@@ -25,10 +25,10 @@ IMPLICIT NONE
 CONTAINS
 
 !----------------------------------------------------------------------------
-!                                                             QuadrangleName1
+!                                                             Quadranglename1
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE QuadrangleName1
+MODULE PROCEDURE Quadranglename1
 SELECT CASE (order)
 CASE (1)
   ans = Quadrangle4
@@ -39,34 +39,58 @@ CASE (3)
 CASE (4:)
   ans = Quadrangle16 + order - 3_I4B
 END SELECT
-END PROCEDURE QuadrangleName1
+END PROCEDURE Quadranglename1
 
 !----------------------------------------------------------------------------
 !                                                                  Initiate
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Initiate_ref_Quadrangle
-CALL Reallocate(obj%xij, 3, 4)
-obj%xij = InterpolationPoint_Quadrangle(  &
-  & xij=xij, &
-  & order=1, &
-  & ipType=Equidistance, &
-  & layout="VEFC")
-obj%EntityCounts = [4, 4, 1, 0]
-obj%XiDimension = 2
-obj%Name = Quadrangle4
+REAL(DFP) :: unit_xij(2, 4), biunit_xij(2, 4)
+CALL DEALLOCATE (obj)
+
+unit_xij = RefCoord_Quadrangle("UNIT")
+biunit_xij = RefCoord_Quadrangle("BIUNIT")
+
+IF (PRESENT(xij)) THEN
+  obj%xij = xij(1:2, 1:4)
+  IF (ALL(obj%xij(1:2, 1:4) .approxeq.unit_xij)) THEN
+    obj%domainName = "UNIT"
+  ELSE IF (ALL(obj%xij(1:2, 1:4) .approxeq.biunit_xij)) THEN
+    obj%domainName = "BIUNIT"
+  ELSE
+    obj%domainName = "GENERAL"
+  END IF
+
+ELSE
+
+  IF (PRESENT(domainName)) THEN
+    obj%domainName = UpperCase(domainName)
+    IF (obj%domainName .EQ. "UNIT" .OR. obj%domainName .EQ. "BIUNIT") THEN
+      obj%xij = RefCoord_Quadrangle(obj%domainName)
+    END IF
+  ELSE
+    obj%domainName = "BIUNIT"
+    obj%xij = RefCoord_Quadrangle(obj%domainName)
+  END IF
+
+END IF
+
+obj%entityCounts = [4, 4, 1, 0]
+obj%xidimension = 2
+obj%name = Quadrangle4
 obj%order = 1
 obj%NSD = NSD
-ALLOCATE (obj%Topology(9))
-obj%Topology(1) = ReferenceTopology([1], Point)
-obj%Topology(2) = ReferenceTopology([2], Point)
-obj%Topology(3) = ReferenceTopology([3], Point)
-obj%Topology(4) = ReferenceTopology([4], Point)
-obj%Topology(5) = ReferenceTopology([1, 2], Line2)
-obj%Topology(6) = ReferenceTopology([2, 3], Line2)
-obj%Topology(7) = ReferenceTopology([3, 4], Line2)
-obj%Topology(8) = ReferenceTopology([4, 1], Line2)
-obj%Topology(9) = ReferenceTopology([1, 2, 3, 4], Quadrangle4)
+ALLOCATE (obj%topology(9))
+obj%topology(1) = ReferenceTopology([1], Point)
+obj%topology(2) = ReferenceTopology([2], Point)
+obj%topology(3) = ReferenceTopology([3], Point)
+obj%topology(4) = ReferenceTopology([4], Point)
+obj%topology(5) = ReferenceTopology([1, 2], Line2)
+obj%topology(6) = ReferenceTopology([2, 3], Line2)
+obj%topology(7) = ReferenceTopology([3, 4], Line2)
+obj%topology(8) = ReferenceTopology([4, 1], Line2)
+obj%topology(9) = ReferenceTopology([1, 2, 3, 4], Quadrangle4)
 obj%highorderElement => highorderElement_Quadrangle
 END PROCEDURE Initiate_ref_Quadrangle
 
@@ -75,7 +99,7 @@ END PROCEDURE Initiate_ref_Quadrangle
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE reference_Quadrangle
-CALL Initiate(obj=obj, nsd=NSD, xij=xij)
+CALL Initiate(obj=obj, nsd=NSD, xij=xij, domainName=domainName)
 END PROCEDURE reference_Quadrangle
 
 !----------------------------------------------------------------------------
@@ -84,7 +108,7 @@ END PROCEDURE reference_Quadrangle
 
 MODULE PROCEDURE reference_Quadrangle_Pointer
 ALLOCATE (obj)
-CALL Initiate(obj=obj, nsd=NSD, xij=xij)
+CALL Initiate(obj=obj, nsd=NSD, xij=xij, domainName=domainName)
 END PROCEDURE reference_Quadrangle_Pointer
 
 !----------------------------------------------------------------------------
@@ -105,36 +129,37 @@ CASE DEFAULT
     & order=order, &
     & ipType=ipType,  &
     & layout="VEFC")
+  obj%domainName=refelem%domainName
   NNS = LagrangeDOF_Quadrangle(order=order)
-  obj%EntityCounts = [NNS, 4, 1, 0]
-  obj%XiDimension = 2
-  obj%Name = QuadrangleName(order=order)
+  obj%entityCounts = [NNS, 4, 1, 0]
+  obj%xidimension = 2
+  obj%name = QuadrangleName(order=order)
   obj%order = order
   obj%NSD = refelem%NSD
-  ALLOCATE (obj%Topology(SUM(obj%EntityCounts)))
+  ALLOCATE (obj%topology(SUM(obj%entityCounts)))
   DO I = 1, NNS
-    obj%Topology(I) = ReferenceTopology([I], Point)
+    obj%topology(I) = ReferenceTopology([I], Point)
   END DO
   aintvec = [1, 2] .append.arange(5_I4B, 3_I4B + order)
-  obj%Topology(NNS + 1) = ReferenceTopology(aintvec, LineName(order=order))
+  obj%topology(NNS + 1) = ReferenceTopology(aintvec, Linename(order=order))
 
   aintvec = [2, 3] .append.arange( &
                                   & 3_I4B + order + 1, &
                                   & 3_I4B + order + order - 1_I4B)
-  obj%Topology(NNS + 2) = ReferenceTopology(aintvec, LineName(order=order))
+  obj%topology(NNS + 2) = ReferenceTopology(aintvec, Linename(order=order))
 
   aintvec = [3, 4] .append.arange(&
                                   & 2_I4B + 2_I4B * order + 1, &
                                   & 2_I4B + 2_I4B * order + order - 1_I4B)
-  obj%Topology(NNS + 3) = ReferenceTopology(aintvec, LineName(order=order))
+  obj%topology(NNS + 3) = ReferenceTopology(aintvec, Linename(order=order))
 
   aintvec = [4, 1] .append.arange( &
                             & 1_I4B + 3_I4B * order + 1,  &
                             & 1_I4B + 3_I4B * order + order - 1_I4B)
-  obj%Topology(NNS + 4) = ReferenceTopology(aintvec, LineName(order=order))
+  obj%topology(NNS + 4) = ReferenceTopology(aintvec, Linename(order=order))
 
-  obj%Topology(NNS + 5) = ReferenceTopology( &
-                            & arange(1_I4B, NNS, 1_I4B), obj%Name)
+  obj%topology(NNS + 5) = ReferenceTopology( &
+                            & arange(1_I4B, NNS, 1_I4B), obj%name)
   obj%highOrderElement => refelem%highOrderElement
 END SELECT
 END PROCEDURE highorderElement_Quadrangle

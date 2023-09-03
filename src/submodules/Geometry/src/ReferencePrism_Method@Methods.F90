@@ -29,6 +29,12 @@ CONTAINS
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Initiate_ref_Prism
+CALL Errormsg( &
+  & msg="[WORK IN PROGRESS]",  &
+  & unitno=stderr,  &
+  & line=__LINE__,  &
+  & file=__FILE__,  &
+  & routine="Initiate_ref_Prism()")
 END PROCEDURE Initiate_ref_Prism
 
 !----------------------------------------------------------------------------
@@ -36,11 +42,7 @@ END PROCEDURE Initiate_ref_Prism
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE reference_Prism
-IF (PRESENT(XiJ)) THEN
-  CALL Initiate(obj, NSD, XiJ)
-ELSE
-  CALL Initiate(obj, NSD)
-END IF
+CALL Initiate(obj=obj, nsd=NSD, xij=xij, domainName=domainName)
 END PROCEDURE reference_Prism
 
 !----------------------------------------------------------------------------
@@ -49,11 +51,7 @@ END PROCEDURE reference_Prism
 
 MODULE PROCEDURE reference_Prism_Pointer
 ALLOCATE (obj)
-IF (PRESENT(XiJ)) THEN
-  CALL Initiate(obj, NSD, XiJ)
-ELSE
-  CALL Initiate(obj, NSD)
-END IF
+CALL Initiate(obj=obj, nsd=NSD, xij=xij, domainName=domainName)
 END PROCEDURE reference_Prism_Pointer
 
 !----------------------------------------------------------------------------
