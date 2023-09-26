@@ -500,7 +500,7 @@ CASE (Triangle)
     & order=order,  &
     & x=x,  &
     & xij=xij,  &
-    & refTriangle="UNIT", &
+    & refTriangle=domainName, &
     & coeff=coeff,  &
     & firstCall=firstCall,  &
     & basisType=basisType,  &
@@ -525,7 +525,7 @@ CASE (Tetrahedron)
     & order=order,  &
     & x=x,  &
     & xij=xij,  &
-    & refTetrahedron="UNIT", &
+    & refTetrahedron=domainName, &
     & coeff=coeff,  &
     & firstCall=firstCall,  &
     & basisType=basisType,  &
@@ -550,7 +550,7 @@ CASE (Prism)
     & order=order,  &
     & x=x,  &
     & xij=xij,  &
-    & refPrism="UNIT", &
+    & refPrism=domainName, &
     & coeff=coeff,  &
     & firstCall=firstCall,  &
     & basisType=basisType,  &
@@ -563,7 +563,7 @@ CASE (Pyramid)
     & order=order,  &
     & x=x,  &
     & xij=xij,  &
-    & refPyramid="UNIT", &
+    & refPyramid=domainName, &
     & coeff=coeff,  &
     & firstCall=firstCall,  &
     & basisType=basisType,  &
@@ -627,7 +627,7 @@ CASE (Triangle)
     & order=order,  &
     & x=x,  &
     & xij=xij,  &
-    & refTriangle="UNIT", &
+    & refTriangle=domainName, &
     & coeff=coeff,  &
     & firstCall=firstCall,  &
     & basisType=basisType,  &
@@ -672,7 +672,7 @@ CASE (Tetrahedron)
     & order=order,  &
     & x=x,  &
     & xij=xij,  &
-    & refTetrahedron="UNIT", &
+    & refTetrahedron=domainName, &
     & coeff=coeff,  &
     & firstCall=firstCall,  &
     & basisType=basisType,  &
@@ -717,7 +717,7 @@ CASE (Prism)
     & order=order,  &
     & x=x,  &
     & xij=xij,  &
-    & refPrism="UNIT", &
+    & refPrism=domainName, &
     & coeff=coeff,  &
     & firstCall=firstCall,  &
     & basisType=basisType,  &
@@ -740,7 +740,7 @@ CASE (Pyramid)
     & order=order,  &
     & x=x,  &
     & xij=xij,  &
-    & refPyramid="UNIT", &
+    & refPyramid=domainName, &
     & coeff=coeff,  &
     & firstCall=firstCall,  &
     & basisType=basisType,  &

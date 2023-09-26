@@ -341,6 +341,7 @@ INTERFACE LagrangeEvalAll
     & elemType, &
     & x, &
     & xij, &
+    & domainName, &
     & coeff, &
     & firstCall, &
     & basisType, &
@@ -356,6 +357,10 @@ INTERFACE LagrangeEvalAll
     !! x(3, :) is z coord
     REAL(DFP), INTENT(INOUT) :: xij(:, :)
     !! Interpolation points
+    CHARACTER(*), INTENT( IN ) :: domainName
+    !! domain of reference element
+    !! UNIT 
+    !! BIUNIT
     REAL(DFP), OPTIONAL, INTENT(INOUT) :: coeff(SIZE(xij, 2), SIZE(xij, 2))
     !! Coefficient of Lagrange polynomials
     LOGICAL(LGT), OPTIONAL :: firstCall
@@ -382,6 +387,7 @@ INTERFACE LagrangeGradientEvalAll
     & elemType, &
     & x, &
     & xij, &
+    & domainName, &
     & coeff, &
     & firstCall, &
     & basisType, &
@@ -397,6 +403,10 @@ INTERFACE LagrangeGradientEvalAll
     !! x(3, :) is z coord
     REAL(DFP), INTENT(INOUT) :: xij(:, :)
     !! Interpolation points
+    CHARACTER(*), INTENT( IN ) :: domainName
+    !! domain of reference element
+    !! UNIT 
+    !! BIUNIT
     REAL(DFP), OPTIONAL, INTENT(INOUT) :: coeff(SIZE(xij, 2), SIZE(xij, 2))
     !! Coefficient of Lagrange polynomials
     LOGICAL(LGT), OPTIONAL :: firstCall

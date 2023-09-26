@@ -159,8 +159,8 @@ REAL(Float), PARAMETER :: MaxReal = MaxReal32
 REAL(Float), PARAMETER :: MinDFP = MinReal32
 REAL(Float), PARAMETER :: MaxDFP = MaxReal32
 #endif
-REAL(Float), PARAMETER :: TypeReal = 1.0
-REAL(Float), PARAMETER :: TypeDFP = 1.0
+REAL(DFP), PARAMETER :: TypeReal = 1.0
+REAL(DFP), PARAMETER :: TypeDFP = 1.0
 REAL(Float), PARAMETER :: TypeFloat = 1.0
 INTEGER(INT64), PARAMETER :: MinInt64 = -HUGE(1_INT64), TypeInt64 = 1
 INTEGER(INT32), PARAMETER :: MinInt32 = -HUGE(1_INT32), TypeInt32 = 1

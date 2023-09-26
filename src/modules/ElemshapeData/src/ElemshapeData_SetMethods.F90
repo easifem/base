@@ -15,67 +15,77 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 
 MODULE ElemshapeData_SetMethods
-USE BaseType
+USE BaSetype
 USE GlobalData
 IMPLICIT NONE
 PRIVATE
 
-PUBLIC :: setThickness
-PUBLIC :: setBarycentricCoord
-PUBLIC :: setJs
-PUBLIC :: setdNdXt
-PUBLIC :: setJacobian
-PUBLIC :: setdNTdt
-PUBLIC :: setdNTdXt
-PUBLIC :: set
-PUBLIC :: setNormal
+PUBLIC :: Set
+PUBLIC :: SetBarycentricCoord
+PUBLIC :: SetJacobian
+PUBLIC :: SetJs
+PUBLIC :: SetNormal
+PUBLIC :: SetThickness
+PUBLIC :: SetdNTdXt
+PUBLIC :: SetdNTdt
+PUBLIC :: SetdNdXt
 
 !----------------------------------------------------------------------------
-!                                                     setThickness@setMethod
+!                                                       SetNormal@SetMethod
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 4 March 2021
+! summary: This subroutine Sets the normal vector
+
+INTERFACE SetNormal
+  MODULE PURE SUBROUTINE elemsd_SetNormal(obj)
+    CLASS(ElemshapeData_), INTENT(INOUT) :: obj
+  END SUBROUTINE elemsd_SetNormal
+END INTERFACE SetNormal
+
+!----------------------------------------------------------------------------
+!                                                     SetThickness@SetMethod
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date:         4 March
-! summary: This subroutine set the thickness field
+! summary: This subroutine Set the thickness field
 !
 !# Introduction
 !
-! This subroutine set the `thickness` field
+! This subroutine Set the `thickness` field
 ! Here `val` denotes the nodal value of thickeness
 !
 ! $$d = d_{I} N^{I}$$
 
-INTERFACE
-  MODULE PURE SUBROUTINE elemsd_setThickness(obj, val, N)
+INTERFACE SetThickness
+  MODULE PURE SUBROUTINE elemsd_SetThickness(obj, val, N)
     CLASS(ElemshapeData_), INTENT(INOUT) :: obj
     REAL(DFP), INTENT(IN) :: val(:)
     !! Nodal values of thickness
     REAL(DFP), INTENT(IN) :: N(:, :)
     !! Shape function values at quadrature points
-  END SUBROUTINE elemsd_setThickness
-END INTERFACE
-
-INTERFACE setThickness
-  MODULE PROCEDURE elemsd_setThickness
-END INTERFACE
+  END SUBROUTINE elemsd_SetThickness
+END INTERFACE SetThickness
 
 !----------------------------------------------------------------------------
-!                                                     setThickness@setMethod
+!                                                     SetThickness@SetMethod
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date:         4 March 2021
-! summary: This subroutine set the thickness field
+! summary: This subroutine Set the thickness field
 !
 !# Introduction
 !
-! This subroutine set the `thickness` field
+! This subroutine Set the `thickness` field
 ! Here `val` denotes the space-time nodal value of thickeness
 !
 ! $$d = d_{I}^{a} N^{I} T_{a}$$
 
-INTERFACE
-  MODULE PURE SUBROUTINE stsd_setThickness(obj, val, N, T)
+INTERFACE SetThickness
+  MODULE PURE SUBROUTINE stsd_SetThickness(obj, val, N, T)
     CLASS(STElemshapeData_), INTENT(INOUT) :: obj
     REAL(DFP), INTENT(IN) :: val(:, :)
     !! Space-time nodal values of thickness
@@ -83,158 +93,134 @@ INTERFACE
     !! Shape function at spatial quadrature
     REAL(DFP), INTENT(IN) :: T(:)
     !! Shape function at temporal quadrature
-  END SUBROUTINE stsd_setThickness
-END INTERFACE
-
-INTERFACE setThickness
-  MODULE PROCEDURE stsd_setThickness
-END INTERFACE
+  END SUBROUTINE stsd_SetThickness
+END INTERFACE SetThickness
 
 !----------------------------------------------------------------------------
-!                                              setBarycentricCoord@setMethod
+!                                              SetBarycentricCoord@SetMethod
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date:         4 March 2021
-! summary: This subroutine set the Barycentric coordinates
+! summary: This subroutine Set the Barycentric coordinates
 !
 !# Introduction
 !
-! This subroutine set the barycentric coordinates
+! This subroutine Set the barycentric coordinates
 !
 ! $$x_i = x_{iI} N^{I}$$
 !
 
-INTERFACE
-  MODULE PURE SUBROUTINE elemsd_setBarycentricCoord(obj, val, N)
+INTERFACE SetBarycentricCoord
+  MODULE PURE SUBROUTINE elemsd_SetBarycentricCoord(obj, val, N)
     CLASS(ElemshapeData_), INTENT(INOUT) :: obj
     REAL(DFP), INTENT(IN) :: val(:, :)
     !! Nodal coordinates in `xiJ` format
     REAL(DFP), INTENT(IN) :: N(:, :)
     !! When element is not an isoparametric we can supply N.
-  END SUBROUTINE elemsd_setBarycentricCoord
-END INTERFACE
-
-INTERFACE setBarycentricCoord
-  MODULE PROCEDURE elemsd_setBarycentricCoord
-END INTERFACE setBarycentricCoord
+  END SUBROUTINE elemsd_SetBarycentricCoord
+END INTERFACE SetBarycentricCoord
 
 !----------------------------------------------------------------------------
-!                                              setBarycentricCoord@setMethod
+!                                              SetBarycentricCoord@SetMethod
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date:         4 March 2021
-! summary: This subroutine set the Barycentric coordinates
+! summary: This subroutine Set the Barycentric coordinates
 !
 !# Introduction
 !
-! This subroutine set the barycentric coordinates by using
+! This subroutine Set the barycentric coordinates by using
 ! space-time nodal coordinates
 !
 ! $$x=x_{I}^{a} N^I T_a$$
 
-INTERFACE
-  MODULE PURE SUBROUTINE stsd_setBarycentricCoord(obj, val, N, T)
+INTERFACE SetBarycentricCoord
+  MODULE PURE SUBROUTINE stsd_SetBarycentricCoord(obj, val, N, T)
     CLASS(STElemshapeData_), INTENT(INOUT) :: obj
     REAL(DFP), INTENT(IN) :: val(:, :, :)
     !! space-time Nodal coordinates in `xiJ` format
     REAL(DFP), INTENT(IN) :: N(:, :), T(:)
     !! N and T are required to handle non isoparametric elements
-  END SUBROUTINE stsd_setBarycentricCoord
-END INTERFACE
-
-INTERFACE setBarycentricCoord
-  MODULE PROCEDURE stsd_setBarycentricCoord
-END INTERFACE setBarycentricCoord
+  END SUBROUTINE stsd_SetBarycentricCoord
+END INTERFACE SetBarycentricCoord
 
 !----------------------------------------------------------------------------
-!                                                            setJs@setMethod
+!                                                            SetJs@SetMethod
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 4 March 2021
-! summary: This subroutine set the determinent of jacobian
+! summary: This subroutine Set the determinent of jacobian
 
-INTERFACE
-  MODULE PURE SUBROUTINE elemsd_setJs(obj)
+INTERFACE SetJs
+  MODULE PURE SUBROUTINE elemsd_SetJs(obj)
     CLASS(ElemshapeData_), INTENT(INOUT) :: obj
-  END SUBROUTINE elemsd_setJs
-END INTERFACE
-
-INTERFACE setJs
-  MODULE PROCEDURE elemsd_setJs
-END INTERFACE setJs
+  END SUBROUTINE elemsd_SetJs
+END INTERFACE SetJs
 
 !----------------------------------------------------------------------------
-!                                                          setdNdXt@setMethod
+!                                                          SetdNdXt@SetMethod
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 4 March 2021
-! summary: This subroutine set $\frac{d N}{d X_t}$ internally
+! summary: This subroutine Set $\frac{d N}{d X_t}$ internally
 !
 !# Introduction
 !
-! This subroutine will internally set `dNdXt`.
+! This subroutine will internally Set `dNdXt`.
 ! It use the inverse of jacobian stored internally, so make sure jacobian is
-! set before calling this  subroutine.
+! Set before calling this  subroutine.
 
-INTERFACE
-  MODULE PURE SUBROUTINE elemsd_setdNdXt(obj)
+INTERFACE SetdNdXt
+  MODULE PURE SUBROUTINE elemsd_SetdNdXt(obj)
     CLASS(ElemshapeData_), INTENT(INOUT) :: obj
-  END SUBROUTINE elemsd_setdNdXt
-END INTERFACE
-
-INTERFACE setdNdXt
-  MODULE PROCEDURE elemsd_setdNdXt
-END INTERFACE setdNdXt
+  END SUBROUTINE elemsd_SetdNdXt
+END INTERFACE SetdNdXt
 
 !----------------------------------------------------------------------------
-!                                                      setJacobian@setMethod
+!                                                      SetJacobian@SetMethod
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 4 March 2021
-! summary: This subroutine set the jacobian
+! summary: This subroutine Set the jacobian
 !
 !# Introduction
 !
-! This subroutine set the jacobian by using the nodal coordinates
+! This subroutine Set the jacobian by using the nodal coordinates
 !
 ! $$\frac{d x_i}{d \xi_j} = x_{iI}\frac{d N^I}{d \xi_j}$$
 
-INTERFACE
-  MODULE PURE SUBROUTINE elemsd_setJacobian(obj, val, dNdXi)
+INTERFACE SetJacobian
+  MODULE PURE SUBROUTINE elemsd_SetJacobian(obj, val, dNdXi)
     CLASS(ElemshapeData_), INTENT(INOUT) :: obj
     REAL(DFP), INTENT(IN) :: val(:, :)
     !! nodal coordinates in `xiJ` format
     REAL(DFP), INTENT(IN) :: dNdXi(:, :, :)
-  END SUBROUTINE elemsd_setJacobian
-END INTERFACE
-
-INTERFACE setJacobian
-  MODULE PROCEDURE elemsd_setJacobian
-END INTERFACE setJacobian
+  END SUBROUTINE elemsd_SetJacobian
+END INTERFACE SetJacobian
 
 !----------------------------------------------------------------------------
-!                                                      setJacobian@setMethod
+!                                                      SetJacobian@SetMethod
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 4 March 2021
-! summary: This subroutine set the jacobian using space-time nodal coords
+! summary: This subroutine Set the jacobian using space-time nodal coords
 !
 !# Introduction
 !
-! This subroutine set the jacobian by using space-time nodal coords, `dNdXi`
+! This subroutine Set the jacobian by using space-time nodal coords, `dNdXi`
 ! `T` are used to handle non-isoparameteric elements.
 !
 ! $$\frac{d x_i}{d \xi_j} = x_{iI}^{a}T_a\frac{d N^I}{d \xi_j}$$
 !
 
-INTERFACE
-  MODULE PURE SUBROUTINE stsd_setJacobian(obj, val, dNdXi, T)
+INTERFACE SetJacobian
+  MODULE PURE SUBROUTINE stsd_SetJacobian(obj, val, dNdXi, T)
     CLASS(STElemshapeData_), INTENT(INOUT) :: obj
     REAL(DFP), INTENT(IN) :: val(:, :, :)
     !! Space time nodal values of coordinates
@@ -242,24 +228,20 @@ INTERFACE
     !! Local derivative of shape function for geometry
     REAL(DFP), INTENT(IN) :: T(:)
     !! Shape function for time element
-  END SUBROUTINE stsd_setJacobian
-END INTERFACE
-
-INTERFACE setJacobian
-  MODULE PROCEDURE stsd_setJacobian
-END INTERFACE setJacobian
+  END SUBROUTINE stsd_SetJacobian
+END INTERFACE SetJacobian
 
 !----------------------------------------------------------------------------
-!                                                         setdNTdt@setMethod
+!                                                         SetdNTdt@SetMethod
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 4 March 2021
-! summary: This subroutine set `dNTdt` by using the space-time nodal values
+! summary: This subroutine Set `dNTdt` by using the space-time nodal values
 !
 !# Introduction
 !
-! - This subroutine set `dNTdt` by using space-time nodal values
+! - This subroutine Set `dNTdt` by using space-time nodal values
 ! - It is important to note that `dNTdXt` should be allocated before calling
 ! - This subroutine uses following formula
 !
@@ -269,75 +251,70 @@ END INTERFACE setJacobian
 ! \hat{v}_{k}
 ! $$
 
-INTERFACE
-  MODULE PURE SUBROUTINE stsd_setdNTdt(obj, val)
+INTERFACE SetdNTdt
+  MODULE PURE SUBROUTINE stsd_SetdNTdt(obj, val)
     CLASS(STElemshapeData_), INTENT(INOUT) :: obj
     REAL(DFP), INTENT(IN) :: val(:, :, :)
     !! Space-time nodal values
-  END SUBROUTINE stsd_setdNTdt
-END INTERFACE
-
-INTERFACE setdNTdt
-  MODULE PROCEDURE stsd_setdNTdt
-END INTERFACE setdNTdt
+  END SUBROUTINE stsd_SetdNTdt
+END INTERFACE SetdNTdt
 
 !----------------------------------------------------------------------------
-!                                                        setdNTdXt@setMethod
+!                                                        SetdNTdXt@SetMethod
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 4 March 2021
-! summary: This subroutine set `dNTdXt` by using internal data
+! summary: This subroutine Set `dNTdXt` by using internal data
 !
 !# Introduction
 !
-! * This subroutine set `dNTdXt` by using internal data
+! * This subroutine Set `dNTdXt` by using internal data
 ! * This subroutine uses inverse of Jacobian, therefore, before calling
-! * this subroutine make sure to set jacobian
+! * this subroutine make sure to Set jacobian
 !
 ! $$\frac{\partial N^{I\  }T_{a}}{\partial x_{i\  }}
 ! =\frac{\partial N^{I}T_{a}}{\partial \xi_{j} } \frac{\partial \xi_{j} }
 ! {\partial x_{i}} $$
 
-INTERFACE
-  MODULE PURE SUBROUTINE stsd_setdNTdXt(obj)
+INTERFACE SetdNTdXt
+  MODULE PURE SUBROUTINE stsd_SetdNTdXt(obj)
     CLASS(STElemshapeData_), INTENT(INOUT) :: obj
   !! Space-time nodal values
-  END SUBROUTINE stsd_setdNTdXt
-END INTERFACE
-
-INTERFACE setdNTdXt
-  MODULE PROCEDURE stsd_setdNTdXt
-END INTERFACE setdNTdXt
+  END SUBROUTINE stsd_SetdNTdXt
+END INTERFACE SetdNTdXt
 
 !----------------------------------------------------------------------------
-!                                                             Set@setMethod
+!                                                             Set@SetMethod
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 4 March 2021
-! summary: This subroutine set parameters defined on physical element
+! summary: Sets parameters defined on physical element
 !
 !# Introduction
 !
-! This subroutine set parameters defined on physical element
+!This subroutine sets parameters defined on physical element
 !
-! * `val` denotes nodal coordinates of element in `xiJ` format
-! * This subroutine will call
-!     - `setJacobian`
-!     - `setJs`
-!     - `setdNdXt`
-!     - `setBarycentricCoord`
-! * The facility of `N` and `dNdXi` allow us to handle non-isoparametric
+!- `val` denotes nodal coordinates of element in `xiJ` format
+!- This subroutine will call
+!     - `SetJacobian`
+!     - `SetJs`
+!     - `SetdNdXt`
+!     - `SetBarycentricCoord`
+!- By using `N` and `dNdXi` we can handle non-isoparametric
 ! elements
 !
 !@note
 ! In case `obj` is instance of [[stelemshapedata_]] then `val` will denotes
 ! coordinates of spatial nodes at some time in [tn, tn+1]
 !@endnote
+!
+! The number of cols in val should be same as the number of rows 
+! in N and size of first index of dNdXi.
 
-INTERFACE
-  MODULE PURE SUBROUTINE elemsd_set1(obj, val, N, dNdXi)
+INTERFACE Set
+  MODULE PURE SUBROUTINE elemsd_Set1(obj, val, N, dNdXi)
     CLASS(ElemshapeData_), INTENT(INOUT) :: obj
     REAL(DFP), INTENT(IN) :: val(:, :)
     !! Spatial nodal coordinates
@@ -345,23 +322,49 @@ INTERFACE
     !! Shape function for geometry
     REAL(DFP), INTENT(IN) :: dNdXi(:, :, :)
     !! Local derivative of shape functions for geometry
-  END SUBROUTINE elemsd_set1
-END INTERFACE
-
-INTERFACE set
-  MODULE PROCEDURE elemsd_set1
-END INTERFACE set
+  END SUBROUTINE elemsd_Set1
+END INTERFACE Set
 
 !----------------------------------------------------------------------------
-!                                                             Set@setMethod
+!                                                             Set@SetMethod
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 4 March 2021
-! summary: This subroutine set parameters defined on physical element
+! summary: This subroutine Set parameters defined on physical element
+!
+!# Introduction
+!
+! This routine performs following tasks
+!
+!- Set Jacobian for cellobj
+!- Set Js for cellobj
+!- Set dNdXt for cellobj
+!- Set SetBarycentricCoord for cellobj
+!
+! Then it get connectivity of facet element by using refelem stored
+! inside facetobj. This conectivity is necessary for getting
+! the coordinates of facet element. Then, it performs following tasks
+! for facetobj
+!
+!- SetJacobian
+!- SetJs
+!- SetBarycentricCoord
+!- SetNormal
+!
+! It is important to note that `dNdXt` in facetobj cannot be computed
+! as facet elements are n-1 dimensional manifold in n dimensional space.
+! Therefore, we extend (copy from) dNdXt from cellobj to facetobj.
+!
+! We also make normal, Js, Ws by in **cellObj** by copying from **facetObj**
+!
+!@note
+! Both facetObj and cellObj should be defined at same quadrature
+! points. These quadrature points corresponds points in facetObj.
+!@endnote
 
-INTERFACE
-  MODULE PURE SUBROUTINE elemsd_set2(facetobj, cellobj, cellval, cellN, &
+INTERFACE Set
+  MODULE PURE SUBROUTINE elemsd_Set2(facetobj, cellobj, cellval, cellN, &
     & celldNdXi, facetN, facetdNdXi)
     CLASS(ElemshapeData_), INTENT(INOUT) :: facetobj
     CLASS(ElemshapeData_), INTENT(INOUT) :: cellobj
@@ -374,23 +377,23 @@ INTERFACE
     REAL(DFP), INTENT(IN) :: celldNdXi(:, :, :)
     REAL(DFP), INTENT(IN) :: facetdNdXi(:, :, :)
     !! Local derivative of shape functions for geometry
-  END SUBROUTINE elemsd_set2
-END INTERFACE
-
-INTERFACE set
-  MODULE PROCEDURE elemsd_set2
-END INTERFACE set
+  END SUBROUTINE elemsd_Set2
+END INTERFACE Set
 
 !----------------------------------------------------------------------------
-!                                                             Set@setMethod
+!                                                             Set@SetMethod
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 4 March 2021
-! summary: This subroutine set parameters defined on physical element
+! summary: This subroutine Set parameters defined on physical element
+!
+!# Introduction
+!
+!TODO: Add documentation of elemsd_Set3
 
-INTERFACE
-  MODULE PURE SUBROUTINE elemsd_set3( &
+INTERFACE Set
+  MODULE PURE SUBROUTINE elemsd_Set3( &
     & masterFacetobj, &
     & masterCellobj, &
     & masterCellval, &
@@ -408,90 +411,72 @@ INTERFACE
     CLASS(ElemshapeData_), INTENT(INOUT) :: masterFacetobj
     CLASS(ElemshapeData_), INTENT(INOUT) :: masterCellobj
     REAL(DFP), INTENT(IN) :: masterCellval(:, :)
-    !! Spatial nodal coordinates
+    !! Spatial nodal coordinates of master cell
     REAL(DFP), INTENT(IN) :: masterCellN(:, :)
+    !! local shape function for geometry of master cell
     REAL(DFP), INTENT(IN) :: masterFacetN(:, :)
-    !! Shape function for geometry
+    !! Shape function for geometry of master facet element
     REAL(DFP), INTENT(IN) :: masterCelldNdXi(:, :, :)
+    !! Local gradient of shape functions for geometry of master cell
     REAL(DFP), INTENT(IN) :: masterFacetdNdXi(:, :, :)
-    !! Local derivative of shape functions for geometry
+    !! Local gradient of shape functions for geometry of
+    !! facet element of master cell
     CLASS(ElemshapeData_), INTENT(INOUT) :: slaveFacetobj
+    !! Shape function data for facet element of slave cell
     CLASS(ElemshapeData_), INTENT(INOUT) :: slaveCellobj
+    !! Shape function data for cell element of slave cell
     REAL(DFP), INTENT(IN) :: slaveCellval(:, :)
-    !! Spatial nodal coordinates
+    !! Spatial nodal coordinates of cell element of slave cell
     REAL(DFP), INTENT(IN) :: slaveCellN(:, :)
+    !! Local shape function for geometry of cell element of slave
     REAL(DFP), INTENT(IN) :: slaveFacetN(:, :)
-    !! Shape function for geometry
+    !! Local shape function for geometry of facet element of slave
     REAL(DFP), INTENT(IN) :: slaveCelldNdXi(:, :, :)
+    !! Local derivative of shape function for geometry of cell element
+    !! of slave
     REAL(DFP), INTENT(IN) :: slaveFacetdNdXi(:, :, :)
-    !! Local derivative of shape functions for geometry
-  END SUBROUTINE elemsd_set3
-END INTERFACE
-
-INTERFACE set
-  MODULE PROCEDURE elemsd_set3
-END INTERFACE set
+    !! Local derivative of shape function for geometry of facet element
+    !! of slave
+  END SUBROUTINE elemsd_Set3
+END INTERFACE Set
 
 !----------------------------------------------------------------------------
-!                                                             set@setMethod
+!                                                             Set@SetMethod
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 4 March 2021
-! summary: This subroutine set parameters defined on physical element
+! summary: This subroutine sets the parameters defined on physical element
 !
 !# Introduction
 !
-! This subroutine set parameters defined on physical element
+! This subroutine Set parameters defined on physical element
 !
 ! * `val` denotes coordinates of the space-time element in `xiJa` format
 ! * The facility of supplying `N`, `T`, and `dNdXi` allows us to handle
 ! non-isoparametric element
 ! * This subroutine will call
-!     - `setJacobian` uses `dNdXi`
-!     - `setJs`
-!     - `setdNdXt`
-!     - `setBarycentricCoord` uses `N` and `T`
-!     - `setdNTdXt`
-!     - `setdNTdt`
+!     - `SetJacobian` uses `dNdXi`
+!     - `SetJs`
+!     - `SetdNdXt`
+!     - `SetBarycentricCoord` uses `N` and `T`
+!     - `SetdNTdXt`
+!     - `SetdNTdt`
 !
 !@note
 ! In case of [[stelemshapedata_]] `val` denotes nodal coordinate at
 ! some intermediate space-time slab
 !@endnote
 
-INTERFACE
-  MODULE PURE SUBROUTINE stelemsd_set1(obj, val, N, T, dNdXi)
+INTERFACE Set
+  MODULE PURE SUBROUTINE stelemsd_Set1(obj, val, N, T, dNdXi)
     CLASS(STElemshapeData_), INTENT(INOUT) :: obj
     REAL(DFP), INTENT(IN) :: val(:, :, :)
     !! Spatial nodal coordinates
     REAL(DFP), INTENT(IN) :: N(:, :)
     REAL(DFP), INTENT(IN) :: T(:)
     REAL(DFP), INTENT(IN) :: dNdXi(:, :, :)
-  END SUBROUTINE stelemsd_set1
-END INTERFACE
-
-INTERFACE set
-  MODULE PROCEDURE stelemsd_set1
-END INTERFACE set
-
-!----------------------------------------------------------------------------
-!                                                       setNormal@setMethod
-!----------------------------------------------------------------------------
-
-!> author: Vikas Sharma, Ph. D.
-! date: 4 March 2021
-! summary: This subroutine sets the normal vector
-!
-
-INTERFACE
-  MODULE PURE SUBROUTINE elemsd_setNormal(obj)
-    CLASS(ElemshapeData_), INTENT(INOUT) :: obj
-  END SUBROUTINE elemsd_setNormal
-END INTERFACE
-
-INTERFACE setNormal
-  MODULE PROCEDURE elemsd_setNormal
-END INTERFACE setNormal
+  END SUBROUTINE stelemsd_Set1
+END INTERFACE Set
 
 END MODULE ElemshapeData_SetMethods

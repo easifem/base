@@ -32,11 +32,11 @@ PUBLIC :: ASSIGNMENT(=)
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 4 March 2021
-! summary: Allocate the memory for various matrices in the object
+! summary: Allocates the memory for various matrices in elemsd
 !
 !# Introduction
 !
-!- This subroutine allocates the memory for various matrices in the object.
+!- This subroutine allocates the memory for various matrices in the obj.
 !- This subroutine belongs to the generic interface called `Allocate()`.
 
 INTERFACE ALLOCATE
@@ -60,7 +60,7 @@ END INTERFACE ALLOCATE
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 23 July 2021
-! summary: This routine initiate the shape data
+! summary: This routine initiate the element shapefunction data
 
 INTERFACE Initiate
   MODULE SUBROUTINE elemsd_initiate1(obj, quad, refelem, continuityType, &
@@ -72,11 +72,9 @@ INTERFACE Initiate
     CLASS(ReferenceElement_), INTENT(IN) :: refelem
     !! reference element
     CHARACTER(*), INTENT(IN) :: continuityType
-    !! continuity/ conformity of shape function
-    !! Base continuity type
+    !! - continuity/ conformity of shape function (basis functions)
     CHARACTER(*), INTENT(IN) :: interpolType
-    !! interpolation/polynomial family type
-    !! Base Interpolation type
+    !! interpolation/polynomial family for basis functions
   END SUBROUTINE elemsd_initiate1
 END INTERFACE Initiate
 

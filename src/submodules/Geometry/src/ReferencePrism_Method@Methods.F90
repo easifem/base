@@ -29,12 +29,81 @@ CONTAINS
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Initiate_ref_Prism
-CALL Errormsg( &
-  & msg="[WORK IN PROGRESS]",  &
-  & unitno=stderr,  &
-  & line=__LINE__,  &
-  & file=__FILE__,  &
-  & routine="Initiate_ref_Prism()")
+INTEGER(I4B) :: ii, jj
+INTEGER(I4B), PARAMETER :: tNodes = 6, tFaces=5, tEdges=9, xidim=3, &
+  & max_nodes_face = 4, min_nodes_face=3, name=Prism
+INTEGER(I4B) :: p1p2(2, tEdges), lloop(max_nodes_face+2, tFaces), &
+  & vol(tNodes, 1)
+REAL(DFP) :: unit_xij(xidim, tNodes), biunit_xij(xidim, tNodes)
+
+CALL DEALLOCATE (obj)
+
+p1p2 = EdgeConnectivity_Prism( &
+  & baseInterpol="LAGRANGE",  &
+  & baseContinuity="H1")
+
+lloop = FacetConnectivity_Prism( &
+  & baseInterpol="LAGRANGE",  &
+  & baseContinuity="H1")
+
+vol(:, 1) = arange(1_I4B, tNodes)
+
+unit_xij = RefCoord_Prism("UNIT")
+biunit_xij = RefCoord_Prism("BIUNIT")
+
+IF (PRESENT(xij)) THEN
+  obj%xij = xij(:xidim, :tNodes)
+
+  IF (ALL(obj%xij(:xidim, :tNodes) .approxeq.unit_xij)) THEN
+    obj%domainName = "UNIT"
+  ELSE IF (ALL(obj%xij(:xidim, :tNodes) .approxeq.biunit_xij)) THEN
+    obj%domainName = "BIUNIT"
+  ELSE
+    obj%domainName = "GENERAL"
+  END IF
+
+ELSE
+
+  IF (PRESENT(domainName)) THEN
+    obj%domainName = UpperCase(domainName)
+    IF (obj%domainName .EQ. "UNIT" .OR. obj%domainName .EQ. "BIUNIT") THEN
+      obj%xij = RefCoord_Prism(obj%domainName)
+    END IF
+  ELSE
+    obj%domainName = "UNIT"
+    obj%xij = RefCoord_Prism(obj%domainName)
+  END IF
+
+END IF
+
+obj%entityCounts = [tNodes, tEdges, tFaces, 1_I4B]
+obj%xidimension = xidim
+obj%name = name
+obj%order = 1_I4B
+obj%nsd = nsd
+
+ALLOCATE (obj%topology(SUM(obj%entityCounts)))
+DO ii = 1, obj%entityCounts(1)
+  obj%topology(ii) = ReferenceTopology([ii], Point)
+END DO
+
+jj = obj%entityCounts(1)
+DO ii = 1, obj%entityCounts(2)
+  obj%topology(jj + ii) = ReferenceTopology(p1p2(:, ii), Line2)
+END DO
+
+jj = jj + obj%entityCounts(2)
+DO ii = 1, obj%entityCounts(3)
+  obj%topology(jj + ii) = ReferenceTopology(  &
+    & lloop(2+1:2+lloop(1,ii), ii), lloop(2, ii))
+END DO
+
+jj = jj + obj%entityCounts(3)
+DO ii = 1, obj%entityCounts(4)
+  obj%topology(jj + ii) = ReferenceTopology(vol(:, ii), name)
+END DO
+
+obj%highorderElement => highorderElement_Prism
 END PROCEDURE Initiate_ref_Prism
 
 !----------------------------------------------------------------------------
@@ -59,6 +128,8 @@ END PROCEDURE reference_Prism_Pointer
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE highOrderElement_Prism
+! TODO Implement highOrderElement_Prism
+! FIX #250
 END PROCEDURE highOrderElement_Prism
 
 !-----------------------------------------------------------------------------

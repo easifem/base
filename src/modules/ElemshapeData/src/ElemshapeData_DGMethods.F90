@@ -14,7 +14,7 @@
 ! You should have received a copy of the GNU General Public License
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 
-MODULE ElemshapeData_H1Methods
+MODULE ElemshapeData_DGMethods
 USE BaseType
 USE GlobalData
 IMPLICIT NONE
@@ -30,7 +30,7 @@ PUBLIC :: Initiate
 ! summary: This routine initiate the shape data
 
 INTERFACE Initiate
-  MODULE SUBROUTINE H1_Lagrange1( &
+  MODULE SUBROUTINE DG_Lagrange1( &
     & obj, &
     & quad, &
     & refelem, &
@@ -47,7 +47,7 @@ INTERFACE Initiate
     CLASS(ElemshapeData_), INTENT(INOUT) :: obj
     CLASS(QuadraturePoint_), INTENT(IN) :: quad
     CLASS(ReferenceElement_), INTENT(IN) :: refelem
-    CLASS(H1_), INTENT(IN) :: baseContinuity
+    CLASS(DG_), INTENT(IN) :: baseContinuity
     CLASS(LagrangeInterpolation_), INTENT(IN) :: baseInterpolation
     INTEGER(I4B), INTENT(IN) :: order
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: ipType
@@ -63,11 +63,11 @@ INTERFACE Initiate
     !! If firstCall is False, then coeff will be used
     !! Default value of firstCall is True
     REAL(DFP), OPTIONAL, INTENT(IN) :: alpha, beta, lambda
-  END SUBROUTINE H1_Lagrange1
+  END SUBROUTINE DG_Lagrange1
 END INTERFACE Initiate
 
 !----------------------------------------------------------------------------
-!                                                    Initiate@H1Hierarchy
+!                                                    Initiate@DGHierarchy
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -79,7 +79,7 @@ END INTERFACE Initiate
 ! This routine initiates the shape function related data inside the element.
 
 INTERFACE Initiate
-  MODULE SUBROUTINE H1_Hierarchy1( &
+  MODULE SUBROUTINE DG_Hierarchy1( &
     & obj, &
     & quad, &
     & refelem, &
@@ -96,7 +96,7 @@ INTERFACE Initiate
     !! quadrature point type
     CLASS(ReferenceElement_), INTENT(IN) :: refelem
     !! Reference element type
-    CLASS(H1_), INTENT(IN) :: baseContinuity
+    CLASS(DG_), INTENT(IN) :: baseContinuity
     !! Base continuity type
     CLASS(HierarchyInterpolation_), INTENT(IN) :: baseInterpolation
     !! Base Interpolation type
@@ -112,11 +112,11 @@ INTERFACE Initiate
     !! alpha and beta are Jacobi polynomial param
     !! lambda is Ultraspherical polynomial param
     !! This argument is not needed
-  END SUBROUTINE H1_Hierarchy1
+  END SUBROUTINE DG_Hierarchy1
 END INTERFACE Initiate
 
 !----------------------------------------------------------------------------
-!                                                    Initiate@H1Orthogonal
+!                                                    Initiate@DGOrthogonal
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -128,7 +128,7 @@ END INTERFACE Initiate
 ! This routine initiates the shape function related data inside the element.
 
 INTERFACE Initiate
-  MODULE SUBROUTINE H1_Orthogonal1( &
+  MODULE SUBROUTINE DG_Orthogonal1( &
     & obj, &
     & quad, &
     & refelem, &
@@ -145,7 +145,7 @@ INTERFACE Initiate
     !! quadrature point type
     CLASS(ReferenceElement_), INTENT(IN) :: refelem
     !! Reference element type
-    CLASS(H1_), INTENT(IN) :: baseContinuity
+    CLASS(DG_), INTENT(IN) :: baseContinuity
     !! Base continuity type
     CLASS(OrthogonalInterpolation_), INTENT(IN) :: baseInterpolation
     !! Base Interpolation type
@@ -158,11 +158,11 @@ INTERFACE Initiate
     REAL(DFP), OPTIONAL, INTENT(IN) :: alpha, beta, lambda
     !! alpha and beta are Jacobi polynomial param
     !! lambda is Ultraspherical polynomial param
-  END SUBROUTINE H1_Orthogonal1
+  END SUBROUTINE DG_Orthogonal1
 END INTERFACE Initiate
 
 !----------------------------------------------------------------------------
-!                                                          Initiate@H1Hermit
+!                                                          Initiate@DGHermit
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -174,7 +174,7 @@ END INTERFACE Initiate
 ! This routine initiates the shape function related data inside the element.
 
 INTERFACE Initiate
-  MODULE SUBROUTINE H1_Hermit1( &
+  MODULE SUBROUTINE DG_Hermit1( &
     & obj, &
     & quad, &
     & refelem, &
@@ -191,7 +191,7 @@ INTERFACE Initiate
     !! quadrature point type
     CLASS(ReferenceElement_), INTENT(IN) :: refelem
     !! Reference element type
-    CLASS(H1_), INTENT(IN) :: baseContinuity
+    CLASS(DG_), INTENT(IN) :: baseContinuity
     !! Base continuity type
     CLASS(HermitInterpolation_), INTENT(IN) :: baseInterpolation
     !! Base Interpolation type
@@ -204,11 +204,11 @@ INTERFACE Initiate
     REAL(DFP), OPTIONAL, INTENT(IN) :: alpha, beta, lambda
     !! alpha and beta are Jacobi polynomial param
     !! lambda is Ultraspherical polynomial param
-  END SUBROUTINE H1_Hermit1
+  END SUBROUTINE DG_Hermit1
 END INTERFACE Initiate
 
 !----------------------------------------------------------------------------
-!                                                    Initiate@H1Serendipity
+!                                                    Initiate@DGSerendipity
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -216,7 +216,7 @@ END INTERFACE Initiate
 ! summary: This routine initiate the shape data
 
 INTERFACE Initiate
-  MODULE SUBROUTINE H1_Serendipity1( &
+  MODULE SUBROUTINE DG_Serendipity1( &
     & obj, &
     & quad, &
     & refelem, &
@@ -233,7 +233,7 @@ INTERFACE Initiate
     !! quadrature point type
     CLASS(ReferenceElement_), INTENT(IN) :: refelem
     !! Reference element type
-    CLASS(H1_), INTENT(IN) :: baseContinuity
+    CLASS(DG_), INTENT(IN) :: baseContinuity
     !! Base continuity type
     CLASS(SerendipityInterpolation_), INTENT(IN) :: baseInterpolation
     !! Base Interpolation type
@@ -246,7 +246,7 @@ INTERFACE Initiate
     REAL(DFP), OPTIONAL, INTENT(IN) :: alpha, beta, lambda
     !! alpha and beta are Jacobi polynomial param
     !! lambda is Ultraspherical polynomial param
-  END SUBROUTINE H1_Serendipity1
+  END SUBROUTINE DG_Serendipity1
 END INTERFACE Initiate
 
-END MODULE ElemshapeData_H1Methods
+END MODULE ElemshapeData_DGMethods

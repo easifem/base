@@ -20,15 +20,12 @@ TARGET_SOURCES(
   ${PROJECT_NAME} PRIVATE
   ${src_path}/ElemshapeData_Method.F90
   ${src_path}/ElemshapeData_ConstructorMethods.F90
-  ${src_path}/ElemshapeData_DGLagrangeMethods.F90
-  ${src_path}/ElemshapeData_DGHermitMethods.F90
-  ${src_path}/ElemshapeData_DGSerendipityMethods.F90
-  ${src_path}/ElemshapeData_DGHierarchyMethods.F90
   ${src_path}/ElemshapeData_DivergenceMethods.F90
   ${src_path}/ElemshapeData_GradientMethods.F90
   ${src_path}/ElemshapeData_GetMethods.F90
 
   ${src_path}/ElemshapeData_H1Methods.F90
+  ${src_path}/ElemshapeData_DGMethods.F90
   ${src_path}/ElemshapeData_HDivMethods.F90
   ${src_path}/ElemshapeData_HCurlMethods.F90
 

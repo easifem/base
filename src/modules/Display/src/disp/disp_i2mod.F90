@@ -207,8 +207,8 @@ CONTAINS
   function tostring_s_byt2(x) result(st)
     ! Scalar to string
     integer(byt2), intent(in)                   :: x
-    character(len_f_byt2((/x/), tosset%ifmt)) :: st
-    st = tostring_f_byt2((/x/), tosset%ifmt)
+    character(len_f_byt2((/x/), tosset0%ifmt)) :: st
+    st = tostring_f_byt2((/x/), tosset0%ifmt)
   end function tostring_s_byt2
 
   function tostring_sf_byt2(x, fmt) result(st)
@@ -222,8 +222,8 @@ CONTAINS
   function tostring_byt2(x) result(st)
     ! Vector to string
     integer(byt2), intent(in)               :: x(:)
-    character(len_f_byt2(x, tosset%ifmt)) :: st
-    st = tostring_f_byt2(x, tosset%ifmt)
+    character(len_f_byt2(x, tosset0%ifmt)) :: st
+    st = tostring_f_byt2(x, tosset0%ifmt)
   end function tostring_byt2
 
   function tostring_f_byt2(x, fmt) result(st)
@@ -238,7 +238,7 @@ CONTAINS
     call readfmt(fmt, fmt1, w, d, gedit)
     if (w < 0) then; st = errormsg; return; endif
     write(sa, fmt1) x
-    if (tosset%trimb == 'YES' .or. w == 0) sa = adjustl(sa)
+    if (tosset0%trimb == 'YES' .or. w == 0) sa = adjustl(sa)
     call tostring_get(sa, st)
   end function tostring_f_byt2
 
@@ -253,8 +253,8 @@ CONTAINS
     call readfmt(fmt, fmt1, w, d, gedit)
     if (w < 0) then; wtot = len(errormsg); return; endif
     write(sa, fmt1) x
-    if (tosset%trimb == 'YES' .or. w == 0) sa = adjustl(sa)
-    wtot = sum(len_trim(sa)) + (size(x) - 1)*(tosset%seplen)
+    if (tosset0%trimb == 'YES' .or. w == 0) sa = adjustl(sa)
+    wtot = sum(len_trim(sa)) + (size(x) - 1)*(tosset0%seplen)
   end function len_f_byt2
 
   pure function widthmax_byt2(x, fmt) result(w)

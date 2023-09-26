@@ -75,7 +75,10 @@ USE PENF, ONLY: endianL, endianB, endian, byte_size, str_ascii, &
   & penf_Init, penf_print
 USE BeFoR64
 USE FACE
-USE FPL
+USE FPL, ONLY: ParameterList_,  &
+& ParameterListIterator_,  &
+& FPL_Init,  &
+& FPL_Finalize
 USE System_Method
 USE CInterface
 USE OpenMP_Method

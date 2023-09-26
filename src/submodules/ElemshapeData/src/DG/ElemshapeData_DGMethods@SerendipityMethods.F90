@@ -13,9 +13,9 @@
 !
 ! You should have received a copy of the GNU General Public License
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
-!
 
-SUBMODULE(ElemShapeData_DGLagrangeMethods) Methods
+SUBMODULE(ElemshapeData_DGMethods) SerendipityMethods
+USE BaseMethod
 IMPLICIT NONE
 CONTAINS
 
@@ -23,7 +23,13 @@ CONTAINS
 !                                                                 Initiate
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE DG_Lagrange
-END PROCEDURE DG_Lagrange
+MODULE PROCEDURE DG_Serendipity1
+CALL Errormsg( &
+  & msg="[WORK IN PROGRESS] This method is currently not available",  &
+  & line=__LINE__,  &
+  & routine="DG_Serendipity1()",  &
+  & unitno=stderr,  &
+  & file=__FILE__)
+END PROCEDURE DG_Serendipity1
 
-END SUBMODULE Methods
+END SUBMODULE SerendipityMethods
