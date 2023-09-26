@@ -141,12 +141,12 @@ END SUBROUTINE avoid_compiler_warnings
 
 SUBROUTINE tostring_set(sep, rfmt, ifmt, trimb, trimz)
   CHARACTER(*), OPTIONAL, INTENT(in) :: sep, rfmt, ifmt, trimb, trimz
-  IF (PRESENT(sep)) tosset%sep = upper(sep)
-  IF (PRESENT(sep)) tosset%seplen = MIN(9, LEN(sep))
-  IF (PRESENT(rfmt)) tosset%rfmt = upper(rfmt)
-  IF (PRESENT(ifmt)) tosset%ifmt = upper(ifmt)
-  IF (PRESENT(trimb)) tosset%trimb = upper(trimb)
-  IF (PRESENT(trimz)) tosset%trimz = upper(trimz)
+  IF (PRESENT(sep)) tosset0%sep = upper(sep)
+  IF (PRESENT(sep)) tosset0%seplen = MIN(9, LEN(sep))
+  IF (PRESENT(rfmt)) tosset0%rfmt = upper(rfmt)
+  IF (PRESENT(ifmt)) tosset0%ifmt = upper(ifmt)
+  IF (PRESENT(trimb)) tosset0%trimb = upper(trimb)
+  IF (PRESENT(trimz)) tosset0%trimz = upper(trimz)
   CALL tostring_check_settings
 END SUBROUTINE tostring_set
 
@@ -158,7 +158,7 @@ SUBROUTINE tostring_set_factory()
   LOGICAL dummy
   dummy = .FALSE.
   IF (dummy) CALL avoid_compiler_warnings
-  tosset = tosfac
+  tosset0 = tosfac
 END SUBROUTINE tostring_set_factory
 
 !----------------------------------------------------------------------------

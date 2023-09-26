@@ -266,8 +266,8 @@ CONTAINS
   function tostring_s_quad(x) result(st)
     ! Scalar to string
     real(quad), intent(in) :: x
-    character(len_f_quad((/x/), tosset%rfmt)) :: st
-    st = tostring_f_quad((/x/), tosset%rfmt)
+    character(len_f_quad((/x/), tosset0%rfmt)) :: st
+    st = tostring_f_quad((/x/), tosset0%rfmt)
   end function tostring_s_quad
 
   function tostring_sf_quad(x, fmt) result(st)
@@ -281,8 +281,8 @@ CONTAINS
   function tostring_quad(x) result(st)
     ! Vector to string
     real(quad), intent(in) :: x(:)
-    character(len_f_quad(x, tosset%rfmt)) :: st
-    st = tostring_f_quad(x, tosset%rfmt)
+    character(len_f_quad(x, tosset0%rfmt)) :: st
+    st = tostring_f_quad(x, tosset0%rfmt)
   end function tostring_quad
 
   function tostring_f_quad(x, fmt) result(st)
@@ -323,7 +323,7 @@ CONTAINS
     endif
     write(sa, fmt1) x
     call trim_real(sa, gedit, w)
-    wtot = sum(len_trim(sa)) + (size(x) - 1)*(tosset%seplen)
+    wtot = sum(len_trim(sa)) + (size(x) - 1)*(tosset0%seplen)
   end function len_f_quad
 
   pure function widthmax_quad(x, fmt) result(w)
@@ -477,8 +477,8 @@ CONTAINS
 
   function tostring_s_cplq(x) result(st)
     complex(quad), intent(in)                   :: x
-    character(len_s_cplq(x, tosset%rfmt)) :: st
-    st = tostring_f_cplq((/x/), tosset%rfmt)
+    character(len_s_cplq(x, tosset0%rfmt)) :: st
+    st = tostring_f_cplq((/x/), tosset0%rfmt)
   end function tostring_s_cplq
 
   function tostring_sf_cplq(x, fmt) result(st)
@@ -490,8 +490,8 @@ CONTAINS
 
   function tostring_cplq(x) result(st)
     complex(quad), intent(in)               :: x(:)
-    character(len_f_cplq(x, tosset%rfmt)) :: st
-    st = tostring_f_cplq(x, tosset%rfmt)
+    character(len_f_cplq(x, tosset0%rfmt)) :: st
+    st = tostring_f_cplq(x, tosset0%rfmt)
   end function tostring_cplq
 
   function tostring_f_cplq(x, fmt) result(st)
@@ -544,7 +544,7 @@ CONTAINS
     character(nnblk(fmt)+8)   :: fmt1
     call readfmt(fmt, fmt1, w, d, gedit)
     if (w < 0) then; wtot = len(errormsg); return; endif
-    wtot = len_f_quad(real(x), fmt) + len_f_quad(abs(aimag(x)), fmt) + size(x)*4 - (size(x) - 1)*(tosset%seplen)
+    wtot = len_f_quad(real(x), fmt) + len_f_quad(abs(aimag(x)), fmt) + size(x)*4 - (size(x) - 1)*(tosset0%seplen)
     ! subtract seplen because it has been added twice in len_f_quad
   end function len_f_cplq
   ! *************************************** END OF QUADRUPLE PRECISION COMPLEX PROCEDURES ********************************

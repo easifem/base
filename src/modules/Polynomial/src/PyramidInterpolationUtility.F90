@@ -33,6 +33,54 @@ PUBLIC :: RefCoord_Pyramid
 PUBLIC :: RefElemDomain_Pyramid
 PUBLIC :: LagrangeEvalAll_Pyramid
 PUBLIC :: LagrangeGradientEvalAll_Pyramid
+PUBLIC :: EdgeConnectivity_Pyramid
+PUBLIC :: FacetConnectivity_Pyramid
+
+INTEGER(I4B), PARAMETER :: CONST_tNODES = 5
+INTEGER(I4B), PARAMETER :: CONST_tFACES = 5
+INTEGER(I4B), PARAMETER :: CONST_tEDGES = 8
+INTEGER(I4B), PARAMETER :: CONST_XIDIM = 3
+INTEGER(I4B), PARAMETER :: CONST_MAX_NODES_FACE = 4
+INTEGER(I4B), PARAMETER :: CONST_MIN_NODES_FACE = 3
+
+!----------------------------------------------------------------------------
+!                                               EdgeConnectivity_Pyramid
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2023-07-07
+! summary:  This function returns the edge connectivity of Pyramid
+
+INTERFACE
+  MODULE PURE FUNCTION EdgeConnectivity_Pyramid( &
+    & baseInterpol,  &
+    & baseContinuity) RESULT(ans)
+    CHARACTER(*), INTENT(IN) :: baseInterpol
+    CHARACTER(*), INTENT(IN) :: baseContinuity
+    INTEGER(I4B) :: ans(2, CONST_tEDGES)
+  END FUNCTION EdgeConnectivity_Pyramid
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                               FacetConnectivity_Pyramid
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2023-08-10
+! summary:  This function returns the facet-connectivity of Pyramid
+
+INTERFACE
+  MODULE PURE FUNCTION FacetConnectivity_Pyramid( &
+    & baseInterpol, &
+    & baseContinuity) RESULT(ans)
+    CHARACTER(*), INTENT(IN) :: baseInterpol
+    CHARACTER(*), INTENT(IN) :: baseContinuity
+    INTEGER(I4B) :: ans(2 + CONST_MAX_NODES_FACE, CONST_tFACES)
+    !! ans(1, iface) contains the total nodes in facet (iface)
+    !! ans(2, iface) contains the integer name of facet element
+    !! ans(3:2+ans(1,iface), iface ) contains the node numbers
+  END FUNCTION FacetConnectivity_Pyramid
+END INTERFACE
 
 !----------------------------------------------------------------------------
 !                                                     RefElemDomain_Pyramid
@@ -610,8 +658,8 @@ INTERFACE LagrangeGradientEvalAll_Pyramid
     REAL(DFP) :: ans(SIZE(x, 2), SIZE(xij, 2), 3)
     !! Value of gradient of nth order Lagrange polynomials at point x
     !! The first index denotes point of evaluation
-    !! the second index denotes Lagrange polynomial number 
-    !! The third index denotes the spatial dimension in which gradient is 
+    !! the second index denotes Lagrange polynomial number
+    !! The third index denotes the spatial dimension in which gradient is
     !! computed
   END FUNCTION LagrangeGradientEvalAll_Pyramid1
 END INTERFACE LagrangeGradientEvalAll_Pyramid

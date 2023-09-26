@@ -158,7 +158,7 @@ CONTAINS
 
   function tostring_log1(x) result(st)
     logical(log1), intent(in)                          :: x(:)
-    character(1 + (size(x) - 1)*(1 + tosset%seplen)) :: st
+    character(1 + (size(x) - 1)*(1 + tosset0%seplen)) :: st
     st = tostring_f_log1(x, 'L1')
   end function tostring_log1
 
@@ -173,7 +173,7 @@ CONTAINS
     call readfmt(fmt, fmt1, w, d, gedit)
     if (w <= 0) then; st = errormsg; return; endif
     write(sa, fmt1) x
-    if (tosset%trimb == 'YES') sa = adjustl(sa)
+    if (tosset0%trimb == 'YES') sa = adjustl(sa)
     call tostring_get(sa, st)
   end function tostring_f_log1
 
@@ -185,9 +185,9 @@ CONTAINS
     character(nnblk(fmt)+2)    :: fmt1
     call readfmt(fmt, fmt1, w, d, gedit)
     if (w <= 0) then; wtot = len(errormsg); return; endif
-    if (tosset%trimb == 'YES') wtot = size(x)
-    if (tosset%trimb == 'NO' ) wtot = w*size(x)
-    wtot = wtot + (size(x) - 1)*(tosset%seplen)
+    if (tosset0%trimb == 'YES') wtot = size(x)
+    if (tosset0%trimb == 'NO' ) wtot = w*size(x)
+    wtot = wtot + (size(x) - 1)*(tosset0%seplen)
   end function len_f_log1
 
   pure function widthmax_log1(fmt) result(w)

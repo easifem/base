@@ -264,8 +264,8 @@ CONTAINS
   function tostring_s_sngl(x) result(st)
     ! Scalar to string
     real(sngl), intent(in) :: x
-    character(len_f_sngl((/x/), tosset%rfmt)) :: st
-    st = tostring_f_sngl((/x/), tosset%rfmt)
+    character(len_f_sngl((/x/), tosset0%rfmt)) :: st
+    st = tostring_f_sngl((/x/), tosset0%rfmt)
   end function tostring_s_sngl
 
   function tostring_sf_sngl(x, fmt) result(st)
@@ -279,8 +279,8 @@ CONTAINS
   function tostring_sngl(x) result(st)
     ! Vector to string
     real(sngl), intent(in) :: x(:)
-    character(len_f_sngl(x, tosset%rfmt)) :: st
-    st = tostring_f_sngl(x, tosset%rfmt)
+    character(len_f_sngl(x, tosset0%rfmt)) :: st
+    st = tostring_f_sngl(x, tosset0%rfmt)
   end function tostring_sngl
 
   function tostring_f_sngl(x, fmt) result(st)
@@ -321,7 +321,7 @@ CONTAINS
     endif
     write(sa, fmt1) x
     call trim_real(sa, gedit, w)
-    wtot = sum(len_trim(sa)) + (size(x) - 1)*(tosset%seplen)
+    wtot = sum(len_trim(sa)) + (size(x) - 1)*(tosset0%seplen)
   end function len_f_sngl
 
   pure function widthmax_sngl(x, fmt) result(w)
@@ -475,8 +475,8 @@ CONTAINS
 
   function tostring_s_cplx(x) result(st)
     complex(sngl), intent(in)                   :: x
-    character(len_s_cplx(x, tosset%rfmt)) :: st
-    st = tostring_f_cplx((/x/), tosset%rfmt)
+    character(len_s_cplx(x, tosset0%rfmt)) :: st
+    st = tostring_f_cplx((/x/), tosset0%rfmt)
   end function tostring_s_cplx
 
   function tostring_sf_cplx(x, fmt) result(st)
@@ -488,8 +488,8 @@ CONTAINS
 
   function tostring_cplx(x) result(st)
     complex(sngl), intent(in)               :: x(:)
-    character(len_f_cplx(x, tosset%rfmt)) :: st
-    st = tostring_f_cplx(x, tosset%rfmt)
+    character(len_f_cplx(x, tosset0%rfmt)) :: st
+    st = tostring_f_cplx(x, tosset0%rfmt)
   end function tostring_cplx
 
   function tostring_f_cplx(x, fmt) result(st)
@@ -542,7 +542,7 @@ CONTAINS
     character(nnblk(fmt)+8)   :: fmt1
     call readfmt(fmt, fmt1, w, d, gedit)
     if (w < 0) then; wtot = len(errormsg); return; endif
-    wtot = len_f_sngl(real(x), fmt) + len_f_sngl(abs(aimag(x)), fmt) + size(x)*4 - (size(x) - 1)*(tosset%seplen)
+    wtot = len_f_sngl(real(x), fmt) + len_f_sngl(abs(aimag(x)), fmt) + size(x)*4 - (size(x) - 1)*(tosset0%seplen)
     ! subtract seplen because it has been added twice in len_f_sngl
   end function len_f_cplx
 

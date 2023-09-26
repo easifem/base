@@ -21,10 +21,40 @@ IMPLICIT NONE
 CONTAINS
 
 !----------------------------------------------------------------------------
+!                                                     EdgeConnectivity_Prism
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE EdgeConnectivity_Prism
+ans(:, 1) = [1, 2]
+ans(:, 2) = [1, 3]
+ans(:, 3) = [1, 4]
+ans(:, 4) = [2, 3]
+ans(:, 5) = [2, 5]
+ans(:, 6) = [3, 6]
+ans(:, 7) = [4, 5]
+ans(:, 8) = [4, 6]
+ans(:, 9) = [5, 6]
+END PROCEDURE EdgeConnectivity_Prism
+
+!----------------------------------------------------------------------------
+!                                                 FacetConnectivity_Prism
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE FacetConnectivity_Prism
+!! ans
+ans(:, 1) = [3, Triangle3, 1, 3, 2, 0]
+ans(:, 2) = [4, Quadrangle4, 2, 3, 6, 5]
+ans(:, 3) = [4, Quadrangle4, 1, 2, 5, 4]
+ans(:, 4) = [4, Quadrangle4, 1, 4, 6, 3]
+ans(:, 5) = [3, Triangle3, 4, 5, 6, 0]
+END PROCEDURE FacetConnectivity_Prism
+
+!----------------------------------------------------------------------------
 !                                                       RefElemDomain_Prism
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE RefElemDomain_Prism
+!FIX: Implement RefElemDomain_Prism 
 CALL Errormsg(&
   & msg="[WORK IN PROGRESS] We are working on it", &
   & file=__FILE__, &
@@ -39,6 +69,8 @@ END PROCEDURE RefElemDomain_Prism
 
 MODULE PROCEDURE RefCoord_Prism
 ans = 0.0_DFP
+!FIX: Implement RefCoord_Prism
+!ISSUE: #251
 END PROCEDURE RefCoord_Prism
 
 !----------------------------------------------------------------------------
@@ -47,7 +79,7 @@ END PROCEDURE RefCoord_Prism
 
 MODULE PROCEDURE LagrangeDegree_Prism
 
-! TODO #164 Implement LagrangeDegree_Prism
+!ISSUE: #164 Implement LagrangeDegree_Prism
 
 END PROCEDURE LagrangeDegree_Prism
 
@@ -72,15 +104,13 @@ END PROCEDURE LagrangeInDOF_Prism
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE EquidistancePoint_Prism
-
 ! nodecoord( :, 1 ) = [0,0,-1]
 ! nodecoord( :, 2 ) = [1,0,-1]
 ! nodecoord( :, 3 ) = [0,1,-1]
 ! nodecoord( :, 4 ) = [0,0,1]
 ! nodecoord( :, 5 ) = [1,0,1]
 ! nodecoord( :, 6 ) = [0,1,1]
-! TODO #160 Implement EquidistancePoint_Prism routine
-
+!ISSUE: #160 Implement EquidistancePoint_Prism routine
 END PROCEDURE EquidistancePoint_Prism
 
 !----------------------------------------------------------------------------
@@ -88,9 +118,7 @@ END PROCEDURE EquidistancePoint_Prism
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE EquidistanceInPoint_Prism
-
-! TODO Implement EquidistanceInPoint_Prism routine
-
+!FIX: Implement EquidistanceInPoint_Prism routine
 END PROCEDURE EquidistanceInPoint_Prism
 
 !----------------------------------------------------------------------------
@@ -116,12 +144,10 @@ MODULE PROCEDURE LagrangeCoeff_Prism1
 REAL(DFP), DIMENSION(SIZE(xij, 2), SIZE(xij, 2)) :: V
 INTEGER(I4B), DIMENSION(SIZE(xij, 2)) :: ipiv
 INTEGER(I4B) :: info
-!!
 ipiv = 0_I4B; ans = 0.0_DFP; ans(i) = 1.0_DFP
 V = LagrangeVandermonde(order=order, xij=xij, elemType=Prism)
 CALL GetLU(A=V, IPIV=ipiv, info=info)
 CALL LUSolve(A=V, B=ans, IPIV=ipiv, info=info)
-!!
 END PROCEDURE LagrangeCoeff_Prism1
 
 !----------------------------------------------------------------------------
@@ -129,11 +155,9 @@ END PROCEDURE LagrangeCoeff_Prism1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE LagrangeCoeff_Prism2
-!!
 REAL(DFP), DIMENSION(SIZE(v, 1), SIZE(v, 2)) :: vtemp
 INTEGER(I4B), DIMENSION(SIZE(v, 1)) :: ipiv
 INTEGER(I4B) :: info
-!!
 vtemp = v; ans = 0.0_DFP; ans(i) = 1.0_DFP; ipiv = 0_I4B
 CALL GetLU(A=vtemp, IPIV=ipiv, info=info)
 CALL LUSolve(A=vtemp, B=ans, IPIV=ipiv, info=info)
@@ -163,6 +187,7 @@ END PROCEDURE LagrangeCoeff_Prism4
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE QuadraturePoint_Prism1
+! FIX: Implement QuadraturePoint_Prism1
 CALL ErrorMsg(&
 & msg="Work in progress",  &
 & unitno=stdout,  &
@@ -176,6 +201,7 @@ END PROCEDURE QuadraturePoint_Prism1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE QuadraturePoint_Prism2
+! FIX: Implement QuadraturePoint_Prism2
 CALL ErrorMsg(&
 & msg="Work in progress",  &
 & unitno=stdout,  &
@@ -189,6 +215,7 @@ END PROCEDURE QuadraturePoint_Prism2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE TensorQuadraturePoint_Prism1
+!FIX: Implement TensorQuadraturePoint_Prism1
 CALL ErrorMsg(&
 & msg="Work in progress",  &
 & unitno=stdout,  &
@@ -202,6 +229,7 @@ END PROCEDURE TensorQuadraturePoint_Prism1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE TensorQuadraturePoint_Prism2
+!FIX: Implement TensorQuadraturePoint_Prism2
 CALL ErrorMsg(&
 & msg="Work in progress",  &
 & unitno=stdout,  &
@@ -215,6 +243,7 @@ END PROCEDURE TensorQuadraturePoint_Prism2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE LagrangeEvalAll_Prism1
+! FIX: Implement LagrangeEvalAll_Prism1
 CALL ErrorMsg(&
 & msg="Work in progress",  &
 & unitno=stdout,  &
@@ -228,6 +257,7 @@ END PROCEDURE LagrangeEvalAll_Prism1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE LagrangeEvalAll_Prism2
+! FIX: Implement LagrangeEvalAll_Prism2
 CALL ErrorMsg(&
 & msg="Work in progress",  &
 & unitno=stdout,  &
@@ -241,6 +271,7 @@ END PROCEDURE LagrangeEvalAll_Prism2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE LagrangeGradientEvalAll_Prism1
+!FIX: Implement LagrangeGradientEvalAll_Prism1
 CALL ErrorMsg(&
 & msg="Work in progress",  &
 & unitno=stdout,  &

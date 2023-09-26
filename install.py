@@ -36,6 +36,7 @@ else:
     cmake_def += " -D USE_Int32:BOOL=ON"
     cmake_def += " -D USE_Real64:BOOL=ON"
     cmake_def += " -D COLOR_DISP:BOOL=OFF"
+    cmake_def += " -D CMAKE_EXPORT_COMPILE_COMMANDS:BOOL=ON"
 
     print("CMAKE DEF : ", cmake_def)
 

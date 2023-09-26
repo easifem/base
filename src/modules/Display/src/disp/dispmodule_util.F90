@@ -22,10 +22,11 @@ IMPLICIT NONE
 
 ! ***************** PUBLIC ENTITIES (ONLY PUBLIC TO DISPMODULE, NOT TO USER PROGRAMS) *****************
 PRIVATE
-public :: disp_settings, defset, factory_settings, tosset, tosfac, errormsg, tostring_settings
-public :: nnblk, upper, readfmt, replace_w, trim_real, get_SE, preparebox, copytobox, boxlist, boxnode
-public :: copyseptobox, finishbox, tostring_get_complex, disp_errmsg, tostring_get, find_editdesc_real
-public :: check_settings, tostring_check_settings, replace_zeronaninf, settings, trim_s_real
+
+PUBLIC :: disp_settings, defset, factory_settings, tosset0, tosfac, errormsg, tostring_settings
+PUBLIC :: nnblk, upper, readfmt, replace_w, trim_real, get_SE, preparebox, copytobox, boxlist, boxnode
+PUBLIC :: copyseptobox, finishbox, tostring_get_complex, disp_errmsg, tostring_get, find_editdesc_real
+PUBLIC :: check_settings, tostring_check_settings, replace_zeronaninf, settings, trim_s_real
 
 ! *********************************** GENERAL DECLARATIONS ********************************************
 TYPE disp_settings
@@ -64,12 +65,16 @@ TYPE settings
 END TYPE settings
 
 TYPE(disp_settings) :: DEFSET
+!$OMP THREADPRIVATE(DEFSET)
 !! Current default settings for disp
 TYPE(disp_settings) :: FACTORY_SETTINGS
+!$OMP THREADPRIVATE(FACTORY_SETTINGS)
 !! Original (factory) settings for disp
-TYPE(tostring_settings) :: tosset
+TYPE(tostring_settings), SAVE :: tosset0
+!$OMP THREADPRIVATE(tosset0)
 !! Current settings for tostring
 TYPE(tostring_settings) :: tosfac
+!$OMP THREADPRIVATE(tosfac)
 !! Factory settings for tostring
 
 CHARACTER(*), PARAMETER :: errormsg = 'Illegal format'
@@ -677,15 +682,15 @@ SUBROUTINE tostring_check_settings
   ! Sanity check of tostring settings
   TYPE(tostring_settings) ts
   INTEGER wi, wr, d
-  CHARACTER(MAX(LEN(tosset%rfmt), LEN(tosset%ifmt)) + 5) fmt1
+  CHARACTER(MAX(LEN(tosset0%rfmt), LEN(tosset0%ifmt)) + 5) fmt1
   LOGICAL gedit
-  ts = tosset
-  IF (ALL(ts%trimb /= (/'YES', 'NO '/))) tosset%trimb = tosfac%trimb
-  IF (ALL(ts%trimz /= (/'NONE', 'ALL ', 'G   '/))) tosset%trimz = tosfac%trimz
-  CALL readfmt(tosset%rfmt, fmt1, wr, d, gedit)
-  CALL readfmt(tosset%ifmt, fmt1, wi, d, gedit)
-  IF (wr < 0) tosset%rfmt = tosfac%rfmt
-  IF (wi < 0) tosset%ifmt = tosfac%ifmt
+  ts = tosset0
+  IF (ALL(ts%trimb /= (/'YES', 'NO '/))) tosset0%trimb = tosfac%trimb
+ IF (ALL(ts%trimz /= (/'NONE', 'ALL ', 'G   '/))) tosset0%trimz = tosfac%trimz
+  CALL readfmt(tosset0%rfmt, fmt1, wr, d, gedit)
+  CALL readfmt(tosset0%ifmt, fmt1, wi, d, gedit)
+  IF (wr < 0) tosset0%rfmt = tosfac%rfmt
+  IF (wi < 0) tosset0%ifmt = tosfac%ifmt
   IF (ALL(ts%trimb /= (/'YES ', 'NO  ', 'AUTO'/))) CALL disp_errmsg( &
          'TOSTRING_SET: error, illegal trimb: '//trim(ts%trimb)//', set to ' // trim(tosfac%trimb))
   IF (ALL(ts%trimz /= (/'NONE', 'ALL ', 'G   '/))) CALL disp_errmsg( &
@@ -699,13 +704,13 @@ END SUBROUTINE tostring_check_settings
 PURE SUBROUTINE trim_s_real(sa, gedit, w)
   ! Trim trailing zeros and possibly decimal point from fractional part.
   ! If sa = '52.2000E12' on entry then it is returned as '52.2E12   '.
-  ! Whether trimming is actually done depends on tosset, gedit and w.
+  ! Whether trimming is actually done depends on tosset0, gedit and w.
   CHARACTER(*), INTENT(INOUT) :: sa
   LOGICAL, INTENT(in) :: gedit
   INTEGER, INTENT(in) :: w
   INTEGER k, k2, k3
-  IF (tosset%trimb == 'YES' .OR. w == 0) sa = ADJUSTL(sa)
-  IF (tosset%trimz == 'ALL' .OR. tosset%trimz == 'G' .AND. gedit) THEN
+  IF (tosset0%trimb == 'YES' .OR. w == 0) sa = ADJUSTL(sa)
+  IF (tosset0%trimz == 'ALL' .OR. tosset0%trimz == 'G' .AND. gedit) THEN
     k = SCAN(sa, '.')
     IF (k > 0) THEN
       k2 = VERIFY(sa(k + 1:), '0123456789') + k
@@ -719,13 +724,13 @@ END SUBROUTINE trim_s_real
 PURE SUBROUTINE trim_real(sa, gedit, w)
   ! Trim trailing zeros and possibly decimal point from fractional part.
   ! If sa = '52.2000E12' on entry then it is returned as '52.2E12   '.
-  ! Whether trimming is actually done depends on tosset, gedit and w.
+  ! Whether trimming is actually done depends on tosset0, gedit and w.
   CHARACTER(*), INTENT(INOUT) :: sa(:)
   LOGICAL, INTENT(in) :: gedit
   INTEGER, INTENT(in) :: w
   INTEGER i
-  IF (tosset%trimb == 'YES' .OR. w == 0) sa = ADJUSTL(sa)
-  IF (tosset%trimz == 'ALL' .OR. tosset%trimz == 'G' .AND. gedit) THEN
+  IF (tosset0%trimb == 'YES' .OR. w == 0) sa = ADJUSTL(sa)
+  IF (tosset0%trimz == 'ALL' .OR. tosset0%trimz == 'G' .AND. gedit) THEN
     DO i = 1, SIZE(sa) ! trim trailing zeros from fractional part
       CALL trim_s_real(sa(i), gedit, w)
     END DO
@@ -734,14 +739,14 @@ END SUBROUTINE trim_real
 
 PURE SUBROUTINE tostring_get(sa, st)
   ! Copy trimmed elements of sa (containing individual elements as strings) to the final
-  ! tostring result st, separated by tosset%sep strings.
+  ! tostring result st, separated by tosset0%sep strings.
   CHARACTER(*), INTENT(in) :: sa(:)
   CHARACTER(*), INTENT(out) :: st
   INTEGER :: i, k, n, sepl
-  sepl = tosset%seplen
+  sepl = tosset0%seplen
   k = 0
   DO i = 1, SIZE(sa)
-    IF (k > 0) st(k + 1:k + sepl) = tosset%sep(1:sepl)
+    IF (k > 0) st(k + 1:k + sepl) = tosset0%sep(1:sepl)
     IF (k > 0) k = k + sepl
     n = LEN_TRIM(sa(i))
     st(k + 1:k + n) = TRIM(sa(i))
@@ -754,10 +759,10 @@ PURE SUBROUTINE tostring_get_complex(sar, sgn, sai, st)
   CHARACTER(*), INTENT(in) :: sar(:), sai(:), sgn(*)
   CHARACTER(*), INTENT(out) :: st
   INTEGER :: i, k, n, sepl
-  sepl = tosset%seplen
+  sepl = tosset0%seplen
   k = 0
   DO i = 1, SIZE(sar)
-    IF (k > 0) st(k + 1:k + sepl) = tosset%sep(1:sepl)
+    IF (k > 0) st(k + 1:k + sepl) = tosset0%sep(1:sepl)
     IF (k > 0) k = k + sepl
     n = LEN_TRIM(sar(i))
     st(k + 1:k + n) = TRIM(sar(i))

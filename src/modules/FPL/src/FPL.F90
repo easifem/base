@@ -21,24 +21,34 @@
 #define ParameterList_t ParameterList_
 #define ParameterListIterator_t ParameterListIterator_
 
-module FPL
+MODULE FPL
 USE ParameterList
 USE WrapperFactoryListSingleton
+PRIVATE 
+PUBLIC :: ParameterList_t, ParameterListIterator_t
+PUBLIC :: FPL_Init
+PUBLIC :: FPL_Finalize
 
-public :: ParameterList_t, ParameterListIterator_t
+CONTAINS
 
-contains
+!----------------------------------------------------------------------------
+!                                                                 
+!----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2022-12-02
 ! summary:         Initialize FPL
 
-subroutine FPL_Init()
-  call TheWrapperFactoryList_Init()
-end subroutine FPL_Init
+SUBROUTINE FPL_Init()
+  CALL TheWrapperFactoryList_Init()
+END SUBROUTINE FPL_Init
 
-subroutine FPL_Finalize()
-  call TheWrapperFactoryList%Free()
-end subroutine FPL_Finalize
+!----------------------------------------------------------------------------
+!                                                                 
+!----------------------------------------------------------------------------
 
-end module FPL
+SUBROUTINE FPL_Finalize()
+  CALL TheWrapperFactoryList%Free()
+END SUBROUTINE FPL_Finalize
+
+END MODULE FPL

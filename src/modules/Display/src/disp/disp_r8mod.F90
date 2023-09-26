@@ -308,8 +308,8 @@ CONTAINS
   function tostring_s_dble(x) result(st)
     ! Scalar to string
     real(dble), intent(in) :: x
-    character(len_f_dble((/x/), tosset%rfmt)) :: st
-    st = tostring_f_dble((/x/), tosset%rfmt)
+    character(len_f_dble((/x/), tosset0%rfmt)) :: st
+    st = tostring_f_dble((/x/), tosset0%rfmt)
   end function tostring_s_dble
 
 !----------------------------------------------------------------------------
@@ -331,8 +331,8 @@ CONTAINS
   function tostring_dble(x) result(st)
     ! Vector to string
     real(dble), intent(in) :: x(:)
-    character(len_f_dble(x, tosset%rfmt)) :: st
-    st = tostring_f_dble(x, tosset%rfmt)
+    character(len_f_dble(x, tosset0%rfmt)) :: st
+    st = tostring_f_dble(x, tosset0%rfmt)
   end function tostring_dble
 
 !----------------------------------------------------------------------------
@@ -381,7 +381,7 @@ CONTAINS
     endif
     write(sa, fmt1) x
     call trim_real(sa, gedit, w)
-    wtot = sum(len_trim(sa)) + (size(x) - 1)*(tosset%seplen)
+    wtot = sum(len_trim(sa)) + (size(x) - 1)*(tosset0%seplen)
   end function len_f_dble
 
 !----------------------------------------------------------------------------
@@ -571,8 +571,8 @@ CONTAINS
 
   function tostring_s_cpld(x) result(st)
     complex(dble), intent(in)                   :: x
-    character(len_s_cpld(x, tosset%rfmt)) :: st
-    st = tostring_f_cpld((/x/), tosset%rfmt)
+    character(len_s_cpld(x, tosset0%rfmt)) :: st
+    st = tostring_f_cpld((/x/), tosset0%rfmt)
   end function tostring_s_cpld
 
 !----------------------------------------------------------------------------
@@ -592,8 +592,8 @@ CONTAINS
 
   function tostring_cpld(x) result(st)
     complex(dble), intent(in)               :: x(:)
-    character(len_f_cpld(x, tosset%rfmt)) :: st
-    st = tostring_f_cpld(x, tosset%rfmt)
+    character(len_f_cpld(x, tosset0%rfmt)) :: st
+    st = tostring_f_cpld(x, tosset0%rfmt)
   end function tostring_cpld
 
 !----------------------------------------------------------------------------
@@ -659,7 +659,7 @@ CONTAINS
     call readfmt(fmt, fmt1, w, d, gedit)
     if (w < 0) then; wtot = len(errormsg); return; endif
     wtot = len_f_dble(real(x), fmt) + len_f_dble(abs(aimag(x)), fmt) &
-      & + size(x)*4 - (size(x) - 1)*(tosset%seplen)
+      & + size(x)*4 - (size(x) - 1)*(tosset0%seplen)
     ! subtract seplen because it has been added twice in len_f_dble
   end function len_f_cpld
 

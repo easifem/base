@@ -13,25 +13,24 @@
 !
 ! You should have received a copy of the GNU General Public License
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
+!
 
-MODULE ElemshapeData_Method
-USE ElemshapeData_ConstructorMethods
-USE ElemshapeData_DGMethods
-USE ElemshapeData_DivergenceMethods
-USE ElemshapeData_GetMethods
-USE ElemshapeData_GradientMethods
-USE ElemshapeData_H1Methods
-USE ElemshapeData_HCurlMethods
-USE ElemshapeData_HDivMethods
-USE ElemshapeData_HRGNParamMethods
-USE ElemshapeData_HRQIParamMethods
-USE ElemshapeData_HminHmaxMethods
-USE ElemshapeData_IOMethods
-USE ElemshapeData_InterpolMethods
-USE ElemshapeData_LocalDivergenceMethods
-USE ElemshapeData_LocalGradientMethods
-USE ElemshapeData_ProjectionMethods
-USE ElemshapeData_SetMethods
-USE ElemshapeData_StabilizationParamMethods
-USE ElemshapeData_UnitNormalMethods
-END MODULE ElemshapeData_Method
+SUBMODULE(ElemshapeData_DGMethods) OrthogonalMethods
+USE BaseMethod
+IMPLICIT NONE
+CONTAINS
+
+!----------------------------------------------------------------------------
+!                                                                 Initiate
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE DG_Orthogonal1
+CALL Errormsg( &
+  & msg="[WORK IN PROGRESS] This method is currently not available",  &
+  & line=__LINE__,  &
+  & routine="DG_Orthogonal1()",  &
+  & unitno=stderr,  &
+  & file=__FILE__)
+END PROCEDURE DG_Orthogonal1
+
+END SUBMODULE OrthogonalMethods

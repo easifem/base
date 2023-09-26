@@ -19,10 +19,6 @@ SET(src_path "${CMAKE_CURRENT_LIST_DIR}/src/")
 TARGET_SOURCES(
   ${PROJECT_NAME} PRIVATE
   ${src_path}/ElemshapeData_ConstructorMethods@Methods.F90
-  ${src_path}/ElemshapeData_DGHermitMethods@Methods.F90
-  ${src_path}/ElemshapeData_DGHierarchyMethods@Methods.F90
-  ${src_path}/ElemshapeData_DGLagrangeMethods@Methods.F90
-  ${src_path}/ElemshapeData_DGSerendipityMethods@Methods.F90
   ${src_path}/ElemshapeData_DivergenceMethods@Methods.F90
   ${src_path}/ElemshapeData_GetMethods@Methods.F90
   ${src_path}/ElemshapeData_GradientMethods@Methods.F90
@@ -32,6 +28,12 @@ TARGET_SOURCES(
   ${src_path}/H1/ElemshapeData_H1Methods@LagrangeMethods.F90
   ${src_path}/H1/ElemshapeData_H1Methods@OrthogonalMethods.F90
   ${src_path}/H1/ElemshapeData_H1Methods@SerendipityMethods.F90
+
+  ${src_path}/DG/ElemshapeData_DGMethods@HermitMethods.F90
+  ${src_path}/DG/ElemshapeData_DGMethods@HierarchyMethods.F90
+  ${src_path}/DG/ElemshapeData_DGMethods@LagrangeMethods.F90
+  ${src_path}/DG/ElemshapeData_DGMethods@OrthogonalMethods.F90
+  ${src_path}/DG/ElemshapeData_DGMethods@SerendipityMethods.F90
 
   ${src_path}/HDiv/ElemshapeData_HDivMethods@HermitMethods.F90
   ${src_path}/HDiv/ElemshapeData_HDivMethods@HierarchyMethods.F90

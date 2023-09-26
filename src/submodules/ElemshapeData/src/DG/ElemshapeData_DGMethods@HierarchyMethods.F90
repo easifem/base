@@ -15,7 +15,8 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-SUBMODULE(ElemShapeData_DGHermitMethods) Methods
+SUBMODULE(ElemShapeData_DGMethods) HierarchyMethods
+USE BaseMethod
 IMPLICIT NONE
 CONTAINS
 
@@ -23,7 +24,13 @@ CONTAINS
 !                                                                 Initiate
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE DG_Hermit
-END PROCEDURE DG_Hermit
+MODULE PROCEDURE DG_Hierarchy1
+CALL Errormsg( &
+  & msg="[WORK IN PROGRESS] This method is currently not available",  &
+  & line=__LINE__,  &
+  & routine="DG_Hierarchy1()",  &
+  & unitno=stderr,  &
+  & file=__FILE__)
+END PROCEDURE DG_Hierarchy1
 
-END SUBMODULE Methods
+END SUBMODULE HierarchyMethods

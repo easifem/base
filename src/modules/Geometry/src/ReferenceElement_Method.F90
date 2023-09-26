@@ -21,10 +21,13 @@
 
 MODULE ReferenceElement_Method
 USE BaseType
+USE String_Class, ONLY: String
 USE GlobalData
 IMPLICIT NONE
 PRIVATE
 PUBLIC :: Display
+PUBLIC :: MdEncode
+PUBLIC :: ReactEncode
 PUBLIC :: ReferenceTopology
 PUBLIC :: DEALLOCATE
 PUBLIC :: OPERATOR(.NNE.)
@@ -131,6 +134,36 @@ END INTERFACE Display
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 20 May 2022
+! summary: Markdown encoding of reference element
+
+INTERFACE MdEncode
+  MODULE FUNCTION refelem_MdEncode(obj) RESULT(ans)
+    CLASS(ReferenceElement_), INTENT(IN) :: obj
+    TYPE(String) :: ans
+  END FUNCTION refelem_MdEncode
+END INTERFACE MdEncode
+
+!----------------------------------------------------------------------------
+!                                                         Display@IOMethods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 20 May 2022
+! summary: Returns react element for reference element
+
+INTERFACE ReactEncode
+  MODULE FUNCTION refelem_ReactEncode(obj) RESULT(ans)
+    CLASS(ReferenceElement_), INTENT(IN) :: obj
+    TYPE(String) :: ans
+  END FUNCTION refelem_ReactEncode
+END INTERFACE ReactEncode
+
+!----------------------------------------------------------------------------
+!                                                         Display@IOMethods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 20 May 2022
 ! summary: Display reference topology
 
 INTERFACE Display
@@ -140,6 +173,21 @@ INTERFACE Display
     INTEGER(I4B), INTENT(IN), OPTIONAL :: unitno
   END SUBROUTINE reftopo_Display
 END INTERFACE Display
+
+!----------------------------------------------------------------------------
+!                                                         Display@IOMethods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 20 May 2022
+! summary: Display reference topology
+
+INTERFACE MdEncode
+  MODULE FUNCTION reftopo_MdEncode(obj) RESULT(ans)
+    CLASS(ReferenceTopology_), INTENT(IN) :: obj
+    TYPE(String) :: ans
+  END FUNCTION reftopo_MdEncode
+END INTERFACE MdEncode
 
 !----------------------------------------------------------------------------
 !                                     ReferenceTopology@ConstructorMethods

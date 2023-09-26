@@ -1,7 +1,7 @@
 ! This program is a part of EASIFEM library
 ! Copyright (C) 2020-2021  Vikas Sharma, Ph.D
 !
-! This program is free software: you can redistribute it and/or modify
+! This programris free software: you can redistribute it and/or modify
 ! it under the terms of the GNU General Public License as published by
 ! the Free Software Foundation, either version 3 of the License, or
 ! (at your option) any later version.
@@ -21,15 +21,43 @@ IMPLICIT NONE
 CONTAINS
 
 !----------------------------------------------------------------------------
+!                                                     EdgeConnectivity_Pyramid
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE EdgeConnectivity_Pyramid
+ans(:, 1) = [1, 2]
+ans(:, 2) = [1, 4]
+ans(:, 3) = [1, 5]
+ans(:, 4) = [2, 3]
+ans(:, 5) = [2, 5]
+ans(:, 6) = [3, 4]
+ans(:, 7) = [3, 5]
+ans(:, 8) = [4, 5]
+END PROCEDURE EdgeConnectivity_Pyramid
+
+!----------------------------------------------------------------------------
+!                                                 FacetConnectivity_Pyramid
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE FacetConnectivity_Pyramid
+ans(:, 1) = [4, Quadrangle4, 1, 4, 3, 2]
+ans(:, 2) = [3, Triangle3, 2, 3, 5, 0]
+ans(:, 3) = [3, Triangle3, 3, 4, 5, 0]
+ans(:, 4) = [3, Triangle3, 1, 5, 4, 0]
+ans(:, 5) = [3, Triangle3, 1, 2, 5, 0]
+END PROCEDURE FacetConnectivity_Pyramid
+
+!----------------------------------------------------------------------------
 !                                                     RefElemDomain_Pyramid
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE RefElemDomain_Pyramid
+!FIX: Implement RefElemDomain
 CALL Errormsg(&
   & msg="[WORK IN PROGRESS] We are working on it", &
   & file=__FILE__, &
   & line=__LINE__,&
-  & routine="RefElemDomain_Prism()", &
+  & routine="RefElemDomain_Pyramid()", &
   & unitno=stderr)
 END PROCEDURE RefElemDomain_Pyramid
 
@@ -38,6 +66,7 @@ END PROCEDURE RefElemDomain_Pyramid
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE RefCoord_Pyramid
+!FIX: Implement RefCoord
 ans = 0.0_DFP
 END PROCEDURE RefCoord_Pyramid
 
@@ -47,7 +76,7 @@ END PROCEDURE RefCoord_Pyramid
 
 MODULE PROCEDURE LagrangeDegree_Pyramid
 
-! TODO #165 Implement LagrangeDegree_Pyramid
+! ISSUE: #165 Implement LagrangeDegree_Pyramid
 
 END PROCEDURE LagrangeDegree_Pyramid
 
@@ -72,14 +101,13 @@ END PROCEDURE LagrangeInDOF_Pyramid
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE EquidistancePoint_Pyramid
-
+!FIX: Implement EquidistancePoint_Pyramid
+!ISSUE: #161 Implement EquidistancePoint_Pyramid routine
 ! nodecoord(:, 1) = [-1, -1, 0]
 ! nodecoord(:, 2) = [1, -1, 0]
 ! nodecoord(:, 3) = [1, 1, 0]
 ! nodecoord(:, 4) = [-1, 1, 0]
 ! nodecoord(:, 5) = [0, 0, 1]
-! TODO #161 Implement EquidistancePoint_Pyramid routine
-
 END PROCEDURE EquidistancePoint_Pyramid
 
 !----------------------------------------------------------------------------
@@ -87,8 +115,8 @@ END PROCEDURE EquidistancePoint_Pyramid
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE EquidistanceInPoint_Pyramid
-
-! TODO #161 Implement EquidistanceInPoint_Pyramid routine
+! FIX: Implement EquidistanceInPoint_Pyramid
+! ISSUE: #161 Implement EquidistanceInPoint_Pyramid routine
 
 END PROCEDURE EquidistanceInPoint_Pyramid
 
@@ -97,6 +125,7 @@ END PROCEDURE EquidistanceInPoint_Pyramid
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE InterpolationPoint_Pyramid
+! FIX: Implement EquidistancePoint_Pyramid
 SELECT CASE (ipType)
 CASE (Equidistance)
   nodecoord = EquidistancePoint_Pyramid(xij=xij, order=order)
@@ -115,12 +144,10 @@ MODULE PROCEDURE LagrangeCoeff_Pyramid1
 REAL(DFP), DIMENSION(SIZE(xij, 2), SIZE(xij, 2)) :: V
 INTEGER(I4B), DIMENSION(SIZE(xij, 2)) :: ipiv
 INTEGER(I4B) :: info
-!!
 ipiv = 0_I4B; ans = 0.0_DFP; ans(i) = 1.0_DFP
 V = LagrangeVandermonde(order=order, xij=xij, elemType=Pyramid)
 CALL GetLU(A=V, IPIV=ipiv, info=info)
 CALL LUSolve(A=V, B=ans, IPIV=ipiv, info=info)
-!!
 END PROCEDURE LagrangeCoeff_Pyramid1
 
 !----------------------------------------------------------------------------
@@ -128,11 +155,9 @@ END PROCEDURE LagrangeCoeff_Pyramid1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE LagrangeCoeff_Pyramid2
-!!
 REAL(DFP), DIMENSION(SIZE(v, 1), SIZE(v, 2)) :: vtemp
 INTEGER(I4B), DIMENSION(SIZE(v, 1)) :: ipiv
 INTEGER(I4B) :: info
-!!
 vtemp = v; ans = 0.0_DFP; ans(i) = 1.0_DFP; ipiv = 0_I4B
 CALL GetLU(A=vtemp, IPIV=ipiv, info=info)
 CALL LUSolve(A=vtemp, B=ans, IPIV=ipiv, info=info)
@@ -158,10 +183,11 @@ CALL GetInvMat(ans)
 END PROCEDURE LagrangeCoeff_Pyramid4
 
 !----------------------------------------------------------------------------
-!                                                   QuadraturePoint_Prism
+!                                                   QuadraturePoint_Pyramid
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE QuadraturePoint_Pyramid1
+!FIX: QuadraturePoint_Pyramid1
 CALL ErrorMsg(&
 & msg="Work in progress",  &
 & unitno=stdout,  &
@@ -175,6 +201,7 @@ END PROCEDURE QuadraturePoint_Pyramid1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE QuadraturePoint_Pyramid2
+!FIX: QuadraturePoint_Pyramid2
 CALL ErrorMsg(&
 & msg="Work in progress",  &
 & unitno=stdout,  &
@@ -188,6 +215,7 @@ END PROCEDURE QuadraturePoint_Pyramid2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE TensorQuadraturePoint_Pyramid1
+!FIX: TensorQuadraturePoint_Pyramid1
 CALL ErrorMsg(&
 & msg="Work in progress",  &
 & unitno=stdout,  &
@@ -201,6 +229,7 @@ END PROCEDURE TensorQuadraturePoint_Pyramid1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE TensorQuadraturePoint_Pyramid2
+!FIX: TensorQuadraturePoint_Pyramid2
 CALL ErrorMsg(&
 & msg="Work in progress",  &
 & unitno=stdout,  &
@@ -214,6 +243,7 @@ END PROCEDURE TensorQuadraturePoint_Pyramid2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE LagrangeEvalAll_Pyramid1
+!FIX: LagrangeEvalAll_Pyramid1
 CALL ErrorMsg(&
 & msg="Work in progress",  &
 & unitno=stdout,  &
@@ -227,6 +257,7 @@ END PROCEDURE LagrangeEvalAll_Pyramid1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE LagrangeEvalAll_Pyramid2
+!FIX: LagrangeEvalAll_Pyramid2
 CALL ErrorMsg(&
 & msg="Work in progress",  &
 & unitno=stdout,  &
@@ -236,10 +267,11 @@ CALL ErrorMsg(&
 END PROCEDURE LagrangeEvalAll_Pyramid2
 
 !----------------------------------------------------------------------------
-!                                             LagrangeGradientEvalAll_Prism
+!                                          LagrangeGradientEvalAll_Pyramid
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE LagrangeGradientEvalAll_Pyramid1
+!FIX: LagrangeGradientEvalAll_Pyramid1
 CALL ErrorMsg(&
 & msg="Work in progress",  &
 & unitno=stdout,  &

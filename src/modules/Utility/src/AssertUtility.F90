@@ -16,7 +16,7 @@
 !
 
 MODULE AssertUtility
-USE GlobalData
+USE GlobalData, ONLY: I4B, DFP
 IMPLICIT NONE
 PRIVATE
 PUBLIC :: ASSERT
@@ -26,103 +26,87 @@ PUBLIC :: ASSERT_EQ
 !                                                             Assert@Assert
 !----------------------------------------------------------------------------
 
-INTERFACE
+INTERFACE ASSERT_EQ
   MODULE FUNCTION assert_eq2(n1, n2, string)
     CHARACTER(*), INTENT(IN) :: string
     INTEGER(I4B), INTENT(IN) :: n1, n2
     INTEGER(I4B) :: assert_eq2
   END FUNCTION
-END INTERFACE
+END INTERFACE ASSERT_EQ
 
 !----------------------------------------------------------------------------
 !                                                             Assert@Assert
 !----------------------------------------------------------------------------
 
-INTERFACE
+INTERFACE ASSERT_EQ
   MODULE FUNCTION assert_eq3(n1, n2, n3, string)
     CHARACTER(*), INTENT(IN) :: string
     INTEGER(I4B), INTENT(IN) :: n1, n2, n3
     INTEGER(I4B) :: assert_eq3
   END FUNCTION
-END INTERFACE
+END INTERFACE ASSERT_EQ
 
 !----------------------------------------------------------------------------
 !                                                             Assert@Assert
 !----------------------------------------------------------------------------
 
-INTERFACE
+INTERFACE ASSERT_EQ
   MODULE FUNCTION assert_eq4(n1, n2, n3, n4, string)
     CHARACTER(*), INTENT(IN) :: string
     INTEGER(I4B), INTENT(IN) :: n1, n2, n3, n4
     INTEGER(I4B) :: assert_eq4
   END FUNCTION
-END INTERFACE
+END INTERFACE ASSERT_EQ
 
 !----------------------------------------------------------------------------
 !                                                             Assert@Assert
 !----------------------------------------------------------------------------
 
-INTERFACE
+INTERFACE ASSERT_EQ
   MODULE FUNCTION assert_eqn(nn, string)
     CHARACTER(*), INTENT(IN) :: string
     INTEGER(I4B), DIMENSION(:), INTENT(IN) :: nn
     INTEGER(I4B) :: assert_eqn
   END FUNCTION
-END INTERFACE
-
-INTERFACE assert_eq
-  MODULE PROCEDURE assert_eqn, assert_eq2, assert_eq3, assert_eq4
-END INTERFACE
+END INTERFACE ASSERT_EQ
 
 !----------------------------------------------------------------------------
 !                                                              Assert@Assert
 !----------------------------------------------------------------------------
 
-INTERFACE
+INTERFACE ASSERT
   MODULE SUBROUTINE assert_shape_2(Mat, s, msg, file, line, routine)
     REAL(DFP), INTENT(IN) :: Mat(:, :)
     INTEGER(I4B), INTENT(IN) :: s(2)
     INTEGER(I4B), INTENT(IN) :: line
     CHARACTER(*), INTENT(IN) :: msg, file, routine
   END SUBROUTINE
-END INTERFACE
-
-INTERFACE ASSERT
-  MODULE PROCEDURE assert_shape_2
 END INTERFACE ASSERT
 
 !----------------------------------------------------------------------------
 !                                                             Assert@Assert
 !----------------------------------------------------------------------------
 
-INTERFACE
+INTERFACE ASSERT
   MODULE SUBROUTINE assert_shape_3(Mat, s, msg, file, line, routine)
     REAL(DFP), INTENT(IN) :: Mat(:, :, :)
     INTEGER(I4B), INTENT(IN) :: s(3)
     INTEGER(I4B), INTENT(IN) :: line
     CHARACTER(*), INTENT(IN) :: msg, file, routine
   END SUBROUTINE
-END INTERFACE
-
-INTERFACE ASSERT
-  MODULE PROCEDURE assert_shape_3
 END INTERFACE ASSERT
 
 !----------------------------------------------------------------------------
 !                                                             Assert@Assert
 !----------------------------------------------------------------------------
 
-INTERFACE
+INTERFACE ASSERT
   MODULE SUBROUTINE assert_shape_4(Mat, s, msg, file, line, routine)
     REAL(DFP), INTENT(IN) :: Mat(:, :, :, :)
     INTEGER(I4B), INTENT(IN) :: s(4)
     INTEGER(I4B), INTENT(IN) :: line
     CHARACTER(*), INTENT(IN) :: msg, file, routine
   END SUBROUTINE
-END INTERFACE
-
-INTERFACE ASSERT
-  MODULE PROCEDURE assert_shape_4
 END INTERFACE ASSERT
 
 !----------------------------------------------------------------------------

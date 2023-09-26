@@ -490,12 +490,20 @@ PUBLIC :: VoigtRank2TensorPointer
 !                                                                  Tensor_
 !----------------------------------------------------------------------------
 
+!> author: Vikas Sharma, Ph. D.
+! date: 2023-09-05
+! summary:  General type for Tensor
+
 TYPE :: Tensor_
 END TYPE Tensor_
 
 !----------------------------------------------------------------------------
 !                                                              Rank2Tensor_
 !----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2023-09-05 
+! summary:  Rank 2 tensor
 
 TYPE, EXTENDS(Tensor_) :: Rank2Tensor_
   REAL(DFP) :: T(3, 3) = 0.0_DFP
@@ -516,6 +524,11 @@ PUBLIC :: Rank2TensorPointer_
 !----------------------------------------------------------------------------
 !                                                       DeformationGradient_
 !----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2023-09-05 
+! summary:  Deformation gradient tensor
+
 TYPE, EXTENDS(Rank2Tensor_) :: DeformationGradient_
 END TYPE DeformationGradient_
 
@@ -544,7 +557,7 @@ PUBLIC :: DeformationGradientPointer_
 !
 ! $$b = F F^{T}=V^2$$
 !
-!{!pages/LeftCauchyGreen.md}
+!{!pages/docs-api/LeftCauchyGreen/LeftCauchyGreen_.md}
 
 TYPE, EXTENDS(Rank2Tensor_) :: LeftCauchyGreen_
 END TYPE LeftCauchyGreen_
@@ -715,7 +728,7 @@ TYPE :: ReferenceElement_
   TYPE(ReferenceTopology_), ALLOCATABLE :: topology(:)
     !! Topology information of 0D, 1, 2, 3D entities
   REAL(DFP), ALLOCATABLE :: xiJ(:, :)
-    !! Node coord 
+    !! Node coord
     !! Rows represents the spatial components
     !! Columns represents the node number
   PROCEDURE(highorder_refelem), POINTER, PASS(obj) ::  &
@@ -1236,6 +1249,20 @@ TYPE(OrthogonalInterpolation_), PARAMETER, PUBLIC :: &
 !                                                          BaseContinuity_
 !----------------------------------------------------------------------------
 
+!> author: Vikas Sharma, Ph. D.
+! date:  2023-09-03
+! summary:  Continuity of basis functions
+!
+!# Introduction
+!
+! `BaseContinuity_` denotes the Continuity or conformity of basis functions.
+! Following values are allowed:
+!
+! - H1_
+! - HDIV_
+! - HCURL_
+! - DG_
+
 TYPE :: BaseContinuity_
 END TYPE BaseContinuity_
 
@@ -1410,7 +1437,7 @@ PUBLIC :: STShapeDataPointer_
 ! date: 4 March 2021
 ! summary: Datatype for data defined at all gauss points of an elements
 !
-!{!pages/ElemshapeData_.md!}
+!{!pages/docs-api/ElemShapeData/ElemshapeData_.md!}
 !
 TYPE :: ElemShapeData_
   REAL(DFP), ALLOCATABLE :: N(:, :)
