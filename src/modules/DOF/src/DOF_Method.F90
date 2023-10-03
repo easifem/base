@@ -19,7 +19,7 @@
 ! date:         23 Feb 2021
 ! summary:         This module contains methods of [[DOF_]] object
 !
-!{!pages/DOF_.md!}
+!{!pages/docs-api/DOF/DOF_.md!}
 
 MODULE DOF_Method
 USE DOF_ConstructorMethods
