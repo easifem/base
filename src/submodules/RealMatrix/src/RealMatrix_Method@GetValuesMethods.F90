@@ -11,11 +11,11 @@
 ! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 ! GNU General Public License for more details.
 !
-! You should have received a copy of the GNU General Public License
+! You should have received a Copy of the GNU General Public License
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-SUBMODULE(RealMatrix_Method) GetValuesMethods
+SUBMODULE(RealMatrix_Method) GetvaluesMethods
 USE BaseMethod
 IMPLICIT NONE
 CONTAINS
@@ -24,138 +24,151 @@ CONTAINS
 !                                                                Get
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE realmat_get1
-  Ans = obj%Val
-END PROCEDURE realmat_get1
+MODULE PROCEDURE realmat_Get1
+IF (ALLOCATED(obj%val)) THEN
+  CALL reallocate(ans, SIZE(obj, 1), SIZE(obj, 2))
+  ans = obj%val
+ELSE
+  CALL reallocate(ans, 0, 0)
+END IF
+END PROCEDURE realmat_Get1
 
 !----------------------------------------------------------------------------
 !                                                                Get
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE realmat_get2
-  Ans = obj%Val( RIndx, CIndx )
-END PROCEDURE realmat_get2
+MODULE PROCEDURE realmat_Get1b
+ans = realmat_get1(obj=obj, datatype=1.0_DFP)
+END PROCEDURE realmat_Get1b
 
 !----------------------------------------------------------------------------
 !                                                                Get
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE realmat_get3
+MODULE PROCEDURE realmat_Get2
+ans = obj%val(RIndx, CIndx)
+END PROCEDURE realmat_Get2
+
+!----------------------------------------------------------------------------
+!                                                                Get
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE realmat_Get3
 #define Indx iStart:iEnd:Stride
-  Ans = obj%Val( Indx, Indx )
+ans = obj%val(Indx, Indx)
 #undef Indx
-END PROCEDURE realmat_get3
+END PROCEDURE realmat_Get3
 
 !----------------------------------------------------------------------------
 !                                                                       Get
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE realmat_get4
-  Ans%Val = obj%Val
-  CALL SetTotalDimension( Ans, 2_I4B )
-END PROCEDURE realmat_get4
+MODULE PROCEDURE realmat_Get4
+ans%val = obj%val
+CALL SetTotalDimension(ans, 2_I4B)
+END PROCEDURE realmat_Get4
 
 !----------------------------------------------------------------------------
 !                                                                        Get
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE realmat_get5
-  Ans%Val = obj%Val( RIndx, CIndx )
-  CALL SetTotalDimension( Ans, 2_I4B )
-END PROCEDURE realmat_get5
+MODULE PROCEDURE realmat_Get5
+ans%val = obj%val(RIndx, CIndx)
+CALL SetTotalDimension(ans, 2_I4B)
+END PROCEDURE realmat_Get5
 
 !----------------------------------------------------------------------------
 !                                                                        Get
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE realmat_get6
+MODULE PROCEDURE realmat_Get6
 #define Indx iStart:iEnd:Stride
-  Ans%Val= obj%Val( Indx, Indx )
+ans%val = obj%val(Indx, Indx)
 #undef Indx
-  CALL SetTotalDimension( Ans, 2_I4B )
-END PROCEDURE realmat_get6
+CALL SetTotalDimension(ans, 2_I4B)
+END PROCEDURE realmat_Get6
 
 !----------------------------------------------------------------------------
 !                                                                      Get
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE realmat_get7
-  INTEGER( I4B ) :: s( 2 ), i, j, r1, r2, c1, c2
-  INTEGER( I4B ), ALLOCATABLE :: rc( :, : )
+MODULE PROCEDURE realmat_Get7
+INTEGER(I4B) :: s(2), i, j, r1, r2, c1, c2
+INTEGER(I4B), ALLOCATABLE :: rc(:, :)
   !!
   !! main
   !!
-  s = SHAPE( obj )
-  ALLOCATE( rc( 0 : 2, 0 : ( s( 1 ) * s( 2 ) ) ) )
-  rc = 0
+s = SHAPE(obj)
+ALLOCATE (rc(0:2, 0:(s(1) * s(2))))
+rc = 0
   !!
-  DO j = 1, s( 2 )
-    DO i = 1, s( 1 )
-      rc( 1:2, i+( j-1 )*s( 1 ) ) = SHAPE( obj( i, j ) )
-    END DO
+DO j = 1, s(2)
+  DO i = 1, s(1)
+    rc(1:2, i + (j - 1) * s(1)) = SHAPE(obj(i, j))
   END DO
+END DO
   !!
-  i = MAXVAL( SUM( RESHAPE( rc( 1, 1: ), SHAPE( obj ) ), 1 ) )
-  j = MAXVAL( SUM( RESHAPE( rc( 2, 1: ), SHAPE( obj ) ), 2 ) )
+i = MAXVAL(SUM(RESHAPE(rc(1, 1:), SHAPE(obj)), 1))
+j = MAXVAL(SUM(RESHAPE(rc(2, 1:), SHAPE(obj)), 2))
   !!
-  ALLOCATE( Ans( i, j ) ); Ans = 0.0_DFP
+ALLOCATE (ans(i, j)); ans = 0.0_DFP
   !!
-  c1 = 0; c2 = 0
+c1 = 0; c2 = 0
   !!
-  DO j = 1, s( 2 )
-    c1 = 1 + c2
-    c2 = c1 + rc( 2, j ) - 1
-    r1 = 0; r2 = 0
-    DO i = 1, s( 1 )
-      r1 = 1 + r2
-      r2 = r1 + rc( 1, i ) - 1
-      Ans( r1:r2, c1:c2 ) = obj( i, j )%Val
-    END DO
+DO j = 1, s(2)
+  c1 = 1 + c2
+  c2 = c1 + rc(2, j) - 1
+  r1 = 0; r2 = 0
+  DO i = 1, s(1)
+    r1 = 1 + r2
+    r2 = r1 + rc(1, i) - 1
+    ans(r1:r2, c1:c2) = obj(i, j)%val
   END DO
+END DO
   !!
-END PROCEDURE realmat_get7
+END PROCEDURE realmat_Get7
 
 !----------------------------------------------------------------------------
 !                                                                        Get
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE realmat_get8
-  Ans%Val = Get( obj, TypeDFP )
-  CALL setTotalDimension( Ans, 2_I4B )
-END PROCEDURE realmat_get8
+MODULE PROCEDURE realmat_Get8
+ans%val = Get(obj, TypeDFP)
+CALL SetTotalDimension(ans, 2_I4B)
+END PROCEDURE realmat_Get8
 
 !----------------------------------------------------------------------------
 !                                                                       Copy
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE realmat_copy1
-  To = From%Val
-END PROCEDURE realmat_copy1
+MODULE PROCEDURE realmat_Copy1
+To = from%val
+END PROCEDURE realmat_Copy1
 
 !----------------------------------------------------------------------------
 !                                                                       Copy
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE realmat_copy2
-  To%Val = From%Val
-  CALL SetTotalDimension( To, 2_I4B )
-END PROCEDURE realmat_copy2
+MODULE PROCEDURE realmat_Copy2
+to%val = from%val
+CALL SetTotalDimension(To, 2_I4B)
+END PROCEDURE realmat_Copy2
 
 !----------------------------------------------------------------------------
 !                                                                       Copy
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE realmat_copy3
-  To%Val = From
-  CALL SetTotalDimension( To, 2_I4B )
-END PROCEDURE realmat_copy3
+MODULE PROCEDURE realmat_Copy3
+to%val = from
+CALL SetTotalDimension(To, 2_I4B)
+END PROCEDURE realmat_Copy3
 
 !----------------------------------------------------------------------------
 !                                                               ArrayPointer
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE realmat_getPointer
-  Ans => obj%Val
-END PROCEDURE realmat_getPointer
+MODULE PROCEDURE realmat_GetPointer
+ans => obj%val
+END PROCEDURE realmat_GetPointer
 
-END SUBMODULE GetValuesMethods
+END SUBMODULE GetvaluesMethods
