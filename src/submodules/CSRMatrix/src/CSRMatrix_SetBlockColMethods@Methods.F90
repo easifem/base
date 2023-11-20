@@ -53,7 +53,7 @@ idofobj => GetDOFPointer(obj, 1)
   !!
   !! check
   !!
-IF (ivar .GT. (.tNames.dofobj)) THEN
+IF (ivar .GT. (.tNames.idofobj)) THEN
   CALL ErrorMSG(  &
     & Msg="ivar is out of Bound", &
     & File="CSRMatrix_Method@SetBlockColMethods.F90", &

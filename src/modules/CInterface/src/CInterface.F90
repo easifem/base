@@ -65,6 +65,88 @@ INTEGER(I4B), PUBLIC, PARAMETER :: C_UNSIGNED_SHORT_INT = C_SHORT
 INTEGER(I4B), PUBLIC, PARAMETER :: C_UNSIGNED_LONG_INT = C_LONG
 INTEGER(I4B), PUBLIC, PARAMETER :: C_UNSIGNED_LONG_LONG_INT = C_LONG_LONG
 
+PUBLIC :: C_MEMCPY
+PUBLIC :: C_memmove
+PUBLIC :: C_memset
+PUBLIC :: C_memcmp
+PUBLIC :: C_memchr
+PUBLIC :: C_strcpy
+PUBLIC :: C_strncpy
+PUBLIC :: C_strcat
+PUBLIC :: C_strncat
+PUBLIC :: C_strcmp
+PUBLIC :: C_strncmp
+PUBLIC :: C_strlen
+PUBLIC :: C_calloc
+PUBLIC :: C_malloc
+PUBLIC :: C_free
+PUBLIC :: ASSIGNMENT(=)
+PUBLIC :: C_ASSOCIATED_PURE
+PUBLIC :: C_F_STRING
+PUBLIC :: FString
+PUBLIC :: F_C_STRING
+PUBLIC :: C_STRLEN_SAFE
+PUBLIC :: F_C_STRING_DUP
+PUBLIC :: C_STRING_VALUE
+PUBLIC :: C_STRING_ALLOC
+PUBLIC :: C_STRING_FREE
+PUBLIC :: C_PTR_TO_INT_VEC
+PUBLIC :: C_PTR_TO_Real_VEC
+PUBLIC :: C2Fortran
+PUBLIC :: optval_c_int
+PUBLIC :: optval_c_size_t
+PUBLIC :: optval_c_double
+PUBLIC :: optval_c_bool
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE C_F_STRING
+  MODULE PROCEDURE F_string_assign_C_string
+  MODULE PROCEDURE C_F_STRING_CHARS
+END INTERFACE C_F_STRING
+
+INTERFACE ASSIGNMENT(=)
+  MODULE PROCEDURE F_string_assign_C_string
+END INTERFACE ASSIGNMENT(=)
+
+INTERFACE FString
+  MODULE PROCEDURE Fstring1
+END INTERFACE FString
+
+INTERFACE F_C_STRING
+  MODULE PROCEDURE F_C_STRING_CHARS, F_C_STRING_PTR
+END INTERFACE F_C_STRING
+
+INTERFACE C_PTR_TO_INT_VEC
+  MODULE PROCEDURE C_PTR_TO_Int8_VEC, C_PTR_TO_Int16_VEC, &
+    & C_PTR_TO_Int32_VEC, C_PTR_TO_Int64_VEC
+END INTERFACE C_PTR_TO_INT_VEC
+
+INTERFACE C_PTR_TO_Real_VEC
+  MODULE PROCEDURE C_PTR_TO_Real32_VEC, C_PTR_TO_Real64_VEC
+END INTERFACE C_PTR_TO_Real_VEC
+
+INTERFACE C2Fortran
+  MODULE PROCEDURE C_PTR_TO_Int8_VEC, C_PTR_TO_Int16_VEC, &
+    & C_PTR_TO_Int32_VEC, C_PTR_TO_Int64_VEC, C_PTR_TO_Real32_VEC,  &
+    & C_PTR_TO_Real64_VEC, F_string_assign_C_string,  &
+    & C_F_STRING_CHARS
+END INTERFACE C2Fortran
+
+INTERFACE optval_c_int
+  MODULE PROCEDURE optval_c_int_1
+END INTERFACE optval_c_int
+
+INTERFACE optval_c_size_t
+  MODULE PROCEDURE optval_c_size_t_1, optval_c_size_t_2
+END INTERFACE optval_c_size_t
+
+INTERFACE optval_c_double
+  MODULE PROCEDURE optval_c_double_1, optval_c_double_2
+END INTERFACE optval_c_double
+
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
@@ -95,8 +177,6 @@ INTERFACE
   END FUNCTION C_MEMCPY
 END INTERFACE
 
-PUBLIC :: C_MEMCPY
-
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
@@ -109,7 +189,6 @@ PUBLIC :: C_MEMCPY
 !# Introduction
 ! Copy N bytes of SRC to DEST, guaranteeing correct behavior for
 ! overlapping strings.
-!
 !
 !### CInterface
 !
@@ -126,8 +205,6 @@ INTERFACE
     INTEGER(C_SIZE_T), VALUE, INTENT(IN) :: n
   END FUNCTION C_memmove
 END INTERFACE
-
-PUBLIC :: C_memmove
 
 !----------------------------------------------------------------------------
 !
@@ -156,8 +233,6 @@ INTERFACE
   END FUNCTION C_memset
 END INTERFACE
 
-PUBLIC :: C_memset
-
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
@@ -184,8 +259,6 @@ INTERFACE
     INTEGER(C_SIZE_T), VALUE, INTENT(IN) :: n
   END FUNCTION C_memcmp
 END INTERFACE
-
-PUBLIC :: C_memcmp
 
 !----------------------------------------------------------------------------
 !
@@ -214,8 +287,6 @@ INTERFACE
   END FUNCTION C_memchr
 END INTERFACE
 
-PUBLIC :: C_memchr
-
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
@@ -241,8 +312,6 @@ INTERFACE
     TYPE(C_CHAR_PTR), VALUE, INTENT(IN) :: src
   END FUNCTION C_strcpy
 END INTERFACE
-
-PUBLIC :: C_strcpy
 
 !----------------------------------------------------------------------------
 !
@@ -272,8 +341,6 @@ INTERFACE
   END FUNCTION C_strncpy
 END INTERFACE
 
-PUBLIC :: C_strncpy
-
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
@@ -301,8 +368,6 @@ INTERFACE
     TYPE(C_CHAR_PTR), VALUE, INTENT(IN) :: src
   END FUNCTION C_strcat
 END INTERFACE
-
-PUBLIC :: C_strcat
 
 !----------------------------------------------------------------------------
 !
@@ -332,8 +397,6 @@ INTERFACE
   END FUNCTION C_strncat
 END INTERFACE
 
-PUBLIC :: C_strncat
-
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
@@ -359,8 +422,6 @@ INTERFACE
     TYPE(C_CHAR_PTR), VALUE, INTENT(IN) :: s2
   END FUNCTION C_strcmp
 END INTERFACE
-
-PUBLIC :: C_strcmp
 
 !----------------------------------------------------------------------------
 !
@@ -389,8 +450,6 @@ INTERFACE
   END FUNCTION C_strncmp
 END INTERFACE
 
-PUBLIC :: C_strncmp
-
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
@@ -416,8 +475,6 @@ INTERFACE
   END FUNCTION C_strlen
 END INTERFACE
 
-PUBLIC :: C_strlen
-
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
@@ -442,8 +499,6 @@ INTERFACE
   END FUNCTION C_calloc
 END INTERFACE
 
-PUBLIC :: C_calloc
-
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
@@ -465,8 +520,6 @@ INTERFACE
   END FUNCTION C_malloc
 END INTERFACE
 
-PUBLIC :: C_malloc
-
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
@@ -487,8 +540,6 @@ INTERFACE
     TYPE(C_void_ptr), VALUE, INTENT(IN) :: ptr
   END SUBROUTINE C_free
 END INTERFACE
-
-PUBLIC :: C_free
 
 !----------------------------------------------------------------------------
 !
@@ -516,131 +567,6 @@ END INTERFACE
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
-
-INTERFACE ASSIGNMENT(=)
-  MODULE PROCEDURE F_string_assign_C_string
-END INTERFACE ASSIGNMENT(=)
-
-PUBLIC :: ASSIGNMENT(=)
-PUBLIC :: C_ASSOCIATED_PURE
-
-!----------------------------------------------------------------------------
-!
-!----------------------------------------------------------------------------
-
-INTERFACE C_F_STRING
-  MODULE PROCEDURE F_string_assign_C_string
-  MODULE PROCEDURE C_F_STRING_CHARS
-END INTERFACE C_F_STRING
-
-PUBLIC :: C_F_STRING
-
-!----------------------------------------------------------------------------
-!
-!----------------------------------------------------------------------------
-
-INTERFACE FString
-  MODULE PROCEDURE Fstring1
-END INTERFACE FString
-
-PUBLIC :: Fstring
-
-!
-! Deprecated
-!
-! INTERFACE C2Fortran
-!   MODULE PROCEDURE F_string_assign_C_string, C_F_STRING_CHARS
-! END INTERFACE C2Fortran
-
-! PUBLIC :: C2Fortran
-
-!----------------------------------------------------------------------------
-!
-!----------------------------------------------------------------------------
-
-INTERFACE F_C_STRING
-  MODULE PROCEDURE F_C_STRING_CHARS, F_C_STRING_PTR
-END INTERFACE F_C_STRING
-
-PUBLIC F_C_STRING
-
-!
-! Deprecated
-!
-! INTERFACE FortranToC
-!   MODULE PROCEDURE F_C_STRING_CHARS, F_C_STRING_PTR
-! END INTERFACE FortranToC
-
-! PUBLIC :: FortranToC
-
-!----------------------------------------------------------------------------
-!
-!----------------------------------------------------------------------------
-
-PUBLIC :: C_STRLEN_SAFE, F_C_STRING_DUP, C_STRING_VALUE, C_STRING_ALLOC
-PUBLIC :: C_STRING_FREE
-
-!----------------------------------------------------------------------------
-!
-!----------------------------------------------------------------------------
-
-INTERFACE C_PTR_TO_INT_VEC
-  MODULE PROCEDURE C_PTR_TO_Int8_VEC, C_PTR_TO_Int16_VEC, &
-    & C_PTR_TO_Int32_VEC, C_PTR_TO_Int64_VEC
-END INTERFACE C_PTR_TO_INT_VEC
-
-PUBLIC :: C_PTR_TO_INT_VEC
-
-!----------------------------------------------------------------------------
-!
-!----------------------------------------------------------------------------
-
-INTERFACE C_PTR_TO_Real_VEC
-  MODULE PROCEDURE C_PTR_TO_Real32_VEC, C_PTR_TO_Real64_VEC
-END INTERFACE C_PTR_TO_Real_VEC
-
-PUBLIC :: C_PTR_TO_Real_VEC
-
-!----------------------------------------------------------------------------
-!
-!----------------------------------------------------------------------------
-
-INTERFACE C2Fortran
-  MODULE PROCEDURE C_PTR_TO_Int8_VEC, C_PTR_TO_Int16_VEC, &
-    & C_PTR_TO_Int32_VEC, C_PTR_TO_Int64_VEC
-  MODULE PROCEDURE C_PTR_TO_Real32_VEC, C_PTR_TO_Real64_VEC
-END INTERFACE C2Fortran
-
-!----------------------------------------------------------------------------
-!
-!----------------------------------------------------------------------------
-
-INTERFACE optval_c_int
-  MODULE PROCEDURE optval_c_int_1
-END INTERFACE optval_c_int
-
-PUBLIC :: optval_c_int
-
-!----------------------------------------------------------------------------
-!
-!----------------------------------------------------------------------------
-
-INTERFACE optval_c_size_t
-  MODULE PROCEDURE optval_c_size_t_1, optval_c_size_t_2
-END INTERFACE optval_c_size_t
-
-PUBLIC :: optval_c_size_t
-
-!----------------------------------------------------------------------------
-!
-!----------------------------------------------------------------------------
-
-INTERFACE optval_c_double
-  MODULE PROCEDURE optval_c_double_1, optval_c_double_2
-END INTERFACE optval_c_double
-
-PUBLIC :: optval_c_double
-PUBLIC :: optval_c_bool
 
 CONTAINS
 

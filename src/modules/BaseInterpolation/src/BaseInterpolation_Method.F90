@@ -275,10 +275,10 @@ FUNCTION BaseInterpolation_ToInteger2(name) RESULT(ans)
   CASE DEFAULT
     ans = -1_I4B
     CALL Errormsg(&
-      & msg="No case found for given quadratureType name", &
+      & msg="No case found for given baseInterpolation name", &
       & file=__FILE__, &
       & line=__LINE__,&
-      & routine="QuadraturePointNameToID()", &
+      & routine="BaseInterpolation_ToInteger2()", &
       & unitno=stderr)
     RETURN
   END SELECT

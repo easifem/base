@@ -120,7 +120,16 @@ END IF
   !!
   !! check
   !!
-IF (obj%dof%StorageFMT .EQ. NODES_FMT) THEN
+IF (obj%idof%StorageFMT .EQ. NODES_FMT) THEN
+  CALL ErrorMSG( &
+    & "This subroutine works for storage format FMT_DOF, only", &
+    & "CSRSparsity_Method@SetMethods.F90", &
+    & "csr_setSparsity3()", &
+    & __LINE__, stderr)
+  STOP
+END IF
+
+IF (obj%jdof%StorageFMT .EQ. NODES_FMT) THEN
   CALL ErrorMSG( &
     & "This subroutine works for storage format FMT_DOF, only", &
     & "CSRSparsity_Method@SetMethods.F90", &

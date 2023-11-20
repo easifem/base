@@ -25,8 +25,8 @@ CONTAINS
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE get_shape
-  IF( ALLOCATED( obj%Val ) ) THEN
-    Ans = SHAPE( obj%Val )
+  IF( ALLOCATED( obj%val ) ) THEN
+    Ans = SHAPE( obj%val )
   ELSE
     Ans = 0
   END IF
@@ -39,8 +39,8 @@ END PROCEDURE get_shape
 MODULE PROCEDURE get_size
   !Define internal variables
   INTEGER( I4B ) :: S( 2 )
-  IF( ALLOCATED( obj%Val ) ) THEN
-    S = SHAPE( obj%Val )
+  IF( ALLOCATED( obj%val ) ) THEN
+    S = SHAPE( obj%val )
     IF( PRESENT( Dims ) ) THEN
       Ans = S( Dims )
     ELSE
@@ -72,7 +72,7 @@ END PROCEDURE set_tdimension
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE allocate_data
-  CALL Reallocate( obj%Val, Dims(1), Dims(2) )
+  CALL Reallocate( obj%val, Dims(1), Dims(2) )
   CALL setTotalDimension( obj, 2_I4B )
 END PROCEDURE allocate_data
 
@@ -81,7 +81,7 @@ END PROCEDURE allocate_data
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Deallocate_Data
-  IF( ALLOCATED( obj%Val ) ) DEALLOCATE( obj%Val )
+  IF( ALLOCATED( obj%val ) ) DEALLOCATE( obj%val )
   CALL setTotalDimension( obj, 0 )
 END PROCEDURE Deallocate_Data
 
@@ -128,7 +128,7 @@ END PROCEDURE realmat_initiate4
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE realmat_initiate5
-  obj%Val = Val
+  obj%val = val
   CALL setTotalDimension( obj, 2_I4B )
 END PROCEDURE realmat_initiate5
 
@@ -148,7 +148,7 @@ MODULE PROCEDURE realMat_eye1
   INTEGER( I4B ) :: i
   CALL Initiate( Ans, [m,m] )
   DO i = 1, m
-    Ans%Val ( i, i ) = 1.0
+    Ans%val ( i, i ) = 1.0
   END DO
 END PROCEDURE realMat_eye1
 
@@ -174,7 +174,7 @@ END PROCEDURE sym_array
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE sym_obj
-  Ans%Val = 0.5_DFP * ( obj%Val + TRANSPOSE( obj%Val ) )
+  Ans%val = 0.5_DFP * ( obj%val + TRANSPOSE( obj%val ) )
 END PROCEDURE sym_obj
 
 !----------------------------------------------------------------------------
@@ -190,7 +190,7 @@ END PROCEDURE SkewSym_array
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE SkewSym_obj
-  Ans%Val = 0.5_DFP * ( obj%Val - TRANSPOSE( obj%Val ) )
+  Ans%val = 0.5_DFP * ( obj%val - TRANSPOSE( obj%val ) )
 END PROCEDURE SkewSym_obj
 
 !----------------------------------------------------------------------------
@@ -235,7 +235,7 @@ END PROCEDURE realmat_make_diag_copy2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE realmat_make_diag_copy3
-  CALL realmat_make_diag_copy1( Mat = Mat%Val, nCopy = nCopy )
+  CALL realmat_make_diag_copy1( Mat = Mat%val, nCopy = nCopy )
 END PROCEDURE realmat_make_diag_copy3
 
 !----------------------------------------------------------------------------
@@ -243,7 +243,7 @@ END PROCEDURE realmat_make_diag_copy3
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE realmat_make_diag_copy4
-  CALL realmat_make_diag_copy2( From = From%Val, To = To%Val, &
+  CALL realmat_make_diag_copy2( From = From%val, To = To%val, &
     & nCopy = nCopy )
 END PROCEDURE realmat_make_diag_copy4
 
@@ -253,24 +253,24 @@ END PROCEDURE realmat_make_diag_copy4
 
 MODULE PROCEDURE realmat_random_number
   IF( PRESENT( m ) .AND. PRESENT( n ) ) THEN
-    CALL Reallocate( obj%Val, m, n )
-    CALL RANDOM_NUMBER( obj%Val )
+    CALL Reallocate( obj%val, m, n )
+    CALL RANDOM_NUMBER( obj%val )
     RETURN
   END IF
 
   IF( PRESENT( m ) ) THEN
-    CALL Reallocate( obj%Val, m, m )
-    CALL RANDOM_NUMBER( obj%Val )
+    CALL Reallocate( obj%val, m, m )
+    CALL RANDOM_NUMBER( obj%val )
     RETURN
   END IF
 
   IF( PRESENT( n ) ) THEN
-    CALL Reallocate( obj%Val, n, n )
-    CALL RANDOM_NUMBER( obj%Val )
+    CALL Reallocate( obj%val, n, n )
+    CALL RANDOM_NUMBER( obj%val )
     RETURN
   END IF
 
-  CALL RANDOM_NUMBER( obj%Val )
+  CALL RANDOM_NUMBER( obj%val )
 
 END PROCEDURE realmat_random_number
 

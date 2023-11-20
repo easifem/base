@@ -29,7 +29,7 @@ PUBLIC :: arange
 ! summary: Returns a vector of reals given `start`,  `end`,  and `increment`
 ! values.
 
-INTERFACE
+INTERFACE arange
   MODULE PURE FUNCTION arange_Real64(istart, iend, increment) RESULT(Ans)
     REAL(REAL64), INTENT(IN) :: istart
     !! Start value of the array
@@ -39,10 +39,6 @@ INTERFACE
     !! Array increment
     REAL(REAL64), DIMENSION(:), ALLOCATABLE :: Ans
   END FUNCTION arange_Real64
-END INTERFACE
-
-INTERFACE arange
-  MODULE PROCEDURE arange_Real64
 END INTERFACE arange
 
 !----------------------------------------------------------------------------
@@ -54,7 +50,7 @@ END INTERFACE arange
 ! summary: Returns a vector of reals given `start`,  `end`,  and `increment`
 ! values.
 
-INTERFACE
+INTERFACE arange
   MODULE PURE FUNCTION arange_Real32(istart, iend, increment) RESULT(Ans)
     REAL(REAL32), INTENT(IN) :: istart
     !! Start value of the array
@@ -64,10 +60,6 @@ INTERFACE
     !! Array increment
     REAL(REAL32), DIMENSION(:), ALLOCATABLE :: Ans
   END FUNCTION arange_Real32
-END INTERFACE
-
-INTERFACE arange
-  MODULE PROCEDURE arange_Real32
 END INTERFACE arange
 
 !----------------------------------------------------------------------------

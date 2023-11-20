@@ -182,43 +182,29 @@ SUBROUTINE Display_Str(msg, unitno, advance)
   LOGICAL(LGT), OPTIONAL, INTENT(IN) :: advance
   ! Internal variables
   INTEGER(I4B) :: i
+  CHARACTER(:), ALLOCATABLE :: advance0
+  LOGICAL(LGT) :: bool1
+
   CALL setDefaultSettings
-  IF (PRESENT(unitno)) THEN
-    i = unitno
+
+  i = stdout; IF (PRESENT(unitno)) i = unitno
+  bool1 = .TRUE.; IF (PRESENT(advance)) bool1 = advance
+
+  IF (bool1) THEN
+    advance0 = "YES"
   ELSE
-    i = stdout
+    advance0 = "NO"
   END IF
+
 #ifdef COLOR_DISP
-  IF (PRESENT(advance)) THEN
-    IF (advance) THEN
-      CALL DISP(title="", &
-        & x=TRIM(colorize(msg, color_fg=COLOR_FG, color_bg=COLOR_BG, &
-        & style=COLOR_STYLE)), &
-        & FMT='a', unit=i, style="left", advance="YES")
-    ELSE
-      CALL DISP(title="", &
-        & x=TRIM(colorize(msg, color_fg=COLOR_FG, color_bg=COLOR_BG, &
-        & style=COLOR_STYLE)), &
-        & FMT='a', unit=i, style="left", advance="NO")
-    END IF
-  ELSE
-    CALL DISP(title="", &
-        & x=TRIM(colorize(msg, color_fg=COLOR_FG, color_bg=COLOR_BG, &
-        & style=COLOR_STYLE)), &
-        & FMT='a', unit=i, style="left")
-  END IF
+  CALL DISP(title="", &
+    & x=TRIM(colorize(msg, color_fg=COLOR_FG, color_bg=COLOR_BG, &
+    & style=COLOR_STYLE)), &
+    & FMT='a', unit=i, style="left",  &
+    & advance=advance0)
 #else
-  IF (PRESENT(advance)) THEN
-    IF (advance) THEN
-      CALL DISP(title="", x=msg, FMT='a', unit=i, style="left",  &
-        & advance="YES")
-    ELSE
-      CALL DISP(title="", x=msg, FMT='a', unit=i, style="left",  &
-        & advance="NO")
-    END IF
-  ELSE
-    CALL DISP(title="", x=msg, FMT='a', unit=i, style="left")
-  END IF
+  CALL DISP(title="", x=msg, FMT='a', unit=i, style="left",  &
+    & advance=advance0)
 #endif
 END SUBROUTINE Display_Str
 
@@ -244,7 +230,6 @@ SUBROUTINE Display_Str2(val, msg, unitno, advance)
   CHARACTER(*), INTENT(IN) :: msg
   INTEGER(I4B), OPTIONAL, INTENT(IN) :: unitno
   LOGICAL(LGT), OPTIONAL, INTENT(IN) :: advance
-  ! internal variables
   CALL Display(msg=TRIM(msg)//TRIM(val), unitNo=unitNo, advance=advance)
 END SUBROUTINE Display_Str2
 
@@ -434,7 +419,29 @@ SUBROUTINE Display_Logical(val, msg, unitNo, advance)
   CHARACTER(*), INTENT(IN) :: msg
   INTEGER(I4B), INTENT(IN), OPTIONAL :: unitNo
   CHARACTER(*), OPTIONAL, INTENT(IN) :: advance
-#include "./Display_Scalar.inc"
+
+  ! Internal variables
+  CHARACTER(:), ALLOCATABLE :: advance0
+  LOGICAL(LGT) :: bool1
+
+  advance0 = "YES"; IF (PRESENT(advance)) advance0 = TRIM(advance)
+
+  SELECT CASE (TRIM(advance0))
+  CASE ("YES")
+    bool1 = .TRUE.
+  CASE ("NO")
+    bool1 = .FALSE.
+  CASE default
+    bool1 = .TRUE.
+  END SELECT
+
+  IF (val) THEN
+    CALL Display_Str(msg=TRIM(msg)//" TRUE",  &
+      & unitNo=unitNo, advance=bool1)
+  ELSE
+    CALL Display_Str(msg=TRIM(msg)//" FALSE",  &
+      & unitNo=unitNo, advance=bool1)
+  END IF
 END SUBROUTINE Display_Logical
 
 !----------------------------------------------------------------------------

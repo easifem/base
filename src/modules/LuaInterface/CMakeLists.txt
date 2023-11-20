@@ -15,12 +15,16 @@
 # along with this program.  If not, see <https: //www.gnu.org/licenses/>
 #
 
-SET(src_path "${CMAKE_CURRENT_LIST_DIR}/src/")
-TARGET_SOURCES(
-  ${PROJECT_NAME} PRIVATE
-  ${src_path}/BoundingBox_Method@ConstructorMethods.F90
-  ${src_path}/BoundingBox_Method@SetMethods.F90
-  ${src_path}/BoundingBox_Method@GetMethods.F90
-  ${src_path}/BoundingBox_Method@IOMethods.F90
-  ${src_path}/BoundingBox_Method@TomlMethods.F90
-)
+IF(USE_LUA)
+    SET(src_path "${CMAKE_CURRENT_LIST_DIR}/src/")
+    TARGET_SOURCES(
+      ${PROJECT_NAME} PRIVATE
+      ${src_path}/LuaInterface.F90
+      )
+ELSE()
+    SET(src_path "${CMAKE_CURRENT_LIST_DIR}/src/")
+    TARGET_SOURCES(
+      ${PROJECT_NAME} PRIVATE
+      ${src_path}/No_LuaInterface.F90
+      )
+ENDIF()

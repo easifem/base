@@ -315,16 +315,12 @@ INTEGER(I4B), ALLOCATABLE :: Indx(:)
 
 n = SIZE(xij, 2)
 ALLOCATE (msk(n), Indx(n))
-
 DO i = 1, n
   msk(i) = isInside(obj, xij(:, i))
   Indx(i) = i
 END DO
-
-Ans = PACK(Indx, msk)
-
+ans = PACK(Indx, msk)
 DEALLOCATE (msk, Indx)
-
 END PROCEDURE get_nptrs
 
 !----------------------------------------------------------------------------
@@ -332,26 +328,13 @@ END PROCEDURE get_nptrs
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE bbox_GetDiameter
-! REAL(DFP) :: x1, x2, y1, y2, z1, z2
-!   !!
-! x1 = .xmin.obj
-! x2 = .xmax.obj
-! y1 = .ymin.obj
-! y2 = .ymax.obj
-! z1 = .zmin.obj
-! z2 = .zmax.obj
-!   !!
-! ans = MAXVAL(ABS([x1 - x2, y1 - y2, z1 - z2]))
-  !!
 REAL(DFP) :: a(3)
-  !!
 a(1) = ABS((.xmax.obj) - (.xmin.obj))
 a(2) = ABS((.ymax.obj) - (.ymin.obj))
 a(3) = ABS((.zmax.obj) - (.zmin.obj))
-!!
 ans = MAXVAL(a)
-!!
 END PROCEDURE bbox_GetDiameter
+
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------

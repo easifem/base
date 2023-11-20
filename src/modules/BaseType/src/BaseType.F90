@@ -29,6 +29,164 @@ USE ISO_C_BINDING, ONLY: C_CHAR, C_PTR, C_SIZE_T
 IMPLICIT NONE
 PRIVATE
 
+PUBLIC :: Math
+PUBLIC :: BoundingBox_
+PUBLIC :: TypeBoundingBox
+PUBLIC :: BoundingBoxPointer_
+PUBLIC :: RealMatrix_
+PUBLIC :: TypeRealMatrix
+PUBLIC :: RealMatrixPointer_
+PUBLIC :: IntVector_
+PUBLIC :: TypeIntVector
+PUBLIC :: IntVectorPointer_
+PUBLIC :: RealVector_
+PUBLIC :: TypeRealVector
+PUBLIC :: RealVectorPointer_
+PUBLIC :: Vector3D_
+PUBLIC :: TypeVector3D
+PUBLIC :: Vector3DPointer_
+PUBLIC :: IndexValue_
+PUBLIC :: IndexValuePointer_
+PUBLIC :: DOF_
+PUBLIC :: TypeDOF
+PUBLIC :: DOFPointer_
+PUBLIC :: SparseMatrixReOrdering_
+PUBLIC :: TypeSparseMatrixReOrdering
+PUBLIC :: CSRSparsity_
+PUBLIC :: TypeCSRSparsity
+PUBLIC :: CSRSparsityPointer_
+PUBLIC :: CSRMatrix_
+PUBLIC :: TypeCSRMatrix
+PUBLIC :: CSRMatrixPointer_
+PUBLIC :: IterationData_
+PUBLIC :: TypeIterationData
+PUBLIC :: IterationDataPointer_
+PUBLIC :: VoigtRank2Tensor_
+PUBLIC :: TypeVoigtRank2Tensor
+PUBLIC :: VoigtRank2TensorPointer
+PUBLIC :: Rank2Tensor_
+PUBLIC :: TypeRank2Tensor
+PUBLIC :: Rank2TensorPointer_
+PUBLIC :: DeformationGradient_
+PUBLIC :: DeformationGradientPointer_
+PUBLIC :: LeftCauchyGreen_
+PUBLIC :: TypeLeftCauchyGreen
+PUBLIC :: LeftCauchyGreenPointer_
+PUBLIC :: RightCauchyGreen_
+PUBLIC :: TypeRightCauchyGreen
+PUBLIC :: RightCauchyGreenPointer_
+PUBLIC :: Strain_
+PUBLIC :: TypeStrain
+PUBLIC :: StrainPointer_
+PUBLIC :: AlmansiStrain_
+PUBLIC :: TypeAlmansiStrain
+PUBLIC :: AlmansiStrainPointer_
+PUBLIC :: GreenStrain_
+PUBLIC :: TypeGreenStrain
+PUBLIC :: GreenStrainPointer_
+PUBLIC :: SmallStrain_
+PUBLIC :: TypeSmallStrain
+PUBLIC :: SmallStrainPointer_
+PUBLIC :: ReferenceTopology_
+! PUBLIC :: TypeReferenceTopology
+PUBLIC :: ReferenceTopologyPointer_
+PUBLIC :: ReferenceElement_
+PUBLIC :: ReferenceElementPointer_
+PUBLIC :: ReferencePoint_
+PUBLIC :: TypeReferencePoint
+PUBLIC :: ReferenceLine_
+PUBLIC :: TypeReferenceLine
+PUBLIC :: ReferenceTriangle_
+PUBLIC :: TypeReferenceTriangle
+PUBLIC :: ReferenceQuadrangle_
+PUBLIC :: TypeReferenceQuadrangle
+PUBLIC :: ReferenceTetrahedron_
+PUBLIC :: TypeReferenceTetrahedron
+PUBLIC :: ReferenceHexahedron_
+PUBLIC :: TypeReferenceHexahedron
+PUBLIC :: ReferencePrism_
+PUBLIC :: TypeReferencePrism
+PUBLIC :: ReferencePyramid_
+PUBLIC :: TypeReferencePyramid
+PUBLIC :: KeyValue_
+PUBLIC :: TypeKeyValue
+PUBLIC :: FEVariable_
+PUBLIC :: TypeFEVariable
+PUBLIC :: FEVariableConstant_
+PUBLIC :: TypeFEVariableConstant
+PUBLIC :: TypeVariableConstant
+PUBLIC :: FEVariableSpace_
+PUBLIC :: TypeFEVariableSpace
+PUBLIC :: TypeVariableSpace
+PUBLIC :: FEVariableSpaceTime_
+PUBLIC :: TypeFEVariableSpaceTime
+PUBLIC :: TypeVariableSpaceTime
+PUBLIC :: FEVariableTime_
+PUBLIC :: TypeFEVariableTime
+PUBLIC :: TypeVariableTime
+PUBLIC :: FEVariableScalar_
+PUBLIC :: TypeFEVariableScalar
+PUBLIC :: TypeVariableScalar
+PUBLIC :: FEVariableVector_
+PUBLIC :: TypeFEVariableVector
+PUBLIC :: TypeVariableVector
+PUBLIC :: FEVariableMatrix_
+PUBLIC :: TypeFEVariableMatrix
+PUBLIC :: TypeVariableMatrix
+PUBLIC :: QuadraturePoint_
+PUBLIC :: TypeQuadraturePoint
+PUBLIC :: QuadraturePointPointer_
+PUBLIC :: BaseInterpolation_
+PUBLIC :: LagrangeInterpolation_
+PUBLIC :: TypeLagrangeInterpolation
+PUBLIC :: HermitInterpolation_
+PUBLIC :: TypeHermitInterpolation
+PUBLIC :: SerendipityInterpolation_
+PUBLIC :: TypeSerendipityInterpolation
+PUBLIC :: HierarchyInterpolation_
+PUBLIC :: TypeHierarchyInterpolation
+PUBLIC :: OrthogonalInterpolation_
+PUBLIC :: TypeOrthogonalInterpolation
+PUBLIC :: BaseContinuity_
+PUBLIC :: TypeBaseContinuity
+PUBLIC :: H1_
+PUBLIC :: TypeH1
+PUBLIC :: HDIV_
+PUBLIC :: TypeHDIV
+PUBLIC :: HCURL_
+PUBLIC :: TypeHCURL
+PUBLIC :: DG_
+PUBLIC :: TypeDG
+PUBLIC :: DEL_NONE, DEL_X, DEL_Y, DEL_Z, DEL_X_ALL, DEL_t
+PUBLIC :: ElementData_
+PUBLIC :: TypeElementData
+PUBLIC :: ElementDataPointer_
+PUBLIC :: ShapeData_
+PUBLIC :: TypeShapeData
+PUBLIC :: ShapeDataPointer_
+PUBLIC :: STShapeData_
+PUBLIC :: STShapeDataPointer_
+PUBLIC :: ElemShapeData_
+PUBLIC :: TypeElemShapeData
+PUBLIC :: ElemShapeDataPointer_
+PUBLIC :: STElemShapeData_
+PUBLIC :: TypeSTElemShapeData
+PUBLIC :: QualityMeasure
+PUBLIC :: Random_
+PUBLIC :: TypeRandom
+PUBLIC :: OMP
+PUBLIC :: TypeOpenMP
+PUBLIC :: MultiIndices_
+PUBLIC :: iface_SpaceTimeFunction
+PUBLIC :: iface_SpaceFunction
+PUBLIC :: iface_TimeFunction
+PUBLIC :: iface_1DFunction
+PUBLIC :: iface_2DFunction
+PUBLIC :: iface_3DFunction
+PUBLIC :: iface_ScalarFunction
+PUBLIC :: iface_VectorFunction
+PUBLIC :: iface_MatrixFunction
+
 !----------------------------------------------------------------------------
 !                                                                 Math_
 !----------------------------------------------------------------------------
@@ -52,7 +210,7 @@ TYPE :: Math_
                               & [2, 2])
 END TYPE Math_
 
-TYPE(Math_), PARAMETER, PUBLIC :: Math = Math_()
+TYPE(Math_), PARAMETER :: Math = Math_()
 
 !----------------------------------------------------------------------------
 !                                                               BoundingBox_
@@ -80,9 +238,7 @@ TYPE :: BoundingBox_
     !!- `Box(2, 3)` is z_max
 END TYPE BoundingBox_
 
-PUBLIC :: BoundingBox_
-
-TYPE(BoundingBox_), PUBLIC, PARAMETER :: TypeBoundingBox = &
+TYPE(BoundingBox_), PARAMETER :: TypeBoundingBox = &
   & BoundingBox_(NSD=0, Box=0)
 !! A Type Instance of Boundingbox
 
@@ -93,8 +249,6 @@ TYPE(BoundingBox_), PUBLIC, PARAMETER :: TypeBoundingBox = &
 TYPE :: BoundingBoxPointer_
   CLASS(BoundingBoxPointer_), POINTER :: ptr => NULL()
 END TYPE BoundingBoxPointer_
-
-PUBLIC :: BoundingBoxPointer_
 
 !----------------------------------------------------------------------------
 !                                                                    Matrix_
@@ -112,17 +266,11 @@ TYPE :: RealMatrix_
   REAL(DFP), ALLOCATABLE :: Val(:, :)
 END TYPE RealMatrix_
 
-PUBLIC :: RealMatrix_
-
-TYPE(RealMatrix_), PUBLIC, PARAMETER :: &
-  & TypeRealMatrix = RealMatrix_( &
-  & Val=NULL())
+TYPE(RealMatrix_), PARAMETER :: TypeRealMatrix = RealMatrix_(Val=NULL())
 
 TYPE :: RealMatrixPointer_
   CLASS(RealMatrix_), POINTER :: ptr => NULL()
 END TYPE RealMatrixPointer_
-
-PUBLIC :: RealMatrixPointer_
 
 !----------------------------------------------------------------------------
 !                                                             IntVector_
@@ -139,15 +287,11 @@ TYPE :: IntVector_
   INTEGER(I4B), ALLOCATABLE :: Val(:)
 END TYPE IntVector_
 
-PUBLIC :: IntVector_
-
-TYPE(IntVector_), PUBLIC, PARAMETER :: TypeIntVector = IntVector_(Val=NULL())
+TYPE(IntVector_), PARAMETER :: TypeIntVector = IntVector_(Val=NULL())
 
 TYPE :: IntVectorPointer_
   CLASS(IntVector_), POINTER :: ptr => NULL()
 END TYPE IntVectorPointer_
-
-PUBLIC :: IntVectorPointer_
 
 !----------------------------------------------------------------------------
 !                                                             RealVector_
@@ -164,16 +308,11 @@ TYPE :: RealVector_
   REAL(DFP), ALLOCATABLE :: Val(:)
 END TYPE RealVector_
 
-PUBLIC :: RealVector_
-
-TYPE(RealVector_), PUBLIC, PARAMETER :: TypeRealVector = RealVector_( &
-  & tDimension=1_I4B, Val=NULL())
+TYPE(RealVector_), PARAMETER :: TypeRealVector = RealVector_(Val=NULL())
 
 TYPE :: RealVectorPointer_
   CLASS(RealVector_), POINTER :: ptr => NULL()
 END TYPE RealVectorPointer_
-
-PUBLIC :: RealVectorPointer_
 
 !----------------------------------------------------------------------------
 !                                                                 Vector3D_
@@ -185,13 +324,10 @@ PUBLIC :: RealVectorPointer_
 
 TYPE :: Vector3D_
   INTEGER(I4B) :: tDimension = 1_I4B
-  REAL(DFP) :: Val(3)
+  REAL(DFP) :: Val(3) = 0.0_DFP
 END TYPE Vector3D_
 
-PUBLIC :: Vector3D_
-
-TYPE(Vector3D_), PUBLIC, PARAMETER :: TypeVector3D = Vector3D_( &
-  & tDimension=1_I4B, Val=[0.0_DFP, 0.0_DFP, 0.0_DFP])
+TYPE(Vector3D_), PARAMETER :: TypeVector3D = Vector3D_()
 
 !----------------------------------------------------------------------------
 !                                                            Vector3DPointer_
@@ -200,8 +336,6 @@ TYPE(Vector3D_), PUBLIC, PARAMETER :: TypeVector3D = Vector3D_( &
 TYPE :: Vector3DPointer_
   CLASS(Vector3D_), POINTER :: ptr => NULL()
 END TYPE Vector3DPointer_
-
-PUBLIC :: Vector3DPointer_
 
 !----------------------------------------------------------------------------
 !                                                              IndexValue_
@@ -216,16 +350,12 @@ TYPE :: IndexValue_
   REAL(DFP) :: Val
 END TYPE
 
-PUBLIC :: IndexValue_
-
 TYPE(IndexValue_), PUBLIC, PARAMETER :: TypeIndexValue = &
   & IndexValue_(Indx=0, Val=0.0_DFP)
 
 TYPE :: IndexValuePointer_
   CLASS(IndexValue_), POINTER :: ptr => NULL()
 END TYPE IndexValuePointer_
-
-PUBLIC :: IndexValuePointer_
 
 !----------------------------------------------------------------------------
 !                                                                     DOF_
@@ -244,15 +374,11 @@ TYPE :: DOF_
     !! Storage format
 END TYPE DOF_
 
-PUBLIC :: DOF_
-
-TYPE(DOF_), PUBLIC, PARAMETER :: TypeDOF = DOF_(MAP=NULL(), ValMap=NULL())
+TYPE(DOF_), PARAMETER :: TypeDOF = DOF_(MAP=NULL(), ValMap=NULL())
 
 TYPE :: DOFPointer_
   CLASS(DOF_), POINTER :: ptr => NULL()
 END TYPE DOFPointer_
-
-PUBLIC :: DOFPointer_
 
 !----------------------------------------------------------------------------
 !                                                            SparseOrdering
@@ -268,12 +394,8 @@ TYPE :: SparseMatrixReOrdering_
   INTEGER(I4B), ALLOCATABLE :: IPERM(:)
 END TYPE SparseMatrixReOrdering_
 
-PUBLIC :: SparseMatrixReOrdering_
-
-TYPE(SparseMatrixReOrdering_), PUBLIC, PARAMETER :: &
-  & TypeSparseMatrixReOrdering = &
-  & SparseMatrixReOrdering_(name='', PERM=NULL(), &
-  & IPERM=NULL())
+TYPE(SparseMatrixReOrdering_), PARAMETER :: TypeSparseMatrixReOrdering = &
+  & SparseMatrixReOrdering_(name='', PERM=NULL(), IPERM=NULL())
 
 !----------------------------------------------------------------------------
 !                                                               CSRSparsity_
@@ -303,16 +425,12 @@ TYPE :: CSRSparsity_
   !! DOF for columns
 END TYPE CSRSparsity_
 
-PUBLIC :: CSRSparsity_
-
-TYPE(CSRSparsity_), PUBLIC, PARAMETER :: TypeCSRSparsity = &
+TYPE(CSRSparsity_), PARAMETER :: TypeCSRSparsity = &
   & CSRSparsity_(IA=NULL(), JA=NULL(), Row=NULL())
 
 TYPE :: CSRSparsityPointer_
   CLASS(CSRSparsity_), POINTER :: ptr => NULL()
 END TYPE CSRSparsityPointer_
-
-PUBLIC :: CSRSparsityPointer_
 
 !----------------------------------------------------------------------------
 !                                                                 SuperLU_
@@ -395,16 +513,12 @@ TYPE :: CSRMatrix_
 #endif
 END TYPE CSRMatrix_
 
-PUBLIC :: CSRMatrix_
-
-TYPE(CSRMatrix_), PUBLIC, PARAMETER :: TypeCSRMatrix = CSRMatrix_(&
+TYPE(CSRMatrix_), PARAMETER :: TypeCSRMatrix = CSRMatrix_(&
   & A=NULL(), slu=NULL())
 
 TYPE :: CSRMatrixPointer_
   CLASS(CSRMatrix_), POINTER :: ptr => NULL()
 END TYPE CSRMatrixPointer_
-
-PUBLIC :: CSRMatrixPointer_
 
 !----------------------------------------------------------------------------
 !                                                            IterationData_
@@ -450,16 +564,20 @@ TYPE :: IterationData_
     !! header for convergenceData
 END TYPE IterationData_
 
-PUBLIC :: IterationData_
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
 
-TYPE(IterationData_), PUBLIC, PARAMETER :: TypeIterationData = &
+TYPE(IterationData_), PARAMETER :: TypeIterationData = &
   & IterationData_(header=NULL())
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
 
 TYPE :: IterationDataPointer_
   CLASS(IterationData_), POINTER :: ptr => NULL()
 END TYPE IterationDataPointer_
-
-PUBLIC :: IterationDataPointer_
 
 !----------------------------------------------------------------------------
 !                                                       VoigtRank2Tensor_
@@ -475,16 +593,12 @@ TYPE :: VoigtRank2Tensor_
   INTEGER(I4B) :: VoigtType = StressTypeVoigt
 END TYPE VoigtRank2Tensor_
 
-PUBLIC :: VoigtRank2Tensor_
-
-TYPE(VoigtRank2Tensor_), PARAMETER, PUBLIC :: &
-  & TypeVoigtRank2Tensor = VoigtRank2Tensor_()
+TYPE(VoigtRank2Tensor_), PARAMETER :: TypeVoigtRank2Tensor  &
+  & = VoigtRank2Tensor_()
 
 TYPE :: VoigtRank2TensorPointer
   CLASS(VoigtRank2Tensor_), POINTER :: ptr => NULL()
 END TYPE VoigtRank2TensorPointer
-
-PUBLIC :: VoigtRank2TensorPointer
 
 !----------------------------------------------------------------------------
 !                                                                  Tensor_
@@ -502,7 +616,7 @@ END TYPE Tensor_
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date:  2023-09-05 
+! date:  2023-09-05
 ! summary:  Rank 2 tensor
 
 TYPE, EXTENDS(Tensor_) :: Rank2Tensor_
@@ -510,38 +624,29 @@ TYPE, EXTENDS(Tensor_) :: Rank2Tensor_
   LOGICAL(LGT) :: isSym = .FALSE.
 END TYPE Rank2Tensor_
 
-PUBLIC :: Rank2Tensor_
-
-TYPE(Rank2Tensor_), PARAMETER, PUBLIC :: &
-  & TypeRank2Tensor = Rank2Tensor_()
+TYPE(Rank2Tensor_), PARAMETER :: TypeRank2Tensor = Rank2Tensor_()
 
 TYPE :: Rank2TensorPointer_
   CLASS(Rank2Tensor_), POINTER :: ptr => NULL()
 END TYPE Rank2TensorPointer_
-
-PUBLIC :: Rank2TensorPointer_
 
 !----------------------------------------------------------------------------
 !                                                       DeformationGradient_
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date:  2023-09-05 
+! date:  2023-09-05
 ! summary:  Deformation gradient tensor
 
 TYPE, EXTENDS(Rank2Tensor_) :: DeformationGradient_
 END TYPE DeformationGradient_
 
-PUBLIC :: DeformationGradient_
-
-TYPE(DeformationGradient_), PUBLIC, PARAMETER :: &
-  & TypeDeformationGradient = DeformationGradient_()
+TYPE(DeformationGradient_), PARAMETER :: TypeDeformationGradient  &
+  & = DeformationGradient_()
 
 TYPE :: DeformationGradientPointer_
   CLASS(DeformationGradient_), POINTER :: ptr => NULL()
 END TYPE DeformationGradientPointer_
-
-PUBLIC :: DeformationGradientPointer_
 
 !----------------------------------------------------------------------------
 !                                                           LeftCauchyGreen_
@@ -557,21 +662,17 @@ PUBLIC :: DeformationGradientPointer_
 !
 ! $$b = F F^{T}=V^2$$
 !
-!{!pages/docs-api/LeftCauchyGreen/LeftCauchyGreen_.md}
+!{!pages/docs-api/LeftCauchyGreen/LeftCauchyGreen_.md!}
 
 TYPE, EXTENDS(Rank2Tensor_) :: LeftCauchyGreen_
 END TYPE LeftCauchyGreen_
 
-PUBLIC :: LeftCauchyGreen_
-
-TYPE(LeftCauchyGreen_), PUBLIC, PARAMETER :: &
-  & TypeLeftCauchyGreen = LeftCauchyGreen_()
+TYPE(LeftCauchyGreen_), PARAMETER :: TypeLeftCauchyGreen  &
+  & = LeftCauchyGreen_()
 
 TYPE :: LeftCauchyGreenPointer_
   CLASS(LeftCauchyGreen_), POINTER :: ptr => NULL()
 END TYPE LeftCauchyGreenPointer_
-
-PUBLIC :: LeftCauchyGreenPointer_
 
 !----------------------------------------------------------------------------
 !                                                          RightCauchyGreen_
@@ -592,16 +693,12 @@ PUBLIC :: LeftCauchyGreenPointer_
 TYPE, EXTENDS(Rank2Tensor_) :: RightCauchyGreen_
 END TYPE RightCauchyGreen_
 
-PUBLIC :: RightCauchyGreen_
-
-TYPE(RightCauchyGreen_), PUBLIC, PARAMETER :: &
-  & TypeRightCauchyGreen = RightCauchyGreen_()
+TYPE(RightCauchyGreen_), PARAMETER :: TypeRightCauchyGreen  &
+  & = RightCauchyGreen_()
 
 TYPE :: RightCauchyGreenPointer_
   CLASS(RightCauchyGreen_), POINTER :: ptr => NULL()
 END TYPE RightCauchyGreenPointer_
-
-PUBLIC :: RightCauchyGreenPointer_
 
 !----------------------------------------------------------------------------
 !                                                                    Strain_
@@ -610,16 +707,11 @@ PUBLIC :: RightCauchyGreenPointer_
 TYPE, EXTENDS(Rank2Tensor_) :: Strain_
 END TYPE Strain_
 
-PUBLIC :: Strain_
-
-TYPE(Strain_), PUBLIC, PARAMETER :: &
-  & TypeStrain = Strain_()
+TYPE(Strain_), PARAMETER :: TypeStrain = Strain_()
 
 TYPE :: StrainPointer_
   CLASS(Strain_), POINTER :: ptr => NULL()
 END TYPE StrainPointer_
-
-PUBLIC :: StrainPointer_
 
 !----------------------------------------------------------------------------
 !                                                             AlmansiStrain_
@@ -628,16 +720,11 @@ PUBLIC :: StrainPointer_
 TYPE, EXTENDS(Strain_) :: AlmansiStrain_
 END TYPE AlmansiStrain_
 
-PUBLIC :: AlmansiStrain_
-
-TYPE(AlmansiStrain_), PUBLIC, PARAMETER :: &
-  & TypeAlmansiStrain = AlmansiStrain_()
+TYPE(AlmansiStrain_), PARAMETER :: TypeAlmansiStrain = AlmansiStrain_()
 
 TYPE :: AlmansiStrainPointer_
   CLASS(AlmansiStrain_), POINTER :: ptr => NULL()
 END TYPE AlmansiStrainPointer_
-
-PUBLIC :: AlmansiStrainPointer_
 
 !----------------------------------------------------------------------------
 !                                                             GreenStrain_
@@ -646,16 +733,11 @@ PUBLIC :: AlmansiStrainPointer_
 TYPE, EXTENDS(Strain_) :: GreenStrain_
 END TYPE GreenStrain_
 
-PUBLIC :: GreenStrain_
-
-TYPE(GreenStrain_), PUBLIC, PARAMETER :: &
-  & TypeGreenStrain = GreenStrain_()
+TYPE(GreenStrain_), PARAMETER :: TypeGreenStrain = GreenStrain_()
 
 TYPE :: GreenStrainPointer_
   CLASS(GreenStrain_), POINTER :: ptr => NULL()
 END TYPE GreenStrainPointer_
-
-PUBLIC :: GreenStrainPointer_
 
 !----------------------------------------------------------------------------
 !                                                             SmallStrain_
@@ -664,16 +746,11 @@ PUBLIC :: GreenStrainPointer_
 TYPE, EXTENDS(Strain_) :: SmallStrain_
 END TYPE SmallStrain_
 
-PUBLIC :: SmallStrain_
-
-TYPE(SmallStrain_), PUBLIC, PARAMETER :: &
-  & TypeSmallStrain = SmallStrain_()
+TYPE(SmallStrain_), PARAMETER :: TypeSmallStrain = SmallStrain_()
 
 TYPE :: SmallStrainPointer_
   CLASS(SmallStrain_), POINTER :: ptr => NULL()
 END TYPE SmallStrainPointer_
-
-PUBLIC :: SmallStrainPointer_
 
 !----------------------------------------------------------------------------
 !                                                       ReferenceTopology_
@@ -691,13 +768,9 @@ TYPE :: ReferenceTopology_
   INTEGER(I4B) :: xiDimension = 0
 END TYPE ReferenceTopology_
 
-PUBLIC :: ReferenceTopology_
-
 TYPE :: ReferenceTopologyPointer_
   CLASS(ReferenceTopology_), POINTER :: ptr => NULL()
 END TYPE ReferenceTopologyPointer_
-
-PUBLIC :: ReferenceTopologyPointer_
 
 !----------------------------------------------------------------------------
 !                                                          ReferenceElement_
@@ -707,7 +780,7 @@ PUBLIC :: ReferenceTopologyPointer_
 ! date: 2 March 2021
 ! summary: An abstract data type for Reference Element
 !
-!{!pages/docs-api/ReferenceElement/ReferenceElement_.md}
+!{!pages/docs-api/ReferenceElement/ReferenceElement_.md!}
 
 TYPE :: ReferenceElement_
   CHARACTER(10) :: domainName = "GENERAL"
@@ -736,13 +809,9 @@ TYPE :: ReferenceElement_
     !! Routine to generate hgher order LagrangeElement
 END TYPE ReferenceElement_
 
-PUBLIC :: ReferenceElement_
-
 TYPE :: ReferenceElementPointer_
   CLASS(ReferenceElement_), POINTER :: ptr => NULL()
 END TYPE ReferenceElementPointer_
-
-PUBLIC :: ReferenceElementPointer_
 
 INTERFACE
   SUBROUTINE highorder_refelem(obj, order, highOrderobj, ipType)
@@ -762,16 +831,15 @@ END INTERFACE
 ! date: 3 March 2021
 ! summary: This data type defines a reference point element
 !
-!{!pages/ReferencePoint.md}
+!{!pages/docs-api/ReferencePoint/ReferencePoint_.md!}
 
 TYPE, EXTENDS(ReferenceElement_) :: ReferencePoint_
 END TYPE ReferencePoint_
 
-PUBLIC :: ReferencePoint_
-
-TYPE(ReferencePoint_), PARAMETER, PUBLIC :: &
+TYPE(ReferencePoint_), PARAMETER :: &
   & TypeReferencePoint = ReferencePoint_( &
-  & XiJ=NULL(), EntityCounts=[0, 0, 0, 0], xiDimension=0, name=0, &
+  & XiJ=NULL(), EntityCounts=[0, 0, 0, 0],  &
+  & xiDimension=0, name=0, &
   & Topology=NULL(), Order=0, NSD=0)
 
 !----------------------------------------------------------------------------
@@ -782,16 +850,15 @@ TYPE(ReferencePoint_), PARAMETER, PUBLIC :: &
 ! date: 3 March 2021
 ! summary: This data type defines a reference line
 !
-!{!pages/ReferenceLine.md}
+!{!pages/docs-api/ReferenceLine/ReferenceLine_.md!}
 
 TYPE, EXTENDS(ReferenceElement_) :: ReferenceLine_
 END TYPE ReferenceLine_
 
-PUBLIC :: ReferenceLine_
-
-TYPE(ReferenceLine_), PARAMETER, PUBLIC :: &
+TYPE(ReferenceLine_), PARAMETER :: &
   & TypeReferenceLine = ReferenceLine_( &
-  & XiJ=NULL(), EntityCounts=[0, 0, 0, 0], xiDimension=0, name=0, &
+  & XiJ=NULL(), EntityCounts=[0, 0, 0, 0],  &
+  & xiDimension=0, name=0, &
   & Topology=NULL(), Order=0, NSD=0)
 
 !----------------------------------------------------------------------------
@@ -806,11 +873,10 @@ TYPE(ReferenceLine_), PARAMETER, PUBLIC :: &
 TYPE, EXTENDS(ReferenceElement_) :: ReferenceTriangle_
 END TYPE ReferenceTriangle_
 
-PUBLIC :: ReferenceTriangle_
-
-TYPE(ReferenceTriangle_), PARAMETER, PUBLIC :: &
+TYPE(ReferenceTriangle_), PARAMETER :: &
   & TypeReferenceTriangle = ReferenceTriangle_( &
-  & XiJ=NULL(), EntityCounts=[0, 0, 0, 0], xiDimension=0, name=0, &
+  & XiJ=NULL(), EntityCounts=[0, 0, 0, 0],  &
+  & xiDimension=0, name=0, &
   & Topology=NULL(), Order=0, NSD=0)
 
 !----------------------------------------------------------------------------
@@ -821,17 +887,16 @@ TYPE(ReferenceTriangle_), PARAMETER, PUBLIC :: &
 ! date: 3 March 2021
 ! summary: This data type defines a reference quadrangle
 !
-!{!pages/ReferenceQuadrangle.md}
+!{!pages/ReferenceQuadrangle/ReferenceQuadrangle_.md!}
 
 TYPE, EXTENDS(ReferenceElement_) :: ReferenceQuadrangle_
 END TYPE ReferenceQuadrangle_
 
-PUBLIC :: ReferenceQuadrangle_
-
-TYPE(ReferenceQuadrangle_), PARAMETER, PUBLIC :: &
+TYPE(ReferenceQuadrangle_), PARAMETER :: &
   & TypeReferenceQuadrangle &
   & = ReferenceQuadrangle_( &
-  & XiJ=NULL(), EntityCounts=[0, 0, 0, 0], xiDimension=0, name=0, &
+  & XiJ=NULL(), EntityCounts=[0, 0, 0, 0],  &
+  & xiDimension=0, name=0, &
   & Topology=NULL(), Order=0, NSD=0)
 
 !----------------------------------------------------------------------------
@@ -842,14 +907,12 @@ TYPE(ReferenceQuadrangle_), PARAMETER, PUBLIC :: &
 ! date: 3 March 2021
 ! summary: This data type defines a reference tetrahedron
 !
-!{!pages/ReferenceTetrahedron.md}
+!{!pages/ReferenceTetrahedron/ReferenceTetrahedron_.md!}
 
 TYPE, EXTENDS(ReferenceElement_) :: ReferenceTetrahedron_
 END TYPE ReferenceTetrahedron_
 
-PUBLIC :: ReferenceTetrahedron_
-
-TYPE(ReferenceTetrahedron_), PARAMETER, PUBLIC :: &
+TYPE(ReferenceTetrahedron_), PARAMETER :: &
   & TypeReferenceTetrahedron &
   & = ReferenceTetrahedron_( &
   & XiJ=NULL(), EntityCounts=[0, 0, 0, 0], xiDimension=0, name=0, &
@@ -863,14 +926,12 @@ TYPE(ReferenceTetrahedron_), PARAMETER, PUBLIC :: &
 ! date: 3 March 2021
 ! summary: This data type defines a reference hexahedron
 !
-!{!pages/ReferenceHexahedron.md}
+!{!pages/docs-api/ReferenceHexahedron/ReferenceHexahedron_.md}
 
 TYPE, EXTENDS(ReferenceElement_) :: ReferenceHexahedron_
 END TYPE ReferenceHexahedron_
 
-PUBLIC :: ReferenceHexahedron_
-
-TYPE(ReferenceHexahedron_), PARAMETER, PUBLIC :: &
+TYPE(ReferenceHexahedron_), PARAMETER :: &
   & TypeReferenceHexahedron &
   & = ReferenceHexahedron_( &
   & XiJ=NULL(), &
@@ -894,9 +955,7 @@ TYPE(ReferenceHexahedron_), PARAMETER, PUBLIC :: &
 TYPE, EXTENDS(ReferenceElement_) :: ReferencePrism_
 END TYPE ReferencePrism_
 
-PUBLIC :: ReferencePrism_
-
-TYPE(ReferencePrism_), PARAMETER, PUBLIC :: TypeReferencePrism &
+TYPE(ReferencePrism_), PARAMETER :: TypeReferencePrism &
   & = ReferencePrism_( &
   & XiJ=NULL(), &
   & EntityCounts=[0, 0, 0, 0], &
@@ -919,9 +978,7 @@ TYPE(ReferencePrism_), PARAMETER, PUBLIC :: TypeReferencePrism &
 TYPE, EXTENDS(ReferenceElement_) :: ReferencePyramid_
 END TYPE ReferencePyramid_
 
-PUBLIC :: ReferencePyramid_
-
-TYPE(ReferencePyramid_), PARAMETER, PUBLIC :: TypeReferencePyramid &
+TYPE(ReferencePyramid_), PARAMETER :: TypeReferencePyramid &
   & = ReferencePyramid_( &
   & XiJ=NULL(), &
   & EntityCounts=[0, 0, 0, 0], &
@@ -945,10 +1002,7 @@ TYPE :: KeyValue_
   REAL(DFP), ALLOCATABLE :: VALUE(:, :)
 END TYPE KeyValue_
 
-PUBLIC :: KeyValue_
-
-TYPE(KeyValue_), PARAMETER, PUBLIC :: TypeKeyValue = &
-  & KeyValue_(VALUE=NULL())
+TYPE(KeyValue_), PARAMETER :: TypeKeyValue = KeyValue_(VALUE=NULL())
 
 !----------------------------------------------------------------------------
 !                                                                FEVariable_
@@ -981,9 +1035,7 @@ TYPE :: FEVariable_
   !! Matrix
 END TYPE FEVariable_
 
-PUBLIC :: FEVariable_
-
-TYPE(FEVariable_), PARAMETER, PUBLIC:: TypeFEVariable = FEVariable_(val = NULL())
+TYPE(FEVariable_), PARAMETER :: TypeFEVariable = FEVariable_(val=NULL())
 
 !----------------------------------------------------------------------------
 !                                                         FEVariableConstant_
@@ -998,12 +1050,10 @@ TYPE :: FEVariableConstant_
 !! INTEGER(I4B):: Val = 1
 END TYPE FEVariableConstant_
 
-PUBLIC :: FEVariableConstant_
-
-TYPE(FEVariableConstant_), PARAMETER, PUBLIC :: TypeFEVariableConstant = &
+TYPE(FEVariableConstant_), PARAMETER :: TypeFEVariableConstant = &
   & FEVariableConstant_()
 
-TYPE(FEVariableConstant_), PARAMETER, PUBLIC :: TypeVariableConstant = &
+TYPE(FEVariableConstant_), PARAMETER :: TypeVariableConstant = &
   & FEVariableConstant_()
 
 !----------------------------------------------------------------------------
@@ -1019,11 +1069,9 @@ TYPE :: FEVariableSpace_
 !! INTEGER(I4B):: Val = 2
 END TYPE FEVariableSpace_
 
-PUBLIC :: FEVariableSpace_
-
-TYPE(FEVariableSpace_), PARAMETER, PUBLIC :: TypeFEVariableSpace = &
+TYPE(FEVariableSpace_), PARAMETER :: TypeFEVariableSpace = &
   & FEVariableSpace_()
-TYPE(FEVariableSpace_), PARAMETER, PUBLIC :: TypeVariableSpace = &
+TYPE(FEVariableSpace_), PARAMETER :: TypeVariableSpace = &
   & FEVariableSpace_()
 
 !----------------------------------------------------------------------------
@@ -1039,12 +1087,10 @@ TYPE :: FEVariableSpaceTime_
 !! INTEGER(I4B):: Val = 3
 END TYPE FEVariableSpaceTime_
 
-PUBLIC :: FEVariableSpaceTime_
-
-TYPE(FEVariableSpaceTime_), PARAMETER, PUBLIC :: &
-  & TypeFEVariableSpaceTime = FEVariableSpaceTime_()
-TYPE(FEVariableSpaceTime_), PARAMETER, PUBLIC :: &
-  & TypeVariableSpaceTime = FEVariableSpaceTime_()
+TYPE(FEVariableSpaceTime_), PARAMETER :: TypeFEVariableSpaceTime  &
+  & = FEVariableSpaceTime_()
+TYPE(FEVariableSpaceTime_), PARAMETER :: TypeVariableSpaceTime  &
+  & = FEVariableSpaceTime_()
 
 !----------------------------------------------------------------------------
 !                                                            FEVariableTime_
@@ -1059,13 +1105,8 @@ TYPE :: FEVariableTime_
 !! INTEGER(I4B):: Val = 4
 END TYPE FEVariableTime_
 
-PUBLIC :: FEVariableTime_
-
-TYPE(FEVariableTime_), PARAMETER, PUBLIC :: TypeFEVariableTime = &
-  & FEVariableTime_()
-
-TYPE(FEVariableTime_), PARAMETER, PUBLIC :: TypeVariableTime = &
-  & FEVariableTime_()
+TYPE(FEVariableTime_), PARAMETER :: TypeFEVariableTime = FEVariableTime_()
+TYPE(FEVariableTime_), PARAMETER :: TypeVariableTime = FEVariableTime_()
 
 !----------------------------------------------------------------------------
 !                                                          FEVariableScalar_
@@ -1080,13 +1121,11 @@ TYPE :: FEVariableScalar_
 !!  INTEGER(I4B):: Val = 0
 END TYPE FEVariableScalar_
 
-PUBLIC :: FEVariableScalar_
+TYPE(FEVariableScalar_), PARAMETER :: TypeFEVariableScalar  &
+  & = FEVariableScalar_()
 
-TYPE(FEVariableScalar_), PARAMETER, PUBLIC :: &
-  & TypeFEVariableScalar = FEVariableScalar_()
-
-TYPE(FEVariableScalar_), PARAMETER, PUBLIC :: &
-  & TypeVariableScalar = FEVariableScalar_()
+TYPE(FEVariableScalar_), PARAMETER :: TypeVariableScalar  &
+  & = FEVariableScalar_()
 
 !----------------------------------------------------------------------------
 !                                                          FEVariableVector_
@@ -1101,13 +1140,11 @@ TYPE :: FEVariableVector_
 !!  INTEGER(I4B):: Val = 1
 END TYPE FEVariableVector_
 
-PUBLIC :: FEVariableVector_
+TYPE(FEVariableVector_), PARAMETER :: TypeFEVariableVector  &
+  & = FEVariableVector_()
 
-TYPE(FEVariableVector_), PARAMETER, PUBLIC :: &
-  & TypeFEVariableVector = FEVariableVector_()
-
-TYPE(FEVariableVector_), PARAMETER, PUBLIC :: &
-  & TypeVariableVector = FEVariableVector_()
+TYPE(FEVariableVector_), PARAMETER :: TypeVariableVector  &
+  & = FEVariableVector_()
 
 !----------------------------------------------------------------------------
 !                                                          FEVariableMatrix_
@@ -1122,12 +1159,10 @@ TYPE :: FEVariableMatrix_
 !!  INTEGER(I4B):: Val = 2
 END TYPE FEVariableMatrix_
 
-PUBLIC :: FEVariableMatrix_
-
-TYPE(FEVariableMatrix_), PARAMETER, PUBLIC :: &
-  & TypeFEVariableMatrix = FEVariableMatrix_()
-TYPE(FEVariableMatrix_), PARAMETER, PUBLIC :: &
-  & TypeVariableMatrix = FEVariableMatrix_()
+TYPE(FEVariableMatrix_), PARAMETER :: TypeFEVariableMatrix  &
+  & = FEVariableMatrix_()
+TYPE(FEVariableMatrix_), PARAMETER :: TypeVariableMatrix  &
+  & = FEVariableMatrix_()
 
 !----------------------------------------------------------------------------
 !                                                           QuadraturePoint_
@@ -1138,23 +1173,19 @@ TYPE(FEVariableMatrix_), PARAMETER, PUBLIC :: &
 ! update: 2021-12-10
 ! summary: Quadrature points for numerical integration
 !
-!{!pages/QuadraturePoint_.md!}
+!{!pages/docs-api/QuadraturePoint/QuadraturePoint_.md!}
 
 TYPE :: QuadraturePoint_
   REAL(DFP), ALLOCATABLE :: points(:, :)
   INTEGER(I4B) :: txi = 0
 END TYPE QuadraturePoint_
 
-PUBLIC :: QuadraturePoint_
-
-TYPE(QuadraturePoint_), PUBLIC, PARAMETER :: &
-  & TypeQuadraturePoint = QuadraturePoint_(points=NULL())
+TYPE(QuadraturePoint_), PARAMETER :: TypeQuadraturePoint  &
+  & = QuadraturePoint_(points=NULL())
 
 TYPE :: QuadraturePointPointer_
   CLASS(QuadraturePoint_), POINTER :: ptr => NULL()
 END TYPE QuadraturePointPointer_
-
-PUBLIC :: QuadraturePointPointer_
 
 !----------------------------------------------------------------------------
 !                                                         BasisInterpolation_
@@ -1162,8 +1193,6 @@ PUBLIC :: QuadraturePointPointer_
 
 TYPE :: BaseInterpolation_
 END TYPE BaseInterpolation_
-
-PUBLIC :: BaseInterpolation_
 
 !----------------------------------------------------------------------------
 !                                                     LagrangeInterpolation_
@@ -1176,10 +1205,8 @@ PUBLIC :: BaseInterpolation_
 TYPE, EXTENDS(BaseInterpolation_) :: LagrangeInterpolation_
 END TYPE LagrangeInterpolation_
 
-PUBLIC :: LagrangeInterpolation_
-
-TYPE(LagrangeInterpolation_), PARAMETER, PUBLIC :: &
-  & TypeLagrangeInterpolation = LagrangeInterpolation_()
+TYPE(LagrangeInterpolation_), PARAMETER :: TypeLagrangeInterpolation  &
+  & = LagrangeInterpolation_()
 
 !----------------------------------------------------------------------------
 !                                                       HermitInterpolation_
@@ -1192,10 +1219,8 @@ TYPE(LagrangeInterpolation_), PARAMETER, PUBLIC :: &
 TYPE, EXTENDS(BaseInterpolation_) :: HermitInterpolation_
 END TYPE HermitInterpolation_
 
-PUBLIC :: HermitInterpolation_
-
-TYPE(HermitInterpolation_), PARAMETER, PUBLIC :: &
-  & TypeHermitInterpolation = HermitInterpolation_()
+TYPE(HermitInterpolation_), PARAMETER :: TypeHermitInterpolation  &
+  & = HermitInterpolation_()
 
 !----------------------------------------------------------------------------
 !                                                  SerendipityInterpolation_
@@ -1208,10 +1233,8 @@ TYPE(HermitInterpolation_), PARAMETER, PUBLIC :: &
 TYPE, EXTENDS(BaseInterpolation_) :: SerendipityInterpolation_
 END TYPE SerendipityInterpolation_
 
-PUBLIC :: SerendipityInterpolation_
-
-TYPE(SerendipityInterpolation_), PARAMETER, PUBLIC :: &
-  & TypeSerendipityInterpolation = SerendipityInterpolation_()
+TYPE(SerendipityInterpolation_), PARAMETER :: TypeSerendipityInterpolation  &
+  & = SerendipityInterpolation_()
 
 !----------------------------------------------------------------------------
 !                                                    HierarchyInterpolation_
@@ -1224,10 +1247,8 @@ TYPE(SerendipityInterpolation_), PARAMETER, PUBLIC :: &
 TYPE, EXTENDS(BaseInterpolation_) :: HierarchyInterpolation_
 END TYPE HierarchyInterpolation_
 
-PUBLIC :: HierarchyInterpolation_
-
-TYPE(HierarchyInterpolation_), PARAMETER, PUBLIC :: &
-  & TypeHierarchyInterpolation = HierarchyInterpolation_()
+TYPE(HierarchyInterpolation_), PARAMETER :: TypeHierarchyInterpolation  &
+  & = HierarchyInterpolation_()
 
 !----------------------------------------------------------------------------
 !                                                    OrthogonalInterpolation_
@@ -1240,10 +1261,8 @@ TYPE(HierarchyInterpolation_), PARAMETER, PUBLIC :: &
 TYPE, EXTENDS(BaseInterpolation_) :: OrthogonalInterpolation_
 END TYPE OrthogonalInterpolation_
 
-PUBLIC :: OrthogonalInterpolation_
-
-TYPE(OrthogonalInterpolation_), PARAMETER, PUBLIC :: &
-  & TypeOrthogonalInterpolation = OrthogonalInterpolation_()
+TYPE(OrthogonalInterpolation_), PARAMETER :: TypeOrthogonalInterpolation  &
+  & = OrthogonalInterpolation_()
 
 !----------------------------------------------------------------------------
 !                                                          BaseContinuity_
@@ -1266,10 +1285,7 @@ TYPE(OrthogonalInterpolation_), PARAMETER, PUBLIC :: &
 TYPE :: BaseContinuity_
 END TYPE BaseContinuity_
 
-PUBLIC :: BaseContinuity_
-
-TYPE(BaseContinuity_), PARAMETER, PUBLIC :: TypeBaseContinuity  &
-  & = BaseContinuity_()
+TYPE(BaseContinuity_), PARAMETER :: TypeBaseContinuity = BaseContinuity_()
 
 !----------------------------------------------------------------------------
 !                                                                     H1_
@@ -1278,9 +1294,7 @@ TYPE(BaseContinuity_), PARAMETER, PUBLIC :: TypeBaseContinuity  &
 TYPE, EXTENDS(BaseContinuity_) :: H1_
 END TYPE H1_
 
-PUBLIC :: H1_
-
-TYPE(H1_), PARAMETER, PUBLIC :: TypeH1 = H1_()
+TYPE(H1_), PARAMETER :: TypeH1 = H1_()
 
 !----------------------------------------------------------------------------
 !                                                                   H1DIV_
@@ -1289,9 +1303,7 @@ TYPE(H1_), PARAMETER, PUBLIC :: TypeH1 = H1_()
 TYPE, EXTENDS(BaseContinuity_) :: HDIV_
 END TYPE HDIV_
 
-PUBLIC :: HDIV_
-
-TYPE(HDIV_), PARAMETER, PUBLIC :: TypeHDIV = HDIV_()
+TYPE(HDIV_), PARAMETER :: TypeHDIV = HDIV_()
 
 !----------------------------------------------------------------------------
 !                                                                   HCURL_
@@ -1300,9 +1312,7 @@ TYPE(HDIV_), PARAMETER, PUBLIC :: TypeHDIV = HDIV_()
 TYPE, EXTENDS(BaseContinuity_) :: HCURL_
 END TYPE HCURL_
 
-PUBLIC :: HCURL_
-
-TYPE(HCURL_), PARAMETER, PUBLIC :: TypeHCURL = HCURL_()
+TYPE(HCURL_), PARAMETER :: TypeHCURL = HCURL_()
 
 !----------------------------------------------------------------------------
 !                                                                      DG_
@@ -1311,9 +1321,7 @@ TYPE(HCURL_), PARAMETER, PUBLIC :: TypeHCURL = HCURL_()
 TYPE, EXTENDS(BaseContinuity_) :: DG_
 END TYPE DG_
 
-PUBLIC :: DG_
-
-TYPE(DG_), PARAMETER, PUBLIC :: TypeDG = DG_()
+TYPE(DG_), PARAMETER :: TypeDG = DG_()
 
 !----------------------------------------------------------------------------
 !                                                                 Derivative
@@ -1324,13 +1332,12 @@ TYPE(DG_), PARAMETER, PUBLIC :: TypeDG = DG_()
 ! update: 2021-11-06
 ! summary: Derivative class contains symbols for derivatives
 
-INTEGER(I4B), PARAMETER, PUBLIC :: DEL_NONE = 0
-INTEGER(I4B), PARAMETER, PUBLIC :: DEL_X = 1
-INTEGER(I4B), PARAMETER, PUBLIC :: DEL_Y = 2
-INTEGER(I4B), PARAMETER, PUBLIC :: DEL_Z = 3
-INTEGER(I4B), PARAMETER, PUBLIC :: DEL_X_ALL = 4
-!!
-INTEGER(I4B), PARAMETER, PUBLIC :: DEL_t = -1
+INTEGER(I4B), PARAMETER :: DEL_NONE = 0
+INTEGER(I4B), PARAMETER :: DEL_X = 1
+INTEGER(I4B), PARAMETER :: DEL_Y = 2
+INTEGER(I4B), PARAMETER :: DEL_Z = 3
+INTEGER(I4B), PARAMETER :: DEL_X_ALL = 4
+INTEGER(I4B), PARAMETER :: DEL_t = -1
 
 !----------------------------------------------------------------------------
 !                                                            ElementData_
@@ -1349,15 +1356,11 @@ TYPE :: ElementData_
   INTEGER(I4B) :: MAT_Type = -1
 END TYPE ElementData_
 
-PUBLIC :: ElementData_
-
-TYPE(ElementData_), PARAMETER, PUBLIC :: TypeElementData = ElementData_()
+TYPE(ElementData_), PARAMETER :: TypeElementData = ElementData_()
 
 TYPE :: ElementDataPointer_
   CLASS(ElementData_), POINTER :: ptr => NULL()
 END TYPE ElementDataPointer_
-
-PUBLIC :: ElementDataPointer_
 
 !----------------------------------------------------------------------------
 !                                                              ShapeData_
@@ -1382,9 +1385,7 @@ TYPE :: ShapeData_
   REAL(DFP), ALLOCATABLE :: Jacobian(:, :)
 END TYPE ShapeData_
 
-PUBLIC :: ShapeData_
-
-TYPE(ShapeData_), PARAMETER, PUBLIC :: &
+TYPE(ShapeData_), PARAMETER :: &
   & TypeShapeData = ShapeData_( &
     & N=NULL(), &
     & dNdXi=NULL(), &
@@ -1394,8 +1395,6 @@ TYPE(ShapeData_), PARAMETER, PUBLIC :: &
 TYPE :: ShapeDataPointer_
   CLASS(ShapeDataPointer_), POINTER :: ptr => NULL()
 END TYPE ShapeDataPointer_
-
-PUBLIC :: ShapeDataPointer_
 
 !----------------------------------------------------------------------------
 !                                                               STShapeData_
@@ -1421,13 +1420,9 @@ TYPE, EXTENDS(ShapeData_) :: STShapeData_
     !! Spatial gradient of the shape functions at space-time gauss points
 END TYPE STShapeData_
 
-PUBLIC :: STShapeData_
-
 TYPE :: STShapeDataPointer_
   CLASS(STShapeData_), POINTER :: ptr => NULL()
 END TYPE STShapeDataPointer_
-
-PUBLIC :: STShapeDataPointer_
 
 !----------------------------------------------------------------------------
 !                                                           ElemShapeData_
@@ -1464,9 +1459,7 @@ TYPE :: ElemShapeData_
     !! Quadrature points
 END TYPE ElemShapeData_
 
-PUBLIC :: ElemShapeData_
-
-TYPE(ElemShapeData_), PUBLIC, PARAMETER :: &
+TYPE(ElemShapeData_), PARAMETER :: &
   & TypeElemShapeData = ElemShapeData_( &
   & N=NULL(), &
   & dNdXi=NULL(), &
@@ -1481,8 +1474,6 @@ TYPE(ElemShapeData_), PUBLIC, PARAMETER :: &
 TYPE :: ElemShapeDataPointer_
   CLASS(ShapeDataPointer_), POINTER :: ptr => NULL()
 END TYPE ElemShapeDataPointer_
-
-PUBLIC :: ElemShapeDataPointer_
 
 !----------------------------------------------------------------------------
 !                                                           STElemShapeData_
@@ -1509,8 +1500,7 @@ TYPE, EXTENDS(ElemShapeData_) :: STElemShapeData_
     !! (I, a, i, ips)
 END TYPE STElemShapeData_
 
-PUBLIC :: STElemShapeData_
-TYPE(STElemShapeData_), PUBLIC, PARAMETER :: &
+TYPE(STElemShapeData_), PARAMETER :: &
   & TypeSTElemShapeData = STElemShapeData_( &
   & N=NULL(), &
   & dNdXi=NULL(), &
@@ -1542,8 +1532,7 @@ TYPE :: QualityMeasure_
   INTEGER(I4B), PUBLIC :: Default = 106
 END TYPE QualityMeasure_
 
-TYPE(QualityMeasure_), PARAMETER, PUBLIC :: &
-  & QualityMeasure = QualityMeasure_()
+TYPE(QualityMeasure_), PARAMETER :: QualityMeasure = QualityMeasure_()
 
 !----------------------------------------------------------------------------
 !                                                                    Random_
@@ -1557,9 +1546,7 @@ TYPE :: Random_
   REAL(DFP), ALLOCATABLE :: random_real_vec(:)
 END TYPE
 
-PUBLIC :: Random_
-
-TYPE(Random_), PARAMETER, PUBLIC :: &
+TYPE(Random_), PARAMETER :: &
   & TypeRandom = Random_(random_int_seed=NULL(), &
   & random_int_vec=NULL(), &
   & random_real_vec=NULL())
@@ -1580,95 +1567,9 @@ TYPE :: OpenMP_
   LOGICAL(LGT) :: DID_I_INIT = .FALSE.
 END TYPE OpenMP_
 
-TYPE(OpenMP_), PARAMETER, PUBLIC :: TypeOpenMP = OpenMP_()
-TYPE(OpenMP_), PUBLIC :: OMP
+TYPE(OpenMP_), PARAMETER :: TypeOpenMP = OpenMP_()
+TYPE(OpenMP_) :: OMP
 !$OMP THREADPRIVATE( OMP )
-
-!----------------------------------------------------------------------------
-!                                                       Function Inerfaces
-!----------------------------------------------------------------------------
-
-ABSTRACT INTERFACE
-  PURE FUNCTION iface_SpaceTimeFunction(x, t) RESULT(ans)
-    IMPORT :: DFP
-    ! CLASS( DirichletBC_ ), INTENT( IN ):: obj
-    REAL(DFP), INTENT(IN) :: x(:)
-    REAL(DFP), INTENT(IN) :: t
-    REAL(DFP) :: ans
-  END FUNCTION iface_SpaceTimeFunction
-END INTERFACE
-
-PUBLIC :: iface_SpaceTimeFunction
-
-!----------------------------------------------------------------------------
-!
-!----------------------------------------------------------------------------
-
-ABSTRACT INTERFACE
-  PURE FUNCTION iface_SpaceFunction(x) RESULT(ans)
-    IMPORT :: DFP
-    REAL(DFP), INTENT(IN) :: x(:)
-    REAL(DFP) :: ans
-  END FUNCTION iface_SpaceFunction
-END INTERFACE
-
-PUBLIC :: iface_SpaceFunction
-
-!----------------------------------------------------------------------------
-!
-!----------------------------------------------------------------------------
-
-ABSTRACT INTERFACE
-  PURE FUNCTION iface_TimeFunction(t) RESULT(ans)
-    IMPORT :: DFP
-    REAL(DFP), INTENT(IN) :: t
-    REAL(DFP) :: ans
-  END FUNCTION iface_TimeFunction
-END INTERFACE
-
-PUBLIC :: iface_TimeFunction
-
-!----------------------------------------------------------------------------
-!
-!----------------------------------------------------------------------------
-
-ABSTRACT INTERFACE
-  PURE FUNCTION iface_1DFunction(x) RESULT(ans)
-    IMPORT :: DFP
-    REAL(DFP), INTENT(IN) :: x
-    REAL(DFP) :: ans
-  END FUNCTION iface_1DFunction
-END INTERFACE
-
-PUBLIC :: iface_1DFunction
-
-!----------------------------------------------------------------------------
-!
-!----------------------------------------------------------------------------
-
-ABSTRACT INTERFACE
-  PURE FUNCTION iface_2DFunction(x, y) RESULT(ans)
-    IMPORT :: DFP
-    REAL(DFP), INTENT(IN) :: x, y
-    REAL(DFP) :: ans
-  END FUNCTION iface_2DFunction
-END INTERFACE
-
-PUBLIC :: iface_2DFunction
-
-!----------------------------------------------------------------------------
-!
-!----------------------------------------------------------------------------
-
-ABSTRACT INTERFACE
-  PURE FUNCTION iface_3DFunction(x, y, z) RESULT(ans)
-    IMPORT :: DFP
-    REAL(DFP), INTENT(IN) :: x, y, z
-    REAL(DFP) :: ans
-  END FUNCTION iface_3DFunction
-END INTERFACE
-
-PUBLIC :: iface_3DFunction
 
 !----------------------------------------------------------------------------
 !                                                              MultiIndices_
@@ -1685,6 +1586,114 @@ TYPE :: MultiIndices_
   !! order
 END TYPE MultiIndices_
 
-PUBLIC :: MultiIndices_
+!----------------------------------------------------------------------------
+!                                                         SpaceTimeFunction
+!----------------------------------------------------------------------------
+
+ABSTRACT INTERFACE
+  PURE FUNCTION iface_SpaceTimeFunction(x, t) RESULT(ans)
+    IMPORT :: DFP
+    ! CLASS( DirichletBC_ ), INTENT( IN ):: obj
+    REAL(DFP), INTENT(IN) :: x(:)
+    REAL(DFP), INTENT(IN) :: t
+    REAL(DFP) :: ans
+  END FUNCTION iface_SpaceTimeFunction
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                              SpaceFunction
+!----------------------------------------------------------------------------
+
+ABSTRACT INTERFACE
+  PURE FUNCTION iface_SpaceFunction(x) RESULT(ans)
+    IMPORT :: DFP
+    REAL(DFP), INTENT(IN) :: x(:)
+    REAL(DFP) :: ans
+  END FUNCTION iface_SpaceFunction
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                              TimeFunction
+!----------------------------------------------------------------------------
+
+ABSTRACT INTERFACE
+  PURE FUNCTION iface_TimeFunction(t) RESULT(ans)
+    IMPORT :: DFP
+    REAL(DFP), INTENT(IN) :: t
+    REAL(DFP) :: ans
+  END FUNCTION iface_TimeFunction
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                               1DFunction
+!----------------------------------------------------------------------------
+
+ABSTRACT INTERFACE
+  PURE FUNCTION iface_1DFunction(x) RESULT(ans)
+    IMPORT :: DFP
+    REAL(DFP), INTENT(IN) :: x
+    REAL(DFP) :: ans
+  END FUNCTION iface_1DFunction
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                               2DFunction
+!----------------------------------------------------------------------------
+
+ABSTRACT INTERFACE
+  PURE FUNCTION iface_2DFunction(x, y) RESULT(ans)
+    IMPORT :: DFP
+    REAL(DFP), INTENT(IN) :: x, y
+    REAL(DFP) :: ans
+  END FUNCTION iface_2DFunction
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                               3DFunction
+!----------------------------------------------------------------------------
+
+ABSTRACT INTERFACE
+  PURE FUNCTION iface_3DFunction(x, y, z) RESULT(ans)
+    IMPORT :: DFP
+    REAL(DFP), INTENT(IN) :: x, y, z
+    REAL(DFP) :: ans
+  END FUNCTION iface_3DFunction
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                             ScalarFunction
+!----------------------------------------------------------------------------
+
+ABSTRACT INTERFACE
+  PURE FUNCTION iface_ScalarFunction(x) RESULT(ans)
+    IMPORT :: DFP
+    REAL(DFP), OPTIONAL, INTENT(IN) :: x(:)
+    REAL(DFP) :: ans
+  END FUNCTION iface_ScalarFunction
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+ABSTRACT INTERFACE
+  PURE FUNCTION iface_VectorFunction(x) RESULT(ans)
+    IMPORT :: DFP
+    REAL(DFP), OPTIONAL, INTENT(IN) :: x(:)
+    REAL(DFP), ALLOCATABLE :: ans(:)
+  END FUNCTION iface_VectorFunction
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+ABSTRACT INTERFACE
+  PURE FUNCTION iface_MatrixFunction(x) RESULT(ans)
+    IMPORT :: DFP
+    REAL(DFP), OPTIONAL, INTENT(IN) :: x(:)
+    REAL(DFP), ALLOCATABLE :: ans(:, :)
+  END FUNCTION iface_MatrixFunction
+END INTERFACE
 
 END MODULE BaseType

@@ -15,17 +15,7 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-!> author: Vikas Sharma, Ph. D.
-! date:         23 Feb 2021
-! summary:         This module contains methods of [[DOF_]] object
-!
-!{!pages/docs-api/DOF/DOF_.md!}
+! This module is used when we are not using Lua
 
-MODULE DOF_Method
-USE DOF_ConstructorMethods
-USE DOF_IOMethods
-USE DOF_GetMethods
-USE DOF_GetValueMethods
-USE DOF_SetMethods
-USE DOF_AddMethods
-END MODULE DOF_Method
+MODULE LuaInterface
+END MODULE LuaInterface

@@ -33,10 +33,10 @@ PUBLIC :: OPERATOR(.ttimecomponents.)
 PUBLIC :: OPERATOR(.EQ.)
 PUBLIC :: OPERATOR(.NE.)
 PUBLIC :: OPERATOR(.Names.)
-PUBLIC :: getIDOF
+PUBLIC :: GetIDOF
 PUBLIC :: SIZE
-PUBLIC :: getNodeLoc
-PUBLIC :: getIndex
+PUBLIC :: GetNodeLoc
+PUBLIC :: GetIndex
 
 !----------------------------------------------------------------------------
 !                                                  DOFStartIndex@getMethods
@@ -316,7 +316,7 @@ INTERFACE
   MODULE PURE FUNCTION dof_names2(obj, ii) RESULT(ans)
     CLASS(DOF_), INTENT(IN) :: obj
     INTEGER(I4B), INTENT(IN) :: ii
-    CHARACTER(1), ALLOCATABLE :: ans
+    CHARACTER(1) :: ans
   END FUNCTION dof_names2
 END INTERFACE
 

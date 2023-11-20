@@ -28,7 +28,6 @@
 ! be included here.
 
 MODULE BaseMethod
-
 #ifdef USE_SuperLU
 USE SuperLUInterface
 #endif
@@ -116,5 +115,6 @@ USE Rank2Tensor_Method
 USE VoigtRank2Tensor_Method
 USE CSRSparsity_Method
 USE CSRMatrix_Method
+USE LuaInterface
 
 END MODULE BaseMethod

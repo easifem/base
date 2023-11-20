@@ -159,7 +159,7 @@ PUBLIC :: LinSolve
 ! Therefore, when A is large this routine should be avoided.
 !@endnote
 
-INTERFACE
+INTERFACE Solve
   MODULE SUBROUTINE ge_solve_1(X, A, B, IPIV, SolverName, isTranspose, RANK, &
     & RCOND, S, info)
     REAL(DFP), INTENT(INOUT) :: X(:)
@@ -192,10 +192,6 @@ INTERFACE
     !! The condition number of A in the 2-norm = S(1)/S(min(m,n)).
     INTEGER(I4B), OPTIONAL, INTENT(OUT) :: info
   END SUBROUTINE ge_solve_1
-END INTERFACE
-
-INTERFACE Solve
-  MODULE PROCEDURE ge_solve_1
 END INTERFACE Solve
 
 !----------------------------------------------------------------------------
@@ -214,7 +210,7 @@ END INTERFACE Solve
 !
 ! All other things are same as `ge_solve_1`.
 
-INTERFACE
+INTERFACE Solve
   MODULE SUBROUTINE ge_solve_2(X, A, B, IPIV, SolverName, isTranspose, RANK, &
     & RCOND, S, info)
     REAL(DFP), INTENT(INOUT) :: X(:, :)
@@ -234,10 +230,6 @@ INTERFACE
     REAL(DFP), OPTIONAL, INTENT(OUT) :: S(:)
     INTEGER(I4B), OPTIONAL, INTENT(OUT) :: info
   END SUBROUTINE ge_solve_2
-END INTERFACE
-
-INTERFACE Solve
-  MODULE PROCEDURE ge_solve_2
 END INTERFACE Solve
 
 !----------------------------------------------------------------------------
@@ -326,7 +318,7 @@ END INTERFACE Solve
 ! On exit, the first min(m,n) rows of A are overwritten with
 ! its right singular vectors, stored rowwise.
 
-INTERFACE
+INTERFACE LinSolve
   MODULE SUBROUTINE ge_linsolve_1(X, A, B, IPIV, SolverName, &
     & isTranspose, RANK, RCOND, S, info)
     REAL(DFP), INTENT(INOUT) :: X(:)
@@ -337,9 +329,9 @@ INTERFACE
       !! RHS of Ax=B
     INTEGER(I4B), OPTIONAL, INTENT(OUT) :: IPIV(:)
       !! Used for GESV
-    ! IPIV is INTEGER array, dimension (N)
-    ! The pivot indices that define the permutation matrix P;
-    ! row i of the matrix was interchanged with row IPIV(i).
+      !! IPIV is INTEGER array, dimension (N)
+      !! The pivot indices that define the permutation matrix P;
+      !! row i of the matrix was interchanged with row IPIV(i).
     CHARACTER(*), OPTIONAL, INTENT(IN) :: SolverName
       !! Name of the solver, when A is not square, default is GELS
     LOGICAL(LGT), OPTIONAL, INTENT(IN) :: isTranspose
@@ -359,10 +351,6 @@ INTERFACE
     !! The condition number of A in the 2-norm = S(1)/S(min(m,n)).
     INTEGER(I4B), OPTIONAL, INTENT(OUT) :: info
   END SUBROUTINE ge_linsolve_1
-END INTERFACE
-
-INTERFACE LinSolve
-  MODULE PROCEDURE ge_linsolve_1
 END INTERFACE LinSolve
 
 !----------------------------------------------------------------------------
@@ -381,7 +369,7 @@ END INTERFACE LinSolve
 !
 ! All other things are same as `ge_solve_1`.
 
-INTERFACE
+INTERFACE LinSolve
   MODULE SUBROUTINE ge_linsolve_2(X, A, B, IPIV, SolverName, isTranspose, &
     & RANK, RCOND, S, info)
     REAL(DFP), INTENT(INOUT) :: X(:, :)
@@ -401,10 +389,6 @@ INTERFACE
     REAL(DFP), OPTIONAL, INTENT(OUT) :: S(:)
     INTEGER(I4B), OPTIONAL, INTENT(OUT) :: info
   END SUBROUTINE ge_linsolve_2
-END INTERFACE
-
-INTERFACE LinSolve
-  MODULE PROCEDURE ge_linsolve_2
 END INTERFACE LinSolve
 
 !----------------------------------------------------------------------------
@@ -422,7 +406,7 @@ END INTERFACE LinSolve
 ! We do not make any copy of B. The solution is returned in B. This
 ! means B will be destroyed on return.
 
-INTERFACE
+INTERFACE LinSolve
   MODULE SUBROUTINE ge_linsolve_3(A, B, IPIV, SolverName, &
     & isTranspose, RANK, RCOND, S, info)
     REAL(DFP), INTENT(INOUT) :: A(:, :)
@@ -454,10 +438,6 @@ INTERFACE
     !! The condition number of A in the 2-norm = S(1)/S(min(m,n)).
     INTEGER(I4B), OPTIONAL, INTENT(OUT) :: info
   END SUBROUTINE ge_linsolve_3
-END INTERFACE
-
-INTERFACE LinSolve
-  MODULE PROCEDURE ge_linsolve_3
 END INTERFACE LinSolve
 
 INTERFACE Solve
@@ -479,7 +459,7 @@ END INTERFACE Solve
 ! In this routine we do not create copy of B, ans sol is returned in B.
 ! This means B will be changed on return.
 
-INTERFACE
+INTERFACE LinSolve
   MODULE SUBROUTINE ge_linsolve_4(A, B, IPIV, SolverName, isTranspose, &
     & RANK, RCOND, S, info)
     REAL(DFP), INTENT(INOUT) :: A(:, :)
@@ -499,10 +479,6 @@ INTERFACE
     REAL(DFP), OPTIONAL, INTENT(OUT) :: S(:)
     INTEGER(I4B), OPTIONAL, INTENT(OUT) :: info
   END SUBROUTINE ge_linsolve_4
-END INTERFACE
-
-INTERFACE LinSolve
-  MODULE PROCEDURE ge_linsolve_4
 END INTERFACE LinSolve
 
 INTERFACE Solve

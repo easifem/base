@@ -36,7 +36,7 @@ REAL(DFP) :: alpha
   !!
   !!check
   !!
-IF (SIZE(value) .LT. obj%csr%nrow) THEN
+IF (SIZE(VALUE) .LT. obj%csr%nrow) THEN
   CALL ErrorMSG(  &
     & Msg="SIZE of column vector is less than the number of row &
     & in sparse matrix", &
@@ -70,7 +70,7 @@ END IF
   !!
   !! check
   !!
-IF ((.StorageFMT.obj) .NE. FMT_DOF) THEN
+IF ((obj.StorageFMT.ivar) .NE. FMT_DOF) THEN
   CALL ErrorMSG(  &
     & Msg="For this rotuine storage format should FMT_DOF", &
     & File="CSRMatrix_Method@getMethod.F90", &
@@ -95,10 +95,10 @@ IF (PRESENT(addContribution)) THEN
   alpha = INPUT(Default=1.0_DFP, Option=scale)
     !!
   DO ii = row_start, row_end
-    value(ii) = 0.0_DFP
+    VALUE(ii) = 0.0_DFP
     DO jj = obj%csr%IA(ii), obj%csr%IA(ii + 1) - 1
       IF (obj%csr%JA(jj) .EQ. icolumn) THEN
-        value(ii) = value(ii) + alpha * obj%A(jj)
+        VALUE(ii) = VALUE(ii) + alpha * obj%A(jj)
         EXIT
       END IF
     END DO
@@ -109,10 +109,10 @@ IF (PRESENT(addContribution)) THEN
 ELSE
     !!
   DO ii = row_start, row_end
-    value(ii) = 0.0_DFP
+    VALUE(ii) = 0.0_DFP
     DO jj = obj%csr%IA(ii), obj%csr%IA(ii + 1) - 1
       IF (obj%csr%JA(jj) .EQ. icolumn) THEN
-        value(ii) = obj%A(jj)
+        VALUE(ii) = obj%A(jj)
         EXIT
       END IF
     END DO
@@ -142,11 +142,11 @@ IF (PRESENT(addContribution)) THEN
   alpha = INPUT(Default=1.0_DFP, Option=scale)
     !!
   DO ii = row_start, row_end
-    value(ii) = 0.0_DFP
-    DO kk = 1, size(icolumn)
+    VALUE(ii) = 0.0_DFP
+    DO kk = 1, SIZE(icolumn)
       DO jj = obj%csr%IA(ii), obj%csr%IA(ii + 1) - 1
         IF (obj%csr%JA(jj) .EQ. icolumn(kk)) THEN
-          value(ii) = value(ii) + alpha * obj%A(jj)
+          VALUE(ii) = VALUE(ii) + alpha * obj%A(jj)
           EXIT
         END IF
       END DO
@@ -156,11 +156,11 @@ IF (PRESENT(addContribution)) THEN
 ELSE
     !!
   DO ii = row_start, row_end
-    value(ii) = 0.0_DFP
-    DO kk = 1, size(icolumn)
+    VALUE(ii) = 0.0_DFP
+    DO kk = 1, SIZE(icolumn)
       DO jj = obj%csr%IA(ii), obj%csr%IA(ii + 1) - 1
         IF (obj%csr%JA(jj) .EQ. icolumn(kk)) THEN
-          value(ii) = obj%A(jj)
+          VALUE(ii) = obj%A(jj)
           EXIT
         END IF
       END DO
@@ -184,7 +184,7 @@ CALL getBlockColumn(  &
   & obj=obj%csr%jdof, &
   & nodeNum=nodenum, &
   & idof=idof), &
-  & value=value, &
+  & VALUE=VALUE, &
   & scale=scale, &
   & addContribution=addContribution)
   !!
@@ -204,7 +204,7 @@ CALL getBlockColumn( &
   & nodeNum=nodenum, &
   & ivar=jvar, &
   & idof=idof), &
-  & value=value, &
+  & VALUE=VALUE, &
   & scale=scale, &
   & addContribution=addContribution)
   !!
@@ -225,7 +225,7 @@ CALL getBlockColumn(  &
   & ivar=jvar, &
   & spacecompo=spacecompo, &
   & timecompo=timecompo), &
-  & value=value, &
+  & VALUE=VALUE, &
   & scale=scale, &
   & addContribution=addContribution)
   !!
@@ -246,7 +246,7 @@ CALL getBlockColumn(  &
   & ivar=jvar, &
   & spacecompo=spacecompo, &
   & timecompo=timecompo), &
-  & value=value, &
+  & VALUE=VALUE, &
   & scale=scale, &
   & addContribution=addContribution)
   !!
@@ -267,7 +267,7 @@ CALL getBlockColumn(  &
   & ivar=jvar, &
   & spacecompo=spacecompo, &
   & timecompo=timecompo), &
-  & value=value, &
+  & VALUE=VALUE, &
   & scale=scale, &
   & addContribution=addContribution)
   !!
@@ -288,7 +288,7 @@ CALL getBlockColumn(  &
   & ivar=jvar, &
   & spacecompo=spacecompo, &
   & timecompo=timecompo), &
-  & value=value, &
+  & VALUE=VALUE, &
   & scale=scale, &
   & addContribution=addContribution)
   !!
@@ -309,7 +309,7 @@ CALL getBlockColumn(  &
   & ivar=jvar, &
   & spacecompo=spacecompo, &
   & timecompo=timecompo), &
-  & value=value, &
+  & VALUE=VALUE, &
   & scale=scale, &
   & addContribution=addContribution)
   !!

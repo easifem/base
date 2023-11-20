@@ -24,21 +24,21 @@ CONTAINS
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE iterdata_Display
-  CALL Display( '# '//trim(msg), unitno )
-  CALL Display( obj%maxIter, '# maxIter: ', unitno)
-  CALL Display( obj%iterationNumber, '# iterationNumber: ', unitno)
-  CALL Display( obj%residualError0, '# residualError0: ', unitno)
-  CALL Display( obj%residualError, '# residualError: ', unitno)
-  CALL Display( obj%residualTolerance, '# residualTolerance: ', unitno)
-  CALL Display( obj%solutionError0, '# solutionError0: ', unitno)
-  CALL Display( obj%solutionError, '# solutionError: ', unitno)
-  CALL Display( obj%solutionTolerance, '# solutionTolerance: ', unitno)
-  CALL Display( obj%convergenceType, '# convergenceType: ', unitno)
-  CALL Display( obj%convergenceIn, '# convergenceIn: ', unitno)
-  CALL Display( obj%normType, '# normType: ', unitno)
-  CALL Display( obj%converged, '# converged: ', unitno)
-  CALL Display( obj%timeAtStart, '# timeAtStart: ', unitno)
-  CALL Display( obj%timeAtEnd, '# timeAtEnd: ', unitno)
+CALL Display(TRIM(msg), unitno)
+CALL Display(obj%maxIter, 'maxIter: ', unitno)
+CALL Display(obj%iterationNumber, 'iterationNumber: ', unitno)
+CALL Display(obj%residualError0, 'residualError0: ', unitno)
+CALL Display(obj%residualError, 'residualError: ', unitno)
+CALL Display(obj%residualTolerance, 'residualTolerance: ', unitno)
+CALL Display(obj%solutionError0, 'solutionError0: ', unitno)
+CALL Display(obj%solutionError, 'solutionError: ', unitno)
+CALL Display(obj%solutionTolerance, 'solutionTolerance: ', unitno)
+CALL Display(obj%convergenceType, 'convergenceType: ', unitno)
+CALL Display(obj%convergenceIn, 'convergenceIn: ', unitno)
+CALL Display(obj%normType, 'normType: ', unitno)
+CALL Display(obj%converged, 'converged: ', unitno)
+CALL Display(obj%timeAtStart, 'timeAtStart: ', unitno)
+CALL Display(obj%timeAtEnd, 'timeAtEnd: ', unitno)
 END PROCEDURE iterdata_Display
 
 END SUBMODULE IOMethods
