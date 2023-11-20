@@ -22,4 +22,5 @@ TARGET_SOURCES(
   ${src_path}/BoundingBox_Method@SetMethods.F90
   ${src_path}/BoundingBox_Method@GetMethods.F90
   ${src_path}/BoundingBox_Method@IOMethods.F90
+  ${src_path}/BoundingBox_Method@TomlMethods.F90
 )
