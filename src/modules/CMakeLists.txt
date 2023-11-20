@@ -45,6 +45,9 @@ INCLUDE(${CMAKE_CURRENT_LIST_DIR}/Test/CMakeLists.txt)
 #GlobalData
 INCLUDE(${CMAKE_CURRENT_LIST_DIR}/GlobalData/CMakeLists.txt)
 
+#Display
+INCLUDE(${CMAKE_CURRENT_LIST_DIR}/Display/CMakeLists.txt)
+
 #ARPACK
 INCLUDE(${CMAKE_CURRENT_LIST_DIR}/ARPACK/CMakeLists.txt)
 
@@ -57,6 +60,9 @@ INCLUDE(${CMAKE_CURRENT_LIST_DIR}/Gnuplot/CMakeLists.txt)
 #CInterface
 INCLUDE(${CMAKE_CURRENT_LIST_DIR}/CInterface/CMakeLists.txt)
 
+#LuaInterface
+INCLUDE(${CMAKE_CURRENT_LIST_DIR}/LuaInterface/CMakeLists.txt)
+
 #SuperLUInterface
 INCLUDE(${CMAKE_CURRENT_LIST_DIR}/SuperLUInterface/CMakeLists.txt)
 
@@ -66,15 +72,11 @@ INCLUDE(${CMAKE_CURRENT_LIST_DIR}/LISInterface/CMakeLists.txt)
 #MetisInterface
 INCLUDE(${CMAKE_CURRENT_LIST_DIR}/MetisInterface/CMakeLists.txt)
 
-#Display
-INCLUDE(${CMAKE_CURRENT_LIST_DIR}/Display/CMakeLists.txt)
-
 #MdEncode
 INCLUDE(${CMAKE_CURRENT_LIST_DIR}/MdEncode/CMakeLists.txt)
 
 #ErrorHandling
 INCLUDE(${CMAKE_CURRENT_LIST_DIR}/ErrorHandling/CMakeLists.txt)
-
 
 #Utility
 INCLUDE(${CMAKE_CURRENT_LIST_DIR}/Utility/CMakeLists.txt)
