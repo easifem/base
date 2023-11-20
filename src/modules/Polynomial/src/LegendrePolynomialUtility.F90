@@ -913,7 +913,7 @@ INTERFACE
   MODULE PURE FUNCTION LegendreTransform1(n, coeff, x, w, &
     &  quadType) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: n
-    !! order of jacobi polynomial
+    !! order of Legendre polynomials
     REAL(DFP), INTENT(IN) :: coeff(0:n)
     !! nodal value (at quad points)
     REAL(DFP), INTENT(IN) :: x(0:n)
