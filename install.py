@@ -20,7 +20,7 @@ else:
     cmake_def = ""
     cmake_def += ' -G "Ninja"'  # Unix Makefiles, Ninja, Ninja Multi-Config
     cmake_def += " -D USE_OpenMP:BOOL=ON"  # OFF
-    cmake_def += " -D CMAKE_BUILD_TYPE:STRING=Release"  # Debug
+    cmake_def += " -D CMAKE_BUILD_TYPE:STRING=Debug"  # Release
     cmake_def += " -D BUILD_SHARED_LIBS:BOOL=ON"
     cmake_def += " -D USE_PLPLOT:BOOL=ON"
     cmake_def += " -D CMAKE_INSTALL_PREFIX:PATH=${EASIFEM_BASE}"
@@ -33,6 +33,7 @@ else:
     cmake_def += " -D USE_LIS:BOOL=ON"
     cmake_def += " -D USE_PARPACK:BOOL=OFF"
     cmake_def += " -D USE_METIS:BOOL=OFF"
+    cmake_def += " -D USE_LUA:BOOL=ON"
     cmake_def += " -D USE_Int32:BOOL=ON"
     cmake_def += " -D USE_Real64:BOOL=ON"
     cmake_def += " -D COLOR_DISP:BOOL=OFF"

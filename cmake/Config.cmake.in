@@ -1,42 +1,10 @@
-# easifemBaseConfig.cmake.in
-#-----------------------------
-#
-# easifemBase cmake module
-# This module sets the following variables in your project:
-#
-# ::
-#
-# easifemBase_FOUND - true if easifemBase found on the system
-# easifemBase_VERSION - easifem version in format Major.Minor.Release
-#
-#
-# Exported targets:
-#
-# ::
-#
-#
-#
-# easifemBase::easifemBase-shared
-# easifemBase::easifem-Static
-#
-#
-# Suggested usage:
-#
-# ::
-#
-# find_package(easifemBase)
-# find_package(easifemBase 1.0.0 CONFIG REQUIRED)
-#
-# The following variables can be set to guide the search for this package:
-#
-#
-
 @PACKAGE_INIT@
 
 LIST(
   APPEND
   ExternalLibs
   Sparsekit
+  toml-f
 )
 
 IF( @USE_LAPACK95@ )
