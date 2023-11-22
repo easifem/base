@@ -396,7 +396,7 @@ INTERFACE GetConnectivity
 END INTERFACE GetConnectivity
 
 !----------------------------------------------------------------------------
-!                                               ElementType@GeometryMethods
+!                                            ElementType@ElementNameMethods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -411,7 +411,7 @@ INTERFACE ElementType
 END INTERFACE ElementType
 
 !----------------------------------------------------------------------------
-!                                                      ElementType@GetMethods
+!                                             ElementType@ElementNameMethods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -426,7 +426,7 @@ INTERFACE ElementType
 END INTERFACE ElementType
 
 !----------------------------------------------------------------------------
-!                                               ElementName@GeometryMethods
+!                                           ElementName@ElementNameMethods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -441,7 +441,7 @@ INTERFACE ElementName
 END INTERFACE ElementName
 
 !----------------------------------------------------------------------------
-!                                               ElementName@GeometryMethods
+!                                             ElementName@ElementNameMethods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -456,7 +456,7 @@ INTERFACE ElementName
 END INTERFACE ElementName
 
 !----------------------------------------------------------------------------
-!                                       TotalNodesInElement@GeometryMethods
+!                                   TotalNodesInElement@ElementNameMethods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -471,7 +471,7 @@ INTERFACE TotalNodesInElement
 END INTERFACE TotalNodesInElement
 
 !----------------------------------------------------------------------------
-!                                              ElementOrder@GeometryMethods
+!                                           ElementOrder@ElementNameMethods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -486,7 +486,7 @@ INTERFACE ElementOrder
 END INTERFACE ElementOrder
 
 !----------------------------------------------------------------------------
-!                                              ElementOrder@GeometryMethods
+!                                           ElementOrder@ElementNameMethods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -505,7 +505,7 @@ INTERFACE OPERATOR(.order.)
 END INTERFACE OPERATOR(.order.)
 
 !----------------------------------------------------------------------------
-!                                               XiDimension@GeometryMethods
+!                                            XiDimension@ElementNameMethods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -521,7 +521,7 @@ INTERFACE XiDimension
 END INTERFACE Xidimension
 
 !----------------------------------------------------------------------------
-!                                                Xidimension@GeometryMethods
+!                                             Xidimension@ElementNameMethods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -867,7 +867,7 @@ INTERFACE isSerendipityElement
 END INTERFACE isSerendipityElement
 
 !----------------------------------------------------------------------------
-!                                           ElementTopology@GeometryMethods
+!                                         ElementTopology@ElementNameMethods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -895,7 +895,7 @@ INTERFACE OPERATOR(.topology.)
 END INTERFACE OPERATOR(.topology.)
 
 !----------------------------------------------------------------------------
-!                                           ElementTopology@GeometryMethods
+!                                       ElementTopology@ElementNameMethods
 !----------------------------------------------------------------------------
 
 INTERFACE ElementTopology
@@ -951,7 +951,7 @@ INTERFACE FacetElements
 END INTERFACE FacetElements
 
 !----------------------------------------------------------------------------
-!                                            LocalNodeCoord@GeometryMethods
+!                                       LocalNodeCoord@LocalNodeCoordMethods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -972,7 +972,7 @@ INTERFACE
 END INTERFACE
 
 !----------------------------------------------------------------------------
-!                                            LocalNodeCoord@GeometryMethods
+!                                     LocalNodeCoord@LocalNodeCoordMethods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
