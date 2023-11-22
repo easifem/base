@@ -286,11 +286,15 @@ END INTERFACE DEALLOCATE
 !```
 
 INTERFACE OPERATOR(.NNE.)
-  MODULE PURE FUNCTION refelem_NNE1(obj) RESULT(Ans)
+  MODULE PURE FUNCTION refelem_NNE1(obj) RESULT(ans)
     CLASS(ReferenceTopology_), INTENT(IN) :: obj
-    INTEGER(I4B) :: Ans
+    INTEGER(I4B) :: ans
   END FUNCTION refelem_NNE1
 END INTERFACE OPERATOR(.NNE.)
+
+INTERFACE TotalNodesInElement
+  MODULE PROCEDURE refelem_NNE1
+END INTERFACE TotalNodesInElement
 
 !----------------------------------------------------------------------------
 !                                                    NNE@ConstructorMethods
@@ -302,11 +306,15 @@ END INTERFACE OPERATOR(.NNE.)
 !
 
 INTERFACE OPERATOR(.NNE.)
-  MODULE PURE FUNCTION refelem_NNE2(obj) RESULT(Ans)
+  MODULE PURE FUNCTION refelem_NNE2(obj) RESULT(ans)
     CLASS(ReferenceElement_), INTENT(IN) :: obj
-    INTEGER(I4B) :: Ans
+    INTEGER(I4B) :: ans
   END FUNCTION refelem_NNE2
 END INTERFACE OPERATOR(.NNE.)
+
+INTERFACE TotalNodesInElement
+  MODULE PROCEDURE refelem_NNE2
+END INTERFACE TotalNodesInElement
 
 !----------------------------------------------------------------------------
 !                                               Initiate@ConstructorMethods
@@ -343,7 +351,7 @@ END INTERFACE
 
 INTERFACE ReferenceElement_Pointer
   MODULE FUNCTION refelem_Constructor_1(xidim, nsd, elemType, &
-    & ipType) RESULT(Ans)
+    & ipType) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: xidim
       !! xidimension
     INTEGER(I4B), INTENT(IN) :: nsd
@@ -381,7 +389,7 @@ END INTERFACE ReferenceElement_Pointer
 ! summary: Returns the node numbers of reference element
 
 INTERFACE GetConnectivity
-  MODULE PURE FUNCTION refelem_GetNptrs(obj) RESULT(Ans)
+  MODULE PURE FUNCTION refelem_GetNptrs(obj) RESULT(ans)
     CLASS(ReferenceElement_), INTENT(IN) :: obj
     INTEGER(I4B), ALLOCATABLE :: ans(:)
   END FUNCTION refelem_GetNptrs
@@ -396,10 +404,25 @@ END INTERFACE GetConnectivity
 ! summary: Returns element name in integer from element name
 
 INTERFACE ElementType
-  MODULE PURE FUNCTION Element_Type(ElemName) RESULT(Ans)
+  MODULE PURE FUNCTION Element_Type(ElemName) RESULT(ans)
     CHARACTER(*), INTENT(IN) :: ElemName
-    INTEGER(I4B) :: Ans
+    INTEGER(I4B) :: ans
   END FUNCTION Element_Type
+END INTERFACE ElementType
+
+!----------------------------------------------------------------------------
+!                                                      ElementType@GetMethods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2023-11-22
+! summary: Return name of element
+
+INTERFACE ElementType
+  MODULE PURE FUNCTION Element_Type_obj(obj) RESULT(ans)
+    CLASS(ReferenceElement_), INTENT(IN) :: obj
+    INTEGER(I4B) :: ans
+  END FUNCTION Element_Type_obj
 END INTERFACE ElementType
 
 !----------------------------------------------------------------------------
@@ -411,10 +434,25 @@ END INTERFACE ElementType
 ! summary: Returns element name in character from element number/type
 
 INTERFACE ElementName
-  MODULE PURE FUNCTION Element_Name(ElemType) RESULT(Ans)
-    INTEGER(I4B), INTENT(IN) :: ElemType
-    CHARACTER(50) :: Ans
+  MODULE PURE FUNCTION Element_Name(elemType) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: elemType
+    CHARACTER(50) :: ans
   END FUNCTION Element_Name
+END INTERFACE ElementName
+
+!----------------------------------------------------------------------------
+!                                               ElementName@GeometryMethods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 21 May 2022
+! summary: Returns element name in character from ReferenceElement
+
+INTERFACE ElementName
+  MODULE PURE FUNCTION Element_Name_obj(obj) RESULT(ans)
+    CLASS(ReferenceElement_), INTENT(IN) :: obj
+    CHARACTER(:), ALLOCATABLE :: ans
+  END FUNCTION Element_Name_obj
 END INTERFACE ElementName
 
 !----------------------------------------------------------------------------
@@ -426,9 +464,9 @@ END INTERFACE ElementName
 ! summary: Returns total numbers of nodes present in a given element
 
 INTERFACE TotalNodesInElement
-  MODULE PURE FUNCTION Total_Nodes_In_Element(ElemType) RESULT(Ans)
-    INTEGER(I4B) :: Ans
-    INTEGER(I4B), INTENT(IN) :: ElemType
+  MODULE PURE FUNCTION Total_Nodes_In_Element(elemType) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: elemType
+    INTEGER(I4B) :: ans
   END FUNCTION Total_Nodes_In_Element
 END INTERFACE TotalNodesInElement
 
@@ -441,9 +479,9 @@ END INTERFACE TotalNodesInElement
 ! summary: Returns the order of an element
 
 INTERFACE ElementOrder
-  MODULE PURE FUNCTION Element_Order(ElemType) RESULT(Ans)
-    INTEGER(I4B) :: Ans
-    INTEGER(I4B), INTENT(IN) :: ElemType
+  MODULE PURE FUNCTION Element_Order(elemType) RESULT(ans)
+    INTEGER(I4B) :: ans
+    INTEGER(I4B), INTENT(IN) :: elemType
   END FUNCTION Element_Order
 END INTERFACE ElementOrder
 
@@ -456,9 +494,9 @@ END INTERFACE ElementOrder
 ! summary: Returns the order of an element
 
 INTERFACE ElementOrder
-  MODULE PURE FUNCTION Element_Order_refelem(refelem) RESULT(Ans)
+  MODULE PURE FUNCTION Element_Order_refelem(refelem) RESULT(ans)
     CLASS(ReferenceElement_), INTENT(IN) :: refelem
-    INTEGER(I4B) :: Ans
+    INTEGER(I4B) :: ans
   END FUNCTION Element_Order_refelem
 END INTERFACE ElementOrder
 
@@ -476,9 +514,9 @@ END INTERFACE OPERATOR(.order.)
 ! summary: Returns the xidimension of an element
 
 INTERFACE XiDimension
-  MODULE PURE FUNCTION Elem_XiDimension1(ElemType) RESULT(Ans)
-    INTEGER(I4B) :: Ans
-    INTEGER(I4B), INTENT(IN) :: ElemType
+  MODULE PURE FUNCTION Elem_XiDimension1(elemType) RESULT(ans)
+    INTEGER(I4B) :: ans
+    INTEGER(I4B), INTENT(IN) :: elemType
   END FUNCTION Elem_XiDimension1
 END INTERFACE Xidimension
 
@@ -492,176 +530,341 @@ END INTERFACE Xidimension
 ! summary: Returns xidimension of the reference element
 
 INTERFACE Xidimension
-  MODULE PURE FUNCTION Elem_Xidimension2(obj) RESULT(Ans)
+  MODULE PURE FUNCTION Elem_Xidimension2(obj) RESULT(ans)
     CLASS(ReferenceElement_), INTENT(IN) :: obj
     INTEGER(I4B) :: ans
   END FUNCTION Elem_Xidimension2
 END INTERFACE XiDimension
 
 !----------------------------------------------------------------------------
-!                                                   isVolume@GeometryMethods
+!                                                   isVolume@EnquireMethods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 21 May 2022
 ! summary: Returns true if element is a volume element
 
-INTERFACE
-  MODULE PURE FUNCTION isVolume(ElemType) RESULT(Ans)
-    LOGICAL(LGT) :: Ans
-    INTEGER(I4B), INTENT(IN) :: ElemType
-  END FUNCTION isVolume
-END INTERFACE
+INTERFACE isVolume
+  MODULE PURE FUNCTION isVolume1(elemType) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: elemType
+    LOGICAL(LGT) :: ans
+  END FUNCTION isVolume1
+END INTERFACE isVolume
 
 !----------------------------------------------------------------------------
-!                                                 isSurface@GeometryMethods
+!                                                   isVolume@EnquireMethods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 21 May 2022
+! summary: Returns true if element is a volume element
+
+INTERFACE isVolume
+  MODULE PURE FUNCTION isVolume2(obj) RESULT(ans)
+    CLASS(ReferenceElement_), INTENT(IN) :: obj
+    LOGICAL(LGT) :: ans
+  END FUNCTION isVolume2
+END INTERFACE isVolume
+
+!----------------------------------------------------------------------------
+!                                                 isSurface@EnquireMethods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 21 May 2022
 ! summary: Returns true if element is a Surface element
 
-INTERFACE
-  MODULE PURE FUNCTION isSurface(ElemType) RESULT(Ans)
-    LOGICAL(LGT) :: Ans
-    INTEGER(I4B), INTENT(IN) :: ElemType
-  END FUNCTION isSurface
-END INTERFACE
+INTERFACE isSurface
+  MODULE PURE FUNCTION isSurface1(elemType) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: elemType
+    LOGICAL(LGT) :: ans
+  END FUNCTION isSurface1
+END INTERFACE isSurface
 
 !----------------------------------------------------------------------------
-!                                                    isLine@GeometryMethods
+!                                                 isSurface@EnquireMethods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 21 May 2022
+! summary: Returns true if element is a Surface element
+
+INTERFACE isSurface
+  MODULE PURE FUNCTION isSurface2(obj) RESULT(ans)
+    CLASS(ReferenceElement_), INTENT(IN) :: obj
+    LOGICAL(LGT) :: ans
+  END FUNCTION isSurface2
+END INTERFACE isSurface
+
+!----------------------------------------------------------------------------
+!                                                    isLine@EnquireMethods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 21 May 2022
 ! summary: Returns true if element is a Line element
 
-INTERFACE
-  MODULE PURE FUNCTION isLine(ElemType) RESULT(Ans)
-    LOGICAL(LGT) :: Ans
-    INTEGER(I4B), INTENT(IN) :: ElemType
-  END FUNCTION isLine
-END INTERFACE
+INTERFACE isLine
+  MODULE PURE FUNCTION isLine1(elemType) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: elemType
+    LOGICAL(LGT) :: ans
+  END FUNCTION isLine1
+END INTERFACE isLine
 
 !----------------------------------------------------------------------------
-!                                                   isPoint@GeometryMethods
+!                                                    isLine@EnquireMethods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 21 May 2022
+! summary: Returns true if element is a Line element
+
+INTERFACE isLine
+  MODULE PURE FUNCTION isLine2(obj) RESULT(ans)
+    CLASS(ReferenceElement_), INTENT(IN) :: obj
+    LOGICAL(LGT) :: ans
+  END FUNCTION isLine2
+END INTERFACE isLine
+
+!----------------------------------------------------------------------------
+!                                                   isPoint@EnquireMethods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 21 May 2022
 ! summary: Returns true if element is a Point element
 
-INTERFACE
-  MODULE PURE FUNCTION isPoint(ElemType) RESULT(Ans)
-    LOGICAL(LGT) :: Ans
-    INTEGER(I4B), INTENT(IN) :: ElemType
-  END FUNCTION isPoint
-END INTERFACE
+INTERFACE isPoint
+  MODULE PURE FUNCTION isPoint1(elemType) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: elemType
+    LOGICAL(LGT) :: ans
+  END FUNCTION isPoint1
+END INTERFACE isPoint
 
 !----------------------------------------------------------------------------
-!                                                 isTriangle@GeometryMethods
+!                                                   isPoint@EnquireMethods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 21 May 2022
+! summary: Returns true if element is a Point element
+
+INTERFACE isPoint
+  MODULE PURE FUNCTION isPoint2(obj) RESULT(ans)
+    CLASS(ReferenceElement_), INTENT(IN) :: obj
+    LOGICAL(LGT) :: ans
+  END FUNCTION isPoint2
+END INTERFACE isPoint
+
+!----------------------------------------------------------------------------
+!                                                 isTriangle@EnquireMethods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 21 May 2022
 ! summary: Returns true if element is a Triangle element
 
-INTERFACE
-  MODULE PURE FUNCTION isTriangle(ElemType) RESULT(Ans)
-    LOGICAL(LGT) :: Ans
-    INTEGER(I4B), INTENT(IN) :: ElemType
-  END FUNCTION isTriangle
-END INTERFACE
+INTERFACE isTriangle
+  MODULE PURE FUNCTION isTriangle1(elemType) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: elemType
+    LOGICAL(LGT) :: ans
+  END FUNCTION isTriangle1
+END INTERFACE isTriangle
 
 !----------------------------------------------------------------------------
-!                                               isQuadrangle@GeometryMethods
+!                                                 isTriangle@EnquireMethods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 21 May 2022
+! summary: Returns true if element is a Triangle element
+
+INTERFACE isTriangle
+  MODULE PURE FUNCTION isTriangle2(obj) RESULT(ans)
+    CLASS(ReferenceElement_), INTENT(IN) :: obj
+    LOGICAL(LGT) :: ans
+  END FUNCTION isTriangle2
+END INTERFACE isTriangle
+
+!----------------------------------------------------------------------------
+!                                               isQuadrangle@EnquireMethods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 21 May 2022
 ! summary: Returns true if element is a Quadrangle element
 
-INTERFACE
-  MODULE PURE FUNCTION isQuadrangle(ElemType) RESULT(Ans)
-    LOGICAL(LGT) :: Ans
-    INTEGER(I4B), INTENT(IN) :: ElemType
-  END FUNCTION isQuadrangle
-END INTERFACE
+INTERFACE isQuadrangle
+  MODULE PURE FUNCTION isQuadrangle1(elemType) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: elemType
+    LOGICAL(LGT) :: ans
+  END FUNCTION isQuadrangle1
+END INTERFACE isQuadrangle
 
 !----------------------------------------------------------------------------
-!                                             isTetrahedron@GeometryMethods
+!                                               isQuadrangle@EnquireMethods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 21 May 2022
+! summary: Returns true if element is a Quadrangle element
+
+INTERFACE isQuadrangle
+  MODULE PURE FUNCTION isQuadrangle2(obj) RESULT(ans)
+    CLASS(ReferenceElement_), INTENT(IN) :: obj
+    LOGICAL(LGT) :: ans
+  END FUNCTION isQuadrangle2
+END INTERFACE isQuadrangle
+
+!----------------------------------------------------------------------------
+!                                             isTetrahedron@EnquireMethods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 21 May 2022
 ! summary: Returns true if element is a Tetrahedron element
 
-INTERFACE
-  MODULE PURE FUNCTION isTetrahedron(ElemType) RESULT(Ans)
-    LOGICAL(LGT) :: Ans
-    INTEGER(I4B), INTENT(IN) :: ElemType
-  END FUNCTION isTetrahedron
-END INTERFACE
+INTERFACE isTetrahedron
+  MODULE PURE FUNCTION isTetrahedron1(elemType) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: elemType
+    LOGICAL(LGT) :: ans
+  END FUNCTION isTetrahedron1
+END INTERFACE isTetrahedron
 
 !----------------------------------------------------------------------------
-!                                             isHexahedron@GeometryMethods
+!                                             isTetrahedron@EnquireMethods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 21 May 2022
+! summary: Returns true if element is a Tetrahedron element
+
+INTERFACE isTetrahedron
+  MODULE PURE FUNCTION isTetrahedron2(obj) RESULT(ans)
+    CLASS(ReferenceElement_), INTENT(IN) :: obj
+    LOGICAL(LGT) :: ans
+  END FUNCTION isTetrahedron2
+END INTERFACE isTetrahedron
+
+!----------------------------------------------------------------------------
+!                                             isHexahedron@EnquireMethods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 21 May 2022
 ! summary: Returns true if element is a Hexahedron element
 
-INTERFACE
-  MODULE PURE FUNCTION isHexahedron(ElemType) RESULT(Ans)
-    LOGICAL(LGT) :: Ans
-    INTEGER(I4B), INTENT(IN) :: ElemType
-  END FUNCTION isHexahedron
-END INTERFACE
+INTERFACE isHexahedron
+  MODULE PURE FUNCTION isHexahedron1(elemType) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: elemType
+    LOGICAL(LGT) :: ans
+  END FUNCTION isHexahedron1
+END INTERFACE isHexahedron
 
 !----------------------------------------------------------------------------
-!                                                    isPrism@GeometryMethods
+!                                             isHexahedron@EnquireMethods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 21 May 2022
+! summary: Returns true if element is a Hexahedron element
+
+INTERFACE isHexahedron
+  MODULE PURE FUNCTION isHexahedron2(obj) RESULT(ans)
+    CLASS(ReferenceElement_), INTENT(IN) :: obj
+    LOGICAL(LGT) :: ans
+  END FUNCTION isHexahedron2
+END INTERFACE isHexahedron
+
+!----------------------------------------------------------------------------
+!                                                    isPrism@EnquireMethods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 21 May 2022
 ! summary: Returns true if element is a Prism element
 
-INTERFACE
-  MODULE PURE FUNCTION isPrism(ElemType) RESULT(Ans)
-    LOGICAL(LGT) :: Ans
-    INTEGER(I4B), INTENT(IN) :: ElemType
-  END FUNCTION isPrism
-END INTERFACE
+INTERFACE isPrism
+  MODULE PURE FUNCTION isPrism1(elemType) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: elemType
+    LOGICAL(LGT) :: ans
+  END FUNCTION isPrism1
+END INTERFACE isPrism
 
 !----------------------------------------------------------------------------
-!                                                 isPyramid@GeometryMethods
+!                                                    isPrism@EnquireMethods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 21 May 2022
+! summary: Returns true if element is a Prism element
+
+INTERFACE isPrism
+  MODULE PURE FUNCTION isPrism2(obj) RESULT(ans)
+    CLASS(ReferenceElement_), INTENT(IN) :: obj
+    LOGICAL(LGT) :: ans
+  END FUNCTION isPrism2
+END INTERFACE isPrism
+
+!----------------------------------------------------------------------------
+!                                                 isPyramid@EnquireMethods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 21 May 2022
 ! summary: Returns true if element is a Pyramid element
 
-INTERFACE
-  MODULE PURE FUNCTION isPyramid(ElemType) RESULT(Ans)
-    LOGICAL(LGT) :: Ans
-    INTEGER(I4B), INTENT(IN) :: ElemType
-  END FUNCTION isPyramid
-END INTERFACE
+INTERFACE isPyramid
+  MODULE PURE FUNCTION isPyramid1(elemType) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: elemType
+    LOGICAL(LGT) :: ans
+  END FUNCTION isPyramid1
+END INTERFACE isPyramid
 
 !----------------------------------------------------------------------------
-!                                       isSerendipityElement@GeometryMethods
+!                                                 isPyramid@EnquireMethods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 21 May 2022
+! summary: Returns true if element is a Pyramid element
+
+INTERFACE isPyramid
+  MODULE PURE FUNCTION isPyramid2(obj) RESULT(ans)
+    CLASS(ReferenceElement_), INTENT(IN) :: obj
+    LOGICAL(LGT) :: ans
+  END FUNCTION isPyramid2
+END INTERFACE isPyramid
+
+!----------------------------------------------------------------------------
+!                                       isSerendipityElement@EnquireMethods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 21 May 2022
 ! summary: Returns true if element is a SerendipityElement element
 
-INTERFACE
-  MODULE PURE FUNCTION isSerendipityElement(ElemType) RESULT(Ans)
-    LOGICAL(LGT) :: Ans
-    INTEGER(I4B), INTENT(IN) :: ElemType
-  END FUNCTION isSerendipityElement
-END INTERFACE
+INTERFACE isSerendipityElement
+  MODULE PURE FUNCTION isSerendipityElement1(elemType) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: elemType
+    LOGICAL(LGT) :: ans
+  END FUNCTION isSerendipityElement1
+END INTERFACE isSerendipityElement
+
+!----------------------------------------------------------------------------
+!                                       isSerendipityElement@EnquireMethods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 21 May 2022
+! summary: Returns true if element is a SerendipityElement element
+
+INTERFACE isSerendipityElement
+  MODULE PURE FUNCTION isSerendipityElement2(obj) RESULT(ans)
+    CLASS(ReferenceElement_), INTENT(IN) :: obj
+    LOGICAL(LGT) :: ans
+  END FUNCTION isSerendipityElement2
+END INTERFACE isSerendipityElement
 
 !----------------------------------------------------------------------------
 !                                           ElementTopology@GeometryMethods
@@ -681,25 +884,29 @@ END INTERFACE
 !  - Tetrahedron
 
 INTERFACE ElementTopology
-  MODULE PURE FUNCTION refelem_ElementTopology1(ElemType) RESULT(Ans)
-    INTEGER(I4B), INTENT(IN) :: ElemType
-    INTEGER(I4B) :: Ans
+  MODULE PURE FUNCTION refelem_ElementTopology1(elemType) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: elemType
+    INTEGER(I4B) :: ans
   END FUNCTION refelem_ElementTopology1
 END INTERFACE ElementTopology
+
+INTERFACE OPERATOR(.topology.)
+  MODULE PROCEDURE refelem_ElementTopology1
+END INTERFACE OPERATOR(.topology.)
 
 !----------------------------------------------------------------------------
 !                                           ElementTopology@GeometryMethods
 !----------------------------------------------------------------------------
 
 INTERFACE ElementTopology
-  MODULE PURE FUNCTION refelem_ElementTopology2(obj) RESULT(Ans)
+  MODULE PURE FUNCTION refelem_ElementTopology2(obj) RESULT(ans)
     CLASS(ReferenceElement_), INTENT(IN) :: obj
-    INTEGER(I4B) :: Ans
+    INTEGER(I4B) :: ans
   END FUNCTION refelem_ElementTopology2
 END INTERFACE ElementTopology
 
 INTERFACE OPERATOR(.topology.)
-  MODULE PROCEDURE refelem_ElementTopology1, refelem_ElementTopology2
+  MODULE PROCEDURE refelem_ElementTopology2
 END INTERFACE OPERATOR(.topology.)
 
 !----------------------------------------------------------------------------
@@ -757,10 +964,10 @@ END INTERFACE FacetElements
 ! This routine is not included in generic LocalNodeCoord routine
 
 INTERFACE
-  MODULE PURE SUBROUTINE Local_NodeCoord(NodeCoord, ElemType)
+  MODULE PURE SUBROUTINE Local_NodeCoord(NodeCoord, elemType)
     ! Define intent of dummy variables
     REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: NodeCoord(:, :)
-    INTEGER(I4B), INTENT(IN) :: ElemType
+    INTEGER(I4B), INTENT(IN) :: elemType
   END SUBROUTINE Local_NodeCoord
 END INTERFACE
 
@@ -788,10 +995,10 @@ END INTERFACE LocalNodeCoord
 ! summary: Returns measures for simplex
 
 INTERFACE MeasureSimplex
-  MODULE PURE FUNCTION Measure_Simplex(refelem, XiJ) RESULT(Ans)
+  MODULE PURE FUNCTION Measure_Simplex(refelem, XiJ) RESULT(ans)
     CLASS(ReferenceElement_), INTENT(IN) :: refelem
     REAL(DFP), INTENT(IN) :: XiJ(:, :)
-    REAL(DFP) :: Ans
+    REAL(DFP) :: ans
   END FUNCTION Measure_Simplex
 END INTERFACE MeasureSimplex
 
@@ -804,11 +1011,11 @@ END INTERFACE MeasureSimplex
 ! summary: Measure the quality of the element
 
 INTERFACE ElementQuality
-  MODULE FUNCTION Element_Quality(refelem, xij, measure) RESULT(Ans)
+  MODULE FUNCTION Element_Quality(refelem, xij, measure) RESULT(ans)
     CLASS(ReferenceElement_), INTENT(IN) :: refelem
     REAL(DFP), INTENT(IN) :: xij(:, :)
     INTEGER(I4B), INTENT(IN) :: measure
-    REAL(DFP) :: Ans
+    REAL(DFP) :: ans
   END FUNCTION Element_Quality
 END INTERFACE ElementQuality
 
@@ -821,11 +1028,11 @@ END INTERFACE ElementQuality
 ! summary: Returns true if the given point is inside the element
 
 INTERFACE ContainsPoint
-  MODULE FUNCTION contains_point(refelem, xij, x) RESULT(Ans)
+  MODULE FUNCTION contains_point(refelem, xij, x) RESULT(ans)
     CLASS(ReferenceElement_), INTENT(IN) :: refelem
     REAL(DFP), INTENT(IN) :: xij(:, :)
     REAL(DFP), INTENT(IN) :: x(:)
-    LOGICAL(LGT) :: Ans
+    LOGICAL(LGT) :: ans
   END FUNCTION contains_point
 END INTERFACE ContainsPoint
 
@@ -838,8 +1045,8 @@ END INTERFACE ContainsPoint
 ! summary: Total entities present in an element
 
 INTERFACE TotalEntities
-  MODULE PURE FUNCTION refelem_TotalEntities(ElemType) RESULT(Ans)
-    INTEGER(I4B), INTENT(IN) :: ElemType
+  MODULE PURE FUNCTION refelem_TotalEntities(elemType) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: elemType
     INTEGER(I4B) :: ans(4)
   END FUNCTION refelem_TotalEntities
 END INTERFACE TotalEntities
@@ -853,8 +1060,8 @@ END INTERFACE TotalEntities
 ! summary: Returns the facet topology of the given element type
 
 INTERFACE FacetTopology
-  MODULE PURE FUNCTION refelem_FacetTopology(ElemType, Nptrs) RESULT(Ans)
-    INTEGER(I4B), INTENT(IN) :: ElemType
+  MODULE PURE FUNCTION refelem_FacetTopology(elemType, Nptrs) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: elemType
     INTEGER(I4B), INTENT(IN) :: Nptrs(:)
     TYPE(ReferenceTopology_), ALLOCATABLE :: ans(:)
   END FUNCTION refelem_FacetTopology
@@ -865,8 +1072,8 @@ END INTERFACE FacetTopology
 !----------------------------------------------------------------------------
 
 INTERFACE GetVTKelementType
-  MODULE PURE SUBROUTINE get_vtk_elemType(ElemType, vtk_type, nptrs)
-    INTEGER(I4B), INTENT(IN) :: ElemType
+  MODULE PURE SUBROUTINE get_vtk_elemType(elemType, vtk_type, nptrs)
+    INTEGER(I4B), INTENT(IN) :: elemType
     INTEGER(INT8), INTENT(OUT) :: vtk_type
     INTEGER(I4B), ALLOCATABLE, INTENT(INOUT) :: nptrs(:)
   END SUBROUTINE get_vtk_elemType
