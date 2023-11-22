@@ -21,6 +21,8 @@ TARGET_SOURCES(
   ${src_path}/ReferenceElement_Method@ConstructorMethods.F90
   ${src_path}/ReferenceElement_Method@IOMethods.F90
   ${src_path}/ReferenceElement_Method@GeometryMethods.F90
+  ${src_path}/ReferenceElement_Method@ElementNameMethods.F90
+  ${src_path}/ReferenceElement_Method@LocalNodeCoordsMethods.F90
   ${src_path}/ReferenceElement_Method@EnquireMethods.F90
   ${src_path}/ReferenceElement_Method@VTKMethods.F90
   ${src_path}/ReferencePoint_Method@Methods.F90
