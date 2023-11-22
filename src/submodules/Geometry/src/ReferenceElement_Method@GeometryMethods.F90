@@ -166,6 +166,14 @@ Ans = TRIM(Str1)
 END PROCEDURE Element_Name
 
 !----------------------------------------------------------------------------
+!                                                         Element_Name_obj
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE Element_Name_obj
+  ans = Element_Name(obj%name)
+END PROCEDURE Element_Name_obj
+
+!----------------------------------------------------------------------------
 !                                                               ElementType
 !----------------------------------------------------------------------------
 MODULE PROCEDURE Element_Type
@@ -242,6 +250,14 @@ CASE ("Hexahedron125")
   Ans = Hexahedron125
 END SELECT
 END PROCEDURE Element_Type
+
+!----------------------------------------------------------------------------
+!                                                                ElementType
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE Element_Type_obj
+  ans = obj%name
+END PROCEDURE Element_Type_obj
 
 !----------------------------------------------------------------------------
 !                                                        TotalNodesInElement
@@ -458,190 +474,6 @@ END PROCEDURE Elem_XiDimension1
 MODULE PROCEDURE Elem_Xidimension2
 ans = obj%xidimension
 END PROCEDURE Elem_Xidimension2
-
-!----------------------------------------------------------------------------
-!                                                                 isVolume
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE isVolume
-!
-SELECT CASE (ElemType)
-  !
-CASE (Tetrahedron4, &
-      Hexahedron8, &
-      Prism6, &
-      Pyramid5, &
-      Tetrahedron10, &
-      Hexahedron27, &
-      Prism18, &
-      Pyramid14, &
-      Hexahedron20, &
-      Prism15, &
-      Pyramid13, &
-      Tetrahedron20, &
-      Tetrahedron35, &
-      Tetrahedron56, &
-      Hexahedron64, &
-      Hexahedron125)
-  !
-  Ans = .TRUE.
-  !
-CASE DEFAULT
-  !
-  Ans = .FALSE.
-  !
-END SELECT
-!
-END PROCEDURE isVolume
-
-!----------------------------------------------------------------------------
-!                                                                 isSurface
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE isSurface
-SELECT CASE (ElemType)
-CASE (Triangle3, &
-      Triangle6, &
-      Triangle9, &
-      Triangle10, &
-      Triangle12, &
-      Triangle15a, &
-      Triangle15b, &
-      Triangle21, &
-      Quadrangle4, &
-      Quadrangle8, &
-      Quadrangle9)
-  Ans = .TRUE.
-CASE DEFAULT
-  Ans = .FALSE.
-END SELECT
-END PROCEDURE isSurface
-
-!----------------------------------------------------------------------------
-!                                                                 isLine
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE isLine
-SELECT CASE (ElemType)
-CASE (Line2, &
-  & Line3, &
-  & Line4, &
-  & Line5, &
-  & Line6)
-  Ans = .TRUE.
-CASE DEFAULT
-  Ans = .FALSE.
-END SELECT
-END PROCEDURE isLine
-
-!----------------------------------------------------------------------------
-!                                                                 isPoint
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE isPoint
-SELECT CASE (ElemType)
-CASE (Point1)
-  Ans = .TRUE.
-CASE DEFAULT
-  Ans = .FALSE.
-END SELECT
-END PROCEDURE isPoint
-
-!----------------------------------------------------------------------------
-!                                                                 isTriangle
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE isTriangle
-SELECT CASE (ElemType)
-CASE (Triangle3, Triangle6, &
-& Triangle9, Triangle10, Triangle12, Triangle15a, &
-& Triangle15b, Triangle21)
-  Ans = .TRUE.
-CASE DEFAULT
-  Ans = .FALSE.
-END SELECT
-END PROCEDURE isTriangle
-
-!----------------------------------------------------------------------------
-!                                                              isQuadrangle
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE isQuadrangle
-SELECT CASE (ElemType)
-CASE (Quadrangle4, Quadrangle8, &
-& Quadrangle9)
-  Ans = .TRUE.
-CASE DEFAULT
-  Ans = .FALSE.
-END SELECT
-END PROCEDURE isQuadrangle
-
-!----------------------------------------------------------------------------
-!                                                            isTetrahedron
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE isTetrahedron
-SELECT CASE (ElemType)
-CASE (Tetrahedron4, Tetrahedron10, &
-& Tetrahedron20, Tetrahedron35, Tetrahedron56)
-  Ans = .TRUE.
-CASE DEFAULT
-  Ans = .FALSE.
-END SELECT
-END PROCEDURE isTetrahedron
-
-!----------------------------------------------------------------------------
-!                                                               isHexahedron
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE isHexahedron
-SELECT CASE (ElemType)
-CASE (Hexahedron8, Hexahedron27, &
-  & Hexahedron20, Hexahedron64, Hexahedron125)
-  Ans = .TRUE.
-CASE DEFAULT
-  Ans = .FALSE.
-END SELECT
-END PROCEDURE isHexahedron
-
-!----------------------------------------------------------------------------
-!                                                                    isPrism
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE isPrism
-SELECT CASE (ElemType)
-CASE (Prism6, Prism18, Prism15)
-  Ans = .TRUE.
-CASE DEFAULT
-  Ans = .FALSE.
-END SELECT
-END PROCEDURE isPrism
-
-!----------------------------------------------------------------------------
-!                                                                  isPyramid
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE isPyramid
-SELECT CASE (ElemType)
-CASE (Pyramid5, Pyramid13, Pyramid14)
-  Ans = .TRUE.
-CASE DEFAULT
-  Ans = .FALSE.
-END SELECT
-END PROCEDURE isPyramid
-
-!----------------------------------------------------------------------------
-!                                                        isSerendipityElement
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE isSerendipityElement
-SELECT CASE (ElemType)
-CASE (Triangle9, Triangle12, Triangle15b, Quadrangle8)
-  Ans = .TRUE.
-CASE DEFAULT
-  Ans = .FALSE.
-END SELECT
-END PROCEDURE isSerendipityElement
 
 !----------------------------------------------------------------------------
 !                                                            ElementTopology
