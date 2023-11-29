@@ -71,6 +71,19 @@ END INTERFACE Convert
 ! date: 6 March 2021
 ! summary: This subroutine converts rank4  matrix to rank2 matrix
 !
+!# Introduction
+!
+!  This subroutine converts rank4 matrix to rank2 matrix
+! This routine can be used in Space-Time FEM
+!
+! - The first and second dimension of From is spatial nodes
+! - The third and forth dimension of From is temporal nodes
+!
+! - In this way `From(:, :, a, b)` denotes the `a,b` block matrix
+!
+! Format of To  matrix
+!
+! Contains the block matrix structure in 2D.
 
 INTERFACE
   MODULE PURE SUBROUTINE convert_2(From, To)
