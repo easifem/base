@@ -16,55 +16,47 @@
 !
 
 !> author: Vikas Sharma, Ph. D.
-! date: 	9 March 2021
-! summary: 	This module contains openmp methods
+! date:         9 March 2021
+! summary:         This module contains openmp methods
 
 MODULE OpenMP_Method
 USE GlobalData
 USE BaseType
 IMPLICIT NONE
+PRIVATE
+PUBLIC :: OMP_Initiate
+PUBLIC :: OMP_Finalize
+PUBLIC :: OMP_Partition
 
 !----------------------------------------------------------------------------
 !                                                      Initiate@Constructor
 !----------------------------------------------------------------------------
 
-INTERFACE
-MODULE SUBROUTINE obj_initiate
-END SUBROUTINE obj_initiate
-END INTERFACE
-
 INTERFACE OMP_Initiate
-  MODULE PROCEDURE obj_initiate
+  MODULE SUBROUTINE obj_initiate
+  END SUBROUTINE obj_initiate
 END INTERFACE OMP_Initiate
-
-PUBLIC :: OMP_Initiate
 
 !----------------------------------------------------------------------------
 !                                                       Finalize@Constructor
 !----------------------------------------------------------------------------
 
-INTERFACE
-MODULE SUBROUTINE obj_finalize
-END SUBROUTINE obj_finalize
-END INTERFACE
-
 INTERFACE OMP_Finalize
-  MODULE PROCEDURE obj_finalize
+  MODULE SUBROUTINE obj_finalize
+  END SUBROUTINE obj_finalize
 END INTERFACE OMP_Finalize
-
-PUBLIC :: OMP_Finalize
 
 !----------------------------------------------------------------------------
 !                                                      Partition@Constructor
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date: 	9 March 2021
-! summary: 	This function partition a vector for omp
+! date:         9 March 2021
+! summary:         This function partition a vector for omp
 !
 !# Introduction
 !
-! This function partition a vector for [[OpenMP_]], 
+! This function partition a vector for [[OpenMP_]],
 ! and returns a vector of length 4 (i.e., Ans)
 !
 ! * Ans( 1 ) = istart
@@ -79,19 +71,12 @@ PUBLIC :: OMP_Finalize
 ! to do
 !```
 
-INTERFACE
-MODULE FUNCTION obj_partition_vec( N, OMP_NUM_THREADS ) RESULT( Ans )
-  INTEGER( I4B ), INTENT( IN ) :: N
-  INTEGER( I4B ), INTENT( IN ) :: OMP_NUM_THREADS
-  INTEGER( I4B ) :: Ans( 4 )
-END FUNCTION obj_partition_vec
-END INTERFACE
-
 INTERFACE OMP_Partition
-  MODULE PROCEDURE obj_partition_vec
+  MODULE FUNCTION obj_partition_vec(N, OMP_NUM_THREADS) RESULT(Ans)
+    INTEGER(I4B), INTENT(IN) :: N
+    INTEGER(I4B), INTENT(IN) :: OMP_NUM_THREADS
+    INTEGER(I4B) :: Ans(4)
+  END FUNCTION obj_partition_vec
 END INTERFACE OMP_Partition
-
-PUBLIC :: OMP_Partition
-
 
 END MODULE OpenMP_Method
