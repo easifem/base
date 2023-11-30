@@ -20,6 +20,12 @@ USE GlobalData
 USE BaseType
 IMPLICIT NONE
 PRIVATE
+PUBLIC :: Initiate
+PUBLIC :: MultiIndices
+PUBLIC :: DEALLOCATE
+PUBLIC :: Display
+PUBLIC :: Size
+PUBLIC :: GetMultiIndices
 
 !----------------------------------------------------------------------------
 !                                                          Initiate@Methods
@@ -29,19 +35,13 @@ PRIVATE
 ! date: 4 Sept 2022
 ! summary:         Initiate the multi indices
 
-INTERFACE
+INTERFACE Initiate
   MODULE PURE SUBROUTINE obj_Initiate1(obj, n, d)
     TYPE(MultiIndices_), INTENT(INOUT) :: obj
     INTEGER(I4B), INTENT(IN) :: n
     INTEGER(I4B), INTENT(IN) :: d
   END SUBROUTINE obj_Initiate1
-END INTERFACE
-
-INTERFACE Initiate
-  MODULE PROCEDURE obj_Initiate1
 END INTERFACE Initiate
-
-PUBLIC :: Initiate
 
 !----------------------------------------------------------------------------
 !                                                       MultiIndices@Methods
@@ -51,19 +51,13 @@ PUBLIC :: Initiate
 ! date: 4 Sept 2022
 ! summary:         Function to construct the multi-index
 
-INTERFACE
+INTERFACE MultiIndices
   MODULE PURE FUNCTION obj_MultiIndices(n, d) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: n
     INTEGER(I4B), INTENT(IN) :: d
     TYPE(MultiIndices_) :: ans
   END FUNCTION obj_MultiIndices
-END INTERFACE
-
-INTERFACE MultiIndices
-  MODULE PROCEDURE obj_MultiIndices
 END INTERFACE MultiIndices
-
-PUBLIC :: MultiIndices
 
 !----------------------------------------------------------------------------
 !                                                        Deallocate@Methods
@@ -73,17 +67,11 @@ PUBLIC :: MultiIndices
 ! date: 4 Sept 2022
 ! summary:         Deallocate the object
 
-INTERFACE
+INTERFACE DEALLOCATE
   MODULE PURE SUBROUTINE obj_Deallocate(obj)
     TYPE(MultiIndices_), INTENT(INOUT) :: obj
   END SUBROUTINE obj_Deallocate
-END INTERFACE
-
-INTERFACE Deallocate
-  MODULE PROCEDURE obj_Deallocate
-END INTERFACE Deallocate
-
-PUBLIC :: Deallocate
+END INTERFACE DEALLOCATE
 
 !----------------------------------------------------------------------------
 !                                                           Display@Methods
@@ -93,19 +81,13 @@ PUBLIC :: Deallocate
 ! date: 4 Sept 2022
 ! summary:         Display the content
 
-INTERFACE
+INTERFACE Display
   MODULE SUBROUTINE obj_Display(obj, msg, unitno)
     TYPE(MultiIndices_), INTENT(IN) :: obj
-    CHARACTER(LEN=*), INTENT(IN) :: msg
+    CHARACTER(*), INTENT(IN) :: msg
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: unitno
   END SUBROUTINE obj_Display
-END INTERFACE
-
-INTERFACE Display
-  MODULE PROCEDURE obj_Display
 END INTERFACE Display
-
-PUBLIC :: Display
 
 !----------------------------------------------------------------------------
 !                                                           Size@Methods
@@ -115,18 +97,12 @@ PUBLIC :: Display
 ! date: 4 Sept 2022
 ! summary:         Get the number of touples
 
-INTERFACE
+INTERFACE Size
   MODULE PURE FUNCTION obj_Size1(obj) RESULT(ans)
     TYPE(MultiIndices_), INTENT(IN) :: obj
     INTEGER(I4B) :: ans
   END FUNCTION obj_Size1
-END INTERFACE
-
-INTERFACE Size
-  MODULE PROCEDURE obj_Size1
 END INTERFACE Size
-
-PUBLIC :: Size
 
 !----------------------------------------------------------------------------
 !                                                           Size@Methods
@@ -136,16 +112,12 @@ PUBLIC :: Size
 ! date: 4 Sept 2022
 ! summary:         Get the number of touples
 
-INTERFACE
+INTERFACE Size
   MODULE PURE FUNCTION obj_Size2(obj, upto) RESULT(ans)
     TYPE(MultiIndices_), INTENT(IN) :: obj
     LOGICAL(LGT), INTENT(IN) :: upto
     INTEGER(I4B) :: ans
   END FUNCTION obj_Size2
-END INTERFACE
-
-INTERFACE Size
-  MODULE PROCEDURE obj_Size2
 END INTERFACE Size
 
 !----------------------------------------------------------------------------
@@ -156,18 +128,12 @@ END INTERFACE Size
 ! date: 4 Sept 2022
 ! summary:         Get Indices
 
-INTERFACE
+INTERFACE GetMultiIndices
   MODULE PURE FUNCTION obj_GetMultiIndices1(obj) RESULT(ans)
     TYPE(MultiIndices_), INTENT(IN) :: obj
     INTEGER(I4B), ALLOCATABLE :: ans(:, :)
   END FUNCTION obj_GetMultiIndices1
-END INTERFACE
-
-INTERFACE GetMultiIndices
-  MODULE PROCEDURE obj_GetMultiIndices1
 END INTERFACE GetMultiIndices
-
-PUBLIC :: GetMultiIndices
 
 !----------------------------------------------------------------------------
 !                                                         GetIndices@Methods
@@ -177,16 +143,12 @@ PUBLIC :: GetMultiIndices
 ! date: 4 Sept 2022
 ! summary:         Get Indices
 
-INTERFACE
+INTERFACE GetMultiIndices
   MODULE PURE FUNCTION obj_GetMultiIndices2(obj, upto) RESULT(ans)
     TYPE(MultiIndices_), INTENT(IN) :: obj
     LOGICAL(LGT), INTENT(IN) :: upto
     INTEGER(I4B), ALLOCATABLE :: ans(:, :)
   END FUNCTION obj_GetMultiIndices2
-END INTERFACE
-
-INTERFACE GetMultiIndices
-  MODULE PROCEDURE obj_GetMultiIndices2
 END INTERFACE GetMultiIndices
 
 END MODULE MultiIndices_Method
