@@ -39,7 +39,7 @@ PUBLIC :: GetNodeLoc
 PUBLIC :: GetIndex
 
 !----------------------------------------------------------------------------
-!                                                  DOFStartIndex@getMethods
+!                                                  DOFStartIndex@GetMethods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -59,14 +59,14 @@ INTERFACE OPERATOR(.DOFStartIndex.)
 END INTERFACE OPERATOR(.DOFStartIndex.)
 
 !----------------------------------------------------------------------------
-!                                                  DOFEndIndex@getMethods
+!                                                  DOFEndIndex@GetMethods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 16 Oct 2021
 ! summary: returns obj%map( ivar+1, 5 ) - 1
 
-INTERFACE
+INTERFACE OPERATOR(.DOFEndIndex.)
   MODULE PURE FUNCTION dof_DOFEndIndex(obj, ivar) RESULT(ans)
     CLASS(DOF_), INTENT(IN) :: obj
     INTEGER(I4B), INTENT(IN) :: ivar
@@ -74,35 +74,27 @@ INTERFACE
   END FUNCTION dof_DOFEndIndex
 END INTERFACE
 
-INTERFACE OPERATOR(.DOFEndIndex.)
-  MODULE PROCEDURE dof_DOFEndIndex
-END INTERFACE OPERATOR(.DOFEndIndex.)
-
 !----------------------------------------------------------------------------
-!                                                           tNodes@getMethod
+!                                                           tNodes@GetMethod
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 26 June 2021
 ! summary: Returns the total length of the vector
 
-INTERFACE
+INTERFACE Size
   MODULE PURE FUNCTION dof_tNodes1(obj) RESULT(ans)
     CLASS(DOF_), INTENT(IN) :: obj
     INTEGER(I4B) :: ans
   END FUNCTION dof_tNodes1
-END INTERFACE
+END INTERFACE Size
 
 INTERFACE OPERATOR(.tNodes.)
   MODULE PROCEDURE dof_tNodes1
 END INTERFACE
 
-INTERFACE SIZE
-  MODULE PROCEDURE dof_tNodes1
-END INTERFACE SIZE
-
 !----------------------------------------------------------------------------
-!                                                           tNodes@getMethod
+!                                                           tNodes@GetMethod
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -115,24 +107,20 @@ END INTERFACE SIZE
 ! freedom number
 ! idof should be lesser than the total degree of freedom
 
-INTERFACE
+INTERFACE Size
   MODULE PURE FUNCTION dof_tNodes2(obj, idof) RESULT(ans)
     CLASS(DOF_), INTENT(IN) :: obj
     INTEGER(I4B), INTENT(IN) :: idof
     INTEGER(I4B) :: ans
   END FUNCTION dof_tNodes2
-END INTERFACE
+END INTERFACE Size
 
 INTERFACE OPERATOR(.tNodes.)
   MODULE PROCEDURE dof_tNodes2
 END INTERFACE
 
-INTERFACE SIZE
-  MODULE PROCEDURE dof_tNodes2
-END INTERFACE SIZE
-
 !----------------------------------------------------------------------------
-!                                                           tNodes@getMethod
+!                                                           tNodes@GetMethod
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -145,24 +133,20 @@ END INTERFACE SIZE
 ! freedom number
 ! idof should be lesser than the total degree of freedom
 
-INTERFACE
+INTERFACE Size
   MODULE PURE FUNCTION dof_tNodes3(obj, varname) RESULT(ans)
     CLASS(DOF_), INTENT(IN) :: obj
     CHARACTER(*), INTENT(IN) :: varname
     INTEGER(I4B) :: ans
   END FUNCTION dof_tNodes3
-END INTERFACE
+END INTERFACE Size
 
 INTERFACE OPERATOR(.tNodes.)
   MODULE PROCEDURE dof_tNodes3
 END INTERFACE
 
-INTERFACE SIZE
-  MODULE PROCEDURE dof_tNodes3
-END INTERFACE SIZE
-
 !----------------------------------------------------------------------------
-!                                                           tNodes@getMethod
+!                                                           tNodes@GetMethod
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -175,43 +159,35 @@ END INTERFACE SIZE
 ! freedom number
 ! idof should be lesser than the total degree of freedom
 
-INTERFACE
+INTERFACE Size
   MODULE PURE FUNCTION dof_tNodes4(obj, idof) RESULT(ans)
     CLASS(DOF_), INTENT(IN) :: obj
     INTEGER(I4B), INTENT(IN) :: idof(:)
     INTEGER(I4B) :: ans
   END FUNCTION dof_tNodes4
-END INTERFACE
+END INTERFACE Size
 
 INTERFACE OPERATOR(.tNodes.)
   MODULE PROCEDURE dof_tNodes4
 END INTERFACE
 
-INTERFACE SIZE
-  MODULE PROCEDURE dof_tNodes4
-END INTERFACE SIZE
-
 !----------------------------------------------------------------------------
-!                                                             tDOF@getMethod
+!                                                             tDOF@GetMethod
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 26 June 2021
 ! summary: This function returns the total number of degree of freedom
 
-INTERFACE
+INTERFACE OPERATOR(.tDOF.)
   MODULE PURE FUNCTION dof_tdof1(obj) RESULT(ans)
     CLASS(DOF_), INTENT(IN) :: obj
     INTEGER(I4B) :: ans
   END FUNCTION dof_tdof1
 END INTERFACE
 
-INTERFACE OPERATOR(.tDOF.)
-  MODULE PROCEDURE dof_tdof1
-END INTERFACE
-
 !----------------------------------------------------------------------------
-!                                                           tDOF@getMethods
+!                                                           tDOF@GetMethods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -223,7 +199,7 @@ END INTERFACE
 ! physical variable.
 ! The physical variable is specified by using its name.
 
-INTERFACE
+INTERFACE OPERATOR(.tDOF.)
   MODULE PURE FUNCTION dof_tdof2(obj, Name) RESULT(ans)
     CLASS(DOF_), INTENT(IN) :: obj
     CHARACTER(1), INTENT(IN) :: Name
@@ -231,12 +207,8 @@ INTERFACE
   END FUNCTION dof_tdof2
 END INTERFACE
 
-INTERFACE OPERATOR(.tDOF.)
-  MODULE PROCEDURE dof_tdof2
-END INTERFACE
-
 !----------------------------------------------------------------------------
-!                                                           tDOF@getMethods
+!                                                           tDOF@GetMethods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -248,7 +220,7 @@ END INTERFACE
 ! physical variable.
 ! The physical variable is specified by using its name.
 
-INTERFACE
+INTERFACE OPERATOR(.tDOF.)
   MODULE PURE FUNCTION dof_tdof3(obj, ivar) RESULT(ans)
     CLASS(DOF_), INTENT(IN) :: obj
     INTEGER(I4B), INTENT(IN) :: ivar
@@ -256,50 +228,38 @@ INTERFACE
   END FUNCTION dof_tdof3
 END INTERFACE
 
-INTERFACE OPERATOR(.tDOF.)
-  MODULE PROCEDURE dof_tdof3
-END INTERFACE
-
 !----------------------------------------------------------------------------
-!                                                           tNames@getMethod
+!                                                           tNames@GetMethod
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 26 June 2021
 ! summary: Returns the total number of names in dof object
 
-INTERFACE
+INTERFACE OPERATOR(.tNames.)
   MODULE PURE FUNCTION dof_tNames(obj) RESULT(ans)
     CLASS(DOF_), INTENT(IN) :: obj
     INTEGER(I4B) :: ans
   END FUNCTION dof_tNames
 END INTERFACE
 
-INTERFACE OPERATOR(.tNames.)
-  MODULE PROCEDURE dof_tNames
-END INTERFACE
-
 !----------------------------------------------------------------------------
-!                                                           Names@getMethod
+!                                                           Names@GetMethod
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 26 June 2021
 ! summary: Returns the name of all physical variables stored in obj
 
-INTERFACE
+INTERFACE OPERATOR(.Names.)
   MODULE PURE FUNCTION dof_names1(obj) RESULT(ans)
     CLASS(DOF_), INTENT(IN) :: obj
     CHARACTER(1), ALLOCATABLE :: ans(:)
   END FUNCTION dof_names1
-END INTERFACE
-
-INTERFACE OPERATOR(.Names.)
-  MODULE PROCEDURE dof_names1
 END INTERFACE OPERATOR(.Names.)
 
 !----------------------------------------------------------------------------
-!                                                           Names@getMethod
+!                                                           Names@GetMethod
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -312,20 +272,16 @@ END INTERFACE OPERATOR(.Names.)
 ! The physical variable is given by its number ii, i.e., the first, second,
 ! third, and so on, physical variable.
 
-INTERFACE
+INTERFACE OPERATOR(.Names.)
   MODULE PURE FUNCTION dof_names2(obj, ii) RESULT(ans)
     CLASS(DOF_), INTENT(IN) :: obj
     INTEGER(I4B), INTENT(IN) :: ii
     CHARACTER(1) :: ans
   END FUNCTION dof_names2
-END INTERFACE
-
-INTERFACE OPERATOR(.Names.)
-  MODULE PROCEDURE dof_names2
 END INTERFACE OPERATOR(.Names.)
 
 !----------------------------------------------------------------------------
-!                                                     NameToIndex@getMethod
+!                                                     NameToIndex@GetMethod
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -341,301 +297,237 @@ INTERFACE
 END INTERFACE
 
 !----------------------------------------------------------------------------
-!                                                tspacecomponents@getMethod
+!                                                tspacecomponents@GetMethod
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 16 Oct 2021
 ! summary: Returns the total physical variable which have space-compo
 
-INTERFACE
+INTERFACE OPERATOR(.tspacecomponents.)
   MODULE PURE FUNCTION dof_tspacecomponents(obj) RESULT(ans)
     CLASS(DOF_), INTENT(IN) :: obj
     INTEGER(I4B) :: ans
   END FUNCTION dof_tspacecomponents
-END INTERFACE
-
-INTERFACE OPERATOR(.tspacecomponents.)
-  MODULE PROCEDURE dof_tspacecomponents
-END INTERFACE
+END INTERFACE OPERATOR(.tspacecomponents.)
 
 !----------------------------------------------------------------------------
-!                                                spacecomponents@getMethod
+!                                                spacecomponents@GetMethod
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 16 Oct 2021
 ! summary: Returns the space components of each physical vars
 
-INTERFACE
+INTERFACE OPERATOR(.spacecomponents.)
   MODULE PURE FUNCTION dof_spacecomponents1(obj) RESULT(ans)
     CLASS(DOF_), INTENT(IN) :: obj
     INTEGER(I4B), ALLOCATABLE :: ans(:)
   END FUNCTION dof_spacecomponents1
-END INTERFACE
-
-INTERFACE OPERATOR(.spacecomponents.)
-  MODULE PROCEDURE dof_spacecomponents1
-END INTERFACE
+END INTERFACE OPERATOR(.spacecomponents.)
 
 !----------------------------------------------------------------------------
-!                                                spacecomponents@getMethod
+!                                                spacecomponents@GetMethod
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 16 Oct 2021
 ! summary: Returns the space component of a given physical vars
 
-INTERFACE
+INTERFACE OPERATOR(.spacecomponents.)
   MODULE PURE FUNCTION dof_spacecomponents2(obj, ivar) RESULT(ans)
     CLASS(DOF_), INTENT(IN) :: obj
     INTEGER(I4B), INTENT(IN) :: ivar
     INTEGER(I4B) :: ans
   END FUNCTION dof_spacecomponents2
-END INTERFACE
-
-INTERFACE OPERATOR(.spacecomponents.)
-  MODULE PROCEDURE dof_spacecomponents2
-END INTERFACE
+END INTERFACE OPERATOR(.spacecomponents.)
 
 !----------------------------------------------------------------------------
-!                                                ttimecomponents@getMethod
+!                                                ttimecomponents@GetMethod
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 16 Oct 2021
 ! summary: Returns the total physical var which has time compo
 
-INTERFACE
+INTERFACE OPERATOR(.ttimecomponents.)
   MODULE PURE FUNCTION dof_ttimecomponents(obj) RESULT(ans)
     CLASS(DOF_), INTENT(IN) :: obj
     INTEGER(I4B) :: ans
   END FUNCTION dof_ttimecomponents
-END INTERFACE
-
-INTERFACE OPERATOR(.ttimecomponents.)
-  MODULE PROCEDURE dof_ttimecomponents
-END INTERFACE
+END INTERFACE OPERATOR(.ttimecomponents.)
 
 !----------------------------------------------------------------------------
-!                                                timecomponents@getMethod
+!                                                timecomponents@GetMethod
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 16 Oct 2021
 ! summary: Returns the timecompo
 
-INTERFACE
+INTERFACE OPERATOR(.timecomponents.)
   MODULE PURE FUNCTION dof_timecomponents1(obj) RESULT(ans)
     CLASS(DOF_), INTENT(IN) :: obj
     INTEGER(I4B), ALLOCATABLE :: ans(:)
   END FUNCTION dof_timecomponents1
-END INTERFACE
-
-INTERFACE OPERATOR(.timecomponents.)
-  MODULE PROCEDURE dof_timecomponents1
-END INTERFACE
+END INTERFACE OPERATOR(.timecomponents.)
 
 !----------------------------------------------------------------------------
-!                                                timecomponents@getMethod
+!                                                timecomponents@GetMethod
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 16 Oct 2021
 ! summary: Returns the timecompo
 
-INTERFACE
+INTERFACE OPERATOR(.timecomponents.)
   MODULE PURE FUNCTION dof_timecomponents2(obj, ivar) RESULT(ans)
     CLASS(DOF_), INTENT(IN) :: obj
     INTEGER(I4B), INTENT(IN) :: ivar
     INTEGER(I4B) :: ans
   END FUNCTION dof_timecomponents2
-END INTERFACE
-
-INTERFACE OPERATOR(.timecomponents.)
-  MODULE PROCEDURE dof_timecomponents2
-END INTERFACE
+END INTERFACE OPERATOR(.timecomponents.)
 
 !----------------------------------------------------------------------------
-!                                                               EQ@getMethod
+!                                                               EQ@GetMethod
 !----------------------------------------------------------------------------
 
-INTERFACE
+INTERFACE OPERATOR(.EQ.)
   MODULE PURE FUNCTION dof_isEqual(obj1, obj2) RESULT(ans)
     TYPE(DOF_), INTENT(IN) :: obj1
     TYPE(DOF_), INTENT(IN) :: obj2
     LOGICAL(LGT) :: ans
   END FUNCTION dof_isEqual
-END INTERFACE
-
-INTERFACE OPERATOR(.EQ.)
-  MODULE PROCEDURE dof_isEqual
 END INTERFACE OPERATOR(.EQ.)
 
 !----------------------------------------------------------------------------
-!                                                               NE@getMethod
+!                                                               NE@GetMethod
 !----------------------------------------------------------------------------
 
-INTERFACE
+INTERFACE OPERATOR(.NE.)
   MODULE PURE FUNCTION dof_isNE(obj1, obj2) RESULT(ans)
     TYPE(DOF_), INTENT(IN) :: obj1
     TYPE(DOF_), INTENT(IN) :: obj2
     LOGICAL(LGT) :: ans
   END FUNCTION dof_isNE
-END INTERFACE
-
-INTERFACE OPERATOR(.NE.)
-  MODULE PROCEDURE dof_isNE
 END INTERFACE OPERATOR(.NE.)
 
 !----------------------------------------------------------------------------
-!                                                        getIDOF@GetMethod
+!                                                        GetIDOF@GetMethod
 !----------------------------------------------------------------------------
 
-INTERFACE
-  MODULE PURE FUNCTION dof_getIDOF1(spacecompo, timecompo, tspacecompo) &
+INTERFACE GetIDOF
+  MODULE PURE FUNCTION dof_GetIDOF1(spacecompo, timecompo, tspacecompo) &
     & RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: spacecompo
     INTEGER(I4B), INTENT(IN) :: timecompo
     INTEGER(I4B), INTENT(IN) :: tspacecompo
     INTEGER(I4B) :: ans
-  END FUNCTION dof_getIDOF1
-END INTERFACE
-
-INTERFACE getIDOF
-  MODULE PROCEDURE dof_getIDOF1
-END INTERFACE getIDOF
+  END FUNCTION dof_GetIDOF1
+END INTERFACE GetIDOF
 
 !----------------------------------------------------------------------------
-!                                                        getIDOF@GetMethod
+!                                                        GetIDOF@GetMethod
 !----------------------------------------------------------------------------
 
-INTERFACE
-  MODULE PURE FUNCTION dof_getIDOF2(obj, ivar, spacecompo, timecompo) &
+INTERFACE GetIDOF
+  MODULE PURE FUNCTION dof_GetIDOF2(obj, ivar, spacecompo, timecompo) &
     & RESULT(ans)
     TYPE(DOF_), INTENT(IN) :: obj
     INTEGER(I4B), INTENT(IN) :: ivar
     INTEGER(I4B), INTENT(IN) :: spacecompo
     INTEGER(I4B), INTENT(IN) :: timecompo
     INTEGER(I4B) :: ans
-  END FUNCTION dof_getIDOF2
-END INTERFACE
-
-INTERFACE getIDOF
-  MODULE PROCEDURE dof_getIDOF2
-END INTERFACE getIDOF
+  END FUNCTION dof_GetIDOF2
+END INTERFACE GetIDOF
 
 !----------------------------------------------------------------------------
-!                                                        getIDOF@GetMethod
+!                                                        GetIDOF@GetMethod
 !----------------------------------------------------------------------------
 
-INTERFACE
-  MODULE PURE FUNCTION dof_getIDOF3(obj, ivar, spacecompo, timecompo) &
+INTERFACE GetIDOF
+  MODULE PURE FUNCTION dof_GetIDOF3(obj, ivar, spacecompo, timecompo) &
     & RESULT(ans)
     TYPE(DOF_), INTENT(IN) :: obj
     INTEGER(I4B), INTENT(IN) :: ivar
     INTEGER(I4B), INTENT(IN) :: spacecompo
     INTEGER(I4B), INTENT(IN) :: timecompo(:)
     INTEGER(I4B) :: ans(SIZE(timecompo))
-  END FUNCTION dof_getIDOF3
-END INTERFACE
-
-INTERFACE getIDOF
-  MODULE PROCEDURE dof_getIDOF3
-END INTERFACE getIDOF
+  END FUNCTION dof_GetIDOF3
+END INTERFACE GetIDOF
 
 !----------------------------------------------------------------------------
-!                                                        getIDOF@GetMethod
+!                                                        GetIDOF@GetMethod
 !----------------------------------------------------------------------------
 
-INTERFACE
-  MODULE PURE FUNCTION dof_getIDOF4(obj, ivar, spacecompo, timecompo) &
+INTERFACE GetIDOF
+  MODULE PURE FUNCTION dof_GetIDOF4(obj, ivar, spacecompo, timecompo) &
     & RESULT(ans)
     TYPE(DOF_), INTENT(IN) :: obj
     INTEGER(I4B), INTENT(IN) :: ivar
     INTEGER(I4B), INTENT(IN) :: spacecompo(:)
     INTEGER(I4B), INTENT(IN) :: timecompo
     INTEGER(I4B) :: ans(SIZE(spacecompo))
-  END FUNCTION dof_getIDOF4
-END INTERFACE
-
-INTERFACE getIDOF
-  MODULE PROCEDURE dof_getIDOF4
-END INTERFACE getIDOF
+  END FUNCTION dof_GetIDOF4
+END INTERFACE GetIDOF
 
 !----------------------------------------------------------------------------
-!                                                        getIDOF@GetMethod
+!                                                        GetIDOF@GetMethod
 !----------------------------------------------------------------------------
 
-INTERFACE
-  MODULE PURE FUNCTION dof_getIDOF5(spacecompo, timecompo, tspacecompo) &
+INTERFACE GetIDOF
+  MODULE PURE FUNCTION dof_GetIDOF5(spacecompo, timecompo, tspacecompo) &
     & RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: spacecompo
     INTEGER(I4B), INTENT(IN) :: timecompo(:)
     INTEGER(I4B), INTENT(IN) :: tspacecompo
     INTEGER(I4B) :: ans(SIZE(timecompo))
-  END FUNCTION dof_getIDOF5
-END INTERFACE
-
-INTERFACE getIDOF
-  MODULE PROCEDURE dof_getIDOF5
-END INTERFACE getIDOF
+  END FUNCTION dof_GetIDOF5
+END INTERFACE GetIDOF
 
 !----------------------------------------------------------------------------
-!                                                        getIDOF@GetMethod
+!                                                        GetIDOF@GetMethod
 !----------------------------------------------------------------------------
 
-INTERFACE
-  MODULE PURE FUNCTION dof_getIDOF6(spacecompo, timecompo, tspacecompo) &
+INTERFACE GetIDOF
+  MODULE PURE FUNCTION dof_GetIDOF6(spacecompo, timecompo, tspacecompo) &
     & RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: spacecompo(:)
     INTEGER(I4B), INTENT(IN) :: timecompo
     INTEGER(I4B), INTENT(IN) :: tspacecompo
     INTEGER(I4B) :: ans(SIZE(spacecompo))
-  END FUNCTION dof_getIDOF6
-END INTERFACE
-
-INTERFACE getIDOF
-  MODULE PROCEDURE dof_getIDOF6
-END INTERFACE getIDOF
+  END FUNCTION dof_GetIDOF6
+END INTERFACE GetIDOF
 
 !----------------------------------------------------------------------------
-!                                                        getIDOF@GetMethod
+!                                                        GetIDOF@GetMethod
 !----------------------------------------------------------------------------
 
-INTERFACE
-  MODULE PURE FUNCTION dof_getIDOF7(obj, ivar, idof) &
+INTERFACE GetIDOF
+  MODULE PURE FUNCTION dof_GetIDOF7(obj, ivar, idof) &
     & RESULT(ans)
     TYPE(DOF_), INTENT(IN) :: obj
     INTEGER(I4B), INTENT(IN) :: ivar
     INTEGER(I4B), INTENT(IN) :: idof
     INTEGER(I4B) :: ans
-  END FUNCTION dof_getIDOF7
-END INTERFACE
-
-INTERFACE getIDOF
-  MODULE PROCEDURE dof_getIDOF7
-END INTERFACE getIDOF
+  END FUNCTION dof_GetIDOF7
+END INTERFACE GetIDOF
 
 !----------------------------------------------------------------------------
-!                                                        getIDOF@GetMethod
+!                                                        GetIDOF@GetMethod
 !----------------------------------------------------------------------------
 
-INTERFACE
-  MODULE PURE FUNCTION dof_getIDOF8(obj, ivar) &
+INTERFACE GetIDOF
+  MODULE PURE FUNCTION dof_GetIDOF8(obj, ivar) &
     & RESULT(ans)
     TYPE(DOF_), INTENT(IN) :: obj
     INTEGER(I4B), INTENT(IN) :: ivar
     INTEGER(I4B), ALLOCATABLE :: ans(:)
-  END FUNCTION dof_getIDOF8
-END INTERFACE
-
-INTERFACE getIDOF
-  MODULE PROCEDURE dof_getIDOF8
-END INTERFACE getIDOF
+  END FUNCTION dof_GetIDOF8
+END INTERFACE GetIDOF
 
 !----------------------------------------------------------------------------
-!                                                       getNodeLoc@getMethod
+!                                                       GetNodeLoc@getMethod
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -644,7 +536,7 @@ END INTERFACE getIDOF
 !
 !# Introduction
 !
-! - This routine is like [[DOF_Method:getIndex]].
+! - This routine is like [[DOF_Method:GetIndex]].
 ! - It returns the location of degree of freedom number `idof`
 ! at node number `nodenum`.
 !
@@ -659,21 +551,17 @@ END INTERFACE getIDOF
 ! variables will not start from 1.
 !@endnote
 
-INTERFACE
-  MODULE PURE FUNCTION dof_getNodeLoc1(obj, nodenum, idof) RESULT(ans)
+INTERFACE GetNodeLoc
+  MODULE PURE FUNCTION dof_GetNodeLoc1(obj, nodenum, idof) RESULT(ans)
     TYPE(DOF_), INTENT(IN) :: obj
     INTEGER(I4B), INTENT(IN) :: nodenum
     INTEGER(I4B), INTENT(IN) :: idof
     INTEGER(I4B) :: ans
-  END FUNCTION dof_getNodeLoc1
-END INTERFACE
-
-INTERFACE getNodeLoc
-  MODULE PROCEDURE dof_getNodeLoc1
-END INTERFACE getNodeLoc
+  END FUNCTION dof_GetNodeLoc1
+END INTERFACE GetNodeLoc
 
 !----------------------------------------------------------------------------
-!                                                       getNodeLoc@getMethod
+!                                                       GetNodeLoc@getMethod
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -682,7 +570,7 @@ END INTERFACE getNodeLoc
 !
 !# Introduction
 !
-! - This routine is like [[DOF_Method:getIndex]].
+! - This routine is like [[DOF_Method:GetIndex]].
 ! - It returns the location of degree of freedom number `idof`
 ! at node number `nodenum`.
 !
@@ -697,21 +585,17 @@ END INTERFACE getNodeLoc
 ! variables will not start from 1.
 !@endnote
 
-INTERFACE
-  MODULE PURE FUNCTION dof_getNodeLoc2(obj, nodenum, idof) RESULT(ans)
+INTERFACE GetNodeLoc
+  MODULE PURE FUNCTION dof_GetNodeLoc2(obj, nodenum, idof) RESULT(ans)
     TYPE(DOF_), INTENT(IN) :: obj
     INTEGER(I4B), INTENT(IN) :: nodenum(:)
     INTEGER(I4B), INTENT(IN) :: idof
     INTEGER(I4B) :: ans(SIZE(nodenum))
-  END FUNCTION dof_getNodeLoc2
-END INTERFACE
-
-INTERFACE getNodeLoc
-  MODULE PROCEDURE dof_getNodeLoc2
-END INTERFACE getNodeLoc
+  END FUNCTION dof_GetNodeLoc2
+END INTERFACE GetNodeLoc
 
 !----------------------------------------------------------------------------
-!                                                       getNodeLoc@getMethod
+!                                                       GetNodeLoc@getMethod
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -720,7 +604,7 @@ END INTERFACE getNodeLoc
 !
 !# Introduction
 !
-! - This routine is like [[DOF_Method:getIndex]].
+! - This routine is like [[DOF_Method:GetIndex]].
 ! - It returns the location of degree of freedom number `idof`
 ! at node number `nodenum`.
 !
@@ -735,21 +619,17 @@ END INTERFACE getNodeLoc
 ! variables will not start from 1.
 !@endnote
 
-INTERFACE
-  MODULE PURE FUNCTION dof_getNodeLoc3(obj, nodenum, idof) RESULT(ans)
+INTERFACE GetNodeLoc
+  MODULE PURE FUNCTION dof_GetNodeLoc3(obj, nodenum, idof) RESULT(ans)
     TYPE(DOF_), INTENT(IN) :: obj
     INTEGER(I4B), INTENT(IN) :: nodenum
     INTEGER(I4B), INTENT(IN) :: idof(:)
     INTEGER(I4B) :: ans(SIZE(idof))
-  END FUNCTION dof_getNodeLoc3
-END INTERFACE
-
-INTERFACE getNodeLoc
-  MODULE PROCEDURE dof_getNodeLoc3
-END INTERFACE getNodeLoc
+  END FUNCTION dof_GetNodeLoc3
+END INTERFACE GetNodeLoc
 
 !----------------------------------------------------------------------------
-!                                                       getNodeLoc@getMethod
+!                                                       GetNodeLoc@getMethod
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -771,74 +651,62 @@ END INTERFACE getNodeLoc
 ! variables will not start from 1.
 !@endnote
 
-INTERFACE
-  MODULE PURE FUNCTION dof_getNodeLoc4(obj, idof) RESULT(ans)
+INTERFACE GetNodeLoc
+  MODULE PURE FUNCTION dof_GetNodeLoc4(obj, idof) RESULT(ans)
     TYPE(DOF_), INTENT(IN) :: obj
     INTEGER(I4B), INTENT(IN) :: idof
     INTEGER(I4B) :: ans(3)
-  END FUNCTION dof_getNodeLoc4
-END INTERFACE
-
-INTERFACE getNodeLoc
-  MODULE PROCEDURE dof_getNodeLoc4
-END INTERFACE getNodeLoc
+  END FUNCTION dof_GetNodeLoc4
+END INTERFACE GetNodeLoc
 
 !----------------------------------------------------------------------------
-!                                                       getNodeLoc@getMethod
+!                                                       GetNodeLoc@getMethod
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 24 July 2021
 ! summary: This routine returns the location of node
 
-INTERFACE
-  MODULE PURE FUNCTION dof_getNodeLoc5(obj, nodenum, ivar, idof) &
+INTERFACE GetNodeLoc
+  MODULE PURE FUNCTION dof_GetNodeLoc5(obj, nodenum, ivar, idof) &
     & RESULT(ans)
     TYPE(DOF_), INTENT(IN) :: obj
     INTEGER(I4B), INTENT(IN) :: nodenum
     INTEGER(I4B), INTENT(IN) :: ivar
     INTEGER(I4B), INTENT(IN) :: idof
     INTEGER(I4B) :: ans
-  END FUNCTION dof_getNodeLoc5
-END INTERFACE
-
-INTERFACE getNodeLoc
-  MODULE PROCEDURE dof_getNodeLoc5
-END INTERFACE getNodeLoc
+  END FUNCTION dof_GetNodeLoc5
+END INTERFACE GetNodeLoc
 
 !----------------------------------------------------------------------------
-!                                                       getNodeLoc@getMethod
+!                                                       GetNodeLoc@getMethod
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 24 July 2021
 ! summary: This routine returns the location of node
 
-INTERFACE
-  MODULE PURE FUNCTION dof_getNodeLoc6(obj, nodenum, ivar, idof) &
+INTERFACE GetNodeLoc
+  MODULE PURE FUNCTION dof_GetNodeLoc6(obj, nodenum, ivar, idof) &
     & RESULT(ans)
     TYPE(DOF_), INTENT(IN) :: obj
     INTEGER(I4B), INTENT(IN) :: nodenum(:)
     INTEGER(I4B), INTENT(IN) :: ivar
     INTEGER(I4B), INTENT(IN) :: idof
     INTEGER(I4B) :: ans(SIZE(nodenum))
-  END FUNCTION dof_getNodeLoc6
-END INTERFACE
-
-INTERFACE getNodeLoc
-  MODULE PROCEDURE dof_getNodeLoc6
-END INTERFACE getNodeLoc
+  END FUNCTION dof_GetNodeLoc6
+END INTERFACE GetNodeLoc
 
 !----------------------------------------------------------------------------
-!                                                       getNodeLoc@getMethod
+!                                                       GetNodeLoc@getMethod
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 24 July 2021
 ! summary: This routine returns the location of node
 
-INTERFACE
-  MODULE PURE FUNCTION dof_getNodeLoc7(obj, nodenum, ivar, spacecompo, &
+INTERFACE GetNodeLoc
+  MODULE PURE FUNCTION dof_GetNodeLoc7(obj, nodenum, ivar, spacecompo, &
     & timecompo) RESULT(ans)
     TYPE(DOF_), INTENT(IN) :: obj
     INTEGER(I4B), INTENT(IN) :: nodenum
@@ -846,23 +714,19 @@ INTERFACE
     INTEGER(I4B), INTENT(IN) :: spacecompo
     INTEGER(I4B), INTENT(IN) :: timecompo
     INTEGER(I4B) :: ans
-  END FUNCTION dof_getNodeLoc7
-END INTERFACE
-
-INTERFACE getNodeLoc
-  MODULE PROCEDURE dof_getNodeLoc7
-END INTERFACE getNodeLoc
+  END FUNCTION dof_GetNodeLoc7
+END INTERFACE GetNodeLoc
 
 !----------------------------------------------------------------------------
-!                                                       getNodeLoc@getMethod
+!                                                       GetNodeLoc@getMethod
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 24 July 2021
 ! summary: This routine returns the location of node
 
-INTERFACE
-  MODULE PURE FUNCTION dof_getNodeLoc8(obj, nodenum, ivar, spacecompo, &
+INTERFACE GetNodeLoc
+  MODULE PURE FUNCTION dof_GetNodeLoc8(obj, nodenum, ivar, spacecompo, &
     & timecompo) RESULT(ans)
     TYPE(DOF_), INTENT(IN) :: obj
     INTEGER(I4B), INTENT(IN) :: nodenum(:)
@@ -870,46 +734,38 @@ INTERFACE
     INTEGER(I4B), INTENT(IN) :: spacecompo
     INTEGER(I4B), INTENT(IN) :: timecompo
     INTEGER(I4B) :: ans(SIZE(nodenum))
-  END FUNCTION dof_getNodeLoc8
-END INTERFACE
-
-INTERFACE getNodeLoc
-  MODULE PROCEDURE dof_getNodeLoc8
-END INTERFACE getNodeLoc
+  END FUNCTION dof_GetNodeLoc8
+END INTERFACE GetNodeLoc
 
 !----------------------------------------------------------------------------
-!                                                       getNodeLoc@getMethod
+!                                                       GetNodeLoc@getMethod
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 24 July 2021
 ! summary: This routine returns the location of node
 
-INTERFACE
-  MODULE PURE FUNCTION dof_getNodeLoc9(obj, nodenum, ivar, idof) &
+INTERFACE GetNodeLoc
+  MODULE PURE FUNCTION dof_GetNodeLoc9(obj, nodenum, ivar, idof) &
     & RESULT(ans)
     TYPE(DOF_), INTENT(IN) :: obj
     INTEGER(I4B), INTENT(IN) :: nodenum
     INTEGER(I4B), INTENT(IN) :: ivar
     INTEGER(I4B), INTENT(IN) :: idof(:)
     INTEGER(I4B) :: ans(SIZE(idof))
-  END FUNCTION dof_getNodeLoc9
-END INTERFACE
-
-INTERFACE getNodeLoc
-  MODULE PROCEDURE dof_getNodeLoc9
-END INTERFACE getNodeLoc
+  END FUNCTION dof_GetNodeLoc9
+END INTERFACE GetNodeLoc
 
 !----------------------------------------------------------------------------
-!                                                       getNodeLoc@getMethod
+!                                                       GetNodeLoc@getMethod
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 24 July 2021
 ! summary: This routine returns the location of node
 
-INTERFACE
-  MODULE PURE FUNCTION dof_getNodeLoc10(obj, nodenum, ivar, spacecompo, &
+INTERFACE GetNodeLoc
+  MODULE PURE FUNCTION dof_GetNodeLoc10(obj, nodenum, ivar, spacecompo, &
     & timecompo) RESULT(ans)
     TYPE(DOF_), INTENT(IN) :: obj
     INTEGER(I4B), INTENT(IN) :: nodenum
@@ -917,23 +773,19 @@ INTERFACE
     INTEGER(I4B), INTENT(IN) :: spacecompo
     INTEGER(I4B), INTENT(IN) :: timecompo(:)
     INTEGER(I4B) :: ans(SIZE(timecompo))
-  END FUNCTION dof_getNodeLoc10
-END INTERFACE
-
-INTERFACE getNodeLoc
-  MODULE PROCEDURE dof_getNodeLoc10
-END INTERFACE getNodeLoc
+  END FUNCTION dof_GetNodeLoc10
+END INTERFACE GetNodeLoc
 
 !----------------------------------------------------------------------------
-!                                                       getNodeLoc@getMethod
+!                                                       GetNodeLoc@getMethod
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 24 July 2021
 ! summary: This routine returns the location of node
 
-INTERFACE
-  MODULE PURE FUNCTION dof_getNodeLoc11(obj, nodenum, ivar, spacecompo, &
+INTERFACE GetNodeLoc
+  MODULE PURE FUNCTION dof_GetNodeLoc11(obj, nodenum, ivar, spacecompo, &
     & timecompo) RESULT(ans)
     TYPE(DOF_), INTENT(IN) :: obj
     INTEGER(I4B), INTENT(IN) :: nodenum
@@ -941,23 +793,19 @@ INTERFACE
     INTEGER(I4B), INTENT(IN) :: spacecompo(:)
     INTEGER(I4B), INTENT(IN) :: timecompo
     INTEGER(I4B) :: ans(SIZE(spacecompo))
-  END FUNCTION dof_getNodeLoc11
-END INTERFACE
-
-INTERFACE getNodeLoc
-  MODULE PROCEDURE dof_getNodeLoc11
-END INTERFACE getNodeLoc
+  END FUNCTION dof_GetNodeLoc11
+END INTERFACE GetNodeLoc
 
 !----------------------------------------------------------------------------
-!                                                       getNodeLoc@getMethod
+!                                                       GetNodeLoc@getMethod
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 24 July 2021
 ! summary: This routine returns the location of node
 
-INTERFACE
-  MODULE PURE FUNCTION dof_getNodeLoc12(obj, nodenum, ivar, spacecompo, &
+INTERFACE GetNodeLoc
+  MODULE PURE FUNCTION dof_GetNodeLoc12(obj, nodenum, ivar, spacecompo, &
     & timecompo) RESULT(ans)
     TYPE(DOF_), INTENT(IN) :: obj
     INTEGER(I4B), INTENT(IN) :: nodenum(:)
@@ -965,23 +813,19 @@ INTERFACE
     INTEGER(I4B), INTENT(IN) :: spacecompo
     INTEGER(I4B), INTENT(IN) :: timecompo(:)
     INTEGER(I4B) :: ans(SIZE(timecompo) * SIZE(nodenum))
-  END FUNCTION dof_getNodeLoc12
-END INTERFACE
-
-INTERFACE getNodeLoc
-  MODULE PROCEDURE dof_getNodeLoc12
-END INTERFACE getNodeLoc
+  END FUNCTION dof_GetNodeLoc12
+END INTERFACE GetNodeLoc
 
 !----------------------------------------------------------------------------
-!                                                       getNodeLoc@getMethod
+!                                                       GetNodeLoc@getMethod
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 24 July 2021
 ! summary: This routine returns the location of node
 
-INTERFACE
-  MODULE PURE FUNCTION dof_getNodeLoc13(obj, nodenum, ivar, spacecompo, &
+INTERFACE GetNodeLoc
+  MODULE PURE FUNCTION dof_GetNodeLoc13(obj, nodenum, ivar, spacecompo, &
     & timecompo) RESULT(ans)
     TYPE(DOF_), INTENT(IN) :: obj
     INTEGER(I4B), INTENT(IN) :: nodenum(:)
@@ -989,15 +833,11 @@ INTERFACE
     INTEGER(I4B), INTENT(IN) :: spacecompo(:)
     INTEGER(I4B), INTENT(IN) :: timecompo
     INTEGER(I4B) :: ans(SIZE(spacecompo) * SIZE(nodenum))
-  END FUNCTION dof_getNodeLoc13
-END INTERFACE
-
-INTERFACE getNodeLoc
-  MODULE PROCEDURE dof_getNodeLoc13
-END INTERFACE getNodeLoc
+  END FUNCTION dof_GetNodeLoc13
+END INTERFACE GetNodeLoc
 
 !----------------------------------------------------------------------------
-!                                                         getIndex@getMethod
+!                                                         GetIndex@getMethod
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -1022,20 +862,16 @@ END INTERFACE getNodeLoc
 ! degrees of freedom in the [[DOF_]] object
 !@endnote
 
-INTERFACE
-  MODULE PURE FUNCTION dof_getIndex1(obj, nodenum) RESULT(ans)
+INTERFACE GetIndex
+  MODULE PURE FUNCTION dof_GetIndex1(obj, nodenum) RESULT(ans)
     CLASS(DOF_), INTENT(IN) :: obj
     INTEGER(I4B), INTENT(IN) :: nodenum
     INTEGER(I4B), ALLOCATABLE :: ans(:)
-  END FUNCTION dof_getIndex1
-END INTERFACE
-
-INTERFACE getIndex
-  MODULE PROCEDURE dof_getIndex1
-END INTERFACE getIndex
+  END FUNCTION dof_GetIndex1
+END INTERFACE GetIndex
 
 !----------------------------------------------------------------------------
-!                                                         getIndex@getMethod
+!                                                         GetIndex@getMethod
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -1054,21 +890,17 @@ END INTERFACE getIndex
 ! the `nodenum` is lesser than the total number of
 ! nodes defined for that physical variable.
 
-INTERFACE
-  MODULE PURE FUNCTION dof_getIndex2(obj, nodenum, ivar) RESULT(ans)
+INTERFACE GetIndex
+  MODULE PURE FUNCTION dof_GetIndex2(obj, nodenum, ivar) RESULT(ans)
     CLASS(DOF_), INTENT(IN) :: obj
     INTEGER(I4B), INTENT(IN) :: nodenum
     INTEGER(I4B), INTENT(IN) :: ivar
     INTEGER(I4B), ALLOCATABLE :: ans(:)
-  END FUNCTION dof_getIndex2
-END INTERFACE
-
-INTERFACE getIndex
-  MODULE PROCEDURE dof_getIndex2
-END INTERFACE getIndex
+  END FUNCTION dof_GetIndex2
+END INTERFACE GetIndex
 
 !----------------------------------------------------------------------------
-!                                                         getIndex@getMethod
+!                                                         GetIndex@getMethod
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -1077,24 +909,20 @@ END INTERFACE getIndex
 !
 !# Introduction
 !
-! Same as [[dof_getIndex2]], but physical variable is selected by
+! Same as [[dof_GetIndex2]], but physical variable is selected by
 ! it name.
 
-INTERFACE
-  MODULE PURE FUNCTION dof_getIndex3(obj, nodenum, varname) RESULT(ans)
+INTERFACE GetIndex
+  MODULE PURE FUNCTION dof_GetIndex3(obj, nodenum, varname) RESULT(ans)
     CLASS(DOF_), INTENT(IN) :: obj
     INTEGER(I4B), INTENT(IN) :: nodenum
     CHARACTER(1), INTENT(IN) :: varname
     INTEGER(I4B), ALLOCATABLE :: ans(:)
-  END FUNCTION dof_getIndex3
-END INTERFACE
-
-INTERFACE getIndex
-  MODULE PROCEDURE dof_getIndex3
-END INTERFACE getIndex
+  END FUNCTION dof_GetIndex3
+END INTERFACE GetIndex
 
 !----------------------------------------------------------------------------
-!                                                         getIndex@getMethod
+!                                                         GetIndex@getMethod
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -1108,20 +936,16 @@ END INTERFACE getIndex
 ! - The size of these indices is equal to the total number of DOF in obj
 ! times the size of nodenum(:)
 
-INTERFACE
-  MODULE PURE FUNCTION dof_getIndex4(obj, nodenum) RESULT(ans)
+INTERFACE GetIndex
+  MODULE PURE FUNCTION dof_GetIndex4(obj, nodenum) RESULT(ans)
     CLASS(DOF_), INTENT(IN) :: obj
     INTEGER(I4B), INTENT(IN) :: nodenum(:)
     INTEGER(I4B), ALLOCATABLE :: ans(:)
-  END FUNCTION dof_getIndex4
-END INTERFACE
-
-INTERFACE getIndex
-  MODULE PROCEDURE dof_getIndex4
-END INTERFACE getIndex
+  END FUNCTION dof_GetIndex4
+END INTERFACE GetIndex
 
 !----------------------------------------------------------------------------
-!                                                         getIndex@getMethod
+!                                                         GetIndex@getMethod
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -1137,21 +961,17 @@ END INTERFACE getIndex
 ! - The size of these indices is equal to the total number of DOF
 ! defined for the `ivar` physical variable times the size of nodenum.
 
-INTERFACE
-  MODULE PURE FUNCTION dof_getIndex5(obj, nodenum, ivar) RESULT(ans)
+INTERFACE GetIndex
+  MODULE PURE FUNCTION dof_GetIndex5(obj, nodenum, ivar) RESULT(ans)
     CLASS(DOF_), INTENT(IN) :: obj
     INTEGER(I4B), INTENT(IN) :: nodenum(:)
     INTEGER(I4B), INTENT(IN) :: ivar
     INTEGER(I4B), ALLOCATABLE :: ans(:)
-  END FUNCTION dof_getIndex5
-END INTERFACE
-
-INTERFACE getIndex
-  MODULE PROCEDURE dof_getIndex5
-END INTERFACE getIndex
+  END FUNCTION dof_GetIndex5
+END INTERFACE GetIndex
 
 !----------------------------------------------------------------------------
-!                                                         getIndex@getMethod
+!                                                         GetIndex@getMethod
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -1170,54 +990,50 @@ END INTERFACE getIndex
 ! - It is user's responsibility to ensure that for the selected physical var
 ! the `nodenumber` is lesser than the total number of
 ! nodes defined for that physical variable.
-! - The returned indices can be used for getting the dof (all dof)
+! - The returned indices can be used for Getting the dof (all dof)
 ! defined on the nodenum for the given physical variable.
 ! - The returned indices can be used to extract values from an instance of
 ! [[RealVector_]] or fortran vector of real numbers.
 
-INTERFACE
-  MODULE PURE FUNCTION dof_getIndex6(obj, nodenum, varname) RESULT(ans)
+INTERFACE GetIndex
+  MODULE PURE FUNCTION dof_GetIndex6(obj, nodenum, varname) RESULT(ans)
     CLASS(DOF_), INTENT(IN) :: obj
     INTEGER(I4B), INTENT(IN) :: nodenum(:)
     CHARACTER(1), INTENT(IN) :: varname
     INTEGER(I4B), ALLOCATABLE :: ans(:)
-  END FUNCTION dof_getIndex6
-END INTERFACE
-
-INTERFACE getIndex
-  MODULE PROCEDURE dof_getIndex6
-END INTERFACE getIndex
+  END FUNCTION dof_GetIndex6
+END INTERFACE GetIndex
 
 !----------------------------------------------------------------------------
-!                                                         getIndex@getMethod
+!                                                         GetIndex@getMethod
 !----------------------------------------------------------------------------
 
-INTERFACE getIndex
-  MODULE PROCEDURE dof_getNodeLoc5
-END INTERFACE getIndex
+INTERFACE GetIndex
+  MODULE PROCEDURE dof_GetNodeLoc5
+END INTERFACE GetIndex
 
 !----------------------------------------------------------------------------
-!                                                         getIndex@getMethod
+!                                                         GetIndex@getMethod
 !----------------------------------------------------------------------------
 
-INTERFACE getIndex
-  MODULE PROCEDURE dof_getNodeLoc6
-END INTERFACE getIndex
+INTERFACE GetIndex
+  MODULE PROCEDURE dof_GetNodeLoc6
+END INTERFACE GetIndex
 
 !----------------------------------------------------------------------------
-!                                                         getIndex@getMethod
+!                                                         GetIndex@getMethod
 !----------------------------------------------------------------------------
 
-INTERFACE getIndex
-  MODULE PROCEDURE dof_getNodeLoc7
-END INTERFACE getIndex
+INTERFACE GetIndex
+  MODULE PROCEDURE dof_GetNodeLoc7
+END INTERFACE GetIndex
 
 !----------------------------------------------------------------------------
-!                                                         getIndex@getMethod
+!                                                         GetIndex@getMethod
 !----------------------------------------------------------------------------
 
-INTERFACE getIndex
-  MODULE PROCEDURE dof_getNodeLoc8
-END INTERFACE getIndex
+INTERFACE GetIndex
+  MODULE PROCEDURE dof_GetNodeLoc8
+END INTERFACE GetIndex
 
 END MODULE DOF_GetMethods
