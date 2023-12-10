@@ -381,7 +381,7 @@ INTERFACE ReferenceElement_Pointer
 END INTERFACE ReferenceElement_Pointer
 
 !----------------------------------------------------------------------------
-!                                                 getNptrs@ConstrucorMethods
+!                                                 GetNptrs@ConstrucorMethods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
