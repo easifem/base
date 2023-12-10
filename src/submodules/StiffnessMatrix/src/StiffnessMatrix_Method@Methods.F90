@@ -257,6 +257,60 @@ END PROCEDURE femat_StiffnessMatrix3
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE femat_StiffnessMatrix4
+REAL(DFP), ALLOCATABLE :: realval(:), Ce(:, :), BMat1(:, :), BMat2(:, :)
+INTEGER(I4B) :: nips, nns1, nns2, i, j, ips, nsd
+INTEGER(I4B), ALLOCATABLE :: S(:), Indx(:, :)
+LOGICAL(LGT) :: isNodal
+
+nns1 = SIZE(test%N, 1)
+nns2 = SIZE(trial%N, 1)
+nips = SIZE(trial%N, 2)
+nsd = SIZE(test%dNdXt, 2)
+
+CALL Reallocate(ans, nns1 * nsd, nns2 * nsd)
+S = SHAPE(Cijkl)
+
+SELECT CASE (nsd)
+CASE (1)
+  ALLOCATE (Indx(1, 1))
+  Indx = 1
+CASE (2)
+  Indx = RESHAPE([1, 3, 3, 2], [2, 2])
+CASE (3)
+  Indx = RESHAPE([1, 4, 6, 4, 2, 5, 6, 5, 3], [3, 3])
+END SELECT
+
+ALLOCATE ( &
+  & Ce(nsd * nsd, nsd * nsd), &
+  & BMat1(nsd * nns1, nsd * nsd), &
+  & BMat2(nsd * nns2, nsd * nsd))
+
+BMat1 = 0.0_DFP
+BMat2 = 0.0_DFP
+realval = trial%Ws * trial%js * trial%thickness
+
+DO ips = 1, nips
+
+  DO j = 1, nsd
+    DO i = 1, nsd
+      Ce((i - 1) * nsd + 1:i * nsd, (j - 1) * nsd + 1:j * nsd) &
+        & = Cijkl(Indx(:, i), Indx(:, j))
+    END DO
+  END DO
+
+  DO i = 1, nsd
+    BMat1((i - 1) * nns1 + 1:i * nns1, (i - 1) * nsd + 1:i * nsd) = &
+      & test%dNdXt(:, :, ips)
+    BMat2((i - 1) * nns2 + 1:i * nns2, (i - 1) * nsd + 1:i * nsd) = &
+      & trial%dNdXt(:, :, ips)
+  END DO
+
+  ans = ans + realval(ips) * MATMUL(MATMUL(BMat1, Ce), TRANSPOSE(BMat2))
+
+END DO
+
+DEALLOCATE (BMat1, BMat2, Indx, Ce, realval, S)
+
 END PROCEDURE femat_StiffnessMatrix4
 
 !----------------------------------------------------------------------------
