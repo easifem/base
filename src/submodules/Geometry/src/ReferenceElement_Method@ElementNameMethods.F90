@@ -29,77 +29,76 @@ CONTAINS
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Element_Name
-! Define internal variables
-CHARACTER(50) :: Str1
 SELECT CASE (ElemType)
 CASE (Point1)
-  Str1 = "Point1"
+  ans = "Point1"
 CASE (Line2)
-  Str1 = "Line2"
+  ans = "Line2"
 CASE (Triangle3)
-  Str1 = "Triangle3"
+  ans = "Triangle3"
 CASE (Quadrangle4)
-  Str1 = "Quadrangle4"
+  ans = "Quadrangle4"
 CASE (Tetrahedron4)
-  Str1 = "Tetrahedron4"
-CASE (Hexahedron8)
-  Str1 = "Hexahedron8"
+  ans = "Tetrahedron4"
 CASE (Prism6)
-  Str1 = "Prism6"
+  ans = "Prism6"
 CASE (Pyramid5)
-  Str1 = "Pyramid5"
+  ans = "Pyramid5"
 CASE (Line3)
-  Str1 = "Line3"
-CASE (Triangle6)
-  Str1 = "Triangle6"
-CASE (Quadrangle9)
-  Str1 = "Quadrangle9"
-CASE (Quadrangle8)
-  Str1 = "Quadrangle8"
-CASE (Tetrahedron10)
-  Str1 = "Tetrahedron10"
-CASE (Hexahedron20)
-  Str1 = "Hexahedron20"
-CASE (Hexahedron27)
-  Str1 = "Hexahedron27"
-CASE (Prism15)
-  Str1 = "Prism15"
-CASE (Prism18)
-  Str1 = "Prism18"
-CASE (Pyramid13)
-  Str1 = "Pyramid13"
-CASE (Pyramid14)
-  Str1 = "Pyramid14"
-CASE (Triangle9)
-  Str1 = "Triangle9"
-CASE (Triangle10)
-  Str1 = "Triangle10"
-CASE (Triangle12)
-  Str1 = "Triangle12"
-CASE (Triangle15a)
-  Str1 = "Triangle15a"
-CASE (Triangle15b)
-  Str1 = "Triangle15b"
-CASE (Triangle21)
-  Str1 = "Triangle21"
+  ans = "Line3"
 CASE (Line4)
-  Str1 = "Line4"
+  ans = "Line4"
 CASE (Line5)
-  Str1 = "Line5"
+  ans = "Line5"
 CASE (Line6)
-  Str1 = "Line6"
+  ans = "Line6"
+CASE (Triangle6)
+  ans = "Triangle6"
+CASE (Quadrangle9)
+  ans = "Quadrangle9"
+CASE (Quadrangle8)
+  ans = "Quadrangle8"
+CASE (Tetrahedron10)
+  ans = "Tetrahedron10"
+CASE (Prism15)
+  ans = "Prism15"
+CASE (Prism18)
+  ans = "Prism18"
+CASE (Pyramid13)
+  ans = "Pyramid13"
+CASE (Pyramid14)
+  ans = "Pyramid14"
+CASE (Triangle9)
+  ans = "Triangle9"
+CASE (Triangle10)
+  ans = "Triangle10"
+CASE (Triangle12)
+  ans = "Triangle12"
+CASE (Triangle15a)
+  ans = "Triangle15a"
+CASE (Triangle15b)
+  ans = "Triangle15b"
+CASE (Triangle21)
+  ans = "Triangle21"
 CASE (Tetrahedron20)
-  Str1 = "Tetrahedron20"
+  ans = "Tetrahedron20"
 CASE (Tetrahedron35)
-  Str1 = "Tetrahedron35"
+  ans = "Tetrahedron35"
 CASE (Tetrahedron56)
-  Str1 = "Tetrahedron56"
+  ans = "Tetrahedron56"
+CASE (Hexahedron8)
+  ans = "Hexahedron8"
+CASE (Hexahedron20)
+  ans = "Hexahedron20"
+CASE (Hexahedron27)
+  ans = "Hexahedron27"
 CASE (Hexahedron64)
-  Str1 = "Hexahedron64"
+  ans = "Hexahedron64"
 CASE (Hexahedron125)
-  Str1 = "Hexahedron125"
+  ans = "Hexahedron125"
+CASE DEFAULT
+  ans = ""
 END SELECT
-Ans = TRIM(Str1)
 END PROCEDURE Element_Name
 
 !----------------------------------------------------------------------------
