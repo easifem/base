@@ -24,71 +24,47 @@ CONTAINS
 !                                                           StiffnessMatrix
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE femat_StiffnessMatrix1
+MODULE PROCEDURE obj_StiffnessMatrix1
 REAL(DFP), ALLOCATABLE :: realval(:), CBar(:, :, :), &
-  & Dummy(:, :, :), Ce(:, :), BMat1(:, :), BMat2(:, :)
+  & Ce(:, :), BMat1(:, :), BMat2(:, :)
 INTEGER(I4B) :: nips, nns1, nns2, i, j, ips, nsd
-INTEGER(I4B), ALLOCATABLE :: S(:), Indx(:, :)
-LOGICAL(LGT) :: isNodal
+INTEGER(I4B), ALLOCATABLE :: indx(:, :)
 
 nns1 = SIZE(test%N, 1)
 nns2 = SIZE(trial%N, 1)
 nips = SIZE(trial%N, 2)
-nsd = trial%refElem%NSD
+nsd = SIZE(trial%dNdXt, 2)
 
-ALLOCATE (ans(nns1 * nsd, nns2 * nsd)); ans = 0.0_DFP
-
-IF (Cijkl%defineOn .EQ. Nodal) THEN
-  isNodal = .TRUE.
-ELSE
-  isNodal = .FALSE.
-END IF
-
-S = SHAPE(Cijkl)
-
-SELECT CASE (Cijkl%varType)
-CASE (Constant)
-  ALLOCATE (CBar(S(1), S(2), nips))
-  CBar(:, :, 1) = Get(Cijkl, TypeFEVariableMatrix, &
-    & TypeFEVariableConstant)
-  DO i = 2, nips
-    CBar(:, :, i) = CBar(:, :, 1)
-  END DO
-CASE (Space)
-  Dummy = Get(Cijkl, TypeFEVariableMatrix, TypeFEVariableSpace)
-  IF (isNodal) THEN
-    CBar = Interpolation(trial, Dummy)
-  ELSE
-    CBar = Dummy
-  END IF
-  DEALLOCATE (Dummy)
-END SELECT
+CALL Reallocate(ans, nns1 * nsd, nns2 * nsd)
+CALL GetInterpolation(obj=test, interpol=CBar, val=Cijkl)
 
 SELECT CASE (nsd)
 CASE (1)
-  ALLOCATE (Indx(1, 1))
-  Indx = 1
+  ALLOCATE (indx(1, 1))
+  indx = 1
 CASE (2)
-  Indx = RESHAPE([1, 3, 3, 2], [2, 2])
+  ALLOCATE (indx(2, 2))
+  indx = RESHAPE([1, 3, 3, 2], [2, 2])
 CASE (3)
-  Indx = RESHAPE([1, 4, 6, 4, 2, 5, 6, 5, 3], [3, 3])
+  ALLOCATE (indx(3, 3))
+  indx = RESHAPE([1, 4, 6, 4, 2, 5, 6, 5, 3], [3, 3])
 END SELECT
 
-ALLOCATE ( &
-  & Ce(nsd * nsd, nsd * nsd), &
-  & BMat1(nsd * nns1, nsd * nsd), &
+ALLOCATE (Ce(nsd * nsd, nsd * nsd), BMat1(nsd * nns1, nsd * nsd), &
   & BMat2(nsd * nns2, nsd * nsd))
 
 BMat1 = 0.0_DFP
 BMat2 = 0.0_DFP
-realval = trial%Ws * trial%js * trial%Thickness
+
+CALL Reallocate(realval, nips)
+realval = trial%ws * trial%js * trial%thickness
 
 DO ips = 1, nips
 
   DO j = 1, nsd
     DO i = 1, nsd
       Ce((i - 1) * nsd + 1:i * nsd, (j - 1) * nsd + 1:j * nsd) &
-        & = CBar(Indx(:, i), Indx(:, j), ips)
+        & = CBar(indx(:, i), indx(:, j), ips)
     END DO
   END DO
 
@@ -99,82 +75,58 @@ DO ips = 1, nips
       & trial%dNdXt(:, :, ips)
   END DO
 
-  ans = ans + realval(ips) * MATMUL( &
-    & MATMUL(BMat1, Ce), TRANSPOSE(BMat2))
+  ans = ans + realval(ips) * MATMUL(MATMUL(BMat1, Ce), TRANSPOSE(BMat2))
 
 END DO
 
-DEALLOCATE (BMat1, BMat2, Indx, Ce, CBar, realval, S)
+DEALLOCATE (BMat1, BMat2, indx, Ce, CBar, realval)
 
-END PROCEDURE femat_StiffnessMatrix1
+END PROCEDURE obj_StiffnessMatrix1
 
 !----------------------------------------------------------------------------
 !                                                           StiffnessMatrix
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE femat_StiffnessMatrix2
+MODULE PROCEDURE obj_StiffnessMatrix2
 ! Define internal variable
-REAL(DFP), ALLOCATABLE :: LambdaBar(:), MuBar(:), Dummy(:), &
+REAL(DFP), ALLOCATABLE :: lambdaBar(:), muBar(:), &
   & realval(:), Ke11(:, :)
 REAL(DFP) :: real1, real2, real3
 INTEGER(I4B) :: nns1, nns2, nips, nsd, c1, c2, i, j, r1, r2, ips
-LOGICAL(LGT) :: isLambdaNodal, isMunodal
+LOGICAL(LGT) :: case1
+TYPE(FEVariable_) :: lambda0
+
+IF (isLambdaYoungsModulus) THEN
+  case1 = isLambdaYoungsModulus
+ELSE
+  case1 = .FALSE.
+END IF
+
+IF (case1) THEN
+  CALL GetLambdaFromYoungsModulus(lambda=lambda0,  &
+    & youngsModulus=lambda, shearModulus=mu)
+ELSE
+  lambda0 = lambda
+END IF
 
 nns1 = SIZE(test%N, 1)
 nns2 = SIZE(trial%N, 1)
 nips = SIZE(trial%N, 2)
-nsd = trial%RefElem%NSD
+nsd = SIZE(trial%dNdXt, 2)
 
 ALLOCATE (ans(nns1 * nsd, nns2 * nsd))
 ans = 0.0_DFP
 
-IF (Lambda%DefineOn .EQ. Nodal) THEN
-  isLambdaNodal = .TRUE.
-ELSE
-  isLambdaNodal = .FALSE.
-END IF
+CALL GetInterpolation(obj=test, interpol=lambdaBar, val=lambda0)
+CALL GetInterpolation(obj=test, interpol=muBar, val=mu)
 
-IF (Mu%DefineOn .EQ. Nodal) THEN
-  isMuNodal = .TRUE.
-ELSE
-  isMuNodal = .FALSE.
-END IF
-
-SELECT CASE (Lambda%VarType)
-CASE (Constant)
-  ALLOCATE (LambdaBar(nips))
-  LambdaBar = Get( &
-    & Lambda, TypeFEVariableScalar, &
-    & TypeFEVariableConstant)
-CASE (Space)
-  realval = Get(Lambda, TypeFEVariableScalar, TypeFEVariableSpace)
-  IF (isLambdaNodal) THEN
-    LambdaBar = Interpolation(trial, realval)
-  ELSE
-    LambdaBar = realval
-  END IF
-END SELECT
-
-SELECT CASE (Mu%VarType)
-CASE (Constant)
-  ALLOCATE (MuBar(nips))
-  MuBar = Get(Mu, TypeFEVariableScalar, TypeFEVariableConstant)
-CASE (Space)
-  realval = Get(Mu, TypeFEVariableScalar, TypeFEVariableSpace)
-  IF (isMuNodal) THEN
-    MuBar = Interpolation(trial, realval)
-  ELSE
-    MuBar = realval
-  END IF
-  DEALLOCATE (realval)
-END SELECT
-
-realval = trial%Ws * trial%Js * trial%Thickness
+CALL Reallocate(realval, nips)
+realval = trial%ws * trial%js * trial%thickness
 
 DO ips = 1, nips
-  real1 = MuBar(ips) * realval(ips)
-  real2 = (LambdaBar(ips) + MuBar(ips)) * realval(ips)
-  real3 = LambdaBar(ips) * realval(ips)
+  real1 = muBar(ips) * realval(ips)
+  real2 = (lambdaBar(ips) + muBar(ips)) * realval(ips)
+  real3 = lambdaBar(ips) * realval(ips)
   c1 = 0
   c2 = 0
   DO j = 1, nsd
@@ -206,28 +158,32 @@ DO ips = 1, nips
   END DO
 END DO
 
-DEALLOCATE (realval, Ke11, LambdaBar, MuBar)
+DEALLOCATE (realval, Ke11, lambdaBar, muBar)
+CALL DEALLOCATE (lambda0)
 
-END PROCEDURE femat_StiffnessMatrix2
+END PROCEDURE obj_StiffnessMatrix2
 
 !----------------------------------------------------------------------------
 !                                                            Stiffnessmatrix
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE femat_StiffnessMatrix3
+MODULE PROCEDURE obj_StiffnessMatrix3
 INTEGER(I4B) :: nns1, nns2, nips, ips, nsd, c1, c2, r1, r2, i, j
 REAL(DFP), ALLOCATABLE :: realval(:), Ke11(:, :)
 REAL(DFP) :: real1, real2, real3
 nns1 = SIZE(test%N, 1)
 nns2 = SIZE(trial%N, 1)
 nips = SIZE(trial%N, 2)
-nsd = trial%RefElem%NSD
-ALLOCATE (ans(nns1 * nsd, nns2 * nsd)); ans = 0.0_DFP
-realval = trial%Ws * trial%Thickness * trial%Js
+nsd = SIZE(trial%dNdXt, 2)
+
+CALL Reallocate(ans, nns1 * nsd, nns2 * nsd)
+CALL Reallocate(realval, nips)
+realval = trial%ws * trial%thickness * trial%js
+
 DO ips = 1, nips
-  real1 = Mu * realval(ips)
-  real2 = (Lambda + Mu) * realval(ips)
-  real3 = Lambda * realval(ips)
+  real1 = mu * realval(ips)
+  real2 = (lambda + mu) * realval(ips)
+  real3 = lambda * realval(ips)
   c1 = 0; c2 = 0; 
   DO j = 1, nsd
     c1 = c2 + 1; c2 = j * nns2; r1 = 0; r2 = 0
@@ -249,52 +205,54 @@ DO ips = 1, nips
     END DO
   END DO
 END DO
+
 DEALLOCATE (realval, Ke11)
-END PROCEDURE femat_StiffnessMatrix3
+END PROCEDURE obj_StiffnessMatrix3
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE femat_StiffnessMatrix4
+MODULE PROCEDURE obj_StiffnessMatrix4
 REAL(DFP), ALLOCATABLE :: realval(:), Ce(:, :), BMat1(:, :), BMat2(:, :)
 INTEGER(I4B) :: nips, nns1, nns2, i, j, ips, nsd
-INTEGER(I4B), ALLOCATABLE :: S(:), Indx(:, :)
-LOGICAL(LGT) :: isNodal
+INTEGER(I4B), ALLOCATABLE :: indx(:, :)
 
 nns1 = SIZE(test%N, 1)
 nns2 = SIZE(trial%N, 1)
 nips = SIZE(trial%N, 2)
-nsd = SIZE(test%dNdXt, 2)
+nsd = SIZE(trial%dNdXt, 2)
 
 CALL Reallocate(ans, nns1 * nsd, nns2 * nsd)
-S = SHAPE(Cijkl)
 
 SELECT CASE (nsd)
 CASE (1)
-  ALLOCATE (Indx(1, 1))
-  Indx = 1
+  ALLOCATE (indx(1, 1))
+  indx = 1
 CASE (2)
-  Indx = RESHAPE([1, 3, 3, 2], [2, 2])
+  ALLOCATE (indx(2, 2))
+  indx = RESHAPE([1, 3, 3, 2], [2, 2])
 CASE (3)
-  Indx = RESHAPE([1, 4, 6, 4, 2, 5, 6, 5, 3], [3, 3])
+  ALLOCATE (indx(3, 3))
+  indx = RESHAPE([1, 4, 6, 4, 2, 5, 6, 5, 3], [3, 3])
 END SELECT
 
-ALLOCATE ( &
-  & Ce(nsd * nsd, nsd * nsd), &
+ALLOCATE (Ce(nsd * nsd, nsd * nsd), &
   & BMat1(nsd * nns1, nsd * nsd), &
   & BMat2(nsd * nns2, nsd * nsd))
 
 BMat1 = 0.0_DFP
 BMat2 = 0.0_DFP
-realval = trial%Ws * trial%js * trial%thickness
+
+CALL Reallocate(realval, nips)
+realval = trial%ws * trial%js * trial%thickness
 
 DO ips = 1, nips
 
   DO j = 1, nsd
     DO i = 1, nsd
       Ce((i - 1) * nsd + 1:i * nsd, (j - 1) * nsd + 1:j * nsd) &
-        & = Cijkl(Indx(:, i), Indx(:, j))
+        & = Cijkl(indx(:, i), indx(:, j))
     END DO
   END DO
 
@@ -309,15 +267,15 @@ DO ips = 1, nips
 
 END DO
 
-DEALLOCATE (BMat1, BMat2, Indx, Ce, realval, S)
+DEALLOCATE (BMat1, BMat2, indx, Ce, realval)
 
-END PROCEDURE femat_StiffnessMatrix4
+END PROCEDURE obj_StiffnessMatrix4
 
 !----------------------------------------------------------------------------
 !                                                           StiffnessMatrix
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE femat_StiffnessMatrix5
+MODULE PROCEDURE obj_StiffnessMatrix5
 ! Define internal variable
 REAL(DFP), ALLOCATABLE :: realval(:), Ke11(:, :)
 REAL(DFP) :: real1, real2, real3
@@ -326,11 +284,12 @@ INTEGER(I4B) :: nns1, nns2, nips, nsd, c1, c2, i, j, r1, r2, ips
 nns1 = SIZE(test%N, 1)
 nns2 = SIZE(trial%N, 1)
 nips = SIZE(trial%N, 2)
-nsd = trial%refelem%NSD
+nsd = SIZE(trial%dNdXt, 2)
 
-ALLOCATE (ans(nns1 * nsd, nns2 * nsd))
+CALL Reallocate(ans, nns1 * nsd, nns2 * nsd)
 ans = 0.0_DFP
 
+CALL Reallocate(realval, nips)
 realval = trial%ws * trial%js * trial%thickness
 
 DO ips = 1, nips
@@ -370,7 +329,7 @@ END DO
 
 DEALLOCATE (realval, Ke11)
 
-END PROCEDURE femat_StiffnessMatrix5
+END PROCEDURE obj_StiffnessMatrix5
 
 !----------------------------------------------------------------------------
 !

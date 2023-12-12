@@ -44,6 +44,23 @@ PUBLIC :: NORM2
 PUBLIC :: OPERATOR(.EQ.)
 PUBLIC :: OPERATOR(.NE.)
 PUBLIC :: MEAN
+PUBLIC :: GetLambdaFromYoungsModulus
+
+!----------------------------------------------------------------------------
+!                                 GetLambdaFromYoungsModulus@SpecialMethods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2023-12-12
+! summary:  Get lame parameter lambda from YoungsModulus
+
+INTERFACE GetLambdaFromYoungsModulus
+  MODULE PURE SUBROUTINE fevar_GetLambdaFromYoungsModulus(youngsModulus,  &
+    & shearModulus, lambda)
+    TYPE(FEVariable_), INTENT(IN) :: youngsModulus, shearModulus
+    TYPE(FEVariable_), INTENT(INOUT) :: lambda
+  END SUBROUTINE fevar_GetLambdaFromYoungsModulus
+END INTERFACE GetLambdaFromYoungsModulus
 
 !----------------------------------------------------------------------------
 !                                                          Display@IOMethods

@@ -38,15 +38,12 @@ PURE SUBROUTINE MM_2a(ans, test, trial, rho)
   REAL(DFP), ALLOCATABLE :: vbar(:, :)
   REAL(DFP), ALLOCATABLE :: m4(:, :, :, :)
   INTEGER(I4B) :: ii, ips
-  !
+
   ! main
-  !
-  CALL getInterpolation(obj=trial, interpol=vbar, val=rho)
-  !
-  CALL reallocate(m4, SIZE(test%N, 1), SIZE(trial%N, 1), SIZE(vbar, 1), 1)
-  !
+  CALL GetInterpolation(obj=trial, interpol=vbar, val=rho)
+  CALL Reallocate(m4, SIZE(test%N, 1), SIZE(trial%N, 1), SIZE(vbar, 1), 1)
   realval = trial%js * trial%ws * trial%thickness
-  !
+
   DO ips = 1, SIZE(realval)
     m2 = OUTERPROD(a=test%N(:, ips), b=trial%N(:, ips))
     DO ii = 1, SIZE(vbar, 1)
@@ -54,11 +51,9 @@ PURE SUBROUTINE MM_2a(ans, test, trial, rho)
         & + realval(ips) * vbar(ii, ips) * m2
     END DO
   END DO
-  !
+
   CALL Convert(From=m4, To=ans)
-  !
   DEALLOCATE (realval, m2, vbar, m4)
-  !
 END SUBROUTINE MM_2a
 
 !----------------------------------------------------------------------------
@@ -73,23 +68,19 @@ PURE SUBROUTINE MM_2b(ans, test, trial, rho)
   ! Shapedata for trial function
   CLASS(FEVariable_), INTENT(IN) :: rho
   ! vector variable
-  !
+
   ! Define internal variable
-  !
   REAL(DFP), ALLOCATABLE :: realval(:)
   REAL(DFP), ALLOCATABLE :: m2(:, :)
   REAL(DFP), ALLOCATABLE :: vbar(:, :)
   REAL(DFP), ALLOCATABLE :: m4(:, :, :, :)
   INTEGER(I4B) :: ii, ips
-  !
+
   ! main
-  !
-  CALL getInterpolation(obj=trial, interpol=vbar, val=rho)
-  !
-  CALL reallocate(m4, SIZE(test%N, 1), SIZE(trial%N, 1), 1, SIZE(vbar, 1))
-  !
+  CALL GetInterpolation(obj=trial, interpol=vbar, val=rho)
+  CALL Reallocate(m4, SIZE(test%N, 1), SIZE(trial%N, 1), 1, SIZE(vbar, 1))
   realval = trial%js * trial%ws * trial%thickness
-  !
+
   DO ips = 1, SIZE(realval)
     m2 = OUTERPROD(a=test%N(:, ips), b=trial%N(:, ips))
     DO ii = 1, SIZE(vbar, 1)
@@ -97,11 +88,9 @@ PURE SUBROUTINE MM_2b(ans, test, trial, rho)
         & + realval(ips) * vbar(ii, ips) * m2
     END DO
   END DO
-  !
+
   CALL Convert(From=m4, To=ans)
-  !
   DEALLOCATE (realval, m2, vbar, m4)
-  !
 END SUBROUTINE MM_2b
 
 !----------------------------------------------------------------------------
@@ -122,16 +111,14 @@ PURE SUBROUTINE MM_2c(ans, test, trial, rho)
   REAL(DFP), ALLOCATABLE :: vbar(:, :)
   REAL(DFP), ALLOCATABLE :: m4(:, :, :, :)
   INTEGER(I4B) :: ips, ii
-  !
+
   ! main
-  !
-  CALL getInterpolation(obj=trial, interpol=vbar, val=rho)
-  !
-  CALL reallocate(m4, SIZE(test%N, 1), SIZE(trial%N, 1), &
+  CALL GetInterpolation(obj=trial, interpol=vbar, val=rho)
+  CALL Reallocate(m4, SIZE(test%N, 1), SIZE(trial%N, 1), &
     & SIZE(vbar, 1), SIZE(vbar, 1))
-  !
+
   realval = trial%js * trial%ws * trial%thickness
-  !
+
   DO ips = 1, SIZE(vbar, 2)
     m2 = OUTERPROD(a=test%N(:, ips), b=trial%N(:, ips))
     DO ii = 1, SIZE(vbar, 1)
@@ -139,11 +126,10 @@ PURE SUBROUTINE MM_2c(ans, test, trial, rho)
         & + realval(ips) * vbar(ii, ips) * m2
     END DO
   END DO
-  !
+
   CALL Convert(from=m4, to=ans)
-  !
+
   DEALLOCATE (realval, m2, vbar, m4)
-  !
 END SUBROUTINE MM_2c
 
 !----------------------------------------------------------------------------
@@ -164,16 +150,14 @@ PURE SUBROUTINE MM_2d(ans, test, trial, rho)
   REAL(DFP), ALLOCATABLE :: vbar(:, :)
   REAL(DFP), ALLOCATABLE :: m4(:, :, :, :)
   INTEGER(I4B) :: ips, ii, jj
-  !
+
   ! main
-  !
-  CALL getInterpolation(obj=trial, interpol=vbar, val=rho)
-  !
-  CALL reallocate(m4, SIZE(test%N, 1), SIZE(trial%N, 1), &
+  CALL GetInterpolation(obj=trial, interpol=vbar, val=rho)
+  CALL Reallocate(m4, SIZE(test%N, 1), SIZE(trial%N, 1), &
     & SIZE(vbar, 1), SIZE(vbar, 1))
-  !
+
   realval = trial%js * trial%ws * trial%thickness
-  !
+
   DO ips = 1, SIZE(vbar, 2)
     m2 = OUTERPROD(a=test%N(:, ips), b=trial%N(:, ips))
     DO jj = 1, SIZE(vbar, 1)
@@ -184,11 +168,10 @@ PURE SUBROUTINE MM_2d(ans, test, trial, rho)
       END DO
     END DO
   END DO
-  !
+
   CALL Convert(from=m4, to=ans)
-  !
+
   DEALLOCATE (realval, m2, vbar, m4)
-  !
 END SUBROUTINE MM_2d
 
 !----------------------------------------------------------------------------
@@ -199,19 +182,17 @@ MODULE PROCEDURE MassMatrix_1
 ! Define internal variable
 REAL(DFP), ALLOCATABLE :: realval(:)
 INTEGER(I4B) :: ips
-!
+
 ! main
-!
-CALL reallocate(ans, SIZE(test%N, 1), SIZE(trial%N, 1))
+CALL Reallocate(ans, SIZE(test%N, 1), SIZE(trial%N, 1))
 realval = trial%js * trial%ws * trial%thickness
-!
+
 DO ips = 1, SIZE(trial%N, 2)
   ans = ans + realval(ips) * &
     & OUTERPROD(a=test%N(:, ips), b=trial%N(:, ips))
 END DO
-!
+
 IF (PRESENT(opt)) CALL MakeDiagonalCopies(ans, opt)
-!
 DEALLOCATE (realval)
 END PROCEDURE MassMatrix_1
 
@@ -220,25 +201,20 @@ END PROCEDURE MassMatrix_1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE MassMatrix_2
-! CALL MM_1(ans=ans, test=test, trial=trial, rho=rho, opt=opt)
-! Internal variable
-!
 REAL(DFP), ALLOCATABLE :: realval(:)
 INTEGER(I4B) :: ips
-!
+
 ! main
-!
-CALL reallocate(ans, SIZE(test%N, 1), SIZE(trial%N, 1))
-CALL getInterpolation(obj=trial, interpol=realval, val=rho)
+CALL Reallocate(ans, SIZE(test%N, 1), SIZE(trial%N, 1))
+CALL GetInterpolation(obj=trial, interpol=realval, val=rho)
 realval = trial%js * trial%ws * trial%thickness * realval
-!
+
 DO ips = 1, SIZE(realval)
   ans = ans + realval(ips) * &
     & OUTERPROD(a=test%N(:, ips), b=trial%N(:, ips))
 END DO
-!
+
 IF (PRESENT(opt)) CALL MakeDiagonalCopies(ans, opt)
-!
 DEALLOCATE (realval)
 END PROCEDURE MassMatrix_2
 
@@ -264,23 +240,19 @@ END PROCEDURE MassMatrix_3
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE MassMatrix_4
-! CALL MM_3(ans=ans, test=test, trial=trial, rho=rho, opt=opt)
-! Define internal variable
-!
 REAL(DFP), ALLOCATABLE :: realval(:)
 REAL(DFP), ALLOCATABLE :: m2(:, :)
 REAL(DFP), ALLOCATABLE :: kbar(:, :, :)
 REAL(DFP), ALLOCATABLE :: m4(:, :, :, :)
 INTEGER(I4B) :: ii, jj, ips
-!
+
 ! main
-!
-CALL getInterpolation(obj=trial, interpol=kbar, val=rho)
-CALL reallocate(m4, SIZE(test%N, 1), SIZE(trial%N, 1), &
+CALL GetInterpolation(obj=trial, interpol=kbar, val=rho)
+CALL Reallocate(m4, SIZE(test%N, 1), SIZE(trial%N, 1), &
   & SIZE(kbar, 1), SIZE(kbar, 2))
-!
+
 realval = trial%js * trial%ws * trial%thickness
-!
+
 DO ips = 1, SIZE(realval)
   m2 = OUTERPROD(a=test%N(:, ips), b=trial%N(:, ips))
   DO jj = 1, SIZE(kbar, 2)
@@ -290,9 +262,8 @@ DO ips = 1, SIZE(realval)
     END DO
   END DO
 END DO
-!
+
 CALL Convert(From=m4, To=ans)
-!
 DEALLOCATE (realval, m2, kbar, m4)
 END PROCEDURE MassMatrix_4
 

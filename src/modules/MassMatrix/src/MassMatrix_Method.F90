@@ -43,7 +43,7 @@ PUBLIC :: MassMatrix
 ! $$\int_{\Omega } N^{I} N^{J}d\Omega$$
 !
 
-INTERFACE
+INTERFACE MassMatrix
   MODULE PURE FUNCTION MassMatrix_1(test, trial, opt) RESULT(ans)
     CLASS(ElemshapeData_), INTENT(IN) :: test
     !! Shapedata for test function
@@ -53,10 +53,6 @@ INTERFACE
     !! ncopy
     REAL(DFP), ALLOCATABLE :: ans(:, :)
   END FUNCTION MassMatrix_1
-END INTERFACE
-
-INTERFACE MassMatrix
-  MODULE PROCEDURE MassMatrix_1
 END INTERFACE MassMatrix
 
 !----------------------------------------------------------------------------
@@ -67,7 +63,7 @@ END INTERFACE MassMatrix
 ! date: 6 March 2021
 ! summary: This subroutine makes mass matrix in space domain
 
-INTERFACE
+INTERFACE MassMatrix
   MODULE PURE FUNCTION MassMatrix_2(test, trial, rho, rhorank, opt) &
     & RESULT(ans)
     CLASS(ElemshapeData_), INTENT(IN) :: test
@@ -81,10 +77,6 @@ INTERFACE
     !! ncopy
     REAL(DFP), ALLOCATABLE :: ans(:, :)
   END FUNCTION MassMatrix_2
-END INTERFACE
-
-INTERFACE MassMatrix
-  MODULE PROCEDURE MassMatrix_2
 END INTERFACE MassMatrix
 
 !----------------------------------------------------------------------------
@@ -95,7 +87,7 @@ END INTERFACE MassMatrix
 ! date: 6 March 2021
 ! summary: This subroutine makes mass matrix in space domain
 
-INTERFACE
+INTERFACE MassMatrix
   MODULE PURE FUNCTION MassMatrix_3(test, trial, rho, rhorank, opt) &
     & RESULT(ans)
     CLASS(ElemshapeData_), INTENT(IN) :: test
@@ -109,10 +101,6 @@ INTERFACE
     !! ncopy
     REAL(DFP), ALLOCATABLE :: ans(:, :)
   END FUNCTION MassMatrix_3
-END INTERFACE
-
-INTERFACE MassMatrix
-  MODULE PROCEDURE MassMatrix_3
 END INTERFACE MassMatrix
 
 !----------------------------------------------------------------------------
@@ -123,7 +111,7 @@ END INTERFACE MassMatrix
 ! date: 6 March 2021
 ! summary: This subroutine makes mass matrix in space domain
 
-INTERFACE
+INTERFACE MassMatrix
   MODULE PURE FUNCTION MassMatrix_4(test, trial, rho, rhorank) &
     & RESULT(ans)
     CLASS(ElemshapeData_), INTENT(IN) :: test
@@ -135,10 +123,6 @@ INTERFACE
     !! Matrix
     REAL(DFP), ALLOCATABLE :: ans(:, :)
   END FUNCTION MassMatrix_4
-END INTERFACE
-
-INTERFACE MassMatrix
-  MODULE PROCEDURE MassMatrix_4
 END INTERFACE MassMatrix
 
 !----------------------------------------------------------------------------
