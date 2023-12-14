@@ -31,26 +31,37 @@ CONTAINS
 MODULE PROCEDURE csr_initiate1
 #ifdef DEBUG_VER
 INTEGER(I4B) :: tNodes1, tNodes2
-IF (obj%isInitiated) THEN
+LOGICAL(LGT) :: isok, problem
+#endif
+
+#ifdef DEBUG_VER
+
+problem = PRESENT(idof) .AND. (.NOT. PRESENT(jdof))
+IF (problem) THEN
   CALL ErrorMSG( &
-    & "Instance of CSRSparsity is already initiated!", &
+    & "When idof is present, jdof should be present too.", &
     & "CSRSparsity_Method@Constructor.F90", &
     & "csr_initiate1()", &
     & __LINE__, stderr)
   STOP
 END IF
-#endif
-!!
-obj%nnz = 0
-obj%ncol = ncol
-obj%nrow = nrow
-!!
-IF (PRESENT(idof)) THEN
-  !!
-#ifdef DEBUG_VER
+
+problem = PRESENT(jdof) .AND. (.NOT. PRESENT(idof))
+IF (problem) THEN
+  CALL ErrorMSG( &
+    & "When jdof is present, idof should be present too.", &
+    & "CSRSparsity_Method@Constructor.F90", &
+    & "csr_initiate1()", &
+    & __LINE__, stderr)
+  STOP
+END IF
+
+isok = PRESENT(idof)
+IF (isok) THEN
   tnodes1 = .tNodes.idof
   tnodes2 = .tNodes.jdof
-  IF (tnodes1 .NE. nrow .OR. tnodes2 .NE. ncol) THEN
+  problem = tnodes1 .NE. nrow .OR. tnodes2 .NE. ncol
+  IF (problem) THEN
     CALL ErrorMSG( &
     & "Size of the matrix does not conform with the dof data!", &
     & "CSRSparsity_Method@Constructor.F90", &
@@ -58,27 +69,36 @@ IF (PRESENT(idof)) THEN
     & __LINE__, stderr)
     STOP
   END IF
+END IF
 #endif
-  !!
+
+CALL DEALLOCATE (obj)
+
+obj%nnz = Input(default=0_I4B, option=nnz)
+obj%ncol = ncol
+obj%nrow = nrow
+
+IF (PRESENT(idof)) THEN
   obj%idof = idof
-  obj%jdof = jdof
-  !!
 ELSE
-  CALL initiate(obj=obj%idof, tNodes=[nrow], names=['K'], &
-    & spacecompo=[1], timecompo=[1], storageFMT=NODES_FMT)
-  CALL initiate(obj=obj%jdof, tNodes=[ncol], names=['K'], &
+  CALL Initiate(obj=obj%idof, tNodes=[nrow], names=['K'], &
     & spacecompo=[1], timecompo=[1], storageFMT=NODES_FMT)
 END IF
-!!
+
+IF (PRESENT(jdof)) THEN
+  obj%jdof = jdof
+ELSE
+  CALL Initiate(obj=obj%jdof, tNodes=[ncol], names=['K'], &
+    & spacecompo=[1], timecompo=[1], storageFMT=NODES_FMT)
+END IF
+
 CALL Reallocate(obj%IA, nrow + 1)
 CALL Reallocate(obj%idiag, nrow)
-!!
-IF (ALLOCATED(obj%row)) DEALLOCATE (obj%row)
-IF (ALLOCATED(obj%JA)) DEALLOCATE (obj%JA)
-obj%isInitiated = .TRUE.
-obj%isSparsityLock = .FALSE.
-obj%isSorted = .FALSE.
-obj%isDiagStored = .FALSE.
+
+IF (obj%nnz .GT. 0) THEN
+  ALLOCATE (obj%row(obj%nnz), obj%JA(obj%nnz))
+END IF
+
 END PROCEDURE csr_initiate1
 
 !----------------------------------------------------------------------------
@@ -113,13 +133,13 @@ END PROCEDURE csr_initiate2
 
 MODULE PROCEDURE csr_Initiate3
 INTEGER(I4B) :: nrow, ncol
-!!
+
 nrow = SIZE(IA) - 1; ncol = MAXVAL(JA)
 CALL Initiate(obj=obj, nrow=nrow, ncol=ncol)
 obj%nnz = SIZE(JA)
 obj%IA = IA
 obj%JA = JA
-!!
+
 END PROCEDURE csr_Initiate3
 
 !----------------------------------------------------------------------------
@@ -165,8 +185,8 @@ IF (ALLOCATED(obj%IA)) DEALLOCATE (obj%IA)
 IF (ALLOCATED(obj%JA)) DEALLOCATE (obj%JA)
 IF (ALLOCATED(obj%idiag)) DEALLOCATE (obj%idiag)
 IF (ALLOCATED(obj%Row)) DEALLOCATE (obj%Row)
-CALL Deallocate (obj%idof)
-CALL Deallocate (obj%jdof)
+CALL DEALLOCATE (obj%idof)
+CALL DEALLOCATE (obj%jdof)
 obj%nnz = 0
 obj%nrow = 0
 obj%ncol = 0

@@ -66,18 +66,18 @@ END IF
 END PROCEDURE csr_size
 
 !----------------------------------------------------------------------------
-!                                                                      getNNZ
+!                                                                      GetNNZ
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE csr_getNNZ
+MODULE PROCEDURE csr_GetNNZ
 Ans = obj%nnz
-END PROCEDURE csr_getNNZ
+END PROCEDURE csr_GetNNZ
 
 !----------------------------------------------------------------------------
 !                                                                 GetNNZ
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE csr_getNNZ1
+MODULE PROCEDURE csr_GetNNZ1
 INTEGER(I4B) :: ii, rindx, jj
 IF (obj%isInitiated) THEN
   ans = 0
@@ -108,13 +108,13 @@ IF (obj%isInitiated) THEN
 ELSE
   ans = 0
 END IF
-END PROCEDURE csr_getNNZ1
+END PROCEDURE csr_GetNNZ1
 
 !----------------------------------------------------------------------------
 !                                                                 GetNNZ
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE csr_getNNZ2
+MODULE PROCEDURE csr_GetNNZ2
 INTEGER(I4B) :: ii, rindx, jj
 IF (obj%isInitiated) THEN
   ans = 0
@@ -136,16 +136,16 @@ IF (obj%isInitiated) THEN
 ELSE
   ans = 0
 END IF
-END PROCEDURE csr_getNNZ2
+END PROCEDURE csr_GetNNZ2
 
 !----------------------------------------------------------------------------
-!                                                                 getDiagonal
+!                                                                 GetDiagonal
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE csr_getDiagonal1
+MODULE PROCEDURE csr_GetDiagonal1
 INTEGER(I4B) :: len0
 CALL Reallocate(diag, obj%nrow, idiag, obj%nrow)
-CALL GETDIA( &
+CALL GetDIA( &
   & obj%nrow,&
   & obj%ncol,&
   & 0,&
@@ -155,26 +155,26 @@ CALL GETDIA( &
   & len0,&
   & diag,&
   & idiag,&
-  & INPUT(option=offset, default=0))
-END PROCEDURE csr_getDiagonal1
+  & INPUT(option=offSet, default=0))
+END PROCEDURE csr_GetDiagonal1
 
 !----------------------------------------------------------------------------
-!                                                               getDiagonal
+!                                                               GetDiagonal
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE csr_getDiagonal2
+MODULE PROCEDURE csr_GetDiagonal2
 INTEGER(I4B) :: ii
-  !!
+
 IF (obj%isDiagStored) THEN
-    !!
+
   CALL Reallocate(diag, obj%nrow)
   DO ii = 1, SIZE(diag)
     diag(ii) = A(obj%idiag(ii))
   END DO
-    !!
+
 ELSE
   CALL Reallocate(diag, obj%nrow)
-  CALL GETDIA( &
+  CALL GetDIA( &
     & obj%nrow,&
     & obj%ncol,&
     & 0,&
@@ -184,10 +184,43 @@ ELSE
     & ii,&
     & diag,&
     & obj%idiag,&
-    & INPUT(option=offset, default=0))
+    & INPUT(option=offSet, default=0))
   obj%isDiagStored = .TRUE.
 END IF
-  !!
-END PROCEDURE csr_getDiagonal2
+
+END PROCEDURE csr_GetDiagonal2
+
+!----------------------------------------------------------------------------
+!                                                               GetColNumber
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE csr_GetColNumber
+ans = obj%JA(indx)
+END PROCEDURE csr_GetColNumber
+
+!----------------------------------------------------------------------------
+!                                                               GetColIndex
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE csr_GetColIndex
+ans(1) = obj%IA(irow)
+ans(2) = obj%IA(irow + 1) - 1
+END PROCEDURE csr_GetColIndex
+
+!----------------------------------------------------------------------------
+!                                                              startColumn
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE csr_startColumn
+ans = obj%IA(irow)
+END PROCEDURE csr_startColumn
+
+!----------------------------------------------------------------------------
+!                                                              endColumn
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE csr_endColumn
+ans = obj%IA(irow + 1) - 1
+END PROCEDURE csr_endColumn
 
 END SUBMODULE GetMethods
