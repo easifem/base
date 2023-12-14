@@ -28,7 +28,7 @@ CONTAINS
 !                                                                   GetRow
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE csrMat_GetRow1
+MODULE PROCEDURE obj_GetRow1
 INTEGER(I4B) :: a, b
 REAL(DFP) :: alpha
 
@@ -38,7 +38,7 @@ IF (SIZE(VALUE) .LT. obj%csr%ncol .OR. irow .GT. SIZE(obj, 1)) THEN
   & Msg="SIZE of row vector should be same as number of col &
   & in sparse matrix or irow is out of bound", &
   & File="CSRMatrix_Method@GetMethod.F90", &
-  & Routine="csrMat_GetRow1", Line=__LINE__, UnitNo=stdout)
+  & Routine="obj_GetRow1", Line=__LINE__, UnitNo=stdout)
   RETURN
 END IF
 #endif
@@ -54,13 +54,13 @@ ELSE
   VALUE(obj%csr%JA(a:b)) = obj%A(a:b)
 END IF
 
-END PROCEDURE csrMat_GetRow1
+END PROCEDURE obj_GetRow1
 
 !----------------------------------------------------------------------------
 !                                                                   GetRow
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE csrMat_GetRow1b
+MODULE PROCEDURE obj_GetRow1b
 INTEGER(I4B) :: a, b, ii
 REAL(DFP) :: alpha
 
@@ -79,26 +79,26 @@ ELSE
     VALUE(obj%csr%JA(a:b)) = obj%A(a:b)
   END DO
 END IF
-END PROCEDURE csrMat_GetRow1b
+END PROCEDURE obj_GetRow1b
 
 !----------------------------------------------------------------------------
 !                                                                   GetRow
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE csrMat_GetRow2
+MODULE PROCEDURE obj_GetRow2
 CALL GetRow(obj=obj, &
   & irow=GetNodeLoc( &
   & obj=obj%csr%idof, &
   & idof=idof, &
   & nodenum=nodenum), &
   & VALUE=VALUE, scale=scale, addContribution=addContribution)
-END PROCEDURE csrMat_GetRow2
+END PROCEDURE obj_GetRow2
 
 !----------------------------------------------------------------------------
 !                                                                   GetRow
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE csrMat_GetRow3
+MODULE PROCEDURE obj_GetRow3
 CALL GetRow(obj=obj, &
   & irow=GetNodeLoc( &
   & obj=obj%csr%idof, &
@@ -106,13 +106,13 @@ CALL GetRow(obj=obj, &
   & idof=idof, &
   & nodenum=nodenum), &
   & VALUE=VALUE, scale=scale, addContribution=addContribution)
-END PROCEDURE csrMat_GetRow3
+END PROCEDURE obj_GetRow3
 
 !----------------------------------------------------------------------------
 !                                                                   GetRow
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE csrMat_GetRow4
+MODULE PROCEDURE obj_GetRow4
 CALL GetRow(obj=obj, &
   & irow=GetNodeLoc( &
   & obj=obj%csr%idof, &
@@ -122,13 +122,13 @@ CALL GetRow(obj=obj, &
   & nodenum=nodenum), &
   & VALUE=VALUE, scale=scale, &
   & addContribution=addContribution)
-END PROCEDURE csrMat_GetRow4
+END PROCEDURE obj_GetRow4
 
 !----------------------------------------------------------------------------
 !                                                                   GetRow
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE csrMat_GetRow5
+MODULE PROCEDURE obj_GetRow5
 CALL GetRow(obj=obj, &
   & irow=GetNodeLoc( &
   & obj=obj%csr%idof, &
@@ -138,13 +138,13 @@ CALL GetRow(obj=obj, &
   & nodenum=nodenum), &
   & VALUE=VALUE, scale=scale, &
   & addContribution=addContribution)
-END PROCEDURE csrMat_GetRow5
+END PROCEDURE obj_GetRow5
 
 !----------------------------------------------------------------------------
 !                                                                   GetRow
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE csrMat_GetRow6
+MODULE PROCEDURE obj_GetRow6
 CALL GetRow(obj=obj, &
   & irow=GetNodeLoc( &
   & obj=obj%csr%idof, &
@@ -154,13 +154,13 @@ CALL GetRow(obj=obj, &
   & nodenum=nodenum), &
   & VALUE=VALUE, scale=scale, &
   & addContribution=addContribution)
-END PROCEDURE csrMat_GetRow6
+END PROCEDURE obj_GetRow6
 
 !----------------------------------------------------------------------------
 !                                                                   GetRow
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE csrMat_GetRow7
+MODULE PROCEDURE obj_GetRow7
 CALL GetRow(obj=obj, &
   & irow=GetNodeLoc( &
   & obj=obj%csr%idof, &
@@ -170,13 +170,13 @@ CALL GetRow(obj=obj, &
   & nodenum=nodenum), &
   & VALUE=VALUE, scale=scale, &
   & addContribution=addContribution)
-END PROCEDURE csrMat_GetRow7
+END PROCEDURE obj_GetRow7
 
 !----------------------------------------------------------------------------
 !                                                                   GetRow
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE csrMat_GetRow8
+MODULE PROCEDURE obj_GetRow8
 CALL GetRow(obj=obj, &
   & irow=GetNodeLoc( &
   & obj=obj%csr%idof, &
@@ -186,7 +186,7 @@ CALL GetRow(obj=obj, &
   & nodenum=nodenum), &
   & VALUE=VALUE, scale=scale, &
   & addContribution=addContribution)
-END PROCEDURE csrMat_GetRow8
+END PROCEDURE obj_GetRow8
 
 !----------------------------------------------------------------------------
 !

@@ -24,7 +24,7 @@ PRIVATE
 PUBLIC :: GetSubMatrix
 
 !----------------------------------------------------------------------------
-!                                                       GetColumn@getMethod
+!                                                       GetColumn@Methods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -32,11 +32,31 @@ PUBLIC :: GetSubMatrix
 ! summary: This routine returns the submatrix
 
 INTERFACE GetSubMatrix
-  MODULE SUBROUTINE obj_GetSubMatrix1(obj, cols, submat)
+  MODULE SUBROUTINE obj_GetSubMatrix1(obj, cols, submat, subIndices)
     TYPE(CSRMatrix_), INTENT(IN) :: obj
     INTEGER(I4B), INTENT(IN) :: cols(:)
     TYPE(CSRMatrix_), INTENT(INOUT) :: submat
+    INTEGER(I4B), ALLOCATABLE, INTENT(INOUT) :: subIndices(:)
   END SUBROUTINE obj_GetSubMatrix1
+END INTERFACE GetSubMatrix
+
+!----------------------------------------------------------------------------
+!                                                       GetColumn@Methods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 24 July 2021
+! summary: This routine returns the submatrix
+
+INTERFACE GetSubMatrix
+  MODULE SUBROUTINE obj_GetSubMatrix2(obj, cols, submat, subIndices,  &
+    & isFirstCall)
+    TYPE(CSRMatrix_), INTENT(IN) :: obj
+    INTEGER(I4B), INTENT(IN) :: cols(:)
+    TYPE(CSRMatrix_), INTENT(INOUT) :: submat
+    INTEGER(I4B), ALLOCATABLE, INTENT(INOUT) :: subIndices(:)
+    LOGICAL(LGT), INTENT(IN) :: isFirstCall
+  END SUBROUTINE obj_GetSubMatrix2
 END INTERFACE GetSubMatrix
 
 !----------------------------------------------------------------------------

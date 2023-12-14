@@ -24,7 +24,7 @@ PRIVATE
 PUBLIC :: GetRow
 
 !----------------------------------------------------------------------------
-!                                                          getRow@getMethod
+!                                                          GetRow@getMethod
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -48,8 +48,8 @@ PUBLIC :: GetRow
 ! value(obj%csr%JA(a:b)) = obj%A( a:b )
 !```
 
-INTERFACE
-  MODULE SUBROUTINE csrMat_getRow1(obj, irow, VALUE, scale, addContribution)
+INTERFACE GetRow
+  MODULE SUBROUTINE obj_GetRow1(obj, irow, VALUE, scale, addContribution)
     TYPE(CSRMatrix_), INTENT(IN) :: obj
     INTEGER(I4B), INTENT(IN) :: irow
   !! index of row in csr matrix
@@ -57,15 +57,11 @@ INTERFACE
   !!
     REAL(DFP), OPTIONAL, INTENT(IN) :: scale
     LOGICAL(LGT), OPTIONAL, INTENT(IN) :: addContribution
-  END SUBROUTINE csrMat_getRow1
-END INTERFACE
-
-INTERFACE getRow
-  MODULE PROCEDURE csrMat_getRow1
-END INTERFACE getRow
+  END SUBROUTINE obj_GetRow1
+END INTERFACE GetRow
 
 !----------------------------------------------------------------------------
-!                                                          getRow@getMethod
+!                                                          GetRow@getMethod
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -89,8 +85,8 @@ END INTERFACE getRow
 ! value(obj%csr%JA(a:b)) = obj%A( a:b )
 !```
 
-INTERFACE
-  MODULE SUBROUTINE csrMat_getRow1b(obj, irow, VALUE, scale, addContribution)
+INTERFACE GetRow
+  MODULE SUBROUTINE obj_GetRow1b(obj, irow, VALUE, scale, addContribution)
     TYPE(CSRMatrix_), INTENT(IN) :: obj
     INTEGER(I4B), INTENT(IN) :: irow(:)
   !! index of row in csr matrix
@@ -98,15 +94,11 @@ INTERFACE
   !!
     REAL(DFP), OPTIONAL, INTENT(IN) :: scale
     LOGICAL(LGT), OPTIONAL, INTENT(IN) :: addContribution
-  END SUBROUTINE csrMat_getRow1b
-END INTERFACE
-
-INTERFACE getRow
-  MODULE PROCEDURE csrMat_getRow1b
-END INTERFACE getRow
+  END SUBROUTINE obj_GetRow1b
+END INTERFACE GetRow
 
 !----------------------------------------------------------------------------
-!                                                          getRow@getMethod
+!                                                          GetRow@getMethod
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -132,8 +124,8 @@ END INTERFACE getRow
 ! the row index from nodenum and idof
 !@endnote
 
-INTERFACE
-  MODULE SUBROUTINE csrMat_getRow2(obj, nodenum, idof, VALUE, scale, &
+INTERFACE GetRow
+  MODULE SUBROUTINE obj_GetRow2(obj, nodenum, idof, VALUE, scale, &
     & addContribution)
     TYPE(CSRMatrix_), INTENT(IN) :: obj
     INTEGER(I4B), INTENT(IN) :: nodenum
@@ -141,15 +133,11 @@ INTERFACE
     REAL(DFP), INTENT(INOUT) :: VALUE(:)
     REAL(DFP), OPTIONAL, INTENT(IN) :: scale
     LOGICAL(LGT), OPTIONAL, INTENT(IN) :: addContribution
-  END SUBROUTINE csrMat_getRow2
-END INTERFACE
-
-INTERFACE getRow
-  MODULE PROCEDURE csrMat_getRow2
-END INTERFACE getRow
+  END SUBROUTINE obj_GetRow2
+END INTERFACE GetRow
 
 !----------------------------------------------------------------------------
-!                                                          getRow@getMethod
+!                                                          GetRow@getMethod
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -169,8 +157,8 @@ END INTERFACE getRow
 ! the row index from nodenum and idof
 !@endnote
 
-INTERFACE
-  MODULE SUBROUTINE csrMat_getRow3(obj, nodenum, ivar, idof, VALUE, scale, &
+INTERFACE GetRow
+  MODULE SUBROUTINE obj_GetRow3(obj, nodenum, ivar, idof, VALUE, scale, &
     & addContribution)
     TYPE(CSRMatrix_), INTENT(IN) :: obj
     INTEGER(I4B), INTENT(IN) :: nodenum
@@ -179,15 +167,11 @@ INTERFACE
     REAL(DFP), INTENT(INOUT) :: VALUE(:)
     REAL(DFP), OPTIONAL, INTENT(IN) :: scale
     LOGICAL(LGT), OPTIONAL, INTENT(IN) :: addContribution
-  END SUBROUTINE csrMat_getRow3
-END INTERFACE
-
-INTERFACE getRow
-  MODULE PROCEDURE csrMat_getRow3
-END INTERFACE getRow
+  END SUBROUTINE obj_GetRow3
+END INTERFACE GetRow
 
 !----------------------------------------------------------------------------
-!                                                          getRow@getMethod
+!                                                          GetRow@getMethod
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -207,8 +191,8 @@ END INTERFACE getRow
 ! the row index from nodenum and idof
 !@endnote
 
-INTERFACE
-  MODULE SUBROUTINE csrMat_getRow4(obj, nodenum, ivar, spacecompo, &
+INTERFACE GetRow
+  MODULE SUBROUTINE obj_GetRow4(obj, nodenum, ivar, spacecompo, &
     & timecompo, VALUE, scale, addContribution)
     TYPE(CSRMatrix_), INTENT(IN) :: obj
     INTEGER(I4B), INTENT(IN) :: nodenum
@@ -218,15 +202,11 @@ INTERFACE
     REAL(DFP), INTENT(INOUT) :: VALUE(:)
     REAL(DFP), OPTIONAL, INTENT(IN) :: scale
     LOGICAL(LGT), OPTIONAL, INTENT(IN) :: addContribution
-  END SUBROUTINE csrMat_getRow4
-END INTERFACE
-
-INTERFACE getRow
-  MODULE PROCEDURE csrMat_getRow4
-END INTERFACE getRow
+  END SUBROUTINE obj_GetRow4
+END INTERFACE GetRow
 
 !----------------------------------------------------------------------------
-!                                                          getRow@getMethod
+!                                                          GetRow@getMethod
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -246,8 +226,8 @@ END INTERFACE getRow
 ! the row index from nodenum and idof
 !@endnote
 
-INTERFACE
-  MODULE SUBROUTINE csrMat_getRow5(obj, nodenum, ivar, spacecompo, &
+INTERFACE GetRow
+  MODULE SUBROUTINE obj_GetRow5(obj, nodenum, ivar, spacecompo, &
     & timecompo, VALUE, scale, addContribution)
     TYPE(CSRMatrix_), INTENT(IN) :: obj
     INTEGER(I4B), INTENT(IN) :: nodenum
@@ -257,15 +237,11 @@ INTERFACE
     REAL(DFP), INTENT(INOUT) :: VALUE(:)
     REAL(DFP), OPTIONAL, INTENT(IN) :: scale
     LOGICAL(LGT), OPTIONAL, INTENT(IN) :: addContribution
-  END SUBROUTINE csrMat_getRow5
-END INTERFACE
-
-INTERFACE getRow
-  MODULE PROCEDURE csrMat_getRow5
-END INTERFACE getRow
+  END SUBROUTINE obj_GetRow5
+END INTERFACE GetRow
 
 !----------------------------------------------------------------------------
-!                                                          getRow@getMethod
+!                                                          GetRow@getMethod
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -285,8 +261,8 @@ END INTERFACE getRow
 ! the row index from nodenum and idof
 !@endnote
 
-INTERFACE
-  MODULE SUBROUTINE csrMat_getRow6(obj, nodenum, ivar, spacecompo, &
+INTERFACE GetRow
+  MODULE SUBROUTINE obj_GetRow6(obj, nodenum, ivar, spacecompo, &
     & timecompo, VALUE, scale, addContribution)
     TYPE(CSRMatrix_), INTENT(IN) :: obj
     INTEGER(I4B), INTENT(IN) :: nodenum
@@ -296,15 +272,11 @@ INTERFACE
     REAL(DFP), INTENT(INOUT) :: VALUE(:)
     REAL(DFP), OPTIONAL, INTENT(IN) :: scale
     LOGICAL(LGT), OPTIONAL, INTENT(IN) :: addContribution
-  END SUBROUTINE csrMat_getRow6
-END INTERFACE
-
-INTERFACE getRow
-  MODULE PROCEDURE csrMat_getRow6
-END INTERFACE getRow
+  END SUBROUTINE obj_GetRow6
+END INTERFACE GetRow
 
 !----------------------------------------------------------------------------
-!                                                          getRow@getMethod
+!                                                          GetRow@getMethod
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -324,8 +296,8 @@ END INTERFACE getRow
 ! the row index from nodenum and idof
 !@endnote
 
-INTERFACE
-  MODULE SUBROUTINE csrMat_getRow7(obj, nodenum, ivar, spacecompo, &
+INTERFACE GetRow
+  MODULE SUBROUTINE obj_GetRow7(obj, nodenum, ivar, spacecompo, &
     & timecompo, VALUE, scale, addContribution)
     TYPE(CSRMatrix_), INTENT(IN) :: obj
     INTEGER(I4B), INTENT(IN) :: nodenum(:)
@@ -335,15 +307,11 @@ INTERFACE
     REAL(DFP), INTENT(INOUT) :: VALUE(:)
     REAL(DFP), OPTIONAL, INTENT(IN) :: scale
     LOGICAL(LGT), OPTIONAL, INTENT(IN) :: addContribution
-  END SUBROUTINE csrMat_getRow7
-END INTERFACE
-
-INTERFACE getRow
-  MODULE PROCEDURE csrMat_getRow7
-END INTERFACE getRow
+  END SUBROUTINE obj_GetRow7
+END INTERFACE GetRow
 
 !----------------------------------------------------------------------------
-!                                                          getRow@getMethod
+!                                                          GetRow@getMethod
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -363,8 +331,8 @@ END INTERFACE getRow
 ! the row index from nodenum and idof
 !@endnote
 
-INTERFACE
-  MODULE SUBROUTINE csrMat_getRow8(obj, nodenum, ivar, spacecompo, &
+INTERFACE GetRow
+  MODULE SUBROUTINE obj_GetRow8(obj, nodenum, ivar, spacecompo, &
     & timecompo, VALUE, scale, addContribution)
     TYPE(CSRMatrix_), INTENT(IN) :: obj
     INTEGER(I4B), INTENT(IN) :: nodenum(:)
@@ -374,10 +342,7 @@ INTERFACE
     REAL(DFP), INTENT(INOUT) :: VALUE(:)
     REAL(DFP), OPTIONAL, INTENT(IN) :: scale
     LOGICAL(LGT), OPTIONAL, INTENT(IN) :: addContribution
-  END SUBROUTINE csrMat_getRow8
-END INTERFACE
+  END SUBROUTINE obj_GetRow8
+END INTERFACE GetRow
 
-INTERFACE getRow
-  MODULE PROCEDURE csrMat_getRow8
-END INTERFACE getRow
 END MODULE CSRMatrix_GetRowMethods

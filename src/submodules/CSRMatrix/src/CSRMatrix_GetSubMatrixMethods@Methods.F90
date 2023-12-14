@@ -25,7 +25,6 @@ CONTAINS
 
 MODULE PROCEDURE obj_GetSubMatrix1
 LOGICAL(LGT), ALLOCATABLE :: selectCol(:)
-INTEGER(I4B), ALLOCATABLE :: subIndices(:)
 INTEGER(I4B) :: nnz, nrow, ncol, submat_nnz, ii, nn, irow, colIndx(2),  &
 & icol, jj
 REAL(DFP) :: aval
@@ -90,8 +89,55 @@ END DO
 CALL Display(subIndices, "debug subIndices: ")
 
 IF (ALLOCATED(selectCol)) DEALLOCATE (selectCol)
-IF (ALLOCATED(subIndices)) DEALLOCATE (subIndices)
 
 END PROCEDURE obj_GetSubMatrix1
+
+!----------------------------------------------------------------------------
+!                                                             GetSubMatrix1
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE obj_GetSubMatrix2
+LOGICAL(LGT) :: isok
+
+IF (isFirstCall) THEN
+  CALL obj_GetSubMatrix2(obj=obj, cols=cols, submat=submat,  &
+    & subIndices=subIndices)
+  RETURN
+END IF
+
+isok = ALLOCATED(subIndices)
+
+IF (.NOT. isok) THEN
+  CALL ErrorMSG( &
+    & "subIndices not allocated", &
+    & "CSRMatrix_GetSubMatrixMethods@Methods.F90", &
+    & "obj_GetSubMatrix2()", &
+    & __LINE__, stderr)
+  STOP
+END IF
+
+isok = ALLOCATED(submat%A)
+IF (.NOT. isok) THEN
+  CALL ErrorMSG( &
+    & "submat%A not allocated", &
+    & "CSRMatrix_GetSubMatrixMethods@Methods.F90", &
+    & "obj_GetSubMatrix2()", &
+    & __LINE__, stderr)
+  STOP
+END IF
+
+isok = SIZE(submat%A) .EQ. SIZE(subIndices)
+IF (.NOT. isok) THEN
+  CALL ErrorMSG( &
+    & "Size of submat%A not same as size of subIndices.", &
+    & "CSRMatrix_GetSubMatrixMethods@Methods.F90", &
+    & "obj_GetSubMatrix2()", &
+    & __LINE__, stderr)
+  STOP
+END IF
+
+submat%A = Get(obj=obj, indx=subIndices)
+
+END PROCEDURE obj_GetSubMatrix2
 
 END SUBMODULE Methods
