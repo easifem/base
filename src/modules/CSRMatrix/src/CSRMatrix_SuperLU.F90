@@ -19,14 +19,15 @@ MODULE CSRMatrix_Superlu
 USE BaseType, ONLY: CSRMatrix_
 USE GlobalData, ONLY: DFP, I4B, LGT
 IMPLICIT NONE
+PRIVATE
 
 ! PUBLIC :: GetLU
 ! PUBLIC :: LUSolve
-! PUBLIC :: LinSolve
 ! PUBLIC :: ! Solve
-! PUBLIC :: InitiateSuperluRHS
-! PUBLIC :: InitiateSuperluA
+PUBLIC :: InitiateSuperluRHS
+PUBLIC :: InitiateSuperluA
 PUBLIC :: LinSolve
+PUBLIC :: SuperluDeallocate
 
 !----------------------------------------------------------------------------
 !
@@ -64,15 +65,11 @@ END INTERFACE
 ! date:  2023-01-26
 ! summary: Set RHS
 
-INTERFACE
+INTERFACE InitiateSuperluRHS
   MODULE SUBROUTINE InitiateSuperluRHS1(obj, rhs)
     TYPE(CSRMatrix_), INTENT(INOUT) :: obj
     REAL(DFP), INTENT(IN) :: rhs(:)
   END SUBROUTINE InitiateSuperluRHS1
-END INTERFACE
-
-INTERFACE InitiateSuperluRHS
-  MODULE PROCEDURE InitiateSuperluRHS1
 END INTERFACE InitiateSuperluRHS
 
 !----------------------------------------------------------------------------
@@ -83,15 +80,11 @@ END INTERFACE InitiateSuperluRHS
 ! date:  2023-01-26
 ! summary: Set RHS
 
-INTERFACE
+INTERFACE InitiateSuperluRHS
   MODULE SUBROUTINE InitiateSuperluRHS2(obj, rhs)
     TYPE(CSRMatrix_), INTENT(INOUT) :: obj
     REAL(DFP), INTENT(IN) :: rhs(:, :)
   END SUBROUTINE InitiateSuperluRHS2
-END INTERFACE
-
-INTERFACE InitiateSuperluRHS
-  MODULE PROCEDURE InitiateSuperluRHS2
 END INTERFACE InitiateSuperluRHS
 
 !----------------------------------------------------------------------------
@@ -102,15 +95,11 @@ END INTERFACE InitiateSuperluRHS
 ! date:  2023-01-26
 ! summary: Set RHS
 
-INTERFACE
+INTERFACE SetSuperluRHS
   MODULE SUBROUTINE SetSuperluRHS1(obj, rhs)
     TYPE(CSRMatrix_), INTENT(INOUT) :: obj
     REAL(DFP), INTENT(IN) :: rhs(:)
   END SUBROUTINE SetSuperluRHS1
-END INTERFACE
-
-INTERFACE SetSuperluRHS
-  MODULE PROCEDURE SetSuperluRHS1
 END INTERFACE SetSuperluRHS
 
 !----------------------------------------------------------------------------
@@ -121,15 +110,11 @@ END INTERFACE SetSuperluRHS
 ! date:  2023-01-26
 ! summary: Set RHS
 
-INTERFACE
+INTERFACE SetSuperluRHS
   MODULE SUBROUTINE SetSuperluRHS2(obj, rhs)
     TYPE(CSRMatrix_), INTENT(INOUT) :: obj
     REAL(DFP), INTENT(IN) :: rhs(:, :)
   END SUBROUTINE SetSuperluRHS2
-END INTERFACE
-
-INTERFACE SetSuperluRHS
-  MODULE PROCEDURE SetSuperluRHS2
 END INTERFACE SetSuperluRHS
 
 !----------------------------------------------------------------------------
@@ -140,15 +125,11 @@ END INTERFACE SetSuperluRHS
 ! date:  2023-01-26
 ! summary: Get solutions
 
-INTERFACE
+INTERFACE GetSuperlux
   MODULE SUBROUTINE GetSuperluX1(obj, x)
     TYPE(CSRMatrix_), INTENT(INOUT) :: obj
     REAL(DFP), INTENT(INOUT) :: x(:)
   END SUBROUTINE GetSuperluX1
-END INTERFACE
-
-INTERFACE GetSuperlux
-  MODULE PROCEDURE GetSuperluX1
 END INTERFACE GetSuperlux
 
 !----------------------------------------------------------------------------
@@ -159,15 +140,11 @@ END INTERFACE GetSuperlux
 ! date:  2023-01-26
 ! summary: Get solutions
 
-INTERFACE
+INTERFACE GetSuperlux
   MODULE SUBROUTINE GetSuperluX2(obj, x)
     TYPE(CSRMatrix_), INTENT(INOUT) :: obj
     REAL(DFP), INTENT(INOUT) :: x(:, :)
   END SUBROUTINE GetSuperluX2
-END INTERFACE
-
-INTERFACE GetSuperlux
-  MODULE PROCEDURE GetSuperluX2
 END INTERFACE GetSuperlux
 
 !----------------------------------------------------------------------------
@@ -299,7 +276,7 @@ END INTERFACE
 !
 ! This routine solves `A*X=B`
 
-INTERFACE
+INTERFACE LinSolve
   MODULE SUBROUTINE LinSolve1(X, A, B, isTranspose, isFactored, &
     & ColPerm, Equil, IterRefine, PivotGrowth, DiagPivotThresh, &
     & ConditionNumber, SymmetricMode, PrintStat, info)
@@ -344,10 +321,6 @@ INTERFACE
     INTEGER(I4B), OPTIONAL, INTENT(OUT) :: info
     !! if info equal  to zero then success, else failure
   END SUBROUTINE LinSolve1
-END INTERFACE
-
-INTERFACE LinSolve
-  MODULE PROCEDURE LinSolve1
 END INTERFACE LinSolve
 
 !----------------------------------------------------------------------------
@@ -362,7 +335,7 @@ END INTERFACE LinSolve
 !
 ! This routine solves `A*X=B`
 
-INTERFACE
+INTERFACE LinSolve
   MODULE SUBROUTINE LinSolve2(X, A, B, isTranspose, isFactored, &
     & ColPerm, Equil, IterRefine, PivotGrowth, DiagPivotThresh, &
     & ConditionNumber, SymmetricMode, PrintStat, info)
@@ -407,10 +380,6 @@ INTERFACE
     INTEGER(I4B), OPTIONAL, INTENT(OUT) :: info
     !! if info equal  to zero then success, else failure
   END SUBROUTINE LinSolve2
-END INTERFACE
-
-INTERFACE LinSolve
-  MODULE PROCEDURE LinSolve2
 END INTERFACE LinSolve
 
 !----------------------------------------------------------------------------
@@ -426,7 +395,7 @@ END INTERFACE LinSolve
 ! This routine solves `A*X=B`
 ! Solution is returned in B
 
-INTERFACE
+INTERFACE LinSolve
   MODULE SUBROUTINE LinSolve3(A, B, isTranspose, isFactored, &
     & ColPerm, Equil, IterRefine, PivotGrowth, DiagPivotThresh, &
     & ConditionNumber, SymmetricMode, PrintStat, info)
@@ -469,10 +438,6 @@ INTERFACE
     INTEGER(I4B), OPTIONAL, INTENT(OUT) :: info
     !! if info equal  to zero then success, else failure
   END SUBROUTINE LinSolve3
-END INTERFACE
-
-INTERFACE LinSolve
-  MODULE PROCEDURE LinSolve3
 END INTERFACE LinSolve
 
 !----------------------------------------------------------------------------
@@ -487,7 +452,7 @@ END INTERFACE LinSolve
 !
 ! This routine solves `A*X=B`
 
-INTERFACE
+INTERFACE LinSolve
   MODULE SUBROUTINE LinSolve4(A, B, isTranspose, isFactored, &
     & ColPerm, Equil, IterRefine, PivotGrowth, DiagPivotThresh, &
     & ConditionNumber, SymmetricMode, PrintStat, info)
@@ -530,9 +495,9 @@ INTERFACE
     INTEGER(I4B), OPTIONAL, INTENT(OUT) :: info
     !! if info equal  to zero then success, else failure
   END SUBROUTINE LinSolve4
-END INTERFACE
-
-INTERFACE LinSolve
-  MODULE PROCEDURE LinSolve4
 END INTERFACE LinSolve
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
 END MODULE CSRMatrix_Superlu

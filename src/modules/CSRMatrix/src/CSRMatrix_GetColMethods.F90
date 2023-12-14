@@ -18,11 +18,13 @@
 MODULE CSRMatrix_GetColMethods
 USE GlobalData, ONLY: I4B, DFP, LGT
 USE BaseType, ONLY: CSRMatrix_
+IMPLICIT NONE
 
+PRIVATE
 PUBLIC :: GetColumn
 
 !----------------------------------------------------------------------------
-!                                                       getColumn@getMethod
+!                                                       GetColumn@getMethod
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -50,23 +52,19 @@ PUBLIC :: GetColumn
 ! END DO
 !```
 
-INTERFACE
-  MODULE SUBROUTINE csrMat_getColumn1(obj, iColumn, VALUE, scale, &
+INTERFACE GetColumn
+  MODULE SUBROUTINE csrMat_GetColumn1(obj, iColumn, VALUE, scale, &
     & addContribution)
     TYPE(CSRMatrix_), INTENT(IN) :: obj
     INTEGER(I4B), INTENT(IN) :: iColumn
     REAL(DFP), INTENT(INOUT) :: VALUE(:)
     REAL(DFP), OPTIONAL, INTENT(IN) :: scale
     LOGICAL(LGT), OPTIONAL, INTENT(IN) :: addContribution
-  END SUBROUTINE csrMat_getColumn1
-END INTERFACE
-
-INTERFACE getColumn
-  MODULE PROCEDURE csrMat_getColumn1
-END INTERFACE getColumn
+  END SUBROUTINE csrMat_GetColumn1
+END INTERFACE GetColumn
 
 !----------------------------------------------------------------------------
-!                                                       getColumn@getMethod
+!                                                       GetColumn@getMethod
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -94,23 +92,19 @@ END INTERFACE getColumn
 ! END DO
 !```
 
-INTERFACE
-  MODULE SUBROUTINE csrMat_getColumn1b(obj, iColumn, VALUE, scale, &
+INTERFACE GetColumn
+  MODULE SUBROUTINE csrMat_GetColumn1b(obj, iColumn, VALUE, scale, &
     & addContribution)
     TYPE(CSRMatrix_), INTENT(IN) :: obj
     INTEGER(I4B), INTENT(IN) :: iColumn(:)
     REAL(DFP), INTENT(INOUT) :: VALUE(:)
     REAL(DFP), OPTIONAL, INTENT(IN) :: scale
     LOGICAL(LGT), OPTIONAL, INTENT(IN) :: addContribution
-  END SUBROUTINE csrMat_getColumn1b
-END INTERFACE
-
-INTERFACE getColumn
-  MODULE PROCEDURE csrMat_getColumn1b
-END INTERFACE getColumn
+  END SUBROUTINE csrMat_GetColumn1b
+END INTERFACE GetColumn
 
 !----------------------------------------------------------------------------
-!                                                       getColumn@getMethod
+!                                                       GetColumn@getMethod
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -136,8 +130,8 @@ END INTERFACE getColumn
 ! the column index from nodenum and idof
 !@endnote
 
-INTERFACE
-  MODULE SUBROUTINE csrMat_getColumn2(obj, nodenum, idof, VALUE, scale,  &
+INTERFACE GetColumn
+  MODULE SUBROUTINE csrMat_GetColumn2(obj, nodenum, idof, VALUE, scale,  &
     & addContribution)
     TYPE(CSRMatrix_), INTENT(IN) :: obj
     INTEGER(I4B), INTENT(IN) :: nodenum
@@ -145,15 +139,11 @@ INTERFACE
     REAL(DFP), INTENT(INOUT) :: VALUE(:)
     REAL(DFP), OPTIONAL, INTENT(IN) :: scale
     LOGICAL(LGT), OPTIONAL, INTENT(IN) :: addContribution
-  END SUBROUTINE csrMat_getColumn2
-END INTERFACE
-
-INTERFACE getColumn
-  MODULE PROCEDURE csrMat_getColumn2
-END INTERFACE getColumn
+  END SUBROUTINE csrMat_GetColumn2
+END INTERFACE GetColumn
 
 !----------------------------------------------------------------------------
-!                                                       getColumn@getMethod
+!                                                       GetColumn@getMethod
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -179,8 +169,8 @@ END INTERFACE getColumn
 ! the column index from nodenum and idof
 !@endnote
 
-INTERFACE
-  MODULE SUBROUTINE csrMat_getColumn3(obj, nodenum, ivar, idof, VALUE,  &
+INTERFACE GetColumn
+  MODULE SUBROUTINE csrMat_GetColumn3(obj, nodenum, ivar, idof, VALUE,  &
     & scale, addContribution)
     TYPE(CSRMatrix_), INTENT(IN) :: obj
     INTEGER(I4B), INTENT(IN) :: nodenum
@@ -189,15 +179,11 @@ INTERFACE
     REAL(DFP), INTENT(INOUT) :: VALUE(:)
     REAL(DFP), OPTIONAL, INTENT(IN) :: scale
     LOGICAL(LGT), OPTIONAL, INTENT(IN) :: addContribution
-  END SUBROUTINE csrMat_getColumn3
-END INTERFACE
-
-INTERFACE getColumn
-  MODULE PROCEDURE csrMat_getColumn3
-END INTERFACE getColumn
+  END SUBROUTINE csrMat_GetColumn3
+END INTERFACE GetColumn
 
 !----------------------------------------------------------------------------
-!                                                       getColumn@getMethod
+!                                                       GetColumn@getMethod
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -223,8 +209,8 @@ END INTERFACE getColumn
 ! the column index from nodenum and idof
 !@endnote
 
-INTERFACE
-  MODULE SUBROUTINE csrMat_getColumn4(obj, nodenum, ivar, spacecompo, &
+INTERFACE GetColumn
+  MODULE SUBROUTINE csrMat_GetColumn4(obj, nodenum, ivar, spacecompo, &
     & timecompo, VALUE, scale, addContribution)
     TYPE(CSRMatrix_), INTENT(IN) :: obj
     INTEGER(I4B), INTENT(IN) :: nodenum
@@ -234,15 +220,11 @@ INTERFACE
     REAL(DFP), INTENT(INOUT) :: VALUE(:)
     REAL(DFP), OPTIONAL, INTENT(IN) :: scale
     LOGICAL(LGT), OPTIONAL, INTENT(IN) :: addContribution
-  END SUBROUTINE csrMat_getColumn4
-END INTERFACE
-
-INTERFACE getColumn
-  MODULE PROCEDURE csrMat_getColumn4
-END INTERFACE getColumn
+  END SUBROUTINE csrMat_GetColumn4
+END INTERFACE GetColumn
 
 !----------------------------------------------------------------------------
-!                                                       getColumn@getMethod
+!                                                       GetColumn@getMethod
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -268,8 +250,8 @@ END INTERFACE getColumn
 ! the column index from nodenum and idof
 !@endnote
 
-INTERFACE
-  MODULE SUBROUTINE csrMat_getColumn5(obj, nodenum, ivar, spacecompo, &
+INTERFACE GetColumn
+  MODULE SUBROUTINE csrMat_GetColumn5(obj, nodenum, ivar, spacecompo, &
     & timecompo, VALUE, scale, addContribution)
     TYPE(CSRMatrix_), INTENT(IN) :: obj
     INTEGER(I4B), INTENT(IN) :: nodenum
@@ -279,15 +261,11 @@ INTERFACE
     REAL(DFP), INTENT(INOUT) :: VALUE(:)
     REAL(DFP), OPTIONAL, INTENT(IN) :: scale
     LOGICAL(LGT), OPTIONAL, INTENT(IN) :: addContribution
-  END SUBROUTINE csrMat_getColumn5
-END INTERFACE
-
-INTERFACE getColumn
-  MODULE PROCEDURE csrMat_getColumn5
-END INTERFACE getColumn
+  END SUBROUTINE csrMat_GetColumn5
+END INTERFACE GetColumn
 
 !----------------------------------------------------------------------------
-!                                                       getColumn@getMethod
+!                                                       GetColumn@getMethod
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -313,8 +291,8 @@ END INTERFACE getColumn
 ! the column index from nodenum and idof
 !@endnote
 
-INTERFACE
-  MODULE SUBROUTINE csrMat_getColumn6(obj, nodenum, ivar, spacecompo, &
+INTERFACE GetColumn
+  MODULE SUBROUTINE csrMat_GetColumn6(obj, nodenum, ivar, spacecompo, &
     & timecompo, VALUE, scale, addContribution)
     TYPE(CSRMatrix_), INTENT(IN) :: obj
     INTEGER(I4B), INTENT(IN) :: nodenum
@@ -324,15 +302,11 @@ INTERFACE
     REAL(DFP), INTENT(INOUT) :: VALUE(:)
     REAL(DFP), OPTIONAL, INTENT(IN) :: scale
     LOGICAL(LGT), OPTIONAL, INTENT(IN) :: addContribution
-  END SUBROUTINE csrMat_getColumn6
-END INTERFACE
-
-INTERFACE getColumn
-  MODULE PROCEDURE csrMat_getColumn6
-END INTERFACE getColumn
+  END SUBROUTINE csrMat_GetColumn6
+END INTERFACE GetColumn
 
 !----------------------------------------------------------------------------
-!                                                       getColumn@getMethod
+!                                                       GetColumn@getMethod
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -358,8 +332,8 @@ END INTERFACE getColumn
 ! the column index from nodenum and idof
 !@endnote
 
-INTERFACE
-  MODULE SUBROUTINE csrMat_getColumn7(obj, nodenum, ivar, spacecompo, &
+INTERFACE GetColumn
+  MODULE SUBROUTINE csrMat_GetColumn7(obj, nodenum, ivar, spacecompo, &
     & timecompo, VALUE, scale, addContribution)
     TYPE(CSRMatrix_), INTENT(IN) :: obj
     INTEGER(I4B), INTENT(IN) :: nodenum(:)
@@ -369,15 +343,11 @@ INTERFACE
     REAL(DFP), INTENT(INOUT) :: VALUE(:)
     REAL(DFP), OPTIONAL, INTENT(IN) :: scale
     LOGICAL(LGT), OPTIONAL, INTENT(IN) :: addContribution
-  END SUBROUTINE csrMat_getColumn7
-END INTERFACE
-
-INTERFACE getColumn
-  MODULE PROCEDURE csrMat_getColumn7
-END INTERFACE getColumn
+  END SUBROUTINE csrMat_GetColumn7
+END INTERFACE GetColumn
 
 !----------------------------------------------------------------------------
-!                                                       getColumn@getMethod
+!                                                       GetColumn@getMethod
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -403,8 +373,8 @@ END INTERFACE getColumn
 ! the column index from nodenum and idof
 !@endnote
 
-INTERFACE
-  MODULE SUBROUTINE csrMat_getColumn8(obj, nodenum, ivar, spacecompo, &
+INTERFACE GetColumn
+  MODULE SUBROUTINE csrMat_GetColumn8(obj, nodenum, ivar, spacecompo, &
     & timecompo, VALUE, scale, addContribution)
     TYPE(CSRMatrix_), INTENT(IN) :: obj
     INTEGER(I4B), INTENT(IN) :: nodenum(:)
@@ -414,11 +384,11 @@ INTERFACE
     REAL(DFP), INTENT(INOUT) :: VALUE(:)
     REAL(DFP), OPTIONAL, INTENT(IN) :: scale
     LOGICAL(LGT), OPTIONAL, INTENT(IN) :: addContribution
-  END SUBROUTINE csrMat_getColumn8
-END INTERFACE
+  END SUBROUTINE csrMat_GetColumn8
+END INTERFACE GetColumn
 
-INTERFACE getColumn
-  MODULE PROCEDURE csrMat_getColumn8
-END INTERFACE getColumn
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
 
 END MODULE CSRMatrix_GetColMethods

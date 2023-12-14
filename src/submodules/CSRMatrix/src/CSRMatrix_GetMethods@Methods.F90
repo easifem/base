@@ -25,59 +25,99 @@ IMPLICIT NONE
 CONTAINS
 
 !----------------------------------------------------------------------------
-!                                                             getStorageFMT
+!                                                           GetSingleValue
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE csrMat_getStorageFMT
+MODULE PROCEDURE obj_GetSingleValue
+ans = obj%A(indx)
+END PROCEDURE obj_GetSingleValue
+
+!----------------------------------------------------------------------------
+!                                                             GetStorageFMT
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE obj_GetStorageFMT
 IF (i .EQ. 1) THEN
   ans = obj%csr%idof%storageFMT
 ELSE
   ans = obj%csr%jdof%storageFMT
 END IF
-END PROCEDURE csrMat_getStorageFMT
+END PROCEDURE obj_GetStorageFMT
 
 !----------------------------------------------------------------------------
-!                                                            getMatrixProp
+!                                                            GetMatrixProp
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE csrMat_getMatrixProp
+MODULE PROCEDURE obj_GetMatrixProp
 ans = TRIM(obj%matrixProp)
-END PROCEDURE csrMat_getMatrixProp
+END PROCEDURE obj_GetMatrixProp
 
 !----------------------------------------------------------------------------
-!                                                              getDOFPointer
+!                                                              GetDOFPointer
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE csrMat_getDOFPointer
+MODULE PROCEDURE obj_GetDOFPointer
 IF (i .EQ. 1) THEN
   ans => obj%csr%idof
 ELSE
   ans => obj%csr%jdof
 END IF
-END PROCEDURE csrMat_getDOFPointer
+END PROCEDURE obj_GetDOFPointer
 
 !----------------------------------------------------------------------------
 !                                                                 isSquare
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE csrMat_isSquare
+MODULE PROCEDURE obj_isSquare
 IF (obj%csr%nrow .EQ. obj%csr%ncol) THEN
   ans = .TRUE.
 ELSE
   ans = .FALSE.
 END IF
-END PROCEDURE csrMat_isSquare
+END PROCEDURE obj_isSquare
 
 !----------------------------------------------------------------------------
 !                                                               isRectangle
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE csrMat_isRectangle
+MODULE PROCEDURE obj_isRectangle
 IF (obj%csr%nrow .EQ. obj%csr%ncol) THEN
   ans = .FALSE.
 ELSE
   ans = .TRUE.
 END IF
-END PROCEDURE csrMat_isRectangle
+END PROCEDURE obj_isRectangle
+
+!----------------------------------------------------------------------------
+!                                                               GetColNumber
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE obj_GetColNumber
+ans = GetColNumber(obj%csr, indx)
+END PROCEDURE obj_GetColNumber
+
+!----------------------------------------------------------------------------
+!                                                               GetColIndex
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE obj_GetColIndex
+ans = GetColIndex(obj%csr, irow)
+END PROCEDURE obj_GetColIndex
+
+!----------------------------------------------------------------------------
+!                                                              startColumn
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE obj_startColumn
+ans = obj%csr.startColumn.irow
+END PROCEDURE obj_startColumn
+
+!----------------------------------------------------------------------------
+!                                                              endColumn
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE obj_endColumn
+ans = obj%csr.endColumn.irow
+END PROCEDURE obj_endColumn
 
 END SUBMODULE Methods

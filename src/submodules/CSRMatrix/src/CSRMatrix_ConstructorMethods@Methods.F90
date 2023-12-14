@@ -103,7 +103,8 @@ MODULE PROCEDURE csrMat_initiate1
 CALL DEALLOCATE (obj)
 obj%csrOwnership = .TRUE.
 IF (PRESENT(matrixProp)) obj%matrixProp = TRIM(matrixProp)
-CALL Initiate(obj=obj%csr, ncol=ncol, nrow=nrow, idof=idof, jdof=jdof)
+CALL Initiate(obj=obj%csr, ncol=ncol, nrow=nrow, idof=idof, jdof=jdof,  &
+& nnz=nnz)
 CALL Reallocate(obj%A, obj%csr%nnz)
 CALL setTotalDimension(obj, 2_I4B)
 END PROCEDURE csrMat_initiate1

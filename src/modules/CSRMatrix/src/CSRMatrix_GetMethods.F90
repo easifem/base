@@ -18,98 +18,165 @@
 MODULE CSRMatrix_GetMethods
 USE GlobalData, ONLY: I4B, DFP, LGT
 USE BaseType, ONLY: CSRMatrix_, DOF_
+IMPLICIT NONE
+PRIVATE
 
-PUBLIC :: getStorageFMT
+PUBLIC :: GetStorageFMT
 PUBLIC :: OPERATOR(.storageFMT.)
 PUBLIC :: OPERATOR(.MatrixProp.)
-PUBLIC :: getMatrixProp
-PUBLIC :: getDOFPointer
+PUBLIC :: GetMatrixProp
+PUBLIC :: GetDOFPointer
 PUBLIC :: isSquare
 PUBLIC :: isRectangle
+PUBLIC :: GetColIndex
+PUBLIC :: GetColNumber
+PUBLIC :: OPERATOR(.startColumn.)
+PUBLIC :: OPERATOR(.endColumn.)
+PUBLIC :: GetSingleValue
 
 !----------------------------------------------------------------------------
-!                                                  getStorageFMT@getMethods
+!                                                   GetSingleValue
 !----------------------------------------------------------------------------
 
-INTERFACE
-  MODULE PURE FUNCTION csrMat_getStorageFMT(obj, i) RESULT(Ans)
+!> author: Vikas Sharma, Ph. D.
+! date:  2023-12-14
+! summary:  Get single value
+
+INTERFACE GetSingleValue
+  MODULE PURE FUNCTION obj_GetSingleValue(obj, indx) RESULT(ans)
+    TYPE(CSRMatrix_), INTENT(IN) :: obj
+    INTEGER(I4B), INTENT(IN) :: indx
+    INTEGER(I4B) :: ans
+  END FUNCTION obj_GetSingleValue
+END INTERFACE GetSingleValue
+
+!----------------------------------------------------------------------------
+!                                                  GetStorageFMT@getMethods
+!----------------------------------------------------------------------------
+
+INTERFACE GetStorageFMT
+  MODULE PURE FUNCTION obj_GetStorageFMT(obj, i) RESULT(Ans)
     TYPE(CSRMatrix_), INTENT(IN) :: obj
     INTEGER(I4B), INTENT(IN) :: i
     INTEGER(I4B) :: ans
-  END FUNCTION csrMat_getStorageFMT
-END INTERFACE
-
-INTERFACE getStorageFMT
-  MODULE PROCEDURE csrMat_getStorageFMT
-END INTERFACE getStorageFMT
+  END FUNCTION obj_GetStorageFMT
+END INTERFACE GetStorageFMT
 
 INTERFACE OPERATOR(.storageFMT.)
-  MODULE PROCEDURE csrMat_getStorageFMT
+  MODULE PROCEDURE obj_GetStorageFMT
 END INTERFACE OPERATOR(.storageFMT.)
 
 !----------------------------------------------------------------------------
-!                                                   getMatrixProp@getMethod
+!                                                   GetMatrixProp@getMethod
 !----------------------------------------------------------------------------
 
-INTERFACE
-  MODULE PURE FUNCTION csrMat_getMatrixProp(obj) RESULT(Ans)
+INTERFACE GetMatrixProp
+  MODULE PURE FUNCTION obj_GetMatrixProp(obj) RESULT(Ans)
     TYPE(CSRMatrix_), TARGET, INTENT(IN) :: obj
     CHARACTER(20) :: ans
-  END FUNCTION csrMat_getMatrixProp
-END INTERFACE
+  END FUNCTION obj_GetMatrixProp
+END INTERFACE GetMatrixProp
 
 INTERFACE OPERATOR(.MatrixProp.)
-  MODULE PROCEDURE csrMat_getMatrixProp
+  MODULE PROCEDURE obj_GetMatrixProp
 END INTERFACE OPERATOR(.MatrixProp.)
 
-INTERFACE getMatrixProp
-  MODULE PROCEDURE csrMat_getMatrixProp
-END INTERFACE getMatrixProp
-
 !----------------------------------------------------------------------------
-!                                                  getDOFPointer@getMethod
+!                                                  GetDOFPointer@getMethod
 !----------------------------------------------------------------------------
 
-INTERFACE
-  MODULE FUNCTION csrMat_getDOFPointer(obj, i) RESULT(Ans)
+INTERFACE GetDOFPointer
+  MODULE FUNCTION obj_GetDOFPointer(obj, i) RESULT(Ans)
     TYPE(CSRMatrix_), TARGET, INTENT(IN) :: obj
     INTEGER(I4B), INTENT(IN) :: i
     CLASS(DOF_), POINTER :: Ans
-  END FUNCTION csrMat_getDOFPointer
-END INTERFACE
-
-INTERFACE getDOFPointer
-  MODULE PROCEDURE csrMat_getDOFPointer
-END INTERFACE getDOFPointer
+  END FUNCTION obj_GetDOFPointer
+END INTERFACE GetDOFPointer
 
 !----------------------------------------------------------------------------
-!                                                          isSquare@getMethod
+!                                                          isSquare@GetMethod
 !----------------------------------------------------------------------------
-
-INTERFACE
-  MODULE PURE FUNCTION csrMat_isSquare(obj) RESULT(Ans)
-    TYPE(CSRMatrix_), INTENT(IN) :: obj
-    LOGICAL(LGT) :: ans
-  END FUNCTION csrMat_isSquare
-END INTERFACE
 
 INTERFACE isSquare
-  MODULE PROCEDURE csrMat_isSquare
+  MODULE PURE FUNCTION obj_isSquare(obj) RESULT(Ans)
+    TYPE(CSRMatrix_), INTENT(IN) :: obj
+    LOGICAL(LGT) :: ans
+  END FUNCTION obj_isSquare
 END INTERFACE isSquare
 
 !----------------------------------------------------------------------------
-!                                                    isRectangle@getMethod
+!                                                    isRectangle@GetMethod
 !----------------------------------------------------------------------------
 
-INTERFACE
-  MODULE PURE FUNCTION csrMat_isRectangle(obj) RESULT(Ans)
+INTERFACE isRectangle
+  MODULE PURE FUNCTION obj_isRectangle(obj) RESULT(Ans)
     TYPE(CSRMatrix_), INTENT(IN) :: obj
     LOGICAL(LGT) :: ans
-  END FUNCTION csrMat_isRectangle
-END INTERFACE
-
-INTERFACE isRectangle
-  MODULE PROCEDURE csrMat_isRectangle
+  END FUNCTION obj_isRectangle
 END INTERFACE isRectangle
+
+!----------------------------------------------------------------------------
+!                                                   GetColNumber@GetMethods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2023-12-14
+! summary:  Get the column number from JA.
+
+INTERFACE GetColNumber
+  MODULE PURE FUNCTION obj_GetColNumber(obj, indx) RESULT(ans)
+    TYPE(CSRMatrix_), INTENT(IN) :: obj
+    INTEGER(I4B), INTENT(IN) :: indx
+    INTEGER(I4B) :: ans
+  END FUNCTION obj_GetColNumber
+END INTERFACE GetColNumber
+
+!----------------------------------------------------------------------------
+!                                                     GetColIndex@GetMethods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2023-12-14
+! summary:  Get the starting  and ending column index of irow
+
+INTERFACE GetColIndex
+  MODULE PURE FUNCTION obj_GetColIndex(obj, irow) RESULT(ans)
+    TYPE(CSRMatrix_), INTENT(IN) :: obj
+    INTEGER(I4B), INTENT(IN) :: irow
+    INTEGER(I4B) :: ans(2)
+  END FUNCTION obj_GetColIndex
+END INTERFACE GetColIndex
+
+!----------------------------------------------------------------------------
+!                                                     startColumn@GetMethods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2023-12-14
+! summary:  Get the starting column index of irow
+
+INTERFACE OPERATOR(.startColumn.)
+  MODULE PURE FUNCTION obj_startColumn(obj, irow) RESULT(ans)
+    TYPE(CSRMatrix_), INTENT(IN) :: obj
+    INTEGER(I4B), INTENT(IN) :: irow
+    INTEGER(I4B) :: ans
+  END FUNCTION obj_startColumn
+END INTERFACE OPERATOR(.startColumn.)
+
+!----------------------------------------------------------------------------
+!                                                        endColumn@GetMethods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2023-12-14
+! summary:  Get the ending column index of irow
+
+INTERFACE OPERATOR(.endColumn.)
+  MODULE PURE FUNCTION obj_endColumn(obj, irow) RESULT(ans)
+    TYPE(CSRMatrix_), INTENT(IN) :: obj
+    INTEGER(I4B), INTENT(IN) :: irow
+    INTEGER(I4B) :: ans
+  END FUNCTION obj_endColumn
+END INTERFACE OPERATOR(.endColumn.)
 
 END MODULE CSRMatrix_GetMethods

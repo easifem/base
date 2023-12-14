@@ -18,7 +18,9 @@
 MODULE CSRMatrix_GetRowMethods
 USE GlobalData, ONLY: I4B, DFP, LGT
 USE BaseType, ONLY: CSRMatrix_
+IMPLICIT NONE
 
+PRIVATE
 PUBLIC :: GetRow
 
 !----------------------------------------------------------------------------

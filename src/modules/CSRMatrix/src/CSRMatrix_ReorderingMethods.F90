@@ -18,6 +18,8 @@
 MODULE CSRMatrix_ReorderingMethods
 USE GlobalData, ONLY: I4B, DFP, LGT
 USE BaseType, ONLY: CSRMatrix_, SparseMatrixReOrdering_
+IMPLICIT NONE
+PRIVATE
 
 PUBLIC :: NestedDissect
 

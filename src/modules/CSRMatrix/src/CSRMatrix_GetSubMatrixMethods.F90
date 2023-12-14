@@ -15,61 +15,32 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-MODULE CSRMatrix_DiagonalScalingMethods
+MODULE CSRMatrix_GetSubMatrixMethods
 USE GlobalData, ONLY: I4B, DFP, LGT
 USE BaseType, ONLY: CSRMatrix_
 IMPLICIT NONE
+
 PRIVATE
+PUBLIC :: GetSubMatrix
 
-PUBLIC :: DiagonalScaling
+!----------------------------------------------------------------------------
+!                                                       GetColumn@getMethod
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 24 July 2021
+! summary: This routine returns the submatrix
+
+INTERFACE GetSubMatrix
+  MODULE SUBROUTINE obj_GetSubMatrix1(obj, cols, submat)
+    TYPE(CSRMatrix_), INTENT(IN) :: obj
+    INTEGER(I4B), INTENT(IN) :: cols(:)
+    TYPE(CSRMatrix_), INTENT(INOUT) :: submat
+  END SUBROUTINE obj_GetSubMatrix1
+END INTERFACE GetSubMatrix
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
-INTERFACE
-  MODULE SUBROUTINE csrmat_DiagonalScaling_1(obj, side, OPERATOR)
-    CLASS(CSRMatrix_), INTENT(INOUT) :: obj
-    CHARACTER(*), INTENT(IN) :: side
-    !! LEFT
-    !! RIGHT
-    !! BOTH
-    CHARACTER(*), OPTIONAL, INTENT(IN) :: OPERATOR
-    !!
-    !! SQRT <-- default
-    !! NONE
-    !!
-  END SUBROUTINE csrmat_DiagonalScaling_1
-END INTERFACE
-
-INTERFACE DiagonalScaling
-  MODULE PROCEDURE csrmat_DiagonalScaling_1
-END INTERFACE DiagonalScaling
-
-!----------------------------------------------------------------------------
-!
-!----------------------------------------------------------------------------
-
-INTERFACE
-  MODULE SUBROUTINE csrmat_DiagonalScaling_2(obj, side, diag, OPERATOR)
-    CLASS(CSRMatrix_), INTENT(INOUT) :: obj
-    CHARACTER(*), INTENT(IN) :: side
-    !! LEFT
-    !! RIGHT
-    !! BOTH
-    REAL(DFP), INTENT(IN) :: diag(:)
-    !! Use this diagonal if present
-    !!
-    CHARACTER(*), OPTIONAL, INTENT(IN) :: OPERATOR
-    !!
-    !! SQRT <-- default
-    !! NONE
-    !!
-  END SUBROUTINE csrmat_DiagonalScaling_2
-END INTERFACE
-
-INTERFACE DiagonalScaling
-  MODULE PROCEDURE csrmat_DiagonalScaling_2
-END INTERFACE DiagonalScaling
-
-END MODULE CSRMatrix_DiagonalScalingMethods
+END MODULE CSRMatrix_GetSubMatrixMethods

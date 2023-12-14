@@ -18,6 +18,8 @@
 MODULE CSRMatrix_MatmulMethods
 USE GlobalData, ONLY: I4B, DFP, LGT
 USE BaseType, ONLY: CSRMatrix_
+IMPLICIT NONE
+PRIVATE
 
 ! !----------------------------------------------------------------------------
 ! !                                                           Matmul@MatVec

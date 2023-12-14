@@ -17,6 +17,8 @@
 MODULE CSRMatrix_AddMethods
 USE GlobalData, ONLY: I4B, DFP, LGT
 USE BaseType, ONLY: CSRMatrix_
+IMPLICIT NONE
+PRIVATE
 
 PUBLIC :: Add
 

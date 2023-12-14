@@ -25,10 +25,18 @@ IMPLICIT NONE
 CONTAINS
 
 !----------------------------------------------------------------------------
+!                                                           SetSingleValue
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE obj_SetSingleValue
+obj%A(indx) = VALUE
+END PROCEDURE obj_SetSingleValue
+
+!----------------------------------------------------------------------------
 !                                                                       set
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE csrMat_set0
+MODULE PROCEDURE obj_set0
 ! Internal variables
 INTEGER(I4B), ALLOCATABLE :: row(:), col(:)
 INTEGER(I4B) :: ii, jj, kk
@@ -47,13 +55,13 @@ DO ii = 1, SIZE(row)
 END DO
 IF (ALLOCATED(row)) DEALLOCATE (row)
 IF (ALLOCATED(col)) DEALLOCATE (col)
-END PROCEDURE csrMat_set0
+END PROCEDURE obj_set0
 
 !----------------------------------------------------------------------------
 !                                                                       set
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE csrMat_set1
+MODULE PROCEDURE obj_set1
 REAL(DFP), ALLOCATABLE :: m2(:, :)
 INTEGER(I4B) :: tdof
 
@@ -76,34 +84,34 @@ CASE (FMT_DOF)
 END SELECT
 CALL Set(obj=obj, nodenum=nodenum, VALUE=m2)
 IF (ALLOCATED(m2)) DEALLOCATE (m2)
-END PROCEDURE csrMat_set1
+END PROCEDURE obj_set1
 
 !----------------------------------------------------------------------------
 !                                                                      set
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE csrMat_set2
+MODULE PROCEDURE obj_set2
 obj%A = VALUE
-END PROCEDURE csrMat_set2
+END PROCEDURE obj_set2
 
 !----------------------------------------------------------------------------
 !                                                                      set
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE csrMat_set3
+MODULE PROCEDURE obj_set3
 INTEGER(I4B) :: i, j
 !
 DO j = obj%csr%IA(irow), obj%csr%IA(irow + 1) - 1
   IF (obj%csr%JA(j) .EQ. icolumn) obj%A(j) = VALUE
 END DO
 !
-END PROCEDURE csrMat_set3
+END PROCEDURE obj_set3
 
 !----------------------------------------------------------------------------
 !                                                                      set
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE csrMat_set4
+MODULE PROCEDURE obj_set4
 CALL set(obj=obj,  &
   & irow=getNodeLoc( &
           & obj=obj%csr%idof, &
@@ -112,13 +120,13 @@ CALL set(obj=obj,  &
               & obj=obj%csr%jdof, &
               & nodenum=jNodeNum, idof=jDOF), &
   & VALUE=VALUE)
-END PROCEDURE csrMat_set4
+END PROCEDURE obj_set4
 
 !----------------------------------------------------------------------------
 !                                                                      set
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE csrMat_set5
+MODULE PROCEDURE obj_set5
 REAL(DFP), ALLOCATABLE :: m2(:, :)
 INTEGER(I4B) :: tdof1, tdof2
 !
@@ -130,13 +138,13 @@ m2 = VALUE
 CALL Set(obj=obj, nodenum=nodenum, VALUE=m2)
 !
 DEALLOCATE (m2)
-END PROCEDURE csrMat_set5
+END PROCEDURE obj_set5
 
 !----------------------------------------------------------------------------
 !                                                                     set
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE csrMat_set6
+MODULE PROCEDURE obj_set6
 ! Internal variables
 INTEGER(I4B), ALLOCATABLE :: row(:), col(:)
 INTEGER(I4B) :: ii, jj, kk
@@ -158,13 +166,13 @@ END DO
 IF (ALLOCATED(row)) DEALLOCATE (row)
 IF (ALLOCATED(col)) DEALLOCATE (col)
 !
-END PROCEDURE csrMat_set6
+END PROCEDURE obj_set6
 
 !----------------------------------------------------------------------------
 !                                                                      set
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE csrMat_set7
+MODULE PROCEDURE obj_set7
 CALL set(obj=obj, &
   & irow=getNodeLoc( &
   & obj=obj%csr%idof, &
@@ -177,13 +185,13 @@ CALL set(obj=obj, &
   & ivar=jvar, &
   & idof=jDOF), &
   & VALUE=VALUE)
-END PROCEDURE csrMat_set7
+END PROCEDURE obj_set7
 
 !----------------------------------------------------------------------------
 !                                                                       set
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE csrMat_set8
+MODULE PROCEDURE obj_set8
 ! Internal variables
 INTEGER(I4B), ALLOCATABLE :: row(:), col(:)
 INTEGER(I4B) :: ii, jj, kk
@@ -204,13 +212,13 @@ END DO
 !
 DEALLOCATE (row, col)
 !
-END PROCEDURE csrMat_set8
+END PROCEDURE obj_set8
 
 !----------------------------------------------------------------------------
 !                                                                      set
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE csrMat_set9
+MODULE PROCEDURE obj_set9
 CALL set(obj=obj, &
   & irow=getNodeLoc( &
   & obj=obj%csr%idof, &
@@ -225,13 +233,13 @@ CALL set(obj=obj, &
   & spacecompo=jspacecompo, &
   & timecompo=jtimecompo), &
   & VALUE=VALUE)
-END PROCEDURE csrMat_set9
+END PROCEDURE obj_set9
 
 !----------------------------------------------------------------------------
 !                                                                     set
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE csrMat_set10
+MODULE PROCEDURE obj_set10
 ! Internal variables
 INTEGER(I4B), ALLOCATABLE :: row(:), col(:)
 INTEGER(I4B) :: ii, jj, kk
@@ -252,13 +260,13 @@ END DO
 !
 DEALLOCATE (row, col)
 !
-END PROCEDURE csrMat_set10
+END PROCEDURE obj_set10
 
 !----------------------------------------------------------------------------
 !                                                                       set
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE csrMat_set11
+MODULE PROCEDURE obj_set11
 ! Internal variables
 INTEGER(I4B), ALLOCATABLE :: row(:), col(:)
 INTEGER(I4B) :: ii, jj, kk
@@ -279,13 +287,13 @@ END DO
 !
 DEALLOCATE (row, col)
 !
-END PROCEDURE csrMat_set11
+END PROCEDURE obj_set11
 
 !----------------------------------------------------------------------------
 !                                                                       set
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE csrMat_set12
+MODULE PROCEDURE obj_set12
 ! Internal variables
 INTEGER(I4B), ALLOCATABLE :: row(:), col(:)
 INTEGER(I4B) :: ii, jj, kk
@@ -308,13 +316,13 @@ END DO
 !
 DEALLOCATE (row, col)
 !
-END PROCEDURE csrMat_set12
+END PROCEDURE obj_set12
 
 !----------------------------------------------------------------------------
 !                                                                       set
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE csrMat_set13
+MODULE PROCEDURE obj_set13
 ! Internal variables
 INTEGER(I4B), ALLOCATABLE :: row(:), col(:)
 INTEGER(I4B) :: ii, jj, kk
@@ -337,13 +345,13 @@ END DO
 !
 DEALLOCATE (row, col)
 !
-END PROCEDURE csrMat_set13
+END PROCEDURE obj_set13
 
 !----------------------------------------------------------------------------
 !                                                                       set
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE csrMat_set14
+MODULE PROCEDURE obj_set14
 ! Internal variables
 INTEGER(I4B), ALLOCATABLE :: row(:), col(:)
 INTEGER(I4B) :: ii, jj, kk
@@ -366,6 +374,22 @@ END DO
 !
 DEALLOCATE (row, col)
 !
-END PROCEDURE csrMat_set14
+END PROCEDURE obj_set14
+
+!----------------------------------------------------------------------------
+!                                                                     SetIA
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE obj_SetIA
+CALL SetIA(obj%csr, irow, VALUE)
+END PROCEDURE obj_SetIA
+
+!----------------------------------------------------------------------------
+!                                                                     SetJA
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE obj_SetJA
+CALL SetJA(obj%csr, indx, VALUE)
+END PROCEDURE obj_SetJA
 
 END SUBMODULE Methods

@@ -18,6 +18,8 @@
 MODULE CSRMatrix_SparsityMethods
 USE GlobalData, ONLY: I4B, DFP, LGT
 USE BaseType, ONLY: CSRMatrix_, IntVector_
+IMPLICIT NONE
+PRIVATE
 
 PUBLIC :: SetSparsity
 
