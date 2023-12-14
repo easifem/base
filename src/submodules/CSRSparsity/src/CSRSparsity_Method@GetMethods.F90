@@ -78,7 +78,7 @@ END PROCEDURE obj_GetNNZ
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE obj_GetNNZ1
-INTEGER(I4B) :: ii, rindx, jj
+INTEGER(I4B) :: ii, rindx
 IF (obj%isInitiated) THEN
   ans = 0
   SELECT CASE (from)
@@ -115,7 +115,7 @@ END PROCEDURE obj_GetNNZ1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE obj_GetNNZ2
-INTEGER(I4B) :: ii, rindx, jj
+INTEGER(I4B) :: ii, rindx
 IF (obj%isInitiated) THEN
   ans = 0
 
@@ -194,33 +194,33 @@ END PROCEDURE obj_GetDiagonal2
 !                                                               GetColNumber
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE obj_GetColNumber
+MODULE PROCEDURE obj_GetColNumber1
 ans = obj%JA(indx)
-END PROCEDURE obj_GetColNumber
+END PROCEDURE obj_GetColNumber1
 
 !----------------------------------------------------------------------------
 !                                                               GetColIndex
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE obj_GetColIndex
+MODULE PROCEDURE obj_GetColIndex1
 ans(1) = obj%IA(irow)
 ans(2) = obj%IA(irow + 1) - 1
-END PROCEDURE obj_GetColIndex
+END PROCEDURE obj_GetColIndex1
 
 !----------------------------------------------------------------------------
 !                                                              startColumn
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE obj_startColumn
+MODULE PROCEDURE obj_startColumn1
 ans = obj%IA(irow)
-END PROCEDURE obj_startColumn
+END PROCEDURE obj_startColumn1
 
 !----------------------------------------------------------------------------
 !                                                              endColumn
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE obj_endColumn
+MODULE PROCEDURE obj_endColumn1
 ans = obj%IA(irow + 1) - 1
-END PROCEDURE obj_endColumn
+END PROCEDURE obj_endColumn1
 
 END SUBMODULE GetMethods

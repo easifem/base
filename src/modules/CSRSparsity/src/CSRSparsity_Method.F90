@@ -21,7 +21,7 @@
 
 MODULE CSRSparsity_Method
 USE GlobalData
-USE BaSetype
+USE Basetype
 IMPLICIT NONE
 PRIVATE
 
@@ -422,11 +422,11 @@ END INTERFACE GetDiagonal
 ! summary:  Get the column number from JA.
 
 INTERFACE GetColNumber
-  MODULE PURE FUNCTION obj_GetColNumber(obj, indx) RESULT(ans)
+  MODULE PURE FUNCTION obj_GetColNumber1(obj, indx) RESULT(ans)
     TYPE(CSRSparsity_), INTENT(IN) :: obj
     INTEGER(I4B), INTENT(IN) :: indx
     INTEGER(I4B) :: ans
-  END FUNCTION obj_GetColNumber
+  END FUNCTION obj_GetColNumber1
 END INTERFACE GetColNumber
 
 !----------------------------------------------------------------------------
@@ -438,11 +438,11 @@ END INTERFACE GetColNumber
 ! summary:  Get the starting  and ending column index of irow
 
 INTERFACE GetColIndex
-  MODULE PURE FUNCTION obj_GetColIndex(obj, irow) RESULT(ans)
+  MODULE PURE FUNCTION obj_GetColIndex1(obj, irow) RESULT(ans)
     TYPE(CSRSparsity_), INTENT(IN) :: obj
     INTEGER(I4B), INTENT(IN) :: irow
     INTEGER(I4B) :: ans(2)
-  END FUNCTION obj_GetColIndex
+  END FUNCTION obj_GetColIndex1
 END INTERFACE GetColIndex
 
 !----------------------------------------------------------------------------
@@ -454,11 +454,11 @@ END INTERFACE GetColIndex
 ! summary:  Get the starting column index of irow
 
 INTERFACE OPERATOR(.startColumn.)
-  MODULE PURE FUNCTION obj_startColumn(obj, irow) RESULT(ans)
+  MODULE PURE FUNCTION obj_startColumn1(obj, irow) RESULT(ans)
     TYPE(CSRSparsity_), INTENT(IN) :: obj
     INTEGER(I4B), INTENT(IN) :: irow
     INTEGER(I4B) :: ans
-  END FUNCTION obj_startColumn
+  END FUNCTION obj_startColumn1
 END INTERFACE OPERATOR(.startColumn.)
 
 !----------------------------------------------------------------------------
@@ -470,11 +470,11 @@ END INTERFACE OPERATOR(.startColumn.)
 ! summary:  Get the ending column index of irow
 
 INTERFACE OPERATOR(.endColumn.)
-  MODULE PURE FUNCTION obj_endColumn(obj, irow) RESULT(ans)
+  MODULE PURE FUNCTION obj_endColumn1(obj, irow) RESULT(ans)
     TYPE(CSRSparsity_), INTENT(IN) :: obj
     INTEGER(I4B), INTENT(IN) :: irow
-    INTEGER(I4B) :: ans(2)
-  END FUNCTION obj_endColumn
+    INTEGER(I4B) :: ans
+  END FUNCTION obj_endColumn1
 END INTERFACE OPERATOR(.endColumn.)
 
 !----------------------------------------------------------------------------

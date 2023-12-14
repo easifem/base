@@ -74,6 +74,8 @@ END IF
 
 CALL DEALLOCATE (obj)
 
+obj%isInitiated = .TRUE.
+
 obj%nnz = Input(default=0_I4B, option=nnz)
 obj%ncol = ncol
 obj%nrow = nrow
