@@ -33,6 +33,7 @@ PUBLIC :: GetColNumber
 PUBLIC :: OPERATOR(.startColumn.)
 PUBLIC :: OPERATOR(.endColumn.)
 PUBLIC :: GetSingleValue
+PUBLIC :: Get
 
 !----------------------------------------------------------------------------
 !                                                   GetSingleValue
@@ -49,6 +50,26 @@ INTERFACE GetSingleValue
     INTEGER(I4B) :: ans
   END FUNCTION obj_GetSingleValue
 END INTERFACE GetSingleValue
+
+INTERFACE Get
+  MODULE PROCEDURE obj_GetSingleValue
+END INTERFACE Get
+
+!----------------------------------------------------------------------------
+!                                                   GetSingleValue
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2023-12-14
+! summary:  Get single value
+
+INTERFACE Get
+  MODULE PURE FUNCTION obj_GetSeveralValue(obj, indx) RESULT(ans)
+    TYPE(CSRMatrix_), INTENT(IN) :: obj
+    INTEGER(I4B), INTENT(IN) :: indx(:)
+    INTEGER(I4B) :: ans(SIZE(indx))
+  END FUNCTION obj_GetSeveralValue
+END INTERFACE Get
 
 !----------------------------------------------------------------------------
 !                                                  GetStorageFMT@getMethods

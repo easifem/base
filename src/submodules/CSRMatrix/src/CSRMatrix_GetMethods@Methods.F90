@@ -33,6 +33,16 @@ ans = obj%A(indx)
 END PROCEDURE obj_GetSingleValue
 
 !----------------------------------------------------------------------------
+!                                                           GetSeveralValues
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE obj_GetSeveralValue
+INTEGER(I4B) :: ii, tsize
+tsize = SIZE(indx)
+DO ii = 1, tsize; ans(ii) = obj%A(indx(ii)); END DO
+END PROCEDURE obj_GetSeveralValue
+
+!----------------------------------------------------------------------------
 !                                                             GetStorageFMT
 !----------------------------------------------------------------------------
 

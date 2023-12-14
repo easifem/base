@@ -25,9 +25,11 @@ CONTAINS
 
 MODULE PROCEDURE obj_GetSubMatrix1
 LOGICAL(LGT), ALLOCATABLE :: selectCol(:)
+INTEGER(I4B), ALLOCATABLE :: subIndices(:)
 INTEGER(I4B) :: nnz, nrow, ncol, submat_nnz, ii, nn, irow, colIndx(2),  &
 & icol, jj
 REAL(DFP) :: aval
+TYPE(String) :: astr
 
 nnz = GetNNZ(obj=obj)
 nrow = SIZE(obj, 1)
@@ -41,8 +43,13 @@ nn = SIZE(cols)
 DO ii = 1, nn
   jj = cols(ii)
   IF (jj .GT. ncol) THEN
-    CALL Display("Error cols( "//tostring(ii)//") is greater than "//  &
-    & "ncol = "//tostring(ncol))
+    astr = "Error cols( "//tostring(ii)//") is greater than "//  &
+    & "ncol = "//tostring(ncol)
+    CALL ErrorMSG( &
+      & astr%chars(), &
+      & "CSRMatrix_GetSubMatrixMethods@Methods.F90", &
+      & "obj_GetSubMatrix1()", &
+      & __LINE__, stderr)
     STOP
   END IF
   selectCol(jj) = .TRUE.
@@ -57,6 +64,7 @@ DO irow = 1, nrow
   END DO
 END DO
 
+CALL Reallocate(subIndices, submat_nnz)
 CALL Initiate(obj=submat, ncol=ncol, nrow=nrow, nnz=submat_nnz)
 
 submat_nnz = 1
@@ -71,12 +79,18 @@ DO irow = 1, nrow
       CALL SetJA(obj=submat, indx=submat_nnz + jj, VALUE=icol)
       aval = GetSingleValue(obj=obj, indx=ii)
       CALL SetSingleValue(obj=submat, indx=submat_nnz + jj, VALUE=aval)
+      subIndices(submat_nnz + jj) = ii
       jj = jj + 1
     END IF
   END DO
   submat_nnz = submat_nnz + jj
   CALL SetIA(obj=submat, irow=irow + 1, VALUE=submat_nnz)
 END DO
+
+CALL Display(subIndices, "debug subIndices: ")
+
+IF (ALLOCATED(selectCol)) DEALLOCATE (selectCol)
+IF (ALLOCATED(subIndices)) DEALLOCATE (subIndices)
 
 END PROCEDURE obj_GetSubMatrix1
 
