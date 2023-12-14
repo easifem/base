@@ -45,15 +45,15 @@ CONTAINS
 !                                                                     Shape
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE csr_shape
+MODULE PROCEDURE obj_shape
 Ans = [obj%nrow, obj%ncol]
-END PROCEDURE csr_shape
+END PROCEDURE obj_shape
 
 !----------------------------------------------------------------------------
 !                                                                      Size
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE csr_size
+MODULE PROCEDURE obj_size
 IF (PRESENT(Dims)) THEN
   IF (Dims .EQ. 1) THEN
     Ans = obj%nrow
@@ -63,21 +63,21 @@ IF (PRESENT(Dims)) THEN
 ELSE
   Ans = obj%nrow * obj%ncol
 END IF
-END PROCEDURE csr_size
+END PROCEDURE obj_size
 
 !----------------------------------------------------------------------------
 !                                                                      GetNNZ
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE csr_GetNNZ
+MODULE PROCEDURE obj_GetNNZ
 Ans = obj%nnz
-END PROCEDURE csr_GetNNZ
+END PROCEDURE obj_GetNNZ
 
 !----------------------------------------------------------------------------
 !                                                                 GetNNZ
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE csr_GetNNZ1
+MODULE PROCEDURE obj_GetNNZ1
 INTEGER(I4B) :: ii, rindx, jj
 IF (obj%isInitiated) THEN
   ans = 0
@@ -108,13 +108,13 @@ IF (obj%isInitiated) THEN
 ELSE
   ans = 0
 END IF
-END PROCEDURE csr_GetNNZ1
+END PROCEDURE obj_GetNNZ1
 
 !----------------------------------------------------------------------------
 !                                                                 GetNNZ
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE csr_GetNNZ2
+MODULE PROCEDURE obj_GetNNZ2
 INTEGER(I4B) :: ii, rindx, jj
 IF (obj%isInitiated) THEN
   ans = 0
@@ -136,13 +136,13 @@ IF (obj%isInitiated) THEN
 ELSE
   ans = 0
 END IF
-END PROCEDURE csr_GetNNZ2
+END PROCEDURE obj_GetNNZ2
 
 !----------------------------------------------------------------------------
 !                                                                 GetDiagonal
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE csr_GetDiagonal1
+MODULE PROCEDURE obj_GetDiagonal1
 INTEGER(I4B) :: len0
 CALL Reallocate(diag, obj%nrow, idiag, obj%nrow)
 CALL GetDIA( &
@@ -156,13 +156,13 @@ CALL GetDIA( &
   & diag,&
   & idiag,&
   & INPUT(option=offSet, default=0))
-END PROCEDURE csr_GetDiagonal1
+END PROCEDURE obj_GetDiagonal1
 
 !----------------------------------------------------------------------------
 !                                                               GetDiagonal
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE csr_GetDiagonal2
+MODULE PROCEDURE obj_GetDiagonal2
 INTEGER(I4B) :: ii
 
 IF (obj%isDiagStored) THEN
@@ -188,39 +188,39 @@ ELSE
   obj%isDiagStored = .TRUE.
 END IF
 
-END PROCEDURE csr_GetDiagonal2
+END PROCEDURE obj_GetDiagonal2
 
 !----------------------------------------------------------------------------
 !                                                               GetColNumber
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE csr_GetColNumber
+MODULE PROCEDURE obj_GetColNumber
 ans = obj%JA(indx)
-END PROCEDURE csr_GetColNumber
+END PROCEDURE obj_GetColNumber
 
 !----------------------------------------------------------------------------
 !                                                               GetColIndex
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE csr_GetColIndex
+MODULE PROCEDURE obj_GetColIndex
 ans(1) = obj%IA(irow)
 ans(2) = obj%IA(irow + 1) - 1
-END PROCEDURE csr_GetColIndex
+END PROCEDURE obj_GetColIndex
 
 !----------------------------------------------------------------------------
 !                                                              startColumn
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE csr_startColumn
+MODULE PROCEDURE obj_startColumn
 ans = obj%IA(irow)
-END PROCEDURE csr_startColumn
+END PROCEDURE obj_startColumn
 
 !----------------------------------------------------------------------------
 !                                                              endColumn
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE csr_endColumn
+MODULE PROCEDURE obj_endColumn
 ans = obj%IA(irow + 1) - 1
-END PROCEDURE csr_endColumn
+END PROCEDURE obj_endColumn
 
 END SUBMODULE GetMethods

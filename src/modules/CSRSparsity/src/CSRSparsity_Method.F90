@@ -41,6 +41,8 @@ PUBLIC :: GetColIndex
 PUBLIC :: GetColNumber
 PUBLIC :: OPERATOR(.startColumn.)
 PUBLIC :: OPERATOR(.endColumn.)
+PUBLIC :: SetIA
+PUBLIC :: SetJA
 
 !----------------------------------------------------------------------------
 !                                                       Initiate@Constructor
@@ -72,7 +74,7 @@ PUBLIC :: OPERATOR(.endColumn.)
 !
 
 INTERFACE Initiate
-  MODULE SUBROUTINE csr_initiate1(obj, ncol, nrow, idof, jdof, nnz)
+  MODULE SUBROUTINE obj_initiate1(obj, ncol, nrow, idof, jdof, nnz)
     TYPE(CSRSparsity_), INTENT(INOUT) :: obj
     INTEGER(I4B), INTENT(IN) :: ncol, nrow
     TYPE(DOF_), OPTIONAL, INTENT(IN) :: idof
@@ -81,7 +83,7 @@ INTERFACE Initiate
     !! DOF for column
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: nnz
     !! number of nonzeros
-  END SUBROUTINE csr_initiate1
+  END SUBROUTINE obj_initiate1
 END INTERFACE Initiate
 
 !----------------------------------------------------------------------------
@@ -98,14 +100,14 @@ END INTERFACE Initiate
 ! This routine is used to define the assignment operator.
 
 INTERFACE Initiate
-  MODULE SUBROUTINE csr_initiate2(obj, obj2)
+  MODULE SUBROUTINE obj_initiate2(obj, obj2)
     TYPE(CSRSparsity_), INTENT(INOUT) :: obj
     TYPE(CSRSparsity_), INTENT(IN) :: obj2
-  END SUBROUTINE csr_initiate2
+  END SUBROUTINE obj_initiate2
 END INTERFACE Initiate
 
 INTERFACE ASSIGNMENT(=)
-  MODULE PROCEDURE csr_initiate2
+  MODULE PROCEDURE obj_initiate2
 END INTERFACE ASSIGNMENT(=)
 
 !----------------------------------------------------------------------------
@@ -121,16 +123,16 @@ END INTERFACE ASSIGNMENT(=)
 ! - This routine constructs [[CSRSparsity_]] instance by using the
 ! indices `IA` and `JA`
 ! - This routine is helpful in reading data from files.
-! - This routine calls [[CSRSparsity_Method:csr_initiate1]] method
+! - This routine calls [[CSRSparsity_Method:obj_initiate1]] method
 ! without `dof` argument. So this type of initiation does not contain
 ! useful information about the degree of freedoms.
 !
 
 INTERFACE Initiate
-  MODULE SUBROUTINE csr_initiate3(obj, IA, JA)
+  MODULE SUBROUTINE obj_initiate3(obj, IA, JA)
     TYPE(CSRSparsity_), INTENT(INOUT) :: obj
     INTEGER(I4B), INTENT(IN) :: IA(:), JA(:)
-  END SUBROUTINE csr_initiate3
+  END SUBROUTINE obj_initiate3
 END INTERFACE Initiate
 
 !----------------------------------------------------------------------------
@@ -146,7 +148,7 @@ END INTERFACE Initiate
 ! This function returns an instance of [[CSRSparsity_]]
 
 INTERFACE CSRSparsity
-  MODULE FUNCTION csr_constructor1(nrow, ncol, idof, jdof) RESULT(Ans)
+  MODULE FUNCTION obj_constructor1(nrow, ncol, idof, jdof) RESULT(Ans)
     INTEGER(I4B), INTENT(IN) :: nrow
     INTEGER(I4B), INTENT(IN) :: ncol
     TYPE(DOF_), OPTIONAL, INTENT(IN) :: idof
@@ -154,7 +156,7 @@ INTERFACE CSRSparsity
     TYPE(DOF_), OPTIONAL, INTENT(IN) :: jdof
     !! dof for column
     TYPE(CSRSparsity_) :: ans
-  END FUNCTION csr_constructor1
+  END FUNCTION obj_constructor1
 END INTERFACE CSRSparsity
 
 !----------------------------------------------------------------------------
@@ -170,11 +172,11 @@ END INTERFACE CSRSparsity
 ! This function returns an instance of [[CSRSparsity_]]
 
 INTERFACE CSRSparsity
-  MODULE FUNCTION csr_constructor2(IA, JA) RESULT(Ans)
+  MODULE FUNCTION obj_constructor2(IA, JA) RESULT(Ans)
     INTEGER(I4B), INTENT(IN) :: IA(:)
     INTEGER(I4B), INTENT(IN) :: JA(:)
     TYPE(CSRSparsity_) :: ans
-  END FUNCTION csr_constructor2
+  END FUNCTION obj_constructor2
 END INTERFACE CSRSparsity
 
 !----------------------------------------------------------------------------
@@ -190,7 +192,7 @@ END INTERFACE CSRSparsity
 ! This function returns an instance of [[CSRSparsity_]]
 
 INTERFACE CSRSparsityPointer
-  MODULE FUNCTION csr_constructor_1(nrow, ncol, idof, jdof) RESULT(Ans)
+  MODULE FUNCTION obj_constructor_1(nrow, ncol, idof, jdof) RESULT(Ans)
     INTEGER(I4B), INTENT(IN) :: nrow
     INTEGER(I4B), INTENT(IN) :: ncol
     TYPE(DOF_), OPTIONAL, INTENT(IN) :: idof
@@ -198,7 +200,7 @@ INTERFACE CSRSparsityPointer
     TYPE(DOF_), OPTIONAL, INTENT(IN) :: jdof
     !! dof for column
     TYPE(CSRSparsity_), POINTER :: ans
-  END FUNCTION csr_constructor_1
+  END FUNCTION obj_constructor_1
 END INTERFACE CSRSparsityPointer
 
 !----------------------------------------------------------------------------
@@ -214,11 +216,11 @@ END INTERFACE CSRSparsityPointer
 ! This function returns an instance of [[CSRSparsity_]]
 
 INTERFACE CSRSparsityPointer
-  MODULE FUNCTION csr_constructor_2(IA, JA) RESULT(Ans)
+  MODULE FUNCTION obj_constructor_2(IA, JA) RESULT(Ans)
     INTEGER(I4B), INTENT(IN) :: IA(:)
     INTEGER(I4B), INTENT(IN) :: JA(:)
     TYPE(CSRSparsity_), POINTER :: ans
-  END FUNCTION csr_constructor_2
+  END FUNCTION obj_constructor_2
 END INTERFACE CSRSparsityPointer
 
 !----------------------------------------------------------------------------
@@ -230,9 +232,9 @@ END INTERFACE CSRSparsityPointer
 ! summary:          This subroutine deallocates the data
 
 INTERFACE DEALLOCATE
-  MODULE PURE SUBROUTINE csr_Deallocate(obj)
+  MODULE PURE SUBROUTINE obj_Deallocate(obj)
     TYPE(CSRSparsity_), INTENT(INOUT) :: obj
-  END SUBROUTINE csr_Deallocate
+  END SUBROUTINE obj_Deallocate
 END INTERFACE DEALLOCATE
 
 !----------------------------------------------------------------------------
@@ -244,11 +246,11 @@ END INTERFACE DEALLOCATE
 ! summary: This subroutine display the content of sparsity
 
 INTERFACE Display
-  MODULE SUBROUTINE csr_Display(obj, Msg, UnitNo)
+  MODULE SUBROUTINE obj_Display(obj, Msg, UnitNo)
     TYPE(CSRSparsity_), INTENT(IN) :: obj
     CHARACTER(*), INTENT(IN) :: Msg
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: UnitNo
-  END SUBROUTINE csr_Display
+  END SUBROUTINE obj_Display
 END INTERFACE Display
 
 !----------------------------------------------------------------------------
@@ -264,10 +266,10 @@ END INTERFACE Display
 ! This function returns the shape of sparse matrix
 
 INTERFACE Shape
-  MODULE PURE FUNCTION csr_shape(obj) RESULT(Ans)
+  MODULE PURE FUNCTION obj_shape(obj) RESULT(Ans)
     TYPE(CSRSparsity_), INTENT(IN) :: obj
     INTEGER(I4B) :: Ans(2)
-  END FUNCTION csr_shape
+  END FUNCTION obj_shape
 END INTERFACE Shape
 
 !----------------------------------------------------------------------------
@@ -286,11 +288,11 @@ END INTERFACE Shape
 ! If Dims is absent then nrow*ncol are returned
 
 INTERFACE Size
-  MODULE PURE FUNCTION csr_size(obj, Dims) RESULT(Ans)
+  MODULE PURE FUNCTION obj_size(obj, Dims) RESULT(Ans)
     TYPE(CSRSparsity_), INTENT(IN) :: obj
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: Dims
     INTEGER(I4B) :: Ans
-  END FUNCTION csr_size
+  END FUNCTION obj_size
 END INTERFACE Size
 
 !----------------------------------------------------------------------------
@@ -302,10 +304,10 @@ END INTERFACE Size
 ! summary:         Return the total number of non zero entry
 
 INTERFACE GetNNZ
-  MODULE PURE FUNCTION csr_GetNNZ(obj) RESULT(Ans)
+  MODULE PURE FUNCTION obj_GetNNZ(obj) RESULT(Ans)
     TYPE(CSRSparsity_), INTENT(IN) :: obj
     INTEGER(I4B) :: Ans
-  END FUNCTION csr_GetNNZ
+  END FUNCTION obj_GetNNZ
 END INTERFACE GetNNZ
 
 !----------------------------------------------------------------------------
@@ -317,7 +319,7 @@ END INTERFACE GetNNZ
 ! summary:         Return the total number of non zero entry
 
 INTERFACE GetNNZ
-  MODULE PURE FUNCTION csr_GetNNZ1(obj, from) RESULT(Ans)
+  MODULE PURE FUNCTION obj_GetNNZ1(obj, from) RESULT(Ans)
     TYPE(CSRSparsity_), INTENT(IN) :: obj
     CHARACTER(1), INTENT(IN) :: from
     !! "U" nnz in upper triangular part, j > i
@@ -325,7 +327,7 @@ INTERFACE GetNNZ
     !! "D" nnz in diagonal part, i=j
     !! "A" nnz in whole matrix, L+U+D
     INTEGER(I4B) :: Ans
-  END FUNCTION csr_GetNNZ1
+  END FUNCTION obj_GetNNZ1
 END INTERFACE GetNNZ
 
 !----------------------------------------------------------------------------
@@ -337,14 +339,14 @@ END INTERFACE GetNNZ
 ! summary: Return the total number of non zero in U, L and D
 
 INTERFACE GetNNZ
-  MODULE PURE FUNCTION csr_GetNNZ2(obj, from) RESULT(Ans)
+  MODULE PURE FUNCTION obj_GetNNZ2(obj, from) RESULT(Ans)
     TYPE(CSRSparsity_), INTENT(IN) :: obj
     CHARACTER(1), INTENT(IN) :: from(1)
     !! this argument is not referred, it is here
     !! to create a unique interface only
     INTEGER(I4B) :: Ans(3)
     !! [nnzU, nnzL, nnzD]
-  END FUNCTION csr_GetNNZ2
+  END FUNCTION obj_GetNNZ2
 END INTERFACE GetNNZ
 
 !----------------------------------------------------------------------------
@@ -372,7 +374,7 @@ END INTERFACE GetNNZ
 ! diagonal found in row=i.
 
 INTERFACE GetDiagonal
-  MODULE SUBROUTINE csr_GetDiagonal1(obj, A, diag, idiag, offSet)
+  MODULE SUBROUTINE obj_GetDiagonal1(obj, A, diag, idiag, offSet)
     TYPE(CSRSparsity_), INTENT(IN) :: obj
     REAL(DFP), INTENT(IN) :: A(:)
     REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: diag(:)
@@ -381,7 +383,7 @@ INTERFACE GetDiagonal
     !! Position of diagonal entries in `A(:)`
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: offSet
     !! offSet of the wanted diagonal
-  END SUBROUTINE csr_GetDiagonal1
+  END SUBROUTINE obj_GetDiagonal1
 END INTERFACE GetDiagonal
 
 !----------------------------------------------------------------------------
@@ -396,11 +398,11 @@ END INTERFACE GetDiagonal
 !
 ! This subroutine returns the diagonal entries of sparse matrix.
 !
-! This routine is similar to [[CSRSparsity_Method:csr_GetDiagonal1]].
+! This routine is similar to [[CSRSparsity_Method:obj_GetDiagonal1]].
 ! However, this routine does not return the position of diagonal in `A`
 
 INTERFACE GetDiagonal
-  MODULE SUBROUTINE csr_GetDiagonal2(obj, A, diag, offSet)
+  MODULE SUBROUTINE obj_GetDiagonal2(obj, A, diag, offSet)
     TYPE(CSRSparsity_), INTENT(INOUT) :: obj
     REAL(DFP), INTENT(IN) :: A(:)
     !! Sparse matrix values
@@ -408,7 +410,7 @@ INTERFACE GetDiagonal
     !! Diagonal entries
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: offSet
     !! offSet of diagonal
-  END SUBROUTINE csr_GetDiagonal2
+  END SUBROUTINE obj_GetDiagonal2
 END INTERFACE GetDiagonal
 
 !----------------------------------------------------------------------------
@@ -420,11 +422,11 @@ END INTERFACE GetDiagonal
 ! summary:  Get the column number from JA.
 
 INTERFACE GetColNumber
-  MODULE PURE FUNCTION csr_GetColNumber(obj, indx) RESULT(ans)
+  MODULE PURE FUNCTION obj_GetColNumber(obj, indx) RESULT(ans)
     TYPE(CSRSparsity_), INTENT(IN) :: obj
     INTEGER(I4B), INTENT(IN) :: indx
     INTEGER(I4B) :: ans
-  END FUNCTION csr_GetColNumber
+  END FUNCTION obj_GetColNumber
 END INTERFACE GetColNumber
 
 !----------------------------------------------------------------------------
@@ -436,11 +438,11 @@ END INTERFACE GetColNumber
 ! summary:  Get the starting  and ending column index of irow
 
 INTERFACE GetColIndex
-  MODULE PURE FUNCTION csr_GetColIndex(obj, irow) RESULT(ans)
+  MODULE PURE FUNCTION obj_GetColIndex(obj, irow) RESULT(ans)
     TYPE(CSRSparsity_), INTENT(IN) :: obj
     INTEGER(I4B), INTENT(IN) :: irow
     INTEGER(I4B) :: ans(2)
-  END FUNCTION csr_GetColIndex
+  END FUNCTION obj_GetColIndex
 END INTERFACE GetColIndex
 
 !----------------------------------------------------------------------------
@@ -452,11 +454,11 @@ END INTERFACE GetColIndex
 ! summary:  Get the starting column index of irow
 
 INTERFACE OPERATOR(.startColumn.)
-  MODULE PURE FUNCTION csr_startColumn(obj, irow) RESULT(ans)
+  MODULE PURE FUNCTION obj_startColumn(obj, irow) RESULT(ans)
     TYPE(CSRSparsity_), INTENT(IN) :: obj
     INTEGER(I4B), INTENT(IN) :: irow
     INTEGER(I4B) :: ans
-  END FUNCTION csr_startColumn
+  END FUNCTION obj_startColumn
 END INTERFACE OPERATOR(.startColumn.)
 
 !----------------------------------------------------------------------------
@@ -468,11 +470,11 @@ END INTERFACE OPERATOR(.startColumn.)
 ! summary:  Get the ending column index of irow
 
 INTERFACE OPERATOR(.endColumn.)
-  MODULE PURE FUNCTION csr_endColumn(obj, irow) RESULT(ans)
+  MODULE PURE FUNCTION obj_endColumn(obj, irow) RESULT(ans)
     TYPE(CSRSparsity_), INTENT(IN) :: obj
     INTEGER(I4B), INTENT(IN) :: irow
     INTEGER(I4B) :: ans(2)
-  END FUNCTION csr_endColumn
+  END FUNCTION obj_endColumn
 END INTERFACE OPERATOR(.endColumn.)
 
 !----------------------------------------------------------------------------
@@ -492,13 +494,13 @@ END INTERFACE OPERATOR(.endColumn.)
 ! `Col` connectivity information is generated.
 
 INTERFACE SetSparsity
-  MODULE SUBROUTINE csr_SetSparsity1(obj, Row, Col)
+  MODULE SUBROUTINE obj_SetSparsity1(obj, Row, Col)
     TYPE(CSRSparsity_), INTENT(INOUT) :: obj
     INTEGER(I4B), INTENT(IN) :: Row
   !! row number
     INTEGER(I4B), INTENT(IN) :: Col(:)
   !! column number
-  END SUBROUTINE csr_SetSparsity1
+  END SUBROUTINE obj_SetSparsity1
 END INTERFACE SetSparsity
 
 !----------------------------------------------------------------------------
@@ -510,17 +512,17 @@ END INTERFACE SetSparsity
 ! summary:          This subroutine Sets the sparsity pattern of several rows
 !
 !# Introduction
-! This routine is similar to [[CSRSparsity_Method:csr_SetSparsity1]].
+! This routine is similar to [[CSRSparsity_Method:obj_SetSparsity1]].
 ! However, in this routine several rows can be given.
 
 INTERFACE SetSparsity
-  MODULE SUBROUTINE csr_SetSparsity2(obj, Row, Col)
+  MODULE SUBROUTINE obj_SetSparsity2(obj, Row, Col)
     TYPE(CSRSparsity_), INTENT(INOUT) :: obj
     INTEGER(I4B), INTENT(IN) :: Row(:)
     !! row number
     TYPE(IntVector_), INTENT(IN) :: Col(:)
     !! column number
-  END SUBROUTINE csr_SetSparsity2
+  END SUBROUTINE obj_SetSparsity2
 END INTERFACE SetSparsity
 
 !----------------------------------------------------------------------------
@@ -532,7 +534,7 @@ END INTERFACE SetSparsity
 ! summary: This subroutine Sets sparsity pattern for block `CSRSparsity_`
 
 INTERFACE SetSparsity
-  MODULE SUBROUTINE csr_SetSparsity3(obj, row, col, ivar, jvar)
+  MODULE SUBROUTINE obj_SetSparsity3(obj, row, col, ivar, jvar)
     TYPE(CSRSparsity_), INTENT(INOUT) :: obj
     INTEGER(I4B), INTENT(IN) :: row
     !! row number
@@ -542,7 +544,7 @@ INTERFACE SetSparsity
     !! block address (row index)
     INTEGER(I4B), INTENT(IN) :: jvar
     !! block address (col index)
-  END SUBROUTINE csr_SetSparsity3
+  END SUBROUTINE obj_SetSparsity3
 END INTERFACE SetSparsity
 
 !----------------------------------------------------------------------------
@@ -554,12 +556,12 @@ END INTERFACE SetSparsity
 ! summary: This subroutine Sets the sparsity pattern of a given row
 !
 !# Introduction
-! This routine is similar to the [[CSRSparsity_Method:csr_SetSparsity3]],
+! This routine is similar to the [[CSRSparsity_Method:obj_SetSparsity3]],
 ! however, in this routine we can specify several rows and their
 ! column indices.
 
 INTERFACE SetSparsity
-  MODULE SUBROUTINE csr_SetSparsity4(obj, Row, Col, iVar, jVar)
+  MODULE SUBROUTINE obj_SetSparsity4(obj, Row, Col, iVar, jVar)
     TYPE(CSRSparsity_), INTENT(INOUT) :: obj
     INTEGER(I4B), INTENT(IN) :: Row(:)
     !! several row numbers
@@ -569,7 +571,7 @@ INTERFACE SetSparsity
     !! block address (row index)
     INTEGER(I4B), INTENT(IN) :: jVar
     !! block address (col index)
-  END SUBROUTINE csr_SetSparsity4
+  END SUBROUTINE obj_SetSparsity4
 END INTERFACE SetSparsity
 
 !----------------------------------------------------------------------------
@@ -587,13 +589,13 @@ END INTERFACE SetSparsity
 ! between row-i and row-j
 
 INTERFACE SetSparsity
-  MODULE SUBROUTINE csr_SetSparsity5(obj, graph)
+  MODULE SUBROUTINE obj_SetSparsity5(obj, graph)
     TYPE(CSRSparsity_), INTENT(INOUT) :: obj
     INTEGER(I4B), INTENT(IN) :: graph(:, :)
   !! graph of sparsity
   !! If graph( i, j ) .EQ. 0, then i and j are not connected
   !! else they are connected.
-  END SUBROUTINE csr_SetSparsity5
+  END SUBROUTINE obj_SetSparsity5
 END INTERFACE SetSparsity
 
 !----------------------------------------------------------------------------
@@ -611,13 +613,13 @@ END INTERFACE SetSparsity
 ! between row-i and row-j
 
 INTERFACE SetSparsity
-  MODULE SUBROUTINE csr_SetSparsity6(obj, graph)
+  MODULE SUBROUTINE obj_SetSparsity6(obj, graph)
     TYPE(CSRSparsity_), INTENT(INOUT) :: obj
     LOGICAL(LGT), INTENT(IN) :: graph(:, :)
   !! graph of sparsity
   !! If graph( i, j ) .EQ. FALSE, then i and j are not connected
   !! else they are connected.
-  END SUBROUTINE csr_SetSparsity6
+  END SUBROUTINE obj_SetSparsity6
 END INTERFACE SetSparsity
 
 !----------------------------------------------------------------------------
@@ -637,10 +639,42 @@ END INTERFACE SetSparsity
 ! `obj%RowSize(:) `, and `obj%DiagIndx(:)`
 
 INTERFACE SetSparsity
-  MODULE SUBROUTINE csr_SetSparsity_final(obj)
+  MODULE SUBROUTINE obj_SetSparsity_final(obj)
     TYPE(CSRSparsity_), INTENT(INOUT) :: obj
-  END SUBROUTINE csr_SetSparsity_final
+  END SUBROUTINE obj_SetSparsity_final
 END INTERFACE SetSparsity
+
+!----------------------------------------------------------------------------
+!                                                        SetIA@GetMethods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2023-12-14
+! summary:  Set entry in IA
+
+INTERFACE SetIA
+  MODULE PURE SUBROUTINE obj_SetIA(obj, irow, VALUE)
+    TYPE(CSRSparsity_), INTENT(INOUT) :: obj
+    INTEGER(I4B), INTENT(IN) :: irow
+    INTEGER(I4B), INTENT(IN) :: VALUE
+  END SUBROUTINE obj_SetIA
+END INTERFACE SetIA
+
+!----------------------------------------------------------------------------
+!                                                        SetJA@GetMethods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2023-12-14
+! summary:  Set entry in JA
+
+INTERFACE SetJA
+  MODULE PURE SUBROUTINE obj_SetJA(obj, indx, VALUE)
+    TYPE(CSRSparsity_), INTENT(INOUT) :: obj
+    INTEGER(I4B), INTENT(IN) :: indx
+    INTEGER(I4B), INTENT(IN) :: VALUE
+  END SUBROUTINE obj_SetJA
+END INTERFACE SetJA
 
 !----------------------------------------------------------------------------
 !                                                         GetSym@SymMethods
@@ -651,11 +685,11 @@ END INTERFACE SetSparsity
 ! summary: Get symmetric part
 
 INTERFACE GetSym
-  MODULE SUBROUTINE csr_GetSym1(obj, symObj, from)
+  MODULE SUBROUTINE obj_GetSym1(obj, symObj, from)
     TYPE(CSRSparsity_), INTENT(IN) :: obj
     TYPE(CSRSparsity_), INTENT(INOUT) :: symObj
     CHARACTER(1), INTENT(IN) :: from
-  END SUBROUTINE csr_GetSym1
+  END SUBROUTINE obj_GetSym1
 END INTERFACE GetSym
 
 !----------------------------------------------------------------------------
@@ -667,10 +701,10 @@ END INTERFACE GetSym
 ! summary: Get symmetric part
 
 INTERFACE GetSym
-  MODULE SUBROUTINE csr_GetSym2(obj, from)
+  MODULE SUBROUTINE obj_GetSym2(obj, from)
     TYPE(CSRSparsity_), INTENT(INOUT) :: obj
     CHARACTER(1), INTENT(IN) :: from
-  END SUBROUTINE csr_GetSym2
+  END SUBROUTINE obj_GetSym2
 END INTERFACE GetSym
 
 END MODULE CSRSparsity_Method

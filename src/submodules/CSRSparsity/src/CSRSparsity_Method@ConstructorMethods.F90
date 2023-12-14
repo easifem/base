@@ -28,7 +28,7 @@ CONTAINS
 !                                                              Initiate
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE csr_initiate1
+MODULE PROCEDURE obj_initiate1
 #ifdef DEBUG_VER
 INTEGER(I4B) :: tNodes1, tNodes2
 LOGICAL(LGT) :: isok, problem
@@ -41,7 +41,7 @@ IF (problem) THEN
   CALL ErrorMSG( &
     & "When idof is present, jdof should be present too.", &
     & "CSRSparsity_Method@Constructor.F90", &
-    & "csr_initiate1()", &
+    & "obj_initiate1()", &
     & __LINE__, stderr)
   STOP
 END IF
@@ -51,7 +51,7 @@ IF (problem) THEN
   CALL ErrorMSG( &
     & "When jdof is present, idof should be present too.", &
     & "CSRSparsity_Method@Constructor.F90", &
-    & "csr_initiate1()", &
+    & "obj_initiate1()", &
     & __LINE__, stderr)
   STOP
 END IF
@@ -65,7 +65,7 @@ IF (isok) THEN
     CALL ErrorMSG( &
     & "Size of the matrix does not conform with the dof data!", &
     & "CSRSparsity_Method@Constructor.F90", &
-    & "csr_initiate1()", &
+    & "obj_initiate1()", &
     & __LINE__, stderr)
     STOP
   END IF
@@ -99,13 +99,13 @@ IF (obj%nnz .GT. 0) THEN
   ALLOCATE (obj%row(obj%nnz), obj%JA(obj%nnz))
 END IF
 
-END PROCEDURE csr_initiate1
+END PROCEDURE obj_initiate1
 
 !----------------------------------------------------------------------------
 !                                                                 Initiate
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE csr_initiate2
+MODULE PROCEDURE obj_initiate2
 INTEGER(I4B) :: ii, n
 obj%nnz = obj2%nnz
 obj%ncol = obj2%ncol
@@ -125,13 +125,13 @@ IF (ALLOCATED(obj%row)) THEN
 END IF
 obj%idof = obj2%idof
 obj%jdof = obj2%jdof
-END PROCEDURE csr_initiate2
+END PROCEDURE obj_initiate2
 
 !----------------------------------------------------------------------------
 !                                                                   Initiate
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE csr_Initiate3
+MODULE PROCEDURE obj_Initiate3
 INTEGER(I4B) :: nrow, ncol
 
 nrow = SIZE(IA) - 1; ncol = MAXVAL(JA)
@@ -140,47 +140,47 @@ obj%nnz = SIZE(JA)
 obj%IA = IA
 obj%JA = JA
 
-END PROCEDURE csr_Initiate3
+END PROCEDURE obj_Initiate3
 
 !----------------------------------------------------------------------------
 !                                                                CSRSparsity
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE csr_constructor1
+MODULE PROCEDURE obj_constructor1
 CALL Initiate(obj=ans, ncol=ncol, nrow=nrow, idof=idof, jdof=jdof)
-END PROCEDURE csr_constructor1
+END PROCEDURE obj_constructor1
 
 !----------------------------------------------------------------------------
 !                                                                CSRSparsity
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE csr_constructor2
+MODULE PROCEDURE obj_constructor2
 CALL Initiate(obj=ans, IA=IA, JA=JA)
-END PROCEDURE csr_constructor2
+END PROCEDURE obj_constructor2
 
 !----------------------------------------------------------------------------
 !                                                                CSRSparsity
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE csr_constructor_1
+MODULE PROCEDURE obj_constructor_1
 ALLOCATE (CSRSparsity_ :: ans)
 CALL Initiate(obj=ans, ncol=ncol, nrow=nrow, idof=idof, jdof=jdof)
-END PROCEDURE csr_constructor_1
+END PROCEDURE obj_constructor_1
 
 !----------------------------------------------------------------------------
 !                                                                CSRSparsity
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE csr_constructor_2
+MODULE PROCEDURE obj_constructor_2
 ALLOCATE (CSRSparsity_ :: ans)
 CALL Initiate(obj=ans, IA=IA, JA=JA)
-END PROCEDURE csr_constructor_2
+END PROCEDURE obj_constructor_2
 
 !----------------------------------------------------------------------------
 !                                                            Deallocate
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE csr_Deallocate
+MODULE PROCEDURE obj_Deallocate
 IF (ALLOCATED(obj%IA)) DEALLOCATE (obj%IA)
 IF (ALLOCATED(obj%JA)) DEALLOCATE (obj%JA)
 IF (ALLOCATED(obj%idiag)) DEALLOCATE (obj%idiag)
@@ -194,6 +194,6 @@ obj%isSorted = .FALSE.
 obj%isInitiated = .FALSE.
 obj%isSparsityLock = .FALSE.
 obj%isDiagStored = .FALSE.
-END PROCEDURE csr_Deallocate
+END PROCEDURE obj_Deallocate
 
 END SUBMODULE ConstructorMethods
