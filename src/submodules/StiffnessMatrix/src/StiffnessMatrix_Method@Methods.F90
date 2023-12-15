@@ -96,7 +96,7 @@ INTEGER(I4B) :: nns1, nns2, nips, nsd, c1, c2, i, j, r1, r2, ips
 LOGICAL(LGT) :: case1
 TYPE(FEVariable_) :: lambda0
 
-IF (isLambdaYoungsModulus) THEN
+IF (PRESENT(isLambdaYoungsModulus)) THEN
   case1 = isLambdaYoungsModulus
 ELSE
   case1 = .FALSE.

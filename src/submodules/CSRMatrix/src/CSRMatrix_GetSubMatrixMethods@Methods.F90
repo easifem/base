@@ -86,8 +86,6 @@ DO irow = 1, nrow
   CALL SetIA(obj=submat, irow=irow + 1, VALUE=submat_nnz)
 END DO
 
-CALL Display(subIndices, "debug subIndices: ")
-
 IF (ALLOCATED(selectCol)) DEALLOCATE (selectCol)
 
 END PROCEDURE obj_GetSubMatrix1
@@ -98,23 +96,6 @@ END PROCEDURE obj_GetSubMatrix1
 
 MODULE PROCEDURE obj_GetSubMatrix2
 LOGICAL(LGT) :: isok
-
-IF (isFirstCall) THEN
-  CALL obj_GetSubMatrix2(obj=obj, cols=cols, submat=submat,  &
-    & subIndices=subIndices)
-  RETURN
-END IF
-
-isok = ALLOCATED(subIndices)
-
-IF (.NOT. isok) THEN
-  CALL ErrorMSG( &
-    & "subIndices not allocated", &
-    & "CSRMatrix_GetSubMatrixMethods@Methods.F90", &
-    & "obj_GetSubMatrix2()", &
-    & __LINE__, stderr)
-  STOP
-END IF
 
 isok = ALLOCATED(submat%A)
 IF (.NOT. isok) THEN

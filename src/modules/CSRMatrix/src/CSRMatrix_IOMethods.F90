@@ -18,8 +18,8 @@ MODULE CSRMatrix_IOMethods
 USE GlobalData, ONLY: I4B, DFP, LGT
 USE BaseType, ONLY: CSRMatrix_
 IMPLICIT NONE
-PRIVATE
 
+PRIVATE
 PUBLIC :: Display
 PUBLIC :: SPY
 PUBLIC :: IMPORT
@@ -37,16 +37,12 @@ PUBLIC :: IMPORT
 ! This subroutine display the content of sparse matrix
 ! - In this subroutine `dump` routine from sparsekit lib is called
 
-INTERFACE
-  MODULE SUBROUTINE csrMat_Display(obj, Msg, UnitNo)
+INTERFACE Display
+  MODULE SUBROUTINE obj_Display(obj, Msg, UnitNo)
     TYPE(CSRMatrix_), INTENT(IN) :: obj
     CHARACTER(*), INTENT(IN) :: Msg
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: UnitNo
-  END SUBROUTINE csrMat_Display
-END INTERFACE
-
-INTERFACE Display
-  MODULE PROCEDURE csrMat_Display
+  END SUBROUTINE obj_Display
 END INTERFACE Display
 
 !----------------------------------------------------------------------------
@@ -57,16 +53,12 @@ END INTERFACE Display
 ! date:         22 March 2021
 ! summary: Prints the structure of sparse matrix in pdf/svg/png format.
 
-INTERFACE
-  MODULE SUBROUTINE csrMat_SPY(obj, filename, ext)
+INTERFACE SPY
+  MODULE SUBROUTINE obj_SPY(obj, filename, ext)
     TYPE(CSRMatrix_), INTENT(IN) :: obj
     CHARACTER(*), INTENT(IN) :: filename
     CHARACTER(*), INTENT(IN) :: ext
-  END SUBROUTINE csrMat_SPY
-END INTERFACE
-
-INTERFACE SPY
-  MODULE PROCEDURE csrMat_SPY
+  END SUBROUTINE obj_SPY
 END INTERFACE SPY
 
 !----------------------------------------------------------------------------
@@ -83,8 +75,8 @@ END INTERFACE SPY
 ! Currently only matFormat="SPARSE_FMT_COO" is supported.
 !
 
-INTERFACE
-  MODULE SUBROUTINE csrMat_Import(obj, fileName, matFormat)
+INTERFACE IMPORT
+  MODULE SUBROUTINE obj_Import(obj, fileName, matFormat)
     TYPE(CSRMatrix_), INTENT(INOUT) :: obj
     CHARACTER(*), INTENT(IN) :: fileName
     !! File from which data should be read. This file will
@@ -92,11 +84,7 @@ INTERFACE
     !! will be closed on return.
     INTEGER(I4B), INTENT(IN) :: matFormat
     !! Currently only `SPARSE_FMT_COO` is supported
-  END SUBROUTINE csrMat_Import
-END INTERFACE
-
-INTERFACE IMPORT
-  MODULE PROCEDURE csrMat_Import
+  END SUBROUTINE obj_Import
 END INTERFACE IMPORT
 
 !----------------------------------------------------------------------------
@@ -105,10 +93,10 @@ END INTERFACE IMPORT
 
 !> author: Vikas Sharma, Ph. D.
 ! date:  23-01-19
-! summary: Deprecated version of csrMat_Import
+! summary: Deprecated version of obj_Import
 
 INTERFACE
-  MODULE SUBROUTINE deprecated_csrMat_Import(obj, fileName, matFormat)
+  MODULE SUBROUTINE deprecated_obj_Import(obj, fileName, matFormat)
     TYPE(CSRMatrix_), INTENT(INOUT) :: obj
     CHARACTER(*), INTENT(IN) :: fileName
     !! File from which data should be read. This file will
@@ -116,7 +104,7 @@ INTERFACE
     !! will be closed on return.
     INTEGER(I4B), INTENT(IN) :: matFormat
     !! Currently only `SPARSE_FMT_COO` is supported
-  END SUBROUTINE deprecated_csrMat_Import
+  END SUBROUTINE deprecated_obj_Import
 END INTERFACE
 
 END MODULE CSRMatrix_IOMethods

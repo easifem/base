@@ -28,39 +28,39 @@ CONTAINS
 !                                                                setSparsity
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE csrMat_setSparsity1
+MODULE PROCEDURE obj_setSparsity1
 CALL setSparsity(obj=obj%csr, row=row, col=col)
-END PROCEDURE csrMat_setSparsity1
+END PROCEDURE obj_setSparsity1
 
 !----------------------------------------------------------------------------
 !                                                                setSparsity
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE csrMat_setSparsity2
+MODULE PROCEDURE obj_setSparsity2
 CALL setSparsity(obj=obj%csr, row=row, col=col)
-END PROCEDURE csrMat_setSparsity2
+END PROCEDURE obj_setSparsity2
 
 !----------------------------------------------------------------------------
 !                                                                setSparsity
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE csrMat_setSparsity3
+MODULE PROCEDURE obj_setSparsity3
 CALL setSparsity(obj=obj%csr, row=row, col=col, ivar=ivar, jvar=jvar)
-END PROCEDURE csrMat_setSparsity3
+END PROCEDURE obj_setSparsity3
 
 !----------------------------------------------------------------------------
 !                                                                setSparsity
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE csrMat_setSparsity4
+MODULE PROCEDURE obj_setSparsity4
 CALL setSparsity(obj=obj%csr, row=row, col=col, ivar=ivar, jvar=jvar)
-END PROCEDURE csrMat_setSparsity4
+END PROCEDURE obj_setSparsity4
 
 !----------------------------------------------------------------------------
 !                                                                setSparsity
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE csrMat_setSparsity_final
+MODULE PROCEDURE obj_setSparsity_final
 REAL(DFP), ALLOCATABLE :: tempA(:)
 INTEGER(I4B) :: m
 !
@@ -87,7 +87,7 @@ CALL CSORT(obj%csr%nrow, obj%A, obj%csr%JA, obj%csr%IA, .TRUE.)
 obj%csr%isSorted = .TRUE.
 obj%csr%isSparsityLock = .FALSE.
 CALL setSparsity(obj%csr)
-END PROCEDURE csrMat_setSparsity_final
+END PROCEDURE obj_setSparsity_final
 
 !----------------------------------------------------------------------------
 !

@@ -26,15 +26,11 @@ PUBLIC :: ApplyDBC
 !
 !----------------------------------------------------------------------------
 
-INTERFACE
+INTERFACE ApplyDBC
   MODULE SUBROUTINE csrMat_ApplyDBC(obj, dbcptrs)
     CLASS(CSRMatrix_), INTENT(INOUT) :: obj
     INTEGER(I4B), INTENT(IN) :: dbcptrs(:)
   END SUBROUTINE csrMat_ApplyDBC
-END INTERFACE
-
-INTERFACE ApplyDBC
-  MODULE PROCEDURE csrMat_ApplyDBC
 END INTERFACE ApplyDBC
 
 END MODULE CSRMatrix_DBCMethods

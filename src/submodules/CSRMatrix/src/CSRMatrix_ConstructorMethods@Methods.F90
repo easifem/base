@@ -28,15 +28,15 @@ CONTAINS
 !                                                                     Shape
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE csrMat_Shape
+MODULE PROCEDURE obj_Shape
 Ans = [obj%csr%nrow, obj%csr%ncol]
-END PROCEDURE csrMat_Shape
+END PROCEDURE obj_Shape
 
 !----------------------------------------------------------------------------
 !                                                                       Size
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE csrMat_Size
+MODULE PROCEDURE obj_Size
 IF (PRESENT(Dims)) THEN
   IF (Dims .EQ. 1) THEN
     Ans = obj%csr%nrow
@@ -46,45 +46,45 @@ IF (PRESENT(Dims)) THEN
 ELSE
   Ans = obj%csr%nrow * obj%csr%ncol
 END IF
-END PROCEDURE csrMat_Size
+END PROCEDURE obj_Size
 
 !----------------------------------------------------------------------------
 !                                                            TotalDimension
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE csrMat_TotalDimension
+MODULE PROCEDURE obj_TotalDimension
 ans = obj%tDimension
-END PROCEDURE csrMat_TotalDimension
+END PROCEDURE obj_TotalDimension
 
 !----------------------------------------------------------------------------
 !                                                         setTotalDimension
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE csrMat_setTotalDimension
+MODULE PROCEDURE obj_setTotalDimension
 obj%tDimension = tDimension
-END PROCEDURE csrMat_setTotalDimension
+END PROCEDURE obj_setTotalDimension
 
 !----------------------------------------------------------------------------
 !                                                                    getNNZ
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE csrMat_getNNZ
+MODULE PROCEDURE obj_getNNZ
 Ans = obj%csr%nnz
-END PROCEDURE csrMat_getNNZ
+END PROCEDURE obj_getNNZ
 
 !----------------------------------------------------------------------------
 !                                                               Allocate
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE csrMat_Allocate
+MODULE PROCEDURE obj_Allocate
 CALL Initiate(obj=obj, ncol=dims(2), nrow=dims(1), matrixProp=matrixProp)
-END PROCEDURE csrMat_Allocate
+END PROCEDURE obj_Allocate
 
 !----------------------------------------------------------------------------
 !                                                            Deallocate
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE csrMat_Deallocate
+MODULE PROCEDURE obj_Deallocate
 CALL DEALLOCATE (obj%csr)
 obj%csrOwnership = .FALSE.
 obj%tDimension = 2
@@ -93,13 +93,13 @@ IF (ALLOCATED(obj%A)) DEALLOCATE (obj%A)
 #ifdef USE_SuperLU
 CALL SuperluDeallocate(obj)
 #endif
-END PROCEDURE csrMat_Deallocate
+END PROCEDURE obj_Deallocate
 
 !----------------------------------------------------------------------------
 !                                                                   Initiate
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE csrMat_initiate1
+MODULE PROCEDURE obj_initiate1
 CALL DEALLOCATE (obj)
 obj%csrOwnership = .TRUE.
 IF (PRESENT(matrixProp)) obj%matrixProp = TRIM(matrixProp)
@@ -107,19 +107,19 @@ CALL Initiate(obj=obj%csr, ncol=ncol, nrow=nrow, idof=idof, jdof=jdof,  &
 & nnz=nnz)
 CALL Reallocate(obj%A, obj%csr%nnz)
 CALL setTotalDimension(obj, 2_I4B)
-END PROCEDURE csrMat_initiate1
+END PROCEDURE obj_initiate1
 
 !----------------------------------------------------------------------------
 !                                                                   Initiate
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE csrMat_initiate2
+MODULE PROCEDURE obj_initiate2
 !!
 IF (.NOT. csr%isInitiated) THEN
   CALL ErrorMSG( &
     & "Instance of CSRSparsity is not initiated!", &
-    & "CSRMatrix_Method@ConstructorMethods.F90", &
-    & "csrMat_initiate2()", &
+    & __FILE__, &
+    & "obj_initiate2()", &
     & __LINE__, stderr)
   STOP
 END IF
@@ -131,38 +131,38 @@ obj%csr = csr
 CALL Reallocate(obj%A, obj%csr%nnz)
 CALL setTotalDimension(obj, 2_I4B)
 !!
-END PROCEDURE csrMat_initiate2
+END PROCEDURE obj_initiate2
 
 !----------------------------------------------------------------------------
 !                                                                  Initiate
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE csrMat_initiate3
+MODULE PROCEDURE obj_initiate3
 obj%csrOwnership = .TRUE.
 IF (PRESENT(matrixProp)) obj%matrixProp = TRIM(matrixProp)
 CALL Initiate(obj=obj%csr, IA=IA, JA=JA)
 obj%A = A
 CALL setTotalDimension(obj, 2_I4B)
 CALL setSparsity(obj)
-END PROCEDURE csrMat_initiate3
+END PROCEDURE obj_initiate3
 
 !----------------------------------------------------------------------------
 !                                                                 Initiate
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE csrMat_Initiate4
+MODULE PROCEDURE obj_Initiate4
 obj%csr = obj2%csr
 obj%tDimension = obj2%tDimension
 obj%csrOwnership = obj2%csrOwnership
 obj%matrixProp = obj2%matrixProp
 IF (ALLOCATED(obj2%A)) obj%A = obj2%A
-END PROCEDURE csrMat_Initiate4
+END PROCEDURE obj_Initiate4
 
 !----------------------------------------------------------------------------
 !                                                                 Initiate
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE csrMat_Initiate5
+MODULE PROCEDURE obj_Initiate5
 INTEGER(I4B) :: nrow, ncol, nnz, job
 INTEGER(I4B), ALLOCATABLE :: IA(:), JA(:)
 REAL(DFP), ALLOCATABLE :: A(:)
@@ -180,14 +180,14 @@ nnz = IA(nrow + 1) - 1
 CALL initiate(obj=obj, A=A(1:nnz), IA=IA, JA=JA(1:nnz))
 obj%csr%ncol = ncol
 DEALLOCATE (IA, JA, A)
-END PROCEDURE csrMat_Initiate5
+END PROCEDURE obj_Initiate5
 
 !----------------------------------------------------------------------------
 !                                                                 Initiate
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE csrMat_Initiate6
-CALL csrMat_Initiate4(obj=obj, obj2=obj2)
-END PROCEDURE csrMat_Initiate6
+MODULE PROCEDURE obj_Initiate6
+CALL obj_Initiate4(obj=obj, obj2=obj2)
+END PROCEDURE obj_Initiate6
 
 END SUBMODULE Methods

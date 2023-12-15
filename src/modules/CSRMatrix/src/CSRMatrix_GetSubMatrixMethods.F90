@@ -49,13 +49,10 @@ END INTERFACE GetSubMatrix
 ! summary: This routine returns the submatrix
 
 INTERFACE GetSubMatrix
-  MODULE SUBROUTINE obj_GetSubMatrix2(obj, cols, submat, subIndices,  &
-    & isFirstCall)
+  MODULE SUBROUTINE obj_GetSubMatrix2(obj, subIndices, submat)
     TYPE(CSRMatrix_), INTENT(IN) :: obj
-    INTEGER(I4B), INTENT(IN) :: cols(:)
+    INTEGER(I4B), INTENT(IN) :: subIndices(:)
     TYPE(CSRMatrix_), INTENT(INOUT) :: submat
-    INTEGER(I4B), ALLOCATABLE, INTENT(INOUT) :: subIndices(:)
-    LOGICAL(LGT), INTENT(IN) :: isFirstCall
   END SUBROUTINE obj_GetSubMatrix2
 END INTERFACE GetSubMatrix
 

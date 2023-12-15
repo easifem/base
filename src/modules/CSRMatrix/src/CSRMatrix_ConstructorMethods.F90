@@ -40,10 +40,10 @@ PUBLIC :: ASSIGNMENT(=)
 ! summary: This function returns the shape of sparse matrix
 
 INTERFACE Shape
-  MODULE PURE FUNCTION csrMat_Shape(obj) RESULT(ans)
+  MODULE PURE FUNCTION obj_Shape(obj) RESULT(ans)
     TYPE(CSRMatrix_), INTENT(IN) :: obj
     INTEGER(I4B) :: ans(2)
-  END FUNCTION csrMat_Shape
+  END FUNCTION obj_Shape
 END INTERFACE Shape
 
 !----------------------------------------------------------------------------
@@ -62,11 +62,11 @@ END INTERFACE Shape
 ! If dims is absent then nrow*ncol are returned
 
 INTERFACE Size
-  MODULE PURE FUNCTION csrMat_Size(obj, dims) RESULT(ans)
+  MODULE PURE FUNCTION obj_Size(obj, dims) RESULT(ans)
     TYPE(CSRMatrix_), INTENT(IN) :: obj
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: dims
     INTEGER(I4B) :: ans
-  END FUNCTION csrMat_Size
+  END FUNCTION obj_Size
 END INTERFACE Size
 
 !----------------------------------------------------------------------------
@@ -78,10 +78,10 @@ END INTERFACE Size
 ! summary:         Returns the total dimension of an array
 
 INTERFACE TotalDimension
-  MODULE PURE FUNCTION csrMat_TotalDimension(obj) RESULT(ans)
+  MODULE PURE FUNCTION obj_TotalDimension(obj) RESULT(ans)
     CLASS(CSRMatrix_), INTENT(IN) :: obj
     INTEGER(I4B) :: ans
-  END FUNCTION csrMat_TotalDimension
+  END FUNCTION obj_TotalDimension
 END INTERFACE TotalDimension
 
 !----------------------------------------------------------------------------
@@ -93,10 +93,10 @@ END INTERFACE TotalDimension
 ! summary:         This subroutine Set the total dimension (rank) of an array
 
 INTERFACE SetTotalDimension
-  MODULE PURE SUBROUTINE csrMat_SetTotalDimension(obj, tDimension)
+  MODULE PURE SUBROUTINE obj_SetTotalDimension(obj, tDimension)
     CLASS(CSRMatrix_), INTENT(INOUT) :: obj
     INTEGER(I4B), INTENT(IN) :: tDimension
-  END SUBROUTINE csrMat_SetTotalDimension
+  END SUBROUTINE obj_SetTotalDimension
 END INTERFACE SetTotalDimension
 
 !----------------------------------------------------------------------------
@@ -108,10 +108,10 @@ END INTERFACE SetTotalDimension
 ! summary:         Return the total number of non zero entry in the matrix
 
 INTERFACE GetNNZ
-  MODULE PURE FUNCTION csrMat_GetNNZ(obj) RESULT(ans)
+  MODULE PURE FUNCTION obj_GetNNZ(obj) RESULT(ans)
     TYPE(CSRMatrix_), INTENT(IN) :: obj
     INTEGER(I4B) :: ans
-  END FUNCTION csrMat_GetNNZ
+  END FUNCTION obj_GetNNZ
 END INTERFACE GetNNZ
 
 !----------------------------------------------------------------------------
@@ -133,11 +133,11 @@ END INTERFACE GetNNZ
 ! nnz is Set to to 0
 
 INTERFACE ALLOCATE
-  MODULE SUBROUTINE csrMat_Allocate(obj, dims, matrixProp)
+  MODULE SUBROUTINE obj_Allocate(obj, dims, matrixProp)
     TYPE(CSRMatrix_), INTENT(INOUT) :: obj
     INTEGER(I4B), INTENT(IN) :: dims(2)
     CHARACTER(*), OPTIONAL, INTENT(IN) :: matrixProp
-  END SUBROUTINE csrMat_Allocate
+  END SUBROUTINE obj_Allocate
 END INTERFACE ALLOCATE
 
 !----------------------------------------------------------------------------
@@ -149,9 +149,9 @@ END INTERFACE ALLOCATE
 ! summary:          This subroutine deallocates the data
 
 INTERFACE DEALLOCATE
-  MODULE SUBROUTINE csrMat_Deallocate(obj)
+  MODULE SUBROUTINE obj_Deallocate(obj)
     TYPE(CSRMatrix_), INTENT(INOUT) :: obj
-  END SUBROUTINE csrMat_Deallocate
+  END SUBROUTINE obj_Deallocate
 END INTERFACE DEALLOCATE
 
 !----------------------------------------------------------------------------
@@ -163,7 +163,7 @@ END INTERFACE DEALLOCATE
 ! summary: This subroutine construct the `CSRMatrix_` object
 
 INTERFACE Initiate
-  MODULE SUBROUTINE csrMat_initiate1(obj, ncol, nrow, idof, jdof, matrixProp, nnz)
+ MODULE SUBROUTINE obj_initiate1(obj, ncol, nrow, idof, jdof, matrixProp, nnz)
     TYPE(CSRMatrix_), INTENT(INOUT) :: obj
     INTEGER(I4B), INTENT(IN) :: ncol
     !! number of columns in sparse matrix
@@ -178,7 +178,7 @@ INTERFACE Initiate
     !! Matrix is `SYM`, `UNSYM`
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: nnz
     !! number of non zeros
-  END SUBROUTINE csrMat_initiate1
+  END SUBROUTINE obj_initiate1
 END INTERFACE Initiate
 
 !----------------------------------------------------------------------------
@@ -201,7 +201,7 @@ END INTERFACE Initiate
 !@endnote
 
 INTERFACE Initiate
-  MODULE SUBROUTINE csrMat_initiate2(obj, csr, matrixProp)
+  MODULE SUBROUTINE obj_initiate2(obj, csr, matrixProp)
     TYPE(CSRMatrix_), INTENT(INOUT) :: obj
     TYPE(CSRSparsity_), INTENT(IN) :: csr
     !! number of columns in sparse matrix
@@ -212,7 +212,7 @@ INTERFACE Initiate
     !! Total number of nodes used for these physical variables
     CHARACTER(*), OPTIONAL, INTENT(IN) :: matrixProp
     !! Matrix is `SYM`, `UNSYM`
-  END SUBROUTINE csrMat_initiate2
+  END SUBROUTINE obj_initiate2
 END INTERFACE Initiate
 
 !----------------------------------------------------------------------------
@@ -224,12 +224,12 @@ END INTERFACE Initiate
 ! summary: This subroutine constructs `sparsematrix_` object from IA, JA, A
 
 INTERFACE Initiate
-  MODULE SUBROUTINE csrMat_initiate3(obj, A, IA, JA, matrixProp)
+  MODULE SUBROUTINE obj_initiate3(obj, A, IA, JA, matrixProp)
     TYPE(CSRMatrix_), INTENT(INOUT) :: obj
     REAL(DFP), INTENT(IN) :: A(:)
     INTEGER(I4B), INTENT(IN) :: IA(:), JA(:)
     CHARACTER(*), OPTIONAL, INTENT(IN) :: matrixProp
-  END SUBROUTINE csrMat_initiate3
+  END SUBROUTINE obj_initiate3
 END INTERFACE Initiate
 
 !----------------------------------------------------------------------------
@@ -245,14 +245,14 @@ END INTERFACE Initiate
 ! This routine is used in defining the assignment operator.
 
 INTERFACE Initiate
-  MODULE SUBROUTINE csrMat_initiate4(obj, obj2)
+  MODULE SUBROUTINE obj_initiate4(obj, obj2)
     TYPE(CSRMatrix_), INTENT(INOUT) :: obj
     TYPE(CSRMatrix_), INTENT(IN) :: obj2
-  END SUBROUTINE csrMat_initiate4
+  END SUBROUTINE obj_initiate4
 END INTERFACE Initiate
 
 INTERFACE ASSIGNMENT(=)
-  MODULE PROCEDURE csrMat_initiate4
+  MODULE PROCEDURE obj_initiate4
 END INTERFACE ASSIGNMENT(=)
 
 !----------------------------------------------------------------------------
@@ -264,7 +264,7 @@ END INTERFACE ASSIGNMENT(=)
 ! summary: Initiates a submatrix
 
 INTERFACE Initiate
-  MODULE SUBROUTINE csrMat_initiate5(obj, obj2, i1, i2, j1, j2)
+  MODULE SUBROUTINE obj_initiate5(obj, obj2, i1, i2, j1, j2)
     TYPE(CSRMatrix_), INTENT(INOUT) :: obj
     !! submatrix to be returned
     TYPE(CSRMatrix_), INTENT(IN) :: obj2
@@ -273,7 +273,7 @@ INTERFACE Initiate
     !! start and end row indices
     INTEGER(I4B), INTENT(IN) :: j1, j2
     !! start and end col indices
-  END SUBROUTINE csrMat_initiate5
+  END SUBROUTINE obj_initiate5
 END INTERFACE Initiate
 
 !----------------------------------------------------------------------------
@@ -290,11 +290,11 @@ END INTERFACE Initiate
 ! This method has been deprecated as it is same as `Initiate4`
 
 INTERFACE Initiate
-  MODULE SUBROUTINE csrMat_initiate6(obj, obj2, hardCopy)
+  MODULE SUBROUTINE obj_initiate6(obj, obj2, hardCopy)
     TYPE(CSRMatrix_), INTENT(INOUT) :: obj
     TYPE(CSRMatrix_), INTENT(IN) :: obj2
     LOGICAL(LGT), INTENT(IN) :: hardCopy
-  END SUBROUTINE csrMat_initiate6
+  END SUBROUTINE obj_initiate6
 END INTERFACE Initiate
 
 !----------------------------------------------------------------------------
