@@ -18,8 +18,9 @@
 !> [[ErrorHandling]] module contains error handling routines.
 
 MODULE ErrorHandling
-USE GlobalData
-USE Display_Method
+USE GlobalData, ONLY: I4B, OPT_ALLOC, OPT_DEALLOC, OPT_OPEN,  &
+  & OPT_READ, OPT_WRITE, OPT_CLOSE
+USE Display_Method, ONLY: Display, DashLine
 IMPLICIT NONE
 PRIVATE
 
