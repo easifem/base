@@ -62,12 +62,12 @@ PUBLIC :: SCAL
 ! end
 !@endtodo
 
-INTERFACE
+INTERFACE asum
   MODULE FUNCTION ASUMScalar(obj) RESULT(Ans)
     CLASS(RealVector_), INTENT(IN) :: obj
     REAL(DFP) :: Ans
   END FUNCTION ASUMScalar
-END INTERFACE
+END INTERFACE asum
 
 !----------------------------------------------------------------------------
 !                                                                 ASUM@BLAS1
@@ -126,16 +126,12 @@ END INTERFACE
 ! call display( ans - (m*sum(obj(1)%val)), "test3: 0 if correct : " )
 !```
 
-INTERFACE
+INTERFACE asum
   MODULE FUNCTION ASUMvector(obj) RESULT(Ans)
     CLASS(RealVector_), INTENT(IN) :: obj(:)
     REAL(DFP) :: Ans
   END FUNCTION ASUMvector
-END INTERFACE
-
-INTERFACE ASUM
-  MODULE PROCEDURE ASUMScalar, ASUMvector
-END INTERFACE ASUM
+END INTERFACE asum
 
 !----------------------------------------------------------------------------
 !                                                                  AXPY@BLAS1
@@ -176,18 +172,13 @@ END INTERFACE ASUM
 ! call display( asum(y%val - z%val), "test4: 0 if correct : " )
 !```
 
-INTERFACE
-
+INTERFACE axpy
   MODULE SUBROUTINE scalarAXPYscalar(X, Y, A)
     CLASS(RealVector_), INTENT(IN) :: X
     CLASS(RealVector_), INTENT(INOUT) :: Y
     REAL(DFP), INTENT(IN) :: A
   END SUBROUTINE scalarAXPYscalar
-END INTERFACE
-
-INTERFACE AXPY
-  MODULE PROCEDURE scalarAXPYscalar
-END INTERFACE AXPY
+END INTERFACE axpy
 
 !----------------------------------------------------------------------------
 !                                                                  AXPY@BLAS1
@@ -212,17 +203,13 @@ END INTERFACE AXPY
 !@endnote
 !
 
-INTERFACE
+INTERFACE axpy
   MODULE SUBROUTINE scalarAXPYintrinsic(X, Y, A)
     REAL(DFP), INTENT(IN) :: X(:)
     CLASS(RealVector_), INTENT(INOUT) :: Y
     REAL(DFP), INTENT(IN) :: A
   END SUBROUTINE scalarAXPYintrinsic
-END INTERFACE
-
-INTERFACE AXPY
-  MODULE PROCEDURE scalarAXPYintrinsic
-END INTERFACE AXPY
+END INTERFACE axpy
 
 !----------------------------------------------------------------------------
 !                                                                  AXPY@BLAS1
@@ -268,17 +255,13 @@ END INTERFACE AXPY
 ! call display( ans, "test5: 0 if correct : " )
 !```
 
-INTERFACE
+INTERFACE axpy
   MODULE SUBROUTINE vectorAXPYvector(X, Y, A)
     CLASS(RealVector_), INTENT(IN) :: X(:)
     CLASS(RealVector_), INTENT(INOUT) :: Y(:)
     REAL(DFP), INTENT(IN) :: A(:)
   END SUBROUTINE vectorAXPYvector
-END INTERFACE
-
-INTERFACE AXPY
-  MODULE PROCEDURE vectorAXPYvector
-END INTERFACE AXPY
+END INTERFACE axpy
 
 !----------------------------------------------------------------------------
 !                                                                 COPY@BLAS1
@@ -314,16 +297,12 @@ END INTERFACE AXPY
 ! call display( asum( z - x%val ), "test6: 0 if correct : " )
 !```
 
-INTERFACE
+INTERFACE copy
   MODULE SUBROUTINE scalarCOPYscalar(Y, X)
     TYPE(RealVector_), INTENT(INOUT) :: Y
     CLASS(RealVector_), INTENT(IN) :: X
   END SUBROUTINE scalarCOPYscalar
-END INTERFACE
-
-INTERFACE COPY
-  MODULE PROCEDURE scalarCOPYscalar
-END INTERFACE COPY
+END INTERFACE copy
 
 !----------------------------------------------------------------------------
 !                                                                 COPY@BLAS1
@@ -355,20 +334,23 @@ END INTERFACE COPY
 ! call display( asum( z - x%val ), "test6: 0 if correct : " )
 !```
 
-INTERFACE
+INTERFACE copy
   MODULE SUBROUTINE scalarCOPYintrinsic_1a(Y, X)
     CLASS(RealVector_), INTENT(INOUT) :: Y
     REAL(REAL32), INTENT(IN) :: X(:)
   END SUBROUTINE scalarCOPYintrinsic_1a
+END INTERFACE copy
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE copy
   MODULE SUBROUTINE scalarCOPYintrinsic_1b(Y, X)
     CLASS(RealVector_), INTENT(INOUT) :: Y
     REAL(REAL64), INTENT(IN) :: X(:)
   END SUBROUTINE scalarCOPYintrinsic_1b
-END INTERFACE
-
-INTERFACE COPY
-  MODULE PROCEDURE scalarCOPYintrinsic_1a, scalarCOPYintrinsic_1b
-END INTERFACE COPY
+END INTERFACE copy
 
 !----------------------------------------------------------------------------
 !                                                                 COPY@BLAS1
@@ -403,20 +385,23 @@ END INTERFACE COPY
 ! call display( asum( z - x%val ), "test6: 0 if correct : " )
 !```
 
-INTERFACE
+INTERFACE copy
   MODULE SUBROUTINE intrinsicCOPYscalar_1a(Y, X)
     REAL(REAL32), ALLOCATABLE, INTENT(INOUT) :: Y(:)
     CLASS(RealVector_), INTENT(IN) :: X
   END SUBROUTINE intrinsicCOPYscalar_1a
+END INTERFACE copy
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE copy
   MODULE SUBROUTINE intrinsicCOPYscalar_1b(Y, X)
     REAL(REAL64), ALLOCATABLE, INTENT(INOUT) :: Y(:)
     CLASS(RealVector_), INTENT(IN) :: X
   END SUBROUTINE intrinsicCOPYscalar_1b
 END INTERFACE
-
-INTERFACE COPY
-  MODULE PROCEDURE intrinsicCOPYscalar_1a, intrinsicCOPYscalar_1b
-END INTERFACE COPY
 
 !----------------------------------------------------------------------------
 !                                                                 COPY@BLAS1
@@ -434,7 +419,7 @@ END INTERFACE COPY
 ! style="max-width:500px;"/>
 !
 !@note
-!         This subroutine internally uses [[intrinsicCOPYintrinsic]] routine. Also
+!This subroutine internally uses [[intrinsicCOPYintrinsic]] routine. Also
 ! note that `obj1` and `obj2` are vectors of [[RealVector_]] data type.
 !@endnote
 !
@@ -457,16 +442,12 @@ END INTERFACE COPY
 ! call display( ans, "test7: 0 if correct : " )
 !```
 
-INTERFACE
+INTERFACE copy
   MODULE SUBROUTINE vectorCOPYvector(Y, X)
     TYPE(RealVector_), INTENT(INOUT), ALLOCATABLE :: Y(:)
     CLASS(RealVector_), INTENT(IN) :: X(:)
   END SUBROUTINE vectorCOPYvector
-END INTERFACE
-
-INTERFACE COPY
-  MODULE PROCEDURE vectorCOPYvector
-END INTERFACE COPY
+END INTERFACE copy
 
 !----------------------------------------------------------------------------
 !                                                                 COPY@BLAS1
@@ -491,41 +472,33 @@ END INTERFACE COPY
 ! need parallel
 !@endtodo
 
-INTERFACE
+INTERFACE copy
   MODULE SUBROUTINE scalarCOPYvector(Y, X)
     TYPE(RealVector_), INTENT(INOUT) :: Y
     CLASS(RealVector_), INTENT(IN) :: X(:)
   END SUBROUTINE scalarCOPYvector
-END INTERFACE
-
-INTERFACE COPY
-  MODULE PROCEDURE scalarCOPYvector
-END INTERFACE COPY
+END INTERFACE copy
 
 !----------------------------------------------------------------------------
 !                                                            Compact@BLAS1V
 !----------------------------------------------------------------------------
 
-INTERFACE
+INTERFACE Compact
   MODULE SUBROUTINE Compact_real_1(Val, row)
     REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: Val(:)
     INTEGER(I4B), INTENT(IN) :: row
   END SUBROUTINE
-END INTERFACE
+END INTERFACE Compact
 
 !----------------------------------------------------------------------------
 !                                                            Compact@BLAS1V
 !----------------------------------------------------------------------------
 
-INTERFACE
+INTERFACE Compact
   MODULE SUBROUTINE Compact_int_1(Val, row)
     INTEGER(I4B), ALLOCATABLE, INTENT(INOUT) :: Val(:)
     INTEGER(I4B), INTENT(IN) :: row
   END SUBROUTINE
-END INTERFACE
-
-INTERFACE Compact
-  MODULE PROCEDURE Compact_real_1, Compact_int_1
 END INTERFACE Compact
 
 !----------------------------------------------------------------------------
@@ -543,12 +516,12 @@ END INTERFACE Compact
 ! CALL Display( DOT(obj1, obj2), "dot 1=" )
 !@endtodo
 
-INTERFACE
+INTERFACE DOT_PRODUCT
   MODULE PURE FUNCTION scalarDOTscalar(obj1, obj2) RESULT(Ans)
     CLASS(RealVector_), INTENT(IN) :: obj1, obj2
     REAL(DFP) :: Ans
   END FUNCTION scalarDOTscalar
-END INTERFACE
+END INTERFACE DOT_PRODUCT
 
 !----------------------------------------------------------------------------
 !                                                                 DOT@BLAS1
@@ -567,13 +540,13 @@ END INTERFACE
 ! CALL Display( DOT(obj1, val), "dot =" )
 !@endtodo
 
-INTERFACE
+INTERFACE DOT_PRODUCT
   MODULE PURE FUNCTION scalarDOTintrinsic(obj, Val) RESULT(Ans)
     REAL(DFP), INTENT(IN) :: Val(:)
     CLASS(RealVector_), INTENT(IN) :: obj
     REAL(DFP) :: Ans
   END FUNCTION scalarDOTintrinsic
-END INTERFACE
+END INTERFACE DOT_PRODUCT
 
 !----------------------------------------------------------------------------
 !                                                                 DOT@BLAS1
@@ -592,12 +565,12 @@ END INTERFACE
 ! CALL Display( DOT(obj1, obj2), "dot =" )
 !@endtodo
 
-INTERFACE
+INTERFACE DOT_PRODUCT
   MODULE PURE FUNCTION vectorDOTvector(obj1, obj2) RESULT(Ans)
     CLASS(RealVector_), INTENT(IN) :: obj1(:), obj2(:)
     REAL(DFP) :: Ans
   END FUNCTION vectorDOTvector
-END INTERFACE
+END INTERFACE DOT_PRODUCT
 
 !----------------------------------------------------------------------------
 !                                                                 DOT@BLAS1
@@ -616,12 +589,12 @@ END INTERFACE
 ! CALL Display( DOT(obj1, obj2), "dot =" )
 !@endtodo
 
-INTERFACE
+INTERFACE DOT_PRODUCT
   MODULE PURE FUNCTION vectorDOTscalar(obj1, obj2) RESULT(Ans)
     CLASS(RealVector_), INTENT(IN) :: obj1(:), obj2
     REAL(DFP) :: Ans
   END FUNCTION vectorDOTscalar
-END INTERFACE
+END INTERFACE DOT_PRODUCT
 
 !----------------------------------------------------------------------------
 !                                                                 DOT@BLAS1
@@ -642,24 +615,11 @@ END INTERFACE
 ! CALL Display( DOT(obj1, val), "dot =" )
 !```
 
-INTERFACE
+INTERFACE DOT_PRODUCT
   MODULE PURE FUNCTION scalarDOTvector(obj1, obj2) RESULT(Ans)
     CLASS(RealVector_), INTENT(IN) :: obj1, obj2(:)
     REAL(DFP) :: Ans
   END FUNCTION scalarDOTvector
-END INTERFACE
-
-!----------------------------------------------------------------------------
-!                                                                 DOT@BLAS1
-!----------------------------------------------------------------------------
-
-!> author: Vikas Sharma, Ph. D.
-! date:         25 Feb 2021
-! summary:         This generic routine computes dot product
-
-INTERFACE DOT_PRODUCT
-  MODULE PROCEDURE scalarDOTscalar, vectorDOTvector, vectorDOTscalar, &
-    & scalarDOTvector, scalarDOTintrinsic
 END INTERFACE DOT_PRODUCT
 
 !----------------------------------------------------------------------------
@@ -686,12 +646,12 @@ END INTERFACE DOT_PRODUCT
 !s = NORM2(obj)
 !```
 
-INTERFACE
+INTERFACE NORM2
   MODULE PURE FUNCTION NRM2scalar(obj) RESULT(Ans)
     CLASS(RealVector_), INTENT(IN) :: obj
     REAL(DFP) :: Ans
   END FUNCTION NRM2scalar
-END INTERFACE
+END INTERFACE NORM2
 
 !----------------------------------------------------------------------------
 !                                                                Norm2@BLAS1
@@ -717,38 +677,18 @@ END INTERFACE
 ! CALL Display( DOT(obj1, val), "dot =" )
 !@endtodo
 
-INTERFACE
+INTERFACE NORM2
   MODULE PURE FUNCTION NRM2vector(obj) RESULT(Ans)
     CLASS(RealVector_), INTENT(IN) :: obj(:)
     REAL(DFP) :: Ans
   END FUNCTION NRM2vector
-END INTERFACE
-
-!----------------------------------------------------------------------------
-!                                                                Norm2@BLAS1
-!----------------------------------------------------------------------------
-
-!> author: Vikas Sharma, Ph. D.
-! date:         25 Feb 2021
-! summary:         This routine computes norm2
-!
-!@note
-! type(_obj_) :: obj1
-! real( dfp ) :: val( 100 )
-! call RANDOM_NUMBER( obj1, 100 )
-! call RANDOM_NUMBER( val )
-! CALL Display( DOT(obj1, val), "dot =" )
-!@endnote
-
-INTERFACE NORM2
-  MODULE PROCEDURE NRM2scalar, NRM2vector
 END INTERFACE NORM2
 
 !----------------------------------------------------------------------------
 !                                                                 SWAP@BLAS1
 !----------------------------------------------------------------------------
 
-INTERFACE
+INTERFACE SWAP
   MODULE PURE SUBROUTINE scalarSWAPscalar(X, Y)
     CLASS(RealVector_), INTENT(INOUT) :: X
     CLASS(RealVector_), INTENT(INOUT) :: Y
@@ -763,18 +703,13 @@ INTERFACE
     CLASS(RealVector_), INTENT(INOUT) :: X
     REAL(DFP), INTENT(INOUT) :: Y(:)
   END SUBROUTINE scalarSWAPintrinsic
-END INTERFACE
-
-INTERFACE SWAP
-  MODULE PROCEDURE scalarSWAPscalar, &
-    & vectorSWAPvector, scalarSWAPintrinsic
 END INTERFACE SWAP
 
 !----------------------------------------------------------------------------
 !                                                                SCALE@BLAS1
 !----------------------------------------------------------------------------
 
-INTERFACE
+INTERFACE SCAL
   MODULE PURE SUBROUTINE SCALscalar(X, A)
     CLASS(RealVector_), INTENT(INOUT) :: X
     REAL(DFP), INTENT(IN) :: A
@@ -784,10 +719,6 @@ INTERFACE
     CLASS(RealVector_), INTENT(INOUT) :: X(:)
     REAL(DFP), INTENT(IN) :: A
   END SUBROUTINE SCALvector
-END INTERFACE
-
-INTERFACE SCAL
-  MODULE PROCEDURE SCALscalar, SCALvector
 END INTERFACE SCAL
 
 END MODULE RealVector_Blas1Methods
