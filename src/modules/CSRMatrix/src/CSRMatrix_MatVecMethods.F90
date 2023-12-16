@@ -33,7 +33,7 @@ PUBLIC :: AtMatvec
 ! date: 20 july 2021
 ! summary: This routine computes y = A*x
 
-INTERFACE
+INTERFACE AMatVec
   MODULE SUBROUTINE csrMat_AMatVec1(obj, x, y, addContribution, scale)
     TYPE(CSRMatrix_), INTENT(IN) :: obj
     REAL(DFP), INTENT(IN) :: x(:)
@@ -41,10 +41,6 @@ INTERFACE
     LOGICAL(LGT), OPTIONAL, INTENT(IN) :: addContribution
     REAL(DFP), OPTIONAL, INTENT(IN) :: scale
   END SUBROUTINE csrMat_AMatVec1
-END INTERFACE
-
-INTERFACE AMatVec
-  MODULE PROCEDURE csrMat_AMatVec1
 END INTERFACE AMatVec
 
 !----------------------------------------------------------------------------
@@ -55,7 +51,7 @@ END INTERFACE AMatVec
 ! date: 20 july 2021
 ! summary: This routine computes y = A*x, A is in MSR format
 
-INTERFACE
+INTERFACE AMatVec
   MODULE SUBROUTINE csrMat_AMatVec2(A, JA, x, y, addContribution, scale)
     REAL(DFP), INTENT(IN) :: A(:)
     INTEGER(I4B), INTENT(IN) :: JA(:)
@@ -64,11 +60,7 @@ INTERFACE
     LOGICAL(LGT), OPTIONAL, INTENT(IN) :: addContribution
     REAL(DFP), OPTIONAL, INTENT(IN) :: scale
   END SUBROUTINE csrMat_AMatVec2
-END INTERFACE
-
-INTERFACE AMatVec
-  MODULE PROCEDURE csrMat_AMatVec2
-END INTERFACE AMatVec
+END INTERFACE AMatvec
 
 !----------------------------------------------------------------------------
 !                                                     AtMatvec@MatvecMethods
@@ -78,7 +70,7 @@ END INTERFACE AMatVec
 ! date: 20 july 2021
 ! summary: This routine computes y = A*x
 
-INTERFACE
+INTERFACE AtMatvec
   MODULE SUBROUTINE csrMat_AtMatvec(obj, x, y, addContribution, scale)
     TYPE(CSRMatrix_), INTENT(IN) :: obj
     REAL(DFP), INTENT(IN) :: x(:)
@@ -86,10 +78,6 @@ INTERFACE
     LOGICAL(LGT), OPTIONAL, INTENT(IN) :: addContribution
     REAL(DFP), OPTIONAL, INTENT(IN) :: scale
   END SUBROUTINE csrMat_AtMatvec
-END INTERFACE
-
-INTERFACE AtMatvec
-  MODULE PROCEDURE csrMat_AtMatvec
 END INTERFACE AtMatvec
 
 !----------------------------------------------------------------------------
@@ -103,7 +91,7 @@ END INTERFACE AtMatvec
 !# Introduction
 ! y = A*x
 
-INTERFACE
+INTERFACE MatVec
   MODULE SUBROUTINE csrMat_MatVec1(obj, x, y, isTranspose, addContribution, &
     & scale)
     TYPE(CSRMatrix_), INTENT(IN) :: obj
@@ -113,10 +101,6 @@ INTERFACE
     LOGICAL(LGT), OPTIONAL, INTENT(IN) :: addContribution
     REAL(DFP), OPTIONAL, INTENT(IN) :: scale
   END SUBROUTINE csrMat_MatVec1
-END INTERFACE
-
-INTERFACE MatVec
-  MODULE PROCEDURE csrMat_MatVec1
 END INTERFACE MatVec
 
 !----------------------------------------------------------------------------
@@ -131,7 +115,7 @@ END INTERFACE MatVec
 !
 ! y = A*x
 
-INTERFACE
+INTERFACE MatVec
   MODULE SUBROUTINE csrMat_MatVec2(A, JA, x, y, addContribution, &
     & scale)
     REAL(DFP), INTENT(IN) :: A(:)
@@ -141,10 +125,6 @@ INTERFACE
     LOGICAL(LGT), OPTIONAL, INTENT(IN) :: addContribution
     REAL(DFP), OPTIONAL, INTENT(IN) :: scale
   END SUBROUTINE csrMat_MatVec2
-END INTERFACE
-
-INTERFACE MatVec
-  MODULE PROCEDURE csrMat_MatVec2
 END INTERFACE MatVec
 
 !----------------------------------------------------------------------------
