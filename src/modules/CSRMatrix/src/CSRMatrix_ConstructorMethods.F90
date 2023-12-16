@@ -165,7 +165,7 @@ END INTERFACE DEALLOCATE
 ! summary: This subroutine construct the `CSRMatrix_` object
 
 INTERFACE Initiate
- MODULE SUBROUTINE obj_initiate1(obj, ncol, nrow, idof, jdof, matrixProp, nnz)
+ MODULE SUBROUTINE obj_Initiate1(obj, ncol, nrow, idof, jdof, matrixProp, nnz)
     TYPE(CSRMatrix_), INTENT(INOUT) :: obj
     INTEGER(I4B), INTENT(IN) :: ncol
     !! number of columns in sparse matrix
@@ -180,7 +180,7 @@ INTERFACE Initiate
     !! Matrix is `SYM`, `UNSYM`
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: nnz
     !! number of non zeros
-  END SUBROUTINE obj_initiate1
+  END SUBROUTINE obj_Initiate1
 END INTERFACE Initiate
 
 !----------------------------------------------------------------------------
@@ -192,18 +192,18 @@ END INTERFACE Initiate
 ! summary: This subroutine construct the `CSRMatrix_` object
 !
 !# Introduction
-! This subroutine initiates an instance of [[CSRMatrix_]]. The object so
+! This subroutine Initiates an instance of [[CSRMatrix_]]. The object so
 ! created does not own the ownership of `obj%csr`. Instead it points to a
 ! [[CSRSparsity_]] object which is supplied by the user.
 !
 !@note
-! The object `csr` should be initiated by the user before sending it to
+! The object `csr` should be Initiated by the user before sending it to
 ! CSR matrix via this routine. This is because this routine uses information
 ! such as ncol, nrow, nnz from the csr.
 !@endnote
 
 INTERFACE Initiate
-  MODULE SUBROUTINE obj_initiate2(obj, csr, matrixProp)
+  MODULE SUBROUTINE obj_Initiate2(obj, csr, matrixProp)
     TYPE(CSRMatrix_), INTENT(INOUT) :: obj
     TYPE(CSRSparsity_), INTENT(IN) :: csr
     !! number of columns in sparse matrix
@@ -214,7 +214,7 @@ INTERFACE Initiate
     !! Total number of nodes used for these physical variables
     CHARACTER(*), OPTIONAL, INTENT(IN) :: matrixProp
     !! Matrix is `SYM`, `UNSYM`
-  END SUBROUTINE obj_initiate2
+  END SUBROUTINE obj_Initiate2
 END INTERFACE Initiate
 
 !----------------------------------------------------------------------------
@@ -226,14 +226,14 @@ END INTERFACE Initiate
 ! summary: This subroutine constructs `sparsematrix_` object from IA, JA, A
 
 INTERFACE Initiate
-  MODULE SUBROUTINE obj_initiate3(obj, A, IA, JA, matrixProp, ncol)
+  MODULE SUBROUTINE obj_Initiate3(obj, A, IA, JA, matrixProp, ncol)
     TYPE(CSRMatrix_), INTENT(INOUT) :: obj
     REAL(DFP), INTENT(IN) :: A(:)
     INTEGER(I4B), INTENT(IN) :: IA(:), JA(:)
     CHARACTER(*), OPTIONAL, INTENT(IN) :: matrixProp
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: ncol
     !! Number of columns in obj, default is number of rows
-  END SUBROUTINE obj_initiate3
+  END SUBROUTINE obj_Initiate3
 END INTERFACE Initiate
 
 !----------------------------------------------------------------------------
@@ -245,18 +245,18 @@ END INTERFACE Initiate
 ! summary: Initiate by copying
 !
 !# Introduction
-! This routine initiates obj by copying contents from obj2
+! This routine Initiates obj by copying contents from obj2
 ! This routine is used in defining the assignment operator.
 
 INTERFACE Initiate
-  MODULE SUBROUTINE obj_initiate4(obj, obj2)
+  MODULE SUBROUTINE obj_Initiate4(obj, obj2)
     TYPE(CSRMatrix_), INTENT(INOUT) :: obj
     TYPE(CSRMatrix_), INTENT(IN) :: obj2
-  END SUBROUTINE obj_initiate4
+  END SUBROUTINE obj_Initiate4
 END INTERFACE Initiate
 
 INTERFACE ASSIGNMENT(=)
-  MODULE PROCEDURE obj_initiate4
+  MODULE PROCEDURE obj_Initiate4
 END INTERFACE ASSIGNMENT(=)
 
 !----------------------------------------------------------------------------
@@ -268,7 +268,7 @@ END INTERFACE ASSIGNMENT(=)
 ! summary: Initiates a submatrix
 
 INTERFACE Initiate
-  MODULE SUBROUTINE obj_initiate5(obj, obj2, i1, i2, j1, j2)
+  MODULE SUBROUTINE obj_Initiate5(obj, obj2, i1, i2, j1, j2)
     TYPE(CSRMatrix_), INTENT(INOUT) :: obj
     !! submatrix to be returned
     TYPE(CSRMatrix_), INTENT(IN) :: obj2
@@ -277,7 +277,7 @@ INTERFACE Initiate
     !! start and end row indices
     INTEGER(I4B), INTENT(IN) :: j1, j2
     !! start and end col indices
-  END SUBROUTINE obj_initiate5
+  END SUBROUTINE obj_Initiate5
 END INTERFACE Initiate
 
 !----------------------------------------------------------------------------
@@ -286,7 +286,7 @@ END INTERFACE Initiate
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 14 July 2021
-! summary: This routine initiates an instance of sparse matrix by copying
+! summary: This routine Initiates an instance of sparse matrix by copying
 ! the content of another object obj2
 !
 !# Introduction
@@ -294,11 +294,11 @@ END INTERFACE Initiate
 ! This method has been deprecated as it is same as `Initiate4`
 
 INTERFACE Initiate
-  MODULE SUBROUTINE obj_initiate6(obj, obj2, hardCopy)
+  MODULE SUBROUTINE obj_Initiate6(obj, obj2, hardCopy)
     TYPE(CSRMatrix_), INTENT(INOUT) :: obj
     TYPE(CSRMatrix_), INTENT(IN) :: obj2
     LOGICAL(LGT), INTENT(IN) :: hardCopy
-  END SUBROUTINE obj_initiate6
+  END SUBROUTINE obj_Initiate6
 END INTERFACE Initiate
 
 !----------------------------------------------------------------------------
@@ -310,13 +310,13 @@ END INTERFACE Initiate
 ! summary:  Initiate an object by adding two csrmatrix
 
 INTERFACE Initiate
-  MODULE SUBROUTINE obj_initiate7(obj, obj1, obj2, scale, isSorted)
+  MODULE SUBROUTINE obj_Initiate7(obj, obj1, obj2, scale, isSorted)
     TYPE(CSRMatrix_), INTENT(INOUT) :: obj
     TYPE(CSRMatrix_), INTENT(IN) :: obj1
     TYPE(CSRMatrix_), INTENT(IN) :: obj2
     REAL(DFP), INTENT(IN) :: scale
     LOGICAL(LGT), OPTIONAL, INTENT(IN) :: isSorted
-  END SUBROUTINE obj_initiate7
+  END SUBROUTINE obj_Initiate7
 END INTERFACE Initiate
 
 !----------------------------------------------------------------------------
