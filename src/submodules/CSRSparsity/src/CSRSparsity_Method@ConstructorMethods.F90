@@ -109,6 +109,8 @@ END PROCEDURE obj_initiate1
 
 MODULE PROCEDURE obj_initiate2
 INTEGER(I4B) :: ii, n
+
+CALL DEALLOCATE (obj)
 obj%nnz = obj2%nnz
 obj%ncol = obj2%ncol
 obj%nrow = obj2%nrow
@@ -134,14 +136,17 @@ END PROCEDURE obj_initiate2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE obj_Initiate3
-INTEGER(I4B) :: nrow, ncol
+INTEGER(I4B) :: nrow, ncol0
 
-nrow = SIZE(IA) - 1; ncol = MAXVAL(JA)
-CALL Initiate(obj=obj, nrow=nrow, ncol=ncol)
+CALL DEALLOCATE (obj)
+nrow = SIZE(IA) - 1
+ncol0 = Input(default=MAXVAL(JA), option=ncol)
+CALL Initiate(obj=obj, nrow=nrow, ncol=ncol0)
 obj%nnz = SIZE(JA)
+CALL Reallocate(obj%IA, SIZE(IA))
 obj%IA = IA
+CALL Reallocate(obj%JA, SIZE(JA))
 obj%JA = JA
-
 END PROCEDURE obj_Initiate3
 
 !----------------------------------------------------------------------------

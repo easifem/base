@@ -66,12 +66,115 @@ END IF
 END PROCEDURE obj_size
 
 !----------------------------------------------------------------------------
-!                                                                      GetNNZ
+!                                                                     GetNNZ
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE obj_GetNNZ
 Ans = obj%nnz
 END PROCEDURE obj_GetNNZ
+
+!----------------------------------------------------------------------------
+!                                                                    GetNNZ
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE obj_GetNNZ_from_operation
+INTEGER(I4B) :: nrow, ncol
+LOGICAL(LGT) :: isSorted0
+
+isSorted0 = Input(default=.FALSE., option=isSorted)
+
+SELECT CASE (op)
+CASE ("+", "-")
+  nrow = SIZE(obj1, 1)
+  ncol = SIZE(obj1, 2)
+  IF (isSorted0) THEN
+    ans = GetNNZ_Add_Subtract_sorted(nrow=nrow, ncol=ncol, ja=obj1%JA,  &
+      & ia=obj1%IA, jb=obj2%JA, ib=obj2%IA)
+  ELSE
+    ans = GetNNZ_Add_Subtract(nrow=nrow, ncol=ncol, ja=obj1%JA,  &
+      & ia=obj1%IA, jb=obj2%JA, ib=obj2%IA)
+  END IF
+END SELECT
+END PROCEDURE obj_GetNNZ_from_operation
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE GetNNZ_Add_Subtract
+INTEGER(I4B) :: ii, jcol, kb, jpos, ka
+LOGICAL(LGT) :: iw(ncol)
+ans = 0
+
+DO ii = 1, nrow
+  iw = .FALSE.
+  DO ka = ia(ii), ia(ii + 1) - 1
+    ans = ans + 1
+    jcol = ja(ka)
+    iw(jcol) = .TRUE.
+  END DO
+
+  DO kb = ib(ii), ib(ii + 1) - 1
+    jcol = jb(kb)
+    IF (.NOT. iw(jcol)) THEN
+      ans = ans + 1
+      iw(jcol) = .TRUE.
+    END IF
+  END DO
+END DO
+END PROCEDURE GetNNZ_Add_Subtract
+
+!----------------------------------------------------------------------------
+!                                                                   GetNNZ
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE GetNNZ_Add_Subtract_sorted
+! internal variables
+INTEGER(I4B) :: len, i, ka, kb, kc, &
+  & kamax, kbmax, j1, jj2
+LOGICAL(LGT) :: isok
+
+kc = 1
+DO i = 1, nrow
+  ka = ia(i)
+  kb = ib(i)
+  kamax = ia(i + 1) - 1
+  kbmax = ib(i + 1) - 1
+
+  DO
+    isok = ka .LE. kamax .OR. kb .LE. kbmax
+    IF (.NOT. isok) EXIT
+
+    IF (ka .LE. kamax) THEN
+      j1 = ja(ka)
+    ELSE
+      ! take j1 large enough  that always jj2 .lt. j1
+      j1 = ncol + 1
+    END IF
+
+    IF (kb .LE. kbmax) THEN
+      jj2 = jb(kb)
+    ELSE
+      ! similarly take jj2 large enough  that always j1 .lt. jj2
+      jj2 = ncol + 1
+    END IF
+
+    IF (j1 .EQ. jj2) THEN
+      ka = ka + 1
+      kb = kb + 1
+      kc = kc + 1
+    ELSE IF (j1 .LT. jj2) THEN
+      ka = ka + 1
+      kc = kc + 1
+    ELSE IF (j1 .GT. jj2) THEN
+      kb = kb + 1
+      kc = kc + 1
+    END IF
+  END DO
+END DO
+
+ans = kc - 1
+END PROCEDURE GetNNZ_Add_Subtract_sorted
 
 !----------------------------------------------------------------------------
 !                                                                 GetNNZ

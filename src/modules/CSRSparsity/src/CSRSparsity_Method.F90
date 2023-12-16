@@ -1,4 +1,4 @@
-! This program is a part of EASIFEM library
+! This program is a part of EASIFEM librarycsrsparsity
 ! Copyright (C) 2020-2021  Vikas Sharma, Ph.D
 !
 ! This program is free software: you can redistribute it and/or modify
@@ -45,7 +45,7 @@ PUBLIC :: SetIA
 PUBLIC :: SetJA
 
 !----------------------------------------------------------------------------
-!                                                       Initiate@Constructor
+!                                               Initiate@ConstructorMethods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -87,7 +87,7 @@ INTERFACE Initiate
 END INTERFACE Initiate
 
 !----------------------------------------------------------------------------
-!                                                       Initiate@Constructor
+!                                               Initiate@ConstructorMethods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -111,7 +111,7 @@ INTERFACE ASSIGNMENT(=)
 END INTERFACE ASSIGNMENT(=)
 
 !----------------------------------------------------------------------------
-!                                                       Initiate@Constructor
+!                                                 Initiate@ConstructorMethods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -129,9 +129,11 @@ END INTERFACE ASSIGNMENT(=)
 !
 
 INTERFACE Initiate
-  MODULE SUBROUTINE obj_initiate3(obj, IA, JA)
+  MODULE SUBROUTINE obj_initiate3(obj, IA, JA, ncol)
     TYPE(CSRSparsity_), INTENT(INOUT) :: obj
     INTEGER(I4B), INTENT(IN) :: IA(:), JA(:)
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: ncol
+    !! number of columns, default is number of rows
   END SUBROUTINE obj_initiate3
 END INTERFACE Initiate
 
@@ -148,7 +150,7 @@ END INTERFACE Initiate
 ! This function returns an instance of [[CSRSparsity_]]
 
 INTERFACE CSRSparsity
-  MODULE FUNCTION obj_constructor1(nrow, ncol, idof, jdof) RESULT(Ans)
+  MODULE FUNCTION obj_constructor1(nrow, ncol, idof, jdof) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: nrow
     INTEGER(I4B), INTENT(IN) :: ncol
     TYPE(DOF_), OPTIONAL, INTENT(IN) :: idof
@@ -172,7 +174,7 @@ END INTERFACE CSRSparsity
 ! This function returns an instance of [[CSRSparsity_]]
 
 INTERFACE CSRSparsity
-  MODULE FUNCTION obj_constructor2(IA, JA) RESULT(Ans)
+  MODULE FUNCTION obj_constructor2(IA, JA) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: IA(:)
     INTEGER(I4B), INTENT(IN) :: JA(:)
     TYPE(CSRSparsity_) :: ans
@@ -192,7 +194,7 @@ END INTERFACE CSRSparsity
 ! This function returns an instance of [[CSRSparsity_]]
 
 INTERFACE CSRSparsityPointer
-  MODULE FUNCTION obj_constructor_1(nrow, ncol, idof, jdof) RESULT(Ans)
+  MODULE FUNCTION obj_constructor_1(nrow, ncol, idof, jdof) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: nrow
     INTEGER(I4B), INTENT(IN) :: ncol
     TYPE(DOF_), OPTIONAL, INTENT(IN) :: idof
@@ -216,7 +218,7 @@ END INTERFACE CSRSparsityPointer
 ! This function returns an instance of [[CSRSparsity_]]
 
 INTERFACE CSRSparsityPointer
-  MODULE FUNCTION obj_constructor_2(IA, JA) RESULT(Ans)
+  MODULE FUNCTION obj_constructor_2(IA, JA) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: IA(:)
     INTEGER(I4B), INTENT(IN) :: JA(:)
     TYPE(CSRSparsity_), POINTER :: ans
@@ -266,9 +268,9 @@ END INTERFACE Display
 ! This function returns the shape of sparse matrix
 
 INTERFACE Shape
-  MODULE PURE FUNCTION obj_shape(obj) RESULT(Ans)
+  MODULE PURE FUNCTION obj_shape(obj) RESULT(ans)
     TYPE(CSRSparsity_), INTENT(IN) :: obj
-    INTEGER(I4B) :: Ans(2)
+    INTEGER(I4B) :: ans(2)
   END FUNCTION obj_shape
 END INTERFACE Shape
 
@@ -288,10 +290,10 @@ END INTERFACE Shape
 ! If Dims is absent then nrow*ncol are returned
 
 INTERFACE Size
-  MODULE PURE FUNCTION obj_size(obj, Dims) RESULT(Ans)
+  MODULE PURE FUNCTION obj_size(obj, Dims) RESULT(ans)
     TYPE(CSRSparsity_), INTENT(IN) :: obj
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: Dims
-    INTEGER(I4B) :: Ans
+    INTEGER(I4B) :: ans
   END FUNCTION obj_size
 END INTERFACE Size
 
@@ -304,11 +306,86 @@ END INTERFACE Size
 ! summary:         Return the total number of non zero entry
 
 INTERFACE GetNNZ
-  MODULE PURE FUNCTION obj_GetNNZ(obj) RESULT(Ans)
+  MODULE PURE FUNCTION obj_GetNNZ(obj) RESULT(ans)
     TYPE(CSRSparsity_), INTENT(IN) :: obj
-    INTEGER(I4B) :: Ans
+    INTEGER(I4B) :: ans
   END FUNCTION obj_GetNNZ
 END INTERFACE GetNNZ
+
+!----------------------------------------------------------------------------
+!                                                          GetNNZ@GetMethods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:         22 March 2021
+! summary:         Return the total number of non zero entry
+
+INTERFACE GetNNZ
+  MODULE PURE FUNCTION obj_GetNNZ_from_operation(obj1, obj2, op, isSorted)  &
+    & RESULT(ans)
+    TYPE(CSRSparsity_), INTENT(IN) :: obj1
+    !! CSRSparsity object
+    TYPE(CSRSparsity_), INTENT(IN) :: obj2
+    !! CSRSparsity object
+    CHARACTER(1), INTENT(IN) :: op
+    !! "*", "+", "-"
+    LOGICAL(LGT), OPTIONAL, INTENT(IN) :: isSorted
+    !! Set it to true if the columns are sorted in obj1 and obj2
+    !! Default is .false.
+    INTEGER(I4B) :: ans
+    !! total number of non zero entries
+  END FUNCTION obj_GetNNZ_from_operation
+END INTERFACE GetNNZ
+
+!----------------------------------------------------------------------------
+!                                                           Initiate@Methods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2023-12-16
+! summary:  Initiate an object by adding two csrmatrix
+
+INTERFACE
+  MODULE PURE FUNCTION GetNNZ_Add_Subtract(nrow, ncol, ja, ia, jb, ib)  &
+    & RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: nrow, ncol
+    !! number of rows in a and b matrix
+    INTEGER(I4B), INTENT(IN) :: ja(:)
+    !! sparsity of ja
+    INTEGER(I4B), INTENT(IN) :: ia(:)
+    !! nrow + 1
+    INTEGER(I4B), INTENT(IN) :: jb(:)
+    !! sparsity of jb
+    INTEGER(I4B), INTENT(IN) :: ib(:)
+    !! nrow + 1
+    INTEGER(I4B) :: ans
+  END FUNCTION GetNNZ_Add_Subtract
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                           Initiate@Methods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2023-12-16
+! summary:  Initiate an object by adding two csrmatrix
+
+INTERFACE
+  MODULE PURE FUNCTION GetNNZ_Add_Subtract_sorted(nrow, ncol, ja, ia, jb,  &
+    & ib) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: nrow, ncol
+    !! number of rows in a and b matrix
+    INTEGER(I4B), INTENT(IN) :: ja(:)
+    !! sparsity of ja
+    INTEGER(I4B), INTENT(IN) :: ia(:)
+    !! nrow + 1
+    INTEGER(I4B), INTENT(IN) :: jb(:)
+    !! sparsity of jb
+    INTEGER(I4B), INTENT(IN) :: ib(:)
+    !! nrow + 1
+    INTEGER(I4B) :: ans
+  END FUNCTION GetNNZ_Add_Subtract_sorted
+END INTERFACE
 
 !----------------------------------------------------------------------------
 !                                                          GetNNZ@GetMethods
@@ -319,14 +396,14 @@ END INTERFACE GetNNZ
 ! summary:         Return the total number of non zero entry
 
 INTERFACE GetNNZ
-  MODULE PURE FUNCTION obj_GetNNZ1(obj, from) RESULT(Ans)
+  MODULE PURE FUNCTION obj_GetNNZ1(obj, from) RESULT(ans)
     TYPE(CSRSparsity_), INTENT(IN) :: obj
     CHARACTER(1), INTENT(IN) :: from
     !! "U" nnz in upper triangular part, j > i
     !! "L" nnz in lower triangular part, i > j
     !! "D" nnz in diagonal part, i=j
     !! "A" nnz in whole matrix, L+U+D
-    INTEGER(I4B) :: Ans
+    INTEGER(I4B) :: ans
   END FUNCTION obj_GetNNZ1
 END INTERFACE GetNNZ
 
@@ -339,12 +416,12 @@ END INTERFACE GetNNZ
 ! summary: Return the total number of non zero in U, L and D
 
 INTERFACE GetNNZ
-  MODULE PURE FUNCTION obj_GetNNZ2(obj, from) RESULT(Ans)
+  MODULE PURE FUNCTION obj_GetNNZ2(obj, from) RESULT(ans)
     TYPE(CSRSparsity_), INTENT(IN) :: obj
     CHARACTER(1), INTENT(IN) :: from(1)
     !! this argument is not referred, it is here
     !! to create a unique interface only
-    INTEGER(I4B) :: Ans(3)
+    INTEGER(I4B) :: ans(3)
     !! [nnzU, nnzL, nnzD]
   END FUNCTION obj_GetNNZ2
 END INTERFACE GetNNZ
