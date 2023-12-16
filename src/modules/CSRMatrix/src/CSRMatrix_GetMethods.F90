@@ -47,7 +47,7 @@ INTERFACE GetSingleValue
   MODULE PURE FUNCTION obj_GetSingleValue(obj, indx) RESULT(ans)
     TYPE(CSRMatrix_), INTENT(IN) :: obj
     INTEGER(I4B), INTENT(IN) :: indx
-    INTEGER(I4B) :: ans
+    REAL(DFP) :: ans
   END FUNCTION obj_GetSingleValue
 END INTERFACE GetSingleValue
 
@@ -67,7 +67,7 @@ INTERFACE Get
   MODULE PURE FUNCTION obj_GetSeveralValue(obj, indx) RESULT(ans)
     TYPE(CSRMatrix_), INTENT(IN) :: obj
     INTEGER(I4B), INTENT(IN) :: indx(:)
-    INTEGER(I4B) :: ans(SIZE(indx))
+    REAL(DFP) :: ans(SIZE(indx))
   END FUNCTION obj_GetSeveralValue
 END INTERFACE Get
 
@@ -76,7 +76,7 @@ END INTERFACE Get
 !----------------------------------------------------------------------------
 
 INTERFACE GetStorageFMT
-  MODULE PURE FUNCTION obj_GetStorageFMT(obj, i) RESULT(Ans)
+  MODULE PURE FUNCTION obj_GetStorageFMT(obj, i) RESULT(ans)
     TYPE(CSRMatrix_), INTENT(IN) :: obj
     INTEGER(I4B), INTENT(IN) :: i
     INTEGER(I4B) :: ans
@@ -92,7 +92,7 @@ END INTERFACE OPERATOR(.storageFMT.)
 !----------------------------------------------------------------------------
 
 INTERFACE GetMatrixProp
-  MODULE PURE FUNCTION obj_GetMatrixProp(obj) RESULT(Ans)
+  MODULE PURE FUNCTION obj_GetMatrixProp(obj) RESULT(ans)
     TYPE(CSRMatrix_), TARGET, INTENT(IN) :: obj
     CHARACTER(20) :: ans
   END FUNCTION obj_GetMatrixProp
@@ -107,10 +107,10 @@ END INTERFACE OPERATOR(.MatrixProp.)
 !----------------------------------------------------------------------------
 
 INTERFACE GetDOFPointer
-  MODULE FUNCTION obj_GetDOFPointer(obj, i) RESULT(Ans)
+  MODULE FUNCTION obj_GetDOFPointer(obj, i) RESULT(ans)
     TYPE(CSRMatrix_), TARGET, INTENT(IN) :: obj
     INTEGER(I4B), INTENT(IN) :: i
-    CLASS(DOF_), POINTER :: Ans
+    CLASS(DOF_), POINTER :: ans
   END FUNCTION obj_GetDOFPointer
 END INTERFACE GetDOFPointer
 
@@ -119,7 +119,7 @@ END INTERFACE GetDOFPointer
 !----------------------------------------------------------------------------
 
 INTERFACE isSquare
-  MODULE PURE FUNCTION obj_isSquare(obj) RESULT(Ans)
+  MODULE PURE FUNCTION obj_isSquare(obj) RESULT(ans)
     TYPE(CSRMatrix_), INTENT(IN) :: obj
     LOGICAL(LGT) :: ans
   END FUNCTION obj_isSquare
@@ -130,7 +130,7 @@ END INTERFACE isSquare
 !----------------------------------------------------------------------------
 
 INTERFACE isRectangle
-  MODULE PURE FUNCTION obj_isRectangle(obj) RESULT(Ans)
+  MODULE PURE FUNCTION obj_isRectangle(obj) RESULT(ans)
     TYPE(CSRMatrix_), INTENT(IN) :: obj
     LOGICAL(LGT) :: ans
   END FUNCTION obj_isRectangle

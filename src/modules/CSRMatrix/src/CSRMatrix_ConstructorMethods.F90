@@ -30,6 +30,8 @@ PUBLIC :: GetNNZ
 PUBLIC :: ALLOCATE
 PUBLIC :: DEALLOCATE
 PUBLIC :: ASSIGNMENT(=)
+PUBLIC :: CSRMatrixAPLSB
+PUBLIC :: CSRMatrixAPLSBSorted
 
 !----------------------------------------------------------------------------
 !                                                  Shape@ConstructorMethods
@@ -224,11 +226,13 @@ END INTERFACE Initiate
 ! summary: This subroutine constructs `sparsematrix_` object from IA, JA, A
 
 INTERFACE Initiate
-  MODULE SUBROUTINE obj_initiate3(obj, A, IA, JA, matrixProp)
+  MODULE SUBROUTINE obj_initiate3(obj, A, IA, JA, matrixProp, ncol)
     TYPE(CSRMatrix_), INTENT(INOUT) :: obj
     REAL(DFP), INTENT(IN) :: A(:)
     INTEGER(I4B), INTENT(IN) :: IA(:), JA(:)
     CHARACTER(*), OPTIONAL, INTENT(IN) :: matrixProp
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: ncol
+    !! Number of columns in obj, default is number of rows
   END SUBROUTINE obj_initiate3
 END INTERFACE Initiate
 
@@ -298,7 +302,90 @@ INTERFACE Initiate
 END INTERFACE Initiate
 
 !----------------------------------------------------------------------------
-!
+!                                                           Initiate@Methods
 !----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2023-12-16
+! summary:  Initiate an object by adding two csrmatrix
+
+INTERFACE Initiate
+  MODULE SUBROUTINE obj_initiate7(obj, obj1, obj2, scale, isSorted)
+    TYPE(CSRMatrix_), INTENT(INOUT) :: obj
+    TYPE(CSRMatrix_), INTENT(IN) :: obj1
+    TYPE(CSRMatrix_), INTENT(IN) :: obj2
+    REAL(DFP), INTENT(IN) :: scale
+    LOGICAL(LGT), OPTIONAL, INTENT(IN) :: isSorted
+  END SUBROUTINE obj_initiate7
+END INTERFACE Initiate
+
+!----------------------------------------------------------------------------
+!                                                           Initiate@Methods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2023-12-16
+! summary:  Initiate an object by adding two csrmatrix
+
+INTERFACE CSRMatrixAPLSB
+  MODULE SUBROUTINE obj_aplsb(nrow, ncol, a, ja, ia, s, b, jb, ib, c,  &
+    & jc, ic, nzmax, ierr)
+    INTEGER(I4B), INTENT(IN) :: nrow
+    INTEGER(I4B), INTENT(IN) :: ncol
+    REAL(DFP), INTENT(IN) :: a(:)
+    INTEGER(I4B), INTENT(IN) :: ja(:)
+    INTEGER(I4B), INTENT(IN) :: ia(:)
+    !! nrow + 1
+    REAL(DFP), INTENT(IN) :: s
+    REAL(DFP), INTENT(IN) :: b(:)
+    INTEGER(I4B), INTENT(IN) :: jb(:)
+    INTEGER(I4B), INTENT(IN) :: ib(:)
+    !! nrow + 1
+    REAL(DFP), INTENT(INOUT) :: c(:)
+    !! The size of c should be less than or equalto nzmax
+    INTEGER(I4B), INTENT(INOUT) :: jc(:)
+    !! The size of jc should be less than or equalto nzmax
+    INTEGER(I4B), INTENT(INOUT) :: ic(:)
+    !! nrow + 1
+    INTEGER(I4B), INTENT(IN) :: nzmax
+    !! max number of nonzero in c
+    INTEGER(I4B), INTENT(OUT) :: ierr
+  END SUBROUTINE obj_aplsb
+END INTERFACE CSRMatrixAPLSB
+
+!----------------------------------------------------------------------------
+!                                                           Initiate@Methods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2023-12-16
+! summary:  Initiate an object by adding two csrmatrix
+
+INTERFACE CSRMatrixAPLSBSorted
+  MODULE SUBROUTINE obj_aplsb_sorted(nrow, ncol, a, ja, ia, s, b, jb, ib,  &
+    & c, jc, ic, nzmax, ierr)
+    INTEGER(I4B), INTENT(IN) :: nrow
+    INTEGER(I4B), INTENT(IN) :: ncol
+    REAL(DFP), INTENT(IN) :: a(:)
+    INTEGER(I4B), INTENT(IN) :: ja(:)
+    INTEGER(I4B), INTENT(IN) :: ia(:)
+    !! nrow + 1
+    REAL(DFP), INTENT(IN) :: s
+    !! scale
+    REAL(DFP), INTENT(IN) :: b(:)
+    INTEGER(I4B), INTENT(IN) :: jb(:)
+    INTEGER(I4B), INTENT(IN) :: ib(:)
+    !! nrow + 1
+    REAL(DFP), INTENT(INOUT) :: c(:)
+    !! The size of c should be less than or equalto nzmax
+    INTEGER(I4B), INTENT(INOUT) :: jc(:)
+    !! The size of jc should be less than or equalto nzmax
+    INTEGER(I4B), INTENT(INOUT) :: ic(:)
+    !! nrow + 1
+    INTEGER(I4B), INTENT(IN) :: nzmax
+    !! max number of nonzero in c
+    INTEGER(I4B), INTENT(OUT) :: ierr
+  END SUBROUTINE obj_aplsb_sorted
+END INTERFACE CSRMatrixAPLSBSorted
 
 END MODULE CSRMatrix_ConstructorMethods
