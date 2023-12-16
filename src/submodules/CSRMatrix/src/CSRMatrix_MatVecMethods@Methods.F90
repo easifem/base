@@ -25,11 +25,116 @@ IMPLICIT NONE
 CONTAINS
 
 !----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE CSRMatrixATMUX1
+INTEGER(I4B) :: i, k
+
+y = 0.0_DFP
+
+DO i = 1, n
+  DO k = ia(i), ia(i + 1) - 1
+    y(ja(k)) = y(ja(k)) + x(i) * a(k)
+  END DO
+END DO
+
+END PROCEDURE CSRMatrixATMUX1
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE CSRMatrixATMUX2
+INTEGER(I4B) :: i, k
+
+y = 0.0_DFP
+
+DO i = 1, n
+  DO k = ia(i), ia(i + 1) - 1
+    y(ja(k)) = y(ja(k)) + x(i) * a(k) * s
+  END DO
+END DO
+
+END PROCEDURE CSRMatrixATMUX2
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE CSRMatrixATMUX_Add_1
+INTEGER(I4B) :: i, k
+
+DO i = 1, n
+  DO k = ia(i), ia(i + 1) - 1
+    y(ja(k)) = y(ja(k)) + x(i) * a(k) * s
+  END DO
+END DO
+
+END PROCEDURE CSRMatrixATMUX_Add_1
+
+!----------------------------------------------------------------------------
+!                                                            CSRMatrixAMUX
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE CSRMatrixAMUX1
+REAL(DFP) :: t
+INTEGER(I4B) :: i, k
+
+DO i = 1, n
+  ! compute the inner product of row i with vector x
+  t = 0.0
+  DO k = ia(i), ia(i + 1) - 1
+    t = t + a(k) * x(ja(k))
+  END DO
+  ! store result in y(i)
+  y(i) = t
+END DO
+END PROCEDURE CSRMatrixAMUX1
+
+!----------------------------------------------------------------------------
+!                                                            CSRMatrixAMUX
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE CSRMatrixAMUX2
+REAL(DFP) :: t
+INTEGER(I4B) :: i, k
+
+DO i = 1, n
+  ! compute the inner product of row i with vector x
+  t = 0.0
+  DO k = ia(i), ia(i + 1) - 1
+    t = t + a(k) * x(ja(k))
+  END DO
+  ! store result in y(i)
+  y(i) = s * t
+END DO
+END PROCEDURE CSRMatrixAMUX2
+
+!----------------------------------------------------------------------------
+!                                                            CSRMatrixAMUX
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE CSRMatrixAMUX_Add_1
+REAL(DFP) :: t
+INTEGER(I4B) :: i, k
+
+DO i = 1, n
+  ! compute the inner product of row i with vector x
+  t = 0.0
+  DO k = ia(i), ia(i + 1) - 1
+    t = t + a(k) * x(ja(k))
+  END DO
+  ! store result in y(i)
+  y(i) = y(i) + s * t
+END DO
+END PROCEDURE CSRMatrixAMUX_Add_1
+
+!----------------------------------------------------------------------------
 !                                                                   AMatvec
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE csrMat_AMatvec1
-REAL(DFP) :: y0(SIZE(y))
 LOGICAL(LGT) :: add0
 REAL(DFP) :: scale0
 INTEGER(I4B) :: tsize
@@ -39,13 +144,14 @@ scale0 = input(default=1.0_DFP, option=scale)
 tsize = SIZE(y)
 
 IF (add0) THEN
-  CALL AMUX(tsize, x, y0, obj%A, obj%csr%JA, obj%csr%IA)
-  CALL AXPY(X=y0, Y=y, A=scale0)
+  CALL CSRMatrixAMUX_Add(n=tsize, x=x, y=y, a=obj%A,  &
+    & ja=obj%csr%JA, ia=obj%csr%IA, s=scale0)
   RETURN
 END IF
 
-CALL AMUX(tsize, x, y, obj%A, obj%csr%JA, obj%csr%IA)
-CALL SCAL(X=y, A=scale0)
+CALL CSRMatrixAMUX(n=tsize, x=x, y=y, a=obj%A,  &
+  & ja=obj%csr%JA, ia=obj%csr%IA, s=scale0)
+
 END PROCEDURE csrMat_AMatvec1
 
 !----------------------------------------------------------------------------

@@ -24,6 +24,129 @@ PRIVATE
 PUBLIC :: MatVec
 PUBLIC :: AMatVec
 PUBLIC :: AtMatvec
+PUBLIC :: CSRMatrixAMUX
+PUBLIC :: CSRMatrixAMUX_Add
+PUBLIC :: CSRMatrixATMUX
+PUBLIC :: CSRMatrixATMUX_Add
+
+!----------------------------------------------------------------------------
+!                                                           CSRMatrixAMUX
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2023-12-16
+! summary:  Mat vec
+
+! y = A *x
+INTERFACE CSRMatrixAMUX
+  MODULE SUBROUTINE CSRMatrixAMUX1(n, x, y, a, ja, ia)
+    INTEGER(I4B), INTENT(IN) :: n
+    REAL(DFP), INTENT(IN) :: x(:)
+    REAL(DFP), INTENT(INOUT) :: y(:)
+    REAL(DFP), INTENT(IN) :: a(:)
+    INTEGER(I4B), INTENT(IN) :: ja(:)
+    INTEGER(I4B), INTENT(IN) :: ia(:)
+  END SUBROUTINE CSRMatrixAMUX1
+END INTERFACE CSRMatrixAMUX
+
+!----------------------------------------------------------------------------
+!                                                             CSRMatrixAMUX
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2023-12-16
+! summary:  y = s * A*x
+
+INTERFACE CSRMatrixAMUX
+  MODULE SUBROUTINE CSRMatrixAMUX2(n, x, y, a, ja, ia, s)
+    INTEGER(I4B), INTENT(IN) :: n
+    REAL(DFP), INTENT(IN) :: x(:)
+    REAL(DFP), INTENT(INOUT) :: y(:)
+    REAL(DFP), INTENT(IN) :: a(:)
+    INTEGER(I4B), INTENT(IN) :: ja(:)
+    INTEGER(I4B), INTENT(IN) :: ia(:)
+    REAL(DFP), INTENT(IN) :: s
+  END SUBROUTINE CSRMatrixAMUX2
+END INTERFACE CSRMatrixAMUX
+
+!----------------------------------------------------------------------------
+!                                                       CSRMatrixAMUX_Add
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2023-12-16
+! summary:  y = y+s * A*x
+
+INTERFACE CSRMatrixAMUX_Add
+  MODULE SUBROUTINE CSRMatrixAMUX_Add_1(n, x, y, a, ja, ia, s)
+    INTEGER(I4B), INTENT(IN) :: n
+    REAL(DFP), INTENT(IN) :: x(:)
+    REAL(DFP), INTENT(INOUT) :: y(:)
+    REAL(DFP), INTENT(IN) :: a(:)
+    INTEGER(I4B), INTENT(IN) :: ja(:)
+    INTEGER(I4B), INTENT(IN) :: ia(:)
+    REAL(DFP), INTENT(IN) :: s
+  END SUBROUTINE CSRMatrixAMUX_Add_1
+END INTERFACE CSRMatrixAMUX_Add
+
+!----------------------------------------------------------------------------
+!                                                           CSRMatrixATMUX
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2023-12-16
+! summary:   y = A^T *x
+
+INTERFACE CSRMatrixATMUX
+  MODULE SUBROUTINE CSRMatrixATMUX1(n, x, y, a, ja, ia)
+    INTEGER(I4B), INTENT(IN) :: n
+    REAL(DFP), INTENT(IN) :: x(:)
+    REAL(DFP), INTENT(INOUT) :: y(:)
+    REAL(DFP), INTENT(IN) :: a(:)
+    INTEGER(I4B), INTENT(IN) :: ja(:)
+    INTEGER(I4B), INTENT(IN) :: ia(:)
+  END SUBROUTINE CSRMatrixATMUX1
+END INTERFACE CSRMatrixATMUX
+
+!----------------------------------------------------------------------------
+!                                                             CSRMatrixATMUX
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2023-12-16
+! summary:  y = s * A^T*x
+
+INTERFACE CSRMatrixATMUX
+  MODULE SUBROUTINE CSRMatrixATMUX2(n, x, y, a, ja, ia, s)
+    INTEGER(I4B), INTENT(IN) :: n
+    REAL(DFP), INTENT(IN) :: x(:)
+    REAL(DFP), INTENT(INOUT) :: y(:)
+    REAL(DFP), INTENT(IN) :: a(:)
+    INTEGER(I4B), INTENT(IN) :: ja(:)
+    INTEGER(I4B), INTENT(IN) :: ia(:)
+    REAL(DFP), INTENT(IN) :: s
+  END SUBROUTINE CSRMatrixATMUX2
+END INTERFACE CSRMatrixATMUX
+
+!----------------------------------------------------------------------------
+!                                                       CSRMatrixATMUX_Add
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2023-12-16
+! summary:  y = y+s * A^T*x
+
+INTERFACE CSRMatrixATMUX_Add
+  MODULE SUBROUTINE CSRMatrixATMUX_Add_1(n, x, y, a, ja, ia, s)
+    INTEGER(I4B), INTENT(IN) :: n
+    REAL(DFP), INTENT(IN) :: x(:)
+    REAL(DFP), INTENT(INOUT) :: y(:)
+    REAL(DFP), INTENT(IN) :: a(:)
+    INTEGER(I4B), INTENT(IN) :: ja(:)
+    INTEGER(I4B), INTENT(IN) :: ia(:)
+    REAL(DFP), INTENT(IN) :: s
+  END SUBROUTINE CSRMatrixATMUX_Add_1
+END INTERFACE CSRMatrixATMUX_Add
 
 !----------------------------------------------------------------------------
 !                                                    AMatVec1@MatvecMethods
