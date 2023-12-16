@@ -355,12 +355,11 @@ MODULE PROCEDURE obj_set14
 ! Internal variables
 INTEGER(I4B), ALLOCATABLE :: row(:), col(:)
 INTEGER(I4B) :: ii, jj, kk
-!
+
 row = getNodeLoc(obj=obj%csr%idof, nodeNum=iNodeNum, ivar=ivar, &
   & spacecompo=ispacecompo, timecompo=itimecompo)
 col = getNodeLoc(obj=obj%csr%jdof, nodeNum=jNodeNum, ivar=jvar, &
   & spacecompo=jspacecompo, timecompo=jtimecompo)
-!
 DO ii = 1, SIZE(row)
   DO kk = 1, SIZE(col)
     DO jj = obj%csr%IA(row(ii)), obj%csr%IA(row(ii) + 1) - 1
@@ -371,10 +370,19 @@ DO ii = 1, SIZE(row)
     END DO
   END DO
 END DO
-!
 DEALLOCATE (row, col)
-!
 END PROCEDURE obj_set14
+
+!----------------------------------------------------------------------------
+!                                                                      Set
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE obj_set15
+CALL COPY(Y=obj%A, X=VALUE%A)
+IF (PRESENT(scale)) THEN
+  CALL SCAL(X=obj%A, A=scale)
+END IF
+END PROCEDURE obj_set15
 
 !----------------------------------------------------------------------------
 !                                                                     SetIA

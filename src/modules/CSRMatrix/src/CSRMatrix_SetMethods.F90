@@ -529,6 +529,23 @@ INTERFACE Set
 END INTERFACE Set
 
 !----------------------------------------------------------------------------
+!                                                             Set@setMethod
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2023-12-17
+! summary: Scale the sparse matrix , obj = scale*Value
+
+INTERFACE Set
+  MODULE PURE SUBROUTINE obj_Set15(obj, VALUE, scale)
+    TYPE(CSRMatrix_), INTENT(INOUT) :: obj
+    TYPE(CSRMatrix_), INTENT(IN) :: VALUE
+    REAL(DFP), OPTIONAL, INTENT(IN) :: scale
+    !! scale
+  END SUBROUTINE obj_Set15
+END INTERFACE Set
+
+!----------------------------------------------------------------------------
 !                                                        SetIA@GetMethods
 !----------------------------------------------------------------------------
 
