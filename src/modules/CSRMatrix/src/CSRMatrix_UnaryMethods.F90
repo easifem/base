@@ -13,7 +13,53 @@
 !
 ! You should have received a copy of the GNU General Public License
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
+
+!> author: Vikas Sharma, Ph. D.
+! date:         22 March 2021
+! summary:         UnaryMethods operator for [[SparseMaatrix_]]
 !
+! Following subroutines are planned to include in this module
+!
+! | subroutine  | description  |
+! |---|---|
+! | `SUBMAT` | extracts a submatrix from a sparse matrix |
+! | `FILTER` | filters elements from a matrix according to their magnitude |
+! | `CSORT`  | sorts the elements in increasing order of columns |
+! | `CLNCSR`  | clean up the CSR format matrix, remove duplicate entry, etc |
+! | `TRANSP` | in-place transposition routine |
+! | `COPMAT` | copy of a matrix into another matrix (both stored csr)    |
+! | `GETELM` | returns a(i,j) for any (i,j) from a CSR-stored matrix.     |
+! | `GETDIA` | extracts a specified diagonal from a matrix.                |
+! | `GETL`   | extracts lower triangular part |
+! | `GETU`   | extracts upper triangular part |
+! | `LEVELS` | gets the level scheduling structure for lower triangular matrices |
+! | `AMASK`  | extracts C = A mask M |
+! | `RPERM`  | permutes the rows of a matrix (B = P A) |
+! | `CPERM`  | permutes the columns of a matrix (B = A Q) |
+! | `DPERM`  | permutes both the rows and columns of a matrix (B = P A Q ) |
+! | `DPERM1` | general extraction routine (extracts arbitrary rows) |
+! | `DPERM2` | general submatrix permutation/extraction routine            |
+! | `DVPERM` | permutes a real vector (in-place)                           |
+! | `IVPERM` | permutes an integer vector (in-place)                       |
+! | `RETMX`  | returns the max absolute value in each row of the matrix    |
+! | `DIAPOS` | returns the positions of the diagonal elements in A.        |
+! | `EXTBDG` | extracts the main diagonal blocks of a matrix.              |
+! | `GETBWD` | returns the bandwidth information on a matrix.              |
+! | `BLKFND` | finds the block-size of a matrix.                           |
+! | `BLKCHK` | checks whether a given integer is the block size of A.      |
+! | `INFDIA` | obtains information on the diagonals of A.                  |
+! | `AMUBDG` | gets number of nonzeros in each row of A*B (as well as NNZ) |
+! | `APLBDG` | gets number of nonzeros in each row of A+B (as well as NNZ) |
+! | `RNRMS`  | computes the norms of the rows of A                         |
+! | `CNRMS`  | computes the norms of the columns of A                      |
+! | `ROSCAL` | scales the rows of a matrix by their norms.                 |
+! | `COSCAL` | scales the columns of a matrix by their norms.              |
+! | `ADDBLK` | Adds a matrix B into a block of A.                          |
+! | `GET1UP` | Collects the first elements of each row of the upper triangular portion of the matrix |
+! | `XTROWS` | extracts given rows from a matrix in CSR format.            |
+! | `CSRKVSTR`|  Finds block row partitioning of matrix in CSR format      |
+! | `CSRKVSTC`|  Finds block column partitioning of matrix in CSR format   |
+! | `KVSTMERGE`| Merges block partitionings, for conformal row/col pattern |
 
 MODULE CSRMatrix_UnaryMethods
 USE GlobalData, ONLY: I4B, DFP, LGT
@@ -37,6 +83,22 @@ PUBLIC :: PermuteColumn
 PUBLIC :: Permute
 PUBLIC :: GetSym
 PUBLIC :: ASSIGNMENT(=)
+PUBLIC :: SCAL
+
+!----------------------------------------------------------------------------
+!                                                               Scal@Methods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2023-12-17
+! summary:  Scale the matrix
+
+INTERFACE Scal
+  MODULE SUBROUTINE obj_Scal(obj, a)
+    TYPE(CSRMatrix_), INTENT(INOUT) :: obj
+    REAL(DFP), INTENT(IN) :: a
+  END SUBROUTINE obj_Scal
+END INTERFACE Scal
 
 !----------------------------------------------------------------------------
 !                                                              Convert@Unary
