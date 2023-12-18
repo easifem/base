@@ -168,17 +168,17 @@ END INTERFACE asum
 ! call random_number( x, n )
 ! call random_number( y, n )
 ! z%val = y%val + a * x%val
-! call axpy( x = x, y = y, A = a  )
+! call AXPY( x = x, y = y, A = a  )
 ! call display( asum(y%val - z%val), "test4: 0 if correct : " )
 !```
 
-INTERFACE axpy
+INTERFACE AXPY
   MODULE SUBROUTINE scalarAXPYscalar(X, Y, A)
     CLASS(RealVector_), INTENT(IN) :: X
     CLASS(RealVector_), INTENT(INOUT) :: Y
     REAL(DFP), INTENT(IN) :: A
   END SUBROUTINE scalarAXPYscalar
-END INTERFACE axpy
+END INTERFACE AXPY
 
 !----------------------------------------------------------------------------
 !                                                                  AXPY@BLAS1
@@ -203,13 +203,13 @@ END INTERFACE axpy
 !@endnote
 !
 
-INTERFACE axpy
+INTERFACE AXPY
   MODULE SUBROUTINE scalarAXPYintrinsic(X, Y, A)
     REAL(DFP), INTENT(IN) :: X(:)
     CLASS(RealVector_), INTENT(INOUT) :: Y
     REAL(DFP), INTENT(IN) :: A
   END SUBROUTINE scalarAXPYintrinsic
-END INTERFACE axpy
+END INTERFACE AXPY
 
 !----------------------------------------------------------------------------
 !                                                                  AXPY@BLAS1
@@ -247,7 +247,7 @@ END INTERFACE axpy
 ! do i = 1, m
 !   z(i)%val = y(i)%val + a( i ) * x(i)%val
 ! end do
-! call axpy( x = x, y = y, A = a )
+! call AXPY( x = x, y = y, A = a )
 ! ans = 0.0
 ! do i = 1, m
 !   ans = ans + asum( y(i)%val - z(i)%val )
@@ -255,13 +255,13 @@ END INTERFACE axpy
 ! call display( ans, "test5: 0 if correct : " )
 !```
 
-INTERFACE axpy
+INTERFACE AXPY
   MODULE SUBROUTINE vectorAXPYvector(X, Y, A)
     CLASS(RealVector_), INTENT(IN) :: X(:)
     CLASS(RealVector_), INTENT(INOUT) :: Y(:)
     REAL(DFP), INTENT(IN) :: A(:)
   END SUBROUTINE vectorAXPYvector
-END INTERFACE axpy
+END INTERFACE AXPY
 
 !----------------------------------------------------------------------------
 !                                                                 COPY@BLAS1
