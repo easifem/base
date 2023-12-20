@@ -47,15 +47,11 @@ PUBLIC :: UpperCase
 ! date: 5 Sept 2021
 ! summary:         Returns the upperCase version of chars
 
-INTERFACE
+INTERFACE UpperCase
   MODULE PURE FUNCTION UpperCase_char(chars) RESULT(Ans)
     CHARACTER(*), INTENT(IN) :: chars
     CHARACTER(LEN(chars)) :: ans
   END FUNCTION UpperCase_char
-END INTERFACE
-
-INTERFACE UpperCase
-  MODULE PROCEDURE UpperCase_char
 END INTERFACE UpperCase
 
 !----------------------------------------------------------------------------
@@ -66,14 +62,10 @@ END INTERFACE UpperCase
 ! date: 5 Sept 2021
 ! summary:         Returns the upperCase version of chars
 
-INTERFACE
+INTERFACE toUpperCase
   MODULE PURE SUBROUTINE ToUpperCase_Char(chars)
     CHARACTER(*), INTENT(INOUT) :: chars
   END SUBROUTINE ToUpperCase_Char
-END INTERFACE
-
-INTERFACE toUpperCase
-  MODULE PROCEDURE ToUpperCase_Char
 END INTERFACE toUpperCase
 
 !----------------------------------------------------------------------------
@@ -84,15 +76,11 @@ END INTERFACE toUpperCase
 ! date: 5 Sept 2021
 ! summary:         Returns the LowerCase version of chars
 
-INTERFACE
+INTERFACE LowerCase
   MODULE PURE FUNCTION LowerCase_char(chars) RESULT(Ans)
     CHARACTER(*), INTENT(IN) :: chars
     CHARACTER(LEN(chars)) :: ans
   END FUNCTION LowerCase_char
-END INTERFACE
-
-INTERFACE LowerCase
-  MODULE PROCEDURE LowerCase_char
 END INTERFACE LowerCase
 
 !----------------------------------------------------------------------------
@@ -103,14 +91,10 @@ END INTERFACE LowerCase
 ! date: 5 Sept 2021
 ! summary:         Returns the LowerCase version of chars
 
-INTERFACE
+INTERFACE toLowerCase
   MODULE PURE SUBROUTINE ToLowerCase_Char(chars)
     CHARACTER(*), INTENT(INOUT) :: chars
   END SUBROUTINE ToLowerCase_Char
-END INTERFACE
-
-INTERFACE toLowerCase
-  MODULE PROCEDURE ToLowerCase_Char
 END INTERFACE toLowerCase
 
 !----------------------------------------------------------------------------
@@ -121,15 +105,11 @@ END INTERFACE toLowerCase
 ! date: 5 Sept 2021
 ! summary:         Returns true if the char is a space(32) or a tab(9).
 
-INTERFACE
+INTERFACE isWhiteChar
   MODULE PURE FUNCTION isWhiteChar_char(char) RESULT(Ans)
     CHARACTER(1), INTENT(IN) :: char
     LOGICAL(LGT) :: ans
   END FUNCTION isWhiteChar_char
-END INTERFACE
-
-INTERFACE isWhiteChar
-  MODULE PROCEDURE isWhiteChar_char
 END INTERFACE isWhiteChar
 
 !----------------------------------------------------------------------------
@@ -140,15 +120,11 @@ END INTERFACE isWhiteChar
 ! date: 5 Sept 2021
 ! summary:         Returns true of the entire string is blank
 
-INTERFACE
+INTERFACE isBlank
   MODULE PURE FUNCTION isBlank_chars(chars) RESULT(Ans)
     CHARACTER(*), INTENT(IN) :: chars
     LOGICAL(LGT) :: ans
   END FUNCTION isBlank_chars
-END INTERFACE
-
-INTERFACE isBlank
-  MODULE PROCEDURE isBlank_chars
 END INTERFACE isBlank
 
 !----------------------------------------------------------------------------
@@ -168,15 +144,11 @@ END INTERFACE isBlank
 ! (https://github.com/CASL/Futility/blob/master/src/IO_Strings.F90)
 !
 
-INTERFACE
+INTERFACE numStrings
   MODULE PURE FUNCTION numStrings_chars(chars) RESULT(Ans)
     CHARACTER(*), INTENT(IN) :: chars
     INTEGER(I4B) :: ans
   END FUNCTION numStrings_chars
-END INTERFACE
-
-INTERFACE numStrings
-  MODULE PROCEDURE numStrings_chars
 END INTERFACE numStrings
 
 !----------------------------------------------------------------------------
@@ -188,16 +160,12 @@ END INTERFACE numStrings
 ! summary: Returns the total number of times the substring pattern is
 ! found in the main string
 
-INTERFACE
+INTERFACE numMatchStr
   MODULE PURE FUNCTION numMatchStr_chars(chars, pattern) RESULT(Ans)
     CHARACTER(*), INTENT(IN) :: chars
     CHARACTER(*), INTENT(IN) :: pattern
     INTEGER(I4B) :: ans
   END FUNCTION numMatchStr_chars
-END INTERFACE
-
-INTERFACE numMatchStr
-  MODULE PROCEDURE numMatchStr_chars
 END INTERFACE numMatchStr
 
 !----------------------------------------------------------------------------
@@ -216,16 +184,12 @@ END INTERFACE numMatchStr
 ! strings should be trimmed when passing into function.
 !@endnote
 
-INTERFACE
+INTERFACE isPresent
   MODULE PURE FUNCTION isPresent_chars(chars, pattern) RESULT(Ans)
     CHARACTER(*), INTENT(IN) :: chars
     CHARACTER(*), INTENT(IN) :: pattern
     LOGICAL(LGT) :: ans
   END FUNCTION isPresent_chars
-END INTERFACE
-
-INTERFACE isPresent
-  MODULE PROCEDURE isPresent_chars
 END INTERFACE isPresent
 
 !----------------------------------------------------------------------------
@@ -236,16 +200,12 @@ END INTERFACE isPresent
 ! date: 5 sept 2021
 ! summary: Function returns the indices in a string where substring pattern
 
-INTERFACE
+INTERFACE strFind
   MODULE PURE SUBROUTINE strFind_chars(chars, pattern, indices)
     CHARACTER(*), INTENT(IN) :: chars
     CHARACTER(*), INTENT(IN) :: pattern
     INTEGER(I4B), ALLOCATABLE, INTENT(OUT) :: indices(:)
   END SUBROUTINE strFind_chars
-END INTERFACE
-
-INTERFACE strFind
-  MODULE PROCEDURE strFind_chars
 END INTERFACE strFind
 
 !----------------------------------------------------------------------------
@@ -268,38 +228,30 @@ END INTERFACE strFind
 ! spaces are counted in all strings.
 !@endnote
 
-INTERFACE
+INTERFACE FindReplace
   MODULE PURE SUBROUTINE FindReplace_chars(chars, findp, repp)
     CHARACTER(*), INTENT(INOUT) :: chars
     CHARACTER(*), INTENT(IN) :: findp
     CHARACTER(*), INTENT(IN) :: repp
   END SUBROUTINE FindReplace_chars
-END INTERFACE
-
-INTERFACE FindReplace
-  MODULE PROCEDURE FindReplace_chars
 END INTERFACE FindReplace
 
 !----------------------------------------------------------------------------
-!                                                    getField@StringMethods
+!                                                    GetField@StringMethods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 8 sept 2021
 ! summary: Replaces a substring pattern with a different substring in a string
 
-INTERFACE
-  MODULE PURE SUBROUTINE getField_chars(i, chars, field, ierr)
+INTERFACE GetField
+  MODULE PURE SUBROUTINE GetField_chars(i, chars, field, ierr)
     INTEGER(I4B), INTENT(IN) :: i
     CHARACTER(*), INTENT(IN) :: chars
     CHARACTER(:), ALLOCATABLE, INTENT(OUT) :: field
     INTEGER(I4B), INTENT(OUT), OPTIONAL :: ierr
-  END SUBROUTINE getField_chars
-END INTERFACE
-
-INTERFACE getField
-  MODULE PROCEDURE getField_chars
-END INTERFACE getField
+  END SUBROUTINE GetField_chars
+END INTERFACE GetField
 
 !----------------------------------------------------------------------------
 !                                                    SlashRep@StringMethods
@@ -313,18 +265,14 @@ END INTERFACE getField
 !# Introduction
 ! This routine returns the path, filename, and extension.
 
-INTERFACE
+INTERFACE SlashRep
   MODULE PURE SUBROUTINE SlashRep_chars(chars)
     CHARACTER(*), INTENT(INOUT) :: chars
   END SUBROUTINE SlashRep_chars
-END INTERFACE
-
-INTERFACE SlashRep
-  MODULE PROCEDURE SlashRep_chars
 END INTERFACE SlashRep
 
 !----------------------------------------------------------------------------
-!                                                getFileParts@StringMethods
+!                                                GetFileParts@StringMethods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -334,88 +282,68 @@ END INTERFACE SlashRep
 !# Introduction
 ! This routine returns the path, filename, and extension.
 
-INTERFACE
-  MODULE PURE SUBROUTINE getFileParts_chars(chars, path, fname, ext)
+INTERFACE GetFileParts
+  MODULE PURE SUBROUTINE GetFileParts_chars(chars, path, fname, ext)
     CHARACTER(*), INTENT(IN) :: chars
     CHARACTER(*), INTENT(OUT) :: path
     CHARACTER(*), INTENT(OUT) :: fname
     CHARACTER(*), INTENT(OUT) :: ext
-  END SUBROUTINE getFileParts_chars
-END INTERFACE
-
-INTERFACE getFileParts
-  MODULE PROCEDURE getFileParts_chars
-END INTERFACE getFileParts
+  END SUBROUTINE GetFileParts_chars
+END INTERFACE GetFileParts
 
 !----------------------------------------------------------------------------
-!                                                getPath@StringMethods
+!                                                GetPath@StringMethods
 !----------------------------------------------------------------------------
 
-INTERFACE
-  MODULE PURE SUBROUTINE getPath_chars(chars, path)
+INTERFACE GetPath
+  MODULE PURE SUBROUTINE GetPath_chars(chars, path)
     CHARACTER(*), INTENT(IN) :: chars
     CHARACTER(*), INTENT(OUT) :: path
-  END SUBROUTINE getPath_chars
-END INTERFACE
-
-INTERFACE getPath
-  MODULE PROCEDURE getPath_chars
-END INTERFACE getPath
+  END SUBROUTINE GetPath_chars
+END INTERFACE GetPath
 
 !----------------------------------------------------------------------------
-!                                                getFileName@StringMethods
+!                                                GetFileName@StringMethods
 !----------------------------------------------------------------------------
 
-INTERFACE
-  MODULE PURE SUBROUTINE getFileName_chars(chars, fname)
+INTERFACE GetFileName
+  MODULE PURE SUBROUTINE GetFileName_chars(chars, fname)
     CHARACTER(*), INTENT(IN) :: chars
     CHARACTER(*), INTENT(OUT) :: fname
-  END SUBROUTINE getFileName_chars
-END INTERFACE
-
-INTERFACE getFileName
-  MODULE PROCEDURE getFileName_chars
-END INTERFACE getFileName
+  END SUBROUTINE GetFileName_chars
+END INTERFACE GetFileName
 
 !----------------------------------------------------------------------------
-!                                           getFileNameExt@StringMethods
+!                                           GetFileNameExt@StringMethods
 !----------------------------------------------------------------------------
 
-INTERFACE
-  MODULE PURE SUBROUTINE getFileNameExt_chars(chars, ext)
+INTERFACE GetFileNameExt
+  MODULE PURE SUBROUTINE GetFileNameExt_chars(chars, ext)
     CHARACTER(*), INTENT(IN) :: chars
     CHARACTER(*), INTENT(OUT) :: ext
-  END SUBROUTINE getFileNameExt_chars
-END INTERFACE
-
-INTERFACE getFileNameExt
-  MODULE PROCEDURE getFileNameExt_chars
-END INTERFACE getFileNameExt
+  END SUBROUTINE GetFileNameExt_chars
+END INTERFACE GetFileNameExt
 
 !----------------------------------------------------------------------------
-!                                                getExtension@StringMethods
+!                                                GetExtension@StringMethods
 !----------------------------------------------------------------------------
 
 !> author: Dr. Vikas Sharma
 !
-! This function get the extension from a file
+! This function Get the extension from a file
 !
 ! ## Usage
 ! ```fortran
-! call display( getExtension("helloworld.F90") .EQ. "f90", &
+! call display( GetExtension("helloworld.F90") .EQ. "f90", &
 ! & msg="test1:: ")
 ! ```
 
-INTERFACE
-  MODULE FUNCTION getExtension_chars(char) RESULT(ext)
+INTERFACE GetExtension
+  MODULE FUNCTION GetExtension_chars(char) RESULT(ext)
     CHARACTER(*), INTENT(IN) :: char
-    CHARACTER(7) :: ext
+    CHARACTER(:), ALLOCATABLE :: ext
   END FUNCTION
-END INTERFACE
-
-INTERFACE getExtension
-  MODULE PROCEDURE getExtension_chars
-END INTERFACE getExtension
+END INTERFACE GetExtension
 
 !----------------------------------------------------------------------------
 !
