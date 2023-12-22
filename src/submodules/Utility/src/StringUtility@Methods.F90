@@ -346,8 +346,12 @@ MODULE PROCEDURE getExtension_chars
 INTEGER(I4B) :: n, m
 n = 0
 n = INDEX(char, ".", back=.TRUE.)
-m = LEN(char)
-ext = CHAR(n + 1:m)
+IF (n .EQ. 0) THEN
+  ext = ""
+ELSE
+  m = LEN(char)
+  ext = CHAR(n + 1:m)
+END IF
 END PROCEDURE getExtension_chars
 
 !----------------------------------------------------------------------------
