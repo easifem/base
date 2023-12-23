@@ -102,7 +102,7 @@ END PROCEDURE obj_GetNNZ_from_operation
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE GetNNZ_Add_Subtract
-INTEGER(I4B) :: ii, jcol, kb, jpos, ka
+INTEGER(I4B) :: ii, jcol, kb, ka
 LOGICAL(LGT) :: iw(ncol)
 ans = 0
 
@@ -311,7 +311,7 @@ ans(2) = obj%IA(irow + 1) - 1
 END PROCEDURE obj_GetColIndex1
 
 !----------------------------------------------------------------------------
-!                                                              startColumn
+!                                                                startColumn
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE obj_startColumn1
@@ -319,11 +319,27 @@ ans = obj%IA(irow)
 END PROCEDURE obj_startColumn1
 
 !----------------------------------------------------------------------------
-!                                                              endColumn
+!                                                                  endColumn
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE obj_endColumn1
 ans = obj%IA(irow + 1) - 1
 END PROCEDURE obj_endColumn1
+
+!----------------------------------------------------------------------------
+!                                                                      GetIA
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE obj_GetIA
+ans = obj%IA(irow)
+END PROCEDURE obj_GetIA
+
+!----------------------------------------------------------------------------
+!                                                                     GetJA
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE obj_GetJA
+ans = obj%JA(indx)
+END PROCEDURE obj_GetJA
 
 END SUBMODULE GetMethods
