@@ -232,12 +232,11 @@ REAL(DFP), ALLOCATABLE :: A(:), rval(:)
 TYPE(String) :: aline
 CHARACTER(1024) :: iomsg
 CHARACTER(50) :: rep, field, symm
-!
+
 ! Open file
-!
 OPEN (FILE=filename, NEWUNIT=unitno, STATUS="OLD", ACTION="READ", &
   & IOSTAT=iostat, iomsg=iomsg)
-!
+
 IF (iostat .NE. 0) THEN
   CALL ErrorMSG(&
     & msg="Error in opening file, following msg = "//TRIM(iomsg), &
@@ -247,10 +246,10 @@ IF (iostat .NE. 0) THEN
     & unitno=stderr)
   RETURN
 END IF
-!
+
 CALL MMRead(unitno=unitno, rep=rep, field=field, symm=symm, rows=rows, &
   & cols=cols, nnz=nnz, indx=indx, jndx=jndx, rval=rval)
-!
+
 CALL toUpperCase(symm)
 IF (symm .EQ. "SYMMETRIC") THEN
   symm = "SYM"
@@ -259,15 +258,13 @@ ELSEIF (symm .EQ. "SKEW-SYMMETRIC") THEN
 ELSE
   symm = "UNSYM"
 END IF
-!
+
 ALLOCATE (IA(rows + 1), JA(nnz), A(nnz))
-!
+
 ! Call COOCSR from sparsekit
-!
 CALL COOCSR(rows, nnz, rval, indx, jndx, A, JA, IA)
-!
 CALL Initiate(obj=obj, A=A, IA=IA, JA=JA, MatrixProp=symm)
-!
+
 CLOSE (unitNo)
 DEALLOCATE (indx, jndx, rval, IA, JA, A)
 END PROCEDURE obj_IMPORT
