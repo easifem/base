@@ -137,11 +137,15 @@ END PROCEDURE obj_Initiate2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE obj_Initiate3
-CALL DEALLOCATE (obj)
+CALL Initiate(obj=obj%csr, IA=IA, JA=JA, ncol=ncol)
 obj%csrOwnership = .TRUE.
 IF (PRESENT(matrixProp)) obj%matrixProp = TRIM(matrixProp)
-CALL Initiate(obj=obj%csr, IA=IA, JA=JA, ncol=ncol)
+CALL Reallocate(obj%A, SIZE(A))
+#ifdef USE_BLAS95
+CALL Copy(y=obj%A, x=A)
+#else
 obj%A = A
+#endif
 CALL SetTotalDimension(obj, 2_I4B)
 CALL SetSparsity(obj)
 END PROCEDURE obj_Initiate3
