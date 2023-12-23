@@ -43,6 +43,8 @@ PUBLIC :: OPERATOR(.startColumn.)
 PUBLIC :: OPERATOR(.endColumn.)
 PUBLIC :: SetIA
 PUBLIC :: SetJA
+PUBLIC :: GetIA
+PUBLIC :: GetJA
 
 !----------------------------------------------------------------------------
 !                                               Initiate@ConstructorMethods
@@ -722,7 +724,7 @@ INTERFACE SetSparsity
 END INTERFACE SetSparsity
 
 !----------------------------------------------------------------------------
-!                                                        SetIA@GetMethods
+!                                                        SetIA@SetMethods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -738,7 +740,7 @@ INTERFACE SetIA
 END INTERFACE SetIA
 
 !----------------------------------------------------------------------------
-!                                                        SetJA@GetMethods
+!                                                        SetJA@SetMethods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -752,6 +754,38 @@ INTERFACE SetJA
     INTEGER(I4B), INTENT(IN) :: VALUE
   END SUBROUTINE obj_SetJA
 END INTERFACE SetJA
+
+!----------------------------------------------------------------------------
+!                                                          GetIA@GetMethods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2023-12-23
+! summary:  Get entry from IA
+
+INTERFACE GetIA
+  MODULE PURE FUNCTION obj_GetIA(obj, irow) RESULT(ans)
+    TYPE(CSRSparsity_), INTENT(IN) :: obj
+    INTEGER(I4B), INTENT(IN) :: irow
+    INTEGER(I4B) :: ans
+  END FUNCTION obj_GetIA
+END INTERFACE GetIA
+
+!----------------------------------------------------------------------------
+!                                                        GetJA@GetMethods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2023-12-14
+! summary:  Get entry from JA
+
+INTERFACE GetJA
+  MODULE PURE FUNCTION obj_GetJA(obj, indx) RESULT(ans)
+    TYPE(CSRSparsity_), INTENT(IN) :: obj
+    INTEGER(I4B), INTENT(IN) :: indx
+    INTEGER(I4B) :: ans
+  END FUNCTION obj_GetJA
+END INTERFACE GetJA
 
 !----------------------------------------------------------------------------
 !                                                         GetSym@SymMethods
