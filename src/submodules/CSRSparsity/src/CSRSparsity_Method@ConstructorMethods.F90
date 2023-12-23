@@ -63,7 +63,8 @@ IF (isok) THEN
   problem = tnodes1 .NE. nrow .OR. tnodes2 .NE. ncol
   IF (problem) THEN
     CALL ErrorMSG( &
-    & "Size of the matrix does not conform with the dof data!", &
+    & "Size of the matrix does not conform with the dof data! "//  &
+    & "tNodes1 = "//tostring(tnodes1)//" tNodes2="//tostring(tNodes2),  &
     & "CSRSparsity_Method@Constructor.F90", &
     & "obj_initiate1()", &
     & __LINE__, stderr)
@@ -98,7 +99,7 @@ CALL Reallocate(obj%IA, nrow + 1)
 CALL Reallocate(obj%idiag, nrow)
 
 IF (obj%nnz .GT. 0) THEN
-  ALLOCATE (obj%row(obj%nnz), obj%JA(obj%nnz))
+  CALL Reallocate(obj%JA, obj%nnz)
 END IF
 
 END PROCEDURE obj_initiate1
@@ -136,16 +137,13 @@ END PROCEDURE obj_initiate2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE obj_Initiate3
-INTEGER(I4B) :: nrow, ncol0
+INTEGER(I4B) :: nrow, ncol0, nnz
 
-CALL DEALLOCATE (obj)
 nrow = SIZE(IA) - 1
-ncol0 = Input(default=MAXVAL(JA), option=ncol)
-CALL Initiate(obj=obj, nrow=nrow, ncol=ncol0)
-obj%nnz = SIZE(JA)
-CALL Reallocate(obj%IA, SIZE(IA))
+ncol0 = Input(default=nrow, option=ncol)
+nnz = SIZE(JA)
+CALL Initiate(obj=obj, nrow=nrow, ncol=ncol0, nnz=nnz)
 obj%IA = IA
-CALL Reallocate(obj%JA, SIZE(JA))
 obj%JA = JA
 END PROCEDURE obj_Initiate3
 
