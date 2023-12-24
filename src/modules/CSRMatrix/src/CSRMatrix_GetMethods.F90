@@ -329,6 +329,18 @@ INTERFACE GetValue
   END SUBROUTINE obj_Get2
 END INTERFACE GetValue
 
+INTERFACE GetValue
+  MODULE PURE SUBROUTINE obj_Get10(obj, irow, icolumn, VALUE)
+    TYPE(CSRMatrix_), INTENT(IN) :: obj
+    INTEGER(I4B), INTENT(IN) :: irow(:)
+    !! row index
+    INTEGER(I4B), INTENT(IN) :: icolumn(:)
+    !! column index
+    REAL(DFP), INTENT(INOUT) :: VALUE(:, :)
+    !! value
+  END SUBROUTINE obj_Get10
+END INTERFACE GetValue
+
 !----------------------------------------------------------------------------
 !                                                             Get@getMethods
 !----------------------------------------------------------------------------
@@ -541,6 +553,35 @@ INTERFACE GetValue
     REAL(DFP), INTENT(INOUT) :: VALUE
     !! scalar value to be Get
   END SUBROUTINE obj_Get7
+END INTERFACE GetValue
+
+!----------------------------------------------------------------------------
+!                                                           GetValue
+!----------------------------------------------------------------------------
+
+INTERFACE GetValue
+  MODULE PURE SUBROUTINE obj_Get9(obj, iNodeNum, jNodeNum, ivar,  &
+    & jvar, ispacecompo, itimecompo, jspacecompo, jtimecompo, VALUE)
+    TYPE(CSRMatrix_), INTENT(IN) :: obj
+    INTEGER(I4B), INTENT(IN) :: iNodeNum(:)
+    !! row node number
+    INTEGER(I4B), INTENT(IN) :: jNodeNum(:)
+    !! column node number
+    INTEGER(I4B), INTENT(IN) :: ivar
+    !! row physical variable
+    INTEGER(I4B), INTENT(IN) :: jvar
+    !! col physical variable
+    INTEGER(I4B), INTENT(IN) :: ispacecompo
+    !! row space component
+    INTEGER(I4B), INTENT(IN) :: itimecompo
+    !! row time component
+    INTEGER(I4B), INTENT(IN) :: jspacecompo
+    !! col space component
+    INTEGER(I4B), INTENT(IN) :: jtimecompo
+    !! col time component
+    REAL(DFP), INTENT(INOUT) :: VALUE(:, :)
+    !! scalar value to be Get
+  END SUBROUTINE obj_Get9
 END INTERFACE GetValue
 
 !----------------------------------------------------------------------------
