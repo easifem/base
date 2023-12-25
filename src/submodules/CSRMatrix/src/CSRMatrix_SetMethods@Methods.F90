@@ -113,10 +113,10 @@ END PROCEDURE obj_set3
 
 MODULE PROCEDURE obj_set4
 CALL set(obj=obj,  &
-  & irow=getNodeLoc( &
+  & irow=GetNodeLoc( &
           & obj=obj%csr%idof, &
           & nodenum=iNodeNum, idof=iDOF), &
-  & icolumn=getNodeLoc( &
+  & icolumn=GetNodeLoc( &
               & obj=obj%csr%jdof, &
               & nodenum=jNodeNum, idof=jDOF), &
   & VALUE=VALUE)
@@ -174,12 +174,12 @@ END PROCEDURE obj_set6
 
 MODULE PROCEDURE obj_set7
 CALL set(obj=obj, &
-  & irow=getNodeLoc( &
+  & irow=GetNodeLoc( &
   & obj=obj%csr%idof, &
   & nodenum=iNodeNum, &
   & ivar=ivar, &
   & idof=iDOF),&
-  & icolumn=getNodeLoc( &
+  & icolumn=GetNodeLoc( &
   & obj=obj%csr%jdof, &
   & nodenum=jNodeNum, &
   & ivar=jvar, &
@@ -220,13 +220,13 @@ END PROCEDURE obj_set8
 
 MODULE PROCEDURE obj_set9
 CALL set(obj=obj, &
-  & irow=getNodeLoc( &
+  & irow=GetNodeLoc( &
   & obj=obj%csr%idof, &
   & nodenum=iNodeNum, &
   & ivar=ivar, &
   & spacecompo=ispacecompo, &
   & timecompo=itimecompo),&
-  & icolumn=getNodeLoc( &
+  & icolumn=GetNodeLoc( &
   & obj=obj%csr%jdof, &
   & nodenum=jNodeNum, &
   & ivar=jvar, &
@@ -271,8 +271,8 @@ MODULE PROCEDURE obj_set11
 INTEGER(I4B), ALLOCATABLE :: row(:), col(:)
 INTEGER(I4B) :: ii, jj, kk
 !
-row = getNodeLoc(obj=obj%csr%idof, nodeNum=iNodeNum, ivar=ivar, idof=idof)
-col = getNodeLoc(obj=obj%csr%jdof, nodeNum=jNodeNum, ivar=jvar, idof=jdof)
+row = GetNodeLoc(obj=obj%csr%idof, nodeNum=iNodeNum, ivar=ivar, idof=idof)
+col = GetNodeLoc(obj=obj%csr%jdof, nodeNum=jNodeNum, ivar=jvar, idof=jdof)
 !
 DO ii = 1, SIZE(row)
   DO kk = 1, SIZE(col)
@@ -298,9 +298,9 @@ MODULE PROCEDURE obj_set12
 INTEGER(I4B), ALLOCATABLE :: row(:), col(:)
 INTEGER(I4B) :: ii, jj, kk
 !
-row = getNodeLoc(obj=obj%csr%idof, nodeNum=iNodeNum, ivar=ivar, &
+row = GetNodeLoc(obj=obj%csr%idof, nodeNum=iNodeNum, ivar=ivar, &
   & spacecompo=ispacecompo, timecompo=itimecompo)
-col = getNodeLoc(obj=obj%csr%jdof, nodeNum=jNodeNum, ivar=jvar, &
+col = GetNodeLoc(obj=obj%csr%jdof, nodeNum=jNodeNum, ivar=jvar, &
   & spacecompo=jspacecompo, timecompo=jtimecompo)
 !
 DO ii = 1, SIZE(row)
@@ -327,9 +327,9 @@ MODULE PROCEDURE obj_set13
 INTEGER(I4B), ALLOCATABLE :: row(:), col(:)
 INTEGER(I4B) :: ii, jj, kk
 !
-row = getNodeLoc(obj=obj%csr%idof, nodeNum=iNodeNum, ivar=ivar, &
+row = GetNodeLoc(obj=obj%csr%idof, nodeNum=iNodeNum, ivar=ivar, &
   & spacecompo=ispacecompo, timecompo=itimecompo)
-col = getNodeLoc(obj=obj%csr%jdof, nodeNum=jNodeNum, ivar=jvar, &
+col = GetNodeLoc(obj=obj%csr%jdof, nodeNum=jNodeNum, ivar=jvar, &
   & spacecompo=jspacecompo, timecompo=jtimecompo)
 !
 DO ii = 1, SIZE(row)
@@ -356,9 +356,9 @@ MODULE PROCEDURE obj_set14
 INTEGER(I4B), ALLOCATABLE :: row(:), col(:)
 INTEGER(I4B) :: ii, jj, kk
 
-row = getNodeLoc(obj=obj%csr%idof, nodeNum=iNodeNum, ivar=ivar, &
+row = GetNodeLoc(obj=obj%csr%idof, nodeNum=iNodeNum, ivar=ivar, &
   & spacecompo=ispacecompo, timecompo=itimecompo)
-col = getNodeLoc(obj=obj%csr%jdof, nodeNum=jNodeNum, ivar=jvar, &
+col = GetNodeLoc(obj=obj%csr%jdof, nodeNum=jNodeNum, ivar=jvar, &
   & spacecompo=jspacecompo, timecompo=jtimecompo)
 DO ii = 1, SIZE(row)
   DO kk = 1, SIZE(col)

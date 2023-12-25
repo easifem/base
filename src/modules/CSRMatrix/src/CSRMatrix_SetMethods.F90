@@ -504,8 +504,8 @@ END INTERFACE Set
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date:         22 March 2021
-! summary:         Sets the specific row and column entry to a given value
+! date: 2023-12-25
+! summary: Sets the specific row and column entry to a given value
 
 INTERFACE Set
   MODULE PURE SUBROUTINE obj_Set14(obj, iNodeNum, jNodeNum, ivar,  &

@@ -230,6 +230,25 @@ END DO
 END PROCEDURE obj_Get2
 
 !----------------------------------------------------------------------------
+!                                                               GetValue
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE obj_Get10
+INTEGER(I4B) :: ii, jj, m, n
+
+VALUE = 0.0_DFP
+m = SIZE(irow)
+n = SIZE(icolumn)
+DO ii = 1, m
+  DO jj = 1, n
+    CALL GetValue(obj=obj, VALUE=VALUE(ii, jj), irow=irow(ii),  &
+      & icolumn=icolumn(jj))
+  END DO
+END DO
+
+END PROCEDURE obj_Get10
+
+!----------------------------------------------------------------------------
 !                                                                   GetValue
 !----------------------------------------------------------------------------
 
@@ -323,6 +342,31 @@ icolumn = GetNodeLoc( &
 
 CALL GetValue(obj=obj, irow=irow, icolumn=icolumn, VALUE=VALUE)
 END PROCEDURE obj_Get7
+
+!----------------------------------------------------------------------------
+!                                                                   GetValue
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE obj_Get9
+INTEGER(I4B) :: irow(SIZE(iNodeNum)), icolumn(SIZE(jNodeNum))
+
+irow = GetNodeLoc( &
+  & obj=obj%csr%idof, &
+  & nodenum=iNodeNum, &
+  & ivar=ivar, &
+  & spacecompo=ispacecompo, &
+  & timecompo=itimecompo)
+
+icolumn = GetNodeLoc( &
+    & obj=obj%csr%jdof, &
+    & nodenum=jNodeNum, &
+    & ivar=jvar, &
+    & spacecompo=jspacecompo, &
+    & timecompo=jtimecompo)
+
+CALL GetValue(obj=obj, irow=irow, icolumn=icolumn, VALUE=VALUE)
+!! Get10
+END PROCEDURE obj_Get9
 
 !----------------------------------------------------------------------------
 !                                                             GetValue
