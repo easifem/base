@@ -25,7 +25,7 @@ CONTAINS
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE ASUMscalar
-Ans = ASUM(obj%Val)
+ans = ASUM(obj%Val)
 END PROCEDURE ASUMscalar
 
 !----------------------------------------------------------------------------
@@ -35,7 +35,7 @@ END PROCEDURE ASUMscalar
 MODULE PROCEDURE ASUMvector
 INTEGER(I4B) :: i
 DO i = 1, SIZE(obj)
-  Ans = Ans + ASUM(obj(i)%Val)
+  ans = ans + ASUM(obj(i)%Val)
 END DO
 END PROCEDURE ASUMvector
 
@@ -184,11 +184,11 @@ END PROCEDURE Compact_Int_1
 !                                                                       DOT
 !----------------------------------------------------------------------------
 
-PURE FUNCTION inner_dot(obj1, obj2) RESULT(Ans)
+PURE FUNCTION inner_dot(obj1, obj2) RESULT(ans)
   REAL(DFP), INTENT(IN) :: obj1(:)
   REAL(DFP), INTENT(IN) :: obj2(:)
-  REAL(DFP) :: Ans
-  Ans = DOT(obj1, obj2)
+  REAL(DFP) :: ans
+  ans = DOT(obj1, obj2)
 END FUNCTION inner_dot
 
 !----------------------------------------------------------------------------
@@ -196,7 +196,7 @@ END FUNCTION inner_dot
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE scalarDOTscalar
-Ans = inner_dot(obj1%Val, obj2%Val)
+ans = inner_dot(obj1%Val, obj2%Val)
 END PROCEDURE scalarDOTscalar
 
 !----------------------------------------------------------------------------
@@ -204,7 +204,7 @@ END PROCEDURE scalarDOTscalar
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE scalarDOTintrinsic
-Ans = inner_dot(obj%val, val)
+ans = inner_dot(obj%val, val)
 END PROCEDURE scalarDOTintrinsic
 
 !----------------------------------------------------------------------------
@@ -213,9 +213,9 @@ END PROCEDURE scalarDOTintrinsic
 
 MODULE PROCEDURE vectorDOTvector
 INTEGER(I4B) :: i
-Ans = 0.0
+ans = 0.0
 DO i = 1, SIZE(obj1)
-  Ans = Ans + DOT_PRODUCT(obj1(i), obj2(i))
+  ans = ans + DOT_PRODUCT(obj1(i), obj2(i))
 END DO
 END PROCEDURE vectorDOTvector
 
@@ -225,9 +225,9 @@ END PROCEDURE vectorDOTvector
 
 MODULE PROCEDURE vectorDOTscalar
 INTEGER(I4B) :: i
-Ans = 0.0
+ans = 0.0
 DO i = 1, SIZE(obj1)
-  Ans = Ans + DOT_PRODUCT(obj1(i)%Val, obj2%Val)
+  ans = ans + DOT_PRODUCT(obj1(i)%Val, obj2%Val)
 END DO
 END PROCEDURE vectorDOTscalar
 
@@ -237,9 +237,9 @@ END PROCEDURE vectorDOTscalar
 
 MODULE PROCEDURE scalarDOTvector
 INTEGER(I4B) :: i
-Ans = 0.0
+ans = 0.0
 DO i = 1, SIZE(obj2)
-  Ans = Ans + DOT_PRODUCT(obj1%Val, obj2(i)%Val)
+  ans = ans + DOT_PRODUCT(obj1%Val, obj2(i)%Val)
 END DO
 END PROCEDURE scalarDOTvector
 
@@ -247,10 +247,10 @@ END PROCEDURE scalarDOTvector
 !                                                                      NRM2
 !----------------------------------------------------------------------------
 
-PURE FUNCTION inner_nrm2(X) RESULT(Ans)
+PURE FUNCTION inner_nrm2(X) RESULT(ans)
   REAL(DFP), INTENT(IN) :: X(:)
-  REAL(DFP) :: Ans
-  Ans = NRM2(X) ! blas
+  REAL(DFP) :: ans
+  ans = NRM2(X) ! blas
 END FUNCTION inner_nrm2
 
 !----------------------------------------------------------------------------
@@ -258,7 +258,7 @@ END FUNCTION inner_nrm2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE NRM2scalar
-Ans = inner_nrm2(obj%Val)
+ans = inner_nrm2(obj%Val)
 END PROCEDURE NRM2scalar
 
 !----------------------------------------------------------------------------
@@ -266,8 +266,24 @@ END PROCEDURE NRM2scalar
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE NRM2vector
-Ans = SQRT(DOT_PRODUCT(obj, obj))
+ans = SQRT(DOT_PRODUCT(obj, obj))
 END PROCEDURE NRM2vector
+
+!----------------------------------------------------------------------------
+!                                                                     NORM2
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE obj_Norm1
+ans = ASUM(obj)
+END PROCEDURE obj_Norm1
+
+!----------------------------------------------------------------------------
+!                                                                     NORM2
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE obj_Normi
+ans = MAXVAL(ABS(obj%val))
+END PROCEDURE obj_Normi
 
 !----------------------------------------------------------------------------
 !                                                                      SWAP
