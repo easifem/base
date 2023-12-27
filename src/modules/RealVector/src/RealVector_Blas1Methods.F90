@@ -30,6 +30,8 @@ PUBLIC :: COPY
 PUBLIC :: Compact
 PUBLIC :: DOT_PRODUCT
 PUBLIC :: NORM2
+PUBLIC :: NORM1
+PUBLIC :: NORMi
 PUBLIC :: SWAP
 PUBLIC :: SCAL
 
@@ -63,9 +65,9 @@ PUBLIC :: SCAL
 !@endtodo
 
 INTERFACE asum
-  MODULE FUNCTION ASUMScalar(obj) RESULT(Ans)
+  MODULE FUNCTION ASUMScalar(obj) RESULT(ans)
     CLASS(RealVector_), INTENT(IN) :: obj
-    REAL(DFP) :: Ans
+    REAL(DFP) :: ans
   END FUNCTION ASUMScalar
 END INTERFACE asum
 
@@ -127,9 +129,9 @@ END INTERFACE asum
 !```
 
 INTERFACE asum
-  MODULE FUNCTION ASUMvector(obj) RESULT(Ans)
+  MODULE FUNCTION ASUMvector(obj) RESULT(ans)
     CLASS(RealVector_), INTENT(IN) :: obj(:)
-    REAL(DFP) :: Ans
+    REAL(DFP) :: ans
   END FUNCTION ASUMvector
 END INTERFACE asum
 
@@ -185,7 +187,7 @@ END INTERFACE AXPY
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date:         8 March 2021
+! date: 8 March 2021
 ! summary: This subroutine computes AXPY
 !
 !# Introduction
@@ -216,7 +218,7 @@ END INTERFACE AXPY
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date:         8 March 2021
+! date: 8 March 2021
 ! summary: This subroutine computes AXPY
 !
 !# Introduction
@@ -268,8 +270,8 @@ END INTERFACE AXPY
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date:         25 Feb 2021
-! summary:         This routine copies one vector into another
+! date: 25 Feb 2021
+! summary: This routine copies one vector into another
 !
 !# Introduction
 ! This subroutine copies one [[RealVector_]] object into another object, i.e.
@@ -279,7 +281,7 @@ END INTERFACE AXPY
 ! style="max-width:500px;"/>
 !
 !@note
-!         This subroutine internally uses [[intrinsicCOPYintrinsic]] routine.
+! This subroutine internally uses [[intrinsicCOPYintrinsic]] routine.
 !@endnote
 !
 !### Usage
@@ -309,14 +311,14 @@ END INTERFACE copy
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date:         25 Feb 2021
-! summary:         This routine copies one vector into another
+! date: 25 Feb 2021
+! summary: This routine copies one vector into another
 !
 !# Introduction
 ! This subroutine copy a fortran vector into [[RealVector_]] obj, i.e. `Y=X`
 !
 !@note
-!         This subroutine internally uses [[intrinsicCOPYintrinsic]] routine.
+! This subroutine internally uses [[intrinsicCOPYintrinsic]] routine.
 !@endnote
 !
 !### Usage
@@ -357,15 +359,15 @@ END INTERFACE copy
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date:         25 Feb 2021
-! summary:         This routine copies one vector into another
+! date: 25 Feb 2021
+! summary: This routine copies one vector into another
 !
 !# Introduction
 ! This subroutine copy an instance of [[RealVector_]] in another fortran
 ! vector, i.e. `Val=obj`
 !
 !@note
-!         This subroutine internally calls [[intrinsicCOPYintrinsic]]. Also `Val`
+! This subroutine internally calls [[intrinsicCOPYintrinsic]]. Also `Val`
 ! is allocatable.
 !@endnote
 !
@@ -408,8 +410,8 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date:         25 Feb 2021
-! summary:         This routine copies one vector into another
+! date: 25 Feb 2021
+! summary: This routine copies one vector into another
 !
 !# Introduction
 ! This subroutine copy a vector of [[RealVector_]] into another vector, i.e.
@@ -454,8 +456,8 @@ END INTERFACE copy
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date:         25 Feb 2021
-! summary:         This routine copies one vector into another
+! date: 25 Feb 2021
+! summary: This routine copies one vector into another
 !
 !# Introduction
 ! This subroutine copies a vector of [[RealVector_]] into a scalar instance
@@ -506,8 +508,8 @@ END INTERFACE Compact
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date:         25 Feb 2021
-! summary:         This routine returns dot product of two [[RealVector_]]
+! date: 25 Feb 2021
+! summary: This routine returns dot product of two [[RealVector_]]
 !
 !@todo
 ! type(_obj_) :: obj1, obj2
@@ -517,9 +519,9 @@ END INTERFACE Compact
 !@endtodo
 
 INTERFACE DOT_PRODUCT
-  MODULE PURE FUNCTION scalarDOTscalar(obj1, obj2) RESULT(Ans)
+  MODULE PURE FUNCTION scalarDOTscalar(obj1, obj2) RESULT(ans)
     CLASS(RealVector_), INTENT(IN) :: obj1, obj2
-    REAL(DFP) :: Ans
+    REAL(DFP) :: ans
   END FUNCTION scalarDOTscalar
 END INTERFACE DOT_PRODUCT
 
@@ -528,8 +530,8 @@ END INTERFACE DOT_PRODUCT
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date:         25 Feb 2021
-! summary:         This routine computes dot product of a fortran array and scalar
+! date: 25 Feb 2021
+! summary: This routine computes dot product of a fortran array and scalar
 ! instance of [[RealVector_]]
 !
 !@todo
@@ -541,10 +543,10 @@ END INTERFACE DOT_PRODUCT
 !@endtodo
 
 INTERFACE DOT_PRODUCT
-  MODULE PURE FUNCTION scalarDOTintrinsic(obj, Val) RESULT(Ans)
+  MODULE PURE FUNCTION scalarDOTintrinsic(obj, Val) RESULT(ans)
     REAL(DFP), INTENT(IN) :: Val(:)
     CLASS(RealVector_), INTENT(IN) :: obj
-    REAL(DFP) :: Ans
+    REAL(DFP) :: ans
   END FUNCTION scalarDOTintrinsic
 END INTERFACE DOT_PRODUCT
 
@@ -553,8 +555,8 @@ END INTERFACE DOT_PRODUCT
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date:         25 Feb 2021
-! summary:         This routines returns the dot product of vector of
+! date:  25 Feb 2021
+! summary:   This routines returns the dot product of vector of
 ! [[RealVector_]] data type.
 !
 !@todo
@@ -566,9 +568,9 @@ END INTERFACE DOT_PRODUCT
 !@endtodo
 
 INTERFACE DOT_PRODUCT
-  MODULE PURE FUNCTION vectorDOTvector(obj1, obj2) RESULT(Ans)
+  MODULE PURE FUNCTION vectorDOTvector(obj1, obj2) RESULT(ans)
     CLASS(RealVector_), INTENT(IN) :: obj1(:), obj2(:)
-    REAL(DFP) :: Ans
+    REAL(DFP) :: ans
   END FUNCTION vectorDOTvector
 END INTERFACE DOT_PRODUCT
 
@@ -577,8 +579,8 @@ END INTERFACE DOT_PRODUCT
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date:         25 Feb 2021
-! summary:         This routine computes dot product of a vector of [[RealVector_]]
+! date:    25 Feb 2021
+! summary: This routine computes dot product of a vector of [[RealVector_]]
 ! and scalar of [[RealVector_]]
 !
 !@todo
@@ -590,9 +592,9 @@ END INTERFACE DOT_PRODUCT
 !@endtodo
 
 INTERFACE DOT_PRODUCT
-  MODULE PURE FUNCTION vectorDOTscalar(obj1, obj2) RESULT(Ans)
+  MODULE PURE FUNCTION vectorDOTscalar(obj1, obj2) RESULT(ans)
     CLASS(RealVector_), INTENT(IN) :: obj1(:), obj2
-    REAL(DFP) :: Ans
+    REAL(DFP) :: ans
   END FUNCTION vectorDOTscalar
 END INTERFACE DOT_PRODUCT
 
@@ -601,8 +603,8 @@ END INTERFACE DOT_PRODUCT
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date:         25 Feb 2021
-! summary:         This routine computes dot product of a scalar of [[RealVector_]]
+! date:    25 Feb 2021
+! summary:  This routine computes dot product of a scalar of [[RealVector_]]
 ! and vector of [[RealVector_]]
 !
 !### Usage
@@ -616,9 +618,9 @@ END INTERFACE DOT_PRODUCT
 !```
 
 INTERFACE DOT_PRODUCT
-  MODULE PURE FUNCTION scalarDOTvector(obj1, obj2) RESULT(Ans)
+  MODULE PURE FUNCTION scalarDOTvector(obj1, obj2) RESULT(ans)
     CLASS(RealVector_), INTENT(IN) :: obj1, obj2(:)
-    REAL(DFP) :: Ans
+    REAL(DFP) :: ans
   END FUNCTION scalarDOTvector
 END INTERFACE DOT_PRODUCT
 
@@ -627,8 +629,8 @@ END INTERFACE DOT_PRODUCT
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date:         25 Feb 2021
-! summary:         This function computes Euclidean norm of [[RealVector_]]
+! date:    25 Feb 2021
+! summary: This function computes Euclidean norm of [[RealVector_]]
 !
 !# Introduction
 !
@@ -647,9 +649,9 @@ END INTERFACE DOT_PRODUCT
 !```
 
 INTERFACE NORM2
-  MODULE PURE FUNCTION NRM2scalar(obj) RESULT(Ans)
+  MODULE PURE FUNCTION NRM2scalar(obj) RESULT(ans)
     CLASS(RealVector_), INTENT(IN) :: obj
-    REAL(DFP) :: Ans
+    REAL(DFP) :: ans
   END FUNCTION NRM2scalar
 END INTERFACE NORM2
 
@@ -658,8 +660,8 @@ END INTERFACE NORM2
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date:         25 Feb 2021
-! summary:         This routine computes the L2 norm of [[RealVector_]]
+! date: 25 Feb 2021
+! summary:   This routine computes the L2 norm of [[RealVector_]]
 !
 !# Introduction
 !
@@ -678,11 +680,41 @@ END INTERFACE NORM2
 !@endtodo
 
 INTERFACE NORM2
-  MODULE PURE FUNCTION NRM2vector(obj) RESULT(Ans)
+  MODULE PURE FUNCTION NRM2vector(obj) RESULT(ans)
     CLASS(RealVector_), INTENT(IN) :: obj(:)
-    REAL(DFP) :: Ans
+    REAL(DFP) :: ans
   END FUNCTION NRM2vector
 END INTERFACE NORM2
+
+!----------------------------------------------------------------------------
+!                                                                Norm2@BLAS1
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:    25 Feb 2021
+! summary: This function computes the l1 norm
+
+INTERFACE NORM1
+  MODULE FUNCTION obj_NORM1(obj) RESULT(ans)
+    CLASS(RealVector_), INTENT(IN) :: obj
+    REAL(DFP) :: ans
+  END FUNCTION obj_NORM1
+END INTERFACE NORM1
+
+!----------------------------------------------------------------------------
+!                                                                Norm2@BLAS1
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:    25 Feb 2021
+! summary: This function computes the l1 norm
+
+INTERFACE NORMi
+  MODULE FUNCTION obj_NORMi(obj) RESULT(ans)
+    CLASS(RealVector_), INTENT(IN) :: obj
+    REAL(DFP) :: ans
+  END FUNCTION obj_NORMi
+END INTERFACE NORMi
 
 !----------------------------------------------------------------------------
 !                                                                 SWAP@BLAS1
