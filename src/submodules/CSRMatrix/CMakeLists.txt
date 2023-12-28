@@ -30,6 +30,7 @@ target_sources(
           ${src_path}/CSRMatrix_IOMethods@Methods.F90
           ${src_path}/CSRMatrix_LUSolveMethods@Methods.F90
           ${src_path}/CSRMatrix_MatVecMethods@Methods.F90
+          ${src_path}/CSRMatrix_SymMatmulMethods@Methods.F90
           ${src_path}/CSRMatrix_ReorderingMethods@Methods.F90
           ${src_path}/CSRMatrix_SetBlockColMethods@Methods.F90
           ${src_path}/CSRMatrix_SetBlockRowMethods@Methods.F90
@@ -41,9 +42,6 @@ target_sources(
           ${src_path}/CSRMatrix_SpectralMethods@Methods.F90
           ${src_path}/CSRMatrix_MatrixMarketIO@Methods.F90
           ${src_path}/CSRMatrix_DBCMethods@Methods.F90
-          ${src_path}/CSRMatrix_LinSolveMethods@Methods.F90)
-
-set(src_path "${CMAKE_CURRENT_LIST_DIR}/src/")
-target_sources(
-  ${PROJECT_NAME} PRIVATE ${src_path}/CSRMatrix_SuperLU@Methods.F90
-                          ${src_path}/CSRMatrix_SchurMethods@Methods.F90)
+          ${src_path}/CSRMatrix_LinSolveMethods@Methods.F90
+          ${src_path}/CSRMatrix_SuperLU@Methods.F90
+          ${src_path}/CSRMatrix_SchurMethods@Methods.F90)

@@ -15,33 +15,27 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-MODULE CSRMatrix_MatmulMethods
+MODULE CSRMatrix_SymMatmulMethods
 USE GlobalData, ONLY: I4B, DFP, LGT
 USE BaseType, ONLY: CSRMatrix_
 IMPLICIT NONE
 PRIVATE
 
-! !----------------------------------------------------------------------------
-! !                                                           Matmul@MatVec
-! !----------------------------------------------------------------------------
+PUBLIC :: SymMatSquare
 
-! !> author: Vikas Sharma, Ph. D.
-! ! date: 14 July 2021
-! ! summary: Matrix vector multiplication
+!----------------------------------------------------------------------------
+!                                                             Matmul@MatVec
+!----------------------------------------------------------------------------
 
-! INTERFACE
-! MODULE FUNCTION csrMat_Matmul( obj, x, matvectype ) RESULT( Ans )
-!   TYPE( CSRMatrix_ ), INTENT( IN ) :: obj
-!   REAL( DFP ), INTENT( IN ) :: x( : )
-!   CHARACTER( LEN = * ), INTENT( IN ) :: matvectype
-!   REAL( DFP ) :: Ans( SIZE( x ) )
-! END FUNCTION csrMat_Matmul
-! END INTERFACE
+!> author: Vikas Sharma, Ph. D.
+! date: 2023-12-27
+! summary:  Returns A^2
 
-! INTERFACE Matmul
-!   MODULE PROCEDURE csrMat_Matmul
-! END INTERFACE Matmul
+INTERFACE SymMatSquare
+  MODULE SUBROUTINE obj_SymMatSquare(obj, A)
+    TYPE(CSRMatrix_), INTENT(INOUT) :: obj
+    TYPE(CSRMatrix_), INTENT(IN) :: A
+  END SUBROUTINE obj_SymMatSquare
+END INTERFACE SymMatSquare
 
-! PUBLIC :: Matmul
-
-END MODULE CSRMatrix_MatmulMethods
+END MODULE CSRMatrix_SymMatmulMethods

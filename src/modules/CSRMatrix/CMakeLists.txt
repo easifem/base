@@ -30,7 +30,7 @@ target_sources(
           ${src_path}/CSRMatrix_ILUMethods.F90
           ${src_path}/CSRMatrix_IOMethods.F90
           ${src_path}/CSRMatrix_LUSolveMethods.F90
-          ${src_path}/CSRMatrix_MatmulMethods.F90
+          ${src_path}/CSRMatrix_SymMatmulMethods.F90
           ${src_path}/CSRMatrix_MatVecMethods.F90
           ${src_path}/CSRMatrix_ReorderingMethods.F90
           ${src_path}/CSRMatrix_SetBlockColMethods.F90
