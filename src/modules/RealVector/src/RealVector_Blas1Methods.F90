@@ -34,6 +34,9 @@ PUBLIC :: NORM1
 PUBLIC :: NORMi
 PUBLIC :: SWAP
 PUBLIC :: SCAL
+PUBLIC :: PMUL
+PUBLIC :: PDIV
+PUBLIC :: Reciprocal
 
 !----------------------------------------------------------------------------
 !                                                                 ASUM@BLAS1
@@ -752,5 +755,54 @@ INTERFACE SCAL
     REAL(DFP), INTENT(IN) :: A
   END SUBROUTINE SCALvector
 END INTERFACE SCAL
+
+!----------------------------------------------------------------------------
+!                                                                 PMUL@BLAS1
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2023-12-28
+! summary:  obj = obj1 * obj2
+
+INTERFACE PMUL
+  MODULE SUBROUTINE obj_PMUL1(obj, obj1, obj2)
+    CLASS(RealVector_), INTENT(INOUT) :: obj
+    CLASS(RealVector_), INTENT(IN) :: obj1
+    CLASS(RealVector_), INTENT(IN) :: obj2
+  END SUBROUTINE obj_PMUL1
+END INTERFACE PMUL
+
+!----------------------------------------------------------------------------
+!                                                                 PMUL@BLAS1
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2023-12-28
+! summary:  obj = obj1 / obj2
+
+INTERFACE PDIV
+  MODULE SUBROUTINE obj_PDIV1(obj, obj1, obj2, check_divide_by_zero)
+    CLASS(RealVector_), INTENT(INOUT) :: obj
+    CLASS(RealVector_), INTENT(IN) :: obj1
+    CLASS(RealVector_), INTENT(IN) :: obj2
+    LOGICAL(LGT), OPTIONAL, INTENT(IN) :: check_divide_by_zero
+  END SUBROUTINE obj_PDIV1
+END INTERFACE PDIV
+
+!----------------------------------------------------------------------------
+!                                                                 PMUL@BLAS1
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2023-12-28
+! summary: Reciprocal obj1 = 1.0/obj2
+
+INTERFACE Reciprocal
+  MODULE SUBROUTINE obj_Reciprocal1(obj1, obj2, check_divide_by_zero)
+    CLASS(RealVector_), INTENT(INOUT) :: obj1
+    CLASS(RealVector_), INTENT(IN) :: obj2
+    LOGICAL(LGT), OPTIONAL, INTENT(IN) :: check_divide_by_zero
+  END SUBROUTINE obj_Reciprocal1
+END INTERFACE Reciprocal
 
 END MODULE RealVector_Blas1Methods

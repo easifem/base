@@ -331,4 +331,82 @@ DO i = 1, SIZE(X)
 END DO
 END PROCEDURE SCALvector
 
+!----------------------------------------------------------------------------
+!                                                                      PMUL
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE obj_PMUL1
+INTEGER(I4B) :: ii, tsize
+
+tsize = SIZE(obj)
+ASSOCIATE (z => obj%val, x => obj1%val, y => obj2%val)
+  DO CONCURRENT(ii=1:tsize)
+    z(ii) = x(ii) * y(ii)
+  END DO
+END ASSOCIATE
+
+END PROCEDURE obj_PMUL1
+
+!----------------------------------------------------------------------------
+!                                                                      PDIV
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE obj_PDIV1
+INTEGER(I4B) :: ii, tsize
+LOGICAL(LGT) :: check0
+
+check0 = Input(default=.FALSE., option=check_divide_by_zero)
+tsize = SIZE(obj)
+
+ASSOCIATE (z => obj%val, x => obj1%val, y => obj2%val)
+
+  IF (check0) THEN
+
+    DO CONCURRENT(ii=1:tsize, y(ii) .NE. 0.0_DFP)
+      z(ii) = x(ii) / y(ii)
+    END DO
+
+  ELSE
+
+    DO CONCURRENT(ii=1:tsize)
+      z(ii) = x(ii) / y(ii)
+    END DO
+
+  END IF
+
+END ASSOCIATE
+
+END PROCEDURE obj_PDIV1
+
+!----------------------------------------------------------------------------
+!                                                                Reciprocal
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE obj_Reciprocal1
+INTEGER(I4B) :: ii, tsize
+LOGICAL(LGT) :: check0
+
+check0 = Input(default=.FALSE., option=check_divide_by_zero)
+tsize = SIZE(obj1)
+
+ASSOCIATE (x => obj1%val, y => obj2%val)
+
+  IF (check0) THEN
+
+    DO CONCURRENT(ii=1:tsize, y(ii) .NE. 0.0_DFP)
+      x(ii) = 1.0_DFP / y(ii)
+    END DO
+
+  ELSE
+
+    DO CONCURRENT(ii=1:tsize)
+      x(ii) = 1.0_DFP / y(ii)
+    END DO
+
+  END IF
+
+END ASSOCIATE
+
+END PROCEDURE obj_Reciprocal1
+
 END SUBMODULE Methods
