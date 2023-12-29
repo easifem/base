@@ -35,7 +35,7 @@ USE CSRMatrix_UnaryMethods
 USE CSRMatrix_ILUMethods
 USE CSRMatrix_LUSolveMethods
 USE CSRMatrix_MatVecMethods
-USE CSRMatrix_MatmulMethods
+USE CSRMatrix_SymMatmulMethods
 USE CSRMatrix_ReorderingMethods
 USE CSRMatrix_DiagonalScalingMethods
 USE CSRMatrix_MatrixMarketIO
