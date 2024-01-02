@@ -20,7 +20,8 @@
 ! summary:         This submodule contains method for swaping
 
 SUBMODULE(ConvertUtility) Methods
-USE BaseMethod
+USE ReallocateUtility
+USE EyeUtility
 IMPLICIT NONE
 CONTAINS
 
@@ -29,14 +30,25 @@ CONTAINS
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE convert_1
+CALL Reallocate(to, nns * tdof, nns * tdof)
+CALL ConvertSafe(from=from, to=to, Conversion=conversion,  &
+  & nns=nns, tdof=tdof)
+END PROCEDURE convert_1
+
+!----------------------------------------------------------------------------
+!                                                             ConvertSafe
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE convert_1_safe
 INTEGER(I4B) :: m, inode, idof, i, j
-INTEGER(I4B), ALLOCATABLE :: T(:, :)
+INTEGER(I4B) :: T(nns * tdof, nns * tdof)
 !> main
 m = nns * tdof
-ALLOCATE (T(m, m))
-T = Eye(m, TypeInt)
+T = eye(m, TypeInt)
+
 SELECT CASE (Conversion)
 CASE (DofToNodes)
+
   DO inode = 1, nns
     DO idof = 1, tdof
       j = (inode - 1) * tdof + idof
@@ -45,7 +57,9 @@ CASE (DofToNodes)
       T(i, j) = 1
     END DO
   END DO
+
 CASE (NodesToDOF)
+
   DO idof = 1, tdof
     DO inode = 1, nns
       j = (idof - 1) * nns + inode
@@ -54,10 +68,11 @@ CASE (NodesToDOF)
       T(i, j) = 1
     END DO
   END DO
+
 END SELECT
+
 to = MATMUL(TRANSPOSE(T), MATMUL(from, T))
-DEALLOCATE (T)
-END PROCEDURE convert_1
+END PROCEDURE convert_1_safe
 
 !----------------------------------------------------------------------------
 !                                                                   Convert
@@ -74,7 +89,7 @@ DO b = 1, I(4)
   c2 = b * I(2)
   r1 = 0; r2 = 0
   DO a = 1, I(3)
-    r1 = r2 + 1;
+    r1 = r2 + 1; 
     r2 = a * I(1)
     To(r1:r2, c1:c2) = From(:, :, a, b)
   END DO

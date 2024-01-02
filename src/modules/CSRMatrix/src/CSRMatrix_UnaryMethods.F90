@@ -13,11 +13,59 @@
 !
 ! You should have received a copy of the GNU General Public License
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
+
+!> author: Vikas Sharma, Ph. D.
+! date:         22 March 2021
+! summary:         UnaryMethods operator for [[SparseMaatrix_]]
 !
+! Following subroutines are planned to include in this module
+!
+! | subroutine  | description  |
+! |---|---|
+! | `SUBMAT` | extracts a submatrix from a sparse matrix |
+! | `FILTER` | filters elements from a matrix according to their magnitude |
+! | `CSORT`  | sorts the elements in increasing order of columns |
+! | `CLNCSR`  | clean up the CSR format matrix, remove duplicate entry, etc |
+! | `TRANSP` | in-place transposition routine |
+! | `COPMAT` | copy of a matrix into another matrix (both stored csr)    |
+! | `GETELM` | returns a(i,j) for any (i,j) from a CSR-stored matrix.     |
+! | `GETDIA` | extracts a specified diagonal from a matrix.                |
+! | `GETL`   | extracts lower triangular part |
+! | `GETU`   | extracts upper triangular part |
+! | `LEVELS` | gets the level scheduling structure for lower triangular matrices |
+! | `AMASK`  | extracts C = A mask M |
+! | `RPERM`  | permutes the rows of a matrix (B = P A) |
+! | `CPERM`  | permutes the columns of a matrix (B = A Q) |
+! | `DPERM`  | permutes both the rows and columns of a matrix (B = P A Q ) |
+! | `DPERM1` | general extraction routine (extracts arbitrary rows) |
+! | `DPERM2` | general submatrix permutation/extraction routine            |
+! | `DVPERM` | permutes a real vector (in-place)                           |
+! | `IVPERM` | permutes an integer vector (in-place)                       |
+! | `RETMX`  | returns the max absolute value in each row of the matrix    |
+! | `DIAPOS` | returns the positions of the diagonal elements in A.        |
+! | `EXTBDG` | extracts the main diagonal blocks of a matrix.              |
+! | `GETBWD` | returns the bandwidth information on a matrix.              |
+! | `BLKFND` | finds the block-size of a matrix.                           |
+! | `BLKCHK` | checks whether a given integer is the block size of A.      |
+! | `INFDIA` | obtains information on the diagonals of A.                  |
+! | `AMUBDG` | gets number of nonzeros in each row of A*B (as well as NNZ) |
+! | `APLBDG` | gets number of nonzeros in each row of A+B (as well as NNZ) |
+! | `RNRMS`  | computes the norms of the rows of A                         |
+! | `CNRMS`  | computes the norms of the columns of A                      |
+! | `ROSCAL` | scales the rows of a matrix by their norms.                 |
+! | `COSCAL` | scales the columns of a matrix by their norms.              |
+! | `ADDBLK` | Adds a matrix B into a block of A.                          |
+! | `GET1UP` | Collects the first elements of each row of the upper triangular portion of the matrix |
+! | `XTROWS` | extracts given rows from a matrix in CSR format.            |
+! | `CSRKVSTR`|  Finds block row partitioning of matrix in CSR format      |
+! | `CSRKVSTC`|  Finds block column partitioning of matrix in CSR format   |
+! | `KVSTMERGE`| Merges block partitionings, for conformal row/col pattern |
 
 MODULE CSRMatrix_UnaryMethods
 USE GlobalData, ONLY: I4B, DFP, LGT
 USE BaseType, ONLY: CSRMatrix_, RealMatrix_
+IMPLICIT NONE
+PRIVATE
 
 PUBLIC :: Convert
 PUBLIC :: ColumnSORT
@@ -34,6 +82,23 @@ PUBLIC :: PermuteRow
 PUBLIC :: PermuteColumn
 PUBLIC :: Permute
 PUBLIC :: GetSym
+PUBLIC :: ASSIGNMENT(=)
+PUBLIC :: SCAL
+
+!----------------------------------------------------------------------------
+!                                                               Scal@Methods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2023-12-17
+! summary:  Scale the matrix
+
+INTERFACE Scal
+  MODULE SUBROUTINE obj_Scal(obj, a)
+    TYPE(CSRMatrix_), INTENT(INOUT) :: obj
+    REAL(DFP), INTENT(IN) :: a
+  END SUBROUTINE obj_Scal
+END INTERFACE Scal
 
 !----------------------------------------------------------------------------
 !                                                              Convert@Unary
@@ -49,17 +114,13 @@ PUBLIC :: GetSym
 ! `A(:), IA(:), JA(:)` denotes CSR format.
 ! This subroutine can be used for debuggin purpose.
 
-INTERFACE
-  MODULE PURE SUBROUTINE crsMat_Convert1(A, IA, JA, mat)
+INTERFACE Convert
+  MODULE PURE SUBROUTINE obj_Convert1(A, IA, JA, mat)
     REAL(DFP), INTENT(IN) :: A(:)
     INTEGER(I4B), INTENT(IN) :: IA(:)
     INTEGER(I4B), INTENT(IN) :: JA(:)
     REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: mat(:, :)
-  END SUBROUTINE crsMat_Convert1
-END INTERFACE
-
-INTERFACE Convert
-  MODULE PROCEDURE crsMat_Convert1
+  END SUBROUTINE obj_Convert1
 END INTERFACE Convert
 
 !----------------------------------------------------------------------------
@@ -75,19 +136,15 @@ END INTERFACE Convert
 ! This subroutine converts sparsematrix to dense storage format
 ! `A(:), IA(:), JA(:)` denotes CSR format.
 
-INTERFACE
-  MODULE PURE SUBROUTINE crsMat_Convert2(To, From)
+INTERFACE Convert
+  MODULE PURE SUBROUTINE obj_Convert2(To, From)
     REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: To(:, :)
     TYPE(CSRMatrix_), INTENT(IN) :: From
-  END SUBROUTINE crsMat_Convert2
-END INTERFACE
-
-INTERFACE Convert
-  MODULE PROCEDURE crsMat_Convert2
+  END SUBROUTINE obj_Convert2
 END INTERFACE Convert
 
 INTERFACE ASSIGNMENT(=)
-  MODULE PROCEDURE crsMat_Convert2
+  MODULE PROCEDURE obj_Convert2
 END INTERFACE ASSIGNMENT(=)
 
 !----------------------------------------------------------------------------
@@ -103,19 +160,15 @@ END INTERFACE ASSIGNMENT(=)
 ! This subroutine converts sparsematrix to dense storage format
 ! `A(:), IA(:), JA(:)` denotes CSR format.
 
-INTERFACE
-  MODULE PURE SUBROUTINE crsMat_Convert3(To, From)
+INTERFACE Convert
+  MODULE PURE SUBROUTINE obj_Convert3(To, From)
     TYPE(RealMatrix_), INTENT(INOUT) :: To
     TYPE(CSRMatrix_), INTENT(IN) :: From
-  END SUBROUTINE crsMat_Convert3
-END INTERFACE
-
-INTERFACE Convert
-  MODULE PROCEDURE crsMat_Convert3
+  END SUBROUTINE obj_Convert3
 END INTERFACE Convert
 
 INTERFACE ASSIGNMENT(=)
-  MODULE PROCEDURE crsMat_Convert3
+  MODULE PROCEDURE obj_Convert3
 END INTERFACE ASSIGNMENT(=)
 
 !----------------------------------------------------------------------------
@@ -138,15 +191,11 @@ END INTERFACE ASSIGNMENT(=)
 !
 ! - Default value of `SortValue` is true.
 
-INTERFACE
-  MODULE SUBROUTINE csrMat_ColumnSORT(obj, isValues)
+INTERFACE ColumnSORT
+  MODULE SUBROUTINE obj_ColumnSORT(obj, isValues)
     TYPE(CSRMatrix_), INTENT(INOUT) :: obj
     LOGICAL(LGT), INTENT(IN), OPTIONAL :: isValues
-  END SUBROUTINE csrMat_ColumnSORT
-END INTERFACE
-
-INTERFACE ColumnSORT
-  MODULE PROCEDURE csrMat_ColumnSORT
+  END SUBROUTINE obj_ColumnSORT
 END INTERFACE ColumnSORT
 
 !----------------------------------------------------------------------------
@@ -161,15 +210,11 @@ END INTERFACE ColumnSORT
 !
 ! This routine calls CLNCSR routine from Sparsekit
 
-INTERFACE
-  MODULE SUBROUTINE csrMat_RemoveDuplicates(obj, isValues)
+INTERFACE RemoveDuplicates
+  MODULE SUBROUTINE obj_RemoveDuplicates(obj, isValues)
     TYPE(CSRMatrix_), INTENT(INOUT) :: obj
     LOGICAL(LGT), INTENT(IN), OPTIONAL :: isValues
-  END SUBROUTINE csrMat_RemoveDuplicates
-END INTERFACE
-
-INTERFACE RemoveDuplicates
-  MODULE PROCEDURE csrMat_RemoveDuplicates
+  END SUBROUTINE obj_RemoveDuplicates
 END INTERFACE RemoveDuplicates
 
 !----------------------------------------------------------------------------
@@ -183,8 +228,8 @@ END INTERFACE RemoveDuplicates
 !# Introduction
 ! This routine performs tasks related to the cleaning of sparse matrix.
 
-INTERFACE
-  MODULE SUBROUTINE csrMat_Clean(obj, isValues, ExtraOption)
+INTERFACE Clean
+  MODULE SUBROUTINE obj_Clean(obj, isValues, ExtraOption)
     TYPE(CSRMatrix_), INTENT(INOUT) :: obj
     LOGICAL(LGT), OPTIONAL, INTENT(IN) :: isValues
     !! If .TRUE. then values will be touched, otherwise they remain
@@ -194,11 +239,7 @@ INTERFACE
     !! If 1, then remove duplicates and zeros, if any
     !! If 2, then remove duplicates and perform partial ordering
     !! If 3, then remove duplicates, sort entries in increasing order of col
-  END SUBROUTINE csrMat_Clean
-END INTERFACE
-
-INTERFACE Clean
-  MODULE PROCEDURE csrMat_Clean
+  END SUBROUTINE obj_Clean
 END INTERFACE Clean
 
 !----------------------------------------------------------------------------
@@ -209,15 +250,11 @@ END INTERFACE Clean
 ! date:         23 March 2021
 ! summary:         Copy sparse matrix into each other
 
-INTERFACE
-  MODULE SUBROUTINE csrMat_Copy(From, To)
+INTERFACE Copy
+  MODULE SUBROUTINE obj_Copy(From, To)
     TYPE(CSRMatrix_), INTENT(IN) :: From
     TYPE(CSRMatrix_), INTENT(INOUT) :: To
-  END SUBROUTINE csrMat_Copy
-END INTERFACE
-
-INTERFACE Copy
-  MODULE PROCEDURE csrMat_Copy
+  END SUBROUTINE obj_Copy
 END INTERFACE Copy
 
 !----------------------------------------------------------------------------
@@ -228,16 +265,12 @@ END INTERFACE Copy
 ! date: 14 July 2021
 ! summary: This returns a sigle value from the matrix
 
-INTERFACE
-  MODULE FUNCTION csrMat_Get1(obj, i, j) RESULT(Ans)
+INTERFACE Get
+  MODULE FUNCTION obj_Get1(obj, i, j) RESULT(Ans)
     TYPE(CSRMatrix_), INTENT(IN) :: obj
     INTEGER(I4B), INTENT(IN) :: i, j
     REAL(DFP) :: Ans
-  END FUNCTION csrMat_Get1
-END INTERFACE
-
-INTERFACE Get
-  MODULE PROCEDURE csrMat_Get1
+  END FUNCTION obj_Get1
 END INTERFACE Get
 
 !----------------------------------------------------------------------------
@@ -261,17 +294,13 @@ END INTERFACE Get
 ! the drop tolerance and the largest element in the row are removed.
 ! - `droptol` = real. drop tolerance used for dropping strategy.
 
-INTERFACE
-  MODULE SUBROUTINE csrMat_DropEntry(objIn, objOut, droptol, option)
+INTERFACE DropEntry
+  MODULE SUBROUTINE obj_DropEntry(objIn, objOut, droptol, option)
     TYPE(CSRMatrix_), INTENT(IN) :: objIn
     TYPE(CSRMatrix_), INTENT(INOUT) :: objOut
     REAL(DFP), INTENT(IN) :: droptol
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: option
-  END SUBROUTINE csrMat_DropEntry
-END INTERFACE
-
-INTERFACE DropEntry
-  MODULE PROCEDURE csrMat_DropEntry
+  END SUBROUTINE obj_DropEntry
 END INTERFACE DropEntry
 
 !----------------------------------------------------------------------------
@@ -289,14 +318,10 @@ END INTERFACE DropEntry
 ! the arrays a,ja,ia c of the transpose are overwritten onto the original
 ! arrays.
 
-INTERFACE
-  MODULE SUBROUTINE csrMat_Transpose(obj)
-    TYPE(CSRMatrix_), INTENT(INOUT) :: obj
-  END SUBROUTINE csrMat_Transpose
-END INTERFACE
-
 INTERFACE GetTRANSPOSE
-  MODULE PROCEDURE csrMat_Transpose
+  MODULE SUBROUTINE obj_Transpose(obj)
+    TYPE(CSRMatrix_), INTENT(INOUT) :: obj
+  END SUBROUTINE obj_Transpose
 END INTERFACE GetTRANSPOSE
 
 !----------------------------------------------------------------------------
@@ -321,17 +346,13 @@ END INTERFACE GetTRANSPOSE
 ! `diag`. A zero entry in `idiag(i)` means that there was no entry found in
 ! row i belonging to the diagonal.
 
-INTERFACE
-  MODULE SUBROUTINE csrMat_getDiagonal1(obj, diag, idiag, offset)
+INTERFACE GetDiagonal
+  MODULE SUBROUTINE obj_getDiagonal1(obj, diag, idiag, offset)
     TYPE(CSRMatrix_), INTENT(IN) :: obj
     REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: diag(:)
     INTEGER(I4B), ALLOCATABLE, INTENT(INOUT) :: idiag(:)
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: offset
-  END SUBROUTINE csrMat_getDiagonal1
-END INTERFACE
-
-INTERFACE GetDiagonal
-  MODULE PROCEDURE csrMat_getDiagonal1
+  END SUBROUTINE obj_getDiagonal1
 END INTERFACE GetDiagonal
 
 !----------------------------------------------------------------------------
@@ -352,16 +373,12 @@ END INTERFACE GetDiagonal
 ! - `diag` : real*8 array of length nrow containing the wanted diagonal. diag
 ! contains the diagonal (`a(i,j),j-i = ioff`) as defined above.
 
-INTERFACE
-  MODULE SUBROUTINE csrMat_getDiagonal2(obj, diag, offset)
+INTERFACE GetDiagonal
+  MODULE SUBROUTINE obj_getDiagonal2(obj, diag, offset)
     TYPE(CSRMatrix_), INTENT(INOUT) :: obj
     REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: diag(:)
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: offset
-  END SUBROUTINE csrMat_getDiagonal2
-END INTERFACE
-
-INTERFACE GetDiagonal
-  MODULE PROCEDURE csrMat_getDiagonal2
+  END SUBROUTINE obj_getDiagonal2
 END INTERFACE GetDiagonal
 
 !----------------------------------------------------------------------------
@@ -376,15 +393,11 @@ END INTERFACE GetDiagonal
 !
 ! This subroutine returns the lower part of the sparse matrix.
 
-INTERFACE
-  MODULE SUBROUTINE csrMat_getLowerTriangle(obj, L)
+INTERFACE GetLowerTriangle
+  MODULE SUBROUTINE obj_getLowerTriangle(obj, L)
     TYPE(CSRMatrix_), INTENT(IN) :: obj
     TYPE(CSRMatrix_), INTENT(INOUT) :: L
-  END SUBROUTINE csrMat_getLowerTriangle
-END INTERFACE
-
-INTERFACE GetLowerTriangle
-  MODULE PROCEDURE csrMat_getLowerTriangle
+  END SUBROUTINE obj_getLowerTriangle
 END INTERFACE GetLowerTriangle
 
 !----------------------------------------------------------------------------
@@ -399,16 +412,12 @@ END INTERFACE GetLowerTriangle
 !
 ! This subroutine returns the Upper part of the sparse matrix.
 
-INTERFACE
-  MODULE SUBROUTINE csrMat_getUpperTriangle(obj, U)
+INTERFACE GetUpperTriangle
+  MODULE SUBROUTINE obj_getUpperTriangle(obj, U)
     TYPE(CSRMatrix_), INTENT(IN) :: obj
     TYPE(CSRMatrix_), INTENT(INOUT) :: U
-  END SUBROUTINE csrMat_getUpperTriangle
-END INTERFACE
-
-INTERFACE getUpperTriangle
-  MODULE PROCEDURE csrMat_getUpperTriangle
-END INTERFACE getUpperTriangle
+  END SUBROUTINE obj_getUpperTriangle
+END INTERFACE GetUpperTriangle
 
 !----------------------------------------------------------------------------
 !                                                         PermuteRow@Unary
@@ -418,18 +427,14 @@ END INTERFACE getUpperTriangle
 ! date: 28 July 2021
 ! summary: Permute the rows of sparse matrix
 
-INTERFACE
-  MODULE FUNCTION csrMat_permuteRow(obj, PERM, isValues) &
+INTERFACE PermuteRow
+  MODULE FUNCTION obj_permuteRow(obj, PERM, isValues) &
     & RESULT(ans)
     TYPE(CSRMatrix_), INTENT(IN) :: obj
     INTEGER(I4B), INTENT(IN) :: PERM(:)
     LOGICAL(LGT), OPTIONAL, INTENT(IN) :: isValues
     TYPE(CSRMatrix_) :: ans
-  END FUNCTION csrMat_permuteRow
-END INTERFACE
-
-INTERFACE PermuteRow
-  MODULE PROCEDURE csrMat_permuteRow
+  END FUNCTION obj_permuteRow
 END INTERFACE PermuteRow
 
 !----------------------------------------------------------------------------
@@ -440,18 +445,14 @@ END INTERFACE PermuteRow
 ! date: 28 July 2021
 ! summary: Permute the columns of sparse matrix
 
-INTERFACE
-  MODULE FUNCTION csrMat_permuteColumn(obj, PERM, isValues) &
+INTERFACE PermuteColumn
+  MODULE FUNCTION obj_permuteColumn(obj, PERM, isValues) &
     & RESULT(ans)
     TYPE(CSRMatrix_), INTENT(IN) :: obj
     INTEGER(I4B), INTENT(IN) :: PERM(:)
     LOGICAL(LGT), OPTIONAL, INTENT(IN) :: isValues
     TYPE(CSRMatrix_) :: ans
-  END FUNCTION csrMat_permuteColumn
-END INTERFACE
-
-INTERFACE PermuteColumn
-  MODULE PROCEDURE csrMat_permuteColumn
+  END FUNCTION obj_permuteColumn
 END INTERFACE PermuteColumn
 
 !----------------------------------------------------------------------------
@@ -462,8 +463,8 @@ END INTERFACE PermuteColumn
 ! date: 28 July 2021
 ! summary: Permute the columns of sparse matrix
 
-INTERFACE
-  MODULE FUNCTION csrMat_permute(obj, rowPERM, colPERM, &
+INTERFACE Permute
+  MODULE FUNCTION obj_permute(obj, rowPERM, colPERM, &
     & isValues, symPERM) RESULT(ans)
     TYPE(CSRMatrix_), INTENT(IN) :: obj
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: rowPERM(:)
@@ -471,11 +472,7 @@ INTERFACE
     LOGICAL(LGT), OPTIONAL, INTENT(IN) :: isValues
     LOGICAL(LGT), OPTIONAL, INTENT(IN) :: symPERM
     TYPE(CSRMatrix_) :: ans
-  END FUNCTION csrMat_permute
-END INTERFACE
-
-INTERFACE Permute
-  MODULE PROCEDURE csrMat_permute
+  END FUNCTION obj_permute
 END INTERFACE Permute
 
 !----------------------------------------------------------------------------
@@ -486,16 +483,12 @@ END INTERFACE Permute
 ! date:  2023-01-28
 ! summary: Returns symmetric part of csrmatrix in symObj
 
-INTERFACE
-  MODULE SUBROUTINE csrMat_GetSym1(obj, symObj, from)
+INTERFACE GetSym
+  MODULE SUBROUTINE obj_GetSym1(obj, symObj, from)
     TYPE(CSRMatrix_), INTENT(IN) :: obj
     TYPE(CSRMatrix_), INTENT(INOUT) :: symObj
     CHARACTER(1), INTENT(IN) :: from
-  END SUBROUTINE csrMat_GetSym1
-END INTERFACE
-
-INTERFACE GetSym
-  MODULE PROCEDURE csrMat_GetSym1
+  END SUBROUTINE obj_GetSym1
 END INTERFACE GetSym
 
 !----------------------------------------------------------------------------
@@ -506,15 +499,14 @@ END INTERFACE GetSym
 ! date:  2023-01-28
 ! summary: Returns symmetric part of csrmatrix in symObj
 
-INTERFACE
-  MODULE SUBROUTINE csrMat_GetSym2(obj, from)
+INTERFACE GetSym
+  MODULE SUBROUTINE obj_GetSym2(obj, from)
     TYPE(CSRMatrix_), INTENT(INOUT) :: obj
     CHARACTER(1), INTENT(IN) :: from
-  END SUBROUTINE csrMat_GetSym2
-END INTERFACE
-
-INTERFACE GetSym
-  MODULE PROCEDURE csrMat_GetSym2
+  END SUBROUTINE obj_GetSym2
 END INTERFACE GetSym
 
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
 END MODULE CSRMatrix_UnaryMethods

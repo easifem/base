@@ -28,7 +28,7 @@ CONTAINS
 !                                                                    Display
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE csrMat_Display
+MODULE PROCEDURE obj_Display
 INTEGER(I4B) :: I
 I = INPUT(Option=UnitNo, Default=stdout)
 CALL Display(msg, unitNo=I)
@@ -41,35 +41,35 @@ IF (ALLOCATED(obj%A)) THEN
 ELSE
   CALL DUMP(1, obj%csr%nrow, .FALSE., obj%A, obj%csr%JA, obj%csr%IA, I)
 END IF
-END PROCEDURE csrMat_Display
+END PROCEDURE obj_Display
 
 !----------------------------------------------------------------------------
 !                                                                       Spy
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE csrMat_SPY
+MODULE PROCEDURE obj_SPY
 SELECT CASE (TRIM(ext))
 CASE ("gp", ".gp", ".GP", "GP")
-  CALL csrMat_SPY_gnuplot(obj, filename)
+  CALL obj_SPY_gnuplot(obj, filename)
 CASE ("pdf", ".pdf")
-  CALL csrMat_SPY_PLPLOT(obj, filename, ext, "pdf")
+  CALL obj_SPY_PLPLOT(obj, filename, ext, "pdf")
 CASE ("svg", ".svg")
-  CALL csrMat_SPY_PLPLOT(obj, filename, ext, "svg")
+  CALL obj_SPY_PLPLOT(obj, filename, ext, "svg")
 CASE ("eps", ".eps")
-  CALL csrMat_SPY_PLPLOT(obj, filename, ext, "epscairo")
+  CALL obj_SPY_PLPLOT(obj, filename, ext, "epscairo")
 CASE ("png", ".png")
-  CALL csrMat_SPY_PLPLOT(obj, filename, ext, "pngcairo")
+  CALL obj_SPY_PLPLOT(obj, filename, ext, "pngcairo")
 CASE ("ps", ".ps")
-  CALL csrMat_SPY_PLPLOT(obj, filename, ext, "ps")
+  CALL obj_SPY_PLPLOT(obj, filename, ext, "ps")
 CASE DEFAULT
 END SELECT
-END PROCEDURE csrMat_SPY
+END PROCEDURE obj_SPY
 
 !----------------------------------------------------------------------------
-!                                                    csrMat_SPY_PLPLOT
+!                                                    obj_SPY_PLPLOT
 !----------------------------------------------------------------------------
 
-SUBROUTINE csrMat_SPY_PLPLOT(obj, filename, ext, driver)
+SUBROUTINE obj_SPY_PLPLOT(obj, filename, ext, driver)
   TYPE(CSRMatrix_), INTENT(IN) :: obj
   CHARACTER(*), INTENT(IN) :: filename
   CHARACTER(*), INTENT(IN) :: ext
@@ -124,13 +124,13 @@ SUBROUTINE csrMat_SPY_PLPLOT(obj, filename, ext, driver)
   IF (ALLOCATED(Y)) DEALLOCATE (Y)
   ! IF( ALLOCATED(A) ) DEALLOCATE(A)
 #endif
-END SUBROUTINE csrMat_SPY_PLPLOT
+END SUBROUTINE obj_SPY_PLPLOT
 
 !----------------------------------------------------------------------------
-!                                                        csrMat_SPY_gnuplot
+!                                                        obj_SPY_gnuplot
 !----------------------------------------------------------------------------
 
-SUBROUTINE csrMat_SPY_gnuplot(obj, filename)
+SUBROUTINE obj_SPY_gnuplot(obj, filename)
   TYPE(CSRMatrix_), INTENT(IN) :: obj
   CHARACTER(*), INTENT(IN) :: filename
   ! internal variable
@@ -143,7 +143,7 @@ SUBROUTINE csrMat_SPY_gnuplot(obj, filename)
   !> check
   IF (IOSTAT .NE. 0) THEN
     CALL ErrorMSG(Msg="Error opening "//TRIM(filename)//".txt file",  &
-      & File=__FILE__, Routine="csrMat_SPY_gnuplot()",  &
+      & File=__FILE__, Routine="obj_SPY_gnuplot()",  &
       & LINE=__LINE__)
     STOP
   END IF
@@ -167,7 +167,7 @@ SUBROUTINE csrMat_SPY_gnuplot(obj, filename)
   !> check
   IF (IOSTAT .NE. 0) THEN
     CALL ErrorMSG(Msg="Error opening "//TRIM(filename)//".gp file",  &
-      & File=__FILE__, Routine="csrMat_SPY_gnuplot()",  &
+      & File=__FILE__, Routine="obj_SPY_gnuplot()",  &
       & LINE=__LINE__)
     STOP
   END IF
@@ -219,38 +219,37 @@ SUBROUTINE csrMat_SPY_gnuplot(obj, filename)
   WRITE (unitNo, "(A)") &
     & "plot"//"'"//TRIM(filename)//".txt"//"' with points pt 7 ps 1.0"
   CLOSE (unitno)
-END SUBROUTINE csrMat_SPY_gnuplot
+END SUBROUTINE obj_SPY_gnuplot
 
 !----------------------------------------------------------------------------
 !                                                                 IMPORT
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE csrMat_IMPORT
+MODULE PROCEDURE obj_IMPORT
 INTEGER(I4B) :: iostat, unitno, rows, cols, nnz, ii
 INTEGER(I4B), ALLOCATABLE :: indx(:), jndx(:), IA(:), JA(:)
 REAL(DFP), ALLOCATABLE :: A(:), rval(:)
 TYPE(String) :: aline
 CHARACTER(1024) :: iomsg
 CHARACTER(50) :: rep, field, symm
-!
+
 ! Open file
-!
 OPEN (FILE=filename, NEWUNIT=unitno, STATUS="OLD", ACTION="READ", &
   & IOSTAT=iostat, iomsg=iomsg)
-!
+
 IF (iostat .NE. 0) THEN
   CALL ErrorMSG(&
     & msg="Error in opening file, following msg = "//TRIM(iomsg), &
     & file=__FILE__, &
-    & routine="csrMat_IMPORT()", &
+    & routine="obj_IMPORT()", &
     & line=__LINE__, &
     & unitno=stderr)
   RETURN
 END IF
-!
+
 CALL MMRead(unitno=unitno, rep=rep, field=field, symm=symm, rows=rows, &
   & cols=cols, nnz=nnz, indx=indx, jndx=jndx, rval=rval)
-!
+
 CALL toUpperCase(symm)
 IF (symm .EQ. "SYMMETRIC") THEN
   symm = "SYM"
@@ -259,24 +258,22 @@ ELSEIF (symm .EQ. "SKEW-SYMMETRIC") THEN
 ELSE
   symm = "UNSYM"
 END IF
-!
+
 ALLOCATE (IA(rows + 1), JA(nnz), A(nnz))
-!
+
 ! Call COOCSR from sparsekit
-!
 CALL COOCSR(rows, nnz, rval, indx, jndx, A, JA, IA)
-!
 CALL Initiate(obj=obj, A=A, IA=IA, JA=JA, MatrixProp=symm)
-!
+
 CLOSE (unitNo)
 DEALLOCATE (indx, jndx, rval, IA, JA, A)
-END PROCEDURE csrMat_IMPORT
+END PROCEDURE obj_IMPORT
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE deprecated_csrMat_IMPORT
+MODULE PROCEDURE deprecated_obj_IMPORT
 INTEGER(I4B) :: iostat, unitNo, nrow, ncol, nnz, ii
 INTEGER(I4B), ALLOCATABLE :: ROW(:), COL(:), IA(:), JA(:)
 REAL(DFP), ALLOCATABLE :: A(:), X(:)
@@ -290,7 +287,7 @@ IF (iostat .NE. 0) THEN
   CALL ErrorMSG(&
     & msg="Error in opening file, following msg = "//TRIM(iomsg), &
     & file=__FILE__, &
-    & routine="csrMat_IMPORT()", &
+    & routine="obj_IMPORT()", &
     & line=__LINE__, &
     & unitno=stderr)
 END IF
@@ -302,7 +299,7 @@ IF (iostat .NE. 0) THEN
     & msg="Error while calling read_line method from String Class, &
     & following msg is returned "//TRIM(iomsg), &
     & file=__FILE__, &
-    & routine="csrMat_IMPORT()", &
+    & routine="obj_IMPORT()", &
     & line=__LINE__, &
     & unitno=stderr)
 END IF
@@ -315,7 +312,7 @@ IF (iostat .NE. 0) THEN
     & msg="Error while reading nrow, ncol, nnz from the given file, &
     & following msg is returned "//TRIM(iomsg), &
     & file=__FILE__, &
-    & routine="csrMat_IMPORT()", &
+    & routine="obj_IMPORT()", &
     & line=__LINE__, &
     & unitno=stderr)
 END IF
@@ -333,7 +330,7 @@ IF (iostat .NE. 0) THEN
     & msg="Error while reading row(ii), col(ii), x(ii) from the given file, &
     & following msg is returned "//TRIM(iomsg), &
     & file=__FILE__, &
-    & routine="csrMat_IMPORT()", &
+    & routine="obj_IMPORT()", &
     & line=__LINE__, &
     & unitno=stderr)
 END IF
@@ -348,7 +345,7 @@ CALL Initiate(obj=obj, A=A, IA=IA, JA=JA)
 !
 DEALLOCATE (ROW, COL, X, IA, JA, A)
 CLOSE (unitNo)
-END PROCEDURE deprecated_csrMat_IMPORT
+END PROCEDURE deprecated_obj_IMPORT
 
 !----------------------------------------------------------------------------
 !

@@ -21,6 +21,7 @@ IMPLICIT NONE
 PRIVATE
 
 PUBLIC :: Convert
+PUBLIC :: ConvertSafe
 
 !----------------------------------------------------------------------------
 !                                                   Convert@ConvertMethods
@@ -47,7 +48,7 @@ PUBLIC :: Convert
 ! this routine works when matrix is square.
 !@endnote
 
-INTERFACE
+INTERFACE Convert
   MODULE PURE SUBROUTINE convert_1(From, To, Conversion, nns, tdof)
     REAL(DFP), INTENT(IN) :: From(:, :)
     !! Matrix in one format
@@ -57,11 +58,44 @@ INTERFACE
     !! `Conversion` can be `NodesToDOF` or `DOFToNodes`
     INTEGER(I4B), INTENT(IN) :: nns, tdof
   END SUBROUTINE convert_1
-END INTERFACE
-
-INTERFACE Convert
-  MODULE PROCEDURE convert_1
 END INTERFACE Convert
+
+!----------------------------------------------------------------------------
+!                                                   Convert@ConvertMethods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 6 March 2021
+! summary: Rearrange the degrees of freedom in a finite element matrix
+!
+!# Introduction
+!
+! This subroutine changes the storage pattern of a two-d matrix
+!  - Usually element matrix in easifem are stored in `FMT_DOF`
+!  - Global matrices/tanmat, however, are stored in `FMT_Nodes`
+!  - This subroutine is, therefore, in settings or adding values in
+! [[SparseMatrix_]].
+!
+! > This subroutine converts changes the storage format of dense matrix.
+! Usually, elemental finite element matrix is stored in `DOF_FMT`, and global
+! matrix/ tanmat, may be stored in `Nodes_FMT`.
+!
+!@note
+! All dof should have the same order of interpolation, therefore,
+! this routine works when matrix is square.
+!@endnote
+
+INTERFACE ConvertSafe
+  MODULE PURE SUBROUTINE convert_1_safe(From, To, Conversion, nns, tdof)
+    REAL(DFP), INTENT(IN) :: From(:, :)
+    !! Matrix in one format
+    REAL(DFP), INTENT(INOUT) :: To(:, :)
+    !! Matrix is desired format
+    INTEGER(I4B), INTENT(IN) :: Conversion
+    !! `Conversion` can be `NodesToDOF` or `DOFToNodes`
+    INTEGER(I4B), INTENT(IN) :: nns, tdof
+  END SUBROUTINE convert_1_safe
+END INTERFACE ConvertSafe
 
 !----------------------------------------------------------------------------
 !                                                    Convert@ConvertMethods
@@ -85,15 +119,11 @@ END INTERFACE Convert
 !
 ! Contains the block matrix structure in 2D.
 
-INTERFACE
+INTERFACE Convert
   MODULE PURE SUBROUTINE convert_2(From, To)
     REAL(DFP), INTENT(IN) :: From(:, :, :, :)
     REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: To(:, :)
   END SUBROUTINE convert_2
-END INTERFACE
-
-INTERFACE Convert
-  MODULE PROCEDURE convert_2
 END INTERFACE Convert
 
 !----------------------------------------------------------------------------
@@ -105,17 +135,13 @@ END INTERFACE Convert
 ! summary: This subroutine converts rank4  matrix to rank2 matrix
 !
 
-INTERFACE
+INTERFACE Convert
   MODULE PURE SUBROUTINE convert_3(From, To)
     REAL(DFP), INTENT(IN) :: From(:, :, :, :, :, :)
   !! I, J, ii, jj, a, b
     REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: To(:, :, :, :)
   !! I, J, a, b
   END SUBROUTINE convert_3
-END INTERFACE
-
-INTERFACE Convert
-  MODULE PROCEDURE convert_3
 END INTERFACE Convert
 
 !----------------------------------------------------------------------------

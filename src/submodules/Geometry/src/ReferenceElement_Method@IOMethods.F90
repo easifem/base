@@ -168,7 +168,7 @@ IF (obj%entityCounts(1) .GT. 0_I4B) THEN
     ans = ans//React_StartTabItem( &
     & VALUE=tostring(j), &
     & label="PointTopology( "//tostring(j)//" ) : ")//char_lf//  &
-    & MdEncode(obj%topology(tsize+j))//char_lf  &
+    & MdEncode(obj%topology(tsize + j))//char_lf  &
     & //React_EndTabItem()//char_lf
   END DO
 
@@ -184,7 +184,7 @@ IF (obj%entityCounts(2) .GT. 0_I4B) THEN
     ans = ans//React_StartTabItem( &
     & VALUE=tostring(j), &
     & label="EdgeTopology( "//tostring(j)//" ) : ")//char_lf//  &
-    & MdEncode(obj%topology(tsize+j))//char_lf  &
+    & MdEncode(obj%topology(tsize + j))//char_lf  &
     & //React_EndTabItem()//char_lf
   END DO
 
@@ -200,7 +200,7 @@ IF (obj%entityCounts(3) .GT. 0_I4B) THEN
     ans = ans//React_StartTabItem( &
     & VALUE=tostring(j), &
     & label="FacetTopology( "//tostring(j)//" ) : ")//char_lf//  &
-    & MdEncode(obj%topology(tsize+j))//char_lf  &
+    & MdEncode(obj%topology(tsize + j))//char_lf  &
     & //React_EndTabItem()//char_lf
   END DO
 
@@ -216,7 +216,7 @@ IF (obj%entityCounts(4) .GT. 0_I4B) THEN
     ans = ans//React_StartTabItem( &
     & VALUE=tostring(j), &
     & label="CellTopology( "//tostring(j)//" ) : ")//char_lf//  &
-    & MdEncode(obj%topology(tsize+j))//char_lf  &
+    & MdEncode(obj%topology(tsize + j))//char_lf  &
     & //React_EndTabItem()//char_lf
   END DO
 
@@ -231,16 +231,9 @@ END PROCEDURE refelem_ReactEncode
 
 MODULE PROCEDURE reftopo_Display
 CALL Display(msg, unitno=unitno)
-CALL Display( &
-  & "ElemType : "//TRIM(ElementName(obj%Name)), &
-  & unitno=unitno)
-CALL Display( &
-  & "XiDim : "//TRIM(INT2STR(obj%XiDimension)), &
-  & unitno=unitno)
-CALL Display( &
-  & obj%Nptrs, &
-  & "Nptrs : ", &
-  & unitno=unitno)
+CALL Display("ElemType: "//TRIM(ElementName(obj%Name)), unitno=unitno)
+CALL Display("XiDim: "//TRIM(INT2STR(obj%XiDimension)), unitno=unitno)
+CALL Display(obj%Nptrs, "Nptrs: ", unitno=unitno)
 END PROCEDURE reftopo_Display
 
 !----------------------------------------------------------------------------
@@ -269,18 +262,22 @@ CALL Display(obj%EntityCounts(3), "EntityCounts(2) : ", &
   & unitno=unitno)
 CALL Display(obj%EntityCounts(4), "EntityCounts(3) : ", &
   & unitno=unitno)
+
+CALL BlankLines(nol=1, unitNo=unitNo)
 DO j = 1, SIZE(obj%XiJ, 2)
-  CALL Display( &
-    & obj%XiJ(:, j), &
-    & "Node( "//TRIM(str(j, .TRUE.))//" ) : ", &
+  CALL EqualLine(unitNo=unitNo)
+  CALL Display(obj%XiJ(:, j), "Node( "//TRIM(str(j, .TRUE.))//" ) : ", &
     & unitno=unitno)
+  CALL BlankLines(nol=1, unitNo=unitNo)
 END DO
+
 DO j = 1, SIZE(obj%Topology)
-  CALL Display( &
-    & obj%Topology(j), &
-    & "Topology( "//TRIM(INT2STR(j))//" ) : ", &
+  CALL EqualLine(unitNo=unitNo)
+  CALL Display(obj%Topology(j), "Topology( "//TRIM(INT2STR(j))//" ) : ", &
     & unitno=unitno)
+  CALL BlankLines(nol=1, unitNo=unitNo)
 END DO
+
 END PROCEDURE refelem_Display
 
 END SUBMODULE IOMethods

@@ -219,14 +219,14 @@ END INTERFACE MdEncode
 !
 !```fortran
 ! type( ReferenceTopology_ ) :: obj
-! obj = ReferenceTopology( Nptrs = [1,2,3], Name=Triangle3 )
+! obj = ReferenceTopology( nptrs = [1,2,3], Name=Triangle3 )
 ! call display( obj, "obj=")
 !```
 
 INTERFACE ReferenceTopology
-  MODULE PURE FUNCTION refelem_ReferenceTopology(Nptrs, Name) RESULT(obj)
+  MODULE PURE FUNCTION refelem_ReferenceTopology(nptrs, Name) RESULT(obj)
     TYPE(ReferenceTopology_) :: obj
-    INTEGER(I4B), INTENT(IN) :: Nptrs(:)
+    INTEGER(I4B), INTENT(IN) :: nptrs(:)
     INTEGER(I4B), INTENT(IN) :: Name
   END FUNCTION refelem_ReferenceTopology
 END INTERFACE ReferenceTopology
@@ -243,7 +243,7 @@ END INTERFACE ReferenceTopology
 !
 !```fortran
 ! type( ReferenceTopology_ ) :: obj
-! obj = ReferenceTopology( Nptrs = [1,2,3], Name=Triangle3 )
+! obj = ReferenceTopology( nptrs = [1,2,3], Name=Triangle3 )
 ! call display( obj, "obj=")
 ! call Deallocate( obj )
 !```
@@ -280,7 +280,7 @@ END INTERFACE DEALLOCATE
 !
 !```fortran
 ! type( ReferenceTopology_ ) :: obj
-! obj = ReferenceTopology( Nptrs = [1,2,3], Name=Triangle3 )
+! obj = ReferenceTopology( nptrs = [1,2,3], Name=Triangle3 )
 ! call display( obj, "obj=")
 ! call display( .NNE. obj, "nne =")
 !```
@@ -381,7 +381,7 @@ INTERFACE ReferenceElement_Pointer
 END INTERFACE ReferenceElement_Pointer
 
 !----------------------------------------------------------------------------
-!                                                 getNptrs@ConstrucorMethods
+!                                                 Getnptrs@ConstrucorMethods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -389,10 +389,10 @@ END INTERFACE ReferenceElement_Pointer
 ! summary: Returns the node numbers of reference element
 
 INTERFACE GetConnectivity
-  MODULE PURE FUNCTION refelem_GetNptrs(obj) RESULT(ans)
+  MODULE PURE FUNCTION refelem_Getnptrs(obj) RESULT(ans)
     CLASS(ReferenceElement_), INTENT(IN) :: obj
     INTEGER(I4B), ALLOCATABLE :: ans(:)
-  END FUNCTION refelem_GetNptrs
+  END FUNCTION refelem_Getnptrs
 END INTERFACE GetConnectivity
 
 !----------------------------------------------------------------------------
@@ -436,7 +436,7 @@ END INTERFACE ElementType
 INTERFACE ElementName
   MODULE PURE FUNCTION Element_Name(elemType) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: elemType
-    CHARACTER(50) :: ans
+    CHARACTER(:), ALLOCATABLE :: ans
   END FUNCTION Element_Name
 END INTERFACE ElementName
 
@@ -910,7 +910,7 @@ INTERFACE OPERATOR(.topology.)
 END INTERFACE OPERATOR(.topology.)
 
 !----------------------------------------------------------------------------
-!                                               FacetMatrix@GeometryMethods
+!                                            FacetMatrix@FacetElementMethods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -926,7 +926,7 @@ END INTERFACE OPERATOR(.topology.)
 ! - First column => ElementTopology
 ! - Second Column => XiDimension
 ! - Third column => NNS
-! - 4 to NNS + 3 => Local Nptrs
+! - 4 to NNS + 3 => Local nptrs
 
 INTERFACE FacetMatrix
   MODULE PURE FUNCTION Facet_Matrix_refelem(refelem) RESULT(FM)
@@ -936,7 +936,7 @@ INTERFACE FacetMatrix
 END INTERFACE FacetMatrix
 
 !----------------------------------------------------------------------------
-!                                             FacetElements@GeometryMethods
+!                                          FacetElements@FacetElementMethods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -949,6 +949,67 @@ INTERFACE FacetElements
     TYPE(ReferenceElement_), ALLOCATABLE :: ans(:)
   END FUNCTION refelem_FacetElements
 END INTERFACE FacetElements
+
+!----------------------------------------------------------------------------
+!                                          FacetElements@FacetElementMethods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 16 June 2021
+! summary: This routine returns the facet elements
+
+INTERFACE
+  MODULE SUBROUTINE refelem_FacetElements_Line(refelem, ans)
+    CLASS(ReferenceElement_), INTENT(IN) :: refelem
+    TYPE(ReferenceElement_), INTENT(INOUT) :: ans(:)
+  END SUBROUTINE refelem_FacetElements_Line
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                          FacetElements@FacetElementMethods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 16 June 2021
+! summary: This routine returns the facet elements
+
+INTERFACE
+  MODULE SUBROUTINE refelem_FacetElements_Surface(refelem, ans)
+    CLASS(ReferenceElement_), INTENT(IN) :: refelem
+    TYPE(ReferenceElement_), INTENT(INOUT) :: ans(:)
+  END SUBROUTINE refelem_FacetElements_Surface
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                          FacetElements@FacetElementMethods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 16 June 2021
+! summary: This routine returns the facet elements
+
+INTERFACE
+  MODULE SUBROUTINE refelem_FacetElements_Volume(refelem, ans)
+    CLASS(ReferenceElement_), INTENT(IN) :: refelem
+    TYPE(ReferenceElement_), INTENT(INOUT) :: ans(:)
+  END SUBROUTINE refelem_FacetElements_Volume
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                             FacetTopology@GeometryMethods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 16 June 2021
+! summary: Returns the facet topology of the given element type
+
+INTERFACE FacetTopology
+  MODULE PURE FUNCTION refelem_FacetTopology(elemType, nptrs) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: elemType
+    INTEGER(I4B), INTENT(IN) :: nptrs(:)
+    TYPE(ReferenceTopology_), ALLOCATABLE :: ans(:)
+  END FUNCTION refelem_FacetTopology
+END INTERFACE FacetTopology
 
 !----------------------------------------------------------------------------
 !                                       LocalNodeCoord@LocalNodeCoordMethods
@@ -1050,22 +1111,6 @@ INTERFACE TotalEntities
     INTEGER(I4B) :: ans(4)
   END FUNCTION refelem_TotalEntities
 END INTERFACE TotalEntities
-
-!----------------------------------------------------------------------------
-!                                             FacetTopology@GeometryMethods
-!----------------------------------------------------------------------------
-
-!> author: Vikas Sharma, Ph. D.
-! date: 16 June 2021
-! summary: Returns the facet topology of the given element type
-
-INTERFACE FacetTopology
-  MODULE PURE FUNCTION refelem_FacetTopology(elemType, Nptrs) RESULT(ans)
-    INTEGER(I4B), INTENT(IN) :: elemType
-    INTEGER(I4B), INTENT(IN) :: Nptrs(:)
-    TYPE(ReferenceTopology_), ALLOCATABLE :: ans(:)
-  END FUNCTION refelem_FacetTopology
-END INTERFACE FacetTopology
 
 !----------------------------------------------------------------------------
 !                                              getVTKelementType@VTKMethods

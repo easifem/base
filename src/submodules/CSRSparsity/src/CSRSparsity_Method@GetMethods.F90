@@ -45,15 +45,15 @@ CONTAINS
 !                                                                     Shape
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE csr_shape
+MODULE PROCEDURE obj_shape
 Ans = [obj%nrow, obj%ncol]
-END PROCEDURE csr_shape
+END PROCEDURE obj_shape
 
 !----------------------------------------------------------------------------
 !                                                                      Size
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE csr_size
+MODULE PROCEDURE obj_size
 IF (PRESENT(Dims)) THEN
   IF (Dims .EQ. 1) THEN
     Ans = obj%nrow
@@ -63,22 +63,125 @@ IF (PRESENT(Dims)) THEN
 ELSE
   Ans = obj%nrow * obj%ncol
 END IF
-END PROCEDURE csr_size
+END PROCEDURE obj_size
 
 !----------------------------------------------------------------------------
-!                                                                      getNNZ
+!                                                                     GetNNZ
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE csr_getNNZ
+MODULE PROCEDURE obj_GetNNZ
 Ans = obj%nnz
-END PROCEDURE csr_getNNZ
+END PROCEDURE obj_GetNNZ
+
+!----------------------------------------------------------------------------
+!                                                                    GetNNZ
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE obj_GetNNZ_from_operation
+INTEGER(I4B) :: nrow, ncol
+LOGICAL(LGT) :: isSorted0
+
+isSorted0 = Input(default=.FALSE., option=isSorted)
+
+SELECT CASE (op)
+CASE ("+", "-")
+  nrow = SIZE(obj1, 1)
+  ncol = SIZE(obj1, 2)
+  IF (isSorted0) THEN
+    ans = GetNNZ_Add_Subtract_sorted(nrow=nrow, ncol=ncol, ja=obj1%JA,  &
+      & ia=obj1%IA, jb=obj2%JA, ib=obj2%IA)
+  ELSE
+    ans = GetNNZ_Add_Subtract(nrow=nrow, ncol=ncol, ja=obj1%JA,  &
+      & ia=obj1%IA, jb=obj2%JA, ib=obj2%IA)
+  END IF
+END SELECT
+END PROCEDURE obj_GetNNZ_from_operation
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE GetNNZ_Add_Subtract
+INTEGER(I4B) :: ii, jcol, kb, ka
+LOGICAL(LGT) :: iw(ncol)
+ans = 0
+
+DO ii = 1, nrow
+  iw = .FALSE.
+  DO ka = ia(ii), ia(ii + 1) - 1
+    ans = ans + 1
+    jcol = ja(ka)
+    iw(jcol) = .TRUE.
+  END DO
+
+  DO kb = ib(ii), ib(ii + 1) - 1
+    jcol = jb(kb)
+    IF (.NOT. iw(jcol)) THEN
+      ans = ans + 1
+      iw(jcol) = .TRUE.
+    END IF
+  END DO
+END DO
+END PROCEDURE GetNNZ_Add_Subtract
+
+!----------------------------------------------------------------------------
+!                                                                   GetNNZ
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE GetNNZ_Add_Subtract_sorted
+! internal variables
+INTEGER(I4B) :: len, i, ka, kb, kc, &
+  & kamax, kbmax, j1, jj2
+LOGICAL(LGT) :: isok
+
+kc = 1
+DO i = 1, nrow
+  ka = ia(i)
+  kb = ib(i)
+  kamax = ia(i + 1) - 1
+  kbmax = ib(i + 1) - 1
+
+  DO
+    isok = ka .LE. kamax .OR. kb .LE. kbmax
+    IF (.NOT. isok) EXIT
+
+    IF (ka .LE. kamax) THEN
+      j1 = ja(ka)
+    ELSE
+      ! take j1 large enough  that always jj2 .lt. j1
+      j1 = ncol + 1
+    END IF
+
+    IF (kb .LE. kbmax) THEN
+      jj2 = jb(kb)
+    ELSE
+      ! similarly take jj2 large enough  that always j1 .lt. jj2
+      jj2 = ncol + 1
+    END IF
+
+    IF (j1 .EQ. jj2) THEN
+      ka = ka + 1
+      kb = kb + 1
+      kc = kc + 1
+    ELSE IF (j1 .LT. jj2) THEN
+      ka = ka + 1
+      kc = kc + 1
+    ELSE IF (j1 .GT. jj2) THEN
+      kb = kb + 1
+      kc = kc + 1
+    END IF
+  END DO
+END DO
+
+ans = kc - 1
+END PROCEDURE GetNNZ_Add_Subtract_sorted
 
 !----------------------------------------------------------------------------
 !                                                                 GetNNZ
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE csr_getNNZ1
-INTEGER(I4B) :: ii, rindx, jj
+MODULE PROCEDURE obj_GetNNZ1
+INTEGER(I4B) :: ii, rindx
 IF (obj%isInitiated) THEN
   ans = 0
   SELECT CASE (from)
@@ -108,14 +211,14 @@ IF (obj%isInitiated) THEN
 ELSE
   ans = 0
 END IF
-END PROCEDURE csr_getNNZ1
+END PROCEDURE obj_GetNNZ1
 
 !----------------------------------------------------------------------------
 !                                                                 GetNNZ
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE csr_getNNZ2
-INTEGER(I4B) :: ii, rindx, jj
+MODULE PROCEDURE obj_GetNNZ2
+INTEGER(I4B) :: ii, rindx
 IF (obj%isInitiated) THEN
   ans = 0
 
@@ -136,16 +239,16 @@ IF (obj%isInitiated) THEN
 ELSE
   ans = 0
 END IF
-END PROCEDURE csr_getNNZ2
+END PROCEDURE obj_GetNNZ2
 
 !----------------------------------------------------------------------------
-!                                                                 getDiagonal
+!                                                                 GetDiagonal
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE csr_getDiagonal1
+MODULE PROCEDURE obj_GetDiagonal1
 INTEGER(I4B) :: len0
 CALL Reallocate(diag, obj%nrow, idiag, obj%nrow)
-CALL GETDIA( &
+CALL GetDIA( &
   & obj%nrow,&
   & obj%ncol,&
   & 0,&
@@ -155,26 +258,26 @@ CALL GETDIA( &
   & len0,&
   & diag,&
   & idiag,&
-  & INPUT(option=offset, default=0))
-END PROCEDURE csr_getDiagonal1
+  & INPUT(option=offSet, default=0))
+END PROCEDURE obj_GetDiagonal1
 
 !----------------------------------------------------------------------------
-!                                                               getDiagonal
+!                                                               GetDiagonal
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE csr_getDiagonal2
+MODULE PROCEDURE obj_GetDiagonal2
 INTEGER(I4B) :: ii
-  !!
+
 IF (obj%isDiagStored) THEN
-    !!
+
   CALL Reallocate(diag, obj%nrow)
   DO ii = 1, SIZE(diag)
     diag(ii) = A(obj%idiag(ii))
   END DO
-    !!
+
 ELSE
   CALL Reallocate(diag, obj%nrow)
-  CALL GETDIA( &
+  CALL GetDIA( &
     & obj%nrow,&
     & obj%ncol,&
     & 0,&
@@ -184,10 +287,59 @@ ELSE
     & ii,&
     & diag,&
     & obj%idiag,&
-    & INPUT(option=offset, default=0))
+    & INPUT(option=offSet, default=0))
   obj%isDiagStored = .TRUE.
 END IF
-  !!
-END PROCEDURE csr_getDiagonal2
+
+END PROCEDURE obj_GetDiagonal2
+
+!----------------------------------------------------------------------------
+!                                                               GetColNumber
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE obj_GetColNumber1
+ans = obj%JA(indx)
+END PROCEDURE obj_GetColNumber1
+
+!----------------------------------------------------------------------------
+!                                                               GetColIndex
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE obj_GetColIndex1
+ans(1) = obj%IA(irow)
+ans(2) = obj%IA(irow + 1) - 1
+END PROCEDURE obj_GetColIndex1
+
+!----------------------------------------------------------------------------
+!                                                                startColumn
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE obj_startColumn1
+ans = obj%IA(irow)
+END PROCEDURE obj_startColumn1
+
+!----------------------------------------------------------------------------
+!                                                                  endColumn
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE obj_endColumn1
+ans = obj%IA(irow + 1) - 1
+END PROCEDURE obj_endColumn1
+
+!----------------------------------------------------------------------------
+!                                                                      GetIA
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE obj_GetIA
+ans = obj%IA(irow)
+END PROCEDURE obj_GetIA
+
+!----------------------------------------------------------------------------
+!                                                                     GetJA
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE obj_GetJA
+ans = obj%JA(indx)
+END PROCEDURE obj_GetJA
 
 END SUBMODULE GetMethods

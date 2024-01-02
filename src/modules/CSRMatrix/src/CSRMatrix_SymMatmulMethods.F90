@@ -13,19 +13,29 @@
 !
 ! You should have received a copy of the GNU General Public License
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
-
-!----------------------------------------------------------------------------
 !
+
+MODULE CSRMatrix_SymMatmulMethods
+USE GlobalData, ONLY: I4B, DFP, LGT
+USE BaseType, ONLY: CSRMatrix_
+IMPLICIT NONE
+PRIVATE
+
+PUBLIC :: SymMatSquare
+
+!----------------------------------------------------------------------------
+!                                                             Matmul@MatVec
 !----------------------------------------------------------------------------
 
-#define _KIJ_ diag(vbar(:,ips, ipt))
-#define _DIM1_ SIZE(vbar, 1)
-#define _DIM2_ SIZE(vbar, 1)
+!> author: Vikas Sharma, Ph. D.
+! date: 2023-12-27
+! summary:  Returns A^2
 
-PURE SUBROUTINE STMM_9c(ans, test, trial, term1, term2, rho)
-#include "./STMM_9.inc"
-END SUBROUTINE STMM_9c
+INTERFACE SymMatSquare
+  MODULE SUBROUTINE obj_SymMatSquare(obj, A)
+    TYPE(CSRMatrix_), INTENT(INOUT) :: obj
+    TYPE(CSRMatrix_), INTENT(IN) :: A
+  END SUBROUTINE obj_SymMatSquare
+END INTERFACE SymMatSquare
 
-#undef _DIM1_
-#undef _DIM2_
-#undef _KIJ_
+END MODULE CSRMatrix_SymMatmulMethods

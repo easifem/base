@@ -17,35 +17,35 @@
 
 MODULE CSRMatrix_ConstructorMethods
 USE GlobalData, ONLY: I4B, DFP, LGT
-USE BaseType, ONLY: CSRMatrix_, DOF_, CSRSparsity_
+USE Basetype, ONLY: CSRMatrix_, DOF_, CSRSparsity_
+IMPLICIT NONE
+PRIVATE
 
 PUBLIC :: Initiate
 PUBLIC :: Shape
 PUBLIC :: Size
 PUBLIC :: TotalDimension
-PUBLIC :: setTotalDimension
-PUBLIC :: getNNZ
+PUBLIC :: SetTotalDimension
+PUBLIC :: GetNNZ
 PUBLIC :: ALLOCATE
 PUBLIC :: DEALLOCATE
 PUBLIC :: ASSIGNMENT(=)
+PUBLIC :: CSRMatrixAPLSB
+PUBLIC :: CSRMatrixAPLSBSorted
 
 !----------------------------------------------------------------------------
 !                                                  Shape@ConstructorMethods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date:         22 March 2021
-! summary:         This function returns the shape of sparse matrix
-
-INTERFACE
-  MODULE PURE FUNCTION csrMat_Shape(obj) RESULT(Ans)
-    TYPE(CSRMatrix_), INTENT(IN) :: obj
-    INTEGER(I4B) :: Ans(2)
-  END FUNCTION csrMat_Shape
-END INTERFACE
+! date: 22 March 2021
+! summary: This function returns the shape of sparse matrix
 
 INTERFACE Shape
-  MODULE PROCEDURE csrMat_Shape
+  MODULE PURE FUNCTION obj_Shape(obj) RESULT(ans)
+    TYPE(CSRMatrix_), INTENT(IN) :: obj
+    INTEGER(I4B) :: ans(2)
+  END FUNCTION obj_Shape
 END INTERFACE Shape
 
 !----------------------------------------------------------------------------
@@ -59,20 +59,16 @@ END INTERFACE Shape
 !# Introduction
 !
 ! This function returns the size of sparse matrix
-! If Dims equal to 1 then total number of rows are returned
-! If Dims is equal to 2 then total number of columns are return
-! If Dims is absent then nrow*ncol are returned
-
-INTERFACE
-  MODULE PURE FUNCTION csrMat_Size(obj, Dims) RESULT(Ans)
-    TYPE(CSRMatrix_), INTENT(IN) :: obj
-    INTEGER(I4B), OPTIONAL, INTENT(IN) :: Dims
-    INTEGER(I4B) :: Ans
-  END FUNCTION csrMat_Size
-END INTERFACE
+! If dims equal to 1 then total number of rows are returned
+! If dims is equal to 2 then total number of columns are return
+! If dims is absent then nrow*ncol are returned
 
 INTERFACE Size
-  MODULE PROCEDURE csrMat_Size
+  MODULE PURE FUNCTION obj_Size(obj, dims) RESULT(ans)
+    TYPE(CSRMatrix_), INTENT(IN) :: obj
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: dims
+    INTEGER(I4B) :: ans
+  END FUNCTION obj_Size
 END INTERFACE Size
 
 !----------------------------------------------------------------------------
@@ -83,54 +79,42 @@ END INTERFACE Size
 ! date:         23 Feb 2021
 ! summary:         Returns the total dimension of an array
 
-INTERFACE
-  MODULE PURE FUNCTION csrMat_TotalDimension(obj) RESULT(Ans)
-    CLASS(CSRMatrix_), INTENT(IN) :: obj
-    INTEGER(I4B) :: Ans
-  END FUNCTION csrMat_TotalDimension
-END INTERFACE
-
 INTERFACE TotalDimension
-  MODULE PROCEDURE csrMat_TotalDimension
+  MODULE PURE FUNCTION obj_TotalDimension(obj) RESULT(ans)
+    CLASS(CSRMatrix_), INTENT(IN) :: obj
+    INTEGER(I4B) :: ans
+  END FUNCTION obj_TotalDimension
 END INTERFACE TotalDimension
 
 !----------------------------------------------------------------------------
-!                                       setTotalDimension@ConstructorMethods
+!                                       SetTotalDimension@ConstructorMethods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date:         23 Feb 2021
-! summary:         This subroutine set the total dimension (rank) of an array
+! summary:         This subroutine Set the total dimension (rank) of an array
 
-INTERFACE
-  MODULE PURE SUBROUTINE csrMat_setTotalDimension(obj, tDimension)
+INTERFACE SetTotalDimension
+  MODULE PURE SUBROUTINE obj_SetTotalDimension(obj, tDimension)
     CLASS(CSRMatrix_), INTENT(INOUT) :: obj
     INTEGER(I4B), INTENT(IN) :: tDimension
-  END SUBROUTINE csrMat_setTotalDimension
-END INTERFACE
-
-INTERFACE setTotalDimension
-  MODULE PROCEDURE csrMat_setTotalDimension
-END INTERFACE setTotalDimension
+  END SUBROUTINE obj_SetTotalDimension
+END INTERFACE SetTotalDimension
 
 !----------------------------------------------------------------------------
-!                                                 getNNZ@ConstructorMethods
+!                                                 GetNNZ@ConstructorMethods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date:         22 March 2021
 ! summary:         Return the total number of non zero entry in the matrix
 
-INTERFACE
-  MODULE PURE FUNCTION csrMat_getNNZ(obj) RESULT(Ans)
+INTERFACE GetNNZ
+  MODULE PURE FUNCTION obj_GetNNZ(obj) RESULT(ans)
     TYPE(CSRMatrix_), INTENT(IN) :: obj
-    INTEGER(I4B) :: Ans
-  END FUNCTION csrMat_getNNZ
-END INTERFACE
-
-INTERFACE getNNZ
-  MODULE PROCEDURE csrMat_getNNZ
-END INTERFACE getNNZ
+    INTEGER(I4B) :: ans
+  END FUNCTION obj_GetNNZ
+END INTERFACE GetNNZ
 
 !----------------------------------------------------------------------------
 !                                                Allocate@ConstructorMethods
@@ -144,22 +128,18 @@ END INTERFACE getNNZ
 !
 ! This subroutine creates memory space for the sparse matrix
 !
-! Dims(1) denotes total number of rows
-! Dims(2) denotes total number of columns
-! tDOF is set to 1
-! tNodes is set to Dims(1)
-! nnz is set to to 0
-
-INTERFACE
-  MODULE SUBROUTINE csrMat_Allocate(obj, Dims, MatrixProp)
-    TYPE(CSRMatrix_), INTENT(INOUT) :: obj
-    INTEGER(I4B), INTENT(IN) :: Dims(2)
-    CHARACTER(*), OPTIONAL, INTENT(IN) :: MatrixProp
-  END SUBROUTINE csrMat_Allocate
-END INTERFACE
+! dims(1) denotes total number of rows
+! dims(2) denotes total number of columns
+! tDOF is Set to 1
+! tNodes is Set to dims(1)
+! nnz is Set to to 0
 
 INTERFACE ALLOCATE
-  MODULE PROCEDURE csrMat_Allocate
+  MODULE SUBROUTINE obj_Allocate(obj, dims, matrixProp)
+    TYPE(CSRMatrix_), INTENT(INOUT) :: obj
+    INTEGER(I4B), INTENT(IN) :: dims(2)
+    CHARACTER(*), OPTIONAL, INTENT(IN) :: matrixProp
+  END SUBROUTINE obj_Allocate
 END INTERFACE ALLOCATE
 
 !----------------------------------------------------------------------------
@@ -170,14 +150,10 @@ END INTERFACE ALLOCATE
 ! date:         22 March 2021
 ! summary:          This subroutine deallocates the data
 
-INTERFACE
-  MODULE SUBROUTINE csrMat_Deallocate(obj)
-    TYPE(CSRMatrix_), INTENT(INOUT) :: obj
-  END SUBROUTINE csrMat_Deallocate
-END INTERFACE
-
 INTERFACE DEALLOCATE
-  MODULE PROCEDURE csrMat_Deallocate
+  MODULE SUBROUTINE obj_Deallocate(obj)
+    TYPE(CSRMatrix_), INTENT(INOUT) :: obj
+  END SUBROUTINE obj_Deallocate
 END INTERFACE DEALLOCATE
 
 !----------------------------------------------------------------------------
@@ -188,8 +164,8 @@ END INTERFACE DEALLOCATE
 ! date:         14 July 2021
 ! summary: This subroutine construct the `CSRMatrix_` object
 
-INTERFACE
-  MODULE SUBROUTINE csrMat_initiate1(obj, ncol, nrow, idof, jdof, matrixProp)
+INTERFACE Initiate
+ MODULE SUBROUTINE obj_Initiate1(obj, ncol, nrow, idof, jdof, matrixProp, nnz)
     TYPE(CSRMatrix_), INTENT(INOUT) :: obj
     INTEGER(I4B), INTENT(IN) :: ncol
     !! number of columns in sparse matrix
@@ -200,13 +176,11 @@ INTERFACE
     !! storage format (NODES_FMT, DOF_FMT), and names of physical variable
     !! space-time component in each physical variables
     !! Total number of nodes used for these physical variables
-    CHARACTER(*), OPTIONAL, INTENT(IN) :: MatrixProp
+    CHARACTER(*), OPTIONAL, INTENT(IN) :: matrixProp
     !! Matrix is `SYM`, `UNSYM`
-  END SUBROUTINE csrMat_initiate1
-END INTERFACE
-
-INTERFACE Initiate
-  MODULE PROCEDURE csrMat_initiate1
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: nnz
+    !! number of non zeros
+  END SUBROUTINE obj_Initiate1
 END INTERFACE Initiate
 
 !----------------------------------------------------------------------------
@@ -218,18 +192,18 @@ END INTERFACE Initiate
 ! summary: This subroutine construct the `CSRMatrix_` object
 !
 !# Introduction
-! This subroutine initiates an instance of [[CSRMatrix_]]. The object so
+! This subroutine Initiates an instance of [[CSRMatrix_]]. The object so
 ! created does not own the ownership of `obj%csr`. Instead it points to a
 ! [[CSRSparsity_]] object which is supplied by the user.
 !
 !@note
-! The object `csr` should be initiated by the user before sending it to
+! The object `csr` should be Initiated by the user before sending it to
 ! CSR matrix via this routine. This is because this routine uses information
 ! such as ncol, nrow, nnz from the csr.
 !@endnote
 
-INTERFACE
-  MODULE SUBROUTINE csrMat_initiate2(obj, csr, matrixProp)
+INTERFACE Initiate
+  MODULE SUBROUTINE obj_Initiate2(obj, csr, matrixProp)
     TYPE(CSRMatrix_), INTENT(INOUT) :: obj
     TYPE(CSRSparsity_), INTENT(IN) :: csr
     !! number of columns in sparse matrix
@@ -238,13 +212,9 @@ INTERFACE
     !! storage format (NODES_FMT, DOF_FMT), and names of physical variable
     !! space-time component in each physical variables
     !! Total number of nodes used for these physical variables
-    CHARACTER(*), OPTIONAL, INTENT(IN) :: MatrixProp
+    CHARACTER(*), OPTIONAL, INTENT(IN) :: matrixProp
     !! Matrix is `SYM`, `UNSYM`
-  END SUBROUTINE csrMat_initiate2
-END INTERFACE
-
-INTERFACE Initiate
-  MODULE PROCEDURE csrMat_initiate2
+  END SUBROUTINE obj_Initiate2
 END INTERFACE Initiate
 
 !----------------------------------------------------------------------------
@@ -255,17 +225,15 @@ END INTERFACE Initiate
 ! date:         22 March 2021
 ! summary: This subroutine constructs `sparsematrix_` object from IA, JA, A
 
-INTERFACE
-  MODULE SUBROUTINE csrMat_initiate3(obj, A, IA, JA, MatrixProp)
+INTERFACE Initiate
+  MODULE SUBROUTINE obj_Initiate3(obj, A, IA, JA, matrixProp, ncol)
     TYPE(CSRMatrix_), INTENT(INOUT) :: obj
     REAL(DFP), INTENT(IN) :: A(:)
     INTEGER(I4B), INTENT(IN) :: IA(:), JA(:)
-    CHARACTER(*), OPTIONAL, INTENT(IN) :: MatrixProp
-  END SUBROUTINE csrMat_initiate3
-END INTERFACE
-
-INTERFACE Initiate
-  MODULE PROCEDURE csrMat_initiate3
+    CHARACTER(*), OPTIONAL, INTENT(IN) :: matrixProp
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: ncol
+    !! Number of columns in obj, default is number of rows
+  END SUBROUTINE obj_Initiate3
 END INTERFACE Initiate
 
 !----------------------------------------------------------------------------
@@ -277,22 +245,18 @@ END INTERFACE Initiate
 ! summary: Initiate by copying
 !
 !# Introduction
-! This routine initiates obj by copying contents from obj2
+! This routine Initiates obj by copying contents from obj2
 ! This routine is used in defining the assignment operator.
 
-INTERFACE
-  MODULE SUBROUTINE csrMat_initiate4(obj, obj2)
+INTERFACE Initiate
+  MODULE SUBROUTINE obj_Initiate4(obj, obj2)
     TYPE(CSRMatrix_), INTENT(INOUT) :: obj
     TYPE(CSRMatrix_), INTENT(IN) :: obj2
-  END SUBROUTINE csrMat_initiate4
-END INTERFACE
-
-INTERFACE Initiate
-  MODULE PROCEDURE csrMat_initiate4
+  END SUBROUTINE obj_Initiate4
 END INTERFACE Initiate
 
 INTERFACE ASSIGNMENT(=)
-  MODULE PROCEDURE csrMat_initiate4
+  MODULE PROCEDURE obj_Initiate4
 END INTERFACE ASSIGNMENT(=)
 
 !----------------------------------------------------------------------------
@@ -303,8 +267,8 @@ END INTERFACE ASSIGNMENT(=)
 ! date: 14 July 2021
 ! summary: Initiates a submatrix
 
-INTERFACE
-  MODULE SUBROUTINE csrMat_initiate5(obj, obj2, i1, i2, j1, j2)
+INTERFACE Initiate
+  MODULE SUBROUTINE obj_Initiate5(obj, obj2, i1, i2, j1, j2)
     TYPE(CSRMatrix_), INTENT(INOUT) :: obj
     !! submatrix to be returned
     TYPE(CSRMatrix_), INTENT(IN) :: obj2
@@ -313,11 +277,7 @@ INTERFACE
     !! start and end row indices
     INTEGER(I4B), INTENT(IN) :: j1, j2
     !! start and end col indices
-  END SUBROUTINE csrMat_initiate5
-END INTERFACE
-
-INTERFACE Initiate
-  MODULE PROCEDURE csrMat_initiate5
+  END SUBROUTINE obj_Initiate5
 END INTERFACE Initiate
 
 !----------------------------------------------------------------------------
@@ -326,23 +286,106 @@ END INTERFACE Initiate
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 14 July 2021
-! summary: This routine initiates an instance of sparse matrix by copying
+! summary: This routine Initiates an instance of sparse matrix by copying
 ! the content of another object obj2
 !
 !# Introduction
 !
 ! This method has been deprecated as it is same as `Initiate4`
 
-INTERFACE
-  MODULE SUBROUTINE csrMat_initiate6(obj, obj2, hardCopy)
+INTERFACE Initiate
+  MODULE SUBROUTINE obj_Initiate6(obj, obj2, hardCopy)
     TYPE(CSRMatrix_), INTENT(INOUT) :: obj
     TYPE(CSRMatrix_), INTENT(IN) :: obj2
     LOGICAL(LGT), INTENT(IN) :: hardCopy
-  END SUBROUTINE csrMat_initiate6
-END INTERFACE
+  END SUBROUTINE obj_Initiate6
+END INTERFACE Initiate
+
+!----------------------------------------------------------------------------
+!                                                           Initiate@Methods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2023-12-16
+! summary:  Initiate an object by adding two csrmatrix
 
 INTERFACE Initiate
-  MODULE PROCEDURE csrMat_initiate6
+  MODULE SUBROUTINE obj_Initiate7(obj, obj1, obj2, scale, isSorted)
+    TYPE(CSRMatrix_), INTENT(INOUT) :: obj
+    TYPE(CSRMatrix_), INTENT(IN) :: obj1
+    TYPE(CSRMatrix_), INTENT(IN) :: obj2
+    REAL(DFP), INTENT(IN) :: scale
+    LOGICAL(LGT), OPTIONAL, INTENT(IN) :: isSorted
+  END SUBROUTINE obj_Initiate7
 END INTERFACE Initiate
+
+!----------------------------------------------------------------------------
+!                                                           Initiate@Methods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2023-12-16
+! summary:  Initiate an object by adding two csrmatrix
+
+INTERFACE CSRMatrixAPLSB
+  MODULE SUBROUTINE obj_aplsb(nrow, ncol, a, ja, ia, s, b, jb, ib, c,  &
+    & jc, ic, nzmax, ierr)
+    INTEGER(I4B), INTENT(IN) :: nrow
+    INTEGER(I4B), INTENT(IN) :: ncol
+    REAL(DFP), INTENT(IN) :: a(:)
+    INTEGER(I4B), INTENT(IN) :: ja(:)
+    INTEGER(I4B), INTENT(IN) :: ia(:)
+    !! nrow + 1
+    REAL(DFP), INTENT(IN) :: s
+    REAL(DFP), INTENT(IN) :: b(:)
+    INTEGER(I4B), INTENT(IN) :: jb(:)
+    INTEGER(I4B), INTENT(IN) :: ib(:)
+    !! nrow + 1
+    REAL(DFP), INTENT(INOUT) :: c(:)
+    !! The size of c should be less than or equalto nzmax
+    INTEGER(I4B), INTENT(INOUT) :: jc(:)
+    !! The size of jc should be less than or equalto nzmax
+    INTEGER(I4B), INTENT(INOUT) :: ic(:)
+    !! nrow + 1
+    INTEGER(I4B), INTENT(IN) :: nzmax
+    !! max number of nonzero in c
+    INTEGER(I4B), INTENT(OUT) :: ierr
+  END SUBROUTINE obj_aplsb
+END INTERFACE CSRMatrixAPLSB
+
+!----------------------------------------------------------------------------
+!                                                           Initiate@Methods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2023-12-16
+! summary:  Initiate an object by adding two csrmatrix
+
+INTERFACE CSRMatrixAPLSBSorted
+  MODULE SUBROUTINE obj_aplsb_sorted(nrow, ncol, a, ja, ia, s, b, jb, ib,  &
+    & c, jc, ic, nzmax, ierr)
+    INTEGER(I4B), INTENT(IN) :: nrow
+    INTEGER(I4B), INTENT(IN) :: ncol
+    REAL(DFP), INTENT(IN) :: a(:)
+    INTEGER(I4B), INTENT(IN) :: ja(:)
+    INTEGER(I4B), INTENT(IN) :: ia(:)
+    !! nrow + 1
+    REAL(DFP), INTENT(IN) :: s
+    !! scale
+    REAL(DFP), INTENT(IN) :: b(:)
+    INTEGER(I4B), INTENT(IN) :: jb(:)
+    INTEGER(I4B), INTENT(IN) :: ib(:)
+    !! nrow + 1
+    REAL(DFP), INTENT(INOUT) :: c(:)
+    !! The size of c should be less than or equalto nzmax
+    INTEGER(I4B), INTENT(INOUT) :: jc(:)
+    !! The size of jc should be less than or equalto nzmax
+    INTEGER(I4B), INTENT(INOUT) :: ic(:)
+    !! nrow + 1
+    INTEGER(I4B), INTENT(IN) :: nzmax
+    !! max number of nonzero in c
+    INTEGER(I4B), INTENT(OUT) :: ierr
+  END SUBROUTINE obj_aplsb_sorted
+END INTERFACE CSRMatrixAPLSBSorted
 
 END MODULE CSRMatrix_ConstructorMethods

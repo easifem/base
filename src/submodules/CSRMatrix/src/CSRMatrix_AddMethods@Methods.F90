@@ -25,169 +25,143 @@ IMPLICIT NONE
 CONTAINS
 
 !----------------------------------------------------------------------------
-!                                                            addContribution
+!                                                            AddContribution
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE csrMat_add0
+MODULE PROCEDURE obj_Add0
 ! Internal variables
 INTEGER(I4B), ALLOCATABLE :: row(:), col(:)
 INTEGER(I4B) :: ii, jj, kk
-!!
-!! main
-!!
+
 row = getIndex(obj=obj%csr%idof, nodeNum=nodenum)
 col = getIndex(obj=obj%csr%jdof, nodeNum=nodenum)
-  !!
+
 DO ii = 1, SIZE(row)
-  !!
   DO kk = 1, SIZE(col)
-    !!
     DO jj = obj%csr%IA(row(ii)), obj%csr%IA(row(ii) + 1) - 1
-      !!
       IF (obj%csr%JA(jj) .EQ. col(kk)) THEN
-        obj%A(jj) = obj%A(jj) + scale * value(ii, kk)
+        obj%A(jj) = obj%A(jj) + scale * VALUE(ii, kk)
         EXIT
       END IF
-      !!
     END DO
-    !!
   END DO
-  !!
 END DO
 IF (ALLOCATED(row)) DEALLOCATE (row)
 IF (ALLOCATED(col)) DEALLOCATE (col)
-END PROCEDURE csrMat_add0
+END PROCEDURE obj_Add0
 
 !----------------------------------------------------------------------------
-!                                                                       add
+!                                                                       Add
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE csrMat_add1
+MODULE PROCEDURE obj_Add1
 REAL(DFP), ALLOCATABLE :: m2(:, :)
 INTEGER(I4B) :: tdof
-!!
-!! main
-!!
+
 tdof = .tdof.obj%csr%idof
-!!
 SELECT CASE (storageFMT)
-!!
-!!
-!!
 CASE (FMT_NODES)
-  !!
   IF ((obj.StorageFMT.1) .EQ. FMT_NODES) THEN
-    m2 = value
+    m2 = VALUE
   ELSE
-    CALL Convert(From=value, To=m2, Conversion=NodesToDOF, &
+    CALL Convert(From=VALUE, To=m2, Conversion=NodesToDOF, &
       & nns=SIZE(nodenum), tDOF=tdof)
   END IF
-!!
-!!
-!!
-!!
+
 CASE (FMT_DOF)
-  !!
   IF ((obj.StorageFMT.1) .EQ. FMT_DOF) THEN
-    m2 = value
+    m2 = VALUE
   ELSE
-    CALL Convert(From=value, To=m2, Conversion=DofToNodes, &
+    CALL Convert(From=VALUE, To=m2, Conversion=DofToNodes, &
       & nns=SIZE(nodenum), tDOF=tdof)
   END IF
-  !!
 END SELECT
-!!
-CALL Add(obj=obj, nodenum=nodenum, value=m2, scale=scale)
-!!
+
+CALL Add(obj=obj, nodenum=nodenum, VALUE=m2, scale=scale)
 IF (ALLOCATED(m2)) DEALLOCATE (m2)
-!!
-END PROCEDURE csrMat_add1
+
+END PROCEDURE obj_Add1
 
 !----------------------------------------------------------------------------
-!                                                                        add
+!                                                                        Add
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE csrMat_add2
-obj%A = obj%A + scale * value
-END PROCEDURE csrMat_add2
+MODULE PROCEDURE obj_Add2
+obj%A = obj%A + scale * VALUE
+END PROCEDURE obj_Add2
 
 !----------------------------------------------------------------------------
-!                                                                        add
+!                                                                        Add
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE csrMat_add3
+MODULE PROCEDURE obj_Add3
 INTEGER(I4B) :: i, j
 DO j = obj%csr%IA(iRow), obj%csr%IA(iRow + 1) - 1
   IF (obj%csr%JA(j) .EQ. iColumn) &
-    & obj%A(j) = obj%A(j) + scale * value
+    & obj%A(j) = obj%A(j) + scale * VALUE
 END DO
-END PROCEDURE csrMat_add3
+END PROCEDURE obj_Add3
 
 !----------------------------------------------------------------------------
-!                                                                        add
+!                                                                        Add
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE csrMat_add4
-  !!
-CALL add(obj=obj, &
+MODULE PROCEDURE obj_Add4
+!
+CALL Add(obj=obj, &
   & irow=getNodeLoc(obj=obj%csr%idof, nodenum=inodenum, idof=idof), &
   & icolumn=getNodeLoc(obj=obj%csr%jdof, nodenum=jnodenum, idof=jdof), &
-  & value=value, scale=scale)
-  !!
-END PROCEDURE csrMat_add4
+  & VALUE=VALUE, scale=scale)
+!
+END PROCEDURE obj_Add4
 
 !----------------------------------------------------------------------------
-!                                                                       add
+!                                                                       Add
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE csrMat_add5
+MODULE PROCEDURE obj_Add5
 REAL(DFP), ALLOCATABLE :: m2(:, :)
 INTEGER(I4B) :: tdof1, tdof2
-!!
 tdof1 = .tdof.obj%csr%idof
 tdof2 = .tdof.obj%csr%jdof
-!!
 ALLOCATE (m2(tdof1 * SIZE(nodenum), tdof2 * SIZE(nodenum)))
-!!
-m2 = value
-!!
-CALL Add(obj=obj, nodenum=nodenum, value=m2, scale=scale)
-!!
+m2 = VALUE
+CALL Add(obj=obj, nodenum=nodenum, VALUE=m2, scale=scale)
 DEALLOCATE (m2)
-END PROCEDURE csrMat_add5
+END PROCEDURE obj_Add5
 
 !----------------------------------------------------------------------------
-!                                                                       add
+!                                                                       Add
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE csrMat_add6
+MODULE PROCEDURE obj_Add6
 ! Internal variables
 INTEGER(I4B), ALLOCATABLE :: row(:), col(:)
 INTEGER(I4B) :: ii, jj, kk
-!!
+
 row = getIndex(obj=obj%csr%idof, nodeNum=iNodeNum, ivar=ivar)
 col = getIndex(obj=obj%csr%jdof, nodeNum=jNodeNum, ivar=jvar)
-!!
+
 DO ii = 1, SIZE(row)
   DO kk = 1, SIZE(col)
     DO jj = obj%csr%IA(row(ii)), obj%csr%IA(row(ii) + 1) - 1
       IF (obj%csr%JA(jj) .EQ. col(kk)) THEN
-        obj%A(jj) = obj%A(jj) + scale * value(ii, kk)
+        obj%A(jj) = obj%A(jj) + scale * VALUE(ii, kk)
         EXIT
       END IF
     END DO
   END DO
 END DO
-!!
+
 DEALLOCATE (row, col)
-!!
-END PROCEDURE csrMat_add6
+
+END PROCEDURE obj_Add6
 
 !----------------------------------------------------------------------------
-!                                                                        add
+!                                                                        Add
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE csrMat_add7
+MODULE PROCEDURE obj_Add7
 CALL Add(obj=obj, &
   & irow=getNodeLoc( &
           & obj=obj%csr%idof, &
@@ -199,45 +173,42 @@ CALL Add(obj=obj, &
               & nodenum=jNodeNum, &
               & ivar=jvar, &
               & idof=jDOF), &
-  & value=value, &
+  & VALUE=VALUE, &
   & scale=scale)
-  !!
-END PROCEDURE csrMat_add7
+!
+END PROCEDURE obj_Add7
 
 !----------------------------------------------------------------------------
-!                                                                       add
+!                                                                       Add
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE csrMat_add8
+MODULE PROCEDURE obj_Add8
 ! Internal variables
 INTEGER(I4B), ALLOCATABLE :: row(:), col(:)
 INTEGER(I4B) :: ii, jj, kk
-  !!
-  !! main
-  !!
+
 row = getIndex(obj=obj%csr%idof, nodeNum=iNodeNum, ivar=ivar, idof=idof)
 col = getIndex(obj=obj%csr%jdof, nodeNum=jNodeNum, ivar=jvar, idof=jdof)
-  !!
+
 DO ii = 1, SIZE(row)
   DO kk = 1, SIZE(col)
     DO jj = obj%csr%IA(row(ii)), obj%csr%IA(row(ii) + 1) - 1
       IF (obj%csr%JA(jj) .EQ. col(kk)) THEN
-        obj%A(jj) = obj%A(jj) + scale * value(ii, kk)
+        obj%A(jj) = obj%A(jj) + scale * VALUE(ii, kk)
         EXIT
       END IF
     END DO
   END DO
 END DO
-  !!
+
 DEALLOCATE (row, col)
-  !!
-END PROCEDURE csrMat_add8
+END PROCEDURE obj_Add8
 
 !----------------------------------------------------------------------------
-!                                                                        add
+!                                                                        Add
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE csrMat_add9
+MODULE PROCEDURE obj_Add9
 CALL Add( &
   & obj=obj, &
   & irow=getNodeLoc( &
@@ -252,154 +223,198 @@ CALL Add( &
               & ivar=jvar, &
               & spacecompo=jspacecompo, &
               & timecompo=jtimecompo), &
-  & value=value, &
+  & VALUE=VALUE, &
   & scale=scale)
-END PROCEDURE csrMat_add9
+END PROCEDURE obj_Add9
 
 !----------------------------------------------------------------------------
-!                                                                     add
+!                                                                     Add
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE csrMat_add10
+MODULE PROCEDURE obj_Add10
 ! Internal variables
 INTEGER(I4B), ALLOCATABLE :: row(:), col(:)
 INTEGER(I4B) :: ii, jj, kk
-!!
+!
 row = getIndex(obj=obj%csr%idof, nodeNum=iNodeNum, ivar=ivar)
 col = getIndex(obj=obj%csr%jdof, nodeNum=jNodeNum, ivar=jvar)
-!!
+
 DO ii = 1, SIZE(row)
   DO kk = 1, SIZE(col)
     DO jj = obj%csr%IA(row(ii)), obj%csr%IA(row(ii) + 1) - 1
       IF (obj%csr%JA(jj) .EQ. col(kk)) THEN
-        obj%A(jj) = obj%A(jj) + scale * value
+        obj%A(jj) = obj%A(jj) + scale * VALUE
         EXIT
       END IF
     END DO
   END DO
 END DO
-!!
+
 DEALLOCATE (row, col)
-END PROCEDURE csrMat_add10
+END PROCEDURE obj_Add10
 
 !----------------------------------------------------------------------------
-!                                                                       add
+!                                                                       Add
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE csrMat_add11
+MODULE PROCEDURE obj_Add11
 ! Internal variables
 INTEGER(I4B), ALLOCATABLE :: row(:), col(:)
 INTEGER(I4B) :: ii, jj, kk
-!!
+
 row = getNodeLoc(obj=obj%csr%idof, nodeNum=iNodeNum, ivar=ivar, idof=idof)
 col = getNodeLoc(obj=obj%csr%jdof, nodeNum=jNodeNum, ivar=jvar, idof=jdof)
-!!
+
 DO ii = 1, SIZE(row)
   DO kk = 1, SIZE(col)
     DO jj = obj%csr%IA(row(ii)), obj%csr%IA(row(ii) + 1) - 1
       IF (obj%csr%JA(jj) .EQ. col(kk)) THEN
-        obj%A(jj) = obj%A(jj) + scale * value
+        obj%A(jj) = obj%A(jj) + scale * VALUE
         EXIT
       END IF
     END DO
   END DO
 END DO
-!!
+
 DEALLOCATE (row, col)
-!!
-END PROCEDURE csrMat_add11
+
+END PROCEDURE obj_Add11
 
 !----------------------------------------------------------------------------
-!                                                                       add
+!                                                                       Add
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE csrMat_add12
+MODULE PROCEDURE obj_Add12
 ! Internal variables
 INTEGER(I4B), ALLOCATABLE :: row(:), col(:)
 INTEGER(I4B) :: ii, jj, kk
-!!
+
 row = getNodeLoc(obj=obj%csr%idof, nodeNum=iNodeNum, ivar=ivar, &
   & spacecompo=ispacecompo, timecompo=itimecompo)
-!!
+
 col = getNodeLoc(obj=obj%csr%jdof, nodeNum=jNodeNum, ivar=jvar, &
   & spacecompo=jspacecompo, timecompo=jtimecompo)
-!!
+
 DO ii = 1, SIZE(row)
   DO kk = 1, SIZE(col)
     DO jj = obj%csr%IA(row(ii)), obj%csr%IA(row(ii) + 1) - 1
       IF (obj%csr%JA(jj) .EQ. col(kk)) THEN
-        obj%A(jj) = obj%A(jj) + scale * value
+        obj%A(jj) = obj%A(jj) + scale * VALUE
         EXIT
       END IF
     END DO
   END DO
 END DO
-!!
+
 DEALLOCATE (row, col)
-END PROCEDURE csrMat_add12
+END PROCEDURE obj_Add12
 
 !----------------------------------------------------------------------------
-!                                                                       add
+!                                                                       Add
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE csrMat_add13
+MODULE PROCEDURE obj_Add13
 ! Internal variables
 INTEGER(I4B), ALLOCATABLE :: row(:), col(:)
 INTEGER(I4B) :: ii, jj, kk
-!!
+
 row = getNodeLoc(obj=obj%csr%idof, nodeNum=iNodeNum, ivar=ivar, &
   & spacecompo=ispacecompo, timecompo=itimecompo)
-!!
+
 col = getNodeLoc(obj=obj%csr%jdof, nodeNum=jNodeNum, ivar=jvar, &
   & spacecompo=jspacecompo, timecompo=jtimecompo)
-!!
+
 DO ii = 1, SIZE(row)
   DO kk = 1, SIZE(col)
     DO jj = obj%csr%IA(row(ii)), obj%csr%IA(row(ii) + 1) - 1
       IF (obj%csr%JA(jj) .EQ. col(kk)) THEN
-        obj%A(jj) = obj%A(jj) + scale * value
+        obj%A(jj) = obj%A(jj) + scale * VALUE
         EXIT
       END IF
     END DO
   END DO
 END DO
-!!
+
 DEALLOCATE (row, col)
-!!
-END PROCEDURE csrMat_add13
+
+END PROCEDURE obj_Add13
 
 !----------------------------------------------------------------------------
-!                                                                       add
+!                                                                       Add
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE csrMat_add14
+MODULE PROCEDURE obj_Add14
 ! Internal variables
 INTEGER(I4B), ALLOCATABLE :: row(:), col(:)
 INTEGER(I4B) :: ii, jj, kk
-!!
+
 row = getNodeLoc(obj=obj%csr%idof, nodeNum=iNodeNum, ivar=ivar, &
   & spacecompo=ispacecompo, timecompo=itimecompo)
-!!
+
 col = getNodeLoc(obj=obj%csr%jdof, nodeNum=jNodeNum, ivar=jvar, &
   & spacecompo=jspacecompo, timecompo=jtimecompo)
-!!
+
 DO ii = 1, SIZE(row)
   DO kk = 1, SIZE(col)
     DO jj = obj%csr%IA(row(ii)), obj%csr%IA(row(ii) + 1) - 1
       IF (obj%csr%JA(jj) .EQ. col(kk)) THEN
-        obj%A(jj) = obj%A(jj) + scale * value
+        obj%A(jj) = obj%A(jj) + scale * VALUE
         EXIT
       END IF
     END DO
   END DO
 END DO
-!!
+
 DEALLOCATE (row, col)
-!!
-END PROCEDURE csrMat_add14
+
+END PROCEDURE obj_Add14
 
 !----------------------------------------------------------------------------
-!
+!                                                                       Add
 !----------------------------------------------------------------------------
+
+MODULE PROCEDURE obj_Add15
+LOGICAL(LGT) :: sameStructure0, isSorted0
+INTEGER(I4B) :: nrow, ncol, nzmax, ierr
+
+sameStructure0 = Input(default=.FALSE., option=isSameStructure)
+
+IF (sameStructure0) THEN
+  obj%A = obj%A + scale * VALUE%A
+  RETURN
+END IF
+
+isSorted0 = Input(default=.FALSE., option=isSorted)
+
+nrow = SIZE(obj, 1)
+ncol = SIZE(obj, 2)
+nzmax = GetNNZ(obj)
+
+IF (isSorted0) THEN
+  CALL CSRMatrixAPLSBSorted(nrow=nrow, ncol=ncol,  &
+    & a=obj%A, ja=obj%csr%ja, ia=obj%csr%ia,  &
+    & s=scale,  &
+    & b=VALUE%a, jb=VALUE%csr%ja, ib=VALUE%csr%ia,  &
+    & c=obj%A, jc=obj%csr%ja, ic=obj%csr%ia, nzmax=nzmax,  &
+    & ierr=ierr)
+ELSE
+  CALL CSRMatrixAPLSB(nrow=nrow, ncol=ncol,  &
+    & a=obj%A, ja=obj%csr%ja, ia=obj%csr%ia,  &
+    & s=scale,  &
+    & b=VALUE%a, jb=VALUE%csr%ja, ib=VALUE%csr%ia,  &
+    & c=obj%A, jc=obj%csr%ja, ic=obj%csr%ia, nzmax=nzmax,  &
+    & ierr=ierr)
+END IF
+
+IF (ierr .EQ. 0) THEN
+  CALL Errormsg( &
+  & "Some error occured while calling CSRMarixAPLSB.",  &
+  & __FILE__,  &
+  & "obj_Add15()",  &
+  & __LINE__,  &
+  & stderr)
+  STOP
+END IF
+END PROCEDURE obj_Add15
 
 END SUBMODULE Methods

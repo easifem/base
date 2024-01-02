@@ -18,7 +18,8 @@
 MODULE CSRMatrix_SetBlockRowMethods
 USE GlobalData, ONLY: I4B, DFP, LGT
 USE BaseType, ONLY: CSRMatrix_
-
+IMPLICIT NONE
+PRIVATE
 
 PUBLIC :: SetBlockRow
 
@@ -31,12 +32,12 @@ PUBLIC :: SetBlockRow
 ! summary: This routine sets the Column of a sparse matrix
 
 INTERFACE
-MODULE SUBROUTINE csrMat_setBlockRow1( obj, jvar, irow, value )
-  TYPE( CSRMatrix_ ), INTENT( INOUT ) :: obj
-  INTEGER( I4B ), INTENT( IN ) :: jvar
-  INTEGER( I4B ), INTENT( IN ) :: irow
-  REAL( DFP ), INTENT( IN ) :: value
-END SUBROUTINE csrMat_setBlockRow1
+  MODULE SUBROUTINE csrMat_setBlockRow1(obj, jvar, irow, VALUE)
+    TYPE(CSRMatrix_), INTENT(INOUT) :: obj
+    INTEGER(I4B), INTENT(IN) :: jvar
+    INTEGER(I4B), INTENT(IN) :: irow
+    REAL(DFP), INTENT(IN) :: VALUE
+  END SUBROUTINE csrMat_setBlockRow1
 END INTERFACE
 
 INTERFACE setBlockRow
@@ -52,12 +53,12 @@ END INTERFACE setBlockRow
 ! summary: This routine sets the Column of a sparse matrix
 
 INTERFACE
-MODULE SUBROUTINE csrMat_setBlockRow2( obj, jvar, irow, value )
-  TYPE( CSRMatrix_ ), INTENT( INOUT ) :: obj
-  INTEGER( I4B ), INTENT( IN ) :: jvar
-  INTEGER( I4B ), INTENT( IN ) :: irow
-  REAL( DFP ), INTENT( IN ) :: value( : )
-END SUBROUTINE csrMat_setBlockRow2
+  MODULE SUBROUTINE csrMat_setBlockRow2(obj, jvar, irow, VALUE)
+    TYPE(CSRMatrix_), INTENT(INOUT) :: obj
+    INTEGER(I4B), INTENT(IN) :: jvar
+    INTEGER(I4B), INTENT(IN) :: irow
+    REAL(DFP), INTENT(IN) :: VALUE(:)
+  END SUBROUTINE csrMat_setBlockRow2
 END INTERFACE
 
 INTERFACE setBlockRow
@@ -73,15 +74,15 @@ END INTERFACE setBlockRow
 ! summary: This routine sets the Column of a sparse matrix
 
 INTERFACE
-MODULE SUBROUTINE csrMat_setBlockRow3( obj, ivar, jvar, nodenum, idof, &
-  & value )
-  TYPE( CSRMatrix_ ), INTENT( INOUT ) :: obj
-  INTEGER( I4B ), INTENT( IN ) :: ivar
-  INTEGER( I4B ), INTENT( IN ) :: jvar
-  INTEGER( I4B ), INTENT( IN ) :: nodenum
-  INTEGER( I4B ), INTENT( IN ) :: idof
-  REAL( DFP ), INTENT( IN ) :: value
-END SUBROUTINE csrMat_setBlockRow3
+  MODULE SUBROUTINE csrMat_setBlockRow3(obj, ivar, jvar, nodenum, idof, &
+    & VALUE)
+    TYPE(CSRMatrix_), INTENT(INOUT) :: obj
+    INTEGER(I4B), INTENT(IN) :: ivar
+    INTEGER(I4B), INTENT(IN) :: jvar
+    INTEGER(I4B), INTENT(IN) :: nodenum
+    INTEGER(I4B), INTENT(IN) :: idof
+    REAL(DFP), INTENT(IN) :: VALUE
+  END SUBROUTINE csrMat_setBlockRow3
 END INTERFACE
 
 INTERFACE setBlockRow
@@ -97,15 +98,15 @@ END INTERFACE setBlockRow
 ! summary: This routine sets the Column of a sparse matrix
 
 INTERFACE
-MODULE SUBROUTINE csrMat_setBlockRow4( obj, ivar, jvar, nodenum, idof, &
-  & value )
-  TYPE( CSRMatrix_ ), INTENT( INOUT ) :: obj
-  INTEGER( I4B ), INTENT( IN ) :: ivar
-  INTEGER( I4B ), INTENT( IN ) :: jvar
-  INTEGER( I4B ), INTENT( IN ) :: nodenum
-  INTEGER( I4B ), INTENT( IN ) :: idof
-  REAL( DFP ), INTENT( IN ) :: value(:)
-END SUBROUTINE csrMat_setBlockRow4
+  MODULE SUBROUTINE csrMat_setBlockRow4(obj, ivar, jvar, nodenum, idof, &
+    & VALUE)
+    TYPE(CSRMatrix_), INTENT(INOUT) :: obj
+    INTEGER(I4B), INTENT(IN) :: ivar
+    INTEGER(I4B), INTENT(IN) :: jvar
+    INTEGER(I4B), INTENT(IN) :: nodenum
+    INTEGER(I4B), INTENT(IN) :: idof
+    REAL(DFP), INTENT(IN) :: VALUE(:)
+  END SUBROUTINE csrMat_setBlockRow4
 END INTERFACE
 
 INTERFACE setBlockRow
@@ -121,16 +122,16 @@ END INTERFACE setBlockRow
 ! summary: This routine sets the Column of a sparse matrix
 
 INTERFACE
-MODULE SUBROUTINE csrMat_setBlockRow5( obj, ivar, jvar, nodenum, spacecompo,&
-  & timecompo, value )
-  TYPE( CSRMatrix_ ), INTENT( INOUT ) :: obj
-  INTEGER( I4B ), INTENT( IN ) :: ivar
-  INTEGER( I4B ), INTENT( IN ) :: jvar
-  INTEGER( I4B ), INTENT( IN ) :: nodenum
-  INTEGER( I4B ), INTENT( IN ) :: spacecompo
-  INTEGER( I4B ), INTENT( IN ) :: timecompo
-  REAL( DFP ), INTENT( IN ) :: value
-END SUBROUTINE csrMat_setBlockRow5
+  MODULE SUBROUTINE csrMat_setBlockRow5(obj, ivar, jvar, nodenum, spacecompo,&
+    & timecompo, VALUE)
+    TYPE(CSRMatrix_), INTENT(INOUT) :: obj
+    INTEGER(I4B), INTENT(IN) :: ivar
+    INTEGER(I4B), INTENT(IN) :: jvar
+    INTEGER(I4B), INTENT(IN) :: nodenum
+    INTEGER(I4B), INTENT(IN) :: spacecompo
+    INTEGER(I4B), INTENT(IN) :: timecompo
+    REAL(DFP), INTENT(IN) :: VALUE
+  END SUBROUTINE csrMat_setBlockRow5
 END INTERFACE
 
 INTERFACE setBlockRow
@@ -146,16 +147,16 @@ END INTERFACE setBlockRow
 ! summary: This routine sets the Column of a sparse matrix
 
 INTERFACE
-MODULE SUBROUTINE csrMat_setBlockRow6( obj, ivar, jvar, nodenum, spacecompo,&
-  & timecompo, value )
-  TYPE( CSRMatrix_ ), INTENT( INOUT ) :: obj
-  INTEGER( I4B ), INTENT( IN ) :: ivar
-  INTEGER( I4B ), INTENT( IN ) :: jvar
-  INTEGER( I4B ), INTENT( IN ) :: nodenum
-  INTEGER( I4B ), INTENT( IN ) :: spacecompo
-  INTEGER( I4B ), INTENT( IN ) :: timecompo
-  REAL( DFP ), INTENT( IN ) :: value(:)
-END SUBROUTINE csrMat_setBlockRow6
+  MODULE SUBROUTINE csrMat_setBlockRow6(obj, ivar, jvar, nodenum, spacecompo,&
+    & timecompo, VALUE)
+    TYPE(CSRMatrix_), INTENT(INOUT) :: obj
+    INTEGER(I4B), INTENT(IN) :: ivar
+    INTEGER(I4B), INTENT(IN) :: jvar
+    INTEGER(I4B), INTENT(IN) :: nodenum
+    INTEGER(I4B), INTENT(IN) :: spacecompo
+    INTEGER(I4B), INTENT(IN) :: timecompo
+    REAL(DFP), INTENT(IN) :: VALUE(:)
+  END SUBROUTINE csrMat_setBlockRow6
 END INTERFACE
 
 INTERFACE setBlockRow

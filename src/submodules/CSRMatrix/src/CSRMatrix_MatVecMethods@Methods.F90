@@ -25,25 +25,133 @@ IMPLICIT NONE
 CONTAINS
 
 !----------------------------------------------------------------------------
-!                                                                      AMatvec
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE CSRMatrixATMUX1
+INTEGER(I4B) :: i, k
+
+y = 0.0_DFP
+
+DO i = 1, n
+  DO k = ia(i), ia(i + 1) - 1
+    y(ja(k)) = y(ja(k)) + x(i) * a(k)
+  END DO
+END DO
+
+END PROCEDURE CSRMatrixATMUX1
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE CSRMatrixATMUX2
+INTEGER(I4B) :: i, k
+
+y = 0.0_DFP
+
+DO i = 1, n
+  DO k = ia(i), ia(i + 1) - 1
+    y(ja(k)) = y(ja(k)) + x(i) * a(k) * s
+  END DO
+END DO
+
+END PROCEDURE CSRMatrixATMUX2
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE CSRMatrixATMUX_Add_1
+INTEGER(I4B) :: i, k
+
+DO i = 1, n
+  DO k = ia(i), ia(i + 1) - 1
+    y(ja(k)) = y(ja(k)) + x(i) * a(k) * s
+  END DO
+END DO
+
+END PROCEDURE CSRMatrixATMUX_Add_1
+
+!----------------------------------------------------------------------------
+!                                                            CSRMatrixAMUX
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE CSRMatrixAMUX1
+REAL(DFP) :: t
+INTEGER(I4B) :: i, k
+
+DO i = 1, n
+  ! compute the inner product of row i with vector x
+  t = 0.0
+  DO k = ia(i), ia(i + 1) - 1
+    t = t + a(k) * x(ja(k))
+  END DO
+  ! store result in y(i)
+  y(i) = t
+END DO
+END PROCEDURE CSRMatrixAMUX1
+
+!----------------------------------------------------------------------------
+!                                                            CSRMatrixAMUX
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE CSRMatrixAMUX2
+REAL(DFP) :: t
+INTEGER(I4B) :: i, k
+
+DO i = 1, n
+  ! compute the inner product of row i with vector x
+  t = 0.0
+  DO k = ia(i), ia(i + 1) - 1
+    t = t + a(k) * x(ja(k))
+  END DO
+  ! store result in y(i)
+  y(i) = s * t
+END DO
+END PROCEDURE CSRMatrixAMUX2
+
+!----------------------------------------------------------------------------
+!                                                            CSRMatrixAMUX
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE CSRMatrixAMUX_Add_1
+REAL(DFP) :: t
+INTEGER(I4B) :: i, k
+
+DO i = 1, n
+  ! compute the inner product of row i with vector x
+  t = 0.0
+  DO k = ia(i), ia(i + 1) - 1
+    t = t + a(k) * x(ja(k))
+  END DO
+  ! store result in y(i)
+  y(i) = y(i) + s * t
+END DO
+END PROCEDURE CSRMatrixAMUX_Add_1
+
+!----------------------------------------------------------------------------
+!                                                                   AMatvec
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE csrMat_AMatvec1
-REAL(dfp), ALLOCATABLE :: y0(:)
 LOGICAL(LGT) :: add0
 REAL(DFP) :: scale0
-!
+INTEGER(I4B) :: tsize
+
 add0 = input(default=.FALSE., option=addContribution)
 scale0 = input(default=1.0_DFP, option=scale)
-!
+tsize = SIZE(y)
+
 IF (add0) THEN
-  ALLOCATE (y0(SIZE(y)))
-  CALL AMUX(SIZE(y0), x, y0, obj%A, obj%csr%JA, obj%csr%IA)
-  CALL AXPY(X=y0, Y=y, A=scale0)
-  DEALLOCATE (y0)
-ELSE
-  CALL AMUX(SIZE(y), x, y, obj%A, obj%csr%JA, obj%csr%IA)
+  CALL CSRMatrixAMUX_Add(n=tsize, x=x, y=y, a=obj%A,  &
+    & ja=obj%csr%JA, ia=obj%csr%IA, s=scale0)
+  RETURN
 END IF
+
+CALL CSRMatrixAMUX(n=tsize, x=x, y=y, a=obj%A,  &
+  & ja=obj%csr%JA, ia=obj%csr%IA, s=scale0)
+
 END PROCEDURE csrMat_AMatvec1
 
 !----------------------------------------------------------------------------
@@ -51,21 +159,23 @@ END PROCEDURE csrMat_AMatvec1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE csrMat_AMatvec2
-REAL(dfp), ALLOCATABLE :: y0(:)
+REAL(DFP) :: y0(SIZE(y))
 LOGICAL(LGT) :: add0
 REAL(DFP) :: scale0
-!
+INTEGER(I4B) :: tsize
+
 add0 = input(default=.FALSE., option=addContribution)
 scale0 = input(default=1.0_DFP, option=scale)
-!
+tsize = SIZE(y)
+
 IF (add0) THEN
-  ALLOCATE (y0(SIZE(y)))
-  CALL AMUXMS(SIZE(y0), x, y0, A, JA)
+  CALL AMUXMS(tsize, x, y0, A, JA)
   CALL AXPY(X=y0, Y=y, A=scale0)
-  DEALLOCATE (y0)
-ELSE
-  CALL AMUXMS(SIZE(y), x, y, A, JA)
+  RETURN
 END IF
+
+CALL AMUXMS(tsize, x, y, A, JA)
+CALL SCAL(X=y, A=scale0)
 END PROCEDURE csrMat_AMatvec2
 
 !----------------------------------------------------------------------------
@@ -73,43 +183,56 @@ END PROCEDURE csrMat_AMatvec2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE csrMat_AtMatvec
-REAL(DFP), ALLOCATABLE :: y0(:)
+REAL(DFP) :: y0(SIZE(y))
 LOGICAL(LGT) :: add0
 REAL(DFP) :: scale0
-INTEGER(I4B) :: m, n
-!
+INTEGER(I4B) :: ty, tx, nrow, ncol
+LOGICAL(LGT) :: squareCase, problem, rectCase
+
 add0 = INPUT(default=.FALSE., option=addContribution)
 scale0 = input(default=1.0_DFP, option=scale)
-!
-IF (add0) THEN
-  ALLOCATE (y0(SIZE(y)))
-  IF (isSquare(obj)) THEN
-    CALL ATMUX(SIZE(y0), x, y0, obj%A, obj%csr%JA, obj%csr%IA)
-  ELSE
-    m = SIZE(obj, 2)
-    n = SIZE(obj, 1)
-    IF (SIZE(x) .NE. n .OR. SIZE(y) .NE. m) THEN
-      CALL Errormsg( &
-        & msg="Mismatch in shapes... nrow = "//tostring(n)// &
-        & " ncol = "//tostring(m)//" size(x) = "//tostring(SIZE(x))// &
-        & " size(y) = "//tostring(SIZE(y)), &
-        & file=__FILE__, &
-        & routine="csrMat_AtMatvec()", &
-        & line=__LINE__, &
-        & unitno=stderr)
-      STOP
-    END IF
-    CALL ATMUXR(m, n, x, y0, obj%A, obj%csr%JA, obj%csr%IA)
-  END IF
+ty = SIZE(y)
+tx = SIZE(x)
+squareCase = isSquare(obj)
+rectCase = isRectangle(obj)
+
+ncol = SIZE(obj, 2) !ncol
+nrow = SIZE(obj, 1) !nrow
+
+problem = tx .NE. nrow .OR. ty .NE. ncol
+
+IF (add0 .AND. squareCase) THEN
+  CALL ATMUX(nrow, x, y0, obj%A, obj%csr%JA, obj%csr%IA)
   CALL AXPY(X=y0, Y=y, A=scale0)
-  DEALLOCATE (y0)
-ELSE
-  IF (isSquare(obj)) THEN
-    CALL ATMUX(SIZE(y), x, y, obj%A, obj%csr%JA, obj%csr%IA)
-  ELSE
-    CALL ATMUXR(SIZE(x), SIZE(y), x, y, obj%A, obj%csr%JA, obj%csr%IA)
-  END IF
+  RETURN
 END IF
+
+IF (add0 .AND. rectCase .AND. problem) THEN
+  CALL Errormsg( &
+    & msg="Mismatch in shapes... nrow = "//tostring(nrow)// &
+    & " ncol = "//tostring(ncol)//" size(x) = "//tostring(tx)// &
+    & " size(y) = "//tostring(ty), &
+    & file=__FILE__, &
+    & routine="csrMat_AtMatvec()", &
+    & line=__LINE__, &
+    & unitno=stderr)
+  RETURN
+END IF
+
+IF (add0 .AND. rectCase) THEN
+  CALL ATMUXR(ncol, nrow, x, y0, obj%A, obj%csr%JA, obj%csr%IA)
+  CALL AXPY(X=y0, Y=y, A=scale0)
+  RETURN
+END IF
+
+IF (squareCase) THEN
+  CALL ATMUX(nrow, x, y, obj%A, obj%csr%JA, obj%csr%IA)
+  CALL SCAL(X=y, A=scale0)
+  RETURN
+END IF
+
+CALL ATMUXR(ncol, nrow, x, y, obj%A, obj%csr%JA, obj%csr%IA)
+CALL SCAL(X=y, A=scale0)
 END PROCEDURE csrMat_AtMatvec
 
 !----------------------------------------------------------------------------
@@ -119,13 +242,15 @@ END PROCEDURE csrMat_AtMatvec
 MODULE PROCEDURE csrMat_MatVec1
 LOGICAL(LGT) :: trans
 trans = INPUT(option=isTranspose, default=.FALSE.)
+
 IF (trans) THEN
   CALL AtMatvec(obj=obj, x=x, y=y, addContribution=addContribution, &
-  & scale=scale)
-ELSE
-  CALL AMatvec(obj=obj, x=x, y=y, addContribution=addContribution, &
-  & scale=scale)
+    & scale=scale)
+  RETURN
 END IF
+
+CALL AMatvec(obj=obj, x=x, y=y, addContribution=addContribution, &
+  & scale=scale)
 END PROCEDURE csrMat_MatVec1
 
 !----------------------------------------------------------------------------

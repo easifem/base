@@ -28,13 +28,14 @@ USE CSRMatrix_SetBlockColMethods
 USE CSRMatrix_GetMethods
 USE CSRMatrix_GetRowMethods
 USE CSRMatrix_GetColMethods
+USE CSRMatrix_GetSubMatrixMethods
 USE CSRMatrix_GetBlockRowMethods
 USE CSRMatrix_GetBlockColMethods
 USE CSRMatrix_UnaryMethods
 USE CSRMatrix_ILUMethods
 USE CSRMatrix_LUSolveMethods
 USE CSRMatrix_MatVecMethods
-USE CSRMatrix_MatmulMethods
+USE CSRMatrix_SymMatmulMethods
 USE CSRMatrix_ReorderingMethods
 USE CSRMatrix_DiagonalScalingMethods
 USE CSRMatrix_MatrixMarketIO
@@ -43,6 +44,8 @@ USE CSRMatrix_SpectralMethods
 USE CSRMatrix_SchurMethods
 USE CSRMatrix_DBCMethods
 USE CSRMatrix_LinSolveMethods
+USE CSRMatrix_SymMatmulMethods
+USE GlobalData, ONLY: I4B
 IMPLICIT NONE
 INTEGER(I4B), PARAMETER, PUBLIC :: SPARSE_FMT_CSR = 0
 INTEGER(I4B), PARAMETER, PUBLIC :: SPARSE_FMT_COO = 1

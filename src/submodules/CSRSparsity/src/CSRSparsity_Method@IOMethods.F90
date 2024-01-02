@@ -28,7 +28,7 @@ CONTAINS
 !                                                                   Display
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE csr_Display
+MODULE PROCEDURE obj_Display
 CALL Display(Msg, unitNo=unitNo)
 CALL Display(obj%nnz, "# NNZ : ", unitNo=unitNo)
 CALL Display(obj%ncol, "# NCOL : ", unitNo=unitNo)
@@ -60,6 +60,6 @@ IF (ALLOCATED(obj%row)) THEN
   CALL Display(obj%row, "# ROW : ", unitNo=unitNo, orient="ROW")
 END IF
 !!
-END PROCEDURE csr_Display
+END PROCEDURE obj_Display
 
 END SUBMODULE IOMethods

@@ -344,11 +344,14 @@ END PROCEDURE getPath_chars
 MODULE PROCEDURE getExtension_chars
 ! Define internal variables
 INTEGER(I4B) :: n, m
-ext = "       "
 n = 0
 n = INDEX(char, ".", back=.TRUE.)
-m = LEN(char)
-ext(1:m - n + 1) = CHAR(n + 1:m)
+IF (n .EQ. 0) THEN
+  ext = ""
+ELSE
+  m = LEN(char)
+  ext = CHAR(n + 1:m)
+END IF
 END PROCEDURE getExtension_chars
 
 !----------------------------------------------------------------------------
@@ -374,10 +377,10 @@ END PROCEDURE getFileName_chars
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE getFileNameExt_chars
-CHARACTER(LEN(chars)) :: chars2
+CHARACTER(:), ALLOCATABLE :: chars2
 INTEGER(I4B) :: i, SLASHloc
 
-chars2 = chars
+chars2 = TRIM(chars)
 CALL SlashRep(chars2)
 ext = ''
 SLASHloc = 1

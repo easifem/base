@@ -18,7 +18,9 @@
 MODULE CSRMatrix_ILUMethods
 USE GlobalData, ONLY: I4B, DFP, LGT
 USE BaseType, ONLY: CSRMatrix_, RealMatrix_
+IMPLICIT NONE
 
+PRIVATE
 PUBLIC :: getILUT
 PUBLIC :: getILUTP
 PUBLIC :: getILUD

@@ -15,30 +15,57 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 
 SUBMODULE(FEVariable_Method) GetMethods
+USE BaseMethod, ONLY: Reallocate
 IMPLICIT NONE
 CONTAINS
+
+!----------------------------------------------------------------------------
+!                                                GetLambdaFromYoungsModulus
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE fevar_GetLambdaFromYoungsModulus
+INTEGER(I4B) :: tsize, ii
+LOGICAL(LGT) :: isok
+
+isok = ALLOCATED(youngsModulus%val)
+
+IF (isok) THEN
+  tsize = SIZE(youngsModulus%val)
+ELSE
+  tsize = 0
+END IF
+
+CALL Reallocate(lambda%val, tsize)
+
+DO ii = 1, tsize
+  lambda%val(1:tsize) = shearModulus%val *  &
+    & (youngsModulus%val - 2.0_DFP * shearModulus%val) /  &
+    & (3.0_DFP * shearModulus%val - youngsModulus%val)
+END DO
+
+lambda%s = youngsModulus%s
+lambda%defineOn = youngsModulus%defineOn
+lambda%varType = youngsModulus%varType
+lambda%rank = youngsModulus%rank
+END PROCEDURE fevar_GetLambdaFromYoungsModulus
 
 !----------------------------------------------------------------------------
 !                                                                      Size
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE fevar_Size
-  !!
-  IF( PRESENT( dim ) ) THEN
-    ans = obj%s(dim)
-  ELSE
-    !!
-    SELECT CASE (obj%rank)
-    CASE (Scalar)
-      ans = 1
-    CASE (Vector)
-      ans = obj%s(1)
-    CASE (Matrix)
-      ans = obj%s(1)*obj%s(2)
-    END SELECT
-    !!
-  END IF
-  !!
+IF (PRESENT(dim)) THEN
+  ans = obj%s(dim)
+ELSE
+  SELECT CASE (obj%rank)
+  CASE (Scalar)
+    ans = 1
+  CASE (Vector)
+    ans = obj%s(1)
+  CASE (Matrix)
+    ans = obj%s(1) * obj%s(2)
+  END SELECT
+END IF
 END PROCEDURE fevar_Size
 
 !----------------------------------------------------------------------------
@@ -154,7 +181,7 @@ END PROCEDURE Scalar_Time
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Scalar_SpaceTime
-val = reshape(obj%val, obj%s(1:2))
+val = RESHAPE(obj%val, obj%s(1:2))
 END PROCEDURE Scalar_SpaceTime
 
 !----------------------------------------------------------------------------
@@ -170,7 +197,7 @@ END PROCEDURE Vector_Constant
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Vector_Space
-val = reshape(obj%val, obj%s(1:2))
+val = RESHAPE(obj%val, obj%s(1:2))
 END PROCEDURE Vector_Space
 
 !----------------------------------------------------------------------------
@@ -178,7 +205,7 @@ END PROCEDURE Vector_Space
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Vector_Time
-val = reshape(obj%val, obj%s(1:2))
+val = RESHAPE(obj%val, obj%s(1:2))
 END PROCEDURE Vector_Time
 
 !----------------------------------------------------------------------------
@@ -186,7 +213,7 @@ END PROCEDURE Vector_Time
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Vector_SpaceTime
-val = reshape(obj%val, obj%s(1:3))
+val = RESHAPE(obj%val, obj%s(1:3))
 END PROCEDURE Vector_SpaceTime
 
 !----------------------------------------------------------------------------
@@ -194,7 +221,7 @@ END PROCEDURE Vector_SpaceTime
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Matrix_Constant
-val = reshape(obj%val, obj%s(1:2))
+val = RESHAPE(obj%val, obj%s(1:2))
 END PROCEDURE Matrix_Constant
 
 !----------------------------------------------------------------------------
@@ -202,7 +229,7 @@ END PROCEDURE Matrix_Constant
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Matrix_Space
-val = reshape(obj%val, obj%s(1:3))
+val = RESHAPE(obj%val, obj%s(1:3))
 END PROCEDURE Matrix_Space
 
 !----------------------------------------------------------------------------
@@ -210,7 +237,7 @@ END PROCEDURE Matrix_Space
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Matrix_Time
-val = reshape(obj%val, obj%s(1:3))
+val = RESHAPE(obj%val, obj%s(1:3))
 END PROCEDURE Matrix_Time
 
 !----------------------------------------------------------------------------
@@ -218,7 +245,11 @@ END PROCEDURE Matrix_Time
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Matrix_SpaceTime
-val = reshape(obj%val, obj%s(1:4))
+val = RESHAPE(obj%val, obj%s(1:4))
 END PROCEDURE Matrix_SpaceTime
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
 
 END SUBMODULE GetMethods

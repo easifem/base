@@ -15,63 +15,24 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-!> author: Vikas Sharma, Ph. D.
-! date:         22 March 2021
-! summary:         UnaryMethods operator for [[SparseMaatrix_]]
-!
-! Following subroutines are planned to include in this module
-!
-! | subroutine  | description  |
-! |---|---|
-! | `SUBMAT` | extracts a submatrix from a sparse matrix |
-! | `FILTER` | filters elements from a matrix according to their magnitude |
-! | `CSORT`  | sorts the elements in increasing order of columns |
-! | `CLNCSR`  | clean up the CSR format matrix, remove duplicate entry, etc |
-! | `TRANSP` | in-place transposition routine |
-! | `COPMAT` | copy of a matrix into another matrix (both stored csr)    |
-! | `GETELM` | returns a(i,j) for any (i,j) from a CSR-stored matrix.     |
-! | `GETDIA` | extracts a specified diagonal from a matrix.                |
-! | `GETL`   | extracts lower triangular part |
-! | `GETU`   | extracts upper triangular part |
-! | `LEVELS` | gets the level scheduling structure for lower triangular matrices |
-! | `AMASK`  | extracts C = A mask M |
-! | `RPERM`  | permutes the rows of a matrix (B = P A) |
-! | `CPERM`  | permutes the columns of a matrix (B = A Q) |
-! | `DPERM`  | permutes both the rows and columns of a matrix (B = P A Q ) |
-! | `DPERM1` | general extraction routine (extracts arbitrary rows) |
-! | `DPERM2` | general submatrix permutation/extraction routine            |
-! | `DVPERM` | permutes a real vector (in-place)                           |
-! | `IVPERM` | permutes an integer vector (in-place)                       |
-! | `RETMX`  | returns the max absolute value in each row of the matrix    |
-! | `DIAPOS` | returns the positions of the diagonal elements in A.        |
-! | `EXTBDG` | extracts the main diagonal blocks of a matrix.              |
-! | `GETBWD` | returns the bandwidth information on a matrix.              |
-! | `BLKFND` | finds the block-size of a matrix.                           |
-! | `BLKCHK` | checks whether a given integer is the block size of A.      |
-! | `INFDIA` | obtains information on the diagonals of A.                  |
-! | `AMUBDG` | gets number of nonzeros in each row of A*B (as well as NNZ) |
-! | `APLBDG` | gets number of nonzeros in each row of A+B (as well as NNZ) |
-! | `RNRMS`  | computes the norms of the rows of A                         |
-! | `CNRMS`  | computes the norms of the columns of A                      |
-! | `ROSCAL` | scales the rows of a matrix by their norms.                 |
-! | `COSCAL` | scales the columns of a matrix by their norms.              |
-! | `ADDBLK` | Adds a matrix B into a block of A.                          |
-! | `GET1UP` | Collects the first elements of each row of the upper triangular portion of the matrix |
-! | `XTROWS` | extracts given rows from a matrix in CSR format.            |
-! | `CSRKVSTR`|  Finds block row partitioning of matrix in CSR format      |
-! | `CSRKVSTC`|  Finds block column partitioning of matrix in CSR format   |
-! | `KVSTMERGE`| Merges block partitionings, for conformal row/col pattern |
-
 SUBMODULE(CSRMatrix_UnaryMethods) Methods
 USE BaseMethod
 IMPLICIT NONE
 CONTAINS
 
 !----------------------------------------------------------------------------
+!                                                                    Scal
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE obj_Scal
+CALL SCAL(X=obj%A, A=a)
+END PROCEDURE obj_Scal
+
+!----------------------------------------------------------------------------
 !                                                                    Convert
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE crsMat_Convert1
+MODULE PROCEDURE obj_Convert1
 INTEGER(I4B) :: i, j, nrow
 nrow = SIZE(IA) - 1
 CALL Reallocate(mat, nrow, nrow)
@@ -80,13 +41,13 @@ DO i = 1, nrow
     mat(i, JA(j)) = A(j)
   END DO
 END DO
-END PROCEDURE crsMat_Convert1
+END PROCEDURE obj_Convert1
 
 !----------------------------------------------------------------------------
 !                                                                    Convert
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE crsMat_Convert2
+MODULE PROCEDURE obj_Convert2
 INTEGER(I4B) :: i, j, nrow, ncol
 !!
 nrow = SIZE(obj=From, dims=1)
@@ -100,34 +61,34 @@ DO i = 1, nrow
   END DO
 END DO
 !!
-END PROCEDURE crsMat_Convert2
+END PROCEDURE obj_Convert2
 
 !----------------------------------------------------------------------------
 !                                                                    Convert
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE crsMat_Convert3
+MODULE PROCEDURE obj_Convert3
 CALL Convert(From=From, To=To%val)
 ! CALL Convert(A=From%A, IA=From%csr%IA, JA=From%csr%JA, &
 !   & mat=To%val)
 CALL setTotalDimension(To, 2_I4B)
-END PROCEDURE crsMat_Convert3
+END PROCEDURE obj_Convert3
 
 !----------------------------------------------------------------------------
 !                                                                    ColSORT
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE csrMat_ColumnSORT
+MODULE PROCEDURE obj_ColumnSORT
 CALL CSORT(obj%csr%nrow, obj%A, obj%csr%JA, obj%csr%IA, &
   & INPUT(Option=isValues, Default=.TRUE.))
 obj%csr%isSorted = .TRUE.
-END PROCEDURE csrMat_ColumnSORT
+END PROCEDURE obj_ColumnSORT
 
 !----------------------------------------------------------------------------
 !                                                           RemoveDuplicates
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE csrMat_RemoveDuplicates
+MODULE PROCEDURE obj_RemoveDuplicates
 INTEGER(I4B), ALLOCATABLE :: iwk(:), UT(:)
 CALL Reallocate(UT, obj%csr%nrow, iwk, obj%csr%nrow + 1)
 CALL CLNCSR(1, 1, obj%csr%nrow, obj%A, obj%csr%JA, obj%csr%IA, UT, iwk)
@@ -135,13 +96,13 @@ CALL CLNCSR(1, 1, obj%csr%nrow, obj%A, obj%csr%JA, obj%csr%IA, UT, iwk)
 obj%csr%isSparsityLock = .FALSE.
 CALL setSparsity(obj)
 DEALLOCATE (iwk, UT)
-END PROCEDURE csrMat_RemoveDuplicates
+END PROCEDURE obj_RemoveDuplicates
 
 !----------------------------------------------------------------------------
 !                                                                      Clean
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE csrMat_Clean
+MODULE PROCEDURE obj_Clean
 INTEGER(I4B), ALLOCATABLE :: iwk(:), UT(:)
 INTEGER(I4B) :: value2
 
@@ -157,21 +118,21 @@ CALL CLNCSR(INPUT(option=ExtraOption, default=1), value2, obj%csr%nrow, &
 obj%csr%isSparsityLock = .FALSE.
 CALL setSparsity(obj)
 DEALLOCATE (iwk, UT)
-END PROCEDURE csrMat_Clean
+END PROCEDURE obj_Clean
 
 !----------------------------------------------------------------------------
 !                                                                      Copy
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE csrMat_Copy
+MODULE PROCEDURE obj_Copy
 To = From
-END PROCEDURE csrMat_Copy
+END PROCEDURE obj_Copy
 
 !----------------------------------------------------------------------------
 !                                                                      get
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE csrMat_Get1
+MODULE PROCEDURE obj_Get1
 INTERFACE
   FUNCTION GETELM(I, J, A, JA, IA, IADD, SORTED)
     INTEGER :: I, J, IA(*), JA(*), IADD
@@ -181,13 +142,13 @@ INTERFACE
 END INTERFACE
 INTEGER(I4B) :: iadd0
 Ans = GETELM(I, J, obj%A, obj%csr%JA, obj%csr%IA, iadd0, obj%csr%isSorted)
-END PROCEDURE csrMat_Get1
+END PROCEDURE obj_Get1
 
 !----------------------------------------------------------------------------
 !                                                                    Filter
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE csrMat_DropEntry
+MODULE PROCEDURE obj_DropEntry
 INTEGER(I4B) :: ierr, nnz
 INTEGER(I4B), ALLOCATABLE :: IA(:), JA(:)
 REAL(DFP), ALLOCATABLE :: A(:)
@@ -199,13 +160,13 @@ CALL FILTER(objIn%csr%nrow, INPUT(option=option, default=1), &
 nnz = IA(objIn%csr%nrow + 1) - 1
 CALL Initiate(obj=objOut, A=A(1:nnz), IA=IA, JA=JA(1:nnz))
 DEALLOCATE (IA, JA, A)
-END PROCEDURE csrMat_DropEntry
+END PROCEDURE obj_DropEntry
 
 !----------------------------------------------------------------------------
 !                                                                 Transpose
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE csrMat_Transpose
+MODULE PROCEDURE obj_Transpose
 INTEGER(I4B), ALLOCATABLE :: iwk(:)
 INTEGER(I4B) :: ierr
 TYPE(DOF_) :: dofobj
@@ -215,7 +176,7 @@ IF (ierr .NE. 0) THEN
   CALL ErrorMSG( &
     & msg="Error occured during transposing!", &
     & file="CSRMatrix_Method@UnaryMethods.F90", &
-    & routine="csrMat_Transpose()", &
+    & routine="obj_Transpose()", &
     & line=__LINE__, &
     & unitno=stderr)
   STOP
@@ -226,30 +187,30 @@ obj%csr%jdof = obj%csr%idof
 obj%csr%idof = dofobj
 CALL DEALLOCATE (dofobj)
 DEALLOCATE (iwk)
-END PROCEDURE csrMat_Transpose
+END PROCEDURE obj_Transpose
 
 !----------------------------------------------------------------------------
 !                                                                 getDiagonal
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE csrMat_getDiagonal1
+MODULE PROCEDURE obj_getDiagonal1
 CALL getDiagonal(obj=obj%csr, A=obj%A, diag=diag, idiag=idiag, &
   & offset=offset)
-END PROCEDURE csrMat_getDiagonal1
+END PROCEDURE obj_getDiagonal1
 
 !----------------------------------------------------------------------------
 !                                                                 getDiagonal
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE csrMat_getDiagonal2
+MODULE PROCEDURE obj_getDiagonal2
 CALL getDiagonal(obj=obj%csr, A=obj%A, diag=diag, offset=offset)
-END PROCEDURE csrMat_getDiagonal2
+END PROCEDURE obj_getDiagonal2
 
 !----------------------------------------------------------------------------
 !                                                          getLowerTriangle
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE csrMat_getLowerTriangle
+MODULE PROCEDURE obj_getLowerTriangle
 REAL(DFP), ALLOCATABLE :: A(:)
 INTEGER(I4B), ALLOCATABLE :: IA(:), JA(:)
 INTEGER(I4B) :: nnz, nrow
@@ -259,13 +220,13 @@ CALL GETL(obj%csr%nrow, obj%A, obj%csr%JA, obj%csr%IA, A, JA, IA)
 nnz = IA(nrow + 1) - 1
 CALL Initiate(obj=L, A=A(1:nnz), IA=IA, JA=JA(1:nnz))
 DEALLOCATE (A, IA, JA)
-END PROCEDURE csrMat_getLowerTriangle
+END PROCEDURE obj_getLowerTriangle
 
 !----------------------------------------------------------------------------
 !                                                          getUpperTriangle
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE csrMat_getUpperTriangle
+MODULE PROCEDURE obj_getUpperTriangle
 REAL(DFP), ALLOCATABLE :: A(:)
 INTEGER(I4B), ALLOCATABLE :: IA(:), JA(:)
 INTEGER(I4B) :: nnz, nrow
@@ -275,13 +236,13 @@ CALL GETU(obj%csr%nrow, obj%A, obj%csr%JA, obj%csr%IA, A, JA, IA)
 nnz = IA(nrow + 1) - 1
 CALL Initiate(obj=U, A=A(1:nnz), IA=IA, JA=JA(1:nnz))
 DEALLOCATE (A, IA, JA)
-END PROCEDURE csrMat_getUpperTriangle
+END PROCEDURE obj_getUpperTriangle
 
 !----------------------------------------------------------------------------
 !                                                                PermuteRow
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE csrMat_PermuteRow
+MODULE PROCEDURE obj_PermuteRow
 INTEGER(I4B) :: nrow, job
 nrow = SIZE(obj, 1); job = 1
 IF (PRESENT(isValues)) THEN
@@ -290,13 +251,13 @@ END IF
 CALL initiate(ans, obj, .TRUE.)
 CALL RPERM(nrow, obj%A, obj%csr%JA, obj%csr%IA, ans%A, ans%csr%JA, &
   & ans%csr%IA, PERM, job)
-END PROCEDURE csrMat_PermuteRow
+END PROCEDURE obj_PermuteRow
 
 !----------------------------------------------------------------------------
 !                                                            PermuteColumn
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE csrMat_PermuteColumn
+MODULE PROCEDURE obj_PermuteColumn
 INTEGER(I4B) :: nrow, job
 nrow = SIZE(obj, 1); job = 1
 IF (PRESENT(isValues)) THEN
@@ -305,13 +266,13 @@ END IF
 CALL initiate(ans, obj, .TRUE.)
 CALL CPERM(nrow, obj%A, obj%csr%JA, obj%csr%IA, ans%A, ans%csr%JA, &
   & ans%csr%IA, PERM, job)
-END PROCEDURE csrMat_PermuteColumn
+END PROCEDURE obj_PermuteColumn
 
 !----------------------------------------------------------------------------
 !                                                                   Permute
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE csrMat_Permute
+MODULE PROCEDURE obj_Permute
 INTEGER(I4B) :: nrow, job
 LOGICAL(LGT) :: isSymPERM
 !
@@ -363,13 +324,13 @@ IF (PRESENT(colPERM)) THEN
     RETURN
   END IF
 END IF
-END PROCEDURE csrMat_Permute
+END PROCEDURE obj_Permute
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
-SUBROUTINE csrMat_GetSymU1(obj, symobj, A, symA)
+SUBROUTINE obj_GetSymU1(obj, symobj, A, symA)
   TYPE(CSRSparsity_), INTENT(IN) :: obj
   TYPE(CSRSparsity_), INTENT(INOUT) :: symobj
   REAL(DFP), INTENT(IN) :: A(:)
@@ -480,13 +441,13 @@ SUBROUTINE csrMat_GetSymU1(obj, symobj, A, symA)
   !
   DEALLOCATE (IA_csr, IA_csc, JA_csr, JA_csc, idiag, A_csr, A_csc)
   !
-END SUBROUTINE csrMat_GetSymU1
+END SUBROUTINE obj_GetSymU1
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
-SUBROUTINE csrMat_GetSymU2(obj, A)
+SUBROUTINE obj_GetSymU2(obj, A)
   TYPE(CSRSparsity_), INTENT(INOUT) :: obj
   REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: A(:)
   !
@@ -591,13 +552,13 @@ SUBROUTINE csrMat_GetSymU2(obj, A)
   DEALLOCATE (IA_csr, IA_csc, JA_csr, JA_csc, idiag, A_csr, &
     & A_csc, A_diag)
   !
-END SUBROUTINE csrMat_GetSymU2
+END SUBROUTINE obj_GetSymU2
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
-SUBROUTINE csrMat_GetSymL1(obj, symobj, A, symA)
+SUBROUTINE obj_GetSymL1(obj, symobj, A, symA)
   TYPE(CSRSparsity_), INTENT(IN) :: obj
   TYPE(CSRSparsity_), INTENT(INOUT) :: symobj
   REAL(DFP), INTENT(IN) :: A(:)
@@ -706,13 +667,13 @@ SUBROUTINE csrMat_GetSymL1(obj, symobj, A, symA)
   !
   DEALLOCATE (IA_csr, IA_csc, JA_csr, JA_csc, idiag, A_csr, A_csc, A_diag)
   !
-END SUBROUTINE csrMat_GetSymL1
+END SUBROUTINE obj_GetSymL1
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
-SUBROUTINE csrMat_GetSymL2(obj, A)
+SUBROUTINE obj_GetSymL2(obj, A)
   TYPE(CSRSparsity_), INTENT(INOUT) :: obj
   REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: A(:)
   !
@@ -820,13 +781,13 @@ SUBROUTINE csrMat_GetSymL2(obj, A)
   !
   DEALLOCATE (IA_csr, IA_csc, JA_csr, JA_csc, idiag, A_csr, A_csc, A_diag)
   !
-END SUBROUTINE csrMat_GetSymL2
+END SUBROUTINE obj_GetSymL2
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE csrMat_GetSym1
+MODULE PROCEDURE obj_GetSym1
 INTEGER(I4B) :: ii, jj, nrow, rindx
 REAL(DFP) :: VALUE
 !
@@ -839,29 +800,29 @@ symObj%matrixProp = "SYM"
 IF (ALLOCATED(obj%A)) THEN
   SELECT CASE (from)
   CASE ("U", "u")
-    CALL csrMat_GetSymU1(obj=obj%csr, symobj=symobj%csr, A=obj%A, &
+    CALL obj_GetSymU1(obj=obj%csr, symobj=symobj%csr, A=obj%A, &
       & symA=symobj%A)
   CASE ("L", "l")
-    CALL csrMat_GetSymL1(obj=obj%csr, symobj=symobj%csr, A=obj%A, &
+    CALL obj_GetSymL1(obj=obj%csr, symobj=symobj%csr, A=obj%A, &
       & symA=symobj%A)
   CASE DEFAULT
     CALL Errormsg(&
      & msg="No match found for given from = "//from, &
      & file=__FILE__, &
-     & routine="csrMat_GetSym1()", &
+     & routine="obj_GetSym1()", &
      & line=__LINE__, &
      & unitno=stderr)
     STOP
   END SELECT
 END IF
 
-END PROCEDURE csrMat_GetSym1
+END PROCEDURE obj_GetSym1
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE csrMat_GetSym2
+MODULE PROCEDURE obj_GetSym2
 INTEGER(I4B) :: ii, jj, nrow, rindx
 REAL(DFP) :: VALUE
 !
@@ -872,21 +833,21 @@ obj%matrixProp = "SYM"
 IF (ALLOCATED(obj%A)) THEN
   SELECT CASE (from)
   CASE ("U", "u")
-    CALL csrMat_GetSymU2(obj=obj%csr, A=obj%A)
+    CALL obj_GetSymU2(obj=obj%csr, A=obj%A)
   CASE ("L", "l")
-    CALL csrMat_GetSymL2(obj=obj%csr, A=obj%A)
+    CALL obj_GetSymL2(obj=obj%csr, A=obj%A)
   CASE DEFAULT
     CALL Errormsg(&
      & msg="No match found for given from = "//from, &
      & file=__FILE__, &
-     & routine="csrMat_GetSym2()", &
+     & routine="obj_GetSym2()", &
      & line=__LINE__, &
      & unitno=stderr)
     STOP
   END SELECT
 END IF
 
-END PROCEDURE csrMat_GetSym2
+END PROCEDURE obj_GetSym2
 
 !----------------------------------------------------------------------------
 !

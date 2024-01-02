@@ -39,15 +39,11 @@ PUBLIC :: ForceVector
 ! F_{I}=\int_{\Omega}N^{I}d\Omega
 ! $$
 
-INTERFACE
+INTERFACE ForceVector
   MODULE PURE FUNCTION ForceVector_1(test) RESULT(ans)
     CLASS(ElemshapeData_), INTENT(IN) :: test
     REAL(DFP), ALLOCATABLE :: ans(:)
   END FUNCTION ForceVector_1
-END INTERFACE
-
-INTERFACE ForceVector
-  MODULE PROCEDURE ForceVector_1
 END INTERFACE ForceVector
 
 !----------------------------------------------------------------------------
@@ -64,17 +60,13 @@ END INTERFACE ForceVector
 ! F_{I}=\int_{\Omega}\rho N^{I}d\Omega
 ! $$
 
-INTERFACE
+INTERFACE ForceVector
   MODULE PURE FUNCTION ForceVector_2b(test, c) RESULT(ans)
     CLASS(ElemshapeData_), INTENT(IN) :: test
     REAL(DFP), INTENT(IN) :: c(:)
     !! defined on quadrature point
     REAL(DFP), ALLOCATABLE :: ans(:)
   END FUNCTION ForceVector_2b
-END INTERFACE
-
-INTERFACE ForceVector
-  MODULE PROCEDURE ForceVector_2b
 END INTERFACE ForceVector
 
 !----------------------------------------------------------------------------
@@ -91,17 +83,13 @@ END INTERFACE ForceVector
 ! F_{I}=\int_{\Omega}\rho N^{I}d\Omega
 ! $$
 
-INTERFACE
+INTERFACE ForceVector
   MODULE PURE FUNCTION ForceVector_2(test, c, crank) RESULT(ans)
     CLASS(ElemshapeData_), INTENT(IN) :: test
     TYPE(FEVariable_), INTENT(IN) :: c
     TYPE(FEVariableScalar_), INTENT(IN) :: crank
     REAL(DFP), ALLOCATABLE :: ans(:)
   END FUNCTION ForceVector_2
-END INTERFACE
-
-INTERFACE ForceVector
-  MODULE PROCEDURE ForceVector_2
 END INTERFACE ForceVector
 
 !----------------------------------------------------------------------------
@@ -120,17 +108,13 @@ END INTERFACE ForceVector
 ! F(i,I)=\int_{\Omega}v_{i}N^{I}d\Omega
 ! $$
 
-INTERFACE
+INTERFACE ForceVector
   MODULE PURE FUNCTION ForceVector_3(test, c, crank) RESULT(ans)
     CLASS(ElemshapeData_), INTENT(IN) :: test
     TYPE(FEVariable_), INTENT(IN) :: c
     TYPE(FEVariableVector_), INTENT(IN) :: crank
     REAL(DFP), ALLOCATABLE :: ans(:, :)
   END FUNCTION ForceVector_3
-END INTERFACE
-
-INTERFACE ForceVector
-  MODULE PROCEDURE ForceVector_3
 END INTERFACE ForceVector
 
 !----------------------------------------------------------------------------
@@ -149,17 +133,13 @@ END INTERFACE ForceVector
 ! F(i,j,I)=\int_{\Omega}k_{ij}N^{I}d\Omega
 ! $$
 
-INTERFACE
+INTERFACE ForceVector
   MODULE PURE FUNCTION ForceVector_4(test, c, crank) RESULT(ans)
     CLASS(ElemshapeData_), INTENT(IN) :: test
     TYPE(FEVariable_), INTENT(IN) :: c
     TYPE(FEVariableMatrix_), INTENT(IN) :: crank
     REAL(DFP), ALLOCATABLE :: ans(:, :, :)
   END FUNCTION ForceVector_4
-END INTERFACE
-
-INTERFACE ForceVector
-  MODULE PROCEDURE ForceVector_4
 END INTERFACE ForceVector
 
 !----------------------------------------------------------------------------
@@ -178,7 +158,7 @@ END INTERFACE ForceVector
 ! F_{I}=\int_{\Omega}\rho_{1}\rho_{2}N^{I}d\Omega
 ! $$
 
-INTERFACE
+INTERFACE ForceVector
   MODULE PURE FUNCTION ForceVector_5(test, c1, c1rank, c2, c2rank) &
     & RESULT(ans)
     CLASS(ElemshapeData_), INTENT(IN) :: test
@@ -188,10 +168,6 @@ INTERFACE
     TYPE(FEVariableScalar_), INTENT(IN) :: c2rank
     REAL(DFP), ALLOCATABLE :: ans(:)
   END FUNCTION ForceVector_5
-END INTERFACE
-
-INTERFACE ForceVector
-  MODULE PROCEDURE ForceVector_5
 END INTERFACE ForceVector
 
 !----------------------------------------------------------------------------
@@ -210,7 +186,7 @@ END INTERFACE ForceVector
 !
 ! $$
 
-INTERFACE
+INTERFACE ForceVector
   MODULE PURE FUNCTION ForceVector_6(test, c1, c1rank, c2, c2rank) &
     & RESULT(ans)
     CLASS(ElemshapeData_), INTENT(IN) :: test
@@ -220,10 +196,6 @@ INTERFACE
     TYPE(FEVariableVector_), INTENT(IN) :: c2rank
     REAL(DFP), ALLOCATABLE :: ans(:, :)
   END FUNCTION ForceVector_6
-END INTERFACE
-
-INTERFACE ForceVector
-  MODULE PROCEDURE ForceVector_6
 END INTERFACE ForceVector
 
 !----------------------------------------------------------------------------
@@ -242,7 +214,7 @@ END INTERFACE ForceVector
 ! F(i,j,I)=\int_{\Omega}\rho k_{ij}N^{I}d\Omega
 ! $$
 
-INTERFACE
+INTERFACE ForceVector
   MODULE PURE FUNCTION ForceVector_7(test, c1, c1rank, c2, c2rank) &
     & RESULT(ans)
     CLASS(ElemshapeData_), INTENT(IN) :: test
@@ -252,10 +224,6 @@ INTERFACE
     TYPE(FEVariableMatrix_), INTENT(IN) :: c2rank
     REAL(DFP), ALLOCATABLE :: ans(:, :, :)
   END FUNCTION ForceVector_7
-END INTERFACE
-
-INTERFACE ForceVector
-  MODULE PROCEDURE ForceVector_7
 END INTERFACE ForceVector
 
 END MODULE ForceVector_Method

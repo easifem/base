@@ -885,7 +885,8 @@ REAL(DFP) :: ans1(SIZE(xij, 2), 0:order)
 REAL(DFP) :: ans2(SIZE(xij, 2), 0:order)
 REAL(DFP) :: ans3(SIZE(xij, 2), 0:order)
 
-basisType0 = input(default=Monomial, option=basisType)
+basisType0 = Input(default=Monomial, option=basisType)
+
 SELECT CASE (basisType0)
 CASE (Monomial)
   ans = LagrangeVandermonde(order=order, xij=xij, elemType=Hexahedron)
@@ -900,7 +901,7 @@ CASE (Legendre, Jacobi, Lobatto, Chebyshev, Ultraspherical)
         & routine="LagrangeCoeff_Hexahedron4", &
         & line=__LINE__, &
         & unitno=stderr)
-      RETURN
+      STOP
     END IF
   END IF
 
@@ -912,7 +913,7 @@ CASE (Legendre, Jacobi, Lobatto, Chebyshev, Ultraspherical)
         & routine="LagrangeCoeff_Hexahedron4", &
         & line=__LINE__, &
         & unitno=stderr)
-      RETURN
+      STOP
     END IF
   END IF
 
@@ -952,11 +953,12 @@ CASE (Legendre, Jacobi, Lobatto, Chebyshev, Ultraspherical)
 
 CASE DEFAULT
   CALL Errormsg(&
-    & msg="No case found for basisType", &
+    & msg="No case found for basisType = "//tostring(basisType0), &
     & file=__FILE__, &
-    & routine="LagrangeCoeff_Hexahedron4", &
+    & routine="LagrangeCoeff_Hexahedron4()", &
     & line=__LINE__, &
     & unitno=stderr)
+  STOP
 END SELECT
 CALL GetInvMat(ans)
 END PROCEDURE LagrangeCoeff_Hexahedron4

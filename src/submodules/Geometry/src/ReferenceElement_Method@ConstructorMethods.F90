@@ -15,10 +15,6 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-!> author: Vikas Sharma, Ph. D.
-! date: 1 March 2021
-! summary: This submodule contains constructor methods of [[ReferenceElement_]]
-
 SUBMODULE(ReferenceElement_Method) ConstructorMethods
 USE BaseMethod
 IMPLICIT NONE
@@ -278,7 +274,32 @@ END PROCEDURE refelem_constructor_2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE refelem_getNptrs
-ans = obj%topology(SUM(obj%entityCounts))%nptrs
+INTEGER(I4B) :: ii, tsize
+LOGICAL(LGT) :: isok
+
+isok = ALLOCATED(obj%topology)
+IF (.NOT. isok) THEN
+  CALL Reallocate(ans, 0)
+  RETURN
+END IF
+
+ii = SUM(obj%entityCounts)
+tsize = SIZE(obj%topology)
+isok = ii .LE. tsize
+
+IF (.NOT. isok) THEN
+  CALL Reallocate(ans, 0)
+  RETURN
+END IF
+
+isok = ALLOCATED(obj%topology(ii)%nptrs)
+
+IF (.NOT. isok) THEN
+  CALL Reallocate(ans, 0)
+  RETURN
+END IF
+
+ans = obj%topology(ii)%nptrs
 END PROCEDURE refelem_getNptrs
 
 !----------------------------------------------------------------------------

@@ -28,7 +28,7 @@ CONTAINS
 !
 !----------------------------------------------------------------------------
 
-SUBROUTINE csr_GetSymU1(obj, symobj)
+SUBROUTINE obj_GetSymU1(obj, symobj)
   TYPE(CSRSparsity_), INTENT(IN) :: obj
   TYPE(CSRSparsity_), INTENT(INOUT) :: symobj
   !
@@ -126,13 +126,13 @@ SUBROUTINE csr_GetSymU1(obj, symobj)
   !
   DEALLOCATE (IA_csr, IA_csc, JA_csr, JA_csc, idiag)
   !
-END SUBROUTINE csr_GetSymU1
+END SUBROUTINE obj_GetSymU1
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
-SUBROUTINE csr_GetSymL1(obj, symobj)
+SUBROUTINE obj_GetSymL1(obj, symobj)
   TYPE(CSRSparsity_), INTENT(IN) :: obj
   TYPE(CSRSparsity_), INTENT(INOUT) :: symobj
   !
@@ -230,34 +230,34 @@ SUBROUTINE csr_GetSymL1(obj, symobj)
   !
   DEALLOCATE (IA_csr, IA_csc, JA_csr, JA_csc, idiag)
   !
-END SUBROUTINE csr_GetSymL1
+END SUBROUTINE obj_GetSymL1
 
 !----------------------------------------------------------------------------
 !                                                                    GetSym
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE csr_GetSym1
+MODULE PROCEDURE obj_GetSym1
 SELECT CASE (from)
 CASE ("U", "u")
-  CALL csr_GetSymU1(obj=obj, symobj=symobj)
+  CALL obj_GetSymU1(obj=obj, symobj=symobj)
 CASE ("L", "l")
-  CALL csr_GetSymL1(obj=obj, symobj=symobj)
+  CALL obj_GetSymL1(obj=obj, symobj=symobj)
 CASE default
   CALL Errormsg( &
     & msg="No case found for given from = "//from, &
     & file=__FILE__, &
-    & routine="csr_GetSym1()", &
+    & routine="obj_GetSym1()", &
     & line=__LINE__, &
     & unitno=stderr)
 END SELECT
-END PROCEDURE csr_GetSym1
+END PROCEDURE obj_GetSym1
 
 !----------------------------------------------------------------------------
 !                                                                    GetSym
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE csr_GetSym2
+MODULE PROCEDURE obj_GetSym2
 
-END PROCEDURE csr_GetSym2
+END PROCEDURE obj_GetSym2
 
 END SUBMODULE SymMethods
