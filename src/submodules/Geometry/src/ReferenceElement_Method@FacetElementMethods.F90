@@ -106,10 +106,13 @@ END PROCEDURE refelem_FacetElements
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE refelem_FacetElements_Line
-INTEGER(I4B) :: ii
+INTEGER(I4B) :: ii, tFacet, xiCell,
 INTEGER(I4B) :: nptrs(1)
 
-DO ii = 1, 2
+xiCell = refelem%xiDimension
+tFacet = refelem%entityCounts(xicell)
+
+DO ii = 1, tFacet
   nptrs = refelem%topology(ii)%nptrs
   ans(ii)%xij = refelem%xij(:, nptrs)
   ans(ii)%entityCounts = [1, 0, 0, 0]
@@ -131,7 +134,7 @@ END PROCEDURE refelem_FacetElements_Line
 
 MODULE PROCEDURE refelem_FacetElements_Surface
 INTEGER(I4B) :: tFacet, ii, xiCell, T(4), istart, iend, tsize, jj
-INTEGER(I4B) :: nptrs(2)
+INTEGER(I4B), ALLOCATABLE :: nptrs(:)
 TYPE(Referencetopology_) :: topo
 
 xiCell = refelem%xiDimension
@@ -159,7 +162,7 @@ DO ii = 1, tFacet
 
   ans(ii)%Order = ElementOrder(elemType=topo%name)
   ans(ii)%NSD = refelem%nsd
-  ans(ii)%entityCounts = [2, 1, 0, 0]
+  ans(ii)%entityCounts = [SIZE(nptrs), 1, 0, 0]
   tsize = SIZE(nptrs) + 1
 
   ALLOCATE (ans(ii)%topology(tsize))
@@ -170,6 +173,7 @@ DO ii = 1, tFacet
 
   ans(ii)%topology(tsize) = Referencetopology(nptrs=nptrs, name=ans(ii)%name)
 
+  DEALLOCATE (nptrs)
 END DO
 
 END PROCEDURE refelem_FacetElements_Surface
