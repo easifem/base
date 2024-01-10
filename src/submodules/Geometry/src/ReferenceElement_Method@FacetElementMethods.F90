@@ -106,7 +106,7 @@ END PROCEDURE refelem_FacetElements
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE refelem_FacetElements_Line
-INTEGER(I4B) :: ii, tFacet, xiCell,
+INTEGER(I4B) :: ii, tFacet, xiCell
 INTEGER(I4B) :: nptrs(1)
 
 xiCell = refelem%xiDimension
