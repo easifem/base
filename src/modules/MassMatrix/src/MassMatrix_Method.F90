@@ -26,6 +26,7 @@ IMPLICIT NONE
 PRIVATE
 
 PUBLIC :: MassMatrix
+PUBLIC :: ViscousBoundaryMassMatrix
 
 !----------------------------------------------------------------------------
 !                                              MassMatrix@MassMatrixMethods
@@ -124,6 +125,31 @@ INTERFACE MassMatrix
     REAL(DFP), ALLOCATABLE :: ans(:, :)
   END FUNCTION MassMatrix_4
 END INTERFACE MassMatrix
+
+!----------------------------------------------------------------------------
+!                                              MassMatrix@MassMatrixMethods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2024-01-15
+! summary: This subroutine makes mass matrix used for viscous boundary
+
+INTERFACE ViscousBoundaryMassMatrix
+  MODULE PURE FUNCTION MassMatrix_5(test, trial, lambda, mu, rho) &
+    & RESULT(ans)
+    CLASS(ElemshapeData_), INTENT(IN) :: test
+    !! Shapedata for test function
+    CLASS(ElemshapeData_), INTENT(IN) :: trial
+    !! Shapedata for trial function
+    CLASS(FEVariable_), INTENT(IN) :: lambda
+      !! Lame parameter
+    CLASS(FEVariable_), INTENT(IN) :: mu
+      !! Lame parameter
+    CLASS(FEVariable_), INTENT(IN) :: rho
+      !! Mass Density
+    REAL(DFP), ALLOCATABLE :: ans(:, :)
+  END FUNCTION MassMatrix_5
+END INTERFACE ViscousBoundaryMassMatrix
 
 !----------------------------------------------------------------------------
 !
