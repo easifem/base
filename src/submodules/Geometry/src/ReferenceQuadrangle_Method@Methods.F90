@@ -125,7 +125,7 @@ CASE (1)
   CALL Initiate(obj=obj, Anotherobj=refelem)
 CASE DEFAULT
   obj%xij = InterpolationPoint_Quadrangle( &
-    & xij=refelem%xij(1:3, 1:4), &
+    & xij=refelem%xij, &
     & order=order, &
     & ipType=ipType,  &
     & layout="VEFC")
