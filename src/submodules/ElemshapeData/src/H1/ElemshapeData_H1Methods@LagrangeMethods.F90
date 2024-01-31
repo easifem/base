@@ -32,7 +32,7 @@ INTEGER(I4B) :: nsd, xidim, ipType0, basisType0
 ipType0 = Input(default=Equidistance, option=ipType)
 basisType0 = Input(default=Monomial, option=basisType)
 
-CALL DEALLOCATE (obj)
+! CALL DEALLOCATE (obj)
 CALL Initiate(obj%refelem, refelem)
 nsd = refelem%nsd
 xidim = refelem%xiDimension

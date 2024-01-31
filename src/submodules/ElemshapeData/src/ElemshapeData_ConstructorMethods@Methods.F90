@@ -307,8 +307,15 @@ END PROCEDURE elemsd_initiate5
 MODULE PROCEDURE stsd_initiate
 INTEGER(I4B) :: tip, ip
 REAL(DFP) :: x(3)
+
 tip = SIZE(elemsd%N, 2)
-IF (ALLOCATED(obj)) DEALLOCATE (obj)
+IF (ALLOCATED(obj)) THEN
+  DO ip = 1, SIZE(obj)
+    CALL DEALLOCATE (obj(ip))
+  END DO
+  DEALLOCATE (obj)
+END IF
+
 ALLOCATE (obj(tip))
 DO ip = 1, tip
   obj(ip)%T = elemsd%N(:, ip)

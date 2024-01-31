@@ -69,6 +69,7 @@ PUBLIC :: TypeRank2Tensor
 PUBLIC :: Rank2TensorPointer_
 PUBLIC :: DeformationGradient_
 PUBLIC :: DeformationGradientPointer_
+PUBLIC :: TypeDeformationGradient
 PUBLIC :: LeftCauchyGreen_
 PUBLIC :: TypeLeftCauchyGreen
 PUBLIC :: LeftCauchyGreenPointer_
@@ -784,9 +785,13 @@ END TYPE ReferenceTopologyPointer_
 
 TYPE :: ReferenceElement_
   CHARACTER(10) :: domainName = "GENERAL"
-  !! UNIT, BIUNIT, GENERAL
+    !! UNIT, BIUNIT, GENERAL
   INTEGER(I4B) :: entityCounts(4) = 0
     !! Number of 0D, 1D, 2D, 3D entities
+    !! entityCounts(1) = total number of points
+    !! entityCounts(2) = total number of edges
+    !! entityCounts(3) = total number of faces
+    !! entityCounts(4) = total number of cells
   INTEGER(I4B) :: xiDimension = 0
     !! Xidimension
   INTEGER(I4B) :: name = 0
@@ -797,7 +802,10 @@ TYPE :: ReferenceElement_
     !! Number of spatial dimensions
   INTEGER(I4B) :: interpolationPointType = Equidistance
     !! Interpolation point
-    !! Equidistance, GaussLegendre, GaussLobatto, Chebyshev
+    !! Equidistance
+    !! GaussLegendre
+    !! GaussLobatto
+    !! Chebyshev
   TYPE(ReferenceTopology_), ALLOCATABLE :: topology(:)
     !! Topology information of 0D, 1, 2, 3D entities
   REAL(DFP), ALLOCATABLE :: xiJ(:, :)

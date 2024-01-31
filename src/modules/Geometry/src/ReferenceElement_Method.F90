@@ -66,6 +66,59 @@ PUBLIC :: GetVTKelementType
 PUBLIC :: GetTotalEdges
 PUBLIC :: GetTotalFaces
 PUBLIC :: GetTotalCells
+PUBLIC :: ReferenceElementInfo
+
+!----------------------------------------------------------------------------
+!                                                      ReferenceElementInfo_
+!----------------------------------------------------------------------------
+
+TYPE :: ReferenceElementInfo_
+  INTEGER(I4B) :: point = 1
+  INTEGER(I4B) :: line = 2
+  INTEGER(I4B) :: triangle = 3
+  INTEGER(I4B) :: quadrangle = 4
+  INTEGER(I4B) :: tetrahedron = 5
+  INTEGER(I4B) :: hexahedron = 6
+  INTEGER(I4B) :: prism = 7
+  INTEGER(I4B) :: pyramid = 8
+  INTEGER(I4B) :: tElemTopologyType_0D = 1
+  INTEGER(I4B) :: tElemTopologyType_1D = 1
+  INTEGER(I4B) :: tElemTopologyType_2D = 2
+  INTEGER(I4B) :: tElemTopologyType_3D = 4
+  INTEGER(I4B) :: tElemTopologyType = 8
+  INTEGER(I4B) :: elemTopologyName(8) = [ &
+    & Point,  &
+    & Line,  &
+    & Triangle,  &
+    & Quadrangle,  &
+    & Tetrahedron, Hexahedron, Prism, Pyramid]
+  INTEGER(I4B) :: maxFaces = 6
+  INTEGER(I4B) :: maxEdges = 12
+  INTEGER(I4B) :: maxPoints = 8
+  INTEGER(I4B) :: tCells(8) = [0, 0, 0, 0, 1, 1, 1, 1]
+  !! Here cell is a topology for which xidim = 3
+  INTEGER(I4B) :: tFaces(8) = [0, 0, 1, 1, 4, 6, 5, 5]
+  !! Here facet is topology entity for which xidim = 2
+  INTEGER(I4B) :: tEdges(8) = [0, 0, 3, 4, 6, 12, 9, 8]
+  !! Here edge is topology entity for which xidim = 1
+  INTEGER(I4B) :: tPoints(8) = [1, 2, 3, 4, 4, 8, 6, 5]
+  !! A point is topology entity for which xidim = 0
+  INTEGER(I4B) :: nne_in_face_triangle(1) = [3]
+  !! number of nodes in each face of triangle
+  INTEGER(I4B) :: nne_in_face_quadrangle(1) = [4]
+  !! number of nodes in each face of quadrangle
+  INTEGER(I4B) :: nne_in_face_tetrahedron(4) = [3, 3, 3, 3]
+  !! number of nodes in each face of tetrahedron
+  INTEGER(I4B) :: nne_in_face_hexahedron(6) = [4, 4, 4, 4, 4, 4]
+  !! number of nodes in each face of tetrahedron
+  INTEGER(I4B) :: nne_in_face_prism(5) = [3, 4, 4, 4, 3]
+  !! number of nodes in each face of tetrahedron
+  INTEGER(I4B) :: nne_in_face_pyramid(5) = [4, 3, 3, 3, 3]
+  !! number of nodes in each face of tetrahedron
+END TYPE ReferenceElementInfo_
+
+TYPE(ReferenceElementInfo_), PARAMETER :: ReferenceElementInfo =  &
+  & ReferenceElementInfo_()
 
 !----------------------------------------------------------------------------
 !                                             GetTotalEdges@GeometryMethods
@@ -381,7 +434,7 @@ INTERFACE ReferenceElement_Pointer
 END INTERFACE ReferenceElement_Pointer
 
 !----------------------------------------------------------------------------
-!                                                 Getnptrs@ConstrucorMethods
+!                                         GetConnectivity@ConstrucorMethods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.

@@ -268,6 +268,58 @@ DEALLOCATE (realval, m2, kbar, m4)
 END PROCEDURE MassMatrix_4
 
 !----------------------------------------------------------------------------
+!                                                                MassMatrix
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE MassMatrix_5
+REAL(DFP), ALLOCATABLE :: realval(:)
+REAL(DFP), ALLOCATABLE :: m2(:, :), eyemat(:, :), nij(:, :)
+REAL(DFP), ALLOCATABLE :: lambdaBar(:)
+REAL(DFP), ALLOCATABLE :: muBar(:)
+REAL(DFP), ALLOCATABLE :: rhoBar(:)
+REAL(DFP), ALLOCATABLE :: acoeff(:)
+REAL(DFP), ALLOCATABLE :: bcoeff(:)
+REAL(DFP), ALLOCATABLE :: m4(:, :, :, :)
+INTEGER(I4B) :: ii, jj, ips, nsd, nns
+
+! main
+CALL GetInterpolation(obj=trial, interpol=lambdaBar, val=lambda)
+CALL GetInterpolation(obj=trial, interpol=muBar, val=mu)
+CALL GetInterpolation(obj=trial, interpol=rhoBar, val=rho)
+
+ALLOCATE (acoeff(SIZE(lambdaBar, 1)), bcoeff(SIZE(lambdaBar, 1)))
+
+bcoeff = SQRT(rhoBar * muBar)
+acoeff = SQRT(rhoBar * (lambdaBar + 2.0_DFP * muBar)) - bcoeff
+
+nsd = trial%refelem%nsd
+eyemat = Eye(nsd, 1.0_DFP)
+nns = SIZE(test%N, 1)
+ALLOCATE (m4(nns, nns, nsd, nsd))
+
+realval = trial%js * trial%ws * trial%thickness
+
+DO ips = 1, SIZE(realval)
+  m2 = OUTERPROD(a=test%normal(:, ips), b=trial%normal(:, ips))
+  nij = OUTERPROD(a=test%N(:, ips), b=trial%N(:, ips))
+
+  DO jj = 1, nsd
+    DO ii = 1, nsd
+
+      m4(:, :, ii, jj) = m4(:, :, ii, jj) + realval(ips) *  &
+        & (acoeff(ips) * m2(ii, jj) + bcoeff(ips) * eyemat(ii, jj)) * nij
+
+    END DO
+  END DO
+END DO
+
+CALL Convert(From=m4, To=ans)
+
+DEALLOCATE (realval, m2, lambdaBar, muBar, rhoBar, acoeff, bcoeff, m4,  &
+  & eyemat, nij)
+END PROCEDURE MassMatrix_5
+
+!----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
