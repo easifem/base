@@ -164,22 +164,22 @@ END PROCEDURE in_2d
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE RemoveDuplicates_1a
-INTEGER(INT8), ALLOCATABLE :: temp(:)
+INTEGER(INT8) :: temp(SIZE(obj))
 #include "./RemoveDuplicates/RemoveDuplicates_1.inc"
 END PROCEDURE RemoveDuplicates_1a
 
 MODULE PROCEDURE RemoveDuplicates_1b
-INTEGER(INT16), ALLOCATABLE :: temp(:)
+INTEGER(INT16) :: temp(SIZE(obj))
 #include "./RemoveDuplicates/RemoveDuplicates_1.inc"
 END PROCEDURE RemoveDuplicates_1b
 
 MODULE PROCEDURE RemoveDuplicates_1c
-INTEGER(INT32), ALLOCATABLE :: temp(:)
+INTEGER(INT32) :: temp(SIZE(obj))
 #include "./RemoveDuplicates/RemoveDuplicates_1.inc"
 END PROCEDURE RemoveDuplicates_1c
 
 MODULE PROCEDURE RemoveDuplicates_1d
-INTEGER(INT64), ALLOCATABLE :: temp(:)
+INTEGER(INT64) :: temp(SIZE(obj))
 #include "./RemoveDuplicates/RemoveDuplicates_1.inc"
 END PROCEDURE RemoveDuplicates_1d
 
