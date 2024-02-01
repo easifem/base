@@ -43,7 +43,7 @@ PUBLIC :: Expand
 ! https://github.com/jacobwilliams/fortran-csv-module/blob/master/src/
 ! csv_utilities.f90
 
-INTERFACE
+INTERFACE Expand
   MODULE PURE SUBROUTINE expand_int8(vec, n, chunk_size, val, finished)
     INTEGER(INT8), ALLOCATABLE, INTENT(INOUT) :: vec(:)
     INTEGER(I4B), INTENT(INOUT) :: n
@@ -58,6 +58,7 @@ INTERFACE
     !! set to true to return `vec`
     !! as its correct size (`n`)
   END SUBROUTINE expand_int8
+
   MODULE PURE SUBROUTINE expand_int16(vec, n, chunk_size, val, finished)
     INTEGER(INT16), ALLOCATABLE, INTENT(INOUT) :: vec(:)
     INTEGER(I4B), INTENT(INOUT) :: n
@@ -72,6 +73,7 @@ INTERFACE
     !! set to true to return `vec`
     !! as its correct size (`n`)
   END SUBROUTINE expand_int16
+
   MODULE PURE SUBROUTINE expand_int32(vec, n, chunk_size, val, finished)
     INTEGER(INT32), ALLOCATABLE, INTENT(INOUT) :: vec(:)
     INTEGER(I4B), INTENT(INOUT) :: n
@@ -86,6 +88,7 @@ INTERFACE
     !! set to true to return `vec`
     !! as its correct size (`n`)
   END SUBROUTINE expand_int32
+
   MODULE PURE SUBROUTINE expand_int64(vec, n, chunk_size, val, finished)
     INTEGER(INT64), ALLOCATABLE, INTENT(INOUT) :: vec(:)
     INTEGER(I4B), INTENT(INOUT) :: n
@@ -100,11 +103,7 @@ INTERFACE
     !! set to true to return `vec`
     !! as its correct size (`n`)
   END SUBROUTINE expand_int64
-END INTERFACE
-
-INTERFACE EXPAND
-  MODULE PROCEDURE expand_int8, expand_int16, expand_int32, expand_int64
-END INTERFACE EXPAND
+END INTERFACE Expand
 
 !----------------------------------------------------------------------------
 !                                                      Expand@Methods
@@ -114,7 +113,7 @@ END INTERFACE EXPAND
 ! date: 22 July 2022
 ! summary: Expand the real vector
 
-INTERFACE
+INTERFACE Expand
   MODULE PURE SUBROUTINE expand_real32(vec, n, chunk_size, val, finished)
     REAL(REAL32), ALLOCATABLE, INTENT(INOUT) :: vec(:)
     INTEGER(I4B), INTENT(INOUT) :: n
@@ -143,10 +142,6 @@ INTERFACE
     !! set to true to return `vec`
     !! as its correct size (`n`)
   END SUBROUTINE expand_real64
-END INTERFACE
-
-INTERFACE Expand
-  MODULE PROCEDURE expand_real32, expand_real64
 END INTERFACE Expand
 
 !----------------------------------------------------------------------------
