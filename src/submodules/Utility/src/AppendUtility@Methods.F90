@@ -25,22 +25,22 @@ CONTAINS
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE expand_int8
-INTEGER(Int8), ALLOCATABLE :: tmp(:)
+INTEGER(INT8), ALLOCATABLE :: tmp(:)
 #include "./Expand/Expand.inc"
 END PROCEDURE expand_int8
 
 MODULE PROCEDURE expand_int16
-INTEGER(Int16), ALLOCATABLE :: tmp(:)
+INTEGER(INT16), ALLOCATABLE :: tmp(:)
 #include "./Expand/Expand.inc"
 END PROCEDURE expand_int16
 
 MODULE PROCEDURE expand_int32
-INTEGER(Int32), ALLOCATABLE :: tmp(:)
+INTEGER(INT32), ALLOCATABLE :: tmp(:)
 #include "./Expand/Expand.inc"
 END PROCEDURE expand_int32
 
 MODULE PROCEDURE expand_int64
-INTEGER(Int64), ALLOCATABLE :: tmp(:)
+INTEGER(INT64), ALLOCATABLE :: tmp(:)
 #include "./Expand/Expand.inc"
 END PROCEDURE expand_int64
 
@@ -49,7 +49,7 @@ END PROCEDURE expand_int64
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE expand_real32
-REAL(Real32), ALLOCATABLE :: tmp(:)
+REAL(REAL32), ALLOCATABLE :: tmp(:)
 #include "./Expand/Expand.inc"
 END PROCEDURE expand_real32
 
@@ -58,7 +58,7 @@ END PROCEDURE expand_real32
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE expand_real64
-REAL(Real64), ALLOCATABLE :: tmp(:)
+REAL(REAL64), ALLOCATABLE :: tmp(:)
 #include "./Expand/Expand.inc"
 END PROCEDURE expand_real64
 
@@ -133,6 +133,22 @@ END PROCEDURE Append_2c
 MODULE PROCEDURE Append_2d
 #include "./Append/Append_2cd.inc"
 END PROCEDURE Append_2d
+
+!----------------------------------------------------------------------------
+!                                                                     Append
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE Append_2e
+#include "./Append/Append_2abcd.inc"
+END PROCEDURE Append_2e
+
+!----------------------------------------------------------------------------
+!                                                                     Append
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE Append_2f
+#include "./Append/Append_2abcd.inc"
+END PROCEDURE Append_2f
 
 !----------------------------------------------------------------------------
 !                                                                     Append
@@ -242,113 +258,113 @@ END PROCEDURE func_Append_2b
 !                                                                 colConcat
 !----------------------------------------------------------------------------
 
-module procedure colconcat_1a
+MODULE PROCEDURE colconcat_1a
 #include "./ColConcat/ColConcat_1.inc"
-end procedure colconcat_1a
+END PROCEDURE colconcat_1a
 
-module procedure colconcat_1b
+MODULE PROCEDURE colconcat_1b
 #include "./ColConcat/ColConcat_1.inc"
-end procedure colconcat_1b
+END PROCEDURE colconcat_1b
 
-module procedure colconcat_1c
+MODULE PROCEDURE colconcat_1c
 #include "./ColConcat/ColConcat_1.inc"
-end procedure colconcat_1c
+END PROCEDURE colconcat_1c
 
-module procedure colconcat_1d
+MODULE PROCEDURE colconcat_1d
 #include "./ColConcat/ColConcat_1.inc"
-end procedure colconcat_1d
+END PROCEDURE colconcat_1d
 
-module procedure colconcat_1e
+MODULE PROCEDURE colconcat_1e
 #include "./ColConcat/ColConcat_1.inc"
-end procedure colconcat_1e
+END PROCEDURE colconcat_1e
 
-module procedure colconcat_1f
+MODULE PROCEDURE colconcat_1f
 #include "./ColConcat/ColConcat_1.inc"
-end procedure colconcat_1f
+END PROCEDURE colconcat_1f
 
 !----------------------------------------------------------------------------
 !                                                                 colConcat
 !----------------------------------------------------------------------------
 
-module procedure colconcat_2a
+MODULE PROCEDURE colconcat_2a
 #include "./ColConcat/ColConcat_2.inc"
-end procedure colconcat_2a
+END PROCEDURE colconcat_2a
 
-module procedure colconcat_2b
+MODULE PROCEDURE colconcat_2b
 #include "./ColConcat/ColConcat_2.inc"
-end procedure colconcat_2b
+END PROCEDURE colconcat_2b
 
-module procedure colconcat_2c
+MODULE PROCEDURE colconcat_2c
 #include "./ColConcat/ColConcat_2.inc"
-end procedure colconcat_2c
+END PROCEDURE colconcat_2c
 
-module procedure colconcat_2d
+MODULE PROCEDURE colconcat_2d
 #include "./ColConcat/ColConcat_2.inc"
-end procedure colconcat_2d
+END PROCEDURE colconcat_2d
 
-module procedure colconcat_2e
+MODULE PROCEDURE colconcat_2e
 #include "./ColConcat/ColConcat_2.inc"
-end procedure colconcat_2e
+END PROCEDURE colconcat_2e
 
-module procedure colconcat_2f
+MODULE PROCEDURE colconcat_2f
 #include "./ColConcat/ColConcat_2.inc"
-end procedure colconcat_2f
+END PROCEDURE colconcat_2f
 
 !----------------------------------------------------------------------------
 !                                                                 colConcat
 !----------------------------------------------------------------------------
 
-module procedure colconcat_3a
+MODULE PROCEDURE colconcat_3a
 #include "./ColConcat/ColConcat_3.inc"
-end procedure colconcat_3a
+END PROCEDURE colconcat_3a
 
-module procedure colconcat_3b
+MODULE PROCEDURE colconcat_3b
 #include "./ColConcat/ColConcat_3.inc"
-end procedure colconcat_3b
+END PROCEDURE colconcat_3b
 
-module procedure colconcat_3c
+MODULE PROCEDURE colconcat_3c
 #include "./ColConcat/ColConcat_3.inc"
-end procedure colconcat_3c
+END PROCEDURE colconcat_3c
 
-module procedure colconcat_3d
+MODULE PROCEDURE colconcat_3d
 #include "./ColConcat/ColConcat_3.inc"
-end procedure colconcat_3d
+END PROCEDURE colconcat_3d
 
-module procedure colconcat_3e
+MODULE PROCEDURE colconcat_3e
 #include "./ColConcat/ColConcat_3.inc"
-end procedure colconcat_3e
+END PROCEDURE colconcat_3e
 
-module procedure colconcat_3f
+MODULE PROCEDURE colconcat_3f
 #include "./ColConcat/ColConcat_3.inc"
-end procedure colconcat_3f
+END PROCEDURE colconcat_3f
 
 !----------------------------------------------------------------------------
 !                                                                 colConcat
 !----------------------------------------------------------------------------
 
-module procedure colconcat_4a
+MODULE PROCEDURE colconcat_4a
 #include "./ColConcat/ColConcat_4.inc"
-end procedure colconcat_4a
+END PROCEDURE colconcat_4a
 
-module procedure colconcat_4b
+MODULE PROCEDURE colconcat_4b
 #include "./ColConcat/ColConcat_4.inc"
-end procedure colconcat_4b
+END PROCEDURE colconcat_4b
 
-module procedure colconcat_4c
+MODULE PROCEDURE colconcat_4c
 #include "./ColConcat/ColConcat_4.inc"
-end procedure colconcat_4c
+END PROCEDURE colconcat_4c
 
-module procedure colconcat_4d
+MODULE PROCEDURE colconcat_4d
 #include "./ColConcat/ColConcat_4.inc"
-end procedure colconcat_4d
+END PROCEDURE colconcat_4d
 
-module procedure colconcat_4e
+MODULE PROCEDURE colconcat_4e
 #include "./ColConcat/ColConcat_4.inc"
-end procedure colconcat_4e
+END PROCEDURE colconcat_4e
 
-module procedure colconcat_4f
+MODULE PROCEDURE colconcat_4f
 #include "./ColConcat/ColConcat_4.inc"
-end procedure colconcat_4f
+END PROCEDURE colconcat_4f
 
 !----------------------------------------------------------------------------
 !                                                                 colConcat
