@@ -32,7 +32,6 @@ PUBLIC :: Measure_Simplex_Line
 PUBLIC :: Line_Quality
 PUBLIC :: Quality_Line
 PUBLIC :: LineName
-PUBLIC :: GetEdgeConnectivity_Line
 PUBLIC :: RefLineCoord
 PUBLIC :: RefCoord_Line
 
@@ -260,28 +259,6 @@ INTERFACE Quality_Line
     REAL(DFP) :: Ans
   END FUNCTION Line_Quality
 END INTERFACE Quality_Line
-
-!----------------------------------------------------------------------------
-!                                                        GetEdgeConnectivity
-!----------------------------------------------------------------------------
-
-!> author: Vikas Sharma, Ph. D.
-! date: 2024-03-08
-! summary:  Returns number of edges in the element
-
-INTERFACE
-  MODULE SUBROUTINE GetEdgeConnectivity_Line(con, opt)
-    INTEGER(I4B), INTENT(INOUT) :: con(:, :)
-    !! Connectivity
-    !! The columns represents the edge number
-    !! The row represents a edge
-    !! con should be allocated by the user
-    INTEGER(I4B), OPTIONAL, INTENT(IN) :: opt
-    !! If opt = 1, then edge connectivity for hierarchial approximation
-    !! If opt =2, then edge connectivity for Lagrangian approximation
-    !! opt=1 is default
-  END SUBROUTINE GetEdgeConnectivity_Line
-END INTERFACE
 
 !----------------------------------------------------------------------------
 !                                                           RefLineCoord
