@@ -16,7 +16,7 @@
 !
 
 !> author: Vikas Sharma, Ph. D.
-! date:         5 March 2021
+! date: 5 March 2021
 ! summary: This module contains methods for [[ReferenceQuadrangle_]]
 
 MODULE ReferenceQuadrangle_Method
@@ -35,6 +35,8 @@ PUBLIC :: QuadArea3D, QuadrangleArea3D
 PUBLIC :: QuadArea2D, QuadrangleArea2D
 PUBLIC :: QuadrangleName
 PUBLIC :: GetEdgeConnectivity_Quadrangle
+PUBLIC :: RefQuadrangleCoord
+PUBLIC :: RefCoord_Quadrangle
 
 !----------------------------------------------------------------------------
 !                                                       QuadrangleName
@@ -94,7 +96,8 @@ END INTERFACE ReferenceQuadrangle
 ! summary: Returns linear Quadrangle element
 
 INTERFACE ReferenceQuadrangle_Pointer
-MODULE FUNCTION reference_Quadrangle_Pointer(NSD, xij, domainName) RESULT(obj)
+  MODULE FUNCTION reference_Quadrangle_Pointer(NSD, xij, domainName)  &
+    & RESULT(obj)
     INTEGER(I4B), INTENT(IN) :: NSD
     REAL(DFP), INTENT(IN), OPTIONAL :: xij(:, :)
     CHARACTER(*), OPTIONAL, INTENT(IN) :: domainName
@@ -159,9 +162,9 @@ INTERFACE Quality_Quadrangle
   END FUNCTION Quadrangle_Quality
 END INTERFACE Quality_Quadrangle
 
-!-----------------------------------------------------------------------------
+!----------------------------------------------------------------------------
 !
-!-----------------------------------------------------------------------------
+!----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 10 Aug 2022
@@ -183,9 +186,9 @@ INTERFACE QuadrangleArea3D
   END SUBROUTINE QuadArea3D
 END INTERFACE QuadrangleArea3D
 
-!-----------------------------------------------------------------------------
-!
-!-----------------------------------------------------------------------------
+!----------------------------------------------------------------------------
+!                                                          QuadrangleArea2D
+!----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 10 Aug 2022
@@ -227,5 +230,16 @@ INTERFACE
     !! opt=1 is default
   END SUBROUTINE GetEdgeConnectivity_Quadrangle
 END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                   RefQuadrangleCoord
+!----------------------------------------------------------------------------
+
+INTERFACE RefCoord_Quadrangle
+  MODULE PURE FUNCTION RefQuadrangleCoord(refQuadrangle) RESULT(ans)
+    CHARACTER(*), INTENT(IN) :: refQuadrangle
+    REAL(DFP) :: ans(2, 4)
+  END FUNCTION RefQuadrangleCoord
+END INTERFACE RefCoord_Quadrangle
 
 END MODULE ReferenceQuadrangle_Method

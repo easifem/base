@@ -20,7 +20,17 @@
 ! summary: This submodule contains method for [[ReferenceQuadrangle_]]
 
 SUBMODULE(ReferenceQuadrangle_Method) Methods
-USE BaseMethod
+USE ReferenceElement_Method
+USE ApproxUtility
+USE QuadrangleInterpolationUtility, ONLY: InterpolationPoint_Quadrangle,  &
+  & LagrangeDOF_Quadrangle
+USE AppendUtility
+USE StringUtility
+USE ArangeUtility
+USE InputUtility
+USE ReferenceTriangle_Method, ONLY: TRIANGLEAREA2D
+USE ReferenceLine_Method, ONLY: Linename
+
 IMPLICIT NONE
 CONTAINS
 
@@ -99,7 +109,7 @@ END PROCEDURE Initiate_ref_Quadrangle
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE reference_Quadrangle
-CALL Initiate(obj=obj, nsd=NSD, xij=xij, domainName=domainName)
+CALL initiate_ref_quadrangle(obj=obj, nsd=NSD, xij=xij, domainName=domainName)
 END PROCEDURE reference_Quadrangle
 
 !----------------------------------------------------------------------------
@@ -108,7 +118,7 @@ END PROCEDURE reference_Quadrangle
 
 MODULE PROCEDURE reference_Quadrangle_Pointer
 ALLOCATE (obj)
-CALL Initiate(obj=obj, nsd=NSD, xij=xij, domainName=domainName)
+CALL initiate_ref_quadrangle(obj=obj, nsd=NSD, xij=xij, domainName=domainName)
 END PROCEDURE reference_Quadrangle_Pointer
 
 !----------------------------------------------------------------------------
@@ -181,6 +191,7 @@ END PROCEDURE Measure_Simplex_Quadrangle
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Quadrangle_quality
+ans = 0.0_DFP
 END PROCEDURE Quadrangle_quality
 
 !----------------------------------------------------------------------------
@@ -321,5 +332,48 @@ PURE SUBROUTINE PARALLELOGRAMAREA2D(p, ans)
   ans = (p(1, 2) - p(1, 1)) * (p(2, 3) - p(2, 1)) &
     & - (p(2, 2) - p(2, 1)) * (p(1, 3) - p(1, 1))
 END SUBROUTINE PARALLELOGRAMAREA2D
+
+!----------------------------------------------------------------------------
+!                                                        RefQuadrangleCoord
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE RefQuadrangleCoord
+CHARACTER(:), ALLOCATABLE :: astr
+astr = UpperCase(refQuadrangle)
+SELECT CASE (astr)
+CASE ("UNIT")
+  ans(1, :) = [0.0_DFP, 1.0_DFP, 1.0_DFP, 0.0_DFP]
+  ans(2, :) = [0.0_DFP, 0.0_DFP, 1.0_DFP, 1.0_DFP]
+CASE ("BIUNIT")
+  ans(1, :) = [-1.0_DFP, 1.0_DFP, 1.0_DFP, -1.0_DFP]
+  ans(2, :) = [-1.0_DFP, -1.0_DFP, 1.0_DFP, 1.0_DFP]
+END SELECT
+astr = ""
+END PROCEDURE RefQuadrangleCoord
+
+!----------------------------------------------------------------------------
+!                                              GetEdgeConnectivity_Quadrangle
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE GetEdgeConnectivity_Quadrangle
+INTEGER(I4B) :: opt0
+
+opt0 = Input(default=1_I4B, option=opt)
+
+SELECT CASE (opt0)
+CASE (1_I4B)
+  con(:, 1) = [1, 2]
+  con(:, 2) = [4, 3]
+  con(:, 3) = [1, 4]
+  con(:, 4) = [2, 3]
+CASE (2_I4B)
+  !! For Lagrangian polynomial
+  con(:, 1) = [1, 2]
+  con(:, 2) = [2, 3]
+  con(:, 3) = [3, 4]
+  con(:, 4) = [4, 1]
+END SELECT
+
+END PROCEDURE GetEdgeConnectivity_Quadrangle
 
 END SUBMODULE Methods

@@ -32,13 +32,13 @@ END PROCEDURE RefElemDomain_Quadrangle
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE FacetConnectivity_Quadrangle
-TYPE(String) :: baseInterpol0
-TYPE(String) :: baseContinuity0
+CHARACTER(:), ALLOCATABLE :: baseInterpol0
+! TYPE(String) :: baseContinuity0
 
 baseInterpol0 = UpperCase(baseInterpol)
-baseContinuity0 = UpperCase(baseContinuity)
+! baseContinuity0 = UpperCase(baseContinuity)
 
-SELECT CASE (baseInterpol0%chars())
+SELECT CASE (baseInterpol0)
 CASE ( &
   & "HIERARCHYPOLYNOMIAL", &
   & "HIERARCHY", &
@@ -69,23 +69,6 @@ MODULE PROCEDURE QuadratureNumber_Quadrangle
 ans(1) = QuadratureNumber_Line(order=p, quadType=quadType1)
 ans(2) = QuadratureNumber_Line(order=q, quadType=quadType2)
 END PROCEDURE QuadratureNumber_Quadrangle
-
-!----------------------------------------------------------------------------
-!                                                        RefQuadrangleCoord
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE RefQuadrangleCoord
-TYPE(String) :: astr
-astr = UpperCase(refQuadrangle)
-SELECT CASE (astr%chars())
-CASE ("UNIT")
-  ans(1, :) = [0.0_DFP, 1.0_DFP, 1.0_DFP, 0.0_DFP]
-  ans(2, :) = [0.0_DFP, 0.0_DFP, 1.0_DFP, 1.0_DFP]
-CASE ("BIUNIT")
-  ans(1, :) = [-1.0_DFP, 1.0_DFP, 1.0_DFP, -1.0_DFP]
-  ans(2, :) = [-1.0_DFP, -1.0_DFP, 1.0_DFP, 1.0_DFP]
-END SELECT
-END PROCEDURE RefQuadrangleCoord
 
 !----------------------------------------------------------------------------
 !                                                 LagrangeDegree_Quadrangle
