@@ -20,7 +20,13 @@
 ! summary:         This submodule contains methods for [[ReferenceLine_]]
 
 SUBMODULE(ReferenceLine_Method) Methods
-USE BaseMethod
+USE ReallocateUtility
+USE ReferenceElement_Method
+USE StringUtility
+USE ApproxUtility
+USE String_Class, ONLY: String
+USE LineInterpolationUtility
+USE Display_Method
 IMPLICIT NONE
 CONTAINS
 
@@ -58,7 +64,7 @@ unit_xij = RefCoord_Line("UNIT")
 biunit_xij = RefCoord_Line("BIUNIT")
 
 IF (PRESENT(xij)) THEN
-  obj%xij = xij(1:1, 1:2) 
+  obj%xij = xij(1:1, 1:2)
   IF (ALL(obj%xij(1:1, 1:2) .approxeq.unit_xij)) THEN
     obj%domainName = "UNIT"
   ELSE IF (ALL(obj%xij(1:1, 1:2) .approxeq.biunit_xij)) THEN
@@ -95,7 +101,7 @@ END PROCEDURE initiate_ref_Line
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE reference_Line
-CALL Initiate(obj=obj, nsd=nsd, xij=xij, domainName=domainName)
+CALL initiate_ref_line(obj=obj, nsd=nsd, xij=xij, domainName=domainName)
 END PROCEDURE reference_Line
 
 !----------------------------------------------------------------------------
@@ -104,7 +110,7 @@ END PROCEDURE reference_Line
 
 MODULE PROCEDURE reference_Line_Pointer_1
 ALLOCATE (obj)
-CALL Initiate(obj=obj, nsd=nsd, xij=xij, domainName=domainName)
+CALL initiate_ref_line(obj=obj, nsd=nsd, xij=xij, domainName=domainName)
 END PROCEDURE reference_Line_Pointer_1
 
 !----------------------------------------------------------------------------
@@ -124,7 +130,7 @@ nns = SIZE(obj%xij, 2)
 obj%entityCounts = [nns, 1, 0, 0]
 obj%xiDimension = 1
 obj%order = order
-obj%name = ElementType("Line"//TRIM(INT2STR(nns)))
+obj%name = ElementType("Line"//ToString(nns))
 ALLOCATE (obj%topology(nns + 1))
 DO CONCURRENT(i=1:nns)
   obj%topology(i) = ReferenceTopology([i], Point)
@@ -157,5 +163,20 @@ END PROCEDURE Measure_Simplex_Line
 MODULE PROCEDURE Line_quality
 ans = 0.0_DFP
 END PROCEDURE Line_quality
+
+!----------------------------------------------------------------------------
+!                                                              RefLineCoord
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE RefLineCoord
+TYPE(String) :: astr
+astr = UpperCase(refLine)
+SELECT CASE (astr%chars())
+CASE ("UNIT")
+  ans(1, :) = [0.0_DFP, 1.0_DFP]
+CASE ("BIUNIT")
+  ans(1, :) = [-1.0_DFP, 1.0_DFP]
+END SELECT
+END PROCEDURE RefLineCoord
 
 END SUBMODULE Methods

@@ -17,10 +17,11 @@
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2 March 2021
-! summary: 	This submodule contains methods for [[ReferencePoint_]]
+! summary:         This submodule contains methods for [[ReferencePoint_]]
 
 SUBMODULE(ReferencePoint_Method) Methods
-USE BaseMethod
+USE ReallocateUtility
+USE ReferenceElement_Method
 IMPLICIT NONE
 CONTAINS
 
@@ -29,24 +30,19 @@ CONTAINS
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE refPoint_Initiate
-  !!
-  CALL Reallocate( obj%XiJ, 3, 1 )
-  !!
-  IF( PRESENT( XiJ ) ) THEN
-    obj%XiJ = XiJ
-  END IF
-  !!
-  obj%EntityCounts = [1, 0, 0, 0]
-  obj%XiDimension = 0
-  obj%Order = 0
-  obj%NSD = NSD
-  obj%Name = Point1
-  IF( ALLOCATED( obj%Topology ) ) DEALLOCATE( obj%Topology )
-  ALLOCATE( obj%Topology( 1 ) )
-  obj%Topology( 1 ) = ReferenceTopology( [1], Point )
-  !!
-  obj%highOrderElement => highOrderElement_Point
-  !!
+CALL Reallocate(obj%XiJ, 3, 1)
+IF (PRESENT(XiJ)) THEN
+  obj%XiJ = XiJ
+END IF
+obj%EntityCounts = [1, 0, 0, 0]
+obj%XiDimension = 0
+obj%Order = 0
+obj%NSD = NSD
+obj%Name = Point1
+IF (ALLOCATED(obj%Topology)) DEALLOCATE (obj%Topology)
+ALLOCATE (obj%Topology(1))
+obj%Topology(1) = ReferenceTopology([1], Point)
+obj%highOrderElement => HighOrderElement_Point
 END PROCEDURE refPoint_Initiate
 
 !----------------------------------------------------------------------------
@@ -54,7 +50,7 @@ END PROCEDURE refPoint_Initiate
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE refPoint_Constructor1
-  CALL Initiate( obj, NSD, XiJ )
+CALL refPoint_Initiate(obj, NSD, XiJ)
 END PROCEDURE refPoint_Constructor1
 
 !----------------------------------------------------------------------------
@@ -62,24 +58,24 @@ END PROCEDURE refPoint_Constructor1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE refPoint_Constructor_1
-  ALLOCATE( obj )
-  CALL Initiate( obj, NSD, XiJ )
+ALLOCATE (obj)
+CALL refpoint_Initiate(obj, NSD, XiJ)
 END PROCEDURE refPoint_Constructor_1
 
 !----------------------------------------------------------------------------
 !                                                            LagrangeElement
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE highOrderElement_Point
-  CALL Initiate( obj=obj, anotherobj=refelem )
-END PROCEDURE highOrderElement_Point
+MODULE PROCEDURE HighOrderElement_Point
+CALL Initiate(obj=obj, anotherobj=refelem)
+END PROCEDURE HighOrderElement_Point
 
 !----------------------------------------------------------------------------
 !                                                              MeasureSimplex
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Measure_Simplex_Point
-  ans = 0.0_DFP
+ans = 0.0_DFP
 END PROCEDURE Measure_Simplex_Point
 
 !----------------------------------------------------------------------------
@@ -87,7 +83,7 @@ END PROCEDURE Measure_Simplex_Point
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Point_Quality
-  ans = 0.0_DFP
+ans = 0.0_DFP
 END PROCEDURE Point_Quality
 
 END SUBMODULE Methods

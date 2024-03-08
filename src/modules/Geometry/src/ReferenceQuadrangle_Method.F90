@@ -27,12 +27,14 @@ PRIVATE
 PUBLIC :: Initiate
 PUBLIC :: ReferenceQuadrangle
 PUBLIC :: ReferenceQuadrangle_Pointer
-PUBLIC :: highorderElement_Quadrangle
+PUBLIC :: HighorderElement_Quadrangle
 PUBLIC :: Measure_Simplex_Quadrangle
 PUBLIC :: Quadrangle_Quality
+PUBLIC :: Quality_Quadrangle
 PUBLIC :: QuadArea3D, QuadrangleArea3D
 PUBLIC :: QuadArea2D, QuadrangleArea2D
 PUBLIC :: QuadrangleName
+PUBLIC :: GetEdgeConnectivity_Quadrangle
 
 !----------------------------------------------------------------------------
 !                                                       QuadrangleName
@@ -123,13 +125,13 @@ END INTERFACE ReferenceQuadrangle_Pointer
 !```
 
 INTERFACE
-  MODULE SUBROUTINE highorderElement_Quadrangle(refelem, order, obj, &
+  MODULE SUBROUTINE HighorderElement_Quadrangle(refelem, order, obj, &
     & ipType)
     CLASS(ReferenceElement_), INTENT(IN) :: refelem
     INTEGER(I4B), INTENT(IN) :: order
     CLASS(ReferenceElement_), INTENT(INOUT) :: obj
     INTEGER(I4B), INTENT(IN) :: ipType
-  END SUBROUTINE highorderElement_Quadrangle
+  END SUBROUTINE HighorderElement_Quadrangle
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -148,14 +150,14 @@ END INTERFACE
 !                                                         Quadrangle_quality
 !----------------------------------------------------------------------------
 
-INTERFACE
+INTERFACE Quality_Quadrangle
   MODULE FUNCTION Quadrangle_Quality(refelem, xij, measure) RESULT(Ans)
     CLASS(ReferenceElement_), INTENT(IN) :: refelem
     REAL(DFP), INTENT(IN) :: xij(:, :)
     INTEGER(I4B), INTENT(IN) :: measure
     REAL(DFP) :: Ans
   END FUNCTION Quadrangle_Quality
-END INTERFACE
+END INTERFACE Quality_Quadrangle
 
 !-----------------------------------------------------------------------------
 !
@@ -203,5 +205,27 @@ INTERFACE QuadrangleArea2D
     REAL(DFP), INTENT(OUT) :: ans
   END SUBROUTINE QuadArea2D
 END INTERFACE QuadrangleArea2D
+
+!----------------------------------------------------------------------------
+!                                                        GetEdgeConnectivity
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2024-03-08
+! summary:  Returns number of edges in the element
+
+INTERFACE
+  MODULE SUBROUTINE GetEdgeConnectivity_Quadrangle(con, opt)
+    INTEGER(I4B), INTENT(INOUT) :: con(:, :)
+    !! Connectivity
+    !! The columns represents the edge number
+    !! The row represents a edge
+    !! con should be allocated by the user
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: opt
+    !! If opt = 1, then edge connectivity for hierarchial approximation
+    !! If opt =2, then edge connectivity for Lagrangian approximation
+    !! opt=1 is default
+  END SUBROUTINE GetEdgeConnectivity_Quadrangle
+END INTERFACE
 
 END MODULE ReferenceQuadrangle_Method

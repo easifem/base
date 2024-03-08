@@ -16,7 +16,24 @@
 !
 
 SUBMODULE(ReferenceElement_Method) GeometryMethods
-USE BaseMethod
+USE ErrorHandling, ONLY: Errormsg
+USE Display_Method
+
+USE ReferencePoint_Method, ONLY: Measure_Simplex_Point, Point_quality
+USE ReferenceLine_Method, ONLY: Measure_Simplex_Line, Line_quality
+USE ReferenceTriangle_Method, ONLY: Measure_Simplex_Triangle,  &
+  & Triangle_quality, triangle_contains_point
+USE ReferenceQuadrangle_Method, ONLY: Measure_Simplex_Quadrangle,  &
+  & Quadrangle_quality
+USE ReferenceTetrahedron_Method, ONLY: Measure_Simplex_Tetrahedron,  &
+  & Tetrahedron_quality
+USE ReferenceHexahedron_Method, ONLY: Measure_Simplex_Hexahedron,  &
+  & Hexahedron_quality
+USE ReferencePrism_Method, ONLY: Measure_Simplex_Prism,  &
+  & Prism_quality
+USE ReferencePyramid_Method, ONLY: Measure_Simplex_Pyramid,  &
+  & Pyramid_quality
+
 IMPLICIT NONE
 CONTAINS
 
@@ -46,6 +63,38 @@ END SELECT
 END PROCEDURE GetTotalEdges1
 
 !----------------------------------------------------------------------------
+!                                                    GetEdgeConnectivity1
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE GetEdgeConnectivity1
+SELECT CASE (elemType)
+CASE (Point)
+  ! CALL GetEdgeConnectivity_Point(con=con, opt=opt)
+CASE (Line)
+  ! CALL GetEdgeConnectivity_Line(con=con, opt=opt)
+CASE (Triangle)
+  ! CALL GetEdgeConnectivity_Triangle(con=con, opt=opt)
+CASE (Quadrangle)
+  ! CALL GetEdgeConnectivity_Quadrangle(con=con, opt=opt)
+CASE (Tetrahedron)
+  ! CALL GetEdgeConnectivity_Tetrahedron(con=con, opt=opt)
+CASE (Hexahedron)
+  ! CALL GetEdgeConnectivity_Hexahedron(con=con, opt=opt)
+CASE (Prism)
+  ! CALL GetEdgeConnectivity_Prism(con=con, opt=opt)
+CASE (Pyramid)
+  ! CALL GetEdgeConnectivity_Pyramid(con=con, opt=opt)
+CASE DEFAULT
+  CALL Errormsg( &
+    & msg="No case found for given elemType="//ToString(elemType),  &
+    & file=__FILE__,  &
+    & routine="GetEdgeConnectivity1()",  &
+    & line=__LINE__,  &
+    & unitno=stderr)
+END SELECT
+END PROCEDURE GetEdgeConnectivity1
+
+!----------------------------------------------------------------------------
 !                                                          GetTotalFaces
 !----------------------------------------------------------------------------
 
@@ -69,6 +118,13 @@ CASE (Pyramid)
   ans = 5_I4B
 END SELECT
 END PROCEDURE GetTotalFaces1
+
+!----------------------------------------------------------------------------
+!                                                    GetFaceConnectivity2
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE GetFaceConnectivity1
+END PROCEDURE GetFaceConnectivity1
 
 !----------------------------------------------------------------------------
 !                                                          GetTotalCells
