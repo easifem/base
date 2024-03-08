@@ -34,6 +34,7 @@ PUBLIC :: TetrahedronVolume3D
 PUBLIC :: Quality_Tetrahedron
 PUBLIC :: GetEdgeConnectivity_Tetrahedron
 PUBLIC :: GetFaceConnectivity_Tetrahedron
+PUBLIC :: RefCoord_Tetrahedron
 
 !----------------------------------------------------------------------------
 !                                                       Initiate@Tetrahedron
@@ -140,7 +141,7 @@ END INTERFACE
 ! summary:  Returns number of edges in the element
 
 INTERFACE
-  MODULE SUBROUTINE GetEdgeConnectivity_Tetrahedron(con, opt)
+  MODULE PURE SUBROUTINE GetEdgeConnectivity_Tetrahedron(con, opt)
     INTEGER(I4B), INTENT(INOUT) :: con(:, :)
     !! Connectivity
     !! The columns represents the edge number
@@ -162,7 +163,7 @@ END INTERFACE
 ! summary:  Returns number of edges in the element
 
 INTERFACE
-  MODULE SUBROUTINE GetFaceConnectivity_Tetrahedron(con, opt)
+  MODULE PURE SUBROUTINE GetFaceConnectivity_Tetrahedron(con, opt)
     INTEGER(I4B), INTENT(INOUT) :: con(:, :)
     !! Connectivity
     !! The columns represents the face number
@@ -173,6 +174,21 @@ INTERFACE
     !! If opt =2, then face connectivity for Lagrangian approximation
     !! opt=1 is default
   END SUBROUTINE GetFaceConnectivity_Tetrahedron
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                       RefCoord_Tetrahedron
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2023-07-03
+! summary:  Returns the coordinate of reference Tetrahedron
+
+INTERFACE
+  MODULE PURE FUNCTION RefCoord_Tetrahedron(refTetrahedron) RESULT(ans)
+    CHARACTER(*), INTENT(IN) :: refTetrahedron
+    REAL(DFP) :: ans(3, 4)
+  END FUNCTION RefCoord_Tetrahedron
 END INTERFACE
 
 END MODULE ReferenceTetrahedron_Method
