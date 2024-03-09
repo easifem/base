@@ -180,7 +180,7 @@ END INTERFACE
 ! summary:  Returns number of edges in the element
 
 INTERFACE
-  MODULE SUBROUTINE GetEdgeConnectivity_Prism(con, opt)
+  MODULE PURE SUBROUTINE GetEdgeConnectivity_Prism(con, opt)
     INTEGER(I4B), INTENT(INOUT) :: con(:, :)
     !! Connectivity
     !! The columns represents the edge number
@@ -202,7 +202,7 @@ END INTERFACE
 ! summary:  Returns number of edges in the element
 
 INTERFACE
-  MODULE SUBROUTINE GetFaceConnectivity_Prism(con, opt)
+  MODULE PURE SUBROUTINE GetFaceConnectivity_Prism(con, opt)
     INTEGER(I4B), INTENT(INOUT) :: con(:, :)
     !! Connectivity
     !! The columns represents the face number

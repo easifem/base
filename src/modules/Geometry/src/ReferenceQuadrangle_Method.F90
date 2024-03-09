@@ -218,7 +218,7 @@ END INTERFACE QuadrangleArea2D
 ! summary:  Returns number of edges in the element
 
 INTERFACE
-  MODULE SUBROUTINE GetEdgeConnectivity_Quadrangle(con, opt)
+  MODULE PURE SUBROUTINE GetEdgeConnectivity_Quadrangle(con, opt)
     INTEGER(I4B), INTENT(INOUT) :: con(:, :)
     !! Connectivity
     !! The columns represents the edge number
