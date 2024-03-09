@@ -29,12 +29,13 @@ PUBLIC :: PolyhedronVolume3D
 PUBLIC :: Initiate
 PUBLIC :: ReferencePrism
 PUBLIC :: ReferencePrism_Pointer
-PUBLIC :: highOrderElement_Prism
+PUBLIC :: HighOrderElement_Prism
 PUBLIC :: Measure_Simplex_Prism
 PUBLIC :: Prism_Quality
 PUBLIC :: Quality_Prism
 PUBLIC :: GetEdgeConnectivity_Prism
 PUBLIC :: GetFaceConnectivity_Prism
+PUBLIC :: RefCoord_Prism
 
 !----------------------------------------------------------------------------
 !                                                       Initiate@Prism
@@ -212,6 +213,21 @@ INTERFACE
     !! If opt =2, then face connectivity for Lagrangian approximation
     !! opt=1 is default
   END SUBROUTINE GetFaceConnectivity_Prism
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                            RefCoord_Prism
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2023-08-09
+! summary:  Reference Coordinates of prism
+
+INTERFACE
+  MODULE PURE FUNCTION RefCoord_Prism(refPrism) RESULT(ans)
+    CHARACTER(*), INTENT(IN) :: refPrism
+    REAL(DFP) :: ans(3, 6)
+  END FUNCTION RefCoord_Prism
 END INTERFACE
 
 END MODULE ReferencePrism_Method

@@ -29,7 +29,6 @@ PUBLIC :: InterpolationPoint_Prism
 PUBLIC :: LagrangeCoeff_Prism
 PUBLIC :: QuadraturePoint_Prism
 PUBLIC :: TensorQuadraturePoint_Prism
-PUBLIC :: RefCoord_Prism
 PUBLIC :: RefElemDomain_Prism
 PUBLIC :: LagrangeEvalAll_Prism
 PUBLIC :: LagrangeGradientEvalAll_Prism
@@ -101,21 +100,6 @@ INTERFACE
     !! Lagrange, Hierarchy, Serendipity, Hermit, Orthogonal
     TYPE(String) :: ans
   END FUNCTION RefElemDomain_Prism
-END INTERFACE
-
-!----------------------------------------------------------------------------
-!                                                            RefCoord_Prism
-!----------------------------------------------------------------------------
-
-!> author: Vikas Sharma, Ph. D.
-! date:  2023-08-09
-! summary:  Reference Coordinates of prism
-
-INTERFACE
-  MODULE PURE FUNCTION RefCoord_Prism(refPrism) RESULT(ans)
-    CHARACTER(*), INTENT(IN) :: refPrism
-    REAL(DFP) :: ans(3, 6)
-  END FUNCTION RefCoord_Prism
 END INTERFACE
 
 !----------------------------------------------------------------------------

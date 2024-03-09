@@ -190,9 +190,9 @@ END PROCEDURE Measure_Simplex_Quadrangle
 !
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE Quadrangle_quality
+MODULE PROCEDURE Quadrangle_Quality
 ans = 0.0_DFP
-END PROCEDURE Quadrangle_quality
+END PROCEDURE Quadrangle_Quality
 
 !----------------------------------------------------------------------------
 !                                                                 QuadArea3D

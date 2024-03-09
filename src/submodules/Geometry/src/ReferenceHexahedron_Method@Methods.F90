@@ -160,7 +160,7 @@ END PROCEDURE Measure_Simplex_Hexahedron
 !
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE Hexahedron_quality
+MODULE PROCEDURE Hexahedron_Quality
 ans = 0.0_I4B
 ! TODO Implement Hexahedron_quality
 END PROCEDURE Hexahedron_quality

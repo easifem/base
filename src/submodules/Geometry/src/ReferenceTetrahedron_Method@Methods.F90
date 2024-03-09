@@ -152,9 +152,10 @@ END PROCEDURE Measure_Simplex_Tetrahedron
 !
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE Tetrahedron_quality
-! TODO Implement Tetrahedron_quality
-END PROCEDURE Tetrahedron_quality
+MODULE PROCEDURE Tetrahedron_Quality
+ans = 0.0_DFP
+! TODO Implement Tetrahedron_Quality
+END PROCEDURE Tetrahedron_Quality
 
 !----------------------------------------------------------------------------
 !                                                       TetrahedronVolume3D

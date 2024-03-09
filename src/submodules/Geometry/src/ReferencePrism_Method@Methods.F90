@@ -30,9 +30,9 @@ CONTAINS
 
 MODULE PROCEDURE Initiate_ref_Prism
 INTEGER(I4B) :: ii, jj
-INTEGER(I4B), PARAMETER :: tNodes = 6, tFaces=5, tEdges=9, xidim=3, &
-  & max_nodes_face = 4, min_nodes_face=3, name=Prism
-INTEGER(I4B) :: p1p2(2, tEdges), lloop(max_nodes_face+2, tFaces), &
+INTEGER(I4B), PARAMETER :: tNodes = 6, tFaces = 5, tEdges = 9, xidim = 3, &
+  & max_nodes_face = 4, min_nodes_face = 3, name = Prism
+INTEGER(I4B) :: p1p2(2, tEdges), lloop(max_nodes_face + 2, tFaces), &
   & vol(tNodes, 1)
 REAL(DFP) :: unit_xij(xidim, tNodes), biunit_xij(xidim, tNodes)
 
@@ -95,7 +95,7 @@ END DO
 jj = jj + obj%entityCounts(2)
 DO ii = 1, obj%entityCounts(3)
   obj%topology(jj + ii) = ReferenceTopology(  &
-    & lloop(2+1:2+lloop(1,ii), ii), lloop(2, ii))
+    & lloop(2 + 1:2 + lloop(1, ii), ii), lloop(2, ii))
 END DO
 
 jj = jj + obj%entityCounts(3)
@@ -107,7 +107,7 @@ obj%highorderElement => highorderElement_Prism
 END PROCEDURE Initiate_ref_Prism
 
 !----------------------------------------------------------------------------
-!                                                      ReferencePrism
+!                                                            ReferencePrism
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE reference_Prism
@@ -132,9 +132,9 @@ MODULE PROCEDURE highOrderElement_Prism
 ! FIX #250
 END PROCEDURE highOrderElement_Prism
 
-!-----------------------------------------------------------------------------
+!----------------------------------------------------------------------------
 !                                                              MeasureSimplex
-!-----------------------------------------------------------------------------
+!----------------------------------------------------------------------------
 
 MODULE PROCEDURE Measure_Simplex_Prism
 INTEGER(I4B) :: fm(5, 7), node0(5, 4), order0(5), b, iface
@@ -153,14 +153,15 @@ CALL POLYHEDRONVOLUME3D(coord=XiJ(1:3, 1:6), &
 END PROCEDURE Measure_Simplex_Prism
 
 !----------------------------------------------------------------------------
-!
+!                                                             Prism_Quality
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE Prism_quality
-END PROCEDURE Prism_quality
+MODULE PROCEDURE Prism_Quality
+ans = 0.0_DFP
+END PROCEDURE Prism_Quality
 
 !----------------------------------------------------------------------------
-!
+!                                                        PolyhedronVolume3D
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE PolyhedronVolume3D
@@ -189,6 +190,44 @@ DO iface = 1, face_num
 END DO
 ans = ans / 6.0_DFP
 END PROCEDURE PolyhedronVolume3D
+
+!----------------------------------------------------------------------------
+!                                                          Refcoord_Prism
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE RefCoord_Prism
+ans = 0.0_DFP
+!FIX: Implement RefCoord_Prism
+!ISSUE: #251
+END PROCEDURE RefCoord_Prism
+
+!----------------------------------------------------------------------------
+!                                                 GetEdgeConnectivity_Prism
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE GetEdgeConnectivity_Prism
+con(1:2, 1) = [1, 2]
+con(1:2, 2) = [1, 3]
+con(1:2, 3) = [1, 4]
+con(1:2, 4) = [2, 3]
+con(1:2, 5) = [2, 5]
+con(1:2, 6) = [3, 6]
+con(1:2, 7) = [4, 5]
+con(1:2, 8) = [4, 6]
+con(1:2, 9) = [5, 6]
+END PROCEDURE GetEdgeConnectivity_Prism
+
+!----------------------------------------------------------------------------
+!                                                 GetFaceConnectivity_Prism
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE GetFaceConnectivity_Prism
+con(1:3, 1) = [1, 3, 2, 0]
+con(1:4, 2) = [2, 3, 6, 5]
+con(1:4, 3) = [1, 2, 5, 4]
+con(1:4, 4) = [1, 4, 6, 3]
+con(1:3, 5) = [4, 5, 6, 0]
+END PROCEDURE GetFaceConnectivity_Prism
 
 !----------------------------------------------------------------------------
 !
