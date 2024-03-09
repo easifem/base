@@ -54,6 +54,8 @@ PUBLIC :: Quality_Triangle
 PUBLIC :: TriangleArea3D
 PUBLIC :: TriangleArea2D
 PUBLIC :: GetEdgeConnectivity_Triangle
+PUBLIC :: RefTriangleCoord
+PUBLIC :: RefCoord_Triangle
 
 !----------------------------------------------------------------------------
 !                                                         Initiate@Triangle
@@ -568,6 +570,21 @@ INTERFACE
     !! opt=1 is default
   END SUBROUTINE GetEdgeConnectivity_Triangle
 END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                           RefTriangleCoord
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2023-07-03
+! summary:  Returns the coordinate of reference triangle
+
+INTERFACE RefCoord_Triangle
+  MODULE PURE FUNCTION RefTriangleCoord(refTriangle) RESULT(ans)
+    CHARACTER(*), INTENT(IN) :: refTriangle
+    REAL(DFP) :: ans(2, 3)
+  END FUNCTION RefTriangleCoord
+END INTERFACE RefCoord_Triangle
 
 !----------------------------------------------------------------------------
 !
