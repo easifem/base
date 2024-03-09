@@ -30,9 +30,9 @@ CONTAINS
 
 MODULE PROCEDURE Initiate_ref_Pyramid
 INTEGER(I4B) :: ii, jj
-INTEGER(I4B), PARAMETER :: tNodes = 5, tFaces=5, tEdges=8, xidim=3, &
-  & max_nodes_face = 4, min_nodes_face=3, name=Pyramid
-INTEGER(I4B) :: p1p2(2, tEdges), lloop(max_nodes_face+2, tFaces), &
+INTEGER(I4B), PARAMETER :: tNodes = 5, tFaces = 5, tEdges = 8, xidim = 3, &
+  & max_nodes_face = 4, min_nodes_face = 3, name = Pyramid
+INTEGER(I4B) :: p1p2(2, tEdges), lloop(max_nodes_face + 2, tFaces), &
   & vol(tNodes, 1)
 REAL(DFP) :: unit_xij(xidim, tNodes), biunit_xij(xidim, tNodes)
 
@@ -95,7 +95,7 @@ END DO
 jj = jj + obj%entityCounts(2)
 DO ii = 1, obj%entityCounts(3)
   obj%topology(jj + ii) = ReferenceTopology(  &
-    & lloop(2+1:2+lloop(1,ii), ii), lloop(2, ii))
+    & lloop(2 + 1:2 + lloop(1, ii), ii), lloop(2, ii))
 END DO
 
 jj = jj + obj%entityCounts(3)
@@ -126,7 +126,7 @@ END PROCEDURE reference_Pyramid_Pointer
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE highOrderElement_Pyramid
-! FIX: 
+! FIX:
 END PROCEDURE highOrderElement_Pyramid
 
 !-----------------------------------------------------------------------------
@@ -152,8 +152,46 @@ END PROCEDURE Measure_Simplex_Pyramid
 !
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE Pyramid_quality
-END PROCEDURE Pyramid_quality
+MODULE PROCEDURE Pyramid_Quality
+ans = 0.0_DFP
+!FIX: Implement Pyramid_Quality
+END PROCEDURE Pyramid_Quality
+
+!----------------------------------------------------------------------------
+!                                                          Refcoord_Pyramid
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE RefCoord_Pyramid
+!FIX: Implement RefCoord
+ans = 0.0_DFP
+END PROCEDURE RefCoord_Pyramid
+
+!----------------------------------------------------------------------------
+!                                               GetEdgeConnectivity_Pyramid
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE GetEdgeConnectivity_Pyramid
+con(1:2, 1) = [1, 2]
+con(1:2, 2) = [1, 4]
+con(1:2, 3) = [1, 5]
+con(1:2, 4) = [2, 3]
+con(1:2, 5) = [2, 5]
+con(1:2, 6) = [3, 4]
+con(1:2, 7) = [3, 5]
+con(1:2, 8) = [4, 5]
+END PROCEDURE GetEdgeConnectivity_Pyramid
+
+!----------------------------------------------------------------------------
+!                                               GetFaceConnectivity_Pyramid
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE GetFaceConnectivity_Pyramid
+con(1:4, 1) = [1, 4, 3, 2]
+con(1:4, 2) = [2, 3, 5, 0]
+con(1:4, 3) = [3, 4, 5, 0]
+con(1:4, 4) = [1, 5, 4, 0]
+con(1:4, 5) = [1, 2, 5, 0]
+END PROCEDURE GetFaceConnectivity_Pyramid
 
 !----------------------------------------------------------------------------
 !

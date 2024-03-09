@@ -28,7 +28,7 @@ CONTAINS
 !                                                                  Initiate
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE Initiate_ref_Prism
+MODULE PROCEDURE Initiate_Ref_Prism
 INTEGER(I4B) :: ii, jj
 INTEGER(I4B), PARAMETER :: tNodes = 6, tFaces = 5, tEdges = 9, xidim = 3, &
   & max_nodes_face = 4, min_nodes_face = 3, name = Prism
@@ -104,33 +104,32 @@ DO ii = 1, obj%entityCounts(4)
 END DO
 
 obj%highorderElement => highorderElement_Prism
-END PROCEDURE Initiate_ref_Prism
+END PROCEDURE Initiate_Ref_Prism
 
 !----------------------------------------------------------------------------
 !                                                            ReferencePrism
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE reference_Prism
+MODULE PROCEDURE Reference_Prism
 CALL Initiate(obj=obj, nsd=NSD, xij=xij, domainName=domainName)
-END PROCEDURE reference_Prism
+END PROCEDURE Reference_Prism
 
 !----------------------------------------------------------------------------
 !                                                     ReferencePrism_Pointer
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE reference_Prism_Pointer
+MODULE PROCEDURE Reference_Prism_Pointer
 ALLOCATE (obj)
 CALL Initiate(obj=obj, nsd=NSD, xij=xij, domainName=domainName)
-END PROCEDURE reference_Prism_Pointer
+END PROCEDURE Reference_Prism_Pointer
 
 !----------------------------------------------------------------------------
-!                                                             LagrangeElement
+!                                                     HighOrderElement_Prism
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE highOrderElement_Prism
-! TODO Implement highOrderElement_Prism
-! FIX #250
-END PROCEDURE highOrderElement_Prism
+MODULE PROCEDURE HighOrderElement_Prism
+! FIX: #250 Implement HighOrderElement_Prism
+END PROCEDURE HighOrderElement_Prism
 
 !----------------------------------------------------------------------------
 !                                                              MeasureSimplex
@@ -222,11 +221,11 @@ END PROCEDURE GetEdgeConnectivity_Prism
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE GetFaceConnectivity_Prism
-con(1:3, 1) = [1, 3, 2, 0]
+con(1:4, 1) = [1, 3, 2, 0]
 con(1:4, 2) = [2, 3, 6, 5]
 con(1:4, 3) = [1, 2, 5, 4]
 con(1:4, 4) = [1, 4, 6, 3]
-con(1:3, 5) = [4, 5, 6, 0]
+con(1:4, 5) = [4, 5, 6, 0]
 END PROCEDURE GetFaceConnectivity_Prism
 
 !----------------------------------------------------------------------------

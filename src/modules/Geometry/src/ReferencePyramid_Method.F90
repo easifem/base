@@ -27,12 +27,13 @@ PRIVATE
 PUBLIC :: Initiate
 PUBLIC :: ReferencePyramid
 PUBLIC :: ReferencePyramid_Pointer
-PUBLIC :: highOrderElement_Pyramid
+PUBLIC :: HighOrderElement_Pyramid
 PUBLIC :: Measure_Simplex_Pyramid
 PUBLIC :: Pyramid_Quality
 PUBLIC :: Quality_Pyramid
 PUBLIC :: GetEdgeConnectivity_Pyramid
 PUBLIC :: GetFaceConnectivity_Pyramid
+PUBLIC :: RefCoord_Pyramid
 
 !----------------------------------------------------------------------------
 !                                                          Initiate@Pyramid
@@ -125,7 +126,7 @@ END INTERFACE Quality_Pyramid
 ! summary:  Returns number of edges in the element
 
 INTERFACE
-  MODULE SUBROUTINE GetEdgeConnectivity_Pyramid(con, opt)
+  MODULE PURE SUBROUTINE GetEdgeConnectivity_Pyramid(con, opt)
     INTEGER(I4B), INTENT(INOUT) :: con(:, :)
     !! Connectivity
     !! The columns represents the edge number
@@ -147,7 +148,7 @@ END INTERFACE
 ! summary:  Returns number of edges in the element
 
 INTERFACE
-  MODULE SUBROUTINE GetFaceConnectivity_Pyramid(con, opt)
+  MODULE PURE SUBROUTINE GetFaceConnectivity_Pyramid(con, opt)
     INTEGER(I4B), INTENT(INOUT) :: con(:, :)
     !! Connectivity
     !! The columns represents the face number
@@ -158,6 +159,21 @@ INTERFACE
     !! If opt =2, then face connectivity for Lagrangian approximation
     !! opt=1 is default
   END SUBROUTINE GetFaceConnectivity_Pyramid
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                          RefCoord_Pyramid
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2024-03-09
+! summary:  Reference Coordinates of pyramid
+
+INTERFACE
+  MODULE PURE FUNCTION RefCoord_Pyramid(refPyramid) RESULT(ans)
+    CHARACTER(*), INTENT(IN) :: refPyramid
+    REAL(DFP) :: ans(3, 5)
+  END FUNCTION RefCoord_Pyramid
 END INTERFACE
 
 END MODULE ReferencePyramid_Method

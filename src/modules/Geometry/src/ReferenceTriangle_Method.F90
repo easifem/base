@@ -558,7 +558,7 @@ END INTERFACE
 ! summary:  Returns number of edges in the element
 
 INTERFACE
-  MODULE SUBROUTINE GetEdgeConnectivity_Triangle(con, opt)
+  MODULE PURE SUBROUTINE GetEdgeConnectivity_Triangle(con, opt)
     INTEGER(I4B), INTENT(INOUT) :: con(:, :)
     !! Connectivity
     !! The columns represents the edge number
