@@ -27,13 +27,15 @@ PRIVATE
 PUBLIC :: Initiate
 PUBLIC :: ReferenceHexahedron
 PUBLIC :: ReferenceHexahedron_Pointer
-PUBLIC :: highorderElement_Hexahedron
+PUBLIC :: HighorderElement_Hexahedron
 PUBLIC :: Measure_Simplex_Hexahedron
 PUBLIC :: Hexahedron_Quality
 PUBLIC :: Quality_Hexahedron
 PUBLIC :: HexahedronVolume3D
 PUBLIC :: GetEdgeConnectivity_Hexahedron
 PUBLIC :: GetFaceConnectivity_Hexahedron
+PUBLIC :: RefCoord_Hexahedron
+PUBLIC :: RefHexahedronCoord
 
 !----------------------------------------------------------------------------
 !                                                       Initiate@Hexahedron
@@ -138,7 +140,7 @@ END INTERFACE
 ! summary:  Returns number of edges in the element
 
 INTERFACE
-  MODULE SUBROUTINE GetEdgeConnectivity_Hexahedron(con, opt)
+  MODULE PURE SUBROUTINE GetEdgeConnectivity_Hexahedron(con, opt)
     INTEGER(I4B), INTENT(INOUT) :: con(:, :)
     !! Connectivity
     !! The columns represents the edge number
@@ -160,7 +162,7 @@ END INTERFACE
 ! summary:  Returns number of edges in the element
 
 INTERFACE
-  MODULE SUBROUTINE GetFaceConnectivity_Hexahedron(con, opt)
+  MODULE PURE SUBROUTINE GetFaceConnectivity_Hexahedron(con, opt)
     INTEGER(I4B), INTENT(INOUT) :: con(:, :)
     !! Connectivity
     !! The columns represents the face number
@@ -172,5 +174,22 @@ INTERFACE
     !! opt=1 is default
   END SUBROUTINE GetFaceConnectivity_Hexahedron
 END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                       RefHexahedronCoord
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2023-07-07
+! summary:  Returns coordinates of reference Hexahedron
+
+INTERFACE RefCoord_Hexahedron
+  MODULE PURE FUNCTION RefHexahedronCoord(refHexahedron) RESULT(ans)
+    CHARACTER(*), INTENT(IN) :: refHexahedron
+    !! UNIT
+    !! BIUNIT
+    REAL(DFP) :: ans(3, 8)
+  END FUNCTION RefHexahedronCoord
+END INTERFACE RefCoord_Hexahedron
 
 END MODULE ReferenceHexahedron_Method
