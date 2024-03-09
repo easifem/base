@@ -64,6 +64,7 @@ PUBLIC :: TotalEntities
 PUBLIC :: FacetTopology
 PUBLIC :: GetVTKelementType
 PUBLIC :: GetTotalEdges
+PUBLIC :: GetEdgeConnectivity
 PUBLIC :: GetTotalFaces
 PUBLIC :: GetTotalCells
 PUBLIC :: ReferenceElementInfo
@@ -136,6 +137,30 @@ INTERFACE GetTotalEdges
 END INTERFACE GetTotalEdges
 
 !----------------------------------------------------------------------------
+!                                        GetEdgeConnectivity@GeometryMethods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2024-03-07
+! summary:  Returns number of edges in the element
+
+INTERFACE GetEdgeConnectivity
+  MODULE SUBROUTINE GetEdgeConnectivity1(elemType, con, opt)
+    INTEGER(I4B), INTENT(IN) :: elemType
+    !! name of element
+    INTEGER(I4B), INTENT(INOUT) :: con(:, :)
+    !! Connectivity
+    !! The columns represents the face number
+    !! The row represents a face
+    !! con should be allocated by the user
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: opt
+    !! If opt = 1, then edge connectivity for hierarchial approximation
+    !! If opt =2, then edge connectivity for Lagrangian approximation
+    !! opt=1 is default
+  END SUBROUTINE GetEdgeConnectivity1
+END INTERFACE GetEdgeConnectivity
+
+!----------------------------------------------------------------------------
 !                                             GetTotalFaces@GeometryMethods
 !----------------------------------------------------------------------------
 
@@ -149,6 +174,30 @@ INTERFACE GetTotalFaces
     INTEGER(I4B) :: ans
   END FUNCTION GetTotalFaces1
 END INTERFACE GetTotalFaces
+
+!----------------------------------------------------------------------------
+!                                        GetFaceConnectivity@GeometryMethods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2024-03-07
+! summary:  Returns number of edges in the element
+
+INTERFACE GetFaceConnectivity
+  MODULE SUBROUTINE GetFaceConnectivity1(elemType, con, opt)
+    INTEGER(I4B), INTENT(IN) :: elemType
+    !! name of element
+    INTEGER(I4B), INTENT(INOUT) :: con(:, :)
+    !! Connectivity
+    !! The columns represents the face number
+    !! The row represents a face
+    !! con should be allocated by the user
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: opt
+    !! If opt = 1, then edge connectivity for hierarchial approximation
+    !! If opt =2, then edge connectivity for Lagrangian approximation
+    !! opt=1 is default
+  END SUBROUTINE GetFaceConnectivity1
+END INTERFACE GetFaceConnectivity
 
 !----------------------------------------------------------------------------
 !                                             GetTotalCells@GeometryMethods

@@ -27,10 +27,13 @@ PRIVATE
 PUBLIC :: Initiate
 PUBLIC :: ReferenceTetrahedron
 PUBLIC :: ReferenceTetrahedron_Pointer
-PUBLIC :: highOrderElement_Tetrahedron
+PUBLIC :: HighOrderElement_Tetrahedron
 PUBLIC :: Measure_Simplex_Tetrahedron
 PUBLIC :: Tetrahedron_Quality
 PUBLIC :: TetrahedronVolume3D
+PUBLIC :: Quality_Tetrahedron
+PUBLIC :: GetEdgeConnectivity_Tetrahedron
+PUBLIC :: GetFaceConnectivity_Tetrahedron
 
 !----------------------------------------------------------------------------
 !                                                       Initiate@Tetrahedron
@@ -80,7 +83,7 @@ END INTERFACE ReferenceTetrahedron_Pointer
 !----------------------------------------------------------------------------
 
 INTERFACE
-  MODULE SUBROUTINE highOrderElement_Tetrahedron( &
+  MODULE SUBROUTINE HighOrderElement_Tetrahedron( &
     & refelem, &
     & order, &
     & obj, &
@@ -89,7 +92,7 @@ INTERFACE
     INTEGER(I4B), INTENT(IN) :: order
     CLASS(ReferenceElement_), INTENT(INOUT) :: obj
     INTEGER(I4B), INTENT(IN) :: ipType
-  END SUBROUTINE highOrderElement_Tetrahedron
+  END SUBROUTINE HighOrderElement_Tetrahedron
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -108,14 +111,14 @@ END INTERFACE
 !                                                       Tetrahedron_Quality
 !----------------------------------------------------------------------------
 
-INTERFACE
+INTERFACE Quality_Tetrahedron
   MODULE FUNCTION Tetrahedron_Quality(refelem, xij, measure) RESULT(Ans)
     CLASS(ReferenceElement_), INTENT(IN) :: refelem
     REAL(DFP), INTENT(IN) :: xij(:, :)
     INTEGER(I4B), INTENT(IN) :: measure
     REAL(DFP) :: Ans
   END FUNCTION Tetrahedron_Quality
-END INTERFACE
+END INTERFACE Quality_Tetrahedron
 
 !----------------------------------------------------------------------------
 !                                                       TetrahedronVolume3D
@@ -126,6 +129,50 @@ INTERFACE
     REAL(DFP), INTENT(IN) :: xij(3, 4)
     REAL(DFP), INTENT(OUT) :: ans
   END SUBROUTINE TetrahedronVolume3D
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                        GetEdgeConnectivity
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2024-03-08
+! summary:  Returns number of edges in the element
+
+INTERFACE
+  MODULE SUBROUTINE GetEdgeConnectivity_Tetrahedron(con, opt)
+    INTEGER(I4B), INTENT(INOUT) :: con(:, :)
+    !! Connectivity
+    !! The columns represents the edge number
+    !! The row represents a edge
+    !! con should be allocated by the user
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: opt
+    !! If opt = 1, then edge connectivity for hierarchial approximation
+    !! If opt =2, then edge connectivity for Lagrangian approximation
+    !! opt=1 is default
+  END SUBROUTINE GetEdgeConnectivity_Tetrahedron
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                        GetFaceConnectivity
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2024-03-08
+! summary:  Returns number of edges in the element
+
+INTERFACE
+  MODULE SUBROUTINE GetFaceConnectivity_Tetrahedron(con, opt)
+    INTEGER(I4B), INTENT(INOUT) :: con(:, :)
+    !! Connectivity
+    !! The columns represents the face number
+    !! The row represents a face
+    !! con should be allocated by the user
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: opt
+    !! If opt = 1, then face connectivity for hierarchial approximation
+    !! If opt =2, then face connectivity for Lagrangian approximation
+    !! opt=1 is default
+  END SUBROUTINE GetFaceConnectivity_Tetrahedron
 END INTERFACE
 
 END MODULE ReferenceTetrahedron_Method

@@ -29,6 +29,8 @@ PUBLIC :: ReferenceTriangle
 PUBLIC :: ReferenceTriangle_Pointer
 PUBLIC :: HighorderElement_Triangle
 PUBLIC :: Measure_Simplex_Triangle
+PUBLIC :: Triangle_Contains_Point
+PUBLIC :: Contains_Point_Triangle
 PUBLIC :: Angles
 PUBLIC :: Area
 PUBLIC :: ArealVector
@@ -38,7 +40,6 @@ PUBLIC :: CircumCenter
 PUBLIC :: CircumCircle
 PUBLIC :: CircumRadius
 PUBLIC :: ContainsLine
-PUBLIC :: Triangle_Contains_Point
 PUBLIC :: Diameter
 PUBLIC :: EdgeLength
 PUBLIC :: Incenter
@@ -49,15 +50,17 @@ PUBLIC :: DistanceFromPoint
 PUBLIC :: NearestPoint
 PUBLIC :: RandomPoint
 PUBLIC :: Triangle_Quality
+PUBLIC :: Quality_Triangle
 PUBLIC :: TriangleArea3D
 PUBLIC :: TriangleArea2D
+PUBLIC :: GetEdgeConnectivity_Triangle
 
 !----------------------------------------------------------------------------
 !                                                         Initiate@Triangle
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date:         3 March 2021
+! date: 3 March 2021
 ! summary: This routine constructs an instance of [[ReferenceTriangle_]]
 !
 !# Introduction
@@ -66,7 +69,8 @@ PUBLIC :: TriangleArea2D
 ! - User can specify the coordinates of the trinagle
 !
 !@note
-!         This routine will contruct a three node triangle. Also, SHAPE(xij) = [3,3]
+! This routine will contruct a three node triangle.
+! Also, SHAPE(xij) = [3,3]
 !@endnote
 !
 !### Usage
@@ -364,13 +368,13 @@ END INTERFACE ContainsLine
 !                                                    ContainsPoint@Triangle
 !----------------------------------------------------------------------------
 
-INTERFACE
-  MODULE PURE FUNCTION triangle_contains_point(refelem, xij, x) RESULT(Ans)
+INTERFACE Contains_Point_Triangle
+  MODULE PURE FUNCTION Triangle_Contains_Point(refelem, xij, x) RESULT(Ans)
     CLASS(ReferenceElement_), INTENT(IN) :: refelem
     REAL(DFP), INTENT(IN) :: xij(:, :), x(:)
     LOGICAL(LGT) :: Ans
-  END FUNCTION triangle_contains_point
-END INTERFACE
+  END FUNCTION Triangle_Contains_Point
+END INTERFACE Contains_Point_Triangle
 
 !----------------------------------------------------------------------------
 !                                                         Diameter@Triangle
@@ -462,7 +466,8 @@ END INTERFACE DistanceFromPoint
 !----------------------------------------------------------------------------
 
 INTERFACE NearestPoint
-  MODULE PURE SUBROUTINE triangle_get_nearest_point(refelem, xij, x, xn, dist)
+  MODULE PURE SUBROUTINE triangle_get_nearest_point(refelem, xij, x, xn,  &
+    & dist)
     CLASS(ReferenceElement_), INTENT(IN) :: refelem
     REAL(DFP), INTENT(IN) :: xij(:, :), x(:)
     REAL(DFP), INTENT(INOUT) :: xn(:)
@@ -489,14 +494,14 @@ END INTERFACE RandomPoint
 !                                                          Quality@Triangle
 !----------------------------------------------------------------------------
 
-INTERFACE
-  MODULE PURE FUNCTION triangle_quality(refelem, xij, measure) RESULT(Ans)
+INTERFACE Quality_Triangle
+  MODULE PURE FUNCTION Triangle_Quality(refelem, xij, measure) RESULT(Ans)
     CLASS(ReferenceElement_), INTENT(IN) :: refelem
     REAL(DFP), INTENT(IN) :: xij(:, :)
     INTEGER(I4B), INTENT(IN) :: measure
     REAL(DFP) :: Ans
-  END FUNCTION triangle_quality
-END INTERFACE
+  END FUNCTION Triangle_Quality
+END INTERFACE Quality_Triangle
 
 !----------------------------------------------------------------------------
 !                                                            TriangleArea3D
@@ -520,9 +525,9 @@ INTERFACE
   END SUBROUTINE TriangleArea3D
 END INTERFACE
 
-!-----------------------------------------------------------------------------
+!----------------------------------------------------------------------------
 !
-!-----------------------------------------------------------------------------
+!----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 10 Aug 2022
@@ -540,6 +545,28 @@ INTERFACE
     REAL(DFP), INTENT(IN) :: t(2, 3)
     REAL(DFP), INTENT(OUT) :: ans
   END SUBROUTINE TriangleArea2D
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                        GetEdgeConnectivity
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2024-03-08
+! summary:  Returns number of edges in the element
+
+INTERFACE
+  MODULE SUBROUTINE GetEdgeConnectivity_Triangle(con, opt)
+    INTEGER(I4B), INTENT(INOUT) :: con(:, :)
+    !! Connectivity
+    !! The columns represents the edge number
+    !! The row represents a edge
+    !! con should be allocated by the user
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: opt
+    !! If opt = 1, then edge connectivity for hierarchial approximation
+    !! If opt =2, then edge connectivity for Lagrangian approximation
+    !! opt=1 is default
+  END SUBROUTINE GetEdgeConnectivity_Triangle
 END INTERFACE
 
 !----------------------------------------------------------------------------
