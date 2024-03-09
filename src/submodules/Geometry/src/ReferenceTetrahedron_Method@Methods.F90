@@ -17,11 +17,18 @@
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2 March 2021
-! summary:         This submodule contains methods for [[ReferenceTetrahedron_]]
+! summary:  This submodule contains methods for [[ReferenceTetrahedron_]]
 
 SUBMODULE(ReferenceTetrahedron_Method) Methods
-USE BaseMethod
+USE ReferenceElement_Method
+USE ApproxUtility
+USE InvUtility
+USE InputUtility
+USE StringUtility
+USE ArangeUtility
+
 IMPLICIT NONE
+
 CONTAINS
 
 !----------------------------------------------------------------------------
@@ -30,19 +37,22 @@ CONTAINS
 
 MODULE PROCEDURE Initiate_ref_Tetrahedron
 INTEGER(I4B) :: ii, jj
-INTEGER(I4B), PARAMETER :: tNodes = 4, tFaces=4, tEdges=6
+INTEGER(I4B), PARAMETER :: tNodes = 4, tFaces = 4, tEdges = 6
 INTEGER(I4B) :: p1p2(2, tEdges), lloop(3, tFaces), vol(tNodes, 1)
 REAL(DFP) :: unit_xij(3, 4), biunit_xij(3, 4)
 
 CALL DEALLOCATE (obj)
 
-p1p2 = EdgeConnectivity_Tetrahedron( &
-  & baseInterpol="LAGRANGE",  &
-  & baseContinuity="H1")
+! p1p2 = EdgeConnectivity_Tetrahedron( &
+!   & baseInterpol="LAGRANGE",  &
+!   & baseContinuity="H1")
 
-lloop = FacetConnectivity_Tetrahedron( &
-  & baseInterpol="LAGRANGE",  &
-  & baseContinuity="H1")
+CALL GetEdgeConnectivity_Tetrahedron(con=p1p2, opt=2_I4B)
+CALL GetFaceConnectivity_Tetrahedron(con=lloop, opt=2_I4B)
+
+! lloop = FacetConnectivity_Tetrahedron( &
+!   & baseInterpol="LAGRANGE",  &
+!   & baseContinuity="H1")
 
 vol(:, 1) = arange(1_I4B, tNodes)
 
@@ -108,7 +118,8 @@ END PROCEDURE Initiate_ref_Tetrahedron
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE reference_Tetrahedron
-CALL Initiate(obj=obj, nsd=nsd, xij=xij, domainName=domainName)
+CALL initiate_ref_tetrahedron(obj=obj, nsd=nsd, xij=xij,  &
+  & domainName=domainName)
 END PROCEDURE reference_Tetrahedron
 
 !----------------------------------------------------------------------------
@@ -117,7 +128,8 @@ END PROCEDURE reference_Tetrahedron
 
 MODULE PROCEDURE reference_Tetrahedron_Pointer
 ALLOCATE (obj)
-CALL Initiate(obj=obj, nsd=nsd, xij=xij, domainName=domainName)
+CALL initiate_ref_tetrahedron(obj=obj, nsd=nsd, xij=xij,  &
+  & domainName=domainName)
 END PROCEDURE reference_Tetrahedron_Pointer
 
 !----------------------------------------------------------------------------
@@ -141,7 +153,7 @@ END PROCEDURE Measure_Simplex_Tetrahedron
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Tetrahedron_quality
-! TODO Implement Tetrahedron_quality 
+! TODO Implement Tetrahedron_quality
 END PROCEDURE Tetrahedron_quality
 
 !----------------------------------------------------------------------------
@@ -154,5 +166,62 @@ a(1:3, 1:4) = xij(1:3, 1:4)
 a(4, 1:4) = 1.0_DFP
 ans = ABS(Det(a)) / 6.0_DFP
 END PROCEDURE TetrahedronVolume3D
+
+!----------------------------------------------------------------------------
+!                                                      RefCoord_Tetrahedron
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE RefCoord_Tetrahedron
+CHARACTER(:), ALLOCATABLE :: layout
+layout = UpperCase(refTetrahedron)
+SELECT CASE (layout)
+CASE ("BIUNIT")
+  ans(:, 1) = [-1.0_DFP, -1.0_DFP, -1.0_DFP]
+  ans(:, 2) = [1.0_DFP, -1.0_DFP, -1.0_DFP]
+  ans(:, 3) = [-1.0_DFP, 1.0_DFP, -1.0_DFP]
+  ans(:, 4) = [-1.0_DFP, -1.0_DFP, 1.0_DFP]
+CASE ("UNIT")
+  ans(:, 1) = [0.0_DFP, 0.0_DFP, 0.0_DFP]
+  ans(:, 2) = [1.0_DFP, 0.0_DFP, 0.0_DFP]
+  ans(:, 3) = [0.0_DFP, 1.0_DFP, 0.0_DFP]
+  ans(:, 4) = [0.0_DFP, 0.0_DFP, 1.0_DFP]
+END SELECT
+layout = ""
+END PROCEDURE RefCoord_Tetrahedron
+
+!----------------------------------------------------------------------------
+!                                           GetEdgeConnectivity_Tetrahedron
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE GetEdgeConnectivity_Tetrahedron
+con(1:2, 1) = [1, 2]
+con(1:2, 2) = [1, 3]
+con(1:2, 3) = [1, 4]
+con(1:2, 4) = [2, 3]
+con(1:2, 5) = [2, 4]
+con(1:2, 6) = [3, 4]
+END PROCEDURE GetEdgeConnectivity_Tetrahedron
+
+!----------------------------------------------------------------------------
+!                                           GetFaceConnectivity_Tetrahedron
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE GetFaceConnectivity_Tetrahedron
+INTEGER(I4B) :: opt0
+opt0 = input(option=opt, default=1_I4B)
+
+SELECT CASE (opt0)
+CASE (1_I4B)
+  con(1:3, 1) = [1, 2, 3]
+  con(1:3, 2) = [1, 2, 4]
+  con(1:3, 3) = [1, 3, 4]
+  con(1:3, 4) = [2, 3, 4]
+CASE (2_I4B)
+  con(1:3, 1) = [1, 3, 2]
+  con(1:3, 2) = [1, 2, 4]
+  con(1:3, 3) = [1, 4, 3]
+  con(1:3, 4) = [2, 3, 4]
+END SELECT
+END PROCEDURE GetFaceConnectivity_Tetrahedron
 
 END SUBMODULE Methods

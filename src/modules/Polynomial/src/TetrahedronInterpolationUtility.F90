@@ -41,7 +41,6 @@ PUBLIC :: EdgeBasis_Tetrahedron
 PUBLIC :: FacetBasis_Tetrahedron
 PUBLIC :: CellBasis_Tetrahedron
 PUBLIC :: HeirarchicalBasis_Tetrahedron
-PUBLIC :: RefCoord_Tetrahedron
 PUBLIC :: FacetConnectivity_Tetrahedron
 PUBLIC :: EdgeConnectivity_Tetrahedron
 PUBLIC :: GetVertexDOF_Tetrahedron
@@ -218,21 +217,6 @@ INTERFACE
     CHARACTER(*), INTENT(IN) :: baseContinuity
     INTEGER(I4B) :: ans(2, 6)
   END FUNCTION EdgeConnectivity_Tetrahedron
-END INTERFACE
-
-!----------------------------------------------------------------------------
-!                                                       RefCoord_Tetrahedron
-!----------------------------------------------------------------------------
-
-!> author: Vikas Sharma, Ph. D.
-! date:  2023-07-03
-! summary:  Returns the coordinate of reference Tetrahedron
-
-INTERFACE
-  MODULE PURE FUNCTION RefCoord_Tetrahedron(refTetrahedron) RESULT(ans)
-    CHARACTER(*), INTENT(IN) :: refTetrahedron
-    REAL(DFP) :: ans(3, 4)
-  END FUNCTION RefCoord_Tetrahedron
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -728,7 +712,6 @@ INTERFACE
   END FUNCTION BarycentricVertexBasis_Tetrahedron
 END INTERFACE
 
-
 !----------------------------------------------------------------------------
 !                                          BarycentricVertexBasis_Tetrahedron
 !----------------------------------------------------------------------------
@@ -748,7 +731,7 @@ INTERFACE
     !! - ans(:,:,i) denotes gradient wrt $\lambda_{i}$
     !! - index1: point of evaluation
     !! - index2: vertex basis number
-    !! - index3: gradient 
+    !! - index3: gradient
   END FUNCTION BarycentricVertexBasisGradient_Tetrahedron
 END INTERFACE
 
@@ -802,7 +785,7 @@ END INTERFACE
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 30 Oct 2022
-! summary: Evaluate the edge basis on Tetrahedron in terms of barycentric 
+! summary: Evaluate the edge basis on Tetrahedron in terms of barycentric
 
 INTERFACE
   MODULE PURE FUNCTION BarycentricEdgeBasis_Tetrahedron2( &
@@ -878,7 +861,7 @@ INTERFACE
     !! size(lambda,2) = number of points of evaluation
     REAL(DFP), INTENT(IN) :: phi(1:, 0:)
     !! lobatto kernel values
-    !! size(phi1, 1) = 6*number of points 
+    !! size(phi1, 1) = 6*number of points
     !! - (lambda2-lambda1)
     !! - (lambda3-lambda1)
     !! - (lambda4-lambda1)
@@ -887,10 +870,10 @@ INTERFACE
     !! - (lambda4-lambda3)
     !! size(phi1, 2) = max(pe1-2, pe2-2, pe3-2)+1
     REAL(DFP), INTENT(IN) :: dphi(1:, 0:)
-    !! gradient of lobatto kernel 
-    !! size(phi1, 1) = 3*number of points 
+    !! gradient of lobatto kernel
+    !! size(phi1, 1) = 3*number of points
     !! - (lambda2-lambda1),
-    !! - (lambda3-lambda1), 
+    !! - (lambda3-lambda1),
     !! - (lambda3-lambda2)
     !! size(phi1, 2) = max(pe1-2, pe2-2, pe3-2)+1
     REAL(DFP) :: ans( &
@@ -899,7 +882,7 @@ INTERFACE
     !! - ans(:,:,i) denotes gradient wrt $\lambda_{i}$
     !! - index1: point of evaluation
     !! - index2: vertex basis number
-    !! - index3: gradient 
+    !! - index3: gradient
   END FUNCTION BarycentricEdgeBasisGradient_Tetrahedron2
 END INTERFACE
 
@@ -1012,7 +995,7 @@ INTERFACE
     !! Number of rows in lambda is equal to 4
     REAL(DFP), INTENT(IN) :: phi(1:, 0:)
     !! lobatto kernel values
-    !! size(phi1, 1) = 6*number of points 
+    !! size(phi1, 1) = 6*number of points
     !! - (lambda2-lambda1)
     !! - (lambda3-lambda1)
     !! - (lambda4-lambda1)
@@ -1021,7 +1004,7 @@ INTERFACE
     !! - (lambda4-lambda3)
     REAL(DFP), INTENT(IN) :: dphi(1:, 0:)
     !! gradient of lobatto kernel values
-    !! size(phi1, 1) = 6*number of points 
+    !! size(phi1, 1) = 6*number of points
     !! - (lambda2-lambda1)
     !! - (lambda3-lambda1)
     !! - (lambda4-lambda1)
@@ -1082,7 +1065,7 @@ INTERFACE
     !! Number of rows in lambda is equal to 4
     REAL(DFP), INTENT(IN) :: phi(1:, 0:)
     !! Value of lobatto kernel values
-    !! size(phi1, 1) = 6*number of points 
+    !! size(phi1, 1) = 6*number of points
     !! - (lambda2-lambda1)
     !! - (lambda3-lambda1)
     !! - (lambda4-lambda1)
@@ -1113,7 +1096,7 @@ INTERFACE
     !! Number of rows in lambda is equal to 4
     REAL(DFP), INTENT(IN) :: phi(1:, 0:)
     !! Value of lobatto kernel values
-    !! size(phi1, 1) = 6*number of points 
+    !! size(phi1, 1) = 6*number of points
     !! - (lambda2-lambda1)
     !! - (lambda3-lambda1)
     !! - (lambda4-lambda1)
@@ -1122,7 +1105,7 @@ INTERFACE
     !! - (lambda4-lambda3)
     REAL(DFP), INTENT(IN) :: dphi(1:, 0:)
     !! Gradient of lobatto kernel values
-    !! size(phi1, 1) = 6*number of points 
+    !! size(phi1, 1) = 6*number of points
     !! - (lambda2-lambda1)
     !! - (lambda3-lambda1)
     !! - (lambda4-lambda1)
@@ -1135,7 +1118,7 @@ INTERFACE
     !! - ans(:,:,i) denotes gradient wrt $\lambda_{i}$
     !! - index1: point of evaluation
     !! - index2: vertex basis number
-    !! - index3: gradient 
+    !! - index3: gradient
   END FUNCTION BarycentricCellBasisGradient_Tetrahedron2
 END INTERFACE
 
@@ -1266,7 +1249,7 @@ END INTERFACE BarycentricHeirarchicalBasisGradient_Tetrahedron
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date:  2023-08-25 
+! date:  2023-08-25
 ! summary:  Evaluate heirarchical basis in terms of barycentric coord
 
 INTERFACE BarycentricHeirarchicalBasis_Tetrahedron
@@ -1288,9 +1271,8 @@ END INTERFACE BarycentricHeirarchicalBasis_Tetrahedron
 !                        BarycentricHeirarchicalBasisGradient_Tetrahedron
 !----------------------------------------------------------------------------
 
-
 !> author: Vikas Sharma, Ph. D.
-! date: 2023-08-25 
+! date: 2023-08-25
 ! summary: Gradient of heirarchical basis in terms of barycentric coord
 
 INTERFACE BarycentricHeirarchicalBasisGradient_Tetrahedron
@@ -1837,8 +1819,8 @@ INTERFACE LagrangeGradientEvalAll_Tetrahedron
     REAL(DFP) :: ans(SIZE(x, 2), SIZE(xij, 2), 3)
     !! Value of gradient of nth order Lagrange polynomials at point x
     !! The first index denotes point of evaluation
-    !! the second index denotes Lagrange polynomial number 
-    !! The third index denotes the spatial dimension in which gradient is 
+    !! the second index denotes Lagrange polynomial number
+    !! The third index denotes the spatial dimension in which gradient is
     !! computed
   END FUNCTION LagrangeGradientEvalAll_Tetrahedron1
 END INTERFACE LagrangeGradientEvalAll_Tetrahedron
