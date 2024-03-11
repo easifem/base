@@ -242,4 +242,8 @@ INTERFACE RefCoord_Quadrangle
   END FUNCTION RefQuadrangleCoord
 END INTERFACE RefCoord_Quadrangle
 
+!----------------------------------------------------------------------------
+!                                                 GetFace
+!----------------------------------------------------------------------------
+
 END MODULE ReferenceQuadrangle_Method

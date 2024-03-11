@@ -225,4 +225,13 @@ CASE (2_I4B)
 END SELECT
 END PROCEDURE GetFaceConnectivity_Tetrahedron
 
+!----------------------------------------------------------------------------
+!                                                            GetFaceElemType
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE GetFaceElemType_Tetrahedron
+faceElemType(1:4) = Triangle3
+IF (PRESENT(tFaceNodes)) tFaceNodes(1:4) = 3_I4B
+END PROCEDURE GetFaceElemType_Tetrahedron
+
 END SUBMODULE Methods

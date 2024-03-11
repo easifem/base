@@ -36,6 +36,7 @@ PUBLIC :: Quality_Prism
 PUBLIC :: GetEdgeConnectivity_Prism
 PUBLIC :: GetFaceConnectivity_Prism
 PUBLIC :: RefCoord_Prism
+PUBLIC :: GetFaceElemType_Prism
 
 !----------------------------------------------------------------------------
 !                                                       Initiate@Prism
@@ -228,6 +229,28 @@ INTERFACE
     CHARACTER(*), INTENT(IN) :: refPrism
     REAL(DFP) :: ans(3, 6)
   END FUNCTION RefCoord_Prism
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                        GetFaceElemType@GeometryMethods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2024-03-11
+! summary:  Returns the element type of each face
+
+INTERFACE
+  MODULE PURE SUBROUTINE GetFaceElemType_Prism(faceElemType, opt,  &
+    & tFaceNodes)
+    INTEGER(I4B), INTENT(INOUT) :: faceElemType(:)
+    !! Face element type
+    INTEGER(I4B), OPTIONAL, INTENT(INOUT) :: tFaceNodes(:)
+    !! total nodes in each face
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: opt
+    !! If opt = 1, then edge connectivity for hierarchial approximation
+    !! If opt = 2, then edge connectivity for Lagrangian approximation
+    !! opt = 1 is default
+  END SUBROUTINE GetFaceElemType_Prism
 END INTERFACE
 
 END MODULE ReferencePrism_Method
