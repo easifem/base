@@ -194,6 +194,16 @@ con(1:4, 5) = [1, 2, 5, 0]
 END PROCEDURE GetFaceConnectivity_Pyramid
 
 !----------------------------------------------------------------------------
+!                                               GetFaceElemType_Pyramid
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE GetFaceElemType_Pyramid
+faceElemType(1:5) = [Quadrangle4, Triangle3, Triangle3, Triangle3,  &
+  & Triangle3]
+IF (PRESENT(tFaceNodes)) tFaceNodes(1:5) = [4, 3, 3, 3, 3]
+END PROCEDURE GetFaceElemType_Pyramid
+
+!----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 

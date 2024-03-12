@@ -229,6 +229,16 @@ con(1:4, 5) = [4, 5, 6, 0]
 END PROCEDURE GetFaceConnectivity_Prism
 
 !----------------------------------------------------------------------------
+!                                                      GetFaceElemType_Prism
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE GetFaceElemType_Prism
+faceElemType(1:5) = [Triangle3, Quadrangle4, Quadrangle4, Quadrangle4,  &
+  & Triangle3]
+IF (PRESENT(tFaceNodes)) tFaceNodes(1:5) = [3, 4, 4, 4, 3]
+END PROCEDURE GetFaceElemType_Prism
+
+!----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 

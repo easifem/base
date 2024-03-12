@@ -35,6 +35,7 @@ PUBLIC :: Quality_Tetrahedron
 PUBLIC :: GetEdgeConnectivity_Tetrahedron
 PUBLIC :: GetFaceConnectivity_Tetrahedron
 PUBLIC :: RefCoord_Tetrahedron
+PUBLIC :: GetFaceElemType_Tetrahedron
 
 !----------------------------------------------------------------------------
 !                                                       Initiate@Tetrahedron
@@ -189,6 +190,28 @@ INTERFACE
     CHARACTER(*), INTENT(IN) :: refTetrahedron
     REAL(DFP) :: ans(3, 4)
   END FUNCTION RefCoord_Tetrahedron
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                        GetFaceElemType@GeometryMethods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2024-03-11
+! summary:  Returns the element type of each face
+
+INTERFACE
+  MODULE PURE SUBROUTINE GetFaceElemType_Tetrahedron(faceElemType, opt,  &
+    & tFaceNodes)
+    INTEGER(I4B), INTENT(INOUT) :: faceElemType(:)
+    !! Face element type
+    INTEGER(I4B), OPTIONAL, INTENT(INOUT) :: tFaceNodes(:)
+    !! total nodes in each face
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: opt
+    !! If opt = 1, then edge connectivity for hierarchial approximation
+    !! If opt = 2, then edge connectivity for Lagrangian approximation
+    !! opt = 1 is default
+  END SUBROUTINE GetFaceElemType_Tetrahedron
 END INTERFACE
 
 END MODULE ReferenceTetrahedron_Method

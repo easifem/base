@@ -63,11 +63,19 @@ PUBLIC :: ContainsPoint
 PUBLIC :: TotalEntities
 PUBLIC :: FacetTopology
 PUBLIC :: GetVTKelementType
-PUBLIC :: GetTotalEdges
 PUBLIC :: GetEdgeConnectivity
+PUBLIC :: GetFaceConnectivity
+PUBLIC :: GetTotalNodes
+PUBLIC :: GetTotalEdges
 PUBLIC :: GetTotalFaces
 PUBLIC :: GetTotalCells
 PUBLIC :: ReferenceElementInfo
+PUBLIC :: RefElemGetGeoParam
+PUBLIC :: GetFaceElemType
+
+INTEGER(I4B), PARAMETER, PUBLIC :: REFELEM_MAX_FACES = 6
+INTEGER(I4B), PARAMETER, PUBLIC :: REFELEM_MAX_EDGES = 12
+INTEGER(I4B), PARAMETER, PUBLIC :: REFELEM_MAX_POINTS = 8
 
 !----------------------------------------------------------------------------
 !                                                      ReferenceElementInfo_
@@ -93,9 +101,9 @@ TYPE :: ReferenceElementInfo_
     & Triangle,  &
     & Quadrangle,  &
     & Tetrahedron, Hexahedron, Prism, Pyramid]
-  INTEGER(I4B) :: maxFaces = 6
-  INTEGER(I4B) :: maxEdges = 12
-  INTEGER(I4B) :: maxPoints = 8
+  INTEGER(I4B) :: maxFaces = REFELEM_MAX_FACES
+  INTEGER(I4B) :: maxEdges = REFELEM_MAX_EDGES
+  INTEGER(I4B) :: maxPoints = REFELEM_MAX_POINTS
   INTEGER(I4B) :: tCells(8) = [0, 0, 0, 0, 1, 1, 1, 1]
   !! Here cell is a topology for which xidim = 3
   INTEGER(I4B) :: tFaces(8) = [0, 0, 1, 1, 4, 6, 5, 5]
@@ -122,6 +130,32 @@ TYPE(ReferenceElementInfo_), PARAMETER :: ReferenceElementInfo =  &
   & ReferenceElementInfo_()
 
 !----------------------------------------------------------------------------
+!                                         RefElemGetGeoParam@GeometryMethods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2024-03-09
+! summary:  Returns the geometry parameters
+
+INTERFACE RefElemGetGeoParam
+  MODULE PURE SUBROUTINE RefElemGetGeoParam1(elemType, tNodes, tEdges,  &
+    & tFaces, tCells, edgeCon, faceCon, edgeOpt, faceOpt, faceElemType,  &
+    & tFaceNodes)
+    INTEGER(I4B), INTENT(IN) :: elemType
+    INTEGER(I4B), OPTIONAL, INTENT(INOUT) :: tNodes
+    INTEGER(I4B), OPTIONAL, INTENT(INOUT) :: tEdges
+    INTEGER(I4B), OPTIONAL, INTENT(INOUT) :: tFaces
+    INTEGER(I4B), OPTIONAL, INTENT(INOUT) :: tCells
+    INTEGER(I4B), OPTIONAL, INTENT(INOUT) :: edgeCon(:, :)
+    INTEGER(I4B), OPTIONAL, INTENT(INOUT) :: faceCon(:, :)
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: edgeOpt
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: faceOpt
+    INTEGER(I4B), OPTIONAL, INTENT(INOUT) :: faceElemType(:)
+    INTEGER(I4B), OPTIONAL, INTENT(INOUT) :: tFaceNodes(:)
+  END SUBROUTINE RefElemGetGeoParam1
+END INTERFACE RefElemGetGeoParam
+
+!----------------------------------------------------------------------------
 !                                             GetTotalEdges@GeometryMethods
 !----------------------------------------------------------------------------
 
@@ -145,7 +179,7 @@ END INTERFACE GetTotalEdges
 ! summary:  Returns number of edges in the element
 
 INTERFACE GetEdgeConnectivity
-  MODULE SUBROUTINE GetEdgeConnectivity1(elemType, con, opt)
+  MODULE PURE SUBROUTINE GetEdgeConnectivity1(elemType, con, opt)
     INTEGER(I4B), INTENT(IN) :: elemType
     !! name of element
     INTEGER(I4B), INTENT(INOUT) :: con(:, :)
@@ -161,6 +195,69 @@ INTERFACE GetEdgeConnectivity
 END INTERFACE GetEdgeConnectivity
 
 !----------------------------------------------------------------------------
+!                                        GetFaceConnectivity@GeometryMethods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2024-03-07
+! summary:  Returns number of edges in the element
+
+INTERFACE GetFaceConnectivity
+  MODULE PURE SUBROUTINE GetFaceConnectivity1(elemType, con, opt)
+    INTEGER(I4B), INTENT(IN) :: elemType
+    !! name of element
+    INTEGER(I4B), INTENT(INOUT) :: con(:, :)
+    !! Connectivity
+    !! The columns represents the face number
+    !! The row represents a face
+    !! con should be allocated by the user
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: opt
+    !! If opt = 1, then edge connectivity for hierarchial approximation
+    !! If opt = 2, then edge connectivity for Lagrangian approximation
+    !! opt = 1 is default
+  END SUBROUTINE GetFaceConnectivity1
+END INTERFACE GetFaceConnectivity
+
+!----------------------------------------------------------------------------
+!                                        GetFaceElemType@GeometryMethods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2024-03-11
+! summary:  Returns the element type of each face
+
+INTERFACE GetFaceElemType
+  MODULE PURE SUBROUTINE GetFaceElemType1(elemType, faceElemType, opt,  &
+    & tFaceNodes)
+    INTEGER(I4B), INTENT(IN) :: elemType
+    !! name of element
+    INTEGER(I4B), INTENT(INOUT) :: faceElemType(:)
+    !! Element names of faces
+    INTEGER(I4B), OPTIONAL, INTENT(INOUT) :: tFaceNodes(:)
+    !! Total number of nodes in each face
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: opt
+    !! If opt = 1, then edge connectivity for hierarchial approximation
+    !! If opt = 2, then edge connectivity for Lagrangian approximation
+    !! opt = 1 is default
+  END SUBROUTINE GetFaceElemType1
+END INTERFACE GetFaceElemType
+
+!----------------------------------------------------------------------------
+!                                             GetTotalNodes@GeometryMethods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2023-08-14
+! summary:  Returns number of nodes (vertices) in the element
+
+INTERFACE GetTotalNodes
+  MODULE PURE FUNCTION GetTotalNodes1(elemType) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: elemType
+    INTEGER(I4B) :: ans
+  END FUNCTION GetTotalNodes1
+END INTERFACE GetTotalNodes
+
+!----------------------------------------------------------------------------
 !                                             GetTotalFaces@GeometryMethods
 !----------------------------------------------------------------------------
 
@@ -174,30 +271,6 @@ INTERFACE GetTotalFaces
     INTEGER(I4B) :: ans
   END FUNCTION GetTotalFaces1
 END INTERFACE GetTotalFaces
-
-!----------------------------------------------------------------------------
-!                                        GetFaceConnectivity@GeometryMethods
-!----------------------------------------------------------------------------
-
-!> author: Vikas Sharma, Ph. D.
-! date: 2024-03-07
-! summary:  Returns number of edges in the element
-
-INTERFACE GetFaceConnectivity
-  MODULE SUBROUTINE GetFaceConnectivity1(elemType, con, opt)
-    INTEGER(I4B), INTENT(IN) :: elemType
-    !! name of element
-    INTEGER(I4B), INTENT(INOUT) :: con(:, :)
-    !! Connectivity
-    !! The columns represents the face number
-    !! The row represents a face
-    !! con should be allocated by the user
-    INTEGER(I4B), OPTIONAL, INTENT(IN) :: opt
-    !! If opt = 1, then edge connectivity for hierarchial approximation
-    !! If opt =2, then edge connectivity for Lagrangian approximation
-    !! opt=1 is default
-  END SUBROUTINE GetFaceConnectivity1
-END INTERFACE GetFaceConnectivity
 
 !----------------------------------------------------------------------------
 !                                             GetTotalCells@GeometryMethods

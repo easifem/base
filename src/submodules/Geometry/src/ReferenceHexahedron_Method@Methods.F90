@@ -251,6 +251,15 @@ END SELECT
 END PROCEDURE GetFaceConnectivity_Hexahedron
 
 !----------------------------------------------------------------------------
+!                                               GetFaceElemType_Hexahedron
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE GetFaceElemType_Hexahedron
+faceElemType(1:6) = Quadrangle4
+IF (PRESENT(tFaceNodes)) tFaceNodes(1:6) = 4_I4B
+END PROCEDURE GetFaceElemType_Hexahedron
+
+!----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
