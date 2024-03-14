@@ -24,12 +24,13 @@ USE ReferenceElement_Method
 USE ApproxUtility
 USE QuadrangleInterpolationUtility, ONLY: InterpolationPoint_Quadrangle,  &
   & LagrangeDOF_Quadrangle
+USE ReferenceTriangle_Method, ONLY: TRIANGLEAREA2D
+USE ReferenceLine_Method, ONLY: Linename
 USE AppendUtility
 USE StringUtility
 USE ArangeUtility
 USE InputUtility
-USE ReferenceTriangle_Method, ONLY: TRIANGLEAREA2D
-USE ReferenceLine_Method, ONLY: Linename
+USE SortUtility
 
 IMPLICIT NONE
 CONTAINS
@@ -375,5 +376,52 @@ CASE (2_I4B)
 END SELECT
 
 END PROCEDURE GetEdgeConnectivity_Quadrangle
+
+!----------------------------------------------------------------------------
+!                                               FaceShapeMetaData_Quadrangle
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE FaceShapeMetaData_Quadrangle
+INTEGER(I4B) :: a(6), localFaces0(4)
+
+sorted_face = SORT(face)
+a(1) = MINLOC(face, 1)
+a(2) = HelpFaceData_Quadrangle(1, a(1)) !b
+a(3) = HelpFaceData_Quadrangle(2, a(1)) !c
+a(4) = HelpFaceData_Quadrangle(3, a(1)) !d
+a(5) = HelpFaceData_Quadrangle(4, a(1)) !e
+a(6) = HelpFaceData_Quadrangle(5, a(1)) !f
+
+localFaces0(1:4) = [face(a(1)), face(a(5)), face(a(4)), face(a(6))]
+IF (PRESENT(localFaces)) THEN
+  localFaces(1:4) = localFaces0(1:4)
+END IF
+
+sorted_face(1) = localFaces0(1)
+sorted_face(3) = localFaces0(3)
+
+IF (localFaces0(2) .LT. localFaces0(4)) THEN
+  sorted_face(2) = localFaces0(2)
+  sorted_face(4) = localFaces0(4)
+
+  IF (PRESENT(faceOrient)) THEN
+    faceOrient(3) = 1_INT8
+    faceOrient(1) = SIGN(1, localFaces0(2) - localFaces0(1))
+    faceOrient(2) = SIGN(1, localFaces0(4) - localFaces0(1))
+  END IF
+
+ELSE
+  sorted_face(2) = localFaces0(4)
+  sorted_face(4) = localFaces0(2)
+
+  IF (PRESENT(faceOrient)) THEN
+    faceOrient(3) = -1_INT8
+    faceOrient(1) = SIGN(1, localFaces0(4) - localFaces0(1))
+    faceOrient(2) = SIGN(1, localFaces0(2) - localFaces0(1))
+  END IF
+
+END IF
+
+END PROCEDURE FaceShapeMetaData_Quadrangle
 
 END SUBMODULE Methods
