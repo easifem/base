@@ -227,27 +227,33 @@ END PROCEDURE GetEdgeConnectivity_Hexahedron
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE GetFaceConnectivity_Hexahedron
-INTEGER(I4B) :: opt0
-
-opt0 = Input(default=1_I4B, option=opt)
-
-SELECT CASE (opt0)
-CASE (1_I4B)
-  con(1:4, 1) = [1, 2, 3, 4] ! back
-  con(1:4, 2) = [5, 6, 7, 8] ! front
-  con(1:4, 3) = [1, 4, 8, 5] ! left
-  con(1:4, 4) = [2, 3, 7, 6] ! right
-  con(1:4, 5) = [1, 2, 6, 5] ! bottom
-  con(1:4, 6) = [4, 3, 7, 8] ! top
-
-CASE (2_I4B)
-  con(1:4, 1) = [1, 4, 3, 2] ! back
-  con(1:4, 2) = [5, 6, 7, 8] ! front
-  con(1:4, 3) = [1, 5, 8, 4] ! left
-  con(1:4, 4) = [2, 3, 7, 6] ! right
-  con(1:4, 5) = [1, 2, 6, 5] ! bottom
-  con(1:4, 6) = [3, 4, 8, 7] ! top
-END SELECT
+con(1:4, 1) = [1, 4, 3, 2] ! back
+con(1:4, 2) = [5, 6, 7, 8] ! front
+con(1:4, 3) = [1, 5, 8, 4] ! left
+con(1:4, 4) = [2, 3, 7, 6] ! right
+con(1:4, 5) = [1, 2, 6, 5] ! bottom
+con(1:4, 6) = [3, 4, 8, 7] ! top
+! INTEGER(I4B) :: opt0
+!
+! opt0 = Input(default=1_I4B, option=opt)
+!
+! SELECT CASE (opt0)
+! CASE (1_I4B)
+!   con(1:4, 1) = [1, 2, 3, 4] ! back
+!   con(1:4, 2) = [5, 6, 7, 8] ! front
+!   con(1:4, 3) = [1, 4, 8, 5] ! left
+!   con(1:4, 4) = [2, 3, 7, 6] ! right
+!   con(1:4, 5) = [1, 2, 6, 5] ! bottom
+!   con(1:4, 6) = [4, 3, 7, 8] ! top
+!
+! CASE (2_I4B)
+!   con(1:4, 1) = [1, 4, 3, 2] ! back
+!   con(1:4, 2) = [5, 6, 7, 8] ! front
+!   con(1:4, 3) = [1, 5, 8, 4] ! left
+!   con(1:4, 4) = [2, 3, 7, 6] ! right
+!   con(1:4, 5) = [1, 2, 6, 5] ! bottom
+!   con(1:4, 6) = [3, 4, 8, 7] ! top
+! END SELECT
 END PROCEDURE GetFaceConnectivity_Hexahedron
 
 !----------------------------------------------------------------------------

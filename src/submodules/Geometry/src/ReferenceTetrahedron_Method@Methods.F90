@@ -208,21 +208,27 @@ END PROCEDURE GetEdgeConnectivity_Tetrahedron
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE GetFaceConnectivity_Tetrahedron
-INTEGER(I4B) :: opt0
-opt0 = input(option=opt, default=1_I4B)
 
-SELECT CASE (opt0)
-CASE (1_I4B)
-  con(1:3, 1) = [1, 2, 3]
-  con(1:3, 2) = [1, 2, 4]
-  con(1:3, 3) = [1, 3, 4]
-  con(1:3, 4) = [2, 3, 4]
-CASE (2_I4B)
-  con(1:3, 1) = [1, 3, 2]
-  con(1:3, 2) = [1, 2, 4]
-  con(1:3, 3) = [1, 4, 3]
-  con(1:3, 4) = [2, 3, 4]
-END SELECT
+con(1:3, 1) = [1, 3, 2]
+con(1:3, 2) = [1, 2, 4]
+con(1:3, 3) = [1, 4, 3]
+con(1:3, 4) = [2, 3, 4]
+
+! INTEGER(I4B) :: opt0
+! opt0 = input(option=opt, default=1_I4B)
+!
+! SELECT CASE (opt0)
+! CASE (1_I4B)
+!   con(1:3, 1) = [1, 2, 3]
+!   con(1:3, 2) = [1, 2, 4]
+!   con(1:3, 3) = [1, 3, 4]
+!   con(1:3, 4) = [2, 3, 4]
+! CASE (2_I4B)
+!   con(1:3, 1) = [1, 3, 2]
+!   con(1:3, 2) = [1, 2, 4]
+!   con(1:3, 3) = [1, 4, 3]
+!   con(1:3, 4) = [2, 3, 4]
+! END SELECT
 END PROCEDURE GetFaceConnectivity_Tetrahedron
 
 !----------------------------------------------------------------------------

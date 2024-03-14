@@ -37,6 +37,15 @@ PUBLIC :: QuadrangleName
 PUBLIC :: GetEdgeConnectivity_Quadrangle
 PUBLIC :: RefQuadrangleCoord
 PUBLIC :: RefCoord_Quadrangle
+PUBLIC :: FaceShapeMetaData_Quadrangle
+
+INTEGER(I4B), PUBLIC, PARAMETER :: HelpFaceData_Quadrangle(5, 4) =  &
+& RESHAPE([ &
+& 2, 4, 3, 2, 4, &
+& 1, 3, 4, 3, 1, &
+& 2, 4, 1, 4, 2, &
+& 1, 3, 2, 1, 3 &
+], [5, 4])
 
 !----------------------------------------------------------------------------
 !                                                       QuadrangleName
@@ -243,7 +252,21 @@ INTERFACE RefCoord_Quadrangle
 END INTERFACE RefCoord_Quadrangle
 
 !----------------------------------------------------------------------------
-!                                                 GetFace
+!                                           FaceShapeMetaData_Quadrangle
 !----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2024-03-13
+! summary:  Returns meta data for global orientation of face
+
+INTERFACE
+  MODULE SUBROUTINE FaceShapeMetaData_Quadrangle(face, sorted_face,  &
+    & faceOrient, localFaces)
+    INTEGER(I4B), INTENT(INOUT) :: face(:)
+    INTEGER(I4B), INTENT(INOUT) :: sorted_face(:)
+    INTEGER(I4B), OPTIONAL, INTENT(INOUT) :: faceOrient(:)
+    INTEGER(I4B), OPTIONAL, INTENT(INOUT) :: localFaces(:)
+  END SUBROUTINE FaceShapeMetaData_Quadrangle
+END INTERFACE
 
 END MODULE ReferenceQuadrangle_Method
