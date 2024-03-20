@@ -72,6 +72,7 @@ PUBLIC :: GetTotalCells
 PUBLIC :: ReferenceElementInfo
 PUBLIC :: RefElemGetGeoParam
 PUBLIC :: GetFaceElemType
+PUBLIC :: GetElementIndex
 
 INTEGER(I4B), PARAMETER, PUBLIC :: REFELEM_MAX_FACES = 6
 INTEGER(I4B), PARAMETER, PUBLIC :: REFELEM_MAX_EDGES = 12
@@ -128,6 +129,32 @@ END TYPE ReferenceElementInfo_
 
 TYPE(ReferenceElementInfo_), PARAMETER :: ReferenceElementInfo =  &
   & ReferenceElementInfo_()
+
+!----------------------------------------------------------------------------
+!                                         GetElementIndex@GeometryMethods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2024-03-19
+! summary:  Returns the index of an element based on its topology
+!
+!# Introduction
+!
+! Point 1
+! Line 2
+! Triangle 3
+! Quadrangle 4
+! Tetrahedron 5
+! Hexahedron 6
+! Prism 7
+! Pyramid 8
+
+INTERFACE
+  MODULE PURE FUNCTION GetElementIndex(elemType) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: elemType
+    INTEGER(I4B) :: ans
+  END FUNCTION GetElementIndex
+END INTERFACE
 
 !----------------------------------------------------------------------------
 !                                         RefElemGetGeoParam@GeometryMethods
