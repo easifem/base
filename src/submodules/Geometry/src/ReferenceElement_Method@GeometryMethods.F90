@@ -49,6 +49,34 @@ IMPLICIT NONE
 CONTAINS
 
 !----------------------------------------------------------------------------
+!                                                     GetElementIndex
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE GetElementIndex
+SELECT CASE (elemType)
+CASE (Point)
+  ans = 1
+CASE (Line, Line3, Line4, Line5, Line6)
+  ans = 2
+CASE (Triangle, Triangle6, Triangle9, Triangle10, Triangle12,  &
+& Triangle15, Triangle21, Triangle15a)
+  ans = 3
+CASE (Quadrangle, Quadrangle8, Quadrangle9, Quadrangle16)
+  ans = 4
+CASE (Tetrahedron, Tetrahedron10, Tetrahedron20, Tetrahedron35,  &
+& Tetrahedron56)
+  ans = 5
+CASE (Hexahedron, Hexahedron27, Hexahedron20, Hexahedron64,  &
+& Hexahedron125)
+  ans = 6
+CASE (Prism, Prism15, Prism18)
+  ans = 7
+CASE (Pyramid, Pyramid13, Pyramid14)
+  ans = 8
+END SELECT
+END PROCEDURE GetElementIndex
+
+!----------------------------------------------------------------------------
 !                                                        RefElemGetGeoParam
 !----------------------------------------------------------------------------
 
@@ -66,6 +94,11 @@ CASE (Line)
   IF (PRESENT(tEdges)) tEdges = 0_I4B
   IF (PRESENT(tFaces)) tFaces = 0_I4B
 
+CASE (Line3)
+  IF (PRESENT(tNodes)) tNodes = 3_I4B
+  IF (PRESENT(tEdges)) tEdges = 0_I4B
+  IF (PRESENT(tFaces)) tFaces = 0_I4B
+
 CASE (Triangle)
   IF (PRESENT(tNodes)) tNodes = 3_I4B
   IF (PRESENT(tEdges)) tEdges = 3_I4B
@@ -73,8 +106,29 @@ CASE (Triangle)
   IF (PRESENT(edgeCon)) CALL GetEdgeConnectivity_Triangle(con=edgeCon,  &
     & opt=edgeOpt)
 
+CASE (Triangle6)
+  IF (PRESENT(tNodes)) tNodes = 6_I4B
+  IF (PRESENT(tEdges)) tEdges = 3_I4B
+  IF (PRESENT(tFaces)) tFaces = 0_I4B
+  IF (PRESENT(edgeCon)) CALL GetEdgeConnectivity_Triangle(con=edgeCon,  &
+    & opt=edgeOpt)
+
 CASE (Quadrangle)
   IF (PRESENT(tNodes)) tNodes = 4_I4B
+  IF (PRESENT(tEdges)) tEdges = 4_I4B
+  IF (PRESENT(tFaces)) tFaces = 0_I4B
+  IF (PRESENT(edgeCon)) CALL GetEdgeConnectivity_Quadrangle(con=edgeCon,  &
+    & opt=edgeOpt)
+
+CASE (Quadrangle8)
+  IF (PRESENT(tNodes)) tNodes = 8_I4B
+  IF (PRESENT(tEdges)) tEdges = 4_I4B
+  IF (PRESENT(tFaces)) tFaces = 0_I4B
+  IF (PRESENT(edgeCon)) CALL GetEdgeConnectivity_Quadrangle(con=edgeCon,  &
+    & opt=edgeOpt)
+
+CASE (Quadrangle9)
+  IF (PRESENT(tNodes)) tNodes = 9_I4B
   IF (PRESENT(tEdges)) tEdges = 4_I4B
   IF (PRESENT(tFaces)) tFaces = 0_I4B
   IF (PRESENT(edgeCon)) CALL GetEdgeConnectivity_Quadrangle(con=edgeCon,  &
