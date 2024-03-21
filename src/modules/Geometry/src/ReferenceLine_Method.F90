@@ -34,6 +34,15 @@ PUBLIC :: Quality_Line
 PUBLIC :: LineName
 PUBLIC :: RefLineCoord
 PUBLIC :: RefCoord_Line
+PUBLIC :: DEFAULT_REF_LINE_COORD
+
+#ifdef REF_LINE_IS_UNIT
+REAL(DFP), PARAMETER :: DEFAULT_REF_LINE_COORD(3, 2) =  &
+  & RESHAPE([0, 0, 0, 1, 0, 0], [3, 2])
+#else
+REAL(DFP), PARAMETER :: DEFAULT_REF_LINE_COORD(3, 2) =  &
+  & RESHAPE([-1, 0, 0, 1, 0, 0], [3, 2])
+#endif
 
 !----------------------------------------------------------------------------
 !                                                                 LineName
