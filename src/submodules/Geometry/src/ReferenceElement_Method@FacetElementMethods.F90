@@ -29,14 +29,14 @@ CONTAINS
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Facet_Matrix_refelem
-INTEGER(I4B) :: xiCell, T(4), i, istart, iend, max_nns, nns, tFacet
+INTEGER(I4B) :: xicell, T(4), i, istart, iend, max_nns, nns, tFacet
 T(1) = 0
 DO i = 2, 4
   T(i) = SUM(refelem%entityCounts(1:i - 1))
 END DO
 
-xiCell = refelem%xiDimension
-SELECT CASE (xiCell)
+xicell = refelem%xiDimension
+SELECT CASE (xicell)
 CASE (1)
   tFacet = 2
   istart = 1
@@ -52,9 +52,9 @@ CASE (1)
     FM(i + 1, 4:(3 + nns)) = refelem%topology(istart + i)%nptrs
   END DO
 CASE (2, 3)
-  tFacet = refelem%entityCounts(xiCell)
-  istart = T(xiCell) + 1
-  iend = T(xiCell) + tFacet
+  tFacet = refelem%entityCounts(xicell)
+  istart = T(xicell) + 1
+  iend = T(xicell) + tFacet
   max_nns = 0
   DO i = istart, iend
     nns = SIZE(refelem%topology(i)%nptrs)
@@ -79,8 +79,8 @@ END PROCEDURE Facet_Matrix_refelem
 MODULE PROCEDURE refelem_FacetElements
 INTEGER(I4B) :: xicell, tFacet
 
-xiCell = refelem%xiDimension
-IF (xiCell .GT. 0) THEN
+xicell = refelem%xiDimension
+IF (xicell .GT. 0) THEN
   tFacet = refelem%entityCounts(xicell)
   ALLOCATE (ans(tFacet))
 ELSE
@@ -88,7 +88,7 @@ ELSE
   RETURN
 END IF
 
-SELECT CASE (xiCell)
+SELECT CASE (xicell)
 CASE (1)
   CALL refelem_FacetElements_Line(refelem=refelem, ans=ans)
 
@@ -102,14 +102,49 @@ END SELECT
 END PROCEDURE refelem_FacetElements
 
 !----------------------------------------------------------------------------
+!                                                             FacetElements
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE refelem_FacetElements_elemType
+INTEGER(I4B) :: xicell, tFacet
+
+xicell = XiDimension(elemType)
+
+IF (xicell .GT. 0) THEN
+  tFacet = GetTotalFaces(elemType)
+  ALLOCATE (ans(tFacet))
+ELSE
+  ALLOCATE (ans(0))
+  RETURN
+END IF
+
+SELECT CASE (xicell)
+
+CASE (1)
+  CALL refelem_FacetElements_Line_elemType(elemType=elemType,  &
+    & nsd=nsd, ans=ans)
+
+CASE (2)
+  CALL refelem_FacetElements_Surface_elemType(elemType=elemType,  &
+    & nsd=nsd, ans=ans)
+
+CASE (3)
+  CALL refelem_FacetElements_Volume_elemType(elemType=elemType,  &
+    & nsd=nsd, ans=ans)
+
+END SELECT
+
+END PROCEDURE refelem_FacetElements_elemType
+
+!----------------------------------------------------------------------------
 !                                                     FacetElementMethods
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE refelem_FacetElements_Line
-INTEGER(I4B) :: ii, tFacet, xiCell
+INTEGER(I4B) :: ii, tFacet, xicell
 INTEGER(I4B) :: nptrs(1)
 
-xiCell = refelem%xiDimension
+xicell = refelem%xiDimension
 tFacet = refelem%entityCounts(xicell)
 
 DO ii = 1, tFacet
@@ -129,15 +164,43 @@ END DO
 END PROCEDURE refelem_FacetElements_Line
 
 !----------------------------------------------------------------------------
+!                                                     FacetElementMethods
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE refelem_FacetElements_Line_elemType
+ans(1)%xij = RESHAPE([-1.0, 0.0, 0.0], [3, 1])
+ans(1)%entityCounts = [1, 0, 0, 0]
+ans(1)%xiDimension = 0
+ans(1)%name = Point
+! ans(1)%interpolationPointType = refelem%interpolationPointType
+ans(1)%order = 0
+ans(1)%nsd = nsd
+ALLOCATE (ans(1)%topology(1))
+ans(1)%topology(1) = Referencetopology(nptrs=[1], name=Point)
+ans(1)%highOrderElement => NULL()
+
+ans(2)%xij = RESHAPE([1.0, 0.0, 0.0], [3, 1])
+ans(2)%entityCounts = [1, 0, 0, 0]
+ans(2)%xiDimension = 0
+ans(2)%name = Point
+! ans(1)%interpolationPointType = refelem%interpolationPointType
+ans(2)%order = 0
+ans(2)%nsd = nsd
+ALLOCATE (ans(2)%topology(1))
+ans(2)%topology(1) = Referencetopology(nptrs=[2], name=Point)
+ans(2)%highOrderElement => NULL()
+END PROCEDURE refelem_FacetElements_Line_elemType
+
+!----------------------------------------------------------------------------
 !                                                             FacetElements
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE refelem_FacetElements_Surface
-INTEGER(I4B) :: tFacet, ii, xiCell, T(4), istart, iend, tsize, jj
+INTEGER(I4B) :: tFacet, ii, xicell, T(4), istart, iend, tsize, jj
 INTEGER(I4B), ALLOCATABLE :: nptrs(:)
 TYPE(Referencetopology_) :: topo
 
-xiCell = refelem%xiDimension
+xicell = refelem%xiDimension
 tFacet = refelem%entityCounts(xicell)
 T(1) = 0
 
@@ -145,8 +208,8 @@ DO ii = 2, 4
   T(ii) = SUM(refelem%entityCounts(1:ii - 1))
 END DO
 
-istart = T(xiCell) + 1
-iend = T(xiCell) + tFacet
+istart = T(xicell) + 1
+iend = T(xicell) + tFacet
 
 DO ii = 1, tFacet
   topo = refelem%topology(istart + ii - 1)
@@ -183,11 +246,11 @@ END PROCEDURE refelem_FacetElements_Surface
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE refelem_FacetElements_Volume
-INTEGER(I4B) :: tFacet, ii, xiCell, T(4), istart, iend, tsize, jj
+INTEGER(I4B) :: tFacet, ii, xicell, T(4), istart, iend, tsize, jj
 INTEGER(I4B), ALLOCATABLE :: nptrs(:)
 TYPE(Referencetopology_) :: topo
 
-xiCell = refelem%xiDimension
+xicell = refelem%xiDimension
 tFacet = refelem%entityCounts(xicell)
 T(1) = 0
 
@@ -195,8 +258,8 @@ DO ii = 2, 4
   T(ii) = SUM(refelem%entityCounts(1:ii - 1))
 END DO
 
-istart = T(xiCell) + 1
-iend = T(xiCell) + tFacet
+istart = T(xicell) + 1
+iend = T(xicell) + tFacet
 
 DO ii = 1, tFacet
   topo = refelem%topology(istart + ii - 1)

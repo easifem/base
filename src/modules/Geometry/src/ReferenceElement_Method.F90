@@ -1160,11 +1160,43 @@ END INTERFACE FacetElements
 ! date: 16 June 2021
 ! summary: This routine returns the facet elements
 
+INTERFACE FacetElements
+  MODULE FUNCTION refelem_FacetElements_elemType(elemType, nsd) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: elemType
+    INTEGER(I4B), INTENT(IN) :: nsd
+    TYPE(ReferenceElement_), ALLOCATABLE :: ans(:)
+  END FUNCTION refelem_FacetElements_elemType
+END INTERFACE FacetElements
+
+!----------------------------------------------------------------------------
+!                                          FacetElements@FacetElementMethods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 16 June 2021
+! summary: This routine returns the facet elements
+
 INTERFACE
   MODULE SUBROUTINE refelem_FacetElements_Line(refelem, ans)
     CLASS(ReferenceElement_), INTENT(IN) :: refelem
     TYPE(ReferenceElement_), INTENT(INOUT) :: ans(:)
   END SUBROUTINE refelem_FacetElements_Line
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                          FacetElements@FacetElementMethods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 16 June 2021
+! summary: This routine returns the facet elements
+
+INTERFACE
+  MODULE SUBROUTINE refelem_FacetElements_Line_elemType(elemType, nsd, ans)
+    INTEGER(I4B), INTENT(IN) :: elemType
+    INTEGER(I4B), INTENT(IN) :: nsd
+    TYPE(ReferenceElement_), INTENT(INOUT) :: ans(:)
+  END SUBROUTINE refelem_FacetElements_Line_elemType
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -1191,10 +1223,42 @@ END INTERFACE
 ! summary: This routine returns the facet elements
 
 INTERFACE
+  MODULE SUBROUTINE refelem_FacetElements_Surface_elemType(elemType, nsd, ans)
+    INTEGER(I4B), INTENT(IN) :: elemType
+    INTEGER(I4B), INTENT(IN) :: nsd
+    TYPE(ReferenceElement_), INTENT(INOUT) :: ans(:)
+  END SUBROUTINE refelem_FacetElements_Surface_elemType
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                          FacetElements@FacetElementMethods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 16 June 2021
+! summary: This routine returns the facet elements
+
+INTERFACE
   MODULE SUBROUTINE refelem_FacetElements_Volume(refelem, ans)
     CLASS(ReferenceElement_), INTENT(IN) :: refelem
     TYPE(ReferenceElement_), INTENT(INOUT) :: ans(:)
   END SUBROUTINE refelem_FacetElements_Volume
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                          FacetElements@FacetElementMethods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 16 June 2021
+! summary: This routine returns the facet elements
+
+INTERFACE
+  MODULE SUBROUTINE refelem_FacetElements_Volume_elemType(elemType, nsd, ans)
+    INTEGER(I4B), INTENT(IN) :: elemType
+    INTEGER(I4B), INTENT(IN) :: nsd
+    TYPE(ReferenceElement_), INTENT(INOUT) :: ans(:)
+  END SUBROUTINE refelem_FacetElements_Volume_elemType
 END INTERFACE
 
 !----------------------------------------------------------------------------
