@@ -208,6 +208,7 @@ END PROCEDURE RefHexahedronCoord
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE GetEdgeConnectivity_Hexahedron
+INTEGER(I4B) :: order0, ii, jj, iface
 con(1:2, 1) = [1, 2]
 con(1:2, 2) = [1, 4]
 con(1:2, 3) = [1, 5]
@@ -220,6 +221,17 @@ con(1:2, 9) = [5, 6]
 con(1:2, 10) = [5, 8]
 con(1:2, 11) = [6, 7]
 con(1:2, 12) = [7, 8]
+
+order0 = Input(default=1_I4B, option=order)
+jj = 8
+
+DO iface = 1, 12
+  DO ii = 1, order0 - 1
+    con(2 + ii, iface) = jj + ii
+  END DO
+  jj = jj + order0 - 1
+END DO
+
 END PROCEDURE GetEdgeConnectivity_Hexahedron
 
 !----------------------------------------------------------------------------
@@ -227,33 +239,27 @@ END PROCEDURE GetEdgeConnectivity_Hexahedron
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE GetFaceConnectivity_Hexahedron
+INTEGER(I4B) :: order0, ii
 con(1:4, 1) = [1, 4, 3, 2] ! back
 con(1:4, 2) = [5, 6, 7, 8] ! front
 con(1:4, 3) = [1, 5, 8, 4] ! left
 con(1:4, 4) = [2, 3, 7, 6] ! right
 con(1:4, 5) = [1, 2, 6, 5] ! bottom
 con(1:4, 6) = [3, 4, 8, 7] ! top
-! INTEGER(I4B) :: opt0
-!
-! opt0 = Input(default=1_I4B, option=opt)
-!
-! SELECT CASE (opt0)
-! CASE (1_I4B)
-!   con(1:4, 1) = [1, 2, 3, 4] ! back
-!   con(1:4, 2) = [5, 6, 7, 8] ! front
-!   con(1:4, 3) = [1, 4, 8, 5] ! left
-!   con(1:4, 4) = [2, 3, 7, 6] ! right
-!   con(1:4, 5) = [1, 2, 6, 5] ! bottom
-!   con(1:4, 6) = [4, 3, 7, 8] ! top
-!
-! CASE (2_I4B)
-!   con(1:4, 1) = [1, 4, 3, 2] ! back
-!   con(1:4, 2) = [5, 6, 7, 8] ! front
-!   con(1:4, 3) = [1, 5, 8, 4] ! left
-!   con(1:4, 4) = [2, 3, 7, 6] ! right
-!   con(1:4, 5) = [1, 2, 6, 5] ! bottom
-!   con(1:4, 6) = [3, 4, 8, 7] ! top
-! END SELECT
+
+order0 = Input(default=1_I4B, option=order)
+ii = 5
+
+SELECT CASE (order0)
+CASE (2_I4B)
+  con(ii:8, 1) = [10, 14, 12, 9, 21] ! back
+  con(ii:8, 2) = [17, 19, 20, 18, 22] ! front
+  con(ii:8, 3) = [11, 18, 16, 10, 23] ! left
+  con(ii:8, 4) = [12, 15, 19, 13, 24] ! right
+  con(ii:8, 5) = [9, 13, 17, 11, 25] ! bottom
+  con(ii:8, 6) = [14, 16, 20, 15, 26] ! top
+END SELECT
+
 END PROCEDURE GetFaceConnectivity_Hexahedron
 
 !----------------------------------------------------------------------------
