@@ -25,15 +25,7 @@ CONTAINS
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE EdgeConnectivity_Prism
-ans(:, 1) = [1, 2]
-ans(:, 2) = [1, 3]
-ans(:, 3) = [1, 4]
-ans(:, 4) = [2, 3]
-ans(:, 5) = [2, 5]
-ans(:, 6) = [3, 6]
-ans(:, 7) = [4, 5]
-ans(:, 8) = [4, 6]
-ans(:, 9) = [5, 6]
+CALL GetEdgeConnectivity_Prism(con=ans)
 END PROCEDURE EdgeConnectivity_Prism
 
 !----------------------------------------------------------------------------
@@ -54,7 +46,7 @@ END PROCEDURE FacetConnectivity_Prism
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE RefElemDomain_Prism
-!FIX: Implement RefElemDomain_Prism 
+!FIX: Implement RefElemDomain_Prism
 CALL Errormsg(&
   & msg="[WORK IN PROGRESS] We are working on it", &
   & file=__FILE__, &
@@ -62,16 +54,6 @@ CALL Errormsg(&
   & routine="RefElemDomain_Prism()", &
   & unitno=stderr)
 END PROCEDURE RefElemDomain_Prism
-
-!----------------------------------------------------------------------------
-!                                                          Refcoord_Prism
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE RefCoord_Prism
-ans = 0.0_DFP
-!FIX: Implement RefCoord_Prism
-!ISSUE: #251
-END PROCEDURE RefCoord_Prism
 
 !----------------------------------------------------------------------------
 !                                                     LagrangeDegree_Prism

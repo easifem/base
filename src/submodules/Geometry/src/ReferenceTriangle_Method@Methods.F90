@@ -16,13 +16,202 @@
 !
 
 !> author: Vikas Sharma, Ph. D.
-! date:         2 March 2021
+! date:  2 March 2021
 ! summary: This submodule contains methods for [[ReferenceTriangle_]]
 
 SUBMODULE(ReferenceTriangle_Method) Methods
-USE BaseMethod
+USE ReferenceElement_Method
+USE StringUtility
+USE ApproxUtility
+USE TriangleInterpolationUtility, ONLY: InterpolationPoint_Triangle
+USE Triangle_Method
+USE InputUtility
+USE ReferenceLine_Method, ONLY: ElementType_Line,  &
+  & ElementOrder_Line
+USE LineInterpolationUtility, ONLY: InterpolationPoint_Line
+USE Display_Method
+USE ReallocateUtility
+
+! USE BaseMethod
 IMPLICIT NONE
 CONTAINS
+
+!----------------------------------------------------------------------------
+!                                                    TotalEntities_Triangle
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE TotalEntities_Triangle
+ans(2:4) = [3, 1, 0]
+ans(1) = TotalNodesInElement_Triangle(elemType)
+END PROCEDURE TotalEntities_Triangle
+
+!----------------------------------------------------------------------------
+!                                              TotalNodesInElement_Triangle
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE TotalNodesInElement_Triangle
+SELECT CASE (ElemType)
+CASE (Triangle3)
+  ans = 3
+CASE (Triangle6)
+  ans = 6
+CASE (Triangle9)
+  ans = 9
+CASE (Triangle10)
+  ans = 10
+CASE (Triangle12)
+  ans = 12
+CASE (Triangle15a)
+  ans = 15
+CASE (Triangle15b)
+  ans = 15
+CASE (Triangle21)
+  ans = 21
+CASE DEFAULT
+  ans = 0
+END SELECT
+END PROCEDURE TotalNodesInElement_Triangle
+
+!----------------------------------------------------------------------------
+!                                                     ElementOrder_Triangle
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE ElementOrder_Triangle
+SELECT CASE (ElemType)
+CASE (Triangle3)
+  ans = 1
+CASE (Triangle6)
+  ans = 2
+CASE (Triangle9)
+  ans = 3
+CASE (Triangle10)
+  ans = 3
+CASE (Triangle12)
+  ans = 4
+CASE (Triangle15a)
+  ans = 4
+CASE (Triangle15b)
+  ans = 5
+CASE (Triangle21)
+  ans = 5
+END SELECT
+END PROCEDURE ElementOrder_Triangle
+
+!----------------------------------------------------------------------------
+!                                                     ElementType_Triangle
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE ElementType_Triangle
+SELECT CASE (elemName)
+CASE ("Triangle3", "Triangle")
+  ans = Triangle3
+CASE ("Triangle6")
+  ans = Triangle6
+CASE ("Triangle9")
+  ans = Triangle9
+CASE ("Triangle10")
+  ans = Triangle10
+CASE ("Triangle12")
+  ans = Triangle12
+CASE ("Triangle15a")
+  ans = Triangle15a
+CASE ("Triangle15b")
+  ans = Triangle15b
+CASE ("Triangle21")
+  ans = Triangle21
+CASE DEFAULT
+  ans = 0
+END SELECT
+END PROCEDURE ElementType_Triangle
+
+!----------------------------------------------------------------------------
+!                                                    FacetElements_Triangle
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE FacetElements_Triangle1
+INTEGER(I4B) :: ii, istart, tsize, jj
+TYPE(Referencetopology_) :: topo
+
+istart = refelem%entityCounts(1)
+
+ans(1)%xij = InterpolationPoint_Line(  &
+  & order=refelem%order, &
+  & ipType=refelem%interpolationPointType, &
+  & layout="VEFC")
+
+ans(1)%interpolationPointType = refelem%interpolationPointType
+ans(1)%nsd = refelem%nsd
+DO ii = 2, 3
+  ans(ii)%xij = ans(1)%xij
+  ans(ii)%interpolationPointType = ans(1)%interpolationPointType
+  ans(ii)%nsd = ans(1)%nsd
+END DO
+
+DO ii = 1, 3
+  topo = refelem%topology(istart + ii)
+  tsize = SIZE(topo%nptrs)
+  ans(ii)%xiDimension = topo%xiDimension
+  ans(ii)%name = topo%name
+  ans(ii)%order = ElementOrder_Line(elemType=topo%name)
+  ans(ii)%entityCounts = [tsize, 1, 0, 0]
+
+  ALLOCATE (ans(ii)%topology(tsize + 1))
+  DO jj = 1, tsize
+    ans(ii)%topology(jj) = Referencetopology( &
+      & nptrs=topo%nptrs(jj:jj), name=Point)
+  END DO
+
+  ans(ii)%topology(tsize + 1) = Referencetopology( &
+    & nptrs=topo%nptrs, name=topo%name)
+END DO
+
+CALL DEALLOCATE (topo)
+
+END PROCEDURE FacetElements_Triangle1
+
+!----------------------------------------------------------------------------
+!                                                    FacetElements_Triangle
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE FacetElements_Triangle2
+INTEGER(I4B) :: ii, jj, order
+INTEGER(I4B), ALLOCATABLE :: edgeCon(:, :)
+
+order = ElementOrder_Triangle(elemType)
+CALL Reallocate(edgeCon, order + 1, 3)
+CALL GetEdgeConnectivity_Triangle(con=edgeCon,  &
+  & opt=DEFAULT_OPT_TRIANGLE_EDGE_CON, order=order)
+!! The edges are accordign to gmsh
+!! [1,2], [2,3], [3,1]
+
+DO ii = 1, 3
+
+  ans(ii)%xiDimension = 1
+  ans(ii)%order = order
+  ans(ii)%name = ElementType_Line("Line"//tostring(order + 1))
+  ans(ii)%interpolationPointType = Equidistance
+  ans(ii)%xij = InterpolationPoint_Line(  &
+    & order=ans(ii)%order, &
+    & ipType=ans(ii)%interpolationPointType, &
+    & layout="VEFC")
+
+  ans(ii)%nsd = nsd
+  ans(ii)%entityCounts = [order + 1, 1, 0, 0]
+  ALLOCATE (ans(ii)%topology(order + 2))
+
+  DO jj = 1, order + 1
+    ans(ii)%topology(jj) = Referencetopology(nptrs=edgeCon(jj:jj, ii),  &
+      & name=Point)
+  END DO
+
+  ans(ii)%topology(order + 2) = Referencetopology(nptrs=edgeCon(1:2, ii),  &
+    & name=ans(ii)%name)
+
+END DO
+
+IF (ALLOCATED(edgeCon)) DEALLOCATE (edgeCon)
+
+END PROCEDURE FacetElements_Triangle2
 
 !----------------------------------------------------------------------------
 !                                                                   Initiate
@@ -30,6 +219,7 @@ CONTAINS
 
 MODULE PROCEDURE initiate_ref_Triangle
 REAL(DFP) :: unit_xij(2, 3), biunit_xij(2, 3)
+INTEGER(I4B) :: edgecon(2, 3), ii
 
 CALL DEALLOCATE (obj)
 
@@ -70,9 +260,15 @@ ALLOCATE (obj%topology(7))
 obj%topology(1) = Referencetopology([1], Point)
 obj%topology(2) = Referencetopology([2], Point)
 obj%topology(3) = Referencetopology([3], Point)
-obj%topology(4) = Referencetopology([1, 2], Line2)
-obj%topology(5) = Referencetopology([2, 3], Line2)
-obj%topology(6) = Referencetopology([3, 1], Line2)
+
+CALL GetEdgeConnectivity_Triangle(con=edgecon,  &
+  & opt=DEFAULT_OPT_TRIANGLE_EDGE_CON,  &
+  & order=1)
+
+DO ii = 1, 3
+  obj%topology(3 + ii) = Referencetopology(edgecon(1:2, ii), Line2)
+END DO
+
 obj%topology(7) = Referencetopology([1, 2, 3], Triangle3)
 
 obj%highorderElement => highorderElement_Triangle
@@ -83,7 +279,7 @@ END PROCEDURE initiate_ref_Triangle
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE reference_Triangle
-CALL Initiate(obj=obj, nsd=nsd, xij=xij, domainName=domainName)
+CALL initiate_ref_triangle(obj=obj, nsd=nsd, xij=xij, domainName=domainName)
 END PROCEDURE reference_Triangle
 
 !----------------------------------------------------------------------------
@@ -92,14 +288,14 @@ END PROCEDURE reference_Triangle
 
 MODULE PROCEDURE reference_Triangle_Pointer
 ALLOCATE (obj)
-CALL Initiate(obj=obj, nsd=nsd, xij=xij, domainName=domainName)
+CALL initiate_ref_triangle(obj=obj, nsd=nsd, xij=xij, domainName=domainName)
 END PROCEDURE reference_Triangle_Pointer
 
 !----------------------------------------------------------------------------
 !                                                           LagrangeElement
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE highorderElement_Triangle
+MODULE PROCEDURE HighorderElement_Triangle
 INTEGER(I4B) :: I, NNS, nsd
 CALL DEALLOCATE (obj)
 obj%xij = InterpolationPoint_Triangle( &
@@ -110,6 +306,7 @@ obj%xij = InterpolationPoint_Triangle( &
 obj%domainName = refelem%domainName
 nsd = refelem%nsd
 obj%highOrderElement => refelem%highOrderElement
+
 SELECT CASE (order)
 CASE (1)
   NNS = 3
@@ -159,7 +356,7 @@ CASE (3)
   obj%topology(NNS + 4) = ReferenceTopology( &
     & [1, 2, 3, 4, 5, 6, 7, 8, 9, 10], obj%name)
 END SELECT
-END PROCEDURE highorderElement_Triangle
+END PROCEDURE HighorderElement_Triangle
 
 !----------------------------------------------------------------------------
 !                                                            MeasureSimplex
@@ -399,9 +596,9 @@ CASE (QualityMeasure%aspectRatio)
 END SELECT
 END PROCEDURE triangle_quality
 
-!-----------------------------------------------------------------------------
+!----------------------------------------------------------------------------
 !
-!-----------------------------------------------------------------------------
+!----------------------------------------------------------------------------
 
 MODULE PROCEDURE TriangleArea3D
 INTEGER(I4B), PARAMETER :: dim_num = 3
@@ -417,18 +614,70 @@ cross(3) = (t(1, 2) - t(1, 1)) * (t(2, 3) - t(2, 1)) &
 ans = 0.5_DFP * SQRT(SUM(cross(1:3)**2))
 END PROCEDURE TriangleArea3D
 
-!-----------------------------------------------------------------------------
+!----------------------------------------------------------------------------
 !
-!-----------------------------------------------------------------------------
+!----------------------------------------------------------------------------
 
 MODULE PROCEDURE TriangleArea2D
-INTEGER(I4B), PARAMETER :: dim_num = 2
-
 ans = 0.5_DFP * ( &
       t(1, 1) * (t(2, 2) - t(2, 3)) &
       + t(1, 2) * (t(2, 3) - t(2, 1)) &
       + t(1, 3) * (t(2, 1) - t(2, 2)))
 END PROCEDURE TriangleArea2D
+
+!----------------------------------------------------------------------------
+!                                              GetEdgeConnectivity_Triangle
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE GetEdgeConnectivity_Triangle
+INTEGER(I4B) :: opt0, order0, ii, jj, iface
+
+opt0 = Input(default=1_I4B, option=opt)
+
+SELECT CASE (opt0)
+CASE (1_I4B)
+  con(1:2, 1) = [1, 2]
+  con(1:2, 2) = [1, 3]
+  con(1:2, 3) = [2, 3]
+CASE (2_I4B)
+  !! For Lagrangian polynomial
+  con(1:2, 1) = [1, 2]
+  con(1:2, 2) = [2, 3]
+  con(1:2, 3) = [3, 1]
+END SELECT
+
+order0 = Input(default=1_I4B, option=order)
+
+jj = 3
+
+DO iface = 1, 3
+  DO ii = 1, order0 - 1
+    con(2 + ii, iface) = jj + ii
+    jj = jj + 1
+  END DO
+END DO
+
+END PROCEDURE GetEdgeConnectivity_Triangle
+
+!----------------------------------------------------------------------------
+!                                                         RefTriangleCoord
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE RefTriangleCoord
+CHARACTER(:), ALLOCATABLE :: layout
+layout = UpperCase(refTriangle)
+SELECT CASE (layout)
+CASE ("BIUNIT")
+  ans(:, 1) = [-1.0_DFP, -1.0_DFP]
+  ans(:, 2) = [1.0_DFP, -1.0_DFP]
+  ans(:, 3) = [-1.0_DFP, 1.0_DFP]
+CASE ("UNIT")
+  ans(:, 1) = [0.0_DFP, 0.0_DFP]
+  ans(:, 2) = [1.0_DFP, 0.0_DFP]
+  ans(:, 3) = [0.0_DFP, 1.0_DFP]
+END SELECT
+layout = ""
+END PROCEDURE RefTriangleCoord
 
 !----------------------------------------------------------------------------
 !

@@ -140,18 +140,7 @@ END PROCEDURE QuadratureNumber_Hexahedron
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE EdgeConnectivity_Hexahedron
-ans(:, 1) = [1, 2]
-ans(:, 2) = [1, 4]
-ans(:, 3) = [1, 5]
-ans(:, 4) = [2, 3]
-ans(:, 5) = [2, 6]
-ans(:, 6) = [3, 4]
-ans(:, 7) = [3, 7]
-ans(:, 8) = [4, 8]
-ans(:, 9) = [5, 6]
-ans(:, 10) = [5, 8]
-ans(:, 11) = [6, 7]
-ans(:, 12) = [7, 8]
+CALL GetEdgeConnectivity_Hexahedron(con=ans)
 END PROCEDURE EdgeConnectivity_Hexahedron
 
 !----------------------------------------------------------------------------
@@ -192,31 +181,6 @@ CASE DEFAULT
 END SELECT
 
 END PROCEDURE FacetConnectivity_Hexahedron
-
-!----------------------------------------------------------------------------
-!                                                       RefHexahedronCoord
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE RefHexahedronCoord
-REAL(DFP) :: one, mone
-TYPE(String) :: astr
-
-astr = UpperCase(refHexahedron)
-
-SELECT CASE (astr%chars())
-CASE ("UNIT")
-  one = 1.0_DFP
-  mone = 0.0_DFP
-CASE ("BIUNIT")
-  one = 1.0_DFP
-  mone = -1.0_DFP
-END SELECT
-
-ans(3, 1:4) = mone
-ans(3, 5:8) = one
-ans(1:2, 1:4) = RefQuadrangleCoord(refHexahedron)
-ans(1:2, 5:8) = ans(1:2, 1:4)
-END PROCEDURE RefHexahedronCoord
 
 !----------------------------------------------------------------------------
 !                                                LagrangeDegree_Hexahedron

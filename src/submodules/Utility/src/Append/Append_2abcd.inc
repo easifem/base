@@ -15,32 +15,15 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-! Define internal variables
-INTEGER(I4B) :: ii, n, tsize
+INTEGER(I4B) :: na, nb, nc
 
-IF (.NOT. ALLOCATED(obj)) THEN
-  RETURN
-END IF
+na = SIZE( A )
+nb = SIZE( B )
+nc = SIZE( C )
 
-tsize = SIZE(obj)
+CALL Reallocate( D, na+nb+nc )
+IF(na .gt. 0) D(1:na) = A
+IF(nb .gt. 0) D(na + 1: na+nb) = B
+IF(nc .gt. 0) D(na + nb + 1:) = C
 
-if(tsize .LE. 1) RETURN
-
-
-CALL QUICKSORT(obj, 1_I4B, tsize)
-
-temp = obj
-DEALLOCATE (obj)
-
-n = 1
-obj = [temp(1)]
-
-DO ii = 2, tsize
-  IF (temp(ii) .NE. temp(ii - 1)) THEN
-    CALL Expand(vec=obj, n=n, chunk_size=tsize, &
-      & val=temp(ii))
-  END IF
-END DO
-
-CALL Expand(vec=obj, n=n, chunk_size=tsize, finished=.TRUE.)
 
