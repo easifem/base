@@ -27,7 +27,7 @@ USE TriangleInterpolationUtility, ONLY: InterpolationPoint_Triangle
 USE Triangle_Method
 USE InputUtility
 USE ReferenceLine_Method, ONLY: ElementType_Line,  &
-& ElementOrder_Line
+  & ElementOrder_Line
 USE LineInterpolationUtility, ONLY: InterpolationPoint_Line
 USE Display_Method
 USE ReallocateUtility
@@ -35,6 +35,15 @@ USE ReallocateUtility
 ! USE BaseMethod
 IMPLICIT NONE
 CONTAINS
+
+!----------------------------------------------------------------------------
+!                                                    TotalEntities_Triangle
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE TotalEntities_Triangle
+ans(2:4) = [3, 1, 0]
+ans(1) = TotalNodesInElement_Triangle(elemType)
+END PROCEDURE TotalEntities_Triangle
 
 !----------------------------------------------------------------------------
 !                                              TotalNodesInElement_Triangle

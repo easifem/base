@@ -61,6 +61,7 @@ PUBLIC :: DEFAULT_OPT_TRIANGLE_EDGE_CON
 PUBLIC :: ElementOrder_Triangle
 PUBLIC :: ElementType_Triangle
 PUBLIC :: TotalNodesInElement_Triangle
+PUBLIC :: TotalEntities_Triangle
 
 #ifdef _TRIANGLE_EDGE_CON_DEFAULT_OPT_2
 INTEGER(I4B), PARAMETER :: DEFAULT_OPT_TRIANGLE_EDGE_CON = 1_I4B
@@ -70,6 +71,21 @@ INTEGER(I4B), PARAMETER :: DEFAULT_OPT_TRIANGLE_EDGE_CON = 2_I4B
 !! This means edges are [1,2], [2,3], [3,1]
 !! This is default option
 #endif
+
+!----------------------------------------------------------------------------
+!                                                    TotalEntities_Triangle
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2024-03-22
+! summary:  Returns total entities
+
+INTERFACE
+  MODULE PURE FUNCTION TotalEntities_Triangle(elemType) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: elemType
+    INTEGER(I4B) :: ans(4)
+  END FUNCTION TotalEntities_Triangle
+END INTERFACE
 
 !----------------------------------------------------------------------------
 !                                               TotalNodesInElement_Triangle
@@ -180,12 +196,12 @@ END INTERFACE FacetElements_Triangle
 !```
 
 INTERFACE Initiate
-  MODULE PURE SUBROUTINE initiate_ref_Triangle(obj, nsd, xij, domainName)
+  MODULE PURE SUBROUTINE Initiate_Ref_Triangle(obj, nsd, xij, domainName)
     CLASS(ReferenceTriangle_), INTENT(INOUT) :: obj
     INTEGER(I4B), INTENT(IN) :: nsd
     REAL(DFP), INTENT(IN), OPTIONAL :: xij(:, :)
     CHARACTER(*), OPTIONAL, INTENT(IN) :: domainName
-  END SUBROUTINE initiate_ref_Triangle
+  END SUBROUTINE Initiate_Ref_Triangle
 END INTERFACE Initiate
 
 !----------------------------------------------------------------------------
@@ -214,12 +230,12 @@ END INTERFACE Initiate
 !```
 
 INTERFACE ReferenceTriangle
-  MODULE PURE FUNCTION reference_Triangle(nsd, xij, domainName) RESULT(obj)
+  MODULE PURE FUNCTION Reference_Triangle(nsd, xij, domainName) RESULT(obj)
     INTEGER(I4B), INTENT(IN) :: nsd
     REAL(DFP), INTENT(IN), OPTIONAL :: xij(:, :)
     CHARACTER(*), OPTIONAL, INTENT(IN) :: domainName
     TYPE(ReferenceTriangle_) :: obj
-  END FUNCTION reference_Triangle
+  END FUNCTION Reference_Triangle
 END INTERFACE ReferenceTriangle
 
 !----------------------------------------------------------------------------
@@ -248,12 +264,12 @@ END INTERFACE ReferenceTriangle
 !```
 
 INTERFACE ReferenceTriangle_Pointer
-  MODULE FUNCTION reference_Triangle_pointer(nsd, xij, domainName) RESULT(obj)
+  MODULE FUNCTION Reference_Triangle_Pointer(nsd, xij, domainName) RESULT(obj)
     INTEGER(I4B), INTENT(IN) :: nsd
     REAL(DFP), INTENT(IN), OPTIONAL :: xij(:, :)
     CHARACTER(*), OPTIONAL, INTENT(IN) :: domainName
     CLASS(ReferenceTriangle_), POINTER :: obj
-  END FUNCTION reference_Triangle_pointer
+  END FUNCTION Reference_Triangle_Pointer
 END INTERFACE ReferenceTriangle_Pointer
 
 !----------------------------------------------------------------------------
@@ -285,13 +301,13 @@ END INTERFACE ReferenceTriangle_Pointer
 !```
 
 INTERFACE
-  MODULE SUBROUTINE highorderElement_Triangle(refelem, order, obj,  &
+  MODULE SUBROUTINE HighorderElement_Triangle(refelem, order, obj,  &
     & ipType)
     CLASS(ReferenceElement_), INTENT(IN) :: refelem
     INTEGER(I4B), INTENT(IN) :: order
     CLASS(ReferenceElement_), INTENT(INOUT) :: obj
     INTEGER(I4B), INTENT(IN) :: ipType
-  END SUBROUTINE highorderElement_Triangle
+  END SUBROUTINE HighorderElement_Triangle
 END INTERFACE
 
 !----------------------------------------------------------------------------
