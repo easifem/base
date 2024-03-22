@@ -38,6 +38,7 @@ PUBLIC :: DEFAULT_REF_LINE_COORD
 PUBLIC :: FacetElements_Line
 PUBLIC :: ElementType_Line
 PUBLIC :: ElementOrder_Line
+PUBLIC :: TotalNodesInElement_Line
 
 #ifdef REF_LINE_IS_UNIT
 REAL(DFP), PARAMETER :: DEFAULT_REF_LINE_COORD(3, 2) =  &
