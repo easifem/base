@@ -27,16 +27,10 @@ PRIVATE
 PUBLIC :: Initiate
 PUBLIC :: ReferenceHexahedron
 PUBLIC :: ReferenceHexahedron_Pointer
-PUBLIC :: HighorderElement_Hexahedron
+PUBLIC :: highorderElement_Hexahedron
 PUBLIC :: Measure_Simplex_Hexahedron
 PUBLIC :: Hexahedron_Quality
-PUBLIC :: Quality_Hexahedron
 PUBLIC :: HexahedronVolume3D
-PUBLIC :: GetEdgeConnectivity_Hexahedron
-PUBLIC :: GetFaceConnectivity_Hexahedron
-PUBLIC :: RefCoord_Hexahedron
-PUBLIC :: RefHexahedronCoord
-PUBLIC :: GetFaceElemType_Hexahedron
 
 !----------------------------------------------------------------------------
 !                                                       Initiate@Hexahedron
@@ -63,7 +57,7 @@ INTERFACE ReferenceHexahedron
   MODULE PURE FUNCTION reference_Hexahedron(nsd, xij, domainName) RESULT(obj)
     INTEGER(I4B), INTENT(IN) :: NSD
     REAL(DFP), INTENT(IN), OPTIONAL :: xij(:, :)
-    CHARACTER(*), OPTIONAL, INTENT(IN) :: domainName
+    CHARACTER(*), OPTIONAL, INTENT( IN ) :: domainName
     TYPE(ReferenceHexahedron_) :: obj
   END FUNCTION reference_Hexahedron
 END INTERFACE ReferenceHexahedron
@@ -77,7 +71,7 @@ INTERFACE ReferenceHexahedron_Pointer
     & RESULT(obj)
     INTEGER(I4B), INTENT(IN) :: NSD
     REAL(DFP), INTENT(IN), OPTIONAL :: xij(:, :)
-    CHARACTER(*), OPTIONAL, INTENT(IN) :: domainName
+    CHARACTER(*), OPTIONAL, INTENT( IN ) :: domainName
     CLASS(ReferenceHexahedron_), POINTER :: obj
   END FUNCTION reference_Hexahedron_Pointer
 END INTERFACE ReferenceHexahedron_Pointer
@@ -112,14 +106,14 @@ END INTERFACE
 !                                                        Hexahedron_quality
 !----------------------------------------------------------------------------
 
-INTERFACE Quality_Hexahedron
-  MODULE FUNCTION Hexahedron_Quality(refelem, xij, measure) RESULT(Ans)
+INTERFACE
+  MODULE FUNCTION Hexahedron_quality(refelem, xij, measure) RESULT(Ans)
     CLASS(ReferenceElement_), INTENT(IN) :: refelem
     REAL(DFP), INTENT(IN) :: xij(:, :)
     INTEGER(I4B), INTENT(IN) :: measure
     REAL(DFP) :: Ans
-  END FUNCTION Hexahedron_Quality
-END INTERFACE Quality_Hexahedron
+  END FUNCTION Hexahedron_quality
+END INTERFACE
 
 !----------------------------------------------------------------------------
 !                                                       HexahedronVolume3D
@@ -130,89 +124,6 @@ INTERFACE
     REAL(DFP), INTENT(IN) :: xij(:, :)
     REAL(DFP), INTENT(OUT) :: ans
   END SUBROUTINE HexahedronVolume3D
-END INTERFACE
-
-!----------------------------------------------------------------------------
-!                                                        GetEdgeConnectivity
-!----------------------------------------------------------------------------
-
-!> author: Vikas Sharma, Ph. D.
-! date: 2024-03-08
-! summary:  Returns number of edges in the element
-
-INTERFACE
-  MODULE PURE SUBROUTINE GetEdgeConnectivity_Hexahedron(con, opt)
-    INTEGER(I4B), INTENT(INOUT) :: con(:, :)
-    !! Connectivity
-    !! The columns represents the edge number
-    !! The row represents a edge
-    !! con should be allocated by the user
-    INTEGER(I4B), OPTIONAL, INTENT(IN) :: opt
-    !! If opt = 1, then edge connectivity for hierarchial approximation
-    !! If opt =2, then edge connectivity for Lagrangian approximation
-    !! opt=1 is default
-  END SUBROUTINE GetEdgeConnectivity_Hexahedron
-END INTERFACE
-
-!----------------------------------------------------------------------------
-!                                                        GetFaceConnectivity
-!----------------------------------------------------------------------------
-
-!> author: Vikas Sharma, Ph. D.
-! date: 2024-03-08
-! summary:  Returns number of edges in the element
-
-INTERFACE
-  MODULE PURE SUBROUTINE GetFaceConnectivity_Hexahedron(con, opt)
-    INTEGER(I4B), INTENT(INOUT) :: con(:, :)
-    !! Connectivity
-    !! The columns represents the face number
-    !! The row represents a face
-    !! con should be allocated by the user
-    INTEGER(I4B), OPTIONAL, INTENT(IN) :: opt
-    !! If opt = 1, then face connectivity for hierarchial approximation
-    !! If opt =2, then face connectivity for Lagrangian approximation
-    !! opt=1 is default
-  END SUBROUTINE GetFaceConnectivity_Hexahedron
-END INTERFACE
-
-!----------------------------------------------------------------------------
-!                                                       RefHexahedronCoord
-!----------------------------------------------------------------------------
-
-!> author: Vikas Sharma, Ph. D.
-! date: 2023-07-07
-! summary:  Returns coordinates of reference Hexahedron
-
-INTERFACE RefCoord_Hexahedron
-  MODULE PURE FUNCTION RefHexahedronCoord(refHexahedron) RESULT(ans)
-    CHARACTER(*), INTENT(IN) :: refHexahedron
-    !! UNIT
-    !! BIUNIT
-    REAL(DFP) :: ans(3, 8)
-  END FUNCTION RefHexahedronCoord
-END INTERFACE RefCoord_Hexahedron
-
-!----------------------------------------------------------------------------
-!                                        GetFaceElemType@GeometryMethods
-!----------------------------------------------------------------------------
-
-!> author: Vikas Sharma, Ph. D.
-! date: 2024-03-11
-! summary:  Returns the element type of each face
-
-INTERFACE
-  MODULE PURE SUBROUTINE GetFaceElemType_Hexahedron(faceElemType, opt,  &
-    & tFaceNodes)
-    INTEGER(I4B), INTENT(INOUT) :: faceElemType(:)
-    !! Face element type
-    INTEGER(I4B), OPTIONAL, INTENT(INOUT) :: tFaceNodes(:)
-    !! total nodes in each face
-    INTEGER(I4B), OPTIONAL, INTENT(IN) :: opt
-    !! If opt = 1, then edge connectivity for hierarchial approximation
-    !! If opt = 2, then edge connectivity for Lagrangian approximation
-    !! opt = 1 is default
-  END SUBROUTINE GetFaceElemType_Hexahedron
 END INTERFACE
 
 END MODULE ReferenceHexahedron_Method

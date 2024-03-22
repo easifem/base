@@ -33,6 +33,8 @@ PUBLIC :: LagrangeEvalAll_Line
 PUBLIC :: LagrangeGradientEvalAll_Line
 PUBLIC :: BasisEvalAll_Line
 PUBLIC :: BasisGradientEvalAll_Line
+PUBLIC :: RefLineCoord
+PUBLIC :: RefCoord_Line
 PUBLIC :: QuadraturePoint_Line
 PUBLIC :: ToVEFC_Line
 PUBLIC :: QuadratureNumber_Line
@@ -41,6 +43,7 @@ PUBLIC :: HeirarchicalBasis_Line
 PUBLIC :: HeirarchicalGradientBasis_Line
 PUBLIC :: OrthogonalBasis_Line
 PUBLIC :: OrthogonalBasisGradient_Line
+
 
 !----------------------------------------------------------------------------
 !                                                       RefElemDomain_Line
@@ -92,6 +95,23 @@ INTERFACE
     REAL(DFP), INTENT(INOUT) :: pt(:)
   END SUBROUTINE ToVEFC_Line
 END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                           RefLineCoord
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2023-07-03
+! summary:  Returns the coordinate of reference triangle
+
+INTERFACE RefCoord_Line
+  MODULE PURE FUNCTION RefLineCoord(refLine) RESULT(ans)
+    CHARACTER(*), INTENT(IN) :: refLine
+    !! "unit"
+    !! "biunit"
+    REAL(DFP) :: ans(1, 2)
+  END FUNCTION RefLineCoord
+END INTERFACE RefCoord_Line
 
 !----------------------------------------------------------------------------
 !                                                       LagrangeDegree_Line
@@ -176,7 +196,7 @@ END INTERFACE
 !- All points are inside the interval
 !- Points are in increasing order
 
-INTERFACE EquidistanceInPoint_Line
+INTERFACE
   MODULE PURE FUNCTION EquidistanceInPoint_Line1(order, xij) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
     !! order
@@ -184,6 +204,10 @@ INTERFACE EquidistanceInPoint_Line
     !! coordinates of point 1 and point 2
     REAL(DFP), ALLOCATABLE :: ans(:)
   END FUNCTION EquidistanceInPoint_Line1
+END INTERFACE
+
+INTERFACE EquidistanceInPoint_Line
+  MODULE PROCEDURE EquidistanceInPoint_Line1
 END INTERFACE EquidistanceInPoint_Line
 
 !----------------------------------------------------------------------------
@@ -203,7 +227,7 @@ END INTERFACE EquidistanceInPoint_Line
 !- The number of space components in `ans` is nsd if xij present
 !- Otherwise, the number of space components in `ans` is 1.
 
-INTERFACE EquidistanceInPoint_Line
+INTERFACE
   MODULE PURE FUNCTION EquidistanceInPoint_Line2(order, xij) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
   !! order
@@ -216,6 +240,10 @@ INTERFACE EquidistanceInPoint_Line
   !! The number of rows is equal to the number of rows in xij
   !! (if xij present), otherwise, it is 1.
   END FUNCTION EquidistanceInPoint_Line2
+END INTERFACE
+
+INTERFACE EquidistanceInPoint_Line
+  MODULE PROCEDURE EquidistanceInPoint_Line2
 END INTERFACE EquidistanceInPoint_Line
 
 !----------------------------------------------------------------------------

@@ -20,18 +20,7 @@
 ! summary: This submodule contains method for [[ReferenceQuadrangle_]]
 
 SUBMODULE(ReferenceQuadrangle_Method) Methods
-USE ReferenceElement_Method
-USE ApproxUtility
-USE QuadrangleInterpolationUtility, ONLY: InterpolationPoint_Quadrangle,  &
-  & LagrangeDOF_Quadrangle
-USE ReferenceTriangle_Method, ONLY: TRIANGLEAREA2D
-USE ReferenceLine_Method, ONLY: Linename
-USE AppendUtility
-USE StringUtility
-USE ArangeUtility
-USE InputUtility
-USE SortUtility
-
+USE BaseMethod
 IMPLICIT NONE
 CONTAINS
 
@@ -110,7 +99,7 @@ END PROCEDURE Initiate_ref_Quadrangle
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE reference_Quadrangle
-CALL initiate_ref_quadrangle(obj=obj, nsd=NSD, xij=xij, domainName=domainName)
+CALL Initiate(obj=obj, nsd=NSD, xij=xij, domainName=domainName)
 END PROCEDURE reference_Quadrangle
 
 !----------------------------------------------------------------------------
@@ -119,7 +108,7 @@ END PROCEDURE reference_Quadrangle
 
 MODULE PROCEDURE reference_Quadrangle_Pointer
 ALLOCATE (obj)
-CALL initiate_ref_quadrangle(obj=obj, nsd=NSD, xij=xij, domainName=domainName)
+CALL Initiate(obj=obj, nsd=NSD, xij=xij, domainName=domainName)
 END PROCEDURE reference_Quadrangle_Pointer
 
 !----------------------------------------------------------------------------
@@ -191,9 +180,8 @@ END PROCEDURE Measure_Simplex_Quadrangle
 !
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE Quadrangle_Quality
-ans = 0.0_DFP
-END PROCEDURE Quadrangle_Quality
+MODULE PROCEDURE Quadrangle_quality
+END PROCEDURE Quadrangle_quality
 
 !----------------------------------------------------------------------------
 !                                                                 QuadArea3D
@@ -333,95 +321,5 @@ PURE SUBROUTINE PARALLELOGRAMAREA2D(p, ans)
   ans = (p(1, 2) - p(1, 1)) * (p(2, 3) - p(2, 1)) &
     & - (p(2, 2) - p(2, 1)) * (p(1, 3) - p(1, 1))
 END SUBROUTINE PARALLELOGRAMAREA2D
-
-!----------------------------------------------------------------------------
-!                                                        RefQuadrangleCoord
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE RefQuadrangleCoord
-CHARACTER(:), ALLOCATABLE :: astr
-astr = UpperCase(refQuadrangle)
-SELECT CASE (astr)
-CASE ("UNIT")
-  ans(1, :) = [0.0_DFP, 1.0_DFP, 1.0_DFP, 0.0_DFP]
-  ans(2, :) = [0.0_DFP, 0.0_DFP, 1.0_DFP, 1.0_DFP]
-CASE ("BIUNIT")
-  ans(1, :) = [-1.0_DFP, 1.0_DFP, 1.0_DFP, -1.0_DFP]
-  ans(2, :) = [-1.0_DFP, -1.0_DFP, 1.0_DFP, 1.0_DFP]
-END SELECT
-astr = ""
-END PROCEDURE RefQuadrangleCoord
-
-!----------------------------------------------------------------------------
-!                                              GetEdgeConnectivity_Quadrangle
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE GetEdgeConnectivity_Quadrangle
-INTEGER(I4B) :: opt0
-
-opt0 = Input(default=1_I4B, option=opt)
-
-SELECT CASE (opt0)
-CASE (1_I4B)
-  con(:, 1) = [1, 2]
-  con(:, 2) = [4, 3]
-  con(:, 3) = [1, 4]
-  con(:, 4) = [2, 3]
-CASE (2_I4B)
-  !! For Lagrangian polynomial
-  con(:, 1) = [1, 2]
-  con(:, 2) = [2, 3]
-  con(:, 3) = [3, 4]
-  con(:, 4) = [4, 1]
-END SELECT
-
-END PROCEDURE GetEdgeConnectivity_Quadrangle
-
-!----------------------------------------------------------------------------
-!                                               FaceShapeMetaData_Quadrangle
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE FaceShapeMetaData_Quadrangle
-INTEGER(I4B) :: a(6), localFaces0(4)
-
-sorted_face = SORT(face)
-a(1) = MINLOC(face, 1)
-a(2) = HelpFaceData_Quadrangle(1, a(1)) !b
-a(3) = HelpFaceData_Quadrangle(2, a(1)) !c
-a(4) = HelpFaceData_Quadrangle(3, a(1)) !d
-a(5) = HelpFaceData_Quadrangle(4, a(1)) !e
-a(6) = HelpFaceData_Quadrangle(5, a(1)) !f
-
-localFaces0(1:4) = [face(a(1)), face(a(5)), face(a(4)), face(a(6))]
-IF (PRESENT(localFaces)) THEN
-  localFaces(1:4) = localFaces0(1:4)
-END IF
-
-sorted_face(1) = localFaces0(1)
-sorted_face(3) = localFaces0(3)
-
-IF (localFaces0(2) .LT. localFaces0(4)) THEN
-  sorted_face(2) = localFaces0(2)
-  sorted_face(4) = localFaces0(4)
-
-  IF (PRESENT(faceOrient)) THEN
-    faceOrient(3) = 1_INT8
-    faceOrient(1) = SIGN(1, localFaces0(2) - localFaces0(1))
-    faceOrient(2) = SIGN(1, localFaces0(4) - localFaces0(1))
-  END IF
-
-ELSE
-  sorted_face(2) = localFaces0(4)
-  sorted_face(4) = localFaces0(2)
-
-  IF (PRESENT(faceOrient)) THEN
-    faceOrient(3) = -1_INT8
-    faceOrient(1) = SIGN(1, localFaces0(4) - localFaces0(1))
-    faceOrient(2) = SIGN(1, localFaces0(2) - localFaces0(1))
-  END IF
-
-END IF
-
-END PROCEDURE FaceShapeMetaData_Quadrangle
 
 END SUBMODULE Methods

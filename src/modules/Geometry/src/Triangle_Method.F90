@@ -32,40 +32,6 @@ MODULE Triangle_Method
 USE GlobalData
 IMPLICIT NONE
 PRIVATE
-PUBLIC :: triangle_angles_2d
-PUBLIC :: triangle_angles_3d
-PUBLIC :: triangle_area_2d
-PUBLIC :: triangle_area_3d
-PUBLIC :: triangle_area_3d_2
-PUBLIC :: triangle_area_3d_3
-PUBLIC :: triangle_area_heron
-PUBLIC :: triangle_area_vector_3d
-PUBLIC :: triangle_barycentric_2d
-PUBLIC :: triangle_centroid_2d
-PUBLIC :: triangle_centroid_3d
-PUBLIC :: triangle_circumcenter_2d
-PUBLIC :: triangle_circumcenter_2d_2
-PUBLIC :: triangle_circumcenter
-PUBLIC :: triangle_circumcircle_2d
-PUBLIC :: triangle_circumcircle_2d_2
-PUBLIC :: triangle_circumradius_2d
-PUBLIC :: triangle_contains_line_exp_3d
-PUBLIC :: triangle_contains_line_par_3d
-PUBLIC :: triangle_contains_point_2d_1
-PUBLIC :: triangle_contains_point_2d_2
-PUBLIC :: triangle_contains_point_2d_3
-PUBLIC :: triangle_diameter_2d
-PUBLIC :: triangle_edge_length_2d
-PUBLIC :: triangle_incenter_2d
-PUBLIC :: triangle_incircle_2d
-PUBLIC :: triangle_inradius_2d
-PUBLIC :: triangle_orthocenter_2d
-PUBLIC :: triangle_point_dist_2d
-PUBLIC :: triangle_point_dist_3d
-PUBLIC :: triangle_point_dist_signed_2d
-PUBLIC :: triangle_point_near_2d
-PUBLIC :: triangle_quality_2d
-PUBLIC :: triangle_sample
 
 !----------------------------------------------------------------------------
 !
@@ -94,6 +60,8 @@ INTERFACE
   END FUNCTION
 END INTERFACE
 
+PUBLIC :: triangle_angles_2d
+
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
@@ -120,6 +88,8 @@ INTERFACE
     !! angle
   END FUNCTION
 END INTERFACE
+
+PUBLIC :: triangle_angles_3d
 
 !----------------------------------------------------------------------------
 !
@@ -150,6 +120,8 @@ INTERFACE
   END FUNCTION
 END INTERFACE
 
+PUBLIC :: triangle_area_2d
+
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
@@ -172,6 +144,8 @@ INTERFACE
   END FUNCTION
 END INTERFACE
 
+PUBLIC :: triangle_area_3d
+
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
@@ -191,6 +165,8 @@ INTERFACE
   END FUNCTION
 END INTERFACE
 
+PUBLIC :: triangle_area_3d_2
+
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
@@ -205,6 +181,8 @@ INTERFACE
     REAL(DFP) :: area
   END FUNCTION
 END INTERFACE
+
+PUBLIC :: triangle_area_3d_3
 
 !----------------------------------------------------------------------------
 !
@@ -225,6 +203,8 @@ INTERFACE
     REAL(DFP) :: area
   END FUNCTION
 END INTERFACE
+
+PUBLIC :: triangle_area_heron
 
 !----------------------------------------------------------------------------
 !
@@ -262,6 +242,8 @@ INTERFACE
   END FUNCTION
 END INTERFACE
 
+PUBLIC :: triangle_area_vector_3d
+
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -288,6 +270,8 @@ INTERFACE
     !! barycentric points
   END FUNCTION
 END INTERFACE
+
+PUBLIC :: triangle_barycentric_2d
 
 !----------------------------------------------------------------------------
 !
@@ -321,6 +305,8 @@ INTERFACE
   END FUNCTION
 END INTERFACE
 
+PUBLIC :: triangle_centroid_2d
+
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
@@ -345,6 +331,8 @@ INTERFACE
     REAL(DFP) :: centroid(3)
   END FUNCTION
 END INTERFACE
+
+PUBLIC :: triangle_centroid_3d
 
 !----------------------------------------------------------------------------
 !
@@ -377,6 +365,8 @@ INTERFACE
     REAL(DFP) :: pc(2)
   END FUNCTION
 END INTERFACE
+
+PUBLIC :: triangle_circumcenter_2d
 
 !----------------------------------------------------------------------------
 !
@@ -421,6 +411,8 @@ INTERFACE
   END FUNCTION
 END INTERFACE
 
+PUBLIC :: triangle_circumcenter_2d_2
+
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
@@ -449,6 +441,8 @@ INTERFACE
     REAL(DFP) :: p(n)
   END FUNCTION
 END INTERFACE
+
+PUBLIC :: triangle_circumcenter
 
 !----------------------------------------------------------------------------
 !
@@ -484,6 +478,8 @@ INTERFACE
     !! circum radius
   END SUBROUTINE
 END INTERFACE
+
+PUBLIC :: triangle_circumcircle_2d
 
 !----------------------------------------------------------------------------
 !
@@ -521,6 +517,8 @@ INTERFACE
   END SUBROUTINE
 END INTERFACE
 
+PUBLIC :: triangle_circumcircle_2d_2
+
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
@@ -544,6 +542,8 @@ INTERFACE
     REAL(DFP) :: r
   END FUNCTION
 END INTERFACE
+
+PUBLIC :: triangle_circumradius_2d
 
 !----------------------------------------------------------------------------
 !
@@ -597,6 +597,8 @@ INTERFACE
     REAL(DFP), INTENT(OUT) :: pint(3)
   END SUBROUTINE
 END INTERFACE
+
+PUBLIC :: triangle_contains_line_exp_3d
 
 !----------------------------------------------------------------------------
 !
@@ -655,6 +657,8 @@ INTERFACE
   END SUBROUTINE
 END INTERFACE
 
+PUBLIC :: triangle_contains_line_par_3d
+
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
@@ -685,6 +689,8 @@ INTERFACE
     LOGICAL(LGT) :: inside
   END FUNCTION
 END INTERFACE
+
+PUBLIC :: triangle_contains_point_2d_1
 
 !----------------------------------------------------------------------------
 !
@@ -723,6 +729,8 @@ INTERFACE
     LOGICAL(LGT) :: inside
   END FUNCTION
 END INTERFACE
+
+PUBLIC :: triangle_contains_point_2d_2
 
 !----------------------------------------------------------------------------
 !
@@ -766,6 +774,8 @@ INTERFACE
   END FUNCTION
 END INTERFACE
 
+PUBLIC :: triangle_contains_point_2d_3
+
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
@@ -794,6 +804,8 @@ INTERFACE
   END FUNCTION
 END INTERFACE
 
+PUBLIC :: triangle_diameter_2d
+
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
@@ -816,6 +828,8 @@ INTERFACE
     REAL(DFP) :: edge_length(3)
   END FUNCTION
 END INTERFACE
+
+PUBLIC :: triangle_edge_length_2d
 
 !----------------------------------------------------------------------------
 !
@@ -903,6 +917,8 @@ INTERFACE
   END FUNCTION
 END INTERFACE
 
+PUBLIC :: triangle_incenter_2d
+
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
@@ -933,6 +949,8 @@ INTERFACE
   END SUBROUTINE
 END INTERFACE
 
+PUBLIC :: triangle_incircle_2d
+
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
@@ -959,6 +977,8 @@ INTERFACE
     REAL(DFP) :: r
   END FUNCTION
 END INTERFACE
+
+PUBLIC :: triangle_inradius_2d
 
 !----------------------------------------------------------------------------
 !
@@ -1197,6 +1217,8 @@ INTERFACE
   END FUNCTION
 END INTERFACE
 
+PUBLIC :: triangle_orthocenter_2d
+
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
@@ -1224,6 +1246,8 @@ INTERFACE
   END FUNCTION
 END INTERFACE
 
+PUBLIC :: triangle_point_dist_2d
+
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
@@ -1250,6 +1274,8 @@ INTERFACE
     REAL(DFP) :: dist
   END FUNCTION
 END INTERFACE
+
+PUBLIC :: triangle_point_dist_3d
 
 !----------------------------------------------------------------------------
 !
@@ -1284,6 +1310,8 @@ INTERFACE
   END FUNCTION
 END INTERFACE
 
+PUBLIC :: triangle_point_dist_signed_2d
+
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
@@ -1315,6 +1343,8 @@ INTERFACE
   END SUBROUTINE
 END INTERFACE
 
+PUBLIC :: triangle_point_near_2d
+
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
@@ -1340,6 +1370,8 @@ INTERFACE
     REAL(DFP) :: quality
   END FUNCTION
 END INTERFACE
+
+PUBLIC :: triangle_quality_2d
 
 !----------------------------------------------------------------------------
 !
@@ -1406,6 +1438,8 @@ INTERFACE
   END FUNCTION
 END INTERFACE
 
+PUBLIC :: triangle_sample
+
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
@@ -1440,8 +1474,8 @@ END INTERFACE
 
 INTERFACE
   MODULE PURE FUNCTION triangle01_lattice_point_num_2d(s) RESULT(n)
-    INTEGER(I4B), INTENT(IN) :: s
-    INTEGER(I4B) :: n
+    integer(I4B), INTENT(IN) :: s
+    integer(I4B) :: n
   END FUNCTION
 END INTERFACE
 

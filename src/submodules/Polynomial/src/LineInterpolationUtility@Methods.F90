@@ -57,6 +57,21 @@ END IF
 END PROCEDURE ToVEFC_Line
 
 !----------------------------------------------------------------------------
+!                                                              RefLineCoord
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE RefLineCoord
+TYPE(String) :: astr
+astr = UpperCase(refLine)
+SELECT CASE (astr%chars())
+CASE ("UNIT")
+  ans(1, :) = [0.0_DFP, 1.0_DFP]
+CASE ("BIUNIT")
+  ans(1, :) = [-1.0_DFP, 1.0_DFP]
+END SELECT
+END PROCEDURE RefLineCoord
+
+!----------------------------------------------------------------------------
 !                                                       LagrangeDegree_Line
 !----------------------------------------------------------------------------
 
@@ -1350,7 +1365,7 @@ END SELECT
 END PROCEDURE OrthogonalBasis_Line1
 
 !----------------------------------------------------------------------------
-!                                            OrthogonalBasisGradient_Line1
+!                                            OrthogonalBasisGradient_Line1 
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE OrthogonalBasisGradient_Line1
@@ -1379,7 +1394,7 @@ CASE DEFAULT
     & unitno=stderr)
   RETURN
 END SELECT
-END PROCEDURE OrthogonalBasisGradient_Line1
+END PROCEDURE OrthogonalBasisGradient_Line1 
 
 !----------------------------------------------------------------------------
 !

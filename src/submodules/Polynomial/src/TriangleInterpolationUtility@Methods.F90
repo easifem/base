@@ -96,6 +96,25 @@ END SELECT
 END PROCEDURE FacetConnectivity_Triangle
 
 !----------------------------------------------------------------------------
+!                                                         RefTriangleCoord
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE RefTriangleCoord
+CHARACTER(20) :: layout
+layout = TRIM(UpperCase(refTriangle))
+SELECT CASE (TRIM(layout))
+CASE ("BIUNIT")
+  ans(:, 1) = [-1.0_DFP, -1.0_DFP]
+  ans(:, 2) = [1.0_DFP, -1.0_DFP]
+  ans(:, 3) = [-1.0_DFP, 1.0_DFP]
+CASE ("UNIT")
+  ans(:, 1) = [0.0_DFP, 0.0_DFP]
+  ans(:, 2) = [1.0_DFP, 0.0_DFP]
+  ans(:, 3) = [0.0_DFP, 1.0_DFP]
+END SELECT
+END PROCEDURE RefTriangleCoord
+
+!----------------------------------------------------------------------------
 !                                                   LagrangeDegree_Triangle
 !----------------------------------------------------------------------------
 
@@ -747,19 +766,19 @@ REAL(DFP) :: temp(SIZE(lambda, 2))
 ans = 0.0_DFP
 tPoints = SIZE(lambda, 2)
 a = 0
-! edge(1) = (v1, v2)
+!! edge(1) = (v1, v2)
 temp = lambda(1, :) * lambda(2, :)
 DO ii = 1, pe1 - 1
   ans(:, a + ii) = temp * phi(1:tPoints, ii - 1)
 END DO
-! edge(2) = (v1, v3)
+!! edge(2) = (v1, v3)
 a = pe1 - 1
 temp = lambda(1, :) * lambda(3, :)
 DO ii = 1, pe2 - 1
   ans(:, a + ii) = temp &
                   & * phi(1 + tPoints:2 * tPoints, ii - 1)
 END DO
-! edge(3) = (v2, v3)
+!! edge(3) = (v2, v3)
 a = pe1 - 1 + pe2 - 1
 temp = lambda(2, :) * lambda(3, :)
 DO ii = 1, pe3 - 1
@@ -775,11 +794,11 @@ END PROCEDURE BarycentricEdgeBasis_Triangle2
 MODULE PROCEDURE BarycentricCellBasis_Triangle2
 INTEGER(I4B) :: tPoints, k1, k2, cnt
 REAL(DFP) :: temp(SIZE(lambda, 2))
-
+!!
 tPoints = SIZE(lambda, 2)
 temp = lambda(1, :) * lambda(2, :) * lambda(3, :)
 cnt = 0
-!
+!!
 DO k1 = 1, order - 2
   DO k2 = 1, order - 1 - k1
     cnt = cnt + 1
@@ -787,7 +806,7 @@ DO k1 = 1, order - 2
       & phi(1 + tPoints:2 * tPoints, k2 - 1)
   END DO
 END DO
-!
+!!
 END PROCEDURE BarycentricCellBasis_Triangle2
 
 !----------------------------------------------------------------------------
@@ -801,37 +820,41 @@ INTEGER(I4B) :: maxP, tPoints
 REAL(DFP) :: phi(1:3 * SIZE(lambda, 2), &
   & 0:MAX(pe1 - 2, pe2 - 2, pe3 - 2, order - 2))
 REAL(DFP) :: d_lambda(3 * SIZE(lambda, 2))
-!
+!!
 layout = TRIM(UpperCase(refTriangle))
-!
+!!
 tPoints = SIZE(lambda, 2)
 maxP = MAX(pe1 - 2, pe2 - 2, pe3 - 2, order - 2)
 d_lambda(1:tPoints) = lambda(2, :) - lambda(1, :)
 d_lambda(1 + tPoints:2 * tPoints) = lambda(3, :) - lambda(1, :)
 d_lambda(1 + 2 * tPoints:3 * tPoints) = lambda(3, :) - lambda(2, :)
 phi = LobattoKernelEvalAll(n=maxP, x=d_lambda)
-
-! Vertex basis function
+!!
+!! Vertex basis function
+!!
 ans = 0.0_DFP
 ans(:, 1:3) = BarycentricVertexBasis_Triangle(lambda=lambda)
-
-! Edge basis function
+!!
+!! Edge basis function
+!!
 b = 3
-
+!!
 IF (pe1 .GE. 2_I4B .OR. pe2 .GE. 2_I4B .OR. pe3 .GE. 2_I4B) THEN
   a = b + 1
   b = a - 1 + pe1 + pe2 + pe3 - 3 !!4+qe1 + qe2 - 2
   ans(:, a:b) = BarycentricEdgeBasis_Triangle2( &
     & pe1=pe1, pe2=pe2, pe3=pe3, lambda=lambda, phi=phi)
 END IF
-
-! Cell basis function
+!!
+!! Cell basis function
+!!
 IF (order .GT. 2_I4B) THEN
   a = b + 1
   b = a - 1 + INT((order - 1) * (order - 2) / 2)
   ans(:, a:b) = BarycentricCellBasis_Triangle2(order=order, &
     & lambda=lambda, phi=phi)
 END IF
+!!
 END PROCEDURE BarycentricHeirarchicalBasis_Triangle1
 
 !----------------------------------------------------------------------------
@@ -941,7 +964,7 @@ CHARACTER(20) :: layout
 INTEGER(I4B) :: maxP, k1, k2, a
 
 maxP = MAX(pe1, pe2, pe3)
-! edge(1)
+!! edge(1)
 a = 0
 
 DO k1 = 2, pe1
@@ -949,14 +972,14 @@ DO k1 = 2, pe1
   ans(:, k1 - 1) = Lo1(:, 0) * Lo1(:, 1) * L1(:, k1 - 2) * (Lo2(:, 0)**k1)
 END DO
 
-! edge(2)
+!! edge(2)
 a = pe1 - 1
 DO k2 = 2, pe2
   ! ans(:, a + k2 - 1) = L1(:, 0) * L2(:, k2)
   ans(:, a + k2 - 1) = Lo1(:, 0) * Lo2(:, 0) * Lo2(:, 1) * L2(:, k2 - 2)
 END DO
 
-! edge(3)
+!! edge(3)
 a = pe1 - 1 + pe2 - 1
 DO k2 = 2, pe3
   ! ans(:, a + k2 - 1) = L1(:, 1) * L2(:, k2)
@@ -974,7 +997,7 @@ INTEGER(I4B) :: maxP, k1, k2, a
 REAL(DFP), DIMENSION(SIZE(Lo1, 1)) :: avec
 
 maxP = MAX(pe1, pe2, pe3)
-! edge(1)
+!! edge(1)
 a = 0
 
 DO k1 = 2, pe1
@@ -991,7 +1014,7 @@ DO k1 = 2, pe1
                      & * dLo2(:, 0)
 END DO
 
-! edge(2)
+!! edge(2)
 a = pe1 - 1
 DO k2 = 2, pe2
   avec = dLo2(:, 0) * Lo2(:, 1) * L2(:, k2 - 2) &
@@ -1001,7 +1024,7 @@ DO k2 = 2, pe2
   ans(:, a + k2 - 1, 2) = Lo1(:, 0) * avec
 END DO
 
-! edge(3)
+!! edge(3)
 a = pe1 - 1 + pe2 - 1
 DO k2 = 2, pe3
   avec = dLo2(:, 0) * Lo2(:, 1) * L2(:, k2 - 2)  &
@@ -1022,15 +1045,16 @@ REAL(DFP) :: x(SIZE(xij, 1), SIZE(xij, 2))
 REAL(DFP) :: L1(SIZE(xij, 2), 0:order)
 REAL(DFP) :: Lo1(SIZE(xij, 2), 0:1)
 REAL(DFP) :: Lo2(SIZE(xij, 2), 0:1)
-
+!!
 layout = TRIM(UpperCase(refTriangle))
+!!
 SELECT CASE (TRIM(layout))
 CASE ("BIUNIT")
   x = FromBiUnitTriangle2BiUnitSqr(xin=xij)
 CASE ("UNIT")
   x = FromUnitTriangle2BiUnitSqr(xin=xij)
 END SELECT
-
+!!
 Lo1(:, 0) = 0.5_DFP * (1.0 - x(1, :))
 Lo1(:, 1) = 0.5_DFP * (1.0 + x(1, :))
 Lo2(:, 0) = 0.5_DFP * (1.0 - x(2, :))
@@ -1048,21 +1072,27 @@ MODULE PROCEDURE CellBasis_Triangle2
 REAL(DFP) :: P2(SIZE(eta_ij, 2), 0:order)
 REAL(DFP) :: avec(SIZE(eta_ij, 2)), alpha, beta
 INTEGER(I4B) :: k1, k2, max_k2, cnt
-
+!!
 alpha = 0.0_DFP
 beta = 1.0_DFP
 cnt = 0
-
+!!
 DO k1 = 2, order - 1
+  !!
   avec = (Lo2(:, 0)**k1) * Lo2(:, 1) * Lo1(:, 0) * Lo1(:, 1)
+  !!
   alpha = 2.0_DFP * k1 - 1.0_DFP
+  !
   max_k2 = MAX(order - k1 - 1, 0)
+  !!
   P2(:, 0:max_k2) = JacobiEvalAll(n=max_k2, x=eta_ij(2, :), &
     & alpha=alpha, beta=beta)
+  !!
   DO k2 = 2, order - k1 + 1
     cnt = cnt + 1
     ans(:, cnt) = L1(:, k1 - 2) * avec * P2(:, k2 - 2)
   END DO
+  !!
 END DO
 
 END PROCEDURE CellBasis_Triangle2

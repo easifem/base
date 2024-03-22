@@ -27,13 +27,10 @@ PRIVATE
 PUBLIC :: Initiate
 PUBLIC :: ReferenceLine
 PUBLIC :: ReferenceLine_Pointer
-PUBLIC :: HighOrderElement_Line
+PUBLIC :: highorderElement_Line
 PUBLIC :: Measure_Simplex_Line
 PUBLIC :: Line_Quality
-PUBLIC :: Quality_Line
 PUBLIC :: LineName
-PUBLIC :: RefLineCoord
-PUBLIC :: RefCoord_Line
 
 !----------------------------------------------------------------------------
 !                                                                 LineName
@@ -187,7 +184,7 @@ END INTERFACE ReferenceLine_Pointer
 ! summary: This function returns lagrange element on line
 !
 !# Introduction
-! Returns lagrange line element of Higher order. By lagrange element we means
+! Returns lagrange line element of higher order. By lagrange element we means
 ! standard finite elements, with equi-distance lagrange interpolation points.
 !
 !### Usage
@@ -198,12 +195,12 @@ END INTERFACE ReferenceLine_Pointer
 ! call random_number( xij )
 ! call initiate( obj=obj1, nsd=3, xij=xij )
 ! call display( obj1, "obj1 : " )
-! call obj1%HighOrderElement( order=2, HighOrderobj=obj3 ) <---
+! call obj1%highorderElement( order=2, Highorderobj=obj3 ) <---
 ! call display( obj3, "Second order Lagrange Element : ")
 !```
 
 INTERFACE
-  MODULE SUBROUTINE HighOrderElement_Line(refelem, order, obj, &
+  MODULE SUBROUTINE highorderElement_Line(refelem, order, obj, &
     & ipType)
     CLASS(ReferenceElement_), INTENT(IN) :: refelem
     !! Linear line element
@@ -212,7 +209,7 @@ INTERFACE
     CLASS(ReferenceElement_), INTENT(INOUT) :: obj
     !! High order lagrange line element
     INTEGER(I4B), INTENT(IN) :: ipType
-  END SUBROUTINE HighOrderElement_Line
+  END SUBROUTINE highorderElement_Line
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -251,31 +248,14 @@ END INTERFACE
 !                                                      line_quality@Methods
 !----------------------------------------------------------------------------
 
-INTERFACE Quality_Line
+INTERFACE
   MODULE FUNCTION Line_Quality(refelem, xij, measure) RESULT(Ans)
     CLASS(ReferenceElement_), INTENT(IN) :: refelem
     REAL(DFP), INTENT(IN) :: xij(:, :)
     INTEGER(I4B), INTENT(IN) :: measure
     REAL(DFP) :: Ans
   END FUNCTION Line_Quality
-END INTERFACE Quality_Line
-
-!----------------------------------------------------------------------------
-!                                                           RefLineCoord
-!----------------------------------------------------------------------------
-
-!> author: Vikas Sharma, Ph. D.
-! date:  2023-07-03
-! summary:  Returns the coordinate of reference triangle
-
-INTERFACE RefCoord_Line
-  MODULE PURE FUNCTION RefLineCoord(refLine) RESULT(ans)
-    CHARACTER(*), INTENT(IN) :: refLine
-    !! "unit"
-    !! "biunit"
-    REAL(DFP) :: ans(1, 2)
-  END FUNCTION RefLineCoord
-END INTERFACE RefCoord_Line
+END INTERFACE
 
 !----------------------------------------------------------------------------
 !

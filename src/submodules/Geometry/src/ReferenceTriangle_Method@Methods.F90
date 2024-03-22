@@ -16,18 +16,11 @@
 !
 
 !> author: Vikas Sharma, Ph. D.
-! date:  2 March 2021
+! date:         2 March 2021
 ! summary: This submodule contains methods for [[ReferenceTriangle_]]
 
 SUBMODULE(ReferenceTriangle_Method) Methods
-USE ReferenceElement_Method
-USE StringUtility
-USE ApproxUtility
-USE TriangleInterpolationUtility, ONLY: InterpolationPoint_Triangle
-USE Triangle_Method
-USE InputUtility
-
-! USE BaseMethod
+USE BaseMethod
 IMPLICIT NONE
 CONTAINS
 
@@ -90,7 +83,7 @@ END PROCEDURE initiate_ref_Triangle
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE reference_Triangle
-CALL initiate_ref_triangle(obj=obj, nsd=nsd, xij=xij, domainName=domainName)
+CALL Initiate(obj=obj, nsd=nsd, xij=xij, domainName=domainName)
 END PROCEDURE reference_Triangle
 
 !----------------------------------------------------------------------------
@@ -99,7 +92,7 @@ END PROCEDURE reference_Triangle
 
 MODULE PROCEDURE reference_Triangle_Pointer
 ALLOCATE (obj)
-CALL initiate_ref_triangle(obj=obj, nsd=nsd, xij=xij, domainName=domainName)
+CALL Initiate(obj=obj, nsd=nsd, xij=xij, domainName=domainName)
 END PROCEDURE reference_Triangle_Pointer
 
 !----------------------------------------------------------------------------
@@ -117,7 +110,6 @@ obj%xij = InterpolationPoint_Triangle( &
 obj%domainName = refelem%domainName
 nsd = refelem%nsd
 obj%highOrderElement => refelem%highOrderElement
-
 SELECT CASE (order)
 CASE (1)
   NNS = 3
@@ -425,59 +417,18 @@ cross(3) = (t(1, 2) - t(1, 1)) * (t(2, 3) - t(2, 1)) &
 ans = 0.5_DFP * SQRT(SUM(cross(1:3)**2))
 END PROCEDURE TriangleArea3D
 
-!----------------------------------------------------------------------------
+!-----------------------------------------------------------------------------
 !
-!----------------------------------------------------------------------------
+!-----------------------------------------------------------------------------
 
 MODULE PROCEDURE TriangleArea2D
+INTEGER(I4B), PARAMETER :: dim_num = 2
+
 ans = 0.5_DFP * ( &
       t(1, 1) * (t(2, 2) - t(2, 3)) &
       + t(1, 2) * (t(2, 3) - t(2, 1)) &
       + t(1, 3) * (t(2, 1) - t(2, 2)))
 END PROCEDURE TriangleArea2D
-
-!----------------------------------------------------------------------------
-!                                              GetEdgeConnectivity_Triangle
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE GetEdgeConnectivity_Triangle
-INTEGER(I4B) :: opt0
-
-opt0 = Input(default=1_I4B, option=opt)
-
-SELECT CASE (opt0)
-CASE (1_I4B)
-  con(1:2, 1) = [1, 2]
-  con(1:2, 2) = [1, 3]
-  con(1:2, 3) = [2, 3]
-CASE (2_I4B)
-  !! For Lagrangian polynomial
-  con(1:2, 1) = [1, 2]
-  con(1:2, 2) = [2, 3]
-  con(1:2, 3) = [3, 1]
-END SELECT
-
-END PROCEDURE GetEdgeConnectivity_Triangle
-
-!----------------------------------------------------------------------------
-!                                                         RefTriangleCoord
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE RefTriangleCoord
-CHARACTER(:), ALLOCATABLE :: layout
-layout = UpperCase(refTriangle)
-SELECT CASE (layout)
-CASE ("BIUNIT")
-  ans(:, 1) = [-1.0_DFP, -1.0_DFP]
-  ans(:, 2) = [1.0_DFP, -1.0_DFP]
-  ans(:, 3) = [-1.0_DFP, 1.0_DFP]
-CASE ("UNIT")
-  ans(:, 1) = [0.0_DFP, 0.0_DFP]
-  ans(:, 2) = [1.0_DFP, 0.0_DFP]
-  ans(:, 3) = [0.0_DFP, 1.0_DFP]
-END SELECT
-layout = ""
-END PROCEDURE RefTriangleCoord
 
 !----------------------------------------------------------------------------
 !

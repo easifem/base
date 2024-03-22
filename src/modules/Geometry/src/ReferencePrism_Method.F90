@@ -29,14 +29,9 @@ PUBLIC :: PolyhedronVolume3D
 PUBLIC :: Initiate
 PUBLIC :: ReferencePrism
 PUBLIC :: ReferencePrism_Pointer
-PUBLIC :: HighOrderElement_Prism
+PUBLIC :: highOrderElement_Prism
 PUBLIC :: Measure_Simplex_Prism
 PUBLIC :: Prism_Quality
-PUBLIC :: Quality_Prism
-PUBLIC :: GetEdgeConnectivity_Prism
-PUBLIC :: GetFaceConnectivity_Prism
-PUBLIC :: RefCoord_Prism
-PUBLIC :: GetFaceElemType_Prism
 
 !----------------------------------------------------------------------------
 !                                                       Initiate@Prism
@@ -51,7 +46,7 @@ INTERFACE Initiate
     CLASS(ReferencePrism_), INTENT(INOUT) :: obj
     INTEGER(I4B), INTENT(IN) :: nsd
     REAL(DFP), INTENT(IN), OPTIONAL :: xij(:, :)
-    CHARACTER(*), OPTIONAL, INTENT(IN) :: domainName
+    CHARACTER(*), OPTIONAL, INTENT( IN ) :: domainName
   END SUBROUTINE initiate_ref_Prism
 END INTERFACE Initiate
 
@@ -63,7 +58,7 @@ INTERFACE ReferencePrism
   MODULE FUNCTION reference_Prism(nsd, xij, domainName) RESULT(obj)
     INTEGER(I4B), INTENT(IN) :: nsd
     REAL(DFP), INTENT(IN), OPTIONAL :: xij(:, :)
-    CHARACTER(*), OPTIONAL, INTENT(IN) :: domainName
+    CHARACTER(*), OPTIONAL, INTENT( IN ) :: domainName
     TYPE(ReferencePrism_) :: obj
   END FUNCTION reference_Prism
 END INTERFACE ReferencePrism
@@ -76,7 +71,7 @@ INTERFACE ReferencePrism_Pointer
   MODULE FUNCTION reference_Prism_Pointer(nsd, xij, domainName) RESULT(obj)
     INTEGER(I4B), INTENT(IN) :: nsd
     REAL(DFP), INTENT(IN), OPTIONAL :: xij(:, :)
-    CHARACTER(*), OPTIONAL, INTENT(IN) :: domainName
+    CHARACTER(*), OPTIONAL, INTENT( IN ) :: domainName
     CLASS(ReferencePrism_), POINTER :: obj
   END FUNCTION reference_Prism_Pointer
 END INTERFACE ReferencePrism_Pointer
@@ -110,14 +105,14 @@ END INTERFACE
 !                                                             Prism_Quality
 !----------------------------------------------------------------------------
 
-INTERFACE Quality_Prism
+INTERFACE
   MODULE FUNCTION Prism_Quality(refelem, xij, measure) RESULT(Ans)
     CLASS(ReferenceElement_), INTENT(IN) :: refelem
     REAL(DFP), INTENT(IN) :: xij(:, :)
     INTEGER(I4B), INTENT(IN) :: measure
     REAL(DFP) :: Ans
   END FUNCTION Prism_Quality
-END INTERFACE Quality_Prism
+END INTERFACE
 
 !----------------------------------------------------------------------------
 !                                                     POLYHEDRONVOLUME3D
@@ -170,87 +165,6 @@ INTERFACE
     INTEGER(I4B), INTENT(IN) :: order(face_num)
     REAL(DFP), INTENT(OUT) :: ans
   END SUBROUTINE PolyhedronVolume3D
-END INTERFACE
-
-!----------------------------------------------------------------------------
-!                                                        GetEdgeConnectivity
-!----------------------------------------------------------------------------
-
-!> author: Vikas Sharma, Ph. D.
-! date: 2024-03-08
-! summary:  Returns number of edges in the element
-
-INTERFACE
-  MODULE PURE SUBROUTINE GetEdgeConnectivity_Prism(con, opt)
-    INTEGER(I4B), INTENT(INOUT) :: con(:, :)
-    !! Connectivity
-    !! The columns represents the edge number
-    !! The row represents a edge
-    !! con should be allocated by the user
-    INTEGER(I4B), OPTIONAL, INTENT(IN) :: opt
-    !! If opt = 1, then edge connectivity for hierarchial approximation
-    !! If opt =2, then edge connectivity for Lagrangian approximation
-    !! opt=1 is default
-  END SUBROUTINE GetEdgeConnectivity_Prism
-END INTERFACE
-
-!----------------------------------------------------------------------------
-!                                                        GetFaceConnectivity
-!----------------------------------------------------------------------------
-
-!> author: Vikas Sharma, Ph. D.
-! date: 2024-03-08
-! summary:  Returns number of edges in the element
-
-INTERFACE
-  MODULE PURE SUBROUTINE GetFaceConnectivity_Prism(con, opt)
-    INTEGER(I4B), INTENT(INOUT) :: con(:, :)
-    !! Connectivity
-    !! The columns represents the face number
-    !! The row represents a face
-    !! con should be allocated by the user
-    INTEGER(I4B), OPTIONAL, INTENT(IN) :: opt
-    !! If opt = 1, then face connectivity for hierarchial approximation
-    !! If opt =2, then face connectivity for Lagrangian approximation
-    !! opt=1 is default
-  END SUBROUTINE GetFaceConnectivity_Prism
-END INTERFACE
-
-!----------------------------------------------------------------------------
-!                                                            RefCoord_Prism
-!----------------------------------------------------------------------------
-
-!> author: Vikas Sharma, Ph. D.
-! date:  2023-08-09
-! summary:  Reference Coordinates of prism
-
-INTERFACE
-  MODULE PURE FUNCTION RefCoord_Prism(refPrism) RESULT(ans)
-    CHARACTER(*), INTENT(IN) :: refPrism
-    REAL(DFP) :: ans(3, 6)
-  END FUNCTION RefCoord_Prism
-END INTERFACE
-
-!----------------------------------------------------------------------------
-!                                        GetFaceElemType@GeometryMethods
-!----------------------------------------------------------------------------
-
-!> author: Vikas Sharma, Ph. D.
-! date: 2024-03-11
-! summary:  Returns the element type of each face
-
-INTERFACE
-  MODULE PURE SUBROUTINE GetFaceElemType_Prism(faceElemType, opt,  &
-    & tFaceNodes)
-    INTEGER(I4B), INTENT(INOUT) :: faceElemType(:)
-    !! Face element type
-    INTEGER(I4B), OPTIONAL, INTENT(INOUT) :: tFaceNodes(:)
-    !! total nodes in each face
-    INTEGER(I4B), OPTIONAL, INTENT(IN) :: opt
-    !! If opt = 1, then edge connectivity for hierarchial approximation
-    !! If opt = 2, then edge connectivity for Lagrangian approximation
-    !! opt = 1 is default
-  END SUBROUTINE GetFaceElemType_Prism
 END INTERFACE
 
 END MODULE ReferencePrism_Method
