@@ -78,7 +78,7 @@ END PROCEDURE ElementOrder_Line
 
 MODULE PROCEDURE ElementType_Line
 SELECT CASE (elemName)
-CASE ("Line1")
+CASE ("Line1", "Point", "Point1")
   ans = Point
 CASE ("Line2", "Line")
   ans = Line2
