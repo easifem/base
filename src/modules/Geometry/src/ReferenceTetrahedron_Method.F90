@@ -40,6 +40,22 @@ PUBLIC :: FacetElements_Tetrahedron
 PUBLIC :: ElementOrder_Tetrahedron
 PUBLIC :: ElementType_Tetrahedron
 PUBLIC :: TotalNodesInElement_Tetrahedron
+PUBLIC :: TotalEntities_Tetrahedron
+
+!----------------------------------------------------------------------------
+!                                                 TotalEntities_Tetrahedron
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2024-03-22
+! summary:  Returns total entities in Tetrahedron
+
+INTERFACE
+  MODULE PURE FUNCTION TotalEntities_Tetrahedron(elemType) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: elemType
+    INTEGER(I4B) :: ans(4)
+  END FUNCTION TotalEntities_Tetrahedron
+END INTERFACE
 
 !----------------------------------------------------------------------------
 !                                            TotalNodesInElement_Tetrahedron

@@ -31,6 +31,15 @@ IMPLICIT NONE
 CONTAINS
 
 !----------------------------------------------------------------------------
+!                                                   TotalEntities_Tetrahedron
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE TotalEntities_Tetrahedron
+ans(2:4) = [6, 4, 1]
+ans(1) = TotalNodesInElement_Tetrahedron(elemType)
+END PROCEDURE TotalEntities_Tetrahedron
+
+!----------------------------------------------------------------------------
 !                                              TotalNodesInElement_Tetrahedron
 !----------------------------------------------------------------------------
 
@@ -98,7 +107,64 @@ END PROCEDURE ElementType_Tetrahedron
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE FacetElements_Tetrahedron1
-
+! INTEGER(I4B) :: ii, T(4), istart, tsize, jj
+! INTEGER(I4B), ALLOCATABLE :: nptrs(:)
+! TYPE(Referencetopology_) :: topo
+! INTEGER(I4B), PARAMETER :: xicell = 3, tFacet = 4
+!
+! xicell = 3_I4B
+! tFacet = 4_I4B
+!
+! T(1) = 0
+!
+! istart = refelem%entityCounts(1) + refelem%entityCounts(2)
+! ! tPoints + tEdges
+!
+! ii = 1
+! ans(ii)%nsd = refelem%nsd
+! ans(ii)%interpolationPointType = refelem%interpolationPointType
+! ans(ii)%xij = InterpolationPoint_Triangle( &
+!   & order=refelem%order, &
+!   & ipType=refelem%interpolationPointType, &
+!   & layout="VEFC")
+!
+! DO ii = 2, 4
+!   ans(ii)%nsd = ans(1)%nsd
+!   ans(ii)%interpolationPointType = ans(1)%interpolationPointType
+!   ans(ii)%xij = ans(1)%xij
+! END DO
+!
+! DO ii = 1, 4
+!   topo = refelem%topology(istart + ii)
+!   nptrs = topo%nptrs
+!   ans(ii)%xidimension = topo%xidimension
+!   ans(ii)%name = topo%name
+!
+!   ans(ii)%order = ElementOrder_Tetrahedron(topo%name)
+!   ans(ii)%entityCounts = TotalEntities(topo%name)
+!   tsize = SUM(ans(ii)%entityCounts)
+!   ALLOCATE (ans(ii)%topology(tsize))
+!
+!   ! points
+!   DO jj = 1, ans(ii)%entityCounts(1)
+!     ans(ii)%topology(jj) = Referencetopology(nptrs=nptrs(jj:jj), &
+!       & name=Point)
+!   END DO
+!
+!   ! lines
+!   jj = ans(ii)%entityCounts(1)
+!   tsize = jj + ans(ii)%entityCounts(2)
+!   ans(ii)%topology(jj + 1:tsize) = Facettopology(ElemType=ans(ii)%name, &
+!     & nptrs=nptrs)
+!
+!   ! surface
+!   ans(ii)%topology(tsize + 1) = Referencetopology(nptrs=nptrs,  &
+!     & name=ans(ii)%name)
+!
+! END DO
+!
+! IF (ALLOCATED(nptrs)) DEALLOCATE (nptrs)
+!
 END PROCEDURE FacetElements_Tetrahedron1
 
 !----------------------------------------------------------------------------
@@ -121,8 +187,8 @@ REAL(DFP) :: unit_xij(3, 4), biunit_xij(3, 4)
 
 CALL DEALLOCATE (obj)
 
-CALL GetEdgeConnectivity_Tetrahedron(con=p1p2)
-CALL GetFaceConnectivity_Tetrahedron(con=lloop)
+CALL GetEdgeConnectivity_Tetrahedron(con=p1p2, order=1)
+CALL GetFaceConnectivity_Tetrahedron(con=lloop, order=1)
 
 vol(:, 1) = arange(1_I4B, tNodes)
 
