@@ -56,6 +56,96 @@ PUBLIC :: TriangleArea2D
 PUBLIC :: GetEdgeConnectivity_Triangle
 PUBLIC :: RefTriangleCoord
 PUBLIC :: RefCoord_Triangle
+PUBLIC :: FacetElements_Triangle
+PUBLIC :: DEFAULT_OPT_TRIANGLE_EDGE_CON
+PUBLIC :: ElementOrder_Triangle
+PUBLIC :: ElementType_Triangle
+PUBLIC :: TotalNodesInElement_Triangle
+
+#ifdef _TRIANGLE_EDGE_CON_DEFAULT_OPT_2
+INTEGER(I4B), PARAMETER :: DEFAULT_OPT_TRIANGLE_EDGE_CON = 1_I4B
+!! This means edges are [1,2], [1,3], [2,3]
+#else
+INTEGER(I4B), PARAMETER :: DEFAULT_OPT_TRIANGLE_EDGE_CON = 2_I4B
+!! This means edges are [1,2], [2,3], [3,1]
+!! This is default option
+#endif
+
+!----------------------------------------------------------------------------
+!                                               TotalNodesInElement_Triangle
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2024-03-22
+! summary:  Returns total nodes in element
+
+INTERFACE
+  MODULE PURE FUNCTION TotalNodesInElement_Triangle(elemType) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: elemType
+    INTEGER(I4B) :: ans
+  END FUNCTION TotalNodesInElement_Triangle
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                     ElementType_Triangle
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2024-03-22
+! summary:  Returns the type of element from char name
+
+INTERFACE
+  MODULE PURE FUNCTION ElementType_Triangle(elemName) RESULT(ans)
+    CHARACTER(*), INTENT(IN) :: elemName
+    INTEGER(I4B) :: ans
+  END FUNCTION ElementType_Triangle
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                      ElementOrder_Triangle
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2024-03-22
+! summary:  Returns the order of element
+
+INTERFACE
+  MODULE PURE FUNCTION ElementOrder_Triangle(elemType) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: elemType
+    INTEGER(I4B) :: ans
+  END FUNCTION ElementOrder_Triangle
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                   FacetElements_Triangle
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2024-03-21
+! summary:  Get FacetElements
+
+INTERFACE FacetElements_Triangle
+  MODULE SUBROUTINE FacetElements_Triangle1(refelem, ans)
+    CLASS(ReferenceElement_), INTENT(IN) :: refelem
+    TYPE(ReferenceElement_), INTENT(INOUT) :: ans(:)
+  END SUBROUTINE FacetElements_Triangle1
+END INTERFACE FacetElements_Triangle
+
+!----------------------------------------------------------------------------
+!                                                     FacetElements_Triangle
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2024-03-21
+! summary:  Get FacetElements
+
+INTERFACE FacetElements_Triangle
+  MODULE SUBROUTINE FacetElements_Triangle2(elemType, nsd, ans)
+    INTEGER(I4B), INTENT(IN) :: elemType
+    INTEGER(I4B), INTENT(IN) :: nsd
+    TYPE(ReferenceElement_), INTENT(INOUT) :: ans(:)
+  END SUBROUTINE FacetElements_Triangle2
+END INTERFACE FacetElements_Triangle
 
 !----------------------------------------------------------------------------
 !                                                         Initiate@Triangle
@@ -558,7 +648,7 @@ END INTERFACE
 ! summary:  Returns number of edges in the element
 
 INTERFACE
-  MODULE PURE SUBROUTINE GetEdgeConnectivity_Triangle(con, opt)
+  MODULE PURE SUBROUTINE GetEdgeConnectivity_Triangle(con, opt, order)
     INTEGER(I4B), INTENT(INOUT) :: con(:, :)
     !! Connectivity
     !! The columns represents the edge number
@@ -566,8 +656,13 @@ INTERFACE
     !! con should be allocated by the user
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: opt
     !! If opt = 1, then edge connectivity for hierarchial approximation
+    !! [1,2], [1,3], [2,3]. This is DEFAULT
     !! If opt =2, then edge connectivity for Lagrangian approximation
-    !! opt=1 is default
+    !! [1,2], [2,3], [3,1]
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: order
+    !! order of element
+    !! Currently order is used only when opt=2
+    !! Currently any order is valid
   END SUBROUTINE GetEdgeConnectivity_Triangle
 END INTERFACE
 
