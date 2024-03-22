@@ -29,12 +29,37 @@ USE InputUtility
 USE ReferenceLine_Method, ONLY: ElementType_Line,  &
   & ElementOrder_Line
 USE LineInterpolationUtility, ONLY: InterpolationPoint_Line
+USE MiscUtility, ONLY: Int2Str
 USE Display_Method
 USE ReallocateUtility
 
 ! USE BaseMethod
 IMPLICIT NONE
 CONTAINS
+
+!----------------------------------------------------------------------------
+!                                                     FacetTopology_Triangle
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE FacetTopology_Triangle
+INTEGER(I4B) :: order, ii, lineType
+INTEGER(I4B), ALLOCATABLE :: con(:, :)
+
+order = ElementOrder_Triangle(elemType)
+CALL Reallocate(con, order + 1, 3)
+CALL GetEdgeConnectivity_Triangle(con=con,  &
+  & opt=DEFAULT_OPT_TRIANGLE_EDGE_CON, order=order)
+lineType = ElementType_Line("Line"//Int2Str(order + 1))
+
+DO ii = 1, 3
+  ans(ii)%nptrs = nptrs(con(:, ii))
+  ans(ii)%xiDimension = 1
+  ans(ii)%name = lineType
+END DO
+
+IF (ALLOCATED(con)) DEALLOCATE (con)
+
+END PROCEDURE FacetTopology_Triangle
 
 !----------------------------------------------------------------------------
 !                                                    TotalEntities_Triangle
@@ -130,7 +155,6 @@ END PROCEDURE ElementType_Triangle
 
 MODULE PROCEDURE FacetElements_Triangle1
 INTEGER(I4B) :: ii, istart, tsize, jj
-TYPE(Referencetopology_) :: topo
 
 istart = refelem%entityCounts(1)
 
@@ -147,25 +171,25 @@ DO ii = 2, 3
   ans(ii)%nsd = ans(1)%nsd
 END DO
 
-DO ii = 1, 3
-  topo = refelem%topology(istart + ii)
-  tsize = SIZE(topo%nptrs)
-  ans(ii)%xiDimension = topo%xiDimension
-  ans(ii)%name = topo%name
-  ans(ii)%order = ElementOrder_Line(elemType=topo%name)
-  ans(ii)%entityCounts = [tsize, 1, 0, 0]
+ASSOCIATE (topo => refelem%topology(istart + ii))
+  DO ii = 1, 3
+    ! topo = refelem%topology(istart + ii)
+    tsize = SIZE(topo%nptrs)
+    ans(ii)%xiDimension = topo%xiDimension
+    ans(ii)%name = topo%name
+    ans(ii)%order = ElementOrder_Line(elemType=topo%name)
+    ans(ii)%entityCounts = [tsize, 1, 0, 0]
 
-  ALLOCATE (ans(ii)%topology(tsize + 1))
-  DO jj = 1, tsize
-    ans(ii)%topology(jj) = Referencetopology( &
-      & nptrs=topo%nptrs(jj:jj), name=Point)
+    ALLOCATE (ans(ii)%topology(tsize + 1))
+    DO jj = 1, tsize
+      ans(ii)%topology(jj) = Referencetopology( &
+        & nptrs=topo%nptrs(jj:jj), name=Point)
+    END DO
+
+    ans(ii)%topology(tsize + 1) = Referencetopology( &
+      & nptrs=topo%nptrs, name=topo%name)
   END DO
-
-  ans(ii)%topology(tsize + 1) = Referencetopology( &
-    & nptrs=topo%nptrs, name=topo%name)
-END DO
-
-CALL DEALLOCATE (topo)
+END ASSOCIATE
 
 END PROCEDURE FacetElements_Triangle1
 

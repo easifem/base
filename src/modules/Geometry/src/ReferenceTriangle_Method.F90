@@ -62,6 +62,7 @@ PUBLIC :: ElementOrder_Triangle
 PUBLIC :: ElementType_Triangle
 PUBLIC :: TotalNodesInElement_Triangle
 PUBLIC :: TotalEntities_Triangle
+PUBLIC :: FacetTopology_Triangle
 
 #ifdef _TRIANGLE_EDGE_CON_DEFAULT_OPT_2
 INTEGER(I4B), PARAMETER :: DEFAULT_OPT_TRIANGLE_EDGE_CON = 1_I4B
@@ -71,6 +72,22 @@ INTEGER(I4B), PARAMETER :: DEFAULT_OPT_TRIANGLE_EDGE_CON = 2_I4B
 !! This means edges are [1,2], [2,3], [3,1]
 !! This is default option
 #endif
+
+!----------------------------------------------------------------------------
+!                                             FacetTopology@GeometryMethods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2024-03-22
+! summary: Returns the facet topology of the given element type
+
+INTERFACE
+  MODULE PURE SUBROUTINE FacetTopology_Triangle(elemType, nptrs, ans)
+    INTEGER(I4B), INTENT(IN) :: elemType
+    INTEGER(I4B), INTENT(IN) :: nptrs(:)
+    TYPE(ReferenceTopology_), INTENT(INOUT) :: ans(:)
+  END SUBROUTINE FacetTopology_Triangle
+END INTERFACE
 
 !----------------------------------------------------------------------------
 !                                                    TotalEntities_Triangle
