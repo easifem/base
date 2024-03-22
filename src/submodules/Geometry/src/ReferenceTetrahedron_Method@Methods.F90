@@ -26,6 +26,10 @@ USE InvUtility
 USE InputUtility
 USE StringUtility
 USE ArangeUtility
+USE TriangleInterpolationUtility, ONLY: InterpolationPoint_Triangle
+
+USE ReferenceTriangle_Method, ONLY: ElementOrder_Triangle,  &
+  & TotalEntities_Triangle, FacetTopology_Triangle
 
 IMPLICIT NONE
 CONTAINS
@@ -40,7 +44,7 @@ ans(1) = TotalNodesInElement_Tetrahedron(elemType)
 END PROCEDURE TotalEntities_Tetrahedron
 
 !----------------------------------------------------------------------------
-!                                              TotalNodesInElement_Tetrahedron
+!                                            TotalNodesInElement_Tetrahedron
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE TotalNodesInElement_Tetrahedron
@@ -61,7 +65,7 @@ END SELECT
 END PROCEDURE TotalNodesInElement_Tetrahedron
 
 !----------------------------------------------------------------------------
-!                                                     ElementOrder_Tetrahedron
+!                                                   ElementOrder_Tetrahedron
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE ElementOrder_Tetrahedron
@@ -107,64 +111,58 @@ END PROCEDURE ElementType_Tetrahedron
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE FacetElements_Tetrahedron1
-! INTEGER(I4B) :: ii, T(4), istart, tsize, jj
-! INTEGER(I4B), ALLOCATABLE :: nptrs(:)
-! TYPE(Referencetopology_) :: topo
-! INTEGER(I4B), PARAMETER :: xicell = 3, tFacet = 4
-!
-! xicell = 3_I4B
-! tFacet = 4_I4B
-!
-! T(1) = 0
-!
-! istart = refelem%entityCounts(1) + refelem%entityCounts(2)
-! ! tPoints + tEdges
-!
-! ii = 1
-! ans(ii)%nsd = refelem%nsd
-! ans(ii)%interpolationPointType = refelem%interpolationPointType
-! ans(ii)%xij = InterpolationPoint_Triangle( &
-!   & order=refelem%order, &
-!   & ipType=refelem%interpolationPointType, &
-!   & layout="VEFC")
-!
-! DO ii = 2, 4
-!   ans(ii)%nsd = ans(1)%nsd
-!   ans(ii)%interpolationPointType = ans(1)%interpolationPointType
-!   ans(ii)%xij = ans(1)%xij
-! END DO
-!
-! DO ii = 1, 4
-!   topo = refelem%topology(istart + ii)
-!   nptrs = topo%nptrs
-!   ans(ii)%xidimension = topo%xidimension
-!   ans(ii)%name = topo%name
-!
-!   ans(ii)%order = ElementOrder_Tetrahedron(topo%name)
-!   ans(ii)%entityCounts = TotalEntities(topo%name)
-!   tsize = SUM(ans(ii)%entityCounts)
-!   ALLOCATE (ans(ii)%topology(tsize))
-!
-!   ! points
-!   DO jj = 1, ans(ii)%entityCounts(1)
-!     ans(ii)%topology(jj) = Referencetopology(nptrs=nptrs(jj:jj), &
-!       & name=Point)
-!   END DO
-!
-!   ! lines
-!   jj = ans(ii)%entityCounts(1)
-!   tsize = jj + ans(ii)%entityCounts(2)
-!   ans(ii)%topology(jj + 1:tsize) = Facettopology(ElemType=ans(ii)%name, &
-!     & nptrs=nptrs)
-!
-!   ! surface
-!   ans(ii)%topology(tsize + 1) = Referencetopology(nptrs=nptrs,  &
-!     & name=ans(ii)%name)
-!
-! END DO
-!
-! IF (ALLOCATED(nptrs)) DEALLOCATE (nptrs)
-!
+INTEGER(I4B) :: ii, istart, tsize, jj
+TYPE(ReferenceTopology_) :: topo
+
+istart = refelem%entityCounts(1) + refelem%entityCounts(2)
+! tPoints + tEdges
+
+ii = 1
+ans(ii)%nsd = refelem%nsd
+ans(ii)%interpolationPointType = refelem%interpolationPointType
+ans(ii)%xij = InterpolationPoint_Triangle( &
+  & order=refelem%order, &
+  & ipType=refelem%interpolationPointType, &
+  & layout="VEFC")
+
+DO ii = 2, 4
+  ans(ii)%nsd = ans(1)%nsd
+  ans(ii)%interpolationPointType = ans(1)%interpolationPointType
+  ans(ii)%xij = ans(1)%xij
+END DO
+
+DO ii = 1, 4
+
+  topo = refelem%topology(istart + ii)
+  ans(ii)%xidimension = topo%xidimension
+  ans(ii)%name = topo%name
+
+  ans(ii)%order = ElementOrder_Triangle(topo%name)
+  ans(ii)%entityCounts = TotalEntities_Triangle(topo%name)
+
+  tsize = SUM(ans(ii)%entityCounts)
+  ALLOCATE (ans(ii)%topology(tsize))
+
+  ! points
+  DO jj = 1, ans(ii)%entityCounts(1)
+    ans(ii)%topology(jj) = ReferenceTopology(nptrs=topo%nptrs(jj:jj), &
+      & name=Point)
+  END DO
+
+  ! lines
+  jj = ans(ii)%entityCounts(1)
+  CALL FacetTopology_Triangle(elemType=topo%name,  &
+    & nptrs=topo%nptrs, ans=ans(ii)%topology(jj + 1:))
+
+  ! surface
+  tsize = jj + ans(ii)%entityCounts(2)
+  ans(ii)%topology(tsize + 1) = ReferenceTopology(nptrs=topo%nptrs, &
+    & name=topo%name)
+
+END DO
+
+CALL DEALLOCATE (topo)
+
 END PROCEDURE FacetElements_Tetrahedron1
 
 !----------------------------------------------------------------------------

@@ -155,7 +155,8 @@ END INTERFACE Initiate
 !----------------------------------------------------------------------------
 
 INTERFACE ReferenceTetrahedron
-  MODULE PURE FUNCTION reference_Tetrahedron(nsd, xij, domainName) RESULT(obj)
+  MODULE PURE FUNCTION reference_Tetrahedron(nsd, xij, domainName)  &
+    & RESULT(obj)
     INTEGER(I4B), INTENT(IN) :: nsd
     REAL(DFP), INTENT(IN), OPTIONAL :: xij(:, :)
     CHARACTER(*), OPTIONAL, INTENT(IN) :: domainName
@@ -168,7 +169,8 @@ END INTERFACE ReferenceTetrahedron
 !----------------------------------------------------------------------------
 
 INTERFACE ReferenceTetrahedron_Pointer
-  MODULE FUNCTION reference_Tetrahedron_Pointer(nsd, xij, domainName) RESULT(obj)
+  MODULE FUNCTION reference_Tetrahedron_Pointer(nsd, xij, domainName)  &
+    & RESULT(obj)
     INTEGER(I4B), INTENT(IN) :: nsd
     REAL(DFP), INTENT(IN), OPTIONAL :: xij(:, :)
     CHARACTER(*), OPTIONAL, INTENT(IN) :: domainName
@@ -181,11 +183,7 @@ END INTERFACE ReferenceTetrahedron_Pointer
 !----------------------------------------------------------------------------
 
 INTERFACE
-  MODULE SUBROUTINE HighOrderElement_Tetrahedron( &
-    & refelem, &
-    & order, &
-    & obj, &
-    & ipType)
+  MODULE SUBROUTINE HighOrderElement_Tetrahedron(refelem, order, obj, ipType)
     CLASS(ReferenceElement_), INTENT(IN) :: refelem
     INTEGER(I4B), INTENT(IN) :: order
     CLASS(ReferenceElement_), INTENT(INOUT) :: obj
@@ -198,10 +196,10 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-  MODULE PURE FUNCTION Measure_Simplex_Tetrahedron(RefElem, XiJ) RESULT(Ans)
+  MODULE PURE FUNCTION Measure_Simplex_Tetrahedron(RefElem, XiJ) RESULT(ans)
     CLASS(ReferenceElement_), INTENT(IN) :: RefElem
     REAL(DFP), INTENT(IN) :: XiJ(:, :)
-    REAL(DFP) :: Ans
+    REAL(DFP) :: ans
   END FUNCTION Measure_Simplex_Tetrahedron
 END INTERFACE
 
@@ -210,11 +208,11 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE Quality_Tetrahedron
-  MODULE FUNCTION Tetrahedron_Quality(refelem, xij, measure) RESULT(Ans)
+  MODULE FUNCTION Tetrahedron_Quality(refelem, xij, measure) RESULT(ans)
     CLASS(ReferenceElement_), INTENT(IN) :: refelem
     REAL(DFP), INTENT(IN) :: xij(:, :)
     INTEGER(I4B), INTENT(IN) :: measure
-    REAL(DFP) :: Ans
+    REAL(DFP) :: ans
   END FUNCTION Tetrahedron_Quality
 END INTERFACE Quality_Tetrahedron
 
