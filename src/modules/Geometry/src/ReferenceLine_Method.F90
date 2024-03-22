@@ -48,6 +48,21 @@ REAL(DFP), PARAMETER :: DEFAULT_REF_LINE_COORD(3, 2) =  &
 #endif
 
 !----------------------------------------------------------------------------
+!                                                   TotalNodesInElement_Line
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2024-03-22
+! summary:  Returns total nodes in element
+
+INTERFACE
+  MODULE PURE FUNCTION TotalNodesInElement_Line(elemType) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: elemType
+    INTEGER(I4B) :: ans
+  END FUNCTION TotalNodesInElement_Line
+END INTERFACE
+
+!----------------------------------------------------------------------------
 !                                                       ElementOrder_Line
 !----------------------------------------------------------------------------
 

@@ -31,6 +31,27 @@ IMPLICIT NONE
 CONTAINS
 
 !----------------------------------------------------------------------------
+!                                                   TotalNodesInElement_Line
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE TotalNodesInElement_Line
+SELECT CASE (ElemType)
+CASE (Line2)
+  ans = 3
+CASE (Line3)
+  ans = 3
+CASE (Line4)
+  ans = 4
+CASE (Line5)
+  ans = 5
+CASE (Line6)
+  ans = 6
+CASE DEFAULT
+  ans = 0
+END SELECT
+END PROCEDURE TotalNodesInElement_Line
+
+!----------------------------------------------------------------------------
 !                                                         ElementOrder_Line
 !----------------------------------------------------------------------------
 
