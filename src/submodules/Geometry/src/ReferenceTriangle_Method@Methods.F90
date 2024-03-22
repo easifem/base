@@ -155,6 +155,7 @@ END PROCEDURE ElementType_Triangle
 
 MODULE PROCEDURE FacetElements_Triangle1
 INTEGER(I4B) :: ii, istart, tsize, jj
+TYPE(ReferenceTopology_) :: topo
 
 istart = refelem%entityCounts(1)
 
@@ -171,25 +172,25 @@ DO ii = 2, 3
   ans(ii)%nsd = ans(1)%nsd
 END DO
 
-ASSOCIATE (topo => refelem%topology(istart + ii))
-  DO ii = 1, 3
-    ! topo = refelem%topology(istart + ii)
-    tsize = SIZE(topo%nptrs)
-    ans(ii)%xiDimension = topo%xiDimension
-    ans(ii)%name = topo%name
-    ans(ii)%order = ElementOrder_Line(elemType=topo%name)
-    ans(ii)%entityCounts = [tsize, 1, 0, 0]
+DO ii = 1, 3
+  topo = refelem%topology(istart + ii)
+  tsize = SIZE(topo%nptrs)
+  ans(ii)%xiDimension = topo%xiDimension
+  ans(ii)%name = topo%name
+  ans(ii)%order = ElementOrder_Line(elemType=topo%name)
+  ans(ii)%entityCounts = [tsize, 1, 0, 0]
 
-    ALLOCATE (ans(ii)%topology(tsize + 1))
-    DO jj = 1, tsize
-      ans(ii)%topology(jj) = Referencetopology( &
-        & nptrs=topo%nptrs(jj:jj), name=Point)
-    END DO
-
-    ans(ii)%topology(tsize + 1) = Referencetopology( &
-      & nptrs=topo%nptrs, name=topo%name)
+  ALLOCATE (ans(ii)%topology(tsize + 1))
+  DO jj = 1, tsize
+    ans(ii)%topology(jj) = Referencetopology( &
+      & nptrs=topo%nptrs(jj:jj), name=Point)
   END DO
-END ASSOCIATE
+
+  ans(ii)%topology(tsize + 1) = Referencetopology( &
+    & nptrs=topo%nptrs, name=topo%name)
+END DO
+
+CALL DEALLOCATE (topo)
 
 END PROCEDURE FacetElements_Triangle1
 
