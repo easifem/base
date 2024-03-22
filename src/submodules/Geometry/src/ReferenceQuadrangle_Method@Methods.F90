@@ -508,7 +508,7 @@ END PROCEDURE RefQuadrangleCoord
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE GetEdgeConnectivity_Quadrangle
-INTEGER(I4B) :: opt0, order0, ii, jj
+INTEGER(I4B) :: opt0, order0, ii, jj, iface
 
 opt0 = Input(default=1_I4B, option=opt)
 
@@ -527,26 +527,13 @@ CASE (2_I4B)
 END SELECT
 
 order0 = Input(default=1_I4B, option=order)
-
 jj = 4
-DO ii = 1, order0 - 1
-  con(2 + ii, 1) = jj + ii
-  jj = jj + 1
-END DO
 
-DO ii = 1, order0 - 1
-  con(2 + ii, 2) = jj + ii
-  jj = jj + 1
-END DO
-
-DO ii = 1, order0 - 1
-  con(2 + ii, 3) = jj + ii
-  jj = jj + 1
-END DO
-
-DO ii = 1, order0 - 1
-  con(2 + ii, 4) = jj + ii
-  jj = jj + 1
+DO iface = 1, 4
+  DO ii = 1, order0 - 1
+    con(2 + ii, iface) = jj + ii
+    jj = jj + 1
+  END DO
 END DO
 
 END PROCEDURE GetEdgeConnectivity_Quadrangle
