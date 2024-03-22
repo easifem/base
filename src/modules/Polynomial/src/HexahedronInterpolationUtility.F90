@@ -27,6 +27,8 @@ PUBLIC :: EquidistancePoint_Hexahedron
 PUBLIC :: EquidistanceInPoint_Hexahedron
 PUBLIC :: InterpolationPoint_Hexahedron
 PUBLIC :: LagrangeCoeff_Hexahedron
+PUBLIC :: RefHexahedronCoord
+PUBLIC :: RefCoord_Hexahedron
 PUBLIC :: EdgeConnectivity_Hexahedron
 PUBLIC :: FacetConnectivity_Hexahedron
 PUBLIC :: QuadratureNumber_Hexahedron
@@ -327,6 +329,23 @@ INTERFACE
     INTEGER(I4B) :: ans(2, 12)
   END FUNCTION EdgeConnectivity_Hexahedron
 END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                       RefHexahedronCoord
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2023-07-07
+! summary:  Returns coordinates of reference Hexahedron
+
+INTERFACE RefCoord_Hexahedron
+  MODULE PURE FUNCTION RefHexahedronCoord(refHexahedron) RESULT(ans)
+    CHARACTER(*), INTENT(IN) :: refHexahedron
+    !! UNIT
+    !! BIUNIT
+    REAL(DFP) :: ans(3, 8)
+  END FUNCTION RefHexahedronCoord
+END INTERFACE RefCoord_Hexahedron
 
 !----------------------------------------------------------------------------
 !                                                  LagrangeDegree_Hexahedron
@@ -2434,8 +2453,8 @@ INTERFACE LagrangeGradientEvalAll_Hexahedron
     REAL(DFP) :: ans(SIZE(x, 2), SIZE(xij, 2), 3)
     !! Value of gradient of nth order Lagrange polynomials at point x
     !! The first index denotes point of evaluation
-    !! the second index denotes Lagrange polynomial number
-    !! The third index denotes the spatial dimension in which gradient is
+    !! the second index denotes Lagrange polynomial number 
+    !! The third index denotes the spatial dimension in which gradient is 
     !! computed
   END FUNCTION LagrangeGradientEvalAll_Hexahedron1
 END INTERFACE LagrangeGradientEvalAll_Hexahedron

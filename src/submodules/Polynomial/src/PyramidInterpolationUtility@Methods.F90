@@ -62,11 +62,22 @@ CALL Errormsg(&
 END PROCEDURE RefElemDomain_Pyramid
 
 !----------------------------------------------------------------------------
+!                                                          Refcoord_Pyramid
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE RefCoord_Pyramid
+!FIX: Implement RefCoord
+ans = 0.0_DFP
+END PROCEDURE RefCoord_Pyramid
+
+!----------------------------------------------------------------------------
 !                                                LagrangeDegree_Pyramid
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE LagrangeDegree_Pyramid
+
 ! ISSUE: #165 Implement LagrangeDegree_Pyramid
+
 END PROCEDURE LagrangeDegree_Pyramid
 
 !----------------------------------------------------------------------------

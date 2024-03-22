@@ -27,10 +27,9 @@ PRIVATE
 PUBLIC :: Initiate
 PUBLIC :: ReferencePoint
 PUBLIC :: ReferencePoint_Pointer
-PUBLIC :: HighOrderElement_Point
+PUBLIC :: highOrderElement_Point
 PUBLIC :: Measure_Simplex_Point
 PUBLIC :: Point_Quality
-PUBLIC :: Quality_Point
 
 !----------------------------------------------------------------------------
 !                                                            Initiate@Methods
@@ -61,7 +60,7 @@ PUBLIC :: Quality_Point
 ! call display( obj1, "obj1 : " )
 !```
 
-INTERFACE Initiate
+INTERFACE
   MODULE PURE SUBROUTINE refPoint_Initiate(obj, NSD, XiJ)
     CLASS(ReferencePoint_), INTENT(INOUT) :: obj
     !! The instance
@@ -70,6 +69,10 @@ INTERFACE Initiate
     REAL(DFP), INTENT(IN), OPTIONAL :: XiJ(:, :)
     !! Coords of element
   END SUBROUTINE refPoint_Initiate
+END INTERFACE
+
+INTERFACE Initiate
+  MODULE PROCEDURE refPoint_Initiate
 END INTERFACE Initiate
 
 !----------------------------------------------------------------------------
@@ -98,12 +101,16 @@ END INTERFACE Initiate
 ! call display( obj, 'obj : ' )
 !```
 
-INTERFACE ReferencePoint
+INTERFACE
   MODULE PURE FUNCTION refPoint_Constructor1(NSD, XiJ) RESULT(obj)
     INTEGER(I4B), INTENT(IN) :: NSD
     REAL(DFP), INTENT(IN), OPTIONAL :: XiJ(:, :)
     TYPE(ReferencePoint_) :: obj
   END FUNCTION refPoint_Constructor1
+END INTERFACE
+
+INTERFACE ReferencePoint
+  MODULE PROCEDURE refPoint_Constructor1
 END INTERFACE ReferencePoint
 
 !----------------------------------------------------------------------------
@@ -133,12 +140,16 @@ END INTERFACE ReferencePoint
 ! call display( obj, "obj : ")
 !```
 
-INTERFACE ReferencePoint_Pointer
+INTERFACE
   MODULE PURE FUNCTION refPoint_Constructor_1(NSD, XiJ) RESULT(obj)
     INTEGER(I4B), INTENT(IN) :: NSD
     REAL(DFP), INTENT(IN), OPTIONAL :: XiJ(:, :)
     CLASS(ReferencePoint_), POINTER :: obj
   END FUNCTION refPoint_Constructor_1
+END INTERFACE
+
+INTERFACE ReferencePoint_Pointer
+  MODULE PROCEDURE refPoint_Constructor_1
 END INTERFACE ReferencePoint_Pointer
 
 !----------------------------------------------------------------------------
@@ -211,14 +222,14 @@ END INTERFACE
 !                                                             Point_quality
 !----------------------------------------------------------------------------
 
-INTERFACE Quality_Point
+INTERFACE
   MODULE FUNCTION Point_Quality(refelem, xij, measure) RESULT(Ans)
     CLASS(ReferencePoint_), INTENT(IN) :: refelem
     REAL(DFP), INTENT(IN) :: xij(:, :)
     INTEGER(I4B), INTENT(IN) :: measure
     REAL(DFP) :: Ans
   END FUNCTION Point_Quality
-END INTERFACE Quality_Point
+END INTERFACE
 
 !----------------------------------------------------------------------------
 !

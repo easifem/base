@@ -34,6 +34,8 @@ PUBLIC :: VerticalEdgeBasis_Quadrangle
 PUBLIC :: HorizontalEdgeBasis_Quadrangle
 PUBLIC :: CellBasis_Quadrangle
 PUBLIC :: HeirarchicalBasis_Quadrangle
+PUBLIC :: RefQuadrangleCoord
+PUBLIC :: RefCoord_Quadrangle
 PUBLIC :: IJ2VEFC_Quadrangle_Clockwise
 PUBLIC :: IJ2VEFC_Quadrangle_AntiClockwise
 PUBLIC :: LagrangeEvalAll_Quadrangle
@@ -103,6 +105,17 @@ INTERFACE
     INTEGER(I4B) :: ans(2)
   END FUNCTION QuadratureNumber_Quadrangle
 END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                   RefQuadrangleCoord
+!----------------------------------------------------------------------------
+
+INTERFACE RefCoord_Quadrangle
+  MODULE PURE FUNCTION RefQuadrangleCoord(refQuadrangle) RESULT(ans)
+    CHARACTER(*), INTENT(IN) :: refQuadrangle
+    REAL(DFP) :: ans(2, 4)
+  END FUNCTION RefQuadrangleCoord
+END INTERFACE RefCoord_Quadrangle
 
 !----------------------------------------------------------------------------
 !                                                  LagrangeDegree_Quadrangle
@@ -1708,8 +1721,8 @@ INTERFACE LagrangeGradientEvalAll_Quadrangle
     REAL(DFP) :: ans(SIZE(x, 2), SIZE(xij, 2), 2)
     !! Value of gradient of nth order Lagrange polynomials at point x
     !! The first index denotes point of evaluation
-    !! the second index denotes Lagrange polynomial number
-    !! The third index denotes the spatial dimension in which gradient is
+    !! the second index denotes Lagrange polynomial number 
+    !! The third index denotes the spatial dimension in which gradient is 
     !! computed
   END FUNCTION LagrangeGradientEvalAll_Quadrangle1
 END INTERFACE LagrangeGradientEvalAll_Quadrangle
