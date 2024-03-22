@@ -56,7 +56,7 @@ REAL(DFP), PARAMETER :: DEFAULT_REF_LINE_COORD(3, 2) =  &
 ! summary:  Returns order of element
 
 INTERFACE
-  MODULE FUNCTION ElementOrder_Line(elemType) RESULT(ans)
+  MODULE PURE FUNCTION ElementOrder_Line(elemType) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: elemType
     INTEGER(I4B) :: ans
   END FUNCTION ElementOrder_Line
@@ -71,7 +71,7 @@ END INTERFACE
 ! summary:  Returns ElementType for line from char
 
 INTERFACE
-  MODULE FUNCTION ElementType_Line(elemName) RESULT(ans)
+  MODULE PURE FUNCTION ElementType_Line(elemName) RESULT(ans)
     CHARACTER(*), INTENT(IN) :: elemName
     INTEGER(I4B) :: ans
   END FUNCTION ElementType_Line
