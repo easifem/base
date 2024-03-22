@@ -222,7 +222,8 @@ END INTERFACE
 ! summary:  Returns number of edges in the element
 
 INTERFACE
-  MODULE PURE SUBROUTINE GetEdgeConnectivity_Tetrahedron(con, opt)
+  MODULE PURE SUBROUTINE GetEdgeConnectivity_Tetrahedron(con, opt,  &
+    & order)
     INTEGER(I4B), INTENT(INOUT) :: con(:, :)
     !! Connectivity
     !! The columns represents the edge number
@@ -232,6 +233,8 @@ INTERFACE
     !! If opt = 1, then edge connectivity for hierarchial approximation
     !! If opt =2, then edge connectivity for Lagrangian approximation
     !! opt=1 is default
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: order
+    !! Order of the edge
   END SUBROUTINE GetEdgeConnectivity_Tetrahedron
 END INTERFACE
 

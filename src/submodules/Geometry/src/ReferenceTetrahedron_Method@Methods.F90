@@ -265,12 +265,23 @@ END PROCEDURE RefCoord_Tetrahedron
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE GetEdgeConnectivity_Tetrahedron
+INTEGER(I4B) :: order0, ii, jj, iface
 con(1:2, 1) = [1, 2]
 con(1:2, 2) = [1, 3]
 con(1:2, 3) = [1, 4]
 con(1:2, 4) = [2, 3]
 con(1:2, 5) = [2, 4]
 con(1:2, 6) = [3, 4]
+
+order0 = Input(default=1_I4B, option=order)
+jj = 4
+DO iface = 1, 6
+  DO ii = 1, order0 - 1
+    con(2 + ii, iface) = jj + ii
+    jj = jj + 1
+  END DO
+END DO
+
 END PROCEDURE GetEdgeConnectivity_Tetrahedron
 
 !----------------------------------------------------------------------------
