@@ -26,7 +26,8 @@ USE ApproxUtility
 USE TriangleInterpolationUtility, ONLY: InterpolationPoint_Triangle
 USE Triangle_Method
 USE InputUtility
-USE ReferenceLine_Method, ONLY: ElementType_Line
+USE ReferenceLine_Method, ONLY: ElementType_Line,  &
+& ElementOrder_Line
 USE LineInterpolationUtility, ONLY: InterpolationPoint_Line
 USE Display_Method
 USE ReallocateUtility
@@ -124,32 +125,35 @@ TYPE(Referencetopology_) :: topo
 
 istart = refelem%entityCounts(1)
 
+ans(1)%xij = InterpolationPoint_Line(  &
+  & order=refelem%order, &
+  & ipType=refelem%interpolationPointType, &
+  & layout="VEFC")
+
+ans(1)%interpolationPointType = refelem%interpolationPointType
+ans(1)%nsd = refelem%nsd
+DO ii = 2, 3
+  ans(ii)%xij = ans(1)%xij
+  ans(ii)%interpolationPointType = ans(1)%interpolationPointType
+  ans(ii)%nsd = ans(1)%nsd
+END DO
+
 DO ii = 1, 3
   topo = refelem%topology(istart + ii)
   tsize = SIZE(topo%nptrs)
-
   ans(ii)%xiDimension = topo%xiDimension
   ans(ii)%name = topo%name
-  ans(ii)%interpolationPointType = refelem%interpolationPointType
-
-  ans(ii)%xij = InterpolationPoint_Line(  &
-    & order=refelem%order, &
-    & ipType=refelem%interpolationPointType, &
-    & layout="VEFC")
-
-  ans(ii)%order = ElementOrder(elemType=topo%name)
-  ans(ii)%nsd = refelem%nsd
+  ans(ii)%order = ElementOrder_Line(elemType=topo%name)
   ans(ii)%entityCounts = [tsize, 1, 0, 0]
 
   ALLOCATE (ans(ii)%topology(tsize + 1))
-
   DO jj = 1, tsize
     ans(ii)%topology(jj) = Referencetopology( &
       & nptrs=topo%nptrs(jj:jj), name=Point)
   END DO
 
   ans(ii)%topology(tsize + 1) = Referencetopology( &
-    & nptrs=topo%nptrs, name=ans(ii)%name)
+    & nptrs=topo%nptrs, name=topo%name)
 END DO
 
 CALL DEALLOCATE (topo)
@@ -166,7 +170,8 @@ INTEGER(I4B), ALLOCATABLE :: edgeCon(:, :)
 
 order = ElementOrder_Triangle(elemType)
 CALL Reallocate(edgeCon, order + 1, 3)
-CALL GetEdgeConnectivity_Triangle(con=edgeCon, opt=2_I4B, order=order)
+CALL GetEdgeConnectivity_Triangle(con=edgeCon,  &
+  & opt=DEFAULT_OPT_TRIANGLE_EDGE_CON, order=order)
 !! The edges are accordign to gmsh
 !! [1,2], [2,3], [3,1]
 
@@ -182,14 +187,15 @@ DO ii = 1, 3
     & layout="VEFC")
 
   ans(ii)%nsd = nsd
-  ans(ii)%entityCounts = [2, 1, 0, 0]
-  ALLOCATE (ans(ii)%topology(3))
+  ans(ii)%entityCounts = [order + 1, 1, 0, 0]
+  ALLOCATE (ans(ii)%topology(order + 2))
 
-  DO jj = 1, 2
+  DO jj = 1, order + 1
     ans(ii)%topology(jj) = Referencetopology(nptrs=edgeCon(jj:jj, ii),  &
       & name=Point)
   END DO
-  ans(ii)%topology(3) = Referencetopology(nptrs=edgeCon(1:2, ii),  &
+
+  ans(ii)%topology(order + 2) = Referencetopology(nptrs=edgeCon(1:2, ii),  &
     & name=ans(ii)%name)
 
 END DO
