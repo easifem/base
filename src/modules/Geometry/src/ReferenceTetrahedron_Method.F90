@@ -36,6 +36,86 @@ PUBLIC :: GetEdgeConnectivity_Tetrahedron
 PUBLIC :: GetFaceConnectivity_Tetrahedron
 PUBLIC :: RefCoord_Tetrahedron
 PUBLIC :: GetFaceElemType_Tetrahedron
+PUBLIC :: FacetElements_Tetrahedron
+PUBLIC :: ElementOrder_Tetrahedron
+PUBLIC :: ElementType_Tetrahedron
+PUBLIC :: TotalNodesInElement_Tetrahedron
+
+!----------------------------------------------------------------------------
+!                                            TotalNodesInElement_Tetrahedron
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2024-03-22
+! summary:  Returns total nodes in element
+
+INTERFACE
+  MODULE PURE FUNCTION TotalNodesInElement_Tetrahedron(elemType) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: elemType
+    INTEGER(I4B) :: ans
+  END FUNCTION TotalNodesInElement_Tetrahedron
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                     ElementType_Tetrahedron
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2024-03-22
+! summary:  Returns the type of element from char name
+
+INTERFACE
+  MODULE PURE FUNCTION ElementType_Tetrahedron(elemName) RESULT(ans)
+    CHARACTER(*), INTENT(IN) :: elemName
+    INTEGER(I4B) :: ans
+  END FUNCTION ElementType_Tetrahedron
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                   ElementOrder_Tetrahedron
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2024-03-22
+! summary:  Returns the order of element
+
+INTERFACE
+  MODULE PURE FUNCTION ElementOrder_Tetrahedron(elemType) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: elemType
+    INTEGER(I4B) :: ans
+  END FUNCTION ElementOrder_Tetrahedron
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                   FacetElements_Tetrahedron
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2024-03-21
+! summary:  Get FacetElements
+
+INTERFACE FacetElements_Tetrahedron
+  MODULE SUBROUTINE FacetElements_Tetrahedron1(refelem, ans)
+    CLASS(ReferenceElement_), INTENT(IN) :: refelem
+    TYPE(ReferenceElement_), INTENT(INOUT) :: ans(:)
+  END SUBROUTINE FacetElements_Tetrahedron1
+END INTERFACE FacetElements_Tetrahedron
+
+!----------------------------------------------------------------------------
+!                                                  FacetElements_Tetrahedron
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2024-03-21
+! summary:  Get FacetElements
+
+INTERFACE FacetElements_Tetrahedron
+  MODULE SUBROUTINE FacetElements_Tetrahedron2(elemType, nsd, ans)
+    INTEGER(I4B), INTENT(IN) :: elemType
+    INTEGER(I4B), INTENT(IN) :: nsd
+    TYPE(ReferenceElement_), INTENT(INOUT) :: ans(:)
+  END SUBROUTINE FacetElements_Tetrahedron2
+END INTERFACE FacetElements_Tetrahedron
 
 !----------------------------------------------------------------------------
 !                                                       Initiate@Tetrahedron
@@ -164,7 +244,7 @@ END INTERFACE
 ! summary:  Returns number of edges in the element
 
 INTERFACE
-  MODULE PURE SUBROUTINE GetFaceConnectivity_Tetrahedron(con, opt)
+  MODULE PURE SUBROUTINE GetFaceConnectivity_Tetrahedron(con, opt, order)
     INTEGER(I4B), INTENT(INOUT) :: con(:, :)
     !! Connectivity
     !! The columns represents the face number
@@ -174,6 +254,8 @@ INTERFACE
     !! If opt = 1, then face connectivity for hierarchial approximation
     !! If opt =2, then face connectivity for Lagrangian approximation
     !! opt=1 is default
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: order
+    !! order
   END SUBROUTINE GetFaceConnectivity_Tetrahedron
 END INTERFACE
 

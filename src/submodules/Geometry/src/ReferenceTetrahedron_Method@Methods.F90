@@ -28,8 +28,86 @@ USE StringUtility
 USE ArangeUtility
 
 IMPLICIT NONE
-
 CONTAINS
+
+!----------------------------------------------------------------------------
+!                                              TotalNodesInElement_Tetrahedron
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE TotalNodesInElement_Tetrahedron
+SELECT CASE (ElemType)
+CASE (Tetrahedron4)
+  ans = 4
+CASE (Tetrahedron10)
+  ans = 10
+CASE (Tetrahedron20)
+  ans = 20
+CASE (Tetrahedron35)
+  ans = 35
+CASE (Tetrahedron56)
+  ans = 56
+CASE DEFAULT
+  ans = 0
+END SELECT
+END PROCEDURE TotalNodesInElement_Tetrahedron
+
+!----------------------------------------------------------------------------
+!                                                     ElementOrder_Tetrahedron
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE ElementOrder_Tetrahedron
+SELECT CASE (ElemType)
+CASE (Tetrahedron4)
+  ans = 1
+CASE (Tetrahedron10)
+  ans = 2
+CASE (Tetrahedron20)
+  ans = 3
+CASE (Tetrahedron35)
+  ans = 4
+CASE (Tetrahedron56)
+  ans = 5
+CASE DEFAULT
+  ans = 0
+END SELECT
+END PROCEDURE ElementOrder_Tetrahedron
+
+!----------------------------------------------------------------------------
+!                                                     ElementType_Tetrahedron
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE ElementType_Tetrahedron
+SELECT CASE (elemName)
+CASE ("Tetrahedron4", "Tetrahedron")
+  ans = Tetrahedron4
+CASE ("Tetrahedron10")
+  ans = Tetrahedron10
+CASE ("Tetrahedron20")
+  ans = Tetrahedron20
+CASE ("Tetrahedron35")
+  ans = Tetrahedron35
+CASE ("Tetrahedron56")
+  ans = Tetrahedron56
+CASE DEFAULT
+  ans = 0
+END SELECT
+END PROCEDURE ElementType_Tetrahedron
+
+!----------------------------------------------------------------------------
+!                                                 FacetElements_Tetrahedron
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE FacetElements_Tetrahedron1
+
+END PROCEDURE FacetElements_Tetrahedron1
+
+!----------------------------------------------------------------------------
+!                                                 FacetElements_Tetrahedron
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE FacetElements_Tetrahedron2
+
+END PROCEDURE FacetElements_Tetrahedron2
 
 !----------------------------------------------------------------------------
 !                                                                  Initiate
@@ -43,16 +121,8 @@ REAL(DFP) :: unit_xij(3, 4), biunit_xij(3, 4)
 
 CALL DEALLOCATE (obj)
 
-! p1p2 = EdgeConnectivity_Tetrahedron( &
-!   & baseInterpol="LAGRANGE",  &
-!   & baseContinuity="H1")
-
-CALL GetEdgeConnectivity_Tetrahedron(con=p1p2, opt=2_I4B)
-CALL GetFaceConnectivity_Tetrahedron(con=lloop, opt=2_I4B)
-
-! lloop = FacetConnectivity_Tetrahedron( &
-!   & baseInterpol="LAGRANGE",  &
-!   & baseContinuity="H1")
+CALL GetEdgeConnectivity_Tetrahedron(con=p1p2)
+CALL GetFaceConnectivity_Tetrahedron(con=lloop)
 
 vol(:, 1) = arange(1_I4B, tNodes)
 
@@ -208,27 +278,10 @@ END PROCEDURE GetEdgeConnectivity_Tetrahedron
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE GetFaceConnectivity_Tetrahedron
-
 con(1:3, 1) = [1, 3, 2]
 con(1:3, 2) = [1, 2, 4]
 con(1:3, 3) = [1, 4, 3]
 con(1:3, 4) = [2, 3, 4]
-
-! INTEGER(I4B) :: opt0
-! opt0 = input(option=opt, default=1_I4B)
-!
-! SELECT CASE (opt0)
-! CASE (1_I4B)
-!   con(1:3, 1) = [1, 2, 3]
-!   con(1:3, 2) = [1, 2, 4]
-!   con(1:3, 3) = [1, 3, 4]
-!   con(1:3, 4) = [2, 3, 4]
-! CASE (2_I4B)
-!   con(1:3, 1) = [1, 3, 2]
-!   con(1:3, 2) = [1, 2, 4]
-!   con(1:3, 3) = [1, 4, 3]
-!   con(1:3, 4) = [2, 3, 4]
-! END SELECT
 END PROCEDURE GetFaceConnectivity_Tetrahedron
 
 !----------------------------------------------------------------------------
