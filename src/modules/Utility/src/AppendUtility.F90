@@ -43,7 +43,7 @@ PUBLIC :: Expand
 ! https://github.com/jacobwilliams/fortran-csv-module/blob/master/src/
 ! csv_utilities.f90
 
-INTERFACE
+INTERFACE Expand
   MODULE PURE SUBROUTINE expand_int8(vec, n, chunk_size, val, finished)
     INTEGER(INT8), ALLOCATABLE, INTENT(INOUT) :: vec(:)
     INTEGER(I4B), INTENT(INOUT) :: n
@@ -58,6 +58,7 @@ INTERFACE
     !! set to true to return `vec`
     !! as its correct size (`n`)
   END SUBROUTINE expand_int8
+
   MODULE PURE SUBROUTINE expand_int16(vec, n, chunk_size, val, finished)
     INTEGER(INT16), ALLOCATABLE, INTENT(INOUT) :: vec(:)
     INTEGER(I4B), INTENT(INOUT) :: n
@@ -72,6 +73,7 @@ INTERFACE
     !! set to true to return `vec`
     !! as its correct size (`n`)
   END SUBROUTINE expand_int16
+
   MODULE PURE SUBROUTINE expand_int32(vec, n, chunk_size, val, finished)
     INTEGER(INT32), ALLOCATABLE, INTENT(INOUT) :: vec(:)
     INTEGER(I4B), INTENT(INOUT) :: n
@@ -86,6 +88,7 @@ INTERFACE
     !! set to true to return `vec`
     !! as its correct size (`n`)
   END SUBROUTINE expand_int32
+
   MODULE PURE SUBROUTINE expand_int64(vec, n, chunk_size, val, finished)
     INTEGER(INT64), ALLOCATABLE, INTENT(INOUT) :: vec(:)
     INTEGER(I4B), INTENT(INOUT) :: n
@@ -100,11 +103,7 @@ INTERFACE
     !! set to true to return `vec`
     !! as its correct size (`n`)
   END SUBROUTINE expand_int64
-END INTERFACE
-
-INTERFACE EXPAND
-  MODULE PROCEDURE expand_int8, expand_int16, expand_int32, expand_int64
-END INTERFACE EXPAND
+END INTERFACE Expand
 
 !----------------------------------------------------------------------------
 !                                                      Expand@Methods
@@ -114,7 +113,7 @@ END INTERFACE EXPAND
 ! date: 22 July 2022
 ! summary: Expand the real vector
 
-INTERFACE
+INTERFACE Expand
   MODULE PURE SUBROUTINE expand_real32(vec, n, chunk_size, val, finished)
     REAL(REAL32), ALLOCATABLE, INTENT(INOUT) :: vec(:)
     INTEGER(I4B), INTENT(INOUT) :: n
@@ -129,6 +128,7 @@ INTERFACE
     !! set to true to return `vec`
     !! as its correct size (`n`)
   END SUBROUTINE expand_real32
+
   MODULE PURE SUBROUTINE expand_real64(vec, n, chunk_size, val, finished)
     REAL(REAL64), ALLOCATABLE, INTENT(INOUT) :: vec(:)
     INTEGER(I4B), INTENT(INOUT) :: n
@@ -143,10 +143,6 @@ INTERFACE
     !! set to true to return `vec`
     !! as its correct size (`n`)
   END SUBROUTINE expand_real64
-END INTERFACE
-
-INTERFACE Expand
-  MODULE PROCEDURE expand_real32, expand_real64
 END INTERFACE Expand
 
 !----------------------------------------------------------------------------
@@ -164,45 +160,33 @@ END INTERFACE Expand
 !- Append a scalar real to an real vector
 !- Append a real vector to a real vector
 
-INTERFACE
-  !>
+INTERFACE Append
   ! Append a scalar int to a vector of int
-  !
   MODULE PURE SUBROUTINE Append_1a(A, ENTRY)
     INTEGER(I4B), ALLOCATABLE, INTENT(INOUT) :: A(:)
     INTEGER(I4B), INTENT(IN) :: ENTRY
   END SUBROUTINE Append_1a
 
-  !>
   ! Append a scalar real to a vector of real
-  !
   MODULE PURE SUBROUTINE Append_1b(A, ENTRY)
     REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: A(:)
     REAL(DFP), INTENT(IN) :: ENTRY
   END SUBROUTINE Append_1b
 
-  !>
   ! Append a scalar and vector int to a vector of int
-  !
   MODULE PURE SUBROUTINE Append_1c(C, A, B)
     INTEGER(I4B), ALLOCATABLE, INTENT(INOUT) :: C(:)
     INTEGER(I4B), INTENT(IN) :: A(:)
     INTEGER(I4B), INTENT(IN) :: B
   END SUBROUTINE Append_1c
 
-  !>
   ! Append a scalar and vector real to a vector of real
-  !
   MODULE PURE SUBROUTINE Append_1d(C, A, B)
     REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: C(:)
     REAL(DFP), INTENT(IN) :: A(:)
     REAL(DFP), INTENT(IN) :: B
   END SUBROUTINE Append_1d
-END INTERFACE
-
-INTERFACE Append
-  MODULE PROCEDURE Append_1a, Append_1b, Append_1c, Append_1d
-END INTERFACE
+END INTERFACE Append
 
 !----------------------------------------------------------------------------
 !                                                            Append@Methods
@@ -219,7 +203,7 @@ END INTERFACE
 !- Append two vectors of int to another vector of int
 !- Append two vector of real to another vector of real
 
-INTERFACE
+INTERFACE Append
   MODULE PURE SUBROUTINE Append_2a(A, ENTRY)
     INTEGER(I4B), ALLOCATABLE, INTENT(INOUT) :: A(:)
     INTEGER(I4B), INTENT(IN) :: ENTRY(:)
@@ -241,11 +225,22 @@ INTERFACE
     REAL(DFP), INTENT(IN) :: A(:)
     REAL(DFP), INTENT(IN) :: B(:)
   END SUBROUTINE Append_2d
-END INTERFACE
 
-INTERFACE Append
-  MODULE PROCEDURE Append_2a, Append_2b, Append_2c, Append_2d
-END INTERFACE
+  MODULE PURE SUBROUTINE Append_2e(D, C, A, B)
+    INTEGER(I4B), ALLOCATABLE, INTENT(INOUT) :: D(:)
+    INTEGER(I4B), INTENT(IN) :: A(:)
+    INTEGER(I4B), INTENT(IN) :: B(:)
+    INTEGER(I4B), INTENT(IN) :: C(:)
+  END SUBROUTINE Append_2e
+
+  MODULE PURE SUBROUTINE Append_2f(D, C, A, B)
+    REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: D(:)
+    REAL(DFP), INTENT(IN) :: A(:)
+    REAL(DFP), INTENT(IN) :: B(:)
+    REAL(DFP), INTENT(IN) :: C(:)
+  END SUBROUTINE Append_2f
+
+END INTERFACE Append
 
 !----------------------------------------------------------------------------
 !                                                      Append@Methods
@@ -262,7 +257,7 @@ END INTERFACE
 !- Append a scalar and vector of int to another vector of int
 !- Append a scalar and vector real to another vector of real
 
-INTERFACE
+INTERFACE Append
   MODULE PURE SUBROUTINE Append_3a(A, ENTRY, mask)
     INTEGER(I4B), ALLOCATABLE, INTENT(INOUT) :: A(:)
     INTEGER(I4B), INTENT(IN) :: ENTRY
@@ -288,11 +283,7 @@ INTERFACE
     REAL(DFP), INTENT(IN) :: B
     LOGICAL(LGT), INTENT(IN) :: mask
   END SUBROUTINE Append_3d
-END INTERFACE
-
-INTERFACE Append
-  MODULE PROCEDURE Append_3a, Append_3b, Append_3c, Append_3d
-END INTERFACE
+END INTERFACE Append
 
 !----------------------------------------------------------------------------
 !                                                      Append@Methods
@@ -307,7 +298,7 @@ END INTERFACE
 !- Append a vector of int to another vector of int
 !- Append a vector of real to another vector of real
 
-INTERFACE
+INTERFACE Append
   MODULE PURE SUBROUTINE Append_4a(A, ENTRY, mask)
     INTEGER(I4B), ALLOCATABLE, INTENT(INOUT) :: A(:)
     INTEGER(I4B), INTENT(IN) :: ENTRY(:)
@@ -333,11 +324,7 @@ INTERFACE
     REAL(DFP), INTENT(IN) :: B(:)
     LOGICAL(LGT), INTENT(IN) :: mask(:)
   END SUBROUTINE Append_4d
-END INTERFACE
-
-INTERFACE Append
-  MODULE PROCEDURE Append_4a, Append_4b, Append_4c, Append_4d
-END INTERFACE
+END INTERFACE Append
 
 !----------------------------------------------------------------------------
 !                                                      Append@Methods
@@ -347,7 +334,7 @@ END INTERFACE
 ! date:  22 March 2021
 ! summary: Append a scalar INTEGER  to  INTEGER  vec tor
 
-INTERFACE
+INTERFACE OPERATOR(.Append.)
   MODULE PURE FUNCTION func_Append_1a(A, ENTRY) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: A(:)
     INTEGER(I4B), INTENT(IN) :: ENTRY
@@ -361,10 +348,6 @@ INTERFACE
   END FUNCTION func_Append_1b
 END INTERFACE
 
-INTERFACE OPERATOR(.APPEND.)
-  MODULE PROCEDURE func_Append_1a, func_Append_1b
-END INTERFACE
-
 !----------------------------------------------------------------------------
 !                                                      Append@Methods
 !----------------------------------------------------------------------------
@@ -373,7 +356,7 @@ END INTERFACE
 ! date:  22 March 2021
 ! summary: Append two vectors of INTEGER
 
-INTERFACE
+INTERFACE OPERATOR(.APPEND.)
   MODULE PURE FUNCTION func_Append_2a(A, ENTRY) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: A(:)
     INTEGER(I4B), INTENT(IN) :: ENTRY(:)
@@ -388,10 +371,6 @@ INTERFACE
 
 END INTERFACE
 
-INTERFACE OPERATOR(.APPEND.)
-  MODULE PROCEDURE func_Append_2a, func_Append_2b
-END INTERFACE
-
 !----------------------------------------------------------------------------
 !                                                    ColConcat@Methods
 !----------------------------------------------------------------------------
@@ -401,7 +380,7 @@ END INTERFACE
 ! update: 2021-11-24
 ! summary: Concat columns of two vectors
 
-INTERFACE
+INTERFACE ColConcat
   MODULE PURE FUNCTION colConcat_1a(a, b) RESULT(ans)
     REAL(REAL32), INTENT(IN) :: a(:)
     REAL(REAL32), INTENT(IN) :: b(:)
@@ -437,11 +416,6 @@ INTERFACE
     INTEGER(INT8), INTENT(IN) :: b(:)
     INTEGER(INT8), ALLOCATABLE :: ans(:, :)
   END FUNCTION colConcat_1f
-END INTERFACE
-
-INTERFACE ColConcat
-  MODULE PROCEDURE colConcat_1a, colConcat_1b, colConcat_1c, &
-    & colConcat_1d, colConcat_1e, colConcat_1f
 END INTERFACE ColConcat
 
 INTERFACE OPERATOR(.ColConcat.)
@@ -458,7 +432,7 @@ END INTERFACE
 ! update: 2021-11-24
 ! summary: Concat columns of a matrix and a vector
 
-INTERFACE
+INTERFACE ColConcat
   MODULE PURE FUNCTION colConcat_2a(a, b) RESULT(ans)
     REAL(REAL32), INTENT(IN) :: a(:, :)
     REAL(REAL32), INTENT(IN) :: b(:)
@@ -494,11 +468,6 @@ INTERFACE
     INTEGER(INT8), INTENT(IN) :: b(:)
     INTEGER(INT8), ALLOCATABLE :: ans(:, :)
   END FUNCTION colConcat_2f
-END INTERFACE
-
-INTERFACE ColConcat
-  MODULE PROCEDURE colConcat_2a, colConcat_2b, colConcat_2c, &
-    & colConcat_2d, colConcat_2e, colConcat_2f
 END INTERFACE ColConcat
 
 INTERFACE OPERATOR(.ColConcat.)
@@ -515,7 +484,7 @@ END INTERFACE
 ! update: 2021-11-24
 ! summary: Concat columns of rank1 and rank2 array
 
-INTERFACE
+INTERFACE ColConcat
   MODULE PURE FUNCTION colConcat_3a(a, b) RESULT(ans)
     REAL(REAL32), INTENT(IN) :: a(:)
     REAL(REAL32), INTENT(IN) :: b(:, :)
@@ -551,11 +520,6 @@ INTERFACE
     INTEGER(INT8), INTENT(IN) :: b(:, :)
     INTEGER(INT8), ALLOCATABLE :: ans(:, :)
   END FUNCTION colConcat_3f
-END INTERFACE
-
-INTERFACE ColConcat
-  MODULE PROCEDURE colConcat_3a, colConcat_3b, colConcat_3c, &
-    & colConcat_3d, colConcat_3e, colConcat_3f
 END INTERFACE ColConcat
 
 INTERFACE OPERATOR(.ColConcat.)
@@ -572,7 +536,7 @@ END INTERFACE
 ! update: 2021-11-24
 ! summary: Concat columns of rank2 and rank2 array
 
-INTERFACE
+INTERFACE ColConcat
   MODULE PURE FUNCTION colConcat_4a(a, b) RESULT(ans)
     REAL(REAL32), INTENT(IN) :: a(:, :)
     REAL(REAL32), INTENT(IN) :: b(:, :)
@@ -608,11 +572,6 @@ INTERFACE
     INTEGER(INT8), INTENT(IN) :: b(:, :)
     INTEGER(INT8), ALLOCATABLE :: ans(:, :)
   END FUNCTION colConcat_4f
-END INTERFACE
-
-INTERFACE ColConcat
-  MODULE PROCEDURE colConcat_4a, colConcat_4b, colConcat_4c, &
-    & colConcat_4d, colConcat_4e, colConcat_4f
 END INTERFACE ColConcat
 
 INTERFACE OPERATOR(.ColConcat.)
@@ -629,7 +588,7 @@ END INTERFACE
 ! update: 2021-11-24
 ! summary: Concat rows of two vectors
 
-INTERFACE
+INTERFACE RowConcat
   MODULE PURE FUNCTION rowConcat_1a(a, b) RESULT(ans)
     REAL(REAL32), INTENT(IN) :: a(:)
     REAL(REAL32), INTENT(IN) :: b(:)
@@ -665,12 +624,7 @@ INTERFACE
     INTEGER(INT8), INTENT(IN) :: b(:)
     INTEGER(INT8), ALLOCATABLE :: ans(:, :)
   END FUNCTION rowConcat_1f
-END INTERFACE
-
-INTERFACE rowConcat
-  MODULE PROCEDURE rowConcat_1a, rowConcat_1b, rowConcat_1c, &
-    & rowConcat_1d, rowConcat_1e, rowConcat_1f
-END INTERFACE rowConcat
+END INTERFACE RowConcat
 
 INTERFACE OPERATOR(.rowConcat.)
   MODULE PROCEDURE rowConcat_1a, rowConcat_1b, rowConcat_1c, &
@@ -686,7 +640,7 @@ END INTERFACE
 ! update: 2021-11-24
 ! summary: Concat rows of a matrix and a vector
 
-INTERFACE
+INTERFACE RowConcat
   MODULE PURE FUNCTION rowConcat_2a(a, b) RESULT(ans)
     REAL(REAL32), INTENT(IN) :: a(:, :)
     REAL(REAL32), INTENT(IN) :: b(:)
@@ -722,12 +676,7 @@ INTERFACE
     INTEGER(INT8), INTENT(IN) :: b(:)
     INTEGER(INT8), ALLOCATABLE :: ans(:, :)
   END FUNCTION rowConcat_2f
-END INTERFACE
-
-INTERFACE rowConcat
-  MODULE PROCEDURE rowConcat_2a, rowConcat_2b, rowConcat_2c, &
-    & rowConcat_2d, rowConcat_2e, rowConcat_2f
-END INTERFACE rowConcat
+END INTERFACE RowConcat
 
 INTERFACE OPERATOR(.rowConcat.)
   MODULE PROCEDURE rowConcat_2a, rowConcat_2b, rowConcat_2c, &
@@ -743,7 +692,7 @@ END INTERFACE
 ! update: 2021-11-24
 ! summary: Concat rows of rank1 and rank2 array
 
-INTERFACE
+INTERFACE RowConcat
   MODULE PURE FUNCTION rowConcat_3a(a, b) RESULT(ans)
     REAL(REAL32), INTENT(IN) :: a(:)
     REAL(REAL32), INTENT(IN) :: b(:, :)
@@ -779,12 +728,7 @@ INTERFACE
     INTEGER(INT8), INTENT(IN) :: b(:, :)
     INTEGER(INT8), ALLOCATABLE :: ans(:, :)
   END FUNCTION rowConcat_3f
-END INTERFACE
-
-INTERFACE rowConcat
-  MODULE PROCEDURE rowConcat_3a, rowConcat_3b, rowConcat_3c, &
-    & rowConcat_3d, rowConcat_3e, rowConcat_3f
-END INTERFACE rowConcat
+END INTERFACE RowConcat
 
 INTERFACE OPERATOR(.rowConcat.)
   MODULE PROCEDURE rowConcat_3a, rowConcat_3b, rowConcat_3c, &
@@ -800,7 +744,7 @@ END INTERFACE
 ! update: 2021-11-24
 ! summary: Concat rows of rank2 and rank2 array
 
-INTERFACE
+INTERFACE RowConcat
   MODULE PURE FUNCTION rowConcat_4a(a, b) RESULT(ans)
     REAL(REAL32), INTENT(IN) :: a(:, :)
     REAL(REAL32), INTENT(IN) :: b(:, :)
@@ -836,12 +780,7 @@ INTERFACE
     INTEGER(INT8), INTENT(IN) :: b(:, :)
     INTEGER(INT8), ALLOCATABLE :: ans(:, :)
   END FUNCTION rowConcat_4f
-END INTERFACE
-
-INTERFACE rowConcat
-  MODULE PROCEDURE rowConcat_4a, rowConcat_4b, rowConcat_4c, &
-    & rowConcat_4d, rowConcat_4e, rowConcat_4f
-END INTERFACE rowConcat
+END INTERFACE RowConcat
 
 INTERFACE OPERATOR(.rowConcat.)
   MODULE PROCEDURE rowConcat_4a, rowConcat_4b, rowConcat_4c, &

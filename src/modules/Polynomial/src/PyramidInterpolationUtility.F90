@@ -29,7 +29,6 @@ PUBLIC :: InterpolationPoint_Pyramid
 PUBLIC :: LagrangeCoeff_Pyramid
 PUBLIC :: QuadraturePoint_Pyramid
 PUBLIC :: TensorQuadraturePoint_Pyramid
-PUBLIC :: RefCoord_Pyramid
 PUBLIC :: RefElemDomain_Pyramid
 PUBLIC :: LagrangeEvalAll_Pyramid
 PUBLIC :: LagrangeGradientEvalAll_Pyramid
@@ -101,21 +100,6 @@ INTERFACE
     !! Lagrange, Hierarchy, Serendipity, Hermit, Orthogonal
     TYPE(String) :: ans
   END FUNCTION RefElemDomain_Pyramid
-END INTERFACE
-
-!----------------------------------------------------------------------------
-!                                                          RefCoord_Pyramid
-!----------------------------------------------------------------------------
-
-!> author: Vikas Sharma, Ph. D.
-! date:  2023-08-09
-! summary:  Reference Coordinates of pyramid
-
-INTERFACE
-  MODULE PURE FUNCTION RefCoord_Pyramid(refPyramid) RESULT(ans)
-    CHARACTER(*), INTENT(IN) :: refPyramid
-    REAL(DFP) :: ans(3, 5)
-  END FUNCTION RefCoord_Pyramid
 END INTERFACE
 
 !----------------------------------------------------------------------------
