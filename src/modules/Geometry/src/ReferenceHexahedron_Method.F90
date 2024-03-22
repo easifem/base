@@ -138,10 +138,12 @@ END INTERFACE
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2024-03-08
+!> author: Shion Shimizu
+! update: 2024-03-22
 ! summary:  Returns number of edges in the element
 
 INTERFACE
-  MODULE PURE SUBROUTINE GetEdgeConnectivity_Hexahedron(con, opt)
+  MODULE PURE SUBROUTINE GetEdgeConnectivity_Hexahedron(con, opt, order)
     INTEGER(I4B), INTENT(INOUT) :: con(:, :)
     !! Connectivity
     !! The columns represents the edge number
@@ -151,6 +153,8 @@ INTERFACE
     !! If opt = 1, then edge connectivity for hierarchial approximation
     !! If opt =2, then edge connectivity for Lagrangian approximation
     !! opt=1 is default
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: order
+    !! order default is 1
   END SUBROUTINE GetEdgeConnectivity_Hexahedron
 END INTERFACE
 
@@ -160,10 +164,12 @@ END INTERFACE
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2024-03-08
+!> author: Shion Shimizu
+! update : 2024-03-22
 ! summary:  Returns number of edges in the element
 
 INTERFACE
-  MODULE PURE SUBROUTINE GetFaceConnectivity_Hexahedron(con, opt)
+  MODULE PURE SUBROUTINE GetFaceConnectivity_Hexahedron(con, opt, order)
     INTEGER(I4B), INTENT(INOUT) :: con(:, :)
     !! Connectivity
     !! The columns represents the face number
@@ -173,6 +179,8 @@ INTERFACE
     !! If opt = 1, then face connectivity for hierarchial approximation
     !! If opt =2, then face connectivity for Lagrangian approximation
     !! opt=1 is default
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: order
+    !! order default is 1
   END SUBROUTINE GetFaceConnectivity_Hexahedron
 END INTERFACE
 

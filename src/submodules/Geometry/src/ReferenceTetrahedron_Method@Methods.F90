@@ -278,8 +278,8 @@ jj = 4
 DO iface = 1, 6
   DO ii = 1, order0 - 1
     con(2 + ii, iface) = jj + ii
-    jj = jj + 1
   END DO
+  jj = jj + order0 - 1
 END DO
 
 END PROCEDURE GetEdgeConnectivity_Tetrahedron
@@ -298,14 +298,13 @@ con(1:3, 4) = [2, 3, 4]
 order0 = Input(default=1_I4B, option=order)
 jj = 4_I4B
 
-IF (order0 .EQ. 1_I4B) THEN
-  RETURN
-ELSEIF (order0 .EQ. 2_I4B) THEN
+SELECT CASE (order0)
+CASE (2_I4B)
   con(jj:6, 1) = [6, 8, 5]
   con(jj:6, 2) = [5, 9, 7]
   con(jj:6, 3) = [7, 10, 6]
   con(jj:6, 4) = [8, 10, 9]
-END IF
+END SELECT
 
 END PROCEDURE GetFaceConnectivity_Tetrahedron
 
