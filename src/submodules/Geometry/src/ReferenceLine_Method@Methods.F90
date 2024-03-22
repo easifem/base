@@ -20,126 +20,9 @@
 ! summary:         This submodule contains methods for [[ReferenceLine_]]
 
 SUBMODULE(ReferenceLine_Method) Methods
-USE ReallocateUtility
-USE ReferenceElement_Method
-USE StringUtility
-USE ApproxUtility
-USE String_Class, ONLY: String
-USE LineInterpolationUtility
-USE Display_Method
+USE BaseMethod
 IMPLICIT NONE
 CONTAINS
-
-!----------------------------------------------------------------------------
-!                                                   TotalNodesInElement_Line
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE TotalNodesInElement_Line
-SELECT CASE (ElemType)
-CASE (Line2)
-  ans = 3
-CASE (Line3)
-  ans = 3
-CASE (Line4)
-  ans = 4
-CASE (Line5)
-  ans = 5
-CASE (Line6)
-  ans = 6
-CASE DEFAULT
-  ans = 0
-END SELECT
-END PROCEDURE TotalNodesInElement_Line
-
-!----------------------------------------------------------------------------
-!                                                         ElementOrder_Line
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE ElementOrder_Line
-SELECT CASE (elemType)
-CASE (Line2)
-  ans = 1
-CASE (Line3)
-  ans = 2
-CASE (Line4)
-  ans = 3
-CASE (Line5)
-  ans = 4
-CASE (Line6)
-  ans = 5
-CASE DEFAULT
-  ans = 0
-END SELECT
-END PROCEDURE ElementOrder_Line
-
-!----------------------------------------------------------------------------
-!                                                          ElementType_Line
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE ElementType_Line
-SELECT CASE (elemName)
-CASE ("Line1", "Point", "Point1")
-  ans = Point
-CASE ("Line2", "Line")
-  ans = Line2
-CASE ("Line3")
-  ans = Line3
-CASE ("Line4")
-  ans = Line4
-CASE ("Line5")
-  ans = Line5
-CASE ("Line6")
-  ans = Line6
-CASE DEFAULT
-  ans = 0
-END SELECT
-END PROCEDURE ElementType_Line
-
-!----------------------------------------------------------------------------
-!                                                        FacetElements_Line
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE FacetElements_Line1
-INTEGER(I4B) :: ii
-INTEGER(I4B) :: nptrs(1)
-
-DO ii = 1, 2
-  nptrs = refelem%topology(ii)%nptrs
-  CALL Reallocate(ans(ii)%xij, 3_I4B, 1)
-  ans(ii)%xij(1:3, 1) = DEFAULT_REF_LINE_COORD(1:3, ii)
-  ans(ii)%entityCounts = [1, 0, 0, 0]
-  ans(ii)%xiDimension = 0
-  ans(ii)%name = Point
-  ans(ii)%interpolationPointType = refelem%interpolationPointType
-  ans(ii)%order = 0
-  ans(ii)%nsd = refelem%nsd
-  ALLOCATE (ans(ii)%topology(1))
-  ans(ii)%topology(1) = Referencetopology(nptrs=nptrs, name=Point)
-  ans(ii)%highOrderElement => NULL()
-END DO
-END PROCEDURE FacetElements_Line1
-
-!----------------------------------------------------------------------------
-!                                                        FacetElements_Line
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE FacetElements_Line2
-INTEGER(I4B), PARAMETER :: nptrs(2) = [1, 2]
-INTEGER(I4B) :: ii
-
-DO ii = 1, 2
-  ans(ii)%xij = RESHAPE(DEFAULT_REF_LINE_COORD(1:3, ii), [3, 1])
-  ans(ii)%entityCounts = [1, 0, 0, 0]
-  ans(ii)%xiDimension = 0
-  ans(ii)%name = Point
-  ans(ii)%interpolationPointType = Equidistance
-  ans(ii)%order = 0
-  ans(ii)%nsd = nsd
-  ALLOCATE (ans(ii)%topology(1))
-  ans(ii)%topology(1) = Referencetopology(nptrs=nptrs(ii:ii), name=Point)
-  ans(ii)%highOrderElement => NULL()
-END DO
-END PROCEDURE FacetElements_Line2
 
 !----------------------------------------------------------------------------
 !                                                                  LineName
@@ -175,7 +58,7 @@ unit_xij = RefCoord_Line("UNIT")
 biunit_xij = RefCoord_Line("BIUNIT")
 
 IF (PRESENT(xij)) THEN
-  obj%xij = xij(1:1, 1:2)
+  obj%xij = xij(1:1, 1:2) 
   IF (ALL(obj%xij(1:1, 1:2) .approxeq.unit_xij)) THEN
     obj%domainName = "UNIT"
   ELSE IF (ALL(obj%xij(1:1, 1:2) .approxeq.biunit_xij)) THEN
@@ -212,7 +95,7 @@ END PROCEDURE initiate_ref_Line
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE reference_Line
-CALL initiate_ref_line(obj=obj, nsd=nsd, xij=xij, domainName=domainName)
+CALL Initiate(obj=obj, nsd=nsd, xij=xij, domainName=domainName)
 END PROCEDURE reference_Line
 
 !----------------------------------------------------------------------------
@@ -221,7 +104,7 @@ END PROCEDURE reference_Line
 
 MODULE PROCEDURE reference_Line_Pointer_1
 ALLOCATE (obj)
-CALL initiate_ref_line(obj=obj, nsd=nsd, xij=xij, domainName=domainName)
+CALL Initiate(obj=obj, nsd=nsd, xij=xij, domainName=domainName)
 END PROCEDURE reference_Line_Pointer_1
 
 !----------------------------------------------------------------------------
@@ -241,7 +124,7 @@ nns = SIZE(obj%xij, 2)
 obj%entityCounts = [nns, 1, 0, 0]
 obj%xiDimension = 1
 obj%order = order
-obj%name = ElementType("Line"//ToString(nns))
+obj%name = ElementType("Line"//TRIM(INT2STR(nns)))
 ALLOCATE (obj%topology(nns + 1))
 DO CONCURRENT(i=1:nns)
   obj%topology(i) = ReferenceTopology([i], Point)
@@ -274,20 +157,5 @@ END PROCEDURE Measure_Simplex_Line
 MODULE PROCEDURE Line_quality
 ans = 0.0_DFP
 END PROCEDURE Line_quality
-
-!----------------------------------------------------------------------------
-!                                                              RefLineCoord
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE RefLineCoord
-TYPE(String) :: astr
-astr = UpperCase(refLine)
-SELECT CASE (astr%chars())
-CASE ("UNIT")
-  ans(1, :) = [0.0_DFP, 1.0_DFP]
-CASE ("BIUNIT")
-  ans(1, :) = [-1.0_DFP, 1.0_DFP]
-END SELECT
-END PROCEDURE RefLineCoord
 
 END SUBMODULE Methods
