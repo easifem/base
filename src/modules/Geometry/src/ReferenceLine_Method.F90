@@ -35,6 +35,9 @@ PUBLIC :: LineName
 PUBLIC :: RefLineCoord
 PUBLIC :: RefCoord_Line
 PUBLIC :: DEFAULT_REF_LINE_COORD
+PUBLIC :: FacetElements_Line
+PUBLIC :: ElementType_Line
+PUBLIC :: ElementOrder_Line
 
 #ifdef REF_LINE_IS_UNIT
 REAL(DFP), PARAMETER :: DEFAULT_REF_LINE_COORD(3, 2) =  &
@@ -43,6 +46,67 @@ REAL(DFP), PARAMETER :: DEFAULT_REF_LINE_COORD(3, 2) =  &
 REAL(DFP), PARAMETER :: DEFAULT_REF_LINE_COORD(3, 2) =  &
   & RESHAPE([-1, 0, 0, 1, 0, 0], [3, 2])
 #endif
+
+!----------------------------------------------------------------------------
+!                                                       ElementOrder_Line
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2024-03-22
+! summary:  Returns order of element
+
+INTERFACE
+  MODULE FUNCTION ElementOrder_Line(elemType) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: elemType
+    INTEGER(I4B) :: ans
+  END FUNCTION ElementOrder_Line
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                       ElementType_Line
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2024-03-22
+! summary:  Returns ElementType for line from char
+
+INTERFACE
+  MODULE FUNCTION ElementType_Line(elemName) RESULT(ans)
+    CHARACTER(*), INTENT(IN) :: elemName
+    INTEGER(I4B) :: ans
+  END FUNCTION ElementType_Line
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                       FacetElements_Line
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2024-03-21
+! summary:  Get FacetElements
+
+INTERFACE FacetElements_Line
+  MODULE SUBROUTINE FacetElements_Line1(refelem, ans)
+    CLASS(ReferenceElement_), INTENT(IN) :: refelem
+    TYPE(ReferenceElement_), INTENT(INOUT) :: ans(:)
+  END SUBROUTINE FacetElements_Line1
+END INTERFACE FacetElements_Line
+
+!----------------------------------------------------------------------------
+!                                                       FacetElements_Line
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2024-03-21
+! summary:  Get FacetElements
+
+INTERFACE FacetElements_Line
+  MODULE SUBROUTINE FacetElements_Line2(elemType, nsd, ans)
+    INTEGER(I4B), INTENT(IN) :: elemType
+    INTEGER(I4B), INTENT(IN) :: nsd
+    TYPE(ReferenceElement_), INTENT(INOUT) :: ans(:)
+  END SUBROUTINE FacetElements_Line2
+END INTERFACE FacetElements_Line
 
 !----------------------------------------------------------------------------
 !                                                                 LineName
