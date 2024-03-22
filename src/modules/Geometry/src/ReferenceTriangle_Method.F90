@@ -133,7 +133,7 @@ INTERFACE
 END INTERFACE
 
 !----------------------------------------------------------------------------
-!                                                   FacetElements_Triangle
+!                                                     FacetElements_Triangle
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -148,7 +148,7 @@ INTERFACE FacetElements_Triangle
 END INTERFACE FacetElements_Triangle
 
 !----------------------------------------------------------------------------
-!                                                     FacetElements_Triangle
+!                                                    FacetElements_Triangle
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -264,7 +264,8 @@ END INTERFACE ReferenceTriangle
 !```
 
 INTERFACE ReferenceTriangle_Pointer
-  MODULE FUNCTION Reference_Triangle_Pointer(nsd, xij, domainName) RESULT(obj)
+  MODULE FUNCTION Reference_Triangle_Pointer(nsd, xij, domainName) &
+    & RESULT(obj)
     INTEGER(I4B), INTENT(IN) :: nsd
     REAL(DFP), INTENT(IN), OPTIONAL :: xij(:, :)
     CHARACTER(*), OPTIONAL, INTENT(IN) :: domainName
@@ -285,7 +286,6 @@ END INTERFACE ReferenceTriangle_Pointer
 ! This routine will be called by [[ReferenceTriangle_:LagrangeElement]]
 ! Currently upto 3rd order triangle elements are supported.
 !
-!
 !### Usage
 !
 !```fortran
@@ -301,8 +301,7 @@ END INTERFACE ReferenceTriangle_Pointer
 !```
 
 INTERFACE
-  MODULE SUBROUTINE HighorderElement_Triangle(refelem, order, obj,  &
-    & ipType)
+  MODULE SUBROUTINE HighorderElement_Triangle(refelem, order, obj, ipType)
     CLASS(ReferenceElement_), INTENT(IN) :: refelem
     INTEGER(I4B), INTENT(IN) :: order
     CLASS(ReferenceElement_), INTENT(INOUT) :: obj
@@ -340,11 +339,11 @@ END INTERFACE
 ! summary: Returns three angles of a triangle
 
 INTERFACE Angles
-  MODULE PURE FUNCTION triangle_angles(refelem, xij) RESULT(Ans)
+  MODULE PURE FUNCTION Triangle_angles(refelem, xij) RESULT(Ans)
     CLASS(ReferenceElement_), INTENT(IN) :: refelem
     REAL(DFP), INTENT(IN) :: xij(:, :)
     REAL(DFP) :: Ans(3)
-  END FUNCTION triangle_angles
+  END FUNCTION Triangle_angles
 END INTERFACE Angles
 
 !----------------------------------------------------------------------------
@@ -356,11 +355,11 @@ END INTERFACE Angles
 ! summary:         Returns the area of triangle
 
 INTERFACE Area
-  MODULE PURE FUNCTION triangle_area(refelem, xij) RESULT(Ans)
+  MODULE PURE FUNCTION Triangle_area(refelem, xij) RESULT(Ans)
     CLASS(ReferenceElement_), INTENT(IN) :: refelem
     REAL(DFP), INTENT(IN) :: xij(:, :)
     REAL(DFP) :: Ans
-  END FUNCTION triangle_area
+  END FUNCTION Triangle_area
 END INTERFACE Area
 
 !----------------------------------------------------------------------------
@@ -372,11 +371,11 @@ END INTERFACE Area
 ! summary: Returns the area vector
 
 INTERFACE ArealVector
-  MODULE PURE FUNCTION triangle_arealVector(refelem, xij) RESULT(Ans)
+  MODULE PURE FUNCTION Triangle_arealVector(refelem, xij) RESULT(Ans)
     CLASS(ReferenceElement_), INTENT(IN) :: refelem
     REAL(DFP), INTENT(IN) :: xij(:, :)
     REAL(DFP) :: Ans(3)
-  END FUNCTION triangle_arealVector
+  END FUNCTION Triangle_arealVector
 END INTERFACE ArealVector
 
 !----------------------------------------------------------------------------
@@ -388,12 +387,12 @@ END INTERFACE ArealVector
 ! summary: Returns the barycentric coordinates of triangle
 
 INTERFACE Barycentric
-  MODULE PURE FUNCTION triangle_barycentric(refelem, xij, x) RESULT(Ans)
+  MODULE PURE FUNCTION Triangle_barycentric(refelem, xij, x) RESULT(Ans)
     CLASS(ReferenceElement_), INTENT(IN) :: refelem
     REAL(DFP), INTENT(IN) :: xij(:, :)
     REAL(DFP), INTENT(IN) :: x(:)
     REAL(DFP) :: Ans(3)
-  END FUNCTION triangle_barycentric
+  END FUNCTION Triangle_barycentric
 END INTERFACE Barycentric
 
 !----------------------------------------------------------------------------
@@ -405,11 +404,11 @@ END INTERFACE Barycentric
 ! summary: Returns the centroid of a triangle
 
 INTERFACE Centroid
-  MODULE PURE FUNCTION triangle_centroid(refelem, xij) RESULT(Ans)
+  MODULE PURE FUNCTION Triangle_centroid(refelem, xij) RESULT(Ans)
     CLASS(ReferenceElement_), INTENT(IN) :: refelem
     REAL(DFP), INTENT(IN) :: xij(:, :)
     REAL(DFP) :: Ans(3)
-  END FUNCTION triangle_centroid
+  END FUNCTION Triangle_centroid
 END INTERFACE Centroid
 
 !----------------------------------------------------------------------------
@@ -421,11 +420,11 @@ END INTERFACE Centroid
 ! summary:         Returns the circum center of the triangle
 
 INTERFACE CircumCenter
-  MODULE PURE FUNCTION triangle_circumcentre(refelem, xij) RESULT(Ans)
+  MODULE PURE FUNCTION Triangle_circumcentre(refelem, xij) RESULT(Ans)
     CLASS(ReferenceElement_), INTENT(IN) :: refelem
     REAL(DFP), INTENT(IN) :: xij(:, :)
     REAL(DFP) :: Ans(3)
-  END FUNCTION triangle_circumcentre
+  END FUNCTION Triangle_circumcentre
 END INTERFACE CircumCenter
 
 !----------------------------------------------------------------------------
@@ -437,12 +436,12 @@ END INTERFACE CircumCenter
 ! summary: Returns circum circle of triangle
 
 INTERFACE CircumCircle
-  MODULE PURE FUNCTION triangle_circumcircle(refelem, xij) RESULT(Ans)
+  MODULE PURE FUNCTION Triangle_circumcircle(refelem, xij) RESULT(Ans)
     CLASS(ReferenceElement_), INTENT(IN) :: refelem
     REAL(DFP), INTENT(IN) :: xij(:, :)
     REAL(DFP) :: Ans(4)
     !! Ans(1) = radius and Ans(2:4) center
-  END FUNCTION triangle_circumcircle
+  END FUNCTION Triangle_circumcircle
 END INTERFACE CircumCircle
 
 !----------------------------------------------------------------------------
@@ -450,11 +449,11 @@ END INTERFACE CircumCircle
 !----------------------------------------------------------------------------
 
 INTERFACE CircumRadius
-  MODULE PURE FUNCTION triangle_circumradius(refelem, xij) RESULT(Ans)
+  MODULE PURE FUNCTION Triangle_circumradius(refelem, xij) RESULT(Ans)
     CLASS(ReferenceElement_), INTENT(IN) :: refelem
     REAL(DFP), INTENT(IN) :: xij(:, :)
     REAL(DFP) :: Ans
-  END FUNCTION triangle_circumradius
+  END FUNCTION Triangle_circumradius
 END INTERFACE CircumRadius
 
 !----------------------------------------------------------------------------
@@ -462,14 +461,14 @@ END INTERFACE CircumRadius
 !----------------------------------------------------------------------------
 
 INTERFACE ContainsLine
-  MODULE PURE SUBROUTINE triangle_contains_line(refelem, xij, x1, x2, &
+  MODULE PURE SUBROUTINE Triangle_contains_line(refelem, xij, x1, x2, &
     & parametricLine, inside, xint)
     CLASS(ReferenceElement_), INTENT(IN) :: refelem
     REAL(DFP), INTENT(IN) :: xij(:, :), x1(3), x2(3)
     LOGICAL(LGT), INTENT(IN) :: parametricLine
     LOGICAL(LGT), INTENT(OUT) :: inside
     REAL(DFP), INTENT(OUT) :: xint(3)
-  END SUBROUTINE triangle_contains_line
+  END SUBROUTINE Triangle_contains_line
 END INTERFACE ContainsLine
 
 !----------------------------------------------------------------------------
