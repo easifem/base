@@ -21,19 +21,170 @@
 
 SUBMODULE(ReferenceQuadrangle_Method) Methods
 USE ReferenceElement_Method
-USE ApproxUtility
+USE LineInterpolationUtility, ONLY: InterpolationPoint_Line
+USE ReferenceLine_Method, ONLY: ElementOrder_Line
+
 USE QuadrangleInterpolationUtility, ONLY: InterpolationPoint_Quadrangle,  &
   & LagrangeDOF_Quadrangle
 USE ReferenceTriangle_Method, ONLY: TRIANGLEAREA2D
-USE ReferenceLine_Method, ONLY: Linename
+USE ReferenceLine_Method, ONLY: Linename, ElementType_Line
+
+USE ApproxUtility
 USE AppendUtility
 USE StringUtility
 USE ArangeUtility
 USE InputUtility
 USE SortUtility
+USE ReallocateUtility
+USE Display_Method
 
 IMPLICIT NONE
 CONTAINS
+
+!----------------------------------------------------------------------------
+!                                              TotalNodesInElement_Quadrangle
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE TotalNodesInElement_Quadrangle
+SELECT CASE (ElemType)
+CASE (Quadrangle4)
+  ans = 4
+CASE (Quadrangle8)
+  ans = 8
+CASE (Quadrangle9)
+  ans = 9
+CASE (Quadrangle16)
+  ans = 16
+CASE DEFAULT
+  ans = 0
+END SELECT
+END PROCEDURE TotalNodesInElement_Quadrangle
+
+!----------------------------------------------------------------------------
+!                                                     ElementOrder_Quadrangle
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE ElementOrder_Quadrangle
+SELECT CASE (ElemType)
+CASE (Quadrangle4)
+  ans = 1
+CASE (Quadrangle8)
+  ans = 2
+CASE (Quadrangle9)
+  ans = 2
+CASE (Quadrangle16)
+  ans = 3
+END SELECT
+END PROCEDURE ElementOrder_Quadrangle
+
+!----------------------------------------------------------------------------
+!                                                     ElementType_Quadrangle
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE ElementType_Quadrangle
+SELECT CASE (elemName)
+CASE ("Quadrangle4", "Quadrangle")
+  ans = Quadrangle4
+CASE ("Quadrangle8")
+  ans = Quadrangle8
+CASE ("Quadrangle9")
+  ans = Quadrangle9
+CASE ("Quadrangle16")
+  ans = Quadrangle16
+CASE DEFAULT
+  ans = 0
+END SELECT
+END PROCEDURE ElementType_Quadrangle
+
+!----------------------------------------------------------------------------
+!                                                    FacetElements_Quadrangle
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE FacetElements_Quadrangle1
+INTEGER(I4B) :: ii, istart, tsize, jj
+TYPE(Referencetopology_) :: topo
+
+istart = refelem%entityCounts(1)
+
+ans(1)%xij = InterpolationPoint_Line(  &
+  & order=refelem%order, &
+  & ipType=refelem%interpolationPointType, &
+  & layout="VEFC")
+
+ans(1)%interpolationPointType = refelem%interpolationPointType
+ans(1)%nsd = refelem%nsd
+DO ii = 2, 4
+  ans(ii)%xij = ans(1)%xij
+  ans(ii)%interpolationPointType = ans(1)%interpolationPointType
+  ans(ii)%nsd = ans(1)%nsd
+END DO
+
+DO ii = 1, 4
+  topo = refelem%topology(istart + ii)
+  tsize = SIZE(topo%nptrs)
+  ans(ii)%xiDimension = topo%xiDimension
+  ans(ii)%name = topo%name
+  ans(ii)%order = ElementOrder_Line(elemType=topo%name)
+  ans(ii)%entityCounts = [tsize, 1, 0, 0]
+
+  ALLOCATE (ans(ii)%topology(tsize + 1))
+
+  DO jj = 1, tsize
+    ans(ii)%topology(jj) = Referencetopology( &
+      & nptrs=topo%nptrs(jj:jj), name=Point)
+  END DO
+
+  ans(ii)%topology(tsize + 1) = Referencetopology( &
+    & nptrs=topo%nptrs, name=topo%name)
+END DO
+
+CALL DEALLOCATE (topo)
+
+END PROCEDURE FacetElements_Quadrangle1
+
+!----------------------------------------------------------------------------
+!                                                    FacetElements_Quadrangle
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE FacetElements_Quadrangle2
+INTEGER(I4B) :: ii, jj, order
+INTEGER(I4B), ALLOCATABLE :: edgeCon(:, :)
+
+order = ElementOrder_Quadrangle(elemType)
+CALL Reallocate(edgeCon, order + 1, 4)
+CALL GetEdgeConnectivity_Quadrangle(con=edgeCon,  &
+  & opt=DEFAULT_OPT_QUADRANGLE_EDGE_CON, order=order)
+!! The edges are accordign to gmsh
+!! [1,2], [2,3], [3,4], [4,1]
+
+DO ii = 1, 4
+
+  ans(ii)%xiDimension = 1
+  ans(ii)%order = order
+  ans(ii)%name = ElementType_Line("Line"//tostring(order + 1))
+  ans(ii)%interpolationPointType = Equidistance
+  ans(ii)%xij = InterpolationPoint_Line(  &
+    & order=order, &
+    & ipType=Equidistance, &
+    & layout="VEFC")
+
+  ans(ii)%nsd = nsd
+  ans(ii)%entityCounts = [order + 1, 1, 0, 0]
+  ALLOCATE (ans(ii)%topology(order + 2))
+
+  DO jj = 1, order + 1
+    ans(ii)%topology(jj) = Referencetopology(nptrs=edgeCon(jj:jj, ii),  &
+      & name=Point)
+  END DO
+
+  ans(ii)%topology(order + 2) = Referencetopology(nptrs=edgeCon(1:2, ii),  &
+    & name=ans(ii)%name)
+
+END DO
+
+IF (ALLOCATED(edgeCon)) DEALLOCATE (edgeCon)
+
+END PROCEDURE FacetElements_Quadrangle2
 
 !----------------------------------------------------------------------------
 !                                                             Quadranglename1
@@ -357,23 +508,46 @@ END PROCEDURE RefQuadrangleCoord
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE GetEdgeConnectivity_Quadrangle
-INTEGER(I4B) :: opt0
+INTEGER(I4B) :: opt0, order0, ii, jj
 
 opt0 = Input(default=1_I4B, option=opt)
 
 SELECT CASE (opt0)
 CASE (1_I4B)
-  con(:, 1) = [1, 2]
-  con(:, 2) = [4, 3]
-  con(:, 3) = [1, 4]
-  con(:, 4) = [2, 3]
+  con(1:2, 1) = [1, 2]
+  con(1:2, 2) = [4, 3]
+  con(1:2, 3) = [1, 4]
+  con(1:2, 4) = [2, 3]
 CASE (2_I4B)
   !! For Lagrangian polynomial
-  con(:, 1) = [1, 2]
-  con(:, 2) = [2, 3]
-  con(:, 3) = [3, 4]
-  con(:, 4) = [4, 1]
+  con(1:2, 1) = [1, 2]
+  con(1:2, 2) = [2, 3]
+  con(1:2, 3) = [3, 4]
+  con(1:2, 4) = [4, 1]
 END SELECT
+
+order0 = Input(default=1_I4B, option=order)
+
+jj = 4
+DO ii = 1, order0 - 1
+  con(2 + ii, 1) = jj + ii
+  jj = jj + 1
+END DO
+
+DO ii = 1, order0 - 1
+  con(2 + ii, 2) = jj + ii
+  jj = jj + 1
+END DO
+
+DO ii = 1, order0 - 1
+  con(2 + ii, 3) = jj + ii
+  jj = jj + 1
+END DO
+
+DO ii = 1, order0 - 1
+  con(2 + ii, 4) = jj + ii
+  jj = jj + 1
+END DO
 
 END PROCEDURE GetEdgeConnectivity_Quadrangle
 

@@ -38,6 +38,11 @@ PUBLIC :: GetEdgeConnectivity_Quadrangle
 PUBLIC :: RefQuadrangleCoord
 PUBLIC :: RefCoord_Quadrangle
 PUBLIC :: FaceShapeMetaData_Quadrangle
+PUBLIC :: FacetElements_Quadrangle
+PUBLIC :: DEFAULT_OPT_QUADRANGLE_EDGE_CON
+PUBLIC :: ElementOrder_Quadrangle
+PUBLIC :: ElementType_Quadrangle
+PUBLIC :: TotalNodesInElement_Quadrangle
 
 INTEGER(I4B), PUBLIC, PARAMETER :: HelpFaceData_Quadrangle(5, 4) =  &
 & RESHAPE([ &
@@ -46,6 +51,91 @@ INTEGER(I4B), PUBLIC, PARAMETER :: HelpFaceData_Quadrangle(5, 4) =  &
 & 2, 4, 1, 4, 2, &
 & 1, 3, 2, 1, 3 &
 ], [5, 4])
+
+#ifdef _QUADRANGLE_EDGE_CON_DEFAULT_OPT_2
+INTEGER(I4B), PARAMETER :: DEFAULT_OPT_QUADRANGLE_EDGE_CON = 1_I4B
+!! This means edges are [1,2], [4,3], [1,4], [2, 3]
+#else
+INTEGER(I4B), PARAMETER :: DEFAULT_OPT_QUADRANGLE_EDGE_CON = 2_I4B
+!! This means edges are [1,2], [2,3], [3,4], [4,1]
+!! This is default option
+#endif
+
+!----------------------------------------------------------------------------
+!                                             TotalNodesInElement_Quadrangle
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2024-03-22
+! summary:  Returns total nodes in element
+
+INTERFACE
+  MODULE PURE FUNCTION TotalNodesInElement_Quadrangle(elemType) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: elemType
+    INTEGER(I4B) :: ans
+  END FUNCTION TotalNodesInElement_Quadrangle
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                    ElementType_Quadrangle
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2024-03-22
+! summary:  Returns the type of element from char name
+
+INTERFACE
+  MODULE PURE FUNCTION ElementType_Quadrangle(elemName) RESULT(ans)
+    CHARACTER(*), INTENT(IN) :: elemName
+    INTEGER(I4B) :: ans
+  END FUNCTION ElementType_Quadrangle
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                    ElementOrder_Quadrangle
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2024-03-22
+! summary:  Returns the order of element
+
+INTERFACE
+  MODULE PURE FUNCTION ElementOrder_Quadrangle(elemType) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: elemType
+    INTEGER(I4B) :: ans
+  END FUNCTION ElementOrder_Quadrangle
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                   FacetElements_Quadrangle
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2024-03-21
+! summary:  Get FacetElements
+
+INTERFACE FacetElements_Quadrangle
+  MODULE SUBROUTINE FacetElements_Quadrangle1(refelem, ans)
+    CLASS(ReferenceElement_), INTENT(IN) :: refelem
+    TYPE(ReferenceElement_), INTENT(INOUT) :: ans(:)
+  END SUBROUTINE FacetElements_Quadrangle1
+END INTERFACE FacetElements_Quadrangle
+
+!----------------------------------------------------------------------------
+!                                                   FacetElements_Quadrangle
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2024-03-21
+! summary:  Get FacetElements
+
+INTERFACE FacetElements_Quadrangle
+  MODULE SUBROUTINE FacetElements_Quadrangle2(elemType, nsd, ans)
+    INTEGER(I4B), INTENT(IN) :: elemType
+    INTEGER(I4B), INTENT(IN) :: nsd
+    TYPE(ReferenceElement_), INTENT(INOUT) :: ans(:)
+  END SUBROUTINE FacetElements_Quadrangle2
+END INTERFACE FacetElements_Quadrangle
 
 !----------------------------------------------------------------------------
 !                                                       QuadrangleName
@@ -227,7 +317,7 @@ END INTERFACE QuadrangleArea2D
 ! summary:  Returns number of edges in the element
 
 INTERFACE
-  MODULE PURE SUBROUTINE GetEdgeConnectivity_Quadrangle(con, opt)
+  MODULE PURE SUBROUTINE GetEdgeConnectivity_Quadrangle(con, opt, order)
     INTEGER(I4B), INTENT(INOUT) :: con(:, :)
     !! Connectivity
     !! The columns represents the edge number
@@ -237,6 +327,8 @@ INTERFACE
     !! If opt = 1, then edge connectivity for hierarchial approximation
     !! If opt =2, then edge connectivity for Lagrangian approximation
     !! opt=1 is default
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: order
+    !! Order of the element
   END SUBROUTINE GetEdgeConnectivity_Quadrangle
 END INTERFACE
 
