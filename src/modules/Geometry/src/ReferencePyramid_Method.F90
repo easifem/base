@@ -27,9 +27,14 @@ PRIVATE
 PUBLIC :: Initiate
 PUBLIC :: ReferencePyramid
 PUBLIC :: ReferencePyramid_Pointer
-PUBLIC :: highOrderElement_Pyramid
+PUBLIC :: HighOrderElement_Pyramid
 PUBLIC :: Measure_Simplex_Pyramid
 PUBLIC :: Pyramid_Quality
+PUBLIC :: Quality_Pyramid
+PUBLIC :: GetEdgeConnectivity_Pyramid
+PUBLIC :: GetFaceConnectivity_Pyramid
+PUBLIC :: RefCoord_Pyramid
+PUBLIC :: GetFaceElemType_Pyramid
 
 !----------------------------------------------------------------------------
 !                                                          Initiate@Pyramid
@@ -44,7 +49,7 @@ INTERFACE Initiate
     CLASS(ReferencePyramid_), INTENT(INOUT) :: obj
     INTEGER(I4B), INTENT(IN) :: nsd
     REAL(DFP), INTENT(IN), OPTIONAL :: xij(:, :)
-    CHARACTER(*), OPTIONAL, INTENT( IN ) :: domainName
+    CHARACTER(*), OPTIONAL, INTENT(IN) :: domainName
   END SUBROUTINE initiate_ref_Pyramid
 END INTERFACE Initiate
 
@@ -56,7 +61,7 @@ INTERFACE ReferencePyramid
   MODULE FUNCTION reference_Pyramid(nsd, xij, domainName) RESULT(obj)
     INTEGER(I4B), INTENT(IN) :: nsd
     REAL(DFP), INTENT(IN), OPTIONAL :: xij(:, :)
-    CHARACTER(*), OPTIONAL, INTENT( IN ) :: domainName
+    CHARACTER(*), OPTIONAL, INTENT(IN) :: domainName
     TYPE(ReferencePyramid_) :: obj
   END FUNCTION reference_Pyramid
 END INTERFACE ReferencePyramid
@@ -70,7 +75,7 @@ INTERFACE ReferencePyramid_Pointer
     & RESULT(obj)
     INTEGER(I4B), INTENT(IN) :: nsd
     REAL(DFP), INTENT(IN), OPTIONAL :: xij(:, :)
-    CHARACTER(*), OPTIONAL, INTENT( IN ) :: domainName
+    CHARACTER(*), OPTIONAL, INTENT(IN) :: domainName
     CLASS(ReferencePyramid_), POINTER :: obj
   END FUNCTION reference_Pyramid_Pointer
 END INTERFACE ReferencePyramid_Pointer
@@ -104,13 +109,94 @@ END INTERFACE
 !                                                            Pyramid_Quality
 !----------------------------------------------------------------------------
 
-INTERFACE
+INTERFACE Quality_Pyramid
   MODULE FUNCTION Pyramid_Quality(refelem, xij, measure) RESULT(Ans)
     CLASS(ReferenceElement_), INTENT(IN) :: refelem
     REAL(DFP), INTENT(IN) :: xij(:, :)
     INTEGER(I4B), INTENT(IN) :: measure
     REAL(DFP) :: Ans
   END FUNCTION Pyramid_Quality
+END INTERFACE Quality_Pyramid
+
+!----------------------------------------------------------------------------
+!                                                        GetEdgeConnectivity
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2024-03-08
+! summary:  Returns number of edges in the element
+
+INTERFACE
+  MODULE PURE SUBROUTINE GetEdgeConnectivity_Pyramid(con, opt)
+    INTEGER(I4B), INTENT(INOUT) :: con(:, :)
+    !! Connectivity
+    !! The columns represents the edge number
+    !! The row represents a edge
+    !! con should be allocated by the user
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: opt
+    !! If opt = 1, then edge connectivity for hierarchial approximation
+    !! If opt =2, then edge connectivity for Lagrangian approximation
+    !! opt=1 is default
+  END SUBROUTINE GetEdgeConnectivity_Pyramid
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                        GetFaceConnectivity
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2024-03-08
+! summary:  Returns number of edges in the element
+
+INTERFACE
+  MODULE PURE SUBROUTINE GetFaceConnectivity_Pyramid(con, opt)
+    INTEGER(I4B), INTENT(INOUT) :: con(:, :)
+    !! Connectivity
+    !! The columns represents the face number
+    !! The row represents a face
+    !! con should be allocated by the user
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: opt
+    !! If opt = 1, then face connectivity for hierarchial approximation
+    !! If opt =2, then face connectivity for Lagrangian approximation
+    !! opt=1 is default
+  END SUBROUTINE GetFaceConnectivity_Pyramid
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                          RefCoord_Pyramid
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2024-03-09
+! summary:  Reference Coordinates of pyramid
+
+INTERFACE
+  MODULE PURE FUNCTION RefCoord_Pyramid(refPyramid) RESULT(ans)
+    CHARACTER(*), INTENT(IN) :: refPyramid
+    REAL(DFP) :: ans(3, 5)
+  END FUNCTION RefCoord_Pyramid
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                        GetFaceElemType@GeometryMethods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2024-03-11
+! summary:  Returns the element type of each face
+
+INTERFACE
+  MODULE PURE SUBROUTINE GetFaceElemType_Pyramid(faceElemType, opt,  &
+    & tFaceNodes)
+    INTEGER(I4B), INTENT(INOUT) :: faceElemType(:)
+    !! Face element type
+    INTEGER(I4B), OPTIONAL, INTENT(INOUT) :: tFaceNodes(:)
+    !! total nodes in each face
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: opt
+    !! If opt = 1, then edge connectivity for hierarchial approximation
+    !! If opt = 2, then edge connectivity for Lagrangian approximation
+    !! opt = 1 is default
+  END SUBROUTINE GetFaceElemType_Pyramid
 END INTERFACE
 
 END MODULE ReferencePyramid_Method

@@ -20,7 +20,6 @@
 ! summary: This sumodule contains method for geometry
 
 SUBMODULE(ReferenceElement_Method) ElementNameMethods
-USE BaseMethod
 IMPLICIT NONE
 CONTAINS
 
@@ -97,7 +96,7 @@ CASE (Hexahedron64)
 CASE (Hexahedron125)
   ans = "Hexahedron125"
 CASE DEFAULT
-  ans = ""
+  ans = "NONE"
 END SELECT
 END PROCEDURE Element_Name
 
@@ -115,75 +114,75 @@ END PROCEDURE Element_Name_obj
 MODULE PROCEDURE Element_Type
 SELECT CASE (TRIM(ElemName))
 CASE ("Line0")
-  Ans = 0
+  ans = 0
 CASE ("Line1", "Point")
-  Ans = Point
+  ans = Point
 CASE ("Line2", "Line")
-  Ans = Line2
+  ans = Line2
 CASE ("Triangle3", "Triangle")
-  Ans = Triangle3
+  ans = Triangle3
 CASE ("Quadrangle4", "Quadrangle")
-  Ans = Quadrangle4
+  ans = Quadrangle4
 CASE ("Tetrahedron4", "Tetrahedron")
-  Ans = Tetrahedron4
+  ans = Tetrahedron4
 CASE ("Hexahedron8", "Hexahedron")
-  Ans = Hexahedron8
+  ans = Hexahedron8
 CASE ("Prism6", "Prism")
-  Ans = Prism6
+  ans = Prism6
 CASE ("Pyramid5", "Pyramid")
-  Ans = Pyramid5
+  ans = Pyramid5
 CASE ("Line3")
-  Ans = Line3
+  ans = Line3
 CASE ("Triangle6")
-  Ans = Triangle6
+  ans = Triangle6
 CASE ("Quadrangle9")
-  Ans = Quadrangle9
+  ans = Quadrangle9
 CASE ("Tetrahedron10")
-  Ans = Tetrahedron10
+  ans = Tetrahedron10
 CASE ("Hexahedron27")
-  Ans = Hexahedron27
+  ans = Hexahedron27
 CASE ("Prism18")
-  Ans = Prism18
+  ans = Prism18
 CASE ("Pyramid14")
-  Ans = Pyramid14
+  ans = Pyramid14
 CASE ("Point1")
-  Ans = Point1
+  ans = Point1
 CASE ("Quadrangle8")
-  Ans = Quadrangle8
+  ans = Quadrangle8
 CASE ("Hexahedron20")
-  Ans = Hexahedron20
+  ans = Hexahedron20
 CASE ("Prism15")
-  Ans = Prism15
+  ans = Prism15
 CASE ("Pyramid13")
-  Ans = Pyramid13
+  ans = Pyramid13
 CASE ("Triangle9")
-  Ans = Triangle9
+  ans = Triangle9
 CASE ("Triangle10")
-  Ans = Triangle10
+  ans = Triangle10
 CASE ("Triangle12")
-  Ans = Triangle12
+  ans = Triangle12
 CASE ("Triangle15a")
-  Ans = Triangle15a
+  ans = Triangle15a
 CASE ("Triangle15b")
-  Ans = Triangle15b
+  ans = Triangle15b
 CASE ("Triangle21")
-  Ans = Triangle21
+  ans = Triangle21
 CASE ("Line4")
-  Ans = Line4
+  ans = Line4
 CASE ("Line5")
-  Ans = Line5
+  ans = Line5
 CASE ("Line6")
-  Ans = Line6
+  ans = Line6
 CASE ("Tetrahedron20")
-  Ans = Tetrahedron20
+  ans = Tetrahedron20
 CASE ("Tetrahedron35")
-  Ans = Tetrahedron35
+  ans = Tetrahedron35
 CASE ("Tetrahedron56")
-  Ans = Tetrahedron56
+  ans = Tetrahedron56
 CASE ("Hexahedron64")
-  Ans = Hexahedron64
+  ans = Hexahedron64
 CASE ("Hexahedron125")
-  Ans = Hexahedron125
+  ans = Hexahedron125
 END SELECT
 END PROCEDURE Element_Type
 
@@ -202,71 +201,71 @@ END PROCEDURE Element_Type_obj
 MODULE PROCEDURE Element_Order
 SELECT CASE (ElemType)
 CASE (Line2)
-  Ans = 1
+  ans = 1
 CASE (Triangle3)
-  Ans = 1
+  ans = 1
 CASE (Quadrangle4)
-  Ans = 1
+  ans = 1
 CASE (Tetrahedron4)
-  Ans = 1
+  ans = 1
 CASE (Hexahedron8)
-  Ans = 1
+  ans = 1
 CASE (Prism6)
-  Ans = 1
+  ans = 1
 CASE (Pyramid5)
-  Ans = 1
+  ans = 1
 CASE (Line3)
-  Ans = 2
+  ans = 2
 CASE (Triangle6)
-  Ans = 2
+  ans = 2
 CASE (Quadrangle9)
-  Ans = 2
+  ans = 2
 CASE (Tetrahedron10)
-  Ans = 2
+  ans = 2
 CASE (Hexahedron27)
-  Ans = 2
+  ans = 2
 CASE (Prism18)
-  Ans = 2
+  ans = 2
 CASE (Pyramid14)
-  Ans = 2
+  ans = 2
 CASE (Point1)
-  Ans = 0
+  ans = 0
 CASE (Quadrangle8)
-  Ans = 2
+  ans = 2
 CASE (Hexahedron20)
-  Ans = 2
+  ans = 2
 CASE (Prism15)
-  Ans = 2
+  ans = 2
 CASE (Pyramid13)
-  Ans = 2
+  ans = 2
 CASE (Triangle9)
-  Ans = 3
+  ans = 3
 CASE (Triangle10)
-  Ans = 3
+  ans = 3
 CASE (Triangle12)
-  Ans = 4
+  ans = 4
 CASE (Triangle15a)
-  Ans = 4
+  ans = 4
 CASE (Triangle15b)
-  Ans = 5
+  ans = 5
 CASE (Triangle21)
-  Ans = 5
+  ans = 5
 CASE (Line4)
-  Ans = 3
+  ans = 3
 CASE (Line5)
-  Ans = 4
+  ans = 4
 CASE (Line6)
-  Ans = 5
+  ans = 5
 CASE (Tetrahedron20)
-  Ans = 3
+  ans = 3
 CASE (Tetrahedron35)
-  Ans = 4
+  ans = 4
 CASE (Tetrahedron56)
-  Ans = 5
+  ans = 5
 CASE (Hexahedron64)
-  Ans = 3
+  ans = 3
 CASE (Hexahedron125)
-  Ans = 4
+  ans = 4
 END SELECT
 END PROCEDURE Element_Order
 
@@ -275,7 +274,7 @@ END PROCEDURE Element_Order
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Element_Order_refelem
-Ans = refelem%Order
+ans = refelem%Order
 END PROCEDURE Element_Order_refelem
 
 !----------------------------------------------------------------------------
@@ -300,7 +299,7 @@ CASE (Tetrahedron4, &
       Tetrahedron56, &
       Hexahedron64, &
       Hexahedron125)
-  Ans = 3
+  ans = 3
 CASE (Triangle3, &
       Triangle6, &
       Triangle9, &
@@ -312,15 +311,15 @@ CASE (Triangle3, &
       Quadrangle4, &
       Quadrangle8, &
       Quadrangle9)
-  Ans = 2
+  ans = 2
 CASE (Line2, &
       Line3, &
       Line4, &
       Line5, &
       Line6)
-  Ans = 1
+  ans = 1
 CASE DEFAULT
-  Ans = 0
+  ans = 0
 END SELECT
 END PROCEDURE Elem_XiDimension1
 
@@ -343,24 +342,24 @@ CASE (Line2, &
   & Line4, &
   & Line5, &
   & Line6)
-  Ans = Line
+  ans = Line
 CASE (Triangle3, Triangle6, &
   & Triangle9, Triangle10, Triangle12, Triangle15a, &
   & Triangle15b, Triangle21)
-  Ans = Triangle
+  ans = Triangle
 CASE (Quadrangle4, Quadrangle8, &
   & Quadrangle9)
-  Ans = Quadrangle
+  ans = Quadrangle
 CASE (Tetrahedron4, Tetrahedron10, &
   & Tetrahedron20, Tetrahedron35, Tetrahedron56)
-  Ans = Tetrahedron
+  ans = Tetrahedron
 CASE (Hexahedron8, Hexahedron27, &
   & Hexahedron20, Hexahedron64, Hexahedron125)
-  Ans = Hexahedron
+  ans = Hexahedron
 CASE (Prism6, Prism18, Prism15)
-  Ans = Prism
+  ans = Prism
 CASE (Pyramid5, Pyramid13, Pyramid14)
-  Ans = Pyramid
+  ans = Pyramid
 END SELECT
 END PROCEDURE refelem_ElementTopology1
 
@@ -379,71 +378,71 @@ END PROCEDURE refelem_ElementTopology2
 MODULE PROCEDURE Total_Nodes_In_Element
 SELECT CASE (ElemType)
 CASE (Line2)
-  Ans = 2
+  ans = 2
 CASE (Triangle3)
-  Ans = 3
+  ans = 3
 CASE (Quadrangle4)
-  Ans = 4
+  ans = 4
 CASE (Tetrahedron4)
-  Ans = 4
+  ans = 4
 CASE (Hexahedron8)
-  Ans = 8
+  ans = 8
 CASE (Prism6)
-  Ans = 6
+  ans = 6
 CASE (Pyramid5)
-  Ans = 5
+  ans = 5
 CASE (Line3)
-  Ans = 3
+  ans = 3
 CASE (Triangle6)
-  Ans = 6
+  ans = 6
 CASE (Quadrangle9)
-  Ans = 9
+  ans = 9
 CASE (Tetrahedron10)
-  Ans = 10
+  ans = 10
 CASE (Hexahedron27)
-  Ans = 27
+  ans = 27
 CASE (Prism18)
-  Ans = 18
+  ans = 18
 CASE (Pyramid14)
-  Ans = 14
+  ans = 14
 CASE (Point1)
-  Ans = 1
+  ans = 1
 CASE (Quadrangle8)
-  Ans = 8
+  ans = 8
 CASE (Hexahedron20)
-  Ans = 20
+  ans = 20
 CASE (Prism15)
-  Ans = 15
+  ans = 15
 CASE (Pyramid13)
-  Ans = 13
+  ans = 13
 CASE (Triangle9)
-  Ans = 9
+  ans = 9
 CASE (Triangle10)
-  Ans = 10
+  ans = 10
 CASE (Triangle12)
-  Ans = 12
+  ans = 12
 CASE (Triangle15a)
-  Ans = 15
+  ans = 15
 CASE (Triangle15b)
-  Ans = 15
+  ans = 15
 CASE (Triangle21)
-  Ans = 21
+  ans = 21
 CASE (Line4)
-  Ans = 4
+  ans = 4
 CASE (Line5)
-  Ans = 5
+  ans = 5
 CASE (Line6)
-  Ans = 6
+  ans = 6
 CASE (Tetrahedron20)
-  Ans = 20
+  ans = 20
 CASE (Tetrahedron35)
-  Ans = 35
+  ans = 35
 CASE (Tetrahedron56)
-  Ans = 56
+  ans = 56
 CASE (Hexahedron64)
-  Ans = 64
+  ans = 64
 CASE (Hexahedron125)
-  Ans = 125
+  ans = 125
 END SELECT
 !
 END PROCEDURE Total_Nodes_In_Element

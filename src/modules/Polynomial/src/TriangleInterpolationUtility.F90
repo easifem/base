@@ -36,8 +36,6 @@ PUBLIC :: VertexBasis_Triangle
 PUBLIC :: EdgeBasis_Triangle
 PUBLIC :: CellBasis_Triangle
 PUBLIC :: HeirarchicalBasis_Triangle
-PUBLIC :: RefTriangleCoord
-PUBLIC :: RefCoord_Triangle
 PUBLIC :: LagrangeEvalAll_Triangle
 PUBLIC :: LagrangeGradientEvalAll_Triangle
 PUBLIC :: QuadraturePoint_Triangle
@@ -101,21 +99,6 @@ INTERFACE
     INTEGER(I4B), INTENT(IN) :: N
   END SUBROUTINE IJ2VEFC_Triangle
 END INTERFACE
-
-!----------------------------------------------------------------------------
-!                                                           RefTriangleCoord
-!----------------------------------------------------------------------------
-
-!> author: Vikas Sharma, Ph. D.
-! date:  2023-07-03
-! summary:  Returns the coordinate of reference triangle
-
-INTERFACE RefCoord_Triangle
-  MODULE PURE FUNCTION RefTriangleCoord(refTriangle) RESULT(ans)
-    CHARACTER(*), INTENT(IN) :: refTriangle
-    REAL(DFP) :: ans(2, 3)
-  END FUNCTION RefTriangleCoord
-END INTERFACE RefCoord_Triangle
 
 !----------------------------------------------------------------------------
 !                                                   LagrangeDegree_Triangle
@@ -1287,8 +1270,8 @@ INTERFACE LagrangeGradientEvalAll_Triangle
     REAL(DFP) :: ans(SIZE(x, 2), SIZE(xij, 2), 2)
     !! Value of gradient of nth order Lagrange polynomials at point x
     !! The first index denotes point of evaluation
-    !! the second index denotes Lagrange polynomial number 
-    !! The third index denotes the spatial dimension in which gradient is 
+    !! the second index denotes Lagrange polynomial number
+    !! The third index denotes the spatial dimension in which gradient is
     !! computed
   END FUNCTION LagrangeGradientEvalAll_Triangle1
 END INTERFACE LagrangeGradientEvalAll_Triangle
