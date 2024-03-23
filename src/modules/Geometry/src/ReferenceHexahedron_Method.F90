@@ -42,8 +42,23 @@ PUBLIC :: FacetElements_Hexahedron
 PUBLIC :: ElementOrder_Hexahedron
 PUBLIC :: ElementType_Hexahedron
 PUBLIC :: TotalNodesInElement_Hexahedron
-! PUBLIC :: TotalEntities_Hexahedron
+PUBLIC :: TotalEntities_Hexahedron
 ! PUBLIC :: FacetTopology_Hexahedron
+
+!----------------------------------------------------------------------------
+!                                                   TotalEntities_Hexahedron
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2024-03-22
+! summary:  Returns total entities in Hexahedron
+
+INTERFACE
+  MODULE PURE FUNCTION TotalEntities_Hexahedron(elemType) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: elemType
+    INTEGER(I4B) :: ans(4)
+  END FUNCTION TotalEntities_Hexahedron
+END INTERFACE
 
 !----------------------------------------------------------------------------
 !                                            TotalNodesInElement_Hexahedron

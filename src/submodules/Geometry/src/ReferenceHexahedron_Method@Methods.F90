@@ -49,6 +49,15 @@ MODULE PROCEDURE FacetElements_Hexahedron2
 END PROCEDURE FacetElements_Hexahedron2
 
 !----------------------------------------------------------------------------
+!                                                  TotalEntities_Hexahedron
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE TotalEntities_Hexahedron
+ans(2:4) = [12, 6, 1]
+ans(1) = TotalNodesInElement_Hexahedron(elemType)
+END PROCEDURE TotalEntities_Hexahedron
+
+!----------------------------------------------------------------------------
 !                                            TotalNodesInElement_Hexahedron
 !----------------------------------------------------------------------------
 
