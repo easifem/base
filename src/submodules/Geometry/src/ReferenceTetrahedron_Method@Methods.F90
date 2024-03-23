@@ -176,13 +176,16 @@ END PROCEDURE FacetElements_Tetrahedron1
 MODULE PROCEDURE FacetElements_Tetrahedron2
 INTEGER(I4B) :: ii, jj, order, entityCounts(4), tsize
 INTEGER(I4B), ALLOCATABLE :: edgeCon(:, :), faceCon(:, :)
+INTEGER(I4B) :: faceElemType(4), tFaceNodes(4)
+
+CALL GetFaceElemType_Tetrahedron(faceElemType=faceElemType,  &
+  & tFaceNodes=tFaceNodes, elemType=elemType)
 
 entityCounts = TotalEntities_Tetrahedron(elemType)
 order = ElementOrder_Tetrahedron(elemType)
 
 CALL Reallocate(edgeCon, order + 1, entityCounts(2))
-ii = LagrangeDOF_Triangle(order)
-CALL Reallocate(faceCon, ii, entityCounts(3))
+CALL Reallocate(faceCon, tFaceNodes(1), entityCounts(3))
 
 CALL GetEdgeConnectivity_Tetrahedron(con=edgeCon, order=order)
 CALL GetFaceConnectivity_Tetrahedron(con=faceCon, order=order)
@@ -191,8 +194,9 @@ DO ii = 1, entityCounts(3)
 
   ans(ii)%xiDimension = 2
   ans(ii)%order = order
-  ans(ii)%name = ElementType_Triangle("Triangle"//tostring(order + 1))
+  ans(ii)%name = faceElemType(ii)
   ans(ii)%interpolationPointType = Equidistance
+
   ans(ii)%xij = InterpolationPoint_Triangle(  &
     & order=ans(ii)%order, &
     & ipType=ans(ii)%interpolationPointType, &
@@ -206,7 +210,7 @@ DO ii = 1, entityCounts(3)
 
   ! points
   DO jj = 1, ans(ii)%entityCounts(1)
-    ans(ii)%topology(ii) = Referencetopology(nptrs=faceCon(jj:jj, ii),  &
+    ans(ii)%topology(jj) = Referencetopology(nptrs=faceCon(jj:jj, ii),  &
       & name=Point)
   END DO
 
