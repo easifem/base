@@ -49,6 +49,27 @@ MODULE PROCEDURE FacetElements_Hexahedron2
 END PROCEDURE FacetElements_Hexahedron2
 
 !----------------------------------------------------------------------------
+!                                                 ElementOrder_Hexahedron
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE ElementOrder_Hexahedron
+SELECT CASE (ElemType)
+CASE (Hexahedron)
+  ans = 1
+CASE (Hexahedron20)
+  ans = 2
+CASE (Hexahedron27)
+  ans = 2
+CASE (Hexahedron64)
+  ans = 3
+CASE (Hexahedron125)
+  ans = 4
+CASE DEFAULT
+  ans = 0
+END SELECT
+END PROCEDURE ElementOrder_Hexahedron
+
+!----------------------------------------------------------------------------
 !                                                                  Initiate
 !----------------------------------------------------------------------------
 
@@ -57,14 +78,6 @@ INTEGER(I4B) :: ii, jj
 INTEGER(I4B) :: p1p2(2, 12), lloop(4, 6), vol(8, 1)
 REAL(DFP) :: unit_xij(3, 8), biunit_xij(3, 8)
 CALL DEALLOCATE (obj)
-
-! p1p2 = EdgeConnectivity_Hexahedron( &
-!   & baseInterpol="LAGRANGE",  &
-!   & baseContinuity="H1")
-
-! lloop = FacetConnectivity_Hexahedron( &
-!   & baseInterpol="LAGRANGE",  &
-!   & baseContinuity="H1")
 
 CALL GetEdgeConnectivity_Hexahedron(con=p1p2, opt=2_I4B)
 CALL GetFaceConnectivity_Hexahedron(con=lloop, opt=2_I4B)
@@ -150,9 +163,9 @@ END PROCEDURE reference_Hexahedron_Pointer
 !                                                          highOrderElement
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE highorderElement_Hexahedron
+MODULE PROCEDURE HighorderElement_Hexahedron
 ! TODO Implement highorderElement_Hexahedron
-END PROCEDURE highorderElement_Hexahedron
+END PROCEDURE HighorderElement_Hexahedron
 
 !----------------------------------------------------------------------------
 !                                                              MeasureSimplex

@@ -39,11 +39,26 @@ PUBLIC :: RefHexahedronCoord
 PUBLIC :: GetFaceElemType_Hexahedron
 PUBLIC :: FacetElements_Hexahedron
 
-! PUBLIC :: ElementOrder_Hexahedron
+PUBLIC :: ElementOrder_Hexahedron
 ! PUBLIC :: ElementType_Hexahedron
 ! PUBLIC :: TotalNodesInElement_Hexahedron
 ! PUBLIC :: TotalEntities_Hexahedron
 ! PUBLIC :: FacetTopology_Hexahedron
+
+!----------------------------------------------------------------------------
+!                                                   ElementOrder_Hexahedron
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2024-03-22
+! summary:  Returns the order of element
+
+INTERFACE
+  MODULE PURE FUNCTION ElementOrder_Hexahedron(elemType) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: elemType
+    INTEGER(I4B) :: ans
+  END FUNCTION ElementOrder_Hexahedron
+END INTERFACE
 
 !----------------------------------------------------------------------------
 !                                                   FacetElements_Hexahedron
