@@ -39,6 +39,7 @@ PUBLIC :: FacetElements_Line
 PUBLIC :: ElementType_Line
 PUBLIC :: ElementOrder_Line
 PUBLIC :: TotalNodesInElement_Line
+PUBLIC :: TotalEntities_Line
 
 #ifdef REF_LINE_IS_UNIT
 REAL(DFP), PARAMETER :: DEFAULT_REF_LINE_COORD(3, 2) =  &
@@ -47,6 +48,21 @@ REAL(DFP), PARAMETER :: DEFAULT_REF_LINE_COORD(3, 2) =  &
 REAL(DFP), PARAMETER :: DEFAULT_REF_LINE_COORD(3, 2) =  &
   & RESHAPE([-1, 0, 0, 1, 0, 0], [3, 2])
 #endif
+
+!----------------------------------------------------------------------------
+!                                                    TotalEntities_Line
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2024-03-22
+! summary:  Returns total entities
+
+INTERFACE
+  MODULE PURE FUNCTION TotalEntities_Line(elemType) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: elemType
+    INTEGER(I4B) :: ans(4)
+  END FUNCTION TotalEntities_Line
+END INTERFACE
 
 !----------------------------------------------------------------------------
 !                                                   TotalNodesInElement_Line

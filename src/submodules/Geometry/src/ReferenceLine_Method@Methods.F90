@@ -31,13 +31,23 @@ IMPLICIT NONE
 CONTAINS
 
 !----------------------------------------------------------------------------
+!                                                         TotalEntities_Line
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE TotalEntities_Line
+ans(1) = TotalNodesInElement_Line(elemType)
+ans(2) = 1
+ans(3:4) = 0
+END PROCEDURE TotalEntities_Line
+
+!----------------------------------------------------------------------------
 !                                                   TotalNodesInElement_Line
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE TotalNodesInElement_Line
 SELECT CASE (ElemType)
 CASE (Line2)
-  ans = 3
+  ans = 2
 CASE (Line3)
   ans = 3
 CASE (Line4)
