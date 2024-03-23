@@ -49,6 +49,27 @@ MODULE PROCEDURE FacetElements_Hexahedron2
 END PROCEDURE FacetElements_Hexahedron2
 
 !----------------------------------------------------------------------------
+!                                            TotalNodesInElement_Hexahedron
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE TotalNodesInElement_Hexahedron
+SELECT CASE (elemType)
+CASE (Hexahedron8)
+  ans = 8
+CASE (Hexahedron20)
+  ans = 20
+CASE (Hexahedron27)
+  ans = 27
+CASE (Hexahedron64)
+  ans = 64
+CASE (Hexahedron125)
+  ans = 125
+CASE DEFAULT
+  ans = 0
+END SELECT
+END PROCEDURE TotalNodesInElement_Hexahedron
+
+!----------------------------------------------------------------------------
 !                                                     ElementType_Hexahedron
 !----------------------------------------------------------------------------
 
