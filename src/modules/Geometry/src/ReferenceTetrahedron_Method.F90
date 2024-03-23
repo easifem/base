@@ -301,7 +301,7 @@ END INTERFACE
 
 INTERFACE
   MODULE PURE SUBROUTINE GetFaceElemType_Tetrahedron(faceElemType, opt,  &
-    & tFaceNodes)
+    & tFaceNodes, elemType)
     INTEGER(I4B), INTENT(INOUT) :: faceElemType(:)
     !! Face element type
     INTEGER(I4B), OPTIONAL, INTENT(INOUT) :: tFaceNodes(:)
@@ -310,6 +310,9 @@ INTERFACE
     !! If opt = 1, then edge connectivity for hierarchial approximation
     !! If opt = 2, then edge connectivity for Lagrangian approximation
     !! opt = 1 is default
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: elemType
+    !! element type for Tetrahedron
+    !! default is Tetrahedron4
   END SUBROUTINE GetFaceElemType_Tetrahedron
 END INTERFACE
 

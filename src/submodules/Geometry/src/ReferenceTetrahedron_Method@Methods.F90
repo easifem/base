@@ -26,10 +26,14 @@ USE InvUtility
 USE InputUtility
 USE StringUtility
 USE ArangeUtility
-USE TriangleInterpolationUtility, ONLY: InterpolationPoint_Triangle
+USE Display_Method
+USE ReallocateUtility
+
+USE TriangleInterpolationUtility, ONLY: InterpolationPoint_Triangle,  &
+  & LagrangeDOF_Triangle
 
 USE ReferenceTriangle_Method, ONLY: ElementOrder_Triangle,  &
-  & TotalEntities_Triangle, FacetTopology_Triangle
+  & TotalEntities_Triangle, FacetTopology_Triangle, ElementType_Triangle
 
 IMPLICIT NONE
 CONTAINS
@@ -170,7 +174,56 @@ END PROCEDURE FacetElements_Tetrahedron1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE FacetElements_Tetrahedron2
+INTEGER(I4B) :: ii, jj, order, entityCounts(4), tsize
+INTEGER(I4B), ALLOCATABLE :: edgeCon(:, :), faceCon(:, :)
 
+entityCounts = TotalEntities_Tetrahedron(elemType)
+order = ElementOrder_Tetrahedron(elemType)
+
+CALL Reallocate(edgeCon, order + 1, entityCounts(2))
+ii = LagrangeDOF_Triangle(order)
+CALL Reallocate(faceCon, ii, entityCounts(3))
+
+CALL GetEdgeConnectivity_Tetrahedron(con=edgeCon, order=order)
+CALL GetFaceConnectivity_Tetrahedron(con=faceCon, order=order)
+
+DO ii = 1, entityCounts(3)
+
+  ans(ii)%xiDimension = 2
+  ans(ii)%order = order
+  ans(ii)%name = ElementType_Triangle("Triangle"//tostring(order + 1))
+  ans(ii)%interpolationPointType = Equidistance
+  ans(ii)%xij = InterpolationPoint_Triangle(  &
+    & order=ans(ii)%order, &
+    & ipType=ans(ii)%interpolationPointType, &
+    & layout="VEFC")
+
+  ans(ii)%nsd = nsd
+  ans(ii)%entityCounts = TotalEntities_Triangle(ans(ii)%name)
+
+  tsize = SUM(ans(ii)%entityCounts)
+  ALLOCATE (ans(ii)%topology(tsize))
+
+  ! points
+  DO jj = 1, ans(ii)%entityCounts(1)
+    ans(ii)%topology(ii) = Referencetopology(nptrs=faceCon(jj:jj, ii),  &
+      & name=Point)
+  END DO
+
+  ! lines
+  jj = ans(ii)%entityCounts(1)
+  CALL FacetTopology_Triangle(elemType=ans(ii)%name,  &
+    & nptrs=faceCon(:, ii), ans=ans(ii)%topology(jj + 1:))
+
+  ! surface
+  tsize = jj + ans(ii)%entityCounts(2)
+  ans(ii)%topology(tsize + 1) = ReferenceTopology(nptrs=faceCon(:, ii), &
+    & name=ans(ii)%name)
+
+END DO
+
+IF (ALLOCATED(edgeCon)) DEALLOCATE (edgeCon)
+IF (ALLOCATED(faceCon)) DEALLOCATE (faceCon)
 END PROCEDURE FacetElements_Tetrahedron2
 
 !----------------------------------------------------------------------------
@@ -377,8 +430,31 @@ END PROCEDURE GetFaceConnectivity_Tetrahedron
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE GetFaceElemType_Tetrahedron
-faceElemType(1:4) = Triangle3
-IF (PRESENT(tFaceNodes)) tFaceNodes(1:4) = 3_I4B
+INTEGER(I4B) :: elemType0
+elemType0 = Input(default=Tetrahedron4, option=elemType)
+
+SELECT CASE (elemType0)
+CASE (Tetrahedron4)
+  faceElemType(1:4) = Triangle3
+  IF (PRESENT(tFaceNodes)) tFaceNodes(1:4) = 3_I4B
+
+CASE (Tetrahedron10)
+  faceElemType(1:4) = Triangle6
+  IF (PRESENT(tFaceNodes)) tFaceNodes(1:4) = 6_I4B
+
+CASE (Tetrahedron20)
+  faceElemType(1:4) = Triangle10
+  IF (PRESENT(tFaceNodes)) tFaceNodes(1:4) = 10_I4B
+
+CASE (Tetrahedron35)
+  faceElemType(1:4) = Triangle15
+  IF (PRESENT(tFaceNodes)) tFaceNodes(1:4) = 15_I4B
+
+CASE (Tetrahedron56)
+  faceElemType(1:4) = Triangle21
+  IF (PRESENT(tFaceNodes)) tFaceNodes(1:4) = 21_I4B
+
+END SELECT
 END PROCEDURE GetFaceElemType_Tetrahedron
 
 END SUBMODULE Methods
