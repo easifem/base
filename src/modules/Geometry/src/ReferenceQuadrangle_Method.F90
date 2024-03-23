@@ -44,6 +44,7 @@ PUBLIC :: ElementOrder_Quadrangle
 PUBLIC :: ElementType_Quadrangle
 PUBLIC :: TotalNodesInElement_Quadrangle
 PUBLIC :: TotalEntities_Quadrangle
+PUBLIC :: FacetTopology_Quadrangle
 
 INTEGER(I4B), PUBLIC, PARAMETER :: HelpFaceData_Quadrangle(5, 4) =  &
   & RESHAPE([ &
@@ -61,6 +62,22 @@ INTEGER(I4B), PARAMETER :: DEFAULT_OPT_QUADRANGLE_EDGE_CON = 2_I4B
 !! This means edges are [1,2], [2,3], [3,4], [4,1]
 !! This is default option
 #endif
+
+!----------------------------------------------------------------------------
+!                                             FacetTopology@GeometryMethods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2024-03-22
+! summary: Returns the facet topology of the given element type
+
+INTERFACE
+  MODULE PURE SUBROUTINE FacetTopology_Quadrangle(elemType, nptrs, ans)
+    INTEGER(I4B), INTENT(IN) :: elemType
+    INTEGER(I4B), INTENT(IN) :: nptrs(:)
+    TYPE(ReferenceTopology_), INTENT(INOUT) :: ans(:)
+  END SUBROUTINE FacetTopology_Quadrangle
+END INTERFACE
 
 !----------------------------------------------------------------------------
 !                                                    TotalEntities_Quadrangle

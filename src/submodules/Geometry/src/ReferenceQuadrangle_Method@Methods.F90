@@ -37,9 +37,34 @@ USE InputUtility
 USE SortUtility
 USE ReallocateUtility
 USE Display_Method
+USE MiscUtility, ONLY: Int2Str
 
 IMPLICIT NONE
 CONTAINS
+
+!----------------------------------------------------------------------------
+!                                                   FacetTopology_Quadrangle
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE FacetTopology_Quadrangle
+INTEGER(I4B) :: order, ii, lineType
+INTEGER(I4B), ALLOCATABLE :: con(:, :)
+
+order = ElementOrder_Quadrangle(elemType)
+CALL Reallocate(con, order + 1, 4)
+CALL GetEdgeConnectivity_Quadrangle(con=con,  &
+  & opt=DEFAULT_OPT_QUADRANGLE_EDGE_CON, order=order)
+lineType = ElementType_Line("Line"//Int2Str(order + 1))
+
+DO ii = 1, 4
+  ans(ii)%nptrs = nptrs(con(:, ii))
+  ans(ii)%xiDimension = 1
+  ans(ii)%name = lineType
+END DO
+
+IF (ALLOCATED(con)) DEALLOCATE (con)
+
+END PROCEDURE FacetTopology_Quadrangle
 
 !----------------------------------------------------------------------------
 !                                                    TotalEntities_Quadrangle
