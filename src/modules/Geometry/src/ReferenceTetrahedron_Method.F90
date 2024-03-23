@@ -41,6 +41,23 @@ PUBLIC :: ElementOrder_Tetrahedron
 PUBLIC :: ElementType_Tetrahedron
 PUBLIC :: TotalNodesInElement_Tetrahedron
 PUBLIC :: TotalEntities_Tetrahedron
+PUBLIC :: FacetTopology_Tetrahedron
+
+!----------------------------------------------------------------------------
+!                                             FacetTopology_Tetrahedron
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2024-03-23
+! summary:  Returns the topology of tetrahedron
+
+INTERFACE
+  MODULE PURE SUBROUTINE FacetTopology_Tetrahedron(elemType, nptrs, ans)
+    INTEGER(I4B), INTENT(IN) :: elemType
+    INTEGER(I4B), INTENT(IN) :: nptrs(:)
+    TYPE(ReferenceTopology_), INTENT(INOUT) :: ans(:)
+  END SUBROUTINE FacetTopology_Tetrahedron
+END INTERFACE
 
 !----------------------------------------------------------------------------
 !                                                 TotalEntities_Tetrahedron

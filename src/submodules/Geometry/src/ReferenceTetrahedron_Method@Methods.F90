@@ -39,6 +39,32 @@ IMPLICIT NONE
 CONTAINS
 
 !----------------------------------------------------------------------------
+!                                                 FacetTopology_Tetrahedron
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE FacetTopology_Tetrahedron
+INTEGER(I4B) :: ii, faceElemType(4), tFaceNodes(4)
+INTEGER(I4B), ALLOCATABLE :: con(:, :)
+
+CALL GetFaceElemType_Tetrahedron(faceElemType=faceElemType,  &
+  & elemType=elemType, tFaceNodes=tFaceNodes)
+
+CALL Reallocate(con, tFaceNodes(1), 4)
+
+ii = ElementOrder_Tetrahedron(elemType=elemType)
+CALL GetFaceConnectivity_Tetrahedron(con=con, order=ii)
+
+DO ii = 1, 4
+  ans(ii)%nptrs = nptrs(con(:, ii))
+  ans(ii)%xiDimension = 2
+  ans(ii)%name = faceElemType(ii)
+END DO
+
+IF (ALLOCATED(con)) DEALLOCATE (con)
+
+END PROCEDURE FacetTopology_Tetrahedron
+
+!----------------------------------------------------------------------------
 !                                                   TotalEntities_Tetrahedron
 !----------------------------------------------------------------------------
 
