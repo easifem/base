@@ -37,6 +37,44 @@ PUBLIC :: GetFaceConnectivity_Hexahedron
 PUBLIC :: RefCoord_Hexahedron
 PUBLIC :: RefHexahedronCoord
 PUBLIC :: GetFaceElemType_Hexahedron
+PUBLIC :: FacetElements_Hexahedron
+
+! PUBLIC :: ElementOrder_Hexahedron
+! PUBLIC :: ElementType_Hexahedron
+! PUBLIC :: TotalNodesInElement_Hexahedron
+! PUBLIC :: TotalEntities_Hexahedron
+! PUBLIC :: FacetTopology_Hexahedron
+
+!----------------------------------------------------------------------------
+!                                                   FacetElements_Hexahedron
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2024-03-21
+! summary:  Get FacetElements
+
+INTERFACE FacetElements_Hexahedron
+  MODULE SUBROUTINE FacetElements_Hexahedron1(refelem, ans)
+    CLASS(ReferenceElement_), INTENT(IN) :: refelem
+    TYPE(ReferenceElement_), INTENT(INOUT) :: ans(:)
+  END SUBROUTINE FacetElements_Hexahedron1
+END INTERFACE FacetElements_Hexahedron
+
+!----------------------------------------------------------------------------
+!                                                  FacetElements_Hexahedron
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2024-03-21
+! summary:  Get FacetElements
+
+INTERFACE FacetElements_Hexahedron
+  MODULE SUBROUTINE FacetElements_Hexahedron2(elemType, nsd, ans)
+    INTEGER(I4B), INTENT(IN) :: elemType
+    INTEGER(I4B), INTENT(IN) :: nsd
+    TYPE(ReferenceElement_), INTENT(INOUT) :: ans(:)
+  END SUBROUTINE FacetElements_Hexahedron2
+END INTERFACE FacetElements_Hexahedron
 
 !----------------------------------------------------------------------------
 !                                                       Initiate@Hexahedron
@@ -211,7 +249,7 @@ END INTERFACE RefCoord_Hexahedron
 
 INTERFACE
   MODULE PURE SUBROUTINE GetFaceElemType_Hexahedron(faceElemType, opt,  &
-    & tFaceNodes)
+    & tFaceNodes, elemType)
     INTEGER(I4B), INTENT(INOUT) :: faceElemType(:)
     !! Face element type
     INTEGER(I4B), OPTIONAL, INTENT(INOUT) :: tFaceNodes(:)
@@ -220,6 +258,9 @@ INTERFACE
     !! If opt = 1, then edge connectivity for hierarchial approximation
     !! If opt = 2, then edge connectivity for Lagrangian approximation
     !! opt = 1 is default
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: elemType
+    !! This denotes the element type of Hexahedron
+    !! Default value is Hexahedron6
   END SUBROUTINE GetFaceElemType_Hexahedron
 END INTERFACE
 

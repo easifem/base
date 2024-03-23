@@ -30,8 +30,23 @@ USE ReferenceQuadrangle_Method, ONLY: RefQuadrangleCoord
 USE ReferencePrism_Method, ONLY: PolyhedronVolume3d
 
 IMPLICIT NONE
-
 CONTAINS
+
+!----------------------------------------------------------------------------
+!                                                   FacetElements_Hexahedron
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE FacetElements_Hexahedron1
+
+END PROCEDURE FacetElements_Hexahedron1
+
+!----------------------------------------------------------------------------
+!                                                   FacetElements_Hexahedron
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE FacetElements_Hexahedron2
+
+END PROCEDURE FacetElements_Hexahedron2
 
 !----------------------------------------------------------------------------
 !                                                                  Initiate
@@ -267,8 +282,31 @@ END PROCEDURE GetFaceConnectivity_Hexahedron
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE GetFaceElemType_Hexahedron
-faceElemType(1:6) = Quadrangle4
-IF (PRESENT(tFaceNodes)) tFaceNodes(1:6) = 4_I4B
+INTEGER(I4B) :: elemType0
+elemType0 = Input(default=Hexahedron8, option=elemType)
+
+SELECT CASE (elemType0)
+CASE (Hexahedron8)
+
+  faceElemType(1:6) = Quadrangle4
+  IF (PRESENT(tFaceNodes)) tFaceNodes(1:6) = 4_I4B
+
+CASE (Hexahedron20)
+
+  faceElemType(1:6) = Quadrangle8
+  IF (PRESENT(tFaceNodes)) tFaceNodes(1:6) = 8_I4B
+
+CASE (Hexahedron27)
+
+  faceElemType(1:6) = Quadrangle9
+  IF (PRESENT(tFaceNodes)) tFaceNodes(1:6) = 9_I4B
+
+CASE (Hexahedron64)
+
+  faceElemType(1:6) = Quadrangle16
+  IF (PRESENT(tFaceNodes)) tFaceNodes(1:6) = 16_I4B
+
+END SELECT
 END PROCEDURE GetFaceElemType_Hexahedron
 
 !----------------------------------------------------------------------------
