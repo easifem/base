@@ -49,6 +49,27 @@ MODULE PROCEDURE FacetElements_Hexahedron2
 END PROCEDURE FacetElements_Hexahedron2
 
 !----------------------------------------------------------------------------
+!                                                     ElementType_Hexahedron
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE ElementType_Hexahedron
+SELECT CASE (elemName)
+CASE ("Hexahedron8", "Hexahedron")
+  ans = Hexahedron8
+CASE ("Hexahedron20")
+  ans = Hexahedron20
+CASE ("Hexahedron27")
+  ans = Hexahedron27
+CASE ("Hexahedron64")
+  ans = Hexahedron64
+CASE ("Hexahedron125")
+  ans = Hexahedron125
+CASE DEFAULT
+  ans = 0
+END SELECT
+END PROCEDURE ElementType_Hexahedron
+
+!----------------------------------------------------------------------------
 !                                                 ElementOrder_Hexahedron
 !----------------------------------------------------------------------------
 
