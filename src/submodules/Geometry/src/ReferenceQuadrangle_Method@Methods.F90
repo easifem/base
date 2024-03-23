@@ -42,6 +42,15 @@ IMPLICIT NONE
 CONTAINS
 
 !----------------------------------------------------------------------------
+!                                                    TotalEntities_Quadrangle
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE TotalEntities_Quadrangle
+ans(2:4) = [4, 1, 0]
+ans(1) = TotalNodesInElement_Quadrangle(elemType)
+END PROCEDURE TotalEntities_Quadrangle
+
+!----------------------------------------------------------------------------
 !                                              TotalNodesInElement_Quadrangle
 !----------------------------------------------------------------------------
 

@@ -43,14 +43,15 @@ PUBLIC :: DEFAULT_OPT_QUADRANGLE_EDGE_CON
 PUBLIC :: ElementOrder_Quadrangle
 PUBLIC :: ElementType_Quadrangle
 PUBLIC :: TotalNodesInElement_Quadrangle
+PUBLIC :: TotalEntities_Quadrangle
 
 INTEGER(I4B), PUBLIC, PARAMETER :: HelpFaceData_Quadrangle(5, 4) =  &
-& RESHAPE([ &
-& 2, 4, 3, 2, 4, &
-& 1, 3, 4, 3, 1, &
-& 2, 4, 1, 4, 2, &
-& 1, 3, 2, 1, 3 &
-], [5, 4])
+  & RESHAPE([ &
+    & 2, 4, 3, 2, 4, &
+    & 1, 3, 4, 3, 1, &
+    & 2, 4, 1, 4, 2, &
+    & 1, 3, 2, 1, 3 &
+  & ], [5, 4])
 
 #ifdef _QUADRANGLE_EDGE_CON_DEFAULT_OPT_2
 INTEGER(I4B), PARAMETER :: DEFAULT_OPT_QUADRANGLE_EDGE_CON = 1_I4B
@@ -60,6 +61,21 @@ INTEGER(I4B), PARAMETER :: DEFAULT_OPT_QUADRANGLE_EDGE_CON = 2_I4B
 !! This means edges are [1,2], [2,3], [3,4], [4,1]
 !! This is default option
 #endif
+
+!----------------------------------------------------------------------------
+!                                                    TotalEntities_Quadrangle
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2024-03-22
+! summary:  Returns total entities
+
+INTERFACE
+  MODULE PURE FUNCTION TotalEntities_Quadrangle(elemType) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: elemType
+    INTEGER(I4B) :: ans(4)
+  END FUNCTION TotalEntities_Quadrangle
+END INTERFACE
 
 !----------------------------------------------------------------------------
 !                                             TotalNodesInElement_Quadrangle
