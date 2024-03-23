@@ -40,6 +40,7 @@ PUBLIC :: ElementType_Line
 PUBLIC :: ElementOrder_Line
 PUBLIC :: TotalNodesInElement_Line
 PUBLIC :: TotalEntities_Line
+PUBLIC :: FacetTopology_Line
 
 #ifdef REF_LINE_IS_UNIT
 REAL(DFP), PARAMETER :: DEFAULT_REF_LINE_COORD(3, 2) =  &
@@ -48,6 +49,22 @@ REAL(DFP), PARAMETER :: DEFAULT_REF_LINE_COORD(3, 2) =  &
 REAL(DFP), PARAMETER :: DEFAULT_REF_LINE_COORD(3, 2) =  &
   & RESHAPE([-1, 0, 0, 1, 0, 0], [3, 2])
 #endif
+
+!----------------------------------------------------------------------------
+!                                                         FacetTopology_Line
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2024-03-22
+! summary: Returns the facet topology of the given element type
+
+INTERFACE
+  MODULE PURE SUBROUTINE FacetTopology_Line(elemType, nptrs, ans)
+    INTEGER(I4B), INTENT(IN) :: elemType
+    INTEGER(I4B), INTENT(IN) :: nptrs(:)
+    TYPE(ReferenceTopology_), INTENT(INOUT) :: ans(:)
+  END SUBROUTINE FacetTopology_Line
+END INTERFACE
 
 !----------------------------------------------------------------------------
 !                                                    TotalEntities_Line

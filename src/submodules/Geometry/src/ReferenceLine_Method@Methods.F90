@@ -31,6 +31,20 @@ IMPLICIT NONE
 CONTAINS
 
 !----------------------------------------------------------------------------
+!                                                     FacetTopology_Line
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE FacetTopology_Line
+ans(1)%nptrs = nptrs([1])
+ans(1)%xiDimension = 0
+ans(1)%name = Point
+
+ans(2)%nptrs = nptrs([2])
+ans(2)%xiDimension = 0
+ans(2)%name = Point
+END PROCEDURE FacetTopology_Line
+
+!----------------------------------------------------------------------------
 !                                                         TotalEntities_Line
 !----------------------------------------------------------------------------
 
