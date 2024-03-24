@@ -90,8 +90,8 @@ END PROCEDURE refelem_ReferenceTopology
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE refelem_Deallocate1
-IF (ALLOCATED(obj%Nptrs)) DEALLOCATE (obj%Nptrs)
-obj%Name = 0_I4B
+IF (ALLOCATED(obj%nptrs)) DEALLOCATE (obj%nptrs)
+obj%name = 0_I4B
 obj%XiDimension = 0_I4B
 END PROCEDURE refelem_Deallocate1
 
@@ -123,8 +123,8 @@ END PROCEDURE refelem_Deallocate2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE refelem_NNE1
-IF (ALLOCATED(obj%Nptrs)) THEN
-  Ans = SIZE(obj%Nptrs)
+IF (ALLOCATED(obj%nptrs)) THEN
+  Ans = SIZE(obj%nptrs)
 ELSE
   Ans = 0
 END IF
@@ -166,7 +166,6 @@ END PROCEDURE refelem_Initiate1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE refelem_constructor_1
-TYPE(String) :: dsetname
 CLASS(ReferenceElement_), POINTER :: refelem
 INTEGER(I4B) :: elemOrder
 refelem => NULL()
@@ -287,7 +286,6 @@ END PROCEDURE refelem_constructor_1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE refelem_constructor_2
-INTEGER(I4B) :: ii
 SELECT TYPE (refelem)
 TYPE IS (ReferenceLine_)
   ALLOCATE (ReferenceLine_ :: ans)
@@ -325,10 +323,10 @@ ans = refelem
 END PROCEDURE refelem_constructor_2
 
 !----------------------------------------------------------------------------
-!                                                              getNptrs
+!                                                              getnptrs
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE refelem_getNptrs
+MODULE PROCEDURE refelem_getnptrs
 INTEGER(I4B) :: ii, tsize
 LOGICAL(LGT) :: isok
 
@@ -355,7 +353,7 @@ IF (.NOT. isok) THEN
 END IF
 
 ans = obj%topology(ii)%nptrs
-END PROCEDURE refelem_getNptrs
+END PROCEDURE refelem_getnptrs
 
 !----------------------------------------------------------------------------
 !
