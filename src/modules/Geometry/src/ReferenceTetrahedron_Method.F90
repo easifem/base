@@ -159,12 +159,12 @@ END INTERFACE FacetElements_Tetrahedron
 ! summary: This subroutine for constructing the object
 
 INTERFACE Initiate
-  MODULE PURE SUBROUTINE initiate_ref_Tetrahedron(obj, nsd, xij, domainName)
+  MODULE PURE SUBROUTINE Initiate_Ref_Tetrahedron(obj, nsd, xij, domainName)
     CLASS(ReferenceTetrahedron_), INTENT(INOUT) :: obj
     INTEGER(I4B), INTENT(IN) :: nsd
     REAL(DFP), INTENT(IN), OPTIONAL :: xij(:, :)
     CHARACTER(*), OPTIONAL, INTENT(IN) :: domainName
-  END SUBROUTINE initiate_ref_Tetrahedron
+  END SUBROUTINE Initiate_Ref_Tetrahedron
 END INTERFACE Initiate
 
 !----------------------------------------------------------------------------
