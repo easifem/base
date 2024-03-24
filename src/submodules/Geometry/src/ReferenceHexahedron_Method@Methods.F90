@@ -28,6 +28,7 @@ USE StringUtility
 USE ArangeUtility
 USE ReferenceQuadrangle_Method, ONLY: RefQuadrangleCoord
 USE ReferencePrism_Method, ONLY: PolyhedronVolume3d
+USE ReallocateUtility
 
 IMPLICIT NONE
 CONTAINS
@@ -47,6 +48,32 @@ END PROCEDURE FacetElements_Hexahedron1
 MODULE PROCEDURE FacetElements_Hexahedron2
 
 END PROCEDURE FacetElements_Hexahedron2
+
+!----------------------------------------------------------------------------
+!                                                 FacetTopology_Hexahedron
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE FacetTopology_Hexahedron
+INTEGER(I4B), PARAMETER :: tface = 6
+INTEGER(I4B) :: ii, faceElemType(tface), tFaceNodes(tface)
+INTEGER(I4B), ALLOCATABLE :: con(:, :)
+
+CALL GetFaceElemType_Hexahedron(faceElemType=faceElemType,  &
+  & elemType=elemType, tFaceNodes=tFaceNodes)
+
+CALL Reallocate(con, tFaceNodes(1), tface)
+
+ii = ElementOrder_Hexahedron(elemType=elemType)
+CALL GetFaceConnectivity_Hexahedron(con=con, order=ii)
+
+DO ii = 1, tface
+  ans(ii)%nptrs = nptrs(con(1:tFaceNodes(ii), ii))
+  ans(ii)%xiDimension = 2
+  ans(ii)%name = faceElemType(ii)
+END DO
+
+IF (ALLOCATED(con)) DEALLOCATE (con)
+END PROCEDURE FacetTopology_Hexahedron
 
 !----------------------------------------------------------------------------
 !                                                  TotalEntities_Hexahedron
@@ -195,20 +222,20 @@ END PROCEDURE Initiate_ref_Hexahedron
 !                                                       ReferenceHexahedron
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE reference_Hexahedron
-CALL Initiate_ref_Hexahedron(obj=obj, nsd=NSD, xij=xij,  &
+MODULE PROCEDURE Reference_Hexahedron
+CALL Initiate_Ref_Hexahedron(obj=obj, nsd=NSD, xij=xij,  &
   & domainName=domainName)
-END PROCEDURE reference_Hexahedron
+END PROCEDURE Reference_Hexahedron
 
 !----------------------------------------------------------------------------
 !                                                        ReferenceHexahedron
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE reference_Hexahedron_Pointer
+MODULE PROCEDURE Reference_Hexahedron_Pointer
 ALLOCATE (obj)
-CALL Initiate_ref_Hexahedron(obj=obj, nsd=NSD, xij=xij,  &
+CALL Initiate_Ref_Hexahedron(obj=obj, nsd=NSD, xij=xij,  &
   & domainName=domainName)
-END PROCEDURE reference_Hexahedron_Pointer
+END PROCEDURE Reference_Hexahedron_Pointer
 
 !----------------------------------------------------------------------------
 !                                                          highOrderElement

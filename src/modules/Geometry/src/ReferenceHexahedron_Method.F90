@@ -43,7 +43,23 @@ PUBLIC :: ElementOrder_Hexahedron
 PUBLIC :: ElementType_Hexahedron
 PUBLIC :: TotalNodesInElement_Hexahedron
 PUBLIC :: TotalEntities_Hexahedron
-! PUBLIC :: FacetTopology_Hexahedron
+PUBLIC :: FacetTopology_Hexahedron
+
+!----------------------------------------------------------------------------
+!                                             FacetTopology_Hexahedron
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2024-03-23
+! summary:  Returns the topology of tetrahedron
+
+INTERFACE
+  MODULE PURE SUBROUTINE FacetTopology_Hexahedron(elemType, nptrs, ans)
+    INTEGER(I4B), INTENT(IN) :: elemType
+    INTEGER(I4B), INTENT(IN) :: nptrs(:)
+    TYPE(ReferenceTopology_), INTENT(INOUT) :: ans(:)
+  END SUBROUTINE FacetTopology_Hexahedron
+END INTERFACE
 
 !----------------------------------------------------------------------------
 !                                                   TotalEntities_Hexahedron
