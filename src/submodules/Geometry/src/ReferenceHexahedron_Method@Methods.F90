@@ -26,12 +26,19 @@ USE InvUtility
 USE InputUtility
 USE StringUtility
 USE ArangeUtility
+USE MiscUtility, ONLY: Int2STR
+
+USE ReferenceLine_Method, ONLY: ElementType_Line
+
 USE ReferenceQuadrangle_Method, ONLY: RefQuadrangleCoord,  &
   & ElementOrder_Quadrangle,  &
   & TotalEntities_Quadrangle,  &
   & FacetTopology_Quadrangle
 
 USE QuadrangleInterpolationUtility, ONLY: InterpolationPoint_Quadrangle
+
+USE HexahedronInterpolationUtility, ONLY: LagrangeDOF_Hexahedron,  &
+  & InterpolationPoint_Hexahedron
 
 USE ReferencePrism_Method, ONLY: PolyhedronVolume3d
 USE ReallocateUtility
@@ -266,17 +273,12 @@ END PROCEDURE ElementOrder_Hexahedron
 !                                                                  Initiate
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE Initiate_ref_Hexahedron
+MODULE PROCEDURE Initiate_Ref_Hexahedron
 INTEGER(I4B) :: ii, jj
 INTEGER(I4B) :: p1p2(2, 12), lloop(4, 6), vol(8, 1)
 REAL(DFP) :: unit_xij(3, 8), biunit_xij(3, 8)
+
 CALL DEALLOCATE (obj)
-
-CALL GetEdgeConnectivity_Hexahedron(con=p1p2, opt=2_I4B)
-CALL GetFaceConnectivity_Hexahedron(con=lloop, opt=2_I4B)
-
-vol(:, 1) = arange(1_I4B, 8_I4B)
-
 unit_xij = RefCoord_Hexahedron("UNIT")
 biunit_xij = RefCoord_Hexahedron("BIUNIT")
 
@@ -304,34 +306,45 @@ ELSE
 
 END IF
 
-obj%entityCounts = [8, 12, 6, 1]
+CALL GetEdgeConnectivity_Hexahedron(con=p1p2, order=1_I4B)
+CALL GetFaceConnectivity_Hexahedron(con=lloop, order=1_I4B)
+
+vol(:, 1) = arange(1_I4B, 8_I4B)
+
+obj%entityCounts = TotalEntities_Hexahedron(Hexahedron8)
 obj%xidimension = 3
 obj%name = Hexahedron8
 obj%order = 1
 obj%nsd = nsd
 
-ALLOCATE (obj%topology(SUM(obj%entityCounts)))
+ii = SUM(obj%entityCounts)
+CALL RefTopoReallocate(obj%topology, ii)
+
+! points
 DO ii = 1, obj%entityCounts(1)
   obj%topology(ii) = ReferenceTopology([ii], Point)
 END DO
 
+! lines
 jj = obj%entityCounts(1)
 DO ii = 1, obj%entityCounts(2)
-  obj%topology(jj + ii) = ReferenceTopology(p1p2(:, ii), Line2)
+  obj%topology(jj + ii) = ReferenceTopology(nptrs=p1p2(:, ii),  &
+    & name=Line2)
 END DO
 
+! faces
 jj = SUM(obj%entityCounts(1:2))
 DO ii = 1, obj%entityCounts(3)
-  obj%topology(jj + ii) = ReferenceTopology(lloop(:, ii), Quadrangle4)
+  obj%topology(jj + ii) = ReferenceTopology(nptrs=lloop(:, ii),  &
+  & name=Quadrangle4)
 END DO
 
+! cell
 jj = SUM(obj%entityCounts(1:3))
-DO ii = 1, obj%entityCounts(4)
-  obj%topology(jj + ii) = ReferenceTopology(vol(:, ii), Hexahedron8)
-END DO
+obj%topology(jj + 1) = ReferenceTopology(vol(:, 1), Hexahedron8)
 
-obj%highorderElement => highorderElement_Hexahedron
-END PROCEDURE Initiate_ref_Hexahedron
+obj%highorderElement => HighorderElement_Hexahedron
+END PROCEDURE Initiate_Ref_Hexahedron
 
 !----------------------------------------------------------------------------
 !                                                       ReferenceHexahedron
@@ -357,7 +370,68 @@ END PROCEDURE Reference_Hexahedron_Pointer
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE HighorderElement_Hexahedron
-! TODO Implement highorderElement_Hexahedron
+INTEGER(I4B) :: ii, tFaceNodes(8), faceElemType(8), jj,  &
+  & edgetype
+INTEGER(I4B), ALLOCATABLE :: edgecon(:, :), facecon(:, :)
+
+CALL DEALLOCATE (obj)
+
+obj%xij = InterpolationPoint_Hexahedron( &
+  & xij=refelem%xij(1:3, 1:8), &
+  & order=order, &
+  & ipType=ipType, &
+  & layout="VEFC")
+
+obj%domainName = refelem%domainName
+obj%nsd = refelem%nsd
+obj%highOrderElement => refelem%highOrderElement
+obj%order = order
+obj%xiDimension = refelem%xiDimension
+
+ii = LagrangeDOF_Hexahedron(order=order)
+obj%name = ElementType_Hexahedron("Hexahedron"//INT2STR(ii))
+obj%entityCounts = TotalEntities_Hexahedron(obj%name)
+
+ii = SUM(obj%entityCounts)
+CALL RefTopoReallocate(obj%topology, ii)
+
+! points
+DO ii = 1, obj%entityCounts(1)
+  obj%topology(ii) = ReferenceTopology([ii], Point)
+END DO
+
+CALL Reallocate(edgecon, order + 1, obj%entityCounts(2))
+CALL GetEdgeConnectivity_Hexahedron(con=edgecon, order=order)
+edgetype = ElementType_Line("Line"//Int2STR(order + 1))
+
+! lines
+jj = obj%entityCounts(1)
+DO ii = 1, obj%entityCounts(2)
+  obj%topology(jj + ii) = ReferenceTopology(nptrs=edgecon(:, ii),  &
+    & name=edgetype)
+END DO
+
+CALL GetFaceElemType_Hexahedron(faceElemType=faceElemType,  &
+  & tFaceNodes=tFaceNodes, elemType=obj%name)
+CALL Reallocate(facecon, tFaceNodes(1), obj%entityCounts(3))
+CALL GetFaceConnectivity_Hexahedron(con=facecon, order=order)
+
+! faces
+jj = jj + obj%entityCounts(2)
+DO ii = 1, obj%entityCounts(3)
+  obj%topology(jj + ii) = ReferenceTopology( &
+    & nptrs=facecon(1:tFaceNodes(ii), ii),  &
+    & name=faceElemType(ii))
+END DO
+
+! cell
+jj = jj + obj%entityCounts(3)
+obj%topology(jj + 1) = ReferenceTopology( &
+  & arange(1_I4B, obj%entityCounts(1)), obj%name)
+
+IF (ALLOCATED(edgecon)) DEALLOCATE (edgecon)
+IF (ALLOCATED(facecon)) DEALLOCATE (facecon)
+
 END PROCEDURE HighorderElement_Hexahedron
 
 !----------------------------------------------------------------------------
@@ -392,7 +466,7 @@ END PROCEDURE Hexahedron_quality
 
 MODULE PROCEDURE HexahedronVolume3D
 TYPE(ReferenceHexahedron_) :: refelem
-CALL Initiate_ref_Hexahedron(obj=refelem, nsd=3_I4B)
+CALL Initiate_Ref_Hexahedron(obj=refelem, nsd=3_I4B)
 ans = Measure_Simplex_Hexahedron(refelem=refelem, xij=xij)
 CALL DEALLOCATE (refelem)
 END PROCEDURE HexahedronVolume3D
