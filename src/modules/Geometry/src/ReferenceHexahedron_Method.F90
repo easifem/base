@@ -161,12 +161,12 @@ END INTERFACE FacetElements_Hexahedron
 ! summary: This subroutine for constructing the object
 
 INTERFACE Initiate
-  MODULE PURE SUBROUTINE initiate_ref_Hexahedron(obj, nsd, xij, domainName)
+  MODULE PURE SUBROUTINE Initiate_Ref_Hexahedron(obj, nsd, xij, domainName)
     CLASS(ReferenceHexahedron_), INTENT(INOUT) :: obj
     INTEGER(I4B), INTENT(IN) :: nsd
     REAL(DFP), INTENT(IN), OPTIONAL :: xij(:, :)
     CHARACTER(*), OPTIONAL, INTENT(IN) :: domainName
-  END SUBROUTINE initiate_ref_Hexahedron
+  END SUBROUTINE Initiate_Ref_Hexahedron
 END INTERFACE Initiate
 
 !----------------------------------------------------------------------------
@@ -174,12 +174,12 @@ END INTERFACE Initiate
 !----------------------------------------------------------------------------
 
 INTERFACE ReferenceHexahedron
-  MODULE PURE FUNCTION reference_Hexahedron(nsd, xij, domainName) RESULT(obj)
+  MODULE PURE FUNCTION Reference_Hexahedron(nsd, xij, domainName) RESULT(obj)
     INTEGER(I4B), INTENT(IN) :: NSD
     REAL(DFP), INTENT(IN), OPTIONAL :: xij(:, :)
     CHARACTER(*), OPTIONAL, INTENT(IN) :: domainName
     TYPE(ReferenceHexahedron_) :: obj
-  END FUNCTION reference_Hexahedron
+  END FUNCTION Reference_Hexahedron
 END INTERFACE ReferenceHexahedron
 
 !----------------------------------------------------------------------------
@@ -187,13 +187,13 @@ END INTERFACE ReferenceHexahedron
 !----------------------------------------------------------------------------
 
 INTERFACE ReferenceHexahedron_Pointer
-  MODULE FUNCTION reference_Hexahedron_Pointer(nsd, xij, domainName)  &
+  MODULE FUNCTION Reference_Hexahedron_Pointer(nsd, xij, domainName)  &
     & RESULT(obj)
     INTEGER(I4B), INTENT(IN) :: NSD
     REAL(DFP), INTENT(IN), OPTIONAL :: xij(:, :)
     CHARACTER(*), OPTIONAL, INTENT(IN) :: domainName
     CLASS(ReferenceHexahedron_), POINTER :: obj
-  END FUNCTION reference_Hexahedron_Pointer
+  END FUNCTION Reference_Hexahedron_Pointer
 END INTERFACE ReferenceHexahedron_Pointer
 
 !----------------------------------------------------------------------------
@@ -201,13 +201,13 @@ END INTERFACE ReferenceHexahedron_Pointer
 !----------------------------------------------------------------------------
 
 INTERFACE
-  MODULE SUBROUTINE highorderElement_Hexahedron(refelem, order, obj, &
+  MODULE SUBROUTINE HighorderElement_Hexahedron(refelem, order, obj, &
     & ipType)
     CLASS(ReferenceElement_), INTENT(IN) :: refelem
     INTEGER(I4B), INTENT(IN) :: order
     CLASS(ReferenceElement_), INTENT(INOUT) :: obj
     INTEGER(I4B), INTENT(IN) :: ipType
-  END SUBROUTINE highorderElement_Hexahedron
+  END SUBROUTINE HighorderElement_Hexahedron
 END INTERFACE
 
 !----------------------------------------------------------------------------

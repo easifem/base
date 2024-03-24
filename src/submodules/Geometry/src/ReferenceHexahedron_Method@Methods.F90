@@ -26,7 +26,13 @@ USE InvUtility
 USE InputUtility
 USE StringUtility
 USE ArangeUtility
-USE ReferenceQuadrangle_Method, ONLY: RefQuadrangleCoord
+USE ReferenceQuadrangle_Method, ONLY: RefQuadrangleCoord,  &
+  & ElementOrder_Quadrangle,  &
+  & TotalEntities_Quadrangle,  &
+  & FacetTopology_Quadrangle
+
+USE QuadrangleInterpolationUtility, ONLY: InterpolationPoint_Quadrangle
+
 USE ReferencePrism_Method, ONLY: PolyhedronVolume3d
 USE ReallocateUtility
 
@@ -38,6 +44,57 @@ CONTAINS
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE FacetElements_Hexahedron1
+INTEGER(I4B) :: ii, istart, tsize, jj
+TYPE(ReferenceTopology_) :: topo
+
+istart = refelem%entityCounts(1) + refelem%entityCounts(2)
+! tPoints + tEdges
+
+ii = 1
+ans(ii)%nsd = refelem%nsd
+ans(ii)%interpolationPointType = refelem%interpolationPointType
+ans(ii)%xij = InterpolationPoint_Quadrangle( &
+  & order=refelem%order, &
+  & ipType=refelem%interpolationPointType, &
+  & layout="VEFC")
+
+DO ii = 2, 4
+  ans(ii)%nsd = ans(1)%nsd
+  ans(ii)%interpolationPointType = ans(1)%interpolationPointType
+  ans(ii)%xij = ans(1)%xij
+END DO
+
+DO ii = 1, 4
+
+  topo = refelem%topology(istart + ii)
+  ans(ii)%xidimension = topo%xidimension
+  ans(ii)%name = topo%name
+
+  ans(ii)%order = ElementOrder_Quadrangle(topo%name)
+  ans(ii)%entityCounts = TotalEntities_Quadrangle(topo%name)
+
+  tsize = SUM(ans(ii)%entityCounts)
+  ALLOCATE (ans(ii)%topology(tsize))
+
+  ! points
+  DO jj = 1, ans(ii)%entityCounts(1)
+    ans(ii)%topology(jj) = ReferenceTopology(nptrs=topo%nptrs(jj:jj), &
+      & name=Point)
+  END DO
+
+  ! lines
+  jj = ans(ii)%entityCounts(1)
+  CALL FacetTopology_Quadrangle(elemType=topo%name,  &
+    & nptrs=topo%nptrs, ans=ans(ii)%topology(jj + 1:))
+
+  ! surface
+  tsize = jj + ans(ii)%entityCounts(2)
+  ans(ii)%topology(tsize + 1) = ReferenceTopology(nptrs=topo%nptrs, &
+    & name=topo%name)
+
+END DO
+
+CALL DEALLOCATE (topo)
 
 END PROCEDURE FacetElements_Hexahedron1
 
