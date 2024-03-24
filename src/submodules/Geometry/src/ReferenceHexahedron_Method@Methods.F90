@@ -333,14 +333,14 @@ DO ii = 1, obj%entityCounts(2)
 END DO
 
 ! faces
-jj = SUM(obj%entityCounts(1:2))
+jj = jj + obj%entityCounts(2)
 DO ii = 1, obj%entityCounts(3)
   obj%topology(jj + ii) = ReferenceTopology(nptrs=lloop(:, ii),  &
   & name=Quadrangle4)
 END DO
 
 ! cell
-jj = SUM(obj%entityCounts(1:3))
+jj = jj + obj%entityCounts(3)
 obj%topology(jj + 1) = ReferenceTopology(vol(:, 1), Hexahedron8)
 
 obj%highorderElement => HighorderElement_Hexahedron
