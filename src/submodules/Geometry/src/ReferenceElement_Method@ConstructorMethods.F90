@@ -124,9 +124,9 @@ END PROCEDURE refelem_Deallocate2
 
 MODULE PROCEDURE refelem_NNE1
 IF (ALLOCATED(obj%nptrs)) THEN
-  Ans = SIZE(obj%nptrs)
+  ans = SIZE(obj%nptrs)
 ELSE
-  Ans = 0
+  ans = 0
 END IF
 END PROCEDURE refelem_NNE1
 
@@ -136,9 +136,9 @@ END PROCEDURE refelem_NNE1
 
 MODULE PROCEDURE refelem_NNE2
 IF (ALLOCATED(obj%XiJ)) THEN
-  Ans = SIZE(obj%XiJ, 2)
+  ans = SIZE(obj%XiJ, 2)
 ELSE
-  Ans = 0
+  ans = 0
 END IF
 END PROCEDURE refelem_NNE2
 
