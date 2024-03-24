@@ -20,31 +20,91 @@
 ! summary:         This submodule contians methods for [[ReferencePyramid_]]
 
 SUBMODULE(ReferencePyramid_Method) Methods
-USE BaseMethod
+USE ArangeUtility
+USE ApproxUtility
+USE StringUtility
+USE ReferenceElement_Method
+USE ReferencePrism_Method, ONLY: PolyhedronVolume3D
+
 IMPLICIT NONE
 CONTAINS
+
+!----------------------------------------------------------------------------
+!                                                     FaceTopology_Pyramid
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE FacetTopology_Pyramid
+! TODO:
+END PROCEDURE FacetTopology_Pyramid
+
+!----------------------------------------------------------------------------
+!                                                     TotalEntities_Pyramid
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE TotalEntities_Pyramid
+!TODO:
+ans = 0
+END PROCEDURE TotalEntities_Pyramid
+
+!----------------------------------------------------------------------------
+!                                               TotalNodesInElements_Pyramid
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE TotalNodesInElement_Pyramid
+!TODO:
+ans = 0
+END PROCEDURE TotalNodesInElement_Pyramid
+
+!----------------------------------------------------------------------------
+!                                                        ElementType_Pyramid
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE ElementType_Pyramid
+!TODO:
+ans = 0
+END PROCEDURE ElementType_Pyramid
+
+!----------------------------------------------------------------------------
+!                                                       ElementOrder_Pyramid
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE ElementOrder_Pyramid
+!TODO:
+ans = 0
+END PROCEDURE ElementOrder_Pyramid
+
+!----------------------------------------------------------------------------
+!                                                     FacetElements_Pyramid
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE FacetElements_Pyramid1
+! TODO:
+END PROCEDURE FacetElements_Pyramid1
+
+!----------------------------------------------------------------------------
+!                                                     FacetElements_Pyramid
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE FacetElements_Pyramid2
+! TODO:
+END PROCEDURE FacetElements_Pyramid2
 
 !----------------------------------------------------------------------------
 !                                                                  Initiate
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE Initiate_ref_Pyramid
+MODULE PROCEDURE Initiate_Ref_Pyramid
 INTEGER(I4B) :: ii, jj
 INTEGER(I4B), PARAMETER :: tNodes = 5, tFaces = 5, tEdges = 8, xidim = 3, &
-  & max_nodes_face = 4, min_nodes_face = 3, name = Pyramid
+  & max_nodes_face = 4, name = Pyramid
 INTEGER(I4B) :: p1p2(2, tEdges), lloop(max_nodes_face + 2, tFaces), &
   & vol(tNodes, 1)
 REAL(DFP) :: unit_xij(xidim, tNodes), biunit_xij(xidim, tNodes)
 
 CALL DEALLOCATE (obj)
 
-p1p2 = EdgeConnectivity_Pyramid( &
-  & baseInterpol="LAGRANGE",  &
-  & baseContinuity="H1")
-
-lloop = FacetConnectivity_Pyramid( &
-  & baseInterpol="LAGRANGE",  &
-  & baseContinuity="H1")
+CALL GetEdgeConnectivity_Pyramid(con=p1p2, opt=1_I4B, order=1_I4B)
+CALL GetFaceConnectivity_Pyramid(con=lloop, opt=1_I4B, order=1_I4B)
 
 vol(:, 1) = arange(1_I4B, tNodes)
 
@@ -52,6 +112,7 @@ unit_xij = RefCoord_Pyramid("UNIT")
 biunit_xij = RefCoord_Pyramid("BIUNIT")
 
 IF (PRESENT(xij)) THEN
+
   obj%xij = xij(:xidim, :tNodes)
 
   IF (ALL(obj%xij(:xidim, :tNodes) .approxeq.unit_xij)) THEN
@@ -104,30 +165,31 @@ DO ii = 1, obj%entityCounts(4)
 END DO
 
 obj%highorderElement => highorderElement_Pyramid
-END PROCEDURE Initiate_ref_Pyramid
+END PROCEDURE Initiate_Ref_Pyramid
 
 !----------------------------------------------------------------------------
 !                                                      ReferencePyramid
 !----------------------------------------------------------------------------
-MODULE PROCEDURE reference_Pyramid
-CALL Initiate(obj=obj, nsd=NSD, xij=xij, domainName=domainName)
-END PROCEDURE reference_Pyramid
+MODULE PROCEDURE Reference_Pyramid
+CALL Initiate_Ref_Pyramid(obj=obj, nsd=NSD, xij=xij, domainName=domainName)
+END PROCEDURE Reference_Pyramid
 
 !----------------------------------------------------------------------------
 !                                                      ReferencePyramid
 !----------------------------------------------------------------------------
-MODULE PROCEDURE reference_Pyramid_Pointer
+MODULE PROCEDURE Reference_Pyramid_Pointer
 ALLOCATE (obj)
-CALL Initiate(obj=obj, nsd=NSD, xij=xij, domainName=domainName)
-END PROCEDURE reference_Pyramid_Pointer
+CALL Initiate_Ref_Pyramid(obj=obj, nsd=NSD, xij=xij, domainName=domainName)
+END PROCEDURE Reference_Pyramid_Pointer
 
 !----------------------------------------------------------------------------
 !                                                             LagrangeElement
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE highOrderElement_Pyramid
+MODULE PROCEDURE HighOrderElement_Pyramid
 ! FIX:
-END PROCEDURE highOrderElement_Pyramid
+!TODO:
+END PROCEDURE HighOrderElement_Pyramid
 
 !-----------------------------------------------------------------------------
 !                                                              MeasureSimplex
@@ -135,17 +197,21 @@ END PROCEDURE highOrderElement_Pyramid
 
 MODULE PROCEDURE Measure_Simplex_Pyramid
 INTEGER(I4B) :: FM(5, 7), Node0(5, 4), Order0(5), iFace, b
+
 FM = FacetMatrix(RefElem)
+
 DO iFace = 1, 5
   Order0(iFace) = FM(iFace, 3)
   b = Order0(iFace) + 3
   Node0(iFace, 1:Order0(iFace)) = FM(iFace, 4:b)
 END DO
-CALL POLYHEDRONVOLUME3D(coord=XiJ(1:3, 1:5), &
+
+CALL PolyhedronVolume3D(coord=XiJ(1:3, 1:5), &
   & order_max=4, face_num=5,  &
   & node=Node0, node_num=5, &
   & order=Order0, &
   & ans=ans)
+
 END PROCEDURE Measure_Simplex_Pyramid
 
 !----------------------------------------------------------------------------
@@ -155,6 +221,7 @@ END PROCEDURE Measure_Simplex_Pyramid
 MODULE PROCEDURE Pyramid_Quality
 ans = 0.0_DFP
 !FIX: Implement Pyramid_Quality
+!TODO:
 END PROCEDURE Pyramid_Quality
 
 !----------------------------------------------------------------------------
@@ -164,6 +231,7 @@ END PROCEDURE Pyramid_Quality
 MODULE PROCEDURE RefCoord_Pyramid
 !FIX: Implement RefCoord
 ans = 0.0_DFP
+!TODO:
 END PROCEDURE RefCoord_Pyramid
 
 !----------------------------------------------------------------------------

@@ -35,6 +35,119 @@ PUBLIC :: GetEdgeConnectivity_Pyramid
 PUBLIC :: GetFaceConnectivity_Pyramid
 PUBLIC :: RefCoord_Pyramid
 PUBLIC :: GetFaceElemType_Pyramid
+PUBLIC :: FacetElements_Pyramid
+PUBLIC :: ElementOrder_Pyramid
+PUBLIC :: ElementType_Pyramid
+PUBLIC :: TotalNodesInElement_Pyramid
+PUBLIC :: TotalEntities_Pyramid
+PUBLIC :: FacetTopology_Pyramid
+
+!----------------------------------------------------------------------------
+!                                             FacetTopology_Pyramid
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2024-03-23
+! summary:  Returns the topology of tetrahedron
+
+INTERFACE
+  MODULE PURE SUBROUTINE FacetTopology_Pyramid(elemType, nptrs, ans)
+    INTEGER(I4B), INTENT(IN) :: elemType
+    INTEGER(I4B), INTENT(IN) :: nptrs(:)
+    TYPE(ReferenceTopology_), INTENT(INOUT) :: ans(:)
+  END SUBROUTINE FacetTopology_Pyramid
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                 TotalEntities_Pyramid
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2024-03-22
+! summary:  Returns total entities in Pyramid
+
+INTERFACE
+  MODULE PURE FUNCTION TotalEntities_Pyramid(elemType) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: elemType
+    INTEGER(I4B) :: ans(4)
+  END FUNCTION TotalEntities_Pyramid
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                            TotalNodesInElement_Pyramid
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2024-03-22
+! summary:  Returns total nodes in element
+
+INTERFACE
+  MODULE PURE FUNCTION TotalNodesInElement_Pyramid(elemType) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: elemType
+    INTEGER(I4B) :: ans
+  END FUNCTION TotalNodesInElement_Pyramid
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                     ElementType_Pyramid
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2024-03-22
+! summary:  Returns the type of element from char name
+
+INTERFACE
+  MODULE PURE FUNCTION ElementType_Pyramid(elemName) RESULT(ans)
+    CHARACTER(*), INTENT(IN) :: elemName
+    INTEGER(I4B) :: ans
+  END FUNCTION ElementType_Pyramid
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                   ElementOrder_Pyramid
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2024-03-22
+! summary:  Returns the order of element
+
+INTERFACE
+  MODULE PURE FUNCTION ElementOrder_Pyramid(elemType) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: elemType
+    INTEGER(I4B) :: ans
+  END FUNCTION ElementOrder_Pyramid
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                   FacetElements_Pyramid
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2024-03-21
+! summary:  Get FacetElements
+
+INTERFACE FacetElements_Pyramid
+  MODULE SUBROUTINE FacetElements_Pyramid1(refelem, ans)
+    CLASS(ReferenceElement_), INTENT(IN) :: refelem
+    TYPE(ReferenceElement_), INTENT(INOUT) :: ans(:)
+  END SUBROUTINE FacetElements_Pyramid1
+END INTERFACE FacetElements_Pyramid
+
+!----------------------------------------------------------------------------
+!                                                  FacetElements_Pyramid
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2024-03-21
+! summary:  Get FacetElements
+
+INTERFACE FacetElements_Pyramid
+  MODULE SUBROUTINE FacetElements_Pyramid2(elemType, nsd, ans)
+    INTEGER(I4B), INTENT(IN) :: elemType
+    INTEGER(I4B), INTENT(IN) :: nsd
+    TYPE(ReferenceElement_), INTENT(INOUT) :: ans(:)
+  END SUBROUTINE FacetElements_Pyramid2
+END INTERFACE FacetElements_Pyramid
 
 !----------------------------------------------------------------------------
 !                                                          Initiate@Pyramid
@@ -45,12 +158,12 @@ PUBLIC :: GetFaceElemType_Pyramid
 ! summary: This subroutine for constructing the object
 
 INTERFACE Initiate
-  MODULE SUBROUTINE initiate_ref_Pyramid(obj, nsd, xij, domainName)
+  MODULE SUBROUTINE Initiate_Ref_Pyramid(obj, nsd, xij, domainName)
     CLASS(ReferencePyramid_), INTENT(INOUT) :: obj
     INTEGER(I4B), INTENT(IN) :: nsd
     REAL(DFP), INTENT(IN), OPTIONAL :: xij(:, :)
     CHARACTER(*), OPTIONAL, INTENT(IN) :: domainName
-  END SUBROUTINE initiate_ref_Pyramid
+  END SUBROUTINE Initiate_Ref_Pyramid
 END INTERFACE Initiate
 
 !----------------------------------------------------------------------------
@@ -58,12 +171,12 @@ END INTERFACE Initiate
 !----------------------------------------------------------------------------
 
 INTERFACE ReferencePyramid
-  MODULE FUNCTION reference_Pyramid(nsd, xij, domainName) RESULT(obj)
+  MODULE FUNCTION Reference_Pyramid(nsd, xij, domainName) RESULT(obj)
     INTEGER(I4B), INTENT(IN) :: nsd
     REAL(DFP), INTENT(IN), OPTIONAL :: xij(:, :)
     CHARACTER(*), OPTIONAL, INTENT(IN) :: domainName
     TYPE(ReferencePyramid_) :: obj
-  END FUNCTION reference_Pyramid
+  END FUNCTION Reference_Pyramid
 END INTERFACE ReferencePyramid
 
 !----------------------------------------------------------------------------
@@ -71,13 +184,13 @@ END INTERFACE ReferencePyramid
 !----------------------------------------------------------------------------
 
 INTERFACE ReferencePyramid_Pointer
-  MODULE FUNCTION reference_Pyramid_Pointer(nsd, xij, domainName) &
+  MODULE FUNCTION Reference_Pyramid_Pointer(nsd, xij, domainName) &
     & RESULT(obj)
     INTEGER(I4B), INTENT(IN) :: nsd
     REAL(DFP), INTENT(IN), OPTIONAL :: xij(:, :)
     CHARACTER(*), OPTIONAL, INTENT(IN) :: domainName
     CLASS(ReferencePyramid_), POINTER :: obj
-  END FUNCTION reference_Pyramid_Pointer
+  END FUNCTION Reference_Pyramid_Pointer
 END INTERFACE ReferencePyramid_Pointer
 
 !----------------------------------------------------------------------------
@@ -85,12 +198,12 @@ END INTERFACE ReferencePyramid_Pointer
 !----------------------------------------------------------------------------
 
 INTERFACE
-  MODULE PURE SUBROUTINE highOrderElement_Pyramid(RefElem, Order, obj, ipType)
+  MODULE PURE SUBROUTINE HighOrderElement_Pyramid(RefElem, Order, obj, ipType)
     CLASS(ReferenceElement_), INTENT(IN) :: RefElem
     INTEGER(I4B), INTENT(IN) :: Order
     CLASS(ReferenceElement_), INTENT(INOUT) :: obj
     INTEGER(I4B), INTENT(IN) :: ipType
-  END SUBROUTINE highOrderElement_Pyramid
+  END SUBROUTINE HighOrderElement_Pyramid
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -127,7 +240,7 @@ END INTERFACE Quality_Pyramid
 ! summary:  Returns number of edges in the element
 
 INTERFACE
-  MODULE PURE SUBROUTINE GetEdgeConnectivity_Pyramid(con, opt)
+  MODULE PURE SUBROUTINE GetEdgeConnectivity_Pyramid(con, opt, order)
     INTEGER(I4B), INTENT(INOUT) :: con(:, :)
     !! Connectivity
     !! The columns represents the edge number
@@ -137,6 +250,8 @@ INTERFACE
     !! If opt = 1, then edge connectivity for hierarchial approximation
     !! If opt =2, then edge connectivity for Lagrangian approximation
     !! opt=1 is default
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: order
+    !! Order of element
   END SUBROUTINE GetEdgeConnectivity_Pyramid
 END INTERFACE
 
@@ -149,7 +264,7 @@ END INTERFACE
 ! summary:  Returns number of edges in the element
 
 INTERFACE
-  MODULE PURE SUBROUTINE GetFaceConnectivity_Pyramid(con, opt)
+  MODULE PURE SUBROUTINE GetFaceConnectivity_Pyramid(con, opt, order)
     INTEGER(I4B), INTENT(INOUT) :: con(:, :)
     !! Connectivity
     !! The columns represents the face number
@@ -159,6 +274,8 @@ INTERFACE
     !! If opt = 1, then face connectivity for hierarchial approximation
     !! If opt =2, then face connectivity for Lagrangian approximation
     !! opt=1 is default
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: order
+    !! Order of element
   END SUBROUTINE GetFaceConnectivity_Pyramid
 END INTERFACE
 
@@ -187,7 +304,7 @@ END INTERFACE
 
 INTERFACE
   MODULE PURE SUBROUTINE GetFaceElemType_Pyramid(faceElemType, opt,  &
-    & tFaceNodes)
+    & tFaceNodes, elemType)
     INTEGER(I4B), INTENT(INOUT) :: faceElemType(:)
     !! Face element type
     INTEGER(I4B), OPTIONAL, INTENT(INOUT) :: tFaceNodes(:)
@@ -196,6 +313,8 @@ INTERFACE
     !! If opt = 1, then edge connectivity for hierarchial approximation
     !! If opt = 2, then edge connectivity for Lagrangian approximation
     !! opt = 1 is default
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: elemType
+    !!  Element type
   END SUBROUTINE GetFaceElemType_Pyramid
 END INTERFACE
 
