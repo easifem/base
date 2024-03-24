@@ -21,6 +21,60 @@ IMPLICIT NONE
 CONTAINS
 
 !----------------------------------------------------------------------------
+!                                                       RefTopoReallocate
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE RefTopoReallocate
+INTEGER(I4B) :: tsize, ii
+LOGICAL(LGT) :: isok
+
+isok = ALLOCATED(obj)
+
+IF (isok) THEN
+
+  tsize = SIZE(obj)
+
+  DO ii = 1, tsize
+    CALL DEALLOCATE (obj(ii))
+  END DO
+
+  IF (tsize .NE. n) THEN
+    DEALLOCATE (obj)
+    ALLOCATE (obj(n))
+  END IF
+
+ELSE
+
+  ALLOCATE (obj(n))
+
+END IF
+
+END PROCEDURE RefTopoReallocate
+
+!----------------------------------------------------------------------------
+!                                                                Deallocate
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE RefTopoDeallocate
+LOGICAL(LGT) :: isok
+INTEGER(I4B) :: ii, tsize
+
+isok = ALLOCATED(obj)
+
+IF (isok) THEN
+  tsize = SIZE(obj)
+
+  DO ii = 1, tsize
+    CALL DEALLOCATE (obj(ii))
+  END DO
+
+  DEALLOCATE (obj)
+
+END IF
+
+END PROCEDURE RefTopoDeallocate
+
+!----------------------------------------------------------------------------
 !                                                         ReferenceTopology
 !----------------------------------------------------------------------------
 

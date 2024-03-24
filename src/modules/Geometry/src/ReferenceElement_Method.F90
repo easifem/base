@@ -73,6 +73,8 @@ PUBLIC :: ReferenceElementInfo
 PUBLIC :: RefElemGetGeoParam
 PUBLIC :: GetFaceElemType
 PUBLIC :: GetElementIndex
+PUBLIC :: Reallocate
+PUBLIC :: RefTopoReallocate
 
 INTEGER(I4B), PARAMETER, PUBLIC :: REFELEM_MAX_FACES = 6
 INTEGER(I4B), PARAMETER, PUBLIC :: REFELEM_MAX_EDGES = 12
@@ -246,7 +248,7 @@ INTERFACE GetFaceConnectivity
 END INTERFACE GetFaceConnectivity
 
 !----------------------------------------------------------------------------
-!                                        GetFaceElemType@GeometryMethods
+!                                           GetFaceElemType@GeometryMethods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -455,6 +457,35 @@ INTERFACE DEALLOCATE
     CLASS(ReferenceTopology_), INTENT(INOUT) :: obj
   END SUBROUTINE refelem_Deallocate1
 END INTERFACE DEALLOCATE
+
+!----------------------------------------------------------------------------
+!                                            Deallocate@ConstructorMethods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2024-03-24
+! summary: Deallocate topology vector
+
+INTERFACE DEALLOCATE
+  MODULE PURE SUBROUTINE RefTopoDeallocate(obj)
+    TYPE(ReferenceTopology_), ALLOCATABLE, INTENT(INOUT) :: obj(:)
+  END SUBROUTINE RefTopoDeallocate
+END INTERFACE DEALLOCATE
+
+!----------------------------------------------------------------------------
+!                                            Deallocate@ConstructorMethods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2024-03-24
+! summary: Reallocate topology vector
+
+INTERFACE Reallocate
+  MODULE PURE SUBROUTINE RefTopoReallocate(obj, n)
+    TYPE(ReferenceTopology_), ALLOCATABLE, INTENT(INOUT) :: obj(:)
+    INTEGER(I4B), INTENT(IN) :: n
+  END SUBROUTINE RefTopoReallocate
+END INTERFACE Reallocate
 
 !----------------------------------------------------------------------------
 !                                            Deallocate@ConstructorMethods
