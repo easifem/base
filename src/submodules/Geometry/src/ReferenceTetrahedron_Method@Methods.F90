@@ -28,11 +28,17 @@ USE StringUtility
 USE ArangeUtility
 USE Display_Method
 USE ReallocateUtility
+USE MiscUtility, ONLY: Int2STR
+
+USE ReferenceLine_Method, ONLY: ElementType_Line
 
 USE TriangleInterpolationUtility, ONLY: InterpolationPoint_Triangle
 
 USE ReferenceTriangle_Method, ONLY: ElementOrder_Triangle,  &
   & TotalEntities_Triangle, FacetTopology_Triangle
+
+USE TetrahedronInterpolationUtility, ONLY: LagrangeDOF_Tetrahedron,  &
+  & InterpolationPoint_Tetrahedron
 
 IMPLICIT NONE
 CONTAINS
@@ -261,18 +267,12 @@ END PROCEDURE FacetElements_Tetrahedron2
 !                                                                  Initiate
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE Initiate_ref_Tetrahedron
-INTEGER(I4B) :: ii, jj
+MODULE PROCEDURE Initiate_Ref_Tetrahedron
 INTEGER(I4B), PARAMETER :: tNodes = 4, tFaces = 4, tEdges = 6
-INTEGER(I4B) :: p1p2(2, tEdges), lloop(3, tFaces), vol(tNodes, 1)
-REAL(DFP) :: unit_xij(3, 4), biunit_xij(3, 4)
+INTEGER(I4B) :: ii, jj, p1p2(2, tEdges), lloop(3, tFaces)
+REAL(DFP) :: unit_xij(nsd, tNodes), biunit_xij(nsd, tNodes)
 
 CALL DEALLOCATE (obj)
-
-CALL GetEdgeConnectivity_Tetrahedron(con=p1p2, order=1)
-CALL GetFaceConnectivity_Tetrahedron(con=lloop, order=1)
-
-vol(:, 1) = arange(1_I4B, tNodes)
 
 unit_xij = RefCoord_Tetrahedron("UNIT")
 biunit_xij = RefCoord_Tetrahedron("BIUNIT")
@@ -302,61 +302,130 @@ ELSE
 
 END IF
 
+CALL GetEdgeConnectivity_Tetrahedron(con=p1p2, order=1)
+CALL GetFaceConnectivity_Tetrahedron(con=lloop, order=1)
+
 obj%entityCounts = [tNodes, tEdges, tFaces, 1_I4B]
-obj%xidimension = 3_I4B
+obj%xidimension = nsd
 obj%name = Tetrahedron4
 obj%order = 1_I4B
 obj%nsd = nsd
 
-ALLOCATE (obj%topology(SUM(obj%entityCounts)))
+ii = SUM(obj%entityCounts)
+CALL RefTopoReallocate(obj%topology, ii)
+
+! points
 DO ii = 1, obj%entityCounts(1)
   obj%topology(ii) = ReferenceTopology([ii], Point)
 END DO
 
+! lines
 jj = obj%entityCounts(1)
 DO ii = 1, obj%entityCounts(2)
   obj%topology(jj + ii) = ReferenceTopology(p1p2(:, ii), Line2)
 END DO
 
-jj = SUM(obj%entityCounts(1:2))
+! faces
+jj = jj + obj%entityCounts(2)
 DO ii = 1, obj%entityCounts(3)
   obj%topology(jj + ii) = ReferenceTopology(lloop(:, ii), Triangle3)
 END DO
 
-jj = SUM(obj%entityCounts(1:3))
-DO ii = 1, obj%entityCounts(4)
-  obj%topology(jj + ii) = ReferenceTopology(vol(:, ii), Tetrahedron4)
-END DO
+! cell
+jj = jj + obj%entityCounts(3)
+obj%topology(jj + 1) = ReferenceTopology(arange(1_I4B, tNodes), Tetrahedron4)
 
 obj%highorderElement => highorderElement_Tetrahedron
-END PROCEDURE Initiate_ref_Tetrahedron
+END PROCEDURE Initiate_Ref_Tetrahedron
 
 !----------------------------------------------------------------------------
 !                                                      ReferenceTetrahedron
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE reference_Tetrahedron
-CALL initiate_ref_tetrahedron(obj=obj, nsd=nsd, xij=xij,  &
+MODULE PROCEDURE Reference_Tetrahedron
+CALL Initiate_Ref_tetrahedron(obj=obj, nsd=nsd, xij=xij,  &
   & domainName=domainName)
-END PROCEDURE reference_Tetrahedron
+END PROCEDURE Reference_Tetrahedron
 
 !----------------------------------------------------------------------------
 !                                              ReferenceTetrahedron_Pointer
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE reference_Tetrahedron_Pointer
+MODULE PROCEDURE Reference_Tetrahedron_Pointer
 ALLOCATE (obj)
-CALL initiate_ref_tetrahedron(obj=obj, nsd=nsd, xij=xij,  &
+CALL Initiate_Ref_tetrahedron(obj=obj, nsd=nsd, xij=xij,  &
   & domainName=domainName)
-END PROCEDURE reference_Tetrahedron_Pointer
+END PROCEDURE Reference_Tetrahedron_Pointer
 
 !----------------------------------------------------------------------------
 !                                                             LagrangeElement
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE highOrderElement_Tetrahedron
-! TODO Implement highOrderElement_Tetrahedron
-END PROCEDURE highOrderElement_Tetrahedron
+MODULE PROCEDURE HighOrderElement_Tetrahedron
+INTEGER(I4B), PARAMETER :: tNodes = 4
+INTEGER(I4B) :: ii, tFaceNodes(4), faceElemType(4), jj,  &
+  & edgetype
+INTEGER(I4B), ALLOCATABLE :: edgecon(:, :), facecon(:, :)
+
+CALL DEALLOCATE (obj)
+
+obj%xij = InterpolationPoint_Tetrahedron( &
+  & xij=refelem%xij(1:3, 1:tNodes), &
+  & order=order, &
+  & ipType=ipType, &
+  & layout="VEFC")
+
+obj%domainName = refelem%domainName
+obj%nsd = refelem%nsd
+obj%highOrderElement => refelem%highOrderElement
+obj%order = order
+obj%xiDimension = refelem%xiDimension
+
+ii = LagrangeDOF_Tetrahedron(order=order)
+obj%name = ElementType_Tetrahedron("Tetrahedron"//INT2STR(ii))
+obj%entityCounts = TotalEntities_Tetrahedron(obj%name)
+
+ii = SUM(obj%entityCounts)
+CALL RefTopoReallocate(obj%topology, ii)
+
+! points
+DO ii = 1, obj%entityCounts(1)
+  obj%topology(ii) = ReferenceTopology([ii], Point)
+END DO
+
+CALL Reallocate(edgecon, order + 1, obj%entityCounts(2))
+CALL GetEdgeConnectivity_Tetrahedron(con=edgecon, order=order)
+edgetype = ElementType_Line("Line"//Int2STR(order + 1))
+
+! lines
+jj = obj%entityCounts(1)
+DO ii = 1, obj%entityCounts(2)
+  obj%topology(jj + ii) = ReferenceTopology(nptrs=edgecon(:, ii),  &
+    & name=edgetype)
+END DO
+
+CALL GetFaceElemType_Tetrahedron(faceElemType=faceElemType,  &
+  & tFaceNodes=tFaceNodes, elemType=obj%name)
+CALL Reallocate(facecon, tFaceNodes(1), obj%entityCounts(3))
+CALL GetFaceConnectivity_Tetrahedron(con=facecon, order=order)
+
+! faces
+jj = jj + obj%entityCounts(2)
+DO ii = 1, obj%entityCounts(3)
+  obj%topology(jj + ii) = ReferenceTopology( &
+    & nptrs=facecon(1:tFaceNodes(ii), ii),  &
+    & name=faceElemType(ii))
+END DO
+
+! cell
+jj = jj + obj%entityCounts(3)
+obj%topology(jj + 1) = ReferenceTopology( &
+  & arange(1_I4B, obj%entityCounts(1)), obj%name)
+
+IF (ALLOCATED(edgecon)) DEALLOCATE (edgecon)
+IF (ALLOCATED(facecon)) DEALLOCATE (facecon)
+
+END PROCEDURE HighOrderElement_Tetrahedron
 
 !----------------------------------------------------------------------------
 !                                                              MeasureSimplex
