@@ -20,7 +20,11 @@
 ! summary: This submodule defines methods for [[ReferencePrism_]]
 
 SUBMODULE(ReferencePrism_Method) Methods
-USE BaseMethod
+USE ArangeUtility
+USE ApproxUtility
+USE StringUtility
+USE ReferenceElement_Method
+
 IMPLICIT NONE
 CONTAINS
 
@@ -94,13 +98,8 @@ REAL(DFP) :: unit_xij(xidim, tNodes), biunit_xij(xidim, tNodes)
 
 CALL DEALLOCATE (obj)
 
-p1p2 = EdgeConnectivity_Prism( &
-  & baseInterpol="LAGRANGE",  &
-  & baseContinuity="H1")
-
-lloop = FacetConnectivity_Prism( &
-  & baseInterpol="LAGRANGE",  &
-  & baseContinuity="H1")
+CALL GetEdgeConnectivity_Prism(con=p1p2, opt=1_I4B, order=1_I4B)
+CALL GetFaceConnectivity_Prism(con=lloop, opt=1_I4B, order=1_I4B)
 
 vol(:, 1) = arange(1_I4B, tNodes)
 
@@ -167,7 +166,7 @@ END PROCEDURE Initiate_Ref_Prism
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Reference_Prism
-CALL Initiate(obj=obj, nsd=NSD, xij=xij, domainName=domainName)
+CALL Initiate_Ref_Prism(obj=obj, nsd=NSD, xij=xij, domainName=domainName)
 END PROCEDURE Reference_Prism
 
 !----------------------------------------------------------------------------
@@ -176,7 +175,7 @@ END PROCEDURE Reference_Prism
 
 MODULE PROCEDURE Reference_Prism_Pointer
 ALLOCATE (obj)
-CALL Initiate(obj=obj, nsd=NSD, xij=xij, domainName=domainName)
+CALL Initiate_Ref_Prism(obj=obj, nsd=NSD, xij=xij, domainName=domainName)
 END PROCEDURE Reference_Prism_Pointer
 
 !----------------------------------------------------------------------------
