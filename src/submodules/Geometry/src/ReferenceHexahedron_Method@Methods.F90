@@ -103,7 +103,64 @@ END PROCEDURE FacetElements_Hexahedron1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE FacetElements_Hexahedron2
+INTEGER(I4B), PARAMETER :: tface = 6
+INTEGER(I4B) :: ii, jj, order, entityCounts(4), tsize
+INTEGER(I4B), ALLOCATABLE :: edgeCon(:, :), faceCon(:, :)
+INTEGER(I4B) :: faceElemType(tface), tFaceNodes(tface)
 
+CALL GetFaceElemType_Hexahedron( &
+  & faceElemType=faceElemType, &
+  & tFaceNodes=tFaceNodes, &
+  & elemType=elemType)
+
+entityCounts = TotalEntities_Hexahedron(elemType)
+order = ElementOrder_Hexahedron(elemType)
+
+CALL Reallocate(edgeCon, order + 1, entityCounts(2))
+CALL Reallocate(faceCon, tFaceNodes(1), tface)
+
+CALL GetEdgeConnectivity_Hexahedron(con=edgeCon, order=order)
+CALL GetFaceConnectivity_Hexahedron(con=faceCon, order=order)
+
+DO ii = 1, tface
+
+  ans(ii)%xiDimension = 2
+  ans(ii)%order = order
+  ans(ii)%name = faceElemType(ii)
+  ans(ii)%interpolationPointType = Equidistance
+
+  ans(ii)%xij = InterpolationPoint_Quadrangle( &
+    & order=ans(ii)%order, &
+    & ipType=ans(ii)%interpolationPointType, &
+    & layout="VEFC")
+
+  ans(ii)%nsd = nsd
+  ans(ii)%entityCounts = TotalEntities_Quadrangle(ans(ii)%name)
+
+  tsize = SUM(ans(ii)%entityCounts)
+  CALL RefTopoReallocate(ans(ii)%topology, tsize)
+  ! ALLOCATE (ans(ii)%topology(tsize))
+
+  ! points
+  DO jj = 1, ans(ii)%entityCounts(1)
+    ans(ii)%topology(jj) = Referencetopology(nptrs=faceCon(jj:jj, ii),  &
+      & name=Point)
+  END DO
+
+  ! lines
+  jj = ans(ii)%entityCounts(1)
+  CALL FacetTopology_Quadrangle(elemType=ans(ii)%name,  &
+    & nptrs=faceCon(:, ii), ans=ans(ii)%topology(jj + 1:))
+
+  ! surface
+  tsize = jj + ans(ii)%entityCounts(2)
+  ans(ii)%topology(tsize + 1) = ReferenceTopology(nptrs=faceCon(:, ii), &
+    & name=ans(ii)%name)
+
+END DO
+
+IF (ALLOCATED(edgeCon)) DEALLOCATE (edgeCon)
+IF (ALLOCATED(faceCon)) DEALLOCATE (faceCon)
 END PROCEDURE FacetElements_Hexahedron2
 
 !----------------------------------------------------------------------------
