@@ -74,7 +74,8 @@ DO ii = 1, 4
   ans(ii)%entityCounts = TotalEntities_Quadrangle(topo%name)
 
   tsize = SUM(ans(ii)%entityCounts)
-  ALLOCATE (ans(ii)%topology(tsize))
+  ! ALLOCATE (ans(ii)%topology(tsize))
+  CALL RefTopoReallocate(ans(ii)%topology, tsize)
 
   ! points
   DO jj = 1, ans(ii)%entityCounts(1)
