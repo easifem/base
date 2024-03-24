@@ -23,7 +23,9 @@ SUBMODULE(ReferenceTriangle_Method) Methods
 USE ReferenceElement_Method
 USE StringUtility
 USE ApproxUtility
-USE TriangleInterpolationUtility, ONLY: InterpolationPoint_Triangle
+USE ArangeUtility
+USE TriangleInterpolationUtility, ONLY: InterpolationPoint_Triangle,  &
+  & LagrangeDOF_Triangle
 USE Triangle_Method
 USE InputUtility
 USE ReferenceLine_Method, ONLY: ElementType_Line,  &
@@ -321,66 +323,47 @@ END PROCEDURE reference_Triangle_Pointer
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE HighorderElement_Triangle
-INTEGER(I4B) :: I, NNS, nsd
+INTEGER(I4B) :: linetype, ii, nns
+INTEGER(I4B), ALLOCATABLE :: edgecon(:, :)
+
 CALL DEALLOCATE (obj)
+
 obj%xij = InterpolationPoint_Triangle( &
-  & xij=refelem%xij(1:3, 1:3), &
+  & xij=refelem%xij(:, 1:3), &
   & order=order, &
   & ipType=ipType, &
   & layout="VEFC")
-obj%domainName = refelem%domainName
-nsd = refelem%nsd
-obj%highOrderElement => refelem%highOrderElement
 
-SELECT CASE (order)
-CASE (1)
-  NNS = 3
-  obj%entityCounts = [NNS, 3, 1, 0]
-  obj%xidimension = 2
-  obj%name = Triangle3
-  obj%order = order
-  obj%nsd = nsd
-  ALLOCATE (obj%topology(SUM(obj%entityCounts)))
-  DO I = 1, NNS
-    obj%topology(I) = ReferenceTopology([I], Point)
-  END DO
-  obj%topology(NNS + 1) = ReferenceTopology([1, 2], Line2)
-  obj%topology(NNS + 2) = ReferenceTopology([2, 3], Line2)
-  obj%topology(NNS + 3) = ReferenceTopology([3, 1], Line2)
-  obj%topology(NNS + 4) = ReferenceTopology([1, 2, 3], obj%name)
-CASE (2)
-  NNS = 6
-  obj%entityCounts = [NNS, 3, 1, 0]
-  obj%xidimension = 2
-  obj%name = Triangle6
-  obj%order = order
-  obj%nsd = nsd
-  ALLOCATE (obj%topology(SUM(obj%entityCounts)))
-  DO I = 1, NNS
-    obj%topology(I) = ReferenceTopology([I], Point)
-  END DO
-  obj%topology(NNS + 1) = ReferenceTopology([1, 2, 4], Line3)
-  obj%topology(NNS + 2) = ReferenceTopology([2, 3, 5], Line3)
-  obj%topology(NNS + 3) = ReferenceTopology([3, 1, 6], Line3)
-  obj%topology(NNS + 4) = ReferenceTopology([1, 2, 3, 4, 5, 6], &
-    & obj%name)
-CASE (3)
-  NNS = 10
-  obj%entityCounts = [NNS, 3, 1, 0]
-  obj%xidimension = 2
-  obj%name = Triangle10
-  obj%order = order
-  obj%nsd = nsd
-  ALLOCATE (obj%topology(SUM(obj%entityCounts)))
-  DO I = 1, NNS
-    obj%topology(I) = ReferenceTopology([I], Point)
-  END DO
-  obj%topology(NNS + 1) = ReferenceTopology([1, 2, 4, 5], Line4)
-  obj%topology(NNS + 2) = ReferenceTopology([2, 3, 6, 7], Line4)
-  obj%topology(NNS + 3) = ReferenceTopology([3, 1, 8, 9], Line4)
-  obj%topology(NNS + 4) = ReferenceTopology( &
-    & [1, 2, 3, 4, 5, 6, 7, 8, 9, 10], obj%name)
-END SELECT
+obj%domainName = refelem%domainName
+obj%nsd = refelem%nsd
+obj%highOrderElement => refelem%highOrderElement
+obj%order = order
+obj%xidimension = refelem%xidimension
+nns = LagrangeDOF_Triangle(order=order)
+obj%name = ElementType_Triangle("Triangle"//Int2Str(nns))
+obj%entityCounts = TotalEntities_Triangle(obj%name)
+ii = SUM(obj%entityCounts)
+CALL RefTopoReallocate(obj%topology, ii)
+
+DO ii = 1, obj%entityCounts(1)
+  obj%topology(ii) = ReferenceTopology([ii], Point)
+END DO
+
+CALL Reallocate(edgecon, order + 1, obj%entityCounts(2))
+CALL GetEdgeConnectivity_Triangle(con=edgecon,  &
+  & opt=DEFAULT_OPT_TRIANGLE_EDGE_CON, order=order)
+
+linetype = ElementType_Line("Line"//Int2Str(order + 1))
+ii = obj%entityCounts(1)
+obj%topology(ii + 1) = ReferenceTopology(edgecon(:, 1), linetype)
+obj%topology(ii + 2) = ReferenceTopology(edgecon(:, 2), linetype)
+obj%topology(ii + 3) = ReferenceTopology(edgecon(:, 3), linetype)
+obj%topology(ii + 4) = ReferenceTopology(edgecon(:, 4), linetype)
+
+ii = ii + obj%entityCounts(2)
+obj%topology(ii + 1) = ReferenceTopology(arange(1_I4B, nns), obj%name)
+
+IF (ALLOCATED(edgecon)) DEALLOCATE (edgecon)
 END PROCEDURE HighorderElement_Triangle
 
 !----------------------------------------------------------------------------
