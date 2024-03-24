@@ -25,6 +25,62 @@ IMPLICIT NONE
 CONTAINS
 
 !----------------------------------------------------------------------------
+!                                                     FaceTopology_Prism
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE FacetTopology_Prism
+! TODO:
+END PROCEDURE FacetTopology_Prism
+
+!----------------------------------------------------------------------------
+!                                                     TotalEntities_Prism
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE TotalEntities_Prism
+!TODO:
+END PROCEDURE TotalEntities_Prism
+
+!----------------------------------------------------------------------------
+!                                                 TotalNodesInElements_Prism
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE TotalNodesInElement_Prism
+!TODO:
+END PROCEDURE TotalNodesInElement_Prism
+
+!----------------------------------------------------------------------------
+!                                                         ElementType_Prism
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE ElementType_Prism
+!TODO:
+END PROCEDURE ElementType_Prism
+
+!----------------------------------------------------------------------------
+!                                                        ElementOrder_Prism
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE ElementOrder_Prism
+!TODO:
+END PROCEDURE ElementOrder_Prism
+
+!----------------------------------------------------------------------------
+!                                                     FacetElements_Prism
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE FacetElements_Prism1
+! TODO:
+END PROCEDURE FacetElements_Prism1
+
+!----------------------------------------------------------------------------
+!                                                     FacetElements_Prism
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE FacetElements_Prism2
+! TODO:
+END PROCEDURE FacetElements_Prism2
+
+!----------------------------------------------------------------------------
 !                                                                  Initiate
 !----------------------------------------------------------------------------
 
@@ -128,6 +184,7 @@ END PROCEDURE Reference_Prism_Pointer
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE HighOrderElement_Prism
+! TODO:
 ! FIX: #250 Implement HighOrderElement_Prism
 END PROCEDURE HighOrderElement_Prism
 
@@ -156,6 +213,7 @@ END PROCEDURE Measure_Simplex_Prism
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Prism_Quality
+! TODO:
 ans = 0.0_DFP
 END PROCEDURE Prism_Quality
 
@@ -196,6 +254,7 @@ END PROCEDURE PolyhedronVolume3D
 
 MODULE PROCEDURE RefCoord_Prism
 ans = 0.0_DFP
+!TODO:
 !FIX: Implement RefCoord_Prism
 !ISSUE: #251
 END PROCEDURE RefCoord_Prism
