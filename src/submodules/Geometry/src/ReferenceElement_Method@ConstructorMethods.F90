@@ -330,13 +330,17 @@ MODULE PROCEDURE refelem_getnptrs
 INTEGER(I4B) :: ii, tsize
 LOGICAL(LGT) :: isok
 
+#ifdef DEBUG_VER
 isok = ALLOCATED(obj%topology)
 IF (.NOT. isok) THEN
   CALL Reallocate(ans, 0)
   RETURN
 END IF
+#endif
 
 ii = SUM(obj%entityCounts)
+
+#ifdef DEBUG_VER
 tsize = SIZE(obj%topology)
 isok = ii .LE. tsize
 
@@ -351,6 +355,7 @@ IF (.NOT. isok) THEN
   CALL Reallocate(ans, 0)
   RETURN
 END IF
+#endif
 
 ans = obj%topology(ii)%nptrs
 END PROCEDURE refelem_getnptrs
