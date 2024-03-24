@@ -34,7 +34,7 @@ PUBLIC :: Quality_Line
 PUBLIC :: LineName
 PUBLIC :: RefLineCoord
 PUBLIC :: RefCoord_Line
-PUBLIC :: DEFAULT_REF_LINE_COORD
+PUBLIC :: DEFAULT_Ref_LINE_COORD
 PUBLIC :: FacetElements_Line
 PUBLIC :: ElementType_Line
 PUBLIC :: ElementOrder_Line
@@ -43,10 +43,10 @@ PUBLIC :: TotalEntities_Line
 PUBLIC :: FacetTopology_Line
 
 #ifdef REF_LINE_IS_UNIT
-REAL(DFP), PARAMETER :: DEFAULT_REF_LINE_COORD(3, 2) =  &
+REAL(DFP), PARAMETER :: DEFAULT_Ref_LINE_COORD(3, 2) =  &
   & RESHAPE([0, 0, 0, 1, 0, 0], [3, 2])
 #else
-REAL(DFP), PARAMETER :: DEFAULT_REF_LINE_COORD(3, 2) =  &
+REAL(DFP), PARAMETER :: DEFAULT_Ref_LINE_COORD(3, 2) =  &
   & RESHAPE([-1, 0, 0, 1, 0, 0], [3, 2])
 #endif
 
@@ -203,7 +203,7 @@ END INTERFACE LineName
 !```
 
 INTERFACE Initiate
-  MODULE PURE SUBROUTINE initiate_ref_Line(obj, nsd, xij, domainName)
+  MODULE PURE SUBROUTINE Initiate_Ref_Line(obj, nsd, xij, domainName)
     CLASS(ReferenceLine_), INTENT(INOUT) :: obj
     !! The instance
     INTEGER(I4B), INTENT(IN) :: nsd
@@ -215,7 +215,7 @@ INTERFACE Initiate
     !! UNIT
     !! BIUNIT
     !! GENERAL
-  END SUBROUTINE initiate_ref_Line
+  END SUBROUTINE Initiate_Ref_Line
 END INTERFACE Initiate
 
 !----------------------------------------------------------------------------
@@ -247,7 +247,7 @@ END INTERFACE Initiate
 !```
 
 INTERFACE ReferenceLine
-  MODULE PURE FUNCTION reference_line(nsd, xij, domainName) RESULT(obj)
+  MODULE PURE FUNCTION Reference_Line(nsd, xij, domainName) RESULT(obj)
     INTEGER(I4B), INTENT(IN) :: nsd
     REAL(DFP), INTENT(IN), OPTIONAL :: xij(:, :)
     TYPE(ReferenceLine_) :: obj
@@ -256,7 +256,7 @@ INTERFACE ReferenceLine
     !! UNIT
     !! BIUNIT
     !! GENERAL
-  END FUNCTION reference_line
+  END FUNCTION Reference_Line
 END INTERFACE ReferenceLine
 
 !----------------------------------------------------------------------------
@@ -282,13 +282,13 @@ END INTERFACE ReferenceLine
 !### Usage
 !
 !```fortran
-! class( ReferenceElement_ ), pointer :: obj => NULL()
+! class( ReferenceElement_ ), Pointer :: obj => NULL()
 ! obj => ReferenceLine_Pointer( nsd = 3 )
 ! call display( obj, "obj : ")
 !```
 
 INTERFACE ReferenceLine_Pointer
-  MODULE FUNCTION reference_line_pointer_1(nsd, xij, domainName) RESULT(obj)
+  MODULE FUNCTION Reference_Line_Pointer_1(nsd, xij, domainName) RESULT(obj)
     INTEGER(I4B), INTENT(IN) :: nsd
     REAL(DFP), INTENT(IN), OPTIONAL :: xij(:, :)
     CLASS(ReferenceLine_), POINTER :: obj
@@ -297,7 +297,7 @@ INTERFACE ReferenceLine_Pointer
     !! UNIT
     !! BIUNIT
     !! GENERAL
-  END FUNCTION reference_line_pointer_1
+  END FUNCTION Reference_Line_Pointer_1
 END INTERFACE ReferenceLine_Pointer
 
 !----------------------------------------------------------------------------
