@@ -29,11 +29,10 @@ USE ArangeUtility
 USE Display_Method
 USE ReallocateUtility
 
-USE TriangleInterpolationUtility, ONLY: InterpolationPoint_Triangle,  &
-  & LagrangeDOF_Triangle
+USE TriangleInterpolationUtility, ONLY: InterpolationPoint_Triangle
 
 USE ReferenceTriangle_Method, ONLY: ElementOrder_Triangle,  &
-  & TotalEntities_Triangle, FacetTopology_Triangle, ElementType_Triangle
+  & TotalEntities_Triangle, FacetTopology_Triangle
 
 IMPLICIT NONE
 CONTAINS
@@ -78,7 +77,7 @@ END PROCEDURE TotalEntities_Tetrahedron
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE TotalNodesInElement_Tetrahedron
-SELECT CASE (ElemType)
+SELECT CASE (elemType)
 CASE (Tetrahedron4)
   ans = 4
 CASE (Tetrahedron10)
@@ -171,7 +170,8 @@ DO ii = 1, 4
   ans(ii)%entityCounts = TotalEntities_Triangle(topo%name)
 
   tsize = SUM(ans(ii)%entityCounts)
-  ALLOCATE (ans(ii)%topology(tsize))
+  ! ALLOCATE (ans(ii)%topology(tsize))
+  CALL RefTopoReallocate(ans(ii)%topology, tsize)
 
   ! points
   DO jj = 1, ans(ii)%entityCounts(1)
@@ -232,7 +232,8 @@ DO ii = 1, entityCounts(3)
   ans(ii)%entityCounts = TotalEntities_Triangle(ans(ii)%name)
 
   tsize = SUM(ans(ii)%entityCounts)
-  ALLOCATE (ans(ii)%topology(tsize))
+  ! ALLOCATE (ans(ii)%topology(tsize))
+  CALL RefTopoReallocate(ans(ii)%topology, tsize)
 
   ! points
   DO jj = 1, ans(ii)%entityCounts(1)
