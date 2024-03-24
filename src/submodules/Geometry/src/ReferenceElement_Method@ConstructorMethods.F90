@@ -79,9 +79,10 @@ END PROCEDURE RefTopoDeallocate
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE refelem_ReferenceTopology
-obj%Nptrs = Nptrs
-obj%Name = Name
-obj%XiDimension = XiDimension(Name)
+CALL Reallocate(obj%nptrs, SIZE(nptrs))
+obj%nptrs = nptrs
+obj%name = name
+obj%xiDimension = XiDimension(name)
 END PROCEDURE refelem_ReferenceTopology
 
 !----------------------------------------------------------------------------
