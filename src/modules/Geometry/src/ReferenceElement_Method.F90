@@ -169,7 +169,7 @@ END INTERFACE
 INTERFACE RefElemGetGeoParam
   MODULE PURE SUBROUTINE RefElemGetGeoParam1(elemType, tNodes, tEdges,  &
     & tFaces, tCells, edgeCon, faceCon, edgeOpt, faceOpt, faceElemType,  &
-    & tFaceNodes)
+    & tFaceNodes, order)
     INTEGER(I4B), INTENT(IN) :: elemType
     INTEGER(I4B), OPTIONAL, INTENT(INOUT) :: tNodes
     INTEGER(I4B), OPTIONAL, INTENT(INOUT) :: tEdges
@@ -181,6 +181,8 @@ INTERFACE RefElemGetGeoParam
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: faceOpt
     INTEGER(I4B), OPTIONAL, INTENT(INOUT) :: faceElemType(:)
     INTEGER(I4B), OPTIONAL, INTENT(INOUT) :: tFaceNodes(:)
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: order
+    !! Order of element
   END SUBROUTINE RefElemGetGeoParam1
 END INTERFACE RefElemGetGeoParam
 
