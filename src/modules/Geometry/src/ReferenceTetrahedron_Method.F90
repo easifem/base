@@ -42,6 +42,22 @@ PUBLIC :: ElementType_Tetrahedron
 PUBLIC :: TotalNodesInElement_Tetrahedron
 PUBLIC :: TotalEntities_Tetrahedron
 PUBLIC :: FacetTopology_Tetrahedron
+PUBLIC :: ElementName_Tetrahedron
+
+!----------------------------------------------------------------------------
+!                                                               ElementName
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2024-03-25
+! summary: Returns element name in character from element number/type
+
+INTERFACE
+  MODULE PURE FUNCTION ElementName_Tetrahedron(elemType) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: elemType
+    CHARACTER(:), ALLOCATABLE :: ans
+  END FUNCTION ElementName_Tetrahedron
+END INTERFACE
 
 !----------------------------------------------------------------------------
 !                                             FacetTopology_Tetrahedron

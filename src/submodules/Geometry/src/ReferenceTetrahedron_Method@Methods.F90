@@ -44,6 +44,35 @@ IMPLICIT NONE
 CONTAINS
 
 !----------------------------------------------------------------------------
+!                                                     ElementName_Tetrahedron
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE ElementName_Tetrahedron
+
+SELECT CASE (elemType)
+CASE (Tetrahedron4)
+  ans = "Tetrahedron4"
+
+CASE (Tetrahedron10)
+  ans = "Tetrahedron10"
+
+CASE (Tetrahedron20)
+  ans = "Tetrahedron20"
+
+CASE (Tetrahedron35)
+  ans = "Tetrahedron35"
+
+CASE (Tetrahedron56)
+  ans = "Tetrahedron56"
+
+CASE DEFAULT
+  ans = "NONE"
+
+END SELECT
+
+END PROCEDURE ElementName_Tetrahedron
+
+!----------------------------------------------------------------------------
 !                                                 FacetTopology_Tetrahedron
 !----------------------------------------------------------------------------
 
