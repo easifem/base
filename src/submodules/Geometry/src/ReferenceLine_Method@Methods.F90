@@ -31,6 +31,29 @@ IMPLICIT NONE
 CONTAINS
 
 !----------------------------------------------------------------------------
+!                                                          ElementName_Line
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE ElementName_Line
+SELECT CASE (elemType)
+CASE (Point1)
+  ans = "Point1"
+CASE (Line2)
+  ans = "Line2"
+CASE (Line3)
+  ans = "Line3"
+CASE (Line4)
+  ans = "Line4"
+CASE (Line5)
+  ans = "Line5"
+CASE (Line6)
+  ans = "Line6"
+CASE DEFAULT
+  ans = "NONE"
+END SELECT
+END PROCEDURE ElementName_Line
+
+!----------------------------------------------------------------------------
 !                                                     FacetTopology_Line
 !----------------------------------------------------------------------------
 

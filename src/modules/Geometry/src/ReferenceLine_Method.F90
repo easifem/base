@@ -41,6 +41,7 @@ PUBLIC :: ElementOrder_Line
 PUBLIC :: TotalNodesInElement_Line
 PUBLIC :: TotalEntities_Line
 PUBLIC :: FacetTopology_Line
+PUBLIC :: ElementName_Line
 
 #ifdef REF_LINE_IS_UNIT
 REAL(DFP), PARAMETER :: DEFAULT_Ref_LINE_COORD(3, 2) =  &
@@ -49,6 +50,21 @@ REAL(DFP), PARAMETER :: DEFAULT_Ref_LINE_COORD(3, 2) =  &
 REAL(DFP), PARAMETER :: DEFAULT_Ref_LINE_COORD(3, 2) =  &
   & RESHAPE([-1, 0, 0, 1, 0, 0], [3, 2])
 #endif
+
+!----------------------------------------------------------------------------
+!                                                              ElementName
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2024-03-25
+! summary: Returns element name in character from element number/type
+
+INTERFACE
+  MODULE PURE FUNCTION ElementName_Line(elemType) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: elemType
+    CHARACTER(:), ALLOCATABLE :: ans
+  END FUNCTION ElementName_Line
+END INTERFACE
 
 !----------------------------------------------------------------------------
 !                                                         FacetTopology_Line
