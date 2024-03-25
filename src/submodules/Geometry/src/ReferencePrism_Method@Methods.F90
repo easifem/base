@@ -97,8 +97,16 @@ END PROCEDURE ElementType_Prism
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE ElementOrder_Prism
-!TODO:
-ans = 0
+SELECT CASE (elemType)
+CASE (Prism6)
+  ans = 1
+CASE (Prism15)
+  ans = 2
+CASE (Prism18)
+  ans = 2
+CASE DEFAULT
+  ans = 0
+END SELECT
 END PROCEDURE ElementOrder_Prism
 
 !----------------------------------------------------------------------------
