@@ -62,8 +62,8 @@ END PROCEDURE FacetTopology_Prism
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE TotalEntities_Prism
-!TODO:
-ans = 0
+ans(2:4) = [9, 5, 1]
+ans(1) = TotalNodesInElement_Prism(elemType)
 END PROCEDURE TotalEntities_Prism
 
 !----------------------------------------------------------------------------
