@@ -36,9 +36,14 @@ USE ReferenceTetrahedron_Method, ONLY: ElementType_Tetrahedron,  &
   & TotalNodesInElement_Tetrahedron,  &
   & ElementName_Tetrahedron
 
-USE ReferenceHexahedron_Method, ONLY: ElementName_Hexahedron
-USE ReferencePrism_Method, ONLY: ElementName_Prism
-USE ReferencePyramid_Method, ONLY: ElementName_Pyramid
+USE ReferenceHexahedron_Method, ONLY: ElementName_Hexahedron,  &
+  & ElementType_Hexahedron
+
+USE ReferencePrism_Method, ONLY: ElementName_Prism,  &
+  & ElementType_Prism
+
+USE ReferencePyramid_Method, ONLY: ElementName_Pyramid,  &
+  & ElementType_Pyramid
 
 IMPLICIT NONE
 CONTAINS
@@ -97,77 +102,31 @@ END PROCEDURE Element_Name_obj
 !                                                               ElementType
 !----------------------------------------------------------------------------
 MODULE PROCEDURE Element_Type
-SELECT CASE (TRIM(ElemName))
-CASE ("Line0")
-  ans = 0
-CASE ("Line1", "Point")
-  ans = Point
-CASE ("Line2", "Line")
-  ans = Line2
-CASE ("Triangle3", "Triangle")
-  ans = Triangle3
-CASE ("Quadrangle4", "Quadrangle")
-  ans = Quadrangle4
-CASE ("Tetrahedron4", "Tetrahedron")
-  ans = Tetrahedron4
-CASE ("Hexahedron8", "Hexahedron")
-  ans = Hexahedron8
-CASE ("Prism6", "Prism")
-  ans = Prism6
-CASE ("Pyramid5", "Pyramid")
-  ans = Pyramid5
-CASE ("Line3")
-  ans = Line3
-CASE ("Triangle6")
-  ans = Triangle6
-CASE ("Quadrangle9")
-  ans = Quadrangle9
-CASE ("Tetrahedron10")
-  ans = Tetrahedron10
-CASE ("Hexahedron27")
-  ans = Hexahedron27
-CASE ("Prism18")
-  ans = Prism18
-CASE ("Pyramid14")
-  ans = Pyramid14
-CASE ("Point1")
-  ans = Point1
-CASE ("Quadrangle8")
-  ans = Quadrangle8
-CASE ("Hexahedron20")
-  ans = Hexahedron20
-CASE ("Prism15")
-  ans = Prism15
-CASE ("Pyramid13")
-  ans = Pyramid13
-CASE ("Triangle9")
-  ans = Triangle9
-CASE ("Triangle10")
-  ans = Triangle10
-CASE ("Triangle12")
-  ans = Triangle12
-CASE ("Triangle15a")
-  ans = Triangle15a
-CASE ("Triangle15b")
-  ans = Triangle15b
-CASE ("Triangle21")
-  ans = Triangle21
-CASE ("Line4")
-  ans = Line4
-CASE ("Line5")
-  ans = Line5
-CASE ("Line6")
-  ans = Line6
-CASE ("Tetrahedron20")
-  ans = Tetrahedron20
-CASE ("Tetrahedron35")
-  ans = Tetrahedron35
-CASE ("Tetrahedron56")
-  ans = Tetrahedron56
-CASE ("Hexahedron64")
-  ans = Hexahedron64
-CASE ("Hexahedron125")
-  ans = Hexahedron125
+CHARACTER(4) :: name
+name = elemName(1:4)
+
+SELECT CASE (name)
+CASE ("Line", "Point")
+  ans = ElementType_Line(elemName)
+
+CASE ("Tria")
+  ans = ElementType_Triangle(elemName)
+
+CASE ("Quad")
+  ans = ElementType_Quadrangle(elemName)
+
+CASE ("Tetr")
+  ans = ElementType_Tetrahedron(elemName)
+
+CASE ("Hexa")
+  ans = ElementType_Hexahedron(elemName)
+
+CASE ("Pris")
+  ans = ElementType_Prism(elemName)
+
+CASE ("Pyra")
+  ans = ElementType_Pyramid(elemName)
+
 END SELECT
 END PROCEDURE Element_Type
 
