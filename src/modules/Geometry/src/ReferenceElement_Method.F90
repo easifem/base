@@ -36,7 +36,7 @@ PUBLIC :: ASSIGNMENT(=)
 PUBLIC :: ReferenceElement_Pointer
 PUBLIC :: GetConnectivity
 PUBLIC :: ElementType
-PUBLIC :: ElementName
+PUBLIC :: Elementname
 PUBLIC :: TotalNodesInElement
 PUBLIC :: ElementOrder
 PUBLIC :: OPERATOR(.order.)
@@ -98,7 +98,7 @@ TYPE :: ReferenceElementInfo_
   INTEGER(I4B) :: tElemTopologyType_2D = 2
   INTEGER(I4B) :: tElemTopologyType_3D = 4
   INTEGER(I4B) :: tElemTopologyType = 8
-  INTEGER(I4B) :: elemTopologyName(8) = [ &
+  INTEGER(I4B) :: elemTopologyname(8) = [ &
     & Point,  &
     & Line,  &
     & Triangle,  &
@@ -405,7 +405,7 @@ END INTERFACE MdEncode
 !
 ! This function returns the instance of [[ReferenceTopology_]].
 !
-! The possible valaues of Name can be
+! The possible valaues of name can be
 !
 ! - `Line, Line2, Line3, Line4, Line5, Line6`
 ! - `Triangle, Triangle3, Triangle6, Triangle9, Triangle10, Triangle12,
@@ -423,15 +423,15 @@ END INTERFACE MdEncode
 !
 !```fortran
 ! type( ReferenceTopology_ ) :: obj
-! obj = ReferenceTopology( nptrs = [1,2,3], Name=Triangle3 )
+! obj = ReferenceTopology( nptrs = [1,2,3], name=Triangle3 )
 ! call display( obj, "obj=")
 !```
 
 INTERFACE ReferenceTopology
-  MODULE PURE FUNCTION refelem_ReferenceTopology(nptrs, Name) RESULT(obj)
+  MODULE PURE FUNCTION refelem_ReferenceTopology(nptrs, name) RESULT(obj)
     TYPE(ReferenceTopology_) :: obj
     INTEGER(I4B), INTENT(IN) :: nptrs(:)
-    INTEGER(I4B), INTENT(IN) :: Name
+    INTEGER(I4B), INTENT(IN) :: name
   END FUNCTION refelem_ReferenceTopology
 END INTERFACE ReferenceTopology
 
@@ -447,7 +447,7 @@ END INTERFACE ReferenceTopology
 !
 !```fortran
 ! type( ReferenceTopology_ ) :: obj
-! obj = ReferenceTopology( nptrs = [1,2,3], Name=Triangle3 )
+! obj = ReferenceTopology( nptrs = [1,2,3], name=Triangle3 )
 ! call display( obj, "obj=")
 ! call Deallocate( obj )
 !```
@@ -513,7 +513,7 @@ END INTERFACE DEALLOCATE
 !
 !```fortran
 ! type( ReferenceTopology_ ) :: obj
-! obj = ReferenceTopology( nptrs = [1,2,3], Name=Triangle3 )
+! obj = ReferenceTopology( nptrs = [1,2,3], name=Triangle3 )
 ! call display( obj, "obj=")
 ! call display( .NNE. obj, "nne =")
 !```
@@ -629,7 +629,7 @@ INTERFACE GetConnectivity
 END INTERFACE GetConnectivity
 
 !----------------------------------------------------------------------------
-!                                            ElementType@ElementNameMethods
+!                                            ElementType@ElementnameMethods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -637,14 +637,14 @@ END INTERFACE GetConnectivity
 ! summary: Returns element name in integer from element name
 
 INTERFACE ElementType
-  MODULE PURE FUNCTION Element_Type(ElemName) RESULT(ans)
-    CHARACTER(*), INTENT(IN) :: ElemName
+  MODULE PURE FUNCTION Element_Type(Elemname) RESULT(ans)
+    CHARACTER(*), INTENT(IN) :: Elemname
     INTEGER(I4B) :: ans
   END FUNCTION Element_Type
 END INTERFACE ElementType
 
 !----------------------------------------------------------------------------
-!                                             ElementType@ElementNameMethods
+!                                             ElementType@ElementnameMethods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -659,37 +659,37 @@ INTERFACE ElementType
 END INTERFACE ElementType
 
 !----------------------------------------------------------------------------
-!                                           ElementName@ElementNameMethods
+!                                           Elementname@ElementNameMethods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 21 May 2022
 ! summary: Returns element name in character from element number/type
 
-INTERFACE ElementName
-  MODULE PURE FUNCTION Element_Name(elemType) RESULT(ans)
+INTERFACE Elementname
+  MODULE PURE FUNCTION Element_name(elemType) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: elemType
     CHARACTER(:), ALLOCATABLE :: ans
-  END FUNCTION Element_Name
-END INTERFACE ElementName
+  END FUNCTION Element_name
+END INTERFACE Elementname
 
 !----------------------------------------------------------------------------
-!                                             ElementName@ElementNameMethods
+!                                             Elementname@ElementNameMethods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 21 May 2022
 ! summary: Returns element name in character from ReferenceElement
 
-INTERFACE ElementName
-  MODULE PURE FUNCTION Element_Name_obj(obj) RESULT(ans)
+INTERFACE Elementname
+  MODULE PURE FUNCTION Element_name_obj(obj) RESULT(ans)
     CLASS(ReferenceElement_), INTENT(IN) :: obj
     CHARACTER(:), ALLOCATABLE :: ans
-  END FUNCTION Element_Name_obj
-END INTERFACE ElementName
+  END FUNCTION Element_name_obj
+END INTERFACE Elementname
 
 !----------------------------------------------------------------------------
-!                                   TotalNodesInElement@ElementNameMethods
+!                                   TotalNodesInElement@ElementnameMethods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -704,7 +704,7 @@ INTERFACE TotalNodesInElement
 END INTERFACE TotalNodesInElement
 
 !----------------------------------------------------------------------------
-!                                           ElementOrder@ElementNameMethods
+!                                           ElementOrder@ElementnameMethods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -719,7 +719,7 @@ INTERFACE ElementOrder
 END INTERFACE ElementOrder
 
 !----------------------------------------------------------------------------
-!                                           ElementOrder@ElementNameMethods
+!                                           ElementOrder@ElementnameMethods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -738,7 +738,7 @@ INTERFACE OPERATOR(.order.)
 END INTERFACE OPERATOR(.order.)
 
 !----------------------------------------------------------------------------
-!                                            XiDimension@ElementNameMethods
+!                                            XiDimension@ElementnameMethods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -754,7 +754,7 @@ INTERFACE XiDimension
 END INTERFACE Xidimension
 
 !----------------------------------------------------------------------------
-!                                             Xidimension@ElementNameMethods
+!                                             Xidimension@ElementnameMethods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -1100,7 +1100,7 @@ INTERFACE isSerendipityElement
 END INTERFACE isSerendipityElement
 
 !----------------------------------------------------------------------------
-!                                         ElementTopology@ElementNameMethods
+!                                         ElementTopology@ElementnameMethods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -1128,7 +1128,7 @@ INTERFACE OPERATOR(.topology.)
 END INTERFACE OPERATOR(.topology.)
 
 !----------------------------------------------------------------------------
-!                                       ElementTopology@ElementNameMethods
+!                                       ElementTopology@ElementnameMethods
 !----------------------------------------------------------------------------
 
 INTERFACE ElementTopology
@@ -1208,37 +1208,6 @@ END INTERFACE FacetElements
 ! summary: This routine returns the facet elements
 
 INTERFACE
-  MODULE SUBROUTINE refelem_FacetElements_Line(refelem, ans)
-    CLASS(ReferenceElement_), INTENT(IN) :: refelem
-    TYPE(ReferenceElement_), INTENT(INOUT) :: ans(:)
-  END SUBROUTINE refelem_FacetElements_Line
-END INTERFACE
-
-!----------------------------------------------------------------------------
-!                                          FacetElements@FacetElementMethods
-!----------------------------------------------------------------------------
-
-!> author: Vikas Sharma, Ph. D.
-! date: 16 June 2021
-! summary: This routine returns the facet elements
-
-INTERFACE
-  MODULE SUBROUTINE refelem_FacetElements_Line_elemType(elemType, nsd, ans)
-    INTEGER(I4B), INTENT(IN) :: elemType
-    INTEGER(I4B), INTENT(IN) :: nsd
-    TYPE(ReferenceElement_), INTENT(INOUT) :: ans(:)
-  END SUBROUTINE refelem_FacetElements_Line_elemType
-END INTERFACE
-
-!----------------------------------------------------------------------------
-!                                          FacetElements@FacetElementMethods
-!----------------------------------------------------------------------------
-
-!> author: Vikas Sharma, Ph. D.
-! date: 16 June 2021
-! summary: This routine returns the facet elements
-
-INTERFACE
   MODULE SUBROUTINE refelem_FacetElements_Surface(refelem, ans)
     CLASS(ReferenceElement_), INTENT(IN) :: refelem
     TYPE(ReferenceElement_), INTENT(INOUT) :: ans(:)
@@ -1254,7 +1223,8 @@ END INTERFACE
 ! summary: This routine returns the facet elements
 
 INTERFACE
-  MODULE SUBROUTINE refelem_FacetElements_Surface_elemType(elemType, nsd, ans)
+  MODULE SUBROUTINE refelem_FacetElements_Surface_elemType(elemType, nsd,  &
+    & ans)
     INTEGER(I4B), INTENT(IN) :: elemType
     INTEGER(I4B), INTENT(IN) :: nsd
     TYPE(ReferenceElement_), INTENT(INOUT) :: ans(:)

@@ -20,6 +20,26 @@
 ! summary: This sumodule contains method for geometry
 
 SUBMODULE(ReferenceElement_Method) ElementNameMethods
+USE ReferenceLine_Method, ONLY: ElementType_Line,  &
+  & TotalNodesInElement_Line,  &
+  & ElementName_Line
+
+USE ReferenceTriangle_Method, ONLY: ElementType_Triangle,  &
+  & TotalNodesInElement_Triangle,  &
+  & ElementName_Triangle
+
+USE ReferenceQuadrangle_Method, ONLY: ElementType_Quadrangle,  &
+  & TotalNodesInElement_Quadrangle,  &
+  & ElementName_Quadrangle
+
+USE ReferenceTetrahedron_Method, ONLY: ElementType_Tetrahedron,  &
+  & TotalNodesInElement_Tetrahedron,  &
+  & ElementName_Tetrahedron
+
+USE ReferenceHexahedron_Method, ONLY: ElementName_Hexahedron
+USE ReferencePrism_Method, ONLY: ElementName_Prism
+USE ReferencePyramid_Method, ONLY: ElementName_Pyramid
+
 IMPLICIT NONE
 CONTAINS
 
@@ -28,76 +48,41 @@ CONTAINS
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Element_Name
-SELECT CASE (ElemType)
-CASE (Point1)
-  ans = "Point1"
-CASE (Line2)
-  ans = "Line2"
-CASE (Triangle3)
-  ans = "Triangle3"
-CASE (Quadrangle4)
-  ans = "Quadrangle4"
-CASE (Tetrahedron4)
-  ans = "Tetrahedron4"
-CASE (Prism6)
-  ans = "Prism6"
-CASE (Pyramid5)
-  ans = "Pyramid5"
-CASE (Line3)
-  ans = "Line3"
-CASE (Line4)
-  ans = "Line4"
-CASE (Line5)
-  ans = "Line5"
-CASE (Line6)
-  ans = "Line6"
-CASE (Triangle6)
-  ans = "Triangle6"
-CASE (Quadrangle9)
-  ans = "Quadrangle9"
-CASE (Quadrangle8)
-  ans = "Quadrangle8"
-CASE (Tetrahedron10)
-  ans = "Tetrahedron10"
-CASE (Prism15)
-  ans = "Prism15"
-CASE (Prism18)
-  ans = "Prism18"
-CASE (Pyramid13)
-  ans = "Pyramid13"
-CASE (Pyramid14)
-  ans = "Pyramid14"
-CASE (Triangle9)
-  ans = "Triangle9"
-CASE (Triangle10)
-  ans = "Triangle10"
-CASE (Triangle12)
-  ans = "Triangle12"
-CASE (Triangle15a)
-  ans = "Triangle15a"
-CASE (Triangle15b)
-  ans = "Triangle15b"
-CASE (Triangle21)
-  ans = "Triangle21"
-CASE (Tetrahedron20)
-  ans = "Tetrahedron20"
-CASE (Tetrahedron35)
-  ans = "Tetrahedron35"
-CASE (Tetrahedron56)
-  ans = "Tetrahedron56"
-CASE (Hexahedron8)
-  ans = "Hexahedron8"
-CASE (Hexahedron20)
-  ans = "Hexahedron20"
-CASE (Hexahedron27)
-  ans = "Hexahedron27"
-CASE (Hexahedron64)
-  ans = "Hexahedron64"
-CASE (Hexahedron125)
-  ans = "Hexahedron125"
-CASE DEFAULT
-  ans = "NONE"
+SELECT CASE (elemType)
+
+CASE (Line2, Line3, Line4, Line5, Line6, Point)
+
+  ans = ElementName_Line(elemType)
+
+CASE (Triangle3, Triangle6, Triangle9, Triangle10,  &
+  & Triangle12, Triangle15a, Triangle15b, Triangle21)
+
+  ans = ElementName_Triangle(elemType)
+
+CASE (Quadrangle4, Quadrangle8, Quadrangle9, Quadrangle16)
+
+  ans = ElementName_Quadrangle(elemType)
+
+CASE (Tetrahedron4, Tetrahedron10, Tetrahedron20, Tetrahedron35,  &
+  & Tetrahedron56)
+
+  ans = ElementName_Tetrahedron(elemType)
+
+CASE (Hexahedron8, Hexahedron27, Hexahedron20, Hexahedron64,  &
+  & Hexahedron125)
+
+  ans = ElementName_Hexahedron(elemType)
+
+CASE (Prism6, Prism18, Prism15)
+
+  ans = ElementName_Prism(elemType)
+
+CASE (Pyramid5, Pyramid13, Pyramid14)
+
+  ans = ElementName_Pyramid(elemType)
+
 END SELECT
+
 END PROCEDURE Element_Name
 
 !----------------------------------------------------------------------------
