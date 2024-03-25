@@ -71,8 +71,16 @@ END PROCEDURE TotalEntities_Prism
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE TotalNodesInElement_Prism
-!TODO:
-ans = 0
+SELECT CASE (elemType)
+CASE (Prism6)
+  ans = 6
+CASE (Prism15)
+  ans = 15
+CASE (Prism18)
+  ans = 18
+CASE DEFAULT
+  ans = 0
+END SELECT
 END PROCEDURE TotalNodesInElement_Prism
 
 !----------------------------------------------------------------------------
