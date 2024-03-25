@@ -22,46 +22,53 @@ USE Display_Method
 USE ReferencePoint_Method, ONLY: Measure_Simplex_Point, Point_quality
 USE ReferenceLine_Method, ONLY: Measure_Simplex_Line, &
 & Line_quality, &
-& TotalNodesInElement_Line
+& TotalNodesInElement_Line, &
+& TotalEntities_Line
 
 USE ReferenceTriangle_Method, ONLY: Measure_Simplex_Triangle,  &
   & Triangle_quality, &
   & triangle_contains_point, &
   & GetEdgeConnectivity_Triangle, &
-  & TotalNodesInElement_Triangle
+  & TotalNodesInElement_Triangle, &
+  & TotalEntities_Triangle
 
 USE ReferenceQuadrangle_Method, ONLY: Measure_Simplex_Quadrangle,  &
   & Quadrangle_quality, &
   & GetEdgeConnectivity_Quadrangle, &
-  & TotalNodesInElement_Quadrangle
+  & TotalNodesInElement_Quadrangle, &
+  & TotalEntities_Quadrangle
 
 USE ReferenceTetrahedron_Method, ONLY: Measure_Simplex_Tetrahedron,  &
   & Tetrahedron_quality, &
   & GetEdgeConnectivity_Tetrahedron,  &
   & GetFaceConnectivity_Tetrahedron, &
   & GetFaceElemType_Tetrahedron, &
-  & TotalNodesInElement_Tetrahedron
+  & TotalNodesInElement_Tetrahedron, &
+  & TotalEntities_Tetrahedron
 
 USE ReferenceHexahedron_Method, ONLY: Measure_Simplex_Hexahedron,  &
   & Hexahedron_quality, &
   & GetEdgeConnectivity_Hexahedron, &
   & GetFaceConnectivity_Hexahedron, &
   & GetFaceElemType_Hexahedron, &
-  & TotalNodesInElement_Hexahedron
+  & TotalNodesInElement_Hexahedron, &
+  & TotalEntities_Hexahedron
 
 USE ReferencePrism_Method, ONLY: Measure_Simplex_Prism,  &
   & Prism_quality, &
   & GetEdgeConnectivity_Prism, &
   & GetFaceConnectivity_Prism, &
   & GetFaceElemType_Prism, &
-  & TotalNodesInElement_Prism
+  & TotalNodesInElement_Prism, &
+  & TotalEntities_Prism
 
 USE ReferencePyramid_Method, ONLY: Measure_Simplex_Pyramid,  &
   & Pyramid_quality, &
   & GetEdgeConnectivity_Pyramid,  &
   & GetFaceConnectivity_Pyramid, &
   & GetFaceElemType_Pyramid, &
-  & TotalNodesInElement_Pyramid
+  & TotalNodesInElement_Pyramid, &
+  & TotalEntities_Pyramid
 
 IMPLICIT NONE
 CONTAINS
@@ -416,75 +423,33 @@ END PROCEDURE contains_point
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE refelem_TotalEntities
-SELECT CASE (ElemType)
-CASE (Point1)
-  ans = 0
-  ans(1) = 1
-CASE (Line2)
-  ans = [2, 1, 0, 0]
-CASE (Triangle3)
-  ans = [3, 3, 1, 0]
-CASE (Quadrangle4)
-  ans = [4, 4, 1, 0]
-CASE (Tetrahedron4)
-  ans = [4, 6, 4, 1]
-CASE (Hexahedron8)
-  ans = [8, 12, 6, 1]
-CASE (Prism6)
-  ans = [6, 9, 5, 1]
-CASE (Pyramid5)
-  ans = [5, 8, 5, 1]
-  ! Order=2 elements
-CASE (Line3)
-  ans = [3, 1, 0, 0]
-CASE (Triangle6)
-  ans = [6, 3, 1, 0]
-CASE (Quadrangle9)
-  ans = [9, 4, 1, 0]
-CASE (Quadrangle8)
-  ans = [8, 4, 1, 0]
-CASE (Tetrahedron10)
-  ans = [10, 6, 4, 1]
-CASE (Hexahedron20)
-  ans = [20, 12, 6, 1]
-CASE (Hexahedron27)
-  ans = [27, 12, 6, 1]
-CASE (Prism15)
-  ans = [15, 9, 5, 1]
-CASE (Prism18)
-  ans = [18, 9, 5, 1]
-CASE (Pyramid13)
-  ans = [13, 8, 5, 1]
-CASE (Pyramid14)
-  ans = [14, 8, 5, 1]
-CASE (Triangle9)
-  ans = [9, 3, 1, 0]
-CASE (Triangle10)
-  ans = [10, 3, 1, 0]
-CASE (Triangle12)
-  ans = [12, 3, 1, 0]
-CASE (Triangle15a)
-  ans = [15, 3, 1, 0]
-CASE (Triangle15b)
-  ans = [15, 3, 1, 0]
-CASE (Triangle21)
-  ans = [21, 3, 1, 0]
-CASE (Line4)
-  ans = [4, 1, 0, 0]
-CASE (Line5)
-  ans = [5, 1, 0, 0]
-CASE (Line6)
-  ans = [6, 1, 0, 0]
-CASE (Tetrahedron20)
-  ans = [20, 6, 4, 1]
-CASE (Tetrahedron35)
-  ans = [35, 6, 4, 1]
-CASE (Tetrahedron56)
-  ans = [56, 6, 4, 1]
-CASE (Hexahedron64)
-  ans = [64, 12, 6, 1]
-CASE (Hexahedron125)
-  ans = [125, 12, 6, 1]
+SELECT CASE (elemType)
+CASE (Point, Line, Line3, Line4, Line5, Line6)
+
+  ans = TotalEntities_Line(elemType)
+
+CASE (Triangle, Triangle6, Triangle9, Triangle10, Triangle12,  &
+  & Triangle15, Triangle21, Triangle15a)
+
+  ans = TotalEntities_Triangle(elemType)
+
+CASE (Quadrangle, Quadrangle8, Quadrangle9, Quadrangle16)
+  ans = TotalEntities_Quadrangle(elemType)
+
+CASE (Tetrahedron, Tetrahedron10, Tetrahedron20, Tetrahedron35,  &
+  & Tetrahedron56)
+  ans = TotalEntities_Tetrahedron(elemType)
+
+CASE (Hexahedron, Hexahedron27, Hexahedron20, Hexahedron64,  &
+  & Hexahedron125)
+  ans = TotalEntities_Hexahedron(elemType)
+
+CASE (Prism, Prism15, Prism18)
+  ans = TotalEntities_Prism(elemType)
+
+CASE (Pyramid, Pyramid13, Pyramid14)
+  ans = TotalEntities_Pyramid(elemType)
+
 END SELECT
 END PROCEDURE refelem_TotalEntities
 
