@@ -62,8 +62,8 @@ END PROCEDURE FacetTopology_Pyramid
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE TotalEntities_Pyramid
-!TODO:
-ans = 0
+ans(2:4) = [9, 5, 1]
+ans(1) = TotalNodesInElement_Pyramid(elemType)
 END PROCEDURE TotalEntities_Pyramid
 
 !----------------------------------------------------------------------------
