@@ -80,8 +80,16 @@ END PROCEDURE TotalNodesInElement_Pyramid
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE ElementType_Pyramid
-!TODO:
-ans = 0
+SELECT CASE (elemName)
+CASE ("Pyramid", "Pyramid5")
+  ans = Pyramid5
+CASE ("Pyramid13")
+  ans = Pyramid13
+CASE ("Pyramid14")
+  ans = Pyramid14
+CASE DEFAULT
+  ans = 0
+END SELECT
 END PROCEDURE ElementType_Pyramid
 
 !----------------------------------------------------------------------------
