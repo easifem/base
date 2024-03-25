@@ -97,8 +97,19 @@ END PROCEDURE ElementType_Pyramid
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE ElementOrder_Pyramid
-!TODO:
-ans = 0
+SELECT CASE (elemType)
+CASE (Pyramid5)
+  ans = 1
+
+CASE (Pyramid13)
+  ans = 2
+
+CASE (Pyramid14)
+  ans = 2
+
+CASE DEFAULT
+  ans = 0
+END SELECT
 END PROCEDURE ElementOrder_Pyramid
 
 !----------------------------------------------------------------------------
