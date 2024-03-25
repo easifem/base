@@ -286,19 +286,28 @@ END PROCEDURE GetFaceConnectivity1
 
 MODULE PROCEDURE GetFaceElemType1
 SELECT CASE (elemType)
-! CASE (Point, Line, Triangle, Quadrangle)
-CASE (Tetrahedron)
+CASE (Tetrahedron4, Tetrahedron10, Tetrahedron20, Tetrahedron35, &
+  & Tetrahedron56)
+
   CALL GetFaceElemType_Tetrahedron(faceElemType=faceElemType, opt=opt,  &
-  & tFaceNodes=tFaceNodes)
-CASE (Hexahedron)
+    & tFaceNodes=tFaceNodes, elemType=elemType)
+
+CASE (Hexahedron8, Hexahedron20, Hexahedron27, Hexahedron64,  &
+  & Hexahedron125)
+
   CALL GetFaceElemType_Hexahedron(faceElemType=faceElemType, opt=opt,  &
-  & tFaceNodes=tFaceNodes)
-CASE (Prism)
+    & tFaceNodes=tFaceNodes, elemType=elemType)
+
+CASE (Prism6, Prism15, Prism18)
+
   CALL GetFaceElemType_Prism(faceElemType=faceElemType, opt=opt,  &
-  & tFaceNodes=tFaceNodes)
-CASE (Pyramid)
+    & tFaceNodes=tFaceNodes, elemType=elemType)
+
+CASE (Pyramid5, Pyramid13, Pyramid14)
+
   CALL GetFaceElemType_Pyramid(faceElemType=faceElemType, opt=opt,  &
-  & tFaceNodes=tFaceNodes)
+    & tFaceNodes=tFaceNodes, elemType=elemType)
+
 END SELECT
 END PROCEDURE GetFaceElemType1
 
@@ -473,9 +482,9 @@ CASE (Tetrahedron35)
 CASE (Tetrahedron56)
   ans = [56, 6, 4, 1]
 CASE (Hexahedron64)
-  ans = [64, 6, 4, 1]
+  ans = [64, 12, 6, 1]
 CASE (Hexahedron125)
-  ans = [125, 6, 4, 1]
+  ans = [125, 12, 6, 1]
 END SELECT
 END PROCEDURE refelem_TotalEntities
 
