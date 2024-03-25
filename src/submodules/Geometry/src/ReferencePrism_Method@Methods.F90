@@ -29,6 +29,27 @@ IMPLICIT NONE
 CONTAINS
 
 !----------------------------------------------------------------------------
+!                                                        ElementName_Prism
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE ElementName_Prism
+SELECT CASE (elemType)
+CASE (Prism6)
+  ans = "Prism6"
+
+CASE (Prism15)
+  ans = "Prism15"
+
+CASE (Prism18)
+  ans = "Prism18"
+
+CASE DEFAULT
+  ans = "NONE"
+
+END SELECT
+END PROCEDURE ElementName_Prism
+
+!----------------------------------------------------------------------------
 !                                                     FaceTopology_Prism
 !----------------------------------------------------------------------------
 
@@ -42,6 +63,7 @@ END PROCEDURE FacetTopology_Prism
 
 MODULE PROCEDURE TotalEntities_Prism
 !TODO:
+ans = 0
 END PROCEDURE TotalEntities_Prism
 
 !----------------------------------------------------------------------------
@@ -50,6 +72,7 @@ END PROCEDURE TotalEntities_Prism
 
 MODULE PROCEDURE TotalNodesInElement_Prism
 !TODO:
+ans = 0
 END PROCEDURE TotalNodesInElement_Prism
 
 !----------------------------------------------------------------------------
@@ -58,6 +81,7 @@ END PROCEDURE TotalNodesInElement_Prism
 
 MODULE PROCEDURE ElementType_Prism
 !TODO:
+ans = 0
 END PROCEDURE ElementType_Prism
 
 !----------------------------------------------------------------------------
@@ -66,6 +90,7 @@ END PROCEDURE ElementType_Prism
 
 MODULE PROCEDURE ElementOrder_Prism
 !TODO:
+ans = 0
 END PROCEDURE ElementOrder_Prism
 
 !----------------------------------------------------------------------------
@@ -91,7 +116,7 @@ END PROCEDURE FacetElements_Prism2
 MODULE PROCEDURE Initiate_Ref_Prism
 INTEGER(I4B) :: ii, jj
 INTEGER(I4B), PARAMETER :: tNodes = 6, tFaces = 5, tEdges = 9, xidim = 3, &
-  & max_nodes_face = 4, min_nodes_face = 3, name = Prism
+  & max_nodes_face = 4, name = Prism
 INTEGER(I4B) :: p1p2(2, tEdges), lloop(max_nodes_face + 2, tFaces), &
   & vol(tNodes, 1)
 REAL(DFP) :: unit_xij(xidim, tNodes), biunit_xij(xidim, tNodes)
@@ -221,7 +246,6 @@ END PROCEDURE Prism_Quality
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE PolyhedronVolume3D
-INTEGER(I4B), PARAMETER :: dim_num = 3
 INTEGER(I4B) :: iFace
 INTEGER(I4B) :: n1
 INTEGER(I4B) :: n2

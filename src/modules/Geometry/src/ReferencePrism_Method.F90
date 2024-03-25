@@ -43,9 +43,25 @@ PUBLIC :: ElementType_Prism
 PUBLIC :: TotalNodesInElement_Prism
 PUBLIC :: TotalEntities_Prism
 PUBLIC :: FacetTopology_Prism
+PUBLIC :: ElementName_Prism
 
 !----------------------------------------------------------------------------
-!                                             FacetTopology_Prism
+!                                                               ElementName
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2024-03-25
+! summary: Returns element name in character from element number/type
+
+INTERFACE
+  MODULE PURE FUNCTION ElementName_Prism(elemType) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: elemType
+    CHARACTER(:), ALLOCATABLE :: ans
+  END FUNCTION ElementName_Prism
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                       FacetTopology_Prism
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
