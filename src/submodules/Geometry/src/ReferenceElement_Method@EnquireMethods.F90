@@ -161,7 +161,7 @@ ans = isTriangle1(obj%name)
 END PROCEDURE isTriangle2
 
 !----------------------------------------------------------------------------
-!                                                              isQuadrangle
+!                                                               isQuadrangle
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE isQuadrangle1
@@ -174,7 +174,7 @@ END SELECT
 END PROCEDURE isQuadrangle1
 
 !----------------------------------------------------------------------------
-!                                                                 isQuadrangle
+!                                                               isQuadrangle
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE isQuadrangle2
@@ -196,7 +196,7 @@ END SELECT
 END PROCEDURE isTetrahedron1
 
 !----------------------------------------------------------------------------
-!                                                                 isTetrahedron
+!                                                              isTetrahedron
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE isTetrahedron2
@@ -239,7 +239,7 @@ END SELECT
 END PROCEDURE isPrism1
 
 !----------------------------------------------------------------------------
-!                                                                 isPrism
+!                                                                   isPrism
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE isPrism2
