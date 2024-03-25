@@ -20,13 +20,24 @@
 ! summary: This sumodule contains method for geometry
 
 SUBMODULE(ReferenceElement_Method) FacetElementMethods
-USE ReferenceLine_Method, ONLY: DEFAULT_REF_LINE_COORD
-USE ReferenceTriangle_Method, ONLY: GetEdgeConnectivity_Triangle
-USE ReferenceQuadrangle_Method, ONLY: GetEdgeConnectivity_Quadrangle
-! USE ReferenceTetrahedron_Method
-! USE ReferenceHexahedron_Method
-! USE ReferencePrism_Method
-! USE ReferencePyramid_Method
+USE ReferenceLine_Method, ONLY: DEFAULT_REF_LINE_COORD,  &
+  & FacetElements_Line
+
+USE ReferenceTriangle_Method, ONLY: GetEdgeConnectivity_Triangle,  &
+  & FacetElements_Triangle
+
+USE ReferenceQuadrangle_Method, ONLY: GetEdgeConnectivity_Quadrangle,  &
+  & FacetElements_Quadrangle
+
+USE ReferenceTetrahedron_Method, ONLY: FacetElements_Tetrahedron
+
+USE ReferenceTetrahedron_Method, ONLY: FacetElements_Tetrahedron
+
+USE ReferenceHexahedron_Method, ONLY: FacetElements_Hexahedron
+
+USE ReferencePrism_Method, ONLY: FacetElements_Prism
+
+USE ReferencePyramid_Method, ONLY: FacetElements_Pyramid
 
 USE LineInterpolationUtility, ONLY: InterpolationPoint_Line
 USE TriangleInterpolationUtility, ONLY: InterpolationPoint_Triangle
@@ -55,6 +66,7 @@ DO i = 2, 4
 END DO
 
 xicell = refelem%xiDimension
+
 SELECT CASE (xicell)
 CASE (1)
   tFacet = 2
@@ -70,6 +82,7 @@ CASE (1)
     FM(i + 1, 3) = nns
     FM(i + 1, 4:(3 + nns)) = refelem%topology(istart + i)%nptrs
   END DO
+
 CASE (2, 3)
   tFacet = refelem%entityCounts(xicell)
   istart = T(xicell) + 1
@@ -89,290 +102,78 @@ CASE (2, 3)
     FM(i + 1, 4:(3 + nns)) = refelem%topology(istart + i)%nptrs
   END DO
 END SELECT
+
 END PROCEDURE Facet_Matrix_refelem
 
 !----------------------------------------------------------------------------
 !                                                             FacetElements
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE refelem_FacetElements
-INTEGER(I4B) :: xicell, tFacet
+MODULE PROCEDURE refelem_GetFacetElements1
+INTEGER(I4B) :: topo
 
-xicell = refelem%xiDimension
-IF (xicell .GT. 0) THEN
-  tFacet = refelem%entityCounts(xicell)
-  ALLOCATE (ans(tFacet))
-ELSE
-  ALLOCATE (ans(0))
-  RETURN
-END IF
+topo = ElementTopology(refelem)
 
-SELECT CASE (xicell)
-CASE (1)
-  CALL refelem_FacetElements_Line(refelem=refelem, ans=ans)
+SELECT CASE (topo)
+CASE (Line)
+  CALL FacetElements_Line(refelem=refelem, ans=ans)
 
-CASE (2)
-  CALL refelem_FacetElements_Surface(refelem=refelem, ans=ans)
+CASE (Triangle)
+  CALL FacetElements_Triangle(refelem=refelem, ans=ans)
 
-CASE (3)
-  CALL refelem_FacetElements_Volume(refelem=refelem, ans=ans)
-END SELECT
+CASE (Quadrangle)
+  CALL FacetElements_Quadrangle(refelem=refelem, ans=ans)
 
-END PROCEDURE refelem_FacetElements
+CASE (Tetrahedron)
+  CALL FacetElements_Tetrahedron(refelem=refelem, ans=ans)
 
-!----------------------------------------------------------------------------
-!                                                             FacetElements
-!----------------------------------------------------------------------------
+CASE (Hexahedron)
+  CALL FacetElements_Hexahedron(refelem=refelem, ans=ans)
 
-MODULE PROCEDURE refelem_FacetElements_elemType
-INTEGER(I4B) :: xicell, tFacet
+CASE (Prism)
+  CALL FacetElements_Prism(refelem=refelem, ans=ans)
 
-xicell = XiDimension(elemType)
-
-SELECT CASE (xicell)
-
-CASE (1)
-  ALLOCATE (ans(2))
-
-  CALL refelem_FacetElements_Line_elemType(elemType=elemType,  &
-    & nsd=nsd, ans=ans)
-
-CASE (2)
-
-  tFacet = GetTotalEdges(elemType)
-  ALLOCATE (ans(tFacet))
-
-  CALL refelem_FacetElements_Surface_elemType(elemType=elemType,  &
-    & nsd=nsd, ans=ans)
-
-CASE (3)
-
-  tFacet = GetTotalFaces(elemType)
-  ALLOCATE (ans(tFacet))
-  CALL refelem_FacetElements_Volume_elemType(elemType=elemType,  &
-    & nsd=nsd, ans=ans)
-
-CASE DEFAULT
-  ALLOCATE (ans(0))
+CASE (Pyramid)
+  CALL FacetElements_Pyramid(refelem=refelem, ans=ans)
 
 END SELECT
 
-END PROCEDURE refelem_FacetElements_elemType
-
-!----------------------------------------------------------------------------
-!                                                     FacetElementMethods
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE refelem_FacetElements_Line
-INTEGER(I4B) :: ii
-INTEGER(I4B) :: nptrs(1)
-
-DO ii = 1, 2
-  nptrs = refelem%topology(ii)%nptrs
-  CALL Reallocate(ans(ii)%xij, 3_I4B, 1)
-  ans(ii)%xij(1:3, 1) = DEFAULT_REF_LINE_COORD(1:3, ii)
-  ans(ii)%entityCounts = [1, 0, 0, 0]
-  ans(ii)%xiDimension = 0
-  ans(ii)%name = Point
-  ans(ii)%interpolationPointType = refelem%interpolationPointType
-  ans(ii)%order = 0
-  ans(ii)%nsd = refelem%nsd
-  ALLOCATE (ans(ii)%topology(1))
-  ans(ii)%topology(1) = Referencetopology(nptrs=nptrs, name=Point)
-  ans(ii)%highOrderElement => NULL()
-END DO
-
-END PROCEDURE refelem_FacetElements_Line
-
-!----------------------------------------------------------------------------
-!                                                     FacetElementMethods
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE refelem_FacetElements_Line_elemType
-INTEGER(I4B), PARAMETER :: nptrs(2) = [1, 2]
-INTEGER(I4B) :: ii
-
-DO ii = 1, 2
-  ans(ii)%xij = RESHAPE(DEFAULT_REF_LINE_COORD(1:3, ii), [3, 1])
-  ans(ii)%entityCounts = [1, 0, 0, 0]
-  ans(ii)%xiDimension = 0
-  ans(ii)%name = Point
-  ! ans(ii)%interpolationPointType = refelem%interpolationPointType
-  ans(ii)%order = 0
-  ans(ii)%nsd = nsd
-  ALLOCATE (ans(ii)%topology(1))
-  ans(ii)%topology(1) = Referencetopology(nptrs=nptrs(ii:ii), name=Point)
-  ans(ii)%highOrderElement => NULL()
-END DO
-END PROCEDURE refelem_FacetElements_Line_elemType
+END PROCEDURE refelem_GetFacetElements1
 
 !----------------------------------------------------------------------------
 !                                                             FacetElements
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE refelem_FacetElements_Surface
-INTEGER(I4B) :: tFacet, ii, xicell, T(4), istart, iend, tsize, jj
-INTEGER(I4B), ALLOCATABLE :: nptrs(:)
-TYPE(Referencetopology_) :: topo
+MODULE PROCEDURE refelem_GetFacetElements2
+INTEGER(I4B) :: topo
 
-xicell = refelem%xiDimension
-tFacet = refelem%entityCounts(xicell)
-T(1) = 0
+topo = ElementTopology(elemType)
 
-DO ii = 2, 4
-  T(ii) = SUM(refelem%entityCounts(1:ii - 1))
-END DO
+SELECT CASE (topo)
+CASE (Line)
+  CALL FacetElements_Line(elemType=elemType, nsd=nsd, ans=ans)
 
-istart = T(xicell) + 1
-iend = T(xicell) + tFacet
+CASE (Triangle)
+  CALL FacetElements_Triangle(elemType=elemType, nsd=nsd, ans=ans)
 
-DO ii = 1, tFacet
-  topo = refelem%topology(istart + ii - 1)
-  nptrs = topo%nptrs
-  ans(ii)%xiDimension = topo%Xidimension
-  ans(ii)%name = topo%name
-  ans(ii)%interpolationPointType = refelem%interpolationPointType
+CASE (Quadrangle)
+  CALL FacetElements_Quadrangle(elemType=elemType, nsd=nsd, ans=ans)
 
-  ans(ii)%xij = InterpolationPoint_Line(  &
-    & order=refelem%order, &
-    & ipType=refelem%interpolationPointType, &
-    & layout="VEFC")
+CASE (Tetrahedron)
+  CALL FacetElements_Tetrahedron(elemType=elemType, nsd=nsd, ans=ans)
 
-  ans(ii)%Order = ElementOrder(elemType=topo%name)
-  ans(ii)%NSD = refelem%nsd
-  ans(ii)%entityCounts = [SIZE(nptrs), 1, 0, 0]
-  tsize = SIZE(nptrs) + 1
+CASE (Hexahedron)
+  CALL FacetElements_Hexahedron(elemType=elemType, nsd=nsd, ans=ans)
 
-  ALLOCATE (ans(ii)%topology(tsize))
+CASE (Prism)
+  CALL FacetElements_Prism(elemType=elemType, nsd=nsd, ans=ans)
 
-  DO jj = 1, SIZE(nptrs)
-    ans(ii)%topology(jj) = Referencetopology(nptrs=nptrs(jj:jj), name=Point)
-  END DO
+CASE (Pyramid)
+  CALL FacetElements_Pyramid(elemType=elemType, nsd=nsd, ans=ans)
 
-  ans(ii)%topology(tsize) = Referencetopology(nptrs=nptrs, name=ans(ii)%name)
+END SELECT
 
-  DEALLOCATE (nptrs)
-END DO
-
-END PROCEDURE refelem_FacetElements_Surface
-
-!----------------------------------------------------------------------------
-!                                                           FacetElements
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE refelem_FacetElements_Surface_elemType
-INTEGER(I4B) :: ii, jj
-INTEGER(I4B) :: edgeCon(1:2, 1:4), tFacet
-
-tFacet = SIZE(ans)
-IF (tFacet .EQ. 3) THEN
-  CALL GetEdgeConnectivity_Triangle(con=edgeCon)
-ELSE
-  CALL GetEdgeConnectivity_Quadrangle(con=edgeCon)
-END IF
-
-DO ii = 1, tFacet
-  ans(ii)%xiDimension = 1
-  ans(ii)%name = Line
-  ! ans(ii)%interpolationPointType = refelem%interpolationPointType
-  ans(ii)%xij = DEFAULT_REF_LINE_COORD(1:3, 1:2)
-  ans(ii)%order = ElementOrder(elemType)
-  ans(ii)%nsd = nsd
-  ans(ii)%entityCounts = [2, 1, 0, 0]
-  ALLOCATE (ans(ii)%topology(3))
-
-  DO jj = 1, 2
-    ans(ii)%topology(jj) = Referencetopology(nptrs=edgeCon(jj:jj, ii),  &
-      & name=Point)
-  END DO
-  ans(ii)%topology(3) = Referencetopology(nptrs=edgeCon(1:2, ii),  &
-    & name=ans(ii)%name)
-END DO
-
-END PROCEDURE refelem_FacetElements_Surface_elemType
-
-!----------------------------------------------------------------------------
-!                                                             FacetElements
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE refelem_FacetElements_Volume
-INTEGER(I4B) :: tFacet, ii, xicell, T(4), istart, iend, tsize, jj
-INTEGER(I4B), ALLOCATABLE :: nptrs(:)
-TYPE(Referencetopology_) :: topo
-
-xicell = refelem%xiDimension
-tFacet = refelem%entityCounts(xicell)
-T(1) = 0
-
-DO ii = 2, 4
-  T(ii) = SUM(refelem%entityCounts(1:ii - 1))
-END DO
-
-istart = T(xicell) + 1
-iend = T(xicell) + tFacet
-
-DO ii = 1, tFacet
-  topo = refelem%topology(istart + ii - 1)
-  nptrs = topo%nptrs
-  ans(ii)%xiDimension = topo%Xidimension
-  ans(ii)%name = topo%name
-  ans(ii)%interpolationPointType = refelem%interpolationPointType
-  ! ans(ii)%xij = refelem%xij(:, nptrs)
-  ans(ii)%Order = ElementOrder(ElemType=topo%name)
-  ans(ii)%NSD = refelem%nsd
-  ans(ii)%entityCounts = TotalEntities(topo%name)
-  tsize = SUM(ans(ii)%entityCounts)
-  ALLOCATE (ans(ii)%topology(tsize))
-
-  ! points
-  DO jj = 1, ans(ii)%entityCounts(1)
-    ans(ii)%topology(jj) = Referencetopology(nptrs=nptrs(jj:jj), &
-      & name=Point)
-  END DO
-
-  ! lines
-  jj = ans(ii)%entityCounts(1)
-  tsize = jj + ans(ii)%entityCounts(2)
-  ans(ii)%topology(jj + 1:tsize) = Facettopology(ElemType=ans(ii)%name, &
-    & nptrs=nptrs)
-
-  ! surface
-  ans(ii)%topology(tsize + 1) = Referencetopology(nptrs=nptrs,  &
-    & name=ans(ii)%name)
-
-  IF (isTriangle(topo%name)) THEN
-    ans(ii)%xij = InterpolationPoint_Triangle( &
-      & order=refelem%order, &
-      & ipType=refelem%interpolationPointType, &
-      & layout="VEFC")
-
-  ELSE IF (isQuadrangle(topo%name)) THEN
-    ans(ii)%xij = InterpolationPoint_Quadrangle( &
-      & order=refelem%order, &
-      & ipType=refelem%interpolationPointType, &
-      & layout="VEFC")
-
-  END IF
-END DO
-
-IF (ALLOCATED(nptrs)) DEALLOCATE (nptrs)
-
-END PROCEDURE refelem_FacetElements_Volume
-
-!----------------------------------------------------------------------------
-!                                                             FacetElements
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE refelem_FacetElements_Volume_elemType
-CHARACTER(*), PARAMETER :: myName = "refelem_FacetElements_Volume_elemType()"
-CALL Errormsg( &
-  & msg="WIP",  &
-  & file=__FILE__,  &
-  & routine=myName,  &
-  & line=__LINE__,  &
-  & unitno=stderr)
-STOP
-END PROCEDURE refelem_FacetElements_Volume_elemType
+END PROCEDURE refelem_GetFacetElements2
 
 !----------------------------------------------------------------------------
 !                                                             Facettopology

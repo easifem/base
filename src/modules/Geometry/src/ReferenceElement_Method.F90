@@ -55,7 +55,7 @@ PUBLIC :: IsSerendipityElement
 PUBLIC :: ElementTopology
 PUBLIC :: OPERATOR(.topology.)
 PUBLIC :: FacetMatrix
-PUBLIC :: FacetElements
+PUBLIC :: GetFacetElements
 PUBLIC :: LocalNodeCoord
 PUBLIC :: MeasureSimplex
 PUBLIC :: ElementQuality
@@ -1178,94 +1178,31 @@ END INTERFACE FacetMatrix
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date: 16 June 2021
+! date: 2024-03-25
 ! summary: This routine returns the facet elements
 
-INTERFACE FacetElements
-  MODULE FUNCTION refelem_FacetElements(refelem) RESULT(ans)
-    CLASS(ReferenceElement_), INTENT(IN) :: refelem
-    TYPE(ReferenceElement_), ALLOCATABLE :: ans(:)
-  END FUNCTION refelem_FacetElements
-END INTERFACE FacetElements
-
-!----------------------------------------------------------------------------
-!                                          FacetElements@FacetElementMethods
-!----------------------------------------------------------------------------
-
-!> author: Vikas Sharma, Ph. D.
-! date: 16 June 2021
-! summary: This routine returns the facet elements
-
-INTERFACE FacetElements
-  MODULE FUNCTION refelem_FacetElements_elemType(elemType, nsd) RESULT(ans)
-    INTEGER(I4B), INTENT(IN) :: elemType
-    INTEGER(I4B), INTENT(IN) :: nsd
-    TYPE(ReferenceElement_), ALLOCATABLE :: ans(:)
-  END FUNCTION refelem_FacetElements_elemType
-END INTERFACE FacetElements
-
-!----------------------------------------------------------------------------
-!                                          FacetElements@FacetElementMethods
-!----------------------------------------------------------------------------
-
-!> author: Vikas Sharma, Ph. D.
-! date: 16 June 2021
-! summary: This routine returns the facet elements
-
-INTERFACE
-  MODULE SUBROUTINE refelem_FacetElements_Surface(refelem, ans)
+INTERFACE GetFacetElements
+  MODULE SUBROUTINE refelem_GetFacetElements1(refelem, ans)
     CLASS(ReferenceElement_), INTENT(IN) :: refelem
     TYPE(ReferenceElement_), INTENT(INOUT) :: ans(:)
-  END SUBROUTINE refelem_FacetElements_Surface
-END INTERFACE
+  END SUBROUTINE refelem_GetFacetElements1
+END INTERFACE GetFacetElements
 
 !----------------------------------------------------------------------------
 !                                          FacetElements@FacetElementMethods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date: 16 June 2021
+! date: 2024-03-25
 ! summary: This routine returns the facet elements
 
-INTERFACE
-  MODULE SUBROUTINE refelem_FacetElements_Surface_elemType(elemType, nsd,  &
-    & ans)
+INTERFACE GetFacetElements
+  MODULE SUBROUTINE refelem_GetFacetElements2(elemType, nsd, ans)
     INTEGER(I4B), INTENT(IN) :: elemType
     INTEGER(I4B), INTENT(IN) :: nsd
     TYPE(ReferenceElement_), INTENT(INOUT) :: ans(:)
-  END SUBROUTINE refelem_FacetElements_Surface_elemType
-END INTERFACE
-
-!----------------------------------------------------------------------------
-!                                          FacetElements@FacetElementMethods
-!----------------------------------------------------------------------------
-
-!> author: Vikas Sharma, Ph. D.
-! date: 16 June 2021
-! summary: This routine returns the facet elements
-
-INTERFACE
-  MODULE SUBROUTINE refelem_FacetElements_Volume(refelem, ans)
-    CLASS(ReferenceElement_), INTENT(IN) :: refelem
-    TYPE(ReferenceElement_), INTENT(INOUT) :: ans(:)
-  END SUBROUTINE refelem_FacetElements_Volume
-END INTERFACE
-
-!----------------------------------------------------------------------------
-!                                          FacetElements@FacetElementMethods
-!----------------------------------------------------------------------------
-
-!> author: Vikas Sharma, Ph. D.
-! date: 16 June 2021
-! summary: This routine returns the facet elements
-
-INTERFACE
-  MODULE SUBROUTINE refelem_FacetElements_Volume_elemType(elemType, nsd, ans)
-    INTEGER(I4B), INTENT(IN) :: elemType
-    INTEGER(I4B), INTENT(IN) :: nsd
-    TYPE(ReferenceElement_), INTENT(INOUT) :: ans(:)
-  END SUBROUTINE refelem_FacetElements_Volume_elemType
-END INTERFACE
+  END SUBROUTINE refelem_GetFacetElements2
+END INTERFACE GetFacetElements
 
 !----------------------------------------------------------------------------
 !                                             FacetTopology@GeometryMethods
