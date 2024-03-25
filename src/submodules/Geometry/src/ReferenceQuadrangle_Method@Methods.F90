@@ -43,6 +43,25 @@ IMPLICIT NONE
 CONTAINS
 
 !----------------------------------------------------------------------------
+!                                                     ElementName_Quadrangle
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE ElementName_Quadrangle
+SELECT CASE (elemType)
+CASE (Quadrangle4)
+  ans = "Quadrangle4"
+CASE (Quadrangle8)
+  ans = "Quadrangle8"
+CASE (Quadrangle9)
+  ans = "Quadrangle9"
+CASE (Quadrangle16)
+  ans = "Quadrangle16"
+CASE default
+  ans = ""
+END SELECT
+END PROCEDURE ElementName_Quadrangle
+
+!----------------------------------------------------------------------------
 !                                                   FacetTopology_Quadrangle
 !----------------------------------------------------------------------------
 

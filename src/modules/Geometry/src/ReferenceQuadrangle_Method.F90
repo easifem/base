@@ -45,6 +45,7 @@ PUBLIC :: ElementType_Quadrangle
 PUBLIC :: TotalNodesInElement_Quadrangle
 PUBLIC :: TotalEntities_Quadrangle
 PUBLIC :: FacetTopology_Quadrangle
+PUBLIC :: ElementName_Quadrangle
 
 INTEGER(I4B), PUBLIC, PARAMETER :: HelpFaceData_Quadrangle(5, 4) =  &
   & RESHAPE([ &
@@ -62,6 +63,21 @@ INTEGER(I4B), PARAMETER :: DEFAULT_OPT_QUADRANGLE_EDGE_CON = 2_I4B
 !! This means edges are [1,2], [2,3], [3,4], [4,1]
 !! This is default option
 #endif
+
+!----------------------------------------------------------------------------
+!                                                               ElementName
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2024-03-25
+! summary: Returns element name in character from element number/type
+
+INTERFACE
+  MODULE PURE FUNCTION ElementName_Quadrangle(elemType) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: elemType
+    CHARACTER(:), ALLOCATABLE :: ans
+  END FUNCTION ElementName_Quadrangle
+END INTERFACE
 
 !----------------------------------------------------------------------------
 !                                             FacetTopology@GeometryMethods
