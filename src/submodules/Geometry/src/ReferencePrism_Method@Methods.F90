@@ -80,8 +80,16 @@ END PROCEDURE TotalNodesInElement_Prism
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE ElementType_Prism
-!TODO:
-ans = 0
+SELECT CASE (elemName)
+CASE ("Prism", "Prism6")
+  ans = Prism6
+CASE ("Prism15")
+  ans = Prism15
+CASE ("Prism18")
+  ans = Prism18
+CASE DEFAULT
+  ans = 0
+END SELECT
 END PROCEDURE ElementType_Prism
 
 !----------------------------------------------------------------------------
