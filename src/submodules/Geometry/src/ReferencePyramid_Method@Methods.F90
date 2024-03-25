@@ -71,8 +71,19 @@ END PROCEDURE TotalEntities_Pyramid
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE TotalNodesInElement_Pyramid
-!TODO:
-ans = 0
+SELECT CASE (elemType)
+CASE (Pyramid5)
+  ans = 5
+
+CASE (Pyramid13)
+  ans = 13
+
+CASE (Pyramid14)
+  ans = 14
+
+CASE DEFAULT
+  ans = 0
+END SELECT
 END PROCEDURE TotalNodesInElement_Pyramid
 
 !----------------------------------------------------------------------------
