@@ -47,6 +47,33 @@ IMPLICIT NONE
 CONTAINS
 
 !----------------------------------------------------------------------------
+!                                                   ElementName_Hexahedron
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE ElementName_Hexahedron
+SELECT CASE (elemType)
+CASE (Hexahedron8)
+  ans = "Hexahedron8"
+
+CASE (Hexahedron27)
+  ans = "Hexahedron27"
+
+CASE (Hexahedron20)
+  ans = "Hexahedron20"
+
+CASE (Hexahedron64)
+  ans = "Hexahedron64"
+
+CASE (Hexahedron125)
+  ans = "Hexahedron125"
+
+CASE DEFAULT
+  ans = "NONE"
+END SELECT
+
+END PROCEDURE ElementName_Hexahedron
+
+!----------------------------------------------------------------------------
 !                                                   FacetElements_Hexahedron
 !----------------------------------------------------------------------------
 

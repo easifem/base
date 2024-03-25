@@ -38,12 +38,27 @@ PUBLIC :: RefCoord_Hexahedron
 PUBLIC :: RefHexahedronCoord
 PUBLIC :: GetFaceElemType_Hexahedron
 PUBLIC :: FacetElements_Hexahedron
-
 PUBLIC :: ElementOrder_Hexahedron
 PUBLIC :: ElementType_Hexahedron
 PUBLIC :: TotalNodesInElement_Hexahedron
 PUBLIC :: TotalEntities_Hexahedron
 PUBLIC :: FacetTopology_Hexahedron
+PUBLIC :: ElementName_Hexahedron
+
+!----------------------------------------------------------------------------
+!                                                               ElementName
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2024-03-25
+! summary: Returns element name in character from element number/type
+
+INTERFACE
+  MODULE PURE FUNCTION ElementName_Hexahedron(elemType) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: elemType
+    CHARACTER(:), ALLOCATABLE :: ans
+  END FUNCTION ElementName_Hexahedron
+END INTERFACE
 
 !----------------------------------------------------------------------------
 !                                             FacetTopology_Hexahedron
