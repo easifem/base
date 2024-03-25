@@ -214,12 +214,6 @@ END PROCEDURE GetTotalFaces1
 
 MODULE PROCEDURE GetTotalCells1
 CALL RefElemGetGeoParam(tCells=ans, elemType=elemType)
-! SELECT CASE (elemType)
-! CASE (Point, Line, Triangle, Quadrangle)
-!   ans = 0_I4B
-! CASE (Tetrahedron, Hexahedron, Prism, Pyramid)
-!   ans = 1_I4B
-! END SELECT
 END PROCEDURE GetTotalCells1
 
 !----------------------------------------------------------------------------
@@ -229,18 +223,33 @@ END PROCEDURE GetTotalCells1
 MODULE PROCEDURE GetEdgeConnectivity1
 SELECT CASE (elemType)
 ! CASE (Point, Line)
-CASE (Triangle)
-  CALL GetEdgeConnectivity_Triangle(con=con, opt=opt)
-CASE (Quadrangle)
-  CALL GetEdgeConnectivity_Quadrangle(con=con, opt=opt)
-CASE (Tetrahedron)
-  CALL GetEdgeConnectivity_Tetrahedron(con=con, opt=opt)
-CASE (Hexahedron)
-  CALL GetEdgeConnectivity_Hexahedron(con=con, opt=opt)
-CASE (Prism)
-  CALL GetEdgeConnectivity_Prism(con=con, opt=opt)
-CASE (Pyramid)
-  CALL GetEdgeConnectivity_Pyramid(con=con, opt=opt)
+CASE (Triangle3, Triangle6, Triangle9, Triangle10, &
+  & Triangle12, Triangle15a, Triangle15b, Triangle21)
+
+  CALL GetEdgeConnectivity_Triangle(con=con, opt=opt, order=order)
+
+CASE (Quadrangle4, Quadrangle8, Quadrangle9, Quadrangle16)
+
+  CALL GetEdgeConnectivity_Quadrangle(con=con, opt=opt, order=order)
+
+CASE (Tetrahedron4, Tetrahedron10, Tetrahedron20, Tetrahedron35, &
+  & Tetrahedron56)
+
+  CALL GetEdgeConnectivity_Tetrahedron(con=con, opt=opt, order=order)
+
+CASE (Hexahedron8, Hexahedron20, Hexahedron27, Hexahedron64,  &
+  & Hexahedron125)
+
+  CALL GetEdgeConnectivity_Hexahedron(con=con, opt=opt, order=order)
+
+CASE (Prism6, Prism15, Prism18)
+
+  CALL GetEdgeConnectivity_Prism(con=con, opt=opt, order=order)
+
+CASE (Pyramid5, Pyramid13, Pyramid14)
+
+  CALL GetEdgeConnectivity_Pyramid(con=con, opt=opt, order=order)
+
 END SELECT
 END PROCEDURE GetEdgeConnectivity1
 
