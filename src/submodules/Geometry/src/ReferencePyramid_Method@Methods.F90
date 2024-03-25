@@ -30,6 +30,26 @@ IMPLICIT NONE
 CONTAINS
 
 !----------------------------------------------------------------------------
+!                                                       ElementName_Pyramid
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE ElementName_Pyramid
+SELECT CASE (elemType)
+CASE (Pyramid5)
+  ans = "Pyramid5"
+
+CASE (Pyramid13)
+  ans = "Pyramid13"
+
+CASE (Pyramid14)
+  ans = "Pyramid14"
+
+CASE default
+  ans = "NONE"
+END SELECT
+END PROCEDURE ElementName_Pyramid
+
+!----------------------------------------------------------------------------
 !                                                     FaceTopology_Pyramid
 !----------------------------------------------------------------------------
 

@@ -41,6 +41,22 @@ PUBLIC :: ElementType_Pyramid
 PUBLIC :: TotalNodesInElement_Pyramid
 PUBLIC :: TotalEntities_Pyramid
 PUBLIC :: FacetTopology_Pyramid
+PUBLIC :: ElementName_Pyramid
+
+!----------------------------------------------------------------------------
+!                                                               ElementName
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2024-03-25
+! summary: Returns element name in character from element number/type
+
+INTERFACE
+  MODULE PURE FUNCTION ElementName_Pyramid(elemType) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: elemType
+    CHARACTER(:), ALLOCATABLE :: ans
+  END FUNCTION ElementName_Pyramid
+END INTERFACE
 
 !----------------------------------------------------------------------------
 !                                             FacetTopology_Pyramid
