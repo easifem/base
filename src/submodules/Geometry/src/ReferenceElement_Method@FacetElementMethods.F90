@@ -21,23 +21,31 @@
 
 SUBMODULE(ReferenceElement_Method) FacetElementMethods
 USE ReferenceLine_Method, ONLY: DEFAULT_REF_LINE_COORD,  &
-  & FacetElements_Line
+  & FacetElements_Line, &
+  & FacetTopology_Line
 
 USE ReferenceTriangle_Method, ONLY: GetEdgeConnectivity_Triangle,  &
-  & FacetElements_Triangle
+  & FacetElements_Triangle, &
+  & FacetTopology_Triangle
 
 USE ReferenceQuadrangle_Method, ONLY: GetEdgeConnectivity_Quadrangle,  &
-  & FacetElements_Quadrangle
+  & FacetElements_Quadrangle, &
+  & FacetTopology_Quadrangle
 
-USE ReferenceTetrahedron_Method, ONLY: FacetElements_Tetrahedron
+USE ReferenceTetrahedron_Method, ONLY: FacetElements_Tetrahedron, &
+  & FacetTopology_Tetrahedron
 
-USE ReferenceTetrahedron_Method, ONLY: FacetElements_Tetrahedron
+USE ReferenceTetrahedron_Method, ONLY: FacetElements_Tetrahedron, &
+  & FacetTopology_Tetrahedron
 
-USE ReferenceHexahedron_Method, ONLY: FacetElements_Hexahedron
+USE ReferenceHexahedron_Method, ONLY: FacetElements_Hexahedron, &
+  & FacetTopology_Hexahedron
 
-USE ReferencePrism_Method, ONLY: FacetElements_Prism
+USE ReferencePrism_Method, ONLY: FacetElements_Prism, &
+  & FacetTopology_Prism
 
-USE ReferencePyramid_Method, ONLY: FacetElements_Pyramid
+USE ReferencePyramid_Method, ONLY: FacetElements_Pyramid, &
+  & FacetTopology_Pyramid
 
 USE LineInterpolationUtility, ONLY: InterpolationPoint_Line
 USE TriangleInterpolationUtility, ONLY: InterpolationPoint_Triangle
@@ -176,254 +184,37 @@ END SELECT
 END PROCEDURE refelem_GetFacetElements2
 
 !----------------------------------------------------------------------------
-!                                                             Facettopology
+!                                                         GetFacetTopology
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE refelem_Facettopology
-SELECT CASE (ElemType)
-CASE (Line2)
-  ALLOCATE (ans(2))
-  ans(1)%nptrs = nptrs(1:1)
-  ans(1)%name = point
-  ans(1)%xiDimension = 0
-  ans(2)%nptrs = nptrs(2:2)
-  ans(2)%name = point
-  ans(2)%xiDimension = 0
+MODULE PROCEDURE refelem_GetFacettopology
+INTEGER(I4B) :: topo
+topo = ElementTopology(elemType)
 
-CASE (Line3)
-  ALLOCATE (ans(2))
-  ans(1)%nptrs = nptrs([1])
-  ans(1)%name = point
-  ans(1)%xiDimension = 0
-  ans(2)%nptrs = nptrs([2])
-  ans(2)%name = point
-  ans(2)%xiDimension = 0
+SELECT CASE (topo)
+CASE (Line)
+  CALL FacetTopology_Line(elemType=elemType, nptrs=nptrs, ans=ans)
 
-CASE (Line4)
-  ALLOCATE (ans(2))
-  ans(1)%nptrs = nptrs([1])
-  ans(1)%name = point
-  ans(1)%xiDimension = 0
-  ans(2)%nptrs = nptrs([2])
-  ans(2)%name = point
-  ans(2)%xiDimension = 0
+CASE (Triangle)
+  CALL FacetTopology_Triangle(elemType=elemType, nptrs=nptrs, ans=ans)
 
-CASE (Line5)
-  ALLOCATE (ans(2))
-  ans(1)%nptrs = nptrs([1])
-  ans(1)%name = point
-  ans(1)%xiDimension = 0
-  ans(2)%nptrs = nptrs([2])
-  ans(2)%name = point
-  ans(2)%xiDimension = 0
+CASE (Quadrangle)
+  CALL FacetTopology_Quadrangle(elemType=elemType, nptrs=nptrs, ans=ans)
 
-CASE (Line6)
-  ALLOCATE (ans(2))
-  ans(1)%nptrs = nptrs([1])
-  ans(1)%name = point
-  ans(1)%xiDimension = 0
-  ans(2)%nptrs = nptrs([2])
-  ans(2)%name = point
-  ans(2)%xiDimension = 0
+CASE (Tetrahedron)
+  CALL FacetTopology_Tetrahedron(elemType=elemType, nptrs=nptrs, ans=ans)
 
-CASE (Triangle3)
-  ALLOCATE (ans(3))
-  ans(1)%nptrs = nptrs([1, 2])
-  ans(2)%nptrs = nptrs([2, 3])
-  ans(3)%nptrs = nptrs([3, 1])
-  ans(1:3)%xiDimension = 1
-  ans(1:3)%name = line2
+CASE (Prism)
+  CALL FacetTopology_Prism(elemType=elemType, nptrs=nptrs, ans=ans)
 
-CASE (Triangle6)
-  ALLOCATE (ans(3))
-  ans(1)%nptrs = nptrs([1, 2, 4])
-  ans(2)%nptrs = nptrs([2, 3, 5])
-  ans(3)%nptrs = nptrs([3, 1, 6])
-  ans(1:3)%xiDimension = 1
-  ans(1:3)%name = line3
+CASE (Pyramid)
+  CALL FacetTopology_Pyramid(elemType=elemType, nptrs=nptrs, ans=ans)
 
-CASE (Triangle9)
-  ALLOCATE (ans(3))
-  ans(1)%nptrs = nptrs([1, 2, 4, 5])
-  ans(2)%nptrs = nptrs([2, 3, 6, 7])
-  ans(3)%nptrs = nptrs([3, 1, 8, 9])
-  ans(1:3)%xiDimension = 1
-  ans(1:3)%name = line4
-
-CASE (Triangle10)
-  ALLOCATE (ans(3))
-  ans(1)%nptrs = nptrs([1, 2, 4, 5])
-  ans(2)%nptrs = nptrs([2, 3, 6, 7])
-  ans(3)%nptrs = nptrs([3, 1, 8, 9])
-  ans(1:3)%xiDimension = 1
-  ans(1:3)%name = line4
-
-CASE (Triangle12)
-  ALLOCATE (ans(3))
-  ans(1)%nptrs = nptrs([1, 2, 4, 5, 6])
-  ans(2)%nptrs = nptrs([2, 3, 7, 8, 9])
-  ans(3)%nptrs = nptrs([3, 1, 10, 11, 12])
-  ans(1:3)%xiDimension = 1
-  ans(1:3)%name = line5
-
-CASE (Triangle15a)
-  ALLOCATE (ans(3))
-  ans(1)%nptrs = nptrs([1, 2, 4, 5, 6])
-  ans(2)%nptrs = nptrs([2, 3, 7, 8, 9])
-  ans(3)%nptrs = nptrs([3, 1, 10, 11, 12])
-  ans(1:3)%xiDimension = 1
-  ans(1:3)%name = line5
-
-CASE (Quadrangle4)
-  ALLOCATE (ans(4))
-  ans(1)%nptrs = nptrs([1, 2])
-  ans(2)%nptrs = nptrs([2, 3])
-  ans(3)%nptrs = nptrs([3, 4])
-  ans(4)%nptrs = nptrs([4, 1])
-  ans(1:)%xiDimension = 1
-  ans(1:)%name = line2
-
-CASE (Quadrangle8)
-  ALLOCATE (ans(4))
-  ans(1)%nptrs = nptrs([1, 2, 5])
-  ans(2)%nptrs = nptrs([2, 3, 6])
-  ans(3)%nptrs = nptrs([3, 4, 7])
-  ans(4)%nptrs = nptrs([4, 1, 8])
-  ans(1:)%xiDimension = 1
-  ans(1:)%name = line3
-
-CASE (Quadrangle9)
-  ALLOCATE (ans(4))
-  ans(1)%nptrs = nptrs([1, 2, 5])
-  ans(2)%nptrs = nptrs([2, 3, 6])
-  ans(3)%nptrs = nptrs([3, 4, 7])
-  ans(4)%nptrs = nptrs([4, 1, 8])
-  ans(1:)%xiDimension = 1
-  ans(1:)%name = line3
-
-CASE (Tetrahedron4)
-  ALLOCATE (ans(4))
-  ans(1)%nptrs = nptrs([1, 2, 3])
-  ans(2)%nptrs = nptrs([3, 1, 4])
-  ans(3)%nptrs = nptrs([4, 2, 3])
-  ans(4)%nptrs = nptrs([1, 2, 4])
-  ans(:)%xiDimension = 2
-  ans(:)%name = Triangle3
-
-CASE (Tetrahedron10)
-  ALLOCATE (ans(4))
-  ans(1)%nptrs = nptrs([1, 2, 3, 5, 6, 7])
-  ans(2)%nptrs = nptrs([3, 1, 4, 7, 8, 10])
-  ans(3)%nptrs = nptrs([4, 2, 3, 9, 6, 10])
-  ans(4)%nptrs = nptrs([1, 2, 4, 5, 9, 8])
-  ans(:)%xiDimension = 2
-  ans(:)%name = Triangle6
-
-CASE (Prism6)
-  ALLOCATE (ans(5))
-  ans(1)%nptrs = nptrs([5, 4, 1, 2])
-  ans(2)%nptrs = nptrs([4, 6, 3, 1])
-  ans(3)%nptrs = nptrs([2, 3, 6, 5])
-  ans(4)%nptrs = nptrs([1, 3, 2])
-  ans(5)%nptrs = nptrs([4, 5, 6])
-  ans(:)%xiDimension = 2
-  ans(1:3)%name = Quadrangle4
-  ans(4:5)%name = Triangle3
-
-CASE (Pyramid5)
-  ALLOCATE (ans(5))
-  ans(1)%nptrs = nptrs([1, 2, 5])
-  ans(2)%nptrs = nptrs([2, 3, 5])
-  ans(3)%nptrs = nptrs([3, 4, 5])
-  ans(4)%nptrs = nptrs([1, 5, 4])
-  ans(5)%nptrs = nptrs([4, 3, 2, 1])
-  ans(:)%xiDimension = 2
-  ans(1:4)%name = Triangle3
-  ans(5)%name = Quadrangle4
-  ! Order=2 elements
-
-CASE (Hexahedron8)
-  ALLOCATE (ans(6))
-  ans(1)%nptrs = nptrs([1, 4, 3, 2])
-  ans(2)%nptrs = nptrs([1, 5, 8, 4])
-  ans(3)%nptrs = nptrs([5, 6, 7, 8])
-  ans(4)%nptrs = nptrs([2, 3, 7, 6])
-  ans(5)%nptrs = nptrs([3, 4, 8, 7])
-  ans(6)%nptrs = nptrs([1, 2, 6, 5])
-  ans(:)%xiDimension = 2
-  ans(:)%name = Quadrangle4
-
-CASE (Hexahedron20)
-  ALLOCATE (ans(6))
-  ans(1)%nptrs = nptrs([1, 4, 3, 2, 10, 14, 12, 9])
-  ans(2)%nptrs = nptrs([1, 5, 8, 4, 11, 18, 16, 10])
-  ans(3)%nptrs = nptrs([5, 6, 7, 8, 17, 19, 20, 18])
-  ans(4)%nptrs = nptrs([2, 3, 7, 6, 12, 15, 19, 13])
-  ans(5)%nptrs = nptrs([3, 4, 8, 7, 14, 16, 20, 15])
-  ans(6)%nptrs = nptrs([1, 2, 6, 5, 9, 13, 17, 11])
-  ans(:)%xiDimension = 2
-  ans(:)%name = Quadrangle8
-
-CASE (Hexahedron27)
-  ALLOCATE (ans(6))
-  ans(1)%nptrs = nptrs([1, 4, 3, 2, 10, 14, 12, 9, 21])
-  ans(2)%nptrs = nptrs([1, 5, 8, 4, 11, 18, 16, 10, 23])
-  ans(3)%nptrs = nptrs([5, 6, 7, 8, 17, 19, 20, 18, 26])
-  ans(4)%nptrs = nptrs([2, 3, 7, 6, 12, 15, 19, 13, 24])
-  ans(5)%nptrs = nptrs([3, 4, 8, 7, 14, 16, 20, 15, 25])
-  ans(6)%nptrs = nptrs([1, 2, 6, 5, 9, 13, 17, 11, 22])
-  ans(:)%xiDimension = 2
-  ans(:)%name = Quadrangle9
-
-CASE (Prism15)
-  ALLOCATE (ans(5))
-  ans(1)%nptrs = nptrs([5, 4, 1, 2, 13, 9, 7, 11])
-  ans(2)%nptrs = nptrs([4, 6, 3, 1, 14, 12, 8, 9])
-  ans(3)%nptrs = nptrs([2, 3, 6, 5, 10, 12, 15, 11])
-  ans(4)%nptrs = nptrs([1, 3, 2, 8, 10, 7])
-  ans(5)%nptrs = nptrs([4, 5, 6, 13, 15, 14])
-  ans(:)%xiDimension = 2
-  ans(1:3)%name = Quadrangle8
-  ans(4:5)%name = Triangle6
-
-CASE (Prism18)
-  ALLOCATE (ans(5))
-  ans(1)%nptrs = nptrs([5, 4, 1, 2, 13, 9, 7, 11, 16])
-  ans(2)%nptrs = nptrs([4, 6, 3, 1, 14, 12, 8, 9, 17])
-  ans(3)%nptrs = nptrs([2, 3, 6, 5, 10, 12, 15, 11, 18])
-  ans(4)%nptrs = nptrs([1, 3, 2, 8, 10, 7])
-  ans(5)%nptrs = nptrs([4, 5, 6, 13, 15, 14])
-  ans(:)%xiDimension = 2
-  ans(1:3)%name = Quadrangle9
-  ans(4:5)%name = Triangle6
-
-CASE (Pyramid13)
-  ALLOCATE (ans(5))
-  ans(1)%nptrs = nptrs([1, 2, 5, 6, 10, 8])
-  ans(2)%nptrs = nptrs([2, 3, 5, 9, 12, 10])
-  ans(3)%nptrs = nptrs([3, 4, 5, 11, 13, 12])
-  ans(4)%nptrs = nptrs([1, 5, 4, 8, 13, 7])
-  ans(5)%nptrs = nptrs([4, 3, 2, 1, 11, 9, 6, 7])
-  ans(:)%xiDimension = 2
-  ans(1:4)%name = Triangle6
-  ans(5)%name = Quadrangle8
-
-CASE (Pyramid14)
-  ALLOCATE (ans(5))
-  ans(1)%nptrs = nptrs([1, 2, 5, 6, 10, 8])
-  ans(2)%nptrs = nptrs([2, 3, 5, 9, 12, 10])
-  ans(3)%nptrs = nptrs([3, 4, 5, 11, 13, 12])
-  ans(4)%nptrs = nptrs([1, 5, 4, 8, 13, 7])
-  ans(5)%nptrs = nptrs([4, 3, 2, 1, 11, 9, 6, 7, 13])
-  ans(:)%xiDimension = 2
-  ans(1:4)%name = Triangle6
-  ans(5)%name = Quadrangle9
-
-CASE (Triangle15b, Triangle21, Tetrahedron20, Tetrahedron35, &
-  & Tetrahedron56, Hexahedron64, Hexahedron125)
+CASE (Hexahedron)
+  CALL FacetTopology_Hexahedron(elemType=elemType, nptrs=nptrs, ans=ans)
 
 END SELECT
-END PROCEDURE refelem_Facettopology
+END PROCEDURE refelem_GetFacettopology
 
 !----------------------------------------------------------------------------
 !

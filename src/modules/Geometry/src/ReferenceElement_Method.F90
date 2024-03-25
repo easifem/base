@@ -61,7 +61,7 @@ PUBLIC :: MeasureSimplex
 PUBLIC :: ElementQuality
 PUBLIC :: ContainsPoint
 PUBLIC :: TotalEntities
-PUBLIC :: FacetTopology
+PUBLIC :: GetFacetTopology
 PUBLIC :: GetVTKelementType
 PUBLIC :: GetEdgeConnectivity
 PUBLIC :: GetFaceConnectivity
@@ -1212,13 +1212,13 @@ END INTERFACE GetFacetElements
 ! date: 16 June 2021
 ! summary: Returns the facet topology of the given element type
 
-INTERFACE FacetTopology
-  MODULE PURE FUNCTION refelem_FacetTopology(elemType, nptrs) RESULT(ans)
+INTERFACE GetFacetTopology
+  MODULE PURE SUBROUTINE refelem_GetFacetTopology(elemType, nptrs, ans)
     INTEGER(I4B), INTENT(IN) :: elemType
     INTEGER(I4B), INTENT(IN) :: nptrs(:)
-    TYPE(ReferenceTopology_), ALLOCATABLE :: ans(:)
-  END FUNCTION refelem_FacetTopology
-END INTERFACE FacetTopology
+    TYPE(ReferenceTopology_), INTENT(INOUT) :: ans(:)
+  END SUBROUTINE refelem_GetFacetTopology
+END INTERFACE GetFacetTopology
 
 !----------------------------------------------------------------------------
 !                                       LocalNodeCoord@LocalNodeCoordMethods
