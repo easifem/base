@@ -259,15 +259,24 @@ END PROCEDURE GetEdgeConnectivity1
 
 MODULE PROCEDURE GetFaceConnectivity1
 SELECT CASE (elemType)
-! CASE (Point, Line, Triangle, Quadrangle)
-CASE (Tetrahedron)
-  CALL GetFaceConnectivity_Tetrahedron(con=con, opt=opt)
-CASE (Hexahedron)
-  CALL GetFaceConnectivity_Hexahedron(con=con, opt=opt)
-CASE (Prism)
-  CALL GetFaceConnectivity_Prism(con=con, opt=opt)
-CASE (Pyramid)
-  CALL GetFaceConnectivity_Pyramid(con=con, opt=opt)
+CASE (Tetrahedron4, Tetrahedron10, Tetrahedron20, Tetrahedron35, &
+  & Tetrahedron56)
+
+  CALL GetFaceConnectivity_Tetrahedron(con=con, opt=opt, order=order)
+
+CASE (Hexahedron8, Hexahedron20, Hexahedron27, Hexahedron64,  &
+  & Hexahedron125)
+
+  CALL GetFaceConnectivity_Hexahedron(con=con, opt=opt, order=order)
+
+CASE (Prism6, Prism15, Prism18)
+
+  CALL GetFaceConnectivity_Prism(con=con, opt=opt, order=order)
+
+CASE (Pyramid5, Pyramid13, Pyramid14)
+
+  CALL GetFaceConnectivity_Pyramid(con=con, opt=opt, order=order)
+
 END SELECT
 END PROCEDURE GetFaceConnectivity1
 
