@@ -22,28 +22,35 @@
 SUBMODULE(ReferenceElement_Method) ElementNameMethods
 USE ReferenceLine_Method, ONLY: ElementType_Line,  &
   & TotalNodesInElement_Line,  &
-  & ElementName_Line
+  & ElementName_Line,  &
+  & ElementOrder_Line
 
 USE ReferenceTriangle_Method, ONLY: ElementType_Triangle,  &
   & TotalNodesInElement_Triangle,  &
-  & ElementName_Triangle
+  & ElementName_Triangle,  &
+  & ElementOrder_Triangle
 
 USE ReferenceQuadrangle_Method, ONLY: ElementType_Quadrangle,  &
-  & TotalNodesInElement_Quadrangle,  &
-  & ElementName_Quadrangle
+  & TotalNodesInElement_Quadrangle, &
+  & ElementName_Quadrangle, &
+  & ElementOrder_Quadrangle
 
 USE ReferenceTetrahedron_Method, ONLY: ElementType_Tetrahedron,  &
   & TotalNodesInElement_Tetrahedron,  &
-  & ElementName_Tetrahedron
+  & ElementName_Tetrahedron, &
+  & ElementOrder_Tetrahedron
 
 USE ReferenceHexahedron_Method, ONLY: ElementName_Hexahedron,  &
-  & ElementType_Hexahedron
+  & ElementType_Hexahedron, &
+  & ElementOrder_Hexahedron
 
 USE ReferencePrism_Method, ONLY: ElementName_Prism,  &
-  & ElementType_Prism
+  & ElementType_Prism, &
+  & ElementOrder_Prism
 
 USE ReferencePyramid_Method, ONLY: ElementName_Pyramid,  &
-  & ElementType_Pyramid
+  & ElementType_Pyramid, &
+  & ElementOrder_Pyramid
 
 IMPLICIT NONE
 CONTAINS
@@ -143,73 +150,39 @@ END PROCEDURE Element_Type_obj
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Element_Order
-SELECT CASE (ElemType)
-CASE (Line2)
-  ans = 1
-CASE (Triangle3)
-  ans = 1
-CASE (Quadrangle4)
-  ans = 1
-CASE (Tetrahedron4)
-  ans = 1
-CASE (Hexahedron8)
-  ans = 1
-CASE (Prism6)
-  ans = 1
-CASE (Pyramid5)
-  ans = 1
-CASE (Line3)
-  ans = 2
-CASE (Triangle6)
-  ans = 2
-CASE (Quadrangle9)
-  ans = 2
-CASE (Tetrahedron10)
-  ans = 2
-CASE (Hexahedron27)
-  ans = 2
-CASE (Prism18)
-  ans = 2
-CASE (Pyramid14)
-  ans = 2
-CASE (Point1)
-  ans = 0
-CASE (Quadrangle8)
-  ans = 2
-CASE (Hexahedron20)
-  ans = 2
-CASE (Prism15)
-  ans = 2
-CASE (Pyramid13)
-  ans = 2
-CASE (Triangle9)
-  ans = 3
-CASE (Triangle10)
-  ans = 3
-CASE (Triangle12)
-  ans = 4
-CASE (Triangle15a)
-  ans = 4
-CASE (Triangle15b)
-  ans = 5
-CASE (Triangle21)
-  ans = 5
-CASE (Line4)
-  ans = 3
-CASE (Line5)
-  ans = 4
-CASE (Line6)
-  ans = 5
-CASE (Tetrahedron20)
-  ans = 3
-CASE (Tetrahedron35)
-  ans = 4
-CASE (Tetrahedron56)
-  ans = 5
-CASE (Hexahedron64)
-  ans = 3
-CASE (Hexahedron125)
-  ans = 4
+SELECT CASE (elemType)
+
+CASE (Line2, Line3, Line4, Line5, Line6, Point)
+
+  ans = ElementOrder_Line(elemType)
+
+CASE (Triangle3, Triangle6, Triangle9, Triangle10,  &
+  & Triangle12, Triangle15a, Triangle15b, Triangle21)
+
+  ans = ElementOrder_Triangle(elemType)
+
+CASE (Quadrangle4, Quadrangle8, Quadrangle9, Quadrangle16)
+
+  ans = ElementOrder_Quadrangle(elemType)
+
+CASE (Tetrahedron4, Tetrahedron10, Tetrahedron20, Tetrahedron35,  &
+  & Tetrahedron56)
+
+  ans = ElementOrder_Tetrahedron(elemType)
+
+CASE (Hexahedron8, Hexahedron27, Hexahedron20, Hexahedron64,  &
+  & Hexahedron125)
+
+  ans = ElementOrder_Hexahedron(elemType)
+
+CASE (Prism6, Prism18, Prism15)
+
+  ans = ElementOrder_Prism(elemType)
+
+CASE (Pyramid5, Pyramid13, Pyramid14)
+
+  ans = ElementOrder_Pyramid(elemType)
+
 END SELECT
 END PROCEDURE Element_Order
 
