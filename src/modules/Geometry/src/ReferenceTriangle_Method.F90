@@ -63,6 +63,7 @@ PUBLIC :: ElementType_Triangle
 PUBLIC :: TotalNodesInElement_Triangle
 PUBLIC :: TotalEntities_Triangle
 PUBLIC :: FacetTopology_Triangle
+PUBLIC :: ElementName_Triangle
 
 #ifdef _TRIANGLE_EDGE_CON_DEFAULT_OPT_2
 INTEGER(I4B), PARAMETER :: DEFAULT_OPT_TRIANGLE_EDGE_CON = 1_I4B
@@ -72,6 +73,21 @@ INTEGER(I4B), PARAMETER :: DEFAULT_OPT_TRIANGLE_EDGE_CON = 2_I4B
 !! This means edges are [1,2], [2,3], [3,1]
 !! This is default option
 #endif
+
+!----------------------------------------------------------------------------
+!                                                               ElementName
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2024-03-25
+! summary: Returns element name in character from element number/type
+
+INTERFACE
+  MODULE PURE FUNCTION ElementName_Triangle(elemType) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: elemType
+    CHARACTER(:), ALLOCATABLE :: ans
+  END FUNCTION ElementName_Triangle
+END INTERFACE
 
 !----------------------------------------------------------------------------
 !                                             FacetTopology@GeometryMethods

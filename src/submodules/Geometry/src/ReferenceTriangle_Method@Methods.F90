@@ -40,6 +40,33 @@ IMPLICIT NONE
 CONTAINS
 
 !----------------------------------------------------------------------------
+!                                                     ElementName_Triangle
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE ElementName_Triangle
+SELECT CASE (elemType)
+CASE (Triangle3)
+  ans = "Triangle3"
+CASE (Triangle6)
+  ans = "Triangle6"
+CASE (Triangle9)
+  ans = "Triangle9"
+CASE (Triangle10)
+  ans = "Triangle10"
+CASE (Triangle12)
+  ans = "Triangle12"
+CASE (Triangle15a)
+  ans = "Triangle15a"
+CASE (Triangle15b)
+  ans = "Triangle15b"
+CASE (Triangle21)
+  ans = "Triangle21"
+CASE DEFAULT
+  ans = "NONE"
+END SELECT
+END PROCEDURE ElementName_Triangle
+
+!----------------------------------------------------------------------------
 !                                                     FacetTopology_Triangle
 !----------------------------------------------------------------------------
 
