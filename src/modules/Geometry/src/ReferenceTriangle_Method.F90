@@ -64,6 +64,13 @@ PUBLIC :: TotalNodesInElement_Triangle
 PUBLIC :: TotalEntities_Triangle
 PUBLIC :: FacetTopology_Triangle
 PUBLIC :: ElementName_Triangle
+PUBLIC :: MaxOrder_Triangle
+
+#ifdef MAX_TRIANGLE_ORDER
+INTEGER(I4B), PARAMETER :: MaxOrder_Triangle = MAX_TRIANGLE_ORDER
+#else
+INTEGER(I4B), PARAMETER :: MaxOrder_Triangle = 2_I4B
+#endif
 
 #ifdef _TRIANGLE_EDGE_CON_DEFAULT_OPT_2
 INTEGER(I4B), PARAMETER :: DEFAULT_OPT_TRIANGLE_EDGE_CON = 1_I4B
