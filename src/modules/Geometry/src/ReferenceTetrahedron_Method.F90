@@ -43,6 +43,13 @@ PUBLIC :: TotalNodesInElement_Tetrahedron
 PUBLIC :: TotalEntities_Tetrahedron
 PUBLIC :: FacetTopology_Tetrahedron
 PUBLIC :: ElementName_Tetrahedron
+PUBLIC :: MaxOrder_Tetrahedron
+
+#ifdef MAX_TETRAHEDRON_ORDER
+INTEGER(I4B), PARAMETER :: MaxOrder_Tetrahedron = MAX_TETRAHEDRON_ORDER
+#else
+INTEGER(I4B), PARAMETER :: MaxOrder_Tetrahedron = 2_I4B
+#endif
 
 !----------------------------------------------------------------------------
 !                                                               ElementName
