@@ -42,6 +42,13 @@ PUBLIC :: TotalNodesInElement_Line
 PUBLIC :: TotalEntities_Line
 PUBLIC :: FacetTopology_Line
 PUBLIC :: ElementName_Line
+PUBLIC :: MaxOrder_Line
+
+#ifdef MAX_LINE_ORDER
+INTEGER(I4B), PARAMETER :: MaxOrder_Line = MAX_LINE_ORDER
+#else
+INTEGER(I4B), PARAMETER :: MaxOrder_Line = 5_I4B
+#endif
 
 #ifdef REF_LINE_IS_UNIT
 REAL(DFP), PARAMETER :: DEFAULT_Ref_LINE_COORD(3, 2) =  &
