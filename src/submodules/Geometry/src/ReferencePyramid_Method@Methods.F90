@@ -55,6 +55,38 @@ END PROCEDURE ElementName_Pyramid
 
 MODULE PROCEDURE FacetTopology_Pyramid
 ! TODO:
+! ALLOCATE (ans(5))
+! ans(1)%nptrs = nptrs([1, 2, 5])
+! ans(2)%nptrs = nptrs([2, 3, 5])
+! ans(3)%nptrs = nptrs([3, 4, 5])
+! ans(4)%nptrs = nptrs([1, 5, 4])
+! ans(5)%nptrs = nptrs([4, 3, 2, 1])
+! ans(:)%xiDimension = 2
+! ans(1:4)%name = Triangle3
+! ans(5)%name = Quadrangle4
+! Order=2 elements
+
+! CASE (Pyramid13)
+!   ! ALLOCATE (ans(5))
+!   ans(1)%nptrs = nptrs([1, 2, 5, 6, 10, 8])
+!   ans(2)%nptrs = nptrs([2, 3, 5, 9, 12, 10])
+!   ans(3)%nptrs = nptrs([3, 4, 5, 11, 13, 12])
+!   ans(4)%nptrs = nptrs([1, 5, 4, 8, 13, 7])
+!   ans(5)%nptrs = nptrs([4, 3, 2, 1, 11, 9, 6, 7])
+!   ans(:)%xiDimension = 2
+!   ans(1:4)%name = Triangle6
+!   ans(5)%name = Quadrangle8
+!
+! CASE (Pyramid14)
+!   ! ALLOCATE (ans(5))
+!   ans(1)%nptrs = nptrs([1, 2, 5, 6, 10, 8])
+!   ans(2)%nptrs = nptrs([2, 3, 5, 9, 12, 10])
+!   ans(3)%nptrs = nptrs([3, 4, 5, 11, 13, 12])
+!   ans(4)%nptrs = nptrs([1, 5, 4, 8, 13, 7])
+!   ans(5)%nptrs = nptrs([4, 3, 2, 1, 11, 9, 6, 7, 13])
+!   ans(:)%xiDimension = 2
+!   ans(1:4)%name = Triangle6
+!   ans(5)%name = Quadrangle9
 END PROCEDURE FacetTopology_Pyramid
 
 !----------------------------------------------------------------------------
