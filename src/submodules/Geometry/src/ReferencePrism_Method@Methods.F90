@@ -55,6 +55,37 @@ END PROCEDURE ElementName_Prism
 
 MODULE PROCEDURE FacetTopology_Prism
 ! TODO:
+! ! ALLOCATE (ans(5))
+! ans(1)%nptrs = nptrs([5, 4, 1, 2])
+! ans(2)%nptrs = nptrs([4, 6, 3, 1])
+! ans(3)%nptrs = nptrs([2, 3, 6, 5])
+! ans(4)%nptrs = nptrs([1, 3, 2])
+! ans(5)%nptrs = nptrs([4, 5, 6])
+! ans(:)%xiDimension = 2
+! ans(1:3)%name = Quadrangle4
+! ans(4:5)%name = Triangle3
+
+! prism 15
+! ! ALLOCATE (ans(5))
+! ans(1)%nptrs = nptrs([5, 4, 1, 2, 13, 9, 7, 11])
+! ans(2)%nptrs = nptrs([4, 6, 3, 1, 14, 12, 8, 9])
+! ans(3)%nptrs = nptrs([2, 3, 6, 5, 10, 12, 15, 11])
+! ans(4)%nptrs = nptrs([1, 3, 2, 8, 10, 7])
+! ans(5)%nptrs = nptrs([4, 5, 6, 13, 15, 14])
+! ans(:)%xiDimension = 2
+! ans(1:3)%name = Quadrangle8
+! ans(4:5)%name = Triangle6
+
+! prism 18
+! ! ALLOCATE (ans(5))
+! ans(1)%nptrs = nptrs([5, 4, 1, 2, 13, 9, 7, 11, 16])
+! ans(2)%nptrs = nptrs([4, 6, 3, 1, 14, 12, 8, 9, 17])
+! ans(3)%nptrs = nptrs([2, 3, 6, 5, 10, 12, 15, 11, 18])
+! ans(4)%nptrs = nptrs([1, 3, 2, 8, 10, 7])
+! ans(5)%nptrs = nptrs([4, 5, 6, 13, 15, 14])
+! ans(:)%xiDimension = 2
+! ans(1:3)%name = Quadrangle9
+! ans(4:5)%name = Triangle6
 END PROCEDURE FacetTopology_Prism
 
 !----------------------------------------------------------------------------
