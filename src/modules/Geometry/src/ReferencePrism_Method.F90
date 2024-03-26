@@ -44,6 +44,13 @@ PUBLIC :: TotalNodesInElement_Prism
 PUBLIC :: TotalEntities_Prism
 PUBLIC :: FacetTopology_Prism
 PUBLIC :: ElementName_Prism
+PUBLIC :: MaxOrder_Prism
+
+#ifdef MAX_PRISM_ORDER
+INTEGER(I4B), PARAMETER :: MaxOrder_Prism = MAX_PRISM_ORDER
+#else
+INTEGER(I4B), PARAMETER :: MaxOrder_Prism = 2_I4B
+#endif
 
 !----------------------------------------------------------------------------
 !                                                               ElementName
