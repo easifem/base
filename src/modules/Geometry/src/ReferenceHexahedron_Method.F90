@@ -44,6 +44,13 @@ PUBLIC :: TotalNodesInElement_Hexahedron
 PUBLIC :: TotalEntities_Hexahedron
 PUBLIC :: FacetTopology_Hexahedron
 PUBLIC :: ElementName_Hexahedron
+PUBLIC :: MaxOrder_Hexahedron
+
+#ifdef MAX_HEXAHEDRON_ORDER
+INTEGER(I4B), PARAMETER :: MaxOrder_Hexahedron = MAX_HEXAHEDRON_ORDER
+#else
+INTEGER(I4B), PARAMETER :: MaxOrder_Hexahedron = 2_I4B
+#endif
 
 !----------------------------------------------------------------------------
 !                                                               ElementName
