@@ -46,6 +46,13 @@ PUBLIC :: TotalNodesInElement_Quadrangle
 PUBLIC :: TotalEntities_Quadrangle
 PUBLIC :: FacetTopology_Quadrangle
 PUBLIC :: ElementName_Quadrangle
+PUBLIC :: MaxOrder_Quadrangle
+
+#ifdef MAX_QUADRANGLE_ORDER
+INTEGER(I4B), PARAMETER :: MaxOrder_Quadrangle = MAX_QUADRANGLE_ORDER
+#else
+INTEGER(I4B), PARAMETER :: MaxOrder_Quadrangle = 2_I4B
+#endif
 
 INTEGER(I4B), PUBLIC, PARAMETER :: HelpFaceData_Quadrangle(5, 4) =  &
   & RESHAPE([ &
