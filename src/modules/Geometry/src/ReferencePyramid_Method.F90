@@ -42,6 +42,13 @@ PUBLIC :: TotalNodesInElement_Pyramid
 PUBLIC :: TotalEntities_Pyramid
 PUBLIC :: FacetTopology_Pyramid
 PUBLIC :: ElementName_Pyramid
+PUBLIC :: MaxOrder_Pyramid
+
+#ifdef MAX_PYRAMID_ORDER
+INTEGER(I4B), PARAMETER :: MaxOrder_Pyramid = MAX_PYRAMID_ORDER
+#else
+INTEGER(I4B), PARAMETER :: MaxOrder_Pyramid = 2_I4B
+#endif
 
 !----------------------------------------------------------------------------
 !                                                               ElementName
