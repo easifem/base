@@ -54,13 +54,13 @@ INTEGER(I4B), PARAMETER :: MaxOrder_Quadrangle = MAX_QUADRANGLE_ORDER
 INTEGER(I4B), PARAMETER :: MaxOrder_Quadrangle = 2_I4B
 #endif
 
-INTEGER(I4B), PUBLIC, PARAMETER :: HelpFaceData_Quadrangle(5, 4) =  &
+INTEGER(I4B), PUBLIC, PARAMETER :: HelpFaceData_Quadrangle(3, 4) =  &
   & RESHAPE([ &
-    & 2, 4, 3, 2, 4, &
-    & 1, 3, 4, 3, 1, &
-    & 2, 4, 1, 4, 2, &
-    & 1, 3, 2, 1, 3 &
-  & ], [5, 4])
+    & 2, 3, 4, &
+    & 3, 4, 1, &
+    & 4, 1, 2, &
+    & 1, 2, 3 &
+  & ], [3, 4])
 
 #ifdef _QUADRANGLE_EDGE_CON_DEFAULT_OPT_2
 INTEGER(I4B), PARAMETER :: DEFAULT_OPT_QUADRANGLE_EDGE_CON = 1_I4B

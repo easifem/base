@@ -596,17 +596,15 @@ END PROCEDURE GetEdgeConnectivity_Quadrangle
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE FaceShapeMetaData_Quadrangle
-INTEGER(I4B) :: a(6), localFaces0(4)
+INTEGER(I4B) :: a(4), localFaces0(4)
 
 sorted_face = SORT(face)
 a(1) = MINLOC(face, 1)
 a(2) = HelpFaceData_Quadrangle(1, a(1)) !b
 a(3) = HelpFaceData_Quadrangle(2, a(1)) !c
 a(4) = HelpFaceData_Quadrangle(3, a(1)) !d
-a(5) = HelpFaceData_Quadrangle(4, a(1)) !e
-a(6) = HelpFaceData_Quadrangle(5, a(1)) !f
 
-localFaces0(1:4) = [face(a(1)), face(a(5)), face(a(4)), face(a(6))]
+localFaces0(1:4) = face(a)
 IF (PRESENT(localFaces)) THEN
   localFaces(1:4) = localFaces0(1:4)
 END IF
