@@ -65,6 +65,7 @@ PUBLIC :: TotalEntities_Triangle
 PUBLIC :: FacetTopology_Triangle
 PUBLIC :: ElementName_Triangle
 PUBLIC :: MaxOrder_Triangle
+PUBLIC :: FaceShapeMetaData_Triangle
 
 #ifdef MAX_TRIANGLE_ORDER
 INTEGER(I4B), PARAMETER :: MaxOrder_Triangle = MAX_TRIANGLE_ORDER
@@ -735,6 +736,24 @@ INTERFACE RefCoord_Triangle
     REAL(DFP) :: ans(2, 3)
   END FUNCTION RefTriangleCoord
 END INTERFACE RefCoord_Triangle
+
+!----------------------------------------------------------------------------
+!                                           FaceShapeMetaData_Triangle
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2024-03-13
+! summary:  Returns meta data for global orientation of face
+
+INTERFACE
+  MODULE SUBROUTINE FaceShapeMetaData_Triangle(face, sorted_face,  &
+    & faceOrient, localFaces)
+    INTEGER(I4B), INTENT(INOUT) :: face(:)
+    INTEGER(I4B), INTENT(INOUT) :: sorted_face(:)
+    INTEGER(I4B), OPTIONAL, INTENT(INOUT) :: faceOrient(:)
+    INTEGER(I4B), OPTIONAL, INTENT(INOUT) :: localFaces(:)
+  END SUBROUTINE FaceShapeMetaData_Triangle
+END INTERFACE
 
 !----------------------------------------------------------------------------
 !

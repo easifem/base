@@ -715,9 +715,54 @@ layout = ""
 END PROCEDURE RefTriangleCoord
 
 !----------------------------------------------------------------------------
-!
+!                                               FaceShapeMetaData_Triangle
 !----------------------------------------------------------------------------
 
-! #include "./modified_burkardt.inc"
+MODULE PROCEDURE FaceShapeMetaData_Triangle
+INTEGER(I4B), PARAMETER :: HelpFaceData_Triangle(2, 3) =  &
+  & RESHAPE([ &
+    & 2, 3, &
+    & 3, 1, &
+    & 1, 2  &
+  & ], [2, 3])
+
+INTEGER(I4B) :: a(3), localFaces0(3)
+
+a(1) = MINLOC(face, 1)
+a(2) = HelpFaceData_Triangle(1, a(1)) !b
+a(3) = HelpFaceData_Triangle(2, a(1)) !c
+
+localFaces0 = face(a)
+IF (PRESENT(localFaces)) THEN
+  localFaces(1:3) = localFaces0
+END IF
+
+sorted_face(1) = localFaces0(1)
+
+IF (localFaces0(2) .LT. localFaces0(3)) THEN
+  sorted_face(2) = localFaces0(2)
+  sorted_face(3) = localFaces0(3)
+
+  IF (PRESENT(faceOrient)) THEN
+    faceOrient(1) = a(1) - 1_I4B
+    faceOrient(2) = 1_INT8
+  END IF
+
+ELSE
+  sorted_face(2) = localFaces0(3)
+  sorted_face(3) = localFaces0(2)
+
+  IF (PRESENT(faceOrient)) THEN
+    faceOrient(1) = a(1) - 1_I4B
+    faceOrient(2) = -1_INT8
+  END IF
+
+END IF
+
+END PROCEDURE FaceShapeMetaData_Triangle
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
 
 END SUBMODULE Methods
