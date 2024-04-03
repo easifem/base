@@ -29,7 +29,7 @@ CONTAINS
 !
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE getLinSolverCodeFromName
+MODULE PROCEDURE GetLinSolverCodeFromName
 SELECT CASE (TRIM(name))
 CASE ("SUPERLU") !1
   ans = LIS_SUPERLU
@@ -90,13 +90,13 @@ CASE ("DBICG") !27
 CASE ("DQGMRES") !28
   ans = LIS_DQGMRES
 END SELECT
-END PROCEDURE getLinSolverCodeFromName
+END PROCEDURE GetLinSolverCodeFromName
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE getLinSolverNameFromCode
+MODULE PROCEDURE GetLinSolverNameFromCode
 SELECT CASE (name)
 CASE (LIS_SUPERLU)
   ans = "SUPERLU" !1
@@ -157,13 +157,13 @@ CASE (LIS_DBICG)
 CASE (LIS_DQGMRES)
   ans = "DQGMRES" !28
 END SELECT
-END PROCEDURE getLinSolverNameFromCode
+END PROCEDURE GetLinSolverNameFromCode
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
-SUBROUTINE setPreconditionOption(IPAR, PRECOND_TYPE)
+SUBROUTINE SetPreconditionOption(IPAR, PRECOND_TYPE)
   INTEGER(I4B), INTENT(INOUT) :: IPAR(:)
   INTEGER(I4B), INTENT(IN) :: PRECOND_TYPE
 
@@ -177,33 +177,33 @@ SUBROUTINE setPreconditionOption(IPAR, PRECOND_TYPE)
   CASE (LEFT_RIGHT_PRECONDITION)
     IPAR(2) = 3
   END SELECT
-END SUBROUTINE setPreconditionOption
+END SUBROUTINE SetPreconditionOption
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
-SUBROUTINE setKrylovSubspaceSize(IPAR, m)
+SUBROUTINE SetKrylovSubspaceSize(IPAR, m)
   INTEGER(I4B), INTENT(INOUT) :: IPAR(:)
   INTEGER(I4B), OPTIONAL, INTENT(IN) :: m
   IPAR(5) = INPUT(default=15, option=m)
-END SUBROUTINE setKrylovSubspaceSize
+END SUBROUTINE SetKrylovSubspaceSize
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
-SUBROUTINE setMaxIter(IPAR, maxIter)
+SUBROUTINE SetMaxIter(IPAR, maxIter)
   INTEGER(I4B), INTENT(INOUT) :: IPAR(:)
   INTEGER(I4B), INTENT(IN) :: maxIter
   IPAR(6) = maxIter
-END SUBROUTINE setMaxIter
+END SUBROUTINE SetMaxIter
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
-SUBROUTINE setConvergenceType(IPAR, convergenceIn, convergenceType, &
+SUBROUTINE SetConvergenceType(IPAR, convergenceIn, convergenceType, &
   & relativeToRHS)
   INTEGER(I4B), INTENT(INOUT) :: IPAR(:)
   INTEGER(I4B), INTENT(IN) :: convergenceIn
@@ -238,7 +238,7 @@ SUBROUTINE setConvergenceType(IPAR, convergenceIn, convergenceType, &
     END IF
 
   END SELECT
-END SUBROUTINE setConvergenceType
+END SUBROUTINE SetConvergenceType
 
 !----------------------------------------------------------------------------
 !
