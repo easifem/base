@@ -31,13 +31,60 @@ IMPLICIT NONE
 CONTAINS
 
 !----------------------------------------------------------------------------
+!                                                          ElementName_Line
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE ElementName_Line
+SELECT CASE (elemType)
+CASE (Point1)
+  ans = "Point1"
+CASE (Line2)
+  ans = "Line2"
+CASE (Line3)
+  ans = "Line3"
+CASE (Line4)
+  ans = "Line4"
+CASE (Line5)
+  ans = "Line5"
+CASE (Line6)
+  ans = "Line6"
+CASE DEFAULT
+  ans = "NONE"
+END SELECT
+END PROCEDURE ElementName_Line
+
+!----------------------------------------------------------------------------
+!                                                     FacetTopology_Line
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE FacetTopology_Line
+ans(1)%nptrs = nptrs([1])
+ans(1)%xiDimension = 0
+ans(1)%name = Point
+
+ans(2)%nptrs = nptrs([2])
+ans(2)%xiDimension = 0
+ans(2)%name = Point
+END PROCEDURE FacetTopology_Line
+
+!----------------------------------------------------------------------------
+!                                                         TotalEntities_Line
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE TotalEntities_Line
+ans(1) = TotalNodesInElement_Line(elemType)
+ans(2) = 1
+ans(3:4) = 0
+END PROCEDURE TotalEntities_Line
+
+!----------------------------------------------------------------------------
 !                                                   TotalNodesInElement_Line
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE TotalNodesInElement_Line
 SELECT CASE (ElemType)
 CASE (Line2)
-  ans = 3
+  ans = 2
 CASE (Line3)
   ans = 3
 CASE (Line4)
@@ -166,7 +213,7 @@ END PROCEDURE LineName1
 !                                                                   Initiate
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE initiate_ref_Line
+MODULE PROCEDURE Initiate_ref_Line
 REAL(DFP) :: unit_xij(1, 2), biunit_xij(1, 2)
 
 CALL DEALLOCATE (obj)
@@ -205,30 +252,30 @@ obj%topology(1) = ReferenceTopology([1], Point)
 obj%topology(2) = ReferenceTopology([2], Point)
 obj%topology(3) = ReferenceTopology([1, 2], Line2)
 obj%highorderElement => highorderElement_Line
-END PROCEDURE initiate_ref_Line
+END PROCEDURE Initiate_ref_Line
 
 !----------------------------------------------------------------------------
 !                                                              ReferenceLine
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE reference_Line
+MODULE PROCEDURE Reference_Line
 CALL initiate_ref_line(obj=obj, nsd=nsd, xij=xij, domainName=domainName)
-END PROCEDURE reference_Line
+END PROCEDURE Reference_Line
 
 !----------------------------------------------------------------------------
 !                                                     ReferenceLine_Pointer
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE reference_Line_Pointer_1
+MODULE PROCEDURE Reference_Line_Pointer_1
 ALLOCATE (obj)
 CALL initiate_ref_line(obj=obj, nsd=nsd, xij=xij, domainName=domainName)
-END PROCEDURE reference_Line_Pointer_1
+END PROCEDURE Reference_Line_Pointer_1
 
 !----------------------------------------------------------------------------
 !                                                           LagrangeElement
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE highorderElement_Line
+MODULE PROCEDURE HighorderElement_Line
 INTEGER(I4B) :: nns, i
 obj%xij = InterpolationPoint_Line( &
   & xij=refelem%xij, &
@@ -247,7 +294,7 @@ DO CONCURRENT(i=1:nns)
   obj%topology(i) = ReferenceTopology([i], Point)
 END DO
 obj%topology(nns + 1) = ReferenceTopology([(i, i=1, nns)], obj%name)
-END PROCEDURE highorderElement_Line
+END PROCEDURE HighorderElement_Line
 
 !----------------------------------------------------------------------------
 !                                                              MeasureSimplex

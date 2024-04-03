@@ -20,9 +20,149 @@
 ! summary: This submodule defines methods for [[ReferencePrism_]]
 
 SUBMODULE(ReferencePrism_Method) Methods
-USE BaseMethod
+USE ArangeUtility
+USE ApproxUtility
+USE StringUtility
+USE ReferenceElement_Method
+
 IMPLICIT NONE
 CONTAINS
+
+!----------------------------------------------------------------------------
+!                                                        ElementName_Prism
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE ElementName_Prism
+SELECT CASE (elemType)
+CASE (Prism6)
+  ans = "Prism6"
+
+CASE (Prism15)
+  ans = "Prism15"
+
+CASE (Prism18)
+  ans = "Prism18"
+
+CASE DEFAULT
+  ans = "NONE"
+
+END SELECT
+END PROCEDURE ElementName_Prism
+
+!----------------------------------------------------------------------------
+!                                                     FaceTopology_Prism
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE FacetTopology_Prism
+! TODO:
+! ! ALLOCATE (ans(5))
+! ans(1)%nptrs = nptrs([5, 4, 1, 2])
+! ans(2)%nptrs = nptrs([4, 6, 3, 1])
+! ans(3)%nptrs = nptrs([2, 3, 6, 5])
+! ans(4)%nptrs = nptrs([1, 3, 2])
+! ans(5)%nptrs = nptrs([4, 5, 6])
+! ans(:)%xiDimension = 2
+! ans(1:3)%name = Quadrangle4
+! ans(4:5)%name = Triangle3
+
+! prism 15
+! ! ALLOCATE (ans(5))
+! ans(1)%nptrs = nptrs([5, 4, 1, 2, 13, 9, 7, 11])
+! ans(2)%nptrs = nptrs([4, 6, 3, 1, 14, 12, 8, 9])
+! ans(3)%nptrs = nptrs([2, 3, 6, 5, 10, 12, 15, 11])
+! ans(4)%nptrs = nptrs([1, 3, 2, 8, 10, 7])
+! ans(5)%nptrs = nptrs([4, 5, 6, 13, 15, 14])
+! ans(:)%xiDimension = 2
+! ans(1:3)%name = Quadrangle8
+! ans(4:5)%name = Triangle6
+
+! prism 18
+! ! ALLOCATE (ans(5))
+! ans(1)%nptrs = nptrs([5, 4, 1, 2, 13, 9, 7, 11, 16])
+! ans(2)%nptrs = nptrs([4, 6, 3, 1, 14, 12, 8, 9, 17])
+! ans(3)%nptrs = nptrs([2, 3, 6, 5, 10, 12, 15, 11, 18])
+! ans(4)%nptrs = nptrs([1, 3, 2, 8, 10, 7])
+! ans(5)%nptrs = nptrs([4, 5, 6, 13, 15, 14])
+! ans(:)%xiDimension = 2
+! ans(1:3)%name = Quadrangle9
+! ans(4:5)%name = Triangle6
+END PROCEDURE FacetTopology_Prism
+
+!----------------------------------------------------------------------------
+!                                                     TotalEntities_Prism
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE TotalEntities_Prism
+ans(2:4) = [9, 5, 1]
+ans(1) = TotalNodesInElement_Prism(elemType)
+END PROCEDURE TotalEntities_Prism
+
+!----------------------------------------------------------------------------
+!                                                 TotalNodesInElements_Prism
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE TotalNodesInElement_Prism
+SELECT CASE (elemType)
+CASE (Prism6)
+  ans = 6
+CASE (Prism15)
+  ans = 15
+CASE (Prism18)
+  ans = 18
+CASE DEFAULT
+  ans = 0
+END SELECT
+END PROCEDURE TotalNodesInElement_Prism
+
+!----------------------------------------------------------------------------
+!                                                         ElementType_Prism
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE ElementType_Prism
+SELECT CASE (elemName)
+CASE ("Prism", "Prism6")
+  ans = Prism6
+CASE ("Prism15")
+  ans = Prism15
+CASE ("Prism18")
+  ans = Prism18
+CASE DEFAULT
+  ans = 0
+END SELECT
+END PROCEDURE ElementType_Prism
+
+!----------------------------------------------------------------------------
+!                                                        ElementOrder_Prism
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE ElementOrder_Prism
+SELECT CASE (elemType)
+CASE (Prism6)
+  ans = 1
+CASE (Prism15)
+  ans = 2
+CASE (Prism18)
+  ans = 2
+CASE DEFAULT
+  ans = 0
+END SELECT
+END PROCEDURE ElementOrder_Prism
+
+!----------------------------------------------------------------------------
+!                                                     FacetElements_Prism
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE FacetElements_Prism1
+! TODO:
+END PROCEDURE FacetElements_Prism1
+
+!----------------------------------------------------------------------------
+!                                                     FacetElements_Prism
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE FacetElements_Prism2
+! TODO:
+END PROCEDURE FacetElements_Prism2
 
 !----------------------------------------------------------------------------
 !                                                                  Initiate
@@ -31,20 +171,15 @@ CONTAINS
 MODULE PROCEDURE Initiate_Ref_Prism
 INTEGER(I4B) :: ii, jj
 INTEGER(I4B), PARAMETER :: tNodes = 6, tFaces = 5, tEdges = 9, xidim = 3, &
-  & max_nodes_face = 4, min_nodes_face = 3, name = Prism
+  & max_nodes_face = 4, name = Prism
 INTEGER(I4B) :: p1p2(2, tEdges), lloop(max_nodes_face + 2, tFaces), &
   & vol(tNodes, 1)
 REAL(DFP) :: unit_xij(xidim, tNodes), biunit_xij(xidim, tNodes)
 
 CALL DEALLOCATE (obj)
 
-p1p2 = EdgeConnectivity_Prism( &
-  & baseInterpol="LAGRANGE",  &
-  & baseContinuity="H1")
-
-lloop = FacetConnectivity_Prism( &
-  & baseInterpol="LAGRANGE",  &
-  & baseContinuity="H1")
+CALL GetEdgeConnectivity_Prism(con=p1p2, opt=1_I4B, order=1_I4B)
+CALL GetFaceConnectivity_Prism(con=lloop, opt=1_I4B, order=1_I4B)
 
 vol(:, 1) = arange(1_I4B, tNodes)
 
@@ -111,7 +246,7 @@ END PROCEDURE Initiate_Ref_Prism
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Reference_Prism
-CALL Initiate(obj=obj, nsd=NSD, xij=xij, domainName=domainName)
+CALL Initiate_Ref_Prism(obj=obj, nsd=NSD, xij=xij, domainName=domainName)
 END PROCEDURE Reference_Prism
 
 !----------------------------------------------------------------------------
@@ -120,7 +255,7 @@ END PROCEDURE Reference_Prism
 
 MODULE PROCEDURE Reference_Prism_Pointer
 ALLOCATE (obj)
-CALL Initiate(obj=obj, nsd=NSD, xij=xij, domainName=domainName)
+CALL Initiate_Ref_Prism(obj=obj, nsd=NSD, xij=xij, domainName=domainName)
 END PROCEDURE Reference_Prism_Pointer
 
 !----------------------------------------------------------------------------
@@ -128,6 +263,7 @@ END PROCEDURE Reference_Prism_Pointer
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE HighOrderElement_Prism
+! TODO:
 ! FIX: #250 Implement HighOrderElement_Prism
 END PROCEDURE HighOrderElement_Prism
 
@@ -156,6 +292,7 @@ END PROCEDURE Measure_Simplex_Prism
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Prism_Quality
+! TODO:
 ans = 0.0_DFP
 END PROCEDURE Prism_Quality
 
@@ -164,7 +301,6 @@ END PROCEDURE Prism_Quality
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE PolyhedronVolume3D
-INTEGER(I4B), PARAMETER :: dim_num = 3
 INTEGER(I4B) :: iFace
 INTEGER(I4B) :: n1
 INTEGER(I4B) :: n2
@@ -196,6 +332,7 @@ END PROCEDURE PolyhedronVolume3D
 
 MODULE PROCEDURE RefCoord_Prism
 ans = 0.0_DFP
+!TODO:
 !FIX: Implement RefCoord_Prism
 !ISSUE: #251
 END PROCEDURE RefCoord_Prism

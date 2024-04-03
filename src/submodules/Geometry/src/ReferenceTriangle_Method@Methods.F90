@@ -23,18 +23,72 @@ SUBMODULE(ReferenceTriangle_Method) Methods
 USE ReferenceElement_Method
 USE StringUtility
 USE ApproxUtility
-USE TriangleInterpolationUtility, ONLY: InterpolationPoint_Triangle
+USE ArangeUtility
+USE TriangleInterpolationUtility, ONLY: InterpolationPoint_Triangle,  &
+  & LagrangeDOF_Triangle
 USE Triangle_Method
 USE InputUtility
 USE ReferenceLine_Method, ONLY: ElementType_Line,  &
   & ElementOrder_Line
 USE LineInterpolationUtility, ONLY: InterpolationPoint_Line
+USE MiscUtility, ONLY: Int2Str
 USE Display_Method
 USE ReallocateUtility
 
 ! USE BaseMethod
 IMPLICIT NONE
 CONTAINS
+
+!----------------------------------------------------------------------------
+!                                                     ElementName_Triangle
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE ElementName_Triangle
+SELECT CASE (elemType)
+CASE (Triangle3)
+  ans = "Triangle3"
+CASE (Triangle6)
+  ans = "Triangle6"
+CASE (Triangle9)
+  ans = "Triangle9"
+CASE (Triangle10)
+  ans = "Triangle10"
+CASE (Triangle12)
+  ans = "Triangle12"
+CASE (Triangle15a)
+  ans = "Triangle15a"
+CASE (Triangle15b)
+  ans = "Triangle15b"
+CASE (Triangle21)
+  ans = "Triangle21"
+CASE DEFAULT
+  ans = "NONE"
+END SELECT
+END PROCEDURE ElementName_Triangle
+
+!----------------------------------------------------------------------------
+!                                                     FacetTopology_Triangle
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE FacetTopology_Triangle
+INTEGER(I4B) :: order, ii, lineType
+INTEGER(I4B), ALLOCATABLE :: con(:, :)
+
+order = ElementOrder_Triangle(elemType)
+CALL Reallocate(con, order + 1, 3)
+CALL GetEdgeConnectivity_Triangle(con=con,  &
+  & opt=DEFAULT_OPT_TRIANGLE_EDGE_CON, order=order)
+lineType = ElementType_Line("Line"//Int2Str(order + 1))
+
+DO ii = 1, 3
+  ans(ii)%nptrs = nptrs(con(:, ii))
+  ans(ii)%xiDimension = 1
+  ans(ii)%name = lineType
+END DO
+
+IF (ALLOCATED(con)) DEALLOCATE (con)
+
+END PROCEDURE FacetTopology_Triangle
 
 !----------------------------------------------------------------------------
 !                                                    TotalEntities_Triangle
@@ -130,7 +184,7 @@ END PROCEDURE ElementType_Triangle
 
 MODULE PROCEDURE FacetElements_Triangle1
 INTEGER(I4B) :: ii, istart, tsize, jj
-TYPE(Referencetopology_) :: topo
+TYPE(ReferenceTopology_) :: topo
 
 istart = refelem%entityCounts(1)
 
@@ -296,66 +350,47 @@ END PROCEDURE reference_Triangle_Pointer
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE HighorderElement_Triangle
-INTEGER(I4B) :: I, NNS, nsd
+INTEGER(I4B) :: linetype, ii, nns
+INTEGER(I4B), ALLOCATABLE :: edgecon(:, :)
+
 CALL DEALLOCATE (obj)
+
 obj%xij = InterpolationPoint_Triangle( &
-  & xij=refelem%xij(1:3, 1:3), &
+  & xij=refelem%xij(:, 1:3), &
   & order=order, &
   & ipType=ipType, &
   & layout="VEFC")
-obj%domainName = refelem%domainName
-nsd = refelem%nsd
-obj%highOrderElement => refelem%highOrderElement
 
-SELECT CASE (order)
-CASE (1)
-  NNS = 3
-  obj%entityCounts = [NNS, 3, 1, 0]
-  obj%xidimension = 2
-  obj%name = Triangle3
-  obj%order = order
-  obj%nsd = nsd
-  ALLOCATE (obj%topology(SUM(obj%entityCounts)))
-  DO I = 1, NNS
-    obj%topology(I) = ReferenceTopology([I], Point)
-  END DO
-  obj%topology(NNS + 1) = ReferenceTopology([1, 2], Line2)
-  obj%topology(NNS + 2) = ReferenceTopology([2, 3], Line2)
-  obj%topology(NNS + 3) = ReferenceTopology([3, 1], Line2)
-  obj%topology(NNS + 4) = ReferenceTopology([1, 2, 3], obj%name)
-CASE (2)
-  NNS = 6
-  obj%entityCounts = [NNS, 3, 1, 0]
-  obj%xidimension = 2
-  obj%name = Triangle6
-  obj%order = order
-  obj%nsd = nsd
-  ALLOCATE (obj%topology(SUM(obj%entityCounts)))
-  DO I = 1, NNS
-    obj%topology(I) = ReferenceTopology([I], Point)
-  END DO
-  obj%topology(NNS + 1) = ReferenceTopology([1, 2, 4], Line3)
-  obj%topology(NNS + 2) = ReferenceTopology([2, 3, 5], Line3)
-  obj%topology(NNS + 3) = ReferenceTopology([3, 1, 6], Line3)
-  obj%topology(NNS + 4) = ReferenceTopology([1, 2, 3, 4, 5, 6], &
-    & obj%name)
-CASE (3)
-  NNS = 10
-  obj%entityCounts = [NNS, 3, 1, 0]
-  obj%xidimension = 2
-  obj%name = Triangle10
-  obj%order = order
-  obj%nsd = nsd
-  ALLOCATE (obj%topology(SUM(obj%entityCounts)))
-  DO I = 1, NNS
-    obj%topology(I) = ReferenceTopology([I], Point)
-  END DO
-  obj%topology(NNS + 1) = ReferenceTopology([1, 2, 4, 5], Line4)
-  obj%topology(NNS + 2) = ReferenceTopology([2, 3, 6, 7], Line4)
-  obj%topology(NNS + 3) = ReferenceTopology([3, 1, 8, 9], Line4)
-  obj%topology(NNS + 4) = ReferenceTopology( &
-    & [1, 2, 3, 4, 5, 6, 7, 8, 9, 10], obj%name)
-END SELECT
+obj%domainName = refelem%domainName
+obj%nsd = refelem%nsd
+obj%highOrderElement => refelem%highOrderElement
+obj%order = order
+obj%xidimension = refelem%xidimension
+nns = LagrangeDOF_Triangle(order=order)
+obj%name = ElementType_Triangle("Triangle"//Int2Str(nns))
+obj%entityCounts = TotalEntities_Triangle(obj%name)
+ii = SUM(obj%entityCounts)
+CALL RefTopoReallocate(obj%topology, ii)
+
+DO ii = 1, obj%entityCounts(1)
+  obj%topology(ii) = ReferenceTopology([ii], Point)
+END DO
+
+CALL Reallocate(edgecon, order + 1, obj%entityCounts(2))
+CALL GetEdgeConnectivity_Triangle(con=edgecon,  &
+  & opt=DEFAULT_OPT_TRIANGLE_EDGE_CON, order=order)
+
+linetype = ElementType_Line("Line"//Int2Str(order + 1))
+ii = obj%entityCounts(1)
+obj%topology(ii + 1) = ReferenceTopology(edgecon(:, 1), linetype)
+obj%topology(ii + 2) = ReferenceTopology(edgecon(:, 2), linetype)
+obj%topology(ii + 3) = ReferenceTopology(edgecon(:, 3), linetype)
+obj%topology(ii + 4) = ReferenceTopology(edgecon(:, 4), linetype)
+
+ii = ii + obj%entityCounts(2)
+obj%topology(ii + 1) = ReferenceTopology(arange(1_I4B, nns), obj%name)
+
+IF (ALLOCATED(edgecon)) DEALLOCATE (edgecon)
 END PROCEDURE HighorderElement_Triangle
 
 !----------------------------------------------------------------------------
@@ -680,9 +715,54 @@ layout = ""
 END PROCEDURE RefTriangleCoord
 
 !----------------------------------------------------------------------------
-!
+!                                               FaceShapeMetaData_Triangle
 !----------------------------------------------------------------------------
 
-! #include "./modified_burkardt.inc"
+MODULE PROCEDURE FaceShapeMetaData_Triangle
+INTEGER(I4B), PARAMETER :: HelpFaceData_Triangle(2, 3) =  &
+  & RESHAPE([ &
+    & 2, 3, &
+    & 3, 1, &
+    & 1, 2  &
+  & ], [2, 3])
+
+INTEGER(I4B) :: a(3), localFaces0(3)
+
+a(1) = MINLOC(face, 1)
+a(2) = HelpFaceData_Triangle(1, a(1)) !b
+a(3) = HelpFaceData_Triangle(2, a(1)) !c
+
+localFaces0 = face(a)
+IF (PRESENT(localFaces)) THEN
+  localFaces(1:3) = localFaces0
+END IF
+
+sorted_face(1) = localFaces0(1)
+
+IF (localFaces0(2) .LT. localFaces0(3)) THEN
+  sorted_face(2) = localFaces0(2)
+  sorted_face(3) = localFaces0(3)
+
+  IF (PRESENT(faceOrient)) THEN
+    faceOrient(1) = a(1) - 1_I4B
+    faceOrient(2) = 1_INT8
+  END IF
+
+ELSE
+  sorted_face(2) = localFaces0(3)
+  sorted_face(3) = localFaces0(2)
+
+  IF (PRESENT(faceOrient)) THEN
+    faceOrient(1) = a(1) - 1_I4B
+    faceOrient(2) = -1_INT8
+  END IF
+
+END IF
+
+END PROCEDURE FaceShapeMetaData_Triangle
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
 
 END SUBMODULE Methods

@@ -44,7 +44,6 @@ USE CSRMatrix_SpectralMethods
 USE CSRMatrix_SchurMethods
 USE CSRMatrix_DBCMethods
 USE CSRMatrix_LinSolveMethods
-USE CSRMatrix_SymMatmulMethods
 USE GlobalData, ONLY: I4B
 IMPLICIT NONE
 INTEGER(I4B), PARAMETER, PUBLIC :: SPARSE_FMT_CSR = 0

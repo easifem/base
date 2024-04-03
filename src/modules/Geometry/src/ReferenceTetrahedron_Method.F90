@@ -41,6 +41,46 @@ PUBLIC :: ElementOrder_Tetrahedron
 PUBLIC :: ElementType_Tetrahedron
 PUBLIC :: TotalNodesInElement_Tetrahedron
 PUBLIC :: TotalEntities_Tetrahedron
+PUBLIC :: FacetTopology_Tetrahedron
+PUBLIC :: ElementName_Tetrahedron
+PUBLIC :: MaxOrder_Tetrahedron
+
+#ifdef MAX_TETRAHEDRON_ORDER
+INTEGER(I4B), PARAMETER :: MaxOrder_Tetrahedron = MAX_TETRAHEDRON_ORDER
+#else
+INTEGER(I4B), PARAMETER :: MaxOrder_Tetrahedron = 2_I4B
+#endif
+
+!----------------------------------------------------------------------------
+!                                                               ElementName
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2024-03-25
+! summary: Returns element name in character from element number/type
+
+INTERFACE
+  MODULE PURE FUNCTION ElementName_Tetrahedron(elemType) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: elemType
+    CHARACTER(:), ALLOCATABLE :: ans
+  END FUNCTION ElementName_Tetrahedron
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                             FacetTopology_Tetrahedron
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2024-03-23
+! summary:  Returns the topology of tetrahedron
+
+INTERFACE
+  MODULE PURE SUBROUTINE FacetTopology_Tetrahedron(elemType, nptrs, ans)
+    INTEGER(I4B), INTENT(IN) :: elemType
+    INTEGER(I4B), INTENT(IN) :: nptrs(:)
+    TYPE(ReferenceTopology_), INTENT(INOUT) :: ans(:)
+  END SUBROUTINE FacetTopology_Tetrahedron
+END INTERFACE
 
 !----------------------------------------------------------------------------
 !                                                 TotalEntities_Tetrahedron
@@ -142,12 +182,12 @@ END INTERFACE FacetElements_Tetrahedron
 ! summary: This subroutine for constructing the object
 
 INTERFACE Initiate
-  MODULE PURE SUBROUTINE initiate_ref_Tetrahedron(obj, nsd, xij, domainName)
+  MODULE PURE SUBROUTINE Initiate_Ref_Tetrahedron(obj, nsd, xij, domainName)
     CLASS(ReferenceTetrahedron_), INTENT(INOUT) :: obj
     INTEGER(I4B), INTENT(IN) :: nsd
     REAL(DFP), INTENT(IN), OPTIONAL :: xij(:, :)
     CHARACTER(*), OPTIONAL, INTENT(IN) :: domainName
-  END SUBROUTINE initiate_ref_Tetrahedron
+  END SUBROUTINE Initiate_Ref_Tetrahedron
 END INTERFACE Initiate
 
 !----------------------------------------------------------------------------
@@ -155,7 +195,8 @@ END INTERFACE Initiate
 !----------------------------------------------------------------------------
 
 INTERFACE ReferenceTetrahedron
-  MODULE PURE FUNCTION reference_Tetrahedron(nsd, xij, domainName) RESULT(obj)
+  MODULE PURE FUNCTION reference_Tetrahedron(nsd, xij, domainName)  &
+    & RESULT(obj)
     INTEGER(I4B), INTENT(IN) :: nsd
     REAL(DFP), INTENT(IN), OPTIONAL :: xij(:, :)
     CHARACTER(*), OPTIONAL, INTENT(IN) :: domainName
@@ -168,7 +209,8 @@ END INTERFACE ReferenceTetrahedron
 !----------------------------------------------------------------------------
 
 INTERFACE ReferenceTetrahedron_Pointer
-  MODULE FUNCTION reference_Tetrahedron_Pointer(nsd, xij, domainName) RESULT(obj)
+  MODULE FUNCTION reference_Tetrahedron_Pointer(nsd, xij, domainName)  &
+    & RESULT(obj)
     INTEGER(I4B), INTENT(IN) :: nsd
     REAL(DFP), INTENT(IN), OPTIONAL :: xij(:, :)
     CHARACTER(*), OPTIONAL, INTENT(IN) :: domainName
@@ -181,11 +223,7 @@ END INTERFACE ReferenceTetrahedron_Pointer
 !----------------------------------------------------------------------------
 
 INTERFACE
-  MODULE SUBROUTINE HighOrderElement_Tetrahedron( &
-    & refelem, &
-    & order, &
-    & obj, &
-    & ipType)
+  MODULE SUBROUTINE HighOrderElement_Tetrahedron(refelem, order, obj, ipType)
     CLASS(ReferenceElement_), INTENT(IN) :: refelem
     INTEGER(I4B), INTENT(IN) :: order
     CLASS(ReferenceElement_), INTENT(INOUT) :: obj
@@ -198,10 +236,10 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-  MODULE PURE FUNCTION Measure_Simplex_Tetrahedron(RefElem, XiJ) RESULT(Ans)
+  MODULE PURE FUNCTION Measure_Simplex_Tetrahedron(RefElem, XiJ) RESULT(ans)
     CLASS(ReferenceElement_), INTENT(IN) :: RefElem
     REAL(DFP), INTENT(IN) :: XiJ(:, :)
-    REAL(DFP) :: Ans
+    REAL(DFP) :: ans
   END FUNCTION Measure_Simplex_Tetrahedron
 END INTERFACE
 
@@ -210,11 +248,11 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE Quality_Tetrahedron
-  MODULE FUNCTION Tetrahedron_Quality(refelem, xij, measure) RESULT(Ans)
+  MODULE FUNCTION Tetrahedron_Quality(refelem, xij, measure) RESULT(ans)
     CLASS(ReferenceElement_), INTENT(IN) :: refelem
     REAL(DFP), INTENT(IN) :: xij(:, :)
     INTEGER(I4B), INTENT(IN) :: measure
-    REAL(DFP) :: Ans
+    REAL(DFP) :: ans
   END FUNCTION Tetrahedron_Quality
 END INTERFACE Quality_Tetrahedron
 
@@ -303,7 +341,7 @@ END INTERFACE
 
 INTERFACE
   MODULE PURE SUBROUTINE GetFaceElemType_Tetrahedron(faceElemType, opt,  &
-    & tFaceNodes)
+    & tFaceNodes, elemType)
     INTEGER(I4B), INTENT(INOUT) :: faceElemType(:)
     !! Face element type
     INTEGER(I4B), OPTIONAL, INTENT(INOUT) :: tFaceNodes(:)
@@ -312,6 +350,9 @@ INTERFACE
     !! If opt = 1, then edge connectivity for hierarchial approximation
     !! If opt = 2, then edge connectivity for Lagrangian approximation
     !! opt = 1 is default
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: elemType
+    !! element type for Tetrahedron
+    !! default is Tetrahedron4
   END SUBROUTINE GetFaceElemType_Tetrahedron
 END INTERFACE
 

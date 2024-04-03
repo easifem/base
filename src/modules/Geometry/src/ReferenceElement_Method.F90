@@ -36,7 +36,7 @@ PUBLIC :: ASSIGNMENT(=)
 PUBLIC :: ReferenceElement_Pointer
 PUBLIC :: GetConnectivity
 PUBLIC :: ElementType
-PUBLIC :: ElementName
+PUBLIC :: Elementname
 PUBLIC :: TotalNodesInElement
 PUBLIC :: ElementOrder
 PUBLIC :: OPERATOR(.order.)
@@ -55,13 +55,13 @@ PUBLIC :: IsSerendipityElement
 PUBLIC :: ElementTopology
 PUBLIC :: OPERATOR(.topology.)
 PUBLIC :: FacetMatrix
-PUBLIC :: FacetElements
+PUBLIC :: GetFacetElements
 PUBLIC :: LocalNodeCoord
 PUBLIC :: MeasureSimplex
 PUBLIC :: ElementQuality
 PUBLIC :: ContainsPoint
 PUBLIC :: TotalEntities
-PUBLIC :: FacetTopology
+PUBLIC :: GetFacetTopology
 PUBLIC :: GetVTKelementType
 PUBLIC :: GetEdgeConnectivity
 PUBLIC :: GetFaceConnectivity
@@ -73,6 +73,8 @@ PUBLIC :: ReferenceElementInfo
 PUBLIC :: RefElemGetGeoParam
 PUBLIC :: GetFaceElemType
 PUBLIC :: GetElementIndex
+PUBLIC :: Reallocate
+PUBLIC :: RefTopoReallocate
 
 INTEGER(I4B), PARAMETER, PUBLIC :: REFELEM_MAX_FACES = 6
 INTEGER(I4B), PARAMETER, PUBLIC :: REFELEM_MAX_EDGES = 12
@@ -96,7 +98,7 @@ TYPE :: ReferenceElementInfo_
   INTEGER(I4B) :: tElemTopologyType_2D = 2
   INTEGER(I4B) :: tElemTopologyType_3D = 4
   INTEGER(I4B) :: tElemTopologyType = 8
-  INTEGER(I4B) :: elemTopologyName(8) = [ &
+  INTEGER(I4B) :: elemTopologyname(8) = [ &
     & Point,  &
     & Line,  &
     & Triangle,  &
@@ -167,7 +169,7 @@ END INTERFACE
 INTERFACE RefElemGetGeoParam
   MODULE PURE SUBROUTINE RefElemGetGeoParam1(elemType, tNodes, tEdges,  &
     & tFaces, tCells, edgeCon, faceCon, edgeOpt, faceOpt, faceElemType,  &
-    & tFaceNodes)
+    & tFaceNodes, order)
     INTEGER(I4B), INTENT(IN) :: elemType
     INTEGER(I4B), OPTIONAL, INTENT(INOUT) :: tNodes
     INTEGER(I4B), OPTIONAL, INTENT(INOUT) :: tEdges
@@ -179,6 +181,8 @@ INTERFACE RefElemGetGeoParam
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: faceOpt
     INTEGER(I4B), OPTIONAL, INTENT(INOUT) :: faceElemType(:)
     INTEGER(I4B), OPTIONAL, INTENT(INOUT) :: tFaceNodes(:)
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: order
+    !! Order of element
   END SUBROUTINE RefElemGetGeoParam1
 END INTERFACE RefElemGetGeoParam
 
@@ -206,7 +210,7 @@ END INTERFACE GetTotalEdges
 ! summary:  Returns number of edges in the element
 
 INTERFACE GetEdgeConnectivity
-  MODULE PURE SUBROUTINE GetEdgeConnectivity1(elemType, con, opt)
+  MODULE PURE SUBROUTINE GetEdgeConnectivity1(elemType, con, opt, order)
     INTEGER(I4B), INTENT(IN) :: elemType
     !! name of element
     INTEGER(I4B), INTENT(INOUT) :: con(:, :)
@@ -218,6 +222,8 @@ INTERFACE GetEdgeConnectivity
     !! If opt = 1, then edge connectivity for hierarchial approximation
     !! If opt =2, then edge connectivity for Lagrangian approximation
     !! opt=1 is default
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: order
+    !! Order of element
   END SUBROUTINE GetEdgeConnectivity1
 END INTERFACE GetEdgeConnectivity
 
@@ -230,7 +236,7 @@ END INTERFACE GetEdgeConnectivity
 ! summary:  Returns number of edges in the element
 
 INTERFACE GetFaceConnectivity
-  MODULE PURE SUBROUTINE GetFaceConnectivity1(elemType, con, opt)
+  MODULE PURE SUBROUTINE GetFaceConnectivity1(elemType, con, opt, order)
     INTEGER(I4B), INTENT(IN) :: elemType
     !! name of element
     INTEGER(I4B), INTENT(INOUT) :: con(:, :)
@@ -242,11 +248,12 @@ INTERFACE GetFaceConnectivity
     !! If opt = 1, then edge connectivity for hierarchial approximation
     !! If opt = 2, then edge connectivity for Lagrangian approximation
     !! opt = 1 is default
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: order
   END SUBROUTINE GetFaceConnectivity1
 END INTERFACE GetFaceConnectivity
 
 !----------------------------------------------------------------------------
-!                                        GetFaceElemType@GeometryMethods
+!                                           GetFaceElemType@GeometryMethods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -403,7 +410,7 @@ END INTERFACE MdEncode
 !
 ! This function returns the instance of [[ReferenceTopology_]].
 !
-! The possible valaues of Name can be
+! The possible valaues of name can be
 !
 ! - `Line, Line2, Line3, Line4, Line5, Line6`
 ! - `Triangle, Triangle3, Triangle6, Triangle9, Triangle10, Triangle12,
@@ -421,15 +428,15 @@ END INTERFACE MdEncode
 !
 !```fortran
 ! type( ReferenceTopology_ ) :: obj
-! obj = ReferenceTopology( nptrs = [1,2,3], Name=Triangle3 )
+! obj = ReferenceTopology( nptrs = [1,2,3], name=Triangle3 )
 ! call display( obj, "obj=")
 !```
 
 INTERFACE ReferenceTopology
-  MODULE PURE FUNCTION refelem_ReferenceTopology(nptrs, Name) RESULT(obj)
+  MODULE PURE FUNCTION refelem_ReferenceTopology(nptrs, name) RESULT(obj)
     TYPE(ReferenceTopology_) :: obj
     INTEGER(I4B), INTENT(IN) :: nptrs(:)
-    INTEGER(I4B), INTENT(IN) :: Name
+    INTEGER(I4B), INTENT(IN) :: name
   END FUNCTION refelem_ReferenceTopology
 END INTERFACE ReferenceTopology
 
@@ -445,7 +452,7 @@ END INTERFACE ReferenceTopology
 !
 !```fortran
 ! type( ReferenceTopology_ ) :: obj
-! obj = ReferenceTopology( nptrs = [1,2,3], Name=Triangle3 )
+! obj = ReferenceTopology( nptrs = [1,2,3], name=Triangle3 )
 ! call display( obj, "obj=")
 ! call Deallocate( obj )
 !```
@@ -455,6 +462,35 @@ INTERFACE DEALLOCATE
     CLASS(ReferenceTopology_), INTENT(INOUT) :: obj
   END SUBROUTINE refelem_Deallocate1
 END INTERFACE DEALLOCATE
+
+!----------------------------------------------------------------------------
+!                                            Deallocate@ConstructorMethods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2024-03-24
+! summary: Deallocate topology vector
+
+INTERFACE DEALLOCATE
+  MODULE PURE SUBROUTINE RefTopoDeallocate(obj)
+    TYPE(ReferenceTopology_), ALLOCATABLE, INTENT(INOUT) :: obj(:)
+  END SUBROUTINE RefTopoDeallocate
+END INTERFACE DEALLOCATE
+
+!----------------------------------------------------------------------------
+!                                            Deallocate@ConstructorMethods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2024-03-24
+! summary: Reallocate topology vector
+
+INTERFACE Reallocate
+  MODULE PURE SUBROUTINE RefTopoReallocate(obj, n)
+    TYPE(ReferenceTopology_), ALLOCATABLE, INTENT(INOUT) :: obj(:)
+    INTEGER(I4B), INTENT(IN) :: n
+  END SUBROUTINE RefTopoReallocate
+END INTERFACE Reallocate
 
 !----------------------------------------------------------------------------
 !                                            Deallocate@ConstructorMethods
@@ -482,7 +518,7 @@ END INTERFACE DEALLOCATE
 !
 !```fortran
 ! type( ReferenceTopology_ ) :: obj
-! obj = ReferenceTopology( nptrs = [1,2,3], Name=Triangle3 )
+! obj = ReferenceTopology( nptrs = [1,2,3], name=Triangle3 )
 ! call display( obj, "obj=")
 ! call display( .NNE. obj, "nne =")
 !```
@@ -598,7 +634,7 @@ INTERFACE GetConnectivity
 END INTERFACE GetConnectivity
 
 !----------------------------------------------------------------------------
-!                                            ElementType@ElementNameMethods
+!                                            ElementType@ElementnameMethods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -606,14 +642,14 @@ END INTERFACE GetConnectivity
 ! summary: Returns element name in integer from element name
 
 INTERFACE ElementType
-  MODULE PURE FUNCTION Element_Type(ElemName) RESULT(ans)
-    CHARACTER(*), INTENT(IN) :: ElemName
+  MODULE PURE FUNCTION Element_Type(Elemname) RESULT(ans)
+    CHARACTER(*), INTENT(IN) :: Elemname
     INTEGER(I4B) :: ans
   END FUNCTION Element_Type
 END INTERFACE ElementType
 
 !----------------------------------------------------------------------------
-!                                             ElementType@ElementNameMethods
+!                                             ElementType@ElementnameMethods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -628,37 +664,37 @@ INTERFACE ElementType
 END INTERFACE ElementType
 
 !----------------------------------------------------------------------------
-!                                           ElementName@ElementNameMethods
+!                                           Elementname@ElementNameMethods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 21 May 2022
 ! summary: Returns element name in character from element number/type
 
-INTERFACE ElementName
-  MODULE PURE FUNCTION Element_Name(elemType) RESULT(ans)
+INTERFACE Elementname
+  MODULE PURE FUNCTION Element_name(elemType) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: elemType
     CHARACTER(:), ALLOCATABLE :: ans
-  END FUNCTION Element_Name
-END INTERFACE ElementName
+  END FUNCTION Element_name
+END INTERFACE Elementname
 
 !----------------------------------------------------------------------------
-!                                             ElementName@ElementNameMethods
+!                                             Elementname@ElementNameMethods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 21 May 2022
 ! summary: Returns element name in character from ReferenceElement
 
-INTERFACE ElementName
-  MODULE PURE FUNCTION Element_Name_obj(obj) RESULT(ans)
+INTERFACE Elementname
+  MODULE PURE FUNCTION Element_name_obj(obj) RESULT(ans)
     CLASS(ReferenceElement_), INTENT(IN) :: obj
     CHARACTER(:), ALLOCATABLE :: ans
-  END FUNCTION Element_Name_obj
-END INTERFACE ElementName
+  END FUNCTION Element_name_obj
+END INTERFACE Elementname
 
 !----------------------------------------------------------------------------
-!                                   TotalNodesInElement@ElementNameMethods
+!                                   TotalNodesInElement@ElementnameMethods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -673,7 +709,7 @@ INTERFACE TotalNodesInElement
 END INTERFACE TotalNodesInElement
 
 !----------------------------------------------------------------------------
-!                                           ElementOrder@ElementNameMethods
+!                                           ElementOrder@ElementnameMethods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -688,7 +724,7 @@ INTERFACE ElementOrder
 END INTERFACE ElementOrder
 
 !----------------------------------------------------------------------------
-!                                           ElementOrder@ElementNameMethods
+!                                           ElementOrder@ElementnameMethods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -707,7 +743,7 @@ INTERFACE OPERATOR(.order.)
 END INTERFACE OPERATOR(.order.)
 
 !----------------------------------------------------------------------------
-!                                            XiDimension@ElementNameMethods
+!                                            XiDimension@ElementnameMethods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -723,7 +759,7 @@ INTERFACE XiDimension
 END INTERFACE Xidimension
 
 !----------------------------------------------------------------------------
-!                                             Xidimension@ElementNameMethods
+!                                             Xidimension@ElementnameMethods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -1069,7 +1105,7 @@ INTERFACE isSerendipityElement
 END INTERFACE isSerendipityElement
 
 !----------------------------------------------------------------------------
-!                                         ElementTopology@ElementNameMethods
+!                                         ElementTopology@ElementnameMethods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -1097,7 +1133,7 @@ INTERFACE OPERATOR(.topology.)
 END INTERFACE OPERATOR(.topology.)
 
 !----------------------------------------------------------------------------
-!                                       ElementTopology@ElementNameMethods
+!                                       ElementTopology@ElementnameMethods
 !----------------------------------------------------------------------------
 
 INTERFACE ElementTopology
@@ -1142,124 +1178,31 @@ END INTERFACE FacetMatrix
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date: 16 June 2021
+! date: 2024-03-25
 ! summary: This routine returns the facet elements
 
-INTERFACE FacetElements
-  MODULE FUNCTION refelem_FacetElements(refelem) RESULT(ans)
-    CLASS(ReferenceElement_), INTENT(IN) :: refelem
-    TYPE(ReferenceElement_), ALLOCATABLE :: ans(:)
-  END FUNCTION refelem_FacetElements
-END INTERFACE FacetElements
-
-!----------------------------------------------------------------------------
-!                                          FacetElements@FacetElementMethods
-!----------------------------------------------------------------------------
-
-!> author: Vikas Sharma, Ph. D.
-! date: 16 June 2021
-! summary: This routine returns the facet elements
-
-INTERFACE FacetElements
-  MODULE FUNCTION refelem_FacetElements_elemType(elemType, nsd) RESULT(ans)
-    INTEGER(I4B), INTENT(IN) :: elemType
-    INTEGER(I4B), INTENT(IN) :: nsd
-    TYPE(ReferenceElement_), ALLOCATABLE :: ans(:)
-  END FUNCTION refelem_FacetElements_elemType
-END INTERFACE FacetElements
-
-!----------------------------------------------------------------------------
-!                                          FacetElements@FacetElementMethods
-!----------------------------------------------------------------------------
-
-!> author: Vikas Sharma, Ph. D.
-! date: 16 June 2021
-! summary: This routine returns the facet elements
-
-INTERFACE
-  MODULE SUBROUTINE refelem_FacetElements_Line(refelem, ans)
+INTERFACE GetFacetElements
+  MODULE SUBROUTINE refelem_GetFacetElements1(refelem, ans)
     CLASS(ReferenceElement_), INTENT(IN) :: refelem
     TYPE(ReferenceElement_), INTENT(INOUT) :: ans(:)
-  END SUBROUTINE refelem_FacetElements_Line
-END INTERFACE
+  END SUBROUTINE refelem_GetFacetElements1
+END INTERFACE GetFacetElements
 
 !----------------------------------------------------------------------------
 !                                          FacetElements@FacetElementMethods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date: 16 June 2021
+! date: 2024-03-25
 ! summary: This routine returns the facet elements
 
-INTERFACE
-  MODULE SUBROUTINE refelem_FacetElements_Line_elemType(elemType, nsd, ans)
+INTERFACE GetFacetElements
+  MODULE SUBROUTINE refelem_GetFacetElements2(elemType, nsd, ans)
     INTEGER(I4B), INTENT(IN) :: elemType
     INTEGER(I4B), INTENT(IN) :: nsd
     TYPE(ReferenceElement_), INTENT(INOUT) :: ans(:)
-  END SUBROUTINE refelem_FacetElements_Line_elemType
-END INTERFACE
-
-!----------------------------------------------------------------------------
-!                                          FacetElements@FacetElementMethods
-!----------------------------------------------------------------------------
-
-!> author: Vikas Sharma, Ph. D.
-! date: 16 June 2021
-! summary: This routine returns the facet elements
-
-INTERFACE
-  MODULE SUBROUTINE refelem_FacetElements_Surface(refelem, ans)
-    CLASS(ReferenceElement_), INTENT(IN) :: refelem
-    TYPE(ReferenceElement_), INTENT(INOUT) :: ans(:)
-  END SUBROUTINE refelem_FacetElements_Surface
-END INTERFACE
-
-!----------------------------------------------------------------------------
-!                                          FacetElements@FacetElementMethods
-!----------------------------------------------------------------------------
-
-!> author: Vikas Sharma, Ph. D.
-! date: 16 June 2021
-! summary: This routine returns the facet elements
-
-INTERFACE
-  MODULE SUBROUTINE refelem_FacetElements_Surface_elemType(elemType, nsd, ans)
-    INTEGER(I4B), INTENT(IN) :: elemType
-    INTEGER(I4B), INTENT(IN) :: nsd
-    TYPE(ReferenceElement_), INTENT(INOUT) :: ans(:)
-  END SUBROUTINE refelem_FacetElements_Surface_elemType
-END INTERFACE
-
-!----------------------------------------------------------------------------
-!                                          FacetElements@FacetElementMethods
-!----------------------------------------------------------------------------
-
-!> author: Vikas Sharma, Ph. D.
-! date: 16 June 2021
-! summary: This routine returns the facet elements
-
-INTERFACE
-  MODULE SUBROUTINE refelem_FacetElements_Volume(refelem, ans)
-    CLASS(ReferenceElement_), INTENT(IN) :: refelem
-    TYPE(ReferenceElement_), INTENT(INOUT) :: ans(:)
-  END SUBROUTINE refelem_FacetElements_Volume
-END INTERFACE
-
-!----------------------------------------------------------------------------
-!                                          FacetElements@FacetElementMethods
-!----------------------------------------------------------------------------
-
-!> author: Vikas Sharma, Ph. D.
-! date: 16 June 2021
-! summary: This routine returns the facet elements
-
-INTERFACE
-  MODULE SUBROUTINE refelem_FacetElements_Volume_elemType(elemType, nsd, ans)
-    INTEGER(I4B), INTENT(IN) :: elemType
-    INTEGER(I4B), INTENT(IN) :: nsd
-    TYPE(ReferenceElement_), INTENT(INOUT) :: ans(:)
-  END SUBROUTINE refelem_FacetElements_Volume_elemType
-END INTERFACE
+  END SUBROUTINE refelem_GetFacetElements2
+END INTERFACE GetFacetElements
 
 !----------------------------------------------------------------------------
 !                                             FacetTopology@GeometryMethods
@@ -1269,13 +1212,13 @@ END INTERFACE
 ! date: 16 June 2021
 ! summary: Returns the facet topology of the given element type
 
-INTERFACE FacetTopology
-  MODULE PURE FUNCTION refelem_FacetTopology(elemType, nptrs) RESULT(ans)
+INTERFACE GetFacetTopology
+  MODULE PURE SUBROUTINE refelem_GetFacetTopology(elemType, nptrs, ans)
     INTEGER(I4B), INTENT(IN) :: elemType
     INTEGER(I4B), INTENT(IN) :: nptrs(:)
-    TYPE(ReferenceTopology_), ALLOCATABLE :: ans(:)
-  END FUNCTION refelem_FacetTopology
-END INTERFACE FacetTopology
+    TYPE(ReferenceTopology_), INTENT(INOUT) :: ans(:)
+  END SUBROUTINE refelem_GetFacetTopology
+END INTERFACE GetFacetTopology
 
 !----------------------------------------------------------------------------
 !                                       LocalNodeCoord@LocalNodeCoordMethods

@@ -37,9 +37,62 @@ USE InputUtility
 USE SortUtility
 USE ReallocateUtility
 USE Display_Method
+USE MiscUtility, ONLY: Int2Str
 
 IMPLICIT NONE
 CONTAINS
+
+!----------------------------------------------------------------------------
+!                                                     ElementName_Quadrangle
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE ElementName_Quadrangle
+SELECT CASE (elemType)
+CASE (Quadrangle4)
+  ans = "Quadrangle4"
+CASE (Quadrangle8)
+  ans = "Quadrangle8"
+CASE (Quadrangle9)
+  ans = "Quadrangle9"
+CASE (Quadrangle16)
+  ans = "Quadrangle16"
+CASE default
+  ans = ""
+END SELECT
+END PROCEDURE ElementName_Quadrangle
+
+!----------------------------------------------------------------------------
+!                                                   FacetTopology_Quadrangle
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE FacetTopology_Quadrangle
+INTEGER(I4B) :: order, ii, lineType
+INTEGER(I4B), ALLOCATABLE :: con(:, :)
+
+order = ElementOrder_Quadrangle(elemType)
+CALL Reallocate(con, order + 1, 4)
+CALL GetEdgeConnectivity_Quadrangle(con=con,  &
+  & opt=DEFAULT_OPT_QUADRANGLE_EDGE_CON, order=order)
+lineType = ElementType_Line("Line"//Int2Str(order + 1))
+
+DO ii = 1, 4
+  ans(ii)%nptrs = nptrs(con(:, ii))
+  ans(ii)%xiDimension = 1
+  ans(ii)%name = lineType
+END DO
+
+IF (ALLOCATED(con)) DEALLOCATE (con)
+
+END PROCEDURE FacetTopology_Quadrangle
+
+!----------------------------------------------------------------------------
+!                                                    TotalEntities_Quadrangle
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE TotalEntities_Quadrangle
+ans(2:4) = [4, 1, 0]
+ans(1) = TotalNodesInElement_Quadrangle(elemType)
+END PROCEDURE TotalEntities_Quadrangle
 
 !----------------------------------------------------------------------------
 !                                              TotalNodesInElement_Quadrangle
@@ -543,17 +596,14 @@ END PROCEDURE GetEdgeConnectivity_Quadrangle
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE FaceShapeMetaData_Quadrangle
-INTEGER(I4B) :: a(6), localFaces0(4)
+INTEGER(I4B) :: a(4), localFaces0(4)
 
-sorted_face = SORT(face)
 a(1) = MINLOC(face, 1)
 a(2) = HelpFaceData_Quadrangle(1, a(1)) !b
 a(3) = HelpFaceData_Quadrangle(2, a(1)) !c
 a(4) = HelpFaceData_Quadrangle(3, a(1)) !d
-a(5) = HelpFaceData_Quadrangle(4, a(1)) !e
-a(6) = HelpFaceData_Quadrangle(5, a(1)) !f
 
-localFaces0(1:4) = [face(a(1)), face(a(5)), face(a(4)), face(a(6))]
+localFaces0(1:4) = face(a)
 IF (PRESENT(localFaces)) THEN
   localFaces(1:4) = localFaces0(1:4)
 END IF

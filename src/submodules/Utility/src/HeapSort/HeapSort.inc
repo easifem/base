@@ -18,7 +18,7 @@
 INTEGER(I4B) :: n, i, k, j, l
 
 n = SIZE(array)
-IF (n .EQ. 1) RETURN
+IF (n .LE. 1) RETURN
 l = n / 2 + 1
 k = n
 DO WHILE (k .NE. 1)

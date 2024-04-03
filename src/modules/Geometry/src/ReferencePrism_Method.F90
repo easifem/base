@@ -37,6 +37,142 @@ PUBLIC :: GetEdgeConnectivity_Prism
 PUBLIC :: GetFaceConnectivity_Prism
 PUBLIC :: RefCoord_Prism
 PUBLIC :: GetFaceElemType_Prism
+PUBLIC :: FacetElements_Prism
+PUBLIC :: ElementOrder_Prism
+PUBLIC :: ElementType_Prism
+PUBLIC :: TotalNodesInElement_Prism
+PUBLIC :: TotalEntities_Prism
+PUBLIC :: FacetTopology_Prism
+PUBLIC :: ElementName_Prism
+PUBLIC :: MaxOrder_Prism
+
+#ifdef MAX_PRISM_ORDER
+INTEGER(I4B), PARAMETER :: MaxOrder_Prism = MAX_PRISM_ORDER
+#else
+INTEGER(I4B), PARAMETER :: MaxOrder_Prism = 2_I4B
+#endif
+
+!----------------------------------------------------------------------------
+!                                                               ElementName
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2024-03-25
+! summary: Returns element name in character from element number/type
+
+INTERFACE
+  MODULE PURE FUNCTION ElementName_Prism(elemType) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: elemType
+    CHARACTER(:), ALLOCATABLE :: ans
+  END FUNCTION ElementName_Prism
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                       FacetTopology_Prism
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2024-03-23
+! summary:  Returns the topology of tetrahedron
+
+INTERFACE
+  MODULE PURE SUBROUTINE FacetTopology_Prism(elemType, nptrs, ans)
+    INTEGER(I4B), INTENT(IN) :: elemType
+    INTEGER(I4B), INTENT(IN) :: nptrs(:)
+    TYPE(ReferenceTopology_), INTENT(INOUT) :: ans(:)
+  END SUBROUTINE FacetTopology_Prism
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                 TotalEntities_Prism
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2024-03-22
+! summary:  Returns total entities in Prism
+
+INTERFACE
+  MODULE PURE FUNCTION TotalEntities_Prism(elemType) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: elemType
+    INTEGER(I4B) :: ans(4)
+  END FUNCTION TotalEntities_Prism
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                            TotalNodesInElement_Prism
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2024-03-22
+! summary:  Returns total nodes in element
+
+INTERFACE
+  MODULE PURE FUNCTION TotalNodesInElement_Prism(elemType) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: elemType
+    INTEGER(I4B) :: ans
+  END FUNCTION TotalNodesInElement_Prism
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                     ElementType_Prism
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2024-03-22
+! summary:  Returns the type of element from char name
+
+INTERFACE
+  MODULE PURE FUNCTION ElementType_Prism(elemName) RESULT(ans)
+    CHARACTER(*), INTENT(IN) :: elemName
+    INTEGER(I4B) :: ans
+  END FUNCTION ElementType_Prism
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                   ElementOrder_Prism
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2024-03-22
+! summary:  Returns the order of element
+
+INTERFACE
+  MODULE PURE FUNCTION ElementOrder_Prism(elemType) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: elemType
+    INTEGER(I4B) :: ans
+  END FUNCTION ElementOrder_Prism
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                   FacetElements_Prism
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2024-03-21
+! summary:  Get FacetElements
+
+INTERFACE FacetElements_Prism
+  MODULE SUBROUTINE FacetElements_Prism1(refelem, ans)
+    CLASS(ReferenceElement_), INTENT(IN) :: refelem
+    TYPE(ReferenceElement_), INTENT(INOUT) :: ans(:)
+  END SUBROUTINE FacetElements_Prism1
+END INTERFACE FacetElements_Prism
+
+!----------------------------------------------------------------------------
+!                                                  FacetElements_Prism
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2024-03-21
+! summary:  Get FacetElements
+
+INTERFACE FacetElements_Prism
+  MODULE SUBROUTINE FacetElements_Prism2(elemType, nsd, ans)
+    INTEGER(I4B), INTENT(IN) :: elemType
+    INTEGER(I4B), INTENT(IN) :: nsd
+    TYPE(ReferenceElement_), INTENT(INOUT) :: ans(:)
+  END SUBROUTINE FacetElements_Prism2
+END INTERFACE FacetElements_Prism
 
 !----------------------------------------------------------------------------
 !                                                       Initiate@Prism
@@ -47,12 +183,12 @@ PUBLIC :: GetFaceElemType_Prism
 ! summary: This subroutine for constructing the object
 
 INTERFACE Initiate
-  MODULE SUBROUTINE initiate_ref_Prism(obj, nsd, xij, domainName)
+  MODULE SUBROUTINE Initiate_Ref_Prism(obj, nsd, xij, domainName)
     CLASS(ReferencePrism_), INTENT(INOUT) :: obj
     INTEGER(I4B), INTENT(IN) :: nsd
     REAL(DFP), INTENT(IN), OPTIONAL :: xij(:, :)
     CHARACTER(*), OPTIONAL, INTENT(IN) :: domainName
-  END SUBROUTINE initiate_ref_Prism
+  END SUBROUTINE Initiate_Ref_Prism
 END INTERFACE Initiate
 
 !----------------------------------------------------------------------------
@@ -60,12 +196,12 @@ END INTERFACE Initiate
 !----------------------------------------------------------------------------
 
 INTERFACE ReferencePrism
-  MODULE FUNCTION reference_Prism(nsd, xij, domainName) RESULT(obj)
+  MODULE FUNCTION Reference_Prism(nsd, xij, domainName) RESULT(obj)
     INTEGER(I4B), INTENT(IN) :: nsd
     REAL(DFP), INTENT(IN), OPTIONAL :: xij(:, :)
     CHARACTER(*), OPTIONAL, INTENT(IN) :: domainName
     TYPE(ReferencePrism_) :: obj
-  END FUNCTION reference_Prism
+  END FUNCTION Reference_Prism
 END INTERFACE ReferencePrism
 
 !----------------------------------------------------------------------------
@@ -73,12 +209,12 @@ END INTERFACE ReferencePrism
 !----------------------------------------------------------------------------
 
 INTERFACE ReferencePrism_Pointer
-  MODULE FUNCTION reference_Prism_Pointer(nsd, xij, domainName) RESULT(obj)
+  MODULE FUNCTION Reference_Prism_Pointer(nsd, xij, domainName) RESULT(obj)
     INTEGER(I4B), INTENT(IN) :: nsd
     REAL(DFP), INTENT(IN), OPTIONAL :: xij(:, :)
     CHARACTER(*), OPTIONAL, INTENT(IN) :: domainName
     CLASS(ReferencePrism_), POINTER :: obj
-  END FUNCTION reference_Prism_Pointer
+  END FUNCTION Reference_Prism_Pointer
 END INTERFACE ReferencePrism_Pointer
 
 !----------------------------------------------------------------------------
@@ -181,7 +317,7 @@ END INTERFACE
 ! summary:  Returns number of edges in the element
 
 INTERFACE
-  MODULE PURE SUBROUTINE GetEdgeConnectivity_Prism(con, opt)
+  MODULE PURE SUBROUTINE GetEdgeConnectivity_Prism(con, opt, order)
     INTEGER(I4B), INTENT(INOUT) :: con(:, :)
     !! Connectivity
     !! The columns represents the edge number
@@ -191,6 +327,7 @@ INTERFACE
     !! If opt = 1, then edge connectivity for hierarchial approximation
     !! If opt =2, then edge connectivity for Lagrangian approximation
     !! opt=1 is default
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: order
   END SUBROUTINE GetEdgeConnectivity_Prism
 END INTERFACE
 
@@ -203,7 +340,7 @@ END INTERFACE
 ! summary:  Returns number of edges in the element
 
 INTERFACE
-  MODULE PURE SUBROUTINE GetFaceConnectivity_Prism(con, opt)
+  MODULE PURE SUBROUTINE GetFaceConnectivity_Prism(con, opt, order)
     INTEGER(I4B), INTENT(INOUT) :: con(:, :)
     !! Connectivity
     !! The columns represents the face number
@@ -213,6 +350,7 @@ INTERFACE
     !! If opt = 1, then face connectivity for hierarchial approximation
     !! If opt =2, then face connectivity for Lagrangian approximation
     !! opt=1 is default
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: order
   END SUBROUTINE GetFaceConnectivity_Prism
 END INTERFACE
 
@@ -241,7 +379,7 @@ END INTERFACE
 
 INTERFACE
   MODULE PURE SUBROUTINE GetFaceElemType_Prism(faceElemType, opt,  &
-    & tFaceNodes)
+    & tFaceNodes, elemType)
     INTEGER(I4B), INTENT(INOUT) :: faceElemType(:)
     !! Face element type
     INTEGER(I4B), OPTIONAL, INTENT(INOUT) :: tFaceNodes(:)
@@ -250,6 +388,9 @@ INTERFACE
     !! If opt = 1, then edge connectivity for hierarchial approximation
     !! If opt = 2, then edge connectivity for Lagrangian approximation
     !! opt = 1 is default
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: elemType
+    !! elemType for prism
+    !! default is Prism
   END SUBROUTINE GetFaceElemType_Prism
 END INTERFACE
 

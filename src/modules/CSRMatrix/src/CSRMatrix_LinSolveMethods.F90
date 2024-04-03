@@ -21,6 +21,9 @@ USE BaseType, ONLY: CSRMatrix_
 IMPLICIT NONE
 PRIVATE
 
+PUBLIC :: CSRMatrixLinSolveInitiate
+PUBLIC :: CSRMatrix_GMRES
+
 INTEGER(I4B), PARAMETER :: IPAR_LENGTH = 14
 INTEGER(I4B), PARAMETER :: FPAR_LENGTH = 14
 
@@ -33,10 +36,10 @@ INTEGER(I4B), PARAMETER :: FPAR_LENGTH = 14
 ! summary: Return integer code of linear solver from character name
 
 INTERFACE
-  MODULE PURE FUNCTION getLinSolverCodeFromName(name) RESULT(Ans)
+  MODULE PURE FUNCTION GetLinSolverCodeFromName(name) RESULT(Ans)
     CHARACTER(*), INTENT(IN) :: name
     INTEGER(I4B) :: ans
-  END FUNCTION getLinSolverCodeFromName
+  END FUNCTION GetLinSolverCodeFromName
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -48,17 +51,17 @@ END INTERFACE
 ! summary: Return character name of linear solver from integer code
 
 INTERFACE
-  MODULE PURE FUNCTION getLinSolverNameFromCode(name) RESULT(Ans)
+  MODULE PURE FUNCTION GetLinSolverNameFromCode(name) RESULT(Ans)
     INTEGER(I4B), INTENT(IN) :: name
     CHARACTER(15) :: ans
-  END FUNCTION getLinSolverNameFromCode
+  END FUNCTION GetLinSolverNameFromCode
 END INTERFACE
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
-INTERFACE
+INTERFACE CSRMatrixLinSolveInitiate
   MODULE SUBROUTINE CSRMatrix_LinSolve_Initiate(ipar, fpar, W, n, &
        & solverName, preConditionOption, convergenceIn, convergenceType, &
        & maxIter, KrylovSubspaceSize, rtol, atol, relativeToRHS)
@@ -95,23 +98,17 @@ INTERFACE
     LOGICAL(LGT), OPTIONAL, INTENT(in) :: relativeToRHS
     !! true if convergence is checked relatative to RHS
   END SUBROUTINE CSRMatrix_LinSolve_Initiate
-END INTERFACE
-
-INTERFACE CSRMatrixLinSolveInitiate
-  MODULE PROCEDURE CSRMatrix_LinSolve_Initiate
 END INTERFACE CSRMatrixLinSolveInitiate
 
-PUBLIC :: CSRMatrixLinSolveInitiate
-
 !----------------------------------------------------------------------------
-!                                                       LinSolve
+!                                                                  LinSolve
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date:  2023-03-14
 ! summary: Solver
 
-INTERFACE
+INTERFACE CSRMatrix_GMRES
   MODULE SUBROUTINE CSRMatrix_GMRES(obj, sol, rhs, ipar, fpar, W)
     CLASS(CSRMatrix_), INTENT(INOUT) :: obj
     REAL(DFP), INTENT(INOUT) :: sol(:)
@@ -120,8 +117,6 @@ INTERFACE
     REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: fpar(:)
     REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: W(:)
   END SUBROUTINE CSRMatrix_GMRES
-END INTERFACE
-
-PUBLIC :: CSRMatrix_GMRES
+END INTERFACE CSRMatrix_GMRES
 
 END MODULE CSRMatrix_LinSolveMethods

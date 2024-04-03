@@ -30,17 +30,13 @@ PUBLIC :: SetColumn
 ! date: 24 July 2021
 ! summary: This routine sets the Column of a sparse matrix
 
-INTERFACE
+INTERFACE SetColumn
   MODULE SUBROUTINE csrMat_setColumn1(obj, icolumn, VALUE)
     TYPE(CSRMatrix_), INTENT(INOUT) :: obj
     INTEGER(I4B), INTENT(IN) :: icolumn
     REAL(DFP), INTENT(IN) :: VALUE(:)
   END SUBROUTINE csrMat_setColumn1
-END INTERFACE
-
-INTERFACE setColumn
-  MODULE PROCEDURE csrMat_setColumn1
-END INTERFACE setColumn
+END INTERFACE SetColumn
 
 !----------------------------------------------------------------------------
 !                                                       setColumn@setMethod
@@ -50,17 +46,13 @@ END INTERFACE setColumn
 ! date: 24 July 2021
 ! summary: This routine sets the Column of a sparse matrix
 
-INTERFACE
+INTERFACE SetColumn
   MODULE SUBROUTINE csrMat_setColumn1b(obj, icolumn, VALUE)
     TYPE(CSRMatrix_), INTENT(INOUT) :: obj
     INTEGER(I4B), INTENT(IN) :: icolumn(:)
     REAL(DFP), INTENT(IN) :: VALUE(:)
   END SUBROUTINE csrMat_setColumn1b
-END INTERFACE
-
-INTERFACE setColumn
-  MODULE PROCEDURE csrMat_setColumn1b
-END INTERFACE setColumn
+END INTERFACE SetColumn
 
 !----------------------------------------------------------------------------
 !                                                       setColumn@setMethod
@@ -78,18 +70,14 @@ END INTERFACE setColumn
 ! - idof is the degree of freedom number
 ! - icolumn calculated from nodenum and idof depends upon the storageFMT.
 
-INTERFACE
+INTERFACE SetColumn
   MODULE SUBROUTINE csrMat_setColumn2(obj, nodenum, idof, VALUE)
     TYPE(CSRMatrix_), INTENT(INOUT) :: obj
     INTEGER(I4B), INTENT(IN) :: nodenum
     INTEGER(I4B), INTENT(IN) :: idof
     REAL(DFP), INTENT(IN) :: VALUE(:)
   END SUBROUTINE csrMat_setColumn2
-END INTERFACE
-
-INTERFACE setColumn
-  MODULE PROCEDURE csrMat_setColumn2
-END INTERFACE setColumn
+END INTERFACE SetColumn
 
 !----------------------------------------------------------------------------
 !                                                       setColumn@setMethod
@@ -99,17 +87,13 @@ END INTERFACE setColumn
 ! date: 24 July 2021
 ! summary: This routine sets the Column of a sparse matrix
 
-INTERFACE
+INTERFACE SetColumn
   MODULE SUBROUTINE csrMat_setColumn3(obj, icolumn, VALUE)
     TYPE(CSRMatrix_), INTENT(INOUT) :: obj
     INTEGER(I4B), INTENT(IN) :: icolumn
     REAL(DFP), INTENT(IN) :: VALUE
   END SUBROUTINE csrMat_setColumn3
-END INTERFACE
-
-INTERFACE setColumn
-  MODULE PROCEDURE csrMat_setColumn3
-END INTERFACE setColumn
+END INTERFACE SetColumn
 
 !----------------------------------------------------------------------------
 !                                                       setColumn@setMethod
@@ -119,17 +103,13 @@ END INTERFACE setColumn
 ! date: 24 July 2021
 ! summary: This routine sets the Column of a sparse matrix
 
-INTERFACE
+INTERFACE SetColumn
   MODULE SUBROUTINE csrMat_setColumn3b(obj, icolumn, VALUE)
     TYPE(CSRMatrix_), INTENT(INOUT) :: obj
     INTEGER(I4B), INTENT(IN) :: icolumn(:)
     REAL(DFP), INTENT(IN) :: VALUE
   END SUBROUTINE csrMat_setColumn3b
-END INTERFACE
-
-INTERFACE setColumn
-  MODULE PROCEDURE csrMat_setColumn3b
-END INTERFACE setColumn
+END INTERFACE SetColumn
 
 !----------------------------------------------------------------------------
 !                                                       setColumn@setMethod
@@ -147,18 +127,14 @@ END INTERFACE setColumn
 ! - idof is the degree of freedom number
 ! - icolumn calculated from nodenum and idof depends upon the storageFMT.
 
-INTERFACE
+INTERFACE SetColumn
   MODULE SUBROUTINE csrMat_setColumn4(obj, nodenum, idof, VALUE)
     TYPE(CSRMatrix_), INTENT(INOUT) :: obj
     INTEGER(I4B), INTENT(IN) :: nodenum
     INTEGER(I4B), INTENT(IN) :: idof
     REAL(DFP), INTENT(IN) :: VALUE
   END SUBROUTINE csrMat_setColumn4
-END INTERFACE
-
-INTERFACE setColumn
-  MODULE PROCEDURE csrMat_setColumn4
-END INTERFACE setColumn
+END INTERFACE SetColumn
 
 !----------------------------------------------------------------------------
 !                                                       setColumn@setMethod
@@ -176,7 +152,7 @@ END INTERFACE setColumn
 ! - idof is the degree of freedom number
 ! - icolumn calculated from nodenum and idof depends upon the storageFMT.
 
-INTERFACE
+INTERFACE SetColumn
   MODULE SUBROUTINE csrMat_setColumn5(obj, nodenum, ivar, idof, VALUE)
     TYPE(CSRMatrix_), INTENT(INOUT) :: obj
     INTEGER(I4B), INTENT(IN) :: nodenum
@@ -184,11 +160,7 @@ INTERFACE
     INTEGER(I4B), INTENT(IN) :: idof
     REAL(DFP), INTENT(IN) :: VALUE
   END SUBROUTINE csrMat_setColumn5
-END INTERFACE
-
-INTERFACE setColumn
-  MODULE PROCEDURE csrMat_setColumn5
-END INTERFACE setColumn
+END INTERFACE SetColumn
 
 !----------------------------------------------------------------------------
 !                                                       setColumn@setMethod
@@ -206,7 +178,7 @@ END INTERFACE setColumn
 ! - idof is the degree of freedom number
 ! - icolumn calculated from nodenum and idof depends upon the storageFMT.
 
-INTERFACE
+INTERFACE SetColumn
   MODULE SUBROUTINE csrMat_setColumn6(obj, nodenum, ivar, idof, VALUE)
     TYPE(CSRMatrix_), INTENT(INOUT) :: obj
     INTEGER(I4B), INTENT(IN) :: nodenum
@@ -214,11 +186,7 @@ INTERFACE
     INTEGER(I4B), INTENT(IN) :: idof
     REAL(DFP), INTENT(IN) :: VALUE(:)
   END SUBROUTINE csrMat_setColumn6
-END INTERFACE
-
-INTERFACE setColumn
-  MODULE PROCEDURE csrMat_setColumn6
-END INTERFACE setColumn
+END INTERFACE SetColumn
 
 !----------------------------------------------------------------------------
 !                                                       setColumn@setMethod
@@ -237,7 +205,7 @@ END INTERFACE setColumn
 ! - idof is the degree of freedom number
 ! - icolumn calculated from nodenum and idof depends upon the storageFMT.
 
-INTERFACE
+INTERFACE SetColumn
   MODULE SUBROUTINE csrMat_setColumn7(obj, nodenum, ivar, &
     & spacecompo, timecompo, VALUE)
     TYPE(CSRMatrix_), INTENT(INOUT) :: obj
@@ -247,11 +215,7 @@ INTERFACE
     INTEGER(I4B), INTENT(IN) :: timecompo
     REAL(DFP), INTENT(IN) :: VALUE
   END SUBROUTINE csrMat_setColumn7
-END INTERFACE
-
-INTERFACE setColumn
-  MODULE PROCEDURE csrMat_setColumn7
-END INTERFACE setColumn
+END INTERFACE SetColumn
 
 !----------------------------------------------------------------------------
 !                                                       setColumn@setMethod
@@ -270,7 +234,7 @@ END INTERFACE setColumn
 ! - idof is the degree of freedom number
 ! - icolumn calculated from nodenum and idof depends upon the storageFMT.
 
-INTERFACE
+INTERFACE SetColumn
   MODULE SUBROUTINE csrMat_setColumn8(obj, nodenum, ivar, &
     & spacecompo, timecompo, VALUE)
     TYPE(CSRMatrix_), INTENT(INOUT) :: obj
@@ -280,11 +244,7 @@ INTERFACE
     INTEGER(I4B), INTENT(IN) :: timecompo
     REAL(DFP), INTENT(IN) :: VALUE(:)
   END SUBROUTINE csrMat_setColumn8
-END INTERFACE
-
-INTERFACE setColumn
-  MODULE PROCEDURE csrMat_setColumn8
-END INTERFACE setColumn
+END INTERFACE SetColumn
 
 !----------------------------------------------------------------------------
 !                                                       setColumn@setMethod
@@ -303,7 +263,7 @@ END INTERFACE setColumn
 ! - idof is the degree of freedom number
 ! - icolumn calculated from nodenum and idof depends upon the storageFMT.
 
-INTERFACE
+INTERFACE SetColumn
   MODULE SUBROUTINE csrMat_setColumn9(obj, nodenum, ivar, &
     & spacecompo, timecompo, VALUE)
     TYPE(CSRMatrix_), INTENT(INOUT) :: obj
@@ -313,11 +273,7 @@ INTERFACE
     INTEGER(I4B), INTENT(IN) :: timecompo(:)
     REAL(DFP), INTENT(IN) :: VALUE
   END SUBROUTINE csrMat_setColumn9
-END INTERFACE
-
-INTERFACE setColumn
-  MODULE PROCEDURE csrMat_setColumn9
-END INTERFACE setColumn
+END INTERFACE SetColumn
 
 !----------------------------------------------------------------------------
 !                                                       setColumn@setMethod
@@ -336,7 +292,7 @@ END INTERFACE setColumn
 ! - idof is the degree of freedom number
 ! - icolumn calculated from nodenum and idof depends upon the storageFMT.
 
-INTERFACE
+INTERFACE SetColumn
   MODULE SUBROUTINE csrMat_setColumn10(obj, nodenum, ivar, &
     & spacecompo, timecompo, VALUE)
     TYPE(CSRMatrix_), INTENT(INOUT) :: obj
@@ -346,11 +302,7 @@ INTERFACE
     INTEGER(I4B), INTENT(IN) :: timecompo(:)
     REAL(DFP), INTENT(IN) :: VALUE(:)
   END SUBROUTINE csrMat_setColumn10
-END INTERFACE
-
-INTERFACE setColumn
-  MODULE PROCEDURE csrMat_setColumn10
-END INTERFACE setColumn
+END INTERFACE SetColumn
 
 !----------------------------------------------------------------------------
 !                                                      setColumn@setMethod
@@ -369,7 +321,7 @@ END INTERFACE setColumn
 ! - idof is the degree of freedom number
 ! - icolumn calculated from nodenum and idof depends upon the storageFMT.
 
-INTERFACE
+INTERFACE SetColumn
   MODULE SUBROUTINE csrMat_setColumn11(obj, nodenum, ivar, &
     & spacecompo, timecompo, VALUE)
     TYPE(CSRMatrix_), INTENT(INOUT) :: obj
@@ -379,11 +331,7 @@ INTERFACE
     INTEGER(I4B), INTENT(IN) :: timecompo
     REAL(DFP), INTENT(IN) :: VALUE
   END SUBROUTINE csrMat_setColumn11
-END INTERFACE
-
-INTERFACE setColumn
-  MODULE PROCEDURE csrMat_setColumn11
-END INTERFACE setColumn
+END INTERFACE SetColumn
 
 !----------------------------------------------------------------------------
 !                                                   setColumn@setMethod
@@ -402,7 +350,7 @@ END INTERFACE setColumn
 ! - idof is the degree of freedom number
 ! - icolumn calculated from nodenum and idof depends upon the storageFMT.
 
-INTERFACE
+INTERFACE SetColumn
   MODULE SUBROUTINE csrMat_setColumn12(obj, nodenum, ivar, &
     & spacecompo, timecompo, VALUE)
     TYPE(CSRMatrix_), INTENT(INOUT) :: obj
@@ -412,11 +360,7 @@ INTERFACE
     INTEGER(I4B), INTENT(IN) :: timecompo
     REAL(DFP), INTENT(IN) :: VALUE(:)
   END SUBROUTINE csrMat_setColumn12
-END INTERFACE
-
-INTERFACE setColumn
-  MODULE PROCEDURE csrMat_setColumn12
-END INTERFACE setColumn
+END INTERFACE SetColumn
 
 !----------------------------------------------------------------------------
 !                                                      setColumn@setMethod
@@ -435,7 +379,7 @@ END INTERFACE setColumn
 ! - idof is the degree of freedom number
 ! - icolumn calculated from nodenum and idof depends upon the storageFMT.
 
-INTERFACE
+INTERFACE SetColumn
   MODULE SUBROUTINE csrMat_setColumn13(obj, nodenum, ivar, &
     & spacecompo, timecompo, VALUE)
     TYPE(CSRMatrix_), INTENT(INOUT) :: obj
@@ -445,11 +389,7 @@ INTERFACE
     INTEGER(I4B), INTENT(IN) :: timecompo(:)
     REAL(DFP), INTENT(IN) :: VALUE
   END SUBROUTINE csrMat_setColumn13
-END INTERFACE
-
-INTERFACE setColumn
-  MODULE PROCEDURE csrMat_setColumn13
-END INTERFACE setColumn
+END INTERFACE SetColumn
 
 !----------------------------------------------------------------------------
 !                                                      setColumn@setMethod
@@ -468,7 +408,7 @@ END INTERFACE setColumn
 ! - idof is the degree of freedom number
 ! - icolumn calculated from nodenum and idof depends upon the storageFMT.
 
-INTERFACE
+INTERFACE SetColumn
   MODULE SUBROUTINE csrMat_setColumn14(obj, nodenum, ivar, &
     & spacecompo, timecompo, VALUE)
     TYPE(CSRMatrix_), INTENT(INOUT) :: obj
@@ -478,11 +418,7 @@ INTERFACE
     INTEGER(I4B), INTENT(IN) :: timecompo(:)
     REAL(DFP), INTENT(IN) :: VALUE(:)
   END SUBROUTINE csrMat_setColumn14
-END INTERFACE
-
-INTERFACE setColumn
-  MODULE PROCEDURE csrMat_setColumn14
-END INTERFACE setColumn
+END INTERFACE SetColumn
 
 !----------------------------------------------------------------------------
 !                                                     setColumn@setMethod
@@ -501,7 +437,7 @@ END INTERFACE setColumn
 ! - idof is the degree of freedom number
 ! - icolumn calculated from nodenum and idof depends upon the storageFMT.
 
-INTERFACE
+INTERFACE SetColumn
   MODULE SUBROUTINE csrMat_setColumn15(obj, nodenum, ivar, &
     & spacecompo, timecompo, VALUE)
     TYPE(CSRMatrix_), INTENT(INOUT) :: obj
@@ -511,11 +447,7 @@ INTERFACE
     INTEGER(I4B), INTENT(IN) :: timecompo
     REAL(DFP), INTENT(IN) :: VALUE
   END SUBROUTINE csrMat_setColumn15
-END INTERFACE
-
-INTERFACE setColumn
-  MODULE PROCEDURE csrMat_setColumn15
-END INTERFACE setColumn
+END INTERFACE SetColumn
 
 !----------------------------------------------------------------------------
 !                                                      setColumn@setMethod
@@ -534,7 +466,7 @@ END INTERFACE setColumn
 ! - idof is the degree of freedom number
 ! - icolumn calculated from nodenum and idof depends upon the storageFMT.
 
-INTERFACE
+INTERFACE SetColumn
   MODULE SUBROUTINE csrMat_setColumn16(obj, nodenum, ivar, &
     & spacecompo, timecompo, VALUE)
     TYPE(CSRMatrix_), INTENT(INOUT) :: obj
@@ -544,9 +476,10 @@ INTERFACE
     INTEGER(I4B), INTENT(IN) :: timecompo
     REAL(DFP), INTENT(IN) :: VALUE(:)
   END SUBROUTINE csrMat_setColumn16
-END INTERFACE
+END INTERFACE SetColumn
 
-INTERFACE setColumn
-  MODULE PROCEDURE csrMat_setColumn16
-END INTERFACE setColumn
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
 END MODULE CSRMatrix_SetColMethods

@@ -21,13 +21,68 @@ IMPLICIT NONE
 CONTAINS
 
 !----------------------------------------------------------------------------
+!                                                       RefTopoReallocate
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE RefTopoReallocate
+INTEGER(I4B) :: tsize, ii
+LOGICAL(LGT) :: isok
+
+isok = ALLOCATED(obj)
+
+IF (isok) THEN
+
+  tsize = SIZE(obj)
+
+  DO ii = 1, tsize
+    CALL DEALLOCATE (obj(ii))
+  END DO
+
+  IF (tsize .NE. n) THEN
+    DEALLOCATE (obj)
+    ALLOCATE (obj(n))
+  END IF
+
+ELSE
+
+  ALLOCATE (obj(n))
+
+END IF
+
+END PROCEDURE RefTopoReallocate
+
+!----------------------------------------------------------------------------
+!                                                                Deallocate
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE RefTopoDeallocate
+LOGICAL(LGT) :: isok
+INTEGER(I4B) :: ii, tsize
+
+isok = ALLOCATED(obj)
+
+IF (isok) THEN
+  tsize = SIZE(obj)
+
+  DO ii = 1, tsize
+    CALL DEALLOCATE (obj(ii))
+  END DO
+
+  DEALLOCATE (obj)
+
+END IF
+
+END PROCEDURE RefTopoDeallocate
+
+!----------------------------------------------------------------------------
 !                                                         ReferenceTopology
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE refelem_ReferenceTopology
-obj%Nptrs = Nptrs
-obj%Name = Name
-obj%XiDimension = XiDimension(Name)
+CALL Reallocate(obj%nptrs, SIZE(nptrs))
+obj%nptrs = nptrs
+obj%name = name
+obj%xiDimension = XiDimension(name)
 END PROCEDURE refelem_ReferenceTopology
 
 !----------------------------------------------------------------------------
@@ -35,8 +90,8 @@ END PROCEDURE refelem_ReferenceTopology
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE refelem_Deallocate1
-IF (ALLOCATED(obj%Nptrs)) DEALLOCATE (obj%Nptrs)
-obj%Name = 0_I4B
+IF (ALLOCATED(obj%nptrs)) DEALLOCATE (obj%nptrs)
+obj%name = 0_I4B
 obj%XiDimension = 0_I4B
 END PROCEDURE refelem_Deallocate1
 
@@ -68,10 +123,10 @@ END PROCEDURE refelem_Deallocate2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE refelem_NNE1
-IF (ALLOCATED(obj%Nptrs)) THEN
-  Ans = SIZE(obj%Nptrs)
+IF (ALLOCATED(obj%nptrs)) THEN
+  ans = SIZE(obj%nptrs)
 ELSE
-  Ans = 0
+  ans = 0
 END IF
 END PROCEDURE refelem_NNE1
 
@@ -81,9 +136,9 @@ END PROCEDURE refelem_NNE1
 
 MODULE PROCEDURE refelem_NNE2
 IF (ALLOCATED(obj%XiJ)) THEN
-  Ans = SIZE(obj%XiJ, 2)
+  ans = SIZE(obj%XiJ, 2)
 ELSE
-  Ans = 0
+  ans = 0
 END IF
 END PROCEDURE refelem_NNE2
 
@@ -111,7 +166,6 @@ END PROCEDURE refelem_Initiate1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE refelem_constructor_1
-TYPE(String) :: dsetname
 CLASS(ReferenceElement_), POINTER :: refelem
 INTEGER(I4B) :: elemOrder
 refelem => NULL()
@@ -232,7 +286,6 @@ END PROCEDURE refelem_constructor_1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE refelem_constructor_2
-INTEGER(I4B) :: ii
 SELECT TYPE (refelem)
 TYPE IS (ReferenceLine_)
   ALLOCATE (ReferenceLine_ :: ans)
@@ -270,20 +323,24 @@ ans = refelem
 END PROCEDURE refelem_constructor_2
 
 !----------------------------------------------------------------------------
-!                                                              getNptrs
+!                                                              getnptrs
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE refelem_getNptrs
+MODULE PROCEDURE refelem_getnptrs
 INTEGER(I4B) :: ii, tsize
 LOGICAL(LGT) :: isok
 
+#ifdef DEBUG_VER
 isok = ALLOCATED(obj%topology)
 IF (.NOT. isok) THEN
   CALL Reallocate(ans, 0)
   RETURN
 END IF
+#endif
 
 ii = SUM(obj%entityCounts)
+
+#ifdef DEBUG_VER
 tsize = SIZE(obj%topology)
 isok = ii .LE. tsize
 
@@ -298,9 +355,10 @@ IF (.NOT. isok) THEN
   CALL Reallocate(ans, 0)
   RETURN
 END IF
+#endif
 
 ans = obj%topology(ii)%nptrs
-END PROCEDURE refelem_getNptrs
+END PROCEDURE refelem_getnptrs
 
 !----------------------------------------------------------------------------
 !

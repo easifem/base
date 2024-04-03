@@ -37,6 +37,142 @@ PUBLIC :: GetFaceConnectivity_Hexahedron
 PUBLIC :: RefCoord_Hexahedron
 PUBLIC :: RefHexahedronCoord
 PUBLIC :: GetFaceElemType_Hexahedron
+PUBLIC :: FacetElements_Hexahedron
+PUBLIC :: ElementOrder_Hexahedron
+PUBLIC :: ElementType_Hexahedron
+PUBLIC :: TotalNodesInElement_Hexahedron
+PUBLIC :: TotalEntities_Hexahedron
+PUBLIC :: FacetTopology_Hexahedron
+PUBLIC :: ElementName_Hexahedron
+PUBLIC :: MaxOrder_Hexahedron
+
+#ifdef MAX_HEXAHEDRON_ORDER
+INTEGER(I4B), PARAMETER :: MaxOrder_Hexahedron = MAX_HEXAHEDRON_ORDER
+#else
+INTEGER(I4B), PARAMETER :: MaxOrder_Hexahedron = 2_I4B
+#endif
+
+!----------------------------------------------------------------------------
+!                                                               ElementName
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2024-03-25
+! summary: Returns element name in character from element number/type
+
+INTERFACE
+  MODULE PURE FUNCTION ElementName_Hexahedron(elemType) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: elemType
+    CHARACTER(:), ALLOCATABLE :: ans
+  END FUNCTION ElementName_Hexahedron
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                             FacetTopology_Hexahedron
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2024-03-23
+! summary:  Returns the topology of tetrahedron
+
+INTERFACE
+  MODULE PURE SUBROUTINE FacetTopology_Hexahedron(elemType, nptrs, ans)
+    INTEGER(I4B), INTENT(IN) :: elemType
+    INTEGER(I4B), INTENT(IN) :: nptrs(:)
+    TYPE(ReferenceTopology_), INTENT(INOUT) :: ans(:)
+  END SUBROUTINE FacetTopology_Hexahedron
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                   TotalEntities_Hexahedron
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2024-03-22
+! summary:  Returns total entities in Hexahedron
+
+INTERFACE
+  MODULE PURE FUNCTION TotalEntities_Hexahedron(elemType) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: elemType
+    INTEGER(I4B) :: ans(4)
+  END FUNCTION TotalEntities_Hexahedron
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                            TotalNodesInElement_Hexahedron
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2024-03-22
+! summary:  Returns total nodes in element
+
+INTERFACE
+  MODULE PURE FUNCTION TotalNodesInElement_Hexahedron(elemType) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: elemType
+    INTEGER(I4B) :: ans
+  END FUNCTION TotalNodesInElement_Hexahedron
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                     ElementType_Hexahedron
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2024-03-22
+! summary:  Returns the type of element from char name
+
+INTERFACE
+  MODULE PURE FUNCTION ElementType_Hexahedron(elemName) RESULT(ans)
+    CHARACTER(*), INTENT(IN) :: elemName
+    INTEGER(I4B) :: ans
+  END FUNCTION ElementType_Hexahedron
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                   ElementOrder_Hexahedron
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2024-03-22
+! summary:  Returns the order of element
+
+INTERFACE
+  MODULE PURE FUNCTION ElementOrder_Hexahedron(elemType) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: elemType
+    INTEGER(I4B) :: ans
+  END FUNCTION ElementOrder_Hexahedron
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                   FacetElements_Hexahedron
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2024-03-21
+! summary:  Get FacetElements
+
+INTERFACE FacetElements_Hexahedron
+  MODULE SUBROUTINE FacetElements_Hexahedron1(refelem, ans)
+    CLASS(ReferenceElement_), INTENT(IN) :: refelem
+    TYPE(ReferenceElement_), INTENT(INOUT) :: ans(:)
+  END SUBROUTINE FacetElements_Hexahedron1
+END INTERFACE FacetElements_Hexahedron
+
+!----------------------------------------------------------------------------
+!                                                  FacetElements_Hexahedron
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2024-03-21
+! summary:  Get FacetElements
+
+INTERFACE FacetElements_Hexahedron
+  MODULE SUBROUTINE FacetElements_Hexahedron2(elemType, nsd, ans)
+    INTEGER(I4B), INTENT(IN) :: elemType
+    INTEGER(I4B), INTENT(IN) :: nsd
+    TYPE(ReferenceElement_), INTENT(INOUT) :: ans(:)
+  END SUBROUTINE FacetElements_Hexahedron2
+END INTERFACE FacetElements_Hexahedron
 
 !----------------------------------------------------------------------------
 !                                                       Initiate@Hexahedron
@@ -47,12 +183,12 @@ PUBLIC :: GetFaceElemType_Hexahedron
 ! summary: This subroutine for constructing the object
 
 INTERFACE Initiate
-  MODULE PURE SUBROUTINE initiate_ref_Hexahedron(obj, nsd, xij, domainName)
+  MODULE PURE SUBROUTINE Initiate_Ref_Hexahedron(obj, nsd, xij, domainName)
     CLASS(ReferenceHexahedron_), INTENT(INOUT) :: obj
     INTEGER(I4B), INTENT(IN) :: nsd
     REAL(DFP), INTENT(IN), OPTIONAL :: xij(:, :)
     CHARACTER(*), OPTIONAL, INTENT(IN) :: domainName
-  END SUBROUTINE initiate_ref_Hexahedron
+  END SUBROUTINE Initiate_Ref_Hexahedron
 END INTERFACE Initiate
 
 !----------------------------------------------------------------------------
@@ -60,12 +196,12 @@ END INTERFACE Initiate
 !----------------------------------------------------------------------------
 
 INTERFACE ReferenceHexahedron
-  MODULE PURE FUNCTION reference_Hexahedron(nsd, xij, domainName) RESULT(obj)
+  MODULE PURE FUNCTION Reference_Hexahedron(nsd, xij, domainName) RESULT(obj)
     INTEGER(I4B), INTENT(IN) :: NSD
     REAL(DFP), INTENT(IN), OPTIONAL :: xij(:, :)
     CHARACTER(*), OPTIONAL, INTENT(IN) :: domainName
     TYPE(ReferenceHexahedron_) :: obj
-  END FUNCTION reference_Hexahedron
+  END FUNCTION Reference_Hexahedron
 END INTERFACE ReferenceHexahedron
 
 !----------------------------------------------------------------------------
@@ -73,13 +209,13 @@ END INTERFACE ReferenceHexahedron
 !----------------------------------------------------------------------------
 
 INTERFACE ReferenceHexahedron_Pointer
-  MODULE FUNCTION reference_Hexahedron_Pointer(nsd, xij, domainName)  &
+  MODULE FUNCTION Reference_Hexahedron_Pointer(nsd, xij, domainName)  &
     & RESULT(obj)
     INTEGER(I4B), INTENT(IN) :: NSD
     REAL(DFP), INTENT(IN), OPTIONAL :: xij(:, :)
     CHARACTER(*), OPTIONAL, INTENT(IN) :: domainName
     CLASS(ReferenceHexahedron_), POINTER :: obj
-  END FUNCTION reference_Hexahedron_Pointer
+  END FUNCTION Reference_Hexahedron_Pointer
 END INTERFACE ReferenceHexahedron_Pointer
 
 !----------------------------------------------------------------------------
@@ -87,13 +223,13 @@ END INTERFACE ReferenceHexahedron_Pointer
 !----------------------------------------------------------------------------
 
 INTERFACE
-  MODULE SUBROUTINE highorderElement_Hexahedron(refelem, order, obj, &
+  MODULE SUBROUTINE HighorderElement_Hexahedron(refelem, order, obj, &
     & ipType)
     CLASS(ReferenceElement_), INTENT(IN) :: refelem
     INTEGER(I4B), INTENT(IN) :: order
     CLASS(ReferenceElement_), INTENT(INOUT) :: obj
     INTEGER(I4B), INTENT(IN) :: ipType
-  END SUBROUTINE highorderElement_Hexahedron
+  END SUBROUTINE HighorderElement_Hexahedron
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -211,7 +347,7 @@ END INTERFACE RefCoord_Hexahedron
 
 INTERFACE
   MODULE PURE SUBROUTINE GetFaceElemType_Hexahedron(faceElemType, opt,  &
-    & tFaceNodes)
+    & tFaceNodes, elemType)
     INTEGER(I4B), INTENT(INOUT) :: faceElemType(:)
     !! Face element type
     INTEGER(I4B), OPTIONAL, INTENT(INOUT) :: tFaceNodes(:)
@@ -220,6 +356,9 @@ INTERFACE
     !! If opt = 1, then edge connectivity for hierarchial approximation
     !! If opt = 2, then edge connectivity for Lagrangian approximation
     !! opt = 1 is default
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: elemType
+    !! This denotes the element type of Hexahedron
+    !! Default value is Hexahedron6
   END SUBROUTINE GetFaceElemType_Hexahedron
 END INTERFACE
 

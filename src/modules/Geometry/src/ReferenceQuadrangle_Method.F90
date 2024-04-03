@@ -43,14 +43,24 @@ PUBLIC :: DEFAULT_OPT_QUADRANGLE_EDGE_CON
 PUBLIC :: ElementOrder_Quadrangle
 PUBLIC :: ElementType_Quadrangle
 PUBLIC :: TotalNodesInElement_Quadrangle
+PUBLIC :: TotalEntities_Quadrangle
+PUBLIC :: FacetTopology_Quadrangle
+PUBLIC :: ElementName_Quadrangle
+PUBLIC :: MaxOrder_Quadrangle
 
-INTEGER(I4B), PUBLIC, PARAMETER :: HelpFaceData_Quadrangle(5, 4) =  &
-& RESHAPE([ &
-& 2, 4, 3, 2, 4, &
-& 1, 3, 4, 3, 1, &
-& 2, 4, 1, 4, 2, &
-& 1, 3, 2, 1, 3 &
-], [5, 4])
+#ifdef MAX_QUADRANGLE_ORDER
+INTEGER(I4B), PARAMETER :: MaxOrder_Quadrangle = MAX_QUADRANGLE_ORDER
+#else
+INTEGER(I4B), PARAMETER :: MaxOrder_Quadrangle = 2_I4B
+#endif
+
+INTEGER(I4B), PUBLIC, PARAMETER :: HelpFaceData_Quadrangle(3, 4) =  &
+  & RESHAPE([ &
+    & 2, 3, 4, &
+    & 3, 4, 1, &
+    & 4, 1, 2, &
+    & 1, 2, 3 &
+  & ], [3, 4])
 
 #ifdef _QUADRANGLE_EDGE_CON_DEFAULT_OPT_2
 INTEGER(I4B), PARAMETER :: DEFAULT_OPT_QUADRANGLE_EDGE_CON = 1_I4B
@@ -60,6 +70,52 @@ INTEGER(I4B), PARAMETER :: DEFAULT_OPT_QUADRANGLE_EDGE_CON = 2_I4B
 !! This means edges are [1,2], [2,3], [3,4], [4,1]
 !! This is default option
 #endif
+
+!----------------------------------------------------------------------------
+!                                                               ElementName
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2024-03-25
+! summary: Returns element name in character from element number/type
+
+INTERFACE
+  MODULE PURE FUNCTION ElementName_Quadrangle(elemType) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: elemType
+    CHARACTER(:), ALLOCATABLE :: ans
+  END FUNCTION ElementName_Quadrangle
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                             FacetTopology@GeometryMethods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2024-03-22
+! summary: Returns the facet topology of the given element type
+
+INTERFACE
+  MODULE PURE SUBROUTINE FacetTopology_Quadrangle(elemType, nptrs, ans)
+    INTEGER(I4B), INTENT(IN) :: elemType
+    INTEGER(I4B), INTENT(IN) :: nptrs(:)
+    TYPE(ReferenceTopology_), INTENT(INOUT) :: ans(:)
+  END SUBROUTINE FacetTopology_Quadrangle
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                    TotalEntities_Quadrangle
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2024-03-22
+! summary:  Returns total entities
+
+INTERFACE
+  MODULE PURE FUNCTION TotalEntities_Quadrangle(elemType) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: elemType
+    INTEGER(I4B) :: ans(4)
+  END FUNCTION TotalEntities_Quadrangle
+END INTERFACE
 
 !----------------------------------------------------------------------------
 !                                             TotalNodesInElement_Quadrangle

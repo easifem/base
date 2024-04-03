@@ -62,6 +62,16 @@ PUBLIC :: ElementOrder_Triangle
 PUBLIC :: ElementType_Triangle
 PUBLIC :: TotalNodesInElement_Triangle
 PUBLIC :: TotalEntities_Triangle
+PUBLIC :: FacetTopology_Triangle
+PUBLIC :: ElementName_Triangle
+PUBLIC :: MaxOrder_Triangle
+PUBLIC :: FaceShapeMetaData_Triangle
+
+#ifdef MAX_TRIANGLE_ORDER
+INTEGER(I4B), PARAMETER :: MaxOrder_Triangle = MAX_TRIANGLE_ORDER
+#else
+INTEGER(I4B), PARAMETER :: MaxOrder_Triangle = 2_I4B
+#endif
 
 #ifdef _TRIANGLE_EDGE_CON_DEFAULT_OPT_2
 INTEGER(I4B), PARAMETER :: DEFAULT_OPT_TRIANGLE_EDGE_CON = 1_I4B
@@ -71,6 +81,37 @@ INTEGER(I4B), PARAMETER :: DEFAULT_OPT_TRIANGLE_EDGE_CON = 2_I4B
 !! This means edges are [1,2], [2,3], [3,1]
 !! This is default option
 #endif
+
+!----------------------------------------------------------------------------
+!                                                               ElementName
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2024-03-25
+! summary: Returns element name in character from element number/type
+
+INTERFACE
+  MODULE PURE FUNCTION ElementName_Triangle(elemType) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: elemType
+    CHARACTER(:), ALLOCATABLE :: ans
+  END FUNCTION ElementName_Triangle
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                             FacetTopology@GeometryMethods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2024-03-22
+! summary: Returns the facet topology of the given element type
+
+INTERFACE
+  MODULE PURE SUBROUTINE FacetTopology_Triangle(elemType, nptrs, ans)
+    INTEGER(I4B), INTENT(IN) :: elemType
+    INTEGER(I4B), INTENT(IN) :: nptrs(:)
+    TYPE(ReferenceTopology_), INTENT(INOUT) :: ans(:)
+  END SUBROUTINE FacetTopology_Triangle
+END INTERFACE
 
 !----------------------------------------------------------------------------
 !                                                    TotalEntities_Triangle
@@ -695,6 +736,24 @@ INTERFACE RefCoord_Triangle
     REAL(DFP) :: ans(2, 3)
   END FUNCTION RefTriangleCoord
 END INTERFACE RefCoord_Triangle
+
+!----------------------------------------------------------------------------
+!                                           FaceShapeMetaData_Triangle
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2024-03-13
+! summary:  Returns meta data for global orientation of face
+
+INTERFACE
+  MODULE SUBROUTINE FaceShapeMetaData_Triangle(face, sorted_face,  &
+    & faceOrient, localFaces)
+    INTEGER(I4B), INTENT(INOUT) :: face(:)
+    INTEGER(I4B), INTENT(INOUT) :: sorted_face(:)
+    INTEGER(I4B), OPTIONAL, INTENT(INOUT) :: faceOrient(:)
+    INTEGER(I4B), OPTIONAL, INTENT(INOUT) :: localFaces(:)
+  END SUBROUTINE FaceShapeMetaData_Triangle
+END INTERFACE
 
 !----------------------------------------------------------------------------
 !
