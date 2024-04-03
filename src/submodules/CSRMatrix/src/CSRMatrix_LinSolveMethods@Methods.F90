@@ -21,7 +21,13 @@
 #define _y2 IPAR(9) + n - 1
 
 SUBMODULE(CSRMatrix_LinSolveMethods) Methods
-USE BaseMethod
+! USE BaseMethod
+USE GlobalData
+USE Display_Method
+USE InputUtility
+USE CSRMatrix_MatVecMethods
+USE CSRMatrix_ConstructorMethods
+USE ReallocateUtility
 IMPLICIT NONE
 CONTAINS
 
@@ -186,7 +192,7 @@ END SUBROUTINE SetPreconditionOption
 SUBROUTINE SetKrylovSubspaceSize(IPAR, m)
   INTEGER(I4B), INTENT(INOUT) :: IPAR(:)
   INTEGER(I4B), OPTIONAL, INTENT(IN) :: m
-  IPAR(5) = INPUT(default=15, option=m)
+  IPAR(5) = Input(default=15, option=m)
 END SUBROUTINE SetKrylovSubspaceSize
 
 !----------------------------------------------------------------------------
@@ -244,13 +250,12 @@ END SUBROUTINE SetConvergenceType
 !
 !----------------------------------------------------------------------------
 
-SUBROUTINE PERFORM_TASK(Amat, y, x, ierr, myName)
+SUBROUTINE PERFORM_TASK(Amat, y, x, ierr)
   ! intent of dummy variables
   CLASS(CSRMatrix_), INTENT(INOUT) :: Amat
   REAL(DFP), INTENT(INOUT) :: y(:)
   REAL(DFP), INTENT(IN) :: x(:)
   INTEGER(I4B), INTENT(IN) :: ierr
-  CHARACTER(*), INTENT(IN) :: myName
 
   SELECT CASE (ierr)
   CASE (1)
@@ -281,10 +286,9 @@ END SUBROUTINE PERFORM_TASK
 !
 !----------------------------------------------------------------------------
 
-SUBROUTINE CHECKERROR(IPAR, FPAR, myName)
+SUBROUTINE CHECKERROR(IPAR, FPAR)
   INTEGER(I4B), INTENT(IN) :: IPAR(:)
   REAL(DFP), INTENT(IN) :: FPAR(:)
-  CHARACTER(*), INTENT(IN) :: myName
   INTEGER(I4B) :: ierr, unitNo
 
   ierr = IPAR(1)
@@ -293,17 +297,17 @@ SUBROUTINE CHECKERROR(IPAR, FPAR, myName)
   CASE (-1)
     unitNo = stdout
     CALL EqualLine(unitNo=unitNo)
-    CALL Display(IPAR(7), "# Number of Matrix-Vector Multiplication = ",&
+    CALL Display(IPAR(7), "Number of Matrix-Vector Multiplication: ",&
       & unitNo=unitNo)
-    CALL Display(FPAR(3), "# Initial residual/error norm = ",&
+    CALL Display(FPAR(3), "Initial residual/error norm: ",&
       & unitNo=unitNo)
-    CALL Display(FPAR(4), "# Target residual/error norm = ",&
+    CALL Display(FPAR(4), "Target residual/error norm: ",&
       & unitNo=unitNo)
-    CALL Display(FPAR(6), "# Current residual/error norm = ",&
+    CALL Display(FPAR(6), "Current residual/error norm: ",&
       & unitNo=unitNo)
-    CALL Display(FPAR(5), "# Current residual norm = ",&
+    CALL Display(FPAR(5), "Current residual norm: ",&
       & unitNo=unitNo)
-    CALL Display(FPAR(7), "# Convergence rate = ",&
+    CALL Display(FPAR(7), "Convergence rate: ",&
       & unitNo=unitNo)
     CALL EqualLine(unitNo=unitNo)
     CALL Display("Termination because iteration number exceeds the limit", &
@@ -338,27 +342,26 @@ END SUBROUTINE CHECKERROR
 !                                                        DisplayConvergence
 !----------------------------------------------------------------------------
 
-SUBROUTINE DisplayConvergence(myName, iter, FPAR)
-  CHARACTER(*), INTENT(IN) :: myName
+SUBROUTINE DisplayConvergence(iter, FPAR)
   INTEGER(I4B), INTENT(IN) :: iter
   REAL(DFP), INTENT(IN) :: FPAR(:)
   INTEGER(I4B) :: unitno
 
   unitno = stdout
 
-  CALL display('Convergence is achieved 🎖', unitNo)
+  CALL Display('Convergence is achieved 🎖', unitNo)
   CALL Blanklines(nol=2, unitno=unitno)
-  CALL Display(iter, "# Number of Matrix-Vector Multiplication = ",&
+  CALL Display(iter, "Number of Matrix-Vector Multiplication: ",&
     & unitno=unitno)
-  CALL Display(fpar(3), "# Initial residual/error norm = ",&
+  CALL Display(fpar(3), "Initial residual/error norm: ",&
     & unitno=unitno)
-  CALL Display(fpar(4), "# Target residual/error norm = ",&
+  CALL Display(fpar(4), "Target residual/error norm: ",&
     & unitno=unitno)
-  CALL Display(fpar(6), "# Current residual/error norm = ",&
+  CALL Display(fpar(6), "Current residual/error norm: ",&
     & unitno=unitno)
-  CALL Display(fpar(5), "# Current residual norm = ",&
+  CALL Display(fpar(5), "Current residual norm: ",&
     & unitno=unitno)
-  CALL Display(fpar(7), "# Convergence rate = ",&
+  CALL Display(fpar(7), "Convergence rate: ",&
     & unitno=unitno)
 END SUBROUTINE DisplayConvergence
 
@@ -370,7 +373,7 @@ END SUBROUTINE DisplayConvergence
 ! date: 16 July 2021
 ! summary: This subroutine allocates the workspace required for the linear solver
 !
-!# Introduction
+! Introduction
 !
 ! This routine allocates the workspace required for the linear solver
 
@@ -394,13 +397,13 @@ SUBROUTINE AllocateWorkSpace(W, IPAR, solverName, n)
   CASE (LIS_TFQMR)
     i = 11 * n
   CASE (LIS_ORTHOMIN, LIS_GMRES)
-    m = INPUT(default=15, option=IPAR(5))
+    m = Input(default=15, option=IPAR(5))
     i = (n + 3) * (m + 2) + (m + 1) * m / 2
   CASE (LIS_FGMRES)
-    m = INPUT(default=15, option=IPAR(5))
+    m = Input(default=15, option=IPAR(5))
     i = 2 * n * (m + 1) + (m + 1) * m / 2 + 3 * m + 2
   CASE (LIS_DQGMRES)
-    m = INPUT(default=15, option=IPAR(5)) + 1
+    m = Input(default=15, option=IPAR(5)) + 1
     i = n + m * (2 * n + 4)
   END SELECT
   IPAR(4) = i
@@ -412,36 +415,44 @@ END SUBROUTINE AllocateWorkSpace
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE CSRMatrix_LinSolve_Initiate
+INTEGER(I4B), PARAMETER :: default_maxiter = -1_I4B, &
+                           default_preconditionOption = NO_PRECONDITION, &
+                           default_convergenceIn = ConvergenceInRes, &
+                           default_convergenceType = RelativeConvergence, &
+                           default_KrylovSubspaceSize = 5, &
+                           default_solverName = LIS_CG
+LOGICAL(LGT), PARAMETER :: default_relativeToRHS = .FALSE.
+REAL(DFP), PARAMETER :: default_atol = 1.0E-10, &
+                        default_rtol = 1.0E-10
 
 IF (.NOT. ALLOCATED(ipar)) ALLOCATE (ipar(13))
 IF (.NOT. ALLOCATED(fpar)) ALLOCATE (fpar(13))
 
-CALL setPreconditionOption( &
-  & ipar=IPAR, &
-  & PRECOND_TYPE=input(option=preconditionOption, &
-  & default=NO_PRECONDITION))
+CALL SetPreconditionOption( &
+  ipar=ipar, &
+  PRECOND_TYPE=Input(option=preconditionOption, &
+                     default=default_preconditionOption))
 
-CALL setConvergenceType(ipar=IPAR, &
-  & convergenceIn=input(option=convergenceIn, default=convergenceInRes), &
-  & convergenceType = input(option= convergenceType, default=relativeConvergence), &
-  & relativeToRHS=input(option=relativeToRHS, default=.FALSE.))
+CALL SetConvergenceType(ipar=ipar, &
+                        convergenceIn=Input(option=convergenceIn, &
+                                            default=default_convergenceIn), &
+                        convergenceType=Input(option=convergenceType, &
+                                           default=default_convergenceType), &
+                        relativeToRHS=Input(option=relativeToRHS, &
+                                            default=default_relativeToRHS))
 
-IPAR(5) = KrylovSubspaceSize
+IPAR(5) = Input(option=KrylovSubspaceSize, default=default_KrylovSubspaceSize)
 
-CALL setMaxIter(IPAR, input(option=maxIter, default=100_I4B))
+CALL SetMaxIter(ipar, Input(option=maxIter, default=default_maxiter))
 
-FPAR = 0.0_DFP
+fpar = 0.0_DFP
 
-IF (PRESENT(atol)) THEN
-  FPAR(2) = atol
-END IF
-
-IF (PRESENT(rtol)) THEN
-  FPAR(1) = rtol
-END IF
+fpar(1) = Input(option=rtol, default=default_rtol)
+fpar(2) = Input(option=atol, default=default_atol)
 
 IF (.NOT. ALLOCATED(W)) THEN
-  CALL AllocateWorkSpace(W, ipar, solverName, n)
+  CALL AllocateWorkSpace(W, ipar, &
+                      Input(default=default_solverName, option=solverName), n)
 END IF
 
 END PROCEDURE CSRMatrix_LinSolve_Initiate
@@ -451,25 +462,9 @@ END PROCEDURE CSRMatrix_LinSolve_Initiate
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE CSRMatrix_GMRES
-CHARACTER(*), PARAMETER :: myName = "CSRMatrix_GMRES"
-INTEGER(I4B) :: n, ii
-! REAL(DFP), ALLOCATABLE :: adiag(:)
-REAL(DFP) :: error0
-REAL(DFP) :: error
-REAL(DFP) :: tol
-REAL(DFP) :: normRes
-INTEGER(I4B) :: ierr
-INTEGER(I4B) :: iter
-
-! IF (preconditionOption .EQ. NO_PRECONDITION) THEN
-!   CALL Display('No precondition = Diagonal precondition !')
-!   CALL obj%GetDiagonal(diag=adiag)
-!   CALL obj%DiagonalScaling(side='BOTH', diag=adiag)
-!   DO ii = 1, SIZE(adiag)
-!     rhs(ii) = rhs(ii) / SQRT(ABS(adiag(ii)))
-!     sol(ii) = sol(ii) * SQRT(ABS(adiag(ii)))
-!   END DO
-! END IF
+INTEGER(I4B) :: n
+! REAL(DFP) :: error0, error, tol, normRes
+! INTEGER(I4B) :: ierr, iter
 
 IPAR(1) = 0
 FPAR(11) = 0.0_DFP
@@ -482,37 +477,127 @@ DO
 
   IF (ipar(1) .GT. 0) THEN
     CALL PERFORM_TASK(obj, y=W(_y1:_y2), x=W(_x1:_x2), &
-      & ierr=ipar(1), myName=myName)
+      & ierr=ipar(1))
 
   ELSE IF (ipar(1) .LT. 0) THEN
-    CALL CHECKERROR(IPAR=ipar, FPAR=fpar, myName=myName)
+    CALL CHECKERROR(IPAR=ipar, FPAR=fpar)
     EXIT
+
   ELSE IF (ipar(1) .EQ. 0) THEN
-    ierr = ipar(1)
-    iter = ipar(7)
-    CALL DisplayConvergence(myName, iter, fpar)
+    ! ierr = ipar(1)
+    ! iter = ipar(7)
+    CALL DisplayConvergence(ipar(7), fpar)
     EXIT
+
   END IF
 END DO
 
 ! Initial residual/error norm
-error0 = fpar(3)
+! error0 = fpar(3)
 ! Target residual/error norm
-tol = fpar(4)
+! tol = fpar(4)
 ! Current residual/error norm
-error = fpar(6)
+! error = fpar(6)
 ! Current residual norm
-normRes = fpar(5)
-
-! ! Applying diagnoal precondition
-! IF (preconditionOption .EQ. NO_PRECONDITION) THEN
-!   DO ii = 1, SIZE(diag)
-!     sol(ii) = sol(ii) / SQRT(ABS(diag(ii)))
-!   END DO
-!   DEALLOCATE (diag)
-! END IF
+! normRes = fpar(5)
 
 END PROCEDURE CSRMatrix_GMRES
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE CSRMatrix_CG
+INTEGER(I4B) :: n
+! REAL(DFP) :: error0, error, tol, normRes
+! INTEGER(I4B) :: ierr, iter
+
+IPAR(1) = 0
+FPAR(11) = 0.0_DFP
+n = SIZE(obj, 1)
+IPAR(7) = 1
+
+DO
+  CALL CG(n, rhs, sol, ipar, fpar, W)
+  ! obj%RES(ipar(7)) = fpar(6)
+
+  IF (ipar(1) .GT. 0) THEN
+    CALL PERFORM_TASK(obj, y=W(_y1:_y2), x=W(_x1:_x2), &
+      & ierr=ipar(1))
+
+  ELSE IF (ipar(1) .LT. 0) THEN
+    CALL CHECKERROR(IPAR=ipar, FPAR=fpar)
+    EXIT
+
+  ELSE IF (ipar(1) .EQ. 0) THEN
+    ! ierr = ipar(1)
+    ! iter = ipar(7)
+    CALL DisplayConvergence(ipar(7), fpar)
+    EXIT
+
+  END IF
+END DO
+
+! Initial residual/error norm
+! error0 = fpar(3)
+! Target residual/error norm
+! tol = fpar(4)
+! Current residual/error norm
+! error = fpar(6)
+! Current residual norm
+! normRes = fpar(5)
+
+END PROCEDURE CSRMatrix_CG
+
+!----------------------------------------------------------------------------
+!                                                                 BiCGStab
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE CSRMatrix_BiCGStab
+INTEGER(I4B) :: n
+! REAL(DFP) :: error0, error, tol, normRes
+! INTEGER(I4B) :: ierr, iter
+
+IPAR(1) = 0
+FPAR(11) = 0.0_DFP
+n = SIZE(obj, 1)
+IPAR(7) = 1
+
+DO
+  CALL BCGSTAB(n, rhs, sol, ipar, fpar, W)
+  ! obj%RES(ipar(7)) = fpar(6)
+
+  IF (ipar(1) .GT. 0) THEN
+    CALL PERFORM_TASK(obj, y=W(_y1:_y2), x=W(_x1:_x2), &
+      & ierr=ipar(1))
+
+  ELSE IF (ipar(1) .LT. 0) THEN
+    CALL CHECKERROR(IPAR=ipar, FPAR=fpar)
+    EXIT
+
+  ELSE IF (ipar(1) .EQ. 0) THEN
+    ! ierr = ipar(1)
+    ! iter = ipar(7)
+    CALL DisplayConvergence(ipar(7), fpar)
+    EXIT
+
+  END IF
+END DO
+
+! Initial residual/error norm
+! error0 = fpar(3)
+! Target residual/error norm
+! tol = fpar(4)
+! Current residual/error norm
+! error = fpar(6)
+! Current residual norm
+! normRes = fpar(5)
+
+END PROCEDURE CSRMatrix_BiCGStab
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
 
 END SUBMODULE Methods
 
