@@ -188,10 +188,6 @@ INTERFACE SetColumn
   END SUBROUTINE csrMat_setColumn6
 END INTERFACE SetColumn
 
-INTERFACE SetColumn
-  MODULE PROCEDURE csrMat_setColumn6
-END INTERFACE SetColumn
-
 !----------------------------------------------------------------------------
 !                                                       setColumn@setMethod
 !----------------------------------------------------------------------------
