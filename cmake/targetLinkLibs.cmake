@@ -15,31 +15,3 @@
 # You should have received a copy of the GNU General Public License along with
 # this program.  If not, see <https: //www.gnu.org/licenses/>
 #
-
-function(FIND_EASIFEM_DEPENDENCY EXT_PKG_LIST)
-  foreach(p ${EXT_PKG_LIST})
-    find_package(${p} REQUIRED)
-    if(${p}_FOUND)
-      message(STATUS "FOUND ${p}")
-    else()
-      message(ERROR "NOT FOUND ${p}")
-    endif()
-  endforeach()
-endfunction(FIND_EASIFEM_DEPENDENCY)
-
-function(LINK_EASIFEM_DEPENDENCY EXT_PKG_LIST PROJECT_NAME)
-  foreach(p ${EXT_PKG_LIST})
-    target_link_libraries(${PROJECT_NAME} PUBLIC ${p}::${p})
-  endforeach()
-endfunction(LINK_EASIFEM_DEPENDENCY)
-
-if(USE_LAPACK95)
-  list(APPEND EXT_PKGS LAPACK95)
-  list(APPEND TARGET_COMPILE_DEF "-DUSE_LAPACK95")
-endif()
-
-list(APPEND EXT_PKGS Sparsekit)
-list(APPEND EXT_PKGS toml-f)
-
-find_easifem_dependency("${EXT_PKGS}")
-link_easifem_dependency("${EXT_PKGS}" "${PROJECT_NAME}")

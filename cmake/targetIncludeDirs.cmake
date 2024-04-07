@@ -17,8 +17,5 @@
 #
 
 target_include_directories(
-  ${PROJECT_NAME}
-  PUBLIC $<BUILD_INTERFACE:${CMAKE_Fortran_MODULE_DIRECTORY}>
-         $<INSTALL_INTERFACE:${INSTALL_INCLUDEDIR}>
-         # "${EASIFEM_EXTPKGS}/include"
-)
+  ${PROJECT_NAME} PUBLIC $<BUILD_INTERFACE:${CMAKE_Fortran_MODULE_DIRECTORY}>
+                         $<INSTALL_INTERFACE:${INSTALL_INCLUDEDIR}>)
