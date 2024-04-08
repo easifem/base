@@ -255,23 +255,50 @@ if(COLOR_DISP)
   list(APPEND TARGET_COMPILE_DEF "-DCOLOR_DISP")
 endif()
 
+# Installation
+
+install(
+  DIRECTORY ${CMAKE_Fortran_MODULE_DIRECTORY}
+  DESTINATION "./"
+  COMPONENT "${PROJECT_NAME}")
+
+install(
+  EXPORT ${TARGETS_EXPORT_NAME}
+  FILE "${TARGETS_EXPORT_NAME}.cmake"
+  NAMESPACE ${namespace}::
+  DESTINATION ${INSTALL_CMAKEDIR}
+  COMPONENT "${PROJECT_NAME}")
+
+include(CMakePackageConfigHelpers)
+
+write_basic_package_version_file(
+  "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake"
+  VERSION "${PROJECT_VERSION}"
+  COMPATIBILITY AnyNewerVersion)
+
+configure_package_config_file(
+  ${CMAKE_CURRENT_SOURCE_DIR}/cmake/Config.cmake.in
+  ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake
+  INSTALL_DESTINATION ${INSTALL_CMAKEDIR}
+  PATH_VARS INSTALL_INCLUDEDIR)
+
+install(
+  FILES "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake"
+        "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake"
+  DESTINATION ${INSTALL_CMAKEDIR}
+  COMPONENT "${PROJECT_NAME}-dev")
+
+# Find external dependency of the project
+
 # FIXME:
 if(NOT CMAKE_PREFIX_PATH)
   list(APPEND CMAKE_PREFIX_PATH "$ENV{EASIFEM_EXTPKGS}")
 endif()
 
-# Add source files
-include(src/modules/CMakeLists.txt)
-include(src/submodules/CMakeLists.txt)
-
 include(${PROJECT_SOURCE_DIR}/cmake/addOpenBLAS.cmake)
-
 include(${PROJECT_SOURCE_DIR}/cmake/addLapack95.cmake)
-
 include(${PROJECT_SOURCE_DIR}/cmake/addSparsekit.cmake)
-
 include(${PROJECT_SOURCE_DIR}/cmake/addToml.cmake)
-
 include(${PROJECT_SOURCE_DIR}/cmake/addOpenMP.cmake)
 include(${PROJECT_SOURCE_DIR}/cmake/addSuperLU.cmake)
 include(${PROJECT_SOURCE_DIR}/cmake/addLIS.cmake)
@@ -284,9 +311,20 @@ include(${PROJECT_SOURCE_DIR}/cmake/addFFTW.cmake)
 include(${PROJECT_SOURCE_DIR}/cmake/addGTKFortran.cmake)
 include(${PROJECT_SOURCE_DIR}/cmake/addLua.cmake)
 
-# This should be in the end
+# Add source files
+include(src/modules/CMakeLists.txt)
+include(src/submodules/CMakeLists.txt)
+
+# this should be in the end.
 target_compile_definitions(${PROJECT_NAME} PUBLIC ${TARGET_COMPILE_DEF})
 message(STATUS "[INFO] :: Compiler definition : ${TARGET_COMPILE_DEF}")
 
-include(${PROJECT_SOURCE_DIR}/cmake/install.cmake)
+install(
+  TARGETS ${PROJECT_NAME} ${C_PROJECTS}
+  EXPORT ${TARGETS_EXPORT_NAME}
+  COMPONENT "${PROJECT_NAME}"
+  ARCHIVE DESTINATION ${INSTALL_LIBDIR}
+  RUNTIME DESTINATION ${INSTALL_BINDIR}
+  LIBRARY DESTINATION ${INSTALL_LIBDIR})
+
 include(${PROJECT_SOURCE_DIR}/cmake/packaging.cmake)
