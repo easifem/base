@@ -187,6 +187,8 @@ PUBLIC :: iface_3DFunction
 PUBLIC :: iface_ScalarFunction
 PUBLIC :: iface_VectorFunction
 PUBLIC :: iface_MatrixFunction
+PUBLIC :: Range_
+PUBLIC :: Interval1D_
 
 !----------------------------------------------------------------------------
 !                                                                 Math_
@@ -1593,6 +1595,38 @@ TYPE :: MultiIndices_
   INTEGER(I4B) :: n
   !! order
 END TYPE MultiIndices_
+
+!----------------------------------------------------------------------------
+!                                                                   Range_
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2024-04-09
+! summary:  Range denotes the triplet index
+
+TYPE :: Range_
+  INTEGER(I4B) :: is = 0_I4B
+  !! istart
+  INTEGER(I4B) :: ie = 0_I4B
+  !! iend
+  INTEGER(I4B) :: ic = 1_I4B
+  !! increment
+END TYPE Range_
+
+!----------------------------------------------------------------------------
+!                                                                Interval1D_
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2024-04-09
+! summary:  Interval1D_ denotes the 1d interval
+
+TYPE :: Interval1D_
+  REAL(DFP) :: lower
+!! lower limit
+  REAL(DFP) :: upper
+!! upper limit
+END TYPE Interval1D_
 
 !----------------------------------------------------------------------------
 !                                                         SpaceTimeFunction
