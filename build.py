@@ -47,6 +47,6 @@ else:
     )
     # build_dir = os.environ["HOME"] + "/temp/easifem-base/build"
     os.makedirs(build_dir, exist_ok=True)
-    os.system(f"cmake -S ./ -B {build_dir} {cmake_def}")
+    os.system(f"cmake {cmake_def} -S ./ -B {build_dir}")
     os.system(f"cmake --build {build_dir}")
     print("Build DONE!!")

@@ -16,7 +16,7 @@
 # this program.  If not, see <https: //www.gnu.org/licenses/>
 #
 
-cmake_minimum_required(VERSION 3.20.0 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.28.0 FATAL_ERROR)
 
 set(PROJECT_NAME "easifemBase")
 project(${PROJECT_NAME})
