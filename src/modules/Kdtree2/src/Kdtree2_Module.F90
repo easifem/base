@@ -410,42 +410,6 @@ END FUNCTION select_on_coordinate_value
 !
 !----------------------------------------------------------------------------
 
-! Move elts of ind around between l and u, so that the kth
-! element
-! is >= those below, <= those above, in the coordinate c.
-! .. Scalar Arguments ..
-
-SUBROUTINE select_on_coordinate(v, ind, c, k, li, ui)
-  INTEGER, INTENT(In) :: c, k, li, ui
-  INTEGER :: i, l, m, s, t, u
-  REAL(kdkind) :: v(:, :)
-  INTEGER :: ind(:)
-
-  l = li
-  u = ui
-  DO WHILE (l < u)
-    t = ind(l)
-    m = l
-    DO i = l + 1, u
-      IF (v(c, ind(i)) < v(c, t)) THEN
-        m = m + 1
-        s = ind(m)
-        ind(m) = ind(i)
-        ind(i) = s
-      END IF
-    END DO
-    s = ind(l)
-    ind(l) = ind(m)
-    ind(m) = s
-    IF (m <= k) l = m + 1
-    IF (m >= k) u = m - 1
-  END DO
-END SUBROUTINE select_on_coordinate
-
-!----------------------------------------------------------------------------
-!
-!----------------------------------------------------------------------------
-
 SUBROUTINE spread_in_coordinate(tp, c, l, u, interv)
   ! the spread in coordinate 'c', between l and u.
   !
@@ -1018,41 +982,6 @@ END FUNCTION dis2_from_bnd
 !
 !----------------------------------------------------------------------------
 
-LOGICAL FUNCTION box_in_search_range(node, srch) RESULT(res)
-  !
-  ! Return the distance from 'qv' to the CLOSEST corner of node's
-  ! bounding box
-  ! for all coordinates outside the box.   Coordinates inside the box
-  ! contribute nothing to the distance.
-  !
-  TYPE(tree_node), POINTER :: node
-  TYPE(tree_search_record), POINTER :: srch
-
-  INTEGER :: dimen, i
-  REAL(kdkind) :: dis, ballsize
-  REAL(kdkind) :: l, u
-
-  dimen = srch%dimen
-  ballsize = srch%ballsize
-  dis = 0.0
-  res = .TRUE.
-  DO i = 1, dimen
-    l = node%box(i)%lower
-    u = node%box(i)%upper
-    dis = dis + (dis2_from_bnd(srch%qv(i), l, u))
-    IF (dis > ballsize) THEN
-      res = .FALSE.
-      RETURN
-    END IF
-  END DO
-  res = .TRUE.
-  RETURN
-END FUNCTION box_in_search_range
-
-!----------------------------------------------------------------------------
-!
-!----------------------------------------------------------------------------
-
 SUBROUTINE process_terminal_node(node)
   !
   ! Look for actual near neighbors in 'node', and update
@@ -1356,69 +1285,6 @@ SUBROUTINE kdtree2_sort_results(nfound, results)
 
   RETURN
 END SUBROUTINE kdtree2_sort_results
-
-!----------------------------------------------------------------------------
-!
-!----------------------------------------------------------------------------
-
-SUBROUTINE heapsort(a, ind, n)
-  !
-  ! Sort a(1:n) in ascending order, permuting ind(1:n) similarly.
-  !
-  ! If ind(k) = k upon input, then it will give a sort index upon output.
-  !
-  INTEGER, INTENT(in) :: n
-  REAL(kdkind), INTENT(inout) :: a(:)
-  INTEGER, INTENT(inout) :: ind(:)
-
-  !
-  !
-  REAL(kdkind) :: VALUE ! temporary for a value from a()
-  INTEGER :: ivalue ! temporary for a value from ind()
-
-  INTEGER :: i, j
-  INTEGER :: ileft, iright
-
-  ileft = n / 2 + 1
-  iright = n
-
-  !    do i=1,n
-  !       ind(i)=i
-  ! Generate initial idum array
-  !    end do
-
-  IF (n .EQ. 1) RETURN
-
-  DO
-    IF (ileft > 1) THEN
-      ileft = ileft - 1
-      VALUE = a(ileft); ivalue = ind(ileft)
-    ELSE
-      VALUE = a(iright); ivalue = ind(iright)
-      a(iright) = a(1); ind(iright) = ind(1)
-      iright = iright - 1
-      IF (iright == 1) THEN
-        a(1) = VALUE; ind(1) = ivalue
-        RETURN
-      END IF
-    END IF
-    i = ileft
-    j = 2 * ileft
-    DO WHILE (j <= iright)
-      IF (j < iright) THEN
-        IF (a(j) < a(j + 1)) j = j + 1
-      END IF
-      IF (VALUE < a(j)) THEN
-        a(i) = a(j); ind(i) = ind(j)
-        i = j
-        j = j + j
-      ELSE
-        j = iright + 1
-      END IF
-    END DO
-    a(i) = VALUE; ind(i) = ivalue
-  END DO
-END SUBROUTINE heapsort
 
 !----------------------------------------------------------------------------
 !
