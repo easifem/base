@@ -1,202 +1,205 @@
-# This program is a part of EASIFEM library
-# Copyright (C) 2020-2021  Vikas Sharma, Ph.D
+# This program is a part of EASIFEM library Copyright (C) 2020-2021  Vikas
+# Sharma, Ph.D
 #
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
+# This program is free software: you can redistribute it and/or modify it under
+# the terms of the GNU General Public License as published by the Free Software
+# Foundation, either version 3 of the License, or (at your option) any later
+# version.
 #
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
+# This program is distributed in the hope that it will be useful, but WITHOUT
+# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+# FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+# details.
 #
-# You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <https: //www.gnu.org/licenses/>
+# You should have received a copy of the GNU General Public License along with
+# this program.  If not, see <https: //www.gnu.org/licenses/>
 #
 
-#FFTW
-INCLUDE(${CMAKE_CURRENT_LIST_DIR}/FFTW/CMakeLists.txt)
+# FFTW
+include(${CMAKE_CURRENT_LIST_DIR}/FFTW/CMakeLists.txt)
 
-#PENF
-INCLUDE(${CMAKE_CURRENT_LIST_DIR}/PENF/CMakeLists.txt)
+# PENF
+include(${CMAKE_CURRENT_LIST_DIR}/PENF/CMakeLists.txt)
 
-#BeFoR64
-INCLUDE(${CMAKE_CURRENT_LIST_DIR}/BeFoR64/CMakeLists.txt)
+# BeFoR64
+include(${CMAKE_CURRENT_LIST_DIR}/BeFoR64/CMakeLists.txt)
 
-#String
-INCLUDE(${CMAKE_CURRENT_LIST_DIR}/String/CMakeLists.txt)
+# String
+include(${CMAKE_CURRENT_LIST_DIR}/String/CMakeLists.txt)
 
-#FACE
-INCLUDE(${CMAKE_CURRENT_LIST_DIR}/FACE/CMakeLists.txt)
+# FACE
+include(${CMAKE_CURRENT_LIST_DIR}/FACE/CMakeLists.txt)
 
-#FPL
-INCLUDE(${CMAKE_CURRENT_LIST_DIR}/FPL/CMakeLists.txt)
+# FPL
+include(${CMAKE_CURRENT_LIST_DIR}/FPL/CMakeLists.txt)
 
-#System
-INCLUDE(${CMAKE_CURRENT_LIST_DIR}/System/CMakeLists.txt)
+# System
+include(${CMAKE_CURRENT_LIST_DIR}/System/CMakeLists.txt)
 
-#BLAS95
-INCLUDE(${CMAKE_CURRENT_LIST_DIR}/BLAS95/CMakeLists.txt)
+# BLAS95
+include(${CMAKE_CURRENT_LIST_DIR}/BLAS95/CMakeLists.txt)
 
-#Test
-INCLUDE(${CMAKE_CURRENT_LIST_DIR}/Test/CMakeLists.txt)
+# Test
+include(${CMAKE_CURRENT_LIST_DIR}/Test/CMakeLists.txt)
 
-#GlobalData
-INCLUDE(${CMAKE_CURRENT_LIST_DIR}/GlobalData/CMakeLists.txt)
+# GlobalData
+include(${CMAKE_CURRENT_LIST_DIR}/GlobalData/CMakeLists.txt)
 
-#Display
-INCLUDE(${CMAKE_CURRENT_LIST_DIR}/Display/CMakeLists.txt)
+# Display
+include(${CMAKE_CURRENT_LIST_DIR}/Display/CMakeLists.txt)
 
-#ARPACK
-INCLUDE(${CMAKE_CURRENT_LIST_DIR}/ARPACK/CMakeLists.txt)
+# ARPACK
+include(${CMAKE_CURRENT_LIST_DIR}/ARPACK/CMakeLists.txt)
 
-#Hashing
-INCLUDE(${CMAKE_CURRENT_LIST_DIR}/Hashing/CMakeLists.txt)
+# Hashing
+include(${CMAKE_CURRENT_LIST_DIR}/Hashing/CMakeLists.txt)
 
-#Gnuplot
-INCLUDE(${CMAKE_CURRENT_LIST_DIR}/Gnuplot/CMakeLists.txt)
+# Gnuplot
+include(${CMAKE_CURRENT_LIST_DIR}/Gnuplot/CMakeLists.txt)
 
-#CInterface
-INCLUDE(${CMAKE_CURRENT_LIST_DIR}/CInterface/CMakeLists.txt)
+# CInterface
+include(${CMAKE_CURRENT_LIST_DIR}/CInterface/CMakeLists.txt)
 
-#LuaInterface
-INCLUDE(${CMAKE_CURRENT_LIST_DIR}/LuaInterface/CMakeLists.txt)
+# LuaInterface
+include(${CMAKE_CURRENT_LIST_DIR}/LuaInterface/CMakeLists.txt)
 
-#SuperLUInterface
-INCLUDE(${CMAKE_CURRENT_LIST_DIR}/SuperLUInterface/CMakeLists.txt)
+# SuperLUInterface
+include(${CMAKE_CURRENT_LIST_DIR}/SuperLUInterface/CMakeLists.txt)
 
-#LISInterface
-INCLUDE(${CMAKE_CURRENT_LIST_DIR}/LISInterface/CMakeLists.txt)
+# LISInterface
+include(${CMAKE_CURRENT_LIST_DIR}/LISInterface/CMakeLists.txt)
 
-#MetisInterface
-INCLUDE(${CMAKE_CURRENT_LIST_DIR}/MetisInterface/CMakeLists.txt)
+# MetisInterface
+include(${CMAKE_CURRENT_LIST_DIR}/MetisInterface/CMakeLists.txt)
 
-#MdEncode
-INCLUDE(${CMAKE_CURRENT_LIST_DIR}/MdEncode/CMakeLists.txt)
+# MdEncode
+include(${CMAKE_CURRENT_LIST_DIR}/MdEncode/CMakeLists.txt)
 
-#ErrorHandling
-INCLUDE(${CMAKE_CURRENT_LIST_DIR}/ErrorHandling/CMakeLists.txt)
+# ErrorHandling
+include(${CMAKE_CURRENT_LIST_DIR}/ErrorHandling/CMakeLists.txt)
 
-#Utility
-INCLUDE(${CMAKE_CURRENT_LIST_DIR}/Utility/CMakeLists.txt)
+# Utility
+include(${CMAKE_CURRENT_LIST_DIR}/Utility/CMakeLists.txt)
 
-#BaseInterpolation
-INCLUDE(${CMAKE_CURRENT_LIST_DIR}/BaseInterpolation/CMakeLists.txt)
+# Kdtree2
+include(${CMAKE_CURRENT_LIST_DIR}/Kdtree2/CMakeLists.txt)
 
-#BaseContinuity
-INCLUDE(${CMAKE_CURRENT_LIST_DIR}/BaseContinuity/CMakeLists.txt)
+# BaseInterpolation
+include(${CMAKE_CURRENT_LIST_DIR}/BaseInterpolation/CMakeLists.txt)
 
-#Polynomial
-INCLUDE(${CMAKE_CURRENT_LIST_DIR}/Polynomial/CMakeLists.txt)
+# BaseContinuity
+include(${CMAKE_CURRENT_LIST_DIR}/BaseContinuity/CMakeLists.txt)
 
-#BaseType
-INCLUDE(${CMAKE_CURRENT_LIST_DIR}/BaseType/CMakeLists.txt)
+# Polynomial
+include(${CMAKE_CURRENT_LIST_DIR}/Polynomial/CMakeLists.txt)
 
-#MultiIndices
-INCLUDE(${CMAKE_CURRENT_LIST_DIR}/MultiIndices/CMakeLists.txt)
+# BaseType
+include(${CMAKE_CURRENT_LIST_DIR}/BaseType/CMakeLists.txt)
 
-#OpenMP
-INCLUDE(${CMAKE_CURRENT_LIST_DIR}/OpenMP/CMakeLists.txt)
+# MultiIndices
+include(${CMAKE_CURRENT_LIST_DIR}/MultiIndices/CMakeLists.txt)
 
-#Random
-INCLUDE(${CMAKE_CURRENT_LIST_DIR}/Random/CMakeLists.txt)
+# OpenMP
+include(${CMAKE_CURRENT_LIST_DIR}/OpenMP/CMakeLists.txt)
 
-#BoundingBox
-INCLUDE(${CMAKE_CURRENT_LIST_DIR}/BoundingBox/CMakeLists.txt)
+# Random
+include(${CMAKE_CURRENT_LIST_DIR}/Random/CMakeLists.txt)
 
-#IntVector
-INCLUDE(${CMAKE_CURRENT_LIST_DIR}/IntVector/CMakeLists.txt)
+# BoundingBox
+include(${CMAKE_CURRENT_LIST_DIR}/BoundingBox/CMakeLists.txt)
 
-#IndexValue
-INCLUDE(${CMAKE_CURRENT_LIST_DIR}/IndexValue/CMakeLists.txt)
+# IntVector
+include(${CMAKE_CURRENT_LIST_DIR}/IntVector/CMakeLists.txt)
 
-#IndexValue
-INCLUDE(${CMAKE_CURRENT_LIST_DIR}/IterationData/CMakeLists.txt)
+# IndexValue
+include(${CMAKE_CURRENT_LIST_DIR}/IndexValue/CMakeLists.txt)
 
-#KeyValue
-INCLUDE(${CMAKE_CURRENT_LIST_DIR}/KeyValue/CMakeLists.txt)
+# IndexValue
+include(${CMAKE_CURRENT_LIST_DIR}/IterationData/CMakeLists.txt)
 
-#Vector3D_
-INCLUDE(${CMAKE_CURRENT_LIST_DIR}/Vector3D/CMakeLists.txt)
+# KeyValue
+include(${CMAKE_CURRENT_LIST_DIR}/KeyValue/CMakeLists.txt)
 
-#Lapack
-INCLUDE(${CMAKE_CURRENT_LIST_DIR}/Lapack/CMakeLists.txt)
+# Vector3D_
+include(${CMAKE_CURRENT_LIST_DIR}/Vector3D/CMakeLists.txt)
 
-#RealVector
-INCLUDE(${CMAKE_CURRENT_LIST_DIR}/RealVector/CMakeLists.txt)
+# Lapack
+include(${CMAKE_CURRENT_LIST_DIR}/Lapack/CMakeLists.txt)
 
-#DOF
-INCLUDE(${CMAKE_CURRENT_LIST_DIR}/DOF/CMakeLists.txt)
+# RealVector
+include(${CMAKE_CURRENT_LIST_DIR}/RealVector/CMakeLists.txt)
 
-#Geometry
-INCLUDE(${CMAKE_CURRENT_LIST_DIR}/Geometry/CMakeLists.txt)
+# DOF
+include(${CMAKE_CURRENT_LIST_DIR}/DOF/CMakeLists.txt)
 
-#QuadraturePoint
-INCLUDE(${CMAKE_CURRENT_LIST_DIR}/QuadraturePoint/CMakeLists.txt)
+# Geometry
+include(${CMAKE_CURRENT_LIST_DIR}/Geometry/CMakeLists.txt)
 
-#FEVariable
-INCLUDE(${CMAKE_CURRENT_LIST_DIR}/FEVariable/CMakeLists.txt)
+# QuadraturePoint
+include(${CMAKE_CURRENT_LIST_DIR}/QuadraturePoint/CMakeLists.txt)
 
-#ElemshapeData
-INCLUDE(${CMAKE_CURRENT_LIST_DIR}/ElemshapeData/CMakeLists.txt)
+# FEVariable
+include(${CMAKE_CURRENT_LIST_DIR}/FEVariable/CMakeLists.txt)
 
-#RealMatrix
-INCLUDE(${CMAKE_CURRENT_LIST_DIR}/RealMatrix/CMakeLists.txt)
+# ElemshapeData
+include(${CMAKE_CURRENT_LIST_DIR}/ElemshapeData/CMakeLists.txt)
 
-#MassMatrix
-INCLUDE(${CMAKE_CURRENT_LIST_DIR}/MassMatrix/CMakeLists.txt)
+# RealMatrix
+include(${CMAKE_CURRENT_LIST_DIR}/RealMatrix/CMakeLists.txt)
 
-#STMassMatrix
-INCLUDE(${CMAKE_CURRENT_LIST_DIR}/STMassMatrix/CMakeLists.txt)
+# MassMatrix
+include(${CMAKE_CURRENT_LIST_DIR}/MassMatrix/CMakeLists.txt)
 
-#DiffusionMatrix
-INCLUDE(${CMAKE_CURRENT_LIST_DIR}/DiffusionMatrix/CMakeLists.txt)
+# STMassMatrix
+include(${CMAKE_CURRENT_LIST_DIR}/STMassMatrix/CMakeLists.txt)
 
-#STDiffusionMatrix
-INCLUDE(${CMAKE_CURRENT_LIST_DIR}/STDiffusionMatrix/CMakeLists.txt)
+# DiffusionMatrix
+include(${CMAKE_CURRENT_LIST_DIR}/DiffusionMatrix/CMakeLists.txt)
 
-#ConvectiveMatrix
-INCLUDE(${CMAKE_CURRENT_LIST_DIR}/ConvectiveMatrix/CMakeLists.txt)
+# STDiffusionMatrix
+include(${CMAKE_CURRENT_LIST_DIR}/STDiffusionMatrix/CMakeLists.txt)
 
-#STConvectiveMatrix
-INCLUDE(${CMAKE_CURRENT_LIST_DIR}/STConvectiveMatrix/CMakeLists.txt)
+# ConvectiveMatrix
+include(${CMAKE_CURRENT_LIST_DIR}/ConvectiveMatrix/CMakeLists.txt)
 
-#StiffnessMatrix
-INCLUDE(${CMAKE_CURRENT_LIST_DIR}/StiffnessMatrix/CMakeLists.txt)
+# STConvectiveMatrix
+include(${CMAKE_CURRENT_LIST_DIR}/STConvectiveMatrix/CMakeLists.txt)
 
-#ElasticNitscheMatrix
-INCLUDE(${CMAKE_CURRENT_LIST_DIR}/ElasticNitscheMatrix/CMakeLists.txt)
+# StiffnessMatrix
+include(${CMAKE_CURRENT_LIST_DIR}/StiffnessMatrix/CMakeLists.txt)
 
-#FacetMatrix
-INCLUDE(${CMAKE_CURRENT_LIST_DIR}/FacetMatrix/CMakeLists.txt)
+# ElasticNitscheMatrix
+include(${CMAKE_CURRENT_LIST_DIR}/ElasticNitscheMatrix/CMakeLists.txt)
 
-#FEMatrix
-INCLUDE(${CMAKE_CURRENT_LIST_DIR}/FEMatrix/CMakeLists.txt)
+# FacetMatrix
+include(${CMAKE_CURRENT_LIST_DIR}/FacetMatrix/CMakeLists.txt)
 
-#ForceVector
-INCLUDE(${CMAKE_CURRENT_LIST_DIR}/ForceVector/CMakeLists.txt)
+# FEMatrix
+include(${CMAKE_CURRENT_LIST_DIR}/FEMatrix/CMakeLists.txt)
 
-#STForceVector
-INCLUDE(${CMAKE_CURRENT_LIST_DIR}/STForceVector/CMakeLists.txt)
+# ForceVector
+include(${CMAKE_CURRENT_LIST_DIR}/ForceVector/CMakeLists.txt)
 
-#FEVector
-INCLUDE(${CMAKE_CURRENT_LIST_DIR}/FEVector/CMakeLists.txt)
+# STForceVector
+include(${CMAKE_CURRENT_LIST_DIR}/STForceVector/CMakeLists.txt)
 
-#VoigtRank2Tensor
-INCLUDE(${CMAKE_CURRENT_LIST_DIR}/VoigtRank2Tensor/CMakeLists.txt)
+# FEVector
+include(${CMAKE_CURRENT_LIST_DIR}/FEVector/CMakeLists.txt)
 
-#Rank2Tensor
-INCLUDE(${CMAKE_CURRENT_LIST_DIR}/Rank2Tensor/CMakeLists.txt)
+# VoigtRank2Tensor
+include(${CMAKE_CURRENT_LIST_DIR}/VoigtRank2Tensor/CMakeLists.txt)
 
-#CSRSparsity
-INCLUDE(${CMAKE_CURRENT_LIST_DIR}/CSRSparsity/CMakeLists.txt)
+# Rank2Tensor
+include(${CMAKE_CURRENT_LIST_DIR}/Rank2Tensor/CMakeLists.txt)
 
-#CSRMatrix
-INCLUDE(${CMAKE_CURRENT_LIST_DIR}/CSRMatrix/CMakeLists.txt)
+# CSRSparsity
+include(${CMAKE_CURRENT_LIST_DIR}/CSRSparsity/CMakeLists.txt)
 
-#BaseMethod
-INCLUDE(${CMAKE_CURRENT_LIST_DIR}/BaseMethod/CMakeLists.txt)
+# CSRMatrix
+include(${CMAKE_CURRENT_LIST_DIR}/CSRMatrix/CMakeLists.txt)
 
-#easifemBase
-INCLUDE(${CMAKE_CURRENT_LIST_DIR}/easifemBase/CMakeLists.txt)
+# BaseMethod
+include(${CMAKE_CURRENT_LIST_DIR}/BaseMethod/CMakeLists.txt)
+
+# easifemBase
+include(${CMAKE_CURRENT_LIST_DIR}/easifemBase/CMakeLists.txt)
