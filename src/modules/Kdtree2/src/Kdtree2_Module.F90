@@ -31,6 +31,7 @@
 MODULE Kdtree2_Module
 USE GlobalData, ONLY: kdkind => DFP, I4B, LGT
 USE Kd2PQueue_Module
+USE InputUtility
 IMPLICIT NONE
 PRIVATE
 
@@ -187,12 +188,10 @@ FUNCTION kdtree2_create(input_data, dim, sort, rearrange) RESULT(mr)
   mr%the_data => input_data
   ! pointer assignment
 
-  IF (PRESENT(dim)) THEN
-    mr%dimen = dim
-  ELSE
-    mr%dimen = SIZE(input_data, 1)
-  END IF
+  mr%dimen = Input(default=SIZE(input_data, 1), option=dim)
   mr%n = SIZE(input_data, 2)
+
+#ifdef DEBUG_VER
 
   IF (mr%dimen > mr%n) THEN
     !  unlikely to be correct
@@ -205,29 +204,22 @@ FUNCTION kdtree2_create(input_data, dim, sort, rearrange) RESULT(mr)
     STOP
   END IF
 
+#endif
+
   CALL build_tree(mr)
 
-  IF (PRESENT(sort)) THEN
-    mr%sort = sort
-  ELSE
-    mr%sort = .FALSE.
-  END IF
+  mr%sort = Input(default=.FALSE., option=sort)
+  mr%rearrange = Input(default=.TRUE., option=rearrange)
 
-  IF (PRESENT(rearrange)) THEN
-    mr%rearrange = rearrange
-  ELSE
-    mr%rearrange = .TRUE.
-  END IF
-
-  IF (mr%rearrange) THEN
-    ALLOCATE (mr%rearranged_data(mr%dimen, mr%n))
-    DO i = 1, mr%n
-      mr%rearranged_data(:, i) = mr%the_data(:, &
-                                             mr%ind(i))
-    END DO
-  ELSE
+  IF (.NOT. mr%rearrange) THEN
     NULLIFY (mr%rearranged_data)
+    RETURN
   END IF
+
+  ALLOCATE (mr%rearranged_data(mr%dimen, mr%n))
+  DO i = 1, mr%n
+    mr%rearranged_data(:, i) = mr%the_data(:, mr%ind(i))
+  END DO
 
 END FUNCTION kdtree2_create
 
@@ -237,14 +229,12 @@ END FUNCTION kdtree2_create
 
 SUBROUTINE build_tree(tp)
   TYPE(kdtree2), POINTER :: tp
-  ! ..
   INTEGER :: j
   TYPE(tree_node), POINTER :: dummy => NULL()
-  ! ..
   ALLOCATE (tp%ind(tp%n))
-  FORALL (j=1:tp%n)
+  DO CONCURRENT(j=1:tp%n)
     tp%ind(j) = j
-  END FORALL
+  END DO
   tp%root => build_tree_for_range(tp, 1, tp%n, dummy)
 END SUBROUTINE build_tree
 
@@ -253,19 +243,14 @@ END SUBROUTINE build_tree
 !----------------------------------------------------------------------------
 
 RECURSIVE FUNCTION build_tree_for_range(tp, l, u, parent) RESULT(res)
-  ! .. Function Return Cut_value ..
   TYPE(tree_node), POINTER :: res
-  ! ..
-  ! .. Structure Arguments ..
   TYPE(kdtree2), POINTER :: tp
   TYPE(tree_node), POINTER :: parent
-  ! ..
-  ! .. Scalar Arguments ..
   INTEGER, INTENT(In) :: l, u
-  ! ..
-  ! .. Local Scalars ..
+
+  ! internal variables
   INTEGER :: i, c, m, dimen
-  LOGICAL :: recompute
+  LOGICAL :: recompute, isok
   REAL(kdkind) :: average
 
   ! first compute min and max
@@ -280,10 +265,9 @@ RECURSIVE FUNCTION build_tree_for_range(tp, l, u, parent) RESULT(res)
     RETURN
   END IF
 
-  IF ((u - l) <= bucket_size) THEN
-    !
+  isok = (u - l) <= bucket_size
+  IF (isok) THEN
     ! always compute true bounding box for terminal nodes.
-    !
     DO i = 1, dimen
       CALL spread_in_coordinate(tp, i, l, u, res%box(i))
     END DO
@@ -293,86 +277,74 @@ RECURSIVE FUNCTION build_tree_for_range(tp, l, u, parent) RESULT(res)
     res%u = u
     res%left => NULL()
     res%right => NULL()
+    RETURN
+  END IF
+
+  ! modify approximate bounding box.  This will be an
+  ! overestimate of the true bounding box, as we are only recomputing
+  ! the bounding box for the dimension that the parent split on.
+  !
+  ! Going to a true bounding box computation would significantly
+  ! increase the time necessary to build the tree, and usually
+  ! has only a very small difference.  This box is not used
+  ! for searching but only for deciding which coordinate to split on.
+  DO i = 1, dimen
+
+    recompute = .TRUE.
+    IF (ASSOCIATED(parent)) THEN
+      IF (i .NE. parent%cut_dim) THEN
+        recompute = .FALSE.
+      END IF
+    END IF
+
+    IF (recompute) THEN
+      CALL spread_in_coordinate(tp, i, l, u, res%box(i))
+    ELSE
+      res%box(i) = parent%box(i)
+    END IF
+
+  END DO
+
+  c = MAXLOC(res%box(1:dimen)%upper - res%box(1:dimen)%lower, 1)
+  ! c is the identity of which coordinate has the greatest spread.
+
+  ! select point halfway between min and max, as per A. Moore,
+  ! who says this helps in some degenerate cases, or
+  ! actual arithmetic average.
+  ! actually compute average
+  average = SUM(tp%the_data(c, tp%ind(l:u))) / REAL(u - l + 1, kdkind)
+
+  res%cut_val = average
+  m = select_on_coordinate_value(tp%the_data, tp%ind, c, average, l, u)
+
+  ! moves indexes around
+  res%cut_dim = c
+  res%l = l
+  res%u = u
+  ! res%cut_val = tp%the_data(c,tp%ind(m))
+
+  res%left => build_tree_for_range(tp, l, m, res)
+  res%right => build_tree_for_range(tp, m + 1, u, res)
+
+  IF (ASSOCIATED(res%right) .EQV. .FALSE.) THEN
+    res%box = res%left%box
+    res%cut_val_left = res%left%box(c)%upper
+    res%cut_val = res%cut_val_left
+  ELSEIF (ASSOCIATED(res%left) .EQV. .FALSE.) THEN
+    res%box = res%right%box
+    res%cut_val_right = res%right%box(c)%lower
+    res%cut_val = res%cut_val_right
   ELSE
-    !
-    ! modify approximate bounding box.  This will be an
-    ! overestimate of the true bounding box, as we are only recomputing
-    ! the bounding box for the dimension that the parent split on.
-    !
-    ! Going to a true bounding box computation would significantly
-    ! increase the time necessary to build the tree, and usually
-    ! has only a very small difference.  This box is not used
-    ! for searching but only for deciding which coordinate to split on.
-    !
-    DO i = 1, dimen
-      recompute = .TRUE.
-      IF (ASSOCIATED(parent)) THEN
-        IF (i .NE. parent%cut_dim) THEN
-          recompute = .FALSE.
-        END IF
-      END IF
-      IF (recompute) THEN
-        CALL spread_in_coordinate(tp, i, l, u, res%box(i))
-      ELSE
-        res%box(i) = parent%box(i)
-      END IF
-    END DO
+    res%cut_val_right = res%right%box(c)%lower
+    res%cut_val_left = res%left%box(c)%upper
+    res%cut_val = (res%cut_val_left + res%cut_val_right) / 2
 
-    c = MAXLOC(res%box(1:dimen)%upper - res%box(1:dimen)%lower, 1)
-    !
-    ! c is the identity of which coordinate has the greatest spread.
-    !
-
-    IF (.FALSE.) THEN
-      ! select exact median to have fully balanced tree.
-      m = (l + u) / 2
-      CALL select_on_coordinate(tp%the_data, tp%ind, c, m, l, u)
-    ELSE
-      !
-      ! select point halfway between min and max, as per A. Moore,
-      ! who says this helps in some degenerate cases, or
-      ! actual arithmetic average.
-      !
-      IF (.TRUE.) THEN
-        ! actually compute average
-        average = SUM(tp%the_data(c, tp%ind(l:u))) / REAL(u - l + 1, kdkind)
-      ELSE
-        average = (res%box(c)%upper + res%box(c)%lower) / 2.0
-      END IF
-
-      res%cut_val = average
-      m = select_on_coordinate_value(tp%the_data, tp%ind, c, average, l, u)
-    END IF
-
-    ! moves indexes around
-    res%cut_dim = c
-    res%l = l
-    res%u = u
-!         res%cut_val = tp%the_data(c,tp%ind(m))
-
-    res%left => build_tree_for_range(tp, l, m, res)
-    res%right => build_tree_for_range(tp, m + 1, u, res)
-
-    IF (ASSOCIATED(res%right) .EQV. .FALSE.) THEN
-      res%box = res%left%box
-      res%cut_val_left = res%left%box(c)%upper
-      res%cut_val = res%cut_val_left
-    ELSEIF (ASSOCIATED(res%left) .EQV. .FALSE.) THEN
-      res%box = res%right%box
-      res%cut_val_right = res%right%box(c)%lower
-      res%cut_val = res%cut_val_right
-    ELSE
-      res%cut_val_right = res%right%box(c)%lower
-      res%cut_val_left = res%left%box(c)%upper
-      res%cut_val = (res%cut_val_left + res%cut_val_right) / 2
-
-      ! now remake the true bounding box for self.
-      ! Since we are taking unions (in effect) of a tree structure,
-      ! this is much faster than doing an exhaustive
-      ! search over all points
-      res%box%upper = MAX(res%left%box%upper, res%right%box%upper)
-      res%box%lower = MIN(res%left%box%lower, res%right%box%lower)
-    END IF
+    ! now remake the true bounding box for self.
+    ! Since we are taking unions (in effect) of a tree structure,
+    ! this is much faster than doing an exhaustive
+    ! search over all points
+    res%box%upper = MAX(res%left%box%upper, res%right%box%upper)
+    res%box%lower = MIN(res%left%box%lower, res%right%box%lower)
   END IF
 END FUNCTION build_tree_for_range
 
@@ -380,34 +352,29 @@ END FUNCTION build_tree_for_range
 !
 !----------------------------------------------------------------------------
 
+! Move elts of ind around between l and u, so that all points
+! <= than alpha (in c cooordinate) are first, and then
+! all points > alpha are second.
+!
+! Algorithm (matt kennel).
+!
+! Consider the list as having three parts: on the left,
+! the points known to be <= alpha.  On the right, the points
+! known to be > alpha, and in the middle, the currently unknown
+! points.   The algorithm is to scan the unknown points, starting
+! from the left, and swapping them so that they are added to
+! the left stack or the right stack, as appropriate.
+!
+! The algorithm finishes when the unknown stack is empty.
 INTEGER FUNCTION select_on_coordinate_value(v, ind, c, alpha, li, ui) &
   RESULT(res)
-  ! Move elts of ind around between l and u, so that all points
-  ! <= than alpha (in c cooordinate) are first, and then
-  ! all points > alpha are second.
-
-  !
-  ! Algorithm (matt kennel).
-  !
-  ! Consider the list as having three parts: on the left,
-  ! the points known to be <= alpha.  On the right, the points
-  ! known to be > alpha, and in the middle, the currently unknown
-  ! points.   The algorithm is to scan the unknown points, starting
-  ! from the left, and swapping them so that they are added to
-  ! the left stack or the right stack, as appropriate.
-  !
-  ! The algorithm finishes when the unknown stack is empty.
-  !
-  ! .. Scalar Arguments ..
   INTEGER, INTENT(In) :: c, li, ui
   REAL(kdkind), INTENT(in) :: alpha
-  ! ..
   REAL(kdkind) :: v(1:, 1:)
   INTEGER :: ind(1:)
   INTEGER :: tmp
-  ! ..
   INTEGER :: lb, rb
-  !
+
   ! The points known to be <= alpha are in
   ! [l,lb-1]
   !
@@ -417,8 +384,6 @@ INTEGER FUNCTION select_on_coordinate_value(v, ind, c, alpha, li, ui) &
   ! Therefore we add new points into lb or
   ! rb as appropriate.  When lb=rb
   ! we are done.  We return the location of the last point <= alpha.
-  !
-  !
   lb = li; rb = ui
 
   DO WHILE (lb < rb)
@@ -445,18 +410,17 @@ END FUNCTION select_on_coordinate_value
 !
 !----------------------------------------------------------------------------
 
+! Move elts of ind around between l and u, so that the kth
+! element
+! is >= those below, <= those above, in the coordinate c.
+! .. Scalar Arguments ..
+
 SUBROUTINE select_on_coordinate(v, ind, c, k, li, ui)
-  ! Move elts of ind around between l and u, so that the kth
-  ! element
-  ! is >= those below, <= those above, in the coordinate c.
-  ! .. Scalar Arguments ..
   INTEGER, INTENT(In) :: c, k, li, ui
-  ! ..
   INTEGER :: i, l, m, s, t, u
-  ! ..
   REAL(kdkind) :: v(:, :)
   INTEGER :: ind(:)
-  ! ..
+
   l = li
   u = ui
   DO WHILE (l < u)
