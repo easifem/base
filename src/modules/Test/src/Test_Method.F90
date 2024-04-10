@@ -20,15 +20,15 @@
 !
 
 MODULE test_base
-USE, INTRINSIC :: iso_fortran_env, ONLY: output_unit, error_unit
+USE, INTRINSIC :: ISO_FORTRAN_ENV, ONLY: OUTPUT_UNIT, ERROR_UNIT
 IMPLICIT NONE
 
 ! Kept as variables instead of aliases,
 ! so that test output or diagonostic output can be redirected
-INTEGER :: test_unit = output_unit, diago_unit = error_unit
+INTEGER :: test_unit = OUTPUT_UNIT, diago_unit = ERROR_UNIT
 
 INTEGER :: tests = 0, todos = 0
-CHARACTER(len=120) :: todomsg = ""
+CHARACTER(120) :: todomsg = ""
 
 INTERFACE todo
   MODULE PROCEDURE todo_i, todo_s, todo_s_i, todo
@@ -41,7 +41,7 @@ CONTAINS
 !----------------------------------------------------------------------------
 
 SUBROUTINE diago(msg)
-  CHARACTER(len=*), INTENT(in) :: msg
+  CHARACTER(*), INTENT(in) :: msg
   WRITE (diago_unit, '("# ",A)') TRIM(msg) ! only trailing spaces
 END SUBROUTINE diago
 
@@ -50,7 +50,7 @@ END SUBROUTINE diago
 !----------------------------------------------------------------------------
 
 SUBROUTINE note(msg)
-  CHARACTER(len=*), INTENT(in) :: msg
+  CHARACTER(*), INTENT(in) :: msg
   WRITE (test_unit, '("# ",A)') TRIM(msg)
 END SUBROUTINE note
 
@@ -60,7 +60,7 @@ END SUBROUTINE note
 
 SUBROUTINE testline(ok, msg, idmsg, gotmsg, expectedmsg)
   LOGICAL, INTENT(in) :: ok
-  CHARACTER(len=*), INTENT(in) :: msg, idmsg, gotmsg, expectedmsg
+  CHARACTER(*), INTENT(in) :: msg, idmsg, gotmsg, expectedmsg
 
   tests = tests + 1
   IF (.NOT. ok) CALL out("not ")
@@ -91,7 +91,7 @@ SUBROUTINE testline(ok, msg, idmsg, gotmsg, expectedmsg)
   END IF
 CONTAINS
   SUBROUTINE out(str)
-    CHARACTER(len=*), INTENT(in) :: str
+    CHARACTER(*), INTENT(in) :: str
     WRITE (test_unit, '(A)', advance="NO") str
   END
 END SUBROUTINE testline
@@ -102,7 +102,7 @@ END SUBROUTINE testline
 
 SUBROUTINE ok(condition, msg)
   LOGICAL, INTENT(in) :: condition
-  CHARACTER(len=*), INTENT(in), OPTIONAL :: msg
+  CHARACTER(*), INTENT(in), OPTIONAL :: msg
   IF (PRESENT(msg)) THEN
     CALL testline(condition, msg, "", "", "")
   ELSE
@@ -115,7 +115,7 @@ END SUBROUTINE ok
 !----------------------------------------------------------------------------
 
 SUBROUTINE PASS(msg)
-  CHARACTER(len=*), INTENT(in), OPTIONAL :: msg
+  CHARACTER(*), INTENT(in), OPTIONAL :: msg
   CALL ok(.TRUE., msg)
 END SUBROUTINE PASS
 
@@ -124,7 +124,7 @@ END SUBROUTINE PASS
 !----------------------------------------------------------------------------
 
 SUBROUTINE fail(msg)
-  CHARACTER(len=*), INTENT(in), OPTIONAL :: msg
+  CHARACTER(*), INTENT(in), OPTIONAL :: msg
   CALL ok(.FALSE., msg)
 END SUBROUTINE fail
 
@@ -133,7 +133,7 @@ END SUBROUTINE fail
 !----------------------------------------------------------------------------
 
 SUBROUTINE todo_s_i(msg, howmany)
-  CHARACTER(len=*), INTENT(in) :: msg
+  CHARACTER(*), INTENT(in) :: msg
   INTEGER, INTENT(in) :: howmany
   todomsg = msg
   todos = howmany
@@ -152,7 +152,7 @@ END SUBROUTINE todo
 !----------------------------------------------------------------------------
 
 SUBROUTINE todo_s(msg)
-  CHARACTER(len=*), INTENT(in) :: msg
+  CHARACTER(*), INTENT(in) :: msg
   CALL todo_s_i(msg, 1)
 END SUBROUTINE todo_s
 
@@ -171,7 +171,6 @@ END SUBROUTINE todo_i
 
 END MODULE test_base
 
-
 !----------------------------------------------------------------------------
 !                                                             test_planning
 !----------------------------------------------------------------------------
@@ -185,7 +184,7 @@ INTEGER, PRIVATE :: planned = 0
 CONTAINS
 
 SUBROUTINE bail_out(msg)
-  CHARACTER(len=*), INTENT(in), OPTIONAL :: msg
+  CHARACTER(*), INTENT(in), OPTIONAL :: msg
   IF (PRESENT(msg)) THEN
     WRITE (test_unit, '("Bail out! ",A)') msg
   ELSE
@@ -193,7 +192,6 @@ SUBROUTINE bail_out(msg)
   END IF
   STOP
 END SUBROUTINE bail_out
-
 
 SUBROUTINE plan(tests)
   INTEGER, INTENT(in) :: tests
@@ -212,7 +210,6 @@ SUBROUTINE plan(tests)
   END SELECT
 END SUBROUTINE plan
 
-
 SUBROUTINE done_testing(howmany)
   INTEGER, INTENT(in), OPTIONAL :: howmany
 
@@ -225,9 +222,8 @@ SUBROUTINE done_testing(howmany)
   END IF
 END SUBROUTINE done_testing
 
-
 SUBROUTINE skip_all(msg)
-  CHARACTER(len=*), INTENT(in), OPTIONAL :: msg
+  CHARACTER(*), INTENT(in), OPTIONAL :: msg
   IF (PRESENT(msg)) THEN
     WRITE (test_unit, '("1..0 # Skipped: ",A)') msg
   ELSE
@@ -245,36 +241,32 @@ END MODULE test_planning
 !! Template instances of integer kinds for "is"
 
 MODULE is_i8_mod
-USE, INTRINSIC :: iso_fortran_env, ONLY: wp => int8
-USE, non_INTRINSIC :: test_base, ONLY: testline, tests
+USE, INTRINSIC :: ISO_FORTRAN_ENV, ONLY: wp => INT8
+USE, NON_INTRINSIC :: test_base, ONLY: testline, tests
 CONTAINS
 INCLUDE "is_i.inc"
 END MODULE is_i8_mod
 
-
 MODULE is_i16_mod
-USE, INTRINSIC :: iso_fortran_env, ONLY: wp => int16
-USE, non_INTRINSIC :: test_base, ONLY: testline, tests
+USE, INTRINSIC :: ISO_FORTRAN_ENV, ONLY: wp => INT16
+USE, NON_INTRINSIC :: test_base, ONLY: testline, tests
 CONTAINS
 INCLUDE "is_i.inc"
 END MODULE is_i16_mod
 
-
 MODULE is_i32_mod
-USE, INTRINSIC :: iso_fortran_env, ONLY: wp => int32
-USE, non_INTRINSIC :: test_base, ONLY: testline, tests
+USE, INTRINSIC :: ISO_FORTRAN_ENV, ONLY: wp => INT32
+USE, NON_INTRINSIC :: test_base, ONLY: testline, tests
 CONTAINS
 INCLUDE "is_i.inc"
 END MODULE is_i32_mod
 
-
 MODULE is_i64_mod
-USE, INTRINSIC :: iso_fortran_env, ONLY: wp => int64
-USE, non_INTRINSIC :: test_base, ONLY: testline, tests
+USE, INTRINSIC :: ISO_FORTRAN_ENV, ONLY: wp => INT64
+USE, NON_INTRINSIC :: test_base, ONLY: testline, tests
 CONTAINS
 INCLUDE "is_i.inc"
 END MODULE is_i64_mod
-
 
 MODULE is_i
 USE is_i8_mod, ONLY: is_i8 => is
@@ -286,32 +278,28 @@ INTERFACE is
 END INTERFACE
 END MODULE is_i
 
-
 ! Template instances of real kinds for "is"
 
 MODULE is_r32_mod
-USE, INTRINSIC :: iso_fortran_env, ONLY: wp => real32
-USE, non_INTRINSIC :: test_base, ONLY: testline, tests
+USE, INTRINSIC :: ISO_FORTRAN_ENV, ONLY: wp => REAL32
+USE, NON_INTRINSIC :: test_base, ONLY: testline, tests
 CONTAINS
 INCLUDE "is_r.inc"
 END MODULE is_r32_mod
 
-
 MODULE is_r64_mod
-USE, INTRINSIC :: iso_fortran_env, ONLY: wp => real64
-USE, non_INTRINSIC :: test_base, ONLY: testline, tests
+USE, INTRINSIC :: ISO_FORTRAN_ENV, ONLY: wp => REAL64
+USE, NON_INTRINSIC :: test_base, ONLY: testline, tests
 CONTAINS
 INCLUDE "is_r.inc"
 END MODULE is_r64_mod
 
-
 MODULE is_r128_mod
-USE, INTRINSIC :: iso_fortran_env, ONLY: wp => real128
-USE, non_INTRINSIC :: test_base, ONLY: testline, tests
+USE, INTRINSIC :: ISO_FORTRAN_ENV, ONLY: wp => REAL128
+USE, NON_INTRINSIC :: test_base, ONLY: testline, tests
 CONTAINS
 INCLUDE "is_r.inc"
 END MODULE is_r128_mod
-
 
 MODULE is_r
 USE is_r32_mod, ONLY: isrel_r32 => isrel, isabs_r32 => isabs, &
@@ -332,7 +320,6 @@ INTERFACE isnear
   MODULE PROCEDURE isnear_r32, isnear_r64, isnear_r128
 END INTERFACE
 END MODULE is_r
-
 
 MODULE test_more
 USE test_base, ONLY: testline, tests, test_unit
@@ -358,9 +345,9 @@ END INTERFACE
 CONTAINS
 
 SUBROUTINE skip_s_i(msg, howmany)
-  CHARACTER(len=*), INTENT(in) :: msg
+  CHARACTER(*), INTENT(in) :: msg
   INTEGER, INTENT(in) :: howmany
-  CHARACTER(len=120) skipmsg
+  CHARACTER(120) skipmsg
   INTEGER i
 
   IF (howmany <= 0) THEN
@@ -379,42 +366,38 @@ SUBROUTINE skip_s_i(msg, howmany)
   END DO
 END SUBROUTINE skip_s_i
 
-
 SUBROUTINE skip
   CALL skip_s_i("", 1)
 END SUBROUTINE skip
 
-
 SUBROUTINE skip_s(msg)
-  CHARACTER(len=*), INTENT(in) :: msg
+  CHARACTER(*), INTENT(in) :: msg
   CALL skip_s_i(msg, 1)
 END SUBROUTINE skip_s
-
 
 SUBROUTINE skip_i(howmany)
   INTEGER, INTENT(in) :: howmany
   CALL skip_s_i("", howmany)
 END SUBROUTINE skip_i
 
-
 ! Duplicates of is_i routines in file is_i.inc and ditto is_r
 ! They are not factored any further, because it is easier
 ! to see all the output together rather than in separate routines
 
 SUBROUTINE is_s(got, expected, msg)
-  CHARACTER(len=*), INTENT(in) :: got
-  CHARACTER(len=*), INTENT(in) :: expected
-  CHARACTER(len=*), INTENT(in), OPTIONAL :: msg
-  CHARACTER(len=:), ALLOCATABLE :: testmsg, idmsg
-  CHARACTER(len=120) gotmsg, expectedmsg
+  CHARACTER(*), INTENT(in) :: got
+  CHARACTER(*), INTENT(in) :: expected
+  CHARACTER(*), INTENT(in), OPTIONAL :: msg
+  CHARACTER(:), ALLOCATABLE :: testmsg, idmsg
+  CHARACTER(120) gotmsg, expectedmsg
   LOGICAL good
 
   IF (PRESENT(msg)) THEN
-    ALLOCATE (CHARACTER(len=len_TRIM(msg) + 20) :: testmsg, idmsg)
+    ALLOCATE (CHARACTER(LEN_TRIM(msg) + 20) :: testmsg, idmsg)
     WRITE (unit=idmsg, fmt='(A,A,A)') 'Failed test: "', TRIM(msg), '"'
     testmsg = TRIM(msg)
   ELSE
-    ALLOCATE (CHARACTER(len=30) :: testmsg, idmsg)
+    ALLOCATE (CHARACTER(30) :: testmsg, idmsg)
     WRITE (unit=idmsg, fmt='(A,I0)') 'Failed test no. ', tests + 1
     testmsg = ""
   END IF
@@ -425,20 +408,19 @@ SUBROUTINE is_s(got, expected, msg)
   CALL testline(good, testmsg, idmsg, gotmsg, expectedmsg)
 END SUBROUTINE is_s
 
-
 SUBROUTINE is_l(got, expected, msg)
   LOGICAL, INTENT(in) :: got, expected
-  CHARACTER(len=*), INTENT(in), OPTIONAL :: msg
-  CHARACTER(len=:), ALLOCATABLE :: testmsg, idmsg
-  CHARACTER(len=120) gotmsg, expectedmsg
+  CHARACTER(*), INTENT(in), OPTIONAL :: msg
+  CHARACTER(:), ALLOCATABLE :: testmsg, idmsg
+  CHARACTER(120) gotmsg, expectedmsg
   LOGICAL good
 
   IF (PRESENT(msg)) THEN
-    ALLOCATE (CHARACTER(len=len_TRIM(msg) + 20) :: testmsg, idmsg)
+    ALLOCATE (CHARACTER(LEN_TRIM(msg) + 20) :: testmsg, idmsg)
     WRITE (unit=idmsg, fmt='(A,A,A)') 'Failed test: "', TRIM(msg), '"'
     testmsg = TRIM(msg)
   ELSE
-    ALLOCATE (CHARACTER(len=30) :: testmsg, idmsg)
+    ALLOCATE (CHARACTER(30) :: testmsg, idmsg)
     WRITE (unit=idmsg, fmt='(A,I0)') 'Failed test no. ', tests + 1
     testmsg = ""
   END IF
