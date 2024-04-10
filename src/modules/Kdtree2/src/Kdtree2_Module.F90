@@ -198,7 +198,7 @@ FUNCTION Kdtree2_create(input_data, dim, sort, rearrange) RESULT(mr)
     WRITE (*, *) 'KD_TREE_TRANS: You passed in matrix with D=', mr%dimen
     WRITE (*, *) 'KD_TREE_TRANS: and N=', mr%n
     WRITE (*, *) 'KD_TREE_TRANS: note, that new format is data(1:D,1:N)'
-       write (*,*) 'KD_TREE_TRANS: with usually N >> D.   If N =approx= D, then a k-d tree'
+    write (*,*) 'KD_TREE_TRANS: with usually N >> D.   If N =approx= D, then a k-d tree'
     WRITE (*, *) 'KD_TREE_TRANS: is not an appropriate data structure.'
     STOP
   END IF
@@ -680,10 +680,16 @@ SUBROUTINE Kdtree2_r_nearest_around_point(tp, idxin, correltime, r2, &
   REAL(kdkind), INTENT(IN) :: r2
   INTEGER, INTENT(out) :: nfound
   TYPE(Kdtree2Result_), TARGET :: results(:)
-  ! ..
-  ! .. INtrinsic Functions ..
-  INTRINSIC HUGE
-  ! ..
+
+#ifdef DEBUG_VER
+  CHARACTER(*), PARAMETER :: msg = &
+               'warning! return from Kdtree2_r_nearest found more neighbors' &
+                             //CHAR_LF// &
+               'than storage was provided for.  Answer is NOT smallest ball' &
+                             //CHAR_LF// &
+                           'with that number of neighbors!  I.e. it is wrong.'
+#endif
+
   ALLOCATE (sr%qv(tp%dimen))
   sr%qv = tp%the_data(:, idxin) ! copy the vector
   sr%ballsize = r2
@@ -724,11 +730,14 @@ SUBROUTINE Kdtree2_r_nearest_around_point(tp, idxin, correltime, r2, &
     CALL Kdtree2_sort_results(nfound, results)
   END IF
 
+#ifdef DEBUG_VER
+
   IF (sr%overflow) THEN
-       write (*,*) 'KD_TREE_TRANS: warning! return from Kdtree2_r_nearest found more neighbors'
-       write (*,*) 'KD_TREE_TRANS: than storage was provided for.  Answer is NOT smallest ball'
-write (*,*) 'KD_TREE_TRANS: with that number of neighbors!  I.e. it is wrong.'
+    CALL Errormsg(msg=msg, file=__FILE__, line=__LINE__, &
+                  routine="Kdtree2_r_nearest_around_point()", unitno=stderr)
   END IF
+
+#endif
 
   DEALLOCATE (sr%qv)
 END SUBROUTINE Kdtree2_r_nearest_around_point
