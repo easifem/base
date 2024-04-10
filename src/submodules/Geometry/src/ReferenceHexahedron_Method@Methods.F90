@@ -595,22 +595,19 @@ elemType0 = Input(default=Hexahedron8, option=elemType)
 SELECT CASE (elemType0)
 CASE (Hexahedron8)
 
-  faceElemType(1:6) = Quadrangle4
+  IF (PRESENT(faceElemType)) faceElemType(1:6) = Quadrangle4
   IF (PRESENT(tFaceNodes)) tFaceNodes(1:6) = 4_I4B
 
 CASE (Hexahedron20)
-
-  faceElemType(1:6) = Quadrangle8
+  IF (PRESENT(faceElemType)) faceElemType(1:6) = Quadrangle8
   IF (PRESENT(tFaceNodes)) tFaceNodes(1:6) = 8_I4B
 
 CASE (Hexahedron27)
-
-  faceElemType(1:6) = Quadrangle9
+  IF (PRESENT(faceElemType)) faceElemType(1:6) = Quadrangle9
   IF (PRESENT(tFaceNodes)) tFaceNodes(1:6) = 9_I4B
 
 CASE (Hexahedron64)
-
-  faceElemType(1:6) = Quadrangle16
+  IF (PRESENT(faceElemType)) faceElemType(1:6) = Quadrangle16
   IF (PRESENT(tFaceNodes)) tFaceNodes(1:6) = 16_I4B
 
 END SELECT

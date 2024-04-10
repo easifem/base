@@ -142,8 +142,9 @@ CASE (Tetrahedron4, Tetrahedron10, Tetrahedron20, Tetrahedron35, &
     & opt=edgeOpt, order=order)
   IF (PRESENT(faceCon)) CALL GetFaceConnectivity_Tetrahedron(con=faceCon, &
     & opt=faceOpt, order=order)
-  IF (PRESENT(faceElemType)) CALL GetFaceElemType_Tetrahedron( &
-    & faceElemType=faceElemType, tFaceNodes=tFaceNodes, elemType=elemType)
+
+  CALL GetFaceElemType_Tetrahedron(faceElemType=faceElemType, &
+                                   tFaceNodes=tFaceNodes, elemType=elemType)
 
 CASE (Hexahedron8, Hexahedron20, Hexahedron27, Hexahedron64, Hexahedron125)
 
@@ -154,8 +155,9 @@ CASE (Hexahedron8, Hexahedron20, Hexahedron27, Hexahedron64, Hexahedron125)
     & opt=edgeOpt, order=order)
   IF (PRESENT(faceCon)) CALL GetFaceConnectivity_Hexahedron(con=faceCon,  &
     & opt=faceOpt, order=order)
-  IF (PRESENT(faceElemType)) CALL GetFaceElemType_Hexahedron( &
-    & faceElemType=faceElemType, tFaceNodes=tFaceNodes, elemType=elemType)
+
+  CALL GetFaceElemType_Hexahedron(faceElemType=faceElemType, &
+                                  tFaceNodes=tFaceNodes, elemType=elemType)
 
 CASE (Prism6, Prism15, Prism18)
 
@@ -166,9 +168,9 @@ CASE (Prism6, Prism15, Prism18)
     & opt=edgeOpt, order=order)
   IF (PRESENT(faceCon)) CALL GetFaceConnectivity_Prism(con=faceCon,  &
     & opt=faceOpt, order=order)
-  IF (PRESENT(faceElemType)) CALL GetFaceElemType_Prism( &
-    & faceElemType=faceElemType, tFaceNodes=tFaceNodes,  &
-    & elemType=elemType)
+
+  CALL GetFaceElemType_Prism(faceElemType=faceElemType, &
+                             tFaceNodes=tFaceNodes, elemType=elemType)
 
 CASE (Pyramid5, Pyramid13, Pyramid14)
 
@@ -180,14 +182,17 @@ CASE (Pyramid5, Pyramid13, Pyramid14)
   IF (PRESENT(faceCon)) CALL GetFaceConnectivity_Pyramid(con=faceCon,  &
     & opt=faceOpt, order=order)
 
-  IF (PRESENT(faceElemType)) CALL GetFaceElemType_Tetrahedron( &
-    & faceElemType=faceElemType, tFaceNodes=tFaceNodes, &
-    & elemType=elemType)
+  CALL GetFaceElemType_Pyramid(faceElemType=faceElemType, &
+                               tFaceNodes=tFaceNodes, elemType=elemType)
 
 CASE DEFAULT
   IF (PRESENT(tNodes)) tNodes = 0_I4B
   IF (PRESENT(tEdges)) tEdges = 0_I4B
   IF (PRESENT(tFaces)) tFaces = 0_I4B
+  IF (PRESENT(edgeCon)) edgeCon = 0_I4B
+  IF (PRESENT(faceCon)) faceCon = 0_I4B
+  IF (PRESENT(faceElemType)) faceElemType = 0_I4B
+  IF (PRESENT(tFaceNodes)) tFaceNodes = 0_I4B
 END SELECT
 END PROCEDURE RefElemGetGeoParam1
 

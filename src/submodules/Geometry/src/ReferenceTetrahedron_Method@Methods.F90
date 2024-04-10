@@ -564,23 +564,33 @@ elemType0 = Input(default=Tetrahedron4, option=elemType)
 
 SELECT CASE (elemType0)
 CASE (Tetrahedron4)
-  faceElemType(1:4) = Triangle3
+  IF (PRESENT(faceElemType)) &
+    faceElemType(1:4) = Triangle3
+
   IF (PRESENT(tFaceNodes)) tFaceNodes(1:4) = 3_I4B
 
 CASE (Tetrahedron10)
-  faceElemType(1:4) = Triangle6
+  IF (PRESENT(faceElemType)) &
+    faceElemType(1:4) = Triangle6
+
   IF (PRESENT(tFaceNodes)) tFaceNodes(1:4) = 6_I4B
 
 CASE (Tetrahedron20)
-  faceElemType(1:4) = Triangle10
+  IF (PRESENT(faceElemType)) &
+    faceElemType(1:4) = Triangle10
+
   IF (PRESENT(tFaceNodes)) tFaceNodes(1:4) = 10_I4B
 
 CASE (Tetrahedron35)
-  faceElemType(1:4) = Triangle15
+  IF (PRESENT(faceElemType)) &
+    faceElemType(1:4) = Triangle15
+
   IF (PRESENT(tFaceNodes)) tFaceNodes(1:4) = 15_I4B
 
 CASE (Tetrahedron56)
-  faceElemType(1:4) = Triangle21
+  IF (PRESENT(faceElemType)) &
+    faceElemType(1:4) = Triangle21
+
   IF (PRESENT(tFaceNodes)) tFaceNodes(1:4) = 21_I4B
 
 END SELECT

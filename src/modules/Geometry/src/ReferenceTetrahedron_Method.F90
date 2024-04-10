@@ -342,7 +342,7 @@ END INTERFACE
 INTERFACE
   MODULE PURE SUBROUTINE GetFaceElemType_Tetrahedron(faceElemType, opt,  &
     & tFaceNodes, elemType)
-    INTEGER(I4B), INTENT(INOUT) :: faceElemType(:)
+    INTEGER(I4B), OPTIONAL, INTENT(INOUT) :: faceElemType(:)
     !! Face element type
     INTEGER(I4B), OPTIONAL, INTENT(INOUT) :: tFaceNodes(:)
     !! total nodes in each face
