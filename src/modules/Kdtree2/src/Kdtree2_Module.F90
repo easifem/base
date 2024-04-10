@@ -97,7 +97,7 @@ TYPE :: Kdtree2_
   !  memory cache locality, and hence search speed, and may enable
   !  vectorization on some processors and compilers.
 
-  INTEGER, POINTER :: ind(:) => NULL()
+  INTEGER, ALLOCATABLE :: ind(:)
   ! permuted index into the data, so that indexes[l..u] of some
   ! bucket represent the indexes of the actual points in that
   ! bucket.
@@ -459,8 +459,7 @@ SUBROUTINE Kdtree2_Destroy(tp)
 
   CALL destroy_node(tp%root)
 
-  DEALLOCATE (tp%ind)
-  NULLIFY (tp%ind)
+  IF (ALLOCATED(tp%ind)) DEALLOCATE (tp%ind)
 
   IF (tp%rearrange) THEN
     DEALLOCATE (tp%rearranged_data)
