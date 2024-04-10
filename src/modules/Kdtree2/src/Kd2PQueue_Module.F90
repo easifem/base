@@ -317,12 +317,7 @@ REAL(kdkind) FUNCTION pq_insert(a, dis, idx)
   !
   INTEGER :: i, isparent
   REAL(kdkind) :: parentdis
-  !
 
-  !    if (a%heap_size .ge. a%max_elems) then
-  !       write (*,*) 'PQ_INSERT: error, attempt made to insert element on full PQ'
-  !       stop
-  !    else
   a%heap_size = a%heap_size + 1
   i = a%heap_size
 
@@ -348,50 +343,6 @@ REAL(kdkind) FUNCTION pq_insert(a, dis, idx)
   !    end if
 
 END FUNCTION pq_insert
-
-!----------------------------------------------------------------------------
-!
-!----------------------------------------------------------------------------
-
-SUBROUTINE pq_adjust_heap(a, i)
-  TYPE(pq), POINTER :: a
-  INTEGER, INTENT(in) :: i
-  !
-  ! nominally arguments (a,i), but specialize for a=1
-  !
-  ! This routine assumes that the trees with roots 2 and 3 are already heaps, i.e.
-  ! the children of '1' are heaps.  When the procedure is completed, the
-  ! tree rooted at 1 is a heap.
-  REAL(kdkind) :: prichild
-  INTEGER :: parent, child, N
-
-  TYPE(kdtree2_result) :: e
-
-  e = a%elems(i)
-
-  parent = i
-  child = 2 * i
-  N = a%heap_size
-
-  DO WHILE (child .LE. N)
-    IF (child .LT. N) THEN
-      IF (a%elems(child)%dis .LT. a%elems(child + 1)%dis) THEN
-        child = child + 1
-      END IF
-    END IF
-    prichild = a%elems(child)%dis
-    IF (e%dis .GE. prichild) THEN
-      EXIT
-    ELSE
-      ! move child into parent.
-      a%elems(parent) = a%elems(child)
-      parent = child
-      child = 2 * parent
-    END IF
-  END DO
-  a%elems(parent) = e
-  RETURN
-END SUBROUTINE pq_adjust_heap
 
 !----------------------------------------------------------------------------
 !

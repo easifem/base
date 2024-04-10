@@ -1,4 +1,3 @@
-!
 !(c) Matthew Kennel, Institute for Nonlinear Science (2004)
 !
 ! Licensed under the Academic Free License version 1.1 found in file LICENSE
@@ -258,7 +257,8 @@ RECURSIVE FUNCTION build_tree_for_range(tp, l, u, parent) RESULT(res)
   ALLOCATE (res)
   ALLOCATE (res%box(dimen))
 
-  ! First, compute an APPROXIMATE bounding box of all points associated with this node.
+  ! First, compute an APPROXIMATE bounding box of all points
+  ! associated with this node.
   IF (u < l) THEN
     ! no points in this box
     NULLIFY (res)
@@ -555,17 +555,27 @@ END SUBROUTINE kdtree2_n_nearest
 !
 !----------------------------------------------------------------------------
 
+!> author: Matthew Kennel
+! date:  2024-04-10
+! summary:  Find nn vectors in the tree.
+!
+! Find the 'nn' vectors in the tree nearest to point 'idxin',
+! with correlation window 'correltime', returing results in
+! results(:), which must be pre-allocated upon entry.
+
 SUBROUTINE kdtree2_n_nearest_around_point(tp, idxin, correltime, nn, results)
-  ! Find the 'nn' vectors in the tree nearest to point 'idxin',
-  ! with correlation window 'correltime', returing results in
-  ! results(:), which must be pre-allocated upon entry.
   TYPE(kdtree2), POINTER :: tp
-  INTEGER, INTENT(In) :: idxin, correltime, nn
+  INTEGER, INTENT(In) :: idxin
+  INTEGER, INTENT(In) :: correltime
+  !! correlation window
+  INTEGER, INTENT(In) :: nn
   TYPE(kdtree2_result), TARGET :: results(:)
 
   ALLOCATE (sr%qv(tp%dimen))
-  sr%qv = tp%the_data(:, idxin) ! copy the vector
-  sr%ballsize = HUGE(1.0) ! the largest real(kdkind) number
+  sr%qv = tp%the_data(:, idxin)
+  ! copy the vector
+  sr%ballsize = HUGE(1.0)
+  ! the largest real(kdkind) number
   sr%centeridx = idxin
   sr%correltime = correltime
 
@@ -840,19 +850,20 @@ END FUNCTION kdtree2_r_count_around_point
 !
 !----------------------------------------------------------------------------
 
+!> author: Vikas Sharma, Ph. D.
+! date:  2024-04-10
+! summary:  check storage when run in debug mode
+
 SUBROUTINE validate_query_storage(n)
-  !
-  ! make sure we have enough storage for n
-  !
   INTEGER, INTENT(in) :: n
 
+#ifdef DEBUG_VER
   IF (SIZE(sr%results, 1) .LT. n) THEN
        write (*,*) 'KD_TREE_TRANS:  you did not provide enough storage for results(1:n)'
     STOP
-    RETURN
   END IF
+#endif
 
-  RETURN
 END SUBROUTINE validate_query_storage
 
 !----------------------------------------------------------------------------
@@ -1185,11 +1196,16 @@ END SUBROUTINE process_terminal_node_fixedball
 !
 !----------------------------------------------------------------------------
 
+!> author: Matthew Kennel
+! date:  2024-04-10
+! summary:  Used for benchmarking only
+!
+! find the 'n' nearest neighbors to 'qv' by exhaustive search.
+! only use this subroutine for testing, as it is SLOW!  The
+! whole point of a k-d tree is to avoid doing what this subroutine
+! does.
+
 SUBROUTINE kdtree2_n_nearest_brute_force(tp, qv, nn, results)
-  ! find the 'n' nearest neighbors to 'qv' by exhaustive search.
-  ! only use this subroutine for testing, as it is SLOW!  The
-  ! whole point of a k-d tree is to avoid doing what this subroutine
-  ! does.
   TYPE(kdtree2), POINTER :: tp
   REAL(kdkind), INTENT(In) :: qv(:)
   INTEGER, INTENT(In) :: nn
@@ -1229,7 +1245,8 @@ END SUBROUTINE kdtree2_n_nearest_brute_force
 !----------------------------------------------------------------------------
 
 SUBROUTINE kdtree2_r_nearest_brute_force(tp, qv, r2, nfound, results)
-  ! find the nearest neighbors to 'qv' with distance**2 <= r2 by exhaustive search.
+  ! find the nearest neighbors to 'qv' with distance**2 <= r2 by exhaustive
+  ! search.
   ! only use this subroutine for testing, as it is SLOW!  The
   ! whole point of a k-d tree is to avoid doing what this subroutine
   ! does.
