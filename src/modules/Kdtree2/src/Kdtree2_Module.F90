@@ -70,7 +70,7 @@ TYPE :: Kdtree2Node_
   ! improved cutoffs knowing the spread in child boxes.
   INTEGER :: l, u
   TYPE(Kdtree2Node_), POINTER :: left, right
-  TYPE(interval), POINTER :: box(:) => NULL()
+  TYPE(interval), ALLOCATABLE :: box(:)
   ! child pointers
   ! Points included in this node are indexes[k] with k \in [l,u]
 END TYPE Kdtree2Node_
@@ -453,11 +453,10 @@ END SUBROUTINE spread_in_coordinate
 !
 !----------------------------------------------------------------------------
 
+! Deallocates all memory for the tree, except input data matrix
 SUBROUTINE Kdtree2_Destroy(tp)
-  ! Deallocates all memory for the tree, except input data matrix
-  ! .. Structure Arguments ..
   TYPE(Kdtree2_), POINTER :: tp
-  ! ..
+
   CALL destroy_node(tp%root)
 
   DEALLOCATE (tp%ind)
@@ -469,27 +468,24 @@ SUBROUTINE Kdtree2_Destroy(tp)
   END IF
 
   DEALLOCATE (tp)
-  RETURN
 
 CONTAINS
   RECURSIVE SUBROUTINE destroy_node(np)
-    ! .. Structure Arguments ..
     TYPE(Kdtree2Node_), POINTER :: np
-    ! ..
-    ! .. Intrinsic Functions ..
     INTRINSIC ASSOCIATED
-    ! ..
+
     IF (ASSOCIATED(np%left)) THEN
       CALL destroy_node(np%left)
       NULLIFY (np%left)
     END IF
+
     IF (ASSOCIATED(np%right)) THEN
       CALL destroy_node(np%right)
       NULLIFY (np%right)
     END IF
-    IF (ASSOCIATED(np%box)) DEALLOCATE (np%box)
+
+    IF (ALLOCATED(np%box)) DEALLOCATE (np%box)
     DEALLOCATE (np)
-    RETURN
 
   END SUBROUTINE destroy_node
 
