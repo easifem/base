@@ -15,7 +15,7 @@ USE GlobalData, ONLY: kdkind => DFP, I4B, LGT
 IMPLICIT NONE
 PRIVATE
 
-PUBLIC :: kdtree2_result
+PUBLIC :: Kdtree2Result_
 PUBLIC :: pq
 PUBLIC :: pq_create
 PUBLIC :: pq_delete, pq_insert
@@ -28,12 +28,13 @@ PUBLIC :: pq_extract_max, pq_max, pq_replace_max, pq_maxpri
 ! maintain a priority queue (PQ) of data, pairs of 'priority/payload',
 ! implemented with a binary heap.  This is the type, and the 'dis' field
 ! is the priority.
+!
+! a pair of distances, indexes
 
-TYPE kdtree2_result
-  ! a pair of distances, indexes
+TYPE Kdtree2Result_
   REAL(kdkind) :: dis !=0.0
   INTEGER :: idx !=-1   Initializers cause some bugs in compilers.
-END TYPE kdtree2_result
+END TYPE Kdtree2Result_
 
 !----------------------------------------------------------------------------
 !
@@ -80,7 +81,7 @@ TYPE pq
   ! Assumes the allocation is always sufficient.  Will NOT increase it
   ! to match.
   INTEGER :: heap_size = 0
-  TYPE(kdtree2_result), POINTER :: elems(:)
+  TYPE(Kdtree2Result_), POINTER :: elems(:)
 END TYPE pq
 
 !----------------------------------------------------------------------------
@@ -103,7 +104,7 @@ FUNCTION pq_create(results_in) RESULT(res)
   !    allocate(x(1000),k(1000))
   !    pq => pq_create(x,k)
   !
-  TYPE(kdtree2_result), TARGET :: results_in(:)
+  TYPE(Kdtree2Result_), TARGET :: results_in(:)
   TYPE(pq) :: res
   !
   !
@@ -168,7 +169,7 @@ SUBROUTINE heapify(a, i_in)
 
   REAL(kdkind) :: pri_i, pri_l, pri_r, pri_largest
 
-  TYPE(kdtree2_result) :: temp
+  TYPE(Kdtree2Result_) :: temp
 
   i = i_in
 
@@ -241,7 +242,7 @@ SUBROUTINE pq_max(a, e)
   ! in heapified form.
   !
   TYPE(pq), POINTER :: a
-  TYPE(kdtree2_result), INTENT(out) :: e
+  TYPE(Kdtree2Result_), INTENT(out) :: e
 
   IF (a%heap_size .GT. 0) THEN
     e = a%elems(1)
@@ -279,7 +280,7 @@ SUBROUTINE pq_extract_max(a, e)
   ! (equivalent to 'pop()' on a stack)
   !
   TYPE(pq), POINTER :: a
-  TYPE(kdtree2_result), INTENT(out) :: e
+  TYPE(Kdtree2Result_), INTENT(out) :: e
 
   IF (a%heap_size .GE. 1) THEN
     !
@@ -313,7 +314,7 @@ REAL(kdkind) FUNCTION pq_insert(a, dis, idx)
   TYPE(pq), POINTER :: a
   REAL(kdkind), INTENT(in) :: dis
   INTEGER, INTENT(in) :: idx
-  !    type(kdtree2_result), intent(in) :: e
+  !    Type(Kdtree2Result_), intent(in) :: e
   !
   INTEGER :: i, isparent
   REAL(kdkind) :: parentdis
@@ -358,13 +359,13 @@ REAL(kdkind) FUNCTION pq_replace_max(a, dis, idx)
   TYPE(pq), POINTER :: a
   REAL(kdkind), INTENT(in) :: dis
   INTEGER, INTENT(in) :: idx
-!    type(kdtree2_result), intent(in) :: e
+!    Type(Kdtree2Result_), intent(in) :: e
   ! not tested as well!
 
   INTEGER :: parent, child, N
   REAL(kdkind) :: prichild, prichildp1
 
-  TYPE(kdtree2_result) :: etmp
+  TYPE(Kdtree2Result_) :: etmp
 
   IF (.TRUE.) THEN
     N = a%heap_size
