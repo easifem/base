@@ -28,7 +28,9 @@
 ! as in the original kd_tree module.
 
 MODULE Kdtree2_Module
-USE GlobalData, ONLY: kdkind => DFP, I4B, LGT
+USE GlobalData, ONLY: kdkind => DFP, I4B, LGT, stdout, stderr
+USE ErrorHandling, ONLY: Errormsg
+USE Display_Method, ONLY: Display
 USE Kd2PQueue_Module
 USE InputUtility
 IMPLICIT NONE
@@ -411,30 +413,19 @@ END FUNCTION select_on_coordinate_value
 !----------------------------------------------------------------------------
 
 SUBROUTINE spread_in_coordinate(tp, c, l, u, interv)
-  ! the spread in coordinate 'c', between l and u.
-  !
-  ! Return lower bound in 'smin', and upper in 'smax',
-  ! ..
-  ! .. Structure Arguments ..
   TYPE(kdtree2), POINTER :: tp
   TYPE(interval), INTENT(out) :: interv
-  ! ..
-  ! .. Scalar Arguments ..
   INTEGER, INTENT(In) :: c, l, u
-  ! ..
-  ! .. Local Scalars ..
+  ! internal variables
   REAL(kdkind) :: last, lmax, lmin, t, smin, smax
   INTEGER :: i, ulocal
-  ! ..
-  ! .. Local Arrays ..
   REAL(kdkind), POINTER :: v(:, :)
   INTEGER, POINTER :: ind(:)
-  ! ..
+
   v => tp%the_data(1:, 1:)
   ind => tp%ind(1:)
   smin = v(c, ind(l))
   smax = smin
-
   ulocal = u
 
   DO i = l + 2, ulocal, 2
@@ -448,6 +439,7 @@ SUBROUTINE spread_in_coordinate(tp, c, l, u, interv)
     IF (smin > lmin) smin = lmin
     IF (smax < lmax) smax = lmax
   END DO
+
   IF (i == ulocal + 1) THEN
     last = v(c, ind(ulocal))
     IF (smin > last) smin = last
@@ -741,7 +733,6 @@ write (*,*) 'KD_TREE_TRANS: with that number of neighbors!  I.e. it is wrong.'
   END IF
 
   DEALLOCATE (sr%qv)
-  RETURN
 END SUBROUTINE kdtree2_r_nearest_around_point
 
 !----------------------------------------------------------------------------
@@ -789,27 +780,23 @@ FUNCTION kdtree2_r_count(tp, qv, r2) RESULT(nfound)
 
   nfound = sr%nfound
 
-  RETURN
 END FUNCTION kdtree2_r_count
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
+! Count the number of neighbors within square distance 'r2' around
+! point 'idxin' with decorrelation time 'correltime'.
+
 FUNCTION kdtree2_r_count_around_point(tp, idxin, correltime, r2) &
   RESULT(nfound)
-  ! Count the number of neighbors within square distance 'r2' around
-  ! point 'idxin' with decorrelation time 'correltime'.
-  !
   TYPE(kdtree2), POINTER :: tp
   INTEGER, INTENT(In) :: correltime, idxin
   REAL(kdkind), INTENT(in) :: r2
   INTEGER :: nfound
-  ! ..
-  ! ..
-  ! .. Intrinsic Functions ..
+
   INTRINSIC HUGE
-  ! ..
   ALLOCATE (sr%qv(tp%dimen))
   sr%qv = tp%the_data(:, idxin)
   sr%ballsize = r2
@@ -843,7 +830,6 @@ FUNCTION kdtree2_r_count_around_point(tp, idxin, correltime, r2) &
 
   nfound = sr%nfound
 
-  RETURN
 END FUNCTION kdtree2_r_count_around_point
 
 !----------------------------------------------------------------------------
@@ -856,12 +842,22 @@ END FUNCTION kdtree2_r_count_around_point
 
 SUBROUTINE validate_query_storage(n)
   INTEGER, INTENT(in) :: n
-
 #ifdef DEBUG_VER
-  IF (SIZE(sr%results, 1) .LT. n) THEN
-       write (*,*) 'KD_TREE_TRANS:  you did not provide enough storage for results(1:n)'
+
+  CHARACTER(*), PARAMETER :: msg = "Not enough storage for results"
+  LOGICAL(LGT) :: problem
+
+  problem = SIZE(sr%results, 1) .LT. n
+  IF (problem) THEN
+    CALL ErrorMsg( &
+      msg=msg, &
+      line=__LINE__, &
+      unitno=stderr, &
+      file=__FILE__, &
+      routine="validate_query_storage()")
     STOP
   END IF
+
 #endif
 
 END SUBROUTINE validate_query_storage
@@ -870,20 +866,13 @@ END SUBROUTINE validate_query_storage
 !
 !----------------------------------------------------------------------------
 
+! distance between iv[1:n] and qv[1:n]
+! .. Function Return Value ..
+! re-implemented to improve vectorization.
 FUNCTION square_distance(d, iv, qv) RESULT(res)
-  ! distance between iv[1:n] and qv[1:n]
-  ! .. Function Return Value ..
-  ! re-implemented to improve vectorization.
   REAL(kdkind) :: res
-  ! ..
-  ! ..
-  ! .. Scalar Arguments ..
   INTEGER :: d
-  ! ..
-  ! .. Array Arguments ..
   REAL(kdkind) :: iv(:), qv(:)
-  ! ..
-  ! ..
   res = SUM((iv(1:d) - qv(1:d))**2)
 END FUNCTION square_distance
 
@@ -891,80 +880,81 @@ END FUNCTION square_distance
 !
 !----------------------------------------------------------------------------
 
+! This is the innermost core routine of the kd-tree search.  Along
+! with "process_terminal_node", it is the performance bottleneck.
+!
+! This version uses a logically complete secondary search of
+! "box in bounds", whether the sear
 RECURSIVE SUBROUTINE search(node)
-  !
-  ! This is the innermost core routine of the kd-tree search.  Along
-  ! with "process_terminal_node", it is the performance bottleneck.
-  !
-  ! This version uses a logically complete secondary search of
-  ! "box in bounds", whether the sear
-  !
   TYPE(Tree_node), POINTER :: node
-  ! ..
+
+  !  internal variables
   TYPE(tree_node), POINTER :: ncloser, nfarther
-  !
   INTEGER :: cut_dim, i
-  ! ..
   REAL(kdkind) :: qval, dis
   REAL(kdkind) :: ballsize
   REAL(kdkind), POINTER :: qv(:)
   TYPE(interval), POINTER :: box(:)
+  LOGICAL(LGT) :: isok
 
-  IF ((ASSOCIATED(node%left) .AND. ASSOCIATED(node%right)) .EQV. .FALSE.) THEN
+  isok = (ASSOCIATED(node%left) .AND. ASSOCIATED(node%right)) .EQV. .FALSE.
+
+  IF (isok) THEN
+
     ! we are on a terminal node
     IF (sr%nn .EQ. 0) THEN
       CALL process_terminal_node_fixedball(node)
     ELSE
       CALL process_terminal_node(node)
     END IF
-  ELSE
-    ! we are not on a terminal node
-    qv => sr%qv(1:)
-    cut_dim = node%cut_dim
-    qval = qv(cut_dim)
+    RETURN
 
-    IF (qval < node%cut_val) THEN
-      ncloser => node%left
-      nfarther => node%right
-      dis = (node%cut_val_right - qval)**2
-!          extra = node%cut_val - qval
-    ELSE
-      ncloser => node%right
-      nfarther => node%left
-      dis = (node%cut_val_left - qval)**2
-!          extra = qval- node%cut_val_left
-    END IF
-
-    IF (ASSOCIATED(ncloser)) CALL search(ncloser)
-
-    ! we may need to search the second node.
-    IF (ASSOCIATED(nfarther)) THEN
-      ballsize = sr%ballsize
-!          dis=extra**2
-      IF (dis <= ballsize) THEN
-        !
-        ! we do this separately as going on the first cut dimen is often
-        ! a good idea.
-        ! note that if extra**2 < sr%ballsize, then the next
-        ! check will also be false.
-        !
-        box => node%box(1:)
-        DO i = 1, sr%dimen
-          IF (i .NE. cut_dim) THEN
-            dis = dis + dis2_from_bnd(qv(i), box(i)%lower, box(i)%upper)
-            IF (dis > ballsize) THEN
-              RETURN
-            END IF
-          END IF
-        END DO
-
-        !
-        ! if we are still here then we need to search mroe.
-        !
-        CALL search(nfarther)
-      END IF
-    END IF
   END IF
+
+  ! we are not on a terminal node
+  qv => sr%qv(1:)
+  cut_dim = node%cut_dim
+  qval = qv(cut_dim)
+
+  IF (qval < node%cut_val) THEN
+    ncloser => node%left
+    nfarther => node%right
+    dis = (node%cut_val_right - qval)**2
+    !  extra = node%cut_val - qval
+  ELSE
+    ncloser => node%right
+    nfarther => node%left
+    dis = (node%cut_val_left - qval)**2
+    !  extra = qval- node%cut_val_left
+  END IF
+
+  IF (ASSOCIATED(ncloser)) CALL search(ncloser)
+
+  ! we may need to search the second node.
+  isok = ASSOCIATED(nfarther)
+  IF (.NOT. isok) RETURN
+
+  ballsize = sr%ballsize
+  ! dis=extra**2
+
+  isok = dis <= ballsize
+  IF (.NOT. isok) RETURN
+
+  ! we do this separately as going on the first cut dimen is often
+  ! a good idea.
+  ! note that if extra**2 < sr%ballsize, then the next
+  ! check will also be false.
+  box => node%box(1:)
+  DO i = 1, sr%dimen
+    IF (i .NE. cut_dim) THEN
+      dis = dis + dis2_from_bnd(qv(i), box(i)%lower, box(i)%upper)
+      IF (dis > ballsize) RETURN
+    END IF
+  END DO
+
+  ! if we are still here then we need to search mroe.
+  CALL search(nfarther)
+
 END SUBROUTINE search
 
 !----------------------------------------------------------------------------
@@ -973,31 +963,27 @@ END SUBROUTINE search
 
 REAL(kdkind) FUNCTION dis2_from_bnd(x, amin, amax) RESULT(res)
   REAL(kdkind), INTENT(in) :: x, amin, amax
+  LOGICAL(LGT) :: isok
 
-  IF (x > amax) THEN
-    res = (x - amax)**2; 
+  res = 0.0
+
+  isok = x > amax
+  IF (isok) THEN
+    res = (x - amax)**2
     RETURN
-  ELSE
-    IF (x < amin) THEN
-      res = (amin - x)**2; 
-      RETURN
-    ELSE
-      res = 0.0
-      RETURN
-    END IF
   END IF
-  RETURN
+
+  isok = x < amin
+  IF (isok) res = (amin - x)**2
 END FUNCTION dis2_from_bnd
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
+! Look for actual near neighbors in 'node', and update
+! the search results on the sr data structure.
 SUBROUTINE process_terminal_node(node)
-  !
-  ! Look for actual near neighbors in 'node', and update
-  ! the search results on the sr data structure.
-  !
   TYPE(tree_node), POINTER :: node
   !
   REAL(kdkind), POINTER :: qv(:)
@@ -1101,12 +1087,10 @@ END SUBROUTINE process_terminal_node
 !
 !----------------------------------------------------------------------------
 
+! Look for actual near neighbors in 'node', and update
+! the search results on the sr data structure, i.e.
+! save all within a fixed ball.
 SUBROUTINE process_terminal_node_fixedball(node)
-  !
-  ! Look for actual near neighbors in 'node', and update
-  ! the search results on the sr data structure, i.e.
-  ! save all within a fixed ball.
-  !
   TYPE(tree_node), POINTER :: node
   !
   REAL(kdkind), POINTER :: qv(:)
@@ -1119,9 +1103,7 @@ SUBROUTINE process_terminal_node_fixedball(node)
   REAL(kdkind) :: ballsize, sd
   LOGICAL :: rearrange
 
-  !
   ! copy values from sr to local variables
-  !
   qv => sr%qv(1:)
   dimen = sr%dimen
   ballsize = sr%ballsize
@@ -1142,8 +1124,9 @@ SUBROUTINE process_terminal_node_fixedball(node)
     !
     ! If it is undersized, then add the point and its distance
     ! unconditionally.  If the point added fills up the working
-    ! list then set the sr%ballsize, maximum distance bound (largest distance on
-    ! list) to be that distance, instead of the initialized +infinity.
+    ! list then set the sr%ballsize, maximum distance bound
+    ! (largest distance on list) to be that distance,
+    ! instead of the initialized +infinity.
     !
     ! If the running list is full size, then compute the
     ! distance but break out immediately if it is larger
@@ -1186,9 +1169,8 @@ SUBROUTINE process_terminal_node_fixedball(node)
       sr%results(nfound)%idx = indexofi
     END IF
   END DO mainloop
-  !
+
   ! Reset sr variables which may have changed during loop
-  !
   sr%nfound = nfound
 END SUBROUTINE process_terminal_node_fixedball
 
@@ -1287,48 +1269,29 @@ END SUBROUTINE kdtree2_r_nearest_brute_force
 !
 !----------------------------------------------------------------------------
 
+!  Use after search to sort results(1:nfound) in order of increasing
+!  distance.
 SUBROUTINE kdtree2_sort_results(nfound, results)
-  !  Use after search to sort results(1:nfound) in order of increasing
-  !  distance.
   INTEGER, INTENT(in) :: nfound
   TYPE(kdtree2_result), TARGET :: results(:)
-  !
-  !
-
-  !THIS IS BUGGY WITH INTEL FORTRAN
-  !    If (nfound .Gt. 1) Call heapsort(results(1:nfound)%dis,results(1:nfound)%ind,nfound)
-  !
   IF (nfound .GT. 1) CALL heapsort_struct(results, nfound)
-
-  RETURN
 END SUBROUTINE kdtree2_sort_results
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
+! Sort a(1:n) in ascending order
 SUBROUTINE heapsort_struct(a, n)
-  !
-  ! Sort a(1:n) in ascending order
-  !
-  !
   INTEGER, INTENT(in) :: n
   TYPE(kdtree2_result), INTENT(inout) :: a(:)
 
-  !
-  !
   TYPE(kdtree2_result) :: VALUE ! temporary value
-
   INTEGER :: i, j
   INTEGER :: ileft, iright
 
   ileft = n / 2 + 1
   iright = n
-
-  !    do i=1,n
-  !       ind(i)=i
-  ! Generate initial idum array
-  !    end do
 
   IF (n .EQ. 1) RETURN
 
@@ -1345,6 +1308,7 @@ SUBROUTINE heapsort_struct(a, n)
         RETURN
       END IF
     END IF
+
     i = ileft
     j = 2 * ileft
     DO WHILE (j <= iright)
@@ -1360,6 +1324,7 @@ SUBROUTINE heapsort_struct(a, n)
       END IF
     END DO
     a(i) = VALUE
+
   END DO
 END SUBROUTINE heapsort_struct
 
