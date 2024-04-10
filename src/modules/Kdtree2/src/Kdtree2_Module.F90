@@ -104,7 +104,7 @@ TYPE :: Kdtree2_
   LOGICAL :: sort = .FALSE.
   ! do we always sort output results?
   LOGICAL :: rearrange = .FALSE.
-  REAL(kdkind), POINTER :: rearranged_data(:, :) => NULL()
+  REAL(kdkind), ALLOCATABLE :: rearranged_data(:, :)
   ! if (rearrange .eqv. .true.) then rearranged_data has been
   ! created so that rearranged_data(:,i) = the_data(:,ind(i)),
   ! permitting search to use more cache-friendly rearranged_data, at
@@ -211,7 +211,7 @@ FUNCTION Kdtree2_create(input_data, dim, sort, rearrange) RESULT(mr)
   mr%rearrange = Input(default=.TRUE., option=rearrange)
 
   IF (.NOT. mr%rearrange) THEN
-    NULLIFY (mr%rearranged_data)
+    IF (ALLOCATED(mr%rearranged_data)) DEALLOCATE (mr%rearranged_data)
     RETURN
   END IF
 
@@ -462,8 +462,7 @@ SUBROUTINE Kdtree2_Destroy(tp)
   IF (ALLOCATED(tp%ind)) DEALLOCATE (tp%ind)
 
   IF (tp%rearrange) THEN
-    DEALLOCATE (tp%rearranged_data)
-    NULLIFY (tp%rearranged_data)
+    IF (ALLOCATED(tp%rearranged_data)) DEALLOCATE (tp%rearranged_data)
   END IF
 
   DEALLOCATE (tp)
