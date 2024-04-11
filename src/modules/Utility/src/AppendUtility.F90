@@ -16,6 +16,11 @@
 !
 
 MODULE AppendUtility
+!> author: Vikas Sharma, Ph. D.
+! date:  2024-04-11
+! summary:  This module contains method for appending to vectors and martrix
+!{!pages/AppendUtility/index.md!}
+
 USE GlobalData
 IMPLICIT NONE
 PRIVATE

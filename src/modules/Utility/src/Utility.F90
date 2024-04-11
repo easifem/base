@@ -14,6 +14,12 @@
 ! You should have received a copy of the GNU General Public License
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 
+!> author: Vikas Sharma, Ph. D.
+! date:  2024-04-11
+! summary:  This module contains several utility modules
+!
+!{!pages/Utility/index.md!}
+
 MODULE Utility
 USE AppendUtility
 USE ApproxUtility
