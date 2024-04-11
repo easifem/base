@@ -14,61 +14,58 @@
 ! You should have received a copy of the GNU General Public License
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
-!> author: Vikas Sharma, Ph. D.
-! date:         23 Feb 2021
-! summary:         This submodule contains implementation of get method for [[BoundingBox_]] data type which are defined in [[BoundingBox_Method]] module.
 
 SUBMODULE(BoundingBox_Method) GetMethods
 USE GlobalData, ONLY: zero
 IMPLICIT NONE
 CONTAINS
 
-!-----------------------------------------------------------------------------
+!----------------------------------------------------------------------------
 !                                                                     getXmin
-!-----------------------------------------------------------------------------
+!----------------------------------------------------------------------------
 
 MODULE PROCEDURE getXmin
-Ans = obj%Box(1, 1)
+ans = obj%box(1, 1)
 END PROCEDURE getXmin
 
-!-----------------------------------------------------------------------------
+!----------------------------------------------------------------------------
 !                                                                     getXmax
-!-----------------------------------------------------------------------------
+!----------------------------------------------------------------------------
 
 MODULE PROCEDURE getXmax
-Ans = obj%Box(2, 1)
+ans = obj%box(2, 1)
 END PROCEDURE getXmax
 
-!-----------------------------------------------------------------------------
+!----------------------------------------------------------------------------
 !                                                                     getYmin
-!-----------------------------------------------------------------------------
+!----------------------------------------------------------------------------
 
 MODULE PROCEDURE getYmin
-Ans = obj%Box(1, 2)
+ans = obj%box(1, 2)
 END PROCEDURE getYmin
 
-!-----------------------------------------------------------------------------
+!----------------------------------------------------------------------------
 !                                                                     getYmax
-!-----------------------------------------------------------------------------
+!----------------------------------------------------------------------------
 
 MODULE PROCEDURE getYmax
-Ans = obj%Box(2, 2)
+ans = obj%box(2, 2)
 END PROCEDURE getYmax
 
-!-----------------------------------------------------------------------------
+!----------------------------------------------------------------------------
 !                                                                     getZmin
-!-----------------------------------------------------------------------------
+!----------------------------------------------------------------------------
 
 MODULE PROCEDURE getZmin
-Ans = obj%Box(1, 3)
+ans = obj%box(1, 3)
 END PROCEDURE getZmin
 
-!-----------------------------------------------------------------------------
+!----------------------------------------------------------------------------
 !                                                                     getZmax
-!-----------------------------------------------------------------------------
+!----------------------------------------------------------------------------
 
 MODULE PROCEDURE getZmax
-Ans = obj%Box(2, 3)
+ans = obj%box(2, 3)
 END PROCEDURE getZmax
 
 !----------------------------------------------------------------------------
@@ -87,9 +84,9 @@ Right = (min2 .GE. min1) .AND. (min2 .LE. max1)
 Left = (max2 .GE. min1) .AND. (max2 .LE. max1)
 
 IF (Left .OR. Right) THEN
-  Ans = .TRUE.
+  ans = .TRUE.
 ELSE
-  Ans = .FALSE.
+  ans = .FALSE.
 END IF
 END PROCEDURE is_intersect_in_X
 
@@ -109,9 +106,9 @@ Right = (min2 .GE. min1) .AND. (min2 .LE. max1)
 Left = (max2 .GE. min1) .AND. (max2 .LE. max1)
 
 IF (Left .OR. Right) THEN
-  Ans = .TRUE.
+  ans = .TRUE.
 ELSE
-  Ans = .FALSE.
+  ans = .FALSE.
 END IF
 END PROCEDURE is_intersect_in_Y
 
@@ -131,9 +128,9 @@ Right = (min2 .GE. min1) .AND. (min2 .LE. max1)
 Left = (max2 .GE. min1) .AND. (max2 .LE. max1)
 
 IF (Left .OR. Right) THEN
-  Ans = .TRUE.
+  ans = .TRUE.
 ELSE
-  Ans = .FALSE.
+  ans = .FALSE.
 END IF
 END PROCEDURE is_intersect_in_Z
 
@@ -142,7 +139,7 @@ END PROCEDURE is_intersect_in_Z
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE is_intersect
-Ans = isIntersectInX(obj, obj2) &
+ans = isIntersectInX(obj, obj2) &
   & .AND. isIntersectInY(obj, obj2) &
   & .AND. isIntersectInZ(obj, obj2)
 END PROCEDURE is_intersect
@@ -152,18 +149,8 @@ END PROCEDURE is_intersect
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE bbox_isEmpty
-REAL(DFP) :: min1, max1
-
-min1 = .Xmin.obj
-max1 = .Xmax.obj
 ans = .TRUE.
-IF (ABS(max1 - min1) .GE. zero) ans = .FALSE.
-min1 = .Ymin.obj
-max1 = .Ymax.obj
-IF (ABS(max1 - min1) .GE. zero) ans = .FALSE.
-min1 = .Zmin.obj
-max1 = .Zmax.obj
-IF (ABS(max1 - min1) .GE. zero) ans = .FALSE.
+IF (ANY(obj%l .GT. zero)) ans = .FALSE.
 END PROCEDURE bbox_isEmpty
 
 !----------------------------------------------------------------------------
@@ -172,15 +159,15 @@ END PROCEDURE bbox_isEmpty
 
 MODULE PROCEDURE get_intersection
 !> main
-Ans%NSD = MAX(obj%NSD, obj2%NSD)
-Ans%Box = 0.0_DFP
+ans%NSD = MAX(obj%NSD, obj2%NSD)
+ans%box = 0.0_DFP
 IF (obj.isIntersect.obj2) THEN
-  CALL setXmin(Ans, MAX(.Xmin.obj, .Xmin.obj2))
-  CALL setXmax(Ans, MIN(.Xmax.obj, .Xmax.obj2))
-  CALL setYmin(Ans, MAX(.Ymin.obj, .Ymin.obj2))
-  CALL setYmax(Ans, MIN(.Ymax.obj, .Ymax.obj2))
-  CALL setZmin(Ans, MAX(.Zmin.obj, .Zmin.obj2))
-  CALL setZmax(Ans, MIN(.Zmax.obj, .Zmax.obj2))
+  CALL setXmin(ans, MAX(.Xmin.obj, .Xmin.obj2))
+  CALL setXmax(ans, MIN(.Xmax.obj, .Xmax.obj2))
+  CALL setYmin(ans, MAX(.Ymin.obj, .Ymin.obj2))
+  CALL setYmax(ans, MIN(.Ymax.obj, .Ymax.obj2))
+  CALL setZmin(ans, MAX(.Zmin.obj, .Zmin.obj2))
+  CALL setZmax(ans, MIN(.Zmax.obj, .Zmax.obj2))
 END IF
 END PROCEDURE get_intersection
 
@@ -190,30 +177,30 @@ END PROCEDURE get_intersection
 
 MODULE PROCEDURE get_union
 ! Define Internal variables
-REAL(DFP) :: Val, Val1, Val2
+INTEGER(I4B) :: nsd
+REAL(DFP) :: val(6), val1, val2
 
-Ans%NSD = MAX(obj%NSD, obj2%NSD)
+nsd = MAX(obj%nsd, obj2%nsd)
 
-Val1 = .Xmin.obj; Val2 = .Xmin.obj2
-Val = MIN(Val1, Val2)
-CALL SetXMin(Ans, Val)
-Val1 = .Xmax.obj; Val2 = .Xmax.obj2
-Val = MAX(Val1, Val2)
-CALL SetXMax(Ans, Val)
+val1 = .Xmin.obj; val2 = .Xmin.obj2
+val(1) = MIN(val1, val2)
 
-Val1 = .Ymin.obj; Val2 = .Ymin.obj2
-Val = MIN(Val1, Val2)
-CALL SetYMin(Ans, Val)
-Val1 = .Ymax.obj; Val2 = .Ymax.obj2
-Val = MAX(Val1, Val2)
-CALL SetYMax(Ans, Val)
+val1 = .Xmax.obj; val2 = .Xmax.obj2
+val(2) = MAX(val1, val2)
 
-Val1 = .Zmin.obj; Val2 = .Zmin.obj2
-Val = MIN(Val1, Val2)
-CALL SetZMin(Ans, Val)
-Val1 = .Zmax.obj; Val2 = .Zmax.obj2
-Val = MAX(Val1, Val2)
-CALL SetZMax(Ans, Val)
+val1 = .Ymin.obj; val2 = .Ymin.obj2
+val(3) = MIN(val1, val2)
+
+val1 = .Ymax.obj; val2 = .Ymax.obj2
+val(4) = MAX(val1, val2)
+
+val1 = .Zmin.obj; val2 = .Zmin.obj2
+val(5) = MIN(val1, val2)
+
+val1 = .Zmax.obj; val2 = .Zmax.obj2
+val(6) = MAX(val1, val2)
+
+CALL Initiate(obj=ans, nsd=nsd, lim=val)
 END PROCEDURE get_union
 
 !----------------------------------------------------------------------------
@@ -221,9 +208,9 @@ END PROCEDURE get_union
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE get_Center
-Ans(1) = SUM(obj%Box(:, 1)) / 2.0_DFP
-Ans(2) = SUM(obj%Box(:, 2)) / 2.0_DFP
-Ans(3) = SUM(obj%Box(:, 3)) / 2.0_DFP
+ans(1) = SUM(obj%box(:, 1)) / 2.0_DFP
+ans(2) = SUM(obj%box(:, 2)) / 2.0_DFP
+ans(3) = SUM(obj%box(:, 3)) / 2.0_DFP
 END PROCEDURE get_Center
 
 !----------------------------------------------------------------------------
@@ -235,71 +222,55 @@ MODULE PROCEDURE is_Inside
 ! internal variables
 INTEGER(I4B) :: NSD
 REAL(DFP) :: min1, max1
-LOGICAL(LGT) :: Ans1, Ans2, Ans3
+LOGICAL(LGT) :: ans1, ans2, ans3
 
-NSD = SIZE(Val)
+ans = .FALSE.
+ans1 = .FALSE.
+ans2 = .FALSE.
+ans3 = .FALSE.
+NSD = SIZE(val)
 
 SELECT CASE (NSD)
 
 CASE (1)
 
   min1 = .Xmin.obj; max1 = .Xmax.obj
-  IF (Val(1) .GE. min1 .AND. Val(1) .LE. max1) THEN
-    Ans = .TRUE.
-  ELSE
-    Ans = .FALSE.
+  IF (val(1) .GE. min1 .AND. val(1) .LE. max1) THEN
+    ans = .TRUE.
   END IF
 
 CASE (2)
 
   min1 = .Xmin.obj; max1 = .Xmax.obj
-  IF (Val(1) .GE. min1 .AND. Val(1) .LE. max1) THEN
-    Ans1 = .TRUE.
-  ELSE
-    Ans2 = .FALSE.
+  IF (val(1) .GE. min1 .AND. val(1) .LE. max1) THEN
+    ans1 = .TRUE.
   END IF
 
   min1 = .Ymin.obj; max1 = .Ymax.obj
-  IF (Val(2) .GE. min1 .AND. Val(2) .LE. max1) THEN
-    Ans2 = .TRUE.
-  ELSE
-    Ans2 = .FALSE.
+  IF (val(2) .GE. min1 .AND. val(2) .LE. max1) THEN
+    ans2 = .TRUE.
   END IF
 
-  IF (Ans1 .AND. Ans2) THEN
-    Ans = .TRUE.
-  ELSE
-    Ans = .FALSE.
-  END IF
+  ans = ans1 .AND. ans2
 
 CASE DEFAULT
 
   min1 = .Xmin.obj; max1 = .Xmax.obj
-  IF (Val(1) .GE. min1 .AND. Val(1) .LE. max1) THEN
-    Ans1 = .TRUE.
-  ELSE
-    Ans1 = .FALSE.
+  IF (val(1) .GE. min1 .AND. val(1) .LE. max1) THEN
+    ans1 = .TRUE.
   END IF
 
   min1 = .Ymin.obj; max1 = .Ymax.obj
-  IF (Val(2) .GE. min1 .AND. Val(2) .LE. max1) THEN
-    Ans2 = .TRUE.
-  ELSE
-    Ans2 = .FALSE.
+  IF (val(2) .GE. min1 .AND. val(2) .LE. max1) THEN
+    ans2 = .TRUE.
   END IF
 
   min1 = .Zmin.obj; max1 = .Zmax.obj
-  IF (Val(3) .GE. min1 .AND. Val(3) .LE. max1) THEN
-    Ans3 = .TRUE.
-  ELSE
-    Ans3 = .FALSE.
+  IF (val(3) .GE. min1 .AND. val(3) .LE. max1) THEN
+    ans3 = .TRUE.
   END IF
 
-  IF (Ans1 .AND. Ans2 .AND. Ans3) THEN
-    Ans = .TRUE.
-  ELSE
-    Ans = .FALSE.
-  END IF
+  ans = ans1 .AND. ans2 .AND. ans3
 
 END SELECT
 END PROCEDURE is_Inside
@@ -328,12 +299,35 @@ END PROCEDURE get_nptrs
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE bbox_GetDiameter
-REAL(DFP) :: a(3)
-a(1) = ABS((.xmax.obj) - (.xmin.obj))
-a(2) = ABS((.ymax.obj) - (.ymin.obj))
-a(3) = ABS((.zmax.obj) - (.zmin.obj))
-ans = MAXVAL(a)
+ans = bbox_GetDiameterSqr(obj)
+ans = SQRT(ans)
 END PROCEDURE bbox_GetDiameter
+
+!----------------------------------------------------------------------------
+!                                                               GetRadius
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE bbox_GetRadius
+ans = bbox_GetDiameter(obj) * 0.5_DFP
+END PROCEDURE bbox_GetRadius
+
+!----------------------------------------------------------------------------
+!                                                               GetDiameter
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE bbox_GetDiameterSqr
+ASSOCIATE (a => obj%l(1), b => obj%l(2), c => obj%l(3))
+  ans = (a**2 + b**2 + c**2) * 0.25_DFP
+END ASSOCIATE
+END PROCEDURE bbox_GetDiameterSqr
+
+!----------------------------------------------------------------------------
+!                                                               GetRadius
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE bbox_GetRadiusSqr
+ans = 0.25_DFP * bbox_GetDiameterSqr(obj)
+END PROCEDURE bbox_GetRadiusSqr
 
 !----------------------------------------------------------------------------
 !

@@ -16,7 +16,7 @@
 !
 
 SUBMODULE(BoundingBox_Method) IOMethods
-USE BaseMethod
+USE Display_Method
 IMPLICIT NONE
 CONTAINS
 
@@ -26,14 +26,13 @@ CONTAINS
 
 MODULE PROCEDURE display_obj
 CALL Display(msg, unitNo=unitNo)
-CALL Display(msg="# Type :: BoundingBox_", unitNo=unitNo)
-CALL Display(obj%NSD, msg="# NSD :: ", unitNo=unitNo)
-CALL Display(.Xmin.obj, msg="# Xmin :: ", unitNo=unitNo)
-CALL Display(.Xmax.obj, msg="# Xmax :: ", unitNo=unitNo)
-CALL Display(.Ymin.obj, msg="# Ymin :: ", unitNo=unitNo)
-CALL Display(.Ymax.obj, msg="# Ymax :: ", unitNo=unitNo)
-CALL Display(.Zmin.obj, msg="# Zmin :: ", unitNo=unitNo)
-CALL Display(.Zmax.obj, msg="# Zmax :: ", unitNo=unitNo)
+CALL Display(obj%nsd, msg="NSD :: ", unitNo=unitNo)
+CALL Display(.Xmin.obj, msg="Xmin :: ", unitNo=unitNo)
+CALL Display(.Xmax.obj, msg="Xmax :: ", unitNo=unitNo)
+CALL Display(.Ymin.obj, msg="Ymin :: ", unitNo=unitNo)
+CALL Display(.Ymax.obj, msg="Ymax :: ", unitNo=unitNo)
+CALL Display(.Zmin.obj, msg="Zmin :: ", unitNo=unitNo)
+CALL Display(.Zmax.obj, msg="Zmax :: ", unitNo=unitNo)
 END PROCEDURE display_obj
 
 END SUBMODULE IOMethods
