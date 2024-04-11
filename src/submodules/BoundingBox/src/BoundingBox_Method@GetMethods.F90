@@ -17,6 +17,7 @@
 
 SUBMODULE(BoundingBox_Method) GetMethods
 USE GlobalData, ONLY: zero
+USE ApproxUtility
 IMPLICIT NONE
 CONTAINS
 
@@ -231,7 +232,7 @@ PURE ELEMENTAL FUNCTION xyz(x, y, z) RESULT(ans)
   REAL(DFP), INTENT(IN) :: x, y, z
   LOGICAL(LGT) :: ans
   ans = .FALSE.
-  IF (x .GE. y .AND. x .LE. z) ans = .TRUE.
+  IF ((x.APPROXGE.y) .AND. (x.APPROXLE.z)) ans = .TRUE.
 END FUNCTION xyz
 END PROCEDURE is_Inside
 
