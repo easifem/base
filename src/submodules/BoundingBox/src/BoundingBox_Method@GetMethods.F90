@@ -218,38 +218,13 @@ END PROCEDURE get_Center
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE is_Inside
-
-! internal variables
-INTEGER(I4B) :: NSD
-LOGICAL(LGT) :: ans1, ans2, ans3
+INTEGER(I4B) :: ii
 
 ans = .FALSE.
-ans1 = .FALSE.
-ans2 = .FALSE.
-ans3 = .FALSE.
-NSD = SIZE(val)
-
-SELECT CASE (NSD)
-
-CASE (1)
-
-  ans = xyz(val(1), obj%box(1, 1), obj%box(2, 1))
-
-CASE (2)
-
-  ans1 = xyz(val(1), obj%box(1, 1), obj%box(2, 1))
-  ans2 = xyz(val(2), obj%box(1, 2), obj%box(2, 2))
-  ans = ans1 .AND. ans2
-
-CASE DEFAULT
-
-  ans1 = xyz(val(1), obj%box(1, 1), obj%box(2, 1))
-  ans2 = xyz(val(2), obj%box(1, 2), obj%box(2, 2))
-  ans3 = xyz(val(3), obj%box(1, 3), obj%box(2, 3))
-
-  ans = ans1 .AND. ans2 .AND. ans3
-
-END SELECT
+DO ii = 1, SIZE(val)
+  ans = xyz(val(ii), obj%box(1, ii), obj%box(2, ii))
+  IF (.NOT. ans) RETURN
+END DO
 
 CONTAINS
 PURE ELEMENTAL FUNCTION xyz(x, y, z) RESULT(ans)
