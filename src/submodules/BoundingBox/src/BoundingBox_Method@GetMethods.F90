@@ -221,7 +221,6 @@ MODULE PROCEDURE is_Inside
 
 ! internal variables
 INTEGER(I4B) :: NSD
-REAL(DFP) :: min1, max1
 LOGICAL(LGT) :: ans1, ans2, ans3
 
 ans = .FALSE.
@@ -234,45 +233,31 @@ SELECT CASE (NSD)
 
 CASE (1)
 
-  min1 = .Xmin.obj; max1 = .Xmax.obj
-  IF (val(1) .GE. min1 .AND. val(1) .LE. max1) THEN
-    ans = .TRUE.
-  END IF
+  ans = xyz(val(1), obj%box(1, 1), obj%box(2, 1))
 
 CASE (2)
 
-  min1 = .Xmin.obj; max1 = .Xmax.obj
-  IF (val(1) .GE. min1 .AND. val(1) .LE. max1) THEN
-    ans1 = .TRUE.
-  END IF
-
-  min1 = .Ymin.obj; max1 = .Ymax.obj
-  IF (val(2) .GE. min1 .AND. val(2) .LE. max1) THEN
-    ans2 = .TRUE.
-  END IF
-
+  ans1 = xyz(val(1), obj%box(1, 1), obj%box(2, 1))
+  ans2 = xyz(val(2), obj%box(1, 2), obj%box(2, 2))
   ans = ans1 .AND. ans2
 
 CASE DEFAULT
 
-  min1 = .Xmin.obj; max1 = .Xmax.obj
-  IF (val(1) .GE. min1 .AND. val(1) .LE. max1) THEN
-    ans1 = .TRUE.
-  END IF
-
-  min1 = .Ymin.obj; max1 = .Ymax.obj
-  IF (val(2) .GE. min1 .AND. val(2) .LE. max1) THEN
-    ans2 = .TRUE.
-  END IF
-
-  min1 = .Zmin.obj; max1 = .Zmax.obj
-  IF (val(3) .GE. min1 .AND. val(3) .LE. max1) THEN
-    ans3 = .TRUE.
-  END IF
+  ans1 = xyz(val(1), obj%box(1, 1), obj%box(2, 1))
+  ans2 = xyz(val(2), obj%box(1, 2), obj%box(2, 2))
+  ans3 = xyz(val(3), obj%box(1, 3), obj%box(2, 3))
 
   ans = ans1 .AND. ans2 .AND. ans3
 
 END SELECT
+
+CONTAINS
+PURE ELEMENTAL FUNCTION xyz(x, y, z) RESULT(ans)
+  REAL(DFP), INTENT(IN) :: x, y, z
+  LOGICAL(LGT) :: ans
+  ans = .FALSE.
+  IF (x .GE. y .AND. x .LE. z) ans = .TRUE.
+END FUNCTION xyz
 END PROCEDURE is_Inside
 
 !----------------------------------------------------------------------------
