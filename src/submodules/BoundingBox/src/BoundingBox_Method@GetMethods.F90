@@ -298,9 +298,16 @@ END PROCEDURE get_nptrs
 !                                                               GetDiameter
 !----------------------------------------------------------------------------
 
+MODULE PROCEDURE bbox_GetDiameterSqr
+ans = obj%l(1)**2 + obj%l(2)**2 + obj%l(3)**2
+END PROCEDURE bbox_GetDiameterSqr
+
+!----------------------------------------------------------------------------
+!                                                               GetDiameter
+!----------------------------------------------------------------------------
+
 MODULE PROCEDURE bbox_GetDiameter
-ans = bbox_GetDiameterSqr(obj)
-ans = SQRT(ans)
+ans = SQRT(bbox_GetDiameterSqr(obj))
 END PROCEDURE bbox_GetDiameter
 
 !----------------------------------------------------------------------------
@@ -310,16 +317,6 @@ END PROCEDURE bbox_GetDiameter
 MODULE PROCEDURE bbox_GetRadius
 ans = bbox_GetDiameter(obj) * 0.5_DFP
 END PROCEDURE bbox_GetRadius
-
-!----------------------------------------------------------------------------
-!                                                               GetDiameter
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE bbox_GetDiameterSqr
-ASSOCIATE (a => obj%l(1), b => obj%l(2), c => obj%l(3))
-  ans = (a**2 + b**2 + c**2) * 0.25_DFP
-END ASSOCIATE
-END PROCEDURE bbox_GetDiameterSqr
 
 !----------------------------------------------------------------------------
 !                                                               GetRadius

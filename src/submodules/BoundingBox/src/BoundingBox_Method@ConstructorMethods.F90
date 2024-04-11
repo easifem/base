@@ -32,8 +32,8 @@ obj%box(2, 1) = lim(2) !xmax
 obj%box(2, 2) = lim(4) !ymax
 obj%box(2, 3) = lim(6) !zmax
 obj%l(1) = lim(2) - lim(1)
-obj%l(2) = lim(4) - lim(2)
-obj%l(3) = lim(6) - lim(3)
+obj%l(2) = lim(4) - lim(3)
+obj%l(3) = lim(6) - lim(5)
 END PROCEDURE Initiate_1
 
 !----------------------------------------------------------------------------

@@ -33,6 +33,9 @@ CALL Display(.Ymin.obj, msg="Ymin :: ", unitNo=unitNo)
 CALL Display(.Ymax.obj, msg="Ymax :: ", unitNo=unitNo)
 CALL Display(.Zmin.obj, msg="Zmin :: ", unitNo=unitNo)
 CALL Display(.Zmax.obj, msg="Zmax :: ", unitNo=unitNo)
+CALL Display(obj%l(1), msg="Lx :: ", unitNo=unitNo)
+CALL Display(obj%l(2), msg="Ly :: ", unitNo=unitNo)
+CALL Display(obj%l(3), msg="Lz :: ", unitNo=unitNo)
 END PROCEDURE display_obj
 
 END SUBMODULE IOMethods
