@@ -159,17 +159,23 @@ END PROCEDURE bbox_isEmpty
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE get_intersection
-!> main
-ans%NSD = MAX(obj%NSD, obj2%NSD)
-ans%box = 0.0_DFP
-IF (obj.isIntersect.obj2) THEN
-  CALL setXmin(ans, MAX(.Xmin.obj, .Xmin.obj2))
-  CALL setXmax(ans, MIN(.Xmax.obj, .Xmax.obj2))
-  CALL setYmin(ans, MAX(.Ymin.obj, .Ymin.obj2))
-  CALL setYmax(ans, MIN(.Ymax.obj, .Ymax.obj2))
-  CALL setZmin(ans, MAX(.Zmin.obj, .Zmin.obj2))
-  CALL setZmax(ans, MIN(.Zmax.obj, .Zmax.obj2))
-END IF
+INTEGER(I4B) :: nsd
+REAL(DFP) :: lim(6)
+
+nsd = MAX(obj%nsd, obj2%nsd)
+lim = 0.0_DFP
+
+lim(1) = MAX(obj%box(1, 1), obj2%box(1, 1))
+lim(2) = MIN(obj%box(2, 1), obj2%box(2, 1))
+
+lim(3) = MAX(obj%box(1, 2), obj2%box(1, 2))
+lim(4) = MIN(obj%box(2, 2), obj2%box(2, 2))
+
+lim(5) = MAX(obj%box(1, 3), obj2%box(1, 3))
+lim(6) = MIN(obj%box(2, 3), obj2%box(2, 3))
+
+CALL Initiate(obj=ans, nsd=nsd, lim=lim)
+
 END PROCEDURE get_intersection
 
 !----------------------------------------------------------------------------
