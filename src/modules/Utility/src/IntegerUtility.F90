@@ -384,19 +384,19 @@ INTERFACE Get
   MODULE PURE FUNCTION Get2_Int16(val, indx) RESULT(ans)
     INTEGER(INT16), INTENT(IN) :: val(:)
     INTEGER(I4B), INTENT(IN) :: indx(:)
-    INTEGER(INT8) :: ans(SIZE(indx))
+    INTEGER(INT16) :: ans(SIZE(indx))
   END FUNCTION Get2_Int16
 
   MODULE PURE FUNCTION Get2_Int32(val, indx) RESULT(ans)
     INTEGER(INT32), INTENT(IN) :: val(:)
     INTEGER(I4B), INTENT(IN) :: indx(:)
-    INTEGER(INT8) :: ans(SIZE(indx))
+    INTEGER(INT32) :: ans(SIZE(indx))
   END FUNCTION Get2_Int32
 
   MODULE PURE FUNCTION Get2_Int64(val, indx) RESULT(ans)
     INTEGER(INT64), INTENT(IN) :: val(:)
     INTEGER(I4B), INTENT(IN) :: indx(:)
-    INTEGER(INT8) :: ans(SIZE(indx))
+    INTEGER(INT64) :: ans(SIZE(indx))
   END FUNCTION Get2_Int64
 END INTERFACE Get
 
@@ -414,19 +414,19 @@ INTERFACE Get
   MODULE PURE FUNCTION Get3_Int16(val, istart, iend, stride) RESULT(ans)
     INTEGER(INT16), INTENT(IN) :: val(:)
     INTEGER(I4B), INTENT(IN) :: istart, iend, stride
-    INTEGER(INT8) :: ans(INT((iend - istart) / stride) + 1)
+    INTEGER(INT16) :: ans(INT((iend - istart) / stride) + 1)
   END FUNCTION Get3_Int16
 
   MODULE PURE FUNCTION Get3_Int32(val, istart, iend, stride) RESULT(ans)
     INTEGER(INT32), INTENT(IN) :: val(:)
     INTEGER(I4B), INTENT(IN) :: istart, iend, stride
-    INTEGER(INT8) :: ans(INT((iend - istart) / stride) + 1)
+    INTEGER(INT32) :: ans(INT((iend - istart) / stride) + 1)
   END FUNCTION Get3_Int32
 
   MODULE PURE FUNCTION Get3_Int64(val, istart, iend, stride) RESULT(ans)
     INTEGER(INT64), INTENT(IN) :: val(:)
     INTEGER(I4B), INTENT(IN) :: istart, iend, stride
-    INTEGER(INT8) :: ans(INT((iend - istart) / stride) + 1)
+    INTEGER(INT64) :: ans(INT((iend - istart) / stride) + 1)
   END FUNCTION Get3_Int64
 END INTERFACE Get
 
