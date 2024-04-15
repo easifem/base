@@ -86,4 +86,17 @@ MODULE PROCEDURE Point_Quality
 ans = 0.0_DFP
 END PROCEDURE Point_Quality
 
+!----------------------------------------------------------------------------
+!                                                         TotalNodesInElement
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE TotalNodesInElement_Point
+SELECT CASE (elemType)
+CASE (Point)
+  ans = 1
+CASE default
+  ans = 0
+END SELECT
+END PROCEDURE TotalNodesInElement_Point
+
 END SUBMODULE Methods

@@ -83,6 +83,8 @@ END PROCEDURE TotalEntities_Line
 
 MODULE PROCEDURE TotalNodesInElement_Line
 SELECT CASE (ElemType)
+CASE (Line1)
+  ans = 1
 CASE (Line2)
   ans = 2
 CASE (Line3)
