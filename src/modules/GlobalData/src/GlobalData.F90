@@ -413,6 +413,7 @@ INTEGER(I4B), PARAMETER :: Pyramid14 = 14
 INTEGER(I4B), PARAMETER :: Pyramid13 = 19
 INTEGER(I4B), PARAMETER :: Point = 15
 INTEGER(I4B), PARAMETER :: Point1 = 15
+INTEGER(I4B), PARAMETER :: Line1 = 15
 ! Read material data from ?
 INTEGER(I4B), PARAMETER :: PhysicalTag = 1
 INTEGER(I4B), PARAMETER :: GeometryTag = 2

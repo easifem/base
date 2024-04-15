@@ -19,7 +19,8 @@ SUBMODULE(ReferenceElement_Method) GeometryMethods
 USE ErrorHandling, ONLY: Errormsg
 USE Display_Method
 
-USE ReferencePoint_Method, ONLY: Measure_Simplex_Point, Point_quality
+USE ReferencePoint_Method, ONLY: Measure_Simplex_Point, Point_quality,  &
+& TotalNodesInElement_Point
 USE ReferenceLine_Method, ONLY: Measure_Simplex_Line, &
 & Line_quality, &
 & TotalNodesInElement_Line, &
