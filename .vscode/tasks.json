@@ -14,7 +14,7 @@
     {
       "label": "build",
       "type": "shell",
-      "command": "python3 ${workspaceFolder}/install.py",
+      "command": "python3 ${workspaceFolder}/build.py",
       "problemMatcher": [],
       "group": {
         "kind": "build",
@@ -22,10 +22,20 @@
       }
     },
     {
+      "label": "install",
+      "type": "shell",
+      "command": "python3 ${workspaceFolder}/install.py",
+      "problemMatcher": [],
+      "group": {
+        "kind": "build"
+      }
+    },
+    {
       "label": "dev",
       "type": "shell",
       "command": "gfortran",
       "args": [
+        "-DDEBUG_VER",
         "-DAPPLE",
         "-DASCII_SUPPORTED",
         "-DDarwin_SYSTEM",

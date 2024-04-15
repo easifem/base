@@ -14,78 +14,24 @@
       "binaryDir": "$env{EASIFEM_BUILD_DIR}/easifem/base/build/default/",
       "installDir": "$env{EASIFEM_BASE}",
       "cacheVariables": {
-        "CMAKE_BUILD_TYPE": {
-          "type": "STRING",
-          "value": "Debug"
-        },
-        "BUILD_SHARED_LIBS": {
-          "type": "BOOL",
-          "value": "ON"
-        },
-        "CMAKE_EXPORT_COMPILE_COMMANDS": {
-          "type": "BOOL",
-          "value": "ON"
-        },
-        "USE_OpenMP": {
-          "type": "BOOL",
-          "value": "ON"
-        },
-        "USE_PLPLOT": {
-          "type": "BOOL",
-          "value": "ON"
-        },
-        "USE_BLAS95": {
-          "type": "BOOL",
-          "value": "ON"
-        },
-        "USE_LAPACK95": {
-          "type": "BOOL",
-          "value": "ON"
-        },
-        "USE_FFTW": {
-          "type": "BOOL",
-          "value": "ON"
-        },
-        "USE_GTK": {
-          "type": "BOOL",
-          "value": "OFF"
-        },
-        "USE_ARPACK": {
-          "type": "BOOL",
-          "value": "ON"
-        },
-        "USE_PARPACK": {
-          "type": "BOOL",
-          "value": "OFF"
-        },
-        "USE_SUPERLU": {
-          "type": "BOOL",
-          "value": "ON"
-        },
-        "USE_LIS": {
-          "type": "BOOL",
-          "value": "ON"
-        },
-        "USE_METIS": {
-          "type": "BOOL",
-          "value": "ON"
-        },
-        "USE_LUA": {
-          "type": "BOOL",
-          "value": "ON"
-        },
-        "USE_Int32": {
-          "type": "BOOL",
-          "value": "ON"
-        },
-        "USE_Real64": {
-          "type": "BOOL",
-          "value": "ON"
-        },
-        "COLOR_DISP": {
-          "type": "BOOL",
-          "value": "OFF"
-        }
+        "CMAKE_BUILD_TYPE": { "type": "STRING", "value": "Debug" },
+        "BUILD_SHARED_LIBS": { "type": "BOOL", "value": "ON" },
+        "CMAKE_EXPORT_COMPILE_COMMANDS": { "type": "BOOL", "value": "ON" },
+        "USE_OpenMP": { "type": "BOOL", "value": "ON" },
+        "USE_PLPLOT": { "type": "BOOL", "value": "ON" },
+        "USE_BLAS95": { "type": "BOOL", "value": "ON" },
+        "USE_LAPACK95": { "type": "BOOL", "value": "ON" },
+        "USE_FFTW": { "type": "BOOL", "value": "ON" },
+        "USE_GTK": { "type": "BOOL", "value": "OFF" },
+        "USE_ARPACK": { "type": "BOOL", "value": "ON" },
+        "USE_PARPACK": { "type": "BOOL", "value": "OFF" },
+        "USE_SUPERLU": { "type": "BOOL", "value": "ON" },
+        "USE_LIS": { "type": "BOOL", "value": "ON" },
+        "USE_METIS": { "type": "BOOL", "value": "ON" },
+        "USE_LUA": { "type": "BOOL", "value": "ON" },
+        "USE_Int32": { "type": "BOOL", "value": "ON" },
+        "USE_Real64": { "type": "BOOL", "value": "ON" },
+        "COLOR_DISP": { "type": "BOOL", "value": "OFF" }
       }
     },
     {
