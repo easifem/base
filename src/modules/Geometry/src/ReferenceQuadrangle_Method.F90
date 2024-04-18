@@ -62,7 +62,7 @@ INTEGER(I4B), PUBLIC, PARAMETER :: HelpFaceData_Quadrangle(3, 4) =  &
     & 1, 2, 3 &
   & ], [3, 4])
 
-#ifdef _QUADRANGLE_EDGE_CON_DEFAULT_OPT_2
+#ifdef QUADRANGLE_EDGE_CON_DEFAULT_OPT_1
 INTEGER(I4B), PARAMETER :: DEFAULT_OPT_QUADRANGLE_EDGE_CON = 1_I4B
 !! This means edges are [1,2], [4,3], [1,4], [2, 3]
 #else

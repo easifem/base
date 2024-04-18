@@ -73,7 +73,7 @@ INTEGER(I4B), PARAMETER :: MaxOrder_Triangle = MAX_TRIANGLE_ORDER
 INTEGER(I4B), PARAMETER :: MaxOrder_Triangle = 2_I4B
 #endif
 
-#ifdef _TRIANGLE_EDGE_CON_DEFAULT_OPT_2
+#ifdef TRIANGLE_EDGE_CON_DEFAULT_OPT_1
 INTEGER(I4B), PARAMETER :: DEFAULT_OPT_TRIANGLE_EDGE_CON = 1_I4B
 !! This means edges are [1,2], [1,3], [2,3]
 #else
@@ -250,7 +250,7 @@ END INTERFACE Initiate
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date:         3 March 2021
+! date: 3 March 2021
 ! summary: This function returns an instance of [[ReferenceTriangle_]]
 !
 !# Introduction
@@ -284,7 +284,7 @@ END INTERFACE ReferenceTriangle
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date:         3 March 2021
+! date: 3 March 2021
 ! summary: This function returns an instance of [[ReferenceTriangle_]]
 !
 !# Introduction
@@ -376,7 +376,7 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date:         5 March 2021
+! date: 5 March 2021
 ! summary: Returns three angles of a triangle
 
 INTERFACE Angles
@@ -392,8 +392,8 @@ END INTERFACE Angles
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date:         5 March 2021
-! summary:         Returns the area of triangle
+! date: 5 March 2021
+! summary: Returns the area of triangle
 
 INTERFACE Area
   MODULE PURE FUNCTION Triangle_area(refelem, xij) RESULT(Ans)
