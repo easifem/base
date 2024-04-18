@@ -54,6 +54,7 @@ PUBLIC :: Quality_Triangle
 PUBLIC :: TriangleArea3D
 PUBLIC :: TriangleArea2D
 PUBLIC :: GetEdgeConnectivity_Triangle
+PUBLIC :: GetFaceConnectivity_Triangle
 PUBLIC :: RefTriangleCoord
 PUBLIC :: RefCoord_Triangle
 PUBLIC :: FacetElements_Triangle
@@ -720,6 +721,33 @@ INTERFACE
     !! Currently order is used only when opt=2
     !! Currently any order is valid
   END SUBROUTINE GetEdgeConnectivity_Triangle
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                        GetEdgeConnectivity
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2024-04-19
+! summary: Get the face connectivity of triangle
+!
+!# Introduction
+!
+! This routine calls [[GetEdgeConnectivity_Triangle]] with opt=2
+
+INTERFACE
+  MODULE PURE SUBROUTINE GetFaceConnectivity_Triangle(con, opt, order)
+    INTEGER(I4B), INTENT(INOUT) :: con(:, :)
+    !! Connectivity
+    !! The columns represents the Face number
+    !! The row represents a Face
+    !! con should be allocated by the user
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: opt
+    !! This option is ignored now
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: order
+    !! order of element
+    !! Currently any order is valid
+  END SUBROUTINE GetFaceConnectivity_Triangle
 END INTERFACE
 
 !----------------------------------------------------------------------------

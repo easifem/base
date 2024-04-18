@@ -695,6 +695,14 @@ END DO
 END PROCEDURE GetEdgeConnectivity_Triangle
 
 !----------------------------------------------------------------------------
+!                                               GetFaceConnectivity_Triangle
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE GetFaceConnectivity_Triangle
+CALL GetEdgeconnectivity_Triangle(con=con, opt=2_I4B, order=order)
+END PROCEDURE GetFaceConnectivity_Triangle
+
+!----------------------------------------------------------------------------
 !                                                         RefTriangleCoord
 !----------------------------------------------------------------------------
 

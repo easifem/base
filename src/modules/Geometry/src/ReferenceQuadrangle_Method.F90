@@ -35,6 +35,7 @@ PUBLIC :: QuadArea3D, QuadrangleArea3D
 PUBLIC :: QuadArea2D, QuadrangleArea2D
 PUBLIC :: QuadrangleName
 PUBLIC :: GetEdgeConnectivity_Quadrangle
+PUBLIC :: GetFaceConnectivity_Quadrangle
 PUBLIC :: RefQuadrangleCoord
 PUBLIC :: RefCoord_Quadrangle
 PUBLIC :: FaceShapeMetaData_Quadrangle
@@ -386,6 +387,33 @@ INTERFACE
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: order
     !! Order of the element
   END SUBROUTINE GetEdgeConnectivity_Quadrangle
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                        GetEdgeConnectivity
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2024-04-19
+! summary: Returns face connectivity
+!
+!# Introduction
+!
+! this routine calls [[GetEdgeConnectivity_Quadrangle]]
+! with opt=2
+
+INTERFACE
+  MODULE PURE SUBROUTINE GetFaceConnectivity_Quadrangle(con, opt, order)
+    INTEGER(I4B), INTENT(INOUT) :: con(:, :)
+    !! Connectivity
+    !! The columns represents the Face number
+    !! The row represents a Face
+    !! con should be allocated by the user
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: opt
+    !! This option is not used
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: order
+    !! Order of the element
+  END SUBROUTINE GetFaceConnectivity_Quadrangle
 END INTERFACE
 
 !----------------------------------------------------------------------------

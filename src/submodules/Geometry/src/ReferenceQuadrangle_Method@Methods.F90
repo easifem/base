@@ -592,6 +592,14 @@ END DO
 END PROCEDURE GetEdgeConnectivity_Quadrangle
 
 !----------------------------------------------------------------------------
+!                                           GetFaceConnectivity_Quadrangle
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE GetFaceConnectivity_Quadrangle
+CALL GetEdgeConnectivity_Quadrangle(con=con, opt=2_I4B, order=order)
+END PROCEDURE GetFaceConnectivity_Quadrangle
+
+!----------------------------------------------------------------------------
 !                                               FaceShapeMetaData_Quadrangle
 !----------------------------------------------------------------------------
 
