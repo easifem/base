@@ -668,29 +668,57 @@ MODULE PROCEDURE GetEdgeConnectivity_Triangle
 INTEGER(I4B) :: opt0, order0, ii, jj, iface
 
 opt0 = Input(default=1_I4B, option=opt)
+order0 = Input(default=1_I4B, option=order)
+jj = 3
 
 SELECT CASE (opt0)
 CASE (1_I4B)
   con(1:2, 1) = [1, 2]
   con(1:2, 2) = [1, 3]
   con(1:2, 3) = [2, 3]
+
+  iface = 1
+  DO ii = 1, order0 - 1
+    con(2 + ii, iface) = jj + ii
+    jj = jj + 1
+  END DO
+
+  iface = 3
+  DO ii = 1, order0 - 1
+    con(2 + ii, iface) = jj + ii
+    jj = jj + 1
+  END DO
+
+  iface = 2
+  DO ii = 1, order0 - 1
+    con(2 + ii, iface) = jj + ii
+    jj = jj + 1
+  END DO
+
 CASE (2_I4B)
   !! For Lagrangian polynomial
   con(1:2, 1) = [1, 2]
   con(1:2, 2) = [2, 3]
   con(1:2, 3) = [3, 1]
-END SELECT
 
-order0 = Input(default=1_I4B, option=order)
-
-jj = 3
-
-DO iface = 1, 3
+  iface = 1
   DO ii = 1, order0 - 1
     con(2 + ii, iface) = jj + ii
     jj = jj + 1
   END DO
-END DO
+
+  iface = 2
+  DO ii = 1, order0 - 1
+    con(2 + ii, iface) = jj + ii
+    jj = jj + 1
+  END DO
+
+  iface = 3
+  DO ii = 1, order0 - 1
+    con(2 + ii, iface) = jj + ii
+    jj = jj + 1
+  END DO
+END SELECT
 
 END PROCEDURE GetEdgeConnectivity_Triangle
 
