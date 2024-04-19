@@ -798,6 +798,42 @@ END IF
 END PROCEDURE FaceShapeMetaData_Triangle
 
 !----------------------------------------------------------------------------
+!                                               GetFaceElemType_Triangle
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE GetFaceElemType_Triangle
+INTEGER(I4B) :: elemType0
+
+elemType0 = input(default=Triangle, option=elemType)
+
+SELECT CASE (elemType0)
+
+CASE (Triangle3)
+
+  IF (PRESENT(faceElemType)) faceElemType(1:3) = Line2
+  IF (PRESENT(tFaceNodes)) tFaceNodes(1:3) = 2_I4B
+
+CASE (Triangle6)
+  IF (PRESENT(faceElemType)) faceElemType(1:3) = Line3
+  IF (PRESENT(tFaceNodes)) tFaceNodes(1:3) = 3_I4B
+
+CASE (Triangle9, Triangle10)
+  IF (PRESENT(faceElemType)) faceElemType(1:3) = Line4
+  IF (PRESENT(tFaceNodes)) tFaceNodes(1:3) = 4_I4B
+
+CASE (Triangle15)
+  IF (PRESENT(faceElemType)) faceElemType(1:3) = Line5
+  IF (PRESENT(tFaceNodes)) tFaceNodes(1:3) = 5_I4B
+
+CASE (Triangle21)
+  IF (PRESENT(faceElemType)) faceElemType(1:3) = Line6
+  IF (PRESENT(tFaceNodes)) tFaceNodes(1:3) = 6_I4B
+
+END SELECT
+
+END PROCEDURE GetFaceElemType_Triangle
+
+!----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
