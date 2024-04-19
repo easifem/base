@@ -20,6 +20,7 @@
 ! summary: This submodule contains methods for [[ReferenceTriangle_]]
 
 SUBMODULE(ReferenceTriangle_Method) Methods
+USE BaseType, ONLY: QualityMeasure
 USE ReferenceElement_Method
 USE StringUtility
 USE ApproxUtility

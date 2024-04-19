@@ -43,6 +43,9 @@ PUBLIC :: TotalEntities_Line
 PUBLIC :: FacetTopology_Line
 PUBLIC :: ElementName_Line
 PUBLIC :: MaxOrder_Line
+PUBLIC :: GetFaceElemType_Line
+PUBLIC :: GetEdgeConnectivity_Line
+PUBLIC :: GetFaceConnectivity_Line
 
 #ifdef MAX_LINE_ORDER
 INTEGER(I4B), PARAMETER :: MaxOrder_Line = MAX_LINE_ORDER
@@ -421,6 +424,84 @@ INTERFACE RefCoord_Line
     REAL(DFP) :: ans(1, 2)
   END FUNCTION RefLineCoord
 END INTERFACE RefCoord_Line
+
+!----------------------------------------------------------------------------
+!                                                        GetEdgeConnectivity
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2024-04-19
+! summary: Get the face connectivity of Line
+!
+!# Introduction
+!
+! This routine calls [[GetEdgeConnectivity_Line]] with opt=2
+
+INTERFACE
+  MODULE PURE SUBROUTINE GetFaceConnectivity_Line(con, opt, order)
+    INTEGER(I4B), INTENT(INOUT) :: con(:, :)
+    !! Connectivity
+    !! The columns represents the Face number
+    !! The row represents a Face
+    !! con should be allocated by the user
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: opt
+    !! This option is ignored now
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: order
+    !! order of element
+    !! Currently any order is valid
+  END SUBROUTINE GetFaceConnectivity_Line
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                           GetEdgeElemType@GeometryMethods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2024-04-19
+! summary:  Returns the element type of each face
+
+INTERFACE
+  MODULE PURE SUBROUTINE GetEdgeConnectivity_Line(con, opt, order)
+    INTEGER(I4B), INTENT(INOUT) :: con(:, :)
+    !! Connectivity
+    !! The columns represents the edge number
+    !! The row represents a edge
+    !! con should be allocated by the user
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: opt
+    !! If opt = 1, then edge connectivity for hierarchial approximation
+    !! [1,2], [1,3], [2,3]. This is DEFAULT
+    !! If opt =2, then edge connectivity for Lagrangian approximation
+    !! [1,2], [2,3], [3,1]
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: order
+    !! order of element
+    !! Currently order is used only when opt=2
+    !! Currently any order is valid
+  END SUBROUTINE GetEdgeConnectivity_Line
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                           GetFaceElemType@GeometryMethods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2024-04-19
+! summary:  Returns the element type of each face
+
+INTERFACE
+  MODULE PURE SUBROUTINE GetFaceElemType_Line(elemType, faceElemType, opt, &
+                                              tFaceNodes)
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: elemType
+    !! name of element
+    INTEGER(I4B), OPTIONAL, INTENT(INOUT) :: faceElemType(:)
+    !! Element names of faces
+    INTEGER(I4B), OPTIONAL, INTENT(INOUT) :: tFaceNodes(:)
+    !! Total number of nodes in each face
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: opt
+    !! If opt = 1, then edge connectivity for hierarchial approximation
+    !! If opt = 2, then edge connectivity for Lagrangian approximation
+    !! opt = 1 is default
+  END SUBROUTINE GetFaceElemType_Line
+END INTERFACE
 
 !----------------------------------------------------------------------------
 !
