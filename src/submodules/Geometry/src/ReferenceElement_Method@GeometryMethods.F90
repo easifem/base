@@ -25,7 +25,10 @@ USE ReferencePoint_Method, ONLY: Measure_Simplex_Point, Point_quality, &
 USE ReferenceLine_Method, ONLY: Measure_Simplex_Line, &
                                 Line_quality, &
                                 TotalNodesInElement_Line, &
-                                TotalEntities_Line
+                                TotalEntities_Line, &
+                                GetFaceElemType_Line, &
+                                GetEdgeConnectivity_Line, &
+                                GetFaceConnectivity_Line
 
 USE ReferenceTriangle_Method, ONLY: Measure_Simplex_Triangle, &
                                     Triangle_quality, &
@@ -240,7 +243,10 @@ END PROCEDURE GetTotalCells1
 
 MODULE PROCEDURE GetEdgeConnectivity1
 SELECT CASE (elemType)
-! CASE (Point, Line)
+
+CASE (Line2, Line3, Line4, Line5)
+  CALL GetEdgeConnectivity_Line(con=con, opt=opt, order=order)
+
 CASE (Triangle3, Triangle6, Triangle9, Triangle10, &
   & Triangle12, Triangle15a, Triangle15b, Triangle21)
 
@@ -277,6 +283,10 @@ END PROCEDURE GetEdgeConnectivity1
 
 MODULE PROCEDURE GetFaceConnectivity1
 SELECT CASE (elemType)
+
+CASE (Line2, Line3, Line4, Line5)
+  CALL GetFaceConnectivity_Line(con=con, opt=opt, order=order)
+
 CASE (Triangle3, Triangle6, Triangle9, Triangle10, &
   & Triangle12, Triangle15a, Triangle15b, Triangle21)
 
@@ -313,6 +323,11 @@ END PROCEDURE GetFaceConnectivity1
 
 MODULE PROCEDURE GetFaceElemType1
 SELECT CASE (elemType)
+
+CASE (Line2, Line3, Line4, Line5)
+
+  CALL GetFaceElemType_Line(faceElemType=faceElemType, opt=opt,  &
+    & tFaceNodes=tFaceNodes, elemType=elemType)
 
 CASE (Triangle3, Triangle6, Triangle9, Triangle10, &
   & Triangle12, Triangle15a, Triangle15b, Triangle21)
