@@ -31,7 +31,8 @@ USE ReferenceTriangle_Method, ONLY: Measure_Simplex_Triangle,  &
   & triangle_contains_point, &
   & GetEdgeConnectivity_Triangle, &
   & TotalNodesInElement_Triangle, &
-  & TotalEntities_Triangle
+  & TotalEntities_Triangle, &
+  & GetFaceConnectivity_Triangle
 
 USE ReferenceQuadrangle_Method, ONLY: Measure_Simplex_Quadrangle,  &
   & Quadrangle_quality, &
@@ -272,6 +273,11 @@ END PROCEDURE GetEdgeConnectivity1
 
 MODULE PROCEDURE GetFaceConnectivity1
 SELECT CASE (elemType)
+CASE (Triangle3, Triangle6, Triangle9, Triangle10, &
+  & Triangle12, Triangle15a, Triangle15b, Triangle21)
+
+  CALL GetFaceConnectivity_Triangle(con=con, opt=opt, order=order)
+
 CASE (Tetrahedron4, Tetrahedron10, Tetrahedron20, Tetrahedron35, &
   & Tetrahedron56)
 
