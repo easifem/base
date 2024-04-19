@@ -40,7 +40,9 @@ USE ReferenceQuadrangle_Method, ONLY: Measure_Simplex_Quadrangle, &
                                       Quadrangle_quality, &
                                       GetEdgeConnectivity_Quadrangle, &
                                       TotalNodesInElement_Quadrangle, &
-                                      TotalEntities_Quadrangle
+                                      TotalEntities_Quadrangle, &
+                                      GetFaceConnectivity_Quadrangle, &
+                                      GetFaceElemType_Quadrangle
 
 USE ReferenceTetrahedron_Method, ONLY: Measure_Simplex_Tetrahedron, &
                                        Tetrahedron_quality, &
@@ -280,6 +282,10 @@ CASE (Triangle3, Triangle6, Triangle9, Triangle10, &
 
   CALL GetFaceConnectivity_Triangle(con=con, opt=opt, order=order)
 
+CASE (Quadrangle4, Quadrangle8, Quadrangle9, Quadrangle16)
+
+  CALL GetFaceConnectivity_Quadrangle(con=con, opt=opt, order=order)
+
 CASE (Tetrahedron4, Tetrahedron10, Tetrahedron20, Tetrahedron35, &
   & Tetrahedron56)
 
@@ -312,6 +318,11 @@ CASE (Triangle3, Triangle6, Triangle9, Triangle10, &
   & Triangle12, Triangle15a, Triangle15b, Triangle21)
 
   CALL GetFaceElemType_Triangle(faceElemType=faceElemType, opt=opt,  &
+    & tFaceNodes=tFaceNodes, elemType=elemType)
+
+CASE (Quadrangle4, Quadrangle8, Quadrangle9, Quadrangle16)
+
+  CALL GetFaceElemType_Quadrangle(faceElemType=faceElemType, opt=opt,  &
     & tFaceNodes=tFaceNodes, elemType=elemType)
 
 CASE (Tetrahedron4, Tetrahedron10, Tetrahedron20, Tetrahedron35, &

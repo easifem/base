@@ -21,7 +21,8 @@
 
 MODULE ReferenceQuadrangle_Method
 USE GlobalData
-USE BaseType
+USE BaseType, ONLY: ReferenceQuadrangle_, ReferenceElement_, &
+                    ReferenceTopology_
 IMPLICIT NONE
 PRIVATE
 PUBLIC :: Initiate
@@ -48,6 +49,7 @@ PUBLIC :: TotalEntities_Quadrangle
 PUBLIC :: FacetTopology_Quadrangle
 PUBLIC :: ElementName_Quadrangle
 PUBLIC :: MaxOrder_Quadrangle
+PUBLIC :: GetFaceElemType_Quadrangle
 
 #ifdef MAX_QUADRANGLE_ORDER
 INTEGER(I4B), PARAMETER :: MaxOrder_Quadrangle = MAX_QUADRANGLE_ORDER
@@ -443,6 +445,30 @@ INTERFACE
     INTEGER(I4B), OPTIONAL, INTENT(INOUT) :: faceOrient(:)
     INTEGER(I4B), OPTIONAL, INTENT(INOUT) :: localFaces(:)
   END SUBROUTINE FaceShapeMetaData_Quadrangle
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                GetFaceElemType_Quadrangle
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2024-04-19
+! summary:  Returns the element type of each face
+
+INTERFACE
+MODULE PURE SUBROUTINE GetFaceElemType_Quadrangle(elemType, faceElemType, opt, &
+                                                    tFaceNodes)
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: elemType
+    !! name of element
+    INTEGER(I4B), OPTIONAL, INTENT(INOUT) :: faceElemType(:)
+    !! Element names of faces
+    INTEGER(I4B), OPTIONAL, INTENT(INOUT) :: tFaceNodes(:)
+    !! Total number of nodes in each face
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: opt
+    !! If opt = 1, then edge connectivity for hierarchial approximation
+    !! If opt = 2, then edge connectivity for Lagrangian approximation
+    !! opt = 1 is default
+  END SUBROUTINE GetFaceElemType_Quadrangle
 END INTERFACE
 
 END MODULE ReferenceQuadrangle_Method
