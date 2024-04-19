@@ -17,7 +17,7 @@
 SUBMODULE(TriangleInterpolationUtility) Methods
 USE BaseMethod
 USE QuadraturePoint_Triangle_Solin, ONLY: QuadraturePointTriangleSolin, &
-& QuadratureNumberTriangleSolin
+                                          QuadratureNumberTriangleSolin
 IMPLICIT NONE
 CONTAINS
 

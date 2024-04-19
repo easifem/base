@@ -76,7 +76,7 @@ INTEGER(I4B), ALLOCATABLE :: con(:, :)
 
 order = ElementOrder_Triangle(elemType)
 CALL Reallocate(con, order + 1, 3)
-CALL GetEdgeConnectivity_Triangle(con=con,  &
+CALL GetFaceConnectivity_Triangle(con=con,  &
   & opt=DEFAULT_OPT_TRIANGLE_EDGE_CON, order=order)
 lineType = ElementType_Line("Line"//Int2Str(order + 1))
 
@@ -229,11 +229,11 @@ END PROCEDURE FacetElements_Triangle1
 
 MODULE PROCEDURE FacetElements_Triangle2
 INTEGER(I4B) :: ii, jj, order
-INTEGER(I4B), ALLOCATABLE :: edgeCon(:, :)
+INTEGER(I4B), ALLOCATABLE :: facecon(:, :)
 
 order = ElementOrder_Triangle(elemType)
-CALL Reallocate(edgeCon, order + 1, 3)
-CALL GetEdgeConnectivity_Triangle(con=edgeCon,  &
+CALL Reallocate(facecon, order + 1, 3)
+CALL GetFaceConnectivity_Triangle(con=facecon,  &
   & opt=DEFAULT_OPT_TRIANGLE_EDGE_CON, order=order)
 !! The edges are accordign to gmsh
 !! [1,2], [2,3], [3,1]
@@ -254,16 +254,16 @@ DO ii = 1, 3
   ALLOCATE (ans(ii)%topology(order + 2))
 
   DO jj = 1, order + 1
-    ans(ii)%topology(jj) = Referencetopology(nptrs=edgeCon(jj:jj, ii),  &
+    ans(ii)%topology(jj) = Referencetopology(nptrs=facecon(jj:jj, ii),  &
       & name=Point)
   END DO
 
-  ans(ii)%topology(order + 2) = Referencetopology(nptrs=edgeCon(1:2, ii),  &
+  ans(ii)%topology(order + 2) = Referencetopology(nptrs=facecon(1:2, ii),  &
     & name=ans(ii)%name)
 
 END DO
 
-IF (ALLOCATED(edgeCon)) DEALLOCATE (edgeCon)
+IF (ALLOCATED(facecon)) DEALLOCATE (facecon)
 
 END PROCEDURE FacetElements_Triangle2
 
@@ -273,7 +273,7 @@ END PROCEDURE FacetElements_Triangle2
 
 MODULE PROCEDURE initiate_ref_Triangle
 REAL(DFP) :: unit_xij(2, 3), biunit_xij(2, 3)
-INTEGER(I4B) :: edgecon(2, 3), ii
+INTEGER(I4B) :: facecon(2, 3), ii
 
 CALL DEALLOCATE (obj)
 
@@ -315,12 +315,12 @@ obj%topology(1) = Referencetopology([1], Point)
 obj%topology(2) = Referencetopology([2], Point)
 obj%topology(3) = Referencetopology([3], Point)
 
-CALL GetEdgeConnectivity_Triangle(con=edgecon,  &
+CALL GetFaceConnectivity_Triangle(con=facecon,  &
   & opt=DEFAULT_OPT_TRIANGLE_EDGE_CON,  &
   & order=1)
 
 DO ii = 1, 3
-  obj%topology(3 + ii) = Referencetopology(edgecon(1:2, ii), Line2)
+  obj%topology(3 + ii) = Referencetopology(facecon(1:2, ii), Line2)
 END DO
 
 obj%topology(7) = Referencetopology([1, 2, 3], Triangle3)
@@ -351,7 +351,7 @@ END PROCEDURE reference_Triangle_Pointer
 
 MODULE PROCEDURE HighorderElement_Triangle
 INTEGER(I4B) :: linetype, ii, nns
-INTEGER(I4B), ALLOCATABLE :: edgecon(:, :)
+INTEGER(I4B), ALLOCATABLE :: facecon(:, :)
 
 CALL DEALLOCATE (obj)
 
@@ -376,21 +376,21 @@ DO ii = 1, obj%entityCounts(1)
   obj%topology(ii) = ReferenceTopology([ii], Point)
 END DO
 
-CALL Reallocate(edgecon, order + 1, obj%entityCounts(2))
-CALL GetEdgeConnectivity_Triangle(con=edgecon,  &
+CALL Reallocate(facecon, order + 1, obj%entityCounts(2))
+CALL GetFaceConnectivity_Triangle(con=facecon,  &
   & opt=DEFAULT_OPT_TRIANGLE_EDGE_CON, order=order)
 
 linetype = ElementType_Line("Line"//Int2Str(order + 1))
 ii = obj%entityCounts(1)
-obj%topology(ii + 1) = ReferenceTopology(edgecon(:, 1), linetype)
-obj%topology(ii + 2) = ReferenceTopology(edgecon(:, 2), linetype)
-obj%topology(ii + 3) = ReferenceTopology(edgecon(:, 3), linetype)
-obj%topology(ii + 4) = ReferenceTopology(edgecon(:, 4), linetype)
+obj%topology(ii + 1) = ReferenceTopology(facecon(:, 1), linetype)
+obj%topology(ii + 2) = ReferenceTopology(facecon(:, 2), linetype)
+obj%topology(ii + 3) = ReferenceTopology(facecon(:, 3), linetype)
+obj%topology(ii + 4) = ReferenceTopology(facecon(:, 4), linetype)
 
 ii = ii + obj%entityCounts(2)
 obj%topology(ii + 1) = ReferenceTopology(arange(1_I4B, nns), obj%name)
 
-IF (ALLOCATED(edgecon)) DEALLOCATE (edgecon)
+IF (ALLOCATED(facecon)) DEALLOCATE (facecon)
 END PROCEDURE HighorderElement_Triangle
 
 !----------------------------------------------------------------------------

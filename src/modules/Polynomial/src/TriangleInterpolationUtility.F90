@@ -51,7 +51,7 @@ PUBLIC :: OrthogonalBasisGradient_Triangle
 
 !> author: Vikas Sharma, Ph. D.
 ! date:  2023-07-03
-! summary:  Returns the coordinate of reference element
+! summary:  Returns the name of the reference element domain
 
 INTERFACE
   MODULE FUNCTION RefElemDomain_Triangle(baseContinuity, baseInterpol) &
@@ -63,6 +63,7 @@ INTERFACE
     !! Basis function family for Interpolation
     !! Lagrange, Hierarchy, Serendipity, Hermit, Orthogonal
     TYPE(String) :: ans
+    !! UNIT or BIUNIT
   END FUNCTION RefElemDomain_Triangle
 END INTERFACE
 
