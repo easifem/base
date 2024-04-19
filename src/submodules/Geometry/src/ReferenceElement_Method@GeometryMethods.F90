@@ -122,24 +122,47 @@ CASE (Point, Line2, Line3, Line4, Line5, Line6)
 
   IF (PRESENT(tNodes)) tNodes = TotalNodesInElement_Line(elemType)
   IF (PRESENT(tEdges)) tEdges = 0_I4B
-  IF (PRESENT(tFaces)) tFaces = 0_I4B
+  IF (PRESENT(tFaces)) tFaces = 2_I4B
+
+  IF (PRESENT(edgeCon)) CALL GetEdgeConnectivity_Line(con=edgeCon, &
+    & opt=edgeOpt, order=order)
+
+  IF (PRESENT(faceCon)) CALL GetFaceConnectivity_Line(con=faceCon, &
+    & opt=faceOpt, order=order)
+
+  CALL GetFaceElemType_Line(faceElemType=faceElemType, &
+                            tFaceNodes=tFaceNodes, elemType=elemType)
 
 CASE (Triangle3, Triangle6, Triangle9, Triangle10, &
   & Triangle12, Triangle15a, Triangle15b, Triangle21)
 
   IF (PRESENT(tNodes)) tNodes = TotalNodesInElement_Triangle(elemType)
   IF (PRESENT(tEdges)) tEdges = 3_I4B
-  IF (PRESENT(tFaces)) tFaces = 0_I4B
+  IF (PRESENT(tFaces)) tFaces = 3_I4B
+
   IF (PRESENT(edgeCon)) CALL GetEdgeConnectivity_Triangle(con=edgeCon, &
     & opt=edgeOpt, order=order)
+
+  IF (PRESENT(faceCon)) CALL GetFaceConnectivity_Triangle(con=faceCon, &
+    & opt=faceOpt, order=order)
+
+  CALL GetFaceElemType_Triangle(faceElemType=faceElemType, &
+                                tFaceNodes=tFaceNodes, elemType=elemType)
 
 CASE (Quadrangle4, Quadrangle8, Quadrangle9, Quadrangle16)
 
   IF (PRESENT(tNodes)) tNodes = TotalNodesInElement_Quadrangle(elemType)
   IF (PRESENT(tEdges)) tEdges = 4_I4B
-  IF (PRESENT(tFaces)) tFaces = 0_I4B
+  IF (PRESENT(tFaces)) tFaces = 4_I4B
+
   IF (PRESENT(edgeCon)) CALL GetEdgeConnectivity_Quadrangle(con=edgeCon, &
     & opt=edgeOpt, order=order)
+
+  IF (PRESENT(faceCon)) CALL GetFaceConnectivity_Quadrangle(con=faceCon, &
+    & opt=faceOpt, order=order)
+
+  CALL GetFaceElemType_Quadrangle(faceElemType=faceElemType, &
+                                  tFaceNodes=tFaceNodes, elemType=elemType)
 
 CASE (Tetrahedron4, Tetrahedron10, Tetrahedron20, Tetrahedron35, &
   & Tetrahedron56)
