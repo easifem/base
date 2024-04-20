@@ -522,7 +522,7 @@ END INTERFACE
 !- x: the point at which the polynomials are to be evaluated.
 !- ans(1:N+1), the values of the first N+1 Jacobi polynomials at x
 
-INTERFACE
+INTERFACE JacobiEvalAll
   MODULE PURE FUNCTION JacobiEvalAll1(n, alpha, beta, x) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: n
     REAL(DFP), INTENT(IN) :: alpha
@@ -532,10 +532,6 @@ INTERFACE
     !! Evaluate Jacobi polynomial of order = 0 to n (total n+1)
     !! at point x
   END FUNCTION JacobiEvalAll1
-END INTERFACE
-
-INTERFACE JacobiEvalAll
-  MODULE PROCEDURE JacobiEvalAll1
 END INTERFACE JacobiEvalAll
 
 !----------------------------------------------------------------------------
@@ -557,7 +553,7 @@ END INTERFACE JacobiEvalAll
 !- ans(M,1:N+1), the values of the first N+1 Jacobi polynomials at the point
 ! X.
 
-INTERFACE
+INTERFACE JacobiEvalAll
   MODULE PURE FUNCTION JacobiEvalAll2(n, alpha, beta, x) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: n
     REAL(DFP), INTENT(IN) :: alpha
@@ -567,10 +563,6 @@ INTERFACE
     !! Evaluate Jacobi polynomial of order = 0 to n (total n+1)
     !! at point x
   END FUNCTION JacobiEvalAll2
-END INTERFACE
-
-INTERFACE JacobiEvalAll
-  MODULE PROCEDURE JacobiEvalAll2
 END INTERFACE JacobiEvalAll
 
 !----------------------------------------------------------------------------
@@ -589,7 +581,7 @@ END INTERFACE JacobiEvalAll
 !- alpha, beta are parameters
 !- x: the point at which the polynomials are to be evaluated.
 
-INTERFACE
+INTERFACE JacobiEval
   MODULE PURE FUNCTION JacobiEval1(n, alpha, beta, x) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: n
     REAL(DFP), INTENT(IN) :: alpha
@@ -598,10 +590,6 @@ INTERFACE
     REAL(DFP) :: ans
     !! Evaluate Jacobi polynomial of order n at point x
   END FUNCTION JacobiEval1
-END INTERFACE
-
-INTERFACE JacobiEval
-  MODULE PROCEDURE JacobiEval1
 END INTERFACE JacobiEval
 
 !----------------------------------------------------------------------------
@@ -620,7 +608,7 @@ END INTERFACE JacobiEval
 !- alpha, beta are parameters
 !- x: the point at which the polynomials are to be evaluated.
 
-INTERFACE
+INTERFACE JacobiEval
   MODULE PURE FUNCTION JacobiEval2(n, alpha, beta, x) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: n
     REAL(DFP), INTENT(IN) :: alpha
@@ -629,10 +617,6 @@ INTERFACE
     REAL(DFP) :: ans(SIZE(x))
     !! Evaluate Jacobi polynomial of order n at point x
   END FUNCTION JacobiEval2
-END INTERFACE
-
-INTERFACE JacobiEval
-  MODULE PROCEDURE JacobiEval2
 END INTERFACE JacobiEval
 
 !----------------------------------------------------------------------------
@@ -643,7 +627,7 @@ END INTERFACE JacobiEval
 ! date: 6 Sept 2022
 ! summary: Evaluate finite sum of Jacobi polynomials at point x
 
-INTERFACE
+INTERFACE JacobiEvalSum
   MODULE PURE FUNCTION JacobiEvalSum1(n, alpha, beta, x, coeff) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: n
     !! order of polynomial
@@ -658,10 +642,6 @@ INTERFACE
     REAL(DFP) :: ans
     !! Evaluate Jacobi polynomial of order n at point x
   END FUNCTION JacobiEvalSum1
-END INTERFACE
-
-INTERFACE JacobiEvalSum
-  MODULE PROCEDURE JacobiEvalSum1
 END INTERFACE JacobiEvalSum
 
 !----------------------------------------------------------------------------
@@ -672,7 +652,7 @@ END INTERFACE JacobiEvalSum
 ! date: 6 Sept 2022
 ! summary: Evaluate finite sum of Jacobi polynomials at several x
 
-INTERFACE
+INTERFACE JacobiEvalSum
   MODULE PURE FUNCTION JacobiEvalSum2(n, alpha, beta, x, coeff) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: n
     !! order of polynomial
@@ -687,10 +667,6 @@ INTERFACE
     REAL(DFP) :: ans(SIZE(x))
     !! Evaluate Jacobi polynomial of order n at point x
   END FUNCTION JacobiEvalSum2
-END INTERFACE
-
-INTERFACE JacobiEvalSum
-  MODULE PROCEDURE JacobiEvalSum2
 END INTERFACE JacobiEvalSum
 
 !----------------------------------------------------------------------------
@@ -701,7 +677,7 @@ END INTERFACE JacobiEvalSum
 ! date: 14 Oct 2022
 ! summary: Evaluate Gradient of Jacobi polynomial
 
-INTERFACE
+INTERFACE JacobiGradientEval
   MODULE PURE FUNCTION JacobiGradientEval1(n, alpha, beta, x) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: n
     !! order of Jacobi polynomial
@@ -714,10 +690,6 @@ INTERFACE
     REAL(DFP) :: ans
     !! Derivative of Jacobi polynomial of order n at point x
   END FUNCTION JacobiGradientEval1
-END INTERFACE
-
-INTERFACE JacobiGradientEval
-  MODULE PROCEDURE JacobiGradientEval1
 END INTERFACE JacobiGradientEval
 
 !----------------------------------------------------------------------------
@@ -728,7 +700,7 @@ END INTERFACE JacobiGradientEval
 ! date: 14 Oct 2022
 ! summary: Evaluate Gradient of Jacobi polynomial
 
-INTERFACE
+INTERFACE JacobiGradientEval
   MODULE PURE FUNCTION JacobiGradientEval2(n, alpha, beta, x) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: n
     REAL(DFP), INTENT(IN) :: alpha
@@ -737,10 +709,6 @@ INTERFACE
     REAL(DFP) :: ans(SIZE(x))
     !! Derivative of Jacobi polynomial of order n at x
   END FUNCTION JacobiGradientEval2
-END INTERFACE
-
-INTERFACE JacobiGradientEval
-  MODULE PROCEDURE JacobiGradientEval2
 END INTERFACE JacobiGradientEval
 
 !----------------------------------------------------------------------------
@@ -751,7 +719,7 @@ END INTERFACE JacobiGradientEval
 ! date: 14 Oct 2022
 ! summary: Evaluate Gradient of Jacobi polynomial
 
-INTERFACE
+INTERFACE JacobiGradientEvalAll
   MODULE PURE FUNCTION JacobiGradientEvalAll1(n, alpha, beta, x) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: n
     !! order of Jacobi polynomial
@@ -764,10 +732,6 @@ INTERFACE
     REAL(DFP) :: ans(n + 1)
     !! Derivative of Jacobi polynomial of order n at point x
   END FUNCTION JacobiGradientEvalAll1
-END INTERFACE
-
-INTERFACE JacobiGradientEvalAll
-  MODULE PROCEDURE JacobiGradientEvalAll1
 END INTERFACE JacobiGradientEvalAll
 
 !----------------------------------------------------------------------------
@@ -778,7 +742,7 @@ END INTERFACE JacobiGradientEvalAll
 ! date: 14 Oct 2022
 ! summary: Evaluate Gradient of Jacobi polynomial
 
-INTERFACE
+INTERFACE JacobiGradientEvalAll
   MODULE PURE FUNCTION JacobiGradientEvalAll2(n, alpha, beta, x) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: n
     REAL(DFP), INTENT(IN) :: alpha
@@ -787,10 +751,6 @@ INTERFACE
     REAL(DFP) :: ans(SIZE(x), n + 1)
     !! Derivative of Jacobi polynomial of order n at x
   END FUNCTION JacobiGradientEvalAll2
-END INTERFACE
-
-INTERFACE JacobiGradientEvalAll
-  MODULE PROCEDURE JacobiGradientEvalAll2
 END INTERFACE JacobiGradientEvalAll
 
 !----------------------------------------------------------------------------
@@ -802,7 +762,7 @@ END INTERFACE JacobiGradientEvalAll
 ! summary: Evaluate the gradient of finite sum of Jacobi polynomials at
 ! point x
 
-INTERFACE
+INTERFACE JacobiGradientEvalSum
   MODULE PURE FUNCTION JacobiGradientEvalSum1(n, alpha, beta, x, coeff) &
     & RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: n
@@ -818,10 +778,6 @@ INTERFACE
     REAL(DFP) :: ans
     !! Evaluate Jacobi polynomial of order n at point x
   END FUNCTION JacobiGradientEvalSum1
-END INTERFACE
-
-INTERFACE JacobiGradientEvalSum
-  MODULE PROCEDURE JacobiGradientEvalSum1
 END INTERFACE JacobiGradientEvalSum
 
 !----------------------------------------------------------------------------
@@ -833,7 +789,7 @@ END INTERFACE JacobiGradientEvalSum
 ! summary: Evaluate the gradient of finite sum of Jacobi polynomials at
 ! several x
 
-INTERFACE
+INTERFACE JacobiGradientEvalSum
   MODULE PURE FUNCTION JacobiGradientEvalSum2(n, alpha, beta, x, coeff) &
     & RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: n
@@ -849,10 +805,6 @@ INTERFACE
     REAL(DFP) :: ans(SIZE(x))
     !! Evaluate Jacobi polynomial of order n at point x
   END FUNCTION JacobiGradientEvalSum2
-END INTERFACE
-
-INTERFACE JacobiGradientEvalSum
-  MODULE PROCEDURE JacobiGradientEvalSum2
 END INTERFACE JacobiGradientEvalSum
 
 !----------------------------------------------------------------------------
@@ -864,7 +816,7 @@ END INTERFACE JacobiGradientEvalSum
 ! summary: Evaluate the kth derivative of finite sum of Jacobi polynomials at
 ! point x
 
-INTERFACE
+INTERFACE JacobiGradientEvalSum
   MODULE PURE FUNCTION JacobiGradientEvalSum3(n, alpha, beta, x, coeff, k) &
     & RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: n
@@ -882,10 +834,6 @@ INTERFACE
     REAL(DFP) :: ans
     !! Evaluate Jacobi polynomial of order n at point x
   END FUNCTION JacobiGradientEvalSum3
-END INTERFACE
-
-INTERFACE JacobiGradientEvalSum
-  MODULE PROCEDURE JacobiGradientEvalSum3
 END INTERFACE JacobiGradientEvalSum
 
 !----------------------------------------------------------------------------
@@ -897,7 +845,7 @@ END INTERFACE JacobiGradientEvalSum
 ! summary: Evaluate the kth gradient of finite sum of Jacobi polynomials at
 ! several x
 
-INTERFACE
+INTERFACE JacobiGradientEvalSum
   MODULE PURE FUNCTION JacobiGradientEvalSum4(n, alpha, beta, x, coeff, k) &
     & RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: n
@@ -915,10 +863,6 @@ INTERFACE
     REAL(DFP) :: ans(SIZE(x))
     !! Evaluate Jacobi polynomial of order n at point x
   END FUNCTION JacobiGradientEvalSum4
-END INTERFACE
-
-INTERFACE JacobiGradientEvalSum
-  MODULE PROCEDURE JacobiGradientEvalSum4
 END INTERFACE JacobiGradientEvalSum
 
 !----------------------------------------------------------------------------
@@ -929,7 +873,7 @@ END INTERFACE JacobiGradientEvalSum
 ! date: 13 Oct 2022
 ! summary:         Discrete Jacobi Transform
 
-INTERFACE
+INTERFACE JacobiTransform
   MODULE PURE FUNCTION JacobiTransform1(n, alpha, beta, coeff, x, w, &
     &  quadType) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: n
@@ -950,10 +894,6 @@ INTERFACE
     REAL(DFP) :: ans(0:n)
     !! modal values  or coefficients
   END FUNCTION JacobiTransform1
-END INTERFACE
-
-INTERFACE JacobiTransform
-  MODULE PROCEDURE JacobiTransform1
 END INTERFACE JacobiTransform
 
 !----------------------------------------------------------------------------
@@ -964,7 +904,7 @@ END INTERFACE JacobiTransform
 ! date: 13 Oct 2022
 ! summary: Columnwise Discrete Jacobi Transform
 
-INTERFACE
+INTERFACE JacobiTransform
   MODULE PURE FUNCTION JacobiTransform2(n, alpha, beta, coeff, x, w, &
     & quadType) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: n
@@ -985,10 +925,6 @@ INTERFACE
     REAL(DFP) :: ans(0:n, 1:SIZE(coeff, 2))
     !! modal values  or coefficients for each column of val
   END FUNCTION JacobiTransform2
-END INTERFACE
-
-INTERFACE JacobiTransform
-  MODULE PROCEDURE JacobiTransform2
 END INTERFACE JacobiTransform
 
 !----------------------------------------------------------------------------
@@ -1019,7 +955,7 @@ END INTERFACE JacobiTransform
 ! which is not pure due to Lapack call.
 !@endnote
 
-INTERFACE
+INTERFACE JacobiTransform
   MODULE FUNCTION JacobiTransform3(n, alpha, beta, f, quadType) &
     & RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: n
@@ -1036,10 +972,6 @@ INTERFACE
     REAL(DFP) :: ans(0:n)
     !! modal values  or coefficients
   END FUNCTION JacobiTransform3
-END INTERFACE
-
-INTERFACE JacobiTransform
-  MODULE PROCEDURE JacobiTransform3
 END INTERFACE JacobiTransform
 
 !----------------------------------------------------------------------------
@@ -1050,7 +982,7 @@ END INTERFACE JacobiTransform
 ! date: 13 Oct 2022
 ! summary:         Discrete Jacobi Transform
 
-INTERFACE
+INTERFACE JacobiInvTransform
   MODULE PURE FUNCTION JacobiInvTransform1(n, alpha, beta, coeff, x) &
         & RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: n
@@ -1066,10 +998,6 @@ INTERFACE
     REAL(DFP) :: ans
     !! value in physical space
   END FUNCTION JacobiInvTransform1
-END INTERFACE
-
-INTERFACE JacobiInvTransform
-  MODULE PROCEDURE JacobiInvTransform1
 END INTERFACE JacobiInvTransform
 
 !----------------------------------------------------------------------------
@@ -1080,7 +1008,7 @@ END INTERFACE JacobiInvTransform
 ! date: 13 Oct 2022
 ! summary:         Discrete Jacobi Transform
 
-INTERFACE
+INTERFACE JacobiInvTransform
   MODULE PURE FUNCTION JacobiInvTransform2(n, alpha, beta, coeff, x) &
         & RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: n
@@ -1096,10 +1024,6 @@ INTERFACE
     REAL(DFP) :: ans(SIZE(x))
     !! value in physical space
   END FUNCTION JacobiInvTransform2
-END INTERFACE
-
-INTERFACE JacobiInvTransform
-  MODULE PROCEDURE JacobiInvTransform2
 END INTERFACE JacobiInvTransform
 
 !----------------------------------------------------------------------------
@@ -1116,7 +1040,7 @@ END INTERFACE JacobiInvTransform
 ! Input is cofficients of Jacobipolynomials (modal values).
 !
 
-INTERFACE
+INTERFACE JacobiGradientCoeff
   MODULE PURE FUNCTION JacobiGradientCoeff1(n, alpha, beta, coeff) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: n
       !! order of Jacobi polynomial
@@ -1129,10 +1053,6 @@ INTERFACE
     REAL(DFP) :: ans(0:n)
       !! coefficient of gradient
   END FUNCTION JacobiGradientCoeff1
-END INTERFACE
-
-INTERFACE JacobiGradientCoeff
-  MODULE PROCEDURE JacobiGradientCoeff1
 END INTERFACE JacobiGradientCoeff
 
 !----------------------------------------------------------------------------
@@ -1149,7 +1069,7 @@ END INTERFACE JacobiGradientCoeff
 ! Input is cofficients of Jacobipolynomials (modal values).
 !
 
-INTERFACE
+INTERFACE JacobiDMatrix
   MODULE PURE FUNCTION JacobiDMatrix1(n, alpha, beta, x, quadType) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: n
       !! order of Jacobi polynomial
@@ -1164,10 +1084,6 @@ INTERFACE
     REAL(DFP) :: ans(0:n, 0:n)
       !! D matrix
   END FUNCTION JacobiDMatrix1
-END INTERFACE
-
-INTERFACE JacobiDMatrix
-  MODULE PROCEDURE JacobiDMatrix1
 END INTERFACE JacobiDMatrix
 
 END MODULE JacobiPolynomialUtility
