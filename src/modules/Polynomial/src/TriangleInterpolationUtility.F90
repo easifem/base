@@ -570,7 +570,7 @@ END INTERFACE
 
 INTERFACE
   MODULE PURE FUNCTION BarycentricEdgeBasis_Triangle(pe1, pe2, pe3, lambda) &
-    & RESULT(ans)
+    RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: pe1
     !! order on  edge (e1)
     INTEGER(I4B), INTENT(IN) :: pe2
@@ -592,13 +592,11 @@ END INTERFACE
 !> author: Vikas Sharma, Ph. D.
 ! date: 30 Oct 2022
 ! summary: Evaluate the edge basis on triangle using barycentric coordinate
-!
-! This is an internal routine which is called by the
-! [[BarycentricEdgeBasis_Triangle]]
+! (internal only)
 
 INTERFACE
   MODULE PURE FUNCTION BarycentricEdgeBasis_Triangle2(pe1, pe2, pe3, &
-    & lambda, phi) RESULT(ans)
+                                                      lambda, phi) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: pe1
     !! order on  edge (e1)
     INTEGER(I4B), INTENT(IN) :: pe2
@@ -624,7 +622,7 @@ END INTERFACE
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 28 Oct 2022
-! summary: Eval basis in the cell of reference triangle
+! summary: Eval basis in the cell of reference triangle (internal only)
 
 INTERFACE
   MODULE PURE FUNCTION BarycentricCellBasis_Triangle2(order, lambda, phi) &
@@ -711,8 +709,9 @@ END INTERFACE BarycentricHeirarchicalBasis_Triangle
 INTERFACE
   MODULE PURE FUNCTION VertexBasis_Triangle(xij, refTriangle) RESULT(ans)
     REAL(DFP), INTENT(IN) :: xij(:, :)
-    !! point of evaluation
+    !! point of evaluation on the triangle
     CHARACTER(*), INTENT(IN) :: refTriangle
+    !! UNIT or BIUNIT
     REAL(DFP) :: ans(SIZE(xij, 2), 3)
     !! ans(:,v1) basis function of vertex v1 at all points
   END FUNCTION VertexBasis_Triangle
@@ -724,7 +723,7 @@ END INTERFACE
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 28 Oct 2022
-! summary: Returns the vertex basis functions on Triangle
+! summary: Returns the vertex basis functions on Triangle (internal only)
 
 INTERFACE
   MODULE PURE FUNCTION VertexBasis_Triangle2(Lo1, Lo2) RESULT(ans)
@@ -742,11 +741,11 @@ END INTERFACE
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 28 Oct 2022
-! summary: Returns the vertex basis functions on Triangle
+! summary: Returns the vertex basis functions on Triangle (internal only)
 
 INTERFACE
   MODULE FUNCTION VertexBasisGradient_Triangle2(Lo1, Lo2, dLo1, dLo2) &
-    & RESULT(ans)
+    RESULT(ans)
     REAL(DFP), INTENT(IN) :: Lo1(1:, 0:)
     !! Lobatto polynomials evaluated at x1
     REAL(DFP), INTENT(IN) :: Lo2(1:, 0:)
@@ -797,7 +796,7 @@ END INTERFACE
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 28 Oct 2022
-! summary: Eval basis on left, right edge of biunit Triangle
+! summary: Eval basis on left, right edge of biunit Triangle (internal only)
 !
 !# Introduction
 !
@@ -830,7 +829,7 @@ END INTERFACE
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 28 Oct 2022
-! summary: Eval basis on left, right edge of biunit Triangle
+! summary: Eval basis on left, right edge of biunit Triangle (internal only)
 !
 !# Introduction
 !
@@ -839,19 +838,8 @@ END INTERFACE
 ! qe1 and qe2 should be greater than or equal to 2
 
 INTERFACE
-  MODULE FUNCTION EdgeBasisGradient_Triangle2( &
-    & pe1,  &
-    & pe2, &
-    & pe3, &
-    & L1,  &
-    & L2, &
-    & Lo1, &
-    & Lo2,  &
-    & dL1,  &
-    & dL2, &
-    & dLo1, &
-    & dLo2  &
-    & ) RESULT(ans)
+  MODULE FUNCTION EdgeBasisGradient_Triangle2(pe1, pe2, pe3, L1, L2, &
+                                   Lo1, Lo2, dL1, dL2, dLo1, dLo2) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: pe1
     !! order on left vertical edge (e1), should be greater than 1
     INTEGER(I4B), INTENT(IN) :: pe2
@@ -904,7 +892,7 @@ END INTERFACE
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 28 Oct 2022
-! summary: Eval basis in the cell of biunit Triangle
+! summary: Eval basis in the cell of biunit Triangle (internal only)
 !
 !# Introduction
 !
