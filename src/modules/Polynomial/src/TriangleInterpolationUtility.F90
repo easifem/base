@@ -374,13 +374,14 @@ INTERFACE LagrangeCoeff_Triangle
     INTEGER(I4B), INTENT(IN) :: order
     !! order of polynomial, it should be SIZE(v,2)-1
     INTEGER(I4B), INTENT(IN) :: i
-    !! coefficient for ith lagrange polynomial
+    !! ith lagrange polynomial
     REAL(DFP), INTENT(IN) :: v(:, :)
     !! vandermonde matrix size should be (order+1,order+1)
     LOGICAL(LGT), INTENT(IN) :: isVandermonde
-    !! This is just to resolve interface issue
+    !! This is just to resolve interface issue, the value of isVandermonde
+    !! is not used in the function
     REAL(DFP) :: ans(SIZE(v, 1))
-    !! coefficients
+    !! coefficients of ith Lagrange polynomial
   END FUNCTION LagrangeCoeff_Triangle2
 END INTERFACE LagrangeCoeff_Triangle
 
@@ -544,10 +545,10 @@ END INTERFACE OrthogonalBasis_Triangle
 
 INTERFACE
   MODULE PURE FUNCTION BarycentricVertexBasis_Triangle(lambda) &
-    & RESULT(ans)
+    RESULT(ans)
     REAL(DFP), INTENT(IN) :: lambda(:, :)
     !! point of evaluation in terms of barycentrix coords
-    !! number of rows = 3
+    !! number of rows = 3 corresponding to three coordinates
     !! number of columns = number of points
     REAL(DFP) :: ans(SIZE(lambda, 2), 3)
     !! ans(:,v1) basis function of vertex v1 at all points
@@ -578,7 +579,8 @@ INTERFACE
     !! order on edge (e3)
     REAL(DFP), INTENT(IN) :: lambda(:, :)
     !! point of evaluation in terms of barycentric coordinates
-    !! Number of rows in lambda is equal to three.
+    !! Number of rows in lambda is equal to three corresponding to
+    !! three coordinates
     REAL(DFP) :: ans(SIZE(lambda, 2), pe1 + pe2 + pe3 - 3)
   END FUNCTION BarycentricEdgeBasis_Triangle
 END INTERFACE
@@ -590,6 +592,9 @@ END INTERFACE
 !> author: Vikas Sharma, Ph. D.
 ! date: 30 Oct 2022
 ! summary: Evaluate the edge basis on triangle using barycentric coordinate
+!
+! This is an internal routine which is called by the
+! [[BarycentricEdgeBasis_Triangle]]
 
 INTERFACE
   MODULE PURE FUNCTION BarycentricEdgeBasis_Triangle2(pe1, pe2, pe3, &

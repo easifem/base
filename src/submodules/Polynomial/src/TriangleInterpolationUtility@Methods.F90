@@ -253,7 +253,7 @@ END PROCEDURE EquidistancePoint_Triangle
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE EquidistanceInPoint_Triangle
-INTEGER(I4B) :: nsd, n, ne
+INTEGER(I4B) :: nsd, n
 REAL(DFP) :: x(3, 3), xin(3, 3), e1(3), e2(3), lam, avar, mu
 
 IF (order .LT. 3_I4B) THEN
@@ -452,7 +452,7 @@ END PROCEDURE Isaac_Triangle
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE IJ2VEFC_Triangle
-INTEGER(I4B) :: cnt, m, ii, jj, kk, ll, llt, llr
+INTEGER(I4B) :: cnt, m, ii, jj, ll, llt, llr
 
 cnt = 0
 m = order
@@ -628,44 +628,27 @@ END PROCEDURE LagrangeCoeff_Triangle3
 
 MODULE PROCEDURE LagrangeCoeff_Triangle4
 INTEGER(I4B) :: basisType0
+CHARACTER(:), ALLOCATABLE :: ref0
+
 basisType0 = input(default=Monomial, option=basisType)
+ref0 = input(default="UNIT", option=refTriangle)
+
 SELECT CASE (basisType0)
 CASE (Monomial)
   ans = LagrangeVandermonde(order=order, xij=xij, elemType=Triangle)
+
 CASE (Jacobi, Orthogonal, Legendre, Lobatto, Ultraspherical)
-  IF (PRESENT(refTriangle)) THEN
-    ans = Dubiner_Triangle(order=order, xij=xij, refTriangle=refTriangle)
-  ELSE
-    ans = Dubiner_Triangle(order=order, xij=xij, refTriangle="UNIT")
-  END IF
+  ans = Dubiner_Triangle(order=order, xij=xij, refTriangle=ref0)
+
 CASE (Heirarchical)
-  IF (PRESENT(refTriangle)) THEN
-    ans = HeirarchicalBasis_Triangle(&
-      & order=order, &
-      & pe1=order, &
-      & pe2=order, &
-      & pe3=order, &
-      & xij=xij, &
-      & refTriangle=refTriangle &
-      & )
-  ELSE
-    ans = HeirarchicalBasis_Triangle(&
-      & order=order, &
-      & pe1=order, &
-      & pe2=order, &
-      & pe3=order, &
-      & xij=xij, &
-      & refTriangle="UNIT" &
-      & )
-  END IF
+  ans = HeirarchicalBasis_Triangle(order=order, pe1=order, pe2=order, &
+                                   pe3=order, xij=xij, refTriangle=ref0)
 CASE DEFAULT
-  CALL Errormsg(&
-    & msg="No case found for basisType", &
-    & file=__FILE__, &
-    & routine="LagrangeCoeff_Triangle4", &
-    & line=__LINE__, &
-    & unitno=stderr)
+  CALL Errormsg(msg="No case found for basisType", &
+                file=__FILE__, routine="LagrangeCoeff_Triangle4", &
+                line=__LINE__, unitno=stderr)
 END SELECT
+
 CALL GetInvMat(ans)
 END PROCEDURE LagrangeCoeff_Triangle4
 
@@ -720,20 +703,29 @@ END PROCEDURE BarycentricVertexBasis_Triangle
 MODULE PROCEDURE BarycentricEdgeBasis_Triangle
 REAL(DFP) :: d_lambda(3 * SIZE(lambda, 2))
 REAL(DFP) :: phi(1:3 * SIZE(lambda, 2), 0:MAX(pe1 - 2, pe2 - 2, pe3 - 2))
-INTEGER(I4B) :: maxP, tPoints
+INTEGER(I4B) :: maxP, tPoints, ii
 
 tPoints = SIZE(lambda, 2)
 maxP = MAX(pe1 - 2, pe2 - 2, pe3 - 2)
-d_lambda(1:tPoints) = lambda(2, :) - lambda(1, :)
-d_lambda(1 + tPoints:2 * tPoints) = lambda(3, :) - lambda(1, :)
-d_lambda(1 + 2 * tPoints:3 * tPoints) = lambda(3, :) - lambda(2, :)
+
+DO CONCURRENT(ii=1:tpoints)
+  ! edge 1 -> 2
+  d_lambda(ii) = lambda(2, ii) - lambda(1, ii)
+  ! edge 1 -> 3
+  d_lambda(ii + tPoints) = lambda(3, ii) - lambda(1, ii)
+  ! edge 2 -> 3
+  d_lambda(ii + 2 * tPoints) = lambda(3, ii) - lambda(2, ii)
+END DO
+
+! d_lambda(1:tPoints) = lambda(2, :) - lambda(1, :)
+! d_lambda(1 + tPoints:2 * tPoints) = lambda(3, :) - lambda(1, :)
+! d_lambda(1 + 2 * tPoints:3 * tPoints) = lambda(3, :) - lambda(2, :)
+
 phi = LobattoKernelEvalAll(n=maxP, x=d_lambda)
-ans = BarycentricEdgeBasis_Triangle2( &
-  & pe1=pe1, &
-  & pe2=pe2, &
-  & pe3=pe3, &
-  & lambda=lambda, &
-  & phi=phi)
+
+ans = BarycentricEdgeBasis_Triangle2(pe1=pe1, pe2=pe2, pe3=pe3, &
+                                     lambda=lambda, phi=phi)
+
 END PROCEDURE BarycentricEdgeBasis_Triangle
 
 !----------------------------------------------------------------------------
@@ -747,25 +739,29 @@ REAL(DFP) :: temp(SIZE(lambda, 2))
 ans = 0.0_DFP
 tPoints = SIZE(lambda, 2)
 a = 0
-! edge(1) = (v1, v2)
+
+! edge(1) = 1 -> 2
 temp = lambda(1, :) * lambda(2, :)
 DO ii = 1, pe1 - 1
   ans(:, a + ii) = temp * phi(1:tPoints, ii - 1)
 END DO
-! edge(2) = (v1, v3)
+
+! edge(2) = 1 -> 3
 a = pe1 - 1
 temp = lambda(1, :) * lambda(3, :)
 DO ii = 1, pe2 - 1
   ans(:, a + ii) = temp &
                   & * phi(1 + tPoints:2 * tPoints, ii - 1)
 END DO
-! edge(3) = (v2, v3)
+
+! edge(3) = 2 -> 3
 a = pe1 - 1 + pe2 - 1
 temp = lambda(2, :) * lambda(3, :)
 DO ii = 1, pe3 - 1
   ans(:, a + ii) = temp &
                   & * phi(1 + 2 * tPoints:3 * tPoints, ii - 1)
 END DO
+
 END PROCEDURE BarycentricEdgeBasis_Triangle2
 
 !----------------------------------------------------------------------------
@@ -937,7 +933,6 @@ END PROCEDURE EdgeBasis_Triangle
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE EdgeBasis_Triangle2
-CHARACTER(20) :: layout
 INTEGER(I4B) :: maxP, k1, k2, a
 
 maxP = MAX(pe1, pe2, pe3)
@@ -969,7 +964,6 @@ END PROCEDURE EdgeBasis_Triangle2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE EdgeBasisGradient_Triangle2
-CHARACTER(20) :: layout
 INTEGER(I4B) :: maxP, k1, k2, a
 REAL(DFP), DIMENSION(SIZE(Lo1, 1)) :: avec
 
@@ -1129,7 +1123,7 @@ REAL(DFP) :: L1(SIZE(xij, 2), 0:MAX(pe1, pe2, pe3, order))
 REAL(DFP) :: L2(SIZE(xij, 2), 0:MAX(pe1, pe2, pe3, order))
 REAL(DFP) :: Lo1(SIZE(xij, 2), 0:1)
 REAL(DFP) :: Lo2(SIZE(xij, 2), 0:1)
-INTEGER(I4B) :: maxP, a, b, ii
+INTEGER(I4B) :: maxP, a, b
 
 layout = TRIM(UpperCase(refTriangle))
 IF (layout .EQ. "BIUNIT") THEN
@@ -1653,7 +1647,7 @@ REAL(DFP) :: Lo2(SIZE(xij, 2), 0:1)
 REAL(DFP) :: dLo1(SIZE(xij, 2), 0:1)
 REAL(DFP) :: dLo2(SIZE(xij, 2), 0:1)
 
-INTEGER(I4B) :: maxP, a, b, ii
+INTEGER(I4B) :: maxP, a, b
 
 layout = TRIM(UpperCase(refTriangle))
 
