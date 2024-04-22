@@ -27,25 +27,29 @@ PUBLIC :: EquidistanceInPoint_Triangle
 PUBLIC :: EquidistancePoint_Triangle
 PUBLIC :: InterpolationPoint_Triangle
 PUBLIC :: LagrangeCoeff_Triangle
+
 PUBLIC :: Dubiner_Triangle
 PUBLIC :: OrthogonalBasis_Triangle
-PUBLIC :: BarycentricVertexBasis_Triangle
-PUBLIC :: BarycentricEdgeBasis_Triangle
-PUBLIC :: BarycentricHeirarchicalBasis_Triangle
-PUBLIC :: BarycentricHeirarchicalBasisGradient_Triangle
+PUBLIC :: OrthogonalBasisGradient_Triangle
+
 PUBLIC :: VertexBasis_Triangle
 PUBLIC :: EdgeBasis_Triangle
 PUBLIC :: CellBasis_Triangle
 PUBLIC :: HeirarchicalBasis_Triangle
+PUBLIC :: HeirarchicalBasisGradient_Triangle
+PUBLIC :: HeirarchicalBasisGradient_Triangle_NEW
+
 PUBLIC :: LagrangeEvalAll_Triangle
 PUBLIC :: LagrangeGradientEvalAll_Triangle
 PUBLIC :: QuadraturePoint_Triangle
 PUBLIC :: IJ2VEFC_Triangle
 PUBLIC :: FacetConnectivity_Triangle
 PUBLIC :: RefElemDomain_Triangle
-PUBLIC :: HeirarchicalBasisGradient_Triangle
-PUBLIC :: HeirarchicalBasisGradient_Triangle_NEW
-PUBLIC :: OrthogonalBasisGradient_Triangle
+
+! PUBLIC :: BarycentricVertexBasis_Triangle
+! PUBLIC :: BarycentricEdgeBasis_Triangle
+! PUBLIC :: BarycentricHeirarchicalBasis_Triangle
+! PUBLIC :: BarycentricHeirarchicalBasisGradient_Triangle
 
 !----------------------------------------------------------------------------
 !                                                   RefElemDomain_Triangle
@@ -545,16 +549,36 @@ END INTERFACE OrthogonalBasis_Triangle
 ! date: 28 Oct 2022
 ! summary: Returns the vertex basis functions on reference Triangle
 
+! INTERFACE
+!   MODULE PURE FUNCTION BarycentricVertexBasis_Triangle(lambda) &
+!     RESULT(ans)
+!     REAL(DFP), INTENT(IN) :: lambda(:, :)
+!     !! point of evaluation in terms of barycentrix coords
+!     !! number of rows = 3 corresponding to three coordinates
+!     !! number of columns = number of points
+!     REAL(DFP) :: ans(SIZE(lambda, 2), 3)
+!     !! ans(:,v1) basis function of vertex v1 at all points
+!   END FUNCTION BarycentricVertexBasis_Triangle
+! END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                          BarycentricVertexBasis_Triangle
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 28 Oct 2022
+! summary: Returns the vertex basis functions on reference Triangle
+
 INTERFACE
-  MODULE PURE FUNCTION BarycentricVertexBasis_Triangle(lambda) &
-    RESULT(ans)
+  MODULE PURE SUBROUTINE BarycentricVertexBasis_Triangle(lambda, ans)
     REAL(DFP), INTENT(IN) :: lambda(:, :)
     !! point of evaluation in terms of barycentrix coords
     !! number of rows = 3 corresponding to three coordinates
     !! number of columns = number of points
-    REAL(DFP) :: ans(SIZE(lambda, 2), 3)
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    ! REAL(DFP) :: ans(SIZE(lambda, 2), 3)
     !! ans(:,v1) basis function of vertex v1 at all points
-  END FUNCTION BarycentricVertexBasis_Triangle
+  END SUBROUTINE BarycentricVertexBasis_Triangle
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -585,37 +609,6 @@ INTERFACE
     !! three coordinates
     REAL(DFP) :: ans(SIZE(lambda, 2), pe1 + pe2 + pe3 - 3)
   END FUNCTION BarycentricEdgeBasis_Triangle
-END INTERFACE
-
-!----------------------------------------------------------------------------
-!
-!----------------------------------------------------------------------------
-
-!> author: Vikas Sharma, Ph. D.
-! date: 30 Oct 2022
-! summary: Evaluate the edge basis on triangle using barycentric coordinate
-! (internal only)
-
-INTERFACE
-  MODULE PURE FUNCTION BarycentricEdgeBasis_Triangle2(pe1, pe2, pe3, &
-                                                      lambda, phi) RESULT(ans)
-    INTEGER(I4B), INTENT(IN) :: pe1
-    !! order on  edge (e1)
-    INTEGER(I4B), INTENT(IN) :: pe2
-    !! order on edge (e2)
-    INTEGER(I4B), INTENT(IN) :: pe3
-    !! order on edge (e3)
-    REAL(DFP), INTENT(IN) :: lambda(:, :)
-    !! point of evaluation in terms of barycentric coordinates
-    !! size(lambda,1) = 3
-    !! size(lambda,2) = number of points of evaluation
-    REAL(DFP), INTENT(IN) :: phi(1:, 0:)
-    !! lobatto kernel values
-    !! size(phi1, 1) = 3*number of points (lambda2-lambda1),
-    !! (lambda3-lambda1), (lambda3-lambda2)
-    !! size(phi1, 2) = max(pe1-2, pe2-2, pe3-2)+1
-    REAL(DFP) :: ans(SIZE(lambda, 2), pe1 + pe2 + pe3 - 3)
-  END FUNCTION BarycentricEdgeBasis_Triangle2
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -834,24 +827,6 @@ INTERFACE
     REAL(DFP) :: ans(SIZE(xij, 2), 3)
     !! ans(:,v1) basis function of vertex v1 at all points
   END FUNCTION VertexBasis_Triangle
-END INTERFACE
-
-!----------------------------------------------------------------------------
-!                                                    VertexBasis_Triangle2
-!----------------------------------------------------------------------------
-
-!> author: Vikas Sharma, Ph. D.
-! date: 28 Oct 2022
-! summary: Returns the vertex basis functions on Triangle (internal only)
-
-INTERFACE
-  MODULE PURE FUNCTION VertexBasis_Triangle2(Lo1, Lo2) RESULT(ans)
-    REAL(DFP), INTENT(IN) :: Lo1(1:, 0:)
-    REAL(DFP), INTENT(IN) :: Lo2(1:, 0:)
-    !! coordinates on biunit square
-    REAL(DFP) :: ans(SIZE(Lo1, 1), 3)
-    !! ans(:,v1) basis function of vertex v1 at all points
-  END FUNCTION VertexBasis_Triangle2
 END INTERFACE
 
 !----------------------------------------------------------------------------
