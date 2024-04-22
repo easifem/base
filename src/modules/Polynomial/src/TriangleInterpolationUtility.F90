@@ -549,26 +549,6 @@ END INTERFACE OrthogonalBasis_Triangle
 ! date: 28 Oct 2022
 ! summary: Returns the vertex basis functions on reference Triangle
 
-! INTERFACE
-!   MODULE PURE FUNCTION BarycentricVertexBasis_Triangle(lambda) &
-!     RESULT(ans)
-!     REAL(DFP), INTENT(IN) :: lambda(:, :)
-!     !! point of evaluation in terms of barycentrix coords
-!     !! number of rows = 3 corresponding to three coordinates
-!     !! number of columns = number of points
-!     REAL(DFP) :: ans(SIZE(lambda, 2), 3)
-!     !! ans(:,v1) basis function of vertex v1 at all points
-!   END FUNCTION BarycentricVertexBasis_Triangle
-! END INTERFACE
-
-!----------------------------------------------------------------------------
-!                                          BarycentricVertexBasis_Triangle
-!----------------------------------------------------------------------------
-
-!> author: Vikas Sharma, Ph. D.
-! date: 28 Oct 2022
-! summary: Returns the vertex basis functions on reference Triangle
-
 INTERFACE
   MODULE PURE SUBROUTINE BarycentricVertexBasis_Triangle(lambda, ans)
     REAL(DFP), INTENT(IN) :: lambda(:, :)
@@ -579,6 +559,25 @@ INTERFACE
     ! REAL(DFP) :: ans(SIZE(lambda, 2), 3)
     !! ans(:,v1) basis function of vertex v1 at all points
   END SUBROUTINE BarycentricVertexBasis_Triangle
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                    VertexBasis_Triangle
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 28 Oct 2022
+! summary: Returns the vertex basis functions on biunit Triangle
+
+INTERFACE
+  MODULE PURE FUNCTION VertexBasis_Triangle(xij, refTriangle) RESULT(ans)
+    REAL(DFP), INTENT(IN) :: xij(:, :)
+    !! point of evaluation on the triangle
+    CHARACTER(*), INTENT(IN) :: refTriangle
+    !! UNIT or BIUNIT
+    REAL(DFP) :: ans(SIZE(xij, 2), 3)
+    !! ans(:,v1) basis function of vertex v1 at all points
+  END FUNCTION VertexBasis_Triangle
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -595,8 +594,8 @@ END INTERFACE
 ! pe1, pe2, pe3 should be greater than or equal to 2
 
 INTERFACE
-  MODULE PURE FUNCTION BarycentricEdgeBasis_Triangle(pe1, pe2, pe3, lambda) &
-    RESULT(ans)
+  MODULE PURE SUBROUTINE BarycentricEdgeBasis_Triangle(pe1, pe2, pe3, &
+                                                       lambda, ans)
     INTEGER(I4B), INTENT(IN) :: pe1
     !! order on  edge (e1)
     INTEGER(I4B), INTENT(IN) :: pe2
@@ -607,8 +606,61 @@ INTERFACE
     !! point of evaluation in terms of barycentric coordinates
     !! Number of rows in lambda is equal to three corresponding to
     !! three coordinates
-    REAL(DFP) :: ans(SIZE(lambda, 2), pe1 + pe2 + pe3 - 3)
-  END FUNCTION BarycentricEdgeBasis_Triangle
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    ! REAL(DFP) :: ans(SIZE(lambda, 2), pe1 + pe2 + pe3 - 3)
+  END SUBROUTINE BarycentricEdgeBasis_Triangle
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                        EdgeBasis_Triangle
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 28 Oct 2022
+! summary: Eval basis on left, right edge of biunit Triangle
+!
+!# Introduction
+!
+! Evaluate basis functions on left and right edge of biunit Triangle
+!
+! qe1 and qe2 should be greater than or equal to 2
+
+INTERFACE
+  MODULE PURE FUNCTION EdgeBasis_Triangle(pe1, pe2, pe3, xij, refTriangle) &
+    & RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: pe1
+    !! order on left vertical edge (e1), should be greater than 1
+    INTEGER(I4B), INTENT(IN) :: pe2
+    !! order on right vertical edge(e2), should be greater than 1
+    INTEGER(I4B), INTENT(IN) :: pe3
+    !! order on right vertical edge(e3), should be greater than 1
+    REAL(DFP), INTENT(IN) :: xij(:, :)
+    !! point of evaluation
+    CHARACTER(*), INTENT(IN) :: refTriangle
+    !! Reference triangle
+    REAL(DFP) :: ans(SIZE(xij, 2), pe1 + pe2 + pe3 - 3)
+  END FUNCTION EdgeBasis_Triangle
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                          BarycentricCellBasis_Triangle
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 28 Oct 2022
+! summary: Returns the Cell basis functions on reference Triangle
+
+INTERFACE
+  MODULE PURE SUBROUTINE BarycentricCellBasis_Triangle(order, lambda, ans)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order in this cell, it should be greater than 2
+    REAL(DFP), INTENT(IN) :: lambda(:, :)
+    !! point of evaluation in terms of barycentrix coords
+    !! number of rows = 3 corresponding to three coordinates
+    !! number of columns = number of points
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    ! ans(SIZE(lambda, 2), INT((order - 1) * (order - 2) / 2))
+  END SUBROUTINE BarycentricCellBasis_Triangle
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -636,6 +688,224 @@ INTERFACE
     REAL(DFP) :: ans(SIZE(lambda, 2), pe1 + pe2 + pe3 - 3, 3)
   END FUNCTION BarycentricEdgeBasisGradient_Triangle
 END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                      CellBasis_Triangle
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 28 Oct 2022
+! summary: Eval basis in the cell of biunit Triangle
+!
+!# Introduction
+!
+! Evaluate basis functions in the cell of biunit Triangle
+
+INTERFACE
+  MODULE PURE FUNCTION CellBasis_Triangle(order, xij, refTriangle) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order of approximation inside the cell, order>2
+    REAL(DFP), INTENT(IN) :: xij(:, :)
+    !! point of evaluation
+    CHARACTER(*), INTENT(IN) :: refTriangle
+    !! Reference triangle
+    REAL(DFP) :: ans(SIZE(xij, 2), INT((order - 1) * (order - 2) / 2))
+  END FUNCTION CellBasis_Triangle
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                      BarycentricHeirarchicalBasis_Triangle
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 27 Oct 2022
+! summary: Evaluate all modal basis (heirarchical polynomial) on Triangle
+
+INTERFACE BarycentricHeirarchicalBasis_Triangle
+  MODULE PURE SUBROUTINE BarycentricHeirarchicalBasis_Triangle1(order, &
+    & pe1, pe2, pe3, lambda, refTriangle, ans, nrow, ncol)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order in the cell of triangle, it should be greater than 2
+    INTEGER(I4B), INTENT(IN) :: pe1
+    !! order of interpolation on edge e1
+    INTEGER(I4B), INTENT(IN) :: pe2
+    !! order of interpolation on edge e2
+    INTEGER(I4B), INTENT(IN) :: pe3
+    !! order of interpolation on edge e3
+    REAL(DFP), INTENT(IN) :: lambda(:, :)
+    !! Barycenteric coordinates
+    !! number of rows = 3
+    !! number of cols = number of points
+    CHARACTER(*), INTENT(IN) :: refTriangle
+    !! reference triangle, "BIUNIT", "UNIT"
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    ! REAL(DFP) :: ans( &
+    !   & SIZE(lambda, 2), &
+    !   & pe1 + pe2 + pe3 + INT((order - 1) * (order - 2) / 2))
+    !!
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+  END SUBROUTINE BarycentricHeirarchicalBasis_Triangle1
+END INTERFACE BarycentricHeirarchicalBasis_Triangle
+
+!----------------------------------------------------------------------------
+!                                      BarycentricHeirarchicalBasis_Triangle
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 27 Oct 2022
+! summary: Evaluate all modal basis (heirarchical polynomial) on Triangle
+
+INTERFACE BarycentricHeirarchicalBasis_Triangle
+MODULE PURE SUBROUTINE BarycentricHeirarchicalBasis_Triangle2(order, lambda, &
+                                               & refTriangle, ans, nrow, ncol)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order of approximation on triangle
+    REAL(DFP), INTENT(IN) :: lambda(:, :)
+    !! Barycenteric coordinates
+    !! number of rows = 3
+    !! number of cols = number of points
+    CHARACTER(*), INTENT(IN) :: refTriangle
+    !! reference triangle, "BIUNIT", "UNIT"
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    ! REAL(DFP) :: ans( &
+    !   & SIZE(lambda, 2), &
+    !   & INT((order + 1) * (order + 2) / 2))
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+  END SUBROUTINE BarycentricHeirarchicalBasis_Triangle2
+END INTERFACE BarycentricHeirarchicalBasis_Triangle
+
+!----------------------------------------------------------------------------
+!                                              HeirarchicalBasis_Triangle
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 27 Oct 2022
+! summary: Evaluate all modal basis (heirarchical polynomial) on Triangle
+
+INTERFACE HeirarchicalBasis_Triangle
+  MODULE PURE FUNCTION HeirarchicalBasis_Triangle1(order, pe1, pe2, pe3,&
+    & xij, refTriangle) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! Order of approximation inside the triangle (i.e., cell)
+    !! it should be greater than 2 for cell bubble to exist
+    INTEGER(I4B), INTENT(IN) :: pe1
+    !! Order of interpolation on edge e1
+    !! It should be greater than 1 for edge bubble to exists
+    INTEGER(I4B), INTENT(IN) :: pe2
+    !! Order of interpolation on edge e2
+    !! It should be greater than 1 for edge bubble to exists
+    INTEGER(I4B), INTENT(IN) :: pe3
+    !! Order of interpolation on edge e3
+    !! It should be greater than 1 for edge bubble to exists
+    REAL(DFP), INTENT(IN) :: xij(:, :)
+    !! Points of evaluation in xij format
+    CHARACTER(*), INTENT(IN) :: refTriangle
+    !! This parameter denotes the type of reference triangle.
+    !! It can take following values:
+    !! UNIT: in this case xij is in unit Triangle.
+    !! BIUNIT: in this case xij is in biunit triangle.
+    REAL(DFP) :: ans( &
+      & SIZE(xij, 2), &
+      & pe1 + pe2 + pe3 + INT((order - 1) * (order - 2) / 2))
+    !!
+  END FUNCTION HeirarchicalBasis_Triangle1
+END INTERFACE HeirarchicalBasis_Triangle
+
+!----------------------------------------------------------------------------
+!                                              HeirarchicalBasis_Triangle
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2024-04-22
+! summary: Evaluate all modal basis (heirarchical polynomial) on Triangle
+
+INTERFACE HeirarchicalBasis_Triangle
+  MODULE PURE FUNCTION HeirarchicalBasis_Triangle2(order, xij, refTriangle) &
+    RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! Order of approximation inside the triangle (i.e., cell)
+    !! it should be greater than 2 for cell bubble to exist
+    REAL(DFP), INTENT(IN) :: xij(:, :)
+    !! Points of evaluation in xij format
+    CHARACTER(*), INTENT(IN) :: refTriangle
+    !! This parameter denotes the type of reference triangle.
+    !! It can take following values:
+    !! UNIT: in this case xij is in unit Triangle.
+    !! BIUNIT: in this case xij is in biunit triangle.
+    REAL(DFP) :: ans(SIZE(xij, 2), &
+                     3 * order + INT((order - 1) * (order - 2) / 2))
+    !!
+  END FUNCTION HeirarchicalBasis_Triangle2
+END INTERFACE HeirarchicalBasis_Triangle
+
+!----------------------------------------------------------------------------
+!                                              HeirarchicalBasis_Triangle
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 27 Oct 2022
+! summary: Evaluate all modal basis (heirarchical polynomial) on Triangle
+
+INTERFACE HeirarchicalBasis_Triangle_
+  MODULE PURE SUBROUTINE HeirarchicalBasis_Triangle1_(order, pe1, pe2, pe3,&
+    & xij, refTriangle, ans, nrow, ncol)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! Order of approximation inside the triangle (i.e., cell)
+    !! it should be greater than 2 for cell bubble to exist
+    INTEGER(I4B), INTENT(IN) :: pe1
+    !! Order of interpolation on edge e1
+    !! It should be greater than 1 for edge bubble to exists
+    INTEGER(I4B), INTENT(IN) :: pe2
+    !! Order of interpolation on edge e2
+    !! It should be greater than 1 for edge bubble to exists
+    INTEGER(I4B), INTENT(IN) :: pe3
+    !! Order of interpolation on edge e3
+    !! It should be greater than 1 for edge bubble to exists
+    REAL(DFP), INTENT(IN) :: xij(:, :)
+    !! Points of evaluation in xij format
+    CHARACTER(*), INTENT(IN) :: refTriangle
+    !! This parameter denotes the type of reference triangle.
+    !! It can take following values:
+    !! UNIT: in this case xij is in unit Triangle.
+    !! BIUNIT: in this case xij is in biunit triangle.
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    ! REAL(DFP) :: ans( &
+    !   & SIZE(xij, 2), &
+    !   & pe1 + pe2 + pe3 + INT((order - 1) * (order - 2) / 2))
+    !!
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+  END SUBROUTINE HeirarchicalBasis_Triangle1_
+END INTERFACE HeirarchicalBasis_Triangle_
+
+!----------------------------------------------------------------------------
+!                                              HeirarchicalBasis_Triangle
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 27 Oct 2022
+! summary: Evaluate all modal basis (heirarchical polynomial) on Triangle
+
+INTERFACE HeirarchicalBasis_Triangle_
+  MODULE PURE SUBROUTINE HeirarchicalBasis_Triangle2_(order, xij, &
+                                                 refTriangle, ans, nrow, ncol)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! Order of approximation inside the triangle (i.e., cell)
+    !! it should be greater than 2 for cell bubble to exist
+    REAL(DFP), INTENT(IN) :: xij(:, :)
+    !! Points of evaluation in xij format
+    CHARACTER(*), INTENT(IN) :: refTriangle
+    !! This parameter denotes the type of reference triangle.
+    !! It can take following values:
+    !! UNIT: in this case xij is in unit Triangle.
+    !! BIUNIT: in this case xij is in biunit triangle.
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    ! REAL(DFP) :: ans( &
+    !   & SIZE(xij, 2), &
+    !   & order*3 + INT((order - 1) * (order - 2) / 2))
+    !!
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+  END SUBROUTINE HeirarchicalBasis_Triangle2_
+END INTERFACE HeirarchicalBasis_Triangle_
 
 !----------------------------------------------------------------------------
 !
@@ -671,30 +941,6 @@ INTERFACE
 END INTERFACE
 
 !----------------------------------------------------------------------------
-!                                             BarycentricCellBasis_Triangle
-!----------------------------------------------------------------------------
-
-!> author: Vikas Sharma, Ph. D.
-! date: 28 Oct 2022
-! summary: Eval basis in the cell of reference triangle (internal only)
-
-INTERFACE
-  MODULE PURE FUNCTION BarycentricCellBasis_Triangle2(order, lambda, phi) &
-    & RESULT(ans)
-    INTEGER(I4B), INTENT(IN) :: order
-    !! order in the cell of triangle, it should be greater than 2
-    REAL(DFP), INTENT(IN) :: lambda(:, :)
-    !! point of evaluation
-    REAL(DFP), INTENT(IN) :: phi(1:, 0:)
-    !! lobatto kernel values
-    !! size(phi1, 1) = 3*number of points (lambda2-lambda1),
-    !! (lambda3-lambda1), (lambda3-lambda2)
-    !! size(phi1, 2) = max(pe1-2, pe2-2, pe3-2)+1
-    REAL(DFP) :: ans(SIZE(lambda, 2), INT((order - 1) * (order - 2) / 2))
-  END FUNCTION BarycentricCellBasis_Triangle2
-END INTERFACE
-
-!----------------------------------------------------------------------------
 !                                       BarycentricCellBasisGradient_Triangle
 !----------------------------------------------------------------------------
 
@@ -719,64 +965,6 @@ INTERFACE
     REAL(DFP) :: ans(SIZE(lambda, 2), INT((order - 1) * (order - 2) / 2), 3)
   END FUNCTION BarycentricCellBasisGradient_Triangle2
 END INTERFACE
-
-!----------------------------------------------------------------------------
-!                                      BarycentricHeirarchicalBasis_Triangle
-!----------------------------------------------------------------------------
-
-!> author: Vikas Sharma, Ph. D.
-! date: 27 Oct 2022
-! summary: Evaluate all modal basis (heirarchical polynomial) on Triangle
-
-INTERFACE BarycentricHeirarchicalBasis_Triangle
-  MODULE PURE FUNCTION BarycentricHeirarchicalBasis_Triangle1(order, &
-    & pe1, pe2, pe3, lambda, refTriangle) RESULT(ans)
-    INTEGER(I4B), INTENT(IN) :: order
-    !! order in the cell of triangle, it should be greater than 2
-    INTEGER(I4B), INTENT(IN) :: pe1
-    !! order of interpolation on edge e1
-    INTEGER(I4B), INTENT(IN) :: pe2
-    !! order of interpolation on edge e2
-    INTEGER(I4B), INTENT(IN) :: pe3
-    !! order of interpolation on edge e3
-    REAL(DFP), INTENT(IN) :: lambda(:, :)
-    !! Barycenteric coordinates
-    !! number of rows = 3
-    !! number of cols = number of points
-    CHARACTER(*), INTENT(IN) :: refTriangle
-    !! reference triangle, "BIUNIT", "UNIT"
-    REAL(DFP) :: ans( &
-      & SIZE(lambda, 2), &
-      & pe1 + pe2 + pe3 + INT((order - 1) * (order - 2) / 2))
-    !!
-  END FUNCTION BarycentricHeirarchicalBasis_Triangle1
-END INTERFACE BarycentricHeirarchicalBasis_Triangle
-
-!----------------------------------------------------------------------------
-!                                      BarycentricHeirarchicalBasis_Triangle
-!----------------------------------------------------------------------------
-
-!> author: Vikas Sharma, Ph. D.
-! date: 27 Oct 2022
-! summary: Evaluate all modal basis (heirarchical polynomial) on Triangle
-
-INTERFACE BarycentricHeirarchicalBasis_Triangle
-  MODULE PURE FUNCTION BarycentricHeirarchicalBasis_Triangle2(order, lambda, &
-    & refTriangle) RESULT(ans)
-    INTEGER(I4B), INTENT(IN) :: order
-    !! order of approximation on triangle
-    REAL(DFP), INTENT(IN) :: lambda(:, :)
-    !! Barycenteric coordinates
-    !! number of rows = 3
-    !! number of cols = number of points
-    CHARACTER(*), INTENT(IN) :: refTriangle
-    !! reference triangle, "BIUNIT", "UNIT"
-    REAL(DFP) :: ans( &
-      & SIZE(lambda, 2), &
-      & INT((order + 1) * (order + 2) / 2))
-    !!
-  END FUNCTION BarycentricHeirarchicalBasis_Triangle2
-END INTERFACE BarycentricHeirarchicalBasis_Triangle
 
 !----------------------------------------------------------------------------
 !                               BarycentricHeirarchicalBasisGradient_Triangle
@@ -811,25 +999,6 @@ INTERFACE BarycentricHeirarchicalBasisGradient_Triangle
 END INTERFACE BarycentricHeirarchicalBasisGradient_Triangle
 
 !----------------------------------------------------------------------------
-!                                                    VertexBasis_Triangle
-!----------------------------------------------------------------------------
-
-!> author: Vikas Sharma, Ph. D.
-! date: 28 Oct 2022
-! summary: Returns the vertex basis functions on biunit Triangle
-
-INTERFACE
-  MODULE PURE FUNCTION VertexBasis_Triangle(xij, refTriangle) RESULT(ans)
-    REAL(DFP), INTENT(IN) :: xij(:, :)
-    !! point of evaluation on the triangle
-    CHARACTER(*), INTENT(IN) :: refTriangle
-    !! UNIT or BIUNIT
-    REAL(DFP) :: ans(SIZE(xij, 2), 3)
-    !! ans(:,v1) basis function of vertex v1 at all points
-  END FUNCTION VertexBasis_Triangle
-END INTERFACE
-
-!----------------------------------------------------------------------------
 !                                                    VertexBasis_Triangle2
 !----------------------------------------------------------------------------
 
@@ -851,70 +1020,6 @@ INTERFACE
     REAL(DFP) :: ans(SIZE(Lo1, 1), 3, 2)
     !! ans(:,v1) basis function of vertex v1 at all points
   END FUNCTION VertexBasisGradient_Triangle2
-END INTERFACE
-
-!----------------------------------------------------------------------------
-!                                                        EdgeBasis_Triangle
-!----------------------------------------------------------------------------
-
-!> author: Vikas Sharma, Ph. D.
-! date: 28 Oct 2022
-! summary: Eval basis on left, right edge of biunit Triangle
-!
-!# Introduction
-!
-! Evaluate basis functions on left and right edge of biunit Triangle
-!
-! qe1 and qe2 should be greater than or equal to 2
-
-INTERFACE
-  MODULE PURE FUNCTION EdgeBasis_Triangle(pe1, pe2, pe3, xij, refTriangle) &
-    & RESULT(ans)
-    INTEGER(I4B), INTENT(IN) :: pe1
-    !! order on left vertical edge (e1), should be greater than 1
-    INTEGER(I4B), INTENT(IN) :: pe2
-    !! order on right vertical edge(e2), should be greater than 1
-    INTEGER(I4B), INTENT(IN) :: pe3
-    !! order on right vertical edge(e3), should be greater than 1
-    REAL(DFP), INTENT(IN) :: xij(:, :)
-    !! point of evaluation
-    CHARACTER(*), INTENT(IN) :: refTriangle
-    !! Reference triangle
-    REAL(DFP) :: ans(SIZE(xij, 2), pe1 + pe2 + pe3 - 3)
-  END FUNCTION EdgeBasis_Triangle
-END INTERFACE
-
-!----------------------------------------------------------------------------
-!                                                        EdgeBasis_Triangle
-!----------------------------------------------------------------------------
-
-!> author: Vikas Sharma, Ph. D.
-! date: 28 Oct 2022
-! summary: Eval basis on left, right edge of biunit Triangle (internal only)
-!
-!# Introduction
-!
-! Evaluate basis functions on left and right edge of biunit Triangle
-!
-! qe1 and qe2 should be greater than or equal to 2
-
-INTERFACE
-  MODULE PURE FUNCTION EdgeBasis_Triangle2(pe1, pe2, pe3, L1, L2, Lo1, &
-    & Lo2) RESULT(ans)
-    INTEGER(I4B), INTENT(IN) :: pe1
-    !! order on left vertical edge (e1), should be greater than 1
-    INTEGER(I4B), INTENT(IN) :: pe2
-    !! order on right vertical edge(e2), should be greater than 1
-    INTEGER(I4B), INTENT(IN) :: pe3
-    !! order on right vertical edge(e3), should be greater than 1
-    REAL(DFP), INTENT(IN) :: L1(1:, 0:), L2(1:, 0:)
-    !! L1 and L2 are jacobian polynomials
-    REAL(DFP), INTENT(IN) :: Lo1(1:, 0:)
-    !! coordinates on biunit square domain
-    REAL(DFP), INTENT(IN) :: Lo2(1:, 0:)
-    !! coordinates on biunit square domain
-    REAL(DFP) :: ans(SIZE(L1, 1), pe1 + pe2 + pe3 - 3)
-  END FUNCTION EdgeBasis_Triangle2
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -969,69 +1074,8 @@ END INTERFACE
 ! Evaluate basis functions in the cell of biunit Triangle
 
 INTERFACE
-  MODULE PURE FUNCTION CellBasis_Triangle(order, xij, refTriangle) RESULT(ans)
-    INTEGER(I4B), INTENT(IN) :: order
-    !! order of approximation inside the cell, order>2
-    REAL(DFP), INTENT(IN) :: xij(:, :)
-    !! point of evaluation
-    CHARACTER(*), INTENT(IN) :: refTriangle
-    !! Reference triangle
-    REAL(DFP) :: ans(SIZE(xij, 2), INT((order - 1) * (order - 2) / 2))
-  END FUNCTION CellBasis_Triangle
-END INTERFACE
-
-!----------------------------------------------------------------------------
-!                                                      CellBasis_Triangle
-!----------------------------------------------------------------------------
-
-!> author: Vikas Sharma, Ph. D.
-! date: 28 Oct 2022
-! summary: Eval basis in the cell of biunit Triangle (internal only)
-!
-!# Introduction
-!
-! Evaluate basis functions in the cell of biunit Triangle
-
-INTERFACE
-  MODULE PURE FUNCTION CellBasis_Triangle2(order, L1, eta_ij, &
-    & Lo1, Lo2) RESULT(ans)
-    INTEGER(I4B), INTENT(IN) :: order
-    !! order of approximation inside the cell, order>2
-    REAL(DFP), INTENT(IN) :: L1(1:, 0:)
-    !! lobatto polynomials
-    REAL(DFP), INTENT(IN) :: eta_ij(:, :)
-    !! coordinates on biunit square
-    REAL(DFP), INTENT(IN) :: Lo1(1:, 0:)
-    !! coordinates on biunit square domain
-    REAL(DFP), INTENT(IN) :: Lo2(1:, 0:)
-    !! coordinates on biunit square domain
-    REAL(DFP) :: ans(SIZE(L1, 1), INT((order - 1) * (order - 2) / 2))
-  END FUNCTION CellBasis_Triangle2
-END INTERFACE
-
-!----------------------------------------------------------------------------
-!                                                      CellBasis_Triangle
-!----------------------------------------------------------------------------
-
-!> author: Vikas Sharma, Ph. D.
-! date: 28 Oct 2022
-! summary: Eval basis in the cell of biunit Triangle
-!
-!# Introduction
-!
-! Evaluate basis functions in the cell of biunit Triangle
-
-INTERFACE
-  MODULE PURE FUNCTION CellBasisGradient_Triangle2( &
-    & order, &
-    & eta_ij, &
-    & L1, &
-    & Lo1, &
-    & Lo2,  &
-    & dL1, &
-    & dLo1, &
-    & dLo2  &
-    & ) RESULT(ans)
+  MODULE PURE FUNCTION CellBasisGradient_Triangle2(order, eta_ij, L1, Lo1, &
+                                             Lo2, dL1, dLo1, dLo2) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
     !! order of approximation inside the cell, order>2
     REAL(DFP), INTENT(IN) :: eta_ij(:, :)
@@ -1051,43 +1095,6 @@ INTERFACE
     REAL(DFP) :: ans(SIZE(L1, 1), INT((order - 1) * (order - 2) / 2), 2)
   END FUNCTION CellBasisGradient_Triangle2
 END INTERFACE
-
-!----------------------------------------------------------------------------
-!                                              HeirarchicalBasis_Triangle
-!----------------------------------------------------------------------------
-
-!> author: Vikas Sharma, Ph. D.
-! date: 27 Oct 2022
-! summary: Evaluate all modal basis (heirarchical polynomial) on Triangle
-
-INTERFACE HeirarchicalBasis_Triangle
-  MODULE PURE FUNCTION HeirarchicalBasis_Triangle1(order, pe1, pe2, pe3,&
-    & xij, refTriangle) RESULT(ans)
-    INTEGER(I4B), INTENT(IN) :: order
-    !! Order of approximation inside the triangle (i.e., cell)
-    !! it should be greater than 2 for cell bubble to exist
-    INTEGER(I4B), INTENT(IN) :: pe1
-    !! Order of interpolation on edge e1
-    !! It should be greater than 1 for edge bubble to exists
-    INTEGER(I4B), INTENT(IN) :: pe2
-    !! Order of interpolation on edge e2
-    !! It should be greater than 1 for edge bubble to exists
-    INTEGER(I4B), INTENT(IN) :: pe3
-    !! Order of interpolation on edge e3
-    !! It should be greater than 1 for edge bubble to exists
-    REAL(DFP), INTENT(IN) :: xij(:, :)
-    !! Points of evaluation in xij format
-    CHARACTER(*), INTENT(IN) :: refTriangle
-    !! This parameter denotes the type of reference triangle.
-    !! It can take following values:
-    !! UNIT: in this case xij is in unit Triangle.
-    !! BIUNIT: in this case xij is in biunit triangle.
-    REAL(DFP) :: ans( &
-      & SIZE(xij, 2), &
-      & pe1 + pe2 + pe3 + INT((order - 1) * (order - 2) / 2))
-    !!
-  END FUNCTION HeirarchicalBasis_Triangle1
-END INTERFACE HeirarchicalBasis_Triangle
 
 !----------------------------------------------------------------------------
 !                                                   LagrangeEvalAll_Triangle
