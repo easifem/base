@@ -393,6 +393,8 @@ PURE SUBROUTINE BarycentricEdgeBasisGradient_Triangle2(pe1, pe2, pe3, &
 
   tp = SIZE(lambda, 2)
 
+  ans = 0.0
+
   !FIXME: Make these loop parallel
 
   a = 0
@@ -401,7 +403,7 @@ PURE SUBROUTINE BarycentricEdgeBasisGradient_Triangle2(pe1, pe2, pe3, &
   DO ii = 1, pe1 - 1
     ans(:, a + ii, 1) = lambda(2, :) * phi(1:tp, ii - 1) - &
                         temp * gradientPhi(1:tp, ii - 1)
-    ans(:, a + ii, 3) = lambda(1, :) * phi(1:tp, ii - 1) + &
+    ans(:, a + ii, 2) = lambda(1, :) * phi(1:tp, ii - 1) + &
                         temp * gradientPhi(1:tp, ii - 1)
   END DO
 
