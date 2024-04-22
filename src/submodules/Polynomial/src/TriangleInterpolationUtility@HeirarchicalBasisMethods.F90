@@ -47,7 +47,7 @@ END PROCEDURE VertexBasis_Triangle
 MODULE PROCEDURE BarycentricEdgeBasis_Triangle
 REAL(DFP) :: d_lambda(3 * SIZE(lambda, 2))
 REAL(DFP) :: phi(1:3 * SIZE(lambda, 2), 0:MAX(pe1 - 2, pe2 - 2, pe3 - 2))
-INTEGER(I4B) :: maxP, tPoints, ii
+INTEGER(I4B) :: maxP, tPoints, ii, jj
 
 tPoints = SIZE(lambda, 2)
 maxP = MAX(pe1 - 2, pe2 - 2, pe3 - 2)
@@ -61,7 +61,7 @@ DO CONCURRENT(ii=1:tpoints)
   d_lambda(ii + 2 * tPoints) = lambda(1, ii) - lambda(3, ii)
 END DO
 
-phi = LobattoKernelEvalAll(n=maxP, x=d_lambda)
+CALL LobattoKernelEvalAll_(n=maxP, x=d_lambda, ans=phi, nrow=ii, ncol=jj)
 
 CALL BarycentricEdgeBasis_Triangle2(pe1=pe1, pe2=pe2, pe3=pe3, &
                                     lambda=lambda, phi=phi, ans=ans)
@@ -393,42 +393,47 @@ PURE SUBROUTINE BarycentricEdgeBasisGradient_Triangle2(pe1, pe2, pe3, &
 
   tp = SIZE(lambda, 2)
 
-  ans = 0.0
-
   !FIXME: Make these loop parallel
 
   a = 0
   ! edge(1) = 1 -> 2
   temp = lambda(1, :) * lambda(2, :)
   DO ii = 1, pe1 - 1
-    ans(:, a + ii, 1) = lambda(2, :) * phi(1:tp, ii - 1) - &
-                        temp * gradientPhi(1:tp, ii - 1)
-    ans(:, a + ii, 2) = lambda(1, :) * phi(1:tp, ii - 1) + &
-                        temp * gradientPhi(1:tp, ii - 1)
+    ans(1:tp, a + ii, 1) = lambda(2, :) * phi(1:tp, ii - 1) - &
+                           temp * gradientPhi(1:tp, ii - 1)
+    ans(1:tp, a + ii, 2) = lambda(1, :) * phi(1:tp, ii - 1) + &
+                           temp * gradientPhi(1:tp, ii - 1)
+    ans(1:tp, a + ii, 3) = 0.0_DFP
   END DO
 
   ! edge(2) = 2 -> 3
   a = pe1 - 1
   temp = lambda(2, :) * lambda(3, :)
   DO ii = 1, pe2 - 1
-    ans(:, a + ii, 2) = lambda(3, :) * &
-                        phi(1 + tp:2 * tp, ii - 1) - &
-                        temp * gradientPhi(1 + tp:2 * tp, ii - 1)
-    ans(:, a + ii, 3) = lambda(2, :) * &
-                        phi(1 + tp:2 * tp, ii - 1) + &
-                        temp * gradientPhi(1 + tp:2 * tp, ii - 1)
+    ans(1:tp, a + ii, 1) = 0.0_DFP
+
+    ans(1:tp, a + ii, 2) = lambda(3, :) * &
+                           phi(1 + tp:2 * tp, ii - 1) - &
+                           temp * gradientPhi(1 + tp:2 * tp, ii - 1)
+
+    ans(1:tp, a + ii, 3) = lambda(2, :) * &
+                           phi(1 + tp:2 * tp, ii - 1) + &
+                           temp * gradientPhi(1 + tp:2 * tp, ii - 1)
   END DO
 
   ! edge(3) = 3 -> 1
   a = pe1 - 1 + pe2 - 1
   temp = lambda(3, :) * lambda(1, :)
   DO ii = 1, pe3 - 1
-    ans(:, a + ii, 1) = lambda(3, :) * &
-                        phi(1 + 2 * tp:3 * tp, ii - 1) + &
-                        temp * gradientPhi(1 + 2 * tp:3 * tp, ii - 1)
-    ans(:, a + ii, 3) = lambda(1, :) * &
-                        phi(1 + 2 * tp:3 * tp, ii - 1) - &
-                        temp * gradientPhi(1 + 2 * tp:3 * tp, ii - 1)
+    ans(1:tp, a + ii, 1) = lambda(3, :) * &
+                           phi(1 + 2 * tp:3 * tp, ii - 1) + &
+                           temp * gradientPhi(1 + 2 * tp:3 * tp, ii - 1)
+
+    ans(1:tp, a + ii, 2) = 0.0_DFP
+
+    ans(1:tp, a + ii, 3) = lambda(1, :) * &
+                           phi(1 + 2 * tp:3 * tp, ii - 1) - &
+                           temp * gradientPhi(1 + 2 * tp:3 * tp, ii - 1)
   END DO
 END SUBROUTINE BarycentricEdgeBasisGradient_Triangle2
 
