@@ -32,6 +32,7 @@ PUBLIC :: OrthogonalBasis_Triangle
 PUBLIC :: BarycentricVertexBasis_Triangle
 PUBLIC :: BarycentricEdgeBasis_Triangle
 PUBLIC :: BarycentricHeirarchicalBasis_Triangle
+PUBLIC :: BarycentricHeirarchicalBasisGradient_Triangle
 PUBLIC :: VertexBasis_Triangle
 PUBLIC :: EdgeBasis_Triangle
 PUBLIC :: CellBasis_Triangle
@@ -43,6 +44,7 @@ PUBLIC :: IJ2VEFC_Triangle
 PUBLIC :: FacetConnectivity_Triangle
 PUBLIC :: RefElemDomain_Triangle
 PUBLIC :: HeirarchicalBasisGradient_Triangle
+PUBLIC :: HeirarchicalBasisGradient_Triangle_NEW
 PUBLIC :: OrthogonalBasisGradient_Triangle
 
 !----------------------------------------------------------------------------
@@ -617,6 +619,65 @@ INTERFACE
 END INTERFACE
 
 !----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+!> author: Shion Shimizu
+! date:   2024-04-21
+! summary: Evaluate the gradient of the edge basis on triangle
+! using barycentric coordinate
+
+INTERFACE
+  MODULE PURE FUNCTION BarycentricEdgeBasisGradient_Triangle(pe1, pe2, pe3, &
+                                                           lambda) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: pe1
+    !! order on  edge (e1)
+    INTEGER(I4B), INTENT(IN) :: pe2
+    !! order on edge (e2)
+    INTEGER(I4B), INTENT(IN) :: pe3
+    !! order on edge (e3)
+    REAL(DFP), INTENT(IN) :: lambda(:, :)
+    !! point of evaluation in terms of barycentric coordinates
+    !! size(lambda,1) = 3
+    !! size(lambda,2) = number of points of evaluation
+    REAL(DFP) :: ans(SIZE(lambda, 2), pe1 + pe2 + pe3 - 3, 3)
+  END FUNCTION BarycentricEdgeBasisGradient_Triangle
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+!> author: Shion Shimizu
+! date:   2024-04-21
+! summary: Evaluate the gradient of the edge basis on triangle
+! using barycentric coordinate
+
+INTERFACE
+  MODULE PURE FUNCTION BarycentricEdgeBasisGradient_Triangle2(pe1, pe2, pe3, &
+                                         lambda, phi, gradientPhi) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: pe1
+    !! order on  edge (e1)
+    INTEGER(I4B), INTENT(IN) :: pe2
+    !! order on edge (e2)
+    INTEGER(I4B), INTENT(IN) :: pe3
+    !! order on edge (e3)
+    REAL(DFP), INTENT(IN) :: lambda(:, :)
+    !! point of evaluation in terms of barycentric coordinates
+    !! size(lambda,1) = 3
+    !! size(lambda,2) = number of points of evaluation
+    REAL(DFP), INTENT(IN) :: phi(1:, 0:)
+    !! lobatto kernel values
+    !! size(phi1, 1) = 3*number of points (lambda2-lambda1),
+    !! (lambda3-lambda1), (lambda3-lambda2)
+    !! size(phi1, 2) = max(pe1-2, pe2-2, pe3-2)+1
+    REAL(DFP), INTENT(IN) :: gradientPhi(1:, 0:)
+    !! gradients of lobatto kernel functions
+    REAL(DFP) :: ans(SIZE(lambda, 2), pe1 + pe2 + pe3 - 3, 3)
+  END FUNCTION BarycentricEdgeBasisGradient_Triangle2
+END INTERFACE
+
+!----------------------------------------------------------------------------
 !                                             BarycentricCellBasis_Triangle
 !----------------------------------------------------------------------------
 
@@ -638,6 +699,32 @@ INTERFACE
     !! size(phi1, 2) = max(pe1-2, pe2-2, pe3-2)+1
     REAL(DFP) :: ans(SIZE(lambda, 2), INT((order - 1) * (order - 2) / 2))
   END FUNCTION BarycentricCellBasis_Triangle2
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                       BarycentricCellBasisGradient_Triangle
+!----------------------------------------------------------------------------
+
+!> author: Shion Shimizu
+! date:   2024-04-21
+! summary:  Evaluate the gradient of the cell basis on triangle
+
+INTERFACE
+  MODULE PURE FUNCTION BarycentricCellBasisGradient_Triangle2(order, lambda, phi, &
+                                                      gradientPhi) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order in the cell of triangle, it should be greater than 2
+    REAL(DFP), INTENT(IN) :: lambda(:, :)
+    !! point of evaluation
+    REAL(DFP), INTENT(IN) :: phi(1:, 0:)
+    !! lobatto kernel values
+    !! size(phi1, 1) = 3*number of points (lambda2-lambda1),
+    !! (lambda3-lambda1), (lambda3-lambda2)
+    !! size(phi1, 2) = max(pe1-2, pe2-2, pe3-2)+1
+    REAL(DFP), INTENT(IN) :: gradientPhi(1:, 0:)
+    !! gradients of lobatto kernel functions
+    REAL(DFP) :: ans(SIZE(lambda, 2), INT((order - 1) * (order - 2) / 2), 3)
+  END FUNCTION BarycentricCellBasisGradient_Triangle2
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -697,6 +784,38 @@ INTERFACE BarycentricHeirarchicalBasis_Triangle
     !!
   END FUNCTION BarycentricHeirarchicalBasis_Triangle2
 END INTERFACE BarycentricHeirarchicalBasis_Triangle
+
+!----------------------------------------------------------------------------
+!                               BarycentricHeirarchicalBasisGradient_Triangle
+!----------------------------------------------------------------------------
+
+!> author: Shion Shimizu
+! date:   2024-04-21
+! summary:  Evaluate the gradient of the Hierarchical basis on triangle
+
+INTERFACE BarycentricHeirarchicalBasisGradient_Triangle
+  MODULE PURE FUNCTION BarycentricHeirarchicalBasisGradient_Triangle1(order, &
+    & pe1, pe2, pe3, lambda, refTriangle) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order in the cell of triangle, it should be greater than 2
+    INTEGER(I4B), INTENT(IN) :: pe1
+    !! order of interpolation on edge e1
+    INTEGER(I4B), INTENT(IN) :: pe2
+    !! order of interpolation on edge e2
+    INTEGER(I4B), INTENT(IN) :: pe3
+    !! order of interpolation on edge e3
+    REAL(DFP), INTENT(IN) :: lambda(:, :)
+    !! Barycenteric coordinates
+    !! number of rows = 3
+    !! number of cols = number of points
+    CHARACTER(*), INTENT(IN) :: refTriangle
+    !! reference triangle, "BIUNIT", "UNIT"
+    REAL(DFP) :: ans( &
+      & SIZE(lambda, 2), &
+      & pe1 + pe2 + pe3 + INT((order - 1) * (order - 2) / 2), 3)
+    !!
+  END FUNCTION BarycentricHeirarchicalBasisGradient_Triangle1
+END INTERFACE BarycentricHeirarchicalBasisGradient_Triangle
 
 !----------------------------------------------------------------------------
 !                                                    VertexBasis_Triangle
@@ -1306,6 +1425,42 @@ INTERFACE HeirarchicalBasisGradient_Triangle
     !!
   END FUNCTION HeirarchicalBasisGradient_Triangle1
 END INTERFACE HeirarchicalBasisGradient_Triangle
+
+!----------------------------------------------------------------------------
+!                                              HeirarchicalBasis_Triangle
+!----------------------------------------------------------------------------
+
+!> author: Shion Shimizu
+! date:   2024-04-21
+! summary:  Evaluate all modal basis (heirarchical polynomial) on Triangle
+
+INTERFACE HeirarchicalBasisGradient_Triangle_New
+  MODULE FUNCTION HeirarchicalBasisGradient_Triangle2(order, pe1, pe2, pe3,&
+    & xij, refTriangle) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! Order of approximation inside the triangle (i.e., cell)
+    !! it should be greater than 2 for cell bubble to exist
+    INTEGER(I4B), INTENT(IN) :: pe1
+    !! Order of interpolation on edge e1
+    !! It should be greater than 1 for edge bubble to exists
+    INTEGER(I4B), INTENT(IN) :: pe2
+    !! Order of interpolation on edge e2
+    !! It should be greater than 1 for edge bubble to exists
+    INTEGER(I4B), INTENT(IN) :: pe3
+    !! Order of interpolation on edge e3
+    !! It should be greater than 1 for edge bubble to exists
+    REAL(DFP), INTENT(IN) :: xij(:, :)
+    !! Points of evaluation in xij format
+    CHARACTER(*), INTENT(IN) :: refTriangle
+    !! This parameter denotes the type of reference triangle.
+    !! It can take following values:
+    !! UNIT: in this case xij is in unit Triangle.
+    !! BIUNIT: in this case xij is in biunit triangle.
+    REAL(DFP) :: ans( &
+      & SIZE(xij, 2), &
+      & pe1 + pe2 + pe3 + INT((order - 1) * (order - 2) / 2), 2)
+  END FUNCTION HeirarchicalBasisGradient_Triangle2
+END INTERFACE HeirarchicalBasisGradient_Triangle_New
 
 !----------------------------------------------------------------------------
 !                                         OrthogonalBasisGradient_Triangle
