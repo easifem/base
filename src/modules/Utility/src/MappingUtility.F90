@@ -53,8 +53,13 @@ PUBLIC :: FromBiUnitQuadrangle2UnitTriangle
 PUBLIC :: FromUnitTriangle2Triangle
 
 PUBLIC :: BarycentricCoordUnitTriangle
+!! This is function
 PUBLIC :: BarycentricCoordBiUnitTriangle
+!! This is function
 PUBLIC :: BarycentricCoordTriangle
+!! This is function
+PUBLIC :: BarycentricCoordTriangle_
+!! This is a subroutine without allocation
 
 PUBLIC :: FromBiUnitTriangle2UnitTriangle
 PUBLIC :: FromUnitTriangle2BiUnitTriangle
@@ -483,6 +488,21 @@ INTERFACE
     !! "UNIT"
     !! "BIUNIT"
   END FUNCTION BarycentricCoordTriangle
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                   BarycentricCoordTriangle
+!----------------------------------------------------------------------------
+
+INTERFACE
+  MODULE PURE SUBROUTINE BarycentricCoordTriangle_(xin, refTriangle, ans)
+    REAL(DFP), INTENT(IN) :: xin(:, :)
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    ! REAL(DFP) :: ans(3, SIZE(xin, 2))
+    CHARACTER(*), INTENT(IN) :: refTriangle
+    !! "UNIT"
+    !! "BIUNIT"
+  END SUBROUTINE BarycentricCoordTriangle_
 END INTERFACE
 
 !----------------------------------------------------------------------------
