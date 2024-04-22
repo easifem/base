@@ -533,7 +533,7 @@ tp = SIZE(lambda, 2)
 maxP = MAX(pe1 - 2, pe2 - 2, pe3 - 2, order - 2)
 
 a = 3 * tp; b = maxP
-ALLOCATE (phi(a, b), gradientPhi(a, b), d_lambda(a))
+ALLOCATE (phi(a, 0:b), gradientPhi(a, 0:b), d_lambda(a))
 
 DO CONCURRENT(ii=1:tp)
   ! edge 1 -> 2
@@ -581,12 +581,13 @@ END PROCEDURE BarycentricHeirarchicalBasisGradient_Triangle1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE HeirarchicalBasisGradient_Triangle1
-REAL(DFP) :: lambda(3, SIZE(xij, 2))
-REAL(DFP) :: dPhi(SIZE(xij, 2), pe1 + pe2 + pe3 + &
-                  INT((order - 1) * (order - 2) / 2), 3)
 REAL(DFP) :: jac(3, 2)
-
+REAL(DFP), ALLOCATABLE :: lambda(:, :), dPhi(:, :, :)
 INTEGER(I4B) :: ii, jj, kk
+
+ii = SIZE(xij, 2)
+jj = pe1 + pe2 + pe3 + INT((order - 1) * (order - 2) / 2)
+ALLOCATE (lambda(3, ii), dPhi(ii, jj, 3))
 
 CALL BarycentricCoordTriangle_(xin=xij, refTriangle=refTriangle, ans=lambda)
 CALL BarycentricHeirarchicalBasisGradient_Triangle( &
@@ -609,6 +610,8 @@ DO CONCURRENT(ii=1:SIZE(dPhi, 1), jj=1:SIZE(dPhi, 2), kk=1:2)
                     + dPhi(ii, jj, 2) * jac(2, kk) &
                     + dPhi(ii, jj, 3) * jac(3, kk)
 END DO
+
+DEALLOCATE (lambda, dPhi)
 
 END PROCEDURE HeirarchicalBasisGradient_Triangle1
 
