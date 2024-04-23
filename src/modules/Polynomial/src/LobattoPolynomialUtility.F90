@@ -30,6 +30,7 @@ PUBLIC :: LobattoZeros
 PUBLIC :: LobattoEval
 PUBLIC :: LobattoEvalAll
 PUBLIC :: LobattoKernelEvalAll
+PUBLIC :: LobattoKernelEvalAll_
 PUBLIC :: LobattoKernelGradientEvalAll
 PUBLIC :: LobattoMonomialExpansionAll
 PUBLIC :: LobattoMonomialExpansion
@@ -243,6 +244,34 @@ INTERFACE LobattoKernelEvalAll
     !! at point x
   END FUNCTION LobattoKernelEvalAll1
 END INTERFACE LobattoKernelEvalAll
+
+!----------------------------------------------------------------------------
+!                                                      LobattoKernelEvalAll
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 6 Sept 2022
+! summary: Evaluate Lobatto bubble functions order = 0 to n at several points
+!
+!# Introduction
+!
+! Evaluate Lobatto bubble polynomials from order = 0 to n at several points
+!
+!- N, the highest order polynomial to compute.
+!- x: the point at which the polynomials are to be evaluated.
+
+INTERFACE LobattoKernelEvalAll_
+  MODULE PURE SUBROUTINE LobattoKernelEvalAll1_(n, x, ans, nrow, ncol)
+    INTEGER(I4B), INTENT(IN) :: n
+    !! n
+    REAL(DFP), INTENT(IN) :: x(:)
+    REAL(DFP), INTENT(INOUT) :: ans(1:, 0:)
+    !! ans(1:SIZE(x), 0:n)
+    !! Evaluate Lobatto polynomial of order = 0 to n (total n+1)
+    !! at point x
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+  END SUBROUTINE LobattoKernelEvalAll1_
+END INTERFACE LobattoKernelEvalAll_
 
 !----------------------------------------------------------------------------
 !                                               LobattoKernelGradientEvalAll

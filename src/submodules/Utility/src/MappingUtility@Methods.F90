@@ -248,9 +248,7 @@ END PROCEDURE FromBiUnitSqr2UnitTriangle
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE BarycentricCoordUnitTriangle
-ans(1, :) = 1.0_DFP - xin(1, :) - xin(2, :)
-ans(2, :) = xin(1, :)
-ans(3, :) = xin(2, :)
+CALL BaryCentricCoordTriangle_(xin, "U", ans)
 END PROCEDURE BarycentricCoordUnitTriangle
 
 !----------------------------------------------------------------------------
@@ -258,9 +256,7 @@ END PROCEDURE BarycentricCoordUnitTriangle
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE BarycentricCoordBiUnitTriangle
-ans(1, :) = -0.5_DFP * (xin(1, :) + xin(2, :))
-ans(2, :) = 0.5_DFP * (1.0_DFP + xin(1, :))
-ans(3, :) = 0.5_DFP * (1.0_DFP + xin(2, :))
+CALL BaryCentricCoordTriangle_(xin, "B", ans)
 END PROCEDURE BarycentricCoordBiUnitTriangle
 
 !----------------------------------------------------------------------------
@@ -268,15 +264,26 @@ END PROCEDURE BarycentricCoordBiUnitTriangle
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE BarycentricCoordTriangle
-CHARACTER(20) :: layout
-layout = TRIM(UpperCase(refTriangle))
-SELECT CASE (TRIM(layout))
-CASE ("BIUNIT")
-  ans = BarycentricCoordBiUnitTriangle(xin)
-CASE ("UNIT")
-  ans = BarycentricCoordUnitTriangle(xin)
-END SELECT
+CALL BaryCentricCoordTriangle_(xin, refTriangle, ans)
 END PROCEDURE BarycentricCoordTriangle
+
+!----------------------------------------------------------------------------
+!                                                   BarycentricCoordTriangle
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE BarycentricCoordTriangle_
+SELECT CASE (refTriangle(1:1))
+CASE ("B", "b")
+  ans(1, :) = -0.5_DFP * (xin(1, :) + xin(2, :))
+  ans(2, :) = 0.5_DFP * (1.0_DFP + xin(1, :))
+  ans(3, :) = 0.5_DFP * (1.0_DFP + xin(2, :))
+
+CASE ("U", "u")
+  ans(1, :) = 1.0_DFP - xin(1, :) - xin(2, :)
+  ans(2, :) = xin(1, :)
+  ans(3, :) = xin(2, :)
+END SELECT
+END PROCEDURE BarycentricCoordTriangle_
 
 !----------------------------------------------------------------------------
 !                                            FromBiUnitTriangle2UnitTriangle
