@@ -15,7 +15,12 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 
 SUBMODULE(TriangleInterpolationUtility) LagrangeBasisMethods
-USE BaseMethod
+USE LagrangePolynomialUtility, ONLY: LagrangeVandermonde
+USE ErrorHandling, ONLY: Errormsg
+USE InputUtility, ONLY: Input
+USE GE_CompRoutineMethods, ONLY: GetInvMat
+USE GE_LUMethods, ONLY: LUSolve, GetLU
+
 IMPLICIT NONE
 CONTAINS
 
