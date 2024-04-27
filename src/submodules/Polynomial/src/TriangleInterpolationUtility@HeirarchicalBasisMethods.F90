@@ -16,7 +16,7 @@
 
 SUBMODULE(TriangleInterpolationUtility) HeirarchicalBasisMethods
 USE LobattoPolynomialUtility, ONLY: LobattoKernelEvalAll_, &
-                                    LobattoKernelGradientEvalAll
+                                    LobattoKernelGradientEvalAll_
 USE MappingUtility, ONLY: BarycentricCoordTriangle_
 
 IMPLICIT NONE
@@ -164,7 +164,6 @@ DO CONCURRENT(ii=1:tpoints)
   d_lambda(ii + 2 * tPoints) = lambda(1, ii) - lambda(3, ii)
 END DO
 
-! FIXME: Make subroutine call
 CALL LobattoKernelEvalAll_(n=maxP, x=d_lambda, ans=ans, nrow=nrow, ncol=ncol)
 
 CALL BarycentricCellBasis_Triangle2(order=order, lambda=lambda, phi=phi, &
@@ -370,8 +369,8 @@ END DO
 
 CALL LobattoKernelEvalAll_(n=maxP, x=d_lambda, ans=phi, nrow=a, ncol=b)
 
-! FIXME: Call LobattoKernelGradientEvalAll_
-gradientPhi = LobattoKernelGradientEvalAll(n=maxP, x=d_lambda)
+CALL LobattoKernelGradientEvalAll_(n=maxP, x=d_lambda, ans=gradientPhi, &
+                                   nrow=a, ncol=b)
 
 CALL BarycentricEdgeBasisGradient_Triangle2(pe1=pe1, pe2=pe2, pe3=pe3, &
                      lambda=lambda, phi=phi, gradientPhi=gradientPhi, ans=ans)
@@ -484,8 +483,8 @@ END DO
 
 CALL LobattoKernelEvalAll_(n=maxP, x=d_lambda, ans=phi, nrow=a, ncol=b)
 
-!FIXME: Call LobattoKernelGradientEvalAll_
-gradientPhi = LobattoKernelGradientEvalAll(n=maxP, x=d_lambda)
+CALL LobattoKernelGradientEvalAll_(n=maxP, x=d_lambda, ans=gradientPhi, &
+                                   nrow=a, ncol=b)
 
 CALL BarycentricCellBasisGradient_Triangle2(order=order, lambda=lambda, &
                                     phi=phi, gradientPhi=gradientPhi, ans=ans)
@@ -576,8 +575,8 @@ END DO
 
 CALL LobattoKernelEvalAll_(n=maxP, x=d_lambda, ans=phi, nrow=a, ncol=b)
 
-!FIXME: Call LobattoKernelGradientEvalAll_
-gradientPhi = LobattoKernelGradientEvalAll(n=maxP, x=d_lambda)
+CALL LobattoKernelGradientEvalAll_(n=maxP, x=d_lambda, ans=gradientPhi, &
+                                   nrow=a, ncol=b)
 
 ! gradient of vertex basis
 ans(1:tp, 1:3, 1:3) = 0.0_DFP
