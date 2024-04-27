@@ -209,6 +209,23 @@ END DO
 END PROCEDURE LobattoKernelGradientEvalAll1
 
 !----------------------------------------------------------------------------
+!                                             LobattoKernelGradientEvalAll1
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE LobattoKernelGradientEvalAll1_
+REAL(DFP) :: m, avar
+INTEGER(I4B) :: ii
+
+CALL UltrasphericalGradientEvalAll_(n=n, x=x, lambda=1.5_DFP, nrow=nrow, &
+                                    ncol=ncol, ans=ans)
+DO CONCURRENT(ii=0:n)
+  m = REAL(ii, KIND=DFP)
+  avar = -SQRT(8.0_DFP*(2.0_DFP*m+3.0_DFP))/(m+1.0_DFP)/(m+2.0_DFP)
+  ans(1:nrow, ii) = avar * ans(1:nrow, ii)
+END DO
+END PROCEDURE LobattoKernelGradientEvalAll1_
+
+!----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 

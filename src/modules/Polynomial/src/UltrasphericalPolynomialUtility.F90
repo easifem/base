@@ -47,6 +47,7 @@ PUBLIC :: UltrasphericalEval
 PUBLIC :: UltrasphericalEvalAll
 PUBLIC :: UltrasphericalEvalAll_
 PUBLIC :: UltrasphericalGradientEvalAll
+PUBLIC :: UltrasphericalGradientEvalAll_
 PUBLIC :: UltrasphericalGradientEval
 PUBLIC :: UltrasphericalEvalSum
 PUBLIC :: UltrasphericalGradientEvalSum
@@ -660,7 +661,7 @@ END INTERFACE UltrasphericalEvalAll_
 !
 ! Evaluate gradient of Ultraspherical polynomial of order upto n.
 
-INTERFACE
+INTERFACE UltrasphericalGradientEvalAll
   MODULE PURE FUNCTION UltrasphericalGradientEvalAll1(n, lambda, x) &
     & RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: n
@@ -670,10 +671,6 @@ INTERFACE
     REAL(DFP), INTENT(IN) :: x
     REAL(DFP) :: ans(1:n + 1)
   END FUNCTION UltrasphericalGradientEvalAll1
-END INTERFACE
-
-INTERFACE UltrasphericalGradientEvalAll
-  MODULE PROCEDURE UltrasphericalGradientEvalAll1
 END INTERFACE UltrasphericalGradientEvalAll
 
 !----------------------------------------------------------------------------
@@ -688,7 +685,33 @@ END INTERFACE UltrasphericalGradientEvalAll
 !
 ! Evaluate gradient of Ultraspherical polynomial of order upto n.
 
-INTERFACE
+INTERFACE UltrasphericalGradientEvalAll_
+  MODULE PURE SUBROUTINE UltrasphericalGradientEvalAll1_(n, lambda, x, ans, &
+                                                         tsize)
+    INTEGER(I4B), INTENT(IN) :: n
+    !! order of polynomial
+    REAL(DFP), INTENT(IN) :: lambda
+    !! lambda should be greater than -0.5
+    REAL(DFP), INTENT(IN) :: x
+    REAL(DFP), INTENT(INOUT) :: ans(:)
+    !! 1:n+1
+    INTEGER(I4B), INTENT(OUT) :: tsize
+  END SUBROUTINE UltrasphericalGradientEvalAll1_
+END INTERFACE UltrasphericalGradientEvalAll_
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 8 Sept 2022
+! summary: Evaluate gradient of Ultraspherical polynomial of order upto n
+!
+!# Introduction
+!
+! Evaluate gradient of Ultraspherical polynomial of order upto n.
+
+INTERFACE UltrasphericalGradientEvalAll
   MODULE PURE FUNCTION UltrasphericalGradientEvalAll2(n, lambda, x) &
     & RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: n
@@ -698,11 +721,34 @@ INTERFACE
     REAL(DFP), INTENT(IN) :: x(:)
     REAL(DFP) :: ans(1:SIZE(x), 1:n + 1)
   END FUNCTION UltrasphericalGradientEvalAll2
-END INTERFACE
-
-INTERFACE UltrasphericalGradientEvalAll
-  MODULE PROCEDURE UltrasphericalGradientEvalAll2
 END INTERFACE UltrasphericalGradientEvalAll
+
+!----------------------------------------------------------------------------
+!                                             UltraSphericalGradientEvalAll
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 8 Sept 2022
+! summary: Evaluate gradient of Ultraspherical polynomial of order upto n
+!
+!# Introduction
+!
+! Evaluate gradient of Ultraspherical polynomial of order upto n.
+
+INTERFACE UltrasphericalGradientEvalAll_
+  MODULE PURE SUBROUTINE UltrasphericalGradientEvalAll2_(n, lambda, x, ans, &
+                                                         nrow, ncol)
+    INTEGER(I4B), INTENT(IN) :: n
+    !! order of polynomial
+    REAL(DFP), INTENT(IN) :: lambda
+    !! lambda should be greater than -0.5
+    REAL(DFP), INTENT(IN) :: x(:)
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    ! ans(1:SIZE(x), 1:n + 1)
+    INTEGER(I4B), INTENT(OUT) :: nrow
+    INTEGER(I4B), INTENT(OUT) :: ncol
+  END SUBROUTINE UltrasphericalGradientEvalAll2_
+END INTERFACE UltrasphericalGradientEvalAll_
 
 !----------------------------------------------------------------------------
 !

@@ -469,37 +469,9 @@ END PROCEDURE UltrasphericalEvalAll2_
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE UltrasphericalGradientEvalAll1
-!!
-INTEGER(I4B) :: ii
-REAL(DFP) :: r_ii
-REAL(DFP) :: p(1:n + 1)
-!!
-IF (n < 0) THEN
-  RETURN
-END IF
-!!
-p(1) = 1.0_DFP
-ans(1) = 0.0_DFP
-!!
-IF (n < 1) THEN
-  RETURN
-END IF
-!!
-p(2) = 2.0_DFP * lambda * x
-ans(2) = 2.0_DFP * lambda
-!!
-DO ii = 2, n
-  !!
-  r_ii = REAL(ii, KIND=DFP)
-  !!
-  p(ii + 1) = ((r_ii + lambda - 1.0_DFP) * 2.0_DFP * x * p(ii) &
-              & - (2.0_DFP * lambda + r_ii - 2.0_DFP) * p(ii - 1)) &
-              & / r_ii
-  !!
-  ans(ii + 1) = 2.0_DFP * (r_ii + lambda - 1.0_DFP) * p(ii) + ans(ii - 1)
-  !!
-END DO
-!!
+INTEGER(I4B) :: tsize
+CALL UltrasphericalGradientEvalAll1_(n=n, lambda=lambda, x=x, ans=ans, &
+                                     tsize=tsize)
 END PROCEDURE UltrasphericalGradientEvalAll1
 
 !----------------------------------------------------------------------------
@@ -507,39 +479,83 @@ END PROCEDURE UltrasphericalGradientEvalAll1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE UltrasphericalGradientEvalAll2
-!!
+INTEGER(I4B) :: nrow, ncol
+CALL UltrasphericalGradientEvalAll2_(n=n, lambda=lambda, x=x, ans=ans, &
+                                     nrow=nrow, ncol=ncol)
+END PROCEDURE UltrasphericalGradientEvalAll2
+
+!----------------------------------------------------------------------------
+!                                            UltrasphericalGradientEvalAll_
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE UltrasphericalGradientEvalAll1_
+INTEGER(I4B) :: ii
+REAL(DFP) :: r_ii
+REAL(DFP) :: p(1:n + 1)
+
+tsize = 0
+IF (n < 0) RETURN
+
+tsize = n + 1
+p(1) = 1.0_DFP
+ans(1) = 0.0_DFP
+
+IF (n < 1) RETURN
+
+p(2) = 2.0_DFP * lambda * x
+ans(2) = 2.0_DFP * lambda
+
+DO ii = 2, n
+
+  r_ii = REAL(ii, KIND=DFP)
+
+  p(ii + 1) = ((r_ii + lambda - 1.0_DFP) * 2.0_DFP * x * p(ii) &
+              & - (2.0_DFP * lambda + r_ii - 2.0_DFP) * p(ii - 1)) &
+              & / r_ii
+
+  ans(ii + 1) = 2.0_DFP * (r_ii + lambda - 1.0_DFP) * p(ii) + ans(ii - 1)
+
+END DO
+
+END PROCEDURE UltrasphericalGradientEvalAll1_
+
+!----------------------------------------------------------------------------
+!                                            UltrasphericalGradientEvalAll_
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE UltrasphericalGradientEvalAll2_
 INTEGER(I4B) :: ii
 REAL(DFP) :: r_ii
 REAL(DFP) :: p(1:SIZE(x), 1:n + 1)
-!!
-IF (n < 0) THEN
-  RETURN
-END IF
-!!
-p(:, 1) = 1.0_DFP
-ans(:, 1) = 0.0_DFP
-!!
-IF (n < 1) THEN
-  RETURN
-END IF
-!!
-p(:, 2) = 2.0_DFP * lambda * x
-ans(:, 2) = 2.0_DFP * lambda
-!!
+
+nrow = 0; ncol = 0
+IF (n < 0) RETURN
+
+nrow = SIZE(x)
+ncol = n + 1
+
+p(1:nrow, 1) = 1.0_DFP
+ans(1:nrow, 1) = 0.0_DFP
+
+IF (n < 1) RETURN
+
+p(1:nrow, 2) = 2.0_DFP * lambda * x
+ans(1:nrow, 2) = 2.0_DFP * lambda
+
 DO ii = 2, n
-  !!
+
   r_ii = REAL(ii, KIND=DFP)
-  !!
-  p(:, ii + 1) = ((r_ii + lambda - 1.0_DFP) * 2.0_DFP * x * p(:, ii) &
-              & - (2.0_DFP * lambda + r_ii - 2.0_DFP) * p(:, ii - 1)) &
-              & / r_ii
-  !!
-  ans(:, ii + 1) = 2.0_DFP * (r_ii + lambda - 1.0_DFP) * p(:, ii) &
-                  & + ans(:, ii - 1)
-  !!
+
+p(1:nrow, ii + 1) = ((r_ii + lambda - 1.0_DFP) * 2.0_DFP * x * p(1:nrow, ii) &
+                & - (2.0_DFP * lambda + r_ii - 2.0_DFP) * p(1:nrow, ii - 1)) &
+                              & / r_ii
+
+  ans(1:nrow, ii + 1) = 2.0_DFP * (r_ii + lambda - 1.0_DFP) * p(1:nrow, ii) &
+                  & + ans(1:nrow, ii - 1)
+
 END DO
-!!
-END PROCEDURE UltrasphericalGradientEvalAll2
+
+END PROCEDURE UltrasphericalGradientEvalAll2_
 
 !----------------------------------------------------------------------------
 !

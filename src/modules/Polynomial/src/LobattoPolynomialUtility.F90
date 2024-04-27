@@ -32,6 +32,7 @@ PUBLIC :: LobattoEvalAll
 PUBLIC :: LobattoKernelEvalAll
 PUBLIC :: LobattoKernelEvalAll_
 PUBLIC :: LobattoKernelGradientEvalAll
+PUBLIC :: LobattoKernelGradientEvalAll_
 PUBLIC :: LobattoMonomialExpansionAll
 PUBLIC :: LobattoMonomialExpansion
 PUBLIC :: LobattoGradientEvalAll
@@ -290,6 +291,27 @@ INTERFACE LobattoKernelGradientEvalAll
     !! Gradient of Lobatto bubbles of order 0 to n
   END FUNCTION LobattoKernelGradientEvalAll1
 END INTERFACE LobattoKernelGradientEvalAll
+
+!----------------------------------------------------------------------------
+!                                               LobattoKernelGradientEvalAll
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 6 Sept 2022
+! summary: Gradient of Lobatto bubbles of order = 0 to n
+
+INTERFACE LobattoKernelGradientEvalAll_
+  MODULE PURE SUBROUTINE LobattoKernelGradientEvalAll1_(n, x, ans, nrow, ncol)
+    INTEGER(I4B), INTENT(IN) :: n
+    !! n
+    REAL(DFP), INTENT(IN) :: x(:)
+    REAL(DFP), INTENT(INOUT) :: ans(1:, 0:)
+    ! ans(1:SIZE(x), 0:n)
+    !! Gradient of Lobatto bubbles of order 0 to n
+    INTEGER(I4B), INTENT(OUT) :: nrow
+    INTEGER(I4B), INTENT(OUT) :: ncol
+  END SUBROUTINE LobattoKernelGradientEvalAll1_
+END INTERFACE LobattoKernelGradientEvalAll_
 
 !----------------------------------------------------------------------------
 !                                             LobattoMonomialExpansionAll
