@@ -559,6 +559,64 @@ END INTERFACE OrthogonalBasis_Triangle
 !# Introduction
 !
 ! Forms Dubiner basis on reference triangle domain. Reference triangle
+! can be biunit or unit.
+!
+! The shape of `ans` is (M,N), where M=SIZE(xij,2) (number of points)
+! N = 0.5*(order+1)*(order+2).
+!
+! In this way, ans(j,:) denotes the values of all polynomial at jth point
+!
+! Polynomials are returned in following way:
+!
+!$$
+! P_{0,0}, P_{0,1}, \cdots , P_{0,order} \\
+! P_{1,0}, P_{1,1}, \cdots , P_{1,order-1} \\
+! P_{2,0}, P_{2,1}, \cdots , P_{2,order-2} \\
+! \cdots
+! P_{order,0}
+!$$
+!
+! For example for order=3, the polynomials are arranged as:
+!
+!$$
+! P_{0,0}, P_{0,1}, P_{0,2}, P_{0,3} \\
+! P_{1,0}, P_{1,1}, P_{1,2} \\
+! P_{2,0}, P_{2,1} \\
+! P_{3,0}
+!$$
+
+INTERFACE Dubiner_Triangle_
+  MODULE PURE SUBROUTINE Dubiner_Triangle1_(order, xij, refTriangle, ans, &
+                                            nrow, ncol)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order of polynomial space
+    REAL(DFP), INTENT(IN) :: xij(:, :)
+    !! Points in reference triangle, shape functions will be evaluated
+    !! at these points. SIZE(xij,1) = 2, and SIZE(xij, 2) = number of points
+    CHARACTER(*), INTENT(IN) :: refTriangle
+    !! Reference domain of triangle where xij are defined
+    !! "UNIT"
+    !! "BIUNIT"
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    !ans(SIZE(xij, 2), (order + 1) * (order + 2) / 2)
+    !! Shape Functions
+    !! ans(:, j), jth shape functions at all points
+    !! ans(j, :), all shape functions at jth point
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+  END SUBROUTINE Dubiner_Triangle1_
+END INTERFACE Dubiner_Triangle_
+
+!----------------------------------------------------------------------------
+!                                                       DubinerPolynomial
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 27 Oct 2022
+! summary: Dubiner (1991) polynomials on triangle
+!
+!# Introduction
+!
+! Forms Dubiner basis on reference triangle domain. Reference triangle
 ! can be biunit or unit. Here x and y are coordinate on line.
 ! xij is given by outerproduct of x and y.
 
@@ -584,6 +642,42 @@ END INTERFACE Dubiner_Triangle
 INTERFACE OrthogonalBasis_Triangle
   MODULE PROCEDURE Dubiner_Triangle2
 END INTERFACE OrthogonalBasis_Triangle
+
+!----------------------------------------------------------------------------
+!                                                       DubinerPolynomial
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 27 Oct 2022
+! summary: Dubiner (1991) polynomials on triangle
+!
+!# Introduction
+!
+! Forms Dubiner basis on reference triangle domain. Reference triangle
+! can be biunit or unit. Here x and y are coordinate on line.
+! xij is given by outerproduct of x and y.
+
+INTERFACE Dubiner_Triangle_
+  MODULE PURE SUBROUTINE Dubiner_Triangle2_(order, x, y, refTriangle, ans, &
+                                            nrow, ncol)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order of polynomial space
+    REAL(DFP), INTENT(IN) :: x(:), y(:)
+    !! x and y coordinates, total points = SIZE(x)*SIZE(y)
+    !! x denotes the coordinates along the x direction
+    !! y denotes the coordinates along the y direction
+    CHARACTER(*), INTENT(IN) :: refTriangle
+    !! Reference domain of triangle where xij are defined
+    !! "UNIT"
+    !! "BIUNIT"
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    ! ans(SIZE(x) * SIZE(y), (order + 1) * (order + 2) / 2)
+    !! shape functions
+    !! ans(:, j), jth shape functions at all points
+    !! ans(j, :), all shape functions at jth point
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+  END SUBROUTINE Dubiner_Triangle2_
+END INTERFACE Dubiner_Triangle_
 
 !----------------------------------------------------------------------------
 !                                          BarycentricVertexBasis_Triangle
@@ -1395,6 +1489,63 @@ INTERFACE OrthogonalBasisGradient_Triangle
     !! ans(j, :, 1), derivative wrt x of all shape functions at jth point
   END FUNCTION OrthogonalBasisGradient_Triangle1
 END INTERFACE OrthogonalBasisGradient_Triangle
+
+!----------------------------------------------------------------------------
+!                                         OrthogonalBasisGradient_Triangle
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 27 Oct 2022
+! summary: Dubiner (1991) polynomials on triangle
+!
+!# Introduction
+!
+! Forms Dubiner basis on reference triangle domain. Reference triangle
+! can be biunit or unit.
+!
+! The shape of `ans` is (M,N), where M=SIZE(xij,2) (number of points)
+! N = 0.5*(order+1)*(order+2).
+!
+! In this way, ans(j,:) denotes the values of all polynomial at jth point
+!
+! Polynomials are returned in following way:
+!
+!$$
+! P_{0,0}, P_{0,1}, \cdots , P_{0,order} \\
+! P_{1,0}, P_{1,1}, \cdots , P_{1,order-1} \\
+! P_{2,0}, P_{2,1}, \cdots , P_{2,order-2} \\
+! \cdots
+! P_{order,0}
+!$$
+!
+! For example for order=3, the polynomials are arranged as:
+!
+!$$
+! P_{0,0}, P_{0,1}, P_{0,2}, P_{0,3} \\
+! P_{1,0}, P_{1,1}, P_{1,2} \\
+! P_{2,0}, P_{2,1} \\
+! P_{3,0}
+!$$
+
+INTERFACE OrthogonalBasisGradient_Triangle_
+  MODULE SUBROUTINE OrthogonalBasisGradient_Triangle1_(order, xij, &
+                                     refTriangle, ans, tsize1, tsize2, tsize3)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order of polynomial space
+    REAL(DFP), INTENT(IN) :: xij(:, :)
+    !! points in reference triangle, shape functions will be evaluated
+    !! at these points. SIZE(xij,1) = 2, and SIZE(xij, 2) = number of points
+    CHARACTER(*), INTENT(IN) :: refTriangle
+    !! "UNIT"
+    !! "BIUNIT"
+    REAL(DFP), INTENT(INOUT) :: ans(:, :, :)
+    ! ans(SIZE(xij, 2), (order + 1) * (order + 2) / 2, 2)
+    !! Derivative of shape functions
+    !! ans(:, j, 1), derivative wrt x of jth shape functions at all points
+    !! ans(j, :, 1), derivative wrt x of all shape functions at jth point
+    INTEGER(I4B), INTENT(OUT) :: tsize1, tsize2, tsize3
+  END SUBROUTINE OrthogonalBasisGradient_Triangle1_
+END INTERFACE OrthogonalBasisGradient_Triangle_
 
 !----------------------------------------------------------------------------
 !                                                                 Triangle
