@@ -529,42 +529,6 @@ END SELECT
 END PROCEDURE InterpolationPoint_Triangle
 
 !----------------------------------------------------------------------------
-!                                                       Dubiner_Triangle
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE Dubiner_Triangle1
-CHARACTER(20) :: layout
-REAL(DFP) :: x(SIZE(xij, 1), SIZE(xij, 2))
-layout = TRIM(UpperCase(refTriangle))
-SELECT CASE (TRIM(layout))
-CASE ("BIUNIT")
-  x = FromBiUnitTriangle2BiUnitSqr(xin=xij)
-CASE ("UNIT")
-  x = FromUnitTriangle2BiUnitSqr(xin=xij)
-END SELECT
-ans = Dubiner_Quadrangle(order=order, xij=x)
-END PROCEDURE Dubiner_Triangle1
-
-!----------------------------------------------------------------------------
-!                                                       Dubiner_Triangle
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE Dubiner_Triangle2
-CHARACTER(20) :: layout
-REAL(DFP) :: x0(SIZE(x)), y0(SIZE(y))
-layout = TRIM(UpperCase(refTriangle))
-SELECT CASE (TRIM(layout))
-CASE ("BIUNIT")
-  x0 = x
-  y0 = y
-CASE ("UNIT")
-  x0 = FromUnitLine2BiUnitLine(xin=x)
-  y0 = FromUnitLine2BiUnitLine(xin=y)
-END SELECT
-ans = Dubiner_Quadrangle(order=order, x=x0, y=y0)
-END PROCEDURE Dubiner_Triangle2
-
-!----------------------------------------------------------------------------
 !                                            TensorQuadraturePoint_Triangle
 !----------------------------------------------------------------------------
 
@@ -753,32 +717,6 @@ ELSE
   RETURN
 END IF
 END PROCEDURE QuadraturePoint_Triangle2
-
-!----------------------------------------------------------------------------
-!                                           OrthogonalBasisGradient_Triangle
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE OrthogonalBasisGradient_Triangle1
-CHARACTER(20) :: layout
-REAL(DFP) :: x(SIZE(xij, 1), SIZE(xij, 2))
-INTEGER(I4B) :: ii
-
-layout = TRIM(UpperCase(refTriangle))
-SELECT CASE (TRIM(layout))
-CASE ("BIUNIT")
-  x = FromBiUnitTriangle2BiUnitSqr(xin=xij)
-CASE ("UNIT")
-  x = FromUnitTriangle2BiUnitSqr(xin=xij)
-END SELECT
-
-ans = DubinerGradient_Quadrangle(order=order, xij=x)
-
-DO ii = 1, SIZE(ans, 2)
-  ans(:, ii, 1) = ans(:, ii, 1) * 4.0_DFP / (1.0_DFP - x(2, :))
-  ans(:, ii, 2) = ans(:, ii, 1) * (1.0_DFP + x(1, :)) * 0.5_DFP  &
-    & + 2.0_DFP * ans(:, ii, 2)
-END DO
-END PROCEDURE OrthogonalBasisGradient_Triangle1
 
 !----------------------------------------------------------------------------
 !

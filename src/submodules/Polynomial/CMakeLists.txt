@@ -24,6 +24,7 @@ target_sources(
           ${src_path}/TriangleInterpolationUtility@Methods.F90
           ${src_path}/TriangleInterpolationUtility@HeirarchicalBasisMethods.F90
           ${src_path}/TriangleInterpolationUtility@LagrangeBasisMethods.F90
+          ${src_path}/TriangleInterpolationUtility@OrthogonalBasisMethods.F90
           ${src_path}/QuadrangleInterpolationUtility@Methods.F90
           ${src_path}/TetrahedronInterpolationUtility@Methods.F90
           ${src_path}/HexahedronInterpolationUtility@Methods.F90

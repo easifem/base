@@ -118,7 +118,27 @@ INTERFACE
   MODULE PURE FUNCTION LagrangeDegree_Triangle(order) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
     INTEGER(I4B), ALLOCATABLE :: ans(:, :)
+    !! number of rows = LagrangeDOf_Triangle(order)
+    !! number of cols = 2
   END FUNCTION LagrangeDegree_Triangle
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                   LagrangeDegree_Triangle
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 18 Aug 2022
+! summary:         Returns the degree of monomials for Lagrange polynomials
+
+INTERFACE
+  MODULE PURE SUBROUTINE LagrangeDegree_Triangle_(order, ans, nrow, ncol)
+    INTEGER(I4B), INTENT(IN) :: order
+    INTEGER(I4B), INTENT(INOUT) :: ans(:, :)
+    !! number of rows = LagrangeDOf_Triangle(order)
+    !! number of cols = 2
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+  END SUBROUTINE LagrangeDegree_Triangle_
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -422,12 +442,8 @@ END INTERFACE LagrangeCoeff_Triangle
 ! summary: Returns the coefficients for ith lagrange polynomial
 
 INTERFACE LagrangeCoeff_Triangle
-  MODULE FUNCTION LagrangeCoeff_Triangle4( &
-    & order, &
-    & xij, &
-    & basisType, &
-    & refTriangle) &
-    & RESULT(ans)
+  MODULE FUNCTION LagrangeCoeff_Triangle4(order, xij, basisType, &
+                                          refTriangle) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
     !! order of polynomial
     REAL(DFP), INTENT(IN) :: xij(:, :)
@@ -443,6 +459,35 @@ INTERFACE LagrangeCoeff_Triangle
     !! coefficients
   END FUNCTION LagrangeCoeff_Triangle4
 END INTERFACE LagrangeCoeff_Triangle
+
+!----------------------------------------------------------------------------
+!                                                    LagrangeCoeff_Triangle
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 27 Oct 2022
+! summary: Returns the coefficients for ith lagrange polynomial
+
+INTERFACE LagrangeCoeff_Triangle_
+  MODULE SUBROUTINE LagrangeCoeff_Triangle4_(order, xij, basisType, &
+                                             refTriangle, ans, nrow, ncol)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order of polynomial
+    REAL(DFP), INTENT(IN) :: xij(:, :)
+    !! points in xij format, size(xij,2)
+    INTEGER(I4B), INTENT(IN) :: basisType
+    !! Monomials
+    !! Jacobi (Dubiner)
+    !! Heirarchical
+    CHARACTER(*), INTENT(IN) :: refTriangle
+    !! UNIT
+    !! BIUNIT
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    ! REAL(DFP) :: ans(SIZE(xij, 2), SIZE(xij, 2))
+    !! coefficients
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+  END SUBROUTINE LagrangeCoeff_Triangle4_
+END INTERFACE LagrangeCoeff_Triangle_
 
 !----------------------------------------------------------------------------
 !                                                       DubinerPolynomial
@@ -960,7 +1005,7 @@ END INTERFACE
 
 INTERFACE BarycentricHeirarchicalBasisGradient_Triangle
 MODULE PURE SUBROUTINE BarycentricHeirarchicalBasisGradient_Triangle1(order, &
-                          & pe1, pe2, pe3, lambda, refTriangle, ans)
+                                    & pe1, pe2, pe3, lambda, refTriangle, ans)
     INTEGER(I4B), INTENT(IN) :: order
     !! order in the cell of triangle, it should be greater than 2
     INTEGER(I4B), INTENT(IN) :: pe1

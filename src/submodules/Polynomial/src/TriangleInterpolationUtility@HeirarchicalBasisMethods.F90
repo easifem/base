@@ -15,7 +15,9 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 
 SUBMODULE(TriangleInterpolationUtility) HeirarchicalBasisMethods
-USE BaseMethod
+USE LobattoPolynomialUtility, ONLY: LobattoKernelEvalAll_, &
+                                    LobattoKernelGradientEvalAll
+USE MappingUtility, ONLY: BarycentricCoordTriangle_
 
 IMPLICIT NONE
 CONTAINS
@@ -249,7 +251,7 @@ DO CONCURRENT(ii=1:nrow)
   d_lambda(ii + 2 * nrow) = lambda(1, ii) - lambda(3, ii)
 END DO
 
-phi = LobattoKernelEvalAll(n=maxP, x=d_lambda)
+CALL LobattoKernelEvalAll_(n=maxP, x=d_lambda, ans=phi, nrow=a, ncol=b)
 
 ! Vertex basis function
 ans = 0.0_DFP
@@ -291,25 +293,43 @@ END PROCEDURE BarycentricHeirarchicalBasis_Triangle2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE HeirarchicalBasis_Triangle1
-REAL(DFP) :: lambda(3, SIZE(xij, 2))
 INTEGER(I4B) :: nrow, ncol
-CALL BarycentricCoordTriangle_(ans=lambda, refTriangle=refTriangle, xin=xij)
-CALL BarycentricHeirarchicalBasis_Triangle(order=order, pe1=pe1, pe2=pe2, &
-        pe3=pe3, lambda=lambda, refTriangle=refTriangle, ans=ans, nrow=nrow, &
-                                           ncol=ncol)
+CALL HeirarchicalBasis_Triangle1_(order=order, pe1=pe1, pe2=pe2, pe3=pe3, &
+              xij=xij, refTriangle=refTriangle, ans=ans, nrow=nrow, ncol=ncol)
 END PROCEDURE HeirarchicalBasis_Triangle1
 
 !----------------------------------------------------------------------------
 !                                                 HeirarchicalBasis_Triangle
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE HeirarchicalBasis_Triangle2
+MODULE PROCEDURE HeirarchicalBasis_Triangle1_
 REAL(DFP) :: lambda(3, SIZE(xij, 2))
+CALL BarycentricCoordTriangle_(ans=lambda, refTriangle=refTriangle, xin=xij)
+CALL BarycentricHeirarchicalBasis_Triangle(order=order, pe1=pe1, pe2=pe2, &
+        pe3=pe3, lambda=lambda, refTriangle=refTriangle, ans=ans, nrow=nrow, &
+                                           ncol=ncol)
+END PROCEDURE HeirarchicalBasis_Triangle1_
+
+!----------------------------------------------------------------------------
+!                                                 HeirarchicalBasis_Triangle
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE HeirarchicalBasis_Triangle2
 INTEGER(I4B) :: nrow, ncol
+CALL HeirarchicalBasis_Triangle2_(order=order, xij=xij, &
+                       refTriangle=refTriangle, ans=ans, nrow=nrow, ncol=ncol)
+END PROCEDURE HeirarchicalBasis_Triangle2
+
+!----------------------------------------------------------------------------
+!                                                 HeirarchicalBasis_Triangle
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE HeirarchicalBasis_Triangle2_
+REAL(DFP) :: lambda(3, SIZE(xij, 2))
 CALL BarycentricCoordTriangle_(ans=lambda, refTriangle=refTriangle, xin=xij)
 CALL BarycentricHeirarchicalBasis_Triangle(order=order, lambda=lambda, &
                        refTriangle=refTriangle, ans=ans, nrow=nrow, ncol=ncol)
-END PROCEDURE HeirarchicalBasis_Triangle2
+END PROCEDURE HeirarchicalBasis_Triangle2_
 
 !----------------------------------------------------------------------------
 !                                   BarycentricVertexBasisGradient_Triangle
@@ -334,7 +354,7 @@ MODULE PROCEDURE BarycentricEdgeBasisGradient_Triangle
 REAL(DFP) :: d_lambda(3 * SIZE(lambda, 2))
 REAL(DFP) :: phi(1:3 * SIZE(lambda, 2), 0:MAX(pe1 - 2, pe2 - 2, pe3 - 2))
 REAL(DFP) :: gradientPhi(1:3 * SIZE(lambda, 2), 0:MAX(pe1 - 2, pe2 - 2, pe3 - 2))
-INTEGER(I4B) :: maxP, tPoints, ii
+INTEGER(I4B) :: maxP, tPoints, ii, a, b
 
 tPoints = SIZE(lambda, 2)
 maxP = MAX(pe1 - 2, pe2 - 2, pe3 - 2)
@@ -348,7 +368,9 @@ DO CONCURRENT(ii=1:tpoints)
   d_lambda(ii + 2 * tPoints) = lambda(1, ii) - lambda(3, ii)
 END DO
 
-phi = LobattoKernelEvalAll(n=maxP, x=d_lambda)
+CALL LobattoKernelEvalAll_(n=maxP, x=d_lambda, ans=phi, nrow=a, ncol=b)
+
+! FIXME: Call LobattoKernelGradientEvalAll_
 gradientPhi = LobattoKernelGradientEvalAll(n=maxP, x=d_lambda)
 
 CALL BarycentricEdgeBasisGradient_Triangle2(pe1=pe1, pe2=pe2, pe3=pe3, &
@@ -461,6 +483,7 @@ DO CONCURRENT(ii=1:tp)
 END DO
 
 CALL LobattoKernelEvalAll_(n=maxP, x=d_lambda, ans=phi, nrow=a, ncol=b)
+
 !FIXME: Call LobattoKernelGradientEvalAll_
 gradientPhi = LobattoKernelGradientEvalAll(n=maxP, x=d_lambda)
 
@@ -552,6 +575,7 @@ DO CONCURRENT(ii=1:tp)
 END DO
 
 CALL LobattoKernelEvalAll_(n=maxP, x=d_lambda, ans=phi, nrow=a, ncol=b)
+
 !FIXME: Call LobattoKernelGradientEvalAll_
 gradientPhi = LobattoKernelGradientEvalAll(n=maxP, x=d_lambda)
 
