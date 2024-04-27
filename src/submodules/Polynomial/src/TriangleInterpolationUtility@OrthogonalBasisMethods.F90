@@ -17,8 +17,8 @@
 SUBMODULE(TriangleInterpolationUtility) OrthogonalBasisMethods
 USE MappingUtility, ONLY: FromBiunitTriangle2BiunitSqr,  &
   & FromUnitTriangle2BiunitSqr, FromUnitLine2BiUnitLine
-USE QuadrangleInterpolationUtility, ONLY: Dubiner_Quadrangle,  &
-  & DubinerGradient_Quadrangle
+USE QuadrangleInterpolationUtility, ONLY: Dubiner_Quadrangle_, &
+                                          DubinerGradient_Quadrangle_
 IMPLICIT NONE
 CONTAINS
 
@@ -39,9 +39,6 @@ END PROCEDURE Dubiner_Triangle1
 MODULE PROCEDURE Dubiner_Triangle1_
 REAL(DFP) :: x(SIZE(xij, 1), SIZE(xij, 2))
 
-nrow = SIZE(xij, 2)
-ncol = (order + 1) * (order + 2) / 2
-
 SELECT CASE (reftriangle(1:1))
 CASE ("B", "b")
 
@@ -55,7 +52,7 @@ CASE ("U", "u")
 
 END SELECT
 
-ans = Dubiner_Quadrangle(order=order, xij=x)
+CALL Dubiner_Quadrangle_(order=order, xij=x, ans=ans, nrow=nrow, ncol=ncol)
 END PROCEDURE Dubiner_Triangle1_
 
 !----------------------------------------------------------------------------
@@ -63,7 +60,9 @@ END PROCEDURE Dubiner_Triangle1_
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Dubiner_Triangle2
-
+INTEGER(I4B) :: nrow, ncol
+CALL Dubiner_Triangle2_(order=order, x=x, y=y, reftriangle=reftriangle, &
+                        ans=ans, nrow=nrow, ncol=ncol)
 END PROCEDURE Dubiner_Triangle2
 
 !----------------------------------------------------------------------------
@@ -72,9 +71,6 @@ END PROCEDURE Dubiner_Triangle2
 
 MODULE PROCEDURE Dubiner_Triangle2_
 REAL(DFP) :: x0(SIZE(x)), y0(SIZE(y))
-
-nrow = SIZE(x) * SIZE(y)
-ncol = (order + 1) * (order + 2) / 2
 
 SELECT CASE (reftriangle(1:1))
 
@@ -93,7 +89,8 @@ CASE ("U", "u")
 
 END SELECT
 
-ans = Dubiner_Quadrangle(order=order, x=x0, y=y0)
+CALL Dubiner_Quadrangle_(order=order, x=x0, y=y0, ans=ans, nrow=nrow, &
+                         ncol=ncol)
 END PROCEDURE Dubiner_Triangle2_
 
 !----------------------------------------------------------------------------
@@ -114,10 +111,6 @@ MODULE PROCEDURE OrthogonalBasisGradient_Triangle1_
 REAL(DFP) :: x(SIZE(xij, 1), SIZE(xij, 2))
 INTEGER(I4B) :: ii
 
-tsize1 = SIZE(xij, 2)
-tsize2 = (order + 1) * (order + 2) / 2
-tsize3 = (order + 1) * (order + 2) / 2
-
 SELECT CASE (reftriangle(1:1))
 
 CASE ("B", "b")
@@ -132,13 +125,13 @@ CASE ("U", "u")
 
 END SELECT
 
-! FIXME:
-ans = DubinerGradient_Quadrangle(order=order, xij=x)
+CALL DubinerGradient_Quadrangle_(order=order, xij=x, ans=ans, tsize1=tsize1, &
+                                 tsize2=tsize2, tsize3=tsize3)
 
 DO ii = 1, SIZE(ans, 2)
   ans(:, ii, 1) = ans(:, ii, 1) * 4.0_DFP / (1.0_DFP - x(2, :))
-  ans(:, ii, 2) = ans(:, ii, 1) * (1.0_DFP + x(1, :)) * 0.5_DFP  &
-    & + 2.0_DFP * ans(:, ii, 2)
+  ans(:, ii, 2) = ans(:, ii, 1) * (1.0_DFP + x(1, :)) * 0.5_DFP &
+                  + 2.0_DFP * ans(:, ii, 2)
 END DO
 
 END PROCEDURE OrthogonalBasisGradient_Triangle1_

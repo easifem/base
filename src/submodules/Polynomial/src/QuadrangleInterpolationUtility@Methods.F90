@@ -895,6 +895,16 @@ END PROCEDURE LagrangeCoeff_Quadrangle5
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Dubiner_Quadrangle1
+INTEGER(I4B) :: nrow, ncol
+CALL Dubiner_Quadrangle1_(xij=xij, order=order, ans=ans, nrow=nrow, &
+                          ncol=ncol)
+END PROCEDURE Dubiner_Quadrangle1
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE Dubiner_Quadrangle1_
 REAL(DFP) :: P1(SIZE(xij, 2), order + 1), P2(SIZE(xij, 2), order + 1)
 REAL(DFP) :: x(SIZE(xij, 2)), y(SIZE(xij, 2))
 REAL(DFP) :: avec(SIZE(xij, 2)), alpha, beta
@@ -902,6 +912,8 @@ INTEGER(I4B) :: k1, k2, max_k2, cnt
 
 x = xij(1, :)
 y = xij(2, :)
+nrow = SIZE(xij, 2)
+ncol = (order + 1) * (order + 2) / 2
 
 P1 = LegendreEvalAll(n=order, x=x)
 
@@ -927,17 +939,31 @@ DO k1 = 0, order
 
 END DO
 
-END PROCEDURE Dubiner_Quadrangle1
+END PROCEDURE Dubiner_Quadrangle1_
 
 !----------------------------------------------------------------------------
 !                                               DubinerGradient_Quadrangle1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE DubinerGradient_Quadrangle1
+INTEGER(I4B) :: s(3)
+CALL DubinerGradient_Quadrangle1_(xij=xij, order=order, ans=ans, &
+                                  tsize1=s(1), tsize2=s(2), tsize3=s(3))
+END PROCEDURE DubinerGradient_Quadrangle1
+
+!----------------------------------------------------------------------------
+!                                               DubinerGradient_Quadrangle1
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE DubinerGradient_Quadrangle1_
 REAL(DFP), DIMENSION(SIZE(xij, 2), order + 1) :: P1, P2, dP1, dP2
 REAL(DFP), DIMENSION(SIZE(xij, 2)) :: avec, bvec, x, y
 REAL(DFP) :: alpha, beta
 INTEGER(I4B) :: k1, k2, max_k2, cnt
+
+tsize1 = SIZE(xij, 2)
+tsize2 = (order + 1) * (order + 2) / 2
+tsize3 = 2
 
 x = xij(1, :)
 y = xij(2, :)
@@ -976,15 +1002,26 @@ DO k1 = 0, order
       & (x * dP2(:, k2 + 1) - 0.5_DFP * REAL(k1, DFP) * P2(:, k2 + 1))
   END DO
 END DO
-END PROCEDURE DubinerGradient_Quadrangle1
+END PROCEDURE DubinerGradient_Quadrangle1_
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Dubiner_Quadrangle2
+INTEGER(I4B) :: nrow, ncol
+CALL Dubiner_Quadrangle2_(x=x, y=y, order=order, ans=ans, nrow=nrow, &
+                          ncol=ncol)
+END PROCEDURE Dubiner_Quadrangle2
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE Dubiner_Quadrangle2_
 REAL(DFP) :: xij(2, SIZE(x) * SIZE(y))
 INTEGER(I4B) :: ii, jj, cnt
+
 xij = 0.0_DFP
 cnt = 0
 DO ii = 1, SIZE(x)
@@ -994,8 +1031,9 @@ DO ii = 1, SIZE(x)
     xij(2, cnt) = y(jj)
   END DO
 END DO
-ans = Dubiner_Quadrangle1(order=order, xij=xij)
-END PROCEDURE Dubiner_Quadrangle2
+CALL Dubiner_Quadrangle1_(order=order, xij=xij, ans=ans, nrow=nrow, &
+                          ncol=ncol)
+END PROCEDURE Dubiner_Quadrangle2_
 
 !----------------------------------------------------------------------------
 !                                              TensorProdOrthoPol_Quadrangle
