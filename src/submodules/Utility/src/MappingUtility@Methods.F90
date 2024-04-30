@@ -64,6 +64,40 @@ ans = 2.0_DFP * xin - 1.0_DFP
 END PROCEDURE FromUnitLine2BiUnitLine
 
 !----------------------------------------------------------------------------
+!                                                            FromLine2Line
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE FromLine2Line_
+CHARACTER(2) :: acase
+INTEGER(I4B) :: ii, n
+
+acase = from(1:1)//to(1:1)
+n = SIZE(xin)
+
+SELECT CASE (acase)
+
+CASE ("BU", "bu", "bU", "Bu")
+
+  DO CONCURRENT(ii=1:n)
+    ans(ii) = 0.5_DFP * (1.0_DFP + xin(ii))
+  END DO
+
+CASE ("UB", "ub", "uB", "Ub")
+
+  DO CONCURRENT(ii=1:n)
+    ans(ii) = 2.0_DFP * xin(ii) - 1.0_DFP
+  END DO
+
+CASE ("BB", "UU", "bb", "uu")
+
+  DO CONCURRENT(ii=1:n)
+    ans(ii) = xin(ii)
+  END DO
+
+END SELECT
+END PROCEDURE FromLine2Line_
+
+!----------------------------------------------------------------------------
 !                                                  FromUnitTriangle2Triangle
 !----------------------------------------------------------------------------
 
@@ -204,43 +238,84 @@ END DO
 END PROCEDURE FromUnitHexahedron2BiUnitHexahedron1
 
 !----------------------------------------------------------------------------
+!                                                     FromTriangle2Square_
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE FromTriangle2Square_
+CHARACTER(2) :: acase
+acase = from(1:1)//to(1:1)
+
+SELECT CASE (acase)
+
+CASE ("BB", "bb")
+
+  ans(1, :) = (1.0_DFP + zero + 2.0_DFP * xin(1, :) + xin(2, :)) &
+              / (1.0_DFP + zero - xin(2, :))
+  ans(2, :) = xin(2, :)
+
+CASE ("UB", "ub")
+
+  ans(1, :) = (2.0_DFP * xin(1, :) + xin(2, :) - 1.0_DFP + zero) &
+              / (1.0_DFP + zero - xin(2, :))
+  ans(2, :) = 2.0_DFP * xin(2, :) - 1.0_DFP
+
+END SELECT
+END PROCEDURE FromTriangle2Square_
+
+!----------------------------------------------------------------------------
 !                                             FromBiUnitTriangle2BiUnitSqr
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE FromBiUnitTriangle2BiUnitSqr
-! ans(1, :) = 2.0_DFP * (1.0_DFP + xin(1, :)) / (1.0_DFP - xin(2, :)) - 1.0_DFP
-ans(1, :) = (1.0_DFP + zero + 2.0_DFP * xin(1, :) + xin(2, :)) &
-  & / (1.0_DFP + zero - xin(2, :))
-ans(2, :) = xin(2, :)
+CALL FromTriangle2Square_(xin=xin, ans=ans, from="B", to="B")
 END PROCEDURE FromBiUnitTriangle2BiUnitSqr
-
-!----------------------------------------------------------------------------
-!                                             FromBiUnitSqr2BiUnitTriangle
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE FromBiUnitSqr2BiUnitTriangle
-ans(1, :) = 0.5_DFP * (1.0_DFP + xin(1, :)) * (1.0_DFP - xin(2, :)) &
-  & - 1.0_DFP
-ans(2, :) = xin(2, :)
-END PROCEDURE FromBiUnitSqr2BiUnitTriangle
 
 !----------------------------------------------------------------------------
 !                                                 FromUnitTriangle2BiUnitSqr
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE FromUnitTriangle2BiUnitSqr
-ans(1, :) = (2.0_DFP * xin(1, :) + xin(2, :) - 1.0_DFP + zero) &
-  & / (1.0_DFP + zero - xin(2, :))
-ans(2, :) = 2.0_DFP * xin(2, :) - 1.0_DFP
+CALL FromTriangle2Square_(xin=xin, ans=ans, from="U", to="B")
 END PROCEDURE FromUnitTriangle2BiUnitSqr
+
+!----------------------------------------------------------------------------
+!                                                     FromSquare2Triangle_
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE FromSquare2Triangle_
+CHARACTER(2) :: acase
+acase = from(1:1)//to(1:1)
+
+SELECT CASE (acase)
+
+CASE ("BB", "bb", "Bb", "bB")
+
+  ans(1, :) = 0.5_DFP * (1.0_DFP + xin(1, :)) * (1.0_DFP - xin(2, :)) &
+              - 1.0_DFP
+  ans(2, :) = xin(2, :)
+
+CASE ("BU", "bu", "Bu", "bU")
+
+  ans(1, :) = 0.25_DFP * (1.0_DFP + xin(1, :)) * (1.0_DFP - xin(2, :))
+  ans(2, :) = 0.5_DFP * (xin(2, :) + 1.0_DFP)
+
+END SELECT
+END PROCEDURE FromSquare2Triangle_
+
+!----------------------------------------------------------------------------
+!                                             FromBiUnitSqr2BiUnitTriangle
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE FromBiUnitSqr2BiUnitTriangle
+CALL FromSquare2Triangle_(xin=xin, ans=ans, from="B", to="B")
+END PROCEDURE FromBiUnitSqr2BiUnitTriangle
 
 !----------------------------------------------------------------------------
 !                                                 FromBiUnitSqr2UnitTriangle
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE FromBiUnitSqr2UnitTriangle
-ans(1, :) = 0.25_DFP * (1.0_DFP + xin(1, :)) * (1.0_DFP - xin(2, :))
-ans(2, :) = 0.5_DFP * (xin(2, :) + 1.0_DFP)
+CALL FromSquare2Triangle_(xin=xin, ans=ans, from="B", to="U")
 END PROCEDURE FromBiUnitSqr2UnitTriangle
 
 !----------------------------------------------------------------------------
@@ -286,11 +361,32 @@ END SELECT
 END PROCEDURE BarycentricCoordTriangle_
 
 !----------------------------------------------------------------------------
+!                                                   FromTriangle2Triangle_
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE FromTriangle2Triangle_
+CHARACTER(2) :: acase
+acase = from(1:1)//to(1:1)
+
+SELECT CASE (acase)
+
+CASE ("BU", "bu", "bU", "Bu")
+
+  ans = 0.5_DFP * (1.0_DFP + xin)
+
+CASE ("UB", "ub", "Ub", "uB")
+
+  ans = -1.0_DFP + 2.0_DFP * xin
+
+END SELECT
+END PROCEDURE FromTriangle2Triangle_
+
+!----------------------------------------------------------------------------
 !                                            FromBiUnitTriangle2UnitTriangle
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE FromBiUnitTriangle2UnitTriangle
-ans = 0.5_DFP * (1.0_DFP + xin)
+CALL FromTriangle2Triangle_(xin=xin, ans=ans, from="B", to="U")
 END PROCEDURE FromBiUnitTriangle2UnitTriangle
 
 !----------------------------------------------------------------------------
@@ -298,7 +394,7 @@ END PROCEDURE FromBiUnitTriangle2UnitTriangle
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE FromUnitTriangle2BiUnitTriangle
-ans = -1.0_DFP + 2.0_DFP * xin
+CALL FromTriangle2Triangle_(xin=xin, ans=ans, from="U", to="B")
 END PROCEDURE FromUnitTriangle2BiUnitTriangle
 
 !----------------------------------------------------------------------------
@@ -325,10 +421,10 @@ MODULE PROCEDURE FromBiUnitTetrahedron2Tetrahedron
 INTEGER(I4B) :: ii
 DO ii = 1, SIZE(xin, 2)
   ans(:, ii) = &
-  & -0.5_DFP * (1.0_DFP + xin(1, ii) + xin(2, ii) + xin(3, ii)) * x1(:) &
-  & + 0.5_DFP * (1.0_DFP + xin(1, ii)) * x2(:)  &
-  & + 0.5_DFP * (1.0_DFP + xin(2, ii)) * x3(:)  &
-  & + 0.5_DFP * (1.0_DFP + xin(3, ii)) * x4(:)
+    -0.5_DFP * (1.0_DFP + xin(1, ii) + xin(2, ii) + xin(3, ii)) * x1(:) &
+    + 0.5_DFP * (1.0_DFP + xin(1, ii)) * x2(:) &
+    + 0.5_DFP * (1.0_DFP + xin(2, ii)) * x3(:) &
+    + 0.5_DFP * (1.0_DFP + xin(3, ii)) * x4(:)
 END DO
 END PROCEDURE FromBiUnitTetrahedron2Tetrahedron
 
@@ -340,10 +436,10 @@ MODULE PROCEDURE FromUnitTetrahedron2Tetrahedron
 INTEGER(I4B) :: ii
 DO ii = 1, SIZE(xin, 2)
   ans(:, ii) = &
-  &  (1.0_DFP - xin(1, ii) - xin(2, ii) - xin(3, ii)) * x1(:) &
-  & + xin(1, ii) * x2(:)  &
-  & + xin(2, ii) * x3(:)  &
-  & + xin(3, ii) * x4(:)
+    (1.0_DFP - xin(1, ii) - xin(2, ii) - xin(3, ii)) * x1(:) &
+    + xin(1, ii) * x2(:) &
+    + xin(2, ii) * x3(:) &
+    + xin(3, ii) * x4(:)
 END DO
 END PROCEDURE FromUnitTetrahedron2Tetrahedron
 
@@ -374,12 +470,10 @@ END PROCEDURE BarycentricCoordBiUnitTetrahedron
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE BarycentricCoordTetrahedron
-CHARACTER(20) :: layout
-layout = TRIM(UpperCase(refTetrahedron))
-SELECT CASE (TRIM(layout))
-CASE ("BIUNIT")
+SELECT CASE (refTetrahedron(1:1))
+CASE ("B", "b")
   ans = BarycentricCoordBiUnitTetrahedron(xin)
-CASE ("UNIT")
+CASE ("U", "u")
   ans = BarycentricCoordUnitTetrahedron(xin)
 END SELECT
 END PROCEDURE BarycentricCoordTetrahedron

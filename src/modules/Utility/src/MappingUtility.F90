@@ -29,6 +29,7 @@ PRIVATE
 PUBLIC :: FromBiunitLine2Segment
 PUBLIC :: FromBiUnitLine2UnitLine
 PUBLIC :: FromUnitLine2BiUnitLine
+PUBLIC :: FromLine2Line_
 
 PUBLIC :: FromBiUnitQuadrangle2Quadrangle
 PUBLIC :: FromBiUnitQuadrangle2UnitQuadrangle
@@ -49,6 +50,8 @@ PUBLIC :: FromUnitTriangle2BiUnitQuadrangle
 
 PUBLIC :: FromBiUnitSqr2UnitTriangle
 PUBLIC :: FromBiUnitQuadrangle2UnitTriangle
+
+PUBLIC :: FromTriangle2Square_
 
 PUBLIC :: FromUnitTriangle2Triangle
 
@@ -355,6 +358,25 @@ INTERFACE
 END INTERFACE
 
 !----------------------------------------------------------------------------
+!                                                             FromLine2Line_
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2024-04-27
+! summary: Map line to line
+
+INTERFACE
+  MODULE PURE SUBROUTINE FromLine2Line_(xin, ans, from, to)
+    REAL(DFP), INTENT(IN) :: xin(:)
+    !! coordinates in  unit line
+    REAL(DFP), INTENT(INOUT) :: ans(:)
+    !! mapped coordinates of xin in biunit line
+    CHARACTER(*), INTENT(IN) :: from
+    CHARACTER(*), INTENT(IN) :: to
+  END SUBROUTINE FromLine2Line_
+END INTERFACE
+
+!----------------------------------------------------------------------------
 !                                             FromBiUnitTriangle2BiUnitSqr
 !----------------------------------------------------------------------------
 
@@ -445,6 +467,66 @@ INTERFACE FromBiUnitQuadrangle2UnitTriangle
     !! coordinates in biunit triangle
   END FUNCTION FromBiUnitSqr2UnitTriangle
 END INTERFACE FromBiUnitQuadrangle2UnitTriangle
+
+!----------------------------------------------------------------------------
+!                                                     FromTriangle2Triangle_
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 19 Oct 2022
+! summary: Map from triangle to square
+
+INTERFACE
+  MODULE PURE SUBROUTINE FromTriangle2Triangle_(xin, ans, from, to)
+    REAL(DFP), INTENT(IN) :: xin(:, :)
+    !! coordinates in bi-unit square in xij coordinate
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    !! ans(2, SIZE(xin, 2))
+    !! coordinates in biunit triangle
+    CHARACTER(*), INTENT(IN) :: from
+    CHARACTER(*), INTENT(IN) :: to
+  END SUBROUTINE FromTriangle2Triangle_
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                       FromTriangle2Square_
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 19 Oct 2022
+! summary: Map from triangle to square
+
+INTERFACE
+  MODULE PURE SUBROUTINE FromTriangle2Square_(xin, ans, from, to)
+    REAL(DFP), INTENT(IN) :: xin(:, :)
+    !! coordinates in bi-unit square in xij coordinate
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    !! ans(2, SIZE(xin, 2))
+    !! coordinates in biunit triangle
+    CHARACTER(*), INTENT(IN) :: from
+    CHARACTER(*), INTENT(IN) :: to
+  END SUBROUTINE FromTriangle2Square_
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                       FromSquare2Triangle_
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 19 Oct 2022
+! summary: Map from triangle to square
+
+INTERFACE
+  MODULE PURE SUBROUTINE FromSquare2Triangle_(xin, ans, from, to)
+    REAL(DFP), INTENT(IN) :: xin(:, :)
+    !! coordinates in bi-unit square in xij coordinate
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    !! ans(2, SIZE(xin, 2))
+    !! coordinates in biunit triangle
+    CHARACTER(*), INTENT(IN) :: from
+    CHARACTER(*), INTENT(IN) :: to
+  END SUBROUTINE FromSquare2Triangle_
+END INTERFACE
 
 !----------------------------------------------------------------------------
 !                                              BarycentricCoordUnitTriangle
