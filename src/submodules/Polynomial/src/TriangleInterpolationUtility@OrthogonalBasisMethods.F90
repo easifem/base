@@ -15,8 +15,9 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 
 SUBMODULE(TriangleInterpolationUtility) OrthogonalBasisMethods
-USE MappingUtility, ONLY: FromBiunitTriangle2BiunitSqr,  &
-  & FromUnitTriangle2BiunitSqr, FromUnitLine2BiUnitLine
+USE MappingUtility, ONLY: FromTriangle2Square_, &
+                          FromLine2Line_
+
 USE QuadrangleInterpolationUtility, ONLY: Dubiner_Quadrangle_, &
                                           DubinerGradient_Quadrangle_
 IMPLICIT NONE
@@ -38,20 +39,7 @@ END PROCEDURE Dubiner_Triangle1
 
 MODULE PROCEDURE Dubiner_Triangle1_
 REAL(DFP) :: x(SIZE(xij, 1), SIZE(xij, 2))
-
-SELECT CASE (reftriangle(1:1))
-CASE ("B", "b")
-
-  ! FIXME:
-  x = FromBiUnitTriangle2BiUnitSqr(xin=xij)
-
-CASE ("U", "u")
-
-  ! FIXME:
-  x = FromUnitTriangle2BiUnitSqr(xin=xij)
-
-END SELECT
-
+CALL FromTriangle2Square_(xin=xij, ans=x, from=reftriangle, to="B")
 CALL Dubiner_Quadrangle_(order=order, xij=x, ans=ans, nrow=nrow, ncol=ncol)
 END PROCEDURE Dubiner_Triangle1_
 
@@ -72,22 +60,8 @@ END PROCEDURE Dubiner_Triangle2
 MODULE PROCEDURE Dubiner_Triangle2_
 REAL(DFP) :: x0(SIZE(x)), y0(SIZE(y))
 
-SELECT CASE (reftriangle(1:1))
-
-CASE ("B", "b")
-
-  x0 = x
-  y0 = y
-
-CASE ("U", "u")
-
-  ! FIXME:
-  x0 = FromUnitLine2BiUnitLine(xin=x)
-
-  ! FIXME:
-  y0 = FromUnitLine2BiUnitLine(xin=y)
-
-END SELECT
+CALL FromLine2Line_(xin=x, ans=x0, from=refTriangle, to="B")
+CALL FromLine2Line_(xin=y, ans=y0, from=refTriangle, to="B")
 
 CALL Dubiner_Quadrangle_(order=order, x=x0, y=y0, ans=ans, nrow=nrow, &
                          ncol=ncol)
@@ -111,24 +85,13 @@ MODULE PROCEDURE OrthogonalBasisGradient_Triangle1_
 REAL(DFP) :: x(SIZE(xij, 1), SIZE(xij, 2))
 INTEGER(I4B) :: ii
 
-SELECT CASE (reftriangle(1:1))
-
-CASE ("B", "b")
-
-  !FIXME:
-  x = FromBiUnitTriangle2BiUnitSqr(xin=xij)
-
-CASE ("U", "u")
-
-  ! FIXME:
-  x = FromUnitTriangle2BiUnitSqr(xin=xij)
-
-END SELECT
+CALL FromTriangle2Square_(xin=xij, ans=x, from=reftriangle, to="B")
 
 CALL DubinerGradient_Quadrangle_(order=order, xij=x, ans=ans, tsize1=tsize1, &
                                  tsize2=tsize2, tsize3=tsize3)
 
 DO ii = 1, SIZE(ans, 2)
+
   ans(:, ii, 1) = ans(:, ii, 1) * 4.0_DFP / (1.0_DFP - x(2, :))
   ans(:, ii, 2) = ans(:, ii, 1) * (1.0_DFP + x(1, :)) * 0.5_DFP &
                   + 2.0_DFP * ans(:, ii, 2)

@@ -22,6 +22,7 @@ target_sources(
           ${src_path}/QuadraturePoint_Triangle_Solin.F90
           ${src_path}/QuadraturePoint_Tetrahedron_Solin.F90
           ${src_path}/TriangleInterpolationUtility@Methods.F90
+          ${src_path}/TriangleInterpolationUtility@QuadratureMethods.F90
           ${src_path}/TriangleInterpolationUtility@HeirarchicalBasisMethods.F90
           ${src_path}/TriangleInterpolationUtility@LagrangeBasisMethods.F90
           ${src_path}/TriangleInterpolationUtility@OrthogonalBasisMethods.F90
