@@ -611,6 +611,17 @@ END PROCEDURE BarycentricHeirarchicalBasisGradient_Triangle1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE HeirarchicalBasisGradient_Triangle1
+INTEGER(I4B) :: s(3)
+CALL HeirarchicalBasisGradient_Triangle1_(order=order, pe1=pe1, &
+   pe2=pe2, pe3=pe3, xij=xij, refTriangle=refTriangle, ans=ans, tsize1=s(1), &
+                                          tsize2=s(2), tsize3=s(3))
+END PROCEDURE HeirarchicalBasisGradient_Triangle1
+
+!----------------------------------------------------------------------------
+!                                         HeirarchicalBasisGradient_Triangle
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE HeirarchicalBasisGradient_Triangle1_
 REAL(DFP) :: jac(3, 2)
 REAL(DFP), ALLOCATABLE :: lambda(:, :), dPhi(:, :, :)
 INTEGER(I4B) :: ii, jj, kk
@@ -618,6 +629,9 @@ INTEGER(I4B) :: ii, jj, kk
 ii = SIZE(xij, 2)
 jj = pe1 + pe2 + pe3 + INT((order - 1) * (order - 2) / 2)
 ALLOCATE (lambda(3, ii), dPhi(ii, jj, 3))
+tsize1 = SIZE(xij, 2)
+tsize2 = pe1 + pe2 + pe3 + INT((order - 1) * (order - 2) / 2)
+tsize3 = 2
 
 CALL BarycentricCoordTriangle_(xin=xij, refTriangle=refTriangle, ans=lambda)
 CALL BarycentricHeirarchicalBasisGradient_Triangle( &
@@ -635,7 +649,7 @@ CASE ("U", "u")
   jac(3, :) = [0.0_DFP, 1.0_DFP]
 END SELECT
 
-DO CONCURRENT(ii=1:SIZE(dPhi, 1), jj=1:SIZE(dPhi, 2), kk=1:2)
+DO CONCURRENT(ii=1:tsize1, jj=1:tsize2, kk=1:tsize3)
   ans(ii, jj, kk) = dPhi(ii, jj, 1) * jac(1, kk) &
                     + dPhi(ii, jj, 2) * jac(2, kk) &
                     + dPhi(ii, jj, 3) * jac(3, kk)
@@ -643,7 +657,7 @@ END DO
 
 DEALLOCATE (lambda, dPhi)
 
-END PROCEDURE HeirarchicalBasisGradient_Triangle1
+END PROCEDURE HeirarchicalBasisGradient_Triangle1_
 
 !----------------------------------------------------------------------------
 !

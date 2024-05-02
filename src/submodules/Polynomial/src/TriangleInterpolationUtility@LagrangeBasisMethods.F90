@@ -15,7 +15,7 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 
 SUBMODULE(TriangleInterpolationUtility) LagrangeBasisMethods
-USE LagrangePolynomialUtility, ONLY: LagrangeVandermonde
+USE LagrangePolynomialUtility, ONLY: LagrangeVandermonde_
 USE ErrorHandling, ONLY: Errormsg
 USE InputUtility, ONLY: Input
 USE GE_CompRoutineMethods, ONLY: GetInvMat
@@ -80,12 +80,12 @@ END PROCEDURE LagrangeInDOF_Triangle
 MODULE PROCEDURE LagrangeCoeff_Triangle1
 REAL(DFP), DIMENSION(SIZE(xij, 2), SIZE(xij, 2)) :: V
 INTEGER(I4B), DIMENSION(SIZE(xij, 2)) :: ipiv
-INTEGER(I4B) :: info
+INTEGER(I4B) :: info, nrow, ncol
+
 ipiv = 0_I4B; ans = 0.0_DFP; ans(i) = 1.0_DFP
 
-! FIXME:
-! Call LagrangeVandermonde_
-V = LagrangeVandermonde(order=order, xij=xij, elemType=Triangle)
+CALL LagrangeVandermonde_(order=order, xij=xij, elemType=Triangle, ans=V, &
+                          nrow=nrow, ncol=ncol)
 CALL GetLU(A=V, IPIV=ipiv, info=info)
 CALL LUSolve(A=V, B=ans, IPIV=ipiv, info=info)
 END PROCEDURE LagrangeCoeff_Triangle1
@@ -138,30 +138,19 @@ MODULE PROCEDURE LagrangeCoeff_Triangle4_
 SELECT CASE (basisType)
 
 CASE (Monomial)
-
-  nrow = SIZE(xij, 2)
-  ncol = nrow
-  ! FIXME: Call LagnageVandermonde_
-  ans(1:nrow, 1:ncol) = LagrangeVandermonde(order=order, xij=xij, &
-                                            elemType=Triangle)
+  CALL LagrangeVandermonde_(order=order, xij=xij, elemType=Triangle, &
+                            ans=ans, nrow=nrow, ncol=ncol)
 
 CASE (Jacobi, Orthogonal, Legendre, Lobatto, Ultraspherical)
 
-  nrow = SIZE(xij, 2)
-  ncol = nrow
-  ! FIXME: Call Dubiner_Triangle_
-  ans(1:nrow, 1:ncol) = Dubiner_Triangle(order=order, xij=xij, &
-                                         refTriangle=refTriangle)
+  CALL Dubiner_Triangle_(order=order, xij=xij, refTriangle=refTriangle, &
+                         ans=ans, nrow=nrow, ncol=ncol)
 
 CASE (Heirarchical)
 
   CALL HeirarchicalBasis_Triangle_(order=order, pe1=order, pe2=order, &
                                 pe3=order, xij=xij, refTriangle=refTriangle, &
                                    ans=ans, nrow=nrow, ncol=ncol)
-CASE DEFAULT
-  CALL Errormsg(msg="No case found for basisType", &
-                file=__FILE__, routine="LagrangeCoeff_Triangle4", &
-                line=__LINE__, unitno=stderr)
 END SELECT
 
 CALL GetInvMat(ans(1:nrow, 1:ncol))
@@ -209,22 +198,10 @@ CASE (Monomial)
 
   tdof = SIZE(xij, 2)
 
-#ifdef DEBUG_VER
-  IF (tdof .NE. SIZE(degree, 1)) THEN
-    CALL Errormsg(&
-      & msg="tdof is not same as size(degree,1)", &
-      & file=__FILE__, &
-      & routine="LagrangeEvalAll_Triangle1", &
-      & line=__LINE__, &
-      & unitno=stderr)
-  END IF
-#endif
-
   DO ii = 1, tdof
     xx(1, ii) = x(1)**degree(ii, 1) * x(2)**degree(ii, 2)
   END DO
 
-!INFO: Heirarchical basis
 CASE (Heirarchical)
 
   CALL HeirarchicalBasis_Triangle_(order=order, pe1=order, &
@@ -233,17 +210,8 @@ CASE (Heirarchical)
 
 CASE (Jacobi, Orthogonal, Legendre, Lobatto, Ultraspherical)
 
-  ! FIXME: Call Dubiner_Triangle_
-  xx = Dubiner_Triangle(order=order, xij=RESHAPE(x, [2, 1]), &
-                        refTriangle=refTriangle)
-
-CASE DEFAULT
-  CALL Errormsg(&
-    & msg="No case found for basisType", &
-    & file=__FILE__, &
-    & routine="LagrangeEvalAll_Triangle1", &
-    & line=__LINE__, &
-    & unitno=stderr)
+  CALL Dubiner_Triangle_(order=order, xij=RESHAPE(x, [2, 1]), &
+                        refTriangle=refTriangle, ans=xx, nrow=nrow, ncol=ncol)
 
 END SELECT
 
@@ -266,13 +234,8 @@ firstCall0 = Input(default=.TRUE., option=firstCall)
 IF (PRESENT(coeff)) THEN
   IF (firstCall0) THEN
 
-    !FIXME:
-    coeff = LagrangeCoeff_Triangle(&
-      & order=order, &
-      & xij=xij, &
-      & basisType=basisType0, &
-      & refTriangle=refTriangle &
-      & )
+    CALL LagrangeCoeff_Triangle_(order=order, xij=xij, basisType=basisType0, &
+                     refTriangle=refTriangle, ans=coeff, nrow=nrow, ncol=ncol)
     coeff0 = coeff
 
   ELSE
@@ -282,13 +245,8 @@ IF (PRESENT(coeff)) THEN
   END IF
 ELSE
 
-  ! FIXME:
-  coeff0 = LagrangeCoeff_Triangle(&
-    & order=order, &
-    & xij=xij, &
-    & basisType=basisType0, &
-    & refTriangle=refTriangle &
-    & )
+  CALL LagrangeCoeff_Triangle_(order=order, xij=xij, basisType=basisType0, &
+                    refTriangle=refTriangle, ans=coeff0, nrow=nrow, ncol=ncol)
 
 END IF
 
@@ -296,17 +254,8 @@ SELECT CASE (basisType0)
 
 CASE (Monomial)
 
-  ! FIXME:
-  degree = LagrangeDegree_Triangle(order=order)
+  CALL LagrangeDegree_Triangle_(order=order, ans=degree, nrow=nrow, ncol=ncol)
   tdof = SIZE(xij, 2)
-  IF (tdof .NE. SIZE(degree, 1)) THEN
-    CALL Errormsg(&
-      & msg="tdof is not same as size(degree,1)", &
-      & file=__FILE__, &
-      & routine="LagrangeEvalAll_Triangle1", &
-      & line=__LINE__, &
-      & unitno=stderr)
-  END IF
 
   DO ii = 1, tdof
     xx(:, ii) = x(1, :)**degree(ii, 1) * x(2, :)**degree(ii, 2)
@@ -319,21 +268,9 @@ CASE (Heirarchical)
 
 CASE (Jacobi, Orthogonal, Legendre, Lobatto, Ultraspherical)
 
-  ! FIXME:
-  xx = Dubiner_Triangle( &
-    & order=order, &
-    & xij=x,  &
-    & refTriangle=refTriangle)
+  CALL Dubiner_Triangle_(order=order, xij=x, refTriangle=refTriangle, &
+                         ans=xx, nrow=nrow, ncol=ncol)
 
-CASE DEFAULT
-
-  CALL Errormsg(&
-    & msg="No case found for basisType", &
-    & file=__FILE__, &
-    & routine="LagrangeEvalAll_Triangle1", &
-    & line=__LINE__, &
-    & unitno=stderr)
-  RETURN
 END SELECT
 
 ans = MATMUL(xx, coeff0)
@@ -345,7 +282,7 @@ END PROCEDURE LagrangeEvalAll_Triangle2
 
 MODULE PROCEDURE LagrangeGradientEvalAll_Triangle1
 LOGICAL(LGT) :: firstCall0
-INTEGER(I4B) :: ii, basisType0, tdof, ai, bi
+INTEGER(I4B) :: ii, basisType0, tdof, ai, bi, s(3)
 INTEGER(I4B) :: degree(SIZE(xij, 2), 2)
 REAL(DFP) :: coeff0(SIZE(xij, 2), SIZE(xij, 2)), &
   & xx(SIZE(x, 2), SIZE(xij, 2), 2), ar, br
@@ -355,43 +292,23 @@ firstCall0 = Input(default=.TRUE., option=firstCall)
 
 IF (PRESENT(coeff)) THEN
   IF (firstCall0) THEN
-    coeff = LagrangeCoeff_Triangle(&
-      & order=order, &
-      & xij=xij, &
-      & basisType=basisType0, &
-      & refTriangle=refTriangle &
-      & )
+    CALL LagrangeCoeff_Triangle_(order=order, xij=xij, basisType=basisType0, &
+                     refTriangle=refTriangle, ans=coeff, nrow=s(1), ncol=s(2))
   END IF
+
   coeff0 = coeff
 ELSE
-  coeff0 = LagrangeCoeff_Triangle(&
-    & order=order, &
-    & xij=xij, &
-    & basisType=basisType0, &
-    & refTriangle=refTriangle &
-    & )
+  CALL LagrangeCoeff_Triangle_(order=order, xij=xij, basisType=basisType0, &
+                    refTriangle=refTriangle, ans=coeff0, nrow=s(1), ncol=s(2))
 END IF
 
 SELECT CASE (basisType0)
 
 CASE (Monomial)
 
-  ! FIXME: LagrangeDegree_Triangle_
-  degree = LagrangeDegree_Triangle(order=order)
+  CALL LagrangeDegree_Triangle_(order=order, ans=degree, nrow=s(1), ncol=s(2))
 
   tdof = SIZE(xij, 2)
-
-#ifdef DEBUG_VER
-  IF (tdof .NE. SIZE(degree, 1)) THEN
-    CALL Errormsg(&
-      & msg="tdof is not same as size(degree,1)", &
-      & file=__FILE__, &
-      & routine="LagrangeGradientEvalAll_Triangle1", &
-      & line=__LINE__, &
-      & unitno=stderr)
-    RETURN
-  END IF
-#endif
 
   DO ii = 1, tdof
     ai = MAX(degree(ii, 1_I4B) - 1_I4B, 0_I4B)
@@ -404,37 +321,22 @@ CASE (Monomial)
 
 CASE (Heirarchical)
 
-  ! FIXME:
-  xx = HeirarchicalBasisGradient_Triangle( &
-    & order=order, &
-    & pe1=order,  &
-    & pe2=order,  &
-    & pe3=order,  &
-    & xij=x,  &
-    & refTriangle=refTriangle)
+ CALL HeirarchicalBasisGradient_Triangle_(order=order, pe1=order, pe2=order, &
+             pe3=order, xij=x, refTriangle=refTriangle, ans=xx, tsize1=s(1), &
+                                           tsize2=s(2), tsize3=s(3))
 
 CASE (Jacobi, Orthogonal, Legendre, Lobatto, Ultraspherical)
 
-  ! FIXME:
-  xx = OrthogonalBasisGradient_Triangle( &
-    & order=order, &
-    & xij=x,  &
-    & refTriangle=refTriangle)
+  CALL OrthogonalBasisGradient_Triangle_(order=order, xij=x, &
+       refTriangle=refTriangle, ans=xx, tsize1=s(1), tsize2=s(2), tsize3=s(3))
 
-CASE DEFAULT
-
-  CALL Errormsg(&
-    & msg="No case found for basisType", &
-    & file=__FILE__, &
-    & routine="LagrangeGradientEvalAll_Triangle1", &
-    & line=__LINE__, &
-    & unitno=stderr)
 END SELECT
 
 DO ii = 1, 2
   ! ans(:, ii, :) = TRANSPOSE(MATMUL(xx(:, :, ii), coeff0))
   ans(:, :, ii) = MATMUL(xx(:, :, ii), coeff0)
 END DO
+
 END PROCEDURE LagrangeGradientEvalAll_Triangle1
 
 !----------------------------------------------------------------------------

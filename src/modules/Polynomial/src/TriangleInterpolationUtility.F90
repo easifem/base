@@ -1398,7 +1398,7 @@ INTERFACE LagrangeGradientEvalAll_Triangle
 END INTERFACE LagrangeGradientEvalAll_Triangle
 
 !----------------------------------------------------------------------------
-!                                              HeirarchicalBasis_Triangle
+!                                        HeirarchicalBasisGradient_Triangle
 !----------------------------------------------------------------------------
 
 !> author: Shion Shimizu and Vikas Sharma
@@ -1432,6 +1432,44 @@ INTERFACE HeirarchicalBasisGradient_Triangle
       & pe1 + pe2 + pe3 + INT((order - 1) * (order - 2) / 2), 2)
   END FUNCTION HeirarchicalBasisGradient_Triangle1
 END INTERFACE HeirarchicalBasisGradient_Triangle
+
+!----------------------------------------------------------------------------
+!                                       HeirarchicalBasisGradient_Triangle_
+!----------------------------------------------------------------------------
+
+!> author: Shion Shimizu and Vikas Sharma
+! date:   2024-04-21
+! summary:  Evaluate all modal basis (heirarchical polynomial) on Triangle
+
+INTERFACE HeirarchicalBasisGradient_Triangle_
+ MODULE SUBROUTINE HeirarchicalBasisGradient_Triangle1_(order, pe1, pe2, pe3,&
+     & xij, refTriangle, ans, tsize1, tsize2, tsize3)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! Order of approximation inside the triangle (i.e., cell)
+    !! it should be greater than 2 for cell bubble to exist
+    INTEGER(I4B), INTENT(IN) :: pe1
+    !! Order of interpolation on edge e1
+    !! It should be greater than 1 for edge bubble to exists
+    INTEGER(I4B), INTENT(IN) :: pe2
+    !! Order of interpolation on edge e2
+    !! It should be greater than 1 for edge bubble to exists
+    INTEGER(I4B), INTENT(IN) :: pe3
+    !! Order of interpolation on edge e3
+    !! It should be greater than 1 for edge bubble to exists
+    REAL(DFP), INTENT(IN) :: xij(:, :)
+    !! Points of evaluation in xij format
+    CHARACTER(*), INTENT(IN) :: refTriangle
+    !! This parameter denotes the type of reference triangle.
+    !! It can take following values:
+    !! UNIT: in this case xij is in unit Triangle.
+    !! BIUNIT: in this case xij is in biunit triangle.
+    REAL(DFP), INTENT(INOUT) :: ans(:, :, :)
+     !! ans( &
+     !!  & SIZE(xij, 2), &
+     !!  & pe1 + pe2 + pe3 + INT((order - 1) * (order - 2) / 2), 2)
+    INTEGER(I4B), INTENT(OUT) :: tsize1, tsize2, tsize3
+  END SUBROUTINE HeirarchicalBasisGradient_Triangle1_
+END INTERFACE HeirarchicalBasisGradient_Triangle_
 
 !----------------------------------------------------------------------------
 !                                         OrthogonalBasisGradient_Triangle
