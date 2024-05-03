@@ -35,7 +35,7 @@ if(${CMAKE_Fortran_COMPILER_ID} STREQUAL "GNU" OR Fortran_COMPILER_NAME MATCHES
                                                   "gfortran*")
 
   list(APPEND FORTRAN_FLAGS "-ffree-form" "-ffree-line-length-none"
-       "-std=f2018" "-fimplicit-none")
+       "-std=f2018" "-fimplicit-none" "-fno-range-check" )
 
   list(APPEND FORTRAN_FLAGS_RELEASE "-O3")
 

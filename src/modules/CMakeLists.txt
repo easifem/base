@@ -45,6 +45,9 @@ include(${CMAKE_CURRENT_LIST_DIR}/Test/CMakeLists.txt)
 # GlobalData
 include(${CMAKE_CURRENT_LIST_DIR}/GlobalData/CMakeLists.txt)
 
+# RaylibInterface
+include(${CMAKE_CURRENT_LIST_DIR}/RaylibInterface/CMakeLists.txt)
+
 # Display
 include(${CMAKE_CURRENT_LIST_DIR}/Display/CMakeLists.txt)
 
