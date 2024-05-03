@@ -13,88 +13,88 @@ USE RaylibEnums
 IMPLICIT NONE
 PRIVATE
 
-PUBLIC :: get_application_directory
-PUBLIC :: get_camera_matrix
-PUBLIC :: get_camera_matrix2d
-PUBLIC :: get_char_pressed
-PUBLIC :: get_clipboard_text
-PUBLIC :: get_codepoint
-PUBLIC :: get_codepoint_count
-PUBLIC :: get_codepoint_next
-PUBLIC :: get_codepoint_previous
-PUBLIC :: get_collision_rec
-PUBLIC :: get_color
-PUBLIC :: get_current_monitor
-PUBLIC :: get_directory_path
-PUBLIC :: get_file_extension
-PUBLIC :: get_file_length
-PUBLIC :: get_file_mod_time
-PUBLIC :: get_file_name
-PUBLIC :: get_file_name_without_ext
-PUBLIC :: get_font_default
-PUBLIC :: get_fps
-PUBLIC :: get_frame_time
-PUBLIC :: get_gamepad_axis_count
-PUBLIC :: get_gamepad_axis_movement
-PUBLIC :: get_gamepad_button_pressed
-PUBLIC :: get_gamepad_name
-PUBLIC :: get_gesture_detected
-PUBLIC :: get_gesture_drag_angle
-PUBLIC :: get_gesture_hold_duration
-PUBLIC :: get_gesture_pinch_angle
-PUBLIC :: get_glyph_atlas_rec
-PUBLIC :: get_glyph_index
-PUBLIC :: get_glyph_info
-PUBLIC :: get_image_alpha_border
-PUBLIC :: get_image_color
-PUBLIC :: get_key_pressed
-PUBLIC :: get_master_volume
-PUBLIC :: get_mesh_bounding_box
-PUBLIC :: get_model_bounding_box
-PUBLIC :: get_monitor_count
-PUBLIC :: get_monitor_height
-PUBLIC :: get_monitor_name
-PUBLIC :: get_monitor_physical_height
-PUBLIC :: get_monitor_physical_width
-PUBLIC :: get_monitor_refresh_rate
-PUBLIC :: get_monitor_width
-PUBLIC :: get_mouse_delta
-PUBLIC :: get_mouse_position
-PUBLIC :: get_mouse_ray
-PUBLIC :: get_mouse_wheel_move
-PUBLIC :: get_mouse_x
-PUBLIC :: get_mouse_y
-PUBLIC :: get_music_time_length
-PUBLIC :: get_music_time_played
-PUBLIC :: get_pixel_color
-PUBLIC :: get_pixel_data_size
-PUBLIC :: get_prev_directory_path
-PUBLIC :: get_random_value
-PUBLIC :: get_ray_collision_box
-PUBLIC :: get_ray_collision_mesh
-PUBLIC :: get_ray_collision_quad
-PUBLIC :: get_ray_collision_sphere
-PUBLIC :: get_ray_collision_triangle
-PUBLIC :: get_render_height
-PUBLIC :: get_render_width
-PUBLIC :: get_screen_height
-PUBLIC :: get_screen_to_world2d
-PUBLIC :: get_screen_width
-PUBLIC :: get_shader_location
-PUBLIC :: get_shader_location_attrib
-PUBLIC :: get_spline_point_basis
-PUBLIC :: get_spline_point_bezier_cubic
-PUBLIC :: get_spline_point_bezier_quad
-PUBLIC :: get_spline_point_catmull_rom
-PUBLIC :: get_spline_point_linear
-PUBLIC :: get_time
-PUBLIC :: get_touch_point_count
-PUBLIC :: get_touch_point_id
-PUBLIC :: get_touch_x
-PUBLIC :: get_touch_y
-PUBLIC :: get_window_handle
-PUBLIC :: get_working_directory
 PUBLIC :: get_world_to_screen2d
+PUBLIC :: get_working_directory
+PUBLIC :: get_window_handle
+PUBLIC :: get_touch_y
+PUBLIC :: get_touch_x
+PUBLIC :: get_touch_point_id
+PUBLIC :: get_touch_point_count
+PUBLIC :: get_time
+PUBLIC :: get_spline_point_linear
+PUBLIC :: get_spline_point_catmull_rom
+PUBLIC :: get_spline_point_bezier_quad
+PUBLIC :: get_spline_point_bezier_cubic
+PUBLIC :: get_spline_point_basis
+PUBLIC :: get_shader_location_attrib
+PUBLIC :: get_shader_location
+PUBLIC :: get_screen_width
+PUBLIC :: get_screen_to_world2d
+PUBLIC :: get_screen_height
+PUBLIC :: get_render_width
+PUBLIC :: get_render_height
+PUBLIC :: get_ray_collision_triangle
+PUBLIC :: get_ray_collision_sphere
+PUBLIC :: get_ray_collision_quad
+PUBLIC :: get_ray_collision_mesh
+PUBLIC :: get_ray_collision_box
+PUBLIC :: get_random_value
+PUBLIC :: get_prev_directory_path
+PUBLIC :: get_pixel_data_size
+PUBLIC :: get_pixel_color
+PUBLIC :: get_music_time_played
+PUBLIC :: get_music_time_length
+PUBLIC :: get_mouse_y
+PUBLIC :: get_mouse_x
+PUBLIC :: get_mouse_wheel_move
+PUBLIC :: get_mouse_ray
+PUBLIC :: get_mouse_position
+PUBLIC :: get_mouse_delta
+PUBLIC :: get_monitor_width
+PUBLIC :: get_monitor_refresh_rate
+PUBLIC :: get_monitor_physical_width
+PUBLIC :: get_monitor_physical_height
+PUBLIC :: get_monitor_name
+PUBLIC :: get_monitor_height
+PUBLIC :: get_monitor_count
+PUBLIC :: get_model_bounding_box
+PUBLIC :: get_mesh_bounding_box
+PUBLIC :: get_master_volume
+PUBLIC :: get_key_pressed
+PUBLIC :: get_image_color
+PUBLIC :: get_image_alpha_border
+PUBLIC :: get_glyph_info
+PUBLIC :: get_glyph_index
+PUBLIC :: get_glyph_atlas_rec
+PUBLIC :: get_gesture_pinch_angle
+PUBLIC :: get_gesture_hold_duration
+PUBLIC :: get_gesture_drag_angle
+PUBLIC :: get_gesture_detected
+PUBLIC :: get_gamepad_name
+PUBLIC :: get_gamepad_button_pressed
+PUBLIC :: get_gamepad_axis_movement
+PUBLIC :: get_gamepad_axis_count
+PUBLIC :: get_frame_time
+PUBLIC :: get_fps
+PUBLIC :: get_font_default
+PUBLIC :: get_file_name_without_ext
+PUBLIC :: get_file_name
+PUBLIC :: get_file_mod_time
+PUBLIC :: get_file_length
+PUBLIC :: get_file_extension
+PUBLIC :: get_directory_path
+PUBLIC :: get_current_monitor
+PUBLIC :: get_color
+PUBLIC :: get_collision_rec
+PUBLIC :: get_codepoint_previous
+PUBLIC :: get_codepoint_next
+PUBLIC :: get_codepoint_count
+PUBLIC :: get_codepoint
+PUBLIC :: get_clipboard_text
+PUBLIC :: get_char_pressed
+PUBLIC :: get_camera_matrix2d
+PUBLIC :: get_camera_matrix
+PUBLIC :: get_application_directory
 
 INTERFACE
 
@@ -152,8 +152,7 @@ INTERFACE
   END FUNCTION get_codepoint_count
 
   ! int GetCodepointNext(const char *text, int *codepointSize)
-  FUNCTION get_codepoint_next(text, codepoint_size) BIND(c, name= &
-                                                         'GetCodepointNext')
+  FUNCTION get_codepoint_next(text, codepoint_size) BIND(c, name= 'GetCodepointNext')
     IMPORT :: C_CHAR, C_INT
     IMPLICIT NONE
     CHARACTER(kind=C_CHAR), INTENT(in) :: text
@@ -243,8 +242,7 @@ INTERFACE
   END FUNCTION get_file_name
 
   ! const char *GetFileNameWithoutExt(const char *filePath)
-  FUNCTION get_file_name_without_ext(file_path) BIND(c, name= &
-                                                     'GetFileNameWithoutExt')
+  FUNCTION get_file_name_without_ext(file_path) BIND(c, name= 'GetFileNameWithoutExt')
     IMPORT :: C_CHAR, C_PTR
     IMPLICIT NONE
     CHARACTER(kind=C_CHAR), INTENT(in) :: file_path
@@ -274,8 +272,7 @@ INTERFACE
   END FUNCTION get_gamepad_axis_count
 
   ! float GetGamepadAxisMovement(int gamepad, int axis)
-  FUNCTION get_gamepad_axis_movement(gamepad, axis) BIND(c, name= &
-                                                     'GetGamepadAxisMovement')
+  FUNCTION get_gamepad_axis_movement(gamepad, axis) BIND(c, name='GetGamepadAxisMovement')
     IMPORT :: C_FLOAT, C_INT
     IMPLICIT NONE
     INTEGER(kind=C_INT), INTENT(in), VALUE :: gamepad
@@ -489,8 +486,7 @@ FUNCTION get_glyph_atlas_rec(font, codepoint) BIND(c, name='GetGlyphAtlasRec')
   END FUNCTION get_monitor_name
 
   ! int GetMonitorPhysicalHeight(int monitor)
-  FUNCTION get_monitor_physical_height(monitor) BIND(c, name= &
-                                                   'GetMonitorPhysicalHeight')
+  FUNCTION get_monitor_physical_height(monitor) BIND(c, name='GetMonitorPhysicalHeight')
     IMPORT :: C_INT
     IMPLICIT NONE
     INTEGER(kind=C_INT), INTENT(in), VALUE :: monitor
@@ -498,8 +494,7 @@ FUNCTION get_glyph_atlas_rec(font, codepoint) BIND(c, name='GetGlyphAtlasRec')
   END FUNCTION get_monitor_physical_height
 
   ! int GetMonitorPhysicalWidth(int monitor)
-  FUNCTION get_monitor_physical_width(monitor) BIND(c, name= &
-                                                    'GetMonitorPhysicalWidth')
+  FUNCTION get_monitor_physical_width(monitor) BIND(c, name= 'GetMonitorPhysicalWidth')
     IMPORT :: C_INT
     IMPLICIT NONE
     INTEGER(kind=C_INT), INTENT(in), VALUE :: monitor
@@ -507,8 +502,7 @@ FUNCTION get_glyph_atlas_rec(font, codepoint) BIND(c, name='GetGlyphAtlasRec')
   END FUNCTION get_monitor_physical_width
 
   ! int GetMonitorRefreshRate(int monitor)
-  FUNCTION get_monitor_refresh_rate(monitor) BIND(c, name= &
-                                                  'GetMonitorRefreshRate')
+  FUNCTION get_monitor_refresh_rate(monitor) BIND(c, name= 'GetMonitorRefreshRate')
     IMPORT :: C_INT
     IMPLICIT NONE
     INTEGER(kind=C_INT), INTENT(in), VALUE :: monitor
@@ -593,8 +587,7 @@ FUNCTION get_glyph_atlas_rec(font, codepoint) BIND(c, name='GetGlyphAtlasRec')
   END FUNCTION get_pixel_color
 
   ! int GetPixelDataSize(int width, int height, int format)
-  FUNCTION get_pixel_data_size(width, height, FORMAT) BIND(c, name= &
-                                                           'GetPixelDataSize')
+  FUNCTION get_pixel_data_size(width, height, FORMAT) BIND(c, name= 'GetPixelDataSize')
     IMPORT :: C_INT
     IMPLICIT NONE
     INTEGER(kind=C_INT), INTENT(in), VALUE :: width
