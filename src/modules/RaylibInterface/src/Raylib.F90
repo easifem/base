@@ -9,5 +9,7 @@
 MODULE Raylib
 USE RaylibTypes
 USE RaylibEnums
+USE RaylibDrawMethods
+USE RaylibGetMethods
 USE RaylibMethods
 END MODULE Raylib

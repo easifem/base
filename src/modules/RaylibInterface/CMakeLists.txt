@@ -21,6 +21,8 @@ IF(USE_RAYLIB)
     ${PROJECT_NAME} PRIVATE
     ${src_path}/RaylibTypes.F90
     ${src_path}/RaylibEnums.F90
+    ${src_path}/RaylibDrawMethods.F90
+    ${src_path}/RaylibGetMethods.F90
     ${src_path}/RaylibMethods.F90
     ${src_path}/Raylib.F90
     ${src_path}/RaylibCamera.F90
