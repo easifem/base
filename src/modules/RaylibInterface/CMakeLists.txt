@@ -27,6 +27,8 @@ IF(USE_RAYLIB)
     ${src_path}/RaylibImageMethods.F90
     ${src_path}/RaylibUnloadMethods.F90
     ${src_path}/RaylibLoadMethods.F90
+    ${src_path}/RaylibIsMethods.F90
+    ${src_path}/RaylibCheckMethods.F90
     ${src_path}/RaylibMethods.F90
     ${src_path}/Raylib.F90
     ${src_path}/RaylibCamera.F90

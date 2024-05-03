@@ -15,5 +15,7 @@ USE RaylibSetMethods
 USE RaylibImageMethods
 USE RaylibUnloadMethods
 USE RaylibLoadMethods
+USE RaylibIsMethods
+USE RaylibCheckMethods
 USE RaylibMethods
 END MODULE Raylib
