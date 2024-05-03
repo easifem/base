@@ -69,25 +69,25 @@ INTERFACE
 
   ! bool IsAudioStreamPlaying(AudioStream stream)
   FUNCTION IsAudioStreamPlaying(stream) BIND(c, name='IsAudioStreamPlaying')
-    IMPORT :: audio_stream_type, C_BOOL
+    IMPORT :: audio_stream_, C_BOOL
     IMPLICIT NONE
-    TYPE(audio_stream_type), INTENT(in), VALUE :: stream
+    TYPE(audio_stream_), INTENT(in), VALUE :: stream
     LOGICAL(kind=C_BOOL) :: IsAudioStreamPlaying
   END FUNCTION IsAudioStreamPlaying
 
   ! bool IsAudioStreamProcessed(AudioStream stream)
 FUNCTION IsAudioStreamProcessed(stream) BIND(c, name='IsAudioStreamProcessed')
-    IMPORT :: audio_stream_type, C_BOOL
+    IMPORT :: audio_stream_, C_BOOL
     IMPLICIT NONE
-    TYPE(audio_stream_type), INTENT(in), VALUE :: stream
+    TYPE(audio_stream_), INTENT(in), VALUE :: stream
     LOGICAL(kind=C_BOOL) :: IsAudioStreamProcessed
   END FUNCTION IsAudioStreamProcessed
 
   ! bool IsAudioStreamReady(AudioStream stream)
   FUNCTION IsAudioStreamReady(stream) BIND(c, name='IsAudioStreamReady')
-    IMPORT :: audio_stream_type, C_BOOL
+    IMPORT :: audio_stream_, C_BOOL
     IMPLICIT NONE
-    TYPE(audio_stream_type), INTENT(in), VALUE :: stream
+    TYPE(audio_stream_), INTENT(in), VALUE :: stream
     LOGICAL(kind=C_BOOL) :: IsAudioStreamReady
   END FUNCTION IsAudioStreamReady
 
@@ -123,9 +123,9 @@ FUNCTION IsAudioStreamProcessed(stream) BIND(c, name='IsAudioStreamProcessed')
 
   ! bool IsFontReady(Font font)
   FUNCTION IsFontReady(font) BIND(c, name='IsFontReady')
-    IMPORT :: C_BOOL, font_type
+    IMPORT :: C_BOOL, font_
     IMPLICIT NONE
-    TYPE(font_type), INTENT(in), VALUE :: font
+    TYPE(font_), INTENT(in), VALUE :: font
     LOGICAL(kind=C_BOOL) :: IsFontReady
   END FUNCTION IsFontReady
 
@@ -183,9 +183,9 @@ FUNCTION IsAudioStreamProcessed(stream) BIND(c, name='IsAudioStreamProcessed')
 
   ! bool IsImageReady(Image image)
   FUNCTION IsImageReady(image) BIND(c, name='IsImageReady')
-    IMPORT :: C_BOOL, image_type
+    IMPORT :: C_BOOL, image_
     IMPLICIT NONE
-    TYPE(image_type), INTENT(in), VALUE :: image
+    TYPE(image_), INTENT(in), VALUE :: image
     LOGICAL(kind=C_BOOL) :: IsImageReady
   END FUNCTION IsImageReady
 
@@ -231,26 +231,26 @@ FUNCTION IsAudioStreamProcessed(stream) BIND(c, name='IsAudioStreamProcessed')
 
   ! bool IsMaterialReady(Material material)
   FUNCTION IsMaterialReady(material) BIND(c, name='IsMaterialReady')
-    IMPORT :: C_BOOL, material_type
+    IMPORT :: C_BOOL, material_
     IMPLICIT NONE
-    TYPE(material_type), INTENT(in), VALUE :: material
+    TYPE(material_), INTENT(in), VALUE :: material
     LOGICAL(kind=C_BOOL) :: IsMaterialReady
   END FUNCTION IsMaterialReady
 
   ! bool IsModelAnimationValid(Model model, ModelAnimation anim)
         function IsModelAnimationValid(model, anim) bind(c, name='IsModelAnimationValid')
-    IMPORT :: C_BOOL, model_animation_type, model_type
+    IMPORT :: C_BOOL, model_animation_, model_
     IMPLICIT NONE
-    TYPE(model_type), INTENT(in), VALUE :: model
-    TYPE(model_animation_type), INTENT(in), VALUE :: anim
+    TYPE(model_), INTENT(in), VALUE :: model
+    TYPE(model_animation_), INTENT(in), VALUE :: anim
     LOGICAL(kind=C_BOOL) :: IsModelAnimationValid
   END FUNCTION IsModelAnimationValid
 
   ! bool IsModelReady(Model model)
   FUNCTION IsModelReady(model) BIND(c, name='IsModelReady')
-    IMPORT :: C_BOOL, model_type
+    IMPORT :: C_BOOL, model_
     IMPLICIT NONE
-    TYPE(model_type), INTENT(in), VALUE :: model
+    TYPE(model_), INTENT(in), VALUE :: model
     LOGICAL(kind=C_BOOL) :: IsModelReady
   END FUNCTION IsModelReady
 
@@ -288,17 +288,17 @@ FUNCTION IsAudioStreamProcessed(stream) BIND(c, name='IsAudioStreamProcessed')
 
   ! bool IsMusicReady(Music music)
   FUNCTION IsMusicReady(music) BIND(c, name='IsMusicReady')
-    IMPORT :: C_BOOL, music_type
+    IMPORT :: C_BOOL, music_
     IMPLICIT NONE
-    TYPE(music_type), INTENT(in), VALUE :: music
+    TYPE(music_), INTENT(in), VALUE :: music
     LOGICAL(kind=C_BOOL) :: IsMusicReady
   END FUNCTION IsMusicReady
 
   ! bool IsMusicStreamPlaying(Music music)
   FUNCTION IsMusicStreamPlaying(music) BIND(c, name='IsMusicStreamPlaying')
-    IMPORT :: C_BOOL, music_type
+    IMPORT :: C_BOOL, music_
     IMPLICIT NONE
-    TYPE(music_type), INTENT(in), VALUE :: music
+    TYPE(music_), INTENT(in), VALUE :: music
     LOGICAL(kind=C_BOOL) :: IsMusicStreamPlaying
   END FUNCTION IsMusicStreamPlaying
 
@@ -312,49 +312,49 @@ FUNCTION IsAudioStreamProcessed(stream) BIND(c, name='IsAudioStreamProcessed')
 
   ! bool IsRenderTextureReady(RenderTexture2D target)
   FUNCTION IsRenderTextureReady(TARGET) BIND(c, name='IsRenderTextureReady')
-    IMPORT :: C_BOOL, render_texture2d_type
+    IMPORT :: C_BOOL, render_texture2d_
     IMPLICIT NONE
-    TYPE(render_texture2d_type), INTENT(in), VALUE :: TARGET
+    TYPE(render_texture2d_), INTENT(in), VALUE :: TARGET
     LOGICAL(kind=C_BOOL) :: IsRenderTextureReady
   END FUNCTION IsRenderTextureReady
 
   ! bool IsShaderReady(Shader shader)
   FUNCTION IsShaderReady(shader) BIND(c, name='IsShaderReady')
-    IMPORT :: C_BOOL, shader_type
+    IMPORT :: C_BOOL, shader_
     IMPLICIT NONE
-    TYPE(shader_type), INTENT(in), VALUE :: shader
+    TYPE(shader_), INTENT(in), VALUE :: shader
     LOGICAL(kind=C_BOOL) :: IsShaderReady
   END FUNCTION IsShaderReady
 
   ! bool IsSoundPlaying(Sound sound)
   FUNCTION IsSoundPlaying(sound) BIND(c, name='IsSoundPlaying')
-    IMPORT :: C_BOOL, sound_type
+    IMPORT :: C_BOOL, sound_
     IMPLICIT NONE
-    TYPE(sound_type), INTENT(in), VALUE :: sound
+    TYPE(sound_), INTENT(in), VALUE :: sound
     LOGICAL(kind=C_BOOL) :: IsSoundPlaying
   END FUNCTION IsSoundPlaying
 
   ! bool IsSoundReady(Sound sound)
   FUNCTION IsSoundReady(sound) BIND(c, name='IsSoundReady')
-    IMPORT :: C_BOOL, sound_type
+    IMPORT :: C_BOOL, sound_
     IMPLICIT NONE
-    TYPE(sound_type), INTENT(in), VALUE :: sound
+    TYPE(sound_), INTENT(in), VALUE :: sound
     LOGICAL(kind=C_BOOL) :: IsSoundReady
   END FUNCTION IsSoundReady
 
   ! bool IsTextureReady(Texture2D texture)
   FUNCTION IsTextureReady(texture) BIND(c, name='IsTextureReady')
-    IMPORT :: C_BOOL, texture2d_type
+    IMPORT :: C_BOOL, texture2d_
     IMPLICIT NONE
-    TYPE(texture2d_type), INTENT(in), VALUE :: texture
+    TYPE(texture2d_), INTENT(in), VALUE :: texture
     LOGICAL(kind=C_BOOL) :: IsTextureReady
   END FUNCTION IsTextureReady
 
   ! bool IsWaveReady(Wave wave)
   FUNCTION IsWaveReady(wave) BIND(c, name='IsWaveReady')
-    IMPORT :: C_BOOL, wave_type
+    IMPORT :: C_BOOL, wave_
     IMPLICIT NONE
-    TYPE(wave_type), INTENT(in), VALUE :: wave
+    TYPE(wave_), INTENT(in), VALUE :: wave
     LOGICAL(kind=C_BOOL) :: IsWaveReady
   END FUNCTION IsWaveReady
 

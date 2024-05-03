@@ -80,25 +80,25 @@ INTERFACE
 
   ! void SetAudioStreamPan(AudioStream stream, float pan)
   SUBROUTINE SetAudioStreamPan(stream, pan) BIND(c, name='SetAudioStreamPan')
-    IMPORT :: audio_stream_type, C_FLOAT
+    IMPORT :: audio_stream_, C_FLOAT
     IMPLICIT NONE
-    TYPE(audio_stream_type), INTENT(in), VALUE :: stream
+    TYPE(audio_stream_), INTENT(in), VALUE :: stream
     REAL(kind=C_FLOAT), INTENT(in), VALUE :: pan
   END SUBROUTINE SetAudioStreamPan
 
   ! void SetAudioStreamPitch(AudioStream stream, float pitch)
         subroutine SetAudioStreamPitch(stream, pitch) bind(c, name='SetAudioStreamPitch')
-    IMPORT :: audio_stream_type, C_FLOAT
+    IMPORT :: audio_stream_, C_FLOAT
     IMPLICIT NONE
-    TYPE(audio_stream_type), INTENT(in), VALUE :: stream
+    TYPE(audio_stream_), INTENT(in), VALUE :: stream
     REAL(kind=C_FLOAT), INTENT(in), VALUE :: pitch
   END SUBROUTINE SetAudioStreamPitch
 
   ! void SetAudioStreamVolume(AudioStream stream, float volume)
         subroutine SetAudioStreamVolume(stream, volume) bind(c, name='SetAudioStreamVolume')
-    IMPORT :: audio_stream_type, C_FLOAT
+    IMPORT :: audio_stream_, C_FLOAT
     IMPLICIT NONE
-    TYPE(audio_stream_type), INTENT(in), VALUE :: stream
+    TYPE(audio_stream_), INTENT(in), VALUE :: stream
     REAL(kind=C_FLOAT), INTENT(in), VALUE :: volume
   END SUBROUTINE SetAudioStreamVolume
 
@@ -111,9 +111,9 @@ INTERFACE
 
   ! void SetCameraMode(Camera camera, int mode)
   SUBROUTINE SetCameraMode(camera, mode) BIND(c, name='SetCameraMode')
-    IMPORT :: C_INT, camera3d_type
+    IMPORT :: C_INT, camera3d_
     IMPLICIT NONE
-    TYPE(camera3d_type), INTENT(in), VALUE :: camera
+    TYPE(camera3d_), INTENT(in), VALUE :: camera
     INTEGER(kind=C_INT), INTENT(in), VALUE :: mode
   END SUBROUTINE SetCameraMode
 
@@ -202,19 +202,19 @@ INTERFACE
   END SUBROUTINE SetMasterVolume
 
   ! void SetMaterialTexture(Material *material, int mapType, Texture2D texture)
-        subroutine SetMaterialTexture(material, map_type, texture) bind(c, name='SetMaterialTexture')
-    IMPORT :: C_INT, material_type, texture2d_type
+        subroutine SetMaterialTexture(material, map_, texture) bind(c, name='SetMaterialTexture')
+    IMPORT :: C_INT, material_, texture2d_
     IMPLICIT NONE
-    TYPE(material_type), INTENT(inout) :: material
-    INTEGER(kind=C_INT), INTENT(in), VALUE :: map_type
-    TYPE(texture2d_type), INTENT(in), VALUE :: texture
+    TYPE(material_), INTENT(inout) :: material
+    INTEGER(kind=C_INT), INTENT(in), VALUE :: map_
+    TYPE(texture2d_), INTENT(in), VALUE :: texture
   END SUBROUTINE SetMaterialTexture
 
   ! void SetModelMeshMaterial(Model *model, int meshId, int materialId)
         subroutine SetModelMeshMaterial(model, mesh_id, material_id) bind(c, name='SetModelMeshMaterial')
-    IMPORT :: C_INT, model_type
+    IMPORT :: C_INT, model_
     IMPLICIT NONE
-    TYPE(model_type), INTENT(inout) :: model
+    TYPE(model_), INTENT(inout) :: model
     INTEGER(kind=C_INT), INTENT(in), VALUE :: mesh_id
     INTEGER(kind=C_INT), INTENT(in), VALUE :: material_id
   END SUBROUTINE SetModelMeshMaterial
@@ -252,34 +252,34 @@ INTERFACE
 
   ! void SetMusicPan(Music music, float pan)
   SUBROUTINE SetMusicPan(music, pan) BIND(c, name='SetMusicPan')
-    IMPORT :: C_FLOAT, music_type
+    IMPORT :: C_FLOAT, music_
     IMPLICIT NONE
-    TYPE(music_type), INTENT(in), VALUE :: music
+    TYPE(music_), INTENT(in), VALUE :: music
     REAL(kind=C_FLOAT), INTENT(in), VALUE :: pan
   END SUBROUTINE SetMusicPan
 
   ! void SetMusicPitch(Music music, float pitch)
   SUBROUTINE SetMusicPitch(music, pitch) BIND(c, name='SetMusicPitch')
-    IMPORT :: C_FLOAT, music_type
+    IMPORT :: C_FLOAT, music_
     IMPLICIT NONE
-    TYPE(music_type), INTENT(in), VALUE :: music
+    TYPE(music_), INTENT(in), VALUE :: music
     REAL(kind=C_FLOAT), INTENT(in), VALUE :: pitch
   END SUBROUTINE SetMusicPitch
 
   ! void SetMusicVolume(Music music, float volume)
   SUBROUTINE SetMusicVolume(music, volume) BIND(c, name='SetMusicVolume')
-    IMPORT :: C_FLOAT, music_type
+    IMPORT :: C_FLOAT, music_
     IMPLICIT NONE
-    TYPE(music_type), INTENT(in), VALUE :: music
+    TYPE(music_), INTENT(in), VALUE :: music
     REAL(kind=C_FLOAT), INTENT(in), VALUE :: volume
   END SUBROUTINE SetMusicVolume
 
   ! void SetPixelColor(void *dstPtr, Color color, int format)
 SUBROUTINE SetPixelColor(dst_ptr, color, FORMAT) BIND(c, name='SetPixelColor')
-    IMPORT :: C_INT, C_PTR, color_type
+    IMPORT :: C_INT, C_PTR, color_
     IMPLICIT NONE
     TYPE(C_PTR), INTENT(in), VALUE :: dst_ptr
-    TYPE(color_type), INTENT(in), VALUE :: color
+    TYPE(color_), INTENT(in), VALUE :: color
     INTEGER(kind=C_INT), INTENT(in), VALUE :: FORMAT
   END SUBROUTINE SetPixelColor
 
@@ -305,73 +305,73 @@ SUBROUTINE SetPixelColor(dst_ptr, color, FORMAT) BIND(c, name='SetPixelColor')
   END SUBROUTINE SetSaveFileTextCallback
 
   ! void SetShaderValue(Shader shader, int locIndex, const void *value, int uniformType)
-        subroutine SetShaderValue(shader, loc_index, value, uniform_type) bind(c, name='SetShaderValue')
-    IMPORT :: C_INT, C_PTR, shader_type
+        subroutine SetShaderValue(shader, loc_index, value, uniform_) bind(c, name='SetShaderValue')
+    IMPORT :: C_INT, C_PTR, shader_
     IMPLICIT NONE
-    TYPE(shader_type), INTENT(in), VALUE :: shader
+    TYPE(shader_), INTENT(in), VALUE :: shader
     INTEGER(kind=C_INT), INTENT(in), VALUE :: loc_index
     TYPE(C_PTR), INTENT(in), VALUE :: VALUE
-    INTEGER(kind=C_INT), INTENT(in), VALUE :: uniform_type
+    INTEGER(kind=C_INT), INTENT(in), VALUE :: uniform_
   END SUBROUTINE SetShaderValue
 
   ! void SetShaderValueMatrix(Shader shader, int locIndex, Matrix mat)
         subroutine SetShaderValueMatrix(shader, loc_index, mat) bind(c, name='SetShaderValueMatrix')
-    IMPORT :: C_INT, matrix_type, shader_type
+    IMPORT :: C_INT, matrix_, shader_
     IMPLICIT NONE
-    TYPE(shader_type), INTENT(in), VALUE :: shader
+    TYPE(shader_), INTENT(in), VALUE :: shader
     INTEGER(kind=C_INT), INTENT(in), VALUE :: loc_index
-    TYPE(matrix_type), INTENT(in), VALUE :: mat
+    TYPE(matrix_), INTENT(in), VALUE :: mat
   END SUBROUTINE SetShaderValueMatrix
 
   ! void SetShaderValueTexture(Shader shader, int locIndex, Texture2D texture)
         subroutine SetShaderValueTexture(shader, loc_index, texture) bind(c, name='SetShaderValueTexture')
-    IMPORT :: C_INT, shader_type, texture2d_type
+    IMPORT :: C_INT, shader_, texture2d_
     IMPLICIT NONE
-    TYPE(shader_type), INTENT(in), VALUE :: shader
+    TYPE(shader_), INTENT(in), VALUE :: shader
     INTEGER(kind=C_INT), INTENT(in), VALUE :: loc_index
-    TYPE(texture2d_type), INTENT(in), VALUE :: texture
+    TYPE(texture2d_), INTENT(in), VALUE :: texture
   END SUBROUTINE SetShaderValueTexture
 
   ! void SetShaderValueV(Shader shader, int locIndex, const void *value, int uniformType, int count)
-        subroutine SetShaderValueV(shader, loc_index, value, uniform_type, count) bind(c, name='SetShaderValueV')
-    IMPORT :: C_INT, C_PTR, shader_type
+        subroutine SetShaderValueV(shader, loc_index, value, uniform_, count) bind(c, name='SetShaderValueV')
+    IMPORT :: C_INT, C_PTR, shader_
     IMPLICIT NONE
-    TYPE(shader_type), INTENT(in), VALUE :: shader
+    TYPE(shader_), INTENT(in), VALUE :: shader
     INTEGER(kind=C_INT), INTENT(in), VALUE :: loc_index
     TYPE(C_PTR), INTENT(in), VALUE :: VALUE
-    INTEGER(kind=C_INT), INTENT(in), VALUE :: uniform_type
+    INTEGER(kind=C_INT), INTENT(in), VALUE :: uniform_
     INTEGER(kind=C_INT), INTENT(in), VALUE :: count
   END SUBROUTINE SetShaderValueV
 
   ! void SetShapesTexture(Texture2D texture, Rectangle source)
  SUBROUTINE SetShapesTexture(texture, source) BIND(c, name='SetShapesTexture')
-    IMPORT :: rectangle_type, texture2d_type
+    IMPORT :: rectangle_, texture2d_
     IMPLICIT NONE
-    TYPE(texture2d_type), INTENT(in), VALUE :: texture
-    TYPE(rectangle_type), INTENT(in), VALUE :: source
+    TYPE(texture2d_), INTENT(in), VALUE :: texture
+    TYPE(rectangle_), INTENT(in), VALUE :: source
   END SUBROUTINE SetShapesTexture
 
   ! void SetSoundPan(Sound sound, float pan)
   SUBROUTINE SetSoundPan(sound, pan) BIND(c, name='SetSoundPan')
-    IMPORT :: C_FLOAT, sound_type
+    IMPORT :: C_FLOAT, sound_
     IMPLICIT NONE
-    TYPE(sound_type), INTENT(in), VALUE :: sound
+    TYPE(sound_), INTENT(in), VALUE :: sound
     REAL(kind=C_FLOAT), INTENT(in), VALUE :: pan
   END SUBROUTINE SetSoundPan
 
   ! void SetSoundPitch(Sound sound, float pitch)
   SUBROUTINE SetSoundPitch(sound, pitch) BIND(c, name='SetSoundPitch')
-    IMPORT :: C_FLOAT, sound_type
+    IMPORT :: C_FLOAT, sound_
     IMPLICIT NONE
-    TYPE(sound_type), INTENT(in), VALUE :: sound
+    TYPE(sound_), INTENT(in), VALUE :: sound
     REAL(kind=C_FLOAT), INTENT(in), VALUE :: pitch
   END SUBROUTINE SetSoundPitch
 
   ! void SetSoundVolume(Sound sound, float volume)
   SUBROUTINE SetSoundVolume(sound, volume) BIND(c, name='SetSoundVolume')
-    IMPORT :: C_FLOAT, sound_type
+    IMPORT :: C_FLOAT, sound_
     IMPLICIT NONE
-    TYPE(sound_type), INTENT(in), VALUE :: sound
+    TYPE(sound_), INTENT(in), VALUE :: sound
     REAL(kind=C_FLOAT), INTENT(in), VALUE :: volume
   END SUBROUTINE SetSoundVolume
 
@@ -391,17 +391,17 @@ SUBROUTINE SetPixelColor(dst_ptr, color, FORMAT) BIND(c, name='SetPixelColor')
 
   ! void SetTextureFilter(Texture2D texture, int filter)
  SUBROUTINE SetTextureFilter(texture, filter) BIND(c, name='SetTextureFilter')
-    IMPORT :: C_INT, texture2d_type
+    IMPORT :: C_INT, texture2d_
     IMPLICIT NONE
-    TYPE(texture2d_type), INTENT(in), VALUE :: texture
+    TYPE(texture2d_), INTENT(in), VALUE :: texture
     INTEGER(kind=C_INT), INTENT(in), VALUE :: filter
   END SUBROUTINE SetTextureFilter
 
   ! void SetTextureWrap(Texture2D texture, int wrap)
   SUBROUTINE SetTextureWrap(texture, wrap) BIND(c, name='SetTextureWrap')
-    IMPORT :: C_INT, texture2d_type
+    IMPORT :: C_INT, texture2d_
     IMPLICIT NONE
-    TYPE(texture2d_type), INTENT(in), VALUE :: texture
+    TYPE(texture2d_), INTENT(in), VALUE :: texture
     INTEGER(kind=C_INT), INTENT(in), VALUE :: wrap
   END SUBROUTINE SetTextureWrap
 
@@ -425,16 +425,16 @@ SUBROUTINE SetPixelColor(dst_ptr, color, FORMAT) BIND(c, name='SetPixelColor')
 
   ! void SetWindowIcon(Image image)
   SUBROUTINE SetWindowIcon(image) BIND(c, name='SetWindowIcon')
-    IMPORT :: image_type
+    IMPORT :: image_
     IMPLICIT NONE
-    TYPE(image_type), INTENT(in), VALUE :: image
+    TYPE(image_), INTENT(in), VALUE :: image
   END SUBROUTINE SetWindowIcon
 
   ! void SetWindowIcons(Image *images, int count)
   SUBROUTINE SetWindowIcons(images, count) BIND(c, name='SetWindowIcons')
-    IMPORT :: C_INT, image_type
+    IMPORT :: C_INT, image_
     IMPLICIT NONE
-    TYPE(image_type), INTENT(inout) :: images
+    TYPE(image_), INTENT(inout) :: images
     INTEGER(kind=C_INT), INTENT(in), VALUE :: count
   END SUBROUTINE SetWindowIcons
 

@@ -200,9 +200,9 @@ INTERFACE
 
   ! void AttachAudioStreamProcessor(AudioStream stream, AudioCallback processor)
         subroutine AttachAudioStreamProcessor(stream, processor) bind(c, name='AttachAudioStreamProcessor')
-    IMPORT :: audio_stream_type, C_FUNPTR
+    IMPORT :: audio_stream_, C_FUNPTR
     IMPLICIT NONE
-    TYPE(audio_stream_type), INTENT(in), VALUE :: stream
+    TYPE(audio_stream_), INTENT(in), VALUE :: stream
     TYPE(C_FUNPTR), INTENT(in), VALUE :: processor
   END SUBROUTINE AttachAudioStreamProcessor
 
@@ -219,16 +219,16 @@ INTERFACE
 
   ! void BeginMode2D(Camera2D camera)
   SUBROUTINE BeginMode2D(camera) BIND(c, name='BeginMode2D')
-    IMPORT :: camera2d_type
+    IMPORT :: camera2d_
     IMPLICIT NONE
-    TYPE(camera2d_type), INTENT(in), VALUE :: camera
+    TYPE(camera2d_), INTENT(in), VALUE :: camera
   END SUBROUTINE BeginMode2D
 
   ! void BeginMode3D(Camera3D camera)
   SUBROUTINE BeginMode3D(camera) BIND(c, name='BeginMode3D')
-    IMPORT :: camera3d_type
+    IMPORT :: camera3d_
     IMPLICIT NONE
-    TYPE(camera3d_type), INTENT(in), VALUE :: camera
+    TYPE(camera3d_), INTENT(in), VALUE :: camera
   END SUBROUTINE BeginMode3D
 
   ! void BeginScissorMode(int x, int y, int width, int height)
@@ -243,23 +243,23 @@ INTERFACE
 
   ! void BeginShaderMode(Shader shader)
   SUBROUTINE BeginShaderMode(shader) BIND(c, name='BeginShaderMode')
-    IMPORT :: shader_type
+    IMPORT :: shader_
     IMPLICIT NONE
-    TYPE(shader_type), INTENT(in), VALUE :: shader
+    TYPE(shader_), INTENT(in), VALUE :: shader
   END SUBROUTINE BeginShaderMode
 
   ! void BeginTextureMode(RenderTexture2D target)
   SUBROUTINE BeginTextureMode(TARGET) BIND(c, name='BeginTextureMode')
-    IMPORT :: render_texture2d_type
+    IMPORT :: render_texture2d_
     IMPLICIT NONE
-    TYPE(render_texture2d_type), INTENT(in), VALUE :: TARGET
+    TYPE(render_texture2d_), INTENT(in), VALUE :: TARGET
   END SUBROUTINE BeginTextureMode
 
   ! void BeginVrStereoMode(VrStereoConfig config)
   SUBROUTINE BeginVrStereoMode(config) BIND(c, name='BeginVrStereoMode')
-    IMPORT :: vr_stereo_config_type
+    IMPORT :: vr_stereo_config_
     IMPLICIT NONE
-    TYPE(vr_stereo_config_type), INTENT(in), VALUE :: config
+    TYPE(vr_stereo_config_), INTENT(in), VALUE :: config
   END SUBROUTINE BeginVrStereoMode
 
   ! bool ChangeDirectory(const char *dir)
@@ -272,9 +272,9 @@ INTERFACE
 
   ! void ClearBackground(Color color)
   SUBROUTINE ClearBackground(color) BIND(c, name='ClearBackground')
-    IMPORT :: color_type
+    IMPORT :: color_
     IMPLICIT NONE
-    TYPE(color_type), INTENT(in), VALUE :: color
+    TYPE(color_), INTENT(in), VALUE :: color
   END SUBROUTINE ClearBackground
 
   ! void ClearWindowState(unsigned int flags)
@@ -303,73 +303,73 @@ FUNCTION CodepointToUTF8(codepoint, utf8_size) BIND(c, name='CodepointToUTF8')
 
   ! Color ColorAlpha(Color color, float alpha)
   FUNCTION ColorAlpha(color, alpha) BIND(c, name='ColorAlpha')
-    IMPORT :: C_FLOAT, color_type
+    IMPORT :: C_FLOAT, color_
     IMPLICIT NONE
-    TYPE(color_type), INTENT(in), VALUE :: color
+    TYPE(color_), INTENT(in), VALUE :: color
     REAL(kind=C_FLOAT), INTENT(in), VALUE :: alpha
-    TYPE(color_type) :: ColorAlpha
+    TYPE(color_) :: ColorAlpha
   END FUNCTION ColorAlpha
 
   ! Color ColorAlphaBlend(Color dst, Color src, Color tint)
   FUNCTION ColorAlphaBlend(dst, src, tint) BIND(c, name='ColorAlphaBlend')
-    IMPORT :: color_type
+    IMPORT :: color_
     IMPLICIT NONE
-    TYPE(color_type), INTENT(in), VALUE :: dst
-    TYPE(color_type), INTENT(in), VALUE :: src
-    TYPE(color_type), INTENT(in), VALUE :: tint
-    TYPE(color_type) :: ColorAlphaBlend
+    TYPE(color_), INTENT(in), VALUE :: dst
+    TYPE(color_), INTENT(in), VALUE :: src
+    TYPE(color_), INTENT(in), VALUE :: tint
+    TYPE(color_) :: ColorAlphaBlend
   END FUNCTION ColorAlphaBlend
 
   ! Color ColorBrightness(Color color, float factor)
   FUNCTION ColorBrightness(color, factor) BIND(c, name='ColorBrightness')
-    IMPORT :: C_FLOAT, color_type
+    IMPORT :: C_FLOAT, color_
     IMPLICIT NONE
-    TYPE(color_type), INTENT(in), VALUE :: color
+    TYPE(color_), INTENT(in), VALUE :: color
     REAL(kind=C_FLOAT), INTENT(in), VALUE :: factor
-    TYPE(color_type) :: ColorBrightness
+    TYPE(color_) :: ColorBrightness
   END FUNCTION ColorBrightness
 
   ! Color ColorContrast(Color color, float contrast)
   FUNCTION ColorContrast(color, contrast) BIND(c, name='ColorContrast')
-    IMPORT :: C_FLOAT, color_type
+    IMPORT :: C_FLOAT, color_
     IMPLICIT NONE
-    TYPE(color_type), INTENT(in), VALUE :: color
+    TYPE(color_), INTENT(in), VALUE :: color
     REAL(kind=C_FLOAT), INTENT(in), VALUE :: contrast
-    TYPE(color_type) :: ColorContrast
+    TYPE(color_) :: ColorContrast
   END FUNCTION ColorContrast
 
   ! Color ColorFromHSV(float hue, float saturation, float value)
   FUNCTION ColorFromHSV(hue, saturation, VALUE) BIND(c, name='ColorFromHSV')
-    IMPORT :: C_FLOAT, color_type
+    IMPORT :: C_FLOAT, color_
     IMPLICIT NONE
     REAL(kind=C_FLOAT), INTENT(in), VALUE :: hue
     REAL(kind=C_FLOAT), INTENT(in), VALUE :: saturation
     REAL(kind=C_FLOAT), INTENT(in), VALUE :: VALUE
-    TYPE(color_type) :: ColorFromHSV
+    TYPE(color_) :: ColorFromHSV
   END FUNCTION ColorFromHSV
 
   ! Color ColorFromNormalized(Vector4 normalized)
   FUNCTION ColorFromNormalized(normalized) BIND(c, name='ColorFromNormalized')
-    IMPORT :: color_type, vector4_type
+    IMPORT :: color_, vector4_
     IMPLICIT NONE
-    TYPE(vector4_type), INTENT(in), VALUE :: normalized
-    TYPE(color_type) :: ColorFromNormalized
+    TYPE(vector4_), INTENT(in), VALUE :: normalized
+    TYPE(color_) :: ColorFromNormalized
   END FUNCTION ColorFromNormalized
 
   ! Color ColorTint(Color color, Color tint)
   FUNCTION ColorTint(color, tint) BIND(c, name='ColorTint')
-    IMPORT :: color_type
+    IMPORT :: color_
     IMPLICIT NONE
-    TYPE(color_type), INTENT(in), VALUE :: color
-    TYPE(color_type), INTENT(in), VALUE :: tint
-    TYPE(color_type) :: ColorTint
+    TYPE(color_), INTENT(in), VALUE :: color
+    TYPE(color_), INTENT(in), VALUE :: tint
+    TYPE(color_) :: ColorTint
   END FUNCTION ColorTint
 
   ! int ColorToInt(Color color)
   FUNCTION ColorToInt(color) BIND(c, name='ColorToInt')
-    IMPORT :: C_INT, color_type
+    IMPORT :: C_INT, color_
     IMPLICIT NONE
-    TYPE(color_type), INTENT(in), VALUE :: color
+    TYPE(color_), INTENT(in), VALUE :: color
     INTEGER(kind=C_INT) :: ColorToInt
   END FUNCTION ColorToInt
 
@@ -411,9 +411,9 @@ FUNCTION CodepointToUTF8(codepoint, utf8_size) BIND(c, name='CodepointToUTF8')
 
   ! void DetachAudioStreamProcessor(AudioStream stream, AudioCallback processor)
         subroutine DetachAudioStreamProcessor(stream, processor) bind(c, name='DetachAudioStreamProcessor')
-    IMPORT :: audio_stream_type, C_FUNPTR
+    IMPORT :: audio_stream_, C_FUNPTR
     IMPLICIT NONE
-    TYPE(audio_stream_type), INTENT(in), VALUE :: stream
+    TYPE(audio_stream_), INTENT(in), VALUE :: stream
     TYPE(C_FUNPTR), INTENT(in), VALUE :: processor
   END SUBROUTINE DetachAudioStreamProcessor
 
@@ -495,75 +495,75 @@ FUNCTION CodepointToUTF8(codepoint, utf8_size) BIND(c, name='CodepointToUTF8')
 
   ! bool ExportFontAsCode(Font font, const char *fileName)
   FUNCTION ExportFontAsCode(font, file_name) BIND(c, name='ExportFontAsCode')
-    IMPORT :: C_BOOL, C_CHAR, font_type
+    IMPORT :: C_BOOL, C_CHAR, font_
     IMPLICIT NONE
-    TYPE(font_type), INTENT(in), VALUE :: font
+    TYPE(font_), INTENT(in), VALUE :: font
     CHARACTER(kind=C_CHAR), INTENT(in) :: file_name
     LOGICAL(kind=C_BOOL) :: ExportFontAsCode
   END FUNCTION ExportFontAsCode
 
   ! bool ExportImage(Image image, const char *fileName)
   FUNCTION ExportImage(image, file_name) BIND(c, name='ExportImage')
-    IMPORT :: C_BOOL, C_CHAR, image_type
+    IMPORT :: C_BOOL, C_CHAR, image_
     IMPLICIT NONE
-    TYPE(image_type), INTENT(in), VALUE :: image
+    TYPE(image_), INTENT(in), VALUE :: image
     CHARACTER(kind=C_CHAR), INTENT(in) :: file_name
     LOGICAL(kind=C_BOOL) :: ExportImage
   END FUNCTION ExportImage
 
   ! bool ExportImageAsCode(Image image, const char *fileName)
 FUNCTION ExportImageAsCode(image, file_name) BIND(c, name='ExportImageAsCode')
-    IMPORT :: C_BOOL, C_CHAR, image_type
+    IMPORT :: C_BOOL, C_CHAR, image_
     IMPLICIT NONE
-    TYPE(image_type), INTENT(in), VALUE :: image
+    TYPE(image_), INTENT(in), VALUE :: image
     CHARACTER(kind=C_CHAR), INTENT(in) :: file_name
     LOGICAL(kind=C_BOOL) :: ExportImageAsCode
   END FUNCTION ExportImageAsCode
 
   ! unsigned char *ExportImageToMemory(Image image, const char *fileType, int *fileSize)
-        function ExportImageToMemory(image, file_type, file_size) bind(c, name='ExportImageToMemory')
-    IMPORT :: C_CHAR, C_INT, C_PTR, image_type
+        function ExportImageToMemory(image, file_, file_size) bind(c, name='ExportImageToMemory')
+    IMPORT :: C_CHAR, C_INT, C_PTR, image_
     IMPLICIT NONE
-    TYPE(image_type), INTENT(in), VALUE :: image
-    CHARACTER(kind=C_CHAR), INTENT(in) :: file_type
+    TYPE(image_), INTENT(in), VALUE :: image
+    CHARACTER(kind=C_CHAR), INTENT(in) :: file_
     INTEGER(kind=C_INT), INTENT(out) :: file_size
     TYPE(C_PTR) :: ExportImageToMemory
   END FUNCTION ExportImageToMemory
 
   ! bool ExportMesh(Mesh mesh, const char *fileName)
   FUNCTION ExportMesh(mesh, file_name) BIND(c, name='ExportMesh')
-    IMPORT :: C_BOOL, C_CHAR, mesh_type
+    IMPORT :: C_BOOL, C_CHAR, mesh_
     IMPLICIT NONE
-    TYPE(mesh_type), INTENT(in), VALUE :: mesh
+    TYPE(mesh_), INTENT(in), VALUE :: mesh
     CHARACTER(kind=C_CHAR), INTENT(in) :: file_name
     LOGICAL(kind=C_BOOL) :: ExportMesh
   END FUNCTION ExportMesh
 
   ! bool ExportWave(Wave wave, const char *fileName)
   FUNCTION ExportWave(wave, file_name) BIND(c, name='ExportWave')
-    IMPORT :: C_BOOL, C_CHAR, wave_type
+    IMPORT :: C_BOOL, C_CHAR, wave_
     IMPLICIT NONE
-    TYPE(wave_type), INTENT(in), VALUE :: wave
+    TYPE(wave_), INTENT(in), VALUE :: wave
     CHARACTER(kind=C_CHAR), INTENT(in) :: file_name
     LOGICAL(kind=C_BOOL) :: ExportWave
   END FUNCTION ExportWave
 
   ! bool ExportWaveAsCode(Wave wave, const char *fileName)
   FUNCTION ExportWaveAsCode(wave, file_name) BIND(c, name='ExportWaveAsCode')
-    IMPORT :: C_BOOL, C_CHAR, wave_type
+    IMPORT :: C_BOOL, C_CHAR, wave_
     IMPLICIT NONE
-    TYPE(wave_type), INTENT(in), VALUE :: wave
+    TYPE(wave_), INTENT(in), VALUE :: wave
     CHARACTER(kind=C_CHAR), INTENT(in) :: file_name
     LOGICAL(kind=C_BOOL) :: ExportWaveAsCode
   END FUNCTION ExportWaveAsCode
 
   ! Color Fade(Color color, float alpha)
   FUNCTION fade(color, alpha) BIND(c, name='Fade')
-    IMPORT :: C_FLOAT, color_type
+    IMPORT :: C_FLOAT, color_
     IMPLICIT NONE
-    TYPE(color_type), INTENT(in), VALUE :: color
+    TYPE(color_), INTENT(in), VALUE :: color
     REAL(kind=C_FLOAT), INTENT(in), VALUE :: alpha
-    TYPE(color_type) :: fade
+    TYPE(color_) :: fade
   END FUNCTION fade
 
   ! bool FileExists(const char *fileName)
@@ -576,241 +576,241 @@ FUNCTION ExportImageAsCode(image, file_name) BIND(c, name='ExportImageAsCode')
 
   ! Image GenImageCellular(int width, int height, int tileSize)
         function gen_image_cellular(width, height, tile_size) bind(c, name='GenImageCellular')
-    IMPORT :: C_INT, image_type
+    IMPORT :: C_INT, image_
     IMPLICIT NONE
     INTEGER(kind=C_INT), INTENT(in), VALUE :: width
     INTEGER(kind=C_INT), INTENT(in), VALUE :: height
     INTEGER(kind=C_INT), INTENT(in), VALUE :: tile_size
-    TYPE(image_type) :: gen_image_cellular
+    TYPE(image_) :: gen_image_cellular
   END FUNCTION gen_image_cellular
 
   ! Image GenImageChecked(int width, int height, int checksX, int checksY, Color col1, Color col2)
         function gen_image_checked(width, height, checks_x, checks_y, col1, col2) bind(c, name='GenImageChecked')
-    IMPORT :: C_INT, color_type, image_type
+    IMPORT :: C_INT, color_, image_
     IMPLICIT NONE
     INTEGER(kind=C_INT), INTENT(in), VALUE :: width
     INTEGER(kind=C_INT), INTENT(in), VALUE :: height
     INTEGER(kind=C_INT), INTENT(in), VALUE :: checks_x
     INTEGER(kind=C_INT), INTENT(in), VALUE :: checks_y
-    TYPE(color_type), INTENT(in), VALUE :: col1
-    TYPE(color_type), INTENT(in), VALUE :: col2
-    TYPE(image_type) :: gen_image_checked
+    TYPE(color_), INTENT(in), VALUE :: col1
+    TYPE(color_), INTENT(in), VALUE :: col2
+    TYPE(image_) :: gen_image_checked
   END FUNCTION gen_image_checked
 
   ! Image GenImageColor(int width, int height, Color color)
   FUNCTION gen_image_color(width, height, color) BIND(c, name='GenImageColor')
-    IMPORT :: C_INT, color_type, image_type
+    IMPORT :: C_INT, color_, image_
     IMPLICIT NONE
     INTEGER(kind=C_INT), INTENT(in), VALUE :: width
     INTEGER(kind=C_INT), INTENT(in), VALUE :: height
-    TYPE(color_type), INTENT(in), VALUE :: color
-    TYPE(image_type) :: gen_image_color
+    TYPE(color_), INTENT(in), VALUE :: color
+    TYPE(image_) :: gen_image_color
   END FUNCTION gen_image_color
 
   ! Image GenImageFontAtlas(const GlyphInfo *glyphs, Rectangle **glyphRecs, int glyphCount, int fontSize, int padding, int packMethod)
         function gen_image_font_atlas(glyphs, glyph_recs, glyph_count, font_size, padding, pack_method) &
     BIND(c, name='GenImageFontAtlas')
-    IMPORT :: C_INT, glyph_info_type, image_type, rectangle_type
+    IMPORT :: C_INT, glyph_info_, image_, rectangle_
     IMPLICIT NONE
-    TYPE(glyph_info_type), INTENT(inout) :: glyphs
-    TYPE(rectangle_type), INTENT(inout) :: glyph_recs(*)
+    TYPE(glyph_info_), INTENT(inout) :: glyphs
+    TYPE(rectangle_), INTENT(inout) :: glyph_recs(*)
     INTEGER(kind=C_INT), INTENT(in), VALUE :: glyph_count
     INTEGER(kind=C_INT), INTENT(in), VALUE :: font_size
     INTEGER(kind=C_INT), INTENT(in), VALUE :: padding
     INTEGER(kind=C_INT), INTENT(in), VALUE :: pack_method
-    TYPE(image_type) :: gen_image_font_atlas
+    TYPE(image_) :: gen_image_font_atlas
   END FUNCTION gen_image_font_atlas
 
   ! Image GenImageGradientLinear(int width, int height, int direction, Color start, Color end)
         function gen_image_gradient_linear(width, height, direction, start, end) bind(c, name='GenImageGradientLinear')
-    IMPORT :: C_INT, color_type, image_type
+    IMPORT :: C_INT, color_, image_
     IMPLICIT NONE
     INTEGER(kind=C_INT), INTENT(in), VALUE :: width
     INTEGER(kind=C_INT), INTENT(in), VALUE :: height
     INTEGER(kind=C_INT), INTENT(in), VALUE :: direction
-    TYPE(color_type), INTENT(in), VALUE :: start
-    TYPE(color_type), INTENT(in), VALUE :: END
-    TYPE(image_type) :: gen_image_gradient_linear
+    TYPE(color_), INTENT(in), VALUE :: start
+    TYPE(color_), INTENT(in), VALUE :: END
+    TYPE(image_) :: gen_image_gradient_linear
   END FUNCTION gen_image_gradient_linear
 
   ! Image GenImageGradientRadial(int width, int height, float density, Color inner, Color outer)
         function gen_image_gradient_radial(width, height, density, inner, outer) bind(c, name='GenImageGradientRadial')
-    IMPORT :: C_FLOAT, C_INT, color_type, image_type
+    IMPORT :: C_FLOAT, C_INT, color_, image_
     IMPLICIT NONE
     INTEGER(kind=C_INT), INTENT(in), VALUE :: width
     INTEGER(kind=C_INT), INTENT(in), VALUE :: height
     REAL(kind=C_FLOAT), INTENT(in), VALUE :: density
-    TYPE(color_type), INTENT(in), VALUE :: inner
-    TYPE(color_type), INTENT(in), VALUE :: outer
-    TYPE(image_type) :: gen_image_gradient_radial
+    TYPE(color_), INTENT(in), VALUE :: inner
+    TYPE(color_), INTENT(in), VALUE :: outer
+    TYPE(image_) :: gen_image_gradient_radial
   END FUNCTION gen_image_gradient_radial
 
   ! Image GenImageGradientSquare(int width, int height, float density, Color inner, Color outer)
         function gen_image_gradient_square(width, height, density, inner, outer) bind(c, name='GenImageGradientSquare')
-    IMPORT :: C_FLOAT, C_INT, color_type, image_type
+    IMPORT :: C_FLOAT, C_INT, color_, image_
     IMPLICIT NONE
     INTEGER(kind=C_INT), INTENT(in), VALUE :: width
     INTEGER(kind=C_INT), INTENT(in), VALUE :: height
     REAL(kind=C_FLOAT), INTENT(in), VALUE :: density
-    TYPE(color_type), INTENT(in), VALUE :: inner
-    TYPE(color_type), INTENT(in), VALUE :: outer
-    TYPE(image_type) :: gen_image_gradient_square
+    TYPE(color_), INTENT(in), VALUE :: inner
+    TYPE(color_), INTENT(in), VALUE :: outer
+    TYPE(image_) :: gen_image_gradient_square
   END FUNCTION gen_image_gradient_square
 
   ! Image GenImageWhiteNoise(int width, int height, float factor)
         function gen_image_white_noise(width, height, factor) bind(c, name='GenImageWhiteNoise')
-    IMPORT :: C_FLOAT, C_INT, image_type
+    IMPORT :: C_FLOAT, C_INT, image_
     IMPLICIT NONE
     INTEGER(kind=C_INT), INTENT(in), VALUE :: width
     INTEGER(kind=C_INT), INTENT(in), VALUE :: height
     REAL(kind=C_FLOAT), INTENT(in), VALUE :: factor
-    TYPE(image_type) :: gen_image_white_noise
+    TYPE(image_) :: gen_image_white_noise
   END FUNCTION gen_image_white_noise
 
   ! Image GenImagePerlinNoise(int width, int height, int offsetX, int offsetY, float scale)
         function gen_image_perlin_noise(width, height, offset_x, offset_y, scale) bind(c, name='GenImagePerlinNoise')
-    IMPORT :: C_FLOAT, C_INT, image_type
+    IMPORT :: C_FLOAT, C_INT, image_
     IMPLICIT NONE
     INTEGER(kind=C_INT), INTENT(in), VALUE :: width
     INTEGER(kind=C_INT), INTENT(in), VALUE :: height
     INTEGER(kind=C_INT), INTENT(in), VALUE :: offset_x
     INTEGER(kind=C_INT), INTENT(in), VALUE :: offset_y
     REAL(kind=C_FLOAT), INTENT(in), VALUE :: scale
-    TYPE(image_type) :: gen_image_perlin_noise
+    TYPE(image_) :: gen_image_perlin_noise
   END FUNCTION gen_image_perlin_noise
 
   ! Image GenImageText(int width, int height, const char *text)
   FUNCTION gen_image_text(width, height, text) BIND(c, name='GenImageText')
-    IMPORT :: C_CHAR, C_INT, image_type
+    IMPORT :: C_CHAR, C_INT, image_
     IMPLICIT NONE
     INTEGER(kind=C_INT), INTENT(in), VALUE :: width
     INTEGER(kind=C_INT), INTENT(in), VALUE :: height
     CHARACTER(kind=C_CHAR), INTENT(in) :: text
-    TYPE(image_type) :: gen_image_text
+    TYPE(image_) :: gen_image_text
   END FUNCTION gen_image_text
 
   ! Mesh GenMeshCone(float radius, float height, int slices)
   FUNCTION gen_mesh_cone(radius, height, slices) BIND(c, name='GenMeshCone')
-    IMPORT :: C_FLOAT, C_INT, mesh_type
+    IMPORT :: C_FLOAT, C_INT, mesh_
     IMPLICIT NONE
     REAL(kind=C_FLOAT), INTENT(in), VALUE :: radius
     REAL(kind=C_FLOAT), INTENT(in), VALUE :: height
     INTEGER(kind=C_INT), INTENT(in), VALUE :: slices
-    TYPE(mesh_type) :: gen_mesh_cone
+    TYPE(mesh_) :: gen_mesh_cone
   END FUNCTION gen_mesh_cone
 
   ! Mesh GenMeshCube(float width, float height, float length)
   FUNCTION gen_mesh_cube(width, height, length) BIND(c, name='GenMeshCube')
-    IMPORT :: C_FLOAT, mesh_type
+    IMPORT :: C_FLOAT, mesh_
     IMPLICIT NONE
     REAL(kind=C_FLOAT), INTENT(in), VALUE :: width
     REAL(kind=C_FLOAT), INTENT(in), VALUE :: height
     REAL(kind=C_FLOAT), INTENT(in), VALUE :: length
-    TYPE(mesh_type) :: gen_mesh_cube
+    TYPE(mesh_) :: gen_mesh_cube
   END FUNCTION gen_mesh_cube
 
   ! Mesh GenMeshCubicmap(Image cubicmap, Vector3 cubeSize)
         function gen_mesh_cubicmap(cubicmap, cube_size) bind(c, name='GenMeshCubicmap')
-    IMPORT :: image_type, mesh_type, vector3_type
+    IMPORT :: image_, mesh_, vector3_
     IMPLICIT NONE
-    TYPE(image_type), INTENT(in), VALUE :: cubicmap
-    TYPE(vector3_type), INTENT(in), VALUE :: cube_size
-    TYPE(mesh_type) :: gen_mesh_cubicmap
+    TYPE(image_), INTENT(in), VALUE :: cubicmap
+    TYPE(vector3_), INTENT(in), VALUE :: cube_size
+    TYPE(mesh_) :: gen_mesh_cubicmap
   END FUNCTION gen_mesh_cubicmap
 
   ! Mesh GenMeshCylinder(float radius, float height, int slices)
         function gen_mesh_cylinder(radius, height, slices) bind(c, name='GenMeshCylinder')
-    IMPORT :: C_FLOAT, C_INT, mesh_type
+    IMPORT :: C_FLOAT, C_INT, mesh_
     IMPLICIT NONE
     REAL(kind=C_FLOAT), INTENT(in), VALUE :: radius
     REAL(kind=C_FLOAT), INTENT(in), VALUE :: height
     INTEGER(kind=C_INT), INTENT(in), VALUE :: slices
-    TYPE(mesh_type) :: gen_mesh_cylinder
+    TYPE(mesh_) :: gen_mesh_cylinder
   END FUNCTION gen_mesh_cylinder
 
   ! Mesh GenMeshHeightmap(Image heightmap, Vector3 size)
  FUNCTION gen_mesh_heightmap(heightmap, size) BIND(c, name='GenMeshHeightmap')
-    IMPORT :: image_type, mesh_type, vector3_type
+    IMPORT :: image_, mesh_, vector3_
     IMPLICIT NONE
-    TYPE(image_type), INTENT(in), VALUE :: heightmap
-    TYPE(vector3_type), INTENT(in), VALUE :: size
-    TYPE(mesh_type) :: gen_mesh_heightmap
+    TYPE(image_), INTENT(in), VALUE :: heightmap
+    TYPE(vector3_), INTENT(in), VALUE :: size
+    TYPE(mesh_) :: gen_mesh_heightmap
   END FUNCTION gen_mesh_heightmap
 
   ! Mesh GenMeshHemiSphere(float radius, int rings, int slices)
         function gen_mesh_hemi_sphere(radius, rings, slices) bind(c, name='GenMeshHemiSphere')
-    IMPORT :: C_FLOAT, C_INT, mesh_type
+    IMPORT :: C_FLOAT, C_INT, mesh_
     IMPLICIT NONE
     REAL(kind=C_FLOAT), INTENT(in), VALUE :: radius
     INTEGER(kind=C_INT), INTENT(in), VALUE :: rings
     INTEGER(kind=C_INT), INTENT(in), VALUE :: slices
-    TYPE(mesh_type) :: gen_mesh_hemi_sphere
+    TYPE(mesh_) :: gen_mesh_hemi_sphere
   END FUNCTION gen_mesh_hemi_sphere
 
   ! Mesh GenMeshKnot(float radius, float size, int radSeg, int sides)
         function gen_mesh_knot(radius, size, rad_seg, sides) bind(c, name='GenMeshKnot')
-    IMPORT :: C_FLOAT, C_INT, mesh_type
+    IMPORT :: C_FLOAT, C_INT, mesh_
     IMPLICIT NONE
     REAL(kind=C_FLOAT), INTENT(in), VALUE :: radius
     REAL(kind=C_FLOAT), INTENT(in), VALUE :: size
     INTEGER(kind=C_INT), INTENT(in), VALUE :: rad_seg
     INTEGER(kind=C_INT), INTENT(in), VALUE :: sides
-    TYPE(mesh_type) :: gen_mesh_knot
+    TYPE(mesh_) :: gen_mesh_knot
   END FUNCTION gen_mesh_knot
 
   ! Mesh GenMeshPlane(float width, float length, int resX, int resZ)
         function gen_mesh_plane(width, length, res_x, res_z) bind(c, name='GenMeshPlane')
-    IMPORT :: C_FLOAT, C_INT, mesh_type
+    IMPORT :: C_FLOAT, C_INT, mesh_
     IMPLICIT NONE
     REAL(kind=C_FLOAT), INTENT(in), VALUE :: width
     REAL(kind=C_FLOAT), INTENT(in), VALUE :: length
     INTEGER(kind=C_INT), INTENT(in), VALUE :: res_x
     INTEGER(kind=C_INT), INTENT(in), VALUE :: res_z
-    TYPE(mesh_type) :: gen_mesh_plane
+    TYPE(mesh_) :: gen_mesh_plane
   END FUNCTION gen_mesh_plane
 
   ! Mesh GenMeshPoly(int sides, float radius)
   FUNCTION gen_mesh_poly(sides, radius) BIND(c, name='GenMeshPoly')
-    IMPORT :: C_FLOAT, C_INT, mesh_type
+    IMPORT :: C_FLOAT, C_INT, mesh_
     IMPLICIT NONE
     INTEGER(kind=C_INT), INTENT(in), VALUE :: sides
     REAL(kind=C_FLOAT), INTENT(in), VALUE :: radius
-    TYPE(mesh_type) :: gen_mesh_poly
+    TYPE(mesh_) :: gen_mesh_poly
   END FUNCTION gen_mesh_poly
 
   ! Mesh GenMeshSphere(float radius, int rings, int slices)
  FUNCTION gen_mesh_sphere(radius, rings, slices) BIND(c, name='GenMeshSphere')
-    IMPORT :: C_FLOAT, C_INT, mesh_type
+    IMPORT :: C_FLOAT, C_INT, mesh_
     IMPLICIT NONE
     REAL(kind=C_FLOAT), INTENT(in), VALUE :: radius
     INTEGER(kind=C_INT), INTENT(in), VALUE :: rings
     INTEGER(kind=C_INT), INTENT(in), VALUE :: slices
-    TYPE(mesh_type) :: gen_mesh_sphere
+    TYPE(mesh_) :: gen_mesh_sphere
   END FUNCTION gen_mesh_sphere
 
   ! void GenMeshTangents(Mesh *mesh)
   SUBROUTINE gen_mesh_tangents(mesh) BIND(c, name='GenMeshTangents')
-    IMPORT :: mesh_type
+    IMPORT :: mesh_
     IMPLICIT NONE
-    TYPE(mesh_type), INTENT(in) :: mesh
+    TYPE(mesh_), INTENT(in) :: mesh
   END SUBROUTINE gen_mesh_tangents
 
   ! Mesh GenMeshTorus(float radius, float size, int radSeg, int sides)
         function gen_mesh_torus(radius, size, rad_seg, sides) bind(c, name='GenMeshTorus')
-    IMPORT :: C_FLOAT, C_INT, mesh_type
+    IMPORT :: C_FLOAT, C_INT, mesh_
     IMPLICIT NONE
     REAL(kind=C_FLOAT), INTENT(in), VALUE :: radius
     REAL(kind=C_FLOAT), INTENT(in), VALUE :: size
     INTEGER(kind=C_INT), INTENT(in), VALUE :: rad_seg
     INTEGER(kind=C_INT), INTENT(in), VALUE :: sides
-    TYPE(mesh_type) :: gen_mesh_torus
+    TYPE(mesh_) :: gen_mesh_torus
   END FUNCTION gen_mesh_torus
 
   ! void GenTextureMipmaps(Texture2D *texture)
   SUBROUTINE gen_texture_mipmaps(texture) BIND(c, name='GenTextureMipmaps')
-    IMPORT :: texture2d_type
+    IMPORT :: texture2d_
     IMPLICIT NONE
-    TYPE(texture2d_type), INTENT(inout) :: texture
+    TYPE(texture2d_), INTENT(inout) :: texture
   END SUBROUTINE gen_texture_mipmaps
 
   ! void HideCursor(void)
@@ -845,13 +845,13 @@ FUNCTION ExportImageAsCode(image, file_name) BIND(c, name='ExportImageAsCode')
 
   ! Vector2 MeasureTextEx(Font font, const char *text, float fontSize, float spacing)
         function MeasureTextEx(font, text, font_size, spacing) bind(c, name='MeasureTextEx')
-    IMPORT :: C_CHAR, C_FLOAT, font_type, vector2_type
+    IMPORT :: C_CHAR, C_FLOAT, font_, vector2_
     IMPLICIT NONE
-    TYPE(font_type), INTENT(in), VALUE :: font
+    TYPE(font_), INTENT(in), VALUE :: font
     CHARACTER(kind=C_CHAR), INTENT(in) :: text
     REAL(kind=C_FLOAT), INTENT(in), VALUE :: font_size
     REAL(kind=C_FLOAT), INTENT(in), VALUE :: spacing
-    TYPE(vector2_type) :: MeasureTextEx
+    TYPE(vector2_) :: MeasureTextEx
   END FUNCTION MeasureTextEx
 
   ! void *MemAlloc(unsigned int size)
@@ -891,44 +891,44 @@ FUNCTION ExportImageAsCode(image, file_name) BIND(c, name='ExportImageAsCode')
 
   ! void PauseAudioStream(AudioStream stream)
   SUBROUTINE PauseAudioStream(stream) BIND(c, name='PauseAudioStream')
-    IMPORT :: audio_stream_type
+    IMPORT :: audio_stream_
     IMPLICIT NONE
-    TYPE(audio_stream_type), INTENT(in), VALUE :: stream
+    TYPE(audio_stream_), INTENT(in), VALUE :: stream
   END SUBROUTINE PauseAudioStream
 
   ! void PauseMusicStream(Music music)
   SUBROUTINE PauseMusicStream(music) BIND(c, name='PauseMusicStream')
-    IMPORT :: music_type
+    IMPORT :: music_
     IMPLICIT NONE
-    TYPE(music_type), INTENT(in), VALUE :: music
+    TYPE(music_), INTENT(in), VALUE :: music
   END SUBROUTINE PauseMusicStream
 
   ! void PauseSound(Sound sound)
   SUBROUTINE PauseSound(sound) BIND(c, name='PauseSound')
-    IMPORT :: sound_type
+    IMPORT :: sound_
     IMPLICIT NONE
-    TYPE(sound_type), INTENT(in), VALUE :: sound
+    TYPE(sound_), INTENT(in), VALUE :: sound
   END SUBROUTINE PauseSound
 
   ! void PlayAudioStream(AudioStream stream)
   SUBROUTINE PlayAudioStream(stream) BIND(c, name='PlayAudioStream')
-    IMPORT :: audio_stream_type
+    IMPORT :: audio_stream_
     IMPLICIT NONE
-    TYPE(audio_stream_type), INTENT(in), VALUE :: stream
+    TYPE(audio_stream_), INTENT(in), VALUE :: stream
   END SUBROUTINE PlayAudioStream
 
   ! void PlayMusicStream(Music music)
   SUBROUTINE PlayMusicStream(music) BIND(c, name='PlayMusicStream')
-    IMPORT :: music_type
+    IMPORT :: music_
     IMPLICIT NONE
-    TYPE(music_type), INTENT(in), VALUE :: music
+    TYPE(music_), INTENT(in), VALUE :: music
   END SUBROUTINE PlayMusicStream
 
   ! void PlaySound(Sound sound)
   SUBROUTINE PlaySound(sound) BIND(c, name='PlaySound')
-    IMPORT :: sound_type
+    IMPORT :: sound_
     IMPLICIT NONE
-    TYPE(sound_type), INTENT(in), VALUE :: sound
+    TYPE(sound_), INTENT(in), VALUE :: sound
   END SUBROUTINE PlaySound
 
   ! void PollInputEvents(void)
@@ -941,23 +941,23 @@ FUNCTION ExportImageAsCode(image, file_name) BIND(c, name='ExportImageAsCode')
 
   ! void ResumeAudioStream(AudioStream stream)
   SUBROUTINE ResumeAudioStream(stream) BIND(c, name='ResumeAudioStream')
-    IMPORT :: audio_stream_type
+    IMPORT :: audio_stream_
     IMPLICIT NONE
-    TYPE(audio_stream_type), INTENT(in), VALUE :: stream
+    TYPE(audio_stream_), INTENT(in), VALUE :: stream
   END SUBROUTINE ResumeAudioStream
 
   ! void ResumeMusicStream(Music music)
   SUBROUTINE ResumeMusicStream(music) BIND(c, name='ResumeMusicStream')
-    IMPORT :: music_type
+    IMPORT :: music_
     IMPLICIT NONE
-    TYPE(music_type), INTENT(in), VALUE :: music
+    TYPE(music_), INTENT(in), VALUE :: music
   END SUBROUTINE ResumeMusicStream
 
   ! void ResumeSound(Sound sound)
   SUBROUTINE ResumeSound(sound) BIND(c, name='ResumeSound')
-    IMPORT :: sound_type
+    IMPORT :: sound_
     IMPLICIT NONE
-    TYPE(sound_type), INTENT(in), VALUE :: sound
+    TYPE(sound_), INTENT(in), VALUE :: sound
   END SUBROUTINE ResumeSound
 
   ! bool SaveFileData(const char *fileName, void *data, int dataSize)
@@ -981,9 +981,9 @@ FUNCTION SaveFileData(file_name, DATA, data_size) BIND(c, name='SaveFileData')
 
   ! void SeekMusicStream(Music music, float position)
   SUBROUTINE SeekMusicStream(music, position) BIND(c, name='SeekMusicStream')
-    IMPORT :: C_FLOAT, music_type
+    IMPORT :: C_FLOAT, music_
     IMPLICIT NONE
-    TYPE(music_type), INTENT(in), VALUE :: music
+    TYPE(music_), INTENT(in), VALUE :: music
     REAL(kind=C_FLOAT), INTENT(in), VALUE :: position
   END SUBROUTINE SeekMusicStream
 
@@ -993,23 +993,23 @@ FUNCTION SaveFileData(file_name, DATA, data_size) BIND(c, name='SaveFileData')
 
   ! void StopAudioStream(AudioStream stream)
   SUBROUTINE StopAudioStream(stream) BIND(c, name='StopAudioStream')
-    IMPORT :: audio_stream_type
+    IMPORT :: audio_stream_
     IMPLICIT NONE
-    TYPE(audio_stream_type), INTENT(in), VALUE :: stream
+    TYPE(audio_stream_), INTENT(in), VALUE :: stream
   END SUBROUTINE StopAudioStream
 
   ! void StopMusicStream(Music music)
   SUBROUTINE StopMusicStream(music) BIND(c, name='StopMusicStream')
-    IMPORT :: music_type
+    IMPORT :: music_
     IMPLICIT NONE
-    TYPE(music_type), INTENT(in), VALUE :: music
+    TYPE(music_), INTENT(in), VALUE :: music
   END SUBROUTINE StopMusicStream
 
   ! void StopSound(Sound sound)
   SUBROUTINE StopSound(sound) BIND(c, name='StopSound')
-    IMPORT :: sound_type
+    IMPORT :: sound_
     IMPLICIT NONE
-    TYPE(sound_type), INTENT(in), VALUE :: sound
+    TYPE(sound_), INTENT(in), VALUE :: sound
   END SUBROUTINE StopSound
 
   ! void SwapScreenBuffer(void)
@@ -1167,26 +1167,26 @@ SUBROUTINE ToggleBorderlessWindowed() BIND(c, name='ToggleBorderlessWindowed')
 
   ! void UpdateAudioStream(AudioStream stream, const void *data, int frameCount)
         subroutine UpdateAudioStream(stream, data, frame_count) bind(c, name='UpdateAudioStream')
-    IMPORT :: audio_stream_type, C_INT, C_PTR
+    IMPORT :: audio_stream_, C_INT, C_PTR
     IMPLICIT NONE
-    TYPE(audio_stream_type), INTENT(in), VALUE :: stream
+    TYPE(audio_stream_), INTENT(in), VALUE :: stream
     TYPE(C_PTR), INTENT(in), VALUE :: DATA
     INTEGER(kind=C_INT), INTENT(in), VALUE :: frame_count
   END SUBROUTINE UpdateAudioStream
 
   ! void UpdateCamera(Camera *camera, int mode)
   SUBROUTINE UpdateCamera(camera, mode) BIND(c, name='UpdateCamera')
-    IMPORT :: camera3d_type, C_INT
+    IMPORT :: camera3d_, C_INT
     IMPLICIT NONE
-    TYPE(camera3d_type), INTENT(inout) :: camera
+    TYPE(camera3d_), INTENT(inout) :: camera
     INTEGER(kind=C_INT), INTENT(in), VALUE :: mode
   END SUBROUTINE UpdateCamera
 
   ! void UpdateMeshBuffer(Mesh mesh, int index, const void *data, int dataSize, int offset)
         subroutine UpdateMeshBuffer(mesh, index, data, data_size, offset) bind(c, name='UpdateMeshBuffer')
-    IMPORT :: C_INT, C_PTR, mesh_type
+    IMPORT :: C_INT, C_PTR, mesh_
     IMPLICIT NONE
-    TYPE(mesh_type), INTENT(in), VALUE :: mesh
+    TYPE(mesh_), INTENT(in), VALUE :: mesh
     INTEGER(kind=C_INT), INTENT(in), VALUE :: index
     TYPE(C_PTR), INTENT(in), VALUE :: DATA
     INTEGER(kind=C_INT), INTENT(in), VALUE :: data_size
@@ -1195,51 +1195,51 @@ SUBROUTINE ToggleBorderlessWindowed() BIND(c, name='ToggleBorderlessWindowed')
 
   ! void UpdateModelAnimation(Model model, ModelAnimation anim, int frame)
         subroutine UpdateModelAnimation(model, anim, frame) bind(c, name='UpdateModelAnimation')
-    IMPORT :: C_INT, model_animation_type, model_type
+    IMPORT :: C_INT, model_animation_, model_
     IMPLICIT NONE
-    TYPE(model_type), INTENT(in), VALUE :: model
-    TYPE(model_animation_type), INTENT(in), VALUE :: anim
+    TYPE(model_), INTENT(in), VALUE :: model
+    TYPE(model_animation_), INTENT(in), VALUE :: anim
     INTEGER(kind=C_INT), INTENT(in), VALUE :: frame
   END SUBROUTINE UpdateModelAnimation
 
   ! void UpdateMusicStream(Music music)
   SUBROUTINE UpdateMusicStream(music) BIND(c, name='UpdateMusicStream')
-    IMPORT :: music_type
+    IMPORT :: music_
     IMPLICIT NONE
-    TYPE(music_type), INTENT(in), VALUE :: music
+    TYPE(music_), INTENT(in), VALUE :: music
   END SUBROUTINE UpdateMusicStream
 
   ! void UpdateSound(Sound sound, const void *data, int sampleCount)
  SUBROUTINE UpdateSound(sound, DATA, sample_count) BIND(c, name='UpdateSound')
-    IMPORT :: C_INT, C_PTR, sound_type
+    IMPORT :: C_INT, C_PTR, sound_
     IMPLICIT NONE
-    TYPE(sound_type), INTENT(in), VALUE :: sound
+    TYPE(sound_), INTENT(in), VALUE :: sound
     TYPE(C_PTR), INTENT(in), VALUE :: DATA
     INTEGER(kind=C_INT), INTENT(in), VALUE :: sample_count
   END SUBROUTINE UpdateSound
 
   ! void UpdateTexture(Texture2D texture, const void *pixels)
   SUBROUTINE UpdateTexture(texture, pixels) BIND(c, name='UpdateTexture')
-    IMPORT :: C_PTR, texture2d_type
+    IMPORT :: C_PTR, texture2d_
     IMPLICIT NONE
-    TYPE(texture2d_type), INTENT(in), VALUE :: texture
+    TYPE(texture2d_), INTENT(in), VALUE :: texture
     TYPE(C_PTR), INTENT(in), VALUE :: pixels
   END SUBROUTINE UpdateTexture
 
   ! void UpdateTextureRec(Texture2D texture, Rectangle rec, const void *pixels)
         subroutine UpdateTextureRec(texture, rec, pixels) bind(c, name='UpdateTextureRec')
-    IMPORT :: C_PTR, rectangle_type, texture2d_type
+    IMPORT :: C_PTR, rectangle_, texture2d_
     IMPLICIT NONE
-    TYPE(texture2d_type), INTENT(in), VALUE :: texture
-    TYPE(rectangle_type), INTENT(in), VALUE :: rec
+    TYPE(texture2d_), INTENT(in), VALUE :: texture
+    TYPE(rectangle_), INTENT(in), VALUE :: rec
     TYPE(C_PTR), INTENT(in), VALUE :: pixels
   END SUBROUTINE UpdateTextureRec
 
   ! void UploadMesh(Mesh *mesh, bool dynamic)
   SUBROUTINE UploadMesh(mesh, dynamic) BIND(c, name='UploadMesh')
-    IMPORT :: C_BOOL, mesh_type
+    IMPORT :: C_BOOL, mesh_
     IMPLICIT NONE
-    TYPE(mesh_type), INTENT(inout) :: mesh
+    TYPE(mesh_), INTENT(inout) :: mesh
     LOGICAL(kind=C_BOOL), INTENT(in), VALUE :: dynamic
   END SUBROUTINE UploadMesh
 
@@ -1252,26 +1252,26 @@ SUBROUTINE ToggleBorderlessWindowed() BIND(c, name='ToggleBorderlessWindowed')
 
   ! Wave WaveCopy(Wave wave)
   FUNCTION WaveCopy(wave) BIND(c, name='WaveCopy')
-    IMPORT :: wave_type
+    IMPORT :: wave_
     IMPLICIT NONE
-    TYPE(wave_type), INTENT(in), VALUE :: wave
-    TYPE(wave_type) :: WaveCopy
+    TYPE(wave_), INTENT(in), VALUE :: wave
+    TYPE(wave_) :: WaveCopy
   END FUNCTION WaveCopy
 
   ! void WaveCrop(Wave *wave, int initSample, int finalSample)
  SUBROUTINE WaveCrop(wave, init_sample, final_sample) BIND(c, name='WaveCrop')
-    IMPORT :: C_INT, wave_type
+    IMPORT :: C_INT, wave_
     IMPLICIT NONE
-    TYPE(wave_type), INTENT(in) :: wave
+    TYPE(wave_), INTENT(in) :: wave
     INTEGER(kind=C_INT), INTENT(in), VALUE :: init_sample
     INTEGER(kind=C_INT), INTENT(in), VALUE :: final_sample
   END SUBROUTINE WaveCrop
 
   ! void WaveFormat(Wave *wave, int sampleRate, int sampleSize, int channels)
         subroutine WaveFormat(wave, sample_rate, sample_size, channels) bind(c, name='WaveFormat')
-    IMPORT :: C_INT, wave_type
+    IMPORT :: C_INT, wave_
     IMPLICIT NONE
-    TYPE(wave_type), INTENT(in) :: wave
+    TYPE(wave_), INTENT(in) :: wave
     INTEGER(kind=C_INT), INTENT(in), VALUE :: sample_rate
     INTEGER(kind=C_INT), INTENT(in), VALUE :: sample_size
     INTEGER(kind=C_INT), INTENT(in), VALUE :: channels

@@ -60,12 +60,12 @@ PUBLIC :: LoadAudioStream
 INTERFACE
   ! AudioStream LoadAudioStream(unsigned int sampleRate, unsigned int sampleSize, unsigned int channels)
         function LoadAudioStream(sample_rate, sample_size, channels) bind(c, name='LoadAudioStream')
-    IMPORT :: audio_stream_type, c_unsigned_int
+    IMPORT :: audio_stream_, c_unsigned_int
     IMPLICIT NONE
     INTEGER(kind=c_unsigned_int), INTENT(in), VALUE :: sample_rate
     INTEGER(kind=c_unsigned_int), INTENT(in), VALUE :: sample_size
     INTEGER(kind=c_unsigned_int), INTENT(in), VALUE :: channels
-    TYPE(audio_stream_type) :: LoadAudioStream
+    TYPE(audio_stream_) :: LoadAudioStream
   END FUNCTION LoadAudioStream
 
   ! int *LoadCodepoints(const char *text, int *count)
@@ -79,27 +79,27 @@ INTERFACE
 
   ! FilePathList LoadDirectoryFiles(const char *dirPath)
   FUNCTION LoadDirectoryFiles(dir_path) BIND(c, name='LoadDirectoryFiles')
-    IMPORT :: C_CHAR, file_path_list_type
+    IMPORT :: C_CHAR, file_path_list_
     IMPLICIT NONE
     CHARACTER(kind=C_CHAR), INTENT(in) :: dir_path
-    TYPE(file_path_list_type) :: LoadDirectoryFiles
+    TYPE(file_path_list_) :: LoadDirectoryFiles
   END FUNCTION LoadDirectoryFiles
 
   ! FilePathList LoadDirectoryFilesEx(const char *basePath, const char *filter, bool scanSubdirs)
         function LoadDirectoryFilesEx(base_path, filter, scan_subdirs) bind(c, name='LoadDirectoryFilesEx')
-    IMPORT :: C_BOOL, C_CHAR, file_path_list_type
+    IMPORT :: C_BOOL, C_CHAR, file_path_list_
     IMPLICIT NONE
     CHARACTER(kind=C_CHAR), INTENT(in) :: base_path
     CHARACTER(kind=C_CHAR), INTENT(in) :: filter
     LOGICAL(kind=C_BOOL), INTENT(in), VALUE :: scan_subdirs
-    TYPE(file_path_list_type) :: LoadDirectoryFilesEx
+    TYPE(file_path_list_) :: LoadDirectoryFilesEx
   END FUNCTION LoadDirectoryFilesEx
 
   ! FilePathList LoadDroppedFiles(void)
   FUNCTION LoadDroppedFiles() BIND(c, name='LoadDroppedFiles')
-    IMPORT :: file_path_list_type
+    IMPORT :: file_path_list_
     IMPLICIT NONE
-    TYPE(file_path_list_type) :: LoadDroppedFiles
+    TYPE(file_path_list_) :: LoadDroppedFiles
   END FUNCTION LoadDroppedFiles
 
   ! unsigned char *LoadFileData(const char *fileName, int *dataSize)
@@ -121,16 +121,16 @@ INTERFACE
 
   ! Font LoadFont(const char *fileName)
   FUNCTION LoadFont(file_name) BIND(c, name='LoadFont')
-    IMPORT :: C_CHAR, font_type
+    IMPORT :: C_CHAR, font_
     IMPLICIT NONE
     CHARACTER(kind=C_CHAR), INTENT(in) :: file_name
-    TYPE(font_type) :: LoadFont
+    TYPE(font_) :: LoadFont
   END FUNCTION LoadFont
 
   ! GlyphInfo *LoadFontData(const unsigned char *fileData, int dataSize, int fontSize, int *codepoints, int codepointsCount, int type)
         function LoadFontData(file_data, data_size, font_size, codepoints, codepoints_count, type) &
     BIND(c, name='LoadFontData')
-    IMPORT :: C_INT, C_PTR, c_unsigned_char, glyph_info_type
+    IMPORT :: C_INT, C_PTR, c_unsigned_char, glyph_info_
     IMPLICIT NONE
     INTEGER(kind=c_unsigned_char), INTENT(inout) :: file_data
     INTEGER(kind=C_INT), INTENT(in), VALUE :: data_size
@@ -143,94 +143,94 @@ INTERFACE
 
   ! Font LoadFontEx(const char *fileName, int fontSize, int *codepoints, int codepointsCount)
         function LoadFontEx(file_name, font_size, codepoints, codepoints_count) bind(c, name='LoadFontEx')
-    IMPORT :: C_CHAR, C_INT, font_type
+    IMPORT :: C_CHAR, C_INT, font_
     IMPLICIT NONE
     CHARACTER(kind=C_CHAR), INTENT(in) :: file_name
     INTEGER(kind=C_INT), INTENT(in), VALUE :: font_size
     INTEGER(kind=C_INT), INTENT(inout) :: codepoints(*)
     INTEGER(kind=C_INT), INTENT(in), VALUE :: codepoints_count
-    TYPE(font_type) :: LoadFontEx
+    TYPE(font_) :: LoadFontEx
   END FUNCTION LoadFontEx
 
   ! Font LoadFontFromImage(Image image, Color key, int firstChar)
         function LoadFontFromImage(image, key, first_char) bind(c, name='LoadFontFromImage')
-    IMPORT :: C_INT, color_type, font_type, image_type
+    IMPORT :: C_INT, color_, font_, image_
     IMPLICIT NONE
-    TYPE(image_type), INTENT(in), VALUE :: image
-    TYPE(color_type), INTENT(in), VALUE :: key
+    TYPE(image_), INTENT(in), VALUE :: image
+    TYPE(color_), INTENT(in), VALUE :: key
     INTEGER(kind=C_INT), INTENT(in), VALUE :: first_char
-    TYPE(font_type) :: LoadFontFromImage
+    TYPE(font_) :: LoadFontFromImage
   END FUNCTION LoadFontFromImage
 
   ! Font LoadFontFromMemory(const char *fileType, const unsigned char *fileData, int dataSize, int fontSize, int *codepoints, int codepointsCount)
-        function LoadFontFromMemory(file_type, file_data, data_size, font_size, codepoints, codepoints_count) &
+        function LoadFontFromMemory(file_, file_data, data_size, font_size, codepoints, codepoints_count) &
     BIND(c, name='LoadFontFromMemory')
-    IMPORT :: C_CHAR, C_INT, c_unsigned_char, font_type
+    IMPORT :: C_CHAR, C_INT, c_unsigned_char, font_
     IMPLICIT NONE
-    CHARACTER(kind=C_CHAR), INTENT(in) :: file_type
+    CHARACTER(kind=C_CHAR), INTENT(in) :: file_
     INTEGER(kind=c_unsigned_char), INTENT(in) :: file_data
     INTEGER(kind=C_INT), INTENT(in), VALUE :: data_size
     INTEGER(kind=C_INT), INTENT(in), VALUE :: font_size
     INTEGER(kind=C_INT), INTENT(inout) :: codepoints(*)
     INTEGER(kind=C_INT), INTENT(in), VALUE :: codepoints_count
-    TYPE(font_type) :: LoadFontFromMemory
+    TYPE(font_) :: LoadFontFromMemory
   END FUNCTION LoadFontFromMemory
 
   ! Image LoadImage(const char *fileName)
   FUNCTION LoadImage(file_name) BIND(c, name='LoadImage')
-    IMPORT :: C_CHAR, image_type
+    IMPORT :: C_CHAR, image_
     IMPLICIT NONE
     CHARACTER(kind=C_CHAR), INTENT(in) :: file_name
-    TYPE(image_type) :: LoadImage
+    TYPE(image_) :: LoadImage
   END FUNCTION LoadImage
 
   ! Image LoadImageAnim(const char *fileName, int *frames)
   FUNCTION LoadImageAnim(file_name, frames) BIND(c, name='LoadImageAnim')
-    IMPORT :: C_CHAR, C_INT, image_type
+    IMPORT :: C_CHAR, C_INT, image_
     IMPLICIT NONE
     CHARACTER(kind=C_CHAR), INTENT(in) :: file_name
     INTEGER(kind=C_INT), INTENT(out) :: frames
-    TYPE(image_type) :: LoadImageAnim
+    TYPE(image_) :: LoadImageAnim
   END FUNCTION LoadImageAnim
 
   ! Color *LoadImageColors(Image image)
   FUNCTION LoadImageColors(image) BIND(c, name='LoadImageColors')
-    IMPORT :: C_PTR, image_type
+    IMPORT :: C_PTR, image_
     IMPLICIT NONE
-    TYPE(image_type), INTENT(in), VALUE :: image
+    TYPE(image_), INTENT(in), VALUE :: image
     TYPE(C_PTR) :: LoadImageColors
   END FUNCTION LoadImageColors
 
   ! Image LoadImageFromMemory(const char *fileType, const unsigned char *fileData, int dataSize)
-        function LoadImageFromMemory(file_type, file_data, data_size) bind(c, name='LoadImageFromMemory')
-    IMPORT :: C_CHAR, C_INT, c_unsigned_char, image_type
+        function LoadImageFromMemory(file_, file_data, data_size) bind(c, name='LoadImageFromMemory')
+    IMPORT :: C_CHAR, C_INT, c_unsigned_char, image_
     IMPLICIT NONE
-    CHARACTER(kind=C_CHAR), INTENT(in) :: file_type
+    CHARACTER(kind=C_CHAR), INTENT(in) :: file_
     INTEGER(kind=c_unsigned_char), INTENT(in) :: file_data
     INTEGER(kind=C_INT), INTENT(in), VALUE :: data_size
-    TYPE(image_type) :: LoadImageFromMemory
+    TYPE(image_) :: LoadImageFromMemory
   END FUNCTION LoadImageFromMemory
 
   ! Image LoadImageFromScreen(void)
   FUNCTION LoadImageFromScreen() BIND(c, name='LoadImageFromScreen')
-    IMPORT :: image_type
+    IMPORT :: image_
     IMPLICIT NONE
-    TYPE(image_type) :: LoadImageFromScreen
+    TYPE(image_) :: LoadImageFromScreen
   END FUNCTION LoadImageFromScreen
 
   ! Image LoadImageFromTexture(Texture2D texture)
   FUNCTION LoadImageFromTexture(texture) BIND(c, name='LoadImageFromTexture')
-    IMPORT :: image_type, texture2d_type
+    IMPORT :: image_, texture2d_
     IMPLICIT NONE
-    TYPE(texture2d_type), INTENT(in), VALUE :: texture
-    TYPE(image_type) :: LoadImageFromTexture
+    TYPE(texture2d_), INTENT(in), VALUE :: texture
+    TYPE(image_) :: LoadImageFromTexture
   END FUNCTION LoadImageFromTexture
 
   ! Color *LoadImagePalette(Image image, int maxPaletteSize, int *colorCount)
         function LoadImagePalette(image, max_palette_size, color_count) bind(c, name='LoadImagePalette')
-    IMPORT :: C_INT, C_PTR, image_type
+    IMPORT :: C_INT, C_PTR, image_
     IMPLICIT NONE
-    TYPE(image_type), INTENT(in), VALUE :: image
+    TYPE(image_), INTENT(in), VALUE :: image
     INTEGER(kind=C_INT), INTENT(in), VALUE :: max_palette_size
     INTEGER(kind=C_INT), INTENT(out) :: color_count
     TYPE(C_PTR) :: LoadImagePalette
@@ -238,31 +238,31 @@ INTERFACE
 
   ! Image LoadImageRaw(const char *fileName, int width, int height, int format, int headerSize)
         function LoadImageRaw(file_name, width, height, format, header_size) bind(c, name='LoadImageRaw')
-    IMPORT :: C_CHAR, C_INT, image_type
+    IMPORT :: C_CHAR, C_INT, image_
     IMPLICIT NONE
     CHARACTER(kind=C_CHAR), INTENT(in) :: file_name
     INTEGER(kind=C_INT), INTENT(in), VALUE :: width
     INTEGER(kind=C_INT), INTENT(in), VALUE :: height
     INTEGER(kind=C_INT), INTENT(in), VALUE :: FORMAT
     INTEGER(kind=C_INT), INTENT(in), VALUE :: header_size
-    TYPE(image_type) :: LoadImageRaw
+    TYPE(image_) :: LoadImageRaw
   END FUNCTION LoadImageRaw
 
   ! Image LoadImageSvg(const char *fileNameOrString, int width, int height)
         function LoadImageSvg(file_name_or_string, width, height) bind(c, name='LoadImageSvg')
-    IMPORT :: C_CHAR, C_INT, image_type
+    IMPORT :: C_CHAR, C_INT, image_
     IMPLICIT NONE
     CHARACTER(kind=C_CHAR), INTENT(in) :: file_name_or_string
     INTEGER(kind=C_INT), INTENT(in), VALUE :: width
     INTEGER(kind=C_INT), INTENT(in), VALUE :: height
-    TYPE(image_type) :: LoadImageSvg
+    TYPE(image_) :: LoadImageSvg
   END FUNCTION LoadImageSvg
 
   ! Material LoadMaterialDefault(void)
   FUNCTION LoadMaterialDefault() BIND(c, name='LoadMaterialDefault')
-    IMPORT :: material_type
+    IMPORT :: material_
     IMPLICIT NONE
-    TYPE(material_type) :: LoadMaterialDefault
+    TYPE(material_) :: LoadMaterialDefault
   END FUNCTION LoadMaterialDefault
 
   ! Material *LoadMaterials(const char *fileName, int *materialCount)
@@ -276,10 +276,10 @@ INTERFACE
 
   ! Model LoadModel(const char *fileName)
   FUNCTION LoadModel(file_name) BIND(c, name='LoadModel')
-    IMPORT :: C_CHAR, model_type
+    IMPORT :: C_CHAR, model_
     IMPLICIT NONE
     CHARACTER(kind=C_CHAR), INTENT(in) :: file_name
-    TYPE(model_type) :: LoadModel
+    TYPE(model_) :: LoadModel
   END FUNCTION LoadModel
 
   ! ModelAnimation *LoadModelAnimations(const char *fileName, int *animCount)
@@ -293,28 +293,28 @@ INTERFACE
 
   ! Model LoadModelFromMesh(Mesh mesh)
   FUNCTION LoadModelFromMesh(mesh) BIND(c, name='LoadModelFromMesh')
-    IMPORT :: mesh_type, model_type
+    IMPORT :: mesh_, model_
     IMPLICIT NONE
-    TYPE(mesh_type), INTENT(in), VALUE :: mesh
-    TYPE(model_type) :: LoadModelFromMesh
+    TYPE(mesh_), INTENT(in), VALUE :: mesh
+    TYPE(model_) :: LoadModelFromMesh
   END FUNCTION LoadModelFromMesh
 
   ! Music LoadMusicStream(const char *fileName)
   FUNCTION LoadMusicStream(file_name) BIND(c, name='LoadMusicStream')
-    IMPORT :: C_CHAR, music_type
+    IMPORT :: C_CHAR, music_
     IMPLICIT NONE
     CHARACTER(kind=C_CHAR), INTENT(in) :: file_name
-    TYPE(music_type) :: LoadMusicStream
+    TYPE(music_) :: LoadMusicStream
   END FUNCTION LoadMusicStream
 
   ! Music LoadMusicStreamFromMemory(const char *fileType, const unsigned char *data, int dataSize)
-        function LoadMusicStreamFromMemory(file_type, data, data_size) bind(c, name='LoadMusicStreamFromMemory')
-    IMPORT :: C_CHAR, C_INT, c_unsigned_char, music_type
+        function LoadMusicStreamFromMemory(file_, data, data_size) bind(c, name='LoadMusicStreamFromMemory')
+    IMPORT :: C_CHAR, C_INT, c_unsigned_char, music_
     IMPLICIT NONE
-    CHARACTER(kind=C_CHAR), INTENT(in) :: file_type
+    CHARACTER(kind=C_CHAR), INTENT(in) :: file_
     INTEGER(kind=c_unsigned_char), INTENT(in) :: DATA
     INTEGER(kind=C_INT), INTENT(in), VALUE :: data_size
-    TYPE(music_type) :: LoadMusicStreamFromMemory
+    TYPE(music_) :: LoadMusicStreamFromMemory
   END FUNCTION LoadMusicStreamFromMemory
 
   ! int *LoadRandomSequence(unsigned int count, int min, int max)
@@ -329,78 +329,78 @@ INTERFACE
 
   ! RenderTexture2D LoadRenderTexture(int width, int height)
   FUNCTION LoadRenderTexture(width, height) BIND(c, name='LoadRenderTexture')
-    IMPORT :: C_INT, render_texture2d_type
+    IMPORT :: C_INT, render_texture2d_
     IMPLICIT NONE
     INTEGER(kind=C_INT), INTENT(in), VALUE :: width
     INTEGER(kind=C_INT), INTENT(in), VALUE :: height
-    TYPE(render_texture2d_type) :: LoadRenderTexture
+    TYPE(render_texture2d_) :: LoadRenderTexture
   END FUNCTION LoadRenderTexture
 
   ! Shader LoadShader(const char *vsFileName, const char *fsFileName)
   FUNCTION LoadShader(vs_file_name, fs_file_name) BIND(c, name='LoadShader')
-    IMPORT :: C_CHAR, shader_type
+    IMPORT :: C_CHAR, shader_
     IMPLICIT NONE
     CHARACTER(kind=C_CHAR), INTENT(in) :: vs_file_name
     CHARACTER(kind=C_CHAR), INTENT(in) :: fs_file_name
-    TYPE(shader_type) :: LoadShader
+    TYPE(shader_) :: LoadShader
   END FUNCTION LoadShader
 
   ! Shader LoadShaderFromMemory(const char *vsCode, const char *fsCode)
         function LoadShaderFromMemory(vs_code, fs_code) bind(c, name='LoadShaderFromMemory')
-    IMPORT :: C_CHAR, shader_type
+    IMPORT :: C_CHAR, shader_
     IMPLICIT NONE
     CHARACTER(kind=C_CHAR), INTENT(in) :: vs_code
     CHARACTER(kind=C_CHAR), INTENT(in) :: fs_code
-    TYPE(shader_type) :: LoadShaderFromMemory
+    TYPE(shader_) :: LoadShaderFromMemory
   END FUNCTION LoadShaderFromMemory
 
   ! Sound LoadSound(const char *fileName)
   FUNCTION LoadSound(file_name) BIND(c, name='LoadSound')
-    IMPORT :: C_CHAR, sound_type
+    IMPORT :: C_CHAR, sound_
     IMPLICIT NONE
     CHARACTER(kind=C_CHAR), INTENT(in) :: file_name
-    TYPE(sound_type) :: LoadSound
+    TYPE(sound_) :: LoadSound
   END FUNCTION LoadSound
 
   ! Sound LoadSoundAlias(Sound source)
   FUNCTION LoadSoundAlias(source) BIND(c, name='LoadSoundAlias')
-    IMPORT :: sound_type
+    IMPORT :: sound_
     IMPLICIT NONE
-    TYPE(sound_type), INTENT(in), VALUE :: source
-    TYPE(sound_type) :: LoadSoundAlias
+    TYPE(sound_), INTENT(in), VALUE :: source
+    TYPE(sound_) :: LoadSoundAlias
   END FUNCTION LoadSoundAlias
 
   ! Sound LoadSoundFromWave(Wave wave)
   FUNCTION LoadSoundFromWave(wave) BIND(c, name='LoadSoundFromWave')
-    IMPORT :: sound_type, wave_type
+    IMPORT :: sound_, wave_
     IMPLICIT NONE
-    TYPE(wave_type), INTENT(in), VALUE :: wave
-    TYPE(sound_type) :: LoadSoundFromWave
+    TYPE(wave_), INTENT(in), VALUE :: wave
+    TYPE(sound_) :: LoadSoundFromWave
   END FUNCTION LoadSoundFromWave
 
   ! Texture2D LoadTexture(const char *fileName)
   FUNCTION LoadTexture(file_name) BIND(c, name='LoadTexture')
-    IMPORT :: C_CHAR, texture2d_type
+    IMPORT :: C_CHAR, texture2d_
     IMPLICIT NONE
     CHARACTER(kind=C_CHAR), INTENT(in) :: file_name
-    TYPE(texture2d_type) :: LoadTexture
+    TYPE(texture2d_) :: LoadTexture
   END FUNCTION LoadTexture
 
   ! TextureCubemap LoadTextureCubemap(Image image, int layout)
  FUNCTION LoadTextureCubemap(image, layout) BIND(c, name='LoadTextureCubemap')
-    IMPORT :: C_INT, image_type, texture_cubemap_type
+    IMPORT :: C_INT, image_, texture_cubemap_
     IMPLICIT NONE
-    TYPE(image_type), INTENT(in), VALUE :: image
+    TYPE(image_), INTENT(in), VALUE :: image
     INTEGER(kind=C_INT), INTENT(in), VALUE :: layout
-    TYPE(texture_cubemap_type) :: LoadTextureCubemap
+    TYPE(texture_cubemap_) :: LoadTextureCubemap
   END FUNCTION LoadTextureCubemap
 
   ! Texture2D LoadTextureFromImage(Image image)
   FUNCTION LoadTextureFromImage(image) BIND(c, name='LoadTextureFromImage')
-    IMPORT :: image_type, texture2d_type
+    IMPORT :: image_, texture2d_
     IMPLICIT NONE
-    TYPE(image_type), INTENT(in), VALUE :: image
-    TYPE(texture2d_type) :: LoadTextureFromImage
+    TYPE(image_), INTENT(in), VALUE :: image
+    TYPE(texture2d_) :: LoadTextureFromImage
   END FUNCTION LoadTextureFromImage
 
   ! char *LoadUTF8(const int *codepoints, int length)
@@ -414,35 +414,35 @@ INTERFACE
 
   ! VrStereoConfig LoadVrStereoConfig(VrDeviceInfo device)
   FUNCTION LoadVrStereoConfig(device) BIND(c, name='LoadVrStereoConfig')
-    IMPORT :: vr_device_info_type, vr_stereo_config_type
+    IMPORT :: vr_device_info_, vr_stereo_config_
     IMPLICIT NONE
-    TYPE(vr_device_info_type), INTENT(in), VALUE :: device
-    TYPE(vr_stereo_config_type) :: LoadVrStereoConfig
+    TYPE(vr_device_info_), INTENT(in), VALUE :: device
+    TYPE(vr_stereo_config_) :: LoadVrStereoConfig
   END FUNCTION LoadVrStereoConfig
 
   ! Wave LoadWave(const char *fileName)
   FUNCTION LoadWave(file_name) BIND(c, name='LoadWave')
-    IMPORT :: C_CHAR, wave_type
+    IMPORT :: C_CHAR, wave_
     IMPLICIT NONE
     CHARACTER(kind=C_CHAR), INTENT(in) :: file_name
-    TYPE(wave_type) :: LoadWave
+    TYPE(wave_) :: LoadWave
   END FUNCTION LoadWave
 
   ! Wave LoadWaveFromMemory(const char *fileType, const unsigned char *fileData, int dataSize)
-        function LoadWaveFromMemory(file_type, file_data, data_size) bind(c, name='LoadWaveFromMemory')
-    IMPORT :: C_CHAR, C_INT, c_unsigned_char, wave_type
+        function LoadWaveFromMemory(file_, file_data, data_size) bind(c, name='LoadWaveFromMemory')
+    IMPORT :: C_CHAR, C_INT, c_unsigned_char, wave_
     IMPLICIT NONE
-    CHARACTER(kind=C_CHAR), INTENT(in) :: file_type
+    CHARACTER(kind=C_CHAR), INTENT(in) :: file_
     INTEGER(kind=c_unsigned_char), INTENT(in) :: file_data
     INTEGER(kind=C_INT), INTENT(in), VALUE :: data_size
-    TYPE(wave_type) :: LoadWaveFromMemory
+    TYPE(wave_) :: LoadWaveFromMemory
   END FUNCTION LoadWaveFromMemory
 
   ! float *LoadWaveSamples(Wave wave)
   FUNCTION LoadWaveSamples(wave) BIND(c, name='LoadWaveSamples')
-    IMPORT :: C_PTR, wave_type
+    IMPORT :: C_PTR, wave_
     IMPLICIT NONE
-    TYPE(wave_type), INTENT(in), VALUE :: wave
+    TYPE(wave_), INTENT(in), VALUE :: wave
     TYPE(C_PTR) :: LoadWaveSamples
   END FUNCTION LoadWaveSamples
 END INTERFACE

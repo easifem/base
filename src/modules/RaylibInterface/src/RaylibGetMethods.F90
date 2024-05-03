@@ -110,18 +110,18 @@ INTERFACE
 
   ! Matrix GetCameraMatrix(Camera camera)
   FUNCTION GetCameraMatrix(camera) BIND(c, name='GetCameraMatrix')
-    IMPORT :: camera3d_type, matrix_type
+    IMPORT :: camera3d_, matrix_
     IMPLICIT NONE
-    TYPE(camera3d_type), INTENT(in), VALUE :: camera
-    TYPE(matrix_type) :: GetCameraMatrix
+    TYPE(camera3d_), INTENT(in), VALUE :: camera
+    TYPE(matrix_) :: GetCameraMatrix
   END FUNCTION GetCameraMatrix
 
   ! Matrix GetCameraMatrix2D(Camera2D camera)
   FUNCTION GetCameraMatrix2D(camera) BIND(c, name='GetCameraMatrix2D')
-    IMPORT :: camera2d_type, matrix_type
+    IMPORT :: camera2d_, matrix_
     IMPLICIT NONE
-    TYPE(camera2d_type), INTENT(in), VALUE :: camera
-    TYPE(matrix_type) :: GetCameraMatrix2D
+    TYPE(camera2d_), INTENT(in), VALUE :: camera
+    TYPE(matrix_) :: GetCameraMatrix2D
   END FUNCTION GetCameraMatrix2D
 
   ! int GetCharPressed(void)
@@ -176,19 +176,19 @@ INTERFACE
 
   ! Rectangle GetCollisionRec(Rectangle rec1, Rectangle rec2)
   FUNCTION GetCollisionRec(rec1, rec2) BIND(c, name='GetCollisionRec')
-    IMPORT :: rectangle_type
+    IMPORT :: rectangle_
     IMPLICIT NONE
-    TYPE(rectangle_type), INTENT(in), VALUE :: rec1
-    TYPE(rectangle_type), INTENT(in), VALUE :: rec2
-    TYPE(rectangle_type) :: GetCollisionRec
+    TYPE(rectangle_), INTENT(in), VALUE :: rec1
+    TYPE(rectangle_), INTENT(in), VALUE :: rec2
+    TYPE(rectangle_) :: GetCollisionRec
   END FUNCTION GetCollisionRec
 
   ! Color GetColor(unsigned int hexValue)
   FUNCTION GetColor(hex_value) BIND(c, name='GetColor')
-    IMPORT :: c_unsigned_int, color_type
+    IMPORT :: c_unsigned_int, color_
     IMPLICIT NONE
     INTEGER(kind=c_unsigned_int), INTENT(in), VALUE :: hex_value
-    TYPE(color_type) :: GetColor
+    TYPE(color_) :: GetColor
   END FUNCTION GetColor
 
   ! int GetCurrentMonitor(void)
@@ -255,9 +255,9 @@ INTERFACE
 
   ! Font GetFontDefault(void)
   FUNCTION GetFontDefault() BIND(c, name='GetFontDefault')
-    IMPORT :: font_type
+    IMPORT :: font_
     IMPLICIT NONE
-    TYPE(font_type) :: GetFontDefault
+    TYPE(font_) :: GetFontDefault
   END FUNCTION GetFontDefault
 
   ! float GetFrameTime(void)
@@ -329,29 +329,29 @@ INTERFACE
 
   ! Rectangle GetGlyphAtlasRec(Font font, int codepoint)
   FUNCTION GetGlyphAtlasRec(font, codepoint) BIND(c, name='GetGlyphAtlasRec')
-    IMPORT :: C_INT, font_type, rectangle_type
+    IMPORT :: C_INT, font_, rectangle_
     IMPLICIT NONE
-    TYPE(font_type), INTENT(in), VALUE :: font
+    TYPE(font_), INTENT(in), VALUE :: font
     INTEGER(kind=C_INT), INTENT(in), VALUE :: codepoint
-    TYPE(rectangle_type) :: GetGlyphAtlasRec
+    TYPE(rectangle_) :: GetGlyphAtlasRec
   END FUNCTION GetGlyphAtlasRec
 
   ! int GetGlyphIndex(Font font, int codepoint)
   FUNCTION GetGlyphIndex(font, codepoint) BIND(c, name='GetGlyphIndex')
-    IMPORT :: C_INT, font_type
+    IMPORT :: C_INT, font_
     IMPLICIT NONE
-    TYPE(font_type), INTENT(in), VALUE :: font
+    TYPE(font_), INTENT(in), VALUE :: font
     INTEGER(kind=C_INT), INTENT(in), VALUE :: codepoint
     INTEGER(kind=C_INT) :: GetGlyphIndex
   END FUNCTION GetGlyphIndex
 
   ! GlyphInfo GetGlyphInfo(Font font, int codepoint)
   FUNCTION GetGlyphInfo(font, codepoint) BIND(c, name='GetGlyphInfo')
-    IMPORT :: C_INT, font_type, glyph_info_type
+    IMPORT :: C_INT, font_, glyph_info_
     IMPLICIT NONE
-    TYPE(font_type), INTENT(in), VALUE :: font
+    TYPE(font_), INTENT(in), VALUE :: font
     INTEGER(kind=C_INT), INTENT(in), VALUE :: codepoint
-    TYPE(glyph_info_type) :: GetGlyphInfo
+    TYPE(glyph_info_) :: GetGlyphInfo
   END FUNCTION GetGlyphInfo
 
   ! float GetMasterVolume(void)
@@ -363,81 +363,81 @@ INTERFACE
 
   ! Rectangle GetImageAlphaBorder(Image image, float threshold)
   FUNCTION GetImageAlphaBorder(image, threshold) BIND(c, name='GetImageAlphaBorder')
-    IMPORT :: C_FLOAT, image_type, rectangle_type
+    IMPORT :: C_FLOAT, image_, rectangle_
     IMPLICIT NONE
-    TYPE(image_type), INTENT(in), VALUE :: image
+    TYPE(image_), INTENT(in), VALUE :: image
     REAL(kind=C_FLOAT), INTENT(in), VALUE :: threshold
-    TYPE(rectangle_type) :: GetImageAlphaBorder
+    TYPE(rectangle_) :: GetImageAlphaBorder
   END FUNCTION GetImageAlphaBorder
 
   ! Vector2 GetSplinePointBasis(Vector2 p1, Vector2 p2, Vector2 p3, Vector2 p4, float t)
   FUNCTION GetSplinePointBasis(p1, p2, p3, p4, t) BIND(c, &
                                                    name='GetSplinePointBasis')
-    IMPORT :: C_FLOAT, vector2_type
+    IMPORT :: C_FLOAT, vector2_
     IMPLICIT NONE
-    TYPE(vector2_type), INTENT(in), VALUE :: p1
-    TYPE(vector2_type), INTENT(in), VALUE :: p2
-    TYPE(vector2_type), INTENT(in), VALUE :: p3
-    TYPE(vector2_type), INTENT(in), VALUE :: p4
+    TYPE(vector2_), INTENT(in), VALUE :: p1
+    TYPE(vector2_), INTENT(in), VALUE :: p2
+    TYPE(vector2_), INTENT(in), VALUE :: p3
+    TYPE(vector2_), INTENT(in), VALUE :: p4
     REAL(kind=C_FLOAT), INTENT(in), VALUE :: t
-    TYPE(vector2_type) :: GetSplinePointBasis
+    TYPE(vector2_) :: GetSplinePointBasis
   END FUNCTION GetSplinePointBasis
 
   ! Vector2 GetSplinePointBezierCubic(Vector2 p1, Vector2 c2, Vector2 c3, Vector2 p4, float t)
   FUNCTION GetSplinePointBezierCubic(p1, c2, c3, p4, t) BIND(c, &
                                              name='GetSplinePointBezierCubic')
-    IMPORT :: C_FLOAT, vector2_type
+    IMPORT :: C_FLOAT, vector2_
     IMPLICIT NONE
-    TYPE(vector2_type), INTENT(in), VALUE :: p1
-    TYPE(vector2_type), INTENT(in), VALUE :: c2
-    TYPE(vector2_type), INTENT(in), VALUE :: c3
-    TYPE(vector2_type), INTENT(in), VALUE :: p4
+    TYPE(vector2_), INTENT(in), VALUE :: p1
+    TYPE(vector2_), INTENT(in), VALUE :: c2
+    TYPE(vector2_), INTENT(in), VALUE :: c3
+    TYPE(vector2_), INTENT(in), VALUE :: p4
     REAL(kind=C_FLOAT), INTENT(in), VALUE :: t
-    TYPE(vector2_type) :: GetSplinePointBezierCubic
+    TYPE(vector2_) :: GetSplinePointBezierCubic
   END FUNCTION GetSplinePointBezierCubic
 
   ! Vector2 GetSplinePointBezierQuad(Vector2 p1, Vector2 c2, Vector2 p3, float t)
   FUNCTION GetSplinePointBezierQuad(p1, c2, p3, t) BIND(c, name='GetSplinePointBezierQuad')
-    IMPORT :: C_FLOAT, vector2_type
+    IMPORT :: C_FLOAT, vector2_
     IMPLICIT NONE
-    TYPE(vector2_type), INTENT(in), VALUE :: p1
-    TYPE(vector2_type), INTENT(in), VALUE :: c2
-    TYPE(vector2_type), INTENT(in), VALUE :: p3
+    TYPE(vector2_), INTENT(in), VALUE :: p1
+    TYPE(vector2_), INTENT(in), VALUE :: c2
+    TYPE(vector2_), INTENT(in), VALUE :: p3
     REAL(kind=C_FLOAT), INTENT(in), VALUE :: t
-    TYPE(vector2_type) :: GetSplinePointBezierQuad
+    TYPE(vector2_) :: GetSplinePointBezierQuad
   END FUNCTION GetSplinePointBezierQuad
 
   ! Vector2 GetSplinePointCatmullRom(Vector2 p1, Vector2 p2, Vector2 p3, Vector2 p4, float t)
   FUNCTION GetSplinePointCatmullRom(p1, p2, p3, p4, t) BIND(c, &
                                               name='GetSplinePointCatmullRom')
-    IMPORT :: C_FLOAT, vector2_type
+    IMPORT :: C_FLOAT, vector2_
     IMPLICIT NONE
-    TYPE(vector2_type), INTENT(in), VALUE :: p1
-    TYPE(vector2_type), INTENT(in), VALUE :: p2
-    TYPE(vector2_type), INTENT(in), VALUE :: p3
-    TYPE(vector2_type), INTENT(in), VALUE :: p4
+    TYPE(vector2_), INTENT(in), VALUE :: p1
+    TYPE(vector2_), INTENT(in), VALUE :: p2
+    TYPE(vector2_), INTENT(in), VALUE :: p3
+    TYPE(vector2_), INTENT(in), VALUE :: p4
     REAL(kind=C_FLOAT), INTENT(in), VALUE :: t
-    TYPE(vector2_type) :: GetSplinePointCatmullRom
+    TYPE(vector2_) :: GetSplinePointCatmullRom
   END FUNCTION GetSplinePointCatmullRom
 
   ! Vector2 GetSplinePointLinear(Vector2 startPos, Vector2 endPos, float t)
   FUNCTION GetSplinePointLinear(start_pos, end_pos, t) BIND(c, name='GetSplinePointLinear')
-    IMPORT :: C_FLOAT, vector2_type
+    IMPORT :: C_FLOAT, vector2_
     IMPLICIT NONE
-    TYPE(vector2_type), INTENT(in), VALUE :: start_pos
-    TYPE(vector2_type), INTENT(in), VALUE :: end_pos
+    TYPE(vector2_), INTENT(in), VALUE :: start_pos
+    TYPE(vector2_), INTENT(in), VALUE :: end_pos
     REAL(kind=C_FLOAT), INTENT(in), VALUE :: t
-    TYPE(vector2_type) :: GetSplinePointLinear
+    TYPE(vector2_) :: GetSplinePointLinear
   END FUNCTION GetSplinePointLinear
 
   ! Color GetImageColor(Image image, int x, int y)
   FUNCTION GetImageColor(image, x, y) BIND(c, name='GetImageColor')
-    IMPORT :: C_INT, color_type, image_type
+    IMPORT :: C_INT, color_, image_
     IMPLICIT NONE
-    TYPE(image_type), INTENT(in), VALUE :: image
+    TYPE(image_), INTENT(in), VALUE :: image
     INTEGER(kind=C_INT), INTENT(in), VALUE :: x
     INTEGER(kind=C_INT), INTENT(in), VALUE :: y
-    TYPE(color_type) :: GetImageColor
+    TYPE(color_) :: GetImageColor
   END FUNCTION GetImageColor
 
   ! int GetKeyPressed(void)
@@ -449,18 +449,18 @@ INTERFACE
 
   ! BoundingBox GetMeshBoundingBox(Mesh mesh)
   FUNCTION GetMeshBoundingBox(mesh) BIND(c, name='GetMeshBoundingBox')
-    IMPORT :: bounding_box_type, mesh_type
+    IMPORT :: bounding_box_, mesh_
     IMPLICIT NONE
-    TYPE(mesh_type), INTENT(in), VALUE :: mesh
-    TYPE(bounding_box_type) :: GetMeshBoundingBox
+    TYPE(mesh_), INTENT(in), VALUE :: mesh
+    TYPE(bounding_box_) :: GetMeshBoundingBox
   END FUNCTION GetMeshBoundingBox
 
   ! BoundingBox GetModelBoundingBox(Model model)
   FUNCTION GetModelBoundingBox(model) BIND(c, name='GetModelBoundingBox')
-    IMPORT :: bounding_box_type, model_type
+    IMPORT :: bounding_box_, model_
     IMPLICIT NONE
-    TYPE(model_type), INTENT(in), VALUE :: model
-    TYPE(bounding_box_type) :: GetModelBoundingBox
+    TYPE(model_), INTENT(in), VALUE :: model
+    TYPE(bounding_box_) :: GetModelBoundingBox
   END FUNCTION GetModelBoundingBox
 
   ! int GetMonitorCount(void)
@@ -520,25 +520,25 @@ INTERFACE
 
   ! Vector2 GetMouseDelta(void)
   FUNCTION GetMouseDelta() BIND(c, name='GetMouseDelta')
-    IMPORT :: vector2_type
+    IMPORT :: vector2_
     IMPLICIT NONE
-    TYPE(vector2_type) :: GetMouseDelta
+    TYPE(vector2_) :: GetMouseDelta
   END FUNCTION GetMouseDelta
 
   ! Vector2 GetMousePosition(void)
   FUNCTION GetMousePosition() BIND(c, name='GetMousePosition')
-    IMPORT :: vector2_type
+    IMPORT :: vector2_
     IMPLICIT NONE
-    TYPE(vector2_type) :: GetMousePosition
+    TYPE(vector2_) :: GetMousePosition
   END FUNCTION GetMousePosition
 
   ! Ray GetMouseRay(Vector2 mousePosition, Camera camera)
   FUNCTION GetMouseRay(mouse_position, camera) BIND(c, name='GetMouseRay')
-    IMPORT :: camera3d_type, ray_type, vector2_type
+    IMPORT :: camera3d_, ray_, vector2_
     IMPLICIT NONE
-    TYPE(vector2_type), INTENT(in), VALUE :: mouse_position
-    TYPE(camera3d_type), INTENT(in), VALUE :: camera
-    TYPE(ray_type) :: GetMouseRay
+    TYPE(vector2_), INTENT(in), VALUE :: mouse_position
+    TYPE(camera3d_), INTENT(in), VALUE :: camera
+    TYPE(ray_) :: GetMouseRay
   END FUNCTION GetMouseRay
 
   ! float GetMouseWheelMove(void)
@@ -564,27 +564,27 @@ INTERFACE
 
   ! float GetMusicTimeLength(Music music)
   FUNCTION GetMusicTimeLength(music) BIND(c, name='GetMusicTimeLength')
-    IMPORT :: C_FLOAT, music_type
+    IMPORT :: C_FLOAT, music_
     IMPLICIT NONE
-    TYPE(music_type), INTENT(in), VALUE :: music
+    TYPE(music_), INTENT(in), VALUE :: music
     REAL(kind=C_FLOAT) :: GetMusicTimeLength
   END FUNCTION GetMusicTimeLength
 
   ! float GetMusicTimePlayed(Music music)
   FUNCTION GetMusicTimePlayed(music) BIND(c, name='GetMusicTimePlayed')
-    IMPORT :: C_FLOAT, music_type
+    IMPORT :: C_FLOAT, music_
     IMPLICIT NONE
-    TYPE(music_type), INTENT(in), VALUE :: music
+    TYPE(music_), INTENT(in), VALUE :: music
     REAL(kind=C_FLOAT) :: GetMusicTimePlayed
   END FUNCTION GetMusicTimePlayed
 
   ! Color GetPixelColor(void *srcPtr, int format)
   FUNCTION GetPixelColor(src_ptr, FORMAT) BIND(c, name='GetPixelColor')
-    IMPORT :: C_INT, C_PTR, color_type
+    IMPORT :: C_INT, C_PTR, color_
     IMPLICIT NONE
     TYPE(C_PTR), INTENT(in), VALUE :: src_ptr
     INTEGER(kind=C_INT), INTENT(in), VALUE :: FORMAT
-    TYPE(color_type) :: GetPixelColor
+    TYPE(color_) :: GetPixelColor
   END FUNCTION GetPixelColor
 
   ! int GetPixelDataSize(int width, int height, int format)
@@ -617,58 +617,58 @@ INTERFACE
 
   ! RayCollision GetRayCollisionBox(Ray ray, BoundingBox box)
   FUNCTION GetRayCollisionBox(ray, box) BIND(c, name='GetRayCollisionBox')
-    IMPORT :: bounding_box_type, ray_collision_type, ray_type
+    IMPORT :: bounding_box_, ray_collision_, ray_
     IMPLICIT NONE
-    TYPE(ray_type), INTENT(in), VALUE :: ray
-    TYPE(bounding_box_type), INTENT(in), VALUE :: box
-    TYPE(ray_collision_type) :: GetRayCollisionBox
+    TYPE(ray_), INTENT(in), VALUE :: ray
+    TYPE(bounding_box_), INTENT(in), VALUE :: box
+    TYPE(ray_collision_) :: GetRayCollisionBox
   END FUNCTION GetRayCollisionBox
 
   ! RayCollision GetRayCollisionMesh(Ray ray, Mesh mesh, Matrix transform)
   FUNCTION GetRayCollisionMesh(ray, mesh, transform) &
     BIND(c, name='GetRayCollisionMesh')
-    IMPORT :: matrix_type, mesh_type, ray_collision_type, ray_type
+    IMPORT :: matrix_, mesh_, ray_collision_, ray_
     IMPLICIT NONE
-    TYPE(ray_type), INTENT(in), VALUE :: ray
-    TYPE(mesh_type), INTENT(in), VALUE :: mesh
-    TYPE(matrix_type), INTENT(in), VALUE :: transform
-    TYPE(ray_collision_type) :: GetRayCollisionMesh
+    TYPE(ray_), INTENT(in), VALUE :: ray
+    TYPE(mesh_), INTENT(in), VALUE :: mesh
+    TYPE(matrix_), INTENT(in), VALUE :: transform
+    TYPE(ray_collision_) :: GetRayCollisionMesh
   END FUNCTION GetRayCollisionMesh
 
   ! RayCollision GetRayCollisionQuad(Ray ray, Vector3 p1, Vector3 p2, Vector3 p3, Vector3 p4)
   FUNCTION GetRayCollisionQuad(ray, p1, p2, p3, p4) &
     BIND(c, name='GetRayCollisionQuad')
-    IMPORT :: ray_collision_type, ray_type, vector3_type
+    IMPORT :: ray_collision_, ray_, vector3_
     IMPLICIT NONE
-    TYPE(ray_type), INTENT(in), VALUE :: ray
-    TYPE(vector3_type), INTENT(in), VALUE :: p1
-    TYPE(vector3_type), INTENT(in), VALUE :: p2
-    TYPE(vector3_type), INTENT(in), VALUE :: p3
-    TYPE(vector3_type), INTENT(in), VALUE :: p4
-    TYPE(ray_collision_type) :: GetRayCollisionQuad
+    TYPE(ray_), INTENT(in), VALUE :: ray
+    TYPE(vector3_), INTENT(in), VALUE :: p1
+    TYPE(vector3_), INTENT(in), VALUE :: p2
+    TYPE(vector3_), INTENT(in), VALUE :: p3
+    TYPE(vector3_), INTENT(in), VALUE :: p4
+    TYPE(ray_collision_) :: GetRayCollisionQuad
   END FUNCTION GetRayCollisionQuad
 
   ! RayCollision GetRayCollisionSphere(Ray ray, Vector3 center, float radius)
   FUNCTION GetRayCollisionSphere(ray, center, radius) &
     BIND(c, name='GetRayCollisionSphere')
-    IMPORT :: C_FLOAT, ray_collision_type, ray_type, vector3_type
+    IMPORT :: C_FLOAT, ray_collision_, ray_, vector3_
     IMPLICIT NONE
-    TYPE(ray_type), INTENT(in), VALUE :: ray
-    TYPE(vector3_type), INTENT(in), VALUE :: center
+    TYPE(ray_), INTENT(in), VALUE :: ray
+    TYPE(vector3_), INTENT(in), VALUE :: center
     REAL(kind=C_FLOAT), INTENT(in), VALUE :: radius
-    TYPE(ray_collision_type) :: GetRayCollisionSphere
+    TYPE(ray_collision_) :: GetRayCollisionSphere
   END FUNCTION GetRayCollisionSphere
 
   ! RayCollision GetRayCollisionTriangle(Ray ray, Vector3 p1, Vector3 p2, Vector3 p3)
   FUNCTION GetRayCollisionTriangle(ray, p1, p2, p3) &
     BIND(c, name='GetRayCollisionTriangle')
-    IMPORT :: ray_collision_type, ray_type, vector3_type
+    IMPORT :: ray_collision_, ray_, vector3_
     IMPLICIT NONE
-    TYPE(ray_type), INTENT(in), VALUE :: ray
-    TYPE(vector3_type), INTENT(in), VALUE :: p1
-    TYPE(vector3_type), INTENT(in), VALUE :: p2
-    TYPE(vector3_type), INTENT(in), VALUE :: p3
-    TYPE(ray_collision_type) :: GetRayCollisionTriangle
+    TYPE(ray_), INTENT(in), VALUE :: ray
+    TYPE(vector3_), INTENT(in), VALUE :: p1
+    TYPE(vector3_), INTENT(in), VALUE :: p2
+    TYPE(vector3_), INTENT(in), VALUE :: p3
+    TYPE(ray_collision_) :: GetRayCollisionTriangle
   END FUNCTION GetRayCollisionTriangle
 
   ! int GetRenderHeight(void)
@@ -695,11 +695,11 @@ INTERFACE
   ! Vector2 GetScreenToWorld2D(Vector2 position, Camera2D camera)
   FUNCTION GetScreenToWorld2D(position, camera) &
     BIND(c, name='GetScreenToWorld2D')
-    IMPORT :: camera2d_type, vector2_type
+    IMPORT :: camera2d_, vector2_
     IMPLICIT NONE
-    TYPE(vector2_type), INTENT(in), VALUE :: position
-    TYPE(camera2d_type), INTENT(in), VALUE :: camera
-    TYPE(vector2_type) :: GetScreenToWorld2D
+    TYPE(vector2_), INTENT(in), VALUE :: position
+    TYPE(camera2d_), INTENT(in), VALUE :: camera
+    TYPE(vector2_) :: GetScreenToWorld2D
   END FUNCTION GetScreenToWorld2D
 
   ! int GetScreenWidth(void)
@@ -712,9 +712,9 @@ INTERFACE
   ! int GetShaderLocation(Shader shader, const char *uniformName)
   FUNCTION GetShaderLocation(shader, uniform_name) &
     BIND(c, name='GetShaderLocation')
-    IMPORT :: C_CHAR, C_INT, shader_type
+    IMPORT :: C_CHAR, C_INT, shader_
     IMPLICIT NONE
-    TYPE(shader_type), INTENT(in), VALUE :: shader
+    TYPE(shader_), INTENT(in), VALUE :: shader
     CHARACTER(kind=C_CHAR), INTENT(in) :: uniform_name
     INTEGER(kind=C_INT) :: GetShaderLocation
   END FUNCTION GetShaderLocation
@@ -722,9 +722,9 @@ INTERFACE
   ! int GetShaderLocationAttrib(Shader shader, const char *attribName)
   FUNCTION GetShaderLocationAttrib(shader, attrib_name) &
     BIND(c, name='GetShaderLocationAttrib')
-    IMPORT :: C_CHAR, C_INT, shader_type
+    IMPORT :: C_CHAR, C_INT, shader_
     IMPLICIT NONE
-    TYPE(shader_type), INTENT(in), VALUE :: shader
+    TYPE(shader_), INTENT(in), VALUE :: shader
     CHARACTER(kind=C_CHAR), INTENT(in) :: attrib_name
     INTEGER(kind=C_INT) :: GetShaderLocationAttrib
   END FUNCTION GetShaderLocationAttrib
@@ -782,11 +782,11 @@ INTERFACE
   ! Vector2 GetWorldToScreen2D(Vector2 position, Camera2D camera)
   FUNCTION GetWorldToScreen2D(position, camera) &
     BIND(c, name='GetWorldToScreen2D')
-    IMPORT :: camera2d_type, vector2_type
+    IMPORT :: camera2d_, vector2_
     IMPLICIT NONE
-    TYPE(vector2_type), INTENT(in), VALUE :: position
-    TYPE(camera2d_type), INTENT(in), VALUE :: camera
-    TYPE(vector2_type) :: GetWorldToScreen2D
+    TYPE(vector2_), INTENT(in), VALUE :: position
+    TYPE(camera2d_), INTENT(in), VALUE :: camera
+    TYPE(vector2_) :: GetWorldToScreen2D
   END FUNCTION GetWorldToScreen2D
 
 END INTERFACE

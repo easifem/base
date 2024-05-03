@@ -5,44 +5,44 @@
 ! Author:  Philipp Engel
 ! Licence: ISC
 
-module raylib_util
-    use, intrinsic :: iso_c_binding
-    implicit none (type, external)
-    private
+MODULE raylib_util
+USE, INTRINSIC :: ISO_C_BINDING
+IMPLICIT NONE(TYPE, EXTERNAL)
+PRIVATE
 
-    interface
-        function c_strlen(str) bind(c, name='strlen')
-            import :: c_ptr, c_size_t
-            implicit none
-            type(c_ptr), intent(in), value :: str
-            integer(kind=c_size_t)         :: c_strlen
-        end function c_strlen
-    end interface
+INTERFACE
+  FUNCTION c_strlen(str) BIND(c, name='strlen')
+    IMPORT :: C_PTR, C_SIZE_T
+    IMPLICIT NONE
+    TYPE(C_PTR), INTENT(in), VALUE :: str
+    INTEGER(kind=C_SIZE_T) :: c_strlen
+  END FUNCTION c_strlen
+END INTERFACE
 
-    public :: c_f_str_ptr
-contains
-    subroutine c_f_str_ptr(c_str, f_str)
+PUBLIC :: c_f_str_ptr
+CONTAINS
+SUBROUTINE c_f_str_ptr(c_str, f_str)
         !! Copies a C string, passed as a C pointer, to a Fortran string.
-        type(c_ptr),                   intent(in)  :: c_str
-        character(:), allocatable, intent(out) :: f_str
+  TYPE(C_PTR), INTENT(in) :: c_str
+  CHARACTER(:), ALLOCATABLE, INTENT(out) :: f_str
 
-        character(kind=c_char), pointer :: ptrs(:)
-        integer(kind=c_size_t)          :: i, sz
+  CHARACTER(kind=C_CHAR), POINTER :: ptrs(:)
+  INTEGER(kind=C_SIZE_T) :: i, sz
 
-        copy_block: block
-            if (.not. c_associated(c_str)) exit copy_block
-            sz = c_strlen(c_str)
-            if (sz < 0) exit copy_block
-            call c_f_pointer(c_str, ptrs, [ sz ])
-            allocate (character(len=sz) :: f_str)
+  copy_block: BLOCK
+    IF (.NOT. C_ASSOCIATED(c_str)) EXIT copy_block
+    sz = c_strlen(c_str)
+    IF (sz < 0) EXIT copy_block
+    CALL C_F_POINTER(c_str, ptrs, [sz])
+    ALLOCATE (CHARACTER(len=sz) :: f_str)
 
-            do i = 1, sz
-                f_str(i:i) = ptrs(i)
-            end do
+    DO i = 1, sz
+      f_str(i:i) = ptrs(i)
+    END DO
 
-            return
-        end block copy_block
+    RETURN
+  END BLOCK copy_block
 
-        if (.not. allocated(f_str)) f_str = ''
-    end subroutine c_f_str_ptr
-end module raylib_util
+  IF (.NOT. ALLOCATED(f_str)) f_str = ''
+END SUBROUTINE c_f_str_ptr
+END MODULE raylib_util
