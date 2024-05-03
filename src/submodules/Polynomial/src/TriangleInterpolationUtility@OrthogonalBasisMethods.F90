@@ -58,13 +58,19 @@ END PROCEDURE Dubiner_Triangle2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Dubiner_Triangle2_
-REAL(DFP) :: x0(SIZE(x)), y0(SIZE(y))
+REAL(DFP), ALLOCATABLE :: x0(:), y0(:)
+INTEGER(I4B) :: ii, jj
+
+ii = SIZE(x)
+jj = SIZE(y)
+ALLOCATE (x0(ii), y0(jj))
 
 CALL FromLine2Line_(xin=x, ans=x0, from=refTriangle, to="B")
 CALL FromLine2Line_(xin=y, ans=y0, from=refTriangle, to="B")
 
 CALL Dubiner_Quadrangle_(order=order, x=x0, y=y0, ans=ans, nrow=nrow, &
                          ncol=ncol)
+DEALLOCATE (x0, y0)
 END PROCEDURE Dubiner_Triangle2_
 
 !----------------------------------------------------------------------------
@@ -82,20 +88,24 @@ END PROCEDURE OrthogonalBasisGradient_Triangle1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE OrthogonalBasisGradient_Triangle1_
-REAL(DFP) :: x(SIZE(xij, 1), SIZE(xij, 2))
-INTEGER(I4B) :: ii
+INTEGER(I4B) :: ii, s(2), jj
+REAL(DFP), ALLOCATABLE :: x(:, :)
+
+s = SHAPE(xij)
+ALLOCATE (x(s(1), s(2)))
 
 CALL FromTriangle2Square_(xin=xij, ans=x, from=reftriangle, to="B")
-
 CALL DubinerGradient_Quadrangle_(order=order, xij=x, ans=ans, tsize1=tsize1, &
                                  tsize2=tsize2, tsize3=tsize3)
 
-DO ii = 1, SIZE(ans, 2)
+DO CONCURRENT(ii=1:tsize2, jj=1:tsize1)
 
-  ans(:, ii, 1) = ans(:, ii, 1) * 4.0_DFP / (1.0_DFP - x(2, :))
-  ans(:, ii, 2) = ans(:, ii, 1) * (1.0_DFP + x(1, :)) * 0.5_DFP &
-                  + 2.0_DFP * ans(:, ii, 2)
+  ans(jj, ii, 1) = ans(jj, ii, 1) * 4.0_DFP / (1.0_DFP - x(2, jj))
+  ans(jj, ii, 2) = ans(jj, ii, 1) * (1.0_DFP + x(1, jj)) * 0.5_DFP &
+                   + 2.0_DFP * ans(jj, ii, 2)
 END DO
+
+DEALLOCATE (x)
 
 END PROCEDURE OrthogonalBasisGradient_Triangle1_
 
