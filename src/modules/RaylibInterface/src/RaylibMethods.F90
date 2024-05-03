@@ -97,6 +97,7 @@ PUBLIC :: stop_music_stream
 PUBLIC :: stop_sound
 PUBLIC :: swap_screen_buffer
 PUBLIC :: take_screenshot
+
 PUBLIC :: text_append
 PUBLIC :: text_copy
 PUBLIC :: text_find_index
@@ -111,9 +112,11 @@ PUBLIC :: text_to_integer
 PUBLIC :: text_to_lower
 PUBLIC :: text_to_pascal
 PUBLIC :: text_to_upper
+
 PUBLIC :: toggle_borderless_windowed
 PUBLIC :: toggle_fullscreen
 PUBLIC :: trace_log
+
 PUBLIC :: update_audio_stream
 PUBLIC :: update_camera
 PUBLIC :: update_mesh_buffer
@@ -122,6 +125,7 @@ PUBLIC :: update_music_stream
 PUBLIC :: update_sound
 PUBLIC :: update_texture
 PUBLIC :: update_texture_rec
+
 PUBLIC :: upload_mesh
 PUBLIC :: wait_time
 PUBLIC :: wave_copy
