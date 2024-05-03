@@ -24,6 +24,7 @@ IF(USE_RAYLIB)
     ${src_path}/RaylibDrawMethods.F90
     ${src_path}/RaylibGetMethods.F90
     ${src_path}/RaylibSetMethods.F90
+    ${src_path}/RaylibImageMethods.F90
     ${src_path}/RaylibMethods.F90
     ${src_path}/Raylib.F90
     ${src_path}/RaylibCamera.F90

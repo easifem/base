@@ -12,5 +12,6 @@ USE RaylibEnums
 USE RaylibDrawMethods
 USE RaylibGetMethods
 USE RaylibSetMethods
+USE RaylibImageMethods
 USE RaylibMethods
 END MODULE Raylib
