@@ -17,6 +17,7 @@
 SUBMODULE(TriangleInterpolationUtility) QuadratureMethods
 USE BaseMethod
 USE QuadraturePoint_Triangle_Solin, ONLY: QuadraturePointTriangleSolin, &
+                                          QuadraturePointTriangleSolin_, &
                                           QuadratureNumberTriangleSolin
 IMPLICIT NONE
 CONTAINS
@@ -105,54 +106,54 @@ END PROCEDURE TensorQuadraturePoint_Triangle2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE QuadraturePoint_Triangle1
-INTEGER(I4B) :: nips(1), nsd
+INTEGER(I4B) :: nips(1), nsd, ii, jj
 REAL(DFP), ALLOCATABLE :: temp_t(:, :)
-TYPE(string) :: astr
+LOGICAL(LGT) :: abool
 
 nips(1) = QuadratureNumberTriangleSolin(order=order)
 
-IF (nips(1) .GT. 0) THEN
-  astr = TRIM(UpperCase(refTriangle))
-  temp_t = QuadraturePointTriangleSolin(nips=nips)
-
-  IF (PRESENT(xij)) THEN
-    nsd = SIZE(xij, 1)
-  ELSE
-    nsd = 2_I4B
-  END IF
-
-  CALL Reallocate(ans, nsd + 1_I4B, SIZE(temp_t, 2, kind=I4B))
-
-  IF (PRESENT(xij)) THEN
-    ans(1:nsd, :) = FromUnitTriangle2Triangle(  &
-      & xin=temp_t(1:2, :), &
-      & x1=xij(:, 1), &
-      & x2=xij(:, 2), &
-      & x3=xij(:, 3))
-
-    ans(nsd + 1, :) = temp_t(3, :) * JacobianTriangle( &
-      & from="UNIT", &
-      & to="TRIANGLE", &
-      & xij=xij)
-  ELSE
-    IF (astr%chars() .EQ. "BIUNIT") THEN
-      ans(1:nsd, :) = FromUnitTriangle2BiUnitTriangle(xin=temp_t(1:2, :))
-      ans(nsd + 1, :) = temp_t(3, :) * JacobianTriangle( &
-        & from="UNIT", &
-        & to="BIUNIT")
-    ELSE
-      ans = temp_t
-    END IF
-  END IF
-
-  IF (ALLOCATED(temp_t)) DEALLOCATE (temp_t)
-ELSE
-  ans = TensorQuadraturepoint_Triangle( &
-    & order=order, &
-    & quadtype=quadtype, &
-    & reftriangle=reftriangle, &
-    & xij=xij)
+IF (nips(1) .LE. 0) THEN
+  ans = TensorQuadraturepoint_Triangle(order=order, quadtype=quadtype, &
+                                       reftriangle=reftriangle, xij=xij)
+  RETURN
 END IF
+
+ALLOCATE (temp_t(3, nips(1)))
+CALL QuadraturePointTriangleSolin_(nips=nips, ans=temp_t, nrow=ii, &
+                                   ncol=jj)
+
+nsd = 2_I4B
+abool = PRESENT(xij)
+IF (abool) nsd = SIZE(xij, 1)
+
+ii = nsd + 1
+ALLOCATE (ans(ii, jj))
+
+IF (abool) THEN
+
+  CALL FromTriangle2Triangle_(xin=temp_t(1:2, :), x1=xij(1:nsd, 1), &
+                      x2=xij(1:nsd, 2), x3=xij(1:nsd, 3), ans=ans(1:nsd, :), &
+                              from="U", to="T")
+
+  ans(nsd + 1, :) = temp_t(3, :) * JacobianTriangle(from="UNIT", &
+                                                    to="TRIANGLE", xij=xij)
+
+  RETURN
+
+END IF
+
+abool = reftriangle(1:1) == "B" .OR. reftriangle(1:1) == "b"
+
+IF (abool) THEN
+  ans(1:nsd, :) = FromUnitTriangle2BiUnitTriangle(xin=temp_t(1:2, :))
+  ans(nsd + 1, :) = temp_t(3, :) * JacobianTriangle(from="UNIT", to="BIUNIT")
+  RETURN
+END IF
+
+ans = temp_t
+
+IF (ALLOCATED(temp_t)) DEALLOCATE (temp_t)
+
 END PROCEDURE QuadraturePoint_Triangle1
 
 !----------------------------------------------------------------------------
