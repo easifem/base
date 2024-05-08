@@ -82,16 +82,16 @@ CASE ("BU", "bu", "bU", "Bu")
     ans(ii) = 0.5_DFP * (1.0_DFP + xin(ii))
   END DO
 
-CASE ("UB", "ub", "uB", "Ub")
-
-  DO CONCURRENT(ii=1:n)
-    ans(ii) = 2.0_DFP * xin(ii) - 1.0_DFP
-  END DO
-
 CASE ("BB", "UU", "bb", "uu")
 
   DO CONCURRENT(ii=1:n)
     ans(ii) = xin(ii)
+  END DO
+
+CASE ("UB", "ub", "uB", "Ub")
+
+  DO CONCURRENT(ii=1:n)
+    ans(ii) = 2.0_DFP * xin(ii) - 1.0_DFP
   END DO
 
 END SELECT
@@ -366,6 +366,8 @@ END PROCEDURE BarycentricCoordTriangle_
 
 MODULE PROCEDURE FromTriangle2Triangle_
 CHARACTER(2) :: acase
+INTEGER(I4B) :: ii, n
+
 acase = from(1:1)//to(1:1)
 
 SELECT CASE (acase)
@@ -377,6 +379,13 @@ CASE ("BU", "bu", "bU", "Bu")
 CASE ("UB", "ub", "Ub", "uB")
 
   ans = -1.0_DFP + 2.0_DFP * xin
+
+CASE ("UT", "ut", "Ut", "uT")
+
+  n = SIZE(xin, 2)
+  DO CONCURRENT(ii=1:n)
+    ans(:, ii) = x1 + (x2 - x1) * xin(1, ii) + (x3 - x1) * xin(2, ii)
+  END DO
 
 END SELECT
 END PROCEDURE FromTriangle2Triangle_
