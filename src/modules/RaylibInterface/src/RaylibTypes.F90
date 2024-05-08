@@ -148,7 +148,7 @@ TYPE, BIND(c), PUBLIC :: camera3d_
   TYPE(vector3_) :: position
   TYPE(vector3_) :: TARGET
   TYPE(vector3_) :: up
-  REAL(kind=C_FLOAT) :: fov_y = 0.0
+  REAL(kind=C_FLOAT) :: fovy = 0.0
   INTEGER(kind=C_INT) :: projection = 0
 END TYPE camera3d_
 

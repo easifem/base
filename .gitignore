@@ -9,6 +9,7 @@
 *.i90
 *.if90
 *.DS_Store
+*.cache
 *.prj
 *.drawio
 *.log
