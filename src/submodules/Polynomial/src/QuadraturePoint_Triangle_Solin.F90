@@ -25,6 +25,7 @@ implicit none
 private
 public :: QuadratureNumberTriangleSolin
 public :: QuadraturePointTriangleSolin
+public :: QuadraturePointTriangleSolin_
 
 REAL(DFP), DIMENSION(3, 1), PUBLIC, PARAMETER :: triSolin1 = &
     & TRANSPOSE(RESHAPE([ &
@@ -2055,51 +2056,115 @@ end function QuadraturePointTriangleSolin1
 !                                                                 
 !----------------------------------------------------------------------------
 
+pure subroutine QuadraturePointTriangleSolin1_(order, ans, nrow, ncol)
+  INTEGER( I4B ), INTENT( IN ) :: order
+  REAL( DFP ), INTENT(INOUT) ::  ans(:, :)
+  INTEGER( I4B ), INTENT(OUT) :: nrow, ncol
+
+  INTEGER(I4B) :: nips(1)
+
+  nips(1) = QuadratureNumberTriangleSolin(order=order)
+  nrow = 0
+  ncol = 0
+
+  if( nips(1) .gt. 0_I4B )  &
+  CALL QuadraturePointTriangleSolin_(nips=nips, ans=ans, nrow=nrow, &
+   ncol=ncol)
+
+end subroutine QuadraturePointTriangleSolin1_
+
+!----------------------------------------------------------------------------
+!                                                                 
+!----------------------------------------------------------------------------
+
 pure function QuadraturePointTriangleSolin(nips) result(ans)
   INTEGER( I4B ), INTENT( IN ) :: nips(1)
   REAL( DFP ), ALLOCATABLE :: ans(:, :)
+
+  INTEGER(I4B) :: nrow, ncol
+
+  nrow = 3
+  ncol = nips(1)
+
+  ALLOCATE(ans(nrow, ncol))
+  CALL QuadraturePointTriangleSolin_(nips=nips, ans=ans, nrow=nrow, ncol=ncol)
+
+end function QuadraturePointTriangleSolin
+
+!----------------------------------------------------------------------------
+!                                                                 
+!----------------------------------------------------------------------------
+
+pure subroutine QuadraturePointTriangleSolin_(nips, ans, nrow, ncol)
+  INTEGER( I4B ), INTENT( IN ) :: nips(1)
+  REAL( DFP ), INTENT(INOUT) :: ans(:, :)
+  INTEGER( I4B ), INTENT(OUT) :: nrow, ncol
+
+  nrow = 3
+  ncol = nips(1)
+
   select case(nips(1))
   case(1)
-    ans = triSolin1
+    ans(1:nrow, 1:ncol) = triSolin1
+
   case(3)
-    ans = triSolin3
+    ans(1:nrow, 1:ncol) = triSolin3
+
   case(4)
-    ans = triSolin4
+    ans(1:nrow, 1:ncol) = triSolin4
+
   case(6)
-    ans = triSolin6
+    ans(1:nrow, 1:ncol) = triSolin6
+
   case(7)
-    ans = triSolin7
+    ans(1:nrow, 1:ncol) = triSolin7
+
   case(12)
-    ans = triSolin12
+    ans(1:nrow, 1:ncol) = triSolin12
+
   case(13)
-    ans = triSolin13
+    ans(1:nrow, 1:ncol) = triSolin13
+
   case(16)
-    ans = triSolin16
+    ans(1:nrow, 1:ncol) = triSolin16
+
   case(19)
-    ans = triSolin19
+    ans(1:nrow, 1:ncol) = triSolin19
+
   case(25)
-    ans = triSolin25
+    ans(1:nrow, 1:ncol) = triSolin25
+
   case(27)
-    ans = triSolin27
+    ans(1:nrow, 1:ncol) = triSolin27
+
   case(33)
-    ans = triSolin33
+    ans(1:nrow, 1:ncol) = triSolin33
+
   case(37)
-    ans = triSolin37
+    ans(1:nrow, 1:ncol) = triSolin37
+
   case(42)
-    ans = triSolin42
+    ans(1:nrow, 1:ncol) = triSolin42
+
   case(48)
-    ans = triSolin48
+    ans(1:nrow, 1:ncol) = triSolin48
+
   case(52)
-    ans = triSolin52
+    ans(1:nrow, 1:ncol) = triSolin52
+
   case(61)
-    ans = triSolin61
+    ans(1:nrow, 1:ncol) = triSolin61
+
   case(70)
-    ans = triSolin70
+    ans(1:nrow, 1:ncol) = triSolin70
+
   case(73)
-    ans = triSolin73
+    ans(1:nrow, 1:ncol) = triSolin73
+
   case(79)
-    ans = triSolin79
+    ans(1:nrow, 1:ncol) = triSolin79
+
   end select
-end function QuadraturePointTriangleSolin
+end subroutine QuadraturePointTriangleSolin_
 
 END MODULE QuadraturePoint_Triangle_Solin
