@@ -67,6 +67,8 @@ PUBLIC :: BarycentricCoordTriangle_
 PUBLIC :: FromBiUnitTriangle2UnitTriangle
 PUBLIC :: FromUnitTriangle2BiUnitTriangle
 
+PUBLIC :: FromTriangle2Triangle_
+
 PUBLIC :: FromUnitTetrahedron2BiUnitTetrahedron
 PUBLIC :: FromBiUnitTetrahedron2UnitTetrahedron
 PUBLIC :: FromUnitTetrahedron2Tetrahedron
@@ -146,7 +148,7 @@ END INTERFACE FromBiunitLine2Segment
 ! date: 19 Oct 2022
 ! summary: Map from unit line to physical space
 
-INTERFACE
+INTERFACE FromUnitTriangle2Triangle
   MODULE PURE FUNCTION FromUnitTriangle2Triangle1(xin, x1, x2, x3) RESULT(ans)
     REAL(DFP), INTENT(IN) :: xin(:, :)
     !! vertex coordinate of unit triangle
@@ -162,10 +164,6 @@ INTERFACE
     !! mapped coordinates of xin in physical domain
     !! shape(ans) = nsd, N
   END FUNCTION FromUnitTriangle2Triangle1
-END INTERFACE
-
-INTERFACE FromUnitTriangle2Triangle
-  MODULE PROCEDURE FromUnitTriangle2Triangle1
 END INTERFACE FromUnitTriangle2Triangle
 
 !----------------------------------------------------------------------------
@@ -477,7 +475,7 @@ END INTERFACE FromBiUnitQuadrangle2UnitTriangle
 ! summary: Map from triangle to square
 
 INTERFACE
-  MODULE PURE SUBROUTINE FromTriangle2Triangle_(xin, ans, from, to)
+ MODULE PURE SUBROUTINE FromTriangle2Triangle_(xin, ans, from, to, x1, x2, x3)
     REAL(DFP), INTENT(IN) :: xin(:, :)
     !! coordinates in bi-unit square in xij coordinate
     REAL(DFP), INTENT(INOUT) :: ans(:, :)
@@ -485,6 +483,12 @@ INTERFACE
     !! coordinates in biunit triangle
     CHARACTER(*), INTENT(IN) :: from
     CHARACTER(*), INTENT(IN) :: to
+    REAL(DFP), OPTIONAL, INTENT(IN) :: x1(:)
+    !! x1 of physical domain, size(x1) = nsd
+    REAL(DFP), OPTIONAL, INTENT(IN) :: x2(:)
+    !! x2 of physical domain, size(x2) = nsd
+    REAL(DFP), OPTIONAL, INTENT(IN) :: x3(:)
+    !! x3 of physical domain, size(x3) = nsd
   END SUBROUTINE FromTriangle2Triangle_
 END INTERFACE
 
