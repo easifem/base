@@ -1219,11 +1219,8 @@ END INTERFACE LagrangeEvalAll_Triangle
 ! summary:  based quadrature points
 
 INTERFACE QuadraturePoint_Triangle
-  MODULE FUNCTION QuadraturePoint_Triangle1(&
-    & order, &
-    & quadType, &
-    & refTriangle, &
-    & xij) RESULT(ans)
+  MODULE FUNCTION QuadraturePoint_Triangle1(order, quadType, refTriangle, &
+                                            xij) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
     !! order of integrand
     INTEGER(I4B), INTENT(IN) :: quadType
@@ -1252,11 +1249,8 @@ END INTERFACE QuadraturePoint_Triangle
 ! summary:  based quadrature points
 
 INTERFACE QuadraturePoint_Triangle
-  MODULE FUNCTION QuadraturePoint_Triangle2(&
-    & nips, &
-    & quadType, &
-    & refTriangle, &
-    & xij) RESULT(ans)
+  MODULE FUNCTION QuadraturePoint_Triangle2(nips, quadType, refTriangle, &
+                                            xij) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: nips(1)
     !! nips(1) .LE. 79, then we call
     !! economical quadrature rules.
@@ -1443,7 +1437,7 @@ END INTERFACE HeirarchicalBasisGradient_Triangle
 
 INTERFACE HeirarchicalBasisGradient_Triangle_
  MODULE SUBROUTINE HeirarchicalBasisGradient_Triangle1_(order, pe1, pe2, pe3,&
-     & xij, refTriangle, ans, tsize1, tsize2, tsize3)
+        & xij, refTriangle, ans, tsize1, tsize2, tsize3)
     INTEGER(I4B), INTENT(IN) :: order
     !! Order of approximation inside the triangle (i.e., cell)
     !! it should be greater than 2 for cell bubble to exist
