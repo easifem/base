@@ -36,6 +36,9 @@ include(${CMAKE_CURRENT_LIST_DIR}/FPL/CMakeLists.txt)
 # System
 include(${CMAKE_CURRENT_LIST_DIR}/System/CMakeLists.txt)
 
+# TriangleInterface
+include(${CMAKE_CURRENT_LIST_DIR}/TriangleInterface/CMakeLists.txt)
+
 # BLAS95
 include(${CMAKE_CURRENT_LIST_DIR}/BLAS95/CMakeLists.txt)
 

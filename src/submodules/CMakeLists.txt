@@ -15,6 +15,9 @@
 # this program.  If not, see <https: //www.gnu.org/licenses/>
 #
 
+# TriangleInterface
+include(${CMAKE_CURRENT_LIST_DIR}/TriangleInterface/CMakeLists.txt)
+
 # Hashing
 include(${CMAKE_CURRENT_LIST_DIR}/Hashing/CMakeLists.txt)
 
