@@ -30,6 +30,7 @@ PUBLIC :: LagrangeDOF
 PUBLIC :: LagrangeInDOF
 PUBLIC :: LagrangeDegree
 PUBLIC :: LagrangeVandermonde
+PUBLIC :: LagrangeVandermonde_
 PUBLIC :: EquidistancePoint
 PUBLIC :: InterpolationPoint
 PUBLIC :: LagrangeCoeff
@@ -155,6 +156,31 @@ INTERFACE
     !! nrows := number of points
     !! ncols := number of dof
   END FUNCTION LagrangeVandermonde
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                       LagrangeVandermonde
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 12 Aug 2022
+! summary: Returns the Vandermonde matrix
+
+INTERFACE
+  MODULE PURE SUBROUTINE LagrangeVandermonde_(xij, order, elemType, ans, &
+                                              nrow, ncol)
+    REAL(DFP), INTENT(IN) :: xij(:, :)
+    !!  points in $x_{iJ}$ format
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order
+    INTEGER(I4B), INTENT(IN) :: elemType
+    !! element type
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    !! vandermonde matrix
+    !! nrows := number of points
+    !! ncols := number of dof
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+  END SUBROUTINE LagrangeVandermonde_
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -357,9 +383,9 @@ INTERFACE LagrangeEvalAll
     !! x(3, :) is z coord
     REAL(DFP), INTENT(INOUT) :: xij(:, :)
     !! Interpolation points
-    CHARACTER(*), INTENT( IN ) :: domainName
+    CHARACTER(*), INTENT(IN) :: domainName
     !! domain of reference element
-    !! UNIT 
+    !! UNIT
     !! BIUNIT
     REAL(DFP), OPTIONAL, INTENT(INOUT) :: coeff(SIZE(xij, 2), SIZE(xij, 2))
     !! Coefficient of Lagrange polynomials
@@ -403,9 +429,9 @@ INTERFACE LagrangeGradientEvalAll
     !! x(3, :) is z coord
     REAL(DFP), INTENT(INOUT) :: xij(:, :)
     !! Interpolation points
-    CHARACTER(*), INTENT( IN ) :: domainName
+    CHARACTER(*), INTENT(IN) :: domainName
     !! domain of reference element
-    !! UNIT 
+    !! UNIT
     !! BIUNIT
     REAL(DFP), OPTIONAL, INTENT(INOUT) :: coeff(SIZE(xij, 2), SIZE(xij, 2))
     !! Coefficient of Lagrange polynomials
@@ -418,7 +444,7 @@ INTERFACE LagrangeGradientEvalAll
     !! Jacobi=Dubiner
     !! Heirarchical
     REAL(DFP), OPTIONAL, INTENT(IN) :: alpha, beta, lambda
-    REAL(DFP) :: ans(size(x, 2), size(xij, 2), size(x, 1))
+    REAL(DFP) :: ans(SIZE(x, 2), SIZE(xij, 2), SIZE(x, 1))
     !! Value of n+1 Lagrange polynomials at point x
   END FUNCTION LagrangeGradientEvalAll1
 END INTERFACE LagrangeGradientEvalAll

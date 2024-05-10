@@ -166,34 +166,51 @@ END PROCEDURE LagrangeDegree
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE LagrangeVandermonde
+INTEGER(I4B) :: nrow, ncol
+nrow = SIZE(xij, 2)
+ncol = LagrangeDOF(order=order, elemType=elemType)
+CALL Reallocate(ans, nrow, ncol)
+CALL LagrangeVandermonde_(xij=xij, order=order, elemType=elemType, ans=ans, &
+                          nrow=nrow, ncol=ncol)
+END PROCEDURE LagrangeVandermonde
+
+!----------------------------------------------------------------------------
+!                                                       LagrangeVandermonde_
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE LagrangeVandermonde_
 INTEGER(I4B), ALLOCATABLE :: degree(:, :)
-INTEGER(I4B) :: m, n, jj, nsd, ii
+INTEGER(I4B) :: jj, nsd, ii
 
 degree = LagrangeDegree(order=order, elemType=elemType)
-m = SIZE(xij, 2)
+nrow = SIZE(xij, 2)
 nsd = SIZE(degree, 2)
-n = SIZE(degree, 1)
-ALLOCATE (ans(m, n))
+ncol = SIZE(degree, 1)
 
 SELECT CASE (nsd)
 CASE (1)
-  DO jj = 1, n
-    ans(:, jj) = xij(1, :)**degree(jj, 1)
+
+  DO CONCURRENT(ii=1:nrow, jj=1:ncol)
+    ans(ii, jj) = xij(1, ii)**degree(jj, 1)
   END DO
+
 CASE (2)
-  DO jj = 1, n
-    ans(:, jj) = xij(1, :)**degree(jj, 1) * xij(2, :)**degree(jj, 2)
+
+  DO CONCURRENT(ii=1:nrow, jj=1:ncol)
+    ans(ii, jj) = xij(1, ii)**degree(jj, 1) * xij(2, ii)**degree(jj, 2)
   END DO
+
 CASE (3)
-  ! ans = 0.0_DFP
-  DO CONCURRENT(jj=1:n, ii=1:m)
+
+  DO CONCURRENT(jj=1:ncol, ii=1:nrow)
     ans(ii, jj) = (xij(1, ii)**degree(jj, 1)) * (xij(2, ii)**degree(jj, 2))  &
                  & * (xij(3, ii)**degree(jj, 3))
   END DO
+
 END SELECT
 
 IF (ALLOCATED(degree)) DEALLOCATE (degree)
-END PROCEDURE LagrangeVandermonde
+END PROCEDURE LagrangeVandermonde_
 
 !----------------------------------------------------------------------------
 !                                                          EquidistancePoint

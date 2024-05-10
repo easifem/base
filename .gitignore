@@ -9,6 +9,7 @@
 *.i90
 *.if90
 *.DS_Store
+*.cache
 *.prj
 *.drawio
 *.log
@@ -22,3 +23,7 @@ src/build/
 src/modules/build/
 src/submodules/build/
 _packages/
+compile_commands.json
+compile_commands.json
+neovim.json
+selected

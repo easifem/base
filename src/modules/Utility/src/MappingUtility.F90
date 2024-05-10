@@ -29,6 +29,7 @@ PRIVATE
 PUBLIC :: FromBiunitLine2Segment
 PUBLIC :: FromBiUnitLine2UnitLine
 PUBLIC :: FromUnitLine2BiUnitLine
+PUBLIC :: FromLine2Line_
 
 PUBLIC :: FromBiUnitQuadrangle2Quadrangle
 PUBLIC :: FromBiUnitQuadrangle2UnitQuadrangle
@@ -50,14 +51,23 @@ PUBLIC :: FromUnitTriangle2BiUnitQuadrangle
 PUBLIC :: FromBiUnitSqr2UnitTriangle
 PUBLIC :: FromBiUnitQuadrangle2UnitTriangle
 
+PUBLIC :: FromTriangle2Square_
+
 PUBLIC :: FromUnitTriangle2Triangle
 
 PUBLIC :: BarycentricCoordUnitTriangle
+!! This is function
 PUBLIC :: BarycentricCoordBiUnitTriangle
+!! This is function
 PUBLIC :: BarycentricCoordTriangle
+!! This is function
+PUBLIC :: BarycentricCoordTriangle_
+!! This is a subroutine without allocation
 
 PUBLIC :: FromBiUnitTriangle2UnitTriangle
 PUBLIC :: FromUnitTriangle2BiUnitTriangle
+
+PUBLIC :: FromTriangle2Triangle_
 
 PUBLIC :: FromUnitTetrahedron2BiUnitTetrahedron
 PUBLIC :: FromBiUnitTetrahedron2UnitTetrahedron
@@ -138,7 +148,7 @@ END INTERFACE FromBiunitLine2Segment
 ! date: 19 Oct 2022
 ! summary: Map from unit line to physical space
 
-INTERFACE
+INTERFACE FromUnitTriangle2Triangle
   MODULE PURE FUNCTION FromUnitTriangle2Triangle1(xin, x1, x2, x3) RESULT(ans)
     REAL(DFP), INTENT(IN) :: xin(:, :)
     !! vertex coordinate of unit triangle
@@ -154,10 +164,6 @@ INTERFACE
     !! mapped coordinates of xin in physical domain
     !! shape(ans) = nsd, N
   END FUNCTION FromUnitTriangle2Triangle1
-END INTERFACE
-
-INTERFACE FromUnitTriangle2Triangle
-  MODULE PROCEDURE FromUnitTriangle2Triangle1
 END INTERFACE FromUnitTriangle2Triangle
 
 !----------------------------------------------------------------------------
@@ -350,6 +356,25 @@ INTERFACE
 END INTERFACE
 
 !----------------------------------------------------------------------------
+!                                                             FromLine2Line_
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2024-04-27
+! summary: Map line to line
+
+INTERFACE
+  MODULE PURE SUBROUTINE FromLine2Line_(xin, ans, from, to)
+    REAL(DFP), INTENT(IN) :: xin(:)
+    !! coordinates in  unit line
+    REAL(DFP), INTENT(INOUT) :: ans(:)
+    !! mapped coordinates of xin in biunit line
+    CHARACTER(*), INTENT(IN) :: from
+    CHARACTER(*), INTENT(IN) :: to
+  END SUBROUTINE FromLine2Line_
+END INTERFACE
+
+!----------------------------------------------------------------------------
 !                                             FromBiUnitTriangle2BiUnitSqr
 !----------------------------------------------------------------------------
 
@@ -442,6 +467,72 @@ INTERFACE FromBiUnitQuadrangle2UnitTriangle
 END INTERFACE FromBiUnitQuadrangle2UnitTriangle
 
 !----------------------------------------------------------------------------
+!                                                     FromTriangle2Triangle_
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 19 Oct 2022
+! summary: Map from triangle to square
+
+INTERFACE
+ MODULE PURE SUBROUTINE FromTriangle2Triangle_(xin, ans, from, to, x1, x2, x3)
+    REAL(DFP), INTENT(IN) :: xin(:, :)
+    !! coordinates in bi-unit square in xij coordinate
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    !! ans(2, SIZE(xin, 2))
+    !! coordinates in biunit triangle
+    CHARACTER(*), INTENT(IN) :: from
+    CHARACTER(*), INTENT(IN) :: to
+    REAL(DFP), OPTIONAL, INTENT(IN) :: x1(:)
+    !! x1 of physical domain, size(x1) = nsd
+    REAL(DFP), OPTIONAL, INTENT(IN) :: x2(:)
+    !! x2 of physical domain, size(x2) = nsd
+    REAL(DFP), OPTIONAL, INTENT(IN) :: x3(:)
+    !! x3 of physical domain, size(x3) = nsd
+  END SUBROUTINE FromTriangle2Triangle_
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                       FromTriangle2Square_
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 19 Oct 2022
+! summary: Map from triangle to square
+
+INTERFACE
+  MODULE PURE SUBROUTINE FromTriangle2Square_(xin, ans, from, to)
+    REAL(DFP), INTENT(IN) :: xin(:, :)
+    !! coordinates in bi-unit square in xij coordinate
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    !! ans(2, SIZE(xin, 2))
+    !! coordinates in biunit triangle
+    CHARACTER(*), INTENT(IN) :: from
+    CHARACTER(*), INTENT(IN) :: to
+  END SUBROUTINE FromTriangle2Square_
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                       FromSquare2Triangle_
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 19 Oct 2022
+! summary: Map from triangle to square
+
+INTERFACE
+  MODULE PURE SUBROUTINE FromSquare2Triangle_(xin, ans, from, to)
+    REAL(DFP), INTENT(IN) :: xin(:, :)
+    !! coordinates in bi-unit square in xij coordinate
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    !! ans(2, SIZE(xin, 2))
+    !! coordinates in biunit triangle
+    CHARACTER(*), INTENT(IN) :: from
+    CHARACTER(*), INTENT(IN) :: to
+  END SUBROUTINE FromSquare2Triangle_
+END INTERFACE
+
+!----------------------------------------------------------------------------
 !                                              BarycentricCoordUnitTriangle
 !----------------------------------------------------------------------------
 
@@ -483,6 +574,21 @@ INTERFACE
     !! "UNIT"
     !! "BIUNIT"
   END FUNCTION BarycentricCoordTriangle
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                   BarycentricCoordTriangle
+!----------------------------------------------------------------------------
+
+INTERFACE
+  MODULE PURE SUBROUTINE BarycentricCoordTriangle_(xin, refTriangle, ans)
+    REAL(DFP), INTENT(IN) :: xin(:, :)
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    ! REAL(DFP) :: ans(3, SIZE(xin, 2))
+    CHARACTER(*), INTENT(IN) :: refTriangle
+    !! "UNIT"
+    !! "BIUNIT"
+  END SUBROUTINE BarycentricCoordTriangle_
 END INTERFACE
 
 !----------------------------------------------------------------------------

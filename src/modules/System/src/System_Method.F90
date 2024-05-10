@@ -1,4 +1,9 @@
-! This program is a part of EASIFEM library. This program is directly taken from the source: https://github.com/urbanjost/M_system. The original name of the program has been changed from M_SYSTEM to System_Method. This is to confirm to the coding sytles of easifem.
+! This program is a part of EASIFEM library.
+! This program is directly taken from the
+! source: https://github.com/urbanjost/M_system.
+! The original name of the program has been changed
+! from M_SYSTEM to System_Method.
+! This is to confirm to the coding sytles of easifem.
 !
 ! Copyright (C) 2020-2021  Vikas Sharma, Ph.D
 !
@@ -160,126 +165,126 @@
 !          o flib.a platform/files and directories,
 !          o fortranposix.
 
-module  System_Method
-use,intrinsic     :: iso_c_binding,   only : c_float, c_int, c_char
+MODULE System_Method
+USE, INTRINSIC :: ISO_C_BINDING, ONLY: C_FLOAT, C_INT, C_CHAR
 use,intrinsic     :: iso_c_binding,   only : c_ptr, c_f_pointer, c_null_char, c_null_ptr
-use,intrinsic     :: iso_c_binding
-use,intrinsic     :: iso_fortran_env, only : int8, int16, int32, int64
+USE, INTRINSIC :: ISO_C_BINDING
+USE, INTRINSIC :: ISO_FORTRAN_ENV, ONLY: INT8, INT16, INT32, INT64
 !!, real32, real64, real128, dp=>real128
 
-implicit none
-private
+IMPLICIT NONE
+PRIVATE
 ! C types. Might be platform dependent
-integer,parameter,public :: mode_t=int32
+INTEGER, PARAMETER, PUBLIC :: mode_t = INT32
 
-public :: system_rand
-public :: system_srand
+PUBLIC :: system_rand
+PUBLIC :: system_srand
 
 !-!public :: system_getc
 !-!public :: system_putc
 
-public :: system_getpid                  ! return process ID
-public :: system_getppid                 ! return parent process ID
-public :: system_getuid, system_geteuid  ! return user ID
-public :: system_getgid, system_getegid  ! return group ID
-public :: system_setsid
-public :: system_getsid
-public :: system_kill                    ! (pid, signal) kill process (defaults: pid=0, signal=SIGTERM)
-public :: system_signal                  ! (signal,[handler]) install signal handler subroutine
+PUBLIC :: system_getpid ! return process ID
+PUBLIC :: system_getppid ! return parent process ID
+PUBLIC :: system_getuid, system_geteuid ! return user ID
+PUBLIC :: system_getgid, system_getegid ! return group ID
+PUBLIC :: system_setsid
+PUBLIC :: system_getsid
+PUBLIC :: system_kill ! (pid, signal) kill process (defaults: pid=0, signal=SIGTERM)
+PUBLIC :: system_signal ! (signal,[handler]) install signal handler subroutine
 
-public :: system_errno
-public :: system_perror
+PUBLIC :: system_errno
+PUBLIC :: system_perror
 
-public :: system_putenv
-public :: system_getenv
-public :: set_environment_variable
-public :: system_unsetenv
+PUBLIC :: system_putenv
+PUBLIC :: system_getenv
+PUBLIC :: set_environment_variable
+PUBLIC :: system_unsetenv
 
-public :: system_initenv
-public :: system_readenv
-public :: system_clearenv
+PUBLIC :: system_initenv
+PUBLIC :: system_readenv
+PUBLIC :: system_clearenv
 
-public :: system_stat                    ! call stat(3c) to determine system information of file by name
-public :: system_perm                    ! create string representing file permission and type
-public :: system_access                  ! determine filename access or existence
-public :: system_isdir                   ! determine if filename is a directory
-public :: system_islnk                   ! determine if filename is a link
-public :: system_isreg                   ! determine if filename is a regular file
-public :: system_isblk                   ! determine if filename is a block device
-public :: system_ischr                   ! determine if filename is a character device
-public :: system_isfifo                  ! determine if filename is a fifo - named pipe
-public :: system_issock                  ! determine if filename is a socket
-public :: system_realpath                ! resolve pathname
+PUBLIC :: system_stat ! call stat(3c) to determine system information of file by name
+PUBLIC :: system_perm ! create string representing file permission and type
+PUBLIC :: system_access ! determine filename access or existence
+PUBLIC :: system_isdir ! determine if filename is a directory
+PUBLIC :: system_islnk ! determine if filename is a link
+PUBLIC :: system_isreg ! determine if filename is a regular file
+PUBLIC :: system_isblk ! determine if filename is a block device
+PUBLIC :: system_ischr ! determine if filename is a character device
+PUBLIC :: system_isfifo ! determine if filename is a fifo - named pipe
+PUBLIC :: system_issock ! determine if filename is a socket
+PUBLIC :: system_realpath ! resolve pathname
 
-public :: system_chdir
-public :: system_rmdir
-public :: system_remove
-public :: system_rename
+PUBLIC :: system_chdir
+PUBLIC :: system_rmdir
+PUBLIC :: system_remove
+PUBLIC :: system_rename
 
-public :: system_mkdir
-public :: system_mkfifo
-public :: system_chmod
-public :: system_chown
-public :: system_link
-public :: system_unlink
-public :: system_utime
+PUBLIC :: system_mkdir
+PUBLIC :: system_mkfifo
+PUBLIC :: system_chmod
+PUBLIC :: system_chown
+PUBLIC :: system_link
+PUBLIC :: system_unlink
+PUBLIC :: system_utime
 
-public :: system_setumask
-public :: system_getumask
-public :: system_umask
+PUBLIC :: system_setumask
+PUBLIC :: system_getumask
+PUBLIC :: system_umask
 
-public :: system_getcwd
+PUBLIC :: system_getcwd
 
-public :: system_opendir
-public :: system_readdir
-public :: system_rewinddir
-public :: system_closedir
+PUBLIC :: system_opendir
+PUBLIC :: system_readdir
+PUBLIC :: system_rewinddir
+PUBLIC :: system_closedir
 
-public :: system_cpu_time
+PUBLIC :: system_cpu_time
 
-public :: system_uname
-public :: system_gethostname
-public :: system_getlogin
-public :: system_getpwuid
-public :: system_getgrgid
-public :: fileglob
+PUBLIC :: system_uname
+PUBLIC :: system_gethostname
+PUBLIC :: system_getlogin
+PUBLIC :: system_getpwuid
+PUBLIC :: system_getgrgid
+PUBLIC :: fileglob
 
-public :: system_alarm
-public :: system_calloc
-public :: system_clock
-public :: system_time
+PUBLIC :: system_alarm
+PUBLIC :: system_calloc
+PUBLIC :: system_clock
+PUBLIC :: system_time
 !public :: system_time
 !public :: system_qsort
 
-public :: system_realloc
-public :: system_malloc
-public :: system_free
-public :: system_memcpy
+PUBLIC :: system_realloc
+PUBLIC :: system_malloc
+PUBLIC :: system_free
+PUBLIC :: system_memcpy
 
-public :: system_dir
+PUBLIC :: system_dir
 
 public :: R_GRP,R_OTH,R_USR,RWX_G,RWX_O,RWX_U,W_GRP,W_OTH,W_USR,X_GRP,X_OTH,X_USR,DEFFILEMODE,ACCESSPERMS
-public :: R_OK,W_OK,X_OK,F_OK  ! for system_access
+PUBLIC :: R_OK, W_OK, X_OK, F_OK ! for system_access
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
-type, bind(C) :: dirent_SYSTEMA
-   integer(c_long)    :: d_ino
-   integer(c_long)    :: d_off; ! __off_t, check size
-   integer(c_short)   :: d_reclen
-   character(len=1,kind=c_char) :: d_name(256)
-end type
+TYPE, BIND(C) :: dirent_SYSTEMA
+  INTEGER(C_LONG) :: d_ino
+  INTEGER(C_LONG) :: d_off; ! __off_t, check size
+  INTEGER(C_SHORT) :: d_reclen
+  CHARACTER(len=1, kind=C_CHAR) :: d_name(256)
+END TYPE
 
-type, bind(C) :: dirent_CYGWIN
-   integer(c_int)       :: d_version
-   integer(c_long)      :: d_ino
-   character(kind=c_char)    :: d_type
-   character(kind=c_char)    :: d_unused1(3)
-   integer(c_int)       :: d_internal1
-   character(len=1,kind=c_char) ::  d_name(256)
-end type
+TYPE, BIND(C) :: dirent_CYGWIN
+  INTEGER(C_INT) :: d_version
+  INTEGER(C_LONG) :: d_ino
+  CHARACTER(kind=C_CHAR) :: d_type
+  CHARACTER(kind=C_CHAR) :: d_unused1(3)
+  INTEGER(C_INT) :: d_internal1
+  CHARACTER(len=1, kind=C_CHAR) :: d_name(256)
+END TYPE
 
 !===================================================================================================================================
 !()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()!
@@ -287,86 +292,86 @@ end type
 !===================================================================================================================================
 !()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()!
 !===================================================================================================================================
-  interface
-    function system_alarm(seconds) bind(c, name="alarm")
-      import c_int
-      integer(kind=c_int), value :: seconds
-      integer(kind=c_int) system_alarm
-    end function system_alarm
-  end interface
+INTERFACE
+  FUNCTION system_alarm(seconds) BIND(c, name="alarm")
+    IMPORT C_INT
+    INTEGER(kind=C_INT), VALUE :: seconds
+    INTEGER(kind=C_INT) system_alarm
+  END FUNCTION system_alarm
+END INTERFACE
 !===================================================================================================================================
 !()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()!
 !===================================================================================================================================
-  interface
-    function system_calloc(nelem, elsize) bind(c, name="calloc")
-      import C_SIZE_T, C_INTPTR_T
-      integer(C_SIZE_T), value :: nelem, elsize
-      integer(C_INTPTR_T) system_calloc
-    end function system_calloc
-  end interface
+INTERFACE
+  FUNCTION system_calloc(nelem, elsize) BIND(c, name="calloc")
+    IMPORT C_SIZE_T, C_INTPTR_T
+    INTEGER(C_SIZE_T), VALUE :: nelem, elsize
+    INTEGER(C_INTPTR_T) system_calloc
+  END FUNCTION system_calloc
+END INTERFACE
 !===================================================================================================================================
 !()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()!
 !===================================================================================================================================
-  interface
-    pure function system_clock() bind(c, name="clock")
-      import C_LONG
-      integer(C_LONG) system_clock
-    end function system_clock
-  end interface
+INTERFACE
+  PURE FUNCTION SYSTEM_CLOCK() BIND(c, name="clock")
+    IMPORT C_LONG
+    INTEGER(C_LONG) system_clock
+  END FUNCTION system_clock
+END INTERFACE
 !===================================================================================================================================
 !()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()!
 !===================================================================================================================================
 ! Copy N bytes of SRC to DEST, no aliasing or overlapping allowed.
 ! extern void *memcpy (void *dest, const void *src, size_t n);
-interface
-  subroutine  system_memcpy(dest, src, n) bind(C,name='memcpy')
-     import C_INTPTR_T, C_SIZE_T
-     INTEGER(C_INTPTR_T), value  :: dest
-     INTEGER(C_INTPTR_T), value  :: src
-     integer(C_SIZE_T), value    :: n
-  end subroutine system_memcpy
-end interface
+INTERFACE
+  SUBROUTINE system_memcpy(dest, src, n) BIND(C, name='memcpy')
+    IMPORT C_INTPTR_T, C_SIZE_T
+    INTEGER(C_INTPTR_T), VALUE :: dest
+    INTEGER(C_INTPTR_T), VALUE :: src
+    INTEGER(C_SIZE_T), VALUE :: n
+  END SUBROUTINE system_memcpy
+END INTERFACE
 !===================================================================================================================================
 !()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()!
 !===================================================================================================================================
-  interface
-    subroutine system_free(ptr) bind(c, name="free")
-      import C_INTPTR_T
-      integer(C_INTPTR_T), value :: ptr
-    end subroutine system_free
-  end interface
+INTERFACE
+  SUBROUTINE system_free(ptr) BIND(c, name="free")
+    IMPORT C_INTPTR_T
+    INTEGER(C_INTPTR_T), VALUE :: ptr
+  END SUBROUTINE system_free
+END INTERFACE
 !===================================================================================================================================
 !()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()!
 !===================================================================================================================================
-  interface
-    function system_malloc(size) bind(c, name="malloc")
-      import C_SIZE_T, C_INTPTR_T
-      integer(C_SIZE_T), value :: size
-      integer(C_INTPTR_T) system_malloc
-    end function system_malloc
-  end interface
+INTERFACE
+  FUNCTION system_malloc(size) BIND(c, name="malloc")
+    IMPORT C_SIZE_T, C_INTPTR_T
+    INTEGER(C_SIZE_T), VALUE :: size
+    INTEGER(C_INTPTR_T) system_malloc
+  END FUNCTION system_malloc
+END INTERFACE
 !===================================================================================================================================
 !()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()!
 !===================================================================================================================================
-  interface
-    function system_realloc(ptr, size) bind(c, name="realloc")
-      import C_SIZE_T, C_INTPTR_T
-      integer(C_INTPTR_T), value :: ptr
-      integer(C_SIZE_T), value :: size
-      integer(C_INTPTR_T) system_realloc
-    end function system_realloc
-  end interface
+INTERFACE
+  FUNCTION system_realloc(ptr, size) BIND(c, name="realloc")
+    IMPORT C_SIZE_T, C_INTPTR_T
+    INTEGER(C_INTPTR_T), VALUE :: ptr
+    INTEGER(C_SIZE_T), VALUE :: size
+    INTEGER(C_INTPTR_T) system_realloc
+  END FUNCTION system_realloc
+END INTERFACE
 !===================================================================================================================================
 !()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()!
 !===================================================================================================================================
-  interface
-    function system_time(tloc) bind(c, name="time")
-      ! tloc argument should be loaded via C_LOC from iso_c_binding
-      import C_PTR, C_LONG
-      type(C_PTR), value :: tloc
-      integer(C_LONG) system_time
-    end function system_time
-  end interface
+INTERFACE
+  FUNCTION system_time(tloc) BIND(c, name="time")
+    ! tloc argument should be loaded via C_LOC from iso_c_binding
+    IMPORT C_PTR, C_LONG
+    TYPE(C_PTR), VALUE :: tloc
+    INTEGER(C_LONG) system_time
+  END FUNCTION system_time
+END INTERFACE
 !===================================================================================================================================
 !()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()!
 !===================================================================================================================================
@@ -454,12 +459,12 @@ end interface
 !!##SEE ALSO
 !!    drand48(3c), random(3c)
 ! void srand_system(int *seed)
-interface
-   subroutine system_srand(seed) bind(c,name='srand')
-      import c_int
-      integer(kind=c_int),intent(in) :: seed
-   end subroutine system_srand
-end interface
+INTERFACE
+  SUBROUTINE system_srand(seed) BIND(c, name='srand')
+    IMPORT C_INT
+    INTEGER(kind=C_INT), INTENT(in) :: seed
+  END SUBROUTINE system_srand
+END INTERFACE
 !===================================================================================================================================
 !()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()!
 !===================================================================================================================================
@@ -573,16 +578,15 @@ end interface
 !!##SEE ALSO
 !!    getpid(), raise(), setsid(), sigaction(), sigqueue(),
 
-
 ! int kill(pid_t pid, int sig);
-interface
-   function system_kill(c_pid,c_signal) bind(c,name="kill") result(c_ierr)
-      import c_int
-      integer(kind=c_int),value,intent(in)   :: c_pid
-      integer(kind=c_int),value,intent(in)   :: c_signal
-      integer(kind=c_int)                    :: c_ierr
-   end function
-end interface
+INTERFACE
+  FUNCTION system_kill(c_pid, c_signal) BIND(c, name="kill") RESULT(c_ierr)
+    IMPORT C_INT
+    INTEGER(kind=C_INT), VALUE, INTENT(in) :: c_pid
+    INTEGER(kind=C_INT), VALUE, INTENT(in) :: c_signal
+    INTEGER(kind=C_INT) :: c_ierr
+  END FUNCTION
+END INTERFACE
 !===================================================================================================================================
 !()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()!
 !===================================================================================================================================
@@ -620,11 +624,11 @@ end interface
 !!    err=           2
 !!    *demo_system_errno*: No such file or directory
 
-interface
-   integer(kind=c_int) function system_errno() bind (C,name="my_errno")
-      import c_int
-   end function system_errno
-end interface
+INTERFACE
+  INTEGER(kind=C_INT) FUNCTION system_errno() BIND(C, name="my_errno")
+    IMPORT C_INT
+  END FUNCTION system_errno
+END INTERFACE
 !-!  if a macro on XLF
 !-!  interface system_errno
 !-!    function ierrno_() bind(c, name="ierrno_")
@@ -656,11 +660,11 @@ end interface
 !!    implicit none
 !!       write(*,*)'EFFECTIVE UID=',system_geteuid()
 !!    end program demo_system_geteuid
-interface
-   integer(kind=c_int) function system_geteuid() bind (C,name="geteuid")
-      import c_int
-   end function system_geteuid
-end interface
+INTERFACE
+  INTEGER(kind=C_INT) FUNCTION system_geteuid() BIND(C, name="geteuid")
+    IMPORT C_INT
+  END FUNCTION system_geteuid
+END INTERFACE
 !===================================================================================================================================
 !()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()!
 !===================================================================================================================================
@@ -689,11 +693,11 @@ end interface
 !!   Results:
 !!
 !!    UID=      197609
-interface
-   integer(kind=c_int) function system_getuid() bind (C,name="getuid")
-      import c_int
-   end function system_getuid
-end interface
+INTERFACE
+  INTEGER(kind=C_INT) FUNCTION system_getuid() BIND(C, name="getuid")
+    IMPORT C_INT
+  END FUNCTION system_getuid
+END INTERFACE
 !===================================================================================================================================
 !()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()!
 !===================================================================================================================================
@@ -728,11 +732,11 @@ end interface
 !!    implicit none
 !!       write(*,*)'GID=',system_getegid()
 !!    end program demo_system_getegid
-interface
-   integer(kind=c_int) function system_getegid() bind (C,name="getegid")
-      import c_int
-   end function system_getegid
-end interface
+INTERFACE
+  INTEGER(kind=C_INT) FUNCTION system_getegid() BIND(C, name="getegid")
+    IMPORT C_INT
+  END FUNCTION system_getegid
+END INTERFACE
 !===================================================================================================================================
 !()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()!
 !===================================================================================================================================
@@ -766,11 +770,11 @@ end interface
 !!    implicit none
 !!       write(*,*)'GID=',system_getgid()
 !!    end program demo_system_getgid
-interface
-   integer(kind=c_int) function system_getgid() bind (C,name="getgid")
-      import c_int
-   end function system_getgid
-end interface
+INTERFACE
+  INTEGER(kind=C_INT) FUNCTION system_getgid() BIND(C, name="getgid")
+    IMPORT C_INT
+  END FUNCTION system_getgid
+END INTERFACE
 !===================================================================================================================================
 !()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()!
 !===================================================================================================================================
@@ -806,11 +810,11 @@ end interface
 !!    implicit none
 !!       write(*,*)'SID=',system_setsid()
 !!    end program demo_system_setsid
-interface
-   integer(kind=c_int) function system_setsid() bind (C,name="setsid")
-      import c_int
-   end function system_setsid
-end interface
+INTERFACE
+  INTEGER(kind=C_INT) FUNCTION system_setsid() BIND(C, name="setsid")
+    IMPORT C_INT
+  END FUNCTION system_setsid
+END INTERFACE
 !===================================================================================================================================
 !()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()!
 !===================================================================================================================================
@@ -840,12 +844,12 @@ end interface
 !!    implicit none
 !!       write(*,*)'SID=',system_getsid(0_c_int)
 !!    end program demo_system_getsid
-interface
-   integer(kind=c_int) function system_getsid(c_pid) bind (C,name="getsid")
-      import c_int
-      integer(kind=c_int) :: c_pid
-   end function system_getsid
-end interface
+INTERFACE
+  INTEGER(kind=C_INT) FUNCTION system_getsid(c_pid) BIND(C, name="getsid")
+    IMPORT C_INT
+    INTEGER(kind=C_INT) :: c_pid
+  END FUNCTION system_getsid
+END INTERFACE
 !===================================================================================================================================
 !()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()!
 !===================================================================================================================================
@@ -873,11 +877,11 @@ end interface
 !!       write(*,*)'PID=',system_getpid()
 !!    end program demo_system_getpid
 
-interface
-   pure integer(kind=c_int) function system_getpid() bind (C,name="getpid")
-      import c_int
-   end function system_getpid
-end interface
+INTERFACE
+  PURE INTEGER(kind=C_INT) FUNCTION system_getpid() BIND(C, name="getpid")
+    IMPORT C_INT
+  END FUNCTION system_getpid
+END INTERFACE
 !===================================================================================================================================
 !()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()!
 !===================================================================================================================================
@@ -912,11 +916,11 @@ end interface
 !!    implicit none
 !!       write(*,*)'PPID=',system_getppid()
 !!    end program demo_system_getppid
-interface
-   integer(kind=c_int) function system_getppid() bind (C,name="getppid")
-   import c_int
-   end function system_getppid
-end interface
+INTERFACE
+  INTEGER(kind=C_INT) FUNCTION system_getppid() BIND(C, name="getppid")
+    IMPORT C_INT
+  END FUNCTION system_getppid
+END INTERFACE
 !===================================================================================================================================
 !()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()!
 !===================================================================================================================================
@@ -975,12 +979,12 @@ end interface
 !!    OLD VALUE=octal=0022 decimal=18
 !!    MASK=octal=0002 decimal=2
 !!    NEW VALUE=octal=0002 decimal=2
-interface
-   integer(kind=c_int) function system_umask(umask_value) bind (C,name="umask")
-   import c_int
-   integer(kind=c_int),value :: umask_value
-   end function system_umask
-end interface
+INTERFACE
+  INTEGER(kind=C_INT) FUNCTION system_umask(umask_value) BIND(C, name="umask")
+    IMPORT C_INT
+    INTEGER(kind=C_INT), VALUE :: umask_value
+  END FUNCTION system_umask
+END INTERFACE
 !===================================================================================================================================
 !()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()!
 !===================================================================================================================================
@@ -1033,18 +1037,18 @@ end interface
 !!      1105177318
 !!       347750200
 !!      1729645355
-interface
-   integer(kind=c_int) function system_rand() bind (C,name="rand")
-      import c_int
-   end function system_rand
-end interface
+INTERFACE
+  INTEGER(kind=C_INT) FUNCTION system_rand() BIND(C, name="rand")
+    IMPORT C_INT
+  END FUNCTION system_rand
+END INTERFACE
 !===================================================================================================================================
 !()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()!
 !===================================================================================================================================
-interface
-  subroutine c_flush() bind(C,name="my_flush")
-  end subroutine c_flush
-end interface
+INTERFACE
+  SUBROUTINE c_flush() BIND(C, name="my_flush")
+  END SUBROUTINE c_flush
+END INTERFACE
 !===================================================================================================================================
 !()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()!
 !===================================================================================================================================
@@ -1101,32 +1105,32 @@ integer(kind=c_long),bind(c,name="longest_env_variable") :: longest_env_variable
 !===================================================================================================================================
 !()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()!
 !===================================================================================================================================
-interface
-   subroutine system_initenv() bind (C,NAME='my_initenv')
-   end subroutine system_initenv
-end interface
+INTERFACE
+  SUBROUTINE system_initenv() BIND(C, NAME='my_initenv')
+  END SUBROUTINE system_initenv
+END INTERFACE
 !===================================================================================================================================
 !()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()!
 !===================================================================================================================================
 !-!type(c_ptr),bind(c,name="environ") :: c_environ
 
-integer(kind=mode_t),bind(c,name="FS_IRGRP") ::R_GRP
-integer(kind=mode_t),bind(c,name="FS_IROTH") ::R_OTH
-integer(kind=mode_t),bind(c,name="FS_IRUSR") ::R_USR
-integer(kind=mode_t),bind(c,name="FS_IRWXG") ::RWX_G
-integer(kind=mode_t),bind(c,name="FS_IRWXO") ::RWX_O
-integer(kind=mode_t),bind(c,name="FS_IRWXU") ::RWX_U
-integer(kind=mode_t),bind(c,name="FS_IWGRP") ::W_GRP
-integer(kind=mode_t),bind(c,name="FS_IWOTH") ::W_OTH
-integer(kind=mode_t),bind(c,name="FS_IWUSR") ::W_USR
-integer(kind=mode_t),bind(c,name="FS_IXGRP") ::X_GRP
-integer(kind=mode_t),bind(c,name="FS_IXOTH") ::X_OTH
-integer(kind=mode_t),bind(c,name="FS_IXUSR") ::X_USR
-integer(kind=mode_t),bind(c,name="FDEFFILEMODE") :: DEFFILEMODE
-integer(kind=mode_t),bind(c,name="FACCESSPERMS") :: ACCESSPERMS
+INTEGER(kind=mode_t), BIND(c, name="FS_IRGRP") :: R_GRP
+INTEGER(kind=mode_t), BIND(c, name="FS_IROTH") :: R_OTH
+INTEGER(kind=mode_t), BIND(c, name="FS_IRUSR") :: R_USR
+INTEGER(kind=mode_t), BIND(c, name="FS_IRWXG") :: RWX_G
+INTEGER(kind=mode_t), BIND(c, name="FS_IRWXO") :: RWX_O
+INTEGER(kind=mode_t), BIND(c, name="FS_IRWXU") :: RWX_U
+INTEGER(kind=mode_t), BIND(c, name="FS_IWGRP") :: W_GRP
+INTEGER(kind=mode_t), BIND(c, name="FS_IWOTH") :: W_OTH
+INTEGER(kind=mode_t), BIND(c, name="FS_IWUSR") :: W_USR
+INTEGER(kind=mode_t), BIND(c, name="FS_IXGRP") :: X_GRP
+INTEGER(kind=mode_t), BIND(c, name="FS_IXOTH") :: X_OTH
+INTEGER(kind=mode_t), BIND(c, name="FS_IXUSR") :: X_USR
+INTEGER(kind=mode_t), BIND(c, name="FDEFFILEMODE") :: DEFFILEMODE
+INTEGER(kind=mode_t), BIND(c, name="FACCESSPERMS") :: ACCESSPERMS
 
 ! Host names are limited to {HOST_NAME_MAX} bytes.
-integer(kind=mode_t),bind(c,name="FHOST_NAME_MAX") :: HOST_NAME_MAX
+INTEGER(kind=mode_t), BIND(c, name="FHOST_NAME_MAX") :: HOST_NAME_MAX
 !===================================================================================================================================
 !()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()!
 !===================================================================================================================================
@@ -1136,25 +1140,25 @@ integer(kind=mode_t),bind(c,name="FHOST_NAME_MAX") :: HOST_NAME_MAX
 !integer(kind=c_int),bind(c,name="W_OK") :: W_OK
 !integer(kind=c_int),bind(c,name="X_OK") :: X_OK
 ! not sure these will be the same on all systems, but above did not work
-integer(kind=c_int),parameter           :: F_OK=0
-integer(kind=c_int),parameter           :: R_OK=4
-integer(kind=c_int),parameter           :: W_OK=2
-integer(kind=c_int),parameter           :: X_OK=1
+INTEGER(kind=C_INT), PARAMETER :: F_OK = 0
+INTEGER(kind=C_INT), PARAMETER :: R_OK = 4
+INTEGER(kind=C_INT), PARAMETER :: W_OK = 2
+INTEGER(kind=C_INT), PARAMETER :: X_OK = 1
 !===================================================================================================================================
 !()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()!
 !===================================================================================================================================
-abstract interface                       !  mold for signal handler to be installed by system_signal
-   subroutine handler(signum)
-   integer :: signum
-   end subroutine handler
-end interface
-type handler_pointer
-    procedure(handler), pointer, nopass :: sub
-end type handler_pointer
-integer, parameter :: no_of_signals=64   !  obtained with command: kill -l
-type(handler_pointer), dimension(no_of_signals) :: handler_ptr_array
+ABSTRACT INTERFACE !  mold for signal handler to be installed by system_signal
+  SUBROUTINE handler(signum)
+    INTEGER :: signum
+  END SUBROUTINE handler
+END INTERFACE
+TYPE handler_pointer
+  PROCEDURE(handler), POINTER, NOPASS :: sub
+END TYPE handler_pointer
+INTEGER, PARAMETER :: no_of_signals = 64 !  obtained with command: kill -l
+TYPE(handler_pointer), DIMENSION(no_of_signals) :: handler_ptr_array
 !===================================================================================================================================
-contains
+CONTAINS
 !===================================================================================================================================
 !()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()!
 !===================================================================================================================================
@@ -1234,34 +1238,34 @@ contains
 !!
 !!##LICENSE
 !!    Public Domain
-subroutine system_signal(signum,handler_routine)
-integer, intent(in) :: signum
-procedure(handler), optional :: handler_routine
-type(c_funptr) :: ret,c_handler
+SUBROUTINE system_signal(signum, handler_routine)
+  INTEGER, INTENT(in) :: signum
+  PROCEDURE(handler), OPTIONAL :: handler_routine
+  TYPE(C_FUNPTR) :: ret, c_handler
 
-interface
-   function c_signal(signal, sighandler) bind(c,name='signal')
-   import :: c_int,c_funptr
-   integer(c_int), value, intent(in) :: signal
-   type(c_funptr), value, intent(in) :: sighandler
-   type(c_funptr) :: c_signal
-   end function c_signal
-end interface
+  INTERFACE
+    FUNCTION c_signal(signal, sighandler) BIND(c, name='signal')
+      IMPORT :: C_INT, C_FUNPTR
+      INTEGER(C_INT), VALUE, INTENT(in) :: signal
+      TYPE(C_FUNPTR), VALUE, INTENT(in) :: sighandler
+      TYPE(C_FUNPTR) :: c_signal
+    END FUNCTION c_signal
+  END INTERFACE
 
-if(present(handler_routine))then
+  IF (PRESENT(handler_routine)) THEN
     handler_ptr_array(signum)%sub => handler_routine
-else
+  ELSE
     !!handler_ptr_array(signum)%sub => null(handler_ptr_array(signum)%sub)
-    handler_ptr_array(signum)%sub => null()
-endif
-c_handler=c_funloc(f_handler)
-ret=c_signal(signum,c_handler)
-end subroutine system_signal
+    handler_ptr_array(signum)%sub => NULL()
+  END IF
+  c_handler = C_FUNLOC(f_handler)
+  ret = c_signal(signum, c_handler)
+END SUBROUTINE system_signal
 
-subroutine f_handler(signum) bind(c)
-integer(c_int), intent(in), value :: signum
+SUBROUTINE f_handler(signum) BIND(c)
+  INTEGER(C_INT), INTENT(in), VALUE :: signum
     if(associated(handler_ptr_array(signum)%sub))call handler_ptr_array(signum)%sub(signum)
-end subroutine f_handler
+END SUBROUTINE f_handler
 !===================================================================================================================================
 !()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()!
 !===================================================================================================================================
@@ -1318,34 +1322,34 @@ end subroutine f_handler
 !!              write(*,*)' is ',trim(names(i)),' executable?   ', system_access(names(i),X_OK)
 !!           enddo
 !!           end program demo_system_access
-elemental impure function system_access(pathname,amode)
-implicit none
+ELEMENTAL impure FUNCTION system_access(pathname, amode)
+  IMPLICIT NONE
 
 ! ident_1="@(#)M_system::system_access(3f): checks accessibility or existence of a pathname"
 
-character(len=*),intent(in) :: pathname
-integer,intent(in)          :: amode
-logical                     :: system_access
+  CHARACTER(len=*), INTENT(in) :: pathname
+  INTEGER, INTENT(in) :: amode
+  LOGICAL :: system_access
 
-interface
+  INTERFACE
   function c_access(c_pathname,c_amode) bind (C,name="my_access") result (c_ierr)
-  import c_char,c_int
-  character(kind=c_char,len=1),intent(in) :: c_pathname(*)
-  integer(kind=c_int),value               :: c_amode
-  integer(kind=c_int)                     :: c_ierr
-  end function c_access
-end interface
+      IMPORT C_CHAR, C_INT
+      CHARACTER(kind=C_CHAR, len=1), INTENT(in) :: c_pathname(*)
+      INTEGER(kind=C_INT), VALUE :: c_amode
+      INTEGER(kind=C_INT) :: c_ierr
+    END FUNCTION c_access
+  END INTERFACE
 
-   if(c_access(str2_carr(trim(pathname)),int(amode,kind=c_int)).eq.0)then
-      system_access=.true.
-   else
-      system_access=.false.
+  IF (c_access(str2_carr(TRIM(pathname)), INT(amode, kind=C_INT)) .EQ. 0) THEN
+    system_access = .TRUE.
+  ELSE
+    system_access = .FALSE.
     !!if(system_errno().ne.0)then
     !!   call perror('*system_access*')
     !!endif
-   endif
+  END IF
 
-end function system_access
+END FUNCTION system_access
 !===================================================================================================================================
 !()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()!
 !===================================================================================================================================
@@ -1447,57 +1451,57 @@ end function system_access
 !!             endif
 !!          enddo
 !!       end program demo_system_utime
-function system_utime(pathname,times)
-implicit none
+FUNCTION system_utime(pathname, times)
+  IMPLICIT NONE
 
 ! ident_2="@(#)M_system::system_utime(3f): set access and modification times of a pathname"
 
-character(len=*),intent(in) :: pathname
-integer,intent(in),optional :: times(2)
-integer                     :: times_local(2)
-logical                     :: system_utime
+  CHARACTER(len=*), INTENT(in) :: pathname
+  INTEGER, INTENT(in), OPTIONAL :: times(2)
+  INTEGER :: times_local(2)
+  LOGICAL :: system_utime
 
 !-! int my_utime(const char *path, int times[2])
-interface
-  function c_utime(c_pathname,c_times) bind (C,name="my_utime") result (c_ierr)
-  import c_char,c_int
-  character(kind=c_char,len=1),intent(in) :: c_pathname(*)
-  integer(kind=c_int),intent(in)          :: c_times(2)
-  integer(kind=c_int)                     :: c_ierr
-  end function c_utime
-end interface
-   if(present(times))then
-      times_local=times
-   else
-      times_local=timestamp()
-   endif
-   if(c_utime(str2_carr(trim(pathname)),int(times_local,kind=c_int)).eq.0)then
-      system_utime=.true.
-   else
-      system_utime=.false.
+  INTERFACE
+ FUNCTION c_utime(c_pathname, c_times) BIND(C, name="my_utime") RESULT(c_ierr)
+      IMPORT C_CHAR, C_INT
+      CHARACTER(kind=C_CHAR, len=1), INTENT(in) :: c_pathname(*)
+      INTEGER(kind=C_INT), INTENT(in) :: c_times(2)
+      INTEGER(kind=C_INT) :: c_ierr
+    END FUNCTION c_utime
+  END INTERFACE
+  IF (PRESENT(times)) THEN
+    times_local = times
+  ELSE
+    times_local = timestamp()
+  END IF
+  if(c_utime(str2_carr(trim(pathname)),int(times_local,kind=c_int)).eq.0)then
+    system_utime = .TRUE.
+  ELSE
+    system_utime = .FALSE.
       !!if(system_errno().ne.0)then
       !!   call perror('*system_utime*')
       !!endif
-   endif
+  END IF
 
-end function system_utime
+END FUNCTION system_utime
 !===================================================================================================================================
 !()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()!
 !===================================================================================================================================
-function timestamp() result(epoch)
-    use, intrinsic :: iso_c_binding, only: c_long
-    implicit none
-    integer(kind=8) :: epoch
-    interface
-        ! time_t time(time_t *tloc)
-        function c_time(tloc) bind(c, name='time')
-            import :: c_long
-            integer(kind=c_long), intent(in), value :: tloc
-            integer(kind=c_long)                    :: c_time
-        end function c_time
-    end interface
-    epoch = c_time(int(0, kind=8))
-end function timestamp
+FUNCTION timestamp() RESULT(epoch)
+  USE, INTRINSIC :: ISO_C_BINDING, ONLY: C_LONG
+  IMPLICIT NONE
+  INTEGER(kind=8) :: epoch
+  INTERFACE
+    ! time_t time(time_t *tloc)
+    FUNCTION c_time(tloc) BIND(c, name='time')
+      IMPORT :: C_LONG
+      INTEGER(kind=C_LONG), INTENT(in), VALUE :: tloc
+      INTEGER(kind=C_LONG) :: c_time
+    END FUNCTION c_time
+  END INTERFACE
+  epoch = c_time(INT(0, kind=8))
+END FUNCTION timestamp
 !===================================================================================================================================
 !()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()!
 !===================================================================================================================================
@@ -1569,28 +1573,28 @@ end function timestamp
 !!   ..=>/usr/share
 !!   *system_realpath* error for pathname NotThere:: No such file or directory
 !!   NotThere=>NotThere
-function system_realpath(input) result(string)
+FUNCTION system_realpath(input) RESULT(string)
 
 ! ident_3="@(#)M_system::system_realpath(3f):call realpath(3c) to get pathname of current working directory"
 
-character(len=*),intent(in)    :: input
-type(c_ptr)                    :: c_output
-character(len=:),allocatable   :: string
-interface
-   function c_realpath(c_input) bind(c,name="my_realpath") result(c_buffer)
-      import c_char, c_size_t, c_ptr, c_int
-      character(kind=c_char) ,intent(in)  :: c_input(*)
-      type(c_ptr)                         :: c_buffer
-   end function
-end interface
+  CHARACTER(len=*), INTENT(in) :: input
+  TYPE(C_PTR) :: c_output
+  CHARACTER(len=:), ALLOCATABLE :: string
+  INTERFACE
+    FUNCTION c_realpath(c_input) BIND(c, name="my_realpath") RESULT(c_buffer)
+      IMPORT C_CHAR, C_SIZE_T, C_PTR, C_INT
+      CHARACTER(kind=C_CHAR), INTENT(in) :: c_input(*)
+      TYPE(C_PTR) :: c_buffer
+    END FUNCTION
+  END INTERFACE
 !-----------------------------------------------------------------------------------------------------------------------------------
-   c_output=c_realpath(str2_carr(trim(input)))
-   if(.not.c_associated(c_output))then
-      string=char(0)
-   else
-      string=C2F_string(c_output)
-   endif
-end function system_realpath
+  c_output = c_realpath(str2_carr(TRIM(input)))
+  IF (.NOT. C_ASSOCIATED(c_output)) THEN
+    string = CHAR(0)
+  ELSE
+    string = C2F_string(c_output)
+  END IF
+END FUNCTION system_realpath
 !===================================================================================================================================
 !()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()!
 !===================================================================================================================================
@@ -1641,29 +1645,29 @@ end function system_realpath
 !!       write(*,*)' is ',trim(names(i)),' a socket? ', system_issock(names(i))
 !!    enddo
 !!    end program demo_system_issock
-function system_issock(pathname)
-implicit none
+FUNCTION system_issock(pathname)
+  IMPLICIT NONE
 
 ! ident_4="@(#)M_system::system_issock(3f): determine if pathname is a socket"
 
-character(len=*),intent(in) :: pathname
-logical                     :: system_issock
+  CHARACTER(len=*), INTENT(in) :: pathname
+  LOGICAL :: system_issock
 
-interface
-  function c_issock(pathname) bind (C,name="my_issock") result (c_ierr)
-  import c_char,c_int
-  character(kind=c_char,len=1),intent(in) :: pathname(*)
-  integer(kind=c_int)                     :: c_ierr
-  end function c_issock
-end interface
+  INTERFACE
+    FUNCTION c_issock(pathname) BIND(C, name="my_issock") RESULT(c_ierr)
+      IMPORT C_CHAR, C_INT
+      CHARACTER(kind=C_CHAR, len=1), INTENT(in) :: pathname(*)
+      INTEGER(kind=C_INT) :: c_ierr
+    END FUNCTION c_issock
+  END INTERFACE
 
-   if(c_issock(str2_carr(trim(pathname))).eq.1)then
-      system_issock=.true.
-   else
-      system_issock=.false.
-   endif
+  IF (c_issock(str2_carr(TRIM(pathname))) .EQ. 1) THEN
+    system_issock = .TRUE.
+  ELSE
+    system_issock = .FALSE.
+  END IF
 
-end function system_issock
+END FUNCTION system_issock
 !===================================================================================================================================
 !()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()!
 !===================================================================================================================================
@@ -1714,29 +1718,29 @@ end function system_issock
 !!       write(*,*)' is ',trim(names(i)),' a fifo(named pipe)? ', system_isfifo(names(i))
 !!    enddo
 !!    end program demo_system_isfifo
-elemental impure function system_isfifo(pathname)
-implicit none
+ELEMENTAL impure FUNCTION system_isfifo(pathname)
+  IMPLICIT NONE
 
 ! ident_5="@(#)M_system::system_isfifo(3f): determine if pathname is a fifo(named pipe)"
 
-character(len=*),intent(in) :: pathname
-logical                     :: system_isfifo
+  CHARACTER(len=*), INTENT(in) :: pathname
+  LOGICAL :: system_isfifo
 
-interface
-  function c_isfifo(pathname) bind (C,name="my_isfifo") result (c_ierr)
-  import c_char,c_int
-  character(kind=c_char,len=1),intent(in) :: pathname(*)
-  integer(kind=c_int)                     :: c_ierr
-  end function c_isfifo
-end interface
+  INTERFACE
+    FUNCTION c_isfifo(pathname) BIND(C, name="my_isfifo") RESULT(c_ierr)
+      IMPORT C_CHAR, C_INT
+      CHARACTER(kind=C_CHAR, len=1), INTENT(in) :: pathname(*)
+      INTEGER(kind=C_INT) :: c_ierr
+    END FUNCTION c_isfifo
+  END INTERFACE
 
-   if(c_isfifo(str2_carr(trim(pathname))).eq.1)then
-      system_isfifo=.true.
-   else
-      system_isfifo=.false.
-   endif
+  IF (c_isfifo(str2_carr(TRIM(pathname))) .EQ. 1) THEN
+    system_isfifo = .TRUE.
+  ELSE
+    system_isfifo = .FALSE.
+  END IF
 
-end function system_isfifo
+END FUNCTION system_isfifo
 !===================================================================================================================================
 !()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()!
 !===================================================================================================================================
@@ -1789,29 +1793,29 @@ end function system_isfifo
 !!    end program demo_system_ischr
 !!
 !!   Results:
-elemental impure function system_ischr(pathname)
-implicit none
+ELEMENTAL impure FUNCTION system_ischr(pathname)
+  IMPLICIT NONE
 
 ! ident_6="@(#)M_system::system_ischr(3f): determine if pathname is a link"
 
-character(len=*),intent(in) :: pathname
-logical                     :: system_ischr
+  CHARACTER(len=*), INTENT(in) :: pathname
+  LOGICAL :: system_ischr
 
-interface
-  function c_ischr(pathname) bind (C,name="my_ischr") result (c_ierr)
-  import c_char,c_int
-  character(kind=c_char,len=1),intent(in) :: pathname(*)
-  integer(kind=c_int)                     :: c_ierr
-  end function c_ischr
-end interface
+  INTERFACE
+    FUNCTION c_ischr(pathname) BIND(C, name="my_ischr") RESULT(c_ierr)
+      IMPORT C_CHAR, C_INT
+      CHARACTER(kind=C_CHAR, len=1), INTENT(in) :: pathname(*)
+      INTEGER(kind=C_INT) :: c_ierr
+    END FUNCTION c_ischr
+  END INTERFACE
 
-   if(c_ischr(str2_carr(trim(pathname))).eq.1)then
-      system_ischr=.true.
-   else
-      system_ischr=.false.
-   endif
+  IF (c_ischr(str2_carr(TRIM(pathname))) .EQ. 1) THEN
+    system_ischr = .TRUE.
+  ELSE
+    system_ischr = .FALSE.
+  END IF
 
-end function system_ischr
+END FUNCTION system_ischr
 !===================================================================================================================================
 !()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()!
 !===================================================================================================================================
@@ -1881,29 +1885,29 @@ end function system_ischr
 !!         filenames=pack(filenames,mask=mymask)
 !!         write(*,'(a)')(trim(filenames(i)),i=1,size(filenames))
 !!    end program demo_system_isreg
-elemental impure function system_isreg(pathname)
-implicit none
+ELEMENTAL impure FUNCTION system_isreg(pathname)
+  IMPLICIT NONE
 
 ! ident_7="@(#)M_system::system_isreg(3f): determine if pathname is a regular file"
 
-character(len=*),intent(in) :: pathname
-logical                     :: system_isreg
+  CHARACTER(len=*), INTENT(in) :: pathname
+  LOGICAL :: system_isreg
 
-interface
-  function c_isreg(pathname) bind (C,name="my_isreg") result (c_ierr)
-  import c_char,c_int
-  character(kind=c_char,len=1),intent(in) :: pathname(*)
-  integer(kind=c_int)                     :: c_ierr
-  end function c_isreg
-end interface
+  INTERFACE
+    FUNCTION c_isreg(pathname) BIND(C, name="my_isreg") RESULT(c_ierr)
+      IMPORT C_CHAR, C_INT
+      CHARACTER(kind=C_CHAR, len=1), INTENT(in) :: pathname(*)
+      INTEGER(kind=C_INT) :: c_ierr
+    END FUNCTION c_isreg
+  END INTERFACE
 
-   if(c_isreg(str2_carr(trim(pathname))).eq.1)then
-      system_isreg=.true.
-   else
-      system_isreg=.false.
-   endif
+  IF (c_isreg(str2_carr(TRIM(pathname))) .EQ. 1) THEN
+    system_isreg = .TRUE.
+  ELSE
+    system_isreg = .FALSE.
+  END IF
 
-end function system_isreg
+END FUNCTION system_isreg
 !===================================================================================================================================
 !()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()!
 !===================================================================================================================================
@@ -1959,29 +1963,29 @@ end function system_isreg
 !!    end program demo_system_islnk
 !!
 !!   Results:
-elemental impure function system_islnk(pathname)
-implicit none
+ELEMENTAL impure FUNCTION system_islnk(pathname)
+  IMPLICIT NONE
 
 ! ident_8="@(#)M_system::system_islnk(3f): determine if pathname is a link"
 
-character(len=*),intent(in) :: pathname
-logical                     :: system_islnk
+  CHARACTER(len=*), INTENT(in) :: pathname
+  LOGICAL :: system_islnk
 
-interface
-  function c_islnk(pathname) bind (C,name="my_islnk") result (c_ierr)
-  import c_char,c_int
-  character(kind=c_char,len=1),intent(in) :: pathname(*)
-  integer(kind=c_int)                     :: c_ierr
-  end function c_islnk
-end interface
+  INTERFACE
+    FUNCTION c_islnk(pathname) BIND(C, name="my_islnk") RESULT(c_ierr)
+      IMPORT C_CHAR, C_INT
+      CHARACTER(kind=C_CHAR, len=1), INTENT(in) :: pathname(*)
+      INTEGER(kind=C_INT) :: c_ierr
+    END FUNCTION c_islnk
+  END INTERFACE
 
-   if(c_islnk(str2_carr(trim(pathname))).eq.1)then
-      system_islnk=.true.
-   else
-      system_islnk=.false.
-   endif
+  IF (c_islnk(str2_carr(TRIM(pathname))) .EQ. 1) THEN
+    system_islnk = .TRUE.
+  ELSE
+    system_islnk = .FALSE.
+  END IF
 
-end function system_islnk
+END FUNCTION system_islnk
 !===================================================================================================================================
 !()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()!
 !===================================================================================================================================
@@ -2034,29 +2038,29 @@ end function system_islnk
 !!    end program demo_system_isblk
 !!
 !!   Results:
-elemental impure function system_isblk(pathname)
-implicit none
+ELEMENTAL impure FUNCTION system_isblk(pathname)
+  IMPLICIT NONE
 
 ! ident_9="@(#)M_system::system_isblk(3f): determine if pathname is a block device"
 
-character(len=*),intent(in) :: pathname
-logical                     :: system_isblk
+  CHARACTER(len=*), INTENT(in) :: pathname
+  LOGICAL :: system_isblk
 
-interface
-  function c_isblk(pathname) bind (C,name="my_isblk") result (c_ierr)
-  import c_char,c_int
-  character(kind=c_char,len=1),intent(in) :: pathname(*)
-  integer(kind=c_int)                     :: c_ierr
-  end function c_isblk
-end interface
+  INTERFACE
+    FUNCTION c_isblk(pathname) BIND(C, name="my_isblk") RESULT(c_ierr)
+      IMPORT C_CHAR, C_INT
+      CHARACTER(kind=C_CHAR, len=1), INTENT(in) :: pathname(*)
+      INTEGER(kind=C_INT) :: c_ierr
+    END FUNCTION c_isblk
+  END INTERFACE
 
-   if(c_isblk(str2_carr(trim(pathname))).eq.1)then
-      system_isblk=.true.
-   else
-      system_isblk=.false.
-   endif
+  IF (c_isblk(str2_carr(TRIM(pathname))) .EQ. 1) THEN
+    system_isblk = .TRUE.
+  ELSE
+    system_isblk = .FALSE.
+  END IF
 
-end function system_isblk
+END FUNCTION system_isblk
 !===================================================================================================================================
 !()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()!
 !===================================================================================================================================
@@ -2133,29 +2137,29 @@ end function system_isblk
 !!
 !!      TEST is a directory
 !!      EXAMPLE is a directory
-elemental impure function system_isdir(dirname)
-implicit none
+ELEMENTAL impure FUNCTION system_isdir(dirname)
+  IMPLICIT NONE
 
 ! ident_10="@(#)M_system::system_isdir(3f): determine if DIRNAME is a directory name"
 
-character(len=*),intent(in) :: dirname
-logical                     :: system_isdir
+  CHARACTER(len=*), INTENT(in) :: dirname
+  LOGICAL :: system_isdir
 
-interface
-  function c_isdir(dirname) bind (C,name="my_isdir") result (c_ierr)
-  import c_char,c_int
-  character(kind=c_char,len=1),intent(in) :: dirname(*)
-  integer(kind=c_int)                     :: c_ierr
-  end function c_isdir
-end interface
+  INTERFACE
+    FUNCTION c_isdir(dirname) BIND(C, name="my_isdir") RESULT(c_ierr)
+      IMPORT C_CHAR, C_INT
+      CHARACTER(kind=C_CHAR, len=1), INTENT(in) :: dirname(*)
+      INTEGER(kind=C_INT) :: c_ierr
+    END FUNCTION c_isdir
+  END INTERFACE
 
-   if(c_isdir(str2_carr(trim(dirname))).eq.1)then
-      system_isdir=.true.
-   else
-      system_isdir=.false.
-   endif
+  IF (c_isdir(str2_carr(TRIM(dirname))) .EQ. 1) THEN
+    system_isdir = .TRUE.
+  ELSE
+    system_isdir = .FALSE.
+  END IF
 
-end function system_isdir
+END FUNCTION system_isdir
 !===================================================================================================================================
 !()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()!
 !===================================================================================================================================
@@ -2218,34 +2222,34 @@ end function system_isdir
 !!       endif
 !!    enddo
 !!    end program demo_system_chown
-elemental impure function system_chown(dirname,owner,group)
-implicit none
+ELEMENTAL impure FUNCTION system_chown(dirname, owner, group)
+  IMPLICIT NONE
 
 ! ident_11="@(#)M_system::system_chown(3f): change owner and group of a file relative to directory file descriptor"
 
-character(len=*),intent(in) :: dirname
-integer,intent(in)          :: owner
-integer,intent(in)          :: group
-logical                     :: system_chown
+  CHARACTER(len=*), INTENT(in) :: dirname
+  INTEGER, INTENT(in) :: owner
+  INTEGER, INTENT(in) :: group
+  LOGICAL :: system_chown
 
 ! int chown(const char *path, uid_t owner, gid_t group);
-interface
+  INTERFACE
   function c_chown(c_dirname,c_owner,c_group) bind (C,name="my_chown") result (c_ierr)
-  import c_char,c_int
-  character(kind=c_char,len=1),intent(in) :: c_dirname(*)
-  integer(kind=c_int),intent(in),value    :: c_owner
-  integer(kind=c_int),intent(in),value    :: c_group
-  integer(kind=c_int)                     :: c_ierr
-  end function c_chown
-end interface
+      IMPORT C_CHAR, C_INT
+      CHARACTER(kind=C_CHAR, len=1), INTENT(in) :: c_dirname(*)
+      INTEGER(kind=C_INT), INTENT(in), VALUE :: c_owner
+      INTEGER(kind=C_INT), INTENT(in), VALUE :: c_group
+      INTEGER(kind=C_INT) :: c_ierr
+    END FUNCTION c_chown
+  END INTERFACE
 
    if(c_chown(str2_carr(trim(dirname)),int(owner,kind=c_int),int(group,kind=c_int)).eq.1)then
-      system_chown=.true.
-   else
-      system_chown=.false.
-   endif
+    system_chown = .TRUE.
+  ELSE
+    system_chown = .FALSE.
+  END IF
 
-end function system_chown
+END FUNCTION system_chown
 !===================================================================================================================================
 !()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()!
 !===================================================================================================================================
@@ -2312,24 +2316,23 @@ end function system_chown
 !-!      real(kind=c_float) :: c_user,c_system,c_total
 !-!   end subroutine system_cpu_time
 !-!end interface
-subroutine system_cpu_time(total,user,system)
+SUBROUTINE system_cpu_time(total, user, system)
 
+  REAL, INTENT(out) :: user, system, total
+  REAL(kind=C_FLOAT) :: c_user, c_system, c_total
 
-real,intent(out)   :: user,system,total
-real(kind=c_float) :: c_user,c_system,c_total
+  INTERFACE
+  SUBROUTINE c_cpu_time(c_total, c_user, c_system) BIND(C, NAME='my_cpu_time')
+      IMPORT C_FLOAT
+      REAL(kind=C_FLOAT) :: c_total, c_user, c_system
+    END SUBROUTINE c_cpu_time
+  END INTERFACE
 
-interface
-   subroutine c_cpu_time(c_total,c_user,c_system) bind (C,NAME='my_cpu_time')
-      import c_float
-      real(kind=c_float) :: c_total,c_user,c_system
-   end subroutine c_cpu_time
-end interface
-
-call c_cpu_time(c_total,c_user,c_system)
-user=c_user
-system=c_system
-total=c_total
-end subroutine system_cpu_time
+  CALL c_cpu_time(c_total, c_user, c_system)
+  user = c_user
+  system = c_system
+  total = c_total
+END SUBROUTINE system_cpu_time
 !===================================================================================================================================
 !()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()!
 !===================================================================================================================================
@@ -2428,28 +2431,28 @@ end subroutine system_cpu_time
 !!       call system_perror('*demo_system_link*')
 !!    endif
 !!    end program demo_system_link
-elemental impure function system_link(oldname,newname) result(ierr)
+ELEMENTAL impure FUNCTION system_link(oldname, newname) RESULT(ierr)
 
 ! ident_12="@(#)M_system::system_link(3f): call link(3c) to create a file link"
 
-character(len=*),intent(in) :: oldname
-character(len=*),intent(in) :: newname
-integer                     :: ierr
-integer(kind=c_int)         :: c_ierr
+  CHARACTER(len=*), INTENT(in) :: oldname
+  CHARACTER(len=*), INTENT(in) :: newname
+  INTEGER :: ierr
+  INTEGER(kind=C_INT) :: c_ierr
 
-interface
-  function c_link(c_oldname,c_newname) bind (C,name="link") result (c_ierr)
-  import c_char,c_int
-  character(kind=c_char,len=1),intent(in) :: c_oldname(*)
-  character(kind=c_char,len=1),intent(in) :: c_newname(*)
-  integer(kind=c_int)                     :: c_ierr
-  end function c_link
-end interface
+  INTERFACE
+    FUNCTION c_link(c_oldname, c_newname) BIND(C, name="link") RESULT(c_ierr)
+      IMPORT C_CHAR, C_INT
+      CHARACTER(kind=C_CHAR, len=1), INTENT(in) :: c_oldname(*)
+      CHARACTER(kind=C_CHAR, len=1), INTENT(in) :: c_newname(*)
+      INTEGER(kind=C_INT) :: c_ierr
+    END FUNCTION c_link
+  END INTERFACE
 
-   c_ierr=c_link(str2_carr(trim(oldname)),str2_carr(trim(newname)))
-   ierr=c_ierr
+  c_ierr = c_link(str2_carr(TRIM(oldname)), str2_carr(TRIM(newname)))
+  ierr = c_ierr
 
-end function system_link
+END FUNCTION system_link
 !===================================================================================================================================
 !()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()!
 !===================================================================================================================================
@@ -2515,22 +2518,22 @@ end function system_link
 !!       call system_perror('*demo_system_unlink*')
 !!    endif
 !!    end program demo_system_unlink
-elemental impure function system_unlink(fname) result (ierr)
+ELEMENTAL impure FUNCTION system_unlink(fname) RESULT(ierr)
 
 ! ident_13="@(#)M_system::system_unlink(3f): call unlink(3c) to rm file link"
 
-character(len=*),intent(in) :: fname
-integer                     :: ierr
+  CHARACTER(len=*), INTENT(in) :: fname
+  INTEGER :: ierr
 
-interface
-  function c_unlink(c_fname) bind (C,name="unlink") result (c_ierr)
-  import c_char, c_int
-  character(kind=c_char,len=1) :: c_fname(*)
-  integer(kind=c_int)          :: c_ierr
-  end function c_unlink
-end interface
-   ierr=c_unlink(str2_carr(trim(fname)))
-end function system_unlink
+  INTERFACE
+    FUNCTION c_unlink(c_fname) BIND(C, name="unlink") RESULT(c_ierr)
+      IMPORT C_CHAR, C_INT
+      CHARACTER(kind=C_CHAR, len=1) :: c_fname(*)
+      INTEGER(kind=C_INT) :: c_ierr
+    END FUNCTION c_unlink
+  END INTERFACE
+  ierr = c_unlink(str2_carr(TRIM(fname)))
+END FUNCTION system_unlink
 !===================================================================================================================================
 !()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()!
 !===================================================================================================================================
@@ -2596,14 +2599,14 @@ end function system_unlink
 !!     18 O'022' Z"12' B'000010010"
 !!     NEW
 !!     63 O'077' Z"3F' B'000111111"
-integer function system_setumask(umask_value) result (old_umask)
-integer,intent(in)  :: umask_value
-integer(kind=c_int) :: umask_c
+INTEGER FUNCTION system_setumask(umask_value) RESULT(old_umask)
+  INTEGER, INTENT(in) :: umask_value
+  INTEGER(kind=C_INT) :: umask_c
 
-   umask_c=umask_value
-   old_umask=system_umask(umask_c) ! set current umask
+  umask_c = umask_value
+  old_umask = system_umask(umask_c) ! set current umask
 
-end function system_setumask
+END FUNCTION system_setumask
 !===================================================================================================================================
 !()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()!
 !===================================================================================================================================
@@ -2631,7 +2634,7 @@ end function system_setumask
 !!   Expected output
 !!
 !!     18 O'022' Z"12' B'000010010"
-integer function system_getumask() result (umask_value)
+INTEGER FUNCTION system_getumask() RESULT(umask_value)
 ! The return value from umask() is just the previous value of the file
 ! creation mask, so that this system call can be used both to get and
 ! set the required values. Sadly, however, there is no way to get the old
@@ -2639,12 +2642,12 @@ integer function system_getumask() result (umask_value)
 
 ! This means that in order just to see the current value, it is necessary
 ! to execute a piece of code like the following function:
-integer             :: idum
-integer(kind=c_int) :: old_umask
-   old_umask=system_umask(0_c_int) ! get current umask but by setting umask to 0 (a conservative mask so no vulnerability is open)
-   idum=system_umask(old_umask)    ! set back to original mask
-   umask_value=old_umask
-end function system_getumask
+  INTEGER :: idum
+  INTEGER(kind=C_INT) :: old_umask
+  old_umask = system_umask(0_C_INT) ! get current umask but by setting umask to 0 (a conservative mask so no vulnerability is open)
+  idum = system_umask(old_umask) ! set back to original mask
+  umask_value = old_umask
+END FUNCTION system_getumask
 !===================================================================================================================================
 !()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()!
 !===================================================================================================================================
@@ -2686,28 +2689,28 @@ end function system_getumask
 !!
 !!    *demo_system_perror*:/NOT/THERE/OR/ANYWHERE: No such file or directory
 !!    That is all Folks!
-subroutine system_perror(prefix)
-use, intrinsic :: iso_fortran_env, only : ERROR_UNIT, INPUT_UNIT, OUTPUT_UNIT     ! access computing environment
+SUBROUTINE system_perror(prefix)
+  USE, INTRINSIC :: ISO_FORTRAN_ENV, ONLY: ERROR_UNIT, INPUT_UNIT, OUTPUT_UNIT ! access computing environment
 
 ! ident_14="@(#)M_system::system_perror(3f): call perror(3c) to display error message"
 
-character(len=*),intent(in) :: prefix
-   integer                  :: ios
+  CHARACTER(len=*), INTENT(in) :: prefix
+  INTEGER :: ios
 
-interface
-  subroutine c_perror(c_prefix) bind (C,name="perror")
-  import c_char
-  character(kind=c_char) :: c_prefix(*)
-  end subroutine c_perror
-end interface
+  INTERFACE
+    SUBROUTINE c_perror(c_prefix) BIND(C, name="perror")
+      IMPORT C_CHAR
+      CHARACTER(kind=C_CHAR) :: c_prefix(*)
+    END SUBROUTINE c_perror
+  END INTERFACE
 
-   flush(unit=ERROR_UNIT,iostat=ios)
-   flush(unit=OUTPUT_UNIT,iostat=ios)
-   flush(unit=INPUT_UNIT,iostat=ios)
-   call c_perror(str2_carr((trim(prefix))))
-   call c_flush()
+  FLUSH (unit=ERROR_UNIT, iostat=ios)
+  FLUSH (unit=OUTPUT_UNIT, iostat=ios)
+  FLUSH (unit=INPUT_UNIT, iostat=ios)
+  CALL c_perror(str2_carr((TRIM(prefix))))
+  CALL c_flush()
 
-end subroutine system_perror
+END SUBROUTINE system_perror
 !===================================================================================================================================
 !()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()!
 !===================================================================================================================================
@@ -2775,26 +2778,26 @@ end subroutine system_perror
 !!      /home/urbanjs/V600
 !!      /tmp
 !!      *CHDIR TEST* IERR=           0
-subroutine system_chdir(path, err)
+SUBROUTINE system_chdir(path, err)
 
 ! ident_15="@(#)M_system::system_chdir(3f): call chdir(3c)"
 
-character(len=*)               :: path
-integer, optional, intent(out) :: err
+  CHARACTER(len=*) :: path
+  INTEGER, OPTIONAL, INTENT(out) :: err
 
-interface
-   integer(kind=c_int)  function c_chdir(c_path) bind(C,name="chdir")
-      import c_char, c_int
-      character(kind=c_char)   :: c_path(*)
-   end function
-end interface
-   integer                     :: loc_err
+  INTERFACE
+    INTEGER(kind=C_INT) FUNCTION c_chdir(c_path) BIND(C, name="chdir")
+      IMPORT C_CHAR, C_INT
+      CHARACTER(kind=C_CHAR) :: c_path(*)
+    END FUNCTION
+  END INTERFACE
+  INTEGER :: loc_err
 !-----------------------------------------------------------------------------------------------------------------------------------
-   loc_err=c_chdir(str2_carr(trim(path)))
-   if(present(err))then
-      err=loc_err
-   endif
-end subroutine system_chdir
+  loc_err = c_chdir(str2_carr(TRIM(path)))
+  IF (PRESENT(err)) THEN
+    err = loc_err
+  END IF
+END SUBROUTINE system_chdir
 !===================================================================================================================================
 !()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()!
 !===================================================================================================================================
@@ -2864,23 +2867,23 @@ end subroutine system_chdir
 !!    John S. Urban
 !!##LICENSE
 !!    Public Domain
-elemental impure function system_remove(path) result(err)
+ELEMENTAL impure FUNCTION system_remove(path) RESULT(err)
 
 ! ident_16="@(#)M_system::system_remove(3f): call remove(3c) to remove file"
 
-character(*),intent(in) :: path
-integer(c_int)          :: err
+  CHARACTER(*), INTENT(in) :: path
+  INTEGER(C_INT) :: err
 
-interface
-   function c_remove(c_path) bind(c,name="remove") result(c_err)
-      import c_char,c_int
-      character(kind=c_char,len=1),intent(in) :: c_path(*)
-      integer(c_int)                          :: c_err
-   end function
-end interface
+  INTERFACE
+    FUNCTION c_remove(c_path) BIND(c, name="remove") RESULT(c_err)
+      IMPORT C_CHAR, C_INT
+      CHARACTER(kind=C_CHAR, len=1), INTENT(in) :: c_path(*)
+      INTEGER(C_INT) :: c_err
+    END FUNCTION
+  END INTERFACE
 !-----------------------------------------------------------------------------------------------------------------------------------
-   err= c_remove(str2_carr(trim(path)))
-end function system_remove
+  err = c_remove(str2_carr(TRIM(path)))
+END FUNCTION system_remove
 !===================================================================================================================================
 !()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()!
 !===================================================================================================================================
@@ -2970,23 +2973,23 @@ end function system_remove
 !!    John S. Urban
 !!##LICENSE
 !!    Public Domain
-function system_rename(input,output) result(ierr)
+FUNCTION system_rename(input, output) RESULT(ierr)
 
 ! ident_17="@(#)M_system::system_rename(3f): call rename(3c) to change filename"
 
-character(*),intent(in)    :: input,output
-integer                    :: ierr
-interface
-   function c_rename(c_input,c_output) bind(c,name="rename") result(c_err)
-      import c_char, c_int
-      character(kind=c_char),intent(in) :: c_input(*)
-      character(kind=c_char),intent(in) :: c_output(*)
-      integer(c_int)                    :: c_err
-   end function
-end interface
+  CHARACTER(*), INTENT(in) :: input, output
+  INTEGER :: ierr
+  INTERFACE
+    FUNCTION c_rename(c_input, c_output) BIND(c, name="rename") RESULT(c_err)
+      IMPORT C_CHAR, C_INT
+      CHARACTER(kind=C_CHAR), INTENT(in) :: c_input(*)
+      CHARACTER(kind=C_CHAR), INTENT(in) :: c_output(*)
+      INTEGER(C_INT) :: c_err
+    END FUNCTION
+  END INTERFACE
 !-----------------------------------------------------------------------------------------------------------------------------------
-   ierr= c_rename(str2_carr(trim(input)),str2_carr(trim(output)))
-end function system_rename
+  ierr = c_rename(str2_carr(TRIM(input)), str2_carr(TRIM(output)))
+END FUNCTION system_rename
 !===================================================================================================================================
 !()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()!
 !===================================================================================================================================
@@ -3096,21 +3099,21 @@ end function system_rename
 !!    John S. Urban
 !!##LICENSE
 !!    Public Domain
-function system_chmod(filename,mode) result(ierr)
-   character(len=*),intent(in)  :: filename
-   integer,value,intent(in)     :: mode
-   integer                      :: ierr
-   interface
-      function c_chmod(c_filename,c_mode) bind(c,name="chmod") result(c_err)
-         import c_char,c_int
-         character(kind=c_char),intent(in) :: c_filename(*)
-         integer(c_int),value,intent(in)   :: c_mode
-         integer(c_int)                    :: c_err
-      end function
-   end interface
+FUNCTION system_chmod(filename, mode) RESULT(ierr)
+  CHARACTER(len=*), INTENT(in) :: filename
+  INTEGER, VALUE, INTENT(in) :: mode
+  INTEGER :: ierr
+  INTERFACE
+    FUNCTION c_chmod(c_filename, c_mode) BIND(c, name="chmod") RESULT(c_err)
+      IMPORT C_CHAR, C_INT
+      CHARACTER(kind=C_CHAR), INTENT(in) :: c_filename(*)
+      INTEGER(C_INT), VALUE, INTENT(in) :: c_mode
+      INTEGER(C_INT) :: c_err
+    END FUNCTION
+  END INTERFACE
 !-----------------------------------------------------------------------------------------------------------------------------------
-   ierr=c_chmod(str2_carr(trim(filename)),int(mode,kind(0_c_int)))
-end function system_chmod
+  ierr = c_chmod(str2_carr(TRIM(filename)), INT(mode, KIND(0_C_INT)))
+END FUNCTION system_chmod
 !===================================================================================================================================
 !()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()!
 !===================================================================================================================================
@@ -3154,34 +3157,34 @@ end function system_chmod
 !!    John S. Urban
 !!##LICENSE
 !!    Public Domain
-subroutine system_getcwd(output,ierr)
+SUBROUTINE system_getcwd(output, ierr)
 
 ! ident_18="@(#)M_system::system_getcwd(3f):call getcwd(3c) to get pathname of current working directory"
 
-character(len=:),allocatable,intent(out) :: output
-integer,intent(out)                      :: ierr
-integer(kind=c_long),parameter           :: length=4097_c_long
-character(kind=c_char,len=1)             :: buffer(length)
-type(c_ptr)                              :: buffer2
-interface
-   function c_getcwd(buffer,size) bind(c,name="getcwd") result(buffer_result)
-      import c_char, c_size_t, c_ptr
-      character(kind=c_char) ,intent(out) :: buffer(*)
-      integer(c_size_t),value,intent(in)  :: size
-      type(c_ptr)                         :: buffer_result
-   end function
-end interface
+  CHARACTER(len=:), ALLOCATABLE, INTENT(out) :: output
+  INTEGER, INTENT(out) :: ierr
+  INTEGER(kind=C_LONG), PARAMETER :: length = 4097_C_LONG
+  CHARACTER(kind=C_CHAR, len=1) :: buffer(length)
+  TYPE(C_PTR) :: buffer2
+  INTERFACE
+  FUNCTION c_getcwd(buffer, size) BIND(c, name="getcwd") RESULT(buffer_result)
+      IMPORT C_CHAR, C_SIZE_T, C_PTR
+      CHARACTER(kind=C_CHAR), INTENT(out) :: buffer(*)
+      INTEGER(C_SIZE_T), VALUE, INTENT(in) :: size
+      TYPE(C_PTR) :: buffer_result
+    END FUNCTION
+  END INTERFACE
 !-----------------------------------------------------------------------------------------------------------------------------------
-   buffer=' '
-   buffer2=c_getcwd(buffer,length)
-   if(.not.c_associated(buffer2))then
-      output=''
-      ierr=-1
-   else
-      output=trim(arr2str(buffer))
-      ierr=0
-   endif
-end subroutine system_getcwd
+  buffer = ' '
+  buffer2 = c_getcwd(buffer, length)
+  IF (.NOT. C_ASSOCIATED(buffer2)) THEN
+    output = ''
+    ierr = -1
+  ELSE
+    output = TRIM(arr2str(buffer))
+    ierr = 0
+  END IF
+END SUBROUTINE system_getcwd
 !===================================================================================================================================
 !()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()!
 !===================================================================================================================================
@@ -3238,24 +3241,24 @@ end subroutine system_getcwd
 !!    John S. Urban
 !!##LICENSE
 !!    Public Domain
-function system_rmdir(dirname) result(err)
+FUNCTION system_rmdir(dirname) RESULT(err)
 
 ! ident_19="@(#)M_system::system_rmdir(3f): call rmdir(3c) to remove empty directory"
 
-character(*),intent(in) :: dirname
-integer(c_int) :: err
+  CHARACTER(*), INTENT(in) :: dirname
+  INTEGER(C_INT) :: err
 
-interface
-   function c_rmdir(c_path) bind(c,name="rmdir") result(c_err)
-      import c_char,c_int
-      character(kind=c_char,len=1),intent(in) :: c_path(*)
-      integer(c_int)                          :: c_err
-   end function
-end interface
+  INTERFACE
+    FUNCTION c_rmdir(c_path) BIND(c, name="rmdir") RESULT(c_err)
+      IMPORT C_CHAR, C_INT
+      CHARACTER(kind=C_CHAR, len=1), INTENT(in) :: c_path(*)
+      INTEGER(C_INT) :: c_err
+    END FUNCTION
+  END INTERFACE
 !-----------------------------------------------------------------------------------------------------------------------------------
-   err= c_rmdir(str2_carr(trim(dirname)))
-   if(err.ne.0) err=system_errno()
-end function system_rmdir
+  err = c_rmdir(str2_carr(TRIM(dirname)))
+  IF (err .NE. 0) err = system_errno()
+END FUNCTION system_rmdir
 !===================================================================================================================================
 !()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()!
 !===================================================================================================================================
@@ -3375,27 +3378,27 @@ end function system_rmdir
 !!    John S. Urban
 !!##LICENSE
 !!    Public Domain
-function system_mkfifo(pathname,mode) result(err)
+FUNCTION system_mkfifo(pathname, mode) RESULT(err)
 
 ! ident_20="@(#)M_system::system_mkfifo(3f): call mkfifo(3c) to create a new FIFO special file"
 
-character(len=*),intent(in)       :: pathname
-integer,intent(in)                :: mode
-   integer                        :: c_mode
-   integer                        :: err
+  CHARACTER(len=*), INTENT(in) :: pathname
+  INTEGER, INTENT(in) :: mode
+  INTEGER :: c_mode
+  INTEGER :: err
 
-interface
-   function c_mkfifo(c_path,c_mode) bind(c,name="mkfifo") result(c_err)
-      import c_char, c_int
-      character(len=1,kind=c_char),intent(in) :: c_path(*)
-      integer(c_int),intent(in),value         :: c_mode
-      integer(c_int)                          :: c_err
-   end function c_mkfifo
-end interface
+  INTERFACE
+    FUNCTION c_mkfifo(c_path, c_mode) BIND(c, name="mkfifo") RESULT(c_err)
+      IMPORT C_CHAR, C_INT
+      CHARACTER(len=1, kind=C_CHAR), INTENT(in) :: c_path(*)
+      INTEGER(C_INT), INTENT(in), VALUE :: c_mode
+      INTEGER(C_INT) :: c_err
+    END FUNCTION c_mkfifo
+  END INTERFACE
 !-----------------------------------------------------------------------------------------------------------------------------------
-   c_mode=mode
-   err= c_mkfifo(str2_carr(trim(pathname)),c_mode)
-end function system_mkfifo
+  c_mode = mode
+  err = c_mkfifo(str2_carr(TRIM(pathname)), c_mode)
+END FUNCTION system_mkfifo
 !===================================================================================================================================
 !()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()!
 !===================================================================================================================================
@@ -3454,41 +3457,41 @@ end function system_mkfifo
 !!    John S. Urban
 !!##LICENSE
 !!    Public Domain
-function system_mkdir(dirname,mode) result(ierr)
+FUNCTION system_mkdir(dirname, mode) RESULT(ierr)
 
 ! ident_21="@(#)M_system::system_mkdir(3f): call mkdir(3c) to create empty directory"
 
-character(len=*),intent(in)       :: dirname
-integer,intent(in)                :: mode
-   integer                        :: c_mode
-   integer(kind=c_int)            :: err
-   integer                        :: ierr
+  CHARACTER(len=*), INTENT(in) :: dirname
+  INTEGER, INTENT(in) :: mode
+  INTEGER :: c_mode
+  INTEGER(kind=C_INT) :: err
+  INTEGER :: ierr
 
-interface
-   function c_mkdir(c_path,c_mode) bind(c,name="mkdir") result(c_err)
-      import c_char, c_int
-      character(len=1,kind=c_char),intent(in) :: c_path(*)
-      integer(c_int),intent(in),value         :: c_mode
-      integer(c_int)                          :: c_err
-   end function c_mkdir
-end interface
-interface
-    subroutine my_mkdir(string,c_mode,c_err) bind(C, name="my_mkdir")
-      use iso_c_binding, only : c_char, c_int
-      character(kind=c_char) :: string(*)
-      integer(c_int),intent(in),value         :: c_mode
-      integer(c_int)                          :: c_err
-    end subroutine my_mkdir
-end interface
+  INTERFACE
+    FUNCTION c_mkdir(c_path, c_mode) BIND(c, name="mkdir") RESULT(c_err)
+      IMPORT C_CHAR, C_INT
+      CHARACTER(len=1, kind=C_CHAR), INTENT(in) :: c_path(*)
+      INTEGER(C_INT), INTENT(in), VALUE :: c_mode
+      INTEGER(C_INT) :: c_err
+    END FUNCTION c_mkdir
+  END INTERFACE
+  INTERFACE
+    SUBROUTINE my_mkdir(string, c_mode, c_err) BIND(C, name="my_mkdir")
+      USE ISO_C_BINDING, ONLY: C_CHAR, C_INT
+      CHARACTER(kind=C_CHAR) :: string(*)
+      INTEGER(C_INT), INTENT(in), VALUE :: c_mode
+      INTEGER(C_INT) :: c_err
+    END SUBROUTINE my_mkdir
+  END INTERFACE
 !-----------------------------------------------------------------------------------------------------------------------------------
-   c_mode=mode
-   if(index(dirname,'/').ne.0)then
-      call my_mkdir(str2_carr(trim(dirname)),c_mode,err)
-   else
-      err= c_mkdir(str2_carr(trim(dirname)),c_mode)
-   endif
-   ierr=err                                          ! c_int to default integer kind
-end function system_mkdir
+  c_mode = mode
+  IF (INDEX(dirname, '/') .NE. 0) THEN
+    CALL my_mkdir(str2_carr(TRIM(dirname)), c_mode, err)
+  ELSE
+    err = c_mkdir(str2_carr(TRIM(dirname)), c_mode)
+  END IF
+  ierr = err ! c_int to default integer kind
+END FUNCTION system_mkdir
 !===================================================================================================================================
 !()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()!
 !===================================================================================================================================
@@ -3582,27 +3585,27 @@ end function system_mkdir
 !!    John S. Urban
 !!##LICENSE
 !!    Public Domain
-subroutine system_opendir(dirname,dir,ierr)
-character(len=*), intent(in) :: dirname
-type(c_ptr)                  :: dir
-integer,intent(out)          :: ierr
+SUBROUTINE system_opendir(dirname, dir, ierr)
+  CHARACTER(len=*), INTENT(in) :: dirname
+  TYPE(C_PTR) :: dir
+  INTEGER, INTENT(out) :: ierr
 
-interface
-   function c_opendir(c_dirname) bind(c,name="opendir") result(c_dir)
-      import c_char, c_int, c_ptr
-      character(kind=c_char),intent(in) :: c_dirname(*)
-      type(c_ptr)                       :: c_dir
-   end function c_opendir
-end interface
+  INTERFACE
+    FUNCTION c_opendir(c_dirname) BIND(c, name="opendir") RESULT(c_dir)
+      IMPORT C_CHAR, C_INT, C_PTR
+      CHARACTER(kind=C_CHAR), INTENT(in) :: c_dirname(*)
+      TYPE(C_PTR) :: c_dir
+    END FUNCTION c_opendir
+  END INTERFACE
 
-   ierr=0
-   dir = c_opendir(str2_carr(trim(dirname)))
-   if(.not.c_associated(dir)) then
-      write(*,'(a)')'*system_opendir* Error opening '//trim(dirname)
-      ierr=-1
-   endif
+  ierr = 0
+  dir = c_opendir(str2_carr(TRIM(dirname)))
+  IF (.NOT. C_ASSOCIATED(dir)) THEN
+    WRITE (*, '(a)') '*system_opendir* Error opening '//TRIM(dirname)
+    ierr = -1
+  END IF
 
-end subroutine system_opendir
+END SUBROUTINE system_opendir
 !===================================================================================================================================
 !()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()!
 !===================================================================================================================================
@@ -3683,30 +3686,30 @@ end subroutine system_opendir
 !!    John S. Urban
 !!##LICENSE
 !!    Public Domain
-subroutine system_readdir(dir,filename,ierr)
-type(c_ptr),value                         :: dir
-character(len=:),intent(out),allocatable  :: filename
-integer,intent(out)                       :: ierr
-integer(kind=c_int)                       :: ierr_local
+SUBROUTINE system_readdir(dir, filename, ierr)
+  TYPE(C_PTR), VALUE :: dir
+  CHARACTER(len=:), INTENT(out), ALLOCATABLE :: filename
+  INTEGER, INTENT(out) :: ierr
+  INTEGER(kind=C_INT) :: ierr_local
 
-   character(kind=c_char,len=1)           :: buf(4097)
+  CHARACTER(kind=C_CHAR, len=1) :: buf(4097)
 
-interface
-   subroutine c_readdir(c_dir, c_filename,c_ierr) bind (C,NAME='my_readdir')
-      import c_char, c_int, c_ptr
-      type(c_ptr),value                   :: c_dir
-      character(kind=c_char)              :: c_filename(*)
-      integer(kind=c_int)                 :: c_ierr
-   end subroutine c_readdir
-end interface
+  INTERFACE
+    SUBROUTINE c_readdir(c_dir, c_filename, c_ierr) BIND(C, NAME='my_readdir')
+      IMPORT C_CHAR, C_INT, C_PTR
+      TYPE(C_PTR), VALUE :: c_dir
+      CHARACTER(kind=C_CHAR) :: c_filename(*)
+      INTEGER(kind=C_INT) :: c_ierr
+    END SUBROUTINE c_readdir
+  END INTERFACE
 
-   buf=' '
-   ierr_local=0
-   call c_readdir(dir,buf,ierr_local)
-   filename=trim(arr2str(buf))
-   ierr=ierr_local
+  buf = ' '
+  ierr_local = 0
+  CALL c_readdir(dir, buf, ierr_local)
+  filename = TRIM(arr2str(buf))
+  ierr = ierr_local
 
-end subroutine system_readdir
+END SUBROUTINE system_readdir
 !===================================================================================================================================
 !()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()!
 !===================================================================================================================================
@@ -3760,19 +3763,19 @@ end subroutine system_readdir
 !!    John S. Urban
 !!##LICENSE
 !!    Public Domain
-subroutine system_rewinddir(dir)
-type(c_ptr),value            :: dir
+SUBROUTINE system_rewinddir(dir)
+  TYPE(C_PTR), VALUE :: dir
 
-interface
-   subroutine c_rewinddir(c_dir) bind(c,name="rewinddir")
-      import c_char, c_int, c_ptr
-      type(c_ptr),value :: c_dir
-   end subroutine c_rewinddir
-end interface
+  INTERFACE
+    SUBROUTINE c_rewinddir(c_dir) BIND(c, name="rewinddir")
+      IMPORT C_CHAR, C_INT, C_PTR
+      TYPE(C_PTR), VALUE :: c_dir
+    END SUBROUTINE c_rewinddir
+  END INTERFACE
 
-   call c_rewinddir(dir)
+  CALL c_rewinddir(dir)
 
-end subroutine system_rewinddir
+END SUBROUTINE system_rewinddir
 !===================================================================================================================================
 !()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()!
 !===================================================================================================================================
@@ -3826,31 +3829,31 @@ end subroutine system_rewinddir
 !!    John S. Urban
 !!##LICENSE
 !!    Public Domain
-subroutine system_closedir(dir,ierr)
-use iso_c_binding
-type(c_ptr),value            :: dir
-integer,intent(out),optional :: ierr
-   integer                   :: ierr_local
+SUBROUTINE system_closedir(dir, ierr)
+  USE ISO_C_BINDING
+  TYPE(C_PTR), VALUE :: dir
+  INTEGER, INTENT(out), OPTIONAL :: ierr
+  INTEGER :: ierr_local
 
-interface
-   function c_closedir(c_dir) bind(c,name="closedir") result(c_err)
-      import c_char, c_int, c_ptr
-      type(c_ptr),value      :: c_dir
-      integer(kind=c_int)    :: c_err
-   end function c_closedir
-end interface
+  INTERFACE
+    FUNCTION c_closedir(c_dir) BIND(c, name="closedir") RESULT(c_err)
+      IMPORT C_CHAR, C_INT, C_PTR
+      TYPE(C_PTR), VALUE :: c_dir
+      INTEGER(kind=C_INT) :: c_err
+    END FUNCTION c_closedir
+  END INTERFACE
 
-    ierr_local = c_closedir(dir)
-    if(present(ierr))then
-       ierr=ierr_local
-    else
-       if(ierr_local /= 0) then
-          print *, "*system_closedir* error", ierr_local
-          stop 3
-       endif
-    endif
+  ierr_local = c_closedir(dir)
+  IF (PRESENT(ierr)) THEN
+    ierr = ierr_local
+  ELSE
+    IF (ierr_local /= 0) THEN
+      PRINT *, "*system_closedir* error", ierr_local
+      STOP 3
+    END IF
+  END IF
 
-end subroutine system_closedir
+END SUBROUTINE system_closedir
 !===================================================================================================================================
 !()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()!
 !===================================================================================================================================
@@ -3924,35 +3927,35 @@ end subroutine system_closedir
 !!    John S. Urban
 !!##LICENSE
 !!    Public Domain
-subroutine system_putenv(string, err)
+SUBROUTINE system_putenv(string, err)
 
 ! ident_22="@(#)M_system::system_putenv(3f): call putenv(3c)"
 
-interface
-   integer(kind=c_int)  function c_putenv(c_string) bind(C,name="putenv")
-      import c_int, c_char
-      character(kind=c_char)   :: c_string(*)
-   end function
-end interface
+  INTERFACE
+    INTEGER(kind=C_INT) FUNCTION c_putenv(c_string) BIND(C, name="putenv")
+      IMPORT C_INT, C_CHAR
+      CHARACTER(kind=C_CHAR) :: c_string(*)
+    END FUNCTION
+  END INTERFACE
 
-character(len=*),intent(in)    :: string
-integer, optional, intent(out) :: err
-   integer                     :: loc_err
-   integer                     :: i
+  CHARACTER(len=*), INTENT(in) :: string
+  INTEGER, OPTIONAL, INTENT(out) :: err
+  INTEGER :: loc_err
+  INTEGER :: i
 
-   ! PUTENV actually adds the data to the environment so the string passed should be saved or will vanish on exit
-   character(len=1,kind=c_char),save, pointer :: memleak(:)
+  ! PUTENV actually adds the data to the environment so the string passed should be saved or will vanish on exit
+  CHARACTER(len=1, kind=C_CHAR), SAVE, POINTER :: memleak(:)
 
-   allocate(memleak(len(string)+1))
-   do i=1,len(string)
-      memleak(i)=string(i:i)
-   enddo
-   memleak(len(string)+1)=c_null_char
+  ALLOCATE (memleak(LEN(string) + 1))
+  DO i = 1, LEN(string)
+    memleak(i) = string(i:i)
+  END DO
+  memleak(LEN(string) + 1) = C_NULL_CHAR
 
-   loc_err =  c_putenv(memleak)
-   if (present(err)) err = loc_err
+  loc_err = c_putenv(memleak)
+  IF (PRESENT(err)) err = loc_err
 
-end subroutine system_putenv
+END SUBROUTINE system_putenv
 !===================================================================================================================================
 !()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()!
 !===================================================================================================================================
@@ -3995,39 +3998,39 @@ end subroutine system_putenv
 !!    John S. Urban
 !!##LICENSE
 !!    Public Domain
-function system_getenv(name,default) result(value)
+FUNCTION system_getenv(name, default) RESULT(VALUE)
 
 ! ident_23="@(#)M_system::system_getenv(3f): call get_environment_variable as a function with a default value(3f)"
 
-character(len=*),intent(in)          :: name
-character(len=*),intent(in),optional :: default
-integer                              :: howbig
-integer                              :: stat
-character(len=:),allocatable         :: value
+  CHARACTER(len=*), INTENT(in) :: name
+  CHARACTER(len=*), INTENT(in), OPTIONAL :: default
+  INTEGER :: howbig
+  INTEGER :: stat
+  CHARACTER(len=:), ALLOCATABLE :: VALUE
 
-   if(NAME.ne.'')then
+  IF (NAME .NE. '') THEN
       call get_environment_variable(name, length=howbig, status=stat, trim_name=.true.)  ! get length required to hold value
-      if(howbig.ne.0)then
-         select case (stat)
-         case (1)     ! print *, NAME, " is not defined in the environment. Strange..."
-            value=''
-         case (2)     ! print *, "This processor doesn't support environment variables. Boooh!"
-            value=''
-         case default ! make string to hold value of sufficient size and get value
-            if(allocated(value))deallocate(value)
-            allocate(character(len=max(howbig,1)) :: VALUE)
-            call get_environment_variable(name,value,status=stat,trim_name=.true.)
-            if(stat.ne.0)VALUE=''
-         end select
-      else
-         value=''
-      endif
-   else
-      value=''
-   endif
-   if(value.eq.''.and.present(default))value=default
+    IF (howbig .NE. 0) THEN
+      SELECT CASE (stat)
+      CASE (1) ! print *, NAME, " is not defined in the environment. Strange..."
+        VALUE = ''
+      CASE (2) ! print *, "This processor doesn't support environment variables. Boooh!"
+        VALUE = ''
+      CASE default ! make string to hold value of sufficient size and get value
+        IF (ALLOCATED(VALUE)) DEALLOCATE (VALUE)
+        ALLOCATE (CHARACTER(len=MAX(howbig, 1)) :: VALUE)
+     CALL GET_ENVIRONMENT_VARIABLE(name, VALUE, status=stat, trim_name=.TRUE.)
+        IF (stat .NE. 0) VALUE = ''
+      END SELECT
+    ELSE
+      VALUE = ''
+    END IF
+  ELSE
+    VALUE = ''
+  END IF
+  IF (VALUE .EQ. '' .AND. PRESENT(default)) VALUE = default
 
-end function system_getenv
+END FUNCTION system_getenv
 !===================================================================================================================================
 !()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()!
 !===================================================================================================================================
@@ -4090,26 +4093,26 @@ end function system_getenv
 !!    John S. Urban
 !!##LICENSE
 !!    Public Domain
-subroutine set_environment_variable(NAME, VALUE, STATUS)
+SUBROUTINE set_environment_variable(NAME, VALUE, STATUS)
 
 ! ident_24="@(#)M_system::set_environment_variable(3f): call setenv(3c) to set environment variable"
 
-   character(len=*)               :: NAME
-   character(len=*)               :: VALUE
-   integer, optional, intent(out) :: STATUS
-   integer                        :: loc_err
+  CHARACTER(len=*) :: NAME
+  CHARACTER(len=*) :: VALUE
+  INTEGER, OPTIONAL, INTENT(out) :: STATUS
+  INTEGER :: loc_err
 
-interface
-   integer(kind=c_int) function c_setenv(c_name,c_VALUE) bind(C,NAME="setenv")
-      import c_int, c_char
-      character(kind=c_char)   :: c_name(*)
-      character(kind=c_char)   :: c_VALUE(*)
-   end function
-end interface
+  INTERFACE
+ INTEGER(kind=C_INT) FUNCTION c_setenv(c_name, c_VALUE) BIND(C, NAME="setenv")
+      IMPORT C_INT, C_CHAR
+      CHARACTER(kind=C_CHAR) :: c_name(*)
+      CHARACTER(kind=C_CHAR) :: c_VALUE(*)
+    END FUNCTION
+  END INTERFACE
 
-   loc_err =  c_setenv(str2_carr(trim(NAME)),str2_carr(VALUE))
-   if (present(STATUS)) STATUS = loc_err
-end subroutine set_environment_variable
+  loc_err = c_setenv(str2_carr(TRIM(NAME)), str2_carr(VALUE))
+  IF (PRESENT(STATUS)) STATUS = loc_err
+END SUBROUTINE set_environment_variable
 !===================================================================================================================================
 !()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()!
 !===================================================================================================================================
@@ -4159,29 +4162,29 @@ end subroutine set_environment_variable
 !!    John S. Urban
 !!##LICENSE
 !!    Public Domain
-subroutine system_clearenv(ierr)
+SUBROUTINE system_clearenv(ierr)
 !  emulating because not available on some platforms
 
 ! ident_25="@(#)M_system::system_clearenv(3f): emulate clearenv(3c) to clear environment"
 
-integer,intent(out),optional    :: ierr
-   character(len=:),allocatable :: string
-   integer                      :: ierr_local1, ierr_local2
-   ierr_local2=0
-   INFINITE: do
-      call system_initenv()                     ! important -- changing table causes undefined behavior so reset after each unsetenv
-      string=system_readenv()                                           ! get first name=value pair
-      if(string.eq.'') exit INFINITE
-      call system_unsetenv(string(1:index(string,'=')-1) ,ierr_local1)  ! remove first name=value pair
-      if(ierr_local1.ne.0)ierr_local2=ierr_local1
-   enddo INFINITE
-   if(present(ierr))then
-      ierr=ierr_local2
-   elseif(ierr_local2.ne.0)then                                         ! if error occurs and not being returned, stop
-      write(*,*)'*system_clearenv* error=',ierr_local2
-      stop
-   endif
-end subroutine system_clearenv
+  INTEGER, INTENT(out), OPTIONAL :: ierr
+  CHARACTER(len=:), ALLOCATABLE :: string
+  INTEGER :: ierr_local1, ierr_local2
+  ierr_local2 = 0
+  INFINITE: DO
+    CALL system_initenv() ! important -- changing table causes undefined behavior so reset after each unsetenv
+    string = system_readenv() ! get first name=value pair
+    IF (string .EQ. '') EXIT INFINITE
+    CALL system_unsetenv(string(1:INDEX(string, '=') - 1), ierr_local1) ! remove first name=value pair
+    IF (ierr_local1 .NE. 0) ierr_local2 = ierr_local1
+  END DO INFINITE
+  IF (PRESENT(ierr)) THEN
+    ierr = ierr_local2
+  ELSEIF (ierr_local2 .NE. 0) THEN ! if error occurs and not being returned, stop
+    WRITE (*, *) '*system_clearenv* error=', ierr_local2
+    STOP
+  END IF
+END SUBROUTINE system_clearenv
 !--subroutine system_clearenv(ierr)
 !--! clearenv(3c) not available on some systems I tried
 !--! Found reference that if it is unavailable the assignment
@@ -4253,32 +4256,32 @@ end subroutine system_clearenv
 !!    John S. Urban
 !!##LICENSE
 !!    Public Domain
-subroutine system_unsetenv(name,ierr)
+SUBROUTINE system_unsetenv(name, ierr)
 
 ! ident_26="@(#)M_system::system_unsetenv(3f): call unsetenv(3c) to remove variable from environment"
 
-character(len=*),intent(in)  :: name
-integer,intent(out),optional :: ierr
-   integer                   :: ierr_local
+  CHARACTER(len=*), INTENT(in) :: name
+  INTEGER, INTENT(out), OPTIONAL :: ierr
+  INTEGER :: ierr_local
 
 ! int unsetenv(void)
-interface
-   integer(kind=c_int) function c_unsetenv(c_name) bind(C,NAME="unsetenv")
-   import c_int, c_char
-   character(len=1,kind=c_char) :: c_name(*)
-   end function
-end interface
+  INTERFACE
+    INTEGER(kind=C_INT) FUNCTION c_unsetenv(c_name) BIND(C, NAME="unsetenv")
+      IMPORT C_INT, C_CHAR
+      CHARACTER(len=1, kind=C_CHAR) :: c_name(*)
+    END FUNCTION
+  END INTERFACE
 
-   ierr_local =  c_unsetenv(str2_carr(trim(NAME)))
+  ierr_local = c_unsetenv(str2_carr(TRIM(NAME)))
 
-   if(present(ierr))then
-      ierr=ierr_local
-   elseif(ierr_local.ne.0)then ! if error occurs and not being returned, stop
-      write(*,*)'*system_unsetenv* error=',ierr_local
-      stop
-   endif
+  IF (PRESENT(ierr)) THEN
+    ierr = ierr_local
+  ELSEIF (ierr_local .NE. 0) THEN ! if error occurs and not being returned, stop
+    WRITE (*, *) '*system_unsetenv* error=', ierr_local
+    STOP
+  END IF
 
-end subroutine system_unsetenv
+END SUBROUTINE system_unsetenv
 !===================================================================================================================================
 !()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()!
 !===================================================================================================================================
@@ -4336,26 +4339,26 @@ end subroutine system_unsetenv
 !!    John S. Urban
 !!##LICENSE
 !!    Public Domain
-function system_readenv() result(string)
+FUNCTION system_readenv() RESULT(string)
 
 ! ident_27="@(#)M_system::system_readenv(3f): read next entry from environment table"
 
-character(len=:),allocatable  :: string
-character(kind=c_char)        :: c_buff(longest_env_variable+1)
+  CHARACTER(len=:), ALLOCATABLE :: string
+  CHARACTER(kind=C_CHAR) :: c_buff(longest_env_variable + 1)
 
-interface
-   subroutine c_readenv(c_string) bind (C,NAME='my_readenv')
-      import c_char, c_int, c_ptr, c_size_t
-      character(kind=c_char),intent(out)  :: c_string(*)
-   end subroutine c_readenv
-end interface
+  INTERFACE
+    SUBROUTINE c_readenv(c_string) BIND(C, NAME='my_readenv')
+      IMPORT C_CHAR, C_INT, C_PTR, C_SIZE_T
+      CHARACTER(kind=C_CHAR), INTENT(out) :: c_string(*)
+    END SUBROUTINE c_readenv
+  END INTERFACE
 
-  c_buff=' '
-  c_buff(longest_env_variable+1:longest_env_variable+1)=c_null_char
-  call c_readenv(c_buff)
-  string=trim(arr2str(c_buff))
+  c_buff = ' '
+  c_buff(longest_env_variable + 1:longest_env_variable + 1) = C_NULL_CHAR
+  CALL c_readenv(c_buff)
+  string = TRIM(arr2str(c_buff))
 
-end function system_readenv
+END FUNCTION system_readenv
 !===================================================================================================================================
 !()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()!
 !===================================================================================================================================
@@ -4404,39 +4407,39 @@ end function system_readenv
 !!    John S. Urban
 !!##LICENSE
 !!    Public Domain
-subroutine fileglob(glob, list) ! NON-PORTABLE AT THIS POINT. REQUIRES ls(1) command, assumes 1 line per file
+SUBROUTINE fileglob(glob, list) ! NON-PORTABLE AT THIS POINT. REQUIRES ls(1) command, assumes 1 line per file
 !  The length of the character strings in list() must be long enough for the filenames.
 !  The list can be zero names long, it is still allocated.
-implicit none
+  IMPLICIT NONE
 
 ! ident_28="@(#)M_system::fileglob(3f): Returns list of files using a file globbing pattern"
 
 !-----------------------------------------------------------------------------------------------------------------------------------
-character(len=*),intent(in)   :: glob                   ! Pattern for the filenames (like: *.txt)
-character(len=*),pointer      :: list(:)                ! Allocated list of filenames (returned), the caller must deallocate it.
+  CHARACTER(len=*), INTENT(in) :: glob ! Pattern for the filenames (like: *.txt)
+  CHARACTER(len=*), POINTER :: list(:) ! Allocated list of filenames (returned), the caller must deallocate it.
 !-----------------------------------------------------------------------------------------------------------------------------------
-   character(len=255)            :: tmpfile             ! scratch filename to hold expanded file list
-   character(len=255)            :: cmd                 ! string to build system command in
-   integer                       :: iotmp               ! needed to open unique scratch file for holding file list
-   integer                       :: i,ios,icount
-   write(tmpfile,'(*(g0))')'/tmp/__filelist_',timestamp(),'_',system_getpid() ! preliminary scratch file name
-   cmd='ls -d '//trim(glob)//'>'//trim(tmpfile)//' '    ! build command string
-   call execute_command_line(cmd )                      ! Execute the command specified by the string.
-   open(newunit=iotmp,file=tmpfile,iostat=ios)          ! open unique scratch filename
-   if(ios.ne.0) return                                  ! the open failed
-   icount=0                                             ! number of filenames in expanded list
-   do                                                   ! count the number of lines (assumed ==files) so know what to allocate
-       read(iotmp,'(a)', iostat=ios)                    ! move down a line in the file to count number of lines
-       if(ios .ne. 0)exit                               ! hopefully, this is because end of file was encountered so done
-       icount=icount+1                                  ! increment line count
-   enddo
-   rewind(iotmp)                                        ! rewind file list so can read and store it
-   allocate(list(icount))                               ! allocate and fill the array
-   do i=1,icount
-      read(iotmp,'(a)')list(i)                          ! read a filename from a line
-   enddo
-   close(iotmp, status='delete',iostat=ios)             ! close and delete scratch file
-end subroutine fileglob
+  CHARACTER(len=255) :: tmpfile ! scratch filename to hold expanded file list
+  CHARACTER(len=255) :: cmd ! string to build system command in
+  INTEGER :: iotmp ! needed to open unique scratch file for holding file list
+  INTEGER :: i, ios, icount
+  write(tmpfile,'(*(g0))')'/tmp/__filelist_',timestamp(),'_',system_getpid() ! preliminary scratch file name
+  cmd = 'ls -d '//TRIM(glob)//'>'//TRIM(tmpfile)//' ' ! build command string
+  CALL execute_command_line(cmd) ! Execute the command specified by the string.
+  OPEN (newunit=iotmp, file=tmpfile, iostat=ios) ! open unique scratch filename
+  IF (ios .NE. 0) RETURN ! the open failed
+  icount = 0 ! number of filenames in expanded list
+  DO ! count the number of lines (assumed ==files) so know what to allocate
+    READ (iotmp, '(a)', iostat=ios) ! move down a line in the file to count number of lines
+    IF (ios .NE. 0) EXIT ! hopefully, this is because end of file was encountered so done
+    icount = icount + 1 ! increment line count
+  END DO
+  REWIND (iotmp) ! rewind file list so can read and store it
+  ALLOCATE (list(icount)) ! allocate and fill the array
+  DO i = 1, icount
+    READ (iotmp, '(a)') list(i) ! read a filename from a line
+  END DO
+  CLOSE (iotmp, status='delete', iostat=ios) ! close and delete scratch file
+END SUBROUTINE fileglob
 !===================================================================================================================================
 !()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()!
 !===================================================================================================================================
@@ -4484,30 +4487,30 @@ end subroutine fileglob
 !!    John S. Urban
 !!##LICENSE
 !!    Public Domain
-subroutine system_uname(WHICH,NAMEOUT)
-implicit none
+SUBROUTINE system_uname(WHICH, NAMEOUT)
+  IMPLICIT NONE
 
 ! ident_29="@(#)M_system::system_uname(3f): call my_uname(3c) which calls uname(3c)"
 
-character(KIND=C_CHAR),intent(in) :: WHICH
-character(len=*),intent(out)      :: NAMEOUT
+  CHARACTER(KIND=C_CHAR), INTENT(in) :: WHICH
+  CHARACTER(len=*), INTENT(out) :: NAMEOUT
 
 ! describe the C routine to Fortran
 ! void system_uname(char *which, char *buf, int *buflen);
-interface
-   subroutine system_uname_c(WHICH,BUF,BUFLEN) bind(C,NAME='my_uname')
-      import c_char, c_int
-      implicit none
-      character(KIND=C_CHAR),intent(in)  :: WHICH
-      character(KIND=C_CHAR),intent(out) :: BUF(*)
-      integer(kind=c_int),intent(in)     :: BUFLEN
-   end subroutine system_uname_c
-end interface
+  INTERFACE
+    SUBROUTINE system_uname_c(WHICH, BUF, BUFLEN) BIND(C, NAME='my_uname')
+      IMPORT C_CHAR, C_INT
+      IMPLICIT NONE
+      CHARACTER(KIND=C_CHAR), INTENT(in) :: WHICH
+      CHARACTER(KIND=C_CHAR), INTENT(out) :: BUF(*)
+      INTEGER(kind=C_INT), INTENT(in) :: BUFLEN
+    END SUBROUTINE system_uname_c
+  END INTERFACE
 
-   NAMEOUT='unknown'
-   call system_uname_c(WHICH,NAMEOUT, INT(LEN(NAMEOUT),kind(0_c_int)))
+  NAMEOUT = 'unknown'
+  CALL system_uname_c(WHICH, NAMEOUT, INT(LEN(NAMEOUT), KIND(0_C_INT)))
 
-end subroutine system_uname
+END SUBROUTINE system_uname
 !===================================================================================================================================
 !()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()!
 !===================================================================================================================================
@@ -4550,32 +4553,32 @@ end subroutine system_uname
 !!    John S. Urban
 !!##LICENSE
 !!    Public Domain
-subroutine system_gethostname(NAME,IERR)
-implicit none
+SUBROUTINE system_gethostname(NAME, IERR)
+  IMPLICIT NONE
 
 ! ident_30="@(#)M_system::system_gethostname(3f): get name of current host by calling gethostname(3c)"
 
-character(len=:),allocatable,intent(out) :: NAME
-integer,intent(out)                      :: IERR
-   character(kind=c_char,len=1)          :: C_BUFF(HOST_NAME_MAX+1)
+  CHARACTER(len=:), ALLOCATABLE, INTENT(out) :: NAME
+  INTEGER, INTENT(out) :: IERR
+  CHARACTER(kind=C_CHAR, len=1) :: C_BUFF(HOST_NAME_MAX + 1)
 
 ! describe the C routine to Fortran
 !int gethostname(char *name, size_t namelen);
-interface
-   function system_gethostname_c(c_buf,c_buflen) bind(C,NAME='gethostname')
-      import c_char, c_int
-      implicit none
-      integer(kind=c_int)                  :: system_gethostname_c
-      character(KIND=C_CHAR),intent(out)   :: c_buf(*)
-      integer(kind=c_int),intent(in),value :: c_buflen
-   end function system_gethostname_c
-end interface
+  INTERFACE
+    FUNCTION system_gethostname_c(c_buf, c_buflen) BIND(C, NAME='gethostname')
+      IMPORT C_CHAR, C_INT
+      IMPLICIT NONE
+      INTEGER(kind=C_INT) :: system_gethostname_c
+      CHARACTER(KIND=C_CHAR), INTENT(out) :: c_buf(*)
+      INTEGER(kind=C_INT), INTENT(in), VALUE :: c_buflen
+    END FUNCTION system_gethostname_c
+  END INTERFACE
 
-   C_BUFF=' '
-   ierr=system_gethostname_c(C_BUFF,HOST_NAME_MAX) ! Host names are limited to {HOST_NAME_MAX} bytes.
-   NAME=trim(arr2str(C_BUFF))
+  C_BUFF = ' '
+  ierr = system_gethostname_c(C_BUFF, HOST_NAME_MAX) ! Host names are limited to {HOST_NAME_MAX} bytes.
+  NAME = TRIM(arr2str(C_BUFF))
 
-end subroutine system_gethostname
+END SUBROUTINE system_gethostname
 !===================================================================================================================================
 !()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()!
 !===================================================================================================================================
@@ -4638,28 +4641,28 @@ end subroutine system_gethostname
 !--APPLICATION USAGE
 !--SEE ALSO
 !--       getpwnam(), getpwuid(), system_geteuid(), getuid()
-function system_getlogin() result (fname)
-character(len=:),allocatable :: fname
-   type(c_ptr)               :: username
+FUNCTION system_getlogin() RESULT(fname)
+  CHARACTER(len=:), ALLOCATABLE :: fname
+  TYPE(C_PTR) :: username
 
-interface
-   function c_getlogin() bind(c,name="getlogin") result(c_username)
-      import c_int, c_ptr
-      type(c_ptr)           :: c_username
-   end function c_getlogin
-end interface
+  INTERFACE
+    FUNCTION c_getlogin() BIND(c, name="getlogin") RESULT(c_username)
+      IMPORT C_INT, C_PTR
+      TYPE(C_PTR) :: c_username
+    END FUNCTION c_getlogin
+  END INTERFACE
 
-   username = c_getlogin()
-   if(.not.c_associated(username)) then
+  username = c_getlogin()
+  IF (.NOT. C_ASSOCIATED(username)) THEN
       !! in windows 10 subsystem running Ubunto does not work
       !!write(*,'(a)')'*system_getlogin* Error getting username. not associated'
       !!fname=c_null_char
-      fname=system_getpwuid(system_geteuid())
-   else
-      fname=c2f_string(username)
-   endif
+    fname = system_getpwuid(system_geteuid())
+  ELSE
+    fname = c2f_string(username)
+  END IF
 
-end function system_getlogin
+END FUNCTION system_getlogin
 !===================================================================================================================================
 !()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()!
 !===================================================================================================================================
@@ -4721,29 +4724,29 @@ end function system_getlogin
 !!
 !!##LICENSE
 !!    Public Domain
-function system_perm(mode) result (perms)
-class(*),intent(in)          :: mode
-character(len=:),allocatable :: perms
-   type(c_ptr)               :: permissions
-   integer(kind=c_long)      :: mode_local
-interface
-   function c_perm(c_mode) bind(c,name="my_get_perm") result(c_permissions)
-      import c_int, c_ptr, c_long
-      integer(kind=c_long),value  :: c_mode
-      type(c_ptr)                 :: c_permissions
-   end function c_perm
-end interface
+FUNCTION system_perm(mode) RESULT(perms)
+  CLASS(*), INTENT(in) :: mode
+  CHARACTER(len=:), ALLOCATABLE :: perms
+  TYPE(C_PTR) :: permissions
+  INTEGER(kind=C_LONG) :: mode_local
+  INTERFACE
+    FUNCTION c_perm(c_mode) BIND(c, name="my_get_perm") RESULT(c_permissions)
+      IMPORT C_INT, C_PTR, C_LONG
+      INTEGER(kind=C_LONG), VALUE :: c_mode
+      TYPE(C_PTR) :: c_permissions
+    END FUNCTION c_perm
+  END INTERFACE
 
-   mode_local=int(anyinteger_to_64bit(mode),kind=c_long)
-   permissions = c_perm(mode_local)
-   if(.not.c_associated(permissions)) then
-      write(*,'(a)')'*system_perm* Error getting permissions. not associated'
-      perms=c_null_char
-   else
-      perms=c2f_string(permissions)
-   endif
+  mode_local = INT(anyinteger_to_64bit(mode), kind=C_LONG)
+  permissions = c_perm(mode_local)
+  IF (.NOT. C_ASSOCIATED(permissions)) THEN
+    WRITE (*, '(a)') '*system_perm* Error getting permissions. not associated'
+    perms = C_NULL_CHAR
+  ELSE
+    perms = c2f_string(permissions)
+  END IF
 
-end function system_perm
+END FUNCTION system_perm
 !===================================================================================================================================
 !()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()!
 !===================================================================================================================================
@@ -4792,31 +4795,31 @@ end function system_perm
 !!    John S. Urban
 !!##LICENSE
 !!    Public Domain
-function system_getgrgid(gid) result (gname)
-class(*),intent(in)                        :: gid
-character(len=:),allocatable               :: gname
-   character(kind=c_char,len=1)            :: groupname(4097)  ! assumed long enough for any groupname
-   integer                                 :: ierr
-   integer(kind=c_long_long)               :: gid_local
+FUNCTION system_getgrgid(gid) RESULT(gname)
+  CLASS(*), INTENT(in) :: gid
+  CHARACTER(len=:), ALLOCATABLE :: gname
+  CHARACTER(kind=C_CHAR, len=1) :: groupname(4097) ! assumed long enough for any groupname
+  INTEGER :: ierr
+  INTEGER(kind=C_LONG_LONG) :: gid_local
 
-interface
+  INTERFACE
    function c_getgrgid(c_gid,c_groupname) bind(c,name="my_getgrgid") result(c_ierr)
-      import c_int, c_ptr, c_char,c_long_long
-      integer(kind=c_long_long),value,intent(in) :: c_gid
-      character(kind=c_char),intent(out)         :: c_groupname(*)
-      integer(kind=c_int)                        :: c_ierr
-   end function c_getgrgid
-end interface
+      IMPORT C_INT, C_PTR, C_CHAR, C_LONG_LONG
+      INTEGER(kind=C_LONG_LONG), VALUE, INTENT(in) :: c_gid
+      CHARACTER(kind=C_CHAR), INTENT(out) :: c_groupname(*)
+      INTEGER(kind=C_INT) :: c_ierr
+    END FUNCTION c_getgrgid
+  END INTERFACE
 !-----------------------------------------------------------------------------------------------------------------------------------
-   gid_local=anyinteger_to_64bit(gid)
-   ierr = c_getgrgid(gid_local,groupname)
-   if(ierr.eq.0)then
-      gname=trim(arr2str(groupname))
-   else
-      gname=''
-   endif
+  gid_local = anyinteger_to_64bit(gid)
+  ierr = c_getgrgid(gid_local, groupname)
+  IF (ierr .EQ. 0) THEN
+    gname = TRIM(arr2str(groupname))
+  ELSE
+    gname = ''
+  END IF
 !-----------------------------------------------------------------------------------------------------------------------------------
-end function system_getgrgid
+END FUNCTION system_getgrgid
 !===================================================================================================================================
 !()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()!
 !===================================================================================================================================
@@ -4864,108 +4867,108 @@ end function system_getgrgid
 !!    John S. Urban
 !!##LICENSE
 !!    Public Domain
-function system_getpwuid(uid) result (uname)
-class(*),intent(in)                        :: uid
-character(len=:),allocatable               :: uname
-   character(kind=c_char,len=1)            :: username(4097)  ! assumed long enough for any username
-   integer                                 :: ierr
-   integer(kind=c_long_long)               :: uid_local
+FUNCTION system_getpwuid(uid) RESULT(uname)
+  CLASS(*), INTENT(in) :: uid
+  CHARACTER(len=:), ALLOCATABLE :: uname
+  CHARACTER(kind=C_CHAR, len=1) :: username(4097) ! assumed long enough for any username
+  INTEGER :: ierr
+  INTEGER(kind=C_LONG_LONG) :: uid_local
 
-interface
+  INTERFACE
    function c_getpwuid(c_uid,c_username) bind(c,name="my_getpwuid") result(c_ierr)
-      import c_int, c_ptr, c_char, c_long_long
-      integer(kind=c_long_long),value,intent(in) :: c_uid
-      character(kind=c_char),intent(out)   :: c_username(*)
-      integer(kind=c_int)                  :: c_ierr
-   end function c_getpwuid
-end interface
+      IMPORT C_INT, C_PTR, C_CHAR, C_LONG_LONG
+      INTEGER(kind=C_LONG_LONG), VALUE, INTENT(in) :: c_uid
+      CHARACTER(kind=C_CHAR), INTENT(out) :: c_username(*)
+      INTEGER(kind=C_INT) :: c_ierr
+    END FUNCTION c_getpwuid
+  END INTERFACE
 !-----------------------------------------------------------------------------------------------------------------------------------
-   uid_local=anyinteger_to_64bit(uid)
-   ierr = c_getpwuid(uid_local,username)
-   if(ierr.eq.0)then
-      uname=trim(arr2str(username))
-   else
-      uname=''
-   endif
+  uid_local = anyinteger_to_64bit(uid)
+  ierr = c_getpwuid(uid_local, username)
+  IF (ierr .EQ. 0) THEN
+    uname = TRIM(arr2str(username))
+  ELSE
+    uname = ''
+  END IF
 !-----------------------------------------------------------------------------------------------------------------------------------
-end function system_getpwuid
+END FUNCTION system_getpwuid
 !===================================================================================================================================
 !()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()!
 !===================================================================================================================================
-pure function arr2str(array)  result (string)
+PURE FUNCTION arr2str(array) RESULT(string)
 
 ! ident_31="@(#)M_system::arr2str(3fp): function copies null-terminated char array to string"
 
-character(len=1),intent(in)  :: array(:)
-character(len=size(array))   :: string
-integer                      :: i
+  CHARACTER(len=1), INTENT(in) :: array(:)
+  CHARACTER(len=SIZE(array)) :: string
+  INTEGER :: i
 
-   string=' '
-   do i = 1,size(array)
-      if(array(i).eq.char(0))then
-         exit
-      else
-         string(i:i) = array(i)
-      endif
-   enddo
+  string = ' '
+  DO i = 1, SIZE(array)
+    IF (array(i) .EQ. CHAR(0)) THEN
+      EXIT
+    ELSE
+      string(i:i) = array(i)
+    END IF
+  END DO
 
-end function arr2str
+END FUNCTION arr2str
 !===================================================================================================================================
 !()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()!
 !===================================================================================================================================
-pure function str2_carr(string) result (array)
+PURE FUNCTION str2_carr(string) RESULT(array)
 
 ! ident_32="@(#)M_system::str2_carr(3fp): function copies string to null terminated char array"
 
-character(len=*),intent(in)     :: string
-character(len=1,kind=c_char)    :: array(len(string)+1)
-   integer                      :: i
+  CHARACTER(len=*), INTENT(in) :: string
+  CHARACTER(len=1, kind=C_CHAR) :: array(LEN(string) + 1)
+  INTEGER :: i
 
-   do i = 1,len_trim(string)
-      array(i) = string(i:i)
-   enddo
-   array(i:i)=c_null_char
+  DO i = 1, LEN_TRIM(string)
+    array(i) = string(i:i)
+  END DO
+  array(i:i) = C_NULL_CHAR
 
-end function str2_carr
+END FUNCTION str2_carr
 !===================================================================================================================================
 !()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()!
 !===================================================================================================================================
-function C2F_string(c_string_pointer) result(f_string)
+FUNCTION C2F_string(c_string_pointer) RESULT(f_string)
 
 ! gets a C string (pointer), and returns the corresponding Fortran string up to 4096(max_len) characters;
 ! If the C string is null, it returns string C "null" character:
 
-type(c_ptr), intent(in)                       :: c_string_pointer
-character(len=:), allocatable                 :: f_string
-character(kind=c_char), dimension(:), pointer :: char_array_pointer => null()
-integer,parameter                             :: max_len=4096
-character(len=max_len)                        :: aux_string
-integer                                       :: i
-integer                                       :: length
+  TYPE(C_PTR), INTENT(in) :: c_string_pointer
+  CHARACTER(len=:), ALLOCATABLE :: f_string
+ CHARACTER(kind=C_CHAR), DIMENSION(:), POINTER :: char_array_pointer => NULL()
+  INTEGER, PARAMETER :: max_len = 4096
+  CHARACTER(len=max_len) :: aux_string
+  INTEGER :: i
+  INTEGER :: length
 
-   length=0
-   call c_f_pointer(c_string_pointer,char_array_pointer,[max_len])
+  length = 0
+  CALL C_F_POINTER(c_string_pointer, char_array_pointer, [max_len])
 
-   if (.not.associated(char_array_pointer)) then
-     if(allocated(f_string))deallocate(f_string)
-     allocate(character(len=4)::f_string)
-     f_string=c_null_char
-     return
-   endif
+  IF (.NOT. ASSOCIATED(char_array_pointer)) THEN
+    IF (ALLOCATED(f_string)) DEALLOCATE (f_string)
+    ALLOCATE (CHARACTER(len=4) :: f_string)
+    f_string = C_NULL_CHAR
+    RETURN
+  END IF
 
-   aux_string=" "
+  aux_string = " "
 
-   do i=1,max_len
-     if (char_array_pointer(i)==c_null_char) then
-       length=i-1; exit
-     endif
-     aux_string(i:i)=char_array_pointer(i)
-   enddo
+  DO i = 1, max_len
+    IF (char_array_pointer(i) == C_NULL_CHAR) THEN
+      length = i - 1; EXIT
+    END IF
+    aux_string(i:i) = char_array_pointer(i)
+  END DO
 
-   if(allocated(f_string))deallocate(f_string)
-   allocate(character(len=length)::f_string)
-   f_string=aux_string(1:length)
-end function C2F_string
+  IF (ALLOCATED(f_string)) DEALLOCATE (f_string)
+  ALLOCATE (CHARACTER(len=length) :: f_string)
+  f_string = aux_string(1:length)
+END FUNCTION C2F_string
 !===================================================================================================================================
 !()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()!
 !===================================================================================================================================
@@ -5103,35 +5106,35 @@ end function C2F_string
 !!    John S. Urban
 !!##LICENSE
 !!    Public Domain
-subroutine system_stat(pathname,values,ierr)
-implicit none
+SUBROUTINE system_stat(pathname, values, ierr)
+  IMPLICIT NONE
 
 ! ident_33="@(#)M_system::system_stat(3f): call stat(3c) to get pathname information"
 
-character(len=*),intent(in)          :: pathname
+  CHARACTER(len=*), INTENT(in) :: pathname
 
-integer(kind=int64),intent(out)      :: values(13)
-integer(kind=c_long)                 :: cvalues(13)
+  INTEGER(kind=INT64), INTENT(out) :: values(13)
+  INTEGER(kind=C_LONG) :: cvalues(13)
 
-integer,optional,intent(out)         :: ierr
-integer(kind=c_int)                  :: cierr
+  INTEGER, OPTIONAL, INTENT(out) :: ierr
+  INTEGER(kind=C_INT) :: cierr
 
-interface
-   subroutine c_stat(buffer,cvalues,cierr,cdebug) bind(c,name="my_stat")
-      import c_char, c_size_t, c_ptr, c_int, c_long
-      character(kind=c_char),intent(in)   :: buffer(*)
-      integer(kind=c_long),intent(out)    :: cvalues(*)
-      integer(kind=c_int)                 :: cierr
-      integer(kind=c_int),intent(in)      :: cdebug
-   end subroutine c_stat
-end interface
+  INTERFACE
+    SUBROUTINE c_stat(buffer, cvalues, cierr, cdebug) BIND(c, name="my_stat")
+      IMPORT C_CHAR, C_SIZE_T, C_PTR, C_INT, C_LONG
+      CHARACTER(kind=C_CHAR), INTENT(in) :: buffer(*)
+      INTEGER(kind=C_LONG), INTENT(out) :: cvalues(*)
+      INTEGER(kind=C_INT) :: cierr
+      INTEGER(kind=C_INT), INTENT(in) :: cdebug
+    END SUBROUTINE c_stat
+  END INTERFACE
 !-----------------------------------------------------------------------------------------------------------------------------------
-   call c_stat(str2_carr(trim(pathname)),cvalues,cierr,0_c_int)
-   values=cvalues
-   if(present(ierr))then
-      ierr=cierr
-   endif
-end subroutine system_stat
+  CALL c_stat(str2_carr(TRIM(pathname)), cvalues, cierr, 0_C_INT)
+  values = cvalues
+  IF (PRESENT(ierr)) THEN
+    ierr = cierr
+  END IF
+END SUBROUTINE system_stat
 !===================================================================================================================================
 !()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()!
 !===================================================================================================================================
@@ -5181,150 +5184,150 @@ end subroutine system_stat
 !!
 !!##LICENSE
 !!    Public Domain
-function system_dir(directory,pattern)
+FUNCTION system_dir(directory, pattern)
 !use M_system, only : system_opendir, system_readdir, system_rewinddir, system_closedir
-use iso_c_binding
-implicit none
-character(len=*),intent(in),optional  :: directory
-character(len=*),intent(in),optional  :: pattern
-character(len=:),allocatable          :: system_dir(:)
-character(len=:),allocatable          :: wild
-type(c_ptr)                           :: dir
-character(len=:),allocatable          :: filename
-integer                               :: i, ierr, icount, longest
-   longest=0
-   icount=0
-   if(present(pattern))then
-      wild=pattern
-   else
-      wild='*'
-   endif
-   if(present(directory))then                        !--- open directory stream to read from
-      call system_opendir(directory, dir, ierr)
-   else
-      call system_opendir('.', dir, ierr)
-   endif
-   if(ierr.eq.0)then
-      do i=1, 2                                      !--- read directory stream twice, first time to get size
-         do
-            call system_readdir(dir, filename, ierr)
-            if(filename.eq.' ')exit
-            if(wild.ne.'*')then
-              if(.not.matchw(filename, wild))cycle   ! Call a wildcard matching routine.
-            endif
-            icount=icount+1
-            select case(i)
-            case(1)
-               longest=max(longest, len(filename))
-            case(2)
-               system_dir(icount)=filename
-            end select
-         enddo
-         if(i.eq.1)then
-            call system_rewinddir(dir)
-            if(allocated(system_dir))deallocate(system_dir)
-            allocate(character(len=longest) :: system_dir(icount))
-            icount=0
-         endif
-      enddo
-   endif
-   call system_closedir(dir, ierr)                   !--- close directory stream
-end function system_dir
+  USE ISO_C_BINDING
+  IMPLICIT NONE
+  CHARACTER(len=*), INTENT(in), OPTIONAL :: directory
+  CHARACTER(len=*), INTENT(in), OPTIONAL :: pattern
+  CHARACTER(len=:), ALLOCATABLE :: system_dir(:)
+  CHARACTER(len=:), ALLOCATABLE :: wild
+  TYPE(C_PTR) :: dir
+  CHARACTER(len=:), ALLOCATABLE :: filename
+  INTEGER :: i, ierr, icount, longest
+  longest = 0
+  icount = 0
+  IF (PRESENT(pattern)) THEN
+    wild = pattern
+  ELSE
+    wild = '*'
+  END IF
+  IF (PRESENT(directory)) THEN !--- open directory stream to read from
+    CALL system_opendir(directory, dir, ierr)
+  ELSE
+    CALL system_opendir('.', dir, ierr)
+  END IF
+  IF (ierr .EQ. 0) THEN
+    DO i = 1, 2 !--- read directory stream twice, first time to get size
+      DO
+        CALL system_readdir(dir, filename, ierr)
+        IF (filename .EQ. ' ') EXIT
+        IF (wild .NE. '*') THEN
+          IF (.NOT. matchw(filename, wild)) CYCLE ! Call a wildcard matching routine.
+        END IF
+        icount = icount + 1
+        SELECT CASE (i)
+        CASE (1)
+          longest = MAX(longest, LEN(filename))
+        CASE (2)
+          system_dir(icount) = filename
+        END SELECT
+      END DO
+      IF (i .EQ. 1) THEN
+        CALL system_rewinddir(dir)
+        IF (ALLOCATED(system_dir)) DEALLOCATE (system_dir)
+        ALLOCATE (CHARACTER(len=longest) :: system_dir(icount))
+        icount = 0
+      END IF
+    END DO
+  END IF
+  CALL system_closedir(dir, ierr) !--- close directory stream
+END FUNCTION system_dir
 !===================================================================================================================================
 !()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()!
 !===================================================================================================================================
 ! copied from M_strings.ff to make stand-alone github version
-function matchw(tame,wild)
+FUNCTION matchw(tame, wild)
 
 ! ident_34="@(#)M_strings::matchw(3f): function compares text strings, one of which can have wildcards ('*' or '?')."
 
-logical                    :: matchw
-character(len=*)           :: tame       ! A string without wildcards
-character(len=*)           :: wild       ! A (potentially) corresponding string with wildcards
-character(len=len(tame)+1) :: tametext
-character(len=len(wild)+1) :: wildtext
-character(len=1),parameter :: NULL=char(0)
-integer                    :: wlen
-integer                    :: ti, wi
-integer                    :: i
-character(len=:),allocatable :: tbookmark, wbookmark
+  LOGICAL :: matchw
+  CHARACTER(len=*) :: tame ! A string without wildcards
+  CHARACTER(len=*) :: wild ! A (potentially) corresponding string with wildcards
+  CHARACTER(len=LEN(tame) + 1) :: tametext
+  CHARACTER(len=LEN(wild) + 1) :: wildtext
+  CHARACTER(len=1), PARAMETER :: NULL = CHAR(0)
+  INTEGER :: wlen
+  INTEGER :: ti, wi
+  INTEGER :: i
+  CHARACTER(len=:), ALLOCATABLE :: tbookmark, wbookmark
 ! These two values are set when we observe a wildcard character. They
 ! represent the locations, in the two strings, from which we start once we've observed it.
-   tametext=tame//NULL
-   wildtext=wild//NULL
-   tbookmark = NULL
-   wbookmark = NULL
-   wlen=len(wild)
-   wi=1
-   ti=1
-   do                                            ! Walk the text strings one character at a time.
-      if(wildtext(wi:wi) == '*')then             ! How do you match a unique text string?
-         do i=wi,wlen                            ! Easy: unique up on it!
-            if(wildtext(wi:wi).eq.'*')then
-               wi=wi+1
-            else
-               exit
-            endif
-         enddo
-         if(wildtext(wi:wi).eq.NULL) then        ! "x" matches "*"
-            matchw=.true.
-            return
-         endif
-         if(wildtext(wi:wi) .ne. '?') then
-            ! Fast-forward to next possible match.
-            do while (tametext(ti:ti) .ne. wildtext(wi:wi))
-               ti=ti+1
-               if (tametext(ti:ti).eq.NULL)then
-                  matchw=.false.
-                  return                         ! "x" doesn't match "*y*"
-               endif
-            enddo
-         endif
-         wbookmark = wildtext(wi:)
-         tbookmark = tametext(ti:)
+  tametext = tame//NULL
+  wildtext = wild//NULL
+  tbookmark = NULL
+  wbookmark = NULL
+  wlen = LEN(wild)
+  wi = 1
+  ti = 1
+  DO ! Walk the text strings one character at a time.
+    IF (wildtext(wi:wi) == '*') THEN ! How do you match a unique text string?
+      DO i = wi, wlen ! Easy: unique up on it!
+        IF (wildtext(wi:wi) .EQ. '*') THEN
+          wi = wi + 1
+        ELSE
+          EXIT
+        END IF
+      END DO
+      IF (wildtext(wi:wi) .EQ. NULL) THEN ! "x" matches "*"
+        matchw = .TRUE.
+        RETURN
+      END IF
+      IF (wildtext(wi:wi) .NE. '?') THEN
+        ! Fast-forward to next possible match.
+        DO WHILE (tametext(ti:ti) .NE. wildtext(wi:wi))
+          ti = ti + 1
+          IF (tametext(ti:ti) .EQ. NULL) THEN
+            matchw = .FALSE.
+            RETURN ! "x" doesn't match "*y*"
+          END IF
+        END DO
+      END IF
+      wbookmark = wildtext(wi:)
+      tbookmark = tametext(ti:)
       elseif(tametext(ti:ti) .ne. wildtext(wi:wi) .and. wildtext(wi:wi) .ne. '?') then
-         ! Got a non-match. If we've set our bookmarks, back up to one or both of them and retry.
-         if(wbookmark.ne.NULL) then
-            if(wildtext(wi:).ne. wbookmark) then
-               wildtext = wbookmark;
-               wlen=len_trim(wbookmark)
-               wi=1
-               ! Don't go this far back again.
-               if (tametext(ti:ti) .ne. wildtext(wi:wi)) then
-                  tbookmark=tbookmark(2:)
-                  tametext = tbookmark
-                  ti=1
-                  cycle                          ! "xy" matches "*y"
-               else
-                  wi=wi+1
-               endif
-            endif
-            if (tametext(ti:ti).ne.NULL) then
-               ti=ti+1
-               cycle                             ! "mississippi" matches "*sip*"
-            endif
-         endif
-         matchw=.false.
-         return                                  ! "xy" doesn't match "x"
-      endif
-      ti=ti+1
-      wi=wi+1
-      if (tametext(ti:ti).eq.NULL) then          ! How do you match a tame text string?
-         if(wildtext(wi:wi).ne.NULL)then
-            do while (wildtext(wi:wi) == '*')    ! The tame way: unique up on it!
-               wi=wi+1                           ! "x" matches "x*"
-               if(wildtext(wi:wi).eq.NULL)exit
-            enddo
-         endif
-         if (wildtext(wi:wi).eq.NULL)then
-            matchw=.true.
-            return                               ! "x" matches "x"
-         endif
-         matchw=.false.
-         return                                  ! "x" doesn't match "xy"
-      endif
-   enddo
-end function matchw
+      ! Got a non-match. If we've set our bookmarks, back up to one or both of them and retry.
+      IF (wbookmark .NE. NULL) THEN
+        IF (wildtext(wi:) .NE. wbookmark) THEN
+          wildtext = wbookmark; 
+          wlen = LEN_TRIM(wbookmark)
+          wi = 1
+          ! Don't go this far back again.
+          IF (tametext(ti:ti) .NE. wildtext(wi:wi)) THEN
+            tbookmark = tbookmark(2:)
+            tametext = tbookmark
+            ti = 1
+            CYCLE ! "xy" matches "*y"
+          ELSE
+            wi = wi + 1
+          END IF
+        END IF
+        IF (tametext(ti:ti) .NE. NULL) THEN
+          ti = ti + 1
+          CYCLE ! "mississippi" matches "*sip*"
+        END IF
+      END IF
+      matchw = .FALSE.
+      RETURN ! "xy" doesn't match "x"
+    END IF
+    ti = ti + 1
+    wi = wi + 1
+    IF (tametext(ti:ti) .EQ. NULL) THEN ! How do you match a tame text string?
+      IF (wildtext(wi:wi) .NE. NULL) THEN
+        DO WHILE (wildtext(wi:wi) == '*') ! The tame way: unique up on it!
+          wi = wi + 1 ! "x" matches "x*"
+          IF (wildtext(wi:wi) .EQ. NULL) EXIT
+        END DO
+      END IF
+      IF (wildtext(wi:wi) .EQ. NULL) THEN
+        matchw = .TRUE.
+        RETURN ! "x" matches "x"
+      END IF
+      matchw = .FALSE.
+      RETURN ! "x" doesn't match "xy"
+    END IF
+  END DO
+END FUNCTION matchw
 !===================================================================================================================================
 !()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()!
 !===================================================================================================================================
@@ -5400,25 +5403,25 @@ end function matchw
 !!LICENSE
 !!   Public Domain
 !@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-pure elemental function anyinteger_to_64bit(intin) result(ii38)
-use, intrinsic :: iso_fortran_env, only : error_unit !! ,input_unit,output_unit
-implicit none
+PURE ELEMENTAL FUNCTION anyinteger_to_64bit(intin) RESULT(ii38)
+  USE, INTRINSIC :: ISO_FORTRAN_ENV, ONLY: ERROR_UNIT !! ,input_unit,output_unit
+  IMPLICIT NONE
 
 !!@(#) M_anything::anyinteger_to_64(3f): convert integer parameter of any kind to 64-bit integer
 
-class(*),intent(in)     :: intin
-   integer(kind=int64) :: ii38
-   select type(intin)
-   type is (integer(kind=int8));   ii38=int(intin,kind=int64)
-   type is (integer(kind=int16));  ii38=int(intin,kind=int64)
-   type is (integer(kind=int32));  ii38=intin
-   type is (integer(kind=int64));  ii38=intin
-   !class default
-      !write(error_unit,*)'ERROR: unknown integer type'
-      !stop 'ERROR: *anyinteger_to_64* unknown integer type'
-   end select
-end function anyinteger_to_64bit
+  CLASS(*), INTENT(in) :: intin
+  INTEGER(kind=INT64) :: ii38
+  SELECT TYPE (intin)
+  TYPE is (INTEGER(kind=INT8)); ii38 = INT(intin, kind=INT64)
+  TYPE is (INTEGER(kind=INT16)); ii38 = INT(intin, kind=INT64)
+  TYPE is (INTEGER(kind=INT32)); ii38 = intin
+  TYPE is (INTEGER(kind=INT64)); ii38 = intin
+    !class default
+    !write(error_unit,*)'ERROR: unknown integer type'
+    !stop 'ERROR: *anyinteger_to_64* unknown integer type'
+  END SELECT
+END FUNCTION anyinteger_to_64bit
 !===================================================================================================================================
 !()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()!
 !===================================================================================================================================
-end module System_Method
+END MODULE System_Method

@@ -35,6 +35,13 @@
       }
     },
     {
+      "name": "neovim-debug",
+      "inherits": "default",
+      "displayName": "Neovim Debug Dev",
+      "description": "Default build using Ninja generator for dev in neovim",
+      "binaryDir": "/home/easifem/.easifem/build/easifem/base/neovim/debug"
+    },
+    {
       "name": "ninja-multi",
       "inherits": "default",
       "displayName": "Ninja Multi-Config",
@@ -48,6 +55,12 @@
       "displayName": "Default build",
       "description": "Default build",
       "configurePreset": "default"
+    },
+    {
+      "name": "neovim-debug",
+      "displayName": "Neovim debug build",
+      "description": "Default build",
+      "configurePreset": "neovim-debug"
     }
   ],
   "workflowPresets": [

@@ -27,6 +27,7 @@ PUBLIC :: EquidistanceInPoint_Quadrangle
 PUBLIC :: InterpolationPoint_Quadrangle
 PUBLIC :: LagrangeCoeff_Quadrangle
 PUBLIC :: Dubiner_Quadrangle
+PUBLIC :: Dubiner_Quadrangle_
 PUBLIC :: TensorProdBasis_Quadrangle
 PUBLIC :: OrthogonalBasis_Quadrangle
 PUBLIC :: VertexBasis_Quadrangle
@@ -46,6 +47,7 @@ PUBLIC :: HeirarchicalBasisGradient_Quadrangle
 PUBLIC :: TensorProdBasisGradient_Quadrangle
 PUBLIC :: OrthogonalBasisGradient_Quadrangle
 PUBLIC :: DubinerGradient_Quadrangle
+PUBLIC :: DubinerGradient_Quadrangle_
 
 !----------------------------------------------------------------------------
 !                                                   RefElemDomain_Quadrangle
@@ -774,6 +776,59 @@ END INTERFACE Dubiner_Quadrangle
 !# Introduction
 !
 ! Forms Dubiner basis on biunit quadrangle domain.
+! This routine is called while forming dubiner basis on triangle domain
+!
+! The shape of `ans` is (M,N), where M=SIZE(xij,2) (number of points)
+! N = 0.5*(order+1)*(order+2).
+!
+! In this way, ans(j,:) denotes the values of all polynomial at jth point
+!
+! Polynomials are returned in following way:
+!
+!$$
+! P_{0,0}, P_{0,1}, \cdots , P_{0,order} \\
+! P_{1,0}, P_{1,1}, \cdots , P_{1,order-1} \\
+! P_{2,0}, P_{2,1}, \cdots , P_{2,order-2} \\
+! \cdots
+! P_{order,0}
+!$$
+!
+! For example for order=3, the polynomials are arranged as:
+!
+!$$
+! P_{0,0}, P_{0,1}, P_{0,2}, P_{0,3} \\
+! P_{1,0}, P_{1,1}, P_{1,2} \\
+! P_{2,0}, P_{2,1} \\
+! P_{3,0}
+!$$
+
+INTERFACE Dubiner_Quadrangle_
+  MODULE PURE SUBROUTINE Dubiner_Quadrangle1_(order, xij, ans, nrow, ncol)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order of polynomial space
+    REAL(DFP), INTENT(IN) :: xij(:, :)
+    !! points in biunit quadrangle, shape functions will be evaluated
+    !! at these points. SIZE(xij,1) = 2, and SIZE(xij, 2) = number of points
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    ! ans(SIZE(xij, 2), (order + 1) * (order + 2) / 2)
+    !! shape functions
+    !! ans(:, j), jth shape functions at all points
+    !! ans(j, :), all shape functions at jth point
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+  END SUBROUTINE Dubiner_Quadrangle1_
+END INTERFACE Dubiner_Quadrangle_
+
+!----------------------------------------------------------------------------
+!                                                       DubinerPolynomial
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 27 Oct 2022
+! summary: Dubiner (1991) polynomials on biunit domain
+!
+!# Introduction
+!
+! Forms Dubiner basis on biunit quadrangle domain.
 ! This routine is same as Dubiner_Quadrangle1
 ! The only difference is that xij are given by outerproduct of x and y.
 ! This function calls `Dubiner_Quadrangle1`.
@@ -792,6 +847,38 @@ INTERFACE Dubiner_Quadrangle
     !! ans(j, :), all shape functions at jth point
   END FUNCTION Dubiner_Quadrangle2
 END INTERFACE Dubiner_Quadrangle
+
+!----------------------------------------------------------------------------
+!                                                       DubinerPolynomial
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 27 Oct 2022
+! summary: Dubiner (1991) polynomials on biunit domain
+!
+!# Introduction
+!
+! Forms Dubiner basis on biunit quadrangle domain.
+! This routine is same as Dubiner_Quadrangle1
+! The only difference is that xij are given by outerproduct of x and y.
+! This function calls `Dubiner_Quadrangle1`.
+
+INTERFACE Dubiner_Quadrangle_
+  MODULE PURE SUBROUTINE Dubiner_Quadrangle2_(order, x, y, ans, nrow, ncol)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order of polynomial space
+    REAL(DFP), INTENT(IN) :: x(:)
+    !! x coordinate on line
+    REAL(DFP), INTENT(IN) :: y(:)
+    !! y coordinate on line
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    ! ans(SIZE(x) * SIZE(y), (order + 1) * (order + 2) / 2)
+    !! shape functions
+    !! ans(:, j), jth shape functions at all points
+    !! ans(j, :), all shape functions at jth point
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+  END SUBROUTINE Dubiner_Quadrangle2_
+END INTERFACE Dubiner_Quadrangle_
 
 !----------------------------------------------------------------------------
 !                                                       DubinerGradient
@@ -845,6 +932,63 @@ INTERFACE DubinerGradient_Quadrangle
     !! ans(j, :), all shape functions at jth point
   END FUNCTION DubinerGradient_Quadrangle1
 END INTERFACE DubinerGradient_Quadrangle
+
+!----------------------------------------------------------------------------
+!                                                       DubinerGradient
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 27 Oct 2022
+! summary: Dubiner (1991) polynomials on biunit domain
+!
+!# Introduction
+!
+! Forms Dubiner basis on biunit quadrangle domain.
+! This routine is called while forming dubiner basis on triangle domain
+!
+! The shape of `ans` is (M,N), where M=SIZE(xij,2) (number of points)
+! N = 0.5*(order+1)*(order+2).
+!
+! In this way, ans(j,:) denotes the values of all polynomial at jth point
+!
+! Polynomials are returned in following way:
+!
+!$$
+! P_{0,0}, P_{0,1}, \cdots , P_{0,order} \\
+! P_{1,0}, P_{1,1}, \cdots , P_{1,order-1} \\
+! P_{2,0}, P_{2,1}, \cdots , P_{2,order-2} \\
+! \cdots
+! P_{order,0}
+!$$
+!
+! For example for order=3, the polynomials are arranged as:
+!
+!$$
+! P_{0,0}, P_{0,1}, P_{0,2}, P_{0,3} \\
+! P_{1,0}, P_{1,1}, P_{1,2} \\
+! P_{2,0}, P_{2,1} \\
+! P_{3,0}
+!$$
+
+INTERFACE DubinerGradient_Quadrangle_
+  MODULE PURE SUBROUTINE DubinerGradient_Quadrangle1_(order, xij, ans, &
+                                                      tsize1, tsize2, tsize3)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order of polynomial space
+    REAL(DFP), INTENT(IN) :: xij(:, :)
+    !! points in biunit quadrangle, shape functions will be evaluated
+    !! at these points. SIZE(xij,1) = 2, and SIZE(xij, 2) = number of points
+    REAL(DFP), INTENT(INOUT) :: ans(:, :, :)
+    ! ans( &
+    ! SIZE(xij, 2), &
+    ! & (order + 1_I4B) * (order + 2_I4B) / 2_I4B, &
+    ! & 2_I4B)
+    !! shape functions
+    !! ans(:, j), jth shape functions at all points
+    !! ans(j, :), all shape functions at jth point
+    INTEGER(I4B), INTENT(OUT) :: tsize1, tsize2, tsize3
+  END SUBROUTINE DubinerGradient_Quadrangle1_
+END INTERFACE DubinerGradient_Quadrangle_
 
 !----------------------------------------------------------------------------
 !                                            TensorProdBasis_Quadrangle

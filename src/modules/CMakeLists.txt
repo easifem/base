@@ -36,6 +36,9 @@ include(${CMAKE_CURRENT_LIST_DIR}/FPL/CMakeLists.txt)
 # System
 include(${CMAKE_CURRENT_LIST_DIR}/System/CMakeLists.txt)
 
+# TriangleInterface
+include(${CMAKE_CURRENT_LIST_DIR}/TriangleInterface/CMakeLists.txt)
+
 # BLAS95
 include(${CMAKE_CURRENT_LIST_DIR}/BLAS95/CMakeLists.txt)
 
@@ -44,6 +47,9 @@ include(${CMAKE_CURRENT_LIST_DIR}/Test/CMakeLists.txt)
 
 # GlobalData
 include(${CMAKE_CURRENT_LIST_DIR}/GlobalData/CMakeLists.txt)
+
+# RaylibInterface
+include(${CMAKE_CURRENT_LIST_DIR}/RaylibInterface/CMakeLists.txt)
 
 # Display
 include(${CMAKE_CURRENT_LIST_DIR}/Display/CMakeLists.txt)

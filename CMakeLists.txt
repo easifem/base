@@ -133,8 +133,14 @@ endif()
 if(${CMAKE_Fortran_COMPILER_ID} STREQUAL "GNU" OR Fortran_COMPILER_NAME MATCHES
                                                   "gfortran*")
 
-  list(APPEND FORTRAN_FLAGS "-ffree-form" "-ffree-line-length-none"
-       "-std=f2018" "-fimplicit-none")
+  list(
+    APPEND
+    FORTRAN_FLAGS
+    "-ffree-form"
+    "-ffree-line-length-none"
+    "-std=f2018"
+    "-fimplicit-none"
+    "-fno-range-check")
 
   list(APPEND FORTRAN_FLAGS_RELEASE "-O3")
 
@@ -295,6 +301,7 @@ if(NOT CMAKE_PREFIX_PATH)
   list(APPEND CMAKE_PREFIX_PATH "$ENV{EASIFEM_EXTPKGS}")
 endif()
 
+include(${PROJECT_SOURCE_DIR}/cmake/addRaylib.cmake)
 include(${PROJECT_SOURCE_DIR}/cmake/addOpenBLAS.cmake)
 include(${PROJECT_SOURCE_DIR}/cmake/addLapack95.cmake)
 include(${PROJECT_SOURCE_DIR}/cmake/addSparsekit.cmake)
