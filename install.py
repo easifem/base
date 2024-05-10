@@ -23,7 +23,7 @@ else:
     cmake_def += " -D CMAKE_INSTALL_PREFIX:PATH=${EASIFEM_BASE}"
     cmake_def += " -D CMAKE_EXPORT_COMPILE_COMMANDS:BOOL=ON"
     cmake_def += " -D BUILD_SHARED_LIBS:BOOL=ON"
-    cmake_def += " -D USE_OpenMP:BOOL=ON"  # OFF
+    cmake_def += " -D USE_OPENMP:BOOL=ON"  # OFF
     cmake_def += " -D USE_PLPLOT:BOOL=ON"
     cmake_def += " -D USE_BLAS95:BOOL=ON"
     cmake_def += " -D USE_LAPACK95:BOOL=ON"
@@ -35,10 +35,10 @@ else:
     cmake_def += " -D USE_PARPACK:BOOL=OFF"
     cmake_def += " -D USE_METIS:BOOL=OFF"
     cmake_def += " -D USE_LUA:BOOL=ON"
-    cmake_def += " -D USE_Int32:BOOL=ON"
-    cmake_def += " -D USE_Real64:BOOL=ON"
+    cmake_def += " -D USE_INT32:BOOL=ON"
+    cmake_def += " -D USE_REAL64:BOOL=ON"
     cmake_def += " -D USE_RAYLIB:BOOL=ON"
-    cmake_def += " -D COLOR_DISP:BOOL=OFF"
+    cmake_def += " -D USE_COLORDISP:BOOL=OFF"
 
     print("CMAKE DEF : ", cmake_def)
 

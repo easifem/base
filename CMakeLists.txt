@@ -228,24 +228,24 @@ set_target_properties(
              WINDOWS_EXPORT_ALL_SYMBOLS ON)
 
 # some options for easifem
-option(USE_Real32 OFF)
-option(USE_Real64 ON)
+option(USE_REAL32 OFF)
+option(USE_REAL64 ON)
 
-if(USE_Real32)
+if(USE_REAL32)
   list(APPEND TARGET_COMPILE_DEF "-DUSE_Real32")
 endif()
 
-if(USE_Real64)
+if(USE_REAL64)
   list(APPEND TARGET_COMPILE_DEF "-DUSE_Real64")
 endif()
 
-option(USE_Int32 ON)
-if(USE_Int32)
+option(USE_INT32 ON)
+if(USE_INT32)
   list(APPEND TARGET_COMPILE_DEF "-DUSE_Int32")
 endif()
 
-option(USE_Int64 OFF)
-if(USE_Int64)
+option(USE_INT64 OFF)
+if(USE_INT64)
   list(APPEND TARGET_COMPILE_DEF "-DUSE_Int64")
 endif()
 
@@ -256,8 +256,8 @@ if(${CMAKE_BUILD_TYPE} STREQUAL "Debug")
   list(APPEND TARGET_COMPILE_DEF "-DDEBUG_VER")
 endif()
 
-option(COLOR_DISP ON)
-if(COLOR_DISP)
+option(USE_COLORDISP ON)
+if(USE_COLORDISP)
   list(APPEND TARGET_COMPILE_DEF "-DCOLOR_DISP")
 endif()
 

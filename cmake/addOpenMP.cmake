@@ -17,8 +17,8 @@
 #
 
 if(${PROJECT_NAME} MATCHES "easifemBase")
-  option(USE_OpenMP OFF)
-  if(USE_OpenMP)
+  option(USE_OPENMP OFF)
+  if(USE_OPENMP)
 
     if(APPLE)
       if(CMAKE_C_COMPILER_ID MATCHES "Clang" OR CMAKE_C_COMPILER_ID MATCHES
