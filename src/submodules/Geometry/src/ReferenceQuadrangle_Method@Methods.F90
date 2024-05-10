@@ -22,7 +22,7 @@
 SUBMODULE(ReferenceQuadrangle_Method) Methods
 USE ReferenceElement_Method
 USE LineInterpolationUtility, ONLY: InterpolationPoint_Line
-USE ReferenceLine_Method, ONLY: ElementOrder_Line
+USE ReferenceLine_Method, ONLY: ElementOrder_Line, ElementName_Line
 
 USE QuadrangleInterpolationUtility, ONLY: InterpolationPoint_Quadrangle,  &
   & LagrangeDOF_Quadrangle
@@ -592,6 +592,14 @@ END DO
 END PROCEDURE GetEdgeConnectivity_Quadrangle
 
 !----------------------------------------------------------------------------
+!                                           GetFaceConnectivity_Quadrangle
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE GetFaceConnectivity_Quadrangle
+CALL GetEdgeConnectivity_Quadrangle(con=con, opt=2_I4B, order=order)
+END PROCEDURE GetFaceConnectivity_Quadrangle
+
+!----------------------------------------------------------------------------
 !                                               FaceShapeMetaData_Quadrangle
 !----------------------------------------------------------------------------
 
@@ -634,5 +642,16 @@ ELSE
 END IF
 
 END PROCEDURE FaceShapeMetaData_Quadrangle
+
+!----------------------------------------------------------------------------
+!                                             GetFaceElemType_Quadrangle
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE GetFaceElemType_Quadrangle
+INTEGER(I4B) :: order
+order = ElementOrder_Quadrangle(Input(default=Quadrangle, option=elemType))
+IF (PRESENT(faceElemType)) faceElemType(1:4) = ElementName_Line(order)
+IF (PRESENT(tFaceNodes)) tFaceNodes(1:4) = order + 1
+END PROCEDURE GetFaceElemType_Quadrangle
 
 END SUBMODULE Methods

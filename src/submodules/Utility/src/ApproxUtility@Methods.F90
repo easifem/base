@@ -24,7 +24,7 @@ CONTAINS
 
 MODULE PROCEDURE approxeq_1
 REAL(REAL64), PARAMETER :: my_zero = 1.0E-10
-Ans = (ABS(a - b) .LE. my_zero)
+ans = (ABS(a - b) .LE. my_zero)
 END PROCEDURE approxeq_1
 
 !----------------------------------------------------------------------------
@@ -33,7 +33,7 @@ END PROCEDURE approxeq_1
 
 MODULE PROCEDURE approxeq_2
 REAL(REAL64), PARAMETER :: my_zero = 1.0E-10
-Ans = (ABS(a - b) .LE. my_zero)
+ans = (ABS(a - b) .LE. my_zero)
 END PROCEDURE approxeq_2
 
 !----------------------------------------------------------------------------
@@ -41,10 +41,10 @@ END PROCEDURE approxeq_2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE approxeqr_1
-REAL(DFP) :: eps
-eps = MAX(ABS(a), ABS(b)) * Zero
-IF (a .EQ. 0.0_DFP .OR. b .EQ. 0.0_DFP) eps = Zero
-Ans = (ABS(a - b) .LE. eps)
+REAL(REAL32) :: eps
+REAL(REAL32), PARAMETER :: my_zero = REAL(Zero, REAL32)
+eps = my_zero + MAX(ABS(a), ABS(b)) * my_zero
+ans = (ABS(a - b) .LE. eps)
 END PROCEDURE approxeqr_1
 
 !----------------------------------------------------------------------------
@@ -52,10 +52,10 @@ END PROCEDURE approxeqr_1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE approxeqr_2
-REAL(DFP) :: eps
-eps = MAX(ABS(a), ABS(b)) * Zero
-IF (a .EQ. 0.0_DFP .OR. b .EQ. 0.0_DFP) eps = Zero
-Ans = (ABS(a - b) .LE. eps)
+REAL(REAL64) :: eps
+REAL(REAL64), PARAMETER :: my_zero = REAL(Zero, REAL64)
+eps = my_zero + MAX(ABS(a), ABS(b)) * my_zero
+ans = (ABS(a - b) .LE. eps)
 END PROCEDURE approxeqr_2
 
 !----------------------------------------------------------------------------
@@ -63,12 +63,14 @@ END PROCEDURE approxeqr_2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE approxeq_ulp_real
-IF (a .EQ. 0.0_DFP .OR. b .EQ. 0.0_DFP &
-  & .OR. (a > 0._DFP .AND. b < 0._DFP) &
-  & .OR. (a < 0._DFP .AND. b > 0._DFP)) THEN
-  Ans = approxeq_1(a, b)
+LOGICAL(LGT) :: isok
+
+isok = (a > 0._DFP .AND. b < 0._DFP) .OR. (a < 0._DFP .AND. b > 0._DFP)
+
+IF (isok) THEN
+  ans = approxeq_1(a, b)
 ELSE
-  Ans = (ABS(TRANSFER(a, 1_I4B) - TRANSFER(b, 1_I4B)) <= 10_I4B)
+  ans = (ABS(TRANSFER(a, 1_I4B) - TRANSFER(b, 1_I4B)) <= 10_I4B)
 END IF
 END PROCEDURE approxeq_ulp_real
 
@@ -77,7 +79,8 @@ END PROCEDURE approxeq_ulp_real
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE approxle_1
-Ans = (r1 .LE. r2 + Zero)
+REAL(DFP), PARAMETER :: my_zero = 1.0E-10
+ans = (r1 - r2 .LE. my_zero)
 END PROCEDURE approxle_1
 
 !----------------------------------------------------------------------------
@@ -85,7 +88,8 @@ END PROCEDURE approxle_1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE approxle_2
-Ans = (r1 .LE. r2 + Zero)
+REAL(DFP), PARAMETER :: my_zero = 1.0E-10
+ans = (r1 - r2 .LE. my_zero)
 END PROCEDURE approxle_2
 
 !----------------------------------------------------------------------------
@@ -93,7 +97,8 @@ END PROCEDURE approxle_2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE approxge_1
-Ans = (r1 + Zero .GE. r2)
+REAL(DFP), PARAMETER :: my_zero = 1.0E-10
+ans = (my_zero .GE. r2 - r1)
 END PROCEDURE approxge_1
 
 !----------------------------------------------------------------------------
@@ -101,7 +106,8 @@ END PROCEDURE approxge_1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE approxge_2
-Ans = (r1 + Zero .GE. r2)
+REAL(DFP), PARAMETER :: my_zero = 1.0E-10
+ans = (my_zero .GE. r2 - r1)
 END PROCEDURE approxge_2
 
 !----------------------------------------------------------------------------
@@ -109,7 +115,7 @@ END PROCEDURE approxge_2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE softeq_1
-Ans = (ABS(r1 - r2) .LE. tol)
+ans = (ABS(r1 - r2) .LE. tol)
 END PROCEDURE softeq_1
 
 !----------------------------------------------------------------------------
@@ -117,7 +123,7 @@ END PROCEDURE softeq_1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE softeq_2
-Ans = (ABS(r1 - r2) .LE. tol)
+ans = (ABS(r1 - r2) .LE. tol)
 END PROCEDURE softeq_2
 
 !----------------------------------------------------------------------------
@@ -125,10 +131,9 @@ END PROCEDURE softeq_2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE softeqr_1
-REAL(DFP) :: eps
-eps = MAX(ABS(r1), ABS(r2)) * tol
-IF (r1 .EQ. 0.0_DFP .OR. r1 .EQ. 0.0_DFP) eps = REAL(Zero, DFP)
-Ans = (ABS(r1 - r2) .LE. eps)
+REAL(REAL32) :: eps
+eps = REAL(Zero, REAL32) + MAX(ABS(r1), ABS(r2)) * tol
+ans = (ABS(r1 - r2) .LE. eps)
 END PROCEDURE softeqr_1
 
 !----------------------------------------------------------------------------
@@ -136,10 +141,9 @@ END PROCEDURE softeqr_1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE softeqr_2
-REAL(DFP) :: eps
-eps = MAX(ABS(r1), ABS(r2)) * tol
-IF (r1 .EQ. 0.0_DFP .OR. r1 .EQ. 0.0_DFP) eps = REAL(Zero, DFP)
-Ans = (ABS(r1 - r2) .LE. eps)
+REAL(REAL64) :: eps
+eps = REAL(Zero, REAL64) + MAX(ABS(r1), ABS(r2)) * tol
+ans = (ABS(r1 - r2) .LE. eps)
 END PROCEDURE softeqr_2
 
 !----------------------------------------------------------------------------
@@ -147,7 +151,7 @@ END PROCEDURE softeqr_2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE softle_1
-Ans = (r1 .LE. r2 + tol)
+ans = (r1 .LE. r2 + tol)
 END PROCEDURE softle_1
 
 !----------------------------------------------------------------------------
@@ -155,7 +159,7 @@ END PROCEDURE softle_1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE softle_2
-Ans = (r1 .LE. r2 + tol)
+ans = (r1 .LE. r2 + tol)
 END PROCEDURE softle_2
 
 !----------------------------------------------------------------------------
@@ -163,7 +167,7 @@ END PROCEDURE softle_2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE softlt_1
-Ans = (r1 < r2 - tol)
+ans = (r1 < r2 - tol)
 END PROCEDURE softlt_1
 
 !----------------------------------------------------------------------------
@@ -171,7 +175,7 @@ END PROCEDURE softlt_1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE softlt_2
-Ans = (r1 < r2 - tol)
+ans = (r1 < r2 - tol)
 END PROCEDURE softlt_2
 
 !----------------------------------------------------------------------------
@@ -179,7 +183,7 @@ END PROCEDURE softlt_2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE softge_1
-Ans = (r1 + tol .GE. r2)
+ans = (r1 + tol .GE. r2)
 END PROCEDURE softge_1
 
 !----------------------------------------------------------------------------
@@ -187,7 +191,7 @@ END PROCEDURE softge_1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE softge_2
-Ans = (r1 + tol .GE. r2)
+ans = (r1 + tol .GE. r2)
 END PROCEDURE softge_2
 
 !----------------------------------------------------------------------------
@@ -195,7 +199,7 @@ END PROCEDURE softge_2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE softgt_1
-Ans = (r1 > r2 + tol)
+ans = (r1 > r2 + tol)
 END PROCEDURE softgt_1
 
 !----------------------------------------------------------------------------
@@ -203,7 +207,7 @@ END PROCEDURE softgt_1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE softgt_2
-Ans = (r1 > r2 + tol)
+ans = (r1 > r2 + tol)
 END PROCEDURE softgt_2
 
 !----------------------------------------------------------------------------
@@ -211,7 +215,7 @@ END PROCEDURE softgt_2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE equalto_logical
-Ans = (l1 .EQV. l2)
+ans = (l1 .EQV. l2)
 END PROCEDURE
 
 !----------------------------------------------------------------------------
@@ -219,7 +223,7 @@ END PROCEDURE
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE notequalto_logical
-Ans = (l1 .NEQV. l2)
+ans = (l1 .NEQV. l2)
 END PROCEDURE
 
 !----------------------------------------------------------------------------

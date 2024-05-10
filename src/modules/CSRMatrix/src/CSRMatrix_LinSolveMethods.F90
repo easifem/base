@@ -23,6 +23,8 @@ PRIVATE
 
 PUBLIC :: CSRMatrixLinSolveInitiate
 PUBLIC :: CSRMatrix_GMRES
+PUBLIC :: CSRMatrix_CG
+PUBLIC :: CSRMatrix_BiCGStab
 
 INTEGER(I4B), PARAMETER :: IPAR_LENGTH = 14
 INTEGER(I4B), PARAMETER :: FPAR_LENGTH = 14
@@ -108,15 +110,53 @@ END INTERFACE CSRMatrixLinSolveInitiate
 ! date:  2023-03-14
 ! summary: Solver
 
-INTERFACE CSRMatrix_GMRES
+INTERFACE
   MODULE SUBROUTINE CSRMatrix_GMRES(obj, sol, rhs, ipar, fpar, W)
     CLASS(CSRMatrix_), INTENT(INOUT) :: obj
     REAL(DFP), INTENT(INOUT) :: sol(:)
     REAL(DFP), INTENT(INOUT) :: rhs(:)
-    INTEGER(I4B), ALLOCATABLE, INTENT(INOUT) :: ipar(:)
-    REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: fpar(:)
-    REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: W(:)
+    INTEGER(I4B), INTENT(INOUT) :: ipar(:)
+    REAL(DFP), INTENT(INOUT) :: fpar(:)
+    REAL(DFP), INTENT(INOUT) :: W(:)
   END SUBROUTINE CSRMatrix_GMRES
-END INTERFACE CSRMatrix_GMRES
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                                  LinSolve
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2023-03-14
+! summary: Solver
+
+INTERFACE
+  MODULE SUBROUTINE CSRMatrix_CG(obj, sol, rhs, ipar, fpar, W)
+    CLASS(CSRMatrix_), INTENT(INOUT) :: obj
+    REAL(DFP), INTENT(INOUT) :: sol(:)
+    REAL(DFP), INTENT(INOUT) :: rhs(:)
+    INTEGER(I4B), INTENT(INOUT) :: ipar(:)
+    REAL(DFP), INTENT(INOUT) :: fpar(:)
+    REAL(DFP), INTENT(INOUT) :: W(:)
+  END SUBROUTINE CSRMatrix_CG
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                                  LinSolve
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2023-03-14
+! summary: Solver
+
+INTERFACE
+  MODULE SUBROUTINE CSRMatrix_BiCGStab(obj, sol, rhs, ipar, fpar, W)
+    CLASS(CSRMatrix_), INTENT(INOUT) :: obj
+    REAL(DFP), INTENT(INOUT) :: sol(:)
+    REAL(DFP), INTENT(INOUT) :: rhs(:)
+    INTEGER(I4B), INTENT(INOUT) :: ipar(:)
+    REAL(DFP), INTENT(INOUT) :: fpar(:)
+    REAL(DFP), INTENT(INOUT) :: W(:)
+  END SUBROUTINE CSRMatrix_BiCGStab
+END INTERFACE
 
 END MODULE CSRMatrix_LinSolveMethods

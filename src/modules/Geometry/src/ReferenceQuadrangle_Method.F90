@@ -21,7 +21,8 @@
 
 MODULE ReferenceQuadrangle_Method
 USE GlobalData
-USE BaseType
+USE BaseType, ONLY: ReferenceQuadrangle_, ReferenceElement_, &
+                    ReferenceTopology_
 IMPLICIT NONE
 PRIVATE
 PUBLIC :: Initiate
@@ -35,6 +36,7 @@ PUBLIC :: QuadArea3D, QuadrangleArea3D
 PUBLIC :: QuadArea2D, QuadrangleArea2D
 PUBLIC :: QuadrangleName
 PUBLIC :: GetEdgeConnectivity_Quadrangle
+PUBLIC :: GetFaceConnectivity_Quadrangle
 PUBLIC :: RefQuadrangleCoord
 PUBLIC :: RefCoord_Quadrangle
 PUBLIC :: FaceShapeMetaData_Quadrangle
@@ -47,6 +49,7 @@ PUBLIC :: TotalEntities_Quadrangle
 PUBLIC :: FacetTopology_Quadrangle
 PUBLIC :: ElementName_Quadrangle
 PUBLIC :: MaxOrder_Quadrangle
+PUBLIC :: GetFaceElemType_Quadrangle
 
 #ifdef MAX_QUADRANGLE_ORDER
 INTEGER(I4B), PARAMETER :: MaxOrder_Quadrangle = MAX_QUADRANGLE_ORDER
@@ -62,7 +65,7 @@ INTEGER(I4B), PUBLIC, PARAMETER :: HelpFaceData_Quadrangle(3, 4) =  &
     & 1, 2, 3 &
   & ], [3, 4])
 
-#ifdef _QUADRANGLE_EDGE_CON_DEFAULT_OPT_2
+#ifdef QUADRANGLE_EDGE_CON_DEFAULT_OPT_1
 INTEGER(I4B), PARAMETER :: DEFAULT_OPT_QUADRANGLE_EDGE_CON = 1_I4B
 !! This means edges are [1,2], [4,3], [1,4], [2, 3]
 #else
@@ -389,6 +392,33 @@ INTERFACE
 END INTERFACE
 
 !----------------------------------------------------------------------------
+!                                                        GetEdgeConnectivity
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2024-04-19
+! summary: Returns face connectivity
+!
+!# Introduction
+!
+! this routine calls [[GetEdgeConnectivity_Quadrangle]]
+! with opt=2
+
+INTERFACE
+  MODULE PURE SUBROUTINE GetFaceConnectivity_Quadrangle(con, opt, order)
+    INTEGER(I4B), INTENT(INOUT) :: con(:, :)
+    !! Connectivity
+    !! The columns represents the Face number
+    !! The row represents a Face
+    !! con should be allocated by the user
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: opt
+    !! This option is not used
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: order
+    !! Order of the element
+  END SUBROUTINE GetFaceConnectivity_Quadrangle
+END INTERFACE
+
+!----------------------------------------------------------------------------
 !                                                   RefQuadrangleCoord
 !----------------------------------------------------------------------------
 
@@ -415,6 +445,30 @@ INTERFACE
     INTEGER(I4B), OPTIONAL, INTENT(INOUT) :: faceOrient(:)
     INTEGER(I4B), OPTIONAL, INTENT(INOUT) :: localFaces(:)
   END SUBROUTINE FaceShapeMetaData_Quadrangle
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                GetFaceElemType_Quadrangle
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2024-04-19
+! summary:  Returns the element type of each face
+
+INTERFACE
+MODULE PURE SUBROUTINE GetFaceElemType_Quadrangle(elemType, faceElemType, opt, &
+                                                    tFaceNodes)
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: elemType
+    !! name of element
+    INTEGER(I4B), OPTIONAL, INTENT(INOUT) :: faceElemType(:)
+    !! Element names of faces
+    INTEGER(I4B), OPTIONAL, INTENT(INOUT) :: tFaceNodes(:)
+    !! Total number of nodes in each face
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: opt
+    !! If opt = 1, then edge connectivity for hierarchial approximation
+    !! If opt = 2, then edge connectivity for Lagrangian approximation
+    !! opt = 1 is default
+  END SUBROUTINE GetFaceElemType_Quadrangle
 END INTERFACE
 
 END MODULE ReferenceQuadrangle_Method

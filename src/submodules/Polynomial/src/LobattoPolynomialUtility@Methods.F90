@@ -170,16 +170,27 @@ END PROCEDURE LobattoEvalAll2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE LobattoKernelEvalAll1
+INTEGER(I4B) :: nrow, ncol
+CALL LobattoKernelEvalAll1_(n=n, x=x, ans=ans, nrow=nrow, ncol=ncol)
+END PROCEDURE LobattoKernelEvalAll1
+
+!----------------------------------------------------------------------------
+!                                                       LobattoKernelEvalAll
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE LobattoKernelEvalAll1_
 REAL(DFP) :: m, avar
 INTEGER(I4B) :: ii
 
-ans = UltrasphericalEvalAll(n=n, x=x, lambda=1.5_DFP)
+CALL UltrasphericalEvalAll_(n=n, x=x, lambda=1.5_DFP, ans=ans, nrow=nrow, &
+                            ncol=ncol)
+
 DO ii = 0, n
   m = REAL(ii, KIND=DFP)
   avar = -SQRT(8.0_DFP*(2.0_DFP*m+3.0_DFP))/(m+1.0_DFP)/(m+2.0_DFP)
-  ans(:, ii) = avar * ans(:, ii)
+  ans(1:nrow, ii) = avar * ans(1:nrow, ii)
 END DO
-END PROCEDURE LobattoKernelEvalAll1
+END PROCEDURE LobattoKernelEvalAll1_
 
 !----------------------------------------------------------------------------
 !                                             LobattoKernelGradientEvalAll1
@@ -197,6 +208,22 @@ DO ii = 0, n
 END DO
 END PROCEDURE LobattoKernelGradientEvalAll1
 
+!----------------------------------------------------------------------------
+!                                             LobattoKernelGradientEvalAll1
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE LobattoKernelGradientEvalAll1_
+REAL(DFP) :: m, avar
+INTEGER(I4B) :: ii
+
+CALL UltrasphericalGradientEvalAll_(n=n, x=x, lambda=1.5_DFP, nrow=nrow, &
+                                    ncol=ncol, ans=ans)
+DO CONCURRENT(ii=0:n)
+  m = REAL(ii, KIND=DFP)
+  avar = -SQRT(8.0_DFP*(2.0_DFP*m+3.0_DFP))/(m+1.0_DFP)/(m+2.0_DFP)
+  ans(1:nrow, ii) = avar * ans(1:nrow, ii)
+END DO
+END PROCEDURE LobattoKernelGradientEvalAll1_
 
 !----------------------------------------------------------------------------
 !
@@ -402,22 +429,21 @@ END PROCEDURE LobattoMassMatrix
 
 MODULE PROCEDURE LobattoStiffnessMatrix
 INTEGER(I4B) :: ii
-REAL(DFP) :: m
-!!
+
 ans = 0.0_DFP
-!!
+
 DO ii = 1, n + 1
   ans(ii, ii) = 1.0_DFP
 END DO
-!!
+
 ans(1, 1) = 0.5_DFP
-!!
+
 IF (n .EQ. 0_I4B) RETURN
-!!
+
 ans(2, 2) = 0.5_DFP
 ans(1, 2) = -0.5_DFP
 ans(2, 1) = ans(1, 2)
-!!
+
 END PROCEDURE LobattoStiffnessMatrix
 
 !----------------------------------------------------------------------------

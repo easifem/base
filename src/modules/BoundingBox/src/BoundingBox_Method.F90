@@ -30,35 +30,41 @@ USE BaseType, ONLY: BoundingBox_
 USE tomlf, ONLY: toml_table
 IMPLICIT NONE
 
-PUBLIC :: Initiate
-PUBLIC :: BoundingBox
-PUBLIC :: BoundingBox_Pointer
-PUBLIC :: DEALLOCATE
-PUBLIC :: Display
 PUBLIC :: OPERATOR(.Xmin.)
 PUBLIC :: OPERATOR(.Xmax.)
 PUBLIC :: OPERATOR(.Ymin.)
 PUBLIC :: OPERATOR(.Ymax.)
 PUBLIC :: OPERATOR(.Zmin.)
 PUBLIC :: OPERATOR(.Zmax.)
+PUBLIC :: OPERATOR(.isIntersect.)
+PUBLIC :: OPERATOR(.Intersection.)
+PUBLIC :: OPERATOR(.UNION.)
+PUBLIC :: OPERATOR(.Center.)
+PUBLIC :: OPERATOR(.isInside.)
+PUBLIC :: OPERATOR(.Nptrs.)
+
+PUBLIC :: ASSIGNMENT(=)
+
+PUBLIC :: Initiate
+PUBLIC :: BoundingBox
+PUBLIC :: BoundingBox_Pointer
+PUBLIC :: DEALLOCATE
+PUBLIC :: Display
+
 PUBLIC :: isIntersectInX
 PUBLIC :: isIntersectInY
 PUBLIC :: isIntersectInZ
-PUBLIC :: OPERATOR(.isIntersect.)
 PUBLIC :: isIntersect
 PUBLIC :: isEmpty
-PUBLIC :: OPERATOR(.Intersection.)
 PUBLIC :: Intersection
-PUBLIC :: OPERATOR(.UNION.)
 PUBLIC :: Union
 PUBLIC :: Center
-PUBLIC :: OPERATOR(.Center.)
-PUBLIC :: OPERATOR(.isInside.)
 PUBLIC :: isInside
-PUBLIC :: OPERATOR(.Nptrs.)
 PUBLIC :: GetDiameter
+PUBLIC :: GetRadius
+PUBLIC :: GetDiameterSqr
+PUBLIC :: GetRadiusSqr
 PUBLIC :: GetValue
-PUBLIC :: ASSIGNMENT(=)
 PUBLIC :: Append
 
 PRIVATE
@@ -69,10 +75,10 @@ PRIVATE
 
 !> author: Vikas Sharma, Ph. D.
 ! date:         23 Feb 2021
-! summary:         This function initiatea an instance of [[BoundingBox_]].
+! summary:         This function Initiatea an instance of [[BoundingBox_]].
 !
 !# Introduction
-! This function initiates an instance of [[BoundingBox_]].
+! This function Initiates an instance of [[BoundingBox_]].
 !- `NSD` is the spatial dimension
 !- `lim` is vector of real numbers (length=6)
 !- `lim(1)` => xmin
@@ -87,21 +93,21 @@ PRIVATE
 !```fortran
 ! subroutine test
 !   type(BoundingBox_) :: obj
-!   call initiate( obj, nsd = 2, lim=[0.0_DFP, 1.0_DFP, 0.0_DFP, 1.0_DFP, 0.
+!   call Initiate( obj, nsd = 2, lim=[0.0_DFP, 1.0_DFP, 0.0_DFP, 1.0_DFP, 0.
 ! 0_DFP, 0.0_DFP] )
 !   call display( obj, msg="test1" )
 ! end subroutine test
 !```
 
 INTERFACE Initiate
-  MODULE PURE SUBROUTINE initiate_1(obj, nsd, lim)
-    CLASS(BoundingBox_), INTENT(INOUT) :: obj
+  MODULE PURE SUBROUTINE Initiate_1(obj, nsd, lim)
+    TYPE(BoundingBox_), INTENT(INOUT) :: obj
     !! Instance of bounding box
     INTEGER(I4B), INTENT(IN) :: NSD
     !! Spatial dimension
     REAL(DFP), INTENT(IN) :: lim(6)
     !! Extent of bounding box
-  END SUBROUTINE initiate_1
+  END SUBROUTINE Initiate_1
 END INTERFACE Initiate
 
 !----------------------------------------------------------------------------
@@ -114,7 +120,7 @@ END INTERFACE Initiate
 !
 !# Introduction
 !
-! This subroutine initiate the instance of [[BoundingBox_]] from another
+! This subroutine Initiate the instance of [[BoundingBox_]] from another
 ! instance. It is basically a copy command.
 !
 !### Usage
@@ -122,22 +128,22 @@ END INTERFACE Initiate
 !```fortran
 ! subroutine test2
 !   type(BoundingBox_) :: obj, obj2
-!   call initiate( obj, 2, [0.0_DFP, 1.0_DFP, 0.0_DFP, 1.0_DFP, 0.0_DFP, 0.
+!   call Initiate( obj, 2, [0.0_DFP, 1.0_DFP, 0.0_DFP, 1.0_DFP, 0.0_DFP, 0.
 ! 0_DFP] )
-!   call initiate(obj2, obj)
+!   call Initiate(obj2, obj)
 !   call display( obj2, msg="test2")
 ! end subroutine test2
 !```
 
 INTERFACE Initiate
-  MODULE PURE SUBROUTINE initiate_2(obj, Anotherobj)
+  MODULE PURE SUBROUTINE Initiate_2(obj, Anotherobj)
     TYPE(BoundingBox_), INTENT(INOUT) :: obj
     TYPE(BoundingBox_), INTENT(IN) :: Anotherobj
-  END SUBROUTINE initiate_2
+  END SUBROUTINE Initiate_2
 END INTERFACE Initiate
 
 INTERFACE ASSIGNMENT(=)
-  MODULE PROCEDURE initiate_2
+  MODULE PROCEDURE Initiate_2
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -149,14 +155,14 @@ END INTERFACE
 ! summary: Initiate the instance of [[BoundingBox_]] from the another box
 
 INTERFACE Initiate
-  MODULE PURE SUBROUTINE initiate_3(obj, Anotherobj)
+  MODULE PURE SUBROUTINE Initiate_3(obj, Anotherobj)
     TYPE(BoundingBox_), INTENT(INOUT) :: obj(:)
     TYPE(BoundingBox_), INTENT(IN) :: Anotherobj(:)
-  END SUBROUTINE initiate_3
+  END SUBROUTINE Initiate_3
 END INTERFACE Initiate
 
 INTERFACE ASSIGNMENT(=)
-  MODULE PROCEDURE initiate_3
+  MODULE PROCEDURE Initiate_3
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -183,7 +189,7 @@ END INTERFACE Append
 ! summary:         Function to create [[BoundingBox_]] instance
 !
 !# Introduction
-! This function initiates an instance of [[BoundingBox_]].
+! This function Initiates an instance of [[BoundingBox_]].
 !- `NSD` is the spatial dimension
 !- `lim` is vector of real numbers (length=6)
 !- `lim(1)` => xmin
@@ -226,7 +232,7 @@ END INTERFACE BoundingBox
 !```fortran
 ! subroutine test4
 !   type(BoundingBox_) :: obj, obj2
-!   call initiate( obj, 2, [0.0_DFP, 1.0_DFP, 0.0_DFP, 1.0_DFP, 0.0_DFP, 0.
+!   call Initiate( obj, 2, [0.0_DFP, 1.0_DFP, 0.0_DFP, 1.0_DFP, 0.0_DFP, 0.
 ! 0_DFP] )
 !   obj2 = BoundingBox(obj)
 !   call display( obj2, msg="test2")
@@ -236,7 +242,7 @@ END INTERFACE BoundingBox
 INTERFACE BoundingBox
   MODULE PURE FUNCTION Constructor2(Anotherobj) RESULT(Ans)
     TYPE(BoundingBox_) :: Ans
-    CLASS(BoundingBox_), INTENT(IN) :: Anotherobj
+    TYPE(BoundingBox_), INTENT(IN) :: Anotherobj
   END FUNCTION Constructor2
 END INTERFACE BoundingBox
 
@@ -297,7 +303,7 @@ END INTERFACE BoundingBox
 ! subroutine test6
 !   type(BoundingBox_) :: obj
 !   type(BoundingBox_), pointer :: obj2
-!   call initiate( obj, 2, [0.0_DFP, 1.0_DFP, 0.0_DFP, 1.0_DFP, 0.0_DFP, 0.
+!   call Initiate( obj, 2, [0.0_DFP, 1.0_DFP, 0.0_DFP, 1.0_DFP, 0.0_DFP, 0.
 ! 0_DFP] )
 !   obj2 => BoundingBox_Pointer(obj)
 !   call display( obj2, msg="test6")
@@ -306,7 +312,7 @@ END INTERFACE BoundingBox
 
 INTERFACE BoundingBox_Pointer
   MODULE FUNCTION Constructor_1(nsd, lim) RESULT(Ans)
-    CLASS(BoundingBox_), POINTER :: Ans
+    TYPE(BoundingBox_), POINTER :: Ans
     INTEGER(I4B), INTENT(IN) :: nsd
     REAL(DFP), INTENT(IN) :: lim(6)
   END FUNCTION Constructor_1
@@ -317,8 +323,8 @@ END INTERFACE BoundingBox_Pointer
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date:         23 Feb 2021
-! summary:         This function returns the pointer to an instance of [[BoundingBox_]]
+! date: 23 Feb 2021
+! summary: This function returns the pointer to an instance of [[BoundingBox_]]
 !
 !# Introduction
 ! This function returns the pointer to an instance of [[BoundingBox_]] by
@@ -336,8 +342,8 @@ END INTERFACE BoundingBox_Pointer
 
 INTERFACE BoundingBox_Pointer
   MODULE FUNCTION Constructor_2(Anotherobj) RESULT(Ans)
-    CLASS(BoundingBox_), POINTER :: Ans
-    CLASS(BoundingBox_), INTENT(IN) :: Anotherobj
+    TYPE(BoundingBox_), POINTER :: Ans
+    TYPE(BoundingBox_), INTENT(IN) :: Anotherobj
   END FUNCTION Constructor_2
 END INTERFACE BoundingBox_Pointer
 
@@ -347,7 +353,7 @@ END INTERFACE BoundingBox_Pointer
 
 INTERFACE DEALLOCATE
   MODULE PURE SUBROUTINE BB_Deallocate(obj)
-    CLASS(BoundingBox_), INTENT(INOUT) :: obj
+    TYPE(BoundingBox_), INTENT(INOUT) :: obj
   END SUBROUTINE BB_Deallocate
 END INTERFACE DEALLOCATE
 
@@ -375,7 +381,7 @@ END INTERFACE DEALLOCATE
 
 INTERFACE Display
   MODULE SUBROUTINE display_obj(obj, msg, unitno)
-    CLASS(BoundingBox_), INTENT(IN) :: obj
+    TYPE(BoundingBox_), INTENT(IN) :: obj
     CHARACTER(*), INTENT(IN) :: msg
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: unitNo
   END SUBROUTINE display_obj
@@ -391,7 +397,7 @@ END INTERFACE Display
 
 INTERFACE
   MODULE PURE SUBROUTINE setXmin(obj, Val)
-    CLASS(BoundingBox_), INTENT(INOUT) :: obj
+    TYPE(BoundingBox_), INTENT(INOUT) :: obj
     REAL(DFP), INTENT(IN) :: Val
   END SUBROUTINE setXmin
 END INTERFACE
@@ -406,7 +412,7 @@ END INTERFACE
 
 INTERFACE
   MODULE PURE SUBROUTINE setXmax(obj, Val)
-    CLASS(BoundingBox_), INTENT(INOUT) :: obj
+    TYPE(BoundingBox_), INTENT(INOUT) :: obj
     REAL(DFP), INTENT(IN) :: Val
   END SUBROUTINE setXmax
 END INTERFACE
@@ -421,7 +427,7 @@ END INTERFACE
 
 INTERFACE
   MODULE PURE SUBROUTINE setYmin(obj, Val)
-    CLASS(BoundingBox_), INTENT(INOUT) :: obj
+    TYPE(BoundingBox_), INTENT(INOUT) :: obj
     REAL(DFP), INTENT(IN) :: Val
   END SUBROUTINE setYmin
 END INTERFACE
@@ -436,7 +442,7 @@ END INTERFACE
 
 INTERFACE
   MODULE PURE SUBROUTINE setYmax(obj, Val)
-    CLASS(BoundingBox_), INTENT(INOUT) :: obj
+    TYPE(BoundingBox_), INTENT(INOUT) :: obj
     REAL(DFP), INTENT(IN) :: Val
   END SUBROUTINE setYmax
 END INTERFACE
@@ -451,7 +457,7 @@ END INTERFACE
 
 INTERFACE
   MODULE PURE SUBROUTINE setZmin(obj, Val)
-    CLASS(BoundingBox_), INTENT(INOUT) :: obj
+    TYPE(BoundingBox_), INTENT(INOUT) :: obj
     REAL(DFP), INTENT(IN) :: Val
   END SUBROUTINE setZmin
 END INTERFACE
@@ -466,7 +472,7 @@ END INTERFACE
 
 INTERFACE
   MODULE PURE SUBROUTINE setZmax(obj, Val)
-    CLASS(BoundingBox_), INTENT(INOUT) :: obj
+    TYPE(BoundingBox_), INTENT(INOUT) :: obj
     REAL(DFP), INTENT(IN) :: Val
   END SUBROUTINE setZmax
 END INTERFACE
@@ -487,7 +493,7 @@ END INTERFACE
 
 INTERFACE OPERATOR(.Xmin.)
   MODULE PURE FUNCTION getXmin(obj) RESULT(Ans)
-    CLASS(BoundingBox_), INTENT(IN) :: obj
+    TYPE(BoundingBox_), INTENT(IN) :: obj
     REAL(DFP) :: Ans
   END FUNCTION getXmin
 END INTERFACE
@@ -508,7 +514,7 @@ END INTERFACE
 
 INTERFACE OPERATOR(.Xmax.)
   MODULE PURE FUNCTION getXmax(obj) RESULT(Ans)
-    CLASS(BoundingBox_), INTENT(IN) :: obj
+    TYPE(BoundingBox_), INTENT(IN) :: obj
     REAL(DFP) :: Ans
   END FUNCTION getXmax
 END INTERFACE
@@ -529,7 +535,7 @@ END INTERFACE
 
 INTERFACE OPERATOR(.Ymin.)
   MODULE PURE FUNCTION getYmin(obj) RESULT(Ans)
-    CLASS(BoundingBox_), INTENT(IN) :: obj
+    TYPE(BoundingBox_), INTENT(IN) :: obj
     REAL(DFP) :: Ans
   END FUNCTION getYmin
 END INTERFACE
@@ -550,7 +556,7 @@ END INTERFACE
 
 INTERFACE OPERATOR(.Ymax.)
   MODULE PURE FUNCTION getYmax(obj) RESULT(Ans)
-    CLASS(BoundingBox_), INTENT(IN) :: obj
+    TYPE(BoundingBox_), INTENT(IN) :: obj
     REAL(DFP) :: Ans
   END FUNCTION getYmax
 END INTERFACE
@@ -571,7 +577,7 @@ END INTERFACE
 
 INTERFACE OPERATOR(.Zmin.)
   MODULE PURE FUNCTION getZmin(obj) RESULT(Ans)
-    CLASS(BoundingBox_), INTENT(IN) :: obj
+    TYPE(BoundingBox_), INTENT(IN) :: obj
     REAL(DFP) :: Ans
   END FUNCTION getZmin
 END INTERFACE
@@ -592,7 +598,7 @@ END INTERFACE
 
 INTERFACE OPERATOR(.Zmax.)
   MODULE PURE FUNCTION getZmax(obj) RESULT(Ans)
-    CLASS(BoundingBox_), INTENT(IN) :: obj
+    TYPE(BoundingBox_), INTENT(IN) :: obj
     REAL(DFP) :: Ans
   END FUNCTION getZmax
 END INTERFACE
@@ -611,7 +617,7 @@ END INTERFACE
 
 INTERFACE isIntersectInX
   MODULE PURE FUNCTION is_intersect_in_X(obj, obj2) RESULT(Ans)
-    CLASS(BoundingBox_), INTENT(IN) :: obj, obj2
+    TYPE(BoundingBox_), INTENT(IN) :: obj, obj2
     LOGICAL(LGT) :: Ans
   END FUNCTION is_intersect_in_X
 END INTERFACE isIntersectInX
@@ -630,7 +636,7 @@ END INTERFACE isIntersectInX
 
 INTERFACE isIntersectInY
   MODULE PURE FUNCTION is_intersect_in_Y(obj, obj2) RESULT(Ans)
-    CLASS(BoundingBox_), INTENT(IN) :: obj, obj2
+    TYPE(BoundingBox_), INTENT(IN) :: obj, obj2
     LOGICAL(LGT) :: Ans
   END FUNCTION is_intersect_in_Y
 END INTERFACE isIntersectInY
@@ -649,7 +655,7 @@ END INTERFACE isIntersectInY
 
 INTERFACE isIntersectInZ
   MODULE PURE FUNCTION is_intersect_in_Z(obj, obj2) RESULT(Ans)
-    CLASS(BoundingBox_), INTENT(IN) :: obj, obj2
+    TYPE(BoundingBox_), INTENT(IN) :: obj, obj2
     LOGICAL(LGT) :: Ans
   END FUNCTION is_intersect_in_Z
 END INTERFACE isIntersectInZ
@@ -664,7 +670,7 @@ END INTERFACE isIntersectInZ
 
 INTERFACE OPERATOR(.isIntersect.)
   MODULE PURE FUNCTION is_intersect(obj, obj2) RESULT(Ans)
-    CLASS(BoundingBox_), INTENT(IN) :: obj, obj2
+    TYPE(BoundingBox_), INTENT(IN) :: obj, obj2
     LOGICAL(LGT) :: Ans
   END FUNCTION is_intersect
 END INTERFACE
@@ -677,9 +683,13 @@ END INTERFACE isIntersect
 !                                                         isEmpty@getMethods
 !----------------------------------------------------------------------------
 
+!> author: Vikas Sharma, Ph. D.
+! date:  2024-04-11
+! summary:  Checks if bounding box is empty
+
 INTERFACE isEmpty
   MODULE PURE FUNCTION bbox_isEmpty(obj) RESULT(ans)
-    CLASS(BoundingBox_), INTENT(IN) :: obj
+    TYPE(BoundingBox_), INTENT(IN) :: obj
     LOGICAL(LGT) :: ans
   END FUNCTION bbox_isEmpty
 END INTERFACE isEmpty
@@ -689,11 +699,13 @@ END INTERFACE isEmpty
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date:         23 Feb 2021
-! summary:         This function returns the intersection bounding box of two bounding box
+! date: 23 Feb 2021
+! summary: This function returns the intersection bounding
+! box of two bounding box
 !
 !# Introduction
-! This function returns the bounding box which is formed by the intersection of two bounding box
+! This function returns the bounding box which is formed by the
+! intersection of two bounding box
 !
 !@todo
 ![] add usage
@@ -701,7 +713,7 @@ END INTERFACE isEmpty
 
 INTERFACE OPERATOR(.Intersection.)
   MODULE PURE FUNCTION get_intersection(obj, obj2) RESULT(Ans)
-    CLASS(BoundingBox_), INTENT(IN) :: obj, obj2
+    TYPE(BoundingBox_), INTENT(IN) :: obj, obj2
     TYPE(BoundingBox_) :: Ans
   END FUNCTION get_intersection
 END INTERFACE
@@ -715,11 +727,12 @@ END INTERFACE Intersection
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date:         23 Feb 2021
-! summary:         This function returns the union of two bounding box
+! date: 23 Feb 2021
+! summary: This function returns the union of two bounding box
 !
 !# Introduction
-! This function returns the bounding box which is formed by the union of two bounding box.
+! This function returns the bounding box which is formed by the union
+! of two bounding box.
 !
 !@todo
 ![] add usage
@@ -727,7 +740,7 @@ END INTERFACE Intersection
 
 INTERFACE OPERATOR(.UNION.)
   MODULE PURE FUNCTION get_Union(obj, obj2) RESULT(Ans)
-    CLASS(BoundingBox_), INTENT(IN) :: obj, obj2
+    TYPE(BoundingBox_), INTENT(IN) :: obj, obj2
     TYPE(BoundingBox_) :: Ans
   END FUNCTION get_Union
 END INTERFACE
@@ -754,7 +767,7 @@ END INTERFACE Union
 
 INTERFACE OPERATOR(.Center.)
   MODULE PURE FUNCTION get_Center(obj) RESULT(Ans)
-    CLASS(BoundingBox_), INTENT(IN) :: obj
+    TYPE(BoundingBox_), INTENT(IN) :: obj
     REAL(DFP) :: Ans(3)
   END FUNCTION get_Center
 END INTERFACE
@@ -768,8 +781,8 @@ END INTERFACE Center
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date:         23 Feb 2021
-! summary:         This function checks if a point is inside the bounding box or not
+! date: 23 Feb 2021
+! summary: This function checks if a point is inside the bounding box or not
 !
 !# Introduction
 !
@@ -781,7 +794,7 @@ END INTERFACE Center
 
 INTERFACE OPERATOR(.isInside.)
   MODULE PURE FUNCTION is_Inside(obj, Val) RESULT(Ans)
-    CLASS(BoundingBox_), INTENT(IN) :: obj
+    TYPE(BoundingBox_), INTENT(IN) :: obj
     REAL(DFP), INTENT(IN) :: Val(:)
     LOGICAL(LGT) :: Ans
   END FUNCTION is_Inside
@@ -796,20 +809,18 @@ END INTERFACE isInside
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date:         23 Feb 2021
-! summary:         This function returns the node numbers located inside the bounding box
+! date: 2024-04-11
+! summary: This function returns the node numbers located inside
+! the bounding box
 !
 !# Introduction
 !
-! This function returns the list of node numbers which are inside the bounding box
-!
-!@todo
-![] usage
-!@endtodo
+! This function returns the list of node numbers which are inside
+! the bounding box
 
 INTERFACE OPERATOR(.Nptrs.)
   MODULE PURE FUNCTION get_nptrs(obj, xij) RESULT(Ans)
-    CLASS(BoundingBox_), INTENT(IN) :: obj
+    TYPE(BoundingBox_), INTENT(IN) :: obj
     REAL(DFP), INTENT(IN) :: xij(:, :)
     INTEGER(I4B), ALLOCATABLE :: Ans(:)
   END FUNCTION get_nptrs
@@ -825,10 +836,55 @@ END INTERFACE
 
 INTERFACE GetDiameter
   MODULE PURE FUNCTION bbox_GetDiameter(obj) RESULT(ans)
-    CLASS(BoundingBox_), INTENT(IN) :: obj
+    TYPE(BoundingBox_), INTENT(IN) :: obj
     REAL(DFP) :: ans
   END FUNCTION bbox_GetDiameter
-END INTERFACE
+END INTERFACE GetDiameter
+
+!----------------------------------------------------------------------------
+!                                                    GetRadius@GetMethods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2024-04-10
+! summary: Returns the Radius of the box
+
+INTERFACE GetRadius
+  MODULE PURE FUNCTION bbox_GetRadius(obj) RESULT(ans)
+    TYPE(BoundingBox_), INTENT(IN) :: obj
+    REAL(DFP) :: ans
+  END FUNCTION bbox_GetRadius
+END INTERFACE GetRadius
+
+!----------------------------------------------------------------------------
+!                                                   GetDiameterSqr@GetMethods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2024-04-10
+! summary: Returns the diameter of the box
+
+INTERFACE GetDiameterSqr
+  MODULE PURE FUNCTION bbox_GetDiameterSqr(obj) RESULT(ans)
+    TYPE(BoundingBox_), INTENT(IN) :: obj
+    REAL(DFP) :: ans
+  END FUNCTION bbox_GetDiameterSqr
+END INTERFACE GetDiameterSqr
+
+!----------------------------------------------------------------------------
+!                                                   GetRadiusSqr@GetMethods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2024-04-10
+! summary: Returns the Radius of the box
+
+INTERFACE GetRadiusSqr
+  MODULE PURE FUNCTION bbox_GetRadiusSqr(obj) RESULT(ans)
+    TYPE(BoundingBox_), INTENT(IN) :: obj
+    REAL(DFP) :: ans
+  END FUNCTION bbox_GetRadiusSqr
+END INTERFACE GetRadiusSqr
 
 !----------------------------------------------------------------------------
 !                                                           GetValue@Methods

@@ -15,7 +15,14 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
+!> author: Vikas Sharma, Ph. D.
+! date:  2024-04-11
+! summary:  This module contains method for appending to vectors and martrix
+!
+!{!|page|/AppendUtility/index.md!}
+!
 MODULE AppendUtility
+
 USE GlobalData
 IMPLICIT NONE
 PRIVATE
@@ -42,6 +49,8 @@ PUBLIC :: Expand
 ! reference
 ! https://github.com/jacobwilliams/fortran-csv-module/blob/master/src/
 ! csv_utilities.f90
+!
+!{!|page|/AppendUtility/Expand.md!}
 
 INTERFACE Expand
   MODULE PURE SUBROUTINE expand_int8(vec, n, chunk_size, val, finished)

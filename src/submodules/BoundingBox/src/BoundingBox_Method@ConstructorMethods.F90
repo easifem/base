@@ -23,37 +23,40 @@ CONTAINS
 !                                                                    Initiate
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE initiate_1
-obj%Box = 0.0_DFP
-obj%NSD = NSD
-obj%Box(1, 1) = lim(1) !xmin
-obj%Box(1, 2) = lim(3) !ymin
-obj%Box(1, 3) = lim(5) !zmin
-obj%Box(2, 1) = lim(2) !xmax
-obj%Box(2, 2) = lim(4) !ymax
-obj%Box(2, 3) = lim(6) !zmax
-END PROCEDURE initiate_1
+MODULE PROCEDURE Initiate_1
+obj%nsd = nsd
+obj%box(1, 1) = lim(1) !xmin
+obj%box(1, 2) = lim(3) !ymin
+obj%box(1, 3) = lim(5) !zmin
+obj%box(2, 1) = lim(2) !xmax
+obj%box(2, 2) = lim(4) !ymax
+obj%box(2, 3) = lim(6) !zmax
+obj%l(1) = lim(2) - lim(1)
+obj%l(2) = lim(4) - lim(3)
+obj%l(3) = lim(6) - lim(5)
+END PROCEDURE Initiate_1
 
 !----------------------------------------------------------------------------
 !                                                                    Initiate
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE initiate_2
-obj%Box = Anotherobj%Box
-obj%NSD = Anotherobj%NSD
-END PROCEDURE initiate_2
+MODULE PROCEDURE Initiate_2
+obj%box = anotherobj%box
+obj%nsd = anotherobj%nsd
+obj%l = anotherobj%l
+END PROCEDURE Initiate_2
 
 !---------------------------------------------------------------------------
 !                                                               Initiate
 !---------------------------------------------------------------------------
 
-MODULE PROCEDURE initiate_3
+MODULE PROCEDURE Initiate_3
 INTEGER(I4B) :: ii, tsize
-tsize = SIZE(Anotherobj)
+tsize = SIZE(anotherobj)
 DO ii = 1, tsize
-  obj(ii) = Anotherobj(ii)
+  obj(ii) = anotherobj(ii)
 END DO
-END PROCEDURE initiate_3
+END PROCEDURE Initiate_3
 
 !----------------------------------------------------------------------------
 !                                                               Append
@@ -67,17 +70,19 @@ tsize2 = SIZE(VALUE)
 IF (ALLOCATED(obj)) THEN
   tsize1 = SIZE(obj)
   ALLOCATE (tempbox(tsize1))
-  CALL Initiate(obj=tempbox, Anotherobj=obj)
+  CALL Initiate(obj=tempbox, anotherobj=obj)
   CALL DEALLOCATE (obj)
   ALLOCATE (obj(tsize1 + tsize2))
   CALL Initiate(obj(1:tsize1), tempbox)
   CALL Initiate(obj(tsize1 + 1:), VALUE)
   CALL DEALLOCATE (tempbox)
-ELSE
-  tsize1 = 0
-  ALLOCATE (obj(tsize1 + tsize2))
-  CALL Initiate(obj(tsize1 + 1:), VALUE)
+  RETURN
+
 END IF
+
+tsize1 = 0
+ALLOCATE (obj(tsize1 + tsize2))
+CALL Initiate(obj(tsize1 + 1:), VALUE)
 END PROCEDURE Append_1
 
 !----------------------------------------------------------------------------
@@ -85,14 +90,14 @@ END PROCEDURE Append_1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Constructor1
-CALL Initiate(Ans, nsd, lim)
+CALL Initiate(ans, nsd, lim)
 END PROCEDURE Constructor1
 
 !----------------------------------------------------------------------------
 !                                                               Bounding box
 !----------------------------------------------------------------------------
 MODULE PROCEDURE Constructor2
-CALL Initiate(Ans, Anotherobj)
+CALL Initiate(ans, anotherobj)
 END PROCEDURE Constructor2
 
 !----------------------------------------------------------------------------
@@ -124,7 +129,7 @@ CASE (3)
   lim(6) = MAXVAL(xij(3, :))
 END SELECT
 
-CALL Initiate(obj=Ans, nsd=nsd, lim=lim)
+CALL Initiate(obj=ans, nsd=nsd, lim=lim)
 END PROCEDURE Constructor3
 
 !----------------------------------------------------------------------------
@@ -132,13 +137,17 @@ END PROCEDURE Constructor3
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Constructor_1
-ALLOCATE (Ans)
-CALL Initiate(Ans, nsd, lim)
+ALLOCATE (ans)
+CALL Initiate(ans, nsd, lim)
 END PROCEDURE Constructor_1
 
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
 MODULE PROCEDURE Constructor_2
-ALLOCATE (Ans)
-CALL Initiate(Ans, Anotherobj)
+ALLOCATE (ans)
+CALL Initiate(ans, anotherobj)
 END PROCEDURE Constructor_2
 
 !----------------------------------------------------------------------------
@@ -146,8 +155,9 @@ END PROCEDURE Constructor_2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE BB_Deallocate
-obj%NSD = 0
-obj%Box = 0.0_DFP
+obj%nsd = 0
+obj%box = 0.0_DFP
+obj%l = 0.0_DFP
 END PROCEDURE BB_Deallocate
 
 !----------------------------------------------------------------------------

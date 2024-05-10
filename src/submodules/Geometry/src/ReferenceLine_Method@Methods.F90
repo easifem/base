@@ -27,6 +27,7 @@ USE ApproxUtility
 USE String_Class, ONLY: String
 USE LineInterpolationUtility
 USE Display_Method
+USE InputUtility
 IMPLICIT NONE
 CONTAINS
 
@@ -83,6 +84,8 @@ END PROCEDURE TotalEntities_Line
 
 MODULE PROCEDURE TotalNodesInElement_Line
 SELECT CASE (ElemType)
+CASE (Line1)
+  ans = 1
 CASE (Line2)
   ans = 2
 CASE (Line3)
@@ -336,5 +339,34 @@ CASE ("BIUNIT")
   ans(1, :) = [-1.0_DFP, 1.0_DFP]
 END SELECT
 END PROCEDURE RefLineCoord
+
+!----------------------------------------------------------------------------
+!                                                 GetEdgeElemType_Line
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE GetEdgeConnectivity_Line
+con(1, 1) = 1
+con(1, 2) = 2
+END PROCEDURE GetEdgeConnectivity_Line
+
+!----------------------------------------------------------------------------
+!                                                 GetFaceElemType_Line
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE GetFaceElemType_Line
+INTEGER(I4B) :: elemType0
+elemType0 = input(default=Line, option=elemType)
+IF (PRESENT(faceElemType)) faceElemType(1:2) = Point1
+IF (PRESENT(tFaceNodes)) tFaceNodes(1:2) = 1_I4B
+END PROCEDURE GetFaceElemType_Line
+
+!----------------------------------------------------------------------------
+!                                               GetFaceConnectivity_Triangle
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE GetFaceConnectivity_Line
+con(1, 1) = 1
+con(1, 2) = 2
+END PROCEDURE GetFaceConnectivity_Line
 
 END SUBMODULE Methods

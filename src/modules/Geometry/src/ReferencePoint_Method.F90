@@ -31,6 +31,7 @@ PUBLIC :: HighOrderElement_Point
 PUBLIC :: Measure_Simplex_Point
 PUBLIC :: Point_Quality
 PUBLIC :: Quality_Point
+PUBLIC :: TotalNodesInElement_Point
 
 !----------------------------------------------------------------------------
 !                                                            Initiate@Methods
@@ -219,6 +220,21 @@ INTERFACE Quality_Point
     REAL(DFP) :: Ans
   END FUNCTION Point_Quality
 END INTERFACE Quality_Point
+
+!----------------------------------------------------------------------------
+!                                                   TotalNodesInElement_Point
+!----------------------------------------------------------------------------
+
+!> author: Shion Shimizu
+! date:   2024-04-14
+! summary:  Returns total nodes in element
+
+INTERFACE
+  MODULE FUNCTION TotalNodesInElement_Point(elemType) RESULT(Ans)
+    INTEGER(I4B), INTENT(IN) :: elemType
+    INTEGER(I4B) :: Ans
+  END FUNCTION TotalNodesInElement_Point
+END INTERFACE
 
 !----------------------------------------------------------------------------
 !

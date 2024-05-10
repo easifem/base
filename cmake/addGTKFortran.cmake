@@ -1,64 +1,53 @@
-# This program is a part of EASIFEM library
-# Copyright (C) 2020-2021  Vikas Sharma, Ph.D
+# This program is a part of EASIFEM library Expandable And Scalable
+# Infrastructure for Finite Element Methods htttps://www.easifem.com Vikas
+# Sharma, Ph.D., vickysharma0812@gmail.com
 #
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
+# This program is free software: you can redistribute it and/or modify it under
+# the terms of the GNU General Public License as published by the Free Software
+# Foundation, either version 3 of the License, or (at your option) any later
+# version.
 #
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
+# This program is distributed in the hope that it will be useful, but WITHOUT
+# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+# FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+# details.
 #
-# You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <https: //www.gnu.org/licenses/>
+# You should have received a copy of the GNU General Public License along with
+# this program.  If not, see <https: //www.gnu.org/licenses/>
 #
 
-#....................................................................
-#
-#....................................................................
+if(${PROJECT_NAME} MATCHES "easifemBase")
 
-IF( ${PROJECT_NAME} MATCHES "easifemBase" )
+  option(USE_GTK OFF)
 
-  OPTION( USE_GTK OFF )
+  if(USE_GTK)
 
-  IF( USE_GTK )
+    list(APPEND TARGET_COMPILE_DEF "-DUSE_GTK")
 
-    LIST( APPEND TARGET_COMPILE_DEF "-DUSE_GTK" )
-
-    FIND_PACKAGE(PkgConfig)
+    find_package(PkgConfig)
     pkg_check_modules(GTKFORTRAN REQUIRED gtk-4-fortran)
-    FIND_PATH(
+    find_path(
       GTKFORTRAN_MODULE_DIRS
       NAMES gtk.mod
       PATHS ${GTKFORTRAN_INCLUDE_DIRS})
-    FIND_LIBRARY(GTKFORTRAN_LIBRARY NAMES gtk-4-fortran)
+    find_library(GTKFORTRAN_LIBRARY NAMES gtk-4-fortran)
 
-    MESSAGE( STATUS "GTKFORTRAN_CFLAGS : ${GTKFORTRAN_CFLAGS}" )
-    MESSAGE( STATUS "GTKFORTRAN_LIBRARY : ${GTKFORTRAN_LIBRARY}" )
-    MESSAGE( STATUS "GTKFORTRAN_LIBRARIES : ${GTKFORTRAN_LIBRARIES}" )
-    MESSAGE( STATUS "GTKFORTRAN_LIBRARY_DIRS : ${GTKFORTRAN_LIBRARY_DIRS}" )
-    MESSAGE( STATUS "GTKFORTRAN_INCLUDE_DIRS : ${GTKFORTRAN_INCLUDE_DIRS}" )
-    MESSAGE( STATUS "GTKFORTRAN_MODULE_DIRS : ${GTKFORTRAN_MODULE_DIRS}" )
+    message(STATUS "GTKFORTRAN_CFLAGS : ${GTKFORTRAN_CFLAGS}")
+    message(STATUS "GTKFORTRAN_LIBRARY : ${GTKFORTRAN_LIBRARY}")
+    message(STATUS "GTKFORTRAN_LIBRARIES : ${GTKFORTRAN_LIBRARIES}")
+    message(STATUS "GTKFORTRAN_LIBRARY_DIRS : ${GTKFORTRAN_LIBRARY_DIRS}")
+    message(STATUS "GTKFORTRAN_INCLUDE_DIRS : ${GTKFORTRAN_INCLUDE_DIRS}")
+    message(STATUS "GTKFORTRAN_MODULE_DIRS : ${GTKFORTRAN_MODULE_DIRS}")
 
-    TARGET_LINK_LIBRARIES(
-      ${PROJECT_NAME}
-      PUBLIC
-      ${GTKFORTRAN_LIBRARY}
-      ${GTKFORTRAN_LIBRARIES}
-      )
-    TARGET_INCLUDE_DIRECTORIES(
-      ${PROJECT_NAME}
-      PUBLIC
-      ${GTKFORTRAN_INCLUDE_DIRS}
-      ${GTKFORTRAN_MODULE_DIRS}
-      )
+    target_link_libraries(${PROJECT_NAME} PUBLIC ${GTKFORTRAN_LIBRARY}
+                                                 ${GTKFORTRAN_LIBRARIES})
+    target_include_directories(${PROJECT_NAME} PUBLIC ${GTKFORTRAN_INCLUDE_DIRS}
+                                                      ${GTKFORTRAN_MODULE_DIRS})
 
-  ELSE()
+  else()
 
-    MESSAGE( STATUS "NOT USING GTK-Fortran" )
+    message(STATUS "NOT USING GTK-Fortran")
 
-  ENDIF()
+  endif()
 
-ENDIF()
+endif()

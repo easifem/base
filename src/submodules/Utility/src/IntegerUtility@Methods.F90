@@ -184,6 +184,30 @@ INTEGER(INT64) :: temp(SIZE(obj))
 END PROCEDURE RemoveDuplicates_1d
 
 !----------------------------------------------------------------------------
+!                                                             RemoveDuplicate
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE RemoveDuplicates_1a_
+INTEGER(INT8) :: temp(SIZE(obj))
+#include "./RemoveDuplicates/RemoveDuplicates_2.inc"
+END PROCEDURE RemoveDuplicates_1a_
+
+MODULE PROCEDURE RemoveDuplicates_1b_
+INTEGER(INT16) :: temp(SIZE(obj))
+#include "./RemoveDuplicates/RemoveDuplicates_2.inc"
+END PROCEDURE RemoveDuplicates_1b_
+
+MODULE PROCEDURE RemoveDuplicates_1c_
+INTEGER(INT32) :: temp(SIZE(obj))
+#include "./RemoveDuplicates/RemoveDuplicates_2.inc"
+END PROCEDURE RemoveDuplicates_1c_
+
+MODULE PROCEDURE RemoveDuplicates_1d_
+INTEGER(INT64) :: temp(SIZE(obj))
+#include "./RemoveDuplicates/RemoveDuplicates_2.inc"
+END PROCEDURE RemoveDuplicates_1d_
+
+!----------------------------------------------------------------------------
 !                                                                 Repeat
 !----------------------------------------------------------------------------
 

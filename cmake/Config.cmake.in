@@ -21,6 +21,13 @@ IF( @USE_ARPACK@ )
   )
 ENDIF()
 
+IF( @USE_RAYLIB@ )
+  LIST(APPEND
+    ExternalLibs
+    raylib
+  )
+ENDIF()
+
 FOREACH(LIB ${ExternalLibs})
   FIND_PACKAGE(${LIB} REQUIRED)
 ENDFOREACH()
@@ -55,6 +62,7 @@ IF( @USE_OpenMP@ )
 
 	FIND_PACKAGE(OpenMP REQUIRED)
 ENDIF()
+
 
 set_and_check(
   "@PROJECT_NAME@_INCLUDE_DIR" "@PACKAGE_INSTALL_INCLUDEDIR@")

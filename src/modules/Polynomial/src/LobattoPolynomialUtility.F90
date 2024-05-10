@@ -30,7 +30,9 @@ PUBLIC :: LobattoZeros
 PUBLIC :: LobattoEval
 PUBLIC :: LobattoEvalAll
 PUBLIC :: LobattoKernelEvalAll
+PUBLIC :: LobattoKernelEvalAll_
 PUBLIC :: LobattoKernelGradientEvalAll
+PUBLIC :: LobattoKernelGradientEvalAll_
 PUBLIC :: LobattoMonomialExpansionAll
 PUBLIC :: LobattoMonomialExpansion
 PUBLIC :: LobattoGradientEvalAll
@@ -245,6 +247,34 @@ INTERFACE LobattoKernelEvalAll
 END INTERFACE LobattoKernelEvalAll
 
 !----------------------------------------------------------------------------
+!                                                      LobattoKernelEvalAll
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 6 Sept 2022
+! summary: Evaluate Lobatto bubble functions order = 0 to n at several points
+!
+!# Introduction
+!
+! Evaluate Lobatto bubble polynomials from order = 0 to n at several points
+!
+!- N, the highest order polynomial to compute.
+!- x: the point at which the polynomials are to be evaluated.
+
+INTERFACE LobattoKernelEvalAll_
+  MODULE PURE SUBROUTINE LobattoKernelEvalAll1_(n, x, ans, nrow, ncol)
+    INTEGER(I4B), INTENT(IN) :: n
+    !! n
+    REAL(DFP), INTENT(IN) :: x(:)
+    REAL(DFP), INTENT(INOUT) :: ans(1:, 0:)
+    !! ans(1:SIZE(x), 0:n)
+    !! Evaluate Lobatto polynomial of order = 0 to n (total n+1)
+    !! at point x
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+  END SUBROUTINE LobattoKernelEvalAll1_
+END INTERFACE LobattoKernelEvalAll_
+
+!----------------------------------------------------------------------------
 !                                               LobattoKernelGradientEvalAll
 !----------------------------------------------------------------------------
 
@@ -261,6 +291,27 @@ INTERFACE LobattoKernelGradientEvalAll
     !! Gradient of Lobatto bubbles of order 0 to n
   END FUNCTION LobattoKernelGradientEvalAll1
 END INTERFACE LobattoKernelGradientEvalAll
+
+!----------------------------------------------------------------------------
+!                                               LobattoKernelGradientEvalAll
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 6 Sept 2022
+! summary: Gradient of Lobatto bubbles of order = 0 to n
+
+INTERFACE LobattoKernelGradientEvalAll_
+  MODULE PURE SUBROUTINE LobattoKernelGradientEvalAll1_(n, x, ans, nrow, ncol)
+    INTEGER(I4B), INTENT(IN) :: n
+    !! n
+    REAL(DFP), INTENT(IN) :: x(:)
+    REAL(DFP), INTENT(INOUT) :: ans(1:, 0:)
+    ! ans(1:SIZE(x), 0:n)
+    !! Gradient of Lobatto bubbles of order 0 to n
+    INTEGER(I4B), INTENT(OUT) :: nrow
+    INTEGER(I4B), INTENT(OUT) :: ncol
+  END SUBROUTINE LobattoKernelGradientEvalAll1_
+END INTERFACE LobattoKernelGradientEvalAll_
 
 !----------------------------------------------------------------------------
 !                                             LobattoMonomialExpansionAll

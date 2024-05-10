@@ -23,6 +23,7 @@ PRIVATE
 PUBLIC :: OPERATOR(.in.)
 PUBLIC :: OPERATOR(.isin.)
 PUBLIC :: RemoveDuplicates
+PUBLIC :: RemoveDuplicates_
 PUBLIC :: Repeat
 PUBLIC :: SIZE
 PUBLIC :: GetMultiIndices
@@ -212,6 +213,10 @@ END INTERFACE OPERATOR(.isin.)
 !
 !----------------------------------------------------------------------------
 
+!> author: Vikas Sharma, Ph. D.
+! date:  2024-04-12
+! summary:  Remove duplicates entries
+
 INTERFACE RemoveDuplicates
   MODULE PURE SUBROUTINE RemoveDuplicates_1a(obj)
     INTEGER(INT8), ALLOCATABLE, INTENT(INOUT) :: obj(:)
@@ -226,6 +231,53 @@ INTERFACE RemoveDuplicates
     INTEGER(INT64), ALLOCATABLE, INTENT(INOUT) :: obj(:)
   END SUBROUTINE RemoveDuplicates_1d
 END INTERFACE RemoveDuplicates
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2024-04-12
+! summary:  Remove duplicates with no allocation
+
+INTERFACE RemoveDuplicates_
+  MODULE PURE SUBROUTINE RemoveDuplicates_1a_(obj, tsize, isSorted)
+    INTEGER(INT8), INTENT(INOUT) :: obj(:)
+    !! obj(1:tsize) will have unique entries
+    LOGICAL(LGT), INTENT(IN) :: isSorted
+    !! if obj is sorted then set isSorted to true
+    INTEGER(I4B), INTENT(OUT) :: tsize
+    !! number of unique entries found
+  END SUBROUTINE RemoveDuplicates_1a_
+
+  MODULE PURE SUBROUTINE RemoveDuplicates_1b_(obj, tsize, isSorted)
+    INTEGER(INT16), INTENT(INOUT) :: obj(:)
+    !! obj(1:tsize) will have unique entries
+    LOGICAL(LGT), INTENT(IN) :: isSorted
+    !! if obj is sorted then set isSorted to true
+    INTEGER(I4B), INTENT(OUT) :: tsize
+    !! number of unique entries found
+  END SUBROUTINE RemoveDuplicates_1b_
+
+  MODULE PURE SUBROUTINE RemoveDuplicates_1c_(obj, tsize, isSorted)
+    INTEGER(INT32), INTENT(INOUT) :: obj(:)
+    !! obj(1:tsize) will have unique entries
+    LOGICAL(LGT), INTENT(IN) :: isSorted
+    !! if obj is sorted then set isSorted to true
+    INTEGER(I4B), INTENT(OUT) :: tsize
+    !! number of unique entries found
+  END SUBROUTINE RemoveDuplicates_1c_
+
+  MODULE PURE SUBROUTINE RemoveDuplicates_1d_(obj, tsize, isSorted)
+    INTEGER(INT64), INTENT(INOUT) :: obj(:)
+    !! obj(1:tsize) will have unique entries
+    LOGICAL(LGT), INTENT(IN) :: isSorted
+    !! if obj is sorted then set isSorted to true
+    INTEGER(I4B), INTENT(OUT) :: tsize
+    !! number of unique entries found
+  END SUBROUTINE RemoveDuplicates_1d_
+
+END INTERFACE RemoveDuplicates_
 
 !----------------------------------------------------------------------------
 !
@@ -332,19 +384,19 @@ INTERFACE Get
   MODULE PURE FUNCTION Get2_Int16(val, indx) RESULT(ans)
     INTEGER(INT16), INTENT(IN) :: val(:)
     INTEGER(I4B), INTENT(IN) :: indx(:)
-    INTEGER(INT8) :: ans(SIZE(indx))
+    INTEGER(INT16) :: ans(SIZE(indx))
   END FUNCTION Get2_Int16
 
   MODULE PURE FUNCTION Get2_Int32(val, indx) RESULT(ans)
     INTEGER(INT32), INTENT(IN) :: val(:)
     INTEGER(I4B), INTENT(IN) :: indx(:)
-    INTEGER(INT8) :: ans(SIZE(indx))
+    INTEGER(INT32) :: ans(SIZE(indx))
   END FUNCTION Get2_Int32
 
   MODULE PURE FUNCTION Get2_Int64(val, indx) RESULT(ans)
     INTEGER(INT64), INTENT(IN) :: val(:)
     INTEGER(I4B), INTENT(IN) :: indx(:)
-    INTEGER(INT8) :: ans(SIZE(indx))
+    INTEGER(INT64) :: ans(SIZE(indx))
   END FUNCTION Get2_Int64
 END INTERFACE Get
 
@@ -362,19 +414,19 @@ INTERFACE Get
   MODULE PURE FUNCTION Get3_Int16(val, istart, iend, stride) RESULT(ans)
     INTEGER(INT16), INTENT(IN) :: val(:)
     INTEGER(I4B), INTENT(IN) :: istart, iend, stride
-    INTEGER(INT8) :: ans(INT((iend - istart) / stride) + 1)
+    INTEGER(INT16) :: ans(INT((iend - istart) / stride) + 1)
   END FUNCTION Get3_Int16
 
   MODULE PURE FUNCTION Get3_Int32(val, istart, iend, stride) RESULT(ans)
     INTEGER(INT32), INTENT(IN) :: val(:)
     INTEGER(I4B), INTENT(IN) :: istart, iend, stride
-    INTEGER(INT8) :: ans(INT((iend - istart) / stride) + 1)
+    INTEGER(INT32) :: ans(INT((iend - istart) / stride) + 1)
   END FUNCTION Get3_Int32
 
   MODULE PURE FUNCTION Get3_Int64(val, istart, iend, stride) RESULT(ans)
     INTEGER(INT64), INTENT(IN) :: val(:)
     INTEGER(I4B), INTENT(IN) :: istart, iend, stride
-    INTEGER(INT8) :: ans(INT((iend - istart) / stride) + 1)
+    INTEGER(INT64) :: ans(INT((iend - istart) / stride) + 1)
   END FUNCTION Get3_Int64
 END INTERFACE Get
 

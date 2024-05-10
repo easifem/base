@@ -20,6 +20,7 @@
 ! summary: This submodule contains methods for [[ReferenceTriangle_]]
 
 SUBMODULE(ReferenceTriangle_Method) Methods
+USE BaseType, ONLY: QualityMeasure
 USE ReferenceElement_Method
 USE StringUtility
 USE ApproxUtility
@@ -76,7 +77,7 @@ INTEGER(I4B), ALLOCATABLE :: con(:, :)
 
 order = ElementOrder_Triangle(elemType)
 CALL Reallocate(con, order + 1, 3)
-CALL GetEdgeConnectivity_Triangle(con=con,  &
+CALL GetFaceConnectivity_Triangle(con=con,  &
   & opt=DEFAULT_OPT_TRIANGLE_EDGE_CON, order=order)
 lineType = ElementType_Line("Line"//Int2Str(order + 1))
 
@@ -229,11 +230,11 @@ END PROCEDURE FacetElements_Triangle1
 
 MODULE PROCEDURE FacetElements_Triangle2
 INTEGER(I4B) :: ii, jj, order
-INTEGER(I4B), ALLOCATABLE :: edgeCon(:, :)
+INTEGER(I4B), ALLOCATABLE :: facecon(:, :)
 
 order = ElementOrder_Triangle(elemType)
-CALL Reallocate(edgeCon, order + 1, 3)
-CALL GetEdgeConnectivity_Triangle(con=edgeCon,  &
+CALL Reallocate(facecon, order + 1, 3)
+CALL GetFaceConnectivity_Triangle(con=facecon,  &
   & opt=DEFAULT_OPT_TRIANGLE_EDGE_CON, order=order)
 !! The edges are accordign to gmsh
 !! [1,2], [2,3], [3,1]
@@ -254,16 +255,16 @@ DO ii = 1, 3
   ALLOCATE (ans(ii)%topology(order + 2))
 
   DO jj = 1, order + 1
-    ans(ii)%topology(jj) = Referencetopology(nptrs=edgeCon(jj:jj, ii),  &
+    ans(ii)%topology(jj) = Referencetopology(nptrs=facecon(jj:jj, ii),  &
       & name=Point)
   END DO
 
-  ans(ii)%topology(order + 2) = Referencetopology(nptrs=edgeCon(1:2, ii),  &
+  ans(ii)%topology(order + 2) = Referencetopology(nptrs=facecon(1:2, ii),  &
     & name=ans(ii)%name)
 
 END DO
 
-IF (ALLOCATED(edgeCon)) DEALLOCATE (edgeCon)
+IF (ALLOCATED(facecon)) DEALLOCATE (facecon)
 
 END PROCEDURE FacetElements_Triangle2
 
@@ -273,7 +274,7 @@ END PROCEDURE FacetElements_Triangle2
 
 MODULE PROCEDURE initiate_ref_Triangle
 REAL(DFP) :: unit_xij(2, 3), biunit_xij(2, 3)
-INTEGER(I4B) :: edgecon(2, 3), ii
+INTEGER(I4B) :: facecon(2, 3), ii
 
 CALL DEALLOCATE (obj)
 
@@ -315,12 +316,12 @@ obj%topology(1) = Referencetopology([1], Point)
 obj%topology(2) = Referencetopology([2], Point)
 obj%topology(3) = Referencetopology([3], Point)
 
-CALL GetEdgeConnectivity_Triangle(con=edgecon,  &
+CALL GetFaceConnectivity_Triangle(con=facecon,  &
   & opt=DEFAULT_OPT_TRIANGLE_EDGE_CON,  &
   & order=1)
 
 DO ii = 1, 3
-  obj%topology(3 + ii) = Referencetopology(edgecon(1:2, ii), Line2)
+  obj%topology(3 + ii) = Referencetopology(facecon(1:2, ii), Line2)
 END DO
 
 obj%topology(7) = Referencetopology([1, 2, 3], Triangle3)
@@ -351,7 +352,7 @@ END PROCEDURE reference_Triangle_Pointer
 
 MODULE PROCEDURE HighorderElement_Triangle
 INTEGER(I4B) :: linetype, ii, nns
-INTEGER(I4B), ALLOCATABLE :: edgecon(:, :)
+INTEGER(I4B), ALLOCATABLE :: facecon(:, :)
 
 CALL DEALLOCATE (obj)
 
@@ -376,21 +377,21 @@ DO ii = 1, obj%entityCounts(1)
   obj%topology(ii) = ReferenceTopology([ii], Point)
 END DO
 
-CALL Reallocate(edgecon, order + 1, obj%entityCounts(2))
-CALL GetEdgeConnectivity_Triangle(con=edgecon,  &
+CALL Reallocate(facecon, order + 1, obj%entityCounts(2))
+CALL GetFaceConnectivity_Triangle(con=facecon,  &
   & opt=DEFAULT_OPT_TRIANGLE_EDGE_CON, order=order)
 
 linetype = ElementType_Line("Line"//Int2Str(order + 1))
 ii = obj%entityCounts(1)
-obj%topology(ii + 1) = ReferenceTopology(edgecon(:, 1), linetype)
-obj%topology(ii + 2) = ReferenceTopology(edgecon(:, 2), linetype)
-obj%topology(ii + 3) = ReferenceTopology(edgecon(:, 3), linetype)
-obj%topology(ii + 4) = ReferenceTopology(edgecon(:, 4), linetype)
+obj%topology(ii + 1) = ReferenceTopology(facecon(:, 1), linetype)
+obj%topology(ii + 2) = ReferenceTopology(facecon(:, 2), linetype)
+obj%topology(ii + 3) = ReferenceTopology(facecon(:, 3), linetype)
+obj%topology(ii + 4) = ReferenceTopology(facecon(:, 4), linetype)
 
 ii = ii + obj%entityCounts(2)
 obj%topology(ii + 1) = ReferenceTopology(arange(1_I4B, nns), obj%name)
 
-IF (ALLOCATED(edgecon)) DEALLOCATE (edgecon)
+IF (ALLOCATED(facecon)) DEALLOCATE (facecon)
 END PROCEDURE HighorderElement_Triangle
 
 !----------------------------------------------------------------------------
@@ -668,31 +669,67 @@ MODULE PROCEDURE GetEdgeConnectivity_Triangle
 INTEGER(I4B) :: opt0, order0, ii, jj, iface
 
 opt0 = Input(default=1_I4B, option=opt)
+order0 = Input(default=1_I4B, option=order)
+jj = 3
 
 SELECT CASE (opt0)
 CASE (1_I4B)
   con(1:2, 1) = [1, 2]
   con(1:2, 2) = [1, 3]
   con(1:2, 3) = [2, 3]
+
+  iface = 1
+  DO ii = 1, order0 - 1
+    con(2 + ii, iface) = jj + ii
+    jj = jj + 1
+  END DO
+
+  iface = 3
+  DO ii = 1, order0 - 1
+    con(2 + ii, iface) = jj + ii
+    jj = jj + 1
+  END DO
+
+  iface = 2
+  DO ii = 1, order0 - 1
+    con(2 + ii, iface) = jj + ii
+    jj = jj + 1
+  END DO
+
 CASE (2_I4B)
   !! For Lagrangian polynomial
   con(1:2, 1) = [1, 2]
   con(1:2, 2) = [2, 3]
   con(1:2, 3) = [3, 1]
-END SELECT
 
-order0 = Input(default=1_I4B, option=order)
-
-jj = 3
-
-DO iface = 1, 3
+  iface = 1
   DO ii = 1, order0 - 1
     con(2 + ii, iface) = jj + ii
     jj = jj + 1
   END DO
-END DO
+
+  iface = 2
+  DO ii = 1, order0 - 1
+    con(2 + ii, iface) = jj + ii
+    jj = jj + 1
+  END DO
+
+  iface = 3
+  DO ii = 1, order0 - 1
+    con(2 + ii, iface) = jj + ii
+    jj = jj + 1
+  END DO
+END SELECT
 
 END PROCEDURE GetEdgeConnectivity_Triangle
+
+!----------------------------------------------------------------------------
+!                                               GetFaceConnectivity_Triangle
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE GetFaceConnectivity_Triangle
+CALL GetEdgeconnectivity_Triangle(con=con, opt=2_I4B, order=order)
+END PROCEDURE GetFaceConnectivity_Triangle
 
 !----------------------------------------------------------------------------
 !                                                         RefTriangleCoord
@@ -760,6 +797,42 @@ ELSE
 END IF
 
 END PROCEDURE FaceShapeMetaData_Triangle
+
+!----------------------------------------------------------------------------
+!                                               GetFaceElemType_Triangle
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE GetFaceElemType_Triangle
+INTEGER(I4B) :: elemType0
+
+elemType0 = input(default=Triangle, option=elemType)
+
+SELECT CASE (elemType0)
+
+CASE (Triangle3)
+
+  IF (PRESENT(faceElemType)) faceElemType(1:3) = Line2
+  IF (PRESENT(tFaceNodes)) tFaceNodes(1:3) = 2_I4B
+
+CASE (Triangle6)
+  IF (PRESENT(faceElemType)) faceElemType(1:3) = Line3
+  IF (PRESENT(tFaceNodes)) tFaceNodes(1:3) = 3_I4B
+
+CASE (Triangle9, Triangle10)
+  IF (PRESENT(faceElemType)) faceElemType(1:3) = Line4
+  IF (PRESENT(tFaceNodes)) tFaceNodes(1:3) = 4_I4B
+
+CASE (Triangle15)
+  IF (PRESENT(faceElemType)) faceElemType(1:3) = Line5
+  IF (PRESENT(tFaceNodes)) tFaceNodes(1:3) = 5_I4B
+
+CASE (Triangle21)
+  IF (PRESENT(faceElemType)) faceElemType(1:3) = Line6
+  IF (PRESENT(tFaceNodes)) tFaceNodes(1:3) = 6_I4B
+
+END SELECT
+
+END PROCEDURE GetFaceElemType_Triangle
 
 !----------------------------------------------------------------------------
 !

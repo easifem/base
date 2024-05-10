@@ -187,6 +187,8 @@ PUBLIC :: iface_3DFunction
 PUBLIC :: iface_ScalarFunction
 PUBLIC :: iface_VectorFunction
 PUBLIC :: iface_MatrixFunction
+PUBLIC :: Range_
+PUBLIC :: Interval1D_
 
 !----------------------------------------------------------------------------
 !                                                                 Math_
@@ -224,10 +226,10 @@ TYPE(Math_), PARAMETER :: Math = Math_()
 !{!pages/BoundingBox_.md!}
 
 TYPE :: BoundingBox_
-  INTEGER(I4B) :: NSD
+  INTEGER(I4B) :: nsd = 0
     !! Number of spatial dimension
     !! NSD = 1, 2, 3 for 1D, 2D, 3D box
-  REAL(DFP) :: Box(2, 3)
+  REAL(DFP) :: box(2, 3) = 0.0
     !! Box contains the xmin, ymin, ...
     !! `Box(1:2, 1:3)`  an array containing box coordinates.
     !!- `Box(1:2, 1:3)`  an array containing box coordinates.
@@ -237,10 +239,13 @@ TYPE :: BoundingBox_
     !!- `Box(2, 2)` is y_max
     !!- `Box(1, 3)` is z_min
     !!- `Box(2, 3)` is z_max
+  REAL(DFP) :: l(3) = 0.0_DFP
+  !! l(1) length in x
+  !! l(2) length in y
+  !! l(3) length in z
 END TYPE BoundingBox_
 
-TYPE(BoundingBox_), PARAMETER :: TypeBoundingBox = &
-  & BoundingBox_(NSD=0, Box=0)
+TYPE(BoundingBox_), PARAMETER :: TypeBoundingBox = BoundingBox_()
 !! A Type Instance of Boundingbox
 
 !> author: Vikas Sharma, Ph. D.
@@ -1593,6 +1598,38 @@ TYPE :: MultiIndices_
   INTEGER(I4B) :: n
   !! order
 END TYPE MultiIndices_
+
+!----------------------------------------------------------------------------
+!                                                                   Range_
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2024-04-09
+! summary:  Range denotes the triplet index
+
+TYPE :: Range_
+  INTEGER(I4B) :: is = 0_I4B
+  !! istart
+  INTEGER(I4B) :: ie = 0_I4B
+  !! iend
+  INTEGER(I4B) :: ic = 1_I4B
+  !! increment
+END TYPE Range_
+
+!----------------------------------------------------------------------------
+!                                                                Interval1D_
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2024-04-09
+! summary:  Interval1D_ denotes the 1d interval
+
+TYPE :: Interval1D_
+  REAL(DFP) :: lower
+!! lower limit
+  REAL(DFP) :: upper
+!! upper limit
+END TYPE Interval1D_
 
 !----------------------------------------------------------------------------
 !                                                         SpaceTimeFunction
