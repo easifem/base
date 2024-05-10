@@ -17,7 +17,7 @@
         "CMAKE_BUILD_TYPE": { "type": "STRING", "value": "Debug" },
         "BUILD_SHARED_LIBS": { "type": "BOOL", "value": "ON" },
         "CMAKE_EXPORT_COMPILE_COMMANDS": { "type": "BOOL", "value": "ON" },
-        "USE_OpenMP": { "type": "BOOL", "value": "ON" },
+        "USE_OPENMP": { "type": "BOOL", "value": "ON" },
         "USE_PLPLOT": { "type": "BOOL", "value": "ON" },
         "USE_BLAS95": { "type": "BOOL", "value": "ON" },
         "USE_LAPACK95": { "type": "BOOL", "value": "ON" },
@@ -31,7 +31,7 @@
         "USE_LUA": { "type": "BOOL", "value": "ON" },
         "USE_Int32": { "type": "BOOL", "value": "ON" },
         "USE_Real64": { "type": "BOOL", "value": "ON" },
-        "COLOR_DISP": { "type": "BOOL", "value": "OFF" }
+        "USE_COLORDISP": { "type": "BOOL", "value": "OFF" }
       }
     },
     {
