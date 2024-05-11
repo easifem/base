@@ -111,6 +111,8 @@ else()
   add_library(${PROJECT_NAME} STATIC "")
 endif()
 
+# include(${PROJECT_SOURCE_DIR}/cmake/Compiler.cmake)
+
 message(
   STATUS
     "[INFO] :: Is the Fortran compiler loaded? ${CMAKE_Fortran_COMPILER_LOADED}"
@@ -261,8 +263,7 @@ if(USE_COLORDISP)
   list(APPEND TARGET_COMPILE_DEF "-DCOLOR_DISP")
 endif()
 
-# Installation
-
+# include(${PROJECT_SOURCE_DIR}/cmake/install.cmake) Installation
 install(
   DIRECTORY ${CMAKE_Fortran_MODULE_DIRECTORY}
   DESTINATION "./"
@@ -294,9 +295,7 @@ install(
   DESTINATION ${INSTALL_CMAKEDIR}
   COMPONENT "${PROJECT_NAME}-dev")
 
-# Find external dependency of the project
-
-# FIXME:
+# Find external dependency of the project FIXME:
 if(NOT CMAKE_PREFIX_PATH)
   list(APPEND CMAKE_PREFIX_PATH "$ENV{EASIFEM_EXTPKGS}")
 endif()
@@ -311,9 +310,7 @@ include(${PROJECT_SOURCE_DIR}/cmake/addSuperLU.cmake)
 include(${PROJECT_SOURCE_DIR}/cmake/addLIS.cmake)
 include(${PROJECT_SOURCE_DIR}/cmake/addMetis.cmake)
 include(${PROJECT_SOURCE_DIR}/cmake/addARPACK.cmake)
-include(${PROJECT_SOURCE_DIR}/cmake/addHDF5.cmake)
 include(${PROJECT_SOURCE_DIR}/cmake/addPLPLOT.cmake)
-include(${PROJECT_SOURCE_DIR}/cmake/addGmsh.cmake)
 include(${PROJECT_SOURCE_DIR}/cmake/addFFTW.cmake)
 include(${PROJECT_SOURCE_DIR}/cmake/addGTKFortran.cmake)
 include(${PROJECT_SOURCE_DIR}/cmake/addLua.cmake)

@@ -16,14 +16,12 @@
 # this program.  If not, see <https: //www.gnu.org/licenses/>
 #
 
-if(${PROJECT_NAME} MATCHES "easifemBase")
-  option(USE_FFTW OFF)
-  if(USE_FFTW)
-    list(APPEND TARGET_COMPILE_DEF "-DUSE_FFTW")
-    set(FFTW_LIBRARY "$ENV{EASIFEM_EXTPKGS}/lib/libfftw3.a")
-    target_link_libraries(${PROJECT_NAME} PUBLIC ${FFTW_LIBRARY})
-    message(STATUS "FFTW_LIBRARY : ${FFTW_LIBRARY}")
-  else()
-    message(STATUS "NOT USING FFTW LIBRARIES")
-  endif()
+option(USE_FFTW OFF)
+if(USE_FFTW)
+  list(APPEND TARGET_COMPILE_DEF "-DUSE_FFTW")
+  set(FFTW_LIBRARY "$ENV{EASIFEM_EXTPKGS}/lib/libfftw3.a")
+  target_link_libraries(${PROJECT_NAME} PUBLIC ${FFTW_LIBRARY})
+  message(STATUS "FFTW_LIBRARY : ${FFTW_LIBRARY}")
+else()
+  message(STATUS "NOT USING FFTW LIBRARIES")
 endif()

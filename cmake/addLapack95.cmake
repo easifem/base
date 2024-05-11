@@ -16,20 +16,18 @@
 # this program.  If not, see <https: //www.gnu.org/licenses/>
 #
 
-if(${PROJECT_NAME} MATCHES "easifemBase")
-  if(USE_LAPACK95)
+if(USE_LAPACK95)
 
-    find_package(LAPACK95 REQUIRED)
+  find_package(LAPACK95 REQUIRED)
 
-    if(LAPACK95_FOUND)
-      message(STATUS "[INFO] :: FOUND LAPACK95")
-      target_link_libraries(${PROJECT_NAME} PUBLIC LAPACK95::LAPACK95)
-      list(APPEND TARGET_COMPILE_DEF "-DUSE_LAPACK95")
+  if(LAPACK95_FOUND)
+    message(STATUS "[INFO] :: FOUND LAPACK95")
+    target_link_libraries(${PROJECT_NAME} PUBLIC LAPACK95::LAPACK95)
+    list(APPEND TARGET_COMPILE_DEF "-DUSE_LAPACK95")
 
-    else()
-      message(ERROR "[ERROR] :: NOT FOUND LAPACK95")
-
-    endif()
+  else()
+    message(ERROR "[ERROR] :: NOT FOUND LAPACK95")
 
   endif()
+
 endif()

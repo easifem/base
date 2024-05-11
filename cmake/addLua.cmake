@@ -16,28 +16,26 @@
 # this program.  If not, see <https: //www.gnu.org/licenses/>
 #
 
-if(${PROJECT_NAME} MATCHES "easifemBase")
-  option(USE_LUA OFF)
-  if(USE_LUA)
-    list(APPEND TARGET_COMPILE_DEF "-DUSE_LUA")
-    find_package(Lua 5.4 EXACT)
+option(USE_LUA OFF)
+if(USE_LUA)
+  list(APPEND TARGET_COMPILE_DEF "-DUSE_LUA")
+  find_package(Lua 5.4 EXACT)
 
-    if(NOT LUA_FOUND)
-      find_package(PkgConfig REQUIRED)
-      pkg_check_modules(LUA REQUIRED lua)
-      find_library(LUA_LIBRARY NAMES lua lua5.4)
-      set(LUA_LIBRARIES ${LUA_LIBRARY})
-      find_path(LUA_INCLUDE_DIR NAMES lua5.4/lua.h lua5.4/lualib.h lua/lua.h
-                                      lua/lualib.h)
-    endif()
-
-    target_link_libraries(${PROJECT_NAME} PUBLIC ${LUA_LIBRARIES})
-    target_include_directories(${PROJECT_NAME} PUBLIC ${LUA_INCLUDE_DIR})
-
-    message(STATUS "LUA LIBRARIES :: ${LUA_LIBRARIES}")
-    message(STATUS "LUA INCLUDE DIR :: ${LUA_INCLUDE_DIR}")
-
-  else()
-    message(STATUS "NOT USING LUA LIBRARIES")
+  if(NOT LUA_FOUND)
+    find_package(PkgConfig REQUIRED)
+    pkg_check_modules(LUA REQUIRED lua)
+    find_library(LUA_LIBRARY NAMES lua lua5.4)
+    set(LUA_LIBRARIES ${LUA_LIBRARY})
+    find_path(LUA_INCLUDE_DIR NAMES lua5.4/lua.h lua5.4/lualib.h lua/lua.h
+                                    lua/lualib.h)
   endif()
+
+  target_link_libraries(${PROJECT_NAME} PUBLIC ${LUA_LIBRARIES})
+  target_include_directories(${PROJECT_NAME} PUBLIC ${LUA_INCLUDE_DIR})
+
+  message(STATUS "LUA LIBRARIES :: ${LUA_LIBRARIES}")
+  message(STATUS "LUA INCLUDE DIR :: ${LUA_INCLUDE_DIR}")
+
+else()
+  message(STATUS "NOT USING LUA LIBRARIES")
 endif()

@@ -16,12 +16,10 @@
 # this program.  If not, see <https: //www.gnu.org/licenses/>
 #
 
-if(${PROJECT_NAME} MATCHES "easifemBase")
-  option(USE_SUPERLU ON)
-  if(USE_SUPERLU)
-    find_library(SuperLU_Libs superlu)
-    list(APPEND TARGET_COMPILE_DEF "-DUSE_SuperLU")
-    message(STATUS "[INFO] :: SuperLU_Libs = ${SuperLU_Libs}")
-  endif()
-  target_link_libraries(${PROJECT_NAME} PUBLIC ${SuperLU_Libs})
+option(USE_SUPERLU ON)
+if(USE_SUPERLU)
+  find_library(SuperLU_Libs superlu)
+  list(APPEND TARGET_COMPILE_DEF "-DUSE_SuperLU")
+  message(STATUS "[INFO] :: SuperLU_Libs = ${SuperLU_Libs}")
 endif()
+target_link_libraries(${PROJECT_NAME} PUBLIC ${SuperLU_Libs})

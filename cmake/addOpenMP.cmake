@@ -16,58 +16,55 @@
 # this program.  If not, see <https: //www.gnu.org/licenses/>
 #
 
-if(${PROJECT_NAME} MATCHES "easifemBase")
-  option(USE_OPENMP OFF)
-  if(USE_OPENMP)
+option(USE_OPENMP OFF)
+if(USE_OPENMP)
 
-    if(APPLE)
-      if(CMAKE_C_COMPILER_ID MATCHES "Clang" OR CMAKE_C_COMPILER_ID MATCHES
-                                                "AppleClang")
-        set(OpenMP_C
-            "${CMAKE_C_COMPILER}"
-            CACHE STRING "" FORCE)
-        set(OpenMP_C_FLAGS
-            "-fopenmp=libomp -Wno-unused-command-line-argument"
-            CACHE STRING "" FORCE)
-        set(OpenMP_C_LIB_NAMES
-            "libomp" "libgomp" "libiomp5"
-            CACHE STRING "" FORCE)
-        set(OpenMP_libomp_LIBRARY
-            ${OpenMP_C_LIB_NAMES}
-            CACHE STRING "" FORCE)
-        set(OpenMP_libgomp_LIBRARY
-            ${OpenMP_C_LIB_NAMES}
-            CACHE STRING "" FORCE)
-        set(OpenMP_libiomp5_LIBRARY
-            ${OpenMP_C_LIB_NAMES}
-            CACHE STRING "" FORCE)
+  if(APPLE)
+    if(CMAKE_C_COMPILER_ID MATCHES "Clang" OR CMAKE_C_COMPILER_ID MATCHES
+                                              "AppleClang")
+      set(OpenMP_C
+          "${CMAKE_C_COMPILER}"
+          CACHE STRING "" FORCE)
+      set(OpenMP_C_FLAGS
+          "-fopenmp=libomp -Wno-unused-command-line-argument"
+          CACHE STRING "" FORCE)
+      set(OpenMP_C_LIB_NAMES
+          "libomp" "libgomp" "libiomp5"
+          CACHE STRING "" FORCE)
+      set(OpenMP_libomp_LIBRARY
+          ${OpenMP_C_LIB_NAMES}
+          CACHE STRING "" FORCE)
+      set(OpenMP_libgomp_LIBRARY
+          ${OpenMP_C_LIB_NAMES}
+          CACHE STRING "" FORCE)
+      set(OpenMP_libiomp5_LIBRARY
+          ${OpenMP_C_LIB_NAMES}
+          CACHE STRING "" FORCE)
 
-        set(OpenMP_CXX
-            "${CMAKE_CXX_COMPILER}"
-            CACHE STRING "" FORCE)
-        set(OpenMP_CXX_FLAGS
-            "-fopenmp=libomp -Wno-unused-command-line-argument"
-            CACHE STRING "" FORCE)
+      set(OpenMP_CXX
+          "${CMAKE_CXX_COMPILER}"
+          CACHE STRING "" FORCE)
+      set(OpenMP_CXX_FLAGS
+          "-fopenmp=libomp -Wno-unused-command-line-argument"
+          CACHE STRING "" FORCE)
 
-        set(OpenMP_CXX_LIB_NAMES
-            "libomp" "libgomp" "libiomp5"
-            CACHE STRING "" FORCE)
-      endif()
+      set(OpenMP_CXX_LIB_NAMES
+          "libomp" "libgomp" "libiomp5"
+          CACHE STRING "" FORCE)
     endif()
-
-    find_package(OpenMP REQUIRED)
-
   endif()
 
-  if(OpenMP_FOUND)
-    message(STATUS "FOUND OpenMP")
-    message(STATUS "OpenMP_Fortran_LIBRARIES: ${OpenMP_Fortran_LIBRARIES}")
-    list(APPEND TARGET_COMPILE_DEF "-DUSE_OpenMP")
-    list(APPEND TARGET_COMPILE_OPT ${OpenMP_Fortran_FLAGS})
-    # TARGET_LINK_LIBRARIES(${PROJECT_NAME} PUBLIC ${OpenMP_Fortran_LIBRARIES})
-    target_link_libraries(${PROJECT_NAME} PUBLIC OpenMP::OpenMP_Fortran)
-  else()
-    message(ERROR "NOT FOUND OpenMP")
-  endif()
+  find_package(OpenMP REQUIRED)
 
+endif()
+
+if(OpenMP_FOUND)
+  message(STATUS "FOUND OpenMP")
+  message(STATUS "OpenMP_Fortran_LIBRARIES: ${OpenMP_Fortran_LIBRARIES}")
+  list(APPEND TARGET_COMPILE_DEF "-DUSE_OpenMP")
+  list(APPEND TARGET_COMPILE_OPT ${OpenMP_Fortran_FLAGS})
+  # TARGET_LINK_LIBRARIES(${PROJECT_NAME} PUBLIC ${OpenMP_Fortran_LIBRARIES})
+  target_link_libraries(${PROJECT_NAME} PUBLIC OpenMP::OpenMP_Fortran)
+else()
+  message(ERROR "NOT FOUND OpenMP")
 endif()
