@@ -16,16 +16,13 @@
 # this program.  If not, see <https: //www.gnu.org/licenses/>
 #
 
-if(${PROJECT_NAME} MATCHES "easifemBase")
-  find_package(toml-f REQUIRED)
+find_package(toml-f REQUIRED)
 
-  if(Sparsekit_FOUND)
-    message(STATUS "[INFO] :: FOUND toml-f")
-    target_link_libraries(${PROJECT_NAME} PUBLIC toml-f::toml-f)
+if(Sparsekit_FOUND)
+  message(STATUS "[INFO] :: FOUND toml-f")
+  target_link_libraries(${PROJECT_NAME} PUBLIC toml-f::toml-f)
 
-  else()
-    message(ERROR "[ERROR] :: NOT FOUND toml-f")
-
-  endif()
+else()
+  message(ERROR "[ERROR] :: NOT FOUND toml-f")
 
 endif()

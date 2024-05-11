@@ -16,38 +16,34 @@
 # this program.  If not, see <https: //www.gnu.org/licenses/>
 #
 
-if(${PROJECT_NAME} MATCHES "easifemBase")
+option(USE_GTK OFF)
 
-  option(USE_GTK OFF)
+if(USE_GTK)
 
-  if(USE_GTK)
+  list(APPEND TARGET_COMPILE_DEF "-DUSE_GTK")
 
-    list(APPEND TARGET_COMPILE_DEF "-DUSE_GTK")
+  find_package(PkgConfig)
+  pkg_check_modules(GTKFORTRAN REQUIRED gtk-4-fortran)
+  find_path(
+    GTKFORTRAN_MODULE_DIRS
+    NAMES gtk.mod
+    PATHS ${GTKFORTRAN_INCLUDE_DIRS})
+  find_library(GTKFORTRAN_LIBRARY NAMES gtk-4-fortran)
 
-    find_package(PkgConfig)
-    pkg_check_modules(GTKFORTRAN REQUIRED gtk-4-fortran)
-    find_path(
-      GTKFORTRAN_MODULE_DIRS
-      NAMES gtk.mod
-      PATHS ${GTKFORTRAN_INCLUDE_DIRS})
-    find_library(GTKFORTRAN_LIBRARY NAMES gtk-4-fortran)
+  message(STATUS "GTKFORTRAN_CFLAGS : ${GTKFORTRAN_CFLAGS}")
+  message(STATUS "GTKFORTRAN_LIBRARY : ${GTKFORTRAN_LIBRARY}")
+  message(STATUS "GTKFORTRAN_LIBRARIES : ${GTKFORTRAN_LIBRARIES}")
+  message(STATUS "GTKFORTRAN_LIBRARY_DIRS : ${GTKFORTRAN_LIBRARY_DIRS}")
+  message(STATUS "GTKFORTRAN_INCLUDE_DIRS : ${GTKFORTRAN_INCLUDE_DIRS}")
+  message(STATUS "GTKFORTRAN_MODULE_DIRS : ${GTKFORTRAN_MODULE_DIRS}")
 
-    message(STATUS "GTKFORTRAN_CFLAGS : ${GTKFORTRAN_CFLAGS}")
-    message(STATUS "GTKFORTRAN_LIBRARY : ${GTKFORTRAN_LIBRARY}")
-    message(STATUS "GTKFORTRAN_LIBRARIES : ${GTKFORTRAN_LIBRARIES}")
-    message(STATUS "GTKFORTRAN_LIBRARY_DIRS : ${GTKFORTRAN_LIBRARY_DIRS}")
-    message(STATUS "GTKFORTRAN_INCLUDE_DIRS : ${GTKFORTRAN_INCLUDE_DIRS}")
-    message(STATUS "GTKFORTRAN_MODULE_DIRS : ${GTKFORTRAN_MODULE_DIRS}")
+  target_link_libraries(${PROJECT_NAME} PUBLIC ${GTKFORTRAN_LIBRARY}
+                                               ${GTKFORTRAN_LIBRARIES})
+  target_include_directories(${PROJECT_NAME} PUBLIC ${GTKFORTRAN_INCLUDE_DIRS}
+                                                    ${GTKFORTRAN_MODULE_DIRS})
 
-    target_link_libraries(${PROJECT_NAME} PUBLIC ${GTKFORTRAN_LIBRARY}
-                                                 ${GTKFORTRAN_LIBRARIES})
-    target_include_directories(${PROJECT_NAME} PUBLIC ${GTKFORTRAN_INCLUDE_DIRS}
-                                                      ${GTKFORTRAN_MODULE_DIRS})
+else()
 
-  else()
-
-    message(STATUS "NOT USING GTK-Fortran")
-
-  endif()
+  message(STATUS "NOT USING GTK-Fortran")
 
 endif()

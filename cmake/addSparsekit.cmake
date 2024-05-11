@@ -16,16 +16,13 @@
 # this program.  If not, see <https: //www.gnu.org/licenses/>
 #
 
-if(${PROJECT_NAME} MATCHES "easifemBase")
-  find_package(Sparsekit REQUIRED)
+find_package(Sparsekit REQUIRED)
 
-  if(Sparsekit_FOUND)
-    message(STATUS "[INFO] :: FOUND Sparsekit")
-    target_link_libraries(${PROJECT_NAME} PUBLIC Sparsekit::Sparsekit)
+if(Sparsekit_FOUND)
+  message(STATUS "[INFO] :: FOUND Sparsekit")
+  target_link_libraries(${PROJECT_NAME} PUBLIC Sparsekit::Sparsekit)
 
-  else()
-    message(ERROR "[ERROR] :: NOT FOUND Sparsekit")
-
-  endif()
+else()
+  message(ERROR "[ERROR] :: NOT FOUND Sparsekit")
 
 endif()

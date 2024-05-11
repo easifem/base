@@ -16,19 +16,16 @@
 # this program.  If not, see <https: //www.gnu.org/licenses/>
 #
 
-if(${PROJECT_NAME} MATCHES "easifemBase")
-  option(USE_RAYLIB OFF)
-  if(USE_RAYLIB)
-    list(APPEND TARGET_COMPILE_DEF "-DUSE_RAYLIB")
-    find_package(raylib REQUIRED)
-    target_link_libraries(${PROJECT_NAME}  PUBLIC raylib)
-    # target_link_libraries(${PROJECT_NAME}  PUBLIC ${raylib_LIBRARIES})
-    # target_include_directories(${PROJECT_NAME} PUBLIC ${raylib_INCLUDE_DIRS})
-    message(STATUS "RAYLIB_LIBRARIES FOUND")
-    # message(STATUS "RAYLIB_INCLUDE_DIRS FOUND: ${raylib_INCLUDE_DIRS}")
+option(USE_RAYLIB OFF)
+if(USE_RAYLIB)
+  list(APPEND TARGET_COMPILE_DEF "-DUSE_RAYLIB")
+  find_package(raylib REQUIRED)
+  target_link_libraries(${PROJECT_NAME} PUBLIC raylib)
+  # target_link_libraries(${PROJECT_NAME}  PUBLIC ${raylib_LIBRARIES})
+  # target_include_directories(${PROJECT_NAME} PUBLIC ${raylib_INCLUDE_DIRS})
+  message(STATUS "RAYLIB_LIBRARIES FOUND")
+  # message(STATUS "RAYLIB_INCLUDE_DIRS FOUND: ${raylib_INCLUDE_DIRS}")
 
-  else()
-    message(STATUS "NOT USING RAYLIB_LIBRARIES")
-  endif()
+else()
+  message(STATUS "NOT USING RAYLIB_LIBRARIES")
 endif()
-
