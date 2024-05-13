@@ -18,16 +18,16 @@
 
 option(USE_LIS OFF)
 if(USE_LIS)
+
   list(APPEND TARGET_COMPILE_DEF "-DUSE_LIS")
-  if(UNIX)
-    if(APPLE)
-      set(LIS_LIBRARIES "$ENV{EASIFEM_EXTPKGS}/lib/liblis.dylib")
-    else()
-      set(LIS_LIBRARIES "$ENV{EASIFEM_EXTPKGS}/lib/liblis.so")
-    endif()
-  endif()
+
+  find_library(LIS_LIBRARIES NAME lis REQUIRED)
+
   target_link_libraries(${PROJECT_NAME} PUBLIC ${LIS_LIBRARIES})
   message(STATUS "LIS_LIBRARIES : ${LIS_LIBRARIES}")
+
 else()
+
   message(STATUS "NOT USING LIS LIBRARIES")
+
 endif()
