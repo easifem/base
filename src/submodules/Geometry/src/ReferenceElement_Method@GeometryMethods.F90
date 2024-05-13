@@ -134,6 +134,13 @@ CASE (Quadrangle9)
   IF (PRESENT(edgeCon)) CALL GetEdgeConnectivity_Quadrangle(con=edgeCon,  &
     & opt=edgeOpt)
 
+CASE (Quadrangle16)
+  IF (PRESENT(tNodes)) tNodes = 16_I4B
+  IF (PRESENT(tEdges)) tEdges = 4_I4B
+  IF (PRESENT(tFaces)) tFaces = 0_I4B
+  IF (PRESENT(edgeCon)) CALL GetEdgeConnectivity_Quadrangle(con=edgeCon,  &
+    & opt=edgeOpt)
+
 CASE (Tetrahedron)
   IF (PRESENT(tNodes)) tNodes = 4_I4B
   IF (PRESENT(tEdges)) tEdges = 6_I4B
@@ -418,6 +425,8 @@ CASE (Quadrangle9)
   ans = [9, 4, 1, 0]
 CASE (Quadrangle8)
   ans = [8, 4, 1, 0]
+CASE (Quadrangle16)
+  ans = [16, 4, 1, 0]
 CASE (Tetrahedron10)
   ans = [10, 6, 4, 1]
 CASE (Hexahedron20)

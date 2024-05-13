@@ -388,7 +388,7 @@ INTEGER(I4B), PARAMETER :: Quadrangle9 = 10
 !! order = 2
 INTEGER(I4B), PARAMETER :: Quadrangle8 = 16
 !! order = 2, Serendipity
-INTEGER(I4B), PARAMETER :: Quadrangle16 = 160
+INTEGER(I4B), PARAMETER :: Quadrangle16 = 36
 !! order = 3
 !! Forder order 4, 5, and so on, we use 1601, 1602, 1603, etc.
 INTEGER(I4B), PARAMETER :: Tetrahedron = 4

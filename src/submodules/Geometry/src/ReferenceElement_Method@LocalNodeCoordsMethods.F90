@@ -50,27 +50,27 @@ CASE (Line4)
   ALLOCATE (nodecoord(3, 4))
   nodecoord = 0.0_DFP
   nodecoord(1, :) = [ &
-    & -1.0_DFP, 1.0_DFP, &
-    & -0.333333333333333_DFP, &
-    &  0.333333333333333_DFP]
+     -1.0_DFP, 1.0_DFP, &
+     -0.333333333333333_DFP, &
+      0.333333333333333_DFP]
 
 CASE (Line5)
   ALLOCATE (nodecoord(3, 5))
   nodecoord = 0.0_DFP
-  nodecoord(1, :) = [&
-    & -1.0_DFP, 1.0_DFP, &
-    & -0.5_DFP, 0.0_DFP, &
-    & 0.5_DFP]
+  nodecoord(1, :) = [ &
+     -1.0_DFP, 1.0_DFP, &
+     -0.5_DFP, 0.0_DFP, &
+     0.5_DFP]
 
 CASE (Line6)
   ALLOCATE (nodecoord(3, 6))
   nodecoord = 0.0_DFP
   nodecoord(1, :) = [ &
-    & -1.0_DFP, 1.0_DFP, &
-    & -0.666666666666666_DFP, &
-    & -0.333333333333333_DFP, &
-    & 0.666666666666666_DFP, &
-    & 0.333333333333333_DFP]
+     -1.0_DFP, 1.0_DFP, &
+     -0.666666666666666_DFP, &
+     -0.333333333333333_DFP, &
+     0.666666666666666_DFP, &
+     0.333333333333333_DFP]
 
 CASE (Triangle3)
   ALLOCATE (nodecoord(3, 3))
@@ -90,85 +90,85 @@ CASE (Triangle9)
   ALLOCATE (nodecoord(3, 9))
   nodecoord = 0.0_DFP
   nodecoord(1, :) = [ &
-    & 0.0_DFP, &
-    & 1.0_DFP, &
-    & 0.0_DFP, &
-    & 0.33333333333333333333_DFP, &
-    & 0.66666666666666666667_DFP, &
-    & 0.66666666666666666667_DFP, &
-    & 0.33333333333333333333_DFP, &
-    & 0.0_DFP, &
-    & 0.0_DFP]
+     0.0_DFP, &
+     1.0_DFP, &
+     0.0_DFP, &
+     0.33333333333333333333_DFP, &
+     0.66666666666666666667_DFP, &
+     0.66666666666666666667_DFP, &
+     0.33333333333333333333_DFP, &
+     0.0_DFP, &
+     0.0_DFP]
 
   nodecoord(2, :) = [ &
-    & 0.0_DFP, &
-    & 0.0_DFP, &
-    & 1.0_DFP, &
-    & 0.0_DFP, &
-    & 0.0_DFP, &
-    & 0.33333333333333333333_DFP, &
-    & 0.66666666666666666667_DFP, &
-    & 0.66666666666666666667_DFP, &
-    & 0.33333333333333333333_DFP]
+     0.0_DFP, &
+     0.0_DFP, &
+     1.0_DFP, &
+     0.0_DFP, &
+     0.0_DFP, &
+     0.33333333333333333333_DFP, &
+     0.66666666666666666667_DFP, &
+     0.66666666666666666667_DFP, &
+     0.33333333333333333333_DFP]
 
 CASE (Triangle10)
   ALLOCATE (nodecoord(3, 10))
   nodecoord = 0.0_DFP
   nodecoord(1, :) = [ &
-    & 0.0_DFP, &
-    & 1.0_DFP, &
-    & 0.0_DFP, &
-    & 0.33333333333333333333_DFP, &
-    & 0.66666666666666666667_DFP, &
-    & 0.66666666666666666667_DFP, &
-    & 0.33333333333333333333_DFP, &
-    & 0.0_DFP, &
-    & 0.0_DFP, &
-    & 0.33333333333333333333_DFP]
+     0.0_DFP, &
+     1.0_DFP, &
+     0.0_DFP, &
+     0.33333333333333333333_DFP, &
+     0.66666666666666666667_DFP, &
+     0.66666666666666666667_DFP, &
+     0.33333333333333333333_DFP, &
+     0.0_DFP, &
+     0.0_DFP, &
+     0.33333333333333333333_DFP]
 
   nodecoord(2, :) = [ &
-    & 0.0_DFP, &
-    & 0.0_DFP, &
-    & 1.0_DFP, &
-    & 0.0_DFP, &
-    & 0.0_DFP, &
-    & 0.33333333333333333333_DFP, &
-    & 0.66666666666666666667_DFP, &
-    & 0.66666666666666666667_DFP, &
-    & 0.33333333333333333333_DFP, &
-    & 0.33333333333333333333_DFP]
+     0.0_DFP, &
+     0.0_DFP, &
+     1.0_DFP, &
+     0.0_DFP, &
+     0.0_DFP, &
+     0.33333333333333333333_DFP, &
+     0.66666666666666666667_DFP, &
+     0.66666666666666666667_DFP, &
+     0.33333333333333333333_DFP, &
+     0.33333333333333333333_DFP]
 
 CASE (Triangle12)
   ! incomplete triangle; all nodes on boundary
   ALLOCATE (nodecoord(3, 12))
   nodecoord = 0.0_DFP
   nodecoord(1, :) = [ &
-    & 0.0_DFP, &
-    & 1.0_DFP, &
-    & 0.0_DFP, &
-    & 0.25_DFP, &
-    & 0.5_DFP, &
-    & 0.75_DFP, &
-    & 0.75_DFP, &
-    & 0.5_DFP, &
-    & 0.25_DFP, &
-    & 0.0_DFP, &
-    & 0.0_DFP, &
-    & 0.0_DFP]
+     0.0_DFP, &
+     1.0_DFP, &
+     0.0_DFP, &
+     0.25_DFP, &
+     0.5_DFP, &
+     0.75_DFP, &
+     0.75_DFP, &
+     0.5_DFP, &
+     0.25_DFP, &
+     0.0_DFP, &
+     0.0_DFP, &
+     0.0_DFP]
 
   nodecoord(2, :) = [ &
-    & 0.0_DFP, &
-    & 0.0_DFP, &
-    & 1.0_DFP, &
-    & 0.0_DFP, &
-    & 0.0_DFP, &
-    & 0.0_DFP, &
-    & 0.25_DFP, &
-    & 0.5_DFP, &
-    & 0.75_DFP, &
-    & 0.75_DFP, &
-    & 0.5_DFP, &
-    & 0.25_DFP]
+     0.0_DFP, &
+     0.0_DFP, &
+     1.0_DFP, &
+     0.0_DFP, &
+     0.0_DFP, &
+     0.0_DFP, &
+     0.25_DFP, &
+     0.5_DFP, &
+     0.75_DFP, &
+     0.75_DFP, &
+     0.5_DFP, &
+     0.25_DFP]
 
 CASE (Triangle15a)
   ! complete triangle; 12 nodes on boundary and
@@ -176,38 +176,38 @@ CASE (Triangle15a)
   ALLOCATE (nodecoord(3, 15))
   nodecoord = 0.0_DFP
   nodecoord(1, :) = [ &
-    & 0.0_DFP, &
-    & 1.0_DFP, &
-    & 0.0_DFP, &
-    & 0.25_DFP, &
-    & 0.5_DFP, &
-    & 0.75_DFP, &
-    & 0.75_DFP, &
-    & 0.5_DFP, &
-    & 0.25_DFP, &
-    & 0.0_DFP, &
-    & 0.0_DFP, &
-    & 0.0_DFP, &
-    & 0.25_DFP, &
-    & 0.5_DFP, &
-    & 0.25_DFP]
+     0.0_DFP, &
+     1.0_DFP, &
+     0.0_DFP, &
+     0.25_DFP, &
+     0.5_DFP, &
+     0.75_DFP, &
+     0.75_DFP, &
+     0.5_DFP, &
+     0.25_DFP, &
+     0.0_DFP, &
+     0.0_DFP, &
+     0.0_DFP, &
+     0.25_DFP, &
+     0.5_DFP, &
+     0.25_DFP]
 
   nodecoord(2, :) = [ &
-    & 0.0_DFP, &
-    & 0.0_DFP, &
-    & 1.0_DFP, &
-    & 0.0_DFP, &
-    & 0.0_DFP, &
-    & 0.0_DFP, &
-    & 0.25_DFP, &
-    & 0.5_DFP, &
-    & 0.75_DFP, &
-    & 0.75_DFP, &
-    & 0.5_DFP, &
-    & 0.25_DFP, &
-    & 0.25_DFP, &
-    & 0.25_DFP, &
-    & 0.5_DFP]
+     0.0_DFP, &
+     0.0_DFP, &
+     1.0_DFP, &
+     0.0_DFP, &
+     0.0_DFP, &
+     0.0_DFP, &
+     0.25_DFP, &
+     0.5_DFP, &
+     0.75_DFP, &
+     0.75_DFP, &
+     0.5_DFP, &
+     0.25_DFP, &
+     0.25_DFP, &
+     0.25_DFP, &
+     0.5_DFP]
 
 CASE (Triangle15b)
   ! Incomplete triangle
@@ -215,88 +215,88 @@ CASE (Triangle15b)
   nodecoord = 0.0_DFP
 
   nodecoord(1, :) = [ &
-    & 0.0_DFP, &
-    & 1.0_DFP, &
-    & 0.0_DFP, &
-    & 0.2_DFP, &
-    & 0.4_DFP, &
-    & 0.6_DFP, &
-    & 0.8_DFP, &
-    & 0.8_DFP, &
-    & 0.6_DFP, &
-    & 0.4_DFP, &
-    & 0.2_DFP, &
-    & 0.0_DFP, &
-    & 0.0_DFP, &
-    & 0.0_DFP, &
-    & 0.0_DFP]
+     0.0_DFP, &
+     1.0_DFP, &
+     0.0_DFP, &
+     0.2_DFP, &
+     0.4_DFP, &
+     0.6_DFP, &
+     0.8_DFP, &
+     0.8_DFP, &
+     0.6_DFP, &
+     0.4_DFP, &
+     0.2_DFP, &
+     0.0_DFP, &
+     0.0_DFP, &
+     0.0_DFP, &
+     0.0_DFP]
 
   nodecoord(2, :) = [ &
-    & 0.0_DFP, &
-    & 0.0_DFP, &
-    & 1.0_DFP, &
-    & 0.0_DFP, &
-    & 0.0_DFP, &
-    & 0.0_DFP, &
-    & 0.0_DFP, &
-    & 0.2_DFP, &
-    & 0.4_DFP, &
-    & 0.6_DFP, &
-    & 0.8_DFP, &
-    & 0.8_DFP, &
-    & 0.6_DFP, &
-    & 0.4_DFP, &
-    & 0.2_DFP]
+     0.0_DFP, &
+     0.0_DFP, &
+     1.0_DFP, &
+     0.0_DFP, &
+     0.0_DFP, &
+     0.0_DFP, &
+     0.0_DFP, &
+     0.2_DFP, &
+     0.4_DFP, &
+     0.6_DFP, &
+     0.8_DFP, &
+     0.8_DFP, &
+     0.6_DFP, &
+     0.4_DFP, &
+     0.2_DFP]
 
 CASE (Triangle21)
   ALLOCATE (nodecoord(3, 21))
   nodecoord = 0.0_DFP
 
   nodecoord(1, :) = [ &
-    & 0.0_DFP, &
-    & 1.0_DFP, &
-    & 0.0_DFP, &
-    & 0.2_DFP, &
-    & 0.4_DFP, &
-    & 0.6_DFP, &
-    & 0.8_DFP, &
-    & 0.8_DFP, &
-    & 0.6_DFP, &
-    & 0.4_DFP, &
-    & 0.2_DFP, &
-    & 0.0_DFP, &
-    & 0.0_DFP, &
-    & 0.0_DFP, &
-    & 0.0_DFP, &
-    & 0.2_DFP, &
-    & 0.6_DFP, &
-    & 0.2_DFP, &
-    & 0.4_DFP, &
-    & 0.4_DFP, &
-    & 0.2_DFP]
+     0.0_DFP, &
+     1.0_DFP, &
+     0.0_DFP, &
+     0.2_DFP, &
+     0.4_DFP, &
+     0.6_DFP, &
+     0.8_DFP, &
+     0.8_DFP, &
+     0.6_DFP, &
+     0.4_DFP, &
+     0.2_DFP, &
+     0.0_DFP, &
+     0.0_DFP, &
+     0.0_DFP, &
+     0.0_DFP, &
+     0.2_DFP, &
+     0.6_DFP, &
+     0.2_DFP, &
+     0.4_DFP, &
+     0.4_DFP, &
+     0.2_DFP]
 
   nodecoord(2, :) = [ &
-    & 0.0_DFP, &
-    & 0.0_DFP, &
-    & 1.0_DFP, &
-    & 0.0_DFP, &
-    & 0.0_DFP, &
-    & 0.0_DFP, &
-    & 0.0_DFP, &
-    & 0.2_DFP, &
-    & 0.4_DFP, &
-    & 0.6_DFP, &
-    & 0.8_DFP, &
-    & 0.8_DFP, &
-    & 0.6_DFP, &
-    & 0.4_DFP, &
-    & 0.2_DFP, &
-    & 0.2_DFP, &
-    & 0.2_DFP, &
-    & 0.6_DFP, &
-    & 0.2_DFP, &
-    & 0.4_DFP, &
-    & 0.4_DFP]
+     0.0_DFP, &
+     0.0_DFP, &
+     1.0_DFP, &
+     0.0_DFP, &
+     0.0_DFP, &
+     0.0_DFP, &
+     0.0_DFP, &
+     0.2_DFP, &
+     0.4_DFP, &
+     0.6_DFP, &
+     0.8_DFP, &
+     0.8_DFP, &
+     0.6_DFP, &
+     0.4_DFP, &
+     0.2_DFP, &
+     0.2_DFP, &
+     0.2_DFP, &
+     0.6_DFP, &
+     0.2_DFP, &
+     0.4_DFP, &
+     0.4_DFP]
 
 CASE (Quadrangle4)
   ALLOCATE (nodecoord(3, 4))
@@ -306,90 +306,110 @@ CASE (Quadrangle4)
 
 CASE (Quadrangle8)
   nodecoord = RESHAPE([ &
-    & -1.0_DFP, -1.0_DFP, 0.0_DFP, &
-    & 1.0_DFP, -1.0_DFP, 0.0_DFP, &
-    & 1.0_DFP, 1.0_DFP, 0.0_DFP, &
-    & -1.0_DFP, 1.0_DFP, 0.0_DFP, &
-    & 0.0_DFP, -1.0_DFP, 0.0_DFP, &
-    & 1.0_DFP, 0.0_DFP, 0.0_DFP, &
-    & 0.0_DFP, 1.0_DFP, 0.0_DFP, &
-    & -1.0_DFP, 0.0_DFP, 0.0_DFP], [3, 8])
+     -1.0_DFP, -1.0_DFP, 0.0_DFP, &
+     1.0_DFP, -1.0_DFP, 0.0_DFP, &
+     1.0_DFP, 1.0_DFP, 0.0_DFP, &
+     -1.0_DFP, 1.0_DFP, 0.0_DFP, &
+     0.0_DFP, -1.0_DFP, 0.0_DFP, &
+     1.0_DFP, 0.0_DFP, 0.0_DFP, &
+     0.0_DFP, 1.0_DFP, 0.0_DFP, &
+     -1.0_DFP, 0.0_DFP, 0.0_DFP], [3, 8])
 
 CASE (Quadrangle9)
   nodecoord = RESHAPE([ &
-    & -1.0_DFP, -1.0_DFP, 0.0_DFP, &
-    & 1.0_DFP, -1.0_DFP, 0.0_DFP, &
-    & 1.0_DFP, 1.0_DFP, 0.0_DFP, &
-    & -1.0_DFP, 1.0_DFP, 0.0_DFP, &
-    & 0.0_DFP, -1.0_DFP, 0.0_DFP, &
-    & 1.0_DFP, 0.0_DFP, 0.0_DFP, &
-    & 0.0_DFP, 1.0_DFP, 0.0_DFP, &
-    & -1.0_DFP, 0.0_DFP, 0.0_DFP, &
-    & 0.0_DFP, 0.0_DFP, 0.0_DFP], [3, 9])
+     -1.0_DFP, -1.0_DFP, 0.0_DFP, &
+     1.0_DFP, -1.0_DFP, 0.0_DFP, &
+     1.0_DFP, 1.0_DFP, 0.0_DFP, &
+     -1.0_DFP, 1.0_DFP, 0.0_DFP, &
+     0.0_DFP, -1.0_DFP, 0.0_DFP, &
+     1.0_DFP, 0.0_DFP, 0.0_DFP, &
+     0.0_DFP, 1.0_DFP, 0.0_DFP, &
+     -1.0_DFP, 0.0_DFP, 0.0_DFP, &
+     0.0_DFP, 0.0_DFP, 0.0_DFP], [3, 9])
+
+CASE (Quadrangle16)
+  nodecoord = RESHAPE([ &
+     -1.0_DFP, -1.0_DFP, 0.0_DFP, &
+     1.0_DFP, -1.0_DFP, 0.0_DFP, &
+     1.0_DFP, 1.0_DFP, 0.0_DFP, &
+     -1.0_DFP, 1.0_DFP, 0.0_DFP, &
+     -1.0_dfp/3.0_dfp, -1.0_DFP, 0.0_DFP, &
+     1.0_dfp/3.0_dfp, -1.0_DFP, 0.0_DFP, &
+     1.0_dfp, -1.0_DFP/3.0_dfp, 0.0_DFP, &
+     1.0_dfp, 1.0_DFP/3.0_dfp, 0.0_DFP, &
+     1.0_dfp/3.0_dfp, 1.0_DFP, 0.0_DFP, &
+     -1.0_dfp/3.0_dfp, 1.0_DFP, 0.0_DFP, &
+     -1.0_dfp, 1.0_DFP/3.0_dfp, 0.0_DFP, &
+     -1.0_dfp, -1.0_DFP/3.0_dfp, 0.0_DFP, &
+     -1.0_dfp/3.0_Dfp, -1.0_DFP/3.0_dfp, 0.0_DFP, &
+     1.0_dfp/3.0_Dfp, -1.0_DFP/3.0_dfp, 0.0_DFP, &
+     1.0_dfp/3.0_Dfp, 1.0_DFP/3.0_dfp, 0.0_DFP, &
+     -1.0_dfp/3.0_Dfp, 1.0_DFP/3.0_dfp, 0.0_DFP], &
+    [3, 16])
 
 CASE (Hexahedron8)
   nodecoord = RESHAPE([ &
-  & -1.0_DFP, -1.0_DFP, -1.0_DFP, &
-  & 1.0_DFP, -1.0_DFP, -1.0_DFP, &
-  & 1.0_DFP, 1.0_DFP, -1.0_DFP, &
-  & -1.0_DFP, 1.0_DFP, -1.0_DFP, &
-  & -1.0_DFP, -1.0_DFP, 1.0_DFP, &
-  & 1.0_DFP, -1.0_DFP, 1.0_DFP, &
-  & 1.0_DFP, 1.0_DFP, 1.0_DFP, &
-  & -1.0_DFP, 1.0_DFP, 1.0_DFP], [3, 8])
+   -1.0_DFP, -1.0_DFP, -1.0_DFP, &
+   1.0_DFP, -1.0_DFP, -1.0_DFP, &
+   1.0_DFP, 1.0_DFP, -1.0_DFP, &
+   -1.0_DFP, 1.0_DFP, -1.0_DFP, &
+   -1.0_DFP, -1.0_DFP, 1.0_DFP, &
+   1.0_DFP, -1.0_DFP, 1.0_DFP, &
+   1.0_DFP, 1.0_DFP, 1.0_DFP, &
+   -1.0_DFP, 1.0_DFP, 1.0_DFP], [3, 8])
 
 CASE (Hexahedron20)
   nodecoord = RESHAPE([ &
-  & -1.0_DFP, -1.0_DFP, -1.0_DFP, &
-  & 1.0_DFP, -1.0_DFP, -1.0_DFP, &
-  & 1.0_DFP, 1.0_DFP, -1.0_DFP, &
-  & -1.0_DFP, 1.0_DFP, -1.0_DFP, &
-  & -1.0_DFP, -1.0_DFP, 1.0_DFP, &
-  & 1.0_DFP, -1.0_DFP, 1.0_DFP, &
-  & 1.0_DFP, 1.0_DFP, 1.0_DFP, &
-  & -1.0_DFP, 1.0_DFP, 1.0_DFP, &
-  & 0.0_DFP, -1.0_DFP, -1.0_DFP, &
-  & -1.0_DFP, 0.0_DFP, -1.0_DFP, &
-  & -1.0_DFP, -1.0_DFP, 0.0_DFP, &
-  & 1.0_DFP, 0.0_DFP, -1.0_DFP, &
-  & 1.0_DFP, -1.0_DFP, 0.0_DFP, &
-  & 0.0_DFP, 1.0_DFP, -1.0_DFP, &
-  & 1.0_DFP, 1.0_DFP, 0.0_DFP, &
-  & -1.0_DFP, 1.0_DFP, 0.0_DFP, &
-  & 0.0_DFP, -1.0_DFP, 1.0_DFP, &
-  & -1.0_DFP, 0.0_DFP, 1.0_DFP, &
-  & 1.0_DFP, 0.0_DFP, 1.0_DFP, &
-  & 0.0_DFP, 1.0_DFP, 1.0_DFP], [3, 20])
+   -1.0_DFP, -1.0_DFP, -1.0_DFP, &
+   1.0_DFP, -1.0_DFP, -1.0_DFP, &
+   1.0_DFP, 1.0_DFP, -1.0_DFP, &
+   -1.0_DFP, 1.0_DFP, -1.0_DFP, &
+   -1.0_DFP, -1.0_DFP, 1.0_DFP, &
+   1.0_DFP, -1.0_DFP, 1.0_DFP, &
+   1.0_DFP, 1.0_DFP, 1.0_DFP, &
+   -1.0_DFP, 1.0_DFP, 1.0_DFP, &
+   0.0_DFP, -1.0_DFP, -1.0_DFP, &
+   -1.0_DFP, 0.0_DFP, -1.0_DFP, &
+   -1.0_DFP, -1.0_DFP, 0.0_DFP, &
+   1.0_DFP, 0.0_DFP, -1.0_DFP, &
+   1.0_DFP, -1.0_DFP, 0.0_DFP, &
+   0.0_DFP, 1.0_DFP, -1.0_DFP, &
+   1.0_DFP, 1.0_DFP, 0.0_DFP, &
+   -1.0_DFP, 1.0_DFP, 0.0_DFP, &
+   0.0_DFP, -1.0_DFP, 1.0_DFP, &
+   -1.0_DFP, 0.0_DFP, 1.0_DFP, &
+   1.0_DFP, 0.0_DFP, 1.0_DFP, &
+   0.0_DFP, 1.0_DFP, 1.0_DFP], [3, 20])
 
 CASE (Hexahedron27)
   nodecoord = RESHAPE([ &
-  & -1.0_DFP, -1.0_DFP, -1.0_DFP, &
-  & 1.0_DFP, -1.0_DFP, -1.0_DFP, &
-  & 1.0_DFP, 1.0_DFP, -1.0_DFP, &
-  & -1.0_DFP, 1.0_DFP, -1.0_DFP, &
-  & -1.0_DFP, -1.0_DFP, 1.0_DFP, &
-  & 1.0_DFP, -1.0_DFP, 1.0_DFP, &
-  & 1.0_DFP, 1.0_DFP, 1.0_DFP, &
-  & -1.0_DFP, 1.0_DFP, 1.0_DFP, &
-  & 0.0_DFP, -1.0_DFP, -1.0_DFP, &
-  & -1.0_DFP, 0.0_DFP, -1.0_DFP, &
-  & -1.0_DFP, -1.0_DFP, 0.0_DFP, &
-  & 1.0_DFP, 0.0_DFP, -1.0_DFP, &
-  & 1.0_DFP, -1.0_DFP, 0.0_DFP, &
-  & 0.0_DFP, 1.0_DFP, -1.0_DFP, &
-  & 1.0_DFP, 1.0_DFP, 0.0_DFP, &
-  & -1.0_DFP, 1.0_DFP, 0.0_DFP, &
-  & 0.0_DFP, -1.0_DFP, 1.0_DFP, &
-  & -1.0_DFP, 0.0_DFP, 1.0_DFP, &
-  & 1.0_DFP, 0.0_DFP, 1.0_DFP, &
-  & 0.0_DFP, 1.0_DFP, 1.0_DFP, &
-  & 0.0_DFP, 0.0_DFP, -1.0_DFP, &
-  & 0.0_DFP, -1.0_DFP, 0.0_DFP, &
-  & -1.0_DFP, 0.0_DFP, 0.0_DFP, &
-  & 1.0_DFP, 0.0_DFP, 0.0_DFP, &
-  & 0.0_DFP, 1.0_DFP, 0.0_DFP, &
-  & 0.0_DFP, 0.0_DFP, 1.0_DFP, &
-  & 0.0_DFP, 0.0_DFP, 0.0_DFP], [3, 27])
+   -1.0_DFP, -1.0_DFP, -1.0_DFP, &
+   1.0_DFP, -1.0_DFP, -1.0_DFP, &
+   1.0_DFP, 1.0_DFP, -1.0_DFP, &
+   -1.0_DFP, 1.0_DFP, -1.0_DFP, &
+   -1.0_DFP, -1.0_DFP, 1.0_DFP, &
+   1.0_DFP, -1.0_DFP, 1.0_DFP, &
+   1.0_DFP, 1.0_DFP, 1.0_DFP, &
+   -1.0_DFP, 1.0_DFP, 1.0_DFP, &
+   0.0_DFP, -1.0_DFP, -1.0_DFP, &
+   -1.0_DFP, 0.0_DFP, -1.0_DFP, &
+   -1.0_DFP, -1.0_DFP, 0.0_DFP, &
+   1.0_DFP, 0.0_DFP, -1.0_DFP, &
+   1.0_DFP, -1.0_DFP, 0.0_DFP, &
+   0.0_DFP, 1.0_DFP, -1.0_DFP, &
+   1.0_DFP, 1.0_DFP, 0.0_DFP, &
+   -1.0_DFP, 1.0_DFP, 0.0_DFP, &
+   0.0_DFP, -1.0_DFP, 1.0_DFP, &
+   -1.0_DFP, 0.0_DFP, 1.0_DFP, &
+   1.0_DFP, 0.0_DFP, 1.0_DFP, &
+   0.0_DFP, 1.0_DFP, 1.0_DFP, &
+   0.0_DFP, 0.0_DFP, -1.0_DFP, &
+   0.0_DFP, -1.0_DFP, 0.0_DFP, &
+   -1.0_DFP, 0.0_DFP, 0.0_DFP, &
+   1.0_DFP, 0.0_DFP, 0.0_DFP, &
+   0.0_DFP, 1.0_DFP, 0.0_DFP, &
+   0.0_DFP, 0.0_DFP, 1.0_DFP, &
+   0.0_DFP, 0.0_DFP, 0.0_DFP], [3, 27])
 END SELECT
 
 END PROCEDURE Local_nodecoord

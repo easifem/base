@@ -79,6 +79,8 @@ CASE (Triangle15b)
   ans = "Triangle15b"
 CASE (Triangle21)
   ans = "Triangle21"
+CASE (Quadrangle16)
+  ans = "Quadrangle16"
 CASE (Tetrahedron20)
   ans = "Tetrahedron20"
 CASE (Tetrahedron35)
@@ -167,6 +169,8 @@ CASE ("Triangle15b")
   ans = Triangle15b
 CASE ("Triangle21")
   ans = Triangle21
+CASE ("Quadrangle16")
+  ans = Quadrangle16
 CASE ("Line4")
   ans = Line4
 CASE ("Line5")
@@ -242,6 +246,8 @@ CASE (Triangle9)
   ans = 3
 CASE (Triangle10)
   ans = 3
+CASE (Quadrangle16)
+  ans = 3
 CASE (Triangle12)
   ans = 4
 CASE (Triangle15a)
@@ -310,7 +316,8 @@ CASE (Triangle3, &
       Triangle21, &
       Quadrangle4, &
       Quadrangle8, &
-      Quadrangle9)
+      Quadrangle9, &
+      Quadrangle16)
   ans = 2
 CASE (Line2, &
       Line3, &
@@ -348,7 +355,7 @@ CASE (Triangle3, Triangle6, &
   & Triangle15b, Triangle21)
   ans = Triangle
 CASE (Quadrangle4, Quadrangle8, &
-  & Quadrangle9)
+  & Quadrangle9, Quadrangle16)
   ans = Quadrangle
 CASE (Tetrahedron4, Tetrahedron10, &
   & Tetrahedron20, Tetrahedron35, Tetrahedron56)
@@ -397,6 +404,8 @@ CASE (Triangle6)
   ans = 6
 CASE (Quadrangle9)
   ans = 9
+CASE (Quadrangle16)
+  ans = 16
 CASE (Tetrahedron10)
   ans = 10
 CASE (Hexahedron27)
