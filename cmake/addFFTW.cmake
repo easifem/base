@@ -18,10 +18,16 @@
 
 option(USE_FFTW OFF)
 if(USE_FFTW)
+
   list(APPEND TARGET_COMPILE_DEF "-DUSE_FFTW")
-  set(FFTW_LIBRARY "$ENV{EASIFEM_EXTPKGS}/lib/libfftw3.a")
-  target_link_libraries(${PROJECT_NAME} PUBLIC ${FFTW_LIBRARY})
-  message(STATUS "FFTW_LIBRARY : ${FFTW_LIBRARY}")
+
+  find_library(FFTW_LIBRARIES NAMES fftw fftw3 REQUIRED)
+
+  target_link_libraries(${PROJECT_NAME} PUBLIC ${FFTW_LIBRARIES})
+  message(STATUS "FFTW_LIBRARY : ${FFTW_LIBRARIES}")
+
 else()
+
   message(STATUS "NOT USING FFTW LIBRARIES")
+
 endif()
