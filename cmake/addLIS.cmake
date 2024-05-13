@@ -22,9 +22,13 @@ if(USE_LIS)
   list(APPEND TARGET_COMPILE_DEF "-DUSE_LIS")
 
   find_library(LIS_LIBRARIES NAME lis REQUIRED)
+  find_path(LIS_INCLUDE_DIR NAMES lis_config.h lisf.h lis.h)
 
   target_link_libraries(${PROJECT_NAME} PUBLIC ${LIS_LIBRARIES})
   message(STATUS "LIS_LIBRARIES : ${LIS_LIBRARIES}")
+
+  target_include_directories(${PROJECT_NAME} PUBLIC ${LIS_INCLUDE_DIR})
+  message(STATUS "LIS_INCLUDE_DIR : ${LIS_INCLUDE_DIR}")
 
 else()
 
