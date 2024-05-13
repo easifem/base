@@ -142,7 +142,6 @@ CASE ("Pyra")
 
 CASE DEFAULT
   ans = 0
-
 END SELECT
 END PROCEDURE Element_Type
 
@@ -193,6 +192,7 @@ CASE (Pyramid5, Pyramid13, Pyramid14)
   ans = ElementOrder_Pyramid(elemType)
 
 CASE DEFAULT
+
   ans = 0
 
 END SELECT
@@ -239,7 +239,8 @@ CASE (Triangle3, &
       Triangle21, &
       Quadrangle4, &
       Quadrangle8, &
-      Quadrangle9)
+      Quadrangle9, &
+      Quadrangle16)
   ans = 2
 CASE (Line2, &
       Line3, &
@@ -277,7 +278,7 @@ CASE (Triangle3, Triangle6, &
   & Triangle15b, Triangle21)
   ans = Triangle
 CASE (Quadrangle4, Quadrangle8, &
-  & Quadrangle9)
+  & Quadrangle9, Quadrangle16)
   ans = Quadrangle
 CASE (Tetrahedron4, Tetrahedron10, &
   & Tetrahedron20, Tetrahedron35, Tetrahedron56)

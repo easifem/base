@@ -652,10 +652,7 @@ IF (ALL([p, q] .GE. 1_I4B)) THEN
   ! internal nodes
   IF (ALL([p, q] .GE. 2_I4B)) THEN
 
-    CALL Reallocate( &
-      & xi_in,  &
-      & MAX(p - 1, 1_I4B), &
-      & MAX(q - 1_I4B, 1_I4B))
+    CALL Reallocate(xi_in, MAX(p - 1, 1_I4B), MAX(q - 1_I4B, 1_I4B))
     CALL Reallocate(eta_in, SIZE(xi_in, 1), SIZE(xi_in, 2))
     CALL Reallocate(temp_in, 2, SIZE(xi_in))
 
@@ -678,7 +675,7 @@ IF (ALL([p, q] .GE. 1_I4B)) THEN
     xi_in = xi(ii1:ii2, jj1:jj2)
     eta_in = eta(ii1:ii2, jj1:jj2)
 
-    CALL IJ2VEFC_Quadrangle_Clockwise( &
+    CALL IJ2VEFC_Quadrangle_AntiClockwise( &
       & xi=xi_in,  &
       & eta=eta_in, &
       & temp=temp_in, &
