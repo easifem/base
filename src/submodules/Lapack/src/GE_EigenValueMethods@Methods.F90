@@ -20,10 +20,10 @@
 
 SUBMODULE(GE_EigenValueMethods) Methods
 USE BaseMethod, ONLY: ErrorMsg, LA_GEEV, stderr, tostring, &
-                      display
+                      Display
 USE AssertUtility
 IMPLICIT NONE
-COMPLEX(DFP), PARAMETER :: i_ = (0, 1)
+COMPLEX(DFPC), PARAMETER :: i_ = (0.0_DFP, 1.0_DFP)
 CONTAINS
 
 !----------------------------------------------------------------------------
@@ -57,7 +57,7 @@ At = A
 
 CALL LA_GEEV('N', 'V', n, At, lda, wr, wi, vl, ldvl, vr, ldvr, &
              work, lwork, info)
-IF (info .NE. 0) CALL geevErrorMsg(info, n)
+IF (info .NE. 0) CALL GeevErrorMsg(info, n)
 
 lam = wr + i_ * wi
 ! as DGEEV has a rather complicated way of returning the eigenvectors,
@@ -83,7 +83,7 @@ MODULE PROCEDURE zeig
 ! LAPACK variables:
 INTEGER(I4B) :: info, lda, ldvl, ldvr, lwork, n, lrwork
 REAL(DFP), ALLOCATABLE :: rwork(:)
-COMPLEX(DFP), ALLOCATABLE :: vl(:, :), vr(:, :), work(:)
+COMPLEX(DFPC), ALLOCATABLE :: vl(:, :), vr(:, :), work(:)
 
 CHARACTER(*), PARAMETER :: myName = "zeig"
 
@@ -105,7 +105,7 @@ ALLOCATE (vl(ldvl, n), vr(ldvr, n), work(lwork), rwork(lrwork))
 c = A
 CALL LA_GEEV('N', 'V', n, c, lda, lam, vl, ldvl, vr, ldvr, work, &
              lwork, rwork, info)
-IF (info .NE. 0) CALL geevErrorMsg(info, n)
+IF (info .NE. 0) CALL GeevErrorMsg(info, n)
 c = vr
 
 END PROCEDURE zeig
@@ -133,7 +133,7 @@ At = A
 
 CALL LA_GEEV('N', 'N', n, At, lda, wr, wi, vl, ldvl, vr, ldvr, &
              work, lwork, info)
-IF (info .NE. 0) CALL geevErrorMsg(info, n)
+IF (info .NE. 0) CALL GeevErrorMsg(info, n)
 
 lam = wr + i_ * wi
 END PROCEDURE deigvals
@@ -146,7 +146,9 @@ MODULE PROCEDURE zeigvals
 ! LAPACK variables:
 INTEGER :: info, lda, ldvl, ldvr, lwork, n, lrwork
 REAL(DFP), ALLOCATABLE :: rwork(:)
-COMPLEX(DFP), ALLOCATABLE :: At(:, :), vl(:, :), vr(:, :), work(:)
+COMPLEX(DFPC), ALLOCATABLE :: At(:, :), vl(:, :), vr(:, :), work(:)
+
+CHARACTER(*), PARAMETER :: myName = "zeigvals"
 
 lda = SIZE(A(:, 1))
 n = SIZE(A(1, :))
@@ -160,7 +162,7 @@ ALLOCATE (At(lda, n), vl(ldvl, n), vr(ldvr, n), &
 At = A
 CALL LA_GEEV('N', 'N', n, At, lda, lam, vl, ldvl, vr, ldvr, work, &
              lwork, rwork, info)
-IF (info .NE. 0) CALL geevErrorMsg(info, n)
+IF (info .NE. 0) CALL GeevErrorMsg(info, n)
 
 END PROCEDURE zeigvals
 
@@ -168,17 +170,17 @@ END PROCEDURE zeigvals
 !                                                                geevErrorMsg
 !----------------------------------------------------------------------------
 
-SUBROUTINE geevErrorMsg(info, n)
+SUBROUTINE GeevErrorMsg(info, n)
   INTEGER(I4B), INTENT(IN) :: info, n
 
   CALL Display(info, "LA_GEEV returned info = ")
   IF (info .LT. 0) THEN
-    CALL display("The "//tostring(-info)//"-th argument "// &
+    CALL Display("The "//tostring(-info)//"-th argument "// &
                  "had an illegal value.")
   ELSE
-    CALL display("The QR algorithm failed to compute all the")
-    CALL display("eigenvalues, and no eigenvectors have been computed;")
-    CALL display("elements "//tostring(info + 1)//":"//tostring(n)// &
+    CALL Display("The QR algorithm failed to compute all the")
+    CALL Display("eigenvalues, and no eigenvectors have been computed;")
+    CALL Display("elements "//tostring(info + 1)//":"//tostring(n)// &
                  " of WR and WI contain eigenvalues which converged.")
   END IF
   CALL ErrorMsg( &
@@ -188,6 +190,6 @@ SUBROUTINE geevErrorMsg(info, n)
     & routine="zeigvals", &
     & unitno=stderr)
   STOP
-END SUBROUTINE geevErrorMsg
+END SUBROUTINE GeevErrorMsg
 
 END SUBMODULE Methods

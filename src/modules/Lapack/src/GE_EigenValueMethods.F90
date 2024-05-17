@@ -16,7 +16,7 @@
 !
 
 MODULE GE_EigenValueMethods
-USE GlobalData, ONLY: DFP, I4B, LGT
+USE GlobalData, ONLY: DFP, DFPC, I4B, LGT
 IMPLICIT NONE
 CHARACTER(*), PARAMETER :: modName = "GE_EigenValueMethods"
 PRIVATE
@@ -35,7 +35,7 @@ PUBLIC :: GetEig
 INTERFACE GetEigVals
   MODULE SUBROUTINE deigvals(A, lam)
     REAL(DFP), INTENT(IN) :: A(:, :)
-    COMPLEX(DFP), INTENT(OUT) :: lam(:)
+    COMPLEX(DFPC), INTENT(INOUT) :: lam(:)
   END SUBROUTINE deigvals
 END INTERFACE GetEigVals
 
@@ -49,8 +49,8 @@ END INTERFACE GetEigVals
 
 INTERFACE GetEigVals
   MODULE SUBROUTINE zeigvals(A, lam)
-    COMPLEX(DFP), INTENT(IN) :: A(:, :)
-    COMPLEX(DFP), INTENT(OUT) :: lam(:)
+    COMPLEX(DFPC), INTENT(IN) :: A(:, :)
+    COMPLEX(DFPC), INTENT(INOUT) :: lam(:)
   END SUBROUTINE zeigvals
 END INTERFACE GetEigVals
 
@@ -65,10 +65,10 @@ END INTERFACE GetEigVals
 INTERFACE GetEig
   MODULE SUBROUTINE deig(A, lam, c)
     REAL(DFP), INTENT(IN) :: A(:, :)
-    COMPLEX(DFP), INTENT(OUT) :: lam(:)
+    COMPLEX(DFPC), INTENT(INOUT) :: lam(:)
     ! eigenvalues
     ! should be allocated
-    COMPLEX(DFP), INTENT(OUT) :: c(:, :)
+    COMPLEX(DFPC), INTENT(INOUT) :: c(:, :)
     ! eigenvectors
     ! c(i,j) = ith component of jth eigenvec.
     ! should be allocated
@@ -85,11 +85,11 @@ END INTERFACE GetEig
 
 INTERFACE GetEig
   MODULE SUBROUTINE zeig(A, lam, c)
-    COMPLEX(DFP), INTENT(IN) :: A(:, :)
-    COMPLEX(DFP), INTENT(OUT) :: lam(:)
+    COMPLEX(DFPC), INTENT(IN) :: A(:, :)
+    COMPLEX(DFPC), INTENT(INOUT) :: lam(:)
     ! eigenvalues
     ! should be allocated
-    COMPLEX(DFP), INTENT(OUT) :: c(:, :)
+    COMPLEX(DFPC), INTENT(INOUT) :: c(:, :)
     ! eigenvectors
     ! c(i,j) = ith component of jth eigenvec.
     ! should be allocated
