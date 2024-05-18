@@ -19,8 +19,8 @@
 ! and are modified to suit the needs of EASIFEM library
 
 SUBMODULE(GE_EigenValueMethods) Methods
-USE BaseMethod, ONLY: ErrorMsg, LA_GEEV, stderr, tostring, &
-                      Display
+USE BaseMethod, ONLY: ErrorMsg, GEEV, stderr, stdout, tostring, &
+                      Display, Input
 USE AssertUtility
 IMPLICIT NONE
 COMPLEX(DFPC), PARAMETER :: i_ = (0.0_DFP, 1.0_DFP)
@@ -32,14 +32,16 @@ CONTAINS
 
 MODULE PROCEDURE deig
 ! LAPACK variables for DGEEV:
-REAL(DFP), ALLOCATABLE :: At(:, :), vl(:, :), vr(:, :), wi(:), &
-                          work(:), wr(:)
-INTEGER(I4B) :: info, lda, ldvl, ldvr, lwork, n, i
+REAL(DFP), ALLOCATABLE :: At(:, :), vr(:, :), wi(:), wr(:)
+INTEGER(I4B) :: info, lda, ldvr, n, i
+LOGICAL(LGT) :: destroy0
 
 CHARACTER(*), PARAMETER :: myName = "deig"
 
-lda = SIZE(A(:, 1))
-n = SIZE(A(1, :))
+destroy0 = Input(default=.TRUE., option=destroy)
+lda = SIZE(A, 1)
+n = SIZE(A, 2)
+ldvr = n
 ! CALL Assert(Mat=A, s=[n, n], msg="[ARG ERROR] :: A should be square", &
 !             file=__FILE__, line=__LINE__, routine=myName)
 ! CALL Assert(n1=SIZE(lam), n2=n, msg="[ARG ERROR] :: size of lam should be "// &
@@ -48,15 +50,16 @@ n = SIZE(A(1, :))
 ! CALL Assert(mat=c, s=[n, n], msg="[ARG ERROR] :: shape of c should be"// &
 !             "the same as one of A", file=__FILE__, line=__LINE__, &
 !             routine=myName)
-ldvl = n
-ldvr = n
-lwork = 8 * n ! TODO: can this size be optimized? query first?
-ALLOCATE (At(lda, n), wr(n), wi(n), vl(ldvl, n), vr(ldvr, n), &
-          work(lwork))
-At = A
 
-CALL LA_GEEV('N', 'V', n, At, lda, wr, wi, vl, ldvl, vr, ldvr, &
-             work, lwork, info)
+ALLOCATE (wr(n), wi(n), vr(ldvr, n))
+IF (.NOT. destroy0) THEN
+  ALLOCATE (At(lda, n))
+  At = A
+  CALL GEEV(A=At, WR=wr, WI=wi, VR=vr, INFO=info)
+ELSE
+  CALL GEEV(A=A, WR=wr, WI=wi, VR=vr, INFO=info)
+END IF
+
 IF (info .NE. 0) CALL GeevErrorMsg(info, n)
 
 lam = wr + i_ * wi
@@ -81,14 +84,16 @@ END PROCEDURE deig
 
 MODULE PROCEDURE zeig
 ! LAPACK variables:
-INTEGER(I4B) :: info, lda, ldvl, ldvr, lwork, n, lrwork
+INTEGER(I4B) :: info, ldvr, n
 REAL(DFP), ALLOCATABLE :: rwork(:)
-COMPLEX(DFPC), ALLOCATABLE :: vl(:, :), vr(:, :), work(:)
+COMPLEX(DFPC), ALLOCATABLE :: vr(:, :)
+LOGICAL(LGT) :: destroy0
 
 CHARACTER(*), PARAMETER :: myName = "zeig"
 
-lda = SIZE(A(:, 1))
-n = SIZE(A(1, :))
+destroy0 = Input(default=.TRUE., option=destroy)
+n = SIZE(A, 2)
+ldvr = n
 ! CALL Assert(Mat=A, s=[n, n], msg="[ARG ERROR] :: A should be square", &
 !             file=__FILE__, line=__LINE__, routine=myName)
 ! CALL Assert(n1=SIZE(lam), n2=n, msg="[ARG ERROR] :: size of lam should be "// &
@@ -97,16 +102,16 @@ n = SIZE(A(1, :))
 ! CALL Assert(mat=c, s=[n, n], msg="[ARG ERROR] :: shape of c should be"// &
 !             "the same as one of A", file=__FILE__, line=__LINE__, &
 !             routine=myName)
-ldvl = n
-ldvr = n
-lwork = 8 * n ! TODO: can this size be optimized? query first?
-lrwork = 2 * n
-ALLOCATE (vl(ldvl, n), vr(ldvr, n), work(lwork), rwork(lrwork))
-c = A
-CALL LA_GEEV('N', 'V', n, c, lda, lam, vl, ldvl, vr, ldvr, work, &
-             lwork, rwork, info)
+ALLOCATE (vr(ldvr, n))
+IF (.NOT. destroy0) THEN
+  c = A
+  CALL GEEV(A=c, W=lam, VR=vr, INFO=info)
+  c = vr
+ELSE
+  CALL GEEV(A=A, W=lam, VR=c, INFO=info)
+END IF
+
 IF (info .NE. 0) CALL GeevErrorMsg(info, n)
-c = vr
 
 END PROCEDURE zeig
 
@@ -116,23 +121,26 @@ END PROCEDURE zeig
 
 MODULE PROCEDURE deigvals
 ! LAPACK variables for DGEEV:
-REAL(DFP), ALLOCATABLE :: At(:, :), vl(:, :), vr(:, :), wi(:), work(:), wr(:)
-INTEGER :: info, lda, ldvl, ldvr, lwork, n
+REAL(DFP), ALLOCATABLE :: At(:, :), wi(:), wr(:)
+INTEGER(I4B) :: info, lda, ldvr, n, i
+LOGICAL(LGT) :: destroy0
 
 CHARACTER(*), PARAMETER :: myName = "deigvals"
 
-lda = SIZE(A(:, 1))
-n = SIZE(A(1, :))
-! CALL assert_shape(A, [n, n], "solve", "A")
-ldvl = n
+destroy0 = Input(default=.TRUE., option=destroy)
+lda = SIZE(A, 1)
+n = SIZE(A, 2)
 ldvr = n
-lwork = 8 * n ! TODO: can this size be optimized? query first?
-ALLOCATE (At(lda, n), wr(n), wi(n), vl(ldvl, n), &
-          vr(ldvr, n), work(lwork))
-At = A
 
-CALL LA_GEEV('N', 'N', n, At, lda, wr, wi, vl, ldvl, vr, ldvr, &
-             work, lwork, info)
+ALLOCATE (wr(n), wi(n))
+IF (.NOT. destroy0) THEN
+  ALLOCATE (At(lda, n))
+  At = A
+  CALL GEEV(A=At, WR=wr, WI=wi, INFO=info)
+ELSE
+  CALL GEEV(A=A, WR=wr, WI=wi, INFO=info)
+END IF
+
 IF (info .NE. 0) CALL GeevErrorMsg(info, n)
 
 lam = wr + i_ * wi
@@ -144,24 +152,22 @@ END PROCEDURE deigvals
 
 MODULE PROCEDURE zeigvals
 ! LAPACK variables:
-INTEGER :: info, lda, ldvl, ldvr, lwork, n, lrwork
-REAL(DFP), ALLOCATABLE :: rwork(:)
-COMPLEX(DFPC), ALLOCATABLE :: At(:, :), vl(:, :), vr(:, :), work(:)
+INTEGER(I4B) :: info, lda, n
+COMPLEX(DFPC), ALLOCATABLE :: At(:, :)
+LOGICAL(LGT) :: destroy0
 
 CHARACTER(*), PARAMETER :: myName = "zeigvals"
+destroy0 = Input(default=.TRUE., option=destroy)
 
-lda = SIZE(A(:, 1))
-n = SIZE(A(1, :))
-! CALL assert_shape(A, [n, n], "solve", "A")
-ldvl = n
-ldvr = n
-lwork = 8 * n ! TODO: can this size be optimized? query first?
-lrwork = 2 * n
-ALLOCATE (At(lda, n), vl(ldvl, n), vr(ldvr, n), &
-          work(lwork), rwork(lrwork))
-At = A
-CALL LA_GEEV('N', 'N', n, At, lda, lam, vl, ldvl, vr, ldvr, work, &
-             lwork, rwork, info)
+lda = SIZE(A, 1)
+n = SIZE(A, 2)
+IF (.NOT. destroy0) THEN
+  ALLOCATE (At(lda, n))
+  At = A
+  CALL GEEV(A=At, W=lam, INFO=info)
+ELSE
+  CALL GEEV(A=A, W=lam, INFO=info)
+END IF
 IF (info .NE. 0) CALL GeevErrorMsg(info, n)
 
 END PROCEDURE zeigvals
@@ -173,15 +179,17 @@ END PROCEDURE zeigvals
 SUBROUTINE GeevErrorMsg(info, n)
   INTEGER(I4B), INTENT(IN) :: info, n
 
-  CALL Display(info, "LA_GEEV returned info = ")
+  CALL Display(info, "LA_GEEV returned info = ", unitno=stdout)
   IF (info .LT. 0) THEN
     CALL Display("The "//tostring(-info)//"-th argument "// &
-                 "had an illegal value.")
+                 "had an illegal value.", unitno=stderr)
   ELSE
-    CALL Display("The QR algorithm failed to compute all the")
-    CALL Display("eigenvalues, and no eigenvectors have been computed;")
+    CALL Display("The QR algorithm failed to compute all the", unitno=stderr)
+    CALL Display("eigenvalues, and no eigenvectors have been computed;", &
+                 unitno=stderr)
     CALL Display("elements "//tostring(info + 1)//":"//tostring(n)// &
-                 " of WR and WI contain eigenvalues which converged.")
+                 " of WR and WI contain eigenvalues which converged.", &
+                 unitno=stderr)
   END IF
   CALL ErrorMsg( &
     & msg="ERROR IN LA_GEEV", &

@@ -31,11 +31,16 @@ PUBLIC :: GetEig
 !> author: Shion Shimizu
 ! date:   2024-05-17
 ! summary:  calculate eigenvalues for real matrix
+!
+! if destroy is false matrix A is preserved
+!
 
 INTERFACE GetEigVals
-  MODULE SUBROUTINE deigvals(A, lam)
-    REAL(DFP), INTENT(IN) :: A(:, :)
+  MODULE SUBROUTINE deigvals(A, lam, destroy)
+    REAL(DFP), INTENT(INOUT) :: A(:, :)
     COMPLEX(DFPC), INTENT(INOUT) :: lam(:)
+    LOGICAL(LGT), OPTIONAL, INTENT(IN) :: destroy
+    ! default is true
   END SUBROUTINE deigvals
 END INTERFACE GetEigVals
 
@@ -46,11 +51,16 @@ END INTERFACE GetEigVals
 !> author: Shion Shimizu
 ! date:   2024-05-17
 ! summary:  calculate eigenvalues for complex matrix
+!
+! if destroy is false matrix A is preserved
+!
 
 INTERFACE GetEigVals
-  MODULE SUBROUTINE zeigvals(A, lam)
-    COMPLEX(DFPC), INTENT(IN) :: A(:, :)
+  MODULE SUBROUTINE zeigvals(A, lam, destroy)
+    COMPLEX(DFPC), INTENT(INOUT) :: A(:, :)
     COMPLEX(DFPC), INTENT(INOUT) :: lam(:)
+    LOGICAL(LGT), OPTIONAL, INTENT(IN) :: destroy
+    ! default is true
   END SUBROUTINE zeigvals
 END INTERFACE GetEigVals
 
@@ -61,10 +71,13 @@ END INTERFACE GetEigVals
 !> author: Shion Shimizu
 ! date:   2024-05-17
 ! summary:  calculate eigenvalues and eigenvectors for real matrix
+!
+! if destroy is false matrix A is preserved
+!
 
 INTERFACE GetEig
-  MODULE SUBROUTINE deig(A, lam, c)
-    REAL(DFP), INTENT(IN) :: A(:, :)
+  MODULE SUBROUTINE deig(A, lam, c, destroy)
+    REAL(DFP), INTENT(INOUT) :: A(:, :)
     COMPLEX(DFPC), INTENT(INOUT) :: lam(:)
     ! eigenvalues
     ! should be allocated
@@ -72,6 +85,8 @@ INTERFACE GetEig
     ! eigenvectors
     ! c(i,j) = ith component of jth eigenvec.
     ! should be allocated
+    LOGICAL(LGT), OPTIONAL, INTENT(IN) :: destroy
+    ! default is true
   END SUBROUTINE deig
 END INTERFACE GetEig
 
@@ -82,10 +97,13 @@ END INTERFACE GetEig
 !> author: Shion Shimizu
 ! date:   2024-05-17
 ! summary:  calculate eigenvalues and eigenvectors for complex matrix
+!
+! if destroy is false matrix A is preserved
+!
 
 INTERFACE GetEig
-  MODULE SUBROUTINE zeig(A, lam, c)
-    COMPLEX(DFPC), INTENT(IN) :: A(:, :)
+  MODULE SUBROUTINE zeig(A, lam, c, destroy)
+    COMPLEX(DFPC), INTENT(INOUT) :: A(:, :)
     COMPLEX(DFPC), INTENT(INOUT) :: lam(:)
     ! eigenvalues
     ! should be allocated
@@ -93,6 +111,8 @@ INTERFACE GetEig
     ! eigenvectors
     ! c(i,j) = ith component of jth eigenvec.
     ! should be allocated
+    LOGICAL(LGT), OPTIONAL, INTENT(IN) :: destroy
+    ! default is true
   END SUBROUTINE zeig
 END INTERFACE GetEig
 
