@@ -585,8 +585,8 @@ jj = 4
 DO iface = 1, 4
   DO ii = 1, order0 - 1
     con(2 + ii, iface) = jj + ii
-    jj = jj + 1
   END DO
+  jj = jj + order0 - 1
 END DO
 
 END PROCEDURE GetEdgeConnectivity_Quadrangle
