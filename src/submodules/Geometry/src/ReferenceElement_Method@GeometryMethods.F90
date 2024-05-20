@@ -92,16 +92,16 @@ CASE (Point)
   ans = 1
 CASE (Line, Line3, Line4, Line5, Line6)
   ans = 2
-CASE (Triangle, Triangle6, Triangle9, Triangle10, Triangle12,  &
-& Triangle15, Triangle21, Triangle15a)
+CASE (Triangle, Triangle6, Triangle9, Triangle10, Triangle12, &
+      Triangle15a, Triangle21, Triangle15b)
   ans = 3
 CASE (Quadrangle, Quadrangle8, Quadrangle9, Quadrangle16)
   ans = 4
-CASE (Tetrahedron, Tetrahedron10, Tetrahedron20, Tetrahedron35,  &
-& Tetrahedron56)
+CASE (Tetrahedron, Tetrahedron10, Tetrahedron20, Tetrahedron35, &
+      Tetrahedron56)
   ans = 5
-CASE (Hexahedron, Hexahedron27, Hexahedron20, Hexahedron64,  &
-& Hexahedron125)
+CASE (Hexahedron, Hexahedron27, Hexahedron20, Hexahedron64, &
+      Hexahedron125)
   ans = 6
 CASE (Prism, Prism15, Prism18)
   ans = 7
@@ -499,7 +499,7 @@ CASE (Point, Line, Line3, Line4, Line5, Line6)
   ans = TotalEntities_Line(elemType)
 
 CASE (Triangle, Triangle6, Triangle9, Triangle10, Triangle12,  &
-  & Triangle15, Triangle21, Triangle15a)
+  & Triangle15a, Triangle21, Triangle15b)
 
   ans = TotalEntities_Triangle(elemType)
 
