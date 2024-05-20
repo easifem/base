@@ -124,104 +124,107 @@ END PROCEDURE GetElementIndex
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE RefElemGetGeoParam1
+INTEGER(I4B) :: topo
+
+topo = refelem_ElementTopology1(elemType)
+
 IF (PRESENT(tCells)) tCells = 1_I4B
 
-SELECT CASE (elemType)
-CASE (Point, Line2, Line3, Line4, Line5, Line6)
+SELECT CASE (topo)
+
+CASE (Point, Line)
 
   IF (PRESENT(tNodes)) tNodes = TotalNodesInElement_Line(elemType)
   IF (PRESENT(tEdges)) tEdges = 0_I4B
   IF (PRESENT(tFaces)) tFaces = 2_I4B
 
   IF (PRESENT(edgeCon)) CALL GetEdgeConnectivity_Line(con=edgeCon, &
-    & opt=edgeOpt, order=order)
+                                                     opt=edgeOpt, order=order)
 
   IF (PRESENT(faceCon)) CALL GetFaceConnectivity_Line(con=faceCon, &
-    & opt=faceOpt, order=order)
+                                                     opt=faceOpt, order=order)
 
   CALL GetFaceElemType_Line(faceElemType=faceElemType, &
                             tFaceNodes=tFaceNodes, elemType=elemType)
 
-CASE (Triangle3, Triangle6, Triangle9, Triangle10, &
-  & Triangle12, Triangle15a, Triangle15b, Triangle21)
+CASE (Triangle)
 
   IF (PRESENT(tNodes)) tNodes = TotalNodesInElement_Triangle(elemType)
   IF (PRESENT(tEdges)) tEdges = 3_I4B
   IF (PRESENT(tFaces)) tFaces = 3_I4B
 
   IF (PRESENT(edgeCon)) CALL GetEdgeConnectivity_Triangle(con=edgeCon, &
-    & opt=edgeOpt, order=order)
+                                                     opt=edgeOpt, order=order)
 
   IF (PRESENT(faceCon)) CALL GetFaceConnectivity_Triangle(con=faceCon, &
-    & opt=faceOpt, order=order)
+                                                     opt=faceOpt, order=order)
 
   CALL GetFaceElemType_Triangle(faceElemType=faceElemType, &
                                 tFaceNodes=tFaceNodes, elemType=elemType)
 
-CASE (Quadrangle4, Quadrangle8, Quadrangle9, Quadrangle16)
+CASE (Quadrangle)
 
   IF (PRESENT(tNodes)) tNodes = TotalNodesInElement_Quadrangle(elemType)
   IF (PRESENT(tEdges)) tEdges = 4_I4B
   IF (PRESENT(tFaces)) tFaces = 4_I4B
 
   IF (PRESENT(edgeCon)) CALL GetEdgeConnectivity_Quadrangle(con=edgeCon, &
-    & opt=edgeOpt, order=order)
+                                                     opt=edgeOpt, order=order)
 
   IF (PRESENT(faceCon)) CALL GetFaceConnectivity_Quadrangle(con=faceCon, &
-    & opt=faceOpt, order=order)
+                                                     opt=faceOpt, order=order)
 
   CALL GetFaceElemType_Quadrangle(faceElemType=faceElemType, &
                                   tFaceNodes=tFaceNodes, elemType=elemType)
 
-CASE (Tetrahedron4, Tetrahedron10, Tetrahedron20, Tetrahedron35, &
-  & Tetrahedron56)
+CASE (Tetrahedron)
 
   IF (PRESENT(tNodes)) tNodes = TotalNodesInElement_Tetrahedron(elemType)
   IF (PRESENT(tEdges)) tEdges = 6_I4B
   IF (PRESENT(tFaces)) tFaces = 4_I4B
   IF (PRESENT(edgeCon)) CALL GetEdgeConnectivity_Tetrahedron(con=edgeCon, &
-    & opt=edgeOpt, order=order)
+                                                     opt=edgeOpt, order=order)
   IF (PRESENT(faceCon)) CALL GetFaceConnectivity_Tetrahedron(con=faceCon, &
-    & opt=faceOpt, order=order)
+                                                     opt=faceOpt, order=order)
 
   CALL GetFaceElemType_Tetrahedron(faceElemType=faceElemType, &
                                    tFaceNodes=tFaceNodes, elemType=elemType)
 
-CASE (Hexahedron8, Hexahedron20, Hexahedron27, Hexahedron64, Hexahedron125)
+CASE (Hexahedron)
 
   IF (PRESENT(tNodes)) tNodes = TotalNodesInElement_Hexahedron(elemType)
   IF (PRESENT(tEdges)) tEdges = 12_I4B
   IF (PRESENT(tFaces)) tFaces = 6_I4B
-  IF (PRESENT(edgeCon)) CALL GetEdgeConnectivity_Hexahedron(con=edgeCon,  &
-    & opt=edgeOpt, order=order)
-  IF (PRESENT(faceCon)) CALL GetFaceConnectivity_Hexahedron(con=faceCon,  &
-    & opt=faceOpt, order=order)
+  IF (PRESENT(edgeCon)) CALL GetEdgeConnectivity_Hexahedron(con=edgeCon, &
+                                                     opt=edgeOpt, order=order)
+  IF (PRESENT(faceCon)) CALL GetFaceConnectivity_Hexahedron(con=faceCon, &
+                                                     opt=faceOpt, order=order)
 
   CALL GetFaceElemType_Hexahedron(faceElemType=faceElemType, &
                                   tFaceNodes=tFaceNodes, elemType=elemType)
 
-CASE (Prism6, Prism15, Prism18)
+CASE (Prism)
 
   IF (PRESENT(tNodes)) tNodes = TotalNodesInElement_Prism(elemType)
   IF (PRESENT(tEdges)) tEdges = 9_I4B
   IF (PRESENT(tFaces)) tFaces = 5_I4B
-  IF (PRESENT(edgeCon)) CALL GetEdgeConnectivity_Prism(con=edgeCon,  &
-    & opt=edgeOpt, order=order)
-  IF (PRESENT(faceCon)) CALL GetFaceConnectivity_Prism(con=faceCon,  &
-    & opt=faceOpt, order=order)
+  IF (PRESENT(edgeCon)) CALL GetEdgeConnectivity_Prism(con=edgeCon, &
+                                                     opt=edgeOpt, order=order)
+  IF (PRESENT(faceCon)) CALL GetFaceConnectivity_Prism(con=faceCon, &
+                                                     opt=faceOpt, order=order)
 
   CALL GetFaceElemType_Prism(faceElemType=faceElemType, &
                              tFaceNodes=tFaceNodes, elemType=elemType)
 
-CASE (Pyramid5, Pyramid13, Pyramid14)
+CASE (Pyramid)
 
   IF (PRESENT(tNodes)) tNodes = TotalNodesInElement_Pyramid(elemType)
   IF (PRESENT(tEdges)) tEdges = 8_I4B
   IF (PRESENT(tFaces)) tFaces = 5_I4B
-  IF (PRESENT(edgeCon)) CALL GetEdgeConnectivity_Pyramid(con=edgeCon,  &
-    & opt=edgeOpt, order=order)
-  IF (PRESENT(faceCon)) CALL GetFaceConnectivity_Pyramid(con=faceCon,  &
-    & opt=faceOpt, order=order)
+  IF (PRESENT(edgeCon)) CALL GetEdgeConnectivity_Pyramid(con=edgeCon, &
+                                                     opt=edgeOpt, order=order)
+  IF (PRESENT(faceCon)) CALL GetFaceConnectivity_Pyramid(con=faceCon, &
+                                                     opt=faceOpt, order=order)
 
   CALL GetFaceElemType_Pyramid(faceElemType=faceElemType, &
                                tFaceNodes=tFaceNodes, elemType=elemType)
