@@ -82,6 +82,22 @@ ans = (order - 1)**2 * (order - 2) / 2_I4B
 END PROCEDURE LagrangeInDOF_Prism
 
 !----------------------------------------------------------------------------
+!                                                        GetTotalDOF_Prism
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE GetTotalDOF_Prism
+ans = (order + 1)**2 * (order + 2) / 2_I4B
+END PROCEDURE GetTotalDOF_Prism
+
+!----------------------------------------------------------------------------
+!                                                    GetTotalInDOF_Prism
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE GetTotalInDOF_Prism
+ans = (order - 1)**2 * (order - 2) / 2_I4B
+END PROCEDURE GetTotalInDOF_Prism
+
+!----------------------------------------------------------------------------
 !                                              EquidistancePoint_Prism
 !----------------------------------------------------------------------------
 

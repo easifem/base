@@ -53,6 +53,52 @@ PUBLIC :: RefElemDomain_Tetrahedron
 PUBLIC :: LagrangeGradientEvalAll_Tetrahedron
 PUBLIC :: HeirarchicalBasisGradient_Tetrahedron
 PUBLIC :: OrthogonalBasisGradient_Tetrahedron
+PUBLIC :: GetTotalDOF_Tetrahedron
+PUBLIC :: GetTotalInDOF_Tetrahedron
+
+!----------------------------------------------------------------------------
+!                                                      GetTotalDOF_Tetrahedron
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 14 Aug 2022
+! summary: Returns the total number of degree of freedom for a
+! lagrange polynomial on Tetrahedron
+
+INTERFACE
+  MODULE PURE FUNCTION GetTotalDOF_Tetrahedron(order, baseContinuity, &
+                                               baseInterpolation) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: order
+    CHARACTER(*), INTENT(IN) :: baseContinuity
+    CHARACTER(*), INTENT(IN) :: baseInterpolation
+    INTEGER(I4B) :: ans
+  END FUNCTION GetTotalDOF_Tetrahedron
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                  LagrangeInDOF_Tetrahedron
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 14 Aug 2022
+! summary:         Returns the total number of degree of freedom for a
+! lagrange polynomial on an edge of a Tetrahedron
+!
+!# Introduction
+!
+!- Returns the total number of degree of freedom for a
+! lagrange polynomial on an edge of a Tetrahedron
+!- These dof are strictly inside the Tetrahedron
+
+INTERFACE
+  MODULE PURE FUNCTION GetTotalInDOF_Tetrahedron(order, baseContinuity, &
+                                                baseInterpolation) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: order
+    CHARACTER(*), INTENT(IN) :: baseContinuity
+    CHARACTER(*), INTENT(IN) :: baseInterpolation
+    INTEGER(I4B) :: ans
+  END FUNCTION GetTotalInDOF_Tetrahedron
+END INTERFACE
 
 !----------------------------------------------------------------------------
 !                                                 RefElemDomain_Tetrahedron

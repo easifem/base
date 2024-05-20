@@ -107,6 +107,22 @@ END DO
 END PROCEDURE LagrangeDegree_Quadrangle2
 
 !----------------------------------------------------------------------------
+!                                                     GetTotalDOF_Quadrangle
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE GetTotalDOF_Quadrangle
+ans = (order + 1)**2
+END PROCEDURE GetTotalDOF_Quadrangle
+
+!----------------------------------------------------------------------------
+!                                                   GetTotalInDOF_Quadrangle
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE GetTotalInDOF_Quadrangle
+ans = (order - 1)**2
+END PROCEDURE GetTotalInDOF_Quadrangle
+
+!----------------------------------------------------------------------------
 !                                                     LagrangeDOF_Quadrangle
 !----------------------------------------------------------------------------
 

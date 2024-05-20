@@ -197,6 +197,22 @@ ans = (order + 1) * (order + 2) * (order + 3) / 6_I4B
 END PROCEDURE LagrangeDOF_Tetrahedron
 
 !----------------------------------------------------------------------------
+!                                                    GetTotalDOF_Tetrahedron
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE GetTotalDOF_Tetrahedron
+ans = (order + 1) * (order + 2) * (order + 3) / 6_I4B
+END PROCEDURE GetTotalDOF_Tetrahedron
+
+!----------------------------------------------------------------------------
+!                                                  GetTotalInDOF_Tetrahedron
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE GetTotalInDOF_Tetrahedron
+ans = (order - 1) * (order - 2) * (order - 3) / 6_I4B
+END PROCEDURE GetTotalInDOF_Tetrahedron
+
+!----------------------------------------------------------------------------
 !                                                  LagrangeInDOF_Tetrahedron
 !----------------------------------------------------------------------------
 

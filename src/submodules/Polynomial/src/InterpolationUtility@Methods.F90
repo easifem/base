@@ -16,6 +16,25 @@
 !
 
 SUBMODULE(InterpolationUtility) Methods
+USE GlobalData, ONLY: Point, Line, Triangle, Quadrangle, &
+                      Tetrahedron, Hexahedron, Prism, Pyramid
+
+USE ReferenceElement_Method, ONLY: ElementTopology
+USE LineInterpolationUtility, ONLY: GetTotalDOF_Line, &
+                                    GetTotalInDOF_Line
+USE TriangleInterpolationUtility, ONLY: GetTotalDOF_Triangle, &
+                                        GetTotalInDOF_Triangle
+USE QuadrangleInterpolationUtility, ONLY: GetTotalDOF_Quadrangle, &
+                                          GetTotalInDOF_Quadrangle
+USE TetrahedronInterpolationUtility, ONLY: GetTotalDOF_Tetrahedron, &
+                                           GetTotalInDOF_Tetrahedron
+USE HexahedronInterpolationUtility, ONLY: GetTotalDOF_Hexahedron, &
+                                          GetTotalInDOF_Hexahedron
+USE PrismInterpolationUtility, ONLY: GetTotalDOF_Prism, &
+                                     GetTotalInDOF_Prism
+USE PyramidInterpolationUtility, ONLY: GetTotalDOF_Pyramid, &
+                                       GetTotalInDOF_Pyramid
+
 IMPLICIT NONE
 CONTAINS
 
@@ -24,14 +43,11 @@ CONTAINS
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE VandermondeMatrix_Real32
-  INTEGER( I4B ) :: ii
-  !!
-  ans(:,1) = 1.0_Real32
-  !!
-  DO ii = 2, order+1
-    ans(:,ii) = x**(ii-1)
-  END DO
-  !!
+INTEGER(I4B) :: ii
+ans(:, 1) = 1.0_REAL32
+DO ii = 2, order + 1
+  ans(:, ii) = x**(ii - 1)
+END DO
 END PROCEDURE VandermondeMatrix_Real32
 
 !----------------------------------------------------------------------------
@@ -39,15 +55,95 @@ END PROCEDURE VandermondeMatrix_Real32
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE VandermondeMatrix_Real64
-  INTEGER( I4B ) :: ii
-  !!
-  ans(:,1) = 1.0_Real64
-  !!
-  DO ii = 2, order+1
-    ans(:,ii) = x**(ii-1)
-  END DO
-  !!
+INTEGER(I4B) :: ii
+ans(:, 1) = 1.0_REAL64
+DO ii = 2, order + 1
+  ans(:, ii) = x**(ii - 1)
+END DO
 END PROCEDURE VandermondeMatrix_Real64
 
+!----------------------------------------------------------------------------
+!                                                         VandermondeMatrix
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE GetTotalDOF1
+INTEGER(I4B) :: topo
+
+topo = ElementTopology(elemType)
+
+SELECT CASE (topo)
+CASE (Point)
+  ans = 0
+CASE (Line)
+  ans = GetTotalDOF_Line(order=order, baseContinuity=baseContinuity, &
+                         baseInterpolation=baseInterpolation)
+
+CASE (Triangle)
+  ans = GetTotalDOF_Triangle(order=order, baseContinuity=baseContinuity, &
+                             baseInterpolation=baseInterpolation)
+
+CASE (Quadrangle)
+  ans = GetTotalDOF_Quadrangle(order=order, baseContinuity=baseContinuity, &
+                               baseInterpolation=baseInterpolation)
+
+CASE (Tetrahedron)
+  ans = GetTotalDOF_Tetrahedron(order=order, baseContinuity=baseContinuity, &
+                                baseInterpolation=baseInterpolation)
+CASE (Hexahedron)
+  ans = GetTotalDOF_Hexahedron(order=order, baseContinuity=baseContinuity, &
+                               baseInterpolation=baseInterpolation)
+
+CASE (Prism)
+  ans = GetTotalDOF_Prism(order=order, baseContinuity=baseContinuity, &
+                          baseInterpolation=baseInterpolation)
+
+CASE (Pyramid)
+  ans = GetTotalDOF_Pyramid(order=order, baseContinuity=baseContinuity, &
+                            baseInterpolation=baseInterpolation)
+END SELECT
+
+END PROCEDURE GetTotalDOF1
+
+!----------------------------------------------------------------------------
+!                                                         VandermondeMatrix
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE GetTotalInDOF1
+INTEGER(I4B) :: topo
+
+topo = ElementTopology(elemType)
+
+SELECT CASE (topo)
+CASE (Point)
+  ans = 0
+CASE (Line)
+  ans = GetTotalInDOF_Line(order=order, baseContinuity=baseContinuity, &
+                           baseInterpolation=baseInterpolation)
+
+CASE (Triangle)
+  ans = GetTotalInDOF_Triangle(order=order, baseContinuity=baseContinuity, &
+                               baseInterpolation=baseInterpolation)
+
+CASE (Quadrangle)
+  ans = GetTotalInDOF_Quadrangle(order=order, baseContinuity=baseContinuity, &
+                                 baseInterpolation=baseInterpolation)
+
+CASE (Tetrahedron)
+ ans = GetTotalInDOF_Tetrahedron(order=order, baseContinuity=baseContinuity, &
+                                  baseInterpolation=baseInterpolation)
+CASE (Hexahedron)
+  ans = GetTotalInDOF_Hexahedron(order=order, baseContinuity=baseContinuity, &
+                                 baseInterpolation=baseInterpolation)
+
+CASE (Prism)
+  ans = GetTotalInDOF_Prism(order=order, baseContinuity=baseContinuity, &
+                            baseInterpolation=baseInterpolation)
+
+CASE (Pyramid)
+  ans = GetTotalInDOF_Pyramid(order=order, baseContinuity=baseContinuity, &
+                              baseInterpolation=baseInterpolation)
+END SELECT
+
+END PROCEDURE GetTotalInDOF1
 
 END SUBMODULE Methods

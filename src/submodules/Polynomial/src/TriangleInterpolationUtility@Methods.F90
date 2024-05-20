@@ -16,10 +16,24 @@
 
 SUBMODULE(TriangleInterpolationUtility) Methods
 USE BaseMethod
-USE QuadraturePoint_Triangle_Solin, ONLY: QuadraturePointTriangleSolin, &
-                                          QuadratureNumberTriangleSolin
 IMPLICIT NONE
 CONTAINS
+
+!----------------------------------------------------------------------------
+!                                                      GetTotalDOF_Triangle
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE GetTotalDOF_Triangle
+ans = (order + 1) * (order + 2) / 2_I4B
+END PROCEDURE GetTotalDOF_Triangle
+
+!----------------------------------------------------------------------------
+!                                                    LagrangeInDOF_Triangle
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE GetTotalInDOF_Triangle
+ans = (order - 1) * (order - 2) / 2_I4B
+END PROCEDURE GetTotalInDOF_Triangle
 
 !----------------------------------------------------------------------------
 !                                                   RefElemDomain_Triangle
