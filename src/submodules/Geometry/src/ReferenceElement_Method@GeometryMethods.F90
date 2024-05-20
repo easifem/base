@@ -359,42 +359,43 @@ END PROCEDURE GetFaceConnectivity1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE GetFaceElemType1
-SELECT CASE (elemType)
+INTEGER(I4B) :: topo
 
-CASE (Line2, Line3, Line4, Line5)
+topo = refelem_ElementTopology1(elemType)
+
+SELECT CASE (topo)
+
+CASE (Line)
 
   CALL GetFaceElemType_Line(faceElemType=faceElemType, opt=opt,  &
     & tFaceNodes=tFaceNodes, elemType=elemType)
 
-CASE (Triangle3, Triangle6, Triangle9, Triangle10, &
-  & Triangle12, Triangle15a, Triangle15b, Triangle21)
+CASE (Triangle)
 
   CALL GetFaceElemType_Triangle(faceElemType=faceElemType, opt=opt,  &
     & tFaceNodes=tFaceNodes, elemType=elemType)
 
-CASE (Quadrangle4, Quadrangle8, Quadrangle9, Quadrangle16)
+CASE (Quadrangle)
 
   CALL GetFaceElemType_Quadrangle(faceElemType=faceElemType, opt=opt,  &
     & tFaceNodes=tFaceNodes, elemType=elemType)
 
-CASE (Tetrahedron4, Tetrahedron10, Tetrahedron20, Tetrahedron35, &
-  & Tetrahedron56)
+CASE (Tetrahedron)
 
   CALL GetFaceElemType_Tetrahedron(faceElemType=faceElemType, opt=opt,  &
     & tFaceNodes=tFaceNodes, elemType=elemType)
 
-CASE (Hexahedron8, Hexahedron20, Hexahedron27, Hexahedron64,  &
-  & Hexahedron125)
+CASE (Hexahedron)
 
   CALL GetFaceElemType_Hexahedron(faceElemType=faceElemType, opt=opt,  &
     & tFaceNodes=tFaceNodes, elemType=elemType)
 
-CASE (Prism6, Prism15, Prism18)
+CASE (Prism)
 
   CALL GetFaceElemType_Prism(faceElemType=faceElemType, opt=opt,  &
     & tFaceNodes=tFaceNodes, elemType=elemType)
 
-CASE (Pyramid5, Pyramid13, Pyramid14)
+CASE (Pyramid)
 
   CALL GetFaceElemType_Pyramid(faceElemType=faceElemType, opt=opt,  &
     & tFaceNodes=tFaceNodes, elemType=elemType)
@@ -507,31 +508,32 @@ END PROCEDURE contains_point
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE refelem_TotalEntities
-SELECT CASE (elemType)
-CASE (Point, Line, Line3, Line4, Line5, Line6)
+INTEGER(I4B) :: topo
+
+topo = refelem_ElementTopology1(elemType)
+
+SELECT CASE (topo)
+CASE (Point, Line)
 
   ans = TotalEntities_Line(elemType)
 
-CASE (Triangle, Triangle6, Triangle9, Triangle10, Triangle12,  &
-  & Triangle15a, Triangle21, Triangle15b)
+CASE (Triangle)
 
   ans = TotalEntities_Triangle(elemType)
 
-CASE (Quadrangle, Quadrangle8, Quadrangle9, Quadrangle16)
+CASE (Quadrangle)
   ans = TotalEntities_Quadrangle(elemType)
 
-CASE (Tetrahedron, Tetrahedron10, Tetrahedron20, Tetrahedron35,  &
-  & Tetrahedron56)
+CASE (Tetrahedron)
   ans = TotalEntities_Tetrahedron(elemType)
 
-CASE (Hexahedron, Hexahedron27, Hexahedron20, Hexahedron64,  &
-  & Hexahedron125)
+CASE (Hexahedron)
   ans = TotalEntities_Hexahedron(elemType)
 
-CASE (Prism, Prism15, Prism18)
+CASE (Prism)
   ans = TotalEntities_Prism(elemType)
 
-CASE (Pyramid, Pyramid13, Pyramid14)
+CASE (Pyramid)
   ans = TotalEntities_Pyramid(elemType)
 
 END SELECT
