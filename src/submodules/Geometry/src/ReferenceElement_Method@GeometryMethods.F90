@@ -87,26 +87,35 @@ CONTAINS
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE GetElementIndex
-SELECT CASE (elemType)
+INTEGER(I4B) :: topo
+
+topo = refelem_ElementTopology1(elemenType)
+
+SELECT CASE (topo)
 CASE (Point)
   ans = 1
-CASE (Line, Line3, Line4, Line5, Line6)
+
+CASE (Line)
   ans = 2
-CASE (Triangle, Triangle6, Triangle9, Triangle10, Triangle12, &
-      Triangle15a, Triangle21, Triangle15b)
+
+CASE (Triangle)
   ans = 3
-CASE (Quadrangle, Quadrangle8, Quadrangle9, Quadrangle16)
+
+CASE (Quadrangle)
   ans = 4
-CASE (Tetrahedron, Tetrahedron10, Tetrahedron20, Tetrahedron35, &
-      Tetrahedron56)
+
+CASE (Tetrahedron)
   ans = 5
-CASE (Hexahedron, Hexahedron27, Hexahedron20, Hexahedron64, &
-      Hexahedron125)
+
+CASE (Hexahedron)
   ans = 6
-CASE (Prism, Prism15, Prism18)
+
+CASE (Prism)
   ans = 7
-CASE (Pyramid, Pyramid13, Pyramid14)
+
+CASE (Pyramid)
   ans = 8
+
 END SELECT
 END PROCEDURE GetElementIndex
 
