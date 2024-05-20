@@ -20,6 +20,8 @@ USE, INTRINSIC :: ISO_FORTRAN_ENV, ONLY: INPUT_UNIT, &
 IMPLICIT NONE
 PUBLIC
 
+#include "./ElementNames.txt"
+
 SAVE
 INTEGER, PARAMETER :: stdin = INPUT_UNIT
 INTEGER, PARAMETER :: stdout = OUTPUT_UNIT
@@ -357,19 +359,29 @@ INTEGER(I4B), PARAMETER :: ChebyshevLIP = Chebyshev
 !!
 !! Types of Element domain
 !!
-INTEGER(I4B), PARAMETER :: Line = 1
+INTEGER(I4B), PARAMETER :: Line = MSH_LIN_2
+! order 1
+INTEGER(I4B), PARAMETER :: Line2 = Line
 !! order 1
-INTEGER(I4B), PARAMETER :: Line2 = 1
-!! order 1
-INTEGER(I4B), PARAMETER :: Line3 = 8
+INTEGER(I4B), PARAMETER :: Line3 = MSH_LIN_3
 !! order 2
-INTEGER(I4B), PARAMETER :: Line4 = 26
+INTEGER(I4B), PARAMETER :: Line4 = MSH_LIN_4
 !! order 3
-INTEGER(I4B), PARAMETER :: Line5 = 27
+INTEGER(I4B), PARAMETER :: Line5 = MSH_LIN_5
 ! order 4
-INTEGER(I4B), PARAMETER :: Line6 = 28
+INTEGER(I4B), PARAMETER :: Line6 = MSH_LIN_6
 !! order 5
-!! Line7 onwards numbering starts from 2801, 2802, and so on...
+INTEGER(I4B), PARAMETER :: Line7 = MSH_LIN_7
+!! order 6
+INTEGER(I4B), PARAMETER :: Line8 = MSH_LIN_8
+!! order 7
+INTEGER(I4B), PARAMETER :: Line9 = MSH_LIN_9
+!! order 8
+INTEGER(I4B), PARAMETER :: Line10 = MSH_LIN_10
+!! order 9
+INTEGER(I4B), PARAMETER :: Line11 = MSH_LIN_11
+!! order 10
+
 INTEGER(I4B), PARAMETER :: Triangle = 2
 INTEGER(I4B), PARAMETER :: Triangle3 = 2
 INTEGER(I4B), PARAMETER :: Triangle6 = 9
