@@ -318,35 +318,36 @@ END PROCEDURE GetEdgeConnectivity1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE GetFaceConnectivity1
-SELECT CASE (elemType)
+INTEGER(I4B) :: topo
 
-CASE (Line2, Line3, Line4, Line5)
+topo = refelem_ElementTopology1(elemType)
+
+SELECT CASE (topo)
+
+CASE (Line)
   CALL GetFaceConnectivity_Line(con=con, opt=opt, order=order)
 
-CASE (Triangle3, Triangle6, Triangle9, Triangle10, &
-  & Triangle12, Triangle15a, Triangle15b, Triangle21)
+CASE (Triangle)
 
   CALL GetFaceConnectivity_Triangle(con=con, opt=opt, order=order)
 
-CASE (Quadrangle4, Quadrangle8, Quadrangle9, Quadrangle16)
+CASE (Quadrangle)
 
   CALL GetFaceConnectivity_Quadrangle(con=con, opt=opt, order=order)
 
-CASE (Tetrahedron4, Tetrahedron10, Tetrahedron20, Tetrahedron35, &
-  & Tetrahedron56)
+CASE (Tetrahedron)
 
   CALL GetFaceConnectivity_Tetrahedron(con=con, opt=opt, order=order)
 
-CASE (Hexahedron8, Hexahedron20, Hexahedron27, Hexahedron64,  &
-  & Hexahedron125)
+CASE (Hexahedron)
 
   CALL GetFaceConnectivity_Hexahedron(con=con, opt=opt, order=order)
 
-CASE (Prism6, Prism15, Prism18)
+CASE (Prism)
 
   CALL GetFaceConnectivity_Prism(con=con, opt=opt, order=order)
 
-CASE (Pyramid5, Pyramid13, Pyramid14)
+CASE (Pyramid)
 
   CALL GetFaceConnectivity_Pyramid(con=con, opt=opt, order=order)
 
