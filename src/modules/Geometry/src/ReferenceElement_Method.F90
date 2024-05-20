@@ -76,9 +76,9 @@ PUBLIC :: GetElementIndex
 PUBLIC :: Reallocate
 PUBLIC :: RefTopoReallocate
 
-INTEGER(I4B), PARAMETER, PUBLIC :: REFELEM_MAX_FACES = 6
-INTEGER(I4B), PARAMETER, PUBLIC :: REFELEM_MAX_EDGES = 12
-INTEGER(I4B), PARAMETER, PUBLIC :: REFELEM_MAX_POINTS = 8
+INTEGER(I4B), PARAMETER, PUBLIC :: PARAM_REFELEM_MAX_FACES = 6
+INTEGER(I4B), PARAMETER, PUBLIC :: PARAM_REFELEM_MAX_EDGES = 12
+INTEGER(I4B), PARAMETER, PUBLIC :: PARAM_REFELEM_MAX_POINTS = 8
 
 !----------------------------------------------------------------------------
 !                                                      ReferenceElementInfo_
@@ -104,9 +104,9 @@ TYPE :: ReferenceElementInfo_
     & Triangle,  &
     & Quadrangle,  &
     & Tetrahedron, Hexahedron, Prism, Pyramid]
-  INTEGER(I4B) :: maxFaces = REFELEM_MAX_FACES
-  INTEGER(I4B) :: maxEdges = REFELEM_MAX_EDGES
-  INTEGER(I4B) :: maxPoints = REFELEM_MAX_POINTS
+  INTEGER(I4B) :: maxFaces = PARAM_REFELEM_MAX_FACES
+  INTEGER(I4B) :: maxEdges = PARAM_REFELEM_MAX_EDGES
+  INTEGER(I4B) :: maxPoints = PARAM_REFELEM_MAX_POINTS
   INTEGER(I4B) :: tCells(8) = [0, 0, 0, 0, 1, 1, 1, 1]
   !! Here cell is a topology for which xidim = 3
   INTEGER(I4B) :: tFaces(8) = [0, 0, 1, 1, 4, 6, 5, 5]
