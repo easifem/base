@@ -16,7 +16,95 @@
 !
 
 SUBMODULE(LagrangePolynomialUtility) Methods
-USE BaseMethod
+USE GlobalData, ONLY: stdout, stderr, Point, Line, Triangle, Quadrangle, &
+                      Tetrahedron, Hexahedron, Prism, Pyramid
+
+USE ErrorHandling, ONLY: Errormsg
+
+USE ReferenceElement_Method, ONLY: ElementTopology
+
+USE ReferenceLine_Method, ONLY: RefCoord_Line
+USE ReferenceTriangle_Method, ONLY: RefCoord_Triangle
+USE ReferenceQuadrangle_Method, ONLY: RefCoord_Quadrangle
+USE ReferenceTetrahedron_Method, ONLY: RefCoord_Tetrahedron
+USE ReferenceHexahedron_Method, ONLY: RefCoord_Hexahedron
+USE ReferencePrism_Method, ONLY: RefCoord_Prism
+USE ReferencePyramid_Method, ONLY: RefCoord_Pyramid
+
+USE LineInterpolationUtility, ONLY: RefElemDomain_Line, &
+                                    LagrangeDOF_Line, &
+                                    LagrangeInDOF_Line, &
+                                    LagrangeDegree_Line, &
+                                    EquidistancePoint_Line, &
+                                    InterpolationPoint_Line, &
+                                    LagrangeCoeff_Line, &
+                                    LagrangeEvalAll_Line, &
+                                    LagrangeGradientEvalAll_Line
+
+USE TriangleInterpolationUtility, ONLY: RefElemDomain_Triangle, &
+                                        LagrangeDOF_Triangle, &
+                                        LagrangeInDOF_Triangle, &
+                                        LagrangeDegree_Triangle, &
+                                        EquidistancePoint_Triangle, &
+                                        InterpolationPoint_Triangle, &
+                                        LagrangeCoeff_Triangle, &
+                                        LagrangeEvalAll_Triangle, &
+                                        LagrangeGradientEvalAll_Triangle
+
+USE QuadrangleInterpolationUtility, ONLY: RefElemDomain_Quadrangle, &
+                                          LagrangeDOF_Quadrangle, &
+                                          LagrangeInDOF_Quadrangle, &
+                                          LagrangeDegree_Quadrangle, &
+                                          EquidistancePoint_Quadrangle, &
+                                          InterpolationPoint_Quadrangle, &
+                                          LagrangeCoeff_Quadrangle, &
+                                          LagrangeEvalAll_Quadrangle, &
+                                          LagrangeGradientEvalAll_Quadrangle
+
+USE TetrahedronInterpolationUtility, ONLY: RefElemDomain_Tetrahedron, &
+                                           LagrangeDOF_Tetrahedron, &
+                                           LagrangeInDOF_Tetrahedron, &
+                                           LagrangeDegree_Tetrahedron, &
+                                           EquidistancePoint_Tetrahedron, &
+                                           InterpolationPoint_Tetrahedron, &
+                                           LagrangeCoeff_Tetrahedron, &
+                                           LagrangeEvalAll_Tetrahedron, &
+                                           LagrangeGradientEvalAll_Tetrahedron
+
+USE HexahedronInterpolationUtility, ONLY: RefElemDomain_Hexahedron, &
+                                          LagrangeDOF_Hexahedron, &
+                                          LagrangeInDOF_Hexahedron, &
+                                          LagrangeDegree_Hexahedron, &
+                                          EquidistancePoint_Hexahedron, &
+                                          InterpolationPoint_Hexahedron, &
+                                          LagrangeCoeff_Hexahedron, &
+                                          LagrangeEvalAll_Hexahedron, &
+                                          LagrangeGradientEvalAll_Hexahedron
+
+USE PrismInterpolationUtility, ONLY: RefElemDomain_Prism, &
+                                     LagrangeDOF_Prism, &
+                                     LagrangeInDOF_Prism, &
+                                     LagrangeDegree_Prism, &
+                                     EquidistancePoint_Prism, &
+                                     InterpolationPoint_Prism, &
+                                     LagrangeCoeff_Prism, &
+                                     LagrangeEvalAll_Prism, &
+                                     LagrangeGradientEvalAll_Prism
+
+USE PyramidInterpolationUtility, ONLY: RefElemDomain_Pyramid, &
+                                       LagrangeDOF_Pyramid, &
+                                       LagrangeInDOF_Pyramid, &
+                                       LagrangeDegree_Pyramid, &
+                                       EquidistancePoint_Pyramid, &
+                                       InterpolationPoint_Pyramid, &
+                                       LagrangeCoeff_Pyramid, &
+                                       LagrangeEvalAll_Pyramid, &
+                                       LagrangeGradientEvalAll_Pyramid
+
+USE ReallocateUtility, ONLY: Reallocate
+
+USE Display_Method, ONLY: ToString
+
 IMPLICIT NONE
 CONTAINS
 
@@ -25,7 +113,11 @@ CONTAINS
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE RefElemDomain
-SELECT CASE (elemType)
+INTEGER(I4B) :: topo
+
+topo = ElementTopology(elemType)
+
+SELECT CASE (topo)
 CASE (Point)
   ans = ""
 
@@ -58,7 +150,12 @@ END PROCEDURE RefElemDomain
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE RefCoord
-SELECT CASE (elemType)
+INTEGER(I4B) :: topo
+
+topo = ElementTopology(elemType)
+
+SELECT CASE (topo)
+
 CASE (Point)
   CALL Reallocate(ans, 3_I4B, 1_I4B)
 
@@ -91,7 +188,11 @@ END PROCEDURE RefCoord
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE LagrangeDOF
-SELECT CASE (elemType)
+INTEGER(I4B) :: topo
+
+topo = ElementTopology(elemType)
+
+SELECT CASE (topo)
 CASE (Point)
   ans = 1
 CASE (Line)
@@ -116,7 +217,11 @@ END PROCEDURE LagrangeDOF
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE LagrangeInDOF
-SELECT CASE (elemType)
+INTEGER(I4B) :: topo
+
+topo = ElementTopology(elemType)
+
+SELECT CASE (topo)
 CASE (Point)
   ans = 0
 CASE (Line)
@@ -134,6 +239,7 @@ CASE (Prism)
 CASE (Pyramid)
   ans = LagrangeInDOF_Pyramid(order=order)
 END SELECT
+
 END PROCEDURE LagrangeInDOF
 
 !----------------------------------------------------------------------------
@@ -141,7 +247,10 @@ END PROCEDURE LagrangeInDOF
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE LagrangeDegree
-SELECT CASE (elemType)
+INTEGER(I4B) :: topo
+topo = ElementTopology(elemType)
+
+SELECT CASE (topo)
 CASE (Point)
   ALLOCATE (ans(0, 0))
 CASE (Line)
@@ -217,7 +326,12 @@ END PROCEDURE LagrangeVandermonde_
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE EquidistancePoint
-SELECT CASE (elemType)
+INTEGER(I4B) :: topo
+
+topo = ElementTopology(elemType)
+
+SELECT CASE (topo)
+
 CASE (Point)
   IF (PRESENT(xij)) THEN
     ans = xij
@@ -248,7 +362,7 @@ CASE (Pyramid)
 
 CASE DEFAULT
   CALL Errormsg(&
-    & msg="No CASE FOUND: elemType="//tostring(elemType), &
+    & msg="No CASE FOUND: elemType="//ToString(elemType), &
     & unitno=stdout,  &
     & line=__LINE__,  &
     & routine="EquidistancePoint()",  &
@@ -261,7 +375,12 @@ END PROCEDURE EquidistancePoint
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE InterpolationPoint
-SELECT CASE (elemType)
+INTEGER(I4B) :: topo
+
+topo = ElementTopology(elemType)
+
+SELECT CASE (topo)
+
 CASE (Point)
   IF (PRESENT(xij)) THEN
     ans = xij
@@ -327,7 +446,7 @@ CASE (Pyramid)
 
 CASE DEFAULT
   CALL Errormsg(&
-    & msg="No CASE FOUND: elemType="//tostring(elemType), &
+    & msg="No CASE FOUND: elemType="//ToString(elemType), &
     & unitno=stdout,  &
     & line=__LINE__,  &
     & routine="InterpolationPoint()",  &
@@ -342,7 +461,12 @@ END PROCEDURE InterpolationPoint
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE LagrangeCoeff1
-SELECT CASE (elemType)
+INTEGER(I4B) :: topo
+
+topo = ElementTopology(elemType)
+
+SELECT CASE (topo)
+
 CASE (Point)
 CASE (Line)
   ans = LagrangeCoeff_Line(order=order, xij=xij, i=i)
@@ -367,12 +491,13 @@ CASE (Pyramid)
 
 CASE DEFAULT
   CALL Errormsg(&
-    & msg="No CASE FOUND: elemType="//tostring(elemType), &
+    & msg="No CASE FOUND: elemType="//ToString(elemType), &
     & unitno=stdout,  &
     & line=__LINE__,  &
     & routine="LagrangeCoeff1()",  &
     & file=__FILE__)
 END SELECT
+
 END PROCEDURE LagrangeCoeff1
 
 !----------------------------------------------------------------------------
@@ -380,7 +505,11 @@ END PROCEDURE LagrangeCoeff1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE LagrangeCoeff2
-SELECT CASE (elemType)
+INTEGER(I4B) :: topo
+
+topo = ElementTopology(elemType)
+
+SELECT CASE (topo)
 CASE (Point)
 
 CASE (Line)
@@ -406,7 +535,7 @@ CASE (Pyramid)
 
 CASE DEFAULT
   CALL Errormsg(&
-    & msg="No CASE FOUND: elemType="//tostring(elemType), &
+    & msg="No CASE FOUND: elemType="//ToString(elemType), &
     & unitno=stdout,  &
     & line=__LINE__,  &
     & routine="LagrangeCoeff2()",  &
@@ -419,7 +548,10 @@ END PROCEDURE LagrangeCoeff2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE LagrangeCoeff3
-SELECT CASE (elemType)
+INTEGER(I4B) :: topo
+topo = ElementTopology(elemType)
+
+SELECT CASE (topo)
 CASE (Point)
 
 CASE (Line)
@@ -445,7 +577,7 @@ CASE (Pyramid)
 
 CASE DEFAULT
   CALL Errormsg(&
-    & msg="No CASE FOUND: elemType="//tostring(elemType), &
+    & msg="No CASE FOUND: elemType="//ToString(elemType), &
     & unitno=stdout,  &
     & line=__LINE__,  &
     & routine="LagrangeCoeff2()",  &
@@ -458,7 +590,11 @@ END PROCEDURE LagrangeCoeff3
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE LagrangeCoeff4
-SELECT CASE (elemType)
+INTEGER(I4B) :: topo
+
+topo = ElementTopology(elemType)
+
+SELECT CASE (topo)
 CASE (Point)
 
 CASE (Line)
@@ -484,7 +620,7 @@ CASE (Pyramid)
 
 CASE DEFAULT
   CALL Errormsg(&
-    & msg="No CASE FOUND: elemType="//tostring(elemType), &
+    & msg="No CASE FOUND: elemType="//ToString(elemType), &
     & unitno=stdout,  &
     & line=__LINE__,  &
     & routine="LagrangeCoeff2()",  &
@@ -497,7 +633,11 @@ END PROCEDURE LagrangeCoeff4
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE LagrangeEvalAll1
-SELECT CASE (elemType)
+INTEGER(I4B) :: topo
+
+topo = ElementTopology(elemType)
+
+SELECT CASE (topo)
 CASE (Point)
 
 CASE (Line)
@@ -590,7 +730,7 @@ CASE (Pyramid)
 
 CASE DEFAULT
   CALL Errormsg(&
-    & msg="No CASE FOUND: elemType="//tostring(elemType), &
+    & msg="No CASE FOUND: elemType="//ToString(elemType), &
     & unitno=stdout,  &
     & line=__LINE__,  &
     & routine="LagrangeEvalAll2()",  &
@@ -603,7 +743,11 @@ END PROCEDURE LagrangeEvalAll1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE LagrangeGradientEvalAll1
-SELECT CASE (elemType)
+INTEGER(I4B) :: topo
+
+topo = ElementTopology(elemType)
+
+SELECT CASE (topo)
 CASE (Point)
 
 CASE (Line)
@@ -767,7 +911,7 @@ CASE (Pyramid)
 
 CASE DEFAULT
   CALL Errormsg(&
-    & msg="No CASE FOUND: elemType="//tostring(elemType), &
+    & msg="No CASE FOUND: elemType="//ToString(elemType), &
     & unitno=stdout,  &
     & line=__LINE__,  &
     & routine="LagrangeGradientEvalAll1()",  &
