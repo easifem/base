@@ -826,9 +826,13 @@ CASE (Triangle15)
   IF (PRESENT(faceElemType)) faceElemType(1:3) = Line5
   IF (PRESENT(tFaceNodes)) tFaceNodes(1:3) = 5_I4B
 
-CASE (Triangle21)
+CASE (Triangle21a, Triangle21b)
   IF (PRESENT(faceElemType)) faceElemType(1:3) = Line6
   IF (PRESENT(tFaceNodes)) tFaceNodes(1:3) = 6_I4B
+
+CASE (Triangle18)
+  IF (PRESENT(faceElemType)) faceElemType(1:3) = Line7
+  IF (PRESENT(tFaceNodes)) tFaceNodes(1:3) = 7_I4B
 
 END SELECT
 

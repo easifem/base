@@ -89,7 +89,7 @@ CONTAINS
 MODULE PROCEDURE GetElementIndex
 INTEGER(I4B) :: topo
 
-topo = refelem_ElementTopology1(elemenType)
+topo = refelem_ElementTopology1(elemType)
 
 SELECT CASE (topo)
 CASE (Point)
