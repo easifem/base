@@ -16,7 +16,8 @@
 !
 
 MODULE IntegerUtility
-USE GlobalData
+USE GlobalData, ONLY: I4B, DFP, LGT, INT8, INT16, INT32, INT64, &
+                      REAL32, REAL64
 IMPLICIT NONE
 PRIVATE
 
@@ -29,6 +30,7 @@ PUBLIC :: SIZE
 PUBLIC :: GetMultiIndices
 PUBLIC :: GetIndex
 PUBLIC :: Get
+PUBLIC :: GetIntersection
 
 !----------------------------------------------------------------------------
 !                                                           Size@Methods
@@ -36,7 +38,7 @@ PUBLIC :: Get
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 4 Sept 2022
-! summary:         Get the number of touples
+! summary:  Get the number of touples
 
 INTERFACE Size
   MODULE PURE FUNCTION obj_Size1(n, d) RESULT(ans)
@@ -51,7 +53,7 @@ END INTERFACE Size
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 4 Sept 2022
-! summary:         Get the number of touples
+! summary:  Get the number of touples
 
 INTERFACE Size
   MODULE PURE FUNCTION obj_Size2(n, d, upto) RESULT(ans)
@@ -429,6 +431,40 @@ INTERFACE Get
     INTEGER(INT64) :: ans(INT((iend - istart) / stride) + 1)
   END FUNCTION Get3_Int64
 END INTERFACE Get
+
+!----------------------------------------------------------------------------
+!                                                           GetIntersection
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2024-05-22
+! summary: Get the intersection fo two integer vectors
+
+INTERFACE GetIntersection
+  MODULE PURE SUBROUTINE GetIntersection1(a, b, c, tsize)
+    INTEGER(INT8), INTENT(IN) :: a(:), b(:)
+    INTEGER(INT8), INTENT(INOUT) :: c(:)
+    INTEGER(I4B), INTENT(OUT) :: tsize
+  END SUBROUTINE GetIntersection1
+
+  MODULE PURE SUBROUTINE GetIntersection2(a, b, c, tsize)
+    INTEGER(INT16), INTENT(IN) :: a(:), b(:)
+    INTEGER(INT16), INTENT(INOUT) :: c(:)
+    INTEGER(I4B), INTENT(OUT) :: tsize
+  END SUBROUTINE GetIntersection2
+
+  MODULE PURE SUBROUTINE GetIntersection3(a, b, c, tsize)
+    INTEGER(INT32), INTENT(IN) :: a(:), b(:)
+    INTEGER(INT32), INTENT(INOUT) :: c(:)
+    INTEGER(I4B), INTENT(OUT) :: tsize
+  END SUBROUTINE GetIntersection3
+
+  MODULE PURE SUBROUTINE GetIntersection4(a, b, c, tsize)
+    INTEGER(INT64), INTENT(IN) :: a(:), b(:)
+    INTEGER(INT64), INTENT(INOUT) :: c(:)
+    INTEGER(I4B), INTENT(OUT) :: tsize
+  END SUBROUTINE GetIntersection4
+END INTERFACE GetIntersection
 
 !----------------------------------------------------------------------------
 !

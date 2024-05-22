@@ -16,7 +16,13 @@
 !
 
 SUBMODULE(IntegerUtility) Methods
-USE BaseMethod
+USE AppendUtility, ONLY: OPERATOR(.ROWCONCAT.), &
+                         OPERATOR(.COLCONCAT.), &
+                         Expand
+USE SortUtility, ONLY: QuickSort
+USE BinomUtility, ONLY: Binom
+USE OnesUtility, ONLY: ones
+
 IMPLICIT NONE
 CONTAINS
 
@@ -47,36 +53,36 @@ END PROCEDURE obj_Size2
 MODULE PROCEDURE obj_GetMultiIndices1
 INTEGER(I4B) :: ii, m
 INTEGER(I4B), ALLOCATABLE :: indx(:, :), acol(:), indx2(:, :)
-!!
+
 SELECT CASE (d)
 CASE (1_I4B)
-  !!
+
   ALLOCATE (ans(2, n + 1))
   DO ii = 0, n
     ans(1:2, ii + 1) = [ii, n - ii]
   END DO
-  !!
+
 CASE DEFAULT
-  !!
+
   ALLOCATE (ans(d + 1, 1))
   ans = 0; ans(1, 1) = n
-  !!
+
   DO ii = n - 1, 0_I4B, -1_I4B
-    !!
+
     indx = GetMultiIndices(n=n - ii, d=d - 1)
     m = SIZE(indx, 2)
     acol = ii * ones(m, 1_I4B)
     indx2 = acol.ROWCONCAT.indx
     ans = indx2.COLCONCAT.ans
-    !!
+
   END DO
-  !!
+
 END SELECT
-!
+
 IF (ALLOCATED(indx)) DEALLOCATE (indx)
 IF (ALLOCATED(acol)) DEALLOCATE (acol)
 IF (ALLOCATED(indx2)) DEALLOCATE (indx2)
-!
+
 END PROCEDURE obj_GetMultiIndices1
 
 !----------------------------------------------------------------------------
@@ -85,10 +91,10 @@ END PROCEDURE obj_GetMultiIndices1
 
 MODULE PROCEDURE obj_GetMultiIndices2
 INTEGER(I4B) :: ii, m, r1, r2
-!!
+
 m = SIZE(n, d, .TRUE.)
 ALLOCATE (ans(d + 1, m))
-!!
+
 r1 = 0; r2 = 0
 DO ii = 0, n
   m = SIZE(n=ii, d=d)
@@ -96,7 +102,7 @@ DO ii = 0, n
   r2 = r1 + m - 1
   ans(:, r1:r2) = GetMultiIndices(n=ii, d=d)
 END DO
-!!
+
 END PROCEDURE obj_GetMultiIndices2
 
 !----------------------------------------------------------------------------
@@ -250,12 +256,12 @@ END PROCEDURE GetIndex1
 MODULE PROCEDURE GetIndex2
 INTEGER(I4B) :: i, j, m
 LOGICAL(LGT), ALLOCATABLE :: Search(:)
-  !!
+
 m = SIZE(val)
 ALLOCATE (Search(m), Ans(m))
 Search = .TRUE.
 Ans = 0
-  !!
+
 DO i = 1, SIZE(obj)
   DO j = 1, m
     IF (Search(j)) THEN
@@ -331,5 +337,25 @@ END PROCEDURE Get3_Int32
 MODULE PROCEDURE Get3_Int64
 ans = val(istart:iend:stride)
 END PROCEDURE Get3_Int64
+
+!----------------------------------------------------------------------------
+!                                                            GetIntersection
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE GetIntersection1
+#include "./Intersection/Intersection.inc"
+END PROCEDURE GetIntersection1
+
+MODULE PROCEDURE GetIntersection2
+#include "./Intersection/Intersection.inc"
+END PROCEDURE GetIntersection2
+
+MODULE PROCEDURE GetIntersection3
+#include "./Intersection/Intersection.inc"
+END PROCEDURE GetIntersection3
+
+MODULE PROCEDURE GetIntersection4
+#include "./Intersection/Intersection.inc"
+END PROCEDURE GetIntersection4
 
 END SUBMODULE Methods
