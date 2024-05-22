@@ -215,8 +215,8 @@ INTERFACE GetEdgeConnectivity
     !! name of element
     INTEGER(I4B), INTENT(INOUT) :: con(:, :)
     !! Connectivity
-    !! The columns represents the face number
-    !! The row represents a face
+    !! The columns represents the edge number
+    !! The row represents the connectivity of edge
     !! con should be allocated by the user
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: opt
     !! If opt = 1, then edge connectivity for hierarchial approximation
