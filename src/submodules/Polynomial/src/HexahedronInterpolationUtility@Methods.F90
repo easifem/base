@@ -225,6 +225,22 @@ END DO
 END PROCEDURE LagrangeDegree_Hexahedron2
 
 !----------------------------------------------------------------------------
+!                                                    GetTotalDOF_Hexahedron
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE GetTotalDOF_Hexahedron
+ans = (order + 1)**3
+END PROCEDURE GetTotalDOF_Hexahedron
+
+!----------------------------------------------------------------------------
+!                                                   GetTotalInDOF_Hexahedron
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE GetTotalInDOF_Hexahedron
+ans = (order - 1)**3
+END PROCEDURE GetTotalInDOF_Hexahedron
+
+!----------------------------------------------------------------------------
 !                                                    LagrangeDOF_Hexahedron
 !----------------------------------------------------------------------------
 
