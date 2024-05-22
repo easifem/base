@@ -277,7 +277,7 @@ END INTERFACE
 
 INTERFACE
   MODULE PURE SUBROUTINE GetEdgeConnectivity_Tetrahedron(con, opt,  &
-    & order)
+    & order, nrow, ncol)
     INTEGER(I4B), INTENT(INOUT) :: con(:, :)
     !! Connectivity
     !! The columns represents the edge number
@@ -289,6 +289,10 @@ INTERFACE
     !! opt=1 is default
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: order
     !! Order of the edge
+    INTEGER(I4B), OPTIONAL, INTENT(OUT) :: nrow
+    !! Number of rows written in con
+    INTEGER(I4B), OPTIONAL, INTENT(OUT) :: ncol
+    !! Numbers of cols written in con
   END SUBROUTINE GetEdgeConnectivity_Tetrahedron
 END INTERFACE
 
@@ -301,7 +305,8 @@ END INTERFACE
 ! summary:  Returns number of edges in the element
 
 INTERFACE
-  MODULE PURE SUBROUTINE GetFaceConnectivity_Tetrahedron(con, opt, order)
+  MODULE PURE SUBROUTINE GetFaceConnectivity_Tetrahedron(con, opt, order, &
+                                                         nrow, ncol)
     INTEGER(I4B), INTENT(INOUT) :: con(:, :)
     !! Connectivity
     !! The columns represents the face number
@@ -313,6 +318,10 @@ INTERFACE
     !! opt=1 is default
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: order
     !! order
+    INTEGER(I4B), OPTIONAL, INTENT(OUT) :: nrow
+    !! Number of rows written in con
+    INTEGER(I4B), OPTIONAL, INTENT(OUT) :: ncol
+    !! Numbers of cols written in con
   END SUBROUTINE GetFaceConnectivity_Tetrahedron
 END INTERFACE
 

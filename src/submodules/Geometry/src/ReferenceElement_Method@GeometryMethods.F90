@@ -284,31 +284,38 @@ topo = refelem_ElementTopology1(elemType)
 SELECT CASE (topo)
 
 CASE (Line)
-  CALL GetEdgeConnectivity_Line(con=con, opt=opt, order=order)
+  CALL GetEdgeConnectivity_Line(con=con, opt=opt, order=order, &
+                                nrow=nrow, ncol=ncol)
 
 CASE (Triangle)
 
-  CALL GetEdgeConnectivity_Triangle(con=con, opt=opt, order=order)
+  CALL GetEdgeConnectivity_Triangle(con=con, opt=opt, order=order, &
+                                    nrow=nrow, ncol=ncol)
 
 CASE (Quadrangle)
 
-  CALL GetEdgeConnectivity_Quadrangle(con=con, opt=opt, order=order)
+  CALL GetEdgeConnectivity_Quadrangle(con=con, opt=opt, order=order, &
+                                      nrow=nrow, ncol=ncol)
 
 CASE (Tetrahedron)
 
-  CALL GetEdgeConnectivity_Tetrahedron(con=con, opt=opt, order=order)
+  CALL GetEdgeConnectivity_Tetrahedron(con=con, opt=opt, order=order, &
+                                       nrow=nrow, ncol=ncol)
 
 CASE (Hexahedron)
 
-  CALL GetEdgeConnectivity_Hexahedron(con=con, opt=opt, order=order)
+  CALL GetEdgeConnectivity_Hexahedron(con=con, opt=opt, order=order, &
+                                      nrow=nrow, ncol=ncol)
 
 CASE (Prism)
 
-  CALL GetEdgeConnectivity_Prism(con=con, opt=opt, order=order)
+  CALL GetEdgeConnectivity_Prism(con=con, opt=opt, order=order, &
+                                 nrow=nrow, ncol=ncol)
 
 CASE (Pyramid)
 
-  CALL GetEdgeConnectivity_Pyramid(con=con, opt=opt, order=order)
+  CALL GetEdgeConnectivity_Pyramid(con=con, opt=opt, order=order, &
+                                   nrow=nrow, ncol=ncol)
 
 END SELECT
 END PROCEDURE GetEdgeConnectivity1
@@ -325,31 +332,38 @@ topo = refelem_ElementTopology1(elemType)
 SELECT CASE (topo)
 
 CASE (Line)
-  CALL GetFaceConnectivity_Line(con=con, opt=opt, order=order)
+  CALL GetFaceConnectivity_Line(con=con, opt=opt, order=order, &
+                                nrow=nrow, ncol=ncol)
 
 CASE (Triangle)
 
-  CALL GetFaceConnectivity_Triangle(con=con, opt=opt, order=order)
+  CALL GetFaceConnectivity_Triangle(con=con, opt=opt, order=order, &
+                                    nrow=nrow, ncol=ncol)
 
 CASE (Quadrangle)
 
-  CALL GetFaceConnectivity_Quadrangle(con=con, opt=opt, order=order)
+  CALL GetFaceConnectivity_Quadrangle(con=con, opt=opt, order=order, &
+                                      nrow=nrow, ncol=ncol)
 
 CASE (Tetrahedron)
 
-  CALL GetFaceConnectivity_Tetrahedron(con=con, opt=opt, order=order)
+  CALL GetFaceConnectivity_Tetrahedron(con=con, opt=opt, order=order, &
+                                       nrow=nrow, ncol=ncol)
 
 CASE (Hexahedron)
 
-  CALL GetFaceConnectivity_Hexahedron(con=con, opt=opt, order=order)
+  CALL GetFaceConnectivity_Hexahedron(con=con, opt=opt, order=order, &
+                                      nrow=nrow, ncol=ncol)
 
 CASE (Prism)
 
-  CALL GetFaceConnectivity_Prism(con=con, opt=opt, order=order)
+  CALL GetFaceConnectivity_Prism(con=con, opt=opt, order=order, &
+                                 nrow=nrow, ncol=ncol)
 
 CASE (Pyramid)
 
-  CALL GetFaceConnectivity_Pyramid(con=con, opt=opt, order=order)
+  CALL GetFaceConnectivity_Pyramid(con=con, opt=opt, order=order, &
+                                   nrow=nrow, ncol=ncol)
 
 END SELECT
 END PROCEDURE GetFaceConnectivity1

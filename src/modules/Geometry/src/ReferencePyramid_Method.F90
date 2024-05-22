@@ -263,7 +263,8 @@ END INTERFACE Quality_Pyramid
 ! summary:  Returns number of edges in the element
 
 INTERFACE
-  MODULE PURE SUBROUTINE GetEdgeConnectivity_Pyramid(con, opt, order)
+  MODULE PURE SUBROUTINE GetEdgeConnectivity_Pyramid(con, opt, order, &
+                                                     nrow, ncol)
     INTEGER(I4B), INTENT(INOUT) :: con(:, :)
     !! Connectivity
     !! The columns represents the edge number
@@ -275,6 +276,10 @@ INTERFACE
     !! opt=1 is default
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: order
     !! Order of element
+    INTEGER(I4B), OPTIONAL, INTENT(OUT) :: nrow
+    !! Number of rows written in con
+    INTEGER(I4B), OPTIONAL, INTENT(OUT) :: ncol
+    !! Numbers of cols written in con
   END SUBROUTINE GetEdgeConnectivity_Pyramid
 END INTERFACE
 
@@ -287,7 +292,8 @@ END INTERFACE
 ! summary:  Returns number of edges in the element
 
 INTERFACE
-  MODULE PURE SUBROUTINE GetFaceConnectivity_Pyramid(con, opt, order)
+  MODULE PURE SUBROUTINE GetFaceConnectivity_Pyramid(con, opt, order, &
+                                                     nrow, ncol)
     INTEGER(I4B), INTENT(INOUT) :: con(:, :)
     !! Connectivity
     !! The columns represents the face number
@@ -299,6 +305,10 @@ INTERFACE
     !! opt=1 is default
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: order
     !! Order of element
+    INTEGER(I4B), OPTIONAL, INTENT(OUT) :: nrow
+    !! Number of rows written in con
+    INTEGER(I4B), OPTIONAL, INTENT(OUT) :: ncol
+    !! Numbers of cols written in con
   END SUBROUTINE GetFaceConnectivity_Pyramid
 END INTERFACE
 

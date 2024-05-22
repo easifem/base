@@ -210,7 +210,8 @@ END INTERFACE GetTotalEdges
 ! summary:  Returns number of edges in the element
 
 INTERFACE GetEdgeConnectivity
-  MODULE PURE SUBROUTINE GetEdgeConnectivity1(elemType, con, opt, order)
+  MODULE PURE SUBROUTINE GetEdgeConnectivity1(elemType, con, opt, order, &
+                                              nrow, ncol)
     INTEGER(I4B), INTENT(IN) :: elemType
     !! name of element
     INTEGER(I4B), INTENT(INOUT) :: con(:, :)
@@ -224,6 +225,10 @@ INTERFACE GetEdgeConnectivity
     !! opt=1 is default
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: order
     !! Order of element
+    INTEGER(I4B), OPTIONAL, INTENT(OUT) :: nrow
+    !! Number of rows written to con
+    INTEGER(I4B), OPTIONAL, INTENT(OUT) :: ncol
+    !! number of columns written to con
   END SUBROUTINE GetEdgeConnectivity1
 END INTERFACE GetEdgeConnectivity
 
@@ -236,7 +241,8 @@ END INTERFACE GetEdgeConnectivity
 ! summary:  Returns number of edges in the element
 
 INTERFACE GetFaceConnectivity
-  MODULE PURE SUBROUTINE GetFaceConnectivity1(elemType, con, opt, order)
+  MODULE PURE SUBROUTINE GetFaceConnectivity1(elemType, con, opt, order, &
+                                              nrow, ncol)
     INTEGER(I4B), INTENT(IN) :: elemType
     !! name of element
     INTEGER(I4B), INTENT(INOUT) :: con(:, :)
@@ -249,6 +255,11 @@ INTERFACE GetFaceConnectivity
     !! If opt = 2, then edge connectivity for Lagrangian approximation
     !! opt = 1 is default
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: order
+    !! order  of element
+    INTEGER(I4B), OPTIONAL, INTENT(OUT) :: nrow
+    !! Number of rows written to con
+    INTEGER(I4B), OPTIONAL, INTENT(OUT) :: ncol
+    !! number of columns written to con
   END SUBROUTINE GetFaceConnectivity1
 END INTERFACE GetFaceConnectivity
 

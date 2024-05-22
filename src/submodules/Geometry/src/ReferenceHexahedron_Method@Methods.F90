@@ -545,8 +545,11 @@ con(1:2, 11) = [6, 7]
 con(1:2, 12) = [7, 8]
 
 order0 = Input(default=1_I4B, option=order)
-jj = 8
 
+IF (PRESENT(ncol)) ncol = 12
+IF (PRESENT(nrow)) nrow = order0 + 1
+
+jj = 8
 DO iface = 1, 12
   DO ii = 1, order0 - 1
     con(2 + ii, iface) = jj + ii
@@ -570,6 +573,9 @@ con(1:4, 5) = [1, 2, 6, 5] ! bottom
 con(1:4, 6) = [3, 4, 8, 7] ! top
 
 order0 = Input(default=1_I4B, option=order)
+
+IF (PRESENT(ncol)) ncol = 6
+
 ii = 5
 
 SELECT CASE (order0)
@@ -580,7 +586,10 @@ CASE (2_I4B)
   con(ii:8, 4) = [12, 15, 19, 13, 24] ! right
   con(ii:8, 5) = [9, 13, 17, 11, 25] ! bottom
   con(ii:8, 6) = [14, 16, 20, 15, 26] ! top
+  ii = 9
 END SELECT
+
+IF (PRESENT(nrow)) nrow = ii - 1
 
 END PROCEDURE GetFaceConnectivity_Hexahedron
 

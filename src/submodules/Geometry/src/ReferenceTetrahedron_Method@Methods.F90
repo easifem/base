@@ -520,6 +520,10 @@ con(1:2, 5) = [2, 4]
 con(1:2, 6) = [3, 4]
 
 order0 = Input(default=1_I4B, option=order)
+
+IF (PRESENT(ncol)) ncol = 6
+IF (PRESENT(nrow)) nrow = order0 + 1
+
 jj = 4
 DO iface = 1, 6
   DO ii = 1, order0 - 1
@@ -542,6 +546,8 @@ con(1:3, 3) = [1, 4, 3]
 con(1:3, 4) = [2, 3, 4]
 
 order0 = Input(default=1_I4B, option=order)
+IF (PRESENT(ncol)) ncol = 4
+
 jj = 4_I4B
 
 SELECT CASE (order0)
@@ -550,7 +556,10 @@ CASE (2_I4B)
   con(jj:6, 2) = [5, 9, 7]
   con(jj:6, 3) = [7, 10, 6]
   con(jj:6, 4) = [8, 10, 9]
+  jj = 7
 END SELECT
+
+IF (PRESENT(nrow)) nrow = jj - 1
 
 END PROCEDURE GetFaceConnectivity_Tetrahedron
 

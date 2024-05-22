@@ -317,7 +317,8 @@ END INTERFACE
 ! summary:  Returns number of edges in the element
 
 INTERFACE
-  MODULE PURE SUBROUTINE GetEdgeConnectivity_Prism(con, opt, order)
+  MODULE PURE SUBROUTINE GetEdgeConnectivity_Prism(con, opt, order, &
+                                                   nrow, ncol)
     INTEGER(I4B), INTENT(INOUT) :: con(:, :)
     !! Connectivity
     !! The columns represents the edge number
@@ -328,6 +329,10 @@ INTERFACE
     !! If opt =2, then edge connectivity for Lagrangian approximation
     !! opt=1 is default
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: order
+    INTEGER(I4B), OPTIONAL, INTENT(OUT) :: nrow
+    !! Number of rows written in con
+    INTEGER(I4B), OPTIONAL, INTENT(OUT) :: ncol
+    !! Numbers of cols written in con
   END SUBROUTINE GetEdgeConnectivity_Prism
 END INTERFACE
 
@@ -340,7 +345,8 @@ END INTERFACE
 ! summary:  Returns number of edges in the element
 
 INTERFACE
-  MODULE PURE SUBROUTINE GetFaceConnectivity_Prism(con, opt, order)
+  MODULE PURE SUBROUTINE GetFaceConnectivity_Prism(con, opt, order, &
+                                                   nrow, ncol)
     INTEGER(I4B), INTENT(INOUT) :: con(:, :)
     !! Connectivity
     !! The columns represents the face number
@@ -351,6 +357,10 @@ INTERFACE
     !! If opt =2, then face connectivity for Lagrangian approximation
     !! opt=1 is default
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: order
+    INTEGER(I4B), OPTIONAL, INTENT(OUT) :: nrow
+    !! Number of rows written in con
+    INTEGER(I4B), OPTIONAL, INTENT(OUT) :: ncol
+    !! Numbers of cols written in con
   END SUBROUTINE GetFaceConnectivity_Prism
 END INTERFACE
 

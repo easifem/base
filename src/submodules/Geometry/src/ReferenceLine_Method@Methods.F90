@@ -345,6 +345,8 @@ END PROCEDURE RefLineCoord
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE GetEdgeConnectivity_Line
+IF (PRESENT(nrow)) nrow = 1
+IF (PRESENT(ncol)) ncol = 2
 con(1, 1) = 1
 con(1, 2) = 2
 END PROCEDURE GetEdgeConnectivity_Line
@@ -365,6 +367,8 @@ END PROCEDURE GetFaceElemType_Line
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE GetFaceConnectivity_Line
+IF (PRESENT(nrow)) nrow = 1
+IF (PRESENT(ncol)) ncol = 2
 con(1, 1) = 1
 con(1, 2) = 2
 END PROCEDURE GetFaceConnectivity_Line
