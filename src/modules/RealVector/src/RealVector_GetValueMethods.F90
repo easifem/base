@@ -16,11 +16,13 @@
 !
 
 MODULE RealVector_GetValueMethods
-USE GlobalData
-USE BaseType
+USE GlobalData, ONLY: DFP, I4B, LGT
+USE BaseType, ONLY: DOF_, RealVector_
+
 IMPLICIT NONE
 PRIVATE
-PUBLIC :: getvalue
+
+PUBLIC :: GetValue
 
 !----------------------------------------------------------------------------
 !                                                   getvalue@GetValueMethods
@@ -37,17 +39,13 @@ PUBLIC :: getvalue
 !
 ! Both obj and value should be allocated.
 
-INTERFACE
+INTERFACE GetValue
   MODULE PURE SUBROUTINE realvec_getvalue1(obj, VALUE, istart, iend, stride)
     CLASS(RealVector_), INTENT(IN) :: obj
     INTEGER(I4B), INTENT(IN) :: istart, iend, stride
     CLASS(RealVector_), INTENT(INOUT) :: VALUE
   END SUBROUTINE realvec_getvalue1
-END INTERFACE
-
-INTERFACE getvalue
-  MODULE PROCEDURE realvec_getvalue1
-END INTERFACE getvalue
+END INTERFACE GetValue
 
 !----------------------------------------------------------------------------
 !                                                   getvalue@GetValueMethods
@@ -64,18 +62,14 @@ END INTERFACE getvalue
 !
 ! Both obj and value should be allocated.
 
-INTERFACE
+INTERFACE GetValue
   MODULE PURE SUBROUTINE realvec_getvalue2(obj, dofobj, VALUE, idof)
     CLASS(RealVector_), INTENT(IN) :: obj
     TYPE(DOF_), INTENT(IN) :: dofobj
     CLASS(RealVector_), INTENT(INOUT) :: VALUE
     INTEGER(I4B), INTENT(IN) :: idof
   END SUBROUTINE realvec_getvalue2
-END INTERFACE
-
-INTERFACE getvalue
-  MODULE PROCEDURE realvec_getvalue2
-END INTERFACE getvalue
+END INTERFACE GetValue
 
 !----------------------------------------------------------------------------
 !                                                   getvalue@GetValueMethods
@@ -92,7 +86,7 @@ END INTERFACE getvalue
 !
 ! Both obj and value should be allocated.
 
-INTERFACE
+INTERFACE GetValue
   MODULE PURE SUBROUTINE realvec_getvalue3(obj, dofobj, VALUE, ivar, idof)
     CLASS(RealVector_), INTENT(IN) :: obj
     TYPE(DOF_), INTENT(IN) :: dofobj
@@ -100,11 +94,7 @@ INTERFACE
     INTEGER(I4B), INTENT(IN) :: ivar
     INTEGER(I4B), INTENT(IN) :: idof
   END SUBROUTINE realvec_getvalue3
-END INTERFACE
-
-INTERFACE getvalue
-  MODULE PROCEDURE realvec_getvalue3
-END INTERFACE getvalue
+END INTERFACE GetValue
 
 !----------------------------------------------------------------------------
 !                                                   getvalue@GetValueMethods
@@ -121,9 +111,9 @@ END INTERFACE getvalue
 !
 ! Both obj and value should be allocated.
 
-INTERFACE
+INTERFACE GetValue
   MODULE PURE SUBROUTINE realvec_getvalue4(obj, dofobj, VALUE, ivar, &
-    & spacecompo, timecompo)
+                                           spacecompo, timecompo)
     CLASS(RealVector_), INTENT(IN) :: obj
     TYPE(DOF_), INTENT(IN) :: dofobj
     CLASS(RealVector_), INTENT(INOUT) :: VALUE
@@ -131,11 +121,7 @@ INTERFACE
     INTEGER(I4B), INTENT(IN) :: spacecompo
     INTEGER(I4B), INTENT(IN) :: timecompo
   END SUBROUTINE realvec_getvalue4
-END INTERFACE
-
-INTERFACE getvalue
-  MODULE PROCEDURE realvec_getvalue4
-END INTERFACE getvalue
+END INTERFACE GetValue
 
 !----------------------------------------------------------------------------
 !                                                   getvalue@GetValueMethods
@@ -152,9 +138,9 @@ END INTERFACE getvalue
 !
 ! Both obj and value should be allocated.
 
-INTERFACE
+INTERFACE GetValue
   MODULE PURE SUBROUTINE realvec_getvalue5(obj, dofobj, idofobj, &
-    & VALUE, dofvalue, idofvalue)
+                                           VALUE, dofvalue, idofvalue)
     CLASS(RealVector_), INTENT(IN) :: obj
     TYPE(DOF_), INTENT(IN) :: dofobj
     INTEGER(I4B), INTENT(IN) :: idofobj
@@ -162,11 +148,7 @@ INTERFACE
     TYPE(DOF_), INTENT(IN) :: dofvalue
     INTEGER(I4B), INTENT(IN) :: idofvalue
   END SUBROUTINE realvec_getvalue5
-END INTERFACE
-
-INTERFACE getvalue
-  MODULE PROCEDURE realvec_getvalue5
-END INTERFACE getvalue
+END INTERFACE GetValue
 
 !----------------------------------------------------------------------------
 !                                                   getvalue@GetValueMethods
@@ -187,9 +169,9 @@ END INTERFACE getvalue
 ! The size of idofobj and idofvalue should be equal.
 !@endnote
 
-INTERFACE
+INTERFACE GetValue
   MODULE PURE SUBROUTINE realvec_getvalue6(obj, dofobj, idofobj, &
-    & VALUE, dofvalue, idofvalue)
+                                           VALUE, dofvalue, idofvalue)
     CLASS(RealVector_), INTENT(IN) :: obj
     TYPE(DOF_), INTENT(IN) :: dofobj
     INTEGER(I4B), INTENT(IN) :: idofobj(:)
@@ -197,11 +179,7 @@ INTERFACE
     TYPE(DOF_), INTENT(IN) :: dofvalue
     INTEGER(I4B), INTENT(IN) :: idofvalue(:)
   END SUBROUTINE realvec_getvalue6
-END INTERFACE
-
-INTERFACE getvalue
-  MODULE PROCEDURE realvec_getvalue6
-END INTERFACE getvalue
+END INTERFACE GetValue
 
 !----------------------------------------------------------------------------
 !                                                   getvalue@GetValueMethods
@@ -218,9 +196,9 @@ END INTERFACE getvalue
 !
 ! Both obj and value should be allocated.
 
-INTERFACE
+INTERFACE GetValue
   MODULE PURE SUBROUTINE realvec_getvalue7(obj, dofobj, ivarobj, idofobj, &
-    & VALUE, dofvalue, ivarvalue, idofvalue)
+                                        VALUE, dofvalue, ivarvalue, idofvalue)
     CLASS(RealVector_), INTENT(IN) :: obj
     TYPE(DOF_), INTENT(IN) :: dofobj
     INTEGER(I4B), INTENT(IN) :: ivarobj
@@ -230,11 +208,7 @@ INTERFACE
     INTEGER(I4B), INTENT(IN) :: ivarvalue
     INTEGER(I4B), INTENT(IN) :: idofvalue
   END SUBROUTINE realvec_getvalue7
-END INTERFACE
-
-INTERFACE getvalue
-  MODULE PROCEDURE realvec_getvalue7
-END INTERFACE getvalue
+END INTERFACE GetValue
 
 !----------------------------------------------------------------------------
 !                                                   getvalue@GetValueMethods
@@ -251,9 +225,9 @@ END INTERFACE getvalue
 !
 ! Both obj and value should be allocated.
 
-INTERFACE
+INTERFACE GetValue
   MODULE PURE SUBROUTINE realvec_getvalue8(obj, dofobj, ivarobj, idofobj, &
-    & VALUE, dofvalue, ivarvalue, idofvalue)
+                                        VALUE, dofvalue, ivarvalue, idofvalue)
     CLASS(RealVector_), INTENT(IN) :: obj
     TYPE(DOF_), INTENT(IN) :: dofobj
     INTEGER(I4B), INTENT(IN) :: ivarobj
@@ -263,11 +237,7 @@ INTERFACE
     INTEGER(I4B), INTENT(IN) :: ivarvalue
     INTEGER(I4B), INTENT(IN) :: idofvalue(:)
   END SUBROUTINE realvec_getvalue8
-END INTERFACE
-
-INTERFACE getvalue
-  MODULE PROCEDURE realvec_getvalue8
-END INTERFACE getvalue
+END INTERFACE GetValue
 
 !----------------------------------------------------------------------------
 !                                                   getvalue@GetValueMethods
@@ -284,10 +254,10 @@ END INTERFACE getvalue
 !
 ! Both obj and value should be allocated.
 
-INTERFACE
+INTERFACE GetValue
   MODULE PURE SUBROUTINE realvec_getvalue9(obj, dofobj, ivarobj, &
-    & spacecompoobj, timecompoobj, VALUE, dofvalue, ivarvalue, &
-    & spacecompovalue, timecompovalue)
+                    spacecompoobj, timecompoobj, VALUE, dofvalue, ivarvalue, &
+                                           spacecompovalue, timecompovalue)
     CLASS(RealVector_), INTENT(IN) :: obj
     TYPE(DOF_), INTENT(IN) :: dofobj
     INTEGER(I4B), INTENT(IN) :: ivarobj
@@ -299,11 +269,7 @@ INTERFACE
     INTEGER(I4B), INTENT(IN) :: spacecompovalue
     INTEGER(I4B), INTENT(IN) :: timecompovalue
   END SUBROUTINE realvec_getvalue9
-END INTERFACE
-
-INTERFACE getvalue
-  MODULE PROCEDURE realvec_getvalue9
-END INTERFACE getvalue
+END INTERFACE GetValue
 
 !----------------------------------------------------------------------------
 !                                                   getvalue@GetValueMethods
@@ -320,10 +286,10 @@ END INTERFACE getvalue
 !
 ! Both obj and value should be allocated.
 
-INTERFACE
+INTERFACE GetValue
   MODULE PURE SUBROUTINE realvec_getvalue10(obj, dofobj, ivarobj, &
-    & spacecompoobj, timecompoobj, VALUE, dofvalue, ivarvalue, &
-    & spacecompovalue, timecompovalue)
+                    spacecompoobj, timecompoobj, VALUE, dofvalue, ivarvalue, &
+                                            spacecompovalue, timecompovalue)
     CLASS(RealVector_), INTENT(IN) :: obj
     TYPE(DOF_), INTENT(IN) :: dofobj
     INTEGER(I4B), INTENT(IN) :: ivarobj
@@ -335,11 +301,7 @@ INTERFACE
     INTEGER(I4B), INTENT(IN) :: spacecompovalue
     INTEGER(I4B), INTENT(IN) :: timecompovalue(:)
   END SUBROUTINE realvec_getvalue10
-END INTERFACE
-
-INTERFACE getvalue
-  MODULE PROCEDURE realvec_getvalue10
-END INTERFACE getvalue
+END INTERFACE GetValue
 
 !----------------------------------------------------------------------------
 !                                                   getvalue@GetValueMethods
@@ -356,10 +318,10 @@ END INTERFACE getvalue
 !
 ! Both obj and value should be allocated.
 
-INTERFACE
+INTERFACE GetValue
   MODULE PURE SUBROUTINE realvec_getvalue11(obj, dofobj, ivarobj, &
-    & spacecompoobj, timecompoobj, VALUE, dofvalue, ivarvalue, &
-    & spacecompovalue, timecompovalue)
+                    spacecompoobj, timecompoobj, VALUE, dofvalue, ivarvalue, &
+                                            spacecompovalue, timecompovalue)
     CLASS(RealVector_), INTENT(IN) :: obj
     TYPE(DOF_), INTENT(IN) :: dofobj
     INTEGER(I4B), INTENT(IN) :: ivarobj
@@ -371,11 +333,7 @@ INTERFACE
     INTEGER(I4B), INTENT(IN) :: spacecompovalue(:)
     INTEGER(I4B), INTENT(IN) :: timecompovalue
   END SUBROUTINE realvec_getvalue11
-END INTERFACE
-
-INTERFACE getvalue
-  MODULE PROCEDURE realvec_getvalue11
-END INTERFACE getvalue
+END INTERFACE GetValue
 
 !----------------------------------------------------------------------------
 !                                                   getvalue@GetValueMethods
@@ -392,9 +350,9 @@ END INTERFACE getvalue
 ! - `StorageFMT` can be 'Nodes_FMT' or `DOF_FMT`. It specify the storage
 ! format of returned vector.
 
-INTERFACE
+INTERFACE GetValue
   MODULE PURE SUBROUTINE realvec_getvalue12(obj, dofobj, idof, VALUE, &
-    & storageFMT, nodenum)
+                                            storageFMT, nodenum)
     CLASS(RealVector_), INTENT(IN) :: obj
     TYPE(DOF_), INTENT(IN) :: dofobj
     INTEGER(I4B), INTENT(IN) :: idof(:)
@@ -402,11 +360,7 @@ INTERFACE
     INTEGER(I4B), INTENT(IN) :: storageFMT
     INTEGER(I4B), INTENT(IN) :: nodenum(:)
   END SUBROUTINE realvec_getvalue12
-END INTERFACE
-
-INTERFACE getvalue
-  MODULE PROCEDURE realvec_getvalue12
-END INTERFACE getvalue
+END INTERFACE GetValue
 
 !----------------------------------------------------------------------------
 !                                                   getvalue@GetValueMethods
@@ -423,20 +377,16 @@ END INTERFACE getvalue
 ! - `StorageFMT` can be 'Nodes_FMT' or `DOF_FMT`. It specify the storage
 ! format of returned vector.
 
-INTERFACE
+INTERFACE GetValue
   MODULE PURE SUBROUTINE realvec_getvalue13(obj, dofobj, idof, VALUE, &
-    & storageFMT)
+                                            storageFMT)
     CLASS(RealVector_), INTENT(IN) :: obj
     TYPE(DOF_), INTENT(IN) :: dofobj
     INTEGER(I4B), INTENT(IN) :: idof(:)
     REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: VALUE(:)
     INTEGER(I4B), INTENT(IN) :: storageFMT
   END SUBROUTINE realvec_getvalue13
-END INTERFACE
-
-INTERFACE getvalue
-  MODULE PROCEDURE realvec_getvalue13
-END INTERFACE getvalue
+END INTERFACE GetValue
 
 !----------------------------------------------------------------------------
 !                                                   getvalue@GetValueMethods
@@ -453,20 +403,16 @@ END INTERFACE getvalue
 ! - `StorageFMT` can be 'Nodes_FMT' or `DOF_FMT`. It specify the storage
 ! format of returned vector.
 
-INTERFACE
+INTERFACE GetValue
   MODULE PURE SUBROUTINE realvec_getvalue14(obj, dofobj, idof, VALUE, &
-    & force3D)
+                                            force3D)
     CLASS(RealVector_), INTENT(IN) :: obj
     TYPE(DOF_), INTENT(IN) :: dofobj
     INTEGER(I4B), INTENT(IN) :: idof(:)
     REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: VALUE(:, :)
     LOGICAL(LGT), OPTIONAL, INTENT(IN) :: force3D
   END SUBROUTINE realvec_getvalue14
-END INTERFACE
-
-INTERFACE getvalue
-  MODULE PROCEDURE realvec_getvalue14
-END INTERFACE getvalue
+END INTERFACE GetValue
 
 !----------------------------------------------------------------------------
 !                                                   getvalue@GetValueMethods
@@ -476,9 +422,9 @@ END INTERFACE getvalue
 ! date:         20 Jan 2022
 ! summary:         This function returns a vector of real from [[RealVector_]]
 
-INTERFACE
+INTERFACE GetValue
   MODULE PURE SUBROUTINE realVec_getvalue15(obj, dofobj, ivar, idof, &
-    & VALUE, nodenum)
+                                            VALUE, nodenum)
     CLASS(RealVector_), INTENT(IN) :: obj
     TYPE(DOF_), INTENT(IN) :: dofobj
     INTEGER(I4B), INTENT(IN) :: ivar
@@ -486,11 +432,7 @@ INTERFACE
     REAL(DFP), INTENT(INOUT) :: VALUE
     INTEGER(I4B), INTENT(IN) :: nodenum
   END SUBROUTINE realVec_getvalue15
-END INTERFACE
-
-INTERFACE getvalue
-  MODULE PROCEDURE realVec_getvalue15
-END INTERFACE getvalue
+END INTERFACE GetValue
 
 !----------------------------------------------------------------------------
 !                                                   getvalue@GetValueMethods
@@ -500,9 +442,9 @@ END INTERFACE getvalue
 ! date:         20 Jan 2022
 ! summary:         This function returns a vector of real from [[RealVector_]]
 
-INTERFACE
+INTERFACE GetValue
   MODULE PURE SUBROUTINE realVec_getvalue16(obj, dofobj, ivar, idof, &
-    & VALUE, nodenum)
+                                            VALUE, nodenum)
     CLASS(RealVector_), INTENT(IN) :: obj
     TYPE(DOF_), INTENT(IN) :: dofobj
     INTEGER(I4B), INTENT(IN) :: ivar
@@ -510,11 +452,7 @@ INTERFACE
     REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: VALUE(:)
     INTEGER(I4B), INTENT(IN) :: nodenum(:)
   END SUBROUTINE realVec_getvalue16
-END INTERFACE
-
-INTERFACE getvalue
-  MODULE PROCEDURE realVec_getvalue16
-END INTERFACE getvalue
+END INTERFACE GetValue
 
 !----------------------------------------------------------------------------
 !                                                   getvalue@GetValueMethods
@@ -524,7 +462,7 @@ END INTERFACE getvalue
 ! date:         20 Jan 2022
 ! summary:         This function returns a vector of real from [[RealVector_]]
 
-INTERFACE
+INTERFACE GetValue
   MODULE PURE SUBROUTINE realVec_getvalue17(obj, dofobj, ivar, VALUE, nodenum)
     CLASS(RealVector_), INTENT(IN) :: obj
     TYPE(DOF_), INTENT(IN) :: dofobj
@@ -532,11 +470,7 @@ INTERFACE
     REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: VALUE(:)
     INTEGER(I4B), INTENT(IN) :: nodenum(:)
   END SUBROUTINE realVec_getvalue17
-END INTERFACE
-
-INTERFACE getvalue
-  MODULE PROCEDURE realVec_getvalue17
-END INTERFACE getvalue
+END INTERFACE GetValue
 
 !----------------------------------------------------------------------------
 !                                                             get@GetMethod
@@ -546,9 +480,9 @@ END INTERFACE getvalue
 ! date:         20 Jan 2022
 ! summary:         This function returns a vector of real from [[RealVector_]]
 
-INTERFACE
+INTERFACE GetValue
   MODULE PURE SUBROUTINE realVec_getvalue18(obj, dofobj, &
-    & ivar, spacecompo, timecompo, VALUE, nodenum)
+                                  ivar, spacecompo, timecompo, VALUE, nodenum)
     CLASS(RealVector_), INTENT(IN) :: obj
     TYPE(DOF_), INTENT(IN) :: dofobj
     INTEGER(I4B), INTENT(IN) :: ivar
@@ -557,11 +491,7 @@ INTERFACE
     REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: VALUE(:)
     INTEGER(I4B), INTENT(IN) :: nodenum(:)
   END SUBROUTINE realVec_getvalue18
-END INTERFACE
-
-INTERFACE getvalue
-  MODULE PROCEDURE realVec_getvalue18
-END INTERFACE getvalue
+END INTERFACE GetValue
 
 !----------------------------------------------------------------------------
 !                                                   getvalue@GetValueMethods
@@ -571,18 +501,14 @@ END INTERFACE getvalue
 ! date:         20 Jan 2022
 ! summary:         This function returns a vector of real from [[RealVector_]]
 
-INTERFACE
+INTERFACE GetValue
   MODULE PURE SUBROUTINE realVec_getvalue19(obj, dofobj, VALUE, idof)
     CLASS(RealVector_), INTENT(IN) :: obj
     TYPE(DOF_), INTENT(IN) :: dofobj
     REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: VALUE(:)
     INTEGER(I4B), INTENT(IN) :: idof
   END SUBROUTINE realVec_getvalue19
-END INTERFACE
-
-INTERFACE getvalue
-  MODULE PROCEDURE realVec_getvalue19
-END INTERFACE getvalue
+END INTERFACE GetValue
 
 !----------------------------------------------------------------------------
 !                                                             get@GetMethod
@@ -592,7 +518,7 @@ END INTERFACE getvalue
 ! date:         20 Jan 2022
 ! summary:         This function returns a vector of real from [[RealVector_]]
 
-INTERFACE
+INTERFACE GetValue
   MODULE PURE SUBROUTINE realVec_getvalue20(obj, dofobj, VALUE, ivar, idof)
     CLASS(RealVector_), INTENT(IN) :: obj
     TYPE(DOF_), INTENT(IN) :: dofobj
@@ -600,11 +526,7 @@ INTERFACE
     INTEGER(I4B), INTENT(IN) :: ivar
     INTEGER(I4B), INTENT(IN) :: idof
   END SUBROUTINE realVec_getvalue20
-END INTERFACE
-
-INTERFACE getvalue
-  MODULE PROCEDURE realVec_getvalue20
-END INTERFACE getvalue
+END INTERFACE GetValue
 
 !----------------------------------------------------------------------------
 !                                                   getvalue@GetValueMethods
@@ -614,9 +536,9 @@ END INTERFACE getvalue
 ! date:         20 Jan 2022
 ! summary:         This function returns a vector of real from [[RealVector_]]
 
-INTERFACE
+INTERFACE GetValue
   MODULE PURE SUBROUTINE realVec_getvalue21(obj, dofobj, VALUE, ivar, &
-    & spacecompo, timecompo)
+                                            spacecompo, timecompo)
     CLASS(RealVector_), INTENT(IN) :: obj
     TYPE(DOF_), INTENT(IN) :: dofobj
     REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: VALUE(:)
@@ -624,11 +546,7 @@ INTERFACE
     INTEGER(I4B), INTENT(IN) :: spacecompo
     INTEGER(I4B), INTENT(IN) :: timecompo
   END SUBROUTINE realVec_getvalue21
-END INTERFACE
-
-INTERFACE getvalue
-  MODULE PROCEDURE realVec_getvalue21
-END INTERFACE getvalue
+END INTERFACE GetValue
 
 !----------------------------------------------------------------------------
 !                                                   getvalue@GetValueMethods
@@ -645,7 +563,7 @@ END INTERFACE getvalue
 ! - `StorageFMT` can be 'Nodes_FMT' or `DOF_FMT`. It specify the storage
 ! format of returned vector.
 
-INTERFACE
+INTERFACE GetValue
   MODULE PURE SUBROUTINE realvec_getvalue22(obj, dofobj, idof, VALUE, nodenum)
     CLASS(RealVector_), INTENT(IN) :: obj
     TYPE(DOF_), INTENT(IN) :: dofobj
@@ -653,11 +571,7 @@ INTERFACE
     REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: VALUE(:)
     INTEGER(I4B), INTENT(IN) :: nodenum(:)
   END SUBROUTINE realvec_getvalue22
-END INTERFACE
-
-INTERFACE getvalue
-  MODULE PROCEDURE realvec_getvalue22
-END INTERFACE getvalue
+END INTERFACE GetValue
 
 !----------------------------------------------------------------------------
 !                                                   getvalue@GetValueMethods
@@ -674,18 +588,14 @@ END INTERFACE getvalue
 ! - `StorageFMT` can be 'Nodes_FMT' or `DOF_FMT`. It specify the storage
 ! format of returned vector.
 
-INTERFACE
+INTERFACE GetValue
   MODULE PURE SUBROUTINE realvec_getvalue23(obj, dofobj, idof, VALUE)
     CLASS(RealVector_), INTENT(IN) :: obj
     TYPE(DOF_), INTENT(IN) :: dofobj
     INTEGER(I4B), INTENT(IN) :: idof(:)
     REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: VALUE(:)
   END SUBROUTINE realvec_getvalue23
-END INTERFACE
-
-INTERFACE getvalue
-  MODULE PROCEDURE realvec_getvalue23
-END INTERFACE getvalue
+END INTERFACE GetValue
 
 !----------------------------------------------------------------------------
 !                                                   getvalue@GetValueMethods
@@ -695,14 +605,15 @@ END INTERFACE getvalue
 ! date: 10 May 2022
 ! summary: copy a realvector into another realvector
 
-INTERFACE
+INTERFACE GetValue
   MODULE PURE SUBROUTINE realvec_getvalue24(obj, VALUE)
     CLASS(RealVector_), INTENT(IN) :: obj
     CLASS(RealVector_), INTENT(INOUT) :: VALUE
   END SUBROUTINE realvec_getvalue24
-END INTERFACE
+END INTERFACE GetValue
 
-INTERFACE getvalue
-  MODULE PROCEDURE realvec_getvalue24
-END INTERFACE getvalue
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
 END MODULE RealVector_GetValueMethods
