@@ -16,8 +16,14 @@
 !
 
 SUBMODULE(DOF_GetValueMethods) Methods
-USE BaseMethod
+USE GlobalData, ONLY: DOF_FMT, NODES_FMT
+
+USE ReallocateUtility, ONLY: Reallocate
+
+USE DOF_GetMethods, ONLY: OPERATOR(.tdof.)
+
 IMPLICIT NONE
+
 CONTAINS
 
 !----------------------------------------------------------------------------
@@ -26,65 +32,57 @@ CONTAINS
 
 MODULE PROCEDURE dof_getvalue1
 INTEGER(I4B) :: m, n, i, k, tdof
-!
-!
-!
 m = SIZE(idof)
 n = SIZE(nodenum)
-!
+
 CALL Reallocate(v, m * n)
-!
+
 SELECT CASE (obj%StorageFMT)
-  !
-  !
-  !
+
 CASE (DOF_FMT)
-  !
+
+  ! Returned storage format is NOT same as the storage format of the object
+  ! that is NODES_FMT
   IF (StorageFMT .EQ. NODES_FMT) THEN
-    !
-    DO i = 1, m
-      DO k = 1, n
-        v((k - 1) * m + i) = &
-          & val(nodenum(k) + obj%valmap(idof(i)) - 1)
-      END DO
+
+    DO CONCURRENT(i=1:m, k=1:n)
+      v((k - 1) * m + i) = val(nodenum(k) + obj%valmap(idof(i)) - 1)
     END DO
-    !
-  ELSE
-    !
-    DO i = 1, m
-      v((i - 1) * n + 1:i * n) = &
-        & val(nodenum + obj%valmap(idof(i)) - 1)
-    END DO
-    !
+
+    RETURN
+
   END IF
-  !
-  !
-  !
+
+  ! Returned storage format is same as the storage format of the object
+  ! that is DOF_FMT
+  DO CONCURRENT(i=1:m)
+    v((i - 1) * n + 1:i * n) = val(nodenum + obj%valmap(idof(i)) - 1)
+  END DO
+
 CASE (NODES_FMT)
-  !
+
   tdof = .tdof.obj
-  !
-  IF (StorageFMT .EQ. dof_FMT) THEN
-    !
-    DO i = 1, n
-      DO k = 1, m
-        v((k - 1) * n + i) = val((nodenum(i) - 1) * tdof + idof(k))
-      END DO
+
+  ! Returned storage format is NOT same as the storage format of the object
+  ! that is DOF_FMT
+  IF (StorageFMT .EQ. DOF_FMT) THEN
+
+    DO CONCURRENT(i=1:n, k=1:m)
+      v((k - 1) * n + i) = val((nodenum(i) - 1) * tdof + idof(k))
     END DO
-    !
-  ELSE
-    !
-    DO i = 1, n
-      DO k = 1, m
-        v((i - 1) * m + k) &
-          & = val((nodenum(i) - 1) * tdof + idof(k))
-      END DO
-    END DO
-    !
+
+    RETURN
+
   END IF
-  !
+
+  ! Returned storage format is same as the storage format of the object
+  ! that is NODES_FMT
+  DO CONCURRENT(i=1:n, k=1:m)
+    v((i - 1) * m + k) = val((nodenum(i) - 1) * tdof + idof(k))
+  END DO
+
 END SELECT
-!
+
 END PROCEDURE dof_getvalue1
 
 !----------------------------------------------------------------------------
@@ -93,29 +91,28 @@ END PROCEDURE dof_getvalue1
 
 MODULE PROCEDURE dof_getvalue2
 INTEGER(I4B) :: m, n, i, k, tdof
-!
-!
-!
+LOGICAL(LGT) :: abool
+
 k = obj%valmap(idof(1) + 1) - obj%valmap(idof(1))
 m = SIZE(idof)
-!
+
 DO i = 1, m
   k = MAX(k, obj%valmap(idof(i) + 1) - obj%valmap(idof(i)))
 END DO
-!
-IF (PRESENT(force3D) .AND. m .LT. 3) THEN
-  CALL reallocate(v, 3, k)
+
+abool = PRESENT(force3D) .AND. (m .LT. 3)
+IF (abool) THEN
+  CALL Reallocate(v, 3, k)
 ELSE
-  CALL reallocate(v, m, k)
+  CALL Reallocate(v, m, k)
 END IF
-!
+
+tdof = .tdof.obj
+
 SELECT CASE (obj%StorageFMT)
-  !
-  !
-  !
+
 CASE (DOF_FMT)
-  !
-  tdof = .tdof.obj
+
   DO i = 1, m
     n = obj%valmap(idof(i) + 1) - obj%valmap(idof(i))
     ! length of idof( i )
@@ -123,21 +120,18 @@ CASE (DOF_FMT)
       v(i, k) = val(k + obj%valmap(idof(i)) - 1)
     END DO
   END DO
-  !
-  !
-  !
+
 CASE (NODES_FMT)
-  !
-  tdof = .tdof.obj
+
   n = obj%valmap(2) - obj%valmap(1) ! size of dof; homogenous
   DO i = 1, n
     DO k = 1, m
       v(k, i) = val((i - 1) * tdof + idof(k))
     END DO
   END DO
-  !
+
 END SELECT
-!
+
 END PROCEDURE dof_getvalue2
 
 !----------------------------------------------------------------------------
@@ -145,53 +139,49 @@ END PROCEDURE dof_getvalue2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE dof_getvalue3
-INTEGER(I4B) :: m, n, i, k, tdof
-!
-! main
-!
+INTEGER(I4B) :: m, n, i, k, tdof, tsize_idof
+
+tsize_idof = SIZE(idof)
+
 k = 0
-DO i = 1, SIZE(idof)
+DO i = 1, tsize_idof
   k = k + obj%valmap(idof(i) + 1) - obj%valmap(idof(i))
 END DO
-!
-CALL reallocate(v, k)
-!
+
+CALL Reallocate(v, k)
+
 SELECT CASE (obj%StorageFMT)
-  !
-  !
-  !
+
 CASE (DOF_FMT)
-  !
-  IF (StorageFMT .EQ. nodes_FMT) THEN
-    !
+
+  IF (StorageFMT .EQ. NODES_FMT) THEN
+
     tdof = .tdof.obj
-    m = SIZE(idof)
+    m = tsize_idof
     DO i = 1, m
       n = obj%valmap(idof(i) + 1) - obj%valmap(idof(i))
       DO k = 1, n
         v((k - 1) * m + i) = val(k + obj%valmap(idof(i)) - 1)
       END DO
     END DO
-    !
+
   ELSE
-    !
+
     m = 0; n = 0
-    DO i = 1, SIZE(idof)
+    DO i = 1, tsize_idof
       m = n + 1
       n = n + obj%valmap(idof(i) + 1) - obj%valmap(idof(i))
       v(m:n) = &
-        & val(obj%valmap(idof(i)):obj%valmap(idof(i + 1) - 1))
+        val(obj%valmap(idof(i)):obj%valmap(idof(i + 1) - 1))
     END DO
-    !
+
   END IF
-  !
-  !
-  !
+
 CASE (Nodes_FMT)
-  !
+
   tdof = .tdof.obj
-  m = SIZE(idof)
-  !
+  m = tsize_idof
+
   IF (StorageFMT .EQ. dof_FMT) THEN
     n = obj%valmap(2) - obj%valmap(1)
     DO i = 1, n
@@ -199,20 +189,19 @@ CASE (Nodes_FMT)
         v((k - 1) * n + i) = val((i - 1) * tdof + idof(k))
       END DO
     END DO
-    !
+
   ELSE
-    !
+
     DO i = 1, obj%valmap(2) - obj%valmap(1)
       DO k = 1, m
         v((i - 1) * m + k) &
-          & = val((i - 1) * tdof + idof(k))
+          = val((i - 1) * tdof + idof(k))
       END DO
     END DO
   END IF
-  !
+
 END SELECT
-!
-!
+
 END PROCEDURE dof_getvalue3
 
 !----------------------------------------------------------------------------
@@ -220,15 +209,8 @@ END PROCEDURE dof_getvalue3
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE dof_get1
-!
-CALL getvalue( &
-  & v=ans, &
-  & val=val, &
-  & obj=obj, &
-  & idof=idof, &
-  & nodenum=nodenum, &
-  & StorageFMT=StorageFMT)
-!
+CALL GetValue(v=ans, val=val, obj=obj, idof=idof, nodenum=nodenum, &
+              StorageFMT=StorageFMT)
 END PROCEDURE dof_get1
 
 !----------------------------------------------------------------------------
@@ -236,14 +218,11 @@ END PROCEDURE dof_get1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE dof_get2
-!
-CALL getvalue( &
-  & v=ans, &
-  & val=val, &
-  & obj=obj, &
-  & idof=idof, &
-  & StorageFMT=StorageFMT)
-!
+CALL GetValue(v=ans, val=val, obj=obj, idof=idof, StorageFMT=StorageFMT)
 END PROCEDURE dof_get2
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
 
 END SUBMODULE Methods
