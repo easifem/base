@@ -16,14 +16,16 @@
 !
 
 MODULE RealVector_ConstructorMethods
-USE GlobalData
-USE BaseType
+USE GlobalData, ONLY: I4B, DFP, LGT
+USE BaseType, ONLY: RealVector_, DOF_
+
 IMPLICIT NONE
 PRIVATE
+
 PUBLIC :: Shape
 PUBLIC :: SIZE
-PUBLIC :: getTotalDimension
-PUBLIC :: setTotalDimension
+PUBLIC :: GetTotalDimension
+PUBLIC :: SetTotalDimension
 PUBLIC :: ALLOCATE
 PUBLIC :: DEALLOCATE
 PUBLIC :: Initiate
@@ -97,31 +99,31 @@ END INTERFACE Size
 !
 ! This function returns the total dimension (or rank) of an array,
 
-INTERFACE getTotalDimension
-  MODULE PURE FUNCTION RealVec_getTotalDimension(obj) RESULT(Ans)
+INTERFACE GetTotalDimension
+  MODULE PURE FUNCTION RealVec_GetTotalDimension(obj) RESULT(Ans)
     TYPE(RealVector_), INTENT(IN) :: obj
     INTEGER(I4B) :: ans
-  END FUNCTION RealVec_getTotalDimension
-END INTERFACE getTotalDimension
+  END FUNCTION RealVec_GetTotalDimension
+END INTERFACE GetTotalDimension
 
 !----------------------------------------------------------------------------
-!                                             setTotalDimension@Constructor
+!                                             SetTotalDimension@Constructor
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date:         23 Feb 2021
-! summary:         This subroutine set the total dimension (rank) of an array
+! summary:         This subroutine Set the total dimension (rank) of an array
 !
 !# Introduction
 !
-! This subroutine sets the rank(total dimension) of an array
+! This subroutine Sets the rank(total dimension) of an array
 
-INTERFACE setTotalDimension
-  MODULE PURE SUBROUTINE RealVec_setTotalDimension(obj, tDimension)
+INTERFACE SetTotalDimension
+  MODULE PURE SUBROUTINE RealVec_SetTotalDimension(obj, tDimension)
     CLASS(RealVector_), INTENT(INOUT) :: obj
     INTEGER(I4B), INTENT(IN) :: tDimension
-  END SUBROUTINE RealVec_setTotalDimension
-END INTERFACE setTotalDimension
+  END SUBROUTINE RealVec_SetTotalDimension
+END INTERFACE SetTotalDimension
 
 !----------------------------------------------------------------------------
 !                                                   Allocate@Constructor
@@ -131,12 +133,12 @@ END INTERFACE setTotalDimension
 ! date: 27 Feb 2021
 ! summary: This subroutine allocates memory for RealVector
 
-INTERFACE Allocate
+INTERFACE ALLOCATE
   MODULE PURE SUBROUTINE realVec_Allocate(obj, Dims)
     CLASS(RealVector_), INTENT(INOUT) :: obj
     INTEGER(I4B), INTENT(IN) :: Dims
   END SUBROUTINE realVec_Allocate
-END INTERFACE Allocate
+END INTERFACE ALLOCATE
 
 !----------------------------------------------------------------------------
 !                                                   Reallocate@Constructor
@@ -161,11 +163,11 @@ END INTERFACE Reallocate
 ! date:         27 Feb 2021
 ! summary:         This subroutine deallocates the data in [[RealVector_]]
 
-INTERFACE Deallocate
+INTERFACE DEALLOCATE
   MODULE PURE SUBROUTINE realVec_Deallocate(obj)
     CLASS(RealVector_), INTENT(INOUT) :: obj
   END SUBROUTINE realVec_Deallocate
-END INTERFACE Deallocate
+END INTERFACE DEALLOCATE
 
 !----------------------------------------------------------------------------
 !                                                       Initiate@Constructor
@@ -241,9 +243,9 @@ END INTERFACE Initiate
 !# Introduction
 !
 ! This subroutine initiate [[RealVector_]] using the information stored inside
-! [[dof_]] object. It gets the information of total size of [[RealVector_]]
+! [[dof_]] object. It Gets the information of total size of [[RealVector_]]
 ! from [[DOF_]] and call [[RealVector_Method:Initiate]] routine.
-! All values of [[RealVector_]] is set to zero.
+! All values of [[RealVector_]] is Set to zero.
 
 INTERFACE Initiate
   MODULE PURE SUBROUTINE realVec_Initiate4(obj, dofobj)
