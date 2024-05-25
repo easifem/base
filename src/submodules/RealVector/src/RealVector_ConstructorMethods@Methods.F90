@@ -20,7 +20,15 @@
 ! summary: This module contains constructor methods of [[RealVector_]]
 
 SUBMODULE(RealVector_ConstructorMethods) Methods
-USE BaseMethod
+USE SafeSizeUtility, ONLY: SafeSize
+
+USE F95_BLAS, ONLY: COPY
+
+USE DOF_Method, ONLY: OPERATOR(.tnodes.), &
+                      OPERATOR(.tDOF.)
+
+USE ReallocateUtility, ONLY: Util_Reallocate => Reallocate
+
 IMPLICIT NONE
 CONTAINS
 
@@ -29,11 +37,7 @@ CONTAINS
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE realVec_isAllocated
-IF (ALLOCATED(obj%Val)) THEN
-  ans = .TRUE.
-ELSE
-  ans = .FALSE.
-END IF
+ans = ALLOCATED(obj%val)
 END PROCEDURE realVec_isAllocated
 
 !----------------------------------------------------------------------------
@@ -41,11 +45,7 @@ END PROCEDURE realVec_isAllocated
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE realVec_Shape
-IF (ALLOCATED(obj%Val)) THEN
-  Ans(1) = SIZE(obj%Val)
-ELSE
-  Ans = 0
-END IF
+ans(1) = SafeSize(obj%val)
 END PROCEDURE realVec_Shape
 
 !----------------------------------------------------------------------------
@@ -53,11 +53,7 @@ END PROCEDURE realVec_Shape
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE realVec_Size
-IF (ALLOCATED(obj%Val)) THEN
-  Ans = SIZE(obj%Val)
-ELSE
-  Ans = 0
-END IF
+ans = SafeSize(obj%val)
 END PROCEDURE realVec_Size
 
 !----------------------------------------------------------------------------
@@ -81,8 +77,8 @@ END PROCEDURE RealVec_setTotalDimension
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE realVec_Allocate
-CALL Reallocate(obj%Val, Dims)
-CALL setTotalDimension(obj, 1_I4B)
+CALL Util_Reallocate(obj%val, Dims)
+CALL SetTotalDimension(obj, 1_I4B)
 END PROCEDURE realVec_Allocate
 
 !----------------------------------------------------------------------------
@@ -90,14 +86,21 @@ END PROCEDURE realVec_Allocate
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE realVec_Reallocate
-IF (ALLOCATED(obj)) THEN
-  IF (SIZE(obj) .NE. row) THEN
-    DEALLOCATE (obj)
-    ALLOCATE (obj(row))
-  END IF
-ELSE
+LOGICAL(LGT) :: isok
+
+isok = ALLOCATED(obj)
+
+IF (.NOT. isok) THEN
+  ALLOCATE (obj(row))
+  RETURN
+END IF
+
+isok = SIZE(obj) .NE. row
+IF (isok) THEN
+  DEALLOCATE (obj)
   ALLOCATE (obj(row))
 END IF
+
 END PROCEDURE realVec_Reallocate
 
 !----------------------------------------------------------------------------
@@ -105,7 +108,7 @@ END PROCEDURE realVec_Reallocate
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE realVec_Deallocate
-IF (ALLOCATED(obj%Val)) DEALLOCATE (obj%Val)
+IF (ALLOCATED(obj%val)) DEALLOCATE (obj%val)
 END PROCEDURE realVec_Deallocate
 
 !----------------------------------------------------------------------------
@@ -123,6 +126,7 @@ END PROCEDURE realVec_Initiate1
 MODULE PROCEDURE realVec_Initiate2
 INTEGER(I4B) :: n, i
 n = SIZE(tSize)
+
 IF (ALLOCATED(obj)) THEN
   IF (SIZE(obj) .NE. n) THEN
     DEALLOCATE (obj)
@@ -131,6 +135,7 @@ IF (ALLOCATED(obj)) THEN
 ELSE
   ALLOCATE (obj(n))
 END IF
+
 DO i = 1, n
   CALL ALLOCATE (obj(i), tSize(i))
 END DO
@@ -141,10 +146,10 @@ END PROCEDURE realVec_Initiate2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE realVec_Initiate3
-IF (ALLOCATED(obj%Val)) DEALLOCATE (obj%Val)
-ALLOCATE (obj%Val(a:b))
-obj%Val = 0.0_DFP
-CALL setTotalDimension(obj, 1_I4B)
+IF (ALLOCATED(obj%val)) DEALLOCATE (obj%val)
+ALLOCATE (obj%val(a:b))
+obj%val = 0.0_DFP
+CALL SetTotalDimension(obj, 1_I4B)
 END PROCEDURE realVec_Initiate3
 
 !----------------------------------------------------------------------------
@@ -162,23 +167,14 @@ END PROCEDURE realVec_Initiate4
 MODULE PROCEDURE realVec_Initiate5
 INTEGER(I4B) :: ii
 INTEGER(I4B), ALLOCATABLE :: tsize(:)
-  !!
-  !! main
-  !!
 ASSOCIATE (Map => dofobj%Map)
-    !!
   ALLOCATE (tsize(.tDOF.dofobj))
-    !!
   DO ii = 1, SIZE(Map, 1) - 1
     tsize(Map(ii, 5):Map(ii + 1, 5) - 1) = Map(ii, 6)
   END DO
-    !!
   CALL Initiate(obj=obj, tsize=tsize)
-    !!
   DEALLOCATE (tsize)
-    !!
 END ASSOCIATE
-  !!
 END PROCEDURE realVec_Initiate5
 
 !----------------------------------------------------------------------------
@@ -187,7 +183,7 @@ END PROCEDURE realVec_Initiate5
 
 MODULE PROCEDURE realVec_Random_Number1
 CALL Initiate(obj=obj, tSize=tSize)
-CALL RANDOM_NUMBER(obj%Val)
+CALL RANDOM_NUMBER(obj%val)
 END PROCEDURE realVec_Random_Number1
 
 !----------------------------------------------------------------------------
@@ -207,7 +203,7 @@ ELSE
 END IF
 DO ii = 1, n
   CALL Initiate(obj=obj(ii), tSize=tSize(ii))
-  CALL RANDOM_NUMBER(obj(ii)%Val)
+  CALL RANDOM_NUMBER(obj(ii)%val)
 END DO
 END PROCEDURE realVec_Random_Number2
 

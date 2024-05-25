@@ -42,7 +42,6 @@ PUBLIC :: isInitiated
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-11
-! update: 2021-11-11
 ! summary: Returns true if the instance is allocated
 
 INTERFACE isAllocated
@@ -61,8 +60,8 @@ END INTERFACE isInitiated
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date:         27 Feb 2021
-! summary:         This function returns the shape of [[RealVector_]]
+! date: 27 Feb 2021
+! summary: This function returns the shape of RealVector_
 
 INTERFACE Shape
   MODULE PURE FUNCTION realVec_shape(obj) RESULT(Ans)
@@ -76,8 +75,8 @@ END INTERFACE Shape
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date:         27 Feb 2021
-! summary:         This function returns the size of [[RealVector_]]
+! date: 27 Feb 2021
+! summary: This function returns the size of RealVector_
 
 INTERFACE Size
   MODULE PURE FUNCTION realVec_size(obj, Dims) RESULT(Ans)
@@ -92,8 +91,8 @@ END INTERFACE Size
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date:         23 Feb 2021
-! summary:         Returns the total dimension of an array
+! date: 23 Feb 2021
+! summary: Returns the total dimension of an array
 !
 !# Introduction
 !
@@ -111,8 +110,8 @@ END INTERFACE GetTotalDimension
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date:         23 Feb 2021
-! summary:         This subroutine Set the total dimension (rank) of an array
+! date: 23 Feb 2021
+! summary: This subroutine Set the total dimension (rank) of an array
 !
 !# Introduction
 !
@@ -145,7 +144,7 @@ END INTERFACE ALLOCATE
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date:  25 Feb 2021
+! date: 25 Feb 2021
 ! summary: Allocate memory for the vector
 
 INTERFACE Reallocate
@@ -160,8 +159,8 @@ END INTERFACE Reallocate
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date:         27 Feb 2021
-! summary:         This subroutine deallocates the data in [[RealVector_]]
+! date: 27 Feb 2021
+! summary: This subroutine deallocates the data in RealVector_
 
 INTERFACE DEALLOCATE
   MODULE PURE SUBROUTINE realVec_Deallocate(obj)
@@ -174,13 +173,13 @@ END INTERFACE DEALLOCATE
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date:         27 Feb 2021
-! summary:         This subroutine allocates the memory for [[RealVector_]]
+! date: 27 Feb 2021
+! summary: This subroutine allocates the memory for RealVector_
 !
-!# Introduction This subroutine allocates the memeory for [[RealVector_]]
+!# Introduction This subroutine allocates the memeory for RealVector_
 !
 !@note
-! This subroutine is an alias for [[Allocate_Data]]
+! This subroutine is an alias for Allocate_Data
 !@endnote
 
 INTERFACE Initiate
@@ -195,12 +194,12 @@ END INTERFACE Initiate
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date:         27 Feb 2021
+! date: 27 Feb 2021
 ! summary: This subroutine allocate the memory for a vector of type
-! [[RealVector_]]
+! RealVector_
 !
 !# Introduction
-! This subroutine allocate the memory for a vector of type [[RealVector_]]
+! This subroutine allocate the memory for a vector of type RealVector_
 !@note
 ! The size of `obj` would be same as the size of `tSize`
 !@endnote
@@ -217,12 +216,12 @@ END INTERFACE Initiate
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date:         27 Feb 2021
+! date: 27 Feb 2021
 ! summary: This subroutine allocate the memory for an instance of
-! [[RealVector_]]
+! RealVector_
 !
 !# Introduction
-! This subroutine allocate the memory for an instance of [[RealVector_]].
+! This subroutine allocate the memory for an instance of RealVector_.
 ! User can specify the lowerbounds and upper bounds.
 
 INTERFACE Initiate
@@ -237,15 +236,15 @@ END INTERFACE Initiate
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date:         23 Feb 2021
-! summary: Initiate [[RealVector_]] using [[dof_]] object
+! date: 23 Feb 2021
+! summary: Initiate RealVector_ using dof_ object
 !
 !# Introduction
 !
-! This subroutine initiate [[RealVector_]] using the information stored inside
-! [[dof_]] object. It Gets the information of total size of [[RealVector_]]
-! from [[DOF_]] and call [[RealVector_Method:Initiate]] routine.
-! All values of [[RealVector_]] is Set to zero.
+! This subroutine initiate RealVector_ using the information stored inside
+! dof_ object. It Gets the information of total size of RealVector_
+! from DOF_ and call RealVector_Method:Initiate routine.
+! All values of RealVector_ is Set to zero.
 
 INTERFACE Initiate
   MODULE PURE SUBROUTINE realVec_Initiate4(obj, dofobj)
@@ -260,13 +259,13 @@ END INTERFACE Initiate
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 10 Oct, 2021
-! summary: Initiate a vector of [[realvector_]] from [[dof_]] object
+! summary: Initiate a vector of realvector_ from dof_ object
 !
 !# Introduction
 !
-! This subroutine initiates a vector of [[realvector_]] object.
+! This subroutine initiates a vector of realvector_ object.
 ! The size of `val` will be total number of degrees of freedom inside
-! the [[DOF_]] object. Therefore, each `val( idof )` denotes the
+! the DOF_ object. Therefore, each `val( idof )` denotes the
 ! nodal vector of correrponding to a degree of freedom number `idof`
 
 INTERFACE Initiate
@@ -281,13 +280,13 @@ END INTERFACE Initiate
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date:         28 Feb 2021
-! summary:         This routine computes radom_number
+! date: 28 Feb 2021
+! summary: This routine computes radom_number
 !
 !# Introduction
 !
 ! This routine calls `RANDOM_NUMBER` to generate a random instnance of
-! [[RealVector_]]
+! RealVector_
 
 INTERFACE RANDOM_NUMBER
   MODULE SUBROUTINE realVec_Random_Number1(obj, tsize)
@@ -301,16 +300,16 @@ END INTERFACE RANDOM_NUMBER
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date:         28 Feb 2021
-! summary:         This routine computes radom_number
+! date: 28 Feb 2021
+! summary: This routine computes radom_number
 !
 !# Introduction
 !
 ! This routine calls `RANDOM_NUMBER` to generate a random instnance of
-! [[RealVector_]]
+! RealVector_
 !
 !@note
-!         Here argument `obj` is a vector of [[RealVector_]] data-types.
+!         Here argument `obj` is a vector of RealVector_ data-types.
 !@endnote
 
 INTERFACE RANDOM_NUMBER
@@ -325,12 +324,12 @@ END INTERFACE RANDOM_NUMBER
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date:         28 Feb 2021
-! summary:         This function returns an instance of [[RealVector_]]
+! date: 28 Feb 2021
+! summary: This function returns an instance of RealVector_
 !
 !# Introduction
 !
-! This function returns an instance of [[RealVector_]]
+! This function returns an instance of RealVector_
 
 INTERFACE RealVector
   MODULE PURE FUNCTION realVec_Constructor1(tSize) RESULT(obj)
@@ -344,15 +343,15 @@ END INTERFACE RealVector
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date:         28 Feb 2021
-! summary:         This function returns an instance of [[RealVector_]]
+! date: 28 Feb 2021
+! summary: This function returns an instance of RealVector_
 !
 !# Introduction
-! This function returns an instance of [[RealVector_]] by copying the
+! This function returns an instance of RealVector_ by copying the
 ! contents of a fortran integer vector.
 !
 !@note
-!         This routine internally calls [[RealVector_Method:COPY]] routine.
+!         This routine internally calls RealVector_Method:COPY routine.
 !@endnote
 
 INTERFACE RealVector
@@ -367,15 +366,15 @@ END INTERFACE RealVector
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date:         28 Feb 2021
-! summary:         This function returns an instance of [[RealVector_]]
+! date: 28 Feb 2021
+! summary: This function returns an instance of RealVector_
 !
 !# Introduction
-! This function returns an instance of [[RealVector_]] by copying the
+! This function returns an instance of RealVector_ by copying the
 ! contents of a fortran real vector.
 !
 !@note
-!         This routine internally calls [[RealVector_Method:COPY]] routine.
+!         This routine internally calls RealVector_Method:COPY routine.
 !@endnote
 
 INTERFACE RealVector
@@ -390,13 +389,13 @@ END INTERFACE RealVector
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date:         28 Feb 2021
-! summary:         This function returnt the pointer to a newly created instance of
-! [[RealVector_]]
+! date: 28 Feb 2021
+! summary: This function returnt the pointer to a newly created instance of
+! RealVector_
 !
 !# Introduction
 ! This function returnt the pointer to a newly created instance of
-! [[RealVector_]]
+! RealVector_
 
 INTERFACE RealVector_Pointer
   MODULE PURE FUNCTION realVec_Constructor_1(tSize) RESULT(obj)
@@ -410,15 +409,15 @@ END INTERFACE RealVector_Pointer
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date:         28 Feb 2021
-! summary:         This function returns the pointer to an instance of[[RealVector_]]
+! date: 28 Feb 2021
+! summary: This function returns the pointer to an instance ofRealVector_
 !
 !# Introduction
 ! This function returns a pointer to an newly created instance of
-! [[RealVector_]] by copying the contents of a fortran integer vector.
+! RealVector_ by copying the contents of a fortran integer vector.
 !
 !@note
-!         This routine internally calls [[RealVector_Method:COPY]] routine.
+!         This routine internally calls RealVector_Method:COPY routine.
 !@endnote
 
 INTERFACE RealVector_Pointer
@@ -433,15 +432,15 @@ END INTERFACE RealVector_Pointer
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date:         28 Feb 2021
-! summary:         This function returns the pointer to an instance of[[RealVector_]]
+! date: 28 Feb 2021
+! summary: This function returns the pointer to an instance ofRealVector_
 !
 !# Introduction
 ! This function returns a pointer to an newly created instance of
-! [[RealVector_]] by copying the contents of a fortran real vector.
+! RealVector_ by copying the contents of a fortran real vector.
 !
 !@note
-!         This routine internally calls [[RealVector_Method:COPY]] routine.
+!         This routine internally calls RealVector_Method:COPY routine.
 !@endnote
 
 INTERFACE RealVector_Pointer
