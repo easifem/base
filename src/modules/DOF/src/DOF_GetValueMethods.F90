@@ -22,7 +22,8 @@ IMPLICIT NONE
 
 PRIVATE
 
-PUBLIC :: Getvalue
+PUBLIC :: GetValue
+PUBLIC :: GetValue_
 PUBLIC :: Get
 
 !----------------------------------------------------------------------------
@@ -41,7 +42,7 @@ PUBLIC :: Get
 ! format of returned vector.
 
 INTERFACE GetValue
-  MODULE PURE SUBROUTINE dof_getvalue1(v, val, obj, idof, storageFMT, &
+  MODULE PURE SUBROUTINE obj_GetValue1(v, val, obj, idof, storageFMT, &
                                        nodenum)
     REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: v(:)
     !! values to return
@@ -55,8 +56,41 @@ INTERFACE GetValue
     !! storage format of returned vector
     INTEGER(I4B), INTENT(IN) :: nodenum(:)
     !! node numbers to extract
-  END SUBROUTINE dof_getvalue1
+  END SUBROUTINE obj_GetValue1
 END INTERFACE GetValue
+
+!----------------------------------------------------------------------------
+!                                                                   GetValue
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2024-05-25
+! summary: Returns the values of degrees of freedom in a single vector
+!
+!# Introduction
+!
+! This subroutine is same as GetValue1
+! but it does not allocate any extra memory
+
+INTERFACE GetValue_
+ MODULE PURE SUBROUTINE obj_GetValue_1(v, tsize, val, obj, idof, storageFMT, &
+                                        nodenum)
+    REAL(DFP), INTENT(INOUT) :: v(:)
+    !! values to return
+    INTEGER(I4B), INTENT(OUT) :: tsize
+    !! size of data written in v
+    REAL(DFP), INTENT(IN) :: val(:)
+    !! values to extract from
+    TYPE(DOF_), INTENT(IN) :: obj
+    !! degree of freedom object
+    INTEGER(I4B), INTENT(IN) :: idof(:)
+    !! degrees of freedom to extract
+    INTEGER(I4B), INTENT(IN) :: storageFMT
+    !! storage format of returned vector
+    INTEGER(I4B), INTENT(IN) :: nodenum(:)
+    !! node numbers to extract
+  END SUBROUTINE obj_GetValue_1
+END INTERFACE GetValue_
 
 !----------------------------------------------------------------------------
 !                                                                   GetValue
@@ -76,14 +110,44 @@ END INTERFACE GetValue
 !
 
 INTERFACE GetValue
-  MODULE PURE SUBROUTINE dof_getvalue2(v, val, obj, idof, force3D)
+  MODULE PURE SUBROUTINE obj_GetValue2(v, val, obj, idof, force3D)
     REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: v(:, :)
     REAL(DFP), INTENT(IN) :: val(:)
     TYPE(DOF_), INTENT(IN) :: obj
     INTEGER(I4B), INTENT(IN) :: idof(:)
     LOGICAL(LGT), OPTIONAL, INTENT(IN) :: force3D
-  END SUBROUTINE dof_getvalue2
+  END SUBROUTINE obj_GetValue2
 END INTERFACE GetValue
+
+!----------------------------------------------------------------------------
+!                                                                   GetValue
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2024-05-25
+! summary: Returns the values of degrees of freedom in a 2D array
+!
+!# Introduction
+!
+! This subroutine is same as GetValue2 but
+! it does not allocate any extra memory
+
+INTERFACE GetValue_
+ MODULE PURE SUBROUTINE obj_GetValue_2(v, val, nrow, ncol, obj, idof, force3D)
+    REAL(DFP), INTENT(INOUT) :: v(:, :)
+    !! Data to be returned
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+    !! number of rows and columns written in v
+    REAL(DFP), INTENT(IN) :: val(:)
+    !! values to extract from
+    TYPE(DOF_), INTENT(IN) :: obj
+    !! degree of freedom object for val
+    INTEGER(I4B), INTENT(IN) :: idof(:)
+    !! degrees of freedom to extract
+    LOGICAL(LGT), OPTIONAL, INTENT(IN) :: force3D
+    !! if true then return 3D vector
+  END SUBROUTINE obj_GetValue_2
+END INTERFACE GetValue_
 
 !----------------------------------------------------------------------------
 !                                                                   GetValue
@@ -101,21 +165,51 @@ END INTERFACE GetValue
 ! format of returned vector.
 
 INTERFACE GetValue
-  MODULE PURE SUBROUTINE dof_getvalue3(v, val, obj, idof, storageFMT)
+  MODULE PURE SUBROUTINE obj_GetValue3(v, val, obj, idof, storageFMT)
     REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: v(:)
     REAL(DFP), INTENT(IN) :: val(:)
     TYPE(DOF_), INTENT(IN) :: obj
     INTEGER(I4B), INTENT(IN) :: idof(:)
     INTEGER(I4B), INTENT(IN) :: storageFMT
-  END SUBROUTINE dof_getvalue3
+  END SUBROUTINE obj_GetValue3
 END INTERFACE GetValue
+
+!----------------------------------------------------------------------------
+!                                                                   GetValue
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2024-05-25
+! summary: Returns the values of degrees of freedom in a single vector
+!
+!# Introduction
+!
+! This subroutine is same as GetValue3 but
+! it does not allocate any extra memory
+
+INTERFACE GetValue_
+  MODULE PURE SUBROUTINE obj_GetValue_3(v, tsize, val, obj, idof, storageFMT)
+    REAL(DFP), INTENT(INOUT) :: v(:)
+    !! values to be returned
+    INTEGER(I4B), INTENT(OUT) :: tsize
+    !! size of data written in v
+    REAL(DFP), INTENT(IN) :: val(:)
+    !! values to extract from
+    TYPE(DOF_), INTENT(IN) :: obj
+    !! degree of freedom object
+    INTEGER(I4B), INTENT(IN) :: idof(:)
+    !! degrees of freedom to extract
+    INTEGER(I4B), INTENT(IN) :: storageFMT
+    !! stroage format of returned vector
+  END SUBROUTINE obj_GetValue_3
+END INTERFACE GetValue_
 
 !----------------------------------------------------------------------------
 !                                                                       Get
 !----------------------------------------------------------------------------
 
 INTERFACE Get
-  MODULE PURE FUNCTION dof_get1(val, obj, idof, StorageFMT, nodenum, &
+  MODULE PURE FUNCTION obj_get1(val, obj, idof, StorageFMT, nodenum, &
                                 Force3D) RESULT(ans)
     REAL(DFP), INTENT(IN) :: val(:)
     TYPE(DOF_), INTENT(IN) :: obj
@@ -124,7 +218,7 @@ INTERFACE Get
     INTEGER(I4B), INTENT(IN) :: nodenum(:)
     LOGICAL(LGT), OPTIONAL, INTENT(IN) :: force3D
     REAL(DFP), ALLOCATABLE :: ans(:)
-  END FUNCTION dof_get1
+  END FUNCTION obj_get1
 END INTERFACE Get
 
 !----------------------------------------------------------------------------
@@ -132,7 +226,7 @@ END INTERFACE Get
 !----------------------------------------------------------------------------
 
 INTERFACE Get
-  MODULE PURE FUNCTION dof_get2(val, obj, idof, StorageFMT, &
+  MODULE PURE FUNCTION obj_get2(val, obj, idof, StorageFMT, &
                                 Force3D) RESULT(ans)
     REAL(DFP), INTENT(IN) :: val(:)
     TYPE(DOF_), INTENT(IN) :: obj
@@ -140,7 +234,7 @@ INTERFACE Get
     INTEGER(I4B), INTENT(IN) :: StorageFMT
     LOGICAL(LGT), OPTIONAL, INTENT(IN) :: force3D
     REAL(DFP), ALLOCATABLE :: ans(:)
-  END FUNCTION dof_get2
+  END FUNCTION obj_get2
 END INTERFACE Get
 
 !----------------------------------------------------------------------------

@@ -30,12 +30,23 @@ CONTAINS
 !                                                             getArrayvalues
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE dof_getvalue1
+MODULE PROCEDURE obj_GetValue1
+INTEGER(I4B) :: tsize
+CALL Reallocate(v, SIZE(idof) * SIZE(nodenum))
+CALL GetValue_(v, tsize, val, obj, idof, storageFMT, &
+               nodenum)
+END PROCEDURE obj_GetValue1
+
+!----------------------------------------------------------------------------
+!                                                                  GetValue_
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE obj_GetValue_1
 INTEGER(I4B) :: m, n, i, k, tdof
 m = SIZE(idof)
 n = SIZE(nodenum)
 
-CALL Reallocate(v, m * n)
+tsize = m * n
 
 SELECT CASE (obj%StorageFMT)
 
@@ -83,14 +94,14 @@ CASE (NODES_FMT)
 
 END SELECT
 
-END PROCEDURE dof_getvalue1
+END PROCEDURE obj_GetValue_1
 
 !----------------------------------------------------------------------------
 !                                                             getArrayvalues
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE dof_getvalue2
-INTEGER(I4B) :: m, n, i, k, tdof
+MODULE PROCEDURE obj_GetValue2
+INTEGER(I4B) :: m, n, i, k
 LOGICAL(LGT) :: abool
 
 k = obj%valmap(idof(1) + 1) - obj%valmap(idof(1))
@@ -101,11 +112,32 @@ DO i = 1, m
 END DO
 
 abool = PRESENT(force3D) .AND. (m .LT. 3)
-IF (abool) THEN
-  CALL Reallocate(v, 3, k)
-ELSE
-  CALL Reallocate(v, m, k)
-END IF
+IF (abool) m = 3
+
+CALL Reallocate(v, m, k)
+CALL GetValue_(v, val, m, k, obj, idof, force3D)
+
+END PROCEDURE obj_GetValue2
+
+!----------------------------------------------------------------------------
+!                                                                 GetValue_
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE obj_GetValue_2
+INTEGER(I4B) :: m, n, i, k, tdof
+LOGICAL(LGT) :: abool
+
+k = obj%valmap(idof(1) + 1) - obj%valmap(idof(1))
+m = SIZE(idof)
+
+DO i = 1, m
+  k = MAX(k, obj%valmap(idof(i) + 1) - obj%valmap(idof(i)))
+END DO
+ncol = k
+
+nrow = m
+abool = PRESENT(force3D) .AND. (m .LT. 3)
+IF (abool) nrow = 3
 
 tdof = .tdof.obj
 
@@ -132,13 +164,30 @@ CASE (NODES_FMT)
 
 END SELECT
 
-END PROCEDURE dof_getvalue2
+END PROCEDURE obj_GetValue_2
 
 !----------------------------------------------------------------------------
 !                                                             getArrayvalues
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE dof_getvalue3
+MODULE PROCEDURE obj_GetValue3
+INTEGER(I4B) :: i, k
+
+k = 0
+DO i = 1, SIZE(idof)
+  k = k + obj%valmap(idof(i) + 1) - obj%valmap(idof(i))
+END DO
+
+CALL Reallocate(v, k)
+CALL GetValue_(v, k, val, obj, idof, storageFMT)
+
+END PROCEDURE obj_GetValue3
+
+!----------------------------------------------------------------------------
+!                                                                   GetValue_
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE obj_GetValue_3
 INTEGER(I4B) :: m, n, i, k, tdof, tsize_idof
 
 tsize_idof = SIZE(idof)
@@ -148,7 +197,7 @@ DO i = 1, tsize_idof
   k = k + obj%valmap(idof(i) + 1) - obj%valmap(idof(i))
 END DO
 
-CALL Reallocate(v, k)
+tsize = k
 
 SELECT CASE (obj%StorageFMT)
 
@@ -165,61 +214,60 @@ CASE (DOF_FMT)
       END DO
     END DO
 
-  ELSE
-
-    m = 0; n = 0
-    DO i = 1, tsize_idof
-      m = n + 1
-      n = n + obj%valmap(idof(i) + 1) - obj%valmap(idof(i))
-      v(m:n) = &
-        val(obj%valmap(idof(i)):obj%valmap(idof(i + 1) - 1))
-    END DO
+    RETURN
 
   END IF
+
+  m = 0; n = 0
+  DO i = 1, tsize_idof
+    m = n + 1
+    n = n + obj%valmap(idof(i) + 1) - obj%valmap(idof(i))
+    v(m:n) = &
+      val(obj%valmap(idof(i)):obj%valmap(idof(i + 1) - 1))
+  END DO
 
 CASE (Nodes_FMT)
 
   tdof = .tdof.obj
   m = tsize_idof
 
-  IF (StorageFMT .EQ. dof_FMT) THEN
+  IF (StorageFMT .EQ. DOF_FMT) THEN
     n = obj%valmap(2) - obj%valmap(1)
     DO i = 1, n
       DO k = 1, m
         v((k - 1) * n + i) = val((i - 1) * tdof + idof(k))
       END DO
     END DO
-
-  ELSE
-
-    DO i = 1, obj%valmap(2) - obj%valmap(1)
-      DO k = 1, m
-        v((i - 1) * m + k) &
-          = val((i - 1) * tdof + idof(k))
-      END DO
-    END DO
+    RETURN
   END IF
+
+  DO i = 1, obj%valmap(2) - obj%valmap(1)
+    DO k = 1, m
+      v((i - 1) * m + k) &
+        = val((i - 1) * tdof + idof(k))
+    END DO
+  END DO
 
 END SELECT
 
-END PROCEDURE dof_getvalue3
+END PROCEDURE obj_GetValue_3
 
 !----------------------------------------------------------------------------
 !                                                                Arrayvalues
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE dof_get1
+MODULE PROCEDURE obj_get1
 CALL GetValue(v=ans, val=val, obj=obj, idof=idof, nodenum=nodenum, &
               StorageFMT=StorageFMT)
-END PROCEDURE dof_get1
+END PROCEDURE obj_get1
 
 !----------------------------------------------------------------------------
 !                                                                Arrayvalues
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE dof_get2
+MODULE PROCEDURE obj_get2
 CALL GetValue(v=ans, val=val, obj=obj, idof=idof, StorageFMT=StorageFMT)
-END PROCEDURE dof_get2
+END PROCEDURE obj_get2
 
 !----------------------------------------------------------------------------
 !
