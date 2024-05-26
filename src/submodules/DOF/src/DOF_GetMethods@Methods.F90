@@ -27,70 +27,70 @@ CONTAINS
 !                                                              DOFStartIndex
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE dof_DOFStartIndex
+MODULE PROCEDURE obj_DOFStartIndex
 ans = obj%map(ivar, 5)
-END PROCEDURE dof_DOFStartIndex
+END PROCEDURE obj_DOFStartIndex
 
 !----------------------------------------------------------------------------
 !                                                              DOFEndIndex
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE dof_DOFEndIndex
+MODULE PROCEDURE obj_DOFEndIndex
 ans = obj%map(ivar + 1, 5) - 1
-END PROCEDURE dof_DOFEndIndex
+END PROCEDURE obj_DOFEndIndex
 
 !----------------------------------------------------------------------------
 !                                                                     tNodes
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE dof_tNodes1
+MODULE PROCEDURE obj_tNodes1
 ans = 0
 IF (ALLOCATED(obj%map)) ans = obj%map(SIZE(obj%map, 1), 6)
-END PROCEDURE dof_tNodes1
+END PROCEDURE obj_tNodes1
 
 !----------------------------------------------------------------------------
 !                                                                     tNodes
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE dof_tNodes2
+MODULE PROCEDURE obj_tNodes2
 ans = 0
 IF (ALLOCATED(obj%valmap)) ans = obj%valmap(idof + 1) - obj%valmap(idof)
-END PROCEDURE dof_tNodes2
+END PROCEDURE obj_tNodes2
 
 !----------------------------------------------------------------------------
 !                                                                     tNodes
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE dof_tNodes3
+MODULE PROCEDURE obj_tNodes3
 ans = obj.tNodes. (NameToIndex(obj, varName))
-END PROCEDURE dof_tNodes3
+END PROCEDURE obj_tNodes3
 
 !----------------------------------------------------------------------------
 !                                                                     tNodes
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE dof_tNodes4
+MODULE PROCEDURE obj_tNodes4
 INTEGER(I4B) :: ii
 ans = 0
 DO ii = 1, SIZE(idof)
   ans = ans + (obj.tNodes.idof(ii))
 END DO
-END PROCEDURE dof_tNodes4
+END PROCEDURE obj_tNodes4
 
 !----------------------------------------------------------------------------
 !                                                                       tDOF
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE dof_tdof1
+MODULE PROCEDURE obj_tdof1
 ans = 0
 IF (ALLOCATED(obj%map)) ans = obj%map(SIZE(obj%map, 1), 4)
-END PROCEDURE dof_tdof1
+END PROCEDURE obj_tdof1
 
 !----------------------------------------------------------------------------
 !                                                                       tDOF
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE dof_tdof2
+MODULE PROCEDURE obj_tdof2
 INTEGER(I4B) :: i, k
 ans = 0
 IF (ALLOCATED(obj%map)) THEN
@@ -99,13 +99,13 @@ IF (ALLOCATED(obj%map)) THEN
     IF (obj%map(i, 1) .EQ. k) ans = obj%map(i, 4)
   END DO
 END IF
-END PROCEDURE dof_tdof2
+END PROCEDURE obj_tdof2
 
 !----------------------------------------------------------------------------
 !                                                                       tDOF
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE dof_tdof3
+MODULE PROCEDURE obj_tdof3
 INTEGER(I4B) :: i
 LOGICAL(LGT) :: isok
 ans = 0
@@ -113,22 +113,22 @@ ans = 0
 i = SIZE(obj%map, 1) - 1
 isok = ALLOCATED(obj%map) .AND. (ivar .LE. i)
 IF (isok) ans = obj%map(ivar, 4)
-END PROCEDURE dof_tdof3
+END PROCEDURE obj_tdof3
 
 !----------------------------------------------------------------------------
 !                                                                     tNames
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE dof_tNames
+MODULE PROCEDURE obj_tNames
 ans = 0
 IF (ALLOCATED(obj%map)) ans = SIZE(obj%map, 1) - 1
-END PROCEDURE dof_tNames
+END PROCEDURE obj_tNames
 
 !----------------------------------------------------------------------------
 !                                                                     Names
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE dof_names1
+MODULE PROCEDURE obj_names1
 INTEGER(I4B) :: ii, n
 
 n = SIZE(obj%map, 1) - 1
@@ -137,15 +137,15 @@ ALLOCATE (ans(n))
 DO ii = 1, n
   ans(ii) = ACHAR(obj%map(ii, 1))
 END DO
-END PROCEDURE dof_names1
+END PROCEDURE obj_names1
 
 !----------------------------------------------------------------------------
 !                                                                     Names
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE dof_names2
+MODULE PROCEDURE obj_names2
 ans = ACHAR(obj%map(ii, 1))
-END PROCEDURE dof_names2
+END PROCEDURE obj_names2
 
 !----------------------------------------------------------------------------
 !                                                                 IndexOF
@@ -168,256 +168,256 @@ END PROCEDURE NameToIndex
 !                                                            tspacecomponents
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE dof_tspacecomponents
+MODULE PROCEDURE obj_tspacecomponents
 INTEGER(I4B) :: n, i
 n = SIZE(obj%map, 1) - 1
 ans = 0
 DO i = 1, n
   IF (obj%map(i, 2) .GT. 0) ans = ans + 1
 END DO
-END PROCEDURE dof_tspacecomponents
+END PROCEDURE obj_tspacecomponents
 
 !----------------------------------------------------------------------------
 !                                                            spacecomponents
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE dof_spacecomponents1
+MODULE PROCEDURE obj_spacecomponents1
 INTEGER(I4B) :: n, i
 CALL Reallocate(ans, SIZE(obj%map, 1) - 1)
 DO i = 1, SIZE(ans)
   ans(i) = obj%map(i, 2)
 END DO
-END PROCEDURE dof_spacecomponents1
+END PROCEDURE obj_spacecomponents1
 
 !----------------------------------------------------------------------------
 !                                                            spacecomponents
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE dof_spacecomponents2
+MODULE PROCEDURE obj_spacecomponents2
 ans = obj%map(ivar, 2)
-END PROCEDURE dof_spacecomponents2
+END PROCEDURE obj_spacecomponents2
 
 !----------------------------------------------------------------------------
 !                                                            ttimecomponents
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE dof_ttimecomponents
+MODULE PROCEDURE obj_ttimecomponents
 INTEGER(I4B) :: n, i
 n = SIZE(obj%map, 1) - 1
 ans = 0
 DO i = 1, n
   IF (obj%map(i, 3) .GT. 1) ans = ans + 1
 END DO
-END PROCEDURE dof_ttimecomponents
+END PROCEDURE obj_ttimecomponents
 
 !----------------------------------------------------------------------------
 !                                                            timecomponents
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE dof_timecomponents1
+MODULE PROCEDURE obj_timecomponents1
 INTEGER(I4B) :: n, i
 CALL Reallocate(ans, SIZE(obj%map, 1) - 1)
 DO i = 1, SIZE(ans)
   ans(i) = obj%map(i, 3)
 END DO
-END PROCEDURE dof_timecomponents1
+END PROCEDURE obj_timecomponents1
 
 !----------------------------------------------------------------------------
 !                                                            timecomponents
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE dof_timecomponents2
+MODULE PROCEDURE obj_timecomponents2
 ans = obj%map(ivar, 3)
-END PROCEDURE dof_timecomponents2
+END PROCEDURE obj_timecomponents2
 
 !----------------------------------------------------------------------------
 !                                                                 EQ
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE dof_isEqual
+MODULE PROCEDURE obj_isEqual
 ans = .TRUE.
 IF (obj1%storageFMT .NE. obj2%storageFMT) ans = .FALSE.
 IF (ANY(obj1%map(:, 2:) .NE. obj2%map(:, 2:))) ans = .FALSE.
 IF (ANY(obj1%valmap .NE. obj2%valmap)) ans = .FALSE.
-END PROCEDURE dof_isEqual
+END PROCEDURE obj_isEqual
 
 !----------------------------------------------------------------------------
 !                                                                 NE
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE dof_isNE
-ans = .NOT. (dof_isEqual(obj1, obj2))
-END PROCEDURE dof_isNE
+MODULE PROCEDURE obj_isNE
+ans = .NOT. (obj_isEqual(obj1, obj2))
+END PROCEDURE obj_isNE
 
 !----------------------------------------------------------------------------
 !                                                                 GetIDOF
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE dof_GetIDOF1
+MODULE PROCEDURE obj_GetIDOF1
 ans = spacecompo + (timecompo - 1) * tspacecompo
-END PROCEDURE dof_GetIDOF1
+END PROCEDURE obj_GetIDOF1
 
 !----------------------------------------------------------------------------
 !                                                                 GetIDOF
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE dof_GetIDOF2
+MODULE PROCEDURE obj_GetIDOF2
 ans = (obj.DOFStartIndex.ivar) &
       + spacecompo - 1 &
       + (timecompo - 1) * (obj.spacecomponents.ivar)
-END PROCEDURE dof_GetIDOF2
+END PROCEDURE obj_GetIDOF2
 
 !----------------------------------------------------------------------------
 !                                                                 GetIDOF
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE dof_GetIDOF3
+MODULE PROCEDURE obj_GetIDOF3
 ans = (obj.DOFStartIndex.ivar) &
       + spacecompo - 1 &
       + (timecompo - 1) * (obj.spacecomponents.ivar)
-END PROCEDURE dof_GetIDOF3
+END PROCEDURE obj_GetIDOF3
 
 !----------------------------------------------------------------------------
 !                                                                 GetIDOF
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE dof_GetIDOF4
+MODULE PROCEDURE obj_GetIDOF4
 ans = (obj.DOFStartIndex.ivar) &
       + spacecompo - 1 &
       + (timecompo - 1) * (obj.spacecomponents.ivar)
-END PROCEDURE dof_GetIDOF4
+END PROCEDURE obj_GetIDOF4
 
 !----------------------------------------------------------------------------
 !                                                                 GetIDOF
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE dof_GetIDOF5
+MODULE PROCEDURE obj_GetIDOF5
 ans = spacecompo + (timecompo - 1) * tspacecompo
-END PROCEDURE dof_GetIDOF5
+END PROCEDURE obj_GetIDOF5
 
 !----------------------------------------------------------------------------
 !                                                                 GetIDOF
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE dof_GetIDOF6
+MODULE PROCEDURE obj_GetIDOF6
 ans = spacecompo + (timecompo - 1) * tspacecompo
-END PROCEDURE dof_GetIDOF6
+END PROCEDURE obj_GetIDOF6
 
 !----------------------------------------------------------------------------
 !                                                                 GetIDOF
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE dof_GetIDOF7
+MODULE PROCEDURE obj_GetIDOF7
 ans = (obj.DOFStartIndex.ivar) + idof - 1
-END PROCEDURE dof_GetIDOF7
+END PROCEDURE obj_GetIDOF7
 
 !----------------------------------------------------------------------------
 !                                                                 GetIDOF
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE dof_GetIDOF8
+MODULE PROCEDURE obj_GetIDOF8
 ans = (obj.DOFStartIndex.ivar) + Arange(1, obj.tdof.ivar) - 1
-END PROCEDURE dof_GetIDOF8
+END PROCEDURE obj_GetIDOF8
 
 !----------------------------------------------------------------------------
 !                                                               GetNodeLoc
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE dof_GetNodeLoc1
+MODULE PROCEDURE obj_GetNodeLoc1
 IF (obj%storageFMT .EQ. NODES_FMT) THEN
   ans = (nodenum - 1) * (.tdof.obj) + idof
 ELSE
   ans = obj%valmap(idof) + nodenum - 1
 END IF
-END PROCEDURE dof_GetNodeLoc1
+END PROCEDURE obj_GetNodeLoc1
 
 !----------------------------------------------------------------------------
 !                                                               GetNodeLoc
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE dof_GetNodeLoc2
+MODULE PROCEDURE obj_GetNodeLoc2
 IF (obj%storageFMT .EQ. NODES_FMT) THEN
   ans = (nodenum - 1) * (.tdof.obj) + idof
 ELSE
   ans = obj%valmap(idof) - 1 + nodenum
 END IF
-END PROCEDURE dof_GetNodeLoc2
+END PROCEDURE obj_GetNodeLoc2
 
 !----------------------------------------------------------------------------
 !                                                               GetNodeLoc
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE dof_GetNodeLoc3
+MODULE PROCEDURE obj_GetNodeLoc3
 IF (obj%storageFMT .EQ. NODES_FMT) THEN
   ans = (nodenum - 1) * (.tdof.obj) + idof
 ELSE
   ans = obj%valmap(idof) - 1 + nodenum
 END IF
-END PROCEDURE dof_GetNodeLoc3
+END PROCEDURE obj_GetNodeLoc3
 
 !----------------------------------------------------------------------------
 !                                                               GetNodeLoc
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE dof_GetNodeLoc4
+MODULE PROCEDURE obj_GetNodeLoc4
 IF (obj%storageFMT .EQ. NODES_FMT) THEN
   ans = [idof, .tnodes.obj, .tdof.obj]
 ELSE
   ans = [obj%valmap(idof), obj%valmap(idof + 1) - 1, 1]
 END IF
-END PROCEDURE dof_GetNodeLoc4
+END PROCEDURE obj_GetNodeLoc4
 
 !----------------------------------------------------------------------------
 !                                                                GetNodeLoc
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE dof_GetNodeLoc5
+MODULE PROCEDURE obj_GetNodeLoc5
 IF (obj%storageFMT .EQ. DOF_FMT) THEN
   ans = obj%valmap(obj%map(ivar, 5) - 1 + idof) + nodenum - 1
 ELSE
   ans = (nodenum - 1) * (.tdof.obj) + (obj%map(ivar, 5) - 1 + idof)
 END IF
-END PROCEDURE dof_GetNodeLoc5
+END PROCEDURE obj_GetNodeLoc5
 
 !----------------------------------------------------------------------------
 !                                                                GetNodeLoc
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE dof_GetNodeLoc6
+MODULE PROCEDURE obj_GetNodeLoc6
 IF (obj%storageFMT .EQ. DOF_FMT) THEN
   ans = obj%valmap(obj%map(ivar, 5) - 1 + idof) + nodenum - 1
 ELSE
   ans = (nodenum - 1) * (.tdof.obj) + (obj%map(ivar, 5) - 1 + idof)
 END IF
-END PROCEDURE dof_GetNodeLoc6
+END PROCEDURE obj_GetNodeLoc6
 
 !----------------------------------------------------------------------------
 !                                                                GetNodeLoc
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE dof_GetNodeLoc7
+MODULE PROCEDURE obj_GetNodeLoc7
 ans = GetNodeLoc(obj=obj, nodenum=nodenum, ivar=ivar, &
                  idof=GetIDOF(spacecompo=spacecompo, &
                               timecompo=timecompo, &
                               tspacecompo=obj.spacecomponents.ivar))
-END PROCEDURE dof_GetNodeLoc7
+END PROCEDURE obj_GetNodeLoc7
 
 !----------------------------------------------------------------------------
 !                                                                GetNodeLoc
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE dof_GetNodeLoc8
+MODULE PROCEDURE obj_GetNodeLoc8
 ans = GetNodeLoc(obj=obj, nodenum=nodenum, ivar=ivar, &
                  idof=GetIDOF(spacecompo=spacecompo, &
                               timecompo=timecompo, &
                               tspacecompo=obj.spacecomponents.ivar))
-END PROCEDURE dof_GetNodeLoc8
+END PROCEDURE obj_GetNodeLoc8
 
 !----------------------------------------------------------------------------
 !                                                                GetNodeLoc
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE dof_GetNodeLoc9
+MODULE PROCEDURE obj_GetNodeLoc9
 INTEGER(I4B) :: ii
 
 IF (obj%storageFMT .EQ. DOF_FMT) THEN
@@ -434,35 +434,35 @@ ELSE
 
 END IF
 
-END PROCEDURE dof_GetNodeLoc9
+END PROCEDURE obj_GetNodeLoc9
 
 !----------------------------------------------------------------------------
 !                                                                GetNodeLoc
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE dof_GetNodeLoc10
+MODULE PROCEDURE obj_GetNodeLoc10
 ans = GetNodeLoc(obj=obj, nodenum=nodenum, ivar=ivar, &
                  idof=GetIDOF(spacecompo=spacecompo, &
                               timecompo=timecompo, &
                               tspacecompo=obj.spacecomponents.ivar))
-END PROCEDURE dof_GetNodeLoc10
+END PROCEDURE obj_GetNodeLoc10
 
 !----------------------------------------------------------------------------
 !                                                                GetNodeLoc
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE dof_GetNodeLoc11
+MODULE PROCEDURE obj_GetNodeLoc11
 ans = GetNodeLoc(obj=obj, nodenum=nodenum, ivar=ivar, &
                  idof=GetIDOF(spacecompo=spacecompo, &
                               timecompo=timecompo, &
                               tspacecompo=obj.spacecomponents.ivar))
-END PROCEDURE dof_GetNodeLoc11
+END PROCEDURE obj_GetNodeLoc11
 
 !----------------------------------------------------------------------------
 !                                                                GetNodeLoc
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE dof_GetNodeLoc12
+MODULE PROCEDURE obj_GetNodeLoc12
 INTEGER(I4B) :: idofs(SIZE(timecompo)), ii
 
 idofs = GetIDOF(spacecompo=spacecompo, timecompo=timecompo, &
@@ -474,13 +474,13 @@ DO ii = 1, SIZE(nodenum)
                                                                 ivar=ivar, &
                                                                 idof=idofs)
 END DO
-END PROCEDURE dof_GetNodeLoc12
+END PROCEDURE obj_GetNodeLoc12
 
 !----------------------------------------------------------------------------
 !                                                                GetNodeLoc
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE dof_GetNodeLoc13
+MODULE PROCEDURE obj_GetNodeLoc13
 INTEGER(I4B) :: idofs(SIZE(spacecompo)), ii
 
 idofs = GetIDOF(spacecompo=spacecompo, timecompo=timecompo, &
@@ -492,38 +492,38 @@ DO ii = 1, SIZE(nodenum)
                                                                 ivar=ivar, &
                                                                 idof=idofs)
 END DO
-END PROCEDURE dof_GetNodeLoc13
+END PROCEDURE obj_GetNodeLoc13
 
 !----------------------------------------------------------------------------
 !                                                               GetIndex
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE dof_GetIndex1
+MODULE PROCEDURE obj_GetIndex1
 ans = GetNodeLoc(obj=obj, nodenum=nodenum, idof=Arange(1, .tdof.obj))
-END PROCEDURE dof_GetIndex1
+END PROCEDURE obj_GetIndex1
 
 !----------------------------------------------------------------------------
 !                                                                 GetIndex
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE dof_GetIndex2
+MODULE PROCEDURE obj_GetIndex2
 ans = GetNodeLoc(obj=obj, nodenum=nodenum, &
                  idof=Arange(obj.DOFStartIndex.ivar, obj.DOFEndIndex.ivar))
-END PROCEDURE dof_GetIndex2
+END PROCEDURE obj_GetIndex2
 
 !----------------------------------------------------------------------------
 !                                                                 GetIndex
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE dof_GetIndex3
+MODULE PROCEDURE obj_GetIndex3
 ans = GetIndex(obj=obj, ivar=NameToIndex(obj, varName), nodenum=nodenum)
-END PROCEDURE dof_GetIndex3
+END PROCEDURE obj_GetIndex3
 
 !----------------------------------------------------------------------------
 !                                                                 GetIndex
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE dof_GetIndex4
+MODULE PROCEDURE obj_GetIndex4
 INTEGER(I4B) :: jj, ii, tdof, nn
 
 tdof = .tdof.obj
@@ -549,13 +549,13 @@ ELSE
 
 END IF
 
-END PROCEDURE dof_GetIndex4
+END PROCEDURE obj_GetIndex4
 
 !----------------------------------------------------------------------------
 !                                                                 GetIndex
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE dof_GetIndex5
+MODULE PROCEDURE obj_GetIndex5
 INTEGER(I4B) :: jj, ii, tdof, nn
 
 tdof = obj.tdof.ivar
@@ -583,14 +583,14 @@ ELSE
   END DO
 END IF
 
-END PROCEDURE dof_GetIndex5
+END PROCEDURE obj_GetIndex5
 
 !----------------------------------------------------------------------------
 !                                                                 GetIndex
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE dof_GetIndex6
+MODULE PROCEDURE obj_GetIndex6
 ans = GetIndex(obj=obj, ivar=NameToIndex(obj, varName), nodenum=nodenum)
-END PROCEDURE dof_GetIndex6
+END PROCEDURE obj_GetIndex6
 
 END SUBMODULE Methods
