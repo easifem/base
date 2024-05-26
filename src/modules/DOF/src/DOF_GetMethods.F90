@@ -1246,6 +1246,26 @@ INTERFACE GetIndex
 END INTERFACE GetIndex
 
 !----------------------------------------------------------------------------
+!                                                                  GetIndex_
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2024-05-26
+! summary: Get index without memory allocation
+
+INTERFACE GetIndex_
+  MODULE PURE SUBROUTINE obj_GetIndex_1(obj, nodenum, ans, tsize)
+    CLASS(DOF_), INTENT(IN) :: obj
+    INTEGER(I4B), INTENT(IN) :: nodenum
+    !! node number
+    INTEGER(I4B), INTENT(INOUT) :: ans(:)
+    !! location of nodenum
+    INTEGER(I4B), INTENT(OUT) :: tsize
+    !! total size written in ans
+  END SUBROUTINE obj_GetIndex_1
+END INTERFACE GetIndex_
+
+!----------------------------------------------------------------------------
 !                                                         GetIndex
 !----------------------------------------------------------------------------
 
@@ -1264,15 +1284,48 @@ END INTERFACE GetIndex
 ! - It is user's responsibility to ensure that for the selected physical var
 ! the `nodenum` is lesser than the total number of
 ! nodes defined for that physical variable.
+!
+!@note
+!   This routine calls GetNodeLoc
+!@endnote
 
 INTERFACE GetIndex
   MODULE PURE FUNCTION obj_GetIndex2(obj, nodenum, ivar) RESULT(ans)
     CLASS(DOF_), INTENT(IN) :: obj
     INTEGER(I4B), INTENT(IN) :: nodenum
+    !! node number
     INTEGER(I4B), INTENT(IN) :: ivar
+    !! physical variable number
     INTEGER(I4B), ALLOCATABLE :: ans(:)
+    !! location of nodenum
   END FUNCTION obj_GetIndex2
 END INTERFACE GetIndex
+
+!----------------------------------------------------------------------------
+!                                                                  GetIndex_
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2024-05-26
+! summary: Returns the indices for node number `nodenum`
+!
+!# Introduction
+!
+! This method is same as obj_GetIndex2,
+! but it does not allocate memory for ans.
+
+INTERFACE GetIndex_
+  MODULE PURE SUBROUTINE obj_GetIndex_2(obj, nodenum, ivar, ans, tsize)
+    CLASS(DOF_), INTENT(IN) :: obj
+    INTEGER(I4B), INTENT(IN) :: nodenum
+    !! node number
+    INTEGER(I4B), INTENT(IN) :: ivar
+    !! physical variable number
+    INTEGER(I4B), INTENT(INOUT) :: ans(:)
+    !! location of nodenum
+    INTEGER(I4B), INTENT(OUT) :: tsize
+  END SUBROUTINE obj_GetIndex_2
+END INTERFACE GetIndex_
 
 !----------------------------------------------------------------------------
 !                                                         GetIndex
@@ -1284,7 +1337,7 @@ END INTERFACE GetIndex
 !
 !# Introduction
 !
-! Same as [[obj_GetIndex2]], but physical variable is selected by
+! Same as obj_GetIndex2, but physical variable is selected by
 ! it name.
 
 INTERFACE GetIndex
@@ -1310,14 +1363,40 @@ END INTERFACE GetIndex
 ! degrees of freedom defined at node numbers specified by nodenum.
 ! - The size of these indices is equal to the total number of DOF in obj
 ! times the size of nodenum(:)
+!
+!@note
+!   The returned indices has same storage pattern as the DOF object
+!@endnote
 
 INTERFACE GetIndex
   MODULE PURE FUNCTION obj_GetIndex4(obj, nodenum) RESULT(ans)
     CLASS(DOF_), INTENT(IN) :: obj
     INTEGER(I4B), INTENT(IN) :: nodenum(:)
+    !! node numbers
     INTEGER(I4B), ALLOCATABLE :: ans(:)
+    !! location of nodenum
   END FUNCTION obj_GetIndex4
 END INTERFACE GetIndex
+
+!----------------------------------------------------------------------------
+!                                                                 GetIndex_
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2024-05-26
+! summary: Returns the indices for node number `nodenum`
+
+INTERFACE GetIndex_
+  MODULE PURE SUBROUTINE obj_GetIndex_4(obj, nodenum, ans, tsize)
+    CLASS(DOF_), INTENT(IN) :: obj
+    INTEGER(I4B), INTENT(IN) :: nodenum(:)
+    !! node numbers
+    INTEGER(I4B), INTENT(INOUT) :: ans(:)
+    !! location of nodenum
+    INTEGER(I4B), INTENT(OUT) :: tsize
+    !! total data written in ans
+  END SUBROUTINE obj_GetIndex_4
+END INTERFACE GetIndex_
 
 !----------------------------------------------------------------------------
 !                                                         GetIndex
@@ -1340,10 +1419,40 @@ INTERFACE GetIndex
   MODULE PURE FUNCTION obj_GetIndex5(obj, nodenum, ivar) RESULT(ans)
     CLASS(DOF_), INTENT(IN) :: obj
     INTEGER(I4B), INTENT(IN) :: nodenum(:)
+    !! node numbers
     INTEGER(I4B), INTENT(IN) :: ivar
+    !! physical variable number
     INTEGER(I4B), ALLOCATABLE :: ans(:)
+    !! location of nodenum
   END FUNCTION obj_GetIndex5
 END INTERFACE GetIndex
+
+!----------------------------------------------------------------------------
+!                                                                 GetIndex_
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2024-05-26
+! summary: Returns the indices for node number `nodenum`
+!
+!# Introduction
+!
+! This method is same as obj_GetIndex5, but it does not allocate memory
+! for ans.
+
+INTERFACE GetIndex_
+  MODULE PURE SUBROUTINE obj_GetIndex_5(obj, nodenum, ivar, ans, tsize)
+    CLASS(DOF_), INTENT(IN) :: obj
+    INTEGER(I4B), INTENT(IN) :: nodenum(:)
+    !! node numbers
+    INTEGER(I4B), INTENT(IN) :: ivar
+    !! physical variable number
+    INTEGER(I4B), INTENT(INOUT) :: ans(:)
+    !! location of nodenum
+    INTEGER(I4B), INTENT(OUT) :: tsize
+    !! total data written in ans
+  END SUBROUTINE obj_GetIndex_5
+END INTERFACE GetIndex_
 
 !----------------------------------------------------------------------------
 !                                                         GetIndex
@@ -1374,8 +1483,11 @@ INTERFACE GetIndex
   MODULE PURE FUNCTION obj_GetIndex6(obj, nodenum, varname) RESULT(ans)
     CLASS(DOF_), INTENT(IN) :: obj
     INTEGER(I4B), INTENT(IN) :: nodenum(:)
+    !! node numbers
     CHARACTER(1), INTENT(IN) :: varname
+    !! variable name
     INTEGER(I4B), ALLOCATABLE :: ans(:)
+    !! location of nodenum
   END FUNCTION obj_GetIndex6
 END INTERFACE GetIndex
 
@@ -1410,5 +1522,21 @@ END INTERFACE GetIndex
 INTERFACE GetIndex
   MODULE PROCEDURE obj_GetNodeLoc8
 END INTERFACE GetIndex
+
+!----------------------------------------------------------------------------
+!                                                                  GetIndex_
+!----------------------------------------------------------------------------
+
+INTERFACE GetIndex_
+  MODULE PROCEDURE obj_GetNodeLoc_6
+END INTERFACE GetIndex_
+
+!----------------------------------------------------------------------------
+!                                                         GetIndex
+!----------------------------------------------------------------------------
+
+INTERFACE GetIndex_
+  MODULE PROCEDURE obj_GetNodeLoc_8
+END INTERFACE GetIndex_
 
 END MODULE DOF_GetMethods

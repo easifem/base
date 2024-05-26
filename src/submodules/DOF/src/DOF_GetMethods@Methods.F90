@@ -616,17 +616,43 @@ END PROCEDURE obj_GetNodeLoc_13
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE obj_GetIndex1
-ans = GetNodeLoc(obj=obj, nodenum=nodenum, idof=Arange(1, .tdof.obj))
+INTEGER(I4B) :: tsize
+tsize = .tdof.obj
+ALLOCATE (ans(tsize))
+CALL GetNodeLoc_(obj=obj, nodenum=nodenum, idof=Arange(1, tsize), &
+                 ans=ans, tsize=tsize)
 END PROCEDURE obj_GetIndex1
+
+!----------------------------------------------------------------------------
+!                                                               GetIndex_
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE obj_GetIndex_1
+tsize = .tdof.obj
+CALL GetNodeLoc_(obj=obj, nodenum=nodenum, idof=Arange(1, tsize), &
+                 ans=ans, tsize=tsize)
+END PROCEDURE obj_GetIndex_1
 
 !----------------------------------------------------------------------------
 !                                                                 GetIndex
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE obj_GetIndex2
-ans = GetNodeLoc(obj=obj, nodenum=nodenum, &
+INTEGER(I4B) :: tsize
+tsize = obj.tdof.ivar
+ALLOCATE (ans(tsize))
+CALL GetNodeLoc_(obj=obj, nodenum=nodenum, ans=ans, tsize=tsize, &
                  idof=Arange(obj.DOFStartIndex.ivar, obj.DOFEndIndex.ivar))
 END PROCEDURE obj_GetIndex2
+
+!----------------------------------------------------------------------------
+!                                                                 GetIndex_
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE obj_GetIndex_2
+CALL GetNodeLoc_(obj=obj, nodenum=nodenum, ans=ans, tsize=tsize, &
+                 idof=Arange(obj.DOFStartIndex.ivar, obj.DOFEndIndex.ivar))
+END PROCEDURE obj_GetIndex_2
 
 !----------------------------------------------------------------------------
 !                                                                 GetIndex
@@ -641,66 +667,101 @@ END PROCEDURE obj_GetIndex3
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE obj_GetIndex4
-INTEGER(I4B) :: jj, ii, tdof, nn
+INTEGER(I4B) :: tsize
 
-tdof = .tdof.obj
+tsize = .tdof.obj
+tsize = tsize * SIZE(nodenum)
+
+ALLOCATE (ans(tsize))
+
+CALL obj_GetIndex_4(obj, nodenum, ans, tsize)
+
+END PROCEDURE obj_GetIndex4
+
+!----------------------------------------------------------------------------
+!                                                                 GetIndex_
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE obj_GetIndex_4
+INTEGER(I4B) :: jj, ii, tdof, nn, tempsize
+
 nn = SIZE(nodenum)
-ALLOCATE (ans(tdof * nn))
-ans = 0
 
 IF (obj%storageFMT .EQ. FMT_NODES) THEN
 
+  tsize = 1
+
   DO ii = 1, nn
-    ans((ii - 1) * tdof + 1:ii * tdof) = GetIndex(obj=obj, &
-                                                  nodenum=nodenum(ii))
+    CALL GetIndex_(obj=obj, nodenum=nodenum(ii), &
+                   ans=ans(tsize:), tsize=tempsize)
+    tsize = tsize + tempsize
   END DO
 
-ELSE
-
-  DO jj = 1, tdof
-    DO ii = 1, nn
-      ans((jj - 1) * nn + ii) = GetNodeLoc(obj=obj, &
-                                           nodenum=nodenum(ii), idof=jj)
-    END DO
-  END DO
+  tsize = tsize - 1
+  RETURN
 
 END IF
 
-END PROCEDURE obj_GetIndex4
+tdof = .tdof.obj
+tsize = tdof * nn
+
+DO jj = 1, tdof
+  DO ii = 1, nn
+   ans((jj - 1) * nn + ii) = GetNodeLoc(obj=obj, nodenum=nodenum(ii), idof=jj)
+  END DO
+END DO
+
+END PROCEDURE obj_GetIndex_4
 
 !----------------------------------------------------------------------------
 !                                                                 GetIndex
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE obj_GetIndex5
-INTEGER(I4B) :: jj, ii, tdof, nn
+INTEGER(I4B) :: tsize
+tsize = obj.tdof.ivar
+tsize = tsize * SIZE(nodenum)
+ALLOCATE (ans(tsize))
+CALL obj_GetIndex_5(obj, nodenum, ivar, ans, tsize)
+END PROCEDURE obj_GetIndex5
+
+!----------------------------------------------------------------------------
+!                                                                 GetIndex_
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE obj_GetIndex_5
+INTEGER(I4B) :: jj, ii, tdof, nn, tempsize
 
 tdof = obj.tdof.ivar
 nn = SIZE(nodenum)
-ALLOCATE (ans(tdof * nn))
-ans = 0
 
 IF (obj%storageFMT .EQ. FMT_NODES) THEN
 
+  tsize = 1
   DO ii = 1, nn
-    ans((ii - 1) * tdof + 1:ii * tdof) = GetIndex(obj=obj, &
-                                               nodenum=nodenum(ii), ivar=ivar)
-  END DO
+    CALL GetIndex_(obj=obj, nodenum=nodenum(ii), ivar=ivar, ans=ans(tsize:), &
+                   tsize=tempsize)
+    tsize = tsize + tempsize
 
-ELSE
-
-  tdof = 0 ! using tdof as counter
-  DO jj = (obj.DOFStartIndex.ivar), (obj.DOFEndIndex.ivar)
-    tdof = tdof + 1
-    DO ii = 1, nn
-      ans((tdof - 1) * nn + ii) = GetNodeLoc(obj=obj, nodenum=nodenum(ii), &
-                                             idof=jj)
-      ! here tdof is local counter
-    END DO
   END DO
+  tsize = tsize - 1
+
+  RETURN
+
 END IF
 
-END PROCEDURE obj_GetIndex5
+tsize = tdof * nn
+tdof = 0 ! using tdof as counter
+DO jj = (obj.DOFStartIndex.ivar), (obj.DOFEndIndex.ivar)
+  tdof = tdof + 1
+  DO ii = 1, nn
+    ans((tdof - 1) * nn + ii) = GetNodeLoc(obj=obj, nodenum=nodenum(ii), &
+                                           idof=jj)
+    ! here tdof is local counter
+  END DO
+END DO
+
+END PROCEDURE obj_GetIndex_5
 
 !----------------------------------------------------------------------------
 !                                                                 GetIndex
