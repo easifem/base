@@ -598,8 +598,7 @@ END INTERFACE GetIDOF
 ! summary: Get all idof of a physical variable
 
 INTERFACE GetIDOF
-  MODULE PURE FUNCTION obj_GetIDOF8(obj, ivar) &
-    & RESULT(ans)
+  MODULE PURE FUNCTION obj_GetIDOF8(obj, ivar) RESULT(ans)
     TYPE(DOF_), INTENT(IN) :: obj
     INTEGER(I4B), INTENT(IN) :: ivar
     !! physical variable number
@@ -609,7 +608,7 @@ INTERFACE GetIDOF
 END INTERFACE GetIDOF
 
 !----------------------------------------------------------------------------
-!                                                       GetNodeLoc@getMethod
+!                                                       GetNodeLoc
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -643,7 +642,7 @@ INTERFACE GetNodeLoc
 END INTERFACE GetNodeLoc
 
 !----------------------------------------------------------------------------
-!                                                       GetNodeLoc@getMethod
+!                                                       GetNodeLoc
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -671,13 +670,38 @@ INTERFACE GetNodeLoc
   MODULE PURE FUNCTION obj_GetNodeLoc2(obj, nodenum, idof) RESULT(ans)
     TYPE(DOF_), INTENT(IN) :: obj
     INTEGER(I4B), INTENT(IN) :: nodenum(:)
+    !! node number
     INTEGER(I4B), INTENT(IN) :: idof
+    !! global degree of freedom number
     INTEGER(I4B) :: ans(SIZE(nodenum))
+    !! location of nodenum
   END FUNCTION obj_GetNodeLoc2
 END INTERFACE GetNodeLoc
 
 !----------------------------------------------------------------------------
-!                                                       GetNodeLoc@getMethod
+!                                                               GetNodeLoc_
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2024-05-26
+! summary: Get node location wihtout memory allocation
+
+INTERFACE GetNodeLoc_
+  MODULE PURE SUBROUTINE obj_GetNodeLoc_2(obj, nodenum, idof, ans, tsize)
+    TYPE(DOF_), INTENT(IN) :: obj
+    INTEGER(I4B), INTENT(IN) :: nodenum(:)
+    !! node number
+    INTEGER(I4B), INTENT(IN) :: idof
+    !! global degree of freedom number
+    INTEGER(I4B), INTENT(INOUT) :: ans(:)
+    !! location of nodenum
+    INTEGER(I4B), INTENT(OUT) :: tsize
+    !! total size written in ans
+  END SUBROUTINE obj_GetNodeLoc_2
+END INTERFACE GetNodeLoc_
+
+!----------------------------------------------------------------------------
+!                                                       GetNodeLoc
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -711,14 +735,40 @@ INTERFACE GetNodeLoc
 END INTERFACE GetNodeLoc
 
 !----------------------------------------------------------------------------
-!                                                       GetNodeLoc@getMethod
+!                                                               GetNodeLoc_
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2024-05-26
+! summary: Get node location wihtout memory allocation
+
+INTERFACE GetNodeLoc_
+  MODULE PURE SUBROUTINE obj_GetNodeLoc_3(obj, nodenum, idof, ans, tsize)
+    TYPE(DOF_), INTENT(IN) :: obj
+    INTEGER(I4B), INTENT(IN) :: nodenum
+    !! node number
+    INTEGER(I4B), INTENT(IN) :: idof(:)
+    !! global degree of freedom number
+    INTEGER(I4B), INTENT(INOUT) :: ans(:)
+    !! location of nodenum
+    INTEGER(I4B), INTENT(OUT) :: tsize
+    !! total size written in ans
+  END SUBROUTINE obj_GetNodeLoc_3
+END INTERFACE GetNodeLoc_
+
+!----------------------------------------------------------------------------
+!                                                       GetNodeLoc
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 24 July 2021
-! summary: This routine returns the location of node
+! summary: This routine returns the location of idof
 !
 !# Introduction
+!
+! This routine returns the location of degree of freedom number `idof`
+!
+! Note that in this routine we do not pass node number.
 !
 ! ans(1) : istart
 ! ans(2) : iend
@@ -728,7 +778,7 @@ END INTERFACE GetNodeLoc
 ! vec(istart:iend:stride).
 !
 !@note
-! In [[DOF_]] object, idofs are continuously numbered, so if there are two
+! In DOF_ object, idofs are continuously numbered, so if there are two
 ! or more physical variables, then idof of the second or later physical
 ! variables will not start from 1.
 !@endnote
@@ -737,31 +787,48 @@ INTERFACE GetNodeLoc
   MODULE PURE FUNCTION obj_GetNodeLoc4(obj, idof) RESULT(ans)
     TYPE(DOF_), INTENT(IN) :: obj
     INTEGER(I4B), INTENT(IN) :: idof
+    !! global degree of freedom in obj
     INTEGER(I4B) :: ans(3)
+    !! ans(1) : istart
+    !! ans(2) : iend
+    !! ans(3) : stride
   END FUNCTION obj_GetNodeLoc4
 END INTERFACE GetNodeLoc
 
 !----------------------------------------------------------------------------
-!                                                       GetNodeLoc@getMethod
+!                                                       GetNodeLoc
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 24 July 2021
 ! summary: This routine returns the location of node
+!
+!# Introduction
+!
+! In this routine we pass the physical variable number and
+! the local degree of freedom number `idof`
+!
+! The `idof` will be converted to global degree of freedom number
+! and then the location of the global degree of freedom number
+! is returned
 
 INTERFACE GetNodeLoc
   MODULE PURE FUNCTION obj_GetNodeLoc5(obj, nodenum, ivar, idof) &
-    & RESULT(ans)
+    RESULT(ans)
     TYPE(DOF_), INTENT(IN) :: obj
     INTEGER(I4B), INTENT(IN) :: nodenum
+    !! node number
     INTEGER(I4B), INTENT(IN) :: ivar
+    !! physical variable number
     INTEGER(I4B), INTENT(IN) :: idof
+    !! local degree of freedom number of physical variable
     INTEGER(I4B) :: ans
+    !! location of nodenum
   END FUNCTION obj_GetNodeLoc5
 END INTERFACE GetNodeLoc
 
 !----------------------------------------------------------------------------
-!                                                       GetNodeLoc@getMethod
+!                                                       GetNodeLoc
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -770,17 +837,45 @@ END INTERFACE GetNodeLoc
 
 INTERFACE GetNodeLoc
   MODULE PURE FUNCTION obj_GetNodeLoc6(obj, nodenum, ivar, idof) &
-    & RESULT(ans)
+    RESULT(ans)
     TYPE(DOF_), INTENT(IN) :: obj
     INTEGER(I4B), INTENT(IN) :: nodenum(:)
+    !! node number
     INTEGER(I4B), INTENT(IN) :: ivar
+    !! physical variable number
     INTEGER(I4B), INTENT(IN) :: idof
+    !! local degree of freedom number of physical variable
     INTEGER(I4B) :: ans(SIZE(nodenum))
+    !! returned location of nodenum
   END FUNCTION obj_GetNodeLoc6
 END INTERFACE GetNodeLoc
 
 !----------------------------------------------------------------------------
-!                                                       GetNodeLoc@getMethod
+!                                                       GetNodeLoc_
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2024-05-26
+! summary: This routine returns the location of node
+
+INTERFACE GetNodeLoc_
+ MODULE PURE SUBROUTINE obj_GetNodeLoc_6(obj, nodenum, ivar, idof, ans, tsize)
+    TYPE(DOF_), INTENT(IN) :: obj
+    INTEGER(I4B), INTENT(IN) :: nodenum(:)
+    !! node number
+    INTEGER(I4B), INTENT(IN) :: ivar
+    !! physical variable number
+    INTEGER(I4B), INTENT(IN) :: idof
+    !! local degree of freedom number of physical variable
+    INTEGER(I4B), INTENT(INOUT) :: ans(:)
+    !! returned location of nodenum
+    INTEGER(I4B), INTENT(OUT) :: tsize
+    !! number of data written in ans
+  END SUBROUTINE obj_GetNodeLoc_6
+END INTERFACE GetNodeLoc_
+
+!----------------------------------------------------------------------------
+!                                                       GetNodeLoc
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -789,18 +884,23 @@ END INTERFACE GetNodeLoc
 
 INTERFACE GetNodeLoc
   MODULE PURE FUNCTION obj_GetNodeLoc7(obj, nodenum, ivar, spacecompo, &
-    & timecompo) RESULT(ans)
+                                       timecompo) RESULT(ans)
     TYPE(DOF_), INTENT(IN) :: obj
     INTEGER(I4B), INTENT(IN) :: nodenum
+    !! node number
     INTEGER(I4B), INTENT(IN) :: ivar
+    !! physical variable number
     INTEGER(I4B), INTENT(IN) :: spacecompo
+    !! space component of physical variable
     INTEGER(I4B), INTENT(IN) :: timecompo
+    !! time component of physical variable
     INTEGER(I4B) :: ans
+    !! location of nodenum
   END FUNCTION obj_GetNodeLoc7
 END INTERFACE GetNodeLoc
 
 !----------------------------------------------------------------------------
-!                                                       GetNodeLoc@getMethod
+!                                                       GetNodeLoc
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -809,18 +909,49 @@ END INTERFACE GetNodeLoc
 
 INTERFACE GetNodeLoc
   MODULE PURE FUNCTION obj_GetNodeLoc8(obj, nodenum, ivar, spacecompo, &
-    & timecompo) RESULT(ans)
+                                       timecompo) RESULT(ans)
     TYPE(DOF_), INTENT(IN) :: obj
     INTEGER(I4B), INTENT(IN) :: nodenum(:)
+    !! node number
     INTEGER(I4B), INTENT(IN) :: ivar
+    !! physical variable number
     INTEGER(I4B), INTENT(IN) :: spacecompo
+    !! space component of physical variable
     INTEGER(I4B), INTENT(IN) :: timecompo
+    !! time component of physical variable
     INTEGER(I4B) :: ans(SIZE(nodenum))
+    !! location of nodenum
   END FUNCTION obj_GetNodeLoc8
 END INTERFACE GetNodeLoc
 
 !----------------------------------------------------------------------------
-!                                                       GetNodeLoc@getMethod
+!                                                              GetNodeLoc_
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2024-05-26
+! summary: This routine returns the location of node
+
+INTERFACE GetNodeLoc_
+  MODULE PURE SUBROUTINE obj_GetNodeLoc_8(obj, nodenum, ivar, spacecompo, &
+                                          timecompo, ans, tsize)
+    TYPE(DOF_), INTENT(IN) :: obj
+    INTEGER(I4B), INTENT(IN) :: nodenum(:)
+    !! node number
+    INTEGER(I4B), INTENT(IN) :: ivar
+    !! physical variable number
+    INTEGER(I4B), INTENT(IN) :: spacecompo
+    !! space component of physical variable
+    INTEGER(I4B), INTENT(IN) :: timecompo
+    !! time component of physical variable
+    INTEGER(I4B), INTENT(INOUT) :: ans(:)
+    !! location of nodenum
+    INTEGER(I4B), INTENT(OUT) :: tsize
+  END SUBROUTINE obj_GetNodeLoc_8
+END INTERFACE GetNodeLoc_
+
+!----------------------------------------------------------------------------
+!                                                       GetNodeLoc
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -829,17 +960,45 @@ END INTERFACE GetNodeLoc
 
 INTERFACE GetNodeLoc
   MODULE PURE FUNCTION obj_GetNodeLoc9(obj, nodenum, ivar, idof) &
-    & RESULT(ans)
+    RESULT(ans)
     TYPE(DOF_), INTENT(IN) :: obj
     INTEGER(I4B), INTENT(IN) :: nodenum
+    !! node number
     INTEGER(I4B), INTENT(IN) :: ivar
+    !! physical variable number
     INTEGER(I4B), INTENT(IN) :: idof(:)
+    !! local degree of freedom number of physical variable
     INTEGER(I4B) :: ans(SIZE(idof))
+    !! location of nodenum
   END FUNCTION obj_GetNodeLoc9
 END INTERFACE GetNodeLoc
 
 !----------------------------------------------------------------------------
-!                                                       GetNodeLoc@getMethod
+!                                                               GetNodeLoc_
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2024-05-26
+! summary: This routine returns the location of node
+
+INTERFACE GetNodeLoc_
+ MODULE PURE SUBROUTINE obj_GetNodeLoc_9(obj, nodenum, ivar, idof, ans, tsize)
+    TYPE(DOF_), INTENT(IN) :: obj
+    INTEGER(I4B), INTENT(IN) :: nodenum
+    !! node number
+    INTEGER(I4B), INTENT(IN) :: ivar
+    !! physical variable number
+    INTEGER(I4B), INTENT(IN) :: idof(:)
+    !! local degree of freedom number of physical variable
+    INTEGER(I4B), INTENT(INOUT) :: ans(:)
+    !! location of nodenum
+    INTEGER(I4B), INTENT(OUT) :: tsize
+    !! total size written in ans
+  END SUBROUTINE obj_GetNodeLoc_9
+END INTERFACE GetNodeLoc_
+
+!----------------------------------------------------------------------------
+!                                                       GetNodeLoc
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -848,18 +1007,50 @@ END INTERFACE GetNodeLoc
 
 INTERFACE GetNodeLoc
   MODULE PURE FUNCTION obj_GetNodeLoc10(obj, nodenum, ivar, spacecompo, &
-    & timecompo) RESULT(ans)
+                                        timecompo) RESULT(ans)
     TYPE(DOF_), INTENT(IN) :: obj
     INTEGER(I4B), INTENT(IN) :: nodenum
+    !! node number
     INTEGER(I4B), INTENT(IN) :: ivar
+    !! physical variable number
     INTEGER(I4B), INTENT(IN) :: spacecompo
+    !! space component of physical variable
     INTEGER(I4B), INTENT(IN) :: timecompo(:)
+    !! time components of physical variable
     INTEGER(I4B) :: ans(SIZE(timecompo))
+    !! location of nodenum
   END FUNCTION obj_GetNodeLoc10
 END INTERFACE GetNodeLoc
 
 !----------------------------------------------------------------------------
-!                                                       GetNodeLoc@getMethod
+!                                                       GetNodeLoc
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2024-05-26
+! summary: This routine returns the location of node
+
+INTERFACE GetNodeLoc_
+  MODULE PURE SUBROUTINE obj_GetNodeLoc_10(obj, nodenum, ivar, spacecompo, &
+                                           timecompo, ans, tsize)
+    TYPE(DOF_), INTENT(IN) :: obj
+    INTEGER(I4B), INTENT(IN) :: nodenum
+    !! node number
+    INTEGER(I4B), INTENT(IN) :: ivar
+    !! physical variable number
+    INTEGER(I4B), INTENT(IN) :: spacecompo
+    !! space component of physical variable
+    INTEGER(I4B), INTENT(IN) :: timecompo(:)
+    !! time components of physical variable
+    INTEGER(I4B), INTENT(INOUT) :: ans(:)
+    !! location of nodenum
+    INTEGER(I4B), INTENT(OUT) :: tsize
+    !! total data written in ans
+  END SUBROUTINE obj_GetNodeLoc_10
+END INTERFACE GetNodeLoc_
+
+!----------------------------------------------------------------------------
+!                                                       GetNodeLoc
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -868,18 +1059,50 @@ END INTERFACE GetNodeLoc
 
 INTERFACE GetNodeLoc
   MODULE PURE FUNCTION obj_GetNodeLoc11(obj, nodenum, ivar, spacecompo, &
-    & timecompo) RESULT(ans)
+                                        timecompo) RESULT(ans)
     TYPE(DOF_), INTENT(IN) :: obj
     INTEGER(I4B), INTENT(IN) :: nodenum
+    !! node number
     INTEGER(I4B), INTENT(IN) :: ivar
+    !! physical variable number
     INTEGER(I4B), INTENT(IN) :: spacecompo(:)
+    !! several space components of physical variable
     INTEGER(I4B), INTENT(IN) :: timecompo
+    !! a time component of a physical variable
     INTEGER(I4B) :: ans(SIZE(spacecompo))
+    !! returned location of nodenum
   END FUNCTION obj_GetNodeLoc11
 END INTERFACE GetNodeLoc
 
 !----------------------------------------------------------------------------
-!                                                       GetNodeLoc@getMethod
+!                                                                GetNodeLoc_
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2024-05-26
+! summary: This routine returns the location of node
+
+INTERFACE GetNodeLoc_
+  MODULE PURE SUBROUTINE obj_GetNodeLoc_11(obj, nodenum, ivar, spacecompo, &
+                                           timecompo, ans, tsize)
+    TYPE(DOF_), INTENT(IN) :: obj
+    INTEGER(I4B), INTENT(IN) :: nodenum
+    !! node number
+    INTEGER(I4B), INTENT(IN) :: ivar
+    !! physical variable number
+    INTEGER(I4B), INTENT(IN) :: spacecompo(:)
+    !! several space components of physical variable
+    INTEGER(I4B), INTENT(IN) :: timecompo
+    !! a time component of a physical variable
+    INTEGER(I4B), INTENT(INOUT) :: ans(:)
+    !! returned location of nodenum
+    INTEGER(I4B), INTENT(OUT) :: tsize
+    !! total data written in ans
+  END SUBROUTINE obj_GetNodeLoc_11
+END INTERFACE GetNodeLoc_
+
+!----------------------------------------------------------------------------
+!                                                       GetNodeLoc
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -888,18 +1111,50 @@ END INTERFACE GetNodeLoc
 
 INTERFACE GetNodeLoc
   MODULE PURE FUNCTION obj_GetNodeLoc12(obj, nodenum, ivar, spacecompo, &
-    & timecompo) RESULT(ans)
+                                        timecompo) RESULT(ans)
     TYPE(DOF_), INTENT(IN) :: obj
     INTEGER(I4B), INTENT(IN) :: nodenum(:)
+    !! node numbers
     INTEGER(I4B), INTENT(IN) :: ivar
+    !! physical variable number
     INTEGER(I4B), INTENT(IN) :: spacecompo
+    !! a space component of a physical variable
     INTEGER(I4B), INTENT(IN) :: timecompo(:)
+    !! several time components of a physical variable
     INTEGER(I4B) :: ans(SIZE(timecompo) * SIZE(nodenum))
+    !! returned location of nodenum
   END FUNCTION obj_GetNodeLoc12
 END INTERFACE GetNodeLoc
 
 !----------------------------------------------------------------------------
-!                                                       GetNodeLoc@getMethod
+!                                                                GetNodeLoc_
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2024-05-26
+! summary: This routine returns the location of node
+
+INTERFACE GetNodeLoc_
+  MODULE PURE SUBROUTINE obj_GetNodeLoc_12(obj, nodenum, ivar, spacecompo, &
+                                           timecompo, ans, tsize)
+    TYPE(DOF_), INTENT(IN) :: obj
+    INTEGER(I4B), INTENT(IN) :: nodenum(:)
+    !! node numbers
+    INTEGER(I4B), INTENT(IN) :: ivar
+    !! physical variable number
+    INTEGER(I4B), INTENT(IN) :: spacecompo
+    !! a space component of a physical variable
+    INTEGER(I4B), INTENT(IN) :: timecompo(:)
+    !! several time components of a physical variable
+    INTEGER(I4B), INTENT(INOUT) :: ans(:)
+    !! returned location of nodenum
+    INTEGER(I4B), INTENT(OUT) :: tsize
+    !! total data written in ans
+  END SUBROUTINE obj_GetNodeLoc_12
+END INTERFACE GetNodeLoc_
+
+!----------------------------------------------------------------------------
+!                                                       GetNodeLoc
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -908,18 +1163,50 @@ END INTERFACE GetNodeLoc
 
 INTERFACE GetNodeLoc
   MODULE PURE FUNCTION obj_GetNodeLoc13(obj, nodenum, ivar, spacecompo, &
-    & timecompo) RESULT(ans)
+                                        timecompo) RESULT(ans)
     TYPE(DOF_), INTENT(IN) :: obj
     INTEGER(I4B), INTENT(IN) :: nodenum(:)
+    !! node numbers
     INTEGER(I4B), INTENT(IN) :: ivar
+    !! physical variable number
     INTEGER(I4B), INTENT(IN) :: spacecompo(:)
+    !! several space components of a physical variable
     INTEGER(I4B), INTENT(IN) :: timecompo
+    !! a time component of a physical variable
     INTEGER(I4B) :: ans(SIZE(spacecompo) * SIZE(nodenum))
+    !! returned location of nodenum
   END FUNCTION obj_GetNodeLoc13
 END INTERFACE GetNodeLoc
 
 !----------------------------------------------------------------------------
-!                                                         GetIndex@getMethod
+!                                                              GetNodeLoc_
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2024-05-26
+! summary: This routine returns the location of node
+
+INTERFACE GetNodeLoc_
+  MODULE PURE SUBROUTINE obj_GetNodeLoc_13(obj, nodenum, ivar, spacecompo, &
+                                           timecompo, ans, tsize)
+    TYPE(DOF_), INTENT(IN) :: obj
+    INTEGER(I4B), INTENT(IN) :: nodenum(:)
+    !! node numbers
+    INTEGER(I4B), INTENT(IN) :: ivar
+    !! physical variable number
+    INTEGER(I4B), INTENT(IN) :: spacecompo(:)
+    !! several space components of a physical variable
+    INTEGER(I4B), INTENT(IN) :: timecompo
+    !! a time component of a physical variable
+    INTEGER(I4B), INTENT(INOUT) :: ans(:)
+    !! returned location of nodenum
+    INTEGER(I4B), INTENT(OUT) :: tsize
+    !! total data written in ans
+  END SUBROUTINE obj_GetNodeLoc_13
+END INTERFACE GetNodeLoc_
+
+!----------------------------------------------------------------------------
+!                                                         GetIndex
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -943,17 +1230,23 @@ END INTERFACE GetNodeLoc
 ! The size of returned vector `ans` will be the total number of
 ! degrees of freedom in the [[DOF_]] object
 !@endnote
+!
+!@note
+! This routine calls GetNodeLoc
+!@endnote
 
 INTERFACE GetIndex
   MODULE PURE FUNCTION obj_GetIndex1(obj, nodenum) RESULT(ans)
     CLASS(DOF_), INTENT(IN) :: obj
     INTEGER(I4B), INTENT(IN) :: nodenum
+    !! node number
     INTEGER(I4B), ALLOCATABLE :: ans(:)
+    !! location of nodenum
   END FUNCTION obj_GetIndex1
 END INTERFACE GetIndex
 
 !----------------------------------------------------------------------------
-!                                                         GetIndex@getMethod
+!                                                         GetIndex
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -982,7 +1275,7 @@ INTERFACE GetIndex
 END INTERFACE GetIndex
 
 !----------------------------------------------------------------------------
-!                                                         GetIndex@getMethod
+!                                                         GetIndex
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -1004,7 +1297,7 @@ INTERFACE GetIndex
 END INTERFACE GetIndex
 
 !----------------------------------------------------------------------------
-!                                                         GetIndex@getMethod
+!                                                         GetIndex
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -1027,7 +1320,7 @@ INTERFACE GetIndex
 END INTERFACE GetIndex
 
 !----------------------------------------------------------------------------
-!                                                         GetIndex@getMethod
+!                                                         GetIndex
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -1053,7 +1346,7 @@ INTERFACE GetIndex
 END INTERFACE GetIndex
 
 !----------------------------------------------------------------------------
-!                                                         GetIndex@getMethod
+!                                                         GetIndex
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -1087,7 +1380,7 @@ INTERFACE GetIndex
 END INTERFACE GetIndex
 
 !----------------------------------------------------------------------------
-!                                                         GetIndex@getMethod
+!                                                         GetIndex
 !----------------------------------------------------------------------------
 
 INTERFACE GetIndex
@@ -1095,7 +1388,7 @@ INTERFACE GetIndex
 END INTERFACE GetIndex
 
 !----------------------------------------------------------------------------
-!                                                         GetIndex@getMethod
+!                                                         GetIndex
 !----------------------------------------------------------------------------
 
 INTERFACE GetIndex
@@ -1103,7 +1396,7 @@ INTERFACE GetIndex
 END INTERFACE GetIndex
 
 !----------------------------------------------------------------------------
-!                                                         GetIndex@getMethod
+!                                                         GetIndex
 !----------------------------------------------------------------------------
 
 INTERFACE GetIndex
@@ -1111,7 +1404,7 @@ INTERFACE GetIndex
 END INTERFACE GetIndex
 
 !----------------------------------------------------------------------------
-!                                                         GetIndex@getMethod
+!                                                         GetIndex
 !----------------------------------------------------------------------------
 
 INTERFACE GetIndex
