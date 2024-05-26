@@ -16,8 +16,8 @@
 !
 
 MODULE DOF_GetMethods
-USE GlobalData
-USE BaseType
+USE GlobalData, ONLY: DFP, I4B, LGT
+USE BaseType, ONLY: DOF_
 IMPLICIT NONE
 PRIVATE
 
@@ -416,12 +416,19 @@ END INTERFACE OPERATOR(.NE.)
 !                                                        GetIDOF@GetMethod
 !----------------------------------------------------------------------------
 
+!> author: Vikas Sharma, Ph. D.
+! date: 2024-05-26
+! summary: Get the idof from spacecompo, timecompo, tsapcecompo
+
 INTERFACE GetIDOF
   MODULE PURE FUNCTION dof_GetIDOF1(spacecompo, timecompo, tspacecompo) &
-    & RESULT(ans)
+    RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: spacecompo
+    !! space component
     INTEGER(I4B), INTENT(IN) :: timecompo
+    !! time component
     INTEGER(I4B), INTENT(IN) :: tspacecompo
+    !! total space component
     INTEGER(I4B) :: ans
   END FUNCTION dof_GetIDOF1
 END INTERFACE GetIDOF
