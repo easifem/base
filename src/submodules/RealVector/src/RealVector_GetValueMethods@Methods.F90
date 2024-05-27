@@ -314,189 +314,139 @@ END PROCEDURE obj_GetValue_14
 !                                                                      get
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE realVec_GetValue15
+MODULE PROCEDURE obj_GetValue15
 VALUE = obj%val(GetIndex(obj=dofobj, nodenum=nodenum, ivar=ivar, &
                          idof=idof))
-END PROCEDURE realVec_GetValue15
+END PROCEDURE obj_GetValue15
 
 !----------------------------------------------------------------------------
 !                                                                      get
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE realVec_GetValue16
+MODULE PROCEDURE obj_GetValue16
 VALUE = obj%val(GetIndex(obj=dofobj, nodenum=nodenum, ivar=ivar, idof=idof))
-END PROCEDURE realVec_GetValue16
+END PROCEDURE obj_GetValue16
 
 !----------------------------------------------------------------------------
 !                                                                 GetValue_
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE realVec_GetValue_16
+MODULE PROCEDURE obj_GetValue_16
 INTEGER(I4B) :: global_idof
 global_idof = GetIDOF(obj=dofobj, ivar=ivar, idof=idof)
 CALL DOF_GetValue_(obj=dofobj, nodenum=nodenum, idof=global_idof, &
                    v=VALUE, tsize=tsize, val=obj%val)
-END PROCEDURE realVec_GetValue_16
+END PROCEDURE obj_GetValue_16
 
 !----------------------------------------------------------------------------
 !                                                                      get
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE realVec_GetValue17
+MODULE PROCEDURE obj_GetValue17
 VALUE = obj%val(GetIndex(obj=dofobj, nodenum=nodenum, ivar=ivar))
-END PROCEDURE realVec_GetValue17
+END PROCEDURE obj_GetValue17
 
 !----------------------------------------------------------------------------
 !                                                                 GetValue_
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE realVec_GetValue_17
-INTEGER(I4B), ALLOCATABLE :: indx(:)
-indx = GetIndex(obj=dofobj, nodenum=nodenum, ivar=ivar)
-tsize = SIZE(indx)
-VALUE(1:tsize) = obj%val(indx)
-END PROCEDURE realVec_GetValue_17
+MODULE PROCEDURE obj_GetValue_17
+INTEGER(I4B), ALLOCATABLE :: idof(:)
+idof = GetIDOF(obj=dofobj, ivar=ivar)
+CALL GetValue_(obj=obj, dofobj=dofobj, nodenum=nodenum, idof=idof, &
+               VALUE=VALUE, tsize=tsize, &
+               storageFMT=dofobj%storageFMT)
+END PROCEDURE obj_GetValue_17
 
 !----------------------------------------------------------------------------
 !                                                                      get
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE realVec_GetValue18
+MODULE PROCEDURE obj_GetValue18
 VALUE = obj%val(GetIndex(obj=dofobj, nodenum=nodenum, ivar=ivar, &
                          spacecompo=spacecompo, timecompo=timecompo))
-END PROCEDURE realVec_GetValue18
+END PROCEDURE obj_GetValue18
 
 !----------------------------------------------------------------------------
 !                                                               GetValue_
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE realVec_GetValue_18
-INTEGER(I4B), ALLOCATABLE :: indx(:)
-indx = GetIndex(obj=dofobj, nodenum=nodenum, ivar=ivar, &
-                spacecompo=spacecompo, timecompo=timecompo)
-tsize = SIZE(indx)
-VALUE(1:tsize) = obj%val(indx)
-END PROCEDURE realVec_GetValue_18
+MODULE PROCEDURE obj_GetValue_18
+INTEGER(I4B) :: idof
+idof = GetIDOF(obj=dofobj, ivar=ivar, spacecompo=spacecompo, &
+               timecompo=timecompo)
+CALL DOF_GetValue_(v=VALUE, val=obj%val, obj=dofobj, idof=idof, &
+                   nodenum=nodenum, tsize=tsize)
+END PROCEDURE obj_GetValue_18
 
 !----------------------------------------------------------------------------
 !                                                                  GetValue
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE realVec_GetValue19
-INTEGER(I4B) :: s(3), ii, jj
+MODULE PROCEDURE obj_GetValue19
+INTEGER(I4B) :: s(3), tsize
 
-s = GetNodeLoc(obj=dofobj, idof=idof)
-CALL Reallocate(VALUE, dofobj.tNodes.idof)
-
-jj = 0
-
-DO ii = s(1), s(2), s(3)
-  jj = jj + 1
-  VALUE(jj) = obj%val(ii)
-END DO
-
-END PROCEDURE realVec_GetValue19
-
-!----------------------------------------------------------------------------
-!                                                                 GetValue_
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE realVec_GetValue_19
-INTEGER(I4B) :: s(3), ii, jj
-
-s = GetNodeLoc(obj=dofobj, idof=idof)
 tsize = dofobj.tNodes.idof
+CALL Reallocate(VALUE, tsize)
+CALL obj_GetValue_19(obj=obj, dofobj=dofobj, VALUE=VALUE, tsize=tsize, &
+                     idof=idof)
 
-jj = 0
-DO ii = s(1), s(2), s(3)
-  jj = jj + 1
-  VALUE(jj) = obj%val(ii)
-END DO
-
-END PROCEDURE realVec_GetValue_19
-
-!----------------------------------------------------------------------------
-!                                                                      get
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE realVec_GetValue20
-INTEGER(I4B) :: s(3), ii, jj
-
-ii = GetIDOF(obj=dofobj, ivar=ivar, idof=idof)
-s = GetNodeLoc(obj=dofobj, idof=ii)
-CALL Reallocate(VALUE, dofobj.tNodes.ii)
-
-jj = 0
-
-DO ii = s(1), s(2), s(3)
-  jj = jj + 1
-  VALUE(jj) = obj%val(ii)
-END DO
-
-END PROCEDURE realVec_GetValue20
-
-!----------------------------------------------------------------------------
-!                                                               GetValue_
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE realVec_GetValue_20
-INTEGER(I4B) :: s(3), ii, jj
-
-ii = GetIDOF(obj=dofobj, ivar=ivar, idof=idof)
-tsize = dofobj.tNodes.ii
-
-s = GetNodeLoc(obj=dofobj, idof=ii)
-
-jj = 0
-DO ii = s(1), s(2), s(3)
-  jj = jj + 1
-  VALUE(jj) = obj%val(ii)
-END DO
-
-END PROCEDURE realVec_GetValue_20
-
-!----------------------------------------------------------------------------
-!                                                                  GetValue
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE realVec_GetValue21
-INTEGER(I4B) :: s(3), ii, jj
-
-ii = GetIDOF(obj=dofobj, ivar=ivar, spacecompo=spacecompo, &
-             timecompo=timecompo)
-s = GetNodeLoc(obj=dofobj, idof=ii)
-CALL Reallocate(VALUE, dofobj.tNodes.ii)
-
-jj = 0
-
-DO ii = s(1), s(2), s(3)
-  jj = jj + 1
-  VALUE(jj) = obj%val(ii)
-END DO
-
-END PROCEDURE realVec_GetValue21
+END PROCEDURE obj_GetValue19
 
 !----------------------------------------------------------------------------
 !                                                                 GetValue_
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE realVec_GetValue_21
-INTEGER(I4B) :: s(3), ii, jj
+MODULE PROCEDURE obj_GetValue_19
+CALL DOF_GetValue_(v=VALUE, val=obj%val, obj=dofobj, idof=idof, &
+                   tsize=tsize, isidof=.TRUE.)
+END PROCEDURE obj_GetValue_19
 
-ii = GetIDOF(obj=dofobj, ivar=ivar, spacecompo=spacecompo, &
-             timecompo=timecompo)
-tsize = dofobj.tNodes.ii
+!----------------------------------------------------------------------------
+!                                                                   GetValue
+!----------------------------------------------------------------------------
 
-s = GetNodeLoc(obj=dofobj, idof=ii)
+MODULE PROCEDURE obj_GetValue20
+INTEGER(I4B) :: global_idof
+global_idof = GetIDOF(obj=dofobj, ivar=ivar, idof=idof)
+CALL GetValue(obj=obj, dofobj=dofobj, idof=global_idof, &
+              VALUE=VALUE)
+END PROCEDURE obj_GetValue20
 
-jj = 0
+!----------------------------------------------------------------------------
+!                                                               GetValue_
+!----------------------------------------------------------------------------
 
-DO ii = s(1), s(2), s(3)
-  jj = jj + 1
-  VALUE(jj) = obj%val(ii)
-END DO
+MODULE PROCEDURE obj_GetValue_20
+INTEGER(I4B) :: global_idof
+global_idof = GetIDOF(obj=dofobj, ivar=ivar, idof=idof)
+CALL GetValue_(obj=obj, dofobj=dofobj, idof=global_idof, &
+               VALUE=VALUE, tsize=tsize)
+END PROCEDURE obj_GetValue_20
 
-END PROCEDURE realVec_GetValue_21
+!----------------------------------------------------------------------------
+!                                                                  GetValue
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE obj_GetValue21
+INTEGER(I4B) :: global_idof
+global_idof = GetIDOF(obj=dofobj, ivar=ivar, spacecompo=spacecompo, &
+                      timecompo=timecompo)
+CALL GetValue(obj=obj, dofobj=dofobj, idof=global_idof, &
+              VALUE=VALUE)
+END PROCEDURE obj_GetValue21
+
+!----------------------------------------------------------------------------
+!                                                                 GetValue_
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE obj_GetValue_21
+INTEGER(I4B) :: global_idof
+global_idof = GetIDOF(obj=dofobj, ivar=ivar, spacecompo=spacecompo, &
+                      timecompo=timecompo)
+CALL GetValue_(obj=obj, dofobj=dofobj, idof=global_idof, &
+               VALUE=VALUE, tsize=tsize)
+END PROCEDURE obj_GetValue_21
 
 !----------------------------------------------------------------------------
 !                                                                 GetValue
@@ -504,8 +454,10 @@ END PROCEDURE realVec_GetValue_21
 
 MODULE PROCEDURE obj_GetValue22
 INTEGER(I4B) :: tsize
-CALL Reallocate(VALUE, SIZE(idof) * SIZE(nodenum))
-CALL GetValue_(obj, dofobj, idof, VALUE, tsize, nodenum)
+tsize = SIZE(idof) * SIZE(nodenum)
+CALL Reallocate(VALUE, tsize)
+CALL GetValue_(obj=obj, dofobj=dofobj, idof=idof, VALUE=VALUE, tsize=tsize, &
+               nodenum=nodenum)
 END PROCEDURE obj_GetValue22
 
 !----------------------------------------------------------------------------
@@ -513,33 +465,8 @@ END PROCEDURE obj_GetValue22
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE obj_GetValue_22
-INTEGER(I4B) :: m, n, i, k, tdof
-
-m = SIZE(idof)
-n = SIZE(nodenum)
-
-tsize = m * n
-
-SELECT CASE (dofobj%StorageFMT)
-
-CASE (DOF_FMT)
-
-  DO i = 1, m
-  VALUE((i - 1) * n + 1:i * n) = obj%val(nodenum + dofobj%valmap(idof(i)) - 1)
-  END DO
-
-CASE (NODES_FMT)
-
-  tdof = .tdof.dofobj
-
-  DO i = 1, n
-    DO k = 1, m
-      VALUE((i - 1) * m + k) = obj%val((nodenum(i) - 1) * tdof + idof(k))
-    END DO
-  END DO
-
-END SELECT
-
+CALL DOF_GetValue_(v=VALUE, val=obj%val, obj=dofobj, idof=idof, &
+                   tsize=tsize, nodenum=nodenum, storageFMT=dofobj%storageFMT)
 END PROCEDURE obj_GetValue_22
 
 !----------------------------------------------------------------------------
@@ -547,19 +474,10 @@ END PROCEDURE obj_GetValue_22
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE obj_GetValue23
-
-INTEGER(I4B) :: i, tsize
-
-! main
-
-tsize = 0
-DO i = 1, SIZE(idof)
-  tsize = tsize + dofobj%valmap(idof(i) + 1) - dofobj%valmap(idof(i))
-END DO
-
+INTEGER(I4B) :: tsize
+tsize = dofobj.tNodes.idof
 CALL Reallocate(VALUE, tsize)
-CALL GetValue_(obj, dofobj, idof, VALUE, tsize)
-
+CALL GetValue_(obj=obj, dofobj=dofobj, idof=idof, VALUE=VALUE, tsize=tsize)
 END PROCEDURE obj_GetValue23
 
 !----------------------------------------------------------------------------
@@ -567,41 +485,8 @@ END PROCEDURE obj_GetValue23
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE obj_GetValue_23
-INTEGER(I4B) :: m, n, i, k, tdof, tsize_idof
-
-! main
-
-tsize_idof = SIZE(idof)
-k = 0
-DO i = 1, tsize_idof
-  k = k + dofobj%valmap(idof(i) + 1) - dofobj%valmap(idof(i))
-END DO
-
-tsize = k
-
-SELECT CASE (dofobj%StorageFMT)
-
-CASE (DOF_FMT)
-
-  m = 0; n = 0
-  DO i = 1, tsize_idof
-    m = n + 1
-    n = n + dofobj%valmap(idof(i) + 1) - dofobj%valmap(idof(i))
-   VALUE(m:n) = obj%val(dofobj%valmap(idof(i)):dofobj%valmap(idof(i + 1) - 1))
-  END DO
-
-CASE (NODES_FMT)
-
-  tdof = .tdof.dofobj; m = tsize_idof
-
-  DO i = 1, dofobj%valmap(2) - dofobj%valmap(1)
-    DO k = 1, m
-      VALUE((i - 1) * m + k) = obj%val((i - 1) * tdof + idof(k))
-    END DO
-  END DO
-
-END SELECT
-
+CALL DOF_GetValue_(obj=dofobj, val=obj%val, v=VALUE, idof=idof, tsize=tsize, &
+                   storageFMT=dofobj%StorageFMT)
 END PROCEDURE obj_GetValue_23
 
 !----------------------------------------------------------------------------
