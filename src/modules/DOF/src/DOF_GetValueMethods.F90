@@ -352,6 +352,32 @@ INTERFACE GetValue_
 END INTERFACE GetValue_
 
 !----------------------------------------------------------------------------
+!                                                                  GetValue_
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2024-05-25
+! summary: Returns the values of degrees of freedom in a single vector
+
+INTERFACE GetValue_
+  MODULE PURE SUBROUTINE obj_GetValue_8(v, tsize, val, obj, idof, isidof)
+    REAL(DFP), INTENT(INOUT) :: v(:)
+    !! values to return
+    INTEGER(I4B), INTENT(OUT) :: tsize
+    !! size of data written in v
+    REAL(DFP), INTENT(IN) :: val(:)
+    !! values to extract from
+    TYPE(DOF_), INTENT(IN) :: obj
+    !! degree of freedom object
+    INTEGER(I4B), INTENT(IN) :: idof
+    !! global degrees of freedom to extract
+    LOGICAL(LGT), INTENT(IN) :: isidof
+    !! This variable is not used, it here to create unique interface
+    !! otherwise it conflicts with obj_GetValue_4
+  END SUBROUTINE obj_GetValue_8
+END INTERFACE GetValue_
+
+!----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 

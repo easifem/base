@@ -23,7 +23,9 @@ USE ReallocateUtility, ONLY: Reallocate
 USE DOF_GetMethods, ONLY: OPERATOR(.tdof.), &
                           GetNodeLoc, &
                           GetIndex_, &
-                          GetIDOF
+                          GetIDOF, &
+                          OPERATOR(.tNodes.), &
+                          GetNodeLoc
 
 IMPLICIT NONE
 
@@ -341,6 +343,23 @@ DO ii = 1, tsize
 END DO
 
 END PROCEDURE obj_GetValue_7
+
+!----------------------------------------------------------------------------
+!                                                                 GetValue_
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE obj_GetValue_8
+INTEGER(I4B) :: ii, jj, s(3)
+
+tsize = obj.tNodes.idof
+s = GetNodeLoc(obj=obj, idof=idof)
+
+DO CONCURRENT(jj=s(1):s(2):s(3))
+  ii = INT((jj - s(1) + s(3)) / s(3))
+  v(ii) = val(jj)
+END DO
+
+END PROCEDURE obj_GetValue_8
 
 !----------------------------------------------------------------------------
 !
