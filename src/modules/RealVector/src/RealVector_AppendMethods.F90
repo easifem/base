@@ -16,9 +16,11 @@
 !
 
 MODULE RealVector_AppendMethods
-USE GlobalData
-USE BaseType
+USE GlobalData, ONLY: DFP
+USE BaseType, ONLY: RealVector_
+
 IMPLICIT NONE
+
 PRIVATE
 PUBLIC :: Append
 
@@ -30,15 +32,11 @@ PUBLIC :: Append
 ! date:         28 Feb 2021
 ! summary:         This subroutine appends value to [[RealVector_]]
 
-INTERFACE
-  MODULE PURE SUBROUTINE realVec_Append1(obj, VALUE)
+INTERFACE Append
+  MODULE PURE SUBROUTINE obj_Append1(obj, VALUE)
     CLASS(RealVector_), INTENT(INOUT) :: obj
     REAL(DFP), INTENT(IN) :: VALUE
-  END SUBROUTINE realVec_Append1
-END INTERFACE
-
-INTERFACE Append
-  MODULE PROCEDURE realVec_Append1
+  END SUBROUTINE obj_Append1
 END INTERFACE Append
 
 !----------------------------------------------------------------------------
@@ -49,15 +47,11 @@ END INTERFACE Append
 ! date:         28 Feb 2021
 ! summary:         This subroutine appends value to [[RealVector_]]
 
-INTERFACE
-  MODULE PURE SUBROUTINE realVec_Append2(obj, VALUE)
+INTERFACE Append
+  MODULE PURE SUBROUTINE obj_Append2(obj, VALUE)
     CLASS(RealVector_), INTENT(INOUT) :: obj
     REAL(DFP), INTENT(IN) :: VALUE(:)
-  END SUBROUTINE realVec_Append2
-END INTERFACE
-
-INTERFACE Append
-  MODULE PROCEDURE realVec_Append2
+  END SUBROUTINE obj_Append2
 END INTERFACE Append
 
 !----------------------------------------------------------------------------
@@ -68,15 +62,11 @@ END INTERFACE Append
 ! date:         28 Feb 2021
 ! summary:         This subroutine appends value to [[RealVector_]]
 
-INTERFACE
-  MODULE PURE SUBROUTINE realVec_Append3(obj, anotherobj)
+INTERFACE Append
+  MODULE PURE SUBROUTINE obj_Append3(obj, anotherobj)
     CLASS(RealVector_), INTENT(INOUT) :: obj
     CLASS(RealVector_), INTENT(IN) :: anotherobj
-  END SUBROUTINE realVec_Append3
-END INTERFACE
-
-INTERFACE Append
-  MODULE PROCEDURE realVec_Append3
+  END SUBROUTINE obj_Append3
 END INTERFACE Append
 
 END MODULE RealVector_AppendMethods
