@@ -64,39 +64,6 @@ END INTERFACE GetValue
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date: 2024-05-25
-! summary: Returns the values of degrees of freedom in a single vector
-!
-!# Introduction
-!
-! This subroutine is same as GetValue1
-! but it does not allocate any extra memory
-
-INTERFACE GetValue_
- MODULE PURE SUBROUTINE obj_GetValue_1(v, tsize, val, obj, idof, storageFMT, &
-                                        nodenum)
-    REAL(DFP), INTENT(INOUT) :: v(:)
-    !! values to return
-    INTEGER(I4B), INTENT(OUT) :: tsize
-    !! size of data written in v
-    REAL(DFP), INTENT(IN) :: val(:)
-    !! values to extract from
-    TYPE(DOF_), INTENT(IN) :: obj
-    !! degree of freedom object
-    INTEGER(I4B), INTENT(IN) :: idof(:)
-    !! degrees of freedom to extract
-    INTEGER(I4B), INTENT(IN) :: storageFMT
-    !! storage format of returned vector
-    INTEGER(I4B), INTENT(IN) :: nodenum(:)
-    !! node numbers to extract
-  END SUBROUTINE obj_GetValue_1
-END INTERFACE GetValue_
-
-!----------------------------------------------------------------------------
-!                                                                   GetValue
-!----------------------------------------------------------------------------
-
-!> author: Vikas Sharma, Ph. D.
 ! date: 26 June 2021
 ! summary: Returns the values of degrees of freedom in a 2D array
 !
@@ -124,36 +91,6 @@ END INTERFACE GetValue
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date: 2024-05-25
-! summary: Returns the values of degrees of freedom in a 2D array
-!
-!# Introduction
-!
-! This subroutine is same as GetValue2 but
-! it does not allocate any extra memory
-
-INTERFACE GetValue_
- MODULE PURE SUBROUTINE obj_GetValue_2(v, val, nrow, ncol, obj, idof, force3D)
-    REAL(DFP), INTENT(INOUT) :: v(:, :)
-    !! Data to be returned
-    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
-    !! number of rows and columns written in v
-    REAL(DFP), INTENT(IN) :: val(:)
-    !! values to extract from
-    TYPE(DOF_), INTENT(IN) :: obj
-    !! degree of freedom object for val
-    INTEGER(I4B), INTENT(IN) :: idof(:)
-    !! degrees of freedom to extract
-    LOGICAL(LGT), OPTIONAL, INTENT(IN) :: force3D
-    !! if true then return 3D vector
-  END SUBROUTINE obj_GetValue_2
-END INTERFACE GetValue_
-
-!----------------------------------------------------------------------------
-!                                                                   GetValue
-!----------------------------------------------------------------------------
-
-!> author: Vikas Sharma, Ph. D.
 ! date: 26 June 2021
 ! summary: Returns the values of degrees of freedom in a single vector
 !
@@ -173,36 +110,6 @@ INTERFACE GetValue
     INTEGER(I4B), INTENT(IN) :: storageFMT
   END SUBROUTINE obj_GetValue3
 END INTERFACE GetValue
-
-!----------------------------------------------------------------------------
-!                                                                   GetValue
-!----------------------------------------------------------------------------
-
-!> author: Vikas Sharma, Ph. D.
-! date: 2024-05-25
-! summary: Returns the values of degrees of freedom in a single vector
-!
-!# Introduction
-!
-! This subroutine is same as GetValue3 but
-! it does not allocate any extra memory
-
-INTERFACE GetValue_
-  MODULE PURE SUBROUTINE obj_GetValue_3(v, tsize, val, obj, idof, storageFMT)
-    REAL(DFP), INTENT(INOUT) :: v(:)
-    !! values to be returned
-    INTEGER(I4B), INTENT(OUT) :: tsize
-    !! size of data written in v
-    REAL(DFP), INTENT(IN) :: val(:)
-    !! values to extract from
-    TYPE(DOF_), INTENT(IN) :: obj
-    !! degree of freedom object
-    INTEGER(I4B), INTENT(IN) :: idof(:)
-    !! degrees of freedom to extract
-    INTEGER(I4B), INTENT(IN) :: storageFMT
-    !! stroage format of returned vector
-  END SUBROUTINE obj_GetValue_3
-END INTERFACE GetValue_
 
 !----------------------------------------------------------------------------
 !                                                                       Get
@@ -236,6 +143,213 @@ INTERFACE Get
     REAL(DFP), ALLOCATABLE :: ans(:)
   END FUNCTION obj_get2
 END INTERFACE Get
+
+!----------------------------------------------------------------------------
+!                                                                  GetValue_
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2024-05-25
+! summary: Returns the values of degrees of freedom in a single vector
+!
+!# Introduction
+!
+! This subroutine is same as GetValue1
+! but it does not allocate any extra memory
+
+INTERFACE GetValue_
+ MODULE PURE SUBROUTINE obj_GetValue_1(v, tsize, val, obj, idof, storageFMT, &
+                                        nodenum)
+    REAL(DFP), INTENT(INOUT) :: v(:)
+    !! values to return
+    INTEGER(I4B), INTENT(OUT) :: tsize
+    !! size of data written in v
+    REAL(DFP), INTENT(IN) :: val(:)
+    !! values to extract from
+    TYPE(DOF_), INTENT(IN) :: obj
+    !! degree of freedom object
+    INTEGER(I4B), INTENT(IN) :: idof(:)
+    !! degrees of freedom to extract
+    INTEGER(I4B), INTENT(IN) :: storageFMT
+    !! storage format of returned vector
+    INTEGER(I4B), INTENT(IN) :: nodenum(:)
+    !! node numbers to extract
+  END SUBROUTINE obj_GetValue_1
+END INTERFACE GetValue_
+
+!----------------------------------------------------------------------------
+!                                                                  GetValue_
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2024-05-25
+! summary: Returns the values of degrees of freedom in a 2D array
+!
+!# Introduction
+!
+! This subroutine is same as GetValue2 but
+! it does not allocate any extra memory
+
+INTERFACE GetValue_
+ MODULE PURE SUBROUTINE obj_GetValue_2(v, val, nrow, ncol, obj, idof, force3D)
+    REAL(DFP), INTENT(INOUT) :: v(:, :)
+    !! Data to be returned
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+    !! number of rows and columns written in v
+    REAL(DFP), INTENT(IN) :: val(:)
+    !! values to extract from
+    TYPE(DOF_), INTENT(IN) :: obj
+    !! degree of freedom object for val
+    INTEGER(I4B), INTENT(IN) :: idof(:)
+    !! degrees of freedom to extract
+    LOGICAL(LGT), OPTIONAL, INTENT(IN) :: force3D
+    !! if true then return 3D vector
+  END SUBROUTINE obj_GetValue_2
+END INTERFACE GetValue_
+
+!----------------------------------------------------------------------------
+!                                                                  GetValue_
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2024-05-25
+! summary: Returns the values of degrees of freedom in a single vector
+!
+!# Introduction
+!
+! This subroutine is same as GetValue3 but
+! it does not allocate any extra memory
+
+INTERFACE GetValue_
+  MODULE PURE SUBROUTINE obj_GetValue_3(v, tsize, val, obj, idof, storageFMT)
+    REAL(DFP), INTENT(INOUT) :: v(:)
+    !! values to be returned
+    INTEGER(I4B), INTENT(OUT) :: tsize
+    !! size of data written in v
+    REAL(DFP), INTENT(IN) :: val(:)
+    !! values to extract from
+    TYPE(DOF_), INTENT(IN) :: obj
+    !! degree of freedom object
+    INTEGER(I4B), INTENT(IN) :: idof(:)
+    !! degrees of freedom to extract
+    INTEGER(I4B), INTENT(IN) :: storageFMT
+    !! stroage format of returned vector
+  END SUBROUTINE obj_GetValue_3
+END INTERFACE GetValue_
+
+!----------------------------------------------------------------------------
+!                                                                 GetValue_
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2024-05-26
+! summary: Returns the values
+!
+!# Introduction
+!
+! This routine performs following operations without extra memory allocation
+! index = obj_GetIndex1(obj, nodenum)
+! v = val(index)
+
+INTERFACE GetValue_
+  MODULE PURE SUBROUTINE obj_GetValue_4(v, tsize, val, obj, nodenum)
+    REAL(DFP), INTENT(INOUT) :: v(:)
+    !! Values to be returned
+    INTEGER(I4B), INTENT(OUT) :: tsize
+    !! Size of data written in v
+    REAL(DFP), INTENT(IN) :: val(:)
+    !! Values to extract from
+    TYPE(DOF_), INTENT(IN) :: obj
+    !! Degree of freedom object
+    INTEGER(I4B), INTENT(IN) :: nodenum
+    !! Node number to extract
+  END SUBROUTINE obj_GetValue_4
+END INTERFACE GetValue_
+
+!----------------------------------------------------------------------------
+!                                                                 GetValue_
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2024-05-26
+! summary: Returns the values
+!
+!# Introduction
+!
+! This routine performs following operations without extra memory allocation
+! index = obj_GetIndex2(obj, nodenum, ivar)
+! v = val(index)
+
+INTERFACE GetValue_
+  MODULE PURE SUBROUTINE obj_GetValue_5(v, tsize, val, obj, nodenum, ivar)
+    REAL(DFP), INTENT(INOUT) :: v(:)
+    !! Values to be returned
+    INTEGER(I4B), INTENT(OUT) :: tsize
+    !! Size of data written in v
+    REAL(DFP), INTENT(IN) :: val(:)
+    !! Values to extract from
+    TYPE(DOF_), INTENT(IN) :: obj
+    !! Degree of freedom object
+    INTEGER(I4B), INTENT(IN) :: nodenum
+    !! Node number to extract
+    INTEGER(I4B), INTENT(IN) :: ivar
+    !! physical variable numbers
+  END SUBROUTINE obj_GetValue_5
+END INTERFACE GetValue_
+
+!----------------------------------------------------------------------------
+!                                                                 GetValue_
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2024-05-26
+! summary: Returns the values
+!
+!# Introduction
+!
+! This routine performs following operations without extra memory allocation
+! index = obj_GetIndex4(obj, nodenum)
+! v = val(index)
+
+INTERFACE GetValue_
+  MODULE PURE SUBROUTINE obj_GetValue_6(v, tsize, val, obj, nodenum)
+    REAL(DFP), INTENT(INOUT) :: v(:)
+    !! Values to be returned
+    INTEGER(I4B), INTENT(OUT) :: tsize
+    !! Size of data written in v
+    REAL(DFP), INTENT(IN) :: val(:)
+    !! Values to extract from
+    TYPE(DOF_), INTENT(IN) :: obj
+    !! Degree of freedom object
+    INTEGER(I4B), INTENT(IN) :: nodenum(:)
+    !! Node number to extract
+  END SUBROUTINE obj_GetValue_6
+END INTERFACE GetValue_
+
+!----------------------------------------------------------------------------
+!                                                                  GetValue_
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2024-05-25
+! summary: Returns the values of degrees of freedom in a single vector
+
+INTERFACE GetValue_
+  MODULE PURE SUBROUTINE obj_GetValue_7(v, tsize, val, obj, idof, nodenum)
+    REAL(DFP), INTENT(INOUT) :: v(:)
+    !! values to return
+    INTEGER(I4B), INTENT(OUT) :: tsize
+    !! size of data written in v
+    REAL(DFP), INTENT(IN) :: val(:)
+    !! values to extract from
+    TYPE(DOF_), INTENT(IN) :: obj
+    !! degree of freedom object
+    INTEGER(I4B), INTENT(IN) :: idof
+    !! global degrees of freedom to extract
+    INTEGER(I4B), INTENT(IN) :: nodenum(:)
+    !! node numbers to extract
+  END SUBROUTINE obj_GetValue_7
+END INTERFACE GetValue_
 
 !----------------------------------------------------------------------------
 !

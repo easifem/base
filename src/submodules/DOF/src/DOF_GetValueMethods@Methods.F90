@@ -20,7 +20,10 @@ USE GlobalData, ONLY: DOF_FMT, NODES_FMT
 
 USE ReallocateUtility, ONLY: Reallocate
 
-USE DOF_GetMethods, ONLY: OPERATOR(.tdof.)
+USE DOF_GetMethods, ONLY: OPERATOR(.tdof.), &
+                          GetNodeLoc, &
+                          GetIndex_, &
+                          GetIDOF
 
 IMPLICIT NONE
 
@@ -36,6 +39,63 @@ CALL Reallocate(v, SIZE(idof) * SIZE(nodenum))
 CALL GetValue_(v, tsize, val, obj, idof, storageFMT, &
                nodenum)
 END PROCEDURE obj_GetValue1
+
+!----------------------------------------------------------------------------
+!                                                             getArrayvalues
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE obj_GetValue2
+INTEGER(I4B) :: m, n, i, k
+LOGICAL(LGT) :: abool
+
+k = obj%valmap(idof(1) + 1) - obj%valmap(idof(1))
+m = SIZE(idof)
+
+DO i = 1, m
+  k = MAX(k, obj%valmap(idof(i) + 1) - obj%valmap(idof(i)))
+END DO
+
+abool = PRESENT(force3D) .AND. (m .LT. 3)
+IF (abool) m = 3
+
+CALL Reallocate(v, m, k)
+CALL GetValue_(v, val, m, k, obj, idof, force3D)
+
+END PROCEDURE obj_GetValue2
+
+!----------------------------------------------------------------------------
+!                                                             getArrayvalues
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE obj_GetValue3
+INTEGER(I4B) :: i, k
+
+k = 0
+DO i = 1, SIZE(idof)
+  k = k + obj%valmap(idof(i) + 1) - obj%valmap(idof(i))
+END DO
+
+CALL Reallocate(v, k)
+CALL GetValue_(v, k, val, obj, idof, storageFMT)
+
+END PROCEDURE obj_GetValue3
+
+!----------------------------------------------------------------------------
+!                                                                Arrayvalues
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE obj_get1
+CALL GetValue(v=ans, val=val, obj=obj, idof=idof, nodenum=nodenum, &
+              StorageFMT=StorageFMT)
+END PROCEDURE obj_get1
+
+!----------------------------------------------------------------------------
+!                                                                Arrayvalues
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE obj_get2
+CALL GetValue(v=ans, val=val, obj=obj, idof=idof, StorageFMT=StorageFMT)
+END PROCEDURE obj_get2
 
 !----------------------------------------------------------------------------
 !                                                                  GetValue_
@@ -97,29 +157,6 @@ END SELECT
 END PROCEDURE obj_GetValue_1
 
 !----------------------------------------------------------------------------
-!                                                             getArrayvalues
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE obj_GetValue2
-INTEGER(I4B) :: m, n, i, k
-LOGICAL(LGT) :: abool
-
-k = obj%valmap(idof(1) + 1) - obj%valmap(idof(1))
-m = SIZE(idof)
-
-DO i = 1, m
-  k = MAX(k, obj%valmap(idof(i) + 1) - obj%valmap(idof(i)))
-END DO
-
-abool = PRESENT(force3D) .AND. (m .LT. 3)
-IF (abool) m = 3
-
-CALL Reallocate(v, m, k)
-CALL GetValue_(v, val, m, k, obj, idof, force3D)
-
-END PROCEDURE obj_GetValue2
-
-!----------------------------------------------------------------------------
 !                                                                 GetValue_
 !----------------------------------------------------------------------------
 
@@ -165,23 +202,6 @@ CASE (NODES_FMT)
 END SELECT
 
 END PROCEDURE obj_GetValue_2
-
-!----------------------------------------------------------------------------
-!                                                             getArrayvalues
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE obj_GetValue3
-INTEGER(I4B) :: i, k
-
-k = 0
-DO i = 1, SIZE(idof)
-  k = k + obj%valmap(idof(i) + 1) - obj%valmap(idof(i))
-END DO
-
-CALL Reallocate(v, k)
-CALL GetValue_(v, k, val, obj, idof, storageFMT)
-
-END PROCEDURE obj_GetValue3
 
 !----------------------------------------------------------------------------
 !                                                                   GetValue_
@@ -253,21 +273,74 @@ END SELECT
 END PROCEDURE obj_GetValue_3
 
 !----------------------------------------------------------------------------
-!                                                                Arrayvalues
+!                                                                 GetValue_
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE obj_get1
-CALL GetValue(v=ans, val=val, obj=obj, idof=idof, nodenum=nodenum, &
-              StorageFMT=StorageFMT)
-END PROCEDURE obj_get1
+MODULE PROCEDURE obj_GetValue_4
+INTEGER(I4B) :: ii, jj
+
+tsize = .tdof.obj
+
+DO ii = 1, tsize
+  jj = GetNodeLoc(obj=obj, nodenum=nodenum, idof=ii)
+  v(ii) = val(jj)
+END DO
+
+END PROCEDURE obj_GetValue_4
 
 !----------------------------------------------------------------------------
-!                                                                Arrayvalues
+!                                                                 GetValue_
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE obj_get2
-CALL GetValue(v=ans, val=val, obj=obj, idof=idof, StorageFMT=StorageFMT)
-END PROCEDURE obj_get2
+MODULE PROCEDURE obj_GetValue_5
+INTEGER(I4B) :: ii, jj, kk
+
+tsize = obj.tdof.ivar
+
+DO ii = 1, tsize
+  kk = GetIDOF(obj=obj, ivar=ivar, idof=ii)
+  jj = GetNodeLoc(obj=obj, nodenum=nodenum, idof=kk)
+  v(ii) = val(jj)
+END DO
+
+END PROCEDURE obj_GetValue_5
+
+!----------------------------------------------------------------------------
+!                                                                 GetValue_
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE obj_GetValue_6
+INTEGER(I4B) :: ii, jj, kk
+INTEGER(I4B), ALLOCATABLE :: indx(:)
+
+tsize = .tdof.obj
+tsize = tsize * SIZE(nodenum)
+ALLOCATE (indx(tsize))
+CALL GetIndex_(obj=obj, nodenum=nodenum, ans=indx, tsize=tsize)
+
+DO CONCURRENT(ii=1:tsize)
+  v(ii) = val(indx(ii))
+END DO
+
+DEALLOCATE (indx)
+
+END PROCEDURE obj_GetValue_6
+
+!----------------------------------------------------------------------------
+!                                                                 GetValue_
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE obj_GetValue_7
+INTEGER(I4B) :: ii, jj
+
+tsize = SIZE(nodenum)
+
+DO ii = 1, tsize
+  jj = GetNodeLoc(obj=obj, nodenum=nodenum(ii), idof=idof)
+  v(ii) = val(jj)
+END DO
+
+END PROCEDURE obj_GetValue_7
 
 !----------------------------------------------------------------------------
 !
