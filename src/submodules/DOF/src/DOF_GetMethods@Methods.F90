@@ -82,8 +82,17 @@ END PROCEDURE obj_tNodes4
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE obj_tdof1
+
+#ifdef DEBUG_VER
+
 ans = 0
 IF (ALLOCATED(obj%map)) ans = obj%map(SIZE(obj%map, 1), 4)
+
+#else
+
+ans = obj%map(SIZE(obj%map, 1), 4)
+
+#endif
 END PROCEDURE obj_tdof1
 
 !----------------------------------------------------------------------------
@@ -106,6 +115,7 @@ END PROCEDURE obj_tdof2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE obj_tdof3
+#ifdef DEBUG_VER
 INTEGER(I4B) :: i
 LOGICAL(LGT) :: isok
 ans = 0
@@ -113,7 +123,24 @@ ans = 0
 i = SIZE(obj%map, 1) - 1
 isok = ALLOCATED(obj%map) .AND. (ivar .LE. i)
 IF (isok) ans = obj%map(ivar, 4)
+
+#else
+ans = obj%map(ivar, 4)
+#endif
+
 END PROCEDURE obj_tdof3
+
+!----------------------------------------------------------------------------
+!                                                                       tDOF
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE obj_tdof4
+INTEGER(I4B) :: ii
+ans = 0
+DO ii = 1, SIZE(ivar)
+  ans = ans + obj%map(ii, 4)
+END DO
+END PROCEDURE obj_tdof4
 
 !----------------------------------------------------------------------------
 !                                                                     tNames

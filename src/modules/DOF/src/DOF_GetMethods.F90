@@ -36,7 +36,9 @@ PUBLIC :: OPERATOR(.Names.)
 PUBLIC :: GetIDOF
 PUBLIC :: SIZE
 PUBLIC :: GetNodeLoc
+PUBLIC :: GetNodeLoc_
 PUBLIC :: GetIndex
+PUBLIC :: GetIndex_
 
 !----------------------------------------------------------------------------
 !                                                  DOFStartIndex@GetMethods
@@ -226,6 +228,27 @@ INTERFACE OPERATOR(.tDOF.)
     INTEGER(I4B), INTENT(IN) :: ivar
     INTEGER(I4B) :: ans
   END FUNCTION obj_tdof3
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                           tDOF@GetMethods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2024-05-26
+! summary: This subroutine returns the total number of degrees of freedom
+!
+!# Introduction
+! This function returns the total number of degrees of freedom in a
+! physical variable.
+! The physical variable is specified by using its name.
+
+INTERFACE OPERATOR(.tDOF.)
+  MODULE PURE FUNCTION obj_tdof4(obj, ivar) RESULT(ans)
+    CLASS(DOF_), INTENT(IN) :: obj
+    INTEGER(I4B), INTENT(IN) :: ivar(:)
+    INTEGER(I4B) :: ans
+  END FUNCTION obj_tdof4
 END INTERFACE
 
 !----------------------------------------------------------------------------
