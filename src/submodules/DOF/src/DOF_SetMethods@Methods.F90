@@ -16,7 +16,10 @@
 !
 
 SUBMODULE(DOF_SetMethods) Methods
-USE BaseMethod
+USE DOF_GetMethods, ONLY: GetIndex, &
+                          GetNodeLoc, &
+                          OPERATOR(.tdof.)
+USE GlobalData, ONLY: DOF_FMT, NODES_FMT, NodesToDOF, DOFToNodes
 IMPLICIT NONE
 
 CONTAINS
@@ -25,326 +28,289 @@ CONTAINS
 !                                                                    setvalue
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE dof_set1
+MODULE PROCEDURE obj_set1
 INTEGER(I4B) :: tdof, idof, i, n, m
-!
+
 tdof = .tdof.obj
 n = SIZE(nodenum)
 m = SIZE(VALUE)
-!
+
 ASSOCIATE (vm => obj%valmap)
   SELECT CASE (obj%StorageFMT)
-    !
-    !
-    !
-    !
   CASE (DOF_FMT)
-    !
     IF (m .NE. n) THEN
-      !
       IF (m .EQ. 1) THEN
-        !
         DO idof = 1, tdof
           Vec(vm(idof) - 1 + nodenum) = VALUE(1)
         END DO
-        !
       ELSE IF (m .EQ. tdof * n) THEN
-        !
-        IF (Conversion(1) .EQ. nodesToDOF) THEN
-          !
+        IF (Conversion(1) .EQ. NodesToDOF) THEN
           DO idof = 1, tdof
             DO i = 1, n
               Vec(vm(idof) - 1 + nodenum(i)) = &
                 & VALUE((i - 1) * tdof + idof)
             END DO
           END DO
-          !
         ELSE
-          !
           DO idof = 1, tdof
             Vec(vm(idof) - 1 + nodenum) = &
               & VALUE((idof - 1) * n + 1:idof * n)
           END DO
-          !
         END IF
-        !
       END IF
-      !
     ELSE
-      !
       DO idof = 1, tdof
         Vec(vm(idof) - 1 + nodenum) = VALUE(:)
       END DO
-      !
     END IF
-    !
-    !
-    !
-    !
+
   CASE (NODES_FMT)
-    !
     IF (m .NE. n) THEN
-      !
       IF (m .EQ. 1) THEN
-        !
         DO idof = 1, tdof
           Vec((nodenum - 1) * tdof + idof) = VALUE(1)
         END DO
-        !
       ELSE IF (m .EQ. tdof * n) THEN
-        !
         IF (Conversion(1) .EQ. DOFToNodes) THEN
-          !
           DO idof = 1, tdof
             DO i = 1, n
               Vec((nodenum(i) - 1) * tdof + idof) &
                 & = VALUE((idof - 1) * n + i)
             END DO
           END DO
-          !
         ELSE
-          !
           DO idof = 1, tdof
             DO i = 1, n
               Vec((nodenum(i) - 1) * tdof + idof) &
                 & = VALUE((i - 1) * tdof + idof)
             END DO
           END DO
-          !
         END IF
-        !
       END IF
-      !
     ELSE
-      !
       DO idof = 1, tdof
         Vec((nodenum - 1) * tdof + idof) = VALUE(:)
       END DO
-      !
     END IF
-    !
   END SELECT
-  !
-  !
-  !
-  !
 END ASSOCIATE
-!
-END PROCEDURE dof_set1
+END PROCEDURE obj_set1
 
 !----------------------------------------------------------------------------
 !                                                                    setvalue
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE dof_set2
-vec(getIndex(obj=obj, nodenum=nodenum)) = VALUE
-END PROCEDURE dof_set2
+MODULE PROCEDURE obj_set2
+vec(GetIndex(obj=obj, nodenum=nodenum)) = VALUE
+END PROCEDURE obj_set2
 
 !----------------------------------------------------------------------------
 !                                                                 setvalue
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE dof_set3
-!
+MODULE PROCEDURE obj_set3
+
 IF (SIZE(nodenum) .EQ. SIZE(VALUE)) THEN
   Vec( &
-    & getNodeLoc( &
+    & GetNodeLoc( &
     & obj=obj, &
     & nodenum=nodenum, &
     & idof=idof)) = VALUE(:)
-ELSE
-  Vec( &
-    & getNodeLoc( &
-    & obj=obj, &
-    & nodenum=nodenum, &
-    & idof=idof)) = VALUE(1)
+  RETURN
 END IF
-!
-END PROCEDURE dof_set3
+
+Vec( &
+  & GetNodeLoc( &
+  & obj=obj, &
+  & nodenum=nodenum, &
+  & idof=idof)) = VALUE(1)
+
+END PROCEDURE obj_set3
 
 !----------------------------------------------------------------------------
 !                                                                 setvalue
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE dof_set4
-!
+MODULE PROCEDURE obj_set4
+
 IF (SIZE(nodenum) .EQ. SIZE(VALUE)) THEN
   Vec( &
-    & getIndex( &
+    & GetIndex( &
     & obj=obj, &
     & nodenum=nodenum, &
     & ivar=ivar, &
     & idof=idof)) &
     & = VALUE(:)
-ELSE
-  Vec( &
-    & getIndex( &
-    & obj=obj, &
-    & nodenum=nodenum, &
-    & ivar=ivar, &
-    & idof=idof)) &
-    & = VALUE(1)
+  RETURN
 END IF
-!
-END PROCEDURE dof_set4
+
+Vec( &
+  & GetIndex( &
+  & obj=obj, &
+  & nodenum=nodenum, &
+  & ivar=ivar, &
+  & idof=idof)) &
+  & = VALUE(1)
+
+END PROCEDURE obj_set4
 
 !----------------------------------------------------------------------------
 !                                                                 set
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE dof_set5
-!
+MODULE PROCEDURE obj_set5
+
 IF (SIZE(nodenum) .EQ. SIZE(VALUE)) THEN
-  !
-  Vec(getNodeLoc(&
+
+  Vec(GetNodeLoc(&
     & obj=obj, &
     & nodenum=nodenum, &
     & ivar=ivar, &
     & spacecompo=spacecompo, &
     & timecompo=timecompo)) &
     & = VALUE(:)
-  !
-ELSE
-  !
-  Vec( &
-    & getNodeLoc( &
-    & obj=obj, &
-    & nodenum=nodenum, &
-    & ivar=ivar, &
-    & spacecompo=spacecompo, &
-    & timecompo=timecompo)) &
-    & = VALUE(1)
-  !
+  RETURN
 END IF
-!
-END PROCEDURE dof_set5
+
+Vec( &
+  & GetNodeLoc( &
+  & obj=obj, &
+  & nodenum=nodenum, &
+  & ivar=ivar, &
+  & spacecompo=spacecompo, &
+  & timecompo=timecompo)) &
+  & = VALUE(1)
+
+END PROCEDURE obj_set5
 
 !----------------------------------------------------------------------------
 !                                                                 set
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE dof_set6
-!
+MODULE PROCEDURE obj_set6
+
 IF (SIZE(nodenum) .EQ. SIZE(VALUE) * SIZE(timecompo)) THEN
   Vec( &
-    & getNodeLoc( &
+    & GetNodeLoc( &
     & obj=obj, &
     & nodenum=nodenum, &
     & ivar=ivar, &
     & spacecompo=spacecompo, &
     & timecompo=timecompo)) &
     & = VALUE(:)
-ELSE
-  Vec( &
-    & getNodeLoc( &
-    & obj=obj, &
-    & nodenum=nodenum, &
-    & ivar=ivar, &
-    & spacecompo=spacecompo, &
-    & timecompo=timecompo)) &
-    & = VALUE(1)
+  RETURN
 END IF
-!
-END PROCEDURE dof_set6
+
+Vec( &
+  & GetNodeLoc( &
+  & obj=obj, &
+  & nodenum=nodenum, &
+  & ivar=ivar, &
+  & spacecompo=spacecompo, &
+  & timecompo=timecompo)) &
+  & = VALUE(1)
+
+END PROCEDURE obj_set6
 
 !----------------------------------------------------------------------------
 !                                                                 set
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE dof_set7
-!
+MODULE PROCEDURE obj_set7
+
 IF (SIZE(nodenum) .EQ. SIZE(VALUE) * SIZE(spacecompo)) THEN
-  Vec(getNodeLoc( &
+  Vec(GetNodeLoc( &
     & obj=obj, &
     & nodenum=nodenum, &
     & ivar=ivar, &
     & spacecompo=spacecompo, &
     & timecompo=timecompo)) &
     & = VALUE(:)
-ELSE
-  Vec( &
-    & getNodeLoc( &
-    & obj=obj, &
-    & nodenum=nodenum, &
-    & ivar=ivar, &
-    & spacecompo=spacecompo, &
-    & timecompo=timecompo)) &
-    & = VALUE(1)
+  RETURN
 END IF
-!
-END PROCEDURE dof_set7
+
+Vec( &
+  & GetNodeLoc( &
+  & obj=obj, &
+  & nodenum=nodenum, &
+  & ivar=ivar, &
+  & spacecompo=spacecompo, &
+  & timecompo=timecompo)) &
+  & = VALUE(1)
+
+END PROCEDURE obj_set7
 
 !----------------------------------------------------------------------------
 !                                                                    setvalue
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE dof_set8
+MODULE PROCEDURE obj_set8
 vec( &
-  & getIndex( &
+  & GetIndex( &
   & obj=obj, &
   & nodenum=nodenum)) = VALUE
-END PROCEDURE dof_set8
+END PROCEDURE obj_set8
 
 !----------------------------------------------------------------------------
 !                                                                 setvalue
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE dof_set9
+MODULE PROCEDURE obj_set9
 Vec( &
-  & getNodeLoc( &
+  & GetNodeLoc( &
   & obj=obj, &
   & nodenum=nodenum, &
   & idof=idof)) = VALUE
-END PROCEDURE dof_set9
+END PROCEDURE obj_set9
 
 !----------------------------------------------------------------------------
 !                                                                 setvalue
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE dof_set10
+MODULE PROCEDURE obj_set10
 Vec( &
-  & getNodeLoc( &
+  & GetNodeLoc( &
   & obj=obj, &
   & nodenum=nodenum, &
   & ivar=ivar, &
   & idof=idof)) = VALUE
-END PROCEDURE dof_set10
+END PROCEDURE obj_set10
 
 !----------------------------------------------------------------------------
 !                                                                 setvalue
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE dof_set11
-Vec(getNodeLoc(obj=obj, &
+MODULE PROCEDURE obj_set11
+Vec(GetNodeLoc(obj=obj, &
   & nodenum=nodenum, &
   & ivar=ivar, &
   & spacecompo=spacecompo, &
   & timecompo=timecompo)) = VALUE
-END PROCEDURE dof_set11
+END PROCEDURE obj_set11
 
 !----------------------------------------------------------------------------
 !                                                                 setvalue
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE dof_set12
-Vec(getNodeLoc(obj=obj, &
+MODULE PROCEDURE obj_set12
+Vec(GetNodeLoc(obj=obj, &
   & nodenum=nodenum, &
   & ivar=ivar, &
   & spacecompo=spacecompo, &
   & timecompo=timecompo)) = VALUE
-END PROCEDURE dof_set12
+END PROCEDURE obj_set12
 
 !----------------------------------------------------------------------------
 !                                                                 setvalue
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE dof_set13
-Vec(getNodeLoc(obj=obj, &
+MODULE PROCEDURE obj_set13
+Vec(GetNodeLoc(obj=obj, &
   & nodenum=nodenum, &
   & ivar=ivar, &
   & spacecompo=spacecompo, &
   & timecompo=timecompo)) = VALUE
-END PROCEDURE dof_set13
+END PROCEDURE obj_set13
 
 !----------------------------------------------------------------------------
 !
