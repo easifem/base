@@ -16,41 +16,58 @@
 !
 
 SUBMODULE(RealVector_ShallowCopyMethods) Methods
-USE BaseMethod
+USE ReallocateUtility, ONLY: Reallocate
+USE RealVector_ConstructorMethods, ONLY: Size
+
 IMPLICIT NONE
 
 CONTAINS
 
 !----------------------------------------------------------------------------
-!                                                                 SHALLOWCOPY
+!                                                                 ShallowCopy
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE realVec_SHALLOWCOPY1a
+MODULE PROCEDURE obj_ShallowCopy1a
 CALL Reallocate(Y, SIZE(X))
-END PROCEDURE realVec_SHALLOWCOPY1a
-MODULE PROCEDURE realVec_SHALLOWCOPY1b
+END PROCEDURE obj_ShallowCopy1a
+
+!----------------------------------------------------------------------------
+!                                                                 ShallowCopy
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE obj_ShallowCopy1b
 CALL Reallocate(Y, SIZE(X))
-END PROCEDURE realVec_SHALLOWCOPY1b
-MODULE PROCEDURE realVec_SHALLOWCOPY1c
+END PROCEDURE obj_ShallowCopy1b
+
+!----------------------------------------------------------------------------
+!                                                                 ShallowCopy
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE obj_ShallowCopy1c
 CALL Reallocate(Y, SIZE(X))
-END PROCEDURE realVec_SHALLOWCOPY1c
-MODULE PROCEDURE realVec_SHALLOWCOPY1d
+END PROCEDURE obj_ShallowCopy1c
+
+!----------------------------------------------------------------------------
+!                                                                 ShallowCopy
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE obj_ShallowCopy1d
 CALL Reallocate(Y, SIZE(X))
-END PROCEDURE realVec_SHALLOWCOPY1d
+END PROCEDURE obj_ShallowCopy1d
 
 !----------------------------------------------------------------------------
-!                                                                 SHALLOWCOPY
+!                                                                 ShallowCopy
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE realVec_SHALLOWCOPY2
-CALL SHALLOWCOPY(Y=Y%Val, X=X%Val)
-END PROCEDURE realVec_SHALLOWCOPY2
+MODULE PROCEDURE obj_ShallowCopy2
+CALL ShallowCopy(Y=Y%Val, X=X%Val)
+END PROCEDURE obj_ShallowCopy2
 
 !----------------------------------------------------------------------------
-!                                                                 SHALLOWCOPY
+!                                                                 ShallowCopy
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE realVec_SHALLOWCOPY3
+MODULE PROCEDURE obj_ShallowCopy3
 INTEGER(I4B) :: i
 IF (ALLOCATED(Y)) THEN
   IF (SIZE(Y) .NE. SIZE(X)) THEN
@@ -61,65 +78,79 @@ ELSE
   ALLOCATE (Y(SIZE(X)))
 END IF
 DO i = 1, SIZE(Y)
-  CALL SHALLOWCOPY(Y=Y(i)%Val, X=X(i)%Val)
+  CALL ShallowCopy(Y=Y(i)%Val, X=X(i)%Val)
 END DO
-END PROCEDURE realVec_SHALLOWCOPY3
+END PROCEDURE obj_ShallowCopy3
 
 !----------------------------------------------------------------------------
-!                                                               SHALLOWCOPY
+!                                                               ShallowCopy
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE realVec_SHALLOWCOPY4
+MODULE PROCEDURE obj_ShallowCopy4
 INTEGER(I4B) :: i, tNodes
 tNodes = 0
 DO i = 1, SIZE(X)
   tNodes = tNodes + SIZE(X(i)%Val)
 END DO
 CALL Reallocate(Y%Val, tNodes)
-END PROCEDURE realVec_SHALLOWCOPY4
+END PROCEDURE obj_ShallowCopy4
 
 !----------------------------------------------------------------------------
-!                                                                 SHALLOWCOPY
+!                                                                 ShallowCopy
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE realVec_SHALLOWCOPY5a
-CALL SHALLOWCOPY(Y=Y%Val, X=X)
-END PROCEDURE realVec_SHALLOWCOPY5a
-
-MODULE PROCEDURE realVec_SHALLOWCOPY5b
-CALL SHALLOWCOPY(Y=Y%Val, X=X)
-END PROCEDURE realVec_SHALLOWCOPY5b
+MODULE PROCEDURE obj_ShallowCopy5a
+CALL ShallowCopy(Y=Y%Val, X=X)
+END PROCEDURE obj_ShallowCopy5a
 
 !----------------------------------------------------------------------------
-!                                                                 SHALLOWCOPY
+!                                                                 ShallowCopy
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE realVec_SHALLOWCOPY6a
-CALL SHALLOWCOPY(Y=Y, X=X%Val)
-END PROCEDURE realVec_SHALLOWCOPY6a
-MODULE PROCEDURE realVec_SHALLOWCOPY6b
-CALL SHALLOWCOPY(Y=Y, X=X%Val)
-END PROCEDURE realVec_SHALLOWCOPY6b
+MODULE PROCEDURE obj_ShallowCopy5b
+CALL ShallowCopy(Y=Y%Val, X=X)
+END PROCEDURE obj_ShallowCopy5b
 
 !----------------------------------------------------------------------------
-!                                                                 SHALLOWCOPY
+!                                                                 ShallowCopy
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE realVec_SHALLOWCOPY7a
+MODULE PROCEDURE obj_ShallowCopy6a
+CALL ShallowCopy(Y=Y, X=X%Val)
+END PROCEDURE obj_ShallowCopy6a
+
+!----------------------------------------------------------------------------
+!                                                                 ShallowCopy
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE obj_ShallowCopy6b
+CALL ShallowCopy(Y=Y, X=X%Val)
+END PROCEDURE obj_ShallowCopy6b
+
+!----------------------------------------------------------------------------
+!                                                                 ShallowCopy
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE obj_ShallowCopy7a
 INTEGER(I4B) :: ii, m
 m = 0
 DO ii = 1, SIZE(X)
   m = m + SIZE(X(ii))
 END DO
 CALL Reallocate(Y, m)
-END PROCEDURE realVec_SHALLOWCOPY7a
-MODULE PROCEDURE realVec_SHALLOWCOPY7b
+END PROCEDURE obj_ShallowCopy7a
+
+!----------------------------------------------------------------------------
+!                                                                 ShallowCopy
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE obj_ShallowCopy7b
 INTEGER(I4B) :: ii, m
 m = 0
 DO ii = 1, SIZE(X)
   m = m + SIZE(X(ii))
 END DO
 CALL Reallocate(Y, m)
-END PROCEDURE realVec_SHALLOWCOPY7b
+END PROCEDURE obj_ShallowCopy7b
 
 END SUBMODULE Methods
