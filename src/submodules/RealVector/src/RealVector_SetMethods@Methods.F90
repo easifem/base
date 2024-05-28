@@ -16,7 +16,9 @@
 !
 
 SUBMODULE(RealVector_SetMethods) Methods
-USE BaseMethod
+USE DOF_Method, ONLY: DOF_Set => Set
+USE F77_Blas, ONLY: F77_Copy
+USE F95_Blas, ONLY: F95_Copy => Copy
 IMPLICIT NONE
 CONTAINS
 
@@ -24,330 +26,243 @@ CONTAINS
 !                                                                       set
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE realVec_set1
-obj%val(:) = VALUE
-END PROCEDURE realVec_set1
+MODULE PROCEDURE obj_set1
+REAL(DFP) :: aval(1)
+INTEGER(I4B) :: N
+aval(1) = VALUE
+N = SIZE(obj%val)
+CALL F77_Copy(N=N, X=aval, INCX=0_I4B, Y=obj%val, INCY=1_I4B)
+END PROCEDURE obj_set1
 
 !----------------------------------------------------------------------------
 !                                                                       set
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE realVec_set2
-obj%val = VALUE
-END PROCEDURE realVec_set2
+MODULE PROCEDURE obj_set2
+CALL F95_Copy(X=VALUE, Y=obj%val)
+END PROCEDURE obj_set2
 
 !----------------------------------------------------------------------------
 !                                                                      set
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE realvec_set3
+MODULE PROCEDURE obj_set3
 obj%val(nodenum) = VALUE
-END PROCEDURE realvec_set3
+END PROCEDURE obj_set3
 
 !----------------------------------------------------------------------------
 !                                                                      set
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE realvec_set4
+MODULE PROCEDURE obj_set4
 obj%val(nodenum) = VALUE
-END PROCEDURE realvec_set4
+END PROCEDURE obj_set4
 
 !----------------------------------------------------------------------------
 !                                                                       set
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE realVec_set5
-  !!
+MODULE PROCEDURE obj_set5
 IF (SIZE(VALUE) .EQ. 1) THEN
   obj%val(nodenum) = VALUE(1)
-ELSE
-  obj%val(nodenum) = VALUE
+  RETURN
 END IF
-  !!
-END PROCEDURE realVec_set5
+
+obj%val(nodenum) = VALUE
+END PROCEDURE obj_set5
 
 !----------------------------------------------------------------------------
 !                                                                       set
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE realVec_set6
-obj%val(istart:iend:stride) = VALUE
-END PROCEDURE realVec_set6
+MODULE PROCEDURE obj_set6
+REAL(DFP) :: aval(1)
+INTEGER(I4B) :: N
+aval(1) = VALUE
+N = INT((iend - istart + stride) / stride)
+CALL F77_Copy(N=N, X=aval, INCX=0_I4B, Y=obj%val(istart:), &
+              INCY=stride)
+END PROCEDURE obj_set6
 
 !----------------------------------------------------------------------------
 !                                                                       set
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE realVec_set7
-obj%val(istart:iend:stride) = VALUE
-END PROCEDURE realVec_set7
+MODULE PROCEDURE obj_set7
+INTEGER(I4B) :: N
+
+N = SIZE(VALUE)
+CALL F77_Copy(N=N, X=VALUE, INCX=1_I4B, Y=obj%val(istart:), &
+              INCY=stride)
+END PROCEDURE obj_set7
 
 !----------------------------------------------------------------------------
 !                                                                     Set
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE realvec_set8
-  !!
-CALL set( &
-  & vec=obj%val, &
-  & obj=dofobj, &
-  & nodenum=nodenum, &
-  & VALUE=VALUE, &
-  & conversion=conversion)
-  !!
-END PROCEDURE realvec_set8
+MODULE PROCEDURE obj_set8
+CALL DOF_Set(vec=obj%val, obj=dofobj, nodenum=nodenum, VALUE=VALUE, &
+             conversion=conversion)
+END PROCEDURE obj_set8
 
 !----------------------------------------------------------------------------
 !                                                                     Set
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE realvec_set9
-  !!
-CALL set( &
-  & vec=obj%val, &
-  & obj=dofobj, &
-  & nodenum=nodenum, &
-  & VALUE=VALUE)
-  !!
-END PROCEDURE realvec_set9
+MODULE PROCEDURE obj_set9
+CALL DOF_Set(vec=obj%val, obj=dofobj, nodenum=nodenum, VALUE=VALUE)
+END PROCEDURE obj_set9
 
 !----------------------------------------------------------------------------
 !                                                                      set
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE realvec_set10
-CALL set( &
-  & vec=obj%val, &
-  & obj=dofobj, &
-  & nodenum=nodenum, &
-  & VALUE=VALUE, &
-  & idof=idof)
-END PROCEDURE realvec_set10
+MODULE PROCEDURE obj_set10
+CALL DOF_Set(vec=obj%val, obj=dofobj, nodenum=nodenum, VALUE=VALUE, &
+             idof=idof)
+END PROCEDURE obj_set10
 
 !----------------------------------------------------------------------------
 !                                                                      set
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE realvec_set11
-CALL set( &
-  & vec=obj%val, &
-  & obj=dofobj, &
-  & nodenum=nodenum, &
-  & VALUE=[VALUE], &
-  & idof=idof)
-END PROCEDURE realvec_set11
+MODULE PROCEDURE obj_set11
+CALL DOF_Set(vec=obj%val, obj=dofobj, nodenum=nodenum, VALUE=[VALUE], &
+             idof=idof)
+END PROCEDURE obj_set11
 
 !----------------------------------------------------------------------------
 !                                                                      set
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE realvec_set12
-CALL set( &
-  & vec=obj%val, &
-  & obj=dofobj, &
-  & nodenum=nodenum, &
-  & VALUE=VALUE, &
-  & idof=idof, &
-  & ivar=ivar)
-END PROCEDURE realvec_set12
+MODULE PROCEDURE obj_set12
+CALL DOF_Set(vec=obj%val, obj=dofobj, nodenum=nodenum, VALUE=VALUE, &
+             idof=idof, ivar=ivar)
+END PROCEDURE obj_set12
 
 !----------------------------------------------------------------------------
 !                                                                      set
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE realvec_set13
-CALL set( &
-  & vec=obj%val, &
-  & obj=dofobj, &
-  & nodenum=nodenum, &
-  & VALUE=[VALUE], &
-  & idof=idof, &
-  & ivar=ivar)
-END PROCEDURE realvec_set13
+MODULE PROCEDURE obj_set13
+CALL DOF_Set(vec=obj%val, obj=dofobj, nodenum=nodenum, VALUE=[VALUE], &
+             idof=idof, ivar=ivar)
+END PROCEDURE obj_set13
 
 !----------------------------------------------------------------------------
 !                                                                      set
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE realvec_set14
-CALL set( &
-  & vec=obj%val, &
-  & obj=dofobj, &
-  & nodenum=nodenum, &
-  & VALUE=VALUE, &
-  & ivar=ivar, &
-  & spacecompo=spacecompo, &
-  & timecompo=timecompo)
-END PROCEDURE realvec_set14
+MODULE PROCEDURE obj_set14
+CALL DOF_Set(vec=obj%val, obj=dofobj, nodenum=nodenum, VALUE=VALUE, &
+             ivar=ivar, spacecompo=spacecompo, timecompo=timecompo)
+END PROCEDURE obj_set14
 
 !----------------------------------------------------------------------------
 !                                                                      set
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE realvec_set15
-CALL set( &
-  & vec=obj%val, &
-  & obj=dofobj, &
-  & nodenum=nodenum, &
-  & VALUE=[VALUE], &
-  & ivar=ivar, &
-  & spacecompo=spacecompo, &
-  & timecompo=timecompo)
-END PROCEDURE realvec_set15
+MODULE PROCEDURE obj_set15
+CALL DOF_Set(vec=obj%val, obj=dofobj, nodenum=nodenum, VALUE=[VALUE], &
+             ivar=ivar, spacecompo=spacecompo, timecompo=timecompo)
+END PROCEDURE obj_set15
 
 !----------------------------------------------------------------------------
 !                                                                      set
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE realvec_set16
-CALL set( &
-  & vec=obj%val, &
-  & obj=dofobj, &
-  & nodenum=nodenum, &
-  & VALUE=VALUE, &
-  & ivar=ivar, &
-  & spacecompo=spacecompo, &
-  & timecompo=timecompo)
-END PROCEDURE realvec_set16
+MODULE PROCEDURE obj_set16
+CALL DOF_Set(vec=obj%val, obj=dofobj, nodenum=nodenum, VALUE=VALUE, &
+             ivar=ivar, spacecompo=spacecompo, timecompo=timecompo)
+END PROCEDURE obj_set16
 
 !----------------------------------------------------------------------------
 !                                                                      set
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE realvec_set17
-CALL set( &
-  & vec=obj%val, &
-  & obj=dofobj, &
-  & nodenum=nodenum, &
-  & VALUE=[VALUE], &
-  & ivar=ivar, &
-  & spacecompo=spacecompo, &
-  & timecompo=timecompo)
-END PROCEDURE realvec_set17
+MODULE PROCEDURE obj_set17
+CALL DOF_Set(vec=obj%val, obj=dofobj, nodenum=nodenum, VALUE=[VALUE], &
+             ivar=ivar, spacecompo=spacecompo, timecompo=timecompo)
+END PROCEDURE obj_set17
 
 !----------------------------------------------------------------------------
 !                                                                      set
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE realvec_set18
-CALL set( &
-  & vec=obj%val, &
-  & obj=dofobj, &
-  & nodenum=nodenum, &
-  & VALUE=VALUE, &
-  & ivar=ivar, &
-  & spacecompo=spacecompo, &
-  & timecompo=timecompo)
-END PROCEDURE realvec_set18
+MODULE PROCEDURE obj_set18
+CALL DOF_Set(vec=obj%val, obj=dofobj, nodenum=nodenum, VALUE=VALUE, &
+             ivar=ivar, spacecompo=spacecompo, timecompo=timecompo)
+END PROCEDURE obj_set18
 
 !----------------------------------------------------------------------------
 !                                                                      set
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE realvec_set19
-CALL set( &
-  & vec=obj%val, &
-  & obj=dofobj, &
-  & nodenum=nodenum, &
-  & VALUE=[VALUE], &
-  & ivar=ivar, &
-  & spacecompo=spacecompo, &
-  & timecompo=timecompo)
-END PROCEDURE realvec_set19
+MODULE PROCEDURE obj_set19
+CALL DOF_Set(vec=obj%val, obj=dofobj, nodenum=nodenum, VALUE=[VALUE], &
+             ivar=ivar, spacecompo=spacecompo, timecompo=timecompo)
+END PROCEDURE obj_set19
 
 !----------------------------------------------------------------------------
 !                                                                     Set
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE realvec_set20
-  !!
-CALL Set( &
-  & vec=obj%val, &
-  & obj=dofobj, &
-  & nodenum=nodenum, &
-  & VALUE=VALUE)
-  !!
-END PROCEDURE realvec_set20
+MODULE PROCEDURE obj_set20
+CALL DOF_Set(vec=obj%val, obj=dofobj, nodenum=nodenum, VALUE=VALUE)
+END PROCEDURE obj_set20
 
 !----------------------------------------------------------------------------
 !                                                                      set
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE realvec_set21
-CALL set( &
-  & vec=obj%val, &
-  & obj=dofobj, &
-  & nodenum=nodenum, &
-  & VALUE=VALUE, &
-  & idof=idof)
-END PROCEDURE realvec_set21
+MODULE PROCEDURE obj_set21
+CALL DOF_Set(vec=obj%val, obj=dofobj, nodenum=nodenum, VALUE=VALUE, &
+             idof=idof)
+END PROCEDURE obj_set21
 
 !----------------------------------------------------------------------------
 !                                                                      set
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE realvec_set22
-CALL set( &
-  & vec=obj%val, &
-  & obj=dofobj, &
-  & nodenum=nodenum, &
-  & VALUE=VALUE, &
-  & ivar=ivar, &
-  & idof=idof)
-END PROCEDURE realvec_set22
+MODULE PROCEDURE obj_set22
+CALL DOF_Set(vec=obj%val, obj=dofobj, nodenum=nodenum, VALUE=VALUE, &
+             ivar=ivar, idof=idof)
+END PROCEDURE obj_set22
 
 !----------------------------------------------------------------------------
 !                                                                      set
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE realvec_set23
-CALL set( &
-  & vec=obj%val, &
-  & obj=dofobj, &
-  & nodenum=nodenum, &
-  & VALUE=VALUE, &
-  & ivar=ivar, &
-  & spacecompo=spacecompo, &
-  & timecompo=timecompo)
-END PROCEDURE realvec_set23
+MODULE PROCEDURE obj_set23
+CALL DOF_Set(vec=obj%val, obj=dofobj, nodenum=nodenum, VALUE=VALUE, &
+             ivar=ivar, spacecompo=spacecompo, timecompo=timecompo)
+END PROCEDURE obj_set23
 
 !----------------------------------------------------------------------------
 !                                                                      set
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE realvec_set24
-CALL set( &
-  & vec=obj%val, &
-  & obj=dofobj, &
-  & nodenum=nodenum, &
-  & VALUE=VALUE, &
-  & ivar=ivar, &
-  & spacecompo=spacecompo, &
-  & timecompo=timecompo)
-END PROCEDURE realvec_set24
+MODULE PROCEDURE obj_set24
+CALL DOF_Set(vec=obj%val, obj=dofobj, nodenum=nodenum, VALUE=VALUE, &
+             ivar=ivar, spacecompo=spacecompo, timecompo=timecompo)
+END PROCEDURE obj_set24
 
 !----------------------------------------------------------------------------
 !                                                                      set
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE realvec_set25
-CALL set( &
-  & vec=obj%val, &
-  & obj=dofobj, &
-  & nodenum=nodenum, &
-  & VALUE=VALUE, &
-  & ivar=ivar, &
-  & spacecompo=spacecompo, &
-  & timecompo=timecompo)
-END PROCEDURE realvec_set25
+MODULE PROCEDURE obj_set25
+CALL DOF_Set(vec=obj%val, obj=dofobj, nodenum=nodenum, VALUE=VALUE, &
+             ivar=ivar, spacecompo=spacecompo, timecompo=timecompo)
+END PROCEDURE obj_set25
 
 !----------------------------------------------------------------------------
 !                                                                      set
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE realvec_set26
+MODULE PROCEDURE obj_set26
 obj%val = VALUE%val
-END PROCEDURE realvec_set26
+END PROCEDURE obj_set26
 
 !----------------------------------------------------------------------------
 !                                                                      set
