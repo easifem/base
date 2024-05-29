@@ -261,7 +261,8 @@ END PROCEDURE obj_set25
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE obj_set26
-obj%val = VALUE%val
+! obj%val = VALUE%val
+CALL F95_Copy(X=VALUE%val, Y=obj%val)
 END PROCEDURE obj_set26
 
 !----------------------------------------------------------------------------

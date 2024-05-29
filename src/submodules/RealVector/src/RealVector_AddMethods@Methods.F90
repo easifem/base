@@ -17,6 +17,8 @@
 
 SUBMODULE(RealVector_AddMethods) Methods
 USE DOF_Method, ONLY: DOF_Add => Add
+USE F77_BLAS, ONLY: F77_AXPY
+USE F95_BLAS, ONLY: F95_AXPY => AXPY
 IMPLICIT NONE
 CONTAINS
 
@@ -25,7 +27,12 @@ CONTAINS
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE obj_add1
-obj%val = obj%val + scale * VALUE
+! obj%val = obj%val + scale * VALUE
+REAL(DFP) :: aval(1)
+INTEGER(I4B) :: N
+aval(1) = VALUE
+N = SIZE(obj%val)
+CALL F77_AXPY(N=N, A=scale, X=aval, INCX=0_I4B, Y=obj%val, INCY=1_I4B)
 END PROCEDURE obj_add1
 
 !----------------------------------------------------------------------------
@@ -33,7 +40,8 @@ END PROCEDURE obj_add1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE obj_add2
-obj%val = obj%val + scale * VALUE
+! obj%val = obj%val + scale * VALUE
+CALL F95_AXPY(A=scale, X=VALUE, Y=obj%val)
 END PROCEDURE obj_add2
 
 !----------------------------------------------------------------------------
@@ -70,8 +78,13 @@ END PROCEDURE obj_add5
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE obj_add6
-obj%val(istart:iend:stride) = obj%val(istart:iend:stride) &
-                              + scale * VALUE
+! obj%val(istart:iend:stride) = obj%val(istart:iend:stride) + scale * VALUE
+REAL(DFP) :: aval(1)
+INTEGER(I4B) :: N
+aval(1) = VALUE
+N = INT((iend - istart + stride) / stride)
+CALL F77_AXPY(N=N, A=scale, X=aval, INCX=0_I4B, Y=obj%val(istart:), &
+              INCY=stride)
 END PROCEDURE obj_add6
 
 !----------------------------------------------------------------------------
@@ -79,8 +92,12 @@ END PROCEDURE obj_add6
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE obj_add7
-obj%val(istart:iend:stride) = obj%val(istart:iend:stride) &
-                              + scale * VALUE
+! obj%val(istart:iend:stride) = obj%val(istart:iend:stride) + scale * VALUE
+INTEGER(I4B) :: N
+
+N = SIZE(VALUE)
+CALL F77_AXPY(N=N, A=scale, X=VALUE, INCX=1_I4B, Y=obj%val(istart:), &
+              INCY=stride)
 END PROCEDURE obj_add7
 
 !----------------------------------------------------------------------------
@@ -97,7 +114,8 @@ END PROCEDURE obj_add8
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE obj_add9
-CALL DOF_Add(vec=obj%val, obj=dofobj, nodenum=nodenum, VALUE=VALUE, scale=scale)
+CALL DOF_Add(vec=obj%val, obj=dofobj, nodenum=nodenum, VALUE=VALUE, &
+             scale=scale)
 END PROCEDURE obj_add9
 
 !----------------------------------------------------------------------------
@@ -249,7 +267,16 @@ END PROCEDURE obj_add25
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE obj_add26
-obj%val = obj%val + scale * VALUE%val
+! obj%val = obj%val + scale * VALUE%val
+CALL F95_AXPY(A=scale, X=VALUE%val, Y=obj%val)
 END PROCEDURE obj_add26
+
+!----------------------------------------------------------------------------
+!                                                                       add
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE obj_add27
+CALL DOF_Add(vec=obj%val, obj=dofobj, scale=scale, VALUE=VALUE)
+END PROCEDURE obj_add27
 
 END SUBMODULE Methods
