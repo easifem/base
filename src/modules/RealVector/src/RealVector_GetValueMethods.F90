@@ -42,9 +42,9 @@ PUBLIC :: GetValue_
 
 INTERFACE GetValue
   MODULE PURE SUBROUTINE obj_GetValue1(obj, VALUE, istart, iend, stride)
-    CLASS(RealVector_), INTENT(IN) :: obj
+    TYPE(RealVector_), INTENT(IN) :: obj
     INTEGER(I4B), INTENT(IN) :: istart, iend, stride
-    CLASS(RealVector_), INTENT(INOUT) :: VALUE
+    TYPE(RealVector_), INTENT(INOUT) :: VALUE
   END SUBROUTINE obj_GetValue1
 END INTERFACE GetValue
 
@@ -65,9 +65,9 @@ END INTERFACE GetValue
 
 INTERFACE GetValue
   MODULE PURE SUBROUTINE obj_GetValue2(obj, dofobj, VALUE, idof)
-    CLASS(RealVector_), INTENT(IN) :: obj
+    TYPE(RealVector_), INTENT(IN) :: obj
     TYPE(DOF_), INTENT(IN) :: dofobj
-    CLASS(RealVector_), INTENT(INOUT) :: VALUE
+    TYPE(RealVector_), INTENT(INOUT) :: VALUE
     INTEGER(I4B), INTENT(IN) :: idof
   END SUBROUTINE obj_GetValue2
 END INTERFACE GetValue
@@ -89,9 +89,9 @@ END INTERFACE GetValue
 
 INTERFACE GetValue
   MODULE PURE SUBROUTINE obj_GetValue3(obj, dofobj, VALUE, ivar, idof)
-    CLASS(RealVector_), INTENT(IN) :: obj
+    TYPE(RealVector_), INTENT(IN) :: obj
     TYPE(DOF_), INTENT(IN) :: dofobj
-    CLASS(RealVector_), INTENT(INOUT) :: VALUE
+    TYPE(RealVector_), INTENT(INOUT) :: VALUE
     INTEGER(I4B), INTENT(IN) :: ivar
     INTEGER(I4B), INTENT(IN) :: idof
   END SUBROUTINE obj_GetValue3
@@ -115,9 +115,9 @@ END INTERFACE GetValue
 INTERFACE GetValue
   MODULE PURE SUBROUTINE obj_GetValue4(obj, dofobj, VALUE, ivar, &
                                        spacecompo, timecompo)
-    CLASS(RealVector_), INTENT(IN) :: obj
+    TYPE(RealVector_), INTENT(IN) :: obj
     TYPE(DOF_), INTENT(IN) :: dofobj
-    CLASS(RealVector_), INTENT(INOUT) :: VALUE
+    TYPE(RealVector_), INTENT(INOUT) :: VALUE
     INTEGER(I4B), INTENT(IN) :: ivar
     INTEGER(I4B), INTENT(IN) :: spacecompo
     INTEGER(I4B), INTENT(IN) :: timecompo
@@ -142,13 +142,13 @@ END INTERFACE GetValue
 INTERFACE GetValue
   MODULE PURE SUBROUTINE obj_GetValue5(obj, dofobj, idofobj, &
                                        VALUE, dofvalue, idofvalue)
-    CLASS(RealVector_), INTENT(IN) :: obj
+    TYPE(RealVector_), INTENT(IN) :: obj
     !! Real vector whose value is to be extracted
     TYPE(DOF_), INTENT(IN) :: dofobj
     !! DOF for obj
     INTEGER(I4B), INTENT(IN) :: idofobj
     !! idof for obj
-    CLASS(RealVector_), INTENT(INOUT) :: VALUE
+    TYPE(RealVector_), INTENT(INOUT) :: VALUE
     !! real vector to be returned
     TYPE(DOF_), INTENT(IN) :: dofvalue
     !! dof for value
@@ -179,13 +179,13 @@ END INTERFACE GetValue
 INTERFACE GetValue
   MODULE PURE SUBROUTINE obj_GetValue6(obj, dofobj, idofobj, &
                                        VALUE, dofvalue, idofvalue)
-    CLASS(RealVector_), INTENT(IN) :: obj
+    TYPE(RealVector_), INTENT(IN) :: obj
     !! Real vector whose value is to be extracted
     TYPE(DOF_), INTENT(IN) :: dofobj
     !! DOF for obj
     INTEGER(I4B), INTENT(IN) :: idofobj(:)
     !! idof for obj
-    CLASS(RealVector_), INTENT(INOUT) :: VALUE
+    TYPE(RealVector_), INTENT(INOUT) :: VALUE
     !! values to be returned
     TYPE(DOF_), INTENT(IN) :: dofvalue
     !! dof for value
@@ -212,14 +212,14 @@ END INTERFACE GetValue
 INTERFACE GetValue
   MODULE PURE SUBROUTINE obj_GetValue7(obj, dofobj, ivarobj, idofobj, &
                                        VALUE, dofvalue, ivarvalue, idofvalue)
-    CLASS(RealVector_), INTENT(IN) :: obj
+    TYPE(RealVector_), INTENT(IN) :: obj
     TYPE(DOF_), INTENT(IN) :: dofobj
     !! DOF for obj
     INTEGER(I4B), INTENT(IN) :: ivarobj
     !! physical variable for obj
     INTEGER(I4B), INTENT(IN) :: idofobj
     !! idof for obj
-    CLASS(RealVector_), INTENT(INOUT) :: VALUE
+    TYPE(RealVector_), INTENT(INOUT) :: VALUE
     TYPE(DOF_), INTENT(IN) :: dofvalue
     INTEGER(I4B), INTENT(IN) :: ivarvalue
     INTEGER(I4B), INTENT(IN) :: idofvalue
@@ -244,11 +244,11 @@ END INTERFACE GetValue
 INTERFACE GetValue
   MODULE PURE SUBROUTINE obj_GetValue8(obj, dofobj, ivarobj, idofobj, &
                                        VALUE, dofvalue, ivarvalue, idofvalue)
-    CLASS(RealVector_), INTENT(IN) :: obj
+    TYPE(RealVector_), INTENT(IN) :: obj
     TYPE(DOF_), INTENT(IN) :: dofobj
     INTEGER(I4B), INTENT(IN) :: ivarobj
     INTEGER(I4B), INTENT(IN) :: idofobj(:)
-    CLASS(RealVector_), INTENT(INOUT) :: VALUE
+    TYPE(RealVector_), INTENT(INOUT) :: VALUE
     TYPE(DOF_), INTENT(IN) :: dofvalue
     INTEGER(I4B), INTENT(IN) :: ivarvalue
     INTEGER(I4B), INTENT(IN) :: idofvalue(:)
@@ -274,7 +274,7 @@ INTERFACE GetValue
   MODULE PURE SUBROUTINE obj_GetValue9(obj, dofobj, ivarobj, &
                     spacecompoobj, timecompoobj, VALUE, dofvalue, ivarvalue, &
                                        spacecompovalue, timecompovalue)
-    CLASS(RealVector_), INTENT(IN) :: obj
+    TYPE(RealVector_), INTENT(IN) :: obj
     TYPE(DOF_), INTENT(IN) :: dofobj
     !! dof for obj
     INTEGER(I4B), INTENT(IN) :: ivarobj
@@ -283,7 +283,7 @@ INTERFACE GetValue
     !! space component for obj
     INTEGER(I4B), INTENT(IN) :: timecompoobj
     !! time component for obj
-    CLASS(RealVector_), INTENT(INOUT) :: VALUE
+    TYPE(RealVector_), INTENT(INOUT) :: VALUE
     !! values to be returned
     TYPE(DOF_), INTENT(IN) :: dofvalue
     !! dof for value
@@ -315,7 +315,7 @@ INTERFACE GetValue
   MODULE PURE SUBROUTINE obj_GetValue10(obj, dofobj, ivarobj, &
                     spacecompoobj, timecompoobj, VALUE, dofvalue, ivarvalue, &
                                         spacecompovalue, timecompovalue)
-    CLASS(RealVector_), INTENT(IN) :: obj
+    TYPE(RealVector_), INTENT(IN) :: obj
     TYPE(DOF_), INTENT(IN) :: dofobj
     !! dof for obj
     INTEGER(I4B), INTENT(IN) :: ivarobj
@@ -324,7 +324,7 @@ INTERFACE GetValue
     !! space component for obj
     INTEGER(I4B), INTENT(IN) :: timecompoobj(:)
     !! time component for obj
-    CLASS(RealVector_), INTENT(INOUT) :: VALUE
+    TYPE(RealVector_), INTENT(INOUT) :: VALUE
     !! values to be returned
     TYPE(DOF_), INTENT(IN) :: dofvalue
     !! dof value
@@ -356,7 +356,7 @@ INTERFACE GetValue
   MODULE PURE SUBROUTINE obj_GetValue11(obj, dofobj, ivarobj, &
                     spacecompoobj, timecompoobj, VALUE, dofvalue, ivarvalue, &
                                         spacecompovalue, timecompovalue)
-    CLASS(RealVector_), INTENT(IN) :: obj
+    TYPE(RealVector_), INTENT(IN) :: obj
     TYPE(DOF_), INTENT(IN) :: dofobj
     !! dof for obj
     INTEGER(I4B), INTENT(IN) :: ivarobj
@@ -365,7 +365,7 @@ INTERFACE GetValue
     !! space component for obj
     INTEGER(I4B), INTENT(IN) :: timecompoobj
     !! time component for obj
-    CLASS(RealVector_), INTENT(INOUT) :: VALUE
+    TYPE(RealVector_), INTENT(INOUT) :: VALUE
     !! values to be returned
     TYPE(DOF_), INTENT(IN) :: dofvalue
     !! dof value
@@ -397,7 +397,7 @@ END INTERFACE GetValue
 INTERFACE GetValue
   MODULE PURE SUBROUTINE obj_GetValue12(obj, dofobj, idof, VALUE, &
                                         storageFMT, nodenum)
-    CLASS(RealVector_), INTENT(IN) :: obj
+    TYPE(RealVector_), INTENT(IN) :: obj
     !! obj
     TYPE(DOF_), INTENT(IN) :: dofobj
     !! dof for obj
@@ -430,7 +430,7 @@ END INTERFACE GetValue
 INTERFACE GetValue
   MODULE PURE SUBROUTINE obj_GetValue13(obj, dofobj, idof, VALUE, &
                                         storageFMT)
-    CLASS(RealVector_), INTENT(IN) :: obj
+    TYPE(RealVector_), INTENT(IN) :: obj
     !! obj to extract values
     TYPE(DOF_), INTENT(IN) :: dofobj
     !! dof for obj
@@ -461,7 +461,7 @@ END INTERFACE GetValue
 INTERFACE GetValue
   MODULE PURE SUBROUTINE obj_GetValue14(obj, dofobj, idof, VALUE, &
                                         force3D)
-    CLASS(RealVector_), INTENT(IN) :: obj
+    TYPE(RealVector_), INTENT(IN) :: obj
     !! obj to extract values
     TYPE(DOF_), INTENT(IN) :: dofobj
     !! dof for obj
@@ -485,7 +485,7 @@ END INTERFACE GetValue
 INTERFACE GetValue
   MODULE PURE SUBROUTINE obj_GetValue15(obj, dofobj, ivar, idof, &
                                         VALUE, nodenum)
-    CLASS(RealVector_), INTENT(IN) :: obj
+    TYPE(RealVector_), INTENT(IN) :: obj
     !! obj whose value is to be extracted
     TYPE(DOF_), INTENT(IN) :: dofobj
     !! dof for obj
@@ -511,7 +511,7 @@ END INTERFACE GetValue
 INTERFACE GetValue
   MODULE PURE SUBROUTINE obj_GetValue16(obj, dofobj, ivar, idof, &
                                         VALUE, nodenum)
-    CLASS(RealVector_), INTENT(IN) :: obj
+    TYPE(RealVector_), INTENT(IN) :: obj
     !! obj whose value is to be extracted
     TYPE(DOF_), INTENT(IN) :: dofobj
     !! dof for obj
@@ -536,7 +536,7 @@ END INTERFACE GetValue
 
 INTERFACE GetValue
   MODULE PURE SUBROUTINE obj_GetValue17(obj, dofobj, ivar, VALUE, nodenum)
-    CLASS(RealVector_), INTENT(IN) :: obj
+    TYPE(RealVector_), INTENT(IN) :: obj
     !! obj whose value is to be extracted
     TYPE(DOF_), INTENT(IN) :: dofobj
     !! dof for obj
@@ -560,7 +560,7 @@ END INTERFACE GetValue
 INTERFACE GetValue
   MODULE PURE SUBROUTINE obj_GetValue18(obj, dofobj, ivar, spacecompo, &
                                         timecompo, VALUE, nodenum)
-    CLASS(RealVector_), INTENT(IN) :: obj
+    TYPE(RealVector_), INTENT(IN) :: obj
     TYPE(DOF_), INTENT(IN) :: dofobj
     INTEGER(I4B), INTENT(IN) :: ivar
     INTEGER(I4B), INTENT(IN) :: spacecompo
@@ -580,7 +580,7 @@ END INTERFACE GetValue
 
 INTERFACE GetValue
   MODULE PURE SUBROUTINE obj_GetValue19(obj, dofobj, VALUE, idof)
-    CLASS(RealVector_), INTENT(IN) :: obj
+    TYPE(RealVector_), INTENT(IN) :: obj
     TYPE(DOF_), INTENT(IN) :: dofobj
     REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: VALUE(:)
     INTEGER(I4B), INTENT(IN) :: idof
@@ -597,7 +597,7 @@ END INTERFACE GetValue
 
 INTERFACE GetValue
   MODULE PURE SUBROUTINE obj_GetValue20(obj, dofobj, VALUE, ivar, idof)
-    CLASS(RealVector_), INTENT(IN) :: obj
+    TYPE(RealVector_), INTENT(IN) :: obj
     TYPE(DOF_), INTENT(IN) :: dofobj
     REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: VALUE(:)
     INTEGER(I4B), INTENT(IN) :: ivar
@@ -616,7 +616,7 @@ END INTERFACE GetValue
 INTERFACE GetValue
   MODULE PURE SUBROUTINE obj_GetValue21(obj, dofobj, VALUE, ivar, &
                                         spacecompo, timecompo)
-    CLASS(RealVector_), INTENT(IN) :: obj
+    TYPE(RealVector_), INTENT(IN) :: obj
     TYPE(DOF_), INTENT(IN) :: dofobj
     REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: VALUE(:)
     INTEGER(I4B), INTENT(IN) :: ivar
@@ -642,7 +642,7 @@ END INTERFACE GetValue
 
 INTERFACE GetValue
   MODULE PURE SUBROUTINE obj_GetValue22(obj, dofobj, idof, VALUE, nodenum)
-    CLASS(RealVector_), INTENT(IN) :: obj
+    TYPE(RealVector_), INTENT(IN) :: obj
     TYPE(DOF_), INTENT(IN) :: dofobj
     INTEGER(I4B), INTENT(IN) :: idof(:)
     REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: VALUE(:)
@@ -667,7 +667,7 @@ END INTERFACE GetValue
 
 INTERFACE GetValue
   MODULE PURE SUBROUTINE obj_GetValue23(obj, dofobj, idof, VALUE)
-    CLASS(RealVector_), INTENT(IN) :: obj
+    TYPE(RealVector_), INTENT(IN) :: obj
     TYPE(DOF_), INTENT(IN) :: dofobj
     INTEGER(I4B), INTENT(IN) :: idof(:)
     REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: VALUE(:)
@@ -684,8 +684,8 @@ END INTERFACE GetValue
 
 INTERFACE GetValue
   MODULE PURE SUBROUTINE obj_GetValue24(obj, VALUE)
-    CLASS(RealVector_), INTENT(IN) :: obj
-    CLASS(RealVector_), INTENT(INOUT) :: VALUE
+    TYPE(RealVector_), INTENT(IN) :: obj
+    TYPE(RealVector_), INTENT(INOUT) :: VALUE
   END SUBROUTINE obj_GetValue24
 END INTERFACE GetValue
 
@@ -705,7 +705,7 @@ END INTERFACE GetValue
 INTERFACE GetValue_
   MODULE PURE SUBROUTINE obj_GetValue_12(obj, dofobj, idof, VALUE, &
                                          tsize, storageFMT, nodenum)
-    CLASS(RealVector_), INTENT(IN) :: obj
+    TYPE(RealVector_), INTENT(IN) :: obj
     !! obj
     TYPE(DOF_), INTENT(IN) :: dofobj
     !! dof for obj
@@ -738,7 +738,7 @@ END INTERFACE GetValue_
 INTERFACE GetValue_
   MODULE PURE SUBROUTINE obj_GetValue_13(obj, dofobj, idof, VALUE, &
                                          tsize, storageFMT)
-    CLASS(RealVector_), INTENT(IN) :: obj
+    TYPE(RealVector_), INTENT(IN) :: obj
     !! obj to extract values
     TYPE(DOF_), INTENT(IN) :: dofobj
     !! dof for obj
@@ -769,7 +769,7 @@ END INTERFACE GetValue_
 INTERFACE GetValue_
   MODULE PURE SUBROUTINE obj_GetValue_14(obj, dofobj, idof, VALUE, &
                                          nrow, ncol, force3D)
-    CLASS(RealVector_), INTENT(IN) :: obj
+    TYPE(RealVector_), INTENT(IN) :: obj
     !! obj to extract values
     TYPE(DOF_), INTENT(IN) :: dofobj
     !! dof for obj
@@ -795,7 +795,7 @@ END INTERFACE GetValue_
 INTERFACE GetValue_
   MODULE PURE SUBROUTINE obj_GetValue_16(obj, dofobj, ivar, idof, &
                                          VALUE, tsize, nodenum)
-    CLASS(RealVector_), INTENT(IN) :: obj
+    TYPE(RealVector_), INTENT(IN) :: obj
     !! obj whose value is to be extracted
     TYPE(DOF_), INTENT(IN) :: dofobj
     !! dof for obj
@@ -830,7 +830,7 @@ END INTERFACE GetValue_
 INTERFACE GetValue_
   MODULE PURE SUBROUTINE obj_GetValue_17(obj, dofobj, ivar, VALUE, &
                                          tsize, nodenum)
-    CLASS(RealVector_), INTENT(IN) :: obj
+    TYPE(RealVector_), INTENT(IN) :: obj
     !! obj whose value is to be extracted
     TYPE(DOF_), INTENT(IN) :: dofobj
     !! dof for obj
@@ -856,7 +856,7 @@ END INTERFACE GetValue_
 INTERFACE GetValue_
   MODULE PURE SUBROUTINE obj_GetValue_18(obj, dofobj, ivar, spacecompo, &
                                          timecompo, VALUE, tsize, nodenum)
-    CLASS(RealVector_), INTENT(IN) :: obj
+    TYPE(RealVector_), INTENT(IN) :: obj
     TYPE(DOF_), INTENT(IN) :: dofobj
     !! degree of freedom for obj
     INTEGER(I4B), INTENT(IN) :: ivar
@@ -884,7 +884,7 @@ END INTERFACE GetValue_
 
 INTERFACE GetValue_
   MODULE PURE SUBROUTINE obj_GetValue_19(obj, dofobj, VALUE, tsize, idof)
-    CLASS(RealVector_), INTENT(IN) :: obj
+    TYPE(RealVector_), INTENT(IN) :: obj
     TYPE(DOF_), INTENT(IN) :: dofobj
     REAL(DFP), INTENT(INOUT) :: VALUE(:)
     INTEGER(I4B), INTENT(OUT) :: tsize
@@ -903,7 +903,7 @@ END INTERFACE GetValue_
 INTERFACE GetValue_
   MODULE PURE SUBROUTINE obj_GetValue_20(obj, dofobj, VALUE, tsize, &
                                          ivar, idof)
-    CLASS(RealVector_), INTENT(IN) :: obj
+    TYPE(RealVector_), INTENT(IN) :: obj
     TYPE(DOF_), INTENT(IN) :: dofobj
     REAL(DFP), INTENT(INOUT) :: VALUE(:)
     INTEGER(I4B), INTENT(OUT) :: tsize
@@ -923,7 +923,7 @@ END INTERFACE GetValue_
 INTERFACE GetValue_
   MODULE PURE SUBROUTINE obj_GetValue_21(obj, dofobj, VALUE, tsize, ivar, &
                                          spacecompo, timecompo)
-    CLASS(RealVector_), INTENT(IN) :: obj
+    TYPE(RealVector_), INTENT(IN) :: obj
     TYPE(DOF_), INTENT(IN) :: dofobj
     REAL(DFP), INTENT(INOUT) :: VALUE(:)
     INTEGER(I4B), INTENT(OUT) :: tsize
@@ -951,7 +951,7 @@ END INTERFACE GetValue_
 INTERFACE GetValue_
   MODULE PURE SUBROUTINE obj_GetValue_22(obj, dofobj, idof, VALUE, &
                                          tsize, nodenum)
-    CLASS(RealVector_), INTENT(IN) :: obj
+    TYPE(RealVector_), INTENT(IN) :: obj
     TYPE(DOF_), INTENT(IN) :: dofobj
     INTEGER(I4B), INTENT(IN) :: idof(:)
     REAL(DFP), INTENT(INOUT) :: VALUE(:)
@@ -977,7 +977,7 @@ END INTERFACE GetValue_
 
 INTERFACE GetValue_
   MODULE PURE SUBROUTINE obj_GetValue_23(obj, dofobj, idof, VALUE, tsize)
-    CLASS(RealVector_), INTENT(IN) :: obj
+    TYPE(RealVector_), INTENT(IN) :: obj
     !! obj to extract values
     TYPE(DOF_), INTENT(IN) :: dofobj
     !! degree of freedom for obj

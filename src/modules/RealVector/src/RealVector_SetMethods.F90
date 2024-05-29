@@ -39,10 +39,10 @@ PUBLIC :: Set
 !@endnote
 
 INTERFACE Set
-  MODULE SUBROUTINE obj_set1(obj, VALUE)
-    CLASS(RealVector_), INTENT(INOUT) :: obj
+  MODULE SUBROUTINE obj_Set1(obj, VALUE)
+    TYPE(RealVector_), INTENT(INOUT) :: obj
     REAL(DFP), INTENT(IN) :: VALUE
-  END SUBROUTINE obj_set1
+  END SUBROUTINE obj_Set1
 END INTERFACE Set
 
 !----------------------------------------------------------------------------
@@ -60,11 +60,11 @@ END INTERFACE Set
 !@endnote
 
 INTERFACE Set
-  MODULE SUBROUTINE obj_set2(obj, VALUE)
-    CLASS(RealVector_), INTENT(INOUT) :: obj
+  MODULE SUBROUTINE obj_Set2(obj, VALUE)
+    TYPE(RealVector_), INTENT(INOUT) :: obj
     REAL(DFP), INTENT(IN) :: VALUE(:)
     !! the length of the vector must be equal to the length of the object
-  END SUBROUTINE obj_set2
+  END SUBROUTINE obj_Set2
 END INTERFACE Set
 
 !----------------------------------------------------------------------------
@@ -76,13 +76,13 @@ END INTERFACE Set
 ! summary: set selected values (obj(nodenum)=VALUE)
 
 INTERFACE Set
-  MODULE SUBROUTINE obj_set3(obj, nodenum, VALUE)
-    CLASS(RealVector_), INTENT(INOUT) :: obj
+  MODULE SUBROUTINE obj_Set3(obj, nodenum, VALUE)
+    TYPE(RealVector_), INTENT(INOUT) :: obj
     INTEGER(I4B), INTENT(IN) :: nodenum
     !! node number to set the value
     REAL(DFP), INTENT(IN) :: VALUE
     !! scalar value
-  END SUBROUTINE obj_set3
+  END SUBROUTINE obj_Set3
 END INTERFACE Set
 
 !----------------------------------------------------------------------------
@@ -91,17 +91,17 @@ END INTERFACE Set
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 27 June 2021
-! summary: See [[DOF_Method::dof_set2]]
+! summary: See [[DOF_Method::dof_Set2]]
 
 INTERFACE Set
-  MODULE PURE SUBROUTINE obj_set4(obj, nodenum, VALUE)
+  MODULE PURE SUBROUTINE obj_Set4(obj, nodenum, VALUE)
     TYPE(Realvector_), INTENT(INOUT) :: obj
     !! obj(nodenum)=VALUE
     INTEGER(I4B), INTENT(IN) :: nodenum(:)
     !! node number to set the value
     REAL(DFP), INTENT(IN) :: VALUE
     !! scalar value
-  END SUBROUTINE obj_set4
+  END SUBROUTINE obj_Set4
 END INTERFACE Set
 
 !----------------------------------------------------------------------------
@@ -113,14 +113,14 @@ END INTERFACE Set
 ! summary: set selected values
 
 INTERFACE Set
-  MODULE SUBROUTINE obj_set5(obj, nodenum, VALUE)
-    CLASS(RealVector_), INTENT(INOUT) :: obj
+  MODULE SUBROUTINE obj_Set5(obj, nodenum, VALUE)
+    TYPE(RealVector_), INTENT(INOUT) :: obj
     !! obj(nodenum)=VALUE
     INTEGER(I4B), INTENT(IN) :: nodenum(:)
     !! node number to set the value
     REAL(DFP), INTENT(IN) :: VALUE(:)
     !! vector value, the size of value should be equal to tdof * size(nodenum)
-  END SUBROUTINE obj_set5
+  END SUBROUTINE obj_Set5
 END INTERFACE Set
 
 !----------------------------------------------------------------------------
@@ -132,13 +132,13 @@ END INTERFACE Set
 ! summary: Set range of values to a scalar
 
 INTERFACE Set
-  MODULE SUBROUTINE obj_set6(obj, istart, iend, stride, VALUE)
-    CLASS(RealVector_), INTENT(INOUT) :: obj
+  MODULE SUBROUTINE obj_Set6(obj, istart, iend, stride, VALUE)
+    TYPE(RealVector_), INTENT(INOUT) :: obj
     INTEGER(I4B), INTENT(IN) :: istart, iend, stride
     !! range of values to set
     REAL(DFP), INTENT(IN) :: VALUE
     !! Scalar value
-  END SUBROUTINE obj_set6
+  END SUBROUTINE obj_Set6
 END INTERFACE Set
 
 !----------------------------------------------------------------------------
@@ -150,14 +150,14 @@ END INTERFACE Set
 ! summary: Set range of values to a vector
 
 INTERFACE Set
-  MODULE SUBROUTINE obj_set7(obj, istart, iend, stride, VALUE)
-    CLASS(RealVector_), INTENT(INOUT) :: obj
+  MODULE SUBROUTINE obj_Set7(obj, istart, iend, stride, VALUE)
+    TYPE(RealVector_), INTENT(INOUT) :: obj
     !! ob(istart:iend:stride)=VALUE
     INTEGER(I4B), INTENT(IN) :: istart, iend, stride
     !! range of values to set
     REAL(DFP), INTENT(IN) :: VALUE(:)
     !! vector value
-  END SUBROUTINE obj_set7
+  END SUBROUTINE obj_Set7
 END INTERFACE Set
 
 !----------------------------------------------------------------------------
@@ -166,10 +166,10 @@ END INTERFACE Set
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 26 June 2021
-! summary: See [[DOF_Method::dof_set1]]
+! summary: See [[DOF_Method::dof_Set1]]
 
 INTERFACE Set
-  MODULE PURE SUBROUTINE obj_set8(obj, dofobj, nodenum, VALUE, conversion)
+  MODULE PURE SUBROUTINE obj_Set8(obj, dofobj, nodenum, VALUE, conversion)
     TYPE(Realvector_), INTENT(INOUT) :: obj
     !! obj(nodenum)=VALUE
     TYPE(DOF_), INTENT(IN) :: dofobj
@@ -180,7 +180,7 @@ INTERFACE Set
     !! vector value
     INTEGER(I4B), INTENT(IN) :: conversion(1)
     !! conversion factor, NodesToDOF, DOFToNodes
-  END SUBROUTINE obj_set8
+  END SUBROUTINE obj_Set8
 END INTERFACE Set
 
 !----------------------------------------------------------------------------
@@ -189,10 +189,10 @@ END INTERFACE Set
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 26 June 2021
-! summary: See [[DOF_Method::dof_set1]]
+! summary: See [[DOF_Method::dof_Set1]]
 
 INTERFACE Set
-  MODULE PURE SUBROUTINE obj_set9(obj, dofobj, nodenum, VALUE)
+  MODULE PURE SUBROUTINE obj_Set9(obj, dofobj, nodenum, VALUE)
     TYPE(Realvector_), INTENT(INOUT) :: obj
     !! obj(nodenum)=VALUE
     TYPE(DOF_), INTENT(IN) :: dofobj
@@ -201,7 +201,7 @@ INTERFACE Set
     !! node number to set the value
     REAL(DFP), INTENT(IN) :: VALUE
     !! scalar value
-  END SUBROUTINE obj_set9
+  END SUBROUTINE obj_Set9
 END INTERFACE Set
 
 !----------------------------------------------------------------------------
@@ -210,10 +210,10 @@ END INTERFACE Set
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 27 June 2021
-! summary: See [[DOF_Method::dof_set2]]
+! summary: See [[DOF_Method::dof_Set2]]
 
 INTERFACE Set
-  MODULE PURE SUBROUTINE obj_set10(obj, dofobj, nodenum, VALUE, idof)
+  MODULE PURE SUBROUTINE obj_Set10(obj, dofobj, nodenum, VALUE, idof)
     TYPE(Realvector_), INTENT(INOUT) :: obj
     !! obj(nodenum)=VALUE
     TYPE(DOF_), INTENT(IN) :: dofobj
@@ -225,7 +225,7 @@ INTERFACE Set
     !! the size of value should be equal to size(nodenum)
     INTEGER(I4B), INTENT(IN) :: idof
     !! global degree of freedom number
-  END SUBROUTINE obj_set10
+  END SUBROUTINE obj_Set10
 END INTERFACE Set
 
 !----------------------------------------------------------------------------
@@ -234,10 +234,10 @@ END INTERFACE Set
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 27 June 2021
-! summary: See [[DOF_Method::dof_set2]]
+! summary: See [[DOF_Method::dof_Set2]]
 
 INTERFACE Set
-  MODULE PURE SUBROUTINE obj_set11(obj, dofobj, nodenum, VALUE, idof)
+  MODULE PURE SUBROUTINE obj_Set11(obj, dofobj, nodenum, VALUE, idof)
     TYPE(Realvector_), INTENT(INOUT) :: obj
     !! obj(nodenum)=VALUE
     TYPE(DOF_), INTENT(IN) :: dofobj
@@ -248,7 +248,7 @@ INTERFACE Set
     !! scalar value
     INTEGER(I4B), INTENT(IN) :: idof
     !! global degree of freedom number
-  END SUBROUTINE obj_set11
+  END SUBROUTINE obj_Set11
 END INTERFACE Set
 
 !----------------------------------------------------------------------------
@@ -257,10 +257,10 @@ END INTERFACE Set
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 27 June 2021
-! summary: See [[DOF_Method::dof_set2]]
+! summary: See [[DOF_Method::dof_Set2]]
 
 INTERFACE Set
-  MODULE PURE SUBROUTINE obj_set12(obj, dofobj, nodenum, VALUE, ivar, idof)
+  MODULE PURE SUBROUTINE obj_Set12(obj, dofobj, nodenum, VALUE, ivar, idof)
     TYPE(Realvector_), INTENT(INOUT) :: obj
     !! obj(nodenum)=VALUE
     TYPE(DOF_), INTENT(IN) :: dofobj
@@ -274,7 +274,7 @@ INTERFACE Set
     !! physical variable number
     INTEGER(I4B), INTENT(IN) :: idof
     !! local degree of freedom number in physical variable
-  END SUBROUTINE obj_set12
+  END SUBROUTINE obj_Set12
 END INTERFACE Set
 
 !----------------------------------------------------------------------------
@@ -283,10 +283,10 @@ END INTERFACE Set
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 27 June 2021
-! summary: See [[DOF_Method::dof_set2]]
+! summary: See [[DOF_Method::dof_Set2]]
 
 INTERFACE Set
-  MODULE PURE SUBROUTINE obj_set13(obj, dofobj, nodenum, VALUE, ivar, idof)
+  MODULE PURE SUBROUTINE obj_Set13(obj, dofobj, nodenum, VALUE, ivar, idof)
     TYPE(Realvector_), INTENT(INOUT) :: obj
     !! obj(nodenum)=VALUE
     TYPE(DOF_), INTENT(IN) :: dofobj
@@ -299,7 +299,7 @@ INTERFACE Set
     !! physical variable number
     INTEGER(I4B), INTENT(IN) :: idof
     !! local degree of freedom number in physical variable
-  END SUBROUTINE obj_set13
+  END SUBROUTINE obj_Set13
 END INTERFACE Set
 
 !----------------------------------------------------------------------------
@@ -308,10 +308,10 @@ END INTERFACE Set
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 27 June 2021
-! summary: See [[DOF_Method::dof_set2]]
+! summary: See [[DOF_Method::dof_Set2]]
 
 INTERFACE Set
-  MODULE PURE SUBROUTINE obj_set14(obj, dofobj, nodenum, VALUE, ivar, &
+  MODULE PURE SUBROUTINE obj_Set14(obj, dofobj, nodenum, VALUE, ivar, &
                                    spacecompo, timecompo)
     TYPE(Realvector_), INTENT(INOUT) :: obj
     TYPE(DOF_), INTENT(IN) :: dofobj
@@ -327,7 +327,7 @@ INTERFACE Set
     !! space component number
     INTEGER(I4B), INTENT(IN) :: timecompo
     !! time component number
-  END SUBROUTINE obj_set14
+  END SUBROUTINE obj_Set14
 END INTERFACE Set
 
 !----------------------------------------------------------------------------
@@ -336,10 +336,10 @@ END INTERFACE Set
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 27 June 2021
-! summary: See [[DOF_Method::dof_set2]]
+! summary: See [[DOF_Method::dof_Set2]]
 
 INTERFACE Set
-  MODULE PURE SUBROUTINE obj_set15(obj, dofobj, nodenum, VALUE, ivar, &
+  MODULE PURE SUBROUTINE obj_Set15(obj, dofobj, nodenum, VALUE, ivar, &
                                    spacecompo, timecompo)
     TYPE(Realvector_), INTENT(INOUT) :: obj
     TYPE(DOF_), INTENT(IN) :: dofobj
@@ -354,7 +354,7 @@ INTERFACE Set
     !! space component number
     INTEGER(I4B), INTENT(IN) :: timecompo
     !! time component number
-  END SUBROUTINE obj_set15
+  END SUBROUTINE obj_Set15
 END INTERFACE Set
 
 !----------------------------------------------------------------------------
@@ -363,10 +363,10 @@ END INTERFACE Set
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 27 June 2021
-! summary: See [[DOF_Method::dof_set2]]
+! summary: See [[DOF_Method::dof_Set2]]
 
 INTERFACE Set
-  MODULE PURE SUBROUTINE obj_set16(obj, dofobj, nodenum, VALUE, ivar, &
+  MODULE PURE SUBROUTINE obj_Set16(obj, dofobj, nodenum, VALUE, ivar, &
                                    spacecompo, timecompo)
     TYPE(Realvector_), INTENT(INOUT) :: obj
     TYPE(DOF_), INTENT(IN) :: dofobj
@@ -382,7 +382,7 @@ INTERFACE Set
     !! space component number
     INTEGER(I4B), INTENT(IN) :: timecompo(:)
     !! time component number
-  END SUBROUTINE obj_set16
+  END SUBROUTINE obj_Set16
 END INTERFACE Set
 
 !----------------------------------------------------------------------------
@@ -391,10 +391,10 @@ END INTERFACE Set
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 27 June 2021
-! summary: See [[DOF_Method::dof_set2]]
+! summary: See [[DOF_Method::dof_Set2]]
 
 INTERFACE Set
-  MODULE PURE SUBROUTINE obj_set17(obj, dofobj, nodenum, VALUE, ivar, &
+  MODULE PURE SUBROUTINE obj_Set17(obj, dofobj, nodenum, VALUE, ivar, &
                                    spacecompo, timecompo)
     TYPE(Realvector_), INTENT(INOUT) :: obj
     TYPE(DOF_), INTENT(IN) :: dofobj
@@ -409,7 +409,7 @@ INTERFACE Set
     !! space component number
     INTEGER(I4B), INTENT(IN) :: timecompo(:)
     !! time component number
-  END SUBROUTINE obj_set17
+  END SUBROUTINE obj_Set17
 END INTERFACE Set
 
 !----------------------------------------------------------------------------
@@ -418,10 +418,10 @@ END INTERFACE Set
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 27 June 2021
-! summary: See [[DOF_Method::dof_set2]]
+! summary: See [[DOF_Method::dof_Set2]]
 
 INTERFACE Set
-  MODULE PURE SUBROUTINE obj_set18(obj, dofobj, nodenum, VALUE, ivar, &
+  MODULE PURE SUBROUTINE obj_Set18(obj, dofobj, nodenum, VALUE, ivar, &
                                    spacecompo, timecompo)
     TYPE(Realvector_), INTENT(INOUT) :: obj
     TYPE(DOF_), INTENT(IN) :: dofobj
@@ -437,7 +437,7 @@ INTERFACE Set
     !! space component number of physical variable
     INTEGER(I4B), INTENT(IN) :: timecompo
     !! time component number of physical variable
-  END SUBROUTINE obj_set18
+  END SUBROUTINE obj_Set18
 END INTERFACE Set
 
 !----------------------------------------------------------------------------
@@ -446,10 +446,10 @@ END INTERFACE Set
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 27 June 2021
-! summary: See [[DOF_Method::dof_set2]]
+! summary: See [[DOF_Method::dof_Set2]]
 
 INTERFACE Set
-  MODULE PURE SUBROUTINE obj_set19(obj, dofobj, nodenum, VALUE, ivar, &
+  MODULE PURE SUBROUTINE obj_Set19(obj, dofobj, nodenum, VALUE, ivar, &
                                    spacecompo, timecompo)
     TYPE(Realvector_), INTENT(INOUT) :: obj
     TYPE(DOF_), INTENT(IN) :: dofobj
@@ -464,7 +464,7 @@ INTERFACE Set
     !! space component number of physical variable
     INTEGER(I4B), INTENT(IN) :: timecompo
     !! time component number of physical variable
-  END SUBROUTINE obj_set19
+  END SUBROUTINE obj_Set19
 END INTERFACE Set
 
 !----------------------------------------------------------------------------
@@ -473,10 +473,10 @@ END INTERFACE Set
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 26 June 2021
-! summary: See [[DOF_Method::dof_set1]]
+! summary: See [[DOF_Method::dof_Set1]]
 
 INTERFACE Set
-  MODULE PURE SUBROUTINE obj_set20(obj, dofobj, nodenum, VALUE)
+  MODULE PURE SUBROUTINE obj_Set20(obj, dofobj, nodenum, VALUE)
     TYPE(Realvector_), INTENT(INOUT) :: obj
     TYPE(DOF_), INTENT(IN) :: dofobj
     !! degree of freedom object
@@ -484,7 +484,7 @@ INTERFACE Set
     !! node number to set the value
     REAL(DFP), INTENT(IN) :: VALUE
     !! scalar value
-  END SUBROUTINE obj_set20
+  END SUBROUTINE obj_Set20
 END INTERFACE Set
 
 !----------------------------------------------------------------------------
@@ -493,10 +493,10 @@ END INTERFACE Set
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 26 June 2021
-! summary: See [[DOF_Method::dof_set1]]
+! summary: See [[DOF_Method::dof_Set1]]
 
 INTERFACE Set
-  MODULE PURE SUBROUTINE obj_set21(obj, dofobj, nodenum, VALUE, idof)
+  MODULE PURE SUBROUTINE obj_Set21(obj, dofobj, nodenum, VALUE, idof)
     TYPE(Realvector_), INTENT(INOUT) :: obj
     TYPE(DOF_), INTENT(IN) :: dofobj
     !! degree of freedom object
@@ -506,7 +506,7 @@ INTERFACE Set
     !! scalar value
     INTEGER(I4B), INTENT(IN) :: idof
     !! global degree of freedom number
-  END SUBROUTINE obj_set21
+  END SUBROUTINE obj_Set21
 END INTERFACE Set
 
 !----------------------------------------------------------------------------
@@ -515,10 +515,10 @@ END INTERFACE Set
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 26 June 2021
-! summary: See [[DOF_Method::dof_set1]]
+! summary: See [[DOF_Method::dof_Set1]]
 
 INTERFACE Set
-  MODULE PURE SUBROUTINE obj_set22(obj, dofobj, nodenum, VALUE, ivar, idof)
+  MODULE PURE SUBROUTINE obj_Set22(obj, dofobj, nodenum, VALUE, ivar, idof)
     TYPE(Realvector_), INTENT(INOUT) :: obj
     TYPE(DOF_), INTENT(IN) :: dofobj
     !! degree of freedom object
@@ -530,7 +530,7 @@ INTERFACE Set
     !! physical variable number
     INTEGER(I4B), INTENT(IN) :: idof
     !! local degree of freedom number in physical variable
-  END SUBROUTINE obj_set22
+  END SUBROUTINE obj_Set22
 END INTERFACE Set
 
 !----------------------------------------------------------------------------
@@ -539,10 +539,10 @@ END INTERFACE Set
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 26 June 2021
-! summary: See [[DOF_Method::dof_set1]]
+! summary: See [[DOF_Method::dof_Set1]]
 
 INTERFACE Set
-  MODULE PURE SUBROUTINE obj_set23(obj, dofobj, nodenum, VALUE, ivar, &
+  MODULE PURE SUBROUTINE obj_Set23(obj, dofobj, nodenum, VALUE, ivar, &
                                    spacecompo, timecompo)
     TYPE(Realvector_), INTENT(INOUT) :: obj
     TYPE(DOF_), INTENT(IN) :: dofobj
@@ -557,7 +557,7 @@ INTERFACE Set
     !! space component number
     INTEGER(I4B), INTENT(IN) :: timecompo
     !! time component number
-  END SUBROUTINE obj_set23
+  END SUBROUTINE obj_Set23
 END INTERFACE Set
 
 !----------------------------------------------------------------------------
@@ -566,10 +566,10 @@ END INTERFACE Set
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 26 June 2021
-! summary: See [[DOF_Method::dof_set1]]
+! summary: See [[DOF_Method::dof_Set1]]
 
 INTERFACE Set
-  MODULE PURE SUBROUTINE obj_set24(obj, dofobj, nodenum, VALUE, ivar, &
+  MODULE PURE SUBROUTINE obj_Set24(obj, dofobj, nodenum, VALUE, ivar, &
                                    spacecompo, timecompo)
     TYPE(Realvector_), INTENT(INOUT) :: obj
     TYPE(DOF_), INTENT(IN) :: dofobj
@@ -584,7 +584,7 @@ INTERFACE Set
     !! space component number
     INTEGER(I4B), INTENT(IN) :: timecompo(:)
     !! time component number
-  END SUBROUTINE obj_set24
+  END SUBROUTINE obj_Set24
 END INTERFACE Set
 
 !----------------------------------------------------------------------------
@@ -593,10 +593,10 @@ END INTERFACE Set
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 26 June 2021
-! summary: See [[DOF_Method::dof_set1]]
+! summary: See [[DOF_Method::dof_Set1]]
 
 INTERFACE Set
-  MODULE PURE SUBROUTINE obj_set25(obj, dofobj, nodenum, VALUE, ivar, &
+  MODULE PURE SUBROUTINE obj_Set25(obj, dofobj, nodenum, VALUE, ivar, &
                                    spacecompo, timecompo)
     TYPE(Realvector_), INTENT(INOUT) :: obj
     TYPE(DOF_), INTENT(IN) :: dofobj
@@ -611,7 +611,7 @@ INTERFACE Set
     !! space component number
     INTEGER(I4B), INTENT(IN) :: timecompo
     !! time component number
-  END SUBROUTINE obj_set25
+  END SUBROUTINE obj_Set25
 END INTERFACE Set
 
 !----------------------------------------------------------------------------
@@ -623,10 +623,83 @@ END INTERFACE Set
 ! summary: obj1=obj2
 
 INTERFACE Set
-  MODULE PURE SUBROUTINE obj_set26(obj, VALUE)
-    CLASS(RealVector_), INTENT(INOUT) :: obj
-    CLASS(RealVector_), INTENT(IN) :: VALUE
-  END SUBROUTINE obj_set26
+  MODULE PURE SUBROUTINE obj_Set26(obj, VALUE)
+    TYPE(RealVector_), INTENT(INOUT) :: obj
+    TYPE(RealVector_), INTENT(IN) :: VALUE
+  END SUBROUTINE obj_Set26
+END INTERFACE Set
+
+!----------------------------------------------------------------------------
+!                                                                        Set
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2024-05-29
+! summary: obj = Value
+!
+!# Introduction
+!
+! Value contains the nodal values of all dofs
+! Number of cols in values should be at least equal to the total dof in obj
+! Number of rows in values should be at least equal to the total nodes in obj
+
+INTERFACE Set
+  MODULE SUBROUTINE obj_Set27(obj, dofobj, VALUE)
+    TYPE(RealVector_), INTENT(INOUT) :: obj
+    !! real vector
+    TYPE(DOF_), INTENT(IN) :: dofobj
+    !! degree of freedom object
+    REAL(DFP), INTENT(IN) :: VALUE(:, :)
+    !! number of cols should be equal to the total dof in obj
+    !! number of rows should be equal to the total nodes in obj
+  END SUBROUTINE obj_Set27
+END INTERFACE Set
+
+!----------------------------------------------------------------------------
+!                                                                       Set
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2024-05-29
+! summary: obj = obj + scale*VALUE
+
+INTERFACE Set
+  MODULE SUBROUTINE obj_Set28(obj, dofobj, VALUE, idof)
+    TYPE(RealVector_), INTENT(INOUT) :: obj
+    !! real vector
+    TYPE(DOF_), INTENT(IN) :: dofobj
+    !! degree of freedom object
+    REAL(DFP), INTENT(IN) :: VALUE(:)
+    !! number of cols should be equal to the total dof in obj
+    !! number of rows should be equal to the total nodes in obj
+    INTEGER(I4B), INTENT(IN) :: idof
+    !! global degree of freedom in dofobj
+  END SUBROUTINE obj_Set28
+END INTERFACE Set
+
+!----------------------------------------------------------------------------
+!                                                                       Set
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2024-05-29
+! summary: obj = obj + scale*VALUE
+
+INTERFACE Set
+  MODULE SUBROUTINE obj_Set29(obj1, dofobj1, idof1, obj2, dofobj2, idof2)
+    TYPE(RealVector_), INTENT(INOUT) :: obj1
+    !! real vector
+    TYPE(DOF_), INTENT(IN) :: dofobj1
+    !! degree of freedom object
+    INTEGER(I4B), INTENT(IN) :: idof1
+    !! global degree of freedom in dof1
+    TYPE(RealVector_), INTENT(IN) :: obj2
+    !! real vector
+    TYPE(DOF_), INTENT(IN) :: dofobj2
+    !! degree of freedom object
+    INTEGER(I4B), INTENT(IN) :: idof2
+    !! global degree of freedom in dof2
+  END SUBROUTINE obj_Set29
 END INTERFACE Set
 
 END MODULE RealVector_SetMethods

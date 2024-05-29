@@ -25,7 +25,7 @@ PRIVATE
 PUBLIC :: Add
 
 !----------------------------------------------------------------------------
-!                                                            set@SetMethod
+!                                                                        Add
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -47,7 +47,7 @@ INTERFACE Add
 END INTERFACE Add
 
 !----------------------------------------------------------------------------
-!                                                             set@SetMethod
+!                                                                         Add
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -70,12 +70,12 @@ INTERFACE Add
 END INTERFACE Add
 
 !----------------------------------------------------------------------------
-!                                                            add@AddMethod
+!                                                                        add
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 5 Jan 2022
-! summary: set selected values
+! summary: Add selected values
 
 INTERFACE Add
   MODULE SUBROUTINE obj_Add3(obj, nodenum, VALUE, scale)
@@ -87,12 +87,12 @@ INTERFACE Add
 END INTERFACE Add
 
 !----------------------------------------------------------------------------
-!                                                             set@setMethod
+!                                                                         Add
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 27 June 2021
-! summary: See [[DOF_Method::dof_set2]]
+! summary: See [[DOF_Method::dof_Add2]]
 
 INTERFACE Add
   MODULE SUBROUTINE obj_Add4(obj, nodenum, VALUE, scale)
@@ -104,12 +104,12 @@ INTERFACE Add
 END INTERFACE Add
 
 !----------------------------------------------------------------------------
-!                                                            set@SetMethod
+!                                                                        Add
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 5 Jan 2022
-! summary: set selected values
+! summary: Add selected values
 
 INTERFACE Add
   MODULE SUBROUTINE obj_Add5(obj, nodenum, VALUE, scale)
@@ -121,7 +121,7 @@ INTERFACE Add
 END INTERFACE Add
 
 !----------------------------------------------------------------------------
-!                                                              set@SetMethod
+!                                                                          Add
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -145,7 +145,7 @@ INTERFACE Add
 END INTERFACE Add
 
 !----------------------------------------------------------------------------
-!                                                             set@SetMethod
+!                                                                         Add
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -166,12 +166,12 @@ INTERFACE Add
 END INTERFACE Add
 
 !----------------------------------------------------------------------------
-!                                                             set@setMethod
+!                                                                         Add
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 26 June 2021
-! summary: See [[DOF_Method::dof_set1]]
+! summary: See [[DOF_Method::dof_Add1]]
 
 INTERFACE Add
   MODULE SUBROUTINE obj_Add8(obj, dofobj, nodenum, VALUE, &
@@ -186,12 +186,12 @@ INTERFACE Add
 END INTERFACE Add
 
 !----------------------------------------------------------------------------
-!                                                             set@setMethod
+!                                                                         Add
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 26 June 2021
-! summary: See [[DOF_Method::dof_set1]]
+! summary: See [[DOF_Method::dof_Add1]]
 
 INTERFACE Add
   MODULE SUBROUTINE obj_Add9(obj, dofobj, nodenum, VALUE, &
@@ -205,12 +205,12 @@ INTERFACE Add
 END INTERFACE Add
 
 !----------------------------------------------------------------------------
-!                                                             set@setMethod
+!                                                                         Add
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 27 June 2021
-! summary: See [[DOF_Method::dof_set2]]
+! summary: See [[DOF_Method::dof_Add2]]
 
 INTERFACE Add
   MODULE SUBROUTINE obj_Add10(obj, dofobj, nodenum, VALUE, &
@@ -225,12 +225,12 @@ INTERFACE Add
 END INTERFACE Add
 
 !----------------------------------------------------------------------------
-!                                                             set@setMethod
+!                                                                         Add
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 27 June 2021
-! summary: See [[DOF_Method::dof_set2]]
+! summary: See [[DOF_Method::dof_Add2]]
 
 INTERFACE Add
   MODULE SUBROUTINE obj_Add11(obj, dofobj, nodenum, VALUE, &
@@ -245,12 +245,12 @@ INTERFACE Add
 END INTERFACE Add
 
 !----------------------------------------------------------------------------
-!                                                             set@setMethod
+!                                                                         Add
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 27 June 2021
-! summary: See [[DOF_Method::dof_set2]]
+! summary: See [[DOF_Method::dof_Add2]]
 
 INTERFACE Add
   MODULE SUBROUTINE obj_Add12(obj, dofobj, nodenum, VALUE, &
@@ -266,12 +266,12 @@ INTERFACE Add
 END INTERFACE Add
 
 !----------------------------------------------------------------------------
-!                                                             set@setMethod
+!                                                                         Add
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 27 June 2021
-! summary: See [[DOF_Method::dof_set2]]
+! summary: See [[DOF_Method::dof_Add2]]
 
 INTERFACE Add
   MODULE SUBROUTINE obj_Add13(obj, dofobj, nodenum, VALUE, &
@@ -287,12 +287,12 @@ INTERFACE Add
 END INTERFACE Add
 
 !----------------------------------------------------------------------------
-!                                                             set@setMethod
+!                                                                         Add
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 27 June 2021
-! summary: See [[DOF_Method::dof_set2]]
+! summary: See [[DOF_Method::dof_Add2]]
 
 INTERFACE Add
   MODULE SUBROUTINE obj_Add14(obj, dofobj, nodenum, VALUE, &
@@ -309,12 +309,12 @@ INTERFACE Add
 END INTERFACE Add
 
 !----------------------------------------------------------------------------
-!                                                             set@setMethod
+!                                                                         Add
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 27 June 2021
-! summary: See [[DOF_Method::dof_set2]]
+! summary: See [[DOF_Method::dof_Add2]]
 
 INTERFACE Add
   MODULE SUBROUTINE obj_Add15(obj, dofobj, nodenum, VALUE, &
@@ -331,12 +331,12 @@ INTERFACE Add
 END INTERFACE Add
 
 !----------------------------------------------------------------------------
-!                                                             set@setMethod
+!                                                                         Add
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 27 June 2021
-! summary: See [[DOF_Method::dof_set2]]
+! summary: See [[DOF_Method::dof_Add2]]
 
 INTERFACE Add
   MODULE SUBROUTINE obj_Add16(obj, dofobj, nodenum, VALUE, &
@@ -353,12 +353,12 @@ INTERFACE Add
 END INTERFACE Add
 
 !----------------------------------------------------------------------------
-!                                                             set@setMethod
+!                                                                         Add
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 27 June 2021
-! summary: See [[DOF_Method::dof_set2]]
+! summary: See [[DOF_Method::dof_Add2]]
 
 INTERFACE Add
   MODULE SUBROUTINE obj_Add17(obj, dofobj, nodenum, VALUE, &
@@ -375,12 +375,12 @@ INTERFACE Add
 END INTERFACE Add
 
 !----------------------------------------------------------------------------
-!                                                             set@setMethod
+!                                                                         Add
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 27 June 2021
-! summary: See [[DOF_Method::dof_set2]]
+! summary: See [[DOF_Method::dof_Add2]]
 
 INTERFACE Add
   MODULE SUBROUTINE obj_Add18(obj, dofobj, nodenum, VALUE, &
@@ -397,12 +397,12 @@ INTERFACE Add
 END INTERFACE Add
 
 !----------------------------------------------------------------------------
-!                                                             set@setMethod
+!                                                                         Add
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 27 June 2021
-! summary: See [[DOF_Method::dof_set2]]
+! summary: See [[DOF_Method::dof_Add2]]
 
 INTERFACE Add
   MODULE SUBROUTINE obj_Add19(obj, dofobj, nodenum, VALUE, &
@@ -419,12 +419,12 @@ INTERFACE Add
 END INTERFACE Add
 
 !----------------------------------------------------------------------------
-!                                                             set@setMethod
+!                                                                         Add
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 26 June 2021
-! summary: See [[DOF_Method::dof_set1]]
+! summary: See [[DOF_Method::dof_Add1]]
 
 INTERFACE Add
   MODULE SUBROUTINE obj_Add20(obj, dofobj, nodenum, VALUE, &
@@ -438,12 +438,12 @@ INTERFACE Add
 END INTERFACE Add
 
 !----------------------------------------------------------------------------
-!                                                             set@setMethod
+!                                                                         Add
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 26 June 2021
-! summary: See [[DOF_Method::dof_set1]]
+! summary: See [[DOF_Method::dof_Add1]]
 
 INTERFACE Add
   MODULE SUBROUTINE obj_Add21(obj, dofobj, nodenum, VALUE, &
@@ -458,12 +458,12 @@ INTERFACE Add
 END INTERFACE Add
 
 !----------------------------------------------------------------------------
-!                                                             set@setMethod
+!                                                                         Add
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 26 June 2021
-! summary: See [[DOF_Method::dof_set1]]
+! summary: See [[DOF_Method::dof_Add1]]
 
 INTERFACE Add
   MODULE SUBROUTINE obj_Add22(obj, dofobj, nodenum, VALUE, &
@@ -479,12 +479,12 @@ INTERFACE Add
 END INTERFACE Add
 
 !----------------------------------------------------------------------------
-!                                                             set@setMethod
+!                                                                         Add
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 26 June 2021
-! summary: See [[DOF_Method::dof_set1]]
+! summary: See [[DOF_Method::dof_Add1]]
 
 INTERFACE Add
   MODULE SUBROUTINE obj_Add23(obj, dofobj, nodenum, VALUE, &
@@ -501,12 +501,12 @@ INTERFACE Add
 END INTERFACE Add
 
 !----------------------------------------------------------------------------
-!                                                             set@setMethod
+!                                                                         Add
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 26 June 2021
-! summary: See [[DOF_Method::dof_set1]]
+! summary: See [[DOF_Method::dof_Add1]]
 
 INTERFACE Add
   MODULE SUBROUTINE obj_Add24(obj, dofobj, nodenum, VALUE, &
@@ -523,12 +523,12 @@ INTERFACE Add
 END INTERFACE Add
 
 !----------------------------------------------------------------------------
-!                                                             set@setMethod
+!                                                                         Add
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 26 June 2021
-! summary: See [[DOF_Method::dof_set1]]
+! summary: See [[DOF_Method::dof_Add1]]
 
 INTERFACE Add
   MODULE SUBROUTINE obj_Add25(obj, dofobj, nodenum, VALUE, &
@@ -545,7 +545,7 @@ INTERFACE Add
 END INTERFACE Add
 
 !----------------------------------------------------------------------------
-!                                                            add@addMethods
+!                                                                        add
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -561,7 +561,7 @@ INTERFACE Add
 END INTERFACE Add
 
 !----------------------------------------------------------------------------
-!                                                            set@SetMethod
+!                                                                        Add
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -585,6 +585,30 @@ INTERFACE Add
     !! number of rows should be equal to the total nodes in obj
     REAL(DFP), INTENT(IN) :: scale
   END SUBROUTINE obj_Add27
+END INTERFACE Add
+
+!----------------------------------------------------------------------------
+!                                                                        Add
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2024-05-29
+! summary: obj = obj + scale*VALUE
+
+INTERFACE Add
+  MODULE SUBROUTINE obj_Add28(obj, dofobj, VALUE, scale, idof)
+    CLASS(RealVector_), INTENT(INOUT) :: obj
+    !! real vector
+    TYPE(DOF_), INTENT(IN) :: dofobj
+    !! degree of freedom object
+    REAL(DFP), INTENT(IN) :: VALUE(:)
+    !! number of cols should be equal to the total dof in obj
+    !! number of rows should be equal to the total nodes in obj
+    REAL(DFP), INTENT(IN) :: scale
+    !! scale
+    INTEGER(I4B), INTENT(IN) :: idof
+    !! global degree of freedom in dofobj
+  END SUBROUTINE obj_Add28
 END INTERFACE Add
 
 END MODULE RealVector_AddMethods
