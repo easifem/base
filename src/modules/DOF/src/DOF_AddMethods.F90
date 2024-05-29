@@ -16,96 +16,100 @@
 !
 
 MODULE DOF_AddMethods
-USE GlobalData
-USE BaseType
+USE GlobalData, ONLY: DFP, I4B, LGT
+USE BaseType, ONLY: RealVector_, DOF_
+
 IMPLICIT NONE
 PRIVATE
 
-PUBLIC :: add
+PUBLIC :: Add
 
 !----------------------------------------------------------------------------
-!                                                            add@addMethod
+!                                                            Add@addMethod
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 27 June 2021
-! summary:          add values in a vector of real numbers
+! summary:          Add values in a vector of real numbers
 !
 !# Introduction
 !
-! This subroutine is designed to add values in a vector of real number
+! This subroutine is designed to Add values in a vector of real number
 ! - [[DOF_]] object `obj` contains the storage pattern of degrees of freedom
 ! inside `vec`. This storage pattern can be `FMT_Nodes` or `FMT_DOF`
 ! - `value` denotes the nodal values of all dof defined inside `obj`. Once
 ! storage pattern in `value` can be `FMT_DOF` or `FMT_Nodes`.
-! - To tackle this `conversion`  can be add to `DOFToNodes`, `NodesToDOF`
+! - To tackle this `conversion`  can be Add to `DOFToNodes`, `NodesToDOF`
 ! or `NONE`.
 !
 ! This subroutine effectivily performes
 ! `vec( nptrs ) = vec(nptrs) + scale * value`
 
-INTERFACE
-  MODULE PURE SUBROUTINE dof_add1(vec, obj, nodenum, VALUE, scale, &
-    & conversion)
+INTERFACE Add
+  MODULE SUBROUTINE obj_Add1(vec, obj, nodenum, VALUE, scale, &
+                             conversion)
     REAL(DFP), INTENT(INOUT) :: vec(:)
-    CLASS(DOF_), INTENT(IN) :: obj
+    !! Vector to set values in
+    TYPE(DOF_), INTENT(IN) :: obj
+    !! degree of freedom object
     INTEGER(I4B), INTENT(IN) :: nodenum(:)
+    !! Node number
     REAL(DFP), INTENT(IN) :: VALUE(:)
+    !! Value
     REAL(DFP), INTENT(IN) :: scale
+    !! scale
     INTEGER(I4B), INTENT(IN) :: conversion(1)
-  END SUBROUTINE dof_add1
-END INTERFACE
-
-INTERFACE add
-  MODULE PROCEDURE dof_add1
-END INTERFACE add
+    !! conversion
+  END SUBROUTINE obj_Add1
+END INTERFACE Add
 
 !----------------------------------------------------------------------------
-!                                                            add@addMethod
+!                                                            Add@addMethod
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 27 June 2021
-! summary:          add values in a vector of real numbers
+! summary:          Add values in a vector of real numbers
 !
 !# Introduction
 !
-! This subroutine is designed to add values in a vector of real number
+! This subroutine is designed to Add values in a vector of real number
 ! - [[DOF_]] object `obj` contains the storage pattern of degrees of freedom
 ! inside `vec`. This storage pattern can be `FMT_Nodes` or `FMT_DOF`
 ! - `value` denotes the nodal values of all dof defined inside `obj`. Once
 ! storage pattern in `value` can be `FMT_DOF` or `FMT_Nodes`.
-! - To tackle this `conversion`  can be add to `DOFToNodes`, `NodesToDOF`
+! - To tackle this `conversion`  can be Add to `DOFToNodes`, `NodesToDOF`
 ! or `NONE`.
 !
 ! This subroutine effectivily performes
 ! `vec( nptrs ) = vec(nptrs) + scale * value`
 
-INTERFACE
-  MODULE PURE SUBROUTINE dof_add2(vec, obj, nodenum, VALUE, scale)
+INTERFACE Add
+  MODULE SUBROUTINE obj_Add2(vec, obj, nodenum, VALUE, scale)
     REAL(DFP), INTENT(INOUT) :: vec(:)
-    CLASS(DOF_), INTENT(IN) :: obj
+    !! vector to set values in
+    TYPE(DOF_), INTENT(IN) :: obj
+    !! degree of freedom object
     INTEGER(I4B), INTENT(IN) :: nodenum(:)
+    !! node number
     REAL(DFP), INTENT(IN) :: VALUE
+    !! scalar value
     REAL(DFP), INTENT(IN) :: scale
-  END SUBROUTINE dof_add2
-END INTERFACE
-
-INTERFACE add
-  MODULE PROCEDURE dof_add2
-END INTERFACE add
+    !! scale
+  END SUBROUTINE obj_Add2
+END INTERFACE Add
 
 !----------------------------------------------------------------------------
-!                                                            add@addMethod
+!                                                            Add@addMethod
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date:         27 June 2021
-! summary:         add values in a vector of real numbers
+! summary:         Add values in a vector of real numbers
 !
 !# Introduction
 !
-! This subroutine is designed to add values in a vector of real number
+! This subroutine is designed to Add values in a vector of real number
 ! - [[DOF_]] object `obj` contains the storage pattern of degrees of freedom
 ! inside `vec`. This storage pattern can be `FMT_Nodes` or `FMT_DOF`
 ! - `value` denotes the nodal values of dof `dofno`.
@@ -113,204 +117,193 @@ END INTERFACE add
 ! This subroutine effectivily performes
 ! `vec( nptrs ) = vec(nptrs) + scale * value`
 
-INTERFACE
-  MODULE PURE SUBROUTINE dof_add3(vec, obj, nodenum, VALUE, scale, idof)
+INTERFACE Add
+  MODULE SUBROUTINE obj_Add3(vec, obj, nodenum, VALUE, scale, idof)
     REAL(DFP), INTENT(INOUT) :: vec(:)
-    CLASS(DOF_), INTENT(IN) :: obj
+    !! vector to set values in
+    TYPE(DOF_), INTENT(IN) :: obj
+    !! degree of freedom object
     INTEGER(I4B), INTENT(IN) :: nodenum(:)
+    !! node number
     REAL(DFP), INTENT(IN) :: VALUE(:)
+    !! vec = values, size of value should be equal to the size of nodenum
     REAL(DFP), INTENT(IN) :: scale
+    !! scale
     INTEGER(I4B), INTENT(IN) :: idof
-  END SUBROUTINE dof_add3
-END INTERFACE
-
-INTERFACE add
-  MODULE PROCEDURE dof_add3
-END INTERFACE add
+    !! global degree of freedom number
+  END SUBROUTINE obj_Add3
+END INTERFACE Add
 
 !----------------------------------------------------------------------------
-!                                                             add@addMethod
+!                                                             Add@addMethod
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 27 June 2021
-! summary: add values in a vector of real numbers
+! summary: Add values in a vector of real numbers
 !
+! This subroutine calls obj_Add3
 
-INTERFACE
-  MODULE PURE SUBROUTINE dof_add4(vec, obj, nodenum, VALUE, scale, ivar, idof)
+INTERFACE Add
+  MODULE SUBROUTINE obj_Add4(vec, obj, nodenum, VALUE, scale, ivar, idof)
     REAL(DFP), INTENT(INOUT) :: vec(:)
-    CLASS(DOF_), INTENT(IN) :: obj
-  !! Object `obj` contains the storage pattern of degrees of freedom
-  !! inside `vec`.
-  !! This storage pattern can be `FMT_Nodes` or `FMT_DOF`
+    !! vector to set values in
+    TYPE(DOF_), INTENT(IN) :: obj
+    !! Object `obj` contains the storage pattern of degrees of freedom
+    !! inside `vec`.
+    !! This storage pattern can be `FMT_Nodes` or `FMT_DOF`
     INTEGER(I4B), INTENT(IN) :: nodenum(:)
-  !! node number
+    !! node number
     REAL(DFP), INTENT(IN) :: VALUE(:)
-  !! `value` denotes the nodal values of dof `idof`.
+    !! `value` denotes the nodal values of dof `idof`.
     REAL(DFP), INTENT(IN) :: scale
-  !! scale
+    !! scale
     INTEGER(I4B), INTENT(IN) :: ivar
-  !! physical variable
+    !! physical variable
     INTEGER(I4B), INTENT(IN) :: idof
-  END SUBROUTINE dof_add4
-END INTERFACE
-
-INTERFACE add
-  MODULE PROCEDURE dof_add4
-END INTERFACE add
+  END SUBROUTINE obj_Add4
+END INTERFACE Add
 
 !----------------------------------------------------------------------------
-!                                                             add@addMethod
+!                                                             Add@addMethod
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 27 June 2021
-! summary: add values in a vector of real numbers
+! summary: Add values in a vector of real numbers
+!
+!@note
+!   this routine calls obj_Add3
+!@endnote
 
-INTERFACE
-  MODULE PURE SUBROUTINE dof_add5(vec, obj, nodenum, VALUE, scale, ivar, &
-      & spacecompo, timecompo)
+INTERFACE Add
+  MODULE SUBROUTINE obj_Add5(vec, obj, nodenum, VALUE, scale, ivar, &
+                             spacecompo, timecompo)
     REAL(DFP), INTENT(INOUT) :: vec(:)
-    CLASS(DOF_), INTENT(IN) :: obj
-  !! Object `obj` contains the storage pattern of degrees of freedom
-  !! inside `vec`.
-  !! This storage pattern can be `FMT_Nodes` or `FMT_DOF`
+    TYPE(DOF_), INTENT(IN) :: obj
+    !! Object `obj` contains the storage pattern of degrees of freedom
+    !! inside `vec`.
+    !! This storage pattern can be `FMT_Nodes` or `FMT_DOF`
     INTEGER(I4B), INTENT(IN) :: nodenum(:)
-  !! node number
+    !! node number
     REAL(DFP), INTENT(IN) :: VALUE(:)
-  !! `value` denotes the nodal values of dof `idof`.
+    !! `value` denotes the nodal values of dof `idof`.
+    !! the size of value should be same as nodenum
     REAL(DFP), INTENT(IN) :: scale
-  !! scale
+    !! scale
     INTEGER(I4B), INTENT(IN) :: ivar
-  !! physical variable
+    !! physical variable
     INTEGER(I4B), INTENT(IN) :: spacecompo
-  !! space components
+    !! space components
     INTEGER(I4B), INTENT(IN) :: timecompo
-  !! time components
-  END SUBROUTINE dof_add5
-END INTERFACE
-
-INTERFACE add
-  MODULE PROCEDURE dof_add5
-END INTERFACE add
+    !! time components
+  END SUBROUTINE obj_Add5
+END INTERFACE Add
 
 !----------------------------------------------------------------------------
-!                                                             add@addMethod
+!                                                             Add@addMethod
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 27 June 2021
-! summary: add values in a vector of real numbers
+! summary: Add values in a vector of real numbers
 
-INTERFACE
-  MODULE PURE SUBROUTINE dof_add6(vec, obj, nodenum, VALUE, scale, ivar, &
-      & spacecompo, timecompo)
+INTERFACE Add
+  MODULE SUBROUTINE obj_Add6(vec, obj, nodenum, VALUE, scale, ivar, &
+                             spacecompo, timecompo)
     REAL(DFP), INTENT(INOUT) :: vec(:)
-    CLASS(DOF_), INTENT(IN) :: obj
-  !! Object `obj` contains the storage pattern of degrees of freedom
-  !! inside `vec`.
-  !! This storage pattern can be `FMT_Nodes` or `FMT_DOF`
+    TYPE(DOF_), INTENT(IN) :: obj
+    !! Object `obj` contains the storage pattern of degrees of freedom
+    !! inside `vec`.
+    !! This storage pattern can be `FMT_Nodes` or `FMT_DOF`
     INTEGER(I4B), INTENT(IN) :: nodenum(:)
-  !! node number
+    !! node number
     REAL(DFP), INTENT(IN) :: VALUE(:)
-  !! `value` denotes the nodal values of dof `idof`.
+    !! `value` denotes the nodal values of dof `idof`.
     REAL(DFP), INTENT(IN) :: scale
-  !! scale
+    !! scale
     INTEGER(I4B), INTENT(IN) :: ivar
-  !! physical variable
+    !! physical variable
     INTEGER(I4B), INTENT(IN) :: spacecompo
-  !! space components
+    !! space components
     INTEGER(I4B), INTENT(IN) :: timecompo(:)
-  !! time components
-  END SUBROUTINE dof_add6
-END INTERFACE
-
-INTERFACE add
-  MODULE PROCEDURE dof_add6
-END INTERFACE add
+    !! time components
+  END SUBROUTINE obj_Add6
+END INTERFACE Add
 
 !----------------------------------------------------------------------------
-!                                                             add@addMethod
+!                                                             Add@addMethod
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 27 June 2021
-! summary: add values in a vector of real numbers
+! summary: Add values in a vector of real numbers
 
-INTERFACE
-  MODULE PURE SUBROUTINE dof_add7(vec, obj, nodenum, VALUE, scale, ivar, &
-      & spacecompo, timecompo)
+INTERFACE Add
+  MODULE SUBROUTINE obj_Add7(vec, obj, nodenum, VALUE, scale, ivar, &
+                             spacecompo, timecompo)
     REAL(DFP), INTENT(INOUT) :: vec(:)
-    CLASS(DOF_), INTENT(IN) :: obj
-  !! Object `obj` contains the storage pattern of degrees of freedom
-  !! inside `vec`.
-  !! This storage pattern can be `FMT_Nodes` or `FMT_DOF`
+    TYPE(DOF_), INTENT(IN) :: obj
+    !! Object `obj` contains the storage pattern of degrees of freedom
+    !! inside `vec`.
+    !! This storage pattern can be `FMT_Nodes` or `FMT_DOF`
     INTEGER(I4B), INTENT(IN) :: nodenum(:)
-  !! node number
+    !! node number
     REAL(DFP), INTENT(IN) :: VALUE(:)
-  !! `value` denotes the nodal values of dof `idof`.
+    !! `value` denotes the nodal values of dof `idof`.
     REAL(DFP), INTENT(IN) :: scale
-  !! scale
+    !! scale
     INTEGER(I4B), INTENT(IN) :: ivar
-  !! physical variable
+    !! physical variable
     INTEGER(I4B), INTENT(IN) :: spacecompo(:)
-  !! space components
+    !! space components
     INTEGER(I4B), INTENT(IN) :: timecompo
-  !! time components
-  END SUBROUTINE dof_add7
-END INTERFACE
-
-INTERFACE add
-  MODULE PROCEDURE dof_add7
-END INTERFACE add
+    !! time components
+  END SUBROUTINE obj_Add7
+END INTERFACE Add
 
 !----------------------------------------------------------------------------
-!                                                            add@addMethod
+!                                                            Add@addMethod
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 27 June 2021
-! summary:          add values in a vector of real numbers
+! summary:          Add values in a vector of real numbers
 !
 !# Introduction
 !
-! This subroutine is designed to add values in a vector of real number
+! This subroutine is designed to Add values in a vector of real number
 ! - [[DOF_]] object `obj` contains the storage pattern of degrees of freedom
 ! inside `vec`. This storage pattern can be `FMT_Nodes` or `FMT_DOF`
 ! - `value` denotes the nodal values of all dof defined inside `obj`. Once
 ! storage pattern in `value` can be `FMT_DOF` or `FMT_Nodes`.
-! - To tackle this `conversion`  can be add to `DOFToNodes`, `NodesToDOF`
+! - To tackle this `conversion`  can be Add to `DOFToNodes`, `NodesToDOF`
 ! or `NONE`.
 !
 ! This subroutine effectivily performes
 ! `vec( nptrs ) = vec(nptrs) + scale * value`
 
-INTERFACE
-  MODULE PURE SUBROUTINE dof_add8(vec, obj, nodenum, VALUE, scale)
+INTERFACE Add
+  MODULE SUBROUTINE obj_Add8(vec, obj, nodenum, VALUE, scale)
     REAL(DFP), INTENT(INOUT) :: vec(:)
-    CLASS(DOF_), INTENT(IN) :: obj
+    TYPE(DOF_), INTENT(IN) :: obj
     INTEGER(I4B), INTENT(IN) :: nodenum
     REAL(DFP), INTENT(IN) :: VALUE
     REAL(DFP), INTENT(IN) :: scale
-  END SUBROUTINE dof_add8
-END INTERFACE
-
-INTERFACE add
-  MODULE PROCEDURE dof_add8
-END INTERFACE add
+  END SUBROUTINE obj_Add8
+END INTERFACE Add
 
 !----------------------------------------------------------------------------
-!                                                            add@addMethod
+!                                                            Add@addMethod
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date:         27 June 2021
-! summary:         add values in a vector of real numbers
+! summary:         Add values in a vector of real numbers
 !
 !# Introduction
 !
-! This subroutine is designed to add values in a vector of real number
+! This subroutine is designed to Add values in a vector of real number
 ! - [[DOF_]] object `obj` contains the storage pattern of degrees of freedom
 ! inside `vec`. This storage pattern can be `FMT_Nodes` or `FMT_DOF`
 ! - `value` denotes the nodal values of dof `dofno`.
@@ -318,32 +311,28 @@ END INTERFACE add
 ! This subroutine effectivily performes
 ! `vec( nptrs ) = vec(nptrs) + scale * value`
 
-INTERFACE
-  MODULE PURE SUBROUTINE dof_add9(vec, obj, nodenum, VALUE, scale, idof)
+INTERFACE Add
+  MODULE SUBROUTINE obj_Add9(vec, obj, nodenum, VALUE, scale, idof)
     REAL(DFP), INTENT(INOUT) :: vec(:)
-    CLASS(DOF_), INTENT(IN) :: obj
+    TYPE(DOF_), INTENT(IN) :: obj
     INTEGER(I4B), INTENT(IN) :: nodenum
     REAL(DFP), INTENT(IN) :: VALUE
     REAL(DFP), INTENT(IN) :: scale
     INTEGER(I4B), INTENT(IN) :: idof
-  END SUBROUTINE dof_add9
-END INTERFACE
-
-INTERFACE add
-  MODULE PROCEDURE dof_add9
-END INTERFACE add
+  END SUBROUTINE obj_Add9
+END INTERFACE Add
 
 !----------------------------------------------------------------------------
-!                                                            add@addMethod
+!                                                            Add@addMethod
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date:         27 June 2021
-! summary:         add values in a vector of real numbers
+! summary:         Add values in a vector of real numbers
 !
 !# Introduction
 !
-! This subroutine is designed to add values in a vector of real number
+! This subroutine is designed to Add values in a vector of real number
 ! - [[DOF_]] object `obj` contains the storage pattern of degrees of freedom
 ! inside `vec`. This storage pattern can be `FMT_Nodes` or `FMT_DOF`
 ! - `value` denotes the nodal values of dof `dofno`.
@@ -351,34 +340,29 @@ END INTERFACE add
 ! This subroutine effectivily performes
 ! `vec( nptrs ) = vec(nptrs) + scale * value`
 
-INTERFACE
-  MODULE PURE SUBROUTINE dof_add10(vec, obj, nodenum, VALUE, scale, &
-    & ivar, idof)
+INTERFACE Add
+  MODULE SUBROUTINE obj_Add10(vec, obj, nodenum, VALUE, scale, ivar, idof)
     REAL(DFP), INTENT(INOUT) :: vec(:)
-    CLASS(DOF_), INTENT(IN) :: obj
+    TYPE(DOF_), INTENT(IN) :: obj
     INTEGER(I4B), INTENT(IN) :: nodenum
     REAL(DFP), INTENT(IN) :: VALUE
     REAL(DFP), INTENT(IN) :: scale
     INTEGER(I4B), INTENT(IN) :: ivar
     INTEGER(I4B), INTENT(IN) :: idof
-  END SUBROUTINE dof_add10
-END INTERFACE
-
-INTERFACE add
-  MODULE PROCEDURE dof_add10
-END INTERFACE add
+  END SUBROUTINE obj_Add10
+END INTERFACE Add
 
 !----------------------------------------------------------------------------
-!                                                            add@addMethod
+!                                                            Add@addMethod
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date:         27 June 2021
-! summary:         add values in a vector of real numbers
+! summary:         Add values in a vector of real numbers
 !
 !# Introduction
 !
-! This subroutine is designed to add values in a vector of real number
+! This subroutine is designed to Add values in a vector of real number
 ! - [[DOF_]] object `obj` contains the storage pattern of degrees of freedom
 ! inside `vec`. This storage pattern can be `FMT_Nodes` or `FMT_DOF`
 ! - `value` denotes the nodal values of dof `dofno`.
@@ -386,35 +370,31 @@ END INTERFACE add
 ! This subroutine effectivily performes
 ! `vec( nptrs ) = vec(nptrs) + scale * value`
 
-INTERFACE
-  MODULE PURE SUBROUTINE dof_add11(vec, obj, nodenum, VALUE, scale, &
-    & ivar, spacecompo, timecompo)
+INTERFACE Add
+  MODULE SUBROUTINE obj_Add11(vec, obj, nodenum, VALUE, scale, &
+                              ivar, spacecompo, timecompo)
     REAL(DFP), INTENT(INOUT) :: vec(:)
-    CLASS(DOF_), INTENT(IN) :: obj
+    TYPE(DOF_), INTENT(IN) :: obj
     INTEGER(I4B), INTENT(IN) :: nodenum
     REAL(DFP), INTENT(IN) :: VALUE
     REAL(DFP), INTENT(IN) :: scale
     INTEGER(I4B), INTENT(IN) :: ivar
     INTEGER(I4B), INTENT(IN) :: spacecompo
     INTEGER(I4B), INTENT(IN) :: timecompo
-  END SUBROUTINE dof_add11
-END INTERFACE
-
-INTERFACE add
-  MODULE PROCEDURE dof_add11
-END INTERFACE add
+  END SUBROUTINE obj_Add11
+END INTERFACE Add
 
 !----------------------------------------------------------------------------
-!                                                            add@addMethod
+!                                                            Add@addMethod
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date:         27 June 2021
-! summary:         add values in a vector of real numbers
+! summary:         Add values in a vector of real numbers
 !
 !# Introduction
 !
-! This subroutine is designed to add values in a vector of real number
+! This subroutine is designed to Add values in a vector of real number
 ! - [[DOF_]] object `obj` contains the storage pattern of degrees of freedom
 ! inside `vec`. This storage pattern can be `FMT_Nodes` or `FMT_DOF`
 ! - `value` denotes the nodal values of dof `dofno`.
@@ -422,35 +402,31 @@ END INTERFACE add
 ! This subroutine effectivily performes
 ! `vec( nptrs ) = vec(nptrs) + scale * value`
 
-INTERFACE
-  MODULE PURE SUBROUTINE dof_add12(vec, obj, nodenum, VALUE, scale, &
-    & ivar, spacecompo, timecompo)
+INTERFACE Add
+  MODULE SUBROUTINE obj_Add12(vec, obj, nodenum, VALUE, scale, &
+                              ivar, spacecompo, timecompo)
     REAL(DFP), INTENT(INOUT) :: vec(:)
-    CLASS(DOF_), INTENT(IN) :: obj
+    TYPE(DOF_), INTENT(IN) :: obj
     INTEGER(I4B), INTENT(IN) :: nodenum
     REAL(DFP), INTENT(IN) :: VALUE
     REAL(DFP), INTENT(IN) :: scale
     INTEGER(I4B), INTENT(IN) :: ivar
     INTEGER(I4B), INTENT(IN) :: spacecompo
     INTEGER(I4B), INTENT(IN) :: timecompo(:)
-  END SUBROUTINE dof_add12
-END INTERFACE
-
-INTERFACE add
-  MODULE PROCEDURE dof_add12
-END INTERFACE add
+  END SUBROUTINE obj_Add12
+END INTERFACE Add
 
 !----------------------------------------------------------------------------
-!                                                            add@addMethod
+!                                                            Add@addMethod
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date:         27 June 2021
-! summary:         add values in a vector of real numbers
+! summary:         Add values in a vector of real numbers
 !
 !# Introduction
 !
-! This subroutine is designed to add values in a vector of real number
+! This subroutine is designed to Add values in a vector of real number
 ! - [[DOF_]] object `obj` contains the storage pattern of degrees of freedom
 ! inside `vec`. This storage pattern can be `FMT_Nodes` or `FMT_DOF`
 ! - `value` denotes the nodal values of dof `dofno`.
@@ -458,22 +434,18 @@ END INTERFACE add
 ! This subroutine effectivily performes
 ! `vec( nptrs ) = vec(nptrs) + scale * value`
 
-INTERFACE
-  MODULE PURE SUBROUTINE dof_add13(vec, obj, nodenum, VALUE, scale, &
-    & ivar, spacecompo, timecompo)
+INTERFACE Add
+  MODULE SUBROUTINE obj_Add13(vec, obj, nodenum, VALUE, scale, &
+                              ivar, spacecompo, timecompo)
     REAL(DFP), INTENT(INOUT) :: vec(:)
-    CLASS(DOF_), INTENT(IN) :: obj
+    TYPE(DOF_), INTENT(IN) :: obj
     INTEGER(I4B), INTENT(IN) :: nodenum
     REAL(DFP), INTENT(IN) :: VALUE
     REAL(DFP), INTENT(IN) :: scale
     INTEGER(I4B), INTENT(IN) :: ivar
     INTEGER(I4B), INTENT(IN) :: spacecompo(:)
     INTEGER(I4B), INTENT(IN) :: timecompo
-  END SUBROUTINE dof_add13
-END INTERFACE
-
-INTERFACE add
-  MODULE PROCEDURE dof_add13
-END INTERFACE add
+  END SUBROUTINE obj_Add13
+END INTERFACE Add
 
 END MODULE DOF_AddMethods
