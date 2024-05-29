@@ -30,6 +30,8 @@ USE ReallocateUtility, ONLY: Reallocate
 
 USE F95_BLAS, ONLY: COPY
 
+USE RealVector_SetMethods, ONLY: Set
+
 IMPLICIT NONE
 CONTAINS
 
@@ -38,11 +40,7 @@ CONTAINS
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE obj_GetValue1
-INTEGER(I4B) :: ii, jj
-DO CONCURRENT(ii=istart:iend:stride)
-  jj = INT((ii - istart + stride) / stride)
-  VALUE%val(jj) = obj%val(ii)
-END DO
+CALL Set(obj=VALUE, VALUE=obj%val, istart=istart, iend=iend, stride=stride)
 END PROCEDURE obj_GetValue1
 
 !----------------------------------------------------------------------------
@@ -52,7 +50,7 @@ END PROCEDURE obj_GetValue1
 MODULE PROCEDURE obj_GetValue2
 INTEGER(I4B) :: s(3)
 s = GetNodeLoc(obj=dofobj, idof=idof)
-CALL GetValue(obj=obj, VALUE=VALUE, istart=s(1), iend=s(2), stride=s(3))
+CALL Set(obj=VALUE, VALUE=obj%val, istart=s(1), iend=s(2), stride=s(3))
 END PROCEDURE obj_GetValue2
 
 !----------------------------------------------------------------------------
@@ -63,7 +61,7 @@ MODULE PROCEDURE obj_GetValue3
 INTEGER(I4B) :: s(3)
 s = GetNodeLoc(obj=dofobj, &
                idof=GetIDOF(obj=dofobj, ivar=ivar, idof=idof))
-CALL GetValue(obj=obj, VALUE=VALUE, istart=s(1), iend=s(2), stride=s(3))
+CALL Set(obj=VALUE, VALUE=obj%val, istart=s(1), iend=s(2), stride=s(3))
 END PROCEDURE obj_GetValue3
 
 !----------------------------------------------------------------------------
@@ -75,10 +73,10 @@ INTEGER(I4B) :: s(3)
 
 s = GetNodeLoc(obj=dofobj, idof=GetIDOF(obj=dofobj, &
                                         ivar=ivar, &
-                                        spacecompo=spacecompo, &
-                                        timecompo=timecompo))
+                                        spaceCompo=spaceCompo, &
+                                        timeCompo=timeCompo))
 
-CALL GetValue(obj=obj, VALUE=VALUE, istart=s(1), iend=s(2), stride=s(3))
+CALL Set(obj=VALUE, VALUE=obj%val, istart=s(1), iend=s(2), stride=s(3))
 END PROCEDURE obj_GetValue4
 
 !----------------------------------------------------------------------------
@@ -86,16 +84,8 @@ END PROCEDURE obj_GetValue4
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE obj_GetValue5
-INTEGER(I4B) :: p(3), s(3), ii, jj
-
-s = GetNodeLoc(obj=dofobj, idof=idofobj)
-p = GetNodeLoc(obj=dofvalue, idof=idofvalue)
-
-DO CONCURRENT(ii=s(1):s(2):s(3))
-  jj = INT((ii - s(1) + s(3)) / s(3))
-  VALUE%val(p(1) + (jj - 1) * p(3)) = obj%val(ii)
-END DO
-
+CALL Set(obj1=VALUE, dofobj1=dofvalue, idof1=idofvalue, &
+         obj2=obj, dofobj2=dofobj, idof2=idofobj)
 END PROCEDURE obj_GetValue5
 
 !----------------------------------------------------------------------------
@@ -103,20 +93,11 @@ END PROCEDURE obj_GetValue5
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE obj_GetValue6
-INTEGER(I4B) :: p(3), s(3), ii, jj, kk, ll
+INTEGER(I4B) :: ii
 
-ll = SIZE(idofobj)
-
-DO CONCURRENT(kk=1:ll)
-
-  s = GetNodeLoc(obj=dofobj, idof=idofobj(kk))
-  p = GetNodeLoc(obj=dofvalue, idof=idofvalue(kk))
-
-  DO ii = s(1), s(2), s(3)
-    jj = INT((ii - s(1) + s(3)) / s(3))
-    VALUE%val(p(1) + (jj - 1) * p(3)) = obj%val(ii)
-  END DO
-
+DO ii = 1, SIZE(idofobj)
+  CALL Set(obj1=VALUE, dofobj1=dofvalue, idof1=idofvalue(ii), &
+           obj2=obj, dofobj2=dofobj, idof2=idofobj(ii))
 END DO
 
 END PROCEDURE obj_GetValue6
@@ -126,20 +107,11 @@ END PROCEDURE obj_GetValue6
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE obj_GetValue7
-INTEGER(I4B) :: p(3), s(3), ii, jj
-
-s = GetNodeLoc(obj=dofobj, idof=GetIDOF(obj=dofobj, &
-                                        ivar=ivarobj, idof=idofobj))
-
-p = GetNodeLoc(obj=dofvalue, idof=GetIDOF(obj=dofvalue, &
-                                          ivar=ivarvalue, &
-                                          idof=idofvalue))
-
-DO CONCURRENT(ii=s(1):s(2):s(3))
-  jj = INT((ii - s(1) + s(3)) / s(3))
-  VALUE%val(p(1) + (jj - 1) * p(3)) = obj%val(ii)
-END DO
-
+INTEGER(I4B) :: global_idofobj, global_idofvalue
+global_idofobj = GetIDOF(obj=dofobj, ivar=ivarobj, idof=idofobj)
+global_idofvalue = GetIDOF(obj=dofvalue, ivar=ivarvalue, idof=idofvalue)
+CALL Set(obj1=VALUE, dofobj1=dofvalue, idof1=global_idofvalue, &
+         obj2=obj, dofobj2=dofobj, idof2=global_idofobj)
 END PROCEDURE obj_GetValue7
 
 !----------------------------------------------------------------------------
@@ -147,25 +119,13 @@ END PROCEDURE obj_GetValue7
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE obj_GetValue8
-INTEGER(I4B) :: p(3), s(3), ii, jj, kk
+INTEGER(I4B) :: global_idofobj, global_idofvalue, ii
 
-DO kk = 1, SIZE(idofobj)
-
-  s = GetNodeLoc(obj=dofobj, idof=GetIDOF(obj=dofobj, &
-                                          ivar=ivarobj, &
-                                          idof=idofobj(kk)))
-
-  p = GetNodeLoc(obj=dofvalue, idof=GetIDOF(obj=dofvalue, &
-                                            ivar=ivarvalue, &
-                                            idof=idofvalue(kk)))
-
-  jj = 0
-
-  DO ii = s(1), s(2), s(3)
-    jj = jj + 1
-    VALUE%val(p(1) + (jj - 1) * p(3)) = obj%val(ii)
-  END DO
-
+DO ii = 1, SIZE(idofobj)
+  global_idofobj = GetIDOF(obj=dofobj, ivar=ivarobj, idof=idofobj(ii))
+  global_idofvalue = GetIDOF(obj=dofvalue, ivar=ivarvalue, idof=idofvalue(ii))
+  CALL Set(obj1=VALUE, dofobj1=dofvalue, idof1=global_idofvalue, &
+           obj2=obj, dofobj2=dofobj, idof2=global_idofobj)
 END DO
 
 END PROCEDURE obj_GetValue8
@@ -175,24 +135,16 @@ END PROCEDURE obj_GetValue8
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE obj_GetValue9
-INTEGER(I4B) :: p(3), s(3), ii, jj
+INTEGER(I4B) :: global_idofobj, global_idofvalue
 
-s = GetNodeLoc(obj=dofobj, idof=GetIDOF(obj=dofobj, &
-                                        ivar=ivarobj, &
-                                        spacecompo=spacecompoobj, &
-                                        timecompo=timecompoobj))
+global_idofobj = GetIDOF(obj=dofobj, ivar=ivarobj, spaceCompo=spaceCompoObj, &
+                         timeCompo=timeCompoObj)
 
-p = GetNodeLoc(obj=dofvalue, idof=GetIDOF(obj=dofvalue, &
-                                          ivar=ivarvalue, &
-                                          spacecompo=spacecompovalue, &
-                                          timecompo=timecompovalue))
+global_idofvalue = GetIDOF(obj=dofvalue, ivar=ivarvalue, &
+                         spaceCompo=spaceCompoValue, timeCompo=timeCompoValue)
 
-jj = 0
-
-DO ii = s(1), s(2), s(3)
-  jj = jj + 1
-  VALUE%val(p(1) + (jj - 1) * p(3)) = obj%val(ii)
-END DO
+CALL Set(obj1=VALUE, dofobj1=dofvalue, idof1=global_idofvalue, &
+         obj2=obj, dofobj2=dofobj, idof2=global_idofobj)
 
 END PROCEDURE obj_GetValue9
 
@@ -201,27 +153,17 @@ END PROCEDURE obj_GetValue9
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE obj_GetValue10
-INTEGER(I4B) :: p(3), s(3), ii, jj, kk
+INTEGER(I4B) :: global_idofobj, global_idofvalue, ii
 
-DO kk = 1, SIZE(timecompoobj)
+DO ii = 1, SIZE(timeCompoObj)
+  global_idofobj = GetIDOF(obj=dofobj, ivar=ivarobj, &
+                         spaceCompo=spaceCompoObj, timeCompo=timeCompoObj(ii))
 
-  s = GetNodeLoc(obj=dofobj, idof=GetIDOF(obj=dofobj, &
-                                          ivar=ivarobj, &
-                                          spacecompo=spacecompoobj, &
-                                          timecompo=timecompoobj(kk)))
+  global_idofvalue = GetIDOF(obj=dofvalue, ivar=ivarvalue, &
+                     spaceCompo=spaceCompoValue, timeCompo=timeCompoValue(ii))
 
-  p = GetNodeLoc(obj=dofvalue, idof=GetIDOF(obj=dofvalue, &
-                                            ivar=ivarvalue, &
-                                            spacecompo=spacecompovalue, &
-                                            timecompo=timecompovalue(kk)))
-
-  jj = 0
-
-  DO ii = s(1), s(2), s(3)
-    jj = jj + 1
-    VALUE%val(p(1) + (jj - 1) * p(3)) = obj%val(ii)
-  END DO
-
+  CALL Set(obj1=VALUE, dofobj1=dofvalue, idof1=global_idofvalue, &
+           obj2=obj, dofobj2=dofobj, idof2=global_idofobj)
 END DO
 
 END PROCEDURE obj_GetValue10
@@ -231,26 +173,18 @@ END PROCEDURE obj_GetValue10
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE obj_GetValue11
-INTEGER(I4B) :: p(3), s(3), ii, jj, kk
+INTEGER(I4B) :: global_idofobj, global_idofvalue, ii
 
-DO kk = 1, SIZE(spacecompoobj)
+DO ii = 1, SIZE(spaceCompoObj)
 
-  s = GetNodeLoc(obj=dofobj, idof=GetIDOF(obj=dofobj, &
-                                          ivar=ivarobj, &
-                                          spacecompo=spacecompoobj(kk), &
-                                          timecompo=timecompoobj))
+  global_idofobj = GetIDOF(obj=dofobj, ivar=ivarobj, &
+                         spaceCompo=spaceCompoObj(ii), timeCompo=timeCompoObj)
 
-  p = GetNodeLoc(obj=dofvalue, idof=GetIDOF(obj=dofvalue, &
-                                            ivar=ivarvalue, &
-                                            spacecompo=spacecompovalue(kk), &
-                                            timecompo=timecompovalue))
+  global_idofvalue = GetIDOF(obj=dofvalue, ivar=ivarvalue, &
+                     spaceCompo=spaceCompoValue(ii), timeCompo=timeCompoValue)
 
-  jj = 0
-
-  DO ii = s(1), s(2), s(3)
-    jj = jj + 1
-    VALUE%val(p(1) + (jj - 1) * p(3)) = obj%val(ii)
-  END DO
+  CALL Set(obj1=VALUE, dofobj1=dofvalue, idof1=global_idofvalue, &
+           obj2=obj, dofobj2=dofobj, idof2=global_idofobj)
 
 END DO
 
@@ -364,7 +298,7 @@ END PROCEDURE obj_GetValue_17
 
 MODULE PROCEDURE obj_GetValue18
 VALUE = obj%val(GetIndex(obj=dofobj, nodenum=nodenum, ivar=ivar, &
-                         spacecompo=spacecompo, timecompo=timecompo))
+                         spaceCompo=spaceCompo, timeCompo=timeCompo))
 END PROCEDURE obj_GetValue18
 
 !----------------------------------------------------------------------------
@@ -373,8 +307,8 @@ END PROCEDURE obj_GetValue18
 
 MODULE PROCEDURE obj_GetValue_18
 INTEGER(I4B) :: idof
-idof = GetIDOF(obj=dofobj, ivar=ivar, spacecompo=spacecompo, &
-               timecompo=timecompo)
+idof = GetIDOF(obj=dofobj, ivar=ivar, spaceCompo=spaceCompo, &
+               timeCompo=timeCompo)
 CALL DOF_GetValue_(v=VALUE, val=obj%val, obj=dofobj, idof=idof, &
                    nodenum=nodenum, tsize=tsize)
 END PROCEDURE obj_GetValue_18
@@ -430,8 +364,8 @@ END PROCEDURE obj_GetValue_20
 
 MODULE PROCEDURE obj_GetValue21
 INTEGER(I4B) :: global_idof
-global_idof = GetIDOF(obj=dofobj, ivar=ivar, spacecompo=spacecompo, &
-                      timecompo=timecompo)
+global_idof = GetIDOF(obj=dofobj, ivar=ivar, spaceCompo=spaceCompo, &
+                      timeCompo=timeCompo)
 CALL GetValue(obj=obj, dofobj=dofobj, idof=global_idof, &
               VALUE=VALUE)
 END PROCEDURE obj_GetValue21
@@ -442,8 +376,8 @@ END PROCEDURE obj_GetValue21
 
 MODULE PROCEDURE obj_GetValue_21
 INTEGER(I4B) :: global_idof
-global_idof = GetIDOF(obj=dofobj, ivar=ivar, spacecompo=spacecompo, &
-                      timecompo=timecompo)
+global_idof = GetIDOF(obj=dofobj, ivar=ivar, spaceCompo=spaceCompo, &
+                      timeCompo=timeCompo)
 CALL GetValue_(obj=obj, dofobj=dofobj, idof=global_idof, &
                VALUE=VALUE, tsize=tsize)
 END PROCEDURE obj_GetValue_21
