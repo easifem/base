@@ -31,6 +31,12 @@ PUBLIC :: Add
 !> author: Vikas Sharma, Ph. D.
 ! date: 26 June 2021
 ! summary: Add all values to given scalar
+!
+!# Introduction
+!
+!@note
+!   We call F77_AXPY in this method
+!@endnote
 
 INTERFACE Add
   MODULE SUBROUTINE obj_add1(obj, VALUE, scale)
@@ -47,12 +53,19 @@ END INTERFACE Add
 !> author: Vikas Sharma, Ph. D.
 ! date: 26 June 2021
 ! summary: Add all values by given vector
+!
+!@note
+!   We call F95_AXPY in this method
+!@endnote
 
 INTERFACE Add
   MODULE SUBROUTINE obj_add2(obj, VALUE, scale)
     CLASS(RealVector_), INTENT(INOUT) :: obj
+    !! obj = obj + scale*VALUE
     REAL(DFP), INTENT(IN) :: VALUE(:)
+    !! Size of value should be equal to the size of obj
     REAL(DFP), INTENT(IN) :: scale
+    !! scale
   END SUBROUTINE obj_add2
 END INTERFACE Add
 
@@ -114,13 +127,20 @@ END INTERFACE Add
 !> author: Vikas Sharma, Ph. D.
 ! date: 26 June 2021
 ! summary: Add range of values to a scalar
+!
+!@note
+!   We call F77_AXPY in this method
+!@endnote
 
 INTERFACE Add
   MODULE SUBROUTINE obj_add6(obj, istart, iend, stride, VALUE, scale)
     CLASS(RealVector_), INTENT(INOUT) :: obj
     INTEGER(I4B), INTENT(IN) :: istart, iend, stride
+    !! range of values to be added
     REAL(DFP), INTENT(IN) :: VALUE
+    !! scalar value
     REAL(DFP), INTENT(IN) :: scale
+    !! scale
   END SUBROUTINE obj_add6
 END INTERFACE Add
 
@@ -131,6 +151,10 @@ END INTERFACE Add
 !> author: Vikas Sharma, Ph. D.
 ! date: 26 June 2021
 ! summary: Add range of values to a vector
+!
+!@note!
+! We call F77_AXPY
+!@endnote
 
 INTERFACE Add
   MODULE SUBROUTINE obj_add7(obj, istart, iend, stride, VALUE, scale)
@@ -151,7 +175,7 @@ END INTERFACE Add
 
 INTERFACE Add
   MODULE PURE SUBROUTINE obj_add8(obj, dofobj, nodenum, VALUE, &
-    & scale, conversion)
+                                  scale, conversion)
     TYPE(Realvector_), INTENT(INOUT) :: obj
     CLASS(DOF_), INTENT(IN) :: dofobj
     INTEGER(I4B), INTENT(IN) :: nodenum(:)
@@ -171,7 +195,7 @@ END INTERFACE Add
 
 INTERFACE Add
   MODULE PURE SUBROUTINE obj_add9(obj, dofobj, nodenum, VALUE, &
-    & scale)
+                                  scale)
     TYPE(Realvector_), INTENT(INOUT) :: obj
     CLASS(DOF_), INTENT(IN) :: dofobj
     INTEGER(I4B), INTENT(IN) :: nodenum(:)
@@ -190,7 +214,7 @@ END INTERFACE Add
 
 INTERFACE Add
   MODULE PURE SUBROUTINE obj_add10(obj, dofobj, nodenum, VALUE, &
-    & scale, idof)
+                                   scale, idof)
     TYPE(Realvector_), INTENT(INOUT) :: obj
     CLASS(DOF_), INTENT(IN) :: dofobj
     INTEGER(I4B), INTENT(IN) :: nodenum(:)
@@ -210,7 +234,7 @@ END INTERFACE Add
 
 INTERFACE Add
   MODULE PURE SUBROUTINE obj_add11(obj, dofobj, nodenum, VALUE, &
-    & scale, idof)
+                                   scale, idof)
     TYPE(Realvector_), INTENT(INOUT) :: obj
     CLASS(DOF_), INTENT(IN) :: dofobj
     INTEGER(I4B), INTENT(IN) :: nodenum(:)
@@ -230,7 +254,7 @@ END INTERFACE Add
 
 INTERFACE Add
   MODULE PURE SUBROUTINE obj_add12(obj, dofobj, nodenum, VALUE, &
-    & scale, ivar, idof)
+                                   scale, ivar, idof)
     TYPE(Realvector_), INTENT(INOUT) :: obj
     CLASS(DOF_), INTENT(IN) :: dofobj
     INTEGER(I4B), INTENT(IN) :: nodenum(:)
@@ -251,7 +275,7 @@ END INTERFACE Add
 
 INTERFACE Add
   MODULE PURE SUBROUTINE obj_add13(obj, dofobj, nodenum, VALUE, &
-    & scale, ivar, idof)
+                                   scale, ivar, idof)
     TYPE(Realvector_), INTENT(INOUT) :: obj
     CLASS(DOF_), INTENT(IN) :: dofobj
     INTEGER(I4B), INTENT(IN) :: nodenum(:)
@@ -272,7 +296,7 @@ END INTERFACE Add
 
 INTERFACE Add
   MODULE PURE SUBROUTINE obj_add14(obj, dofobj, nodenum, VALUE, &
-    & scale, ivar, spacecompo, timecompo)
+                                   scale, ivar, spacecompo, timecompo)
     TYPE(Realvector_), INTENT(INOUT) :: obj
     CLASS(DOF_), INTENT(IN) :: dofobj
     INTEGER(I4B), INTENT(IN) :: nodenum(:)
@@ -294,7 +318,7 @@ END INTERFACE Add
 
 INTERFACE Add
   MODULE PURE SUBROUTINE obj_add15(obj, dofobj, nodenum, VALUE, &
-    & scale, ivar, spacecompo, timecompo)
+                                   scale, ivar, spacecompo, timecompo)
     TYPE(Realvector_), INTENT(INOUT) :: obj
     CLASS(DOF_), INTENT(IN) :: dofobj
     INTEGER(I4B), INTENT(IN) :: nodenum(:)
@@ -316,7 +340,7 @@ END INTERFACE Add
 
 INTERFACE Add
   MODULE PURE SUBROUTINE obj_add16(obj, dofobj, nodenum, VALUE, &
-    & scale, ivar, spacecompo, timecompo)
+                                   scale, ivar, spacecompo, timecompo)
     TYPE(Realvector_), INTENT(INOUT) :: obj
     CLASS(DOF_), INTENT(IN) :: dofobj
     INTEGER(I4B), INTENT(IN) :: nodenum(:)
@@ -338,7 +362,7 @@ END INTERFACE Add
 
 INTERFACE Add
   MODULE PURE SUBROUTINE obj_add17(obj, dofobj, nodenum, VALUE, &
-    & scale, ivar, spacecompo, timecompo)
+                                   scale, ivar, spacecompo, timecompo)
     TYPE(Realvector_), INTENT(INOUT) :: obj
     CLASS(DOF_), INTENT(IN) :: dofobj
     INTEGER(I4B), INTENT(IN) :: nodenum(:)
@@ -534,6 +558,33 @@ INTERFACE Add
     CLASS(RealVector_), INTENT(IN) :: VALUE
     REAL(DFP), INTENT(IN) :: scale
   END SUBROUTINE obj_add26
+END INTERFACE Add
+
+!----------------------------------------------------------------------------
+!                                                            set@SetMethod
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2024-05-29
+! summary: obj = obj + scale*VALUE
+!
+!# Introduction
+!
+! Value contains the nodal values of all dofs
+! Number of rows in values should be at least equal to the total dof in obj
+! Number of columns in values should be at least equal to the total nodes in obj
+
+INTERFACE Add
+  MODULE SUBROUTINE obj_add27(obj, dofobj, VALUE, scale)
+    CLASS(RealVector_), INTENT(INOUT) :: obj
+    !! real vector
+    TYPE(DOF_), INTENT(IN) :: dofobj
+    !! degree of freedom object
+    REAL(DFP), INTENT(IN) :: VALUE(:, :)
+    !! number of rows should be equal to the total dof in obj
+    !! number of columns should be equal to the total nodes in obj
+    REAL(DFP), INTENT(IN) :: scale
+  END SUBROUTINE obj_add27
 END INTERFACE Add
 
 END MODULE RealVector_AddMethods
