@@ -307,6 +307,47 @@ CALL obj_Add7(obj=obj, istart=s(1), iend=s(2), stride=s(3), scale=scale, &
 END PROCEDURE obj_Add28
 
 !----------------------------------------------------------------------------
+!                                                                       set
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE obj_Add29
+INTEGER(I4B) :: s1(3), s2(3)
+INTEGER(I4B) :: N
+
+s1 = GetNodeLoc(obj=dofobj1, idof=idof1)
+s2 = GetNodeLoc(obj=dofobj2, idof=idof2)
+
+N = (s1(2) - s1(1) + s1(3)) / s1(3)
+
+CALL F77_AXPY(N=N, A=scale, X=obj2%val(s2(1):), INCX=s2(3), &
+              Y=obj1%val(s1(1):), INCY=s1(3))
+END PROCEDURE obj_Add29
+
+!----------------------------------------------------------------------------
+!                                                                       set
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE obj_Add30
+INTEGER(I4B) :: ii, jj
+DO ii = istart, iend, stride
+  jj = GetNodeLoc(obj=dofobj, idof=idof, nodenum=ii)
+  obj%val(jj) = obj%val(jj) + scale * VALUE
+END DO
+END PROCEDURE obj_Add30
+
+!----------------------------------------------------------------------------
+!                                                                       set
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE obj_Add31
+INTEGER(I4B) :: ii, jj
+DO ii = istart, iend, stride
+  jj = GetNodeLoc(obj=dofobj, idof=idof, nodenum=ii)
+  obj%val(jj) = obj%val(jj) + scale * VALUE((ii - istart + stride) / stride)
+END DO
+END PROCEDURE obj_Add31
+
+!----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 

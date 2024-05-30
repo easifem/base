@@ -312,6 +312,30 @@ CALL F77_Copy(N=N, X=obj2%val(s2(1):), INCX=s2(3), Y=obj1%val(s1(1):), &
 END PROCEDURE obj_Set29
 
 !----------------------------------------------------------------------------
+!                                                                       set
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE obj_Set30
+INTEGER(I4B) :: ii, jj
+DO ii = istart, iend, stride
+  jj = GetNodeLoc(obj=dofobj, idof=idof, nodenum=ii)
+  obj%val(jj) = VALUE
+END DO
+END PROCEDURE obj_Set30
+
+!----------------------------------------------------------------------------
+!                                                                       set
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE obj_Set31
+INTEGER(I4B) :: ii, jj
+DO ii = istart, iend, stride
+  jj = GetNodeLoc(obj=dofobj, idof=idof, nodenum=ii)
+  obj%val(jj) = VALUE((ii - istart + stride) / stride)
+END DO
+END PROCEDURE obj_Set31
+
+!----------------------------------------------------------------------------
 !                                                                      set
 !----------------------------------------------------------------------------
 

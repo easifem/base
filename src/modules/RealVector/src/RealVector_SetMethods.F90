@@ -656,7 +656,7 @@ INTERFACE Set
 END INTERFACE Set
 
 !----------------------------------------------------------------------------
-!                                                                       Set
+!                                                                        Set
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -678,7 +678,7 @@ INTERFACE Set
 END INTERFACE Set
 
 !----------------------------------------------------------------------------
-!                                                                       Set
+!                                                                        Set
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -700,6 +700,51 @@ INTERFACE Set
     INTEGER(I4B), INTENT(IN) :: idof2
     !! global degree of freedom in dof2
   END SUBROUTINE obj_Set29
+END INTERFACE Set
+
+!----------------------------------------------------------------------------
+!                                                                        Set
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2024-05-30
+! summary: Set range of values to a scalar
+
+INTERFACE Set
+  MODULE SUBROUTINE obj_Set30(obj, dofobj, istart, iend, stride, VALUE, idof)
+    TYPE(RealVector_), INTENT(INOUT) :: obj
+    TYPE(DOF_), INTENT(IN) :: dofobj
+    !! degree of freedom object
+    INTEGER(I4B), INTENT(IN) :: istart, iend, stride
+    !! range of values to set
+    REAL(DFP), INTENT(IN) :: VALUE
+    !! Scalar value
+    INTEGER(I4B), INTENT(IN) :: idof
+    !! global degree of freedom number
+  END SUBROUTINE obj_Set30
+END INTERFACE Set
+
+!----------------------------------------------------------------------------
+!                                                                        Set
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2024-05-30
+! summary: Set range of values to a vector
+
+INTERFACE Set
+  MODULE SUBROUTINE obj_Set31(obj, dofobj, istart, iend, stride, VALUE, idof)
+    TYPE(RealVector_), INTENT(INOUT) :: obj
+    !! ob(istart:iend:stride)=VALUE
+    TYPE(DOF_), INTENT(IN) :: dofobj
+    !! degree of freedom object
+    INTEGER(I4B), INTENT(IN) :: istart, iend, stride
+    !! range of values to set
+    REAL(DFP), INTENT(IN) :: VALUE(:)
+    !! vector value
+    INTEGER(I4B), INTENT(IN) :: idof
+    !! global degree of freedom number
+  END SUBROUTINE obj_Set31
 END INTERFACE Set
 
 END MODULE RealVector_SetMethods

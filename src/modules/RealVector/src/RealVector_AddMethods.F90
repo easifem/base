@@ -611,4 +611,83 @@ INTERFACE Add
   END SUBROUTINE obj_Add28
 END INTERFACE Add
 
+!----------------------------------------------------------------------------
+!                                                                       Add
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2024-05-29
+! summary: obj = obj + scale*VALUE
+
+INTERFACE Add
+  MODULE SUBROUTINE obj_Add29(obj1, dofobj1, idof1, obj2, dofobj2, idof2, &
+                              scale)
+    TYPE(RealVector_), INTENT(INOUT) :: obj1
+    !! real vector
+    TYPE(DOF_), INTENT(IN) :: dofobj1
+    !! degree of freedom object
+    INTEGER(I4B), INTENT(IN) :: idof1
+    !! global degree of freedom in dof1
+    TYPE(RealVector_), INTENT(IN) :: obj2
+    !! real vector
+    TYPE(DOF_), INTENT(IN) :: dofobj2
+    !! degree of freedom object
+    INTEGER(I4B), INTENT(IN) :: idof2
+    !! global degree of freedom in dof2
+    REAL(DFP), INTENT(IN) :: scale
+    !! Scale
+  END SUBROUTINE obj_Add29
+END INTERFACE Add
+
+!----------------------------------------------------------------------------
+!                                                                        Add
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2024-05-30
+! summary: Add range of values to a scalar
+
+INTERFACE Add
+  MODULE SUBROUTINE obj_Add30(obj, dofobj, istart, iend, stride, VALUE, &
+                              idof, scale)
+    TYPE(RealVector_), INTENT(INOUT) :: obj
+    TYPE(DOF_), INTENT(IN) :: dofobj
+    !! degree of freedom object
+    INTEGER(I4B), INTENT(IN) :: istart, iend, stride
+    !! range of values to set
+    REAL(DFP), INTENT(IN) :: VALUE
+    !! Scalar value
+    INTEGER(I4B), INTENT(IN) :: idof
+    !! global degree of freedom number
+    REAL(DFP), INTENT(IN) :: scale
+    !! scale
+  END SUBROUTINE obj_Add30
+END INTERFACE Add
+
+!----------------------------------------------------------------------------
+!                                                                        Add
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2024-05-30
+! summary: Add range of values to a vector
+
+INTERFACE Add
+  MODULE SUBROUTINE obj_Add31(obj, dofobj, istart, iend, stride, VALUE, &
+                              idof, scale)
+    TYPE(RealVector_), INTENT(INOUT) :: obj
+    !! ob(istart:iend:stride)=VALUE
+    TYPE(DOF_), INTENT(IN) :: dofobj
+    !! degree of freedom object
+    INTEGER(I4B), INTENT(IN) :: istart, iend, stride
+    !! range of values to set
+    REAL(DFP), INTENT(IN) :: VALUE(:)
+    !! vector value
+    INTEGER(I4B), INTENT(IN) :: idof
+    !! global degree of freedom number
+    REAL(DFP), INTENT(IN) :: scale
+    !! scale
+  END SUBROUTINE obj_Add31
+END INTERFACE Add
+
 END MODULE RealVector_AddMethods
