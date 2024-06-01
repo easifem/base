@@ -1229,6 +1229,36 @@ INTERFACE GetNodeLoc_
 END INTERFACE GetNodeLoc_
 
 !----------------------------------------------------------------------------
+!                                                              GetNodeLoc_
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2024-06-01
+! summary: This routine returns the location of node
+
+INTERFACE GetNodeLoc_
+  MODULE PURE SUBROUTINE obj_GetNodeLoc_14(obj, nodenum, idof, ans, nrow, &
+                                           ncol, storageFMT)
+    TYPE(DOF_), INTENT(IN) :: obj
+    INTEGER(I4B), INTENT(IN) :: nodenum(:)
+    !! node numbers
+    INTEGER(I4B), INTENT(IN) :: idof(:)
+    !! physical variable number
+    INTEGER(I4B), INTENT(INOUT) :: ans(:, :)
+    !! returned location of nodenum
+    INTEGER(I4B), INTENT(OUT) :: nrow
+    !! number of rows written in ans
+    INTEGER(I4B), INTENT(OUT) :: ncol
+    !! number of cols written in ans
+    INTEGER(I4B), INTENT(IN) :: storageFMT
+    !! if storageFMT is NODES_FMT, then
+    !! nrow is size(idofs) and ncol is size(nodenum)
+    !! if storageFMT is DOF_FMT, then
+    !! nrow is size(nodenum) and ncol is size(idofs)
+  END SUBROUTINE obj_GetNodeLoc_14
+END INTERFACE GetNodeLoc_
+
+!----------------------------------------------------------------------------
 !                                                         GetIndex
 !----------------------------------------------------------------------------
 

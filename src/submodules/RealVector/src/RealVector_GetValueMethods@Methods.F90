@@ -427,6 +427,35 @@ END PROCEDURE obj_GetValue_23
 !                                                                 GetValue
 !----------------------------------------------------------------------------
 
+MODULE PROCEDURE obj_GetValue_24
+INTEGER(I4B) :: jj
+
+SELECT CASE (storageFMT)
+
+CASE (DOF_FMT)
+  ncol = SIZE(idof)
+
+  DO jj = 1, ncol
+   CALL GetValue_(obj=obj, dofobj=dofobj, idof=idof(jj:jj), nodenum=nodenum, &
+                 VALUE=VALUE(:, jj), tsize=nrow, storageFMT=dofobj%storageFMT)
+  END DO
+
+CASE (NODES_FMT)
+  ncol = SIZE(nodenum)
+
+  DO jj = 1, ncol
+   CALL GetValue_(obj=obj, dofobj=dofobj, idof=idof, nodenum=nodenum(jj:jj), &
+                 VALUE=VALUE(:, jj), tsize=nrow, storageFMT=dofobj%storageFMT)
+  END DO
+
+END SELECT
+
+END PROCEDURE obj_GetValue_24
+
+!----------------------------------------------------------------------------
+!                                                                 GetValue
+!----------------------------------------------------------------------------
+
 MODULE PROCEDURE obj_GetValue24
 CALL COPY(Y=VALUE%val, X=obj%val)
 END PROCEDURE obj_GetValue24

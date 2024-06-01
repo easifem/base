@@ -798,4 +798,30 @@ MODULE PROCEDURE obj_GetIndex6
 ans = GetIndex(obj=obj, ivar=NameToIndex(obj, varName), nodenum=nodenum)
 END PROCEDURE obj_GetIndex6
 
+!----------------------------------------------------------------------------
+!                                                           GetNodeLoc_
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE obj_GetNodeLoc_14
+INTEGER(I4B) :: jj
+
+IF (storageFMT .EQ. NODES_FMT) THEN
+
+  ncol = SIZE(nodenum)
+  DO jj = 1, ncol
+    CALL GetNodeLoc_(obj=obj, nodenum=nodenum(jj), idof=idof, &
+                     ans=ans(:, jj), tsize=nrow)
+  END DO
+
+  RETURN
+END IF
+
+ncol = SIZE(idof)
+DO jj = 1, ncol
+  CALL GetNodeLoc_(obj=obj, nodenum=nodenum, idof=idof(jj), &
+                   ans=ans(:, jj), tsize=nrow)
+END DO
+
+END PROCEDURE obj_GetNodeLoc_14
+
 END SUBMODULE Methods
