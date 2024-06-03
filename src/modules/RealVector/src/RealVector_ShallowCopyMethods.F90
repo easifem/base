@@ -16,171 +16,144 @@
 !
 
 MODULE RealVector_ShallowCopyMethods
-USE GlobalData
-USE BaseType
+USE GlobalData, ONLY: DFP, I4B, REAL32, REAL64
+USE BaseType, ONLY: RealVector_, DOF_
+
 IMPLICIT NONE
+
 PRIVATE
-PUBLIC :: SHALLOWCOPY
+PUBLIC :: ShallowCopy
 
 !----------------------------------------------------------------------------
-!                                            SHALLOWCOPY@ShallowCopyMethods
+!                                            ShallowCopy@ShallowCopyMethods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2024-05-28
+! summary: Copy only the structure for Y = X
+
+INTERFACE ShallowCopy
+  MODULE PURE SUBROUTINE obj_ShallowCopy1a(Y, X)
+    REAL(REAL32), ALLOCATABLE, INTENT(INOUT) :: Y(:)
+    REAL(REAL32), INTENT(IN) :: X(:)
+  END SUBROUTINE obj_ShallowCopy1a
+
+  MODULE PURE SUBROUTINE obj_ShallowCopy1b(Y, X)
+    REAL(REAL64), ALLOCATABLE, INTENT(INOUT) :: Y(:)
+    REAL(REAL64), INTENT(IN) :: X(:)
+  END SUBROUTINE obj_ShallowCopy1b
+
+  MODULE PURE SUBROUTINE obj_ShallowCopy1c(Y, X)
+    REAL(REAL64), ALLOCATABLE, INTENT(INOUT) :: Y(:)
+    REAL(REAL32), INTENT(IN) :: X(:)
+  END SUBROUTINE obj_ShallowCopy1c
+
+  MODULE PURE SUBROUTINE obj_ShallowCopy1d(Y, X)
+    REAL(REAL32), ALLOCATABLE, INTENT(INOUT) :: Y(:)
+    REAL(REAL64), INTENT(IN) :: X(:)
+  END SUBROUTINE obj_ShallowCopy1d
+END INTERFACE ShallowCopy
+
+!----------------------------------------------------------------------------
+!                                            ShallowCopy@ShallowCopyMethods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 26 |June 2021
 ! summary: Copy only the structure for Y = X
 
-INTERFACE
-  MODULE PURE SUBROUTINE realVec_SHALLOWCOPY1a(Y, X)
-    REAL(REAL32), ALLOCATABLE, INTENT(INOUT) :: Y(:)
-    REAL(REAL32), INTENT(IN) :: X(:)
-  END SUBROUTINE realVec_SHALLOWCOPY1a
-
-  MODULE PURE SUBROUTINE realVec_SHALLOWCOPY1b(Y, X)
-    REAL(REAL64), ALLOCATABLE, INTENT(INOUT) :: Y(:)
-    REAL(REAL64), INTENT(IN) :: X(:)
-  END SUBROUTINE realVec_SHALLOWCOPY1b
-
-  MODULE PURE SUBROUTINE realVec_SHALLOWCOPY1c(Y, X)
-    REAL(REAL64), ALLOCATABLE, INTENT(INOUT) :: Y(:)
-    REAL(REAL32), INTENT(IN) :: X(:)
-  END SUBROUTINE realVec_SHALLOWCOPY1c
-
-  MODULE PURE SUBROUTINE realVec_SHALLOWCOPY1d(Y, X)
-    REAL(REAL32), ALLOCATABLE, INTENT(INOUT) :: Y(:)
-    REAL(REAL64), INTENT(IN) :: X(:)
-  END SUBROUTINE realVec_SHALLOWCOPY1d
-END INTERFACE
-
-INTERFACE SHALLOWCOPY
-  MODULE PROCEDURE realVec_SHALLOWCOPY1a, realVec_SHALLOWCOPY1b, &
-    & realVec_SHALLOWCOPY1c, realVec_SHALLOWCOPY1d
-END INTERFACE SHALLOWCOPY
-
-!----------------------------------------------------------------------------
-!                                            SHALLOWCOPY@ShallowCopyMethods
-!----------------------------------------------------------------------------
-
-!> author: Vikas Sharma, Ph. D.
-! date: 26 |June 2021
-! summary: Copy only the structure for Y = X
-
-INTERFACE
-  MODULE PURE SUBROUTINE realVec_SHALLOWCOPY2(Y, X)
+INTERFACE ShallowCopy
+  MODULE PURE SUBROUTINE obj_ShallowCopy2(Y, X)
     TYPE(RealVector_), INTENT(INOUT) :: Y
     CLASS(RealVector_), INTENT(IN) :: X
-  END SUBROUTINE realVec_SHALLOWCOPY2
-END INTERFACE
-
-INTERFACE SHALLOWCOPY
-  MODULE PROCEDURE realVec_SHALLOWCOPY2
-END INTERFACE SHALLOWCOPY
+  END SUBROUTINE obj_ShallowCopy2
+END INTERFACE ShallowCopy
 
 !----------------------------------------------------------------------------
-!                                            SHALLOWCOPY@ShallowCopyMethods
+!                                            ShallowCopy@ShallowCopyMethods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 26 |June 2021
 ! summary: Copy only the structure for Y = X
 
-INTERFACE
-  MODULE PURE SUBROUTINE realVec_SHALLOWCOPY3(Y, X)
+INTERFACE ShallowCopy
+  MODULE PURE SUBROUTINE obj_ShallowCopy3(Y, X)
     TYPE(RealVector_), INTENT(INOUT), ALLOCATABLE :: Y(:)
     CLASS(RealVector_), INTENT(IN) :: X(:)
-  END SUBROUTINE realVec_SHALLOWCOPY3
-END INTERFACE
-
-INTERFACE SHALLOWCOPY
-  MODULE PROCEDURE realVec_SHALLOWCOPY3
-END INTERFACE SHALLOWCOPY
+  END SUBROUTINE obj_ShallowCopy3
+END INTERFACE ShallowCopy
 
 !----------------------------------------------------------------------------
-!                                            SHALLOWCOPY@ShallowCopyMethods
+!                                            ShallowCopy@ShallowCopyMethods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 26 |June 2021
 ! summary: Copy only the structure for Y = X
 
-INTERFACE
-  MODULE PURE SUBROUTINE realVec_SHALLOWCOPY4(Y, X)
+INTERFACE ShallowCopy
+  MODULE PURE SUBROUTINE obj_ShallowCopy4(Y, X)
     TYPE(RealVector_), INTENT(INOUT) :: Y
     CLASS(RealVector_), INTENT(IN) :: X(:)
-  END SUBROUTINE realVec_SHALLOWCOPY4
-END INTERFACE
-
-INTERFACE SHALLOWCOPY
-  MODULE PROCEDURE realVec_SHALLOWCOPY4
-END INTERFACE SHALLOWCOPY
+  END SUBROUTINE obj_ShallowCopy4
+END INTERFACE ShallowCopy
 
 !----------------------------------------------------------------------------
-!                                            SHALLOWCOPY@ShallowCopyMethods
+!                                            ShallowCopy@ShallowCopyMethods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 26 |June 2021
 ! summary: Copy only the structure for Y = X
 
-INTERFACE
-  MODULE PURE SUBROUTINE realVec_SHALLOWCOPY5a(Y, X)
+INTERFACE ShallowCopy
+  MODULE PURE SUBROUTINE obj_ShallowCopy5a(Y, X)
     CLASS(RealVector_), INTENT(INOUT) :: Y
     REAL(REAL32), INTENT(IN) :: X(:)
-  END SUBROUTINE realVec_SHALLOWCOPY5a
-  MODULE PURE SUBROUTINE realVec_SHALLOWCOPY5b(Y, X)
+  END SUBROUTINE obj_ShallowCopy5a
+  MODULE PURE SUBROUTINE obj_ShallowCopy5b(Y, X)
     CLASS(RealVector_), INTENT(INOUT) :: Y
     REAL(REAL64), INTENT(IN) :: X(:)
-  END SUBROUTINE realVec_SHALLOWCOPY5b
-END INTERFACE
-
-INTERFACE SHALLOWCOPY
-  MODULE PROCEDURE realVec_SHALLOWCOPY5a, realVec_SHALLOWCOPY5b
-END INTERFACE SHALLOWCOPY
+  END SUBROUTINE obj_ShallowCopy5b
+END INTERFACE ShallowCopy
 
 !----------------------------------------------------------------------------
-!                                            SHALLOWCOPY@ShallowCopyMethods
+!                                            ShallowCopy@ShallowCopyMethods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 26 |June 2021
 ! summary: Copy only the structure for Y = X
 
-INTERFACE
-  MODULE PURE SUBROUTINE realVec_SHALLOWCOPY6a(Y, X)
+INTERFACE ShallowCopy
+  MODULE PURE SUBROUTINE obj_ShallowCopy6a(Y, X)
     REAL(REAL32), ALLOCATABLE, INTENT(INOUT) :: Y(:)
     CLASS(RealVector_), INTENT(IN) :: X
-  END SUBROUTINE realVec_SHALLOWCOPY6a
-  MODULE PURE SUBROUTINE realVec_SHALLOWCOPY6b(Y, X)
+  END SUBROUTINE obj_ShallowCopy6a
+  MODULE PURE SUBROUTINE obj_ShallowCopy6b(Y, X)
     REAL(REAL64), ALLOCATABLE, INTENT(INOUT) :: Y(:)
     CLASS(RealVector_), INTENT(IN) :: X
-  END SUBROUTINE realVec_SHALLOWCOPY6b
-END INTERFACE
-
-INTERFACE SHALLOWCOPY
-  MODULE PROCEDURE realVec_SHALLOWCOPY6a, realVec_SHALLOWCOPY6b
-END INTERFACE SHALLOWCOPY
+  END SUBROUTINE obj_ShallowCopy6b
+END INTERFACE ShallowCopy
 
 !----------------------------------------------------------------------------
-!                                            SHALLOWCOPY@ShallowCopyMethods
+!                                            ShallowCopy@ShallowCopyMethods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 26 |June 2021
 ! summary: Copy only the structure for Y = X
 
-INTERFACE
-  MODULE PURE SUBROUTINE realVec_SHALLOWCOPY7a(Y, X)
+INTERFACE ShallowCopy
+  MODULE PURE SUBROUTINE obj_ShallowCopy7a(Y, X)
     REAL(REAL32), ALLOCATABLE, INTENT(INOUT) :: Y(:)
     CLASS(RealVector_), INTENT(IN) :: X(:)
-  END SUBROUTINE realVec_SHALLOWCOPY7a
-  MODULE PURE SUBROUTINE realVec_SHALLOWCOPY7b(Y, X)
+  END SUBROUTINE obj_ShallowCopy7a
+  MODULE PURE SUBROUTINE obj_ShallowCopy7b(Y, X)
     REAL(REAL64), ALLOCATABLE, INTENT(INOUT) :: Y(:)
     CLASS(RealVector_), INTENT(IN) :: X(:)
-  END SUBROUTINE realVec_SHALLOWCOPY7b
-END INTERFACE
-
-INTERFACE SHALLOWCOPY
-  MODULE PROCEDURE realVec_SHALLOWCOPY7a, realVec_SHALLOWCOPY7b
-END INTERFACE SHALLOWCOPY
+  END SUBROUTINE obj_ShallowCopy7b
+END INTERFACE ShallowCopy
 
 END MODULE RealVector_ShallowCopyMethods

@@ -16,15 +16,16 @@
 !
 
 MODULE DOF_SetMethods
-USE GlobalData
-USE BaseType
+USE GlobalData, ONLY: DFP, I4B, LGT
+USE BaseType, ONLY: DOF_
+
 IMPLICIT NONE
 PRIVATE
 
-PUBLIC :: set
+PUBLIC :: Set
 
 !----------------------------------------------------------------------------
-!                                                             set@setMethod
+!                                                             Set@SetMethod
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -33,58 +34,53 @@ PUBLIC :: set
 !
 !# Introduction
 !
-! - This subroutine is designed to set the values in a vector of real number
+! - This subroutine is designed to Set the values in a vector of real number
 ! - This subroutine effectivily performes `vec( nptrs ) = value`
-! - If `SIZE(value)==1` then all values are set to `value(1)`
-! - If `SIZE(value) .EQ. SIZE(nptrs)` then, each dof is set to value
-! - If `SIZE(value)=tDOF*Size(nptrs)` then each dof is set to appropriate
+! - If `SIZE(value)==1` then all values are Set to `value(1)`
+! - If `SIZE(value) .EQ. SIZE(nptrs)` then, each dof is Set to value
+! - If `SIZE(value)=tDOF*Size(nptrs)` then each dof is Set to appropriate
 ! value from value
 
-INTERFACE
-  MODULE PURE SUBROUTINE dof_set1(vec, obj, nodenum, VALUE, conversion)
+INTERFACE Set
+  MODULE PURE SUBROUTINE obj_Set1(vec, obj, nodenum, VALUE, conversion)
     REAL(DFP), INTENT(INOUT) :: vec(:)
     CLASS(DOF_), INTENT(IN) :: obj
-  !! `obj` contains the storage pattern of degrees of freedom
-  !! inside `vec`.
-  !! This storage pattern can be `FMT_Nodes` or `FMT_DOF`
+    !! `obj` contains the storage pattern of degrees of freedom
+    !! inside `vec`.
+    !! This storage pattern can be `FMT_Nodes` or `FMT_DOF`
     INTEGER(I4B), INTENT(IN) :: nodenum(:)
+    !! node number to set
     INTEGER(I4B), INTENT(IN) :: conversion(1)
-  !! DOFToNodes
-  !! NodesTODOF
-  !! None
+    !! DOFToNodes
+    !! NodesTODOF
+    !! None
     REAL(DFP), INTENT(IN) :: VALUE(:)
-  !! `value` denotes the nodal values of all dof defined inside `obj`.
-  !! The storage pattern in `value` can be `FMT_DOF` or `FMT_Nodes`.
-  END SUBROUTINE dof_set1
-END INTERFACE
-
-INTERFACE set
-  MODULE PROCEDURE dof_set1
-END INTERFACE set
+    !! `value` denotes the nodal values of all dof defined inside `obj`.
+    !! The storage pattern in `value` can be `FMT_DOF` or `FMT_Nodes`.
+  END SUBROUTINE obj_Set1
+END INTERFACE Set
 
 !----------------------------------------------------------------------------
-!                                                             set@setMethod
+!                                                             Set@SetMethod
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 26 June 2021
 ! summary: Set values in a vector of real numbers
 
-INTERFACE
-  MODULE PURE SUBROUTINE dof_set2(vec, obj, nodenum, VALUE)
+INTERFACE Set
+  MODULE PURE SUBROUTINE obj_Set2(vec, obj, nodenum, VALUE)
     REAL(DFP), INTENT(INOUT) :: vec(:)
     CLASS(DOF_), INTENT(IN) :: obj
     INTEGER(I4B), INTENT(IN) :: nodenum(:)
+    !! node number to set
     REAL(DFP), INTENT(IN) :: VALUE
-  END SUBROUTINE dof_set2
-END INTERFACE
-
-INTERFACE set
-  MODULE PROCEDURE dof_set2
-END INTERFACE set
+    !! scalar value
+  END SUBROUTINE obj_Set2
+END INTERFACE Set
 
 !----------------------------------------------------------------------------
-!                                                             set@setMethod
+!                                                             Set@SetMethod
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -93,7 +89,7 @@ END INTERFACE set
 !
 !# Introduction
 !
-! - This subroutine is designed to set the values in a array of real number.
+! - This subroutine is designed to Set the values in a array of real number.
 ! - This subroutine handles only those entries which belongs to the
 ! dofno.
 ! - This subroutine effectivily performes `vec( nptrs ) = value`
@@ -106,170 +102,155 @@ END INTERFACE set
 ! variables will not start from 1.
 !@endnote
 
-INTERFACE
-  MODULE PURE SUBROUTINE dof_set3(vec, obj, nodenum, VALUE, idof)
+INTERFACE Set
+  MODULE PURE SUBROUTINE obj_Set3(vec, obj, nodenum, VALUE, idof)
     REAL(DFP), INTENT(INOUT) :: vec(:)
     CLASS(DOF_), INTENT(IN) :: obj
-  !! Object `obj` contains the storage pattern of degrees of freedom
-  !! inside `vec`.
-  !! This storage pattern can be `FMT_Nodes` or `FMT_DOF`
+    !! Object `obj` contains the storage pattern of degrees of freedom
+    !! inside `vec`.
+    !! This storage pattern can be `FMT_Nodes` or `FMT_DOF`
     INTEGER(I4B), INTENT(IN) :: nodenum(:)
-  !! node number
+    !! node number
     REAL(DFP), INTENT(IN) :: VALUE(:)
-  !! `value` denotes the nodal values of dof `idof`.
+    !! `value` denotes the nodal values of dof `idof`.
     INTEGER(I4B), INTENT(IN) :: idof
-  END SUBROUTINE dof_set3
-END INTERFACE
-
-INTERFACE set
-  MODULE PROCEDURE dof_set3
-END INTERFACE set
+    !! global degree of freedom in obj
+  END SUBROUTINE obj_Set3
+END INTERFACE Set
 
 !----------------------------------------------------------------------------
-!                                                             set@setMethod
+!                                                             Set@SetMethod
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 27 June 2021
 ! summary: Set values in a vector of real numbers
 
-INTERFACE
-  MODULE PURE SUBROUTINE dof_set4(vec, obj, nodenum, VALUE, ivar, idof)
+INTERFACE Set
+  MODULE PURE SUBROUTINE obj_Set4(vec, obj, nodenum, VALUE, ivar, idof)
     REAL(DFP), INTENT(INOUT) :: vec(:)
     CLASS(DOF_), INTENT(IN) :: obj
-  !! Object `obj` contains the storage pattern of degrees of freedom
-  !! inside `vec`.
-  !! This storage pattern can be `FMT_Nodes` or `FMT_DOF`
+    !! Object `obj` contains the storage pattern of degrees of freedom
+    !! inside `vec`.
+    !! This storage pattern can be `FMT_Nodes` or `FMT_DOF`
     INTEGER(I4B), INTENT(IN) :: nodenum(:)
-  !! node number
+    !! node number
     REAL(DFP), INTENT(IN) :: VALUE(:)
-  !! `value` denotes the nodal values of dof `idof`.
+    !! `value` denotes the nodal values of dof `idof`.
     INTEGER(I4B), INTENT(IN) :: ivar
-  !! physical variable
+    !! physical variable
     INTEGER(I4B), INTENT(IN) :: idof
-  END SUBROUTINE dof_set4
-END INTERFACE
-
-INTERFACE set
-  MODULE PROCEDURE dof_set4
-END INTERFACE set
+  END SUBROUTINE obj_Set4
+END INTERFACE Set
 
 !----------------------------------------------------------------------------
-!                                                             set@setMethod
+!                                                             Set@SetMethod
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 27 June 2021
 ! summary: Set values in a vector of real numbers
 
-INTERFACE
-  MODULE PURE SUBROUTINE dof_set5(vec, obj, nodenum, VALUE, ivar, &
-      & spacecompo, timecompo)
+INTERFACE Set
+  MODULE PURE SUBROUTINE obj_Set5(vec, obj, nodenum, VALUE, ivar, &
+                                  spacecompo, timecompo)
     REAL(DFP), INTENT(INOUT) :: vec(:)
     CLASS(DOF_), INTENT(IN) :: obj
-  !! Object `obj` contains the storage pattern of degrees of freedom
-  !! inside `vec`.
-  !! This storage pattern can be `FMT_Nodes` or `FMT_DOF`
+    !! Object `obj` contains the storage pattern of degrees of freedom
+    !! inside `vec`.
+    !! This storage pattern can be `FMT_Nodes` or `FMT_DOF`
     INTEGER(I4B), INTENT(IN) :: nodenum(:)
-  !! node number
+    !! node number
     REAL(DFP), INTENT(IN) :: VALUE(:)
-  !! `value` denotes the nodal values of dof `idof`.
+    !! `value` denotes the nodal values of dof `idof`.
     INTEGER(I4B), INTENT(IN) :: ivar
-  !! physical variable
+    !! physical variable
     INTEGER(I4B), INTENT(IN) :: spacecompo
+    !! space component of physical variable
     INTEGER(I4B), INTENT(IN) :: timecompo
-  END SUBROUTINE dof_set5
-END INTERFACE
-
-INTERFACE set
-  MODULE PROCEDURE dof_set5
-END INTERFACE set
+    !! time component of physical  variable
+  END SUBROUTINE obj_Set5
+END INTERFACE Set
 
 !----------------------------------------------------------------------------
-!                                                             set@setMethod
+!                                                             Set@SetMethod
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 27 June 2021
 ! summary: Set values in a vector of real numbers
 
-INTERFACE
-  MODULE PURE SUBROUTINE dof_set6(vec, obj, nodenum, VALUE, ivar, &
-      & spacecompo, timecompo)
+INTERFACE Set
+  MODULE PURE SUBROUTINE obj_Set6(vec, obj, nodenum, VALUE, ivar, &
+                                  spacecompo, timecompo)
     REAL(DFP), INTENT(INOUT) :: vec(:)
     CLASS(DOF_), INTENT(IN) :: obj
-  !! Object `obj` contains the storage pattern of degrees of freedom
-  !! inside `vec`.
-  !! This storage pattern can be `FMT_Nodes` or `FMT_DOF`
+    !! Object `obj` contains the storage pattern of degrees of freedom
+    !! inside `vec`.
+    !! This storage pattern can be `FMT_Nodes` or `FMT_DOF`
     INTEGER(I4B), INTENT(IN) :: nodenum(:)
-  !! node number
+    !! node number
     REAL(DFP), INTENT(IN) :: VALUE(:)
-  !! `value` denotes the nodal values of dof `idof`.
+    !! `value` denotes the nodal values of dof `idof`.
     INTEGER(I4B), INTENT(IN) :: ivar
-  !! physical variable
+    !! physical variable
     INTEGER(I4B), INTENT(IN) :: spacecompo
+    !! space component of physical variable
     INTEGER(I4B), INTENT(IN) :: timecompo(:)
-  END SUBROUTINE dof_set6
-END INTERFACE
-
-INTERFACE set
-  MODULE PROCEDURE dof_set6
-END INTERFACE set
+    !! time components of physical variables
+  END SUBROUTINE obj_Set6
+END INTERFACE Set
 
 !----------------------------------------------------------------------------
-!                                                             set@setMethod
+!                                                             Set@SetMethod
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 27 June 2021
 ! summary: Set values in a vector of real numbers
 
-INTERFACE
-  MODULE PURE SUBROUTINE dof_set7(vec, obj, nodenum, VALUE, ivar, &
-      & spacecompo, timecompo)
+INTERFACE Set
+  MODULE PURE SUBROUTINE obj_Set7(vec, obj, nodenum, VALUE, ivar, &
+                                  spacecompo, timecompo)
     REAL(DFP), INTENT(INOUT) :: vec(:)
     CLASS(DOF_), INTENT(IN) :: obj
-  !! Object `obj` contains the storage pattern of degrees of freedom
-  !! inside `vec`.
-  !! This storage pattern can be `FMT_Nodes` or `FMT_DOF`
+    !! Object `obj` contains the storage pattern of degrees of freedom
+    !! inside `vec`.
+    !! This storage pattern can be `FMT_Nodes` or `FMT_DOF`
     INTEGER(I4B), INTENT(IN) :: nodenum(:)
-  !! node number
+    !! node number
     REAL(DFP), INTENT(IN) :: VALUE(:)
-  !! `value` denotes the nodal values of dof `idof`.
+    !! `value` denotes the nodal values of dof `idof`.
     INTEGER(I4B), INTENT(IN) :: ivar
-  !! physical variable
+    !! physical variable
     INTEGER(I4B), INTENT(IN) :: spacecompo(:)
+    !! space components of physical variables
     INTEGER(I4B), INTENT(IN) :: timecompo
-  END SUBROUTINE dof_set7
-END INTERFACE
-
-INTERFACE set
-  MODULE PROCEDURE dof_set7
-END INTERFACE set
+    !! time component of physical variable
+  END SUBROUTINE obj_Set7
+END INTERFACE Set
 
 !----------------------------------------------------------------------------
-!                                                             set@setMethod
+!                                                             Set@SetMethod
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 26 June 2021
 ! summary: Set values in a vector of real numbers
 
-INTERFACE
-  MODULE PURE SUBROUTINE dof_set8(vec, obj, nodenum, VALUE)
+INTERFACE Set
+  MODULE PURE SUBROUTINE obj_Set8(vec, obj, nodenum, VALUE)
     REAL(DFP), INTENT(INOUT) :: vec(:)
     CLASS(DOF_), INTENT(IN) :: obj
     INTEGER(I4B), INTENT(IN) :: nodenum
+    !! node to set
     REAL(DFP), INTENT(IN) :: VALUE
-  END SUBROUTINE dof_set8
-END INTERFACE
-
-INTERFACE set
-  MODULE PROCEDURE dof_set8
-END INTERFACE set
+    !! scalar value
+  END SUBROUTINE obj_Set8
+END INTERFACE Set
 
 !----------------------------------------------------------------------------
-!                                                             set@setMethod
+!                                                             Set@SetMethod
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -278,7 +259,7 @@ END INTERFACE set
 !
 !# Introduction
 !
-! - This subroutine is designed to set the values in a array of real number.
+! - This subroutine is designed to Set the values in a array of real number.
 ! - This subroutine handles only those entries which belongs to the
 ! dofno.
 ! - This subroutine effectivily performes `vec( nptrs ) = value`
@@ -291,27 +272,24 @@ END INTERFACE set
 ! variables will not start from 1.
 !@endnote
 
-INTERFACE
-  MODULE PURE SUBROUTINE dof_set9(vec, obj, nodenum, VALUE, idof)
+INTERFACE Set
+  MODULE PURE SUBROUTINE obj_Set9(vec, obj, nodenum, VALUE, idof)
     REAL(DFP), INTENT(INOUT) :: vec(:)
     CLASS(DOF_), INTENT(IN) :: obj
-  !! Object `obj` contains the storage pattern of degrees of freedom
-  !! inside `vec`.
-  !! This storage pattern can be `FMT_Nodes` or `FMT_DOF`
+    !! Object `obj` contains the storage pattern of degrees of freedom
+    !! inside `vec`.
+    !! This storage pattern can be `FMT_Nodes` or `FMT_DOF`
     INTEGER(I4B), INTENT(IN) :: nodenum
-  !! node number
+    !! node number
     REAL(DFP), INTENT(IN) :: VALUE
-  !! `value` denotes the nodal values of dof `idof`.
+    !! `value` denotes the nodal values of dof `idof`.
     INTEGER(I4B), INTENT(IN) :: idof
-  END SUBROUTINE dof_set9
-END INTERFACE
-
-INTERFACE set
-  MODULE PROCEDURE dof_set9
-END INTERFACE set
+    !! global degree of freedom in obj
+  END SUBROUTINE obj_Set9
+END INTERFACE Set
 
 !----------------------------------------------------------------------------
-!                                                             set@setMethod
+!                                                             Set@SetMethod
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -320,7 +298,7 @@ END INTERFACE set
 !
 !# Introduction
 !
-! - This subroutine is designed to set the values in a array of real number.
+! - This subroutine is designed to Set the values in a array of real number.
 ! - This subroutine handles only those entries which belongs to the
 ! dofno.
 ! - This subroutine effectivily performes `vec( nptrs ) = value`
@@ -333,28 +311,26 @@ END INTERFACE set
 ! variables will not start from 1.
 !@endnote
 
-INTERFACE
-  MODULE PURE SUBROUTINE dof_set10(vec, obj, nodenum, VALUE, ivar, idof)
+INTERFACE Set
+  MODULE PURE SUBROUTINE obj_Set10(vec, obj, nodenum, VALUE, ivar, idof)
     REAL(DFP), INTENT(INOUT) :: vec(:)
     CLASS(DOF_), INTENT(IN) :: obj
-  !! object `obj` contains the storage pattern of degrees of freedom
-  !! inside `vec`.
-  !! This storage pattern can be `FMT_Nodes` or `FMT_DOF`
+    !! object `obj` contains the storage pattern of degrees of freedom
+    !! inside `vec`.
+    !! This storage pattern can be `FMT_Nodes` or `FMT_DOF`
     INTEGER(I4B), INTENT(IN) :: nodenum
-  !! node number
+    !! node number
     REAL(DFP), INTENT(IN) :: VALUE
-  !! `value` denotes the nodal values of dof `idof`.
+    !! `value` denotes the nodal values of dof `idof`.
     INTEGER(I4B), INTENT(IN) :: ivar
+    !! physical variable
     INTEGER(I4B), INTENT(IN) :: idof
-  END SUBROUTINE dof_set10
-END INTERFACE
-
-INTERFACE set
-  MODULE PROCEDURE dof_set10
-END INTERFACE set
+    !! local degree of freedom in physical variable
+  END SUBROUTINE obj_Set10
+END INTERFACE Set
 
 !----------------------------------------------------------------------------
-!                                                             set@setMethod
+!                                                             Set@SetMethod
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -363,7 +339,7 @@ END INTERFACE set
 !
 !# Introduction
 !
-! - This subroutine is designed to set the values in a array of real number.
+! - This subroutine is designed to Set the values in a array of real number.
 ! - This subroutine handles only those entries which belongs to the
 ! dofno.
 ! - This subroutine effectivily performes `vec( nptrs ) = value`
@@ -376,31 +352,29 @@ END INTERFACE set
 ! variables will not start from 1.
 !@endnote
 
-INTERFACE
-  MODULE PURE SUBROUTINE dof_set11(vec, obj, nodenum, VALUE, ivar, &
-    & spacecompo, timecompo)
+INTERFACE Set
+  MODULE PURE SUBROUTINE obj_Set11(vec, obj, nodenum, VALUE, ivar, &
+                                   spacecompo, timecompo)
     REAL(DFP), INTENT(INOUT) :: vec(:)
     CLASS(DOF_), INTENT(IN) :: obj
-  !! object `obj` contains the storage pattern of degrees of freedom
-  !! inside `vec`.
-  !! This storage pattern can be `FMT_Nodes` or `FMT_DOF`
+    !! object `obj` contains the storage pattern of degrees of freedom
+    !! inside `vec`.
+    !! This storage pattern can be `FMT_Nodes` or `FMT_DOF`
     INTEGER(I4B), INTENT(IN) :: nodenum
-  !! node number
+    !! node number
     REAL(DFP), INTENT(IN) :: VALUE
-  !! `value` denotes the nodal values of dof `idof`.
-
+    !! `value` denotes the nodal values of dof `idof`.
     INTEGER(I4B), INTENT(IN) :: ivar
+    !! physical variable
     INTEGER(I4B), INTENT(IN) :: spacecompo
+    !! space component of physical variable
     INTEGER(I4B), INTENT(IN) :: timecompo
-  END SUBROUTINE dof_set11
-END INTERFACE
-
-INTERFACE set
-  MODULE PROCEDURE dof_set11
-END INTERFACE set
+    !! time component of physical variable
+  END SUBROUTINE obj_Set11
+END INTERFACE Set
 
 !----------------------------------------------------------------------------
-!                                                             set@setMethod
+!                                                             Set@SetMethod
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -409,7 +383,7 @@ END INTERFACE set
 !
 !# Introduction
 !
-! - This subroutine is designed to set the values in a array of real number.
+! - This subroutine is designed to Set the values in a array of real number.
 ! - This subroutine handles only those entries which belongs to the
 ! dofno.
 ! - This subroutine effectivily performes `vec( nptrs ) = value`
@@ -422,31 +396,29 @@ END INTERFACE set
 ! variables will not start from 1.
 !@endnote
 
-INTERFACE
-  MODULE PURE SUBROUTINE dof_set12(vec, obj, nodenum, VALUE, ivar, &
-    & spacecompo, timecompo)
+INTERFACE Set
+  MODULE PURE SUBROUTINE obj_Set12(vec, obj, nodenum, VALUE, ivar, &
+                                   spacecompo, timecompo)
     REAL(DFP), INTENT(INOUT) :: vec(:)
     CLASS(DOF_), INTENT(IN) :: obj
-  !! object `obj` contains the storage pattern of degrees of freedom
-  !! inside `vec`.
-  !! This storage pattern can be `FMT_Nodes` or `FMT_DOF`
+    !! object `obj` contains the storage pattern of degrees of freedom
+    !! inside `vec`.
+    !! This storage pattern can be `FMT_Nodes` or `FMT_DOF`
     INTEGER(I4B), INTENT(IN) :: nodenum
-  !! node number
+    !! node number
     REAL(DFP), INTENT(IN) :: VALUE
-  !! `value` denotes the nodal values of dof `idof`.
-
+    !! `value` denotes the nodal values of dof `idof`.
     INTEGER(I4B), INTENT(IN) :: ivar
+    !! physical variable
     INTEGER(I4B), INTENT(IN) :: spacecompo
+    !! space component of physical variable
     INTEGER(I4B), INTENT(IN) :: timecompo(:)
-  END SUBROUTINE dof_set12
-END INTERFACE
-
-INTERFACE set
-  MODULE PROCEDURE dof_set12
-END INTERFACE set
+    !! time components of physical variables
+  END SUBROUTINE obj_Set12
+END INTERFACE Set
 
 !----------------------------------------------------------------------------
-!                                                             set@setMethod
+!                                                             Set@SetMethod
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -455,7 +427,7 @@ END INTERFACE set
 !
 !# Introduction
 !
-! - This subroutine is designed to set the values in a array of real number.
+! - This subroutine is designed to Set the values in a array of real number.
 ! - This subroutine handles only those entries which belongs to the
 ! dofno.
 ! - This subroutine effectivily performes `vec( nptrs ) = value`
@@ -468,27 +440,25 @@ END INTERFACE set
 ! variables will not start from 1.
 !@endnote
 
-INTERFACE
-  MODULE PURE SUBROUTINE dof_set13(vec, obj, nodenum, VALUE, ivar, &
-    & spacecompo, timecompo)
+INTERFACE Set
+  MODULE PURE SUBROUTINE obj_Set13(vec, obj, nodenum, VALUE, ivar, &
+                                   spacecompo, timecompo)
     REAL(DFP), INTENT(INOUT) :: vec(:)
     CLASS(DOF_), INTENT(IN) :: obj
-  !! object `obj` contains the storage pattern of degrees of freedom
-  !! inside `vec`.
-  !! This storage pattern can be `FMT_Nodes` or `FMT_DOF`
+    !! object `obj` contains the storage pattern of degrees of freedom
+    !! inside `vec`.
+    !! This storage pattern can be `FMT_Nodes` or `FMT_DOF`
     INTEGER(I4B), INTENT(IN) :: nodenum
-  !! node number
+    !! node number
     REAL(DFP), INTENT(IN) :: VALUE
-  !! `value` denotes the nodal values of dof `idof`.
-
+    !! `value` denotes the nodal values of dof `idof`.
     INTEGER(I4B), INTENT(IN) :: ivar
+    !! physical variable
     INTEGER(I4B), INTENT(IN) :: spacecompo(:)
+    !! space components of physical variables
     INTEGER(I4B), INTENT(IN) :: timecompo
-  END SUBROUTINE dof_set13
-END INTERFACE
-
-INTERFACE set
-  MODULE PROCEDURE dof_set13
-END INTERFACE set
+    !! time component of physical variable
+  END SUBROUTINE obj_Set13
+END INTERFACE Set
 
 END MODULE DOF_SetMethods

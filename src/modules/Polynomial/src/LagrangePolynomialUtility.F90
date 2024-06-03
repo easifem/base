@@ -22,7 +22,7 @@
 !{!pages/LagrangePolynomialUtility.md!}
 
 MODULE LagrangePolynomialUtility
-USE GlobalData
+USE GlobalData, ONLY: DFP, I4B, LGT
 USE String_Class, ONLY: String
 IMPLICIT NONE
 PRIVATE

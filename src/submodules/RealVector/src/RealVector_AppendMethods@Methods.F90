@@ -20,7 +20,7 @@
 ! summary:         This submodule contains set methods of [[RealVector_]]
 
 SUBMODULE(RealVector_AppendMethods) Methods
-USE BaseMethod
+USE AppendUtility, ONLY: Util_Append => Append
 IMPLICIT NONE
 CONTAINS
 
@@ -28,25 +28,25 @@ CONTAINS
 !                                                                     Append
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE realVec_Append1
-CALL Append(obj%val, VALUE)
-END PROCEDURE realVec_Append1
+MODULE PROCEDURE obj_Append1
+CALL Util_Append(obj%val, VALUE)
+END PROCEDURE obj_Append1
 
 !----------------------------------------------------------------------------
 !                                                                     Append
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE realVec_Append2
-CALL Append(obj%val, VALUE)
-END PROCEDURE realVec_Append2
+MODULE PROCEDURE obj_Append2
+CALL Util_Append(obj%val, VALUE)
+END PROCEDURE obj_Append2
 
 !----------------------------------------------------------------------------
 !                                                                     Append
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE realVec_Append3
-CALL Append(obj%val, Anotherobj%val)
-END PROCEDURE realVec_Append3
+MODULE PROCEDURE obj_Append3
+CALL Util_Append(obj%val, Anotherobj%val)
+END PROCEDURE obj_Append3
 
 !----------------------------------------------------------------------------
 !

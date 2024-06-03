@@ -76,9 +76,9 @@ PUBLIC :: GetElementIndex
 PUBLIC :: Reallocate
 PUBLIC :: RefTopoReallocate
 
-INTEGER(I4B), PARAMETER, PUBLIC :: REFELEM_MAX_FACES = 6
-INTEGER(I4B), PARAMETER, PUBLIC :: REFELEM_MAX_EDGES = 12
-INTEGER(I4B), PARAMETER, PUBLIC :: REFELEM_MAX_POINTS = 8
+INTEGER(I4B), PARAMETER, PUBLIC :: PARAM_REFELEM_MAX_FACES = 6
+INTEGER(I4B), PARAMETER, PUBLIC :: PARAM_REFELEM_MAX_EDGES = 12
+INTEGER(I4B), PARAMETER, PUBLIC :: PARAM_REFELEM_MAX_POINTS = 8
 
 !----------------------------------------------------------------------------
 !                                                      ReferenceElementInfo_
@@ -104,9 +104,9 @@ TYPE :: ReferenceElementInfo_
     & Triangle,  &
     & Quadrangle,  &
     & Tetrahedron, Hexahedron, Prism, Pyramid]
-  INTEGER(I4B) :: maxFaces = REFELEM_MAX_FACES
-  INTEGER(I4B) :: maxEdges = REFELEM_MAX_EDGES
-  INTEGER(I4B) :: maxPoints = REFELEM_MAX_POINTS
+  INTEGER(I4B) :: maxFaces = PARAM_REFELEM_MAX_FACES
+  INTEGER(I4B) :: maxEdges = PARAM_REFELEM_MAX_EDGES
+  INTEGER(I4B) :: maxPoints = PARAM_REFELEM_MAX_POINTS
   INTEGER(I4B) :: tCells(8) = [0, 0, 0, 0, 1, 1, 1, 1]
   !! Here cell is a topology for which xidim = 3
   INTEGER(I4B) :: tFaces(8) = [0, 0, 1, 1, 4, 6, 5, 5]
@@ -210,13 +210,14 @@ END INTERFACE GetTotalEdges
 ! summary:  Returns number of edges in the element
 
 INTERFACE GetEdgeConnectivity
-  MODULE PURE SUBROUTINE GetEdgeConnectivity1(elemType, con, opt, order)
+  MODULE PURE SUBROUTINE GetEdgeConnectivity1(elemType, con, opt, order, &
+                                              nrow, ncol)
     INTEGER(I4B), INTENT(IN) :: elemType
     !! name of element
     INTEGER(I4B), INTENT(INOUT) :: con(:, :)
     !! Connectivity
-    !! The columns represents the face number
-    !! The row represents a face
+    !! The columns represents the edge number
+    !! The row represents the connectivity of edge
     !! con should be allocated by the user
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: opt
     !! If opt = 1, then edge connectivity for hierarchial approximation
@@ -224,6 +225,10 @@ INTERFACE GetEdgeConnectivity
     !! opt=1 is default
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: order
     !! Order of element
+    INTEGER(I4B), OPTIONAL, INTENT(OUT) :: nrow
+    !! Number of rows written to con
+    INTEGER(I4B), OPTIONAL, INTENT(OUT) :: ncol
+    !! number of columns written to con
   END SUBROUTINE GetEdgeConnectivity1
 END INTERFACE GetEdgeConnectivity
 
@@ -236,7 +241,8 @@ END INTERFACE GetEdgeConnectivity
 ! summary:  Returns number of edges in the element
 
 INTERFACE GetFaceConnectivity
-  MODULE PURE SUBROUTINE GetFaceConnectivity1(elemType, con, opt, order)
+  MODULE PURE SUBROUTINE GetFaceConnectivity1(elemType, con, opt, order, &
+                                              nrow, ncol)
     INTEGER(I4B), INTENT(IN) :: elemType
     !! name of element
     INTEGER(I4B), INTENT(INOUT) :: con(:, :)
@@ -249,6 +255,11 @@ INTERFACE GetFaceConnectivity
     !! If opt = 2, then edge connectivity for Lagrangian approximation
     !! opt = 1 is default
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: order
+    !! order  of element
+    INTEGER(I4B), OPTIONAL, INTENT(OUT) :: nrow
+    !! Number of rows written to con
+    INTEGER(I4B), OPTIONAL, INTENT(OUT) :: ncol
+    !! number of columns written to con
   END SUBROUTINE GetFaceConnectivity1
 END INTERFACE GetFaceConnectivity
 

@@ -376,7 +376,8 @@ END INTERFACE QuadrangleArea2D
 ! summary:  Returns number of edges in the element
 
 INTERFACE
-  MODULE PURE SUBROUTINE GetEdgeConnectivity_Quadrangle(con, opt, order)
+  MODULE PURE SUBROUTINE GetEdgeConnectivity_Quadrangle(con, opt, order, &
+                                                        nrow, ncol)
     INTEGER(I4B), INTENT(INOUT) :: con(:, :)
     !! Connectivity
     !! The columns represents the edge number
@@ -388,6 +389,10 @@ INTERFACE
     !! opt=1 is default
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: order
     !! Order of the element
+    INTEGER(I4B), OPTIONAL, INTENT(OUT) :: nrow
+    !! Number of rows written in con
+    INTEGER(I4B), OPTIONAL, INTENT(OUT) :: ncol
+    !! Numbers of cols written in con
   END SUBROUTINE GetEdgeConnectivity_Quadrangle
 END INTERFACE
 
@@ -405,7 +410,8 @@ END INTERFACE
 ! with opt=2
 
 INTERFACE
-  MODULE PURE SUBROUTINE GetFaceConnectivity_Quadrangle(con, opt, order)
+  MODULE PURE SUBROUTINE GetFaceConnectivity_Quadrangle(con, opt, order, &
+                                                        nrow, ncol)
     INTEGER(I4B), INTENT(INOUT) :: con(:, :)
     !! Connectivity
     !! The columns represents the Face number
@@ -415,6 +421,10 @@ INTERFACE
     !! This option is not used
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: order
     !! Order of the element
+    INTEGER(I4B), OPTIONAL, INTENT(OUT) :: nrow
+    !! Number of rows written in con
+    INTEGER(I4B), OPTIONAL, INTENT(OUT) :: ncol
+    !! Numbers of cols written in con
   END SUBROUTINE GetFaceConnectivity_Quadrangle
 END INTERFACE
 

@@ -25,6 +25,8 @@ PUBLIC :: LagrangeDegree_Line
 PUBLIC :: LagrangeDOF_Point
 PUBLIC :: LagrangeDOF_Line
 PUBLIC :: LagrangeInDOF_Line
+PUBLIC :: GetTotalDOF_Line
+PUBLIC :: GetTotalInDOF_Line
 PUBLIC :: EquidistanceInPoint_Line
 PUBLIC :: EquidistancePoint_Line
 PUBLIC :: InterpolationPoint_Line
@@ -160,6 +162,50 @@ INTERFACE
     INTEGER(I4B), INTENT(IN) :: order
     INTEGER(I4B) :: ans
   END FUNCTION LagrangeInDOF_Line
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                         GetTotalDOF_Line
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 14 Aug 2022
+! summary: Returns the total number of degree of freedom for a
+! lagrange polynomial on Line
+
+INTERFACE
+  MODULE PURE FUNCTION GetTotalDOF_Line(order, baseContinuity, &
+                                        baseInterpolation) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: order
+    CHARACTER(*), INTENT(IN) :: baseContinuity
+    CHARACTER(*), INTENT(IN) :: baseInterpolation
+    INTEGER(I4B) :: ans
+  END FUNCTION GetTotalDOF_Line
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                        LagrangeInDOF_Line
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 14 Aug 2022
+! summary:         Returns the total number of degree of freedom for a
+! lagrange polynomial on an edge of a Line
+!
+!# Introduction
+!
+!- Returns the total number of degree of freedom for a
+! lagrange polynomial on an edge of a Line
+!- These dof are strictly inside the line
+
+INTERFACE
+  MODULE PURE FUNCTION GetTotalInDOF_Line(order, baseContinuity, &
+                                          baseInterpolation) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: order
+    CHARACTER(*), INTENT(IN) :: baseContinuity
+    CHARACTER(*), INTENT(IN) :: baseInterpolation
+    INTEGER(I4B) :: ans
+  END FUNCTION GetTotalInDOF_Line
 END INTERFACE
 
 !----------------------------------------------------------------------------

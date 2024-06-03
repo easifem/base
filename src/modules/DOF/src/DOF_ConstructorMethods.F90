@@ -16,9 +16,13 @@
 !
 
 MODULE DOF_ConstructorMethods
-USE GlobalData
-USE BaseType
+USE GlobalData, ONLY: DFP, I4B, LGT, FMT_DOF, FMT_NODES, DOF_FMT, &
+                      NODES_FMT
+
+USE BaseType, ONLY: DOF_
+
 IMPLICIT NONE
+
 PRIVATE
 
 PUBLIC :: Initiate
@@ -33,11 +37,11 @@ PUBLIC :: DOF
 
 !> author: Vikas Sharma, Ph. D.
 ! date:         23 Feb 2021
-! summary: This subroutine initiate [[DOF_]] object
+! summary: This subroutine initiate DOF_ object
 !
 !# Introduction
 !
-! This subroutine initiate [[DOF_]] object
+! This subroutine initiate DOF_ object
 !
 !- If the size of all physical variables are equal then set
 ! tNodes = [tNodes] otherwise we need to provide size of each dof
@@ -51,8 +55,8 @@ PUBLIC :: DOF
 !   its component $v_1, v_2, v_3$ all are degrees of freedom.
 !@endnote
 
-INTERFACE
-  MODULE PURE SUBROUTINE dof_initiate1(obj, tNodes, Names, spacecompo, &
+INTERFACE Initiate
+  MODULE PURE SUBROUTINE obj_initiate1(obj, tNodes, Names, spacecompo, &
     & timecompo, StorageFMT)
     CLASS(DOF_), INTENT(INOUT) :: obj
     !! degree of freedom object
@@ -66,11 +70,7 @@ INTERFACE
     !! Time component of each physical variable
     INTEGER(I4B), INTENT(IN) :: StorageFMT
     !! Storage format `FMT_DOF`, `FMT_Nodes`
-  END SUBROUTINE dof_initiate1
-END INTERFACE
-
-INTERFACE Initiate
-  MODULE PROCEDURE dof_initiate1
+  END SUBROUTINE obj_initiate1
 END INTERFACE Initiate
 
 !----------------------------------------------------------------------------
@@ -79,26 +79,22 @@ END INTERFACE Initiate
 
 !> author: Vikas Sharma, Ph. D.
 ! date:         23 Feb 2021
-! summary: Initiate a fortran vector using [[DOF_]] object
+! summary: Initiate a fortran vector using DOF_ object
 !
 !# Introduction
 !
 ! This subroutine initiates a fortran vector (rank-1 fortran array ) of
-! real using the information stored inside [[DOF_]] object. This subroutine
-! gets the size of array from the [[DOF_]] object and then reallocates
+! real using the information stored inside DOF_ object. This subroutine
+! gets the size of array from the DOF_ object and then reallocates
 ! `val` and set its all values to zero.
 
-INTERFACE
-  MODULE PURE SUBROUTINE dof_initiate2(val, obj)
+INTERFACE Initiate
+  MODULE PURE SUBROUTINE obj_initiate2(val, obj)
     REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: val(:)
     !! This vector will be initiated by using obj
     CLASS(DOF_), INTENT(IN) :: obj
     !! DOF object
-  END SUBROUTINE dof_initiate2
-END INTERFACE
-
-INTERFACE Initiate
-  MODULE PROCEDURE dof_initiate2
+  END SUBROUTINE obj_initiate2
 END INTERFACE Initiate
 
 !----------------------------------------------------------------------------
@@ -107,22 +103,18 @@ END INTERFACE Initiate
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 10 Oct, 2021
-! summary: Initiate two fortran vectors using [[dof_]] object
+! summary: Initiate two fortran vectors using obj_ object
 !
 !# Introduction
 !
 ! This subroutine can initiate two fortran vectors (rank-1 fortran arrays)
-! using  the information stored inside the [[DOF_]] object
-
-INTERFACE
-  MODULE PURE SUBROUTINE dof_initiate3(Val1, Val2, obj)
-    REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: Val1(:), Val2(:)
-    CLASS(DOF_), INTENT(IN) :: obj
-  END SUBROUTINE dof_initiate3
-END INTERFACE
+! using  the information stored inside the DOF_ object
 
 INTERFACE Initiate
-  MODULE PROCEDURE dof_initiate3
+  MODULE PURE SUBROUTINE obj_initiate3(Val1, Val2, obj)
+    REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: Val1(:), Val2(:)
+    CLASS(DOF_), INTENT(IN) :: obj
+  END SUBROUTINE obj_initiate3
 END INTERFACE Initiate
 
 !----------------------------------------------------------------------------
@@ -131,26 +123,22 @@ END INTERFACE Initiate
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 25 July 2021
-! summary: Initiate an instance of [[DOF_]] by copying other object
+! summary: Initiate an instance of DOF_ by copying other object
 !
 !# Introduction
 !
 ! This routine copy obj2 into obj1. It also define an assignment operator
 
-INTERFACE
-  MODULE PURE SUBROUTINE dof_initiate4(obj1, obj2)
+INTERFACE Initiate
+  MODULE PURE SUBROUTINE obj_initiate4(obj1, obj2)
     CLASS(DOF_), INTENT(INOUT) :: obj1
     CLASS(DOF_), INTENT(IN) :: obj2
-  END SUBROUTINE dof_initiate4
-END INTERFACE
+  END SUBROUTINE obj_initiate4
+END INTERFACE Initiate
 
 INTERFACE ASSIGNMENT(=)
-  MODULE PROCEDURE dof_initiate4
+  MODULE PROCEDURE obj_initiate4
 END INTERFACE ASSIGNMENT(=)
-
-INTERFACE Initiate
-  MODULE PROCEDURE dof_initiate4
-END INTERFACE Initiate
 
 !----------------------------------------------------------------------------
 !                                                            DOF@Constructor
@@ -158,27 +146,22 @@ END INTERFACE Initiate
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 10 oct 2021
-! summary:          Constructor for [[dof_]] object
+! summary:          Constructor for dof_ object
 !
 !# Introduction
 !
-! This function return instance of [[DOF_]]
-! This function calls [[DOF_Method:DOF_Initiate1]] method
-! for more see [[dof_]]
+! This function return instance of DOF_
+! This function calls DOF_Method:DOF_Initiate1 method
+! for more see dof_
 
-INTERFACE
- MODULE PURE FUNCTION dof_Constructor1(tNodes, Names, spacecompo, timecompo, &
-        & StorageFMT) RESULT(obj)
+INTERFACE DOF
+ MODULE PURE FUNCTION obj_Constructor1(tNodes, Names, spacecompo, timecompo, &
+                             & StorageFMT) RESULT(obj)
     TYPE(DOF_) :: obj
     INTEGER(I4B), INTENT(IN) :: tNodes(:), spacecompo(:), &
       & timecompo(:), StorageFMT
     CHARACTER(1), INTENT(IN) :: Names(:)
-  END FUNCTION dof_Constructor1
-END INTERFACE
-
-!> Generic function to construct [[dof_]] object
-INTERFACE DOF
-  MODULE PROCEDURE dof_Constructor1
+  END FUNCTION obj_Constructor1
 END INTERFACE DOF
 
 !----------------------------------------------------------------------------
@@ -187,18 +170,18 @@ END INTERFACE DOF
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 10 Oct, 2021
-! summary: Returns pointer to newly created [[dof_]] object
+! summary: Returns pointer to newly created dof_ object
 !
 !# Introduction
 !
-! This function returns the pointer to instance of [[dof_]] object
-! for more see [[dof_]]
+! This function returns the pointer to instance of dof_ object
+! for more see dof_
 
-INTERFACE
-  MODULE FUNCTION dof_Constructor_1(tNodes, Names, spacecompo, timecompo, &
+INTERFACE DOF_Pointer
+  MODULE FUNCTION obj_Constructor_1(tNodes, Names, spacecompo, timecompo, &
     & StorageFMT) RESULT(obj)
     CLASS(DOF_), POINTER :: obj
-    !! [[dof_]] object
+    !! dof_ object
     INTEGER(I4B), INTENT(IN) :: tNodes(:)
     !! total number of nodes for each dof
     CHARACTER(1), INTENT(IN) :: Names(:)
@@ -209,11 +192,7 @@ INTERFACE
     !! time component for each dof
     INTEGER(I4B), INTENT(IN) :: StorageFMT
     !! storage format for dof
-  END FUNCTION dof_Constructor_1
-END INTERFACE
-
-INTERFACE DOF_Pointer
-  MODULE PROCEDURE dof_Constructor_1
+  END FUNCTION obj_Constructor_1
 END INTERFACE DOF_Pointer
 
 !----------------------------------------------------------------------------
@@ -222,20 +201,20 @@ END INTERFACE DOF_Pointer
 
 !> author: Vikas Sharma, Ph. D.
 ! date: Oct 10, 2021
-! summary: Deallocate data in [[dof_]]
+! summary: Deallocate data in dof_
 !
 !# Introduction
 !
-! This subroutine deallocates the data in [[DOF_]] object
-
-INTERFACE
-  MODULE PURE SUBROUTINE dof_Deallocate(obj)
-    CLASS(DOF_), INTENT(INOUT) :: obj
-  END SUBROUTINE dof_Deallocate
-END INTERFACE
+! This subroutine deallocates the data in DOF_ object
 
 INTERFACE DEALLOCATE
-  MODULE PROCEDURE dof_Deallocate
+  MODULE PURE SUBROUTINE obj_Deallocate(obj)
+    CLASS(DOF_), INTENT(INOUT) :: obj
+  END SUBROUTINE obj_Deallocate
 END INTERFACE DEALLOCATE
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
 
 END MODULE DOF_ConstructorMethods

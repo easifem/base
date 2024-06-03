@@ -23,9 +23,9 @@ project(${PROJECT_NAME})
 
 enable_language(C Fortran CXX)
 
-set(VERSION_MAJOR "23")
-set(VERSION_MINOR "6")
-set(VERSION_BugFix "0")
+set(VERSION_MAJOR "24")
+set(VERSION_MINOR "4")
+set(VERSION_BugFix "5")
 
 set(PROJECT_VERSION ${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_BugFix})
 

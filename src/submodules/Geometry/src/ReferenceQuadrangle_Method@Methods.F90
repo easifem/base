@@ -564,6 +564,10 @@ MODULE PROCEDURE GetEdgeConnectivity_Quadrangle
 INTEGER(I4B) :: opt0, order0, ii, jj, iface
 
 opt0 = Input(default=1_I4B, option=opt)
+order0 = Input(default=1_I4B, option=order)
+
+IF (PRESENT(ncol)) ncol = 4
+IF (PRESENT(nrow)) nrow = 1 + order0
 
 SELECT CASE (opt0)
 CASE (1_I4B)
@@ -579,14 +583,12 @@ CASE (2_I4B)
   con(1:2, 4) = [4, 1]
 END SELECT
 
-order0 = Input(default=1_I4B, option=order)
 jj = 4
-
 DO iface = 1, 4
   DO ii = 1, order0 - 1
     con(2 + ii, iface) = jj + ii
-    jj = jj + 1
   END DO
+  jj = jj + order0 - 1
 END DO
 
 END PROCEDURE GetEdgeConnectivity_Quadrangle
@@ -596,7 +598,8 @@ END PROCEDURE GetEdgeConnectivity_Quadrangle
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE GetFaceConnectivity_Quadrangle
-CALL GetEdgeConnectivity_Quadrangle(con=con, opt=2_I4B, order=order)
+CALL GetEdgeConnectivity_Quadrangle(con=con, opt=2_I4B, order=order, &
+                                    nrow=nrow, ncol=ncol)
 END PROCEDURE GetFaceConnectivity_Quadrangle
 
 !----------------------------------------------------------------------------

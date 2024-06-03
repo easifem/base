@@ -16,52 +16,64 @@
 !
 
 !> author: Vikas Sharma, Ph. D.
-! date:         25 Feb 2021
-! summary:         This submodule contains get methods of [[RealVector_]]
+! date: 25 Feb 2021
+! summary: This submodule contains Get methods of [[RealVector_]]
 
 SUBMODULE(RealVector_GetMethods) Methods
-USE BaseMethod
+USE DOF_Method, ONLY: GetNodeLoc, DOF_GetIndex => GetIndex
+
+USE InputUtility, ONLY: INPUT
+
+USE ReallocateUtility, ONLY: Reallocate
+
+USE F95_BLAS, ONLY: COPY
+
+USE RealVector_AssignMethods, ONLY: ASSIGNMENT(=)
+
+USE RealVector_ConstructorMethods, ONLY: RealVector_Size => Size
+
+USE SafeSizeUtility, ONLY: SafeSize
+
 IMPLICIT NONE
+
 CONTAINS
 
 !----------------------------------------------------------------------------
-!                                                               getPointer
+!                                                               GetPointer
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE realVec_getPointer1
+MODULE PROCEDURE obj_GetPointer1
 val => obj%val
-END PROCEDURE realVec_getPointer1
+END PROCEDURE obj_GetPointer1
 
 !----------------------------------------------------------------------------
-!                                                               getPointer
+!                                                               GetPointer
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE realVec_getPointer2
+MODULE PROCEDURE obj_GetPointer2
 INTEGER(I4B) :: s(3)
 s = GetNodeLoc(obj=dofobj, idof=idof)
 val => obj%val(s(1):s(2):s(3))
-END PROCEDURE realVec_getPointer2
+END PROCEDURE obj_GetPointer2
 
 !----------------------------------------------------------------------------
 !                                                                     IndexOf
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE realVec_getIndex1
+MODULE PROCEDURE obj_GetIndex1
 Ans = MINLOC(ABS(obj%val - VALUE), 1)
-END PROCEDURE realVec_getIndex1
+END PROCEDURE obj_GetIndex1
 
 !----------------------------------------------------------------------------
 !                                                                     IndexOf
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE realVec_getIndex2
+MODULE PROCEDURE obj_GetIndex2
 ! Ans = MINLOC( ABS( obj%val - Value ), 1 )
 INTEGER(I4B) :: i, j, m
 LOGICAL(LGT), ALLOCATABLE :: Search(:)
 REAL(DFP) :: tol0
-  !!
-  !!
-  !!
+
 tol0 = INPUT(default=REAL(1.0E-10, DFP), option=tol)
 m = SIZE(VALUE)
 ALLOCATE (Search(m), Ans(m))
@@ -77,13 +89,13 @@ DO i = 1, SIZE(obj%val)
     END IF
   END DO
 END DO
-END PROCEDURE realVec_getIndex2
+END PROCEDURE obj_GetIndex2
 
 !----------------------------------------------------------------------------
 !                                                                  isPresent
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE realVec_isPresent1
+MODULE PROCEDURE obj_isPresent1
 INTEGER(I4B) :: i
 REAL(DFP) :: tol0
 Ans = .FALSE.
@@ -94,13 +106,13 @@ DO i = 1, SIZE(obj%val)
     EXIT
   END IF
 END DO
-END PROCEDURE realVec_isPresent1
+END PROCEDURE obj_isPresent1
 
 !----------------------------------------------------------------------------
 !                                                                  isPresent
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE realVec_isPresent2
+MODULE PROCEDURE obj_isPresent2
 INTEGER(I4B) :: i, m, j
 REAL(DFP) :: tol0
 LOGICAL(LGT), ALLOCATABLE :: Search(:)
@@ -120,131 +132,165 @@ DO i = 1, SIZE(obj%val)
     END IF
   END DO
 END DO
-END PROCEDURE realVec_isPresent2
+END PROCEDURE obj_isPresent2
 
 !----------------------------------------------------------------------------
-!                                                                        get
+!                                                                        Get
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE realVec_get1
-IF (ALLOCATED(obj%val)) THEN
-  ans = obj%val
-ELSE
-  ALLOCATE (ans(0))
-END IF
-END PROCEDURE realVec_get1
+MODULE PROCEDURE obj_Get1
+INTEGER(I4B) :: tsize, ii
+tsize = SafeSize(obj%val)
+ALLOCATE (ans(tsize))
+
+DO CONCURRENT(ii=1:tsize)
+  ans(ii) = INT(obj%val(ii), kind=I4B)
+END DO
+END PROCEDURE obj_Get1
 
 !----------------------------------------------------------------------------
-!                                                                        get
+!                                                                        Get
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE realVec_get2
-IF (ALLOCATED(obj%val)) THEN
-  ans = obj%val(nodenum)
-ELSE
-  ALLOCATE (ans(0))
-END IF
-END PROCEDURE realVec_get2
+MODULE PROCEDURE obj_Get2
+INTEGER(I4B) :: tsize, ii
+
+tsize = SIZE(nodenum)
+ALLOCATE (ans(tsize))
+
+DO CONCURRENT(ii=1:tsize)
+  ans(ii) = INT(obj%val(nodenum(ii)), kind=I4B)
+END DO
+END PROCEDURE obj_Get2
 
 !----------------------------------------------------------------------------
-!                                                                        get
+!                                                                        Get
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE realVec_get3
-IF (ALLOCATED(obj%val)) THEN
-  ans = obj%val(iStart:iEnd:Stride)
-ELSE
-  ALLOCATE (ans(0))
-END IF
-END PROCEDURE realVec_get3
+MODULE PROCEDURE obj_Get3
+INTEGER(I4B) :: tsize, ii, jj
+
+tsize = 1_I4B + (iend - istart) / stride
+ALLOCATE (ans(tsize))
+
+jj = 0
+
+DO ii = istart, iend, stride
+  jj = jj + 1
+  ans(jj) = INT(obj%val(ii), kind=I4B)
+END DO
+END PROCEDURE obj_Get3
 
 !----------------------------------------------------------------------------
-!                                                                        get
+!                                                                        Get
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE realVec_get4a
-IF (ALLOCATED(obj%val)) THEN
-  ans = obj
-ELSE
-  ALLOCATE (ans(0))
-END IF
-END PROCEDURE realVec_get4a
+MODULE PROCEDURE obj_Get4a
+INTEGER(I4B) :: tsize, ii
+tsize = SafeSize(obj%val)
+ALLOCATE (ans(tsize))
 
-MODULE PROCEDURE realVec_get4b
-IF (ALLOCATED(obj%val)) THEN
-  ans = obj
-ELSE
-  ALLOCATE (ans(0))
-END IF
-END PROCEDURE realVec_get4b
+DO CONCURRENT(ii=1:tsize)
+  ans(ii) = REAL(obj%val(ii), kind=REAL32)
+END DO
+
+END PROCEDURE obj_Get4a
 
 !----------------------------------------------------------------------------
-!                                                                        get
+!                                                                       Get
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE realVec_get5a
-IF (ALLOCATED(obj%val)) THEN
-  CALL Reallocate(ans, SIZE(nodenum))
-  ans = obj%val(nodenum)
-ELSE
-  ALLOCATE (ans(0))
-END IF
-END PROCEDURE realVec_get5a
+MODULE PROCEDURE obj_Get4b
+INTEGER(I4B) :: tsize, ii
+tsize = SafeSize(obj%val)
+ALLOCATE (ans(tsize))
 
-MODULE PROCEDURE realVec_get5b
-IF (ALLOCATED(obj%val)) THEN
-  CALL Reallocate(ans, SIZE(nodenum))
-  ans = obj%val(nodenum)
-ELSE
-  ALLOCATE (ans(0))
-END IF
-END PROCEDURE realVec_get5b
+DO CONCURRENT(ii=1:tsize)
+  ans(ii) = REAL(obj%val(ii), kind=REAL64)
+END DO
+END PROCEDURE obj_Get4b
 
 !----------------------------------------------------------------------------
-!                                                                       get
+!                                                                        Get
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE realVec_get6
-IF (ALLOCATED(obj%val)) THEN
-  ans = obj%val(iStart:iEnd:Stride)
-ELSE
-  ALLOCATE (ans(0))
-END IF
-END PROCEDURE realVec_get6
+MODULE PROCEDURE obj_Get5a
+INTEGER(I4B) :: tsize, ii
+
+tsize = SIZE(nodenum)
+ALLOCATE (ans(tsize))
+
+DO ii = 1, tsize
+  ans(ii) = REAL(obj%val(nodenum(ii)), kind=REAL32)
+END DO
+
+END PROCEDURE obj_Get5a
 
 !----------------------------------------------------------------------------
-!                                                                       get
+!                                                                       Get
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE realVec_get7
+MODULE PROCEDURE obj_Get5b
+INTEGER(I4B) :: tsize, ii
+
+tsize = SIZE(nodenum)
+ALLOCATE (ans(tsize))
+
+DO ii = 1, tsize
+  ans(ii) = REAL(obj%val(nodenum(ii)), kind=REAL64)
+END DO
+END PROCEDURE obj_Get5b
+
+!----------------------------------------------------------------------------
+!                                                                       Get
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE obj_Get6
+INTEGER(I4B) :: tsize, ii, jj
+
+tsize = 1_I4B + (iend - istart) / stride
+ALLOCATE (ans(tsize))
+
+jj = 0
+
+DO ii = istart, iend, stride
+  jj = jj + 1
+  ans(jj) = obj%val(ii)
+END DO
+
+END PROCEDURE obj_Get6
+
+!----------------------------------------------------------------------------
+!                                                                       Get
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE obj_Get7
 INTEGER(I4B) :: N, i, tNodes, r1, r2
-  !!
+
 N = SIZE(obj)
 tNodes = 0
-  !!
 DO i = 1, N
-  tNodes = tNodes + SIZE(obj(i))
+  tNodes = tNodes + RealVector_SIZE(obj(i))
 END DO
-  !!
+
 ALLOCATE (val(tNodes))
-  !!
 tNodes = 0
 r1 = 0
 r2 = 0
-  !!
+
 DO i = 1, N
   r1 = r2 + 1
-  r2 = r2 + SIZE(obj(i))
+  r2 = r2 + RealVector_SIZE(obj(i))
   val(r1:r2) = obj(i)%val
 END DO
-  !!
-END PROCEDURE realVec_get7
+
+END PROCEDURE obj_Get7
 
 !----------------------------------------------------------------------------
-!                                                                       get
+!                                                                       Get
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE realVec_get8
+MODULE PROCEDURE obj_Get8
 INTEGER(I4B) :: N, i, M
 N = SIZE(obj)
 M = SIZE(nodenum)
@@ -252,27 +298,27 @@ ALLOCATE (val(N * M))
 DO i = 1, N
   val((i - 1) * M + 1:i * M) = obj(i)%val(nodenum)
 END DO
-END PROCEDURE realVec_get8
+END PROCEDURE obj_Get8
 
 !----------------------------------------------------------------------------
-!                                                                       get
+!                                                                       Get
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE realVec_get9
+MODULE PROCEDURE obj_Get9
 INTEGER(I4B) :: N, i, M
 N = SIZE(obj)
-M = 1 + (iEnd - iStart) / Stride
+M = 1 + (iend - istart) / stride
 ALLOCATE (val(M * N))
 DO i = 1, N
-  val((i - 1) * M + 1:i * M) = obj(i)%val(iStart:iEnd:Stride)
+  val((i - 1) * M + 1:i * M) = obj(i)%val(istart:iend:stride)
 END DO
-END PROCEDURE realVec_get9
+END PROCEDURE obj_Get9
 
 !----------------------------------------------------------------------------
-!                                                                        get
+!                                                                        Get
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE realVec_get10a
+MODULE PROCEDURE obj_Get10a
 INTEGER(I4B) :: N, i, tNodes, r1, r2
 N = SIZE(obj)
 tNodes = 0
@@ -285,8 +331,13 @@ DO i = 1, N
   r1 = r2 + 1; r2 = r2 + SIZE(obj(i)%val)
   val(r1:r2) = obj(i)%val
 END DO
-END PROCEDURE realVec_get10a
-MODULE PROCEDURE realVec_get10b
+END PROCEDURE obj_Get10a
+
+!----------------------------------------------------------------------------
+!                                                                      Get
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE obj_Get10b
 INTEGER(I4B) :: N, i, tNodes, r1, r2
 N = SIZE(obj)
 tNodes = 0
@@ -299,13 +350,13 @@ DO i = 1, N
   r1 = r2 + 1; r2 = r2 + SIZE(obj(i)%val)
   val(r1:r2) = obj(i)%val
 END DO
-END PROCEDURE realVec_get10b
+END PROCEDURE obj_Get10b
 
 !----------------------------------------------------------------------------
-!                                                                        get
+!                                                                        Get
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE realVec_get11a
+MODULE PROCEDURE obj_Get11a
 INTEGER(I4B) :: N, i, M
 N = SIZE(obj)
 M = SIZE(nodenum)
@@ -313,9 +364,13 @@ ALLOCATE (val(M * N))
 DO i = 1, N
   val((i - 1) * M + 1:i * M) = obj(i)%val(nodenum)
 END DO
-END PROCEDURE realVec_get11a
+END PROCEDURE obj_Get11a
 
-MODULE PROCEDURE realVec_get11b
+!----------------------------------------------------------------------------
+!                                                                       Get
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE obj_Get11b
 INTEGER(I4B) :: N, i, M
 N = SIZE(obj)
 M = SIZE(nodenum)
@@ -323,127 +378,132 @@ ALLOCATE (val(M * N))
 DO i = 1, N
   val((i - 1) * M + 1:i * M) = obj(i)%val(nodenum)
 END DO
-END PROCEDURE realVec_get11b
+END PROCEDURE obj_Get11b
 
 !----------------------------------------------------------------------------
-!                                                                        get
+!                                                                        Get
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE realVec_get12a
+MODULE PROCEDURE obj_Get12a
 INTEGER(I4B) :: N, i, M
 N = SIZE(obj)
-M = 1 + (iEnd - iStart) / Stride
+M = 1 + (iend - istart) / stride
 ALLOCATE (val(M * N))
 DO i = 1, N
-  val((i - 1) * M + 1:i * M) = obj(i)%val(iStart:iEnd:Stride)
+  val((i - 1) * M + 1:i * M) = obj(i)%val(istart:iend:stride)
 END DO
-END PROCEDURE realVec_get12a
-MODULE PROCEDURE realVec_get12b
+END PROCEDURE obj_Get12a
+
+!----------------------------------------------------------------------------
+!                                                                       Get
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE obj_Get12b
 INTEGER(I4B) :: N, i, M
 N = SIZE(obj)
-M = 1 + (iEnd - iStart) / Stride
+M = 1 + (iend - istart) / stride
 ALLOCATE (val(M * N))
 DO i = 1, N
-  val((i - 1) * M + 1:i * M) = obj(i)%val(iStart:iEnd:Stride)
+  val((i - 1) * M + 1:i * M) = obj(i)%val(istart:iend:stride)
 END DO
-END PROCEDURE realVec_get12b
+END PROCEDURE obj_Get12b
 
 !----------------------------------------------------------------------------
-!                                                                       get
+!                                                                       Get
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE realVec_get13
-val = get(obj=obj, dataType=1.0_DFP)
-END PROCEDURE realVec_get13
+MODULE PROCEDURE obj_Get13
+val = Get(obj=obj, dataType=1.0_DFP)
+END PROCEDURE obj_Get13
 
 !----------------------------------------------------------------------------
-!                                                                        get
+!                                                                        Get
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE realVec_get14
-val = get(obj=obj, nodenum=nodenum, dataType=1.0_DFP)
-END PROCEDURE realVec_get14
+MODULE PROCEDURE obj_Get14
+val = Get(obj=obj, nodenum=nodenum, dataType=1.0_DFP)
+END PROCEDURE obj_Get14
 
 !----------------------------------------------------------------------------
-!                                                                        get
+!                                                                        Get
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE realVec_get15
-val = get(obj=obj, istart=istart, iend=iend, stride=stride,  &
+MODULE PROCEDURE obj_Get15
+val = Get(obj=obj, istart=istart, iend=iend, stride=stride,  &
   & dataType=1.0_DFP)
-END PROCEDURE realVec_get15
+END PROCEDURE obj_Get15
 
 !----------------------------------------------------------------------------
-!                                                                        get
+!                                                                        Get
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE realVec_get16
-val = get(obj=obj, nodenum=nodenum, dataType=1.0_DFP)
-END PROCEDURE realVec_get16
+MODULE PROCEDURE obj_Get16
+val = Get(obj=obj, nodenum=nodenum, dataType=1.0_DFP)
+END PROCEDURE obj_Get16
 
 !----------------------------------------------------------------------------
-!                                                                       get
+!                                                                       Get
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE realVec_get17
-val = get(obj=obj, istart=istart, iend=iend, stride=stride,  &
+MODULE PROCEDURE obj_Get17
+val = Get(obj=obj, istart=istart, iend=iend, stride=stride,  &
   & dataType=1.0_DFP)
-END PROCEDURE realVec_get17
+END PROCEDURE obj_Get17
 
 !----------------------------------------------------------------------------
-!                                                                       get
+!                                                                       Get
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE realVec_get18a
+MODULE PROCEDURE obj_Get18a
 val = obj%val(nodenum)
-END PROCEDURE realVec_get18a
+END PROCEDURE obj_Get18a
 
-MODULE PROCEDURE realVec_get18b
+MODULE PROCEDURE obj_Get18b
 val = obj%val(nodenum)
-END PROCEDURE realVec_get18b
+END PROCEDURE obj_Get18b
 
 !----------------------------------------------------------------------------
-!                                                                        get
+!                                                                        Get
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE realVec_get19
+MODULE PROCEDURE obj_Get19
 IF (ALLOCATED(obj%val)) THEN
   ans = obj
 ELSE
   ALLOCATE (ans(0))
 END IF
-END PROCEDURE realVec_get19
+END PROCEDURE obj_Get19
 
 !----------------------------------------------------------------------------
-!                                                                        get
+!                                                                        Get
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE realVec_get20
+MODULE PROCEDURE obj_Get20
 IF (ALLOCATED(obj%val)) THEN
   CALL Reallocate(ans, SIZE(nodenum))
   CALL COPY(Y=ans, X=obj%val(nodenum))
 ELSE
   ALLOCATE (ans(0))
 END IF
-END PROCEDURE realVec_get20
+END PROCEDURE obj_Get20
 
 !----------------------------------------------------------------------------
-!                                                                       get
+!                                                                       Get
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE realVec_get21
+MODULE PROCEDURE obj_Get21
 IF (ALLOCATED(obj%val)) THEN
-  ans = obj%val(iStart:iEnd:Stride)
+  ans = obj%val(istart:iend:stride)
 ELSE
   ALLOCATE (ans(0))
 END IF
-END PROCEDURE realVec_get21
+END PROCEDURE obj_Get21
 
 !----------------------------------------------------------------------------
-!                                                                        get
+!                                                                        Get
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE realVec_get22
+MODULE PROCEDURE obj_Get22
 INTEGER(I4B) :: N, i, tNodes, r1, r2
 N = SIZE(obj)
 tNodes = 0
@@ -456,13 +516,13 @@ DO i = 1, N
   r1 = r2 + 1; r2 = r2 + SIZE(obj(i)%val)
   val(r1:r2) = obj(i)%val
 END DO
-END PROCEDURE realVec_get22
+END PROCEDURE obj_Get22
 
 !----------------------------------------------------------------------------
-!                                                                        get
+!                                                                        Get
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE realVec_get23
+MODULE PROCEDURE obj_Get23
 INTEGER(I4B) :: N, i, M
 N = SIZE(obj)
 M = SIZE(nodenum)
@@ -470,67 +530,69 @@ ALLOCATE (val(M * N))
 DO i = 1, N
   val((i - 1) * M + 1:i * M) = obj(i)%val(nodenum)
 END DO
-END PROCEDURE realVec_get23
+END PROCEDURE obj_Get23
 
 !----------------------------------------------------------------------------
-!                                                                        get
+!                                                                        Get
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE realVec_get24
+MODULE PROCEDURE obj_Get24
 INTEGER(I4B) :: N, i, M
 N = SIZE(obj)
-M = 1 + (iEnd - iStart) / Stride
+M = 1 + (iend - istart) / stride
 ALLOCATE (val(M * N))
 DO i = 1, N
-  val((i - 1) * M + 1:i * M) = obj(i)%val(iStart:iEnd:Stride)
+  val((i - 1) * M + 1:i * M) = obj(i)%val(istart:iend:stride)
 END DO
-END PROCEDURE realVec_get24
+END PROCEDURE obj_Get24
 
 !----------------------------------------------------------------------------
-!                                                                      get
+!                                                                      Get
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE realVec_get25
-ans = obj%val(getIndex(obj=dofobj, nodenum=nodenum, &
-  & ivar=ivar, idof=idof))
-END PROCEDURE realVec_get25
+MODULE PROCEDURE obj_Get25
+ans = obj%val(DOF_GetIndex(obj=dofobj, nodenum=nodenum, &
+                           ivar=ivar, idof=idof))
+END PROCEDURE obj_Get25
 
 !----------------------------------------------------------------------------
-!                                                                      get
+!                                                                      Get
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE realVec_get26
-ans = obj%val(getIndex(obj=dofobj, nodenum=nodenum, &
-  & ivar=ivar, idof=idof))
-END PROCEDURE realVec_get26
+MODULE PROCEDURE obj_Get26
+ans = obj%val(DOF_GetIndex(obj=dofobj, nodenum=nodenum, &
+                           ivar=ivar, idof=idof))
+END PROCEDURE obj_Get26
 
 !----------------------------------------------------------------------------
-!                                                                      get
+!                                                                      Get
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE realVec_get27
-ans = obj%val(getIndex(obj=dofobj, nodenum=nodenum, &
-  & ivar=ivar))
-END PROCEDURE realVec_get27
+MODULE PROCEDURE obj_Get27
+ans = obj%val(DOF_GetIndex(obj=dofobj, nodenum=nodenum, ivar=ivar))
+END PROCEDURE obj_Get27
 
 !----------------------------------------------------------------------------
-!                                                                      get
+!                                                                      Get
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE realVec_get28
-  !!
-ans = obj%val( &
-  & getIndex( &
-  & obj=dofobj, &
-  & nodenum=nodenum, &
-  & ivar=ivar, &
-  & spacecompo=spacecompo, &
-  & timecompo=timecompo))
-  !!
-END PROCEDURE realVec_get28
+MODULE PROCEDURE obj_Get28
+ans = obj%val(DOF_GetIndex(obj=dofobj, nodenum=nodenum, ivar=ivar, &
+                           spacecompo=spacecompo, timecompo=timecompo))
+END PROCEDURE obj_Get28
+
+!----------------------------------------------------------------------------
+!                                                                      Get
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE obj_Get29
+INTEGER(I4B) :: s(3)
+s = GetNodeLoc(obj=dofobj, idof=idof)
+ans = Get(obj=obj, istart=s(1), iend=s(2), stride=s(3), dataType=1.0_DFP)
+END PROCEDURE obj_Get29
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
-!!
+
 END SUBMODULE Methods

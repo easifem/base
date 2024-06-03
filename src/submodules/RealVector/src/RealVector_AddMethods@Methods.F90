@@ -16,7 +16,16 @@
 !
 
 SUBMODULE(RealVector_AddMethods) Methods
-USE BaseMethod
+USE GlobalData, ONLY: DOF_FMT, NODES_FMT
+
+USE DOF_Method, ONLY: DOF_Add => Add, &
+                      OPERATOR(.tdof.), &
+                      GetNodeLoc
+
+USE F77_BLAS, ONLY: F77_AXPY
+
+USE F95_BLAS, ONLY: F95_AXPY => AXPY
+
 IMPLICIT NONE
 CONTAINS
 
@@ -24,357 +33,322 @@ CONTAINS
 !                                                                       add
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE realVec_add1
-obj%val = obj%val + scale * VALUE
-END PROCEDURE realVec_add1
+MODULE PROCEDURE obj_Add1
+! obj%val = obj%val + scale * VALUE
+REAL(DFP) :: aval(1)
+INTEGER(I4B) :: N
+aval(1) = VALUE
+N = SIZE(obj%val)
+CALL F77_AXPY(N=N, A=scale, X=aval, INCX=0_I4B, Y=obj%val, INCY=1_I4B)
+END PROCEDURE obj_Add1
 
 !----------------------------------------------------------------------------
 !                                                                       add
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE realVec_add2
-obj%val = obj%val + scale * VALUE
-END PROCEDURE realVec_add2
+MODULE PROCEDURE obj_Add2
+! obj%val = obj%val + scale * VALUE
+CALL F95_AXPY(A=scale, X=VALUE, Y=obj%val)
+END PROCEDURE obj_Add2
 
 !----------------------------------------------------------------------------
 !                                                                       add
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE realvec_add3
+MODULE PROCEDURE obj_Add3
 obj%val(nodenum) = obj%val(nodenum) + scale * VALUE
-END PROCEDURE realvec_add3
+END PROCEDURE obj_Add3
 
 !----------------------------------------------------------------------------
 !                                                                       add
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE realvec_add4
+MODULE PROCEDURE obj_Add4
 obj%val(nodenum) = obj%val(nodenum) + scale * VALUE
-END PROCEDURE realvec_add4
+END PROCEDURE obj_Add4
 
 !----------------------------------------------------------------------------
 !                                                                       add
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE realVec_add5
-  !!
+MODULE PROCEDURE obj_Add5
 IF (SIZE(VALUE) .EQ. 1) THEN
   obj%val(nodenum) = obj%val(nodenum) + scale * VALUE(1)
-ELSE
-  obj%val(nodenum) = obj%val(nodenum) + scale * VALUE
+  RETURN
 END IF
-  !!
-END PROCEDURE realVec_add5
+
+obj%val(nodenum) = obj%val(nodenum) + scale * VALUE
+END PROCEDURE obj_Add5
 
 !----------------------------------------------------------------------------
 !                                                                       add
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE realVec_add6
-obj%val(istart:iend:stride) = obj%val(istart:iend:stride) &
-  & + scale * VALUE
-END PROCEDURE realVec_add6
+MODULE PROCEDURE obj_Add6
+! obj%val(istart:iend:stride) = obj%val(istart:iend:stride) + scale * VALUE
+REAL(DFP) :: aval(1)
+INTEGER(I4B) :: N
+aval(1) = VALUE
+N = INT((iend - istart + stride) / stride)
+CALL F77_AXPY(N=N, A=scale, X=aval, INCX=0_I4B, Y=obj%val(istart:), &
+              INCY=stride)
+END PROCEDURE obj_Add6
 
 !----------------------------------------------------------------------------
 !                                                                       add
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE realVec_add7
-obj%val(istart:iend:stride) = obj%val(istart:iend:stride) &
-  & + scale * VALUE
-END PROCEDURE realVec_add7
+MODULE PROCEDURE obj_Add7
+! obj%val(istart:iend:stride) = obj%val(istart:iend:stride) + scale * VALUE
+INTEGER(I4B) :: N
+
+N = SIZE(VALUE)
+CALL F77_AXPY(N=N, A=scale, X=VALUE, INCX=1_I4B, Y=obj%val(istart:), &
+              INCY=stride)
+END PROCEDURE obj_Add7
 
 !----------------------------------------------------------------------------
 !                                                                       add
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE realvec_add8
-CALL add( &
-  & vec=obj%val, &
-  & obj=dofobj, &
-  & nodenum=nodenum, &
-  & VALUE=VALUE, &
-  & scale=scale, &
-  & conversion=conversion)
-END PROCEDURE realvec_add8
+MODULE PROCEDURE obj_Add8
+CALL DOF_Add(vec=obj%val, obj=dofobj, nodenum=nodenum, VALUE=VALUE, &
+             scale=scale, conversion=conversion)
+END PROCEDURE obj_Add8
 
 !----------------------------------------------------------------------------
 !                                                                     add
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE realvec_add9
-  !!
-CALL add( &
-  & vec=obj%val, &
-  & obj=dofobj, &
-  & nodenum=nodenum, &
-  & VALUE=VALUE, &
-  & scale=scale)
-  !!
-END PROCEDURE realvec_add9
+MODULE PROCEDURE obj_Add9
+CALL DOF_Add(vec=obj%val, obj=dofobj, nodenum=nodenum, VALUE=VALUE, &
+             scale=scale)
+END PROCEDURE obj_Add9
 
 !----------------------------------------------------------------------------
 !                                                                       add
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE realvec_add10
-CALL add( &
-  & vec=obj%val, &
-  & obj=dofobj, &
-  & nodenum=nodenum, &
-  & VALUE=VALUE, &
-  & scale=scale, &
-  & idof=idof)
-END PROCEDURE realvec_add10
+MODULE PROCEDURE obj_Add10
+CALL DOF_Add(vec=obj%val, obj=dofobj, nodenum=nodenum, VALUE=VALUE, &
+             scale=scale, idof=idof)
+END PROCEDURE obj_Add10
 
 !----------------------------------------------------------------------------
 !                                                                       add
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE realvec_add11
-CALL add( &
-  & vec=obj%val, &
-  & obj=dofobj, &
-  & nodenum=nodenum, &
-  & VALUE=[VALUE], &
-  & scale=scale, &
-  & idof=idof)
-END PROCEDURE realvec_add11
+MODULE PROCEDURE obj_Add11
+CALL DOF_Add(vec=obj%val, obj=dofobj, nodenum=nodenum, VALUE=[VALUE], &
+             scale=scale, idof=idof)
+END PROCEDURE obj_Add11
 
 !----------------------------------------------------------------------------
 !                                                                       add
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE realvec_add12
-CALL add( &
-  & vec=obj%val, &
-  & obj=dofobj, &
-  & nodenum=nodenum, &
-  & VALUE=VALUE, &
-  & scale=scale, &
-  & idof=idof, &
-  & ivar=ivar)
-END PROCEDURE realvec_add12
+MODULE PROCEDURE obj_Add12
+CALL DOF_Add(vec=obj%val, obj=dofobj, nodenum=nodenum, VALUE=VALUE, &
+             scale=scale, idof=idof, ivar=ivar)
+END PROCEDURE obj_Add12
 
 !----------------------------------------------------------------------------
 !                                                                       add
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE realvec_add13
-CALL add( &
-  & vec=obj%val, &
-  & obj=dofobj, &
-  & nodenum=nodenum, &
-  & VALUE=[VALUE], &
-  & scale=scale, &
-  & idof=idof, &
-  & ivar=ivar)
-END PROCEDURE realvec_add13
+MODULE PROCEDURE obj_Add13
+CALL DOF_Add(vec=obj%val, obj=dofobj, nodenum=nodenum, VALUE=[VALUE], &
+             scale=scale, idof=idof, ivar=ivar)
+END PROCEDURE obj_Add13
 
 !----------------------------------------------------------------------------
 !                                                                       add
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE realvec_add14
-CALL add( &
-  & vec=obj%val, &
-  & obj=dofobj, &
-  & nodenum=nodenum, &
-  & VALUE=VALUE, &
-  & scale=scale, &
-  & ivar=ivar, &
-  & spacecompo=spacecompo, &
-  & timecompo=timecompo)
-END PROCEDURE realvec_add14
+MODULE PROCEDURE obj_Add14
+CALL DOF_Add(vec=obj%val, obj=dofobj, nodenum=nodenum, VALUE=VALUE, &
+           scale=scale, ivar=ivar, spacecompo=spacecompo, timecompo=timecompo)
+END PROCEDURE obj_Add14
 
 !----------------------------------------------------------------------------
 !                                                                       add
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE realvec_add15
-CALL add( &
-  & vec=obj%val, &
-  & obj=dofobj, &
-  & nodenum=nodenum, &
-  & VALUE=[VALUE], &
-  & scale=scale, &
-  & ivar=ivar, &
-  & spacecompo=spacecompo, &
-  & timecompo=timecompo)
-END PROCEDURE realvec_add15
+MODULE PROCEDURE obj_Add15
+CALL DOF_Add(vec=obj%val, obj=dofobj, nodenum=nodenum, VALUE=[VALUE], &
+           scale=scale, ivar=ivar, spacecompo=spacecompo, timecompo=timecompo)
+END PROCEDURE obj_Add15
 
 !----------------------------------------------------------------------------
 !                                                                       add
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE realvec_add16
-CALL add( &
-  & vec=obj%val, &
-  & obj=dofobj, &
-  & nodenum=nodenum, &
-  & VALUE=VALUE, &
-  & scale=scale, &
-  & ivar=ivar, &
-  & spacecompo=spacecompo, &
-  & timecompo=timecompo)
-END PROCEDURE realvec_add16
+MODULE PROCEDURE obj_Add16
+CALL DOF_Add(vec=obj%val, obj=dofobj, nodenum=nodenum, VALUE=VALUE, &
+           scale=scale, ivar=ivar, spacecompo=spacecompo, timecompo=timecompo)
+END PROCEDURE obj_Add16
 
 !----------------------------------------------------------------------------
 !                                                                       add
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE realvec_add17
-CALL add( &
-  & vec=obj%val, &
-  & obj=dofobj, &
-  & nodenum=nodenum, &
-  & VALUE=[VALUE], &
-  & scale=scale, &
-  & ivar=ivar, &
-  & spacecompo=spacecompo, &
-  & timecompo=timecompo)
-END PROCEDURE realvec_add17
+MODULE PROCEDURE obj_Add17
+CALL DOF_Add(vec=obj%val, obj=dofobj, nodenum=nodenum, VALUE=[VALUE], &
+           scale=scale, ivar=ivar, spacecompo=spacecompo, timecompo=timecompo)
+END PROCEDURE obj_Add17
 
 !----------------------------------------------------------------------------
 !                                                                       add
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE realvec_add18
-CALL add( &
-  & vec=obj%val, &
-  & obj=dofobj, &
-  & nodenum=nodenum, &
-  & VALUE=VALUE, &
-  & scale=scale, &
-  & ivar=ivar, &
-  & spacecompo=spacecompo, &
-  & timecompo=timecompo)
-END PROCEDURE realvec_add18
+MODULE PROCEDURE obj_Add18
+CALL DOF_Add(vec=obj%val, obj=dofobj, nodenum=nodenum, VALUE=VALUE, &
+           scale=scale, ivar=ivar, spacecompo=spacecompo, timecompo=timecompo)
+END PROCEDURE obj_Add18
 
 !----------------------------------------------------------------------------
 !                                                                       add
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE realvec_add19
-CALL add( &
-  & vec=obj%val, &
-  & obj=dofobj, &
-  & nodenum=nodenum, &
-  & VALUE=[VALUE], &
-  & scale=scale, &
-  & ivar=ivar, &
-  & spacecompo=spacecompo, &
-  & timecompo=timecompo)
-END PROCEDURE realvec_add19
+MODULE PROCEDURE obj_Add19
+CALL DOF_Add(vec=obj%val, obj=dofobj, nodenum=nodenum, VALUE=[VALUE], &
+           scale=scale, ivar=ivar, spacecompo=spacecompo, timecompo=timecompo)
+END PROCEDURE obj_Add19
 
 !----------------------------------------------------------------------------
 !                                                                     add
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE realvec_add20
-  !!
-CALL add( &
-  & vec=obj%val, &
-  & obj=dofobj, &
-  & nodenum=nodenum, &
-  & VALUE=VALUE, &
-  & scale=scale)
-  !!
-END PROCEDURE realvec_add20
+MODULE PROCEDURE obj_Add20
+CALL DOF_Add(vec=obj%val, obj=dofobj, nodenum=nodenum, VALUE=VALUE, &
+             scale=scale)
+END PROCEDURE obj_Add20
 
 !----------------------------------------------------------------------------
 !                                                                     add
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE realvec_add21
-  !!
-CALL add( &
-  & vec=obj%val, &
-  & obj=dofobj, &
-  & nodenum=nodenum, &
-  & VALUE=VALUE, &
-  & scale=scale, &
-  & idof=idof)
-  !!
-END PROCEDURE realvec_add21
+MODULE PROCEDURE obj_Add21
+CALL DOF_Add(vec=obj%val, obj=dofobj, nodenum=nodenum, VALUE=VALUE, &
+             scale=scale, idof=idof)
+END PROCEDURE obj_Add21
 
 !----------------------------------------------------------------------------
 !                                                                     add
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE realvec_add22
-  !!
-CALL add( &
-  & vec=obj%val, &
-  & obj=dofobj, &
-  & nodenum=nodenum, &
-  & VALUE=VALUE, &
-  & scale=scale, &
-  & ivar=ivar, &
-  & idof=idof)
-  !!
-END PROCEDURE realvec_add22
+MODULE PROCEDURE obj_Add22
+CALL DOF_Add(vec=obj%val, obj=dofobj, nodenum=nodenum, VALUE=VALUE, &
+             scale=scale, ivar=ivar, idof=idof)
+END PROCEDURE obj_Add22
 
 !----------------------------------------------------------------------------
 !                                                                     add
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE realvec_add23
-  !!
-CALL add( &
-  & vec=obj%val, &
-  & obj=dofobj, &
-  & nodenum=nodenum, &
-  & VALUE=VALUE, &
-  & scale=scale, &
-  & ivar=ivar, &
-  & spacecompo=spacecompo, &
-  & timecompo=timecompo)
-  !!
-END PROCEDURE realvec_add23
+MODULE PROCEDURE obj_Add23
+CALL DOF_Add(vec=obj%val, obj=dofobj, nodenum=nodenum, VALUE=VALUE, &
+           scale=scale, ivar=ivar, spacecompo=spacecompo, timecompo=timecompo)
+END PROCEDURE obj_Add23
 
 !----------------------------------------------------------------------------
 !                                                                     add
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE realvec_add24
-  !!
-CALL add( &
-  & vec=obj%val, &
-  & obj=dofobj, &
-  & nodenum=nodenum, &
-  & VALUE=VALUE, &
-  & scale=scale, &
-  & ivar=ivar, &
-  & spacecompo=spacecompo, &
-  & timecompo=timecompo)
-  !!
-END PROCEDURE realvec_add24
+MODULE PROCEDURE obj_Add24
+CALL DOF_Add(vec=obj%val, obj=dofobj, nodenum=nodenum, VALUE=VALUE, &
+           scale=scale, ivar=ivar, spacecompo=spacecompo, timecompo=timecompo)
+END PROCEDURE obj_Add24
 
 !----------------------------------------------------------------------------
 !                                                                     add
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE realvec_add25
-  !!
-CALL add( &
-  & vec=obj%val, &
-  & obj=dofobj, &
-  & nodenum=nodenum, &
-  & VALUE=VALUE, &
-  & scale=scale, &
-  & ivar=ivar, &
-  & spacecompo=spacecompo, &
-  & timecompo=timecompo)
-  !!
-END PROCEDURE realvec_add25
+MODULE PROCEDURE obj_Add25
+CALL DOF_Add(vec=obj%val, obj=dofobj, nodenum=nodenum, VALUE=VALUE, &
+           scale=scale, ivar=ivar, spacecompo=spacecompo, timecompo=timecompo)
+END PROCEDURE obj_Add25
 
 !----------------------------------------------------------------------------
 !                                                                       add
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE realvec_add26
-obj%val = obj%val + scale * VALUE%val
-END PROCEDURE realvec_add26
+MODULE PROCEDURE obj_Add26
+! obj%val = obj%val + scale * VALUE%val
+CALL F95_AXPY(A=scale, X=VALUE%val, Y=obj%val)
+END PROCEDURE obj_Add26
+
+!----------------------------------------------------------------------------
+!                                                                       add
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE obj_Add27
+INTEGER(I4B) :: tdof, s(3), idof
+
+tdof = .tdof.dofobj
+
+DO idof = 1, tdof
+  s = GetNodeLoc(obj=dofobj, idof=idof)
+  CALL obj_Add7(obj=obj, istart=s(1), iend=s(2), stride=s(3), scale=scale, &
+                VALUE=VALUE(:, idof))
+END DO
+
+END PROCEDURE obj_Add27
+
+!----------------------------------------------------------------------------
+!                                                                      Add
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE obj_Add28
+INTEGER(I4B) :: s(3)
+s = GetNodeLoc(obj=dofobj, idof=idof)
+CALL obj_Add7(obj=obj, istart=s(1), iend=s(2), stride=s(3), scale=scale, &
+              VALUE=VALUE)
+END PROCEDURE obj_Add28
+
+!----------------------------------------------------------------------------
+!                                                                       set
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE obj_Add29
+INTEGER(I4B) :: s1(3), s2(3)
+INTEGER(I4B) :: N
+
+s1 = GetNodeLoc(obj=dofobj1, idof=idof1)
+s2 = GetNodeLoc(obj=dofobj2, idof=idof2)
+
+N = (s1(2) - s1(1) + s1(3)) / s1(3)
+
+CALL F77_AXPY(N=N, A=scale, X=obj2%val(s2(1):), INCX=s2(3), &
+              Y=obj1%val(s1(1):), INCY=s1(3))
+END PROCEDURE obj_Add29
+
+!----------------------------------------------------------------------------
+!                                                                       set
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE obj_Add30
+INTEGER(I4B) :: ii, jj
+DO ii = istart, iend, stride
+  jj = GetNodeLoc(obj=dofobj, idof=idof, nodenum=ii)
+  obj%val(jj) = obj%val(jj) + scale * VALUE
+END DO
+END PROCEDURE obj_Add30
+
+!----------------------------------------------------------------------------
+!                                                                       set
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE obj_Add31
+INTEGER(I4B) :: ii, jj
+DO ii = istart, iend, stride
+  jj = GetNodeLoc(obj=dofobj, idof=idof, nodenum=ii)
+  obj%val(jj) = obj%val(jj) + scale * VALUE((ii - istart + stride) / stride)
+END DO
+END PROCEDURE obj_Add31
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
 
 END SUBMODULE Methods

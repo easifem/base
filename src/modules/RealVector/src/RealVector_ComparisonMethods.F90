@@ -16,26 +16,25 @@
 !
 
 MODULE RealVector_ComparisonMethods
-USE GlobalData
-USE BaseType
+USE GlobalData, ONLY: LGT
+USE BaseType, ONLY: RealVector_
+
 IMPLICIT NONE
+
 PRIVATE
+
 PUBLIC :: OPERATOR(.EQ.)
 
 !----------------------------------------------------------------------------
 !                                                                        EQ
 !----------------------------------------------------------------------------
 
-INTERFACE
-  MODULE PURE FUNCTION realvec_isEqual(obj, obj2) RESULT(Ans)
+INTERFACE OPERATOR(.EQ.)
+  MODULE PURE FUNCTION obj_isEqual(obj, obj2) RESULT(Ans)
     CLASS(RealVector_), INTENT(IN) :: obj
     CLASS(RealVector_), INTENT(IN) :: obj2
     LOGICAL(LGT) :: ans
-  END FUNCTION realvec_isEqual
-END INTERFACE
-
-INTERFACE OPERATOR(.EQ.)
-  MODULE PROCEDURE realvec_isEqual
+  END FUNCTION obj_isEqual
 END INTERFACE OPERATOR(.EQ.)
 
 END MODULE RealVector_ComparisonMethods

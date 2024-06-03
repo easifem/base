@@ -94,6 +94,22 @@ ans = order - 1_I4B
 END PROCEDURE LagrangeInDOF_Line
 
 !----------------------------------------------------------------------------
+!                                                         GetTotalDOF_Line
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE GetTotalDOF_Line
+ans = order + 1
+END PROCEDURE GetTotalDOF_Line
+
+!----------------------------------------------------------------------------
+!                                                         LagrangeInDOF_Line
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE GetTotalInDOF_Line
+ans = order - 1_I4B
+END PROCEDURE GetTotalInDOF_Line
+
+!----------------------------------------------------------------------------
 !                                                   EquidistanceInPoint_Line
 !----------------------------------------------------------------------------
 

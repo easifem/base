@@ -672,6 +672,9 @@ opt0 = Input(default=1_I4B, option=opt)
 order0 = Input(default=1_I4B, option=order)
 jj = 3
 
+IF (PRESENT(ncol)) ncol = 3
+IF (PRESENT(nrow)) nrow = 1 + order0
+
 SELECT CASE (opt0)
 CASE (1_I4B)
   con(1:2, 1) = [1, 2]
@@ -728,7 +731,8 @@ END PROCEDURE GetEdgeConnectivity_Triangle
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE GetFaceConnectivity_Triangle
-CALL GetEdgeconnectivity_Triangle(con=con, opt=2_I4B, order=order)
+CALL GetEdgeconnectivity_Triangle(con=con, opt=2_I4B, order=order, &
+                                  nrow=nrow, ncol=ncol)
 END PROCEDURE GetFaceConnectivity_Triangle
 
 !----------------------------------------------------------------------------
@@ -826,9 +830,13 @@ CASE (Triangle15)
   IF (PRESENT(faceElemType)) faceElemType(1:3) = Line5
   IF (PRESENT(tFaceNodes)) tFaceNodes(1:3) = 5_I4B
 
-CASE (Triangle21)
+CASE (Triangle21a, Triangle21b)
   IF (PRESENT(faceElemType)) faceElemType(1:3) = Line6
   IF (PRESENT(tFaceNodes)) tFaceNodes(1:3) = 6_I4B
+
+CASE (Triangle18)
+  IF (PRESENT(faceElemType)) faceElemType(1:3) = Line7
+  IF (PRESENT(tFaceNodes)) tFaceNodes(1:3) = 7_I4B
 
 END SELECT
 

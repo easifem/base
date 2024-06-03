@@ -76,7 +76,8 @@ CASE (Triangle3, &
       Triangle21, &
       Quadrangle4, &
       Quadrangle8, &
-      Quadrangle9)
+      Quadrangle9, &
+      Quadrangle16)
   ans = .TRUE.
 CASE DEFAULT
   ans = .FALSE.
@@ -166,7 +167,7 @@ END PROCEDURE isTriangle2
 
 MODULE PROCEDURE isQuadrangle1
 SELECT CASE (elemType)
-CASE (Quadrangle4, Quadrangle8, Quadrangle9)
+CASE (Quadrangle4, Quadrangle8, Quadrangle9, Quadrangle16)
   ans = .TRUE.
 CASE DEFAULT
   ans = .FALSE.

@@ -15,15 +15,15 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-!!
+
 INTEGER(I4B) :: ii
-!!
+
 ans = .TRUE.
 IF (SIZE(a) .GT. SIZE(b)) THEN
   ans = .FALSE.
   RETURN
 END IF
-!!
+
 DO ii = 1, SIZE(a)
   IF (.NOT. ANY(a(ii) .EQ. b)) THEN
     ans = .FALSE.

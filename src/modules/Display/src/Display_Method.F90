@@ -66,6 +66,8 @@ INTERFACE Display
     & Display_Str2, &
     & Display_Real64, &
     & Display_Real32, &
+    & Display_Cmplx64, &
+    & Display_Cmplx32, &
     & Display_Int8, &
     & Display_Int16, &
     & Display_Int32, &
@@ -74,12 +76,16 @@ INTERFACE Display
     & Display_Vector_Logical, &
     & Display_Vector_Real64, &
     & Display_Vector_Real32, &
+    & Display_Vector_Cmplx64, &
+    & Display_Vector_Cmplx32, &
     & Display_Vector_Int8, &
     & Display_Vector_Int16, &
     & Display_Vector_Int32, &
     & Display_Vector_Int64, &
     & Display_Mat2_Real64, &
     & Display_Mat2_Real32, &
+    & Display_Mat2_Cmplx64, &
+    & Display_Mat2_Cmplx32, &
     & Display_Mat2_Int64, &
     & Display_Mat2_Int32, &
     & Display_Mat2_Int16, &
@@ -87,12 +93,16 @@ INTERFACE Display
     & Display_Mat2_Bool, &
     & Display_Mat3_Real64, &
     & Display_Mat3_Real32, &
+    & Display_Mat3_Cmplx64, &
+    & Display_Mat3_Cmplx32, &
     & Display_Mat3_Int64, &
     & Display_Mat3_Int32, &
     & Display_Mat3_Int16, &
     & Display_Mat3_Int8, &
     & Display_Mat4_Real64, &
     & Display_Mat4_Real32, &
+    & Display_Mat4_Cmplx64, &
+    & Display_Mat4_Cmplx32, &
     & Display_Mat4_Int64, &
     & Display_Mat4_Int32, &
     & Display_Mat4_Int16, &
@@ -286,6 +296,52 @@ SUBROUTINE Display_Real32(val, msg, unitNo, advance)
   CHARACTER(*), OPTIONAL, INTENT(IN) :: advance
 #include "./Display_Scalar.inc"
 END SUBROUTINE Display_Real32
+
+!----------------------------------------------------------------------------
+!                                                                    Display
+!----------------------------------------------------------------------------
+
+!> author: Shion Shimizu
+! date:   2024-05-17
+! summary:       This subroutine displays a scalar complex number
+!
+!## Usage
+!
+!```fortran
+! call display( val=CMPLX(1.0_DFP, 1.0_DFP), msg="var=", unitno=stdout)
+!```
+
+SUBROUTINE Display_Cmplx64(val, msg, unitNo, advance)
+  ! Define intent of dummy variables
+  COMPLEX(DPC), INTENT(IN) :: val
+  CHARACTER(*), INTENT(IN) :: msg
+  INTEGER(I4B), INTENT(IN), OPTIONAL :: unitNo
+  CHARACTER(*), OPTIONAL, INTENT(IN) :: advance
+#include "./Display_Scalar.inc"
+END SUBROUTINE Display_Cmplx64
+
+!----------------------------------------------------------------------------
+!                                                                    Display
+!----------------------------------------------------------------------------
+
+!> author: Shion Shimizu
+! date:   2024-05-17
+! summary:       This subroutine displays a scalar complex number
+!
+!## Usage
+!
+!```fortran
+! call display( val=CMPLX(1.0_DFP, 1.0_DFP), msg="var=", unitno=stdout)
+!```
+
+SUBROUTINE Display_Cmplx32(val, msg, unitNo, advance)
+  ! Define intent of dummy variables
+  COMPLEX(SPC), INTENT(IN) :: val
+  CHARACTER(*), INTENT(IN) :: msg
+  INTEGER(I4B), INTENT(IN), OPTIONAL :: unitNo
+  CHARACTER(*), OPTIONAL, INTENT(IN) :: advance
+#include "./Display_Scalar.inc"
+END SUBROUTINE Display_Cmplx32
 
 !----------------------------------------------------------------------------
 !                                                                    Display
@@ -557,6 +613,81 @@ END SUBROUTINE Display_Vector_Real32
 !                                                                    Display
 !----------------------------------------------------------------------------
 
+!> author: Shion Shimizu
+! date:  2024-05-17
+! summary:  This subroutine displays a vector of complex numbers
+!
+!
+!### Usage
+!
+!```fortran
+! REAL(DFP) :: x(10), y(10)
+! COMPLEX( DFPC ), INTENT(IN) :: vec(10)
+! call random_number(x)
+! call random_number(y)
+! vec = cmplx(x, y, kind=DFP)
+! call display( val=vec, msg="var=", unitno=stdout)
+! call display( val=vec, msg="var=", unitno=stdout, orient="col")
+!```
+
+SUBROUTINE Display_Vector_Cmplx64(val, msg, unitNo, orient, full, advance)
+  ! Define intent of dummy variables
+  COMPLEX(DPC), INTENT(IN) :: val(:)
+  CHARACTER(*), INTENT(IN) :: msg
+  ! message
+  INTEGER(I4B), INTENT(IN), OPTIONAL :: unitNo
+  ! Unit number
+  CHARACTER(*), OPTIONAL, INTENT(IN) :: orient
+  ! orient=row => rowwise printing
+  ! orient=col =>  columnwise printing
+  LOGICAL(LGT), INTENT(IN), OPTIONAL :: full
+  ! logical variable to print the whole vector
+  CHARACTER(*), OPTIONAL, INTENT(IN) :: advance
+    !! vector of real numbers
+#include "./Display_Vector.inc"
+END SUBROUTINE Display_Vector_Cmplx64
+
+!----------------------------------------------------------------------------
+!                                                                    Display
+!----------------------------------------------------------------------------
+
+!> author: Shion Shimizu
+! date:  2024-05-17
+! summary:  This subroutine displays a vector of complex numbers
+!
+!
+!### Usage
+!
+!```fortran
+! REAL(DFP) :: x(10), y(10)
+! COMPLEX( DFPC ), INTENT(IN) :: vec(10)
+! call random_number(x)
+! call random_number(y)
+! vec = cmplx(x, y, kind=DFP)
+! call display( val=vec, msg="var=", unitno=stdout)
+! call display( val=vec, msg="var=", unitno=stdout, orient="col")
+!```
+
+SUBROUTINE Display_Vector_Cmplx32(val, msg, unitNo, orient, full, advance)
+  ! Define intent of dummy variables
+  COMPLEX(SPC), INTENT(IN) :: val(:)
+  CHARACTER(*), INTENT(IN) :: msg
+  ! message
+  INTEGER(I4B), INTENT(IN), OPTIONAL :: unitNo
+  ! Unit number
+  CHARACTER(*), OPTIONAL, INTENT(IN) :: orient
+  ! orient=row => rowwise printing
+  ! orient=col =>  columnwise printing
+  LOGICAL(LGT), INTENT(IN), OPTIONAL :: full
+  ! logical variable to print the whole vector
+  CHARACTER(*), OPTIONAL, INTENT(IN) :: advance
+#include "./Display_Vector.inc"
+END SUBROUTINE Display_Vector_Cmplx32
+
+!----------------------------------------------------------------------------
+!                                                                    Display
+!----------------------------------------------------------------------------
+
 !> author: Vikas Sharma, Ph. D.
 ! date: 21 Sept 2021
 ! summary:  This subroutine display a vector of integer numbers
@@ -761,6 +892,62 @@ END SUBROUTINE Display_Mat2_Real32
 !                                                                    Display
 !----------------------------------------------------------------------------
 
+!> author: Shion Shimizu
+! date:  2024-05-17
+! summary: This subroutine display a matrix of complex numbers
+!
+! ## Usage
+! ```fortran
+! REAL(DFP) :: x(10, 10), y(10, 10)
+! COMPLEX(DFPC) :: mat(10, 10)
+! call RANDOM_NUMBER(x)
+! call RANDOM_NUMBER(y)
+! mat = CMPLX(x, y, kind=DFP)
+! call display( val=mat, msg="var=", unitno=stdout)
+! ```
+
+SUBROUTINE Display_Mat2_Cmplx64(Val, msg, unitNo, full, advance)
+  !   Define intent of dummy variables
+  COMPLEX(DPC), INTENT(IN) :: Val(:, :)
+  CHARACTER(*), INTENT(IN) :: msg
+  INTEGER(I4B), INTENT(IN), OPTIONAL :: unitNo
+  LOGICAL(LGT), INTENT(IN), OPTIONAL :: full
+  CHARACTER(*), OPTIONAL, INTENT(IN) :: advance
+#include "./Display_Mat2.inc"
+END SUBROUTINE Display_Mat2_Cmplx64
+
+!----------------------------------------------------------------------------
+!                                                                    Display
+!----------------------------------------------------------------------------
+
+!> author: Shion Shimizu
+! date:  2024-05-17
+! summary: This subroutine display a matrix of complex numbers
+!
+! ## Usage
+! ```fortran
+! REAL(DFP) :: x(10, 10), y(10, 10)
+! COMPLEX(DFPC) :: mat(10, 10)
+! call RANDOM_NUMBER(x)
+! call RANDOM_NUMBER(y)
+! mat = CMPLX(x, y, kind=DFP)
+! call display( val=mat, msg="var=", unitno=stdout)
+! ```
+
+SUBROUTINE Display_Mat2_Cmplx32(Val, msg, unitNo, full, advance)
+  !   Define intent of dummy variables
+  COMPLEX(SPC), INTENT(IN) :: Val(:, :)
+  CHARACTER(*), INTENT(IN) :: msg
+  INTEGER(I4B), INTENT(IN), OPTIONAL :: unitNo
+  LOGICAL(LGT), INTENT(IN), OPTIONAL :: full
+  CHARACTER(*), OPTIONAL, INTENT(IN) :: advance
+#include "./Display_Mat2.inc"
+END SUBROUTINE Display_Mat2_Cmplx32
+
+!----------------------------------------------------------------------------
+!                                                                    Display
+!----------------------------------------------------------------------------
+
 !> author: Dr. Vikas Sharma
 !
 ! This subroutine display a matrix of real numbers
@@ -944,6 +1131,66 @@ END SUBROUTINE Display_Mat3_Real32
 !                                                                    Display
 !----------------------------------------------------------------------------
 
+!> author: Shion Shimizu
+! date:  2024-05-17
+! summary: This subroutine displays the contents of a rank 3 array.
+!
+!# Introduction
+!
+! #Usage
+! ```fortran
+! REAL(DFP) :: x(5, 5, 2), y(5, 5, 2)
+! COMPLEX(DFPC) :: mat(5, 5, 2)
+! call RANDOM_NUMBER(x)
+! call RANDOM_NUMBER(y)
+! mat = CMPLX(x, y, kind=DFP)
+! call display( val=mat, msg="var=", unitno=stdout)
+! ```
+
+SUBROUTINE Display_Mat3_Cmplx64(Val, msg, unitNo, full, advance)
+  !   Define intent of dummy variables
+  COMPLEX(DPC), INTENT(IN) :: Val(:, :, :)
+  CHARACTER(*), INTENT(IN) :: msg
+  INTEGER(I4B), INTENT(IN), OPTIONAL :: unitNo
+  LOGICAL(LGT), OPTIONAL, INTENT(IN) :: full
+  CHARACTER(*), OPTIONAL, INTENT(IN) :: advance
+#include "./Display_Mat3.inc"
+END SUBROUTINE Display_Mat3_Cmplx64
+
+!----------------------------------------------------------------------------
+!                                                                    Display
+!----------------------------------------------------------------------------
+
+!> author: Shion Shimizu
+! date:  2024-05-17
+! summary: This subroutine displays the contents of a rank 3 array.
+!
+!# Introduction
+!
+! #Usage
+! ```fortran
+! REAL(DFP) :: x(5, 5, 2), y(5, 5, 2)
+! COMPLEX(DFPC) :: mat(5, 5, 2)
+! call RANDOM_NUMBER(x)
+! call RANDOM_NUMBER(y)
+! mat = CMPLX(x, y, kind=DFP)
+! call display( val=mat, msg="var=", unitno=stdout)
+! ```
+
+SUBROUTINE Display_Mat3_Cmplx32(Val, msg, unitNo, full, advance)
+  !   Define intent of dummy variables
+  COMPLEX(SPC), INTENT(IN) :: Val(:, :, :)
+  CHARACTER(*), INTENT(IN) :: msg
+  INTEGER(I4B), INTENT(IN), OPTIONAL :: unitNo
+  LOGICAL(LGT), OPTIONAL, INTENT(IN) :: full
+  CHARACTER(*), OPTIONAL, INTENT(IN) :: advance
+#include "./Display_Mat3.inc"
+END SUBROUTINE Display_Mat3_Cmplx32
+
+!----------------------------------------------------------------------------
+!                                                                    Display
+!----------------------------------------------------------------------------
+
 !> author: Vikas Sharma, Ph. D.
 ! date: 21 Sept 2021
 ! summary: This subroutine displays the contents of a rank 3 array.
@@ -1117,6 +1364,67 @@ SUBROUTINE Display_Mat4_Real32(Val, msg, unitNo, full, advance)
   CHARACTER(*), OPTIONAL, INTENT(IN) :: advance
 #include "./Display_Mat4.inc"
 END SUBROUTINE Display_Mat4_Real32
+
+!----------------------------------------------------------------------------
+!                                                                    Display
+!----------------------------------------------------------------------------
+
+!> author: Shion Shimizu
+! date:   2024-05-17
+! summary:  This subroutine displays the content of rank4 matrix
+!
+!# Introduction
+!
+!### Usage
+!
+! ```fortran
+! REAL(DFP) :: x(3, 3, 3, 2), y(3, 3, 3, 2)
+! COMPLEX(DFPC) :: mat(3, 3, 3, 2)
+! call RANDOM_NUMBER(x)
+! call RANDOM_NUMBER(y)
+! mat = CMPLX(x, y, kind=DFP)
+! call display( val=mat, msg="var=", unitno=stdout)
+! ```
+
+SUBROUTINE Display_Mat4_Cmplx64(Val, msg, unitNo, full, advance)
+  ! Define intent of dummy variables
+  COMPLEX(DPC), INTENT(IN) :: Val(:, :, :, :)
+  CHARACTER(*), INTENT(IN) :: msg
+  INTEGER(I4B), INTENT(IN), OPTIONAL :: unitNo
+  LOGICAL(LGT), OPTIONAL, INTENT(IN) :: full
+  CHARACTER(*), OPTIONAL, INTENT(IN) :: advance
+#include "./Display_Mat4.inc"
+END SUBROUTINE Display_Mat4_Cmplx64
+
+!----------------------------------------------------------------------------
+!                                                                    Display
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 21 Sept 2021
+! summary: This subroutine displays the content of rank4 matrix
+!
+!# Introduction
+!
+! This subroutine displays the content of rank4 matrix
+!
+!### Usage
+!
+!```fortran
+! real( dfp ) :: mat(3, 3, 2, 2)
+! call RANDOM_NUMBER(mat)
+! call display( val=mat, msg="var=", unitno=stdout)
+!```
+
+SUBROUTINE Display_Mat4_Cmplx32(Val, msg, unitNo, full, advance)
+  ! Define intent of dummy variables
+  COMPLEX(SPC), INTENT(IN) :: Val(:, :, :, :)
+  CHARACTER(*), INTENT(IN) :: msg
+  INTEGER(I4B), INTENT(IN), OPTIONAL :: unitNo
+  LOGICAL(LGT), OPTIONAL, INTENT(IN) :: full
+  CHARACTER(*), OPTIONAL, INTENT(IN) :: advance
+#include "./Display_Mat4.inc"
+END SUBROUTINE Display_Mat4_Cmplx32
 
 !----------------------------------------------------------------------------
 !                                                                    Display

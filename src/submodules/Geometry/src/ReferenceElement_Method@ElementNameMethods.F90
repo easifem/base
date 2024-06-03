@@ -59,44 +59,102 @@ IMPLICIT NONE
 CONTAINS
 
 !----------------------------------------------------------------------------
+!                                                            ElementTopology
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE refelem_ElementTopology1
+SELECT CASE (elemType)
+CASE (Point)
+  ans = Point
+
+CASE (Line2, Line3, Line4, Line5, Line6, Line7, Line8, Line9, Line10, Line11)
+
+  ans = Line
+
+CASE (Triangle3, Triangle6, Triangle9, Triangle10, Triangle12, &
+      Triangle15a, Triangle15b, Triangle18, Triangle21a, Triangle21b, &
+      Triangle24, Triangle27, Triangle28, Triangle30, Triangle36, &
+      Triangle45, Triangle55, Triangle66)
+
+  ans = Triangle
+
+CASE (Quadrangle4, Quadrangle8, Quadrangle9, Quadrangle16a, Quadrangle16b, &
+      Quadrangle20, Quadrangle24, Quadrangle25, Quadrangle28, Quadrangle32, &
+     Quadrangle36a, Quadrangle36b, Quadrangle40, Quadrangle49, Quadrangle64, &
+      Quadrangle81, Quadrangle100, Quadrangle121)
+  ans = Quadrangle
+
+CASE (Tetrahedron4, Tetrahedron10, Tetrahedron20, Tetrahedron35, &
+      Tetrahedron56)
+  ans = Tetrahedron
+
+CASE (Hexahedron8, Hexahedron27, Hexahedron20, Hexahedron64, Hexahedron125)
+  ans = Hexahedron
+
+CASE (Prism6, Prism18, Prism15)
+  ans = Prism
+
+CASE (Pyramid5, Pyramid13, Pyramid14)
+  ans = Pyramid
+
+CASE DEFAULT
+  ans = 0
+END SELECT
+
+END PROCEDURE refelem_ElementTopology1
+
+!----------------------------------------------------------------------------
+!                                                            ElementTopology
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE refelem_ElementTopology2
+ans = refelem_ElementTopology1(obj%name)
+END PROCEDURE refelem_ElementTopology2
+
+!----------------------------------------------------------------------------
 !                                                                ElementName
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Element_Name
-SELECT CASE (elemType)
+INTEGER(I4B) :: topo
 
-CASE (Line2, Line3, Line4, Line5, Line6, Point)
+topo = refelem_elementtopology1(elemType)
+
+SELECT CASE (topo)
+
+CASE (Point)
+  ans = "Point"
+
+CASE (Line)
 
   ans = ElementName_Line(elemType)
 
-CASE (Triangle3, Triangle6, Triangle9, Triangle10,  &
-  & Triangle12, Triangle15a, Triangle15b, Triangle21)
+CASE (Triangle)
 
   ans = ElementName_Triangle(elemType)
 
-CASE (Quadrangle4, Quadrangle8, Quadrangle9, Quadrangle16)
+CASE (Quadrangle)
 
   ans = ElementName_Quadrangle(elemType)
 
-CASE (Tetrahedron4, Tetrahedron10, Tetrahedron20, Tetrahedron35,  &
-  & Tetrahedron56)
+CASE (Tetrahedron)
 
   ans = ElementName_Tetrahedron(elemType)
 
-CASE (Hexahedron8, Hexahedron27, Hexahedron20, Hexahedron64,  &
-  & Hexahedron125)
+CASE (Hexahedron)
 
   ans = ElementName_Hexahedron(elemType)
 
-CASE (Prism6, Prism18, Prism15)
+CASE (Prism)
 
   ans = ElementName_Prism(elemType)
 
-CASE (Pyramid5, Pyramid13, Pyramid14)
+CASE (Pyramid)
 
   ans = ElementName_Pyramid(elemType)
 
 CASE DEFAULT
+
   ans = "NONE"
 
 END SELECT
@@ -115,35 +173,35 @@ END PROCEDURE Element_Name_obj
 !                                                               ElementType
 !----------------------------------------------------------------------------
 MODULE PROCEDURE Element_Type
-CHARACTER(4) :: name
-name = elemName(1:4)
+CHARACTER(2) :: name
+name = elemName(1:2)
 
 SELECT CASE (name)
-CASE ("Line", "Point")
+CASE ("Li", "Po")
   ans = ElementType_Line(elemName)
 
-CASE ("Tria")
+CASE ("Tr")
   ans = ElementType_Triangle(elemName)
 
-CASE ("Quad")
+CASE ("Qu")
   ans = ElementType_Quadrangle(elemName)
 
-CASE ("Tetr")
+CASE ("Te")
   ans = ElementType_Tetrahedron(elemName)
 
-CASE ("Hexa")
+CASE ("He")
   ans = ElementType_Hexahedron(elemName)
 
-CASE ("Pris")
+CASE ("Pr")
   ans = ElementType_Prism(elemName)
 
-CASE ("Pyra")
+CASE ("Py")
   ans = ElementType_Pyramid(elemName)
 
 CASE DEFAULT
   ans = 0
-
 END SELECT
+
 END PROCEDURE Element_Type
 
 !----------------------------------------------------------------------------
@@ -159,40 +217,42 @@ END PROCEDURE Element_Type_obj
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Element_Order
-SELECT CASE (elemType)
+INTEGER(I4B) :: topo
 
-CASE (Line2, Line3, Line4, Line5, Line6, Point)
+topo = refelem_elementtopology1(elemType)
+
+SELECT CASE (topo)
+
+CASE (Line)
 
   ans = ElementOrder_Line(elemType)
 
-CASE (Triangle3, Triangle6, Triangle9, Triangle10,  &
-  & Triangle12, Triangle15a, Triangle15b, Triangle21)
+CASE (Triangle)
 
   ans = ElementOrder_Triangle(elemType)
 
-CASE (Quadrangle4, Quadrangle8, Quadrangle9, Quadrangle16)
+CASE (Quadrangle)
 
   ans = ElementOrder_Quadrangle(elemType)
 
-CASE (Tetrahedron4, Tetrahedron10, Tetrahedron20, Tetrahedron35,  &
-  & Tetrahedron56)
+CASE (Tetrahedron)
 
   ans = ElementOrder_Tetrahedron(elemType)
 
-CASE (Hexahedron8, Hexahedron27, Hexahedron20, Hexahedron64,  &
-  & Hexahedron125)
+CASE (Hexahedron)
 
   ans = ElementOrder_Hexahedron(elemType)
 
-CASE (Prism6, Prism18, Prism15)
+CASE (Prism)
 
   ans = ElementOrder_Prism(elemType)
 
-CASE (Pyramid5, Pyramid13, Pyramid14)
+CASE (Pyramid)
 
   ans = ElementOrder_Pyramid(elemType)
 
 CASE DEFAULT
+
   ans = 0
 
 END SELECT
@@ -211,42 +271,19 @@ END PROCEDURE Element_Order_refelem
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Elem_XiDimension1
-SELECT CASE (elemType)
-CASE (Tetrahedron4, &
-      Hexahedron8, &
-      Prism6, &
-      Pyramid5, &
-      Tetrahedron10, &
-      Hexahedron27, &
-      Prism18, &
-      Pyramid14, &
-      Hexahedron20, &
-      Prism15, &
-      Pyramid13, &
-      Tetrahedron20, &
-      Tetrahedron35, &
-      Tetrahedron56, &
-      Hexahedron64, &
-      Hexahedron125)
+INTEGER(I4B) :: topo
+topo = refelem_elementtopology1(elemType)
+
+SELECT CASE (topo)
+CASE (Tetrahedron, Hexahedron, Prism, Pyramid)
   ans = 3
-CASE (Triangle3, &
-      Triangle6, &
-      Triangle9, &
-      Triangle10, &
-      Triangle12, &
-      Triangle15a, &
-      Triangle15b, &
-      Triangle21, &
-      Quadrangle4, &
-      Quadrangle8, &
-      Quadrangle9)
+
+CASE (Triangle, Quadrangle)
   ans = 2
-CASE (Line2, &
-      Line3, &
-      Line4, &
-      Line5, &
-      Line6)
+
+CASE (Line)
   ans = 1
+
 CASE DEFAULT
   ans = 0
 END SELECT
@@ -261,82 +298,41 @@ ans = obj%xidimension
 END PROCEDURE Elem_Xidimension2
 
 !----------------------------------------------------------------------------
-!                                                            ElementTopology
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE refelem_ElementTopology1
-SELECT CASE (elemType)
-CASE (Line2, &
-  & Line3, &
-  & Line4, &
-  & Line5, &
-  & Line6)
-  ans = Line
-CASE (Triangle3, Triangle6, &
-  & Triangle9, Triangle10, Triangle12, Triangle15a, &
-  & Triangle15b, Triangle21)
-  ans = Triangle
-CASE (Quadrangle4, Quadrangle8, &
-  & Quadrangle9)
-  ans = Quadrangle
-CASE (Tetrahedron4, Tetrahedron10, &
-  & Tetrahedron20, Tetrahedron35, Tetrahedron56)
-  ans = Tetrahedron
-CASE (Hexahedron8, Hexahedron27, &
-  & Hexahedron20, Hexahedron64, Hexahedron125)
-  ans = Hexahedron
-CASE (Prism6, Prism18, Prism15)
-  ans = Prism
-CASE (Pyramid5, Pyramid13, Pyramid14)
-  ans = Pyramid
-CASE DEFAULT
-  ans = 0
-END SELECT
-END PROCEDURE refelem_ElementTopology1
-
-!----------------------------------------------------------------------------
-!                                                            ElementTopology
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE refelem_ElementTopology2
-ans = refelem_ElementTopology1(obj%name)
-END PROCEDURE refelem_ElementTopology2
-
-!----------------------------------------------------------------------------
 !                                                        TotalNodesInElement
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Total_Nodes_In_Element
-SELECT CASE (elemType)
+INTEGER(I4B) :: topo
 
-CASE (Line2, Line3, Line4, Line5, Line6, Point)
+topo = refelem_elementtopology1(elemType)
+
+SELECT CASE (topo)
+
+CASE (Line)
 
   ans = TotalNodesInElement_Line(elemType)
 
-CASE (Triangle3, Triangle6, Triangle9, Triangle10,  &
-  & Triangle12, Triangle15a, Triangle15b, Triangle21)
+CASE (Triangle)
 
   ans = TotalNodesInElement_Triangle(elemType)
 
-CASE (Quadrangle4, Quadrangle8, Quadrangle9, Quadrangle16)
+CASE (Quadrangle)
 
   ans = TotalNodesInElement_Quadrangle(elemType)
 
-CASE (Tetrahedron4, Tetrahedron10, Tetrahedron20, Tetrahedron35,  &
-  & Tetrahedron56)
+CASE (Tetrahedron)
 
   ans = TotalNodesInElement_Tetrahedron(elemType)
 
-CASE (Hexahedron8, Hexahedron27, Hexahedron20, Hexahedron64,  &
-  & Hexahedron125)
+CASE (Hexahedron)
 
   ans = TotalNodesInElement_Hexahedron(elemType)
 
-CASE (Prism6, Prism18, Prism15)
+CASE (Prism)
 
   ans = TotalNodesInElement_Prism(elemType)
 
-CASE (Pyramid5, Pyramid13, Pyramid14)
+CASE (Pyramid)
 
   ans = TotalNodesInElement_Pyramid(elemType)
 
@@ -344,6 +340,7 @@ CASE DEFAULT
   ans = 0
 
 END SELECT
+
 END PROCEDURE Total_Nodes_In_Element
 
 END SUBMODULE ElementNameMethods

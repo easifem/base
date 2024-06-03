@@ -329,6 +329,9 @@ con(1:2, 5) = [2, 5]
 con(1:2, 6) = [3, 4]
 con(1:2, 7) = [3, 5]
 con(1:2, 8) = [4, 5]
+
+IF (PRESENT(nrow)) nrow = 2
+IF (PRESENT(ncol)) ncol = 8
 END PROCEDURE GetEdgeConnectivity_Pyramid
 
 !----------------------------------------------------------------------------
@@ -341,6 +344,8 @@ con(1:4, 2) = [2, 3, 5, 0]
 con(1:4, 3) = [3, 4, 5, 0]
 con(1:4, 4) = [1, 5, 4, 0]
 con(1:4, 5) = [1, 2, 5, 0]
+IF (PRESENT(nrow)) nrow = 4
+IF (PRESENT(ncol)) ncol = 5
 END PROCEDURE GetFaceConnectivity_Pyramid
 
 !----------------------------------------------------------------------------

@@ -16,8 +16,105 @@
 !
 
 MODULE GE_EigenValueMethods
-! USE GlobalData, ONLY: DFP, I4B, LGT
-! IMPLICIT NONE
+USE GlobalData, ONLY: DFP, DFPC, I4B, LGT
+IMPLICIT NONE
+CHARACTER(*), PARAMETER :: modName = "GE_EigenValueMethods"
+PRIVATE
+
+PUBLIC :: GetEigVals
+PUBLIC :: GetEig
+
+!----------------------------------------------------------------------------
+!                                                                  getEigVals
+!----------------------------------------------------------------------------
+
+!> author: Shion Shimizu
+! date:   2024-05-17
+! summary:  calculate eigenvalues for real matrix
+!
+! if destroy is false matrix A is preserved
+!
+
+INTERFACE GetEigVals
+  MODULE SUBROUTINE deigvals(A, lam, destroy)
+    REAL(DFP), INTENT(INOUT) :: A(:, :)
+    COMPLEX(DFPC), INTENT(INOUT) :: lam(:)
+    LOGICAL(LGT), OPTIONAL, INTENT(IN) :: destroy
+    ! default is true
+  END SUBROUTINE deigvals
+END INTERFACE GetEigVals
+
+!----------------------------------------------------------------------------
+!                                                                  getEigVals
+!----------------------------------------------------------------------------
+
+!> author: Shion Shimizu
+! date:   2024-05-17
+! summary:  calculate eigenvalues for complex matrix
+!
+! if destroy is false matrix A is preserved
+!
+
+INTERFACE GetEigVals
+  MODULE SUBROUTINE zeigvals(A, lam, destroy)
+    COMPLEX(DFPC), INTENT(INOUT) :: A(:, :)
+    COMPLEX(DFPC), INTENT(INOUT) :: lam(:)
+    LOGICAL(LGT), OPTIONAL, INTENT(IN) :: destroy
+    ! default is true
+  END SUBROUTINE zeigvals
+END INTERFACE GetEigVals
+
+!----------------------------------------------------------------------------
+!                                                                     getEig
+!----------------------------------------------------------------------------
+
+!> author: Shion Shimizu
+! date:   2024-05-17
+! summary:  calculate eigenvalues and eigenvectors for real matrix
+!
+! if destroy is false matrix A is preserved
+!
+
+INTERFACE GetEig
+  MODULE SUBROUTINE deig(A, lam, c, destroy)
+    REAL(DFP), INTENT(INOUT) :: A(:, :)
+    COMPLEX(DFPC), INTENT(INOUT) :: lam(:)
+    ! eigenvalues
+    ! should be allocated
+    COMPLEX(DFPC), INTENT(INOUT) :: c(:, :)
+    ! eigenvectors
+    ! c(i,j) = ith component of jth eigenvec.
+    ! should be allocated
+    LOGICAL(LGT), OPTIONAL, INTENT(IN) :: destroy
+    ! default is true
+  END SUBROUTINE deig
+END INTERFACE GetEig
+
+!----------------------------------------------------------------------------
+!                                                                     getEig
+!----------------------------------------------------------------------------
+
+!> author: Shion Shimizu
+! date:   2024-05-17
+! summary:  calculate eigenvalues and eigenvectors for complex matrix
+!
+! if destroy is false matrix A is preserved
+!
+
+INTERFACE GetEig
+  MODULE SUBROUTINE zeig(A, lam, c, destroy)
+    COMPLEX(DFPC), INTENT(INOUT) :: A(:, :)
+    COMPLEX(DFPC), INTENT(INOUT) :: lam(:)
+    ! eigenvalues
+    ! should be allocated
+    COMPLEX(DFPC), INTENT(INOUT) :: c(:, :)
+    ! eigenvectors
+    ! c(i,j) = ith component of jth eigenvec.
+    ! should be allocated
+    LOGICAL(LGT), OPTIONAL, INTENT(IN) :: destroy
+    ! default is true
+  END SUBROUTINE zeig
+END INTERFACE GetEig
 
 !----------------------------------------------------------------------------
 !                                                          DGEES@EigenValue

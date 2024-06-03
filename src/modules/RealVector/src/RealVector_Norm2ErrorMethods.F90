@@ -16,19 +16,21 @@
 !
 
 MODULE RealVector_Norm2ErrorMethods
-USE GlobalData
-USE BaseType
+USE GlobalData, ONLY: I4B, DFP
+USE BaseType, ONLY: RealVector_, DOF_
+
 IMPLICIT NONE
 PRIVATE
+
 PUBLIC :: Norm2Error
 
 !----------------------------------------------------------------------------
 !                                                                Norm2Error
 !----------------------------------------------------------------------------
 
-INTERFACE
-  MODULE PURE FUNCTION realvec_norm2error_1(obj, dofobj, ivarobj, &
-    & idofobj, obj2, dofobj2, ivarobj2, idofobj2) RESULT(ans)
+INTERFACE Norm2Error
+  MODULE PURE FUNCTION obj_norm2error_1(obj, dofobj, ivarobj, &
+                       idofobj, obj2, dofobj2, ivarobj2, idofobj2) RESULT(ans)
     CLASS(RealVector_), INTENT(IN) :: obj
     TYPE(DOF_), INTENT(IN) :: dofobj
     INTEGER(I4B), INTENT(IN) :: ivarobj
@@ -38,20 +40,16 @@ INTERFACE
     INTEGER(I4B), INTENT(IN) :: ivarobj2
     INTEGER(I4B), INTENT(IN) :: idofobj2
     REAL(DFP) :: ans
-  END FUNCTION realvec_norm2error_1
-END INTERFACE
-
-INTERFACE Norm2Error
-  MODULE PROCEDURE realvec_norm2error_1
+  END FUNCTION obj_norm2error_1
 END INTERFACE Norm2Error
 
 !----------------------------------------------------------------------------
 !                                                                Norm2Error
 !----------------------------------------------------------------------------
 
-INTERFACE
-  MODULE PURE FUNCTION realvec_norm2error_2(obj, dofobj, ivarobj, &
-    & idofobj, obj2, dofobj2, ivarobj2, idofobj2) RESULT(ans)
+INTERFACE Norm2Error
+  MODULE PURE FUNCTION obj_norm2error_2(obj, dofobj, ivarobj, &
+                       idofobj, obj2, dofobj2, ivarobj2, idofobj2) RESULT(ans)
     CLASS(RealVector_), INTENT(IN) :: obj
     TYPE(DOF_), INTENT(IN) :: dofobj
     INTEGER(I4B), INTENT(IN) :: ivarobj
@@ -61,20 +59,16 @@ INTERFACE
     INTEGER(I4B), INTENT(IN) :: ivarobj2
     INTEGER(I4B), INTENT(IN) :: idofobj2(:)
     REAL(DFP) :: ans
-  END FUNCTION realvec_norm2error_2
-END INTERFACE
-
-INTERFACE Norm2Error
-  MODULE PROCEDURE realvec_norm2error_2
+  END FUNCTION obj_norm2error_2
 END INTERFACE Norm2Error
 
 !----------------------------------------------------------------------------
 !                                                                Norm2Error
 !----------------------------------------------------------------------------
 
-INTERFACE
-  MODULE PURE FUNCTION realvec_norm2error_3(obj, dofobj, idofobj, obj2, &
-    & dofobj2, idofobj2) RESULT(ans)
+INTERFACE Norm2Error
+  MODULE PURE FUNCTION obj_norm2error_3(obj, dofobj, idofobj, obj2, &
+                                        dofobj2, idofobj2) RESULT(ans)
     CLASS(RealVector_), INTENT(IN) :: obj
     TYPE(DOF_), INTENT(IN) :: dofobj
     INTEGER(I4B), INTENT(IN) :: idofobj
@@ -82,20 +76,16 @@ INTERFACE
     TYPE(DOF_), INTENT(IN) :: dofobj2
     INTEGER(I4B), INTENT(IN) :: idofobj2
     REAL(DFP) :: ans
-  END FUNCTION realvec_norm2error_3
-END INTERFACE
-
-INTERFACE Norm2Error
-  MODULE PROCEDURE realvec_norm2error_3
+  END FUNCTION obj_norm2error_3
 END INTERFACE Norm2Error
 
 !----------------------------------------------------------------------------
 !                                                                Norm2Error
 !----------------------------------------------------------------------------
 
-INTERFACE
-  MODULE PURE FUNCTION realvec_norm2error_4(obj, dofobj, idofobj, obj2, &
-    & dofobj2, idofobj2) RESULT(ans)
+INTERFACE Norm2Error
+  MODULE PURE FUNCTION obj_norm2error_4(obj, dofobj, idofobj, obj2, &
+                                        dofobj2, idofobj2) RESULT(ans)
     CLASS(RealVector_), INTENT(IN) :: obj
     TYPE(DOF_), INTENT(IN) :: dofobj
     INTEGER(I4B), INTENT(IN) :: idofobj(:)
@@ -103,21 +93,17 @@ INTERFACE
     TYPE(DOF_), INTENT(IN) :: dofobj2
     INTEGER(I4B), INTENT(IN) :: idofobj2(:)
     REAL(DFP) :: ans
-  END FUNCTION realvec_norm2error_4
-END INTERFACE
-
-INTERFACE Norm2Error
-  MODULE PROCEDURE realvec_norm2error_4
+  END FUNCTION obj_norm2error_4
 END INTERFACE Norm2Error
 
 !----------------------------------------------------------------------------
 !                                                                Norm2Error
 !----------------------------------------------------------------------------
 
-INTERFACE
-  MODULE PURE FUNCTION realvec_norm2error_5(obj, dofobj, ivarobj, &
-    & spaceCompoObj, timeCompoObj, obj2, dofobj2, ivarobj2, &
-    & spaceCompoobj2, timeCompoobj2) RESULT(ans)
+INTERFACE Norm2Error
+  MODULE PURE FUNCTION obj_norm2error_5(obj, dofobj, ivarobj, &
+                       spaceCompoObj, timeCompoObj, obj2, dofobj2, ivarobj2, &
+                                    spaceCompoobj2, timeCompoobj2) RESULT(ans)
     CLASS(RealVector_), INTENT(IN) :: obj
     TYPE(DOF_), INTENT(IN) :: dofobj
     INTEGER(I4B), INTENT(IN) :: ivarobj
@@ -129,21 +115,17 @@ INTERFACE
     INTEGER(I4B), INTENT(IN) :: spaceCompoobj2
     INTEGER(I4B), INTENT(IN) :: timeCompoobj2
     REAL(DFP) :: ans
-  END FUNCTION realvec_norm2error_5
-END INTERFACE
-
-INTERFACE Norm2Error
-  MODULE PROCEDURE realvec_norm2error_5
+  END FUNCTION obj_norm2error_5
 END INTERFACE Norm2Error
 
 !----------------------------------------------------------------------------
 !                                                                Norm2Error
 !----------------------------------------------------------------------------
 
-INTERFACE
-  MODULE PURE FUNCTION realvec_norm2error_6(obj, dofobj, ivarobj, &
-    & spaceCompoObj, timeCompoObj, obj2, dofobj2, ivarobj2, &
-    & spaceCompoobj2, timeCompoobj2) RESULT(ans)
+INTERFACE Norm2Error
+  MODULE PURE FUNCTION obj_norm2error_6(obj, dofobj, ivarobj, &
+                       spaceCompoObj, timeCompoObj, obj2, dofobj2, ivarobj2, &
+                                    spaceCompoobj2, timeCompoobj2) RESULT(ans)
     CLASS(RealVector_), INTENT(IN) :: obj
     TYPE(DOF_), INTENT(IN) :: dofobj
     INTEGER(I4B), INTENT(IN) :: ivarobj
@@ -155,21 +137,17 @@ INTERFACE
     INTEGER(I4B), INTENT(IN) :: spaceCompoobj2
     INTEGER(I4B), INTENT(IN) :: timeCompoobj2(:)
     REAL(DFP) :: ans
-  END FUNCTION realvec_norm2error_6
-END INTERFACE
-
-INTERFACE Norm2Error
-  MODULE PROCEDURE realvec_norm2error_6
+  END FUNCTION obj_norm2error_6
 END INTERFACE Norm2Error
 
 !----------------------------------------------------------------------------
 !                                                                Norm2Error
 !----------------------------------------------------------------------------
 
-INTERFACE
-  MODULE PURE FUNCTION realvec_norm2error_7(obj, dofobj, ivarobj, &
-    & spaceCompoObj, timeCompoObj, obj2, dofobj2, ivarobj2, &
-    & spaceCompoobj2, timeCompoobj2) RESULT(ans)
+INTERFACE Norm2Error
+  MODULE PURE FUNCTION obj_norm2error_7(obj, dofobj, ivarobj, &
+                       spaceCompoObj, timeCompoObj, obj2, dofobj2, ivarobj2, &
+                                    spaceCompoobj2, timeCompoobj2) RESULT(ans)
     CLASS(RealVector_), INTENT(IN) :: obj
     TYPE(DOF_), INTENT(IN) :: dofobj
     INTEGER(I4B), INTENT(IN) :: ivarobj
@@ -181,11 +159,7 @@ INTERFACE
     INTEGER(I4B), INTENT(IN) :: spaceCompoobj2(:)
     INTEGER(I4B), INTENT(IN) :: timeCompoobj2
     REAL(DFP) :: ans
-  END FUNCTION realvec_norm2error_7
-END INTERFACE
-
-INTERFACE Norm2Error
-  MODULE PROCEDURE realvec_norm2error_7
+  END FUNCTION obj_norm2error_7
 END INTERFACE Norm2Error
 
 END MODULE RealVector_Norm2ErrorMethods

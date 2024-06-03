@@ -438,7 +438,7 @@ END INTERFACE RefCoord_Line
 ! This routine calls [[GetEdgeConnectivity_Line]] with opt=2
 
 INTERFACE
-  MODULE PURE SUBROUTINE GetFaceConnectivity_Line(con, opt, order)
+  MODULE PURE SUBROUTINE GetFaceConnectivity_Line(con, opt, order, nrow, ncol)
     INTEGER(I4B), INTENT(INOUT) :: con(:, :)
     !! Connectivity
     !! The columns represents the Face number
@@ -449,6 +449,10 @@ INTERFACE
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: order
     !! order of element
     !! Currently any order is valid
+    INTEGER(I4B), OPTIONAL, INTENT(OUT) :: nrow
+    !! Number of rows written in con
+    INTEGER(I4B), OPTIONAL, INTENT(OUT) :: ncol
+    !! Numbers of cols written in con
   END SUBROUTINE GetFaceConnectivity_Line
 END INTERFACE
 
@@ -461,7 +465,7 @@ END INTERFACE
 ! summary:  Returns the element type of each face
 
 INTERFACE
-  MODULE PURE SUBROUTINE GetEdgeConnectivity_Line(con, opt, order)
+  MODULE PURE SUBROUTINE GetEdgeConnectivity_Line(con, opt, order, nrow, ncol)
     INTEGER(I4B), INTENT(INOUT) :: con(:, :)
     !! Connectivity
     !! The columns represents the edge number
@@ -476,6 +480,10 @@ INTERFACE
     !! order of element
     !! Currently order is used only when opt=2
     !! Currently any order is valid
+    INTEGER(I4B), OPTIONAL, INTENT(OUT) :: nrow
+    !! Number of rows written in con
+    INTEGER(I4B), OPTIONAL, INTENT(OUT) :: ncol
+    !! Numbers of cols written in con
   END SUBROUTINE GetEdgeConnectivity_Line
 END INTERFACE
 

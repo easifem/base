@@ -16,7 +16,21 @@
 !
 
 SUBMODULE(RealVector_Blas1Methods) Methods
-USE BaseMethod
+
+USE F95_BLAS, ONLY: BLAS_AXPY => AXPY, &
+                    BLAS_COPY => COPY, &
+                    BLAS_DOT => DOT, &
+                    BLAS_NRM2 => NRM2, &
+                    BLAS_SCAL => SCAL, &
+                    BLAS_SWAP => SWAP, &
+                    BLAS_ASUM => ASUM
+
+USE RealVector_ShallowCopyMethods, ONLY: ShallowCopy
+USE RealVector_ConstructorMethods, ONLY: SetTotalDimension, Size
+USE InputUtility, ONLY: Input
+
+USE ReallocateUtility, ONLY: Reallocate
+
 IMPLICIT NONE
 CONTAINS
 
@@ -25,7 +39,7 @@ CONTAINS
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE ASUMscalar
-ans = ASUM(obj%Val)
+ans = BLAS_ASUM(obj%Val)
 END PROCEDURE ASUMscalar
 
 !----------------------------------------------------------------------------
@@ -35,7 +49,7 @@ END PROCEDURE ASUMscalar
 MODULE PROCEDURE ASUMvector
 INTEGER(I4B) :: i
 DO i = 1, SIZE(obj)
-  ans = ans + ASUM(obj(i)%Val)
+  ans = ans + BLAS_ASUM(obj(i)%Val)
 END DO
 END PROCEDURE ASUMvector
 
@@ -44,7 +58,7 @@ END PROCEDURE ASUMvector
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE scalarAXPYscalar
-CALL AXPY(X=X%Val, Y=Y%Val, A=A)
+CALL BLAS_AXPY(X=X%Val, Y=Y%Val, A=A)
 END PROCEDURE scalarAXPYscalar
 
 !----------------------------------------------------------------------------
@@ -52,7 +66,7 @@ END PROCEDURE scalarAXPYscalar
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE scalarAXPYintrinsic
-CALL AXPY(X=X, Y=Y%Val, A=A)
+CALL BLAS_AXPY(X=X, Y=Y%Val, A=A)
 END PROCEDURE scalarAXPYintrinsic
 
 !----------------------------------------------------------------------------
@@ -62,7 +76,7 @@ END PROCEDURE scalarAXPYintrinsic
 MODULE PROCEDURE vectorAXPYvector
 INTEGER(I4B) :: i
 DO i = 1, SIZE(X)
-  CALL AXPY(Y=Y(i)%Val, A=A(i), X=X(i)%Val)
+  CALL BLAS_AXPY(Y=Y(i)%Val, A=A(i), X=X(i)%Val)
 END DO
 END PROCEDURE vectorAXPYvector
 
@@ -72,8 +86,8 @@ END PROCEDURE vectorAXPYvector
 
 MODULE PROCEDURE scalarCOPYscalar
 CALL SHALLOWCOPY(Y=Y%Val, X=X%Val)
-CALL setTotalDimension(Y, 1_I4B)
-CALL COPY(Y=Y%Val, X=X%Val)
+CALL SetTotalDimension(Y, 1_I4B)
+CALL BLAS_COPY(Y=Y%Val, X=X%Val)
 END PROCEDURE scalarCOPYscalar
 
 !----------------------------------------------------------------------------
@@ -82,7 +96,7 @@ END PROCEDURE scalarCOPYscalar
 
 MODULE PROCEDURE scalarCOPYintrinsic_1a
 CALL SHALLOWCOPY(Y=Y%Val, X=X)
-CALL setTotalDimension(Y, 1_I4B)
+CALL SetTotalDimension(Y, 1_I4B)
 Y%Val = X
 END PROCEDURE scalarCOPYintrinsic_1a
 
@@ -92,8 +106,8 @@ END PROCEDURE scalarCOPYintrinsic_1a
 
 MODULE PROCEDURE scalarCOPYintrinsic_1b
 CALL SHALLOWCOPY(Y=Y%Val, X=X)
-CALL setTotalDimension(Y, 1_I4B)
-CALL COPY(Y=Y%Val, X=X)
+CALL SetTotalDimension(Y, 1_I4B)
+CALL BLAS_COPY(Y=Y%Val, X=X)
 ! Y%Val = X
 END PROCEDURE scalarCOPYintrinsic_1b
 
@@ -114,7 +128,7 @@ END PROCEDURE intrinsicCOPYscalar_1a
 MODULE PROCEDURE intrinsicCOPYscalar_1b
 CALL SHALLOWCOPY(Y=Y, X=X%Val)
 ! Y = X%Val
-CALL COPY(Y=Y, X=X%Val)
+CALL BLAS_COPY(Y=Y, X=X%Val)
 END PROCEDURE intrinsicCOPYscalar_1b
 
 !----------------------------------------------------------------------------
@@ -125,8 +139,8 @@ MODULE PROCEDURE vectorCOPYvector
 INTEGER(I4B) :: i
 CALL SHALLOWCOPY(Y=Y, X=X)
 DO i = 1, SIZE(X)
-  CALL COPY(Y=Y(i)%Val, X=X(i)%Val)
-  CALL setTotalDimension(Y(i), 1_I4B)
+  CALL BLAS_COPY(Y=Y(i)%Val, X=X(i)%Val)
+  CALL SetTotalDimension(Y(i), 1_I4B)
 END DO
 END PROCEDURE vectorCOPYvector
 
@@ -138,7 +152,7 @@ END PROCEDURE vectorCOPYvector
 MODULE PROCEDURE scalarCOPYvector
 INTEGER(I4B) :: i, r1, r2
 CALL SHALLOWCOPY(Y=Y, X=X)
-CALL setTotalDimension(Y, 1_I4B)
+CALL SetTotalDimension(Y, 1_I4B)
 r1 = 0; r2 = 0
 DO i = 1, SIZE(X)
   r1 = r2 + 1
@@ -157,9 +171,9 @@ REAL(DFP), ALLOCATABLE :: Temp_Val(:)
 m = SIZE(Val)
 IF (m .GT. row) THEN
   CALL Reallocate(Temp_Val, m)
-  CALL COPY(Y=Temp_Val, X=Val)
+  CALL BLAS_COPY(Y=Temp_Val, X=Val)
   CALL Reallocate(Val, row)
-  CALL COPY(Y=Val, X=Temp_Val(1:row))
+  CALL BLAS_COPY(Y=Val, X=Temp_Val(1:row))
   DEALLOCATE (Temp_Val)
 END IF
 END PROCEDURE Compact_real_1
@@ -188,7 +202,7 @@ PURE FUNCTION inner_dot(obj1, obj2) RESULT(ans)
   REAL(DFP), INTENT(IN) :: obj1(:)
   REAL(DFP), INTENT(IN) :: obj2(:)
   REAL(DFP) :: ans
-  ans = DOT(obj1, obj2)
+  ans = BLAS_DOT(obj1, obj2)
 END FUNCTION inner_dot
 
 !----------------------------------------------------------------------------
@@ -250,7 +264,7 @@ END PROCEDURE scalarDOTvector
 PURE FUNCTION inner_nrm2(X) RESULT(ans)
   REAL(DFP), INTENT(IN) :: X(:)
   REAL(DFP) :: ans
-  ans = NRM2(X) ! blas
+  ans = BLAS_NRM2(X) ! blas
 END FUNCTION inner_nrm2
 
 !----------------------------------------------------------------------------
@@ -290,7 +304,7 @@ END PROCEDURE obj_Normi
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE scalarSWAPscalar
-CALL SWAP(X=X%Val, Y=Y%Val)
+CALL BLAS_SWAP(X=X%Val, Y=Y%Val)
 END PROCEDURE scalarSWAPscalar
 
 !----------------------------------------------------------------------------
@@ -300,7 +314,7 @@ END PROCEDURE scalarSWAPscalar
 MODULE PROCEDURE vectorSWAPvector
 INTEGER(I4B) :: i
 DO i = 1, SIZE(X)
-  CALL SWAP(X=X(i)%Val, Y=Y(i)%Val)
+  CALL BLAS_SWAP(X=X(i)%Val, Y=Y(i)%Val)
 END DO
 END PROCEDURE vectorSWAPvector
 
@@ -309,7 +323,7 @@ END PROCEDURE vectorSWAPvector
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE scalarSWAPintrinsic
-CALL SWAP(X=X%Val, Y=Y)
+CALL BLAS_SWAP(X=X%Val, Y=Y)
 END PROCEDURE scalarSWAPintrinsic
 
 !----------------------------------------------------------------------------
@@ -317,7 +331,7 @@ END PROCEDURE scalarSWAPintrinsic
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE SCALscalar
-CALL SCAL(A=A, X=X%Val)
+CALL BLAS_SCAL(A=A, X=X%Val)
 END PROCEDURE SCALscalar
 
 !----------------------------------------------------------------------------
@@ -327,7 +341,7 @@ END PROCEDURE SCALscalar
 MODULE PROCEDURE SCALvector
 INTEGER(I4B) :: i
 DO i = 1, SIZE(X)
-  CALL SCAL(A=A, X=X(i)%Val)
+  CALL BLAS_SCAL(A=A, X=X(i)%Val)
 END DO
 END PROCEDURE SCALvector
 

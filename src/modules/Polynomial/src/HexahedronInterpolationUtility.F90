@@ -54,6 +54,52 @@ PUBLIC :: LagrangeGradientEvalAll_Hexahedron
 PUBLIC :: OrthogonalBasisGradient_Hexahedron
 PUBLIC :: TensorProdBasisGradient_Hexahedron
 PUBLIC :: HeirarchicalBasisGradient_Hexahedron
+PUBLIC :: GetTotalDOF_Hexahedron
+PUBLIC :: GetTotalInDOF_Hexahedron
+
+!----------------------------------------------------------------------------
+!                                                      GetTotalDOF_Hexahedron
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 14 Aug 2022
+! summary: Returns the total number of degree of freedom for a
+! lagrange polynomial on Hexahedron
+
+INTERFACE
+  MODULE PURE FUNCTION GetTotalDOF_Hexahedron(order, baseContinuity, &
+                                              baseInterpolation) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: order
+    CHARACTER(*), INTENT(IN) :: baseContinuity
+    CHARACTER(*), INTENT(IN) :: baseInterpolation
+    INTEGER(I4B) :: ans
+  END FUNCTION GetTotalDOF_Hexahedron
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                  LagrangeInDOF_Hexahedron
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 14 Aug 2022
+! summary:         Returns the total number of degree of freedom for a
+! lagrange polynomial on an edge of a Hexahedron
+!
+!# Introduction
+!
+!- Returns the total number of degree of freedom for a
+! lagrange polynomial on an edge of a Hexahedron
+!- These dof are strictly inside the Hexahedron
+
+INTERFACE
+  MODULE PURE FUNCTION GetTotalInDOF_Hexahedron(order, baseContinuity, &
+                                                baseInterpolation) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: order
+    CHARACTER(*), INTENT(IN) :: baseContinuity
+    CHARACTER(*), INTENT(IN) :: baseInterpolation
+    INTEGER(I4B) :: ans
+  END FUNCTION GetTotalInDOF_Hexahedron
+END INTERFACE
 
 !----------------------------------------------------------------------------
 !                                                   RefElemDomain_Hexahedron

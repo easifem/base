@@ -16,351 +16,415 @@
 !
 
 SUBMODULE(DOF_AddMethods) Methods
-USE BaseMethod
+USE DOF_GetMethods, ONLY: GetNodeLoc, &
+                          OPERATOR(.tdof.), &
+                          GetNodeLoc_, &
+                          GetIndex_, &
+                          GetIDOF
+
+USE GlobalData, ONLY: NodesToDOF, DOFToNodes, NODES_FMT, DOF_FMT
+
+USE SafeSizeUtility, ONLY: SafeSize
+
+USE ReallocateUtility, ONLY: Reallocate
+
 IMPLICIT NONE
+
+INTEGER(I4B), PARAMETER :: PARAM_EXPAND_FACTOR_TEMP_INTVEC = 2
+INTEGER(I4B), PARAMETER :: PARAM_TEMP_INTVEC_SIZE = 1024
+INTEGER(I4B) :: tempIntVec(PARAM_TEMP_INTVEC_SIZE)
+!$OMP THREADPRIVATE(tempIntVec)
+
+INTEGER(I4B), ALLOCATABLE :: tempAllocIntVec(:)
+!$OMP THREADPRIVATE(tempAllocIntVec)
+
 CONTAINS
 
 !----------------------------------------------------------------------------
-!                                                                      add
+!                                                                      Add
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE dof_add1
+MODULE PROCEDURE obj_Add1
 INTEGER(I4B) :: tdof, idof, i, n, m
-!
+
 tdof = .tdof.obj
 n = SIZE(nodenum)
 m = SIZE(VALUE)
-!
-!
+
 SELECT CASE (obj%StorageFMT)
-  !
-  !
-  !
+
 CASE (DOF_FMT)
-  !
-  IF (m .NE. n) THEN
-    ! vec( nodenum ) += scale * value( 1 )
-    IF (m .EQ. 1) THEN
-      !
-      DO idof = 1, tdof
-        vec(obj%valmap(idof) - 1 + nodenum) &
-          & = vec(obj%valmap(idof) - 1 + nodenum) &
-          & + scale * VALUE(1)
-      END DO
-      !
-      ! Vec_dof_i( nodenum ) += scale * val_dof_i( : )
-    ELSE IF (m .EQ. tdof * n) THEN
-      !
-      IF (Conversion(1) .EQ. nodesToDOF) THEN
-        !
-        DO idof = 1, tdof
-          DO i = 1, n
-            vec(obj%valmap(idof) - 1 + nodenum(i)) &
-              & = vec(obj%valmap(idof) - 1 + nodenum(i)) &
-              & + scale * VALUE((i - 1) * tdof + idof)
-          END DO
-        END DO
-        !
-      ELSE
-        !
-        DO idof = 1, tdof
-          vec(obj%valmap(idof) - 1 + nodenum) &
-            & = vec(obj%valmap(idof) - 1 + nodenum) &
-            & + scale * VALUE((idof - 1) * n + 1:idof * n)
-        END DO
-        !
-      END IF
-    END IF
-    !
-  ELSE
-    !
-    DO idof = 1, tdof
-      vec(obj%valmap(idof) - 1 + nodenum) &
-        & = vec(obj%valmap(idof) - 1 + nodenum) &
-        & + scale * VALUE(:)
+
+  IF (m .EQ. n) THEN
+
+    DO CONCURRENT(idof=1:tdof, i=1:n)
+      vec(obj%valmap(idof) - 1 + nodenum(i)) = &
+        vec(obj%valmap(idof) - 1 + nodenum(i)) + scale * VALUE(i)
     END DO
-    !
+
+    RETURN
   END IF
-  !
-  !
-  !
+
+  ! vec( nodenum ) += scale * value( 1 )
+  IF (m .EQ. 1) THEN
+
+    DO CONCURRENT(idof=1:tdof, i=1:n)
+      vec(obj%valmap(idof) - 1 + nodenum(i)) = &
+        vec(obj%valmap(idof) - 1 + nodenum(i)) + scale * VALUE(1)
+    END DO
+
+    RETURN
+  END IF
+
+  ! Vec_obj_i( nodenum ) += scale * val_obj_i( : )
+  ! IF (m .EQ. tdof * n) THEN
+  IF (conversion(1) .EQ. NodesToDOF) THEN
+
+    DO CONCURRENT(idof=1:tdof, i=1:n)
+      vec(obj%valmap(idof) - 1 + nodenum(i)) = &
+        vec(obj%valmap(idof) - 1 + nodenum(i)) &
+        + scale * VALUE((i - 1) * tdof + idof)
+    END DO
+
+    RETURN
+
+  END IF
+
+  ! Vec_obj_i( nodenum ) += scale * val_obj_i( : )
+  ! IF (m .EQ. tdof * n) THEN
+  DO CONCURRENT(idof=1:tdof, i=1:n)
+
+    vec(obj%valmap(idof) - 1 + nodenum(i)) = &
+      vec(obj%valmap(idof) - 1 + nodenum(i)) &
+      + scale * VALUE((idof - 1) * n + i)
+
+  END DO
+
+  RETURN
+
 CASE (NODES_FMT)
-  !
-  IF (m .NE. n) THEN
-    !
-    IF (m .EQ. 1) THEN
-      !
-      DO idof = 1, tdof
-        vec((nodenum - 1) * tdof + idof) &
-          & = vec((nodenum - 1) * tdof + idof) &
-          & + scale * VALUE(1)
-      END DO
-      !
-    ELSE IF (m .EQ. tdof * n) THEN
-      !
-      IF (Conversion(1) .EQ. DOFToNodes) THEN
-        !
-        DO idof = 1, tdof
-          DO i = 1, n
-            vec((nodenum(i) - 1) * tdof + idof) &
-              & = vec((nodenum(i) - 1) * tdof + idof) &
-              & + scale * VALUE((idof - 1) * n + i)
-          END DO
-        END DO
-        !
-      ELSE
-        !
-        DO idof = 1, tdof
-          DO i = 1, n
-            vec((nodenum(i) - 1) * tdof + idof) &
-              & = vec((nodenum(i) - 1) * tdof + idof) &
-              & + scale * VALUE((i - 1) * tdof + idof)
-          END DO
-        END DO
-        !
-      END IF
-    END IF
-    !
-  ELSE
-    !
+
+  IF (m .EQ. n) THEN
+
+    DO CONCURRENT(idof=1:tdof, i=1:n)
+
+      vec((nodenum(i) - 1) * tdof + idof) &
+        = vec((nodenum(i) - 1) * tdof + idof) &
+          + scale * VALUE(i)
+
+    END DO
+
+    RETURN
+
+  END IF
+
+  IF (m .EQ. 1) THEN
+
     DO idof = 1, tdof
       vec((nodenum - 1) * tdof + idof) &
         & = vec((nodenum - 1) * tdof + idof) &
-        & + scale * VALUE(:)
+        & + scale * VALUE(1)
     END DO
-    !
+
+    RETURN
   END IF
-  !
+
+  ! ELSE IF (m .EQ. tdof * n) THEN
+
+  IF (conversion(1) .EQ. DOFToNodes) THEN
+
+    DO CONCURRENT(idof=1:tdof, i=1:n)
+
+      vec((nodenum(i) - 1) * tdof + idof) &
+        = vec((nodenum(i) - 1) * tdof + idof) &
+          + scale * VALUE((idof - 1) * n + i)
+
+    END DO
+
+    RETURN
+
+  END IF
+
+  DO CONCURRENT(idof=1:tdof, i=1:n)
+    vec((nodenum(i) - 1) * tdof + idof) &
+      = vec((nodenum(i) - 1) * tdof + idof) &
+        + scale * VALUE((i - 1) * tdof + idof)
+  END DO
+  RETURN
+
+  ! END IF
+
 END SELECT
-!
-END PROCEDURE dof_add1
+
+END PROCEDURE obj_Add1
 
 !----------------------------------------------------------------------------
-!                                                                      add
+!                                                                      Add
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE dof_add2
-INTEGER(I4B), ALLOCATABLE :: indx(:)
-indx = getIndex(obj=obj, nodenum=nodenum)
-vec(indx) = vec(indx) + scale * VALUE
-DEALLOCATE (indx)
-END PROCEDURE dof_add2
+MODULE PROCEDURE obj_Add2
+INTEGER(I4B) :: tsize
+tsize = (.tdof.obj) * SIZE(nodenum)
 
-!----------------------------------------------------------------------------
-!                                                                       add
-!----------------------------------------------------------------------------
+IF (tsize .GT. PARAM_TEMP_INTVEC_SIZE) THEN
 
-MODULE PROCEDURE dof_add3
-INTEGER(I4B), ALLOCATABLE :: indx(:)
-!
-indx = getNodeLoc( &
-  & obj=obj,&
-  & nodenum=nodenum,&
-  & idof=idof)
-!
-IF (SIZE(nodenum) .EQ. SIZE(VALUE)) THEN
-  !
-  vec(indx) = vec(indx) + scale * VALUE(:)
-  !
-ELSE
-  !
-  vec(indx) = vec(indx) + scale * VALUE(1)
-  !
+  IF (tsize .GT. SafeSize(tempAllocIntVec)) THEN
+    CALL Reallocate(tempAllocIntVec, tsize * PARAM_EXPAND_FACTOR_TEMP_INTVEC)
+  END IF
+
+  CALL GetIndex_(obj=obj, nodenum=nodenum, ans=tempAllocIntVec, tsize=tsize)
+  CALL obj_add_help_1(vec=vec, scale=scale, VALUE=VALUE, tsize=tsize, indx=tempAllocIntVec)
+
+  RETURN
 END IF
-!
-DEALLOCATE (indx)
-!
-END PROCEDURE dof_add3
+
+CALL GetIndex_(obj=obj, nodenum=nodenum, ans=tempIntVec, tsize=tsize)
+CALL obj_add_help_1(vec=vec, scale=scale, VALUE=VALUE, tsize=tsize, &
+                    indx=tempIntVec)
+
+END PROCEDURE obj_Add2
 
 !----------------------------------------------------------------------------
-!                                                                       add
+!                                                            obj_add_help_1
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE dof_add4
-INTEGER(I4B), ALLOCATABLE :: indx(:)
-!
-indx = getNodeLoc( &
-  & obj=obj,&
-  & nodenum=nodenum,&
-  & idof=idof,&
-  & ivar=ivar)
-!
-IF (SIZE(nodenum) .EQ. SIZE(VALUE)) THEN
-  vec(indx) = vec(indx) + scale * VALUE(:)
-ELSE
-  vec(indx) = vec(indx) + scale * VALUE(1)
+PURE SUBROUTINE obj_add_help_1(vec, scale, VALUE, tsize, indx)
+  REAL(DFP), INTENT(INOUT) :: vec(:)
+  REAL(DFP), INTENT(IN) :: scale
+  REAL(DFP), INTENT(IN) :: VALUE
+  INTEGER(I4B), INTENT(IN) :: tsize
+  INTEGER(I4B), INTENT(IN) :: indx(:)
+
+  INTEGER(I4B) :: ii
+
+  DO CONCURRENT(ii=1:tsize)
+    vec(indx(ii)) = vec(indx(ii)) + scale * VALUE
+  END DO
+
+END SUBROUTINE obj_add_help_1
+
+!----------------------------------------------------------------------------
+!                                                                       Add
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE obj_Add3
+INTEGER(I4B) :: tsize
+
+tsize = SIZE(nodenum)
+
+IF (tsize .GT. PARAM_TEMP_INTVEC_SIZE) THEN
+
+  IF (tsize .GT. SafeSize(tempAllocIntVec)) THEN
+    CALL Reallocate(tempAllocIntVec, tsize * PARAM_EXPAND_FACTOR_TEMP_INTVEC)
+  END IF
+
+  CALL GetNodeLoc_(obj=obj, nodenum=nodenum, ans=tempAllocIntVec, &
+                   tsize=tsize, idof=idof)
+
+  CALL obj_add_help_2(vec=vec, scale=scale, VALUE=VALUE, tsize=tsize, &
+                      indx=tempAllocIntVec)
+
+  RETURN
 END IF
-!
-DEALLOCATE (indx)
-!
-END PROCEDURE dof_add4
+
+CALL GetNodeLoc_(obj=obj, nodenum=nodenum, ans=tempIntVec, &
+                 tsize=tsize, idof=idof)
+CALL obj_add_help_2(vec=vec, scale=scale, VALUE=VALUE, tsize=tsize, &
+                    indx=tempIntVec)
+
+END PROCEDURE obj_Add3
 
 !----------------------------------------------------------------------------
-!                                                                      add
+!                                                         obj_add_help_2
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE dof_add5
-INTEGER(I4B), ALLOCATABLE :: indx(:)
-!
-indx = getNodeLoc( &
-  & obj=obj, &
-  & nodenum=nodenum, &
-  & ivar=ivar, &
-  & spacecompo=spacecompo, &
-  & timecompo=timecompo)
-!
-IF (SIZE(nodenum) .EQ. SIZE(VALUE)) THEN
-  vec(indx) = vec(indx) + scale * VALUE(:)
-ELSE
-  vec(indx) = vec(indx) + scale * VALUE(1)
+PURE SUBROUTINE obj_add_help_2(vec, scale, VALUE, tsize, indx)
+  REAL(DFP), INTENT(INOUT) :: vec(:)
+  REAL(DFP), INTENT(IN) :: scale
+  REAL(DFP), INTENT(IN) :: VALUE(:)
+  INTEGER(I4B), INTENT(IN) :: tsize
+  INTEGER(I4B), INTENT(IN) :: indx(:)
+
+  INTEGER(I4B) :: ii, n
+
+  n = SIZE(VALUE)
+
+  IF (n .EQ. 1) THEN
+
+    DO CONCURRENT(ii=1:tsize)
+      vec(indx(ii)) = vec(indx(ii)) + scale * VALUE(1)
+    END DO
+
+    RETURN
+
+  END IF
+
+  DO CONCURRENT(ii=1:tsize)
+    vec(indx(ii)) = vec(indx(ii)) + scale * VALUE(ii)
+  END DO
+
+END SUBROUTINE obj_add_help_2
+
+!----------------------------------------------------------------------------
+!                                                                       Add
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE obj_Add4
+INTEGER(I4B) :: global_idof
+global_idof = GetIDOF(obj=obj, ivar=ivar, idof=idof)
+CALL obj_Add3(vec=vec, obj=obj, nodenum=nodenum, VALUE=VALUE, scale=scale, &
+              idof=global_idof)
+END PROCEDURE obj_Add4
+
+!----------------------------------------------------------------------------
+!                                                                      Add
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE obj_Add5
+INTEGER(I4B) :: global_idof
+global_idof = GetIDOF(obj=obj, ivar=ivar, spaceCompo=spaceCompo, &
+                      timeCompo=timeCompo)
+CALL obj_Add3(vec=vec, obj=obj, nodenum=nodenum, VALUE=VALUE, scale=scale, &
+              idof=global_idof)
+END PROCEDURE obj_Add5
+
+!----------------------------------------------------------------------------
+!                                                                      Add
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE obj_Add6
+INTEGER(I4B) :: tsize
+
+tsize = SIZE(nodenum)
+
+IF (tsize .GT. PARAM_TEMP_INTVEC_SIZE) THEN
+
+  IF (tsize .GT. SafeSize(tempAllocIntVec)) THEN
+    CALL Reallocate(tempAllocIntVec, tsize * PARAM_EXPAND_FACTOR_TEMP_INTVEC)
+  END IF
+
+  CALL GetNodeLoc_(obj=obj, nodenum=nodenum, ans=tempAllocIntVec, &
+                   tsize=tsize, ivar=ivar, spacecompo=spacecompo, &
+                   timecompo=timecompo)
+
+  CALL obj_add_help_2(vec=vec, scale=scale, VALUE=VALUE, tsize=tsize, &
+                      indx=tempAllocIntVec)
+
+  RETURN
 END IF
-!
-DEALLOCATE (indx)
-!
-END PROCEDURE dof_add5
+
+CALL GetNodeLoc_(obj=obj, nodenum=nodenum, ans=tempIntVec, &
+                 tsize=tsize, ivar=ivar, spacecompo=spacecompo, &
+                 timecompo=timecompo)
+CALL obj_add_help_2(vec=vec, scale=scale, VALUE=VALUE, tsize=tsize, &
+                    indx=tempIntVec)
+
+END PROCEDURE obj_Add6
 
 !----------------------------------------------------------------------------
-!                                                                      add
+!                                                                      Add
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE dof_add6
-INTEGER(I4B), ALLOCATABLE :: indx(:)
-!
-indx = getNodeLoc(obj=obj, nodenum=nodenum, ivar=ivar, &
-  & spacecompo=spacecompo, timecompo=timecompo)
-!
-IF (SIZE(nodenum) .EQ. SIZE(VALUE)) THEN
-  vec(indx) = vec(indx) + scale * VALUE(:)
-ELSE
-  vec(indx) = vec(indx) + scale * VALUE(1)
+MODULE PROCEDURE obj_Add7
+INTEGER(I4B) :: tsize
+
+tsize = SIZE(nodenum)
+
+IF (tsize .GT. PARAM_TEMP_INTVEC_SIZE) THEN
+
+  IF (tsize .GT. SafeSize(tempAllocIntVec)) THEN
+    CALL Reallocate(tempAllocIntVec, tsize * PARAM_EXPAND_FACTOR_TEMP_INTVEC)
+  END IF
+
+  CALL GetNodeLoc_(obj=obj, nodenum=nodenum, ans=tempAllocIntVec, &
+                   tsize=tsize, ivar=ivar, spacecompo=spacecompo, &
+                   timecompo=timecompo)
+
+  CALL obj_add_help_2(vec=vec, scale=scale, VALUE=VALUE, tsize=tsize, &
+                      indx=tempAllocIntVec)
+
+  RETURN
 END IF
-!
-DEALLOCATE (indx)
-!
-END PROCEDURE dof_add6
+
+CALL GetNodeLoc_(obj=obj, nodenum=nodenum, ans=tempIntVec, &
+                 tsize=tsize, ivar=ivar, spacecompo=spacecompo, &
+                 timecompo=timecompo)
+CALL obj_add_help_2(vec=vec, scale=scale, VALUE=VALUE, tsize=tsize, &
+                    indx=tempIntVec)
+
+END PROCEDURE obj_Add7
 
 !----------------------------------------------------------------------------
-!                                                                      add
+!                                                                      Add
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE dof_add7
-INTEGER(I4B), ALLOCATABLE :: indx(:)
-!
-indx = getNodeLoc( &
-  & obj=obj, &
-  & nodenum=nodenum, &
-  & ivar=ivar, &
-  & spacecompo=spacecompo, &
-  & timecompo=timecompo)
-!
-IF (SIZE(nodenum) .EQ. SIZE(VALUE)) THEN
-  vec(indx) = vec(indx) + scale * VALUE(:)
-ELSE
-  vec(indx) = vec(indx) + scale * VALUE(1)
-END IF
-!
-DEALLOCATE (indx)
-!
-END PROCEDURE dof_add7
+MODULE PROCEDURE obj_Add8
+INTEGER(I4B) :: tsize
+CALL GetIndex_(obj=obj, nodenum=nodenum, ans=tempIntVec, tsize=tsize)
+CALL obj_add_help_1(vec=vec, scale=scale, VALUE=VALUE, tsize=tsize, &
+                    indx=tempIntVec)
+END PROCEDURE obj_Add8
 
 !----------------------------------------------------------------------------
-!                                                                      add
+!                                                                       Add
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE dof_add8
-INTEGER(I4B), ALLOCATABLE :: indx(:)
-indx = getIndex(obj=obj, nodenum=nodenum)
-vec(indx) = vec(indx) + scale * VALUE
-DEALLOCATE (indx)
-END PROCEDURE dof_add8
-
-!----------------------------------------------------------------------------
-!                                                                       add
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE dof_add9
+MODULE PROCEDURE obj_Add9
 INTEGER(I4B) :: indx
-!
-indx = getNodeLoc( &
-  & obj=obj, &
-  & nodenum=nodenum, &
-  & idof=idof)
-!
+indx = GetNodeLoc(obj=obj, nodenum=nodenum, idof=idof)
 vec(indx) = vec(indx) + scale * VALUE
-END PROCEDURE dof_add9
+END PROCEDURE obj_Add9
 
 !----------------------------------------------------------------------------
-!                                                                       add
+!                                                                       Add
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE dof_add10
+MODULE PROCEDURE obj_Add10
 INTEGER(I4B) :: indx
-!
-indx = getNodeLoc( &
-  & obj=obj, &
-  & nodenum=nodenum, &
-  & ivar=ivar, &
-  & idof=idof)
-!
+indx = GetNodeLoc(obj=obj, nodenum=nodenum, ivar=ivar, idof=idof)
 vec(indx) = vec(indx) + scale * VALUE
-END PROCEDURE dof_add10
+END PROCEDURE obj_Add10
 
 !----------------------------------------------------------------------------
-!                                                                       add
+!                                                                       Add
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE dof_add11
+MODULE PROCEDURE obj_Add11
 INTEGER(I4B) :: indx
-!
-indx = getNodeLoc( &
-  & obj=obj, &
-  & nodenum=nodenum, &
-  & ivar=ivar, &
-  & spacecompo=spacecompo, &
-  & timecompo=timecompo)
-!
+indx = GetNodeLoc( obj=obj, nodenum=nodenum, ivar=ivar, spacecompo=spacecompo, &
+                  timecompo=timecompo)
 vec(indx) = vec(indx) + scale * VALUE
-END PROCEDURE dof_add11
+END PROCEDURE obj_Add11
 
 !----------------------------------------------------------------------------
-!                                                                       add
+!                                                                       Add
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE dof_add12
-INTEGER(I4B), ALLOCATABLE :: indx(:)
-!
-indx = getNodeLoc( &
-  & obj=obj, &
-  & nodenum=nodenum, &
-  & ivar=ivar, &
-  & spacecompo=spacecompo, &
-  & timecompo=timecompo)
-!
-vec(indx) = vec(indx) + scale * VALUE
-!
-DEALLOCATE (indx)
-!
-END PROCEDURE dof_add12
+MODULE PROCEDURE obj_Add12
+INTEGER(I4B) :: tsize
+
+CALL GetNodeLoc_(obj=obj, nodenum=nodenum, ivar=ivar, &
+      spacecompo=spacecompo, timecompo=timecompo, ans=tempIntVec, tsize=tsize)
+
+CALL obj_add_help_1(vec=vec, scale=scale, VALUE=VALUE, tsize=tsize, &
+                    indx=tempIntVec)
+
+END PROCEDURE obj_Add12
 
 !----------------------------------------------------------------------------
-!                                                                       add
+!                                                                       Add
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE dof_add13
-INTEGER(I4B), ALLOCATABLE :: indx(:)
-!
-indx = getNodeLoc( &
-  & obj=obj, &
-  & nodenum=nodenum, &
-  & ivar=ivar, &
-  & spacecompo=spacecompo, &
-  & timecompo=timecompo)
-!
-vec(indx) = vec(indx) + scale * VALUE
-!
-DEALLOCATE (indx)
-!
-END PROCEDURE dof_add13
+MODULE PROCEDURE obj_Add13
+INTEGER(I4B) :: tsize
+
+CALL GetNodeLoc_(obj=obj, nodenum=nodenum, ivar=ivar, &
+      spacecompo=spacecompo, timecompo=timecompo, ans=tempIntVec, tsize=tsize)
+
+CALL obj_add_help_1(vec=vec, scale=scale, VALUE=VALUE, tsize=tsize, &
+                    indx=tempIntVec)
+
+END PROCEDURE obj_Add13
 
 !----------------------------------------------------------------------------
 !

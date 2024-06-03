@@ -34,6 +34,8 @@ PUBLIC :: LagrangeEvalAll_Pyramid
 PUBLIC :: LagrangeGradientEvalAll_Pyramid
 PUBLIC :: EdgeConnectivity_Pyramid
 PUBLIC :: FacetConnectivity_Pyramid
+PUBLIC :: GetTotalDOF_Pyramid
+PUBLIC :: GetTotalInDOF_Pyramid
 
 INTEGER(I4B), PARAMETER :: CONST_tNODES = 5
 INTEGER(I4B), PARAMETER :: CONST_tFACES = 5
@@ -41,6 +43,50 @@ INTEGER(I4B), PARAMETER :: CONST_tEDGES = 8
 INTEGER(I4B), PARAMETER :: CONST_XIDIM = 3
 INTEGER(I4B), PARAMETER :: CONST_MAX_NODES_FACE = 4
 INTEGER(I4B), PARAMETER :: CONST_MIN_NODES_FACE = 3
+
+!----------------------------------------------------------------------------
+!                                                      GetTotalDOF_Pyramid
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 14 Aug 2022
+! summary: Returns the total number of degree of freedom for a
+! lagrange polynomial on Pyramid
+
+INTERFACE
+  MODULE PURE FUNCTION GetTotalDOF_Pyramid(order, baseContinuity, &
+                                           baseInterpolation) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: order
+    CHARACTER(*), INTENT(IN) :: baseContinuity
+    CHARACTER(*), INTENT(IN) :: baseInterpolation
+    INTEGER(I4B) :: ans
+  END FUNCTION GetTotalDOF_Pyramid
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                  LagrangeInDOF_Pyramid
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 14 Aug 2022
+! summary:         Returns the total number of degree of freedom for a
+! lagrange polynomial on an edge of a Pyramid
+!
+!# Introduction
+!
+!- Returns the total number of degree of freedom for a
+! lagrange polynomial on an edge of a Pyramid
+!- These dof are strictly inside the Pyramid
+
+INTERFACE
+  MODULE PURE FUNCTION GetTotalInDOF_Pyramid(order, baseContinuity, &
+                                             baseInterpolation) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: order
+    CHARACTER(*), INTENT(IN) :: baseContinuity
+    CHARACTER(*), INTENT(IN) :: baseInterpolation
+    INTEGER(I4B) :: ans
+  END FUNCTION GetTotalInDOF_Pyramid
+END INTERFACE
 
 !----------------------------------------------------------------------------
 !                                               EdgeConnectivity_Pyramid

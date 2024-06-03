@@ -16,7 +16,8 @@
 !
 
 SUBMODULE(RealVector_ComparisonMethods) Methods
-USE BaseMethod
+USE ApproxUtility, ONLY: OPERATOR(.APPROXEQ.)
+
 IMPLICIT NONE
 
 CONTAINS
@@ -25,27 +26,27 @@ CONTAINS
 !                                                                 isEqual
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE realvec_isequal
+MODULE PROCEDURE obj_isEqual
 IF (.NOT. ALLOCATED(obj%val)) THEN
   ans = .FALSE.
   RETURN
 END IF
-  !!
+
 IF (.NOT. ALLOCATED(obj2%val)) THEN
   ans = .FALSE.
   RETURN
 END IF
-  !!
+
 IF (SIZE(obj%val) .NE. SIZE(obj2%val)) THEN
   ans = .FALSE.
   RETURN
 END IF
-  !!
+
 IF (ALL(obj%val.APPROXEQ.obj2%val)) THEN
   ans = .TRUE.
 ELSE
   ans = .FALSE.
 END IF
-END PROCEDURE realvec_isequal
+END PROCEDURE obj_isEqual
 
 END SUBMODULE Methods

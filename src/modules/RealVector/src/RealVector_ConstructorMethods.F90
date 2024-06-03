@@ -16,14 +16,16 @@
 !
 
 MODULE RealVector_ConstructorMethods
-USE GlobalData
-USE BaseType
+USE GlobalData, ONLY: I4B, DFP, LGT
+USE BaseType, ONLY: RealVector_, DOF_
+
 IMPLICIT NONE
 PRIVATE
+
 PUBLIC :: Shape
 PUBLIC :: SIZE
-PUBLIC :: getTotalDimension
-PUBLIC :: setTotalDimension
+PUBLIC :: GetTotalDimension
+PUBLIC :: SetTotalDimension
 PUBLIC :: ALLOCATE
 PUBLIC :: DEALLOCATE
 PUBLIC :: Initiate
@@ -40,18 +42,17 @@ PUBLIC :: isInitiated
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-11
-! update: 2021-11-11
 ! summary: Returns true if the instance is allocated
 
 INTERFACE isAllocated
-  MODULE PURE FUNCTION realVec_isAllocated(obj) RESULT(Ans)
+  MODULE PURE FUNCTION obj_isAllocated(obj) RESULT(Ans)
     CLASS(RealVector_), INTENT(IN) :: obj
     LOGICAL(LGT) :: ans
-  END FUNCTION realVec_isAllocated
+  END FUNCTION obj_isAllocated
 END INTERFACE isAllocated
 
 INTERFACE isInitiated
-  MODULE PROCEDURE realVec_isAllocated
+  MODULE PROCEDURE obj_isAllocated
 END INTERFACE isInitiated
 
 !----------------------------------------------------------------------------
@@ -59,14 +60,14 @@ END INTERFACE isInitiated
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date:         27 Feb 2021
-! summary:         This function returns the shape of [[RealVector_]]
+! date: 27 Feb 2021
+! summary: This function returns the shape of RealVector_
 
 INTERFACE Shape
-  MODULE PURE FUNCTION realVec_shape(obj) RESULT(Ans)
+  MODULE PURE FUNCTION obj_shape(obj) RESULT(Ans)
     CLASS(RealVector_), INTENT(IN) :: obj
     INTEGER(I4B) :: Ans(1)
-  END FUNCTION realVec_shape
+  END FUNCTION obj_shape
 END INTERFACE Shape
 
 !----------------------------------------------------------------------------
@@ -74,15 +75,15 @@ END INTERFACE Shape
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date:         27 Feb 2021
-! summary:         This function returns the size of [[RealVector_]]
+! date: 27 Feb 2021
+! summary: This function returns the size of RealVector_
 
 INTERFACE Size
-  MODULE PURE FUNCTION realVec_size(obj, Dims) RESULT(Ans)
+  MODULE PURE FUNCTION obj_size(obj, Dims) RESULT(Ans)
     TYPE(RealVector_), INTENT(IN) :: obj
     INTEGER(I4B), INTENT(IN), OPTIONAL :: Dims
     INTEGER(I4B) :: Ans
-  END FUNCTION realVec_size
+  END FUNCTION obj_size
 END INTERFACE Size
 
 !----------------------------------------------------------------------------
@@ -90,38 +91,38 @@ END INTERFACE Size
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date:         23 Feb 2021
-! summary:         Returns the total dimension of an array
+! date: 23 Feb 2021
+! summary: Returns the total dimension of an array
 !
 !# Introduction
 !
 ! This function returns the total dimension (or rank) of an array,
 
-INTERFACE getTotalDimension
-  MODULE PURE FUNCTION RealVec_getTotalDimension(obj) RESULT(Ans)
+INTERFACE GetTotalDimension
+  MODULE PURE FUNCTION RealVec_GetTotalDimension(obj) RESULT(Ans)
     TYPE(RealVector_), INTENT(IN) :: obj
     INTEGER(I4B) :: ans
-  END FUNCTION RealVec_getTotalDimension
-END INTERFACE getTotalDimension
+  END FUNCTION RealVec_GetTotalDimension
+END INTERFACE GetTotalDimension
 
 !----------------------------------------------------------------------------
-!                                             setTotalDimension@Constructor
+!                                             SetTotalDimension@Constructor
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date:         23 Feb 2021
-! summary:         This subroutine set the total dimension (rank) of an array
+! date: 23 Feb 2021
+! summary: This subroutine Set the total dimension (rank) of an array
 !
 !# Introduction
 !
-! This subroutine sets the rank(total dimension) of an array
+! This subroutine Sets the rank(total dimension) of an array
 
-INTERFACE setTotalDimension
-  MODULE PURE SUBROUTINE RealVec_setTotalDimension(obj, tDimension)
+INTERFACE SetTotalDimension
+  MODULE PURE SUBROUTINE RealVec_SetTotalDimension(obj, tDimension)
     CLASS(RealVector_), INTENT(INOUT) :: obj
     INTEGER(I4B), INTENT(IN) :: tDimension
-  END SUBROUTINE RealVec_setTotalDimension
-END INTERFACE setTotalDimension
+  END SUBROUTINE RealVec_SetTotalDimension
+END INTERFACE SetTotalDimension
 
 !----------------------------------------------------------------------------
 !                                                   Allocate@Constructor
@@ -131,26 +132,26 @@ END INTERFACE setTotalDimension
 ! date: 27 Feb 2021
 ! summary: This subroutine allocates memory for RealVector
 
-INTERFACE Allocate
-  MODULE PURE SUBROUTINE realVec_Allocate(obj, Dims)
+INTERFACE ALLOCATE
+  MODULE PURE SUBROUTINE obj_Allocate(obj, Dims)
     CLASS(RealVector_), INTENT(INOUT) :: obj
     INTEGER(I4B), INTENT(IN) :: Dims
-  END SUBROUTINE realVec_Allocate
-END INTERFACE Allocate
+  END SUBROUTINE obj_Allocate
+END INTERFACE ALLOCATE
 
 !----------------------------------------------------------------------------
 !                                                   Reallocate@Constructor
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date:  25 Feb 2021
+! date: 25 Feb 2021
 ! summary: Allocate memory for the vector
 
 INTERFACE Reallocate
-  MODULE PURE SUBROUTINE realVec_Reallocate(obj, row)
+  MODULE PURE SUBROUTINE obj_Reallocate(obj, row)
     TYPE(RealVector_), ALLOCATABLE, INTENT(INOUT) :: obj(:)
     INTEGER(I4B), INTENT(IN) :: row
-  END SUBROUTINE realVec_Reallocate
+  END SUBROUTINE obj_Reallocate
 END INTERFACE Reallocate
 
 !----------------------------------------------------------------------------
@@ -158,34 +159,34 @@ END INTERFACE Reallocate
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date:         27 Feb 2021
-! summary:         This subroutine deallocates the data in [[RealVector_]]
+! date: 27 Feb 2021
+! summary: This subroutine deallocates the data in RealVector_
 
-INTERFACE Deallocate
-  MODULE PURE SUBROUTINE realVec_Deallocate(obj)
+INTERFACE DEALLOCATE
+  MODULE PURE SUBROUTINE obj_Deallocate(obj)
     CLASS(RealVector_), INTENT(INOUT) :: obj
-  END SUBROUTINE realVec_Deallocate
-END INTERFACE Deallocate
+  END SUBROUTINE obj_Deallocate
+END INTERFACE DEALLOCATE
 
 !----------------------------------------------------------------------------
 !                                                       Initiate@Constructor
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date:         27 Feb 2021
-! summary:         This subroutine allocates the memory for [[RealVector_]]
+! date: 27 Feb 2021
+! summary: This subroutine allocates the memory for RealVector_
 !
-!# Introduction This subroutine allocates the memeory for [[RealVector_]]
+!# Introduction This subroutine allocates the memeory for RealVector_
 !
 !@note
-! This subroutine is an alias for [[Allocate_Data]]
+! This subroutine is an alias for Allocate_Data
 !@endnote
 
 INTERFACE Initiate
-  MODULE PURE SUBROUTINE realVec_initiate1(obj, tSize)
+  MODULE PURE SUBROUTINE obj_initiate1(obj, tSize)
     CLASS(RealVector_), INTENT(INOUT) :: obj
     INTEGER(I4B), INTENT(IN) :: tSize
-  END SUBROUTINE realVec_initiate1
+  END SUBROUTINE obj_initiate1
 END INTERFACE Initiate
 
 !----------------------------------------------------------------------------
@@ -193,21 +194,21 @@ END INTERFACE Initiate
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date:         27 Feb 2021
+! date: 27 Feb 2021
 ! summary: This subroutine allocate the memory for a vector of type
-! [[RealVector_]]
+! RealVector_
 !
 !# Introduction
-! This subroutine allocate the memory for a vector of type [[RealVector_]]
+! This subroutine allocate the memory for a vector of type RealVector_
 !@note
 ! The size of `obj` would be same as the size of `tSize`
 !@endnote
 
 INTERFACE Initiate
-  MODULE PURE SUBROUTINE realVec_Initiate2(obj, tSize)
+  MODULE PURE SUBROUTINE obj_Initiate2(obj, tSize)
     TYPE(RealVector_), ALLOCATABLE, INTENT(INOUT) :: obj(:)
     INTEGER(I4B), INTENT(IN) :: tSize(:)
-  END SUBROUTINE realVec_Initiate2
+  END SUBROUTINE obj_Initiate2
 END INTERFACE Initiate
 
 !----------------------------------------------------------------------------
@@ -215,19 +216,19 @@ END INTERFACE Initiate
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date:         27 Feb 2021
+! date: 27 Feb 2021
 ! summary: This subroutine allocate the memory for an instance of
-! [[RealVector_]]
+! RealVector_
 !
 !# Introduction
-! This subroutine allocate the memory for an instance of [[RealVector_]].
+! This subroutine allocate the memory for an instance of RealVector_.
 ! User can specify the lowerbounds and upper bounds.
 
 INTERFACE Initiate
-  MODULE PURE SUBROUTINE realVec_Initiate3(obj, a, b)
+  MODULE PURE SUBROUTINE obj_Initiate3(obj, a, b)
     CLASS(RealVector_), INTENT(INOUT) :: obj
     INTEGER(I4B), INTENT(IN) :: a, b
-  END SUBROUTINE realVec_Initiate3
+  END SUBROUTINE obj_Initiate3
 END INTERFACE Initiate
 
 !----------------------------------------------------------------------------
@@ -235,21 +236,21 @@ END INTERFACE Initiate
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date:         23 Feb 2021
-! summary: Initiate [[RealVector_]] using [[dof_]] object
+! date: 23 Feb 2021
+! summary: Initiate RealVector_ using dof_ object
 !
 !# Introduction
 !
-! This subroutine initiate [[RealVector_]] using the information stored inside
-! [[dof_]] object. It gets the information of total size of [[RealVector_]]
-! from [[DOF_]] and call [[RealVector_Method:Initiate]] routine.
-! All values of [[RealVector_]] is set to zero.
+! This subroutine initiate RealVector_ using the information stored inside
+! dof_ object. It Gets the information of total size of RealVector_
+! from DOF_ and call RealVector_Method:Initiate routine.
+! All values of RealVector_ is Set to zero.
 
 INTERFACE Initiate
-  MODULE PURE SUBROUTINE realVec_Initiate4(obj, dofobj)
+  MODULE PURE SUBROUTINE obj_Initiate4(obj, dofobj)
     CLASS(RealVector_), INTENT(INOUT) :: obj
     CLASS(DOF_), INTENT(IN) :: dofobj
-  END SUBROUTINE realVec_Initiate4
+  END SUBROUTINE obj_Initiate4
 END INTERFACE Initiate
 
 !----------------------------------------------------------------------------
@@ -258,20 +259,20 @@ END INTERFACE Initiate
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 10 Oct, 2021
-! summary: Initiate a vector of [[realvector_]] from [[dof_]] object
+! summary: Initiate a vector of realvector_ from dof_ object
 !
 !# Introduction
 !
-! This subroutine initiates a vector of [[realvector_]] object.
+! This subroutine initiates a vector of realvector_ object.
 ! The size of `val` will be total number of degrees of freedom inside
-! the [[DOF_]] object. Therefore, each `val( idof )` denotes the
+! the DOF_ object. Therefore, each `val( idof )` denotes the
 ! nodal vector of correrponding to a degree of freedom number `idof`
 
 INTERFACE Initiate
-  MODULE PURE SUBROUTINE realVec_Initiate5(obj, dofobj)
+  MODULE PURE SUBROUTINE obj_Initiate5(obj, dofobj)
     TYPE(RealVector_), ALLOCATABLE, INTENT(INOUT) :: obj(:)
     CLASS(DOF_), INTENT(IN) :: dofobj
-  END SUBROUTINE realVec_Initiate5
+  END SUBROUTINE obj_Initiate5
 END INTERFACE Initiate
 
 !----------------------------------------------------------------------------
@@ -279,19 +280,19 @@ END INTERFACE Initiate
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date:         28 Feb 2021
-! summary:         This routine computes radom_number
+! date: 28 Feb 2021
+! summary: This routine computes radom_number
 !
 !# Introduction
 !
 ! This routine calls `RANDOM_NUMBER` to generate a random instnance of
-! [[RealVector_]]
+! RealVector_
 
 INTERFACE RANDOM_NUMBER
-  MODULE SUBROUTINE realVec_Random_Number1(obj, tsize)
+  MODULE SUBROUTINE obj_Random_Number1(obj, tsize)
     CLASS(RealVector_), INTENT(INOUT) :: obj
     INTEGER(I4B), INTENT(IN) :: tsize
-  END SUBROUTINE realVec_Random_Number1
+  END SUBROUTINE obj_Random_Number1
 END INTERFACE RANDOM_NUMBER
 
 !----------------------------------------------------------------------------
@@ -299,23 +300,23 @@ END INTERFACE RANDOM_NUMBER
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date:         28 Feb 2021
-! summary:         This routine computes radom_number
+! date: 28 Feb 2021
+! summary: This routine computes radom_number
 !
 !# Introduction
 !
 ! This routine calls `RANDOM_NUMBER` to generate a random instnance of
-! [[RealVector_]]
+! RealVector_
 !
 !@note
-!         Here argument `obj` is a vector of [[RealVector_]] data-types.
+!         Here argument `obj` is a vector of RealVector_ data-types.
 !@endnote
 
 INTERFACE RANDOM_NUMBER
-  MODULE SUBROUTINE realVec_Random_Number2(obj, tsize)
+  MODULE SUBROUTINE obj_Random_Number2(obj, tsize)
     TYPE(RealVector_), ALLOCATABLE, INTENT(INOUT) :: obj(:)
     INTEGER(I4B), INTENT(IN) :: tsize(:)
-  END SUBROUTINE realVec_Random_Number2
+  END SUBROUTINE obj_Random_Number2
 END INTERFACE RANDOM_NUMBER
 
 !----------------------------------------------------------------------------
@@ -323,18 +324,18 @@ END INTERFACE RANDOM_NUMBER
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date:         28 Feb 2021
-! summary:         This function returns an instance of [[RealVector_]]
+! date: 28 Feb 2021
+! summary: This function returns an instance of RealVector_
 !
 !# Introduction
 !
-! This function returns an instance of [[RealVector_]]
+! This function returns an instance of RealVector_
 
 INTERFACE RealVector
-  MODULE PURE FUNCTION realVec_Constructor1(tSize) RESULT(obj)
+  MODULE PURE FUNCTION obj_Constructor1(tSize) RESULT(obj)
     TYPE(RealVector_) :: obj
     INTEGER(I4B), INTENT(IN) :: tSize
-  END FUNCTION realVec_Constructor1
+  END FUNCTION obj_Constructor1
 END INTERFACE RealVector
 
 !----------------------------------------------------------------------------
@@ -342,22 +343,22 @@ END INTERFACE RealVector
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date:         28 Feb 2021
-! summary:         This function returns an instance of [[RealVector_]]
+! date: 28 Feb 2021
+! summary: This function returns an instance of RealVector_
 !
 !# Introduction
-! This function returns an instance of [[RealVector_]] by copying the
+! This function returns an instance of RealVector_ by copying the
 ! contents of a fortran integer vector.
 !
 !@note
-!         This routine internally calls [[RealVector_Method:COPY]] routine.
+!         This routine internally calls RealVector_Method:COPY routine.
 !@endnote
 
 INTERFACE RealVector
-  MODULE PURE FUNCTION realVec_Constructor2(Val) RESULT(obj)
+  MODULE PURE FUNCTION obj_Constructor2(Val) RESULT(obj)
     TYPE(RealVector_) :: obj
     INTEGER(I4B), INTENT(IN) :: Val(:)
-  END FUNCTION realVec_Constructor2
+  END FUNCTION obj_Constructor2
 END INTERFACE RealVector
 
 !----------------------------------------------------------------------------
@@ -365,22 +366,22 @@ END INTERFACE RealVector
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date:         28 Feb 2021
-! summary:         This function returns an instance of [[RealVector_]]
+! date: 28 Feb 2021
+! summary: This function returns an instance of RealVector_
 !
 !# Introduction
-! This function returns an instance of [[RealVector_]] by copying the
+! This function returns an instance of RealVector_ by copying the
 ! contents of a fortran real vector.
 !
 !@note
-!         This routine internally calls [[RealVector_Method:COPY]] routine.
+!         This routine internally calls RealVector_Method:COPY routine.
 !@endnote
 
 INTERFACE RealVector
-  MODULE PURE FUNCTION realVec_Constructor3(Val) RESULT(obj)
+  MODULE PURE FUNCTION obj_Constructor3(Val) RESULT(obj)
     TYPE(RealVector_) :: obj
     REAL(DFP), INTENT(IN) :: Val(:)
-  END FUNCTION realVec_Constructor3
+  END FUNCTION obj_Constructor3
 END INTERFACE RealVector
 
 !----------------------------------------------------------------------------
@@ -388,19 +389,19 @@ END INTERFACE RealVector
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date:         28 Feb 2021
-! summary:         This function returnt the pointer to a newly created instance of
-! [[RealVector_]]
+! date: 28 Feb 2021
+! summary: This function returnt the pointer to a newly created instance of
+! RealVector_
 !
 !# Introduction
 ! This function returnt the pointer to a newly created instance of
-! [[RealVector_]]
+! RealVector_
 
 INTERFACE RealVector_Pointer
-  MODULE PURE FUNCTION realVec_Constructor_1(tSize) RESULT(obj)
+  MODULE PURE FUNCTION obj_Constructor_1(tSize) RESULT(obj)
     CLASS(RealVector_), POINTER :: obj
     INTEGER(I4B), INTENT(IN) :: tSize
-  END FUNCTION realVec_Constructor_1
+  END FUNCTION obj_Constructor_1
 END INTERFACE RealVector_Pointer
 
 !----------------------------------------------------------------------------
@@ -408,22 +409,22 @@ END INTERFACE RealVector_Pointer
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date:         28 Feb 2021
-! summary:         This function returns the pointer to an instance of[[RealVector_]]
+! date: 28 Feb 2021
+! summary: This function returns the pointer to an instance ofRealVector_
 !
 !# Introduction
 ! This function returns a pointer to an newly created instance of
-! [[RealVector_]] by copying the contents of a fortran integer vector.
+! RealVector_ by copying the contents of a fortran integer vector.
 !
 !@note
-!         This routine internally calls [[RealVector_Method:COPY]] routine.
+!         This routine internally calls RealVector_Method:COPY routine.
 !@endnote
 
 INTERFACE RealVector_Pointer
-  MODULE PURE FUNCTION realVec_Constructor_2(Val) RESULT(obj)
+  MODULE PURE FUNCTION obj_Constructor_2(Val) RESULT(obj)
     CLASS(RealVector_), POINTER :: obj
     INTEGER(I4B), INTENT(IN) :: Val(:)
-  END FUNCTION realVec_Constructor_2
+  END FUNCTION obj_Constructor_2
 END INTERFACE RealVector_Pointer
 
 !----------------------------------------------------------------------------
@@ -431,22 +432,22 @@ END INTERFACE RealVector_Pointer
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date:         28 Feb 2021
-! summary:         This function returns the pointer to an instance of[[RealVector_]]
+! date: 28 Feb 2021
+! summary: This function returns the pointer to an instance ofRealVector_
 !
 !# Introduction
 ! This function returns a pointer to an newly created instance of
-! [[RealVector_]] by copying the contents of a fortran real vector.
+! RealVector_ by copying the contents of a fortran real vector.
 !
 !@note
-!         This routine internally calls [[RealVector_Method:COPY]] routine.
+!         This routine internally calls RealVector_Method:COPY routine.
 !@endnote
 
 INTERFACE RealVector_Pointer
-  MODULE PURE FUNCTION realVec_Constructor_3(Val) RESULT(obj)
+  MODULE PURE FUNCTION obj_Constructor_3(Val) RESULT(obj)
     CLASS(RealVector_), POINTER :: obj
     REAL(DFP), INTENT(IN) :: Val(:)
-  END FUNCTION realVec_Constructor_3
+  END FUNCTION obj_Constructor_3
 END INTERFACE RealVector_Pointer
 
 END MODULE RealVector_ConstructorMethods

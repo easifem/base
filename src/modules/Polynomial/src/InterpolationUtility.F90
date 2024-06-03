@@ -20,6 +20,8 @@ USE GlobalData, ONLY: I4B, DFP, REAL32, REAL64
 IMPLICIT NONE
 PRIVATE
 PUBLIC :: VandermondeMatrix
+PUBLIC :: GetTotalInDOF
+PUBLIC :: GetTotalDOF
 
 !----------------------------------------------------------------------------
 !
@@ -42,5 +44,53 @@ INTERFACE VandermondeMatrix
     REAL(REAL64) :: ans(SIZE(x), order + 1)
   END FUNCTION VandermondeMatrix_Real64
 END INTERFACE VandermondeMatrix
+
+!----------------------------------------------------------------------------
+!                                                             GetTotalDOF
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2024-05-20
+! summary: Get total number of degrees of freedom
+
+INTERFACE GetTotalDOF
+  MODULE PURE FUNCTION GetTotalDOF1(elemType, order, baseContinuity, &
+                                    baseInterpolation) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: elemType
+    !! element type, Point, Line, Triangle
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order of interpolation
+    CHARACTER(LEN=*), INTENT(IN) :: baseContinuity
+    !! continuity of basis, H1, HDiv, HCurl
+    CHARACTER(LEN=*), INTENT(IN) :: baseInterpolation
+    !! interpolation of basis, Lagrange, Heirarchical
+    INTEGER(I4B) :: ans
+    !! total number of degrees of freedom
+  END FUNCTION GetTotalDOF1
+END INTERFACE GetTotalDOF
+
+!----------------------------------------------------------------------------
+!                                                             GetTotalInDOF
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2024-05-20
+! summary: Get total number of degrees of freedom internal to the element
+
+INTERFACE GetTotalInDOF
+  MODULE PURE FUNCTION GetTotalInDOF1(elemType, order, baseContinuity, &
+                                      baseInterpolation) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: elemType
+    !! element type, Point, Line, Triangle
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order of interpolation
+    CHARACTER(LEN=*), INTENT(IN) :: baseContinuity
+    !! continuity of basis, H1, HDiv, HCurl
+    CHARACTER(LEN=*), INTENT(IN) :: baseInterpolation
+    !! interpolation of basis, Lagrange, Heirarchical
+    INTEGER(I4B) :: ans
+    !! total number of degrees of freedom
+  END FUNCTION GetTotalInDOF1
+END INTERFACE GetTotalInDOF
 
 END MODULE InterpolationUtility

@@ -11,7 +11,7 @@
 ! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 ! GNU General Public License for more details.
 !
-! You should have received a copy of the GNU General Public License
+! You should have received a COPY of the GNU General Public License
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
@@ -20,10 +20,12 @@
 ! summary: This module contains BLAS1 methods
 
 MODULE RealVector_Blas1Methods
-USE GlobalData
-USE BaseType
+USE GlobalData, ONLY: DFP, I4B, LGT, REAL32, REAL64
+USE BaseType, ONLY: RealVector_, DOF_
+
 IMPLICIT NONE
 PRIVATE
+
 PUBLIC :: ASUM
 PUBLIC :: AXPY
 PUBLIC :: COPY
@@ -62,17 +64,17 @@ PUBLIC :: Reciprocal
 !   type( RealVector_ ) :: obj
 !   real( dfp ) :: ans
 !   obj = RealVector(arange(1,1000,1))
-!   ans = asum(obj)
+!   ans = ASUM(obj)
 !   call display( ans-sum(obj%val), "test1: 0 if correct : " )
 ! end
 !@endtodo
 
-INTERFACE asum
+INTERFACE ASUM
   MODULE FUNCTION ASUMScalar(obj) RESULT(ans)
     CLASS(RealVector_), INTENT(IN) :: obj
     REAL(DFP) :: ans
   END FUNCTION ASUMScalar
-END INTERFACE asum
+END INTERFACE ASUM
 
 !----------------------------------------------------------------------------
 !                                                                 ASUM@BLAS1
@@ -107,7 +109,7 @@ END INTERFACE asum
 !   CALL OMP_INITIATE
 !   !$omp do
 !   do i = 1, m
-!     ans = ans + asum(obj(i)) !! no parallel
+!     ans = ans + ASUM(obj(i)) !! no parallel
 !   enddo
 !   !$omp enddo
 !   CALL OMP_FINALIZE
@@ -131,12 +133,12 @@ END INTERFACE asum
 ! call display( ans - (m*sum(obj(1)%val)), "test3: 0 if correct : " )
 !```
 
-INTERFACE asum
+INTERFACE ASUM
   MODULE FUNCTION ASUMvector(obj) RESULT(ans)
     CLASS(RealVector_), INTENT(IN) :: obj(:)
     REAL(DFP) :: ans
   END FUNCTION ASUMvector
-END INTERFACE asum
+END INTERFACE ASUM
 
 !----------------------------------------------------------------------------
 !                                                                  AXPY@BLAS1
@@ -174,7 +176,7 @@ END INTERFACE asum
 ! call random_number( y, n )
 ! z%val = y%val + a * x%val
 ! call AXPY( x = x, y = y, A = a  )
-! call display( asum(y%val - z%val), "test4: 0 if correct : " )
+! call display( ASUM(y%val - z%val), "test4: 0 if correct : " )
 !```
 
 INTERFACE AXPY
@@ -255,7 +257,7 @@ END INTERFACE AXPY
 ! call AXPY( x = x, y = y, A = a )
 ! ans = 0.0
 ! do i = 1, m
-!   ans = ans + asum( y(i)%val - z(i)%val )
+!   ans = ans + ASUM( y(i)%val - z(i)%val )
 ! end do
 ! call display( ans, "test5: 0 if correct : " )
 !```
@@ -280,7 +282,7 @@ END INTERFACE AXPY
 ! This subroutine copies one [[RealVector_]] object into another object, i.e.
 ! `Y=X`. See figure given below:
 !
-! <img src=|media|/scalar_copy_scalar.jpg alt="drawing"
+! <img src=|media|/scalar_COPY_scalar.jpg alt="drawing"
 ! style="max-width:500px;"/>
 !
 !@note
@@ -294,20 +296,20 @@ END INTERFACE AXPY
 ! type( RealVector_ ) :: x, y
 ! real( dfp ), allocatable :: z( : )
 ! call random_number( x, n )
-! call copy( x = x, y = y )
-! call display( asum( x%val - y%val ), "test6: 0 if correct : " )
-! call copy( y=z, x=x )
-! call display( asum( z - x%val ), "test6: 0 if correct : " )
-! call copy( y=x, x=z )
-! call display( asum( z - x%val ), "test6: 0 if correct : " )
+! call COPY( x = x, y = y )
+! call display( ASUM( x%val - y%val ), "test6: 0 if correct : " )
+! call COPY( y=z, x=x )
+! call display( ASUM( z - x%val ), "test6: 0 if correct : " )
+! call COPY( y=x, x=z )
+! call display( ASUM( z - x%val ), "test6: 0 if correct : " )
 !```
 
-INTERFACE copy
+INTERFACE COPY
   MODULE SUBROUTINE scalarCOPYscalar(Y, X)
     TYPE(RealVector_), INTENT(INOUT) :: Y
     CLASS(RealVector_), INTENT(IN) :: X
   END SUBROUTINE scalarCOPYscalar
-END INTERFACE copy
+END INTERFACE COPY
 
 !----------------------------------------------------------------------------
 !                                                                 COPY@BLAS1
@@ -318,7 +320,7 @@ END INTERFACE copy
 ! summary: This routine copies one vector into another
 !
 !# Introduction
-! This subroutine copy a fortran vector into [[RealVector_]] obj, i.e. `Y=X`
+! This subroutine COPY a fortran vector into [[RealVector_]] obj, i.e. `Y=X`
 !
 !@note
 ! This subroutine internally uses [[intrinsicCOPYintrinsic]] routine.
@@ -331,31 +333,31 @@ END INTERFACE copy
 ! type( RealVector_ ) :: x, y
 ! real( dfp ), allocatable :: z( : )
 ! call random_number( x, n )
-! call copy( x = x, y = y )
-! call display( asum( x%val - y%val ), "test6: 0 if correct : " )
-! call copy( y=z, x=x )
-! call display( asum( z - x%val ), "test6: 0 if correct : " )
-! call copy( y=x, x=z )
-! call display( asum( z - x%val ), "test6: 0 if correct : " )
+! call COPY( x = x, y = y )
+! call display( ASUM( x%val - y%val ), "test6: 0 if correct : " )
+! call COPY( y=z, x=x )
+! call display( ASUM( z - x%val ), "test6: 0 if correct : " )
+! call COPY( y=x, x=z )
+! call display( ASUM( z - x%val ), "test6: 0 if correct : " )
 !```
 
-INTERFACE copy
+INTERFACE COPY
   MODULE SUBROUTINE scalarCOPYintrinsic_1a(Y, X)
     CLASS(RealVector_), INTENT(INOUT) :: Y
     REAL(REAL32), INTENT(IN) :: X(:)
   END SUBROUTINE scalarCOPYintrinsic_1a
-END INTERFACE copy
+END INTERFACE COPY
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
-INTERFACE copy
+INTERFACE COPY
   MODULE SUBROUTINE scalarCOPYintrinsic_1b(Y, X)
     CLASS(RealVector_), INTENT(INOUT) :: Y
     REAL(REAL64), INTENT(IN) :: X(:)
   END SUBROUTINE scalarCOPYintrinsic_1b
-END INTERFACE copy
+END INTERFACE COPY
 
 !----------------------------------------------------------------------------
 !                                                                 COPY@BLAS1
@@ -366,7 +368,7 @@ END INTERFACE copy
 ! summary: This routine copies one vector into another
 !
 !# Introduction
-! This subroutine copy an instance of [[RealVector_]] in another fortran
+! This subroutine COPY an instance of [[RealVector_]] in another fortran
 ! vector, i.e. `Val=obj`
 !
 !@note
@@ -382,26 +384,26 @@ END INTERFACE copy
 ! type( RealVector_ ) :: x, y
 ! real( dfp ), allocatable :: z( : )
 ! call random_number( x, n )
-! call copy( x = x, y = y )
-! call display( asum( x%val - y%val ), "test6: 0 if correct : " )
-! call copy( y=z, x=x )
-! call display( asum( z - x%val ), "test6: 0 if correct : " )
-! call copy( y=x, x=z )
-! call display( asum( z - x%val ), "test6: 0 if correct : " )
+! call COPY( x = x, y = y )
+! call display( ASUM( x%val - y%val ), "test6: 0 if correct : " )
+! call COPY( y=z, x=x )
+! call display( ASUM( z - x%val ), "test6: 0 if correct : " )
+! call COPY( y=x, x=z )
+! call display( ASUM( z - x%val ), "test6: 0 if correct : " )
 !```
 
-INTERFACE copy
+INTERFACE COPY
   MODULE SUBROUTINE intrinsicCOPYscalar_1a(Y, X)
     REAL(REAL32), ALLOCATABLE, INTENT(INOUT) :: Y(:)
     CLASS(RealVector_), INTENT(IN) :: X
   END SUBROUTINE intrinsicCOPYscalar_1a
-END INTERFACE copy
+END INTERFACE COPY
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
-INTERFACE copy
+INTERFACE COPY
   MODULE SUBROUTINE intrinsicCOPYscalar_1b(Y, X)
     REAL(REAL64), ALLOCATABLE, INTENT(INOUT) :: Y(:)
     CLASS(RealVector_), INTENT(IN) :: X
@@ -417,10 +419,10 @@ END INTERFACE
 ! summary: This routine copies one vector into another
 !
 !# Introduction
-! This subroutine copy a vector of [[RealVector_]] into another vector, i.e.
+! This subroutine COPY a vector of [[RealVector_]] into another vector, i.e.
 ! `obj1=obj2` see the figure below:
 !
-! <img src=|media|/vector_copy_vector.jpg alt="drawing"
+! <img src=|media|/vector_COPY_vector.jpg alt="drawing"
 ! style="max-width:500px;"/>
 !
 !@note
@@ -439,20 +441,20 @@ END INTERFACE
 ! real( dfp ) :: ans
 ! tsize = n
 ! call random_number(x, tsize)
-! call copy( x = x, y = y )
+! call COPY( x = x, y = y )
 ! ans = 0.0
 ! do i = 1, size( x )
-!   ans = ans + asum( x(i)%val - y(i)%val )
+!   ans = ans + ASUM( x(i)%val - y(i)%val )
 ! end do
 ! call display( ans, "test7: 0 if correct : " )
 !```
 
-INTERFACE copy
+INTERFACE COPY
   MODULE SUBROUTINE vectorCOPYvector(Y, X)
     TYPE(RealVector_), INTENT(INOUT), ALLOCATABLE :: Y(:)
     CLASS(RealVector_), INTENT(IN) :: X(:)
   END SUBROUTINE vectorCOPYvector
-END INTERFACE copy
+END INTERFACE COPY
 
 !----------------------------------------------------------------------------
 !                                                                 COPY@BLAS1
@@ -466,7 +468,7 @@ END INTERFACE copy
 ! This subroutine copies a vector of [[RealVector_]] into a scalar instance
 ! of [[RealVector_]]. See Figure below:
 !
-! <img src=|media|/scalar_copy_vector.jpg alt="drawing"
+! <img src=|media|/scalar_COPY_vector.jpg alt="drawing"
 ! style="max-width:500px;"/>
 !
 !@note
@@ -477,12 +479,12 @@ END INTERFACE copy
 ! need parallel
 !@endtodo
 
-INTERFACE copy
+INTERFACE COPY
   MODULE SUBROUTINE scalarCOPYvector(Y, X)
     TYPE(RealVector_), INTENT(INOUT) :: Y
     CLASS(RealVector_), INTENT(IN) :: X(:)
   END SUBROUTINE scalarCOPYvector
-END INTERFACE copy
+END INTERFACE COPY
 
 !----------------------------------------------------------------------------
 !                                                            Compact@BLAS1V

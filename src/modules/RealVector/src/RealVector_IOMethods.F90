@@ -16,42 +16,37 @@
 !
 
 MODULE RealVector_IOMethods
-USE GlobalData
-USE BaseType
+USE GlobalData, ONLY: I4B
+USE BaseType, ONLY: RealVector_
+
 IMPLICIT NONE
+
 PRIVATE
+
 PUBLIC :: Display
 
 !----------------------------------------------------------------------------
 !                                                                 Display@IO
 !----------------------------------------------------------------------------
 
-INTERFACE
-  MODULE SUBROUTINE realVec_display1(obj, msg, UnitNo)
+INTERFACE Display
+  MODULE SUBROUTINE obj_display1(obj, msg, unitno)
     CLASS(RealVector_), INTENT(IN) :: obj
     CHARACTER(*), INTENT(IN) :: msg
-    INTEGER(I4B), OPTIONAL, INTENT(IN) :: UnitNo
-  END SUBROUTINE realVec_display1
-END INTERFACE
-
-INTERFACE Display
-  MODULE PROCEDURE realVec_display1
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: unitno
+  END SUBROUTINE obj_display1
 END INTERFACE Display
 
 !----------------------------------------------------------------------------
 !                                                                Display@IO
 !----------------------------------------------------------------------------
 
-INTERFACE
-  MODULE SUBROUTINE realVec_display2(obj, msg, UnitNo)
+INTERFACE Display
+  MODULE SUBROUTINE obj_display2(obj, msg, unitno)
     CLASS(RealVector_), INTENT(IN) :: obj(:)
     CHARACTER(*), INTENT(IN) :: msg
-    INTEGER(I4B), INTENT(IN), OPTIONAL :: UnitNo
-  END SUBROUTINE realVec_display2
-END INTERFACE
-
-INTERFACE Display
-  MODULE PROCEDURE realVec_display2
+    INTEGER(I4B), INTENT(IN), OPTIONAL :: unitno
+  END SUBROUTINE obj_display2
 END INTERFACE Display
 
 END MODULE RealVector_IOMethods

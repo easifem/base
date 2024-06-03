@@ -86,6 +86,22 @@ ans = (order - 1) * (order - 2) * (2 * order - 3) / 6
 END PROCEDURE LagrangeInDOF_Pyramid
 
 !----------------------------------------------------------------------------
+!                                                        GetTotalDOF_Pyramid
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE GetTotalDOF_Pyramid
+ans = (order + 1) * (order + 2) * (2 * order + 3) / 6
+END PROCEDURE GetTotalDOF_Pyramid
+
+!----------------------------------------------------------------------------
+!                                                    GetTotalInDOF_Pyramid
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE GetTotalInDOF_Pyramid
+ans = (order - 1) * (order - 2) * (2 * order - 3) / 6
+END PROCEDURE GetTotalInDOF_Pyramid
+
+!----------------------------------------------------------------------------
 !                                              EquidistancePoint_Pyramid
 !----------------------------------------------------------------------------
 

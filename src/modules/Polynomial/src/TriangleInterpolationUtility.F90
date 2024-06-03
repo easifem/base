@@ -45,10 +45,57 @@ PUBLIC :: IJ2VEFC_Triangle
 PUBLIC :: FacetConnectivity_Triangle
 PUBLIC :: RefElemDomain_Triangle
 
+PUBLIC :: GetTotalDOF_Triangle
+PUBLIC :: GetTotalInDOF_Triangle
+
 ! PUBLIC :: BarycentricVertexBasis_Triangle
 ! PUBLIC :: BarycentricEdgeBasis_Triangle
 ! PUBLIC :: BarycentricHeirarchicalBasis_Triangle
 ! PUBLIC :: BarycentricHeirarchicalBasisGradient_Triangle
+
+!----------------------------------------------------------------------------
+!                                                         GetTotalDOF_Triangle
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 14 Aug 2022
+! summary: Returns the total number of degree of freedom for a
+! lagrange polynomial on Triangle
+
+INTERFACE
+  MODULE PURE FUNCTION GetTotalDOF_Triangle(order, baseContinuity, &
+                                            baseInterpolation) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: order
+    CHARACTER(*), INTENT(IN) :: baseContinuity
+    CHARACTER(*), INTENT(IN) :: baseInterpolation
+    INTEGER(I4B) :: ans
+  END FUNCTION GetTotalDOF_Triangle
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                        LagrangeInDOF_Triangle
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 14 Aug 2022
+! summary:         Returns the total number of degree of freedom for a
+! lagrange polynomial on an edge of a Triangle
+!
+!# Introduction
+!
+!- Returns the total number of degree of freedom for a
+! lagrange polynomial on an edge of a Triangle
+!- These dof are strictly inside the Triangle
+
+INTERFACE
+  MODULE PURE FUNCTION GetTotalInDOF_Triangle(order, baseContinuity, &
+                                              baseInterpolation) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: order
+    CHARACTER(*), INTENT(IN) :: baseContinuity
+    CHARACTER(*), INTENT(IN) :: baseInterpolation
+    INTEGER(I4B) :: ans
+  END FUNCTION GetTotalInDOF_Triangle
+END INTERFACE
 
 !----------------------------------------------------------------------------
 !                                                   RefElemDomain_Triangle
@@ -1437,7 +1484,7 @@ END INTERFACE HeirarchicalBasisGradient_Triangle
 
 INTERFACE HeirarchicalBasisGradient_Triangle_
  MODULE SUBROUTINE HeirarchicalBasisGradient_Triangle1_(order, pe1, pe2, pe3,&
-        & xij, refTriangle, ans, tsize1, tsize2, tsize3)
+          & xij, refTriangle, ans, tsize1, tsize2, tsize3)
     INTEGER(I4B), INTENT(IN) :: order
     !! Order of approximation inside the triangle (i.e., cell)
     !! it should be greater than 2 for cell bubble to exist

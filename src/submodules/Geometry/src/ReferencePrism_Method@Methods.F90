@@ -351,6 +351,10 @@ con(1:2, 6) = [3, 6]
 con(1:2, 7) = [4, 5]
 con(1:2, 8) = [4, 6]
 con(1:2, 9) = [5, 6]
+
+IF (PRESENT(ncol)) ncol = 9
+IF (PRESENT(nrow)) nrow = 2
+
 END PROCEDURE GetEdgeConnectivity_Prism
 
 !----------------------------------------------------------------------------
@@ -363,6 +367,10 @@ con(1:4, 2) = [2, 3, 6, 5]
 con(1:4, 3) = [1, 2, 5, 4]
 con(1:4, 4) = [1, 4, 6, 3]
 con(1:4, 5) = [4, 5, 6, 0]
+
+IF (PRESENT(ncol)) ncol = 5
+IF (PRESENT(nrow)) nrow = 4
+
 END PROCEDURE GetFaceConnectivity_Prism
 
 !----------------------------------------------------------------------------

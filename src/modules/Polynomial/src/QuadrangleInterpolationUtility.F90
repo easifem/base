@@ -48,6 +48,52 @@ PUBLIC :: TensorProdBasisGradient_Quadrangle
 PUBLIC :: OrthogonalBasisGradient_Quadrangle
 PUBLIC :: DubinerGradient_Quadrangle
 PUBLIC :: DubinerGradient_Quadrangle_
+PUBLIC :: GetTotalDOF_Quadrangle
+PUBLIC :: GetTotalInDOF_Quadrangle
+
+!----------------------------------------------------------------------------
+!                                                     GetTotalDOF_Quadrangle
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 14 Aug 2022
+! summary: Returns the total number of degree of freedom for a
+! lagrange polynomial on Quadrangle
+
+INTERFACE
+  MODULE PURE FUNCTION GetTotalDOF_Quadrangle(order, baseContinuity, &
+                                              baseInterpolation) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: order
+    CHARACTER(*), INTENT(IN) :: baseContinuity
+    CHARACTER(*), INTENT(IN) :: baseInterpolation
+    INTEGER(I4B) :: ans
+  END FUNCTION GetTotalDOF_Quadrangle
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                   LagrangeInDOF_Quadrangle
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 14 Aug 2022
+! summary:         Returns the total number of degree of freedom for a
+! lagrange polynomial on an edge of a Quadrangle
+!
+!# Introduction
+!
+!- Returns the total number of degree of freedom for a
+! lagrange polynomial on an edge of a Quadrangle
+!- These dof are strictly inside the Quadrangle
+
+INTERFACE
+  MODULE PURE FUNCTION GetTotalInDOF_Quadrangle(order, baseContinuity, &
+                                                baseInterpolation) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: order
+    CHARACTER(*), INTENT(IN) :: baseContinuity
+    CHARACTER(*), INTENT(IN) :: baseInterpolation
+    INTEGER(I4B) :: ans
+  END FUNCTION GetTotalInDOF_Quadrangle
+END INTERFACE
 
 !----------------------------------------------------------------------------
 !                                                   RefElemDomain_Quadrangle
