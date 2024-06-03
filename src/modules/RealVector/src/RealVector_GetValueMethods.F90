@@ -1060,6 +1060,43 @@ INTERFACE GetValue_
 END INTERFACE GetValue_
 
 !----------------------------------------------------------------------------
+!                                                                    GetValue
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 26 June 2021
+! summary: Returns the values of degrees of freedom in a single vector
+!
+!# Introduction
+! This subroutine extracts the values from `val` corresponding to
+! degrees of freedom specified by `idof(:)` and return it in `V`
+!
+! - `StorageFMT` can be 'Nodes_FMT' or `DOF_FMT`. It specify the storage
+! format of returned vector.
+
+INTERFACE GetValue_
+  MODULE SUBROUTINE obj_GetValue_25(obj, dofobj, idof, VALUE, nrow, ncol, &
+                                    storageFMT)
+    TYPE(RealVector_), INTENT(IN) :: obj
+    !! obj to extract values
+    TYPE(DOF_), INTENT(IN) :: dofobj
+    !! dof for obj
+    INTEGER(I4B), INTENT(IN) :: idof(:)
+    !! idof for obj
+    REAL(DFP), INTENT(INOUT) :: VALUE(:, :)
+    !! values to be returned
+    INTEGER(I4B), INTENT(OUT) :: nrow
+    !! number of rows written to value
+    INTEGER(I4B), INTENT(OUT) :: ncol
+    !! number of columns written to value
+    INTEGER(I4B), INTENT(IN) :: storageFMT
+    !! storage format can be DOF_FMT or Nodes_FMT
+    !! if DOF_FMT then nrow size(nodenum) and ncol size(idof)
+    !! if Nodes_FMT then nrow is size(idof) and ncol is size(nodenum)
+  END SUBROUTINE obj_GetValue_25
+END INTERFACE GetValue_
+
+!----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 

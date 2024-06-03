@@ -461,6 +461,31 @@ CALL COPY(Y=VALUE%val, X=obj%val)
 END PROCEDURE obj_GetValue24
 
 !----------------------------------------------------------------------------
+!                                                                 GetValue
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE obj_GetValue_25
+INTEGER(I4B) :: jj
+
+SELECT CASE (storageFMT)
+
+CASE (DOF_FMT)
+  ncol = SIZE(idof)
+
+  DO jj = 1, ncol
+    CALL GetValue_(obj=obj, dofobj=dofobj, idof=idof(jj), &
+                   VALUE=VALUE(:, jj), tsize=nrow)
+  END DO
+
+CASE (NODES_FMT)
+  CALL GetValue_(obj=obj, dofobj=dofobj, idof=idof, VALUE=VALUE, &
+                 nrow=nrow, ncol=ncol)
+
+END SELECT
+
+END PROCEDURE obj_GetValue_25
+
+!----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
