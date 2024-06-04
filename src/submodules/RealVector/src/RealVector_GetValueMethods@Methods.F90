@@ -30,6 +30,8 @@ USE ReallocateUtility, ONLY: Reallocate
 
 USE F95_BLAS, ONLY: COPY
 
+USE F77_BLAS, ONLY: F77_Copy
+
 USE RealVector_SetMethods, ONLY: Set
 
 IMPLICIT NONE
@@ -484,6 +486,38 @@ CASE (NODES_FMT)
 END SELECT
 
 END PROCEDURE obj_GetValue_25
+
+!----------------------------------------------------------------------------
+!                                                                 GetValue_
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE obj_GetValue_26
+INTEGER(I4B) :: ii
+tsize = SIZE(nodenum)
+DO ii = 1, tsize
+  VALUE(ii) = obj%val(nodenum(ii))
+END DO
+END PROCEDURE obj_GetValue_26
+
+!----------------------------------------------------------------------------
+!                                                                 GetValue_
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE obj_GetValue_27
+tsize = (iend - istart + stride) / stride
+CALL F77_Copy(N=tsize, X=obj%val(istart:), INCX=stride, &
+              Y=VALUE, INCY=1_I4B)
+END PROCEDURE obj_GetValue_27
+
+!----------------------------------------------------------------------------
+!                                                                 GetValue_
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE obj_GetValue_28
+tsize = (iend - istart + stride) / stride
+CALL F77_Copy(N=tsize, X=obj%val(istart:), INCX=stride, &
+              Y=VALUE(istart_value:), INCY=stride_value)
+END PROCEDURE obj_GetValue_28
 
 !----------------------------------------------------------------------------
 !

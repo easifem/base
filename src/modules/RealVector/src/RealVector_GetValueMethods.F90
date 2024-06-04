@@ -1097,6 +1097,71 @@ INTERFACE GetValue_
 END INTERFACE GetValue_
 
 !----------------------------------------------------------------------------
+!                                                                    GetValue
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 26 June 2021
+! summary: Get multiple values
+
+INTERFACE GetValue_
+  MODULE SUBROUTINE obj_GetValue_26(obj, nodenum, VALUE, tsize)
+    TYPE(RealVector_), INTENT(IN) :: obj
+    !! obj to extract values
+    INTEGER(I4B), INTENT(IN) :: nodenum(:)
+    !! index
+    REAL(DFP), INTENT(INOUT) :: VALUE(:)
+    !! values to be returned
+    INTEGER(I4B), INTENT(OUT) :: tsize
+    !! total size written to value
+  END SUBROUTINE obj_GetValue_26
+END INTERFACE GetValue_
+
+!----------------------------------------------------------------------------
+!                                                                    GetValue
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 26 June 2021
+! summary: Get multiple values
+
+INTERFACE GetValue_
+  MODULE SUBROUTINE obj_GetValue_27(obj, istart, iend, stride, VALUE, tsize)
+    TYPE(RealVector_), INTENT(IN) :: obj
+    !! obj to extract values
+    INTEGER(I4B), INTENT(IN) :: istart, iend, stride
+    !! index
+    REAL(DFP), INTENT(INOUT) :: VALUE(:)
+    !! values to be returned
+    INTEGER(I4B), INTENT(OUT) :: tsize
+    !! total size written to value
+  END SUBROUTINE obj_GetValue_27
+END INTERFACE GetValue_
+
+!----------------------------------------------------------------------------
+!                                                                    GetValue
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 26 June 2021
+! summary: Get multiple values
+
+INTERFACE GetValue_
+  MODULE SUBROUTINE obj_GetValue_28(obj, istart, iend, stride, VALUE, &
+                                tsize, istart_value, iend_value, stride_value)
+    TYPE(RealVector_), INTENT(IN) :: obj
+    !! obj to extract values
+    INTEGER(I4B), INTENT(IN) :: istart, iend, stride
+    !! index
+    REAL(DFP), INTENT(INOUT) :: VALUE(:)
+    !! values to be returned
+    INTEGER(I4B), INTENT(OUT) :: tsize
+    !! total size written to value
+    INTEGER(I4B), INTENT(IN) :: istart_value, iend_value, stride_value
+  END SUBROUTINE obj_GetValue_28
+END INTERFACE GetValue_
+
+!----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
