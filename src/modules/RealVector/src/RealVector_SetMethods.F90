@@ -747,4 +747,26 @@ INTERFACE Set
   END SUBROUTINE obj_Set31
 END INTERFACE Set
 
+!----------------------------------------------------------------------------
+!                                                                        Set
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2024-05-30
+! summary: Set range of values to a vector
+
+INTERFACE Set
+  MODULE SUBROUTINE obj_Set32(obj, istart, iend, stride, VALUE, &
+                              istart_value, iend_value, stride_value)
+    TYPE(RealVector_), INTENT(INOUT) :: obj
+    !! ob(istart:iend:stride)=VALUE
+    INTEGER(I4B), INTENT(IN) :: istart, iend, stride
+    !! range of values to set
+    REAL(DFP), INTENT(IN) :: VALUE(:)
+    !! vector value
+    INTEGER(I4B), INTENT(IN) :: istart_value, iend_value, stride_value
+    !! range of values to set
+  END SUBROUTINE obj_Set32
+END INTERFACE Set
+
 END MODULE RealVector_SetMethods
