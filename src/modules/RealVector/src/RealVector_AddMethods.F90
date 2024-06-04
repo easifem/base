@@ -690,4 +690,28 @@ INTERFACE Add
   END SUBROUTINE obj_Add31
 END INTERFACE Add
 
+!----------------------------------------------------------------------------
+!                                                                        Add
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2024-05-30
+! summary: Add range of values to a vector
+
+INTERFACE Add
+  MODULE SUBROUTINE obj_Add32(obj, istart, iend, stride, VALUE, &
+                              istart_value, iend_value, stride_value, scale)
+    TYPE(RealVector_), INTENT(INOUT) :: obj
+    !! ob(istart:iend:stride)=VALUE
+    INTEGER(I4B), INTENT(IN) :: istart, iend, stride
+    !! range of values to set
+    REAL(DFP), INTENT(IN) :: VALUE(:)
+    !! vector value
+    INTEGER(I4B), INTENT(IN) :: istart_value, iend_value, stride_value
+    !! range of values to set
+    REAL(DFP), INTENT(IN) :: scale
+    !! scale
+  END SUBROUTINE obj_Add32
+END INTERFACE Add
+
 END MODULE RealVector_AddMethods
