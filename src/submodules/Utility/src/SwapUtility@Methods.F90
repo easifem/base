@@ -222,7 +222,7 @@ END PROCEDURE swap_r32m
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE swap_r64m
-REAL(REAL32), DIMENSION(SIZE(a, 1), SIZE(a, 2)) :: dum
+REAL(REAL64), DIMENSION(SIZE(a, 1), SIZE(a, 2)) :: dum
 dum = a
 a = b
 b = dum
@@ -591,6 +591,38 @@ END PROCEDURE swap_index1
 !                                                                  SWAP
 !----------------------------------------------------------------------------
 
+MODULE PROCEDURE swap_index_1
+INTEGER(I4B) :: ij(2), s(2), i, j
+!! main
+s = SHAPE(b)
+DO j = 1, s(2)
+  DO i = 1, s(1)
+    ij(1) = i; ij(2) = j
+    a(ij(i1), ij(i2)) = b(i, j)
+  END DO
+END DO
+END PROCEDURE swap_index_1
+
+!----------------------------------------------------------------------------
+!                                                                  SWAP
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE swap_index_2
+INTEGER(I4B) :: ij(2), s(2), i, j
+!! main
+s = SHAPE(b)
+DO j = 1, s(2)
+  DO i = 1, s(1)
+    ij(1) = i; ij(2) = j
+    a(ij(i1), ij(i2)) = b(i, j)
+  END DO
+END DO
+END PROCEDURE swap_index_2
+
+!----------------------------------------------------------------------------
+!                                                                  SWAP
+!----------------------------------------------------------------------------
+
 MODULE PROCEDURE swap_index2
 INTEGER(I4B) :: IJ(2), s(2), i, j
 !! main
@@ -664,6 +696,42 @@ END PROCEDURE swap_index4
 !                                                                  SWAP
 !----------------------------------------------------------------------------
 
+MODULE PROCEDURE swap_index_3
+INTEGER(I4B) :: ijk(3), s(3), i, j, k
+!! main
+s = SHAPE(b)
+DO k = 1, s(3)
+  DO j = 1, s(2)
+    DO i = 1, s(1)
+      ijk = [i, j, k]
+      a(ijk(i1), ijk(i2), ijk(i3)) = b(i, j, k)
+    END DO
+  END DO
+END DO
+END PROCEDURE swap_index_3
+
+!----------------------------------------------------------------------------
+!                                                                  SWAP
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE swap_index_4
+INTEGER(I4B) :: ijk(3), s(3), i, j, k
+!! main
+s = SHAPE(b)
+DO k = 1, s(3)
+  DO j = 1, s(2)
+    DO i = 1, s(1)
+      ijk = [i, j, k]
+      a(ijk(i1), ijk(i2), ijk(i3)) = b(i, j, k)
+    END DO
+  END DO
+END DO
+END PROCEDURE swap_index_4
+
+!----------------------------------------------------------------------------
+!                                                                  SWAP
+!----------------------------------------------------------------------------
+
 MODULE PROCEDURE swap_index5
 INTEGER(I4B) :: indx(4), s(4), i, j, k, l
 !! main
@@ -701,6 +769,46 @@ DO l = 1, s(4)
   END DO
 END DO
 END PROCEDURE swap_index6
+
+!----------------------------------------------------------------------------
+!                                                                  SWAP
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE swap_index_5
+INTEGER(I4B) :: indx(4), s(4), i, j, k, l
+!! main
+s = SHAPE(b)
+DO l = 1, s(4)
+  DO k = 1, s(3)
+    DO j = 1, s(2)
+      DO i = 1, s(1)
+        indx = [i, j, k, l]
+        a(indx(i1), indx(i2), indx(i3), indx(i4)) = b(i, j, k, l)
+      END DO
+    END DO
+  END DO
+END DO
+END PROCEDURE swap_index_5
+
+!----------------------------------------------------------------------------
+!                                                                  SWAP
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE swap_index_6
+INTEGER(I4B) :: indx(4), s(4), i, j, k, l
+!! main
+s = SHAPE(b)
+DO l = 1, s(4)
+  DO k = 1, s(3)
+    DO j = 1, s(2)
+      DO i = 1, s(1)
+        indx = [i, j, k, l]
+        a(indx(i1), indx(i2), indx(i3), indx(i4)) = b(i, j, k, l)
+      END DO
+    END DO
+  END DO
+END DO
+END PROCEDURE swap_index_6
 
 !----------------------------------------------------------------------------
 !

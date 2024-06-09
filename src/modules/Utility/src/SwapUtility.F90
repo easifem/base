@@ -16,10 +16,15 @@
 !
 
 MODULE SwapUtility
-USE GlobalData
+USE GlobalData, ONLY: INT8, INT16, INT32, INT64, REAL32, REAL64, &
+                      DFPC, LGT, I4B
+
 IMPLICIT NONE
+
 PRIVATE
+
 PUBLIC :: Swap
+PUBLIC :: Swap_
 
 !----------------------------------------------------------------------------
 !                                                           Swap@SwapMethods
@@ -521,7 +526,51 @@ INTERFACE Swap
     !! index 2 is Swapped with index `i2`
     !! make sure i2 is less than or equal to 2
   END SUBROUTINE Swap_index2
-END INTERFACE Swap 
+END INTERFACE Swap
+
+!----------------------------------------------------------------------------
+!                                                           Swap@SwapMethods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2021-11-20
+! summary: Swap the index, it is like taking transpose.
+!
+!# Introduction
+!
+! - This routine returns an matrix by chaning the dimensions of input matrix
+! `b`.
+! - This routine does not check the shape, so make sure the shape of
+! `a` and `b` are appropriate,.
+!
+
+INTERFACE Swap_
+  MODULE PURE SUBROUTINE Swap_index_1(a, b, i1, i2)
+    REAL(REAL32), INTENT(INOUT) :: a(:, :)
+      !! the returned array
+    REAL(REAL32), INTENT(IN) :: b(:, :)
+      !! input array, it will be untouched
+    INTEGER(I4B), INTENT(IN) :: i1
+      !! index 1 is Swapped with index `i1`
+      !! make sure i1 is lesser than or equal to 2
+    INTEGER(I4B), INTENT(IN) :: i2
+      !! index 2 is Swapped with index `i2`
+      !! make sure i2 is less than or equal to 2
+  END SUBROUTINE Swap_index_1
+
+  MODULE PURE SUBROUTINE Swap_index_2(a, b, i1, i2)
+    REAL(REAL64), INTENT(INOUT) :: a(:, :)
+      !! the returned array
+    REAL(REAL64), INTENT(IN) :: b(:, :)
+      !! input array, it will be untouched
+    INTEGER(I4B), INTENT(IN) :: i1
+      !! index 1 is Swapped with index `i1`
+      !! make sure i1 is lesser than or equal to 2
+    INTEGER(I4B), INTENT(IN) :: i2
+      !! index 2 is Swapped with index `i2`
+      !! make sure i2 is less than or equal to 2
+  END SUBROUTINE Swap_index_2
+END INTERFACE Swap_
 
 !----------------------------------------------------------------------------
 !                                                           Swap@SwapMethods
@@ -557,6 +606,57 @@ INTERFACE Swap
     !! make sure i3 is less than or equal to 3
   END SUBROUTINE Swap_index3
 END INTERFACE Swap
+
+!----------------------------------------------------------------------------
+!                                                           Swap@SwapMethods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2021-11-20
+! update: 2021-11-20
+! summary: Swap the index, it is like taking transpose.
+!
+!# Introduction
+!
+! - This routine returns an matrix by chaning the dimensions of input matrix
+! `b`.
+! - This routine does not check the shape, so make sure the shape of
+! `a` and `b` are appropriate,.
+!
+
+INTERFACE Swap_
+  MODULE PURE SUBROUTINE Swap_index_3(a, b, i1, i2, i3)
+    REAL(REAL32), INTENT(INOUT) :: a(:, :, :)
+    !! the returned array
+    REAL(REAL32), INTENT(IN) :: b(:, :, :)
+    !! input array, it will be untouched
+    INTEGER(I4B), INTENT(IN) :: i1
+    !! index 1 is Swapped with index `i1`
+    !! make sure i1 is lesser than or equal to 3
+    INTEGER(I4B), INTENT(IN) :: i2
+    !! index 2 is Swapped with index `i2`
+    !! make sure i2 is less than or equal to 3
+    INTEGER(I4B), INTENT(IN) :: i3
+    !! index 3 is Swapped with index `i3`
+    !! make sure i3 is less than or equal to 3
+  END SUBROUTINE Swap_index_3
+
+  MODULE PURE SUBROUTINE Swap_index_4(a, b, i1, i2, i3)
+    REAL(REAL64), INTENT(INOUT) :: a(:, :, :)
+    !! the returned array
+    REAL(REAL64), INTENT(IN) :: b(:, :, :)
+    !! input array, it will be untouched
+    INTEGER(I4B), INTENT(IN) :: i1
+    !! index 1 is Swapped with index `i1`
+    !! make sure i1 is lesser than or equal to 3
+    INTEGER(I4B), INTENT(IN) :: i2
+    !! index 2 is Swapped with index `i2`
+    !! make sure i2 is less than or equal to 3
+    INTEGER(I4B), INTENT(IN) :: i3
+    !! index 3 is Swapped with index `i3`
+    !! make sure i3 is less than or equal to 3
+  END SUBROUTINE Swap_index_4
+END INTERFACE Swap_
 
 !----------------------------------------------------------------------------
 !                                                           Swap@SwapMethods
@@ -666,6 +766,62 @@ INTERFACE Swap
     !! make sure i4 is less than or equal to 4
   END SUBROUTINE Swap_index6
 END INTERFACE Swap
+
+!----------------------------------------------------------------------------
+!                                                           Swap@SwapMethods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2021-11-20
+! update: 2021-11-20
+! summary: Swap the index, it is like taking transpose.
+!
+!# Introduction
+!
+! - This routine returns an matrix by chaning the dimensions of input matrix
+! `b`.
+! - This routine does not check the shape, so make sure the shape of
+! `a` and `b` are appropriate,.
+
+INTERFACE Swap_
+  MODULE PURE SUBROUTINE Swap_index_5(a, b, i1, i2, i3, i4)
+    REAL(REAL32), ALLOCATABLE, INTENT(INOUT) :: a(:, :, :, :)
+    !! the returned array
+    REAL(REAL32), INTENT(IN) :: b(:, :, :, :)
+    !! input array, it will be untouched
+    INTEGER(I4B), INTENT(IN) :: i1
+    !! index 1 is Swapped with index `i1`
+    !! make sure i1 is lesser than or equal to 4
+    INTEGER(I4B), INTENT(IN) :: i2
+    !! index 2 is Swapped with index `i2`
+    !! make sure i2 is less than or equal to 4
+    INTEGER(I4B), INTENT(IN) :: i3
+    !! index 3 is Swapped with index `i3`
+    !! make sure i3 is less than or equal to 4
+    INTEGER(I4B), INTENT(IN) :: i4
+    !! index 4 is Swapped with index `i4`
+    !! make sure i4 is less than or equal to 4
+  END SUBROUTINE Swap_index_5
+
+  MODULE PURE SUBROUTINE Swap_index_6(a, b, i1, i2, i3, i4)
+    REAL(REAL64), ALLOCATABLE, INTENT(INOUT) :: a(:, :, :, :)
+    !! the returned array
+    REAL(REAL64), INTENT(IN) :: b(:, :, :, :)
+    !! input array, it will be untouched
+    INTEGER(I4B), INTENT(IN) :: i1
+    !! index 1 is Swapped with index `i1`
+    !! make sure i1 is lesser than or equal to 4
+    INTEGER(I4B), INTENT(IN) :: i2
+    !! index 2 is Swapped with index `i2`
+    !! make sure i2 is less than or equal to 4
+    INTEGER(I4B), INTENT(IN) :: i3
+    !! index 3 is Swapped with index `i3`
+    !! make sure i3 is less than or equal to 4
+    INTEGER(I4B), INTENT(IN) :: i4
+    !! index 4 is Swapped with index `i4`
+    !! make sure i4 is less than or equal to 4
+  END SUBROUTINE Swap_index_6
+END INTERFACE Swap_
 
 !----------------------------------------------------------------------------
 !
