@@ -27,7 +27,7 @@ CONTAINS
 
 MODULE PROCEDURE fevar_addition1
 !!
-REAL(DFP), ALLOCATABLE :: r2(:, :), r3(:, :, :), r4(:,:,:,:), m2(:,:)
+REAL(DFP), ALLOCATABLE :: r2(:, :), r3(:, :, :), r4(:, :, :, :), m2(:, :)
 INTEGER(I4B) :: jj, kk
 !!
 SELECT CASE (obj1%rank)
@@ -37,45 +37,45 @@ SELECT CASE (obj1%rank)
 !!
 CASE (SCALAR)
   !!
-  select case( obj2%rank )
+  SELECT CASE (obj2%rank)
   !! scalar, scalar
-  case( scalar )
+  CASE (scalar)
 #include "./ScalarOperatorScalar.inc"
   !! scalar, vector
-  case( vector )
+  CASE (vector)
 #include "./ScalarOperatorVector.inc"
   !! scalar, matrix
-  case( matrix )
+  CASE (matrix)
 #include "./ScalarOperatorMatrix.inc"
-  end select
+  END SELECT
 !!
 !!
 !!
 !!
 CASE (VECTOR)
   !!
-  select case( obj2%rank )
+  SELECT CASE (obj2%rank)
   !! vector, scalar
-  case( scalar )
+  CASE (scalar)
 #include "./VectorOperatorScalar.inc"
   !! vector, vector
-  case( vector )
+  CASE (vector)
 #include "./VectorOperatorVector.inc"
-  end select
+  END SELECT
 !!
 !!
 !!
 !!
 CASE (MATRIX)
   !!
-  select case( obj2%rank )
-  case( scalar )
+  SELECT CASE (obj2%rank)
+  CASE (scalar)
     !! matrix, scalar
 #include "./MatrixOperatorScalar.inc"
-  case( matrix )
+  CASE (matrix)
     !! matrix, matrix
 #include "./MatrixOperatorMatrix.inc"
-  end select
+  END SELECT
 !!
 !!
 !!

@@ -57,14 +57,7 @@ MODULE PROCEDURE fevar_Size
 IF (PRESENT(dim)) THEN
   ans = obj%s(dim)
 ELSE
-  SELECT CASE (obj%rank)
-  CASE (Scalar)
-    ans = 1
-  CASE (Vector)
-    ans = obj%s(1)
-  CASE (Matrix)
-    ans = obj%s(1) * obj%s(2)
-  END SELECT
+  ans = obj%len
 END IF
 END PROCEDURE fevar_Size
 

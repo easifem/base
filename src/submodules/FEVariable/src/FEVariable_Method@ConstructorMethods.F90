@@ -27,9 +27,11 @@ CONTAINS
 MODULE PROCEDURE fevar_Deallocate
 IF (ALLOCATED(obj%val)) DEALLOCATE (obj%val)
 obj%s = 0
-obj%DefineOn = 0
-obj%VarType = 0
-obj%Rank = 0
+obj%defineOn = 0
+obj%varType = 0
+obj%rank = 0
+obj%len = 0
+obj%capacity = 0
 END PROCEDURE fevar_Deallocate
 
 !----------------------------------------------------------------------------
@@ -38,10 +40,12 @@ END PROCEDURE fevar_Deallocate
 
 MODULE PROCEDURE Nodal_Scalar_Constant
 obj%val = [val]
-obj%s = 0
-obj%defineon = NODAL
+obj%s(1) = 1
+obj%defineOn = NODAL
 obj%rank = SCALAR
-obj%vartype = CONSTANT
+obj%varType = CONSTANT
+obj%len = 1
+obj%capacity = 1
 END PROCEDURE Nodal_Scalar_Constant
 
 !----------------------------------------------------------------------------
@@ -51,9 +55,11 @@ END PROCEDURE Nodal_Scalar_Constant
 MODULE PROCEDURE Nodal_Scalar_Space
 obj%val = val
 obj%s(1) = SIZE(val)
-obj%defineon = NODAL
+obj%defineOn = NODAL
 obj%rank = SCALAR
-obj%vartype = SPACE
+obj%varType = SPACE
+obj%len = SIZE(val)
+obj%capacity = obj%len
 END PROCEDURE Nodal_Scalar_Space
 
 !----------------------------------------------------------------------------
@@ -63,9 +69,11 @@ END PROCEDURE Nodal_Scalar_Space
 MODULE PROCEDURE Nodal_Scalar_Time
 obj%val = val
 obj%s(1) = SIZE(val)
-obj%defineon = NODAL
+obj%defineOn = NODAL
 obj%rank = SCALAR
-obj%vartype = TIME
+obj%varType = TIME
+obj%len = SIZE(val)
+obj%capacity = obj%len
 END PROCEDURE Nodal_Scalar_Time
 
 !----------------------------------------------------------------------------
@@ -75,9 +83,11 @@ END PROCEDURE Nodal_Scalar_Time
 MODULE PROCEDURE Nodal_Scalar_Spacetime
 obj%val = RESHAPE(val, [SIZE(val)])
 obj%s(1:2) = SHAPE(val)
-obj%defineon = NODAL
+obj%defineOn = NODAL
 obj%rank = SCALAR
-obj%vartype = SPACETIME
+obj%varType = SPACETIME
+obj%len = SIZE(obj%val)
+obj%capacity = obj%len
 END PROCEDURE Nodal_Scalar_Spacetime
 
 !----------------------------------------------------------------------------
@@ -87,9 +97,11 @@ END PROCEDURE Nodal_Scalar_Spacetime
 MODULE PROCEDURE Nodal_Vector_Constant
 obj%val = val
 obj%s(1:1) = SHAPE(val)
-obj%defineon = NODAL
+obj%defineOn = NODAL
 obj%rank = VECTOR
-obj%vartype = CONSTANT
+obj%varType = CONSTANT
+obj%len = SIZE(obj%val)
+obj%capacity = obj%len
 END PROCEDURE Nodal_Vector_Constant
 
 !----------------------------------------------------------------------------
@@ -99,9 +111,11 @@ END PROCEDURE Nodal_Vector_Constant
 MODULE PROCEDURE Nodal_Vector_Space
 obj%val = RESHAPE(val, [SIZE(val)])
 obj%s(1:2) = SHAPE(val)
-obj%defineon = NODAL
+obj%defineOn = NODAL
 obj%rank = VECTOR
-obj%vartype = SPACE
+obj%varType = SPACE
+obj%len = SIZE(obj%val)
+obj%capacity = obj%len
 END PROCEDURE Nodal_Vector_Space
 
 !----------------------------------------------------------------------------
@@ -111,9 +125,11 @@ END PROCEDURE Nodal_Vector_Space
 MODULE PROCEDURE Nodal_Vector_Time
 obj%val = RESHAPE(val, [SIZE(val)])
 obj%s(1:2) = SHAPE(val)
-obj%defineon = NODAL
+obj%defineOn = NODAL
 obj%rank = VECTOR
-obj%vartype = TIME
+obj%varType = TIME
+obj%len = SIZE(obj%val)
+obj%capacity = obj%len
 END PROCEDURE Nodal_Vector_Time
 
 !----------------------------------------------------------------------------
@@ -123,9 +139,11 @@ END PROCEDURE Nodal_Vector_Time
 MODULE PROCEDURE Nodal_Vector_Spacetime
 obj%val = RESHAPE(val, [SIZE(val)])
 obj%s(1:3) = SHAPE(val)
-obj%defineon = NODAL
+obj%defineOn = NODAL
 obj%rank = VECTOR
-obj%vartype = SPACETIME
+obj%varType = SPACETIME
+obj%len = SIZE(obj%val)
+obj%capacity = obj%len
 END PROCEDURE Nodal_Vector_Spacetime
 
 !----------------------------------------------------------------------------
@@ -135,9 +153,11 @@ END PROCEDURE Nodal_Vector_Spacetime
 MODULE PROCEDURE Nodal_Matrix_Constant
 obj%val = RESHAPE(val, [SIZE(val)])
 obj%s(1:2) = SHAPE(val)
-obj%defineon = NODAL
+obj%defineOn = NODAL
 obj%rank = MATRIX
-obj%vartype = CONSTANT
+obj%varType = CONSTANT
+obj%len = SIZE(obj%val)
+obj%capacity = obj%len
 END PROCEDURE Nodal_Matrix_Constant
 
 !----------------------------------------------------------------------------
@@ -147,9 +167,11 @@ END PROCEDURE Nodal_Matrix_Constant
 MODULE PROCEDURE Nodal_Matrix_Space
 obj%val = RESHAPE(val, [SIZE(val)])
 obj%s(1:3) = SHAPE(val)
-obj%defineon = NODAL
+obj%defineOn = NODAL
 obj%rank = MATRIX
-obj%vartype = SPACE
+obj%varType = SPACE
+obj%len = SIZE(obj%val)
+obj%capacity = obj%len
 END PROCEDURE Nodal_Matrix_Space
 
 !----------------------------------------------------------------------------
@@ -159,9 +181,11 @@ END PROCEDURE Nodal_Matrix_Space
 MODULE PROCEDURE Nodal_Matrix_Time
 obj%val = RESHAPE(val, [SIZE(val)])
 obj%s(1:3) = SHAPE(val)
-obj%defineon = NODAL
+obj%defineOn = NODAL
 obj%rank = MATRIX
-obj%vartype = TIME
+obj%varType = TIME
+obj%len = SIZE(obj%val)
+obj%capacity = obj%len
 END PROCEDURE Nodal_Matrix_Time
 
 !----------------------------------------------------------------------------
@@ -171,9 +195,11 @@ END PROCEDURE Nodal_Matrix_Time
 MODULE PROCEDURE Nodal_Matrix_Spacetime
 obj%val = RESHAPE(val, [SIZE(val)])
 obj%s(1:4) = SHAPE(val)
-obj%defineon = NODAL
+obj%defineOn = NODAL
 obj%rank = MATRIX
-obj%vartype = SPACETIME
+obj%varType = SPACETIME
+obj%len = SIZE(obj%val)
+obj%capacity = obj%len
 END PROCEDURE Nodal_Matrix_Spacetime
 
 !----------------------------------------------------------------------------
@@ -183,9 +209,11 @@ END PROCEDURE Nodal_Matrix_Spacetime
 MODULE PROCEDURE Quadrature_Scalar_Constant
 obj%val = [val]
 obj%s = 0
-obj%defineon = Quadrature
+obj%defineOn = Quadrature
 obj%rank = SCALAR
-obj%vartype = CONSTANT
+obj%varType = CONSTANT
+obj%len = SIZE(obj%val)
+obj%capacity = obj%len
 END PROCEDURE Quadrature_Scalar_Constant
 
 !----------------------------------------------------------------------------
@@ -195,9 +223,11 @@ END PROCEDURE Quadrature_Scalar_Constant
 MODULE PROCEDURE Quadrature_Scalar_Space
 obj%val = val
 obj%s(1) = SIZE(val)
-obj%defineon = Quadrature
+obj%defineOn = Quadrature
 obj%rank = SCALAR
-obj%vartype = SPACE
+obj%varType = SPACE
+obj%len = SIZE(obj%val)
+obj%capacity = obj%len
 END PROCEDURE Quadrature_Scalar_Space
 
 !----------------------------------------------------------------------------
@@ -207,9 +237,11 @@ END PROCEDURE Quadrature_Scalar_Space
 MODULE PROCEDURE Quadrature_Scalar_Time
 obj%val = val
 obj%s(1) = SIZE(val)
-obj%defineon = Quadrature
+obj%defineOn = Quadrature
 obj%rank = SCALAR
-obj%vartype = TIME
+obj%varType = TIME
+obj%len = SIZE(obj%val)
+obj%capacity = obj%len
 END PROCEDURE Quadrature_Scalar_Time
 
 !----------------------------------------------------------------------------
@@ -219,9 +251,11 @@ END PROCEDURE Quadrature_Scalar_Time
 MODULE PROCEDURE Quadrature_Scalar_Spacetime
 obj%val = RESHAPE(val, [SIZE(val)])
 obj%s(1:2) = SHAPE(val)
-obj%defineon = Quadrature
+obj%defineOn = Quadrature
 obj%rank = SCALAR
-obj%vartype = SPACETIME
+obj%varType = SPACETIME
+obj%len = SIZE(obj%val)
+obj%capacity = obj%len
 END PROCEDURE Quadrature_Scalar_Spacetime
 
 !----------------------------------------------------------------------------
@@ -231,9 +265,11 @@ END PROCEDURE Quadrature_Scalar_Spacetime
 MODULE PROCEDURE Quadrature_Vector_Constant
 obj%val = val
 obj%s(1:1) = SHAPE(val)
-obj%defineon = Quadrature
+obj%defineOn = Quadrature
 obj%rank = VECTOR
-obj%vartype = CONSTANT
+obj%varType = CONSTANT
+obj%len = SIZE(obj%val)
+obj%capacity = obj%len
 END PROCEDURE Quadrature_Vector_Constant
 
 !----------------------------------------------------------------------------
@@ -243,9 +279,11 @@ END PROCEDURE Quadrature_Vector_Constant
 MODULE PROCEDURE Quadrature_Vector_Space
 obj%val = RESHAPE(val, [SIZE(val)])
 obj%s(1:2) = SHAPE(val)
-obj%defineon = Quadrature
+obj%defineOn = Quadrature
 obj%rank = VECTOR
-obj%vartype = SPACE
+obj%varType = SPACE
+obj%len = SIZE(obj%val)
+obj%capacity = obj%len
 END PROCEDURE Quadrature_Vector_Space
 
 !----------------------------------------------------------------------------
@@ -255,9 +293,11 @@ END PROCEDURE Quadrature_Vector_Space
 MODULE PROCEDURE Quadrature_Vector_Time
 obj%val = RESHAPE(val, [SIZE(val)])
 obj%s(1:2) = SHAPE(val)
-obj%defineon = Quadrature
+obj%defineOn = Quadrature
 obj%rank = VECTOR
-obj%vartype = TIME
+obj%varType = TIME
+obj%len = SIZE(obj%val)
+obj%capacity = obj%len
 END PROCEDURE Quadrature_Vector_Time
 
 !----------------------------------------------------------------------------
@@ -267,9 +307,11 @@ END PROCEDURE Quadrature_Vector_Time
 MODULE PROCEDURE Quadrature_Vector_Spacetime
 obj%val = RESHAPE(val, [SIZE(val)])
 obj%s(1:3) = SHAPE(val)
-obj%defineon = Quadrature
+obj%defineOn = Quadrature
 obj%rank = VECTOR
-obj%vartype = SPACETIME
+obj%varType = SPACETIME
+obj%len = SIZE(obj%val)
+obj%capacity = obj%len
 END PROCEDURE Quadrature_Vector_Spacetime
 
 !----------------------------------------------------------------------------
@@ -279,9 +321,11 @@ END PROCEDURE Quadrature_Vector_Spacetime
 MODULE PROCEDURE Quadrature_Matrix_Constant
 obj%val = RESHAPE(val, [SIZE(val)])
 obj%s(1:2) = SHAPE(val)
-obj%defineon = Quadrature
+obj%defineOn = Quadrature
 obj%rank = MATRIX
-obj%vartype = CONSTANT
+obj%varType = CONSTANT
+obj%len = SIZE(obj%val)
+obj%capacity = obj%len
 END PROCEDURE Quadrature_Matrix_Constant
 
 !----------------------------------------------------------------------------
@@ -291,9 +335,11 @@ END PROCEDURE Quadrature_Matrix_Constant
 MODULE PROCEDURE Quadrature_Matrix_Space
 obj%val = RESHAPE(val, [SIZE(val)])
 obj%s(1:3) = SHAPE(val)
-obj%defineon = Quadrature
+obj%defineOn = Quadrature
 obj%rank = MATRIX
-obj%vartype = SPACE
+obj%varType = SPACE
+obj%len = SIZE(obj%val)
+obj%capacity = obj%len
 END PROCEDURE Quadrature_Matrix_Space
 
 !----------------------------------------------------------------------------
@@ -303,9 +349,11 @@ END PROCEDURE Quadrature_Matrix_Space
 MODULE PROCEDURE Quadrature_Matrix_Time
 obj%val = RESHAPE(val, [SIZE(val)])
 obj%s(1:3) = SHAPE(val)
-obj%defineon = Quadrature
+obj%defineOn = Quadrature
 obj%rank = MATRIX
-obj%vartype = TIME
+obj%varType = TIME
+obj%len = SIZE(obj%val)
+obj%capacity = obj%len
 END PROCEDURE Quadrature_Matrix_Time
 
 !----------------------------------------------------------------------------
@@ -315,9 +363,11 @@ END PROCEDURE Quadrature_Matrix_Time
 MODULE PROCEDURE Quadrature_Matrix_Spacetime
 obj%val = RESHAPE(val, [SIZE(val)])
 obj%s(1:4) = SHAPE(val)
-obj%defineon = Quadrature
+obj%defineOn = Quadrature
 obj%rank = MATRIX
-obj%vartype = SPACETIME
+obj%varType = SPACETIME
+obj%len = SIZE(obj%val)
+obj%capacity = obj%len
 END PROCEDURE Quadrature_Matrix_Spacetime
 
 END SUBMODULE ConstructorMethods
