@@ -185,28 +185,29 @@ MODULE PROCEDURE obj_Get1
 REAL(DFP) :: m2(SIZE(VALUE, 1), SIZE(VALUE, 2))
 INTEGER(I4B) :: tdof, nns, myfmt
 
-CALL GetValue(obj=obj, nodenum=nodenum, VALUE=m2)
+CALL GetValue(obj=obj, nodenum=nodenum, VALUE=m2, nrow=nrow, ncol=ncol)
 
-tdof = .tdof. (obj%csr%idof)
-nns = SIZE(nodenum)
 myfmt = GetStorageFMT(obj, 1)
 
 IF (myfmt .EQ. storageFMT) THEN
-  VALUE = m2
+  VALUE(1:nrow, 1:ncol) = m2(1:nrow, 1:ncol)
   RETURN
 END IF
+
+tdof = .tdof. (obj%csr%idof)
+nns = SIZE(nodenum)
 
 SELECT CASE (storageFMT)
 
 CASE (FMT_NODES)
 
-  CALL ConvertSafe(From=m2, To=VALUE, Conversion=DOFToNodes, nns=nns, &
-    & tDOF=tdof)
+  CALL ConvertSafe(From=m2(1:nrow, 1:ncol), To=VALUE(1:nrow, 1:ncol), &
+                   Conversion=DOFToNodes, nns=nns, tDOF=tdof)
 
 CASE (FMT_DOF)
 
-  CALL ConvertSafe(From=m2, To=VALUE, Conversion=NodesToDOF, nns=nns,  &
-    & tDOF=tdof)
+  CALL ConvertSafe(From=m2(1:nrow, 1:ncol), To=VALUE(1:nrow, 1:ncol), &
+                   Conversion=NodesToDOF, nns=nns, tDOF=tdof)
 
 END SELECT
 
@@ -219,7 +220,7 @@ END PROCEDURE obj_Get1
 MODULE PROCEDURE obj_Get2
 INTEGER(I4B) :: j
 
-VALUE = 0.0_DFP
+! VALUE = 0.0_DFP
 DO j = obj%csr%IA(irow), obj%csr%IA(irow + 1) - 1
   IF (obj%csr%JA(j) .EQ. icolumn) THEN
     VALUE = obj%A(j)
@@ -234,15 +235,15 @@ END PROCEDURE obj_Get2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE obj_Get10
-INTEGER(I4B) :: ii, jj, m, n
+INTEGER(I4B) :: ii, jj
 
-VALUE = 0.0_DFP
-m = SIZE(irow)
-n = SIZE(icolumn)
-DO ii = 1, m
-  DO jj = 1, n
-    CALL GetValue(obj=obj, VALUE=VALUE(ii, jj), irow=irow(ii),  &
-      & icolumn=icolumn(jj))
+! VALUE = 0.0_DFP
+nrow = SIZE(irow)
+ncol = SIZE(icolumn)
+DO jj = 1, ncol
+  DO ii = 1, nrow
+    CALL GetValue(obj=obj, VALUE=VALUE(ii, jj), irow=irow(ii), &
+                  icolumn=icolumn(jj))
   END DO
 END DO
 
@@ -271,10 +272,13 @@ INTEGER(I4B) :: ii, jj
 row = GetIndex(obj=obj%csr%idof, nodeNum=iNodeNum, ivar=ivar)
 col = GetIndex(obj=obj%csr%jdof, nodeNum=jNodeNum, ivar=jvar)
 
-DO ii = 1, SIZE(row)
-  DO jj = 1, SIZE(col)
-    CALL GetValue(obj=obj, VALUE=VALUE(ii, jj), irow=row(ii),  &
-      & icolumn=col(jj))
+nrow = SIZE(row)
+ncol = SIZE(col)
+
+DO ii = 1, nrow
+  DO jj = 1, ncol
+    CALL GetValue(obj=obj, VALUE=VALUE(ii, jj), irow=row(ii), &
+                  icolumn=col(jj))
   END DO
 END DO
 
@@ -300,18 +304,18 @@ END PROCEDURE obj_Get5
 MODULE PROCEDURE obj_Get6
 ! Internal variables
 INTEGER(I4B), ALLOCATABLE :: row(:), col(:)
-INTEGER(I4B) :: ii, jj, trow, tcol
+INTEGER(I4B) :: ii, jj
 
 row = GetIndex(obj=obj%csr%idof, nodeNum=iNodeNum, ivar=ivar, idof=idof)
 col = GetIndex(obj=obj%csr%jdof, nodeNum=jNodeNum, ivar=jvar, idof=jdof)
 
-trow = SIZE(row)
-tcol = SIZE(col)
+nrow = SIZE(row)
+ncol = SIZE(col)
 
-DO ii = 1, trow
-  DO jj = 1, tcol
-    CALL GetValue(obj=obj, VALUE=VALUE(ii, jj), irow=row(ii),  &
-      & icolumn=col(jj))
+DO ii = 1, nrow
+  DO jj = 1, ncol
+    CALL GetValue(obj=obj, VALUE=VALUE(ii, jj), irow=row(ii), &
+                  icolumn=col(jj))
   END DO
 END DO
 
@@ -350,22 +354,14 @@ END PROCEDURE obj_Get7
 MODULE PROCEDURE obj_Get9
 INTEGER(I4B) :: irow(SIZE(iNodeNum)), icolumn(SIZE(jNodeNum))
 
-irow = GetNodeLoc( &
-  & obj=obj%csr%idof, &
-  & nodenum=iNodeNum, &
-  & ivar=ivar, &
-  & spacecompo=ispacecompo, &
-  & timecompo=itimecompo)
+irow = GetNodeLoc(obj=obj%csr%idof, nodenum=iNodeNum, ivar=ivar, &
+                  spacecompo=ispacecompo, timecompo=itimecompo)
 
-icolumn = GetNodeLoc( &
-    & obj=obj%csr%jdof, &
-    & nodenum=jNodeNum, &
-    & ivar=jvar, &
-    & spacecompo=jspacecompo, &
-    & timecompo=jtimecompo)
+icolumn = GetNodeLoc(obj=obj%csr%jdof, nodenum=jNodeNum, ivar=jvar, &
+                     spacecompo=jspacecompo, timecompo=jtimecompo)
 
-CALL GetValue(obj=obj, irow=irow, icolumn=icolumn, VALUE=VALUE)
-!! Get10
+CALL GetValue(obj=obj, irow=irow, icolumn=icolumn, VALUE=VALUE, &
+              nrow=nrow, ncol=ncol)
 END PROCEDURE obj_Get9
 
 !----------------------------------------------------------------------------
