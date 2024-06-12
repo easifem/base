@@ -190,6 +190,8 @@ PUBLIC :: iface_MatrixFunction
 PUBLIC :: Range_
 PUBLIC :: Interval1D_
 
+INTEGER(I4B), PARAMETER, PUBLIC :: MAX_RANK_FEVARIABLE = 6
+
 !----------------------------------------------------------------------------
 !                                                                 Math_
 !----------------------------------------------------------------------------
@@ -1027,8 +1029,6 @@ TYPE(KeyValue_), PARAMETER :: TypeKeyValue = KeyValue_(VALUE=NULL())
 !
 ! {!pages/FEVariable_.md!}
 
-INTEGER(I4B), PARAMETER, PUBLIC :: MAX_RANK_FEVARIABLE = 6
-
 TYPE :: FEVariable_
   REAL(DFP), ALLOCATABLE :: val(:)
   !! values
@@ -1046,6 +1046,10 @@ TYPE :: FEVariable_
   !! Scalar
   !! Vector
   !! Matrix
+  INTEGER(I4B) :: len = 0_I4B
+  !! current total size
+  INTEGER(I4B) :: capacity = 0_I4B
+  !! capacity of the val
 END TYPE FEVariable_
 
 TYPE(FEVariable_), PARAMETER :: TypeFEVariable = FEVariable_(val=NULL())
