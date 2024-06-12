@@ -39,7 +39,7 @@ PUBLIC :: GetJA
 PUBLIC :: GetValue
 
 !----------------------------------------------------------------------------
-!                                                        GetIA@GetMethods
+!                                                        GetIA
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -55,7 +55,7 @@ INTERFACE GetIA
 END INTERFACE GetIA
 
 !----------------------------------------------------------------------------
-!                                                        GetJA@GetMethods
+!                                                        GetJA
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -111,7 +111,7 @@ INTERFACE Get
 END INTERFACE Get
 
 !----------------------------------------------------------------------------
-!                                                  GetStorageFMT@getMethods
+!                                                  GetStorageFMT
 !----------------------------------------------------------------------------
 
 INTERFACE GetStorageFMT
@@ -127,7 +127,7 @@ INTERFACE OPERATOR(.storageFMT.)
 END INTERFACE OPERATOR(.storageFMT.)
 
 !----------------------------------------------------------------------------
-!                                                   GetMatrixProp@getMethod
+!                                                   GetMatrixProp
 !----------------------------------------------------------------------------
 
 INTERFACE GetMatrixProp
@@ -142,7 +142,7 @@ INTERFACE OPERATOR(.MatrixProp.)
 END INTERFACE OPERATOR(.MatrixProp.)
 
 !----------------------------------------------------------------------------
-!                                                  GetDOFPointer@getMethod
+!                                                  GetDOFPointer
 !----------------------------------------------------------------------------
 
 INTERFACE GetDOFPointer
@@ -154,7 +154,7 @@ INTERFACE GetDOFPointer
 END INTERFACE GetDOFPointer
 
 !----------------------------------------------------------------------------
-!                                                          isSquare@GetMethod
+!                                                          isSquare
 !----------------------------------------------------------------------------
 
 INTERFACE isSquare
@@ -165,7 +165,7 @@ INTERFACE isSquare
 END INTERFACE isSquare
 
 !----------------------------------------------------------------------------
-!                                                    isRectangle@GetMethod
+!                                                    isRectangle
 !----------------------------------------------------------------------------
 
 INTERFACE isRectangle
@@ -176,7 +176,7 @@ INTERFACE isRectangle
 END INTERFACE isRectangle
 
 !----------------------------------------------------------------------------
-!                                                   GetColNumber@GetMethods
+!                                                   GetColNumber
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -192,7 +192,7 @@ INTERFACE GetColNumber
 END INTERFACE GetColNumber
 
 !----------------------------------------------------------------------------
-!                                                     GetColIndex@GetMethods
+!                                                     GetColIndex
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -208,7 +208,7 @@ INTERFACE GetColIndex
 END INTERFACE GetColIndex
 
 !----------------------------------------------------------------------------
-!                                                     startColumn@GetMethods
+!                                                     startColumn
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -224,7 +224,7 @@ INTERFACE OPERATOR(.startColumn.)
 END INTERFACE OPERATOR(.startColumn.)
 
 !----------------------------------------------------------------------------
-!                                                        endColumn@GetMethods
+!                                                        endColumn
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -240,7 +240,7 @@ INTERFACE OPERATOR(.endColumn.)
 END INTERFACE OPERATOR(.endColumn.)
 
 !----------------------------------------------------------------------------
-!                                                            Get@getMethods
+!                                                            Get
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -255,15 +255,16 @@ END INTERFACE OPERATOR(.endColumn.)
 ! - Symbolic we are performing following task `obj(nodenum, nodenum)=value`
 
 INTERFACE GetValue
-  MODULE PURE SUBROUTINE obj_Get0(obj, nodenum, VALUE)
+  MODULE PURE SUBROUTINE obj_Get0(obj, nodenum, VALUE, nrow, ncol)
     TYPE(CSRMatrix_), INTENT(IN) :: obj
     INTEGER(I4B), INTENT(IN) :: nodenum(:)
     REAL(DFP), INTENT(INOUT) :: VALUE(:, :)
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
   END SUBROUTINE obj_Get0
 END INTERFACE GetValue
 
 !----------------------------------------------------------------------------
-!                                                            Get@getMethods
+!                                                            Get
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -288,17 +289,18 @@ END INTERFACE GetValue
 ! - Usually, element matrix is stored with `DOF_FMT`
 
 INTERFACE GetValue
-  MODULE PURE SUBROUTINE obj_Get1(obj, nodenum, storageFMT, VALUE)
+  MODULE PURE SUBROUTINE obj_Get1(obj, nodenum, storageFMT, VALUE, nrow, ncol)
     TYPE(CSRMatrix_), INTENT(IN) :: obj
     INTEGER(I4B), INTENT(IN) :: nodenum(:)
-    REAL(DFP), INTENT(INOUT) :: VALUE(:, :)
     INTEGER(I4B), INTENT(IN) :: storageFMT
     !! storage format of value (desired format of value)
+    REAL(DFP), INTENT(INOUT) :: VALUE(:, :)
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
   END SUBROUTINE obj_Get1
 END INTERFACE GetValue
 
 !----------------------------------------------------------------------------
-!                                                             Get@getMethods
+!                                                                        Get
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -329,8 +331,12 @@ INTERFACE GetValue
   END SUBROUTINE obj_Get2
 END INTERFACE GetValue
 
+!----------------------------------------------------------------------------
+!                                                                   GetValue
+!----------------------------------------------------------------------------
+
 INTERFACE GetValue
-  MODULE PURE SUBROUTINE obj_Get10(obj, irow, icolumn, VALUE)
+  MODULE PURE SUBROUTINE obj_Get10(obj, irow, icolumn, VALUE, nrow, ncol)
     TYPE(CSRMatrix_), INTENT(IN) :: obj
     INTEGER(I4B), INTENT(IN) :: irow(:)
     !! row index
@@ -338,11 +344,12 @@ INTERFACE GetValue
     !! column index
     REAL(DFP), INTENT(INOUT) :: VALUE(:, :)
     !! value
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
   END SUBROUTINE obj_Get10
 END INTERFACE GetValue
 
 !----------------------------------------------------------------------------
-!                                                             Get@getMethods
+!                                                                       Get
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -372,7 +379,7 @@ END INTERFACE GetValue
 
 INTERFACE GetValue
   MODULE PURE SUBROUTINE obj_Get3(obj, iNodeNum, jNodeNum, iDOF, &
-    & jDOF, VALUE)
+                                  jDOF, VALUE)
     TYPE(CSRMatrix_), INTENT(IN) :: obj
     INTEGER(I4B), INTENT(IN) :: iNodeNum
     !! row node number
@@ -388,7 +395,7 @@ INTERFACE GetValue
 END INTERFACE GetValue
 
 !----------------------------------------------------------------------------
-!                                                            Get@getMethods
+!                                                                        Get
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -407,7 +414,7 @@ END INTERFACE GetValue
 
 INTERFACE GetValue
   MODULE PURE SUBROUTINE obj_Get4(obj, iNodeNum, jNodeNum, &
-    & ivar, jvar, VALUE)
+                                  ivar, jvar, VALUE, nrow, ncol)
     TYPE(CSRMatrix_), INTENT(IN) :: obj
     !! Block csr matrix
     INTEGER(I4B), INTENT(IN) :: iNodeNum(:)
@@ -420,11 +427,12 @@ INTERFACE GetValue
     !! column physical variables
     REAL(DFP), INTENT(INOUT) :: VALUE(:, :)
     !! value
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
   END SUBROUTINE obj_Get4
 END INTERFACE GetValue
 
 !----------------------------------------------------------------------------
-!                                                             Get@getMethods
+!                                                                        Get
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -452,8 +460,8 @@ END INTERFACE GetValue
 !@endnote
 
 INTERFACE GetValue
-  MODULE PURE SUBROUTINE obj_Get5(obj, iNodeNum, jNodeNum, ivar,  &
-    & jvar, iDOF, jDOF, VALUE)
+  MODULE PURE SUBROUTINE obj_Get5(obj, iNodeNum, jNodeNum, ivar, &
+                                  jvar, iDOF, jDOF, VALUE)
     TYPE(CSRMatrix_), INTENT(IN) :: obj
     INTEGER(I4B), INTENT(IN) :: iNodeNum
     !! row node number
@@ -473,7 +481,7 @@ INTERFACE GetValue
 END INTERFACE GetValue
 
 !----------------------------------------------------------------------------
-!                                                             Get@getMethods
+!                                                                        Get
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -481,8 +489,8 @@ END INTERFACE GetValue
 ! summary:  Gets the specific row and column entry from a given value
 
 INTERFACE GetValue
-  MODULE PURE SUBROUTINE obj_Get6(obj, iNodeNum, jNodeNum, ivar,  &
-    & jvar, iDOF, jDOF, VALUE)
+  MODULE PURE SUBROUTINE obj_Get6(obj, iNodeNum, jNodeNum, ivar, &
+                                  jvar, iDOF, jDOF, VALUE, nrow, ncol)
     TYPE(CSRMatrix_), INTENT(IN) :: obj
     !! block matrix field
     INTEGER(I4B), INTENT(IN) :: iNodeNum(:)
@@ -499,11 +507,12 @@ INTERFACE GetValue
     !! col degree of freedom
     REAL(DFP), INTENT(INOUT) :: VALUE(:, :)
     !! Matrix value
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
   END SUBROUTINE obj_Get6
 END INTERFACE GetValue
 
 !----------------------------------------------------------------------------
-!                                                             Get@getMethods
+!                                                                       Get
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -531,8 +540,8 @@ END INTERFACE GetValue
 !@endnote
 
 INTERFACE GetValue
-  MODULE PURE SUBROUTINE obj_Get7(obj, iNodeNum, jNodeNum, ivar,  &
-    & jvar, ispacecompo, itimecompo, jspacecompo, jtimecompo, VALUE)
+  MODULE PURE SUBROUTINE obj_Get7(obj, iNodeNum, jNodeNum, ivar, &
+                jvar, ispacecompo, itimecompo, jspacecompo, jtimecompo, VALUE)
     TYPE(CSRMatrix_), INTENT(IN) :: obj
     INTEGER(I4B), INTENT(IN) :: iNodeNum
     !! row node number
@@ -556,12 +565,13 @@ INTERFACE GetValue
 END INTERFACE GetValue
 
 !----------------------------------------------------------------------------
-!                                                           GetValue
+!                                                                   GetValue
 !----------------------------------------------------------------------------
 
 INTERFACE GetValue
-  MODULE PURE SUBROUTINE obj_Get9(obj, iNodeNum, jNodeNum, ivar,  &
-    & jvar, ispacecompo, itimecompo, jspacecompo, jtimecompo, VALUE)
+  MODULE PURE SUBROUTINE obj_Get9(obj, iNodeNum, jNodeNum, ivar, &
+              jvar, ispacecompo, itimecompo, jspacecompo, jtimecompo, VALUE, &
+                                  nrow, ncol)
     TYPE(CSRMatrix_), INTENT(IN) :: obj
     INTEGER(I4B), INTENT(IN) :: iNodeNum(:)
     !! row node number
@@ -581,11 +591,12 @@ INTERFACE GetValue
     !! col time component
     REAL(DFP), INTENT(INOUT) :: VALUE(:, :)
     !! scalar value to be Get
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
   END SUBROUTINE obj_Get9
 END INTERFACE GetValue
 
 !----------------------------------------------------------------------------
-!                                                             Get@GetMethod
+!                                                                        Get
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -597,13 +608,10 @@ END INTERFACE GetValue
 ! - The number of nodes in obj1 and obj2 should be same
 
 INTERFACE GetValue
-  MODULE SUBROUTINE obj_Get8(obj1, obj2,  &
-    & ivar1, jvar1,  &
-    & ispacecompo1, jspacecompo1, &
-    & itimecompo1, jtimecompo1, &
-    & ivar2, jvar2,  &
-    & ispacecompo2, jspacecompo2, &
-    & itimecompo2, jtimecompo2, ierr)
+  MODULE SUBROUTINE obj_Get8(obj1, obj2, ivar1, jvar1, &
+                       ispacecompo1, jspacecompo1, itimecompo1, jtimecompo1, &
+                      ivar2, jvar2, ispacecompo2, jspacecompo2, itimecompo2, &
+                             jtimecompo2, ierr)
     TYPE(CSRMatrix_), INTENT(IN) :: obj1
     !! master object
     TYPE(CSRMatrix_), INTENT(INOUT) :: obj2
@@ -638,7 +646,7 @@ INTERFACE GetValue
 END INTERFACE GetValue
 
 !----------------------------------------------------------------------------
-!                                                             Get@GetMethod
+!                                                                       Get
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -650,8 +658,8 @@ END INTERFACE GetValue
 ! - The number of nodes in obj1 and obj2 should be same
 
 INTERFACE
-  MODULE SUBROUTINE CSR2CSR_Get_Master(obj1, obj2, idof1, jdof1, idof2,  &
-    & jdof2, tNodes1, tNodes2)
+  MODULE SUBROUTINE CSR2CSR_Get_Master(obj1, obj2, idof1, jdof1, idof2, &
+                                       jdof2, tNodes1, tNodes2)
     TYPE(CSRMatrix_), INTENT(IN) :: obj1
     !! master object
     TYPE(CSRMatrix_), INTENT(INOUT) :: obj2
