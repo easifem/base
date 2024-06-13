@@ -27,7 +27,7 @@ CONTAINS
 
 MODULE PROCEDURE fevar_Multiplication1
 !!
-REAL(DFP), ALLOCATABLE :: r2(:, :), r3(:, :, :), r4(:,:,:,:), m2(:,:)
+REAL(DFP), ALLOCATABLE :: r2(:, :), r3(:, :, :), r4(:, :, :, :), m2(:, :)
 INTEGER(I4B) :: jj, kk
 !!
 SELECT CASE (obj1%rank)
@@ -37,45 +37,45 @@ SELECT CASE (obj1%rank)
 !!
 CASE (SCALAR)
   !!
-  select case( obj2%rank )
+  SELECT CASE (obj2%rank)
   !! scalar, scalar
-  case( scalar )
-#include "./ScalarOperatorScalar.inc"
+  CASE (scalar)
+#include "./include/ScalarOperatorScalar.F90"
   !! scalar, vector
-  case( vector )
-#include "./ScalarOperatorVector.inc"
+  CASE (vector)
+#include "./include/ScalarOperatorVector.F90"
   !! scalar, matrix
-  case( matrix )
-#include "./ScalarOperatorMatrix.inc"
-  end select
+  CASE (matrix)
+#include "./include/ScalarOperatorMatrix.F90"
+  END SELECT
 !!
 !!
 !!
 !!
 CASE (VECTOR)
   !!
-  select case( obj2%rank )
+  SELECT CASE (obj2%rank)
   !! vector, scalar
-  case( scalar )
-#include "./VectorOperatorScalar.inc"
+  CASE (scalar)
+#include "./include/VectorOperatorScalar.F90"
   !! vector, vector
-  case( vector )
-#include "./VectorOperatorVector.inc"
-  end select
+  CASE (vector)
+#include "./include/VectorOperatorVector.F90"
+  END SELECT
 !!
 !!
 !!
 !!
 CASE (MATRIX)
   !!
-  select case( obj2%rank )
-  case( scalar )
+  SELECT CASE (obj2%rank)
+  CASE (scalar)
     !! matrix, scalar
-#include "./MatrixOperatorScalar.inc"
-  case( matrix )
+#include "./include/MatrixOperatorScalar.F90"
+  CASE (matrix)
     !! matrix, matrix
-#include "./MatrixOperatorMatrix.inc"
-  end select
+#include "./include/MatrixOperatorMatrix.F90"
+  END SELECT
 !!
 !!
 !!
@@ -95,19 +95,19 @@ SELECT CASE (obj1%rank)
 !!
 !!
 CASE (SCALAR)
-#include "./ScalarOperatorReal.inc"
+#include "./include/ScalarOperatorReal.F90"
 !!
 !!
 !!
 !!
 CASE (VECTOR)
-#include "./VectorOperatorReal.inc"
+#include "./include/VectorOperatorReal.F90"
 !!
 !!
 !!
 !!
 CASE (MATRIX)
-#include "./MatrixOperatorReal.inc"
+#include "./include/MatrixOperatorReal.F90"
 !!
 !!
 !!
@@ -127,19 +127,19 @@ SELECT CASE (obj1%rank)
 !!
 !!
 CASE (SCALAR)
-#include "./RealOperatorScalar.inc"
+#include "./include/RealOperatorScalar.F90"
 !!
 !!
 !!
 !!
 CASE (VECTOR)
-#include "./RealOperatorVector.inc"
+#include "./include/RealOperatorVector.F90"
 !!
 !!
 !!
 !!
 CASE (MATRIX)
-#include "./RealOperatorMatrix.inc"
+#include "./include/RealOperatorMatrix.F90"
 !!
 !!
 !!

@@ -16,7 +16,13 @@
 !
 
 SUBMODULE(FEVariable_Method) IOMethods
-USE BaseMethod
+USE Display_Method, ONLY: Util_Display => Display, ToString
+USE GlobalData, ONLY: Scalar, Vector, Matrix, &
+                      Constant, Space, Time, SpaceTime, Nodal, Quadrature
+USE BaseType, ONLY: TypeFEVariableConstant, TypeFEVariableSpace, &
+                    TypeFEVariableTime, TypeFEVariableSpaceTime, &
+                    TypeFEVariableScalar, TypeFEVariableVector, &
+                    TypeFEVariableMatrix
 IMPLICIT NONE
 CONTAINS
 
@@ -25,97 +31,91 @@ CONTAINS
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE fevar_Display
-!!
-!! main
-!!
-CALL Display(msg, unitno=unitno)
-!!
+CALL Util_Display(msg, unitno=unitno)
+
 SELECT CASE (obj%rank)
-!!
-!! rank: SCALAR
-!!
-CASE (SCALAR)
-  CALL Display("# RANK :: 0 (SCALAR)", unitno=unitno)
-  !!
-  SELECT CASE (obj%vartype)
-  CASE (CONSTANT)
-    CALL Display("# VarType: CONSTANT", unitno=unitno)
-    CALL Display(GET(obj, typeFEVariableScalar, typeFEVariableConstant), &
-      & '# VALUE: ', unitno=unitno)
-  !!
-  CASE (SPACE)
-    CALL Display("# VarType: SPACE", unitno=unitno)
-    CALL Display(GET(obj, typeFEVariableScalar, typeFEVariableSpace), &
-      & '# VALUE: ', unitno=unitno)
-  !!
-  CASE (TIME)
-    CALL Display("# VarType: TIME", unitno=unitno)
-    CALL Display(GET(obj, typeFEVariableScalar, typeFEVariableTime), &
-      & '# VALUE: ', unitno=unitno)
-  !!
-  CASE (SPACETIME)
-    CALL Display("# VarType: SPACE & TIME", unitno=unitno)
-    CALL Display(GET(obj, typeFEVariableScalar, typeFEVariableSpaceTime), &
-      & '# VALUE: ', unitno=unitno)
+
+CASE (Scalar)
+
+  CALL Util_Display("RANK :: 0 (Scalar)", unitno=unitno)
+
+  SELECT CASE (obj%varType)
+  CASE (Constant)
+    CALL Util_Display("VarType: Constant", unitno=unitno)
+   CALL Util_Display(GET(obj, TypeFEVariableScalar, TypeFEVariableConstant), &
+                      'VALUE: ', unitno=unitno)
+
+  CASE (Space)
+    CALL Util_Display("VarType: Space", unitno=unitno)
+    CALL Util_Display(GET(obj, TypeFEVariableScalar, TypeFEVariableSpace), &
+                      'VALUE: ', unitno=unitno)
+  CASE (Time)
+    CALL Util_Display("VarType: Time", unitno=unitno)
+    CALL Util_Display(GET(obj, TypeFEVariableScalar, TypeFEVariableTime), &
+                      'VALUE: ', unitno=unitno)
+  CASE (SpaceTime)
+    CALL Util_Display("VarType: Space & Time", unitno=unitno)
+  CALL Util_Display(GET(obj, TypeFEVariableScalar, TypeFEVariableSpaceTime), &
+                      'VALUE: ', unitno=unitno)
+
+  CASE DEFAULT
+    CALL Util_Display("VarType: UNKNOWN", unitno=unitno)
   END SELECT
-!!
-!! rank: VECTOR
-!!
-CASE (VECTOR)
-  !!
-  CALL Display("RANK :: 1 (VECTOR)", unitno=unitno)
-  !!
-  SELECT CASE (obj%vartype)
-  CASE (CONSTANT)
-    CALL Display("# VarType: CONSTANT", unitno=unitno)
-    CALL Display(GET(obj, typeFEVariableVector, typeFEVariableConstant), &
-      & '# VALUE: ', unitno=unitno)
-  !!
-  CASE (SPACE)
-    CALL Display("# VarType: SPACE", unitno=unitno)
-    CALL Display(GET(obj, typeFEVariableVector, typeFEVariableSpace), &
-      & '# VALUE: ', unitno=unitno)
-  !!
-  CASE (TIME)
-    CALL Display("# VarType: TIME", unitno=unitno)
-    CALL Display(GET(obj, typeFEVariableVector, typeFEVariableTime), &
-      & '# VALUE: ', unitno=unitno)
-  !!
-  CASE (SPACETIME)
-    CALL Display("# VarType: SPACE & TIME", unitno=unitno)
-    CALL Display(GET(obj, typeFEVariableVector, typeFEVariableSpaceTime), &
-      & '# VALUE: ', unitno=unitno)
+
+CASE (Vector)
+
+  CALL Util_Display("RANK :: 1 (Vector)", unitno=unitno)
+  SELECT CASE (obj%varType)
+  CASE (Constant)
+    CALL Util_Display("VarType: Constant", unitno=unitno)
+   CALL Util_Display(GET(obj, TypeFEVariableVector, TypeFEVariableConstant), &
+                      'VALUE: ', unitno=unitno)
+  CASE (Space)
+    CALL Util_Display("VarType: Space", unitno=unitno)
+    CALL Util_Display(GET(obj, TypeFEVariableVector, TypeFEVariableSpace), &
+                      'VALUE: ', unitno=unitno)
+  CASE (Time)
+    CALL Util_Display("VarType: Time", unitno=unitno)
+    CALL Util_Display(GET(obj, TypeFEVariableVector, TypeFEVariableTime), &
+                      'VALUE: ', unitno=unitno)
+  CASE (SpaceTime)
+    CALL Util_Display("VarType: Space & Time", unitno=unitno)
+  CALL Util_Display(GET(obj, TypeFEVariableVector, TypeFEVariableSpaceTime), &
+                      'VALUE: ', unitno=unitno)
+
+  CASE DEFAULT
+    CALL Util_Display("VarType: UNKNOWN", unitno=unitno)
   END SELECT
-!!
-!! rank: MATRIX
-!!
-CASE (MATRIX)
-  !!
-  CALL Display("RANK :: 2 (MATRIX)", unitno=unitno)
-  !!
-  SELECT CASE (obj%vartype)
-  CASE (CONSTANT)
-    CALL Display("# VarType: CONSTANT", unitno=unitno)
-    CALL Display(GET(obj, typeFEVariableMatrix, typeFEVariableConstant), &
-      & '# VALUE: ', unitno=unitno)
-  !!
-  CASE (SPACE)
-    CALL Display("# VarType: SPACE", unitno=unitno)
-    CALL Display(GET(obj, typeFEVariableMatrix, typeFEVariableSpace), &
-      & '# VALUE: ', unitno=unitno)
-  !!
-  CASE (TIME)
-    CALL Display("# VarType: TIME", unitno=unitno)
-    CALL Display(GET(obj, typeFEVariableMatrix, typeFEVariableTime), &
-      & '# VALUE: ', unitno=unitno)
-  !!
-  CASE (SPACETIME)
-    CALL Display("# VarType: SPACE & TIME", unitno=unitno)
-    CALL Display(GET(obj, typeFEVariableMatrix, typeFEVariableSpaceTime), &
-      & '# VALUE: ', unitno=unitno)
+
+CASE (Matrix)
+
+  CALL Util_Display("RANK :: 2 (Matrix)", unitno=unitno)
+  SELECT CASE (obj%varType)
+  CASE (Constant)
+    CALL Util_Display("VarType: Constant", unitno=unitno)
+   CALL Util_Display(GET(obj, TypeFEVariableMatrix, TypeFEVariableConstant), &
+                      'VALUE: ', unitno=unitno)
+  CASE (Space)
+    CALL Util_Display("VarType: Space", unitno=unitno)
+    CALL Util_Display(GET(obj, TypeFEVariableMatrix, TypeFEVariableSpace), &
+                      'VALUE: ', unitno=unitno)
+  CASE (Time)
+    CALL Util_Display("VarType: Time", unitno=unitno)
+    CALL Util_Display(GET(obj, TypeFEVariableMatrix, TypeFEVariableTime), &
+                      'VALUE: ', unitno=unitno)
+  CASE (SpaceTime)
+    CALL Util_Display("VarType: Space & Time", unitno=unitno)
+  CALL Util_Display(GET(obj, TypeFEVariableMatrix, TypeFEVariableSpaceTime), &
+                      'VALUE: ', unitno=unitno)
+
+  CASE DEFAULT
+    CALL Util_Display("VarType: UNKNOWN", unitno=unitno)
   END SELECT
+
+CASE DEFAULT
+  CALL Util_Display("RANK: UNKNOWN", unitno=unitno)
+
 END SELECT
-!!
 END PROCEDURE fevar_Display
 
 END SUBMODULE IOMethods

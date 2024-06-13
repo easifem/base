@@ -28,13 +28,13 @@ MODULE PROCEDURE fevar_power
 SELECT CASE (obj%rank)
 !!
 CASE (SCALAR)
-#include "./ScalarPower.inc"
+#include "./include/ScalarPower.F90"
 !!
 CASE (VECTOR)
-#include "./VectorPower.inc"
+#include "./include/VectorPower.F90"
 !!
 CASE (MATRIX)
-#include "./MatrixPower.inc"
+#include "./include/MatrixPower.F90"
 !!
 END SELECT
 !!

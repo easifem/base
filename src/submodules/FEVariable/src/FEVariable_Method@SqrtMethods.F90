@@ -30,13 +30,13 @@ MODULE PROCEDURE fevar_sqrt
 SELECT CASE (obj%rank)
 !!
 CASE (SCALAR)
-#include "./ScalarElemMethod.inc"
+#include "./include/ScalarElemMethod.F90"
 !!
 CASE (VECTOR)
-#include "./VectorElemMethod.inc"
+#include "./include/VectorElemMethod.F90"
 !!
 CASE (MATRIX)
-#include "./MatrixElemMethod.inc"
+#include "./include/MatrixElemMethod.F90"
 !!
 END SELECT
 !!

@@ -40,13 +40,13 @@ CASE (SCALAR)
   SELECT CASE (obj2%rank)
   !! scalar, scalar
   CASE (scalar)
-#include "./ScalarOperatorScalar.inc"
+#include "./include/ScalarOperatorScalar.F90"
   !! scalar, vector
   CASE (vector)
-#include "./ScalarOperatorVector.inc"
+#include "./include/ScalarOperatorVector.F90"
   !! scalar, matrix
   CASE (matrix)
-#include "./ScalarOperatorMatrix.inc"
+#include "./include/ScalarOperatorMatrix.F90"
   END SELECT
 !!
 !!
@@ -57,10 +57,10 @@ CASE (VECTOR)
   SELECT CASE (obj2%rank)
   !! vector, scalar
   CASE (scalar)
-#include "./VectorOperatorScalar.inc"
+#include "./include/VectorOperatorScalar.F90"
   !! vector, vector
   CASE (vector)
-#include "./VectorOperatorVector.inc"
+#include "./include/VectorOperatorVector.F90"
   END SELECT
 !!
 !!
@@ -71,10 +71,10 @@ CASE (MATRIX)
   SELECT CASE (obj2%rank)
   CASE (scalar)
     !! matrix, scalar
-#include "./MatrixOperatorScalar.inc"
+#include "./include/MatrixOperatorScalar.F90"
   CASE (matrix)
     !! matrix, matrix
-#include "./MatrixOperatorMatrix.inc"
+#include "./include/MatrixOperatorMatrix.F90"
   END SELECT
 !!
 !!
@@ -95,19 +95,19 @@ SELECT CASE (obj1%rank)
 !!
 !!
 CASE (SCALAR)
-#include "./ScalarOperatorReal.inc"
+#include "./include/ScalarOperatorReal.F90"
 !!
 !!
 !!
 !!
 CASE (VECTOR)
-#include "./VectorOperatorReal.inc"
+#include "./include/VectorOperatorReal.F90"
 !!
 !!
 !!
 !!
 CASE (MATRIX)
-#include "./MatrixOperatorReal.inc"
+#include "./include/MatrixOperatorReal.F90"
 !!
 !!
 !!
@@ -127,19 +127,19 @@ SELECT CASE (obj1%rank)
 !!
 !!
 CASE (SCALAR)
-#include "./RealOperatorScalar.inc"
+#include "./include/RealOperatorScalar.F90"
 !!
 !!
 !!
 !!
 CASE (VECTOR)
-#include "./RealOperatorVector.inc"
+#include "./include/RealOperatorVector.F90"
 !!
 !!
 !!
 !!
 CASE (MATRIX)
-#include "./RealOperatorMatrix.inc"
+#include "./include/RealOperatorMatrix.F90"
 !!
 !!
 !!

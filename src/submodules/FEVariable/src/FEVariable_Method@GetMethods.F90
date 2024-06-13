@@ -15,7 +15,9 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 
 SUBMODULE(FEVariable_Method) GetMethods
-USE BaseMethod, ONLY: Reallocate
+USE ReallocateUtility, ONLY: Reallocate
+USE GlobalData, ONLY: Scalar, Vector, Matrix, Constant, Space, &
+                      Time, SpaceTime, Nodal, Quadrature
 IMPLICIT NONE
 CONTAINS
 
@@ -24,29 +26,16 @@ CONTAINS
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE fevar_GetLambdaFromYoungsModulus
-INTEGER(I4B) :: tsize, ii
-LOGICAL(LGT) :: isok
+INTEGER(I4B) :: ii
 
-isok = ALLOCATED(youngsModulus%val)
+lambda = youngsModulus
 
-IF (isok) THEN
-  tsize = SIZE(youngsModulus%val)
-ELSE
-  tsize = 0
-END IF
-
-CALL Reallocate(lambda%val, tsize)
-
-DO ii = 1, tsize
-  lambda%val(1:tsize) = shearModulus%val *  &
-    & (youngsModulus%val - 2.0_DFP * shearModulus%val) /  &
-    & (3.0_DFP * shearModulus%val - youngsModulus%val)
+DO CONCURRENT(ii=1:lambda%len)
+  lambda%val(ii) = shearModulus%val(ii) * &
+                  (youngsModulus%val(ii) - 2.0_DFP * shearModulus%val(ii)) / &
+                   (3.0_DFP * shearModulus%val(ii) - youngsModulus%val(ii))
 END DO
 
-lambda%s = youngsModulus%s
-lambda%defineOn = youngsModulus%defineOn
-lambda%varType = youngsModulus%varType
-lambda%rank = youngsModulus%rank
 END PROCEDURE fevar_GetLambdaFromYoungsModulus
 
 !----------------------------------------------------------------------------
@@ -126,11 +115,7 @@ END PROCEDURE fevar_defineon
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE fevar_isNodalVariable
-IF (obj%defineon .EQ. nodal) THEN
-  ans = .TRUE.
-ELSE
-  ans = .FALSE.
-END IF
+ans = obj%defineon .EQ. nodal
 END PROCEDURE fevar_isNodalVariable
 
 !----------------------------------------------------------------------------
@@ -138,11 +123,7 @@ END PROCEDURE fevar_isNodalVariable
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE fevar_isQuadratureVariable
-IF (obj%defineon .EQ. nodal) THEN
-  ans = .FALSE.
-ELSE
-  ans = .TRUE.
-END IF
+ans = obj%defineon .NE. nodal
 END PROCEDURE fevar_isQuadratureVariable
 
 !----------------------------------------------------------------------------
@@ -158,7 +139,8 @@ END PROCEDURE Scalar_Constant
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Scalar_Space
-val = obj%val
+ALLOCATE (val(obj%len))
+val = obj%val(1:obj%len)
 END PROCEDURE Scalar_Space
 
 !----------------------------------------------------------------------------
@@ -166,7 +148,8 @@ END PROCEDURE Scalar_Space
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Scalar_Time
-val = obj%val
+ALLOCATE (val(obj%len))
+val = obj%val(1:obj%len)
 END PROCEDURE Scalar_Time
 
 !----------------------------------------------------------------------------
@@ -174,7 +157,19 @@ END PROCEDURE Scalar_Time
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Scalar_SpaceTime
-val = RESHAPE(obj%val, obj%s(1:2))
+INTEGER(I4B) :: ii, jj, cnt
+
+ALLOCATE (val(obj%s(1), obj%s(2)))
+
+cnt = 0
+DO jj = 1, obj%s(2)
+  DO ii = 1, obj%s(1)
+    cnt = cnt + 1
+    val(ii, jj) = obj%val(cnt)
+
+  END DO
+END DO
+
 END PROCEDURE Scalar_SpaceTime
 
 !----------------------------------------------------------------------------
@@ -182,7 +177,8 @@ END PROCEDURE Scalar_SpaceTime
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Vector_Constant
-val = obj%val
+ALLOCATE (val(obj%len))
+val = obj%val(1:obj%len)
 END PROCEDURE Vector_Constant
 
 !----------------------------------------------------------------------------
@@ -190,7 +186,18 @@ END PROCEDURE Vector_Constant
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Vector_Space
-val = RESHAPE(obj%val, obj%s(1:2))
+INTEGER(I4B) :: ii, jj, cnt
+
+ALLOCATE (val(obj%s(1), obj%s(2)))
+
+cnt = 0
+DO jj = 1, obj%s(2)
+  DO ii = 1, obj%s(1)
+    cnt = cnt + 1
+    val(ii, jj) = obj%val(cnt)
+  END DO
+END DO
+
 END PROCEDURE Vector_Space
 
 !----------------------------------------------------------------------------
@@ -198,7 +205,17 @@ END PROCEDURE Vector_Space
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Vector_Time
-val = RESHAPE(obj%val, obj%s(1:2))
+INTEGER(I4B) :: ii, jj, cnt
+
+ALLOCATE (val(obj%s(1), obj%s(2)))
+
+cnt = 0
+DO jj = 1, obj%s(2)
+  DO ii = 1, obj%s(1)
+    cnt = cnt + 1
+    val(ii, jj) = obj%val(cnt)
+  END DO
+END DO
 END PROCEDURE Vector_Time
 
 !----------------------------------------------------------------------------
@@ -206,7 +223,19 @@ END PROCEDURE Vector_Time
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Vector_SpaceTime
-val = RESHAPE(obj%val, obj%s(1:3))
+INTEGER(I4B) :: ii, jj, kk, cnt
+
+ALLOCATE (val(obj%s(1), obj%s(2), obj%s(3)))
+
+cnt = 0
+DO kk = 1, obj%s(3)
+  DO jj = 1, obj%s(2)
+    DO ii = 1, obj%s(1)
+      cnt = cnt + 1
+      val(ii, jj, kk) = obj%val(cnt)
+    END DO
+  END DO
+END DO
 END PROCEDURE Vector_SpaceTime
 
 !----------------------------------------------------------------------------
@@ -214,7 +243,17 @@ END PROCEDURE Vector_SpaceTime
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Matrix_Constant
-val = RESHAPE(obj%val, obj%s(1:2))
+INTEGER(I4B) :: ii, jj, cnt
+
+ALLOCATE (val(obj%s(1), obj%s(2)))
+
+cnt = 0
+DO jj = 1, obj%s(2)
+  DO ii = 1, obj%s(1)
+    cnt = cnt + 1
+    val(ii, jj) = obj%val(cnt)
+  END DO
+END DO
 END PROCEDURE Matrix_Constant
 
 !----------------------------------------------------------------------------
@@ -222,7 +261,19 @@ END PROCEDURE Matrix_Constant
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Matrix_Space
-val = RESHAPE(obj%val, obj%s(1:3))
+INTEGER(I4B) :: ii, jj, kk, cnt
+
+ALLOCATE (val(obj%s(1), obj%s(2), obj%s(3)))
+
+cnt = 0
+DO kk = 1, obj%s(3)
+  DO jj = 1, obj%s(2)
+    DO ii = 1, obj%s(1)
+      cnt = cnt + 1
+      val(ii, jj, kk) = obj%val(cnt)
+    END DO
+  END DO
+END DO
 END PROCEDURE Matrix_Space
 
 !----------------------------------------------------------------------------
@@ -230,7 +281,19 @@ END PROCEDURE Matrix_Space
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Matrix_Time
-val = RESHAPE(obj%val, obj%s(1:3))
+INTEGER(I4B) :: ii, jj, kk, cnt
+
+ALLOCATE (val(obj%s(1), obj%s(2), obj%s(3)))
+
+cnt = 0
+DO kk = 1, obj%s(3)
+  DO jj = 1, obj%s(2)
+    DO ii = 1, obj%s(1)
+      cnt = cnt + 1
+      val(ii, jj, kk) = obj%val(cnt)
+    END DO
+  END DO
+END DO
 END PROCEDURE Matrix_Time
 
 !----------------------------------------------------------------------------
@@ -238,7 +301,21 @@ END PROCEDURE Matrix_Time
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Matrix_SpaceTime
-val = RESHAPE(obj%val, obj%s(1:4))
+INTEGER(I4B) :: ii, jj, kk, ll, cnt
+
+ALLOCATE (val(obj%s(1), obj%s(2), obj%s(3), obj%s(4)))
+
+cnt = 0
+DO ll = 1, obj%s(4)
+  DO kk = 1, obj%s(3)
+    DO jj = 1, obj%s(2)
+      DO ii = 1, obj%s(1)
+        cnt = cnt + 1
+        val(ii, jj, kk, ll) = obj%val(cnt)
+      END DO
+    END DO
+  END DO
+END DO
 END PROCEDURE Matrix_SpaceTime
 
 !----------------------------------------------------------------------------
