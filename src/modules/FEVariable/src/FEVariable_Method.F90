@@ -15,8 +15,16 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 
 MODULE FEVariable_Method
-USE BaseType
-USE GlobalData
+USE BaseType, ONLY: FEVariable_, &
+                    FEVariableScalar_, &
+                    FEVariableVector_, &
+                    FEVariableMatrix_, &
+                    FEVariableConstant_, &
+                    FEVariableSpace_, &
+                    FEVariableTime_, &
+                    FEVariableSpaceTime_
+USE GlobalData, ONLY: I4B, DFP, LGT
+
 IMPLICIT NONE
 PRIVATE
 
@@ -45,6 +53,10 @@ PUBLIC :: OPERATOR(.EQ.)
 PUBLIC :: OPERATOR(.NE.)
 PUBLIC :: MEAN
 PUBLIC :: GetLambdaFromYoungsModulus
+PUBLIC :: ASSIGNMENT(=)
+
+INTEGER(I4B), PARAMETER :: CAPACITY_EXPAND_FACTOR = 1
+! capacity = tsize * CAPACITY_EXPAND_FACTOR
 
 !----------------------------------------------------------------------------
 !                                 GetLambdaFromYoungsModulus@SpecialMethods
@@ -156,6 +168,26 @@ INTERFACE QuadratureVariable
 END INTERFACE QuadratureVariable
 
 !----------------------------------------------------------------------------
+!                                      QuadratureVariable@ConstructorMethods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2021-12-10
+! update: 2021-12-10
+! summary: Create quadrature variable, which is Scalar, SpaceTime
+
+INTERFACE QuadratureVariable
+  MODULE PURE FUNCTION Quadrature_Scalar_SpaceTime2(val, rank, vartype, s) &
+    & RESULT(obj)
+    TYPE(FEVariable_) :: obj
+    REAL(DFP), INTENT(IN) :: val(:)
+    TYPE(FEVariableScalar_), INTENT(IN) :: rank
+    TYPE(FEVariableSpaceTime_), INTENT(IN) :: vartype
+    INTEGER(I4B), INTENT(IN) :: s(2)
+  END FUNCTION Quadrature_Scalar_SpaceTime2
+END INTERFACE QuadratureVariable
+
+!----------------------------------------------------------------------------
 !                                           NodalVariable@ConstructorMethods
 !----------------------------------------------------------------------------
 
@@ -183,7 +215,8 @@ END INTERFACE QuadratureVariable
 ! update: 2021-12-10
 ! summary: Create quadrature variable, which is Vector, Space
 
-INTERFACE
+INTERFACE QuadratureVariable
+
   MODULE PURE FUNCTION Quadrature_Vector_Space(val, rank, vartype) &
     & RESULT(obj)
     TYPE(FEVariable_) :: obj
@@ -191,10 +224,27 @@ INTERFACE
     TYPE(FEVariableVector_), INTENT(IN) :: rank
     TYPE(FEVariableSpace_), INTENT(IN) :: vartype
   END FUNCTION Quadrature_Vector_Space
-END INTERFACE
+END INTERFACE QuadratureVariable
+
+!----------------------------------------------------------------------------
+!                                      QuadratureVariable@ConstructorMethods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2021-12-10
+! update: 2021-12-10
+! summary: Create quadrature variable, which is Vector, Space
 
 INTERFACE QuadratureVariable
-  MODULE PROCEDURE Quadrature_Vector_Space
+
+  MODULE PURE FUNCTION Quadrature_Vector_Space2(val, rank, vartype, s) &
+    & RESULT(obj)
+    TYPE(FEVariable_) :: obj
+    REAL(DFP), INTENT(IN) :: val(:)
+    TYPE(FEVariableVector_), INTENT(IN) :: rank
+    TYPE(FEVariableSpace_), INTENT(IN) :: vartype
+    INTEGER(I4B), INTENT(IN) :: s(2)
+  END FUNCTION Quadrature_Vector_Space2
 END INTERFACE QuadratureVariable
 
 !----------------------------------------------------------------------------
@@ -223,6 +273,26 @@ END INTERFACE QuadratureVariable
 !> author: Vikas Sharma, Ph. D.
 ! date: 2021-12-10
 ! update: 2021-12-10
+! summary: Create quadrature variable, which is Vector, Time
+
+INTERFACE QuadratureVariable
+  MODULE PURE FUNCTION Quadrature_Vector_Time2(val, rank, vartype, s) &
+    & RESULT(obj)
+    TYPE(FEVariable_) :: obj
+    REAL(DFP), INTENT(IN) :: val(:)
+    TYPE(FEVariableVector_), INTENT(IN) :: rank
+    TYPE(FEVariableTime_), INTENT(IN) :: vartype
+    INTEGER(I4B), INTENT(IN) :: s(2)
+  END FUNCTION Quadrature_Vector_Time2
+END INTERFACE QuadratureVariable
+
+!----------------------------------------------------------------------------
+!                                      QuadratureVariable@ConstructorMethods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2021-12-10
+! update: 2021-12-10
 ! summary: Create quadrature variable, which is Vector, SpaceTime
 
 INTERFACE QuadratureVariable
@@ -233,6 +303,26 @@ INTERFACE QuadratureVariable
     TYPE(FEVariableVector_), INTENT(IN) :: rank
     TYPE(FEVariableSpaceTime_), INTENT(IN) :: vartype
   END FUNCTION Quadrature_Vector_SpaceTime
+END INTERFACE QuadratureVariable
+
+!----------------------------------------------------------------------------
+!                                      QuadratureVariable@ConstructorMethods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2021-12-10
+! update: 2021-12-10
+! summary: Create quadrature variable, which is Vector, SpaceTime
+
+INTERFACE QuadratureVariable
+  MODULE PURE FUNCTION Quadrature_Vector_SpaceTime2(val, rank, vartype, s) &
+    & RESULT(obj)
+    TYPE(FEVariable_) :: obj
+    REAL(DFP), INTENT(IN) :: val(:)
+    TYPE(FEVariableVector_), INTENT(IN) :: rank
+    TYPE(FEVariableSpaceTime_), INTENT(IN) :: vartype
+    INTEGER(I4B), INTENT(IN) :: s(3)
+  END FUNCTION Quadrature_Vector_SpaceTime2
 END INTERFACE QuadratureVariable
 
 !----------------------------------------------------------------------------
@@ -261,6 +351,26 @@ END INTERFACE QuadratureVariable
 !> author: Vikas Sharma, Ph. D.
 ! date: 2021-12-10
 ! update: 2021-12-10
+! summary: Create quadrature variable, which is Matrix, Constant
+
+INTERFACE QuadratureVariable
+  MODULE PURE FUNCTION Quadrature_Matrix_Constant2(val, rank, vartype, s) &
+    & RESULT(obj)
+    TYPE(FEVariable_) :: obj
+    REAL(DFP), INTENT(IN) :: val(:)
+    TYPE(FEVariableMatrix_), INTENT(IN) :: rank
+    TYPE(FEVariableConstant_), INTENT(IN) :: vartype
+    INTEGER(I4B), INTENT(IN) :: s(2)
+  END FUNCTION Quadrature_Matrix_Constant2
+END INTERFACE QuadratureVariable
+
+!----------------------------------------------------------------------------
+!                                      QuadratureVariable@ConstructorMethods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2021-12-10
+! update: 2021-12-10
 ! summary: Create quadrature variable, which is Matrix, Space
 
 INTERFACE QuadratureVariable
@@ -271,6 +381,26 @@ INTERFACE QuadratureVariable
     TYPE(FEVariableMatrix_), INTENT(IN) :: rank
     TYPE(FEVariableSpace_), INTENT(IN) :: vartype
   END FUNCTION Quadrature_Matrix_Space
+END INTERFACE QuadratureVariable
+
+!----------------------------------------------------------------------------
+!                                      QuadratureVariable@ConstructorMethods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2021-12-10
+! update: 2021-12-10
+! summary: Create quadrature variable, which is Matrix, Space
+
+INTERFACE QuadratureVariable
+  MODULE PURE FUNCTION Quadrature_Matrix_Space2(val, rank, vartype, s) &
+    & RESULT(obj)
+    TYPE(FEVariable_) :: obj
+    REAL(DFP), INTENT(IN) :: val(:)
+    TYPE(FEVariableMatrix_), INTENT(IN) :: rank
+    TYPE(FEVariableSpace_), INTENT(IN) :: vartype
+    INTEGER(I4B), INTENT(IN) :: s(3)
+  END FUNCTION Quadrature_Matrix_Space2
 END INTERFACE QuadratureVariable
 
 !----------------------------------------------------------------------------
@@ -299,6 +429,26 @@ END INTERFACE QuadratureVariable
 !> author: Vikas Sharma, Ph. D.
 ! date: 2021-12-10
 ! update: 2021-12-10
+! summary: Create quadrature variable, which is Matrix, Time
+
+INTERFACE QuadratureVariable
+  MODULE PURE FUNCTION Quadrature_Matrix_Time2(val, rank, vartype, s) &
+    & RESULT(obj)
+    TYPE(FEVariable_) :: obj
+    REAL(DFP), INTENT(IN) :: val(:)
+    TYPE(FEVariableMatrix_), INTENT(IN) :: rank
+    TYPE(FEVariableTime_), INTENT(IN) :: vartype
+    INTEGER(I4B), INTENT(IN) :: s(3)
+  END FUNCTION Quadrature_Matrix_Time2
+END INTERFACE QuadratureVariable
+
+!----------------------------------------------------------------------------
+!                                      QuadratureVariable@ConstructorMethods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2021-12-10
+! update: 2021-12-10
 ! summary: Create quadrature variable, which is Matrix, SpaceTime
 
 INTERFACE QuadratureVariable
@@ -312,6 +462,26 @@ INTERFACE QuadratureVariable
 END INTERFACE QuadratureVariable
 
 !----------------------------------------------------------------------------
+!                                      QuadratureVariable@ConstructorMethods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2021-12-10
+! update: 2021-12-10
+! summary: Create quadrature variable, which is Matrix, SpaceTime
+
+INTERFACE QuadratureVariable
+  MODULE PURE FUNCTION Quadrature_Matrix_SpaceTime2(val, rank, vartype, s) &
+    & RESULT(obj)
+    TYPE(FEVariable_) :: obj
+    REAL(DFP), INTENT(IN) :: val(:)
+    TYPE(FEVariableMatrix_), INTENT(IN) :: rank
+    TYPE(FEVariableSpaceTime_), INTENT(IN) :: vartype
+    INTEGER(I4B), INTENT(IN) :: s(4)
+  END FUNCTION Quadrature_Matrix_SpaceTime2
+END INTERFACE QuadratureVariable
+
+!----------------------------------------------------------------------------
 !                                              Deallocate@ConstructorMethods
 !----------------------------------------------------------------------------
 
@@ -320,14 +490,10 @@ END INTERFACE QuadratureVariable
 ! update: 2021-12-10
 ! summary: Deallocates the content of FEVariable
 
-INTERFACE
+INTERFACE DEALLOCATE
   MODULE PURE SUBROUTINE fevar_Deallocate(obj)
     TYPE(FEVariable_), INTENT(INOUT) :: obj
   END SUBROUTINE fevar_Deallocate
-END INTERFACE
-
-INTERFACE DEALLOCATE
-  MODULE PROCEDURE fevar_Deallocate
 END INTERFACE DEALLOCATE
 
 !----------------------------------------------------------------------------
@@ -358,17 +524,14 @@ END INTERFACE NodalVariable
 ! update: 2021-12-10
 ! summary: Create nodal variable, which is scalar, Space
 
-INTERFACE
+INTERFACE NodalVariable
+
   MODULE PURE FUNCTION Nodal_Scalar_Space(val, rank, vartype) RESULT(obj)
     TYPE(FEVariable_) :: obj
     REAL(DFP), INTENT(IN) :: val(:)
     TYPE(FEVariableScalar_), INTENT(IN) :: rank
     TYPE(FEVariableSpace_), INTENT(IN) :: vartype
   END FUNCTION Nodal_Scalar_Space
-END INTERFACE
-
-INTERFACE NodalVariable
-  MODULE PROCEDURE Nodal_Scalar_Space
 END INTERFACE NodalVariable
 
 !----------------------------------------------------------------------------
@@ -405,6 +568,25 @@ INTERFACE NodalVariable
     TYPE(FEVariableScalar_), INTENT(IN) :: rank
     TYPE(FEVariableSpaceTime_), INTENT(IN) :: vartype
   END FUNCTION Nodal_Scalar_SpaceTime
+END INTERFACE NodalVariable
+
+!----------------------------------------------------------------------------
+!                                           NodalVariable@ConstructorMethods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2021-12-10
+! update: 2021-12-10
+! summary: Create nodal variable, which is scalar, SpaceTime
+
+INTERFACE NodalVariable
+  MODULE PURE FUNCTION Nodal_Scalar_SpaceTime2(val, rank, vartype, s) RESULT(obj)
+    TYPE(FEVariable_) :: obj
+    REAL(DFP), INTENT(IN) :: val(:)
+    TYPE(FEVariableScalar_), INTENT(IN) :: rank
+    TYPE(FEVariableSpaceTime_), INTENT(IN) :: vartype
+    INTEGER(I4B), INTENT(IN) :: s(2)
+  END FUNCTION Nodal_Scalar_SpaceTime2
 END INTERFACE NodalVariable
 
 !----------------------------------------------------------------------------
@@ -451,6 +633,25 @@ END INTERFACE NodalVariable
 !> author: Vikas Sharma, Ph. D.
 ! date: 2021-12-10
 ! update: 2021-12-10
+! summary: Create nodal variable, which is vector, Space
+
+INTERFACE NodalVariable
+  MODULE PURE FUNCTION Nodal_Vector_Space2(val, rank, vartype, s) RESULT(obj)
+    TYPE(FEVariable_) :: obj
+    REAL(DFP), INTENT(IN) :: val(:)
+    TYPE(FEVariableVector_), INTENT(IN) :: rank
+    TYPE(FEVariableSpace_), INTENT(IN) :: vartype
+    INTEGER(I4B), INTENT(IN) :: s(2)
+  END FUNCTION Nodal_Vector_Space2
+END INTERFACE NodalVariable
+
+!----------------------------------------------------------------------------
+!                                           NodalVariable@ConstructorMethods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2021-12-10
+! update: 2021-12-10
 ! summary: Create nodal variable, which is vector, Time
 
 INTERFACE NodalVariable
@@ -460,6 +661,25 @@ INTERFACE NodalVariable
     TYPE(FEVariableVector_), INTENT(IN) :: rank
     TYPE(FEVariableTime_), INTENT(IN) :: vartype
   END FUNCTION Nodal_Vector_Time
+END INTERFACE NodalVariable
+
+!----------------------------------------------------------------------------
+!                                           NodalVariable@ConstructorMethods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2021-12-10
+! update: 2021-12-10
+! summary: Create nodal variable, which is vector, Time
+
+INTERFACE NodalVariable
+  MODULE PURE FUNCTION Nodal_Vector_Time2(val, rank, vartype, s) RESULT(obj)
+    TYPE(FEVariable_) :: obj
+    REAL(DFP), INTENT(IN) :: val(:)
+    TYPE(FEVariableVector_), INTENT(IN) :: rank
+    TYPE(FEVariableTime_), INTENT(IN) :: vartype
+    INTEGER(I4B), INTENT(IN) :: s(2)
+  END FUNCTION Nodal_Vector_Time2
 END INTERFACE NodalVariable
 
 !----------------------------------------------------------------------------
@@ -488,6 +708,26 @@ END INTERFACE NodalVariable
 !> author: Vikas Sharma, Ph. D.
 ! date: 2021-12-10
 ! update: 2021-12-10
+! summary: Create nodal variable, which is vector, SpaceTime
+
+INTERFACE NodalVariable
+  MODULE PURE FUNCTION Nodal_Vector_SpaceTime2(val, rank, vartype, s) &
+    RESULT(obj)
+    TYPE(FEVariable_) :: obj
+    REAL(DFP), INTENT(IN) :: val(:)
+    TYPE(FEVariableVector_), INTENT(IN) :: rank
+    TYPE(FEVariableSpaceTime_), INTENT(IN) :: vartype
+    INTEGER(I4B), INTENT(IN) :: s(3)
+  END FUNCTION Nodal_Vector_SpaceTime2
+END INTERFACE NodalVariable
+
+!----------------------------------------------------------------------------
+!                                           NodalVariable@ConstructorMethods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2021-12-10
+! update: 2021-12-10
 ! summary: Create nodal variable, which is Matrix, Constant
 
 INTERFACE NodalVariable
@@ -498,6 +738,26 @@ INTERFACE NodalVariable
     TYPE(FEVariableMatrix_), INTENT(IN) :: rank
     TYPE(FEVariableConstant_), INTENT(IN) :: vartype
   END FUNCTION Nodal_Matrix_Constant
+END INTERFACE NodalVariable
+
+!----------------------------------------------------------------------------
+!                                           NodalVariable@ConstructorMethods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2021-12-10
+! update: 2021-12-10
+! summary: Create nodal variable, which is Matrix, Constant
+
+INTERFACE NodalVariable
+  MODULE PURE FUNCTION Nodal_Matrix_Constant2(val, rank, vartype, s) &
+    RESULT(obj)
+    TYPE(FEVariable_) :: obj
+    REAL(DFP), INTENT(IN) :: val(:)
+    TYPE(FEVariableMatrix_), INTENT(IN) :: rank
+    TYPE(FEVariableConstant_), INTENT(IN) :: vartype
+    INTEGER(I4B), INTENT(IN) :: s(2)
+  END FUNCTION Nodal_Matrix_Constant2
 END INTERFACE NodalVariable
 
 !----------------------------------------------------------------------------
@@ -525,6 +785,25 @@ END INTERFACE NodalVariable
 !> author: Vikas Sharma, Ph. D.
 ! date: 2021-12-10
 ! update: 2021-12-10
+! summary: Create nodal variable, which is Matrix, Space
+
+INTERFACE NodalVariable
+  MODULE PURE FUNCTION Nodal_Matrix_Space2(val, rank, vartype, s) RESULT(obj)
+    TYPE(FEVariable_) :: obj
+    REAL(DFP), INTENT(IN) :: val(:)
+    TYPE(FEVariableMatrix_), INTENT(IN) :: rank
+    TYPE(FEVariableSpace_), INTENT(IN) :: vartype
+    INTEGER(I4B), INTENT(IN) :: s(3)
+  END FUNCTION Nodal_Matrix_Space2
+END INTERFACE NodalVariable
+
+!----------------------------------------------------------------------------
+!                                           NodalVariable@ConstructorMethods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2021-12-10
+! update: 2021-12-10
 ! summary: Create nodal variable, which is Matrix, Time
 
 INTERFACE NodalVariable
@@ -534,6 +813,25 @@ INTERFACE NodalVariable
     TYPE(FEVariableMatrix_), INTENT(IN) :: rank
     TYPE(FEVariableTime_), INTENT(IN) :: vartype
   END FUNCTION Nodal_Matrix_Time
+END INTERFACE NodalVariable
+
+!----------------------------------------------------------------------------
+!                                           NodalVariable@ConstructorMethods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2021-12-10
+! update: 2021-12-10
+! summary: Create nodal variable, which is Matrix, Time
+
+INTERFACE NodalVariable
+  MODULE PURE FUNCTION Nodal_Matrix_Time2(val, rank, vartype, s) RESULT(obj)
+    TYPE(FEVariable_) :: obj
+    REAL(DFP), INTENT(IN) :: val(:)
+    TYPE(FEVariableMatrix_), INTENT(IN) :: rank
+    TYPE(FEVariableTime_), INTENT(IN) :: vartype
+    INTEGER(I4B), INTENT(IN) :: s(3)
+  END FUNCTION Nodal_Matrix_Time2
 END INTERFACE NodalVariable
 
 !----------------------------------------------------------------------------
@@ -554,6 +852,41 @@ INTERFACE NodalVariable
     TYPE(FEVariableSpaceTime_), INTENT(IN) :: vartype
   END FUNCTION Nodal_Matrix_SpaceTime
 END INTERFACE NodalVariable
+
+!----------------------------------------------------------------------------
+!                                           NodalVariable@ConstructorMethods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2021-12-10
+! update: 2021-12-10
+! summary: Create nodal variable, which is Matrix, SpaceTime
+
+INTERFACE NodalVariable
+  MODULE PURE FUNCTION Nodal_Matrix_SpaceTime2(val, rank, vartype, s) &
+    & RESULT(obj)
+    TYPE(FEVariable_) :: obj
+    REAL(DFP), INTENT(IN) :: val(:)
+    TYPE(FEVariableMatrix_), INTENT(IN) :: rank
+    TYPE(FEVariableSpaceTime_), INTENT(IN) :: vartype
+    INTEGER(I4B), INTENT(IN) :: s(4)
+  END FUNCTION Nodal_Matrix_SpaceTime2
+END INTERFACE NodalVariable
+
+!----------------------------------------------------------------------------
+!                                               Assignment@ConstructorMethods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2024-06-13
+! summary: obj1 = obj2
+
+INTERFACE ASSIGNMENT(=)
+  MODULE PURE SUBROUTINE obj_Copy(obj1, obj2)
+    TYPE(FEVariable_), INTENT(INOUT) :: obj1
+    TYPE(FEVariable_), INTENT(IN) :: obj2
+  END SUBROUTINE obj_Copy
+END INTERFACE
 
 !----------------------------------------------------------------------------
 !                                                            SIZE@GetMethods
