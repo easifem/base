@@ -14,11 +14,25 @@
 ! You should have received a copy of the GNU General Public License
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
-#define _OP_ /
 
 SUBMODULE(FEVariable_Method) DivisionMethods
-USE BaseMethod
+USE GlobalData, ONLY: Constant, Space, Time, SpaceTime, &
+                      Scalar, Vector, Matrix, &
+                      Nodal, Quadrature
+USE BaseType, ONLY: TypeFEVariableScalar, &
+                    TypeFEVariableVector, &
+                    TypeFEVariableMatrix, &
+                    TypeFEVariableConstant, &
+                    TypeFEVariableSpace, &
+                    TypeFEVariableTime, &
+                    TypeFEVariableSpaceTime
+
+USE ReallocateUtility, ONLY: Reallocate
+
+#define _OP_ /
+
 IMPLICIT NONE
+
 CONTAINS
 
 !----------------------------------------------------------------------------
@@ -26,62 +40,47 @@ CONTAINS
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE fevar_Division1
-!!
 REAL(DFP), ALLOCATABLE :: r2(:, :), r3(:, :, :), r4(:, :, :, :), m2(:, :)
 INTEGER(I4B) :: jj, kk
-!!
 SELECT CASE (obj1%rank)
-!!
-!!
-!!
-!!
-CASE (SCALAR)
-  !!
+
+CASE (scalar)
+
   SELECT CASE (obj2%rank)
-  !! scalar, scalar
+
   CASE (scalar)
+
 #include "./include/ScalarOperatorScalar.F90"
-  !! scalar, vector
   CASE (vector)
+
 #include "./include/ScalarOperatorVector.F90"
-  !! scalar, matrix
   CASE (matrix)
+
 #include "./include/ScalarOperatorMatrix.F90"
   END SELECT
-!!
-!!
-!!
-!!
-CASE (VECTOR)
-  !!
+CASE (vector)
+
   SELECT CASE (obj2%rank)
-  !! vector, scalar
+
   CASE (scalar)
+
 #include "./include/VectorOperatorScalar.F90"
-  !! vector, vector
   CASE (vector)
+
 #include "./include/VectorOperatorVector.F90"
   END SELECT
-!!
-!!
-!!
-!!
-CASE (MATRIX)
-  !!
+CASE (matrix)
+
   SELECT CASE (obj2%rank)
+
   CASE (scalar)
-    !! matrix, scalar
+
 #include "./include/MatrixOperatorScalar.F90"
   CASE (matrix)
-    !! matrix, matrix
+
 #include "./include/MatrixOperatorMatrix.F90"
   END SELECT
-!!
-!!
-!!
-!!
 END SELECT
-!!
 END PROCEDURE fevar_Division1
 
 !----------------------------------------------------------------------------
@@ -90,30 +89,17 @@ END PROCEDURE fevar_Division1
 
 MODULE PROCEDURE fevar_Division2
 SELECT CASE (obj1%rank)
-!!
-!!
-!!
-!!
-CASE (SCALAR)
+
+CASE (scalar)
+
 #include "./include/ScalarOperatorReal.F90"
-!!
-!!
-!!
-!!
-CASE (VECTOR)
+CASE (vector)
+
 #include "./include/VectorOperatorReal.F90"
-!!
-!!
-!!
-!!
-CASE (MATRIX)
+CASE (matrix)
+
 #include "./include/MatrixOperatorReal.F90"
-!!
-!!
-!!
-!!
 END SELECT
-!!
 END PROCEDURE fevar_Division2
 
 !----------------------------------------------------------------------------
@@ -122,35 +108,22 @@ END PROCEDURE fevar_Division2
 
 MODULE PROCEDURE fevar_Division3
 SELECT CASE (obj1%rank)
-!!
-!!
-!!
-!!
-CASE (SCALAR)
+
+CASE (scalar)
+
 #include "./include/RealOperatorScalar.F90"
-!!
-!!
-!!
-!!
-CASE (VECTOR)
+CASE (vector)
+
 #include "./include/RealOperatorVector.F90"
-!!
-!!
-!!
-!!
-CASE (MATRIX)
+CASE (matrix)
+
 #include "./include/RealOperatorMatrix.F90"
-!!
-!!
-!!
-!!
 END SELECT
-!!
 END PROCEDURE fevar_Division3
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
-END SUBMODULE DivisionMethods
 #undef _OP_
+END SUBMODULE DivisionMethods
