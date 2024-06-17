@@ -1,97 +1,34 @@
-! This program is a part of EASIFEM library
-! Copyright (C) 2020-2021  Vikas Sharma, Ph.D
-!
-! This program is free software: you can redistribute it and/or modify
-! it under the terms of the GNU General Public License as published by
-! the Free Software Foundation, either version 3 of the License, or
-! (at your option) any later version.
-!
-! This program is distributed in the hope that it will be useful,
-! but WITHOUT ANY WARRANTY; without even the implied warranty of
-! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-! GNU General Public License for more details.
-!
-! You should have received a copy of the GNU General Public License
-! along with this program.  If not, see <https: //www.gnu.org/licenses/>
-!
-
-!----------------------------------------------------------------------------
-!                                                             ScalarAddition
-!----------------------------------------------------------------------------
-!!
-!! main
-!!
 SELECT CASE (obj1%vartype)
-!!
-!!
-!!
-!!
 CASE (constant)
-  !!
-  IF( obj1%defineon .EQ. nodal ) THEN
-    ans = NodalVariable( &
-          & obj1%val(:) _OP_ val, &
-          & typeFEVariableVector, &
-          & typeFEVariableConstant)
+  IF (obj1%defineon .EQ. nodal) THEN
+    ans = NodalVariable(obj1%val(1:obj1%len) _OP_ val, &
+                        TypeFEVariableVector, TypeFEVariableConstant)
   ELSE
-    ans = QuadratureVariable( &
-          & obj1%val(:) _OP_ val, &
-          & typeFEVariableVector, &
-          & typeFEVariableConstant)
-  ENDIF
-!!
-!!
-!!
-!!
+    ans = QuadratureVariable(obj1%val(1:obj1%len) _OP_ val, &
+                             TypeFEVariableVector, TypeFEVariableConstant)
+  END IF
 CASE (space)
-  !!
-  IF( obj1%defineon .EQ. nodal ) THEN
-    ans = NodalVariable(&
-          & RESHAPE(obj1%val(:) _OP_ val, obj1%s(1:2)), &
-          & typeFEVariableVector, &
-          & typeFEVariableSpace)
+  IF (obj1%defineon .EQ. nodal) THEN
+    ans = NodalVariable(obj1%val(1:obj1%len) _OP_ val, &
+                       TypeFEVariableVector, TypeFEVariableSpace, obj1%s(1:2))
   ELSE
-    ans = QuadratureVariable(&
-          & RESHAPE(obj1%val(:) _OP_ val, obj1%s(1:2)), &
-          & typeFEVariableVector, &
-          & typeFEVariableSpace)
-  ENDIF
-!!
-!!
-!!
-!!
+    ans = QuadratureVariable(obj1%val(1:obj1%len) _OP_ val, &
+                       TypeFEVariableVector, TypeFEVariableSpace, obj1%s(1:2))
+  END IF
 CASE (time)
-  !!
-  IF( obj1%defineon .EQ. nodal ) THEN
-    ans = NodalVariable( &
-          & RESHAPE(obj1%val(:) _OP_ val, obj1%s(1:2)), &
-          & typeFEVariableVector, &
-          & typeFEVariableTime)
+  IF (obj1%defineon .EQ. nodal) THEN
+    ans = NodalVariable(obj1%val(1:obj1%len) _OP_ val, &
+                        TypeFEVariableVector, TypeFEVariableTime, obj1%s(1:2))
   ELSE
-    ans = QuadratureVariable( &
-          & RESHAPE(obj1%val(:) _OP_ val, obj1%s(1:2)), &
-          & typeFEVariableVector, &
-          & typeFEVariableTime)
-  ENDIF
-!!
-!!
-!!
-!!
+    ans = QuadratureVariable(obj1%val(1:obj1%len) _OP_ val, &
+                        TypeFEVariableVector, TypeFEVariableTime, obj1%s(1:2))
+  END IF
 CASE (spacetime)
-  !!
-  IF( obj1%defineon .EQ. nodal ) THEN
-    ans = NodalVariable(&
-          & RESHAPE(obj1%val(:) _OP_ val, obj1%s(1:3)), &
-          & typeFEVariableVector, &
-          & typeFEVariableSpaceTime)
+  IF (obj1%defineon .EQ. nodal) THEN
+    ans = NodalVariable(obj1%val(1:obj1%len) _OP_ val, &
+                   TypeFEVariableVector, TypeFEVariableSpaceTime, obj1%s(1:3))
   ELSE
-    ans = QuadratureVariable(&
-          & RESHAPE(obj1%val(:) _OP_ val, obj1%s(1:3)), &
-          & typeFEVariableVector, &
-          & typeFEVariableSpaceTime)
-  ENDIF
-!!
-!!
-!!
-!!
+    ans = QuadratureVariable(obj1%val(1:obj1%len) _OP_ val, &
+                   TypeFEVariableVector, TypeFEVariableSpaceTime, obj1%s(1:3))
+  END IF
 END SELECT
