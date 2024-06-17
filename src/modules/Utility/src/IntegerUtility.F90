@@ -31,6 +31,7 @@ PUBLIC :: GetMultiIndices
 PUBLIC :: GetIndex
 PUBLIC :: Get
 PUBLIC :: GetIntersection
+PUBLIC :: Get1DIndexFortran
 
 !----------------------------------------------------------------------------
 !                                                           Size@Methods
@@ -465,6 +466,69 @@ INTERFACE GetIntersection
     INTEGER(I4B), INTENT(OUT) :: tsize
   END SUBROUTINE GetIntersection4
 END INTERFACE GetIntersection
+
+!----------------------------------------------------------------------------
+!                                                     Get1DIndexFrom2DIndex
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2024-06-14
+! summary: Convert (i,j) to ans from Fortran2D array to 1D array
+
+INTERFACE Get1DIndexFortran
+  MODULE PURE FUNCTION Get1DIndexFrom2DFortranIndex(i, j, dim1, dim2) &
+    RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: i
+    INTEGER(I4B), INTENT(IN) :: j
+    INTEGER(I4B), INTENT(IN) :: dim1
+    INTEGER(I4B), INTENT(IN) :: dim2
+    INTEGER(I4B) :: ans
+  END FUNCTION Get1DIndexFrom2DFortranIndex
+END INTERFACE Get1DIndexFortran
+
+!----------------------------------------------------------------------------
+!                                                     Get1DIndexFrom2DIndex
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2024-06-14
+! summary: Convert (i,j,k) to ans from Fortran3D array to 1D array
+
+INTERFACE Get1DIndexFortran
+  MODULE PURE FUNCTION Get1DIndexFrom3DFortranIndex(i, j, k, dim1, dim2, &
+                                                    dim3) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: i
+    INTEGER(I4B), INTENT(IN) :: j
+    INTEGER(I4B), INTENT(IN) :: k
+    INTEGER(I4B), INTENT(IN) :: dim1
+    INTEGER(I4B), INTENT(IN) :: dim2
+    INTEGER(I4B), INTENT(IN) :: dim3
+    INTEGER(I4B) :: ans
+  END FUNCTION Get1DIndexFrom3DFortranIndex
+END INTERFACE Get1DIndexFortran
+
+!----------------------------------------------------------------------------
+!                                                         Get1DIndexFortran
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2024-06-14
+! summary: Convert (i,j,k,l) to ans from Fortran4D array to 1D array
+
+INTERFACE Get1DIndexFortran
+  MODULE PURE FUNCTION Get1DIndexFrom4DFortranIndex(i, j, k, l, dim1, dim2, &
+                                                    dim3, dim4) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: i
+    INTEGER(I4B), INTENT(IN) :: j
+    INTEGER(I4B), INTENT(IN) :: k
+    INTEGER(I4B), INTENT(IN) :: l
+    INTEGER(I4B), INTENT(IN) :: dim1
+    INTEGER(I4B), INTENT(IN) :: dim2
+    INTEGER(I4B), INTENT(IN) :: dim3
+    INTEGER(I4B), INTENT(IN) :: dim4
+    INTEGER(I4B) :: ans
+  END FUNCTION Get1DIndexFrom4DFortranIndex
+END INTERFACE Get1DIndexFortran
 
 !----------------------------------------------------------------------------
 !
