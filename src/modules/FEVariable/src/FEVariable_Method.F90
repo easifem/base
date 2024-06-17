@@ -23,9 +23,11 @@ USE BaseType, ONLY: FEVariable_, &
                     FEVariableSpace_, &
                     FEVariableTime_, &
                     FEVariableSpaceTime_
+
 USE GlobalData, ONLY: I4B, DFP, LGT
 
 IMPLICIT NONE
+
 PRIVATE
 
 PUBLIC :: Display
