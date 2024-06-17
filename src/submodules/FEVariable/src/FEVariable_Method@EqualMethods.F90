@@ -34,7 +34,7 @@ IF (obj1%rank .NE. obj2%rank) RETURN
 IF (obj1%varType .NE. obj2%varType) RETURN
 IF (ANY(obj1%s .NE. obj2%s)) RETURN
 
-IF (ALL(obj1%val.APPROXEQ.obj2%val)) ans = .TRUE.
+IF (ALL(obj1%val(1:obj1%len) .APPROXEQ.obj2%val(1:obj2%len))) ans = .TRUE.
 !!
 END PROCEDURE fevar_isequal
 
