@@ -17,7 +17,7 @@
 
 !> author: Vikas Sharma, Ph. D.
 ! date:  19 Oct 2022
-! summary:         Some methods related to standard mapping are defined
+! summary: Some methods related to standard mapping are defined
 !
 !{!pages/MappingUtility_.md!}
 
