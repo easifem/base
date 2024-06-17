@@ -272,8 +272,8 @@ END INTERFACE GetFaceConnectivity
 ! summary:  Returns the element type of each face
 
 INTERFACE GetFaceElemType
-  MODULE PURE SUBROUTINE GetFaceElemType1(elemType, faceElemType, opt,  &
-    & tFaceNodes)
+  MODULE PURE SUBROUTINE GetFaceElemType1(elemType, faceElemType, opt, &
+                                          tFaceNodes)
     INTEGER(I4B), INTENT(IN) :: elemType
     !! name of element
     INTEGER(I4B), INTENT(INOUT) :: faceElemType(:)
