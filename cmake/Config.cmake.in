@@ -1,0 +1,75 @@
+@PACKAGE_INIT@
+
+LIST(
+  APPEND
+  ExternalLibs
+  Sparsekit
+  toml-f
+)
+
+IF( @USE_LAPACK95@ )
+  LIST(APPEND
+    ExternalLibs
+    LAPACK95
+  )
+ENDIF()
+
+IF( @USE_ARPACK@ )
+  LIST(APPEND
+    ExternalLibs
+    arpackng
+  )
+ENDIF()
+
+IF( @USE_RAYLIB@ )
+  LIST(APPEND
+    ExternalLibs
+    raylib
+  )
+ENDIF()
+
+FOREACH(LIB ${ExternalLibs})
+  FIND_PACKAGE(${LIB} REQUIRED)
+ENDFOREACH()
+
+IF( @USE_OPENMP@ )
+	IF(APPLE)
+		IF(CMAKE_C_COMPILER_ID MATCHES "Clang" OR CMAKE_C_COMPILER_ID MATCHES "AppleClang")
+			SET(OpenMP_C "${CMAKE_C_COMPILER}" CACHE STRING "" FORCE)
+			SET(OpenMP_C_FLAGS 
+					"-fopenmp=libomp -Wno-unused-command-line-argument" 
+					CACHE STRING 
+					"" 
+					FORCE
+			)
+			SET(OpenMP_C_LIB_NAMES "libomp" "libgomp" "libiomp5" CACHE STRING "" FORCE)
+			SET(OpenMP_libomp_LIBRARY ${OpenMP_C_LIB_NAMES} CACHE STRING "" FORCE)
+			SET(OpenMP_libgomp_LIBRARY ${OpenMP_C_LIB_NAMES} CACHE STRING "" FORCE)
+			SET(OpenMP_libiomp5_LIBRARY ${OpenMP_C_LIB_NAMES} CACHE STRING "" FORCE)
+
+			SET(OpenMP_CXX "${CMAKE_CXX_COMPILER}" CACHE STRING "" FORCE)
+			SET(
+				OpenMP_CXX_FLAGS 
+				"-fopenmp=libomp -Wno-unused-command-line-argument" 
+				CACHE STRING 
+				"" 
+				FORCE
+			)
+
+			SET(OpenMP_CXX_LIB_NAMES "libomp" "libgomp" "libiomp5" CACHE STRING "" FORCE)
+		ENDIF()
+	ENDIF()
+
+	FIND_PACKAGE(OpenMP REQUIRED)
+ENDIF()
+
+
+set_and_check(
+  "@PROJECT_NAME@_INCLUDE_DIR" "@PACKAGE_INSTALL_INCLUDEDIR@")
+
+include(
+  "${CMAKE_CURRENT_LIST_DIR}/@TARGETS_EXPORT_NAME@.cmake")
+
+check_required_components(
+    "@PROJECT_NAME@"
+  )

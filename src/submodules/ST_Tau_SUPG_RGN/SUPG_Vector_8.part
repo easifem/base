@@ -1,0 +1,234 @@
+!
+!------------------------------------------------------------------------------
+!                   Author      :   Vikas sharma
+!                   Position    :   Doctral Student
+!                   Institute   :   Kyoto Univeristy, Japan
+!                   Program name:   SUPG_Vector_8.part
+!                   Last Update :   Nov-25-2017
+!
+!------------------------------------------------------------------------------
+!                           Details of Program
+!==============================================================================
+!
+!   TYPE    ::  Part of the Code
+!
+!   DESCRIPTION
+!       -   This code is part of the code
+!
+!   HOSTING FILE
+!       -    ST_Tau_SUPG_RGN_Class.f90
+!
+!==============================================================================
+!
+!------------------------------------------------------------------------------
+!                                                         getSUPG_For_Vector_8
+!------------------------------------------------------------------------------
+!
+ SUBROUTINE getSUPG_For_Vector_8( Obj, U, C, Mu, CType  )
+!
+!   DESCRIPTION
+!------------------------------------------------------------------------------
+!       1.  -   Returns Tau SUPG for scalar unknown; &
+!               C and Phi are space-time nodal values
+!------------------------------------------------------------------------------
+!
+!   Define intent of dummy variables
+
+#ifdef STMat
+    CLASS( SpaceTimeMatrix_ ), INTENT( INOUT ), TARGET :: Obj
+#else
+    CLASS( ST_Tau_SUPG_RGN_ ), INTENT( INOUT ), TARGET :: Obj  
+#endif    
+    REAL( DFP ), DIMENSION( :, : ), INTENT( IN ) :: C
+    REAL( DFP ), DIMENSION( :, :, : ), INTENT( IN ) :: U
+    REAL( DFP ), INTENT( IN ) :: Mu
+    CHARACTER( LEN = * ), INTENT( IN ) :: CType
+
+!   Define internal variables   
+    INTEGER( I4B ) :: IPS, IPT, NIPS, NIPT, NSD, NNS, NNT
+    REAL( DFP ), ALLOCATABLE :: cdNTdXt( :, : ), R( : ), rdNTdXt( :, : ), &
+                                dNTdt( :, : )
+    REAL( DFP ) :: DummyReal, h, Tau12, Tau3, d1 = 1.0_DFP, d2 = 2.0_DFP, &
+                   pt5 = 0.5_DFP, TauSUPG, mpt5 = -0.5_DFP, d4 = 4.0_DFP
+
+
+    Error_Flag = .FALSE.
+
+!   Flag-1
+    IF( .NOT. Obj % isInitiated( ) ) THEN 
+
+        CALL Err_Msg( "ST_Tau_SUPG_RGN_Class.f90>>SUPG_Vector_8.part", &
+        "getSUPG_For_Vector_8()", &
+        "ST_Tau_SUPG_RGN_ Object is not initiated")
+        Error_Flag = .TRUE.
+        RETURN
+
+    END IF
+
+    NIPS = Obj % getNIPS( )
+    NIPT = Obj % getNIPT( )
+    NSD = Obj % SD( 1, 1 ) % getNSD( )
+    NNS = Obj % SD( 1, 1 ) % getNNS( )
+    NNT = Obj % SD( 1, 1 ) % getNNT( )
+
+!   Flag-2
+    IF( SIZE( U, 1 ) .NE. NSD  ) THEN 
+
+        CALL Err_Msg( "ST_Tau_SUPG_RGN_Class.f90>>SUPG_Vector_8.part", &
+        "getSUPG_For_Vector_8()", &
+        "SIZE( U, 1 ) Should be equal to NSD")
+        Error_Flag = .TRUE.
+        RETURN
+
+    END IF
+
+!   Flag-3
+    IF( SIZE( U, 2 ) .NE. NNS  ) THEN 
+
+        CALL Err_Msg( "ST_Tau_SUPG_RGN_Class.f90>>SUPG_Vector_8.part", &
+        "getSUPG_For_Vector_8()", &
+        "SIZE( U, 2 ) Should be equal to NNS")
+        Error_Flag = .TRUE.
+        RETURN
+
+    END IF
+
+!   Flag-3
+    IF( SIZE( U, 3 ) .NE. NNT  ) THEN 
+
+        CALL Err_Msg( "ST_Tau_SUPG_RGN_Class.f90>>SUPG_Vector_8.part", &
+        "getSUPG_For_Vector_8()", &
+        "SIZE( U, 3 ) should be equal to the NNT")
+        Error_Flag = .TRUE.
+        RETURN
+
+    END IF
+
+!   Flag-4
+    IF( SIZE( C, 1 ) .NE. NSD ) THEN 
+
+        CALL Err_Msg( "ST_Tau_SUPG_RGN_Class.f90>>SUPG_Vector_8.part", &
+        "getSUPG_For_Vector_8()", &
+        "SIZE( C, 1 ) should be equal to the NSD")
+        Error_Flag = .TRUE.
+        RETURN
+
+    END IF
+
+!   Flag-5
+    IF( SIZE( C, 2 ) .NE. NNS .AND. SIZE( C, 2 ) .NE. NIPS ) THEN 
+
+        CALL Err_Msg( "ST_Tau_SUPG_RGN_Class.f90>>SUPG_Vector_8.part", &
+        "getSUPG_For_Vector_8()", &
+        "SIZE( C, 2 ) should be equal to the NNS or NIPS")
+        Error_Flag = .TRUE.
+        RETURN
+
+    END IF
+
+
+    IF( ALLOCATED ( Obj % Mat2 ) ) DEALLOCATE( Obj % Mat2 )
+    ALLOCATE( Obj % Mat2( NIPS, NIPT ) )
+    Obj % Mat2 = 0.0_DFP
+
+    SELECT CASE( TRIM( ADJUSTL( CType ) ) )
+
+        CASE( 'Nodal', 'Nodal Values', 'NodalValues', &
+            'SpaceNodalValues', 'Space Nodal Values')
+
+            CALL Obj % getSUPG_For_Vector_2( U = U, C = C, Mu = Mu )
+
+            IF( Error_Flag ) THEN 
+
+                CALL Err_Msg( "ST_Tau_SUPG_RGN_Class.f90>>SUPG_Vector_8.part", &
+                "getSUPG_For_Vector_8()", &
+                "Traceback ---> CALL Obj % getSUPG_For_Vector_2( U = U, C = C )")
+
+            END IF
+
+        CASE( 'Integration', 'IntegrationPoints', 'Integration Points', &
+            'Quad', 'QuadPoints', 'Quad Points' )
+
+            DO IPT = 1, NIPT
+
+                DO IPS = 1, NIPS
+
+                    CALL Obj % SD( IPS, IPT ) % getdNTdt( dNTdt )
+
+                    CALL Obj % SD( IPS, IPT ) % getProjectionOfdNTdXt( &
+                    cdNTdXt = cdNTdXt, VectorValues = C( :, IPS ) )
+
+                    CALL Obj % SD( IPS, IPT ) % getUnitNormalOfVector( &
+                    STNodalValues = U, R = R )
+
+                    CALL Obj % SD( IPS, IPT ) % getProjectionOfdNTdXt( &
+                    cdNTdXt = rdNTdXt, VectorValues = R )
+                    
+                    ! Make Tau3
+
+                        DummyReal = SUM( ABS( rdNTdXt ) )
+                        IF( DummyReal .LE. zero ) THEN 
+                            h = 0.0_DFP
+                        ELSE
+                            h = d2 / DummyReal
+                        END IF
+
+                        Tau3 = h * h / d4 / mu
+
+                    ! Make Tau12
+
+                        DummyReal = SUM( ABS(  dNTdt + cdNTdXt ) )
+
+                        IF( DummyReal .LE. zero ) THEN 
+                            Tau12 = 0.0_DFP
+                        ELSE
+                            Tau12 = d1 / DummyReal
+                        END IF
+
+                    ! Make Tau SUPG
+
+                        TauSUPG = 0.0_DFP
+
+                        IF( Tau12 .NE. 0.0_DFP .AND. Tau3 .NE. 0.0_DFP ) THEN
+
+                            TauSUPG = ( d1 / Tau12 / Tau12 + d1 / Tau3 / Tau3  )**(mpt5)
+
+                        ELSE 
+
+                            TauSUPG = MAXVAL( (/Tau12, Tau3/) )
+
+                        END IF
+
+                    ! Set the value in Mat2
+                        Obj % Mat2( IPS, IPT ) = TauSUPG
+                    
+                END DO
+            
+            END DO
+
+        CASE DEFAULT
+
+            CALL Err_Msg( "ST_Tau_SUPG_RGN_Class.f90>>SUPG_Vector_8.part", &
+            "getSUPG_For_Vector_8()", &
+            "No case found for given CType it should be &
+            & 'Nodal', 'Nodal Values', 'NodalValues', &
+            & 'SpaceNodalValues', 'Space Nodal Values', &
+            & 'Integration', 'IntegrationPoints', 'Integration Points', &
+            & 'Quad', 'QuadPoints', 'Quad Points' ")
+            Error_Flag = .TRUE.
+            RETURN
+
+
+    END SELECT
+
+    IF( ALLOCATED( dNTdt ) ) DEALLOCATE( dNTdt )
+    IF( ALLOCATED( cdNTdXt ) ) DEALLOCATE( cdNTdXt )
+    IF( ALLOCATED( rdNTdXt ) ) DEALLOCATE( rdNTdXt )
+    IF( ALLOCATED( R ) ) DEALLOCATE( R )
+!
+END SUBROUTINE getSUPG_For_Vector_8
+!
+!------------------------------------------------------------------------------
+!
+!------------------------------------------------------------------------------
+!

@@ -1,0 +1,16 @@
+{
+	"folders": [
+		{
+			"path": "../src/modules/CSRMatrix"
+		},
+		{
+			"path": "../src/modules/CSRSparsity"
+		},
+		{
+			"path": "../src/submodules/CSRMatrix"
+		},
+		{
+			"path": "../src/submodules/CSRSparsity"
+		}
+	]
+}

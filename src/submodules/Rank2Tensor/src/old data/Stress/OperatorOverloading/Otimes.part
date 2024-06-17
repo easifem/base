@@ -1,0 +1,422 @@
+!
+!------------------------------------------------------------------------------
+!                   Author      :   Vikas sharma
+!                   Position    :   Doctral Student
+!                   Institute   :   Kyoto Univeristy, Japan
+!                   Program name:   Otimes.part
+!                   Last Update :   Dec-18-2017
+!
+!------------------------------------------------------------------------------
+!                       Details of Program
+!==============================================================================
+!
+!   TYPE :: Part of the program
+!
+!   DESCRIPTION ::
+!       -   Dyadic product for stress class is defined
+!   HOSTING FILE
+!       -   Stress_Class.F90
+!
+!==============================================================================
+
+!------------------------------------------------------------------------------
+!                                                              obj_Otimes_obj
+!------------------------------------------------------------------------------
+
+ FUNCTION obj_Otimes_obj( obj, obj2 )
+
+    USE Rank2Tensor_Class
+
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+!       1.  obj .otimes. obj2
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+
+    ! Define intent of dummy variables
+
+    CLASS( Stress_ ), INTENT( IN ) :: obj, obj2
+    REAL( DFP ), DIMENSION( 6, 6 ) :: obj_Otimes_obj
+
+    ! Define internal variables
+    TYPE( Rank2Tensor_ ) :: T1, T2
+
+    IF( .NOT. ALLOCATED( obj%V ) &
+        .OR. .NOT. ALLOCATED( obj2%V ) ) THEN
+
+        CALL Err_Msg( &
+                        "Stress_Class.F90>>Otimes.part", &
+                        "obj_Otimes_obj()", &
+                        "Stress_ obj is/are not allocated. Program Stopped"&
+                    )
+        Error_Flag = .TRUE.
+
+        STOP
+
+    END IF
+
+    T1 = obj
+    T2 = obj2
+
+    obj_Otimes_obj = T1 .otimes. T2
+
+    CALL T1%Deallocate( )
+    CALL T2%Deallocate( )
+
+ END FUNCTION obj_Otimes_obj
+
+!------------------------------------------------------------------------------
+!                                                            obj_Otimes_Mat
+!------------------------------------------------------------------------------
+
+ FUNCTION obj_Otimes_Mat( obj, Mat )
+
+    USE Rank2Tensor_Class
+
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+!       1.  obj .otimes. Mat
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+
+    ! Define intent of dummy variables
+    CLASS( Stress_ ), INTENT( IN ) :: obj
+    REAL( DFP ), DIMENSION( :, : ), INTENT( IN ) :: Mat
+    REAL( DFP ), DIMENSION( 6, 6 ) :: obj_Otimes_Mat
+
+    ! Define internal variables
+    TYPE( Rank2Tensor_ ) :: T
+    INTEGER( I4B ) :: N
+    REAL ( DFP ) :: DummyMat( 3, 3 )
+
+    IF( .NOT. ALLOCATED( obj%V ) ) THEN
+
+        CALL Err_Msg( &
+                        "Stress_Class.F90>>Otimes.part", &
+                        "obj_Otimes_Mat()", &
+                        "Stress_ obj is not allocated. Program Stopped" &
+                    )
+        STOP
+    END IF
+
+    N = SIZE( Mat, 1 )
+
+    IF( SIZE( Mat, 2 ) .NE. N .OR. N .GT. 3 ) THEN
+
+        CALL Err_Msg( &
+                        "Stress_Class.F90>>Otimes.part", &
+                        "obj_Otimes_Mat()", &
+                        "Mat should be square matrix, &
+                        and Size should be less than equal to 3, &
+                        Program Stopped!!!" &
+                    )
+        STOP
+
+    END IF
+
+    DummyMat = 0.0_DFP
+    DummyMat( 1:N, 1:N ) = Mat( 1:N, 1:N )
+
+    T = obj
+
+    obj_Otimes_Mat = T .Otimes. DummyMat
+
+    CALL T%Deallocate( )
+
+ END FUNCTION obj_Otimes_Mat
+
+!------------------------------------------------------------------------------
+!                                                            Mat_Otimes_obj
+!------------------------------------------------------------------------------
+
+ FUNCTION Mat_Otimes_obj( Mat, obj )
+
+    USE Rank2Tensor_Class
+
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+!       1.  Mat .otimes. obj
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+
+    ! Define intent of dummy variables
+
+    CLASS( Stress_ ), INTENT( IN ) :: obj
+    REAL( DFP ), DIMENSION( :, : ), INTENT( IN ) :: Mat
+    REAL( DFP ), DIMENSION( 6, 6 ) :: Mat_Otimes_obj
+
+    ! Define internal variables
+    TYPE( Rank2Tensor_ ) :: T
+    INTEGER( I4B ) :: N
+    REAL ( DFP ) :: DummyMat( 3, 3 )
+
+    IF( .NOT. ALLOCATED( obj%V ) ) THEN
+
+        CALL Err_Msg( &
+                        "Stress_Class.F90>>Otimes.part", &
+                        "Mat_Otimes_obj()", &
+                        "Stress_ obj is not allocated. Program Stopped" &
+                    )
+        STOP
+    END IF
+
+    N = SIZE( Mat, 1 )
+
+    IF( SIZE( Mat, 2 ) .NE. N .OR. N .GT. 3 ) THEN
+
+        CALL Err_Msg( &
+                        "Stress_Class.F90>>Otimes.part", &
+                        "Mat_Otimes_obj()", &
+                        "Mat should be square matrix, &
+                        and Size should be less than equal to 3, &
+                        Program Stopped!!!" &
+                    )
+        STOP
+
+    END IF
+
+    DummyMat = 0.0_DFP
+    DummyMat( 1:N, 1:N ) = Mat( 1:N, 1:N )
+
+    T = obj
+
+    Mat_Otimes_obj = DummyMat .Otimes. T
+
+    CALL T%Deallocate( )
+
+ END FUNCTION Mat_Otimes_obj
+
+!------------------------------------------------------------------------------
+!                                                            obj_Otimes_Tensor
+!------------------------------------------------------------------------------
+
+ FUNCTION obj_Otimes_Tensor( obj, Tensorobj )
+
+    USE Rank2Tensor_Class
+
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+!       1.  obj .otimes. Tensor
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+
+    ! Define intent of dummy variables
+
+    CLASS( Stress_ ), INTENT( IN ) :: obj
+    CLASS( Rank2Tensor_ ), INTENT( IN ) :: Tensorobj
+    REAL( DFP ), DIMENSION( 6, 6 ) :: obj_Otimes_Tensor
+
+    ! Define internal variables
+    TYPE( Rank2Tensor_ ) :: T
+
+    IF( .NOT. ALLOCATED( obj%V ) ) THEN
+
+        CALL Err_Msg( &
+                        "Stress_Class.F90>>Otimes.part", &
+                        "obj_Otimes_Tensor()", &
+                        "Stress_ obj is not allocated. Program Stopped" &
+                    )
+        STOP
+    END IF
+
+    T = obj
+
+    obj_Otimes_Tensor = T .Otimes. Tensorobj
+
+    CALL T%Deallocate( )
+
+ END FUNCTION obj_Otimes_Tensor
+
+!------------------------------------------------------------------------------
+!                                                            Tensor_Otimes_obj
+!------------------------------------------------------------------------------
+
+ FUNCTION Tensor_Otimes_obj( Tensorobj, obj )
+
+    USE Rank2Tensor_Class
+
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+!       1.  Tensor .otimes. obj
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+
+    ! Define intent of dummy variables
+
+    CLASS( Stress_ ), INTENT( IN ) :: obj
+    CLASS( Rank2Tensor_ ), INTENT( IN ) :: Tensorobj
+    REAL( DFP ), DIMENSION( 6, 6 ) :: Tensor_Otimes_obj
+
+    ! Define internal variables
+    TYPE( Rank2Tensor_ ) :: T
+
+    IF( .NOT. ALLOCATED( obj%V ) ) THEN
+
+        CALL Err_Msg( &
+                        "Stress_Class.F90>>Otimes.part", &
+                        "Tensor_Otimes_obj()", &
+                        "Stress_ obj is not allocated. Program Stopped" &
+                    )
+        STOP
+    END IF
+
+    T = obj
+
+    Tensor_Otimes_obj = Tensorobj .Otimes. T
+
+    CALL T%Deallocate( )
+
+ END FUNCTION Tensor_Otimes_obj
+
+!------------------------------------------------------------------------------
+!                                                            obj_Otimes_Vec
+!------------------------------------------------------------------------------
+
+ FUNCTION obj_Otimes_Vec( obj, Vec )
+
+    USE Rank2Tensor_Class
+
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+!       1.  obj .otimes. Vec
+!       2.  Vec is voigt vector of type stress
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+
+    ! Define intent of dummy variables
+    CLASS( Stress_ ), INTENT( IN ) :: obj
+    REAL( DFP ), DIMENSION( : ), INTENT( IN ) :: Vec
+    REAL( DFP ), DIMENSION( 6, 6 ) :: obj_Otimes_Vec
+
+    ! Define internal variables
+    TYPE( Rank2Tensor_ ) :: T1, T2
+
+    IF( .NOT. ALLOCATED( obj%V ) ) THEN
+
+        CALL Err_Msg( &
+                        "Stress_Class.F90>>Otimes.part", &
+                        "obj_Otimes_Vec()", &
+                        "Stress_ obj is not allocated. Program Stopped" &
+                    )
+        STOP
+
+    END IF
+
+    IF( SIZE( Vec ) .GT. 6 ) THEN
+
+        CALL Err_Msg( &
+                        "Stress_Class.F90>>Otimes.part", &
+                        "obj_Otimes_Vec()", &
+                        "The length of Vec must be less than or equal to 6. &
+                        Program Stopped !!! " &
+                    )
+        STOP
+
+    END IF
+
+    T1 = obj
+    T2 = Rank2Tensor( Vec, "Stress")
+
+    obj_Otimes_Vec = T1 .Otimes. T2
+
+    CALL T1%Deallocate( )
+    CALL T2%Deallocate( )
+
+ END FUNCTION obj_Otimes_Vec
+
+!------------------------------------------------------------------------------
+!                                                               Vec_Otimes_obj
+!------------------------------------------------------------------------------
+
+ FUNCTION Vec_Otimes_obj( Vec, obj )
+
+    USE Rank2Tensor_Class
+
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+!       1.  Vec .otimes. obj
+!       2.  Vec is voigt vector of type stress
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+
+    ! Define intent of dummy variables
+    CLASS( Stress_ ), INTENT( IN ) :: obj
+    REAL( DFP ), DIMENSION( : ), INTENT( IN ) :: Vec
+    REAL( DFP ), DIMENSION( 6, 6 ) :: Vec_Otimes_obj
+
+    ! Define internal variables
+    TYPE( Rank2Tensor_ ) :: T1, T2
+
+    IF( .NOT. ALLOCATED( obj%V ) ) THEN
+
+        CALL Err_Msg( &
+                        "Stress_Class.F90>>Otimes.part", &
+                        "Vec_Otimes_obj()", &
+                        "Stress_ obj is not allocated. Program Stopped" &
+                    )
+        STOP
+
+    END IF
+
+    IF( SIZE( Vec ) .GT. 6 ) THEN
+
+        CALL Err_Msg( &
+                        "Stress_Class.F90>>Otimes.part", &
+                        "Vec_Otimes_obj()", &
+                        "The length of Vec must be less than or equal to 6. &
+                        Program Stopped !!! " &
+                    )
+        STOP
+
+    END IF
+
+    T1 = obj
+    T2 = Rank2Tensor( Vec, "Stress")
+
+    Vec_Otimes_obj = T2 .Otimes. T1
+
+    CALL T1%Deallocate( )
+    CALL T2%Deallocate( )
+
+ END FUNCTION Vec_Otimes_obj
+
+!------------------------------------------------------------------------------
+!                                                            m_obj_Otimes_Vec
+!------------------------------------------------------------------------------
+
+ FUNCTION m_obj_Otimes_Vec( obj, Vec, VoigtType )
+
+    USE Rank2Tensor_Class
+
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+!       1.  obj .otimes. Vec
+!       2.  Vec is voigt vector of type stress
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+
+    ! Define intent of dummy variables
+    CLASS( Stress_ ), INTENT( IN ) :: obj
+    REAL( DFP ), DIMENSION( : ), INTENT( IN ) :: Vec
+    CHARACTER( LEN = * ), INTENT( IN ) :: VoigtType
+    REAL( DFP ), DIMENSION( 6, 6 ) :: m_obj_Otimes_Vec
+
+    ! Define internal variables
+    TYPE( Rank2Tensor_ ) :: T1, T2
+
+    IF( .NOT. ALLOCATED( obj%V ) ) THEN
+
+        CALL Err_Msg( &
+                        "Stress_Class.F90>>Otimes.part", &
+                        "m_obj_Otimes_Vec()", &
+                        "Stress_ obj is not allocated. Program Stopped" &
+                    )
+        STOP
+
+    END IF
+
+    IF( SIZE( Vec ) .GT. 6 ) THEN
+
+        CALL Err_Msg( &
+                        "Stress_Class.F90>>Otimes.part", &
+                        "m_obj_Otimes_Vec()", &
+                        "The length of Vec must be less than or equal to 6. &
+                        Program Stopped !!! " &
+                    )
+        STOP
+
+    END IF
+
+    T1 = obj
+    T2 = Rank2Tensor( Vec, VoigtType )
+
+    m_obj_Otimes_Vec = T1 .Otimes. T2
+
+    CALL T1%Deallocate( )
+    CALL T2%Deallocate( )
+
+ END FUNCTION m_obj_Otimes_Vec

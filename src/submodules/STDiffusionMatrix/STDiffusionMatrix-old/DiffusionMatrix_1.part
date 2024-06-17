@@ -1,0 +1,93 @@
+!
+!------------------------------------------------------------------------------
+!                   Author      :   Vikas sharma
+!                   Position    :   Doctral Student
+!                   Institute   :   Kyoto Univeristy, Japan
+!                   Program name:   DiffusionMatrix_1.part
+!                   Last Update :   Nov-20-2017
+!
+!------------------------------------------------------------------------------
+!                           Details of Program
+!==============================================================================
+!
+!   TYPE    ::  Part of the Code
+!
+!   DESCRIPTION
+!       -   This code is part of the code
+!
+!   HOSTING FILE
+!       -    STDiffusionMatrix_Class.f90
+!   Ver-2 => 3Loops
+!==============================================================================
+
+!------------------------------------------------------------------------------
+!                                                        getDiffusionMatrix_1
+!------------------------------------------------------------------------------
+
+SUBROUTINE getDiffusionMatrix_1( Obj )
+
+  !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+  !   1.   SpaceTime Diffusion matrix
+  !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+
+  USE Utility, ONLY : OUTERPROD
+
+  ! Define intent of dummy variables
+#ifdef STMat
+  CLASS( SpaceTimeMatrix_ ), INTENT( INOUT ), TARGET ::  Obj
+#else
+  CLASS( STDiffusionMatrix_ ), INTENT( INOUT ), TARGET ::  Obj
+#endif
+
+  ! Define internal variables
+  INTEGER( I4B ) :: NNS, NNT, NIPS, NIPT, IPS, IPT, &
+       NSD, i
+  REAL( DFP ) :: RealVal
+  CLASS( STShapeData_ ), POINTER :: SD
+  REAL( DFP ), ALLOCATABLE :: DummyVec1( : )
+
+#ifdef DEBUG_VER
+  Error_Flag = .FALSE.
+  IF( .NOT. Obj % isInitiated( ) ) THEN
+     CALL Err_Msg( &
+          "STDiffusionMatrix_Class.f90", &
+          "getDiffusionMatrix_1(), Flag-1", &
+          "STDiffusionMatrix_ Object is not Initiated" )
+     Error_Flag = .TRUE.
+     RETURN
+  END IF
+#endif
+
+  NNS = SIZE( Obj % SD( 1,1 ) % N )
+  NNT = SIZE( Obj % SD( 1,1 ) % T )
+  NSD = Obj % SD( 1,1 ) % getNSD( )
+  NIPS = SIZE( Obj % SD, 1 )
+  NIPT = SIZE( Obj % SD, 2 )
+
+  IF( ALLOCATED( Obj % Mat2 ) ) DEALLOCATE( Obj % Mat2 )
+  ALLOCATE( Obj % Mat2( NNS*NNT, NNS * NNT ) )
+  Obj % Mat2 = 0.0_DFP
+
+  ALLOCATE( DummyVec1( NNS*NNT ) )
+  DO IPT = 1, NIPT
+     DO IPS = 1, NIPS
+        SD => Obj % SD( IPS, IPT )
+        RealVal = SD % Ws * SD % Wt * SD % Js_Xi2Xt &
+             & * SD % Jt * SD % Thickness
+        DO i = 1, NSD
+           DummyVec1 = RESHAPE( SD % dNTdXt( :, i, : ), (/NNS*NNT/) )
+           Obj % Mat2( :, : ) = Obj % Mat2( :, : ) &
+                & + OUTERPROD( a = DummyVec1*RealVal, b = DummyVec1 )
+        END DO
+     END DO
+  END DO
+  CALL Obj % Mat4FromMat2( I3 = NNT, I4 = NNT )
+  NULLIFY( SD )
+  DEALLOCATE( DummyVec1 )
+
+END SUBROUTINE getDiffusionMatrix_1
+
+!------------------------------------------------------------------------------
+!
+!------------------------------------------------------------------------------
+

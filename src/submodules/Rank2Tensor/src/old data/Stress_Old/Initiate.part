@@ -1,0 +1,48 @@
+!
+!------------------------------------------------------------------------------
+!                   Author      :   Vikas sharma
+!                   Position    :   Doctral Student
+!                   Institute   :   Kyoto Univeristy, Japan
+!                   Program name:   Initiate.part
+!                   Last Update :   March-29-2017
+!
+!------------------------------------------------------------------------------
+!                           Details of Program
+!==============================================================================
+!
+!   Type    ::  Part of the Code
+!
+!   Info    ::  -   Part of the code; Initiate the Sigma object
+!
+!   Hosting File
+!           ::  -   Stress_Class.F90
+!
+!==============================================================================
+!
+!------------------------------------------------------------------------------
+!
+!------------------------------------------------------------------------------
+!
+ SUBROUTINE Initiate( Stress, n )
+!
+!   Description
+!------------------------------------------------------------------------------
+!       1.  - Initiate the Sigma object
+!
+!------------------------------------------------------------------------------
+!  Define arguments of dummy argument
+    CLASS(Stress_)   ::  Stress
+    INTEGER(I4B), INTENT(IN) :: n
+
+    IF( ALLOCATED( Stress%Sigma ) ) DEALLOCATE( Stress%Sigma )
+
+    ALLOCATE( Stress%Sigma( n ) )
+
+    Stress%Sigma( : ) = 0.0_DFP
+
+ END SUBROUTINE Initiate
+!
+!------------------------------------------------------------------------------
+!
+!------------------------------------------------------------------------------
+!

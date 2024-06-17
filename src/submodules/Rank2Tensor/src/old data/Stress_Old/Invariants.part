@@ -1,0 +1,252 @@
+!
+!------------------------------------------------------------------------------
+!                   Author      :   Vikas sharma
+!                   Position    :   Doctral Student
+!                   Institute   :   Kyoto Univeristy, Japan
+!                   Program name:   Invariants.part
+!                   Last Update :   March-29-2017
+!
+!------------------------------------------------------------------------------
+!                           Details of Program
+!==============================================================================
+!
+!   Type    ::  Part of the Code
+!
+!   Info    ::  -   Part of the code; Initiate the Sigma object
+!
+!   Hosting File
+!           ::  -   Stress_Class.F90
+!
+!==============================================================================
+!
+!------------------------------------------------------------------------------
+!                                                                   getSigma_m
+!------------------------------------------------------------------------------
+!
+ FUNCTION getSigma_m(Stress)
+!
+!   Description
+!------------------------------------------------------------------------------
+!       1   -   This subroutine Makes Stress Invariants
+!                   Sigma_m     =   tr(sigma)/3
+!                   trSigma     =
+!------------------------------------------------------------------------------
+! Define intent of dummy variables
+!
+    CLASS(Stress_)  :: Stress
+    REAL(DFP)                            ::  getSigma_m
+!
+    INTEGER(I4B) :: n
+    n = Stress%getLength()
+!
+    SELECT CASE(n)
+        CASE(4)
+            getSigma_m  = ( Stress%Sigma(1) + Stress%Sigma(2) &
+                        + Stress%Sigma(4) ) / 3.0_DFP
+
+        CASE(6)
+            getSigma_m  = ( Stress%Sigma(1) + Stress%Sigma(2) &
+                        + Stress%Sigma(3) ) / 3.0_DFP
+    END SELECT
+!
+ END FUNCTION getSigma_m
+!
+!------------------------------------------------------------------------------
+!                                                                  getSigma_bar
+!------------------------------------------------------------------------------
+!
+ FUNCTION getSigma_bar(Stress)
+!
+!   Description
+!------------------------------------------------------------------------------
+!       1   -   This subroutine Makes Stress Invariants
+!                   Sigma_bar     =   tr(sigma)/3
+!                   trSigma     =
+!------------------------------------------------------------------------------
+! Define intent of dummy variables
+!
+    CLASS(Stress_)  :: Stress
+    REAL(DFP)                            ::  getSigma_bar
+!
+    INTEGER(I4B) :: n
+    n = Stress%getLength()
+!
+    SELECT CASE(n)
+        CASE(4)
+            getSigma_bar   = SQRT(( (Stress%Sigma(1)-Stress%Sigma(2))**2  &
+                                +(Stress%Sigma(2)-Stress%Sigma(4))**2 &
+                                +(Stress%Sigma(4)-Stress%Sigma(1))**2 &
+                                + 6.0_DFP*Stress%Sigma(3)*Stress%Sigma(3)) / 2.0_DFP)
+
+        CASE(6)
+            getSigma_bar   = SQRT( (   ( Stress%Sigma(1) - Stress%Sigma(2) )**2  &
+                                   +( Stress%Sigma(2) - Stress%Sigma(3) )**2 &
+                                   +( Stress%Sigma(3) - Stress%Sigma(1) )**2 &
+                                   + 6.0_DFP * (  Stress%Sigma(4) * Stress%Sigma(4) &
+                                                + Stress%Sigma(5) * Stress%Sigma(5) &
+                                                + Stress%Sigma(6) * Stress%Sigma(6) ) &
+                                  ) / 2.0_DFP )
+    END SELECT
+!
+ END FUNCTION getSigma_bar
+!
+!------------------------------------------------------------------------------
+!                                                                        getJ2
+!------------------------------------------------------------------------------
+!
+ FUNCTION getJ2(Stress)
+!
+!   Description
+!------------------------------------------------------------------------------
+!       1   -   This subroutine Makes Stress Invariants
+!                   Sigma_bar     =
+!------------------------------------------------------------------------------
+! Define intent of dummy variables
+!
+    CLASS(Stress_)  :: Stress
+    REAL(DFP)       ::  getJ2
+!
+    getJ2 = Stress%getSigma_bar()**2 / 3.0_DFP
+!
+ END FUNCTION getJ2
+!
+!------------------------------------------------------------------------------
+!                                                                 getLodeAngle
+!------------------------------------------------------------------------------
+!
+ FUNCTION getLodeAngle(Stress)
+!
+!   Description
+!------------------------------------------------------------------------------
+!       1   -   This subroutine Makes Stress Invariants
+!                   Sigma_bar     =
+!------------------------------------------------------------------------------
+! Define intent of dummy variables
+!
+    CLASS(Stress_)  :: Stress
+    REAL(DFP)       ::  getLodeAngle
+!
+    REAL(DFP)   :: s1,s2,s3, J3,small=1.0E-10_DFP, sine, Sigma_m, Sigma_bar
+    INTEGER(I4B):: n
+
+    n = Stress%getLength()
+
+    SELECT CASE(n)
+        CASE(4)
+            Sigma_m     =   Stress%getSigma_m()
+            Sigma_bar   =   Stress%getSigma_bar()
+
+            IF(sigma_bar .LT. small) THEN
+                getLodeAngle = 0.0_DFP
+            ELSE
+                s1 = Stress%Sigma(1) - Sigma_m
+                s2 = Stress%Sigma(2) - Sigma_m
+                s3 = Stress%Sigma(4) - Sigma_m
+                J3 = s1*s2*s3 - s3*(Stress%Sigma(3)*Stress%Sigma(3))
+
+                sine = -13.5_DFP * J3 / Sigma_bar**3
+
+                IF( sine .GE. 1.0_DFP ) THEN
+                    sine    =   1.0_DFP
+                END IF
+                IF(sine .LT. -1.0_DFP)THEN
+                    sine    = -1.0_DFP
+                END IF
+                getLodeAngle = ASIN(sine)/3.0_DFP
+            END IF
+
+        CASE(6)
+            Sigma_m     = ( Stress%Sigma(1) + Stress%Sigma(2) + Stress%Sigma(3) ) / 3.0_DFP
+            Sigma_bar   =   Stress%getSigma_bar()
+
+            s1 = Stress%Sigma(1) - Sigma_m
+            s2 = Stress%Sigma(2) - Sigma_m
+            s3 = Stress%Sigma(3) - Sigma_m
+
+            J3  =   s1*( s2 * s3 - Stress%Sigma(6) * Stress%Sigma(5) ) &
+                -   Stress%Sigma(4) * ( Stress%Sigma(4) * s3 - Stress%Sigma(6) * Stress%Sigma(5) ) &
+                +   Stress%Sigma(6) * ( Stress%Sigma(4) * Stress%Sigma(5) - s2 * Stress%Sigma(6) )
+
+            sine = -13.5_DFP * J3 / Sigma_bar**3
+
+            IF( sine .GE. 1.0_DFP ) THEN
+                sine    =   1.0_DFP
+            END IF
+            IF(sine .LT. -1.0_DFP)THEN
+                sine    = -1.0_DFP
+            END IF
+            getLodeAngle = ASIN(sine)/3.0_DFP
+
+    END SELECT
+!
+ END FUNCTION getLodeAngle
+!
+!------------------------------------------------------------------------------
+!                                                                       getJ3
+!------------------------------------------------------------------------------
+!
+ FUNCTION getJ3(Stress)
+!
+!   Description
+!------------------------------------------------------------------------------
+!       1   -   This subroutine Makes Stress Invariants
+!
+!------------------------------------------------------------------------------
+! Define intent of dummy variables
+!
+    CLASS(Stress_)  :: Stress
+    REAL(DFP)       ::  getJ3
+!
+    REAL(DFP)   :: s1,s2,s3,small=1.0E-10_DFP, Sigma_m
+    INTEGER(I4B):: n
+
+    n = Stress%getLength()
+
+    SELECT CASE(n)
+        CASE(4)
+            Sigma_m     =   Stress%getSigma_m()
+            s1 = Stress%Sigma(1) - Sigma_m
+            s2 = Stress%Sigma(2) - Sigma_m
+            s3 = Stress%Sigma(4) - Sigma_m
+            getJ3 = s1*s2*s3 - s3*(Stress%Sigma(3)*Stress%Sigma(3))
+        CASE(6)
+            Sigma_m     = Stress%getSigma_m()
+            s1 = Stress%Sigma(1) - Sigma_m
+            s2 = Stress%Sigma(2) - Sigma_m
+            s3 = Stress%Sigma(3) - Sigma_m
+            getJ3  =   s1*( s2 * s3 - Stress%Sigma(6) * Stress%Sigma(5) ) &
+                -   Stress%Sigma(4) * ( Stress%Sigma(4) * s3 - Stress%Sigma(6) * Stress%Sigma(5) ) &
+                +  Stress%Sigma(6) * ( Stress%Sigma(4) * Stress%Sigma(5) - s2 * Stress%Sigma(6) )
+    END SELECT
+!
+ END FUNCTION getJ3
+!
+!------------------------------------------------------------------------------
+!                                                           getStressInvariants
+!------------------------------------------------------------------------------
+!
+ SUBROUTINE getStressInvariants(Stress, Sigma_m, Sigma_bar, theta)
+!
+!   Description
+!------------------------------------------------------------------------------
+!       1   -   This subroutine Makes Stress Invariants
+!                   Sigma_m     =   tr(sigma)/3
+!                   Sigma_bar   =   sqrt(3/2)||S||
+!                   theta       =   Lode angle
+!                   Sigma       = (sigma11, sigma22, sigma12, sigma33)
+!
+!       2   -   Input is Sigma which is a vector using Voigt
+!               notation for plane strain
+!
+!------------------------------------------------------------------------------
+! Define intent of dummy variables
+!
+    CLASS(Stress_)  :: Stress
+    REAL(DFP), INTENT(OUT)               :: Sigma_m, Sigma_bar, theta
+
+    Sigma_m = Stress%getSigma_m()
+    Sigma_bar = Stress%getSigma_bar()
+    theta = Stress%getLodeAngle()
+!
+ END SUBROUTINE getStressInvariants
+!

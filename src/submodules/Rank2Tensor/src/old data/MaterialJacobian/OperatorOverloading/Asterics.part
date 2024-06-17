@@ -1,0 +1,75 @@
+!
+!------------------------------------------------------------------------------
+!                   Author      :   Vikas sharma
+!                   Position    :   Doctral Student
+!                   Institute   :   Kyoto Univeristy, Japan
+!                   Program name:   Asterics.part
+!                   Last Update :   Dec-30-2017
+!
+!------------------------------------------------------------------------------
+!                       Details of Program
+!==============================================================================
+!
+!   TYPE :: Part of the program
+!
+!   DESCRIPTION
+!       -   Asterics Operator is defined for Material Jacobian and
+!           tensor
+!   HOSTING FILE
+!       -   MaterialJacobian_Class.F90
+!==============================================================================
+
+!------------------------------------------------------------------------------
+!                                                       obj_Times_Scalar
+!------------------------------------------------------------------------------
+
+ FUNCTION obj_Times_Scalar( obj, Scalar )
+
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+!   1.  obj .Contraction. Tensor
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+
+    ! Define intent of dummy variables
+    CLASS( MaterialJacobian_ ), INTENT( IN ) :: obj
+    REAL( DFP ), INTENT( IN ) :: Scalar
+    REAL( DFP ), ALLOCATABLE :: obj_Times_Scalar( :, : )
+
+    ! Define internal variables
+    INTEGER( I4B ) :: N
+
+    IF( .NOT. ALLOCATED( obj%C ) ) THEN
+
+        CALL Err_Msg( &
+        "MaterialJacobian_Class.F90>>Asterics.part", &
+        "obj * Scalar", &
+        "obj  is not initiated, Program Stopped!!!"&
+        )
+        STOP
+
+    END IF
+
+    N = .SIZE. obj
+    ALLOCATE( obj_Times_Scalar( N, N ) )
+    obj_Times_Scalar = obj%C * Scalar
+
+ END FUNCTION obj_Times_Scalar
+
+!------------------------------------------------------------------------------
+!                                                            Scalar_Times_obj
+!------------------------------------------------------------------------------
+
+ FUNCTION Scalar_Times_obj( Scalar, obj )
+
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+!   1.  obj .Contraction. Tensor
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+
+    ! Define intent of dummy variables
+    CLASS( MaterialJacobian_ ), INTENT( IN ) :: obj
+    REAL( DFP ), INTENT( IN ) :: Scalar
+    REAL( DFP ), ALLOCATABLE :: Scalar_Times_obj( :, : )
+
+    Scalar_Times_obj  = obj_Times_Scalar( obj, Scalar )
+
+ END FUNCTION Scalar_Times_obj
+

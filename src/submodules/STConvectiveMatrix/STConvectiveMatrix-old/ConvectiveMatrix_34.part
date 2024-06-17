@@ -1,0 +1,222 @@
+!
+!------------------------------------------------------------------------------
+!                   Author      :   Vikas sharma
+!                   Position    :   Doctral Student
+!                   Institute   :   Kyoto Univeristy, Japan
+!                   Program name:   ConvectiveMatrix_34.part
+!                   Last Update :   Feb-09-2018
+!
+!------------------------------------------------------------------------------
+!                           Details of Program
+!==============================================================================
+!
+!   TYPE    ::  Part of the Code
+!
+!   DESCRIPTION
+!       -   This code is part of the code
+!       -   Space Interpolation of scalar and vector
+!
+!   HOSTING FILE
+!       -    MassMatrix_Class.f90
+!
+!==============================================================================
+
+!------------------------------------------------------------------------------
+!                                                       getConvectiveMatrix_34
+!------------------------------------------------------------------------------
+
+ SUBROUTINE getConvectiveMatrix_34( Obj, U, dCdU, dCdU_Type )
+
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+!   1.  Returns Space time convective matrix
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+
+    USE Utility, ONLY : OUTERPROD
+
+    ! Define intent of dummy variables
+#ifdef STMat
+    CLASS( SpaceTimeMatrix_ ), INTENT( INOUT ), TARGET ::  Obj
+#else
+    CLASS( STConvectiveMatrix_ ), INTENT( INOUT ), TARGET ::  Obj
+#endif
+    REAL( DFP ), INTENT( IN ) :: U( :, :, : ), dCdU( :, :, : )
+    CHARACTER( LEN = * ), INTENT( IN ) :: dCdU_Type
+    
+    ! Define internal variables
+    INTEGER( I4B ) :: NNS, NNT, NIPS, NIPT, IPS, IPT, NSD, &
+                      a, b, r1, r2, c1, c2, p, q, tSize
+    REAL( DFP ), ALLOCATABLE :: Mat2( :, : ), dCdU_( :, : ), &
+                                Mat3( :, : ), dUdt( : )
+    REAL( DFP ) :: RealVal, RealVal1, RealVal2
+
+    INTEGER( I4B ), ALLOCATABLE :: Indx( :, : )
+
+    LOGICAL( LGT ) :: dCdU_Nodal
+
+    CLASS( STShapeData_ ), POINTER :: SD
+        
+#ifdef DEBUG_VER
+    Error_Flag = .FALSE.
+    IF( .NOT. Obj % isInitiated( ) ) THEN
+        CALL Err_Msg( &
+        "STConvectiveMatrix_Class.f90", &
+        "getConvectiveMatrix_34(), Flag-1", &
+        "STConvectiveMatrix_ Object is not Initiated" &
+        )
+        Error_Flag = .TRUE.
+        RETURN
+    END IF
+#endif
+
+    NNS = Obj % SD( 1,1 ) % getNNS( )
+    NNT = Obj % SD( 1,1 ) % getNNT( ) 
+    NSD = Obj % SD( 1, 1 ) % getNSD( )
+    NIPS = Obj % getNIPS( )
+    NIPT = Obj % getNIPT( )
+
+    ! Make Indx
+    tSize = SIZE( dCdU, 1 )
+    a = SIZE( dCdU, 3 )
+
+#ifdef DEBUG_VER
+    IF( a .NE. NNS .AND. a .NE. NIPS ) THEN
+
+        CALL Err_Msg( &
+        "STConvectiveMatrix_Class.f90", &
+        "getConvectiveMatrix_34( Obj, U, dCdU, dCdU_Type, MatrixName ), Flag-2", &
+        "The size of third index of dCdU must be equal to the NNS or NIPS" &
+        )
+        Error_Flag = .TRUE.
+        RETURN
+
+    END IF
+
+    IF( tSize .NE. NSD ) THEN
+
+        CALL Err_Msg( &
+        "STConvectiveMatrix_Class.f90", &
+        "getConvectiveMatrix_34( Obj, U, dCdU, dCdU_Type, MatrixName ), Flag-2", &
+        "The size of first two indices of dCdU must be equal to the NSD" &
+        )
+        Error_Flag = .TRUE.
+        RETURN
+
+    END IF
+#endif
+
+    ALLOCATE( Indx( NSD, 2 ) )
+
+    DO p = 1, NSD
+        Indx( p, 1 ) = ( p - 1 ) * NNS + 1
+        Indx( p, 2 ) = p * NNS
+    END DO
+
+    ! Check the type of dCdU
+
+    SELECT CASE( TRIM( dCdU_Type ) )
+
+        CASE( "Nodal", "NodalValues", "Nodal Values", "SpaceNodalValues", &
+            "Space Nodal Values" )
+
+            dCdU_Nodal = .TRUE.
+
+        CASE( "Integration", "Integration Points", &
+            "IntegrationPoints", "Quad Points", "QuadPoints", "Quad" )
+
+            dCdU_Nodal = .FALSE.
+
+#ifdef DEBUG_VER
+        CASE DEFAULT
+
+            CALL Err_Msg( &
+            "STConvectiveMatrix_Class.f90", &
+            "getConvectiveMatrix_34( Obj, U, dCdU, dCdU_Type, MatrixName ), Flag-2", &
+            "dCdU_Type should be either NodalValues or QuadPoints" &
+            )
+            Error_Flag = .TRUE.
+            RETURN
+#endif
+
+    END SELECT
+
+    IF( ALLOCATED( Obj % Mat4 ) ) DEALLOCATE( Obj % Mat4 )
+    ALLOCATE( Obj % Mat4( NNS*NSD, NNS*NSD, NNT, NNT ) )
+
+    Obj % Mat4 = 0.0_DFP;
+
+    DO IPT= 1, NIPT
+
+        DO IPS = 1, NIPS
+
+            SD => Obj % SD( IPS, IPT )
+
+            RealVal1 = SD % Ws * SD % Wt * SD % Js_Xi2Xt * SD % Jt * SD % Thickness
+
+            IF( dCdU_Nodal ) THEN
+
+                CALL SD % getInterpolationOfMatrix( SpaceNodalValues = dCdU, Val = dCdU_ )
+#ifdef DEBUG_VER
+                CALL Check_Error( "STConvectiveMatrix_Class.f90>>getConvectiveMatrix_34()", &
+                "CALL SD % getInterpolationOfMatrix( STNodalValues = dCdU, Val = dCdU_ )" )
+#endif
+            ELSE
+
+                dCdU_ = dCdU( :, :, IPS )
+
+            END IF
+
+            ! Compute dUdt
+            dUdt = SD .dVdt. U
+
+            DO a = 1, NNT
+
+                Mat3 = MATMUL( SD % dNTdXt( :, :, a ), dCdU_ )
+
+                DO q = 1, NSD
+
+                    c1 = Indx( q, 1 ); c2 = Indx( q, 2 )
+                    Mat2 = OUTERPROD( a = Mat3( :, q ), b = SD % N )
+
+                    DO b = 1, NNT
+
+                        RealVal2 = RealVal1 * SD % T( b )
+
+                        DO p = 1, NSD
+
+                            r1 = Indx( p, 1 ); r2 = Indx( p, 2 )
+                            RealVal = RealVal2 * dUdt( p )
+
+                            Obj % Mat4( r1 : r2, c1 : c2, a, b ) = &
+                            Obj % Mat4( r1 : r2, c1 : c2, a, b ) &
+                            + RealVal * Mat2
+
+                        END DO
+
+                    END DO
+
+                END DO
+
+
+            END DO
+
+
+        END DO
+
+    END DO
+
+    CALL Obj % Mat2FromMat4( )
+
+    NULLIFY( SD )
+    ! IF( ALLOCATED( Obj % Mat2 ) ) DEALLOCATE( Obj % Mat2 )
+    IF( ALLOCATED( Indx ) ) DEALLOCATE( Indx )
+    IF( ALLOCATED( Mat2 ) ) DEALLOCATE( Mat2 )
+    IF( ALLOCATED( dCdU_ ) ) DEALLOCATE( dCdU_ )
+    IF( ALLOCATED( Mat3 ) ) DEALLOCATE( Mat3 )
+    IF( ALLOCATED( dUdt ) ) DEALLOCATE( dUdt )
+
+ END SUBROUTINE getConvectiveMatrix_34
+
+!------------------------------------------------------------------------------
+!
+!------------------------------------------------------------------------------
+

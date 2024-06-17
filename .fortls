@@ -1,0 +1,28 @@
+{
+  "source_dirs": [
+    "src/**"
+  ],
+  "excl_suffixes": [
+    "_skip.F90",
+    ".bk",
+    ".ignore"
+  ],
+  "pp_suffixes": [
+    ".F90",
+    ".inc",
+    ".part",
+    ".f90"
+  ],
+  "pp_defs": {},
+  "include_dirs": [],
+  "ext_source_dirs": [],
+  "lowercase_intrinsics": false,
+  "debug_log": false,
+  "disable_diagnostics": false,
+  "sort_keywords": false,
+  "use_signature_help": true,
+  "hover_signature": true,
+  "hover_language": "fortran",
+  "enable_code_actions": false,
+  "symbol_skip_mem": false
+}

@@ -1,0 +1,71 @@
+!
+!------------------------------------------------------------------------------
+!                   Author      :   Vikas sharma
+!                   Position    :   Doctral Student
+!                   Institute   :   Kyoto Univeristy, Japan
+!                   Program name:   Display.part
+!                   Last Update :   Dec-29-2017
+!
+!------------------------------------------------------------------------------
+!                       Details of Program
+!==============================================================================
+!
+!   TYPE :: Part of the program
+!
+!   DESCRIPTION
+!       -   Material Jacobian class is defined
+!   HOSTING FILE
+!       -   MaterialJacobian_Class.F90
+!
+!==============================================================================
+
+!------------------------------------------------------------------------------
+!                                                                      Display
+!------------------------------------------------------------------------------
+
+ SUBROUTINE Display( obj, UnitNo )
+
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+!       1.  Display the content
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+
+    ! Define intent of dummy variables
+    CLASS( MaterialJacobian_ ), INTENT( IN ) :: obj
+    INTEGER( I4B ), INTENT( IN ), OPTIONAL :: UnitNo
+
+    !   Define internal variables
+    INTEGER( I4B ) :: I, j
+
+    IF( PRESENT( UnitNo ) ) THEN
+        I = UnitNo
+    ELSE
+        I = 6
+    END IF
+
+    IF( .NOT. ALLOCATED( obj%C ) ) THEN
+
+        CALL BlankLines( UnitNo = I )
+        WRITE( I, "(A)" ) "MaterialJacobian_ object is Empty"
+        CALL BlankLines( UnitNo = I )
+        RETURN
+
+    END IF
+
+    CALL BlankLines( UnitNo = I )
+    CALL EqualLine( UnitNo = I )
+    WRITE( I, "(12X, A)" ) "|||| Material Jacobian Data ||||"
+    CALL EqualLine( UnitNo = I )
+    CALL BlankLines( UnitNo = I )
+
+    CALL Display_Array( obj%C, "C" )
+
+    WRITE( I, "(A)" ) "Stress Type"
+    CALL obj%StressType%Display( I )
+
+    WRITE( I, "(A)" ) "Strain Type"
+    CALL obj%StrainType%Display( I )
+
+    WRITE( I, "(A)" ) "Rate Type"
+    CALL obj%RateType%Display( )
+
+ END SUBROUTINE Display

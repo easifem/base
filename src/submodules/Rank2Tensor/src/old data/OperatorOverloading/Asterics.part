@@ -1,0 +1,373 @@
+!
+!------------------------------------------------------------------------------
+!                   Author      :   Vikas sharma
+!                   Position    :   Doctral Student
+!                   Institute   :   Kyoto Univeristy, Japan
+!                   Program name:   Asterics.part
+!                   Last Update :   Dec-13-2017
+!
+!------------------------------------------------------------------------------
+!                       Details of Program
+!==============================================================================
+!
+!   TYPE :: Part of the program
+!
+!   DESCRIPTION
+!       -   Tensor class is defined
+!   HOSTING FILE
+!       -   Rank2Tensor_Class.F90
+!
+!==============================================================================
+!
+!------------------------------------------------------------------------------
+!                                                          TensorTimesScalar_1
+!------------------------------------------------------------------------------
+!
+ FUNCTION TensorTimesScalar_1( obj, Scalar )
+!
+!   DESCRIPTION
+!------------------------------------------------------------------------------
+!       1.  -  Tensor Class
+!------------------------------------------------------------------------------
+!
+!   Define intent of dummy variables
+    CLASS( Rank2Tensor_ ), INTENT( IN ) :: obj
+    REAL( DFP ), INTENT( IN ) :: Scalar
+    REAL( DFP ), DIMENSION( 3, 3 ) :: TensorTimesScalar_1
+
+    Error_Flag = .FALSE.
+
+    IF( .NOT. ALLOCATED( obj%T ) ) THEN
+
+        CALL Err_Msg(   &
+                       "Rank2Tensor_Class.F90>>Asterics.part", &
+                        "TensorTimesScalar_1()", &
+                        "Tensor_ obj is not allocated. Program Stopped" &
+                    )
+        Error_Flag = .TRUE.
+
+        STOP
+
+    END IF
+
+    TensorTimesScalar_1 = obj%T * Scalar
+
+ END FUNCTION TensorTimesScalar_1
+!
+!------------------------------------------------------------------------------
+!                                                          TensorTimesScalar_2
+!------------------------------------------------------------------------------
+!
+ FUNCTION TensorTimesScalar_2( Scalar, obj )
+!
+!   DESCRIPTION
+!------------------------------------------------------------------------------
+!       1.  -  Tensor Class
+!------------------------------------------------------------------------------
+!
+!   Define intent of dummy variables
+    CLASS( Rank2Tensor_ ), INTENT( IN ) :: obj
+    REAL( DFP ), INTENT( IN ) :: Scalar
+    REAL( DFP ), DIMENSION( 3, 3 ) :: TensorTimesScalar_2
+
+    Error_Flag = .FALSE.
+
+    IF( .NOT. ALLOCATED( obj%T ) ) THEN
+
+        CALL Err_Msg(                                                     &
+                       "Rank2Tensor_Class.F90>>Asterics.part", &
+                        "TensorTimesScalar_2()",                          &
+                        "Tensor_ obj is not allocated. Program Stopped"                   &
+                    )
+        Error_Flag = .TRUE.
+
+        STOP
+
+    END IF
+
+    TensorTimesScalar_2 = obj%T * Scalar
+
+ END FUNCTION TensorTimesScalar_2
+!
+!------------------------------------------------------------------------------
+!                                                          TensorTimesScalar_3
+!------------------------------------------------------------------------------
+!
+ FUNCTION TensorTimesScalar_3( obj, Scalar )
+!
+!   DESCRIPTION
+!------------------------------------------------------------------------------
+!       1.  -  Tensor Class
+!------------------------------------------------------------------------------
+!
+!   Define intent of dummy variables
+    CLASS( Rank2Tensor_ ), INTENT( IN ) :: obj
+    INTEGER( I4B ), INTENT( IN ) :: Scalar
+    REAL( DFP ), DIMENSION( 3, 3 ) :: TensorTimesScalar_3
+
+    Error_Flag = .FALSE.
+
+    IF( .NOT. ALLOCATED( obj%T ) ) THEN
+
+        CALL Err_Msg(   &
+                       "Rank2Tensor_Class.F90>>Asterics.part", &
+                        "TensorTimesScalar_3()", &
+                        "Tensor_ obj is not allocated. Program Stopped" &
+                    )
+        Error_Flag = .TRUE.
+
+        STOP
+
+    END IF
+
+    TensorTimesScalar_3 = obj%T * Scalar
+
+ END FUNCTION TensorTimesScalar_3
+!
+!------------------------------------------------------------------------------
+!                                                          TensorTimesScalar_4
+!------------------------------------------------------------------------------
+!
+ FUNCTION TensorTimesScalar_4( Scalar, obj )
+!
+!   DESCRIPTION
+!------------------------------------------------------------------------------
+!       1.  -  Tensor Class
+!------------------------------------------------------------------------------
+!
+!   Define intent of dummy variables
+    CLASS( Rank2Tensor_ ), INTENT( IN ) :: obj
+    INTEGER( I4B ), INTENT( IN ) :: Scalar
+    REAL( DFP ), DIMENSION( 3, 3 ) :: TensorTimesScalar_4
+
+    Error_Flag = .FALSE.
+
+    IF( .NOT. ALLOCATED( obj%T ) ) THEN
+
+        CALL Err_Msg(                                                     &
+                       "Rank2Tensor_Class.F90>>Asterics.part", &
+                        "TensorTimesScalar_4()",                          &
+                        "Tensor_ obj is not allocated. Program Stopped"   &
+                    )
+        Error_Flag = .TRUE.
+
+        STOP
+
+    END IF
+
+    TensorTimesScalar_4 = obj%T * Scalar
+
+ END FUNCTION TensorTimesScalar_4
+!
+!------------------------------------------------------------------------------
+!                                                          TensorTimesTensor
+!------------------------------------------------------------------------------
+!
+ FUNCTION TensorTimesTensor( obj, obj2 )
+!
+!   DESCRIPTION
+!------------------------------------------------------------------------------
+!       1.  -  Tensor Class
+!------------------------------------------------------------------------------
+!
+!   Define intent of dummy variables
+    CLASS( Rank2Tensor_ ), INTENT( IN ) :: obj, obj2
+    REAL( DFP ), DIMENSION( 3, 3 ) :: TensorTimesTensor
+
+    Error_Flag = .FALSE.
+
+    IF( .NOT. ALLOCATED( obj%T ) &
+        .OR. .NOT. ALLOCATED( obj2%T ) ) THEN
+
+        CALL Err_Msg(                                                     &
+                       "Rank2Tensor_Class.F90>>Asterics.part", &
+                        "TensorTimesTensor()",                          &
+                        "Tensor_ obj is/are not allocated. Program Stopped" &
+                    )
+        Error_Flag = .TRUE.
+
+        STOP
+
+    END IF
+
+    TensorTimesTensor = obj%T * obj2%T
+
+ END FUNCTION TensorTimesTensor
+!
+!------------------------------------------------------------------------------
+!                                                          TensorTimesVector
+!------------------------------------------------------------------------------
+!
+ FUNCTION TensorTimesVector( obj, Vec )
+!
+!   DESCRIPTION
+!------------------------------------------------------------------------------
+!       1.  Vec =   [T] * {v}
+!------------------------------------------------------------------------------
+!
+!   Define intent of dummy variables
+    CLASS( Rank2Tensor_ ), INTENT( IN ) :: obj
+    REAL( DFP ), DIMENSION( : ), INTENT( IN ) :: Vec
+    REAL( DFP ), DIMENSION( 3 ) :: TensorTimesVector
+
+!   Define internal variables
+
+    Error_Flag = .FALSE.
+
+    TensorTimesVector = 0.0_DFP
+
+    IF( .NOT. ALLOCATED( obj%T ) ) THEN
+
+        CALL Err_Msg(                                                     &
+                       "Rank2Tensor_Class.F90>>Asterics.part", &
+                        "TensorTimesVector()",                            &
+                        "Tensor_ obj is not allocated. Program Stopped"   &
+                    )
+        Error_Flag = .TRUE.
+
+        STOP
+
+    END IF
+
+    SELECT CASE( SIZE( Vec ) )
+
+        CASE( 1 )
+
+            TensorTimesVector( 1 ) = obj%T( 1, 1 ) * Vec( 1 )
+
+        CASE( 2 )
+
+            TensorTimesVector( 1 : 2 ) = MATMUL( obj%T( 1:2, 1:2 ), Vec( 1:2 ) )
+
+        CASE( 3 )
+
+            TensorTimesVector = MATMUL( obj%T, Vec )
+
+    END SELECT
+
+
+ END FUNCTION TensorTimesVector
+!
+!------------------------------------------------------------------------------
+!                                                          VectorTimesTensor
+!------------------------------------------------------------------------------
+!
+ FUNCTION VectorTimesTensor( Vec, obj )
+!
+!   DESCRIPTION
+!------------------------------------------------------------------------------
+!       1.  Vec = {v}*[T] = [T]^T {v}
+!------------------------------------------------------------------------------
+!
+!   Define intent of dummy variables
+    CLASS( Rank2Tensor_ ), INTENT( IN ) :: obj
+    REAL( DFP ), DIMENSION( : ), INTENT( IN ) :: Vec
+    REAL( DFP ), DIMENSION( 3 ) :: VectorTimesTensor
+
+!   Define internal variables
+
+    Error_Flag = .FALSE.
+
+    VectorTimesTensor = 0.0_DFP
+
+    IF( .NOT. ALLOCATED( obj%T ) ) THEN
+
+        CALL Err_Msg(                                                     &
+                       "Rank2Tensor_Class.F90>>Asterics.part", &
+                        "VectorTimesTensor()",                            &
+                        "Tensor_ obj is not allocated. Program Stopped"   &
+                    )
+        Error_Flag = .TRUE.
+
+        STOP
+
+    END IF
+
+    SELECT CASE( SIZE( Vec ) )
+
+        CASE( 1 )
+
+            VectorTimesTensor( 1 ) = obj%T( 1, 1 ) * Vec( 1 )
+
+        CASE( 2 )
+
+            VectorTimesTensor( 1 : 2 ) = MATMUL( TRANSPOSE( obj%T( 1:2, 1:2 ) ), Vec( 1:2 ) )
+
+        CASE( 3 )
+
+            VectorTimesTensor = MATMUL( TRANSPOSE( obj%T ), Vec )
+
+    END SELECT
+
+ END FUNCTION VectorTimesTensor
+!
+!------------------------------------------------------------------------------
+!                                                               TensorTimesMat
+!------------------------------------------------------------------------------
+!
+ FUNCTION TensorTimesMat( obj, Mat )
+!
+!   DESCRIPTION
+!------------------------------------------------------------------------------
+!       1.  -  Tensor Class
+!------------------------------------------------------------------------------
+!
+!   Define intent of dummy variables
+    CLASS( Rank2Tensor_ ), INTENT( IN ) :: obj
+    REAL( DFP ), DIMENSION( 3, 3 ), INTENT( IN ) :: Mat
+    REAL( DFP ), DIMENSION( 3, 3 ) :: TensorTimesMat
+
+    Error_Flag = .FALSE.
+
+    IF( .NOT. ALLOCATED( obj%T ) ) THEN
+
+        CALL Err_Msg(                                                     &
+                       "Rank2Tensor_Class.F90>>Asterics.part", &
+                        "TensorTimesMat()",                          &
+                        "Tensor_ obj not allocated. Program Stopped" &
+                    )
+        Error_Flag = .TRUE.
+
+        STOP
+
+    END IF
+
+    TensorTimesMat = obj%T * Mat
+
+ END FUNCTION TensorTimesMat
+!
+!------------------------------------------------------------------------------
+!                                                               MatTimesTensor
+!------------------------------------------------------------------------------
+!
+ FUNCTION MatTimesTensor( Mat, obj )
+!
+!   DESCRIPTION
+!------------------------------------------------------------------------------
+!       1.  -  Tensor Class
+!------------------------------------------------------------------------------
+!
+!   Define intent of dummy variables
+    CLASS( Rank2Tensor_ ), INTENT( IN ) :: obj
+    REAL( DFP ), DIMENSION( 3, 3 ), INTENT( IN ) :: Mat
+    REAL( DFP ), DIMENSION( 3, 3 ) :: MatTimesTensor
+
+    Error_Flag = .FALSE.
+
+    IF( .NOT. ALLOCATED( obj%T ) ) THEN
+
+        CALL Err_Msg(                                                     &
+                       "Rank2Tensor_Class.F90>>Asterics.part", &
+                        "MatTimesTensor()",                          &
+                        "Tensor_ obj not allocated. Program Stopped" &
+                    )
+        Error_Flag = .TRUE.
+
+        STOP
+
+    END IF
+
+    MatTimesTensor = obj%T * Mat
+
+ END FUNCTION MatTimesTensor
+!

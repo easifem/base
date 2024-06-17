@@ -1,0 +1,29 @@
+# ignore following extesions
+# added by vikas
+# 2-Dec-2018
+*.a
+*.mod
+*.smod
+*.o
+*.out
+*.i90
+*.if90
+*.DS_Store
+*.cache
+*.prj
+*.drawio
+*.log
+*.pdf
+vscode-settings
+docs/
+media/
+*/build/
+build/
+src/build/
+src/modules/build/
+src/submodules/build/
+_packages/
+compile_commands.json
+compile_commands.json
+neovim.json
+selected

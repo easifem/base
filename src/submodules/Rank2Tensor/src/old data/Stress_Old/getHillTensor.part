@@ -1,0 +1,88 @@
+!
+!------------------------------------------------------------------------------
+!                   Author      :   Vikas sharma
+!                   Position    :   Doctral Student
+!                   Institute   :   Kyoto Univeristy, Japan
+!                   Program name:   getHillTensor.part
+!                   Last Update :   March-29-2017
+!
+!------------------------------------------------------------------------------
+!                           Details of Program
+!==============================================================================
+!
+!   Type    ::  Part of the Code
+!
+!   Info    ::  -   Part of the code;
+!
+!   Hosting File
+!           ::  -   Stress_Class.F90
+!
+!==============================================================================
+!
+ SUBROUTINE getHillTensor(Stress, H)
+!
+!   Description
+!------------------------------------------------------------------------------
+!       1   -   Hill tensor is dev(S**2)
+!------------------------------------------------------------------------------
+! Define intent of dummy variables
+!
+    CLASS(Stress_) :: Stress
+    REAL(DFP), DIMENSION(:), INTENT(OUT) ::  H
+!
+    REAL(DFP), ALLOCATABLE :: S(:, :), Smat(: , :)
+    REAL(DFP) :: trS
+    INTEGER(I4B):: n
+
+    n = Stress%getLength()
+
+    ALLOCATE(S(n,1), Smat(3,3))
+    Smat = 0.0_DFP
+
+    CALL Stress%getDeviatoricPart(S = S(:,1))
+
+    SELECT CASE(n)
+        CASE(4)
+            Smat(1, 1)  =  S(1,1)
+            Smat(1, 2)  =  S(3,1)
+            Smat(2, 1)  =  S(3,1)
+            Smat(2, 2)  =  S(2,1)
+            Smat(3, 3)  =  S(4,1)
+        CASE(6)
+            Smat        = RESHAPE ((/   S(1,1), S(4,1), S(6,1), &
+                                        S(4,1), S(2,1), S(5,1), &
+                                        S(6,1), S(5,1), S(3,1)  &
+                                    /), (/ 3, 3/) )
+    END SELECT
+
+    DEALLOCATE(S)
+    ALLOCATE(S(3,3))
+        S = MATMUL(Smat, Smat)
+        trS = S(1,1) + S(2,2) + S(3,3)
+        S(1,1) = S(1,1) - trS / 3.0_DFP
+        S(2,2) = S(2,2) - trS / 3.0_DFP
+        S(3,3) = S(3,3) - trS / 3.0_DFP
+
+    SELECT CASE(n)
+        CASE(4)
+            H(1)  = S(1,1)
+            H(2)  = S(2,2)
+            H(3)  = S(1,2)
+            H(4)  = S(3,3)
+        CASE(6)
+            H(1)  = S(1,1)
+            H(2)  = S(2,2)
+            H(3)  = S(3,3)
+            H(4)  = S(1,2)
+            H(5)  = S(2,3)
+            H(6)  = S(1,3)
+    END SELECT
+
+    DEALLOCATE(S, Smat)
+!
+ END SUBROUTINE getHillTensor
+!
+!------------------------------------------------------------------------------
+!
+!------------------------------------------------------------------------------
+!
