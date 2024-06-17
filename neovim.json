@@ -1,1 +1,0 @@
-{"cargo":{"dap_name":"lldb"},"cmake":{"build_type":"Debug","dap_name":"lldb","args":{"configure":["-D","CMAKE_EXPORT_COMPILE_COMMANDS=1","-G","Ninja","-D","USE_OPENMP=ON"]},"env":{"configure":[]},"build_dir":"{cwd}\/build\/{os}-{build_type}","cmd":"cmake"}}
