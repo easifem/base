@@ -18,9 +18,11 @@
 #define _ELEM_METHOD_ ABS
 
 SUBMODULE(FEVariable_Method) AbsMethods
+
 USE GlobalData, ONLY: Constant, Space, Time, SpaceTime, &
                       Scalar, Vector, Matrix, &
                       Nodal, Quadrature
+
 USE BaseType, ONLY: TypeFEVariableScalar, &
                     TypeFEVariableVector, &
                     TypeFEVariableMatrix, &
@@ -30,6 +32,7 @@ USE BaseType, ONLY: TypeFEVariableScalar, &
                     TypeFEVariableSpaceTime
 
 IMPLICIT NONE
+
 CONTAINS
 
 !----------------------------------------------------------------------------
@@ -39,13 +42,13 @@ CONTAINS
 MODULE PROCEDURE fevar_Abs
 SELECT CASE (obj%rank)
 
-CASE (SCALAR)
+CASE (scalar)
 #include "./include/ScalarElemMethod.F90"
 
-CASE (VECTOR)
+CASE (vector)
 #include "./include/VectorElemMethod.F90"
 
-CASE (MATRIX)
+CASE (matrix)
 #include "./include/MatrixElemMethod.F90"
 
 END SELECT
