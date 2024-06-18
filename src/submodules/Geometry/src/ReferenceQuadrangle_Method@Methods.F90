@@ -20,23 +20,40 @@
 ! summary: This submodule contains method for [[ReferenceQuadrangle_]]
 
 SUBMODULE(ReferenceQuadrangle_Method) Methods
-USE ReferenceElement_Method
+
+USE GlobalData, ONLY: Quadrangle, Quadrangle4, Quadrangle8, Quadrangle9, &
+                      Quadrangle16, Point, Line2, Equidistance, INT8
+
+USE ReferenceElement_Method, ONLY: ReferenceTopology, DEALLOCATE, &
+                                   ReferenceElement_Initiate => Initiate
+
 USE LineInterpolationUtility, ONLY: InterpolationPoint_Line
+
 USE ReferenceLine_Method, ONLY: ElementOrder_Line, LineName
 
 USE QuadrangleInterpolationUtility, ONLY: InterpolationPoint_Quadrangle, &
                                           LagrangeDOF_Quadrangle
+
 USE ReferenceTriangle_Method, ONLY: TRIANGLEAREA2D
+
 USE ReferenceLine_Method, ONLY: Linename, ElementType_Line
 
-USE ApproxUtility
+USE ApproxUtility, ONLY: OPERATOR(.approxeq.)
+
 USE AppendUtility
-USE StringUtility
-USE ArangeUtility
-USE InputUtility
-USE SortUtility
-USE ReallocateUtility
-USE Display_Method
+
+USE StringUtility, ONLY: UpperCase
+
+USE ArangeUtility, ONLY: Arange
+
+USE InputUtility, ONLY: Input
+
+USE SortUtility, ONLY: Sort
+
+USE ReallocateUtility, ONLY: Reallocate
+
+USE Display_Method, ONLY: ToString
+
 USE MiscUtility, ONLY: Int2Str
 
 IMPLICIT NONE
@@ -71,8 +88,8 @@ INTEGER(I4B), ALLOCATABLE :: con(:, :)
 
 order = ElementOrder_Quadrangle(elemType)
 CALL Reallocate(con, order + 1, 4)
-CALL GetEdgeConnectivity_Quadrangle(con=con,  &
-  & opt=DEFAULT_OPT_QUADRANGLE_EDGE_CON, order=order)
+CALL GetEdgeConnectivity_Quadrangle(con=con, &
+                             opt=DEFAULT_OPT_QUADRANGLE_EDGE_CON, order=order)
 lineType = ElementType_Line("Line"//Int2Str(order + 1))
 
 DO ii = 1, 4
@@ -99,7 +116,7 @@ END PROCEDURE TotalEntities_Quadrangle
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE TotalNodesInElement_Quadrangle
-SELECT CASE (ElemType)
+SELECT CASE (elemType)
 CASE (Quadrangle4)
   ans = 4
 CASE (Quadrangle8)
@@ -118,7 +135,7 @@ END PROCEDURE TotalNodesInElement_Quadrangle
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE ElementOrder_Quadrangle
-SELECT CASE (ElemType)
+SELECT CASE (elemType)
 CASE (Quadrangle4)
   ans = 1
 CASE (Quadrangle8)
@@ -159,10 +176,10 @@ TYPE(Referencetopology_) :: topo
 
 istart = refelem%entityCounts(1)
 
-ans(1)%xij = InterpolationPoint_Line(  &
-  & order=refelem%order, &
-  & ipType=refelem%interpolationPointType, &
-  & layout="VEFC")
+ans(1)%xij = InterpolationPoint_Line( &
+             order=refelem%order, &
+             ipType=refelem%interpolationPointType, &
+             layout="VEFC")
 
 ans(1)%interpolationPointType = refelem%interpolationPointType
 ans(1)%nsd = refelem%nsd
@@ -205,8 +222,8 @@ INTEGER(I4B), ALLOCATABLE :: edgeCon(:, :)
 
 order = ElementOrder_Quadrangle(elemType)
 CALL Reallocate(edgeCon, order + 1, 4)
-CALL GetEdgeConnectivity_Quadrangle(con=edgeCon,  &
-  & opt=DEFAULT_OPT_QUADRANGLE_EDGE_CON, order=order)
+CALL GetEdgeConnectivity_Quadrangle(con=edgeCon, &
+                             opt=DEFAULT_OPT_QUADRANGLE_EDGE_CON, order=order)
 !! The edges are accordign to gmsh
 !! [1,2], [2,3], [3,4], [4,1]
 
@@ -216,22 +233,20 @@ DO ii = 1, 4
   ans(ii)%order = order
   ans(ii)%name = ElementType_Line("Line"//tostring(order + 1))
   ans(ii)%interpolationPointType = Equidistance
-  ans(ii)%xij = InterpolationPoint_Line(  &
-    & order=order, &
-    & ipType=Equidistance, &
-    & layout="VEFC")
+  ans(ii)%xij = InterpolationPoint_Line(order=order, ipType=Equidistance, &
+                                        layout="VEFC")
 
   ans(ii)%nsd = nsd
   ans(ii)%entityCounts = [order + 1, 1, 0, 0]
   ALLOCATE (ans(ii)%topology(order + 2))
 
   DO jj = 1, order + 1
-    ans(ii)%topology(jj) = Referencetopology(nptrs=edgeCon(jj:jj, ii),  &
-      & name=Point)
+    ans(ii)%topology(jj) = Referencetopology(nptrs=edgeCon(jj:jj, ii), &
+                                             name=Point)
   END DO
 
-  ans(ii)%topology(order + 2) = Referencetopology(nptrs=edgeCon(1:2, ii),  &
-    & name=ans(ii)%name)
+  ans(ii)%topology(order + 2) = Referencetopology(nptrs=edgeCon(1:2, ii), &
+                                                  name=ans(ii)%name)
 
 END DO
 
@@ -337,13 +352,10 @@ INTEGER(I4B), ALLOCATABLE :: aintvec(:)
 CALL DEALLOCATE (obj)
 SELECT CASE (order)
 CASE (1)
-  CALL Initiate(obj=obj, Anotherobj=refelem)
+  CALL ReferenceElement_Initiate(obj=obj, Anotherobj=refelem)
 CASE DEFAULT
-  obj%xij = InterpolationPoint_Quadrangle( &
-    & xij=refelem%xij, &
-    & order=order, &
-    & ipType=ipType,  &
-    & layout="VEFC")
+  obj%xij = InterpolationPoint_Quadrangle(xij=refelem%xij, order=order, &
+                                          ipType=ipType, layout="VEFC")
   obj%domainName = refelem%domainName
   NNS = LagrangeDOF_Quadrangle(order=order)
   obj%entityCounts = [NNS, 4, 1, 0]
