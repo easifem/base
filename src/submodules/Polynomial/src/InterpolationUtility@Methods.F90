@@ -20,20 +20,34 @@ USE GlobalData, ONLY: Point, Line, Triangle, Quadrangle, &
                       Tetrahedron, Hexahedron, Prism, Pyramid
 
 USE ReferenceElement_Method, ONLY: ElementTopology
+
 USE LineInterpolationUtility, ONLY: GetTotalDOF_Line, &
-                                    GetTotalInDOF_Line
+                                    GetTotalInDOF_Line, &
+                                    RefElemDomain_Line
+
 USE TriangleInterpolationUtility, ONLY: GetTotalDOF_Triangle, &
-                                        GetTotalInDOF_Triangle
+                                        GetTotalInDOF_Triangle, &
+                                        RefElemDomain_Triangle
+
 USE QuadrangleInterpolationUtility, ONLY: GetTotalDOF_Quadrangle, &
-                                          GetTotalInDOF_Quadrangle
+                                          GetTotalInDOF_Quadrangle, &
+                                          RefElemDomain_Quadrangle
+
 USE TetrahedronInterpolationUtility, ONLY: GetTotalDOF_Tetrahedron, &
-                                           GetTotalInDOF_Tetrahedron
+                                           GetTotalInDOF_Tetrahedron, &
+                                           RefElemDomain_Tetrahedron
+
 USE HexahedronInterpolationUtility, ONLY: GetTotalDOF_Hexahedron, &
-                                          GetTotalInDOF_Hexahedron
+                                          GetTotalInDOF_Hexahedron, &
+                                          RefElemDomain_Hexahedron
+
 USE PrismInterpolationUtility, ONLY: GetTotalDOF_Prism, &
-                                     GetTotalInDOF_Prism
+                                     GetTotalInDOF_Prism, &
+                                     RefElemDomain_Prism
+
 USE PyramidInterpolationUtility, ONLY: GetTotalDOF_Pyramid, &
-                                       GetTotalInDOF_Pyramid
+                                       GetTotalInDOF_Pyramid, &
+                                       RefElemDomain_Pyramid
 
 IMPLICIT NONE
 CONTAINS
@@ -145,5 +159,42 @@ CASE (Pyramid)
 END SELECT
 
 END PROCEDURE GetTotalInDOF1
+
+!----------------------------------------------------------------------------
+!                                                             RefElemDomain
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE RefElemDomain
+INTEGER(I4B) :: topo
+
+topo = ElementTopology(elemType)
+
+SELECT CASE (topo)
+CASE (Point)
+  ans = ""
+
+CASE (Line)
+  ans = RefElemDomain_Line(baseContinuity, baseInterpol)
+
+CASE (Triangle)
+  ans = RefElemDomain_Triangle(baseContinuity, baseInterpol)
+
+CASE (Quadrangle)
+  ans = RefElemDomain_Quadrangle(baseContinuity, baseInterpol)
+
+CASE (Tetrahedron)
+  ans = RefElemDomain_Tetrahedron(baseContinuity, baseInterpol)
+
+CASE (Hexahedron)
+  ans = RefElemDomain_Hexahedron(baseContinuity, baseInterpol)
+
+CASE (Prism)
+  ans = RefElemDomain_Prism(baseContinuity, baseInterpol)
+
+CASE (Pyramid)
+  ans = RefElemDomain_Pyramid(baseContinuity, baseInterpol)
+END SELECT
+
+END PROCEDURE RefElemDomain
 
 END SUBMODULE Methods

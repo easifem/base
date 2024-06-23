@@ -17,11 +17,14 @@
 
 MODULE InterpolationUtility
 USE GlobalData, ONLY: I4B, DFP, REAL32, REAL64
+USE String_Class, ONLY: String
+
 IMPLICIT NONE
 PRIVATE
 PUBLIC :: VandermondeMatrix
 PUBLIC :: GetTotalInDOF
 PUBLIC :: GetTotalDOF
+PUBLIC :: RefElemDomain
 
 !----------------------------------------------------------------------------
 !
@@ -92,5 +95,28 @@ INTERFACE GetTotalInDOF
     !! total number of degrees of freedom
   END FUNCTION GetTotalInDOF1
 END INTERFACE GetTotalInDOF
+
+!----------------------------------------------------------------------------
+!                                                           RefElemDomain
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2023-07-03
+! summary:  Returns the coordinate of reference element
+
+INTERFACE
+  MODULE FUNCTION RefElemDomain(elemType, baseContinuity, baseInterpol) &
+    RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: elemType
+    !! Element type
+    CHARACTER(*), INTENT(IN) :: baseContinuity
+    !! Cointinuity (conformity) of basis functions
+    !! "H1", "HDiv", "HCurl", "DG"
+    CHARACTER(*), INTENT(IN) :: baseInterpol
+    !! Basis function family for Interpolation
+    !! Lagrange, Hierarchy, Serendipity, Hermit, Orthogonal
+    TYPE(String) :: ans
+  END FUNCTION RefElemDomain
+END INTERFACE
 
 END MODULE InterpolationUtility
