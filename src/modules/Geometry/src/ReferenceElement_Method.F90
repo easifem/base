@@ -75,6 +75,7 @@ PUBLIC :: GetFaceElemType
 PUBLIC :: GetElementIndex
 PUBLIC :: Reallocate
 PUBLIC :: RefTopoReallocate
+PUBLIC :: RefCoord
 
 INTEGER(I4B), PARAMETER, PUBLIC :: PARAM_REFELEM_MAX_FACES = 6
 INTEGER(I4B), PARAMETER, PUBLIC :: PARAM_REFELEM_MAX_EDGES = 12
@@ -129,8 +130,27 @@ TYPE :: ReferenceElementInfo_
   !! number of nodes in each face of tetrahedron
 END TYPE ReferenceElementInfo_
 
-TYPE(ReferenceElementInfo_), PARAMETER :: ReferenceElementInfo =  &
-  & ReferenceElementInfo_()
+TYPE(ReferenceElementInfo_), PARAMETER :: ReferenceElementInfo = &
+                                          ReferenceElementInfo_()
+
+!----------------------------------------------------------------------------
+!                                                                 RefCoord
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2023-07-03
+! summary:  Returns the coordinate of reference element
+
+INTERFACE
+  MODULE PURE FUNCTION RefCoord(elemType, refElem) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: elemType
+    !! Element type
+    CHARACTER(*), INTENT(IN) :: refElem
+    !! "UNIT"
+    !! "BIUNIT"
+    REAL(DFP), ALLOCATABLE :: ans(:, :)
+  END FUNCTION RefCoord
+END INTERFACE
 
 !----------------------------------------------------------------------------
 !                                         GetElementIndex@GeometryMethods
