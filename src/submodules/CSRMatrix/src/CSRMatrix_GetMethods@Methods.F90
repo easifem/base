@@ -160,21 +160,37 @@ END PROCEDURE obj_endColumn
 
 MODULE PROCEDURE obj_Get0
 ! Internal variables
-INTEGER(I4B), ALLOCATABLE :: row(:), col(:)
+INTEGER(I4B), ALLOCATABLE :: indx(:)
 INTEGER(I4B) :: ii, jj
 
-row = GetIndex(obj=obj%csr%idof, nodeNum=nodenum)
-col = GetIndex(obj=obj%csr%jdof, nodeNum=nodenum)
-VALUE = 0.0_DFP
-DO ii = 1, SIZE(row)
-  DO jj = 1, SIZE(col)
-    CALL GetValue(obj=obj, VALUE=VALUE(ii, jj), irow=row(ii),  &
-      & icolumn=col(jj))
+nrow = .tdof. (obj%csr%idof)
+nrow = nrow * SIZE(nodenum)
+
+ncol = .tdof. (obj%csr%jdof)
+ncol = ncol * SIZE(nodenum)
+
+ALLOCATE (indx(nrow + ncol))
+
+CALL GetIndex_(obj=obj%csr%idof, nodeNum=nodenum, &
+               ans=indx(1:), tsize=ii)
+
+CALL GetIndex_(obj=obj%csr%jdof, nodeNum=nodenum, &
+               ans=indx(nrow + 1:), tsize=ii)
+
+! row = GetIndex(obj=obj%csr%idof, nodeNum=nodenum)
+! col = GetIndex(obj=obj%csr%jdof, nodeNum=nodenum)
+
+VALUE(1:nrow, 1:ncol) = 0.0_DFP
+
+DO ii = 1, nrow
+  DO jj = 1, ncol
+    CALL GetValue(obj=obj, VALUE=VALUE(ii, jj), irow=indx(ii), &
+                  icolumn=indx(nrow + jj))
   END DO
 END DO
 
-IF (ALLOCATED(row)) DEALLOCATE (row)
-IF (ALLOCATED(col)) DEALLOCATE (col)
+DEALLOCATE (indx)
+
 END PROCEDURE obj_Get0
 
 !----------------------------------------------------------------------------
