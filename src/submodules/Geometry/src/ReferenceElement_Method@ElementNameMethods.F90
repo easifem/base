@@ -20,8 +20,6 @@
 ! summary: This sumodule contains method for geometry
 
 SUBMODULE(ReferenceElement_Method) ElementNameMethods
-USE ReferencePoint_Method, ONLY: TotalNodesInElement_Point
-
 USE ReferenceLine_Method, ONLY: ElementType_Line,  &
   & TotalNodesInElement_Line,  &
   & ElementName_Line,  &
@@ -309,10 +307,6 @@ INTEGER(I4B) :: topo
 topo = refelem_elementtopology1(elemType)
 
 SELECT CASE (topo)
-
-CASE (Point)
-
-  ans = TotalNodesInElement_Point(elemType)
 
 CASE (Line)
 
