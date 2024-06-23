@@ -49,7 +49,7 @@ PUBLIC :: LagrangeGradientEvalAll
 
 INTERFACE
   MODULE FUNCTION RefElemDomain(elemType, baseContinuity, baseInterpol) &
-    & RESULT(ans)
+    RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: elemType
     !! Element type
     CHARACTER(*), INTENT(IN) :: baseContinuity
@@ -144,7 +144,7 @@ END INTERFACE
 
 INTERFACE
   MODULE PURE FUNCTION LagrangeVandermonde(xij, order, elemType) &
-    & RESULT(ans)
+    RESULT(ans)
     REAL(DFP), INTENT(IN) :: xij(:, :)
     !!  points in $x_{iJ}$ format
     INTEGER(I4B), INTENT(IN) :: order
@@ -192,11 +192,7 @@ END INTERFACE
 ! summary: Equidistance points on 1D/2D/3D elements
 
 INTERFACE
-  MODULE FUNCTION EquidistancePoint( &
-    & order, &
-    & elemType, &
-    & xij) &
-    & RESULT(ans)
+  MODULE FUNCTION EquidistancePoint(order, elemType, xij) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
     !! Order of element
     INTEGER(I4B), INTENT(IN) :: elemType
@@ -228,15 +224,8 @@ END INTERFACE
 ! summary: Get the interpolation point
 
 INTERFACE
-  MODULE FUNCTION InterpolationPoint( &
-    & order, &
-    & elemType, &
-    & ipType, &
-    & xij, &
-    & layout, &
-    & alpha, &
-    & beta, &
-    & lambda) RESULT(ans)
+  MODULE FUNCTION InterpolationPoint(order, elemType, ipType, xij, layout, &
+                                     alpha, beta, lambda) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
     !! order of interpolation
     INTEGER(I4B), INTENT(IN) :: elemType
@@ -319,7 +308,7 @@ END INTERFACE LagrangeCoeff
 
 INTERFACE LagrangeCoeff
   MODULE FUNCTION LagrangeCoeff3(order, elemType, i, v, &
-    & isVandermonde) RESULT(ans)
+                                 isVandermonde) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
     !! order of polynomial, it should be SIZE(v,2)-1
     INTEGER(I4B), INTENT(IN) :: elemType
@@ -340,8 +329,7 @@ END INTERFACE LagrangeCoeff
 !----------------------------------------------------------------------------
 
 INTERFACE LagrangeCoeff
-  MODULE FUNCTION LagrangeCoeff4(order, elemType, i, v, ipiv) &
-    & RESULT(ans)
+  MODULE FUNCTION LagrangeCoeff4(order, elemType, i, v, ipiv) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
     !! order of polynomial, it should be SIZE(x,2)-1
     INTEGER(I4B), INTENT(IN) :: elemType
@@ -362,16 +350,8 @@ END INTERFACE LagrangeCoeff
 !----------------------------------------------------------------------------
 
 INTERFACE LagrangeEvalAll
-  MODULE FUNCTION LagrangeEvalAll1( &
-    & order, &
-    & elemType, &
-    & x, &
-    & xij, &
-    & domainName, &
-    & coeff, &
-    & firstCall, &
-    & basisType, &
-    & alpha, beta, lambda) RESULT(ans)
+  MODULE FUNCTION LagrangeEvalAll1(order, elemType, x, xij, domainName, &
+                 coeff, firstCall, basisType, alpha, beta, lambda) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
     !! Order of Lagrange polynomials
     INTEGER(I4B), INTENT(IN) :: elemType
@@ -408,16 +388,8 @@ END INTERFACE LagrangeEvalAll
 !----------------------------------------------------------------------------
 
 INTERFACE LagrangeGradientEvalAll
-  MODULE FUNCTION LagrangeGradientEvalAll1( &
-    & order, &
-    & elemType, &
-    & x, &
-    & xij, &
-    & domainName, &
-    & coeff, &
-    & firstCall, &
-    & basisType, &
-    & alpha, beta, lambda) RESULT(ans)
+  MODULE FUNCTION LagrangeGradientEvalAll1(order, elemType, x, xij, &
+     domainName, coeff, firstCall, basisType, alpha, beta, lambda) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
     !! Order of Lagrange polynomials
     INTEGER(I4B), INTENT(IN) :: elemType
