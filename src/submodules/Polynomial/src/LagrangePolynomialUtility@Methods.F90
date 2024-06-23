@@ -23,16 +23,7 @@ USE ErrorHandling, ONLY: Errormsg
 
 USE ReferenceElement_Method, ONLY: ElementTopology
 
-USE ReferenceLine_Method, ONLY: RefCoord_Line
-USE ReferenceTriangle_Method, ONLY: RefCoord_Triangle
-USE ReferenceQuadrangle_Method, ONLY: RefCoord_Quadrangle
-USE ReferenceTetrahedron_Method, ONLY: RefCoord_Tetrahedron
-USE ReferenceHexahedron_Method, ONLY: RefCoord_Hexahedron
-USE ReferencePrism_Method, ONLY: RefCoord_Prism
-USE ReferencePyramid_Method, ONLY: RefCoord_Pyramid
-
-USE LineInterpolationUtility, ONLY: RefElemDomain_Line, &
-                                    LagrangeDOF_Line, &
+USE LineInterpolationUtility, ONLY: LagrangeDOF_Line, &
                                     LagrangeInDOF_Line, &
                                     LagrangeDegree_Line, &
                                     EquidistancePoint_Line, &
@@ -41,8 +32,7 @@ USE LineInterpolationUtility, ONLY: RefElemDomain_Line, &
                                     LagrangeEvalAll_Line, &
                                     LagrangeGradientEvalAll_Line
 
-USE TriangleInterpolationUtility, ONLY: RefElemDomain_Triangle, &
-                                        LagrangeDOF_Triangle, &
+USE TriangleInterpolationUtility, ONLY: LagrangeDOF_Triangle, &
                                         LagrangeInDOF_Triangle, &
                                         LagrangeDegree_Triangle, &
                                         EquidistancePoint_Triangle, &
@@ -51,8 +41,7 @@ USE TriangleInterpolationUtility, ONLY: RefElemDomain_Triangle, &
                                         LagrangeEvalAll_Triangle, &
                                         LagrangeGradientEvalAll_Triangle
 
-USE QuadrangleInterpolationUtility, ONLY: RefElemDomain_Quadrangle, &
-                                          LagrangeDOF_Quadrangle, &
+USE QuadrangleInterpolationUtility, ONLY: LagrangeDOF_Quadrangle, &
                                           LagrangeInDOF_Quadrangle, &
                                           LagrangeDegree_Quadrangle, &
                                           EquidistancePoint_Quadrangle, &
@@ -61,8 +50,7 @@ USE QuadrangleInterpolationUtility, ONLY: RefElemDomain_Quadrangle, &
                                           LagrangeEvalAll_Quadrangle, &
                                           LagrangeGradientEvalAll_Quadrangle
 
-USE TetrahedronInterpolationUtility, ONLY: RefElemDomain_Tetrahedron, &
-                                           LagrangeDOF_Tetrahedron, &
+USE TetrahedronInterpolationUtility, ONLY: LagrangeDOF_Tetrahedron, &
                                            LagrangeInDOF_Tetrahedron, &
                                            LagrangeDegree_Tetrahedron, &
                                            EquidistancePoint_Tetrahedron, &
@@ -71,8 +59,7 @@ USE TetrahedronInterpolationUtility, ONLY: RefElemDomain_Tetrahedron, &
                                            LagrangeEvalAll_Tetrahedron, &
                                            LagrangeGradientEvalAll_Tetrahedron
 
-USE HexahedronInterpolationUtility, ONLY: RefElemDomain_Hexahedron, &
-                                          LagrangeDOF_Hexahedron, &
+USE HexahedronInterpolationUtility, ONLY: LagrangeDOF_Hexahedron, &
                                           LagrangeInDOF_Hexahedron, &
                                           LagrangeDegree_Hexahedron, &
                                           EquidistancePoint_Hexahedron, &
@@ -81,8 +68,7 @@ USE HexahedronInterpolationUtility, ONLY: RefElemDomain_Hexahedron, &
                                           LagrangeEvalAll_Hexahedron, &
                                           LagrangeGradientEvalAll_Hexahedron
 
-USE PrismInterpolationUtility, ONLY: RefElemDomain_Prism, &
-                                     LagrangeDOF_Prism, &
+USE PrismInterpolationUtility, ONLY: LagrangeDOF_Prism, &
                                      LagrangeInDOF_Prism, &
                                      LagrangeDegree_Prism, &
                                      EquidistancePoint_Prism, &
@@ -91,8 +77,7 @@ USE PrismInterpolationUtility, ONLY: RefElemDomain_Prism, &
                                      LagrangeEvalAll_Prism, &
                                      LagrangeGradientEvalAll_Prism
 
-USE PyramidInterpolationUtility, ONLY: RefElemDomain_Pyramid, &
-                                       LagrangeDOF_Pyramid, &
+USE PyramidInterpolationUtility, ONLY: LagrangeDOF_Pyramid, &
                                        LagrangeInDOF_Pyramid, &
                                        LagrangeDegree_Pyramid, &
                                        EquidistancePoint_Pyramid, &
@@ -107,81 +92,6 @@ USE Display_Method, ONLY: ToString
 
 IMPLICIT NONE
 CONTAINS
-
-!----------------------------------------------------------------------------
-!                                                             RefElemDomain
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE RefElemDomain
-INTEGER(I4B) :: topo
-
-topo = ElementTopology(elemType)
-
-SELECT CASE (topo)
-CASE (Point)
-  ans = ""
-
-CASE (Line)
-  ans = RefElemDomain_Line(baseContinuity, baseInterpol)
-
-CASE (Triangle)
-  ans = RefElemDomain_Triangle(baseContinuity, baseInterpol)
-
-CASE (Quadrangle)
-  ans = RefElemDomain_Quadrangle(baseContinuity, baseInterpol)
-
-CASE (Tetrahedron)
-  ans = RefElemDomain_Tetrahedron(baseContinuity, baseInterpol)
-
-CASE (Hexahedron)
-  ans = RefElemDomain_Hexahedron(baseContinuity, baseInterpol)
-
-CASE (Prism)
-  ans = RefElemDomain_Prism(baseContinuity, baseInterpol)
-
-CASE (Pyramid)
-  ans = RefElemDomain_Pyramid(baseContinuity, baseInterpol)
-END SELECT
-
-END PROCEDURE RefElemDomain
-
-!----------------------------------------------------------------------------
-!                                                                  RefCoord
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE RefCoord
-INTEGER(I4B) :: topo
-
-topo = ElementTopology(elemType)
-
-SELECT CASE (topo)
-
-CASE (Point)
-  CALL Reallocate(ans, 3_I4B, 1_I4B)
-
-CASE (Line)
-  ans = RefCoord_Line(refElem)
-
-CASE (Triangle)
-  ans = RefCoord_Triangle(refElem)
-
-CASE (Quadrangle)
-  ans = RefCoord_Quadrangle(refElem)
-
-CASE (Tetrahedron)
-  ans = RefCoord_Tetrahedron(refElem)
-
-CASE (Hexahedron)
-  ans = RefCoord_Hexahedron(refElem)
-
-CASE (Prism)
-  ans = RefCoord_Prism(refElem)
-
-CASE (Pyramid)
-  ans = RefCoord_Pyramid(refElem)
-
-END SELECT
-END PROCEDURE RefCoord
 
 !----------------------------------------------------------------------------
 !                                                               LagrangeDOF

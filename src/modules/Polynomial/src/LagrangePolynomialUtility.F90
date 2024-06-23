@@ -34,52 +34,8 @@ PUBLIC :: LagrangeVandermonde_
 PUBLIC :: EquidistancePoint
 PUBLIC :: InterpolationPoint
 PUBLIC :: LagrangeCoeff
-PUBLIC :: RefCoord
-PUBLIC :: RefElemDomain
 PUBLIC :: LagrangeEvalAll
 PUBLIC :: LagrangeGradientEvalAll
-
-!----------------------------------------------------------------------------
-!                                                           RefElemDomain
-!----------------------------------------------------------------------------
-
-!> author: Vikas Sharma, Ph. D.
-! date:  2023-07-03
-! summary:  Returns the coordinate of reference element
-
-INTERFACE
-  MODULE FUNCTION RefElemDomain(elemType, baseContinuity, baseInterpol) &
-    RESULT(ans)
-    INTEGER(I4B), INTENT(IN) :: elemType
-    !! Element type
-    CHARACTER(*), INTENT(IN) :: baseContinuity
-    !! Cointinuity (conformity) of basis functions
-    !! "H1", "HDiv", "HCurl", "DG"
-    CHARACTER(*), INTENT(IN) :: baseInterpol
-    !! Basis function family for Interpolation
-    !! Lagrange, Hierarchy, Serendipity, Hermit, Orthogonal
-    TYPE(String) :: ans
-  END FUNCTION RefElemDomain
-END INTERFACE
-
-!----------------------------------------------------------------------------
-!                                                                 RefCoord
-!----------------------------------------------------------------------------
-
-!> author: Vikas Sharma, Ph. D.
-! date:  2023-07-03
-! summary:  Returns the coordinate of reference element
-
-INTERFACE
-  MODULE PURE FUNCTION RefCoord(elemType, refElem) RESULT(ans)
-    INTEGER(I4B), INTENT(IN) :: elemType
-    !! Element type
-    CHARACTER(*), INTENT(IN) :: refElem
-    !! "UNIT"
-    !! "BIUNIT"
-    REAL(DFP), ALLOCATABLE :: ans(:, :)
-  END FUNCTION RefCoord
-END INTERFACE
 
 !----------------------------------------------------------------------------
 !                                                   LagrangeDOF@BasisMethods
