@@ -189,6 +189,9 @@ PUBLIC :: iface_VectorFunction
 PUBLIC :: iface_MatrixFunction
 PUBLIC :: Range_
 PUBLIC :: Interval1D_
+PUBLIC :: TypePrecondOpt
+PUBLIC :: TypeConvergenceOpt
+PUBLIC :: TypeSolverNameOpt
 
 INTEGER(I4B), PARAMETER, PUBLIC :: MAX_RANK_FEVARIABLE = 6
 
@@ -1594,7 +1597,7 @@ TYPE(OpenMP_) :: OMP
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 4 Sept 2022
-! summary:         Multi-indices object is defined
+! summary:         Multi-indices object is definedstringclass
 
 TYPE :: MultiIndices_
   INTEGER(I4B) :: d
@@ -1744,5 +1747,93 @@ ABSTRACT INTERFACE
     REAL(DFP), ALLOCATABLE :: ans(:, :)
   END FUNCTION iface_MatrixFunction
 END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                              TypePreconOpt
+!----------------------------------------------------------------------------
+
+TYPE :: PrecondOpt_
+  INTEGER(I4B) :: NONE = NO_PRECONDITION
+  INTEGER(I4B) :: left = LEFT_PRECONDITION
+  INTEGER(I4B) :: right = RIGHT_PRECONDITION
+  INTEGER(I4B) :: both = LEFT_RIGHT_PRECONDITION
+  INTEGER(I4B) :: jacobi = PRECOND_JACOBI
+  INTEGER(I4B) :: ilu = PRECOND_ILU
+  INTEGER(I4B) :: ssor = PRECOND_SSOR
+  INTEGER(I4B) :: hybrid = PRECOND_HYBRID
+  INTEGER(I4B) :: is = PRECOND_IS
+  INTEGER(I4B) :: sainv = PRECOND_SAINV
+  INTEGER(I4B) :: saamg = PRECOND_SAAMG
+  INTEGER(I4B) :: iluc = PRECOND_ILUC
+  INTEGER(I4B) :: adds = PRECOND_ADDS
+  INTEGER(I4B) :: ilutp = PRECOND_ILUTP
+  INTEGER(I4B) :: ilud = PRECOND_ILUD
+  INTEGER(I4B) :: iludp = PRECOND_ILUDP
+  INTEGER(I4B) :: ilu0 = PRECOND_ILU0
+  INTEGER(I4B) :: iluk = PRECOND_ILUK
+  INTEGER(I4B) :: ilut = PRECOND_ILUT
+END TYPE PrecondOpt_
+
+TYPE(PrecondOpt_), PARAMETER :: TypePrecondOpt = PrecondOpt_()
+
+!----------------------------------------------------------------------------
+!                                                              TypePreconOpt
+!----------------------------------------------------------------------------
+
+TYPE :: ConvergenceOpt_
+  INTEGER(I4B) :: res = convergenceInRes
+  INTEGER(I4B) :: sol = convergenceInSol
+  INTEGER(I4B) :: both = convergenceInResSol
+  INTEGER(I4B) :: relative = relativeConvergence
+  INTEGER(I4B) :: absolute = absoluteConvergence
+END TYPE ConvergenceOpt_
+
+TYPE(ConvergenceOpt_), PARAMETER :: TypeConvergenceOpt = ConvergenceOpt_()
+
+!----------------------------------------------------------------------------
+!                                                           SolverNameOpt_
+!----------------------------------------------------------------------------
+
+TYPE SolverNameOpt_
+  INTEGER(I4B) :: cg = LIS_CG
+  INTEGER(I4B) :: bcg = LIS_BCG
+  INTEGER(I4B) :: bicg = LIS_BICG
+  INTEGER(I4B) :: cgs = LIS_CGS
+  INTEGER(I4B) :: bcgstab = LIS_BCGSTAB
+  INTEGER(I4B) :: bicgstab = LIS_BICGSTAB
+  INTEGER(I4B) :: bicgstabl = LIS_BICGSTABL
+  INTEGER(I4B) :: gpbicg = LIS_GPBICG
+  INTEGER(I4B) :: tfqmr = LIS_TFQMR
+  INTEGER(I4B) :: omn = LIS_OMN
+  INTEGER(I4B) :: fom = LIS_FOM
+  INTEGER(I4B) :: orthomin = LIS_ORTHOMIN
+  INTEGER(I4B) :: gmres = LIS_GMRES
+  INTEGER(I4B) :: gmr = LIS_GMR
+  INTEGER(I4B) :: jacobi = LIS_JACOBI
+  INTEGER(I4B) :: gs = LIS_GS
+  INTEGER(I4B) :: sor = LIS_SOR
+  INTEGER(I4B) :: bicgsafe = LIS_BICGSAFE
+  INTEGER(I4B) :: cr = LIS_CR
+  INTEGER(I4B) :: bicr = LIS_BICR
+  INTEGER(I4B) :: crs = LIS_CRS
+  INTEGER(I4B) :: bicrstab = LIS_BICRSTAB
+  INTEGER(I4B) :: gpbicr = LIS_GPBICR
+  INTEGER(I4B) :: bicrsafe = LIS_BICRSAFE
+  INTEGER(I4B) :: fgmres = LIS_FGMRES
+  INTEGER(I4B) :: idrs = LIS_IDRS
+  INTEGER(I4B) :: idr1 = LIS_IDR1
+  INTEGER(I4B) :: minres = LIS_MINRES
+  INTEGER(I4B) :: cocg = LIS_COCG
+  INTEGER(I4B) :: cocr = LIS_COCR
+  INTEGER(I4B) :: cgnr = LIS_CGNR
+  INTEGER(I4B) :: cgn = LIS_CGN
+  INTEGER(I4B) :: dbcg = LIS_DBCG
+  INTEGER(I4B) :: dbicg = LIS_DBICG
+  INTEGER(I4B) :: dqgmres = LIS_DQGMRES
+  INTEGER(I4B) :: superlu = LIS_SUPERLU
+END TYPE SolverNameOpt_
+
+TYPE(SolverNameOpt_), PARAMETER :: TypeSolverNameOpt = &
+                                   SolverNameOpt_()
 
 END MODULE BaseType
