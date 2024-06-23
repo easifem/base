@@ -230,7 +230,7 @@ END INTERFACE Quality_Point
 ! summary:  Returns total nodes in element
 
 INTERFACE
-  MODULE PURE FUNCTION TotalNodesInElement_Point(elemType) RESULT(Ans)
+  MODULE FUNCTION TotalNodesInElement_Point(elemType) RESULT(Ans)
     INTEGER(I4B), INTENT(IN) :: elemType
     INTEGER(I4B) :: Ans
   END FUNCTION TotalNodesInElement_Point
