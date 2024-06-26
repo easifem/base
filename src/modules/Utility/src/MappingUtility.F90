@@ -27,6 +27,7 @@ IMPLICIT NONE
 PRIVATE
 
 PUBLIC :: FromBiunitLine2Segment
+PUBLIC :: FromBiunitLine2Segment_
 PUBLIC :: FromBiUnitLine2UnitLine
 PUBLIC :: FromUnitLine2BiUnitLine
 PUBLIC :: FromLine2Line_
@@ -97,7 +98,7 @@ PUBLIC :: JacobianTetrahedron
 ! date: 19 Oct 2022
 ! summary: Map from unit line to physical space
 
-INTERFACE
+INTERFACE FromBiunitLine2Segment
   MODULE PURE FUNCTION FromBiunitLine2Segment1(xin, x1, x2) RESULT(ans)
     REAL(DFP), INTENT(IN) :: xin(:)
     !! coordinates in [-1,1]
@@ -108,11 +109,25 @@ INTERFACE
     REAL(DFP) :: ans(SIZE(xin))
     !! mapped coordinates of xin in physical domain
   END FUNCTION FromBiunitLine2Segment1
-END INTERFACE
-
-INTERFACE FromBiunitLine2Segment
-  MODULE PROCEDURE FromBiunitLine2Segment1
 END INTERFACE FromBiunitLine2Segment
+
+!----------------------------------------------------------------------------
+!                                                    FromBiunitLine2Segment_
+!----------------------------------------------------------------------------
+
+INTERFACE FromBiunitLine2Segment_
+  MODULE PURE SUBROUTINE FromBiunitLine2Segment1_(xin, x1, x2, ans, tsize)
+    REAL(DFP), INTENT(IN) :: xin(:)
+    !! coordinates in [-1,1]
+    REAL(DFP), INTENT(IN) :: x1
+    !! x1 of physical domain
+    REAL(DFP), INTENT(IN) :: x2
+    !! x2 of physical  domain
+    REAL(DFP), INTENT(INOUT) :: ans(:)
+    !! mapped coordinates of xin in physical domain
+    INTEGER(I4B), INTENT(OUT) :: tsize
+  END SUBROUTINE FromBiunitLine2Segment1_
+END INTERFACE FromBiunitLine2Segment_
 
 !----------------------------------------------------------------------------
 !                                                     FromBiunitLine2Segment
@@ -122,7 +137,7 @@ END INTERFACE FromBiunitLine2Segment
 ! date: 19 Oct 2022
 ! summary: Map from unit line to physical space
 
-INTERFACE
+INTERFACE FromBiunitLine2Segment
   MODULE PURE FUNCTION FromBiunitLine2Segment2(xin, x1, x2) RESULT(ans)
     REAL(DFP), INTENT(IN) :: xin(:)
     !! coordinates in [-1,1], SIZE(xin) = n
@@ -134,11 +149,31 @@ INTERFACE
     !! returned coordinates in physical space
     !! ans is in xij format
   END FUNCTION FromBiunitLine2Segment2
-END INTERFACE
-
-INTERFACE FromBiunitLine2Segment
-  MODULE PROCEDURE FromBiunitLine2Segment2
 END INTERFACE FromBiunitLine2Segment
+
+!----------------------------------------------------------------------------
+!                                                     FromBiunitLine2Segment
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 19 Oct 2022
+! summary: from bi unit line to segment wo allocation
+
+INTERFACE FromBiunitLine2Segment_
+  MODULE PURE SUBROUTINE FromBiunitLine2Segment2_(xin, x1, x2, ans, nrow, &
+                                                  ncol)
+    REAL(DFP), INTENT(IN) :: xin(:)
+    !! coordinates in [-1,1], SIZE(xin) = n
+    REAL(DFP), INTENT(IN) :: x1(:)
+    !! x1 of physical domain, SIZE(x1) = nsd
+    REAL(DFP), INTENT(IN) :: x2(:)
+    !! x2 of physical  domain, SIZE(x2) = nsd
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    !! returned coordinates in physical space
+    !! ans is in xij format
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+  END SUBROUTINE FromBiunitLine2Segment2_
+END INTERFACE FromBiunitLine2Segment_
 
 !----------------------------------------------------------------------------
 !                                                 FromUnitTriangle2Triangle

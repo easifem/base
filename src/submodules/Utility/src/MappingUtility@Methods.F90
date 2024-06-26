@@ -40,12 +40,34 @@ END PROCEDURE FromBiunitLine2Segment1
 !                                                       FromBiunitLine2Segment
 !----------------------------------------------------------------------------
 
+MODULE PROCEDURE FromBiunitLine2Segment1_
+tsize = SIZE(xin)
+ans(1:tsize) = 0.5_DFP * (x1 + x2) + 0.5_DFP * (x2 - x1) * xin
+END PROCEDURE FromBiunitLine2Segment1_
+
+!----------------------------------------------------------------------------
+!                                                       FromBiunitLine2Segment
+!----------------------------------------------------------------------------
+
 MODULE PROCEDURE FromBiunitLine2Segment2
 INTEGER(I4B) :: ii
 DO ii = 1, SIZE(xin)
   ans(:, ii) = 0.5_DFP * (x1 + x2) + 0.5_DFP * (x2 - x1) * xin(ii)
 END DO
 END PROCEDURE FromBiunitLine2Segment2
+
+!----------------------------------------------------------------------------
+!                                                       FromBiunitLine2Segment
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE FromBiunitLine2Segment2_
+INTEGER(I4B) :: ii
+nrow = SIZE(x1)
+ncol = SIZE(xin)
+DO ii = 1, ncol
+  ans(1:nrow, ii) = 0.5_DFP * (x1 + x2) + 0.5_DFP * (x2 - x1) * xin(ii)
+END DO
+END PROCEDURE FromBiunitLine2Segment2_
 
 !----------------------------------------------------------------------------
 !                                                   FromBiUnitLine2UnitLine
