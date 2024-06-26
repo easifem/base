@@ -55,6 +55,7 @@ PUBLIC :: FromBiUnitQuadrangle2UnitTriangle
 PUBLIC :: FromTriangle2Square_
 
 PUBLIC :: FromUnitTriangle2Triangle
+PUBLIC :: FromUnitTriangle2Triangle_
 
 PUBLIC :: BarycentricCoordUnitTriangle
 !! This is function
@@ -202,6 +203,35 @@ INTERFACE FromUnitTriangle2Triangle
 END INTERFACE FromUnitTriangle2Triangle
 
 !----------------------------------------------------------------------------
+!                                                FromUnitTriangle2Triangle_
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2024-06-26
+! summary:  from unit triangle to triangle without allocation
+
+INTERFACE FromUnitTriangle2Triangle_
+  MODULE PURE SUBROUTINE FromUnitTriangle2Triangle1_(xin, x1, x2, x3, ans, &
+                                                     nrow, ncol)
+    REAL(DFP), INTENT(IN) :: xin(:, :)
+    !! vertex coordinate of unit triangle
+    !! (0,0), (1,0), (0,1)
+    !! shape(xin) = (2,N)
+    REAL(DFP), INTENT(IN) :: x1(:)
+    !! x1 of physical domain, size(x1) = nsd
+    REAL(DFP), INTENT(IN) :: x2(:)
+    !! x2 of physical domain, size(x2) = nsd
+    REAL(DFP), INTENT(IN) :: x3(:)
+    !! x3 of physical domain, size(x3) = nsd
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    ! REAL(DFP) :: ans(SIZE(x1), SIZE(xin, 2))
+    !! mapped coordinates of xin in physical domain
+    !! shape(ans) = nsd, N
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+  END SUBROUTINE FromUnitTriangle2Triangle1_
+END INTERFACE FromUnitTriangle2Triangle_
+
+!----------------------------------------------------------------------------
 !                                            FromBiUnitQuadrangle2Quadrangle
 !----------------------------------------------------------------------------
 
@@ -251,7 +281,7 @@ END INTERFACE FromUnitQuadrangle2BiUnitQuadrangle
 
 INTERFACE FromBiUnitQuadrangle2Quadrangle
   MODULE PURE FUNCTION FromBiUnitQuadrangle2Quadrangle1(xin, x1, x2, x3, x4) &
-    & RESULT(ans)
+          & RESULT(ans)
     REAL(DFP), INTENT(IN) :: xin(:, :)
     !! vertex coordinate of biunit Quadrangle in xij format
     !! SIZE(xin,1) = 2

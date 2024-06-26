@@ -131,6 +131,22 @@ END DO
 END PROCEDURE FromUnitTriangle2Triangle1
 
 !----------------------------------------------------------------------------
+!                                                  FromUnitTriangle2Triangle_
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE FromUnitTriangle2Triangle1_
+INTEGER(I4B) :: ii, jj
+
+nrow = SIZE(x1)
+ncol = SIZE(xin, 2)
+
+DO CONCURRENT(jj=1:ncol, ii=1:nrow)
+  ans(ii, jj) = x1(ii) + (x2(ii) - x1(ii)) * xin(1, jj) &
+                + (x3(ii) - x1(ii)) * xin(2, jj)
+END DO
+END PROCEDURE FromUnitTriangle2Triangle1_
+
+!----------------------------------------------------------------------------
 !                                        FromBiUnitQuadrangle2UnitQuadrangle
 !----------------------------------------------------------------------------
 
