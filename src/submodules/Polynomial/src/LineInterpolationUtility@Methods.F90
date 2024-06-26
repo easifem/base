@@ -16,7 +16,12 @@
 !
 
 SUBMODULE(LineInterpolationUtility) Methods
-USE BaseMethod
+USE BaseType, ONLY: ipopt => TypeInterpolationOpt, &
+                    qpopt => TypeQuadratureOpt, &
+                    polyopt => TypePolynomialOpt
+
+USE GlobalData, ONLY: stderr
+
 IMPLICIT NONE
 CONTAINS
 
@@ -34,7 +39,8 @@ END PROCEDURE RefElemDomain_Line
 
 MODULE PROCEDURE QuadratureNumber_Line
 SELECT CASE (quadType)
-CASE (GaussLegendre, GaussChebyshev, GaussJacobi, GaussUltraspherical)
+CASE (qpopt%GaussLegendre, qpopt%GaussChebyshev, &
+      qpopt%GaussJacobi, qpopt%GaussUltraspherical)
   ans = 1_I4B + INT(order / 2, kind=I4B)
 CASE DEFAULT
   ans = 2_I4B + INT(order / 2, kind=I4B)
@@ -332,9 +338,9 @@ ncol = order + 1
 
 ALLOCATE (ans(nrow, ncol))
 
-CALL InterpolationPoint_Line1(order=order, ipType=ipType, ans=ans, &
+CALL InterpolationPoint_Line1_(order=order, ipType=ipType, ans=ans, &
                   nrow=nrow, ncol=ncol, layout=layout, xij=xij, alpha=alpha, &
-                              beta=beta, lambda=lambda)
+                               beta=beta, lambda=lambda)
 
 END PROCEDURE InterpolationPoint_Line1
 
@@ -371,46 +377,46 @@ ncol = order + 1
 
 SELECT CASE (ipType)
 
-CASE (Equidistance)
+CASE (ipopt%Equidistance)
   CALL EquidistancePoint_Line_(xij=xij, order=order, nrow=nrow, ncol=ncol, &
                                ans=ans)
   CALL handle_increasing
 
-CASE (GaussLegendre)
+CASE (ipopt%GaussLegendre)
   CALL LegendreQuadrature(n=ncol, pt=temp(1:ncol), quadType=Gauss)
   CALL handle_non_equidistance
 
-CASE (GaussChebyshev)
+CASE (ipopt%GaussChebyshev)
   CALL Chebyshev1Quadrature(n=ncol, pt=temp(1:ncol), quadType=Gauss)
   CALL handle_non_equidistance
 
-CASE (GaussLegendreLobatto)
+CASE (ipopt%GaussLegendreLobatto)
   CALL LegendreQuadrature(n=ncol, pt=temp(1:ncol), quadType=GaussLobatto)
   CALL handle_vefc
   CALL handle_non_equidistance
 
-CASE (GaussChebyshevLobatto)
+CASE (ipopt%GaussChebyshevLobatto)
   CALL Chebyshev1Quadrature(n=ncol, pt=temp(1:ncol), quadType=GaussLobatto)
   CALL handle_vefc
   CALL handle_non_equidistance
 
-CASE (GaussJacobi)
+CASE (ipopt%GaussJacobi)
   CALL JacobiQuadrature(n=ncol, pt=temp(1:ncol), quadType=Gauss, &
                         alpha=alpha, beta=beta)
   CALL handle_non_equidistance
 
-CASE (GaussJacobiLobatto)
+CASE (ipopt%GaussJacobiLobatto)
   CALL JacobiQuadrature(n=ncol, pt=temp(1:ncol), quadType=GaussLobatto, &
                         alpha=alpha, beta=beta)
   CALL handle_vefc
   CALL handle_non_equidistance
 
-CASE (GaussUltraspherical)
+CASE (ipopt%GaussUltraspherical)
   CALL UltrasphericalQuadrature(n=ncol, pt=temp(1:ncol), quadType=Gauss, &
                                 lambda=lambda)
   CALL handle_non_equidistance
 
-CASE (GaussUltrasphericalLobatto)
+CASE (ipopt%GaussUltrasphericalLobatto)
   CALL UltrasphericalQuadrature(n=ncol, pt=temp(1:ncol), quadType=GaussLobatto, &
                                 lambda=lambda)
 
@@ -466,7 +472,7 @@ SUBROUTINE handle_error
   CHARACTER(:), ALLOCATABLE :: msg
 
   SELECT CASE (ipType)
-  CASE (GaussJacobi, GaussJacobiLobatto)
+  CASE (ipopt%GaussJacobi, ipopt%GaussJacobiLobatto)
     isok = PRESENT(alpha) .AND. PRESENT(beta)
     IF (.NOT. isok) THEN
       msg = "alpha and beta should be present for ipType=GaussJacobi"
@@ -476,7 +482,7 @@ SUBROUTINE handle_error
                     line=__LINE__, unitno=stderr)
     END IF
 
-  CASE (GaussUltraSpherical, GaussUltraSphericalLobatto)
+  CASE (ipopt%GaussUltraSpherical, ipopt%GaussUltraSphericalLobatto)
     isok = PRESENT(lambda)
     IF (.NOT. isok) THEN
       msg = "lambda should be present for ipType=GaussUltraSpherical"
@@ -507,45 +513,45 @@ CALL handle_error
 
 SELECT CASE (ipType)
 
-CASE (Equidistance)
+CASE (ipopt%Equidistance)
   CALL EquidistancePoint_Line_(xij=xij, order=order, tsize=tsize, ans=ans)
   IF (layout(1:2) .EQ. "IN") CALL HeapSort(ans)
 
-CASE (GaussLegendre)
+CASE (ipopt%GaussLegendre)
   CALL LegendreQuadrature(n=tsize, pt=ans, quadType=Gauss)
   CALL handle_non_equidistance
 
-CASE (GaussChebyshev)
+CASE (ipopt%GaussChebyshev)
   CALL Chebyshev1Quadrature(n=tsize, pt=ans, quadType=Gauss)
   CALL handle_non_equidistance
 
-CASE (GaussJacobi)
+CASE (ipopt%GaussJacobi)
   CALL JacobiQuadrature(n=tsize, pt=ans, quadType=Gauss, alpha=alpha, &
                         beta=beta)
   CALL handle_non_equidistance
 
-CASE (GaussUltraspherical)
+CASE (ipopt%GaussUltraspherical)
   CALL UltrasphericalQuadrature(n=tsize, pt=ans, quadType=Gauss, &
                                 lambda=lambda)
   CALL handle_non_equidistance
 
-CASE (GaussLegendreLobatto)
+CASE (ipopt%GaussLegendreLobatto)
   CALL LegendreQuadrature(n=tsize, pt=ans, quadType=GaussLobatto)
   CALL handle_vefc
   CALL handle_non_equidistance
 
-CASE (GaussChebyshevLobatto)
+CASE (ipopt%GaussChebyshevLobatto)
   CALL Chebyshev1Quadrature(n=tsize, pt=ans, quadType=GaussLobatto)
   CALL handle_vefc
   CALL handle_non_equidistance
 
-CASE (GaussJacobiLobatto)
+CASE (ipopt%GaussJacobiLobatto)
   CALL JacobiQuadrature(n=tsize, pt=ans, quadType=GaussLobatto, alpha=alpha, &
                         beta=beta)
   CALL handle_vefc
   CALL handle_non_equidistance
 
-CASE (GaussUltrasphericalLobatto)
+CASE (ipopt%GaussUltrasphericalLobatto)
   CALL UltrasphericalQuadrature(n=tsize, pt=ans, quadType=GaussLobatto, &
                                 lambda=lambda)
   CALL handle_vefc
@@ -597,7 +603,7 @@ SUBROUTINE handle_error
   CHARACTER(:), ALLOCATABLE :: msg
 
   SELECT CASE (ipType)
-  CASE (GaussJacobi, GaussJacobiLobatto)
+  CASE (ipopt%GaussJacobi, ipopt%GaussJacobiLobatto)
     isok = PRESENT(alpha) .AND. PRESENT(beta)
     IF (.NOT. isok) THEN
       msg = "alpha and beta should be present for ipType=GaussJacobi"
@@ -607,7 +613,7 @@ SUBROUTINE handle_error
                     line=__LINE__, unitno=stderr)
     END IF
 
-  CASE (GaussUltraSpherical, GaussUltraSphericalLobatto)
+  CASE (ipopt%GaussUltraSpherical, ipopt%GaussUltraSphericalLobatto)
     isok = PRESENT(lambda)
     IF (.NOT. isok) THEN
       msg = "lambda should be present for ipType=GaussUltraSpherical"
@@ -676,7 +682,7 @@ END PROCEDURE LagrangeCoeff_Line4
 
 MODULE PROCEDURE LagrangeCoeff_Line5
 SELECT CASE (basisType)
-CASE (Monomial)
+CASE (polyopt%Monomial)
   ans = LagrangeCoeff_Line(order=order, xij=xij)
 CASE DEFAULT
   ans = EvalAllOrthopol(&
@@ -709,7 +715,7 @@ IF (SIZE(xij, 2) .NE. order + 1) THEN
   RETURN
 END IF
 
-orthopol0 = input(default=Monomial, option=basisType)
+orthopol0 = input(default=polyopt%Monomial, option=basisType)
 firstCall0 = input(default=.TRUE., option=firstCall)
 
 IF (PRESENT(coeff)) THEN
@@ -735,7 +741,7 @@ ELSE
 END IF
 
 SELECT CASE (orthopol0)
-CASE (Monomial)
+CASE (polyopt%Monomial)
   xx(1, 1) = 1.0_DFP
   DO ii = 1, order
     xx(1, ii + 1) = xx(1, ii) * x
@@ -773,7 +779,7 @@ IF (SIZE(xij, 2) .NE. order + 1) THEN
   RETURN
 END IF
 
-orthopol0 = Input(default=Monomial, option=basisType)
+orthopol0 = Input(default=polyopt%Monomial, option=basisType)
 firstCall0 = Input(default=.TRUE., option=firstCall)
 
 IF (PRESENT(coeff)) THEN
@@ -799,7 +805,7 @@ ELSE
 END IF
 
 SELECT CASE (orthopol0)
-CASE (Monomial)
+CASE (polyopt%Monomial)
   xx(:, 1) = 1.0_DFP
   DO ii = 1, order
     xx(:, ii + 1) = xx(:, ii) * x(1, :)
@@ -839,7 +845,7 @@ END IF
 
 basisType0 = input(default=Monomial, option=basisType)
 SELECT CASE (basisType0)
-CASE (Monomial)
+CASE (polyopt%Monomial)
   ans(1) = 1.0_DFP
   DO ii = 1, order
     ans(ii + 1) = ans(ii) * x
@@ -902,7 +908,7 @@ END IF
 
 basisType0 = input(default=Monomial, option=basisType)
 SELECT CASE (basisType0)
-CASE (Monomial)
+CASE (polyopt%Monomial)
   ans(1) = 0.0_DFP
   DO ii = 1, order
     ans(ii + 1) = REAL(ii, dfp) * x**(ii - 1)
@@ -965,7 +971,7 @@ END IF
 
 basisType0 = input(default=Monomial, option=basisType)
 SELECT CASE (basisType0)
-CASE (Monomial)
+CASE (polyopt%Monomial)
   ans(:, 1) = 1.0_DFP
   DO ii = 1, order
     ans(:, ii + 1) = ans(:, ii) * x
@@ -1028,7 +1034,7 @@ END IF
 
 basisType0 = input(default=Monomial, option=basisType)
 SELECT CASE (basisType0)
-CASE (Monomial)
+CASE (polyopt%Monomial)
   ans(:, 1) = 0.0_DFP
   DO ii = 1, order
     ans(:, ii + 1) = REAL(ii, dfp) * x**(ii - 1)
@@ -1157,109 +1163,69 @@ changeLayout = .FALSE.
 
 SELECT CASE (quadType)
 
-CASE (GaussLegendre)
+CASE (ipopt%GaussLegendre)
   CALL LegendreQuadrature(n=np, pt=pt, wt=wt, quadType=Gauss)
 
-CASE (GaussLegendreRadauLeft)
+CASE (ipopt%GaussLegendreRadauLeft)
   CALL LegendreQuadrature(n=np, pt=pt, wt=wt, quadType=GaussRadauLeft)
 
-CASE (GaussLegendreRadauRight)
+CASE (ipopt%GaussLegendreRadauRight)
   CALL LegendreQuadrature(n=np, pt=pt, wt=wt, quadType=GaussRadauRight)
 
-CASE (GaussLegendreLobatto)
+CASE (ipopt%GaussLegendreLobatto)
   CALL LegendreQuadrature(n=np, pt=pt, wt=wt, quadType=GaussLobatto)
   IF (layout .EQ. "VEFC") changeLayout = .TRUE.
 
-CASE (GaussChebyshev)
+CASE (ipopt%GaussChebyshev)
   CALL Chebyshev1Quadrature(n=np, pt=pt, wt=wt, quadType=Gauss)
 
-CASE (GaussChebyshevRadauLeft)
+CASE (ipopt%GaussChebyshevRadauLeft)
   CALL Chebyshev1Quadrature(n=np, pt=pt, wt=wt, quadType=GaussRadauLeft)
 
-CASE (GaussChebyshevRadauRight)
+CASE (ipopt%GaussChebyshevRadauRight)
   CALL Chebyshev1Quadrature(n=np, pt=pt, wt=wt, quadType=GaussRadauRight)
 
-CASE (GaussChebyshevLobatto)
+CASE (ipopt%GaussChebyshevLobatto)
   CALL Chebyshev1Quadrature(n=np, pt=pt, wt=wt, quadType=GaussLobatto)
   IF (layout .EQ. "VEFC") changeLayout = .TRUE.
 
-CASE (GaussJacobi)
-  CALL JacobiQuadrature( &
-    & n=np, &
-    & pt=pt, &
-    & wt=wt, &
-    & quadType=Gauss, &
-    & alpha=alpha, &
-    & beta=beta)
+CASE (ipopt%GaussJacobi)
+  CALL JacobiQuadrature(n=np, pt=pt, wt=wt, quadType=Gauss, &
+                        alpha=alpha, beta=beta)
 
-CASE (GaussJacobiRadauLeft)
-  CALL JacobiQuadrature( &
-    & n=np, &
-    & pt=pt, &
-    & wt=wt, &
-    & quadType=GaussRadauLeft, &
-    & alpha=alpha, &
-    & beta=beta)
+CASE (ipopt%GaussJacobiRadauLeft)
+  CALL JacobiQuadrature(n=np, pt=pt, wt=wt, quadType=GaussRadauLeft, &
+                        alpha=alpha, beta=beta)
 
-CASE (GaussJacobiRadauRight)
-  CALL JacobiQuadrature( &
-    & n=np, &
-    & pt=pt, &
-    & wt=wt, &
-    & quadType=GaussRadauRight, &
-    & alpha=alpha, &
-    & beta=beta)
+CASE (ipopt%GaussJacobiRadauRight)
+  CALL JacobiQuadrature(n=np, pt=pt, wt=wt, quadType=GaussRadauRight, &
+                        alpha=alpha, beta=beta)
 
-CASE (GaussJacobiLobatto)
-  CALL JacobiQuadrature( &
-    & n=np, &
-    & pt=pt, &
-    & wt=wt, &
-    & quadType=GaussLobatto, &
-    & alpha=alpha, &
-    & beta=beta)
+CASE (ipopt%GaussJacobiLobatto)
+  CALL JacobiQuadrature(n=np, pt=pt, wt=wt, quadType=GaussLobatto, &
+                        alpha=alpha, beta=beta)
   IF (layout .EQ. "VEFC") changeLayout = .TRUE.
 
-CASE (GaussUltraspherical)
-  CALL UltrasphericalQuadrature( &
-    & n=np, &
-    & pt=pt, &
-    & wt=wt, &
-    & quadType=Gauss, &
-    & lambda=lambda)
+CASE (ipopt%GaussUltraspherical)
+  CALL UltrasphericalQuadrature(n=np, pt=pt, wt=wt, quadType=Gauss, &
+                                lambda=lambda)
 
-CASE (GaussUltrasphericalRadauLeft)
-  CALL UltrasphericalQuadrature( &
-    & n=np, &
-    & pt=pt, &
-    & wt=wt, &
-    & quadType=GaussRadauLeft, &
-    & lambda=lambda)
+CASE (ipopt%GaussUltrasphericalRadauLeft)
+  CALL UltrasphericalQuadrature(n=np, pt=pt, wt=wt, &
+                                quadType=GaussRadauLeft, lambda=lambda)
 
-CASE (GaussUltrasphericalRadauRight)
-  CALL UltrasphericalQuadrature( &
-    & n=np, &
-    & pt=pt, &
-    & wt=wt, &
-    & quadType=GaussRadauRight, &
-    & lambda=lambda)
+CASE (ipopt%GaussUltrasphericalRadauRight)
+  CALL UltrasphericalQuadrature(n=np, pt=pt, wt=wt, &
+                                quadType=GaussRadauRight, lambda=lambda)
 
-CASE (GaussUltrasphericalLobatto)
-  CALL UltrasphericalQuadrature( &
-    & n=np, &
-    & pt=pt, &
-    & wt=wt, &
-    & quadType=GaussLobatto, &
-    & lambda=lambda)
+CASE (ipopt%GaussUltrasphericalLobatto)
+  CALL UltrasphericalQuadrature(n=np, pt=pt, wt=wt, &
+                                quadType=GaussLobatto, lambda=lambda)
   IF (layout .EQ. "VEFC") changeLayout = .TRUE.
 
 CASE DEFAULT
-  CALL ErrorMsg(&
-    & msg="Unknown iptype", &
-    & file=__FILE__, &
-    & routine="QuadraturePoint_Line3", &
-    & line=__LINE__, &
-    & unitno=stderr)
+  CALL ErrorMsg(msg="Unknown iptype", routine="QuadraturePoint_Line3", &
+                file=__FILE__, line=__LINE__, unitno=stderr)
   RETURN
 END SELECT
 
@@ -1289,7 +1255,7 @@ LOGICAL(LGT) :: firstCall0
 REAL(DFP) :: coeff0(order + 1, order + 1), xx(SIZE(x, 2), order + 1)
 INTEGER(I4B) :: ii, orthopol0
 
-orthopol0 = input(default=Monomial, option=basisType)
+orthopol0 = input(default=polyopt%Monomial, option=basisType)
 firstCall0 = input(default=.TRUE., option=firstCall)
 
 IF (PRESENT(coeff)) THEN
@@ -1315,7 +1281,7 @@ ELSE
 END IF
 
 SELECT CASE (orthopol0)
-CASE (Monomial)
+CASE (polyopt%Monomial)
 
   IF (SIZE(xij, 2) .NE. order + 1) THEN
     CALL Errormsg(&
