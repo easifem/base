@@ -114,257 +114,228 @@ END PROCEDURE GetTotalInDOF_Line
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE EquidistanceInPoint_Line1
-INTEGER(I4B) :: n, ii
-REAL(DFP) :: avar
+INTEGER(I4B) :: tsize
+
 IF (order .LE. 1_I4B) THEN
   ALLOCATE (ans(0))
   RETURN
 END IF
-n = LagrangeInDOF_Line(order=order)
-ALLOCATE (ans(n))
-avar = (xij(2) - xij(1)) / order
-DO ii = 1, n
-  ans(ii) = xij(1) + ii * avar
-END DO
+
+tsize = LagrangeInDOF_Line(order=order)
+ALLOCATE (ans(tsize))
+CALL EquidistanceInPoint_Line1_(order=order, xij=xij, ans=ans, tsize=tsize)
+
 END PROCEDURE EquidistanceInPoint_Line1
 
 !----------------------------------------------------------------------------
 !                                                   EquidistanceInPoint_Line
 !----------------------------------------------------------------------------
 
+MODULE PROCEDURE EquidistanceInPoint_Line1_
+INTEGER(I4B) :: ii
+REAL(DFP) :: avar
+
+tsize = 0
+IF (order .LE. 1_I4B) RETURN
+
+tsize = LagrangeInDOF_Line(order=order)
+
+avar = (xij(2) - xij(1)) / order
+
+DO ii = 1, tsize
+  ans(ii) = xij(1) + REAL(ii, kind=dfp) * avar
+END DO
+
+END PROCEDURE EquidistanceInPoint_Line1_
+
+!----------------------------------------------------------------------------
+!                                                   EquidistanceInPoint_Line
+!----------------------------------------------------------------------------
+
 MODULE PROCEDURE EquidistanceInPoint_Line2
-INTEGER(I4B) :: n, ii, nsd
-REAL(DFP) :: x0(3, 2)
-REAL(DFP) :: avar(3)
+INTEGER(I4B) :: nrow, ncol
+
 IF (order .LE. 1_I4B) THEN
   ALLOCATE (ans(0, 0))
   RETURN
 END IF
+
 IF (PRESENT(xij)) THEN
-  nsd = SIZE(xij, 1)
-  x0(1:nsd, 1) = xij(1:nsd, 1)
-  x0(1:nsd, 2) = xij(1:nsd, 2)
+  nrow = SIZE(xij, 1)
 ELSE
-  nsd = 1_I4B
-  x0(1:nsd, 1) = [-1.0]
-  x0(1:nsd, 2) = [1.0]
+  nrow = 1_I4B
 END IF
-n = LagrangeInDOF_Line(order=order)
-ALLOCATE (ans(nsd, n))
-avar(1:nsd) = (x0(1:nsd, 2) - x0(1:nsd, 1)) / order
-DO ii = 1, n
-  ans(1:nsd, ii) = x0(1:nsd, 1) + ii * avar(1:nsd)
-END DO
+
+ncol = LagrangeInDOF_Line(order=order)
+
+ALLOCATE (ans(nrow, ncol))
+
+CALL EquidistanceInPoint_Line2_(order=order, xij=xij, ans=ans, nrow=nrow, &
+                                ncol=ncol)
+
 END PROCEDURE EquidistanceInPoint_Line2
+
+!----------------------------------------------------------------------------
+!                                                   EquidistanceInPoint_Line
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE EquidistanceInPoint_Line2_
+INTEGER(I4B) :: ii
+REAL(DFP) :: x0(3, 3)
+
+nrow = 0; ncol = 0
+IF (order .LE. 1_I4B) RETURN
+
+IF (PRESENT(xij)) THEN
+  nrow = SIZE(xij, 1)
+  x0(1:nrow, 1) = xij(1:nrow, 1)
+  x0(1:nrow, 2) = xij(1:nrow, 2)
+ELSE
+  nrow = 1_I4B
+  x0(1, 1) = -1.0
+  x0(1, 2) = 1.0
+END IF
+
+ncol = LagrangeInDOF_Line(order=order)
+
+x0(1:nrow, 3) = (x0(1:nrow, 2) - x0(1:nrow, 1)) / order
+
+DO ii = 1, ncol
+  ans(1:nrow, ii) = x0(1:nrow, 1) + ii * x0(1:nrow, 3)
+END DO
+END PROCEDURE EquidistanceInPoint_Line2_
 
 !----------------------------------------------------------------------------
 !                                                     EquidistancePoint_Line
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE EquidistancePoint_Line1
-CALL Reallocate(ans, order + 1)
-IF (order .EQ. 0_I4B) THEN
-  ans(1) = 0.5_DFP * (xij(1) + xij(2))
-  RETURN
-END IF
-ans(1) = xij(1)
-ans(2) = xij(2)
-IF (order .GE. 2) THEN
-  ans(3:) = EquidistanceInPoint_Line(order=order, xij=xij)
-END IF
+INTEGER(I4B) :: tsize
+
+tsize = order + 1
+ALLOCATE (ans(tsize))
+CALL EquidistancePoint_Line1_(order=order, xij=xij, ans=ans, tsize=tsize)
 END PROCEDURE EquidistancePoint_Line1
+
+!----------------------------------------------------------------------------
+!                                                   EquidistancePoint_Line_
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE EquidistancePoint_Line1_
+INTEGER(I4B) :: tempint
+
+tsize = order + 1
+
+SELECT CASE (order)
+CASE (0)
+  ans(1) = 0.5_DFP * (xij(1) + xij(2))
+
+CASE (1)
+  ans(1) = xij(1)
+  ans(2) = xij(2)
+
+CASE DEFAULT
+  ans(1) = xij(1)
+  ans(2) = xij(2)
+  CALL EquidistanceInPoint_Line_(order=order, xij=xij, ans=ans(3:), &
+                                 tsize=tempint)
+END SELECT
+
+END PROCEDURE EquidistancePoint_Line1_
 
 !----------------------------------------------------------------------------
 !                                                     EquidistancePoint_Line
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE EquidistancePoint_Line2
-INTEGER(I4B) :: nsd
+INTEGER(I4B) :: nrow, ncol
 
 IF (PRESENT(xij)) THEN
-  nsd = SIZE(xij, 1)
-  CALL Reallocate(ans, nsd, order + 1)
-  IF (order .EQ. 0_I4B) THEN
-    ans(1:nsd, 1) = 0.5_DFP * (xij(1:nsd, 1) + xij(1:nsd, 2))
-    RETURN
-  END IF
-  ans(1:nsd, 1) = xij(1:nsd, 1)
-  ans(1:nsd, 2) = xij(1:nsd, 2)
+  nrow = SIZE(xij, 1)
 ELSE
-  nsd = 1_I4B
-  CALL Reallocate(ans, nsd, order + 1)
-  IF (order .EQ. 0_I4B) THEN
-    ans(1:nsd, 1) = 0.0_DFP
+  nrow = 1_I4B
+END IF
+
+ncol = order + 1
+ALLOCATE (ans(nrow, ncol))
+
+CALL EquidistancePoint_Line2_(order=order, xij=xij, ans=ans, nrow=nrow, &
+                              ncol=ncol)
+END PROCEDURE EquidistancePoint_Line2
+
+!----------------------------------------------------------------------------
+!                                                     EquidistancePoint_Line
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE EquidistancePoint_Line2_
+INTEGER(I4B) :: tempint
+
+ncol = order + 1
+
+SELECT CASE (order)
+
+CASE (0)
+
+  IF (PRESENT(xij)) THEN
+    nrow = SIZE(xij, 1)
+    ans(1:nrow, 1) = 0.5_DFP * (xij(1:nrow, 1) + xij(1:nrow, 2))
     RETURN
   END IF
-  ans(1:nsd, 1) = [-1.0]
-  ans(1:nsd, 2) = [1.0]
-END IF
-IF (order .GE. 2) THEN
-  ans(1:nsd, 3:) = EquidistanceInPoint_Line(order=order, xij=xij)
-END IF
-END PROCEDURE EquidistancePoint_Line2
+
+  nrow = 1_I4B
+  ans(1, 1) = 0.0_DFP
+
+CASE (1)
+
+  IF (PRESENT(xij)) THEN
+    nrow = SIZE(xij, 1)
+    ans(1:nrow, 1:2) = xij(1:nrow, 1:2)
+    RETURN
+  END IF
+
+  nrow = 1
+  ans(1, 1) = -1.0_DFP
+  ans(1, 2) = 1.0_DFP
+
+CASE DEFAULT
+
+  IF (PRESENT(xij)) THEN
+    nrow = SIZE(xij, 1)
+    ans(1:nrow, 1:2) = xij(1:nrow, 1:2)
+  ELSE
+    nrow = 1
+    ans(1, 1) = -1.0_DFP
+    ans(1, 2) = 1.0_DFP
+  END IF
+
+  CALL EquidistanceInPoint_Line2_(order=order, xij=xij, ans=ans(:, 3:), &
+                                  nrow=nrow, ncol=tempint)
+
+END SELECT
+
+END PROCEDURE EquidistancePoint_Line2_
 
 !----------------------------------------------------------------------------
 !                                                   InterpolationPoint_Line
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE InterpolationPoint_Line1
-CHARACTER(20) :: astr
-INTEGER(I4B) :: nsd, ii
-REAL(DFP) :: temp(order + 1), t1
+INTEGER(I4B) :: nrow, ncol
 
-IF (order .EQ. 0_I4B) THEN
-  IF (PRESENT(xij)) THEN
-    nsd = SIZE(xij, 1)
-    CALL Reallocate(ans, nsd, 1)
-    ans(1:nsd, 1) = 0.5_DFP * (xij(1:nsd, 1) + xij(1:nsd, 2))
-  ELSE
-    CALL Reallocate(ans, 1, 1)
-    ans = 0.0_DFP
-  END IF
-  RETURN
+IF (PRESENT(xij)) THEN
+  nrow = SIZE(xij, 1)
+ELSE
+  nrow = 1
 END IF
 
-astr = TRIM(UpperCase(layout))
+ncol = order + 1
 
-SELECT CASE (ipType)
+ALLOCATE (ans(nrow, ncol))
 
-CASE (Equidistance)
-  ans = EquidistancePoint_Line(xij=xij, order=order)
-  IF (astr .EQ. "INCREASING") THEN
-    DO ii = 1, SIZE(ans, 1)
-      ans(ii, :) = SORT(ans(ii, :))
-    END DO
-  END IF
-  RETURN
-CASE (GaussLegendre)
-  CALL LegendreQuadrature(n=order + 1, pt=temp, quadType=Gauss)
-CASE (GaussLegendreLobatto)
-  CALL LegendreQuadrature(n=order + 1, pt=temp, quadType=GaussLobatto)
-  IF (layout .EQ. "VEFC") THEN
-    t1 = temp(order + 1)
-    IF (order .GE. 2) THEN
-      temp(3:) = temp(2:order)
-    END IF
-    temp(2) = t1
-  END IF
+CALL InterpolationPoint_Line1(order=order, ipType=ipType, ans=ans, &
+                  nrow=nrow, ncol=ncol, layout=layout, xij=xij, alpha=alpha, &
+                              beta=beta, lambda=lambda)
 
-CASE (GaussChebyshev)
-  CALL Chebyshev1Quadrature(n=order + 1, pt=temp, quadType=Gauss)
-
-CASE (GaussChebyshevLobatto)
-  CALL Chebyshev1Quadrature(n=order + 1, pt=temp, quadType=GaussLobatto)
-  IF (layout .EQ. "VEFC") THEN
-    t1 = temp(order + 1)
-    IF (order .GE. 2) THEN
-      temp(3:) = temp(2:order)
-    END IF
-    temp(2) = t1
-  END IF
-
-CASE (GaussJacobi)
-  IF (.NOT. PRESENT(alpha) .OR. .NOT. PRESENT(beta)) THEN
-    CALL ErrorMsg(&
-      & msg="alpha and beta should be present for ipType=GaussJacobi", &
-      & file=__FILE__, &
-      & routine="InterpolationPoint_Line1", &
-      & line=__LINE__, &
-      & unitno=stderr)
-  END IF
-
-  CALL JacobiQuadrature( &
-    & n=order + 1, &
-    & pt=temp, &
-    & quadType=Gauss, &
-    & alpha=alpha, &
-    & beta=beta)
-
-CASE (GaussJacobiLobatto)
-  IF (.NOT. PRESENT(alpha) .OR. .NOT. PRESENT(beta)) THEN
-    CALL ErrorMsg(&
-      & msg="alpha and beta should be present for ipType=GaussJacobi", &
-      & file=__FILE__, &
-      & routine="InterpolationPoint_Line1", &
-      & line=__LINE__, &
-      & unitno=stderr)
-  END IF
-
-  CALL JacobiQuadrature( &
-    & n=order + 1, &
-    & pt=temp, &
-    & quadType=GaussLobatto, &
-    & alpha=alpha, &
-    & beta=beta)
-
-  IF (layout .EQ. "VEFC") THEN
-    t1 = temp(order + 1)
-    IF (order .GE. 2) THEN
-      temp(3:) = temp(2:order)
-    END IF
-    temp(2) = t1
-  END IF
-
-CASE (GaussUltraspherical)
-  IF (.NOT. PRESENT(lambda)) THEN
-    CALL ErrorMsg(&
-      & msg="lambda should be present for ipType=GaussUltraspherical", &
-      & file=__FILE__, &
-      & routine="InterpolationPoint_Line1", &
-      & line=__LINE__, &
-      & unitno=stderr)
-  END IF
-
-  CALL UltrasphericalQuadrature( &
-    & n=order + 1, &
-    & pt=temp, &
-    & quadType=Gauss, &
-    & lambda=lambda)
-
-CASE (GaussUltrasphericalLobatto)
-  IF (.NOT. PRESENT(lambda)) THEN
-    CALL ErrorMsg(&
-     & msg="lambda should be present for ipType=GaussUltrasphericalLobatto", &
-      & file=__FILE__, &
-      & routine="InterpolationPoint_Line1", &
-      & line=__LINE__, &
-      & unitno=stderr)
-  END IF
-
-  CALL UltrasphericalQuadrature( &
-    & n=order + 1, &
-    & pt=temp, &
-    & quadType=GaussLobatto, &
-    & lambda=lambda)
-
-  IF (layout .EQ. "VEFC") THEN
-    t1 = temp(order + 1)
-    IF (order .GE. 2) THEN
-      temp(3:) = temp(2:order)
-    END IF
-    temp(2) = t1
-  END IF
-
-CASE DEFAULT
-  CALL ErrorMsg(&
-    & msg="Unknown iptype", &
-    & file=__FILE__, &
-    & routine="InterpolationPoint_Line1", &
-    & line=__LINE__, &
-    & unitno=stderr)
-END SELECT
-
-IF (ipType .NE. Equidistance) THEN
-  IF (PRESENT(xij)) THEN
-    nsd = SIZE(xij, 1)
-    CALL Reallocate(ans, nsd, order + 1)
-    ans = FromBiunitLine2Segment(xin=temp, x1=xij(:, 1), &
-      & x2=xij(:, 2))
-  ELSE
-    CALL Reallocate(ans, 1, order + 1)
-    ans(1, :) = temp
-  END IF
-END IF
 END PROCEDURE InterpolationPoint_Line1
 
 !----------------------------------------------------------------------------
@@ -372,124 +343,230 @@ END PROCEDURE InterpolationPoint_Line1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE InterpolationPoint_Line2
-CHARACTER(20) :: astr
-REAL(DFP) :: t1
+INTEGER(I4B) :: tsize
+tsize = order + 1
+ALLOCATE (ans(tsize))
+CALL InterpolationPoint_Line2_(order=order, ipType=ipType, &
+              xij=xij, layout=layout, alpha=alpha, beta=beta, lambda=lambda, &
+                               ans=ans, tsize=tsize)
+END PROCEDURE InterpolationPoint_Line2
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE InterpolationPoint_Line1_
+REAL(DFP) :: temp(64)
 
 IF (order .EQ. 0_I4B) THEN
-  ans = [0.5_DFP * (xij(1) + xij(2))]
+  CALL EquidistancePoint_Line_(xij=xij, order=order, ans=ans, nrow=nrow, &
+                               ncol=ncol)
   RETURN
 END IF
 
-CALL Reallocate(ans, order + 1)
-astr = TRIM(UpperCase(layout))
+CALL handle_error
+!! handle_error is defined in this routine, see below
+
+ncol = order + 1
 
 SELECT CASE (ipType)
+
 CASE (Equidistance)
-  ans = EquidistancePoint_Line(xij=xij, order=order)
-  IF (astr .EQ. "INCREASING") ans = SORT(ans)
-  RETURN
+  CALL EquidistancePoint_Line_(xij=xij, order=order, nrow=nrow, ncol=ncol, &
+                               ans=ans)
+  CALL handle_increasing
 
 CASE (GaussLegendre)
-  CALL LegendreQuadrature(n=order + 1, pt=ans, quadType=Gauss)
-
-CASE (GaussLegendreLobatto)
-  CALL LegendreQuadrature(n=order + 1, pt=ans, quadType=GaussLobatto)
-  IF (layout .EQ. "VEFC") THEN
-    t1 = ans(order + 1)
-    IF (order .GE. 2) THEN
-      ans(3:) = ans(2:order)
-    END IF
-    ans(2) = t1
-  END IF
+  CALL LegendreQuadrature(n=ncol, pt=temp(1:ncol), quadType=Gauss)
+  CALL handle_non_equidistance
 
 CASE (GaussChebyshev)
-  CALL Chebyshev1Quadrature(n=order + 1, pt=ans, quadType=Gauss)
+  CALL Chebyshev1Quadrature(n=ncol, pt=temp(1:ncol), quadType=Gauss)
+  CALL handle_non_equidistance
+
+CASE (GaussLegendreLobatto)
+  CALL LegendreQuadrature(n=ncol, pt=temp(1:ncol), quadType=GaussLobatto)
+  CALL handle_vefc
+  CALL handle_non_equidistance
 
 CASE (GaussChebyshevLobatto)
-  CALL Chebyshev1Quadrature(n=order + 1, pt=ans, quadType=GaussLobatto)
-  IF (layout .EQ. "VEFC") THEN
-    t1 = ans(order + 1)
-    IF (order .GE. 2) THEN
-      ans(3:) = ans(2:order)
-    END IF
-    ans(2) = t1
-  END IF
+  CALL Chebyshev1Quadrature(n=ncol, pt=temp(1:ncol), quadType=GaussLobatto)
+  CALL handle_vefc
+  CALL handle_non_equidistance
 
 CASE (GaussJacobi)
-  IF (.NOT. PRESENT(alpha) .OR. .NOT. PRESENT(beta)) THEN
-    CALL ErrorMsg(&
-      & msg="alpha and beta should be present for ipType=GaussJacobi", &
-      & file=__FILE__, &
-      & routine="InterpolationPoint_Line2", &
-      & line=__LINE__, &
-      & unitno=stderr)
-  END IF
-
-  CALL JacobiQuadrature( &
-    & n=order + 1, &
-    & pt=ans, &
-    & quadType=Gauss, &
-    & alpha=alpha, &
-    & beta=beta)
+  CALL JacobiQuadrature(n=ncol, pt=temp(1:ncol), quadType=Gauss, &
+                        alpha=alpha, beta=beta)
+  CALL handle_non_equidistance
 
 CASE (GaussJacobiLobatto)
-  IF (.NOT. PRESENT(alpha) .OR. .NOT. PRESENT(beta)) THEN
-    CALL ErrorMsg(&
-    & msg="alpha and beta should be present for ipType=GaussJacobiLobatto", &
-    & file=__FILE__, &
-    & routine="InterpolationPoint_Line2", &
-    & line=__LINE__, &
-    & unitno=stderr)
-  END IF
-
-  CALL JacobiQuadrature( &
-    & n=order + 1, &
-    & pt=ans, &
-    & quadType=GaussLobatto, &
-    & alpha=alpha, &
-    & beta=beta)
-
-  IF (layout .EQ. "VEFC") THEN
-    t1 = ans(order + 1)
-    IF (order .GE. 2) THEN
-      ans(3:) = ans(2:order)
-    END IF
-    ans(2) = t1
-  END IF
+  CALL JacobiQuadrature(n=ncol, pt=temp(1:ncol), quadType=GaussLobatto, &
+                        alpha=alpha, beta=beta)
+  CALL handle_vefc
+  CALL handle_non_equidistance
 
 CASE (GaussUltraspherical)
-  IF (.NOT. PRESENT(lambda)) THEN
-    CALL ErrorMsg(&
-      & msg="lambda should be present for ipType=GaussUltraspherical", &
-      & file=__FILE__, &
-      & routine="InterpolationPoint_Line2", &
-      & line=__LINE__, &
-      & unitno=stderr)
-  END IF
-
-  CALL UltrasphericalQuadrature( &
-    & n=order + 1, &
-    & pt=ans, &
-    & quadType=Gauss, &
-    & lambda=lambda)
+  CALL UltrasphericalQuadrature(n=ncol, pt=temp(1:ncol), quadType=Gauss, &
+                                lambda=lambda)
+  CALL handle_non_equidistance
 
 CASE (GaussUltrasphericalLobatto)
-  IF (.NOT. PRESENT(lambda)) THEN
-    CALL ErrorMsg(&
-     & msg="lambda should be present for ipType=GaussUltrasphericalLobatto", &
-      & file=__FILE__, &
-      & routine="InterpolationPoint_Line2", &
-      & line=__LINE__, &
-      & unitno=stderr)
+  CALL UltrasphericalQuadrature(n=ncol, pt=temp(1:ncol), quadType=GaussLobatto, &
+                                lambda=lambda)
+
+  CALL handle_vefc
+  CALL handle_non_equidistance
+
+CASE DEFAULT
+  CALL ErrorMsg(msg="Unknown iptype", routine="InterpolationPoint_Line1_()", &
+                file=__FILE__, line=__LINE__, unitno=stderr)
+END SELECT
+
+CONTAINS
+
+SUBROUTINE handle_vefc
+  INTEGER(I4B) :: jj
+  REAL(DFP) :: t1
+
+  IF (layout(1:2) .EQ. "VE") THEN
+    t1 = temp(order + 1)
+    IF (order .GE. 2) THEN
+      temp(3:) = temp(2:order)
+    END IF
+    temp(2) = t1
   END IF
 
-  CALL UltrasphericalQuadrature( &
-    & n=order + 1, &
-    & pt=ans, &
-    & quadType=GaussLobatto, &
-    & lambda=lambda)
+END SUBROUTINE handle_vefc
 
-  IF (layout .EQ. "VEFC") THEN
+SUBROUTINE handle_increasing
+  INTEGER(I4B) :: ii
+
+  IF (layout(1:2) .EQ. "IN") THEN
+    DO ii = 1, nrow
+      CALL HeapSort(ans(ii, :))
+    END DO
+  END IF
+END SUBROUTINE
+
+SUBROUTINE handle_non_equidistance
+  IF (PRESENT(xij)) THEN
+  CALL FromBiunitLine2Segment_(xin=temp(1:ncol), x1=xij(:, 1), x2=xij(:, 2), &
+                                 ans=ans, nrow=nrow, ncol=ncol)
+  ELSE
+    nrow = 1
+    ans(1, 1:ncol) = temp(1:ncol)
+  END IF
+
+END SUBROUTINE handle_non_equidistance
+
+SUBROUTINE handle_error
+
+#ifdef DEBUG_VER
+  LOGICAL(LGT) :: isok
+  CHARACTER(:), ALLOCATABLE :: msg
+
+  SELECT CASE (ipType)
+  CASE (GaussJacobi, GaussJacobiLobatto)
+    isok = PRESENT(alpha) .AND. PRESENT(beta)
+    IF (.NOT. isok) THEN
+      msg = "alpha and beta should be present for ipType=GaussJacobi"
+
+      CALL ErrorMsg(msg=msg, file=__FILE__, &
+                    routine="InterpolationPoint_Line1_()", &
+                    line=__LINE__, unitno=stderr)
+    END IF
+
+  CASE (GaussUltraSpherical, GaussUltraSphericalLobatto)
+    isok = PRESENT(lambda)
+    IF (.NOT. isok) THEN
+      msg = "lambda should be present for ipType=GaussUltraSpherical"
+      CALL ErrorMsg(msg=msg, file=__FILE__, &
+                    routine="InterpolationPoint_Line1_()", &
+                    line=__LINE__, unitno=stderr)
+    END IF
+  END SELECT
+
+#endif
+
+END SUBROUTINE handle_error
+
+END PROCEDURE InterpolationPoint_Line1_
+
+!----------------------------------------------------------------------------
+!                                                   InterpolationPoint_Line2_
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE InterpolationPoint_Line2_
+tsize = order + 1
+IF (order .EQ. 0_I4B) THEN
+  ans(1) = 0.5_DFP * (xij(1) + xij(2))
+  RETURN
+END IF
+
+CALL handle_error
+
+SELECT CASE (ipType)
+
+CASE (Equidistance)
+  CALL EquidistancePoint_Line_(xij=xij, order=order, tsize=tsize, ans=ans)
+  IF (layout(1:2) .EQ. "IN") CALL HeapSort(ans)
+
+CASE (GaussLegendre)
+  CALL LegendreQuadrature(n=tsize, pt=ans, quadType=Gauss)
+  CALL handle_non_equidistance
+
+CASE (GaussChebyshev)
+  CALL Chebyshev1Quadrature(n=tsize, pt=ans, quadType=Gauss)
+  CALL handle_non_equidistance
+
+CASE (GaussJacobi)
+  CALL JacobiQuadrature(n=tsize, pt=ans, quadType=Gauss, alpha=alpha, &
+                        beta=beta)
+  CALL handle_non_equidistance
+
+CASE (GaussUltraspherical)
+  CALL UltrasphericalQuadrature(n=tsize, pt=ans, quadType=Gauss, &
+                                lambda=lambda)
+  CALL handle_non_equidistance
+
+CASE (GaussLegendreLobatto)
+  CALL LegendreQuadrature(n=tsize, pt=ans, quadType=GaussLobatto)
+  CALL handle_vefc
+  CALL handle_non_equidistance
+
+CASE (GaussChebyshevLobatto)
+  CALL Chebyshev1Quadrature(n=tsize, pt=ans, quadType=GaussLobatto)
+  CALL handle_vefc
+  CALL handle_non_equidistance
+
+CASE (GaussJacobiLobatto)
+  CALL JacobiQuadrature(n=tsize, pt=ans, quadType=GaussLobatto, alpha=alpha, &
+                        beta=beta)
+  CALL handle_vefc
+  CALL handle_non_equidistance
+
+CASE (GaussUltrasphericalLobatto)
+  CALL UltrasphericalQuadrature(n=tsize, pt=ans, quadType=GaussLobatto, &
+                                lambda=lambda)
+  CALL handle_vefc
+  CALL handle_non_equidistance
+
+CASE DEFAULT
+  CALL ErrorMsg(msg="Unknown iptype", routine="InterpolationPoint_Line2", &
+                file=__FILE__, line=__LINE__, unitno=stderr)
+END SELECT
+
+CONTAINS
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+SUBROUTINE handle_vefc
+  INTEGER(I4B) :: jj
+  REAL(DFP) :: t1
+
+  IF (layout(1:2) .EQ. "VE") THEN
     t1 = ans(order + 1)
     IF (order .GE. 2) THEN
       ans(3:) = ans(2:order)
@@ -497,19 +574,54 @@ CASE (GaussUltrasphericalLobatto)
     ans(2) = t1
   END IF
 
-CASE DEFAULT
-  CALL ErrorMsg(&
-    & msg="Unknown iptype", &
-    & file=__FILE__, &
-    & routine="InterpolationPoint_Line2", &
-    & line=__LINE__, &
-    & unitno=stderr)
-END SELECT
+END SUBROUTINE handle_vefc
 
-IF (ipType .NE. Equidistance) THEN
-  ans = FromBiunitLine2Segment(xin=ans, x1=xij(1), x2=xij(2))
-END IF
-END PROCEDURE InterpolationPoint_Line2
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+SUBROUTINE handle_non_equidistance
+  CALL FromBiunitLine2Segment_(xin=ans, x1=xij(1), x2=xij(2), &
+                               ans=ans, tsize=tsize)
+
+END SUBROUTINE handle_non_equidistance
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+SUBROUTINE handle_error
+
+#ifdef DEBUG_VER
+  LOGICAL(LGT) :: isok
+  CHARACTER(:), ALLOCATABLE :: msg
+
+  SELECT CASE (ipType)
+  CASE (GaussJacobi, GaussJacobiLobatto)
+    isok = PRESENT(alpha) .AND. PRESENT(beta)
+    IF (.NOT. isok) THEN
+      msg = "alpha and beta should be present for ipType=GaussJacobi"
+
+      CALL ErrorMsg(msg=msg, file=__FILE__, &
+                    routine="InterpolationPoint_Line1_()", &
+                    line=__LINE__, unitno=stderr)
+    END IF
+
+  CASE (GaussUltraSpherical, GaussUltraSphericalLobatto)
+    isok = PRESENT(lambda)
+    IF (.NOT. isok) THEN
+      msg = "lambda should be present for ipType=GaussUltraSpherical"
+      CALL ErrorMsg(msg=msg, file=__FILE__, &
+                    routine="InterpolationPoint_Line1_()", &
+                    line=__LINE__, unitno=stderr)
+    END IF
+  END SELECT
+
+#endif
+
+END SUBROUTINE handle_error
+
+END PROCEDURE InterpolationPoint_Line2_
 
 !----------------------------------------------------------------------------
 !                                                        LagrangeCoeff_Line

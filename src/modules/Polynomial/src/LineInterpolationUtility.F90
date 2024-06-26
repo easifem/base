@@ -30,6 +30,7 @@ PUBLIC :: GetTotalInDOF_Line
 PUBLIC :: EquidistanceInPoint_Line
 PUBLIC :: EquidistancePoint_Line
 PUBLIC :: InterpolationPoint_Line
+PUBLIC :: InterpolationPoint_Line_
 PUBLIC :: LagrangeCoeff_Line
 PUBLIC :: LagrangeEvalAll_Line
 PUBLIC :: LagrangeGradientEvalAll_Line
@@ -233,6 +234,21 @@ INTERFACE EquidistanceInPoint_Line
 END INTERFACE EquidistanceInPoint_Line
 
 !----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE EquidistanceInPoint_Line_
+  MODULE PURE SUBROUTINE EquidistanceInPoint_Line1_(order, xij, ans, tsize)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order
+    REAL(DFP), INTENT(IN) :: xij(2)
+    !! coordinates of point 1 and point 2
+    REAL(DFP), INTENT(INOUT) :: ans(:)
+    INTEGER(I4B), INTENT(OUT) :: tsize
+  END SUBROUTINE EquidistanceInPoint_Line1_
+END INTERFACE EquidistanceInPoint_Line_
+
+!----------------------------------------------------------------------------
 !                                                   EquidistanceInPoint_Line
 !----------------------------------------------------------------------------
 
@@ -265,6 +281,27 @@ INTERFACE EquidistanceInPoint_Line
 END INTERFACE EquidistanceInPoint_Line
 
 !----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE EquidistanceInPoint_Line_
+  MODULE PURE SUBROUTINE EquidistanceInPoint_Line2_(order, xij, ans, &
+                                                    nrow, ncol)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order
+    REAL(DFP), OPTIONAL, INTENT(IN) :: xij(:, :)
+    !! coordinates of point 1 and point 2 in $x_{iJ}$ format
+    !! number of rows = nsd
+    !! number of cols = 2
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    !! Equidistnace points in $x_{iJ}$ format
+    !! The number of rows is equal to the number of rows in xij
+    !! (if xij present), otherwise, it is 1.
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+  END SUBROUTINE EquidistanceInPoint_Line2_
+END INTERFACE EquidistanceInPoint_Line_
+
+!----------------------------------------------------------------------------
 !                                                    EquidistancePoint_Line
 !----------------------------------------------------------------------------
 
@@ -288,6 +325,22 @@ INTERFACE EquidistancePoint_Line
     !! equidistance points
   END FUNCTION EquidistancePoint_Line1
 END INTERFACE EquidistancePoint_Line
+
+!----------------------------------------------------------------------------
+!                                                   EquidistancePoint_Line_
+!----------------------------------------------------------------------------
+
+INTERFACE EquidistancePoint_Line_
+  MODULE PURE SUBROUTINE EquidistancePoint_Line1_(order, xij, ans, tsize)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order
+    REAL(DFP), INTENT(IN) :: xij(2)
+    !! coorindates of point 1 and point 2
+    REAL(DFP), INTENT(INOUT) :: ans(:)
+    !! equidistance points
+    INTEGER(I4B), INTENT(OUT) :: tsize
+  END SUBROUTINE EquidistancePoint_Line1_
+END INTERFACE EquidistancePoint_Line_
 
 !----------------------------------------------------------------------------
 !                                                    EquidistancePoint_Line
@@ -318,6 +371,27 @@ INTERFACE EquidistancePoint_Line
     !! ans is  same as xij.
   END FUNCTION EquidistancePoint_Line2
 END INTERFACE EquidistancePoint_Line
+
+!----------------------------------------------------------------------------
+!                                                   EquidistancePoint_Line_
+!----------------------------------------------------------------------------
+
+INTERFACE EquidistancePoint_Line_
+  MODULE PURE SUBROUTINE EquidistancePoint_Line2_(order, xij, ans, nrow, ncol)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order
+    REAL(DFP), OPTIONAL, INTENT(IN) :: xij(:, :)
+    !! coordinates of point 1 and point 2 in $x_{iJ}$ format
+    !! number of rows = nsd
+    !! number of cols = 2
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    !! equidistance points in $x_{iJ}$ format
+    !! If xij is not present, then number of rows in ans
+    !! is 1. If `xij` is present then the number of rows in
+    !! ans is  same as xij.
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+  END SUBROUTINE EquidistancePoint_Line2_
+END INTERFACE EquidistancePoint_Line_
 
 !----------------------------------------------------------------------------
 !                                                   InterpolationPoint_Line
@@ -355,7 +429,7 @@ END INTERFACE EquidistancePoint_Line
 
 INTERFACE InterpolationPoint_Line
   MODULE FUNCTION InterpolationPoint_Line1(order, ipType, &
-    & layout, xij, alpha, beta, lambda) RESULT(ans)
+                                 layout, xij, alpha, beta, lambda) RESULT(ans)
     !!
     INTEGER(I4B), INTENT(IN) :: order
     !! Order of interpolation
@@ -382,6 +456,43 @@ INTERFACE InterpolationPoint_Line
 END INTERFACE InterpolationPoint_Line
 
 !----------------------------------------------------------------------------
+!                                                   InterpolationPoint_Line_
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2024-06-25
+! summary:  Interpolation without allocation
+
+INTERFACE InterpolationPoint_Line_
+ MODULE SUBROUTINE InterpolationPoint_Line1_(order, ipType, ans, nrow, ncol, &
+                                             layout, xij, alpha, beta, lambda)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! Order of interpolation
+    INTEGER(I4B), INTENT(IN) :: ipType
+    !! Interpolation point type
+    !! Equidistance, GaussLegendre, GaussLegendreLobatto, GaussChebyshev,
+    !! GaussChebyshevLobatto, GaussJacobi, GaussJacobiLobatto
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    !! interpolation points in xij format
+    !! size(ans,1) = 1
+    !! size(ans,2) = order+1
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+    !! number of rows and columns written to ans
+    CHARACTER(*), INTENT(IN) :: layout
+    !! "VEFC"
+    !! "INCREASING"
+    REAL(DFP), OPTIONAL, INTENT(IN) :: xij(:, :)
+    !! domain of interpolation
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
+    !! Jacobi parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: beta
+    !! Jacobi parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: lambda
+    !! Ultraspherical parameter
+  END SUBROUTINE InterpolationPoint_Line1_
+END INTERFACE InterpolationPoint_Line_
+
+!----------------------------------------------------------------------------
 !                                                   InterpolationPoint_Line
 !----------------------------------------------------------------------------
 
@@ -391,7 +502,7 @@ END INTERFACE InterpolationPoint_Line
 
 INTERFACE InterpolationPoint_Line
   MODULE FUNCTION InterpolationPoint_Line2(order, ipType, xij, &
-    & layout, alpha, beta, lambda) RESULT(ans)
+                                      layout, alpha, beta, lambda) RESULT(ans)
     !!
     INTEGER(I4B), INTENT(IN) :: order
     !! order of interpolation
@@ -420,6 +531,38 @@ INTERFACE InterpolationPoint_Line
     !! one dimensional interpolation point
   END FUNCTION InterpolationPoint_Line2
 END INTERFACE InterpolationPoint_Line
+
+!----------------------------------------------------------------------------
+!                                                   InterpolationPoint_Line_
+!----------------------------------------------------------------------------
+
+INTERFACE InterpolationPoint_Line_
+  MODULE SUBROUTINE InterpolationPoint_Line2_(order, ipType, ans, tsize, &
+                                             xij, layout, alpha, beta, lambda)
+    !!
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order of interpolation
+    INTEGER(I4B), INTENT(IN) :: ipType
+    !! Interpolation point type
+    !! See TypeInterpolationOpt
+    REAL(DFP), INTENT(INOUT) :: ans(:)
+    !! one dimensional interpolation point
+    INTEGER(I4B), INTENT(OUT) :: tsize
+    !! total size of ans
+    REAL(DFP), INTENT(IN) :: xij(2)
+    !! end points
+    CHARACTER(*), INTENT(IN) :: layout
+    !! "VEFC"
+    !! "INCREASING"
+    !! "DECREASING"
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
+    !! Jacobi parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: beta
+    !! Jacobi parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: lambda
+    !! Ultraspherical parameter
+  END SUBROUTINE InterpolationPoint_Line2_
+END INTERFACE InterpolationPoint_Line_
 
 !----------------------------------------------------------------------------
 !                                                         LagrangeCoeff_Line
@@ -499,7 +642,7 @@ END INTERFACE LagrangeCoeff_Line
 
 INTERFACE LagrangeCoeff_Line
   MODULE FUNCTION LagrangeCoeff_Line5(order, xij, basisType, alpha, &
-    & beta, lambda) RESULT(ans)
+                                      beta, lambda) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
     !! order of polynomial, it should be SIZE(xij,2)-1
     REAL(DFP), INTENT(IN) :: xij(:, :)
@@ -534,8 +677,7 @@ END INTERFACE LagrangeCoeff_Line
 
 INTERFACE LagrangeEvalAll_Line
   MODULE FUNCTION LagrangeEvalAll_Line1(order, x, xij, coeff, firstCall, &
-    & basisType, alpha, beta, lambda) &
-    & RESULT(ans)
+                                   basisType, alpha, beta, lambda) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
     !! order of Lagrange polynomials
     REAL(DFP), INTENT(IN) :: x
@@ -575,10 +717,8 @@ END INTERFACE LagrangeEvalAll_Line
 ! summary: Evaluate Lagrange polynomials of n at several points
 
 INTERFACE LagrangeEvalAll_Line
-  MODULE FUNCTION LagrangeEvalAll_Line2( &
-    & order, x, xij, coeff, firstCall, &
-    & basisType, alpha, beta, lambda) &
-    & RESULT(ans)
+  MODULE FUNCTION LagrangeEvalAll_Line2(order, x, xij, coeff, firstCall, &
+                                   basisType, alpha, beta, lambda) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
     !! order of Lagrange polynomials
     REAL(DFP), INTENT(IN) :: x(:, :)
@@ -625,14 +765,8 @@ END INTERFACE LagrangeEvalAll_Line
 ! summary: Evaluate Lagrange polynomials of n at several points
 
 INTERFACE LagrangeGradientEvalAll_Line
-  MODULE FUNCTION LagrangeGradientEvalAll_Line1( &
-    & order, &
-    & x, &
-    & xij, &
-    & coeff, &
-    & firstCall, &
-    & basisType, &
-    & alpha, beta, lambda) RESULT(ans)
+  MODULE FUNCTION LagrangeGradientEvalAll_Line1(order, x, xij, coeff, &
+                        firstCall, basisType, alpha, beta, lambda) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
     !! order of Lagrange polynomials
     REAL(DFP), INTENT(IN) :: x(:, :)
@@ -679,14 +813,8 @@ END INTERFACE LagrangeGradientEvalAll_Line
 ! summary: Evaluate basis functions of order upto n
 
 INTERFACE BasisEvalAll_Line
-  MODULE FUNCTION BasisEvalAll_Line1( &
-    & order, &
-    & x, &
-    & refLine, &
-    & basisType, &
-    & alpha, &
-    & beta, &
-    & lambda) RESULT(ans)
+  MODULE FUNCTION BasisEvalAll_Line1(order, x, refLine, basisType, alpha, &
+                                     beta, lambda) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
     !! order of  polynomials
     REAL(DFP), INTENT(IN) :: x
@@ -721,14 +849,8 @@ END INTERFACE BasisEvalAll_Line
 ! summary: Evaluate basis functions of order upto n
 
 INTERFACE BasisEvalAll_Line
-  MODULE FUNCTION BasisEvalAll_Line2( &
-    & order, &
-    & x, &
-    & refLine, &
-    & basisType, &
-    & alpha, &
-    & beta, &
-    & lambda) RESULT(ans)
+  MODULE FUNCTION BasisEvalAll_Line2(order, x, refLine, basisType, &
+                                     alpha, beta, lambda) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
     !! order of  polynomials
     REAL(DFP), INTENT(IN) :: x(:)
@@ -766,14 +888,8 @@ END INTERFACE BasisEvalAll_Line
 ! summary: Evaluate basis functions of order upto n
 
 INTERFACE OrthogonalBasis_Line
-  MODULE FUNCTION OrthogonalBasis_Line1( &
-    & order, &
-    & xij, &
-    & refLine, &
-    & basisType, &
-    & alpha, &
-    & beta, &
-    & lambda) RESULT(ans)
+  MODULE FUNCTION OrthogonalBasis_Line1(order, xij, refLine, basisType, &
+                                        alpha, beta, lambda) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
     !! order of  polynomials
     REAL(DFP), INTENT(IN) :: xij(:, :)
@@ -811,14 +927,8 @@ END INTERFACE OrthogonalBasis_Line
 ! summary: Evaluate basis functions of order upto n
 
 INTERFACE OrthogonalBasisGradient_Line
-  MODULE FUNCTION OrthogonalBasisGradient_Line1( &
-    & order, &
-    & xij, &
-    & refLine, &
-    & basisType, &
-    & alpha, &
-    & beta, &
-    & lambda) RESULT(ans)
+  MODULE FUNCTION OrthogonalBasisGradient_Line1(order, xij, refLine, &
+                                   basisType, alpha, beta, lambda) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
     !! order of  polynomials
     REAL(DFP), INTENT(IN) :: xij(:, :)
@@ -880,10 +990,8 @@ END INTERFACE HeirarchicalBasis_Line
 ! summary: Eval gradient of all modal basis (heirarchical polynomial) on Line
 
 INTERFACE HeirarchicalGradientBasis_Line
-  MODULE FUNCTION HeirarchicalGradientBasis_Line1( &
-    & order, &
-    & xij, &
-    & refLine) RESULT(ans)
+  MODULE FUNCTION HeirarchicalGradientBasis_Line1(order, xij, refLine) &
+    RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
     !! Polynomial order of interpolation
     REAL(DFP), INTENT(IN) :: xij(:, :)
@@ -908,14 +1016,8 @@ END INTERFACE HeirarchicalGradientBasis_Line
 ! summary: Evaluate the gradient of basis functions of order upto n
 
 INTERFACE BasisGradientEvalAll_Line
-  MODULE FUNCTION BasisGradientEvalAll_Line1( &
-    & order, &
-    & x, &
-    & refLine, &
-    & basisType, &
-    & alpha, &
-    & beta, &
-    & lambda) RESULT(ans)
+  MODULE FUNCTION BasisGradientEvalAll_Line1(order, x, refLine, basisType, &
+                                             alpha, beta, lambda) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
     !! order of  polynomials
     REAL(DFP), INTENT(IN) :: x
@@ -950,14 +1052,8 @@ END INTERFACE BasisGradientEvalAll_Line
 ! summary: Evaluate gradient of basis functions of order upto n
 
 INTERFACE BasisGradientEvalAll_Line
-  MODULE FUNCTION BasisGradientEvalAll_Line2( &
-    & order, &
-    & x, &
-    & refLine, &
-    & basisType, &
-    & alpha, &
-    & beta, &
-    & lambda) RESULT(ans)
+  MODULE FUNCTION BasisGradientEvalAll_Line2(order, x, refLine, basisType, &
+                                             alpha, beta, lambda) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
     !! order of  polynomials
     REAL(DFP), INTENT(IN) :: x(:)
@@ -995,15 +1091,8 @@ END INTERFACE BasisGradientEvalAll_Line
 ! summary:  Returns quadrature points
 
 INTERFACE QuadraturePoint_Line
-  MODULE FUNCTION QuadraturePoint_Line1( &
-    & order, &
-    & quadType, &
-    & layout, &
-    & xij, &
-    & alpha, &
-    & beta, &
-    & lambda) RESULT(ans)
-    !!
+  MODULE FUNCTION QuadraturePoint_Line1(order, quadType, layout, xij, &
+                                        alpha, beta, lambda) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
     !! Order of interpolation
     INTEGER(I4B), INTENT(IN) :: quadType
@@ -1046,14 +1135,8 @@ END INTERFACE QuadraturePoint_Line
 ! summary: Returns the interpolation point
 
 INTERFACE QuadraturePoint_Line
-  MODULE FUNCTION QuadraturePoint_Line2( &
-    & order, &
-    & quadType, &
-    & xij, &
-    & layout, &
-    & alpha, &
-    & beta, &
-    & lambda) RESULT(ans)
+  MODULE FUNCTION QuadraturePoint_Line2(order, quadType, xij, layout, &
+                                        alpha, beta, lambda) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
     !! order of interpolation
     INTEGER(I4B), INTENT(IN) :: quadType
@@ -1090,15 +1173,8 @@ END INTERFACE QuadraturePoint_Line
 ! summary:  Returns quadrature points
 
 INTERFACE QuadraturePoint_Line
-  MODULE FUNCTION QuadraturePoint_Line3( &
-    & nips, &
-    & quadType, &
-    & layout, &
-    & xij, &
-    & alpha, &
-    & beta, &
-    & lambda) RESULT(ans)
-    !!
+  MODULE FUNCTION QuadraturePoint_Line3(nips, quadType, layout, xij, &
+                                        alpha, beta, lambda) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: nips(1)
     !! Order of interpolation
     INTEGER(I4B), INTENT(IN) :: quadType
@@ -1141,14 +1217,8 @@ END INTERFACE QuadraturePoint_Line
 ! summary: Returns the interpolation point
 
 INTERFACE QuadraturePoint_Line
-  MODULE FUNCTION QuadraturePoint_Line4( &
-    & nips, &
-    & quadType, &
-    & xij, &
-    & layout, &
-    & alpha, &
-    & beta, &
-    & lambda) RESULT(ans)
+  MODULE FUNCTION QuadraturePoint_Line4(nips, quadType, xij, layout, &
+                                        alpha, beta, lambda) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: nips(1)
     !! order of interpolation
     INTEGER(I4B), INTENT(IN) :: quadType
