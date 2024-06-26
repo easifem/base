@@ -20,8 +20,16 @@
 ! summary:         This submodule contains the sorting routine
 
 SUBMODULE(SortUtility) Methods
-USE BaseMethod, ONLY: Swap, UpperCase, arange, Median, Partition, &
-& ArgPartition, ArgMedian
+USE SwapUtility, ONLY: Swap
+
+USE StringUtility, ONLY: UpperCase
+
+USE ArangeUtility, ONLY: Arange
+
+USE MedianUtility, ONLY: Median, ArgMedian
+
+USE PartitionUtility, ONLY: Partition, ArgPartition
+
 IMPLICIT NONE
 
 INTEGER(I4B), PARAMETER :: minimumLengthForInsertion = 16
