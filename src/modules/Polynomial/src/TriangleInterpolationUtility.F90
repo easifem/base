@@ -16,7 +16,7 @@
 !
 
 MODULE TriangleInterpolationUtility
-USE GlobalData
+USE GlobalData, ONLY: DFP, I4B, LGT
 USE String_Class, ONLY: String
 IMPLICIT NONE
 PRIVATE
@@ -26,6 +26,7 @@ PUBLIC :: LagrangeInDOF_Triangle
 PUBLIC :: EquidistanceInPoint_Triangle
 PUBLIC :: EquidistancePoint_Triangle
 PUBLIC :: InterpolationPoint_Triangle
+PUBLIC :: InterpolationPoint_Triangle_
 PUBLIC :: LagrangeCoeff_Triangle
 
 PUBLIC :: Dubiner_Triangle
@@ -54,7 +55,7 @@ PUBLIC :: GetTotalInDOF_Triangle
 ! PUBLIC :: BarycentricHeirarchicalBasisGradient_Triangle
 
 !----------------------------------------------------------------------------
-!                                                         GetTotalDOF_Triangle
+!                                                      GetTotalDOF_Triangle
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -147,7 +148,7 @@ INTERFACE
   MODULE SUBROUTINE IJ2VEFC_Triangle(xi, eta, temp, order, N)
     REAL(DFP), INTENT(IN) :: xi(:, :)
     REAL(DFP), INTENT(IN) :: eta(:, :)
-    REAL(DFP), INTENT(OUT) :: temp(:, :)
+    REAL(DFP), INTENT(INOUT) :: temp(:, :)
     INTEGER(I4B), INTENT(IN) :: order
     INTEGER(I4B), INTENT(IN) :: N
   END SUBROUTINE IJ2VEFC_Triangle
@@ -255,6 +256,36 @@ INTERFACE
 END INTERFACE
 
 !----------------------------------------------------------------------------
+!                                              EquidistanceInPoint_Triangle
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 14 Aug 2022
+! summary: Returns equidistance points in triangle
+!
+!# Introduction
+!
+!- This function returns the equidistance points in triangle
+!- All points are inside the triangle
+
+INTERFACE
+  MODULE PURE SUBROUTINE EquidistanceInPoint_Triangle_(order, ans, nrow, &
+                                                       ncol, xij)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    !! returned coordinates in $x_{iJ}$ format
+    !! If xij is present then number of rows in ans is same as xij
+    !! If xij is not present then number of rows in ans is 2.
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+    REAL(DFP), OPTIONAL, INTENT(IN) :: xij(:, :)
+    !! coordinates of point 1 and point 2 in $x_{iJ}$ format
+    !! number of rows = nsd
+    !! number of cols = 3
+  END SUBROUTINE EquidistanceInPoint_Triangle_
+END INTERFACE
+
+!----------------------------------------------------------------------------
 !                                              EquidistancePoint_Triangle
 !----------------------------------------------------------------------------
 
@@ -284,6 +315,22 @@ INTERFACE
   END FUNCTION EquidistancePoint_Triangle
 END INTERFACE
 
+INTERFACE
+  MODULE RECURSIVE PURE SUBROUTINE EquidistancePoint_Triangle_(order, ans, &
+                                                              nrow, ncol, xij)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    !! returned coordinates in $x_{iJ}$ format
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+    !! number of rows and cols
+    REAL(DFP), OPTIONAL, INTENT(IN) :: xij(:, :)
+    !! coordinates of point 1 and point 2 in $x_{iJ}$ format
+    !! number of rows = nsd
+    !! number of cols = 3
+  END SUBROUTINE EquidistancePoint_Triangle_
+END INTERFACE
+
 !----------------------------------------------------------------------------
 !                                                BlythPozrikidis_Triangle
 !----------------------------------------------------------------------------
@@ -301,9 +348,8 @@ END INTERFACE
 ! doi:10.1093/imamat/hxh077.
 
 INTERFACE
-  MODULE FUNCTION BlythPozrikidis_Triangle(order, ipType, layout, xij,  &
-  & alpha, beta, lambda) &
-    & RESULT(ans)
+  MODULE FUNCTION BlythPozrikidis_Triangle(order, ipType, layout, xij, &
+                                           alpha, beta, lambda) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
     !! order
     INTEGER(I4B), INTENT(IN) :: ipType
@@ -326,6 +372,37 @@ INTERFACE
 END INTERFACE
 
 !----------------------------------------------------------------------------
+!                                                 BlythPozrikidis_Triangle_
+!----------------------------------------------------------------------------
+
+INTERFACE
+ MODULE SUBROUTINE BlythPozrikidis_Triangle_(order, ipType, ans, nrow, ncol, &
+                                             layout, xij, alpha, beta, lambda)
+
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order
+    INTEGER(I4B), INTENT(IN) :: ipType
+    !! Equidistance, GaussLegendre, GaussLegendreLobatto, GaussChebyshev,
+    !! GaussChebyshevLobatto, GaussJacobi, GaussJacobiLobatto
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    !!
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+    !! number of rows and columns written in ans
+    REAL(DFP), OPTIONAL, INTENT(IN) :: xij(:, :)
+    !! xij coordinates
+    CHARACTER(*), INTENT(IN) :: layout
+    !! local node numbering layout
+    !! only layout = "VEFC" is allowed
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
+    !! Jacobi polynomial parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: beta
+    !! Jacobi polynomial parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: lambda
+    !! Ultraspherical polynomial parameter
+  END SUBROUTINE BlythPozrikidis_Triangle_
+END INTERFACE
+
+!----------------------------------------------------------------------------
 !                                                            Isaac_Triangle
 !----------------------------------------------------------------------------
 
@@ -334,8 +411,8 @@ END INTERFACE
 ! summary: Isaac points on triangle
 
 INTERFACE
-  MODULE FUNCTION Isaac_Triangle(order, ipType, layout, xij,  &
-  & alpha, beta, lambda) &
+  MODULE FUNCTION Isaac_Triangle(order, ipType, layout, xij, &
+   alpha, beta, lambda) &
     & RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
     !! order
@@ -356,6 +433,36 @@ INTERFACE
     REAL(DFP), ALLOCATABLE :: ans(:, :)
     !! xij coordinates
   END FUNCTION Isaac_Triangle
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                            Isaac_Triangle
+!----------------------------------------------------------------------------
+
+INTERFACE
+  MODULE SUBROUTINE Isaac_Triangle_(order, ipType, ans, nrow, ncol, &
+                                    layout, xij, alpha, beta, lambda)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order
+    INTEGER(I4B), INTENT(IN) :: ipType
+    !! Equidistance, GaussLegendre, GaussLegendreLobatto, GaussChebyshev,
+    !! GaussChebyshevLobatto, GaussJacobi, GaussJacobiLobatto
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    !!
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+    !! number of rows and columns written in ans
+    REAL(DFP), OPTIONAL, INTENT(IN) :: xij(:, :)
+    !! xij coordinates
+    CHARACTER(*), INTENT(IN) :: layout
+    !! local node numbering layout
+    !! only layout = "VEFC" is allowed
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
+    !! Jacobi polynomial parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: beta
+    !! Jacobi polynomial parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: lambda
+    !! Ultraspherical polynomial parameter
+  END SUBROUTINE Isaac_Triangle_
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -391,7 +498,7 @@ END INTERFACE
 
 INTERFACE
   MODULE FUNCTION InterpolationPoint_Triangle(order, ipType, &
-    & layout, xij, alpha, beta, lambda) RESULT(ans)
+                                 layout, xij, alpha, beta, lambda) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
     !! order
     INTEGER(I4B), INTENT(IN) :: ipType
@@ -409,6 +516,34 @@ INTERFACE
     REAL(DFP), ALLOCATABLE :: ans(:, :)
     !! xij coordinates
   END FUNCTION InterpolationPoint_Triangle
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                               InterpolationPoint_Triangle_
+!----------------------------------------------------------------------------
+
+INTERFACE
+  MODULE SUBROUTINE InterpolationPoint_Triangle_(order, ipType, ans, nrow, &
+                                       ncol, layout, xij, alpha, beta, lambda)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order
+    INTEGER(I4B), INTENT(IN) :: ipType
+    !! interpolation point type
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    !! xij coordinates
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+    !! number of rows and columns written in ans
+    REAL(DFP), OPTIONAL, INTENT(IN) :: xij(:, :)
+    !! Coord of domain in xij format
+    CHARACTER(*), INTENT(IN) :: layout
+    !! local node numbering layout, always VEFC
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
+    !! Jacobi polynomial parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: beta
+    !! Jacobi polynomial parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: lambda
+    !! Ultraspherical polynomial parameter
+  END SUBROUTINE InterpolationPoint_Triangle_
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -1484,7 +1619,7 @@ END INTERFACE HeirarchicalBasisGradient_Triangle
 
 INTERFACE HeirarchicalBasisGradient_Triangle_
  MODULE SUBROUTINE HeirarchicalBasisGradient_Triangle1_(order, pe1, pe2, pe3,&
-          & xij, refTriangle, ans, tsize1, tsize2, tsize3)
+                              & xij, refTriangle, ans, tsize1, tsize2, tsize3)
     INTEGER(I4B), INTENT(IN) :: order
     !! Order of approximation inside the triangle (i.e., cell)
     !! it should be greater than 2 for cell bubble to exist
