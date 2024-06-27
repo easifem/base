@@ -17,11 +17,18 @@
 
 MODULE RecursiveNodesUtility
 USE GlobalData
+
 IMPLICIT NONE
+
 PRIVATE
+
 PUBLIC :: RecursiveNode1D
 PUBLIC :: RecursiveNode2D
 PUBLIC :: RecursiveNode3D
+
+PUBLIC :: RecursiveNode1D_
+PUBLIC :: RecursiveNode2D_
+PUBLIC :: RecursiveNode3D_
 
 !----------------------------------------------------------------------------
 !                                                           RecursiveNode1D
@@ -32,8 +39,8 @@ PUBLIC :: RecursiveNode3D
 ! summary: RecursiveNodes in 1D
 
 INTERFACE
-  MODULE FUNCTION RecursiveNode1D(order, ipType, &
-    & domain, alpha, beta, lambda) RESULT(ans)
+  MODULE FUNCTION RecursiveNode1D(order, ipType, domain, alpha, beta, &
+                                  lambda) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
       !! order >= 0
     INTEGER(I4B), INTENT(IN) :: ipType
@@ -63,6 +70,43 @@ INTERFACE
 END INTERFACE
 
 !----------------------------------------------------------------------------
+!                                                           RecursiveNode1D_
+!----------------------------------------------------------------------------
+
+INTERFACE
+  MODULE SUBROUTINE RecursiveNode1D_(order, ipType, domain, alpha, beta, &
+                                     lambda, ans, nrow, ncol)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order >= 0
+    INTEGER(I4B), INTENT(IN) :: ipType
+    !! interpolation point type
+    !! Equidistance
+    !! LobattoGaussJacobi
+    !! LobattoGaussChebyshev
+    !! LobattoGaussGegenbauer
+    !! GaussJacobi
+    !! GaussChebyshev
+    !! GaussGegenbauer
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    !! barycentric coordinates, in xiJ format
+    !! size(ans,1) = 2 corresponding to b0 and b1
+    !! size(ans,2) total number of points
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+    !! number of rows and columns of ans
+    CHARACTER(*), OPTIONAL, INTENT(IN) :: domain
+    !! unit (0,1)
+    !! biunit (-1, 1)
+    !! equilateral
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
+    !! Jacobi polynomial parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: beta
+    !! Jacobi polynomial parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: lambda
+    !! Ultraspherical polynomial parameter
+  END SUBROUTINE RecursiveNode1D_
+END INTERFACE
+
+!----------------------------------------------------------------------------
 !                                                            RecursiveNode2D
 !----------------------------------------------------------------------------
 
@@ -71,15 +115,8 @@ END INTERFACE
 ! summary: RecursiveNodes in 2D
 
 INTERFACE
-  MODULE FUNCTION RecursiveNode2D( &
-    & order, &
-    & ipType, &
-    & domain, &
-    & alpha, &
-    & beta, &
-    & lambda  &
-    & ) &
-    & RESULT(ans)
+  MODULE FUNCTION RecursiveNode2D(order, ipType, domain, alpha, beta, &
+                                  lambda) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
       !! order >= 0
     INTEGER(I4B), INTENT(IN) :: ipType
@@ -109,6 +146,43 @@ INTERFACE
 END INTERFACE
 
 !----------------------------------------------------------------------------
+!                                                          RecursiveNode2D_
+!----------------------------------------------------------------------------
+
+INTERFACE
+  MODULE SUBROUTINE RecursiveNode2D_(order, ipType, ans, nrow, ncol, &
+                                     domain, alpha, beta, lambda)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order >= 0
+    INTEGER(I4B), INTENT(IN) :: ipType
+    !! interpolation point type
+    !! Equidistance
+    !! LobattoGaussJacobi
+    !! LobattoGaussChebyshev
+    !! LobattoGaussGegenbauer
+    !! GaussJacobi
+    !! GaussChebyshev
+    !! GaussGegenbauer
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    !! barycentric coordinates, in xiJ format
+    !! size(ans,1) = 3 corresponding to b0, b1, b2
+    !! size(ans,2) total number of points
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+    !! number of rows and columns of ans
+    CHARACTER(*), OPTIONAL, INTENT(IN) :: domain
+    !! unit
+    !! Biunit
+    !! Equilateral
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
+    !! Jacobi polynomial parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: beta
+    !! Jacobi polynomial parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: lambda
+    !! Ultraspherical polynomial parameter
+  END SUBROUTINE RecursiveNode2D_
+END INTERFACE
+
+!----------------------------------------------------------------------------
 !                                                            RecursiveNode3D
 !----------------------------------------------------------------------------
 
@@ -117,14 +191,8 @@ END INTERFACE
 ! summary: Recursive nodes in 3D
 
 INTERFACE
-  MODULE FUNCTION RecursiveNode3D( &
-    & order, &
-    & ipType, &
-    & domain, &
-    & alpha, &
-    & beta, &
-    & lambda  &
-    & ) RESULT(ans)
+  MODULE FUNCTION RecursiveNode3D(order, ipType, domain, alpha, beta, &
+                                  lambda) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
       !! order >= 0
     INTEGER(I4B), INTENT(IN) :: ipType
@@ -154,6 +222,47 @@ INTERFACE
 END INTERFACE
 
 !----------------------------------------------------------------------------
+!                                                          RecursiveNode3D_
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2024-06-26
+! summary:  Recursive node 3D without allocation
+
+INTERFACE
+  MODULE SUBROUTINE RecursiveNode3D_(order, ipType, ans, nrow, ncol, &
+                                     domain, alpha, beta, lambda)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order >= 0
+    INTEGER(I4B), INTENT(IN) :: ipType
+    !! interpolation point type
+    !! Equidistance
+    !! LobattoGaussJacobi
+    !! LobattoGaussChebyshev
+    !! LobattoGaussGegenbauer
+    !! GaussJacobi
+    !! GaussChebyshev
+    !! GaussGegenbauer
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    !! barycentric coordinates, in xiJ format
+    !! size(ans,1) = 4 corresponding to b0, b1, b2, b3
+    !! size(ans,2) total number of points
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+    !! number of rows and columns of ans
+    CHARACTER(*), OPTIONAL, INTENT(IN) :: domain
+    !! unit
+    !! Biunit
+    !! Equilateral
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
+    !! Jacobi polynomial parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: beta
+    !! Jacobi polynomial parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: lambda
+    !! Ultraspherical polynomial parameter
+  END SUBROUTINE RecursiveNode3D_
+END INTERFACE
+
+!----------------------------------------------------------------------------
 !                                                                   ToUnit
 !----------------------------------------------------------------------------
 
@@ -166,6 +275,19 @@ INTERFACE
 END INTERFACE
 
 !----------------------------------------------------------------------------
+!                                                                   ToUnit
+!----------------------------------------------------------------------------
+
+INTERFACE
+  MODULE PURE SUBROUTINE ToUnit_(x, domain, ans, nrow, ncol)
+    REAL(DFP), INTENT(IN) :: x(:, :)
+    CHARACTER(*), INTENT(IN) :: domain
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+  END SUBROUTINE ToUnit_
+END INTERFACE
+
+!----------------------------------------------------------------------------
 !                                                                    ToUnit
 !----------------------------------------------------------------------------
 
@@ -175,6 +297,19 @@ INTERFACE
     CHARACTER(*), INTENT(IN) :: domain
     REAL(DFP), ALLOCATABLE :: ans(:, :)
   END FUNCTION FromUnit
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                                    ToUnit
+!----------------------------------------------------------------------------
+
+INTERFACE
+  MODULE PURE SUBROUTINE FromUnit_(x, domain, ans, nrow, ncol)
+    REAL(DFP), INTENT(IN) :: x(:, :)
+    CHARACTER(*), INTENT(IN) :: domain
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+  END SUBROUTINE FromUnit_
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -210,6 +345,20 @@ INTERFACE
     CHARACTER(*), INTENT(IN) :: to
     REAL(DFP), ALLOCATABLE :: ans(:, :)
   END FUNCTION Coord_Map
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                                 Coord_Map
+!----------------------------------------------------------------------------
+
+INTERFACE
+  MODULE PURE SUBROUTINE Coord_Map_(x, from, to, ans, nrow, ncol)
+    REAL(DFP), INTENT(IN) :: x(:, :)
+    CHARACTER(*), INTENT(IN) :: from
+    CHARACTER(*), INTENT(IN) :: to
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+  END SUBROUTINE Coord_Map_
 END INTERFACE
 
 END MODULE RecursiveNodesUtility
