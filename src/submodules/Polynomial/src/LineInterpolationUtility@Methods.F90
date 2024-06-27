@@ -18,9 +18,38 @@
 SUBMODULE(LineInterpolationUtility) Methods
 USE BaseType, ONLY: ipopt => TypeInterpolationOpt, &
                     qpopt => TypeQuadratureOpt, &
-                    polyopt => TypePolynomialOpt
+                    polyopt => TypePolynomialOpt, &
+                    elmopt => TypeElemNameOpt
 
 USE GlobalData, ONLY: stderr
+
+USE StringUtility, ONLY: UpperCase
+
+USE MappingUtility, ONLY: FromBiunitLine2Segment_, &
+                          FromBiunitLine2Segment, &
+                          FromUnitLine2BiUnitLine
+
+USE OrthogonalPolynomialUtility, ONLY: GradientEvalAllOrthopol, &
+                                       EvalAllOrthopol
+
+USE InputUtility, ONLY: Input
+
+USE LagrangePolynomialUtility, ONLY: LagrangeVandermonde, &
+                                     LagrangeCoeff
+
+USE ErrorHandling, ONLY: ErrorMsg
+
+USE LegendrePolynomialUtility, ONLY: LegendreQuadrature
+
+USE Chebyshev1PolynomialUtility, ONLY: Chebyshev1Quadrature
+
+USE JacobiPolynomialUtility, ONLY: JacobiQuadrature
+
+USE UltrasphericalPolynomialUtility, ONLY: UltrasphericalQuadrature
+
+USE Lapack_Method, ONLY: GetLU, LUSolve, GetInvMat
+
+USE SortUtility, ONLY: HeapSort
 
 IMPLICIT NONE
 CONTAINS
@@ -383,41 +412,41 @@ CASE (ipopt%Equidistance)
   CALL handle_increasing
 
 CASE (ipopt%GaussLegendre)
-  CALL LegendreQuadrature(n=ncol, pt=temp(1:ncol), quadType=Gauss)
+  CALL LegendreQuadrature(n=ncol, pt=temp(1:ncol), quadType=ipopt%Gauss)
   CALL handle_non_equidistance
 
 CASE (ipopt%GaussChebyshev)
-  CALL Chebyshev1Quadrature(n=ncol, pt=temp(1:ncol), quadType=Gauss)
+  CALL Chebyshev1Quadrature(n=ncol, pt=temp(1:ncol), quadType=ipopt%Gauss)
   CALL handle_non_equidistance
 
 CASE (ipopt%GaussLegendreLobatto)
-  CALL LegendreQuadrature(n=ncol, pt=temp(1:ncol), quadType=GaussLobatto)
+ CALL LegendreQuadrature(n=ncol, pt=temp(1:ncol), quadType=ipopt%GaussLobatto)
   CALL handle_vefc
   CALL handle_non_equidistance
 
 CASE (ipopt%GaussChebyshevLobatto)
-  CALL Chebyshev1Quadrature(n=ncol, pt=temp(1:ncol), quadType=GaussLobatto)
+  CALL Chebyshev1Quadrature(n=ncol, pt=temp(1:ncol), quadType=ipopt%GaussLobatto)
   CALL handle_vefc
   CALL handle_non_equidistance
 
 CASE (ipopt%GaussJacobi)
-  CALL JacobiQuadrature(n=ncol, pt=temp(1:ncol), quadType=Gauss, &
+  CALL JacobiQuadrature(n=ncol, pt=temp(1:ncol), quadType=ipopt%Gauss, &
                         alpha=alpha, beta=beta)
   CALL handle_non_equidistance
 
 CASE (ipopt%GaussJacobiLobatto)
-  CALL JacobiQuadrature(n=ncol, pt=temp(1:ncol), quadType=GaussLobatto, &
+ CALL JacobiQuadrature(n=ncol, pt=temp(1:ncol), quadType=ipopt%GaussLobatto, &
                         alpha=alpha, beta=beta)
   CALL handle_vefc
   CALL handle_non_equidistance
 
 CASE (ipopt%GaussUltraspherical)
-  CALL UltrasphericalQuadrature(n=ncol, pt=temp(1:ncol), quadType=Gauss, &
+CALL UltrasphericalQuadrature(n=ncol, pt=temp(1:ncol), quadType=ipopt%Gauss, &
                                 lambda=lambda)
   CALL handle_non_equidistance
 
 CASE (ipopt%GaussUltrasphericalLobatto)
-  CALL UltrasphericalQuadrature(n=ncol, pt=temp(1:ncol), quadType=GaussLobatto, &
+  CALL UltrasphericalQuadrature(n=ncol, pt=temp(1:ncol), quadType=ipopt%GaussLobatto, &
                                 lambda=lambda)
 
   CALL handle_vefc
@@ -515,44 +544,45 @@ SELECT CASE (ipType)
 
 CASE (ipopt%Equidistance)
   CALL EquidistancePoint_Line_(xij=xij, order=order, tsize=tsize, ans=ans)
-  IF (layout(1:2) .EQ. "IN") CALL HeapSort(ans)
+
+  IF (layout(1:2) .EQ. "IN") CALL HeapSort(ans(1:tsize))
 
 CASE (ipopt%GaussLegendre)
-  CALL LegendreQuadrature(n=tsize, pt=ans, quadType=Gauss)
+  CALL LegendreQuadrature(n=tsize, pt=ans, quadType=ipopt%Gauss)
   CALL handle_non_equidistance
 
 CASE (ipopt%GaussChebyshev)
-  CALL Chebyshev1Quadrature(n=tsize, pt=ans, quadType=Gauss)
+  CALL Chebyshev1Quadrature(n=tsize, pt=ans, quadType=ipopt%Gauss)
   CALL handle_non_equidistance
 
 CASE (ipopt%GaussJacobi)
-  CALL JacobiQuadrature(n=tsize, pt=ans, quadType=Gauss, alpha=alpha, &
+  CALL JacobiQuadrature(n=tsize, pt=ans, quadType=ipopt%Gauss, alpha=alpha, &
                         beta=beta)
   CALL handle_non_equidistance
 
 CASE (ipopt%GaussUltraspherical)
-  CALL UltrasphericalQuadrature(n=tsize, pt=ans, quadType=Gauss, &
+  CALL UltrasphericalQuadrature(n=tsize, pt=ans, quadType=ipopt%Gauss, &
                                 lambda=lambda)
   CALL handle_non_equidistance
 
 CASE (ipopt%GaussLegendreLobatto)
-  CALL LegendreQuadrature(n=tsize, pt=ans, quadType=GaussLobatto)
+  CALL LegendreQuadrature(n=tsize, pt=ans, quadType=ipopt%GaussLobatto)
   CALL handle_vefc
   CALL handle_non_equidistance
 
 CASE (ipopt%GaussChebyshevLobatto)
-  CALL Chebyshev1Quadrature(n=tsize, pt=ans, quadType=GaussLobatto)
+  CALL Chebyshev1Quadrature(n=tsize, pt=ans, quadType=ipopt%GaussLobatto)
   CALL handle_vefc
   CALL handle_non_equidistance
 
 CASE (ipopt%GaussJacobiLobatto)
-  CALL JacobiQuadrature(n=tsize, pt=ans, quadType=GaussLobatto, alpha=alpha, &
+  CALL JacobiQuadrature(n=tsize, pt=ans, quadType=ipopt%GaussLobatto, alpha=alpha, &
                         beta=beta)
   CALL handle_vefc
   CALL handle_non_equidistance
 
 CASE (ipopt%GaussUltrasphericalLobatto)
-  CALL UltrasphericalQuadrature(n=tsize, pt=ans, quadType=GaussLobatto, &
+ CALL UltrasphericalQuadrature(n=tsize, pt=ans, quadType=ipopt%GaussLobatto, &
                                 lambda=lambda)
   CALL handle_vefc
   CALL handle_non_equidistance
@@ -637,8 +667,8 @@ MODULE PROCEDURE LagrangeCoeff_Line1
 REAL(DFP) :: v(SIZE(xij, 2), SIZE(xij, 2))
 INTEGER(I4B), DIMENSION(SIZE(xij, 2)) :: ipiv
 INTEGER(I4B) :: info
-v = LagrangeVandermonde(order=order, xij=xij, elemType=Line2)
-CALL getLU(A=v, IPIV=ipiv, info=info)
+v = LagrangeVandermonde(order=order, xij=xij, elemType=elmopt%Line)
+CALL GetLU(A=v, IPIV=ipiv, info=info)
 ans = 0.0_DFP; ans(i) = 1.0_DFP
 CALL LUSolve(A=v, B=ans, IPIV=ipiv, info=info)
 END PROCEDURE LagrangeCoeff_Line1
@@ -652,7 +682,7 @@ REAL(DFP) :: vtemp(SIZE(v, 1), SIZE(v, 2))
 INTEGER(I4B), DIMENSION(SIZE(v, 1)) :: ipiv
 INTEGER(I4B) :: info
 vtemp = v; ipiv = 0
-CALL getLU(A=vtemp, IPIV=ipiv, info=info)
+CALL GetLU(A=vtemp, IPIV=ipiv, info=info)
 ans = 0.0_DFP; ans(i) = 1.0_DFP
 CALL LUSolve(A=vtemp, B=ans, IPIV=ipiv, info=info)
 END PROCEDURE LagrangeCoeff_Line2
@@ -672,7 +702,7 @@ END PROCEDURE LagrangeCoeff_Line3
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE LagrangeCoeff_Line4
-ans = LagrangeVandermonde(order=order, xij=xij, elemType=Line2)
+ans = LagrangeVandermonde(order=order, xij=xij, elemType=elmopt%Line)
 CALL GetInvMat(ans)
 END PROCEDURE LagrangeCoeff_Line4
 
@@ -843,7 +873,7 @@ IF (astr%chars() .EQ. "UNIT") THEN
   RETURN
 END IF
 
-basisType0 = input(default=Monomial, option=basisType)
+basisType0 = input(default=polyopt%Monomial, option=basisType)
 SELECT CASE (basisType0)
 CASE (polyopt%Monomial)
   ans(1) = 1.0_DFP
@@ -852,7 +882,7 @@ CASE (polyopt%Monomial)
   END DO
 CASE DEFAULT
 
-  IF (basisType0 .EQ. Jacobi) THEN
+  IF (basisType0 .EQ. polyopt%Jacobi) THEN
     IF (.NOT. PRESENT(alpha) .OR. .NOT. PRESENT(beta)) THEN
       CALL Errormsg(&
         & msg="alpha and beta should be present for basisType=Jacobi", &
@@ -864,7 +894,7 @@ CASE DEFAULT
     END IF
   END IF
 
-  IF (basisType0 .EQ. Ultraspherical) THEN
+  IF (basisType0 .EQ. polyopt%Ultraspherical) THEN
     IF (.NOT. PRESENT(lambda)) THEN
       CALL Errormsg(&
         & msg="lambda should be present for basisType=Ultraspherical", &
@@ -906,7 +936,7 @@ IF (astr%chars() .EQ. "UNIT") THEN
   RETURN
 END IF
 
-basisType0 = input(default=Monomial, option=basisType)
+basisType0 = input(default=polyopt%Monomial, option=basisType)
 SELECT CASE (basisType0)
 CASE (polyopt%Monomial)
   ans(1) = 0.0_DFP
@@ -915,7 +945,7 @@ CASE (polyopt%Monomial)
   END DO
 CASE DEFAULT
 
-  IF (basisType0 .EQ. Jacobi) THEN
+  IF (basisType0 .EQ. polyopt%Jacobi) THEN
     IF (.NOT. PRESENT(alpha) .OR. .NOT. PRESENT(beta)) THEN
       CALL Errormsg(&
         & msg="alpha and beta should be present for basisType=Jacobi", &
@@ -927,7 +957,7 @@ CASE DEFAULT
     END IF
   END IF
 
-  IF (basisType0 .EQ. Ultraspherical) THEN
+  IF (basisType0 .EQ. polyopt%Ultraspherical) THEN
     IF (.NOT. PRESENT(lambda)) THEN
       CALL Errormsg(&
         & msg="lambda should be present for basisType=Ultraspherical", &
@@ -969,7 +999,7 @@ IF (astr%chars() .EQ. "UNIT") THEN
   RETURN
 END IF
 
-basisType0 = input(default=Monomial, option=basisType)
+basisType0 = input(default=polyopt%Monomial, option=basisType)
 SELECT CASE (basisType0)
 CASE (polyopt%Monomial)
   ans(:, 1) = 1.0_DFP
@@ -978,7 +1008,7 @@ CASE (polyopt%Monomial)
   END DO
 CASE DEFAULT
 
-  IF (basisType0 .EQ. Jacobi) THEN
+  IF (basisType0 .EQ. polyopt%Jacobi) THEN
     IF (.NOT. PRESENT(alpha) .OR. .NOT. PRESENT(beta)) THEN
       CALL Errormsg(&
         & msg="alpha and beta should be present for basisType=Jacobi", &
@@ -990,7 +1020,7 @@ CASE DEFAULT
     END IF
   END IF
 
-  IF (basisType0 .EQ. Ultraspherical) THEN
+  IF (basisType0 .EQ. polyopt%Ultraspherical) THEN
     IF (.NOT. PRESENT(lambda)) THEN
       CALL Errormsg(&
         & msg="lambda should be present for basisType=Ultraspherical", &
@@ -1032,7 +1062,7 @@ IF (astr%chars() .EQ. "UNIT") THEN
   RETURN
 END IF
 
-basisType0 = input(default=Monomial, option=basisType)
+basisType0 = input(default=polyopt%Monomial, option=basisType)
 SELECT CASE (basisType0)
 CASE (polyopt%Monomial)
   ans(:, 1) = 0.0_DFP
@@ -1041,7 +1071,7 @@ CASE (polyopt%Monomial)
   END DO
 CASE DEFAULT
 
-  IF (basisType0 .EQ. Jacobi) THEN
+  IF (basisType0 .EQ. polyopt%Jacobi) THEN
     IF (.NOT. PRESENT(alpha) .OR. .NOT. PRESENT(beta)) THEN
       CALL Errormsg(&
         & msg="alpha and beta should be present for basisType=Jacobi", &
@@ -1053,7 +1083,7 @@ CASE DEFAULT
     END IF
   END IF
 
-  IF (basisType0 .EQ. Ultraspherical) THEN
+  IF (basisType0 .EQ. polyopt%Ultraspherical) THEN
     IF (.NOT. PRESENT(lambda)) THEN
       CALL Errormsg(&
         & msg="lambda should be present for basisType=Ultraspherical", &
@@ -1128,20 +1158,20 @@ REAL(DFP) :: pt(nips(1)), wt(nips(1))
 REAL(DFP) :: t1
 LOGICAL(LGT) :: changeLayout
 
-IF (ANY([GaussJacobi, GaussJacobiLobatto] .EQ. quadType)) THEN
+IF (ANY([ipopt%GaussJacobi, ipopt%GaussJacobiLobatto] .EQ. quadType)) THEN
   IF (.NOT. PRESENT(alpha) .OR. .NOT. PRESENT(beta)) THEN
     CALL ErrorMsg(&
-      & msg="alpha and beta should be present for quadType=GaussJacobi", &
+    & msg="alpha and beta should be present for quadType=ipopt%GaussJacobi", &
       & file=__FILE__, &
       & routine="QuadraturePoint_Line3", &
       & line=__LINE__, &
       & unitno=stderr)
   END IF
   RETURN
-ELSEIF (ANY([GaussJacobi, GaussJacobiLobatto] .EQ. quadType)) THEN
+ELSEIF (ANY([ipopt%GaussJacobi, ipopt%GaussJacobiLobatto] .EQ. quadType)) THEN
   IF (.NOT. PRESENT(lambda)) THEN
     CALL ErrorMsg(&
-      & msg="lambda should be present for quadType=GaussUltraspherical", &
+    & msg="lambda should be present for quadType=ipopt%GaussUltraspherical", &
       & file=__FILE__, &
       & routine="QuadraturePoint_Line3", &
       & line=__LINE__, &
@@ -1158,69 +1188,70 @@ END IF
 
 astr = TRIM(UpperCase(layout))
 np = nips(1)
-CALL Reallocate(ans, nsd + 1_I4B, np)
+! CALL Reallocate(ans, nsd + 1_I4B, np)
+ALLOCATE (ans(nsd + 1_I4B, np))
 changeLayout = .FALSE.
 
 SELECT CASE (quadType)
 
 CASE (ipopt%GaussLegendre)
-  CALL LegendreQuadrature(n=np, pt=pt, wt=wt, quadType=Gauss)
+  CALL LegendreQuadrature(n=np, pt=pt, wt=wt, quadType=ipopt%Gauss)
 
 CASE (ipopt%GaussLegendreRadauLeft)
-  CALL LegendreQuadrature(n=np, pt=pt, wt=wt, quadType=GaussRadauLeft)
+  CALL LegendreQuadrature(n=np, pt=pt, wt=wt, quadType=ipopt%GaussRadauLeft)
 
 CASE (ipopt%GaussLegendreRadauRight)
-  CALL LegendreQuadrature(n=np, pt=pt, wt=wt, quadType=GaussRadauRight)
+  CALL LegendreQuadrature(n=np, pt=pt, wt=wt, quadType=ipopt%GaussRadauRight)
 
 CASE (ipopt%GaussLegendreLobatto)
-  CALL LegendreQuadrature(n=np, pt=pt, wt=wt, quadType=GaussLobatto)
+  CALL LegendreQuadrature(n=np, pt=pt, wt=wt, quadType=ipopt%GaussLobatto)
   IF (layout .EQ. "VEFC") changeLayout = .TRUE.
 
 CASE (ipopt%GaussChebyshev)
-  CALL Chebyshev1Quadrature(n=np, pt=pt, wt=wt, quadType=Gauss)
+  CALL Chebyshev1Quadrature(n=np, pt=pt, wt=wt, quadType=ipopt%Gauss)
 
 CASE (ipopt%GaussChebyshevRadauLeft)
-  CALL Chebyshev1Quadrature(n=np, pt=pt, wt=wt, quadType=GaussRadauLeft)
+  CALL Chebyshev1Quadrature(n=np, pt=pt, wt=wt, quadType=ipopt%GaussRadauLeft)
 
 CASE (ipopt%GaussChebyshevRadauRight)
-  CALL Chebyshev1Quadrature(n=np, pt=pt, wt=wt, quadType=GaussRadauRight)
+ CALL Chebyshev1Quadrature(n=np, pt=pt, wt=wt, quadType=ipopt%GaussRadauRight)
 
 CASE (ipopt%GaussChebyshevLobatto)
-  CALL Chebyshev1Quadrature(n=np, pt=pt, wt=wt, quadType=GaussLobatto)
+  CALL Chebyshev1Quadrature(n=np, pt=pt, wt=wt, quadType=ipopt%GaussLobatto)
   IF (layout .EQ. "VEFC") changeLayout = .TRUE.
 
 CASE (ipopt%GaussJacobi)
-  CALL JacobiQuadrature(n=np, pt=pt, wt=wt, quadType=Gauss, &
+  CALL JacobiQuadrature(n=np, pt=pt, wt=wt, quadType=ipopt%Gauss, &
                         alpha=alpha, beta=beta)
 
 CASE (ipopt%GaussJacobiRadauLeft)
-  CALL JacobiQuadrature(n=np, pt=pt, wt=wt, quadType=GaussRadauLeft, &
+  CALL JacobiQuadrature(n=np, pt=pt, wt=wt, quadType=ipopt%GaussRadauLeft, &
                         alpha=alpha, beta=beta)
 
 CASE (ipopt%GaussJacobiRadauRight)
-  CALL JacobiQuadrature(n=np, pt=pt, wt=wt, quadType=GaussRadauRight, &
+  CALL JacobiQuadrature(n=np, pt=pt, wt=wt, quadType=ipopt%GaussRadauRight, &
                         alpha=alpha, beta=beta)
 
 CASE (ipopt%GaussJacobiLobatto)
-  CALL JacobiQuadrature(n=np, pt=pt, wt=wt, quadType=GaussLobatto, &
+  CALL JacobiQuadrature(n=np, pt=pt, wt=wt, quadType=ipopt%GaussLobatto, &
                         alpha=alpha, beta=beta)
   IF (layout .EQ. "VEFC") changeLayout = .TRUE.
 
 CASE (ipopt%GaussUltraspherical)
-  CALL UltrasphericalQuadrature(n=np, pt=pt, wt=wt, quadType=Gauss, &
+  CALL UltrasphericalQuadrature(n=np, pt=pt, wt=wt, quadType=ipopt%Gauss, &
                                 lambda=lambda)
 
 CASE (ipopt%GaussUltrasphericalRadauLeft)
   CALL UltrasphericalQuadrature(n=np, pt=pt, wt=wt, &
-                                quadType=GaussRadauLeft, lambda=lambda)
+                                quadType=ipopt%GaussRadauLeft, lambda=lambda)
 
 CASE (ipopt%GaussUltrasphericalRadauRight)
   CALL UltrasphericalQuadrature(n=np, pt=pt, wt=wt, &
-                                quadType=GaussRadauRight, lambda=lambda)
+                                quadType=ipopt%GaussRadauRight, lambda=lambda)
 
 CASE (ipopt%GaussUltrasphericalLobatto)
   CALL UltrasphericalQuadrature(n=np, pt=pt, wt=wt, &
-                                quadType=GaussLobatto, lambda=lambda)
+                                quadType=ipopt%GaussLobatto, lambda=lambda)
   IF (layout .EQ. "VEFC") changeLayout = .TRUE.
 
 CASE DEFAULT
@@ -1324,12 +1355,12 @@ CASE ("UNIT")
   ans = EvalAllOrthopol( &
     & n=order, &
     & x=FromUnitLine2BiUnitLine(xin=xij(1, :)), &
-    & orthopol=Lobatto)
+    & orthopol=polyopt%Lobatto)
 CASE ("BIUNIT")
   ans = EvalAllOrthopol( &
     & n=order, &
     & x=xij(1, :), &
-    & orthopol=Lobatto)
+    & orthopol=polyopt%Lobatto)
 CASE DEFAULT
   ans = 0.0_DFP
   CALL Errormsg(&
@@ -1356,13 +1387,13 @@ CASE ("UNIT")
   ans(:, :, 1) = GradientEvalAllOrthopol( &
     & n=order, &
     & x=FromUnitLine2BiUnitLine(xin=xij(1, :)), &
-    & orthopol=Lobatto)
+    & orthopol=polyopt%Lobatto)
   ans = ans * 2.0_DFP
 CASE ("BIUNIT")
   ans(:, :, 1) = GradientEvalAllOrthopol( &
     & n=order, &
     & x=xij(1, :), &
-    & orthopol=Lobatto)
+    & orthopol=polyopt%Lobatto)
 CASE DEFAULT
   ans = 0.0_DFP
   CALL Errormsg(&
@@ -1387,7 +1418,7 @@ TYPE(String) :: astr
 ans = 0.0_DFP
 astr = UpperCase(refLine)
 
-IF (basisType .EQ. Jacobi) THEN
+IF (basisType .EQ. polyopt%Jacobi) THEN
   IF (.NOT. PRESENT(alpha) .OR. .NOT. PRESENT(beta)) THEN
     CALL Errormsg(&
       & msg="alpha and beta should be present for basisType=Jacobi", &
@@ -1399,7 +1430,7 @@ IF (basisType .EQ. Jacobi) THEN
   END IF
 END IF
 
-IF (basisType .EQ. Ultraspherical) THEN
+IF (basisType .EQ. polyopt%Ultraspherical) THEN
   IF (.NOT. PRESENT(lambda)) THEN
     CALL Errormsg(&
       & msg="lambda should be present for basisType=Ultraspherical", &

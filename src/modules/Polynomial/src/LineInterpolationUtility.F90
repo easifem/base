@@ -28,7 +28,9 @@ PUBLIC :: LagrangeInDOF_Line
 PUBLIC :: GetTotalDOF_Line
 PUBLIC :: GetTotalInDOF_Line
 PUBLIC :: EquidistanceInPoint_Line
+PUBLIC :: EquidistanceInPoint_Line_
 PUBLIC :: EquidistancePoint_Line
+PUBLIC :: EquidistancePoint_Line_
 PUBLIC :: InterpolationPoint_Line
 PUBLIC :: InterpolationPoint_Line_
 PUBLIC :: LagrangeCoeff_Line
