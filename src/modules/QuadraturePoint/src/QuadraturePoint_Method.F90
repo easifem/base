@@ -181,12 +181,8 @@ END INTERFACE Initiate
 ! summary: This routine constructs the quadrature points
 
 INTERFACE Initiate
-  MODULE SUBROUTINE quad_initiate5( &
-    & obj, &
-    & refElem, &
-    & order, &
-    & quadratureType,  &
-    & alpha, beta, lambda)
+  MODULE SUBROUTINE quad_initiate5(obj, refElem, order, quadratureType, &
+                                   alpha, beta, lambda)
     TYPE(QuadraturePoint_), INTENT(INOUT) :: obj
     !! Total number of xidimension
     CLASS(ReferenceElement_), INTENT(IN) :: refElem
@@ -223,14 +219,8 @@ END INTERFACE Initiate
 ! summary: This routine initiates the quadrature points
 
 INTERFACE Initiate
-  MODULE SUBROUTINE quad_initiate6( &
-    & obj, &
-    & refElem, &
-    & nips, &
-    & quadratureType, &
-    & alpha, &
-    & beta, &
-    & lambda)
+  MODULE SUBROUTINE quad_initiate6(obj, refElem, nips, quadratureType, &
+                                   alpha, beta, lambda)
     TYPE(QuadraturePoint_), INTENT(INOUT) :: obj
     !! Total number of xidimension
     CLASS(ReferenceElement_), INTENT(IN) :: refElem
@@ -267,16 +257,9 @@ END INTERFACE Initiate
 ! summary: This routine initiates the quadrature points
 
 INTERFACE Initiate
-  MODULE SUBROUTINE quad_initiate7( &
-    & obj, &
-    & refElem, &
-    & p, q, r, &
-    & quadratureType1, &
-    & quadratureType2, &
-    & quadratureType3, &
-    & alpha1, beta1, lambda1,  &
-    & alpha2, beta2, lambda2,  &
-    & alpha3, beta3, lambda3)
+  MODULE SUBROUTINE quad_initiate7(obj, refElem, p, q, r, quadratureType1, &
+           quadratureType2, quadratureType3, alpha1, beta1, lambda1, alpha2, &
+                                   beta2, lambda2, alpha3, beta3, lambda3)
     TYPE(QuadraturePoint_), INTENT(INOUT) :: obj
     !! Total number of xidimension
     CLASS(ReferenceElement_), INTENT(IN) :: refElem
@@ -321,18 +304,9 @@ END INTERFACE Initiate
 ! summary: This routine initiates the quadrature points
 
 INTERFACE Initiate
-  MODULE SUBROUTINE quad_initiate8( &
-    & obj, &
-    & refElem, &
-    & nipsx, &
-    & nipsy, &
-    & nipsz, &
-    & quadratureType1, &
-    & quadratureType2, &
-    & quadratureType3, &
-    & alpha1, beta1, lambda1, &
-    & alpha2, beta2, lambda2, &
-    & alpha3, beta3, lambda3)
+  MODULE SUBROUTINE quad_initiate8(obj, refElem, nipsx, nipsy, nipsz, &
+           quadratureType1, quadratureType2, quadratureType3, alpha1, beta1, &
+                      lambda1, alpha2, beta2, lambda2, alpha3, beta3, lambda3)
     TYPE(QuadraturePoint_), INTENT(INOUT) :: obj
     !! Total number of xidimension
     CLASS(ReferenceElement_), INTENT(IN) :: refElem
