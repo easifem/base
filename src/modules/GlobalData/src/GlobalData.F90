@@ -288,13 +288,19 @@ INTEGER(I4B), PARAMETER :: Heirarchy = HeirarchyPolynomial
 INTEGER(I4B), PARAMETER :: HierarchyPolynomial = 3
 INTEGER(I4B), PARAMETER :: Hierarchy = HierarchyPolynomial
 INTEGER(I4B), PARAMETER :: Jacobi = 4
+INTEGER(I4B), PARAMETER :: JacobiPolynomial = Jacobi
 INTEGER(I4B), PARAMETER :: Ultraspherical = 5
+INTEGER(I4B), PARAMETER :: UltrasphericalPolynomial = Ultraspherical
 INTEGER(I4B), PARAMETER :: Legendre = 6
+INTEGER(I4B), PARAMETER :: LegendrePolynomial = 6
 INTEGER(I4B), PARAMETER :: Chebyshev = 7
+INTEGER(I4B), PARAMETER :: ChebyshevPolynomial = 7
 INTEGER(I4B), PARAMETER :: Lobatto = 8
+INTEGER(I4B), PARAMETER :: LobattoPolynomial = 8
 INTEGER(I4B), PARAMETER :: Orthogonal = 9
 INTEGER(I4B), PARAMETER :: OrthogonalPolynomial = Orthogonal
 INTEGER(I4B), PARAMETER :: UnscaledLobatto = 10
+INTEGER(I4B), PARAMETER :: UnscaledLobattoPolynomial = 10
 INTEGER(I4B), PARAMETER :: HermitPolynomial = 11
 !!
 !! Quadrature types
@@ -332,23 +338,35 @@ INTEGER(I4B), PARAMETER :: GaussUltrasphericalLobatto = 26
 !!
 !! Type of quadrature points
 !!
+INTEGER(I4B), PARAMETER :: EquidistanceQP = Equidistance
 INTEGER(I4B), PARAMETER :: GaussQP = Gauss
 INTEGER(I4B), PARAMETER :: GaussLegendreQP = GaussLegendre
+INTEGER(I4B), PARAMETER :: GaussLegendreLobattoQP = GaussLegendreLobatto
 INTEGER(I4B), PARAMETER :: GaussRadauQP = GaussRadau
 INTEGER(I4B), PARAMETER :: GaussRadauLeftQP = GaussRadauLeft
 INTEGER(I4B), PARAMETER :: GaussRadauRightQP = GaussRadauRight
 INTEGER(I4B), PARAMETER :: GaussLobattoQP = GaussLobatto
 INTEGER(I4B), PARAMETER :: GaussChebyshevQP = GaussChebyshev
-!!
+INTEGER(I4B), PARAMETER :: GaussChebyshevLobattoQP = GaussChebyshevLobatto
+INTEGER(I4B), PARAMETER :: GaussJacobiQP = GaussJacobi
+INTEGER(I4B), PARAMETER :: GaussJacobiLobattoQP = GaussJacobiLobatto
+INTEGER(I4B), PARAMETER :: GaussUltrasphericalQP = GaussUltraspherical
+INTEGER(I4B), PARAMETER :: GaussUltrasphericalLobattoQP = &
+                           GaussUltrasphericalLobatto
 INTEGER(I4B), PARAMETER :: ChenBabuska = 22 !! for triangle nodes
+INTEGER(I4B), PARAMETER :: ChenBabuskaQP = 22 !! for triangle nodes
 INTEGER(I4B), PARAMETER :: Hesthaven = 23 !! for triangle nodes
+INTEGER(I4B), PARAMETER :: HesthavenQP = 23 !! for triangle nodes
 INTEGER(I4B), PARAMETER :: Feket = 24 !! for triangle nodes
-!!
+INTEGER(I4B), PARAMETER :: FeketQP = 24 !! for triangle nodes
 INTEGER(I4B), PARAMETER :: BlythPozLegendre = 25 !! for triangle
+INTEGER(I4B), PARAMETER :: BlythPozLegendreQP = 25 !! for triangle
 INTEGER(I4B), PARAMETER :: BlythPozChebyshev = 26 !! for triangle
-!!
+INTEGER(I4B), PARAMETER :: BlythPozChebyshevQP = 26 !! for triangle
 INTEGER(I4B), PARAMETER :: IsaacLegendre = 27 !! for triangle
+INTEGER(I4B), PARAMETER :: IsaacLegendreQP = 27 !! for triangle
 INTEGER(I4B), PARAMETER :: IsaacChebyshev = 28 !! for triangle
+INTEGER(I4B), PARAMETER :: IsaacChebyshevQP = 28 !! for triangle
 !!
 !! Type of Lagrange Interpolation Points
 !!
