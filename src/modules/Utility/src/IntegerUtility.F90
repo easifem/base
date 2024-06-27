@@ -28,6 +28,7 @@ PUBLIC :: RemoveDuplicates_
 PUBLIC :: Repeat
 PUBLIC :: SIZE
 PUBLIC :: GetMultiIndices
+PUBLIC :: GetMultiIndices_
 PUBLIC :: GetIndex
 PUBLIC :: Get
 PUBLIC :: GetIntersection
@@ -70,7 +71,7 @@ END INTERFACE Size
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 4 Sept 2022
-! summary:         Get Indices
+! summary:  Get Indices
 
 INTERFACE GetMultiIndices
   MODULE RECURSIVE PURE FUNCTION obj_GetMultiIndices1(n, d) RESULT(ans)
@@ -85,7 +86,24 @@ END INTERFACE GetMultiIndices
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 4 Sept 2022
-! summary:         Get Indices upto order n
+! summary:  Get Indices
+
+INTERFACE GetMultiIndices_
+  MODULE RECURSIVE PURE SUBROUTINE obj_GetMultiIndices1_(n, d, ans, &
+                                                         nrow, ncol)
+    INTEGER(I4B), INTENT(IN) :: n, d
+    INTEGER(I4B), INTENT(INOUT) :: ans(:, :)
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+  END SUBROUTINE obj_GetMultiIndices1_
+END INTERFACE GetMultiIndices_
+
+!----------------------------------------------------------------------------
+!                                                         GetIndices@Methods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 4 Sept 2022
+! summary: Get Indices upto order n
 
 INTERFACE GetMultiIndices
   MODULE RECURSIVE PURE FUNCTION obj_GetMultiIndices2(n, d, upto) RESULT(ans)
@@ -94,6 +112,24 @@ INTERFACE GetMultiIndices
     INTEGER(I4B), ALLOCATABLE :: ans(:, :)
   END FUNCTION obj_GetMultiIndices2
 END INTERFACE GetMultiIndices
+
+!----------------------------------------------------------------------------
+!                                                         GetIndices@Methods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 4 Sept 2022
+! summary: Get Indices upto order n
+
+INTERFACE GetMultiIndices_
+  MODULE RECURSIVE PURE SUBROUTINE obj_GetMultiIndices2_(n, d, upto, ans, &
+                                                         nrow, ncol)
+    INTEGER(I4B), INTENT(IN) :: n, d
+    LOGICAL(LGT), INTENT(IN) :: upto
+    INTEGER(I4B), INTENT(INOUT) :: ans(:, :)
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+  END SUBROUTINE obj_GetMultiIndices2_
+END INTERFACE GetMultiIndices_
 
 !----------------------------------------------------------------------------
 !                                             Operator(.in.)@IntegerMethods
