@@ -192,6 +192,10 @@ PUBLIC :: Interval1D_
 PUBLIC :: TypePrecondOpt
 PUBLIC :: TypeConvergenceOpt
 PUBLIC :: TypeSolverNameOpt
+PUBLIC :: TypeElemNameOpt
+PUBLIC :: TypePolynomialOpt
+PUBLIC :: TypeQuadratureOpt
+PUBLIC :: TypeInterpolationOpt
 
 INTEGER(I4B), PARAMETER, PUBLIC :: MAX_RANK_FEVARIABLE = 6
 
@@ -1835,5 +1839,83 @@ END TYPE SolverNameOpt_
 
 TYPE(SolverNameOpt_), PARAMETER :: TypeSolverNameOpt = &
                                    SolverNameOpt_()
+
+!----------------------------------------------------------------------------
+!                                                            TypeElemNameOpt
+!----------------------------------------------------------------------------
+
+TYPE :: ElemNameOpt_
+  INTEGER(I4B) :: point = Point
+  INTEGER(I4B) :: line = Line
+  INTEGER(I4B) :: triangle = Triangle
+  INTEGER(I4B) :: quadrangle = Quadrangle
+  INTEGER(I4B) :: tetrahedron = Tetrahedron
+  INTEGER(I4B) :: hexahedron = Hexahedron
+  INTEGER(I4B) :: prism = Prism
+  INTEGER(I4B) :: pyramid = Pyramid
+END TYPE ElemNameOpt_
+
+TYPE(ElemNameOpt_), PARAMETER :: TypeElemNameOpt = ElemNameOpt_()
+
+!----------------------------------------------------------------------------
+!                                                          TypePolynomialOpt
+!----------------------------------------------------------------------------
+
+TYPE :: PolynomialOpt_
+  INTEGER(I4B) :: monomial = Monomial
+  INTEGER(I4B) :: lagrange = LagrangePolynomial
+  INTEGER(I4B) :: serendipity = SerendipityPolynomial
+  INTEGER(I4B) :: hierarchical = HierarchicalPolynomial
+  INTEGER(I4B) :: orthogonal = OrthogonalPolynomial
+  INTEGER(I4B) :: jacobi = JacobiPolynomial
+  INTEGER(I4B) :: legendre = LegendrePolynomial
+  INTEGER(I4B) :: chebyshev = ChebyshevPolynomial
+  INTEGER(I4B) :: lobatto = LobattoPolynomial
+  INTEGER(I4B) :: unscaledLobatto = UnscaledLobattoPolynomial
+  INTEGER(I4B) :: hermit = HermitPolynomial
+  INTEGER(I4B) :: ultraspherical = UltrasphericalPolynomial
+END TYPE PolynomialOpt_
+
+TYPE(PolynomialOpt_), PARAMETER :: TypePolynomialOpt = PolynomialOpt_()
+
+!----------------------------------------------------------------------------
+!                                                         TypeQuadratureOpt
+!----------------------------------------------------------------------------
+
+TYPE :: QuadratureOpt_
+  INTEGER(I4B) :: equidistance = EquidistanceQP
+  INTEGER(I4B) :: Gauss = GaussQP
+  INTEGER(I4B) :: GaussLegendre = GaussLegendreQP
+  INTEGER(I4B) :: GaussLegendreLobatto = GaussLegendreLobattoQP
+  INTEGER(I4B) :: GaussLegendreRadauLeft = GaussLegendreRadauLeft
+  INTEGER(I4B) :: GaussLegendreRadauRight = GaussLegendreRadauRight
+  INTEGER(I4B) :: GaussRadau = GaussRadauQP
+  INTEGER(I4B) :: GaussRadauLeft = GaussRadauLeftQP
+  INTEGER(I4B) :: GaussRadauRight = GaussRadauRightQP
+  INTEGER(I4B) :: GaussLobatto = GaussLobattoQP
+  INTEGER(I4B) :: GaussChebyshev = GaussChebyshevQP
+  INTEGER(I4B) :: GaussChebyshevLobatto = GaussChebyshevLobattoQP
+  INTEGER(I4B) :: GaussChebyshevRadauLeft = GaussChebyshevRadauLeft
+  INTEGER(I4B) :: GaussChebyshevRadauRight = GaussChebyshevRadauRight
+  INTEGER(I4B) :: GaussJacobi = GaussJacobiQP
+  INTEGER(I4B) :: GaussJacobiLobatto = GaussJacobiLobattoQP
+  INTEGER(I4B) :: GaussJacobiRadauLeft = GaussJacobiRadauLeft
+  INTEGER(I4B) :: GaussJacobiRadauRight = GaussJacobiRadauRight
+  INTEGER(I4B) :: GaussUltraSpherical = GaussUltraSphericalQP
+  INTEGER(I4B) :: GaussUltraSphericalLobatto = GaussUltraSphericalLobattoQP
+  INTEGER(I4B) :: GaussUltraSphericalRadauLeft = GaussUltraSphericalRadauLeft
+  INTEGER(I4B) :: GaussUltraSphericalRadauRight = &
+                  GaussUltraSphericalRadauRight
+  INTEGER(I4B) :: ChenBabuska = ChenBabuskaQP
+  INTEGER(I4B) :: Hesthaven = HesthavenQP
+  INTEGER(I4B) :: Feket = FeketQP
+  INTEGER(I4B) :: BlythPozLegendre = BlythPozLegendreQP
+  INTEGER(I4B) :: BlythPozChebyshev = BlythPozChebyshevQP
+  INTEGER(I4B) :: IsaacLegendre = IsaacLegendreQP
+  INTEGER(I4B) :: IsaacChebyshev = IsaacChebyshevQP
+END TYPE QuadratureOpt_
+
+TYPE(QuadratureOpt_), PARAMETER :: TypeQuadratureOpt = QuadratureOpt_()
+TYPE(QuadratureOpt_), PARAMETER :: TypeInterpolationOpt = QuadratureOpt_()
 
 END MODULE BaseType
