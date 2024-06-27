@@ -16,7 +16,14 @@
 !
 
 SUBMODULE(RecursiveNodesUtility) Methods
-USE BaseMethod
+USE StringUtility, ONLY: UpperCase
+
+USE IntegerUtility, ONLY: GetMultiIndices_, Size
+
+USE PushPopUtility, ONLY: Pop, Push
+
+USE LineInterpolationUtility, ONLY: InterpolationPoint_Line_
+
 CONTAINS
 
 !----------------------------------------------------------------------------
@@ -368,7 +375,7 @@ END SUBROUTINE BarycentericNodeFamily2D
 
 MODULE PROCEDURE Unit2Equilateral
 INTEGER(I4B) :: ii
-!!
+
 IF (d .GT. 1_I4B) THEN
   ! Move the top vertex over the centroid
   DO ii = 1, d - 1
@@ -387,7 +394,7 @@ END PROCEDURE Unit2Equilateral
 
 MODULE PROCEDURE Equilateral2Unit
 INTEGER(I4B) :: ii
-!!
+
 IF (d .GT. 1_I4B) THEN
   x(d, :) = x(d, :) / SQRT((d + 1.0_DFP) / (2.0_DFP * d))
   CALL Equilateral2Unit(d=d - 1, x=x(1:d - 1, :))
@@ -402,24 +409,14 @@ END PROCEDURE Equilateral2Unit
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE ToUnit
-TYPE(String) :: astr
-INTEGER(I4B) :: d
-astr = UpperCase(TRIM(domain))
-SELECT CASE (astr%chars())
-CASE ("UNIT")
-  ans = x
-CASE ("BIUNIT")
-  ans = 0.5_DFP * (x + 1.0_DFP)
-CASE ("BARYCENTRIC")
-  d = SIZE(x, 1)
-  ans = x(1:d - 1, :)
-CASE ("EQUILATERAL")
-  d = SIZE(x, 1)
-  ans = x
-  ans = ans / 2.0_DFP
-  CALL Equilateral2Unit(d=d, x=ans)
-  ans = ans + 1.0_DFP / (d + 1.0_DFP)
-END SELECT
+INTEGER(I4B) :: nrow, ncol
+CHARACTER(2) :: mydomain
+mydomain = UpperCase(domain(1:2))
+nrow = SIZE(x, 1)
+ncol = SIZE(x, 2)
+IF (mydomain .EQ. "BA") nrow = nrow - 1
+ALLOCATE (ans(nrow, ncol))
+CALL ToUnit_(x=x, domain=mydomain, ans=ans, nrow=nrow, ncol=ncol)
 END PROCEDURE ToUnit
 
 !----------------------------------------------------------------------------
@@ -459,23 +456,13 @@ END PROCEDURE ToUnit_
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE FromUnit
-TYPE(String) :: astr
-INTEGER(I4B) :: d
-astr = UpperCase(TRIM(domain))
-SELECT CASE (astr%chars())
-CASE ("UNIT")
-  ans = x
-CASE ("BIUNIT")
-  ans = 2.0_DFP * x - 1
-CASE ("BARYCENTRIC")
-  ans = x.ROWCONCAT. (1.0_DFP - SUM(x, dim=1))
-CASE ("EQUILATERAL")
-  d = SIZE(x, 1)
-  ans = x
-  ans = ans - 1.0_DFP / (d + 1.0_DFP)
-  CALL Unit2Equilateral(d=d, x=ans)
-  ans = ans * 2.0_DFP
-END SELECT
+INTEGER(I4B) :: nrow, ncol
+CHARACTER(2) :: mydomain
+mydomain = UpperCase(domain(1:2))
+nrow = SIZE(x, 1)
+ncol = SIZE(x, 2)
+IF (mydomain .EQ. "BA") nrow = nrow + 1
+CALL FromUnit_(x=x, domain=mydomain, ans=ans, nrow=nrow, ncol=ncol)
 END PROCEDURE FromUnit
 
 !----------------------------------------------------------------------------

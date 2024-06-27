@@ -16,7 +16,7 @@
 !
 
 MODULE RecursiveNodesUtility
-USE GlobalData
+USE GlobalData, ONLY: DFP, I4B, LGT
 
 IMPLICIT NONE
 
@@ -42,30 +42,30 @@ INTERFACE
   MODULE FUNCTION RecursiveNode1D(order, ipType, domain, alpha, beta, &
                                   lambda) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
-      !! order >= 0
+    !! order >= 0
     INTEGER(I4B), INTENT(IN) :: ipType
-      !! interpolation point type
-      !! Equidistance
-      !! LobattoGaussJacobi
-      !! LobattoGaussChebyshev
-      !! LobattoGaussGegenbauer
-      !! GaussJacobi
-      !! GaussChebyshev
-      !! GaussGegenbauer
+    !! interpolation point type
+    !! Equidistance
+    !! LobattoGaussJacobi
+    !! LobattoGaussChebyshev
+    !! LobattoGaussGegenbauer
+    !! GaussJacobi
+    !! GaussChebyshev
+    !! GaussGegenbauer
     REAL(DFP), ALLOCATABLE :: ans(:, :)
-      !! barycentric coordinates, in xiJ format
-      !! size(ans,1) = 2 corresponding to b0 and b1
-      !! size(ans,2) total number of points
+    !! barycentric coordinates, in xiJ format
+    !! size(ans,1) = 2 corresponding to b0 and b1
+    !! size(ans,2) total number of points
     CHARACTER(*), OPTIONAL, INTENT(IN) :: domain
-      !! unit (0,1)
-      !! biunit (-1, 1)
-      !! equilateral
+    !! unit (0,1)
+    !! biunit (-1, 1)
+    !! equilateral
     REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
-      !! Jacobi polynomial parameter
+    !! Jacobi polynomial parameter
     REAL(DFP), OPTIONAL, INTENT(IN) :: beta
-      !! Jacobi polynomial parameter
+    !! Jacobi polynomial parameter
     REAL(DFP), OPTIONAL, INTENT(IN) :: lambda
-      !! Ultraspherical polynomial parameter
+    !! Ultraspherical polynomial parameter
   END FUNCTION RecursiveNode1D
 END INTERFACE
 
@@ -118,30 +118,30 @@ INTERFACE
   MODULE FUNCTION RecursiveNode2D(order, ipType, domain, alpha, beta, &
                                   lambda) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
-      !! order >= 0
+    !! order >= 0
     INTEGER(I4B), INTENT(IN) :: ipType
-      !! interpolation point type
-      !! Equidistance
-      !! LobattoGaussJacobi
-      !! LobattoGaussChebyshev
-      !! LobattoGaussGegenbauer
-      !! GaussJacobi
-      !! GaussChebyshev
-      !! GaussGegenbauer
+    !! interpolation point type
+    !! Equidistance
+    !! LobattoGaussJacobi
+    !! LobattoGaussChebyshev
+    !! LobattoGaussGegenbauer
+    !! GaussJacobi
+    !! GaussChebyshev
+    !! GaussGegenbauer
     REAL(DFP), ALLOCATABLE :: ans(:, :)
-      !! barycentric coordinates, in xiJ format
-      !! size(ans,1) = 3 corresponding to b0, b1, b2
-      !! size(ans,2) total number of points
+    !! barycentric coordinates, in xiJ format
+    !! size(ans,1) = 3 corresponding to b0, b1, b2
+    !! size(ans,2) total number of points
     CHARACTER(*), OPTIONAL, INTENT(IN) :: domain
-      !! unit
-      !! Biunit
-      !! Equilateral
+    !! unit
+    !! Biunit
+    !! Equilateral
     REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
-      !! Jacobi polynomial parameter
+    !! Jacobi polynomial parameter
     REAL(DFP), OPTIONAL, INTENT(IN) :: beta
-      !! Jacobi polynomial parameter
+    !! Jacobi polynomial parameter
     REAL(DFP), OPTIONAL, INTENT(IN) :: lambda
-      !! Ultraspherical polynomial parameter
+    !! Ultraspherical polynomial parameter
   END FUNCTION RecursiveNode2D
 END INTERFACE
 
@@ -194,30 +194,30 @@ INTERFACE
   MODULE FUNCTION RecursiveNode3D(order, ipType, domain, alpha, beta, &
                                   lambda) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
-      !! order >= 0
+    !! order >= 0
     INTEGER(I4B), INTENT(IN) :: ipType
-      !! interpolation point type
-      !! Equidistance
-      !! LobattoGaussJacobi
-      !! LobattoGaussChebyshev
-      !! LobattoGaussGegenbauer
-      !! GaussJacobi
-      !! GaussChebyshev
-      !! GaussGegenbauer
+    !! interpolation point type
+    !! Equidistance
+    !! LobattoGaussJacobi
+    !! LobattoGaussChebyshev
+    !! LobattoGaussGegenbauer
+    !! GaussJacobi
+    !! GaussChebyshev
+    !! GaussGegenbauer
     REAL(DFP), ALLOCATABLE :: ans(:, :)
-      !! barycentric coordinates, in xiJ format
-      !! size(ans,1) = 4 corresponding to b0, b1, b2, b3
-      !! size(ans,2) total number of points
+    !! barycentric coordinates, in xiJ format
+    !! size(ans,1) = 4 corresponding to b0, b1, b2, b3
+    !! size(ans,2) total number of points
     CHARACTER(*), OPTIONAL, INTENT(IN) :: domain
-      !! unit
-      !! Biunit
-      !! Equilateral
+    !! unit
+    !! Biunit
+    !! Equilateral
     REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
-      !! Jacobi polynomial parameter
+    !! Jacobi polynomial parameter
     REAL(DFP), OPTIONAL, INTENT(IN) :: beta
-      !! Jacobi polynomial parameter
+    !! Jacobi polynomial parameter
     REAL(DFP), OPTIONAL, INTENT(IN) :: lambda
-      !! Ultraspherical polynomial parameter
+    !! Ultraspherical polynomial parameter
   END FUNCTION RecursiveNode3D
 END INTERFACE
 
