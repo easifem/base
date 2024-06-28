@@ -26,6 +26,7 @@ PUBLIC :: LagrangeInDOF_Pyramid
 PUBLIC :: EquidistanceInPoint_Pyramid
 PUBLIC :: EquidistancePoint_Pyramid
 PUBLIC :: InterpolationPoint_Pyramid
+PUBLIC :: InterpolationPoint_Pyramid_
 PUBLIC :: LagrangeCoeff_Pyramid
 PUBLIC :: QuadraturePoint_Pyramid
 PUBLIC :: TensorQuadraturePoint_Pyramid
@@ -267,12 +268,8 @@ END INTERFACE
 ! summary:         Interpolation point on Pyramid
 
 INTERFACE
-  MODULE PURE FUNCTION InterpolationPoint_Pyramid( &
-    & order, &
-    & ipType, &
-    & layout, &
-    & xij,  &
-    & alpha, beta, lambda) RESULT(nodecoord)
+  MODULE FUNCTION InterpolationPoint_Pyramid(order, ipType, layout, &
+                                   xij, alpha, beta, lambda) RESULT(nodecoord)
     INTEGER(I4B), INTENT(IN) :: order
     !! order of element
     INTEGER(I4B), INTENT(IN) :: ipType
@@ -286,6 +283,34 @@ INTERFACE
     REAL(DFP), ALLOCATABLE :: nodecoord(:, :)
     !! interpolation points in $x_{iJ}$ format
   END FUNCTION InterpolationPoint_Pyramid
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                            InterpolationPoint_Pyramid
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 18 Aug 2022
+! summary:         Interpolation point on Pyramid
+
+INTERFACE
+  MODULE SUBROUTINE InterpolationPoint_Pyramid_(order, ipType, ans, &
+                                 nrow, ncol, layout, xij, alpha, beta, lambda)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order of element
+    INTEGER(I4B), INTENT(IN) :: ipType
+    !! interpolation points
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    !! interpolation points in $x_{iJ}$ format
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+    !! number of rows and columns in ans
+    CHARACTER(*), INTENT(IN) :: layout
+    !! layout
+    REAL(DFP), OPTIONAL, INTENT(IN) :: xij(:, :)
+    !! coords of vertices in $x_{iJ}$ format
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha, beta, lambda
+    !! Alpha, beta, and lambda
+  END SUBROUTINE InterpolationPoint_Pyramid_
 END INTERFACE
 
 !----------------------------------------------------------------------------

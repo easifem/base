@@ -142,6 +142,19 @@ END SELECT
 END PROCEDURE InterpolationPoint_Pyramid
 
 !----------------------------------------------------------------------------
+!                                                 InterpolationPoint_Pyramid
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE InterpolationPoint_Pyramid_
+CALL ErrorMsg(&
+  & msg="InterpolationPoint_Pyramid_ is not implemented", &
+  & file=__FILE__, &
+  & routine="InterpolationPoint_Pyramid_", &
+  & line=__LINE__, &
+  & unitno=stderr)
+END PROCEDURE InterpolationPoint_Pyramid_
+
+!----------------------------------------------------------------------------
 !                                                  LagrangeCoeff_Pyramid
 !----------------------------------------------------------------------------
 
