@@ -21,7 +21,10 @@ USE InputUtility, ONLY: Input
 USE GE_CompRoutineMethods, ONLY: GetInvMat
 USE GE_LUMethods, ONLY: LUSolve, GetLU
 
+USE BaseType, ONLY: polyopt => TypePolynomialOpt, elemopt => TypeElemNameOpt
+
 IMPLICIT NONE
+
 CONTAINS
 
 !----------------------------------------------------------------------------
@@ -84,8 +87,8 @@ INTEGER(I4B) :: info, nrow, ncol
 
 ipiv = 0_I4B; ans = 0.0_DFP; ans(i) = 1.0_DFP
 
-CALL LagrangeVandermonde_(order=order, xij=xij, elemType=Triangle, ans=V, &
-                          nrow=nrow, ncol=ncol)
+CALL LagrangeVandermonde_(order=order, xij=xij, elemType=elemopt%Triangle, &
+                          ans=V, nrow=nrow, ncol=ncol)
 CALL GetLU(A=V, IPIV=ipiv, info=info)
 CALL LUSolve(A=V, B=ans, IPIV=ipiv, info=info)
 END PROCEDURE LagrangeCoeff_Triangle1
@@ -122,7 +125,7 @@ MODULE PROCEDURE LagrangeCoeff_Triangle4
 INTEGER(I4B) :: basisType0, nrow, ncol
 CHARACTER(:), ALLOCATABLE :: ref0
 
-basisType0 = Input(default=Monomial, option=basisType)
+basisType0 = Input(default=polyopt%Monomial, option=basisType)
 ref0 = Input(default="UNIT", option=refTriangle)
 CALL LagrangeCoeff_Triangle4_(order=order, xij=xij, basisType=basisType0, &
                               refTriangle=ref0, ans=ans, nrow=nrow, ncol=ncol)
@@ -137,16 +140,17 @@ MODULE PROCEDURE LagrangeCoeff_Triangle4_
 
 SELECT CASE (basisType)
 
-CASE (Monomial)
-  CALL LagrangeVandermonde_(order=order, xij=xij, elemType=Triangle, &
+CASE (polyopt%Monomial)
+  CALL LagrangeVandermonde_(order=order, xij=xij, elemType=elemopt%Triangle, &
                             ans=ans, nrow=nrow, ncol=ncol)
 
-CASE (Jacobi, Orthogonal, Legendre, Lobatto, Ultraspherical)
+CASE (polyopt%Jacobi, polyopt%Orthogonal, polyopt%Legendre, &
+      polyopt%Lobatto, polyopt%Ultraspherical)
 
   CALL Dubiner_Triangle_(order=order, xij=xij, refTriangle=refTriangle, &
                          ans=ans, nrow=nrow, ncol=ncol)
 
-CASE (Heirarchical)
+CASE (polyopt%Hierarchical)
 
   CALL HeirarchicalBasis_Triangle_(order=order, pe1=order, pe2=order, &
                                 pe3=order, xij=xij, refTriangle=refTriangle, &
@@ -167,7 +171,7 @@ INTEGER(I4B) :: ii, basisType0, tdof, ncol, nrow
 INTEGER(I4B) :: degree(SIZE(xij, 2), 2)
 REAL(DFP) :: coeff0(SIZE(xij, 2), SIZE(xij, 2)), xx(1, SIZE(xij, 2))
 
-basisType0 = Input(default=Monomial, option=basisType)
+basisType0 = Input(default=polyopt%Monomial, option=basisType)
 firstCall0 = Input(default=.TRUE., option=firstCall)
 
 IF (PRESENT(coeff)) THEN
@@ -192,7 +196,7 @@ END IF
 
 SELECT CASE (basisType0)
 
-CASE (Monomial)
+CASE (polyopt%Monomial)
 
   CALL LagrangeDegree_Triangle_(order=order, ans=degree, nrow=nrow, ncol=ncol)
 
@@ -202,13 +206,14 @@ CASE (Monomial)
     xx(1, ii) = x(1)**degree(ii, 1) * x(2)**degree(ii, 2)
   END DO
 
-CASE (Heirarchical)
+CASE (polyopt%Hierarchical)
 
   CALL HeirarchicalBasis_Triangle_(order=order, pe1=order, &
                                pe2=order, pe3=order, xij=RESHAPE(x, [2, 1]), &
                         refTriangle=refTriangle, ans=xx, ncol=ncol, nrow=nrow)
 
-CASE (Jacobi, Orthogonal, Legendre, Lobatto, Ultraspherical)
+CASE (polyopt%Jacobi, polyopt%Orthogonal, polyopt%Legendre, polyopt%Lobatto, &
+      polyopt%Ultraspherical)
 
   CALL Dubiner_Triangle_(order=order, xij=RESHAPE(x, [2, 1]), &
                         refTriangle=refTriangle, ans=xx, nrow=nrow, ncol=ncol)
@@ -228,7 +233,7 @@ INTEGER(I4B) :: ii, basisType0, tdof, ncol, nrow
 INTEGER(I4B) :: degree(SIZE(xij, 2), 2)
 REAL(DFP) :: coeff0(SIZE(xij, 2), SIZE(xij, 2)), xx(SIZE(x, 2), SIZE(xij, 2))
 
-basisType0 = Input(default=Monomial, option=basisType)
+basisType0 = Input(default=polyopt%Monomial, option=basisType)
 firstCall0 = Input(default=.TRUE., option=firstCall)
 
 IF (PRESENT(coeff)) THEN
@@ -252,7 +257,7 @@ END IF
 
 SELECT CASE (basisType0)
 
-CASE (Monomial)
+CASE (polyopt%Monomial)
 
   CALL LagrangeDegree_Triangle_(order=order, ans=degree, nrow=nrow, ncol=ncol)
   tdof = SIZE(xij, 2)
@@ -261,12 +266,12 @@ CASE (Monomial)
     xx(:, ii) = x(1, :)**degree(ii, 1) * x(2, :)**degree(ii, 2)
   END DO
 
-CASE (Heirarchical)
+CASE (polyopt%Hierarchical)
 
   CALL HeirarchicalBasis_Triangle_(order=order, pe1=order, pe2=order, &
       pe3=order, xij=x, refTriangle=refTriangle, ans=xx, ncol=ncol, nrow=nrow)
 
-CASE (Jacobi, Orthogonal, Legendre, Lobatto, Ultraspherical)
+CASE (polyopt%Jacobi, polyopt%Orthogonal, polyopt%Legendre, polyopt%Lobatto, polyopt%Ultraspherical)
 
   CALL Dubiner_Triangle_(order=order, xij=x, refTriangle=refTriangle, &
                          ans=xx, nrow=nrow, ncol=ncol)
@@ -287,7 +292,7 @@ INTEGER(I4B) :: degree(SIZE(xij, 2), 2)
 REAL(DFP) :: coeff0(SIZE(xij, 2), SIZE(xij, 2)), &
   & xx(SIZE(x, 2), SIZE(xij, 2), 2), ar, br
 
-basisType0 = Input(default=Monomial, option=basisType)
+basisType0 = Input(default=polyopt%Monomial, option=basisType)
 firstCall0 = Input(default=.TRUE., option=firstCall)
 
 IF (PRESENT(coeff)) THEN
@@ -304,7 +309,7 @@ END IF
 
 SELECT CASE (basisType0)
 
-CASE (Monomial)
+CASE (polyopt%Monomial)
 
   CALL LagrangeDegree_Triangle_(order=order, ans=degree, nrow=s(1), ncol=s(2))
 
@@ -319,13 +324,14 @@ CASE (Monomial)
     xx(:, ii, 2) = x(1, :)**degree(ii, 1) * (br * x(2, :)**bi)
   END DO
 
-CASE (Heirarchical)
+CASE (polyopt%Hierarchical)
 
  CALL HeirarchicalBasisGradient_Triangle_(order=order, pe1=order, pe2=order, &
              pe3=order, xij=x, refTriangle=refTriangle, ans=xx, tsize1=s(1), &
                                            tsize2=s(2), tsize3=s(3))
 
-CASE (Jacobi, Orthogonal, Legendre, Lobatto, Ultraspherical)
+CASE (polyopt%Jacobi, polyopt%Orthogonal, polyopt%Legendre, polyopt%Lobatto, &
+      polyopt%Ultraspherical)
 
   CALL OrthogonalBasisGradient_Triangle_(order=order, xij=x, &
        refTriangle=refTriangle, ans=xx, tsize1=s(1), tsize2=s(2), tsize3=s(3))

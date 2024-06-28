@@ -745,8 +745,8 @@ IF (SIZE(xij, 2) .NE. order + 1) THEN
   RETURN
 END IF
 
-orthopol0 = input(default=polyopt%Monomial, option=basisType)
-firstCall0 = input(default=.TRUE., option=firstCall)
+orthopol0 = Input(default=polyopt%Monomial, option=basisType)
+firstCall0 = Input(default=.TRUE., option=firstCall)
 
 IF (PRESENT(coeff)) THEN
   IF (firstCall0) THEN

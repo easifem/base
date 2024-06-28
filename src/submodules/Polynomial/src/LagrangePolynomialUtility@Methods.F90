@@ -28,6 +28,7 @@ USE LineInterpolationUtility, ONLY: LagrangeDOF_Line, &
                                     LagrangeDegree_Line, &
                                     EquidistancePoint_Line, &
                                     InterpolationPoint_Line, &
+                                    InterpolationPoint_Line_, &
                                     LagrangeCoeff_Line, &
                                     LagrangeEvalAll_Line, &
                                     LagrangeGradientEvalAll_Line
@@ -37,6 +38,7 @@ USE TriangleInterpolationUtility, ONLY: LagrangeDOF_Triangle, &
                                         LagrangeDegree_Triangle, &
                                         EquidistancePoint_Triangle, &
                                         InterpolationPoint_Triangle, &
+                                        InterpolationPoint_Triangle_, &
                                         LagrangeCoeff_Triangle, &
                                         LagrangeEvalAll_Triangle, &
                                         LagrangeGradientEvalAll_Triangle
@@ -46,6 +48,7 @@ USE QuadrangleInterpolationUtility, ONLY: LagrangeDOF_Quadrangle, &
                                           LagrangeDegree_Quadrangle, &
                                           EquidistancePoint_Quadrangle, &
                                           InterpolationPoint_Quadrangle, &
+                                          InterpolationPoint_Quadrangle_, &
                                           LagrangeCoeff_Quadrangle, &
                                           LagrangeEvalAll_Quadrangle, &
                                           LagrangeGradientEvalAll_Quadrangle
@@ -55,6 +58,7 @@ USE TetrahedronInterpolationUtility, ONLY: LagrangeDOF_Tetrahedron, &
                                            LagrangeDegree_Tetrahedron, &
                                            EquidistancePoint_Tetrahedron, &
                                            InterpolationPoint_Tetrahedron, &
+                                           InterpolationPoint_Tetrahedron_, &
                                            LagrangeCoeff_Tetrahedron, &
                                            LagrangeEvalAll_Tetrahedron, &
                                            LagrangeGradientEvalAll_Tetrahedron
@@ -64,6 +68,7 @@ USE HexahedronInterpolationUtility, ONLY: LagrangeDOF_Hexahedron, &
                                           LagrangeDegree_Hexahedron, &
                                           EquidistancePoint_Hexahedron, &
                                           InterpolationPoint_Hexahedron, &
+                                          InterpolationPoint_Hexahedron_, &
                                           LagrangeCoeff_Hexahedron, &
                                           LagrangeEvalAll_Hexahedron, &
                                           LagrangeGradientEvalAll_Hexahedron
@@ -73,6 +78,7 @@ USE PrismInterpolationUtility, ONLY: LagrangeDOF_Prism, &
                                      LagrangeDegree_Prism, &
                                      EquidistancePoint_Prism, &
                                      InterpolationPoint_Prism, &
+                                     InterpolationPoint_Prism_, &
                                      LagrangeCoeff_Prism, &
                                      LagrangeEvalAll_Prism, &
                                      LagrangeGradientEvalAll_Prism
@@ -82,6 +88,7 @@ USE PyramidInterpolationUtility, ONLY: LagrangeDOF_Pyramid, &
                                        LagrangeDegree_Pyramid, &
                                        EquidistancePoint_Pyramid, &
                                        InterpolationPoint_Pyramid, &
+                                       InterpolationPoint_Pyramid_, &
                                        LagrangeCoeff_Pyramid, &
                                        LagrangeEvalAll_Pyramid, &
                                        LagrangeGradientEvalAll_Pyramid
@@ -299,72 +306,108 @@ CASE (Point)
   END IF
 
 CASE (Line)
-  ans = InterpolationPoint_Line(&
-    & order=order, &
-    & ipType=ipType, &
-    & xij=xij, &
-    & layout=layout, &
-    & alpha=alpha, beta=beta, lambda=lambda)
+  ans = InterpolationPoint_Line(order=order, ipType=ipType, &
+                xij=xij, layout=layout, alpha=alpha, beta=beta, lambda=lambda)
 
 CASE (Triangle)
-  ans = InterpolationPoint_Triangle( &
-    & order=order, &
-    & ipType=ipType, &
-    & xij=xij, &
-    & layout=layout,  &
-    & alpha=alpha, beta=beta, lambda=lambda)
+  ans = InterpolationPoint_Triangle(order=order, ipType=ipType, &
+                xij=xij, layout=layout, alpha=alpha, beta=beta, lambda=lambda)
 
 CASE (Quadrangle)
-  ans = InterpolationPoint_Quadrangle( &
-    & order=order, &
-    & ipType=ipType, &
-    & xij=xij, &
-    & layout=layout,  &
-    & alpha=alpha, beta=beta, lambda=lambda)
+  ans = InterpolationPoint_Quadrangle(order=order, ipType=ipType, &
+                xij=xij, layout=layout, alpha=alpha, beta=beta, lambda=lambda)
 
 CASE (Tetrahedron)
-  ans = InterpolationPoint_Tetrahedron( &
-    & order=order, &
-    & ipType=ipType, &
-    & xij=xij, &
-    & layout=layout,  &
-    & alpha=alpha, beta=beta, lambda=lambda)
+  ans = InterpolationPoint_Tetrahedron(order=order, ipType=ipType, &
+                xij=xij, layout=layout, alpha=alpha, beta=beta, lambda=lambda)
 
 CASE (Hexahedron)
-  ans = InterpolationPoint_Hexahedron( &
-    & order=order, &
-    & ipType=ipType, &
-    & xij=xij, &
-    & layout=layout,  &
-    & alpha=alpha, beta=beta, lambda=lambda)
+  ans = InterpolationPoint_Hexahedron(order=order, ipType=ipType, xij=xij, &
+                         layout=layout, alpha=alpha, beta=beta, lambda=lambda)
 
 CASE (Prism)
-  ans = InterpolationPoint_Prism( &
-    & order=order, &
-    & ipType=ipType, &
-    & xij=xij, &
-    & layout=layout,  &
-    & alpha=alpha, beta=beta, lambda=lambda)
+  ans = InterpolationPoint_Prism(order=order, ipType=ipType, xij=xij, &
+                         layout=layout, alpha=alpha, beta=beta, lambda=lambda)
 
 CASE (Pyramid)
-  ans = InterpolationPoint_Pyramid( &
-    & order=order, &
-    & ipType=ipType, &
-    & xij=xij, &
-    & layout=layout,  &
-    & alpha=alpha, beta=beta, lambda=lambda)
+  ans = InterpolationPoint_Pyramid(order=order, ipType=ipType, xij=xij, &
+                         layout=layout, alpha=alpha, beta=beta, lambda=lambda)
 
 CASE DEFAULT
-  CALL Errormsg(&
-    & msg="No CASE FOUND: elemType="//ToString(elemType), &
-    & unitno=stdout,  &
-    & line=__LINE__,  &
-    & routine="InterpolationPoint()",  &
-    & file=__FILE__)
+  CALL Errormsg(msg="No CASE FOUND: elemType="//ToString(elemType), &
+               unitno=stdout, line=__LINE__, routine="InterpolationPoint()", &
+                file=__FILE__)
   RETURN
 END SELECT
 
 END PROCEDURE InterpolationPoint
+
+!----------------------------------------------------------------------------
+!                                                         InterpolationPoint
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE InterpolationPoint_
+INTEGER(I4B) :: topo
+
+topo = ElementTopology(elemType)
+
+SELECT CASE (topo)
+
+CASE (Point)
+
+  IF (PRESENT(xij)) THEN
+    nrow = SIZE(xij, 1)
+    ncol = SIZE(xij, 2)
+    ans(1:nrow, 1:ncol) = xij(1:nrow, 1:ncol)
+    RETURN
+  END IF
+
+  nrow = 0
+  ncol = 0
+
+CASE (Line)
+  CALL InterpolationPoint_Line_(order=order, ipType=ipType, ans=ans, &
+       nrow=nrow, ncol=ncol, xij=xij, layout=layout, alpha=alpha, beta=beta, &
+                                lambda=lambda)
+
+CASE (Triangle)
+  CALL InterpolationPoint_Triangle_(order=order, ipType=ipType, ans=ans, &
+       nrow=nrow, ncol=ncol, xij=xij, layout=layout, alpha=alpha, beta=beta, &
+                                    lambda=lambda)
+
+CASE (Quadrangle)
+  CALL InterpolationPoint_Quadrangle_(order=order, ipType=ipType, ans=ans, &
+                  nrow=nrow, ncol=ncol, xij=xij, layout=layout, alpha=alpha, &
+                                      beta=beta, lambda=lambda)
+
+CASE (Tetrahedron)
+  CALL InterpolationPoint_Tetrahedron_(order=order, ipType=ipType, ans=ans, &
+                  nrow=nrow, ncol=ncol, xij=xij, layout=layout, alpha=alpha, &
+                                       beta=beta, lambda=lambda)
+
+CASE (Hexahedron)
+  CALL InterpolationPoint_Hexahedron_(order=order, ipType=ipType, xij=xij, &
+                               ans=ans, nrow=nrow, ncol=ncol, layout=layout, &
+                                      alpha=alpha, beta=beta, lambda=lambda)
+
+CASE (Prism)
+  CALL InterpolationPoint_Prism_(order=order, ipType=ipType, xij=xij, &
+                               ans=ans, nrow=nrow, ncol=ncol, layout=layout, &
+                                 alpha=alpha, beta=beta, lambda=lambda)
+
+CASE (Pyramid)
+  CALL InterpolationPoint_Pyramid_(order=order, ipType=ipType, xij=xij, &
+       ans=ans, nrow=nrow, ncol=ncol, layout=layout, alpha=alpha, beta=beta, &
+                                   lambda=lambda)
+
+CASE DEFAULT
+  CALL Errormsg(msg="No CASE FOUND: elemType="//ToString(elemType), &
+               unitno=stdout, line=__LINE__, routine="InterpolationPoint()", &
+                file=__FILE__)
+  RETURN
+END SELECT
+
+END PROCEDURE InterpolationPoint_
 
 !----------------------------------------------------------------------------
 !                                                             LagrangeCoeff
