@@ -821,6 +821,27 @@ INTERFACE LagrangeCoeff_Hexahedron
 END INTERFACE LagrangeCoeff_Hexahedron
 
 !----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE LagrangeCoeff_Hexahedron_
+  MODULE SUBROUTINE LagrangeCoeff_Hexahedron1_(order, i, xij, ans, tsize)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order of polynomial
+    INTEGER(I4B), INTENT(IN) :: i
+    !! ith coefficients for lagrange polynomial
+    REAL(DFP), INTENT(IN) :: xij(:, :)
+    !! interpolation points in xij format
+    !! number of rows in xij is 3
+    !! number of columns should be equal to the number degree of freedom
+    REAL(DFP), INTENT(INOUT) :: ans(:)
+    !! ans(SIZE(xij, 2))
+    !! coefficients
+    INTEGER(I4B), INTENT(OUT) :: tsize
+  END SUBROUTINE LagrangeCoeff_Hexahedron1_
+END INTERFACE LagrangeCoeff_Hexahedron_
+
+!----------------------------------------------------------------------------
 !                                                   LagrangeCoeff_Hexahedron
 !----------------------------------------------------------------------------
 
@@ -845,6 +866,28 @@ INTERFACE LagrangeCoeff_Hexahedron
 END INTERFACE LagrangeCoeff_Hexahedron
 
 !----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE LagrangeCoeff_Hexahedron_
+  MODULE SUBROUTINE LagrangeCoeff_Hexahedron2_(order, i, v, isVandermonde, &
+                                               ans, tsize)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order of polynomial, it should be SIZE(v,2)-1
+    INTEGER(I4B), INTENT(IN) :: i
+    !! coefficient for ith lagrange polynomial
+    REAL(DFP), INTENT(IN) :: v(:, :)
+    !! vandermonde matrix size should be (order+1,order+1)
+    LOGICAL(LGT), INTENT(IN) :: isVandermonde
+    !! This is just to resolve interface issue
+    REAL(DFP), INTENT(INOUT) :: ans(:)
+    !! ans(SIZE(v, 1))
+    !! coefficients
+    INTEGER(I4B), INTENT(OUT) :: tsize
+  END SUBROUTINE LagrangeCoeff_Hexahedron2_
+END INTERFACE LagrangeCoeff_Hexahedron_
+
+!----------------------------------------------------------------------------
 !                                                  LagrangeCoeff_Hexahedron
 !----------------------------------------------------------------------------
 
@@ -866,6 +909,27 @@ INTERFACE LagrangeCoeff_Hexahedron
     !! coefficients
   END FUNCTION LagrangeCoeff_Hexahedron3
 END INTERFACE LagrangeCoeff_Hexahedron
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE LagrangeCoeff_Hexahedron_
+  MODULE SUBROUTINE LagrangeCoeff_Hexahedron3_(order, i, v, ipiv, ans, tsize)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order of polynomial, it should be SIZE(x,2)-1
+    INTEGER(I4B), INTENT(IN) :: i
+    !! ith coefficients for lagrange polynomial
+    REAL(DFP), INTENT(INOUT) :: v(:, :)
+    !! LU decomposition of vandermonde matrix
+    INTEGER(I4B), INTENT(IN) :: ipiv(:)
+    !! inverse pivoting mapping, compes from LU decomposition
+    REAL(DFP), INTENT(INOUT) :: ans(:)
+    ! ans(SIZE(v, 1))
+    !! coefficients
+    INTEGER(I4B), INTENT(OUT) :: tsize
+  END SUBROUTINE LagrangeCoeff_Hexahedron3_
+END INTERFACE LagrangeCoeff_Hexahedron_
 
 !----------------------------------------------------------------------------
 !                                                  LagrangeCoeff_Hexahedron
@@ -904,6 +968,35 @@ INTERFACE LagrangeCoeff_Hexahedron
 END INTERFACE LagrangeCoeff_Hexahedron
 
 !----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE LagrangeCoeff_Hexahedron_
+  MODULE SUBROUTINE LagrangeCoeff_Hexahedron4_(order, xij, basisType, &
+                          refHexahedron, alpha, beta, lambda, ans, nrow, ncol)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order of polynomial
+    REAL(DFP), INTENT(IN) :: xij(:, :)
+    !! points in xij format, size(xij,2)
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: basisType
+    !! Monomials, Jacobi, Legendre, Chebyshev, Ultraspherical, Heirarchical
+    CHARACTER(*), OPTIONAL, INTENT(IN) :: refHexahedron
+    !! UNIT
+    !! BIUNIT
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
+    !! This parameter is needed when basisType is Jacobi
+    REAL(DFP), OPTIONAL, INTENT(IN) :: beta
+    !! This parameter is needed when basisType is Jacobi
+    REAL(DFP), OPTIONAL, INTENT(IN) :: lambda
+    !! This parameter is needed when basisType is Ultraspherical
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    !! ans(SIZE(xij, 2), SIZE(xij, 2))
+    !! coefficients
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+  END SUBROUTINE LagrangeCoeff_Hexahedron4_
+END INTERFACE LagrangeCoeff_Hexahedron_
+
+!----------------------------------------------------------------------------
 !                                                  LagrangeCoeff_Hexahedron
 !----------------------------------------------------------------------------
 
@@ -915,6 +1008,54 @@ INTERFACE LagrangeCoeff_Hexahedron
   MODULE FUNCTION LagrangeCoeff_Hexahedron5(p, q, r, xij, basisType1, &
               basisType2, basisType3, alpha1, beta1, lambda1, alpha2, beta2, &
                    lambda2, alpha3, beta3, lambda3, refHexahedron) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: p
+    !! order of polynomial in x direction
+    INTEGER(I4B), INTENT(IN) :: q
+    !! order of polynomial in y direction
+    INTEGER(I4B), INTENT(IN) :: r
+    !! order of polynomial in z direction
+    REAL(DFP), INTENT(IN) :: xij(:, :)
+    !! These are interpolation points in xij format, size(xij,2)
+    INTEGER(I4B), INTENT(IN) :: basisType1
+    !! basis type in x direction
+    INTEGER(I4B), INTENT(IN) :: basisType2
+    !! basis type in y direction
+    INTEGER(I4B), INTENT(IN) :: basisType3
+    !! basis type in z direction
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha1
+    !! This parameter is needed when basisType1 is Jacobi
+    REAL(DFP), OPTIONAL, INTENT(IN) :: beta1
+    !! This parameter is needed when basisType1 is Jacobi
+    REAL(DFP), OPTIONAL, INTENT(IN) :: lambda1
+    !! This parameter is needed when basisType1 is Ultraspherical
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha2
+    !! This parameter is needed when basisType2 is Jacobi
+    REAL(DFP), OPTIONAL, INTENT(IN) :: beta2
+    !! This parameter is needed when basisType2 is Jacobi
+    REAL(DFP), OPTIONAL, INTENT(IN) :: lambda2
+    !! This parameter is needed when basisType2 is Ultraspherical
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha3
+    !! This parameter is needed when basisType3 is Jacobi
+    REAL(DFP), OPTIONAL, INTENT(IN) :: beta3
+    !! This parameter is needed when basisType3 is Jacobi
+    REAL(DFP), OPTIONAL, INTENT(IN) :: lambda3
+    !! This parameter is needed when basisType3 is Ultraspherical
+    CHARACTER(*), OPTIONAL, INTENT(IN) :: refHexahedron
+    !! UNIT
+    !! BIUNIT
+    REAL(DFP) :: ans(SIZE(xij, 2), SIZE(xij, 2))
+    !! coefficients
+  END FUNCTION LagrangeCoeff_Hexahedron5
+END INTERFACE LagrangeCoeff_Hexahedron
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE LagrangeCoeff_Hexahedron_
+  MODULE SUBROUTINE LagrangeCoeff_Hexahedron5_(p, q, r, xij, basisType1, &
+              basisType2, basisType3, alpha1, beta1, lambda1, alpha2, beta2, &
+              lambda2, alpha3, beta3, lambda3, refHexahedron, ans, nrow, ncol)
     INTEGER(I4B), INTENT(IN) :: p
     !! order of polynomial in x direction
     INTEGER(I4B), INTENT(IN) :: q
@@ -968,10 +1109,12 @@ INTERFACE LagrangeCoeff_Hexahedron
     CHARACTER(*), OPTIONAL, INTENT(IN) :: refHexahedron
     !! UNIT
     !! BIUNIT
-    REAL(DFP) :: ans(SIZE(xij, 2), SIZE(xij, 2))
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    ! ans(SIZE(xij, 2), SIZE(xij, 2))
     !! coefficients
-  END FUNCTION LagrangeCoeff_Hexahedron5
-END INTERFACE LagrangeCoeff_Hexahedron
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+  END SUBROUTINE LagrangeCoeff_Hexahedron5_
+END INTERFACE LagrangeCoeff_Hexahedron_
 
 !----------------------------------------------------------------------------
 !                                            TensorProdBasis_Hexahedron
