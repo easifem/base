@@ -522,25 +522,6 @@ INTERFACE LagrangeCoeff_Tetrahedron
 END INTERFACE LagrangeCoeff_Tetrahedron
 
 !----------------------------------------------------------------------------
-!
-!----------------------------------------------------------------------------
-
-INTERFACE LagrangeCoeff_Tetrahedron_
-  MODULE SUBROUTINE LagrangeCoeff_Tetrahedron1_(order, i, xij, ans, tsize)
-    INTEGER(I4B), INTENT(IN) :: order
-    !! order of polynomial
-    INTEGER(I4B), INTENT(IN) :: i
-    !! ith coefficients for lagrange polynomial
-    REAL(DFP), INTENT(IN) :: xij(:, :)
-    !! points in xij format, size(xij,2)
-    REAL(DFP), INTENT(INOUT) :: ans(:)
-    !! ans(SIZE(xij, 2))
-    !! coefficients
-    INTEGER(I4B), INTENT(OUT) :: tsize
-  END SUBROUTINE LagrangeCoeff_Tetrahedron1_
-END INTERFACE LagrangeCoeff_Tetrahedron_
-
-!----------------------------------------------------------------------------
 !                                                   LagrangeCoeff_Tetrahedron
 !----------------------------------------------------------------------------
 
@@ -561,28 +542,6 @@ INTERFACE LagrangeCoeff_Tetrahedron
 END INTERFACE LagrangeCoeff_Tetrahedron
 
 !----------------------------------------------------------------------------
-!
-!----------------------------------------------------------------------------
-
-INTERFACE LagrangeCoeff_Tetrahedron_
-  MODULE SUBROUTINE LagrangeCoeff_Tetrahedron2_(order, i, v, isVandermonde, &
-                                                ans, tsize)
-    INTEGER(I4B), INTENT(IN) :: order
-    !! order of polynomial, it should be SIZE(v,2)-1
-    INTEGER(I4B), INTENT(IN) :: i
-    !! coefficient for ith lagrange polynomial
-    REAL(DFP), INTENT(IN) :: v(:, :)
-    !! vandermonde matrix size should be (order+1,order+1)
-    LOGICAL(LGT), INTENT(IN) :: isVandermonde
-    !! This is just to resolve interface issue
-    REAL(DFP), INTENT(INOUT) :: ans(:)
-    ! ans(SIZE(v, 1))
-    !! coefficients
-    INTEGER(I4B), INTENT(OUT) :: tsize
-  END SUBROUTINE LagrangeCoeff_Tetrahedron2_
-END INTERFACE LagrangeCoeff_Tetrahedron_
-
-!----------------------------------------------------------------------------
 !                                                  LagrangeCoeff_Tetrahedron
 !----------------------------------------------------------------------------
 
@@ -600,27 +559,6 @@ INTERFACE LagrangeCoeff_Tetrahedron
     !! coefficients
   END FUNCTION LagrangeCoeff_Tetrahedron3
 END INTERFACE LagrangeCoeff_Tetrahedron
-
-!----------------------------------------------------------------------------
-!
-!----------------------------------------------------------------------------
-
-INTERFACE LagrangeCoeff_Tetrahedron_
-  MODULE SUBROUTINE LagrangeCoeff_Tetrahedron3_(order, i, v, ipiv, ans, tsize)
-    INTEGER(I4B), INTENT(IN) :: order
-    !! order of polynomial, it should be SIZE(x,2)-1
-    INTEGER(I4B), INTENT(IN) :: i
-    !! ith coefficients for lagrange polynomial
-    REAL(DFP), INTENT(INOUT) :: v(:, :)
-    !! LU decomposition of vandermonde matrix
-    INTEGER(I4B), INTENT(IN) :: ipiv(:)
-    !! inverse pivoting mapping, compes from LU decomposition
-    REAL(DFP), INTENT(INOUT) :: ans(:)
-    !! ans(SIZE(v, 1))
-    !! coefficients
-    INTEGER(I4B), INTENT(OUT) :: tsize
-  END SUBROUTINE LagrangeCoeff_Tetrahedron3_
-END INTERFACE LagrangeCoeff_Tetrahedron_
 
 !----------------------------------------------------------------------------
 !                                                  LagrangeCoeff_Tetrahedron
@@ -655,6 +593,68 @@ INTERFACE LagrangeCoeff_Tetrahedron
     !! coefficients
   END FUNCTION LagrangeCoeff_Tetrahedron4
 END INTERFACE LagrangeCoeff_Tetrahedron
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE LagrangeCoeff_Tetrahedron_
+  MODULE SUBROUTINE LagrangeCoeff_Tetrahedron1_(order, i, xij, ans, tsize)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order of polynomial
+    INTEGER(I4B), INTENT(IN) :: i
+    !! ith coefficients for lagrange polynomial
+    REAL(DFP), INTENT(IN) :: xij(:, :)
+    !! points in xij format, size(xij,2)
+    REAL(DFP), INTENT(INOUT) :: ans(:)
+    !! ans(SIZE(xij, 2))
+    !! coefficients
+    INTEGER(I4B), INTENT(OUT) :: tsize
+  END SUBROUTINE LagrangeCoeff_Tetrahedron1_
+END INTERFACE LagrangeCoeff_Tetrahedron_
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE LagrangeCoeff_Tetrahedron_
+  MODULE SUBROUTINE LagrangeCoeff_Tetrahedron2_(order, i, v, isVandermonde, &
+                                                ans, tsize)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order of polynomial, it should be SIZE(v,2)-1
+    INTEGER(I4B), INTENT(IN) :: i
+    !! coefficient for ith lagrange polynomial
+    REAL(DFP), INTENT(IN) :: v(:, :)
+    !! vandermonde matrix size should be (order+1,order+1)
+    LOGICAL(LGT), INTENT(IN) :: isVandermonde
+    !! This is just to resolve interface issue
+    REAL(DFP), INTENT(INOUT) :: ans(:)
+    ! ans(SIZE(v, 1))
+    !! coefficients
+    INTEGER(I4B), INTENT(OUT) :: tsize
+  END SUBROUTINE LagrangeCoeff_Tetrahedron2_
+END INTERFACE LagrangeCoeff_Tetrahedron_
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE LagrangeCoeff_Tetrahedron_
+  MODULE SUBROUTINE LagrangeCoeff_Tetrahedron3_(order, i, v, ipiv, ans, tsize)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order of polynomial, it should be SIZE(x,2)-1
+    INTEGER(I4B), INTENT(IN) :: i
+    !! ith coefficients for lagrange polynomial
+    REAL(DFP), INTENT(INOUT) :: v(:, :)
+    !! LU decomposition of vandermonde matrix
+    INTEGER(I4B), INTENT(IN) :: ipiv(:)
+    !! inverse pivoting mapping, compes from LU decomposition
+    REAL(DFP), INTENT(INOUT) :: ans(:)
+    !! ans(SIZE(v, 1))
+    !! coefficients
+    INTEGER(I4B), INTENT(OUT) :: tsize
+  END SUBROUTINE LagrangeCoeff_Tetrahedron3_
+END INTERFACE LagrangeCoeff_Tetrahedron_
 
 !----------------------------------------------------------------------------
 !
