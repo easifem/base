@@ -548,7 +548,7 @@ DO ii = 2, n
 
 p(1:nrow, ii + 1) = ((r_ii + lambda - 1.0_DFP) * 2.0_DFP * x * p(1:nrow, ii) &
                 & - (2.0_DFP * lambda + r_ii - 2.0_DFP) * p(1:nrow, ii - 1)) &
-                              & / r_ii
+                                & / r_ii
 
   ans(1:nrow, ii + 1) = 2.0_DFP * (r_ii + lambda - 1.0_DFP) * p(1:nrow, ii) &
                   & + ans(1:nrow, ii - 1)

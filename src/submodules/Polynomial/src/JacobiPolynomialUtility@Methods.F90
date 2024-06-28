@@ -502,12 +502,16 @@ DO i = 2, n
   c1 = r2 * (r_i + apb) * (r2 + apb_minus_2)
 
   c2 = (r2 + apb_minus_1) * (r2 + apb) * (r2 + apb_minus_2)
+  c2 = c2 / c1
 
   c3 = (r2 + apb_minus_1) * apb * amb
+  c3 = c3 / c1
 
   c4 = -2.0_DFP * (r_i + alpha_minus_1) * (r_i + beta_minus_1) * (r2 + apb)
 
-  ans(i + 1) = ((c3 + c2 * x) * ans(i) + c4 * ans(i - 1)) / c1
+  c4 = c4 / c1
+
+  ans(i + 1) = (c3 + c2 * x) * ans(i) + c4 * ans(i - 1)
 
 END DO
 
@@ -561,13 +565,16 @@ DO i = 2, n
   c1 = r2 * (r_i + apb) * (r2 + apb_minus_2)
 
   c2 = (r2 + apb_minus_1) * (r2 + apb) * (r2 + apb_minus_2)
+  c2 = c2 / c1
 
   c3 = (r2 + apb_minus_1) * apb * amb
+  c3 = c3 / c1
 
   c4 = -2.0_DFP * (r_i + alpha_minus_1) * (r_i + beta_minus_1) * (r2 + apb)
+  c4 = c4 / c1
 
-  ans(1:nrow, i + 1) = ((c3 + c2 * x) * ans(1:nrow, i) &
-                        + c4 * ans(1:nrow, i - 1)) / c1
+  ans(1:nrow, i + 1) = (c3 + c2 * x) * ans(1:nrow, i) &
+                       + c4 * ans(1:nrow, i - 1)
 
 END DO
 
