@@ -16,16 +16,18 @@
 
 SUBMODULE(MappingUtility) Methods
 USE BaseMethod, ONLY: UpperCase, &
-  & SOFTLE, &
-  & RefCoord_Tetrahedron, &
-  & RefCoord_Hexahedron, &
-  & TriangleArea2D, &
-  & TriangleArea3D, &
-  & QuadrangleArea2D,  &
-  & QuadrangleArea3D, &
-  & TetrahedronVolume3D, &
-  & HexahedronVolume3D
+                      SOFTLE, &
+                      RefCoord_Tetrahedron, &
+                      RefCoord_Hexahedron, &
+                      TriangleArea2D, &
+                      TriangleArea3D, &
+                      QuadrangleArea2D, &
+                      QuadrangleArea3D, &
+                      TetrahedronVolume3D, &
+                      HexahedronVolume3D
+
 IMPLICIT NONE
+
 CONTAINS
 
 !----------------------------------------------------------------------------
@@ -187,19 +189,33 @@ END PROCEDURE FromUnitQuadrangle2BiUnitQuadrangle1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE FromBiUnitQuadrangle2Quadrangle1
+INTEGER(I4B) :: nrow, ncol
+CALL FromBiUnitQuadrangle2Quadrangle1_(xin=xin, ans=ans, x1=x1, x2=x2, &
+                                       x3=x3, x4=x4, nrow=nrow, ncol=ncol)
+END PROCEDURE FromBiUnitQuadrangle2Quadrangle1
+
+!----------------------------------------------------------------------------
+!                                           FromBiUnitQuadrangle2Quadrangle_
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE FromBiUnitQuadrangle2Quadrangle1_
 INTEGER(I4B) :: ii
 REAL(DFP) :: xi, eta, p1, p2, p3, p4
-!!
-DO ii = 1, SIZE(ans, 2)
+
+! ans(SIZE(x1), SIZE(xin, 2))
+nrow = SIZE(x1)
+ncol = SIZE(xin, 2)
+
+DO ii = 1, ncol
   xi = xin(1, ii)
   eta = xin(2, ii)
   p1 = 0.25 * (1.0 - xi) * (1.0 - eta)
   p2 = 0.25 * (1.0 + xi) * (1.0 - eta)
   p3 = 0.25 * (1.0 + xi) * (1.0 + eta)
   p4 = 0.25 * (1.0 - xi) * (1.0 + eta)
-  ans(:, ii) = x1 * p1 + x2 * p2 + x3 * p3 + x4 * p4
+  ans(1:nrow, ii) = x1 * p1 + x2 * p2 + x3 * p3 + x4 * p4
 END DO
-END PROCEDURE FromBiUnitQuadrangle2Quadrangle1
+END PROCEDURE FromBiUnitQuadrangle2Quadrangle1_
 
 !----------------------------------------------------------------------------
 !                                           FromBiUnitHexahedron2Hexahedron

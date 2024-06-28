@@ -33,6 +33,8 @@ PUBLIC :: FromUnitLine2BiUnitLine
 PUBLIC :: FromLine2Line_
 
 PUBLIC :: FromBiUnitQuadrangle2Quadrangle
+PUBLIC :: FromBiUnitQuadrangle2Quadrangle_
+
 PUBLIC :: FromBiUnitQuadrangle2UnitQuadrangle
 PUBLIC :: FromUnitQuadrangle2BiUnitQuadrangle
 
@@ -232,7 +234,7 @@ INTERFACE FromUnitTriangle2Triangle_
 END INTERFACE FromUnitTriangle2Triangle_
 
 !----------------------------------------------------------------------------
-!                                            FromBiUnitQuadrangle2Quadrangle
+!                                       FromBiUnitQuadrangle2UnitQuadrangle
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -241,7 +243,7 @@ END INTERFACE FromUnitTriangle2Triangle_
 
 INTERFACE FromBiUnitQuadrangle2UnitQuadrangle
   MODULE PURE FUNCTION FromBiUnitQuadrangle2UnitQuadrangle1(xin) &
-    & RESULT(ans)
+    RESULT(ans)
     REAL(DFP), INTENT(IN) :: xin(:, :)
     !! vertex coordinate of biunit Quadrangle in xij format
     !! SIZE(xin,1) = 2
@@ -252,7 +254,7 @@ INTERFACE FromBiUnitQuadrangle2UnitQuadrangle
 END INTERFACE FromBiUnitQuadrangle2UnitQuadrangle
 
 !----------------------------------------------------------------------------
-!                                            FromBiUnitQuadrangle2Quadrangle
+!                                        FromUnitQuadrangle2BiUnitQuadrangle
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -261,7 +263,7 @@ END INTERFACE FromBiUnitQuadrangle2UnitQuadrangle
 
 INTERFACE FromUnitQuadrangle2BiUnitQuadrangle
   MODULE PURE FUNCTION FromUnitQuadrangle2BiUnitQuadrangle1(xin) &
-    & RESULT(ans)
+    RESULT(ans)
     REAL(DFP), INTENT(IN) :: xin(:, :)
     !! vertex coordinate of biunit Quadrangle in xij format
     !! SIZE(xin,1) = 2
@@ -281,7 +283,7 @@ END INTERFACE FromUnitQuadrangle2BiUnitQuadrangle
 
 INTERFACE FromBiUnitQuadrangle2Quadrangle
   MODULE PURE FUNCTION FromBiUnitQuadrangle2Quadrangle1(xin, x1, x2, x3, x4) &
-          & RESULT(ans)
+    RESULT(ans)
     REAL(DFP), INTENT(IN) :: xin(:, :)
     !! vertex coordinate of biunit Quadrangle in xij format
     !! SIZE(xin,1) = 2
@@ -298,6 +300,36 @@ INTERFACE FromBiUnitQuadrangle2Quadrangle
     !! shape(ans) = nsd, N
   END FUNCTION FromBiUnitQuadrangle2Quadrangle1
 END INTERFACE FromBiUnitQuadrangle2Quadrangle
+
+!----------------------------------------------------------------------------
+!                                            FromBiUnitQuadrangle2Quadrangle_
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 19 Oct 2022
+! summary: Map from unit line to physical space
+
+INTERFACE FromBiUnitQuadrangle2Quadrangle_
+  MODULE PURE SUBROUTINE FromBiUnitQuadrangle2Quadrangle1_(xin, x1, x2, x3, &
+                                                          x4, ans, nrow, ncol)
+    REAL(DFP), INTENT(IN) :: xin(:, :)
+    !! vertex coordinate of biunit Quadrangle in xij format
+    !! SIZE(xin,1) = 2
+    REAL(DFP), INTENT(IN) :: x1(:)
+    !! vertex x1 of physical domain, size(x1) = nsd
+    REAL(DFP), INTENT(IN) :: x2(:)
+    !! vertex x2 of physical domain, size(x2) = nsd
+    REAL(DFP), INTENT(IN) :: x3(:)
+    !! vertex x3 of physical domain, size(x3) = nsd
+    REAL(DFP), INTENT(IN) :: x4(:)
+    !! vertex x4 of physical domain, size(x4) = nsd
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    ! ans(SIZE(x1), SIZE(xin, 2))
+    !! mapped coordinates of xin in physical domain
+    !! shape(ans) = nsd, N
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+  END SUBROUTINE FromBiUnitQuadrangle2Quadrangle1_
+END INTERFACE FromBiUnitQuadrangle2Quadrangle_
 
 !----------------------------------------------------------------------------
 !                                            FromBiUnitHexahedron2Hexahedron
