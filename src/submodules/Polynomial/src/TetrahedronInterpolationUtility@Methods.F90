@@ -16,12 +16,14 @@
 
 SUBMODULE(TetrahedronInterpolationUtility) Methods
 USE BaseMethod
-USE QuadraturePoint_Tetrahedron_Solin, ONLY:   &
-& QuadratureNumberTetrahedronSolin,  &
-& QuadratureOrderTetrahedronSolin,  &
-& QuadraturePointTetrahedronSolin,  &
-& MAX_ORDER_TETRAHEDRON_SOLIN
+USE QuadraturePoint_Tetrahedron_Solin, ONLY: &
+  QuadratureNumberTetrahedronSolin, &
+  QuadratureOrderTetrahedronSolin, &
+  QuadraturePointTetrahedronSolin, &
+  MAX_ORDER_TETRAHEDRON_SOLIN
+
 IMPLICIT NONE
+
 CONTAINS
 
 !----------------------------------------------------------------------------
@@ -461,14 +463,12 @@ END PROCEDURE EquidistanceInPoint_Tetrahedron
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE InterpolationPoint_Tetrahedron
-ans = Isaac_Tetrahedron( &
-  & order=order, &
-  & ipType=ipType, &
-  & layout=layout, &
-  & xij=xij, &
-  & alpha=alpha,  &
-  & beta=beta,  &
-  & lambda=lambda)
+INTEGER(I4B) :: nrow, ncol
+
+ncol = SIZE(n=order, d=3)
+ALLOCATE (ans(3, ncol))
+CALL Isaac_Tetrahedron(order=order, ipType=ipType, layout=layout, xij=xij, &
+         alpha=alpha, beta=beta, lambda=lambda, ans=ans, nrow=nrow, ncol=ncol)
 END PROCEDURE InterpolationPoint_Tetrahedron
 
 !----------------------------------------------------------------------------
@@ -557,24 +557,20 @@ END PROCEDURE LagrangeCoeff_Tetrahedron4
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Isaac_Tetrahedron
+! CHARACTER(*), PARAMETER :: myName = "Isaac_Tetrahedron"
+
 REAL(DFP), DIMENSION(order + 1, order + 1, order + 1) :: xi, eta, zeta
-REAL(DFP), ALLOCATABLE :: temp(:, :), rPoints(:, :)
-INTEGER(I4B) :: nsd, N, cnt, ii, jj, kk
-CHARACTER(*), PARAMETER :: myName = "Isaac_Tetrahedron"
 
-rPoints = RecursiveNode3D( &
-  & order=order, &
-  & ipType=ipType, &
-  & domain="UNIT", &
-  & alpha=alpha, &
-  & beta=beta, &
-  & lambda=lambda)
+INTEGER(I4B) :: cnt, ii, jj, kk
 
-N = SIZE(rPoints, 2)
+ncol = SIZE(n=order, d=3)
+nrow = 3
 
-nsd = 3
-CALL Reallocate(ans, nsd, N)
-CALL Reallocate(temp, nsd, N)
+CALL RecursiveNode3D_(order=order, ipType=ipType, domain="UNIT", &
+         alpha=alpha, beta=beta, lambda=lambda, ans=ans, nrow=nrow, ncol=ncol)
+
+! CALL Reallocate(ans, nsd, N)
+! CALL Reallocate(temp, nrow, ncol)
 
 !! convert from rPoints to xi and eta
 cnt = 0
@@ -587,39 +583,26 @@ DO ii = 0, order
     DO kk = 0, order
       IF (ii + jj + kk .LE. order) THEN
         cnt = cnt + 1
-        xi(ii + 1, jj + 1, kk + 1) = rPoints(1, cnt)
-        eta(ii + 1, jj + 1, kk + 1) = rPoints(2, cnt)
-        zeta(ii + 1, jj + 1, kk + 1) = rPoints(3, cnt)
+        xi(ii + 1, jj + 1, kk + 1) = ans(1, cnt)
+        eta(ii + 1, jj + 1, kk + 1) = ans(2, cnt)
+        zeta(ii + 1, jj + 1, kk + 1) = ans(3, cnt)
       END IF
     END DO
   END DO
 END DO
 
 IF (layout .EQ. "VEFC") THEN
-  CALL IJK2VEFC_Tetrahedron( &
-    & xi=xi, &
-    & eta=eta, &
-    & zeta=zeta, &
-    & temp=temp, &
-    & order=order, &
-    & N=N)
-ELSE
-  temp = rPoints
+  CALL IJK2VEFC_Tetrahedron(xi=xi, eta=eta, zeta=zeta, temp=ans, &
+                            order=order, N=ncol)
 END IF
 
 IF (PRESENT(xij)) THEN
-  ans = FromUnitTetrahedron2Tetrahedron( &
-    & xin=temp, &
-    & x1=xij(:, 1), &
-    & x2=xij(:, 2), &
-    & x3=xij(:, 3), &
-    & x4=xij(:, 4))
-ELSE
-  ans = temp
+  ! convert temp to ans using xij
+  CALL FromUnitTetrahedron2Tetrahedron_(xin=ans(1:nrow, 1:ncol), &
+            x1=xij(:, 1), x2=xij(:, 2), x3=xij(:, 3), x4=xij(:, 4), ans=ans, &
+                                        nrow=nrow, ncol=ncol)
 END IF
 
-IF (ALLOCATED(temp)) DEALLOCATE (temp)
-IF (ALLOCATED(rPoints)) DEALLOCATE (rPoints)
 END PROCEDURE Isaac_Tetrahedron
 
 !----------------------------------------------------------------------------
@@ -642,21 +625,33 @@ END PROCEDURE BlythPozrikidis_Tetrahedron
 
 MODULE PROCEDURE IJK2VEFC_Tetrahedron
 INTEGER(I4B) :: indof, ii, cnt, jj, kk, ll
+REAL(DFP) :: x(3)
+INTEGER(I4B), PARAMETER :: nrow = 3
+
 REAL(DFP), DIMENSION(3, (order + 1)*(order + 2)/2) :: temp_face_in
 REAL(DFP), DIMENSION(order + 1, order + 1) :: xi2, eta2, zeta2
 
 SELECT CASE (order)
 CASE (0)
-  temp(:, 1) = [xi(1, 1, 1), eta(1, 1, 1), zeta(1, 1, 1)]
+  x = [xi(1, 1, 1), eta(1, 1, 1), zeta(1, 1, 1)]
+  temp(1:nrow, 1) = x
 CASE (1)
   !  | 0 | 0 | 0 |
   !  | 0 | 0 | 1 |
   !  | 0 | 1 | 0 |
   !  | 1 | 0 | 0 |
-  temp(:, 1) = [xi(1, 1, 1), eta(1, 1, 1), zeta(1, 1, 1)]
-  temp(:, 2) = [xi(order+1, 1, 1), eta(order+1, 1, 1), zeta(order+1, 1, 1)]
-  temp(:, 3) = [xi(1, order+1, 1), eta(1, order+1, 1), zeta(1, order+1, 1)]
-  temp(:, 4) = [xi(1, 1, order+1), eta(1, 1, order+1), zeta(1, 1, order+1)]
+  x = [xi(1, 1, 1), eta(1, 1, 1), zeta(1, 1, 1)]
+  temp(1:nrow, 1) = x
+
+  x = [xi(order + 1, 1, 1), eta(order + 1, 1, 1), zeta(order + 1, 1, 1)]
+  temp(1:nrow, 2) = x
+
+  x = [xi(1, order + 1, 1), eta(1, order + 1, 1), zeta(1, order + 1, 1)]
+  temp(1:nrow, 3) = x
+
+  x = [xi(1, 1, order + 1), eta(1, 1, order + 1), zeta(1, 1, order + 1)]
+  temp(1:nrow, 4) = x
+
 CASE (2)
   ! | 0 | 0 | 0 |
   ! | 0 | 0 | 0.5 |
@@ -670,23 +665,41 @@ CASE (2)
   ! | 1 | 0 | 0 |
 
   ! four vertex
-  temp(:, 1) = [xi(1, 1, 1), eta(1, 1, 1), zeta(1, 1, 1)]
-  temp(:, 2) = [xi(order+1, 1, 1), eta(order+1, 1, 1), zeta(order+1, 1, 1)]
-  temp(:, 3) = [xi(1, order+1, 1), eta(1, order+1, 1), zeta(1, order+1, 1)]
-  temp(:, 4) = [xi(1, 1, order+1), eta(1, 1, order+1), zeta(1, 1, order+1)]
+  x = [xi(1, 1, 1), eta(1, 1, 1), zeta(1, 1, 1)]
+  temp(1:nrow, 1) = x
+
+  x = [xi(order + 1, 1, 1), eta(order + 1, 1, 1), zeta(order + 1, 1, 1)]
+  temp(1:nrow, 2) = x
+
+  x = [xi(1, order + 1, 1), eta(1, order + 1, 1), zeta(1, order + 1, 1)]
+  temp(1:nrow, 3) = x
+
+  x = [xi(1, 1, order + 1), eta(1, 1, order + 1), zeta(1, 1, order + 1)]
+  temp(1:nrow, 4) = x
 
   ! edge1 x
-  temp(:, 5) = [xi(2, 1, 1), eta(2, 1, 1), zeta(2, 1, 1)]
+  x = [xi(2, 1, 1), eta(2, 1, 1), zeta(2, 1, 1)]
+  temp(1:nrow, 5) = x
+
   ! edge2 y
-  temp(:, 6) = [xi(1, 2, 1), eta(1, 2, 1), zeta(1, 2, 1)]
+  x = [xi(1, 2, 1), eta(1, 2, 1), zeta(1, 2, 1)]
+  temp(1:nrow, 6) = x
+
   ! edge3 z
-  temp(:, 7) = [xi(1, 1, 2), eta(1, 1, 2), zeta(1, 1, 2)]
+  x = [xi(1, 1, 2), eta(1, 1, 2), zeta(1, 1, 2)]
+  temp(1:nrow, 7) = x
+
   ! edge4 xy
-  temp(:, 8) = [xi(2, 2, 1), eta(2, 2, 1), zeta(2, 2, 1)]
+  x = [xi(2, 2, 1), eta(2, 2, 1), zeta(2, 2, 1)]
+  temp(1:nrow, 8) = x
+
   ! edge5, xz
-  temp(:, 9) = [xi(2, 1, 2), eta(2, 1, 2), zeta(2, 1, 2)]
+  x = [xi(2, 1, 2), eta(2, 1, 2), zeta(2, 1, 2)]
+  temp(1:nrow, 9) = x
+
   ! edge6, yz
-  temp(:, 10) = [xi(1, 2, 2), eta(1, 2, 2), zeta(1, 2, 2)]
+  x = [xi(1, 2, 2), eta(1, 2, 2), zeta(1, 2, 2)]
+  temp(1:nrow, 10) = x
 
 CASE (3)
   ! | 0 | 0 | 0 |
@@ -711,149 +724,179 @@ CASE (3)
   ! | 1 | 0 | 0 |
 
   ! four vertex
-  temp(:, 1) = [xi(1, 1, 1), eta(1, 1, 1), zeta(1, 1, 1)]
-  temp(:, 2) = [xi(order+1, 1, 1), eta(order+1, 1, 1), zeta(order+1, 1, 1)]
-  temp(:, 3) = [xi(1, order+1, 1), eta(1, order+1, 1), zeta(1, order+1, 1)]
-  temp(:, 4) = [xi(1, 1, order+1), eta(1, 1, order+1), zeta(1, 1, order+1)]
+  x = [xi(1, 1, 1), eta(1, 1, 1), zeta(1, 1, 1)]
+  temp(1:nrow, 1) = x
+
+  x = [xi(order + 1, 1, 1), eta(order + 1, 1, 1), zeta(order + 1, 1, 1)]
+  temp(1:nrow, 2) = x
+
+  x = [xi(1, order + 1, 1), eta(1, order + 1, 1), zeta(1, order + 1, 1)]
+  temp(1:nrow, 3) = x
+
+  x = [xi(1, 1, order + 1), eta(1, 1, order + 1), zeta(1, 1, order + 1)]
+  temp(1:nrow, 4) = x
 
   cnt = 4
   ! edge1 x
   DO ii = 1, order - 1
     cnt = cnt + 1
-    temp(:, cnt) = [xi(1 + ii, 1, 1), eta(1 + ii, 1, 1), zeta(1 + ii, 1, 1)]
+    x = [xi(1 + ii, 1, 1), eta(1 + ii, 1, 1), zeta(1 + ii, 1, 1)]
+    temp(1:nrow, cnt) = x
   END DO
+
   ! edge2 y
   DO ii = 1, order - 1
     cnt = cnt + 1
-    temp(:, cnt) = [xi(1, 1 + ii, 1), eta(1, 1 + ii, 1), zeta(1, 1 + ii, 1)]
+    x = [xi(1, 1 + ii, 1), eta(1, 1 + ii, 1), zeta(1, 1 + ii, 1)]
+    temp(1:nrow, cnt) = x
   END DO
+
   ! edge3 z
   DO ii = 1, order - 1
     cnt = cnt + 1
-    temp(:, cnt) = [xi(1, 1, 1 + ii), eta(1, 1, 1 + ii), zeta(1, 1, 1 + ii)]
+    x = [xi(1, 1, 1 + ii), eta(1, 1, 1 + ii), zeta(1, 1, 1 + ii)]
+    temp(1:nrow, cnt) = x
   END DO
+
   ! edge4 xy
   DO ii = 1, order - 1
     cnt = cnt + 1
-   temp(:, cnt) = [xi(4-ii, 1+ii, 1), eta(4-ii, 1+ii, 1), zeta(4-ii, 1+ii, 1)]
+    x = [xi(4 - ii, 1 + ii, 1), eta(4 - ii, 1 + ii, 1), &
+         zeta(4 - ii, 1 + ii, 1)]
+    temp(1:nrow, cnt) = x
   END DO
+
   ! edge5, xz
   DO ii = 1, order - 1
     cnt = cnt + 1
-   temp(:, cnt) = [xi(4-ii, 1, ii+1), eta(4-ii, 1, ii+1), zeta(4-ii, 1, ii+1)]
+    x = [xi(4 - ii, 1, ii + 1), eta(4 - ii, 1, ii + 1), &
+         zeta(4 - ii, 1, ii + 1)]
+    temp(1:nrow, cnt) = x
   END DO
   ! edge6, yz
   DO ii = 1, order - 1
     cnt = cnt + 1
-   temp(:, cnt) = [xi(1, 4-ii, ii+1), eta(1, 4-ii, ii+1), zeta(1, 4-ii, ii+1)]
+    x = [xi(1, 4 - ii, ii + 1), eta(1, 4 - ii, ii + 1), &
+         zeta(1, 4 - ii, ii + 1)]
+    temp(1:nrow, cnt) = x
+
   END DO
 
   ! facet xy
   cnt = cnt + 1
-  temp(:, cnt) = [xi(2, 2, 1), eta(2, 2, 1), zeta(2, 2, 1)]
+  x = [xi(2, 2, 1), eta(2, 2, 1), zeta(2, 2, 1)]
+  temp(1:nrow, cnt) = x
 
   ! facet xz
   cnt = cnt + 1
-  temp(:, cnt) = [xi(2, 1, 2), eta(2, 1, 2), zeta(2, 1, 2)]
+  x = [xi(2, 1, 2), eta(2, 1, 2), zeta(2, 1, 2)]
+  temp(1:nrow, cnt) = x
 
   ! facet yz
   cnt = cnt + 1
-  temp(:, cnt) = [xi(1, 2, 2), eta(1, 2, 2), zeta(1, 2, 2)]
+  x = [xi(1, 2, 2), eta(1, 2, 2), zeta(1, 2, 2)]
+  temp(1:nrow, cnt) = x
 
   ! facet 4
   cnt = cnt + 1
-  temp(:, cnt) = [xi(2, 2, 2), eta(2, 2, 2), zeta(2, 2, 2)]
+  x = [xi(2, 2, 2), eta(2, 2, 2), zeta(2, 2, 2)]
+  temp(1:nrow, cnt) = x
 
 CASE DEFAULT
 
   ! four vertex
-  temp(:, 1) = [xi(1, 1, 1), eta(1, 1, 1), zeta(1, 1, 1)]
-  temp(:, 2) = [xi(order+1, 1, 1), eta(order+1, 1, 1), zeta(order+1, 1, 1)]
-  temp(:, 3) = [xi(1, order+1, 1), eta(1, order+1, 1), zeta(1, order+1, 1)]
-  temp(:, 4) = [xi(1, 1, order+1), eta(1, 1, order+1), zeta(1, 1, order+1)]
+  x = [xi(1, 1, 1), eta(1, 1, 1), zeta(1, 1, 1)]
+  temp(1:nrow, 1) = x
+
+  x = [xi(order + 1, 1, 1), eta(order + 1, 1, 1), zeta(order + 1, 1, 1)]
+  temp(1:nrow, 2) = x
+
+  x = [xi(1, order + 1, 1), eta(1, order + 1, 1), zeta(1, order + 1, 1)]
+  temp(1:nrow, 3) = x
+
+  x = [xi(1, 1, order + 1), eta(1, 1, order + 1), zeta(1, 1, order + 1)]
+  temp(1:nrow, 4) = x
 
   cnt = 4
   ! edge1 x
   DO ii = 1, order - 1
     cnt = cnt + 1
-    temp(:, cnt) = [xi(1 + ii, 1, 1), eta(1 + ii, 1, 1), zeta(1 + ii, 1, 1)]
+    x = [xi(1 + ii, 1, 1), eta(1 + ii, 1, 1), zeta(1 + ii, 1, 1)]
+    temp(1:nrow, cnt) = x
+
   END DO
   ! edge2 y
   DO ii = 1, order - 1
     cnt = cnt + 1
-    temp(:, cnt) = [xi(1, 1 + ii, 1), eta(1, 1 + ii, 1), zeta(1, 1 + ii, 1)]
+    x = [xi(1, 1 + ii, 1), eta(1, 1 + ii, 1), zeta(1, 1 + ii, 1)]
+    temp(1:nrow, cnt) = x
+
   END DO
   ! edge3 z
   DO ii = 1, order - 1
     cnt = cnt + 1
-    temp(:, cnt) = [xi(1, 1, 1 + ii), eta(1, 1, 1 + ii), zeta(1, 1, 1 + ii)]
+    x = [xi(1, 1, 1 + ii), eta(1, 1, 1 + ii), zeta(1, 1, 1 + ii)]
+    temp(1:nrow, cnt) = x
+
   END DO
   ! edge4 xy
   jj = order + 1
   DO ii = 1, order - 1
     cnt = cnt + 1
-    temp(:, cnt) = [ &
-                & xi(jj - ii, 1 + ii, 1), &
-                & eta(jj - ii, 1 + ii, 1), &
-                & zeta(jj - ii, 1 + ii, 1)]
+    x = [xi(jj - ii, 1 + ii, 1), eta(jj - ii, 1 + ii, 1), &
+         zeta(jj - ii, 1 + ii, 1)]
+    temp(1:nrow, cnt) = x
   END DO
+
   ! edge5, xz
   DO ii = 1, order - 1
     cnt = cnt + 1
-    temp(:, cnt) = [ &
-              & xi(jj - ii, 1, ii + 1), &
-              & eta(jj - ii, 1, ii + 1), &
-              & zeta(jj - ii, 1, ii + 1)]
+    x = [xi(jj - ii, 1, ii + 1), eta(jj - ii, 1, ii + 1), &
+         zeta(jj - ii, 1, ii + 1)]
+    temp(1:nrow, cnt) = x
   END DO
+
   ! edge6, yz
   DO ii = 1, order - 1
     cnt = cnt + 1
-    temp(:, cnt) = [ &
-              & xi(1, jj - ii, ii + 1), &
-              & eta(1, jj - ii, ii + 1), &
-              & zeta(1, jj - ii, ii + 1)]
+    x = [xi(1, jj - ii, ii + 1), eta(1, jj - ii, ii + 1), &
+         zeta(1, jj - ii, ii + 1)]
+    temp(1:nrow, cnt) = x
   END DO
 
   ! facet xy
   jj = LagrangeDOF_Triangle(order)
-  CALL IJ2VEFC_Triangle( &
-    & xi=xi(:, :, 1), &
-    & eta=eta(:, :, 1), &
-    & temp=temp_face_in, &
-    & order=order, &
-    & N=jj)
+  CALL IJ2VEFC_Triangle(xi=xi(:, :, 1), eta=eta(:, :, 1), &
+                        temp=temp_face_in, order=order, N=jj)
+
   kk = LagrangeInDOF_Triangle(order)
   DO ii = jj - kk + 1, jj
     cnt = cnt + 1
-    temp(:, cnt) = [temp_face_in(1, ii), temp_face_in(2, ii), zeta(1, 1, 1)]
+    x = [temp_face_in(1, ii), temp_face_in(2, ii), zeta(1, 1, 1)]
+    temp(1:nrow, cnt) = x
   END DO
 
   ! facet xz
   ! jj = LagrangeDOF_Triangle(order)
-  CALL IJ2VEFC_Triangle( &
-    & xi=xi(:, 1, :), &
-    & eta=zeta(:, 1, :), &
-    & temp=temp_face_in, &
-    & order=order, &
-    & N=jj)
+  CALL IJ2VEFC_Triangle(xi=xi(:, 1, :), eta=zeta(:, 1, :), &
+                        temp=temp_face_in, order=order, N=jj)
+
   ! kk = LagrangeInDOF_Triangle(order)
   DO ii = jj - kk + 1, jj
     cnt = cnt + 1
-    temp(:, cnt) = [temp_face_in(1, ii), eta(1, 1, 1), temp_face_in(2, ii)]
+    x = [temp_face_in(1, ii), eta(1, 1, 1), temp_face_in(2, ii)]
+    temp(1:nrow, cnt) = x
   END DO
 
   ! facet yz
   ! jj = LagrangeDOF_Triangle(order)
-  CALL IJ2VEFC_Triangle( &
-    & xi=eta(1, :, :), &
-    & eta=zeta(1, :, :), &
-    & temp=temp_face_in, &
-    & order=order, &
-    & N=jj)
+  CALL IJ2VEFC_Triangle(xi=eta(1, :, :), eta=zeta(1, :, :), &
+                        temp=temp_face_in, order=order, N=jj)
   ! kk = LagrangeInDOF_Triangle(order)
   DO ii = jj - kk + 1, jj
     cnt = cnt + 1
-    temp(:, cnt) = [xi(1, 1, 1), temp_face_in(1, ii), temp_face_in(2, ii)]
+    x = [xi(1, 1, 1), temp_face_in(1, ii), temp_face_in(2, ii)]
+    temp(1:nrow, cnt) = x
   END DO
 
   ! ! facet 4
@@ -877,23 +920,13 @@ CASE DEFAULT
   END DO
 
   temp_face_in = 0.0_DFP
-  CALL IJK2VEFC_Triangle( &
-    & xi=xi2, &
-    & eta=eta2, &
-    & zeta=zeta2, &
-    & temp=temp_face_in, &
-    & order=order, &
-    & N=SIZE(temp_face_in, 2))
+  CALL IJK2VEFC_Triangle(xi=xi2, eta=eta2, zeta=zeta2, temp=temp_face_in, &
+                         order=order, N=SIZE(temp_face_in, 2))
 
   ! facet 4
   jj = LagrangeDOF_Triangle(order)
-  CALL IJK2VEFC_Triangle( &
-    & xi=xi2, &
-    & eta=eta2, &
-    & zeta=zeta2, &
-    & temp=temp_face_in, &
-    & order=order, &
-    & N=jj)
+  CALL IJK2VEFC_Triangle(xi=xi2, eta=eta2, zeta=zeta2, temp=temp_face_in, &
+                         order=order, N=jj)
   kk = LagrangeInDOF_Triangle(order)
   DO ii = jj - kk + 1, jj
     cnt = cnt + 1
@@ -902,12 +935,10 @@ CASE DEFAULT
 
   jj = LagrangeDOF_Tetrahedron(order)
   kk = LagrangeInDOF_Tetrahedron(order=order)
-  CALL IJK2VEFC_Tetrahedron( &
-    & xi(2:order - 2, 2:order - 2, 2:order - 2), &
-    & eta(2:order - 2, 2:order - 2, 2:order - 2), &
-    & zeta(2:order - 2, 2:order - 2, 2:order - 2), &
-    & temp(:, cnt + 1:), &
-    & order - 4, kk)
+  CALL IJK2VEFC_Tetrahedron(xi(2:order - 2, 2:order - 2, 2:order - 2), &
+                            eta(2:order - 2, 2:order - 2, 2:order - 2), &
+             zeta(2:order - 2, 2:order - 2, 2:order - 2), temp(:, cnt + 1:), &
+                            order - 4, kk)
 END SELECT
 
 END PROCEDURE IJK2VEFC_Tetrahedron
@@ -916,13 +947,7 @@ END PROCEDURE IJK2VEFC_Tetrahedron
 !                                                         IJ2VEFC_Triangle
 !----------------------------------------------------------------------------
 
-SUBROUTINE IJK2VEFC_Triangle( &
-  & xi, &
-  & eta, &
-  & zeta, &
-  & temp,  &
-  & order, &
-  & N)
+SUBROUTINE IJK2VEFC_Triangle(xi, eta, zeta, temp, order, N)
   REAL(DFP), INTENT(IN) :: xi(:, :)
   REAL(DFP), INTENT(IN) :: eta(:, :)
   REAL(DFP), INTENT(IN) :: zeta(:, :)
@@ -1002,6 +1027,7 @@ SUBROUTINE IJK2VEFC_Triangle( &
       & unitno=stderr)
     RETURN
   END IF
+
 END SUBROUTINE IJK2VEFC_Triangle
 
 !----------------------------------------------------------------------------

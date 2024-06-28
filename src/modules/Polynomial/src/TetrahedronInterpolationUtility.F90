@@ -27,9 +27,10 @@ PUBLIC :: LagrangeInDOF_Tetrahedron
 PUBLIC :: EquidistanceInPoint_Tetrahedron
 PUBLIC :: EquidistancePoint_Tetrahedron
 PUBLIC :: LagrangeCoeff_Tetrahedron
-PUBLIC :: Isaac_Tetrahedron
-PUBLIC :: BlythPozrikidis_Tetrahedron
+! PUBLIC :: Isaac_Tetrahedron
+! PUBLIC :: BlythPozrikidis_Tetrahedron
 PUBLIC :: InterpolationPoint_Tetrahedron
+PUBLIC :: InterpolationPoint_Tetrahedron_
 PUBLIC :: OrthogonalBasis_Tetrahedron
 PUBLIC :: BarycentricVertexBasis_Tetrahedron
 PUBLIC :: BarycentricEdgeBasis_Tetrahedron
@@ -443,14 +444,8 @@ END INTERFACE
 ! summary:         Interpolation point
 
 INTERFACE
-  MODULE FUNCTION InterpolationPoint_Tetrahedron( &
-    & order, &
-    & ipType, &
-    & layout, &
-    & xij, &
-    & alpha, &
-    & beta, &
-    & lambda) RESULT(ans)
+  MODULE FUNCTION InterpolationPoint_Tetrahedron(order, ipType, layout, &
+                                         xij, alpha, beta, lambda) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
     !! order of element
     INTEGER(I4B), INTENT(IN) :: ipType
@@ -475,6 +470,38 @@ INTERFACE
     REAL(DFP), ALLOCATABLE :: ans(:, :)
     !! interpolation points in $x_{iJ}$ format
   END FUNCTION InterpolationPoint_Tetrahedron
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                            InterpolationPoint_Tetrahedron
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 18 Aug 2022
+! summary:         Interpolation point
+
+INTERFACE
+  MODULE SUBROUTINE InterpolationPoint_Tetrahedron_(order, ipType, ans, &
+                                 nrow, ncol, layout, xij, alpha, beta, lambda)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order of element
+    INTEGER(I4B), INTENT(IN) :: ipType
+    !! interpolation type
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    !!
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+    !!
+    CHARACTER(*), INTENT(IN) :: layout
+    !! "VEFC", "INCREASING"
+    REAL(DFP), OPTIONAL, INTENT(IN) :: xij(3, 4)
+    !! coordinates of vertices in $x_{iJ}$ format
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
+    !! Jacobi polynomial parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: beta
+    !! Jacobi polynomial parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: lambda
+    !! Ultraspherical polynomial parameter
+  END SUBROUTINE InterpolationPoint_Tetrahedron_
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -580,9 +607,8 @@ END INTERFACE LagrangeCoeff_Tetrahedron
 ! https://tisaac.gitlab.io/recursivenodes/
 
 INTERFACE
-  MODULE FUNCTION Isaac_Tetrahedron(order, ipType, layout, xij,  &
-  & alpha, beta, lambda) &
-    & RESULT(ans)
+  MODULE SUBROUTINE Isaac_Tetrahedron(order, ipType, ans, nrow, ncol, &
+                                      layout, xij, alpha, beta, lambda)
     INTEGER(I4B), INTENT(IN) :: order
     !! order
     INTEGER(I4B), INTENT(IN) :: ipType
@@ -593,6 +619,10 @@ INTERFACE
     !! GaussChebyshevLobatto
     !! GaussJacobi
     !! GaussJacobiLobatto
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    !! xij coordinates
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+    !! number of rows and columns
     REAL(DFP), OPTIONAL, INTENT(IN) :: xij(:, :)
     !! nodal coordinates of Tetrahedron
     CHARACTER(*), INTENT(IN) :: layout
@@ -604,9 +634,7 @@ INTERFACE
     !! Jacobi polynomial parameter
     REAL(DFP), OPTIONAL, INTENT(IN) :: lambda
     !! Ultraspherical polynomial parameter
-    REAL(DFP), ALLOCATABLE :: ans(:, :)
-    !! xij coordinates
-  END FUNCTION Isaac_Tetrahedron
+  END SUBROUTINE Isaac_Tetrahedron
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -658,17 +686,12 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-  MODULE RECURSIVE SUBROUTINE IJK2VEFC_Tetrahedron( &
-    & xi, &
-    & eta, &
-    & zeta, &
-    & temp, &
-    & order, &
-    & N)
+  MODULE RECURSIVE SUBROUTINE IJK2VEFC_Tetrahedron(xi, eta, zeta, temp, &
+                                                   order, N)
     REAL(DFP), INTENT(IN) :: xi(:, :, :)
     REAL(DFP), INTENT(IN) :: eta(:, :, :)
     REAL(DFP), INTENT(IN) :: zeta(:, :, :)
-    REAL(DFP), INTENT(OUT) :: temp(:, :)
+    REAL(DFP), INTENT(INOUT) :: temp(:, :)
     INTEGER(I4B), INTENT(IN) :: order
     INTEGER(I4B), INTENT(IN) :: N
   END SUBROUTINE IJK2VEFC_Tetrahedron
