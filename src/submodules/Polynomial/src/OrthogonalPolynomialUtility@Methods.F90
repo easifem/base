@@ -136,6 +136,29 @@ END SELECT
 END PROCEDURE EvalAllOrthopol
 
 !----------------------------------------------------------------------------
+!                                                            EvalAllOrthopol
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE EvalAllOrthopol_
+SELECT CASE (orthopol)
+CASE (Jacobi)
+  CALL JacobiEvalAll_(n=n, alpha=alpha, beta=beta, x=x, ans=ans, nrow=nrow, &
+                      ncol=ncol)
+CASE (Ultraspherical)
+  CALL UltraSphericalEvalAll_(n=n, lambda=lambda, x=x, ans=ans, nrow=nrow, &
+                              ncol=ncol)
+CASE (Legendre)
+  CALL LegendreEvalAll_(n=n, x=x, ans=ans, nrow=nrow, ncol=ncol)
+CASE (Chebyshev)
+  CALL Chebyshev1EvalAll_(n=n, x=x, ans=ans, nrow=nrow, ncol=ncol)
+CASE (Lobatto)
+  CALL LobattoEvalAll_(n=n, x=x, ans=ans, nrow=nrow, ncol=ncol)
+CASE (UnscaledLobatto)
+  CALL UnscaledLobattoEvalAll_(n=n, x=x, ans=ans, nrow=nrow, ncol=ncol)
+END SELECT
+END PROCEDURE EvalAllOrthopol_
+
+!----------------------------------------------------------------------------
 !                                                   GradientEvalAllOrthopol
 !----------------------------------------------------------------------------
 

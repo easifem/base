@@ -29,6 +29,7 @@ PUBLIC :: UnscaledLobattoLeadingCoeff
 PUBLIC :: UnscaledLobattoZeros
 PUBLIC :: UnscaledLobattoEval
 PUBLIC :: UnscaledLobattoEvalAll
+PUBLIC :: UnscaledLobattoEvalAll_
 PUBLIC :: UnscaledLobattoMonomialExpansionAll
 PUBLIC :: UnscaledLobattoMonomialExpansion
 PUBLIC :: UnscaledLobattoGradientEvalAll

@@ -29,6 +29,7 @@ PUBLIC :: LobattoLeadingCoeff
 PUBLIC :: LobattoZeros
 PUBLIC :: LobattoEval
 PUBLIC :: LobattoEvalAll
+PUBLIC :: LobattoEvalAll_
 PUBLIC :: LobattoKernelEvalAll
 PUBLIC :: LobattoKernelEvalAll_
 PUBLIC :: LobattoKernelGradientEvalAll

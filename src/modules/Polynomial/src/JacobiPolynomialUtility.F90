@@ -44,6 +44,7 @@ PUBLIC :: JacobiGaussLobattoQuadrature
 PUBLIC :: JacobiZeros
 PUBLIC :: JacobiQuadrature
 PUBLIC :: JacobiEvalAll
+PUBLIC :: JacobiEvalAll_
 PUBLIC :: JacobiEval
 PUBLIC :: JacobiEvalSum
 PUBLIC :: JacobiGradientEval
