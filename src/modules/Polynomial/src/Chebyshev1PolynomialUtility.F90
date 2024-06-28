@@ -463,7 +463,7 @@ END INTERFACE Chebyshev1Eval
 !- ans(1:N+1), the values of the first N+1 Chebyshev1 polynomials at the
 ! point
 
-INTERFACE
+INTERFACE Chebyshev1EvalAll
   MODULE PURE FUNCTION Chebyshev1EvalAll1(n, x) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: n
     !! order of polynomial
@@ -473,11 +473,25 @@ INTERFACE
     !! Evaluate Chebyshev1 polynomial of order = 0 to n (total n+1)
     !! at point x
   END FUNCTION Chebyshev1EvalAll1
-END INTERFACE
-
-INTERFACE Chebyshev1EvalAll
-  MODULE PROCEDURE Chebyshev1EvalAll1
 END INTERFACE Chebyshev1EvalAll
+
+!----------------------------------------------------------------------------
+!                                                       Chebyshev1EvalAll
+!----------------------------------------------------------------------------
+
+INTERFACE Chebyshev1EvalAll_
+  MODULE PURE SUBROUTINE Chebyshev1EvalAll1_(n, x, ans, tsize)
+    INTEGER(I4B), INTENT(IN) :: n
+    !! order of polynomial
+    REAL(DFP), INTENT(IN) :: x
+    !! point of evaluation
+    REAL(DFP), INTENT(INOUT) :: ans(:)
+    ! ans(n + 1)
+    !! Evaluate Chebyshev1 polynomial of order = 0 to n (total n+1)
+    !! at point x
+    INTEGER(I4B), INTENT(OUT) :: tsize
+  END SUBROUTINE Chebyshev1EvalAll1_
+END INTERFACE Chebyshev1EvalAll_
 
 !----------------------------------------------------------------------------
 !                                                           Chebyshev1EvalAll
@@ -498,7 +512,7 @@ END INTERFACE Chebyshev1EvalAll
 !- ans(M,1:N+1), the values of the first N+1 Chebyshev1 polynomials at the
 ! points x(1:m)
 
-INTERFACE
+INTERFACE Chebyshev1EvalAll
   MODULE PURE FUNCTION Chebyshev1EvalAll2(n, x) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: n
     !! order of polynomial
@@ -508,11 +522,25 @@ INTERFACE
     !! Evaluate Chebyshev1 polynomial of order = 0 to n (total n+1)
     !! at points x
   END FUNCTION Chebyshev1EvalAll2
-END INTERFACE
-
-INTERFACE Chebyshev1EvalAll
-  MODULE PROCEDURE Chebyshev1EvalAll2
 END INTERFACE Chebyshev1EvalAll
+
+!----------------------------------------------------------------------------
+!                                                         ChebyshevEvalAll2_
+!----------------------------------------------------------------------------
+
+INTERFACE Chebyshev1EvalAll_
+  MODULE PURE SUBROUTINE Chebyshev1EvalAll2_(n, x, ans, nrow, ncol)
+    INTEGER(I4B), INTENT(IN) :: n
+    !! order of polynomial
+    REAL(DFP), INTENT(IN) :: x(:)
+    !! several points of evaluation
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    !! ans(SIZE(x), n + 1)
+    !! Evaluate Chebyshev1 polynomial of order = 0 to n (total n+1)
+    !! at points x
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+  END SUBROUTINE Chebyshev1EvalAll2_
+END INTERFACE Chebyshev1EvalAll_
 
 !----------------------------------------------------------------------------
 !                                             Chebyshev1MonomialExpansionAll

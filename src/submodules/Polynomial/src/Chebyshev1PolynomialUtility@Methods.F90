@@ -357,54 +357,68 @@ END PROCEDURE Chebyshev1Eval2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Chebyshev1EvalAll1
-INTEGER(I4B) :: i
-!!
-ans = 0.0_DFP
-!!
-IF (n < 0) THEN
-  RETURN
-END IF
-!!
-ans(1) = 1.0_DFP
-!!
-IF (n .EQ. 0) THEN
-  RETURN
-END IF
-!!
-ans(2) = x
-!!
-DO i = 2, n
-  ans(i + 1) = (2.0_DFP * x) * ans(i) - ans(i - 1)
-END DO
-!!
+INTEGER(I4B) :: tsize
+CALL Chebyshev1EvalAll1_(tsize=tsize, ans=ans, n=n, x=x)
 END PROCEDURE Chebyshev1EvalAll1
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE Chebyshev1EvalAll2
+MODULE PROCEDURE Chebyshev1EvalAll1_
 INTEGER(I4B) :: i
-!!
-ans = 0.0_DFP
-!!
-IF (n < 0) THEN
-  RETURN
-END IF
-!!
-ans(:, 1) = 1.0_DFP
-!!
-IF (n .EQ. 0) THEN
-  RETURN
-END IF
-!!
-ans(:, 2) = x
-!!
+
+tsize = 0
+
+IF (n < 0) RETURN
+
+tsize = n + 1
+ans(1) = 1.0_DFP
+
+IF (n .EQ. 0) RETURN
+
+ans(2) = x
+
 DO i = 2, n
-  ans(:, i + 1) = (2.0_DFP * x) * ans(:, i) - ans(:, i - 1)
+  ans(i + 1) = (2.0_DFP * x) * ans(i) - ans(i - 1)
 END DO
-!!
+END PROCEDURE Chebyshev1EvalAll1_
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE Chebyshev1EvalAll2
+INTEGER(I4B) :: nrow, ncol
+CALL Chebyshev1EvalAll2_(n=n, x=x, ans=ans, nrow=nrow, ncol=ncol)
 END PROCEDURE Chebyshev1EvalAll2
+
+!----------------------------------------------------------------------------
+!                                                         Chebyshev1EvalAll_
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE Chebyshev1EvalAll2_
+INTEGER(I4B) :: i
+
+nrow = 0
+ncol = 0
+
+IF (n < 0) RETURN
+
+nrow = SIZE(x)
+ncol = n + 1
+
+ans(1:nrow, 1) = 1.0_DFP
+
+IF (n .EQ. 0) RETURN
+
+ans(1:nrow, 2) = x
+
+DO i = 2, n
+  ans(1:nrow, i + 1) = (2.0_DFP * x) * ans(1:nrow, i) - ans(1:nrow, i - 1)
+END DO
+
+END PROCEDURE Chebyshev1EvalAll2_
 
 !----------------------------------------------------------------------------
 !                                             Chebyshev1MonomialExpansionAll
@@ -693,9 +707,9 @@ b2 = 0.0_DFP
 xx = 2.0_DFP * x
 !!
 DO i = n - 1, 0, -1
-  t = xx * b1 - b2 + (i + 1) * coeff(i + 1);
-  b2 = b1;
-  b1 = t;
+  t = xx * b1 - b2 + (i + 1) * coeff(i + 1); 
+  b2 = b1; 
+  b1 = t; 
 END DO
 !!
 ans = b1
@@ -714,9 +728,9 @@ b2 = 0.0_DFP
 xx = 2.0_DFP * x
 !!
 DO i = n - 1, 0, -1
-  t = xx * b1 - b2 + (i + 1) * coeff(i + 1);
-  b2 = b1;
-  b1 = t;
+  t = xx * b1 - b2 + (i + 1) * coeff(i + 1); 
+  b2 = b1; 
+  b1 = t; 
 END DO
 !!
 ans = b1
@@ -750,9 +764,9 @@ ELSE
   DO i = n - k, 0, -1
     j = REAL(i, KIND=DFP)
     t = 2 * (j + k) / (j + 1) * x * b1 - (j + 2 * k) &
-      & / (j + 2) * b2 + (j + k) * coeff(i + k);
-    b2 = b1;
-    b1 = t;
+      & / (j + 2) * b2 + (j + k) * coeff(i + k); 
+    b2 = b1; 
+    b1 = t; 
   END DO
   !!
   ans = s * b1
@@ -788,9 +802,9 @@ ELSE
   DO i = n - k, 0, -1
     j = REAL(i, KIND=DFP)
     t = 2 * (j + k) / (j + 1) * x * b1 - (j + 2 * k) &
-      & / (j + 2) * b2 + (j + k) * coeff(i + k);
-    b2 = b1;
-    b1 = t;
+      & / (j + 2) * b2 + (j + k) * coeff(i + k); 
+    b2 = b1; 
+    b1 = t; 
   END DO
   !!
   ans = s * b1
@@ -1000,7 +1014,7 @@ PURE SUBROUTINE Chebyshev1DMatrixGL2(n, x, D)
   REAL(DFP) :: rn, j1, j2
   INTEGER(I4B) :: ii, jj, nb2
   !!
-  nb2 = int(n / 2)
+  nb2 = INT(n / 2)
   rn = REAL(n, KIND=DFP)
   !!
   D = 0.0_DFP
@@ -1056,7 +1070,7 @@ PURE SUBROUTINE Chebyshev1DMatrixG(n, x, D)
   !! main
   !!
   rn = REAL(n, KIND=DFP)
-  nb2 = int(n / 2)
+  nb2 = INT(n / 2)
   D = 0.0_DFP
   !!
   DO jj = 0, n
@@ -1107,7 +1121,7 @@ PURE SUBROUTINE Chebyshev1DMatrixG2(n, x, D)
   !! main
   !!
   rn = REAL(n, KIND=DFP)
-  nb2 = int(n / 2)
+  nb2 = INT(n / 2)
   D = 0.0_DFP
   !!
   J = Chebyshev1GradientEval(n=n + 1, x=x)
