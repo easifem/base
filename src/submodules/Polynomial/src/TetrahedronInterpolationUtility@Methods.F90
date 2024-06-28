@@ -464,12 +464,21 @@ END PROCEDURE EquidistanceInPoint_Tetrahedron
 
 MODULE PROCEDURE InterpolationPoint_Tetrahedron
 INTEGER(I4B) :: nrow, ncol
-
 ncol = SIZE(n=order, d=3)
 ALLOCATE (ans(3, ncol))
+CALL InterpolationPoint_Tetrahedron_(order=order, ipType=ipType, &
+              layout=layout, xij=xij, alpha=alpha, beta=beta, lambda=lambda, &
+                                     ans=ans, nrow=nrow, ncol=ncol)
+END PROCEDURE InterpolationPoint_Tetrahedron
+
+!----------------------------------------------------------------------------
+!                                            InterpolationPoint_Tetrahedron
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE InterpolationPoint_Tetrahedron_
 CALL Isaac_Tetrahedron(order=order, ipType=ipType, layout=layout, xij=xij, &
          alpha=alpha, beta=beta, lambda=lambda, ans=ans, nrow=nrow, ncol=ncol)
-END PROCEDURE InterpolationPoint_Tetrahedron
+END PROCEDURE InterpolationPoint_Tetrahedron_
 
 !----------------------------------------------------------------------------
 !                                                  LagrangeCoeff_Tetrahedron
