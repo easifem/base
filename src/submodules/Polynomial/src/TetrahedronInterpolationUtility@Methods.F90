@@ -485,81 +485,127 @@ END PROCEDURE InterpolationPoint_Tetrahedron_
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE LagrangeCoeff_Tetrahedron1
+INTEGER(I4B) :: tsize
+CALL LagrangeCoeff_Tetrahedron1_(order=order, i=i, xij=xij, ans=ans, &
+                                 tsize=tsize)
+END PROCEDURE LagrangeCoeff_Tetrahedron1
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE LagrangeCoeff_Tetrahedron1_
 REAL(DFP), DIMENSION(SIZE(xij, 2), SIZE(xij, 2)) :: V
 INTEGER(I4B), DIMENSION(SIZE(xij, 2)) :: ipiv
 INTEGER(I4B) :: info
-ipiv = 0_I4B; ans = 0.0_DFP; ans(i) = 1.0_DFP
+
+tsize = SIZE(xij, 2)
+
+ipiv = 0_I4B; ans(1:tsize) = 0.0_DFP; ans(i) = 1.0_DFP
 V = LagrangeVandermonde(order=order, xij=xij, elemType=Tetrahedron)
 CALL GetLU(A=V, IPIV=ipiv, info=info)
-CALL LUSolve(A=V, B=ans, IPIV=ipiv, info=info)
-END PROCEDURE LagrangeCoeff_Tetrahedron1
+CALL LUSolve(A=V, B=ans(1:tsize), IPIV=ipiv, info=info)
+END PROCEDURE LagrangeCoeff_Tetrahedron1_
 
 !----------------------------------------------------------------------------
 !                                                  LagrangeCoeff_Tetrahedron
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE LagrangeCoeff_Tetrahedron2
+INTEGER(I4B) :: tsize
+CALL LagrangeCoeff_Tetrahedron2_(order=order, i=i, v=v, &
+                                 isVandermonde=.TRUE., ans=ans, tsize=tsize)
+END PROCEDURE LagrangeCoeff_Tetrahedron2
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE LagrangeCoeff_Tetrahedron2_
 REAL(DFP), DIMENSION(SIZE(v, 1), SIZE(v, 2)) :: vtemp
 INTEGER(I4B), DIMENSION(SIZE(v, 1)) :: ipiv
 INTEGER(I4B) :: info
-vtemp = v; ans = 0.0_DFP; ans(i) = 1.0_DFP; ipiv = 0_I4B
+
+tsize = SIZE(v, 1)
+
+vtemp = v; ans(1:tsize) = 0.0_DFP; ans(i) = 1.0_DFP; ipiv = 0_I4B
 CALL GetLU(A=vtemp, IPIV=ipiv, info=info)
-CALL LUSolve(A=vtemp, B=ans, IPIV=ipiv, info=info)
-END PROCEDURE LagrangeCoeff_Tetrahedron2
+CALL LUSolve(A=vtemp, B=ans(1:tsize), IPIV=ipiv, info=info)
+END PROCEDURE LagrangeCoeff_Tetrahedron2_
 
 !----------------------------------------------------------------------------
 !                                                  LagrangeCoeff_Tetrahedron
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE LagrangeCoeff_Tetrahedron3
-INTEGER(I4B) :: info
-ans = 0.0_DFP; ans(i) = 1.0_DFP
-CALL LUSolve(A=v, B=ans, IPIV=ipiv, info=info)
+INTEGER(I4B) :: tsize
+CALL LagrangeCoeff_Tetrahedron3_(order=order, i=i, v=v, ipiv=ipiv, &
+                                 ans=ans, tsize=tsize)
 END PROCEDURE LagrangeCoeff_Tetrahedron3
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE LagrangeCoeff_Tetrahedron3_
+INTEGER(I4B) :: info
+
+tsize = SIZE(v, 1)
+
+ans(1:tsize) = 0.0_DFP; ans(i) = 1.0_DFP
+CALL LUSolve(A=v, B=ans(1:tsize), IPIV=ipiv, info=info)
+END PROCEDURE LagrangeCoeff_Tetrahedron3_
 
 !----------------------------------------------------------------------------
 !                                                    LagrangeCoeff_Tetrahedron
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE LagrangeCoeff_Tetrahedron4
+INTEGER(I4B) :: nrow, ncol
+
+CALL LagrangeCoeff_Tetrahedron4_(order=order, xij=xij, basisType=basisType, &
+       refTetrahedron=refTetrahedron, alpha=alpha, beta=beta, lambda=lambda, &
+                                 ans=ans, nrow=nrow, ncol=ncol)
+
+END PROCEDURE LagrangeCoeff_Tetrahedron4
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE LagrangeCoeff_Tetrahedron4_
 INTEGER(I4B) :: basisType0
+CHARACTER(:), ALLOCATABLE :: aname
+
 basisType0 = input(default=Monomial, option=basisType)
+nrow = SIZE(xij, 2)
+ncol = nrow
 
 SELECT CASE (basisType0)
 CASE (Monomial)
-  ans = LagrangeVandermonde(order=order, xij=xij, elemType=Tetrahedron)
-CASE (Heirarchical)
-  IF (PRESENT(refTetrahedron)) THEN
-    ans = HeirarchicalBasis_Tetrahedron(&
-      & order=order, &
-      & xij=xij, &
-      & refTetrahedron=refTetrahedron &
-      & )
-  ELSE
-    ans = HeirarchicalBasis_Tetrahedron(&
-      & order=order, &
-      & xij=xij, &
-      & refTetrahedron="UNIT" &
-      & )
-  END IF
-CASE DEFAULT
-  IF (PRESENT(refTetrahedron)) THEN
-    ans = OrthogonalBasis_Tetrahedron(&
-      & order=order, &
-      & xij=xij, &
-      & refTetrahedron=refTetrahedron &
-      & )
-  ELSE
-    ans = OrthogonalBasis_Tetrahedron(&
-      & order=order, &
-      & xij=xij, &
-      & refTetrahedron="UNIT" &
-      & )
-  END IF
-END SELECT
-CALL GetInvMat(ans)
+  ans(1:nrow, 1:ncol) = LagrangeVandermonde(order=order, xij=xij, &
+                                            elemType=Tetrahedron)
 
-END PROCEDURE LagrangeCoeff_Tetrahedron4
+  CALL LagrangeVandermonde_(order=order, xij=xij, ans=ans, nrow=nrow, &
+                            ncol=ncol, elemType=Tetrahedron)
+
+CASE (Heirarchical)
+  aname = Input(default="UNIT", option=refTetrahedron)
+
+  ans(1:nrow, 1:ncol) = HeirarchicalBasis_Tetrahedron(order=order, xij=xij, &
+                                                      refTetrahedron=aname)
+
+CASE DEFAULT
+  aname = Input(default="UNIT", option=refTetrahedron)
+
+  ans(1:nrow, 1:ncol) = OrthogonalBasis_Tetrahedron(order=order, &
+                                       xij=xij, refTetrahedron=refTetrahedron)
+
+END SELECT
+
+CALL GetInvMat(ans(1:nrow, 1:ncol))
+
+END PROCEDURE LagrangeCoeff_Tetrahedron4_
 
 !----------------------------------------------------------------------------
 !                                                         Isaac_Tetrahedron
