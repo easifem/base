@@ -32,23 +32,12 @@ END PROCEDURE RefElemDomain_Quadrangle
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE FacetConnectivity_Quadrangle
-CHARACTER(:), ALLOCATABLE :: baseInterpol0
-! TYPE(String) :: baseContinuity0
+CHARACTER(3) :: bi
 
-baseInterpol0 = UpperCase(baseInterpol)
-! baseContinuity0 = UpperCase(baseContinuity)
+bi = UpperCase(baseInterpol(1:3))
 
-SELECT CASE (baseInterpol0)
-CASE ( &
-  & "HIERARCHYPOLYNOMIAL", &
-  & "HIERARCHY", &
-  & "HEIRARCHYPOLYNOMIAL", &
-  & "HEIRARCHY", &
-  & "HIERARCHYINTERPOLATION", &
-  & "HEIRARCHYINTERPOLATION", &
-  & "ORTHOGONALPOLYNOMIAL", &
-  & "ORTHOGONAL", &
-  & "ORTHOGONALINTERPOLATION")
+SELECT CASE (bi)
+CASE ("HIE", "HEI", "ORT")
   ans(:, 1) = [1, 2]
   ans(:, 2) = [4, 3]
   ans(:, 3) = [1, 4]
@@ -717,90 +706,95 @@ END PROCEDURE IJ2VEFC_Quadrangle_AntiClockwise
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE InterpolationPoint_Quadrangle1
-ans = InterpolationPoint_Quadrangle2( &
-  & p=order, &
-  & q=order, &
-  & ipType1=ipType, &
-  & ipType2=ipType, &
-  & xij=xij, &
-  & layout=layout, &
-  & alpha1=alpha, &
-  & beta1=beta, &
-  & lambda1=lambda, &
-  & alpha2=alpha, &
-  & beta2=beta, &
-  & lambda2=lambda &
-  & )
+ans = InterpolationPoint_Quadrangle2(p=order, q=order, ipType1=ipType, &
+           ipType2=ipType, xij=xij, layout=layout, alpha1=alpha, beta1=beta, &
+                     lambda1=lambda, alpha2=alpha, beta2=beta, lambda2=lambda)
 END PROCEDURE InterpolationPoint_Quadrangle1
+
+!----------------------------------------------------------------------------
+!                                              InterpolationPoint_Quadrangle
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE InterpolationPoint_Quadrangle1_
+CALL InterpolationPoint_Quadrangle2_(p=order, q=order, ipType1=ipType, &
+           ipType2=ipType, xij=xij, layout=layout, alpha1=alpha, beta1=beta, &
+                   lambda1=lambda, alpha2=alpha, beta2=beta, lambda2=lambda, &
+                                     ans=ans, nrow=nrow, ncol=ncol)
+END PROCEDURE InterpolationPoint_Quadrangle1_
 
 !----------------------------------------------------------------------------
 !                                             InterpolationPoint_Quadrangle
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE InterpolationPoint_Quadrangle2
-! internal variables
-REAL(DFP) :: x(p + 1), y(q + 1), &
-  & xi(p + 1, q + 1), eta(p + 1, q + 1)
-REAL(DFP), ALLOCATABLE :: temp(:, :)
-INTEGER(I4B) :: ii, jj, kk, nsd
+INTEGER(I4B) :: nrow, ncol
 
-x = InterpolationPoint_Line( &
-  & order=p, &
-  & ipType=ipType1, &
-  & xij=[-1.0_DFP, 1.0_DFP], &
-  & layout="INCREASING", &
-  & alpha=alpha1, &
-  & beta=beta1, &
-  & lambda=lambda1)
+nrow = 2; IF (PRESENT(xij)) nrow = SIZE(xij, 1)
+ncol = (p + 1) * (q + 1)
+ALLOCATE (ans(nrow, ncol))
 
-y = InterpolationPoint_Line( &
-  & order=q,  &
-  & ipType=ipType2, &
-  & xij=[-1.0_DFP, 1.0_DFP], &
-  & layout="INCREASING", &
-  & alpha=alpha2, &
-  & beta=beta2, &
-  & lambda=lambda2)
+CALL InterpolationPoint_Quadrangle2_(p=p, q=q, ipType1=ipType1, &
+     ipType2=ipType2, ans=ans, nrow=nrow, ncol=ncol, layout=layout, xij=xij, &
+                 alpha1=alpha1, beta1=beta1, lambda1=lambda1, alpha2=alpha2, &
+                                     beta2=beta2, lambda2=lambda2)
+
+END PROCEDURE InterpolationPoint_Quadrangle2
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE InterpolationPoint_Quadrangle2_
+REAL(DFP), PARAMETER :: biunit_xij(2) = [-1.0_DFP, 1.0_DFP]
+
+REAL(DFP) :: x(p + 1), y(q + 1), xi(p + 1, q + 1), eta(p + 1, q + 1)
+INTEGER(I4B) :: ii, jj, kk, tsize
 
 IF (PRESENT(xij)) THEN
-  nsd = SIZE(xij, 1)
+  nrow = SIZE(xij, 1)
 ELSE
-  nsd = 2
+  nrow = 2
 END IF
 
-CALL Reallocate(ans, nsd, (p + 1) * (q + 1))
-CALL Reallocate(temp, 2, (p + 1) * (q + 1))
+ncol = (p + 1) * (q + 1)
 
-xi = 0.0_DFP
-eta = 0.0_DFP
+CALL InterpolationPoint_Line_(order=p, ipType=ipType1, xij=biunit_xij, &
+              layout="INCREASING", alpha=alpha1, beta=beta1, lambda=lambda1, &
+                              ans=x, tsize=tsize)
 
+CALL InterpolationPoint_Line_(order=q, ipType=ipType2, xij=biunit_xij, &
+              layout="INCREASING", alpha=alpha2, beta=beta2, lambda=lambda2, &
+                              ans=y, tsize=tsize)
+
+! CALL Reallocate(ans, nsd, (p + 1) * (q + 1))
+! CALL Reallocate(temp, 2, (p + 1) * (q + 1))
+! xi = 0.0_DFP
+! eta = 0.0_DFP
+
+kk = 0
 DO ii = 1, p + 1
   DO jj = 1, q + 1
+    kk = kk + 1
     xi(ii, jj) = x(ii)
+    ans(1, kk) = x(ii)
+
     eta(ii, jj) = y(jj)
+    ans(2, kk) = y(jj)
   END DO
 END DO
 
-IF (layout .EQ. "VEFC") THEN
-  CALL IJ2VEFC_Quadrangle(xi=xi, eta=eta, temp=temp, p=p, q=q)
-ELSE
-  kk = 0
-  DO ii = 1, p + 1
-    DO jj = 1, q + 1
-      kk = kk + 1
-      temp(1, kk) = xi(ii, jj)
-      temp(2, kk) = eta(ii, jj)
-    END DO
-  END DO
+IF (layout(1:4) .EQ. "VEFC") THEN
+  CALL IJ2VEFC_Quadrangle(xi=xi, eta=eta, temp=ans(1:2, 1:ncol), p=p, q=q)
 END IF
 
 IF (PRESENT(xij)) THEN
-  ans = FromBiUnitQuadrangle2Quadrangle(xin=temp, x1=xij(:, 1), &
-    & x2=xij(:, 2), x3=xij(:, 3), x4=xij(:, 4))
-ELSE
-  ans = temp
+  CALL FromBiUnitQuadrangle2Quadrangle_(xin=ans(1:2, 1:ncol), &
+                                        x1=xij(:, 1), x2=xij(:, 2), &
+                                        x3=xij(:, 3), x4=xij(:, 4), &
+                                        ans=ans, nrow=ii, ncol=jj)
 END IF
-END PROCEDURE InterpolationPoint_Quadrangle2
+
+END PROCEDURE InterpolationPoint_Quadrangle2_
 
 !----------------------------------------------------------------------------
 !                                                    LagrangeCoeff_Quadrangle

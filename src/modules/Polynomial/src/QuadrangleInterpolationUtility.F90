@@ -25,6 +25,7 @@ PUBLIC :: LagrangeInDOF_Quadrangle
 PUBLIC :: EquidistancePoint_Quadrangle
 PUBLIC :: EquidistanceInPoint_Quadrangle
 PUBLIC :: InterpolationPoint_Quadrangle
+PUBLIC :: InterpolationPoint_Quadrangle_
 PUBLIC :: LagrangeCoeff_Quadrangle
 PUBLIC :: Dubiner_Quadrangle
 PUBLIC :: Dubiner_Quadrangle_
@@ -418,33 +419,12 @@ END INTERFACE EquidistanceInPoint_Quadrangle
 ! also follow the same convention. Please read Gmsh manual  on this topic.
 
 INTERFACE InterpolationPoint_Quadrangle
-  MODULE FUNCTION InterpolationPoint_Quadrangle1( &
-    & order, &
-    & ipType, &
-    & layout, &
-    & xij, &
-    & alpha, beta, lambda) RESULT(ans)
+  MODULE FUNCTION InterpolationPoint_Quadrangle1(order, ipType, layout, &
+                                         xij, alpha, beta, lambda) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
     !! order of element
     INTEGER(I4B), INTENT(IN) :: ipType
     !! interpolation point type
-    !! Equidistance
-    !! GaussLegendre
-    !! GaussLegendreLobatto
-    !! GaussLegendreRadauLeft
-    !! GaussLegendreRadauRight
-    !! GaussChebyshev1
-    !! GaussChebyshev1Lobatto
-    !! GaussChebyshev1RadauLeft
-    !! GaussChebyshev1RadauRight
-    !! GaussUltraspherical
-    !! GaussUltrasphericalLobatto
-    !! GaussUltrasphericalRadauLeft
-    !! GaussUltrasphericalRadauRight
-    !! GaussJacobi
-    !! GaussJacobiLobatto
-    !! GaussJacobiRadauLeft
-    !! GaussJacobiRadauRight
     CHARACTER(*), INTENT(IN) :: layout
     !! VEFC, INCREASING
     REAL(DFP), OPTIONAL, INTENT(IN) :: xij(:, :)
@@ -459,6 +439,33 @@ INTERFACE InterpolationPoint_Quadrangle
     !! interpolation points in xij format
   END FUNCTION InterpolationPoint_Quadrangle1
 END INTERFACE InterpolationPoint_Quadrangle
+
+!----------------------------------------------------------------------------
+!                                           InterpolationPoint_Quadrangle_
+!----------------------------------------------------------------------------
+
+INTERFACE InterpolationPoint_Quadrangle_
+  MODULE SUBROUTINE InterpolationPoint_Quadrangle1_(order, ipType, ans, &
+                                 nrow, ncol, layout, xij, alpha, beta, lambda)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order of element
+    INTEGER(I4B), INTENT(IN) :: ipType
+    !! interpolation point type
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    !!
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+    CHARACTER(*), INTENT(IN) :: layout
+    !! VEFC, INCREASING
+    REAL(DFP), OPTIONAL, INTENT(IN) :: xij(:, :)
+    !! four vertices of quadrangle in xij format
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
+    !! Jacobi parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: beta
+    !! Jacobi parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: lambda
+    !! Ultraspherical parameter
+  END SUBROUTINE InterpolationPoint_Quadrangle1_
+END INTERFACE InterpolationPoint_Quadrangle_
 
 !----------------------------------------------------------------------------
 !                                             InterpolationPoint_Quadrangle
@@ -490,51 +497,16 @@ END INTERFACE InterpolationPoint_Quadrangle
 ! also follow the same convention. Please read Gmsh manual  on this topic.
 
 INTERFACE InterpolationPoint_Quadrangle
-  MODULE FUNCTION InterpolationPoint_Quadrangle2(  &
-    & p, q, ipType1, ipType2, layout, xij, alpha1, beta1, &
-    & lambda1, alpha2, beta2, lambda2) RESULT(ans)
+  MODULE FUNCTION InterpolationPoint_Quadrangle2(p, q, ipType1, ipType2, &
+      layout, xij, alpha1, beta1, lambda1, alpha2, beta2, lambda2) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: p
     !! order of element in x direction
     INTEGER(I4B), INTENT(IN) :: q
     !! order of element in y direction
     INTEGER(I4B), INTENT(IN) :: ipType1
     !! interpolation point type in x direction
-    !! Equidistance
-    !! GaussLegendre
-    !! GaussLegendreLobatto
-    !! GaussLegendreRadauLeft
-    !! GaussLegendreRadauRight
-    !! GaussChebyshev1
-    !! GaussChebyshev1Lobatto
-    !! GaussChebyshev1RadauLeft
-    !! GaussChebyshev1RadauRight
-    !! GaussUltraspherical
-    !! GaussUltrasphericalLobatto
-    !! GaussUltrasphericalRadauLeft
-    !! GaussUltrasphericalRadauRight
-    !! GaussJacobi
-    !! GaussJacobiLobatto
-    !! GaussJacobiRadauLeft
-    !! GaussJacobiRadauRight
     INTEGER(I4B), INTENT(IN) :: ipType2
     !! interpolation point type in y direction
-    !! Equidistance
-    !! GaussLegendre
-    !! GaussLegendreLobatto
-    !! GaussLegendreRadauLeft
-    !! GaussLegendreRadauRight
-    !! GaussChebyshev1
-    !! GaussChebyshev1Lobatto
-    !! GaussChebyshev1RadauLeft
-    !! GaussChebyshev1RadauRight
-    !! GaussUltraspherical
-    !! GaussUltrasphericalLobatto
-    !! GaussUltrasphericalRadauLeft
-    !! GaussUltrasphericalRadauRight
-    !! GaussJacobi
-    !! GaussJacobiLobatto
-    !! GaussJacobiRadauLeft
-    !! GaussJacobiRadauRight
     CHARACTER(*), INTENT(IN) :: layout
     !! VEFC, INCREASING
     REAL(DFP), OPTIONAL, INTENT(IN) :: xij(:, :)
@@ -555,6 +527,45 @@ INTERFACE InterpolationPoint_Quadrangle
     !! interpolation points in xij format
   END FUNCTION InterpolationPoint_Quadrangle2
 END INTERFACE InterpolationPoint_Quadrangle
+
+!----------------------------------------------------------------------------
+!                                             InterpolationPoint_Quadrangle_
+!----------------------------------------------------------------------------
+
+INTERFACE InterpolationPoint_Quadrangle_
+  MODULE SUBROUTINE InterpolationPoint_Quadrangle2_(p, q, ipType1, ipType2, &
+                       ans, nrow, ncol, layout, xij, alpha1, beta1, lambda1, &
+                                                    alpha2, beta2, lambda2)
+    INTEGER(I4B), INTENT(IN) :: p
+    !! order of element in x direction
+    INTEGER(I4B), INTENT(IN) :: q
+    !! order of element in y direction
+    INTEGER(I4B), INTENT(IN) :: ipType1
+    !! interpolation point type in x direction
+    INTEGER(I4B), INTENT(IN) :: ipType2
+    !! interpolation point type in y direction
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    !!
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+    !!
+    CHARACTER(*), INTENT(IN) :: layout
+    !! VEFC, INCREASING
+    REAL(DFP), OPTIONAL, INTENT(IN) :: xij(:, :)
+    !! four vertices of quadrangle in xij format
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha1
+    !! Jacobi parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: beta1
+    !! Jacobi parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: lambda1
+    !! Ultraspherical parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha2
+    !! Jacobi parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: beta2
+    !! Jacobi parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: lambda2
+    !! Ultraspherical parameter
+  END SUBROUTINE InterpolationPoint_Quadrangle2_
+END INTERFACE InterpolationPoint_Quadrangle_
 
 !----------------------------------------------------------------------------
 !                                                                  IJ2VEFC
