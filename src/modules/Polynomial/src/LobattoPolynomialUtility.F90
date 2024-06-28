@@ -173,7 +173,7 @@ END INTERFACE LobattoEval
 !- ans(M,1:N+1), the values of the first N+1 Lobatto polynomials at the point
 ! X.
 
-INTERFACE
+INTERFACE LobattoEvalAll
   MODULE PURE FUNCTION LobattoEvalAll1(n, x) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: n
     REAL(DFP), INTENT(IN) :: x
@@ -181,11 +181,23 @@ INTERFACE
     !! Evaluate Lobatto polynomial of order = 0 to n (total n+1)
     !! at point x
   END FUNCTION LobattoEvalAll1
-END INTERFACE
-
-INTERFACE LobattoEvalAll
-  MODULE PROCEDURE LobattoEvalAll1
 END INTERFACE LobattoEvalAll
+
+!----------------------------------------------------------------------------
+!                                                            LobattoEvalAll_
+!----------------------------------------------------------------------------
+
+INTERFACE LobattoEvalAll_
+  MODULE PURE SUBROUTINE LobattoEvalAll1_(n, x, ans, tsize)
+    INTEGER(I4B), INTENT(IN) :: n
+    REAL(DFP), INTENT(IN) :: x
+    REAL(DFP), INTENT(INOUT) :: ans(:)
+    !! ans(n + 1)
+    !! Evaluate Lobatto polynomial of order = 0 to n (total n+1)
+    !! at point x
+    INTEGER(I4B), INTENT(OUT) :: tsize
+  END SUBROUTINE LobattoEvalAll1_
+END INTERFACE LobattoEvalAll_
 
 !----------------------------------------------------------------------------
 !                                                           LobattoEvalAll
@@ -206,7 +218,7 @@ END INTERFACE LobattoEvalAll
 !- ans(M,1:N+1), the values of the first N+1 Lobatto polynomials at the point
 ! X.
 
-INTERFACE
+INTERFACE LobattoEvalAll
   MODULE PURE FUNCTION LobattoEvalAll2(n, x) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: n
     REAL(DFP), INTENT(IN) :: x(:)
@@ -214,11 +226,23 @@ INTERFACE
     !! Evaluate Lobatto polynomial of order = 0 to n (total n+1)
     !! at point x
   END FUNCTION LobattoEvalAll2
-END INTERFACE
-
-INTERFACE LobattoEvalAll
-  MODULE PROCEDURE LobattoEvalAll2
 END INTERFACE LobattoEvalAll
+
+!----------------------------------------------------------------------------
+!                                                            LobattoEvalAll_
+!----------------------------------------------------------------------------
+
+INTERFACE LobattoEvalAll_
+  MODULE PURE SUBROUTINE LobattoEvalAll2_(n, x, ans, nrow, ncol)
+    INTEGER(I4B), INTENT(IN) :: n
+    REAL(DFP), INTENT(IN) :: x(:)
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    ! ans(SIZE(x), n + 1)
+    !! Evaluate Lobatto polynomial of order = 0 to n (total n+1)
+    !! at point x
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+  END SUBROUTINE LobattoEvalAll2_
+END INTERFACE LobattoEvalAll_
 
 !----------------------------------------------------------------------------
 !                                                      LobattoKernelEvalAll

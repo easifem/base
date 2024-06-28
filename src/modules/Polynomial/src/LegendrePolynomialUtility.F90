@@ -45,6 +45,7 @@ PUBLIC :: LegendreZeros
 PUBLIC :: LegendreQuadrature
 PUBLIC :: LegendreEval
 PUBLIC :: LegendreEvalAll
+PUBLIC :: LegendreEvalAll_
 PUBLIC :: LegendreMonomialExpansionAll
 PUBLIC :: LegendreMonomialExpansion
 PUBLIC :: LegendreGradientEvalAll

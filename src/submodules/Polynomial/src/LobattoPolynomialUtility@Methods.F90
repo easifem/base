@@ -117,53 +117,86 @@ END PROCEDURE LobattoEval2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE LobattoEvalAll1
+INTEGER(I4B) :: tsize
+CALL LobattoEvalAll1_(n=n, x=x, ans=ans, tsize=tsize)
+END PROCEDURE LobattoEvalAll1
+
+!----------------------------------------------------------------------------
+!                                                            LobattoEvalAll_
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE LobattoEvalAll1_
 REAL(DFP) :: avar, m
 REAL(DFP) :: p(n + 1)
 INTEGER(I4B) :: ii
-  !!
+
+tsize = n + 1
+
 SELECT CASE (n)
 CASE (0)
   ans(1) = 0.5_DFP * (1.0_DFP - x)
+
 CASE (1)
   ans(1) = 0.5_DFP * (1.0_DFP - x)
   ans(2) = 0.5_DFP * (1.0_DFP + x)
+
 CASE DEFAULT
   ans(1) = 0.5_DFP * (1.0_DFP - x)
   ans(2) = 0.5_DFP * (1.0_DFP + x)
-  p = LegendreEvalAll(n=n, x=x)
+
+  CALL LegendreEvalAll_(n=n, x=x, ans=p, tsize=ii)
+
   DO ii = 1, n - 1
     m = REAL(ii - 1, KIND=DFP)
     avar = 1.0_DFP / SQRT(2.0_DFP * (2.0_DFP * m + 3.0_DFP))
-    ans(2 + ii) = avar * (p(ii + 2) - p(ii))
+    ans(ii + 2) = avar * (p(ii + 2) - p(ii))
   END DO
+
 END SELECT
-END PROCEDURE LobattoEvalAll1
+END PROCEDURE LobattoEvalAll1_
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE LobattoEvalAll2
+INTEGER(I4B) :: nrow, ncol
+CALL LobattoEvalAll2_(n=n, x=x, ans=ans, nrow=nrow, ncol=ncol)
+END PROCEDURE LobattoEvalAll2
+
+!----------------------------------------------------------------------------
+!                                                             LobattoEvalAll
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE LobattoEvalAll2_
 REAL(DFP) :: avar, m
 REAL(DFP) :: p(SIZE(x), n + 1)
-INTEGER(I4B) :: ii
+INTEGER(I4B) :: ii, aint, bint
+
+nrow = SIZE(x)
+ncol = 1 + n
+
 SELECT CASE (n)
 CASE (0)
-  ans(:, 1) = 0.5_DFP * (1.0_DFP - x)
+  ans(1:nrow, 1) = 0.5_DFP * (1.0_DFP - x)
+
 CASE (1)
-  ans(:, 1) = 0.5_DFP * (1.0_DFP - x)
-  ans(:, 2) = 0.5_DFP * (1.0_DFP + x)
+  ans(1:nrow, 1) = 0.5_DFP * (1.0_DFP - x)
+  ans(1:nrow, 2) = 0.5_DFP * (1.0_DFP + x)
+
 CASE DEFAULT
-  ans(:, 1) = 0.5_DFP * (1.0_DFP - x)
-  ans(:, 2) = 0.5_DFP * (1.0_DFP + x)
-  p = LegendreEvalAll(n=n, x=x)
+  ans(1:nrow, 1) = 0.5_DFP * (1.0_DFP - x)
+  ans(1:nrow, 2) = 0.5_DFP * (1.0_DFP + x)
+  CALL LegendreEvalAll_(n=n, x=x, ans=p, nrow=aint, ncol=bint)
+
   DO ii = 1, n - 1
     m = REAL(ii - 1, KIND=DFP)
     avar = 1.0_DFP / SQRT(2.0_DFP * (2.0_DFP * m + 3.0_DFP))
-    ans(:, 2 + ii) = avar * (p(:, ii + 2) - p(:, ii))
+    ans(1:nrow, 2 + ii) = avar * (p(1:nrow, ii + 2) - p(1:nrow, ii))
   END DO
+
 END SELECT
-END PROCEDURE LobattoEvalAll2
+END PROCEDURE LobattoEvalAll2_
 
 !----------------------------------------------------------------------------
 !                                                       LobattoKernelEvalAll
