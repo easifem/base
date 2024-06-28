@@ -26,6 +26,7 @@ PUBLIC :: LagrangeInDOF_Hexahedron
 PUBLIC :: EquidistancePoint_Hexahedron
 PUBLIC :: EquidistanceInPoint_Hexahedron
 PUBLIC :: InterpolationPoint_Hexahedron
+PUBLIC :: InterpolationPoint_Hexahedron_
 PUBLIC :: LagrangeCoeff_Hexahedron
 PUBLIC :: EdgeConnectivity_Hexahedron
 PUBLIC :: FacetConnectivity_Hexahedron
@@ -607,7 +608,7 @@ END INTERFACE EquidistancePoint_Hexahedron
 
 INTERFACE InterpolationPoint_Hexahedron
   MODULE FUNCTION InterpolationPoint_Hexahedron1(order, ipType, &
-    & layout, xij, alpha, beta, lambda) RESULT(ans)
+                                 layout, xij, alpha, beta, lambda) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
     !! order in x, y and z direction
     INTEGER(I4B), INTENT(IN) :: ipType
@@ -636,23 +637,49 @@ END INTERFACE InterpolationPoint_Hexahedron
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date:  2023-07-10
-! summary:  Interpolation points
+! date:  2024-06-26
+! summary:  Interpolation points without allocation
+
+INTERFACE InterpolationPoint_Hexahedron_
+  MODULE SUBROUTINE InterpolationPoint_Hexahedron1_(order, ipType, ans, &
+                                 nrow, ncol, layout, xij, alpha, beta, lambda)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order in x, y and z direction
+    INTEGER(I4B), INTENT(IN) :: ipType
+    !! Interpolation type in x, y, and z direction
+    !! Equidistance, GaussLegendre, GaussLegendreLobatto, GaussChebyshev,
+    !! GaussChebyshevLobatto, GaussJacobi, GaussJacobiLobatto
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    !! interpolation points in xij format
+    !! rows of ans denotes x, y, z components
+    !! cols of ans denotes x, y, z components
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+    !! number of rows and cols
+    CHARACTER(*), INTENT(IN) :: layout
+    !! layout can be VEFC or INCREASING
+    REAL(DFP), OPTIONAL, INTENT(IN) :: xij(:, :)
+    !! nodal coordiantes of reference hexahedron
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
+    !! Jacobi parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: beta
+    !! Jacobi parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: lambda
+    !! Ultraspherical parameter
+  END SUBROUTINE InterpolationPoint_Hexahedron1_
+END INTERFACE InterpolationPoint_Hexahedron_
+
+!----------------------------------------------------------------------------
+!                                             InterpolationPoint_Hexahedron
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2024-06-26
+! summary:  Interpolation points hexahedron
 
 INTERFACE InterpolationPoint_Hexahedron
-  MODULE FUNCTION InterpolationPoint_Hexahedron2(  &
-    & p, &
-    & q, &
-    & r, &
-    & ipType1,  &
-    & ipType2, &
-    & ipType3,  &
-    & layout,  &
-    & xij, &
-    & alpha1, beta1, lambda1, &
-    & alpha2, beta2, lambda2, &
-    & alpha3, beta3, lambda3 &
-    & ) RESULT(ans)
+  MODULE FUNCTION InterpolationPoint_Hexahedron2(p, q, r, ipType1, &
+                      ipType2, ipType3, layout, xij, alpha1, beta1, lambda1, &
+                   alpha2, beta2, lambda2, alpha3, beta3, lambda3) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: p
     !! order in x direction
     INTEGER(I4B), INTENT(IN) :: q
@@ -695,6 +722,61 @@ INTERFACE InterpolationPoint_Hexahedron
 END INTERFACE InterpolationPoint_Hexahedron
 
 !----------------------------------------------------------------------------
+!                                             InterpolationPoint_Hexahedron
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2023-07-10
+! summary:  Interpolation points
+
+INTERFACE InterpolationPoint_Hexahedron_
+  MODULE SUBROUTINE InterpolationPoint_Hexahedron2_(p, q, r, ipType1, &
+     ipType2, ipType3, ans, nrow, ncol, layout, xij, alpha1, beta1, lambda1, &
+                               alpha2, beta2, lambda2, alpha3, beta3, lambda3)
+    INTEGER(I4B), INTENT(IN) :: p
+    !! order in x direction
+    INTEGER(I4B), INTENT(IN) :: q
+    !! order in y direction
+    INTEGER(I4B), INTENT(IN) :: r
+    !! order in z direction
+    INTEGER(I4B), INTENT(IN) :: ipType1
+    !! interpolation type in x direction
+    INTEGER(I4B), INTENT(IN) :: ipType2
+    !! interpolation type in y direction
+    INTEGER(I4B), INTENT(IN) :: ipType3
+    !! interpolation type in z direction
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    !! Interpolation points in xij format
+    !! rows of ans denotes x, y, z components
+    !! cols of ans denotes x, y, z components
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+    !! number of rows and cols written in ans
+    CHARACTER(*), INTENT(IN) :: layout
+    !! layout can be VEFC or INCREASING
+    REAL(DFP), OPTIONAL, INTENT(IN) :: xij(:, :)
+    !! nodal coordinate of reference Hexahedron
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha1
+    !! Jacobi parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: beta1
+    !! Jacobi parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: lambda1
+    !! Ultraspherical parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha2
+    !! Jacobi parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: beta2
+    !! Jacobi parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: lambda2
+    !! Ultraspherical parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha3
+    !! Jacobi parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: beta3
+    !! Jacobi parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: lambda3
+    !! Ultraspherical parameter
+  END SUBROUTINE InterpolationPoint_Hexahedron2_
+END INTERFACE InterpolationPoint_Hexahedron_
+
+!----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
@@ -703,12 +785,8 @@ END INTERFACE InterpolationPoint_Hexahedron
 ! summary:  Convert IJK to VEFC format
 
 INTERFACE
-  MODULE RECURSIVE PURE SUBROUTINE IJK2VEFC_Hexahedron( &
-    & xi, &
-    & eta, &
-    & zeta, &
-    & temp, &
-    & p, q, r)
+  MODULE RECURSIVE PURE SUBROUTINE IJK2VEFC_Hexahedron(xi, eta, zeta, &
+                                                       temp, p, q, r)
     REAL(DFP), INTENT(IN) :: xi(:, :, :)
     REAL(DFP), INTENT(IN) :: eta(:, :, :)
     REAL(DFP), INTENT(IN) :: zeta(:, :, :)
@@ -752,7 +830,7 @@ END INTERFACE LagrangeCoeff_Hexahedron
 
 INTERFACE LagrangeCoeff_Hexahedron
   MODULE FUNCTION LagrangeCoeff_Hexahedron2(order, i, v, isVandermonde) &
-    & RESULT(ans)
+    RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
     !! order of polynomial, it should be SIZE(v,2)-1
     INTEGER(I4B), INTENT(IN) :: i
@@ -799,7 +877,7 @@ END INTERFACE LagrangeCoeff_Hexahedron
 
 INTERFACE LagrangeCoeff_Hexahedron
   MODULE FUNCTION LagrangeCoeff_Hexahedron4(order, xij, basisType, &
-    & refHexahedron, alpha, beta, lambda) RESULT(ans)
+                               refHexahedron, alpha, beta, lambda) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
     !! order of polynomial
     REAL(DFP), INTENT(IN) :: xij(:, :)
@@ -834,25 +912,9 @@ END INTERFACE LagrangeCoeff_Hexahedron
 ! summary:  Returns the coefficients of monomials for all lagrange polynomial
 
 INTERFACE LagrangeCoeff_Hexahedron
-  MODULE FUNCTION LagrangeCoeff_Hexahedron5(&
-    & p, &
-    & q, &
-    & r, &
-    & xij, &
-    & basisType1, &
-    & basisType2, &
-    & basisType3, &
-    & alpha1, &
-    & beta1, &
-    & lambda1, &
-    & alpha2, &
-    & beta2, &
-    & lambda2, &
-    & alpha3, &
-    & beta3, &
-    & lambda3, &
-    & refHexahedron &
-    & ) RESULT(ans)
+  MODULE FUNCTION LagrangeCoeff_Hexahedron5(p, q, r, xij, basisType1, &
+              basisType2, basisType3, alpha1, beta1, lambda1, alpha2, beta2, &
+                   lambda2, alpha3, beta3, lambda3, refHexahedron) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: p
     !! order of polynomial in x direction
     INTEGER(I4B), INTENT(IN) :: q
@@ -920,24 +982,9 @@ END INTERFACE LagrangeCoeff_Hexahedron
 ! summary: Evaluate all tensor product orthogoanl polynomial on hexahedron
 
 INTERFACE TensorProdBasis_Hexahedron
-  MODULE FUNCTION TensorProdBasis_Hexahedron1(  &
-    & p,  &
-    & q,  &
-    & r,  &
-    & xij, &
-    & basisType1,  &
-    & basisType2,  &
-    & basisType3,  &
-    & alpha1,  &
-    & beta1,  &
-    & lambda1,  &
-    & alpha2,  &
-    & beta2,  &
-    & lambda2,  &
-    & alpha3,  &
-    & beta3,  &
-    & lambda3) &
-    & RESULT(ans)
+  MODULE FUNCTION TensorProdBasis_Hexahedron1(p, q, r, xij, basisType1, &
+              basisType2, basisType3, alpha1, beta1, lambda1, alpha2, beta2, &
+                                  lambda2, alpha3, beta3, lambda3) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: p
     !! highest order in x1 direction
     INTEGER(I4B), INTENT(IN) :: q

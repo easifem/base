@@ -2947,4 +2947,32 @@ END PROCEDURE HeirarchicalBasisGradient_Hexahedron2
 !
 !----------------------------------------------------------------------------
 
+MODULE PROCEDURE InterpolationPoint_Hexahedron1_
+CALL ErrorMsg(&
+  & msg="InterpolationPoint_Hexahedron1_ is not implemented", &
+  & file=__FILE__, &
+  & routine="InterpolationPoint_Hexahedron1_", &
+  & line=__LINE__, &
+  & unitno=stderr)
+! STOP
+END PROCEDURE InterpolationPoint_Hexahedron1_
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE InterpolationPoint_Hexahedron2_
+CALL ErrorMsg(&
+  & msg="InterpolationPoint_Hexahedron2_ is not implemented", &
+  & file=__FILE__, &
+  & routine="InterpolationPoint_Hexahedron2_", &
+  & line=__LINE__, &
+  & unitno=stderr)
+STOP
+END PROCEDURE InterpolationPoint_Hexahedron2_
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
 END SUBMODULE Methods
