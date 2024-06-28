@@ -373,15 +373,122 @@ END INTERFACE LagrangeCoeff_Prism
 !----------------------------------------------------------------------------
 
 INTERFACE LagrangeCoeff_Prism
-  MODULE FUNCTION LagrangeCoeff_Prism4(order, xij) RESULT(ans)
+  MODULE FUNCTION LagrangeCoeff_Prism4(order, xij, basisType, &
+                                    refPrism, alpha, beta, lambda) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
     !! order of polynomial
     REAL(DFP), INTENT(IN) :: xij(:, :)
     !! points in xij format, size(xij,2)
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: basisType
+    !! Monomials
+    !! Jacobi (Dubiner)
+    !! Heirarchical
+    CHARACTER(*), OPTIONAL, INTENT(IN) :: refPrism
+    !! UNIT * default
+    !! BIUNIT
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
+    !! Jacobi polynomial parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: beta
+    !! Jacobi polynomial parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: lambda
+    !! Ultraspherical polynomial parameter
     REAL(DFP) :: ans(SIZE(xij, 2), SIZE(xij, 2))
     !! coefficients
   END FUNCTION LagrangeCoeff_Prism4
 END INTERFACE LagrangeCoeff_Prism
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE LagrangeCoeff_Prism_
+  MODULE SUBROUTINE LagrangeCoeff_Prism1_(order, i, xij, ans, tsize)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order of polynomial
+    INTEGER(I4B), INTENT(IN) :: i
+    !! ith coefficients for lagrange polynomial
+    REAL(DFP), INTENT(IN) :: xij(:, :)
+    !! points in xij format, size(xij,2)
+    REAL(DFP), INTENT(INOUT) :: ans(:)
+    !! ans(SIZE(xij, 2))
+    !! coefficients
+    INTEGER(I4B), INTENT(OUT) :: tsize
+  END SUBROUTINE LagrangeCoeff_Prism1_
+END INTERFACE LagrangeCoeff_Prism_
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE LagrangeCoeff_Prism_
+  MODULE SUBROUTINE LagrangeCoeff_Prism2_(order, i, v, isVandermonde, &
+                                          ans, tsize)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order of polynomial, it should be SIZE(v,2)-1
+    INTEGER(I4B), INTENT(IN) :: i
+    !! coefficient for ith lagrange polynomial
+    REAL(DFP), INTENT(IN) :: v(:, :)
+    !! vandermonde matrix size should be (order+1,order+1)
+    LOGICAL(LGT), INTENT(IN) :: isVandermonde
+    !! This is just to resolve interface issue
+    REAL(DFP), INTENT(INOUT) :: ans(:)
+    ! ans(SIZE(v, 1))
+    !! coefficients
+    INTEGER(I4B), INTENT(OUT) :: tsize
+  END SUBROUTINE LagrangeCoeff_Prism2_
+END INTERFACE LagrangeCoeff_Prism_
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE LagrangeCoeff_Prism_
+  MODULE SUBROUTINE LagrangeCoeff_Prism3_(order, i, v, ipiv, ans, tsize)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order of polynomial, it should be SIZE(x,2)-1
+    INTEGER(I4B), INTENT(IN) :: i
+    !! ith coefficients for lagrange polynomial
+    REAL(DFP), INTENT(INOUT) :: v(:, :)
+    !! LU decomposition of vandermonde matrix
+    INTEGER(I4B), INTENT(IN) :: ipiv(:)
+    !! inverse pivoting mapping, compes from LU decomposition
+    REAL(DFP), INTENT(INOUT) :: ans(:)
+    !! ans(SIZE(v, 1))
+    !! coefficients
+    INTEGER(I4B), INTENT(OUT) :: tsize
+  END SUBROUTINE LagrangeCoeff_Prism3_
+END INTERFACE LagrangeCoeff_Prism_
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE LagrangeCoeff_Prism_
+  MODULE SUBROUTINE LagrangeCoeff_Prism4_(order, xij, basisType, &
+                               refPrism, alpha, beta, lambda, ans, nrow, ncol)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order of polynomial
+    REAL(DFP), INTENT(IN) :: xij(:, :)
+    !! points in xij format, size(xij,2)
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: basisType
+    !! Monomials
+    !! Jacobi (Dubiner)
+    !! Heirarchical
+    CHARACTER(*), OPTIONAL, INTENT(IN) :: refPrism
+    !! UNIT * default
+    !! BIUNIT
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
+    !! Jacobi polynomial parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: beta
+    !! Jacobi polynomial parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: lambda
+    !! Ultraspherical polynomial parameter
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    !! ans(SIZE(xij, 2), SIZE(xij, 2))
+    !! coefficients
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+  END SUBROUTINE LagrangeCoeff_Prism4_
+END INTERFACE LagrangeCoeff_Prism_
 
 !----------------------------------------------------------------------------
 !                                                    QuadraturePoints_Prism
