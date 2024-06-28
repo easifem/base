@@ -284,6 +284,31 @@ INTERFACE LagrangeCoeff
 END INTERFACE LagrangeCoeff
 
 !----------------------------------------------------------------------------
+!                                                           LagrangeCoeff_
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 18 Oct 2022
+! summary:  Returns the coefficient of ith lagrange poly
+
+INTERFACE LagrangeCoeff_
+  MODULE SUBROUTINE LagrangeCoeff1_(order, elemType, i, xij, ans, tsize)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order of polynomial
+    INTEGER(I4B), INTENT(IN) :: elemType
+    !! element type
+    INTEGER(I4B), INTENT(IN) :: i
+    !! ith coefficients for lagrange polynomial
+    REAL(DFP), INTENT(IN) :: xij(:, :)
+    !! points in xij format
+    REAL(DFP), INTENT(INOUT) :: ans(:)
+    !! ans(SIZE(xij, 2))
+    !! coefficients
+    INTEGER(I4B), INTENT(OUT) :: tsize
+  END SUBROUTINE LagrangeCoeff1_
+END INTERFACE LagrangeCoeff_
+
+!----------------------------------------------------------------------------
 !                                                           LagrangeCoeff
 !----------------------------------------------------------------------------
 
@@ -303,6 +328,29 @@ INTERFACE LagrangeCoeff
     !! coefficients
   END FUNCTION LagrangeCoeff2
 END INTERFACE LagrangeCoeff
+
+!----------------------------------------------------------------------------
+!                                                           LagrangeCoeff
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 18 Oct 2022
+! summary: Returns the coefficient of all lagrange poly
+
+INTERFACE LagrangeCoeff_
+  MODULE SUBROUTINE LagrangeCoeff2_(order, elemType, xij, ans, nrow, ncol)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order of polynomial
+    INTEGER(I4B), INTENT(IN) :: elemType
+    !! element type
+    REAL(DFP), INTENT(IN) :: xij(:, :)
+    !! points in xij format
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    !! ans(SIZE(xij, 2), SIZE(xij, 2))
+    !! coefficients
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+  END SUBROUTINE LagrangeCoeff2_
+END INTERFACE LagrangeCoeff_
 
 !----------------------------------------------------------------------------
 !                                                             LagrangeCoeff
@@ -327,6 +375,30 @@ INTERFACE LagrangeCoeff
 END INTERFACE LagrangeCoeff
 
 !----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE LagrangeCoeff_
+  MODULE SUBROUTINE LagrangeCoeff3_(order, elemType, i, v, &
+                                    isVandermonde, ans, tsize)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order of polynomial, it should be SIZE(v,2)-1
+    INTEGER(I4B), INTENT(IN) :: elemType
+    !! element type
+    INTEGER(I4B), INTENT(IN) :: i
+    !! coefficient for ith lagrange polynomial
+    REAL(DFP), INTENT(IN) :: v(:, :)
+    !! vandermonde matrix size should be (order+1,order+1)
+    LOGICAL(LGT), INTENT(IN) :: isVandermonde
+    !! This is just to resolve interface issue
+    REAL(DFP), INTENT(INOUT) :: ans(:)
+    !! ans(SIZE(v, 1))
+    !! coefficients
+    INTEGER(I4B), INTENT(OUT) :: tsize
+  END SUBROUTINE LagrangeCoeff3_
+END INTERFACE LagrangeCoeff_
+
+!----------------------------------------------------------------------------
 !                                                              LagrangeCoeff
 !----------------------------------------------------------------------------
 
@@ -346,6 +418,29 @@ INTERFACE LagrangeCoeff
     !! coefficients
   END FUNCTION LagrangeCoeff4
 END INTERFACE LagrangeCoeff
+
+!----------------------------------------------------------------------------
+!                                                              LagrangeCoeff
+!----------------------------------------------------------------------------
+
+INTERFACE LagrangeCoeff_
+  MODULE SUBROUTINE LagrangeCoeff4_(order, elemType, i, v, ipiv, ans, tsize)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order of polynomial, it should be SIZE(x,2)-1
+    INTEGER(I4B), INTENT(IN) :: elemType
+    !! element type
+    INTEGER(I4B), INTENT(IN) :: i
+    !! ith coefficients for lagrange polynomial
+    REAL(DFP), INTENT(INOUT) :: v(:, :)
+    !! LU decomposition of vandermonde matrix
+    INTEGER(I4B), INTENT(IN) :: ipiv(:)
+    !! inverse pivoting mapping, compes from LU decomposition
+    REAL(DFP), INTENT(INOUT) :: ans(:)
+    !! ans(SIZE(v, 1))
+    !! coefficients
+    INTEGER(I4B), INTENT(OUT) :: tsize
+  END SUBROUTINE LagrangeCoeff4_
+END INTERFACE LagrangeCoeff_
 
 !----------------------------------------------------------------------------
 !                                                           LagrangeEvalAll

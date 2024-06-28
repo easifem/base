@@ -410,6 +410,42 @@ END SELECT
 END PROCEDURE InterpolationPoint_
 
 !----------------------------------------------------------------------------
+!                                                             LagrangeCoeff_
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE LagrangeCoeff1_
+CALL Errormsg(msg="Not Implemented", unitno=stdout, line=__LINE__, &
+              routine="LagrangeCoeff1_", file=__FILE__)
+END PROCEDURE LagrangeCoeff1_
+
+!----------------------------------------------------------------------------
+!                                                             LagrangeCoeff_
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE LagrangeCoeff2_
+CALL Errormsg(msg="Not Implemented", unitno=stdout, line=__LINE__, &
+              routine="LagrangeCoeff2_", file=__FILE__)
+END PROCEDURE LagrangeCoeff2_
+
+!----------------------------------------------------------------------------
+!                                                             LagrangeCoeff_
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE LagrangeCoeff3_
+CALL Errormsg(msg="Not Implemented", unitno=stdout, line=__LINE__, &
+              routine="LagrangeCoeff3_", file=__FILE__)
+END PROCEDURE LagrangeCoeff3_
+
+!----------------------------------------------------------------------------
+!                                                             LagrangeCoeff_
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE LagrangeCoeff4_
+CALL Errormsg(msg="Not Implemented", unitno=stdout, line=__LINE__, &
+              routine="LagrangeCoeff4_", file=__FILE__)
+END PROCEDURE LagrangeCoeff4_
+
+!----------------------------------------------------------------------------
 !                                                             LagrangeCoeff
 !----------------------------------------------------------------------------
 
@@ -443,12 +479,12 @@ CASE (Pyramid)
   ans = LagrangeCoeff_Pyramid(order=order, xij=xij, i=i)
 
 CASE DEFAULT
-  CALL Errormsg(&
-    & msg="No CASE FOUND: elemType="//ToString(elemType), &
-    & unitno=stdout,  &
-    & line=__LINE__,  &
-    & routine="LagrangeCoeff1()",  &
-    & file=__FILE__)
+  CALL Errormsg( &
+    msg="No CASE FOUND: elemType="//ToString(elemType), &
+    unitno=stdout, &
+    line=__LINE__, &
+    routine="LagrangeCoeff1()", &
+    file=__FILE__)
 END SELECT
 
 END PROCEDURE LagrangeCoeff1
@@ -487,12 +523,9 @@ CASE (Pyramid)
   ans = LagrangeCoeff_Pyramid(order=order, xij=xij)
 
 CASE DEFAULT
-  CALL Errormsg(&
-    & msg="No CASE FOUND: elemType="//ToString(elemType), &
-    & unitno=stdout,  &
-    & line=__LINE__,  &
-    & routine="LagrangeCoeff2()",  &
-    & file=__FILE__)
+  CALL Errormsg(msg="No CASE FOUND: elemType="//ToString(elemType), &
+                unitno=stdout, line=__LINE__, routine="LagrangeCoeff2()", &
+                file=__FILE__)
 END SELECT
 END PROCEDURE LagrangeCoeff2
 
@@ -533,7 +566,7 @@ CASE DEFAULT
     & msg="No CASE FOUND: elemType="//ToString(elemType), &
     & unitno=stdout,  &
     & line=__LINE__,  &
-    & routine="LagrangeCoeff2()",  &
+    & routine="LagrangeCoeff3()",  &
     & file=__FILE__)
 END SELECT
 END PROCEDURE LagrangeCoeff3
