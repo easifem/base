@@ -450,70 +450,87 @@ END PROCEDURE LegendreEval2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE LegendreEvalAll1
+INTEGER(I4B) :: tsize
+CALL LegendreEvalAll1_(n=n, x=x, ans=ans, tsize=tsize)
+END PROCEDURE LegendreEvalAll1
+
+!----------------------------------------------------------------------------
+!                                                           LegendreEvalAll_
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE LegendreEvalAll1_
 INTEGER(I4B) :: i
 REAL(DFP) :: c1, c2, c3, r_i
-!!
-ans = 0.0_DFP
-!!
-IF (n < 0) THEN
-  RETURN
-END IF
-!!
+
+tsize = 0
+IF (n < 0) RETURN
+
+tsize = n + 1
 ans(1) = 1.0_DFP
-!!
-IF (n .EQ. 0) THEN
-  RETURN
-END IF
-!!
+
+IF (n .EQ. 0) RETURN
+
 ans(2) = x
-!!
+
 DO i = 2, n
-  !!
+
   r_i = REAL(i, kind=DFP)
+
   c1 = r_i
+
   c2 = 2.0_DFP * r_i - 1.0_DFP
+  c2 = c2 / c1
+
   c3 = -r_i + 1.0_DFP
-  !!
-  ans(i + 1) = ((c2 * x) * ans(i) + c3 * ans(i - 1)) / c1
-  !!
+  c3 = c3 / c1
+
+  ans(i + 1) = (c2 * x) * ans(i) + c3 * ans(i - 1)
 END DO
 
-END PROCEDURE LegendreEvalAll1
+END PROCEDURE LegendreEvalAll1_
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE LegendreEvalAll2
+INTEGER(I4B) :: nrow, ncol
+CALL LegendreEvalAll2_(n=n, x=x, ans=ans, nrow=nrow, ncol=ncol)
+END PROCEDURE LegendreEvalAll2
+
+!----------------------------------------------------------------------------
+!                                                          LegendreEvalAll_
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE LegendreEvalAll2_
 INTEGER(I4B) :: i
 REAL(DFP) :: c1, c2, c3, r_i
-!!
-ans = 0.0_DFP
-!!
-IF (n < 0) THEN
-  RETURN
-END IF
-!!
-ans(:, 1) = 1.0_DFP
-!!
-IF (n .EQ. 0) THEN
-  RETURN
-END IF
-!!
-ans(:, 2) = x
-!!
+
+nrow = 0; ncol = 0
+IF (n < 0) RETURN
+
+nrow = SIZE(x)
+ncol = n + 1
+
+ans(1:nrow, 1) = 1.0_DFP
+
+IF (n .EQ. 0) RETURN
+
+ans(1:nrow, 2) = x
+
 DO i = 2, n
-  !!
   r_i = REAL(i, kind=DFP)
   c1 = r_i
   c2 = 2.0_DFP * r_i - 1.0_DFP
+  c2 = c2 / c1
+
   c3 = -r_i + 1.0_DFP
-  !!
-  ans(:, i + 1) = ((c2 * x) * ans(:, i) + c3 * ans(:, i - 1)) / c1
-  !!
+  c3 = c3 / c1
+
+  ans(1:nrow, i + 1) = (c2 * x) * ans(1:nrow, i) + c3 * ans(1:nrow, i - 1)
 END DO
 
-END PROCEDURE LegendreEvalAll2
+END PROCEDURE LegendreEvalAll2_
 
 !----------------------------------------------------------------------------
 !

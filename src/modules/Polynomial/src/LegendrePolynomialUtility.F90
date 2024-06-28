@@ -546,7 +546,7 @@ END INTERFACE LegendreEval
 !
 !- x: the point at which the polynomials are to be evaluated.
 
-INTERFACE
+INTERFACE LegendreEvalAll
   MODULE PURE FUNCTION LegendreEvalAll1(n, x) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: n
     !! Highest order of polynomial.
@@ -557,11 +557,26 @@ INTERFACE
     !! Evaluate Legendre polynomial of order = 0 to n (total n+1)
     !! at point x
   END FUNCTION LegendreEvalAll1
-END INTERFACE
-
-INTERFACE LegendreEvalAll
-  MODULE PROCEDURE LegendreEvalAll1
 END INTERFACE LegendreEvalAll
+
+!----------------------------------------------------------------------------
+!                                                         LegendreEvalAll_
+!----------------------------------------------------------------------------
+
+INTERFACE LegendreEvalAll_
+  MODULE PURE SUBROUTINE LegendreEvalAll1_(n, x, ans, tsize)
+    INTEGER(I4B), INTENT(IN) :: n
+    !! Highest order of polynomial.
+    !! Polynomials from 0 to n will be computed.
+    REAL(DFP), INTENT(IN) :: x
+    !! Point of evaluation, $x \in [-1, 1]$
+    REAL(DFP), INTENT(INOUT) :: ans(:)
+    !! ans(n + 1)
+    !! Evaluate Legendre polynomial of order = 0 to n (total n+1)
+    !! at point x
+    INTEGER(I4B), INTENT(OUT) :: tsize
+  END SUBROUTINE LegendreEvalAll1_
+END INTERFACE LegendreEvalAll_
 
 !----------------------------------------------------------------------------
 !                                                           LegendreEvalAll
@@ -587,7 +602,7 @@ END INTERFACE LegendreEvalAll
 ! points, N+1 number of polynomials. So ans(j, :) denotes value of all
 ! polynomials at jth point, and ans(:, n) denotes value of Pn at all nodes
 
-INTERFACE
+INTERFACE LegendreEvalAll
   MODULE PURE FUNCTION LegendreEvalAll2(n, x) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: n
     !! Highest order of polynomial.
@@ -597,11 +612,25 @@ INTERFACE
     REAL(DFP) :: ans(SIZE(x), n + 1)
     !! shape (M,N+1)
   END FUNCTION LegendreEvalAll2
-END INTERFACE
-
-INTERFACE LegendreEvalAll
-  MODULE PROCEDURE LegendreEvalAll2
 END INTERFACE LegendreEvalAll
+
+!----------------------------------------------------------------------------
+!                                                          LegendreEvalAll_
+!----------------------------------------------------------------------------
+
+INTERFACE LegendreEvalAll_
+  MODULE PURE SUBROUTINE LegendreEvalAll2_(n, x, ans, nrow, ncol)
+    INTEGER(I4B), INTENT(IN) :: n
+    !! Highest order of polynomial.
+    !! Polynomials from 0 to n will be computed.
+    REAL(DFP), INTENT(IN) :: x(:)
+    !! number of points, SIZE(x)=M
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    !! ans(SIZE(x), n + 1)
+    !! shape (M,N+1)
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+  END SUBROUTINE LegendreEvalAll2_
+END INTERFACE LegendreEvalAll_
 
 !----------------------------------------------------------------------------
 !                                             LegendreMonomialExpansionAll
