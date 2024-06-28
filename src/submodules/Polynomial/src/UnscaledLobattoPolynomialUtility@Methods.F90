@@ -118,54 +118,87 @@ END PROCEDURE UnscaledLobattoEval2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE UnscaledLobattoEvalAll1
-REAL(DFP) :: avar, m
-REAL(DFP) :: p(n + 1)
-INTEGER(I4B) :: ii
-  !!
-SELECT CASE (n)
-CASE (0)
-  ans(1) = 0.5_DFP * (1.0_DFP - x)
-CASE (1)
-  ans(1) = 0.5_DFP * (1.0_DFP - x)
-  ans(2) = 0.5_DFP * (1.0_DFP + x)
-CASE DEFAULT
-  ans(1) = 0.5_DFP * (1.0_DFP - x)
-  ans(2) = 0.5_DFP * (1.0_DFP + x)
-  p = LegendreEvalAll(n=n, x=x)
-  DO ii = 1, n - 1
-    m = REAL(ii - 1, KIND=DFP)
-    avar = 1.0_DFP / (2.0_DFP * m + 3.0_DFP)
-    ans(2 + ii) = avar * (p(ii + 2) - p(ii))
-  END DO
-END SELECT
+INTEGER(I4B) :: tsize
+CALL UnscaledLobattoEvalAll1_(n=n, x=x, ans=ans, tsize=tsize)
 END PROCEDURE UnscaledLobattoEvalAll1
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE UnscaledLobattoEvalAll2
+MODULE PROCEDURE UnscaledLobattoEvalAll1_
 REAL(DFP) :: avar, m
-REAL(DFP) :: p(SIZE(x), n + 1)
+REAL(DFP) :: p(n + 1)
 INTEGER(I4B) :: ii
-  !!
+
+tsize = n + 1
+
 SELECT CASE (n)
 CASE (0)
-  ans(:, 1) = 0.5_DFP * (1.0_DFP - x)
+  ans(1) = 0.5_DFP * (1.0_DFP - x)
+
 CASE (1)
-  ans(:, 1) = 0.5_DFP * (1.0_DFP - x)
-  ans(:, 2) = 0.5_DFP * (1.0_DFP + x)
+  ans(1) = 0.5_DFP * (1.0_DFP - x)
+  ans(2) = 0.5_DFP * (1.0_DFP + x)
+
 CASE DEFAULT
-  ans(:, 1) = 0.5_DFP * (1.0_DFP - x)
-  ans(:, 2) = 0.5_DFP * (1.0_DFP + x)
-  p = LegendreEvalAll(n=n, x=x)
+  ans(1) = 0.5_DFP * (1.0_DFP - x)
+  ans(2) = 0.5_DFP * (1.0_DFP + x)
+
+  CALL LegendreEvalAll_(n=n, x=x, ans=p, tsize=ii)
+
   DO ii = 1, n - 1
     m = REAL(ii - 1, KIND=DFP)
     avar = 1.0_DFP / (2.0_DFP * m + 3.0_DFP)
-    ans(:, 2 + ii) = avar * (p(:, ii + 2) - p(:, ii))
+    ans(2 + ii) = avar * (p(ii + 2) - p(ii))
   END DO
+
 END SELECT
+END PROCEDURE UnscaledLobattoEvalAll1_
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE UnscaledLobattoEvalAll2
+INTEGER(I4B) :: nrow, ncol
+CALL UnscaledLobattoEvalAll2_(n=n, x=x, ans=ans, nrow=nrow, ncol=ncol)
 END PROCEDURE UnscaledLobattoEvalAll2
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE UnscaledLobattoEvalAll2_
+REAL(DFP) :: avar, m
+REAL(DFP) :: p(SIZE(x), n + 1)
+INTEGER(I4B) :: ii, aint, bint
+
+nrow = SIZE(x)
+ncol = n + 1
+
+SELECT CASE (n)
+CASE (0)
+  ans(1:nrow, 1) = 0.5_DFP * (1.0_DFP - x)
+
+CASE (1)
+  ans(1:nrow, 1) = 0.5_DFP * (1.0_DFP - x)
+  ans(1:nrow, 2) = 0.5_DFP * (1.0_DFP + x)
+
+CASE DEFAULT
+  ans(1:nrow, 1) = 0.5_DFP * (1.0_DFP - x)
+  ans(1:nrow, 2) = 0.5_DFP * (1.0_DFP + x)
+
+  CALL LegendreEvalAll_(n=n, x=x, ans=p, nrow=aint, ncol=bint)
+
+  DO ii = 1, n - 1
+    m = REAL(ii - 1, KIND=DFP)
+    avar = 1.0_DFP / (2.0_DFP * m + 3.0_DFP)
+    ans(1:nrow, 2 + ii) = avar * (p(1:nrow, ii + 2) - p(1:nrow, ii))
+  END DO
+
+END SELECT
+END PROCEDURE UnscaledLobattoEvalAll2_
 
 !----------------------------------------------------------------------------
 !

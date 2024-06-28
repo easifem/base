@@ -171,7 +171,7 @@ END INTERFACE UnscaledLobattoEval
 !- ans(M,1:N+1), the values of the first N+1 UnscaledLobatto polynomials at
 ! the point X.
 
-INTERFACE
+INTERFACE UnscaledLobattoEvalAll
   MODULE PURE FUNCTION UnscaledLobattoEvalAll1(n, x) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: n
     REAL(DFP), INTENT(IN) :: x
@@ -179,11 +179,23 @@ INTERFACE
     !! Evaluate UnscaledLobatto polynomial of order = 0 to n (total n+1)
     !! at point x
   END FUNCTION UnscaledLobattoEvalAll1
-END INTERFACE
-
-INTERFACE UnscaledLobattoEvalAll
-  MODULE PROCEDURE UnscaledLobattoEvalAll1
 END INTERFACE UnscaledLobattoEvalAll
+
+!----------------------------------------------------------------------------
+!                                                   UnscaledLobattoEvalAll_
+!----------------------------------------------------------------------------
+
+INTERFACE UnscaledLobattoEvalAll_
+  MODULE PURE SUBROUTINE UnscaledLobattoEvalAll1_(n, x, ans, tsize)
+    INTEGER(I4B), INTENT(IN) :: n
+    REAL(DFP), INTENT(IN) :: x
+    REAL(DFP), INTENT(INOUT) :: ans(:)
+    !! ans(n + 1)
+    !! Evaluate UnscaledLobatto polynomial of order = 0 to n (total n+1)
+    !! at point x
+    INTEGER(I4B), INTENT(OUT) :: tsize
+  END SUBROUTINE UnscaledLobattoEvalAll1_
+END INTERFACE UnscaledLobattoEvalAll_
 
 !----------------------------------------------------------------------------
 !                                                     UnscaledLobattoEvalAll
@@ -205,7 +217,8 @@ END INTERFACE UnscaledLobattoEvalAll
 !- ans(M,1:N+1), the values of the first N+1 UnscaledLobatto polynomials at
 ! the point X.
 
-INTERFACE
+INTERFACE UnscaledLobattoEvalAll
+
   MODULE PURE FUNCTION UnscaledLobattoEvalAll2(n, x) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: n
     REAL(DFP), INTENT(IN) :: x(:)
@@ -213,11 +226,24 @@ INTERFACE
     !! Evaluate UnscaledLobatto polynomial of order = 0 to n (total n+1)
     !! at point x
   END FUNCTION UnscaledLobattoEvalAll2
-END INTERFACE
-
-INTERFACE UnscaledLobattoEvalAll
-  MODULE PROCEDURE UnscaledLobattoEvalAll2
 END INTERFACE UnscaledLobattoEvalAll
+
+!----------------------------------------------------------------------------
+!                                                 UnscaledLobattoEvalAll_
+!----------------------------------------------------------------------------
+
+INTERFACE UnscaledLobattoEvalAll_
+
+  MODULE PURE SUBROUTINE UnscaledLobattoEvalAll2_(n, x, ans, nrow, ncol)
+    INTEGER(I4B), INTENT(IN) :: n
+    REAL(DFP), INTENT(IN) :: x(:)
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    !! ans(SIZE(x), n + 1)
+    !! Evaluate UnscaledLobatto polynomial of order = 0 to n (total n+1)
+    !! at point x
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+  END SUBROUTINE UnscaledLobattoEvalAll2_
+END INTERFACE UnscaledLobattoEvalAll_
 
 !----------------------------------------------------------------------------
 !                                       UnscaledLobattoMonomialExpansionAll
