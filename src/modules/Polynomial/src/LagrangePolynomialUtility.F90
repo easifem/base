@@ -33,6 +33,7 @@ PUBLIC :: LagrangeVandermonde
 PUBLIC :: LagrangeVandermonde_
 PUBLIC :: EquidistancePoint
 PUBLIC :: InterpolationPoint
+PUBLIC :: InterpolationPoint_
 PUBLIC :: LagrangeCoeff
 PUBLIC :: LagrangeEvalAll
 PUBLIC :: LagrangeGradientEvalAll
@@ -212,6 +213,51 @@ INTERFACE
     REAL(DFP), ALLOCATABLE :: ans(:, :)
     !! interpolation points in xij format
   END FUNCTION InterpolationPoint
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                         InterpolationPoint
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 28 Aug 2022
+! summary: Get the interpolation point
+
+INTERFACE
+ MODULE SUBROUTINE InterpolationPoint_(order, elemType, ipType, xij, layout, &
+                                        alpha, beta, lambda, ans, nrow, ncol)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order of interpolation
+    INTEGER(I4B), INTENT(IN) :: elemType
+    !! element type, following values are allowed.
+    !! Point, Line, Triangle, Quadrangle, Tetrahedron
+    !! Hexahedron, Prism, Pyramid
+    INTEGER(I4B), INTENT(IN) :: ipType
+    !! interpolation point type
+    !! Equidistance, GaussLegendre, GaussLegendreLobatto, GaussChebyshev,
+    !! GaussChebyshevLobatto, GaussJacobi, GaussJacobiLobatto,
+    !! GaussUltraspherical, GaussUltrasphericalLobatto
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    !! interpolation points in xij format
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+    !! the number of rows and cols written in ans
+    CHARACTER(*), INTENT(IN) :: layout
+    !! "VEFC" Vertex, Edge, Face, Cell
+    !! "INCREASING" incresing order
+    !! "DECREASING" decreasing order
+    !! "XYZ" First X, then Y, then Z
+    !! "YXZ" First Y, then X, then Z
+    REAL(DFP), OPTIONAL, INTENT(IN) :: xij(:, :)
+    !! Nodal coordinates of linear elements.
+    !! Domain of interpolation, default values are given by:
+    !! Biunit line
+    !! Unit triangle
+    !! Biunit Quadrangle
+    !! Unit Tetrahedron
+    !! Biunit Hexahedron
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha, beta, lambda
+    !! Jacobi and Ultraspherical parameters
+  END SUBROUTINE InterpolationPoint_
 END INTERFACE
 
 !----------------------------------------------------------------------------

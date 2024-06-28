@@ -425,6 +425,23 @@ INTERFACE InterpolationPoint_Quadrangle
     !! order of element
     INTEGER(I4B), INTENT(IN) :: ipType
     !! interpolation point type
+    !! Equidistance
+    !! GaussLegendre
+    !! GaussLegendreLobatto
+    !! GaussLegendreRadauLeft
+    !! GaussLegendreRadauRight
+    !! GaussChebyshev1
+    !! GaussChebyshev1Lobatto
+    !! GaussChebyshev1RadauLeft
+    !! GaussChebyshev1RadauRight
+    !! GaussUltraspherical
+    !! GaussUltrasphericalLobatto
+    !! GaussUltrasphericalRadauLeft
+    !! GaussUltrasphericalRadauRight
+    !! GaussJacobi
+    !! GaussJacobiLobatto
+    !! GaussJacobiRadauLeft
+    !! GaussJacobiRadauRight
     CHARACTER(*), INTENT(IN) :: layout
     !! VEFC, INCREASING
     REAL(DFP), OPTIONAL, INTENT(IN) :: xij(:, :)
