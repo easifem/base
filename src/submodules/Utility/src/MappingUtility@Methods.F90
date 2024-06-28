@@ -496,15 +496,29 @@ END PROCEDURE FromBiUnitTetrahedron2Tetrahedron
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE FromUnitTetrahedron2Tetrahedron
-INTEGER(I4B) :: ii
-DO ii = 1, SIZE(xin, 2)
-  ans(:, ii) = &
-    (1.0_DFP - xin(1, ii) - xin(2, ii) - xin(3, ii)) * x1(:) &
-    + xin(1, ii) * x2(:) &
-    + xin(2, ii) * x3(:) &
-    + xin(3, ii) * x4(:)
-END DO
+INTEGER(I4B) :: nrow, ncol
+CALL FromUnitTetrahedron2Tetrahedron_(xin=xin, ans=ans, x1=x1, x2=x2, &
+                                      x3=x3, x4=x4, nrow=nrow, ncol=ncol)
 END PROCEDURE FromUnitTetrahedron2Tetrahedron
+
+!----------------------------------------------------------------------------
+!                                            FromUnitTetrahedron2Tetrahedron
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE FromUnitTetrahedron2Tetrahedron_
+INTEGER(I4B) :: ii
+
+nrow = 3
+ncol = SIZE(xin, 2)
+
+DO ii = 1, ncol
+  ans(1:3, ii) = &
+    (1.0_DFP - xin(1, ii) - xin(2, ii) - xin(3, ii)) * x1(1:3) &
+    + xin(1, ii) * x2(1:3) &
+    + xin(2, ii) * x3(1:3) &
+    + xin(3, ii) * x4(1:3)
+END DO
+END PROCEDURE FromUnitTetrahedron2Tetrahedron_
 
 !----------------------------------------------------------------------------
 !                                            BarycentricCoordUnitTetrahedron

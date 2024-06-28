@@ -76,6 +76,7 @@ PUBLIC :: FromTriangle2Triangle_
 PUBLIC :: FromUnitTetrahedron2BiUnitTetrahedron
 PUBLIC :: FromBiUnitTetrahedron2UnitTetrahedron
 PUBLIC :: FromUnitTetrahedron2Tetrahedron
+PUBLIC :: FromUnitTetrahedron2Tetrahedron_
 PUBLIC :: FromBiUnitTetrahedron2Tetrahedron
 PUBLIC :: BarycentricCoordUnitTetrahedron
 PUBLIC :: BarycentricCoordBiUnitTetrahedron
@@ -785,12 +786,8 @@ END INTERFACE
 ! summary: Unit Tetrahedron to tetrahedron
 
 INTERFACE
-  MODULE PURE FUNCTION FromUnitTetrahedron2Tetrahedron( &
-    & xin, &
-    & x1, &
-    & x2, &
-    & x3, &
-    & x4) RESULT(ans)
+  MODULE PURE FUNCTION FromUnitTetrahedron2Tetrahedron(xin, x1, x2, x3, x4) &
+    RESULT(ans)
     REAL(DFP), INTENT(IN) :: xin(:, :)
     REAL(DFP), INTENT(IN) :: x1(3)
     !! Coordinate of tetrahedron node 1
@@ -802,6 +799,32 @@ INTERFACE
     !! Coordinate of tetrahedron node 4
     REAL(DFP) :: ans(3, SIZE(xin, 2))
   END FUNCTION FromUnitTetrahedron2Tetrahedron
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                           FromUnitTetrahedron2Tetrahedron_
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2024-06-28
+! summary:  No allocation
+
+INTERFACE
+MODULE PURE SUBROUTINE FromUnitTetrahedron2Tetrahedron_(xin, x1, x2, x3, x4, &
+                                                          ans, nrow, ncol)
+    REAL(DFP), INTENT(IN) :: xin(:, :)
+    REAL(DFP), INTENT(IN) :: x1(3)
+    !! Coordinate of tetrahedron node 1
+    REAL(DFP), INTENT(IN) :: x2(3)
+    !! Coordinate of tetrahedron node 2
+    REAL(DFP), INTENT(IN) :: x3(3)
+    !! Coordinate of tetrahedron node 3
+    REAL(DFP), INTENT(IN) :: x4(3)
+    !! Coordinate of tetrahedron node 4
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    !! ans(3, SIZE(xin, 2))
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+  END SUBROUTINE FromUnitTetrahedron2Tetrahedron_
 END INTERFACE
 
 !----------------------------------------------------------------------------
