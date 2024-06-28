@@ -535,6 +535,24 @@ INTERFACE JacobiEvalAll
 END INTERFACE JacobiEvalAll
 
 !----------------------------------------------------------------------------
+!                                                       JacobiEvalAll
+!----------------------------------------------------------------------------
+
+INTERFACE JacobiEvalAll_
+  MODULE PURE SUBROUTINE JacobiEvalAll1_(n, alpha, beta, x, ans, tsize)
+    INTEGER(I4B), INTENT(IN) :: n
+    REAL(DFP), INTENT(IN) :: alpha
+    REAL(DFP), INTENT(IN) :: beta
+    REAL(DFP), INTENT(IN) :: x
+    REAL(DFP), INTENT(INOUT) :: ans(:)
+    !! ans(n + 1)
+    !! Evaluate Jacobi polynomial of order = 0 to n (total n+1)
+    !! at point x
+    INTEGER(I4B), INTENT(OUT) :: tsize
+  END SUBROUTINE JacobiEvalAll1_
+END INTERFACE JacobiEvalAll_
+
+!----------------------------------------------------------------------------
 !                                                             JacobiEvalUpto
 !----------------------------------------------------------------------------
 
@@ -564,6 +582,24 @@ INTERFACE JacobiEvalAll
     !! at point x
   END FUNCTION JacobiEvalAll2
 END INTERFACE JacobiEvalAll
+
+!----------------------------------------------------------------------------
+!                                                              JacobiEvalAll
+!----------------------------------------------------------------------------
+
+INTERFACE JacobiEvalAll_
+  MODULE PURE SUBROUTINE JacobiEvalAll2_(n, alpha, beta, x, ans, nrow, ncol)
+    INTEGER(I4B), INTENT(IN) :: n
+    REAL(DFP), INTENT(IN) :: alpha
+    REAL(DFP), INTENT(IN) :: beta
+    REAL(DFP), INTENT(IN) :: x(:)
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    !! ans(SIZE(x), n + 1)
+    !! Evaluate Jacobi polynomial of order = 0 to n (total n+1)
+    !! at point x
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+  END SUBROUTINE JacobiEvalAll2_
+END INTERFACE JacobiEvalAll_
 
 !----------------------------------------------------------------------------
 !                                                             JacobiEval
