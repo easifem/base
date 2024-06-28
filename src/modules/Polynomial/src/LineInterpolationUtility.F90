@@ -587,6 +587,25 @@ END INTERFACE LagrangeCoeff_Line
 !                                                         LagrangeCoeff_Line
 !----------------------------------------------------------------------------
 
+INTERFACE LagrangeCoeff_Line_
+  MODULE SUBROUTINE LagrangeCoeff_Line1_(order, i, xij, ans, tsize)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order of polynomial, it should be SIZE(xij,2)-1
+    INTEGER(I4B), INTENT(IN) :: i
+    !! ith coefficients for lagrange polynomial
+    REAL(DFP), INTENT(IN) :: xij(:, :)
+    !! points in xij format, size(xij,2) = order+1
+    REAL(DFP), INTENT(INOUT) :: ans(:)
+    !! ans(order + 1)
+    !! coefficients
+    INTEGER(I4B), INTENT(OUT) :: tsize
+  END SUBROUTINE LagrangeCoeff_Line1_
+END INTERFACE LagrangeCoeff_Line_
+
+!----------------------------------------------------------------------------
+!                                                         LagrangeCoeff_Line
+!----------------------------------------------------------------------------
+
 INTERFACE LagrangeCoeff_Line
   MODULE FUNCTION LagrangeCoeff_Line2(order, i, v, isVandermonde) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
@@ -601,6 +620,28 @@ INTERFACE LagrangeCoeff_Line
     !! coefficients
   END FUNCTION LagrangeCoeff_Line2
 END INTERFACE LagrangeCoeff_Line
+
+!----------------------------------------------------------------------------
+!                                                         LagrangeCoeff_Line
+!----------------------------------------------------------------------------
+
+INTERFACE LagrangeCoeff_Line_
+  MODULE SUBROUTINE LagrangeCoeff_Line2_(order, i, v, isVandermonde, ans, &
+                                         tsize)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order of polynomial, it should be SIZE(v,2)-1
+    INTEGER(I4B), INTENT(IN) :: i
+    !! coefficient for ith lagrange polynomial
+    REAL(DFP), INTENT(IN) :: v(:, :)
+    !! vandermonde matrix size should be (order+1,order+1)
+    LOGICAL(LGT), INTENT(IN) :: isVandermonde
+    !! This is just to resolve interface issue
+    REAL(DFP), INTENT(INOUT) :: ans(:)
+    !! ans(order + 1)
+    !! coefficients
+    INTEGER(I4B), INTENT(OUT) :: tsize
+  END SUBROUTINE LagrangeCoeff_Line2_
+END INTERFACE LagrangeCoeff_Line_
 
 !----------------------------------------------------------------------------
 !                                                         LagrangeCoeff_Line
@@ -625,6 +666,27 @@ END INTERFACE LagrangeCoeff_Line
 !                                                         LagrangeCoeff_Line
 !----------------------------------------------------------------------------
 
+INTERFACE LagrangeCoeff_Line_
+  MODULE SUBROUTINE LagrangeCoeff_Line3_(order, i, v, ipiv, ans, tsize)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order of polynomial, it should be SIZE(x,2)-1
+    INTEGER(I4B), INTENT(IN) :: i
+    !! ith coefficients for lagrange polynomial
+    REAL(DFP), INTENT(INOUT) :: v(:, :)
+    !! LU decomposition of vandermonde matrix
+    INTEGER(I4B), INTENT(IN) :: ipiv(:)
+    !! inverse pivoting mapping, compes from LU decomposition
+    REAL(DFP), INTENT(INOUT) :: ans(:)
+    !! ans(order + 1)
+    !! coefficients
+    INTEGER(I4B), INTENT(OUT) :: tsize
+  END SUBROUTINE LagrangeCoeff_Line3_
+END INTERFACE LagrangeCoeff_Line_
+
+!----------------------------------------------------------------------------
+!                                                         LagrangeCoeff_Line
+!----------------------------------------------------------------------------
+
 INTERFACE LagrangeCoeff_Line
   MODULE FUNCTION LagrangeCoeff_Line4(order, xij) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
@@ -639,6 +701,25 @@ INTERFACE LagrangeCoeff_Line
 END INTERFACE LagrangeCoeff_Line
 
 !----------------------------------------------------------------------------
+!                                                         LagrangeCoeff_Line
+!----------------------------------------------------------------------------
+
+INTERFACE LagrangeCoeff_Line_
+  MODULE SUBROUTINE LagrangeCoeff_Line4_(order, xij, ans, nrow, ncol)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order of polynomial, it should be SIZE(xij,2)-1
+    REAL(DFP), INTENT(IN) :: xij(:, :)
+    !! points in xij format, size(xij,2) = order+1
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    !! ans(order + 1, order + 1)
+    !! coefficients
+    !! jth column of ans corresponds to the coeff of lagrange polynomial
+    !! at the jth point
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+  END SUBROUTINE LagrangeCoeff_Line4_
+END INTERFACE LagrangeCoeff_Line_
+
+!----------------------------------------------------------------------------
 !                                                       LagrangeCoeff_Line
 !----------------------------------------------------------------------------
 
@@ -650,12 +731,7 @@ INTERFACE LagrangeCoeff_Line
     REAL(DFP), INTENT(IN) :: xij(:, :)
     !! points in xij format, size(xij,2) = order+1
     INTEGER(I4B), INTENT(IN) :: basisType
-    !! Monomial
-    !! Jacobi
-    !! Legendre
-    !! Chebyshev
-    !! Lobatto
-    !! UnscaledLobatto
+    !! Monomial, Jacobi, Legendre, Chebyshev, Lobatto, UnscaledLobatto
     REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
     !! Jacobi polynomial parameter
     REAL(DFP), OPTIONAL, INTENT(IN) :: beta
@@ -668,6 +744,34 @@ INTERFACE LagrangeCoeff_Line
     !! at the jth point
   END FUNCTION LagrangeCoeff_Line5
 END INTERFACE LagrangeCoeff_Line
+
+!----------------------------------------------------------------------------
+!                                                       LagrangeCoeff_Line
+!----------------------------------------------------------------------------
+
+INTERFACE LagrangeCoeff_Line_
+  MODULE SUBROUTINE LagrangeCoeff_Line5_(order, xij, basisType, alpha, &
+                                         beta, lambda, ans, nrow, ncol)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order of polynomial, it should be SIZE(xij,2)-1
+    REAL(DFP), INTENT(IN) :: xij(:, :)
+    !! points in xij format, size(xij,2) = order+1
+    INTEGER(I4B), INTENT(IN) :: basisType
+    !! Monomial, Jacobi, Legendre, Chebyshev, Lobatto, UnscaledLobatto
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
+    !! Jacobi polynomial parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: beta
+    !! Jacobi polynomial parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: lambda
+    !! Ultraspherical parameter
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    !! ans(SIZE(xij, 2), SIZE(xij, 2))
+    !! coefficients
+    !! jth column of ans corresponds to the coeff of lagrange polynomial
+    !! at the jth point
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+  END SUBROUTINE LagrangeCoeff_Line5_
+END INTERFACE LagrangeCoeff_Line_
 
 !----------------------------------------------------------------------------
 !                                                       LagrangeEvalAll_Line

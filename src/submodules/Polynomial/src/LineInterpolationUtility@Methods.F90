@@ -35,7 +35,8 @@ USE OrthogonalPolynomialUtility, ONLY: GradientEvalAllOrthopol, &
 USE InputUtility, ONLY: Input
 
 USE LagrangePolynomialUtility, ONLY: LagrangeVandermonde, &
-                                     LagrangeCoeff
+                                     LagrangeCoeff, &
+                                     LagrangeVandermonde_
 
 USE ErrorHandling, ONLY: ErrorMsg
 
@@ -664,67 +665,134 @@ END PROCEDURE InterpolationPoint_Line2_
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE LagrangeCoeff_Line1
-REAL(DFP) :: v(SIZE(xij, 2), SIZE(xij, 2))
-INTEGER(I4B), DIMENSION(SIZE(xij, 2)) :: ipiv
-INTEGER(I4B) :: info
-v = LagrangeVandermonde(order=order, xij=xij, elemType=elmopt%Line)
-CALL GetLU(A=v, IPIV=ipiv, info=info)
-ans = 0.0_DFP; ans(i) = 1.0_DFP
-CALL LUSolve(A=v, B=ans, IPIV=ipiv, info=info)
+INTEGER(I4B) :: tsize
+CALL LagrangeCoeff_Line1_(order=order, i=i, xij=xij, ans=ans, tsize=tsize)
 END PROCEDURE LagrangeCoeff_Line1
 
 !----------------------------------------------------------------------------
 !                                                        LagrangeCoeff_Line
 !----------------------------------------------------------------------------
 
+MODULE PROCEDURE LagrangeCoeff_Line1_
+REAL(DFP) :: v(SIZE(xij, 2), SIZE(xij, 2))
+INTEGER(I4B), DIMENSION(SIZE(xij, 2)) :: ipiv
+INTEGER(I4B) :: info, nrow, ncol
+
+tsize = order + 1
+CALL LagrangeVandermonde_(order=order, xij=xij, elemType=elmopt%Line, &
+                          ans=v, nrow=nrow, ncol=ncol)
+
+CALL GetLU(A=v, IPIV=ipiv, info=info)
+
+ans(1:tsize) = 0.0_DFP; ans(i) = 1.0_DFP
+
+CALL LUSolve(A=v, B=ans(1:tsize), IPIV=ipiv, info=info)
+
+END PROCEDURE LagrangeCoeff_Line1_
+
+!----------------------------------------------------------------------------
+!                                                        LagrangeCoeff_Line
+!----------------------------------------------------------------------------
+
 MODULE PROCEDURE LagrangeCoeff_Line2
-REAL(DFP) :: vtemp(SIZE(v, 1), SIZE(v, 2))
-INTEGER(I4B), DIMENSION(SIZE(v, 1)) :: ipiv
-INTEGER(I4B) :: info
-vtemp = v; ipiv = 0
-CALL GetLU(A=vtemp, IPIV=ipiv, info=info)
-ans = 0.0_DFP; ans(i) = 1.0_DFP
-CALL LUSolve(A=vtemp, B=ans, IPIV=ipiv, info=info)
+INTEGER(I4B) :: tsize
+CALL LagrangeCoeff_Line2_(order=order, i=i, v=v, isVandermonde=.TRUE., &
+                          ans=ans, tsize=tsize)
 END PROCEDURE LagrangeCoeff_Line2
 
 !----------------------------------------------------------------------------
 !                                                        LagrangeCoeff_Line
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE LagrangeCoeff_Line3
+MODULE PROCEDURE LagrangeCoeff_Line2_
+REAL(DFP) :: vtemp(SIZE(v, 1), SIZE(v, 2))
+INTEGER(I4B), DIMENSION(SIZE(v, 1)) :: ipiv
 INTEGER(I4B) :: info
-ans = 0.0_DFP; ans(i) = 1.0_DFP
-CALL LUSolve(A=v, B=ans, IPIV=ipiv, info=info)
+
+tsize = order + 1
+
+vtemp = v
+! ipiv = 0
+
+CALL GetLU(A=vtemp, IPIV=ipiv, info=info)
+
+ans(1:tsize) = 0.0_DFP; ans(i) = 1.0_DFP
+
+CALL LUSolve(A=vtemp, B=ans(1:tsize), IPIV=ipiv, info=info)
+
+END PROCEDURE LagrangeCoeff_Line2_
+
+!----------------------------------------------------------------------------
+!                                                        LagrangeCoeff_Line
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE LagrangeCoeff_Line3
+INTEGER(I4B) :: tsize
+CALL LagrangeCoeff_Line3_(order=order, i=i, v=v, ipiv=ipiv, ans=ans, &
+                          tsize=tsize)
 END PROCEDURE LagrangeCoeff_Line3
 
 !----------------------------------------------------------------------------
 !                                                        LagrangeCoeff_Line
 !----------------------------------------------------------------------------
 
+MODULE PROCEDURE LagrangeCoeff_Line3_
+INTEGER(I4B) :: info
+tsize = 1 + order
+ans(1:tsize) = 0.0_DFP; ans(i) = 1.0_DFP
+CALL LUSolve(A=v, B=ans(1:tsize), IPIV=ipiv, info=info)
+END PROCEDURE LagrangeCoeff_Line3_
+
+!----------------------------------------------------------------------------
+!                                                        LagrangeCoeff_Line
+!----------------------------------------------------------------------------
+
 MODULE PROCEDURE LagrangeCoeff_Line4
-ans = LagrangeVandermonde(order=order, xij=xij, elemType=elmopt%Line)
-CALL GetInvMat(ans)
+INTEGER(I4B) :: nrow, ncol
+CALL LagrangeCoeff_Line4_(order=order, xij=xij, ans=ans, nrow=nrow, &
+                          ncol=ncol)
 END PROCEDURE LagrangeCoeff_Line4
+
+!----------------------------------------------------------------------------
+!                                                        LagrangeCoeff_Line
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE LagrangeCoeff_Line4_
+CALL LagrangeVandermonde_(order=order, xij=xij, elemType=elmopt%Line, &
+                          ans=ans, nrow=nrow, ncol=ncol)
+CALL GetInvMat(ans(1:nrow, 1:ncol))
+END PROCEDURE LagrangeCoeff_Line4_
 
 !----------------------------------------------------------------------------
 !                                                         LagrangeCoeff_Line
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE LagrangeCoeff_Line5
-SELECT CASE (basisType)
-CASE (polyopt%Monomial)
-  ans = LagrangeCoeff_Line(order=order, xij=xij)
-CASE DEFAULT
-  ans = EvalAllOrthopol(&
-    & n=order, &
-    & x=xij(1, :), &
-    & orthopol=basisType, &
-    & alpha=alpha, &
-    & beta=beta, &
-    & lambda=lambda)
-  CALL GetInvMat(ans)
-END SELECT
+INTEGER(I4B) :: nrow, ncol
+CALL LagrangeCoeff_Line5_(order=order, xij=xij, basisType=basisType, &
+         alpha=alpha, beta=beta, lambda=lambda, ans=ans, nrow=nrow, ncol=ncol)
 END PROCEDURE LagrangeCoeff_Line5
+
+!----------------------------------------------------------------------------
+!                                                         LagrangeCoeff_Line
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE LagrangeCoeff_Line5_
+IF (basisType .EQ. polyopt%Monomial) THEN
+  CALL LagrangeCoeff_Line_(order=order, xij=xij, ans=ans, nrow=nrow, &
+                           ncol=ncol)
+  RETURN
+END IF
+
+nrow = SIZE(xij, 2)
+ncol = nrow
+
+ans(1:nrow, 1:ncol) = EvalAllOrthopol(n=order, x=xij(1, :), &
+                                      orthopol=basisType, &
+                                      alpha=alpha, beta=beta, lambda=lambda)
+
+CALL GetInvMat(ans(1:nrow, 1:ncol))
+END PROCEDURE LagrangeCoeff_Line5_
 
 !----------------------------------------------------------------------------
 !                                                       LagrangeEvalAll_Line
