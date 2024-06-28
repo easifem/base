@@ -26,6 +26,7 @@ PUBLIC :: LagrangeInDOF_Prism
 PUBLIC :: EquidistanceInPoint_Prism
 PUBLIC :: EquidistancePoint_Prism
 PUBLIC :: InterpolationPoint_Prism
+PUBLIC :: InterpolationPoint_Prism_
 PUBLIC :: LagrangeCoeff_Prism
 PUBLIC :: QuadraturePoint_Prism
 PUBLIC :: TensorQuadraturePoint_Prism
@@ -267,13 +268,8 @@ END INTERFACE
 ! summary: Interpolation point on Prism
 
 INTERFACE
-  MODULE PURE FUNCTION InterpolationPoint_Prism( &
-    & order, &
-    & ipType, &
-    & layout, &
-    & xij, &
-    & alpha, beta, lambda) &
-    & RESULT(nodecoord)
+  MODULE FUNCTION InterpolationPoint_Prism(order, ipType, layout, &
+                                   xij, alpha, beta, lambda) RESULT(nodecoord)
     INTEGER(I4B), INTENT(IN) :: order
     !! order
     INTEGER(I4B), INTENT(IN) :: ipType
@@ -287,6 +283,33 @@ INTERFACE
     REAL(DFP), ALLOCATABLE :: nodecoord(:, :)
     !! interpolation points in $x_{iJ}$ format
   END FUNCTION InterpolationPoint_Prism
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                  InterpolationPoint_Prism
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 18 Aug 2022
+! summary: Interpolation point on Prism
+
+INTERFACE
+  MODULE SUBROUTINE InterpolationPoint_Prism_(order, ipType, ans, &
+                                 nrow, ncol, layout, xij, alpha, beta, lambda)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order
+    INTEGER(I4B), INTENT(IN) :: ipType
+    !! Interpolation point type
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    !! Interpolation points in $x_{iJ}$ format
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+    CHARACTER(*), INTENT(IN) :: layout
+    !!
+    REAL(DFP), OPTIONAL, INTENT(IN) :: xij(:, :)
+    !! coords of vertices in $x_{iJ}$ format
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha, beta, lambda
+    !! Jacobi and Ultraspherical parameters
+  END SUBROUTINE InterpolationPoint_Prism_
 END INTERFACE
 
 !----------------------------------------------------------------------------

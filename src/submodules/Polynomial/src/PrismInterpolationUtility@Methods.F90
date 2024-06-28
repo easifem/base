@@ -135,6 +135,19 @@ END SELECT
 END PROCEDURE InterpolationPoint_Prism
 
 !----------------------------------------------------------------------------
+!                                                  InterpolationPoint_Prism
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE InterpolationPoint_Prism_
+CALL ErrorMsg(&
+  & msg="InterpolationPoint_Prism_ is not implemented", &
+  & file=__FILE__, &
+  & routine="InterpolationPoint_Prism_", &
+  & line=__LINE__, &
+  & unitno=stderr)
+END PROCEDURE InterpolationPoint_Prism_
+
+!----------------------------------------------------------------------------
 !                                                  LagrangeCoeff_Prism
 !----------------------------------------------------------------------------
 
