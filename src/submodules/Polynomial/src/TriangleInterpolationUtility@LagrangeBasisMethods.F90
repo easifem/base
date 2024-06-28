@@ -81,41 +81,75 @@ END PROCEDURE LagrangeInDOF_Triangle
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE LagrangeCoeff_Triangle1
+INTEGER(I4B) :: tsize
+CALL LagrangeCoeff_Triangle1_(order=order, i=i, xij=xij, ans=ans, tsize=tsize)
+END PROCEDURE LagrangeCoeff_Triangle1
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE LagrangeCoeff_Triangle1_
 REAL(DFP), DIMENSION(SIZE(xij, 2), SIZE(xij, 2)) :: V
 INTEGER(I4B), DIMENSION(SIZE(xij, 2)) :: ipiv
 INTEGER(I4B) :: info, nrow, ncol
 
-ipiv = 0_I4B; ans = 0.0_DFP; ans(i) = 1.0_DFP
+tsize = SIZE(xij, 2)
+
+ipiv = 0_I4B; ans(1:tsize) = 0.0_DFP; ans(i) = 1.0_DFP
 
 CALL LagrangeVandermonde_(order=order, xij=xij, elemType=elemopt%Triangle, &
                           ans=V, nrow=nrow, ncol=ncol)
 CALL GetLU(A=V, IPIV=ipiv, info=info)
-CALL LUSolve(A=V, B=ans, IPIV=ipiv, info=info)
-END PROCEDURE LagrangeCoeff_Triangle1
+CALL LUSolve(A=V, B=ans(1:tsize), IPIV=ipiv, info=info)
+END PROCEDURE LagrangeCoeff_Triangle1_
 
 !----------------------------------------------------------------------------
 !                                                    LagrangeCoeff_Triangle
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE LagrangeCoeff_Triangle2
-REAL(DFP), DIMENSION(SIZE(v, 1), SIZE(v, 2)) :: vtemp
-INTEGER(I4B), DIMENSION(SIZE(v, 1)) :: ipiv
-INTEGER(I4B) :: info
-
-vtemp = v; ans = 0.0_DFP; ans(i) = 1.0_DFP; ipiv = 0_I4B
-CALL GetLU(A=vtemp, IPIV=ipiv, info=info)
-CALL LUSolve(A=vtemp, B=ans, IPIV=ipiv, info=info)
+INTEGER(I4B) :: tsize
+CALL LagrangeCoeff_Triangle2_(order=order, i=i, v=v, &
+                            isVandermonde=isVandermonde, ans=ans, tsize=tsize)
 END PROCEDURE LagrangeCoeff_Triangle2
 
 !----------------------------------------------------------------------------
 !                                                     LagrangeCoeff_Triangle
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE LagrangeCoeff_Triangle3
+MODULE PROCEDURE LagrangeCoeff_Triangle2_
+REAL(DFP), DIMENSION(SIZE(v, 1), SIZE(v, 2)) :: vtemp
+INTEGER(I4B), DIMENSION(SIZE(v, 1)) :: ipiv
 INTEGER(I4B) :: info
-ans = 0.0_DFP; ans(i) = 1.0_DFP
-CALL LUSolve(A=v, B=ans, IPIV=ipiv, info=info)
+
+tsize = SIZE(v, 1)
+vtemp = v; ans(1:tsize) = 0.0_DFP; ans(i) = 1.0_DFP; ipiv = 0_I4B
+CALL GetLU(A=vtemp, IPIV=ipiv, info=info)
+CALL LUSolve(A=vtemp, B=ans(1:tsize), IPIV=ipiv, info=info)
+END PROCEDURE LagrangeCoeff_Triangle2_
+
+!----------------------------------------------------------------------------
+!                                                     LagrangeCoeff_Triangle
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE LagrangeCoeff_Triangle3
+INTEGER(I4B) :: tsize
+CALL LagrangeCoeff_Triangle3_(order=order, i=i, v=v, ipiv=ipiv, ans=ans, &
+                              tsize=tsize)
 END PROCEDURE LagrangeCoeff_Triangle3
+
+!----------------------------------------------------------------------------
+!                                                   LagrangeCoeff_Triangle
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE LagrangeCoeff_Triangle3_
+INTEGER(I4B) :: info
+
+tsize = SIZE(v, 1)
+ans(1:tsize) = 0.0_DFP; ans(i) = 1.0_DFP
+CALL LUSolve(A=v, B=ans(1:tsize), IPIV=ipiv, info=info)
+END PROCEDURE LagrangeCoeff_Triangle3_
 
 !----------------------------------------------------------------------------
 !                                                    LagrangeCoeff_Triangle

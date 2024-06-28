@@ -28,6 +28,7 @@ PUBLIC :: EquidistancePoint_Triangle
 PUBLIC :: InterpolationPoint_Triangle
 PUBLIC :: InterpolationPoint_Triangle_
 PUBLIC :: LagrangeCoeff_Triangle
+PUBLIC :: LagrangeCoeff_Triangle_
 
 PUBLIC :: Dubiner_Triangle
 PUBLIC :: OrthogonalBasis_Triangle
@@ -40,6 +41,7 @@ PUBLIC :: HeirarchicalBasis_Triangle
 PUBLIC :: HeirarchicalBasisGradient_Triangle
 
 PUBLIC :: LagrangeEvalAll_Triangle
+
 PUBLIC :: LagrangeGradientEvalAll_Triangle
 PUBLIC :: QuadraturePoint_Triangle
 PUBLIC :: IJ2VEFC_Triangle
@@ -568,6 +570,25 @@ INTERFACE LagrangeCoeff_Triangle
 END INTERFACE LagrangeCoeff_Triangle
 
 !----------------------------------------------------------------------------
+!                                                   LagrangeCoeff_Triangle_
+!----------------------------------------------------------------------------
+
+INTERFACE LagrangeCoeff_Triangle_
+  MODULE SUBROUTINE LagrangeCoeff_Triangle1_(order, i, xij, ans, tsize)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order of polynomial
+    INTEGER(I4B), INTENT(IN) :: i
+    !! ith coefficients for lagrange polynomial
+    REAL(DFP), INTENT(IN) :: xij(:, :)
+    !! points in xij format, size(xij,2)
+    REAL(DFP), INTENT(INOUT) :: ans(:)
+    !! ans(SIZE(xij, 2))
+    !! coefficients
+    INTEGER(I4B), INTENT(OUT) :: tsize
+  END SUBROUTINE LagrangeCoeff_Triangle1_
+END INTERFACE LagrangeCoeff_Triangle_
+
+!----------------------------------------------------------------------------
 !                                                   LagrangeCoeff_Triangle
 !----------------------------------------------------------------------------
 
@@ -593,6 +614,29 @@ INTERFACE LagrangeCoeff_Triangle
 END INTERFACE LagrangeCoeff_Triangle
 
 !----------------------------------------------------------------------------
+!                                                     LagrangeCoeff_Triangle_
+!----------------------------------------------------------------------------
+
+INTERFACE LagrangeCoeff_Triangle_
+  MODULE SUBROUTINE LagrangeCoeff_Triangle2_(order, i, v, isVandermonde, &
+                                             ans, tsize)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order of polynomial, it should be SIZE(v,2)-1
+    INTEGER(I4B), INTENT(IN) :: i
+    !! ith lagrange polynomial
+    REAL(DFP), INTENT(IN) :: v(:, :)
+    !! vandermonde matrix size should be (order+1,order+1)
+    LOGICAL(LGT), INTENT(IN) :: isVandermonde
+    !! This is just to resolve interface issue, the value of isVandermonde
+    !! is not used in thesubroutine _
+    REAL(DFP), INTENT(INOUT) :: ans(:)
+    ! ans(SIZE(v, 1))
+    !! coefficients of ith Lagrange polynomial
+    INTEGER(I4B), INTENT(OUT) :: tsize
+  END SUBROUTINE LagrangeCoeff_Triangle2_
+END INTERFACE LagrangeCoeff_Triangle_
+
+!----------------------------------------------------------------------------
 !                                                     LagrangeCoeff_Triangle
 !----------------------------------------------------------------------------
 
@@ -614,6 +658,27 @@ INTERFACE LagrangeCoeff_Triangle
     !! coefficients
   END FUNCTION LagrangeCoeff_Triangle3
 END INTERFACE LagrangeCoeff_Triangle
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE LagrangeCoeff_Triangle_
+  MODULE SUBROUTINE LagrangeCoeff_Triangle3_(order, i, v, ipiv, ans, tsize)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order of polynomial, it should be SIZE(x,2)-1
+    INTEGER(I4B), INTENT(IN) :: i
+    !! ith coefficients for lagrange polynomial
+    REAL(DFP), INTENT(INOUT) :: v(:, :)
+    !! LU decomposition of vandermonde matrix
+    INTEGER(I4B), INTENT(IN) :: ipiv(:)
+    !! inverse pivoting mapping, compes from LU decomposition
+    REAL(DFP), INTENT(INOUT) :: ans(:)
+    !! ans(SIZE(v, 1))
+    !! coefficients
+    INTEGER(I4B), INTENT(OUT) :: tsize
+  END SUBROUTINE LagrangeCoeff_Triangle3_
+END INTERFACE LagrangeCoeff_Triangle_
 
 !----------------------------------------------------------------------------
 !                                                    LagrangeCoeff_Triangle
@@ -1313,14 +1378,8 @@ END INTERFACE BarycentricHeirarchicalBasisGradient_Triangle
 ! summary: Evaluate all Lagrange polynomial of order n at single points
 
 INTERFACE LagrangeEvalAll_Triangle
-  MODULE FUNCTION LagrangeEvalAll_Triangle1( &
-    & order, &
-    & x, &
-    & xij, &
-    & refTriangle, &
-    & coeff, &
-    & firstCall, &
-    & basisType) RESULT(ans)
+  MODULE FUNCTION LagrangeEvalAll_Triangle1(order, x, xij, refTriangle, &
+                                      coeff, firstCall, basisType) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
     !! order of Lagrange polynomials
     REAL(DFP), INTENT(IN) :: x(2)
@@ -1355,15 +1414,8 @@ END INTERFACE LagrangeEvalAll_Triangle
 ! summary: Evaluate all Lagrange polynomials of order n at several points
 
 INTERFACE LagrangeEvalAll_Triangle
-  MODULE FUNCTION LagrangeEvalAll_Triangle2( &
-    & order, &
-    & x, &
-    & xij, &
-    & refTriangle, &
-    & coeff, &
-    & firstCall, &
-    & basisType, &
-    & alpha, beta, lambda) RESULT(ans)
+  MODULE FUNCTION LagrangeEvalAll_Triangle2(order, x, xij, refTriangle, &
+                 coeff, firstCall, basisType, alpha, beta, lambda) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
     !! Order of Lagrange polynomials
     REAL(DFP), INTENT(IN) :: x(:, :)

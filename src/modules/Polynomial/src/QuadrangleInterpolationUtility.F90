@@ -27,6 +27,7 @@ PUBLIC :: EquidistanceInPoint_Quadrangle
 PUBLIC :: InterpolationPoint_Quadrangle
 PUBLIC :: InterpolationPoint_Quadrangle_
 PUBLIC :: LagrangeCoeff_Quadrangle
+PUBLIC :: LagrangeCoeff_Quadrangle_
 PUBLIC :: Dubiner_Quadrangle
 PUBLIC :: Dubiner_Quadrangle_
 PUBLIC :: TensorProdBasis_Quadrangle
@@ -660,6 +661,25 @@ INTERFACE LagrangeCoeff_Quadrangle
 END INTERFACE LagrangeCoeff_Quadrangle
 
 !----------------------------------------------------------------------------
+!                                                 LagrangeCoeff_Quadrangle_
+!----------------------------------------------------------------------------
+
+INTERFACE LagrangeCoeff_Quadrangle_
+  MODULE SUBROUTINE LagrangeCoeff_Quadrangle1_(order, i, xij, ans, tsize)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order of polynomial
+    INTEGER(I4B), INTENT(IN) :: i
+    !! ith coefficients for lagrange polynomial
+    REAL(DFP), INTENT(IN) :: xij(:, :)
+    !! points in xij format, size(xij,2)
+    REAL(DFP), INTENT(INOUT) :: ans(:)
+    !! ans(SIZE(xij, 2))
+    !! coefficients
+    INTEGER(I4B), INTENT(OUT) :: tsize
+  END SUBROUTINE LagrangeCoeff_Quadrangle1_
+END INTERFACE LagrangeCoeff_Quadrangle_
+
+!----------------------------------------------------------------------------
 !                                                   LagrangeCoeff_Quadrangle
 !----------------------------------------------------------------------------
 
@@ -678,6 +698,27 @@ INTERFACE LagrangeCoeff_Quadrangle
     !! coefficients
   END FUNCTION LagrangeCoeff_Quadrangle2
 END INTERFACE LagrangeCoeff_Quadrangle
+
+!----------------------------------------------------------------------------
+!                                                 LagrangeCoeff_Quadrangle_
+!----------------------------------------------------------------------------
+
+INTERFACE LagrangeCoeff_Quadrangle_
+  MODULE SUBROUTINE LagrangeCoeff_Quadrangle2_(order, i, v, isVandermonde, &
+                                               ans, tsize)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order of polynomial, it should be SIZE(v,2)-1
+    INTEGER(I4B), INTENT(IN) :: i
+    !! coefficient for ith lagrange polynomial
+    REAL(DFP), INTENT(IN) :: v(:, :)
+    !! vandermonde matrix size should be (order+1,order+1)
+    LOGICAL(LGT), INTENT(IN) :: isVandermonde
+    REAL(DFP), INTENT(INOUT) :: ans(:)
+    !! ans(SIZE(v, 1))
+    !! coefficients
+    INTEGER(I4B), INTENT(OUT) :: tsize
+  END SUBROUTINE LagrangeCoeff_Quadrangle2_
+END INTERFACE LagrangeCoeff_Quadrangle_
 
 !----------------------------------------------------------------------------
 !                                                  LagrangeCoeff_Quadrangle
@@ -699,17 +740,33 @@ INTERFACE LagrangeCoeff_Quadrangle
 END INTERFACE LagrangeCoeff_Quadrangle
 
 !----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE LagrangeCoeff_Quadrangle_
+  MODULE SUBROUTINE LagrangeCoeff_Quadrangle3_(order, i, v, ipiv, ans, tsize)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order of polynomial, it should be SIZE(x,2)-1
+    INTEGER(I4B), INTENT(IN) :: i
+    !! ith coefficients for lagrange polynomial
+    REAL(DFP), INTENT(INOUT) :: v(:, :)
+    !! LU decomposition of vandermonde matrix
+    INTEGER(I4B), INTENT(IN) :: ipiv(:)
+    !! inverse pivoting mapping, compes from LU decomposition
+    REAL(DFP), INTENT(INOUT) :: ans(:)
+    !! ans(SIZE(v, 1))
+    !! coefficients
+    INTEGER(I4B), INTENT(OUT) :: tsize
+  END SUBROUTINE LagrangeCoeff_Quadrangle3_
+END INTERFACE LagrangeCoeff_Quadrangle_
+
+!----------------------------------------------------------------------------
 !                                                  LagrangeCoeff_Quadrangle
 !----------------------------------------------------------------------------
 
 INTERFACE LagrangeCoeff_Quadrangle
-  MODULE FUNCTION LagrangeCoeff_Quadrangle4( &
-    & order, &
-    & xij, &
-    & basisType, &
-    & alpha, &
-    & beta, &
-    & lambda) RESULT(ans)
+  MODULE FUNCTION LagrangeCoeff_Quadrangle4(order, xij, basisType, alpha, &
+                                            beta, lambda) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
     !! order of polynomial
     REAL(DFP), INTENT(IN) :: xij(:, :)
@@ -733,22 +790,43 @@ INTERFACE LagrangeCoeff_Quadrangle
 END INTERFACE LagrangeCoeff_Quadrangle
 
 !----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE LagrangeCoeff_Quadrangle_
+  MODULE SUBROUTINE LagrangeCoeff_Quadrangle4_(order, xij, basisType, &
+                                         alpha, beta, lambda, ans, nrow, ncol)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order of polynomial
+    REAL(DFP), INTENT(IN) :: xij(:, :)
+    !! points in xij format, size(xij,2)
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: basisType
+    !! Monomials
+    !! Jacobi
+    !! Legendre
+    !! Chebyshev
+    !! Ultraspherical
+    !! Heirarchical
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
+    !! This parameter is needed when basisType is Jacobi
+    REAL(DFP), OPTIONAL, INTENT(IN) :: beta
+    !! This parameter is needed when basisType is Jacobi
+    REAL(DFP), OPTIONAL, INTENT(IN) :: lambda
+    !! This parameter is needed when basisType is Ultraspherical
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    !! ans(SIZE(xij, 2), SIZE(xij, 2))
+    !! coefficients
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+  END SUBROUTINE LagrangeCoeff_Quadrangle4_
+END INTERFACE LagrangeCoeff_Quadrangle_
+
+!----------------------------------------------------------------------------
 !                                                  LagrangeCoeff_Quadrangle
 !----------------------------------------------------------------------------
 
 INTERFACE LagrangeCoeff_Quadrangle
-  MODULE FUNCTION LagrangeCoeff_Quadrangle5(  &
-    & p,  &
-    & q,  &
-    & xij, &
-    & basisType1, &
-    & basisType2, &
-    & alpha1, &
-    & beta1,  &
-    & lambda1, &
-    & alpha2,  &
-    & beta2,  &
-    & lambda2) RESULT(ans)
+  MODULE FUNCTION LagrangeCoeff_Quadrangle5(p, q, xij, basisType1, &
+       basisType2, alpha1, beta1, lambda1, alpha2, beta2, lambda2) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: p
     !! order of polynomial in x direction
     INTEGER(I4B), INTENT(IN) :: q
@@ -787,6 +865,55 @@ INTERFACE LagrangeCoeff_Quadrangle
     !! coefficients
   END FUNCTION LagrangeCoeff_Quadrangle5
 END INTERFACE LagrangeCoeff_Quadrangle
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE LagrangeCoeff_Quadrangle_
+  MODULE SUBROUTINE LagrangeCoeff_Quadrangle5_(p, q, xij, basisType1, &
+                 basisType2, alpha1, beta1, lambda1, alpha2, beta2, lambda2, &
+                                               ans, nrow, ncol)
+    INTEGER(I4B), INTENT(IN) :: p
+    !! order of polynomial in x direction
+    INTEGER(I4B), INTENT(IN) :: q
+    !! order of polynomial in y direction
+    REAL(DFP), INTENT(IN) :: xij(:, :)
+    !! points in xij format, size(xij,2)
+    INTEGER(I4B), INTENT(IN) :: basisType1
+    !! basisType in x direction
+    !! Monomials
+    !! Jacobi
+    !! Legendre
+    !! Chebyshev
+    !! Ultraspherical
+    !! Heirarchical
+    INTEGER(I4B), INTENT(IN) :: basisType2
+    !! basisType in y direction
+    !! Monomials
+    !! Jacobi
+    !! Legendre
+    !! Chebyshev
+    !! Ultraspherical
+    !! Heirarchical
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha1
+    !! This parameter is needed when basisType is Jacobi
+    REAL(DFP), OPTIONAL, INTENT(IN) :: beta1
+    !! This parameter is needed when basisType is Jacobi
+    REAL(DFP), OPTIONAL, INTENT(IN) :: lambda1
+    !! This parameter is needed when basisType is Ultraspherical
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha2
+    !! This parameter is needed when basisType is Jacobi
+    REAL(DFP), OPTIONAL, INTENT(IN) :: beta2
+    !! This parameter is needed when basisType is Jacobi
+    REAL(DFP), OPTIONAL, INTENT(IN) :: lambda2
+    !! This parameter is needed when basisType is Ultraspherical
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    ! ans(SIZE(xij, 2), SIZE(xij, 2))
+    !! coefficients
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+  END SUBROUTINE LagrangeCoeff_Quadrangle5_
+END INTERFACE LagrangeCoeff_Quadrangle_
 
 !----------------------------------------------------------------------------
 !                                                       DubinerPolynomial

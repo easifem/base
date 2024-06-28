@@ -801,101 +801,151 @@ END PROCEDURE InterpolationPoint_Quadrangle2_
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE LagrangeCoeff_Quadrangle1
+INTEGER(I4B) :: tsize
+CALL LagrangeCoeff_Quadrangle1_(order=order, i=i, xij=xij, ans=ans, &
+                                tsize=tsize)
+END PROCEDURE LagrangeCoeff_Quadrangle1
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE LagrangeCoeff_Quadrangle1_
 REAL(DFP), DIMENSION(SIZE(xij, 2), SIZE(xij, 2)) :: V
 INTEGER(I4B), DIMENSION(SIZE(xij, 2)) :: ipiv
 INTEGER(I4B) :: info
-ipiv = 0_I4B; ans = 0.0_DFP; ans(i) = 1.0_DFP
+
+tsize = SIZE(xij, 2)
+
+ipiv = 0_I4B; ans(1:tsize) = 0.0_DFP; ans(i) = 1.0_DFP
 V = LagrangeVandermonde(order=order, xij=xij, elemType=Quadrangle)
 CALL GetLU(A=V, IPIV=ipiv, info=info)
-CALL LUSolve(A=V, B=ans, IPIV=ipiv, info=info)
-END PROCEDURE LagrangeCoeff_Quadrangle1
+CALL LUSolve(A=V, B=ans(1:tsize), IPIV=ipiv, info=info)
+END PROCEDURE LagrangeCoeff_Quadrangle1_
 
 !----------------------------------------------------------------------------
 !                                                    LagrangeCoeff_Quadrangle
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE LagrangeCoeff_Quadrangle2
+INTEGER(I4B) :: tsize
+CALL LagrangeCoeff_Quadrangle2_(order=order, i=i, v=v, isVandermonde=.TRUE., &
+                                ans=ans, tsize=tsize)
+END PROCEDURE LagrangeCoeff_Quadrangle2
 
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE LagrangeCoeff_Quadrangle2_
 REAL(DFP), DIMENSION(SIZE(v, 1), SIZE(v, 2)) :: vtemp
 INTEGER(I4B), DIMENSION(SIZE(v, 1)) :: ipiv
 INTEGER(I4B) :: info
-vtemp = v; ans = 0.0_DFP; ans(i) = 1.0_DFP; ipiv = 0_I4B
+
+tsize = SIZE(v, 1)
+
+vtemp = v; ans(1:tsize) = 0.0_DFP; ans(i) = 1.0_DFP; ipiv = 0_I4B
 CALL GetLU(A=vtemp, IPIV=ipiv, info=info)
-CALL LUSolve(A=vtemp, B=ans, IPIV=ipiv, info=info)
-END PROCEDURE LagrangeCoeff_Quadrangle2
+CALL LUSolve(A=vtemp, B=ans(1:tsize), IPIV=ipiv, info=info)
+END PROCEDURE LagrangeCoeff_Quadrangle2_
 
 !----------------------------------------------------------------------------
 !                                                  LagrangeCoeff_Quadrangle
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE LagrangeCoeff_Quadrangle3
-INTEGER(I4B) :: info
-ans = 0.0_DFP; ans(i) = 1.0_DFP
-CALL LUSolve(A=v, B=ans, IPIV=ipiv, info=info)
+INTEGER(I4B) :: tsize
+CALL LagrangeCoeff_Quadrangle3_(order=order, i=i, v=v, ipiv=ipiv, &
+                                ans=ans, tsize=tsize)
 END PROCEDURE LagrangeCoeff_Quadrangle3
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE LagrangeCoeff_Quadrangle3_
+INTEGER(I4B) :: info
+tsize = SIZE(v, 1)
+ans(1:tsize) = 0.0_DFP; ans(i) = 1.0_DFP
+CALL LUSolve(A=v, B=ans(1:tsize), IPIV=ipiv, info=info)
+END PROCEDURE LagrangeCoeff_Quadrangle3_
 
 !----------------------------------------------------------------------------
 !                                                 LagrangeCoeff_Quadrangle
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE LagrangeCoeff_Quadrangle4
-INTEGER(I4B) :: basisType0, ii, jj, indx
-REAL(DFP) :: ans1(SIZE(xij, 2), 0:order)
-REAL(DFP) :: ans2(SIZE(xij, 2), 0:order)
+INTEGER(I4B) :: nrow, ncol
+CALL LagrangeCoeff_Quadrangle4_(order=order, xij=xij, basisType=basisType, &
+                             alpha=alpha, beta=beta, lambda=lambda, ans=ans, &
+                                nrow=nrow, ncol=ncol)
+END PROCEDURE LagrangeCoeff_Quadrangle4
 
-basisType0 = input(default=Monomial, option=basisType)
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE LagrangeCoeff_Quadrangle4_
+INTEGER(I4B) :: basisType0, ii, jj, indx
+
+nrow = SIZE(xij, 2)
+ncol = nrow
+
+basisType0 = Input(default=Monomial, option=basisType)
 
 IF (basisType0 .EQ. Heirarchical) THEN
-  ans = HeirarchicalBasis_Quadrangle2(p=order, q=order, xij=xij)
-ELSE
-  ans = TensorProdBasis_Quadrangle1(  &
-    & p=order, &
-    & q=order, &
-    & xij=xij, &
-    & basisType1=basisType0,  &
-    & basisType2=basisType0, &
-    & alpha1=alpha,  &
-    & beta1=beta, &
-    & lambda1=lambda, &
-    & alpha2=alpha,  &
-    & beta2=beta, &
-    & lambda2=lambda)
+  ans(1:nrow, 1:ncol) = HeirarchicalBasis_Quadrangle2(p=order, q=order, &
+                                                      xij=xij)
+  CALL GetInvMat(ans(1:nrow, 1:ncol))
+  RETURN
 END IF
 
-CALL GetInvMat(ans)
-END PROCEDURE LagrangeCoeff_Quadrangle4
+ans(1:nrow, 1:ncol) = TensorProdBasis_Quadrangle1(p=order, q=order, &
+                      xij=xij, basisType1=basisType0, basisType2=basisType0, &
+                     alpha1=alpha, beta1=beta, lambda1=lambda, alpha2=alpha, &
+                                                  beta2=beta, lambda2=lambda)
+
+CALL GetInvMat(ans(1:nrow, 1:ncol))
+
+END PROCEDURE LagrangeCoeff_Quadrangle4_
 
 !----------------------------------------------------------------------------
 !                                                   LagrangeCoeff_Quadrangle
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE LagrangeCoeff_Quadrangle5
-INTEGER(I4B) :: ii, jj, kk, indx, basisType(2)
-REAL(DFP) :: ans1(SIZE(xij, 2), 0:p)
-REAL(DFP) :: ans2(SIZE(xij, 2), 0:q)
+INTEGER(I4B) :: nrow, ncol
+CALL LagrangeCoeff_Quadrangle5_(p=p, q=q, xij=xij, basisType1=basisType1, &
+         basisType2=basisType2, alpha1=alpha1, beta1=beta1, lambda1=lambda1, &
+   alpha2=alpha2, beta2=beta2, lambda2=lambda2, ans=ans, nrow=nrow, ncol=ncol)
+END PROCEDURE LagrangeCoeff_Quadrangle5
 
-basisType(1) = input(default=Monomial, option=basisType1)
-basisType(2) = input(default=Monomial, option=basisType2)
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE LagrangeCoeff_Quadrangle5_
+INTEGER(I4B) :: ii, jj, kk, indx, basisType(2)
+
+nrow = SIZE(xij, 2)
+ncol = nrow
+
+basisType(1) = Input(default=Monomial, option=basisType1)
+basisType(2) = Input(default=Monomial, option=basisType2)
 
 IF (ALL(basisType .EQ. Heirarchical)) THEN
-  ans = HeirarchicalBasis_Quadrangle2(p=p, q=q, xij=xij)
-ELSE
-  ans = TensorProdBasis_Quadrangle1(  &
-    & p=p, &
-    & q=q, &
-    & xij=xij, &
-    & basisType1=basisType(1),  &
-    & basisType2=basisType(2), &
-    & alpha1=alpha1,  &
-    & beta1=beta1, &
-    & lambda1=lambda1, &
-    & alpha2=alpha2,  &
-    & beta2=beta2, &
-    & lambda2=lambda2)
+  ans(1:nrow, 1:ncol) = HeirarchicalBasis_Quadrangle2(p=p, q=q, xij=xij)
+  CALL GetInvMat(ans(1:nrow, 1:ncol))
+  RETURN
 END IF
 
-CALL GetInvMat(ans)
-END PROCEDURE LagrangeCoeff_Quadrangle5
+ans(1:nrow, 1:ncol) = TensorProdBasis_Quadrangle1(p=p, q=q, xij=xij, &
+       basisType1=basisType(1), alpha1=alpha1, beta1=beta1, lambda1=lambda1, &
+         basisType2=basisType(2), alpha2=alpha2, beta2=beta2, lambda2=lambda2)
+
+CALL GetInvMat(ans(1:nrow, 1:ncol))
+
+END PROCEDURE LagrangeCoeff_Quadrangle5_
 
 !----------------------------------------------------------------------------
 !
