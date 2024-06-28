@@ -30,7 +30,8 @@ USE MappingUtility, ONLY: FromBiunitLine2Segment_, &
                           FromUnitLine2BiUnitLine
 
 USE OrthogonalPolynomialUtility, ONLY: GradientEvalAllOrthopol, &
-                                       EvalAllOrthopol
+                                       EvalAllOrthopol, &
+                                       EvalAllOrthopol_
 
 USE InputUtility, ONLY: Input
 
@@ -784,12 +785,10 @@ IF (basisType .EQ. polyopt%Monomial) THEN
   RETURN
 END IF
 
-nrow = SIZE(xij, 2)
-ncol = nrow
-
-ans(1:nrow, 1:ncol) = EvalAllOrthopol(n=order, x=xij(1, :), &
-                                      orthopol=basisType, &
-                                      alpha=alpha, beta=beta, lambda=lambda)
+CALL EvalAllOrthopol_(n=order, x=xij(1, :), &
+                      orthopol=basisType, &
+                      alpha=alpha, beta=beta, lambda=lambda, &
+                      ans=ans, nrow=nrow, ncol=ncol)
 
 CALL GetInvMat(ans(1:nrow, 1:ncol))
 END PROCEDURE LagrangeCoeff_Line5_
