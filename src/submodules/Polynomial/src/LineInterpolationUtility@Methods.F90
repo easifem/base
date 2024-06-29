@@ -53,6 +53,8 @@ USE Lapack_Method, ONLY: GetLU, LUSolve, GetInvMat
 
 USE SortUtility, ONLY: HeapSort
 
+USE F95_BLAS, ONLY: GEMM
+
 IMPLICIT NONE
 CONTAINS
 
@@ -798,128 +800,154 @@ END PROCEDURE LagrangeCoeff_Line5_
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE LagrangeEvalAll_Line1
-LOGICAL(LGT) :: firstCall0
-REAL(DFP) :: coeff0(SIZE(xij, 2), SIZE(xij, 2)), xx(1, SIZE(xij, 2))
-INTEGER(I4B) :: ii, orthopol0
+INTEGER(I4B) :: tsize
+CALL LagrangeEvalAll_Line1_(order=order, x=x, xij=xij, coeff=coeff, &
+           firstCall=firstCall, basisType=basisType, alpha=alpha, beta=beta, &
+                            lambda=lambda, ans=ans, tsize=tsize)
+END PROCEDURE LagrangeEvalAll_Line1
 
-IF (SIZE(xij, 2) .NE. order + 1) THEN
-  CALL Errormsg(&
-    & msg="Size(xij, 1) .NE. order+1 ", &
-    & file=__FILE__, &
-    & routine="LagrangeEvalAll_Line2", &
-    & line=__LINE__, &
-    & unitno=stderr)
+!----------------------------------------------------------------------------
+!                                                     LagrangeEvalAll_Line_
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE LagrangeEvalAll_Line1_
+LOGICAL(LGT) :: firstCall0
+REAL(DFP) :: coeff0(SIZE(xij, 2), SIZE(xij, 2)), xx(1, SIZE(xij, 2)), x1(1)
+INTEGER(I4B) :: ii, orthopol0, nrow, ncol
+
+tsize = SIZE(xij, 2)
+
+#ifdef DEBUG_VER
+
+IF (tsize .NE. order + 1) THEN
+  CALL Errormsg(msg="Size(xij, 1) .NE. order+1 ", &
+                routine="LagrangeEvalAll_Line2", &
+                file=__FILE__, line=__LINE__, unitno=stderr)
   RETURN
 END IF
+
+#endif
 
 orthopol0 = Input(default=polyopt%Monomial, option=basisType)
 firstCall0 = Input(default=.TRUE., option=firstCall)
 
+! make coeff0
+
 IF (PRESENT(coeff)) THEN
   IF (firstCall0) THEN
-    coeff = LagrangeCoeff_Line(&
-      & order=order, &
-      & xij=xij, &
-      & basisType=orthopol0, &
-      & alpha=alpha, &
-      & beta=beta, &
-      & lambda=lambda)
+    CALL LagrangeCoeff_Line_(order=order, xij=xij, &
+                 basisType=orthopol0, alpha=alpha, beta=beta, lambda=lambda, &
+                             ans=coeff, nrow=nrow, ncol=ncol)
   END IF
-  coeff0 = TRANSPOSE(coeff)
+
+  ! coeff0(1:nrow, 1:ncol) = TRANSPOSE(coeff(1:nrow, 1:ncol))
+  coeff0(1:tsize, 1:tsize) = coeff(1:tsize, 1:tsize)
+
 ELSE
-  coeff0 = TRANSPOSE(LagrangeCoeff_Line(&
-    & order=order, &
-    & xij=xij, &
-    & basisType=orthopol0, &
-    & alpha=alpha, &
-    & beta=beta, &
-    & lambda=lambda &
-    & ))
+
+  CALL LagrangeCoeff_Line_(order=order, xij=xij, basisType=orthopol0, &
+                           alpha=alpha, beta=beta, lambda=lambda, &
+                           ans=coeff0, nrow=nrow, ncol=ncol)
+
+  ! coeff0(1:nrow, 1:ncol) = TRANSPOSE(coeff0(1:nrow, 1:ncol))
 END IF
 
-SELECT CASE (orthopol0)
-CASE (polyopt%Monomial)
+IF (orthopol0 .EQ. polyopt%monomial) THEN
+
   xx(1, 1) = 1.0_DFP
   DO ii = 1, order
     xx(1, ii + 1) = xx(1, ii) * x
   END DO
-CASE DEFAULT
-  xx = EvalAllOrthopol(&
-    & n=order, &
-    & x=[x], &
-    & orthopol=orthopol0, &
-    & alpha=alpha, &
-    & beta=beta, &
-    & lambda=lambda)
-END SELECT
 
-ans = MATMUL(coeff0, xx(1, :))
+ELSE
 
-END PROCEDURE LagrangeEvalAll_Line1
+  x1(1) = x
+  CALL EvalAllOrthopol_(n=order, x=x1, orthopol=orthopol0, &
+                        alpha=alpha, beta=beta, lambda=lambda, &
+                        ans=xx, nrow=nrow, ncol=ncol)
+
+END IF
+
+DO CONCURRENT(ii=1:tsize)
+  ans(ii) = DOT_PRODUCT(coeff0(:, ii), xx(1, :))
+END DO
+
+END PROCEDURE LagrangeEvalAll_Line1_
 
 !----------------------------------------------------------------------------
 !                                                       LagrangeEvalAll_Line
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE LagrangeEvalAll_Line2
+INTEGER(I4B) :: nrow, ncol
+CALL LagrangeEvalAll_Line2_(order=order, x=x, xij=xij, coeff=coeff, &
+           firstCall=firstCall, basisType=basisType, alpha=alpha, beta=beta, &
+                            lambda=lambda, ans=ans, nrow=nrow, ncol=ncol)
+END PROCEDURE LagrangeEvalAll_Line2
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE LagrangeEvalAll_Line2_
 LOGICAL(LGT) :: firstCall0
 REAL(DFP) :: coeff0(SIZE(xij, 2), SIZE(xij, 2)), xx(SIZE(x, 2), SIZE(xij, 2))
-INTEGER(I4B) :: ii, orthopol0
+INTEGER(I4B) :: ii, orthopol0, aint, bint
 
-IF (SIZE(xij, 2) .NE. order + 1) THEN
-  CALL Errormsg(&
-    & msg="Size(xij, 1) .NE. order+1 ", &
-    & file=__FILE__, &
-    & routine="LagrangeEvalAll_Line2", &
-    & line=__LINE__, &
-    & unitno=stderr)
+nrow = SIZE(x, 2)
+ncol = SIZE(xij, 2)
+
+#ifdef DEBUG_VER
+
+IF (ncol .NE. order + 1) THEN
+  CALL Errormsg(msg="Size(xij, 1) .NE. order+1 ", &
+                routine="LagrangeEvalAll_Line2", &
+                file=__FILE__, line=__LINE__, unitno=stderr)
   RETURN
 END IF
+
+#endif
 
 orthopol0 = Input(default=polyopt%Monomial, option=basisType)
 firstCall0 = Input(default=.TRUE., option=firstCall)
 
 IF (PRESENT(coeff)) THEN
+
   IF (firstCall0) THEN
-    coeff = LagrangeCoeff_Line(&
-      & order=order, &
-      & xij=xij, &
-      & basisType=orthopol0, &
-      & alpha=alpha, &
-      & beta=beta, &
-      & lambda=lambda)
+    ! coeff = LagrangeCoeff_Line(&
+    CALL LagrangeCoeff_Line_(order=order, xij=xij, basisType=orthopol0, &
+       alpha=alpha, beta=beta, lambda=lambda, ans=coeff, nrow=aint, ncol=bint)
   END IF
-  coeff0 = coeff
+
+  coeff0(1:ncol, 1:ncol) = coeff(1:ncol, 1:ncol)
+
 ELSE
-  coeff0 = LagrangeCoeff_Line(&
-    & order=order, &
-    & xij=xij, &
-    & basisType=orthopol0, &
-    & alpha=alpha, &
-    & beta=beta, &
-    & lambda=lambda &
-    & )
+
+  ! coeff0 = LagrangeCoeff_Line(&
+  CALL LagrangeCoeff_Line_(order=order, xij=xij, basisType=orthopol0, &
+      alpha=alpha, beta=beta, lambda=lambda, ans=coeff0, nrow=aint, ncol=bint)
+
 END IF
 
-SELECT CASE (orthopol0)
-CASE (polyopt%Monomial)
+IF (orthopol0 .EQ. polyopt%monomial) THEN
+
   xx(:, 1) = 1.0_DFP
   DO ii = 1, order
     xx(:, ii + 1) = xx(:, ii) * x(1, :)
   END DO
-CASE DEFAULT
-  xx = EvalAllOrthopol(&
-    & n=order, &
-    & x=x(1, :), &
-    & orthopol=orthopol0, &
-    & alpha=alpha, &
-    & beta=beta, &
-    & lambda=lambda)
-END SELECT
 
-ans = MATMUL(xx, coeff0)
+ELSE
 
-END PROCEDURE LagrangeEvalAll_Line2
+  ! xx = EvalAllOrthopol(
+  CALL EvalAllOrthopol_(n=order, x=x(1, :), orthopol=orthopol0, alpha=alpha, &
+                       beta=beta, lambda=lambda, ans=xx, nrow=aint, ncol=bint)
+
+END IF
+
+! ans = MATMUL(xx, coeff0)
+CALL GEMM(C=ans, alpha=1.0_DFP, A=xx, B=coeff0)
+
+END PROCEDURE LagrangeEvalAll_Line2_
 
 !----------------------------------------------------------------------------
 !                                                               EvalAll_Line
@@ -1229,12 +1257,11 @@ IF (ANY([ipopt%GaussJacobi, ipopt%GaussJacobiLobatto] .EQ. quadType)) THEN
   IF (.NOT. PRESENT(alpha) .OR. .NOT. PRESENT(beta)) THEN
     CALL ErrorMsg(&
     & msg="alpha and beta should be present for quadType=ipopt%GaussJacobi", &
-      & file=__FILE__, &
       & routine="QuadraturePoint_Line3", &
-      & line=__LINE__, &
-      & unitno=stderr)
+      & file=__FILE__, line=__LINE__, unitno=stderr)
   END IF
   RETURN
+
 ELSEIF (ANY([ipopt%GaussJacobi, ipopt%GaussJacobiLobatto] .EQ. quadType)) THEN
   IF (.NOT. PRESENT(lambda)) THEN
     CALL ErrorMsg(&
@@ -1245,6 +1272,7 @@ ELSEIF (ANY([ipopt%GaussJacobi, ipopt%GaussJacobiLobatto] .EQ. quadType)) THEN
       & unitno=stderr)
   END IF
   RETURN
+
 END IF
 
 IF (PRESENT(xij)) THEN

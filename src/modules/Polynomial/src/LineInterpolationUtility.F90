@@ -34,6 +34,7 @@ PUBLIC :: EquidistancePoint_Line_
 PUBLIC :: InterpolationPoint_Line
 PUBLIC :: InterpolationPoint_Line_
 PUBLIC :: LagrangeCoeff_Line
+PUBLIC :: LagrangeCoeff_Line_
 PUBLIC :: LagrangeEvalAll_Line
 PUBLIC :: LagrangeGradientEvalAll_Line
 PUBLIC :: BasisEvalAll_Line
@@ -797,12 +798,7 @@ INTERFACE LagrangeEvalAll_Line
     !! If firstCall is False, then coeff will be used
     !! Default value of firstCall is True
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: basisType
-    !! Monomial
-    !! Jacobi
-    !! Legendre
-    !! Chebyshev
-    !! Lobatto
-    !! UnscaledLobatto
+    !! Monomial  Jacobi  Legendre  Chebyshev  Lobatto  UnscaledLobatto
     REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
     !! Jacobi polynomial parameter
     REAL(DFP), OPTIONAL, INTENT(IN) :: beta
@@ -813,6 +809,41 @@ INTERFACE LagrangeEvalAll_Line
     !! Value of n+1 Lagrange polynomials at point x
   END FUNCTION LagrangeEvalAll_Line1
 END INTERFACE LagrangeEvalAll_Line
+
+!----------------------------------------------------------------------------
+!                                               LagrangeEvalAll_Line_
+!----------------------------------------------------------------------------
+
+INTERFACE LagrangeEvalAll_Line_
+  MODULE SUBROUTINE LagrangeEvalAll_Line1_(order, x, xij, coeff, firstCall, &
+                                   basisType, alpha, beta, lambda, ans, tsize)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order of Lagrange polynomials
+    REAL(DFP), INTENT(IN) :: x
+    !! point of evaluation
+    REAL(DFP), INTENT(INOUT) :: xij(:, :)
+    !! interpolation points
+    REAL(DFP), OPTIONAL, INTENT(INOUT) :: coeff(:, :)
+    !! coeff(SIZE(xij, 2), SIZE(xij, 2))
+    !! coefficient of Lagrange polynomials
+    LOGICAL(LGT), OPTIONAL :: firstCall
+    !! If firstCall is true, then coeff will be made
+    !! If firstCall is False, then coeff will be used
+    !! Default value of firstCall is True
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: basisType
+    !! Monomial  Jacobi  Legendre  Chebyshev  Lobatto  UnscaledLobatto
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
+    !! Jacobi polynomial parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: beta
+    !! Jacobi polynomial parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: lambda
+    !! Ultraspherical parameter
+    REAL(DFP), INTENT(INOUT) :: ans(:)
+    !! ans(SIZE(xij, 2))
+    !! Value of n+1 Lagrange polynomials at point x
+    INTEGER(I4B), INTENT(OUT) :: tsize
+  END SUBROUTINE LagrangeEvalAll_Line1_
+END INTERFACE LagrangeEvalAll_Line_
 
 !----------------------------------------------------------------------------
 !                                                       LagrangeEvalAll_Line
@@ -861,6 +892,49 @@ INTERFACE LagrangeEvalAll_Line
     !! ans(i, :) is the value of all polynomials at x(i) point
   END FUNCTION LagrangeEvalAll_Line2
 END INTERFACE LagrangeEvalAll_Line
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE LagrangeEvalAll_Line_
+  MODULE SUBROUTINE LagrangeEvalAll_Line2_(order, x, xij, ans, nrow, ncol, &
+                             coeff, firstCall, basisType, alpha, beta, lambda)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order of Lagrange polynomials
+    REAL(DFP), INTENT(IN) :: x(:, :)
+    !! point of evaluation in xij format
+    !! size(xij, 1) = nsd
+    !! size(xij, 2) = number of points
+    REAL(DFP), INTENT(INOUT) :: xij(:, :)
+    !! interpolation points
+    !! xij should be present when firstCall is true.
+    !! It is used for computing the coeff
+    !! If coeff is absent then xij should be present
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    !! ans(SIZE(x, 2), SIZE(xij, 2))
+    !! Value of n+1 Lagrange polynomials at point x
+    !! ans(:, j) is the value of jth polynomial at x points
+    !! ans(i, :) is the value of all polynomials at x(i) point
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+    !! nubmer of rows and cols writte in ans
+    REAL(DFP), OPTIONAL, INTENT(INOUT) :: coeff(:, :)
+    !! coeff(SIZE(xij, 2), SIZE(xij, 2))
+    !! coefficient of Lagrange polynomials
+    LOGICAL(LGT), OPTIONAL :: firstCall
+    !! If firstCall is true, then coeff will be made
+    !! If firstCall is False, then coeff will be used
+    !! Default value of firstCall is True
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: basisType
+    !! Monomial, Jacobi, Legendre, Chebyshev, Lobatto, UnscaledLobatto
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
+    !! Jacobi polynomial parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: beta
+    !! Jacobi polynomial parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: lambda
+    !! Ultraspherical parameter
+  END SUBROUTINE LagrangeEvalAll_Line2_
+END INTERFACE LagrangeEvalAll_Line_
 
 !----------------------------------------------------------------------------
 !                                               LagrangeGradientEvalAll_Line
