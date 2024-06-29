@@ -41,6 +41,7 @@ PUBLIC :: HeirarchicalBasis_Triangle
 PUBLIC :: HeirarchicalBasisGradient_Triangle
 
 PUBLIC :: LagrangeEvalAll_Triangle
+PUBLIC :: LagrangeEvalAll_Triangle_
 
 PUBLIC :: LagrangeGradientEvalAll_Triangle
 PUBLIC :: QuadraturePoint_Triangle
@@ -1406,6 +1407,42 @@ INTERFACE LagrangeEvalAll_Triangle
 END INTERFACE LagrangeEvalAll_Triangle
 
 !----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE LagrangeEvalAll_Triangle_
+  MODULE SUBROUTINE LagrangeEvalAll_Triangle1_(order, x, xij, ans, tsize, &
+                                     refTriangle, coeff, firstCall, basisType)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order of Lagrange polynomials
+    REAL(DFP), INTENT(IN) :: x(2)
+    !! point of evaluation
+    !! x(1) is x coord
+    !! x(2) is y coord
+    REAL(DFP), INTENT(INOUT) :: xij(:, :)
+    !!
+    CHARACTER(*), INTENT(IN) :: refTriangle
+    !! interpolation points
+    REAL(DFP), INTENT(INOUT) :: ans(:)
+    !! ans(SIZE(xij, 2))
+    !! Value of n+1 Lagrange polynomials at point x
+    INTEGER(I4B), INTENT(OUT) :: tsize
+    !! Total size written in ans
+    REAL(DFP), OPTIONAL, INTENT(INOUT) :: coeff(:, :)
+    !! coeff(SIZE(xij, 2), SIZE(xij, 2))
+    !! coefficient of Lagrange polynomials
+    LOGICAL(LGT), OPTIONAL :: firstCall
+    !! If firstCall is true, then coeff will be made
+    !! If firstCall is False, then coeff will be used
+    !! Default value of firstCall is True
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: basisType
+    !! Monomials *Default
+    !! Jacobi=Dubiner
+    !! Heirarchical
+  END SUBROUTINE LagrangeEvalAll_Triangle1_
+END INTERFACE LagrangeEvalAll_Triangle_
+
+!----------------------------------------------------------------------------
 !                                                   LagrangeEvalAll_Triangle
 !----------------------------------------------------------------------------
 
@@ -1443,6 +1480,45 @@ INTERFACE LagrangeEvalAll_Triangle
     !! Value of n+1 Lagrange polynomials at point x
   END FUNCTION LagrangeEvalAll_Triangle2
 END INTERFACE LagrangeEvalAll_Triangle
+
+!----------------------------------------------------------------------------
+!                             LagrangeEvalAll_Triangle_@LagrnageBasisMethods
+!----------------------------------------------------------------------------
+
+INTERFACE LagrangeEvalAll_Triangle_
+  MODULE SUBROUTINE LagrangeEvalAll_Triangle2_(order, x, xij, ans, nrow, &
+          ncol, refTriangle, coeff, firstCall, basisType, alpha, beta, lambda)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! Order of Lagrange polynomials
+    REAL(DFP), INTENT(IN) :: x(:, :)
+    !! Point of evaluation
+    !! x(1, :) is x coord
+    !! x(2, :) is y coord
+    REAL(DFP), INTENT(INOUT) :: xij(:, :)
+    !! Interpolation points
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    !! ans(SIZE(x, 2), SIZE(xij, 2))
+    !! Value of n+1 Lagrange polynomials at point x
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+    !! Number of rows and columns written to ans
+    CHARACTER(*), INTENT(IN) :: refTriangle
+    !! Reference triangle
+    !! Biunit
+    !! Unit
+    REAL(DFP), OPTIONAL, INTENT(INOUT) :: coeff(:, :)
+    !! coeff(SIZE(xij, 2), SIZE(xij, 2))
+    !! Coefficient of Lagrange polynomials
+    LOGICAL(LGT), OPTIONAL :: firstCall
+    !! If firstCall is true, then coeff will be made
+    !! If firstCall is False, then coeff will be used
+    !! Default value of firstCall is True
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: basisType
+    !! Monomials *Default
+    !! Jacobi=Dubiner
+    !! Heirarchical
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha, beta, lambda
+  END SUBROUTINE LagrangeEvalAll_Triangle2_
+END INTERFACE LagrangeEvalAll_Triangle_
 
 !----------------------------------------------------------------------------
 !                                                 QuadraturePoints_Triangle
