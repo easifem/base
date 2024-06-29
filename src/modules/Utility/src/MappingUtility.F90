@@ -79,8 +79,11 @@ PUBLIC :: FromUnitTetrahedron2Tetrahedron
 PUBLIC :: FromUnitTetrahedron2Tetrahedron_
 PUBLIC :: FromBiUnitTetrahedron2Tetrahedron
 PUBLIC :: BarycentricCoordUnitTetrahedron
+PUBLIC :: BarycentricCoordUnitTetrahedron_
 PUBLIC :: BarycentricCoordBiUnitTetrahedron
+PUBLIC :: BarycentricCoordBiUnitTetrahedron_
 PUBLIC :: BarycentricCoordTetrahedron
+PUBLIC :: BarycentricCoordTetrahedron_
 PUBLIC :: FromBiUnitTetrahedron2BiUnitHexahedron
 PUBLIC :: FromBiUnitHexahedron2BiUnitTetrahedron
 PUBLIC :: FromUnitTetrahedron2BiUnitHexahedron
@@ -843,6 +846,20 @@ INTERFACE
 END INTERFACE
 
 !----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE
+  MODULE PURE SUBROUTINE BarycentricCoordUnitTetrahedron_(xin, ans, &
+                                                          nrow, ncol)
+    REAL(DFP), INTENT(IN) :: xin(:, :)
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    !! ans(4, SIZE(xin, 2))
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+  END SUBROUTINE BarycentricCoordUnitTetrahedron_
+END INTERFACE
+
+!----------------------------------------------------------------------------
 !                                            BarycentricCoordBiUnitTetrahedron
 !----------------------------------------------------------------------------
 
@@ -858,6 +875,20 @@ INTERFACE
 END INTERFACE
 
 !----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE
+  MODULE PURE SUBROUTINE BarycentricCoordBiUnitTetrahedron_(xin, &
+                                                            ans, nrow, ncol)
+    REAL(DFP), INTENT(IN) :: xin(:, :)
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    !! ans(4, SIZE(xin, 2))
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+  END SUBROUTINE BarycentricCoordBiUnitTetrahedron_
+END INTERFACE
+
+!----------------------------------------------------------------------------
 !                                                   BarycentricCoordTetrahedron
 !----------------------------------------------------------------------------
 
@@ -869,6 +900,22 @@ INTERFACE
     !! "UNIT"
     !! "BIUNIT"
   END FUNCTION BarycentricCoordTetrahedron
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE
+  MODULE PURE SUBROUTINE BarycentricCoordTetrahedron_(xin, refTetrahedron, &
+                                                      ans, nrow, ncol)
+    REAL(DFP), INTENT(IN) :: xin(:, :)
+    CHARACTER(*), INTENT(IN) :: refTetrahedron
+    !! "UNIT" "BIUNIT"
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    !! ans(4, SIZE(xin, 2))
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+  END SUBROUTINE BarycentricCoordTetrahedron_
 END INTERFACE
 
 !----------------------------------------------------------------------------

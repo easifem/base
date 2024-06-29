@@ -525,35 +525,81 @@ END PROCEDURE FromUnitTetrahedron2Tetrahedron_
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE BarycentricCoordUnitTetrahedron
-ans(1, :) = 1.0_DFP - xin(1, :) - xin(2, :) - xin(3, :)
-ans(2, :) = xin(1, :)
-ans(3, :) = xin(2, :)
-ans(4, :) = xin(3, :)
+INTEGER(I4B) :: nrow, ncol
+CALL BarycentricCoordUnitTetrahedron_(xin=xin, ans=ans, nrow=nrow, ncol=ncol)
 END PROCEDURE BarycentricCoordUnitTetrahedron
+
+!----------------------------------------------------------------------------
+!                                            BarycentricCoordUnitTetrahedron
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE BarycentricCoordUnitTetrahedron_
+INTEGER(I4B) :: ii
+
+nrow = 4
+ncol = SIZE(xin, 2)
+
+DO CONCURRENT(ii=1:ncol)
+  ans(1, ii) = 1.0_DFP - xin(1, ii) - xin(2, ii) - xin(3, ii)
+  ans(2, ii) = xin(1, ii)
+  ans(3, ii) = xin(2, ii)
+  ans(4, ii) = xin(3, ii)
+END DO
+END PROCEDURE BarycentricCoordUnitTetrahedron_
 
 !----------------------------------------------------------------------------
 !                                           BarycentricCoordBiUnitTetrahedron
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE BarycentricCoordBiUnitTetrahedron
-ans(1, :) = -0.5_DFP * (1.0_DFP + xin(1, :) + xin(2, :) + xin(3, :))
-ans(2, :) = 0.5_DFP * (1.0_DFP + xin(1, :))
-ans(3, :) = 0.5_DFP * (1.0_DFP + xin(2, :))
-ans(4, :) = 0.5_DFP * (1.0_DFP + xin(3, :))
+INTEGER(I4B) :: nrow, ncol
+CALL BarycentricCoordBiUnitTetrahedron_(xin=xin, ans=ans, nrow=nrow, &
+                                        ncol=ncol)
 END PROCEDURE BarycentricCoordBiUnitTetrahedron
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE BarycentricCoordBiUnitTetrahedron_
+INTEGER(I4B) :: ii
+
+nrow = 4
+ncol = SIZE(xin, 2)
+
+DO CONCURRENT(ii=1:ncol)
+  ans(1, ii) = -0.5_DFP * (1.0_DFP + xin(1, ii) + xin(2, ii) + xin(3, ii))
+  ans(2, ii) = 0.5_DFP * (1.0_DFP + xin(1, ii))
+  ans(3, ii) = 0.5_DFP * (1.0_DFP + xin(2, ii))
+  ans(4, ii) = 0.5_DFP * (1.0_DFP + xin(3, ii))
+END DO
+
+END PROCEDURE BarycentricCoordBiUnitTetrahedron_
 
 !----------------------------------------------------------------------------
 !                                                BarycentricCoordTetrahedron
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE BarycentricCoordTetrahedron
+INTEGER(I4B) :: nrow, ncol
+CALL BarycentricCoordTetrahedron_(xin=xin, refTetrahedron=refTetrahedron, &
+                                  ans=ans, nrow=nrow, ncol=ncol)
+END PROCEDURE BarycentricCoordTetrahedron
+
+!----------------------------------------------------------------------------
+!                                                BarycentricCoordTetrahedron
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE BarycentricCoordTetrahedron_
 SELECT CASE (refTetrahedron(1:1))
 CASE ("B", "b")
-  ans = BarycentricCoordBiUnitTetrahedron(xin)
+  CALL BarycentricCoordBiUnitTetrahedron_(xin=xin, ans=ans, nrow=nrow, &
+                                          ncol=ncol)
 CASE ("U", "u")
-  ans = BarycentricCoordUnitTetrahedron(xin)
+  CALL BarycentricCoordUnitTetrahedron_(xin=xin, ans=ans, nrow=nrow, &
+                                        ncol=ncol)
 END SELECT
-END PROCEDURE BarycentricCoordTetrahedron
+END PROCEDURE BarycentricCoordTetrahedron_
 
 !----------------------------------------------------------------------------
 !                                     FromBiUnitTetrahedron2BiUnitHexahedron
