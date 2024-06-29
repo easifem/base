@@ -841,12 +841,14 @@ END PROCEDURE LagrangeCoeff_Quadrangle1
 MODULE PROCEDURE LagrangeCoeff_Quadrangle1_
 REAL(DFP), DIMENSION(SIZE(xij, 2), SIZE(xij, 2)) :: V
 INTEGER(I4B), DIMENSION(SIZE(xij, 2)) :: ipiv
-INTEGER(I4B) :: info
+INTEGER(I4B) :: info, nrow, ncol
 
 tsize = SIZE(xij, 2)
 
 ipiv = 0_I4B; ans(1:tsize) = 0.0_DFP; ans(i) = 1.0_DFP
-V = LagrangeVandermonde(order=order, xij=xij, elemType=Quadrangle)
+! V = LagrangeVandermonde(order=order, xij=xij, elemType=Quadrangle)
+CALL LagrangeVandermonde_(order=order, xij=xij, elemType=Quadrangle, &
+                          ans=V, nrow=nrow, ncol=ncol)
 CALL GetLU(A=V, IPIV=ipiv, info=info)
 CALL LUSolve(A=V, B=ans(1:tsize), IPIV=ipiv, info=info)
 END PROCEDURE LagrangeCoeff_Quadrangle1_
@@ -916,22 +918,20 @@ END PROCEDURE LagrangeCoeff_Quadrangle4
 MODULE PROCEDURE LagrangeCoeff_Quadrangle4_
 INTEGER(I4B) :: basisType0, ii, jj, indx
 
-nrow = SIZE(xij, 2)
-ncol = nrow
-
 basisType0 = Input(default=Monomial, option=basisType)
 
 IF (basisType0 .EQ. Heirarchical) THEN
-  ans(1:nrow, 1:ncol) = HeirarchicalBasis_Quadrangle2(p=order, q=order, &
-                                                      xij=xij)
+  CALL HeirarchicalBasis_Quadrangle2_(p=order, q=order, xij=xij, &
+                                      ans=ans, nrow=nrow, ncol=ncol)
   CALL GetInvMat(ans(1:nrow, 1:ncol))
   RETURN
 END IF
 
-ans(1:nrow, 1:ncol) = TensorProdBasis_Quadrangle1(p=order, q=order, &
+! ans(1:nrow, 1:ncol) = TensorProdBasis_Quadrangle1(p=order, q=order, &
+CALL TensorProdBasis_Quadrangle1_(p=order, q=order, &
                       xij=xij, basisType1=basisType0, basisType2=basisType0, &
                      alpha1=alpha, beta1=beta, lambda1=lambda, alpha2=alpha, &
-                                                  beta2=beta, lambda2=lambda)
+                    beta2=beta, lambda2=lambda, ans=ans, nrow=nrow, ncol=ncol)
 
 CALL GetInvMat(ans(1:nrow, 1:ncol))
 
@@ -955,21 +955,23 @@ END PROCEDURE LagrangeCoeff_Quadrangle5
 MODULE PROCEDURE LagrangeCoeff_Quadrangle5_
 INTEGER(I4B) :: ii, jj, kk, indx, basisType(2)
 
-nrow = SIZE(xij, 2)
-ncol = nrow
-
 basisType(1) = Input(default=Monomial, option=basisType1)
 basisType(2) = Input(default=Monomial, option=basisType2)
 
 IF (ALL(basisType .EQ. Heirarchical)) THEN
-  ans(1:nrow, 1:ncol) = HeirarchicalBasis_Quadrangle2(p=p, q=q, xij=xij)
+  ! ans(1:nrow, 1:ncol) = HeirarchicalBasis_Quadrangle2(p=p, q=q, xij=xij)
+  CALL HeirarchicalBasis_Quadrangle2_(p=p, q=q, xij=xij, &
+                                      ans=ans, nrow=nrow, ncol=ncol)
+
   CALL GetInvMat(ans(1:nrow, 1:ncol))
   RETURN
 END IF
 
-ans(1:nrow, 1:ncol) = TensorProdBasis_Quadrangle1(p=p, q=q, xij=xij, &
+! ans(1:nrow, 1:ncol) = TensorProdBasis_Quadrangle1(p=p, q=q, xij=xij, &
+CALL TensorProdBasis_Quadrangle1_(p=p, q=q, xij=xij, &
        basisType1=basisType(1), alpha1=alpha1, beta1=beta1, lambda1=lambda1, &
-         basisType2=basisType(2), alpha2=alpha2, beta2=beta2, lambda2=lambda2)
+       basisType2=basisType(2), alpha2=alpha2, beta2=beta2, lambda2=lambda2, &
+                                  ans=ans, nrow=nrow, ncol=ncol)
 
 CALL GetInvMat(ans(1:nrow, 1:ncol))
 
@@ -1578,8 +1580,10 @@ END PROCEDURE HeirarchicalBasis_Quadrangle1
 
 MODULE PROCEDURE HeirarchicalBasis_Quadrangle1_
 INTEGER(I4B) :: a, b, maxP, maxQ
-REAL(DFP) :: L1(1:SIZE(xij, 2), 0:MAX(pe3, pe4, pb))
-REAL(DFP) :: L2(1:SIZE(xij, 2), 0:MAX(qe1, qe2, qb))
+! REAL(DFP) :: L1(1:SIZE(xij, 2), 0:MAX(pe3, pe4, pb))
+! REAL(DFP) :: L2(1:SIZE(xij, 2), 0:MAX(qe1, qe2, qb))
+
+REAL(DFP), ALLOCATABLE :: L1(:, :), L2(:, :)
 
 nrow = SIZE(xij, 2)
 ncol = pb * qb - pb - qb + pe3 + pe4 + qe1 + qe2 + 1
@@ -1587,12 +1591,18 @@ ncol = pb * qb - pb - qb + pe3 + pe4 + qe1 + qe2 + 1
 maxP = MAX(pe3, pe4, pb)
 maxQ = MAX(qe1, qe2, qb)
 
-L1 = LobattoEvalAll(n=maxP, x=xij(1, :))
-L2 = LobattoEvalAll(n=maxQ, x=xij(2, :))
+ALLOCATE (L1(1:nrow, 0:maxP), L2(1:nrow, 0:maxQ))
+
+! L1 = LobattoEvalAll(n=maxP, x=xij(1, :))
+! L2 = LobattoEvalAll(n=maxQ, x=xij(2, :))
+
+CALL LobattoEvalAll_(n=maxP, x=xij(1, :), ans=L1, nrow=a, ncol=b)
+CALL LobattoEvalAll_(n=maxQ, x=xij(2, :), ans=L2, nrow=a, ncol=b)
 
 ! Vertex basis function
 
-ans(1:nrow, 1:4) = VertexBasis_Quadrangle2(L1=L1, L2=L2)
+! ans(1:nrow, 1:4) = VertexBasis_Quadrangle2(L1=L1, L2=L2)
+CALL VertexBasis_Quadrangle2_(L1=L1, L2=L2, ans=ans, nrow=maxP, ncol=maxQ)
 
 ! Edge basis function
 
@@ -1600,8 +1610,11 @@ b = 4
 IF (qe1 .GE. 2_I4B .OR. qe2 .GE. 2_I4B) THEN
   a = b + 1
   b = a - 1 + qe1 + qe2 - 2 !4+qe1 + qe2 - 2
-  ans(1:nrow, a:b) = VerticalEdgeBasis_Quadrangle2( &
-                     qe1=qe1, qe2=qe2, L1=L1, L2=L2)
+  ! ans(1:nrow, a:b) = VerticalEdgeBasis_Quadrangle2( &
+  !                    qe1=qe1, qe2=qe2, L1=L1, L2=L2)
+
+  CALL VerticalEdgeBasis_Quadrangle2_(qe1=qe1, qe2=qe2, L1=L1, L2=L2, &
+                                      ans=ans(:, a:), nrow=maxP, ncol=maxQ)
 END IF
 
 ! Edge basis function
@@ -1609,8 +1622,11 @@ END IF
 IF (pe3 .GE. 2_I4B .OR. pe4 .GE. 2_I4B) THEN
   a = b + 1
   b = a - 1 + pe3 + pe4 - 2 !4+pe3 + pe4 - 2
-  ans(1:nrow, a:b) = HorizontalEdgeBasis_Quadrangle2( &
-                     pe3=pe3, pe4=pe4, L1=L1, L2=L2)
+  ! ans(1:nrow, a:b) = HorizontalEdgeBasis_Quadrangle2( &
+  !                    pe3=pe3, pe4=pe4, L1=L1, L2=L2)
+
+  CALL HorizontalEdgeBasis_Quadrangle2_(pe3=pe3, pe4=pe4, L1=L1, L2=L2, &
+                                        ans=ans(:, a:), nrow=maxP, ncol=maxQ)
 END IF
 
 ! Cell basis function
@@ -1618,8 +1634,12 @@ END IF
 IF (pb .GE. 2_I4B .OR. qb .GE. 2_I4B) THEN
   a = b + 1
   b = a - 1 + (pb - 1) * (qb - 1)
-  ans(1:nrow, a:b) = CellBasis_Quadrangle2(pb=pb, qb=qb, L1=L1, L2=L2)
+  ! ans(1:nrow, a:b) = CellBasis_Quadrangle2(pb=pb, qb=qb, L1=L1, L2=L2)
+  CALL CellBasis_Quadrangle2_(pb=pb, qb=qb, L1=L1, L2=L2, &
+                              ans=ans(:, a:), nrow=maxP, ncol=maxQ)
 END IF
+
+DEALLOCATE (L1, L2)
 
 END PROCEDURE HeirarchicalBasis_Quadrangle1_
 
