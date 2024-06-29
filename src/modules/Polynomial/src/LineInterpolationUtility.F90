@@ -36,6 +36,7 @@ PUBLIC :: InterpolationPoint_Line_
 PUBLIC :: LagrangeCoeff_Line
 PUBLIC :: LagrangeCoeff_Line_
 PUBLIC :: LagrangeEvalAll_Line
+PUBLIC :: LagrangeEvalAll_Line_
 PUBLIC :: LagrangeGradientEvalAll_Line
 PUBLIC :: BasisEvalAll_Line
 PUBLIC :: BasisGradientEvalAll_Line
