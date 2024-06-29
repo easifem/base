@@ -40,6 +40,7 @@ PUBLIC :: COPY
 PUBLIC :: AXPY
 PUBLIC :: ASUM
 PUBLIC :: GEMV
+PUBLIC :: GEMM
 
 #ifndef USE_NativeBLAS
 PUBLIC :: IAMIN
@@ -203,6 +204,24 @@ INTERFACE GEMV
   MODULE PROCEDURE SCGEMV_F95, DZGEMV_F95
 END INTERFACE GEMV
 #endif
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE GEMM
+  MODULE PROCEDURE SGEMM_F95, DGEMM_F95, CGEMM_F95, ZGEMM_F95
+END INTERFACE GEMM
+
+! #ifdef USE_INTEL_MKL
+! INTERFACE GEMV
+!   MODULE PROCEDURE SCGEMV_F95, DZGEMV_F95
+! END INTERFACE GEMV
+! #endif
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
 
 CONTAINS
 
