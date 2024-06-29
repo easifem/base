@@ -40,6 +40,7 @@ PUBLIC :: HeirarchicalBasis_Quadrangle
 PUBLIC :: IJ2VEFC_Quadrangle_Clockwise
 PUBLIC :: IJ2VEFC_Quadrangle_AntiClockwise
 PUBLIC :: LagrangeEvalAll_Quadrangle
+PUBLIC :: LagrangeEvalAll_Quadrangle_
 PUBLIC :: QuadraturePoint_Quadrangle
 PUBLIC :: QuadratureNumber_Quadrangle
 PUBLIC :: FacetConnectivity_Quadrangle
@@ -177,6 +178,22 @@ END INTERFACE LagrangeDegree_Quadrangle
 ! date: 18 Aug 2022
 ! summary:         Returns the degree of monomials for Lagrange polynomials
 
+INTERFACE LagrangeDegree_Quadrangle_
+  MODULE PURE SUBROUTINE LagrangeDegree_Quadrangle1_(order, ans, nrow, ncol)
+    INTEGER(I4B), INTENT(IN) :: order
+    INTEGER(I4B), INTENT(INOUT) :: ans(:, :)
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+  END SUBROUTINE LagrangeDegree_Quadrangle1_
+END INTERFACE LagrangeDegree_Quadrangle_
+
+!----------------------------------------------------------------------------
+!                                                  LagrangeDegree_Quadrangle
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 18 Aug 2022
+! summary:         Returns the degree of monomials for Lagrange polynomials
+
 INTERFACE LagrangeDegree_Quadrangle
   MODULE PURE FUNCTION LagrangeDegree_Quadrangle2(p, q) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: p
@@ -184,6 +201,19 @@ INTERFACE LagrangeDegree_Quadrangle
     INTEGER(I4B), ALLOCATABLE :: ans(:, :)
   END FUNCTION LagrangeDegree_Quadrangle2
 END INTERFACE LagrangeDegree_Quadrangle
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE LagrangeDegree_Quadrangle_
+  MODULE PURE SUBROUTINE LagrangeDegree_Quadrangle2_(p, q, ans, nrow, ncol)
+    INTEGER(I4B), INTENT(IN) :: p
+    INTEGER(I4B), INTENT(IN) :: q
+    INTEGER(I4B), INTENT(INOUT) :: ans(:, :)
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+  END SUBROUTINE LagrangeDegree_Quadrangle2_
+END INTERFACE LagrangeDegree_Quadrangle_
 
 !----------------------------------------------------------------------------
 !                                                    LagrangeDOF_Quadrangle
@@ -1262,6 +1292,48 @@ INTERFACE OrthogonalBasis_Quadrangle
 END INTERFACE OrthogonalBasis_Quadrangle
 
 !----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE TensorProdBasis_Quadrangle_
+  MODULE SUBROUTINE TensorProdBasis_Quadrangle1_(p, q, xij, ans, nrow, &
+               ncol, basisType1, basisType2, alpha1, beta1, lambda1, alpha2, &
+                                                 beta2, lambda2)
+    INTEGER(I4B), INTENT(IN) :: p
+    !! highest order in x1 direction
+    INTEGER(I4B), INTENT(IN) :: q
+    !! highest order in x2 direction
+    REAL(DFP), INTENT(IN) :: xij(:, :)
+    !! points of evaluation in xij format
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    !! nrow = SIZE(xij, 2)
+    !! ncol = (p + 1) * (q + 1)
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+    !! number of rows and columns written in ans
+    INTEGER(I4B), INTENT(IN) :: basisType1
+    !! basis type in x1 direction
+    INTEGER(I4B), INTENT(IN) :: basisType2
+    !! basis type in x2 direction
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha1
+    !! alpha1 needed when  basisType1 "Jacobi"
+    REAL(DFP), OPTIONAL, INTENT(IN) :: beta1
+    !! beta1 is needed when basisType1 is "Jacobi"
+    REAL(DFP), OPTIONAL, INTENT(IN) :: lambda1
+    !! lambda1 is needed when basisType1 is "Ultraspherical"
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha2
+    !! alpha2 needed when basisType2 is "Jacobi"
+    REAL(DFP), OPTIONAL, INTENT(IN) :: beta2
+    !! beta2 needed when basisType2 is "Jacobi"
+    REAL(DFP), OPTIONAL, INTENT(IN) :: lambda2
+    !! lambda2 is needed when basisType2 is "Ultraspherical"
+  END SUBROUTINE TensorProdBasis_Quadrangle1_
+END INTERFACE TensorProdBasis_Quadrangle_
+
+INTERFACE OrthogonalBasis_Quadrangle_
+  MODULE PROCEDURE TensorProdBasis_Quadrangle1_
+END INTERFACE OrthogonalBasis_Quadrangle_
+
+!----------------------------------------------------------------------------
 !                                            TensorProdBasis_Quadrangle
 !----------------------------------------------------------------------------
 
@@ -1336,6 +1408,47 @@ INTERFACE OrthogonalBasis_Quadrangle
 END INTERFACE OrthogonalBasis_Quadrangle
 
 !----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE TensorProdBasis_Quadrangle_
+  MODULE SUBROUTINE TensorProdBasis_Quadrangle2_(p, q, x, y, ans, nrow, &
+        ncol, basisType1, basisType2, alpha1, beta1, lambda1, alpha2, beta2, &
+                                                 lambda2)
+    INTEGER(I4B), INTENT(IN) :: p
+    !! highest order in x1 direction
+    INTEGER(I4B), INTENT(IN) :: q
+    !! highest order in x2 direction
+    REAL(DFP), INTENT(IN) :: x(:), y(:)
+    !! points of evaluation in xij format
+    REAL(DFP) :: ans(SIZE(x) * SIZE(y), (p + 1) * (q + 1))
+    !! nrow = SIZE(x) * SIZE(y)
+    !! ncol = (p + 1) * (q + 1)
+    !! Tensor basis
+    !! The number of rows corresponds to the
+    !! total number of points
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+    !! number of rows and columns written in ans
+    INTEGER(I4B), INTENT(IN) :: basisType1
+    !! Orthogonal polynomial family in x1 direction
+    INTEGER(I4B), INTENT(IN) :: basisType2
+    !! Orthogonal poly family in x2 direction
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha1
+    !! alpha1 needed when basisType1 is "Jacobi"
+    REAL(DFP), OPTIONAL, INTENT(IN) :: beta1
+    !! beta1 is needed when basisType1 is "Jacobi"
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha2
+    !! alpha2 needed when basisType2 is "Jacobi"
+    REAL(DFP), OPTIONAL, INTENT(IN) :: beta2
+    !! beta2 needed when basisType2 is "Jacobi"
+    REAL(DFP), OPTIONAL, INTENT(IN) :: lambda1
+    !! lambda1 is needed when basisType1 is "Ultraspherical"
+    REAL(DFP), OPTIONAL, INTENT(IN) :: lambda2
+    !! lambda2 is needed when basisType2 is "Ultraspherical"
+  END SUBROUTINE TensorProdBasis_Quadrangle2_
+END INTERFACE TensorProdBasis_Quadrangle_
+
+!----------------------------------------------------------------------------
 !                                                    VertexBasis_Quadrangle
 !----------------------------------------------------------------------------
 
@@ -1354,22 +1467,19 @@ INTERFACE VertexBasis_Quadrangle
 END INTERFACE VertexBasis_Quadrangle
 
 !----------------------------------------------------------------------------
-!                                                    VertexBasis_Quadrangle
+!
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 28 Oct 2022
-! summary: Returns the vertex basis functions on biunit quadrangle
-
-INTERFACE VertexBasis_Quadrangle
-  MODULE PURE FUNCTION VertexBasis_Quadrangle3(xij) &
-    & RESULT(ans)
-    REAL(DFP), INTENT(IN) :: xij(:, :)
+INTERFACE VertexBasis_Quadrangle_
+  MODULE PURE SUBROUTINE VertexBasis_Quadrangle1_(x, y, ans, nrow, ncol)
+    REAL(DFP), INTENT(IN) :: x(:), y(:)
     !! point of evaluation
-    REAL(DFP) :: ans(SIZE(xij, 2), 4)
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    !! ans(SIZE(x), 4)
     !! ans(:,v1) basis function of vertex v1 at all points
-  END FUNCTION VertexBasis_Quadrangle3
-END INTERFACE VertexBasis_Quadrangle
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+  END SUBROUTINE VertexBasis_Quadrangle1_
+END INTERFACE VertexBasis_Quadrangle_
 
 !----------------------------------------------------------------------------
 !                                                    VertexBasis_Quadrangle2
@@ -1388,6 +1498,54 @@ INTERFACE
     !! ans(:,v1) basis function of vertex v1 at all points
   END FUNCTION VertexBasis_Quadrangle2
 END INTERFACE
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE
+  MODULE PURE SUBROUTINE VertexBasis_Quadrangle2_(L1, L2, ans, nrow, ncol)
+    REAL(DFP), INTENT(IN) :: L1(1:, 0:), L2(1:, 0:)
+    !! L1 Lobatto polynomial evaluated at x coordinates
+    !! L2 is Lobatto polynomial evaluated at y coordinates
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+  !! ans(SIZE(L1, 1), 4)
+    !! ans(:,v1) basis function of vertex v1 at all points
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+  END SUBROUTINE VertexBasis_Quadrangle2_
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                    VertexBasis_Quadrangle
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 28 Oct 2022
+! summary: Returns the vertex basis functions on biunit quadrangle
+
+INTERFACE VertexBasis_Quadrangle
+  MODULE PURE FUNCTION VertexBasis_Quadrangle3(xij) RESULT(ans)
+    REAL(DFP), INTENT(IN) :: xij(:, :)
+    !! point of evaluation
+    REAL(DFP) :: ans(SIZE(xij, 2), 4)
+    !! ans(:,v1) basis function of vertex v1 at all points
+  END FUNCTION VertexBasis_Quadrangle3
+END INTERFACE VertexBasis_Quadrangle
+
+!----------------------------------------------------------------------------
+!                                                   VertexBasis_Quadrangle
+!----------------------------------------------------------------------------
+
+INTERFACE VertexBasis_Quadrangle_
+  MODULE PURE SUBROUTINE VertexBasis_Quadrangle3_(xij, ans, nrow, ncol)
+    REAL(DFP), INTENT(IN) :: xij(:, :)
+    !! point of evaluation
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    !! ans(SIZE(xij, 2), 4)
+    !! ans(:,v1) basis function of vertex v1 at all points
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+  END SUBROUTINE VertexBasis_Quadrangle3_
+END INTERFACE VertexBasis_Quadrangle_
 
 !----------------------------------------------------------------------------
 !                                                    VertexBasis_Quadrangle2
@@ -1453,6 +1611,28 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
+  MODULE PURE SUBROUTINE VerticalEdgeBasis_Quadrangle_(qe1, qe2, x, y, &
+                                                       ans, nrow, ncol)
+    INTEGER(I4B), INTENT(IN) :: qe1
+    !! order on left vertical edge (e1), it should be greater than 1
+    !! It should be greater than 2
+    INTEGER(I4B), INTENT(IN) :: qe2
+    !! order on right vertical edge(e2), it should be greater than 1
+    !! It should be greater than 2
+    REAL(DFP), INTENT(IN) :: x(:), y(:)
+    !! point of evaluation
+    !! these points should be between [-1, 1].
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    ! ans(SIZE(x), qe1 + qe2 - 2)
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+  END SUBROUTINE VerticalEdgeBasis_Quadrangle_
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE
   MODULE PURE FUNCTION VerticalEdgeBasis_Quadrangle2(qe1, qe2, L1, L2) &
     & RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: qe1
@@ -1463,6 +1643,25 @@ INTERFACE
     !! Lobatto polynomials in x and y direction.
     REAL(DFP) :: ans(SIZE(L1, 1), qe1 + qe2 - 2)
   END FUNCTION VerticalEdgeBasis_Quadrangle2
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE
+  MODULE PURE SUBROUTINE VerticalEdgeBasis_Quadrangle2_(qe1, qe2, L1, L2, &
+                                                        ans, nrow, ncol)
+    INTEGER(I4B), INTENT(IN) :: qe1
+    !! order on left vertical edge (e1), it should be greater than 1
+    INTEGER(I4B), INTENT(IN) :: qe2
+    !! order on right vertical edge(e2), it should be greater than 1
+    REAL(DFP), INTENT(IN) :: L1(1:, 0:), L2(1:, 0:)
+    !! Lobatto polynomials in x and y direction.
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    !! ans(SIZE(L1, 1), qe1 + qe2 - 2)
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+  END SUBROUTINE VerticalEdgeBasis_Quadrangle2_
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -1522,6 +1721,25 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
+  MODULE PURE SUBROUTINE HorizontalEdgeBasis_Quadrangle_(pe3, pe4, x, y, &
+                                                         ans, nrow, ncol)
+    INTEGER(I4B), INTENT(IN) :: pe3
+    !! order on bottom vertical edge (e3), it should be greater than 1
+    INTEGER(I4B), INTENT(IN) :: pe4
+    !! order on top vertical edge(e4), it should be greater than 1
+    REAL(DFP), INTENT(IN) :: x(:), y(:)
+    !! point of evaluation
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    !! ans(SIZE(x), pe3 + pe4 - 2)
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+  END SUBROUTINE HorizontalEdgeBasis_Quadrangle_
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE
   MODULE PURE FUNCTION HorizontalEdgeBasis_Quadrangle2(pe3, pe4, L1, L2) &
     & RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: pe3
@@ -1539,14 +1757,27 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-  MODULE PURE FUNCTION HorizontalEdgeBasisGradient_Quadrangle2( &
-  &pe3, &
-  & pe4, &
-  & L1, &
-  & L2,  &
-  & dL1,  &
-  & dL2) &
-    & RESULT(ans)
+  MODULE PURE SUBROUTINE HorizontalEdgeBasis_Quadrangle2_(pe3, pe4, L1, L2, &
+                                                          ans, nrow, ncol)
+    INTEGER(I4B), INTENT(IN) :: pe3
+    !! order on bottom vertical edge (e3), it should be greater than 1
+    INTEGER(I4B), INTENT(IN) :: pe4
+    !! order on top vertical edge(e4), it should be greater than 1
+    REAL(DFP), INTENT(IN) :: L1(1:, 0:), L2(1:, 0:)
+    !! point of evaluation
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    !! ans(SIZE(L1, 1), pe3 + pe4 - 2)
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+  END SUBROUTINE HorizontalEdgeBasis_Quadrangle2_
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE
+  MODULE PURE FUNCTION HorizontalEdgeBasisGradient_Quadrangle2(pe3, pe4, &
+                                                 L1, L2, dL1, dL2) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: pe3
     !! order on bottom vertical edge (e3), it should be greater than 1
     INTEGER(I4B), INTENT(IN) :: pe4
@@ -1582,6 +1813,25 @@ INTERFACE
 END INTERFACE
 
 !----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE
+  MODULE PURE SUBROUTINE CellBasis_Quadrangle_(pb, qb, x, y, ans, nrow, &
+                                               ncol)
+    INTEGER(I4B), INTENT(IN) :: pb
+    !! order on bottom vertical edge (e3), it should be greater than 1
+    INTEGER(I4B), INTENT(IN) :: qb
+    !! order on top vertical edge(e4), it should be greater than 1
+    REAL(DFP), INTENT(IN) :: x(:), y(:)
+    !! point of evaluation
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    !! ans(SIZE(x), (pb - 1) * (qb - 1))
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+  END SUBROUTINE CellBasis_Quadrangle_
+END INTERFACE
+
+!----------------------------------------------------------------------------
 !                                                      CellBasis_Quadrangle
 !----------------------------------------------------------------------------
 
@@ -1595,6 +1845,25 @@ INTERFACE
     !! point of evaluation
     REAL(DFP) :: ans(SIZE(L1, 1), (pb - 1) * (qb - 1))
   END FUNCTION CellBasis_Quadrangle2
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE
+  MODULE PURE SUBROUTINE CellBasis_Quadrangle2_(pb, qb, L1, L2, &
+                                                ans, nrow, ncol)
+    INTEGER(I4B), INTENT(IN) :: pb
+    !! order on bottom vertical edge (e3), it should be greater than 1
+    INTEGER(I4B), INTENT(IN) :: qb
+    !! order on top vertical edge(e4), it should be greater than 1
+    REAL(DFP), INTENT(IN) :: L1(1:, 0:), L2(1:, 0:)
+    !! point of evaluation
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    !! ans(SIZE(L1, 1), (pb - 1) * (qb - 1))
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+  END SUBROUTINE CellBasis_Quadrangle2_
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -1663,6 +1932,34 @@ INTERFACE HeirarchicalBasis_Quadrangle
 END INTERFACE HeirarchicalBasis_Quadrangle
 
 !----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE HeirarchicalBasis_Quadrangle_
+  MODULE PURE SUBROUTINE HeirarchicalBasis_Quadrangle1_(pb, qb, pe3, pe4, &
+                                               qe1, qe2, xij, ans, nrow, ncol)
+    INTEGER(I4B), INTENT(IN) :: pb
+    !! order of interpolation inside the quadrangle in x1 direction
+    INTEGER(I4B), INTENT(IN) :: qb
+    !! order of interpolation inside the quadrangle in x2 direction
+    INTEGER(I4B), INTENT(IN) :: pe3
+    !! order of interpolation on edge e3 (bottom) in x1 direction
+    INTEGER(I4B), INTENT(IN) :: pe4
+    !! order of interpolation on edge e4 (top) in x1 direction
+    INTEGER(I4B), INTENT(IN) :: qe1
+    !! order of interpolation on edge e1 (left) in y1 direction
+    INTEGER(I4B), INTENT(IN) :: qe2
+    !! order of interpolation on edge e2 (right) in y1 direction
+    REAL(DFP), INTENT(IN) :: xij(:, :)
+    !! points of evaluation in xij format
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    !! nrow = SIZE(xij, 2), &
+    !! ncol =  pb * qb - pb - qb + pe3 + pe4 + qe1 + qe2 + 1)
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+  END SUBROUTINE HeirarchicalBasis_Quadrangle1_
+END INTERFACE HeirarchicalBasis_Quadrangle_
+
+!----------------------------------------------------------------------------
 !                                              HeirarchicalBasis_Quadrangle
 !----------------------------------------------------------------------------
 
@@ -1687,6 +1984,26 @@ INTERFACE HeirarchicalBasis_Quadrangle
     REAL(DFP) :: ans(SIZE(xij, 2), (p + 1) * (q + 1))
   END FUNCTION HeirarchicalBasis_Quadrangle2
 END INTERFACE HeirarchicalBasis_Quadrangle
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE HeirarchicalBasis_Quadrangle_
+  MODULE PURE SUBROUTINE HeirarchicalBasis_Quadrangle2_(p, q, xij, ans, &
+                                                        nrow, ncol)
+    INTEGER(I4B), INTENT(IN) :: p
+    !! order of interpolation inside the quadrangle in x1 direction
+    INTEGER(I4B), INTENT(IN) :: q
+    !! order of interpolation inside the quadrangle in x2 direction
+    REAL(DFP), INTENT(IN) :: xij(:, :)
+    !! points of evaluation in xij format
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    !! nrow = SIZE(xij, 2)
+    !! ncol = (p + 1) * (q + 1))
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+  END SUBROUTINE HeirarchicalBasis_Quadrangle2_
+END INTERFACE HeirarchicalBasis_Quadrangle_
 
 !----------------------------------------------------------------------------
 !                                                 LagrangeEvalAll_Quadrangle
@@ -1746,6 +2063,55 @@ INTERFACE LagrangeEvalAll_Quadrangle
 END INTERFACE LagrangeEvalAll_Quadrangle
 
 !----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE LagrangeEvalAll_Quadrangle_
+  MODULE SUBROUTINE LagrangeEvalAll_Quadrangle1_(order, x, xij, ans, tsize, &
+                             coeff, firstCall, basisType, alpha, beta, lambda)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order of Lagrange polynomials
+    REAL(DFP), INTENT(IN) :: x(2)
+    !! point of evaluation
+    !! x(1) is x coord
+    !! x(2) is y coord
+    REAL(DFP), INTENT(INOUT) :: xij(:, :)
+    !! Interpolation points
+    !! The number of rows in xij can be 2 or 3
+    !! The number of columns in xij should be equal to total
+    !! degree of freedom
+    REAL(DFP), INTENT(INOUT) :: ans(:)
+    !! ans(SIZE(xij, 2))
+    !! Value of n+1 Lagrange polynomials at point x
+    INTEGER(I4B), INTENT(OUT) :: tsize
+    !! Total size written in ans
+    REAL(DFP), OPTIONAL, INTENT(INOUT) :: coeff(:, :)
+    !! coeff(SIZE(xij, 2), SIZE(xij, 2))
+    !! coefficient of Lagrange polynomials
+    LOGICAL(LGT), OPTIONAL :: firstCall
+    !! If firstCall is true, then coeff will be computed and returned
+    !! by this routine.
+    !! If firstCall is False, then coeff should be given, which will be
+    !! used.
+    !! Default value of firstCall is True
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: basisType
+    !! Monomials *Default
+    !! Legendre
+    !! Lobatto
+    !! Chebyshev
+    !! Jacobi
+    !! Ultraspherical
+    !! Heirarchical
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
+    !! Jacobi parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: beta
+    !! Jacobi parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: lambda
+    !! Ultraspherical parameter
+  END SUBROUTINE LagrangeEvalAll_Quadrangle1_
+END INTERFACE LagrangeEvalAll_Quadrangle_
+
+!----------------------------------------------------------------------------
 !                                               LagrangeEvalAll_Quadrangle
 !----------------------------------------------------------------------------
 
@@ -1793,6 +2159,46 @@ INTERFACE LagrangeEvalAll_Quadrangle
     !! Value of n+1 Lagrange polynomials at point x
   END FUNCTION LagrangeEvalAll_Quadrangle2
 END INTERFACE LagrangeEvalAll_Quadrangle
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE LagrangeEvalAll_Quadrangle_
+  MODULE SUBROUTINE LagrangeEvalAll_Quadrangle2_(order, x, xij, ans, &
+                 nrow, ncol, coeff, firstCall, basisType, alpha, beta, lambda)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! Order of Lagrange polynomials
+    REAL(DFP), INTENT(IN) :: x(:, :)
+    !! Point of evaluation
+    !! x(1, :) is x coord
+    !! x(2, :) is y coord
+    REAL(DFP), INTENT(INOUT) :: xij(:, :)
+    !! Interpolation points
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    !! ans(SIZE(x, 2), SIZE(xij, 2))
+    !! Value of n+1 Lagrange polynomials at point x
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+    !! number of rows and columns written in ans
+    REAL(DFP), OPTIONAL, INTENT(INOUT) :: coeff(:, :)
+    !! coeff(SIZE(xij, 2), SIZE(xij, 2))
+    !! Coefficient of Lagrange polynomials
+    LOGICAL(LGT), OPTIONAL :: firstCall
+    !! If firstCall is true, then coeff will be made
+    !! If firstCall is False, then coeff will be used
+    !! Default value of firstCall is True
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: basisType
+    !! Monomials *Default
+    !! Jacobi=Dubiner
+    !! Heirarchical
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
+    !! Jacobi parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: beta
+    !! Jacobi parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: lambda
+    !! Ultraspherical parameter
+  END SUBROUTINE LagrangeEvalAll_Quadrangle2_
+END INTERFACE LagrangeEvalAll_Quadrangle_
 
 !----------------------------------------------------------------------------
 !                                                 QuadraturePoint_Quadrangle
