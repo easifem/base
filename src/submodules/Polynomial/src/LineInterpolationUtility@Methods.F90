@@ -954,63 +954,91 @@ END PROCEDURE LagrangeEvalAll_Line2_
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE BasisEvalAll_Line1
-INTEGER(I4B) :: ii, basisType0
-TYPE(String) :: astr
-astr = UpperCase(refLine)
+INTEGER(I4B) :: tsize
+CALL BasisEvalAll_Line1_(order=order, x=x, ans=ans, tsize=tsize, &
+               refline=refline, basistype=basistype, alpha=alpha, beta=beta, &
+                         lambda=lambda)
+END PROCEDURE BasisEvalAll_Line1
 
-IF (astr%chars() .EQ. "UNIT") THEN
-  CALL Errormsg(&
-    & msg="refLine should be BIUNIT", &
-    & file=__FILE__, &
-    & routine="BasisEvalAll_Line1", &
-    & line=__LINE__, &
-    & unitno=stderr)
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE BasisEvalAll_Line1_
+#ifdef DEBUG_VER
+CHARACTER(1) :: astr
+#endif
+
+INTEGER(I4B) :: ii, basisType0, nrow, ncol
+REAL(DFP) :: temp(1, 100), x1(1)
+
+tsize = order + 1
+
+#ifdef DEBUG_VER
+
+astr = UpperCase(refLine(1:1))
+IF (astr .EQ. "U") THEN
+  CALL Errormsg(msg="refLine should be BIUNIT", &
+                routine="BasisEvalAll_Line1", &
+                file=__FILE__, line=__LINE__, unitno=stderr)
   RETURN
 END IF
 
-basisType0 = input(default=polyopt%Monomial, option=basisType)
+#endif
+
+basisType0 = Input(default=polyopt%Monomial, option=basisType)
+
 SELECT CASE (basisType0)
+
 CASE (polyopt%Monomial)
   ans(1) = 1.0_DFP
   DO ii = 1, order
     ans(ii + 1) = ans(ii) * x
   END DO
+
 CASE DEFAULT
+
+#ifdef DEBUG_VER
 
   IF (basisType0 .EQ. polyopt%Jacobi) THEN
     IF (.NOT. PRESENT(alpha) .OR. .NOT. PRESENT(beta)) THEN
-      CALL Errormsg(&
-        & msg="alpha and beta should be present for basisType=Jacobi", &
-        & file=__FILE__, &
-        & routine="BasisEvalAll_Line1", &
-        & line=__LINE__, &
-        & unitno=stderr)
+      CALL Errormsg( &
+        msg="alpha and beta should be present for basisType=Jacobi", &
+        routine="BasisEvalAll_Line1", &
+        file=__FILE__, line=__LINE__, unitno=stderr)
       RETURN
     END IF
   END IF
 
   IF (basisType0 .EQ. polyopt%Ultraspherical) THEN
     IF (.NOT. PRESENT(lambda)) THEN
-      CALL Errormsg(&
-        & msg="lambda should be present for basisType=Ultraspherical", &
-        & file=__FILE__, &
-        & routine="BasisEvalAll_Line1", &
-        & line=__LINE__, &
-        & unitno=stderr)
+      CALL Errormsg( &
+        msg="lambda should be present for basisType=Ultraspherical", &
+        routine="BasisEvalAll_Line1", &
+        file=__FILE__, line=__LINE__, unitno=stderr)
       RETURN
     END IF
   END IF
 
-  ans = RESHAPE(EvalAllOrthopol(&
-    & n=order, &
-    & x=[x], &
-    & orthopol=basisType0, &
-    & alpha=alpha, &
-    & beta=beta, &
-    & lambda=lambda), [order + 1])
+  IF (order + 1 .GT. SIZE(temp, 2)) THEN
+    CALL Errormsg( &
+      msg="order+1 is greater than number of col in temp", &
+      routine="BasisEvalAll_Line1_", &
+      file=__FILE__, line=__LINE__, unitno=stderr)
+    RETURN
+  END IF
+
+#endif
+
+  x1(1) = x
+  CALL EvalAllOrthopol_(n=order, x=x1, orthopol=basisType0, alpha=alpha, &
+                     beta=beta, lambda=lambda, ans=temp, nrow=nrow, ncol=ncol)
+
+  ans(1:tsize) = temp(1, 1:tsize)
+
 END SELECT
 
-END PROCEDURE BasisEvalAll_Line1
+END PROCEDURE BasisEvalAll_Line1_
 
 !----------------------------------------------------------------------------
 !                                                 BasisGradientEvalAll_Line
@@ -1080,63 +1108,82 @@ END PROCEDURE BasisGradientEvalAll_Line1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE BasisEvalAll_Line2
-INTEGER(I4B) :: ii, basisType0
-TYPE(String) :: astr
-astr = UpperCase(refLine)
+INTEGER(I4B) :: nrow, ncol
+CALL BasisEvalAll_Line2_(order=order, x=x, ans=ans, nrow=nrow, ncol=ncol, &
+                         refline=refline, basistype=basistype, &
+                         alpha=alpha, beta=beta, lambda=lambda)
+END PROCEDURE BasisEvalAll_Line2
 
-IF (astr%chars() .EQ. "UNIT") THEN
-  CALL Errormsg(&
-    & msg="refLine should be BIUNIT", &
-    & file=__FILE__, &
-    & routine="BasisEvalAll_Line2", &
-    & line=__LINE__, &
-    & unitno=stderr)
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE BasisEvalAll_Line2_
+#ifdef DEBUG_VER
+CHARACTER(1) :: astr
+
+#endif
+
+INTEGER(I4B) :: ii, basisType0
+
+nrow = SIZE(x)
+ncol = order + 1
+
+#ifdef DEBUG_VER
+
+astr = UpperCase(refline(1:1))
+
+IF (astr .EQ. "U") THEN
+  CALL Errormsg(msg="refLine should be BIUNIT", &
+                routine="BasisEvalAll_Line2", &
+                file=__FILE__, line=__LINE__, unitno=stderr)
   RETURN
 END IF
 
-basisType0 = input(default=polyopt%Monomial, option=basisType)
+#endif
+
+basisType0 = Input(default=polyopt%Monomial, option=basisType)
+
 SELECT CASE (basisType0)
+
 CASE (polyopt%Monomial)
-  ans(:, 1) = 1.0_DFP
+  ans(1:nrow, 1) = 1.0_DFP
   DO ii = 1, order
-    ans(:, ii + 1) = ans(:, ii) * x
+    ans(1:nrow, ii + 1) = ans(1:nrow, ii) * x
   END DO
+
 CASE DEFAULT
+
+#ifdef DEBUG_VER
 
   IF (basisType0 .EQ. polyopt%Jacobi) THEN
     IF (.NOT. PRESENT(alpha) .OR. .NOT. PRESENT(beta)) THEN
-      CALL Errormsg(&
-        & msg="alpha and beta should be present for basisType=Jacobi", &
-        & file=__FILE__, &
-        & routine="BasisEvalAll_Line2", &
-        & line=__LINE__, &
-        & unitno=stderr)
+      CALL Errormsg( &
+        msg="alpha and beta should be present for basisType=Jacobi", &
+        routine="BasisEvalAll_Line2", &
+        file=__FILE__, line=__LINE__, unitno=stderr)
       RETURN
     END IF
   END IF
 
   IF (basisType0 .EQ. polyopt%Ultraspherical) THEN
     IF (.NOT. PRESENT(lambda)) THEN
-      CALL Errormsg(&
-        & msg="lambda should be present for basisType=Ultraspherical", &
-        & file=__FILE__, &
-        & routine="BasisEvalAll_Line2", &
-        & line=__LINE__, &
-        & unitno=stderr)
+      CALL Errormsg( &
+        msg="lambda should be present for basisType=Ultraspherical", &
+        routine="BasisEvalAll_Line2", &
+        file=__FILE__, line=__LINE__, unitno=stderr)
       RETURN
     END IF
   END IF
 
-  ans = EvalAllOrthopol(&
-    & n=order, &
-    & x=x, &
-    & orthopol=basisType0, &
-    & alpha=alpha, &
-    & beta=beta, &
-    & lambda=lambda)
+#endif
+
+  CALL EvalAllOrthopol_(n=order, x=x, orthopol=basisType0, alpha=alpha, &
+                        beta=beta, lambda=lambda, ans=ans, nrow=nrow, &
+                        ncol=ncol)
 END SELECT
 
-END PROCEDURE BasisEvalAll_Line2
+END PROCEDURE BasisEvalAll_Line2_
 
 !----------------------------------------------------------------------------
 !                                                  BasisGradientEvalAll_Line

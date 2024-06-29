@@ -39,6 +39,7 @@ PUBLIC :: LagrangeEvalAll_Line
 PUBLIC :: LagrangeEvalAll_Line_
 PUBLIC :: LagrangeGradientEvalAll_Line
 PUBLIC :: BasisEvalAll_Line
+PUBLIC :: BasisEvalAll_Line_
 PUBLIC :: BasisGradientEvalAll_Line
 PUBLIC :: QuadraturePoint_Line
 PUBLIC :: ToVEFC_Line
@@ -1022,6 +1023,40 @@ INTERFACE BasisEvalAll_Line
 END INTERFACE BasisEvalAll_Line
 
 !----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE BasisEvalAll_Line_
+  MODULE SUBROUTINE BasisEvalAll_Line1_(order, x, ans, tsize, refLine, &
+                                        basisType, alpha, beta, lambda)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order of  polynomials
+    REAL(DFP), INTENT(IN) :: x
+    !! point of evaluation
+    REAL(DFP), INTENT(INOUT) :: ans(:)
+    !! ans(order + 1)
+    !! Value of n+1  polynomials at point x
+    INTEGER(I4B), INTENT(OUT) :: tsize
+    CHARACTER(*), INTENT(IN) :: refLine
+    !! Refline should be  BIUNIT
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: basisType
+    !! Monomial
+    !! Jacobi
+    !! Ultraspherical
+    !! Legendre
+    !! Chebyshev
+    !! Lobatto
+    !! UnscaledLobatto
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
+    !! Jacobi polynomial parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: beta
+    !! Jacobi polynomial parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: lambda
+    !! Ultraspherical parameter
+  END SUBROUTINE BasisEvalAll_Line1_
+END INTERFACE BasisEvalAll_Line_
+
+!----------------------------------------------------------------------------
 !                                                         BasisEvalAll_Line
 !----------------------------------------------------------------------------
 
@@ -1059,6 +1094,44 @@ INTERFACE BasisEvalAll_Line
     !! ans(i, :) is the value of all polynomials at x(i) point
   END FUNCTION BasisEvalAll_Line2
 END INTERFACE BasisEvalAll_Line
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE BasisEvalAll_Line_
+  MODULE SUBROUTINE BasisEvalAll_Line2_(order, x, ans, nrow, ncol, &
+                                      refLine, basisType, alpha, beta, lambda)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order of  polynomials
+    REAL(DFP), INTENT(IN) :: x(:)
+    !! point of evaluation
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    !! ans(SIZE(x), order + 1)
+    !! Value of n+1  polynomials at point x
+    !! ans(:, j) is the value of jth polynomial at x points
+    !! ans(i, :) is the value of all polynomials at x(i) point
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+    !! number of rows and columns written to ans
+    CHARACTER(*), INTENT(IN) :: refLine
+    !! UNIT
+    !! BIUNIT
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: basisType
+    !! Monomial
+    !! Jacobi
+    !! Ultraspherical
+    !! Legendre
+    !! Chebyshev
+    !! Lobatto
+    !! UnscaledLobatto
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
+    !! Jacobi polynomial parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: beta
+    !! Jacobi polynomial parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: lambda
+    !! Ultraspherical parameter
+  END SUBROUTINE BasisEvalAll_Line2_
+END INTERFACE BasisEvalAll_Line_
 
 !----------------------------------------------------------------------------
 !                                                         BasisEvalAll_Line
