@@ -110,17 +110,13 @@ END INTERFACE
 !- ans(M,1:N+1), the values of the first N+1 Lobatto polynomials at the point
 ! X.
 
-INTERFACE
+INTERFACE LobattoEval
   MODULE PURE FUNCTION LobattoEval1(n, x) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: n
     REAL(DFP), INTENT(IN) :: x
     REAL(DFP) :: ans
     !! Evaluate Lobatto polynomial of order n at point x
   END FUNCTION LobattoEval1
-END INTERFACE
-
-INTERFACE LobattoEval
-  MODULE PROCEDURE LobattoEval1
 END INTERFACE LobattoEval
 
 !----------------------------------------------------------------------------
@@ -142,17 +138,13 @@ END INTERFACE LobattoEval
 !- ans(M,1:N+1), the values of the first N+1 Lobatto polynomials at the point
 ! X.
 
-INTERFACE
+INTERFACE LobattoEval
   MODULE PURE FUNCTION LobattoEval2(n, x) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: n
     REAL(DFP), INTENT(IN) :: x(:)
     REAL(DFP) :: ans(SIZE(x))
     !! Evaluate Lobatto polynomial of order n at point x
   END FUNCTION LobattoEval2
-END INTERFACE
-
-INTERFACE LobattoEval
-  MODULE PROCEDURE LobattoEval2
 END INTERFACE LobattoEval
 
 !----------------------------------------------------------------------------
@@ -418,6 +410,20 @@ END INTERFACE LobattoGradientEvalAll
 !
 !----------------------------------------------------------------------------
 
+INTERFACE LobattoGradientEvalAll_
+  MODULE PURE SUBROUTINE LobattoGradientEvalAll1_(n, x, ans, tsize)
+    INTEGER(I4B), INTENT(IN) :: n
+    REAL(DFP), INTENT(IN) :: x
+    REAL(DFP), INTENT(INOUT) :: ans(:)
+    !! ans(1:n + 1)
+    INTEGER(I4B), INTENT(OUT) :: tsize
+  END SUBROUTINE LobattoGradientEvalAll1_
+END INTERFACE LobattoGradientEvalAll_
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
 !> author: Vikas Sharma, Ph. D.
 ! date: 8 Sept 2022
 ! summary:         Evaluate gradient of Lobatto polynomial of order upto n
@@ -438,6 +444,20 @@ END INTERFACE LobattoGradientEvalAll
 !
 !----------------------------------------------------------------------------
 
+INTERFACE LobattoGradientEvalAll_
+  MODULE PURE SUBROUTINE LobattoGradientEvalAll2_(n, x, ans, nrow, ncol)
+    INTEGER(I4B), INTENT(IN) :: n
+    REAL(DFP), INTENT(IN) :: x(:)
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+    ! ans(1:SIZE(x), 1:n + 1)
+  END SUBROUTINE LobattoGradientEvalAll2_
+END INTERFACE LobattoGradientEvalAll_
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
 !> author: Vikas Sharma, Ph. D.
 ! date: 8 Sept 2022
 ! summary:         Evaluate gradient of Lobatto polynomial of order upto n
@@ -446,18 +466,14 @@ END INTERFACE LobattoGradientEvalAll
 !
 ! Evaluate gradient of Lobatto polynomial of order upto n.
 
-INTERFACE
+INTERFACE LobattoGradientEval
   MODULE PURE FUNCTION LobattoGradientEval1(n, x) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: n
     REAL(DFP), INTENT(IN) :: x
     REAL(DFP) :: ans
   END FUNCTION LobattoGradientEval1
-END INTERFACE
-!!
-
-INTERFACE LobattoGradientEval
-  MODULE PROCEDURE LobattoGradientEval1
 END INTERFACE LobattoGradientEval
+!!
 
 !----------------------------------------------------------------------------
 !
@@ -471,16 +487,12 @@ END INTERFACE LobattoGradientEval
 !
 ! Evaluate gradient of Lobatto polynomial of order upto n.
 
-INTERFACE
+INTERFACE LobattoGradientEval
   MODULE PURE FUNCTION LobattoGradientEval2(n, x) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: n
     REAL(DFP), INTENT(IN) :: x(:)
     REAL(DFP) :: ans(1:SIZE(x))
   END FUNCTION LobattoGradientEval2
-END INTERFACE
-
-INTERFACE LobattoGradientEval
-  MODULE PROCEDURE LobattoGradientEval2
 END INTERFACE LobattoGradientEval
 
 !----------------------------------------------------------------------------
