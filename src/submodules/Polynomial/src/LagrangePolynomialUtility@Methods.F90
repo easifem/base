@@ -21,7 +21,7 @@ USE GlobalData, ONLY: stdout, stderr, Point, Line, Triangle, Quadrangle, &
 
 USE ErrorHandling, ONLY: Errormsg
 
-USE ReferenceElement_Method, ONLY: ElementTopology
+USE ReferenceElement_Method, ONLY: ElementTopology, XiDimension
 
 USE LineInterpolationUtility, ONLY: LagrangeDOF_Line, &
                                     LagrangeInDOF_Line, &
@@ -31,7 +31,7 @@ USE LineInterpolationUtility, ONLY: LagrangeDOF_Line, &
                                     InterpolationPoint_Line_, &
                                     LagrangeCoeff_Line, &
                                     LagrangeCoeff_Line_, &
-                                    LagrangeEvalAll_Line, &
+                                    LagrangeEvalAll_Line_, &
                                     LagrangeGradientEvalAll_Line
 
 USE TriangleInterpolationUtility, ONLY: LagrangeDOF_Triangle, &
@@ -42,7 +42,7 @@ USE TriangleInterpolationUtility, ONLY: LagrangeDOF_Triangle, &
                                         InterpolationPoint_Triangle_, &
                                         LagrangeCoeff_Triangle, &
                                         LagrangeCoeff_Triangle_, &
-                                        LagrangeEvalAll_Triangle, &
+                                        LagrangeEvalAll_Triangle_, &
                                         LagrangeGradientEvalAll_Triangle
 
 USE QuadrangleInterpolationUtility, ONLY: LagrangeDOF_Quadrangle, &
@@ -53,7 +53,7 @@ USE QuadrangleInterpolationUtility, ONLY: LagrangeDOF_Quadrangle, &
                                           InterpolationPoint_Quadrangle_, &
                                           LagrangeCoeff_Quadrangle, &
                                           LagrangeCoeff_Quadrangle_, &
-                                          LagrangeEvalAll_Quadrangle, &
+                                          LagrangeEvalAll_Quadrangle_, &
                                           LagrangeGradientEvalAll_Quadrangle
 
 USE TetrahedronInterpolationUtility, ONLY: LagrangeDOF_Tetrahedron, &
@@ -64,7 +64,7 @@ USE TetrahedronInterpolationUtility, ONLY: LagrangeDOF_Tetrahedron, &
                                            InterpolationPoint_Tetrahedron_, &
                                            LagrangeCoeff_Tetrahedron, &
                                            LagrangeCoeff_Tetrahedron_, &
-                                           LagrangeEvalAll_Tetrahedron, &
+                                           LagrangeEvalAll_Tetrahedron_, &
                                            LagrangeGradientEvalAll_Tetrahedron
 
 USE HexahedronInterpolationUtility, ONLY: LagrangeDOF_Hexahedron, &
@@ -75,7 +75,7 @@ USE HexahedronInterpolationUtility, ONLY: LagrangeDOF_Hexahedron, &
                                           InterpolationPoint_Hexahedron_, &
                                           LagrangeCoeff_Hexahedron, &
                                           LagrangeCoeff_Hexahedron_, &
-                                          LagrangeEvalAll_Hexahedron, &
+                                          LagrangeEvalAll_Hexahedron_, &
                                           LagrangeGradientEvalAll_Hexahedron
 
 USE PrismInterpolationUtility, ONLY: LagrangeDOF_Prism, &
@@ -86,7 +86,7 @@ USE PrismInterpolationUtility, ONLY: LagrangeDOF_Prism, &
                                      InterpolationPoint_Prism_, &
                                      LagrangeCoeff_Prism, &
                                      LagrangeCoeff_Prism_, &
-                                     LagrangeEvalAll_Prism, &
+                                     LagrangeEvalAll_Prism_, &
                                      LagrangeGradientEvalAll_Prism
 
 USE PyramidInterpolationUtility, ONLY: LagrangeDOF_Pyramid, &
@@ -97,7 +97,7 @@ USE PyramidInterpolationUtility, ONLY: LagrangeDOF_Pyramid, &
                                        InterpolationPoint_Pyramid_, &
                                        LagrangeCoeff_Pyramid, &
                                        LagrangeCoeff_Pyramid_, &
-                                       LagrangeEvalAll_Pyramid, &
+                                       LagrangeEvalAll_Pyramid_, &
                                        LagrangeGradientEvalAll_Pyramid
 
 USE ReallocateUtility, ONLY: Reallocate
@@ -299,53 +299,20 @@ END PROCEDURE EquidistancePoint
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE InterpolationPoint
-INTEGER(I4B) :: topo
+INTEGER(I4B) :: nrow, ncol
 
-topo = ElementTopology(elemType)
+IF (PRESENT(xij)) THEN
+  nrow = SIZE(Xij, 1)
+ELSE
+  nrow = XiDimension(elemType)
+END IF
 
-SELECT CASE (topo)
+ncol = LagrangeDOF(order=order, elemType=elemType)
+ALLOCATE (ans(nrow, ncol))
 
-CASE (Point)
-  IF (PRESENT(xij)) THEN
-    ans = xij
-  ELSE
-    ALLOCATE (ans(0, 0))
-  END IF
-
-CASE (Line)
-  ans = InterpolationPoint_Line(order=order, ipType=ipType, &
-                xij=xij, layout=layout, alpha=alpha, beta=beta, lambda=lambda)
-
-CASE (Triangle)
-  ans = InterpolationPoint_Triangle(order=order, ipType=ipType, &
-                xij=xij, layout=layout, alpha=alpha, beta=beta, lambda=lambda)
-
-CASE (Quadrangle)
-  ans = InterpolationPoint_Quadrangle(order=order, ipType=ipType, &
-                xij=xij, layout=layout, alpha=alpha, beta=beta, lambda=lambda)
-
-CASE (Tetrahedron)
-  ans = InterpolationPoint_Tetrahedron(order=order, ipType=ipType, &
-                xij=xij, layout=layout, alpha=alpha, beta=beta, lambda=lambda)
-
-CASE (Hexahedron)
-  ans = InterpolationPoint_Hexahedron(order=order, ipType=ipType, xij=xij, &
-                         layout=layout, alpha=alpha, beta=beta, lambda=lambda)
-
-CASE (Prism)
-  ans = InterpolationPoint_Prism(order=order, ipType=ipType, xij=xij, &
-                         layout=layout, alpha=alpha, beta=beta, lambda=lambda)
-
-CASE (Pyramid)
-  ans = InterpolationPoint_Pyramid(order=order, ipType=ipType, xij=xij, &
-                         layout=layout, alpha=alpha, beta=beta, lambda=lambda)
-
-CASE DEFAULT
-  CALL Errormsg(msg="No CASE FOUND: elemType="//ToString(elemType), &
-               unitno=stdout, line=__LINE__, routine="InterpolationPoint()", &
-                file=__FILE__)
-  RETURN
-END SELECT
+CALL InterpolationPoint_(order=order, elemType=elemType, ipType=ipType, &
+     xij=xij, layout=layout, alpha=alpha, beta=beta, lambda=lambda, ans=ans, &
+                         nrow=nrow, ncol=ncol)
 
 END PROCEDURE InterpolationPoint
 
@@ -616,40 +583,9 @@ END PROCEDURE LagrangeCoeff4_
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE LagrangeCoeff1
-INTEGER(I4B) :: topo
-
-topo = ElementTopology(elemType)
-
-SELECT CASE (topo)
-
-CASE (Point)
-CASE (Line)
-  ans = LagrangeCoeff_Line(order=order, xij=xij, i=i)
-
-CASE (Triangle)
-  ans = LagrangeCoeff_Triangle(order=order, xij=xij, i=i)
-
-CASE (Quadrangle)
-  ans = LagrangeCoeff_Quadrangle(order=order, xij=xij, i=i)
-
-CASE (Tetrahedron)
-  ans = LagrangeCoeff_Tetrahedron(order=order, xij=xij, i=i)
-
-CASE (Hexahedron)
-  ans = LagrangeCoeff_Hexahedron(order=order, xij=xij, i=i)
-
-CASE (Prism)
-  ans = LagrangeCoeff_Prism(order=order, xij=xij, i=i)
-
-CASE (Pyramid)
-  ans = LagrangeCoeff_Pyramid(order=order, xij=xij, i=i)
-
-CASE DEFAULT
-  CALL Errormsg( &
-    msg="No CASE FOUND: elemType="//ToString(elemType), &
-    routine="LagrangeCoeff1()", unitno=stdout, line=__LINE__, file=__FILE__)
-  RETURN
-END SELECT
+INTEGER(I4B) :: tsize
+CALL LagrangeCoeff1_(order=order, elemType=elemType, i=i, xij=xij, ans=ans, &
+                     tsize=tsize)
 
 END PROCEDURE LagrangeCoeff1
 
@@ -658,40 +594,10 @@ END PROCEDURE LagrangeCoeff1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE LagrangeCoeff2
-INTEGER(I4B) :: topo
+INTEGER(I4B) :: nrow, ncol
+CALL LagrangeCoeff2_(order=order, elemType=elemType, xij=xij, ans=ans, &
+                     nrow=nrow, ncol=ncol)
 
-topo = ElementTopology(elemType)
-
-SELECT CASE (topo)
-CASE (Point)
-
-CASE (Line)
-  ans = LagrangeCoeff_Line(order=order, xij=xij)
-
-CASE (Triangle)
-  ans = LagrangeCoeff_Triangle(order=order, xij=xij)
-
-CASE (Quadrangle)
-  ans = LagrangeCoeff_Quadrangle(order=order, xij=xij)
-
-CASE (Tetrahedron)
-  ans = LagrangeCoeff_Tetrahedron(order=order, xij=xij)
-
-CASE (Hexahedron)
-  ans = LagrangeCoeff_Hexahedron(order=order, xij=xij)
-
-CASE (Prism)
-  ans = LagrangeCoeff_Prism(order=order, xij=xij)
-
-CASE (Pyramid)
-  ans = LagrangeCoeff_Pyramid(order=order, xij=xij)
-
-CASE DEFAULT
-  CALL Errormsg(msg="No CASE FOUND: elemType="//ToString(elemType), &
-                unitno=stdout, line=__LINE__, routine="LagrangeCoeff2()", &
-                file=__FILE__)
-  RETURN
-END SELECT
 END PROCEDURE LagrangeCoeff2
 
 !----------------------------------------------------------------------------
@@ -699,41 +605,9 @@ END PROCEDURE LagrangeCoeff2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE LagrangeCoeff3
-INTEGER(I4B) :: topo
-topo = ElementTopology(elemType)
-
-SELECT CASE (topo)
-CASE (Point)
-
-CASE (Line)
-  ans = LagrangeCoeff_Line(order=order, i=i, v=v, isVandermonde=.TRUE.)
-
-CASE (Triangle)
-  ans = LagrangeCoeff_Triangle(order=order, i=i, v=v, isVandermonde=.TRUE.)
-
-CASE (Quadrangle)
-  ans = LagrangeCoeff_Quadrangle(order=order, i=i, v=v, isVandermonde=.TRUE.)
-
-CASE (Tetrahedron)
-  ans = LagrangeCoeff_Tetrahedron(order=order, i=i, v=v, isVandermonde=.TRUE.)
-
-CASE (Hexahedron)
-  ans = LagrangeCoeff_Hexahedron(order=order, i=i, v=v, isVandermonde=.TRUE.)
-
-CASE (Prism)
-  ans = LagrangeCoeff_Prism(order=order, i=i, v=v, isVandermonde=.TRUE.)
-
-CASE (Pyramid)
-  ans = LagrangeCoeff_Pyramid(order=order, i=i, v=v, isVandermonde=.TRUE.)
-
-CASE DEFAULT
-  CALL Errormsg( &
-    msg="No CASE FOUND: elemType="//ToString(elemType), &
-    routine="LagrangeCoeff3()", &
-    unitno=stdout, line=__LINE__, file=__FILE__)
-  RETURN
-END SELECT
-
+INTEGER(I4B) :: tsize
+CALL LagrangeCoeff3_(order=order, elemType=elemType, i=i, v=v, &
+                     isVandermonde=isVandermonde, ans=ans, tsize=tsize)
 END PROCEDURE LagrangeCoeff3
 
 !----------------------------------------------------------------------------
@@ -741,42 +615,9 @@ END PROCEDURE LagrangeCoeff3
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE LagrangeCoeff4
-INTEGER(I4B) :: topo
-
-topo = ElementTopology(elemType)
-
-SELECT CASE (topo)
-CASE (Point)
-
-CASE (Line)
-  ans = LagrangeCoeff_Line(order=order, i=i, v=v, ipiv=ipiv)
-
-CASE (Triangle)
-  ans = LagrangeCoeff_Triangle(order=order, i=i, v=v, ipiv=ipiv)
-
-CASE (Quadrangle)
-  ans = LagrangeCoeff_Quadrangle(order=order, i=i, v=v, ipiv=ipiv)
-
-CASE (Tetrahedron)
-  ans = LagrangeCoeff_Tetrahedron(order=order, i=i, v=v, ipiv=ipiv)
-
-CASE (Hexahedron)
-  ans = LagrangeCoeff_Hexahedron(order=order, i=i, v=v, ipiv=ipiv)
-
-CASE (Prism)
-  ans = LagrangeCoeff_Prism(order=order, i=i, v=v, ipiv=ipiv)
-
-CASE (Pyramid)
-  ans = LagrangeCoeff_Pyramid(order=order, i=i, v=v, ipiv=ipiv)
-
-CASE DEFAULT
-  CALL Errormsg( &
-    msg="No CASE FOUND: elemType="//ToString(elemType), &
-    routine="LagrangeCoeff2()", &
-    unitno=stdout, line=__LINE__, file=__FILE__)
-  RETURN
-END SELECT
-
+INTEGER(I4B) :: tsize
+CALL LagrangeCoeff4_(order=order, elemType=elemType, i=i, v=v, ipiv=ipiv, &
+                     ans=ans, tsize=tsize)
 END PROCEDURE LagrangeCoeff4
 
 !----------------------------------------------------------------------------
@@ -784,6 +625,18 @@ END PROCEDURE LagrangeCoeff4
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE LagrangeEvalAll1
+INTEGER(I4B) :: nrow, ncol
+CALL LagrangeEvalAll1_(order=order, elemType=elemType, x=x, xij=xij, &
+          ans=ans, nrow=nrow, ncol=ncol, domainName=domainName, coeff=coeff, &
+           firstCall=firstCall, basisType=basisType, alpha=alpha, beta=beta, &
+                       lambda=lambda)
+END PROCEDURE LagrangeEvalAll1
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE LagrangeEvalAll1_
 INTEGER(I4B) :: topo
 
 topo = ElementTopology(elemType)
@@ -792,92 +645,51 @@ SELECT CASE (topo)
 CASE (Point)
 
 CASE (Line)
-  ans = LagrangeEvalAll_Line( &
-    & order=order,  &
-    & xij=xij,  &
-    & x=x,  &
-    & coeff=coeff,  &
-    & firstCall=firstCall,  &
-    & basisType=basisType,  &
-    & alpha=alpha,  &
-    & beta=beta,  &
-    & lambda=lambda)
+  ! ans = LagrangeEvalAll_Line( &
+  CALL LagrangeEvalAll_Line_(order=order, xij=xij, x=x, coeff=coeff, &
+           firstCall=firstCall, basisType=basisType, alpha=alpha, beta=beta, &
+                             lambda=lambda, ans=ans, nrow=nrow, ncol=ncol)
 
 CASE (Triangle)
-  ans = LagrangeEvalAll_Triangle( &
-    & order=order,  &
-    & x=x,  &
-    & xij=xij,  &
-    & refTriangle=domainName, &
-    & coeff=coeff,  &
-    & firstCall=firstCall,  &
-    & basisType=basisType,  &
-    & alpha=alpha,  &
-    & beta=beta,  &
-    & lambda=lambda)
+  ! ans = LagrangeEvalAll_Triangle( &
+  CALL LagrangeEvalAll_Triangle_(order=order, x=x, xij=xij, &
+                   refTriangle=domainName, coeff=coeff, firstCall=firstCall, &
+        basisType=basisType, alpha=alpha, beta=beta, lambda=lambda, ans=ans, &
+                                 nrow=nrow, ncol=ncol)
 
 CASE (Quadrangle)
-  ans = LagrangeEvalAll_Quadrangle( &
-    & order=order,  &
-    & x=x,  &
-    & xij=xij,  &
-    & coeff=coeff,  &
-    & firstCall=firstCall,  &
-    & basisType=basisType,  &
-    & alpha=alpha,  &
-    & beta=beta,  &
-    & lambda=lambda)
+  ! ans = LagrangeEvalAll_Quadrangle( &
+  CALL LagrangeEvalAll_Quadrangle_(order=order, x=x, xij=xij, &
+         coeff=coeff, firstCall=firstCall, basisType=basisType, alpha=alpha, &
+                      beta=beta, lambda=lambda, ans=ans, nrow=nrow, ncol=ncol)
 
 CASE (Tetrahedron)
-  ans = LagrangeEvalAll_Tetrahedron( &
-    & order=order,  &
-    & x=x,  &
-    & xij=xij,  &
-    & refTetrahedron=domainName, &
-    & coeff=coeff,  &
-    & firstCall=firstCall,  &
-    & basisType=basisType,  &
-    & alpha=alpha, &
-    & beta=beta,  &
-    & lambda=lambda)
+  ! ans = LagrangeEvalAll_Tetrahedron( &
+  CALL LagrangeEvalAll_Tetrahedron_(order=order, x=x, xij=xij, &
+                refTetrahedron=domainName, coeff=coeff, firstCall=firstCall, &
+        basisType=basisType, alpha=alpha, beta=beta, lambda=lambda, ans=ans, &
+                                    nrow=nrow, ncol=ncol)
 
 CASE (Hexahedron)
-  ans = LagrangeEvalAll_Hexahedron( &
-    & order=order,  &
-    & x=x,  &
-    & xij=xij,  &
-    & coeff=coeff,  &
-    & firstCall=firstCall,  &
-    & basisType=basisType,  &
-    & alpha=alpha, &
-    & beta=beta,  &
-    & lambda=lambda)
+
+  ! ans = LagrangeEvalAll_Hexahedron( &
+  CALL LagrangeEvalAll_Hexahedron_(order=order, x=x, xij=xij, &
+         coeff=coeff, firstCall=firstCall, basisType=basisType, alpha=alpha, &
+                      beta=beta, lambda=lambda, ans=ans, nrow=nrow, ncol=ncol)
 
 CASE (Prism)
-  ans = LagrangeEvalAll_Prism( &
-    & order=order,  &
-    & x=x,  &
-    & xij=xij,  &
-    & refPrism=domainName, &
-    & coeff=coeff,  &
-    & firstCall=firstCall,  &
-    & basisType=basisType,  &
-    & alpha=alpha, &
-    & beta=beta,  &
-    & lambda=lambda)
+  ! ans = LagrangeEvalAll_Prism( &
+  CALL LagrangeEvalAll_Prism_(order=order, x=x, xij=xij, &
+                      refPrism=domainName, coeff=coeff, firstCall=firstCall, &
+        basisType=basisType, alpha=alpha, beta=beta, lambda=lambda, ans=ans, &
+                              nrow=nrow, ncol=ncol)
 
 CASE (Pyramid)
-  ans = LagrangeEvalAll_Pyramid( &
-    & order=order,  &
-    & x=x,  &
-    & xij=xij,  &
-    & refPyramid=domainName, &
-    & coeff=coeff,  &
-    & firstCall=firstCall,  &
-    & basisType=basisType,  &
-    & alpha=alpha, &
-    & beta=beta,  &
-    & lambda=lambda)
+  ! ans = LagrangeEvalAll_Pyramid( &
+  CALL LagrangeEvalAll_Pyramid_(order=order, x=x, xij=xij, &
+                    refPyramid=domainName, coeff=coeff, firstCall=firstCall, &
+        basisType=basisType, alpha=alpha, beta=beta, lambda=lambda, ans=ans, &
+                                nrow=nrow, ncol=ncol)
 
 CASE DEFAULT
   CALL Errormsg(msg="No CASE FOUND: elemType="//ToString(elemType), &
@@ -886,7 +698,7 @@ CASE DEFAULT
   RETURN
 END SELECT
 
-END PROCEDURE LagrangeEvalAll1
+END PROCEDURE LagrangeEvalAll1_
 
 !----------------------------------------------------------------------------
 !                                                 LagrangeGradientEvalAll
