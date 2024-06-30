@@ -474,82 +474,96 @@ END PROCEDURE Chebyshev1MonomialExpansion
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Chebyshev1GradientEvalAll1
-!!
+INTEGER(I4B) :: tsize
+CALL Chebyshev1GradientEvalAll1_(n=n, x=x, ans=ans, tsize=tsize)
+END PROCEDURE Chebyshev1GradientEvalAll1
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE Chebyshev1GradientEvalAll1_
 INTEGER(I4B) :: ii
 REAL(DFP) :: p(1:n + 1), r_ii
-!!
-IF (n < 0) THEN
-  RETURN
-END IF
-!!
+
+tsize = 0
+IF (n < 0) RETURN
+
+tsize = n + 1
 p(1) = 1.0_DFP
 ans(1) = 0.0_DFP
-!!
-IF (n < 1) THEN
-  RETURN
-END IF
-!!
-IF (n .EQ. 0_I4B) RETURN
-!!
+
+IF (n < 1) RETURN
+
 p(2) = x
 ans(2) = 1.0_DFP
-!!
+
 IF (n .EQ. 1_I4B) RETURN
-!!
+
 p(3) = 2.0_DFP * x**2 - 1.0_DFP
 ans(3) = 4.0_DFP * x
-!!
+
 DO ii = 3, n
-  !!
+
   r_ii = REAL(ii, KIND=DFP)
   p(ii + 1) = (2.0_DFP * x) * p(ii) - p(ii - 1)
+
   ans(ii + 1) = 2.0_DFP * r_ii * p(ii) &
               & + r_ii * ans(ii - 1) / (r_ii - 2.0_DFP)
-  !!
+
 END DO
-!!
-END PROCEDURE Chebyshev1GradientEvalAll1
+
+END PROCEDURE Chebyshev1GradientEvalAll1_
 
 !----------------------------------------------------------------------------
 !                                             Chebyshev1GradientEvalAll2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Chebyshev1GradientEvalAll2
+INTEGER(I4B) :: nrow, ncol
+CALL Chebyshev1GradientEvalAll2_(n=n, x=x, ans=ans, nrow=nrow, ncol=ncol)
+END PROCEDURE Chebyshev1GradientEvalAll2
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE Chebyshev1GradientEvalAll2_
 !!
 INTEGER(I4B) :: ii
 REAL(DFP) :: p(1:SIZE(x), 1:n + 1), r_ii
-!!
-IF (n < 0) THEN
-  RETURN
-END IF
-!!
-p(:, 1) = 1.0_DFP
-ans(:, 1) = 0.0_DFP
-!!
-IF (n < 1) THEN
-  RETURN
-END IF
-!!
-IF (n .EQ. 0_I4B) RETURN
-!!
-p(:, 2) = x
-ans(:, 2) = 1.0_DFP
-!!
+
+nrow = 0; ncol = 0
+
+IF (n < 0) RETURN
+
+nrow = SIZE(x)
+ncol = n + 1
+
+p(1:nrow, 1) = 1.0_DFP
+ans(1:nrow, 1) = 0.0_DFP
+
+IF (n < 1) RETURN
+
+p(1:nrow, 2) = x
+ans(1:nrow, 2) = 1.0_DFP
+
 IF (n .EQ. 1_I4B) RETURN
-!!
-p(:, 3) = 2.0_DFP * x**2 - 1.0_DFP
-ans(:, 3) = 4.0_DFP * x
-!!
+
+p(1:nrow, 3) = 2.0_DFP * x**2 - 1.0_DFP
+ans(1:nrow, 3) = 4.0_DFP * x
+
 DO ii = 3, n
-  !!
+
   r_ii = REAL(ii, KIND=DFP)
-  p(:, ii + 1) = (2.0_DFP * x) * p(:, ii) - p(:, ii - 1)
-  ans(:, ii + 1) = 2.0_DFP * r_ii * p(:, ii) &
-              & + r_ii * ans(:, ii - 1) / (r_ii - 2.0_DFP)
-  !!
+  p(1:nrow, ii + 1) = (2.0_DFP * x) * p(1:nrow, ii) - p(1:nrow, ii - 1)
+
+  ans(1:nrow, ii + 1) = 2.0_DFP * r_ii * p(1:nrow, ii) &
+                        + r_ii * ans(1:nrow, ii - 1) / (r_ii - 2.0_DFP)
+
 END DO
-!!
-END PROCEDURE Chebyshev1GradientEvalAll2
+
+END PROCEDURE Chebyshev1GradientEvalAll2_
 
 !----------------------------------------------------------------------------
 !                                             Chebyshev1GradientEval1
