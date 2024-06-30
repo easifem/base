@@ -28,6 +28,7 @@ PUBLIC :: EquidistanceInPoint_Hexahedron
 PUBLIC :: InterpolationPoint_Hexahedron
 PUBLIC :: InterpolationPoint_Hexahedron_
 PUBLIC :: LagrangeCoeff_Hexahedron
+PUBLIC :: LagrangeCoeff_Hexahedron_
 PUBLIC :: EdgeConnectivity_Hexahedron
 PUBLIC :: FacetConnectivity_Hexahedron
 PUBLIC :: QuadratureNumber_Hexahedron
