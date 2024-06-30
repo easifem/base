@@ -47,6 +47,7 @@ PUBLIC :: CellBasis_Hexahedron
 PUBLIC :: HeirarchicalBasis_Hexahedron
 PUBLIC :: QuadraturePoint_Hexahedron
 PUBLIC :: LagrangeEvalAll_Hexahedron
+PUBLIC :: LagrangeEvalAll_Hexahedron_
 PUBLIC :: GetVertexDOF_Hexahedron
 PUBLIC :: GetEdgeDOF_Hexahedron
 PUBLIC :: GetFacetDOF_Hexahedron
@@ -2571,6 +2572,48 @@ INTERFACE LagrangeEvalAll_Hexahedron
 END INTERFACE LagrangeEvalAll_Hexahedron
 
 !----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE LagrangeEvalAll_Hexahedron_
+  MODULE SUBROUTINE LagrangeEvalAll_Hexahedron1_(order, x, xij, ans, tsize, coeff, &
+                                    firstCall, basisType, alpha, beta, lambda)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order of Lagrange polynomials
+    REAL(DFP), INTENT(IN) :: x(3)
+    !! point of evaluation
+    !! x(1) is x coord
+    !! x(2) is y coord
+    !! x(3) is z coord
+    REAL(DFP), INTENT(INOUT) :: xij(:, :)
+    !! Interpolation points
+    !! The number of rows in xij is 3
+    !! The number of columns in xij should be equal to total
+    !! degree of freedom
+    REAL(DFP), INTENT(INOUT) :: ans(:)
+    !! Value of n+1 Lagrange polynomials at point x
+    INTEGER(I4B), INTENT(OUT) :: tsize
+    !! ans(SIZE(xij, 2))
+    REAL(DFP), OPTIONAL, INTENT(INOUT) :: coeff(SIZE(xij, 2), SIZE(xij, 2))
+    !! coefficient of Lagrange polynomials
+    LOGICAL(LGT), OPTIONAL :: firstCall
+    !! If firstCall is true, then coeff will be computed and returned
+    !! by this routine.
+    !! If firstCall is False, then coeff should be given, which will be
+    !! used.
+    !! Default value of firstCall is True
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: basisType
+    !! Monomials *Default
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
+    !! Jacobi parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: beta
+    !! Jacobi parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: lambda
+    !! Ultraspherical parameter
+  END SUBROUTINE LagrangeEvalAll_Hexahedron1_
+END INTERFACE LagrangeEvalAll_Hexahedron_
+
+!----------------------------------------------------------------------------
 !                                                LagrangeEvalAll_Hexahedron
 !----------------------------------------------------------------------------
 
@@ -2623,6 +2666,45 @@ INTERFACE LagrangeEvalAll_Hexahedron
     !! Value of n+1 Lagrange polynomials at point x
   END FUNCTION LagrangeEvalAll_Hexahedron2
 END INTERFACE LagrangeEvalAll_Hexahedron
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE LagrangeEvalAll_Hexahedron_
+  MODULE SUBROUTINE LagrangeEvalAll_Hexahedron2_(order, x, xij, ans, nrow, &
+                       ncol, coeff, firstCall, basisType, alpha, beta, lambda)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! Order of Lagrange polynomials
+    REAL(DFP), INTENT(IN) :: x(:, :)
+    !! Point of evaluation
+    !! x(1, :) is x coord
+    !! x(2, :) is y coord
+    !! x(3, :) is z coord
+    REAL(DFP), INTENT(INOUT) :: xij(:, :)
+    !! Interpolation points
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    !! Value of n+1 Lagrange polynomials at point x
+    !! ans(SIZE(x, 2), SIZE(xij, 2))
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+    !! number of rows and columns in ans
+    REAL(DFP), OPTIONAL, INTENT(INOUT) :: coeff(:, :)
+    !! coeff(SIZE(xij, 2), SIZE(xij, 2))
+    !! Coefficient of Lagrange polynomials
+    LOGICAL(LGT), OPTIONAL :: firstCall
+    !! If firstCall is true, then coeff will be made
+    !! If firstCall is False, then coeff will be used
+    !! Default value of firstCall is True
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: basisType
+    !! Monomials *Default
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
+    !! Jacobi parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: beta
+    !! Jacobi parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: lambda
+    !! Ultraspherical parameter
+  END SUBROUTINE LagrangeEvalAll_Hexahedron2_
+END INTERFACE LagrangeEvalAll_Hexahedron_
 
 !----------------------------------------------------------------------------
 !                                         LagrangeGradientEvalAll_Hexahedron
