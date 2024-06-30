@@ -28,6 +28,7 @@ PUBLIC :: EquidistancePoint_Prism
 PUBLIC :: InterpolationPoint_Prism
 PUBLIC :: InterpolationPoint_Prism_
 PUBLIC :: LagrangeCoeff_Prism
+PUBLIC :: LagrangeCoeff_Prism_
 PUBLIC :: QuadraturePoint_Prism
 PUBLIC :: TensorQuadraturePoint_Prism
 PUBLIC :: RefElemDomain_Prism
