@@ -159,13 +159,9 @@ END PROCEDURE InterpolationPoint_Pyramid_
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE LagrangeCoeff_Pyramid1
-REAL(DFP), DIMENSION(SIZE(xij, 2), SIZE(xij, 2)) :: V
-INTEGER(I4B), DIMENSION(SIZE(xij, 2)) :: ipiv
-INTEGER(I4B) :: info
-ipiv = 0_I4B; ans = 0.0_DFP; ans(i) = 1.0_DFP
-V = LagrangeVandermonde(order=order, xij=xij, elemType=Pyramid)
-CALL GetLU(A=V, IPIV=ipiv, info=info)
-CALL LUSolve(A=V, B=ans, IPIV=ipiv, info=info)
+INTEGER(I4B) :: tsize
+CALL LagrangeCoeff_Pyramid1_(order=order, i=i, xij=xij, ans=ans, &
+                             tsize=tsize)
 END PROCEDURE LagrangeCoeff_Pyramid1
 
 !----------------------------------------------------------------------------
@@ -173,12 +169,9 @@ END PROCEDURE LagrangeCoeff_Pyramid1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE LagrangeCoeff_Pyramid2
-REAL(DFP), DIMENSION(SIZE(v, 1), SIZE(v, 2)) :: vtemp
-INTEGER(I4B), DIMENSION(SIZE(v, 1)) :: ipiv
-INTEGER(I4B) :: info
-vtemp = v; ans = 0.0_DFP; ans(i) = 1.0_DFP; ipiv = 0_I4B
-CALL GetLU(A=vtemp, IPIV=ipiv, info=info)
-CALL LUSolve(A=vtemp, B=ans, IPIV=ipiv, info=info)
+INTEGER(I4B) :: tsize
+CALL LagrangeCoeff_Pyramid2_(order=order, i=i, v=v, &
+                             isVandermonde=.TRUE., ans=ans, tsize=tsize)
 END PROCEDURE LagrangeCoeff_Pyramid2
 
 !----------------------------------------------------------------------------
@@ -186,9 +179,9 @@ END PROCEDURE LagrangeCoeff_Pyramid2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE LagrangeCoeff_Pyramid3
-INTEGER(I4B) :: info
-ans = 0.0_DFP; ans(i) = 1.0_DFP
-CALL LUSolve(A=v, B=ans, IPIV=ipiv, info=info)
+INTEGER(I4B) :: tsize
+CALL LagrangeCoeff_Pyramid3_(order=order, i=i, v=v, ipiv=ipiv, &
+                             ans=ans, tsize=tsize)
 END PROCEDURE LagrangeCoeff_Pyramid3
 
 !----------------------------------------------------------------------------
@@ -196,9 +189,73 @@ END PROCEDURE LagrangeCoeff_Pyramid3
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE LagrangeCoeff_Pyramid4
-ans = LagrangeVandermonde(order=order, xij=xij, elemType=Pyramid)
-CALL GetInvMat(ans)
+INTEGER(I4B) :: nrow, ncol
+
+CALL LagrangeCoeff_Pyramid4_(order=order, xij=xij, basisType=basisType, &
+               refPyramid=refPyramid, alpha=alpha, beta=beta, lambda=lambda, &
+                             ans=ans, nrow=nrow, ncol=ncol)
+
 END PROCEDURE LagrangeCoeff_Pyramid4
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE LagrangeCoeff_Pyramid1_
+REAL(DFP), DIMENSION(SIZE(xij, 2), SIZE(xij, 2)) :: V
+INTEGER(I4B), DIMENSION(SIZE(xij, 2)) :: ipiv
+INTEGER(I4B) :: info, nrow, ncol
+
+tsize = SIZE(xij, 2)
+
+ipiv = 0_I4B; ans(1:tsize) = 0.0_DFP; ans(i) = 1.0_DFP
+
+CALL LagrangeVandermonde_(order=order, xij=xij, elemType=Pyramid, &
+                          ans=V, nrow=nrow, ncol=ncol)
+
+CALL GetLU(A=V, IPIV=ipiv, info=info)
+
+CALL LUSolve(A=V, B=ans(1:tsize), IPIV=ipiv, info=info)
+END PROCEDURE LagrangeCoeff_Pyramid1_
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE LagrangeCoeff_Pyramid2_
+REAL(DFP), DIMENSION(SIZE(v, 1), SIZE(v, 2)) :: vtemp
+INTEGER(I4B), DIMENSION(SIZE(v, 1)) :: ipiv
+INTEGER(I4B) :: info
+
+tsize = SIZE(v, 1)
+
+vtemp = v; ans(1:tsize) = 0.0_DFP; ans(i) = 1.0_DFP; ipiv = 0_I4B
+CALL GetLU(A=vtemp, IPIV=ipiv, info=info)
+CALL LUSolve(A=vtemp, B=ans(1:tsize), IPIV=ipiv, info=info)
+END PROCEDURE LagrangeCoeff_Pyramid2_
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE LagrangeCoeff_Pyramid3_
+INTEGER(I4B) :: info
+
+tsize = SIZE(v, 1)
+
+ans(1:tsize) = 0.0_DFP; ans(i) = 1.0_DFP
+CALL LUSolve(A=v, B=ans(1:tsize), IPIV=ipiv, info=info)
+END PROCEDURE LagrangeCoeff_Pyramid3_
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE LagrangeCoeff_Pyramid4_
+CALL LagrangeVandermonde_(order=order, xij=xij, ans=ans, nrow=nrow, &
+                          ncol=ncol, elemType=Pyramid)
+CALL GetInvMat(ans(1:nrow, 1:ncol))
+END PROCEDURE LagrangeCoeff_Pyramid4_
 
 !----------------------------------------------------------------------------
 !                                                   QuadraturePoint_Pyramid
