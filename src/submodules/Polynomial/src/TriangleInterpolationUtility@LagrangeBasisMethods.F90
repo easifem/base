@@ -217,7 +217,8 @@ MODULE PROCEDURE LagrangeEvalAll_Triangle1_
 LOGICAL(LGT) :: firstCall0
 INTEGER(I4B) :: ii, basisType0, tdof, ncol, nrow
 INTEGER(I4B) :: degree(SIZE(xij, 2), 2)
-REAL(DFP) :: coeff0(SIZE(xij, 2), SIZE(xij, 2)), xx(1, SIZE(xij, 2))
+REAL(DFP) :: coeff0(SIZE(xij, 2), SIZE(xij, 2)), xx(1, SIZE(xij, 2)), &
+             x21(2, 1)
 
 tsize = SIZE(xij, 2)
 
@@ -258,14 +259,16 @@ CASE (polyopt%Monomial)
 
 CASE (polyopt%Hierarchical)
 
+  x21(1:2, 1) = x(1:2)
   CALL HeirarchicalBasis_Triangle_(order=order, pe1=order, &
-                               pe2=order, pe3=order, xij=RESHAPE(x, [2, 1]), &
+                                   pe2=order, pe3=order, xij=x21, &
                         refTriangle=refTriangle, ans=xx, ncol=ncol, nrow=nrow)
 
 CASE (polyopt%Jacobi, polyopt%Orthogonal, polyopt%Legendre, polyopt%Lobatto, &
       polyopt%Ultraspherical)
 
-  CALL Dubiner_Triangle_(order=order, xij=RESHAPE(x, [2, 1]), &
+  x21(1:2, 1) = x(1:2)
+  CALL Dubiner_Triangle_(order=order, xij=x21, &
                         refTriangle=refTriangle, ans=xx, nrow=nrow, ncol=ncol)
 
 END SELECT
