@@ -1680,9 +1680,9 @@ END PROCEDURE LagrangeEvalAll_Quadrangle1
 
 MODULE PROCEDURE LagrangeEvalAll_Quadrangle1_
 LOGICAL(LGT) :: firstCall0
-INTEGER(I4B) :: ii, basisType0, nrow, ncol
-INTEGER(I4B) :: degree(SIZE(xij, 2), 2)
-REAL(DFP) :: coeff0(SIZE(xij, 2), SIZE(xij, 2)), xx(1, SIZE(xij, 2))
+INTEGER(I4B) :: ii, basisType0, degree(SIZE(xij, 2), 2), indx(2)
+REAL(DFP) :: coeff0(SIZE(xij, 2), SIZE(xij, 2)), xx(1, SIZE(xij, 2)), &
+             x21(2, 1)
 
 tsize = SIZE(xij, 2)
 
@@ -1695,7 +1695,7 @@ IF (PRESENT(coeff)) THEN
     CALL LagrangeCoeff_Quadrangle_(order=order, xij=xij, &
                                    basisType=basisType0, alpha=alpha, &
                                    beta=beta, lambda=lambda, &
-                                   ans=coeff, nrow=nrow, ncol=ncol)
+                                   ans=coeff, nrow=indx(1), ncol=indx(2))
   END IF
 
   ! coeff0 = TRANSPOSE(coeff)
@@ -1705,7 +1705,8 @@ ELSE
 
   CALL LagrangeCoeff_Quadrangle_(order=order, xij=xij, &
                 basisType=basisType0, alpha=alpha, beta=beta, lambda=lambda, &
-                                 ans=coeff0, nrow=nrow, ncol=ncol)
+                                 ans=coeff0, nrow=indx(1), ncol=indx(2))
+
   ! coeff0 = TRANSPOSE(coeff0)
 
 END IF
@@ -1714,9 +1715,8 @@ SELECT CASE (basisType0)
 
 CASE (Monomial)
 
-  degree = LagrangeDegree_Quadrangle(order=order)
-! CALL LagrangeDegree_Quadrangle_(order=order, ans=degree, nrow=nrow, ncol=ncol)
-
+  CALL LagrangeDegree_Quadrangle_(order=order, ans=degree, nrow=indx(1), &
+                                  ncol=indx(2))
 #ifdef DEBUG_VER
 
   IF (tsize .NE. SIZE(degree, 1)) THEN
@@ -1729,29 +1729,24 @@ CASE (Monomial)
 #endif
 
   DO ii = 1, tsize
-    xx(1, ii) = x(1)**degree(ii, 1) * x(2)**degree(ii, 2)
+    indx(1:2) = degree(ii, 1:2)
+    xx(1, ii) = x(1)**indx(1) * x(2)**indx(2)
   END DO
 
 CASE (Heirarchical)
 
   ! xx = HeirarchicalBasis_Quadrangle( &
-  ! CALL HeirarchicalBasis_Quadrangle_(p=order, q=order, &
-  !                        xij=RESHAPE(x, [2, 1]), ans=xx, nrow=nrow, ncol=ncol)
+  x21(1:2, 1) = x(1:2)
+  CALL HeirarchicalBasis_Quadrangle_(p=order, q=order, &
+                                  xij=x21, ans=xx, nrow=indx(1), ncol=indx(2))
 
 CASE DEFAULT
 
-  xx = TensorProdBasis_Quadrangle( &
-    & p=order, &
-    & q=order, &
-    & xij=RESHAPE(x, [2, 1]),  &
-    & basisType1=basisType0, &
-    & basisType2=basisType0, &
-    & alpha1=alpha, &
-    & beta1=beta, &
-    & lambda1=lambda, &
-    & alpha2=alpha, &
-    & beta2=beta, &
-    & lambda2=lambda)
+  x21(1:2, 1) = x(1:2)
+  CALL TensorProdBasis_Quadrangle_(p=order, q=order, xij=x21, &
+     basisType1=basisType0, basisType2=basisType0, alpha1=alpha, beta1=beta, &
+           lambda1=lambda, alpha2=alpha, beta2=beta, lambda2=lambda, ans=xx, &
+                                   nrow=indx(1), ncol=indx(2))
 
 END SELECT
 
@@ -1762,91 +1757,98 @@ END DO
 END PROCEDURE LagrangeEvalAll_Quadrangle1_
 
 !----------------------------------------------------------------------------
-!                                               LagrangeEvalAll_Quadrangle2
+!
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE LagrangeEvalAll_Quadrangle2
+INTEGER(I4B) :: nrow, ncol
+CALL LagrangeEvalAll_Quadrangle2_(order=order, x=x, xij=xij, ans=ans, &
+                     nrow=nrow, ncol=ncol, coeff=coeff, firstCall=firstCall, &
+                   basisType=basisType, alpha=alpha, beta=beta, lambda=lambda)
+END PROCEDURE LagrangeEvalAll_Quadrangle2
+
+!----------------------------------------------------------------------------
+!                                               LagrangeEvalAll_Quadrangle2
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE LagrangeEvalAll_Quadrangle2_
 LOGICAL(LGT) :: firstCall0
-INTEGER(I4B) :: ii, basisType0, tdof
-INTEGER(I4B) :: degree(SIZE(xij, 2), 2)
-REAL(DFP) :: coeff0(SIZE(xij, 2), SIZE(xij, 2))
-REAL(DFP) :: xx(SIZE(x, 2), SIZE(xij, 2))
+INTEGER(I4B) :: ii, jj, basisType0, indx(2), degree(SIZE(xij, 2), 2)
+REAL(DFP) :: coeff0(SIZE(xij, 2), SIZE(xij, 2)) ,xx(SIZE(x, 2), SIZE(xij, 2)), &
+             aval
+
+nrow = SIZE(x, 2)
+ncol = SIZE(xij, 2)
 
 basisType0 = INPUT(default=Monomial, option=basisType)
 firstCall0 = INPUT(default=.TRUE., option=firstCall)
 
 IF (PRESENT(coeff)) THEN
+
   IF (firstCall0) THEN
-    coeff = LagrangeCoeff_Quadrangle(&
-      & order=order, &
-      & xij=xij, &
-      & basisType=basisType0, &
-      & alpha=alpha, &
-      & beta=beta, &
-      & lambda=lambda &
-      & )
-    coeff0 = coeff
-  ELSE
-    coeff0 = coeff
+
+    ! coeff = LagrangeCoeff_Quadrangle(&
+    CALL LagrangeCoeff_Quadrangle_(order=order, xij=xij, &
+                basisType=basisType0, alpha=alpha, beta=beta, lambda=lambda, &
+                                   ans=coeff, nrow=indx(1), ncol=indx(2))
   END IF
+
+  coeff0(1:ncol, 1:ncol) = coeff(1:ncol, 1:ncol)
+
 ELSE
-  coeff0 = LagrangeCoeff_Quadrangle(&
-    & order=order, &
-    & xij=xij, &
-    & basisType=basisType0, &
-    & alpha=alpha, &
-    & beta=beta, &
-    & lambda=lambda &
-    & )
+
+  ! coeff0 = LagrangeCoeff_Quadrangle(&
+  CALL LagrangeCoeff_Quadrangle_(order=order, xij=xij, &
+    basisType=basisType0, alpha=alpha, beta=beta, lambda=lambda, ans=coeff0, &
+                                 nrow=indx(1), ncol=indx(2))
+
 END IF
 
 SELECT CASE (basisType0)
 
 CASE (Monomial)
 
-  degree = LagrangeDegree_Quadrangle(order=order)
-  tdof = SIZE(xij, 2)
+  ! degree = LagrangeDegree_Quadrangle(order=order)
+  CALL LagrangeDegree_Quadrangle_(order=order, ans=degree, nrow=indx(1), &
+                                  ncol=indx(2))
 
-  IF (tdof .NE. SIZE(degree, 1)) THEN
-    CALL Errormsg(&
-      & msg="tdof is not same as size(degree,1)", &
-      & file=__FILE__, &
-      & routine="LagrangeEvalAll_Quadrangle1", &
-      & line=__LINE__, &
-      & unitno=stderr)
+#ifdef DEBUG_VER
+  IF (ncol .NE. SIZE(degree, 1)) THEN
+    CALL Errormsg(msg="tdof is not same as size(degree,1)", &
+        routine="LagrangeEvalAll_Quadrangle1", file=__FILE__, line=__LINE__, &
+                  unitno=stderr)
+    RETURN
   END IF
+#endif
 
-  DO ii = 1, tdof
-    xx(:, ii) = x(1, :)**degree(ii, 1) * x(2, :)**degree(ii, 2)
+  DO ii = 1, ncol
+    indx(1:2) = degree(ii, 1:2)
+    DO jj = 1, nrow
+      aval = x(1, jj)**indx(1) * x(2, jj)**indx(2)
+      xx(jj, ii) = aval
+    END DO
   END DO
 
 CASE (Heirarchical)
 
-  xx = HeirarchicalBasis_Quadrangle( &
-    & p=order, &
-    & q=order,  &
-    & xij=x)
+  ! xx = HeirarchicalBasis_Quadrangle( &
+  CALL HeirarchicalBasis_Quadrangle_(p=order, q=order, xij=x, ans=xx, &
+                                     nrow=indx(1), ncol=indx(2))
 
 CASE DEFAULT
 
-  xx = TensorProdBasis_Quadrangle( &
-    & p=order, &
-    & q=order, &
-    & xij=x,  &
-    & basisType1=basisType0, &
-    & basisType2=basisType0, &
-    & alpha1=alpha, &
-    & beta1=beta, &
-    & lambda1=lambda, &
-    & alpha2=alpha, &
-    & beta2=beta, &
-    & lambda2=lambda)
+  ! xx = TensorProdBasis_Quadrangle( &
+  CALL TensorProdBasis_Quadrangle_(p=order, q=order, xij=x, &
+     basisType1=basisType0, basisType2=basisType0, alpha1=alpha, beta1=beta, &
+           lambda1=lambda, alpha2=alpha, beta2=beta, lambda2=lambda, ans=xx, &
+                                   nrow=indx(1), ncol=indx(2))
 
 END SELECT
 
-ans = MATMUL(xx, coeff0)
+! ans = MATMUL(xx, coeff0)
+CALL GEMM(C=ans(1:nrow, 1:ncol), alpha=1.0_DFP, A=xx, B=coeff0)
 
-END PROCEDURE LagrangeEvalAll_Quadrangle2
+END PROCEDURE LagrangeEvalAll_Quadrangle2_
 
 !----------------------------------------------------------------------------
 !                                              QuadraturePoint_Quadrangle
