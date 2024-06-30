@@ -318,28 +318,41 @@ END PROCEDURE TensorQuadraturePoint_Pyramid2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE LagrangeEvalAll_Pyramid1
-!FIX: LagrangeEvalAll_Pyramid1
-CALL ErrorMsg(&
-& msg="Work in progress",  &
-& unitno=stdout,  &
-& line=__LINE__,  &
-& routine="LagrangeEvalAll_Pyramid1()", &
-& file=__FILE__)
+INTEGER(I4B) :: tsize
+
 END PROCEDURE LagrangeEvalAll_Pyramid1
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE LagrangeEvalAll_Pyramid1_
+!FIX: LagrangeEvalAll_Pyramid1
+CALL ErrorMsg(msg="Work in progress", routine="LagrangeEvalAll_Pyramid1()", &
+              unitno=stdout, line=__LINE__, file=__FILE__)
+END PROCEDURE LagrangeEvalAll_Pyramid1_
 
 !----------------------------------------------------------------------------
 !                                             LagrangeEvalAll_Pyramid
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE LagrangeEvalAll_Pyramid2
-!FIX: LagrangeEvalAll_Pyramid2
-CALL ErrorMsg(&
-& msg="Work in progress",  &
-& unitno=stdout,  &
-& line=__LINE__,  &
-& routine="LagrangeEvalAll_Pyramid2()", &
-& file=__FILE__)
+INTEGER(I4B) :: nrow, ncol
+CALL LagrangeEvalAll_Pyramid2_(order=order, x=x, xij=xij, ans=ans, &
+                   nrow=nrow, ncol=ncol, refPyramid=refPyramid, coeff=coeff, &
+           firstCall=firstCall, basisType=basisType, alpha=alpha, beta=beta, &
+                               lambda=lambda)
 END PROCEDURE LagrangeEvalAll_Pyramid2
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE LagrangeEvalAll_Pyramid2_
+!FIX: LagrangeEvalAll_Pyramid2
+CALL ErrorMsg(msg="Work in progress", unitno=stdout, line=__LINE__, &
+              routine="LagrangeEvalAll_Pyramid2()", file=__FILE__)
+END PROCEDURE LagrangeEvalAll_Pyramid2_
 
 !----------------------------------------------------------------------------
 !                                          LagrangeGradientEvalAll_Pyramid

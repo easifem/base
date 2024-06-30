@@ -33,6 +33,7 @@ PUBLIC :: QuadraturePoint_Pyramid
 PUBLIC :: TensorQuadraturePoint_Pyramid
 PUBLIC :: RefElemDomain_Pyramid
 PUBLIC :: LagrangeEvalAll_Pyramid
+PUBLIC :: LagrangeEvalAll_Pyramid_
 PUBLIC :: LagrangeGradientEvalAll_Pyramid
 PUBLIC :: EdgeConnectivity_Pyramid
 PUBLIC :: FacetConnectivity_Pyramid
@@ -690,6 +691,58 @@ INTERFACE LagrangeEvalAll_Pyramid
 END INTERFACE LagrangeEvalAll_Pyramid
 
 !----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE LagrangeEvalAll_Pyramid_
+  MODULE SUBROUTINE LagrangeEvalAll_Pyramid1_(order, x, xij, ans, tsize, &
+                 refPyramid, coeff, firstCall, basisType, alpha, beta, lambda)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order of Lagrange polynomials
+    REAL(DFP), INTENT(IN) :: x(3)
+    !! point of evaluation
+    !! x(1) is x coord
+    !! x(2) is y coord
+    !! x(3) is z coord
+    REAL(DFP), INTENT(INOUT) :: xij(:, :)
+    !! Interpolation points
+    !! The number of rows in xij is 3
+    !! The number of columns in xij should be equal to total
+    !! degree of freedom
+    REAL(DFP), INTENT(INOUT) :: ans(:)
+    !! Value of n+1 Lagrange polynomials at point x
+    INTEGER(I4B), INTENT(OUT) :: tsize
+    !! ans(SIZE(xij, 2))
+    CHARACTER(*), OPTIONAL, INTENT(IN) :: refPyramid
+    !! UNIT *default
+    !! BIUNIT
+    REAL(DFP), OPTIONAL, INTENT(INOUT) :: coeff(SIZE(xij, 2), SIZE(xij, 2))
+    !! coefficient of Lagrange polynomials
+    LOGICAL(LGT), OPTIONAL :: firstCall
+    !! If firstCall is true, then coeff will be computed and returned
+    !! by this routine.
+    !! If firstCall is False, then coeff should be given, which will be
+    !! used.
+    !! Default value of firstCall is True
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: basisType
+    !! Monomials *Default
+    !! Legendre
+    !! Lobatto
+    !! Chebyshev
+    !! Jacobi
+    !! Ultraspherical
+    !! Heirarchical
+    !! Orthogonal
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
+    !! Jacobi parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: beta
+    !! Jacobi parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: lambda
+    !! Ultraspherical parameter
+  END SUBROUTINE LagrangeEvalAll_Pyramid1_
+END INTERFACE LagrangeEvalAll_Pyramid_
+
+!----------------------------------------------------------------------------
 !                                                LagrangeEvalAll_Pyramid
 !----------------------------------------------------------------------------
 
@@ -747,6 +800,54 @@ INTERFACE LagrangeEvalAll_Pyramid
     !! Value of n+1 Lagrange polynomials at point x
   END FUNCTION LagrangeEvalAll_Pyramid2
 END INTERFACE LagrangeEvalAll_Pyramid
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE LagrangeEvalAll_Pyramid_
+  MODULE SUBROUTINE LagrangeEvalAll_Pyramid2_(order, x, xij, ans, nrow, &
+           ncol, refPyramid, coeff, firstCall, basisType, alpha, beta, lambda)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! Order of Lagrange polynomials
+    REAL(DFP), INTENT(IN) :: x(:, :)
+    !! Point of evaluation
+    !! x(1, :) is x coord
+    !! x(2, :) is y coord
+    !! x(3, :) is z coord
+    REAL(DFP), INTENT(INOUT) :: xij(:, :)
+    !! Interpolation points
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    !! Value of n+1 Lagrange polynomials at point x
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+    !! nrow = SIZE(x, 2),
+    !! ncol = SIZE(xij, 2)
+    CHARACTER(*), OPTIONAL, INTENT(IN) :: refPyramid
+    !! UNIT *default
+    !! BIUNIT
+    REAL(DFP), OPTIONAL, INTENT(INOUT) :: coeff(SIZE(xij, 2), SIZE(xij, 2))
+    !! Coefficient of Lagrange polynomials
+    LOGICAL(LGT), OPTIONAL :: firstCall
+    !! If firstCall is true, then coeff will be made
+    !! If firstCall is False, then coeff will be used
+    !! Default value of firstCall is True
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: basisType
+    !! Monomials *Default
+    !! Legendre
+    !! Lobatto
+    !! Chebyshev
+    !! Jacobi
+    !! Ultraspherical
+    !! Heirarchical
+    !! Orthogonal
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
+    !! Jacobi parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: beta
+    !! Jacobi parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: lambda
+    !! Ultraspherical parameter
+  END SUBROUTINE LagrangeEvalAll_Pyramid2_
+END INTERFACE LagrangeEvalAll_Pyramid_
 
 !----------------------------------------------------------------------------
 !                                       LagrangeGradientEvalAll_Pyramid

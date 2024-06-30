@@ -311,28 +311,42 @@ END PROCEDURE TensorQuadraturePoint_Prism2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE LagrangeEvalAll_Prism1
-! FIX: Implement LagrangeEvalAll_Prism1
-CALL ErrorMsg(&
-& msg="Work in progress",  &
-& unitno=stdout,  &
-& line=__LINE__,  &
-& routine="LagrangeEvalAll_Prism1()", &
-& file=__FILE__)
+INTEGER(I4B) :: tsize
+CALL LagrangeEvalAll_Prism1_(order=order, x=x, xij=xij, ans=ans, &
+           tsize=tsize, refPrism=refPrism, coeff=coeff, firstCall=firstCall, &
+                   basisType=basisType, alpha=alpha, beta=beta, lambda=lambda)
 END PROCEDURE LagrangeEvalAll_Prism1
 
 !----------------------------------------------------------------------------
 !                                             LagrangeEvalAll_Prism
 !----------------------------------------------------------------------------
 
+MODULE PROCEDURE LagrangeEvalAll_Prism1_
+! FIX: Implement LagrangeEvalAll_Prism1
+CALL ErrorMsg(msg="Work in progress", routine="LagrangeEvalAll_Prism1_()", &
+              unitno=stdout, line=__LINE__, file=__FILE__)
+END PROCEDURE LagrangeEvalAll_Prism1_
+
+!----------------------------------------------------------------------------
+!                                             LagrangeEvalAll_Prism
+!----------------------------------------------------------------------------
+
 MODULE PROCEDURE LagrangeEvalAll_Prism2
-! FIX: Implement LagrangeEvalAll_Prism2
-CALL ErrorMsg(&
-& msg="Work in progress",  &
-& unitno=stdout,  &
-& line=__LINE__,  &
-& routine="LagrangeEvalAll_Prism2()", &
-& file=__FILE__)
+INTEGER(I4B) :: nrow, ncol
+CALL LagrangeEvalAll_Prism2_(order=order, x=x, xij=xij, ans=ans, nrow=nrow, &
+             ncol=ncol, refPrism=refPrism, coeff=coeff, firstCall=firstCall, &
+                   basisType=basisType, alpha=alpha, beta=beta, lambda=lambda)
 END PROCEDURE LagrangeEvalAll_Prism2
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE LagrangeEvalAll_Prism2_
+! FIX: Implement LagrangeEvalAll_Prism2
+CALL ErrorMsg(msg="Work in progress", routine="LagrangeEvalAll_Prism2_()", &
+              unitno=stdout, line=__LINE__, file=__FILE__)
+END PROCEDURE LagrangeEvalAll_Prism2_
 
 !----------------------------------------------------------------------------
 !                                             LagrangeGradientEvalAll_Prism
