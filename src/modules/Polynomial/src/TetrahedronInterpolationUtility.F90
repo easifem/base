@@ -27,8 +27,7 @@ PUBLIC :: LagrangeInDOF_Tetrahedron
 PUBLIC :: EquidistanceInPoint_Tetrahedron
 PUBLIC :: EquidistancePoint_Tetrahedron
 PUBLIC :: LagrangeCoeff_Tetrahedron
-! PUBLIC :: Isaac_Tetrahedron
-! PUBLIC :: BlythPozrikidis_Tetrahedron
+PUBLIC :: LagrangeCoeff_Tetrahedron_
 PUBLIC :: InterpolationPoint_Tetrahedron
 PUBLIC :: InterpolationPoint_Tetrahedron_
 PUBLIC :: OrthogonalBasis_Tetrahedron
@@ -49,6 +48,7 @@ PUBLIC :: GetEdgeDOF_Tetrahedron
 PUBLIC :: GetFacetDOF_Tetrahedron
 PUBLIC :: GetCellDOF_Tetrahedron
 PUBLIC :: LagrangeEvalAll_Tetrahedron
+PUBLIC :: LagrangeEvalAll_Tetrahedron_
 PUBLIC :: QuadraturePoint_Tetrahedron
 PUBLIC :: RefElemDomain_Tetrahedron
 PUBLIC :: LagrangeGradientEvalAll_Tetrahedron
@@ -279,6 +279,18 @@ INTERFACE
     INTEGER(I4B), INTENT(IN) :: order
     INTEGER(I4B), ALLOCATABLE :: ans(:, :)
   END FUNCTION LagrangeDegree_Tetrahedron
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE
+  MODULE PURE SUBROUTINE LagrangeDegree_Tetrahedron_(order, ans, nrow, ncol)
+    INTEGER(I4B), INTENT(IN) :: order
+    INTEGER(I4B), INTENT(INOUT) :: ans(:, :)
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+  END SUBROUTINE LagrangeDegree_Tetrahedron_
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -823,6 +835,34 @@ INTERFACE OrthogonalBasis_Tetrahedron
 END INTERFACE OrthogonalBasis_Tetrahedron
 
 !----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE OrthogonalBasis_Tetrahedron_
+  MODULE SUBROUTINE OrthogonalBasis_Tetrahedron1_(order, xij, &
+                                              refTetrahedron, ans, nrow, ncol)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order of polynomial space
+    REAL(DFP), INTENT(IN) :: xij(:, :)
+    !! Points of evaluation in reference Tetrahedron.
+    !! The shape functions will be evaluated
+    !! at these points.
+    !! the SIZE(xij,1) = 3, and SIZE(xij, 2) = number of points
+    CHARACTER(*), INTENT(IN) :: refTetrahedron
+    !! "UNIT"
+    !! "BIUNIT"
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    !! shape functions
+    !! ans(:, j), jth shape functions at all points
+    !! ans(j, :), all shape functions at jth point
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+    !! number of rows and columns
+   !! nrow = SIZE(xij, 2)
+   !! ncol = (order + 1) * (order + 2) * (order + 3) / 6
+  END SUBROUTINE OrthogonalBasis_Tetrahedron1_
+END INTERFACE OrthogonalBasis_Tetrahedron_
+
+!----------------------------------------------------------------------------
 !                                                OrthogonalBasis_Tetrahedron
 !----------------------------------------------------------------------------
 
@@ -855,6 +895,34 @@ INTERFACE OrthogonalBasis_Tetrahedron
 END INTERFACE OrthogonalBasis_Tetrahedron
 
 !----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE OrthogonalBasis_Tetrahedron_
+  MODULE SUBROUTINE OrthogonalBasis_Tetrahedron2_(order, x, y, z, &
+                                              refTetrahedron, ans, nrow, ncol)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order of polynomial space
+    REAL(DFP), INTENT(IN) :: x(:)
+    !! x coordinates, total points = SIZE(x)*SIZE(y)*SIZE(z)
+    REAL(DFP), INTENT(IN) :: y(:)
+    !! y coordinates, total points = SIZE(x)*SIZE(y)*SIZE(z)
+    REAL(DFP), INTENT(IN) :: z(:)
+    !! z coordinates, total points = SIZE(x)*SIZE(y)*SIZE(z)
+    CHARACTER(*), INTENT(IN) :: refTetrahedron
+    !! "UNIT"
+    !! "BIUNIT"
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    !! shape functions
+    !! ans(:, j), jth shape functions at all points
+    !! ans(j, :), all shape functions at jth point
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+    !! nrow = SIZE(x) * SIZE(y) * SIZE(z)
+    !! ncol = (order + 1) * (order + 2) * (order + 3) / 6
+  END SUBROUTINE OrthogonalBasis_Tetrahedron2_
+END INTERFACE OrthogonalBasis_Tetrahedron_
+
+!----------------------------------------------------------------------------
 !                                          BarycentricVertexBasis_Tetrahedron
 !----------------------------------------------------------------------------
 
@@ -875,6 +943,24 @@ INTERFACE
 END INTERFACE
 
 !----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE
+  MODULE PURE SUBROUTINE BarycentricVertexBasis_Tetrahedron_(lambda, ans, &
+                                                             nrow, ncol)
+    REAL(DFP), INTENT(IN) :: lambda(:, :)
+    !! point of evaluation in terms of barycentrix coords
+    !! number of rows = 4
+    !! number of columns = number of points
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    !! ans(SIZE(lambda, 2), 4)
+    !! ans(:,v1) basis function of vertex v1 at all points
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+  END SUBROUTINE BarycentricVertexBasis_Tetrahedron_
+END INTERFACE
+
+!----------------------------------------------------------------------------
 !                                          BarycentricVertexBasis_Tetrahedron
 !----------------------------------------------------------------------------
 
@@ -884,7 +970,7 @@ END INTERFACE
 
 INTERFACE
   MODULE PURE FUNCTION BarycentricVertexBasisGradient_Tetrahedron(lambda) &
-    & RESULT(ans)
+    RESULT(ans)
     REAL(DFP), INTENT(IN) :: lambda(:, :)
     !! point of evaluation in terms of barycentrix coords
     !! number of rows = 4
@@ -911,15 +997,8 @@ END INTERFACE
 ! pe1, pe2, pe3 should be greater than or equal to 2
 
 INTERFACE
-  MODULE PURE FUNCTION BarycentricEdgeBasis_Tetrahedron( &
-    & pe1, &
-    & pe2, &
-    & pe3, &
-    & pe4, &
-    & pe5, &
-    & pe6, &
-    & lambda  &
-    & ) RESULT(ans)
+  MODULE PURE FUNCTION BarycentricEdgeBasis_Tetrahedron(pe1, pe2, pe3, pe4, &
+                                                 pe5, pe6, lambda) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: pe1
     !! order on  edge parallel to x
     INTEGER(I4B), INTENT(IN) :: pe2
@@ -942,6 +1021,35 @@ INTERFACE
 END INTERFACE
 
 !----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE
+  MODULE PURE SUBROUTINE BarycentricEdgeBasis_Tetrahedron_(pe1, pe2, pe3, &
+                                       pe4, pe5, pe6, lambda, ans, nrow, ncol)
+    INTEGER(I4B), INTENT(IN) :: pe1
+    !! order on  edge parallel to x
+    INTEGER(I4B), INTENT(IN) :: pe2
+    !! order on  edge parallel to y
+    INTEGER(I4B), INTENT(IN) :: pe3
+    !! order on  edge parallel to z
+    INTEGER(I4B), INTENT(IN) :: pe4
+    !! order on  edge parallel to xy
+    INTEGER(I4B), INTENT(IN) :: pe5
+    !! order on  edge parallel to xz
+    INTEGER(I4B), INTENT(IN) :: pe6
+    !! order on  edge parallel to yz
+    REAL(DFP), INTENT(IN) :: lambda(:, :)
+    !! point of evaluation in terms of barycentric coordinates
+    !! Number of rows in lambda is equal to 4
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    !! nrow = SIZE(lambda, 2)
+    !! ncol = pe1 + pe2 + pe3 + pe4 + pe5 + pe6 - 6
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+  END SUBROUTINE BarycentricEdgeBasis_Tetrahedron_
+END INTERFACE
+
+!----------------------------------------------------------------------------
 !                                           BarycentricEdgeBasis_Tetrahedron
 !----------------------------------------------------------------------------
 
@@ -950,15 +1058,8 @@ END INTERFACE
 ! summary: Evaluate the edge basis on Tetrahedron in terms of barycentric
 
 INTERFACE
-  MODULE PURE FUNCTION BarycentricEdgeBasis_Tetrahedron2( &
-    & pe1, &
-    & pe2, &
-    & pe3, &
-    & pe4, &
-    & pe5, &
-    & pe6, &
-    & lambda, &
-    & phi) RESULT(ans)
+  MODULE PURE FUNCTION BarycentricEdgeBasis_Tetrahedron2(pe1, pe2, pe3, &
+                                       pe4, pe5, pe6, lambda, phi) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: pe1
     !! order on  edge parallel to x
     INTEGER(I4B), INTENT(IN) :: pe2
@@ -984,6 +1085,41 @@ INTERFACE
       & SIZE(lambda, 2), &
       & pe1 + pe2 + pe3 + pe4 + pe5 + pe6 - 6)
   END FUNCTION BarycentricEdgeBasis_Tetrahedron2
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE
+  MODULE PURE SUBROUTINE BarycentricEdgeBasis_Tetrahedron2_(pe1, pe2, pe3, &
+                                  pe4, pe5, pe6, lambda, phi, ans, nrow, ncol)
+    INTEGER(I4B), INTENT(IN) :: pe1
+    !! order on  edge parallel to x
+    INTEGER(I4B), INTENT(IN) :: pe2
+    !! order on  edge parallel to y
+    INTEGER(I4B), INTENT(IN) :: pe3
+    !! order on  edge parallel to z
+    INTEGER(I4B), INTENT(IN) :: pe4
+    !! order on  edge parallel to xy
+    INTEGER(I4B), INTENT(IN) :: pe5
+    !! order on  edge parallel to xz
+    INTEGER(I4B), INTENT(IN) :: pe6
+    !! order on  edge parallel to yz
+    REAL(DFP), INTENT(IN) :: lambda(:, :)
+    !! point of evaluation in terms of barycentric coordinates
+    !! size(lambda,1) = 4
+    !! size(lambda,2) = number of points of evaluation
+    REAL(DFP), INTENT(IN) :: phi(1:, 0:)
+    !! lobatto kernel values
+    !! size(phi1, 1) = 3*number of points (lambda2-lambda1),
+    !! (lambda3-lambda1), (lambda3-lambda2)
+    !! size(phi1, 2) = max(pe1-2, pe2-2, pe3-2)+1
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    !! nrow = SIZE(lambda, 2)
+    !! ncol = pe1 + pe2 + pe3 + pe4 + pe5 + pe6 - 6
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+  END SUBROUTINE BarycentricEdgeBasis_Tetrahedron2_
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -1085,6 +1221,32 @@ INTERFACE
 END INTERFACE
 
 !----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE
+  MODULE PURE SUBROUTINE BarycentricFacetBasis_Tetrahedron_(ps1, ps2, ps3, &
+                                                 ps4, lambda, ans, nrow, ncol)
+    INTEGER(I4B), INTENT(IN) :: ps1
+    !! order on  facet parallel to xy
+    INTEGER(I4B), INTENT(IN) :: ps2
+    !! order on  facet parallel to xz
+    INTEGER(I4B), INTENT(IN) :: ps3
+    !! order on  facet parallel to yz
+    INTEGER(I4B), INTENT(IN) :: ps4
+    !! order on  facet parallel to xyz
+    REAL(DFP), INTENT(IN) :: lambda(:, :)
+    !! point of evaluation in terms of barycentric coordinates
+    !! Number of rows in lambda is equal to 4
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+    !! nrow = SIZE(lambda, 2)
+    !! ncol = (ps1 - 1) * (ps1 - 2) / 2  + (ps2 - 1) * (ps2 - 2) / 2  &
+    !! + (ps3 - 1) * (ps3 - 2) / 2   + (ps4 - 1) * (ps4 - 2) / 2
+  END SUBROUTINE BarycentricFacetBasis_Tetrahedron_
+END INTERFACE
+
+!----------------------------------------------------------------------------
 !                                         BarycentricFacetBasis_Tetrahedron
 !----------------------------------------------------------------------------
 
@@ -1124,6 +1286,37 @@ INTERFACE
       & + (ps3 - 1) * (ps3 - 2) / 2  &
       & + (ps4 - 1) * (ps4 - 2) / 2)
   END FUNCTION BarycentricFacetBasis_Tetrahedron2
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE
+  MODULE PURE SUBROUTINE BarycentricFacetBasis_Tetrahedron2_(ps1, ps2, ps3, &
+                                            ps4, lambda, phi, ans, nrow, ncol)
+    INTEGER(I4B), INTENT(IN) :: ps1
+    !! order on  edge parallel to xy
+    INTEGER(I4B), INTENT(IN) :: ps2
+    !! order on  edge parallel to xz
+    INTEGER(I4B), INTENT(IN) :: ps3
+    !! order on  edge parallel to yz
+    INTEGER(I4B), INTENT(IN) :: ps4
+    !! order on  edge parallel to xyz
+    REAL(DFP), INTENT(IN) :: lambda(:, :)
+    !! point of evaluation in terms of barycentric coordinates
+    !! Number of rows in lambda is equal to 4
+    REAL(DFP), INTENT(IN) :: phi(1:, 0:)
+    !! lobatto kernel values
+    !! size(phi1, 1) = 3*number of points (lambda2-lambda1),
+    !! (lambda3-lambda1), (lambda3-lambda2)
+    !! size(phi1, 2) = max(pe1-2, pe2-2, pe3-2)+1
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    !! nrow = SIZE(lambda, 2)
+    !! ncol = (ps1 - 1) * (ps1 - 2) / 2  + (ps2 - 1) * (ps2 - 2) / 2  &
+    !! + (ps3 - 1) * (ps3 - 2) / 2  + (ps4 - 1) * (ps4 - 2) / 2
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+  END SUBROUTINE BarycentricFacetBasis_Tetrahedron2_
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -1210,6 +1403,25 @@ INTERFACE
 END INTERFACE
 
 !----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE
+  MODULE PURE SUBROUTINE BarycentricCellBasis_Tetrahedron_(pb, lambda, ans, &
+                                                           nrow, ncol)
+    INTEGER(I4B), INTENT(IN) :: pb
+    !! order on  facet parallel to xy
+    REAL(DFP), INTENT(IN) :: lambda(:, :)
+    !! point of evaluation in terms of barycentric coordinates
+    !! Number of rows in lambda is equal to 4
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+    !! nrow = SIZE(lambda, 2)
+    !! ncol = (pb - 1) * (pb - 2) * (pb - 3) / 6_I4B
+  END SUBROUTINE BarycentricCellBasis_Tetrahedron_
+END INTERFACE
+
+!----------------------------------------------------------------------------
 !                                          BarycentricCellBasis_Tetrahedron
 !----------------------------------------------------------------------------
 
@@ -1238,6 +1450,34 @@ INTERFACE
       & SIZE(lambda, 2), &
       & (pb - 1) * (pb - 2) * (pb - 3) / 6_I4B)
   END FUNCTION BarycentricCellBasis_Tetrahedron2
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE
+  MODULE PURE SUBROUTINE BarycentricCellBasis_Tetrahedron2_(pb, lambda, phi, &
+                                                            ans, nrow, ncol)
+    INTEGER(I4B), INTENT(IN) :: pb
+    !! order on  facet parallel to xy
+    REAL(DFP), INTENT(IN) :: lambda(:, :)
+    !! point of evaluation in terms of barycentric coordinates
+    !! Number of rows in lambda is equal to 4
+    REAL(DFP), INTENT(IN) :: phi(1:, 0:)
+    !! Value of lobatto kernel values
+    !! size(phi1, 1) = 6*number of points
+    !! - (lambda2-lambda1)
+    !! - (lambda3-lambda1)
+    !! - (lambda4-lambda1)
+    !! - (lambda3-lambda2)
+    !! - (lambda4-lambda2)
+    !! - (lambda4-lambda3)
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+    !! nrow = SIZE(lambda, 2)
+    !! ncol = (pb - 1) * (pb - 2) * (pb - 3) / 6_I4B
+  END SUBROUTINE BarycentricCellBasis_Tetrahedron2_
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -1293,20 +1533,8 @@ END INTERFACE
 ! summary: Evaluate all modal basis (heirarchical polynomial) on Tetrahedron
 
 INTERFACE BarycentricHeirarchicalBasis_Tetrahedron
-  MODULE PURE FUNCTION BarycentricHeirarchicalBasis_Tetrahedron1( &
-    & order, &
-    & pe1,  &
-    & pe2, &
-    & pe3, &
-    & pe4, &
-    & pe5, &
-    & pe6, &
-    & ps1, &
-    & ps2, &
-    & ps3, &
-    & ps4, &
-    & lambda &
-    & ) RESULT(ans)
+  MODULE PURE FUNCTION BarycentricHeirarchicalBasis_Tetrahedron1(order, &
+         pe1, pe2, pe3, pe4, pe5, pe6, ps1, ps2, ps3, ps4, lambda) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
     !! order in the cell of triangle, it should be greater than 2
     INTEGER(I4B), INTENT(IN) :: pe1
@@ -1346,6 +1574,91 @@ INTERFACE BarycentricHeirarchicalBasis_Tetrahedron
 END INTERFACE BarycentricHeirarchicalBasis_Tetrahedron
 
 !----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE BarycentricHeirarchicalBasis_Tetrahedron_
+  MODULE PURE SUBROUTINE BarycentricHeirarchicalBasis_Tetrahedron1_(order, &
+    pe1, pe2, pe3, pe4, pe5, pe6, ps1, ps2, ps3, ps4, lambda, ans, nrow, ncol)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order in the cell of triangle, it should be greater than 2
+    INTEGER(I4B), INTENT(IN) :: pe1
+    !! order of interpolation on edge parallel to x
+    INTEGER(I4B), INTENT(IN) :: pe2
+    !! order of interpolation on edge parallel to y
+    INTEGER(I4B), INTENT(IN) :: pe3
+    !! order of interpolation on edge parallel to z
+    INTEGER(I4B), INTENT(IN) :: pe4
+    !! order of interpolation on edge parallel to xy
+    INTEGER(I4B), INTENT(IN) :: pe5
+    !! order of interpolation on edge parallel to xz
+    INTEGER(I4B), INTENT(IN) :: pe6
+    !! order of interpolation on edge parallel to yz
+    INTEGER(I4B), INTENT(IN) :: ps1
+    !! order of interpolation on facet parallel to xy
+    INTEGER(I4B), INTENT(IN) :: ps2
+    !! order of interpolation on facet parallel to xz
+    INTEGER(I4B), INTENT(IN) :: ps3
+    !! order of interpolation on facet parallel to yz
+    INTEGER(I4B), INTENT(IN) :: ps4
+    !! order of interpolation on facet parallel to xyz
+    REAL(DFP), INTENT(IN) :: lambda(:, :)
+    !! Barycenteric coordinates
+    !! number of rows = 4
+    !! number of cols = number of points
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    !! nrow = SIZE(lambda, 2)
+    !! ncol = 4  + pe1 + pe2 + pe3 + pe4 + pe5 + pe6 - 6 &
+    !!  + (ps1 - 1) * (ps1 - 2) / 2  + (ps2 - 1) * (ps2 - 2) / 2   &
+    !! + (ps3 - 1) * (ps3 - 2) / 2   + (ps4 - 1) * (ps4 - 2) / 2 &
+    !! + (order - 1) * (order - 2) * (order - 3) / 6_I4B
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+  END SUBROUTINE BarycentricHeirarchicalBasis_Tetrahedron1_
+END INTERFACE BarycentricHeirarchicalBasis_Tetrahedron_
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2023-08-25
+! summary:  Evaluate heirarchical basis in terms of barycentric coord
+
+INTERFACE BarycentricHeirarchicalBasis_Tetrahedron
+  MODULE PURE FUNCTION &
+    BarycentricHeirarchicalBasis_Tetrahedron2(order, lambda) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order in the cell of triangle, it should be greater than 2
+    REAL(DFP), INTENT(IN) :: lambda(:, :)
+    !! Barycenteric coordinates
+    !! number of rows = 4
+    !! number of cols = number of points
+    REAL(DFP) :: ans(SIZE(lambda, 2), &
+                     (order + 1) * (order + 2) * (order + 3) / 6_I4B)
+  END FUNCTION BarycentricHeirarchicalBasis_Tetrahedron2
+END INTERFACE BarycentricHeirarchicalBasis_Tetrahedron
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE BarycentricHeirarchicalBasis_Tetrahedron_
+  MODULE PURE SUBROUTINE BarycentricHeirarchicalBasis_Tetrahedron2_( &
+    order, lambda, ans, nrow, ncol)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order in the cell of triangle, it should be greater than 2
+    REAL(DFP), INTENT(IN) :: lambda(:, :)
+    !! Barycenteric coordinates
+    !! number of rows = 4
+    !! number of cols = number of points
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    !! nrow =  SIZE(lambda, 2)
+    !! ncol = (order + 1) * (order + 2) * (order + 3) / 6_I4B
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+  END SUBROUTINE BarycentricHeirarchicalBasis_Tetrahedron2_
+END INTERFACE BarycentricHeirarchicalBasis_Tetrahedron_
+
+!----------------------------------------------------------------------------
 !                         BarycentricHeirarchicalBasisGradient_Tetrahedron
 !----------------------------------------------------------------------------
 
@@ -1355,19 +1668,7 @@ END INTERFACE BarycentricHeirarchicalBasis_Tetrahedron
 
 INTERFACE BarycentricHeirarchicalBasisGradient_Tetrahedron
   MODULE PURE FUNCTION BarycentricHeirarchicalBasisGradient_Tetrahedron1( &
-    & order, &
-    & pe1,  &
-    & pe2, &
-    & pe3, &
-    & pe4, &
-    & pe5, &
-    & pe6, &
-    & ps1, &
-    & ps2, &
-    & ps3, &
-    & ps4, &
-    & lambda &
-    & ) RESULT(ans)
+  order, pe1, pe2, pe3, pe4, pe5, pe6, ps1, ps2, ps3, ps4, lambda) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
     !! order in the cell of triangle, it should be greater than 2
     INTEGER(I4B), INTENT(IN) :: pe1
@@ -1405,29 +1706,6 @@ INTERFACE BarycentricHeirarchicalBasisGradient_Tetrahedron
       & + (order - 1) * (order - 2) * (order - 3) / 6_I4B, 4_I4B)
   END FUNCTION BarycentricHeirarchicalBasisGradient_Tetrahedron1
 END INTERFACE BarycentricHeirarchicalBasisGradient_Tetrahedron
-
-!----------------------------------------------------------------------------
-!
-!----------------------------------------------------------------------------
-
-!> author: Vikas Sharma, Ph. D.
-! date:  2023-08-25
-! summary:  Evaluate heirarchical basis in terms of barycentric coord
-
-INTERFACE BarycentricHeirarchicalBasis_Tetrahedron
-  MODULE PURE FUNCTION BarycentricHeirarchicalBasis_Tetrahedron2( &
-    & order, lambda) RESULT(ans)
-    INTEGER(I4B), INTENT(IN) :: order
-    !! order in the cell of triangle, it should be greater than 2
-    REAL(DFP), INTENT(IN) :: lambda(:, :)
-    !! Barycenteric coordinates
-    !! number of rows = 4
-    !! number of cols = number of points
-    REAL(DFP) :: ans( &
-      & SIZE(lambda, 2), &
-      & (order + 1) * (order + 2) * (order + 3) / 6_I4B)
-  END FUNCTION BarycentricHeirarchicalBasis_Tetrahedron2
-END INTERFACE BarycentricHeirarchicalBasis_Tetrahedron
 
 !----------------------------------------------------------------------------
 !                        BarycentricHeirarchicalBasisGradient_Tetrahedron
@@ -1474,6 +1752,24 @@ INTERFACE
 END INTERFACE
 
 !----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE
+  MODULE PURE SUBROUTINE VertexBasis_Tetrahedron_(xij, refTetrahedron, &
+                                                  ans, nrow, ncol)
+    REAL(DFP), INTENT(IN) :: xij(:, :)
+    !! point of evaluation
+    CHARACTER(*), INTENT(IN) :: refTetrahedron
+    !! Unit or biunit
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+    !! ans(SIZE(xij, 2), 4)
+    !! ans(:,v1) basis function of vertex v1 at all points
+  END SUBROUTINE VertexBasis_Tetrahedron_
+END INTERFACE
+
+!----------------------------------------------------------------------------
 !                                                     EdgeBasis_Tetrahedron
 !----------------------------------------------------------------------------
 
@@ -1515,6 +1811,37 @@ INTERFACE
 END INTERFACE
 
 !----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE
+  MODULE PURE SUBROUTINE EdgeBasis_Tetrahedron_(pe1, pe2, pe3, pe4, pe5, &
+                                    pe6, xij, refTetrahedron, ans, nrow, ncol)
+    INTEGER(I4B), INTENT(IN) :: pe1
+    !! order on  edge parallel to x
+    INTEGER(I4B), INTENT(IN) :: pe2
+    !! order on  edge parallel to y
+    INTEGER(I4B), INTENT(IN) :: pe3
+    !! order on  edge parallel to z
+    INTEGER(I4B), INTENT(IN) :: pe4
+    !! order on  edge parallel to xy
+    INTEGER(I4B), INTENT(IN) :: pe5
+    !! order on  edge parallel to xz
+    INTEGER(I4B), INTENT(IN) :: pe6
+    !! order on  edge parallel to yz
+    REAL(DFP), INTENT(IN) :: xij(:, :)
+    !! point of evaluation
+    CHARACTER(*), INTENT(IN) :: refTetrahedron
+    !! UNIT or BIUNIT
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    !!
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+    !! nrow = SIZE(xij, 2)
+    !! ncol = pe1 + pe2 + pe3 + pe4 + pe5 + pe6 - 6
+  END SUBROUTINE EdgeBasis_Tetrahedron_
+END INTERFACE
+
+!----------------------------------------------------------------------------
 !                                                     FacetBasis_Tetrahedron
 !----------------------------------------------------------------------------
 
@@ -1553,6 +1880,34 @@ INTERFACE
 END INTERFACE
 
 !----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE
+  MODULE PURE SUBROUTINE FacetBasis_Tetrahedron_(ps1, ps2, ps3, ps4, xij, &
+                                              refTetrahedron, ans, nrow, ncol)
+    INTEGER(I4B), INTENT(IN) :: ps1
+    !! order on facet to xy
+    INTEGER(I4B), INTENT(IN) :: ps2
+    !! order on facet to xz
+    INTEGER(I4B), INTENT(IN) :: ps3
+    !! order on facet to yz
+    INTEGER(I4B), INTENT(IN) :: ps4
+    !! order on facet to xyz
+    REAL(DFP), INTENT(IN) :: xij(:, :)
+    !! order on xij
+    CHARACTER(*), INTENT(IN) :: refTetrahedron
+    !! UNIT or BIUNIT
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    !!
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+    !! nrow = SIZE(xij, 2)
+    !! ncol = (ps1 - 1) * (ps1 - 2) / 2  + (ps2 - 1) * (ps2 - 2) / 2  &
+    !! + (ps3 - 1) * (ps3 - 2) / 2  + (ps4 - 1) * (ps4 - 2) / 2
+  END SUBROUTINE FacetBasis_Tetrahedron_
+END INTERFACE
+
+!----------------------------------------------------------------------------
 !                                                     CellBasis_Tetrahedron
 !----------------------------------------------------------------------------
 
@@ -1576,6 +1931,28 @@ INTERFACE
       & SIZE(xij, 2), &
       & (pb - 1) * (pb - 2) * (pb - 3) / 6_I4B)
   END FUNCTION CellBasis_Tetrahedron
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE
+  MODULE PURE SUBROUTINE CellBasis_Tetrahedron_(pb, xij, refTetrahedron, &
+                                                ans, nrow, ncol)
+    INTEGER(I4B), INTENT(IN) :: pb
+    !! order in cell
+    REAL(DFP), INTENT(IN) :: xij(:, :)
+    !! order on xij
+    CHARACTER(*), INTENT(IN) :: refTetrahedron
+    !! UNIT or BIUNIT
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    !!
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+  !! number of rows and columns written to ans
+  !! nrow = SIZE(xij, 2)
+  !! ncol = (pb - 1) * (pb - 2) * (pb - 3) / 6_I4B
+  END SUBROUTINE CellBasis_Tetrahedron_
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -1641,6 +2018,49 @@ INTERFACE HeirarchicalBasis_Tetrahedron
 END INTERFACE HeirarchicalBasis_Tetrahedron
 
 !----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE HeirarchicalBasis_Tetrahedron_
+  MODULE PURE SUBROUTINE HeirarchicalBasis_Tetrahedron1_(order, pe1, pe2, &
+           pe3, pe4, pe5, pe6, ps1, ps2, ps3, ps4, xij, refTetrahedron, ans, &
+                                                         nrow, ncol)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order in the cell of triangle, it should be greater than 2
+    INTEGER(I4B), INTENT(IN) :: pe1
+    !! order of interpolation on edge parallel to x
+    INTEGER(I4B), INTENT(IN) :: pe2
+    !! order of interpolation on edge parallel to y
+    INTEGER(I4B), INTENT(IN) :: pe3
+    !! order of interpolation on edge parallel to z
+    INTEGER(I4B), INTENT(IN) :: pe4
+    !! order of interpolation on edge parallel to xy
+    INTEGER(I4B), INTENT(IN) :: pe5
+    !! order of interpolation on edge parallel to xz
+    INTEGER(I4B), INTENT(IN) :: pe6
+    !! order of interpolation on edge parallel to yz
+    INTEGER(I4B), INTENT(IN) :: ps1
+    !! order of interpolation on facet parallel to xy
+    INTEGER(I4B), INTENT(IN) :: ps2
+    !! order of interpolation on facet parallel to xz
+    INTEGER(I4B), INTENT(IN) :: ps3
+    !! order of interpolation on facet parallel to yz
+    INTEGER(I4B), INTENT(IN) :: ps4
+    !! order of interpolation on facet parallel to xyz
+    REAL(DFP), INTENT(IN) :: xij(:, :)
+    !! order on xij
+    CHARACTER(*), INTENT(IN) :: refTetrahedron
+    !! UNIT or BIUNIT
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    !! nrow = SIZE(xij, 2),
+    !! ncol = 4 + pe1 + pe2 + pe3 + pe4 + pe5 + pe6 - 6 + (ps1 - 1) * (ps1 - 2) / 2
+    !! + (ps2 - 1) * (ps2 - 2) / 2  + (ps3 - 1) * (ps3 - 2) / 2  &
+    !! + (ps4 - 1) * (ps4 - 2) / 2 + (order - 1) * (order - 2) * (order - 3) / 6_I4B)
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+  END SUBROUTINE HeirarchicalBasis_Tetrahedron1_
+END INTERFACE HeirarchicalBasis_Tetrahedron_
+
+!----------------------------------------------------------------------------
 !                                             HeirarchicalBasis_Tetrahedron
 !----------------------------------------------------------------------------
 
@@ -1667,6 +2087,26 @@ INTERFACE HeirarchicalBasis_Tetrahedron
 END INTERFACE HeirarchicalBasis_Tetrahedron
 
 !----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE HeirarchicalBasis_Tetrahedron_
+  MODULE PURE SUBROUTINE HeirarchicalBasis_Tetrahedron2_(order, xij, &
+                                              refTetrahedron, ans, nrow, ncol)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order in the cell of triangle, it should be greater than 2
+    REAL(DFP), INTENT(IN) :: xij(:, :)
+    !! order on xij
+    CHARACTER(*), INTENT(IN) :: refTetrahedron
+    !! UNIT or BIUNIT
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    !! nrow =  SIZE(xij, 2)
+    !! ncol = (order + 1) * (order + 2) * (order + 3) / 6_I4B)
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+  END SUBROUTINE HeirarchicalBasis_Tetrahedron2_
+END INTERFACE HeirarchicalBasis_Tetrahedron_
+
+!----------------------------------------------------------------------------
 !                                             LagrangeEvalAll_Tetrahedron
 !----------------------------------------------------------------------------
 
@@ -1675,17 +2115,9 @@ END INTERFACE HeirarchicalBasis_Tetrahedron
 ! summary:  Evaluate all Lagrange polynomials at several points
 
 INTERFACE LagrangeEvalAll_Tetrahedron
-  MODULE FUNCTION LagrangeEvalAll_Tetrahedron1( &
-    & order, &
-    & x, &
-    & xij, &
-    & refTetrahedron, &
-    & coeff, &
-    & firstCall, &
-    & basisType, &
-    & alpha, &
-    & beta, &
-    & lambda) RESULT(ans)
+  MODULE FUNCTION LagrangeEvalAll_Tetrahedron1(order, x, xij, &
+           refTetrahedron, coeff, firstCall, basisType, alpha, beta, lambda) &
+    RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
     !! order of Lagrange polynomials
     REAL(DFP), INTENT(IN) :: x(3)
@@ -1711,13 +2143,6 @@ INTERFACE LagrangeEvalAll_Tetrahedron
     !! Default value of firstCall is True
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: basisType
     !! Monomials *Default
-    !! Legendre
-    !! Lobatto
-    !! Chebyshev
-    !! Jacobi
-    !! Ultraspherical
-    !! Heirarchical
-    !! Orthogonal
     REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
     !! Jacobi parameter
     REAL(DFP), OPTIONAL, INTENT(IN) :: beta
@@ -1730,6 +2155,54 @@ INTERFACE LagrangeEvalAll_Tetrahedron
 END INTERFACE LagrangeEvalAll_Tetrahedron
 
 !----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE LagrangeEvalAll_Tetrahedron_
+  MODULE SUBROUTINE LagrangeEvalAll_Tetrahedron1_(order, x, xij, ans, &
+            tsize, refTetrahedron, coeff, firstCall, basisType, alpha, beta, &
+                                                  lambda)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order of Lagrange polynomials
+    REAL(DFP), INTENT(IN) :: x(3)
+    !! point of evaluation
+    !! x(1) is x coord
+    !! x(2) is y coord
+    !! x(3) is z coord
+    REAL(DFP), INTENT(INOUT) :: xij(:, :)
+    !! Interpolation points
+    !! The number of rows in xij is 3
+    !! The number of columns in xij should be equal to total
+    !! degree of freedom
+    REAL(DFP), INTENT(INOUT) :: ans(:)
+    !! Value of n+1 Lagrange polynomials at point x
+    !! size(xij, 2)
+    INTEGER(I4B), INTENT(OUT) :: tsize
+    !! total data written in ans
+    CHARACTER(*), OPTIONAL, INTENT(IN) :: refTetrahedron
+    !! UNIT *default
+    !! BIUNIT
+    REAL(DFP), OPTIONAL, INTENT(INOUT) :: coeff(:, :)
+    !! coeff(SIZE(xij, 2), SIZE(xij, 2))
+    !! coefficient of Lagrange polynomials
+    LOGICAL(LGT), OPTIONAL :: firstCall
+    !! If firstCall is true, then coeff will be computed and returned
+    !! by this routine.
+    !! If firstCall is False, then coeff should be given, which will be
+    !! used.
+    !! Default value of firstCall is True
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: basisType
+    !! Monomials *Default
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
+    !! Jacobi parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: beta
+    !! Jacobi parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: lambda
+    !! Ultraspherical parameter
+  END SUBROUTINE LagrangeEvalAll_Tetrahedron1_
+END INTERFACE LagrangeEvalAll_Tetrahedron_
+
+!----------------------------------------------------------------------------
 !                                                LagrangeEvalAll_Tetrahedron
 !----------------------------------------------------------------------------
 
@@ -1738,18 +2211,9 @@ END INTERFACE LagrangeEvalAll_Tetrahedron
 ! summary:  Evaluate all Lagrange polynomials at several points
 
 INTERFACE LagrangeEvalAll_Tetrahedron
-  MODULE FUNCTION LagrangeEvalAll_Tetrahedron2( &
-    & order, &
-    & x, &
-    & xij, &
-    & refTetrahedron, &
-    & coeff, &
-    & firstCall, &
-    & basisType, &
-    & alpha, &
-    & beta, &
-    & lambda &
-    & ) RESULT(ans)
+  MODULE FUNCTION LagrangeEvalAll_Tetrahedron2(order, x, xij, &
+           refTetrahedron, coeff, firstCall, basisType, alpha, beta, lambda) &
+    RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
     !! Order of Lagrange polynomials
     REAL(DFP), INTENT(IN) :: x(:, :)
@@ -1770,6 +2234,51 @@ INTERFACE LagrangeEvalAll_Tetrahedron
     !! Default value of firstCall is True
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: basisType
     !! Monomials *Default
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
+    !! Jacobi parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: beta
+    !! Jacobi parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: lambda
+    !! Ultraspherical parameter
+    REAL(DFP) :: ans(SIZE(x, 2), SIZE(xij, 2))
+    !! Value of n+1 Lagrange polynomials at point x
+  END FUNCTION LagrangeEvalAll_Tetrahedron2
+END INTERFACE LagrangeEvalAll_Tetrahedron
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE LagrangeEvalAll_Tetrahedron_
+  MODULE SUBROUTINE LagrangeEvalAll_Tetrahedron2_(order, x, xij, ans, &
+       nrow, ncol, refTetrahedron, coeff, firstCall, basisType, alpha, beta, &
+                                                  lambda)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! Order of Lagrange polynomials
+    REAL(DFP), INTENT(IN) :: x(:, :)
+    !! Point of evaluation
+    !! x(1, :) is x coord
+    !! x(2, :) is y coord
+    !! x(3, :) is z coord
+    REAL(DFP), INTENT(INOUT) :: xij(:, :)
+    !! Interpolation points
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    !! ans(SIZE(x, 2), SIZE(xij, 2))
+    !! Value of n+1 Lagrange polynomials at point x
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+    !! number of rows and columns writen in ans
+    CHARACTER(*), OPTIONAL, INTENT(IN) :: refTetrahedron
+    !! UNIT *default
+    !! BIUNIT
+    REAL(DFP), OPTIONAL, INTENT(INOUT) :: coeff(:, :)
+    ! coeff(SIZE(xij, 2), SIZE(xij, 2))
+    !! Coefficient of Lagrange polynomials
+    LOGICAL(LGT), OPTIONAL :: firstCall
+    !! If firstCall is true, then coeff will be made
+    !! If firstCall is False, then coeff will be used
+    !! Default value of firstCall is True
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: basisType
+    !! Monomials *Default
     !! Legendre
     !! Lobatto
     !! Chebyshev
@@ -1783,10 +2292,8 @@ INTERFACE LagrangeEvalAll_Tetrahedron
     !! Jacobi parameter
     REAL(DFP), OPTIONAL, INTENT(IN) :: lambda
     !! Ultraspherical parameter
-    REAL(DFP) :: ans(SIZE(x, 2), SIZE(xij, 2))
-    !! Value of n+1 Lagrange polynomials at point x
-  END FUNCTION LagrangeEvalAll_Tetrahedron2
-END INTERFACE LagrangeEvalAll_Tetrahedron
+  END SUBROUTINE LagrangeEvalAll_Tetrahedron2_
+END INTERFACE LagrangeEvalAll_Tetrahedron_
 
 !----------------------------------------------------------------------------
 !                                            QuadraturePoints_Tetrahedron
