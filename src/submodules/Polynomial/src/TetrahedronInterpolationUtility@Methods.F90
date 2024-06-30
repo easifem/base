@@ -2292,8 +2292,8 @@ CASE DEFAULT
 
   !FIXME:
   x31(1:3, 1) = x(1:3)
- CALL OrthogonalBasis_Tetrahedron(order=order, xij=x31, refTetrahedron=ref0, &
-                                   ans=xx, nrow=nrow, ncol=ncol)
+CALL OrthogonalBasis_Tetrahedron_(order=order, xij=x31, refTetrahedron=ref0, &
+                                    ans=xx, nrow=nrow, ncol=ncol)
 
 END SELECT
 
@@ -2392,7 +2392,7 @@ CASE (Heirarchical)
 CASE DEFAULT
 
   CALL OrthogonalBasis_Tetrahedron_(order=order, xij=x, refTetrahedron=ref0, &
-                                    ans=xx, nrows=indx(1), ncols=indx(2))
+                                    ans=xx, nrow=indx(1), ncol=indx(2))
 
 END SELECT
 
