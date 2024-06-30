@@ -875,51 +875,58 @@ END PROCEDURE JacobiGradientEval2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE JacobiGradientEvalAll1
-!!
+INTEGER(I4B) :: tsize
+CALL JacobiGradientEvalAll1_(n=n, alpha=alpha, beta=beta, x=x, ans=ans, &
+                             tsize=tsize)
+END PROCEDURE JacobiGradientEvalAll1
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE JacobiGradientEvalAll1_
 INTEGER(I4B) :: ii
 REAL(DFP) :: j
 REAL(DFP), DIMENSION(n + 1) :: p
 REAL(DFP) :: ab, amb, a1, a2, a3, b1, b2, b3
-!!
-IF (n < 0) THEN
-  RETURN
-END IF
-!!
+
+tsize = 0
+
+IF (n < 0) RETURN
+
+tsize = n + 1
+
 p(1) = 1.0_DFP
 ans(1) = 0.0_DFP
-!!
-IF (n < 1) THEN
-  RETURN
-END IF
-!!
-!!
+
+IF (n < 1) RETURN
+
 ab = alpha + beta
 amb = alpha - beta
 p(2) = 0.5 * (ab + 2.0) * x + 0.5 * amb
 ans(2) = 0.5 * (ab + 2.0)
-!!
+
 DO ii = 2, n
-  !!
+
   j = REAL(ii, KIND=DFP)
-  !!
+
   a1 = (2*j+alpha+beta-1)*(2*j+alpha+beta)/(2*j*(j+alpha+beta)); 
   a2 = (alpha * alpha - beta * beta) * (2 * j + alpha + beta - 1) &
-    & / (2 * j * (j + alpha + beta) * (2 * j + alpha + beta - 2)); 
+       / (2 * j * (j + alpha + beta) * (2 * j + alpha + beta - 2)); 
   a3 = (j - 1 + alpha) * (j - 1 + beta) * (2 * j + alpha + beta) &
-    & / (j * (j + alpha + beta) * (2 * j + alpha + beta - 2)); 
-  !!
+       / (j * (j + alpha + beta) * (2 * j + alpha + beta - 2)); 
   p(ii + 1) = (a1 * x + a2) * p(ii) - a3 * p(ii - 1)
-  !!
+
   j = j - 1.0
   b1 = -2.0*(j+alpha)*(j+beta)/(j+ab)/(2.0*j+ab)/(2.0*j+ab+1.0)
   b2 = 2.0 * amb / (2.0 * j + ab) / (2.0 * j + ab + 2.0)
   b3 = 2.0 * (j + ab + 1.0) / (2.0 * j + ab + 1.0) / (2.0 * j + ab + 2.0)
-  !!
+
   ans(ii + 1) = (p(ii) - b1 * ans(ii - 1) - b2 * ans(ii)) / b3
-  !!
+
 END DO
-!!
-END PROCEDURE JacobiGradientEvalAll1
+
+END PROCEDURE JacobiGradientEvalAll1_
 
 !----------------------------------------------------------------------------
 !                                                     JacobiGradientEvalAll
@@ -970,6 +977,61 @@ DO ii = 2, n
 END DO
 !!
 END PROCEDURE JacobiGradientEvalAll2
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE JacobiGradientEvalAll2_
+INTEGER(I4B) :: ii
+REAL(DFP) :: j
+REAL(DFP), DIMENSION(SIZE(x), n + 1) :: p
+REAL(DFP) :: ab, amb, a1, a2, a3, b1, b2, b3
+
+nrow = 0
+ncol = 0
+
+IF (n < 0) RETURN
+
+nrow = SIZE(x)
+ncol = 1 + n
+
+p(1:nrow, 1) = 1.0_DFP
+ans(1:nrow, 1) = 0.0_DFP
+
+IF (n < 1) RETURN
+
+ab = alpha + beta
+amb = alpha - beta
+p(:, 2) = 0.5 * (ab + 2.0) * x + 0.5 * amb
+ans(:, 2) = 0.5 * (ab + 2.0)
+
+DO ii = 2, n
+  j = REAL(ii, KIND=DFP)
+
+  a1 = (2*j+alpha+beta-1)*(2*j+alpha+beta)/(2*j*(j+alpha+beta))
+
+  a2 = (alpha * alpha - beta * beta) * (2 * j + alpha + beta - 1) &
+       / (2 * j * (j + alpha + beta) * (2 * j + alpha + beta - 2))
+
+  a3 = (j - 1 + alpha) * (j - 1 + beta) * (2 * j + alpha + beta) &
+       / (j * (j + alpha + beta) * (2 * j + alpha + beta - 2))
+
+  p(1:nrow, ii + 1) = (a1 * x + a2) * p(1:nrow, ii) - a3 * p(1:nrow, ii - 1)
+
+  j = j - 1.0
+  b1 = -2.0*(j+alpha)*(j+beta)/(j+ab)/(2.0*j+ab)/(2.0*j+ab+1.0)
+  b2 = 2.0 * amb / (2.0 * j + ab) / (2.0 * j + ab + 2.0)
+  b3 = 2.0 * (j + ab + 1.0) / (2.0 * j + ab + 1.0) / (2.0 * j + ab + 2.0)
+
+  ans(1:nrow, ii + 1) = p(1:nrow, ii) - b1 * ans(1:nrow, ii - 1) &
+                        - b2 * ans(1:nrow, ii)
+
+  ans(1:nrow, ii + 1) = ans(1:nrow, ii + 1) / b3
+
+END DO
+
+END PROCEDURE JacobiGradientEvalAll2_
 
 !----------------------------------------------------------------------------
 !                                                     JacobiGradientEvalSum

@@ -49,6 +49,7 @@ PUBLIC :: JacobiEval
 PUBLIC :: JacobiEvalSum
 PUBLIC :: JacobiGradientEval
 PUBLIC :: JacobiGradientEvalAll
+PUBLIC :: JacobiGradientEvalAll_
 PUBLIC :: JacobiGradientEvalSum
 PUBLIC :: JacobiTransform
 PUBLIC :: JacobiInvTransform
@@ -772,6 +773,28 @@ INTERFACE JacobiGradientEvalAll
 END INTERFACE JacobiGradientEvalAll
 
 !----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE JacobiGradientEvalAll_
+  MODULE PURE SUBROUTINE JacobiGradientEvalAll1_(n, alpha, beta, x, &
+                                                 ans, tsize)
+    INTEGER(I4B), INTENT(IN) :: n
+    !! order of Jacobi polynomial
+    REAL(DFP), INTENT(IN) :: alpha
+    !! alpha > -1.0
+    REAL(DFP), INTENT(IN) :: beta
+    !! beta > -1.0
+    REAL(DFP), INTENT(IN) :: x
+    !! point
+    REAL(DFP), INTENT(INOUT) :: ans(:)
+    !! ans(n + 1)
+    !! Derivative of Jacobi polynomial of order n at point x
+    INTEGER(I4B), INTENT(OUT) :: tsize
+  END SUBROUTINE JacobiGradientEvalAll1_
+END INTERFACE JacobiGradientEvalAll_
+
+!----------------------------------------------------------------------------
 !                                                     JacobiGradientEvalAll
 !----------------------------------------------------------------------------
 
@@ -789,6 +812,24 @@ INTERFACE JacobiGradientEvalAll
     !! Derivative of Jacobi polynomial of order n at x
   END FUNCTION JacobiGradientEvalAll2
 END INTERFACE JacobiGradientEvalAll
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE JacobiGradientEvalAll_
+  MODULE PURE SUBROUTINE JacobiGradientEvalAll2_(n, alpha, beta, x, &
+                                                 ans, nrow, ncol)
+    INTEGER(I4B), INTENT(IN) :: n
+    REAL(DFP), INTENT(IN) :: alpha
+    REAL(DFP), INTENT(IN) :: beta
+    REAL(DFP), INTENT(IN) :: x(:)
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    !! ans(SIZE(x), n + 1)
+    !! Derivative of Jacobi polynomial of order n at x
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+  END SUBROUTINE JacobiGradientEvalAll2_
+END INTERFACE JacobiGradientEvalAll_
 
 !----------------------------------------------------------------------------
 !                                                      JacobiGradientEvalSum
