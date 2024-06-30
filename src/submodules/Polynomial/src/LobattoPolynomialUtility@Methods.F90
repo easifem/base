@@ -309,60 +309,90 @@ END PROCEDURE LobattoMonomialExpansion
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE LobattoGradientEvalAll1
-REAL(DFP) :: p(n), avar, m
-INTEGER(I4B) :: ii
-  !!
-SELECT CASE (n)
-CASE (0)
-  ans(1) = -0.5_DFP
-CASE (1)
-  ans(1) = -0.5_DFP
-  ans(2) = 0.5_DFP
-CASE DEFAULT
-  ans(1) = -0.5_DFP
-  ans(2) = 0.5_DFP
-  !!
-  p = LegendreEvalAll(n=n - 1_I4B, x=x)
-  !!
-  DO ii = 1, n - 1
-    m = REAL(ii - 1, DFP)
-    avar = SQRT((2.0_DFP * m + 3.0) / 2.0)
-    ans(ii + 2) = avar * p(ii + 1)
-    ! ans(3:) = p(2:)
-  END DO
-  !!
-END SELECT
+INTEGER(I4B) :: tsize
+CALL LobattoGradientEvalAll1_(n=n, x=x, ans=ans, tsize=tsize)
 END PROCEDURE LobattoGradientEvalAll1
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE LobattoGradientEvalAll2
-REAL(DFP) :: p(SIZE(x), n), avar, m
+MODULE PROCEDURE LobattoGradientEvalAll1_
+REAL(DFP) :: p(n), avar, m
 INTEGER(I4B) :: ii
-  !!
+
+tsize = n + 1
+
 SELECT CASE (n)
+
 CASE (0)
-  ans(:, 1) = -0.5_DFP
+  ans(1) = -0.5_DFP
+
 CASE (1)
-  ans(:, 1) = -0.5_DFP
-  ans(:, 2) = 0.5_DFP
+  ans(1) = -0.5_DFP
+  ans(2) = 0.5_DFP
+
 CASE DEFAULT
-  ans(:, 1) = -0.5_DFP
-  ans(:, 2) = 0.5_DFP
-  !!
-  p = LegendreEvalAll(n=n - 1_I4B, x=x)
-  !!
+  ans(1) = -0.5_DFP
+  ans(2) = 0.5_DFP
+
+  CALL LegendreEvalAll_(n=n - 1_I4B, x=x, ans=p, tsize=ii)
+
   DO ii = 1, n - 1
     m = REAL(ii - 1, DFP)
     avar = SQRT((2.0_DFP * m + 3.0) / 2.0)
-    ans(:, ii + 2) = avar * p(:, ii + 1)
+    ans(ii + 2) = avar * p(ii + 1)
+
+  END DO
+
+END SELECT
+END PROCEDURE LobattoGradientEvalAll1_
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE LobattoGradientEvalAll2
+INTEGER(I4B) :: nrow, ncol
+CALL LobattoGradientEvalAll2_(n=n, x=x, ans=ans, nrow=nrow, ncol=ncol)
+END PROCEDURE LobattoGradientEvalAll2
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE LobattoGradientEvalAll2_
+REAL(DFP) :: p(SIZE(x), n), avar, m
+INTEGER(I4B) :: ii
+
+nrow = SIZE(x)
+ncol = n + 1
+
+SELECT CASE (n)
+CASE (0)
+  ans(1:nrow, 1) = -0.5_DFP
+
+CASE (1)
+  ans(1:nrow, 1) = -0.5_DFP
+  ans(1:nrow, 2) = 0.5_DFP
+
+CASE DEFAULT
+  ans(1:nrow, 1) = -0.5_DFP
+  ans(1:nrow, 2) = 0.5_DFP
+
+  !! p = LegendreEvalAll(n=n - 1_I4B, x=x)
+  CALL LegendreEvalAll_(n=n - 1_I4B, x=x, ans=p, nrow=nrow, ncol=ii)
+
+  DO ii = 1, n - 1
+    m = REAL(ii - 1, DFP)
+    avar = SQRT((2.0_DFP * m + 3.0) / 2.0)
+    ans(1:nrow, ii + 2) = avar * p(1:nrow, ii + 1)
     ! ans(3:) = p(2:)
   END DO
-  !!
+
 END SELECT
-END PROCEDURE LobattoGradientEvalAll2
+
+END PROCEDURE LobattoGradientEvalAll2_
 
 !----------------------------------------------------------------------------
 !
