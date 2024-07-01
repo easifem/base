@@ -359,11 +359,29 @@ END PROCEDURE LagrangeEvalAll_Triangle2_
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE LagrangeGradientEvalAll_Triangle1
+INTEGER(I4B) :: dim1, dim2, dim3
+
+CALL LagrangeGradientEvalAll_Triangle1_(order=order, x=x, xij=xij, ans=ans, &
+      dim1=dim1, dim2=dim2, dim3=dim3, refTriangle=refTriangle, coeff=coeff, &
+           firstCall=firstCall, basisType=basisType, alpha=alpha, beta=beta, &
+                                        lambda=lambda)
+
+END PROCEDURE LagrangeGradientEvalAll_Triangle1
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE LagrangeGradientEvalAll_Triangle1_
 LOGICAL(LGT) :: firstCall0
 INTEGER(I4B) :: ii, basisType0, tdof, ai, bi, s(3)
 INTEGER(I4B) :: degree(SIZE(xij, 2), 2)
 REAL(DFP) :: coeff0(SIZE(xij, 2), SIZE(xij, 2)), &
-  & xx(SIZE(x, 2), SIZE(xij, 2), 2), ar, br
+             xx(SIZE(x, 2), SIZE(xij, 2), 2), ar, br
+
+dim1 = SIZE(x, 2)
+dim2 = SIZE(xij, 2)
+dim3 = 2
 
 basisType0 = Input(default=polyopt%Monomial, option=basisType)
 firstCall0 = Input(default=.TRUE., option=firstCall)
@@ -374,7 +392,8 @@ IF (PRESENT(coeff)) THEN
                      refTriangle=refTriangle, ans=coeff, nrow=s(1), ncol=s(2))
   END IF
 
-  coeff0 = coeff
+  coeff0(1:dim2, 1:dim2) = coeff(1:dim2, 1:dim2)
+
 ELSE
   CALL LagrangeCoeff_Triangle_(order=order, xij=xij, basisType=basisType0, &
                     refTriangle=refTriangle, ans=coeff0, nrow=s(1), ncol=s(2))
@@ -413,10 +432,10 @@ END SELECT
 
 DO ii = 1, 2
   ! ans(:, ii, :) = TRANSPOSE(MATMUL(xx(:, :, ii), coeff0))
-  ans(:, :, ii) = MATMUL(xx(:, :, ii), coeff0)
+  ans(1:dim1, 1:dim2, ii) = MATMUL(xx(1:dim1, 1:dim2, ii), coeff0)
 END DO
 
-END PROCEDURE LagrangeGradientEvalAll_Triangle1
+END PROCEDURE LagrangeGradientEvalAll_Triangle1_
 
 !----------------------------------------------------------------------------
 !
