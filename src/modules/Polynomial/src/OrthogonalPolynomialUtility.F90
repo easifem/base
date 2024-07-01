@@ -17,20 +17,26 @@
 
 MODULE OrthogonalPolynomialUtility
 USE GlobalData
+
 IMPLICIT NONE
+
 PRIVATE
+
 PUBLIC :: Clenshaw
 PUBLIC :: ChebClenshaw
 PUBLIC :: JacobiMatrix
+
 PUBLIC :: EvalAllOrthopol
 PUBLIC :: EvalAllOrthopol_
+
 PUBLIC :: GradientEvalAllOrthopol
+PUBLIC :: GradientEvalAllOrthopol_
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
-INTERFACE
+INTERFACE Clenshaw
   MODULE PURE FUNCTION Clenshaw_1(x, alpha, beta, y0, ym1, c) RESULT(ans)
     REAL(DFP), INTENT(IN) :: x
     REAL(DFP), INTENT(IN) :: alpha(0:)
@@ -42,17 +48,13 @@ INTERFACE
     REAL(DFP), INTENT(IN) :: c(0:)
     REAL(DFP) :: ans
   END FUNCTION Clenshaw_1
-END INTERFACE
-
-INTERFACE Clenshaw
-  MODULE PROCEDURE Clenshaw_1
 END INTERFACE Clenshaw
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
-INTERFACE
+INTERFACE Clenshaw
   MODULE PURE FUNCTION Clenshaw_2(x, alpha, beta, y0, ym1, c) RESULT(ans)
     REAL(DFP), INTENT(IN) :: x(:)
     REAL(DFP), INTENT(IN) :: alpha(0:)
@@ -64,10 +66,6 @@ INTERFACE
     REAL(DFP), INTENT(IN) :: c(0:)
     REAL(DFP) :: ans(SIZE(x))
   END FUNCTION Clenshaw_2
-END INTERFACE
-
-INTERFACE Clenshaw
-  MODULE PROCEDURE Clenshaw_2
 END INTERFACE Clenshaw
 
 !----------------------------------------------------------------------------
@@ -86,21 +84,13 @@ END INTERFACE Clenshaw
 ! s(t) = 0.5 c_{0} + \sum_{i=1}^{n} c_{i} T_{j}(x)
 !$$
 
-INTERFACE
+INTERFACE Clenshaw
   MODULE PURE FUNCTION ChebClenshaw_1(x, c) RESULT(ans)
     REAL(DFP), INTENT(IN) :: x
     REAL(DFP), INTENT(IN) :: c(0:)
     REAL(DFP) :: ans
   END FUNCTION ChebClenshaw_1
-END INTERFACE
-
-INTERFACE Clenshaw
-  MODULE PROCEDURE ChebClenshaw_1
 END INTERFACE Clenshaw
-
-INTERFACE ChebClenshaw
-  MODULE PROCEDURE ChebClenshaw_1
-END INTERFACE ChebClenshaw
 
 !----------------------------------------------------------------------------
 !
@@ -118,16 +108,12 @@ END INTERFACE ChebClenshaw
 ! s(t) = 0.5 c_{0} + \sum_{i=1}^{n} c_{i} T_{j}(x)
 !$$
 
-INTERFACE
+INTERFACE Clenshaw
   MODULE PURE FUNCTION ChebClenshaw_2(x, c) RESULT(ans)
     REAL(DFP), INTENT(IN) :: x(:)
     REAL(DFP), INTENT(IN) :: c(0:)
     REAL(DFP) :: ans(SIZE(x))
   END FUNCTION ChebClenshaw_2
-END INTERFACE
-
-INTERFACE Clenshaw
-  MODULE PROCEDURE ChebClenshaw_2
 END INTERFACE Clenshaw
 
 INTERFACE ChebClenshaw
@@ -138,7 +124,7 @@ END INTERFACE ChebClenshaw
 !                                                             JacobiMatrix
 !----------------------------------------------------------------------------
 
-INTERFACE
+INTERFACE JacobiMatrix
   MODULE PURE SUBROUTINE JacobiMatrix_1(alphaCoeff, betaCoeff, D, E)
     REAL(DFP), INTENT(IN) :: alphaCoeff(0:)
   !! size n, from 0 to n-1
@@ -149,10 +135,6 @@ INTERFACE
     REAL(DFP), INTENT(OUT) :: E(:)
   !! entry from 1 to n-1 are filled
   END SUBROUTINE JacobiMatrix_1
-END INTERFACE
-
-INTERFACE JacobiMatrix
-  MODULE PROCEDURE JacobiMatrix_1
 END INTERFACE JacobiMatrix
 
 !----------------------------------------------------------------------------
@@ -168,11 +150,7 @@ INTERFACE
     !! points of evaluation
     INTEGER(I4B), INTENT(IN) :: orthopol
     !! orthogonal polynomial family
-    !! Legendre
-    !! Jacobi
-    !! Lobatto
-    !! Chebyshev
-    !! Ultraspherical
+    !! Legendre, Jacobi, Lobatto, Chebyshev, Ultraspherical
     REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
     !! alpha1 needed when orthopol1 is "Jacobi"
     REAL(DFP), OPTIONAL, INTENT(IN) :: beta
@@ -200,12 +178,8 @@ INTERFACE
     REAL(DFP), INTENT(IN) :: x(:)
     !! points of evaluation
     INTEGER(I4B), INTENT(IN) :: orthopol
-    !! orthogonal polynomial family
-    !! Legendre
-    !! Jacobi
-    !! Lobatto
-    !! Chebyshev
-    !! Ultraspherical
+    !! Orthogonal polynomial family
+    !! Legendre Jacobi Lobatto Chebyshev Ultraspherical
     REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
     !! alpha1 needed when orthopol1 is "Jacobi"
     REAL(DFP), OPTIONAL, INTENT(IN) :: beta
@@ -222,6 +196,37 @@ INTERFACE
 END INTERFACE
 
 !----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE
+  MODULE PURE SUBROUTINE GradientEvalAllOrthopol_(n, x, orthopol, ans, &
+                                              nrow, ncol, alpha, beta, lambda)
+    INTEGER(I4B), INTENT(IN) :: n
+    !! order of polynomial
+    REAL(DFP), INTENT(IN) :: x(:)
+    !! points of evaluation
+    INTEGER(I4B), INTENT(IN) :: orthopol
+    !! Orthogonal polynomial family
+    !! Legendre Jacobi Lobatto Chebyshev Ultraspherical
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    !! ans(SIZE(x), n + 1)
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+    !! The number of rows in ans is equal to the number of points.
+    !! The number of columns are equal to the orthogonal
+    !! polynomials from order  = 0 to n
+    !! Therefore, jth column is denotes the value of jth polynomial
+    !! at all the points.
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
+    !! alpha1 needed when orthopol1 is "Jacobi"
+    REAL(DFP), OPTIONAL, INTENT(IN) :: beta
+    !! beta1 is needed when orthopol1 is "Jacobi"
+    REAL(DFP), OPTIONAL, INTENT(IN) :: lambda
+    !! lambda1 is needed when orthopol1 is "Ultraspherical"
+  END SUBROUTINE GradientEvalAllOrthopol_
+END INTERFACE
+
+!----------------------------------------------------------------------------
 !                                                     EvalAllOrthopol_
 !----------------------------------------------------------------------------
 
@@ -234,11 +239,7 @@ INTERFACE
     !! points of evaluation
     INTEGER(I4B), INTENT(IN) :: orthopol
     !! orthogonal polynomial family
-    !! Legendre
-    !! Jacobi
-    !! Lobatto
-    !! Chebyshev
-    !! Ultraspherical
+    !! Legendre Jacobi ! Lobatto ! Chebyshev ! Ultraspherical
     REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
     !! alpha1 needed when orthopol1 is "Jacobi"
     REAL(DFP), OPTIONAL, INTENT(IN) :: beta

@@ -36,7 +36,10 @@ PUBLIC :: LobattoKernelGradientEvalAll
 PUBLIC :: LobattoKernelGradientEvalAll_
 PUBLIC :: LobattoMonomialExpansionAll
 PUBLIC :: LobattoMonomialExpansion
+
 PUBLIC :: LobattoGradientEvalAll
+PUBLIC :: LobattoGradientEvalAll_
+
 PUBLIC :: LobattoGradientEval
 PUBLIC :: LobattoMassMatrix
 PUBLIC :: LobattoStiffnessMatrix

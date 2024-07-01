@@ -705,7 +705,23 @@ END PROCEDURE LagrangeEvalAll1_
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE LagrangeGradientEvalAll1
+INTEGER(I4B) :: dim1, dim2, dim3
+CALL LagrangeGradientEvalAll1_(order=order, elemType=elemType, x=x, xij=xij, &
+            ans=ans, dim1=dim1, dim2=dim2, dim3=dim3, domainName=domainName, &
+         coeff=coeff, firstCall=firstCall, basisType=basisType, alpha=alpha, &
+                               beta=beta, lambda=lambda)
+END PROCEDURE LagrangeGradientEvalAll1
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE LagrangeGradientEvalAll1_
 INTEGER(I4B) :: topo
+
+dim1 = SIZE(x, 2)
+dim2 = SIZE(xij, 2)
+dim3 = SIZE(x, 1)
 
 topo = ElementTopology(elemType)
 
@@ -713,174 +729,133 @@ SELECT CASE (topo)
 CASE (Point)
 
 CASE (Line)
+
+#ifdef DEBUG_VER
+
   IF (SIZE(x, 1) .NE. 1 .OR. SIZE(xij, 1) .NE. 1) THEN
-    CALL Errormsg( &
-    & msg="SIZE(x, 1) or SIZE(xij, 1) .NE. 1",  &
-    & unitno=stderr,  &
-    & line=__LINE__,  &
-    & routine="LagrangeGradientEvalAll1",  &
-    & file=__FILE__)
+    CALL Errormsg(msg="SIZE(x, 1) or SIZE(xij, 1) .NE. 1", &
+                  routine="LagrangeGradientEvalAll1", unitno=stderr, &
+                  line=__LINE__, file=__FILE__)
     RETURN
   END IF
 
-  ans(:, :, 1:1) = LagrangeGradientEvalAll_Line( &
-    & order=order,  &
-    & x=x,  &
-    & xij=xij,  &
-    & coeff=coeff,  &
-    & firstCall=firstCall,  &
-    & basisType=basisType,  &
-    & alpha=alpha,  &
-    & beta=beta,  &
-    & lambda=lambda)
+#endif
+
+  ans(1:dim1, 1:dim2, 1:1) = LagrangeGradientEvalAll_Line(order=order, &
+                             x=x, xij=xij, coeff=coeff, firstCall=firstCall, &
+                   basisType=basisType, alpha=alpha, beta=beta, lambda=lambda)
 
 CASE (Triangle)
 
+#ifdef DEBUG_VER
+
   IF (SIZE(x, 1) .NE. 2 .OR. SIZE(xij, 1) .NE. 2) THEN
-    CALL Errormsg( &
-    & msg="SIZE(x, 1) or SIZE(xij, 1) .NE. 2",  &
-    & unitno=stderr,  &
-    & line=__LINE__,  &
-    & routine="LagrangeGradientEvalAll1",  &
-    & file=__FILE__)
+    CALL Errormsg(msg="SIZE(x, 1) or SIZE(xij, 1) .NE. 2", &
+                  routine="LagrangeGradientEvalAll1", &
+                  unitno=stderr, line=__LINE__, file=__FILE__)
     RETURN
   END IF
 
-  ans(:, :, 1:2) = LagrangeGradientEvalAll_Triangle( &
-    & order=order,  &
-    & x=x,  &
-    & xij=xij,  &
-    & refTriangle=domainName, &
-    & coeff=coeff,  &
-    & firstCall=firstCall,  &
-    & basisType=basisType,  &
-    & alpha=alpha,  &
-    & beta=beta,  &
-    & lambda=lambda)
+#endif
+
+  ans(1:dim1, 1:dim2, 1:2) = LagrangeGradientEvalAll_Triangle(order=order, &
+                          x=x, xij=xij, refTriangle=domainName, coeff=coeff, &
+           firstCall=firstCall, basisType=basisType, alpha=alpha, beta=beta, &
+                                                              lambda=lambda)
 
 CASE (Quadrangle)
 
+#ifdef DEBUG_VER
   IF (SIZE(x, 1) .NE. 2 .OR. SIZE(xij, 1) .NE. 2) THEN
     CALL Errormsg( &
-    & msg="SIZE(x, 1) or SIZE(xij, 1) .NE. 2",  &
-    & unitno=stderr,  &
-    & line=__LINE__,  &
-    & routine="LagrangeGradientEvalAll1",  &
-    & file=__FILE__)
+      msg="SIZE(x, 1) or SIZE(xij, 1) .NE. 2", &
+      routine="LagrangeGradientEvalAll1", &
+      unitno=stderr, line=__LINE__, file=__FILE__)
     RETURN
   END IF
-  ans(:, :, 1:2) = LagrangeGradientEvalAll_Quadrangle( &
-    & order=order,  &
-    & x=x,  &
-    & xij=xij,  &
-    & coeff=coeff,  &
-    & firstCall=firstCall,  &
-    & basisType=basisType,  &
-    & alpha=alpha,  &
-    & beta=beta,  &
-    & lambda=lambda)
+
+#endif
+
+  ans(1:dim1, 1:dim2, 1:2) = LagrangeGradientEvalAll_Quadrangle( &
+                order=order, x=x, xij=xij, coeff=coeff, firstCall=firstCall, &
+                   basisType=basisType, alpha=alpha, beta=beta, lambda=lambda)
 
 CASE (Tetrahedron)
 
+#ifdef DEBUG_VER
+
   IF (SIZE(x, 1) .NE. 3 .OR. SIZE(xij, 1) .NE. 3) THEN
-    CALL Errormsg( &
-    & msg="SIZE(x, 1) or SIZE(xij, 1) .NE. 3",  &
-    & unitno=stderr,  &
-    & line=__LINE__,  &
-    & routine="LagrangeGradientEvalAll1",  &
-    & file=__FILE__)
+    CALL Errormsg(msg="SIZE(x, 1) or SIZE(xij, 1) .NE. 3", &
+                  routine="LagrangeGradientEvalAll1", &
+                  unitno=stderr, line=__LINE__, file=__FILE__)
     RETURN
   END IF
-  ans(:, :, 1:3) = LagrangeGradientEvalAll_Tetrahedron( &
-    & order=order,  &
-    & x=x,  &
-    & xij=xij,  &
-    & refTetrahedron=domainName, &
-    & coeff=coeff,  &
-    & firstCall=firstCall,  &
-    & basisType=basisType,  &
-    & alpha=alpha,  &
-    & beta=beta,  &
-    & lambda=lambda)
+
+#endif
+
+  ans(1:dim1, 1:dim2, 1:3) = LagrangeGradientEvalAll_Tetrahedron( &
+          order=order, x=x, xij=xij, refTetrahedron=domainName, coeff=coeff, &
+           firstCall=firstCall, basisType=basisType, alpha=alpha, beta=beta, &
+                             lambda=lambda)
 
 CASE (Hexahedron)
 
+#ifdef DEBUG_VER
+
   IF (SIZE(x, 1) .NE. 3 .OR. SIZE(xij, 1) .NE. 3) THEN
-    CALL Errormsg( &
-    & msg="SIZE(x, 1) or SIZE(xij, 1) .NE. 3",  &
-    & unitno=stderr,  &
-    & line=__LINE__,  &
-    & routine="LagrangeGradientEvalAll1",  &
-    & file=__FILE__)
+    CALL Errormsg(msg="SIZE(x, 1) or SIZE(xij, 1) .NE. 3", &
+                  routine="LagrangeGradientEvalAll1", &
+                  unitno=stderr, line=__LINE__, file=__FILE__)
     RETURN
   END IF
-  ans(:, :, 1:3) = LagrangeGradientEvalAll_Hexahedron( &
-    & order=order,  &
-    & x=x,  &
-    & xij=xij,  &
-    & coeff=coeff,  &
-    & firstCall=firstCall,  &
-    & basisType=basisType,  &
-    & alpha=alpha,  &
-    & beta=beta,  &
-    & lambda=lambda)
+
+#endif
+
+  ans(1:dim1, 1:dim2, 1:3) = LagrangeGradientEvalAll_Hexahedron( &
+                order=order, x=x, xij=xij, coeff=coeff, firstCall=firstCall, &
+                   basisType=basisType, alpha=alpha, beta=beta, lambda=lambda)
 
 CASE (Prism)
 
+#ifdef DEBUG_VER
   IF (SIZE(x, 1) .NE. 3 .OR. SIZE(xij, 1) .NE. 3) THEN
-    CALL Errormsg( &
-    & msg="SIZE(x, 1) or SIZE(xij, 1) .NE. 3",  &
-    & unitno=stderr,  &
-    & line=__LINE__,  &
-    & routine="LagrangeGradientEvalAll1",  &
-    & file=__FILE__)
+    CALL Errormsg(msg="SIZE(x, 1) or SIZE(xij, 1) .NE. 3", &
+                  routine="LagrangeGradientEvalAll1", &
+                  unitno=stderr, line=__LINE__, file=__FILE__)
     RETURN
   END IF
-  ans(:, :, 1:3) = LagrangeGradientEvalAll_Prism( &
-    & order=order,  &
-    & x=x,  &
-    & xij=xij,  &
-    & refPrism=domainName, &
-    & coeff=coeff,  &
-    & firstCall=firstCall,  &
-    & basisType=basisType,  &
-    & alpha=alpha,  &
-    & beta=beta,  &
-    & lambda=lambda)
+#endif
+
+  ans(1:dim1, 1:dim2, 1:3) = LagrangeGradientEvalAll_Prism(order=order, &
+        x=x, xij=xij, refPrism=domainName, coeff=coeff, firstCall=firstCall, &
+                   basisType=basisType, alpha=alpha, beta=beta, lambda=lambda)
 
 CASE (Pyramid)
 
+#ifdef DEBUG_VER
+
   IF (SIZE(x, 1) .NE. 3 .OR. SIZE(xij, 1) .NE. 3) THEN
-    CALL Errormsg( &
-    & msg="SIZE(x, 1) or SIZE(xij, 1) .NE. 3",  &
-    & unitno=stderr,  &
-    & line=__LINE__,  &
-    & routine="LagrangeGradientEvalAll1",  &
-    & file=__FILE__)
+    CALL Errormsg(msg="SIZE(x, 1) or SIZE(xij, 1) .NE. 3", &
+                  routine="LagrangeGradientEvalAll1", &
+                  unitno=stderr, line=__LINE__, file=__FILE__)
     RETURN
   END IF
-  ans(:, :, 1:3) = LagrangeGradientEvalAll_Pyramid( &
-    & order=order,  &
-    & x=x,  &
-    & xij=xij,  &
-    & refPyramid=domainName, &
-    & coeff=coeff,  &
-    & firstCall=firstCall,  &
-    & basisType=basisType,  &
-    & alpha=alpha,  &
-    & beta=beta,  &
-    & lambda=lambda)
+
+#endif
+
+  ans(1:dim1, 1:dim2, 1:3) = LagrangeGradientEvalAll_Pyramid(order=order, &
+      x=x, xij=xij, refPyramid=domainName, coeff=coeff, firstCall=firstCall, &
+                   basisType=basisType, alpha=alpha, beta=beta, lambda=lambda)
 
 CASE DEFAULT
-  CALL Errormsg(&
-    & msg="No CASE FOUND: elemType="//ToString(elemType), &
-    & unitno=stdout,  &
-    & line=__LINE__,  &
-    & routine="LagrangeGradientEvalAll1()",  &
-    & file=__FILE__)
+
+  CALL Errormsg(msg="No CASE FOUND: elemType="//ToString(elemType), &
+                routine="LagrangeGradientEvalAll1()", &
+                unitno=stdout, line=__LINE__, file=__FILE__)
   RETURN
+
 END SELECT
-END PROCEDURE LagrangeGradientEvalAll1
+END PROCEDURE LagrangeGradientEvalAll1_
 
 !----------------------------------------------------------------------------
 !

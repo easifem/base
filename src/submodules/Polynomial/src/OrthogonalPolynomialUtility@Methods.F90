@@ -163,20 +163,46 @@ END PROCEDURE EvalAllOrthopol_
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE GradientEvalAllOrthopol
+INTEGER(I4B) :: nrow, ncol
+CALL GradientEvalAllOrthopol_(n=n, x=x, orthopol=orthopol, ans=ans, &
+                  nrow=nrow, ncol=ncol, alpha=alpha, beta=beta, lambda=lambda)
+END PROCEDURE GradientEvalAllOrthopol
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE GradientEvalAllOrthopol_
+
 SELECT CASE (orthopol)
 CASE (Jacobi)
-  ans = JacobiGradientEvalAll(n=n, alpha=alpha, beta=beta, x=x)
+  ! ans(1:nrow, 1:ncol) = JacobiGradientEvalAll(n=n, alpha=alpha, beta=beta, x=x)
+  CALL JacobiGradientEvalAll_(n=n, alpha=alpha, beta=beta, x=x, ans=ans, &
+                              nrow=nrow, ncol=ncol)
+
 CASE (Ultraspherical)
-  ans = UltraSphericalGradientEvalAll(n=n, lambda=lambda, x=x)
+  ! ans(1:nrow, 1:ncol) = UltraSphericalGradientEvalAll(n=n, lambda=lambda, x=x)
+  CALL UltraSphericalGradientEvalAll_(n=n, lambda=lambda, x=x, ans=ans, &
+                                      nrow=nrow, ncol=ncol)
+
 CASE (Legendre)
-  ans = LegendreGradientEvalAll(n=n, x=x)
+  ! ans(1:nrow, 1:ncol) = LegendreGradientEvalAll(n=n, x=x)
+  CALL LegendreGradientEvalAll_(n=n, x=x, ans=ans, nrow=nrow, ncol=ncol)
+
 CASE (Chebyshev)
-  ans = Chebyshev1GradientEvalAll(n=n, x=x)
+  ! ans(1:nrow, 1:ncol) = Chebyshev1GradientEvalAll(n=n, x=x)
+  CALL Chebyshev1GradientEvalAll_(n=n, x=x, ans=ans, nrow=nrow, ncol=ncol)
+
 CASE (Lobatto)
-  ans = LobattoGradientEvalAll(n=n, x=x)
+  ! ans(1:nrow, 1:ncol) = LobattoGradientEvalAll(n=n, x=x)
+  CALL LobattoGradientEvalAll_(n=n, x=x, ans=ans, nrow=nrow, ncol=ncol)
+
 CASE (UnscaledLobatto)
-  ans = UnscaledLobattoGradientEvalAll(n=n, x=x)
+  ! ans(1:nrow, 1:ncol) = UnscaledLobattoGradientEvalAll(n=n, x=x)
+  CALL UnscaledLobattoGradientEvalAll_(n=n, x=x, ans=ans, &
+                                       nrow=nrow, ncol=ncol)
+
 END SELECT
-END PROCEDURE GradientEvalAllOrthopol
+END PROCEDURE GradientEvalAllOrthopol_
 
 END SUBMODULE Methods

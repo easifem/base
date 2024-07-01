@@ -1485,6 +1485,77 @@ ans(:, :, 1) = MATMUL(xx, coeff0)
 END PROCEDURE LagrangeGradientEvalAll_Line1
 
 !----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE LagrangeGradientEvalAll_Line1_
+LOGICAL(LGT) :: firstCall0
+REAL(DFP) :: coeff0(order + 1, order + 1), xx(SIZE(x, 2), order + 1), areal
+INTEGER(I4B) :: ii, orthopol0, indx(2), jj
+
+dim1 = SIZE(x, 2)
+dim2 = SIZE(xij, 2)
+dim3 = 1
+!! ans(SIZE(x, 2), SIZE(xij, 2), 1)
+
+orthopol0 = input(default=polyopt%Monomial, option=basisType)
+firstCall0 = input(default=.TRUE., option=firstCall)
+
+IF (PRESENT(coeff)) THEN
+  IF (firstCall0) THEN
+
+    ! coeff = LagrangeCoeff_Line(&
+    CALL LagrangeCoeff_Line_(order=order, xij=xij, basisType=orthopol0, &
+                           alpha=alpha, beta=beta, lambda=lambda, ans=coeff, &
+                             nrow=indx(1), ncol=indx(2))
+
+  END IF
+
+  coeff0(1:dim2, 1:dim2) = coeff(1:dim2, 1:dim2)
+
+ELSE
+
+  ! coeff0 = LagrangeCoeff_Line(&
+  CALL LagrangeCoeff_Line_(order=order, xij=xij, basisType=orthopol0, &
+                          alpha=alpha, beta=beta, lambda=lambda, ans=coeff0, &
+                           nrow=indx(1), ncol=indx(2))
+END IF
+
+SELECT CASE (orthopol0)
+CASE (polyopt%Monomial)
+
+#ifdef DEBUG_VER
+
+  IF (dim2 .NE. order + 1) THEN
+    CALL Errormsg(msg="size(xij, 2) is not same as order+1", &
+                  routine="LagrangeGradientEvalAll_Line1", &
+                  file=__FILE__, line=__LINE__, unitno=stderr)
+    RETURN
+  END IF
+
+#endif
+
+  DO ii = 0, order
+    indx(1) = MAX(ii - 1_I4B, 0_I4B)
+    areal = REAL(ii, kind=DFP)
+    DO jj = 1, dim1
+      xx(jj, ii + 1) = areal * (x(1, jj)**(indx(1)))
+    END DO
+  END DO
+
+CASE DEFAULT
+
+  xx(1:dim1, 1:dim2) = GradientEvalAllOrthopol(n=order, x=x(1, :), &
+                    orthopol=orthopol0, alpha=alpha, beta=beta, lambda=lambda)
+
+END SELECT
+
+! ans(:, :, 1) = MATMUL(xx, coeff0)
+CALL GEMM(C=ans(1:dim1, 1:dim2, 1), alpha=1.0_DFP, A=xx, B=coeff0)
+
+END PROCEDURE LagrangeGradientEvalAll_Line1_
+
+!----------------------------------------------------------------------------
 !                                                        BasisEvalAll_Line
 !----------------------------------------------------------------------------
 

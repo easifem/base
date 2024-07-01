@@ -29,15 +29,18 @@ PRIVATE
 PUBLIC :: LagrangeDOF
 PUBLIC :: LagrangeInDOF
 PUBLIC :: LagrangeDegree
+PUBLIC :: EquidistancePoint
+
 PUBLIC :: LagrangeVandermonde
 PUBLIC :: LagrangeVandermonde_
-PUBLIC :: EquidistancePoint
 PUBLIC :: InterpolationPoint
 PUBLIC :: InterpolationPoint_
 PUBLIC :: LagrangeCoeff
+PUBLIC :: LagrangeCoeff_
 PUBLIC :: LagrangeEvalAll
 PUBLIC :: LagrangeEvalAll_
 PUBLIC :: LagrangeGradientEvalAll
+PUBLIC :: LagrangeGradientEvalAll_
 
 !----------------------------------------------------------------------------
 !                                                   LagrangeDOF@BasisMethods
@@ -559,6 +562,53 @@ INTERFACE LagrangeGradientEvalAll
     !! Value of n+1 Lagrange polynomials at point x
   END FUNCTION LagrangeGradientEvalAll1
 END INTERFACE LagrangeGradientEvalAll
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE LagrangeGradientEvalAll_
+  MODULE SUBROUTINE LagrangeGradientEvalAll1_(order, elemType, x, xij, ans, &
+           dim1, dim2, dim3, domainName, coeff, firstCall, basisType, alpha, &
+                                              beta, lambda)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! Order of Lagrange polynomials
+    INTEGER(I4B), INTENT(IN) :: elemType
+    !! element type
+    REAL(DFP), INTENT(IN) :: x(:, :)
+    !! Point of evaluation
+    !! x(1, :) is x coord
+    !! x(2, :) is y coord
+    !! x(3, :) is z coord
+    REAL(DFP), INTENT(INOUT) :: xij(:, :)
+    !! Interpolation points
+    REAL(DFP), INTENT(INOUT) :: ans(:, :, :)
+    !! Value of n+1 Lagrange polynomials at point x
+    !! dim1 =  SIZE(x, 2)
+    !! dim2 = SIZE(xij, 2)
+    !! dim3 = SIZE(x, 1)
+    !! ans(:, :, 1) denotes x gradient
+    !! ans(:,:, 2) denotes y gradient
+    !! ans(:,:, 3) denotes z gradient
+    INTEGER(I4B), INTENT(OUT) :: dim1, dim2, dim3
+    !! data written in ans
+    CHARACTER(*), INTENT(IN) :: domainName
+    !! domain of reference element
+    !! UNIT
+    !! BIUNIT
+    REAL(DFP), OPTIONAL, INTENT(INOUT) :: coeff(SIZE(xij, 2), SIZE(xij, 2))
+    !! Coefficient of Lagrange polynomials
+    LOGICAL(LGT), OPTIONAL :: firstCall
+    !! If firstCall is true, then coeff will be made
+    !! If firstCall is False, then coeff will be used
+    !! Default value of firstCall is True
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: basisType
+    !! Monomials *Default
+    !! Jacobi=Dubiner
+    !! Heirarchical
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha, beta, lambda
+  END SUBROUTINE LagrangeGradientEvalAll1_
+END INTERFACE LagrangeGradientEvalAll_
 
 !----------------------------------------------------------------------------
 !
