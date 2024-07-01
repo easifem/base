@@ -44,6 +44,8 @@ PUBLIC :: LagrangeEvalAll_Triangle
 PUBLIC :: LagrangeEvalAll_Triangle_
 
 PUBLIC :: LagrangeGradientEvalAll_Triangle
+PUBLIC :: LagrangeGradientEvalAll_Triangle_
+
 PUBLIC :: QuadraturePoint_Triangle
 PUBLIC :: IJ2VEFC_Triangle
 PUBLIC :: FacetConnectivity_Triangle
