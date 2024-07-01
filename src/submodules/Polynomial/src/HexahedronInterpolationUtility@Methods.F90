@@ -2680,7 +2680,7 @@ CASE (Monomial)
 
 #endif
 
-  DO ii = 1, tdof
+  DO ii = 1, dim2
     d1 = degree(ii, 1)
     d2 = degree(ii, 2)
     d3 = degree(ii, 3)
