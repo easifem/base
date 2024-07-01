@@ -2617,57 +2617,68 @@ CALL GEMM(C=ans(1:nrow, 1:ncol), alpha=1.0_DFP, A=xx, B=coeff0)
 END PROCEDURE LagrangeEvalAll_Hexahedron2_
 
 !----------------------------------------------------------------------------
-!                                       LagrangeGradientEvalAll_Hexahedron
+!
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE LagrangeGradientEvalAll_Hexahedron1
+INTEGER(I4B) :: dim1, dim2, dim3
+CALL LagrangeGradientEvalAll_Hexahedron1_(order=order, x=x, xij=xij, &
+                      ans=ans, dim1=dim1, dim2=dim2, dim3=dim3, coeff=coeff, &
+           firstCall=firstCall, basisType=basisType, alpha=alpha, beta=beta, &
+                                          lambda=lambda)
+END PROCEDURE LagrangeGradientEvalAll_Hexahedron1
+
+!----------------------------------------------------------------------------
+!                                       LagrangeGradientEvalAll_Hexahedron
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE LagrangeGradientEvalAll_Hexahedron1_
 LOGICAL(LGT) :: firstCall0
-INTEGER(I4B) :: ii, basisType0, tdof, ai, bi, ci
-INTEGER(I4B) :: degree(SIZE(xij, 2), 3), d1, d2, d3
+INTEGER(I4B) :: ii, basisType0, ai, bi, ci,d1, d2, d3,  degree(SIZE(xij, 2), 3), indx(3)
 REAL(DFP) :: coeff0(SIZE(xij, 2), SIZE(xij, 2)), &
-  & xx(SIZE(x, 2), SIZE(xij, 2), 3), ar, br, cr
+             xx(SIZE(x, 2), SIZE(xij, 2), 3), ar, br, cr
+
+dim1 = SIZE(x, 2)
+dim2 = SIZE(xij, 2)
+dim3 = 3
 
 basisType0 = INPUT(default=Monomial, option=basisType)
 firstCall0 = INPUT(default=.TRUE., option=firstCall)
 
 IF (PRESENT(coeff)) THEN
+
   IF (firstCall0) THEN
-    coeff = LagrangeCoeff_Hexahedron(&
-      & order=order, &
-      & xij=xij, &
-      & basisType=basisType0, &
-      & alpha=alpha, &
-      & beta=beta, &
-      & lambda=lambda &
-      & )
+    ! coeff = LagrangeCoeff_Hexahedron(&
+    CALL LagrangeCoeff_Hexahedron_(order=order, xij=xij, &
+                basisType=basisType0, alpha=alpha, beta=beta, lambda=lambda, &
+                                   ans=coeff, nrow=indx(1), ncol=indx(2))
   END IF
-  coeff0 = coeff
+  coeff0(1:dim2, 1:dim2) = coeff(1:dim2, 1:dim2)
+
 ELSE
-  coeff0 = LagrangeCoeff_Hexahedron(&
-    & order=order, &
-    & xij=xij, &
-    & basisType=basisType0, &
-    & alpha=alpha, &
-    & beta=beta, &
-    & lambda=lambda &
-    & )
+
+  CALL LagrangeCoeff_Hexahedron_(order=order, xij=xij, basisType=basisType0, &
+           alpha=alpha, beta=beta, lambda=lambda, ans=coeff0, nrows=indx(1), &
+                                 ncols=indx(2))
+
 END IF
 
 SELECT CASE (basisType0)
 
 CASE (Monomial)
-  degree = LagrangeDegree_Hexahedron(order=order)
-  tdof = SIZE(xij, 2)
 
-  IF (tdof .NE. SIZE(degree, 1)) THEN
-    CALL Errormsg(&
-      & msg="tdof is not same as size(degree,1)", &
-      & file=__FILE__, &
-      & routine="LagrangeEvalAll_Hexahedron1", &
-      & line=__LINE__, &
-      & unitno=stderr)
+  degree = LagrangeDegree_Hexahedron(order=order)
+
+#ifdef DEBUG_VER
+
+  IF (dim2 .NE. SIZE(degree, 1)) THEN
+    CALL Errormsg(msg="tdof is not same as size(degree,1)", &
+                  routine="LagrangeEvalAll_Hexahedron1", &
+                  file=__FILE__, line=__LINE__, unitno=stderr)
     RETURN
   END IF
+
+#endif
 
   DO ii = 1, tdof
     d1 = degree(ii, 1)
@@ -2726,10 +2737,10 @@ END SELECT
 
 DO ii = 1, 3
   ! ans(:, ii, :) = TRANSPOSE(MATMUL(xx(:, :, ii), coeff0))
-  ans(:, :, ii) = MATMUL(xx(:, :, ii), coeff0)
+  ans(1:dim1, 1:dim2, ii) = MATMUL(xx(:, :, ii), coeff0)
 END DO
 
-END PROCEDURE LagrangeGradientEvalAll_Hexahedron1
+END PROCEDURE LagrangeGradientEvalAll_Hexahedron1_
 
 !----------------------------------------------------------------------------
 !                                         TensorProdBasisGradient_Hexahedron

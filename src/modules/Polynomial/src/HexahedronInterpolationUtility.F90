@@ -54,6 +54,7 @@ PUBLIC :: GetFacetDOF_Hexahedron
 PUBLIC :: GetCellDOF_Hexahedron
 PUBLIC :: RefElemDomain_Hexahedron
 PUBLIC :: LagrangeGradientEvalAll_Hexahedron
+PUBLIC :: LagrangeGradientEvalAll_Hexahedron_
 PUBLIC :: OrthogonalBasisGradient_Hexahedron
 PUBLIC :: TensorProdBasisGradient_Hexahedron
 PUBLIC :: HeirarchicalBasisGradient_Hexahedron
@@ -2758,6 +2759,44 @@ INTERFACE LagrangeGradientEvalAll_Hexahedron
     !! computed
   END FUNCTION LagrangeGradientEvalAll_Hexahedron1
 END INTERFACE LagrangeGradientEvalAll_Hexahedron
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE LagrangeGradientEvalAll_Hexahedron_
+  MODULE SUBROUTINE LagrangeGradientEvalAll_Hexahedron1_(order, x, xij, ans, &
+           dim1, dim2, dim3, coeff, firstCall, basisType, alpha, beta, lambda)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order of Lagrange polynomials
+    REAL(DFP), INTENT(IN) :: x(:, :)
+    !! point of evaluation in xij format
+    REAL(DFP), INTENT(INOUT) :: xij(:, :)
+    !! interpolation points
+    REAL(DFP), INTENT(INOUT) :: ans(:, :, :)
+    !! Value of gradient of nth order Lagrange polynomials at point x
+    !! The first index denotes point of evaluation
+    !! the second index denotes Lagrange polynomial number
+    !! The third index denotes the spatial dimension in which gradient is
+    !! computed
+    INTEGER(I4B), INTENT(OUT) :: dim1, dim2, dim3
+    !! dim1, dim2, dim3 = SIZE(x, 2), SIZE(xij, 2), 3
+    REAL(DFP), OPTIONAL, INTENT(INOUT) :: coeff(SIZE(xij, 2), SIZE(xij, 2))
+    !! coefficient of Lagrange polynomials
+    LOGICAL(LGT), OPTIONAL :: firstCall
+    !! If firstCall is true, then coeff will be made
+    !! If firstCall is False, then coeff will be used
+    !! Default value of firstCall is True
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: basisType
+    !! Monomial ! Jacobi ! Legendre ! Chebyshev ! Lobatto ! UnscaledLobatto
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
+    !! Jacobi polynomial parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: beta
+    !! Jacobi polynomial parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: lambda
+    !! Ultraspherical parameter
+  END SUBROUTINE LagrangeGradientEvalAll_Hexahedron1_
+END INTERFACE LagrangeGradientEvalAll_Hexahedron_
 
 !----------------------------------------------------------------------------
 !                                        TensorProdBasisGradient_Hexahedron
