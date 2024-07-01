@@ -52,6 +52,7 @@ PUBLIC :: LagrangeEvalAll_Tetrahedron_
 PUBLIC :: QuadraturePoint_Tetrahedron
 PUBLIC :: RefElemDomain_Tetrahedron
 PUBLIC :: LagrangeGradientEvalAll_Tetrahedron
+PUBLIC :: LagrangeGradientEvalAll_Tetrahedron_
 PUBLIC :: HeirarchicalBasisGradient_Tetrahedron
 PUBLIC :: OrthogonalBasisGradient_Tetrahedron
 PUBLIC :: GetTotalDOF_Tetrahedron
@@ -2493,6 +2494,49 @@ INTERFACE LagrangeGradientEvalAll_Tetrahedron
     !! computed
   END FUNCTION LagrangeGradientEvalAll_Tetrahedron1
 END INTERFACE LagrangeGradientEvalAll_Tetrahedron
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE LagrangeGradientEvalAll_Tetrahedron_
+  MODULE SUBROUTINE LagrangeGradientEvalAll_Tetrahedron1_(order, x, xij, &
+         ans, dim1, dim2, dim3, refTetrahedron, coeff, firstCall, basisType, &
+                                                          alpha, beta, lambda)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! Order of Lagrange polynomials
+    REAL(DFP), INTENT(IN) :: x(:, :)
+    !! Point of evaluation
+    !! x(1, :) is x coord ! x(2, :) is y coord ! x(3, :) is z coord
+    REAL(DFP), INTENT(INOUT) :: xij(:, :)
+    !! Interpolation points
+    REAL(DFP), INTENT(INOUT) :: ans(:, :, :)
+    !! Value of gradient of nth order Lagrange polynomials at point x
+    !! The first index denotes point of evaluation
+    !! the second index denotes Lagrange polynomial number
+    !! The third index denotes the spatial dimension in which gradient is
+    !! computed
+    INTEGER(I4B), INTENT(OUT) :: dim1, dim2, dim3
+    !! dim1, dim2, dim3 = SIZE(x, 2), SIZE(xij, 2), 3
+    CHARACTER(*), OPTIONAL, INTENT(IN) :: refTetrahedron
+    !! UNIT *default ! BIUNIT
+    REAL(DFP), OPTIONAL, INTENT(INOUT) :: coeff(SIZE(xij, 2), SIZE(xij, 2))
+    !! Coefficient of Lagrange polynomials
+    LOGICAL(LGT), OPTIONAL :: firstCall
+    !! If firstCall is true, then coeff will be made
+    !! If firstCall is False, then coeff will be used
+    !! Default value of firstCall is True
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: basisType
+    !! Monomials *Default ! Orthogonal
+    !! Legendre ! Lobatto ! Chebyshev ! Jacobi ! Ultraspherical ! Heirarchical
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
+    !! Jacobi parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: beta
+    !! Jacobi parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: lambda
+    !! Ultraspherical parameter
+  END SUBROUTINE LagrangeGradientEvalAll_Tetrahedron1_
+END INTERFACE LagrangeGradientEvalAll_Tetrahedron_
 
 !----------------------------------------------------------------------------
 !                                       OrthogonalBasisGradient_Tetrahedron
