@@ -355,17 +355,27 @@ CALL ErrorMsg(msg="Work in progress", unitno=stdout, line=__LINE__, &
 END PROCEDURE LagrangeEvalAll_Pyramid2_
 
 !----------------------------------------------------------------------------
-!                                          LagrangeGradientEvalAll_Pyramid
+!
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE LagrangeGradientEvalAll_Pyramid1
-!FIX: LagrangeGradientEvalAll_Pyramid1
-CALL ErrorMsg(&
-& msg="Work in progress",  &
-& unitno=stdout,  &
-& line=__LINE__,  &
-& routine="LagrangeGradientEvalAll_Pyramid1()", &
-& file=__FILE__)
+INTEGER(I4B) :: dim1, dim2, dim3
+CALL LagrangeGradientEvalAll_Pyramid1_(order=order, x=x, xij=xij, ans=ans, &
+        dim1=dim1, dim2=dim2, dim3=dim3, refPyramid=refPyramid, coeff=coeff, &
+           firstCall=firstCall, basisType=basisType, alpha=alpha, beta=beta, &
+                                       lambda=lambda)
 END PROCEDURE LagrangeGradientEvalAll_Pyramid1
+
+!----------------------------------------------------------------------------
+!                                             LagrangeGradientEvalAll_Pyramid
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE LagrangeGradientEvalAll_Pyramid1_
+!FIX: Implement LagrangeGradientEvalAll_Pyramid1_
+CALL ErrorMsg(msg="Work in progress", &
+              routine="LagrangeGradientEvalAll_Pyramid1_()", &
+              unitno=stdout, line=__LINE__, file=__FILE__)
+RETURN
+END PROCEDURE LagrangeGradientEvalAll_Pyramid1_
 
 END SUBMODULE Methods
