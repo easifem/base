@@ -32,7 +32,7 @@ USE LineInterpolationUtility, ONLY: LagrangeDOF_Line, &
                                     LagrangeCoeff_Line, &
                                     LagrangeCoeff_Line_, &
                                     LagrangeEvalAll_Line_, &
-                                    LagrangeGradientEvalAll_Line
+                                    LagrangeGradientEvalAll_Line_
 
 USE TriangleInterpolationUtility, ONLY: LagrangeDOF_Triangle, &
                                         LagrangeInDOF_Triangle, &
@@ -43,7 +43,7 @@ USE TriangleInterpolationUtility, ONLY: LagrangeDOF_Triangle, &
                                         LagrangeCoeff_Triangle, &
                                         LagrangeCoeff_Triangle_, &
                                         LagrangeEvalAll_Triangle_, &
-                                        LagrangeGradientEvalAll_Triangle
+                                        LagrangeGradientEvalAll_Triangle_
 
 USE QuadrangleInterpolationUtility, ONLY: LagrangeDOF_Quadrangle, &
                                           LagrangeInDOF_Quadrangle, &
@@ -54,7 +54,7 @@ USE QuadrangleInterpolationUtility, ONLY: LagrangeDOF_Quadrangle, &
                                           LagrangeCoeff_Quadrangle, &
                                           LagrangeCoeff_Quadrangle_, &
                                           LagrangeEvalAll_Quadrangle_, &
-                                          LagrangeGradientEvalAll_Quadrangle
+                                          LagrangeGradientEvalAll_Quadrangle_
 
 USE TetrahedronInterpolationUtility, ONLY: LagrangeDOF_Tetrahedron, &
                                            LagrangeInDOF_Tetrahedron, &
@@ -65,7 +65,7 @@ USE TetrahedronInterpolationUtility, ONLY: LagrangeDOF_Tetrahedron, &
                                            LagrangeCoeff_Tetrahedron, &
                                            LagrangeCoeff_Tetrahedron_, &
                                            LagrangeEvalAll_Tetrahedron_, &
-                                           LagrangeGradientEvalAll_Tetrahedron
+                                          LagrangeGradientEvalAll_Tetrahedron_
 
 USE HexahedronInterpolationUtility, ONLY: LagrangeDOF_Hexahedron, &
                                           LagrangeInDOF_Hexahedron, &
@@ -76,7 +76,7 @@ USE HexahedronInterpolationUtility, ONLY: LagrangeDOF_Hexahedron, &
                                           LagrangeCoeff_Hexahedron, &
                                           LagrangeCoeff_Hexahedron_, &
                                           LagrangeEvalAll_Hexahedron_, &
-                                          LagrangeGradientEvalAll_Hexahedron
+                                          LagrangeGradientEvalAll_Hexahedron_
 
 USE PrismInterpolationUtility, ONLY: LagrangeDOF_Prism, &
                                      LagrangeInDOF_Prism, &
@@ -87,7 +87,7 @@ USE PrismInterpolationUtility, ONLY: LagrangeDOF_Prism, &
                                      LagrangeCoeff_Prism, &
                                      LagrangeCoeff_Prism_, &
                                      LagrangeEvalAll_Prism_, &
-                                     LagrangeGradientEvalAll_Prism
+                                     LagrangeGradientEvalAll_Prism_
 
 USE PyramidInterpolationUtility, ONLY: LagrangeDOF_Pyramid, &
                                        LagrangeInDOF_Pyramid, &
@@ -98,7 +98,7 @@ USE PyramidInterpolationUtility, ONLY: LagrangeDOF_Pyramid, &
                                        LagrangeCoeff_Pyramid, &
                                        LagrangeCoeff_Pyramid_, &
                                        LagrangeEvalAll_Pyramid_, &
-                                       LagrangeGradientEvalAll_Pyramid
+                                       LagrangeGradientEvalAll_Pyramid_
 
 USE ReallocateUtility, ONLY: Reallocate
 
@@ -741,9 +741,10 @@ CASE (Line)
 
 #endif
 
-  ans(1:dim1, 1:dim2, 1:1) = LagrangeGradientEvalAll_Line(order=order, &
-                             x=x, xij=xij, coeff=coeff, firstCall=firstCall, &
-                   basisType=basisType, alpha=alpha, beta=beta, lambda=lambda)
+  ! ans(1:dim1, 1:dim2, 1:1) = LagrangeGradientEvalAll_Line(order=order, &
+  CALL LagrangeGradientEvalAll_Line_(order=order, x=x, xij=xij, coeff=coeff, &
+           firstCall=firstCall, basisType=basisType, alpha=alpha, beta=beta, &
+                      lambda=lambda, ans=ans, dim1=dim1, dim2=dim2, dim3=dim3)
 
 CASE (Triangle)
 
@@ -758,10 +759,11 @@ CASE (Triangle)
 
 #endif
 
-  ans(1:dim1, 1:dim2, 1:2) = LagrangeGradientEvalAll_Triangle(order=order, &
-                          x=x, xij=xij, refTriangle=domainName, coeff=coeff, &
+  ! ans(1:dim1, 1:dim2, 1:2) = LagrangeGradientEvalAll_Triangle(order=order, &
+  CALL LagrangeGradientEvalAll_Triangle_(order=order, ans=ans, dim1=dim1, &
+    dim2=dim2, dim3=dim3, x=x, xij=xij, refTriangle=domainName, coeff=coeff, &
            firstCall=firstCall, basisType=basisType, alpha=alpha, beta=beta, &
-                                                              lambda=lambda)
+                                         lambda=lambda)
 
 CASE (Quadrangle)
 
@@ -776,9 +778,10 @@ CASE (Quadrangle)
 
 #endif
 
-  ans(1:dim1, 1:dim2, 1:2) = LagrangeGradientEvalAll_Quadrangle( &
-                order=order, x=x, xij=xij, coeff=coeff, firstCall=firstCall, &
-                   basisType=basisType, alpha=alpha, beta=beta, lambda=lambda)
+  ! ans(1:dim1, 1:dim2, 1:2) = LagrangeGradientEvalAll_Quadrangle( &
+  CALL LagrangeGradientEvalAll_Quadrangle_(order=order, x=x, xij=xij, &
+         coeff=coeff, firstCall=firstCall, basisType=basisType, alpha=alpha, &
+           beta=beta, lambda=lambda, ans=ans, dim1=dim1, dim2=dim2, dim3=dim3)
 
 CASE (Tetrahedron)
 
@@ -793,10 +796,11 @@ CASE (Tetrahedron)
 
 #endif
 
-  ans(1:dim1, 1:dim2, 1:3) = LagrangeGradientEvalAll_Tetrahedron( &
-          order=order, x=x, xij=xij, refTetrahedron=domainName, coeff=coeff, &
-           firstCall=firstCall, basisType=basisType, alpha=alpha, beta=beta, &
-                             lambda=lambda)
+  ! ans(1:dim1, 1:dim2, 1:3) = LagrangeGradientEvalAll_Tetrahedron( &
+  CALL LagrangeGradientEvalAll_Tetrahedron_(order=order, x=x, xij=xij, &
+                refTetrahedron=domainName, coeff=coeff, firstCall=firstCall, &
+        basisType=basisType, alpha=alpha, beta=beta, lambda=lambda, ans=ans, &
+                                            dim1=dim1, dim2=dim2, dim3=dim3)
 
 CASE (Hexahedron)
 
@@ -811,9 +815,10 @@ CASE (Hexahedron)
 
 #endif
 
-  ans(1:dim1, 1:dim2, 1:3) = LagrangeGradientEvalAll_Hexahedron( &
-                order=order, x=x, xij=xij, coeff=coeff, firstCall=firstCall, &
-                   basisType=basisType, alpha=alpha, beta=beta, lambda=lambda)
+  ! ans(1:dim1, 1:dim2, 1:3) = LagrangeGradientEvalAll_Hexahedron( &
+  CALL LagrangeGradientEvalAll_Hexahedron_(order=order, x=x, xij=xij, &
+         coeff=coeff, firstCall=firstCall, basisType=basisType, alpha=alpha, &
+           beta=beta, lambda=lambda, ans=ans, dim1=dim1, dim2=dim2, dim3=dim3)
 
 CASE (Prism)
 
@@ -826,9 +831,11 @@ CASE (Prism)
   END IF
 #endif
 
-  ans(1:dim1, 1:dim2, 1:3) = LagrangeGradientEvalAll_Prism(order=order, &
-        x=x, xij=xij, refPrism=domainName, coeff=coeff, firstCall=firstCall, &
-                   basisType=basisType, alpha=alpha, beta=beta, lambda=lambda)
+  ! ans(1:dim1, 1:dim2, 1:3) = LagrangeGradientEvalAll_Prism(order=order, &
+  CALL LagrangeGradientEvalAll_Prism_(order=order, x=x, xij=xij, &
+                      refPrism=domainName, coeff=coeff, firstCall=firstCall, &
+        basisType=basisType, alpha=alpha, beta=beta, lambda=lambda, ans=ans, &
+                                      dim1=dim1, dim2=dim2, dim3=dim3)
 
 CASE (Pyramid)
 
@@ -843,9 +850,11 @@ CASE (Pyramid)
 
 #endif
 
-  ans(1:dim1, 1:dim2, 1:3) = LagrangeGradientEvalAll_Pyramid(order=order, &
-      x=x, xij=xij, refPyramid=domainName, coeff=coeff, firstCall=firstCall, &
-                   basisType=basisType, alpha=alpha, beta=beta, lambda=lambda)
+  ! ans(1:dim1, 1:dim2, 1:3) = LagrangeGradientEvalAll_Pyramid(order=order, &
+  CALL LagrangeGradientEvalAll_Pyramid_(order=order, x=x, xij=xij, &
+                    refPyramid=domainName, coeff=coeff, firstCall=firstCall, &
+        basisType=basisType, alpha=alpha, beta=beta, lambda=lambda, ans=ans, &
+                                        dim1=dim1, dim2=dim2, dim3=dim3)
 
 CASE DEFAULT
 
