@@ -2658,8 +2658,8 @@ IF (PRESENT(coeff)) THEN
 ELSE
 
   CALL LagrangeCoeff_Hexahedron_(order=order, xij=xij, basisType=basisType0, &
-           alpha=alpha, beta=beta, lambda=lambda, ans=coeff0, nrows=indx(1), &
-                                 ncols=indx(2))
+            alpha=alpha, beta=beta, lambda=lambda, ans=coeff0, nrow=indx(1), &
+                                 ncol=indx(2))
 
 END IF
 
