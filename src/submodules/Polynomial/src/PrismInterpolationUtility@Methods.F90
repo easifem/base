@@ -349,18 +349,28 @@ CALL ErrorMsg(msg="Work in progress", routine="LagrangeEvalAll_Prism2_()", &
 END PROCEDURE LagrangeEvalAll_Prism2_
 
 !----------------------------------------------------------------------------
-!                                             LagrangeGradientEvalAll_Prism
+!
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE LagrangeGradientEvalAll_Prism1
-!FIX: Implement LagrangeGradientEvalAll_Prism1
-CALL ErrorMsg(&
-& msg="Work in progress",  &
-& unitno=stdout,  &
-& line=__LINE__,  &
-& routine="LagrangeGradientEvalAll_Prism1()", &
-& file=__FILE__)
+INTEGER(I4B) :: dim1, dim2, dim3
+CALL LagrangeGradientEvalAll_Prism1_(order=order, x=x, xij=xij, ans=ans, &
+            dim1=dim1, dim2=dim2, dim3=dim3, refPrism=refPrism, coeff=coeff, &
+           firstCall=firstCall, basisType=basisType, alpha=alpha, beta=beta, &
+                                     lambda=lambda)
 END PROCEDURE LagrangeGradientEvalAll_Prism1
+
+!----------------------------------------------------------------------------
+!                                             LagrangeGradientEvalAll_Prism
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE LagrangeGradientEvalAll_Prism1_
+!FIX: Implement LagrangeGradientEvalAll_Prism1_
+CALL ErrorMsg(msg="Work in progress", &
+              routine="LagrangeGradientEvalAll_Prism1_()", &
+              unitno=stdout, line=__LINE__, file=__FILE__)
+RETURN
+END PROCEDURE LagrangeGradientEvalAll_Prism1_
 
 !----------------------------------------------------------------------------
 !

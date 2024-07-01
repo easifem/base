@@ -35,6 +35,8 @@ PUBLIC :: RefElemDomain_Prism
 PUBLIC :: LagrangeEvalAll_Prism
 PUBLIC :: LagrangeEvalAll_Prism_
 PUBLIC :: LagrangeGradientEvalAll_Prism
+PUBLIC :: LagrangeGradientEvalAll_Prism_
+
 PUBLIC :: EdgeConnectivity_Prism
 PUBLIC :: FacetConnectivity_Prism
 PUBLIC :: GetTotalDOF_Prism
@@ -879,7 +881,7 @@ INTERFACE LagrangeGradientEvalAll_Prism
     !! UNIT *default
     !! BIUNIT
     REAL(DFP), OPTIONAL, INTENT(INOUT) :: coeff(SIZE(xij, 2), SIZE(xij, 2))
-    !! Coefficient of Lagrange polynomials
+    !!!! Coefficient of Lagrange polynomials
     LOGICAL(LGT), OPTIONAL :: firstCall
     !! If firstCall is true, then coeff will be made
     !! If firstCall is False, then coeff will be used
@@ -907,6 +909,52 @@ INTERFACE LagrangeGradientEvalAll_Prism
     !! computed
   END FUNCTION LagrangeGradientEvalAll_Prism1
 END INTERFACE LagrangeGradientEvalAll_Prism
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE LagrangeGradientEvalAll_Prism_
+  MODULE SUBROUTINE LagrangeGradientEvalAll_Prism1_(order, x, xij, ans, &
+       dim1, dim2, dim3, refPrism, coeff, firstCall, basisType, alpha, beta, &
+                                                    lambda)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! Order of Lagrange polynomials
+    REAL(DFP), INTENT(IN) :: x(:, :)
+    !! Point of evaluation
+    !! x(1, :) is x coord
+    !! x(2, :) is y coord
+    !! x(3, :) is z coord
+    REAL(DFP), INTENT(INOUT) :: xij(:, :)
+    !! Interpolation points
+    REAL(DFP), INTENT(INOUT) :: ans(:, :, :)
+    !! Value of gradient of nth order Lagrange polynomials at point x
+    !! The first index denotes point of evaluation
+    !! the second index denotes Lagrange polynomial number
+    !! The third index denotes the spatial dimension in which gradient is
+    !! computed
+    INTEGER(I4B), INTENT(OUT) :: dim1, dim2, dim3
+    !! SIZE(x, 2), SIZE(xij, 2), 3
+    CHARACTER(*), OPTIONAL, INTENT(IN) :: refPrism
+    !! UNIT *default
+    !! BIUNIT
+    REAL(DFP), OPTIONAL, INTENT(INOUT) :: coeff(SIZE(xij, 2), SIZE(xij, 2))
+    !! Coefficient of Lagrange polynomials
+    LOGICAL(LGT), OPTIONAL :: firstCall
+    !! If firstCall is true, then coeff will be made
+    !! If firstCall is False, then coeff will be used
+    !! Default value of firstCall is True
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: basisType
+    !! Monomials *Default ! Legendre ! Lobatto ! Chebyshev ! Jacobi
+    !! Ultraspherical ! Heirarchical ! Orthogonal
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
+    !! Jacobi parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: beta
+    !! Jacobi parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: lambda
+    !! Ultraspherical parameter
+  END SUBROUTINE LagrangeGradientEvalAll_Prism1_
+END INTERFACE LagrangeGradientEvalAll_Prism_
 
 !----------------------------------------------------------------------------
 !
