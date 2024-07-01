@@ -173,7 +173,6 @@ END PROCEDURE GradientEvalAllOrthopol
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE GradientEvalAllOrthopol_
-
 SELECT CASE (orthopol)
 CASE (Jacobi)
   ! ans(1:nrow, 1:ncol) = JacobiGradientEvalAll(n=n, alpha=alpha, beta=beta, x=x)
@@ -204,5 +203,9 @@ CASE (UnscaledLobatto)
 
 END SELECT
 END PROCEDURE GradientEvalAllOrthopol_
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
 
 END SUBMODULE Methods

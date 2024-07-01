@@ -30,6 +30,7 @@ USE MappingUtility, ONLY: FromBiunitLine2Segment_, &
                           FromUnitLine2BiUnitLine
 
 USE OrthogonalPolynomialUtility, ONLY: GradientEvalAllOrthopol, &
+                                       GradientEvalAllOrthopol_, &
                                        EvalAllOrthopol, &
                                        EvalAllOrthopol_
 
@@ -1045,63 +1046,176 @@ END PROCEDURE BasisEvalAll_Line1_
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE BasisGradientEvalAll_Line1
-INTEGER(I4B) :: ii, basisType0
-TYPE(String) :: astr
-astr = UpperCase(refLine)
+INTEGER(I4B) :: tsize
+CALL BasisGradientEvalAll_Line1_(order=order, x=x, refLine=refLine, &
+        basisType=basisType, alpha=alpha, beta=beta, lambda=lambda, ans=ans, &
+                                 tsize=tsize)
+END PROCEDURE BasisGradientEvalAll_Line1
 
-IF (astr%chars() .EQ. "UNIT") THEN
-  CALL Errormsg(&
-    & msg="refLine should be BIUNIT", &
-    & file=__FILE__, &
-    & routine="BasisGradientEvalAll_Line1", &
-    & line=__LINE__, &
-    & unitno=stderr)
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE BasisGradientEvalAll_Line1_
+INTEGER(I4B) :: ii, basisType0
+CHARACTER(:), ALLOCATABLE :: astr
+REAL(DFP) :: areal, breal, x1(1), temp(1, order + 1)
+
+astr = UpperCase(refline)
+
+tsize = order + 1
+
+#ifdef DEBUG_VER
+
+IF (astr .EQ. "UNIT") THEN
+  CALL Errormsg(msg="refLine should be BIUNIT", &
+                routine="BasisGradientEvalAll_Line1", &
+                file=__FILE__, line=__LINE__, unitno=stderr)
   RETURN
 END IF
 
-basisType0 = input(default=polyopt%Monomial, option=basisType)
+#endif
+
+basisType0 = Input(default=polyopt%Monomial, option=basisType)
 SELECT CASE (basisType0)
+
 CASE (polyopt%Monomial)
+
   ans(1) = 0.0_DFP
   DO ii = 1, order
-    ans(ii + 1) = REAL(ii, dfp) * x**(ii - 1)
+    areal = REAL(ii, kind=DFP)
+    breal = x**(ii - 1)
+    ans(ii + 1) = areal * breal
   END DO
+
 CASE DEFAULT
+
+#ifdef DEBUG_VER
+
+  IF (basisType0 .EQ. polyopt%Jacobi) THEN
+
+    IF (.NOT. PRESENT(alpha) .OR. .NOT. PRESENT(beta)) THEN
+      CALL Errormsg( &
+        msg="alpha and beta should be present for basisType=Jacobi", &
+        routine="BasisGradientEvalAll_Line1", &
+        file=__FILE__, line=__LINE__, unitno=stderr)
+      RETURN
+    END IF
+
+  END IF
+
+  IF (basisType0 .EQ. polyopt%Ultraspherical) THEN
+
+    IF (.NOT. PRESENT(lambda)) THEN
+      CALL Errormsg( &
+        msg="lambda should be present for basisType=Ultraspherical", &
+        routine="BasisGradientEvalAll_Line1", &
+        file=__FILE__, line=__LINE__, unitno=stderr)
+      RETURN
+    END IF
+
+  END IF
+
+#endif
+
+  x1(1) = x
+  CALL GradientEvalAllOrthopol_(n=order, x=x1, orthopol=basisType0, &
+         alpha=alpha, beta=beta, lambda=lambda, ans=temp, nrow=ii, ncol=tsize)
+
+  ans(1:tsize) = temp(1, 1:tsize)
+
+END SELECT
+
+END PROCEDURE BasisGradientEvalAll_Line1_
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE BasisGradientEvalAll_Line2
+INTEGER(I4B) :: nrow, ncol
+CALL BasisGradientEvalAll_Line2_(order=order, x=x, ans=ans, nrow=nrow, &
+    ncol=ncol, refLine=refLine, basisType=basisType, alpha=alpha, beta=beta, &
+                                 lambda=lambda)
+END PROCEDURE BasisGradientEvalAll_Line2
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE BasisGradientEvalAll_Line2_
+INTEGER(I4B) :: ii, basisType0, jj
+REAL(DFP) :: areal, breal
+CHARACTER(:), ALLOCATABLE :: astr
+
+nrow = SIZE(x)
+ncol = 1 + order
+
+astr = UpperCase(refLine)
+
+#ifdef DEBUG_VER
+
+IF (astr .EQ. "UNIT") THEN
+  CALL Errormsg(msg="refLine should be BIUNIT", &
+                routine="BasisGradientEvalAll_Line2", &
+                file=__FILE__, line=__LINE__, unitno=stderr)
+  RETURN
+END IF
+
+#endif
+
+basisType0 = Input(default=polyopt%Monomial, option=basisType)
+SELECT CASE (basisType0)
+
+CASE (polyopt%Monomial)
+
+  ans(1:nrow, 1) = 0.0_DFP
+
+  DO ii = 1, order
+    areal = REAL(ii, kind=dfp)
+
+    DO jj = 1, nrow
+
+      breal = x(jj)**(ii - 1)
+      ans(jj, ii + 1) = areal * breal
+
+    END DO
+
+  END DO
+
+CASE DEFAULT
+
+#ifdef DEBUG_VER
 
   IF (basisType0 .EQ. polyopt%Jacobi) THEN
     IF (.NOT. PRESENT(alpha) .OR. .NOT. PRESENT(beta)) THEN
-      CALL Errormsg(&
-        & msg="alpha and beta should be present for basisType=Jacobi", &
-        & file=__FILE__, &
-        & routine="BasisGradientEvalAll_Line1", &
-        & line=__LINE__, &
-        & unitno=stderr)
+      CALL Errormsg( &
+        msg="alpha and beta should be present for basisType=Jacobi", &
+        routine="BasisGradientEvalAll_Line2", &
+        file=__FILE__, line=__LINE__, unitno=stderr)
       RETURN
     END IF
   END IF
 
   IF (basisType0 .EQ. polyopt%Ultraspherical) THEN
     IF (.NOT. PRESENT(lambda)) THEN
-      CALL Errormsg(&
-        & msg="lambda should be present for basisType=Ultraspherical", &
-        & file=__FILE__, &
-        & routine="BasisGradientEvalAll_Line1", &
-        & line=__LINE__, &
-        & unitno=stderr)
+      CALL Errormsg( &
+        msg="lambda should be present for basisType=Ultraspherical", &
+        routine="BasisGradientEvalAll_Line2", &
+        file=__FILE__, line=__LINE__, unitno=stderr)
       RETURN
     END IF
   END IF
 
-  ans = RESHAPE(GradientEvalAllOrthopol(&
-    & n=order, &
-    & x=[x], &
-    & orthopol=basisType0, &
-    & alpha=alpha, &
-    & beta=beta, &
-    & lambda=lambda), [order + 1])
+#endif
+
+  ! ans = GradientEvalAllOrthopol(&
+  CALL GradientEvalAllOrthopol_(n=order, x=x, orthopol=basisType0, &
+         alpha=alpha, beta=beta, lambda=lambda, ans=ans, nrow=nrow, ncol=ncol)
+
 END SELECT
 
-END PROCEDURE BasisGradientEvalAll_Line1
+END PROCEDURE BasisGradientEvalAll_Line2_
 
 !----------------------------------------------------------------------------
 !                                                        BasisEvalAll_Line
@@ -1188,65 +1302,6 @@ END PROCEDURE BasisEvalAll_Line2_
 !----------------------------------------------------------------------------
 !                                                  BasisGradientEvalAll_Line
 !----------------------------------------------------------------------------
-
-MODULE PROCEDURE BasisGradientEvalAll_Line2
-INTEGER(I4B) :: ii, basisType0
-TYPE(String) :: astr
-astr = UpperCase(refLine)
-
-IF (astr%chars() .EQ. "UNIT") THEN
-  CALL Errormsg(&
-    & msg="refLine should be BIUNIT", &
-    & file=__FILE__, &
-    & routine="BasisGradientEvalAll_Line2", &
-    & line=__LINE__, &
-    & unitno=stderr)
-  RETURN
-END IF
-
-basisType0 = input(default=polyopt%Monomial, option=basisType)
-SELECT CASE (basisType0)
-CASE (polyopt%Monomial)
-  ans(:, 1) = 0.0_DFP
-  DO ii = 1, order
-    ans(:, ii + 1) = REAL(ii, dfp) * x**(ii - 1)
-  END DO
-CASE DEFAULT
-
-  IF (basisType0 .EQ. polyopt%Jacobi) THEN
-    IF (.NOT. PRESENT(alpha) .OR. .NOT. PRESENT(beta)) THEN
-      CALL Errormsg(&
-        & msg="alpha and beta should be present for basisType=Jacobi", &
-        & file=__FILE__, &
-        & routine="BasisGradientEvalAll_Line2", &
-        & line=__LINE__, &
-        & unitno=stderr)
-      RETURN
-    END IF
-  END IF
-
-  IF (basisType0 .EQ. polyopt%Ultraspherical) THEN
-    IF (.NOT. PRESENT(lambda)) THEN
-      CALL Errormsg(&
-        & msg="lambda should be present for basisType=Ultraspherical", &
-        & file=__FILE__, &
-        & routine="BasisGradientEvalAll_Line2", &
-        & line=__LINE__, &
-        & unitno=stderr)
-      RETURN
-    END IF
-  END IF
-
-  ans = GradientEvalAllOrthopol(&
-    & n=order, &
-    & x=x, &
-    & orthopol=basisType0, &
-    & alpha=alpha, &
-    & beta=beta, &
-    & lambda=lambda)
-END SELECT
-
-END PROCEDURE BasisGradientEvalAll_Line2
 
 !----------------------------------------------------------------------------
 !                                                   QuadraturePoint_Line
@@ -1545,8 +1600,9 @@ CASE (polyopt%Monomial)
 
 CASE DEFAULT
 
-  xx(1:dim1, 1:dim2) = GradientEvalAllOrthopol(n=order, x=x(1, :), &
-                    orthopol=orthopol0, alpha=alpha, beta=beta, lambda=lambda)
+  ! xx(1:dim1, 1:dim2) = GradientEvalAllOrthopol(n=order, x=x(1, :), &
+  CALL GradientEvalAllOrthopol_(n=order, x=x(1, :), orthopol=orthopol0, &
+          alpha=alpha, beta=beta, lambda=lambda, ans=xx, nrow=dim1, ncol=dim2)
 
 END SELECT
 

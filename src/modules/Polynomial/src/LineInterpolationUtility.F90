@@ -38,9 +38,11 @@ PUBLIC :: LagrangeCoeff_Line_
 PUBLIC :: LagrangeEvalAll_Line
 PUBLIC :: LagrangeEvalAll_Line_
 PUBLIC :: LagrangeGradientEvalAll_Line
+PUBLIC :: LagrangeGradientEvalAll_Line_
 PUBLIC :: BasisEvalAll_Line
 PUBLIC :: BasisEvalAll_Line_
 PUBLIC :: BasisGradientEvalAll_Line
+PUBLIC :: BasisGradientEvalAll_Line_
 PUBLIC :: QuadraturePoint_Line
 PUBLIC :: ToVEFC_Line
 PUBLIC :: QuadratureNumber_Line
@@ -987,6 +989,47 @@ INTERFACE LagrangeGradientEvalAll_Line
 END INTERFACE LagrangeGradientEvalAll_Line
 
 !----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE LagrangeGradientEvalAll_Line_
+  MODULE SUBROUTINE LagrangeGradientEvalAll_Line1_(order, x, xij, ans, &
+           dim1, dim2, dim3, coeff, firstCall, basisType, alpha, beta, lambda)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order of Lagrange polynomials
+    REAL(DFP), INTENT(IN) :: x(:, :)
+    !! point of evaluation in xij format
+    REAL(DFP), INTENT(INOUT) :: xij(:, :)
+    !! interpolation points
+    !! xij should be present when firstCall is true.
+    !! It is used for computing the coeff
+    !! If coeff is absent then xij should be present
+    REAL(DFP), INTENT(INOUT) :: ans(:, :, :)
+    !! Value of gradient of nth order Lagrange polynomials at point x
+    !! The first index denotes point of evaluation
+    !! the second index denotes Lagrange polynomial number
+    !! The third index denotes the spatial dimension in which gradient is
+    !! computed
+    INTEGER(I4B), INTENT(OUT) :: dim1, dim2, dim3
+    !! ans(SIZE(x, 2), SIZE(xij, 2), 1)
+    REAL(DFP), OPTIONAL, INTENT(INOUT) :: coeff(SIZE(xij, 2), SIZE(xij, 2))
+    !! coefficient of Lagrange polynomials
+    LOGICAL(LGT), OPTIONAL :: firstCall
+    !! If firstCall is true, then coeff will be made
+    !! If firstCall is False, then coeff will be used
+    !! Default value of firstCall is True
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: basisType
+    !! Monomial
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
+    !! Jacobi polynomial parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: beta
+    !! Jacobi polynomial parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: lambda
+    !! Ultraspherical parameter
+  END SUBROUTINE LagrangeGradientEvalAll_Line1_
+END INTERFACE LagrangeGradientEvalAll_Line_
+
+!----------------------------------------------------------------------------
 !                                                          BasisEvalAll_Line
 !----------------------------------------------------------------------------
 
@@ -1298,6 +1341,36 @@ INTERFACE BasisGradientEvalAll_Line
 END INTERFACE BasisGradientEvalAll_Line
 
 !----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE BasisGradientEvalAll_Line_
+  MODULE SUBROUTINE BasisGradientEvalAll_Line1_(order, x, refLine, &
+                                   basisType, alpha, beta, lambda, ans, tsize)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order of  polynomials
+    REAL(DFP), INTENT(IN) :: x
+    !! point of evaluation
+    REAL(DFP), INTENT(INOUT) :: ans(:)
+    !! ans(order + 1)
+    !! Value of n+1  polynomials at point x
+    INTEGER(I4B), INTENT(OUT) :: tsize
+    !! order + 1
+    CHARACTER(*), INTENT(IN) :: refLine
+    !! Refline should be  BIUNIT
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: basisType
+    !! Monomial ! Jacobi ! Ultraspherical ! Legendre ! Chebyshev
+    !! Lobatto ! UnscaledLobatto
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
+    !! Jacobi polynomial parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: beta
+    !! Jacobi polynomial parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: lambda
+    !! Ultraspherical parameter
+  END SUBROUTINE BasisGradientEvalAll_Line1_
+END INTERFACE BasisGradientEvalAll_Line_
+
+!----------------------------------------------------------------------------
 !                                                         BasisEvalAll_Line
 !----------------------------------------------------------------------------
 
@@ -1335,6 +1408,39 @@ INTERFACE BasisGradientEvalAll_Line
     !! ans(i, :) is the value of all polynomials at x(i) point
   END FUNCTION BasisGradientEvalAll_Line2
 END INTERFACE BasisGradientEvalAll_Line
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE BasisGradientEvalAll_Line_
+  MODULE SUBROUTINE BasisGradientEvalAll_Line2_(order, x, ans, nrow, ncol, &
+                                      refLine, basisType, alpha, beta, lambda)
+
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order of  polynomials
+    REAL(DFP), INTENT(IN) :: x(:)
+    !! point of evaluation
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    !! ans(SIZE(x), order + 1)
+    !! Value of n+1  polynomials at point x
+    !! ans(:, j) is the value of jth polynomial at x points
+    !! ans(i, :) is the value of all polynomials at x(i) point
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+    !! number of rows and columns written to ans
+    CHARACTER(*), INTENT(IN) :: refLine
+    !! UNIT ! BIUNIT
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: basisType
+    !! Monomial ! Jacobi ! Ultraspherical ! Legendre ! Chebyshev
+    !! Lobatto ! UnscaledLobatto
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
+    !! Jacobi polynomial parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: beta
+    !! Jacobi polynomial parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: lambda
+    !! Ultraspherical parameter
+  END SUBROUTINE BasisGradientEvalAll_Line2_
+END INTERFACE BasisGradientEvalAll_Line_
 
 !----------------------------------------------------------------------------
 !                                                      QuadraturePoint_Line
