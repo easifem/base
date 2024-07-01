@@ -1,4 +1,4 @@
-! This program is a part of EASIFEM library
+
 ! Copyright (C) 2020-2021  Vikas Sharma, Ph.D
 !
 ! This program is free software: you can redistribute it and/or modify
@@ -46,6 +46,7 @@ PUBLIC :: QuadratureNumber_Quadrangle
 PUBLIC :: FacetConnectivity_Quadrangle
 PUBLIC :: RefElemDomain_Quadrangle
 PUBLIC :: LagrangeGradientEvalAll_Quadrangle
+PUBLIC :: LagrangeGradientEvalAll_Quadrangle_
 PUBLIC :: HeirarchicalBasisGradient_Quadrangle
 PUBLIC :: TensorProdBasisGradient_Quadrangle
 PUBLIC :: OrthogonalBasisGradient_Quadrangle
@@ -1556,22 +1557,23 @@ END INTERFACE VertexBasis_Quadrangle_
 ! summary: Returns the vertex basis functions on biunit quadrangle
 
 INTERFACE
-  MODULE PURE FUNCTION VertexBasisGradient_Quadrangle2( &
-    & L1, &
-    & L2,  &
-    & dL1,  &
-    & dL2) RESULT(ans)
+  MODULE PURE SUBROUTINE VertexBasisGradient_Quadrangle2_(L1, L2, dL1, dL2, &
+                                                        ans, dim1, dim2, dim3)
     REAL(DFP), INTENT(IN) :: L1(1:, 0:)
-    !! L1 Lobatto polynomial evaluated at x coordinates
+  !! L1 Lobatto polynomial evaluated at x coordinates
     REAL(DFP), INTENT(IN) :: L2(1:, 0:)
-    !! L2 is Lobatto polynomial evaluated at y coordinates
+  !! L2 is Lobatto polynomial evaluated at y coordinates
     REAL(DFP), INTENT(IN) :: dL1(1:, 0:)
-    !! L1 Lobatto polynomial evaluated at x coordinates
+  !! L1 Lobatto polynomial evaluated at x coordinates
     REAL(DFP), INTENT(IN) :: dL2(1:, 0:)
-    !! L2 is Lobatto polynomial evaluated at y coordinates
-    REAL(DFP) :: ans(SIZE(L1, 1), 4, 2)
-    !! Gradient of vertex basis
-  END FUNCTION VertexBasisGradient_Quadrangle2
+  !! L2 is Lobatto polynomial evaluated at y coordinates
+    REAL(DFP), INTENT(INOUT) :: ans(:, :, :)
+  !! dim1= SIZE(L1, 1)
+  !! dim2= 4
+  !! dim3 = 2
+  !! Gradient of vertex basis
+    INTEGER(I4B), INTENT(OUT) :: dim1, dim2, dim3
+  END SUBROUTINE VertexBasisGradient_Quadrangle2_
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -1669,14 +1671,8 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-  MODULE PURE FUNCTION VerticalEdgeBasisGradient_Quadrangle2( &
-    & qe1, &
-    & qe2, &
-    & L1, &
-    & L2,  &
-    & dL1,  &
-    & dL2) &
-    & RESULT(ans)
+  MODULE PURE SUBROUTINE VerticalEdgeBasisGradient_Quadrangle2_(qe1, qe2, &
+                                      L1, L2, dL1, dL2, ans, dim1, dim2, dim3)
     INTEGER(I4B), INTENT(IN) :: qe1
     !! order on left vertical edge (e1), it should be greater than 1
     INTEGER(I4B), INTENT(IN) :: qe2
@@ -1685,8 +1681,12 @@ INTERFACE
     !! Lobatto polynomials in x and y direction.
     REAL(DFP), INTENT(IN) :: dL1(1:, 0:), dL2(1:, 0:)
     !! Lobatto polynomials in x and y direction.
-    REAL(DFP) :: ans(SIZE(L1, 1), qe1 + qe2 - 2, 2)
-  END FUNCTION VerticalEdgeBasisGradient_Quadrangle2
+    REAL(DFP), INTENT(INOUT) :: ans(:, :, :)
+    !! dim1=SIZE(L1, 1)
+    !! dim2=qe1 + qe2 - 2
+    !! dim3= 2
+    INTEGER(I4B), INTENT(OUT) :: dim1, dim2, dim3
+  END SUBROUTINE VerticalEdgeBasisGradient_Quadrangle2_
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -1704,8 +1704,7 @@ END INTERFACE
 ! pe3 and pe4 should be greater than or equal to 2
 
 INTERFACE
-  MODULE PURE FUNCTION HorizontalEdgeBasis_Quadrangle(pe3, pe4, x, y) &
-    & RESULT(ans)
+  MODULE PURE FUNCTION HorizontalEdgeBasis_Quadrangle(pe3, pe4, x, y)  RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: pe3
     !! order on bottom vertical edge (e3), it should be greater than 1
     INTEGER(I4B), INTENT(IN) :: pe4
@@ -1736,7 +1735,7 @@ INTERFACE
 END INTERFACE
 
 !----------------------------------------------------------------------------
-!
+!:
 !----------------------------------------------------------------------------
 
 INTERFACE
@@ -1776,16 +1775,20 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-  MODULE PURE FUNCTION HorizontalEdgeBasisGradient_Quadrangle2(pe3, pe4, &
-                                                 L1, L2, dL1, dL2) RESULT(ans)
+  MODULE PURE SUBROUTINE HorizontalEdgeBasisGradient_Quadrangle2_(pe3, pe4, &
+                                      L1, L2, dL1, dL2, ans, dim1, dim2, dim3)
     INTEGER(I4B), INTENT(IN) :: pe3
     !! order on bottom vertical edge (e3), it should be greater than 1
     INTEGER(I4B), INTENT(IN) :: pe4
     !! order on top vertical edge(e4), it should be greater than 1
     REAL(DFP), INTENT(IN) :: L1(1:, 0:), L2(1:, 0:)
     REAL(DFP), INTENT(IN) :: dL1(1:, 0:), dL2(1:, 0:)
-    REAL(DFP) :: ans(SIZE(L1, 1), pe3 + pe4 - 2, 2)
-  END FUNCTION HorizontalEdgeBasisGradient_Quadrangle2
+    REAL(DFP), INTENT(INOUT) :: ans(:, :, :)
+    INTEGER(I4B), INTENT(OUT) :: dim1, dim2, dim3
+    !! dim1 = SIZE(L1, 1)
+    !! dim2 = pe3 + pe4 - 2
+    !! dim3 = 2
+  END SUBROUTINE HorizontalEdgeBasisGradient_Quadrangle2_
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -1871,21 +1874,20 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-  MODULE PURE FUNCTION CellBasisGradient_Quadrangle2( &
-    & pb, &
-    & qb, &
-    & L1, &
-    & L2,  &
-    & dL1,  &
-    & dL2) RESULT(ans)
+  MODULE PURE SUBROUTINE CellBasisGradient_Quadrangle2_(pb, qb, L1, L2, &
+                                              dL1, dL2, ans, dim1, dim2, dim3)
     INTEGER(I4B), INTENT(IN) :: pb
     !! order on bottom vertical edge (e3), it should be greater than 1
     INTEGER(I4B), INTENT(IN) :: qb
     !! order on top vertical edge(e4), it should be greater than 1
     REAL(DFP), INTENT(IN) :: L1(1:, 0:), L2(1:, 0:)
     REAL(DFP), INTENT(IN) :: dL1(1:, 0:), dL2(1:, 0:)
-    REAL(DFP) :: ans(SIZE(L1, 1), (pb - 1) * (qb - 1), 2)
-  END FUNCTION CellBasisGradient_Quadrangle2
+    REAL(DFP), INTENT(INOUT) :: ans(:, :, :)
+    INTEGER(I4B), INTENT(OUT) :: dim1, dim2, dim3
+    !! dim1=SIZE(L1, 1)
+    !! dim2=(pb - 1) * (qb - 1)
+    !! dim3=2
+  END SUBROUTINE CellBasisGradient_Quadrangle2_
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -2466,6 +2468,51 @@ INTERFACE LagrangeGradientEvalAll_Quadrangle
 END INTERFACE LagrangeGradientEvalAll_Quadrangle
 
 !----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE LagrangeGradientEvalAll_Quadrangle_
+  MODULE SUBROUTINE LagrangeGradientEvalAll_Quadrangle1_(order, x, xij, &
+            ans, dim1, dim2, dim3, coeff, firstCall, basisType, alpha, beta, &
+                                                         lambda)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order of Lagrange polynomials
+    REAL(DFP), INTENT(IN) :: x(:, :)
+    !! point of evaluation in xij format
+    REAL(DFP), INTENT(INOUT) :: xij(:, :)
+    !! interpolation points
+    !! xij should be present when firstCall is true.
+    !! It is used for computing the coeff
+    !! If coeff is absent then xij should be present
+    REAL(DFP), INTENT(INOUT) :: ans(:, :, :)
+    !! dim1 = SIZE(x, 2)
+    !! dim2 = SIZE(xij, 2)
+    !! dim3 = 2
+    !! Value of gradient of nth order Lagrange polynomials at point x
+    !! The first index denotes point of evaluation
+    !! the second index denotes Lagrange polynomial number
+    !! The third index denotes the spatial dimension in which gradient is
+    !! computed
+    INTEGER(I4B), INTENT(OUT) :: dim1, dim2, dim3
+    !!
+    REAL(DFP), OPTIONAL, INTENT(INOUT) :: coeff(:, :)
+    !! coefficient of Lagrange polynomials
+    LOGICAL(LGT), OPTIONAL :: firstCall
+    !! If firstCall is true, then coeff will be made
+    !! If firstCall is False, then coeff will be used
+    !! Default value of firstCall is True
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: basisType
+    !! Monomial ! Jacobi ! Legendre ! Chebyshev ! Lobatto ! UnscaledLobatto
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
+    !! Jacobi polynomial parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: beta
+    !! Jacobi polynomial parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: lambda
+    !! Ultraspherical parameter
+  END SUBROUTINE LagrangeGradientEvalAll_Quadrangle1_
+END INTERFACE LagrangeGradientEvalAll_Quadrangle_
+
+!----------------------------------------------------------------------------
 !                                              HeirarchicalBasis_Quadrangle
 !----------------------------------------------------------------------------
 
@@ -2513,6 +2560,35 @@ INTERFACE HeirarchicalBasisGradient_Quadrangle
 END INTERFACE HeirarchicalBasisGradient_Quadrangle
 
 !----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE HeirarchicalBasisGradient_Quadrangle_
+  MODULE SUBROUTINE HeirarchicalBasisGradient_Quadrangle1_(pb, qb, pe3, &
+                                    pe4, qe1, qe2, xij, ans, dim1, dim2, dim3)
+    INTEGER(I4B), INTENT(IN) :: pb
+    !! order of interpolation inside the quadrangle in x1 direction
+    INTEGER(I4B), INTENT(IN) :: qb
+    !! order of interpolation inside the quadrangle in x2 direction
+    INTEGER(I4B), INTENT(IN) :: pe3
+    !! order of interpolation on edge e3 (bottom) in x1 direction
+    INTEGER(I4B), INTENT(IN) :: pe4
+    !! order of interpolation on edge e4 (top) in x1 direction
+    INTEGER(I4B), INTENT(IN) :: qe1
+    !! order of interpolation on edge e1 (left) in y1 direction
+    INTEGER(I4B), INTENT(IN) :: qe2
+    !! order of interpolation on edge e2 (right) in y1 direction
+    REAL(DFP), INTENT(IN) :: xij(:, :)
+    !! points of evaluation in xij format
+    REAL(DFP), INTENT(INOUT) :: ans(:, :, :)
+    !! dim1 =  SIZE(xij, 2)
+    !! dim2 = pb * qb - pb - qb + pe3 + pe4 + qe1 + qe2 + 1
+    !! dim3 = 2
+    INTEGER(I4B), INTENT(OUT) :: dim1, dim2, dim3
+  END SUBROUTINE HeirarchicalBasisGradient_Quadrangle1_
+END INTERFACE HeirarchicalBasisGradient_Quadrangle_
+
+!----------------------------------------------------------------------------
 !                                              HeirarchicalBasis_Quadrangle
 !----------------------------------------------------------------------------
 
@@ -2521,10 +2597,7 @@ END INTERFACE HeirarchicalBasisGradient_Quadrangle
 ! summary: Evaluate all modal basis (heirarchical polynomial) on quadrangle
 
 INTERFACE HeirarchicalBasisGradient_Quadrangle
-  MODULE FUNCTION HeirarchicalBasisGradient_Quadrangle2( &
-    & p, &
-    & q, &
-    & xij) RESULT(ans)
+  MODULE FUNCTION HeirarchicalBasisGradient_Quadrangle2(p, q, xij) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: p
     !! order of interpolation inside the quadrangle in x1 direction
     INTEGER(I4B), INTENT(IN) :: q
@@ -2534,6 +2607,27 @@ INTERFACE HeirarchicalBasisGradient_Quadrangle
     REAL(DFP) :: ans(SIZE(xij, 2), (p + 1) * (q + 1), 2)
   END FUNCTION HeirarchicalBasisGradient_Quadrangle2
 END INTERFACE HeirarchicalBasisGradient_Quadrangle
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE HeirarchicalBasisGradient_Quadrangle_
+  MODULE SUBROUTINE HeirarchicalBasisGradient_Quadrangle2_(p, q, xij, &
+                                                        ans, dim1, dim2, dim3)
+    INTEGER(I4B), INTENT(IN) :: p
+    !! order of interpolation inside the quadrangle in x1 direction
+    INTEGER(I4B), INTENT(IN) :: q
+    !! order of interpolation inside the quadrangle in x2 direction
+    REAL(DFP), INTENT(IN) :: xij(:, :)
+    !! points of evaluation in xij format
+    REAL(DFP), INTENT(INOUT) :: ans(:, :, :)
+    INTEGER(I4B), INTENT(OUT) :: dim1, dim2, dim3
+    !! dim1 = SIZE(xij, 2)
+    !! dim2 = (p+1)*(q+1)
+    !! dim3 = 2
+  END SUBROUTINE HeirarchicalBasisGradient_Quadrangle2_
+END INTERFACE HeirarchicalBasisGradient_Quadrangle_
 
 !----------------------------------------------------------------------------
 !                                        TensorProdBasisGradient_Quadrangle
@@ -2565,19 +2659,11 @@ INTERFACE TensorProdBasisGradient_Quadrangle
     !! points of evaluation in xij format
     INTEGER(I4B), INTENT(IN) :: basisType1
     !! basis type in x1 direction
-    !! Monomials
-    !! Jacobi
-    !! Legendre
-    !! Chebyshev
-    !! Ultraspherical
+    !! Monomials ! Jacobi ! Legendre ! Chebyshev ! Ultraspherical
     !! Heirarchical
     INTEGER(I4B), INTENT(IN) :: basisType2
     !! basis type in x2 direction
-    !! Monomials
-    !! Jacobi
-    !! Legendre
-    !! Chebyshev
-    !! Ultraspherical
+    !! Monomials ! Jacobi ! Legendre ! Chebyshev ! Ultraspherical
     !! Heirarchical
     REAL(DFP), OPTIONAL, INTENT(IN) :: alpha1
     !! alpha1 needed when  basisType1 "Jacobi"
@@ -2599,5 +2685,56 @@ END INTERFACE TensorProdBasisGradient_Quadrangle
 INTERFACE OrthogonalBasisGradient_Quadrangle
   MODULE PROCEDURE TensorProdBasisGradient_Quadrangle1
 END INTERFACE OrthogonalBasisGradient_Quadrangle
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE TensorProdBasisGradient_Quadrangle_
+  MODULE SUBROUTINE TensorProdBasisGradient_Quadrangle1_(p, q, xij, ans, &
+   dim1, dim2, dim3, basisType1, basisType2, alpha1, beta1, lambda1, alpha2, &
+                                                         beta2, lambda2)
+    INTEGER(I4B), INTENT(IN) :: p
+    !! highest order in x1 direction
+    INTEGER(I4B), INTENT(IN) :: q
+    !! highest order in x2 direction
+    REAL(DFP), INTENT(IN) :: xij(:, :)
+    !! points of evaluation in xij format
+    REAL(DFP), INTENT(INOUT) :: ans(:, :, :)
+    !! dim1 = SIZE(xij, 2)
+    !! dim2 = (p + 1) * (q + 1)
+    !! dim3 = 2
+    INTEGER(I4B), INTENT(OUT) :: dim1, dim2, dim3
+    !! dimension of data written in ans
+    INTEGER(I4B), INTENT(IN) :: basisType1
+    !! basis type in x1 direction
+    !! Monomials ! Jacobi ! Legendre ! Chebyshev ! Ultraspherical
+    !! Heirarchical
+    INTEGER(I4B), INTENT(IN) :: basisType2
+    !! basis type in x2 direction
+    !! Monomials ! Jacobi ! Legendre ! Chebyshev ! Ultraspherical
+    !! Heirarchical
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha1
+    !! alpha1 needed when  basisType1 "Jacobi"
+    REAL(DFP), OPTIONAL, INTENT(IN) :: beta1
+    !! beta1 is needed when basisType1 is "Jacobi"
+    REAL(DFP), OPTIONAL, INTENT(IN) :: lambda1
+    !! lambda1 is needed when basisType1 is "Ultraspherical"
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha2
+    !! alpha2 needed when basisType2 is "Jacobi"
+    REAL(DFP), OPTIONAL, INTENT(IN) :: beta2
+    !! beta2 needed when basisType2 is "Jacobi"
+    REAL(DFP), OPTIONAL, INTENT(IN) :: lambda2
+    !! lambda2 is needed when basisType2 is "Ultraspherical"
+  END SUBROUTINE TensorProdBasisGradient_Quadrangle1_
+END INTERFACE TensorProdBasisGradient_Quadrangle_
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE OrthogonalBasisGradient_Quadrangle_
+  MODULE PROCEDURE TensorProdBasisGradient_Quadrangle1_
+END INTERFACE OrthogonalBasisGradient_Quadrangle_
 
 END MODULE QuadrangleInterpolationUtility
