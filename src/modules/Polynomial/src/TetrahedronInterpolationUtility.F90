@@ -26,6 +26,7 @@ PUBLIC :: LagrangeDOF_Tetrahedron
 PUBLIC :: LagrangeInDOF_Tetrahedron
 PUBLIC :: EquidistanceInPoint_Tetrahedron
 PUBLIC :: EquidistancePoint_Tetrahedron
+PUBLIC :: EquidistancePoint_Tetrahedron_
 PUBLIC :: LagrangeCoeff_Tetrahedron
 PUBLIC :: LagrangeCoeff_Tetrahedron_
 PUBLIC :: InterpolationPoint_Tetrahedron
@@ -414,6 +415,25 @@ INTERFACE
     REAL(DFP), ALLOCATABLE :: ans(:, :)
   !! returned coordinates in $x_{iJ}$ format
   END FUNCTION EquidistancePoint_Tetrahedron
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE
+  MODULE SUBROUTINE EquidistancePoint_Tetrahedron_(order, xij, ans, nrow, &
+                                                   ncol)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order
+    REAL(DFP), OPTIONAL, INTENT(IN) :: xij(:, :)
+    !! coordinates of point 1 and point 2 in $x_{iJ}$ format
+    !! number of rows = nsd
+    !! number of cols = 3
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    !! returned coordinates in $x_{iJ}$ format
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+  END SUBROUTINE EquidistancePoint_Tetrahedron_
 END INTERFACE
 
 !----------------------------------------------------------------------------

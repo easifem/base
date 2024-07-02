@@ -450,13 +450,21 @@ END PROCEDURE EquidistanceInPoint_Tetrahedron_old
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE EquidistancePoint_Tetrahedron
-ans = InterpolationPoint_Tetrahedron( &
-  & order=order, &
-  & ipType=Equidistance, &
-  & layout="VEFC", &
-  & xij=xij  &
-  &)
+INTEGER(I4B) :: nrow, ncol
+ncol = SIZE(n=order, d=3)
+ALLOCATE (ans(3, ncol))
+CALL EquidistancePoint_Tetrahedron_(order=order, xij=xij, ans=ans, &
+                                    nrow=nrow, ncol=ncol)
 END PROCEDURE EquidistancePoint_Tetrahedron
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE EquidistancePoint_Tetrahedron_
+CALL InterpolationPoint_Tetrahedron_(order=order, ipType=Equidistance, &
+                        layout="VEFC", xij=xij, ans=ans, nrow=nrow, ncol=ncol)
+END PROCEDURE EquidistancePoint_Tetrahedron_
 
 !----------------------------------------------------------------------------
 !                                            EquidistanceInPoint_Tetrahedron
