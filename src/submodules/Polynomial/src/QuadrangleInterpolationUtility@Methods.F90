@@ -176,123 +176,154 @@ END PROCEDURE LagrangeInDOF_Quadrangle2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE EquidistancePoint_Quadrangle1
-INTEGER(I4B) :: nsd, n, ne, i1, i2
-REAL(DFP) :: x(3, 4), xin(3, 4), e1(3), e2(3), lam, avar, mu
+INTEGER(I4B) :: nrow, ncol
 
-x = 0.0_DFP; xin = 0.0_DFP; e1 = 0.0_DFP; e2 = 0.0_DFP
 IF (PRESENT(xij)) THEN
-  nsd = SIZE(xij, 1)
-  x(1:nsd, 1:4) = xij(1:nsd, 1:4)
+  nrow = SIZE(xij, 1)
 ELSE
-  nsd = 2_I4B
-  x = 0.0_DFP
-  x(1:2, :) = RefQuadrangleCoord("BIUNIT")
+  nrow = 2_I4B
 END IF
 
-n = LagrangeDOF_Quadrangle(order=order)
-ALLOCATE (ans(nsd, n))
-ans = 0.0_DFP
+ncol = LagrangeDOF_Quadrangle(order=order)
 
+ALLOCATE (ans(nrow, ncol))
+
+CALL EquidistancePoint_Quadrangle1_(order=order, ans=ans, nrow=nrow, &
+                                    ncol=ncol, xij=xij)
+
+END PROCEDURE EquidistancePoint_Quadrangle1
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE EquidistancePoint_Quadrangle1_
+INTEGER(I4B) :: ne, i1, i2, indx(3)
+REAL(DFP) :: x(3, 5), xin(3, 4), e1(3), e2(3), lam, avar, mu
+
+x = 0.0_DFP; xin = 0.0_DFP; e1 = 0.0_DFP; e2 = 0.0_DFP
+
+IF (PRESENT(xij)) THEN
+  nrow = SIZE(xij, 1)
+  x(1:nrow, 1:4) = xij(1:nrow, 1:4)
+ELSE
+  nrow = 2_I4B
+  x(1:2, 1:4) = RefQuadrangleCoord("BIUNIT")
+  x(3:4, 1:4) = 0.0_DFP
+END IF
+
+IF (order .EQ. 0_I4B) THEN
+  ncol = 1
+  ans(1:nrow, 1) = SUM(x(1:nrow, 1:4), dim=2_I4B) / 4.0_DFP
+  RETURN
+END IF
+
+x(:, 5) = x(:, 1) !! cycic effect
+
+ncol = LagrangeDOF_Quadrangle(order=order)
 ! points on vertex
-ans(1:nsd, 1:4) = x(1:nsd, 1:4)
+
+ans(1:nrow, 1:4) = x(1:nrow, 1:4)
+
+IF (order .EQ. 1_I4B) RETURN
 
 ! points on edge
 ne = LagrangeInDOF_Line(order=order)
 
 i2 = 4
-IF (order .GT. 1_I4B) THEN
-  i1 = i2 + 1; i2 = i1 + ne - 1
-  ans(1:nsd, i1:i2) = EquidistanceInPoint_Line( &
-    & order=order, &
-    & xij=x(1:nsd, [1, 2]))
+i1 = i2 + 1; i2 = i1 + ne - 1
+CALL EquidistanceInPoint_Line_(order=order, xij=x(1:nrow, 1:2), &
+                               ans=ans(:, i1:), nrow=indx(1), ncol=indx(2))
 
-  i1 = i2 + 1; i2 = i1 + ne - 1
-  ans(1:nsd, i1:i2) = EquidistanceInPoint_Line( &
-    & order=order, &
-    & xij=x(1:nsd, [2, 3]))
+i1 = i2 + 1; i2 = i1 + ne - 1
+CALL EquidistanceInPoint_Line_(order=order, xij=x(1:nrow, 2:3), &
+                               ans=ans(:, i1:), nrow=indx(1), ncol=indx(2))
 
-  i1 = i2 + 1; i2 = i1 + ne - 1
-  ans(1:nsd, i1:i2) = EquidistanceInPoint_Line( &
-    & order=order, &
-    & xij=x(1:nsd, [3, 4]))
+i1 = i2 + 1; i2 = i1 + ne - 1
+CALL EquidistanceInPoint_Line_(order=order, xij=x(1:nrow, 3:4), &
+                               ans=ans(:, i1:), nrow=indx(1), ncol=indx(2))
 
-  i1 = i2 + 1; i2 = i1 + ne - 1
-  ans(1:nsd, i1:i2) = EquidistanceInPoint_Line( &
-    & order=order, &
-    & xij=x(1:nsd, [4, 1]))
+i1 = i2 + 1; i2 = i1 + ne - 1
+CALL EquidistanceInPoint_Line_(order=order, xij=x(1:nrow, 4:5), &
+                               ans=ans(:, i1:), nrow=indx(1), ncol=indx(2))
 
+IF (order .EQ. 2_I4B) THEN
+  i1 = i2 + 1
+  ans(1:nrow, i1) = SUM(x(1:nrow, 1:4), dim=2_I4B) / 4.0_DFP
+  RETURN
 END IF
 
 ! points on face
-IF (order .GT. 1_I4B) THEN
+! IF (order .GT. 2_I4B) THEN
 
-  IF (order .EQ. 2_I4B) THEN
-    i1 = i2 + 1
-    ans(1:nsd, i1) = SUM(x(1:nsd, :), dim=2_I4B) / 4.0_DFP
-  ELSE
+e1 = x(:, 2) - x(:, 1)
+avar = NORM2(e1)
+e1 = e1 / avar
+lam = avar / order
+e2 = x(:, 4) - x(:, 1)
+avar = NORM2(e2)
+e2 = e2 / avar
+mu = avar / order
+xin(1:nrow, 1) = x(1:nrow, 1) + lam * e1(1:nrow) + mu * e2(1:nrow)
 
-    e1 = x(:, 2) - x(:, 1)
-    avar = NORM2(e1)
-    e1 = e1 / avar
-    lam = avar / order
-    e2 = x(:, 4) - x(:, 1)
-    avar = NORM2(e2)
-    e2 = e2 / avar
-    mu = avar / order
-    xin(1:nsd, 1) = x(1:nsd, 1) + lam * e1(1:nsd) + mu * e2(1:nsd)
+e1 = x(:, 3) - x(:, 2)
+avar = NORM2(e1)
+e1 = e1 / avar
+lam = avar / order
+e2 = x(:, 1) - x(:, 2)
+avar = NORM2(e2)
+e2 = e2 / avar
+mu = avar / order
+xin(1:nrow, 2) = x(1:nrow, 2) + lam * e1(1:nrow) + mu * e2(1:nrow)
 
-    e1 = x(:, 3) - x(:, 2)
-    avar = NORM2(e1)
-    e1 = e1 / avar
-    lam = avar / order
-    e2 = x(:, 1) - x(:, 2)
-    avar = NORM2(e2)
-    e2 = e2 / avar
-    mu = avar / order
-    xin(1:nsd, 2) = x(1:nsd, 2) + lam * e1(1:nsd) + mu * e2(1:nsd)
+e1 = x(:, 2) - x(:, 3)
+avar = NORM2(e1)
+e1 = e1 / avar
+lam = avar / order
+e2 = x(:, 4) - x(:, 3)
+avar = NORM2(e2)
+e2 = e2 / avar
+mu = avar / order
+xin(1:nrow, 3) = x(1:nrow, 3) + lam * e1(1:nrow) + mu * e2(1:nrow)
 
-    e1 = x(:, 2) - x(:, 3)
-    avar = NORM2(e1)
-    e1 = e1 / avar
-    lam = avar / order
-    e2 = x(:, 4) - x(:, 3)
-    avar = NORM2(e2)
-    e2 = e2 / avar
-    mu = avar / order
-    xin(1:nsd, 3) = x(1:nsd, 3) + lam * e1(1:nsd) + mu * e2(1:nsd)
+e1 = x(:, 3) - x(:, 4)
+avar = NORM2(e1)
+e1 = e1 / avar
+lam = avar / order
+e2 = x(:, 1) - x(:, 4)
+avar = NORM2(e2)
+e2 = e2 / avar
+mu = avar / order
+xin(1:nrow, 4) = x(1:nrow, 4) + lam * e1(1:nrow) + mu * e2(1:nrow)
 
-    e1 = x(:, 3) - x(:, 4)
-    avar = NORM2(e1)
-    e1 = e1 / avar
-    lam = avar / order
-    e2 = x(:, 1) - x(:, 4)
-    avar = NORM2(e2)
-    e2 = e2 / avar
-    mu = avar / order
-    xin(1:nsd, 4) = x(1:nsd, 4) + lam * e1(1:nsd) + mu * e2(1:nsd)
+i1 = i2 + 1
+! ans(1:nsd, i1:) = EquidistancePoint_Quadrangle( &
+CALL EquidistancePoint_Quadrangle_(order=order - 2, xij=xin(1:nrow, 1:4), &
+                                  ans=ans(:, i1:), nrow=indx(1), ncol=indx(2))
 
-    i1 = i2 + 1
-    ans(1:nsd, i1:) = EquidistancePoint_Quadrangle( &
-      & order=order - 2, &
-      & xij=xin(1:nsd, 1:4))
-
-  END IF
-END IF
-END PROCEDURE EquidistancePoint_Quadrangle1
+END PROCEDURE EquidistancePoint_Quadrangle1_
 
 !----------------------------------------------------------------------------
 !                                               EquidistancePoint_Quadrangle
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE EquidistancePoint_Quadrangle2
-ans = InterpolationPoint_Quadrangle2(  &
-  & p=p,  &
-  & q=q,  &
-  & xij=xij,  &
-  & ipType1=Equidistance,  &
-  & ipType2=Equidistance,  &
-  & layout="VEFC")
+INTEGER(I4B) :: nrow, ncol
+nrow = 2; IF (PRESENT(xij)) nrow = SIZE(xij, 1)
+ncol = (p + 1) * (q + 1)
+ALLOCATE (ans(nrow, ncol))
+CALL EquidistancePoint_Quadrangle2_(p=p, q=q, ans=ans, nrow=nrow, ncol=ncol, &
+                                    xij=xij)
 END PROCEDURE EquidistancePoint_Quadrangle2
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE EquidistancePoint_Quadrangle2_
+CALL InterpolationPoint_Quadrangle2_(p=p, q=q, ipType1=Equidistance, &
+  ipType2=Equidistance, ans=ans, nrow=nrow, ncol=ncol, layout="VEFC", xij=xij)
+END PROCEDURE EquidistancePoint_Quadrangle2_
 
 !----------------------------------------------------------------------------
 !                                            EquidistanceInPoint_Quadrangle

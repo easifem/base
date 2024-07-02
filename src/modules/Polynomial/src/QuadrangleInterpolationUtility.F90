@@ -23,6 +23,7 @@ PUBLIC :: LagrangeDegree_Quadrangle
 PUBLIC :: LagrangeDOF_Quadrangle
 PUBLIC :: LagrangeInDOF_Quadrangle
 PUBLIC :: EquidistancePoint_Quadrangle
+! PUBLIC :: EquidistancePoint_Quadrangle_
 PUBLIC :: EquidistanceInPoint_Quadrangle
 PUBLIC :: InterpolationPoint_Quadrangle
 PUBLIC :: InterpolationPoint_Quadrangle_
@@ -312,7 +313,7 @@ END INTERFACE LagrangeInDOF_Quadrangle
 
 INTERFACE EquidistancePoint_Quadrangle
   MODULE RECURSIVE PURE FUNCTION EquidistancePoint_Quadrangle1(order, xij) &
-    & RESULT(ans)
+    RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
     !! order
     REAL(DFP), OPTIONAL, INTENT(IN) :: xij(:, :)
@@ -325,6 +326,28 @@ INTERFACE EquidistancePoint_Quadrangle
     !! Number of columns in ans is equal to the number of points
   END FUNCTION EquidistancePoint_Quadrangle1
 END INTERFACE EquidistancePoint_Quadrangle
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE EquidistancePoint_Quadrangle_
+  MODULE RECURSIVE PURE SUBROUTINE EquidistancePoint_Quadrangle1_(order, &
+                                                         ans, nrow, ncol, xij)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    !! returned coordinates of interpolation points in $x_{iJ}$ format.
+    !! Number of rows in ans is equal to the 2
+    !! Number of columns in ans is equal to the number of points
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+    !! number of rows and columns in ans
+    REAL(DFP), OPTIONAL, INTENT(IN) :: xij(:, :)
+    !! Nodal coordinates of quadrangle
+    !! number of rows = 2
+    !! number of cols = 4
+  END SUBROUTINE EquidistancePoint_Quadrangle1_
+END INTERFACE EquidistancePoint_Quadrangle_
 
 !----------------------------------------------------------------------------
 !                                              EquidistancePoint_Quadrangle
@@ -345,7 +368,7 @@ END INTERFACE EquidistancePoint_Quadrangle
 
 INTERFACE EquidistancePoint_Quadrangle
   MODULE RECURSIVE FUNCTION EquidistancePoint_Quadrangle2(p, q, &
-    & xij) RESULT(ans)
+                                                          xij) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: p
     !! order in x direction
     INTEGER(I4B), INTENT(IN) :: q
@@ -362,6 +385,29 @@ INTERFACE EquidistancePoint_Quadrangle
 END INTERFACE EquidistancePoint_Quadrangle
 
 !----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE EquidistancePoint_Quadrangle_
+  MODULE RECURSIVE SUBROUTINE EquidistancePoint_Quadrangle2_(p, q, ans, &
+                                                             nrow, ncol, xij)
+    INTEGER(I4B), INTENT(IN) :: p
+    !! order in x direction
+    INTEGER(I4B), INTENT(IN) :: q
+    !! order in y direction
+    REAL(DFP), OPTIONAL, INTENT(IN) :: xij(:, :)
+    !! Nodal coordinates of quadrangle
+    !! number of rows = 2 or 3
+    !! number of cols = 4
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    !! returned coordinates of interpolation points in $x_{iJ}$ format.
+    !! Number of rows in ans is equal to the 2
+    !! Number of columns in ans is equal to the number of points
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+  END SUBROUTINE EquidistancePoint_Quadrangle2_
+END INTERFACE EquidistancePoint_Quadrangle_
+
+!----------------------------------------------------------------------------
 !                                             EquidistanceInPoint_Quadrangle
 !----------------------------------------------------------------------------
 
@@ -376,7 +422,7 @@ END INTERFACE EquidistancePoint_Quadrangle
 
 INTERFACE EquidistanceInPoint_Quadrangle
   MODULE PURE FUNCTION EquidistanceInPoint_Quadrangle1(order, xij) &
-    & RESULT(ans)
+    RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
     !! order
     REAL(DFP), OPTIONAL, INTENT(IN) :: xij(:, :)
@@ -405,7 +451,7 @@ END INTERFACE EquidistanceInPoint_Quadrangle
 
 INTERFACE EquidistanceInPoint_Quadrangle
   MODULE PURE FUNCTION EquidistanceInPoint_Quadrangle2(p, q, xij) &
-    & RESULT(ans)
+    RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: p
     !! order in x direction
     INTEGER(I4B), INTENT(IN) :: q
