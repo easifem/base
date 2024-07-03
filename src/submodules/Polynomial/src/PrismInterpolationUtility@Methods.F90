@@ -102,6 +102,19 @@ END PROCEDURE GetTotalInDOF_Prism
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE EquidistancePoint_Prism
+INTEGER(I4B) :: nrow, ncol
+nrow = 3
+ncol = LagrangeDOF_Prism(order=order)
+ALLOCATE (ans(nrow, ncol))
+CALL EquidistancePoint_Prism_(order=order, ans=ans, nrow=nrow, ncol=ncol, &
+                              xij=xij)
+END PROCEDURE EquidistancePoint_Prism
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE EquidistancePoint_Prism_
 ! nodecoord( :, 1 ) = [0,0,-1]
 ! nodecoord( :, 2 ) = [1,0,-1]
 ! nodecoord( :, 3 ) = [0,1,-1]
@@ -109,7 +122,9 @@ MODULE PROCEDURE EquidistancePoint_Prism
 ! nodecoord( :, 5 ) = [1,0,1]
 ! nodecoord( :, 6 ) = [0,1,1]
 !ISSUE: #160 Implement EquidistancePoint_Prism routine
-END PROCEDURE EquidistancePoint_Prism
+nrow = 3
+ncol = LagrangeDOF_Prism(order=order)
+END PROCEDURE EquidistancePoint_Prism_
 
 !----------------------------------------------------------------------------
 !                                            EquidistanceInPoint_Prism
