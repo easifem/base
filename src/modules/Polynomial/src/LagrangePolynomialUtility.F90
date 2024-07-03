@@ -29,16 +29,22 @@ PRIVATE
 PUBLIC :: LagrangeDOF
 PUBLIC :: LagrangeInDOF
 PUBLIC :: LagrangeDegree
+
 PUBLIC :: EquidistancePoint
+PUBLIC :: EquidistancePoint_
 
 PUBLIC :: LagrangeVandermonde
 PUBLIC :: LagrangeVandermonde_
+
 PUBLIC :: InterpolationPoint
 PUBLIC :: InterpolationPoint_
+
 PUBLIC :: LagrangeCoeff
 PUBLIC :: LagrangeCoeff_
+
 PUBLIC :: LagrangeEvalAll
 PUBLIC :: LagrangeEvalAll_
+
 PUBLIC :: LagrangeGradientEvalAll
 PUBLIC :: LagrangeGradientEvalAll_
 
@@ -163,10 +169,7 @@ INTERFACE
     REAL(DFP), OPTIONAL, INTENT(IN) :: xij(:, :)
     !! nodal coordinates of linear elements
     !! Default values:
-    !! Biunit line
-    !! Unit triangle
-    !! Biunit Quadrangle
-    !! Unit Tetrahedron
+    !! Biunit line ! Unit triangle ! Biunit Quadrangle ! Unit Tetrahedron
     !! Biunit Hexahedron
     REAL(DFP), ALLOCATABLE :: ans(:, :)
     !! Equidistance points in xij format
@@ -174,6 +177,33 @@ INTERFACE
     !! Number of columns = Number of points
     !! The number of points depend upon the order and elemType
   END FUNCTION EquidistancePoint
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE
+  MODULE SUBROUTINE EquidistancePoint_(order, elemType, ans, nrow, ncol, xij)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! Order of element
+    INTEGER(I4B), INTENT(IN) :: elemType
+    !! Element type
+    !! Point, Line, Triangle, Quadrangle, Tetrahedron
+    !! Hexahedron, Prism, Pyramid
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    !! Equidistance points in xij format
+    !! Number of rows = nsd
+    !! Number of columns = Number of points
+    !! The number of points depend upon the order and elemType
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+    !! number of rows and columns in ans
+    REAL(DFP), OPTIONAL, INTENT(IN) :: xij(:, :)
+    !! nodal coordinates of linear elements
+    !! Default values:
+    !! Biunit line ! Unit triangle ! Biunit Quadrangle ! Unit Tetrahedron
+    !! Biunit Hexahedron
+  END SUBROUTINE EquidistancePoint_
 END INTERFACE
 
 !----------------------------------------------------------------------------
