@@ -198,10 +198,12 @@ END PROCEDURE EquidistancePoint_Quadrangle1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE EquidistancePoint_Quadrangle1_
-INTEGER(I4B) :: ne, i1, i2, indx(3)
+INTEGER(I4B) :: ne, indx(3)
 REAL(DFP) :: x(3, 5), xin(3, 4), e1(3), e2(3), lam, avar, mu
 
 x = 0.0_DFP; xin = 0.0_DFP; e1 = 0.0_DFP; e2 = 0.0_DFP
+
+ncol = 0
 
 IF (PRESENT(xij)) THEN
   nrow = SIZE(xij, 1)
@@ -220,36 +222,36 @@ END IF
 
 x(:, 5) = x(:, 1) !! cycic effect
 
-ncol = LagrangeDOF_Quadrangle(order=order)
+! ncol = LagrangeDOF_Quadrangle(order=order)
 ! points on vertex
 
 ans(1:nrow, 1:4) = x(1:nrow, 1:4)
+ncol = 4
 
 IF (order .EQ. 1_I4B) RETURN
 
 ! points on edge
 ne = LagrangeInDOF_Line(order=order)
 
-i2 = 4
-i1 = i2 + 1; i2 = i1 + ne - 1
 CALL EquidistanceInPoint_Line_(order=order, xij=x(1:nrow, 1:2), &
-                               ans=ans(:, i1:), nrow=indx(1), ncol=indx(2))
+                            ans=ans(:, ncol + 1:), nrow=indx(1), ncol=indx(2))
+ncol = ncol + indx(2)
 
-i1 = i2 + 1; i2 = i1 + ne - 1
 CALL EquidistanceInPoint_Line_(order=order, xij=x(1:nrow, 2:3), &
-                               ans=ans(:, i1:), nrow=indx(1), ncol=indx(2))
+                            ans=ans(:, ncol + 1:), nrow=indx(1), ncol=indx(2))
+ncol = ncol + indx(2)
 
-i1 = i2 + 1; i2 = i1 + ne - 1
 CALL EquidistanceInPoint_Line_(order=order, xij=x(1:nrow, 3:4), &
-                               ans=ans(:, i1:), nrow=indx(1), ncol=indx(2))
+                            ans=ans(:, ncol + 1:), nrow=indx(1), ncol=indx(2))
+ncol = ncol + indx(2)
 
-i1 = i2 + 1; i2 = i1 + ne - 1
 CALL EquidistanceInPoint_Line_(order=order, xij=x(1:nrow, 4:5), &
-                               ans=ans(:, i1:), nrow=indx(1), ncol=indx(2))
+                            ans=ans(:, ncol + 1:), nrow=indx(1), ncol=indx(2))
+ncol = ncol + indx(2)
 
 IF (order .EQ. 2_I4B) THEN
-  i1 = i2 + 1
-  ans(1:nrow, i1) = SUM(x(1:nrow, 1:4), dim=2_I4B) / 4.0_DFP
+  ans(1:nrow, ncol + 1) = SUM(x(1:nrow, 1:4), dim=2_I4B) / 4.0_DFP
+  ncol = ncol + 1
   RETURN
 END IF
 
@@ -296,10 +298,11 @@ e2 = e2 / avar
 mu = avar / order
 xin(1:nrow, 4) = x(1:nrow, 4) + lam * e1(1:nrow) + mu * e2(1:nrow)
 
-i1 = i2 + 1
 ! ans(1:nsd, i1:) = EquidistancePoint_Quadrangle( &
 CALL EquidistancePoint_Quadrangle_(order=order - 2, xij=xin(1:nrow, 1:4), &
-                                  ans=ans(:, i1:), nrow=indx(1), ncol=indx(2))
+                            ans=ans(:, ncol + 1:), nrow=indx(1), ncol=indx(2))
+
+ncol = ncol + indx(2)
 
 END PROCEDURE EquidistancePoint_Quadrangle1_
 
