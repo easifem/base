@@ -25,6 +25,7 @@ PUBLIC :: LagrangeDOF_Pyramid
 PUBLIC :: LagrangeInDOF_Pyramid
 PUBLIC :: EquidistanceInPoint_Pyramid
 PUBLIC :: EquidistancePoint_Pyramid
+PUBLIC :: EquidistancePoint_Pyramid_
 PUBLIC :: InterpolationPoint_Pyramid
 PUBLIC :: InterpolationPoint_Pyramid_
 PUBLIC :: LagrangeCoeff_Pyramid
@@ -260,6 +261,26 @@ INTERFACE
     REAL(DFP), ALLOCATABLE :: ans(:, :)
   !! returned coordinates in $x_{iJ}$ format
   END FUNCTION EquidistancePoint_Pyramid
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE
+  MODULE PURE SUBROUTINE EquidistancePoint_Pyramid_(order, ans, nrow, ncol, &
+                                                    xij)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    !! returned coordinates in $x_{iJ}$ format
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+    !! number of rows and columns in ans
+    REAL(DFP), OPTIONAL, INTENT(IN) :: xij(:, :)
+    !! coordinates of point 1 and point 2 in $x_{iJ}$ format
+    !! number of rows = nsd
+    !! number of cols = 3
+  END SUBROUTINE EquidistancePoint_Pyramid_
 END INTERFACE
 
 !----------------------------------------------------------------------------
