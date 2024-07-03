@@ -23,7 +23,7 @@ PUBLIC :: LagrangeDegree_Quadrangle
 PUBLIC :: LagrangeDOF_Quadrangle
 PUBLIC :: LagrangeInDOF_Quadrangle
 PUBLIC :: EquidistancePoint_Quadrangle
-! PUBLIC :: EquidistancePoint_Quadrangle_
+PUBLIC :: EquidistancePoint_Quadrangle_
 PUBLIC :: EquidistanceInPoint_Quadrangle
 PUBLIC :: InterpolationPoint_Quadrangle
 PUBLIC :: InterpolationPoint_Quadrangle_
