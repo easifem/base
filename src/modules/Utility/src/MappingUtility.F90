@@ -30,6 +30,7 @@ PUBLIC :: FromBiunitLine2Segment
 PUBLIC :: FromBiunitLine2Segment_
 PUBLIC :: FromBiUnitLine2UnitLine
 PUBLIC :: FromUnitLine2BiUnitLine
+PUBLIC :: FromUnitLine2BiUnitLine_
 PUBLIC :: FromLine2Line_
 
 PUBLIC :: FromBiUnitQuadrangle2Quadrangle
@@ -454,6 +455,24 @@ INTERFACE
     REAL(DFP) :: ans(SIZE(xin))
     !! mapped coordinates of xin in biunit line
   END FUNCTION FromUnitLine2BiUnitLine
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2024-07-03
+! summary:  from unit line to bi unit line without allocation
+
+INTERFACE
+  MODULE PURE SUBROUTINE FromUnitLine2BiUnitLine_(xin, ans, tsize)
+    REAL(DFP), INTENT(IN) :: xin(:)
+    !! coordinates in  unit line
+    REAL(DFP), INTENT(INOUT) :: ans(:)
+    !! mapped coordinates of xin in biunit line
+    INTEGER(I4B), INTENT(OUT) :: tsize
+  END SUBROUTINE FromUnitLine2BiUnitLine_
 END INTERFACE
 
 !----------------------------------------------------------------------------

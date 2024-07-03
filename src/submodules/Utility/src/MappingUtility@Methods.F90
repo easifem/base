@@ -84,8 +84,18 @@ END PROCEDURE FromBiUnitLine2UnitLine
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE FromUnitLine2BiUnitLine
-ans = 2.0_DFP * xin - 1.0_DFP
+INTEGER(I4B) :: tsize
+CALL FromUnitLine2BiUnitLine_(xin=xin, ans=ans, tsize=tsize)
 END PROCEDURE FromUnitLine2BiUnitLine
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE FromUnitLine2BiUnitLine_
+tsize = SIZE(xin)
+ans(1:tsize) = 2.0_DFP * xin(1:tsize) - 1.0_DFP
+END PROCEDURE FromUnitLine2BiUnitLine_
 
 !----------------------------------------------------------------------------
 !                                                            FromLine2Line
