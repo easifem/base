@@ -27,6 +27,7 @@ USE LineInterpolationUtility, ONLY: LagrangeDOF_Line, &
                                     LagrangeInDOF_Line, &
                                     LagrangeDegree_Line, &
                                     EquidistancePoint_Line, &
+                                    EquidistancePoint_Line_, &
                                     InterpolationPoint_Line, &
                                     InterpolationPoint_Line_, &
                                     LagrangeCoeff_Line, &
@@ -38,6 +39,7 @@ USE TriangleInterpolationUtility, ONLY: LagrangeDOF_Triangle, &
                                         LagrangeInDOF_Triangle, &
                                         LagrangeDegree_Triangle, &
                                         EquidistancePoint_Triangle, &
+                                        EquidistancePoint_Triangle_, &
                                         InterpolationPoint_Triangle, &
                                         InterpolationPoint_Triangle_, &
                                         LagrangeCoeff_Triangle, &
@@ -49,6 +51,7 @@ USE QuadrangleInterpolationUtility, ONLY: LagrangeDOF_Quadrangle, &
                                           LagrangeInDOF_Quadrangle, &
                                           LagrangeDegree_Quadrangle, &
                                           EquidistancePoint_Quadrangle, &
+                                          EquidistancePoint_Quadrangle_, &
                                           InterpolationPoint_Quadrangle, &
                                           InterpolationPoint_Quadrangle_, &
                                           LagrangeCoeff_Quadrangle, &
@@ -60,6 +63,7 @@ USE TetrahedronInterpolationUtility, ONLY: LagrangeDOF_Tetrahedron, &
                                            LagrangeInDOF_Tetrahedron, &
                                            LagrangeDegree_Tetrahedron, &
                                            EquidistancePoint_Tetrahedron, &
+                                           EquidistancePoint_Tetrahedron_, &
                                            InterpolationPoint_Tetrahedron, &
                                            InterpolationPoint_Tetrahedron_, &
                                            LagrangeCoeff_Tetrahedron, &
@@ -71,6 +75,7 @@ USE HexahedronInterpolationUtility, ONLY: LagrangeDOF_Hexahedron, &
                                           LagrangeInDOF_Hexahedron, &
                                           LagrangeDegree_Hexahedron, &
                                           EquidistancePoint_Hexahedron, &
+                                          EquidistancePoint_Hexahedron_, &
                                           InterpolationPoint_Hexahedron, &
                                           InterpolationPoint_Hexahedron_, &
                                           LagrangeCoeff_Hexahedron, &
@@ -82,6 +87,7 @@ USE PrismInterpolationUtility, ONLY: LagrangeDOF_Prism, &
                                      LagrangeInDOF_Prism, &
                                      LagrangeDegree_Prism, &
                                      EquidistancePoint_Prism, &
+                                     EquidistancePoint_Prism_, &
                                      InterpolationPoint_Prism, &
                                      InterpolationPoint_Prism_, &
                                      LagrangeCoeff_Prism, &
@@ -93,6 +99,7 @@ USE PyramidInterpolationUtility, ONLY: LagrangeDOF_Pyramid, &
                                        LagrangeInDOF_Pyramid, &
                                        LagrangeDegree_Pyramid, &
                                        EquidistancePoint_Pyramid, &
+                                       EquidistancePoint_Pyramid_, &
                                        InterpolationPoint_Pyramid, &
                                        InterpolationPoint_Pyramid_, &
                                        LagrangeCoeff_Pyramid, &
@@ -250,49 +257,93 @@ END PROCEDURE LagrangeVandermonde_
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE EquidistancePoint
+INTEGER(I4B) :: nrow, ncol
+
+IF (PRESENT(xij)) THEN
+  nrow = SIZE(xij, 1)
+ELSE
+  nrow = XiDimension(elemType)
+END IF
+
+ncol = LagrangeDOF(order=order, elemType=elemType)
+
+ALLOCATE (ans(nrow, ncol))
+
+CALL EquidistancePoint_(order=order, elemType=elemType, ans=ans, nrow=nrow, &
+                        ncol=ncol, xij=xij)
+
+END PROCEDURE EquidistancePoint
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE EquidistancePoint_
 INTEGER(I4B) :: topo
 
 topo = ElementTopology(elemType)
 
+IF (PRESENT(xij)) THEN
+  nrow = SIZE(xij, 1)
+ELSE
+  nrow = XiDimension(topo)
+END IF
+
+ncol = LagrangeDOF(order=order, elemType=elemType)
+
 SELECT CASE (topo)
 
 CASE (Point)
+
   IF (PRESENT(xij)) THEN
-    ans = xij
+    ncol = 1
+    ans(1:nrow, 1) = xij(1:nrow, 1)
   ELSE
-    ALLOCATE (ans(0, 0))
+    nrow = 0
+    ncol = 0
+    ! ALLOCATE (ans(0, 0))
   END IF
 
 CASE (Line)
-  ans = EquidistancePoint_Line(order=order, xij=xij)
+  ! ans(1:nrow, 1:ncol) = EquidistancePoint_Line(order=order, xij=xij)
+  CALL EquidistancePoint_Line_(order=order, xij=xij, ans=ans, nrow=nrow, &
+                               ncol=ncol)
 
 CASE (Triangle)
-  ans = EquidistancePoint_Triangle(order=order, xij=xij)
+  ! ans(1:nrow, 1:ncol) = EquidistancePoint_Triangle(order=order, xij=xij)
+  CALL EquidistancePoint_Triangle_(order=order, xij=xij, nrow=nrow, &
+                                   ncol=ncol, ans=ans)
 
 CASE (Quadrangle)
-  ans = EquidistancePoint_Quadrangle(order=order, xij=xij)
+  ! ans(1:nrow, 1:ncol) = EquidistancePoint_Quadrangle(order=order, xij=xij)
+  CALL EquidistancePoint_Quadrangle_(order=order, xij=xij, ans=ans, &
+                                     nrow=nrow, ncol=ncol)
 
 CASE (Tetrahedron)
-  ans = EquidistancePoint_Tetrahedron(order=order, xij=xij)
+  ! ans(1:nrow, 1:ncol) = EquidistancePoint_Tetrahedron(order=order, xij=xij)
+  CALL EquidistancePoint_Tetrahedron_(order=order, xij=xij, ans=ans, &
+                                      nrow=nrow, ncol=ncol)
 
 CASE (Hexahedron)
-  ans = EquidistancePoint_Hexahedron(order=order, xij=xij)
+  CALL EquidistancePoint_Hexahedron_(order=order, xij=xij, ans=ans, &
+                                     nrow=nrow, ncol=ncol)
 
 CASE (Prism)
-  ans = EquidistancePoint_Prism(order=order, xij=xij)
+  CALL EquidistancePoint_Prism_(order=order, xij=xij, ans=ans, &
+                                nrow=nrow, ncol=ncol)
 
 CASE (Pyramid)
-  ans = EquidistancePoint_Pyramid(order=order, xij=xij)
+  CALL EquidistancePoint_Pyramid_(order=order, xij=xij, ans=ans, nrow=nrow, &
+                                  ncol=ncol)
 
 CASE DEFAULT
-  CALL Errormsg(&
-    & msg="No CASE FOUND: elemType="//ToString(elemType), &
-    & unitno=stdout,  &
-    & line=__LINE__,  &
-    & routine="EquidistancePoint()",  &
-    & file=__FILE__)
+  CALL Errormsg(msg="No CASE FOUND: elemType="//ToString(elemType), &
+                routine="EquidistancePoint()", &
+                unitno=stdout, line=__LINE__, file=__FILE__)
+  RETURN
 END SELECT
-END PROCEDURE EquidistancePoint
+
+END PROCEDURE EquidistancePoint_
 
 !----------------------------------------------------------------------------
 !                                                         InterpolationPoint
