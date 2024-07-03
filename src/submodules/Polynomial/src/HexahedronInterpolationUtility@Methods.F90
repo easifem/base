@@ -273,90 +273,100 @@ ans = (p - 1) * (q - 1) * (r - 1)
 END PROCEDURE LagrangeInDOF_Hexahedron2
 
 !----------------------------------------------------------------------------
-!                                              EquidistancePoint_Hexahedron
+!
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE EquidistancePoint_Hexahedron1
-ans = EquidistancePoint_Hexahedron2(p=order, q=order, r=order, xij=xij)
+INTEGER(I4B) :: nrow, ncol
+nrow = 3
+ncol = LagrangeDOF_Hexahedron(order=order)
+ALLOCATE (ans(nrow, ncol))
+CALL EquidistancePoint_Hexahedron1_(order=order, ans=ans, nrow=nrow, &
+                                    ncol=ncol, xij=xij)
 END PROCEDURE EquidistancePoint_Hexahedron1
+
+!----------------------------------------------------------------------------
+!                                              EquidistancePoint_Hexahedron
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE EquidistancePoint_Hexahedron1_
+CALL EquidistancePoint_Hexahedron2_(p=order, q=order, r=order, xij=xij, &
+                                    ans=ans, nrow=nrow, ncol=ncol)
+END PROCEDURE EquidistancePoint_Hexahedron1_
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE EquidistancePoint_Hexahedron2
+INTEGER(I4B) :: nrow, ncol
+nrow = 3
+ncol = LagrangeDOF_Hexahedron(p=p, q=q, r=r)
+ALLOCATE (ans(nrow, ncol))
+CALL EquidistancePoint_Hexahedron2_(p=p, q=q, r=r, ans=ans, nrow=nrow, &
+                                    ncol=ncol, xij=xij)
+END PROCEDURE EquidistancePoint_Hexahedron2
 
 !----------------------------------------------------------------------------
 !                                             EquidistancePoint_Hexahedron
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE EquidistancePoint_Hexahedron2
+MODULE PROCEDURE EquidistancePoint_Hexahedron2_
 ! internal variables
 REAL(DFP) :: x(p + 1), y(q + 1), z(r + 1), temp0
 REAL(DFP), DIMENSION(p + 1, q + 1, r + 1) :: xi, eta, zeta
 REAL(DFP) :: temp(3, (p + 1) * (q + 1) * (r + 1))
 INTEGER(I4B) :: ii, jj, kk, nsd
 
+nrow = 3
+ncol = LagrangeDOF_Hexahedron(p=p, q=q, r=r)
+
 x = EquidistancePoint_Line(order=p, xij=[-1.0_DFP, 1.0_DFP])
 y = EquidistancePoint_Line(order=q, xij=[-1.0_DFP, 1.0_DFP])
 z = EquidistancePoint_Line(order=r, xij=[-1.0_DFP, 1.0_DFP])
-IF (p .GT. 0_I4B) THEN
-  temp0 = x(2)
-END IF
-DO ii = 2, p
+
+IF (p .GT. 0_I4B) temp0 = x(2)
+DO CONCURRENT(ii=2:p)
   x(ii) = x(ii + 1)
 END DO
 x(p + 1) = temp0
 
-IF (q .GT. 0_I4B) THEN
-  temp0 = y(2)
-END IF
-DO ii = 2, q
+IF (q .GT. 0_I4B) temp0 = y(2)
+DO CONCURRENT(ii=2:q)
   y(ii) = y(ii + 1)
 END DO
 y(q + 1) = temp0
 
-IF (r .GT. 0_I4B) THEN
-  temp0 = z(2)
-END IF
-DO ii = 2, r
+IF (r .GT. 0_I4B) temp0 = z(2)
+DO CONCURRENT(ii=2:r)
   z(ii) = z(ii + 1)
 END DO
 z(r + 1) = temp0
 
-nsd = 3
-CALL Reallocate(ans, nsd, (p + 1) * (q + 1) * (r + 1))
+! nsd = 3
+! CALL Reallocate(ans, nsd, (p + 1) * (q + 1) * (r + 1))
 
-DO ii = 1, p + 1
-  DO jj = 1, q + 1
-    DO kk = 1, r + 1
-      xi(ii, jj, kk) = x(ii)
-      eta(ii, jj, kk) = y(jj)
-      zeta(ii, jj, kk) = z(kk)
-    END DO
-  END DO
+DO CONCURRENT(ii=1:p + 1, jj=1:q + 1, kk=1:r + 1)
+  xi(ii, jj, kk) = x(ii)
+  eta(ii, jj, kk) = y(jj)
+  zeta(ii, jj, kk) = z(kk)
 END DO
 
-CALL IJK2VEFC_Hexahedron( &
-  & xi=xi,  &
-  & eta=eta, &
-  & zeta=zeta, &
-  & temp=temp, &
-  & p=p, &
-  & q=q, &
-  & r=r)
+CALL IJK2VEFC_Hexahedron(xi=xi, eta=eta, zeta=zeta, temp=temp, p=p, q=q, r=r)
 
 IF (PRESENT(xij)) THEN
-  ans = FromBiUnitHexahedron2Hexahedron( &
-    & xin=temp,     &
-    & x1=xij(:, 1), &
-    & x2=xij(:, 2), &
-    & x3=xij(:, 3), &
-    & x4=xij(:, 4), &
-    & x5=xij(:, 5), &
-    & x6=xij(:, 6), &
-    & x7=xij(:, 7), &
-    & x8=xij(:, 8)  &
-    & )
+
+  ans(1:nrow, 1:ncol) = FromBiUnitHexahedron2Hexahedron(xin=temp, &
+                     x1=xij(:, 1), x2=xij(:, 2), x3=xij(:, 3), x4=xij(:, 4), &
+                       x5=xij(:, 5), x6=xij(:, 6), x7=xij(:, 7), x8=xij(:, 8))
+
 ELSE
-  ans = temp
+
+  ans(1:nrow, 1:ncol) = temp
+
 END IF
 
-END PROCEDURE EquidistancePoint_Hexahedron2
+END PROCEDURE EquidistancePoint_Hexahedron2_
 
 !----------------------------------------------------------------------------
 !                                            EquidistanceInPoint_Hexahedron
