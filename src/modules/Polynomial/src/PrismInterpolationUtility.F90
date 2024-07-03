@@ -24,7 +24,10 @@ PUBLIC :: LagrangeDegree_Prism
 PUBLIC :: LagrangeDOF_Prism
 PUBLIC :: LagrangeInDOF_Prism
 PUBLIC :: EquidistanceInPoint_Prism
+
 PUBLIC :: EquidistancePoint_Prism
+PUBLIC :: EquidistancePoint_Prism_
+
 PUBLIC :: InterpolationPoint_Prism
 PUBLIC :: InterpolationPoint_Prism_
 PUBLIC :: LagrangeCoeff_Prism
@@ -253,14 +256,34 @@ END INTERFACE
 INTERFACE
   MODULE PURE FUNCTION EquidistancePoint_Prism(order, xij) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
-  !! order
+    !! order
     REAL(DFP), OPTIONAL, INTENT(IN) :: xij(:, :)
-  !! coordinates of point 1 and point 2 in $x_{iJ}$ format
-  !! number of rows = nsd
-  !! number of cols = 3
+    !! coordinates of point 1 and point 2 in $x_{iJ}$ format
+    !! number of rows = nsd
+    !! number of cols = 3
     REAL(DFP), ALLOCATABLE :: ans(:, :)
-  !! returned coordinates in $x_{iJ}$ format
+    !! returned coordinates in $x_{iJ}$ format
   END FUNCTION EquidistancePoint_Prism
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE
+  MODULE PURE SUBROUTINE EquidistancePoint_Prism_(order, ans, nrow, ncol, &
+                                                  xij)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    !! equidistance points in xij format
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+    !! number of rows and columns in ans
+    REAL(DFP), OPTIONAL, INTENT(IN) :: xij(:, :)
+    !! coordinates of point 1 and point 2 in $x_{iJ}$ format
+    !! number of rows = nsd
+    !! number of cols = 3
+  END SUBROUTINE EquidistancePoint_Prism_
 END INTERFACE
 
 !----------------------------------------------------------------------------
