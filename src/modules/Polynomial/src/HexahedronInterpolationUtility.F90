@@ -24,6 +24,7 @@ PUBLIC :: LagrangeDegree_Hexahedron
 PUBLIC :: LagrangeDOF_Hexahedron
 PUBLIC :: LagrangeInDOF_Hexahedron
 PUBLIC :: EquidistancePoint_Hexahedron
+PUBLIC :: EquidistancePoint_Hexahedron_
 PUBLIC :: EquidistanceInPoint_Hexahedron
 PUBLIC :: InterpolationPoint_Hexahedron
 PUBLIC :: InterpolationPoint_Hexahedron_
@@ -568,6 +569,24 @@ INTERFACE EquidistancePoint_Hexahedron
 END INTERFACE EquidistancePoint_Hexahedron
 
 !----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE EquidistancePoint_Hexahedron_
+  MODULE PURE SUBROUTINE EquidistancePoint_Hexahedron1_(order, ans, nrow, &
+                                                        ncol, xij)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order
+    REAL(DFP), OPTIONAL, INTENT(IN) :: xij(:, :)
+    !! number of rows = 3
+    !! number of cols = 8
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    !! returned coordinates in $x_{iJ}$ format
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+  END SUBROUTINE EquidistancePoint_Hexahedron1_
+END INTERFACE EquidistancePoint_Hexahedron_
+
+!----------------------------------------------------------------------------
 !                                              EquidistancePoint_Hexahedron
 !----------------------------------------------------------------------------
 
@@ -600,6 +619,28 @@ INTERFACE EquidistancePoint_Hexahedron
     !! returned coordinates in $x_{iJ}$ format
   END FUNCTION EquidistancePoint_Hexahedron2
 END INTERFACE EquidistancePoint_Hexahedron
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE EquidistancePoint_Hexahedron_
+  MODULE PURE SUBROUTINE EquidistancePoint_Hexahedron2_(p, q, r, ans, nrow, &
+                                                        ncol, xij)
+    INTEGER(I4B), INTENT(IN) :: p
+    !! order in x direction
+    INTEGER(I4B), INTENT(IN) :: q
+    !! order in y direction
+    INTEGER(I4B), INTENT(IN) :: r
+    !! order in z direction
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    !! returned coordinates in $x_{iJ}$ format
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+    REAL(DFP), OPTIONAL, INTENT(IN) :: xij(:, :)
+    !! number of rows = 3
+    !! number of cols = 8
+  END SUBROUTINE EquidistancePoint_Hexahedron2_
+END INTERFACE EquidistancePoint_Hexahedron_
 
 !----------------------------------------------------------------------------
 !                                            InterpolationPoint_Hexahedron
