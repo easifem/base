@@ -24,7 +24,10 @@ PUBLIC :: LagrangeDegree_Triangle
 PUBLIC :: LagrangeDOF_Triangle
 PUBLIC :: LagrangeInDOF_Triangle
 PUBLIC :: EquidistanceInPoint_Triangle
+
 PUBLIC :: EquidistancePoint_Triangle
+PUBLIC :: EquidistancePoint_Triangle_
+
 PUBLIC :: InterpolationPoint_Triangle
 PUBLIC :: InterpolationPoint_Triangle_
 PUBLIC :: LagrangeCoeff_Triangle
@@ -319,6 +322,10 @@ INTERFACE
   !! returned coordinates in $x_{iJ}$ format
   END FUNCTION EquidistancePoint_Triangle
 END INTERFACE
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
 
 INTERFACE
   MODULE RECURSIVE PURE SUBROUTINE EquidistancePoint_Triangle_(order, ans, &
