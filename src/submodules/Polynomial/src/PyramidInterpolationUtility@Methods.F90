@@ -53,12 +53,9 @@ END PROCEDURE FacetConnectivity_Pyramid
 
 MODULE PROCEDURE RefElemDomain_Pyramid
 !FIX: Implement RefElemDomain
-CALL Errormsg(&
-  & msg="[WORK IN PROGRESS] We are working on it", &
-  & file=__FILE__, &
-  & line=__LINE__,&
-  & routine="RefElemDomain_Pyramid()", &
-  & unitno=stderr)
+CALL Errormsg(msg="[WORK IN PROGRESS] We are working on it", &
+              routine="RefElemDomain_Pyramid()", &
+              file=__FILE__, line=__LINE__, unitno=stderr)
 END PROCEDURE RefElemDomain_Pyramid
 
 !----------------------------------------------------------------------------
@@ -102,18 +99,31 @@ ans = (order - 1) * (order - 2) * (2 * order - 3) / 6
 END PROCEDURE GetTotalInDOF_Pyramid
 
 !----------------------------------------------------------------------------
-!                                              EquidistancePoint_Pyramid
+!                                              EquidistancePoint_Prism
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE EquidistancePoint_Pyramid
-!FIX: Implement EquidistancePoint_Pyramid
-!ISSUE: #161 Implement EquidistancePoint_Pyramid routine
+INTEGER(I4B) :: nrow, ncol
+nrow = 3
+ncol = LagrangeDOF_Pyramid(order=order)
+ALLOCATE (ans(nrow, ncol))
+CALL EquidistancePoint_Pyramid_(order=order, ans=ans, nrow=nrow, ncol=ncol, &
+                                xij=xij)
+END PROCEDURE EquidistancePoint_Pyramid
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE EquidistancePoint_Pyramid_
+nrow = 3
+ncol = LagrangeDOF_Pyramid(order=order)
 ! nodecoord(:, 1) = [-1, -1, 0]
 ! nodecoord(:, 2) = [1, -1, 0]
 ! nodecoord(:, 3) = [1, 1, 0]
 ! nodecoord(:, 4) = [-1, 1, 0]
 ! nodecoord(:, 5) = [0, 0, 1]
-END PROCEDURE EquidistancePoint_Pyramid
+END PROCEDURE EquidistancePoint_Pyramid_
 
 !----------------------------------------------------------------------------
 !                                            EquidistanceInPoint_Pyramid
@@ -122,7 +132,6 @@ END PROCEDURE EquidistancePoint_Pyramid
 MODULE PROCEDURE EquidistanceInPoint_Pyramid
 ! FIX: Implement EquidistanceInPoint_Pyramid
 ! ISSUE: #161 Implement EquidistanceInPoint_Pyramid routine
-
 END PROCEDURE EquidistanceInPoint_Pyramid
 
 !----------------------------------------------------------------------------
