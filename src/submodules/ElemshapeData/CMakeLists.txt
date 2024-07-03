@@ -25,7 +25,6 @@ target_sources(
           ${src_path}/Lagrange/ElemshapeData_Lagrange@Methods.F90
           ${src_path}/H1/ElemshapeData_H1Methods@HermitMethods.F90
           ${src_path}/H1/ElemshapeData_H1Methods@HierarchyMethods.F90
-          ${src_path}/H1/ElemshapeData_H1Methods@LagrangeMethods.F90
           ${src_path}/H1/ElemshapeData_H1Methods@OrthogonalMethods.F90
           ${src_path}/H1/ElemshapeData_H1Methods@SerendipityMethods.F90
           ${src_path}/DG/ElemshapeData_DGMethods@HermitMethods.F90

@@ -25,7 +25,8 @@ USE ElemShapeData_Method, ONLY: Elemsd_Allocate => ALLOCATE
 USE LagrangePolynomialUtility, ONLY: LagrangeDOF, &
                                      InterpolationPoint_, &
                                      LagrangeEvalAll, &
-                                     LagrangeGradientEvalAll
+                                     LagrangeEvalAll_, &
+                                     LagrangeGradientEvalAll_
 
 USE QuadraturePoint_Method, ONLY: GetQuadraturePoints, &
                                   QuadraturePoint_Size => Size
@@ -33,7 +34,7 @@ USE QuadraturePoint_Method, ONLY: GetQuadraturePoints, &
 USE BaseType, ONLY: TypeQuadratureOpt, &
                     TypePolynomialOpt
 
-USE SwapUtility, ONLY: SWAP
+USE SwapUtility, ONLY: SWAP_
 
 USE Display_Method, ONLY: Display
 
@@ -45,77 +46,112 @@ CONTAINS
 !                                             ElemshapeData_InitiateLagrange
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE ElemshapeData_InitiateLagrange1
-REAL(DFP), ALLOCATABLE :: xij(:, :), dNdXi(:, :, :), coeff0(:, :)
-INTEGER(I4B) :: ipType0, basisType0, tsize, nns, nrow, ncol
+MODULE PROCEDURE LagrangeElemShapeData1
+REAL(DFP), ALLOCATABLE :: xij(:, :), coeff0(:, :), temp(:, :, :)
+INTEGER(I4B) :: ipType0, basisType0, nips, nns, indx(10)
 
 ipType0 = Input(default=TypeQuadratureOpt%equidistance, option=ipType)
 basisType0 = Input(default=TypePolynomialOpt%Monomial, option=basisType)
 
 ! CALL DEALLOCATE (obj)
 
-tsize = SIZE(quad%points, 2)
-! pt = quad%points(1:obj%txi, 1:tsize)
-! wt = quad%points(obj%txi + 1, 1:tsize)
+nips = SIZE(quad%points, 2)
+! pt = quad%points(1:quad%txi, 1:nips)
+! wt = quad%points(quad%txi + 1, 1:nips)
 
 nns = LagrangeDOF(order=order, elemType=elemType)
 
-CALL Elemsd_Allocate(obj=obj, nsd=nsd, xidim=xidim, nns=nns, nips=tsize)
+CALL Elemsd_Allocate(obj=obj, nsd=nsd, xidim=xidim, nns=nns, nips=nips)
 
-obj%ws = quad%points(quad%txi + 1, 1:tsize)
+obj%ws = quad%points(quad%txi + 1, 1:nips)
 
-ncol = LagrangeDOF(order=order, elemType=elemType)
-ALLOCATE (xij(3, ncol))
+ALLOCATE (xij(3, nns), temp(nips, nns, 3))
 
 CALL InterpolationPoint_(order=order, elemType=elemType, ipType=ipType0, &
         layout="VEFC", xij=refelemCoord(1:xidim, :), alpha=alpha, beta=beta, &
-                         lambda=lambda, ans=xij, nrow=nrow, ncol=ncol)
+                         lambda=lambda, ans=xij, nrow=indx(1), ncol=indx(2))
 
 IF (PRESENT(coeff)) THEN
 
-  obj%N = TRANSPOSE(LagrangeEvalAll(order=order, elemType=elemType, &
-                                    x=quad%points(1:quad%txi, 1:tsize), &
-                                    xij=xij(1:xidim, :), &
-                                    domainName=refelemDomain, &
-                                    basisType=basisType0, &
-                                    alpha=alpha, beta=beta, lambda=lambda, &
-                                    coeff=coeff, firstCall=firstCall))
+  CALL LagrangeEvalAll_(order=order, &
+                        elemType=elemType, &
+                        x=quad%points(1:quad%txi, 1:nips), &
+                        xij=xij(1:xidim, :), &
+                        domainName=refelemDomain, &
+                        basisType=basisType0, &
+                        alpha=alpha, beta=beta, lambda=lambda, &
+                        coeff=coeff, firstCall=firstCall, &
+                        ans=temp(:, :, 1), nrow=indx(1), ncol=indx(2))
 
-  dNdXi = LagrangeGradientEvalAll(order=order, elemType=elemType, &
-                                  x=quad%points(1:quad%txi, 1:tsize), &
-                                  xij=xij(1:xidim, :), &
-                                  domainName=refelemDomain, &
-                                  basisType=basisType0, &
-                                  alpha=alpha, beta=beta, lambda=lambda, &
-                                  coeff=coeff, firstCall=.FALSE.)
+  obj%N(1:nns, 1:nips) = TRANSPOSE(temp(1:nips, 1:nns, 1))
+
+  CALL LagrangeGradientEvalAll_(order=order, elemType=elemType, &
+                                x=quad%points(1:quad%txi, 1:nips), &
+                                xij=xij(1:xidim, :), &
+                                domainName=refelemDomain, &
+                                basisType=basisType0, &
+                                alpha=alpha, beta=beta, lambda=lambda, &
+                                coeff=coeff, firstCall=.FALSE., &
+                                ans=temp, &
+                                dim1=indx(1), dim2=indx(2), dim3=indx(3))
 
 ELSE
 
-  ALLOCATE (coeff0(SIZE(xij, 2), SIZE(xij, 2)))
+  ALLOCATE (coeff0(nns, nns))
 
-  obj%N = TRANSPOSE(LagrangeEvalAll(order=order, elemType=elemType, &
-                                    x=quad%points(1:quad%txi, 1:tsize), &
-                                    xij=xij(1:xidim, :), &
-                                    domainName=refelemDomain, &
-                                    basisType=basisType0, &
-                                    alpha=alpha, beta=beta, lambda=lambda, &
-                                    coeff=coeff0, firstCall=.TRUE.))
+  ! obj%N = TRANSPOSE(LagrangeEvalAll(order=order, elemType=elemType, &
+  CALL LagrangeEvalAll_(order=order, elemType=elemType, &
+                        x=quad%points(1:quad%txi, 1:nips), &
+                        xij=xij(1:xidim, :), &
+                        domainName=refelemDomain, &
+                        basisType=basisType0, &
+                        alpha=alpha, beta=beta, lambda=lambda, &
+                        coeff=coeff0, firstCall=.TRUE., &
+                        ans=temp(:, :, 1), nrow=indx(1), ncol=indx(2))
 
-  dNdXi = LagrangeGradientEvalAll(order=order, elemType=elemType, &
-                                  x=quad%points(1:quad%txi, 1:tsize), &
-                                  xij=xij(1:xidim, :), &
-                                  domainName=refelemDomain, &
-                                  basisType=basisType0, &
-                                  alpha=alpha, beta=beta, lambda=lambda, &
-                                  coeff=coeff0, firstCall=.FALSE.)
+  obj%N(1:nns, 1:nips) = TRANSPOSE(temp(1:nips, 1:nns, 1))
+
+  ! dNdXi = LagrangeGradientEvalAll(order=order, elemType=elemType, &
+  CALL LagrangeGradientEvalAll_(order=order, elemType=elemType, &
+                                x=quad%points(1:quad%txi, 1:nips), &
+                                xij=xij(1:xidim, :), &
+                                domainName=refelemDomain, &
+                                basisType=basisType0, &
+                                alpha=alpha, beta=beta, lambda=lambda, &
+                                coeff=coeff0, firstCall=.FALSE., &
+                                ans=temp, &
+                                dim1=indx(1), dim2=indx(2), dim3=indx(3))
 END IF
 
-CALL SWAP(a=obj%dNdXi, b=dNdXi, i1=2, i2=3, i3=1)
+CALL SWAP_(a=obj%dNdXi, b=temp(1:indx(1), 1:indx(2), 1:indx(3)), i1=2, &
+           i2=3, i3=1)
 
-IF (ALLOCATED(dNdXi)) DEALLOCATE (dNdXi)
+IF (ALLOCATED(temp)) DEALLOCATE (temp)
 IF (ALLOCATED(xij)) DEALLOCATE (xij)
 IF (ALLOCATED(coeff0)) DEALLOCATE (coeff0)
 
-END PROCEDURE ElemshapeData_InitiateLagrange1
+END PROCEDURE LagrangeElemShapeData1
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE LagrangeElemShapeData2
+CALL LagrangeElemShapeData1(obj=obj, quad=quad, nsd=refelem%nsd, &
+                           xidim=refelem%xidimension, elemType=refelem%name, &
+    refelemCoord=refelem%xij, refelemDomain=refelem%domainName, order=order, &
+       ipType=ipType, basisType=basisType, coeff=coeff, firstCall=firstCall, &
+                            alpha=alpha, beta=beta, lambda=lambda)
+END PROCEDURE LagrangeElemShapeData2
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE LagrangeElemShapeData3
+CALL LagrangeElemShapeData2(obj=obj, quad=quad, refelem=refelem, &
+               order=order, ipType=ipType, basisType=basisType, coeff=coeff, &
+                   firstCall=firstCall, alpha=alpha, beta=beta, lambda=lambda)
+END PROCEDURE LagrangeElemShapeData3
 
 END SUBMODULE Methods
