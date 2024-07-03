@@ -19,11 +19,7 @@ USE BaseType, ONLY: ElemshapeData_, &
                     QuadraturePoint_, &
                     ReferenceElement_, &
                     H1_, &
-                    LagrangeInterpolation_, &
-                    HierarchyInterpolation_, &
-                    OrthogonalInterpolation_, &
-                    HermitInterpolation_, &
-                    SerendipityInterpolation_
+                    LagrangeInterpolation_
 
 USE GlobalData, ONLY: I4B, DFP, LGT
 
@@ -31,7 +27,8 @@ IMPLICIT NONE
 
 PRIVATE
 
-PUBLIC :: ElemshapeData_InitiateLagrange
+PUBLIC :: LagrangeElemShapeData
+PUBLIC :: Initiate
 
 !----------------------------------------------------------------------------
 !                                                          Initiate@Methods
@@ -41,20 +38,88 @@ PUBLIC :: ElemshapeData_InitiateLagrange
 ! date: 2023-08-16
 ! summary: This routine initiate the shape data
 
-INTERFACE ElemshapeData_InitiateLagrange
-  MODULE SUBROUTINE ElemshapeData_InitiateLagrange1(obj, quad, nsd, xidim, &
-                      elemType, refelemCoord, refelemDomain, baseContinuity, &
-                                baseInterpolation, order, ipType, basisType, &
+INTERFACE LagrangeElemShapeData
+  MODULE SUBROUTINE LagrangeElemShapeData1(obj, quad, nsd, xidim, &
+            elemType, refelemCoord, refelemDomain, order, ipType, basisType, &
                                         coeff, firstCall, alpha, beta, lambda)
     CLASS(ElemshapeData_), INTENT(INOUT) :: obj
+    !! element shape data
     TYPE(QuadraturePoint_), INTENT(IN) :: quad
+    !! quadrature point
     INTEGER(I4B), INTENT(IN) :: nsd
+    !! number of spatial dimension
     INTEGER(I4B), INTENT(IN) :: xidim
+    !!  dimension of xi
     INTEGER(I4B), INTENT(IN) :: elemType
+    !! element type
     REAL(DFP), INTENT(IN) :: refelemCoord(:, :)
+    !! coordinate of reference element
     CHARACTER(*), INTENT(IN) :: refelemDomain
-    CHARACTER(*), INTENT(IN) :: baseContinuity
-    CHARACTER(*), INTENT(IN) :: baseInterpolation
+    !! name of reference element domain
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order of interpolation
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: ipType
+    !! Interpolation point type
+    !! Default value is Equidistance
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: basisType
+    !! Basis function types
+    !! Default value is Monomial
+    REAL(DFP), OPTIONAL, ALLOCATABLE, INTENT(INOUT) :: coeff(:, :)
+    !! Coefficient of Lagrange polynomials
+    LOGICAL(LGT), OPTIONAL :: firstCall
+    !! If firstCall is true, then coeff will be made
+    !! If firstCall is false, then coeff will be used
+    !! Default value of firstCall is True
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha, beta, lambda
+    !! Jacobi parameter and Ultra-spherical parameter
+  END SUBROUTINE LagrangeElemShapeData1
+END INTERFACE LagrangeElemShapeData
+
+!----------------------------------------------------------------------------
+!                                                          Initiate@Methods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2023-08-16
+! summary: This routine initiate the shape data
+
+INTERFACE LagrangeElemShapeData
+  MODULE SUBROUTINE LagrangeElemShapeData2(obj, quad, refelem, order, &
+                     ipType, basisType, coeff, firstCall, alpha, beta, lambda)
+    CLASS(ElemshapeData_), INTENT(INOUT) :: obj
+    TYPE(QuadraturePoint_), INTENT(IN) :: quad
+    CLASS(ReferenceElement_), INTENT(IN) :: refelem
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order of interpolation
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: ipType
+    !! Interpolation point type
+    !! Default value is Equidistance
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: basisType
+    !! Basis function types
+    !! Default value is Monomial
+    REAL(DFP), OPTIONAL, ALLOCATABLE, INTENT(INOUT) :: coeff(:, :)
+    !! Coefficient of Lagrange polynomials
+    LOGICAL(LGT), OPTIONAL :: firstCall
+    !! If firstCall is true, then coeff will be made
+    !! If firstCall is False, then coeff will be used
+    !! Default value of firstCall is True
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha, beta, lambda
+  END SUBROUTINE LagrangeElemShapeData2
+END INTERFACE LagrangeElemShapeData
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE LagrangeElemShapeData
+MODULE SUBROUTINE LagrangeElemShapeData3(obj, quad, refelem, baseContinuity, &
+              baseInterpolation, order, ipType, basisType, coeff, firstCall, &
+                                           alpha, beta, lambda)
+    CLASS(ElemshapeData_), INTENT(INOUT) :: obj
+    CLASS(QuadraturePoint_), INTENT(IN) :: quad
+    CLASS(ReferenceElement_), INTENT(IN) :: refelem
+    CLASS(H1_), INTENT(IN) :: baseContinuity
+    CLASS(LagrangeInterpolation_), INTENT(IN) :: baseInterpolation
     INTEGER(I4B), INTENT(IN) :: order
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: ipType
     !! Interpolation point type
@@ -69,7 +134,11 @@ INTERFACE ElemshapeData_InitiateLagrange
     !! If firstCall is False, then coeff will be used
     !! Default value of firstCall is True
     REAL(DFP), OPTIONAL, INTENT(IN) :: alpha, beta, lambda
-  END SUBROUTINE ElemshapeData_InitiateLagrange1
-END INTERFACE ElemshapeData_InitiateLagrange
+  END SUBROUTINE LagrangeElemShapeData3
+END INTERFACE LagrangeElemShapeData
+
+INTERFACE Initiate
+  MODULE PROCEDURE LagrangeElemShapeData3
+END INTERFACE Initiate
 
 END MODULE ElemshapeData_Lagrange
