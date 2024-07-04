@@ -39,16 +39,24 @@ PUBLIC :: LagrangeEvalAll_Line
 PUBLIC :: LagrangeEvalAll_Line_
 PUBLIC :: LagrangeGradientEvalAll_Line
 PUBLIC :: LagrangeGradientEvalAll_Line_
+
 PUBLIC :: BasisEvalAll_Line
 PUBLIC :: BasisEvalAll_Line_
+
 PUBLIC :: BasisGradientEvalAll_Line
 PUBLIC :: BasisGradientEvalAll_Line_
+
 PUBLIC :: QuadraturePoint_Line
 PUBLIC :: ToVEFC_Line
 PUBLIC :: QuadratureNumber_Line
 PUBLIC :: RefElemDomain_Line
+
 PUBLIC :: HeirarchicalBasis_Line
-PUBLIC :: HeirarchicalGradientBasis_Line
+PUBLIC :: HeirarchicalBasis_Line_
+
+PUBLIC :: HeirarchicalBasisGradient_Line
+PUBLIC :: HeirarchicalBasisGradient_Line_
+
 PUBLIC :: OrthogonalBasis_Line
 PUBLIC :: OrthogonalBasisGradient_Line
 
@@ -186,7 +194,9 @@ INTERFACE
                                         baseInterpolation) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
     CHARACTER(*), INTENT(IN) :: baseContinuity
+    !! not used
     CHARACTER(*), INTENT(IN) :: baseInterpolation
+    !! not used
     INTEGER(I4B) :: ans
   END FUNCTION GetTotalDOF_Line
 END INTERFACE
@@ -1279,6 +1289,29 @@ INTERFACE HeirarchicalBasis_Line
 END INTERFACE HeirarchicalBasis_Line
 
 !----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE HeirarchicalBasis_Line_
+  MODULE SUBROUTINE HeirarchicalBasis_Line1_(order, xij, refLine, ans, &
+                                             nrow, ncol)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! Polynomial order of interpolation
+    REAL(DFP), INTENT(IN) :: xij(:, :)
+    !! Points of evaluation in xij format
+    CHARACTER(*), INTENT(IN) :: refLine
+    !! This parameter denotes the type of reference line.
+    !! It can take following values:
+    !! UNIT: in this case xij is in unit Line.
+    !! BIUNIT: in this case xij is in biunit Line.
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    !! Hierarchical basis
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+    !! SIZE(xij, 2), order + 1
+  END SUBROUTINE HeirarchicalBasis_Line1_
+END INTERFACE HeirarchicalBasis_Line_
+
+!----------------------------------------------------------------------------
 !                                              HeirarchicalBasisGradient_Line
 !----------------------------------------------------------------------------
 
@@ -1286,7 +1319,7 @@ END INTERFACE HeirarchicalBasis_Line
 ! date: 27 Oct 2022
 ! summary: Eval gradient of all modal basis (heirarchical polynomial) on Line
 
-INTERFACE HeirarchicalGradientBasis_Line
+INTERFACE HeirarchicalBasisGradient_Line
   MODULE FUNCTION HeirarchicalGradientBasis_Line1(order, xij, refLine) &
     RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
@@ -1302,7 +1335,31 @@ INTERFACE HeirarchicalGradientBasis_Line
     REAL(DFP) :: ans(SIZE(xij, 2), order + 1, 1)
     !! Gradient of Hierarchical basis
   END FUNCTION HeirarchicalGradientBasis_Line1
-END INTERFACE HeirarchicalGradientBasis_Line
+END INTERFACE HeirarchicalBasisGradient_Line
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE HeirarchicalBasisGradient_Line_
+  MODULE SUBROUTINE HeirarchicalGradientBasis_Line1_(order, xij, refLine, &
+                                                     ans, dim1, dim2, dim3)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! Polynomial order of interpolation
+    REAL(DFP), INTENT(IN) :: xij(:, :)
+    !! Points of evaluation in xij format
+    !! size(xij, 1) should be 1
+    CHARACTER(*), INTENT(IN) :: refLine
+    !! This parameter denotes the type of reference line.
+    !! It can take following values:
+    !! UNIT: in this case xij is in unit Line.
+    !! BIUNIT: in this case xij is in biunit Line.
+    REAL(DFP), INTENT(INOUT) :: ans(:, :, :)
+    !! Gradient of Hierarchical basis
+    INTEGER(I4B), INTENT(OUT) :: dim1, dim2, dim3
+    !! SIZE(xij, 2), order + 1, 1
+  END SUBROUTINE HeirarchicalGradientBasis_Line1_
+END INTERFACE HeirarchicalBasisGradient_Line_
 
 !----------------------------------------------------------------------------
 !                                                 BasisGradientEvalAll_Line
@@ -1386,16 +1443,10 @@ INTERFACE BasisGradientEvalAll_Line
     REAL(DFP), INTENT(IN) :: x(:)
     !! point of evaluation
     CHARACTER(*), INTENT(IN) :: refLine
-    !! UNIT
-    !! BIUNIT
+    !! UNIT ! BIUNIT
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: basisType
-    !! Monomial
-    !! Jacobi
-    !! Ultraspherical
-    !! Legendre
-    !! Chebyshev
-    !! Lobatto
-    !! UnscaledLobatto
+    !! Monomial ! Jacobi ! Ultraspherical ! Legendre ! Chebyshev
+    !! Lobatto ! UnscaledLobatto
     REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
     !! Jacobi polynomial parameter
     REAL(DFP), OPTIONAL, INTENT(IN) :: beta
