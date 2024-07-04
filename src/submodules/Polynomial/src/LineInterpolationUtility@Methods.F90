@@ -27,7 +27,8 @@ USE StringUtility, ONLY: UpperCase
 
 USE MappingUtility, ONLY: FromBiunitLine2Segment_, &
                           FromBiunitLine2Segment, &
-                          FromUnitLine2BiUnitLine
+                          FromUnitLine2BiUnitLine, &
+                          FromUnitLine2BiUnitLine_
 
 USE OrthogonalPolynomialUtility, ONLY: GradientEvalAllOrthopol, &
                                        GradientEvalAllOrthopol_, &
@@ -1612,69 +1613,99 @@ CALL GEMM(C=ans(1:dim1, 1:dim2, 1), alpha=1.0_DFP, A=xx, B=coeff0)
 END PROCEDURE LagrangeGradientEvalAll_Line1_
 
 !----------------------------------------------------------------------------
-!                                                        BasisEvalAll_Line
+!
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE HeirarchicalBasis_Line1
-TYPE(String) :: astr
-astr = UpperCase(refLine)
+INTEGER(I4B) :: nrow, ncol
+CALL HeirarchicalBasis_Line1_(order=order, xij=xij, refLine=refLine, &
+                              ans=ans, nrow=nrow, ncol=ncol)
+END PROCEDURE HeirarchicalBasis_Line1
 
-SELECT CASE (astr%chars())
-CASE ("UNIT")
-  ans = EvalAllOrthopol( &
-    & n=order, &
-    & x=FromUnitLine2BiUnitLine(xin=xij(1, :)), &
-    & orthopol=polyopt%Lobatto)
-CASE ("BIUNIT")
-  ans = EvalAllOrthopol( &
-    & n=order, &
-    & x=xij(1, :), &
-    & orthopol=polyopt%Lobatto)
+!----------------------------------------------------------------------------
+!                                                        BasisEvalAll_Line
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE HeirarchicalBasis_Line1_
+CHARACTER(1) :: astr
+REAL(DFP) :: temp(SIZE(xij, 2))
+
+astr = UpperCase(refLine(1:1))
+
+nrow = SIZE(xij, 2)
+ncol = order + 1
+
+SELECT CASE (astr)
+CASE ("U")
+  CALL FromUnitLine2BiUnitLine_(xin=xij(1, :), ans=temp, tsize=nrow)
+  CALL EvalAllOrthopol_(n=order, x=temp, orthopol=polyopt%Lobatto, ans=ans, &
+                        nrow=nrow, ncol=ncol)
+
+CASE ("B")
+  CALL EvalAllOrthopol_(n=order, x=xij(1, :), orthopol=polyopt%Lobatto, &
+                        ans=ans, nrow=nrow, ncol=ncol)
+
 CASE DEFAULT
-  ans = 0.0_DFP
-  CALL Errormsg(&
-    & msg="No case found for refline.", &
-    & file=__FILE__, &
-    & routine="HeirarchicalBasis_Line1", &
-    & line=__LINE__, &
-    & unitno=stderr)
+  nrow = 0
+  ncol = 0
+
+  CALL Errormsg(msg="No case found for refLine.", &
+                routine="HeirarchicalBasis_Line1_()", &
+                file=__FILE__, line=__LINE__, unitno=stderr)
   RETURN
 END SELECT
 
-END PROCEDURE HeirarchicalBasis_Line1
+END PROCEDURE HeirarchicalBasis_Line1_
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE HeirarchicalGradientBasis_Line1
+INTEGER(I4B) :: dim1, dim2, dim3
+CALL HeirarchicalGradientBasis_Line1_(order=order, xij=xij, refLine=refLine, &
+                                     ans=ans, dim1=dim1, dim2=dim2, dim3=dim3)
+END PROCEDURE HeirarchicalGradientBasis_Line1
 
 !----------------------------------------------------------------------------
 !                                            HeirarchicalGradientBasis_Line
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE HeirarchicalGradientBasis_Line1
-TYPE(String) :: astr
-astr = UpperCase(refLine)
+MODULE PROCEDURE HeirarchicalGradientBasis_Line1_
+CHARACTER(1) :: astr
+REAL(DFP) :: temp(SIZE(xij, 2))
 
-SELECT CASE (astr%chars())
-CASE ("UNIT")
-  ans(:, :, 1) = GradientEvalAllOrthopol( &
-    & n=order, &
-    & x=FromUnitLine2BiUnitLine(xin=xij(1, :)), &
-    & orthopol=polyopt%Lobatto)
-  ans = ans * 2.0_DFP
-CASE ("BIUNIT")
-  ans(:, :, 1) = GradientEvalAllOrthopol( &
-    & n=order, &
-    & x=xij(1, :), &
-    & orthopol=polyopt%Lobatto)
+astr = UpperCase(refLine(1:1))
+
+dim3 = 1
+
+SELECT CASE (astr)
+CASE ("U")
+
+  CALL FromUnitLine2BiUnitLine_(xin=xij(1, :), ans=temp, tsize=dim1)
+
+  CALL GradientEvalAllOrthopol_(n=order, x=temp, orthopol=polyopt%Lobatto, &
+                                ans=ans(:, :, 1), nrow=dim1, ncol=dim2)
+
+  ans(1:dim1, 1:dim2, 1) = ans(1:dim1, 1:dim2, 1) * 2.0_DFP
+
+CASE ("B")
+
+  CALL GradientEvalAllOrthopol_(n=order, x=xij(1, :), &
+             orthopol=polyopt%Lobatto, ans=ans(:, :, 1), nrow=dim1, ncol=dim2)
+
 CASE DEFAULT
-  ans = 0.0_DFP
-  CALL Errormsg(&
-    & msg="No case found for refline.", &
-    & file=__FILE__, &
-    & routine="HeirarchicalGradientBasis_Line1", &
-    & line=__LINE__, &
-    & unitno=stderr)
+
+  dim1 = 0
+  dim2 = 0
+  dim3 = 0
+  CALL Errormsg(msg="No case found for refline.", &
+                routine="HeirarchicalGradientBasis_Line1_()", &
+                file=__FILE__, line=__LINE__, unitno=stderr)
   RETURN
 END SELECT
 
-END PROCEDURE HeirarchicalGradientBasis_Line1
+END PROCEDURE HeirarchicalGradientBasis_Line1_
 
 !----------------------------------------------------------------------------
 !                                                        OrthogonalBasis_Line
