@@ -40,8 +40,12 @@ PUBLIC :: OrthogonalBasisGradient_Triangle
 PUBLIC :: VertexBasis_Triangle
 PUBLIC :: EdgeBasis_Triangle
 PUBLIC :: CellBasis_Triangle
+
 PUBLIC :: HeirarchicalBasis_Triangle
+PUBLIC :: HeirarchicalBasis_Triangle_
+
 PUBLIC :: HeirarchicalBasisGradient_Triangle
+PUBLIC :: HeirarchicalBasisGradient_Triangle_
 
 PUBLIC :: LagrangeEvalAll_Triangle
 PUBLIC :: LagrangeEvalAll_Triangle_
@@ -1152,8 +1156,8 @@ END INTERFACE BarycentricHeirarchicalBasis_Triangle
 ! summary: Evaluate all modal basis (heirarchical polynomial) on Triangle
 
 INTERFACE HeirarchicalBasis_Triangle
-  MODULE PURE FUNCTION HeirarchicalBasis_Triangle1(order, pe1, pe2, pe3,&
-    & xij, refTriangle) RESULT(ans)
+  MODULE PURE FUNCTION HeirarchicalBasis_Triangle1(order, pe1, pe2, pe3, &
+                                                 xij, refTriangle) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
     !! Order of approximation inside the triangle (i.e., cell)
     !! it should be greater than 2 for cell bubble to exist
@@ -1802,8 +1806,8 @@ END INTERFACE HeirarchicalBasisGradient_Triangle
 ! summary:  Evaluate all modal basis (heirarchical polynomial) on Triangle
 
 INTERFACE HeirarchicalBasisGradient_Triangle_
- MODULE SUBROUTINE HeirarchicalBasisGradient_Triangle1_(order, pe1, pe2, pe3,&
-                              & xij, refTriangle, ans, tsize1, tsize2, tsize3)
+  MODULE SUBROUTINE HeirarchicalBasisGradient_Triangle1_(order, pe1, pe2, &
+                           pe3, xij, refTriangle, ans, tsize1, tsize2, tsize3)
     INTEGER(I4B), INTENT(IN) :: order
     !! Order of approximation inside the triangle (i.e., cell)
     !! it should be greater than 2 for cell bubble to exist
@@ -1869,10 +1873,8 @@ END INTERFACE HeirarchicalBasisGradient_Triangle_
 !$$
 
 INTERFACE OrthogonalBasisGradient_Triangle
-  MODULE FUNCTION OrthogonalBasisGradient_Triangle1( &
-    & order, &
-    & xij, &
-    & refTriangle) RESULT(ans)
+  MODULE FUNCTION OrthogonalBasisGradient_Triangle1(order, xij, refTriangle) &
+    RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
     !! order of polynomial space
     REAL(DFP), INTENT(IN) :: xij(:, :)
