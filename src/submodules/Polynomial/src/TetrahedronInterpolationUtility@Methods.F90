@@ -2807,37 +2807,57 @@ END IF
 END PROCEDURE OrthogonalBasisGradient_Tetrahedron1
 
 !----------------------------------------------------------------------------
-!                                     HeirarchicalBasisGradient_Tetrahedron
+!
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE HeirarchicalBasisGradient_Tetrahedron1
-TYPE(String) :: name
-REAL(DFP) :: ans0(SIZE(ans, 1), SIZE(ans, 2), 4)
-ans0 = BarycentricHeirarchicalBasisGradient_Tetrahedron(&
-  & lambda=BarycentricCoordTetrahedron( &
-    & xin=xij, &
-    & refTetrahedron=refTetrahedron), &
-  & order=order, &
-  & pe1=pe1,  &
-  & pe2=pe2,  &
-  & pe3=pe3,  &
-  & pe4=pe4,  &
-  & pe5=pe5,  &
-  & pe6=pe6,  &
-  & ps1=ps1,  &
-  & ps2=ps2,  &
-  & ps3=ps3,  &
-  & ps4=ps4)
-
-ans(:, :, 1) = ans0(:, :, 2) - ans0(:, :, 1)
-ans(:, :, 2) = ans0(:, :, 3) - ans0(:, :, 1)
-ans(:, :, 3) = ans0(:, :, 4) - ans0(:, :, 1)
-
-name = UpperCase(refTetrahedron)
-IF (name == "BIUNIT") THEN
-  ans = 0.5_DFP * ans
-END IF
+INTEGER(I4B) :: dim1, dim2, dim3
+CALL HeirarchicalBasisGradient_Tetrahedron1_(order=order, pe1=pe1, pe2=pe2, &
+     pe3=pe3, pe4=pe4, pe5=pe5, pe6=pe6, ps1=ps1, ps2=ps2, ps3=ps3, ps4=ps4, &
+      xij=xij, refTetrahedron=refTetrahedron, ans=ans, dim1=dim1, dim2=dim2, &
+                                             dim3=dim3)
 END PROCEDURE HeirarchicalBasisGradient_Tetrahedron1
+
+!----------------------------------------------------------------------------
+!                                     HeirarchicalBasisGradient_Tetrahedron
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE HeirarchicalBasisGradient_Tetrahedron1_
+CHARACTER(1) :: name
+REAL(DFP), ALLOCATABLE :: ans0(:, :, :), lambda(:, :)
+INTEGER(I4B) :: indx(2)
+
+dim1 = SIZE(xij, 2)
+
+dim2 = 4 + pe1 + pe2 + pe3 + pe4 + pe5 + pe6 - 6 &
+       + (ps1 - 1) * (ps1 - 2) / 2 &
+       + (ps2 - 1) * (ps2 - 2) / 2 &
+       + (ps3 - 1) * (ps3 - 2) / 2 &
+       + (ps4 - 1) * (ps4 - 2) / 2 &
+       + (order - 1) * (order - 2) * (order - 3) / 6_I4B
+
+dim3 = 3
+
+ALLOCATE (ans0(dim1, dim2, dim3 + 1), lambda(4, dim1))
+
+CALL BarycentricCoordTetrahedron_(xin=xij, refTetrahedron=refTetrahedron, &
+                                  ans=lambda, nrow=indx(1), ncol=indx(2))
+
+ans0 = BarycentricHeirarchicalBasisGradient_Tetrahedron(lambda=lambda, &
+          order=order, pe1=pe1, pe2=pe2, pe3=pe3, pe4=pe4, pe5=pe5, pe6=pe6, &
+                                           ps1=ps1, ps2=ps2, ps3=ps3, ps4=ps4)
+
+ans(1:dim1, 1:dim2, 1) = ans0(:, :, 2) - ans0(:, :, 1)
+ans(1:dim1, 1:dim2, 2) = ans0(:, :, 3) - ans0(:, :, 1)
+ans(1:dim1, 1:dim2, 3) = ans0(:, :, 4) - ans0(:, :, 1)
+
+name = UpperCase(refTetrahedron(1:1))
+IF (name .EQ. "B") THEN
+  ans(1:dim1, 1:dim2, 1:dim3) = 0.5_DFP * ans(1:dim1, 1:dim2, 1:dim3)
+END IF
+
+DEALLOCATE (ans0, lambda)
+END PROCEDURE HeirarchicalBasisGradient_Tetrahedron1_
 
 !----------------------------------------------------------------------------
 !                                     HeirarchicalBasisGradient_Tetrahedron
