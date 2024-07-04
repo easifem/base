@@ -46,6 +46,7 @@ PUBLIC :: xzFacetBasis_Hexahedron
 PUBLIC :: FacetBasis_Hexahedron
 PUBLIC :: CellBasis_Hexahedron
 PUBLIC :: HeirarchicalBasis_Hexahedron
+PUBLIC :: HeirarchicalBasis_Hexahedron_
 PUBLIC :: QuadraturePoint_Hexahedron
 PUBLIC :: LagrangeEvalAll_Hexahedron
 PUBLIC :: LagrangeEvalAll_Hexahedron_
@@ -59,6 +60,7 @@ PUBLIC :: LagrangeGradientEvalAll_Hexahedron_
 PUBLIC :: OrthogonalBasisGradient_Hexahedron
 PUBLIC :: TensorProdBasisGradient_Hexahedron
 PUBLIC :: HeirarchicalBasisGradient_Hexahedron
+PUBLIC :: HeirarchicalBasisGradient_Hexahedron_
 PUBLIC :: GetTotalDOF_Hexahedron
 PUBLIC :: GetTotalInDOF_Hexahedron
 
@@ -2264,15 +2266,9 @@ END INTERFACE CellBasisGradient_Hexahedron
 ! summary: Returns the HeirarchicalBasis on Hexahedron
 
 INTERFACE HeirarchicalBasis_Hexahedron
-  MODULE PURE FUNCTION HeirarchicalBasis_Hexahedron1(  &
-    & pb1, pb2, pb3, &
-    & pxy1, pxy2, &
-    & pxz1, pxz2, &
-    & pyz1, pyz2, &
-    & px1, px2, px3, px4, &
-    & py1, py2, py3, py4, &
-    & pz1, pz2, pz3, pz4, &
-    & xij) RESULT(ans)
+  MODULE PURE FUNCTION HeirarchicalBasis_Hexahedron1(pb1, pb2, pb3, pxy1, &
+       pxy2, pxz1, pxz2, pyz1, pyz2, px1, px2, px3, px4, py1, py2, py3, py4, &
+                                          pz1, pz2, pz3, pz4, xij) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: pb1, pb2, pb3
     !! order of interpolation inside the element in x, y, and z dirs
     INTEGER(I4B), INTENT(IN) :: pxy1, pxy2
@@ -2305,6 +2301,44 @@ INTERFACE HeirarchicalBasis_Hexahedron
 END INTERFACE HeirarchicalBasis_Hexahedron
 
 !----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE HeirarchicalBasis_Hexahedron_
+  MODULE PURE SUBROUTINE HeirarchicalBasis_Hexahedron1_(pb1, pb2, pb3, pxy1, &
+       pxy2, pxz1, pxz2, pyz1, pyz2, px1, px2, px3, px4, py1, py2, py3, py4, &
+                                     pz1, pz2, pz3, pz4, xij, ans, nrow, ncol)
+    INTEGER(I4B), INTENT(IN) :: pb1, pb2, pb3
+    !! order of interpolation inside the element in x, y, and z dirs
+    INTEGER(I4B), INTENT(IN) :: pxy1, pxy2
+    !! order of interpolation on facets parallel to xy plane
+    INTEGER(I4B), INTENT(IN) :: pxz1, pxz2
+    !! order of interpolation on facets parallel to xz plane
+    INTEGER(I4B), INTENT(IN) :: pyz1, pyz2
+    !! order of interpolation on facets parallel to yz plane
+    INTEGER(I4B), INTENT(IN) :: px1, px2, px3, px4
+    !! order of interpolation on edges parallel to x-axis
+    INTEGER(I4B), INTENT(IN) :: py1, py2, py3, py4
+    !! order of interpolation on edges parallel to y-axis
+    INTEGER(I4B), INTENT(IN) :: pz1, pz2, pz3, pz4
+    !! order of interpolation on edges parallel to z-axis
+    REAL(DFP), INTENT(IN) :: xij(:, :)
+    !! points of evaluation in xij format
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    !!
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+    !! nrow = SIZE(xij, 2)
+    !! ncol = 8_I4B + (pb1 - 1_I4B) * (pb2 - 1_I4B) * (pb3 - 1_I4B) &
+    !! + (pxy1 - 1_I4B) * (pxy2 - 1_I4B) * 2_I4B  &
+    !! + (pxz1 - 1_I4B) * (pxz2 - 1_I4B) * 2_I4B  &
+    !! + (pyz1 - 1_I4B) * (pyz2 - 1_I4B) * 2_I4B  &
+    !! + (px1 + px2 + px3 + px4 - 4_I4B) &
+    !! + (py1 + py2 + py3 + py4 - 4_I4B) &
+    !! + (pz1 + pz2 + pz3 + pz4 - 4_I4B) &
+  END SUBROUTINE HeirarchicalBasis_Hexahedron1_
+END INTERFACE HeirarchicalBasis_Hexahedron_
+
+!----------------------------------------------------------------------------
 !                                               HeirarchicalBasis_Hexahedron
 !----------------------------------------------------------------------------
 
@@ -2313,9 +2347,7 @@ END INTERFACE HeirarchicalBasis_Hexahedron
 ! summary: Returns the HeirarchicalBasis on Hexahedron
 
 INTERFACE HeirarchicalBasis_Hexahedron
-  MODULE PURE FUNCTION HeirarchicalBasis_Hexahedron2(  &
-    & p, q, r, &
-    & xij) RESULT(ans)
+  MODULE PURE FUNCTION HeirarchicalBasis_Hexahedron2(p, q, r, xij) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: p, q, r
     !! order of interpolation in x, y, and z dirs
     REAL(DFP), INTENT(IN) :: xij(:, :)
@@ -2334,6 +2366,31 @@ INTERFACE HeirarchicalBasis_Hexahedron
     !!
   END FUNCTION HeirarchicalBasis_Hexahedron2
 END INTERFACE HeirarchicalBasis_Hexahedron
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE HeirarchicalBasis_Hexahedron_
+  MODULE PURE SUBROUTINE HeirarchicalBasis_Hexahedron2_(p, q, r, xij, ans, &
+                                                        nrow, ncol)
+    INTEGER(I4B), INTENT(IN) :: p, q, r
+    !! order of interpolation in x, y, and z dirs
+    REAL(DFP), INTENT(IN) :: xij(:, :)
+    !! points of evaluation in xij format
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    !!
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+    !! nrow = SIZE(xij, 2)
+    !! ncol = 8_I4B + (p - 1_I4B) * (q - 1_I4B) * (r - 1_I4B) &
+    !!  + (p - 1_I4B) * (q - 1_I4B) * 2_I4B  &
+    !!  + (p - 1_I4B) * (r - 1_I4B) * 2_I4B  &
+    !!  + (q - 1_I4B) * (r - 1_I4B) * 2_I4B  &
+    !!  + (4_I4B * p - 4_I4B) &
+    !!  + (4_I4B * q - 4_I4B) &
+    !!  + (4_I4B * r - 4_I4B) &
+  END SUBROUTINE HeirarchicalBasis_Hexahedron2_
+END INTERFACE HeirarchicalBasis_Hexahedron_
 
 !----------------------------------------------------------------------------
 !                                                 QuadraturePoint_Hexahedron
@@ -2957,6 +3014,45 @@ INTERFACE HeirarchicalBasisGradient_Hexahedron
 END INTERFACE HeirarchicalBasisGradient_Hexahedron
 
 !----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE HeirarchicalBasisGradient_Hexahedron_
+  MODULE SUBROUTINE HeirarchicalBasisGradient_Hexahedron1_(pb1, pb2, pb3, &
+      pxy1, pxy2, pxz1, pxz2, pyz1, pyz2, px1, px2, px3, px4, py1, py2, py3, &
+                          py4, pz1, pz2, pz3, pz4, xij, ans, dim1, dim2, dim3)
+    INTEGER(I4B), INTENT(IN) :: pb1, pb2, pb3
+    !! order of interpolation inside the element in x, y, and z dirs
+    INTEGER(I4B), INTENT(IN) :: pxy1, pxy2
+    !! order of interpolation on facets parallel to xy plane
+    INTEGER(I4B), INTENT(IN) :: pxz1, pxz2
+    !! order of interpolation on facets parallel to xz plane
+    INTEGER(I4B), INTENT(IN) :: pyz1, pyz2
+    !! order of interpolation on facets parallel to yz plane
+    INTEGER(I4B), INTENT(IN) :: px1, px2, px3, px4
+    !! order of interpolation on edges parallel to x-axis
+    INTEGER(I4B), INTENT(IN) :: py1, py2, py3, py4
+    !! order of interpolation on edges parallel to y-axis
+    INTEGER(I4B), INTENT(IN) :: pz1, pz2, pz3, pz4
+    !! order of interpolation on edges parallel to z-axis
+    REAL(DFP), INTENT(IN) :: xij(:, :)
+    !! points of evaluation in xij format
+    REAL(DFP), INTENT(INOUT) :: ans(:, :, :)
+    !!
+    INTEGER(I4B), INTENT(OUT) :: dim1, dim2, dim3
+    !! dim1 = SIZE(xij, 2)
+    !! dim2 = 8_I4B + (pb1 - 1_I4B) * (pb2 - 1_I4B) * (pb3 - 1_I4B) &
+    !! & + (pxy1 - 1_I4B) * (pxy2 - 1_I4B) * 2_I4B  &
+    !! & + (pxz1 - 1_I4B) * (pxz2 - 1_I4B) * 2_I4B  &
+    !! & + (pyz1 - 1_I4B) * (pyz2 - 1_I4B) * 2_I4B  &
+    !! & + (px1 + px2 + px3 + px4 - 4_I4B) &
+    !! & + (py1 + py2 + py3 + py4 - 4_I4B) &
+    !! & + (pz1 + pz2 + pz3 + pz4 - 4_I4B)
+    !! dim3 = 3_I4B
+  END SUBROUTINE HeirarchicalBasisGradient_Hexahedron1_
+END INTERFACE HeirarchicalBasisGradient_Hexahedron_
+
+!----------------------------------------------------------------------------
 !                                     HeirarchicalBasisGradient_Hexahedron
 !----------------------------------------------------------------------------
 
@@ -2985,5 +3081,31 @@ INTERFACE HeirarchicalBasisGradient_Hexahedron
       & 3_I4B)
   END FUNCTION HeirarchicalBasisGradient_Hexahedron2
 END INTERFACE HeirarchicalBasisGradient_Hexahedron
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE HeirarchicalBasisGradient_Hexahedron_
+  MODULE SUBROUTINE HeirarchicalBasisGradient_Hexahedron2_(p, q, r, xij, &
+                                                        ans, dim1, dim2, dim3)
+    INTEGER(I4B), INTENT(IN) :: p, q, r
+    !! order of interpolation in x, y, and z dirs
+    REAL(DFP), INTENT(IN) :: xij(:, :)
+    !! points of evaluation in xij format
+    REAL(DFP), INTENT(INOUT) :: ans(:, :, :)
+    !
+    INTEGER(I4B), INTENT(OUT) :: dim1, dim2, dim3
+    !! dim1 = SIZE(xij, 2)
+    !! dim2 = 8_I4B + (p - 1_I4B) * (q - 1_I4B) * (r - 1_I4B) &
+    !! + (p - 1_I4B) * (q - 1_I4B) * 2_I4B  &
+    !! + (p - 1_I4B) * (r - 1_I4B) * 2_I4B  &
+    !! + (q - 1_I4B) * (r - 1_I4B) * 2_I4B  &
+    !! + (4_I4B * p - 4_I4B) &
+    !! + (4_I4B * q - 4_I4B) &
+    !! + (4_I4B * r - 4_I4B)
+    !! dim3 = 3_I4B
+  END SUBROUTINE HeirarchicalBasisGradient_Hexahedron2_
+END INTERFACE HeirarchicalBasisGradient_Hexahedron_
 
 END MODULE HexahedronInterpolationUtility
