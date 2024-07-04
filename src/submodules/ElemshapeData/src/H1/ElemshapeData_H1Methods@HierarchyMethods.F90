@@ -50,7 +50,7 @@ CASE (Line)
     & xij=xij, &
     & refLine=refelem%domainName)
 
-  dNdXi = HeirarchicalGradientBasis_Line( &
+  dNdXi = HeirarchicalBasisGradient_Line( &
     & order=order,  &
     & xij=xij, &
     & refLine=refelem%domainName)
