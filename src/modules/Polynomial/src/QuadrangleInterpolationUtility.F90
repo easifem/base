@@ -37,7 +37,10 @@ PUBLIC :: VertexBasis_Quadrangle
 PUBLIC :: VerticalEdgeBasis_Quadrangle
 PUBLIC :: HorizontalEdgeBasis_Quadrangle
 PUBLIC :: CellBasis_Quadrangle
+
 PUBLIC :: HeirarchicalBasis_Quadrangle
+PUBLIC :: HeirarchicalBasis_Quadrangle_
+
 PUBLIC :: IJ2VEFC_Quadrangle_Clockwise
 PUBLIC :: IJ2VEFC_Quadrangle_AntiClockwise
 PUBLIC :: LagrangeEvalAll_Quadrangle
@@ -48,7 +51,10 @@ PUBLIC :: FacetConnectivity_Quadrangle
 PUBLIC :: RefElemDomain_Quadrangle
 PUBLIC :: LagrangeGradientEvalAll_Quadrangle
 PUBLIC :: LagrangeGradientEvalAll_Quadrangle_
+
 PUBLIC :: HeirarchicalBasisGradient_Quadrangle
+PUBLIC :: HeirarchicalBasisGradient_Quadrangle_
+
 PUBLIC :: TensorProdBasisGradient_Quadrangle
 PUBLIC :: OrthogonalBasisGradient_Quadrangle
 PUBLIC :: DubinerGradient_Quadrangle
@@ -1958,7 +1964,7 @@ END INTERFACE
 
 INTERFACE HeirarchicalBasis_Quadrangle
   MODULE PURE FUNCTION HeirarchicalBasis_Quadrangle1(pb, qb, pe3, pe4, &
-    & qe1, qe2, xij) RESULT(ans)
+                                                    qe1, qe2, xij) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: pb
     !! order of interpolation inside the quadrangle in x1 direction
     INTEGER(I4B), INTENT(IN) :: qb
@@ -2062,16 +2068,8 @@ END INTERFACE HeirarchicalBasis_Quadrangle_
 ! summary: Evaluate all Lagrange polynomial of order n at single points
 
 INTERFACE LagrangeEvalAll_Quadrangle
-  MODULE FUNCTION LagrangeEvalAll_Quadrangle1( &
-    & order, &
-    & x, &
-    & xij, &
-    & coeff, &
-    & firstCall, &
-    & basisType, &
-    & alpha, &
-    & beta, &
-    & lambda) RESULT(ans)
+  MODULE FUNCTION LagrangeEvalAll_Quadrangle1(order, x, xij, coeff, &
+                        firstCall, basisType, alpha, beta, lambda) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
     !! order of Lagrange polynomials
     REAL(DFP), INTENT(IN) :: x(2)
@@ -2093,11 +2091,7 @@ INTERFACE LagrangeEvalAll_Quadrangle
     !! Default value of firstCall is True
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: basisType
     !! Monomials *Default
-    !! Legendre
-    !! Lobatto
-    !! Chebyshev
-    !! Jacobi
-    !! Ultraspherical
+    !! Legendre ! Lobatto ! Chebyshev ! Jacobi ! Ultraspherical
     !! Heirarchical
     REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
     !! Jacobi parameter
