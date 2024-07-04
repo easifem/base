@@ -2026,59 +2026,69 @@ END DO
 END PROCEDURE CellBasisGradient_Hexahedron2
 
 !----------------------------------------------------------------------------
-!                                               HeirarchicalBasis_Hexahedron
+!
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE HeirarchicalBasis_Hexahedron1
+INTEGER(I4B) :: nrow, ncol
+CALL HeirarchicalBasis_Hexahedron1_(pb1=pb1, pb2=pb2, pb3=pb3, pxy1=pxy1, &
+    pxy2=pxy2, pxz1=pxz1, pxz2=pxz2, pyz1=pyz1, pyz2=pyz2, px1=px1, px2=px2, &
+     px3=px3, px4=px4, py1=py1, py2=py2, py3=py3, py4=py4, pz1=pz1, pz2=pz2, &
+                     pz3=pz3, pz4=pz4, xij=xij, ans=ans, nrow=nrow, ncol=ncol)
+END PROCEDURE HeirarchicalBasis_Hexahedron1
 
-#define _maxP_ MAXVAL([pb1, px1, px2, px3, px4, pxy1, pxz1])
-#define _maxQ_ MAXVAL([pb2, py1, py2, py3, py4, pxy2, pyz1])
-#define _maxR_ MAXVAL([pb3, pz1, pz2, pz3, pz4, pxz2, pyz2])
+!----------------------------------------------------------------------------
+!                                               HeirarchicalBasis_Hexahedron
+!----------------------------------------------------------------------------
 
-INTEGER(I4B) :: a, b, maxP, maxQ, maxR
-REAL(DFP) :: L1(1:SIZE(xij, 2), 0:_maxP_)
-REAL(DFP) :: L2(1:SIZE(xij, 2), 0:_maxQ_)
-REAL(DFP) :: L3(1:SIZE(xij, 2), 0:_maxR_)
+MODULE PROCEDURE HeirarchicalBasis_Hexahedron1_
+INTEGER(I4B) :: a, b, maxP, maxQ, maxR, indx(2)
+REAL(DFP), ALLOCATABLE :: L1(:, :), L2(:, :), L3(:, :)
 
-#undef _maxP_
-#undef _maxQ_
-#undef _maxR_
+nrow = SIZE(xij, 2)
+ncol = 8_I4B + (pb1 - 1_I4B) * (pb2 - 1_I4B) * (pb3 - 1_I4B) &
+       + (pxy1 - 1_I4B) * (pxy2 - 1_I4B) * 2_I4B &
+       + (pxz1 - 1_I4B) * (pxz2 - 1_I4B) * 2_I4B &
+       + (pyz1 - 1_I4B) * (pyz2 - 1_I4B) * 2_I4B &
+       + (px1 + px2 + px3 + px4 - 4_I4B) &
+       + (py1 + py2 + py3 + py4 - 4_I4B) &
+       + (pz1 + pz2 + pz3 + pz4 - 4_I4B)
 
-maxP = SIZE(L1, 2) - 1
-maxQ = SIZE(L2, 2) - 1
-maxR = SIZE(L3, 2) - 1
+maxP = MAX(pb1, px1, px2, px3, px4, pxy1, pxz1)
+maxQ = MAX(pb2, py1, py2, py3, py4, pxy2, pyz1)
+maxR = MAX(pb3, pz1, pz2, pz3, pz4, pxz2, pyz2)
 
-L1 = LobattoEvalAll(n=maxP, x=xij(1, :))
-L2 = LobattoEvalAll(n=maxQ, x=xij(2, :))
-L3 = LobattoEvalAll(n=maxR, x=xij(3, :))
+ALLOCATE (L1(1:nrow, 0:maxP), L2(1:nrow, 0:maxQ), L3(1:nrow, 0:maxR))
+
+CALL LobattoEvalAll_(n=maxP, x=xij(1, :), ans=L1, nrow=indx(1), ncol=indx(2))
+CALL LobattoEvalAll_(n=maxQ, x=xij(2, :), ans=L2, nrow=indx(1), ncol=indx(2))
+CALL LobattoEvalAll_(n=maxR, x=xij(3, :), ans=L3, nrow=indx(1), ncol=indx(2))
 
 ! Vertex basis function
-
-ans(:, 1:8) = VertexBasis_Hexahedron2(L1=L1, L2=L2, L3=L3)
+ans(1:nrow, 1:8) = VertexBasis_Hexahedron2(L1=L1, L2=L2, L3=L3)
 
 ! Edge basis function
-
 b = 8
 
 IF (ANY([px1, px2, px3, px4] .GE. 2_I4B)) THEN
   a = b + 1
   b = a - 1 + px1 + px2 + px3 + px4 - 4
-  ans(:, a:b) = xEdgeBasis_Hexahedron2( &
-    & pe1=px1, pe2=px2, pe3=px3, pe4=px4, L1=L1, L2=L2, L3=L3)
+  ans(1:nrow, a:b) = xEdgeBasis_Hexahedron2( &
+                     pe1=px1, pe2=px2, pe3=px3, pe4=px4, L1=L1, L2=L2, L3=L3)
 END IF
 
 IF (ANY([py1, py2, py3, py4] .GE. 2_I4B)) THEN
   a = b + 1
   b = a - 1 + py1 + py2 + py3 + py4 - 4
-  ans(:, a:b) = yEdgeBasis_Hexahedron2( &
-    & pe1=py1, pe2=py2, pe3=py3, pe4=py4, L1=L1, L2=L2, L3=L3)
+  ans(1:nrow, a:b) = yEdgeBasis_Hexahedron2( &
+                     pe1=py1, pe2=py2, pe3=py3, pe4=py4, L1=L1, L2=L2, L3=L3)
 END IF
 
 IF (ANY([pz1, pz2, pz3, pz4] .GE. 2_I4B)) THEN
   a = b + 1
   b = a - 1 + pz1 + pz2 + pz3 + pz4 - 4
-  ans(:, a:b) = zEdgeBasis_Hexahedron2( &
-    & pe1=pz1, pe2=pz2, pe3=pz3, pe4=pz4, L1=L1, L2=L2, L3=L3)
+  ans(1:nrow, a:b) = zEdgeBasis_Hexahedron2( &
+                     pe1=pz1, pe2=pz2, pe3=pz3, pe4=pz4, L1=L1, L2=L2, L3=L3)
 END IF
 
 ! Facet basis function
@@ -2086,47 +2096,52 @@ END IF
 IF (ANY([pxy1, pxy2] .GE. 2_I4B)) THEN
   a = b + 1
   b = a - 1 + 2 * (pxy1 - 1) * (pxy2 - 1)
-  ans(:, a:b) = xyFacetBasis_Hexahedron2( &
-    & n1=pxy1, n2=pxy2, L1=L1, L2=L2, L3=L3)
+  ans(1:nrow, a:b) = xyFacetBasis_Hexahedron2( &
+                     n1=pxy1, n2=pxy2, L1=L1, L2=L2, L3=L3)
 END IF
 
 IF (ANY([pxz1, pxz2] .GE. 2_I4B)) THEN
   a = b + 1
   b = a - 1 + 2 * (pxz1 - 1) * (pxz2 - 1)
-  ans(:, a:b) = xzFacetBasis_Hexahedron2( &
-    & n1=pxz1, n2=pxz2, L1=L1, L2=L2, L3=L3)
+  ans(1:nrow, a:b) = xzFacetBasis_Hexahedron2( &
+                     n1=pxz1, n2=pxz2, L1=L1, L2=L2, L3=L3)
 END IF
 
 IF (ANY([pyz1, pyz2] .GE. 2_I4B)) THEN
   a = b + 1
   b = a - 1 + 2 * (pyz1 - 1) * (pyz2 - 1)
-  ans(:, a:b) = yzFacetBasis_Hexahedron2( &
-    & n1=pyz1, n2=pyz2, L1=L1, L2=L2, L3=L3)
+  ans(1:nrow, a:b) = yzFacetBasis_Hexahedron2( &
+                     n1=pyz1, n2=pyz2, L1=L1, L2=L2, L3=L3)
 END IF
 
 IF (ANY([pb1, pb2, pb3] .GE. 2_I4B)) THEN
   a = b + 1
   b = a - 1 + (pb1 - 1) * (pb2 - 1) * (pb3 - 1)
-  ans(:, a:b) = cellBasis_Hexahedron2( &
-    & n1=pb1, n2=pb2, n3=pb3, L1=L1, L2=L2, L3=L3)
+  ans(1:nrow, a:b) = cellBasis_Hexahedron2( &
+                     n1=pb1, n2=pb2, n3=pb3, L1=L1, L2=L2, L3=L3)
 END IF
-END PROCEDURE HeirarchicalBasis_Hexahedron1
+END PROCEDURE HeirarchicalBasis_Hexahedron1_
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE HeirarchicalBasis_Hexahedron2
+INTEGER(I4B) :: nrow, ncol
+CALL HeirarchicalBasis_Hexahedron2_(p=p, q=q, r=r, xij=xij, ans=ans, &
+                                    nrow=nrow, ncol=ncol)
+END PROCEDURE HeirarchicalBasis_Hexahedron2
 
 !----------------------------------------------------------------------------
 !                                              HeirarchicalBasis_Hexahedron
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE HeirarchicalBasis_Hexahedron2
-ans = HeirarchicalBasis_Hexahedron1(&
-  & pb1=p, pb2=q, pb3=r, &
-  & pxy1=p, pxy2=q, &
-  & pxz1=p, pxz2=r, &
-  & pyz1=q, pyz2=r, &
-  & px1=p, px2=p, px3=p, px4=p, &
-  & py1=q, py2=q, py3=q, py4=q, &
-  & pz1=r, pz2=r, pz3=r, pz4=r, &
-  & xij=xij)
-END PROCEDURE HeirarchicalBasis_Hexahedron2
+MODULE PROCEDURE HeirarchicalBasis_Hexahedron2_
+CALL HeirarchicalBasis_Hexahedron1_(pb1=p, pb2=q, pb3=r, pxy1=p, pxy2=q, &
+   pxz1=p, pxz2=r, pyz1=q, pyz2=r, px1=p, px2=p, px3=p, px4=p, py1=q, py2=q, &
+      py3=q, py4=q, pz1=r, pz2=r, pz3=r, pz4=r, xij=xij, ans=ans, nrow=nrow, &
+                                    ncol=ncol)
+END PROCEDURE HeirarchicalBasis_Hexahedron2_
 
 !----------------------------------------------------------------------------
 !                                              QuadraturePoint_Hexahedron
@@ -2840,47 +2855,66 @@ END DO
 END PROCEDURE TensorProdBasisGradient_Hexahedron1
 
 !----------------------------------------------------------------------------
-!                                    HeirarchicalBasisGradient_Hexahedron1
+!
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE HeirarchicalBasisGradient_Hexahedron1
-#define _maxP_ MAXVAL([pb1, px1, px2, px3, px4, pxy1, pxz1])
-#define _maxQ_ MAXVAL([pb2, py1, py2, py3, py4, pxy2, pyz1])
-#define _maxR_ MAXVAL([pb3, pz1, pz2, pz3, pz4, pxz2, pyz2])
+INTEGER(I4B) :: dim1, dim2, dim3
 
-INTEGER(I4B) :: a, b, maxP, maxQ, maxR
-REAL(DFP) :: L1(1:SIZE(xij, 2), 0:_maxP_)
-REAL(DFP) :: L2(1:SIZE(xij, 2), 0:_maxQ_)
-REAL(DFP) :: L3(1:SIZE(xij, 2), 0:_maxR_)
-REAL(DFP) :: dL1(1:SIZE(xij, 2), 0:_maxP_)
-REAL(DFP) :: dL2(1:SIZE(xij, 2), 0:_maxQ_)
-REAL(DFP) :: dL3(1:SIZE(xij, 2), 0:_maxR_)
+CALL HeirarchicalBasisGradient_Hexahedron1_(pb1=pb1, pb2=pb2, pb3=pb3, &
+  pxy1=pxy1, pxy2=pxy2, pxz1=pxz1, pxz2=pxz2, pyz1=pyz1, pyz2=pyz2, px1=px1, &
+     px2=px2, px3=px3, px4=px4, py1=py1, py2=py2, py3=py3, py4=py4, pz1=pz1, &
+          pz2=pz2, pz3=pz3, pz4=pz4, xij=xij, ans=ans, dim1=dim1, dim2=dim2, &
+                                            dim3=dim3)
+END PROCEDURE HeirarchicalBasisGradient_Hexahedron1
 
-#undef _maxP_
-#undef _maxQ_
-#undef _maxR_
+!----------------------------------------------------------------------------
+!                                    HeirarchicalBasisGradient_Hexahedron1
+!----------------------------------------------------------------------------
 
-maxP = SIZE(L1, 2) - 1
-maxQ = SIZE(L2, 2) - 1
-maxR = SIZE(L3, 2) - 1
+MODULE PROCEDURE HeirarchicalBasisGradient_Hexahedron1_
+INTEGER(I4B) :: a, b, maxP, maxQ, maxR, indx(2)
+REAL( DFP ), ALLOCATABLE :: L1(:,:), L2(:,:), L3(:,:), dL1(:,:), dL2(:,:), &
+                            dL3(:, :)
 
-L1 = LobattoEvalAll(n=maxP, x=xij(1, :))
-L2 = LobattoEvalAll(n=maxQ, x=xij(2, :))
-L3 = LobattoEvalAll(n=maxR, x=xij(3, :))
+dim1 = SIZE(xij, 2)
 
-dL1 = LobattoGradientEvalAll(n=maxP, x=xij(1, :))
-dL2 = LobattoGradientEvalAll(n=maxQ, x=xij(2, :))
-dL3 = LobattoGradientEvalAll(n=maxR, x=xij(3, :))
+dim2 = 8_I4B + (pb1 - 1_I4B) * (pb2 - 1_I4B) * (pb3 - 1_I4B) &
+       + (pxy1 - 1_I4B) * (pxy2 - 1_I4B) * 2_I4B &
+       + (pxz1 - 1_I4B) * (pxz2 - 1_I4B) * 2_I4B &
+       + (pyz1 - 1_I4B) * (pyz2 - 1_I4B) * 2_I4B &
+       + (px1 + px2 + px3 + px4 - 4_I4B) &
+       + (py1 + py2 + py3 + py4 - 4_I4B) &
+       + (pz1 + pz2 + pz3 + pz4 - 4_I4B)
+
+dim3 = 3_I4B
+
+maxP = MAX(pb1, px1, px2, px3, px4, pxy1, pxz1)
+maxQ = MAX(pb2, py1, py2, py3, py4, pxy2, pyz1)
+maxR = MAX(pb3, pz1, pz2, pz3, pz4, pxz2, pyz2)
+
+ALLOCATE (L1(1:dim1, 0:maxP), L2(1:dim1, 0:maxQ), L3(1:dim1, 0:maxR), &
+          dL1(1:dim1, 0:maxP), dL2(1:dim1, 0:maxQ), dL3(1:dim1, 0:maxR))
+
+CALL LobattoEvalAll_(n=maxP, x=xij(1, :), ans=L1, nrow=indx(1), ncol=indx(2))
+CALL LobattoEvalAll_(n=maxQ, x=xij(2, :), ans=L2, nrow=indx(1), ncol=indx(2))
+CALL LobattoEvalAll_(n=maxR, x=xij(3, :), ans=L3, nrow=indx(1), ncol=indx(2))
+
+! dL1 = LobattoGradientEvalAll(n=maxP, x=xij(1, :))
+CALL LobattoGradientEvalAll_(n=maxP, x=xij(1, :), ans=dL1, nrow=indx(1), &
+                             ncol=indx(2))
+
+! dL2 = LobattoGradientEvalAll(n=maxQ, x=xij(2, :))
+CALL LobattoGradientEvalAll_(n=maxQ, x=xij(2, :), ans=dL2, nrow=indx(1), &
+                             ncol=indx(2))
+
+! dL3 = LobattoGradientEvalAll(n=maxR, x=xij(3, :))
+CALL LobattoGradientEvalAll_(n=maxR, x=xij(3, :), ans=dL3, nrow=indx(1), &
+                             ncol=indx(2))
 
 ! Vertex basis function
-ans(:, 1:8, :) = VertexBasisGradient_Hexahedron2( &
-  & L1=L1, &
-  & L2=L2, &
-  & L3=L3, &
-  & dL1=dL1, &
-  & dL2=dL2, &
-  & dL3=dL3  &
-  & )
+ans(1:dim1, 1:8, 1:dim3) = VertexBasisGradient_Hexahedron2(L1=L1, L2=L2, &
+                                             L3=L3, dL1=dL1, dL2=dL2, dL3=dL3)
 
 ! Edge basis function
 b = 8
@@ -2888,52 +2922,25 @@ b = 8
 IF (ANY([px1, px2, px3, px4] .GE. 2_I4B)) THEN
   a = b + 1
   b = a - 1 + px1 + px2 + px3 + px4 - 4
-  ans(:, a:b, :) = xEdgeBasisGradient_Hexahedron2( &
-    & pe1=px1, &
-    & pe2=px2, &
-    & pe3=px3, &
-    & pe4=px4, &
-    & L1=L1, &
-    & L2=L2, &
-    & L3=L3, &
-    & dL1=dL1, &
-    & dL2=dL2, &
-    & dL3=dL3 &
-    & )
+  ans(1:dim1, a:b, 1:dim3) = xEdgeBasisGradient_Hexahedron2(pe1=px1, &
+           pe2=px2, pe3=px3, pe4=px4, L1=L1, L2=L2, L3=L3, dL1=dL1, dL2=dL2, &
+                                                            dL3=dL3)
 END IF
 
 IF (ANY([py1, py2, py3, py4] .GE. 2_I4B)) THEN
   a = b + 1
   b = a - 1 + py1 + py2 + py3 + py4 - 4
-  ans(:, a:b, :) = yEdgeBasisGradient_Hexahedron2( &
-    & pe1=py1, &
-    & pe2=py2, &
-    & pe3=py3, &
-    & pe4=py4, &
-    & L1=L1, &
-    & L2=L2, &
-    & L3=L3, &
-    & dL1=dL1, &
-    & dL2=dL2, &
-    & dL3=dL3 &
-    & )
+  ans(1:dim1, a:b, 1:dim3) = yEdgeBasisGradient_Hexahedron2(pe1=py1, &
+           pe2=py2, pe3=py3, pe4=py4, L1=L1, L2=L2, L3=L3, dL1=dL1, dL2=dL2, &
+                                                            dL3=dL3)
 END IF
 
 IF (ANY([pz1, pz2, pz3, pz4] .GE. 2_I4B)) THEN
   a = b + 1
   b = a - 1 + pz1 + pz2 + pz3 + pz4 - 4
-  ans(:, a:b, :) = zEdgeBasisGradient_Hexahedron2( &
-    & pe1=pz1, &
-    & pe2=pz2, &
-    & pe3=pz3, &
-    & pe4=pz4, &
-    & L1=L1, &
-    & L2=L2, &
-    & L3=L3, &
-    & dL1=dL1, &
-    & dL2=dL2, &
-    & dL3=dL3 &
-    & )
+  ans(1:dim1, a:b, 1:dim3) = zEdgeBasisGradient_Hexahedron2(pe1=pz1, &
+           pe2=pz2, pe3=pz3, pe4=pz4, L1=L1, L2=L2, L3=L3, dL1=dL1, dL2=dL2, &
+                                                            dL3=dL3)
 END IF
 
 ! Facet basis function
@@ -2941,80 +2948,53 @@ END IF
 IF (ANY([pxy1, pxy2] .GE. 2_I4B)) THEN
   a = b + 1
   b = a - 1 + 2 * (pxy1 - 1) * (pxy2 - 1)
-  ans(:, a:b, :) = xyFacetBasisGradient_Hexahedron2( &
-    & n1=pxy1, &
-    & n2=pxy2, &
-    & L1=L1, &
-    & L2=L2, &
-    & L3=L3, &
-    & dL1=dL1, &
-    & dL2=dL2, &
-    & dL3=dL3 &
-    & )
+  ans(1:dim1, a:b, 1:dim3) = xyFacetBasisGradient_Hexahedron2(n1=pxy1, &
+                      n2=pxy2, L1=L1, L2=L2, L3=L3, dL1=dL1, dL2=dL2, dL3=dL3)
 END IF
 
-IF (ANY([pxz1, pxz2] .GE. 2_I4B)) THEN
+IF &
+  (ANY([pxz1, pxz2] .GE. 2_I4B)) THEN
   a = b + 1
   b = a - 1 + 2 * (pxz1 - 1) * (pxz2 - 1)
-  ans(:, a:b, :) = xzFacetBasisGradient_Hexahedron2( &
-    & n1=pxz1, &
-    & n2=pxz2, &
-    & L1=L1, &
-    & L2=L2, &
-    & L3=L3, &
-    & dL1=dL1, &
-    & dL2=dL2, &
-    & dL3=dL3 &
-    & )
+  ans(1:dim1, a:b, 1:dim3) = xzFacetBasisGradient_Hexahedron2(n1=pxz1, &
+                      n2=pxz2, L1=L1, L2=L2, L3=L3, dL1=dL1, dL2=dL2, dL3=dL3)
 END IF
 
 IF (ANY([pyz1, pyz2] .GE. 2_I4B)) THEN
   a = b + 1
   b = a - 1 + 2 * (pyz1 - 1) * (pyz2 - 1)
-  ans(:, a:b, :) = yzFacetBasisGradient_Hexahedron2( &
-    & n1=pyz1, &
-    & n2=pyz2, &
-    & L1=L1, &
-    & L2=L2, &
-    & L3=L3, &
-    & dL1=dL1, &
-    & dL2=dL2, &
-    & dL3=dL3 &
-    & )
+  ans(1:dim1, a:b, 1:dim3) = yzFacetBasisGradient_Hexahedron2(n1=pyz1, &
+                      n2=pyz2, L1=L1, L2=L2, L3=L3, dL1=dL1, dL2=dL2, dL3=dL3)
 END IF
 
 IF (ANY([pb1, pb2, pb3] .GE. 2_I4B)) THEN
   a = b + 1
   b = a - 1 + (pb1 - 1) * (pb2 - 1) * (pb3 - 1)
-  ans(:, a:b, :) = cellBasisGradient_Hexahedron2( &
-    & n1=pb1, &
-    & n2=pb2, &
-    & n3=pb3, &
-    & L1=L1, &
-    & L2=L2, &
-    & L3=L3, &
-    & dL1=dL1, &
-    & dL2=dL2, &
-    & dL3=dL3 &
-    & )
+  ans(1:dim1, a:b, 1:dim3) = cellBasisGradient_Hexahedron2(n1=pb1, n2=pb2, &
+                       n3=pb3, L1=L1, L2=L2, L3=L3, dL1=dL1, dL2=dL2, dL3=dL3)
 END IF
-END PROCEDURE HeirarchicalBasisGradient_Hexahedron1
+END PROCEDURE HeirarchicalBasisGradient_Hexahedron1_
 
 !----------------------------------------------------------------------------
 !                                     HeirarchicalBasisGradient_Hexahedron2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE HeirarchicalBasisGradient_Hexahedron2
-ans = HeirarchicalBasisGradient_Hexahedron1(&
-  & pb1=p, pb2=q, pb3=r, &
-  & pxy1=p, pxy2=q, &
-  & pxz1=p, pxz2=r, &
-  & pyz1=q, pyz2=r, &
-  & px1=p, px2=p, px3=p, px4=p, &
-  & py1=q, py2=q, py3=q, py4=q, &
-  & pz1=r, pz2=r, pz3=r, pz4=r, &
-  & xij=xij)
+INTEGER(I4B) :: dim1, dim2, dim3
+CALL HeirarchicalBasisGradient_Hexahedron2_(p=p, q=q, r=r, xij=xij, &
+                                     ans=ans, dim1=dim1, dim2=dim2, dim3=dim3)
 END PROCEDURE HeirarchicalBasisGradient_Hexahedron2
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE HeirarchicalBasisGradient_Hexahedron2_
+CALL HeirarchicalBasisGradient_Hexahedron1_(pb1=p, pb2=q, pb3=r, pxy1=p, &
+  pxy2=q, pxz1=p, pxz2=r, pyz1=q, pyz2=r, px1=p, px2=p, px3=p, px4=p, py1=q, &
+                   py2=q, py3=q, py4=q, pz1=r, pz2=r, pz3=r, pz4=r, xij=xij, &
+                                     ans=ans, dim1=dim1, dim2=dim2, dim3=dim3)
+END PROCEDURE HeirarchicalBasisGradient_Hexahedron2_
 
 !----------------------------------------------------------------------------
 !
