@@ -41,7 +41,10 @@ PUBLIC :: VertexBasis_Tetrahedron
 PUBLIC :: EdgeBasis_Tetrahedron
 PUBLIC :: FacetBasis_Tetrahedron
 PUBLIC :: CellBasis_Tetrahedron
+
 PUBLIC :: HeirarchicalBasis_Tetrahedron
+PUBLIC :: HeirarchicalBasis_Tetrahedron_
+
 PUBLIC :: FacetConnectivity_Tetrahedron
 PUBLIC :: EdgeConnectivity_Tetrahedron
 PUBLIC :: GetVertexDOF_Tetrahedron
@@ -54,7 +57,10 @@ PUBLIC :: QuadraturePoint_Tetrahedron
 PUBLIC :: RefElemDomain_Tetrahedron
 PUBLIC :: LagrangeGradientEvalAll_Tetrahedron
 PUBLIC :: LagrangeGradientEvalAll_Tetrahedron_
+
 PUBLIC :: HeirarchicalBasisGradient_Tetrahedron
+PUBLIC :: HeirarchicalBasisGradient_Tetrahedron_
+
 PUBLIC :: OrthogonalBasisGradient_Tetrahedron
 PUBLIC :: GetTotalDOF_Tetrahedron
 PUBLIC :: GetTotalInDOF_Tetrahedron
@@ -1985,21 +1991,9 @@ END INTERFACE
 ! summary: Returns the heirarchical basis functions on Tetrahedron
 
 INTERFACE HeirarchicalBasis_Tetrahedron
-  MODULE PURE FUNCTION HeirarchicalBasis_Tetrahedron1( &
-    & order, &
-    & pe1,  &
-    & pe2, &
-    & pe3, &
-    & pe4, &
-    & pe5, &
-    & pe6, &
-    & ps1, &
-    & ps2, &
-    & ps3, &
-    & ps4, &
-    & xij, &
-    & refTetrahedron) &
-    & RESULT(ans)
+  MODULE PURE FUNCTION HeirarchicalBasis_Tetrahedron1(order, pe1, pe2, &
+                pe3, pe4, pe5, pe6, ps1, ps2, ps3, ps4, xij, refTetrahedron) &
+    RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
     !! order in the cell of triangle, it should be greater than 2
     INTEGER(I4B), INTENT(IN) :: pe1
@@ -2090,11 +2084,8 @@ END INTERFACE HeirarchicalBasis_Tetrahedron_
 ! summary: Returns the heirarchical basis functions on Tetrahedron
 
 INTERFACE HeirarchicalBasis_Tetrahedron
-  MODULE PURE FUNCTION HeirarchicalBasis_Tetrahedron2( &
-    & order, &
-    & xij, &
-    & refTetrahedron) &
-    & RESULT(ans)
+  MODULE PURE FUNCTION HeirarchicalBasis_Tetrahedron2(order, xij, &
+                                                   refTetrahedron) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
     !! order in the cell of triangle, it should be greater than 2
     REAL(DFP), INTENT(IN) :: xij(:, :)
@@ -2599,21 +2590,9 @@ END INTERFACE OrthogonalBasisGradient_Tetrahedron
 ! summary: Returns the heirarchical basis functions on Tetrahedron
 
 INTERFACE HeirarchicalBasisGradient_Tetrahedron
-  MODULE FUNCTION HeirarchicalBasisGradient_Tetrahedron1( &
-    & order, &
-    & pe1,  &
-    & pe2, &
-    & pe3, &
-    & pe4, &
-    & pe5, &
-    & pe6, &
-    & ps1, &
-    & ps2, &
-    & ps3, &
-    & ps4, &
-    & xij, &
-    & refTetrahedron) &
-    & RESULT(ans)
+  MODULE FUNCTION HeirarchicalBasisGradient_Tetrahedron1(order, pe1, pe2, &
+                pe3, pe4, pe5, pe6, ps1, ps2, ps3, ps4, xij, refTetrahedron) &
+    RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
     !! order in the cell of triangle, it should be greater than 2
     INTEGER(I4B), INTENT(IN) :: pe1
@@ -2653,6 +2632,55 @@ INTERFACE HeirarchicalBasisGradient_Tetrahedron
 END INTERFACE HeirarchicalBasisGradient_Tetrahedron
 
 !----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE HeirarchicalBasisGradient_Tetrahedron_
+  MODULE SUBROUTINE HeirarchicalBasisGradient_Tetrahedron1_(order, pe1, pe2, &
+                pe3, pe4, pe5, pe6, ps1, ps2, ps3, ps4, xij, refTetrahedron, &
+                                                        ans, dim1, dim2, dim3)
+
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order in the cell of triangle, it should be greater than 2
+    INTEGER(I4B), INTENT(IN) :: pe1
+    !! order of interpolation on edge parallel to x
+    INTEGER(I4B), INTENT(IN) :: pe2
+    !! order of interpolation on edge parallel to y
+    INTEGER(I4B), INTENT(IN) :: pe3
+    !! order of interpolation on edge parallel to z
+    INTEGER(I4B), INTENT(IN) :: pe4
+    !! order of interpolation on edge parallel to xy
+    INTEGER(I4B), INTENT(IN) :: pe5
+    !! order of interpolation on edge parallel to xz
+    INTEGER(I4B), INTENT(IN) :: pe6
+    !! order of interpolation on edge parallel to yz
+    INTEGER(I4B), INTENT(IN) :: ps1
+    !! order of interpolation on facet parallel to xy
+    INTEGER(I4B), INTENT(IN) :: ps2
+    !! order of interpolation on facet parallel to xz
+    INTEGER(I4B), INTENT(IN) :: ps3
+    !! order of interpolation on facet parallel to yz
+    INTEGER(I4B), INTENT(IN) :: ps4
+    !! order of interpolation on facet parallel to xyz
+    REAL(DFP), INTENT(IN) :: xij(:, :)
+    !! order on xij
+    CHARACTER(*), INTENT(IN) :: refTetrahedron
+    !! UNIT or BIUNIT
+    REAL(DFP), INTENT(INOUT) :: ans(:, :, :)
+    !!
+    INTEGER(I4B), INTENT(OUT) :: dim1, dim2, dim3
+    !! dim1 = SIZE(xij, 2)
+    !! dim2 = 4  + pe1 + pe2 + pe3 + pe4 + pe5 + pe6 - 6 &
+    !! + (ps1 - 1) * (ps1 - 2) / 2  &
+    !! + (ps2 - 1) * (ps2 - 2) / 2  &
+    !! + (ps3 - 1) * (ps3 - 2) / 2  &
+    !! + (ps4 - 1) * (ps4 - 2) / 2 &
+    !! + (order - 1) * (order - 2) * (order - 3) / 6_I4B
+    !! dim3 = 3
+  END SUBROUTINE HeirarchicalBasisGradient_Tetrahedron1_
+END INTERFACE HeirarchicalBasisGradient_Tetrahedron_
+
+!----------------------------------------------------------------------------
 !                                     HeirarchicalBasisGradient_Tetrahedron
 !----------------------------------------------------------------------------
 
@@ -2660,12 +2688,30 @@ END INTERFACE HeirarchicalBasisGradient_Tetrahedron
 ! date: 28 Oct 2022
 ! summary: Returns the heirarchical basis functions on Tetrahedron
 
+INTERFACE HeirarchicalBasisGradient_Tetrahedron_
+  MODULE SUBROUTINE HeirarchicalBasisGradient_Tetrahedron2_(order, xij, &
+                                        refTetrahedron, ans, dim1, dim2, dim3)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order in the cell of triangle, it should be greater than 2
+    REAL(DFP), INTENT(IN) :: xij(:, :)
+    !! order on xij
+    CHARACTER(*), INTENT(IN) :: refTetrahedron
+    !! UNIT or BIUNIT
+    REAL(DFP), INTENT(INOUT) :: ans(:, :, :)
+    !!
+    INTEGER(I4B), INTENT(OUT) :: dim1, dim2, dim3
+    !! dim1 = SIZE(xij, 2)
+    !! dim2 = (order + 1) * (order + 2) * (order + 3) / 6_I4B
+    !! dim3 = 3
+  END SUBROUTINE HeirarchicalBasisGradient_Tetrahedron2_
+END INTERFACE HeirarchicalBasisGradient_Tetrahedron_
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
 INTERFACE HeirarchicalBasisGradient_Tetrahedron
-  MODULE FUNCTION HeirarchicalBasisGradient_Tetrahedron2( &
-    & order, &
-    & xij, &
-    & refTetrahedron) &
-    & RESULT(ans)
+  MODULE FUNCTION HeirarchicalBasisGradient_Tetrahedron2(order, xij, refTetrahedron) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
     !! order in the cell of triangle, it should be greater than 2
     REAL(DFP), INTENT(IN) :: xij(:, :)
