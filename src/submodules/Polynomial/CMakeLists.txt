@@ -33,6 +33,7 @@ target_sources(
           ${src_path}/PyramidInterpolationUtility@Methods.F90
           ${src_path}/InterpolationUtility@Methods.F90
           ${src_path}/LagrangePolynomialUtility@Methods.F90
+          ${src_path}/HierarchicalPolynomialUtility@Methods.F90
           ${src_path}/JacobiPolynomialUtility@Methods.F90
           ${src_path}/UltrasphericalPolynomialUtility@Methods.F90
           ${src_path}/LegendrePolynomialUtility@Methods.F90
