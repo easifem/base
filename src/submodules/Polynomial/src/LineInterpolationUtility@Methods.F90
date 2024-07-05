@@ -57,6 +57,16 @@ USE SortUtility, ONLY: HeapSort
 
 USE F95_BLAS, ONLY: GEMM
 
+#ifndef USE_BLAS95
+
+USE SwapUtility, ONLY: Swap
+
+#else
+
+USE F95_BLAS, ONLY: Swap
+
+#endif
+
 IMPLICIT NONE
 CONTAINS
 
@@ -1627,6 +1637,16 @@ END PROCEDURE HeirarchicalBasis_Line1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE HeirarchicalBasis_Line1_
+INTEGER(I4B), PARAMETER :: orient = 1
+CALL HeirarchicalBasis_Line2_(order=order, xij=xij, refLine=refLine, &
+                              orient=orient, ans=ans, nrow=nrow, ncol=ncol)
+END PROCEDURE HeirarchicalBasis_Line1_
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE HeirarchicalBasis_Line2_
 CHARACTER(1) :: astr
 REAL(DFP) :: temp(SIZE(xij, 2))
 
@@ -1638,10 +1658,27 @@ ncol = order + 1
 SELECT CASE (astr)
 CASE ("U")
   CALL FromUnitLine2BiUnitLine_(xin=xij(1, :), ans=temp, tsize=nrow)
+  IF (orient .EQ. -1) temp(1:nrow) = -1.0_DFP * temp(1:nrow)
   CALL EvalAllOrthopol_(n=order, x=temp, orthopol=polyopt%Lobatto, ans=ans, &
                         nrow=nrow, ncol=ncol)
 
+  !! Only the internal modes depends on the orientation
+  !! So we are reverting removing the effect of orientation from
+  !! vertex basis functions, this is equivalent to swapping the
+  !! the value of vertex basis functions
+  CALL SWAP(ans(1:nrow, 1), ans(1:nrow, 2))
+
 CASE ("B")
+
+  IF (orient .EQ. -1) THEN
+    temp(1:nrow) = -1.0_DFP * xij(1, 1:nrow)
+    CALL EvalAllOrthopol_(n=order, x=temp(1:nrow), &
+                      orthopol=polyopt%Lobatto, ans=ans, nrow=nrow, ncol=ncol)
+
+    CALL SWAP(ans(1:nrow, 1), ans(1:nrow, 2))
+    RETURN
+  END IF
+
   CALL EvalAllOrthopol_(n=order, x=xij(1, :), orthopol=polyopt%Lobatto, &
                         ans=ans, nrow=nrow, ncol=ncol)
 
@@ -1655,7 +1692,7 @@ CASE DEFAULT
   RETURN
 END SELECT
 
-END PROCEDURE HeirarchicalBasis_Line1_
+END PROCEDURE HeirarchicalBasis_Line2_
 
 !----------------------------------------------------------------------------
 !
@@ -1672,17 +1709,30 @@ END PROCEDURE HeirarchicalGradientBasis_Line1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE HeirarchicalGradientBasis_Line1_
+INTEGER(I4B), PARAMETER :: orient = 1
+CALL HeirarchicalGradientBasis_Line2_(order=order, xij=xij, refLine=refLine, &
+                      orient=orient, ans=ans, dim1=dim1, dim2=dim2, dim3=dim3)
+END PROCEDURE HeirarchicalGradientBasis_Line1_
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE HeirarchicalGradientBasis_Line2_
 CHARACTER(1) :: astr
 REAL(DFP) :: temp(SIZE(xij, 2))
 
 astr = UpperCase(refLine(1:1))
 
+dim1 = SIZE(xij, 2)
 dim3 = 1
 
 SELECT CASE (astr)
 CASE ("U")
 
   CALL FromUnitLine2BiUnitLine_(xin=xij(1, :), ans=temp, tsize=dim1)
+
+  IF (orient .EQ. -1) temp(1:dim1) = -1.0_DFP * temp(1:dim1)
 
   CALL GradientEvalAllOrthopol_(n=order, x=temp, orthopol=polyopt%Lobatto, &
                                 ans=ans(:, :, 1), nrow=dim1, ncol=dim2)
@@ -1691,8 +1741,17 @@ CASE ("U")
 
 CASE ("B")
 
-  CALL GradientEvalAllOrthopol_(n=order, x=xij(1, :), &
+  IF (orient .EQ. -1) THEN
+
+    temp(1:dim1) = -1.0_DFP * xij(1, 1:dim1)
+
+    CALL GradientEvalAllOrthopol_(n=order, x=temp, &
              orthopol=polyopt%Lobatto, ans=ans(:, :, 1), nrow=dim1, ncol=dim2)
+  ELSE
+
+    CALL GradientEvalAllOrthopol_(n=order, x=xij(1, :), &
+             orthopol=polyopt%Lobatto, ans=ans(:, :, 1), nrow=dim1, ncol=dim2)
+  END IF
 
 CASE DEFAULT
 
@@ -1705,7 +1764,7 @@ CASE DEFAULT
   RETURN
 END SELECT
 
-END PROCEDURE HeirarchicalGradientBasis_Line1_
+END PROCEDURE HeirarchicalGradientBasis_Line2_
 
 !----------------------------------------------------------------------------
 !                                                        OrthogonalBasis_Line

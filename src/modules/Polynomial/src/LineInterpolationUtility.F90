@@ -1312,6 +1312,31 @@ INTERFACE HeirarchicalBasis_Line_
 END INTERFACE HeirarchicalBasis_Line_
 
 !----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE HeirarchicalBasis_Line_
+MODULE SUBROUTINE HeirarchicalBasis_Line2_(order, xij, refLine, orient, ans, &
+                                             nrow, ncol)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! Polynomial order of interpolation
+    REAL(DFP), INTENT(IN) :: xij(:, :)
+    !! Points of evaluation in xij format
+    CHARACTER(*), INTENT(IN) :: refLine
+    !! This parameter denotes the type of reference line.
+    !! It can take following values:
+    !! UNIT: in this case xij is in unit Line.
+    !! BIUNIT: in this case xij is in biunit Line.
+    INTEGER(I4B), INTENT(IN) :: orient
+    !! orientation of line: 1 or -1
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    !! Hierarchical basis
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+    !! SIZE(xij, 2), order + 1
+  END SUBROUTINE HeirarchicalBasis_Line2_
+END INTERFACE HeirarchicalBasis_Line_
+
+!----------------------------------------------------------------------------
 !                                              HeirarchicalBasisGradient_Line
 !----------------------------------------------------------------------------
 
@@ -1362,6 +1387,32 @@ INTERFACE HeirarchicalBasisGradient_Line_
 END INTERFACE HeirarchicalBasisGradient_Line_
 
 !----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE HeirarchicalBasisGradient_Line_
+  MODULE SUBROUTINE HeirarchicalGradientBasis_Line2_(order, xij, refLine, &
+                                                orient, ans, dim1, dim2, dim3)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! Polynomial order of interpolation
+    REAL(DFP), INTENT(IN) :: xij(:, :)
+    !! Points of evaluation in xij format
+    !! size(xij, 1) should be 1
+    CHARACTER(*), INTENT(IN) :: refLine
+    !! This parameter denotes the type of reference line.
+    !! It can take following values:
+    !! UNIT: in this case xij is in unit Line.
+    !! BIUNIT: in this case xij is in biunit Line.
+    INTEGER(I4B), INTENT(IN) :: orient
+    !! orientation of line: 1 or -1
+    REAL(DFP), INTENT(INOUT) :: ans(:, :, :)
+    !! Gradient of Hierarchical basis
+    INTEGER(I4B), INTENT(OUT) :: dim1, dim2, dim3
+    !! SIZE(xij, 2), order + 1, 1
+  END SUBROUTINE HeirarchicalGradientBasis_Line2_
+END INTERFACE HeirarchicalBasisGradient_Line_
+
+!----------------------------------------------------------------------------
 !                                                 BasisGradientEvalAll_Line
 !----------------------------------------------------------------------------
 
@@ -1379,12 +1430,7 @@ INTERFACE BasisGradientEvalAll_Line
     CHARACTER(*), INTENT(IN) :: refLine
     !! Refline should be  BIUNIT
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: basisType
-    !! Monomial
-    !! Jacobi
-    !! Ultraspherical
-    !! Legendre
-    !! Chebyshev
-    !! Lobatto
+    !! Monomial ! Jacobi ! Ultraspherical ! Legendre ! Chebyshev ! Lobatto
     !! UnscaledLobatto
     REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
     !! Jacobi polynomial parameter
