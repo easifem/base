@@ -61,11 +61,6 @@ PUBLIC :: RefElemDomain_Triangle
 PUBLIC :: GetTotalDOF_Triangle
 PUBLIC :: GetTotalInDOF_Triangle
 
-! PUBLIC :: BarycentricVertexBasis_Triangle
-! PUBLIC :: BarycentricEdgeBasis_Triangle
-! PUBLIC :: BarycentricHeirarchicalBasis_Triangle
-! PUBLIC :: BarycentricHeirarchicalBasisGradient_Triangle
-
 !----------------------------------------------------------------------------
 !                                                      GetTotalDOF_Triangle
 !----------------------------------------------------------------------------
@@ -1096,7 +1091,7 @@ END INTERFACE
 
 INTERFACE BarycentricHeirarchicalBasis_Triangle
   MODULE PURE SUBROUTINE BarycentricHeirarchicalBasis_Triangle1(order, &
-    & pe1, pe2, pe3, lambda, refTriangle, ans, nrow, ncol)
+                          pe1, pe2, pe3, lambda, refTriangle, ans, nrow, ncol)
     INTEGER(I4B), INTENT(IN) :: order
     !! order in the cell of triangle, it should be greater than 2
     INTEGER(I4B), INTENT(IN) :: pe1
@@ -1145,6 +1140,41 @@ MODULE PURE SUBROUTINE BarycentricHeirarchicalBasis_Triangle2(order, lambda, &
     !   & INT((order + 1) * (order + 2) / 2))
     INTEGER(I4B), INTENT(OUT) :: nrow, ncol
   END SUBROUTINE BarycentricHeirarchicalBasis_Triangle2
+END INTERFACE BarycentricHeirarchicalBasis_Triangle
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE BarycentricHeirarchicalBasis_Triangle
+  MODULE PURE SUBROUTINE BarycentricHeirarchicalBasis_Triangle3(order, &
+               pe1, pe2, pe3, lambda, refTriangle, edgeOrient1, edgeOrient2, &
+                                     edgeOrient3, faceOrient, ans, nrow, ncol)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order in the cell of triangle, it should be greater than 2
+    INTEGER(I4B), INTENT(IN) :: pe1
+    !! order of interpolation on edge e1
+    INTEGER(I4B), INTENT(IN) :: pe2
+    !! order of interpolation on edge e2
+    INTEGER(I4B), INTENT(IN) :: pe3
+    !! order of interpolation on edge e3
+    REAL(DFP), INTENT(IN) :: lambda(:, :)
+    !! Barycenteric coordinates
+    !! number of rows = 3
+    !! number of cols = number of points
+    CHARACTER(*), INTENT(IN) :: refTriangle
+    !! reference triangle, "BIUNIT", "UNIT"
+    INTEGER(I4B), INTENT(IN) :: edgeOrient1, edgeOrient2, edgeOrient3
+    !! edge orientation 1 or -1
+    INTEGER(I4B), INTENT(IN) :: faceOrient(:)
+    !! face orientation
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    ! REAL(DFP) :: ans( &
+    !   & SIZE(lambda, 2), &
+    !   & pe1 + pe2 + pe3 + INT((order - 1) * (order - 2) / 2))
+    !!
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+  END SUBROUTINE BarycentricHeirarchicalBasis_Triangle3
 END INTERFACE BarycentricHeirarchicalBasis_Triangle
 
 !----------------------------------------------------------------------------
@@ -1278,6 +1308,50 @@ INTERFACE HeirarchicalBasis_Triangle_
     !!
     INTEGER(I4B), INTENT(OUT) :: nrow, ncol
   END SUBROUTINE HeirarchicalBasis_Triangle2_
+END INTERFACE HeirarchicalBasis_Triangle_
+
+!----------------------------------------------------------------------------
+!                                              HeirarchicalBasis_Triangle
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2024-07-04
+! summary: Evaluate all modal basis (heirarchical polynomial) on Triangle
+
+INTERFACE HeirarchicalBasis_Triangle_
+  MODULE PURE SUBROUTINE HeirarchicalBasis_Triangle3_(order, pe1, pe2, pe3, &
+        xij, refTriangle, edgeOrient1, edgeOrient2, edgeOrient3, faceOrient, &
+                                                      ans, nrow, ncol)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! Order of approximation inside the triangle (i.e., cell)
+    !! it should be greater than 2 for cell bubble to exist
+    INTEGER(I4B), INTENT(IN) :: pe1
+    !! Order of interpolation on edge e1
+    !! It should be greater than 1 for edge bubble to exists
+    INTEGER(I4B), INTENT(IN) :: pe2
+    !! Order of interpolation on edge e2
+    !! It should be greater than 1 for edge bubble to exists
+    INTEGER(I4B), INTENT(IN) :: pe3
+    !! Order of interpolation on edge e3
+    !! It should be greater than 1 for edge bubble to exists
+    REAL(DFP), INTENT(IN) :: xij(:, :)
+    !! Points of evaluation in xij format
+    CHARACTER(*), INTENT(IN) :: refTriangle
+    !! This parameter denotes the type of reference triangle.
+    !! It can take following values:
+    !! UNIT: in this case xij is in unit Triangle.
+    !! BIUNIT: in this case xij is in biunit triangle.
+    INTEGER(I4B), INTENT(IN) :: edgeOrient1, edgeOrient2, edgeOrient3
+    !! edge orientation, 1 or -1
+    INTEGER(I4B), INTENT(IN) :: faceOrient(:)
+    !! face orient, size is 2, 1 or -1
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    ! REAL(DFP) :: ans( &
+    !   & SIZE(xij, 2), &
+    !   & pe1 + pe2 + pe3 + INT((order - 1) * (order - 2) / 2))
+    !!
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+  END SUBROUTINE HeirarchicalBasis_Triangle3_
 END INTERFACE HeirarchicalBasis_Triangle_
 
 !----------------------------------------------------------------------------
