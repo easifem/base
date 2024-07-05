@@ -1021,7 +1021,7 @@ END INTERFACE
 
 INTERFACE
   MODULE PURE FUNCTION EdgeBasis_Triangle(pe1, pe2, pe3, xij, refTriangle) &
-    & RESULT(ans)
+    RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: pe1
     !! order on left vertical edge (e1), should be greater than 1
     INTEGER(I4B), INTENT(IN) :: pe2
