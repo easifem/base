@@ -116,7 +116,7 @@ END INTERFACE
 
 INTERFACE
   MODULE FUNCTION RefElemDomain_Quadrangle(baseContinuity, baseInterpol) &
-      & RESULT(ans)
+    RESULT(ans)
     CHARACTER(*), INTENT(IN) :: baseContinuity
     !! Cointinuity (conformity) of basis functions
     !! "H1", "HDiv", "HCurl", "DG"
@@ -137,8 +137,8 @@ END INTERFACE
 
 INTERFACE
   MODULE FUNCTION FacetConnectivity_Quadrangle( &
-    & baseInterpol, &
-    & baseContinuity) RESULT(ans)
+    baseInterpol, &
+    baseContinuity) RESULT(ans)
     CHARACTER(*), INTENT(IN) :: baseInterpol
     CHARACTER(*), INTENT(IN) :: baseContinuity
     INTEGER(I4B) :: ans(2, 4)
@@ -152,11 +152,8 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-  MODULE PURE FUNCTION QuadratureNumber_Quadrangle( &
-    & p,  &
-    & q,  &
-    & quadType1,  &
-    & quadType2) RESULT(ans)
+  MODULE PURE FUNCTION QuadratureNumber_Quadrangle(p, q, quadType1, &
+                                                   quadType2) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: p, q
     INTEGER(I4B), INTENT(IN) :: quadType1, quadType2
     INTEGER(I4B) :: ans(2)
@@ -696,7 +693,7 @@ END INTERFACE
 
 INTERFACE
   MODULE PURE RECURSIVE SUBROUTINE IJ2VEFC_Quadrangle_Clockwise( &
-    & xi, eta, temp, p, q, startNode)
+    xi, eta, temp, p, q, startNode)
     REAL(DFP), INTENT(IN) :: xi(:, :)
     REAL(DFP), INTENT(IN) :: eta(:, :)
     REAL(DFP), INTENT(OUT) :: temp(:, :)
@@ -716,7 +713,7 @@ END INTERFACE
 
 INTERFACE
   MODULE PURE RECURSIVE SUBROUTINE IJ2VEFC_Quadrangle_AntiClockwise( &
-    & xi, eta, temp, p, q, startNode)
+    xi, eta, temp, p, q, startNode)
     REAL(DFP), INTENT(IN) :: xi(:, :)
     REAL(DFP), INTENT(IN) :: eta(:, :)
     REAL(DFP), INTENT(OUT) :: temp(:, :)
@@ -768,7 +765,7 @@ END INTERFACE LagrangeCoeff_Quadrangle_
 
 INTERFACE LagrangeCoeff_Quadrangle
   MODULE FUNCTION LagrangeCoeff_Quadrangle2(order, i, v, isVandermonde) &
-    & RESULT(ans)
+    RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
     !! order of polynomial, it should be SIZE(v,2)-1
     INTEGER(I4B), INTENT(IN) :: i
@@ -1209,8 +1206,8 @@ INTERFACE DubinerGradient_Quadrangle
     !! points in biunit quadrangle, shape functions will be evaluated
     !! at these points. SIZE(xij,1) = 2, and SIZE(xij, 2) = number of points
     REAL(DFP) :: ans(SIZE(xij, 2), &
-      & (order + 1_I4B) * (order + 2_I4B) / 2_I4B, &
-      & 2_I4B)
+                     (order + 1_I4B) * (order + 2_I4B) / 2_I4B, &
+                     2_I4B)
     !! shape functions
     !! ans(:, j), jth shape functions at all points
     !! ans(j, :), all shape functions at jth point
@@ -1288,19 +1285,8 @@ END INTERFACE DubinerGradient_Quadrangle_
 ! polynomial on biunit quadrangle.
 
 INTERFACE TensorProdBasis_Quadrangle
-  MODULE FUNCTION TensorProdBasis_Quadrangle1(  &
-    & p,  &
-    & q,  &
-    & xij, &
-    & basisType1,  &
-    & basisType2,  &
-    & alpha1,  &
-    & beta1,  &
-    & lambda1,  &
-    & alpha2,  &
-    & beta2,  &
-    & lambda2) &
-    & RESULT(ans)
+  MODULE FUNCTION TensorProdBasis_Quadrangle1(p, q, xij, basisType1, &
+       basisType2, alpha1, beta1, lambda1, alpha2, beta2, lambda2) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: p
     !! highest order in x1 direction
     INTEGER(I4B), INTENT(IN) :: q
@@ -1401,20 +1387,8 @@ END INTERFACE OrthogonalBasis_Quadrangle_
 ! outer product of x and y
 
 INTERFACE TensorProdBasis_Quadrangle
-  MODULE FUNCTION TensorProdBasis_Quadrangle2( &
-    & p, &
-    & q, &
-    & x, &
-    & y, &
-    & basisType1, &
-    & basisType2, &
-    & alpha1, &
-    & beta1, &
-    & lambda1, &
-    & alpha2, &
-    & beta2, &
-    & lambda2) &
-    & RESULT(ans)
+  MODULE FUNCTION TensorProdBasis_Quadrangle2(p, q, x, y, basisType1, &
+       basisType2, alpha1, beta1, lambda1, alpha2, beta2, lambda2) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: p
     !! highest order in x1 direction
     INTEGER(I4B), INTENT(IN) :: q
@@ -1510,8 +1484,7 @@ END INTERFACE TensorProdBasis_Quadrangle_
 ! summary: Returns the vertex basis functions on biunit quadrangle
 
 INTERFACE VertexBasis_Quadrangle
-  MODULE PURE FUNCTION VertexBasis_Quadrangle1(x, y) &
-     & RESULT(ans)
+  MODULE PURE FUNCTION VertexBasis_Quadrangle1(x, y) RESULT(ans)
     REAL(DFP), INTENT(IN) :: x(:), y(:)
     !! point of evaluation
     REAL(DFP) :: ans(SIZE(x), 4)
@@ -1646,7 +1619,7 @@ END INTERFACE
 
 INTERFACE
   MODULE PURE FUNCTION VerticalEdgeBasis_Quadrangle(qe1, qe2, x, y) &
-    & RESULT(ans)
+    RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: qe1
     !! order on left vertical edge (e1), it should be greater than 1
     !! It should be greater than 2
@@ -1688,7 +1661,7 @@ END INTERFACE
 
 INTERFACE
   MODULE PURE FUNCTION VerticalEdgeBasis_Quadrangle2(qe1, qe2, L1, L2) &
-    & RESULT(ans)
+    RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: qe1
     !! order on left vertical edge (e1), it should be greater than 1
     INTEGER(I4B), INTENT(IN) :: qe2
@@ -1792,7 +1765,7 @@ END INTERFACE
 
 INTERFACE
   MODULE PURE FUNCTION HorizontalEdgeBasis_Quadrangle2(pe3, pe4, L1, L2) &
-    & RESULT(ans)
+    RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: pe3
     !! order on bottom vertical edge (e3), it should be greater than 1
     INTEGER(I4B), INTENT(IN) :: pe4
@@ -2162,17 +2135,8 @@ END INTERFACE LagrangeEvalAll_Quadrangle_
 ! summary: Evaluate all Lagrange polynomials of order n at several points
 
 INTERFACE LagrangeEvalAll_Quadrangle
-  MODULE FUNCTION LagrangeEvalAll_Quadrangle2( &
-    & order, &
-    & x, &
-    & xij, &
-    & coeff, &
-    & firstCall, &
-    & basisType, &
-    & alpha, &
-    & beta, &
-    & lambda &
-    & ) RESULT(ans)
+  MODULE FUNCTION LagrangeEvalAll_Quadrangle2(order, x, xij, coeff, &
+                        firstCall, basisType, alpha, beta, lambda) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
     !! Order of Lagrange polynomials
     REAL(DFP), INTENT(IN) :: x(:, :)
@@ -2251,14 +2215,8 @@ END INTERFACE LagrangeEvalAll_Quadrangle_
 ! summary:  Returns quadrature points on reference quadrangle
 
 INTERFACE QuadraturePoint_Quadrangle
-  MODULE FUNCTION QuadraturePoint_Quadrangle1( &
-    & order, &
-    & quadType, &
-    & refQuadrangle, &
-    & xij, &
-    & alpha, &
-    & beta, &
-    & lambda) RESULT(ans)
+  MODULE FUNCTION QuadraturePoint_Quadrangle1(order, quadType, &
+                          refQuadrangle, xij, alpha, beta, lambda) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
     !! Order of integrand in x and y direction
     INTEGER(I4B), INTENT(IN) :: quadType
@@ -2301,9 +2259,9 @@ END INTERFACE QuadraturePoint_Quadrangle
 !----------------------------------------------------------------------------
 
 INTERFACE QuadraturePoint_Quadrangle
-  MODULE FUNCTION QuadraturePoint_Quadrangle2(  &
-    & p, q, quadType1, quadType2, refQuadrangle, xij, alpha1, beta1, &
-    & lambda1, alpha2, beta2, lambda2) RESULT(ans)
+  MODULE FUNCTION QuadraturePoint_Quadrangle2(p, q, quadType1, quadType2, &
+         refQuadrangle, xij, alpha1, beta1, lambda1, alpha2, beta2, lambda2) &
+    RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: p
     !! order of integrand in x direction
     INTEGER(I4B), INTENT(IN) :: q
@@ -2360,7 +2318,7 @@ END INTERFACE QuadraturePoint_Quadrangle
 
 INTERFACE QuadraturePoint_Quadrangle
   MODULE FUNCTION QuadraturePoint_Quadrangle3(nips, quadType, &
-    & refQuadrangle, xij, alpha, beta, lambda) RESULT(ans)
+                          refQuadrangle, xij, alpha, beta, lambda) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: nips(1)
     !! number of integration points in x and y direction
     INTEGER(I4B), INTENT(IN) :: quadType
@@ -2403,10 +2361,9 @@ END INTERFACE QuadraturePoint_Quadrangle
 !----------------------------------------------------------------------------
 
 INTERFACE QuadraturePoint_Quadrangle
-  MODULE FUNCTION QuadraturePoint_Quadrangle4(  &
-    & nipsx, nipsy, quadType1, quadType2, &
-    & refQuadrangle, xij, alpha1, beta1, &
-    & lambda1, alpha2, beta2, lambda2) RESULT(ans)
+  MODULE FUNCTION QuadraturePoint_Quadrangle4(nipsx, nipsy, quadType1, &
+       quadType2, refQuadrangle, xij, alpha1, beta1, lambda1, alpha2, beta2, &
+                                              lambda2) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: nipsx(1)
     !! order of integrand in x direction
     INTEGER(I4B), INTENT(IN) :: nipsy(1)
@@ -2462,14 +2419,8 @@ END INTERFACE QuadraturePoint_Quadrangle
 ! summary: Evaluate Lagrange polynomials of n at several points
 
 INTERFACE LagrangeGradientEvalAll_Quadrangle
-  MODULE FUNCTION LagrangeGradientEvalAll_Quadrangle1( &
-    & order, &
-    & x, &
-    & xij, &
-    & coeff, &
-    & firstCall, &
-    & basisType, &
-    & alpha, beta, lambda) RESULT(ans)
+  MODULE FUNCTION LagrangeGradientEvalAll_Quadrangle1(order, x, xij, coeff, &
+                        firstCall, basisType, alpha, beta, lambda) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
     !! order of Lagrange polynomials
     REAL(DFP), INTENT(IN) :: x(:, :)
@@ -2572,14 +2523,8 @@ END INTERFACE LagrangeGradientEvalAll_Quadrangle_
 ! Ultraspherical polynomials with lambda = 3/2.
 
 INTERFACE HeirarchicalBasisGradient_Quadrangle
-  MODULE FUNCTION HeirarchicalBasisGradient_Quadrangle1( &
-    & pb, &
-    & qb, &
-    & pe3, &
-    & pe4, &
-    & qe1, &
-    & qe2, &
-    & xij) RESULT(ans)
+  MODULE FUNCTION HeirarchicalBasisGradient_Quadrangle1(pb, qb, pe3, pe4, &
+                                                    qe1, qe2, xij) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: pb
     !! order of interpolation inside the quadrangle in x1 direction
     INTEGER(I4B), INTENT(IN) :: qb
@@ -2678,19 +2623,9 @@ END INTERFACE HeirarchicalBasisGradient_Quadrangle_
 ! summary: Evaluate all tensor product orthogoanl polynomial on quadrangle
 
 INTERFACE TensorProdBasisGradient_Quadrangle
-  MODULE FUNCTION TensorProdBasisGradient_Quadrangle1(  &
-    & p,  &
-    & q,  &
-    & xij, &
-    & basisType1,  &
-    & basisType2,  &
-    & alpha1,  &
-    & beta1,  &
-    & lambda1,  &
-    & alpha2,  &
-    & beta2,  &
-    & lambda2) &
-    & RESULT(ans)
+  MODULE FUNCTION TensorProdBasisGradient_Quadrangle1(p, q, xij, &
+              basisType1, basisType2, alpha1, beta1, lambda1, alpha2, beta2, &
+                                                      lambda2) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: p
     !! highest order in x1 direction
     INTEGER(I4B), INTENT(IN) :: q
