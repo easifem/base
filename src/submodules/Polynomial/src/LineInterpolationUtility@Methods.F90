@@ -1648,49 +1648,33 @@ END PROCEDURE HeirarchicalBasis_Line1_
 
 MODULE PROCEDURE HeirarchicalBasis_Line2_
 CHARACTER(1) :: astr
-REAL(DFP) :: temp(SIZE(xij, 2))
+REAL(DFP) :: temp(SIZE(xij, 2)), o1
+INTEGER(I4B) :: ii, k
 
+o1 = REAL(orient, kind=DFP)
 astr = UpperCase(refLine(1:1))
 
-nrow = SIZE(xij, 2)
-ncol = order + 1
+! nrow = SIZE(xij, 2)
+! ncol = order + 1
 
 SELECT CASE (astr)
 CASE ("U")
   CALL FromUnitLine2BiUnitLine_(xin=xij(1, :), ans=temp, tsize=nrow)
-  IF (orient .EQ. -1) temp(1:nrow) = -1.0_DFP * temp(1:nrow)
   CALL EvalAllOrthopol_(n=order, x=temp, orthopol=polyopt%Lobatto, ans=ans, &
                         nrow=nrow, ncol=ncol)
 
-  !! Only the internal modes depends on the orientation
-  !! So we are reverting removing the effect of orientation from
-  !! vertex basis functions, this is equivalent to swapping the
-  !! the value of vertex basis functions
-  CALL SWAP(ans(1:nrow, 1), ans(1:nrow, 2))
-
 CASE ("B")
-
-  IF (orient .EQ. -1) THEN
-    temp(1:nrow) = -1.0_DFP * xij(1, 1:nrow)
-    CALL EvalAllOrthopol_(n=order, x=temp(1:nrow), &
-                      orthopol=polyopt%Lobatto, ans=ans, nrow=nrow, ncol=ncol)
-
-    CALL SWAP(ans(1:nrow, 1), ans(1:nrow, 2))
-    RETURN
-  END IF
-
   CALL EvalAllOrthopol_(n=order, x=xij(1, :), orthopol=polyopt%Lobatto, &
                         ans=ans, nrow=nrow, ncol=ncol)
 
 CASE DEFAULT
   nrow = 0
   ncol = 0
-
-  CALL Errormsg(msg="No case found for refLine.", &
-                routine="HeirarchicalBasis_Line1_()", &
-                file=__FILE__, line=__LINE__, unitno=stderr)
-  RETURN
 END SELECT
+
+DO CONCURRENT(k=2:order, ii=1:nrow)
+  ans(ii, k + 1) = (o1**k) * ans(ii, k + 1)
+END DO
 
 END PROCEDURE HeirarchicalBasis_Line2_
 
@@ -1720,49 +1704,38 @@ END PROCEDURE HeirarchicalGradientBasis_Line1_
 
 MODULE PROCEDURE HeirarchicalGradientBasis_Line2_
 CHARACTER(1) :: astr
-REAL(DFP) :: temp(SIZE(xij, 2))
+REAL(DFP) :: temp(SIZE(xij, 2)), o1
+INTEGER(I4B) :: ii, jj, k
 
+o1 = REAL(orient, kind=DFP)
 astr = UpperCase(refLine(1:1))
 
-dim1 = SIZE(xij, 2)
 dim3 = 1
 
 SELECT CASE (astr)
+
 CASE ("U")
-
   CALL FromUnitLine2BiUnitLine_(xin=xij(1, :), ans=temp, tsize=dim1)
-
-  IF (orient .EQ. -1) temp(1:dim1) = -1.0_DFP * temp(1:dim1)
-
   CALL GradientEvalAllOrthopol_(n=order, x=temp, orthopol=polyopt%Lobatto, &
                                 ans=ans(:, :, 1), nrow=dim1, ncol=dim2)
 
-  ans(1:dim1, 1:dim2, 1) = ans(1:dim1, 1:dim2, 1) * 2.0_DFP
+  DO CONCURRENT(ii=1:dim1, jj=1:dim2)
+    ans(ii, jj, 1) = ans(ii, jj, 1) * 2.0_DFP
+  END DO
 
 CASE ("B")
-
-  IF (orient .EQ. -1) THEN
-
-    temp(1:dim1) = -1.0_DFP * xij(1, 1:dim1)
-
-    CALL GradientEvalAllOrthopol_(n=order, x=temp, &
+  CALL GradientEvalAllOrthopol_(n=order, x=xij(1, :), &
              orthopol=polyopt%Lobatto, ans=ans(:, :, 1), nrow=dim1, ncol=dim2)
-  ELSE
-
-    CALL GradientEvalAllOrthopol_(n=order, x=xij(1, :), &
-             orthopol=polyopt%Lobatto, ans=ans(:, :, 1), nrow=dim1, ncol=dim2)
-  END IF
 
 CASE DEFAULT
-
-  dim1 = 0
-  dim2 = 0
-  dim3 = 0
-  CALL Errormsg(msg="No case found for refline.", &
-                routine="HeirarchicalGradientBasis_Line1_()", &
-                file=__FILE__, line=__LINE__, unitno=stderr)
+  dim1 = 0; dim2 = 0; dim3 = 0
   RETURN
+
 END SELECT
+
+DO CONCURRENT(k=2:order, ii=1:dim1)
+  ans(ii, k + 1, 1) = (o1**(k - 1)) * ans(ii, k + 1, 1)
+END DO
 
 END PROCEDURE HeirarchicalGradientBasis_Line2_
 
@@ -1772,63 +1745,66 @@ END PROCEDURE HeirarchicalGradientBasis_Line2_
 
 MODULE PROCEDURE OrthogonalBasis_Line1
 INTEGER(I4B) :: ii
-TYPE(String) :: astr
+CHARACTER(1) :: astr
+LOGICAL(LGT) :: isok, abool
 
 ans = 0.0_DFP
-astr = UpperCase(refLine)
 
-IF (basisType .EQ. polyopt%Jacobi) THEN
-  IF (.NOT. PRESENT(alpha) .OR. .NOT. PRESENT(beta)) THEN
-    CALL Errormsg(&
-      & msg="alpha and beta should be present for basisType=Jacobi", &
-      & file=__FILE__, &
-      & routine="BasisEvalAll_Line2", &
-      & line=__LINE__, &
-      & unitno=stderr)
+#ifdef DEBUG_VER
+
+isok = basisType .EQ. polyopt%Jacobi
+
+IF (isok) THEN
+  abool = (.NOT. PRESENT(alpha)) .OR. (.NOT. PRESENT(beta))
+
+  IF (abool) THEN
+    CALL Errormsg(routine="OrthogonalBasis_Line1()", &
+                msg="alpha and beta should be present for basisType=Jacobi", &
+                  file=__FILE__, line=__LINE__, unitno=stderr)
+
     RETURN
   END IF
+
 END IF
 
-IF (basisType .EQ. polyopt%Ultraspherical) THEN
-  IF (.NOT. PRESENT(lambda)) THEN
-    CALL Errormsg(&
-      & msg="lambda should be present for basisType=Ultraspherical", &
-      & file=__FILE__, &
-      & routine="BasisEvalAll_Line2", &
-      & line=__LINE__, &
-      & unitno=stderr)
+isok = basisType .EQ. polyopt%Ultraspherical
+IF (isok) THEN
+
+  abool = .NOT. PRESENT(lambda)
+
+  IF (abool) THEN
+    CALL Errormsg(routine="OrthogonalBasis_Line1()", file=__FILE__, &
+                msg="lambda should be present for basisType=Ultraspherical", &
+                  line=__LINE__, unitno=stderr)
     RETURN
   END IF
+
 END IF
 
-SELECT CASE (astr%chars())
-CASE ("UNIT")
-  ans = EvalAllOrthopol(&
-    & n=order, &
-    & x=FromUnitLine2BiUnitLine(xin=xij(1, :)), &
-    & orthopol=basisType, &
-    & alpha=alpha, &
-    & beta=beta, &
-    & lambda=lambda)
+#endif
 
-CASE ("BIUNIT")
-  ans = EvalAllOrthopol(&
-    & n=order, &
-    & x=xij(1, :), &
-    & orthopol=basisType, &
-    & alpha=alpha, &
-    & beta=beta, &
-    & lambda=lambda)
+astr = UpperCase(refLine(1:1))
+
+SELECT CASE (astr)
+CASE ("U")
+
+  ans = EvalAllOrthopol(n=order, &
+               x=FromUnitLine2BiUnitLine(xin=xij(1, :)), orthopol=basisType, &
+                        alpha=alpha, beta=beta, lambda=lambda)
+
+CASE ("B")
+
+  ans = EvalAllOrthopol(n=order, x=xij(1, :), orthopol=basisType, &
+                        alpha=alpha, beta=beta, lambda=lambda)
 
 CASE DEFAULT
+
   ans = 0.0_DFP
-  CALL Errormsg(&
-    & msg="No case found for refLine.", &
-    & file=__FILE__, &
-    & routine="OrthogonalBasis_Line1()", &
-    & line=__LINE__, &
-    & unitno=stderr)
+  CALL Errormsg(msg="No case found for refLine.", &
+                routine="OrthogonalBasis_Line1()", &
+                file=__FILE__, line=__LINE__, unitno=stderr)
   RETURN
+
 END SELECT
 
 END PROCEDURE OrthogonalBasis_Line1

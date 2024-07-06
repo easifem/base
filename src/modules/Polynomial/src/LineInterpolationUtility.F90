@@ -1203,14 +1203,9 @@ INTERFACE OrthogonalBasis_Line
     !! point of evaluation
     !! Number of rows in xij is 1
     CHARACTER(*), INTENT(IN) :: refLine
-    !! UNIT
-    !! BIUNIT
+    !! UNIT ! BIUNIT
     INTEGER(I4B), INTENT(IN) :: basisType
-    !! Jacobi
-    !! Ultraspherical
-    !! Legendre
-    !! Chebyshev
-    !! Lobatto
+    !! Jacobi ! Ultraspherical ! Legendre ! Chebyshev ! Lobatto
     !! UnscaledLobatto
     REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
     !! Jacobi polynomial parameter
