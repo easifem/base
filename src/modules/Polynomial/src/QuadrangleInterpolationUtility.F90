@@ -712,8 +712,8 @@ END INTERFACE
 ! summary:  Convert format from IJ to VEFC
 
 INTERFACE
-  MODULE PURE RECURSIVE SUBROUTINE IJ2VEFC_Quadrangle_Clockwise( &
-    xi, eta, temp, p, q, startNode)
+  MODULE PURE RECURSIVE SUBROUTINE IJ2VEFC_Quadrangle_Clockwise(xi, eta, &
+                                                        temp, p, q, startNode)
     REAL(DFP), INTENT(IN) :: xi(:, :)
     REAL(DFP), INTENT(IN) :: eta(:, :)
     REAL(DFP), INTENT(OUT) :: temp(:, :)
@@ -732,8 +732,8 @@ END INTERFACE
 ! summary:  Convert format from IJ to VEFC
 
 INTERFACE
-  MODULE PURE RECURSIVE SUBROUTINE IJ2VEFC_Quadrangle_AntiClockwise( &
-    xi, eta, temp, p, q, startNode)
+  MODULE PURE RECURSIVE SUBROUTINE IJ2VEFC_Quadrangle_AntiClockwise(xi, eta, &
+                                                        temp, p, q, startNode)
     REAL(DFP), INTENT(IN) :: xi(:, :)
     REAL(DFP), INTENT(IN) :: eta(:, :)
     REAL(DFP), INTENT(OUT) :: temp(:, :)
@@ -901,11 +901,7 @@ INTERFACE LagrangeCoeff_Quadrangle_
     REAL(DFP), INTENT(IN) :: xij(:, :)
     !! points in xij format, size(xij,2)
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: basisType
-    !! Monomials
-    !! Jacobi
-    !! Legendre
-    !! Chebyshev
-    !! Ultraspherical
+    !! Monomials ! Jacobi ! Legendre ! Chebyshev ! Ultraspherical
     !! Heirarchical
     REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
     !! This parameter is needed when basisType is Jacobi
@@ -935,19 +931,11 @@ INTERFACE LagrangeCoeff_Quadrangle
     !! points in xij format, size(xij,2)
     INTEGER(I4B), INTENT(IN) :: basisType1
     !! basisType in x direction
-    !! Monomials
-    !! Jacobi
-    !! Legendre
-    !! Chebyshev
-    !! Ultraspherical
+    !! Monomials ! Jacobi ! Legendre ! Chebyshev ! Ultraspherical
     !! Heirarchical
     INTEGER(I4B), INTENT(IN) :: basisType2
     !! basisType in y direction
-    !! Monomials
-    !! Jacobi
-    !! Legendre
-    !! Chebyshev
-    !! Ultraspherical
+    !! Monomials ! Jacobi ! Legendre ! Chebyshev ! Ultraspherical
     !! Heirarchical
     REAL(DFP), OPTIONAL, INTENT(IN) :: alpha1
     !! This parameter is needed when basisType is Jacobi
@@ -982,19 +970,11 @@ INTERFACE LagrangeCoeff_Quadrangle_
     !! points in xij format, size(xij,2)
     INTEGER(I4B), INTENT(IN) :: basisType1
     !! basisType in x direction
-    !! Monomials
-    !! Jacobi
-    !! Legendre
-    !! Chebyshev
-    !! Ultraspherical
+    !! Monomials ! Jacobi ! Legendre ! Chebyshev ! Ultraspherical
     !! Heirarchical
     INTEGER(I4B), INTENT(IN) :: basisType2
     !! basisType in y direction
-    !! Monomials
-    !! Jacobi
-    !! Legendre
-    !! Chebyshev
-    !! Ultraspherical
+    !! Monomials ! Jacobi ! Legendre ! Chebyshev ! Ultraspherical
     !! Heirarchical
     REAL(DFP), OPTIONAL, INTENT(IN) :: alpha1
     !! This parameter is needed when basisType is Jacobi
@@ -1315,19 +1295,11 @@ INTERFACE TensorProdBasis_Quadrangle
     !! points of evaluation in xij format
     INTEGER(I4B), INTENT(IN) :: basisType1
     !! basis type in x1 direction
-    !! Monomials
-    !! Jacobi
-    !! Legendre
-    !! Chebyshev
-    !! Ultraspherical
+    !! Monomials ! Jacobi ! Legendre ! Chebyshev ! Ultraspherical
     !! Heirarchical
     INTEGER(I4B), INTENT(IN) :: basisType2
     !! basis type in x2 direction
-    !! Monomials
-    !! Jacobi
-    !! Legendre
-    !! Chebyshev
-    !! Ultraspherical
+    !! Monomials ! Jacobi ! Legendre ! Chebyshev ! Ultraspherical
     !! Heirarchical
     REAL(DFP), OPTIONAL, INTENT(IN) :: alpha1
     !! alpha1 needed when  basisType1 "Jacobi"
@@ -1702,27 +1674,6 @@ INTERFACE
 END INTERFACE
 
 !----------------------------------------------------------------------------
-!                                               CellBasisGradient_Quadrangle
-!----------------------------------------------------------------------------
-
-INTERFACE
-  MODULE PURE SUBROUTINE CellBasisGradient_Quadrangle2_(pb, qb, L1, L2, &
-                                              dL1, dL2, ans, dim1, dim2, dim3)
-    INTEGER(I4B), INTENT(IN) :: pb
-    !! order on bottom vertical edge (e3), it should be greater than 1
-    INTEGER(I4B), INTENT(IN) :: qb
-    !! order on top vertical edge(e4), it should be greater than 1
-    REAL(DFP), INTENT(IN) :: L1(1:, 0:), L2(1:, 0:)
-    REAL(DFP), INTENT(IN) :: dL1(1:, 0:), dL2(1:, 0:)
-    REAL(DFP), INTENT(INOUT) :: ans(:, :, :)
-    INTEGER(I4B), INTENT(OUT) :: dim1, dim2, dim3
-    !! dim1=SIZE(L1, 1)
-    !! dim2=(pb - 1) * (qb - 1)
-    !! dim3=2
-  END SUBROUTINE CellBasisGradient_Quadrangle2_
-END INTERFACE
-
-!----------------------------------------------------------------------------
 !                                              HeirarchicalBasis_Quadrangle
 !----------------------------------------------------------------------------
 
@@ -1838,6 +1789,44 @@ INTERFACE HeirarchicalBasis_Quadrangle_
     INTEGER(I4B), INTENT(OUT) :: nrow, ncol
   END SUBROUTINE HeirarchicalBasis_Quadrangle2_
 END INTERFACE HeirarchicalBasis_Quadrangle_
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE HeirarchicalBasis_Quadrangle
+  MODULE PURE FUNCTION HeirarchicalBasis_Quadrangle3(pb, qb, pe3, pe4, &
+                  qe1, qe2, xij, pe3Orient, pe4Orient, qe1Orient, qe2Orient, &
+                                                     faceOrient) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: pb
+    !! order of interpolation inside the quadrangle in x1 direction
+    INTEGER(I4B), INTENT(IN) :: qb
+    !! order of interpolation inside the quadrangle in x2 direction
+    INTEGER(I4B), INTENT(IN) :: pe3
+    !! order of interpolation on edge e3 (bottom) in x1 direction
+    INTEGER(I4B), INTENT(IN) :: pe4
+    !! order of interpolation on edge e4 (top) in x1 direction
+    INTEGER(I4B), INTENT(IN) :: qe1
+    !! order of interpolation on edge e1 (left) in y1 direction
+    INTEGER(I4B), INTENT(IN) :: qe2
+    !! order of interpolation on edge e2 (right) in y1 direction
+    REAL(DFP), INTENT(IN) :: xij(:, :)
+    !! points of evaluation in xij format
+    INTEGER(I4B), INTENT(IN) :: pe3Orient
+    !! orientation of edge 1
+    INTEGER(I4B), INTENT(IN) :: pe4Orient
+    !! orientation of edge 2
+    INTEGER(I4B), INTENT(IN) :: qe1Orient
+    !! orientation of edge 3
+    INTEGER(I4B), INTENT(IN) :: qe2Orient
+    !! orientation of edge 4
+    INTEGER(I4B), INTENT(IN) :: faceOrient(:)
+    !! orientation of face
+    REAL(DFP), ALLOCATABLE :: ans(:, :)
+    !! nrow = SIZE(xij, 2)
+    !! ncol =  pb * qb - pb - qb + pe3 + pe4 + qe1 + qe2 + 1
+  END FUNCTION HeirarchicalBasis_Quadrangle3
+END INTERFACE HeirarchicalBasis_Quadrangle
 
 !----------------------------------------------------------------------------
 !
@@ -2458,6 +2447,86 @@ INTERFACE HeirarchicalBasisGradient_Quadrangle_
     !! dim2 = (p+1)*(q+1)
     !! dim3 = 2
   END SUBROUTINE HeirarchicalBasisGradient_Quadrangle2_
+END INTERFACE HeirarchicalBasisGradient_Quadrangle_
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2024-07-06
+! summary:  Basis gradient
+
+INTERFACE HeirarchicalBasisGradient_Quadrangle
+  MODULE FUNCTION HeirarchicalBasisGradient_Quadrangle3(pb, qb, pe3, pe4, &
+      qe1, qe2, xij, qe1Orient, qe2Orient, pe3Orient, pe4Orient, faceOrient) &
+    RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: pb
+    !! order of interpolation inside the quadrangle in x1 direction
+    INTEGER(I4B), INTENT(IN) :: qb
+    !! order of interpolation inside the quadrangle in x2 direction
+    INTEGER(I4B), INTENT(IN) :: pe3
+    !! order of interpolation on edge e3 (bottom) in x1 direction
+    INTEGER(I4B), INTENT(IN) :: pe4
+    !! order of interpolation on edge e4 (top) in x1 direction
+    INTEGER(I4B), INTENT(IN) :: qe1
+    !! order of interpolation on edge e1 (left) in y1 direction
+    INTEGER(I4B), INTENT(IN) :: qe2
+    !! order of interpolation on edge e2 (right) in y1 direction
+    REAL(DFP), INTENT(IN) :: xij(:, :)
+    !! points of evaluation in xij format
+    INTEGER(I4B), INTENT(IN) :: qe1Orient
+    !! left vertical edge orientation
+    INTEGER(I4B), INTENT(IN) :: qe2Orient
+    !! right vertical edge orientation
+    INTEGER(I4B), INTENT(IN) :: pe3Orient
+    !! orientation of bottom horizontal edge
+    INTEGER(I4B), INTENT(IN) :: pe4Orient
+    !! orientation of top horizontal edge
+    INTEGER(I4B), INTENT(IN) :: faceOrient(3)
+    !! orientation of faces
+    REAL(DFP), ALLOCATABLE :: ans(:, :, :)
+  END FUNCTION HeirarchicalBasisGradient_Quadrangle3
+END INTERFACE HeirarchicalBasisGradient_Quadrangle
+
+!----------------------------------------------------------------------------
+!                                       HeirarchicalBasisGradient_Quadrangle
+!----------------------------------------------------------------------------
+
+INTERFACE HeirarchicalBasisGradient_Quadrangle_
+  MODULE SUBROUTINE HeirarchicalBasisGradient_Quadrangle3_(pb, qb, pe3, pe4, &
+      qe1, qe2, xij, qe1Orient, qe2Orient, pe3Orient, pe4Orient, faceOrient, &
+                                                        ans, dim1, dim2, dim3)
+    INTEGER(I4B), INTENT(IN) :: pb
+    !! order of interpolation inside the quadrangle in x1 direction
+    INTEGER(I4B), INTENT(IN) :: qb
+    !! order of interpolation inside the quadrangle in x2 direction
+    INTEGER(I4B), INTENT(IN) :: pe3
+    !! order of interpolation on edge e3 (bottom) in x1 direction
+    INTEGER(I4B), INTENT(IN) :: pe4
+    !! order of interpolation on edge e4 (top) in x1 direction
+    INTEGER(I4B), INTENT(IN) :: qe1
+    !! order of interpolation on edge e1 (left) in y1 direction
+    INTEGER(I4B), INTENT(IN) :: qe2
+    !! order of interpolation on edge e2 (right) in y1 direction
+    REAL(DFP), INTENT(IN) :: xij(:, :)
+    !! points of evaluation in xij format
+    INTEGER(I4B), INTENT(IN) :: qe1Orient
+    !! left vertical edge orientation
+    INTEGER(I4B), INTENT(IN) :: qe2Orient
+    !! right vertical edge orientation
+    INTEGER(I4B), INTENT(IN) :: pe3Orient
+    !! orientation of bottom horizontal edge
+    INTEGER(I4B), INTENT(IN) :: pe4Orient
+    !! orientation of top horizontal edge
+    INTEGER(I4B), INTENT(IN) :: faceOrient(3)
+    !! orientation of faces
+    REAL(DFP), INTENT(INOUT) :: ans(:, :, :)
+    !! dim1 =  SIZE(xij, 2)
+    !! dim2 = pb * qb - pb - qb + pe3 + pe4 + qe1 + qe2 + 1
+    !! dim3 = 2
+    INTEGER(I4B), INTENT(OUT) :: dim1, dim2, dim3
+  END SUBROUTINE HeirarchicalBasisGradient_Quadrangle3_
 END INTERFACE HeirarchicalBasisGradient_Quadrangle_
 
 !----------------------------------------------------------------------------
