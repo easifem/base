@@ -285,15 +285,15 @@ END INTERFACE EquidistanceInPoint_Line_
 INTERFACE EquidistanceInPoint_Line
   MODULE PURE FUNCTION EquidistanceInPoint_Line2(order, xij) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
-  !! order
+    !! order
     REAL(DFP), OPTIONAL, INTENT(IN) :: xij(:, :)
-  !! coordinates of point 1 and point 2 in $x_{iJ}$ format
-  !! number of rows = nsd
-  !! number of cols = 2
+    !! coordinates of point 1 and point 2 in $x_{iJ}$ format
+    !! number of rows = nsd
+    !! number of cols = 2
     REAL(DFP), ALLOCATABLE :: ans(:, :)
-  !! Equidistnace points in $x_{iJ}$ format
-  !! The number of rows is equal to the number of rows in xij
-  !! (if xij present), otherwise, it is 1.
+    !! Equidistnace points in $x_{iJ}$ format
+    !! The number of rows is equal to the number of rows in xij
+    !! (if xij present), otherwise, it is 1.
   END FUNCTION EquidistanceInPoint_Line2
 END INTERFACE EquidistanceInPoint_Line
 
