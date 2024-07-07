@@ -1311,8 +1311,8 @@ END INTERFACE HeirarchicalBasis_Line_
 !----------------------------------------------------------------------------
 
 INTERFACE HeirarchicalBasis_Line_
-MODULE SUBROUTINE HeirarchicalBasis_Line2_(order, xij, refLine, orient, ans, &
-                                             nrow, ncol)
+  MODULE SUBROUTINE HeirarchicalBasis_Line2_(order, xij, refLine, orient, &
+                                             ans, nrow, ncol)
     INTEGER(I4B), INTENT(IN) :: order
     !! Polynomial order of interpolation
     REAL(DFP), INTENT(IN) :: xij(:, :)
@@ -1380,6 +1380,31 @@ INTERFACE HeirarchicalBasisGradient_Line_
     !! SIZE(xij, 2), order + 1, 1
   END SUBROUTINE HeirarchicalGradientBasis_Line1_
 END INTERFACE HeirarchicalBasisGradient_Line_
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE HeirarchicalBasisGradient_Line
+  MODULE FUNCTION HeirarchicalGradientBasis_Line2(order, xij, refLine, &
+                                                  orient) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! Polynomial order of interpolation
+    REAL(DFP), INTENT(IN) :: xij(:, :)
+    !! Points of evaluation in xij format
+    !! size(xij, 1) should be 1
+    CHARACTER(*), INTENT(IN) :: refLine
+    !! This parameter denotes the type of reference line.
+    !! It can take following values:
+    !! UNIT: in this case xij is in unit Line.
+    !! BIUNIT: in this case xij is in biunit Line.
+    INTEGER(I4B), INTENT(IN) :: orient
+    !! orientation of line: 1 or -1
+    REAL(DFP), ALLOCATABLE :: ans(:, :, :)
+    !! Gradient of Hierarchical basis
+    !! SIZE(xij, 2), order + 1, 1
+  END FUNCTION HeirarchicalGradientBasis_Line2
+END INTERFACE HeirarchicalBasisGradient_Line
 
 !----------------------------------------------------------------------------
 !
@@ -1541,6 +1566,10 @@ END INTERFACE BasisGradientEvalAll_Line_
 !> author: Vikas Sharma, Ph. D.
 ! date:  2023-07-19
 ! summary:  Returns quadrature points
+!
+!# Introduction
+!
+! This function calls QuadraturePoint_Line3 function
 
 INTERFACE QuadraturePoint_Line
   MODULE FUNCTION QuadraturePoint_Line1(order, quadType, layout, xij, &
@@ -1549,16 +1578,11 @@ INTERFACE QuadraturePoint_Line
     !! Order of interpolation
     INTEGER(I4B), INTENT(IN) :: quadType
     !! Quadrature point type
-    !! Equidistance,
-    !! GaussLegendre,
-    !! GaussLegendreLobatto,
-    !! GaussChebyshev,
-    !! GaussChebyshevLobatto,
-    !! GaussJacobi,
+    !! Equidistance, ! GaussLegendre, ! GaussLegendreLobatto,
+    !! GaussChebyshev, ! GaussChebyshevLobatto, ! GaussJacobi,
     !! GaussJacobiLobatto
     CHARACTER(*), INTENT(IN) :: layout
-    !! "VEFC"
-    !! "INCREASING"
+    !! "VEFC" ! "INCREASING"
     REAL(DFP), OPTIONAL, INTENT(IN) :: xij(:, :)
     !! domain of interpolation
     REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
@@ -1585,6 +1609,10 @@ END INTERFACE QuadraturePoint_Line
 !> author: Vikas Sharma, Ph. D.
 ! date: 27 Aug 2022
 ! summary: Returns the interpolation point
+!
+!# Introduction
+!
+! This function calls QuadraturePoint_Line1 function
 
 INTERFACE QuadraturePoint_Line
   MODULE FUNCTION QuadraturePoint_Line2(order, quadType, xij, layout, &
@@ -1593,13 +1621,8 @@ INTERFACE QuadraturePoint_Line
     !! order of interpolation
     INTEGER(I4B), INTENT(IN) :: quadType
     !! Quadrature point type
-    !! Equidistance
-    !! GaussLegendre
-    !! GaussLegendreLobatto
-    !! GaussChebyshev,
-    !! GaussChebyshevLobatto
-    !! GaussJacobi
-    !! GaussJacobiLobatto
+    !! Equidistance ! GaussLegendre ! GaussLegendreLobatto ! GaussChebyshev,
+    !! GaussChebyshevLobatto ! GaussJacobi ! GaussJacobiLobatto
     REAL(DFP), INTENT(IN) :: xij(2)
     !! end points
     CHARACTER(*), INTENT(IN) :: layout
@@ -1614,6 +1637,43 @@ INTERFACE QuadraturePoint_Line
     REAL(DFP), ALLOCATABLE :: ans(:, :)
     !! one dimensional interpolation point
   END FUNCTION QuadraturePoint_Line2
+END INTERFACE QuadraturePoint_Line
+
+!----------------------------------------------------------------------------
+!                                                   QuadraturePoint_Line
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 27 Aug 2022
+! summary: Returns the interpolation point
+!
+!# Introduction
+!
+! This function calls QuadraturePoint_Line3
+
+INTERFACE QuadraturePoint_Line
+  MODULE FUNCTION QuadraturePoint_Line4(nips, quadType, xij, layout, &
+                                        alpha, beta, lambda) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: nips(1)
+    !! order of interpolation
+    INTEGER(I4B), INTENT(IN) :: quadType
+    !! Quadrature point type
+    !! Equidistance ! GaussLegendre ! GaussLegendreLobatto ! GaussChebyshev,
+    !! GaussChebyshevLobatto ! GaussJacobi ! GaussJacobiLobatto
+    REAL(DFP), INTENT(IN) :: xij(2)
+    !! end points
+    CHARACTER(*), INTENT(IN) :: layout
+    !! "VEFC"
+    !! "INCREASING"
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
+    !! Jacobi parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: beta
+    !! Jacobi parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: lambda
+    !! Ultraspherical parameter
+    REAL(DFP), ALLOCATABLE :: ans(:, :)
+    !! one dimensional interpolation point
+  END FUNCTION QuadraturePoint_Line4
 END INTERFACE QuadraturePoint_Line
 
 !----------------------------------------------------------------------------
@@ -1661,41 +1721,42 @@ INTERFACE QuadraturePoint_Line
 END INTERFACE QuadraturePoint_Line
 
 !----------------------------------------------------------------------------
-!                                                   QuadraturePoint_Line
+!
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date: 27 Aug 2022
-! summary: Returns the interpolation point
+! date:  2024-07-07
+! summary:  Quadrature point on line
 
-INTERFACE QuadraturePoint_Line
-  MODULE FUNCTION QuadraturePoint_Line4(nips, quadType, xij, layout, &
-                                        alpha, beta, lambda) RESULT(ans)
+INTERFACE QuadraturePoint_Line_
+  MODULE SUBROUTINE QuadraturePoint_Line1_(nips, quadType, layout, xij, &
+                                         alpha, beta, lambda, ans, nrow, ncol)
     INTEGER(I4B), INTENT(IN) :: nips(1)
-    !! order of interpolation
+    !! Order of interpolation
     INTEGER(I4B), INTENT(IN) :: quadType
     !! Quadrature point type
-    !! Equidistance
-    !! GaussLegendre
-    !! GaussLegendreLobatto
-    !! GaussChebyshev,
-    !! GaussChebyshevLobatto
-    !! GaussJacobi
-    !! GaussJacobiLobatto
-    REAL(DFP), INTENT(IN) :: xij(2)
-    !! end points
+    !! Equidistance, ! GaussLegendre, ! GaussLegendreLobatto, ! GaussChebyshev,
+    !! GaussChebyshevLobatto, ! GaussJacobi, ! GaussJacobiLobatto
     CHARACTER(*), INTENT(IN) :: layout
-    !! "VEFC"
-    !! "INCREASING"
+    !! "VEFC" ! "INCREASING"
+    REAL(DFP), OPTIONAL, INTENT(IN) :: xij(:, :)
+    !! domain of interpolation
     REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
     !! Jacobi parameter
     REAL(DFP), OPTIONAL, INTENT(IN) :: beta
     !! Jacobi parameter
     REAL(DFP), OPTIONAL, INTENT(IN) :: lambda
     !! Ultraspherical parameter
-    REAL(DFP), ALLOCATABLE :: ans(:, :)
-    !! one dimensional interpolation point
-  END FUNCTION QuadraturePoint_Line4
-END INTERFACE QuadraturePoint_Line
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    !! quadrature points
+    !! If xij is present then the number of rows in ans
+    !! is same as size(xij,1) + 1.
+    !! If xij is not present then the number of rows in
+    !! ans is 2
+    !! The last row of ans contains the weights
+    !! The first few rows contains the quadrature points
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+  END SUBROUTINE QuadraturePoint_Line1_
+END INTERFACE QuadraturePoint_Line_
 
 END MODULE LineInterpolationUtility
