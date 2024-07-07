@@ -117,15 +117,29 @@ END INTERFACE
 ! lagrange polynomial on an edge of a Quadrangle
 !- These dof are strictly inside the Quadrangle
 
-INTERFACE
-  MODULE PURE FUNCTION GetTotalInDOF_Quadrangle(order, baseContinuity, &
+INTERFACE GetTotalInDOF_Quadrangle
+  MODULE PURE FUNCTION GetTotalInDOF_Quadrangle1(order, baseContinuity, &
                                                 baseInterpolation) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
     CHARACTER(*), INTENT(IN) :: baseContinuity
     CHARACTER(*), INTENT(IN) :: baseInterpolation
     INTEGER(I4B) :: ans
-  END FUNCTION GetTotalInDOF_Quadrangle
-END INTERFACE
+  END FUNCTION GetTotalInDOF_Quadrangle1
+END INTERFACE GetTotalInDOF_Quadrangle
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE GetTotalInDOF_Quadrangle
+  MODULE PURE FUNCTION GetTotalInDOF_Quadrangle2(p, q, baseContinuity, &
+                                                baseInterpolation) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: p, q
+    CHARACTER(*), INTENT(IN) :: baseContinuity
+    CHARACTER(*), INTENT(IN) :: baseInterpolation
+    INTEGER(I4B) :: ans
+  END FUNCTION GetTotalInDOF_Quadrangle2
+END INTERFACE GetTotalInDOF_Quadrangle
 
 !----------------------------------------------------------------------------
 !                                                   RefElemDomain_Quadrangle
