@@ -110,9 +110,17 @@ END PROCEDURE GetTotalDOF_Quadrangle
 !                                                   GetTotalInDOF_Quadrangle
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE GetTotalInDOF_Quadrangle
+MODULE PROCEDURE GetTotalInDOF_Quadrangle1
 ans = (order - 1)**2
-END PROCEDURE GetTotalInDOF_Quadrangle
+END PROCEDURE GetTotalInDOF_Quadrangle1
+
+!----------------------------------------------------------------------------
+!                                                   GetTotalInDOF_Quadrangle
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE GetTotalInDOF_Quadrangle2
+ans = (p - 1) * (q - 1)
+END PROCEDURE GetTotalInDOF_Quadrangle2
 
 !----------------------------------------------------------------------------
 !                                                     LagrangeDOF_Quadrangle
