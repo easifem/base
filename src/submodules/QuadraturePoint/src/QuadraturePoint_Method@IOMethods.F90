@@ -20,28 +20,35 @@
 ! summary: This submodule contains the IO method for [[QuadraturePoint_]]
 
 SUBMODULE(QuadraturePoint_Method) IOMethods
-USE BaseMethod
+USE Display_Method, ONLY: Util_Display => Display, Tostring
+USE MdEncode_Method, ONLY: Util_MdEncode => MdEncode
+
 IMPLICIT NONE
+
 CONTAINS
 
 !----------------------------------------------------------------------------
 !                                                                    Display
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE quad_Display
-CALL Display(msg, unitno=unitno)
-IF (.NOT. ALLOCATED(obj%points)) THEN
-  RETURN
-END IF
-CALL Display(obj%points, msg="# points :", unitno=unitno)
-CALL Display(obj%txi, msg="# txi :", unitno=unitno)
-END PROCEDURE quad_Display
+MODULE PROCEDURE obj_Display
+LOGICAL(LGT) :: isok
+
+CALL Util_Display(msg, unitno=unitno)
+
+isok = ALLOCATED(obj%points)
+IF (.NOT. isok) RETURN
+
+CALL Util_Display(obj%points, msg="points:", unitno=unitno)
+CALL Util_Display(obj%txi, msg="txi:", unitno=unitno)
+
+END PROCEDURE obj_Display
 
 !----------------------------------------------------------------------------
 !                                                                 MdEncode
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE QuadraturePoint_MdEncode
+MODULE PROCEDURE obj_MdEncode
 INTEGER(I4B) :: ii, n, jj
 TYPE(String), ALLOCATABLE :: rh(:), ch(:)
 
@@ -51,8 +58,10 @@ IF (.NOT. ALLOCATED(obj%points)) THEN
 END IF
 
 n = SIZE(obj%points, 2)
-CALL Reallocate(rh, SIZE(obj, 1))
-CALL Reallocate(ch, SIZE(obj, 2))
+ii = SIZE(obj, 1)
+jj = SIZE(obj, 2)
+
+ALLOCATE (rh(ii), ch(jj))
 
 DO ii = 1, SIZE(rh) - 1
   rh(ii) = "`x"//tostring(ii)//"`"
@@ -63,8 +72,12 @@ DO ii = 1, SIZE(ch)
   ch(ii) = "`p"//tostring(ii)//"`"
 END DO
 
-ans = MdEncode(obj%points, rh=rh, ch=ch)
+ans = Util_MdEncode(obj%points, rh=rh, ch=ch)
 
-END PROCEDURE QuadraturePoint_MdEncode
+END PROCEDURE obj_MdEncode
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
 
 END SUBMODULE IOMethods
