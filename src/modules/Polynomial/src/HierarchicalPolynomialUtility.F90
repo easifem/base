@@ -24,10 +24,10 @@ IMPLICIT NONE
 PRIVATE
 
 PUBLIC :: HierarchicalDOF
-PUBLIC :: VertexDOF
-PUBLIC :: EdgeDOF
-PUBLIC :: FaceDOF
-PUBLIC :: CellDOF
+PUBLIC :: HierarchicalVertexDOF
+PUBLIC :: HierarchicalEdgeDOF
+PUBLIC :: HierarchicalFaceDOF
+PUBLIC :: HierarchicalCellDOF
 
 PUBLIC :: HierarchicalEvalAll_
 PUBLIC :: HierarchicalEvalAll
@@ -68,11 +68,11 @@ END INTERFACE
 ! summary:  Returns the total number of degree of freedom
 
 INTERFACE
-  MODULE PURE FUNCTION VertexDOF(elemType) RESULT(ans)
+  MODULE PURE FUNCTION HierarchicalVertexDOF(elemType) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: elemType
     INTEGER(I4B) :: ans
     !! number of degree of freedom
-  END FUNCTION VertexDOF
+  END FUNCTION HierarchicalVertexDOF
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -80,13 +80,15 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-  MODULE PURE FUNCTION EdgeDOF(order, elemType) RESULT(ans)
+  MODULE PURE FUNCTION HierarchicalEdgeDOF(order, elemType) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order(:)
-    !! order
+    !! order,
+    !! the size of order should be same as
+    !! the total number of edges in element
     INTEGER(I4B), INTENT(IN) :: elemType
     INTEGER(I4B) :: ans
     !! number of degree of freedom
-  END FUNCTION EdgeDOF
+  END FUNCTION HierarchicalEdgeDOF
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -94,13 +96,13 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-  MODULE PURE FUNCTION FaceDOF(order, elemType) RESULT(ans)
+  MODULE PURE FUNCTION HierarchicalFaceDOF(order, elemType) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order(:, :)
     !! order
     INTEGER(I4B), INTENT(IN) :: elemType
     INTEGER(I4B) :: ans
     !! number of degree of freedom
-  END FUNCTION FaceDOF
+  END FUNCTION HierarchicalFaceDOF
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -108,14 +110,15 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-  MODULE PURE FUNCTION CellDOF(order, elemType) RESULT(ans)
+  MODULE PURE FUNCTION HierarchicalCellDOF(order, elemType) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order(:)
     !! order
+    !! for quadrangle element, size of order should be 2
     INTEGER(I4B), INTENT(IN) :: elemType
-    !!
+    !! element type
     INTEGER(I4B) :: ans
     !! number of degree of freedom
-  END FUNCTION CellDOF
+  END FUNCTION HierarchicalCellDOF
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -124,7 +127,8 @@ END INTERFACE
 
 INTERFACE
   MODULE FUNCTION HierarchicalEvalAll(order, elemType, xij, domainName, &
-                                  cellOrder, faceOrder, edgeOrder) RESULT(ans)
+                    cellOrder, faceOrder, edgeOrder, cellOrient, faceOrient, &
+                                      edgeOrient) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
     !! Order of Hierarchical polynomials
     INTEGER(I4B), INTENT(IN) :: elemType
@@ -145,6 +149,12 @@ INTERFACE
     !! edge order, needed for 3D elements only
     REAL(DFP), ALLOCATABLE :: ans(:, :)
     !! Value of n+1 Hierarchical polynomials at point x
+    INTEGER(I4B), INTENT(IN) :: edgeOrient(:)
+    !! edge orientation
+    INTEGER(I4B), INTENT(IN) :: faceOrient(:, :)
+    !! face orientation
+    INTEGER(I4B), INTENT(IN) :: cellOrient(:)
+    !! cell orientation
   END FUNCTION HierarchicalEvalAll
 END INTERFACE
 
@@ -153,8 +163,9 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-  MODULE SUBROUTINE HierarchicalEvalAll_(order, elemType, xij, ans, &
-                      nrow, ncol, domainName, cellOrder, faceOrder, edgeOrder)
+  MODULE SUBROUTINE HierarchicalEvalAll_(order, elemType, xij, ans, nrow, &
+                          ncol, domainName, cellOrder, faceOrder, edgeOrder, &
+                                         cellOrient, faceOrient, edgeOrient)
     INTEGER(I4B), INTENT(IN) :: order
     !! Order of Hierarchical polynomials
     INTEGER(I4B), INTENT(IN) :: elemType
@@ -178,6 +189,12 @@ INTERFACE
     !! face order, needed for 2D and 3D elements
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: edgeOrder(:)
     !! edge order, needed for 3D elements only
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: cellOrient(:)
+    !! orientation of cell
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: faceOrient(:, :)
+    !! orientation of face
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: edgeOrient(:)
+    !! edge orientation
   END SUBROUTINE HierarchicalEvalAll_
 END INTERFACE
 
@@ -186,8 +203,9 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-  MODULE FUNCTION HierarchicalGradientEvalAll(order, elemType, xij, domainName, &
-                                  cellOrder, faceOrder, edgeOrder) RESULT(ans)
+  MODULE FUNCTION HierarchicalGradientEvalAll(order, elemType, xij, &
+        domainName, cellOrder, faceOrder, edgeOrder, cellOrient, faceOrient, &
+                                              edgeOrient) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
     !! Order of Hierarchical polynomials
     INTEGER(I4B), INTENT(IN) :: elemType
@@ -208,6 +226,12 @@ INTERFACE
     !! edge order, needed for 3D elements only
     REAL(DFP), ALLOCATABLE :: ans(:, :, :)
     !! Value of n+1 Hierarchical polynomials at point x
+    INTEGER(I4B), INTENT(IN) :: edgeOrient(:)
+    !! edge orientation
+    INTEGER(I4B), INTENT(IN) :: faceOrient(:, :)
+    !! face orientation
+    INTEGER(I4B), INTENT(IN) :: cellOrient(:)
+    !! cell orientation
   END FUNCTION HierarchicalGradientEvalAll
 END INTERFACE
 
@@ -217,7 +241,8 @@ END INTERFACE
 
 INTERFACE
   MODULE SUBROUTINE HierarchicalGradientEvalAll_(order, elemType, xij, ans, &
-                dim1, dim2, dim3, domainName, cellOrder, faceOrder, edgeOrder)
+              dim1, dim2, dim3, domainName, cellOrder, faceOrder, edgeOrder, &
+                                           cellOrient, faceOrient, edgeOrient)
     INTEGER(I4B), INTENT(IN) :: order
     !! Order of Hierarchical polynomials
     INTEGER(I4B), INTENT(IN) :: elemType
@@ -241,6 +266,13 @@ INTERFACE
     !! face order, needed for 2D and 3D elements
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: edgeOrder(:)
     !! edge order, needed for 3D elements only
+    !! cell order, always needed
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: cellOrient(:)
+    !! orientation of cell
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: faceOrient(:, :)
+    !! orientation of face
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: edgeOrient(:)
+    !! edge orientation
   END SUBROUTINE HierarchicalGradientEvalAll_
 END INTERFACE
 
