@@ -236,9 +236,17 @@ END PROCEDURE GetTotalDOF_Hexahedron
 !                                                   GetTotalInDOF_Hexahedron
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE GetTotalInDOF_Hexahedron
+MODULE PROCEDURE GetTotalInDOF_Hexahedron1
 ans = (order - 1)**3
-END PROCEDURE GetTotalInDOF_Hexahedron
+END PROCEDURE GetTotalInDOF_Hexahedron1
+
+!----------------------------------------------------------------------------
+!                                                   GetTotalInDOF_Hexahedron
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE GetTotalInDOF_Hexahedron2
+ans = (p - 1) * (q - 1) * (r - 1)
+END PROCEDURE GetTotalInDOF_Hexahedron2
 
 !----------------------------------------------------------------------------
 !                                                    LagrangeDOF_Hexahedron
