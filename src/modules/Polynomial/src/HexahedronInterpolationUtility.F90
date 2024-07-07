@@ -98,15 +98,30 @@ END INTERFACE
 ! lagrange polynomial on an edge of a Hexahedron
 !- These dof are strictly inside the Hexahedron
 
-INTERFACE
-  MODULE PURE FUNCTION GetTotalInDOF_Hexahedron(order, baseContinuity, &
+INTERFACE GetTotalInDOF_Hexahedron
+  MODULE PURE FUNCTION GetTotalInDOF_Hexahedron1(order, baseContinuity, &
                                                 baseInterpolation) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
     CHARACTER(*), INTENT(IN) :: baseContinuity
     CHARACTER(*), INTENT(IN) :: baseInterpolation
     INTEGER(I4B) :: ans
-  END FUNCTION GetTotalInDOF_Hexahedron
-END INTERFACE
+  END FUNCTION GetTotalInDOF_Hexahedron1
+END INTERFACE GetTotalInDOF_Hexahedron
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE GetTotalInDOF_Hexahedron
+  MODULE PURE FUNCTION GetTotalInDOF_Hexahedron2(p, q, r, baseContinuity, &
+                                                baseInterpolation) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: p, q, r
+    !! order in x, y and z direction
+    CHARACTER(*), INTENT(IN) :: baseContinuity
+    CHARACTER(*), INTENT(IN) :: baseInterpolation
+    INTEGER(I4B) :: ans
+  END FUNCTION GetTotalInDOF_Hexahedron2
+END INTERFACE GetTotalInDOF_Hexahedron
 
 !----------------------------------------------------------------------------
 !                                                   RefElemDomain_Hexahedron
