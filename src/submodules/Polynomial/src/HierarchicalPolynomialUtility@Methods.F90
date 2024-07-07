@@ -22,26 +22,36 @@ USE GlobalData, ONLY: stderr
 
 USE ReferenceElement_Method, ONLY: XiDimension, &
                                    GetTotalNodes, &
-                                   ElementTopology
+                                   ElementTopology, &
+                                   GetTotalEdges
 
 USE ErrorHandling, ONLY: ErrorMsg
 
 USE BaseType, ONLY: elemopt => TypeElemNameOpt
 
 USE LineInterpolationUtility, ONLY: HeirarchicalBasis_Line_, &
-                                    HeirarchicalBasisGradient_Line_
+                                    HeirarchicalBasisGradient_Line_, &
+                                    GetTotalInDOF_Line
 
 USE TriangleInterpolationUtility, ONLY: HeirarchicalBasis_Triangle_, &
-                                        HeirarchicalBasisGradient_Triangle_
+                                        HeirarchicalBasisGradient_Triangle_, &
+                                        GetTotalInDOF_Triangle
 
 USE QuadrangleInterpolationUtility, ONLY: HeirarchicalBasis_Quadrangle_, &
-                                         HeirarchicalBasisGradient_Quadrangle_
+                                      HeirarchicalBasisGradient_Quadrangle_, &
+                                          GetTotalInDOF_Quadrangle
 
 USE TetrahedronInterpolationUtility, ONLY: HeirarchicalBasis_Tetrahedron_, &
-                                        HeirarchicalBasisGradient_Tetrahedron_
+                                     HeirarchicalBasisGradient_Tetrahedron_, &
+                                           GetTotalInDOF_Tetrahedron
 
 USE HexahedronInterpolationUtility, ONLY: HeirarchicalBasis_Hexahedron_, &
-                                         HeirarchicalBasisGradient_Hexahedron_
+                                      HeirarchicalBasisGradient_Hexahedron_, &
+                                          GetTotalInDOF_Hexahedron
+
+USE PrismInterpolationUtility, ONLY: GetTotalInDOF_Prism
+
+USE PyramidInterpolationUtility, ONLY: GetTotalInDOF_Pyramid
 
 IMPLICIT NONE
 CONTAINS
@@ -51,40 +61,153 @@ CONTAINS
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE HierarchicalDOF
+INTEGER(I4B) :: ii
+
 ans = 0
+
+ii = HierarchicalVertexDOF(elemType=elemType)
+ans = ans + ii
+
+IF (PRESENT(cellOrder)) THEN
+  ii = HierarchicalCellDOF(elemType=elemType, order=cellOrder)
+  ans = ans + ii
+END IF
+
+IF (PRESENT(faceOrder)) THEN
+  ii = HierarchicalFaceDOF(elemType=elemType, order=faceOrder)
+  ans = ans + ii
+END IF
+
+IF (PRESENT(edgeOrder)) THEN
+  ii = HierarchicalEdgeDOF(elemType=elemType, order=edgeOrder)
+  ans = ans + ii
+END IF
+
 END PROCEDURE HierarchicalDOF
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE VertexDOF
+MODULE PROCEDURE HierarchicalVertexDOF
 ans = GetTotalNodes(elemType)
-END PROCEDURE VertexDOF
+END PROCEDURE HierarchicalVertexDOF
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE EdgeDOF
+MODULE PROCEDURE HierarchicalEdgeDOF
+INTEGER(I4B) :: topo, ii, tedges
+
+topo = ElementTopology(elemType)
 ans = 0
-END PROCEDURE EdgeDOF
+
+SELECT CASE (topo)
+CASE (elemopt%Tetrahedron, elemopt%Hexahedron, elemopt%Prism, elemopt%Pyramid)
+
+  tedges = GetTotalEdges(topo)
+
+  DO ii = 1, tedges
+    ans = ans + GetTotalInDOF_Line(order=order(ii), baseContinuity="H1", &
+                                   baseInterpolation="HEIRARCHICAL")
+  END DO
+
+END SELECT
+
+END PROCEDURE HierarchicalEdgeDOF
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE FaceDOF
+MODULE PROCEDURE HierarchicalFaceDOF
+INTEGER(I4B) :: topo, jj, ii
+
+topo = ElementTopology(elemType)
+
 ans = 0
-END PROCEDURE FaceDOF
+
+SELECT CASE (topo)
+CASE (elemopt%Point)
+  ans = 0
+
+CASE (elemopt%Line)
+  ans = 0
+
+CASE (elemopt%Triangle)
+  DO ii = 1, 3
+    jj = GetTotalInDOF_Line(order=order(1, ii), baseContinuity="H1", &
+                            baseInterpolation="HEIRARCHICAL")
+    ans = ans + jj
+  END DO
+
+CASE (elemopt%Quadrangle)
+  DO ii = 1, 4
+    jj = GetTotalInDOF_Line(order=order(1, ii), baseContinuity="H1", &
+                            baseInterpolation="HEIRARCHICAL")
+    ans = ans + jj
+  END DO
+
+CASE (elemopt%Tetrahedron)
+  DO ii = 1, 4
+    jj = GetTotalInDOF_Triangle(order=order(1, ii), baseContinuity="H1", &
+                                baseInterpolation="HEIRARCHICAL")
+    ans = ans + jj
+  END DO
+
+CASE (elemopt%Hexahedron)
+  DO ii = 1, 6
+    jj = GetTotalInDOF_Quadrangle(p=order(1, ii), q=order(2, ii), &
+                                  baseContinuity="H1", &
+                                  baseInterpolation="HEIRARCHICAL")
+    ans = ans + jj
+  END DO
+
+! CASE (elemopt%Prism)
+! CASE (elemopt%Pyramid)
+END SELECT
+END PROCEDURE HierarchicalFaceDOF
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE CellDOF
+MODULE PROCEDURE HierarchicalCellDOF
+INTEGER(I4B) :: topo
+
 ans = 0
-END PROCEDURE CellDOF
+topo = ElementTopology(elemType)
+SELECT CASE (topo)
+CASE (elemopt%Point)
+  ans = 0
+CASE (elemopt%Line)
+  ans = GetTotalInDOF_Line(order=order(1), baseContinuity="H1", &
+                           baseInterpolation="HEIRARCHICAL")
+CASE (elemopt%Triangle)
+  ans = GetTotalInDOF_Triangle(order=order(1), baseContinuity="H1", &
+                               baseInterpolation="HEIRARCHICAL")
+CASE (elemopt%Quadrangle)
+ ans = GetTotalInDOF_Quadrangle(p=order(1), q=order(2), baseContinuity="H1", &
+                                 baseInterpolation="HEIRARCHICAL")
+CASE (elemopt%Tetrahedron)
+  ans = GetTotalInDOF_Tetrahedron(order=order(1), baseContinuity="H1", &
+                                  baseInterpolation="HEIRARCHICAL")
+
+CASE (elemopt%Hexahedron)
+  ans = GetTotalInDOF_Hexahedron(p=order(1), q=order(2), r=order(3), &
+                                 baseContinuity="H1", &
+                                 baseInterpolation="HEIRARCHICAL")
+
+CASE (elemopt%Prism)
+  ans = GetTotalInDOF_Prism(order=order(1), baseContinuity="H1", &
+                            baseInterpolation="HEIRARCHICAL")
+CASE (elemopt%Pyramid)
+
+  ans = GetTotalInDOF_Pyramid(order=order(1), baseContinuity="H1", &
+                              baseInterpolation="HEIRARCHICAL")
+END SELECT
+END PROCEDURE HierarchicalCellDOF
 
 !----------------------------------------------------------------------------
 !
@@ -101,7 +224,8 @@ ALLOCATE (ans(nrow, ncol))
 
 CALL HierarchicalEvalAll_(order=order, elemType=elemType, xij=xij, ans=ans, &
            nrow=nrow, ncol=ncol, domainName=domainName, cellOrder=cellOrder, &
-                          faceOrder=faceOrder, edgeOrder=edgeOrder)
+            faceOrder=faceOrder, edgeOrder=edgeOrder, cellOrient=cellOrient, &
+                          faceOrient=faceOrient, edgeOrient=edgeOrient)
 
 END PROCEDURE HierarchicalEvalAll
 
@@ -111,12 +235,13 @@ END PROCEDURE HierarchicalEvalAll
 
 MODULE PROCEDURE HierarchicalEvalAll_
 #ifdef DEBUG_VER
-INTEGER(I4B) :: ierr, tedge, tface, nsd
-LOGICAL(LGT) :: isok
-CHARACTER(:), ALLOCATABLE :: errmsg
+INTEGER(I4B) :: ierr
+CHARACTER(*), PARAMETER :: routine = "HierarchicalEvalAll_()"
 #endif
 
 INTEGER(I4B) :: topo
+
+nrow = 0; ncol = 0
 
 topo = ElementTopology(elemType)
 
@@ -125,86 +250,79 @@ SELECT CASE (topo)
 CASE (elemopt%Line)
 
 #ifdef DEBUG_VER
-  nsd = 1
-  CALL check_error
-  IF (ierr .LT. 0) THEN
-    CALL printError
-    RETURN
-  END IF
+  CALL check_error_1d(ierr=ierr, routine=routine, &
+              cellOrder=cellOrder, faceOrder=faceOrder, edgeOrder=edgeOrder, &
+          cellOrient=cellOrient, faceOrient=faceOrient, edgeOrient=edgeOrient)
+  IF (ierr .LT. 0) RETURN
 #endif
 
   CALL HeirarchicalBasis_Line_(order=cellOrder(1), xij=xij, ans=ans, &
-                               nrow=nrow, ncol=ncol, refLine=domainName)
+               nrow=nrow, ncol=ncol, refLine=domainName, orient=cellOrient(1))
 
 CASE (elemopt%Triangle)
 
 #ifdef DEBUG_VER
-  nsd = 2; tFace = 3
-  CALL check_error
-  IF (ierr .LT. 0) THEN
-    CALL printError
-    RETURN
-  END IF
+  CALL check_error_2d(ierr=ierr, tface=3, routine=routine, &
+              cellOrder=cellOrder, faceOrder=faceOrder, edgeOrder=edgeOrder, &
+          cellOrient=cellOrient, faceOrient=faceOrient, edgeOrient=edgeOrient)
+  IF (ierr .LT. 0) RETURN
 #endif
 
-  CALL HeirarchicalBasis_Triangle_(order=cellOrder(1), pe1=faceOrder(1, 1), &
-  pe2=faceOrder(1, 2), pe3=faceOrder(1, 3), xij=xij, refTriangle=domainName, &
-                                   ans=ans, nrow=nrow, ncol=ncol)
+  CALL HeirarchicalBasis_Triangle_(order=cellOrder(1), &
+                                   pe1=faceOrder(1, 1), &
+                                   pe2=faceOrder(1, 2), &
+                                   pe3=faceOrder(1, 3), &
+                                   xij=xij, &
+                                   refTriangle=domainName, &
+                                   ans=ans, nrow=nrow, ncol=ncol, &
+                                   edgeOrient1=faceOrient(1, 1), &
+                                   edgeOrient2=faceOrient(1, 2), &
+                                   edgeOrient3=faceOrient(1, 3), &
+                                   faceOrient=cellOrient)
 
 CASE (elemopt%Quadrangle)
 
 #ifdef DEBUG_VER
-  nsd = 2; tFace = 4
-  CALL check_error
-  IF (ierr .LT. 0) THEN
-    CALL printError
-    RETURN
-  END IF
+  CALL check_error_2d(ierr=ierr, tface=4, routine=routine, &
+              cellOrder=cellOrder, faceOrder=faceOrder, edgeOrder=edgeOrder, &
+          cellOrient=cellOrient, faceOrient=faceOrient, edgeOrient=edgeOrient)
+  IF (ierr .LT. 0) RETURN
 #endif
 
-  CALL HeirarchicalBasis_Quadrangle_(pb=cellOrder(1), qb=cellOrder(2), &
-              pe3=faceOrder(1, 1), pe4=faceOrder(1, 3), qe1=faceOrder(1, 4), &
-                  qe2=faceOrder(1, 2), xij=xij, ans=ans, nrow=nrow, ncol=ncol)
+  CALL HeirarchicalBasis_Quadrangle_(pb=cellOrder(1), &
+                                     qb=cellOrder(2), &
+                                     pe3=faceOrder(1, 1), &
+                                     pe4=faceOrder(1, 3), &
+                                     qe1=faceOrder(1, 4), &
+                                     qe2=faceOrder(1, 2), &
+                                     xij=xij, &
+                                     ans=ans, nrow=nrow, ncol=ncol, &
+                                     pe3Orient=faceOrient(1, 1), &
+                                     pe4Orient=faceOrient(1, 3), &
+                                     qe1Orient=faceOrient(1, 4), &
+                                     qe2Orient=faceOrient(1, 2), &
+                                     faceOrient=cellOrient)
 
-CASE (elemopt%Tetrahedron)
+! CASE (elemopt%Tetrahedron)
 
-#ifdef DEBUG_VER
-  nsd = 3; tFace = 4; tEdge = 6
-  CALL check_error
-  IF (ierr .LT. 0) THEN
-    CALL printError
-    RETURN
-  END IF
-#endif
+!   CALL HeirarchicalBasis_Tetrahedron_(order=cellOrder(1), pe1=edgeOrder(1), &
+!      pe2=edgeOrder(2), pe3=edgeOrder(3), pe4=edgeOrder(4), pe5=edgeOrder(5), &
+!                  pe6=edgeOrder(6), ps1=faceOrder(1, 1), ps2=faceOrder(1, 2), &
+!                           ps3=faceOrder(1, 3), ps4=faceOrder(1, 4), xij=xij, &
+!                                       refTetrahedron=domainName, ans=ans, &
+!                                       nrow=nrow, ncol=ncol)
 
-  CALL HeirarchicalBasis_Tetrahedron_(order=cellOrder(1), pe1=edgeOrder(1), &
-     pe2=edgeOrder(2), pe3=edgeOrder(3), pe4=edgeOrder(4), pe5=edgeOrder(5), &
-                 pe6=edgeOrder(6), ps1=faceOrder(1, 1), ps2=faceOrder(1, 2), &
-                          ps3=faceOrder(1, 3), ps4=faceOrder(1, 4), xij=xij, &
-                                      refTetrahedron=domainName, ans=ans, &
-                                      nrow=nrow, ncol=ncol)
+! CASE (elemopt%Hexahedron)
 
-CASE (elemopt%Hexahedron)
-
-#ifdef DEBUG_VER
-  !! FIXME: Currently we consiering  only three faces
-  nsd = 3; tFace = 3; tEdge = 12
-  CALL check_error
-  IF (ierr .LT. 0) THEN
-    CALL printError
-    RETURN
-  END IF
-#endif
-
-  CALL HeirarchicalBasis_Hexahedron_( &
-    pb1=cellOrder(1), pb2=cellOrder(2), pb3=cellOrder(3), &
-    pxy1=faceOrder(1, 1), pxy2=faceOrder(2, 1), &
-    pxz1=faceOrder(1, 2), pxz2=faceOrder(2, 2), &
-    pyz1=faceOrder(1, 3), pyz2=faceOrder(2, 3), &
-    px1=edgeOrder(1), px2=edgeOrder(2), px3=edgeOrder(3), px4=edgeOrder(4), &
-    py1=edgeOrder(5), py2=edgeOrder(6), py3=edgeOrder(7), py4=edgeOrder(8), &
-    pz1=edgeOrder(9), pz2=edgeOrder(10), pz3=edgeOrder(11), &
-    pz4=edgeOrder(12), xij=xij, ans=ans, nrow=nrow, ncol=ncol)
+!   CALL HeirarchicalBasis_Hexahedron_( &
+!     pb1=cellOrder(1), pb2=cellOrder(2), pb3=cellOrder(3), &
+!     pxy1=faceOrder(1, 1), pxy2=faceOrder(2, 1), &
+!     pxz1=faceOrder(1, 2), pxz2=faceOrder(2, 2), &
+!     pyz1=faceOrder(1, 3), pyz2=faceOrder(2, 3), &
+!     px1=edgeOrder(1), px2=edgeOrder(2), px3=edgeOrder(3), px4=edgeOrder(4), &
+!     py1=edgeOrder(5), py2=edgeOrder(6), py3=edgeOrder(7), py4=edgeOrder(8), &
+!     pz1=edgeOrder(9), pz2=edgeOrder(10), pz3=edgeOrder(11), &
+!     pz4=edgeOrder(12), xij=xij, ans=ans, nrow=nrow, ncol=ncol)
 
 ! CASE (elemopt%Prism)
 
@@ -217,68 +335,6 @@ CASE DEFAULT
 
   RETURN
 END SELECT
-
-#ifdef DEBUG_VER
-
-!----------------------------------------------------------------------------
-!
-!----------------------------------------------------------------------------
-
-CONTAINS
-
-SUBROUTINE check_error
-
-  isok = PRESENT(cellOrder)
-  IF (.NOT. isok) THEN
-    ierr = -1
-    errmsg = "cellOrder is not present"
-    RETURN
-  END IF
-
-  IF (nsd .GT. 1) THEN
-
-    isok = PRESENT(faceOrder)
-    IF (.NOT. isok) THEN
-      ierr = -2
-      errmsg = "faceOrder is not present"
-      RETURN
-    END IF
-
-    isok = SIZE(faceOrder, 2) .EQ. tface
-    IF (.NOT. isok) THEN
-      ierr = -3
-      errmsg = "the size of faceOrder should be total face in elements"
-      RETURN
-    END IF
-
-  END IF
-
-  IF (nsd .EQ. 2) THEN
-
-    isok = PRESENT(edgeOrder)
-    IF (.NOT. isok) THEN
-      ierr = -4
-      errmsg = "edgeOrder is not present"
-      RETURN
-    END IF
-
-    isok = SIZE(edgeOrder) .EQ. tEdge
-    IF (.NOT. isok) THEN
-      ierr = -5
-      errmsg = "the size of faceOrder should be total face in elements"
-      RETURN
-    END IF
-
-  END IF
-
-END SUBROUTINE check_error
-
-SUBROUTINE printError
-  CALL ErrorMsg(msg=errmsg, routine='HierarchicalEvalAll_()', &
-                file=__FILE__, line=__LINE__, unitno=stderr)
-END SUBROUTINE printError
-
-#endif
 
 END PROCEDURE HierarchicalEvalAll_
 
@@ -298,8 +354,8 @@ ALLOCATE (ans(dim1, dim2, dim3))
 
 CALL HierarchicalGradientEvalAll_(order=order, elemType=elemType, xij=xij, &
             ans=ans, dim1=dim1, dim2=dim2, dim3=dim3, domainName=domainName, &
-                cellOrder=cellOrder, faceOrder=faceOrder, edgeOrder=edgeOrder)
-
+              cellOrder=cellOrder, faceOrder=faceOrder, edgeOrder=edgeOrder, &
+          cellOrient=cellOrient, faceOrient=faceOrient, edgeOrient=edgeOrient)
 END PROCEDURE HierarchicalGradientEvalAll
 
 !----------------------------------------------------------------------------
@@ -307,11 +363,9 @@ END PROCEDURE HierarchicalGradientEvalAll
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE HierarchicalGradientEvalAll_
-
 #ifdef DEBUG_VER
-INTEGER(I4B) :: ierr, tedge, tface, nsd
-LOGICAL(LGT) :: isok
-CHARACTER(:), ALLOCATABLE :: errmsg
+INTEGER(I4B) :: ierr
+CHARACTER(*), PARAMETER :: routine = "HierarchicalGradientEvalAll_()"
 #endif
 
 INTEGER(I4B) :: topo
@@ -323,86 +377,81 @@ SELECT CASE (topo)
 CASE (elemopt%Line)
 
 #ifdef DEBUG_VER
-  nsd = 1
-  CALL check_error
-  IF (ierr .LT. 0) THEN
-    CALL printError
-    RETURN
-  END IF
+  CALL check_error_2d(ierr=ierr, tface=3, routine=routine, &
+              cellOrder=cellOrder, faceOrder=faceOrder, edgeOrder=edgeOrder, &
+          cellOrient=cellOrient, faceOrient=faceOrient, edgeOrient=edgeOrient)
+  IF (ierr .LT. 0) RETURN
 #endif
 
   CALL HeirarchicalBasisGradient_Line_(order=cellOrder(1), xij=xij, ans=ans, &
-                          dim1=dim1, dim2=dim2, dim3=dim3, refLine=domainName)
+    dim1=dim1, dim2=dim2, dim3=dim3, refLine=domainName, orient=cellOrient(1))
 
 CASE (elemopt%Triangle)
 
 #ifdef DEBUG_VER
-  nsd = 2; tFace = 3
-  CALL check_error
-  IF (ierr .LT. 0) THEN
-    CALL printError
-    RETURN
-  END IF
+  CALL check_error_2d(ierr=ierr, tface=3, routine=routine, &
+              cellOrder=cellOrder, faceOrder=faceOrder, edgeOrder=edgeOrder, &
+          cellOrient=cellOrient, faceOrient=faceOrient, edgeOrient=edgeOrient)
+  IF (ierr .LT. 0) RETURN
 #endif
 
   CALL HeirarchicalBasisGradient_Triangle_(order=cellOrder(1), &
-     pe1=faceOrder(1, 1), pe2=faceOrder(1, 2), pe3=faceOrder(1, 3), xij=xij, &
-       refTriangle=domainName, ans=ans, tsize1=dim1, tsize2=dim2, tsize3=dim3)
+                                           pe1=faceOrder(1, 1), &
+                                           pe2=faceOrder(1, 2), &
+                                           pe3=faceOrder(1, 3), &
+                                           xij=xij, &
+                                           refTriangle=domainName, &
+                                           ans=ans, tsize1=dim1, &
+                                           tsize2=dim2, tsize3=dim3, &
+                                           edgeOrient1=faceOrient(1, 1), &
+                                           edgeOrient2=faceOrient(1, 2), &
+                                           edgeOrient3=faceOrient(1, 3), &
+                                           faceOrient=cellOrient)
 
 CASE (elemopt%Quadrangle)
 
 #ifdef DEBUG_VER
-  nsd = 2; tFace = 4
-  CALL check_error
-  IF (ierr .LT. 0) THEN
-    CALL printError
-    RETURN
-  END IF
+  CALL check_error_2d(ierr=ierr, tface=4, routine=routine, &
+              cellOrder=cellOrder, faceOrder=faceOrder, edgeOrder=edgeOrder, &
+          cellOrient=cellOrient, faceOrient=faceOrient, edgeOrient=edgeOrient)
+  IF (ierr .LT. 0) RETURN
 #endif
 
-CALL HeirarchicalBasisGradient_Quadrangle_(pb=cellOrder(1), qb=cellOrder(2), &
-              pe3=faceOrder(1, 1), pe4=faceOrder(1, 3), qe1=faceOrder(1, 4), &
-       qe2=faceOrder(1, 2), xij=xij, ans=ans, dim1=dim1, dim2=dim2, dim3=dim3)
+  CALL HeirarchicalBasisGradient_Quadrangle_(pb=cellOrder(1), &
+                                             qb=cellOrder(2), &
+                                             pe3=faceOrder(1, 1), &
+                                             qe2=faceOrder(1, 2), &
+                                             pe4=faceOrder(1, 3), &
+                                             qe1=faceOrder(1, 4), &
+                                             xij=xij, &
+                                             ans=ans, dim1=dim1, &
+                                             dim2=dim2, dim3=dim3, &
+                                             pe3Orient=faceOrient(1, 1), &
+                                             qe2Orient=faceOrient(1, 2), &
+                                             pe4Orient=faceOrient(1, 3), &
+                                             qe1Orient=faceOrient(1, 4), &
+                                             faceOrient=cellOrient)
 
-CASE (elemopt%Tetrahedron)
+! CASE (elemopt%Tetrahedron)
 
-#ifdef DEBUG_VER
-  nsd = 3; tFace = 4; tEdge = 6
-  CALL check_error
-  IF (ierr .LT. 0) THEN
-    CALL printError
-    RETURN
-  END IF
-#endif
+  ! CALL HeirarchicalBasisGradient_Tetrahedron_(order=cellOrder(1), &
+  !                      pe1=edgeOrder(1), pe2=edgeOrder(2), pe3=edgeOrder(3), &
+  !                      pe4=edgeOrder(4), pe5=edgeOrder(5), pe6=edgeOrder(6), &
+  !             ps1=faceOrder(1, 1), ps2=faceOrder(1, 2), ps3=faceOrder(1, 3), &
+  !                   ps4=faceOrder(1, 4), xij=xij, refTetrahedron=domainName, &
+  !                                    ans=ans, dim1=dim1, dim2=dim2, dim3=dim3)
 
-  CALL HeirarchicalBasisGradient_Tetrahedron_(order=cellOrder(1), &
-                       pe1=edgeOrder(1), pe2=edgeOrder(2), pe3=edgeOrder(3), &
-                       pe4=edgeOrder(4), pe5=edgeOrder(5), pe6=edgeOrder(6), &
-              ps1=faceOrder(1, 1), ps2=faceOrder(1, 2), ps3=faceOrder(1, 3), &
-                    ps4=faceOrder(1, 4), xij=xij, refTetrahedron=domainName, &
-                                     ans=ans, dim1=dim1, dim2=dim2, dim3=dim3)
+! CASE (elemopt%Hexahedron)
 
-CASE (elemopt%Hexahedron)
-
-#ifdef DEBUG_VER
-  !! FIXME: Currently we consiering  only three faces
-  nsd = 3; tFace = 3; tEdge = 12
-  CALL check_error
-  IF (ierr .LT. 0) THEN
-    CALL printError
-    RETURN
-  END IF
-#endif
-
-  CALL HeirarchicalBasisGradient_Hexahedron_( &
-    pb1=cellOrder(1), pb2=cellOrder(2), pb3=cellOrder(3), &
-    pxy1=faceOrder(1, 1), pxy2=faceOrder(2, 1), &
-    pxz1=faceOrder(1, 2), pxz2=faceOrder(2, 2), &
-    pyz1=faceOrder(1, 3), pyz2=faceOrder(2, 3), &
-    px1=edgeOrder(1), px2=edgeOrder(2), px3=edgeOrder(3), px4=edgeOrder(4), &
-    py1=edgeOrder(5), py2=edgeOrder(6), py3=edgeOrder(7), py4=edgeOrder(8), &
-    pz1=edgeOrder(9), pz2=edgeOrder(10), pz3=edgeOrder(11), &
-    pz4=edgeOrder(12), xij=xij, ans=ans, dim1=dim1, dim2=dim2, dim3=dim3)
+  ! CALL HeirarchicalBasisGradient_Hexahedron_( &
+  !   pb1=cellOrder(1), pb2=cellOrder(2), pb3=cellOrder(3), &
+  !   pxy1=faceOrder(1, 1), pxy2=faceOrder(2, 1), &
+  !   pxz1=faceOrder(1, 2), pxz2=faceOrder(2, 2), &
+  !   pyz1=faceOrder(1, 3), pyz2=faceOrder(2, 3), &
+  !   px1=edgeOrder(1), px2=edgeOrder(2), px3=edgeOrder(3), px4=edgeOrder(4), &
+  !   py1=edgeOrder(5), py2=edgeOrder(6), py3=edgeOrder(7), py4=edgeOrder(8), &
+  !   pz1=edgeOrder(9), pz2=edgeOrder(10), pz3=edgeOrder(11), &
+  !   pz4=edgeOrder(12), xij=xij, ans=ans, dim1=dim1, dim2=dim2, dim3=dim3)
 
 ! CASE (elemopt%Prism)
 
@@ -416,68 +465,123 @@ CASE DEFAULT
   RETURN
 END SELECT
 
-#ifdef DEBUG_VER
+END PROCEDURE HierarchicalGradientEvalAll_
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
-CONTAINS
+SUBROUTINE check_error_1d(ierr, routine, cellOrder, faceOrder, edgeOrder, &
+                          cellOrient, faceOrient, edgeOrient)
+  INTEGER(I4B), INTENT(OUT) :: ierr
+  CHARACTER(*), INTENT(IN) :: routine
+  INTEGER(I4B), OPTIONAL, INTENT(IN) :: cellOrder(:)
+  INTEGER(I4B), OPTIONAL, INTENT(IN) :: faceOrder(:, :)
+  INTEGER(I4B), OPTIONAL, INTENT(IN) :: edgeOrder(:)
+  INTEGER(I4B), OPTIONAL, INTENT(IN) :: cellOrient(:)
+  INTEGER(I4B), OPTIONAL, INTENT(IN) :: faceOrient(:, :)
+  INTEGER(I4B), OPTIONAL, INTENT(IN) :: edgeOrient(:)
 
-SUBROUTINE check_error
+  ! internal variables
+  LOGICAL(LGT) :: isok
+  CHARACTER(:), ALLOCATABLE :: errmsg
 
+  ierr = 0
   isok = PRESENT(cellOrder)
   IF (.NOT. isok) THEN
     ierr = -1
     errmsg = "cellOrder is not present"
+  END IF
+
+  isok = PRESENT(cellOrient)
+  IF (.NOT. isok) THEN
+    ierr = -2
+    errmsg = "cellOrient is not present"
+  END IF
+
+  IF (.NOT. isok) THEN
+    CALL ErrorMsg(msg=errmsg, routine=routine, file=__FILE__, &
+                  line=__LINE__, unitno=stderr)
     RETURN
   END IF
 
-  IF (nsd .GT. 1) THEN
+END SUBROUTINE check_error_1d
 
-    isok = PRESENT(faceOrder)
-    IF (.NOT. isok) THEN
-      ierr = -2
-      errmsg = "faceOrder is not present"
-      RETURN
-    END IF
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
 
-    isok = SIZE(faceOrder, 2) .EQ. tface
-    IF (.NOT. isok) THEN
-      ierr = -3
-      errmsg = "the size of faceOrder should be total face in elements"
-      RETURN
-    END IF
+SUBROUTINE check_error_2d(ierr, tface, routine, cellOrder, &
+                     faceOrder, edgeOrder, cellOrient, faceOrient, edgeOrient)
+  INTEGER(I4B), INTENT(OUT) :: ierr
+  INTEGER(I4B), INTENT(IN) :: tface
+  CHARACTER(*), INTENT(IN) :: routine
+  INTEGER(I4B), OPTIONAL, INTENT(IN) :: cellOrder(:)
+  INTEGER(I4B), OPTIONAL, INTENT(IN) :: faceOrder(:, :)
+  INTEGER(I4B), OPTIONAL, INTENT(IN) :: edgeOrder(:)
+  INTEGER(I4B), OPTIONAL, INTENT(IN) :: cellOrient(:)
+  INTEGER(I4B), OPTIONAL, INTENT(IN) :: faceOrient(:, :)
+  INTEGER(I4B), OPTIONAL, INTENT(IN) :: edgeOrient(:)
 
+  LOGICAL(LGT) :: isok
+  CHARACTER(:), ALLOCATABLE :: errmsg
+
+  ierr = 0
+
+  isok = PRESENT(cellOrder)
+  IF (.NOT. isok) THEN
+    ierr = ierr - 1
+    errmsg = "cellOrder is not present"
+    CALL print_error
+    RETURN
   END IF
 
-  IF (nsd .EQ. 2) THEN
-
-    isok = PRESENT(edgeOrder)
-    IF (.NOT. isok) THEN
-      ierr = -4
-      errmsg = "edgeOrder is not present"
-      RETURN
-    END IF
-
-    isok = SIZE(edgeOrder) .EQ. tEdge
-    IF (.NOT. isok) THEN
-      ierr = -5
-      errmsg = "the size of faceOrder should be total face in elements"
-      RETURN
-    END IF
-
+  isok = PRESENT(cellOrient)
+  IF (.NOT. isok) THEN
+    ierr = ierr - 1
+    errmsg = "cellOrient is not present"
+    CALL print_error
+    RETURN
   END IF
 
-END SUBROUTINE check_error
+  isok = PRESENT(faceOrder)
+  IF (.NOT. isok) THEN
+    ierr = ierr - 1
+    errmsg = "faceOrder is not present"
+    CALL print_error
+    RETURN
+  END IF
 
-SUBROUTINE printError
-  CALL ErrorMsg(msg=errmsg, routine='HierarchicalEvalAll_()', &
-                file=__FILE__, line=__LINE__, unitno=stderr)
-END SUBROUTINE printError
+  isok = SIZE(faceOrder, 2) .EQ. tface
+  IF (.NOT. isok) THEN
+    ierr = ierr - 1
+    errmsg = "the size of faceOrder should be total face in elements"
+    CALL print_error
+    RETURN
+  END IF
 
-#endif
+  isok = PRESENT(faceOrient)
+  IF (.NOT. isok) THEN
+    ierr = ierr - 1
+    errmsg = "faceOrient is not present"
+    CALL print_error
+    RETURN
+  END IF
 
-END PROCEDURE HierarchicalGradientEvalAll_
+  isok = SIZE(faceOrient, 2) .EQ. tface
+  IF (.NOT. isok) THEN
+    ierr = ierr - 1
+    errmsg = "number of cols in faceOrient should be total face in elements"
+    CALL print_error
+    RETURN
+  END IF
+
+CONTAINS
+  SUBROUTINE print_error
+    CALL ErrorMsg(msg=errmsg, routine=routine, file=__FILE__, &
+                  line=__LINE__, unitno=stderr)
+  END SUBROUTINE print_error
+
+END SUBROUTINE check_error_2d
 
 END SUBMODULE Methods
