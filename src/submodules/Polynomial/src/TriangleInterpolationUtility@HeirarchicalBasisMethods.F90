@@ -23,54 +23,110 @@ IMPLICIT NONE
 CONTAINS
 
 !----------------------------------------------------------------------------
-!                                            BarycentricVertexBasis_Triangle
+!                                          BarycentricVertexBasis_Triangle
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE BarycentricVertexBasis_Triangle
-INTEGER(I4B) :: a(2)
-a = SHAPE(lambda)
-ans(1:a(2), 1:a(1)) = TRANSPOSE(lambda)
-END PROCEDURE BarycentricVertexBasis_Triangle
+!> author: Vikas Sharma, Ph. D.
+! date: 28 Oct 2022
+! summary: Returns the vertex basis functions on reference Triangle
+
+PURE SUBROUTINE BarycentricVertexBasis_Triangle(lambda, ans, nrow, &
+                                                ncol)
+  REAL(DFP), INTENT(IN) :: lambda(:, :)
+  !! point of evaluation in terms of barycentrix coords
+  !! number of rows = 3 corresponding to three coordinates
+  !! number of columns = number of points
+  REAL(DFP), INTENT(INOUT) :: ans(:, :)
+  !! REAL(DFP) :: ans(SIZE(lambda, 2), 3)
+  !! ans(:,v1) basis function of vertex v1 at all points
+  INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+  !! nrow = size(lambda, 2)
+  !! ncol = 3
+
+  !! internal variables
+  INTEGER(I4B) :: ii, jj
+
+  nrow = SIZE(lambda, 2)
+  ncol = SIZE(lambda, 1)
+
+  DO CONCURRENT(ii=1:nrow, jj=1:ncol)
+    ans(ii, jj) = lambda(jj, ii)
+  END DO
+
+END SUBROUTINE BarycentricVertexBasis_Triangle
 
 !----------------------------------------------------------------------------
 !                                                      VertexBasis_Triangle
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE VertexBasis_Triangle
+INTEGER(I4B) :: nrow, ncol
 REAL(DFP) :: lambda(3, SIZE(xij, 2))
 CALL BarycentricCoordTriangle_(ans=lambda, refTriangle=refTriangle, xin=xij)
-CALL BarycentricVertexBasis_Triangle(lambda=lambda, ans=ans)
+CALL BarycentricVertexBasis_Triangle(lambda=lambda, ans=ans, nrow=nrow, &
+                                     ncol=ncol)
 END PROCEDURE VertexBasis_Triangle
 
 !----------------------------------------------------------------------------
-!                                             BarycentricEdgeBasis_Triangle
+!                                              BarycentricEdgeBasis_Triangle
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE BarycentricEdgeBasis_Triangle
-INTEGER(I4B), PARAMETER :: orient = 1
-REAL(DFP) :: d_lambda(3 * SIZE(lambda, 2))
-REAL(DFP) :: phi(1:3 * SIZE(lambda, 2), 0:MAX(pe1 - 2, pe2 - 2, pe3 - 2))
-INTEGER(I4B) :: maxP, tPoints, ii, jj
+!> author: Vikas Sharma, Ph. D.
+! date: 28 Oct 2022
+! summary: Eval basis on edge of triangle
+!
+!# Introduction
+!
+! Evaluate basis functions on edges of triangle
+! pe1, pe2, pe3 should be greater than or equal to 2
 
-tPoints = SIZE(lambda, 2)
-maxP = MAX(pe1 - 2, pe2 - 2, pe3 - 2)
+PURE SUBROUTINE BarycentricEdgeBasis_Triangle(pe1, pe2, pe3, lambda, ans, &
+                                              nrow, ncol)
+  INTEGER(I4B), INTENT(IN) :: pe1
+  !! order on  edge (e1)
+  INTEGER(I4B), INTENT(IN) :: pe2
+  !! order on edge (e2)
+  INTEGER(I4B), INTENT(IN) :: pe3
+  !! order on edge (e3)
+  REAL(DFP), INTENT(IN) :: lambda(:, :)
+  !! point of evaluation in terms of barycentric coordinates
+  !! Number of rows in lambda is equal to three corresponding to
+  !! three coordinates
+  REAL(DFP), INTENT(INOUT) :: ans(:, :)
+  !! REAL(DFP) :: ans(SIZE(lambda, 2), pe1 + pe2 + pe3 - 3)
+  INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+  !! nrow=SIZE(lambda, 2)
+  !! ncol=pe1 + pe2 + pe3 - 3
 
-DO CONCURRENT(ii=1:tpoints)
-  ! edge 1 -> 2
-  d_lambda(ii) = lambda(2, ii) - lambda(1, ii)
-  ! edge 2 -> 3
-  d_lambda(ii + tPoints) = lambda(3, ii) - lambda(2, ii)
-  ! edge 3 -> 1
-  d_lambda(ii + 2 * tPoints) = lambda(1, ii) - lambda(3, ii)
-END DO
+  INTEGER(I4B), PARAMETER :: orient = 1
+  REAL(DFP) :: d_lambda(3 * SIZE(lambda, 2))
+  ! REAL(DFP) :: phi(1:3 * SIZE(lambda, 2), 0:MAX(pe1 - 2, pe2 - 2, pe3 - 2))
+  REAL(DFP), ALLOCATABLE :: phi(:, :)
 
-CALL LobattoKernelEvalAll_(n=maxP, x=d_lambda, ans=phi, nrow=ii, ncol=jj)
+  INTEGER(I4B) :: maxP, ii
 
-CALL BarycentricEdgeBasis_Triangle2(pe1=pe1, pe2=pe2, pe3=pe3, &
-      lambda=lambda, phi=phi, ans=ans, nrow=ii, ncol=jj, edgeOrient1=orient, &
-                                    edgeOrient2=orient, edgeOrient3=orient)
+  nrow = SIZE(lambda, 2)
+  ! ncol = pe1 + pe2 + pe3 - 3
+  maxP = MAX(pe1 - 2, pe2 - 2, pe3 - 2)
 
-END PROCEDURE BarycentricEdgeBasis_Triangle
+  ALLOCATE (phi(1:3 * nrow, 0:maxP))
+
+  DO CONCURRENT(ii=1:nrow)
+    ! edge 1 -> 2
+    d_lambda(ii) = lambda(2, ii) - lambda(1, ii)
+    ! edge 2 -> 3
+    d_lambda(ii + nrow) = lambda(3, ii) - lambda(2, ii)
+    ! edge 3 -> 1
+    d_lambda(ii + 2 * nrow) = lambda(1, ii) - lambda(3, ii)
+  END DO
+
+ CALL LobattoKernelEvalAll_(n=maxP, x=d_lambda, ans=phi, nrow=nrow, ncol=ncol)
+
+  CALL BarycentricEdgeBasis_Triangle2(pe1=pe1, pe2=pe2, pe3=pe3, &
+                      lambda=lambda, phi=phi, ans=ans, nrow=nrow, ncol=ncol, &
+                   edgeOrient1=orient, edgeOrient2=orient, edgeOrient3=orient)
+
+END SUBROUTINE BarycentricEdgeBasis_Triangle
 
 !----------------------------------------------------------------------------
 !
@@ -95,9 +151,11 @@ MODULE PURE SUBROUTINE BarycentricEdgeBasis_Triangle2(pe1, pe2, pe3, &
   !! size(lambda,2) = number of points of evaluation
   REAL(DFP), INTENT(IN) :: phi(1:, 0:)
   !! lobatto kernel values
-  !! size(phi1, 1) = 3*number of points (lambda2-lambda1),
-  !! (lambda3-lambda1), (lambda3-lambda2)
+  !! size(phi1, 1) = 3*number of points
   !! size(phi1, 2) = max(pe1-2, pe2-2, pe3-2)+1
+  !! (lambda2-lambda1),
+  !! (lambda3-lambda2),
+  !! (lambda1-lambda3)
   REAL(DFP), INTENT(INOUT) :: ans(:, :)
   !! ans(SIZE(lambda, 2), pe1 + pe2 + pe3 - 3)
   INTEGER(I4B), INTENT(OUT) :: nrow, ncol
@@ -106,20 +164,23 @@ MODULE PURE SUBROUTINE BarycentricEdgeBasis_Triangle2(pe1, pe2, pe3, &
   INTEGER(I4B), INTENT(IN) :: edgeOrient1, edgeOrient2, edgeOrient3
 
   !! Internal variables
-
   INTEGER(I4B) :: a, ii, jj
-  REAL(DFP) :: temp, areal
+  REAL(DFP) :: temp, areal, o1, o2, o3
 
   nrow = SIZE(lambda, 2)
   ! tPoints = SIZE(lambda, 2)
   ncol = pe1 + pe2 + pe3 - 3
+
+  o1 = REAL(edgeOrient1, kind=DFP)
+  o2 = REAL(edgeOrient2, kind=DFP)
+  o3 = REAL(edgeOrient3, kind=DFP)
 
   ! ans = 0.0_DFP
   a = 0
 
   ! edge(1) = 1 -> 2
   DO ii = 1, pe1 - 1
-    areal = REAL(edgeOrient1**(ii + 1), kind=DFP)
+    areal = o1**(ii + 1)
     ! ans(1:nrow, a + ii) = areal * temp * phi(1:nrow, ii - 1)
 
     DO jj = 1, nrow
@@ -132,7 +193,7 @@ MODULE PURE SUBROUTINE BarycentricEdgeBasis_Triangle2(pe1, pe2, pe3, &
   a = pe1 - 1
 
   DO ii = 1, pe2 - 1
-    areal = REAL(edgeOrient2**(ii + 1), kind=DFP)
+    areal = o2**(ii + 1)
 
     DO jj = 1, nrow
       temp = lambda(2, jj) * lambda(3, jj) * areal
@@ -145,7 +206,7 @@ MODULE PURE SUBROUTINE BarycentricEdgeBasis_Triangle2(pe1, pe2, pe3, &
   a = pe1 - 1 + pe2 - 1
 
   DO ii = 1, pe3 - 1
-    areal = REAL(edgeOrient3**(ii + 1), kind=DFP)
+    areal = o3**(ii + 1)
 
     DO jj = 1, nrow
       temp = areal * lambda(3, jj) * lambda(1, jj)
@@ -160,39 +221,59 @@ END SUBROUTINE BarycentricEdgeBasis_Triangle2
 
 MODULE PROCEDURE EdgeBasis_Triangle
 REAL(DFP) :: lambda(3, SIZE(xij, 2))
+INTEGER(I4B) :: nrow, ncol
+
 CALL BarycentricCoordTriangle_(ans=lambda, refTriangle=refTriangle, xin=xij)
 CALL BarycentricEdgeBasis_Triangle(lambda=lambda, ans=ans, pe1=pe1, &
-                                   pe2=pe2, pe3=pe3)
+                                   pe2=pe2, pe3=pe3, nrow=nrow, ncol=ncol)
 END PROCEDURE EdgeBasis_Triangle
 
 !----------------------------------------------------------------------------
-!                                             BarycentricEdgeBasis_Triangle
+!                                          BarycentricCellBasis_Triangle
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE BarycentricCellBasis_Triangle
-REAL(DFP) :: d_lambda(3 * SIZE(lambda, 2))
-REAL(DFP) :: phi(1:3 * SIZE(lambda, 2), 0:order - 2)
-INTEGER(I4B) :: maxP, tPoints, ii, nrow, ncol
-INTEGER(I4B), PARAMETER :: faceOrient(2) = [0, 1]
+!> author: Vikas Sharma, Ph. D.
+! date: 28 Oct 2022
+! summary: Returns the Cell basis functions on reference Triangle
 
-tPoints = SIZE(lambda, 2)
-maxP = order - 2
+PURE SUBROUTINE BarycentricCellBasis_Triangle(order, lambda, ans, nrow, ncol)
+  INTEGER(I4B), INTENT(IN) :: order
+    !! order in this cell, it should be greater than 2
+  REAL(DFP), INTENT(IN) :: lambda(:, :)
+    !! point of evaluation in terms of barycentrix coords
+    !! number of rows = 3 corresponding to three coordinates
+    !! number of columns = number of points
+  REAL(DFP), INTENT(INOUT) :: ans(:, :)
+  ! ans(SIZE(lambda, 2), INT((order - 1) * (order - 2) / 2))
+  INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+  !! nrow =  SIZE(lambda, 2)
+  !! ncol = INT((order - 1) * (order - 2) / 2)
 
-DO CONCURRENT(ii=1:tpoints)
-  ! Cell 1 -> 2
-  d_lambda(ii) = lambda(2, ii) - lambda(1, ii)
-  ! Cell 2 -> 3
-  d_lambda(ii + tPoints) = lambda(3, ii) - lambda(2, ii)
-  ! Cell 3 -> 1
-  d_lambda(ii + 2 * tPoints) = lambda(1, ii) - lambda(3, ii)
-END DO
+  !! internal variables
+  REAL(DFP) :: d_lambda(3 * SIZE(lambda, 2))
+  REAL(DFP) :: phi(1:3 * SIZE(lambda, 2), 0:order - 2)
+  INTEGER(I4B) :: maxP, ii
+  INTEGER(I4B), PARAMETER :: faceOrient(2) = [0, 1]
 
-CALL LobattoKernelEvalAll_(n=maxP, x=d_lambda, ans=ans, nrow=nrow, ncol=ncol)
+  nrow = SIZE(lambda, 2)
+  maxP = order - 2
 
-CALL BarycentricCellBasis_Triangle2(order=order, lambda=lambda, phi=phi, &
+  DO CONCURRENT(ii=1:nrow)
+    ! Cell 1 -> 2
+    d_lambda(ii) = lambda(2, ii) - lambda(1, ii)
+    ! Cell 2 -> 3
+    d_lambda(ii + nrow) = lambda(3, ii) - lambda(2, ii)
+    ! Cell 3 -> 1
+    d_lambda(ii + 2 * nrow) = lambda(1, ii) - lambda(3, ii)
+  END DO
+
+  CALL LobattoKernelEvalAll_(n=maxP, x=d_lambda, ans=ans, nrow=nrow, &
+                             ncol=ncol)
+
+  CALL BarycentricCellBasis_Triangle2(order=order, lambda=lambda, phi=phi, &
                          ans=ans, nrow=nrow, ncol=ncol, faceOrient=faceOrient)
 
-END PROCEDURE BarycentricCellBasis_Triangle
+END SUBROUTINE BarycentricCellBasis_Triangle
 
 !----------------------------------------------------------------------------
 !
@@ -283,7 +364,7 @@ PURE SUBROUTINE BarycentricCellBasis_Triangle2(order, lambda, phi, ans, &
   INTEGER(I4B), INTENT(IN) :: faceOrient(2)
 
   INTEGER(I4B) :: k1, k2, cnt, id, indx(2, 2), aint, bint, ii
-  REAL(DFP) :: temp, areal, breal
+  REAL(DFP) :: temp, areal, breal, o1
 
   nrow = SIZE(lambda, 2)
   ncol = INT((order - 1) * (order - 2) / 2)
@@ -296,11 +377,13 @@ PURE SUBROUTINE BarycentricCellBasis_Triangle2(order, lambda, phi, ans, &
   aint = indx(1, 1) - 1
   bint = indx(1, 2) - 1
 
+  o1 = REAL(faceOrient(2), kind=DFP)
+
   DO k1 = 1, order - 2
-    areal = REAL(faceOrient(2)**(k1 + 1), kind=DFP)
+    areal = o1**(k1 + 1)
 
     DO k2 = 1, order - 1 - k1
-      breal = REAL(faceOrient(2)**(k2 + 1), kind=DFP)
+      breal = o1**(k2 + 1)
       breal = breal * areal
 
       cnt = cnt + 1
@@ -323,86 +406,97 @@ END SUBROUTINE BarycentricCellBasis_Triangle2
 
 MODULE PROCEDURE CellBasis_Triangle
 REAL(DFP) :: lambda(3, SIZE(xij, 2))
+INTEGER(I4B) :: nrow, ncol
 CALL BarycentricCoordTriangle_(ans=lambda, refTriangle=refTriangle, xin=xij)
-CALL BarycentricCellBasis_Triangle(lambda=lambda, ans=ans, order=order)
+CALL BarycentricCellBasis_Triangle(lambda=lambda, ans=ans, order=order, &
+                                   nrow=nrow, ncol=ncol)
 END PROCEDURE CellBasis_Triangle
-
-!----------------------------------------------------------------------------
-!                                     BarycentricHeirarchicalBasis_Triangle
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE BarycentricHeirarchicalBasis_Triangle1
-INTEGER(I4B), PARAMETER :: orient = 1, faceOrient(2) = [1, 1]
-
-CALL BarycentricHeirarchicalBasis_Triangle3(order=order, pe1=pe1, pe2=pe2, &
-        pe3=pe3, lambda=lambda, refTriangle=refTriangle, edgeOrient1=orient, &
-              edgeOrient2=orient, edgeOrient3=orient, faceOrient=faceOrient, &
-                                            ans=ans, nrow=nrow, ncol=ncol)
-END PROCEDURE BarycentricHeirarchicalBasis_Triangle1
-
-!----------------------------------------------------------------------------
-!                                     BarycentricHeirarchicalBasis_Triangle
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE BarycentricHeirarchicalBasis_Triangle2
-CALL BarycentricHeirarchicalBasis_Triangle1(order=order, pe1=order, &
-                                        pe2=order, pe3=order, lambda=lambda, &
-                       refTriangle=refTriangle, ans=ans, nrow=nrow, ncol=ncol)
-END PROCEDURE BarycentricHeirarchicalBasis_Triangle2
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE BarycentricHeirarchicalBasis_Triangle3
-INTEGER(I4B) :: a, b, ii, maxP, indx(2)
-REAL(DFP) :: phi(1:3 * SIZE(lambda, 2), &
-                 0:MAX(pe1 - 2, pe2 - 2, pe3 - 2, order - 2))
-REAL(DFP) :: d_lambda(3 * SIZE(lambda, 2))
-LOGICAL(LGT) :: isok
+MODULE PURE SUBROUTINE BarycentricHeirarchicalBasis_Triangle(order, &
+               pe1, pe2, pe3, lambda, refTriangle, edgeOrient1, edgeOrient2, &
+                                     edgeOrient3, faceOrient, ans, nrow, ncol)
+  INTEGER(I4B), INTENT(IN) :: order
+  !! order in the cell of triangle, it should be greater than 2
+  INTEGER(I4B), INTENT(IN) :: pe1
+  !! order of interpolation on edge e1
+  INTEGER(I4B), INTENT(IN) :: pe2
+  !! order of interpolation on edge e2
+  INTEGER(I4B), INTENT(IN) :: pe3
+  !! order of interpolation on edge e3
+  REAL(DFP), INTENT(IN) :: lambda(:, :)
+  !! Barycenteric coordinates
+  !! number of rows = 3
+  !! number of cols = number of points
+  CHARACTER(*), INTENT(IN) :: refTriangle
+  !! reference triangle, "BIUNIT", "UNIT"
+  INTEGER(I4B), INTENT(IN) :: edgeOrient1, edgeOrient2, edgeOrient3
+  !! edge orientation 1 or -1
+  INTEGER(I4B), INTENT(IN) :: faceOrient(:)
+  !! face orientation
+  REAL(DFP), INTENT(INOUT) :: ans(:, :)
+  !!
+  INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+  !! nrow = SIZE(lambda, 2)
+  !! ncol = pe1 + pe2 + pe3 + INT((order - 1) * (order - 2) / 2)
 
-nrow = SIZE(lambda, 2)
-ncol = pe1 + pe2 + pe3 + INT((order - 1) * (order - 2) / 2)
+  !! Internal variables
+  INTEGER(I4B) :: ii, maxP, indx(3)
+  REAL(DFP) :: d_lambda(3 * SIZE(lambda, 2))
+  REAL(DFP), ALLOCATABLE :: phi(:, :)
+  LOGICAL(LGT) :: isok
 
-maxP = MAX(pe1 - 2, pe2 - 2, pe3 - 2, order - 2)
+  nrow = SIZE(lambda, 2)
+  ! ncol = pe1 + pe2 + pe3 + INT((order - 1) * (order - 2) / 2)
+  ncol = 0
 
-DO CONCURRENT(ii=1:nrow)
-  ! edge 1 -> 2
-  d_lambda(ii) = lambda(2, ii) - lambda(1, ii)
-  ! edge 2 -> 3
-  d_lambda(ii + nrow) = lambda(3, ii) - lambda(2, ii)
-  ! edge 3 -> 1
-  d_lambda(ii + 2 * nrow) = lambda(1, ii) - lambda(3, ii)
-END DO
+  maxP = MAX(pe1 - 2, pe2 - 2, pe3 - 2, order - 2)
 
-CALL LobattoKernelEvalAll_(n=maxP, x=d_lambda, ans=phi, nrow=a, ncol=b)
+  ALLOCATE (phi(1:3 * nrow, 0:maxP))
 
-! Vertex basis function
-!FIXME: Add nrow and ncol info in BarycentricVertexBasis_Triangle
-CALL BarycentricVertexBasis_Triangle(lambda=lambda, ans=ans(:, 1:3))
+  DO CONCURRENT(ii=1:nrow)
+    ! edge 1 -> 2
+    d_lambda(ii) = lambda(2, ii) - lambda(1, ii)
+    ! edge 2 -> 3
+    d_lambda(ii + nrow) = lambda(3, ii) - lambda(2, ii)
+    ! edge 3 -> 1
+    d_lambda(ii + 2 * nrow) = lambda(1, ii) - lambda(3, ii)
+  END DO
 
-! Edge basis function
-b = 3
+  CALL LobattoKernelEvalAll_(n=maxP, x=d_lambda, ans=phi, nrow=indx(1), &
+                             ncol=indx(2))
 
-isok = ANY([pe1, pe2, pe3] .GE. 2_I4B)
-IF (isok) THEN
-  a = b + 1
-  b = a - 1 + pe1 + pe2 + pe3 - 3 !!4+qe1 + qe2 - 2
-  CALL BarycentricEdgeBasis_Triangle2(pe1=pe1, pe2=pe2, pe3=pe3, &
-                       lambda=lambda, phi=phi, ans=ans(:, a:), nrow=indx(1), &
+  !! Vertex basis function
+  CALL BarycentricVertexBasis_Triangle(lambda=lambda, ans=ans(:, 1:3), &
+                                       nrow=indx(1), ncol=indx(2))
+
+  !! Edge basis function
+  ncol = ncol + indx(2)
+
+  isok = ANY([pe1, pe2, pe3] .GE. 2_I4B)
+  IF (isok) THEN
+    CALL BarycentricEdgeBasis_Triangle2(pe1=pe1, pe2=pe2, pe3=pe3, &
+                lambda=lambda, phi=phi, ans=ans(:, ncol + 1:), nrow=indx(1), &
              ncol=indx(2), edgeOrient1=edgeOrient1, edgeOrient2=edgeOrient2, &
-                                      edgeOrient3=edgeOrient3)
-END IF
+                                        edgeOrient3=edgeOrient3)
 
-! Cell basis function
-IF (order .GT. 2_I4B) THEN
-  a = b + 1
-  b = a - 1 + INT((order - 1) * (order - 2) / 2)
-  CALL BarycentricCellBasis_Triangle2(order=order, lambda=lambda, phi=phi, &
-      ans=ans(1:nrow, a:b), nrow=indx(1), ncol=indx(2), faceOrient=faceOrient)
-END IF
+    ncol = ncol + indx(2)
+  END IF
 
-END PROCEDURE BarycentricHeirarchicalBasis_Triangle3
+  !! Cell basis function
+  isok = order .GT. 2_I4B
+  IF (isok) THEN
+    CALL BarycentricCellBasis_Triangle2(order=order, lambda=lambda, phi=phi, &
+     ans=ans(:, ncol + 1:), nrow=indx(1), ncol=indx(2), faceOrient=faceOrient)
+    ncol = ncol + indx(2)
+  END IF
+
+  DEALLOCATE (phi)
+
+END SUBROUTINE BarycentricHeirarchicalBasis_Triangle
 
 !----------------------------------------------------------------------------
 !                                                 HeirarchicalBasis_Triangle
@@ -419,11 +513,11 @@ END PROCEDURE HeirarchicalBasis_Triangle1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE HeirarchicalBasis_Triangle1_
-REAL(DFP) :: lambda(3, SIZE(xij, 2))
-CALL BarycentricCoordTriangle_(ans=lambda, refTriangle=refTriangle, xin=xij)
-CALL BarycentricHeirarchicalBasis_Triangle(order=order, pe1=pe1, pe2=pe2, &
-        pe3=pe3, lambda=lambda, refTriangle=refTriangle, ans=ans, nrow=nrow, &
-                                           ncol=ncol)
+INTEGER(I4B), PARAMETER :: orient = 1, faceOrient(2) = [0, 1]
+CALL HeirarchicalBasis_Triangle3_(order=order, pe1=pe1, pe2=pe2, pe3=pe3, &
+                       xij=xij, refTriangle=refTriangle, edgeOrient1=orient, &
+              edgeOrient2=orient, edgeOrient3=orient, faceOrient=faceOrient, &
+                                  ans=ans, nrow=nrow, ncol=ncol)
 END PROCEDURE HeirarchicalBasis_Triangle1_
 
 !----------------------------------------------------------------------------
@@ -441,58 +535,175 @@ END PROCEDURE HeirarchicalBasis_Triangle2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE HeirarchicalBasis_Triangle2_
-REAL(DFP) :: lambda(3, SIZE(xij, 2))
-CALL BarycentricCoordTriangle_(ans=lambda, refTriangle=refTriangle, xin=xij)
-CALL BarycentricHeirarchicalBasis_Triangle(order=order, lambda=lambda, &
-                       refTriangle=refTriangle, ans=ans, nrow=nrow, ncol=ncol)
+INTEGER(I4B), PARAMETER :: orient = 1, faceOrient(2) = [0, 1]
+CALL HeirarchicalBasis_Triangle3_(order=order, pe1=order, pe2=order, pe3=order, &
+                       xij=xij, refTriangle=refTriangle, edgeOrient1=orient, &
+              edgeOrient2=orient, edgeOrient3=orient, faceOrient=faceOrient, &
+                                  ans=ans, nrow=nrow, ncol=ncol)
 END PROCEDURE HeirarchicalBasis_Triangle2_
 
 !----------------------------------------------------------------------------
-!                                   BarycentricVertexBasisGradient_Triangle
+!                                                 HeirarchicalBasis_Triangle
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE BarycentricVertexBasisGradient_Triangle
-INTEGER(I4B) :: ii, tp
-
-tp = SIZE(lambda, 2)
-ans(1:tp, 1:3, 1:3) = 0.0_DFP
-DO CONCURRENT(ii=1:3)
-  ans(1:tp, ii, ii) = 1.0_DFP
-END DO
-
-END PROCEDURE BarycentricVertexBasisGradient_Triangle
+MODULE PROCEDURE HeirarchicalBasis_Triangle3_
+REAL(DFP) :: lambda(3, SIZE(xij, 2))
+CALL BarycentricCoordTriangle_(ans=lambda, refTriangle=refTriangle, xin=xij)
+CALL BarycentricHeirarchicalBasis_Triangle(order=order, pe1=pe1, pe2=pe2, &
+   pe3=pe3, lambda=lambda, refTriangle=refTriangle, edgeOrient1=edgeOrient1, &
+    edgeOrient2=edgeOrient2, edgeOrient3=edgeOrient3, faceOrient=faceOrient, &
+                                           ans=ans, nrow=nrow, ncol=ncol)
+END PROCEDURE HeirarchicalBasis_Triangle3_
 
 !----------------------------------------------------------------------------
-!                                   BarycentricEdgeBasisGradient_Triangle2
+!
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE BarycentricEdgeBasisGradient_Triangle
-REAL(DFP) :: d_lambda(3 * SIZE(lambda, 2))
-REAL(DFP) :: phi(1:3 * SIZE(lambda, 2), 0:MAX(pe1 - 2, pe2 - 2, pe3 - 2))
-REAL(DFP) :: gradientPhi(1:3 * SIZE(lambda, 2), 0:MAX(pe1 - 2, pe2 - 2, pe3 - 2))
-INTEGER(I4B) :: maxP, tPoints, ii, a, b
+!> author: Vikas Sharma, Ph. D.
+! date:   2024-04-21
+! summary: Evaluate the gradient of the edge basis on triangle
+! using barycentric coordinate
 
-tPoints = SIZE(lambda, 2)
-maxP = MAX(pe1 - 2, pe2 - 2, pe3 - 2)
+PURE SUBROUTINE BarycentricVertexBasisGradient_Triangle(lambda, ans, &
+                                                        dim1, dim2, dim3)
+  REAL(DFP), INTENT(IN) :: lambda(:, :)
+  !! point of evaluation in terms of barycentric coordinates
+  !! size(lambda,1) = 3
+  !! size(lambda,2) = number of points of evaluation
+  REAL(DFP), INTENT(INOUT) :: ans(:, :, :)
+  !! ans(SIZE(lambda, 2), 3, 3)
+  INTEGER(I4B), INTENT(OUT) :: dim1, dim2, dim3
+  !! dim1 = SIZE(lambda, 2)
+  !! dim2 = 3
+  !! dim3 = 3
 
-DO CONCURRENT(ii=1:tpoints)
-  ! edge 1 -> 2
-  d_lambda(ii) = lambda(2, ii) - lambda(1, ii)
-  ! edge 2 -> 3
-  d_lambda(ii + tPoints) = lambda(3, ii) - lambda(2, ii)
-  ! edge 3 -> 1
-  d_lambda(ii + 2 * tPoints) = lambda(1, ii) - lambda(3, ii)
-END DO
+  INTEGER(I4B) :: ii
 
-CALL LobattoKernelEvalAll_(n=maxP, x=d_lambda, ans=phi, nrow=a, ncol=b)
+  dim1 = SIZE(lambda, 2)
+  dim2 = 3
+  dim3 = 3
 
-CALL LobattoKernelGradientEvalAll_(n=maxP, x=d_lambda, ans=gradientPhi, &
-                                   nrow=a, ncol=b)
+  ans(1:dim1, 1:dim2, 1:dim3) = 0.0_DFP
+  DO CONCURRENT(ii=1:dim2)
+    ans(1:dim1, ii, ii) = 1.0_DFP
+  END DO
+END SUBROUTINE BarycentricVertexBasisGradient_Triangle
 
-CALL BarycentricEdgeBasisGradient_Triangle2(pe1=pe1, pe2=pe2, pe3=pe3, &
-                     lambda=lambda, phi=phi, gradientPhi=gradientPhi, ans=ans)
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
 
-END PROCEDURE BarycentricEdgeBasisGradient_Triangle
+!> author: Shion Shimizu
+! date:   2024-04-21
+! summary: Evaluate the gradient of the edge basis on triangle
+! using barycentric coordinate
+
+! PURE SUBROUTINE BarycentricEdgeBasisGradient_Triangle(pe1, pe2, pe3, lambda, &
+!                                                       ans, dim1, dim2, dim3)
+!   INTEGER(I4B), INTENT(IN) :: pe1
+!   !! order on  edge (e1)
+!   INTEGER(I4B), INTENT(IN) :: pe2
+!   !! order on edge (e2)
+!   INTEGER(I4B), INTENT(IN) :: pe3
+!   !! order on edge (e3)
+!   REAL(DFP), INTENT(IN) :: lambda(:, :)
+!   !! point of evaluation in terms of barycentric coordinates
+!   !! size(lambda,1) = 3
+!   !! size(lambda,2) = number of points of evaluation
+!   REAL(DFP), INTENT(INOUT) :: ans(:, :, :)
+!   !! REAL(DFP) :: ans(SIZE(lambda, 2), pe1 + pe2 + pe3 - 3, 3)
+!   INTEGER(I4B), INTENT(OUT) :: dim1, dim2, dim3
+!   !! dim1=SIZE(lambda, 2)
+!   !! dim2=pe1 + pe2 + pe3 - 3
+!   !! dim3=3
+!
+!   REAL(DFP) :: d_lambda(3 * SIZE(lambda, 2))
+!   REAL(DFP), ALLOCATABLE :: gradientPhi(:, :), phi(:, :)
+!   INTEGER(I4B) :: maxP, ii
+!
+!   dim1 = SIZE(lambda, 2)
+!   ! dim2 = pe1 + pe2 + pe3 - 3
+!   ! dim3 = 3
+!
+!   maxP = MAX(pe1 - 2, pe2 - 2, pe3 - 2)
+!
+!   ALLOCATE (gradientPhi(1:3 * dim1, 0:maxP), phi(1:3 * dim1, 0:maxP))
+!
+!   DO CONCURRENT(ii=1:dim1)
+!     ! edge 1 -> 2
+!     d_lambda(ii) = lambda(2, ii) - lambda(1, ii)
+!     ! edge 2 -> 3
+!     d_lambda(ii + dim1) = lambda(3, ii) - lambda(2, ii)
+!     ! edge 3 -> 1
+!     d_lambda(ii + 2 * dim1) = lambda(1, ii) - lambda(3, ii)
+!   END DO
+!
+!  CALL LobattoKernelEvalAll_(n=maxP, x=d_lambda, ans=phi, nrow=dim1, ncol=dim2)
+!
+!   CALL LobattoKernelGradientEvalAll_(n=maxP, x=d_lambda, ans=gradientPhi, &
+!                                      nrow=dim1, ncol=dim2)
+!
+!   CALL BarycentricEdgeBasisGradient_Triangle2(pe1=pe1, pe2=pe2, pe3=pe3, &
+!                    lambda=lambda, phi=phi, gradientPhi=gradientPhi, ans=ans, &
+!                                               dim1=dim1, dim2=dim2, dim3=dim3)
+!
+!   DEALLOCATE (gradientPhi, phi)
+!
+! END SUBROUTINE BarycentricEdgeBasisGradient_Triangle
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+!> author: Shion Shimizu
+! date:   2024-04-21
+! summary: Evaluate the gradient of the edge basis on triangle
+! using barycentric coordinate
+!
+! PURE SUBROUTINE BarycentricCellBasisGradient_Triangle(order, lambda, ans, &
+!                                                       dim1, dim2, dim3)
+!   INTEGER(I4B), INTENT(IN) :: order
+!     !! order on  Cell (e1)
+!   REAL(DFP), INTENT(IN) :: lambda(:, :)
+!     !! point of evaluation in terms of barycentric coordinates
+!     !! size(lambda,1) = 3
+!     !! size(lambda,2) = number of points of evaluation
+!   REAL(DFP), INTENT(INOUT) :: ans(:, :, :)
+!   ! REAL(DFP) :: ans(SIZE(lambda, 2), 3*order - 3, 3)
+!   INTEGER(I4B), INTENT(OUT) :: dim1, dim2, dim3
+!   !! dim1=SIZE(lambda, 2)
+!   !! dim2=3*order - 3
+!   !! dim3=3
+!
+!   !! internal variables
+!   INTEGER(I4B) :: a, b, ii, maxP, tp
+!   REAL(DFP), ALLOCATABLE :: phi(:, :), gradientPhi(:, :), d_lambda(:)
+!
+!   dim1 = SIZE(lambda, 2)
+!   maxP = order - 2
+!
+!   a = 3 * dim1; b = maxP
+!   ALLOCATE (phi(a, b), gradientPhi(a, b), d_lambda(a))
+!
+!   DO CONCURRENT(ii=1:dim1)
+!     ! edge 1 -> 2
+!     d_lambda(ii) = lambda(2, ii) - lambda(1, ii)
+!     ! edge 2 -> 3
+!     d_lambda(ii + dim1) = lambda(3, ii) - lambda(2, ii)
+!     ! edge 3 -> 1
+!     d_lambda(ii + 2 * dim1) = lambda(1, ii) - lambda(3, ii)
+!   END DO
+!
+!  CALL LobattoKernelEvalAll_(n=maxP, x=d_lambda, ans=phi, nrow=dim1, ncol=dim2)
+!
+!   CALL LobattoKernelGradientEvalAll_(n=maxP, x=d_lambda, ans=gradientPhi, &
+!                                      nrow=dim1, ncol=dim2)
+!
+!   CALL BarycentricCellBasisGradient_Triangle2(order=order, lambda=lambda, &
+!             phi=phi, gradientPhi=gradientPhi, ans=ans, dim1=dim1, dim2=dim2, &
+!                                              dim3=dim3, faceOrient=faceOrient)
+!
+! END SUBROUTINE BarycentricCellBasisGradient_Triangle
 
 !----------------------------------------------------------------------------
 !
@@ -504,111 +715,132 @@ END PROCEDURE BarycentricEdgeBasisGradient_Triangle
 ! using barycentric coordinate
 
 PURE SUBROUTINE BarycentricEdgeBasisGradient_Triangle2(pe1, pe2, pe3, &
-                                                lambda, phi, gradientPhi, ans)
+                            lambda, phi, gradientPhi, ans, dim1, dim2, dim3, &
+                                        edgeOrient1, edgeOrient2, edgeOrient3)
   INTEGER(I4B), INTENT(IN) :: pe1
-    !! order on  edge (e1)
+  !! order on  edge (e1)
   INTEGER(I4B), INTENT(IN) :: pe2
-    !! order on edge (e2)
+  !! order on edge (e2)
   INTEGER(I4B), INTENT(IN) :: pe3
-    !! order on edge (e3)
+  !! order on edge (e3)
   REAL(DFP), INTENT(IN) :: lambda(:, :)
-    !! point of evaluation in terms of barycentric coordinates
-    !! size(lambda,1) = 3
-    !! size(lambda,2) = number of points of evaluation
+  !! point of evaluation in terms of barycentric coordinates
+  !! size(lambda,1) = 3
+  !! size(lambda,2) = number of points of evaluation
   REAL(DFP), INTENT(IN) :: phi(1:, 0:)
-    !! lobatto kernel values
-    !! size(phi1, 1) = 3*number of points (lambda2-lambda1),
-    !! (lambda3-lambda1), (lambda3-lambda2)
-    !! size(phi1, 2) = max(pe1-2, pe2-2, pe3-2)+1
+  !! lobatto kernel values
+  !! size(phi1, 1) = 3*number of points
+  !! size(phi1, 2) = max(pe1-2, pe2-2, pe3-2)+1
+  !! (lambda2-lambda1)
+  !! (lambda3-lambda2)
+  !! (lambda1-lambda3)
   REAL(DFP), INTENT(IN) :: gradientPhi(1:, 0:)
-    !! gradients of lobatto kernel functions
+  !! gradients of lobatto kernel functions
   REAL(DFP), INTENT(INOUT) :: ans(:, :, :)
-  ! REAL(DFP) :: ans(SIZE(lambda, 2), pe1 + pe2 + pe3 - 3, 3)
+  !! REAL(DFP) :: ans(SIZE(lambda, 2), pe1 + pe2 + pe3 - 3, 3)
+  INTEGER(I4B), INTENT(OUT) :: dim1, dim2, dim3
+  !! dim1=SIZE(lambda, 2)
+  !! dim2=pe1 + pe2 + pe3 - 3
+  !! dim3=3
+  INTEGER(I4B), INTENT(IN) :: edgeOrient1, edgeOrient2, edgeOrient3
+  !! edge orientation
 
-  INTEGER(I4B) :: tp, a, ii
-  REAL(DFP) :: temp(SIZE(lambda, 2))
-  ! FIXME: Remove this temp
+  !! Internal variables
+  INTEGER(I4B) :: a, ii, jj
+  REAL(DFP) :: rr(10), o1, o2, o3
 
-  tp = SIZE(lambda, 2)
+  dim1 = SIZE(lambda, 2)
+  dim2 = pe1 + pe2 + pe3 - 3
+  dim3 = 3
 
-  !FIXME: Make these loop parallel
+  o1 = REAL(edgeOrient1, kind=DFP)
+  o2 = REAL(edgeOrient2, kind=DFP)
+  o3 = REAL(edgeOrient3, kind=DFP)
 
   a = 0
   ! edge(1) = 1 -> 2
-  temp = lambda(1, :) * lambda(2, :)
+
   DO ii = 1, pe1 - 1
-    ans(1:tp, a + ii, 1) = lambda(2, :) * phi(1:tp, ii - 1) - &
-                           temp * gradientPhi(1:tp, ii - 1)
-    ans(1:tp, a + ii, 2) = lambda(1, :) * phi(1:tp, ii - 1) + &
-                           temp * gradientPhi(1:tp, ii - 1)
-    ans(1:tp, a + ii, 3) = 0.0_DFP
+    rr(1) = o1**(ii + 1)
+    rr(2) = o1**(ii)
+
+    DO jj = 1, dim1
+      rr(3) = lambda(1, jj) * lambda(2, jj)
+
+      rr(4) = rr(1) * lambda(2, jj) * phi(jj, ii - 1)
+
+      rr(5) = rr(2) * rr(3) * gradientPhi(jj, ii - 1)
+
+      ans(jj, a + ii, 1) = rr(4) - rr(5)
+
+      rr(4) = rr(1) * lambda(1, jj) * phi(jj, ii - 1)
+
+      rr(5) = rr(2) * rr(3) * gradientPhi(jj, ii - 1)
+
+      ans(jj, a + ii, 2) = rr(4) + rr(5)
+
+      ans(jj, a + ii, 3) = 0.0_DFP
+
+    END DO
+
   END DO
 
   ! edge(2) = 2 -> 3
   a = pe1 - 1
-  temp = lambda(2, :) * lambda(3, :)
+
   DO ii = 1, pe2 - 1
-    ans(1:tp, a + ii, 1) = 0.0_DFP
+    rr(1) = o2**(ii + 1)
+    rr(2) = o2**(ii)
 
-    ans(1:tp, a + ii, 2) = lambda(3, :) * &
-                           phi(1 + tp:2 * tp, ii - 1) - &
-                           temp * gradientPhi(1 + tp:2 * tp, ii - 1)
+    DO jj = 1, dim1
+      rr(3) = lambda(2, jj) * lambda(3, jj)
 
-    ans(1:tp, a + ii, 3) = lambda(2, :) * &
-                           phi(1 + tp:2 * tp, ii - 1) + &
-                           temp * gradientPhi(1 + tp:2 * tp, ii - 1)
+      ans(jj, a + ii, 1) = 0.0_DFP
+
+      rr(4) = rr(1) * lambda(3, jj) * phi(jj + dim1, ii - 1)
+      rr(5) = rr(2) * rr(3) * gradientPhi(jj + dim1, ii - 1)
+
+      ans(jj, a + ii, 2) = rr(4) - rr(5)
+
+      rr(4) = rr(1) * lambda(2, jj) * phi(jj + dim1, ii - 1)
+      rr(5) = rr(2) * rr(3) * gradientPhi(jj + dim1, ii - 1)
+
+      ans(jj, a + ii, 3) = rr(4) + rr(5)
+
+    END DO
+
   END DO
 
   ! edge(3) = 3 -> 1
   a = pe1 - 1 + pe2 - 1
-  temp = lambda(3, :) * lambda(1, :)
+
   DO ii = 1, pe3 - 1
-    ans(1:tp, a + ii, 1) = lambda(3, :) * &
-                           phi(1 + 2 * tp:3 * tp, ii - 1) + &
-                           temp * gradientPhi(1 + 2 * tp:3 * tp, ii - 1)
+    rr(1) = o3**(ii + 1)
+    rr(2) = o3**(ii)
 
-    ans(1:tp, a + ii, 2) = 0.0_DFP
+    DO jj = 1, dim1
+      rr(3) = lambda(3, jj) * lambda(1, jj)
 
-    ans(1:tp, a + ii, 3) = lambda(1, :) * &
-                           phi(1 + 2 * tp:3 * tp, ii - 1) - &
-                           temp * gradientPhi(1 + 2 * tp:3 * tp, ii - 1)
+      rr(4) = rr(1) * lambda(3, jj) * phi(jj + 2 * dim1, ii - 1)
+      rr(5) = rr(2) * rr(3) * gradientPhi(jj + 2 * dim1, ii - 1)
+
+      ans(jj, a + ii, 1) = rr(4) + rr(5)
+
+      ans(jj, a + ii, 2) = 0.0_DFP
+
+      rr(4) = rr(1) * lambda(1, jj) * phi(jj + 2 * dim1, ii - 1)
+      rr(5) = rr(2) * rr(3) * gradientPhi(jj + 2 * dim1, ii - 1)
+
+      ans(jj, a + ii, 3) = rr(4) - rr(5)
+
+    END DO
+
   END DO
+
 END SUBROUTINE BarycentricEdgeBasisGradient_Triangle2
 
 !----------------------------------------------------------------------------
-!                                   BarycentricVertexBasisGradient_Triangle
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE BarycentricCellBasisGradient_Triangle
-INTEGER(I4B) :: a, b, ii, maxP, tp
-REAL(DFP), ALLOCATABLE :: phi(:, :), gradientPhi(:, :), d_lambda(:)
-
-tp = SIZE(lambda, 2)
-maxP = order - 2
-
-a = 3 * tp; b = maxP
-ALLOCATE (phi(a, b), gradientPhi(a, b), d_lambda(a))
-
-DO CONCURRENT(ii=1:tp)
-  ! edge 1 -> 2
-  d_lambda(ii) = lambda(2, ii) - lambda(1, ii)
-  ! edge 2 -> 3
-  d_lambda(ii + tp) = lambda(3, ii) - lambda(2, ii)
-  ! edge 3 -> 1
-  d_lambda(ii + 2 * tp) = lambda(1, ii) - lambda(3, ii)
-END DO
-
-CALL LobattoKernelEvalAll_(n=maxP, x=d_lambda, ans=phi, nrow=a, ncol=b)
-
-CALL LobattoKernelGradientEvalAll_(n=maxP, x=d_lambda, ans=gradientPhi, &
-                                   nrow=a, ncol=b)
-
-CALL BarycentricCellBasisGradient_Triangle2(order=order, lambda=lambda, &
-                                    phi=phi, gradientPhi=gradientPhi, ans=ans)
-END PROCEDURE BarycentricCellBasisGradient_Triangle
-
-!----------------------------------------------------------------------------
-!                                       BarycentricCellBasisGradient_Triangle
+!                                     BarycentricCellBasisGradient_Triangle2
 !----------------------------------------------------------------------------
 
 !> author: Shion Shimizu
@@ -616,53 +848,71 @@ END PROCEDURE BarycentricCellBasisGradient_Triangle
 ! summary:  Evaluate the gradient of the cell basis on triangle
 
 PURE SUBROUTINE BarycentricCellBasisGradient_Triangle2(order, lambda, phi, &
-                                                       gradientPhi, ans)
+                               gradientPhi, ans, dim1, dim2, dim3, faceOrient)
   INTEGER(I4B), INTENT(IN) :: order
-    !! order in the cell of triangle, it should be greater than 2
+  !! order in the cell of triangle, it should be greater than 2
   REAL(DFP), INTENT(IN) :: lambda(:, :)
-    !! point of evaluation
+  !! point of evaluation
   REAL(DFP), INTENT(IN) :: phi(1:, 0:)
-    !! lobatto kernel values
-    !! size(phi1, 1) = 3*number of points (lambda2-lambda1),
-    !! (lambda3-lambda1), (lambda3-lambda2)
-    !! size(phi1, 2) = max(pe1-2, pe2-2, pe3-2)+1
+  !! lobatto kernel values
+  !! size(phi1, 1) = 3*number of points (lambda2-lambda1),
+  !! (lambda3-lambda1), (lambda3-lambda2)
+  !! size(phi1, 2) = max(pe1-2, pe2-2, pe3-2)+1
   REAL(DFP), INTENT(IN) :: gradientPhi(1:, 0:)
-    !! gradients of lobatto kernel functions
+  !! gradients of lobatto kernel functions
   REAL(DFP), INTENT(INOUT) :: ans(:, :, :)
-  ! REAL(DFP) :: ans(SIZE(lambda, 2), INT((order - 1) * (order - 2) / 2), 3)
+  !! gradient
+  INTEGER(I4B), INTENT(OUT) :: dim1, dim2, dim3
+  !! dim1 = SIZE(lambda, 2)
+  !! dim2 = INT((order - 1) * (order - 2) / 2)
+  !! dim3 = 3
+  INTEGER(I4B), INTENT(IN) :: faceOrient(2)
+  !! face orientation
 
   ! internal variables
-  INTEGER(I4B) :: tPoints, k1, k2, cnt
-  REAL(DFP) :: temp1(SIZE(lambda, 2)), temp2(SIZE(lambda, 2))
-  REAL(DFP) :: temp3(SIZE(lambda, 2)), temp4(SIZE(lambda, 2))
+  INTEGER(I4B) :: k1, k2, cnt, ii
+  REAL(DFP) :: rr(10)
 
-  ! FIXME: Remove these temps
+  dim1 = SIZE(lambda, 2)
+  dim2 = INT((order - 1) * (order - 2) / 2)
+  dim3 = 3
 
-  tPoints = SIZE(lambda, 2)
-  temp1 = lambda(1, :) * lambda(2, :) * lambda(3, :)
-  temp2 = lambda(2, :) * lambda(3, :)
-  temp3 = lambda(1, :) * lambda(3, :)
-  temp4 = lambda(1, :) * lambda(2, :)
   cnt = 0
-
-  ! FIXME: make these loop parallel
 
   DO k1 = 1, order - 2
     DO k2 = 1, order - 1 - k1
+
       cnt = cnt + 1
-      ans(:, cnt, 1) = temp2 * phi(1:tPoints, k1 - 1) * &
-                       phi(1 + 2 * tPoints:3 * tPoints, k2 - 1) - &
-                       temp1 * (gradientPhi(1:tPoints, k1 - 1) * &
-                                phi(1 + 2 * tPoints:3 * tPoints, k2 - 1) - &
-                                phi(1:tPoints, k1 - 1) * &
-                             gradientPhi(1 + 2 * tPoints:3 * tPoints, k2 - 1))
-      ans(:, cnt, 2) = (temp3 * phi(1:tPoints, k1 - 1) + &
-                        temp1 * gradientPhi(1:tPoints, k1 - 1)) * &
-                       phi(1 + 2 * tPoints:3 * tPoints, k2 - 1)
-      ans(:, cnt, 3) = (temp4 * phi(1 + 2 * tPoints:3 * tPoints, k2 - 1) - &
-                 temp1 * gradientPhi(1 + 2 * tPoints:3 * tPoints, k2 - 1)) * &
-                       phi(1:tPoints, k1 - 1)
+
+      DO ii = 1, dim1
+
+        rr(1) = lambda(1, ii) * lambda(2, ii) * lambda(3, ii)
+        rr(2) = lambda(2, ii) * lambda(3, ii)
+        rr(3) = lambda(1, ii) * lambda(3, ii)
+        rr(4) = lambda(1, ii) * lambda(2, ii)
+
+        rr(5) = rr(2) * phi(ii, k1 - 1) * phi(ii + 2 * dim1, k2 - 1)
+        rr(6) = phi(ii + 2 * dim1, k2 - 1) * gradientPhi(ii, k1 - 1)
+        rr(7) = phi(ii, k1 - 1) * gradientPhi(ii + 2 * dim1, k2 - 1)
+        rr(8) = rr(6) - rr(7)
+        ans(ii, cnt, 1) = rr(5) - rr(1) * rr(8)
+
+        rr(5) = rr(3) * phi(ii, k1 - 1)
+        rr(6) = rr(1) * gradientPhi(ii, k1 - 1)
+        rr(7) = rr(5) + rr(6)
+        rr(8) = phi(ii + 2 * dim1, k2 - 1)
+        ans(ii, cnt, 2) = rr(7) * rr(8)
+
+        rr(5) = rr(4) * phi(ii + 2 * dim1, k2 - 1)
+        rr(6) = rr(1) * gradientPhi(ii + 2 * dim1, k2 - 1)
+        rr(7) = rr(5) - rr(6)
+        rr(8) = phi(ii, k1 - 1)
+        ans(ii, cnt, 3) = rr(7) * rr(8)
+
+      END DO
+
     END DO
+
   END DO
 END SUBROUTINE BarycentricCellBasisGradient_Triangle2
 
@@ -670,58 +920,93 @@ END SUBROUTINE BarycentricCellBasisGradient_Triangle2
 !                                     BarycentricHeirarchicalBasis_Triangle
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE BarycentricHeirarchicalBasisGradient_Triangle1
-INTEGER(I4B) :: a, b, ii, maxP, tp
-REAL(DFP), ALLOCATABLE :: phi(:, :), gradientPhi(:, :), d_lambda(:)
-LOGICAL(LGT) :: isok
+PURE SUBROUTINE BarycentricHeirarchicalBasisGradient_Triangle(order, pe1, &
+          pe2, pe3, lambda, refTriangle, ans, dim1, dim2, dim3, edgeOrient1, &
+                                         edgeOrient2, edgeOrient3, faceOrient)
+  INTEGER(I4B), INTENT(IN) :: order
+  !! order in the cell of triangle, it should be greater than 2
+  INTEGER(I4B), INTENT(IN) :: pe1
+  !! order of interpolation on edge e1
+  INTEGER(I4B), INTENT(IN) :: pe2
+  !! order of interpolation on edge e2
+  INTEGER(I4B), INTENT(IN) :: pe3
+  !! order of interpolation on edge e3
+  REAL(DFP), INTENT(IN) :: lambda(:, :)
+  !! Barycenteric coordinates
+  !! number of rows = 3
+  !! number of cols = number of points
+  CHARACTER(*), INTENT(IN) :: refTriangle
+  !! reference triangle, "BIUNIT", "UNIT"
+  REAL(DFP), INTENT(INOUT) :: ans(:, :, :)
+  !! dim1=SIZE(lambda, 2)
+  !! dim2=pe1 + pe2 + pe3 + INT((order - 1) * (order - 2) / 2)
+  !! dim3=3
+  INTEGER(I4B), INTENT(OUT) :: dim1, dim2, dim3
+  !! range of data written in ans
+  INTEGER(I4B), INTENT(IN) :: edgeOrient1, edgeOrient2, edgeOrient3
+  !! edge orientation
+  INTEGER(I4B), INTENT(IN) :: faceOrient(2)
+  !! face orientation
 
-tp = SIZE(lambda, 2)
-maxP = MAX(pe1 - 2, pe2 - 2, pe3 - 2, order - 2)
+  INTEGER(I4B) :: a, b, ii, maxP, indx(3)
+  REAL(DFP), ALLOCATABLE :: phi(:, :), gradientPhi(:, :), d_lambda(:)
+  LOGICAL(LGT) :: isok
 
-a = 3 * tp; b = maxP
-ALLOCATE (phi(a, 0:b), gradientPhi(a, 0:b), d_lambda(a))
+  dim1 = SIZE(lambda, 2)
+  dim2 = pe1 + pe2 + pe3 + INT((order - 1) * (order - 2) / 2)
+  dim3 = 3
 
-DO CONCURRENT(ii=1:tp)
-  ! edge 1 -> 2
-  d_lambda(ii) = lambda(2, ii) - lambda(1, ii)
-  ! edge 2 -> 3
-  d_lambda(ii + tp) = lambda(3, ii) - lambda(2, ii)
-  ! edge 3 -> 1
-  d_lambda(ii + 2 * tp) = lambda(1, ii) - lambda(3, ii)
-END DO
+  maxP = MAX(pe1 - 2, pe2 - 2, pe3 - 2, order - 2)
 
-CALL LobattoKernelEvalAll_(n=maxP, x=d_lambda, ans=phi, nrow=a, ncol=b)
+  a = 3 * dim1; b = maxP
+  ALLOCATE (phi(a, 0:b), gradientPhi(a, 0:b), d_lambda(a))
 
-CALL LobattoKernelGradientEvalAll_(n=maxP, x=d_lambda, ans=gradientPhi, &
-                                   nrow=a, ncol=b)
+  DO CONCURRENT(ii=1:dim1)
+    ! edge 1 -> 2
+    d_lambda(ii) = lambda(2, ii) - lambda(1, ii)
+    ! edge 2 -> 3
+    d_lambda(ii + dim1) = lambda(3, ii) - lambda(2, ii)
+    ! edge 3 -> 1
+    d_lambda(ii + 2 * dim1) = lambda(1, ii) - lambda(3, ii)
+  END DO
 
-! gradient of vertex basis
-ans(1:tp, 1:3, 1:3) = 0.0_DFP
-DO CONCURRENT(ii=1:3)
-  ans(1:tp, ii, ii) = 1.0_DFP
-END DO
+  CALL LobattoKernelEvalAll_(n=maxP, x=d_lambda, ans=phi, nrow=indx(1), &
+                             ncol=indx(2))
 
-! gradient of Edge basis function
-b = 3
-isok = ANY([pe1, pe2, pe3] .GE. 2_I4B)
-IF (isok) THEN
-  a = b + 1
-  b = a - 1 + pe1 + pe2 + pe3 - 3 !!4+qe1 + qe2 - 2
-  CALL BarycentricEdgeBasisGradient_Triangle2( &
-    pe1=pe1, pe2=pe2, pe3=pe3, lambda=lambda, &
-    phi=phi, gradientPhi=gradientPhi, ans=ans(:, a:b, :))
-END IF
+  CALL LobattoKernelGradientEvalAll_(n=maxP, x=d_lambda, ans=gradientPhi, &
+                                     nrow=indx(1), ncol=indx(2))
 
-! gradient of Cell basis function
-IF (order .GT. 2_I4B) THEN
-  a = b + 1
-  b = a - 1 + INT((order - 1) * (order - 2) / 2)
-  CALL BarycentricCellBasisGradient_Triangle2(order=order, lambda=lambda, &
-                         phi=phi, gradientPhi=gradientPhi, ans=ans(:, a:b, :))
-END IF
+  ! gradient of vertex basis
+  ans(1:dim1, 1:3, 1:3) = 0.0_DFP
+  DO CONCURRENT(ii=1:3)
+    ans(1:dim1, ii, ii) = 1.0_DFP
+  END DO
 
-DEALLOCATE (phi, gradientPhi, d_lambda)
-END PROCEDURE BarycentricHeirarchicalBasisGradient_Triangle1
+  ! gradient of Edge basis function
+  b = 3
+  isok = ANY([pe1, pe2, pe3] .GE. 2_I4B)
+  IF (isok) THEN
+    a = b + 1
+    b = a - 1 + pe1 + pe2 + pe3 - 3 !!4+qe1 + qe2 - 2
+    CALL BarycentricEdgeBasisGradient_Triangle2(pe1=pe1, pe2=pe2, pe3=pe3, &
+        lambda=lambda, phi=phi, gradientPhi=gradientPhi, ans=ans(:, a:b, :), &
+          dim1=indx(1), dim2=indx(2), dim3=indx(3), edgeOrient1=edgeOrient1, &
+                             edgeOrient2=edgeOrient2, edgeOrient3=edgeOrient3)
+  END IF
+
+  ! gradient of Cell basis function
+  isok = order .GT. 2_I4B
+  IF (isok) THEN
+    a = b + 1
+    b = a - 1 + INT((order - 1) * (order - 2) / 2)
+    CALL BarycentricCellBasisGradient_Triangle2(order=order, lambda=lambda, &
+                       phi=phi, gradientPhi=gradientPhi, ans=ans(:, a:b, :), &
+              dim1=indx(1), dim2=indx(2), dim3=indx(3), faceOrient=faceOrient)
+  END IF
+
+  DEALLOCATE (phi, gradientPhi, d_lambda)
+
+END SUBROUTINE BarycentricHeirarchicalBasisGradient_Triangle
 
 !----------------------------------------------------------------------------
 !                                         HeirarchicalBasisGradient_Triangle
@@ -739,21 +1024,37 @@ END PROCEDURE HeirarchicalBasisGradient_Triangle1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE HeirarchicalBasisGradient_Triangle1_
+INTEGER(I4B), PARAMETER :: orient = 1, faceOrient(2) = [0, 1]
+
+CALL HeirarchicalBasisGradient_Triangle2_(order=order, pe1=pe1, pe2=pe2, &
+                   pe3=pe3, xij=xij, edgeOrient1=orient, edgeOrient2=orient, &
+         edgeOrient3=orient, faceOrient=faceOrient, refTriangle=refTriangle, &
+                         ans=ans, tsize1=tsize1, tsize2=tsize2, tsize3=tsize3)
+END PROCEDURE HeirarchicalBasisGradient_Triangle1_
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE HeirarchicalBasisGradient_Triangle2_
 REAL(DFP) :: jac(3, 2)
 REAL(DFP), ALLOCATABLE :: lambda(:, :), dPhi(:, :, :)
-INTEGER(I4B) :: ii, jj, kk
+INTEGER(I4B) :: ii, jj, kk, indx(3)
 
 ii = SIZE(xij, 2)
 jj = pe1 + pe2 + pe3 + INT((order - 1) * (order - 2) / 2)
 ALLOCATE (lambda(3, ii), dPhi(ii, jj, 3))
+
 tsize1 = SIZE(xij, 2)
 tsize2 = pe1 + pe2 + pe3 + INT((order - 1) * (order - 2) / 2)
 tsize3 = 2
 
 CALL BarycentricCoordTriangle_(xin=xij, refTriangle=refTriangle, ans=lambda)
-CALL BarycentricHeirarchicalBasisGradient_Triangle( &
-  order=order, pe1=pe1, pe2=pe2, pe3=pe3, lambda=lambda, &
-  refTriangle=refTriangle, ans=dPhi)
+
+CALL BarycentricHeirarchicalBasisGradient_Triangle(order=order, pe1=pe1, &
+         pe2=pe2, pe3=pe3, lambda=lambda, refTriangle=refTriangle, ans=dPhi, &
+          dim1=indx(1), dim2=indx(2), dim3=indx(3), edgeOrient1=edgeOrient1, &
+      edgeOrient2=edgeOrient2, edgeOrient3=edgeOrient3, faceOrient=faceOrient)
 
 SELECT CASE (refTriangle(1:1))
 CASE ("B", "b")
@@ -774,7 +1075,7 @@ END DO
 
 DEALLOCATE (lambda, dPhi)
 
-END PROCEDURE HeirarchicalBasisGradient_Triangle1_
+END PROCEDURE HeirarchicalBasisGradient_Triangle2_
 
 !----------------------------------------------------------------------------
 !
