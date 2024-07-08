@@ -1354,8 +1354,7 @@ INTERFACE QuadraturePoint_Triangle
     !! currently this variable is not used
     CHARACTER(*), INTENT(IN) :: refTriangle
     !! Reference triangle
-    !! Biunit
-    !! Unit
+    !! Biunit ! Unit
     !! If xij is present,then this parameter is not used
     REAL(DFP), OPTIONAL, INTENT(IN) :: xij(:, :)
     !! nodal coordinates of triangle.
@@ -1365,6 +1364,32 @@ INTERFACE QuadraturePoint_Triangle
     !! Quadrature points
   END FUNCTION QuadraturePoint_Triangle1
 END INTERFACE QuadraturePoint_Triangle
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE QuadraturePoint_Triangle_
+  MODULE SUBROUTINE QuadraturePoint_Triangle1_(order, quadType, refTriangle, &
+                                               xij, ans, nrow, ncol)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order of integrand
+    INTEGER(I4B), INTENT(IN) :: quadType
+    !! quadrature point type
+    !! currently this variable is not used
+    CHARACTER(*), INTENT(IN) :: refTriangle
+    !! Reference triangle
+    !! Biunit ! Unit
+    !! If xij is present,then this parameter is not used
+    REAL(DFP), OPTIONAL, INTENT(IN) :: xij(:, :)
+    !! nodal coordinates of triangle.
+    !! The number of rows in xij can be 2 or 3.
+    !! The number of columns in xij should be 3
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    !! Quadrature points
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+  END SUBROUTINE QuadraturePoint_Triangle1_
+END INTERFACE QuadraturePoint_Triangle_
 
 !----------------------------------------------------------------------------
 !                                            QuadraturePoints_Triangle
@@ -1387,8 +1412,7 @@ INTERFACE QuadraturePoint_Triangle
     !! currently this variable is not used
     CHARACTER(*), INTENT(IN) :: refTriangle
     !! Reference triangle
-    !! Biunit
-    !! Unit
+    !! Biunit ! Unit
     REAL(DFP), OPTIONAL, INTENT(IN) :: xij(:, :)
     !! nodal coordinates of triangle.
     !! The number of rows in xij can be 2 or 3.
@@ -1397,6 +1421,34 @@ INTERFACE QuadraturePoint_Triangle
     !! Quadrature points
   END FUNCTION QuadraturePoint_Triangle2
 END INTERFACE QuadraturePoint_Triangle
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE QuadraturePoint_Triangle_
+  MODULE SUBROUTINE QuadraturePoint_Triangle2_(nips, quadType, refTriangle, &
+                                               xij, ans, nrow, ncol)
+    INTEGER(I4B), INTENT(IN) :: nips(1)
+    !! nips(1) .LE. 79, then we call
+    !! economical quadrature rules.
+    !! Otherwise, this routine will retport
+    !! error
+    INTEGER(I4B), INTENT(IN) :: quadType
+    !! quadrature point type,
+    !! currently this variable is not used
+    CHARACTER(*), INTENT(IN) :: refTriangle
+    !! Reference triangle
+    !! Biunit ! Unit
+    REAL(DFP), OPTIONAL, INTENT(IN) :: xij(:, :)
+    !! nodal coordinates of triangle.
+    !! The number of rows in xij can be 2 or 3.
+    !! The number of columns in xij should be 3
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    !! Quadrature points
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+  END SUBROUTINE QuadraturePoint_Triangle2_
+END INTERFACE QuadraturePoint_Triangle_
 
 !----------------------------------------------------------------------------
 !                                            TensorQuadraturePoints_Triangle
@@ -1428,6 +1480,31 @@ INTERFACE TensorQuadraturePoint_Triangle
 END INTERFACE TensorQuadraturePoint_Triangle
 
 !----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE TensorQuadraturePoint_Triangle_
+  MODULE SUBROUTINE TensorQuadraturePoint_Triangle1_(order, quadType, &
+                                            refTriangle, xij, ans, nrow, ncol)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order of integrand
+    INTEGER(I4B), INTENT(IN) :: quadType
+    !! quadrature point type
+    !! currently this variable is not used
+    CHARACTER(*), INTENT(IN) :: refTriangle
+    !! Reference triangle ! Biunit ! Unit
+    REAL(DFP), OPTIONAL, INTENT(IN) :: xij(:, :)
+    !! nodal coordinates of triangle.
+    !! The number of rows in xij can be 2 or 3.
+    !! The number of columns in xij should be 3
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    !! Quadrature points
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+   !! number of rows and columns written in ans
+  END SUBROUTINE TensorQuadraturePoint_Triangle1_
+END INTERFACE TensorQuadraturePoint_Triangle_
+
+!----------------------------------------------------------------------------
 !                                            TensorQuadraturePoints_Triangle
 !----------------------------------------------------------------------------
 
@@ -1457,6 +1534,35 @@ INTERFACE TensorQuadraturePoint_Triangle
     !! Quadrature points
   END FUNCTION TensorQuadraturePoint_Triangle2
 END INTERFACE TensorQuadraturePoint_Triangle
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE TensorQuadraturePoint_Triangle_
+  MODULE SUBROUTINE TensorQuadraturePoint_Triangle2_(nipsx, nipsy, quadType, &
+                                            refTriangle, xij, ans, nrow, ncol)
+    INTEGER(I4B), INTENT(IN) :: nipsx(1)
+    !! number of integration points in x direction
+    INTEGER(I4B), INTENT(IN) :: nipsy(1)
+    !! number of integration points in y direction
+    INTEGER(I4B), INTENT(IN) :: quadType
+    !! quadrature point type
+    !! currently this variable is not used
+    CHARACTER(*), INTENT(IN) :: refTriangle
+    !! Reference triangle
+    !! Biunit
+    !! Unit
+    REAL(DFP), OPTIONAL, INTENT(IN) :: xij(:, :)
+    !! nodal coordinates of triangle.
+    !! The number of rows in xij can be 2 or 3.
+    !! The number of columns in xij should be 3
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    !! Quadrature points
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+    !! number of rows and columns written in ans
+  END SUBROUTINE TensorQuadraturePoint_Triangle2_
+END INTERFACE TensorQuadraturePoint_Triangle_
 
 !----------------------------------------------------------------------------
 !
