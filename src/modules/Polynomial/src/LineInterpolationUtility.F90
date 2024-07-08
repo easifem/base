@@ -47,6 +47,8 @@ PUBLIC :: BasisGradientEvalAll_Line
 PUBLIC :: BasisGradientEvalAll_Line_
 
 PUBLIC :: QuadraturePoint_Line
+PUBLIC :: QuadraturePoint_Line_
+
 PUBLIC :: ToVEFC_Line
 PUBLIC :: QuadratureNumber_Line
 PUBLIC :: RefElemDomain_Line
