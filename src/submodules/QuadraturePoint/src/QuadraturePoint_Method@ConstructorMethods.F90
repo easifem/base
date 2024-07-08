@@ -47,6 +47,34 @@ ans = BaseInterpolation_ToInteger(name)
 END PROCEDURE QuadraturePointNameToID
 
 !----------------------------------------------------------------------------
+!                                                            QuadraturePoint
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE quad_Constructor1
+obj%points = points
+obj%tXi = SIZE(points, 1) - 1
+END PROCEDURE quad_Constructor1
+
+!----------------------------------------------------------------------------
+!                                                   QuadraturePoint_Pointer
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE quad_Constructor_1
+ALLOCATE (obj)
+obj%points = points
+obj%tXi = SIZE(points, 1) - 1
+END PROCEDURE quad_Constructor_1
+
+!----------------------------------------------------------------------------
+!                                                            Deallocate
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE quad_Deallocate
+IF (ALLOCATED(obj%points)) DEALLOCATE (obj%points)
+obj%tXi = -1
+END PROCEDURE quad_Deallocate
+
+!----------------------------------------------------------------------------
 !                                                                   Initiate
 !----------------------------------------------------------------------------
 
@@ -1061,33 +1089,5 @@ END PROCEDURE obj_Initiate4
 ! END SELECT
 !
 ! END PROCEDURE obj_Initiate8
-
-!----------------------------------------------------------------------------
-!                                                            QuadraturePoint
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE quad_Constructor1
-obj%points = points
-obj%tXi = SIZE(points, 1) - 1
-END PROCEDURE quad_Constructor1
-
-!----------------------------------------------------------------------------
-!                                                   QuadraturePoint_Pointer
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE quad_Constructor_1
-ALLOCATE (obj)
-obj%points = points
-obj%tXi = SIZE(points, 1) - 1
-END PROCEDURE quad_Constructor_1
-
-!----------------------------------------------------------------------------
-!                                                            Deallocate
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE quad_Deallocate
-IF (ALLOCATED(obj%points)) DEALLOCATE (obj%points)
-obj%tXi = -1
-END PROCEDURE quad_Deallocate
 
 END SUBMODULE ConstructorMethods
