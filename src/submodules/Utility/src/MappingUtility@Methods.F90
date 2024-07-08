@@ -163,13 +163,22 @@ END PROCEDURE FromUnitTriangle2Triangle1_
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE FromBiUnitQuadrangle2UnitQuadrangle1
-ans = FromBiUnitQuadrangle2Quadrangle(&
-  & xin=xin, &
-  & x1=[0.0_DFP, 0.0_DFP],  &
-  & x2=[1.0_DFP, 0.0_DFP],  &
-  & x3=[1.0_DFP, 1.0_DFP],  &
-  & x4=[0.0_DFP, 1.0_DFP])
+INTEGER(I4B) :: nrow, ncol
+CALL FromBiUnitQuadrangle2UnitQuadrangle1_(xin=xin, ans=ans, nrow=nrow, &
+                                           ncol=ncol)
 END PROCEDURE FromBiUnitQuadrangle2UnitQuadrangle1
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE FromBiUnitQuadrangle2UnitQuadrangle1_
+REAL(DFP), PARAMETER :: azero = 0.0_DFP, aone = 1.0_DFP
+REAL(DFP), PARAMETER :: x1(2) = [azero, azero], x2(2) = [aone, azero], &
+                        x3(2) = [aone, aone], x4(2) = [azero, aone]
+CALL FromBiUnitQuadrangle2Quadrangle_(xin=xin, x1=x1, x2=x2, x3=x3, x4=x4, &
+                                      ans=ans, nrow=nrow, ncol=ncol)
+END PROCEDURE FromBiUnitQuadrangle2UnitQuadrangle1_
 
 !----------------------------------------------------------------------------
 !                                        FromBiUnitQuadrangle2UnitQuadrangle

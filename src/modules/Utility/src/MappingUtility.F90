@@ -37,6 +37,7 @@ PUBLIC :: FromBiUnitQuadrangle2Quadrangle
 PUBLIC :: FromBiUnitQuadrangle2Quadrangle_
 
 PUBLIC :: FromBiUnitQuadrangle2UnitQuadrangle
+PUBLIC :: FromBiUnitQuadrangle2UnitQuadrangle_
 PUBLIC :: FromUnitQuadrangle2BiUnitQuadrangle
 
 PUBLIC :: FromBiUnitHexahedron2Hexahedron
@@ -257,6 +258,25 @@ INTERFACE FromBiUnitQuadrangle2UnitQuadrangle
     !! shape(ans) = nsd, N
   END FUNCTION FromBiUnitQuadrangle2UnitQuadrangle1
 END INTERFACE FromBiUnitQuadrangle2UnitQuadrangle
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE FromBiUnitQuadrangle2UnitQuadrangle_
+  MODULE PURE SUBROUTINE FromBiUnitQuadrangle2UnitQuadrangle1_(xin, ans, &
+                                                               nrow, ncol)
+    REAL(DFP), INTENT(IN) :: xin(:, :)
+    !! vertex coordinate of biunit Quadrangle in xij format
+    !! SIZE(xin,1) = 2
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    !! mapped coordinates of xin in physical domain
+    !! shape(ans) = nsd, N
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+    !! nrow = SIZE(xin, 1)
+    !! ncol = SIZE(xin, 2)
+  END SUBROUTINE FromBiUnitQuadrangle2UnitQuadrangle1_
+END INTERFACE FromBiUnitQuadrangle2UnitQuadrangle_
 
 !----------------------------------------------------------------------------
 !                                        FromUnitQuadrangle2BiUnitQuadrangle
