@@ -23,19 +23,6 @@ IMPLICIT NONE
 CONTAINS
 
 !----------------------------------------------------------------------------
-!
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE QuadratureNumber_Triangle
-ans = QuadratureNumberTriangleSolin(order=order)
-
-IF (ans .LE. 0) THEN
-  ans = 1_I4B + INT(order / 2, kind=I4B)
-  ans = ans * (ans + 1)
-END IF
-END PROCEDURE QuadratureNumber_Triangle
-
-!----------------------------------------------------------------------------
 !                                            TensorQuadraturePoint_Triangle
 !----------------------------------------------------------------------------
 
