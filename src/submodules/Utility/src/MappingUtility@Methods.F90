@@ -348,6 +348,7 @@ END PROCEDURE FromBiUnitTriangle2BiUnitSqr
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE FromUnitTriangle2BiUnitSqr
+INTEGER(I4B) :: nrow, ncol
 CALL FromTriangle2Square_(xin=xin, ans=ans, from="U", to="B")
 END PROCEDURE FromUnitTriangle2BiUnitSqr
 
@@ -356,21 +357,46 @@ END PROCEDURE FromUnitTriangle2BiUnitSqr
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE FromSquare2Triangle_
+REAL(DFP) :: rr(4)
+INTEGER(I4B) :: ii
 CHARACTER(2) :: acase
-acase = from(1:1)//to(1:1)
+
+acase(1:1) = UpperCase(from(1:1))
+acase(2:2) = UpperCase(to(1:1))
+
+nrow = 2
+ncol = SIZE(xin, 2)
 
 SELECT CASE (acase)
 
-CASE ("BB", "bb", "Bb", "bB")
+CASE ("BB")
 
-  ans(1, :) = 0.5_DFP * (1.0_DFP + xin(1, :)) * (1.0_DFP - xin(2, :)) &
-              - 1.0_DFP
-  ans(2, :) = xin(2, :)
+  DO ii = 1, ncol
 
-CASE ("BU", "bu", "Bu", "bU")
+    rr(1) = xin(2, ii)
+    rr(2) = xin(1, ii)
+    rr(3) = 0.5_DFP * (1.0_DFP + rr(2))
+    rr(4) = 1.0_DFP - rr(1)
+    rr(2) = rr(3) * rr(4) - 1.0_DFP
 
-  ans(1, :) = 0.25_DFP * (1.0_DFP + xin(1, :)) * (1.0_DFP - xin(2, :))
-  ans(2, :) = 0.5_DFP * (xin(2, :) + 1.0_DFP)
+    ans(1, ii) = rr(2)
+    ans(2, ii) = rr(1)
+
+  END DO
+
+CASE ("BU")
+
+  DO ii = 1, ncol
+    rr(1) = xin(1, ii)
+    rr(2) = xin(2, ii)
+    rr(3) = 0.25_DFP * (1.0_DFP + rr(1))
+    rr(4) = 1.0_DFP - rr(2)
+    rr(1) = rr(3) * rr(4)
+    rr(3) = 0.5_DFP * (rr(2) + 1.0_DFP)
+
+    ans(1, ii) = rr(1)
+    ans(2, ii) = rr(3)
+  END DO
 
 END SELECT
 END PROCEDURE FromSquare2Triangle_
@@ -380,7 +406,9 @@ END PROCEDURE FromSquare2Triangle_
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE FromBiUnitSqr2BiUnitTriangle
-CALL FromSquare2Triangle_(xin=xin, ans=ans, from="B", to="B")
+INTEGER(I4B) :: nrow, ncol
+CALL FromSquare2Triangle_(xin=xin, ans=ans, from="B", to="B", nrow=nrow, &
+                          ncol=ncol)
 END PROCEDURE FromBiUnitSqr2BiUnitTriangle
 
 !----------------------------------------------------------------------------
@@ -388,7 +416,9 @@ END PROCEDURE FromBiUnitSqr2BiUnitTriangle
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE FromBiUnitSqr2UnitTriangle
-CALL FromSquare2Triangle_(xin=xin, ans=ans, from="B", to="U")
+INTEGER(I4B) :: nrow, ncol
+CALL FromSquare2Triangle_(xin=xin, ans=ans, from="B", to="U", nrow=nrow, &
+                          ncol=ncol)
 END PROCEDURE FromBiUnitSqr2UnitTriangle
 
 !----------------------------------------------------------------------------
@@ -439,25 +469,41 @@ END PROCEDURE BarycentricCoordTriangle_
 
 MODULE PROCEDURE FromTriangle2Triangle_
 CHARACTER(2) :: acase
-INTEGER(I4B) :: ii, n
+INTEGER(I4B) :: ii, jj
+REAL(DFP) :: x21(3), x31(3)
 
-acase = from(1:1)//to(1:1)
+ncol = SIZE(xin, 2)
+
+acase(1:1) = Uppercase(from(1:1))
+acase(2:2) = Uppercase(to(1:1))
 
 SELECT CASE (acase)
 
-CASE ("BU", "bu", "bU", "Bu")
+CASE ("BU")
 
-  ans = 0.5_DFP * (1.0_DFP + xin)
+  nrow = SIZE(xin, 1)
 
-CASE ("UB", "ub", "Ub", "uB")
+  DO CONCURRENT(ii=1:nrow, jj=1:ncol)
+    ans(ii, jj) = 0.5_DFP * (1.0_DFP + xin(ii, jj))
+  END DO
 
-  ans = -1.0_DFP + 2.0_DFP * xin
+CASE ("UB")
 
-CASE ("UT", "ut", "Ut", "uT")
+  nrow = SIZE(xin, 1)
 
-  n = SIZE(xin, 2)
-  DO CONCURRENT(ii=1:n)
-    ans(:, ii) = x1 + (x2 - x1) * xin(1, ii) + (x3 - x1) * xin(2, ii)
+  DO CONCURRENT(ii=1:nrow, jj=1:ncol)
+    ans(ii, jj) = -1.0_DFP + 2.0_DFP * xin(ii, jj)
+  END DO
+
+CASE ("UT")
+
+  nrow = SIZE(x1)
+
+  x21(1:nrow) = x2(1:nrow) - x1(1:nrow)
+  x31(1:nrow) = x3(1:nrow) - x1(1:nrow)
+
+  DO CONCURRENT(ii=1:nrow, jj=1:ncol)
+    ans(ii, jj) = x1(ii) + x21(ii) * xin(1, jj) + x31(ii) * xin(2, jj)
   END DO
 
 END SELECT
@@ -468,7 +514,9 @@ END PROCEDURE FromTriangle2Triangle_
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE FromBiUnitTriangle2UnitTriangle
-CALL FromTriangle2Triangle_(xin=xin, ans=ans, from="B", to="U")
+INTEGER(I4B) :: nrow, ncol
+CALL FromTriangle2Triangle_(xin=xin, ans=ans, from="B", to="U", nrow=nrow, &
+                            ncol=ncol)
 END PROCEDURE FromBiUnitTriangle2UnitTriangle
 
 !----------------------------------------------------------------------------
@@ -476,7 +524,9 @@ END PROCEDURE FromBiUnitTriangle2UnitTriangle
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE FromUnitTriangle2BiUnitTriangle
-CALL FromTriangle2Triangle_(xin=xin, ans=ans, from="U", to="B")
+INTEGER(I4B) :: nrow, ncol
+CALL FromTriangle2Triangle_(xin=xin, ans=ans, from="U", to="B", nrow=nrow, &
+                            ncol=ncol)
 END PROCEDURE FromUnitTriangle2BiUnitTriangle
 
 !----------------------------------------------------------------------------

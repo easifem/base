@@ -57,6 +57,7 @@ PUBLIC :: FromBiUnitSqr2UnitTriangle
 PUBLIC :: FromBiUnitQuadrangle2UnitTriangle
 
 PUBLIC :: FromTriangle2Square_
+PUBLIC :: FromSquare2Triangle_
 
 PUBLIC :: FromUnitTriangle2Triangle
 PUBLIC :: FromUnitTriangle2Triangle_
@@ -615,12 +616,17 @@ END INTERFACE FromBiUnitQuadrangle2UnitTriangle
 ! summary: Map from triangle to square
 
 INTERFACE
- MODULE PURE SUBROUTINE FromTriangle2Triangle_(xin, ans, from, to, x1, x2, x3)
+  MODULE PURE SUBROUTINE FromTriangle2Triangle_(xin, ans, nrow, ncol, &
+                                                from, to, x1, x2, x3)
     REAL(DFP), INTENT(IN) :: xin(:, :)
     !! coordinates in bi-unit square in xij coordinate
     REAL(DFP), INTENT(INOUT) :: ans(:, :)
     !! ans(2, SIZE(xin, 2))
     !! coordinates in biunit triangle
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+    !! number of rows and columns written in ans
+    !! nrow=2
+    !! ncol=SIZE(xin, 2)
     CHARACTER(*), INTENT(IN) :: from
     CHARACTER(*), INTENT(IN) :: to
     REAL(DFP), OPTIONAL, INTENT(IN) :: x1(:)
@@ -661,7 +667,7 @@ END INTERFACE
 ! summary: Map from triangle to square
 
 INTERFACE
-  MODULE PURE SUBROUTINE FromSquare2Triangle_(xin, ans, from, to)
+  MODULE PURE SUBROUTINE FromSquare2Triangle_(xin, ans, from, to, nrow, ncol)
     REAL(DFP), INTENT(IN) :: xin(:, :)
     !! coordinates in bi-unit square in xij coordinate
     REAL(DFP), INTENT(INOUT) :: ans(:, :)
@@ -669,6 +675,10 @@ INTERFACE
     !! coordinates in biunit triangle
     CHARACTER(*), INTENT(IN) :: from
     CHARACTER(*), INTENT(IN) :: to
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+    !! number of rows and columns written in ans
+    !! nrow = 2
+    !! ncol = SIZE(xin, 2)
   END SUBROUTINE FromSquare2Triangle_
 END INTERFACE
 
