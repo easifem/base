@@ -53,7 +53,10 @@ PUBLIC :: LagrangeEvalAll_Triangle_
 PUBLIC :: LagrangeGradientEvalAll_Triangle
 PUBLIC :: LagrangeGradientEvalAll_Triangle_
 
+PUBLIC :: QuadratureNumber_Triangle
 PUBLIC :: QuadraturePoint_Triangle
+PUBLIC :: QuadraturePoint_Triangle_
+
 PUBLIC :: IJ2VEFC_Triangle
 PUBLIC :: FacetConnectivity_Triangle
 PUBLIC :: RefElemDomain_Triangle
@@ -1335,6 +1338,22 @@ INTERFACE LagrangeEvalAll_Triangle_
     REAL(DFP), OPTIONAL, INTENT(IN) :: alpha, beta, lambda
   END SUBROUTINE LagrangeEvalAll_Triangle2_
 END INTERFACE LagrangeEvalAll_Triangle_
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE
+  MODULE FUNCTION QuadratureNumber_Triangle(order, quadType) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order of integrand
+    INTEGER(I4B), INTENT(IN) :: quadType
+    !! quadrature point type
+    !! currently this variable is not used
+    INTEGER(I4B) :: ans
+    !! Quadrature points
+  END FUNCTION QuadratureNumber_Triangle
+END INTERFACE
 
 !----------------------------------------------------------------------------
 !                                                 QuadraturePoints_Triangle
