@@ -75,6 +75,29 @@ INTERFACE
 END INTERFACE
 
 !----------------------------------------------------------------------------
+!                                         QuadratureNumber@ConstructorMethods
+!----------------------------------------------------------------------------
+
+INTERFACE QuadratureNumber
+  MODULE FUNCTION obj_QuadratureNumber1(topo, order, quadratureType) &
+    RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: topo
+    !! Reference-element
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order of integrand
+    INTEGER(I4B), INTENT(IN) :: quadratureType
+    !! Type of quadrature points ! GaussLegendre ! GaussLegendreLobatto
+    !! GaussLegendreRadau ! GaussLegendreRadauLeft ! GaussLegendreRadauRight
+    !! GaussChebyshev ! GaussChebyshevLobatto ! GaussChebyshevRadau
+    !! GaussChebyshevRadauLeft ! GaussChebyshevRadauRight
+    INTEGER(I4B) :: ans
+    !! quadrature number
+    !! for quadrangle element ans is number of  quadrature points in x and y
+    !! so total number of quadrature points are ans*ans
+  END FUNCTION obj_QuadratureNumber1
+END INTERFACE QuadratureNumber
+
+!----------------------------------------------------------------------------
 !                                                Initiate@ConstructorMethods
 !----------------------------------------------------------------------------
 
@@ -230,7 +253,7 @@ INTERFACE Initiate
     CLASS(ReferenceElement_), INTENT(IN) :: refElem
     !! Reference element
     INTEGER(I4B), INTENT(IN) :: nips(1)
-    !! order of integrand
+    !! number of integration points
     INTEGER(I4B), INTENT(IN) :: quadratureType
     !! Type of quadrature points
     !! GaussLegendre ! GaussLegendreLobatto ! GaussLegendreRadau
@@ -245,7 +268,6 @@ INTERFACE Initiate
     !! Ultraspherical parameter
   END SUBROUTINE obj_Initiate6
 END INTERFACE Initiate
-
 !----------------------------------------------------------------------------
 !                                                Initiate@ConstructorMethods
 !----------------------------------------------------------------------------
@@ -269,17 +291,10 @@ INTERFACE Initiate
     INTEGER(I4B), INTENT(IN) :: r
     !! order of integrand in z direction
     INTEGER(I4B), INTENT(IN) :: quadratureType1
-    !! Type of quadrature points
-    !! GaussLegendre
-    !! GaussLegendreLobatto
-    !! GaussLegendreRadau
-    !! GaussLegendreRadauLeft
-    !! GaussLegendreRadauRight
-    !! GaussChebyshev
-    !! GaussChebyshevLobatto
-    !! GaussChebyshevRadau
-    !! GaussChebyshevRadauLeft
-    !! GaussChebyshevRadauRight
+    !! Type of quadrature points ! GaussLegendre ! GaussLegendreLobatto
+    !! GaussLegendreRadau ! GaussLegendreRadauLeft ! GaussLegendreRadauRight
+    !! GaussChebyshev ! GaussChebyshevLobatto ! GaussChebyshevRadau
+    !! GaussChebyshevRadauLeft ! GaussChebyshevRadauRight
     INTEGER(I4B), INTENT(IN) :: quadratureType2
     !! Type of quadrature points
     INTEGER(I4B), INTENT(IN) :: quadratureType3
@@ -317,15 +332,9 @@ INTERFACE Initiate
     !! number of integration points in z direction
     INTEGER(I4B), INTENT(IN) :: quadratureType1
     !! Type of quadrature points
-    !! GaussLegendre
-    !! GaussLegendreLobatto
-    !! GaussLegendreRadau
-    !! GaussLegendreRadauLeft
-    !! GaussLegendreRadauRight
-    !! GaussChebyshev
-    !! GaussChebyshevLobatto
-    !! GaussChebyshevRadau
-    !! GaussChebyshevRadauLeft
+    !! GaussLegendre ! GaussLegendreLobatto ! GaussLegendreRadau
+    !! GaussLegendreRadauLeft ! GaussLegendreRadauRight ! GaussChebyshev
+    !! GaussChebyshevLobatto ! GaussChebyshevRadau ! GaussChebyshevRadauLeft
     !! GaussChebyshevRadauRight
     INTEGER(I4B), INTENT(IN) :: quadratureType2
     !! Type of quadrature points
@@ -338,6 +347,153 @@ INTERFACE Initiate
     REAL(DFP), OPTIONAL, INTENT(IN) :: alpha3, beta3, lambda3
     !! Jacobi parameter and Ultraspherical parameter
   END SUBROUTINE obj_Initiate8
+END INTERFACE Initiate
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE Initiate
+  MODULE SUBROUTINE obj_Initiate9(obj, elemType, domainName, order, &
+                                  quadratureType, alpha, beta, lambda, xij)
+    TYPE(QuadraturePoint_), INTENT(INOUT) :: obj
+    !! Total number of xidimension
+    INTEGER(I4B), INTENT(IN) :: elemType
+    !! element name
+    CHARACTER(*), INTENT(IN) :: domainName
+    !! domain name
+    !! unit or biunit
+    !! Reference-element
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order of integrand
+    INTEGER(I4B), INTENT(IN) :: quadratureType
+    !! Type of quadrature points ! GaussLegendre ! GaussLegendreLobatto
+    !! GaussLegendreRadau ! GaussLegendreRadauLeft ! GaussLegendreRadauRight
+    !! GaussChebyshev ! GaussChebyshevLobatto ! GaussChebyshevRadau
+    !! GaussChebyshevRadauLeft ! GaussChebyshevRadauRight
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
+    !! Jacobi parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: beta
+    !! Jacobi parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: lambda
+    !! Ultraspherical parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: xij(:, :)
+  END SUBROUTINE obj_Initiate9
+END INTERFACE Initiate
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE Initiate
+  MODULE SUBROUTINE obj_Initiate10(obj, elemType, domainName, nips, &
+                                   quadratureType, alpha, beta, lambda, xij)
+    TYPE(QuadraturePoint_), INTENT(INOUT) :: obj
+    !! Total number of xidimension
+    INTEGER(I4B), INTENT(IN) :: elemType
+    !! element name
+    CHARACTER(*), INTENT(IN) :: domainName
+    !! domain name
+    !! unit or biunit
+    !! Reference-element
+    INTEGER(I4B), INTENT(IN) :: nips(1)
+    !! order of integrand
+    !! in the case of  quadrangle element nips(1) denotes the
+    !! number of quadrature points in the x and y direction
+    !! so the total number of quadrature points are nips(1)*nips(1)
+    INTEGER(I4B), INTENT(IN) :: quadratureType
+    !! Type of quadrature points ! GaussLegendre ! GaussLegendreLobatto
+    !! GaussLegendreRadau ! GaussLegendreRadauLeft ! GaussLegendreRadauRight
+    !! GaussChebyshev ! GaussChebyshevLobatto ! GaussChebyshevRadau
+    !! GaussChebyshevRadauLeft ! GaussChebyshevRadauRight
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
+    !! Jacobi parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: beta
+    !! Jacobi parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: lambda
+    !! Ultraspherical parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: xij(:, :)
+  END SUBROUTINE obj_Initiate10
+END INTERFACE Initiate
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE Initiate
+  MODULE SUBROUTINE obj_Initiate11(obj, elemType, domainName, p, q, r, &
+           quadratureType1, quadratureType2, quadratureType3, alpha1, beta1, &
+                 lambda1, alpha2, beta2, lambda2, alpha3, beta3, lambda3, xij)
+    TYPE(QuadraturePoint_), INTENT(INOUT) :: obj
+    !! Total number of xidimension
+    INTEGER(I4B), INTENT(IN) :: elemtype
+    !! Reference-element
+    CHARACTER(*), INTENT(IN) :: domainName
+    !! domain name
+    INTEGER(I4B), INTENT(IN) :: p
+    !! order of integrand in x
+    INTEGER(I4B), INTENT(IN) :: q
+    !! order of integrand in y
+    INTEGER(I4B), INTENT(IN) :: r
+    !! order of integrand in z direction
+    INTEGER(I4B), INTENT(IN) :: quadratureType1
+    !! Type of quadrature points ! GaussLegendre ! GaussLegendreLobatto
+    !! GaussLegendreRadau ! GaussLegendreRadauLeft ! GaussLegendreRadauRight
+    !! GaussChebyshev ! GaussChebyshevLobatto ! GaussChebyshevRadau
+    !! GaussChebyshevRadauLeft ! GaussChebyshevRadauRight
+    INTEGER(I4B), INTENT(IN) :: quadratureType2
+    !! Type of quadrature points
+    INTEGER(I4B), INTENT(IN) :: quadratureType3
+    !! Type of quadrature points
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha1, beta1, lambda1
+    !! Jacobi parameter and Ultraspherical parameters
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha2, beta2, lambda2
+    !! Jacobi parameter and Ultraspherical parameters
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha3, beta3, lambda3
+    !! Jacobi parameter and Ultraspherical parameters
+    REAL(DFP), OPTIONAL, INTENT(IN) :: xij(:, :)
+  END SUBROUTINE obj_Initiate11
+END INTERFACE Initiate
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE Initiate
+  MODULE SUBROUTINE obj_Initiate12(obj, elemType, domainName, nipsx, nipsy, &
+    nipsz, quadratureType1, quadratureType2, quadratureType3, alpha1, beta1, &
+                 lambda1, alpha2, beta2, lambda2, alpha3, beta3, lambda3, xij)
+    TYPE(QuadraturePoint_), INTENT(INOUT) :: obj
+    !! Total number of xidimension
+    INTEGER(I4B), INTENT(IN) :: elemType
+    !! element type
+    CHARACTER(*), INTENT(IN) :: domainName
+    !! domain name
+    INTEGER(I4B), INTENT(IN) :: nipsx(1)
+    !! number of integration points in x direction
+    INTEGER(I4B), INTENT(IN) :: nipsy(1)
+    !! number of integration points in y direction
+    INTEGER(I4B), INTENT(IN) :: nipsz(1)
+    !! number of integration points in z direction
+    INTEGER(I4B), INTENT(IN) :: quadratureType1
+    !! Type of quadrature points
+    !! GaussLegendre ! GaussLegendreLobatto ! GaussLegendreRadau
+    !! GaussLegendreRadauLeft ! GaussLegendreRadauRight ! GaussChebyshev
+    !! GaussChebyshevLobatto ! GaussChebyshevRadau ! GaussChebyshevRadauLeft
+    !! GaussChebyshevRadauRight
+    INTEGER(I4B), INTENT(IN) :: quadratureType2
+    !! Type of quadrature points
+    INTEGER(I4B), INTENT(IN) :: quadratureType3
+    !! Type of quadrature points
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha1, beta1, lambda1
+    !! Jacobi parameter and Ultraspherical parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha2, beta2, lambda2
+    !! Jacobi parameter and Ultraspherical parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha3, beta3, lambda3
+    !! Jacobi parameter and Ultraspherical parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: xij(:, :)
+    !! coordinates of reference element
+  END SUBROUTINE obj_Initiate12
 END INTERFACE Initiate
 
 !----------------------------------------------------------------------------
