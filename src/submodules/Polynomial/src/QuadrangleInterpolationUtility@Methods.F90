@@ -1952,9 +1952,26 @@ END PROCEDURE LagrangeEvalAll_Quadrangle2_
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE QuadraturePoint_Quadrangle1
-ans = QuadraturePoint_Quadrangle2(p=order, q=order, quadType1=quadType, &
-     quadType2=quadType, xij=xij, refQuadrangle=refQuadrangle, alpha1=alpha, &
-         beta1=beta, lambda1=lambda, alpha2=alpha, beta2=beta, lambda2=lambda)
+INTEGER(I4B) :: nips(1), nrow, ncol
+
+nips(1) = QuadratureNumber_Line(order=order, quadType=quadType)
+
+IF (PRESENT(xij)) THEN
+  nrow = MAX(SIZE(xij, 1), 2)
+ELSE
+  nrow = 2
+END IF
+
+nrow = nrow + 1
+ncol = nips(1) * nips(1)
+
+ALLOCATE (ans(1:nrow, 1:ncol))
+
+CALL QuadraturePoint_Quadrangle1_(nipsx=nips, nipsy=nips, &
+        quadType1=quadType, quadType2=quadType, refQuadrangle=refQuadrangle, &
+            xij=xij, alpha1=alpha, beta1=beta, lambda1=lambda, alpha2=alpha, &
+                    beta2=beta, lambda2=lambda, ans=ans, nrow=nrow, ncol=ncol)
+
 END PROCEDURE QuadraturePoint_Quadrangle1
 
 !----------------------------------------------------------------------------
@@ -1962,77 +1979,26 @@ END PROCEDURE QuadraturePoint_Quadrangle1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE QuadraturePoint_Quadrangle2
-! internal variables
-REAL(DFP), ALLOCATABLE :: x(:, :), y(:, :), temp(:, :)
-INTEGER(I4B) :: ii, jj, kk, nsd, np, nq
-TYPE(String) :: astr
+INTEGER(I4B) :: nipsx(1), nipsy(1), nrow, ncol
 
-astr = TRIM(UpperCase(refQuadrangle))
-
-x = QuadraturePoint_Line( &
-  & order=p, &
-  & quadType=quadType1, &
-  & xij=[-1.0_DFP, 1.0_DFP], &
-  & layout="INCREASING", &
-  & alpha=alpha1, &
-  & beta=beta1, &
-  & lambda=lambda1)
-
-np = SIZE(x, 2)
-
-y = QuadraturePoint_Line( &
-  & order=q,  &
-  & quadType=quadType2, &
-  & xij=[-1.0_DFP, 1.0_DFP], &
-  & layout="INCREASING", &
-  & alpha=alpha2, &
-  & beta=beta2, &
-  & lambda=lambda2)
-
-nq = SIZE(y, 2)
+nipsx(1) = QuadratureNumber_Line(order=p, quadType=quadType1)
+nipsy(1) = QuadratureNumber_Line(order=q, quadType=quadType2)
 
 IF (PRESENT(xij)) THEN
-  nsd = SIZE(xij, 1)
+  nrow = MAX(SIZE(xij, 1), 2)
 ELSE
-  nsd = 2
+  nrow = 2
 END IF
 
-CALL Reallocate(ans, nsd + 1_I4B, np * nq)
-CALL Reallocate(temp, 3_I4B, np * nq)
+nrow = nrow + 1
+ncol = nipsx(1) * nipsy(1)
 
-kk = 0
-DO ii = 1, np
-  DO jj = 1, nq
-    kk = kk + 1
-    temp(1, kk) = x(1, ii)
-    temp(2, kk) = y(1, jj)
-    temp(3, kk) = x(2, ii) * y(2, jj)
-  END DO
-END DO
+ALLOCATE (ans(1:nrow, 1:ncol))
 
-IF (PRESENT(xij)) THEN
-  ans(1:nsd, :) = FromBiUnitQuadrangle2Quadrangle( &
-    & xin=temp(1:2, :), &
-    & x1=xij(:, 1), &
-    & x2=xij(:, 2), &
-    & x3=xij(:, 3), &
-    & x4=xij(:, 4))
-  ans(nsd + 1, :) = temp(3, :) * JacobianQuadrangle( &
-    &  from="BIUNIT", to="QUADRANGLE", xij=xij)
-ELSE
-  IF (astr%chars() .EQ. "UNIT") THEN
-    ans(1:nsd, :) = FromBiUnitQuadrangle2UnitQuadrangle( &
-      & xin=temp(1:2, :))
-    ans(nsd + 1, :) = temp(3, :) * JacobianQuadrangle( &
-      &  from="BIUNIT", to="UNIT", xij=xij)
-  ELSE
-    ans = temp
-  END IF
-END IF
-
-IF (ALLOCATED(temp)) DEALLOCATE (temp)
-IF (ALLOCATED(x)) DEALLOCATE (x)
-IF (ALLOCATED(y)) DEALLOCATE (y)
+CALL QuadraturePoint_Quadrangle1_(nipsx=nipsx, nipsy=nipsy, &
+      quadType1=quadType1, quadType2=quadType2, refQuadrangle=refQuadrangle, &
+        xij=xij, alpha1=alpha1, beta1=beta1, lambda1=lambda1, alpha2=alpha2, &
+                  beta2=beta2, lambda2=lambda2, ans=ans, nrow=nrow, ncol=ncol)
 
 END PROCEDURE QuadraturePoint_Quadrangle2
 
@@ -2041,20 +2007,24 @@ END PROCEDURE QuadraturePoint_Quadrangle2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE QuadraturePoint_Quadrangle3
-ans = QuadraturePoint_Quadrangle4( &
-  & nipsx=nips, &
-  & nipsy=nips, &
-  & quadType1=quadType, &
-  & quadType2=quadType, &
-  & refQuadrangle=refQuadrangle, &
-  & xij=xij, &
-  & alpha1=alpha, &
-  & beta1=beta, &
-  & lambda1=lambda, &
-  & alpha2=alpha, &
-  & beta2=beta, &
-  & lambda2=lambda &
-  & )
+INTEGER(I4B) :: nrow, ncol
+
+IF (PRESENT(xij)) THEN
+  nrow = MAX(SIZE(xij, 1), 2)
+ELSE
+  nrow = 2
+END IF
+
+nrow = nrow + 1
+ncol = nips(1) * nips(1)
+
+ALLOCATE (ans(1:nrow, 1:ncol))
+
+CALL QuadraturePoint_Quadrangle1_(nipsx=nips, nipsy=nips, &
+        quadType1=quadType, quadType2=quadType, refQuadrangle=refQuadrangle, &
+            xij=xij, alpha1=alpha, beta1=beta, lambda1=lambda, alpha2=alpha, &
+                    beta2=beta, lambda2=lambda, ans=ans, nrow=nrow, ncol=ncol)
+
 END PROCEDURE QuadraturePoint_Quadrangle3
 
 !----------------------------------------------------------------------------
@@ -2062,74 +2032,90 @@ END PROCEDURE QuadraturePoint_Quadrangle3
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE QuadraturePoint_Quadrangle4
-! internal variables
-REAL(DFP) :: x(2, nipsx(1)), y(2, nipsy(1)), temp(3, nipsy(1) * nipsx(1))
-INTEGER(I4B) :: ii, jj, kk, nsd, np, nq
-TYPE(String) :: astr
-
-astr = TRIM(UpperCase(refQuadrangle))
-
-x = QuadraturePoint_Line( &
-  & nips=nipsx, &
-  & quadType=quadType1, &
-  & xij=[-1.0_DFP, 1.0_DFP], &
-  & layout="INCREASING", &
-  & alpha=alpha1, &
-  & beta=beta1, &
-  & lambda=lambda1)
-
-np = SIZE(x, 2)
-
-y = QuadraturePoint_Line( &
-  & nips=nipsy,  &
-  & quadType=quadType2, &
-  & xij=[-1.0_DFP, 1.0_DFP], &
-  & layout="INCREASING", &
-  & alpha=alpha2, &
-  & beta=beta2, &
-  & lambda=lambda2)
-
-nq = SIZE(y, 2)
+INTEGER(I4B) :: nrow, ncol
 
 IF (PRESENT(xij)) THEN
-  nsd = SIZE(xij, 1)
+  nrow = MAX(SIZE(xij, 1), 2)
+ELSE
+  nrow = 2
+END IF
+
+nrow = nrow + 1
+ncol = nipsx(1) * nipsy(1)
+
+ALLOCATE (ans(1:nrow, 1:ncol))
+
+CALL QuadraturePoint_Quadrangle1_(nipsx=nipsx, nipsy=nipsy, &
+      quadType1=quadType1, quadType2=quadType2, refQuadrangle=refQuadrangle, &
+        xij=xij, alpha1=alpha1, beta1=beta1, lambda1=lambda1, alpha2=alpha2, &
+                  beta2=beta2, lambda2=lambda2, ans=ans, nrow=nrow, ncol=ncol)
+
+END PROCEDURE QuadraturePoint_Quadrangle4
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE QuadraturePoint_Quadrangle1_
+! internal variables
+REAL(DFP) :: x(4, nipsx(1)), y(2, nipsy(1)), areal
+INTEGER(I4B) :: ii, jj, kk, nsd, np, nq
+CHARACTER(len=1) :: astr
+
+REAL(DFP), PARAMETER :: x12(1, 2) = RESHAPE([-1.0_DFP, 1.0_DFP], [1, 2])
+
+IF (PRESENT(xij)) THEN
+  nsd = MAX(SIZE(xij, 1), 2)
 ELSE
   nsd = 2
 END IF
 
-CALL Reallocate(ans, nsd + 1_I4B, np * nq)
+! CALL Reallocate(ans, nsd + 1_I4B, np * nq)
+nrow = nsd + 1
+ncol = nipsx(1) * nipsy(1)
 
-kk = 0
-DO ii = 1, np
-  DO jj = 1, nq
-    kk = kk + 1
-    temp(1, kk) = x(1, ii)
-    temp(2, kk) = y(1, jj)
-    temp(3, kk) = x(2, ii) * y(2, jj)
-  END DO
+CALL QuadraturePoint_Line_(nips=nipsx, quadType=quadType1, xij=x12, &
+       layout="INCREASING", alpha=alpha1, beta=beta1, lambda=lambda1, ans=x, &
+                           nrow=ii, ncol=np)
+
+CALL QuadraturePoint_Line_(nips=nipsy, quadType=quadType2, xij=x12, &
+       layout="INCREASING", alpha=alpha2, beta=beta2, lambda=lambda2, ans=y, &
+                           nrow=ii, ncol=nq)
+
+DO CONCURRENT(ii=1:np, jj=1:nq)
+  ans(1, nq * (ii - 1) + jj) = x(1, ii)
+  ans(2, nq * (ii - 1) + jj) = y(1, jj)
+  ans(nrow, nq * (ii - 1) + jj) = x(2, ii) * y(2, jj)
 END DO
 
 IF (PRESENT(xij)) THEN
-  ans(1:nsd, :) = FromBiUnitQuadrangle2Quadrangle( &
-    & xin=temp(1:2, :), &
-    & x1=xij(:, 1), &
-    & x2=xij(:, 2), &
-    & x3=xij(:, 3), &
-    & x4=xij(:, 4))
-  ans(nsd + 1, :) = temp(3, :) * JacobianQuadrangle( &
-    &  from="BIUNIT", to="QUADRANGLE", xij=xij)
-ELSE
-  IF (astr%chars() .EQ. "UNIT") THEN
-    ans(1:nsd, :) = FromBiUnitQuadrangle2UnitQuadrangle( &
-      & xin=temp(1:2, :))
-    ans(nsd + 1, :) = temp(3, :) * JacobianQuadrangle( &
-      &  from="BIUNIT", to="UNIT", xij=xij)
-  ELSE
-    ans = temp
-  END IF
+  CALL FromBiUnitQuadrangle2Quadrangle_(xin=ans(1:2, :), x1=xij(:, 1), &
+          x2=xij(:, 2), x3=xij(:, 3), x4=xij(:, 4), ans=ans, nrow=ii, ncol=jj)
+
+  areal = JacobianQuadrangle(from="BIUNIT", to="QUADRANGLE", xij=xij)
+
+  DO CONCURRENT(ii=1:ncol)
+    ans(nrow, ii) = ans(nrow, ii) * areal
+  END DO
+
+  RETURN
 END IF
 
-END PROCEDURE QuadraturePoint_Quadrangle4
+astr = UpperCase(refQuadrangle(1:1))
+IF (astr .EQ. "U") THEN
+  CALL FromBiUnitQuadrangle2UnitQuadrangle_(xin=ans(1:2, :), ans=ans, &
+                                            nrow=ii, ncol=jj)
+
+  areal = JacobianQuadrangle(from="BIUNIT", to="UNIT", xij=xij)
+
+  DO CONCURRENT(ii=1:ncol)
+    ans(nrow, ii) = ans(nrow, ii) * areal
+  END DO
+
+  RETURN
+END IF
+
+END PROCEDURE QuadraturePoint_Quadrangle1_
 
 !----------------------------------------------------------------------------
 !

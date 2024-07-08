@@ -65,6 +65,7 @@ PUBLIC :: LagrangeEvalAll_Quadrangle
 PUBLIC :: LagrangeEvalAll_Quadrangle_
 
 PUBLIC :: QuadraturePoint_Quadrangle
+PUBLIC :: QuadraturePoint_Quadrangle_
 PUBLIC :: QuadratureNumber_Quadrangle
 
 PUBLIC :: FacetConnectivity_Quadrangle
@@ -2070,26 +2071,15 @@ INTERFACE QuadraturePoint_Quadrangle
     !! Order of integrand in x and y direction
     INTEGER(I4B), INTENT(IN) :: quadType
     !! Quadrature point type
-    !! GaussLegendre
-    !! GaussLegendreLobatto
-    !! GaussLegendreRadauLeft
-    !! GaussLegendreRadauRight
-    !! GaussChebyshev1
-    !! GaussChebyshev1Lobatto
-    !! GaussChebyshev1RadauLeft
-    !! GaussChebyshev1RadauRight
-    !! GaussUltraspherical
-    !! GaussUltrasphericalLobatto
-    !! GaussUltrasphericalRadauLeft
-    !! GaussUltrasphericalRadauRight
-    !! GaussJacobi
-    !! GaussJacobiLobatto
-    !! GaussJacobiRadauLeft
-    !! GaussJacobiRadauRight
+    !! GaussLegendre ! GaussLegendreLobatto ! GaussLegendreRadauLeft
+    !! GaussLegendreRadauRight ! GaussChebyshev1 ! GaussChebyshev1Lobatto
+    !! GaussChebyshev1RadauLeft ! GaussChebyshev1RadauRight
+    !! GaussUltraspherical ! GaussUltrasphericalLobatto
+    !! GaussUltrasphericalRadauLeft ! GaussUltrasphericalRadauRight
+    !! GaussJacobi ! GaussJacobiLobatto
+    !! GaussJacobiRadauLeft ! GaussJacobiRadauRight
     CHARACTER(*), INTENT(IN) :: refQuadrangle
-    !! Reference quadrangle
-    !! UNIT
-    !! BIUNIT
+    !! Reference quadrangle ! UNIT ! BIUNIT
     REAL(DFP), OPTIONAL, INTENT(IN) :: xij(:, :)
     !! four vertices of quadrangle in xij format
     REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
@@ -2117,27 +2107,15 @@ INTERFACE QuadraturePoint_Quadrangle
     !! order of  integrand in y direction
     INTEGER(I4B), INTENT(IN) :: quadType1, quadType2
     !! quadrature point type in x direction
-    !! Equidistance
-    !! GaussLegendre
-    !! GaussLegendreLobatto
-    !! GaussLegendreRadauLeft
-    !! GaussLegendreRadauRight
-    !! GaussChebyshev1
-    !! GaussChebyshev1Lobatto
-    !! GaussChebyshev1RadauLeft
-    !! GaussChebyshev1RadauRight
-    !! GaussUltraspherical
-    !! GaussUltrasphericalLobatto
-    !! GaussUltrasphericalRadauLeft
-    !! GaussUltrasphericalRadauRight
-    !! GaussJacobi
-    !! GaussJacobiLobatto
-    !! GaussJacobiRadauLeft
-    !! GaussJacobiRadauRight
+    !! Equidistance ! GaussLegendre ! GaussLegendreLobatto
+    !! GaussLegendreRadauLeft ! GaussLegendreRadauRight ! GaussChebyshev1
+    !! GaussChebyshev1Lobatto ! GaussChebyshev1RadauLeft
+    !! GaussChebyshev1RadauRight ! GaussUltraspherical
+    !! GaussUltrasphericalLobatto ! GaussUltrasphericalRadauLeft
+    !! GaussUltrasphericalRadauRight ! GaussJacobi
+    !! GaussJacobiLobatto ! GaussJacobiRadauLeft ! GaussJacobiRadauRight
     CHARACTER(*), INTENT(IN) :: refQuadrangle
-    !! Reference quadrangle
-    !! UNIT
-    !! BIUNIT
+    !! Reference quadrangle ! UNIT ! BIUNIT
     REAL(DFP), OPTIONAL, INTENT(IN) :: xij(:, :)
     !! four vertices of quadrangle in xij format
     REAL(DFP), OPTIONAL, INTENT(IN) :: alpha1
@@ -2171,27 +2149,15 @@ INTERFACE QuadraturePoint_Quadrangle
     INTEGER(I4B), INTENT(IN) :: nips(1)
     !! number of integration points in x and y direction
     INTEGER(I4B), INTENT(IN) :: quadType
-    !! interpolation point type
-    !! GaussLegendre
-    !! GaussLegendreLobatto
-    !! GaussLegendreRadauLeft
-    !! GaussLegendreRadauRight
-    !! GaussChebyshev1
-    !! GaussChebyshev1Lobatto
-    !! GaussChebyshev1RadauLeft
-    !! GaussChebyshev1RadauRight
-    !! GaussUltraspherical
-    !! GaussUltrasphericalLobatto
-    !! GaussUltrasphericalRadauLeft
-    !! GaussUltrasphericalRadauRight
-    !! GaussJacobi
-    !! GaussJacobiLobatto
-    !! GaussJacobiRadauLeft
-    !! GaussJacobiRadauRight
+    !! interpolation point type ! GaussLegendre ! GaussLegendreLobatto
+    !! GaussLegendreRadauLeft ! GaussLegendreRadauRight ! GaussChebyshev1
+    !! GaussChebyshev1Lobatto ! GaussChebyshev1RadauLeft
+    !! GaussChebyshev1RadauRight ! GaussUltraspherical
+    !! GaussUltrasphericalLobatto ! GaussUltrasphericalRadauLeft
+    !! GaussUltrasphericalRadauRight ! GaussJacobi
+    !! GaussJacobiLobatto ! GaussJacobiRadauLeft ! GaussJacobiRadauRight
     CHARACTER(*), INTENT(IN) :: refQuadrangle
-    !! Reference quadrangle
-    !! UNIT
-    !! BIUNIT
+    !! Reference quadrangle ! UNIT ! BIUNIT
     REAL(DFP), OPTIONAL, INTENT(IN) :: xij(:, :)
     !! four vertices of quadrangle in xij format
     REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
@@ -2219,27 +2185,15 @@ INTERFACE QuadraturePoint_Quadrangle
     !! order of  integrand in y direction
     INTEGER(I4B), INTENT(IN) :: quadType1, quadType2
     !! interpolation point type in x direction
-    !! Equidistance
-    !! GaussLegendre
-    !! GaussLegendreLobatto
-    !! GaussLegendreRadauLeft
-    !! GaussLegendreRadauRight
-    !! GaussChebyshev1
-    !! GaussChebyshev1Lobatto
-    !! GaussChebyshev1RadauLeft
-    !! GaussChebyshev1RadauRight
-    !! GaussUltraspherical
-    !! GaussUltrasphericalLobatto
-    !! GaussUltrasphericalRadauLeft
-    !! GaussUltrasphericalRadauRight
-    !! GaussJacobi
-    !! GaussJacobiLobatto
-    !! GaussJacobiRadauLeft
-    !! GaussJacobiRadauRight
+    !! Equidistance ! GaussLegendre ! GaussLegendreLobatto
+    !! GaussLegendreRadauLeft ! GaussLegendreRadauRight ! GaussChebyshev1
+    !! GaussChebyshev1Lobatto ! GaussChebyshev1RadauLeft
+    !! GaussChebyshev1RadauRight ! GaussUltraspherical
+    !! GaussUltrasphericalLobatto ! GaussUltrasphericalRadauLeft
+    !! GaussUltrasphericalRadauRight ! GaussJacobi
+    !! GaussJacobiLobatto ! GaussJacobiRadauLeft ! GaussJacobiRadauRight
     CHARACTER(*), INTENT(IN) :: refQuadrangle
-    !! Reference quadrangle
-    !! UNIT
-    !! BIUNIT
+    !! Reference quadrangle ! UNIT ! BIUNIT
     REAL(DFP), OPTIONAL, INTENT(IN) :: xij(:, :)
     !! four vertices of quadrangle in xij format
     REAL(DFP), OPTIONAL, INTENT(IN) :: alpha1
@@ -2258,6 +2212,50 @@ INTERFACE QuadraturePoint_Quadrangle
     !! interpolation points in xij format
   END FUNCTION QuadraturePoint_Quadrangle4
 END INTERFACE QuadraturePoint_Quadrangle
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE QuadraturePoint_Quadrangle_
+  MODULE SUBROUTINE QuadraturePoint_Quadrangle1_(nipsx, nipsy, quadType1, &
+       quadType2, refQuadrangle, xij, alpha1, beta1, lambda1, alpha2, beta2, &
+                                                 lambda2, ans, nrow, ncol)
+    INTEGER(I4B), INTENT(IN) :: nipsx(1)
+    !! order of integrand in x direction
+    INTEGER(I4B), INTENT(IN) :: nipsy(1)
+    !! order of  integrand in y direction
+    INTEGER(I4B), INTENT(IN) :: quadType1, quadType2
+    !! interpolation point type in x direction
+    !! Equidistance ! GaussLegendre ! GaussLegendreLobatto
+    !! GaussLegendreRadauLeft ! GaussLegendreRadauRight ! GaussChebyshev1
+    !! GaussChebyshev1Lobatto ! GaussChebyshev1RadauLeft
+    !! GaussChebyshev1RadauRight ! GaussUltraspherical
+    !! GaussUltrasphericalLobatto ! GaussUltrasphericalRadauLeft
+    !! GaussUltrasphericalRadauRight ! GaussJacobi
+    !! GaussJacobiLobatto ! GaussJacobiRadauLeft ! GaussJacobiRadauRight
+    CHARACTER(*), INTENT(IN) :: refQuadrangle
+    !! Reference quadrangle ! UNIT ! BIUNIT
+    REAL(DFP), OPTIONAL, INTENT(IN) :: xij(:, :)
+    !! four vertices of quadrangle in xij format
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha1
+    !! Jacobi parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: beta1
+    !! Jacobi parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: lambda1
+    !! Ultraspherical parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha2
+    !! Jacobi parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: beta2
+    !! Jacobi parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: lambda2
+    !! Ultraspherical parameter
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    !! interpolation points in xij format
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+    !! number of rows and columns written in ans
+  END SUBROUTINE QuadraturePoint_Quadrangle1_
+END INTERFACE QuadraturePoint_Quadrangle_
 
 !----------------------------------------------------------------------------
 !                                          LagrangeGradientEvalAll_Quadrangle
