@@ -2415,152 +2415,233 @@ END PROCEDURE LagrangeEvalAll_Tetrahedron2_
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE QuadraturePoint_Tetrahedron1
-REAL(DFP), ALLOCATABLE :: temp_t(:, :)
-TYPE(string) :: astr
+INTEGER(I4B) :: nrow, ncol, n
 
-IF (order .LE. MAX_ORDER_TETRAHEDRON_SOLIN) THEN
-  astr = TRIM(UpperCase(refTetrahedron))
-  temp_t = QuadraturePointTetrahedronSolin(order=order)
-  CALL Reallocate(ans, 4_I4B, SIZE(temp_t, 2, kind=I4B))
+nrow = 4
+ncol = QuadratureNumberTetrahedronSolin(order=order)
 
-  IF (PRESENT(xij)) THEN
-    ans(1:3, :) = FromUnitTetrahedron2Tetrahedron(  &
-      & xin=temp_t(1:3, :), &
-      & x1=xij(:, 1), &
-      & x2=xij(:, 2), &
-      & x3=xij(:, 3), &
-      & x4=xij(:, 4) &
-      & )
-
-    ans(4, :) = temp_t(4, :) * JacobianTetrahedron( &
-      & from="UNIT", &
-      & to="TETRAHEDRON", &
-      & xij=xij)
-
-  ELSE
-
-    IF (astr%chars() .EQ. "BIUNIT") THEN
-      ans(1:3, :) = FromUnitTetrahedron2BiUnitTetrahedron(xin=temp_t(1:3, :))
-      ans(4, :) = temp_t(4, :) * JacobianTetrahedron( &
-        & from="UNIT", &
-        & to="BIUNIT")
-
-    ELSE
-      ans = temp_t
-    END IF
-  END IF
-
-  IF (ALLOCATED(temp_t)) DEALLOCATE (temp_t)
-ELSE
-  ans = TensorQuadraturepoint_Tetrahedron( &
-    & order=order, &
-    & quadtype=quadtype, &
-    & refTetrahedron=refTetrahedron, &
-    & xij=xij)
+IF (ncol .LT. 0) THEN
+  n = 1_I4B + INT(order / 2, kind=I4B)
+  ncol = n * (n + 1) * n
 END IF
+
+ALLOCATE (ans(nrow, ncol))
+
+CALL QuadraturePoint_Tetrahedron1_(order, quadType, refTetrahedron, xij, &
+                                   ans, nrow, ncol)
+
 END PROCEDURE QuadraturePoint_Tetrahedron1
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE QuadraturePoint_Tetrahedron1_
+INTEGER(I4B), PARAMETER :: nsd = 3
+CHARACTER(1) :: astr
+INTEGER(I4B) :: ii, jj
+REAL(DFP) :: areal
+LOGICAL(LGT) :: abool
+
+abool = order .GT. MAX_ORDER_TETRAHEDRON_SOLIN
+IF (abool) THEN
+  CALL TensorQuadraturepoint_Tetrahedron_(order=order, quadtype=quadtype, &
+        refTetrahedron=refTetrahedron, xij=xij, ans=ans, nrow=nrow, ncol=ncol)
+  RETURN
+END IF
+
+CALL QuadraturePointTetrahedronSolin(order=order, ans=ans, nrow=nrow, &
+                                     ncol=ncol)
+
+! CALL Reallocate(ans, 4_I4B, SIZE(temp_t, 2, kind=I4B))
+
+IF (PRESENT(xij)) THEN
+  ! ans(1:3, :) = FromUnitTetrahedron2Tetrahedron(  &
+  CALL FromUnitTetrahedron2Tetrahedron_(xin=ans(1:nsd, 1:ncol), &
+            x1=xij(:, 1), x2=xij(:, 2), x3=xij(:, 3), x4=xij(:, 4), ans=ans, &
+                                        nrow=ii, ncol=jj)
+
+  areal = JacobianTetrahedron(from="UNIT", to="TETRAHEDRON", xij=xij)
+
+  DO CONCURRENT(ii=1:ncol)
+    ans(nrow, ii) = ans(nrow, ii) * areal
+  END DO
+
+  RETURN
+
+END IF
+
+astr = UpperCase(reftetrahedron(1:1))
+
+IF (astr .EQ. "B") THEN
+
+  CALL FromUnitTetrahedron2BiUnitTetrahedron_(xin=ans(1:nsd, 1:ncol), &
+                                              nrow=ii, ncol=jj, ans=ans)
+
+  areal = JacobianTetrahedron(from="UNIT", to="BIUNIT")
+
+  DO CONCURRENT(ii=1:ncol)
+    ans(nrow, ii) = ans(nrow, ii) * areal
+  END DO
+
+END IF
+
+END PROCEDURE QuadraturePoint_Tetrahedron1_
 
 !----------------------------------------------------------------------------
 !                                              QuadraturePoint_Tetrahedron2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE QuadraturePoint_Tetrahedron2
-INTEGER(I4B) :: order
-order = QuadratureOrderTetrahedronSolin(nips(1))
-IF (order .LT. 0) THEN
-  ans = Quadraturepoint_Tetrahedron1( &
-    & order=order,  &
-    & quadtype=quadType, &
-    & refTetrahedron=refTetrahedron, &
-    & xij=xij)
-ELSE
-  CALL Errormsg(&
-    & msg="This routine is available for nips = [  &
-    &  1, 4, 5, 11, 14, 24, 31, 43, 53, 126, 210, 330, 495, 715, 1001]  &
-    & TRY CALLING TensorQuadraturePoint_Tetrahedron() instead.", &
-    & file=__FILE__, &
-    & routine="QuadraturePoint_Tetrahedron2()", &
-    & line=__LINE__, &
-    & unitno=stderr)
-END IF
+INTEGER(I4B) :: nrow, ncol
+nrow = 4
+ncol = nips(1)
+ALLOCATE (ans(nrow, ncol))
+CALL QuadraturePoint_Tetrahedron2_(nips=nips, quadType=quadType, &
+        refTetrahedron=refTetrahedron, xij=xij, ans=ans, nrow=nrow, ncol=ncol)
 END PROCEDURE QuadraturePoint_Tetrahedron2
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE QuadraturePoint_Tetrahedron2_
+INTEGER(I4B) :: order
+
+order = QuadratureOrderTetrahedronSolin(nips(1))
+
+IF (order .LT. 0) THEN
+
+  CALL Errormsg( &
+    msg="This routine is available for nips = [&
+    &  1, 4, 5, 11, 14, 24, 31, 43, 53, 126, 210, 330, 495, 715, 1001] &
+    & TRY CALLING TensorQuadraturePoint_Tetrahedron() instead.", &
+     routine="QuadraturePoint_Tetrahedron2()", &
+     file=__FILE__, line=__LINE__, unitno=stderr)
+
+  nrow = 0; ncol = 0
+  RETURN
+
+END IF
+
+CALL Quadraturepoint_Tetrahedron1_(order=order, quadtype=quadType, &
+        refTetrahedron=refTetrahedron, xij=xij, ans=ans, nrow=nrow, ncol=ncol)
+END PROCEDURE QuadraturePoint_Tetrahedron2_
 
 !----------------------------------------------------------------------------
 !                                         TensorQuadraturePoint_Tetrahedron
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE TensorQuadraturePoint_Tetrahedron1
-INTEGER(I4B) :: n(4)
+INTEGER(I4B) :: n(3), nrow, ncol
+
 n = 1_I4B + INT(order / 2, kind=I4B)
 n(2) = n(2) + 1
-ans = TensorQuadraturePoint_Tetrahedron2( &
-  & nipsx=n(1), &
-  & nipsy=n(2), &
-  & nipsz=n(3), &
-  & quadType=quadType, &
-  & refTetrahedron=refTetrahedron, &
-  & xij=xij)
+
+nrow = 4
+ncol = n(1) * n(2) * n(3)
+
+ALLOCATE (ans(nrow, ncol))
+
+CALL TensorQuadraturePoint_Tetrahedron2_(nipsx=n(1), nipsy=n(2), &
+      nipsz=n(3), quadType=quadType, reftetrahedron=reftetrahedron, xij=xij, &
+                                         ans=ans, nrow=nrow, ncol=ncol)
 END PROCEDURE TensorQuadraturePoint_Tetrahedron1
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE TensorQuadraturePoint_Tetrahedron1_
+INTEGER(I4B) :: n(3)
+
+n = 1_I4B + INT(order / 2, kind=I4B)
+n(2) = n(2) + 1
+
+CALL TensorQuadraturePoint_Tetrahedron2_(nipsx=n(1), nipsy=n(2), &
+      nipsz=n(3), quadType=quadType, refTetrahedron=refTetrahedron, xij=xij, &
+                                         ans=ans, nrow=nrow, ncol=ncol)
+
+END PROCEDURE TensorQuadraturePoint_Tetrahedron1_
 
 !----------------------------------------------------------------------------
 !                                         TensorQuadraturePoint_Tetrahedron
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE TensorQuadraturePoint_Tetrahedron2
-INTEGER(I4B) :: n(3), nsd
-REAL(DFP), ALLOCATABLE :: temp_q(:, :), temp_t(:, :)
-TYPE(String) :: astr
+INTEGER(I4B) :: nrow, ncol
 
-astr = TRIM(UpperCase(refTetrahedron))
-n(1) = nipsx(1)
-n(2) = nipsy(1)
-n(3) = nipsz(1)
+nrow = 4
+ncol = nipsx(1) * nipsy(1) * nipsz(1)
 
-temp_q = QuadraturePoint_Hexahedron(&
-  & nipsx=n(1:1),  &
-  & nipsy=n(2:2),  &
-  & nipsz=n(3:3),  &
-  & quadType1=GaussLegendreLobatto, &
-  & quadType2=GaussJacobiRadauLeft, &
-  & quadType3=GaussJacobiRadauLeft, &
-  & refHexahedron="BIUNIT", &
-  & alpha2=1.0_DFP, &
-  & beta2=0.0_DFP, &
-  & alpha3=2.0_DFP, &
-  & beta3=0.0_DFP)
+ALLOCATE (ans(nrow, ncol))
 
-CALL Reallocate(temp_t, SIZE(temp_q, 1, KIND=I4B), SIZE(temp_q, 2, KIND=I4B))
-temp_t(1:3, :) = FromBiUnitHexahedron2UnitTetrahedron(xin=temp_q(1:3, :))
-temp_t(4, :) = temp_q(4, :) / 8.0_DFP
-nsd = 3_I4B
-CALL Reallocate(ans, 4_I4B, SIZE(temp_q, 2, KIND=I4B))
+CALL TensorQuadraturePoint_Tetrahedron2_(nipsx=nipsx, nipsy=nipsy, &
+     nipsz=nipsz, quadType=quadType, refTetrahedron=refTetrahedron, xij=xij, &
+                                         ans=ans, nrow=nrow, ncol=ncol)
+END PROCEDURE TensorQuadraturePoint_Tetrahedron2
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE TensorQuadraturePoint_Tetrahedron2_
+INTEGER(I4B), PARAMETER :: nsd = 3
+REAL(DFP), PARAMETER :: one_by_8 = 1.0_DFP / 8.0_DFP
+
+REAL(DFP) :: areal
+
+INTEGER(I4B) :: ii, jj
+CHARACTER(1) :: astr
+
+nrow = 4
+ncol = nipsx(1) * nipsy(1) * nipsz(1)
+
+! temp_q = QuadraturePoint_Hexahedron(&
+CALL QuadraturePoint_Hexahedron_(nipsx=nipsx, nipsy=nipsy, nipsz=nipsz, &
+             quadType1=GaussLegendreLobatto, quadType2=GaussJacobiRadauLeft, &
+     quadType3=GaussJacobiRadauLeft, refHexahedron="BIUNIT", alpha2=1.0_DFP, &
+      beta2=0.0_DFP, alpha3=2.0_DFP, beta3=0.0_DFP, ans=ans, nrow=ii, ncol=jj)
+
+! ans(1:nsd, :) = FromBiUnitHexahedron2UnitTetrahedron(xin=temp_q(1:3, :))
+CALL FromBiUnitHexahedron2UnitTetrahedron_(xin=ans(1:nsd, 1:ncol), ans=ans, &
+                                           nrow=ii, ncol=jj)
+
+DO CONCURRENT(ii=1:ncol)
+  ans(nrow, ii) = ans(nrow, ii) * one_by_8
+END DO
 
 IF (PRESENT(xij)) THEN
-  ans(1:3, :) = FromUnitTetrahedron2Tetrahedron(  &
-    & xin=temp_t(1:3, :), &
-    & x1=xij(:, 1), &
-    & x2=xij(:, 2), &
-    & x3=xij(:, 3), &
-    & x4=xij(:, 4) &
-    & )
-  ans(4, :) = temp_t(4, :) * JacobianTetrahedron( &
-    & from="UNIT", &
-    & to="TETRAHEDRON", &
-    & xij=xij)
-ELSE
-  IF (astr%chars() .EQ. "BIUNIT") THEN
-    ans(1:3, :) = FromUnitTetrahedron2BiUnitTetrahedron(xin=temp_t(1:3, :))
-    ans(4, :) = temp_t(4, :) * JacobianTetrahedron( &
-      & from="UNIT", &
-      & to="BIUNIT")
-  ELSE
-    ans = temp_t
-  END IF
+
+  ! ans(1:3, :) = FromUnitTetrahedron2Tetrahedron(  &
+  CALL FromUnitTetrahedron2Tetrahedron_(xin=ans(1:nsd, 1:ncol), &
+            x1=xij(:, 1), x2=xij(:, 2), x3=xij(:, 3), x4=xij(:, 4), ans=ans, &
+                                        nrow=ii, ncol=jj)
+
+  areal = JacobianTetrahedron(from="UNIT", to="TETRAHEDRON", xij=xij)
+
+  DO CONCURRENT(ii=1:ncol)
+    ans(nrow, ii) = ans(nrow, ii) * areal
+  END DO
+
+  RETURN
 END IF
 
-IF (ALLOCATED(temp_q)) DEALLOCATE (temp_q)
-IF (ALLOCATED(temp_t)) DEALLOCATE (temp_t)
-END PROCEDURE TensorQuadraturePoint_Tetrahedron2
+astr = UpperCase(reftetrahedron(1:1))
+
+IF (astr .EQ. "B") THEN
+  CALL FromUnitTetrahedron2BiUnitTetrahedron_(xin=ans(1:nsd, 1:ncol), &
+                                              ans=ans, nrow=ii, ncol=jj)
+
+  areal = JacobianTetrahedron(from="UNIT", to="BIUNIT")
+
+  DO CONCURRENT(ii=1:ncol)
+    ans(nrow, ii) = ans(nrow, ii) * areal
+  END DO
+  RETURN
+END IF
+
+END PROCEDURE TensorQuadraturePoint_Tetrahedron2_
 
 !----------------------------------------------------------------------------
 !                                       LagrangeGradientEvalAll_Tetrahedron
