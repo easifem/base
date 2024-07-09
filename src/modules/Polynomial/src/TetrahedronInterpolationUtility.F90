@@ -51,9 +51,14 @@ PUBLIC :: GetVertexDOF_Tetrahedron
 PUBLIC :: GetEdgeDOF_Tetrahedron
 PUBLIC :: GetFacetDOF_Tetrahedron
 PUBLIC :: GetCellDOF_Tetrahedron
+
 PUBLIC :: LagrangeEvalAll_Tetrahedron
 PUBLIC :: LagrangeEvalAll_Tetrahedron_
+
 PUBLIC :: QuadraturePoint_Tetrahedron
+PUBLIC :: QuadraturePoint_Tetrahedron_
+PUBLIC :: QuadratureNumber_Tetrahedron
+
 PUBLIC :: RefElemDomain_Tetrahedron
 PUBLIC :: LagrangeGradientEvalAll_Tetrahedron
 PUBLIC :: LagrangeGradientEvalAll_Tetrahedron_
@@ -2308,6 +2313,22 @@ INTERFACE LagrangeEvalAll_Tetrahedron_
 END INTERFACE LagrangeEvalAll_Tetrahedron_
 
 !----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE
+  MODULE FUNCTION QuadratureNumber_Tetrahedron(order, quadType) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order of integrand
+    INTEGER(I4B), INTENT(IN) :: quadType
+    !! quadrature point type
+    !! currently this variable is not used
+    INTEGER(I4B) :: ans
+    !! Quadrature points
+  END FUNCTION QuadratureNumber_Tetrahedron
+END INTERFACE
+
+!----------------------------------------------------------------------------
 !                                            QuadraturePoints_Tetrahedron
 !----------------------------------------------------------------------------
 
@@ -2490,7 +2511,7 @@ INTERFACE TensorQuadraturePoint_Tetrahedron_
 END INTERFACE TensorQuadraturePoint_Tetrahedron_
 
 !----------------------------------------------------------------------------
-!                                            TensorQuadraturePoints_Tetrahedron
+!                                        TensorQuadraturePoints_Tetrahedron
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -2515,9 +2536,7 @@ INTERFACE TensorQuadraturePoint_Tetrahedron
     !! quadrature point type
     !! currently this variable is not used
     CHARACTER(*), INTENT(IN) :: refTetrahedron
-    !! Reference triangle
-    !! BIUNIT
-    !! UNIT
+    !! Reference triangle ! BIUNIT ! UNIT
     REAL(DFP), OPTIONAL, INTENT(IN) :: xij(:, :)
     !! nodal coordinates of triangle.
     !! The number of rows in xij should be 3
@@ -2588,8 +2607,7 @@ INTERFACE LagrangeGradientEvalAll_Tetrahedron
     REAL(DFP), INTENT(INOUT) :: xij(:, :)
     !! Interpolation points
     CHARACTER(*), OPTIONAL, INTENT(IN) :: refTetrahedron
-    !! UNIT *default
-    !! BIUNIT
+    !! UNIT *default ! BIUNIT
     REAL(DFP), OPTIONAL, INTENT(INOUT) :: coeff(SIZE(xij, 2), SIZE(xij, 2))
     !! Coefficient of Lagrange polynomials
     LOGICAL(LGT), OPTIONAL :: firstCall
@@ -2598,12 +2616,7 @@ INTERFACE LagrangeGradientEvalAll_Tetrahedron
     !! Default value of firstCall is True
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: basisType
     !! Monomials *Default
-    !! Legendre
-    !! Lobatto
-    !! Chebyshev
-    !! Jacobi
-    !! Ultraspherical
-    !! Heirarchical
+    !! Legendre ! Lobatto ! Chebyshev ! Jacobi ! Ultraspherical ! Heirarchical
     !! Orthogonal
     REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
     !! Jacobi parameter
