@@ -47,7 +47,10 @@ PUBLIC :: FacetBasis_Hexahedron
 PUBLIC :: CellBasis_Hexahedron
 PUBLIC :: HeirarchicalBasis_Hexahedron
 PUBLIC :: HeirarchicalBasis_Hexahedron_
+
 PUBLIC :: QuadraturePoint_Hexahedron
+PUBLIC :: QuadraturePoint_Hexahedron_
+
 PUBLIC :: LagrangeEvalAll_Hexahedron
 PUBLIC :: LagrangeEvalAll_Hexahedron_
 PUBLIC :: GetVertexDOF_Hexahedron
@@ -347,13 +350,8 @@ END INTERFACE GetCellDOF_Hexahedron
 !----------------------------------------------------------------------------
 
 INTERFACE
-  MODULE PURE FUNCTION QuadratureNumber_Hexahedron( &
-    & p,  &
-    & q,  &
-    & r,  &
-    & quadType1,  &
-    & quadType2,  &
-    & quadType3) RESULT(ans)
+  MODULE PURE FUNCTION QuadratureNumber_Hexahedron(p, q, r, quadType1, &
+                                             quadType2, quadType3) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: p, q, r
     INTEGER(I4B), INTENT(IN) :: quadType1, quadType2, quadType3
     INTEGER(I4B) :: ans(3)
@@ -369,9 +367,8 @@ END INTERFACE
 ! summary:  This function returns the edge connectivity of Hexahedron
 
 INTERFACE
-  MODULE PURE FUNCTION FacetConnectivity_Hexahedron( &
-    & baseInterpol, &
-    & baseContinuity) RESULT(ans)
+  MODULE PURE FUNCTION FacetConnectivity_Hexahedron(baseInterpol, &
+                                                   baseContinuity) RESULT(ans)
     CHARACTER(*), INTENT(IN) :: baseInterpol
     CHARACTER(*), INTENT(IN) :: baseContinuity
     INTEGER(I4B) :: ans(4, 6)
@@ -387,9 +384,8 @@ END INTERFACE
 ! summary:  This function returns the edge connectivity of Hexahedron
 
 INTERFACE
-  MODULE PURE FUNCTION EdgeConnectivity_Hexahedron( &
-    & baseInterpol,  &
-    & baseContinuity) RESULT(ans)
+  MODULE PURE FUNCTION EdgeConnectivity_Hexahedron(baseInterpol, &
+                                                   baseContinuity) RESULT(ans)
     CHARACTER(*), INTENT(IN) :: baseInterpol
     CHARACTER(*), INTENT(IN) :: baseContinuity
     INTEGER(I4B) :: ans(2, 12)
@@ -2416,38 +2412,21 @@ END INTERFACE HeirarchicalBasis_Hexahedron_
 ! summary:  Returns quadrature points on reference hexahedron
 
 INTERFACE QuadraturePoint_Hexahedron
-  MODULE FUNCTION QuadraturePoint_Hexahedron1( &
-    & order, &
-    & quadType, &
-    & refHexahedron, &
-    & xij, &
-    & alpha, &
-    & beta, &
-    & lambda) RESULT(ans)
+  MODULE FUNCTION QuadraturePoint_Hexahedron1(order, quadType, &
+                          refHexahedron, xij, alpha, beta, lambda) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
     !! order of integrand in x, y, and z direction
     INTEGER(I4B), INTENT(IN) :: quadType
     !! quadrature point type
-    !! GaussLegendre
-    !! GaussLegendreLobatto
-    !! GaussLegendreRadauLeft
-    !! GaussLegendreRadauRight
-    !! GaussChebyshev1
-    !! GaussChebyshev1Lobatto
-    !! GaussChebyshev1RadauLeft
-    !! GaussChebyshev1RadauRight
-    !! GaussUltraspherical
-    !! GaussUltrasphericalLobatto
-    !! GaussUltrasphericalRadauLeft
-    !! GaussUltrasphericalRadauRight
-    !! GaussJacobi
-    !! GaussJacobiLobatto
-    !! GaussJacobiRadauLeft
+    !! GaussLegendre ! GaussLegendreLobatto ! GaussLegendreRadauLeft
+    !! GaussLegendreRadauRight ! GaussChebyshev1 ! GaussChebyshev1Lobatto
+    !! GaussChebyshev1RadauLeft ! GaussChebyshev1RadauRight
+    !! GaussUltraspherical ! GaussUltrasphericalLobatto
+    !! GaussUltrasphericalRadauLeft ! GaussUltrasphericalRadauRight
+    !! GaussJacobi ! GaussJacobiLobatto ! GaussJacobiRadauLeft
     !! GaussJacobiRadauRight
     CHARACTER(*), INTENT(IN) :: refHexahedron
-    !! Reference hexahedron
-    !! UNIT
-    !! BIUNIT
+    !! Reference hexahedron ! UNIT ! BIUNIT
     REAL(DFP), OPTIONAL, INTENT(IN) :: xij(:, :)
     !! nodal coordiantes of hexahedron in xij format
     REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
@@ -2462,19 +2441,48 @@ INTERFACE QuadraturePoint_Hexahedron
 END INTERFACE QuadraturePoint_Hexahedron
 
 !----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE QuadraturePoint_Hexahedron_
+  MODULE SUBROUTINE QuadraturePoint_Hexahedron1_(order, quadType, &
+                     refHexahedron, xij, alpha, beta, lambda, ans, nrow, ncol)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order of integrand in x, y, and z direction
+    INTEGER(I4B), INTENT(IN) :: quadType
+    !! quadrature point type
+    !! GaussLegendre ! GaussLegendreLobatto ! GaussLegendreRadauLeft
+    !! GaussLegendreRadauRight ! GaussChebyshev1 ! GaussChebyshev1Lobatto
+    !! GaussChebyshev1RadauLeft ! GaussChebyshev1RadauRight
+    !! GaussUltraspherical ! GaussUltrasphericalLobatto
+    !! GaussUltrasphericalRadauLeft ! GaussUltrasphericalRadauRight
+    !! GaussJacobi ! GaussJacobiLobatto ! GaussJacobiRadauLeft
+    !! GaussJacobiRadauRight
+    CHARACTER(*), INTENT(IN) :: refHexahedron
+    !! Reference hexahedron ! UNIT ! BIUNIT
+    REAL(DFP), OPTIONAL, INTENT(IN) :: xij(:, :)
+    !! nodal coordiantes of hexahedron in xij format
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
+    !! Jacobi parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: beta
+    !! Jacobi parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: lambda
+    !! Ultraspherical parameter
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    !! quadrature points in xij format
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+    !! number of rows and columns written in ans
+  END SUBROUTINE QuadraturePoint_Hexahedron1_
+END INTERFACE QuadraturePoint_Hexahedron_
+
+!----------------------------------------------------------------------------
 !                                                QuadraturePoint_Hexahedron
 !----------------------------------------------------------------------------
 
 INTERFACE QuadraturePoint_Hexahedron
-  MODULE FUNCTION QuadraturePoint_Hexahedron2(  &
-    & p, q, r, &
-    & quadType1, quadType2, quadType3, &
-    & refHexahedron, &
-    & xij, &
-    & alpha1, beta1, lambda1, &
-    & alpha2, beta2, lambda2, &
-    & alpha3, beta3, lambda3 &
-    & ) RESULT(ans)
+  MODULE FUNCTION QuadraturePoint_Hexahedron2(p, q, r, quadType1, &
+           quadType2, quadType3, refHexahedron, xij, alpha1, beta1, lambda1, &
+                   alpha2, beta2, lambda2, alpha3, beta3, lambda3) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: p
     !! order of integrand in x direction
     INTEGER(I4B), INTENT(IN) :: q
@@ -2483,27 +2491,15 @@ INTERFACE QuadraturePoint_Hexahedron
     !! order of  integrand in z direction
     INTEGER(I4B), INTENT(IN) :: quadType1, quadType2, quadType3
     !! quadrature point type in x direction
-    !! Equidistance
-    !! GaussLegendre
-    !! GaussLegendreLobatto
-    !! GaussLegendreRadauLeft
-    !! GaussLegendreRadauRight
-    !! GaussChebyshev1
-    !! GaussChebyshev1Lobatto
-    !! GaussChebyshev1RadauLeft
-    !! GaussChebyshev1RadauRight
-    !! GaussUltraspherical
-    !! GaussUltrasphericalLobatto
-    !! GaussUltrasphericalRadauLeft
-    !! GaussUltrasphericalRadauRight
-    !! GaussJacobi
-    !! GaussJacobiLobatto
-    !! GaussJacobiRadauLeft
-    !! GaussJacobiRadauRight
+    !! Equidistance ! GaussLegendre ! GaussLegendreLobatto
+    !! GaussLegendreRadauLeft ! GaussLegendreRadauRight ! GaussChebyshev1
+    !! GaussChebyshev1Lobatto ! GaussChebyshev1RadauLeft
+    !! GaussChebyshev1RadauRight ! GaussUltraspherical
+    !! GaussUltrasphericalLobatto ! GaussUltrasphericalRadauLeft
+    !! GaussUltrasphericalRadauRight ! GaussJacobi
+    !! GaussJacobiLobatto ! GaussJacobiRadauLeft ! GaussJacobiRadauRight
     CHARACTER(*), INTENT(IN) :: refHexahedron
-    !! Reference hexahedron
-    !! UNIT
-    !! BIUNIT
+    !! Reference hexahedron ! UNIT ! BIUNIT
     REAL(DFP), OPTIONAL, INTENT(IN) :: xij(:, :)
     !! four vertices of quadrangle in xij format
     REAL(DFP), OPTIONAL, INTENT(IN) :: alpha1, beta1, lambda1
@@ -2518,6 +2514,45 @@ INTERFACE QuadraturePoint_Hexahedron
 END INTERFACE QuadraturePoint_Hexahedron
 
 !----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE QuadraturePoint_Hexahedron_
+  MODULE SUBROUTINE QuadraturePoint_Hexahedron2_(p, q, r, quadType1, &
+           quadType2, quadType3, refHexahedron, xij, alpha1, beta1, lambda1, &
+              alpha2, beta2, lambda2, alpha3, beta3, lambda3, ans, nrow, ncol)
+    INTEGER(I4B), INTENT(IN) :: p
+    !! order of integrand in x direction
+    INTEGER(I4B), INTENT(IN) :: q
+    !! order of  integrand in y direction
+    INTEGER(I4B), INTENT(IN) :: r
+    !! order of  integrand in z direction
+    INTEGER(I4B), INTENT(IN) :: quadType1, quadType2, quadType3
+    !! quadrature point type in x direction
+    !! Equidistance ! GaussLegendre ! GaussLegendreLobatto
+    !! GaussLegendreRadauLeft ! GaussLegendreRadauRight ! GaussChebyshev1
+    !! GaussChebyshev1Lobatto ! GaussChebyshev1RadauLeft
+    !! GaussChebyshev1RadauRight ! GaussUltraspherical
+    !! GaussUltrasphericalLobatto ! GaussUltrasphericalRadauLeft
+    !! GaussUltrasphericalRadauRight ! GaussJacobi
+    !! GaussJacobiLobatto ! GaussJacobiRadauLeft ! GaussJacobiRadauRight
+    CHARACTER(*), INTENT(IN) :: refHexahedron
+    !! Reference hexahedron ! UNIT ! BIUNIT
+    REAL(DFP), OPTIONAL, INTENT(IN) :: xij(:, :)
+    !! four vertices of quadrangle in xij format
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha1, beta1, lambda1
+    !! Jacobi parameter and Ultraspherical parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha2, beta2, lambda2
+    !! Jacobi parameter and Ultraspherical parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha3, beta3, lambda3
+    !! Jacobi parameter and Ultraspherical parameter
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    !! interpolation points in xij format
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+  END SUBROUTINE QuadraturePoint_Hexahedron2_
+END INTERFACE QuadraturePoint_Hexahedron_
+
+!----------------------------------------------------------------------------
 !                                                 QuadraturePoint_Hexahedron
 !----------------------------------------------------------------------------
 
@@ -2526,33 +2561,18 @@ END INTERFACE QuadraturePoint_Hexahedron
 ! summary:  Returns quadrature points on reference quadrangle
 
 INTERFACE QuadraturePoint_Hexahedron
-  MODULE FUNCTION QuadraturePoint_Hexahedron3( &
-    & nips, &
-    & quadType, &
-    & refHexahedron, &
-    & xij, &
-    & alpha, &
-    & beta, &
-    & lambda) RESULT(ans)
+  MODULE FUNCTION QuadraturePoint_Hexahedron3(nips, quadType, &
+                          refHexahedron, xij, alpha, beta, lambda) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: nips(1)
     !! number of integration points in x, y, and z direction
     INTEGER(I4B), INTENT(IN) :: quadType
     !! interpolation point type
-    !! GaussLegendre
-    !! GaussLegendreLobatto
-    !! GaussLegendreRadauLeft
-    !! GaussLegendreRadauRight
-    !! GaussChebyshev1
-    !! GaussChebyshev1Lobatto
-    !! GaussChebyshev1RadauLeft
-    !! GaussChebyshev1RadauRight
-    !! GaussUltraspherical
-    !! GaussUltrasphericalLobatto
-    !! GaussUltrasphericalRadauLeft
-    !! GaussUltrasphericalRadauRight
-    !! GaussJacobi
-    !! GaussJacobiLobatto
-    !! GaussJacobiRadauLeft
+    !! GaussLegendre ! GaussLegendreLobatto ! GaussLegendreRadauLeft
+    !! GaussLegendreRadauRight ! GaussChebyshev1 ! GaussChebyshev1Lobatto
+    !! GaussChebyshev1RadauLeft ! GaussChebyshev1RadauRight
+    !! GaussUltraspherical ! GaussUltrasphericalLobatto
+    !! GaussUltrasphericalRadauLeft ! GaussUltrasphericalRadauRight
+    !! GaussJacobi ! GaussJacobiLobatto ! GaussJacobiRadauLeft
     !! GaussJacobiRadauRight
     CHARACTER(*), INTENT(IN) :: refHexahedron
     !! Reference hexahedron
@@ -2572,19 +2592,42 @@ INTERFACE QuadraturePoint_Hexahedron
 END INTERFACE QuadraturePoint_Hexahedron
 
 !----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE QuadraturePoint_Hexahedron_
+  MODULE SUBROUTINE QuadraturePoint_Hexahedron3_(nips, quadType, &
+                     refHexahedron, xij, alpha, beta, lambda, ans, nrow, ncol)
+    INTEGER(I4B), INTENT(IN) :: nips(1)
+    !! number of integration points in x, y, and z direction
+    INTEGER(I4B), INTENT(IN) :: quadType
+    !! interpolation point type
+    CHARACTER(*), INTENT(IN) :: refHexahedron
+    !! Reference hexahedron
+    !! UNIT
+    !! BIUNIT
+    REAL(DFP), OPTIONAL, INTENT(IN) :: xij(:, :)
+    !! four vertices of quadrangle in xij format
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
+    !! Jacobi parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: beta
+    !! Jacobi parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: lambda
+    !! Ultraspherical parameter
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    !! interpolation points in xij format
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+  END SUBROUTINE QuadraturePoint_Hexahedron3_
+END INTERFACE QuadraturePoint_Hexahedron_
+
+!----------------------------------------------------------------------------
 !                                                QuadraturePoint_Hexahedron
 !----------------------------------------------------------------------------
 
 INTERFACE QuadraturePoint_Hexahedron
-  MODULE FUNCTION QuadraturePoint_Hexahedron4(  &
-    & nipsx, nipsy, nipsz, &
-    & quadType1, quadType2, quadType3, &
-    & refHexahedron, &
-    & xij, &
-    & alpha1, beta1, lambda1, &
-    & alpha2, beta2, lambda2, &
-    & alpha3, beta3, lambda3 &
-    & ) RESULT(ans)
+  MODULE FUNCTION QuadraturePoint_Hexahedron4(nipsx, nipsy, nipsz, &
+         quadType1, quadType2, quadType3, refHexahedron, xij, alpha1, beta1, &
+          lambda1, alpha2, beta2, lambda2, alpha3, beta3, lambda3) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: nipsx(1)
     !! order of integrand in x direction
     INTEGER(I4B), INTENT(IN) :: nipsy(1)
@@ -2593,27 +2636,16 @@ INTERFACE QuadraturePoint_Hexahedron
     !! order of  integrand in z direction
     INTEGER(I4B), INTENT(IN) :: quadType1, quadType2, quadType3
     !! quadrature point type in x, y, and z direction
-    !! Equidistance
-    !! GaussLegendre
-    !! GaussLegendreLobatto
-    !! GaussLegendreRadauLeft
-    !! GaussLegendreRadauRight
-    !! GaussChebyshev1
-    !! GaussChebyshev1Lobatto
-    !! GaussChebyshev1RadauLeft
-    !! GaussChebyshev1RadauRight
-    !! GaussUltraspherical
-    !! GaussUltrasphericalLobatto
-    !! GaussUltrasphericalRadauLeft
-    !! GaussUltrasphericalRadauRight
-    !! GaussJacobi
-    !! GaussJacobiLobatto
-    !! GaussJacobiRadauLeft
+    !! Equidistance ! GaussLegendre ! GaussLegendreLobatto
+    !! GaussLegendreRadauLeft ! GaussLegendreRadauRight
+    !! GaussChebyshev1 ! GaussChebyshev1Lobatto
+    !! GaussChebyshev1RadauLeft ! GaussChebyshev1RadauRight
+    !! GaussUltraspherical ! GaussUltrasphericalLobatto
+    !! GaussUltrasphericalRadauLeft ! GaussUltrasphericalRadauRight
+    !! GaussJacobi ! GaussJacobiLobatto ! GaussJacobiRadauLeft
     !! GaussJacobiRadauRight
     CHARACTER(*), INTENT(IN) :: refHexahedron
-    !! Reference hexahedron
-    !! UNIT
-    !! BIUNIT
+    !! Reference hexahedron ! UNIT ! BIUNIT
     REAL(DFP), OPTIONAL, INTENT(IN) :: xij(:, :)
     !! four vertices of quadrangle in xij format
     REAL(DFP), OPTIONAL, INTENT(IN) :: alpha1, beta1, lambda1
@@ -2626,6 +2658,47 @@ INTERFACE QuadraturePoint_Hexahedron
     !! interpolation points in xij format
   END FUNCTION QuadraturePoint_Hexahedron4
 END INTERFACE QuadraturePoint_Hexahedron
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE QuadraturePoint_Hexahedron_
+  MODULE SUBROUTINE QuadraturePoint_Hexahedron4_(nipsx, nipsy, nipsz, &
+         quadType1, quadType2, quadType3, refhexahedron, xij, alpha1, beta1, &
+     lambda1, alpha2, beta2, lambda2, alpha3, beta3, lambda3, ans, nrow, ncol)
+    INTEGER(I4B), INTENT(IN) :: nipsx(1)
+    !! Order of integrand in x direction
+    INTEGER(I4B), INTENT(IN) :: nipsy(1)
+    !! Order of  integrand in y direction
+    INTEGER(I4B), INTENT(IN) :: nipsz(1)
+    !! Order of  integrand in z direction
+    INTEGER(I4B), INTENT(IN) :: quadType1, quadType2, quadType3
+    !! Quadrature point type in x, y, and z direction
+    !! Equidistance ! GaussLegendre ! GaussLegendreLobatto
+    !! GaussLegendreRadauLeft ! GaussLegendreRadauRight
+    !! GaussChebyshev1 ! GaussChebyshev1Lobatto
+    !! GaussChebyshev1RadauLeft ! GaussChebyshev1RadauRight
+    !! GaussUltraspherical ! GaussUltrasphericalLobatto
+    !! GaussUltrasphericalRadauLeft ! GaussUltrasphericalRadauRight
+    !! GaussJacobi ! GaussJacobiLobatto ! GaussJacobiRadauLeft
+    !! GaussJacobiRadauRight
+    CHARACTER(*), INTENT(IN) :: refhexahedron
+    !! Reference hexahedron ! UNIT ! BIUNIT
+    REAL(DFP), OPTIONAL, INTENT(IN) :: xij(:, :)
+    !! four vertices of quadrangle in xij format
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha1, beta1, lambda1
+    !! Jacobi and Ultraspherical parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha2, beta2, lambda2
+    !! Jacobi and Ultraspherical parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha3, beta3, lambda3
+    !! Jacobi and Ultraspherical parameter
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    !! results
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+    !! number of rows and columns
+  END SUBROUTINE QuadraturePoint_Hexahedron4_
+END INTERFACE QuadraturePoint_Hexahedron_
 
 !----------------------------------------------------------------------------
 !                                             LagrangeEvalAll_Hexahedron
