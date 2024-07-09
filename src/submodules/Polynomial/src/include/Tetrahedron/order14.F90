@@ -7,4 +7,4 @@ PURE SUBROUTINE QP_Tetrahedron_Order14(ans, nrow, ncol)
 
   CALL QP_Tetrahedron_Order15(ans, nrow, ncol)
 
-END SUBROUTINE
+END SUBROUTINE QP_Tetrahedron_Order14
