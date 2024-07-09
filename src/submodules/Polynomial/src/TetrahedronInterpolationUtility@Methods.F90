@@ -2411,6 +2411,22 @@ CALL GEMM(C=ans(1:nrow, 1:ncol), alpha=1.0_DFP, A=xx, B=coeff0)
 END PROCEDURE LagrangeEvalAll_Tetrahedron2_
 
 !----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE QuadratureNumber_Tetrahedron
+INTEGER(I4B) :: n
+
+ans = QuadratureNumberTetrahedronSolin(order=order)
+
+IF (ans .LT. 0) THEN
+  n = 1_I4B + INT(order / 2, kind=I4B)
+  ans = n * (n + 1) * n
+END IF
+
+END PROCEDURE QuadratureNumber_Tetrahedron
+
+!----------------------------------------------------------------------------
 !                                               QuadraturePoint_Tetrahedron
 !----------------------------------------------------------------------------
 
@@ -2418,12 +2434,7 @@ MODULE PROCEDURE QuadraturePoint_Tetrahedron1
 INTEGER(I4B) :: nrow, ncol, n
 
 nrow = 4
-ncol = QuadratureNumberTetrahedronSolin(order=order)
-
-IF (ncol .LT. 0) THEN
-  n = 1_I4B + INT(order / 2, kind=I4B)
-  ncol = n * (n + 1) * n
-END IF
+ncol = QuadratureNumber_Tetrahedron(order=order, quadType=quadType)
 
 ALLOCATE (ans(nrow, ncol))
 
