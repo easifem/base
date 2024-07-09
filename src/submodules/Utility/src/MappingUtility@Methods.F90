@@ -241,11 +241,25 @@ END PROCEDURE FromBiUnitQuadrangle2Quadrangle1_
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE FromBiUnitHexahedron2Hexahedron1
+INTEGER(I4B) :: nrow, ncol
+CALL FromBiUnitHexahedron2Hexahedron1_(xin, x1, x2, x3, x4, x5, x6, x7, x8, &
+                                       ans, nrow, ncol)
+
+END PROCEDURE FromBiUnitHexahedron2Hexahedron1
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE FromBiUnitHexahedron2Hexahedron1_
 INTEGER(I4B) :: ii
 REAL(DFP) :: xi, eta, p1, p2, p3, p4, p5, p6, p7, p8, zeta
 REAL(DFP), PARAMETER :: one = 1.0_DFP, p125 = 0.125_DFP
 
-DO ii = 1, SIZE(ans, 2)
+nrow = SIZE(x1)
+ncol = SIZE(xin, 2)
+
+DO ii = 1, ncol
   xi = xin(1, ii)
   eta = xin(2, ii)
   zeta = xin(3, ii)
@@ -257,35 +271,48 @@ DO ii = 1, SIZE(ans, 2)
   p6 = p125 * (one + xi) * (one - eta) * (one + zeta)
   p7 = p125 * (one + xi) * (one + eta) * (one + zeta)
   p8 = p125 * (one - xi) * (one + eta) * (one + zeta)
-  ans(:, ii) = x1 * p1 + x2 * p2 + x3 * p3 + x4 * p4 + &
-    & x5 * p5 + x6 * p6 + x7 * p7 + x8 * p8
+  ans(1:nrow, ii) = x1 * p1 + x2 * p2 + x3 * p3 + x4 * p4 + &
+                    x5 * p5 + x6 * p6 + x7 * p7 + x8 * p8
 END DO
-END PROCEDURE FromBiUnitHexahedron2Hexahedron1
+END PROCEDURE FromBiUnitHexahedron2Hexahedron1_
 
 !----------------------------------------------------------------------------
 !                                       FromBiUnitHexahedron2UnitHexahedron
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE FromBiUnitHexahedron2UnitHexahedron1
-REAL(DFP) :: xij(3, 8)
-xij = RefCoord_Hexahedron(refHexahedron="UNIT")
-ans = FromBiUnitHexahedron2Hexahedron(&
-  & xin=xin,  &
-  & x1=xij(:, 1),  &
-  & x2=xij(:, 2), &
-  & x3=xij(:, 3), &
-  & x4=xij(:, 4), &
-  & x5=xij(:, 5), &
-  & x6=xij(:, 6), &
-  & x7=xij(:, 7), &
-  & x8=xij(:, 8))
+INTEGER(I4B) :: nrow, ncol
+CALL FromBiUnitHexahedron2UnitHexahedron1_(xin, ans, nrow, ncol)
 END PROCEDURE FromBiUnitHexahedron2UnitHexahedron1
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE FromBiUnitHexahedron2UnitHexahedron1_
+REAL(DFP) :: xij(3, 8)
+
+xij = RefCoord_Hexahedron(refHexahedron="UNIT")
+
+CALL FromBiUnitHexahedron2Hexahedron_(xin=xin, x1=xij(:, 1), x2=xij(:, 2), &
+       x3=xij(:, 3), x4=xij(:, 4), x5=xij(:, 5), x6=xij(:, 6), x7=xij(:, 7), &
+                                  x8=xij(:, 8), ans=ans, nrow=nrow, ncol=ncol)
+END PROCEDURE FromBiUnitHexahedron2UnitHexahedron1_
 
 !----------------------------------------------------------------------------
 !                                           FromBiUnitHexahedron2Hexahedron
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE FromUnitHexahedron2BiUnitHexahedron1
+INTEGER(I4B) :: nrow, ncol
+CALL FromUnitHexahedron2BiUnitHexahedron1_(xin, ans, nrow, ncol)
+END PROCEDURE FromUnitHexahedron2BiUnitHexahedron1
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE FromUnitHexahedron2BiUnitHexahedron1_
 INTEGER(I4B) :: ii
 REAL(DFP) :: xi, eta, p1, p2, p3, p4, p5, p6, p7, p8, zeta
 REAL(DFP), PARAMETER :: one = 1.0_DFP, p125 = 0.125_DFP
@@ -293,7 +320,10 @@ REAL(DFP) :: x(3, 8)
 
 x = RefCoord_Hexahedron(refHexahedron="BIUNIT")
 
-DO ii = 1, SIZE(ans, 2)
+nrow = SIZE(xin, 1)
+ncol = SIZE(xin, 2)
+
+DO ii = 1, ncol
   xi = xin(1, ii)
   eta = xin(2, ii)
   zeta = xin(3, ii)
@@ -305,10 +335,11 @@ DO ii = 1, SIZE(ans, 2)
   p6 = (xi) * (one - eta) * (zeta)
   p7 = (xi) * (eta) * (zeta)
   p8 = (one - xi) * (eta) * (zeta)
-  ans(:, ii) = x(:, 1) * p1 + x(:, 2) * p2 + x(:, 3) * p3 + x(:, 4) * p4 + &
-    & x(:, 5) * p5 + x(:, 6) * p6 + x(:, 7) * p7 + x(:, 8) * p8
+ ans(1:nrow, ii) = x(1:nrow, 1) * p1 + x(1:nrow, 2) * p2 + x(1:nrow, 3) * p3 &
+                 + x(1:nrow, 4) * p4 + x(1:nrow, 5) * p5 + x(1:nrow, 6) * p6 &
+                    + x(1:nrow, 7) * p7 + x(1:nrow, 8) * p8
 END DO
-END PROCEDURE FromUnitHexahedron2BiUnitHexahedron1
+END PROCEDURE FromUnitHexahedron2BiUnitHexahedron1_
 
 !----------------------------------------------------------------------------
 !                                                     FromTriangle2Square_
