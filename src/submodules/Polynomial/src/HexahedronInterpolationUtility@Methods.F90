@@ -2156,116 +2156,51 @@ END PROCEDURE HeirarchicalBasis_Hexahedron2_
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE QuadraturePoint_Hexahedron1
-ans = QuadraturePoint_Hexahedron2( &
-  & p=order, &
-  & q=order, &
-  & r=order, &
-  & quadType1=quadType, &
-  & quadType2=quadType, &
-  & quadType3=quadType, &
-  & refHexahedron=refHexahedron, &
-  & xij=xij, &
-  & alpha1=alpha, &
-  & beta1=beta, &
-  & lambda1=lambda, &
-  & alpha2=alpha, &
-  & beta2=beta, &
-  & lambda2=lambda, &
-  & alpha3=alpha, &
-  & beta3=beta, &
-  & lambda3=lambda &
-  & )
+INTEGER(I4B) :: nrow, ncol, nips(1)
+
+nips(1) = QuadratureNumber_Line(quadType=quadType, order=order)
+
+nrow = 4
+ncol = nips(1) * nips(1) * nips(1)
+
+ALLOCATE (ans(nrow, ncol))
+
+CALL QuadraturePoint_Hexahedron4_(nipsx=nips, nipsy=nips, nipsz=nips, &
+                 quadType1=quadType, quadType2=quadType, quadType3=quadType, &
+             refHexahedron=refHexahedron, xij=xij, alpha1=alpha, beta1=beta, &
+     lambda1=lambda, alpha2=alpha, beta2=beta, lambda2=lambda, alpha3=alpha, &
+                    beta3=beta, lambda3=lambda, ans=ans, nrow=nrow, ncol=ncol)
 END PROCEDURE QuadraturePoint_Hexahedron1
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE QuadraturePoint_Hexahedron1_
+CALL QuadraturePoint_Hexahedron2_(p=order, q=order, r=order, &
+                 quadType1=quadType, quadType2=quadType, quadType3=quadType, &
+             refHexahedron=refHexahedron, xij=xij, alpha1=alpha, beta1=beta, &
+     lambda1=lambda, alpha2=alpha, beta2=beta, lambda2=lambda, alpha3=alpha, &
+                    beta3=beta, lambda3=lambda, ans=ans, nrow=nrow, ncol=ncol)
+END PROCEDURE QuadraturePoint_Hexahedron1_
 
 !----------------------------------------------------------------------------
 !                                                 QuadraturePoint_Hexahedron
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE QuadraturePoint_Hexahedron2
-! internal variables
-REAL(DFP), ALLOCATABLE :: x(:, :), y(:, :), z(:, :), temp(:, :)
-INTEGER(I4B) :: ii, jj, kk, nsd, np, nq, nr, cnt
-TYPE(String) :: astr
+INTEGER(I4B), DIMENSION(1) :: nipsx, nipsy, nipsz
+INTEGER(I4B) :: nrow, ncol
 
-astr = UpperCase(refHexahedron)
+nipsx(1) = QuadratureNumber_Line(quadType=quadType1, order=p)
+nipsy(1) = QuadratureNumber_Line(quadType=quadType2, order=q)
+nipsz(1) = QuadratureNumber_Line(quadType=quadType3, order=r)
 
-x = QuadraturePoint_Line( &
-  & order=p, &
-  & quadType=quadType1, &
-  & xij=[-1.0_DFP, 1.0_DFP], &
-  & layout="INCREASING", &
-  & alpha=alpha1, &
-  & beta=beta1, &
-  & lambda=lambda1)
-np = SIZE(x, 2)
-
-y = QuadraturePoint_Line( &
-  & order=q,  &
-  & quadType=quadType2, &
-  & xij=[-1.0_DFP, 1.0_DFP], &
-  & layout="INCREASING", &
-  & alpha=alpha2, &
-  & beta=beta2, &
-  & lambda=lambda2)
-nq = SIZE(y, 2)
-
-z = QuadraturePoint_Line( &
-  & order=r,  &
-  & quadType=quadType2, &
-  & xij=[-1.0_DFP, 1.0_DFP], &
-  & layout="INCREASING", &
-  & alpha=alpha3, &
-  & beta=beta3, &
-  & lambda=lambda3)
-nr = SIZE(z, 2)
-
-nsd = 3
-CALL Reallocate(ans, 4_I4B, np * nq * nr)
-CALL Reallocate(temp, 4_I4B, np * nq * nr)
-
-cnt = 0
-DO ii = 1, np
-  DO jj = 1, nq
-    DO kk = 1, nr
-      cnt = cnt + 1
-      temp(1, cnt) = x(1, ii)
-      temp(2, cnt) = y(1, jj)
-      temp(3, cnt) = z(1, kk)
-      temp(4, cnt) = x(2, ii) * y(2, jj) * z(2, kk)
-    END DO
-  END DO
-END DO
-
-IF (PRESENT(xij)) THEN
-  ans(1:nsd, :) = FromBiUnitHexahedron2Hexahedron( &
-    & xin=temp(1:3, :), &
-    & x1=xij(:, 1), &
-    & x2=xij(:, 2), &
-    & x3=xij(:, 3), &
-    & x4=xij(:, 4), &
-    & x5=xij(:, 5), &
-    & x6=xij(:, 6), &
-    & x7=xij(:, 7), &
-    & x8=xij(:, 8)  &
-    & )
-  ans(4, :) = temp(4, :) * JacobianHexahedron( &
-    & from="BIUNIT", to="HEXAHEDRON", xij=xij)
-
-ELSE
-  IF (astr%chars() .EQ. "UNIT") THEN
-    ans(1:nsd, :) = FromBiUnitHexahedron2UnitHexahedron( &
-      & xin=temp(1:3, :))
-    ans(4, :) = temp(4, :) * JacobianHexahedron( &
-      & from="BIUNIT", to="UNIT", xij=xij)
-  ELSE
-    ans = temp
-  END IF
-END IF
-
-IF (ALLOCATED(temp)) DEALLOCATE (temp)
-IF (ALLOCATED(x)) DEALLOCATE (x)
-IF (ALLOCATED(y)) DEALLOCATE (y)
-IF (ALLOCATED(z)) DEALLOCATE (z)
+CALL QuadraturePoint_Hexahedron4_(nipsx=nipsx, nipsy=nipsy, nipsz=nipsz, &
+              quadType1=quadType1, quadType2=quadType2, quadType3=quadType3, &
+           refHexahedron=refHexahedron, xij=xij, alpha1=alpha1, beta1=beta1, &
+               lambda1=lambda1, alpha2=alpha2, beta2=beta2, lambda2=lambda2, &
+   alpha3=alpha3, beta3=beta3, lambda3=lambda3, ans=ans, nrow=nrow, ncol=ncol)
 
 END PROCEDURE QuadraturePoint_Hexahedron2
 
@@ -2274,25 +2209,16 @@ END PROCEDURE QuadraturePoint_Hexahedron2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE QuadraturePoint_Hexahedron3
-ans = QuadraturePoint_Hexahedron4( &
-  & nipsx=nips, &
-  & nipsy=nips, &
-  & nipsz=nips, &
-  & quadType1=quadType, &
-  & quadType2=quadType, &
-  & quadType3=quadType, &
-  & refHexahedron=refHexahedron, &
-  & xij=xij, &
-  & alpha1=alpha, &
-  & beta1=beta, &
-  & lambda1=lambda, &
-  & alpha2=alpha, &
-  & beta2=beta, &
-  & lambda2=lambda, &
-  & alpha3=alpha, &
-  & beta3=beta, &
-  & lambda3=lambda &
-  & )
+INTEGER(I4B) :: nrow, ncol
+
+ALLOCATE (ans(nrow, ncol))
+
+CALL QuadraturePoint_Hexahedron4_(nipsx=nips, nipsy=nips, nipsz=nips, &
+                 quadType1=quadType, quadType2=quadType, quadType3=quadType, &
+             refHexahedron=refHexahedron, xij=xij, alpha1=alpha, beta1=beta, &
+     lambda1=lambda, alpha2=alpha, beta2=beta, lambda2=lambda, alpha3=alpha, &
+                    beta3=beta, lambda3=lambda, ans=ans, nrow=nrow, ncol=ncol)
+
 END PROCEDURE QuadraturePoint_Hexahedron3
 
 !----------------------------------------------------------------------------
@@ -2300,87 +2226,93 @@ END PROCEDURE QuadraturePoint_Hexahedron3
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE QuadraturePoint_Hexahedron4
-! internal variables
-REAL(DFP) :: x(2, nipsx(1)), y(2, nipsy(1)), z(2, nipsz(1)), &
-& temp(4, nipsy(1) * nipsx(1) * nipsz(1))
-INTEGER(I4B) :: ii, jj, kk, nsd, np, nq, nr, cnt
-TYPE(String) :: astr
+INTEGER(I4B) :: nrow, ncol
 
-astr = UpperCase(refHexahedron)
+ALLOCATE (ans(nrow, ncol))
 
-x = QuadraturePoint_Line( &
-  & nips=nipsx, &
-  & quadType=quadType1, &
-  & xij=[-1.0_DFP, 1.0_DFP], &
-  & layout="INCREASING", &
-  & alpha=alpha1, &
-  & beta=beta1, &
-  & lambda=lambda1)
-np = SIZE(x, 2)
+CALL QuadraturePoint_Hexahedron4_(nipsx=nipsx, nipsy=nipsy, nipsz=nipsz, &
+              quadType1=quadType1, quadType2=quadType2, quadType3=quadType3, &
+           refHexahedron=refHexahedron, xij=xij, alpha1=alpha1, beta1=beta1, &
+               lambda1=lambda1, alpha2=alpha2, beta2=beta2, lambda2=lambda2, &
+   alpha3=alpha3, beta3=beta3, lambda3=lambda3, ans=ans, nrow=nrow, ncol=ncol)
 
-y = QuadraturePoint_Line( &
-  & nips=nipsy,  &
-  & quadType=quadType2, &
-  & xij=[-1.0_DFP, 1.0_DFP], &
-  & layout="INCREASING", &
-  & alpha=alpha2, &
-  & beta=beta2, &
-  & lambda=lambda2)
-nq = SIZE(y, 2)
+END PROCEDURE QuadraturePoint_Hexahedron4
 
-z = QuadraturePoint_Line( &
-  & nips=nipsz,  &
-  & quadType=quadType3, &
-  & xij=[-1.0_DFP, 1.0_DFP], &
-  & layout="INCREASING", &
-  & alpha=alpha3, &
-  & beta=beta3, &
-  & lambda=lambda3)
-nr = SIZE(z, 2)
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
 
-nsd = 3
-CALL Reallocate(ans, 4_I4B, np * nq * nr)
+MODULE PROCEDURE QuadraturePoint_Hexahedron4_
+INTEGER(I4B), PARAMETER :: nsd = 3
+
+REAL(DFP) :: x(2, nipsx(1)), y(2, nipsy(1)), z(2, nipsz(1)), areal
+
+INTEGER(I4B) :: ii, jj, kk, cnt
+
+REAL(DFP), PARAMETER :: x12(1, 2) = RESHAPE([-1.0_DFP, 1.0_DFP], [1, 2])
+
+CHARACTER(len=1) :: astr
+
+nrow = 4
+ncol = nipsx(1) * nipsy(1) * nipsz(1)
+
+CALL QuadraturePoint_Line_(nips=nipsx, quadType=quadType1, xij=x12, &
+                           layout="INCREASING", alpha=alpha1, beta=beta1, &
+                           lambda=lambda1, ans=x, nrow=ii, ncol=jj)
+
+CALL QuadraturePoint_Line_(nips=nipsy, quadType=quadType2, xij=x12, &
+              layout="INCREASING", alpha=alpha2, beta=beta2, lambda=lambda2, &
+                           ans=y, nrow=ii, ncol=jj)
+
+CALL QuadraturePoint_Line_(nips=nipsz, quadType=quadType3, xij=x12, &
+       layout="INCREASING", alpha=alpha3, beta=beta3, lambda=lambda3, ans=z, &
+                           nrow=ii, ncol=jj)
 
 cnt = 0
-DO ii = 1, np
-  DO jj = 1, nq
-    DO kk = 1, nr
+DO ii = 1, nipsx(1)
+  DO jj = 1, nipsy(1)
+    DO kk = 1, nipsz(1)
       cnt = cnt + 1
-      temp(1, cnt) = x(1, ii)
-      temp(2, cnt) = y(1, jj)
-      temp(3, cnt) = z(1, kk)
-      temp(4, cnt) = x(2, ii) * y(2, jj) * z(2, kk)
+      ans(1, cnt) = x(1, ii)
+      ans(2, cnt) = y(1, jj)
+      ans(3, cnt) = z(1, kk)
+      ans(4, cnt) = x(2, ii) * y(2, jj) * z(2, kk)
     END DO
   END DO
 END DO
 
 IF (PRESENT(xij)) THEN
-  ans(1:nsd, :) = FromBiUnitHexahedron2Hexahedron( &
-    & xin=temp(1:3, :), &
-    & x1=xij(:, 1), &
-    & x2=xij(:, 2), &
-    & x3=xij(:, 3), &
-    & x4=xij(:, 4), &
-    & x5=xij(:, 5), &
-    & x6=xij(:, 6), &
-    & x7=xij(:, 7), &
-    & x8=xij(:, 8)  &
-    & )
-  ans(4, :) = temp(4, :) * JacobianHexahedron( &
-    & from="BIUNIT", to="HEXAHEDRON", xij=xij)
+  ! ans(1:nsd, :) = FromBiUnitHexahedron2Hexahedron( &
+ CALL FromBiUnitHexahedron2Hexahedron_(xin=ans(1:nsd, 1:ncol), x1=xij(:, 1), &
+       x2=xij(:, 2), x3=xij(:, 3), x4=xij(:, 4), x5=xij(:, 5), x6=xij(:, 6), &
+                        x7=xij(:, 7), x8=xij(:, 8), ans=ans, nrow=ii, ncol=jj)
 
-ELSE
-  IF (astr%chars() .EQ. "UNIT") THEN
-    ans(1:nsd, :) = FromBiUnitHexahedron2UnitHexahedron( &
-      & xin=temp(1:3, :))
-    ans(4, :) = temp(4, :) * JacobianHexahedron( &
-      & from="BIUNIT", to="UNIT", xij=xij)
-  ELSE
-    ans = temp
-  END IF
+  areal = JacobianHexahedron(from="BIUNIT", to="HEXAHEDRON", xij=xij)
+
+  DO CONCURRENT(ii=1:ncol)
+    ans(nrow, ii) = ans(nrow, ii) * areal
+  END DO
+
+  RETURN
+
 END IF
 
-END PROCEDURE QuadraturePoint_Hexahedron4
+astr = UpperCase(refhexahedron(1:1))
+
+IF (astr .EQ. "U") THEN
+  CALL FromBiUnitHexahedron2UnitHexahedron_(xin=ans(1:nsd, 1:ncol), ans=ans, &
+                                            nrow=ii, ncol=jj)
+
+  areal = JacobianHexahedron(from="BIUNIT", to="UNIT", xij=xij)
+
+  DO CONCURRENT(ii=1:ncol)
+    ans(nrow, ii) = ans(nrow, ii) * areal
+  END DO
+
+  RETURN
+END IF
+
+END PROCEDURE QuadraturePoint_Hexahedron4_
 
 !----------------------------------------------------------------------------
 !                                               LagrangeEvallAll_Hexahedron
