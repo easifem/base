@@ -2341,6 +2341,33 @@ INTERFACE QuadraturePoint_Tetrahedron
 END INTERFACE QuadraturePoint_Tetrahedron
 
 !----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE QuadraturePoint_Tetrahedron_
+  MODULE SUBROUTINE QuadraturePoint_Tetrahedron1_(order, quadType, &
+                                         refTetrahedron, xij, ans, nrow, ncol)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order of integrand
+    INTEGER(I4B), INTENT(IN) :: quadType
+    !! quadrature point type
+    !! currently this variable is not used
+    CHARACTER(*), INTENT(IN) :: refTetrahedron
+    !! Reference triangle
+    !! BIUNIT
+    !! UNIT
+    !! If xij is present then this argument is ignored
+    REAL(DFP), OPTIONAL, INTENT(IN) :: xij(:, :)
+    !! nodal coordinates of triangle.
+    !! The number of rows in xij should be  3.
+    !! The number of columns in xij should be 4
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    !! Quadrature points
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+  END SUBROUTINE QuadraturePoint_Tetrahedron1_
+END INTERFACE QuadraturePoint_Tetrahedron_
+
+!----------------------------------------------------------------------------
 !                                            QuadraturePoints_Tetrahedron
 !----------------------------------------------------------------------------
 
@@ -2377,6 +2404,37 @@ INTERFACE QuadraturePoint_Tetrahedron
 END INTERFACE QuadraturePoint_Tetrahedron
 
 !----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE QuadraturePoint_Tetrahedron_
+  MODULE SUBROUTINE QuadraturePoint_Tetrahedron2_(nips, quadType, &
+                                         refTetrahedron, xij, ans, nrow, ncol)
+    INTEGER(I4B), INTENT(IN) :: nips(1)
+    !! nips(1) .LE. 79, then we call
+    !! economical quadrature rules.
+    !! Otherwise, this routine will retport
+    !! error
+    INTEGER(I4B), INTENT(IN) :: quadType
+    !! quadrature point type,
+    !! currently this variable is not used
+    CHARACTER(*), INTENT(IN) :: refTetrahedron
+    !! Reference triangle
+    !! BIUNIT
+    !! UNIT
+    !! If xij is present then this argument is ignored
+    REAL(DFP), OPTIONAL, INTENT(IN) :: xij(:, :)
+    !! nodal coordinates of triangle.
+    !! The number of rows in xij should be 3
+    !! The number of columns in xij should be 4
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    !! Quadrature points
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+    !! number of rows ans columns
+  END SUBROUTINE QuadraturePoint_Tetrahedron2_
+END INTERFACE QuadraturePoint_Tetrahedron_
+
+!----------------------------------------------------------------------------
 !                                            TensorQuadraturePoints_Tetrahedron
 !----------------------------------------------------------------------------
 
@@ -2404,6 +2462,32 @@ INTERFACE TensorQuadraturePoint_Tetrahedron
     !! Quadrature points
   END FUNCTION TensorQuadraturePoint_Tetrahedron1
 END INTERFACE TensorQuadraturePoint_Tetrahedron
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE TensorQuadraturePoint_Tetrahedron_
+  MODULE SUBROUTINE TensorQuadraturePoint_Tetrahedron1_(order, quadType, &
+                                         refTetrahedron, xij, ans, nrow, ncol)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order of integrand
+    INTEGER(I4B), INTENT(IN) :: quadType
+    !! quadrature point type
+    !! currently this variable is not used
+    CHARACTER(*), INTENT(IN) :: refTetrahedron
+    !! Reference triangle
+    !! BIUNIT
+    !! UNIT
+    REAL(DFP), OPTIONAL, INTENT(IN) :: xij(:, :)
+    !! nodal coordinates of triangle.
+    !! The number of rows in xij can be 4.
+    !! The number of columns in xij should be 4
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    !! Quadrature points
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+  END SUBROUTINE TensorQuadraturePoint_Tetrahedron1_
+END INTERFACE TensorQuadraturePoint_Tetrahedron_
 
 !----------------------------------------------------------------------------
 !                                            TensorQuadraturePoints_Tetrahedron
@@ -2442,6 +2526,36 @@ INTERFACE TensorQuadraturePoint_Tetrahedron
     !! Quadrature points
   END FUNCTION TensorQuadraturePoint_Tetrahedron2
 END INTERFACE TensorQuadraturePoint_Tetrahedron
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE TensorQuadraturePoint_Tetrahedron_
+  MODULE SUBROUTINE TensorQuadraturePoint_Tetrahedron2_(nipsx, nipsy, &
+                        nipsz, quadType, refTetrahedron, xij, ans, nrow, ncol)
+    INTEGER(I4B), INTENT(IN) :: nipsx(1)
+    !! number of integration points in x direction
+    INTEGER(I4B), INTENT(IN) :: nipsy(1)
+    !! number of integration points in y direction
+    INTEGER(I4B), INTENT(IN) :: nipsz(1)
+    !! number of integration points in z direction
+    INTEGER(I4B), INTENT(IN) :: quadType
+    !! quadrature point type
+    !! currently this variable is not used
+    CHARACTER(*), INTENT(IN) :: refTetrahedron
+    !! Reference triangle
+    !! BIUNIT
+    !! UNIT
+    REAL(DFP), OPTIONAL, INTENT(IN) :: xij(:, :)
+    !! nodal coordinates of triangle.
+    !! The number of rows in xij should be 3
+    !! The number of columns in xij should be 4
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    !! Quadrature points
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+  END SUBROUTINE TensorQuadraturePoint_Tetrahedron2_
+END INTERFACE TensorQuadraturePoint_Tetrahedron_
 
 !----------------------------------------------------------------------------
 !                                       LagrangeGradientEvalAll_Tetrahedron
