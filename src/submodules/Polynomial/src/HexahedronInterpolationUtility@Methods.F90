@@ -2196,6 +2196,11 @@ nipsx(1) = QuadratureNumber_Line(quadType=quadType1, order=p)
 nipsy(1) = QuadratureNumber_Line(quadType=quadType2, order=q)
 nipsz(1) = QuadratureNumber_Line(quadType=quadType3, order=r)
 
+nrow = 4
+ncol = nipsx(1) * nipsy(1) * nipsz(1)
+
+ALLOCATE (ans(nrow, ncol))
+
 CALL QuadraturePoint_Hexahedron4_(nipsx=nipsx, nipsy=nipsy, nipsz=nipsz, &
               quadType1=quadType1, quadType2=quadType2, quadType3=quadType3, &
            refHexahedron=refHexahedron, xij=xij, alpha1=alpha1, beta1=beta1, &
@@ -2210,6 +2215,9 @@ END PROCEDURE QuadraturePoint_Hexahedron2
 
 MODULE PROCEDURE QuadraturePoint_Hexahedron3
 INTEGER(I4B) :: nrow, ncol
+
+nrow = 4
+ncol = nips(1) * nips(1) * nips(1)
 
 ALLOCATE (ans(nrow, ncol))
 
@@ -2227,6 +2235,9 @@ END PROCEDURE QuadraturePoint_Hexahedron3
 
 MODULE PROCEDURE QuadraturePoint_Hexahedron4
 INTEGER(I4B) :: nrow, ncol
+
+nrow = 4
+ncol = nipsx(1) * nipsy(1) * nipsz(1)
 
 ALLOCATE (ans(nrow, ncol))
 
