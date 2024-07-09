@@ -39,6 +39,9 @@ PUBLIC :: FromBiUnitQuadrangle2Quadrangle_
 PUBLIC :: FromBiUnitQuadrangle2UnitQuadrangle
 PUBLIC :: FromBiUnitQuadrangle2UnitQuadrangle_
 PUBLIC :: FromUnitQuadrangle2BiUnitQuadrangle
+PUBLIC :: FromBiUnitHexahedron2Hexahedron_
+PUBLIC :: FromBiUnitHexahedron2UnitHexahedron_
+PUBLIC :: FromUnitHexahedron2BiUnitHexahedron_
 
 PUBLIC :: FromBiUnitHexahedron2Hexahedron
 PUBLIC :: FromBiUnitHexahedron2UnitHexahedron
@@ -395,6 +398,41 @@ INTERFACE FromBiUnitHexahedron2Hexahedron
 END INTERFACE FromBiUnitHexahedron2Hexahedron
 
 !----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE FromBiUnitHexahedron2Hexahedron_
+  MODULE PURE SUBROUTINE FromBiUnitHexahedron2Hexahedron1_(xin, x1, x2, x3, &
+                                          x4, x5, x6, x7, x8, ans, nrow, ncol)
+    REAL(DFP), INTENT(IN) :: xin(:, :)
+    !! vertex coordinate of biunit Hexahedron in xij format
+    !! SIZE(xin,1) = 3
+    REAL(DFP), INTENT(IN) :: x1(:)
+    !! vertex x1 of physical domain, size(x1) = nsd
+    REAL(DFP), INTENT(IN) :: x2(:)
+    !! vertex x2 of physical domain, size(x2) = nsd
+    REAL(DFP), INTENT(IN) :: x3(:)
+    !! vertex x3 of physical domain, size(x3) = nsd
+    REAL(DFP), INTENT(IN) :: x4(:)
+    !! vertex x4 of physical domain, size(x4) = nsd
+    REAL(DFP), INTENT(IN) :: x5(:)
+    !! vertex x5 of physical domain, size(x5) = nsd
+    REAL(DFP), INTENT(IN) :: x6(:)
+    !! vertex x6 of physical domain, size(x6) = nsd
+    REAL(DFP), INTENT(IN) :: x7(:)
+    !! vertex x7 of physical domain, size(x7) = nsd
+    REAL(DFP), INTENT(IN) :: x8(:)
+    !! vertex x8 of physical domain, size(x8) = nsd
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    !! mapped coordinates of xin in physical domain
+    !! shape(ans) = nsd, N
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+    !! nrow = SIZE(x1)
+    !! ncol = SIZE(xin, 2)
+  END SUBROUTINE FromBiUnitHexahedron2Hexahedron1_
+END INTERFACE FromBiUnitHexahedron2Hexahedron_
+
+!----------------------------------------------------------------------------
 !                                            FromBiUnitHexahedron2Hexahedron
 !----------------------------------------------------------------------------
 
@@ -415,6 +453,26 @@ INTERFACE FromBiUnitHexahedron2UnitHexahedron
 END INTERFACE FromBiUnitHexahedron2UnitHexahedron
 
 !----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE FromBiUnitHexahedron2UnitHexahedron_
+  MODULE PURE SUBROUTINE FromBiUnitHexahedron2UnitHexahedron1_(xin, ans, &
+                                                               nrow, ncol)
+    REAL(DFP), INTENT(IN) :: xin(:, :)
+    !! vertex coordinate of biunit Hexahedron in xij format
+    !! SIZE(xin,1) = 3
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    !! mapped coordinates of xin in physical domain
+    !! shape(ans) = nsd, N
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+    !! number of rows and columns written in ans
+    !! nrow = SIZE(xin, 1)
+    !! ncol = SIZE(xin, 2)
+  END SUBROUTINE FromBiUnitHexahedron2UnitHexahedron1_
+END INTERFACE FromBiUnitHexahedron2UnitHexahedron_
+
+!----------------------------------------------------------------------------
 !                                            FromBiUnitHexahedron2Hexahedron
 !----------------------------------------------------------------------------
 
@@ -433,6 +491,26 @@ INTERFACE FromUnitHexahedron2BiUnitHexahedron
     !! shape(ans) = nsd, N
   END FUNCTION FromUnitHexahedron2BiUnitHexahedron1
 END INTERFACE FromUnitHexahedron2BiUnitHexahedron
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE FromUnitHexahedron2BiUnitHexahedron_
+
+  MODULE PURE SUBROUTINE FromUnitHexahedron2BiUnitHexahedron1_(xin, ans, &
+                                                               nrow, ncol)
+    REAL(DFP), INTENT(IN) :: xin(:, :)
+    !! vertex coordinate of biunit Hexahedron in xij format
+    !! SIZE(xin,1) = 3
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    !! mapped coordinates of xin in physical domain
+    !! shape(ans) = nsd, N
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+    !! nrow = SIZE(xin, 1)
+    !! ncol = SIZE(xin, 2)
+  END SUBROUTINE FromUnitHexahedron2BiUnitHexahedron1_
+END INTERFACE FromUnitHexahedron2BiUnitHexahedron_
 
 !----------------------------------------------------------------------------
 !                                                     FromBiUnitLine2UnitLine
