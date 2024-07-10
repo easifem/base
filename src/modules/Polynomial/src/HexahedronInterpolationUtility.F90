@@ -32,7 +32,6 @@ PUBLIC :: LagrangeCoeff_Hexahedron
 PUBLIC :: LagrangeCoeff_Hexahedron_
 PUBLIC :: EdgeConnectivity_Hexahedron
 PUBLIC :: FacetConnectivity_Hexahedron
-PUBLIC :: QuadratureNumber_Hexahedron
 PUBLIC :: TensorProdBasis_Hexahedron
 PUBLIC :: OrthogonalBasis_Hexahedron
 PUBLIC :: VertexBasis_Hexahedron
@@ -48,6 +47,7 @@ PUBLIC :: CellBasis_Hexahedron
 PUBLIC :: HeirarchicalBasis_Hexahedron
 PUBLIC :: HeirarchicalBasis_Hexahedron_
 
+PUBLIC :: QuadratureNumber_Hexahedron
 PUBLIC :: QuadraturePoint_Hexahedron
 PUBLIC :: QuadraturePoint_Hexahedron_
 
