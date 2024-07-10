@@ -35,6 +35,12 @@ USE TriangleInterpolationUtility, ONLY: QuadraturePoint_Triangle_, &
 USE QuadrangleInterpolationUtility, ONLY: QuadraturePoint_Quadrangle_, &
                                           QuadratureNumber_Quadrangle
 
+USE TetrahedronInterpolationUtility, ONLY: QuadraturePoint_Tetrahedron_, &
+                                           QuadratureNumber_Tetrahedron
+
+USE HexahedronInterpolationUtility, ONLY: QuadraturePoint_Hexahedron_, &
+                                          QuadratureNumber_Hexahedron
+
 IMPLICIT NONE
 
 CONTAINS
@@ -105,7 +111,7 @@ CASE (Quadrangle)
   ans = QuadratureNumber_Line(order=order, quadtype=quadratureType)
 
 CASE (Tetrahedron)
-  ! ans = QuadratureNumber_Line(order=order, quadtype=quadratureType)
+  ans = QuadratureNumber_Tetrahedron(order=order, quadtype=quadratureType)
 
 CASE (Hexahedron)
 
@@ -282,7 +288,33 @@ CASE (Quadrangle)
 
 CASE (Tetrahedron)
 
+  nipsx(1) = QuadratureNumber_Tetrahedron(order=p, quadtype=quadratureType1)
+  ncol = nipsx(1)
+
+  CALL Reallocate(obj%points, nrow, ncol)
+
+  CALL QuadraturePoint_Tetrahedron_(nips=nipsx, quadType=quadratureType1, &
+     refTetrahedron=domainName, xij=xij, ans=obj%points, nrow=nrow, ncol=ncol)
+
 CASE (Hexahedron)
+
+  nipsx(1) = QuadratureNumber_Line(order=p, quadtype=quadratureType1)
+  nipsy(1) = QuadratureNumber_Line(order=q, quadtype=quadratureType2)
+  nipsz(1) = QuadratureNumber_Line(order=r, quadtype=quadratureType3)
+
+  ncol = nipsx(1) * nipsy(1) * nipsz(1)
+
+  CALL Reallocate(obj%points, nrow, ncol)
+
+  CALL QuadraturePoint_Hexahedron_(nipsx=nipsx, nipsy=nipsy, nipsz=nipsz, &
+                                   quadType1=quadratureType1, &
+                                   quadType2=quadratureType2, &
+                                   quadType3=quadratureType3, &
+                                   refHexahedron=domainName, xij=xij, &
+                                alpha1=alpha1, beta1=beta1, lambda1=lambda1, &
+                                alpha2=alpha2, beta2=beta2, lambda2=lambda2, &
+                                alpha3=alpha3, beta3=beta3, lambda3=lambda3, &
+                                   ans=obj%points, nrow=nrow, ncol=ncol)
 
 CASE (Prism)
 
@@ -346,7 +378,29 @@ CASE (Quadrangle)
 
 CASE (Tetrahedron)
 
+  ncol = nipsx(1)
+
+  CALL Reallocate(obj%points, nrow, ncol)
+
+  CALL QuadraturePoint_Tetrahedron_(nips=nipsx, quadType=quadratureType1, &
+     refTetrahedron=domainName, xij=xij, ans=obj%points, nrow=nrow, ncol=ncol)
+
 CASE (Hexahedron)
+
+  ncol = nipsx(1) * nipsy(1) * nipsz(1)
+
+  CALL Reallocate(obj%points, nrow, ncol)
+
+  CALL QuadraturePoint_Hexahedron_(nipsx=nipsx, nipsy=nipsy, nipsz=nipsz, &
+                                   quadType1=quadratureType1, &
+                                   quadType2=quadratureType2, &
+                                   quadType3=quadratureType3, &
+                                   refHexahedron=domainName, &
+                                   xij=xij, &
+                                alpha1=alpha1, beta1=beta1, lambda1=lambda1, &
+                                alpha2=alpha2, beta2=beta2, lambda2=lambda2, &
+                                alpha3=alpha3, beta3=beta3, lambda3=lambda3, &
+                                   ans=obj%points, nrow=nrow, ncol=ncol)
 
 CASE (Prism)
 
