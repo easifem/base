@@ -2210,6 +2210,25 @@ CALL QuadraturePoint_Hexahedron4_(nipsx=nipsx, nipsy=nipsy, nipsz=nipsz, &
 END PROCEDURE QuadraturePoint_Hexahedron2
 
 !----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE QuadraturePoint_Hexahedron2_
+INTEGER(I4B), DIMENSION(1) :: nipsx, nipsy, nipsz
+
+nipsx(1) = QuadratureNumber_Line(quadType=quadType1, order=p)
+nipsy(1) = QuadratureNumber_Line(quadType=quadType2, order=q)
+nipsz(1) = QuadratureNumber_Line(quadType=quadType3, order=r)
+
+CALL QuadraturePoint_Hexahedron4_(nipsx=nipsx, nipsy=nipsy, nipsz=nipsz, &
+              quadType1=quadType1, quadType2=quadType2, quadType3=quadType3, &
+           refHexahedron=refHexahedron, xij=xij, alpha1=alpha1, beta1=beta1, &
+               lambda1=lambda1, alpha2=alpha2, beta2=beta2, lambda2=lambda2, &
+   alpha3=alpha3, beta3=beta3, lambda3=lambda3, ans=ans, nrow=nrow, ncol=ncol)
+
+END PROCEDURE QuadraturePoint_Hexahedron2_
+
+!----------------------------------------------------------------------------
 !                                                QuadraturePoint_Hexahedron
 !----------------------------------------------------------------------------
 
@@ -2228,6 +2247,18 @@ CALL QuadraturePoint_Hexahedron4_(nipsx=nips, nipsy=nips, nipsz=nips, &
                     beta3=beta, lambda3=lambda, ans=ans, nrow=nrow, ncol=ncol)
 
 END PROCEDURE QuadraturePoint_Hexahedron3
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE QuadraturePoint_Hexahedron3_
+CALL QuadraturePoint_Hexahedron4_(nipsx=nips, nipsy=nips, nipsz=nips, &
+                 quadType1=quadType, quadType2=quadType, quadType3=quadType, &
+             refHexahedron=refHexahedron, xij=xij, alpha1=alpha, beta1=beta, &
+     lambda1=lambda, alpha2=alpha, beta2=beta, lambda2=lambda, alpha3=alpha, &
+                    beta3=beta, lambda3=lambda, ans=ans, nrow=nrow, ncol=ncol)
+END PROCEDURE QuadraturePoint_Hexahedron3_
 
 !----------------------------------------------------------------------------
 !                                                QuadraturePoint_Hexahedron
