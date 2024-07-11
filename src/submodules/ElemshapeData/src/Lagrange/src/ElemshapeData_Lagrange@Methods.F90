@@ -48,7 +48,7 @@ CONTAINS
 
 MODULE PROCEDURE LagrangeElemShapeData1
 REAL(DFP), ALLOCATABLE :: xij(:, :), coeff0(:, :), temp(:, :, :)
-INTEGER(I4B) :: ipType0, basisType0, nips, nns, indx(10)
+INTEGER(I4B) :: ipType0, basisType0, nips, nns, indx(10), ii, jj
 
 ipType0 = Input(default=TypeQuadratureOpt%equidistance, option=ipType)
 basisType0 = Input(default=TypePolynomialOpt%Monomial, option=basisType)
@@ -77,21 +77,24 @@ IF (PRESENT(coeff)) THEN
                         elemType=elemType, &
                         x=quad%points(1:quad%txi, 1:nips), &
                         xij=xij(1:xidim, :), &
-                        domainName=refelemDomain, &
+                        domainName=domainName, &
                         basisType=basisType0, &
                         alpha=alpha, beta=beta, lambda=lambda, &
-                        coeff=coeff, firstCall=firstCall, &
+                        coeff=coeff(1:nns, 1:nns), firstCall=firstCall, &
                         ans=temp(:, :, 1), nrow=indx(1), ncol=indx(2))
 
-  obj%N(1:nns, 1:nips) = TRANSPOSE(temp(1:nips, 1:nns, 1))
+  DO CONCURRENT(ii=1:nns, jj=1:nips)
+    obj%N(ii, jj) = temp(jj, ii, 1)
+  END DO
 
   CALL LagrangeGradientEvalAll_(order=order, elemType=elemType, &
                                 x=quad%points(1:quad%txi, 1:nips), &
                                 xij=xij(1:xidim, :), &
-                                domainName=refelemDomain, &
+                                domainName=domainName, &
                                 basisType=basisType0, &
                                 alpha=alpha, beta=beta, lambda=lambda, &
-                                coeff=coeff, firstCall=.FALSE., &
+                                coeff=coeff(1:nns, 1:nns), &
+                                firstCall=.FALSE., &
                                 ans=temp, &
                                 dim1=indx(1), dim2=indx(2), dim3=indx(3))
 
@@ -103,7 +106,7 @@ ELSE
   CALL LagrangeEvalAll_(order=order, elemType=elemType, &
                         x=quad%points(1:quad%txi, 1:nips), &
                         xij=xij(1:xidim, :), &
-                        domainName=refelemDomain, &
+                        domainName=domainName, &
                         basisType=basisType0, &
                         alpha=alpha, beta=beta, lambda=lambda, &
                         coeff=coeff0, firstCall=.TRUE., &
@@ -115,7 +118,7 @@ ELSE
   CALL LagrangeGradientEvalAll_(order=order, elemType=elemType, &
                                 x=quad%points(1:quad%txi, 1:nips), &
                                 xij=xij(1:xidim, :), &
-                                domainName=refelemDomain, &
+                                domainName=domainName, &
                                 basisType=basisType0, &
                                 alpha=alpha, beta=beta, lambda=lambda, &
                                 coeff=coeff0, firstCall=.FALSE., &
@@ -139,7 +142,7 @@ END PROCEDURE LagrangeElemShapeData1
 MODULE PROCEDURE LagrangeElemShapeData2
 CALL LagrangeElemShapeData1(obj=obj, quad=quad, nsd=refelem%nsd, &
                            xidim=refelem%xidimension, elemType=refelem%name, &
-    refelemCoord=refelem%xij, refelemDomain=refelem%domainName, order=order, &
+       refelemCoord=refelem%xij, domainName=refelem%domainName, order=order, &
        ipType=ipType, basisType=basisType, coeff=coeff, firstCall=firstCall, &
                             alpha=alpha, beta=beta, lambda=lambda)
 END PROCEDURE LagrangeElemShapeData2

@@ -22,26 +22,6 @@ target_sources(
           ${src_path}/ElemshapeData_DivergenceMethods@Methods.F90
           ${src_path}/ElemshapeData_GetMethods@Methods.F90
           ${src_path}/ElemshapeData_GradientMethods@Methods.F90
-          ${src_path}/Lagrange/ElemshapeData_Lagrange@Methods.F90
-          ${src_path}/H1/ElemshapeData_H1Methods@HermitMethods.F90
-          ${src_path}/H1/ElemshapeData_H1Methods@HierarchyMethods.F90
-          ${src_path}/H1/ElemshapeData_H1Methods@OrthogonalMethods.F90
-          ${src_path}/H1/ElemshapeData_H1Methods@SerendipityMethods.F90
-          ${src_path}/DG/ElemshapeData_DGMethods@HermitMethods.F90
-          ${src_path}/DG/ElemshapeData_DGMethods@HierarchyMethods.F90
-          ${src_path}/DG/ElemshapeData_DGMethods@LagrangeMethods.F90
-          ${src_path}/DG/ElemshapeData_DGMethods@OrthogonalMethods.F90
-          ${src_path}/DG/ElemshapeData_DGMethods@SerendipityMethods.F90
-          ${src_path}/HDiv/ElemshapeData_HDivMethods@HermitMethods.F90
-          ${src_path}/HDiv/ElemshapeData_HDivMethods@HierarchyMethods.F90
-          ${src_path}/HDiv/ElemshapeData_HDivMethods@LagrangeMethods.F90
-          ${src_path}/HDiv/ElemshapeData_HDivMethods@OrthogonalMethods.F90
-          ${src_path}/HDiv/ElemshapeData_HDivMethods@SerendipityMethods.F90
-          ${src_path}/HCurl/ElemshapeData_HCurlMethods@HermitMethods.F90
-          ${src_path}/HCurl/ElemshapeData_HCurlMethods@HierarchyMethods.F90
-          ${src_path}/HCurl/ElemshapeData_HCurlMethods@LagrangeMethods.F90
-          ${src_path}/HCurl/ElemshapeData_HCurlMethods@OrthogonalMethods.F90
-          ${src_path}/HCurl/ElemshapeData_HCurlMethods@SerendipityMethods.F90
           ${src_path}/ElemshapeData_HminHmaxMethods@Methods.F90
           ${src_path}/ElemshapeData_HRGNParamMethods@Methods.F90
           ${src_path}/ElemshapeData_HRQIParamMethods@Methods.F90
@@ -55,3 +35,10 @@ target_sources(
           ${src_path}/ElemshapeData_StabilizationParamMethods@SUPG.F90
           ${src_path}/ElemshapeData_StabilizationParamMethods@Takizawa2018.F90
           ${src_path}/ElemshapeData_UnitNormalMethods@Methods.F90)
+
+include(${src_path}/H1/CMakeLists.txt)
+include(${src_path}/HDiv/CMakeLists.txt)
+include(${src_path}/HCurl/CMakeLists.txt)
+include(${src_path}/DG/CMakeLists.txt)
+include(${src_path}/Lagrange/CMakeLists.txt)
+include(${src_path}/Hierarchical/CMakeLists.txt)
