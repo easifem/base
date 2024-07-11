@@ -56,15 +56,35 @@ PUBLIC :: LagrangeGradientEvalAll_
 ! date: 12 Aug 2022
 ! summary: Returns the number of dof for lagrange polynomial
 
-INTERFACE
-  MODULE PURE FUNCTION LagrangeDOF(order, elemType) RESULT(ans)
+INTERFACE LagrangeDOF
+  MODULE PURE FUNCTION LagrangeDOF1(order, elemType) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
     !! order
     INTEGER(I4B), INTENT(IN) :: elemType
     INTEGER(I4B) :: ans
     !! number of degree of freedom
-  END FUNCTION LagrangeDOF
-END INTERFACE
+  END FUNCTION LagrangeDOF1
+END INTERFACE LagrangeDOF
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2024-07-11
+! summary:  Get lagrange degree of freedom
+
+INTERFACE LagrangeDOF
+  MODULE PURE FUNCTION LagrangeDOF2(p, q, r, elemType) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: p, q, r
+    !! order in x, y, and z direction
+    INTEGER(I4B), INTENT(IN) :: elemType
+    !! for line, triangle, tetrahedron, prism , and pyramid only p is used
+    !! for quadrangle and hexahedron, pq are used and pqr are used
+    INTEGER(I4B) :: ans
+    !! number of degree of freedom
+  END FUNCTION LagrangeDOF2
+END INTERFACE LagrangeDOF
 
 !----------------------------------------------------------------------------
 !                                                 LagrangeInDOF@BasisMethods
