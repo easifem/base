@@ -196,6 +196,7 @@ PUBLIC :: TypeElemNameOpt
 PUBLIC :: TypePolynomialOpt
 PUBLIC :: TypeQuadratureOpt
 PUBLIC :: TypeInterpolationOpt
+PUBLIC :: TypeFEVariableOpt
 
 INTEGER(I4B), PARAMETER, PUBLIC :: MAX_RANK_FEVARIABLE = 6
 
@@ -1917,5 +1918,25 @@ END TYPE QuadratureOpt_
 
 TYPE(QuadratureOpt_), PARAMETER :: TypeQuadratureOpt = QuadratureOpt_()
 TYPE(QuadratureOpt_), PARAMETER :: TypeInterpolationOpt = QuadratureOpt_()
+
+!----------------------------------------------------------------------------
+!                                                           TypeFeVariableOpt
+!----------------------------------------------------------------------------
+
+TYPE :: FEVariableOpt_
+  INTEGER(I4B) :: scalar = scalar
+  INTEGER(I4B) :: vector = vector
+  INTEGER(I4B) :: matrix = matrix
+  INTEGER(I4B) :: nodal = nodal
+  INTEGER(i4b) :: quadrature = quadrature
+  INTEGER(I4B) :: constant = constant
+  INTEGER(I4B) :: space = space
+  INTEGER(I4B) :: time = time
+  INTEGER(I4B) :: spacetime = spacetime
+  INTEGER(I4B) :: solutionDependent = solutionDependent
+  INTEGER(I4B) :: randomSpace = randomSpace
+END TYPE FEVariableOpt_
+
+TYPE(FEVariableOpt_), PARAMETER :: TypeFEVariableOpt = FEVariableOpt_()
 
 END MODULE BaseType
