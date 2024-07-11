@@ -76,6 +76,7 @@ PUBLIC :: GetElementIndex
 PUBLIC :: Reallocate
 PUBLIC :: RefTopoReallocate
 PUBLIC :: RefCoord
+PUBLIC :: RefCoord_
 
 INTEGER(I4B), PARAMETER, PUBLIC :: PARAM_REFELEM_MAX_FACES = 6
 INTEGER(I4B), PARAMETER, PUBLIC :: PARAM_REFELEM_MAX_EDGES = 12
@@ -150,6 +151,22 @@ INTERFACE
     !! "BIUNIT"
     REAL(DFP), ALLOCATABLE :: ans(:, :)
   END FUNCTION RefCoord
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE
+  MODULE PURE SUBROUTINE RefCoord_(elemType, refElem, ans, nrow, ncol)
+    INTEGER(I4B), INTENT(IN) :: elemType
+    !! Element type
+    CHARACTER(*), INTENT(IN) :: refElem
+    !! "UNIT" ! "BIUNIT"
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    !! xij coordinate
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+  END SUBROUTINE RefCoord_
 END INTERFACE
 
 !----------------------------------------------------------------------------
