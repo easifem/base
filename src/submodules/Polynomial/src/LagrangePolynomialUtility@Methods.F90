@@ -118,7 +118,7 @@ CONTAINS
 !                                                               LagrangeDOF
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE LagrangeDOF
+MODULE PROCEDURE LagrangeDOF1
 INTEGER(I4B) :: topo
 
 topo = ElementTopology(elemType)
@@ -141,7 +141,36 @@ CASE (Prism)
 CASE (Pyramid)
   ans = LagrangeDOF_Pyramid(order=order)
 END SELECT
-END PROCEDURE LagrangeDOF
+END PROCEDURE LagrangeDOF1
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE LagrangeDOF2
+INTEGER(I4B) :: topo
+
+topo = ElementTopology(elemType)
+
+SELECT CASE (topo)
+CASE (Point)
+  ans = 1
+CASE (Line)
+  ans = LagrangeDOF_Line(order=p)
+CASE (Triangle)
+  ans = LagrangeDOF_Triangle(order=p)
+CASE (Quadrangle)
+  ans = LagrangeDOF_Quadrangle(p=p, q=q)
+CASE (Tetrahedron)
+  ans = LagrangeDOF_Tetrahedron(order=p)
+CASE (Hexahedron)
+  ans = LagrangeDOF_Hexahedron(p=p, q=q, r=r)
+CASE (Prism)
+  ans = LagrangeDOF_Prism(order=p)
+CASE (Pyramid)
+  ans = LagrangeDOF_Pyramid(order=p)
+END SELECT
+END PROCEDURE LagrangeDOF2
 
 !----------------------------------------------------------------------------
 !                                                             LagrangeInDOF

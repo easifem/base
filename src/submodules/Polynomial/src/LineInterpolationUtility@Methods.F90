@@ -476,13 +476,12 @@ END SELECT
 CONTAINS
 
 SUBROUTINE handle_vefc
-  INTEGER(I4B) :: jj
   REAL(DFP) :: t1
 
   IF (layout(1:2) .EQ. "VE") THEN
     t1 = temp(order + 1)
     IF (order .GE. 2) THEN
-      temp(3:) = temp(2:order)
+      temp(3:order + 1) = temp(2:order)
     END IF
     temp(2) = t1
   END IF
@@ -615,7 +614,6 @@ CONTAINS
 !----------------------------------------------------------------------------
 
 SUBROUTINE handle_vefc
-  INTEGER(I4B) :: jj
   REAL(DFP) :: t1
 
   IF (layout(1:2) .EQ. "VE") THEN
@@ -1412,7 +1410,7 @@ END PROCEDURE QuadraturePoint_Line4
 
 MODULE PROCEDURE QuadraturePoint_Line1_
 #ifdef DEBUG_VER
-LOGICAL(LGT) :: isok, abool
+LOGICAL(LGT) :: isok
 #endif
 
 INTEGER(I4B) :: np, nsd, ii, jj
@@ -1832,7 +1830,6 @@ END PROCEDURE HeirarchicalGradientBasis_Line2_
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE OrthogonalBasis_Line1
-INTEGER(I4B) :: ii
 CHARACTER(1) :: astr
 LOGICAL(LGT) :: isok, abool
 

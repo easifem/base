@@ -222,7 +222,7 @@ ncol = HierarchicalDOF(elemType=elemType, cellOrder=cellOrder, &
 
 ALLOCATE (ans(nrow, ncol))
 
-CALL HierarchicalEvalAll_(order=order, elemType=elemType, xij=xij, ans=ans, &
+CALL HierarchicalEvalAll_(elemType=elemType, xij=xij, ans=ans, &
            nrow=nrow, ncol=ncol, domainName=domainName, cellOrder=cellOrder, &
             faceOrder=faceOrder, edgeOrder=edgeOrder, cellOrient=cellOrient, &
                           faceOrient=faceOrient, edgeOrient=edgeOrient)
@@ -352,7 +352,7 @@ dim3 = XiDimension(elemType)
 
 ALLOCATE (ans(dim1, dim2, dim3))
 
-CALL HierarchicalGradientEvalAll_(order=order, elemType=elemType, xij=xij, &
+CALL HierarchicalGradientEvalAll_(elemType=elemType, xij=xij, &
             ans=ans, dim1=dim1, dim2=dim2, dim3=dim3, domainName=domainName, &
               cellOrder=cellOrder, faceOrder=faceOrder, edgeOrder=edgeOrder, &
           cellOrient=cellOrient, faceOrient=faceOrient, edgeOrient=edgeOrient)
