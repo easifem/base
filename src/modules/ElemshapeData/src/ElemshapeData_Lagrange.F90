@@ -40,7 +40,7 @@ PUBLIC :: Initiate
 
 INTERFACE LagrangeElemShapeData
   MODULE SUBROUTINE LagrangeElemShapeData1(obj, quad, nsd, xidim, &
-            elemType, refelemCoord, refelemDomain, order, ipType, basisType, &
+               elemType, refelemCoord, domainName, order, ipType, basisType, &
                                         coeff, firstCall, alpha, beta, lambda)
     CLASS(ElemshapeData_), INTENT(INOUT) :: obj
     !! element shape data
@@ -54,7 +54,7 @@ INTERFACE LagrangeElemShapeData
     !! element type
     REAL(DFP), INTENT(IN) :: refelemCoord(:, :)
     !! coordinate of reference element
-    CHARACTER(*), INTENT(IN) :: refelemDomain
+    CHARACTER(*), INTENT(IN) :: domainName
     !! name of reference element domain
     INTEGER(I4B), INTENT(IN) :: order
     !! order of interpolation
@@ -64,7 +64,7 @@ INTERFACE LagrangeElemShapeData
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: basisType
     !! Basis function types
     !! Default value is Monomial
-    REAL(DFP), OPTIONAL, ALLOCATABLE, INTENT(INOUT) :: coeff(:, :)
+    REAL(DFP), OPTIONAL, INTENT(INOUT) :: coeff(:, :)
     !! Coefficient of Lagrange polynomials
     LOGICAL(LGT), OPTIONAL :: firstCall
     !! If firstCall is true, then coeff will be made
@@ -97,7 +97,7 @@ INTERFACE LagrangeElemShapeData
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: basisType
     !! Basis function types
     !! Default value is Monomial
-    REAL(DFP), OPTIONAL, ALLOCATABLE, INTENT(INOUT) :: coeff(:, :)
+    REAL(DFP), OPTIONAL, INTENT(INOUT) :: coeff(:, :)
     !! Coefficient of Lagrange polynomials
     LOGICAL(LGT), OPTIONAL :: firstCall
     !! If firstCall is true, then coeff will be made
@@ -127,7 +127,7 @@ MODULE SUBROUTINE LagrangeElemShapeData3(obj, quad, refelem, baseContinuity, &
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: basisType
     !! Basis function types
     !! Default value is Monomial
-    REAL(DFP), OPTIONAL, ALLOCATABLE, INTENT(INOUT) :: coeff(:, :)
+    REAL(DFP), OPTIONAL, INTENT(INOUT) :: coeff(:, :)
     !! Coefficient of Lagrange polynomials
     LOGICAL(LGT), OPTIONAL :: firstCall
     !! If firstCall is true, then coeff will be made
