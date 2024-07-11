@@ -126,11 +126,9 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-  MODULE FUNCTION HierarchicalEvalAll(order, elemType, xij, domainName, &
+  MODULE FUNCTION HierarchicalEvalAll(elemType, xij, domainName, &
                     cellOrder, faceOrder, edgeOrder, cellOrient, faceOrient, &
                                       edgeOrient) RESULT(ans)
-    INTEGER(I4B), INTENT(IN) :: order
-    !! Order of Hierarchical polynomials
     INTEGER(I4B), INTENT(IN) :: elemType
     !! element type
     REAL(DFP), INTENT(IN) :: xij(:, :)
@@ -163,11 +161,9 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-  MODULE SUBROUTINE HierarchicalEvalAll_(order, elemType, xij, ans, nrow, &
+  MODULE SUBROUTINE HierarchicalEvalAll_(elemType, xij, ans, nrow, &
                           ncol, domainName, cellOrder, faceOrder, edgeOrder, &
                                          cellOrient, faceOrient, edgeOrient)
-    INTEGER(I4B), INTENT(IN) :: order
-    !! Order of Hierarchical polynomials
     INTEGER(I4B), INTENT(IN) :: elemType
     !! element type
     REAL(DFP), INTENT(IN) :: xij(:, :)
@@ -203,11 +199,9 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-  MODULE FUNCTION HierarchicalGradientEvalAll(order, elemType, xij, &
+  MODULE FUNCTION HierarchicalGradientEvalAll(elemType, xij, &
         domainName, cellOrder, faceOrder, edgeOrder, cellOrient, faceOrient, &
                                               edgeOrient) RESULT(ans)
-    INTEGER(I4B), INTENT(IN) :: order
-    !! Order of Hierarchical polynomials
     INTEGER(I4B), INTENT(IN) :: elemType
     !! element type
     REAL(DFP), INTENT(IN) :: xij(:, :)
@@ -240,11 +234,9 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-  MODULE SUBROUTINE HierarchicalGradientEvalAll_(order, elemType, xij, ans, &
+  MODULE SUBROUTINE HierarchicalGradientEvalAll_(elemType, xij, ans, &
               dim1, dim2, dim3, domainName, cellOrder, faceOrder, edgeOrder, &
                                            cellOrient, faceOrient, edgeOrient)
-    INTEGER(I4B), INTENT(IN) :: order
-    !! Order of Hierarchical polynomials
     INTEGER(I4B), INTENT(IN) :: elemType
     !! element type
     REAL(DFP), INTENT(IN) :: xij(:, :)
