@@ -555,17 +555,18 @@ END SUBROUTINE PARALLELOGRAMAREA2D
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE RefQuadrangleCoord
-CHARACTER(:), ALLOCATABLE :: astr
-astr = UpperCase(refQuadrangle)
+CHARACTER(1) :: astr
+astr = refQuadrangle(1:1)
+
 SELECT CASE (astr)
-CASE ("UNIT")
-  ans(1, :) = [0.0_DFP, 1.0_DFP, 1.0_DFP, 0.0_DFP]
-  ans(2, :) = [0.0_DFP, 0.0_DFP, 1.0_DFP, 1.0_DFP]
-CASE ("BIUNIT")
-  ans(1, :) = [-1.0_DFP, 1.0_DFP, 1.0_DFP, -1.0_DFP]
-  ans(2, :) = [-1.0_DFP, -1.0_DFP, 1.0_DFP, 1.0_DFP]
+CASE ("U", "u")
+  ans(1, 1:4) = [0.0_DFP, 1.0_DFP, 1.0_DFP, 0.0_DFP]
+  ans(2, 1:4) = [0.0_DFP, 0.0_DFP, 1.0_DFP, 1.0_DFP]
+
+CASE ("B", "b")
+  ans(1, 1:4) = [-1.0_DFP, 1.0_DFP, 1.0_DFP, -1.0_DFP]
+  ans(2, 1:4) = [-1.0_DFP, -1.0_DFP, 1.0_DFP, 1.0_DFP]
 END SELECT
-astr = ""
 END PROCEDURE RefQuadrangleCoord
 
 !----------------------------------------------------------------------------

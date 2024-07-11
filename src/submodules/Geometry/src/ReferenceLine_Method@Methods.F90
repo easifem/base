@@ -346,13 +346,14 @@ END PROCEDURE Line_quality
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE RefLineCoord
-TYPE(String) :: astr
-astr = UpperCase(refLine)
-SELECT CASE (astr%chars())
-CASE ("UNIT")
-  ans(1, :) = [0.0_DFP, 1.0_DFP]
-CASE ("BIUNIT")
-  ans(1, :) = [-1.0_DFP, 1.0_DFP]
+CHARACTER(1) :: astr
+
+astr = refline(1:1)
+SELECT CASE (astr)
+CASE ("U", "u")
+  ans(1, 1:2) = [0.0_DFP, 1.0_DFP]
+CASE ("B", "b")
+  ans(1, 1:2) = [-1.0_DFP, 1.0_DFP]
 END SELECT
 END PROCEDURE RefLineCoord
 

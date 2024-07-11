@@ -17,6 +17,7 @@
 
 SUBMODULE(ReferenceElement_Method) GeometryMethods
 USE ErrorHandling, ONLY: Errormsg
+
 USE Display_Method
 
 USE ReferencePoint_Method, ONLY: Measure_Simplex_Point, Point_quality, &
@@ -124,9 +125,61 @@ CASE (Prism)
 
 CASE (Pyramid)
   ans = RefCoord_Pyramid(refElem)
-
 END SELECT
 END PROCEDURE RefCoord
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE RefCoord_
+INTEGER(I4B) :: topo
+
+topo = ElementTopology(elemType)
+
+SELECT CASE (topo)
+
+CASE (Point)
+  nrow = 3
+  ncol = 1
+  ans(1:nrow, 1:ncol) = 0.0_DFP
+
+CASE (Line)
+  nrow = 1
+  ncol = 2
+  ans(1:nrow, 1:ncol) = RefCoord_Line(refElem)
+
+CASE (Triangle)
+  nrow = 2
+  ncol = 3
+  ans(1:nrow, 1:ncol) = RefCoord_Triangle(refElem)
+
+CASE (Quadrangle)
+  nrow = 2
+  ncol = 4
+  ans(1:nrow, 1:ncol) = RefCoord_Quadrangle(refElem)
+
+CASE (Tetrahedron)
+  nrow = 3
+  ncol = 4
+  ans(1:nrow, 1:ncol) = RefCoord_Tetrahedron(refElem)
+
+CASE (Hexahedron)
+  nrow = 3
+  ncol = 8
+  ans(1:nrow, 1:ncol) = RefCoord_Hexahedron(refElem)
+
+CASE (Prism)
+  nrow = 3
+  ncol = 6
+  ans(1:nrow, 1:ncol) = RefCoord_Prism(refElem)
+
+CASE (Pyramid)
+  nrow = 3
+  ncol = 5
+  ans(1:nrow, 1:ncol) = RefCoord_Pyramid(refElem)
+END SELECT
+END PROCEDURE RefCoord_
 
 !----------------------------------------------------------------------------
 !                                                     GetElementIndex
