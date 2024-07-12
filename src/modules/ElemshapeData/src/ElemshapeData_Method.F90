@@ -20,10 +20,14 @@ USE ElemshapeData_DGMethods
 USE ElemshapeData_DivergenceMethods
 USE ElemshapeData_GetMethods
 USE ElemshapeData_GradientMethods
+
 USE ElemshapeData_H1Methods
-USE ElemshapeData_Lagrange
 USE ElemshapeData_HCurlMethods
 USE ElemshapeData_HDivMethods
+
+USE ElemshapeData_Lagrange
+USE ElemshapeData_Hierarchical
+
 USE ElemshapeData_HRGNParamMethods
 USE ElemshapeData_HRQIParamMethods
 USE ElemshapeData_HminHmaxMethods
