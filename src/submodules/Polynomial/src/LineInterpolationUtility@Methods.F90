@@ -1414,7 +1414,7 @@ LOGICAL(LGT) :: isok
 #endif
 
 INTEGER(I4B) :: np, nsd, ii, jj
-REAL(DFP) :: pt(nips(1)), wt(nips(1)), areal
+REAL(DFP) :: areal
 LOGICAL(LGT) :: changeLayout
 
 nrow = 0
@@ -1467,59 +1467,67 @@ IF (layout(1:1) .EQ. "V") changeLayout = .TRUE.
 SELECT CASE (quadType)
 
 CASE (ipopt%GaussLegendre)
-  CALL LegendreQuadrature(n=np, pt=pt, wt=wt, quadType=ipopt%Gauss)
+  CALL LegendreQuadrature(n=np, pt=ans(1, 1:ncol), wt=ans(nrow, 1:ncol), &
+                          quadType=ipopt%Gauss)
 
 CASE (ipopt%GaussLegendreRadauLeft)
-  CALL LegendreQuadrature(n=np, pt=pt, wt=wt, quadType=ipopt%GaussRadauLeft)
+  CALL LegendreQuadrature(n=np, pt=ans(1, 1:ncol), wt=ans(nrow, 1:ncol), &
+                          quadType=ipopt%GaussRadauLeft)
 
 CASE (ipopt%GaussLegendreRadauRight)
-  CALL LegendreQuadrature(n=np, pt=pt, wt=wt, quadType=ipopt%GaussRadauRight)
+  CALL LegendreQuadrature(n=np, pt=ans(1, 1:ncol), wt=ans(nrow, 1:ncol), &
+                          quadType=ipopt%GaussRadauRight)
 
 CASE (ipopt%GaussLegendreLobatto)
-  CALL LegendreQuadrature(n=np, pt=pt, wt=wt, quadType=ipopt%GaussLobatto)
+  CALL LegendreQuadrature(n=np, pt=ans(1, 1:ncol), wt=ans(nrow, 1:ncol), &
+                          quadType=ipopt%GaussLobatto)
 
 CASE (ipopt%GaussChebyshev)
-  CALL Chebyshev1Quadrature(n=np, pt=pt, wt=wt, quadType=ipopt%Gauss)
+  CALL Chebyshev1Quadrature(n=np, pt=ans(1, 1:ncol), wt=ans(nrow, 1:ncol), &
+                            quadType=ipopt%Gauss)
 
 CASE (ipopt%GaussChebyshevRadauLeft)
-  CALL Chebyshev1Quadrature(n=np, pt=pt, wt=wt, quadType=ipopt%GaussRadauLeft)
+  CALL Chebyshev1Quadrature(n=np, pt=ans(1, 1:ncol), wt=ans(nrow, 1:ncol), &
+                            quadType=ipopt%GaussRadauLeft)
 
 CASE (ipopt%GaussChebyshevRadauRight)
- CALL Chebyshev1Quadrature(n=np, pt=pt, wt=wt, quadType=ipopt%GaussRadauRight)
+  CALL Chebyshev1Quadrature(n=np, pt=ans(1, 1:ncol), wt=ans(nrow, 1:ncol), &
+                            quadType=ipopt%GaussRadauRight)
 
 CASE (ipopt%GaussChebyshevLobatto)
-  CALL Chebyshev1Quadrature(n=np, pt=pt, wt=wt, quadType=ipopt%GaussLobatto)
+  CALL Chebyshev1Quadrature(n=np, pt=ans(1, 1:ncol), wt=ans(nrow, 1:ncol), &
+                            quadType=ipopt%GaussLobatto)
 
 CASE (ipopt%GaussJacobi)
-  CALL JacobiQuadrature(n=np, pt=pt, wt=wt, quadType=ipopt%Gauss, &
-                        alpha=alpha, beta=beta)
+  CALL JacobiQuadrature(n=np, pt=ans(1, 1:ncol), wt=ans(nrow, 1:ncol), &
+                        quadType=ipopt%Gauss, alpha=alpha, beta=beta)
 
 CASE (ipopt%GaussJacobiRadauLeft)
-  CALL JacobiQuadrature(n=np, pt=pt, wt=wt, quadType=ipopt%GaussRadauLeft, &
-                        alpha=alpha, beta=beta)
+  CALL JacobiQuadrature(n=np, pt=ans(1, 1:ncol), wt=ans(nrow, 1:ncol), &
+                        quadType=ipopt%GaussRadauLeft, alpha=alpha, beta=beta)
 
 CASE (ipopt%GaussJacobiRadauRight)
-  CALL JacobiQuadrature(n=np, pt=pt, wt=wt, quadType=ipopt%GaussRadauRight, &
-                        alpha=alpha, beta=beta)
+  CALL JacobiQuadrature(n=np, pt=ans(1, 1:ncol), wt=ans(nrow, 1:ncol), &
+                       quadType=ipopt%GaussRadauRight, alpha=alpha, beta=beta)
 
 CASE (ipopt%GaussJacobiLobatto)
-  CALL JacobiQuadrature(n=np, pt=pt, wt=wt, quadType=ipopt%GaussLobatto, &
-                        alpha=alpha, beta=beta)
+  CALL JacobiQuadrature(n=np, pt=ans(1, 1:ncol), wt=ans(nrow, 1:ncol), &
+                        quadType=ipopt%GaussLobatto, alpha=alpha, beta=beta)
 
 CASE (ipopt%GaussUltraspherical)
-  CALL UltrasphericalQuadrature(n=np, pt=pt, wt=wt, quadType=ipopt%Gauss, &
-                                lambda=lambda)
+CALL UltrasphericalQuadrature(n=np, pt=ans(1, 1:ncol), wt=ans(nrow, 1:ncol), &
+                                quadType=ipopt%Gauss, lambda=lambda)
 
 CASE (ipopt%GaussUltrasphericalRadauLeft)
-  CALL UltrasphericalQuadrature(n=np, pt=pt, wt=wt, &
+CALL UltrasphericalQuadrature(n=np, pt=ans(1, 1:ncol), wt=ans(nrow, 1:ncol), &
                                 quadType=ipopt%GaussRadauLeft, lambda=lambda)
 
 CASE (ipopt%GaussUltrasphericalRadauRight)
-  CALL UltrasphericalQuadrature(n=np, pt=pt, wt=wt, &
+CALL UltrasphericalQuadrature(n=np, pt=ans(1, 1:ncol), wt=ans(nrow, 1:ncol), &
                                 quadType=ipopt%GaussRadauRight, lambda=lambda)
 
 CASE (ipopt%GaussUltrasphericalLobatto)
-  CALL UltrasphericalQuadrature(n=np, pt=pt, wt=wt, &
+CALL UltrasphericalQuadrature(n=np, pt=ans(1, 1:ncol), wt=ans(nrow, 1:ncol), &
                                 quadType=ipopt%GaussLobatto, lambda=lambda)
 
 CASE DEFAULT
@@ -1529,27 +1537,22 @@ CASE DEFAULT
 END SELECT
 
 IF (changeLayout) THEN
-  CALL ToVEFC_Line(pt)
-  CALL ToVEFC_Line(wt)
+  CALL ToVEFC_Line(ans(1, 1:ncol))
+  CALL ToVEFC_Line(ans(nrow, 1:ncol))
 END IF
 
 IF (PRESENT(xij)) THEN
-  CALL FromBiunitLine2Segment_(xin=pt, x1=xij(:, 1), x2=xij(:, 2), ans=ans, &
-                               nrow=ii, ncol=jj)
+  CALL FromBiunitLine2Segment_(xin=ans(1, 1:nrow), x1=xij(:, 1), &
+                               x2=xij(:, 2), ans=ans, nrow=ii, ncol=jj)
 
   areal = NORM2(xij(:, 2) - xij(:, 1)) / 2.0_DFP
 
   DO CONCURRENT(ii=1:ncol)
-    ans(nsd + 1, ii) = wt(ii) * areal
+    ans(nrow, ii) = ans(nrow, ii) * areal
   END DO
 
   RETURN
 END IF
-
-DO CONCURRENT(ii=1:ncol)
-  ans(1, ii) = pt(ii)
-  ans(nsd + 1, ii) = wt(ii)
-END DO
 
 END PROCEDURE QuadraturePoint_Line1_
 
