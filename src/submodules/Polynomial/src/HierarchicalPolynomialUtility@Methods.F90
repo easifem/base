@@ -552,10 +552,18 @@ SUBROUTINE check_error_2d(ierr, tface, routine, cellOrder, &
     RETURN
   END IF
 
-  isok = SIZE(faceOrder, 2) .EQ. tface
+  isok = SIZE(faceOrder, 2) .GE. tface
   IF (.NOT. isok) THEN
     ierr = ierr - 1
-    errmsg = "the size of faceOrder should be total face in elements"
+    errmsg = "colsize of faceOrder should be at least total face in elements"
+    CALL print_error
+    RETURN
+  END IF
+
+  isok = SIZE(faceOrder, 1) .GE. 3_I4B
+  IF (.NOT. isok) THEN
+    ierr = ierr - 1
+    errmsg = "rowsize of faceOrder should be at least 3"
     CALL print_error
     RETURN
   END IF
@@ -568,10 +576,18 @@ SUBROUTINE check_error_2d(ierr, tface, routine, cellOrder, &
     RETURN
   END IF
 
-  isok = SIZE(faceOrient, 2) .EQ. tface
+  isok = SIZE(faceOrient, 1) .GE. 3
   IF (.NOT. isok) THEN
     ierr = ierr - 1
-    errmsg = "number of cols in faceOrient should be total face in elements"
+    errmsg = "rowsize of faceOrient should be at least 3"
+    CALL print_error
+    RETURN
+  END IF
+
+  isok = SIZE(faceOrient, 2) .GE. tface
+  IF (.NOT. isok) THEN
+    ierr = ierr - 1
+    errmsg = "colsize of faceOrient should be at least total face in elements"
     CALL print_error
     RETURN
   END IF
