@@ -89,7 +89,8 @@ CALL HierarchicalGradientEvalAll_(elemType=elemType, &
                                   faceOrient=faceOrient, &
                                   edgeOrient=edgeOrient)
 
-CALL SWAP_(a=obj%dNdXi, b=temp(1:ii, 1:jj, 1:jj), i1=2, i2=3, i3=1)
+CALL SWAP_(a=obj%dNdXi, b=temp(1:ii, 1:jj, 1:kk), i1=2, i2=3, i3=1)
+! CALL SWAP_(a=obj%dNdXi, b=temp(1:ii, 1:jj, 1:jj), i1=3, i2=1, i3=2)
 
 IF (ALLOCATED(temp)) DEALLOCATE (temp)
 
