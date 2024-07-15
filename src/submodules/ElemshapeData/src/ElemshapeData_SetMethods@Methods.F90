@@ -92,7 +92,9 @@ INTEGER(I4B) :: NSD, XiDim, ips, nips
 REAL(DFP), ALLOCATABLE :: InvJacobian(:, :, :)
 
 NSD = obj%RefElem%NSD
+
 XiDim = obj%RefElem%XiDimension
+
 IF (NSD .NE. XiDim) THEN
   obj%dNdXt = 0.0_DFP
 ELSE
