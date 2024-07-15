@@ -245,10 +245,10 @@ INTERFACE
     !! x(2, :) is y coord
     !! x(3, :) is z coord
     REAL(DFP), INTENT(INOUT) :: ans(:, :, :)
-    !! Value of n+1 Hierarchical polynomials at point x
+    !! gradient of polynomials at quadrature points
     INTEGER(I4B), INTENT(OUT) :: dim1, dim2, dim3
-    !! nrow = SIZE(x, 2)
-    !! ncol = SIZE(xij, 2)
+    !! dim1 = SIZE(xij, 2)
+    !! dim2 = SIZE(xij, 2)
     CHARACTER(*), INTENT(IN) :: domainName
     !! domain of reference element
     !! UNIT ! BIUNIT
