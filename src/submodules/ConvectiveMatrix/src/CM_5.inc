@@ -49,7 +49,7 @@ PURE SUBROUTINE CM_5(ans, test, trial, term1, term2, c, opt)
     CALL Reallocate(m4, &
       & SIZE(test%N, 1), &
       & SIZE(trial%N, 1), &
-      & trial%refelem%nsd, 1)
+      & trial%nsd, 1)
     !!
     !! test: rowConcat
     !!
@@ -61,7 +61,7 @@ PURE SUBROUTINE CM_5(ans, test, trial, term1, term2, c, opt)
     CALL Reallocate(m4, &
       & SIZE(test%N, 1), &
       & SIZE(trial%N, 1), &
-      & 1, trial%refelem%nsd)
+      & 1, trial%nsd)
     !!
     !! test: rowConcat
     !!

@@ -45,7 +45,7 @@ PURE SUBROUTINE CM_9(ans, test, trial, term1, term2, opt)
     CALL Reallocate(m4, &
       & SIZE(test%N, 1), &
       & SIZE(trial%N, 1), &
-      & trial%refelem%nsd, 1)
+      & trial%nsd, 1)
     !!
     DO ips = 1, SIZE(realval)
       DO ii = 1, SIZE(m4, 3)
@@ -57,7 +57,7 @@ PURE SUBROUTINE CM_9(ans, test, trial, term1, term2, opt)
     CALL Reallocate(m4, &
       & SIZE(test%N, 1), &
       & SIZE(trial%N, 1), &
-      & 1, trial%refelem%nsd)
+      & 1, trial%nsd)
     !!
     DO ips = 1, SIZE(realval)
       DO ii = 1, SIZE( m4, 4)
