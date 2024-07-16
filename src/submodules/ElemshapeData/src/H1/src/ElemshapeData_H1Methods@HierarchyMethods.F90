@@ -30,11 +30,9 @@ REAL(DFP), ALLOCATABLE :: N(:, :)
 INTEGER(I4B) :: nsd, xidim
 
 CALL DEALLOCATE (obj)
-CALL Initiate(obj%refelem, refelem)
 nsd = refelem%nsd
 xidim = refelem%xiDimension
 CALL GetQuadraturePoints(obj=quad, points=xij, weights=obj%ws)
-obj%quad = quad
 
 CALL ALLOCATE ( &
   & obj=obj, &
