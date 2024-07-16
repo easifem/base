@@ -292,7 +292,7 @@ ALLOCATE (acoeff(SIZE(lambdaBar, 1)), bcoeff(SIZE(lambdaBar, 1)))
 bcoeff = SQRT(rhoBar * muBar)
 acoeff = SQRT(rhoBar * (lambdaBar + 2.0_DFP * muBar)) - bcoeff
 
-nsd = trial%refelem%nsd
+nsd = trial%nsd
 eyemat = Eye(nsd, 1.0_DFP)
 nns = SIZE(test%N, 1)
 ALLOCATE (m4(nns, nns, nsd, nsd))
