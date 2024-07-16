@@ -46,14 +46,14 @@ PURE SUBROUTINE STDM_11a(ans, test, trial, k, opt)
   CALL Reallocate(m6, &
     & SIZE(test(1)%N, 1), &
     & SIZE(trial(1)%N, 1), &
-    & trial(1)%refelem%nsd, &
-    & trial(1)%refelem%nsd, &
+    & trial(1)%nsd, &
+    & trial(1)%nsd, &
     & SIZE(test(1)%T), &
     & SIZE(trial(1)%T))
   !!
   CALL getInterpolation(obj=trial, interpol=kbar, val=k)
   !!
-  nsd = trial(1)%refelem%nsd
+  nsd = trial(1)%nsd
   !!
   DO ipt = 1, SIZE(trial)
     !!
@@ -112,14 +112,14 @@ PURE SUBROUTINE STDM_11b(ans, test, trial, k, opt)
   CALL Reallocate(m6, &
     & SIZE(test(1)%N, 1), &
     & SIZE(trial(1)%N, 1), &
-    & trial(1)%refelem%nsd, &
-    & trial(1)%refelem%nsd, &
+    & trial(1)%nsd, &
+    & trial(1)%nsd, &
     & SIZE(test(1)%T), &
     & SIZE(trial(1)%T))
   !!
   CALL getInterpolation(obj=trial, interpol=kbar, val=k)
   !!
-  nsd = trial(1)%refelem%nsd
+  nsd = trial(1)%nsd
   !!
   DO ipt = 1, SIZE(trial)
     !!
@@ -195,7 +195,7 @@ PURE SUBROUTINE STDM_12a(ans, test, trial, k, opt)
     & SIZE(test(1)%T), &
     & SIZE(trial(1)%T))
   !!
-  nsd = trial(1)%refelem%nsd
+  nsd = trial(1)%nsd
   !!
   DO ipt = 1, SIZE(trial)
     !!
@@ -210,7 +210,7 @@ PURE SUBROUTINE STDM_12a(ans, test, trial, k, opt)
         DO b = 1, SIZE(IJab, 4)
           DO a = 1, SIZE(IJab, 3)
             !!
-            IJab(:,:,a,b) = IJab(:,:,a,b) &
+            IJab(:, :, a, b) = IJab(:, :, a, b) &
               & + OUTERPROD( &
               & test(ipt)%dNTdXt(:, a, ii, ips), &
               & trial(ipt)%dNTdXt(:, b, ii, ips))
@@ -220,15 +220,15 @@ PURE SUBROUTINE STDM_12a(ans, test, trial, k, opt)
       END DO
       !!
       DO ii = 1, SIZE(m6, 3)
-        m6(:,:,ii,1,:,:) = m6(:,:,ii,1,:,:) &
-          & + realval( ips ) * vbar(ii, ips, ipt) &
+        m6(:, :, ii, 1, :, :) = m6(:, :, ii, 1, :, :) &
+          & + realval(ips) * vbar(ii, ips, ipt) &
           & * IJab
       END DO
       !!
     END DO
   END DO
   !!
-  CALL Convert( from=m6, to=ans)
+  CALL Convert(from=m6, to=ans)
   !!
   DEALLOCATE (realval, IJab, vbar, m6)
   !!
@@ -277,7 +277,7 @@ PURE SUBROUTINE STDM_12b(ans, test, trial, k, opt)
     & SIZE(test(1)%T), &
     & SIZE(trial(1)%T))
   !!
-  nsd = trial(1)%refelem%nsd
+  nsd = trial(1)%nsd
   !!
   DO ipt = 1, SIZE(trial)
     !!
@@ -292,7 +292,7 @@ PURE SUBROUTINE STDM_12b(ans, test, trial, k, opt)
         DO b = 1, SIZE(IJab, 4)
           DO a = 1, SIZE(IJab, 3)
             !!
-            IJab(:,:,a,b) = IJab(:,:,a,b) &
+            IJab(:, :, a, b) = IJab(:, :, a, b) &
               & + OUTERPROD( &
               & test(ipt)%dNTdXt(:, a, ii, ips), &
               & trial(ipt)%dNTdXt(:, b, ii, ips))
@@ -302,8 +302,8 @@ PURE SUBROUTINE STDM_12b(ans, test, trial, k, opt)
       END DO
       !!
       DO ii = 1, SIZE(m6, 4)
-        m6(:,:,1,ii,:,:) = m6(:,:,1,ii,:,:) &
-          & + realval( ips ) * vbar(ii, ips, ipt) &
+        m6(:, :, 1, ii, :, :) = m6(:, :, 1, ii, :, :) &
+          & + realval(ips) * vbar(ii, ips, ipt) &
           & * IJab
       END DO
       !!
@@ -311,7 +311,7 @@ PURE SUBROUTINE STDM_12b(ans, test, trial, k, opt)
     !!
   END DO
   !!
-  CALL Convert( from=m6, to=ans)
+  CALL Convert(from=m6, to=ans)
   !!
   DEALLOCATE (realval, IJab, vbar, m6)
   !!
@@ -346,15 +346,15 @@ PURE SUBROUTINE STDM_13a(ans, test, trial, c1, c2, opt)
   CALL Reallocate(m6, &
     & SIZE(test(1)%N, 1), &
     & SIZE(trial(1)%N, 1), &
-    & trial(1)%refelem%nsd, &
-    & trial(1)%refelem%nsd, &
+    & trial(1)%nsd, &
+    & trial(1)%nsd, &
     & SIZE(test(1)%T), &
     & SIZE(trial(1)%T))
   !!
   CALL getInterpolation(obj=trial, interpol=c1bar, val=c1)
   CALL getInterpolation(obj=trial, interpol=c2bar, val=c2)
   !!
-  nsd = trial(1)%refelem%nsd
+  nsd = trial(1)%nsd
   !!
   DO ipt = 1, SIZE(trial)
     !!
@@ -416,20 +416,20 @@ PURE SUBROUTINE STDM_13b(ans, test, trial, c1, c2, opt)
   CALL Reallocate(m6, &
     & SIZE(test(1)%N, 1), &
     & SIZE(trial(1)%N, 1), &
-    & trial(1)%refelem%nsd, &
-    & trial(1)%refelem%nsd, &
+    & trial(1)%nsd, &
+    & trial(1)%nsd, &
     & SIZE(test(1)%T), &
     & SIZE(trial(1)%T))
   !!
   CALL getInterpolation(obj=trial, interpol=c1bar, val=c1)
   CALL getInterpolation(obj=trial, interpol=c2bar, val=c2)
   !!
-  nsd = trial(1)%refelem%nsd
+  nsd = trial(1)%nsd
   !!
   DO ipt = 1, SIZE(trial)
     !!
     realval = trial(ipt)%js * trial(ipt)%ws * trial(ipt)%thickness &
-     & * trial(ipt)%wt * trial(ipt)%jt * c1bar(:, ipt) * c2bar(:,ipt)
+     & * trial(ipt)%wt * trial(ipt)%jt * c1bar(:, ipt) * c2bar(:, ipt)
     !!
     DO ips = 1, SIZE(realval)
       !!
@@ -504,7 +504,7 @@ PURE SUBROUTINE STDM_14a(ans, test, trial, c1, c2, opt)
     & SIZE(test(1)%T), &
     & SIZE(trial(1)%T))
   !!
-  nsd = trial(1)%refelem%nsd
+  nsd = trial(1)%nsd
   !!
   DO ipt = 1, SIZE(trial)
     !!
@@ -519,7 +519,7 @@ PURE SUBROUTINE STDM_14a(ans, test, trial, c1, c2, opt)
         DO b = 1, SIZE(IJab, 4)
           DO a = 1, SIZE(IJab, 3)
             !!
-            IJab(:,:,a,b) = IJab(:,:,a,b) &
+            IJab(:, :, a, b) = IJab(:, :, a, b) &
               & + OUTERPROD( &
               & test(ipt)%dNTdXt(:, a, ii, ips), &
               & trial(ipt)%dNTdXt(:, b, ii, ips))
@@ -529,15 +529,15 @@ PURE SUBROUTINE STDM_14a(ans, test, trial, c1, c2, opt)
       END DO
       !!
       DO ii = 1, SIZE(m6, 3)
-        m6(:,:,ii,1,:,:) = m6(:,:,ii,1,:,:) &
-          & + realval( ips ) * vbar(ii, ips, ipt) &
+        m6(:, :, ii, 1, :, :) = m6(:, :, ii, 1, :, :) &
+          & + realval(ips) * vbar(ii, ips, ipt) &
           & * IJab
       END DO
       !!
     END DO
   END DO
   !!
-  CALL Convert( from=m6, to=ans)
+  CALL Convert(from=m6, to=ans)
   !!
   DEALLOCATE (realval, IJab, vbar, m6, cbar)
   !!
@@ -590,12 +590,12 @@ PURE SUBROUTINE STDM_14b(ans, test, trial, c1, c2, opt)
     & SIZE(test(1)%T), &
     & SIZE(trial(1)%T))
   !!
-  nsd = trial(1)%refelem%nsd
+  nsd = trial(1)%nsd
   !!
   DO ipt = 1, SIZE(trial)
     !!
     realval = trial(ipt)%js * trial(ipt)%ws * trial(ipt)%thickness &
-     & * trial(ipt)%wt * trial(ipt)%jt * cbar(:,ipt)
+     & * trial(ipt)%wt * trial(ipt)%jt * cbar(:, ipt)
     !!
     DO ips = 1, SIZE(realval)
       !!
@@ -605,7 +605,7 @@ PURE SUBROUTINE STDM_14b(ans, test, trial, c1, c2, opt)
         DO b = 1, SIZE(IJab, 4)
           DO a = 1, SIZE(IJab, 3)
             !!
-            IJab(:,:,a,b) = IJab(:,:,a,b) &
+            IJab(:, :, a, b) = IJab(:, :, a, b) &
               & + OUTERPROD( &
               & test(ipt)%dNTdXt(:, a, ii, ips), &
               & trial(ipt)%dNTdXt(:, b, ii, ips))
@@ -615,8 +615,8 @@ PURE SUBROUTINE STDM_14b(ans, test, trial, c1, c2, opt)
       END DO
       !!
       DO ii = 1, SIZE(m6, 4)
-        m6(:,:,1,ii,:,:) = m6(:,:,1,ii,:,:) &
-          & + realval( ips ) * vbar(ii, ips, ipt) &
+        m6(:, :, 1, ii, :, :) = m6(:, :, 1, ii, :, :) &
+          & + realval(ips) * vbar(ii, ips, ipt) &
           & * IJab
       END DO
       !!
@@ -624,7 +624,7 @@ PURE SUBROUTINE STDM_14b(ans, test, trial, c1, c2, opt)
     !!
   END DO
   !!
-  CALL Convert( from=m6, to=ans)
+  CALL Convert(from=m6, to=ans)
   !!
   DEALLOCATE (realval, IJab, vbar, m6)
   !!
@@ -672,7 +672,7 @@ INTEGER(I4B) :: ips, ipt, ii, nsd
 !!
 CALL Reallocate(iajb, SIZE(test(1)%N, 1), SIZE(test(1)%T), &
   & SIZE(trial(1)%N, 1), SIZE(trial(1)%T))
-nsd = trial(1)%refelem%nsd
+nsd = trial(1)%nsd
 !!
 DO ipt = 1, SIZE(trial)
   realval = trial(ipt)%Js * trial(ipt)%Ws * trial(ipt)%Thickness &
@@ -688,7 +688,7 @@ END DO
 !!
 CALL SWAP(a=ans, b=iajb, i1=1, i2=3, i3=2, i4=4)
 !!
-if(present(opt)) call MakeDiagonalCopiesIJab(ans, opt)
+IF (PRESENT(opt)) CALL MakeDiagonalCopiesIJab(ans, opt)
 !!
 DEALLOCATE (realval, iajb)
 END PROCEDURE mat4_STDiffusionMatrix_1
@@ -698,42 +698,42 @@ END PROCEDURE mat4_STDiffusionMatrix_1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE mat4_STDiffusionMatrix_2
-  ! CALL STDM_1(ans=ans, test=test, trial=trial, k=k, opt=opt)
-  REAL(DFP), ALLOCATABLE :: realval(:)
-  REAL(DFP), ALLOCATABLE :: iajb(:, :, :, :)
-  REAL(DFP), ALLOCATABLE :: kbar(:, :)
-  INTEGER(I4B) :: ips, ipt, ii, nsd
+! CALL STDM_1(ans=ans, test=test, trial=trial, k=k, opt=opt)
+REAL(DFP), ALLOCATABLE :: realval(:)
+REAL(DFP), ALLOCATABLE :: iajb(:, :, :, :)
+REAL(DFP), ALLOCATABLE :: kbar(:, :)
+INTEGER(I4B) :: ips, ipt, ii, nsd
   !!
   !! main
   !!
-  CALL getInterpolation(obj=trial, interpol=kbar, val=k)
+CALL getInterpolation(obj=trial, interpol=kbar, val=k)
   !!
-  CALL Reallocate(iajb, SIZE(test(1)%N, 1), SIZE(test(1)%T), &
-    & SIZE(trial(1)%N, 1), SIZE(trial(1)%T))
+CALL Reallocate(iajb, SIZE(test(1)%N, 1), SIZE(test(1)%T), &
+  & SIZE(trial(1)%N, 1), SIZE(trial(1)%T))
   !!
-  nsd = trial(1)%refelem%nsd
+nsd = trial(1)%nsd
   !!
-  DO ipt = 1, SIZE(trial)
+DO ipt = 1, SIZE(trial)
     !!
-    realval = trial(ipt)%js * trial(ipt)%ws * trial(ipt)%thickness &
-     & * trial(ipt)%wt * trial(ipt)%jt * kbar(:, ipt)
+  realval = trial(ipt)%js * trial(ipt)%ws * trial(ipt)%thickness &
+   & * trial(ipt)%wt * trial(ipt)%jt * kbar(:, ipt)
     !!
-    DO ips = 1, SIZE(realval)
+  DO ips = 1, SIZE(realval)
       !!
-      DO ii = 1, nsd
+    DO ii = 1, nsd
         !!
-        iajb = iajb + realval(ips) &
-          & * OUTERPROD(test(ipt)%dNTdXt(:, :, ii, ips),&
-          & trial(ipt)%dNTdXt(:, :, ii, ips))
+      iajb = iajb + realval(ips) &
+        & * OUTERPROD(test(ipt)%dNTdXt(:, :, ii, ips),&
+        & trial(ipt)%dNTdXt(:, :, ii, ips))
         !!
-      END DO
     END DO
   END DO
+END DO
   !!
-  CALL SWAP(a=ans, b=iajb, i1=1, i2=3, i3=2, i4=4)
-  if(present(opt)) call MakeDiagonalCopiesIJab(ans, opt)
+CALL SWAP(a=ans, b=iajb, i1=1, i2=3, i3=2, i4=4)
+IF (PRESENT(opt)) CALL MakeDiagonalCopiesIJab(ans, opt)
   !!
-  DEALLOCATE (realval, iajb, kbar)
+DEALLOCATE (realval, iajb, kbar)
 END PROCEDURE mat4_STDiffusionMatrix_2
 
 !----------------------------------------------------------------------------
@@ -741,39 +741,39 @@ END PROCEDURE mat4_STDiffusionMatrix_2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE mat4_STDiffusionMatrix_3
-  ! CALL STDM_2(ans=ans, test=test, trial=trial, k=k, opt=opt)
+! CALL STDM_2(ans=ans, test=test, trial=trial, k=k, opt=opt)
   !! Internal variable
-  REAL(DFP), ALLOCATABLE :: realval(:)
-  REAL(DFP), ALLOCATABLE :: iajb(:, :, :, :)
-  REAL(DFP), ALLOCATABLE :: p1(:, :, :)
-  REAL(DFP), ALLOCATABLE :: p2(:, :, :)
-  INTEGER(I4B) :: ips, ipt
+REAL(DFP), ALLOCATABLE :: realval(:)
+REAL(DFP), ALLOCATABLE :: iajb(:, :, :, :)
+REAL(DFP), ALLOCATABLE :: p1(:, :, :)
+REAL(DFP), ALLOCATABLE :: p2(:, :, :)
+INTEGER(I4B) :: ips, ipt
   !!
   !! main
-  CALL Reallocate(iajb, SIZE(test(1)%N, 1), SIZE(test(1)%T), &
-    & SIZE(trial(1)%N, 1), SIZE(trial(1)%T))
+CALL Reallocate(iajb, SIZE(test(1)%N, 1), SIZE(test(1)%T), &
+  & SIZE(trial(1)%N, 1), SIZE(trial(1)%T))
   !!
   !!
-  DO ipt = 1, SIZE(trial)
+DO ipt = 1, SIZE(trial)
     !!
-    realval = trial(ipt)%js * trial(ipt)%ws * trial(ipt)%thickness &
-     & * trial(ipt)%wt * trial(ipt)%jt
+  realval = trial(ipt)%js * trial(ipt)%ws * trial(ipt)%thickness &
+   & * trial(ipt)%wt * trial(ipt)%jt
     !!
-    CALL GetProjectionOfdNTdXt(obj=test(ipt), cdNTdXt=p1, val=k)
+  CALL GetProjectionOfdNTdXt(obj=test(ipt), cdNTdXt=p1, val=k)
     !!
-    CALL GetProjectionOfdNTdXt(obj=trial(ipt), cdNTdXt=p2, val=k)
+  CALL GetProjectionOfdNTdXt(obj=trial(ipt), cdNTdXt=p2, val=k)
     !!
-    DO ips = 1, SIZE(realval)
+  DO ips = 1, SIZE(realval)
       !!
-      iajb = iajb + realval(ips) * OUTERPROD(p1(:, :, ips), p2(:, :, ips))
+    iajb = iajb + realval(ips) * OUTERPROD(p1(:, :, ips), p2(:, :, ips))
       !!
-    END DO
   END DO
+END DO
   !!
-  CALL SWAP(a=ans, b=iajb, i1=1, i2=3, i3=2, i4=4)
-  if(present(opt)) call MakeDiagonalCopiesIJab(ans, opt)
+CALL SWAP(a=ans, b=iajb, i1=1, i2=3, i3=2, i4=4)
+IF (PRESENT(opt)) CALL MakeDiagonalCopiesIJab(ans, opt)
   !!
-  DEALLOCATE (realval, iajb, p1, p2)
+DEALLOCATE (realval, iajb, p1, p2)
 END PROCEDURE mat4_STDiffusionMatrix_3
 
 !----------------------------------------------------------------------------
@@ -781,44 +781,44 @@ END PROCEDURE mat4_STDiffusionMatrix_3
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE mat4_STDiffusionMatrix_4
-  ! CALL STDM_3(ans=ans, test=test, trial=trial, k=k, opt=opt)
-  REAL(DFP), ALLOCATABLE :: realval(:)
-  REAL(DFP), ALLOCATABLE :: IaJb(:, :, :, :)
-  REAL(DFP), ALLOCATABLE :: kbar(:, :, :, :)
-  INTEGER(I4B) :: ips, ipt, ii, jj, nsd
+! CALL STDM_3(ans=ans, test=test, trial=trial, k=k, opt=opt)
+REAL(DFP), ALLOCATABLE :: realval(:)
+REAL(DFP), ALLOCATABLE :: IaJb(:, :, :, :)
+REAL(DFP), ALLOCATABLE :: kbar(:, :, :, :)
+INTEGER(I4B) :: ips, ipt, ii, jj, nsd
   !!
   !! main
-  CALL Reallocate(IaJb, SIZE(test(1)%N, 1), SIZE(test(1)%T), &
-    & SIZE(trial(1)%N, 1), SIZE(trial(1)%T))
+CALL Reallocate(IaJb, SIZE(test(1)%N, 1), SIZE(test(1)%T), &
+  & SIZE(trial(1)%N, 1), SIZE(trial(1)%T))
   !!
-  CALL getInterpolation(obj=trial, interpol=kbar, val=k)
+CALL getInterpolation(obj=trial, interpol=kbar, val=k)
   !!
-  nsd = trial(1)%refelem%nsd
+nsd = trial(1)%nsd
   !!
-  DO ipt = 1, SIZE(trial)
+DO ipt = 1, SIZE(trial)
     !!
-    realval = trial(ipt)%js * trial(ipt)%ws * trial(ipt)%thickness &
-     & * trial(ipt)%wt * trial(ipt)%jt
+  realval = trial(ipt)%js * trial(ipt)%ws * trial(ipt)%thickness &
+   & * trial(ipt)%wt * trial(ipt)%jt
     !!
-    DO ips = 1, SIZE(realval)
+  DO ips = 1, SIZE(realval)
       !!
-      DO jj = 1, nsd
+    DO jj = 1, nsd
         !!
-        DO ii = 1, nsd
+      DO ii = 1, nsd
           !!
-          IaJb = IaJb + realval(ips) * kbar(ii, jj, ips, ipt) * &
-            & OUTERPROD(test(ipt)%dNTdXt(:, :, ii, ips), &
-            & trial(ipt)%dNTdXt(:, :, jj, ips))
+        IaJb = IaJb + realval(ips) * kbar(ii, jj, ips, ipt) * &
+          & OUTERPROD(test(ipt)%dNTdXt(:, :, ii, ips), &
+          & trial(ipt)%dNTdXt(:, :, jj, ips))
           !!
-        END DO
       END DO
     END DO
   END DO
+END DO
   !!
-  CALL SWAP(a=ans, b=IaJb, i1=1, i2=3, i3=2, i4=4)
-  if(present(opt)) call MakeDiagonalCopiesIJab(ans, opt)
+CALL SWAP(a=ans, b=IaJb, i1=1, i2=3, i3=2, i4=4)
+IF (PRESENT(opt)) CALL MakeDiagonalCopiesIJab(ans, opt)
   !!
-  DEALLOCATE (realval, KBar, IaJb)
+DEALLOCATE (realval, KBar, IaJb)
 END PROCEDURE mat4_STDiffusionMatrix_4
 
 !----------------------------------------------------------------------------
@@ -830,48 +830,48 @@ MODULE PROCEDURE mat4_STDiffusionMatrix_5
   !! scalar
   !! scalar
   !!
-  ! CALL STDM_6(ans=ans, test=test, trial=trial, c1=c1, c2=c2, opt=opt)
+! CALL STDM_6(ans=ans, test=test, trial=trial, c1=c1, c2=c2, opt=opt)
   !!
   !!
   !! Internal variable
   !!
-  REAL(DFP), ALLOCATABLE :: realval(:)
-  REAL(DFP), ALLOCATABLE :: iajb(:, :, :, :)
-  REAL(DFP), ALLOCATABLE :: c1bar(:, :)
-  REAL(DFP), ALLOCATABLE :: c2bar(:, :)
-  INTEGER(I4B) :: ips, ipt, ii, nsd
+REAL(DFP), ALLOCATABLE :: realval(:)
+REAL(DFP), ALLOCATABLE :: iajb(:, :, :, :)
+REAL(DFP), ALLOCATABLE :: c1bar(:, :)
+REAL(DFP), ALLOCATABLE :: c2bar(:, :)
+INTEGER(I4B) :: ips, ipt, ii, nsd
   !!
   !! main
   !!
-  CALL getInterpolation(obj=trial, interpol=c1bar, val=c1)
-  CALL getInterpolation(obj=trial, interpol=c2bar, val=c2)
+CALL getInterpolation(obj=trial, interpol=c1bar, val=c1)
+CALL getInterpolation(obj=trial, interpol=c2bar, val=c2)
   !!
-  CALL Reallocate(iajb, SIZE(test(1)%N, 1), SIZE(test(1)%T), &
-      & SIZE(trial(1)%N, 1), SIZE(trial(1)%T))
+CALL Reallocate(iajb, SIZE(test(1)%N, 1), SIZE(test(1)%T), &
+    & SIZE(trial(1)%N, 1), SIZE(trial(1)%T))
   !!
-  nsd = trial(1)%refelem%nsd
+nsd = trial(1)%nsd
   !!
-  DO ipt = 1, SIZE(trial)
+DO ipt = 1, SIZE(trial)
     !!
-    realval = trial(ipt)%Js * trial(ipt)%Ws * trial(ipt)%Thickness &
-        & * trial(ipt)%Wt * trial(ipt)%Jt * c1bar(:, ipt) * c2bar(:, ipt)
+  realval = trial(ipt)%Js * trial(ipt)%Ws * trial(ipt)%Thickness &
+   & * trial(ipt)%Wt * trial(ipt)%Jt * c1bar(:, ipt) * c2bar(:, ipt)
     !!
-    DO ips = 1, SIZE(realval)
+  DO ips = 1, SIZE(realval)
       !!
-      DO ii = 1, nsd
+    DO ii = 1, nsd
         !!
-        iajb = iajb + realval(ips) &
-          & * OUTERPROD(test(ipt)%dNTdXt(:, :, ii, ips),&
-          & trial(ipt)%dNTdXt(:, :, ii, ips))
+      iajb = iajb + realval(ips) &
+        & * OUTERPROD(test(ipt)%dNTdXt(:, :, ii, ips),&
+        & trial(ipt)%dNTdXt(:, :, ii, ips))
         !!
-      END DO
     END DO
   END DO
+END DO
   !!
-  CALL SWAP(a=ans, b=iajb, i1=1, i2=3, i3=2, i4=4)
-  if(present(opt)) call MakeDiagonalCopiesIJab(ans, opt)
+CALL SWAP(a=ans, b=iajb, i1=1, i2=3, i3=2, i4=4)
+IF (PRESENT(opt)) CALL MakeDiagonalCopiesIJab(ans, opt)
   !!
-  DEALLOCATE (realval, iajb, c1bar, c2bar)
+DEALLOCATE (realval, iajb, c1bar, c2bar)
 END PROCEDURE mat4_STDiffusionMatrix_5
 
 !----------------------------------------------------------------------------
@@ -883,40 +883,40 @@ MODULE PROCEDURE mat4_STDiffusionMatrix_6
   !! scalar
   !! vector
   !!
-  ! CALL STDM_7(ans=ans, test=test, trial=trial, c1=c1, c2=c2, opt=opt)
+! CALL STDM_7(ans=ans, test=test, trial=trial, c1=c1, c2=c2, opt=opt)
   !!
   !! Internal variable
   !!
-  REAL(DFP), ALLOCATABLE :: realval(:)
-  REAL(DFP), ALLOCATABLE :: c1bar(:,:)
-  REAL(DFP), ALLOCATABLE :: iajb(:, :, :, :)
-  REAL(DFP), ALLOCATABLE :: p1(:, :, :)
-  REAL(DFP), ALLOCATABLE :: p2(:, :, :)
-  INTEGER(I4B) :: ips, ipt
+REAL(DFP), ALLOCATABLE :: realval(:)
+REAL(DFP), ALLOCATABLE :: c1bar(:, :)
+REAL(DFP), ALLOCATABLE :: iajb(:, :, :, :)
+REAL(DFP), ALLOCATABLE :: p1(:, :, :)
+REAL(DFP), ALLOCATABLE :: p2(:, :, :)
+INTEGER(I4B) :: ips, ipt
   !!
   !! main
-  CALL Reallocate(iajb, SIZE(test(1)%N, 1), SIZE(test(1)%T), &
-      & SIZE(trial(1)%N, 1), SIZE(trial(1)%T))
-  CALL getInterpolation(obj=trial, interpol=c1bar, val=c1)
+CALL Reallocate(iajb, SIZE(test(1)%N, 1), SIZE(test(1)%T), &
+    & SIZE(trial(1)%N, 1), SIZE(trial(1)%T))
+CALL getInterpolation(obj=trial, interpol=c1bar, val=c1)
   !!
-  DO ipt = 1, SIZE(trial)
+DO ipt = 1, SIZE(trial)
     !!
-    realval = trial(ipt)%js * trial(ipt)%ws * trial(ipt)%thickness &
-     & * trial(ipt)%wt * trial(ipt)%jt * c1bar(:,ipt)
-    CALL GetProjectionOfdNTdXt(obj=test(ipt), cdNTdXt=p1, val=c2)
-    CALL GetProjectionOfdNTdXt(obj=trial(ipt), cdNTdXt=p2, val=c2)
+  realval = trial(ipt)%js * trial(ipt)%ws * trial(ipt)%thickness &
+   & * trial(ipt)%wt * trial(ipt)%jt * c1bar(:, ipt)
+  CALL GetProjectionOfdNTdXt(obj=test(ipt), cdNTdXt=p1, val=c2)
+  CALL GetProjectionOfdNTdXt(obj=trial(ipt), cdNTdXt=p2, val=c2)
     !!
-    DO ips = 1, SIZE(realval)
+  DO ips = 1, SIZE(realval)
       !!
-      iajb = iajb + realval(ips) * OUTERPROD(p1(:, :, ips), p2(:, :, ips))
+    iajb = iajb + realval(ips) * OUTERPROD(p1(:, :, ips), p2(:, :, ips))
       !!
-    END DO
   END DO
+END DO
   !!
-  CALL SWAP(a=ans, b=iajb, i1=1, i2=3, i3=2, i4=4)
-  if(present(opt)) call MakeDiagonalCopiesIJab(ans, opt)
+CALL SWAP(a=ans, b=iajb, i1=1, i2=3, i3=2, i4=4)
+IF (PRESENT(opt)) CALL MakeDiagonalCopiesIJab(ans, opt)
   !!
-  DEALLOCATE (realval, c1bar, iajb, p1, p2)
+DEALLOCATE (realval, c1bar, iajb, p1, p2)
   !!
 END PROCEDURE mat4_STDiffusionMatrix_6
 
@@ -929,49 +929,49 @@ MODULE PROCEDURE mat4_STDiffusionMatrix_7
   !! scalar
   !! matrix
   !!
-  ! CALL STDM_5(ans=ans, test=test, trial=trial, c1=c1, c2=c2, opt=opt)
+! CALL STDM_5(ans=ans, test=test, trial=trial, c1=c1, c2=c2, opt=opt)
   !!
   !! Internal variable
-  REAL(DFP), ALLOCATABLE :: realval(:)
-  REAL(DFP), ALLOCATABLE :: iajb(:, :, :, :)
-  REAL(DFP), ALLOCATABLE :: rhobar(:, :)
-  REAL(DFP), ALLOCATABLE :: kbar(:, :, :, :)
-  INTEGER(I4B) :: ips, ipt, ii, jj, nsd
+REAL(DFP), ALLOCATABLE :: realval(:)
+REAL(DFP), ALLOCATABLE :: iajb(:, :, :, :)
+REAL(DFP), ALLOCATABLE :: rhobar(:, :)
+REAL(DFP), ALLOCATABLE :: kbar(:, :, :, :)
+INTEGER(I4B) :: ips, ipt, ii, jj, nsd
   !!
   !! main
   !!
-  CALL Reallocate(iajb, SIZE(test(1)%N, 1), SIZE(test(1)%T), &
-      & SIZE(trial(1)%N, 1), SIZE(trial(1)%T))
+CALL Reallocate(iajb, SIZE(test(1)%N, 1), SIZE(test(1)%T), &
+    & SIZE(trial(1)%N, 1), SIZE(trial(1)%T))
   !!
-  CALL getInterpolation(obj=trial, interpol=rhobar, val=c1)
-  CALL getInterpolation(obj=trial, interpol=kbar, val=c2)
+CALL getInterpolation(obj=trial, interpol=rhobar, val=c1)
+CALL getInterpolation(obj=trial, interpol=kbar, val=c2)
   !!
-  nsd = trial(1)%refelem%nsd
+nsd = trial(1)%nsd
   !!
-  DO ipt = 1, SIZE(trial)
+DO ipt = 1, SIZE(trial)
     !!
-    realval = trial(ipt)%js * trial(ipt)%ws * trial(ipt)%thickness &
-     & * trial(ipt)%wt * trial(ipt)%jt * rhobar(:, ipt)
+  realval = trial(ipt)%js * trial(ipt)%ws * trial(ipt)%thickness &
+   & * trial(ipt)%wt * trial(ipt)%jt * rhobar(:, ipt)
     !!
-    DO ips = 1, SIZE(realval)
+  DO ips = 1, SIZE(realval)
       !!
-      DO jj = 1, nsd
+    DO jj = 1, nsd
         !!
-        DO ii = 1, nsd
+      DO ii = 1, nsd
           !!
-          iajb = iajb + realval(ips) * kbar(ii, jj, ips, ipt) * &
-              & OUTERPROD(test(ipt)%dNTdXt(:, :, ii, ips), &
-              & trial(ipt)%dNTdXt(:, :, jj, ips))
+        iajb = iajb + realval(ips) * kbar(ii, jj, ips, ipt) * &
+            & OUTERPROD(test(ipt)%dNTdXt(:, :, ii, ips), &
+            & trial(ipt)%dNTdXt(:, :, jj, ips))
           !!
-        END DO
       END DO
     END DO
   END DO
+END DO
   !!
-  CALL SWAP(a=ans, b=iajb, i1=1, i2=3, i3=2, i4=4)
-  if(present(opt)) call MakeDiagonalCopiesIJab(ans, opt)
+CALL SWAP(a=ans, b=iajb, i1=1, i2=3, i3=2, i4=4)
+IF (PRESENT(opt)) CALL MakeDiagonalCopiesIJab(ans, opt)
   !!
-  DEALLOCATE (realval, iajb, rhobar, kbar)
+DEALLOCATE (realval, iajb, rhobar, kbar)
 END PROCEDURE mat4_STDiffusionMatrix_7
 
 !----------------------------------------------------------------------------
@@ -983,10 +983,10 @@ MODULE PROCEDURE mat4_STDiffusionMatrix_8
   !! vector
   !! scalar
   !!
-  ! CALL STDM_7(ans=ans, test=test, trial=trial, c1=c2, c2=c1, opt=opt)
+! CALL STDM_7(ans=ans, test=test, trial=trial, c1=c2, c2=c1, opt=opt)
   !!
-  ans = STDiffusionMatrix(test=test, trial=trial, c1=c2, c2=c1, &
-    & c1rank=TypeFEVariableScalar, c2rank=TypeFEVariableVector, opt=opt )
+ans = STDiffusionMatrix(test=test, trial=trial, c1=c2, c2=c1, &
+  & c1rank=TypeFEVariableScalar, c2rank=TypeFEVariableVector, opt=opt)
 END PROCEDURE mat4_STDiffusionMatrix_8
 
 !----------------------------------------------------------------------------
@@ -998,38 +998,38 @@ MODULE PROCEDURE mat4_STDiffusionMatrix_9
   !! vector
   !! vector
   !!
-  ! CALL STDM_4(ans=ans, test=test, trial=trial, c1=c1, c2=c2, opt=opt)
+! CALL STDM_4(ans=ans, test=test, trial=trial, c1=c1, c2=c2, opt=opt)
   !!
   !! Internal variable
-  REAL(DFP), ALLOCATABLE :: realval(:)
-  REAL(DFP), ALLOCATABLE :: iajb(:, :, :, :)
-  REAL(DFP), ALLOCATABLE :: p1(:, :, :)
-  REAL(DFP), ALLOCATABLE :: p2(:, :, :)
-  INTEGER(I4B) :: ips, ipt
+REAL(DFP), ALLOCATABLE :: realval(:)
+REAL(DFP), ALLOCATABLE :: iajb(:, :, :, :)
+REAL(DFP), ALLOCATABLE :: p1(:, :, :)
+REAL(DFP), ALLOCATABLE :: p2(:, :, :)
+INTEGER(I4B) :: ips, ipt
   !!
   !! main
-  CALL Reallocate(iajb, SIZE(test(1)%N, 1), SIZE(test(1)%T), &
-    & SIZE(trial(1)%N, 1), SIZE(trial(1)%T))
+CALL Reallocate(iajb, SIZE(test(1)%N, 1), SIZE(test(1)%T), &
+  & SIZE(trial(1)%N, 1), SIZE(trial(1)%T))
   !!
   !!
-  DO ipt = 1, SIZE(trial)
+DO ipt = 1, SIZE(trial)
     !!
-    realval = trial(ipt)%js * trial(ipt)%ws * trial(ipt)%thickness &
-     & * trial(ipt)%wt * trial(ipt)%jt
-    CALL GetProjectionOfdNTdXt(obj=test(ipt), cdNTdXt=p1, val=c1)
-    CALL GetProjectionOfdNTdXt(obj=trial(ipt), cdNTdXt=p2, val=c2)
+  realval = trial(ipt)%js * trial(ipt)%ws * trial(ipt)%thickness &
+   & * trial(ipt)%wt * trial(ipt)%jt
+  CALL GetProjectionOfdNTdXt(obj=test(ipt), cdNTdXt=p1, val=c1)
+  CALL GetProjectionOfdNTdXt(obj=trial(ipt), cdNTdXt=p2, val=c2)
     !!
-    DO ips = 1, SIZE(realval)
+  DO ips = 1, SIZE(realval)
       !!
-      iajb = iajb + realval(ips) * OUTERPROD(p1(:, :, ips), p2(:, :, ips))
+    iajb = iajb + realval(ips) * OUTERPROD(p1(:, :, ips), p2(:, :, ips))
       !!
-    END DO
   END DO
+END DO
   !!
-  CALL SWAP(a=ans, b=iajb, i1=1, i2=3, i3=2, i4=4)
-  if(present(opt)) call MakeDiagonalCopiesIJab(ans, opt)
+CALL SWAP(a=ans, b=iajb, i1=1, i2=3, i3=2, i4=4)
+IF (PRESENT(opt)) CALL MakeDiagonalCopiesIJab(ans, opt)
   !!
-  DEALLOCATE (realval, iajb, p1, p2)
+DEALLOCATE (realval, iajb, p1, p2)
 END PROCEDURE mat4_STDiffusionMatrix_9
 
 !----------------------------------------------------------------------------
@@ -1054,10 +1054,10 @@ MODULE PROCEDURE mat4_STDiffusionMatrix_11
   !! matrix
   !! scalar
   !!
-  ! CALL STDM_5(ans=ans, test=test, trial=trial, c1=c2, c2=c1, opt=opt)
+! CALL STDM_5(ans=ans, test=test, trial=trial, c1=c2, c2=c1, opt=opt)
   !!
-  ans = STDiffusionMatrix(test=test, trial=trial, c1=c2, c2=c1, &
-    & c1rank=TypeFEVariableScalar, c2rank=TypeFEVariableMatrix, opt=opt)
+ans = STDiffusionMatrix(test=test, trial=trial, c1=c2, c2=c1, &
+  & c1rank=TypeFEVariableScalar, c2rank=TypeFEVariableMatrix, opt=opt)
   !!
 END PROCEDURE mat4_STDiffusionMatrix_11
 
@@ -1083,49 +1083,49 @@ MODULE PROCEDURE mat4_STDiffusionMatrix_13
   !! matrix
   !! matrix
   !!
-  ! CALL STDM_8(ans=ans, test=test, trial=trial, c1=c1, c2=c2, opt=opt)
+! CALL STDM_8(ans=ans, test=test, trial=trial, c1=c1, c2=c2, opt=opt)
   !!
   !! Internal variable
-  REAL(DFP), ALLOCATABLE :: realval(:)
-  REAL(DFP), ALLOCATABLE :: m2(:, :)
-  REAL(DFP), ALLOCATABLE :: iajb(:, :, :, :)
-  REAL(DFP), ALLOCATABLE :: k1bar(:, :, :, :)
-  REAL(DFP), ALLOCATABLE :: k2bar(:, :, :, :)
-  INTEGER(I4B) :: ips, ipt, ii, jj, nsd
+REAL(DFP), ALLOCATABLE :: realval(:)
+REAL(DFP), ALLOCATABLE :: m2(:, :)
+REAL(DFP), ALLOCATABLE :: iajb(:, :, :, :)
+REAL(DFP), ALLOCATABLE :: k1bar(:, :, :, :)
+REAL(DFP), ALLOCATABLE :: k2bar(:, :, :, :)
+INTEGER(I4B) :: ips, ipt, ii, jj, nsd
   !!
   !! main
-  CALL Reallocate(iajb, SIZE(test(1)%N, 1), SIZE(test(1)%T), &
-      & SIZE(trial(1)%N, 1), SIZE(trial(1)%T))
-  CALL getInterpolation(obj=trial, interpol=k1bar, val=c1)
-  CALL getInterpolation(obj=trial, interpol=k2bar, val=c2)
-  nsd = trial(1)%refelem%nsd
+CALL Reallocate(iajb, SIZE(test(1)%N, 1), SIZE(test(1)%T), &
+    & SIZE(trial(1)%N, 1), SIZE(trial(1)%T))
+CALL getInterpolation(obj=trial, interpol=k1bar, val=c1)
+CALL getInterpolation(obj=trial, interpol=k2bar, val=c2)
+nsd = trial(1)%nsd
   !!
-  DO ipt = 1, SIZE(trial)
+DO ipt = 1, SIZE(trial)
     !!
-    realval = trial(ipt)%js * trial(ipt)%ws * trial(ipt)%thickness &
-     & * trial(ipt)%wt * trial(ipt)%jt
+  realval = trial(ipt)%js * trial(ipt)%ws * trial(ipt)%thickness &
+   & * trial(ipt)%wt * trial(ipt)%jt
     !!
-    DO ips = 1, SIZE(realval)
+  DO ips = 1, SIZE(realval)
       !!
-      m2 = MATMUL(k1bar(:, :, ips, ipt), k2bar(:, :, ips, ipt))
+    m2 = MATMUL(k1bar(:, :, ips, ipt), k2bar(:, :, ips, ipt))
       !!
-      DO jj = 1, nsd
+    DO jj = 1, nsd
         !!
-        DO ii = 1, nsd
+      DO ii = 1, nsd
           !!
-          iajb = iajb + realval(ips) * m2(ii, jj) * &
-              & OUTERPROD(test(ipt)%dNTdXt(:, :, ii, ips), &
-              & trial(ipt)%dNTdXt(:, :, jj, ips))
+        iajb = iajb + realval(ips) * m2(ii, jj) * &
+            & OUTERPROD(test(ipt)%dNTdXt(:, :, ii, ips), &
+            & trial(ipt)%dNTdXt(:, :, jj, ips))
           !!
-        END DO
       END DO
     END DO
   END DO
+END DO
   !!
-  CALL SWAP(a=ans, b=iajb, i1=1, i2=3, i3=2, i4=4)
-  if(present(opt)) call MakeDiagonalCopiesIJab(ans, opt)
+CALL SWAP(a=ans, b=iajb, i1=1, i2=3, i3=2, i4=4)
+IF (PRESENT(opt)) CALL MakeDiagonalCopiesIJab(ans, opt)
   !!
-  DEALLOCATE (realval, m2, iajb, k1bar, k2bar)
+DEALLOCATE (realval, m2, iajb, k1bar, k2bar)
   !!
 END PROCEDURE mat4_STDiffusionMatrix_13
 
