@@ -32,11 +32,9 @@ INTEGER(I4B) :: nsd, xidim, basisType0
 
 basisType0 = Input(option=basisType, default=Legendre)
 CALL DEALLOCATE (obj)
-CALL Initiate(obj%refelem, refelem)
 nsd = refelem%nsd
 xidim = refelem%xiDimension
 CALL GetQuadraturePoints(obj=quad, points=xij, weights=obj%ws)
-obj%quad = quad
 
 CALL ALLOCATE ( &
   & obj=obj, &
@@ -79,12 +77,12 @@ CASE (Quadrangle)
     & xij=xij, &
     & basisType1=basisType0,  &
     & basisType2=basisType0,  &
-    & alpha1 = alpha,  &
-    & beta1 = beta,  &
-    & alpha2 = alpha,  &
-    & beta2 = beta,  &
-    & lambda1 = lambda,  &
-    & lambda2 = lambda )
+    & alpha1=alpha,  &
+    & beta1=beta,  &
+    & alpha2=alpha,  &
+    & beta2=beta,  &
+    & lambda1=lambda,  &
+    & lambda2=lambda)
 
   dNdXi = OrthogonalBasisGradient_Quadrangle( &
     & p=order, &
@@ -92,12 +90,12 @@ CASE (Quadrangle)
     & xij=xij, &
     & basisType1=basisType0,  &
     & basisType2=basisType0,  &
-    & alpha1 = alpha,  &
-    & beta1 = beta,  &
-    & alpha2 = alpha,  &
-    & beta2 = beta,  &
-    & lambda1 = lambda,  &
-    & lambda2 = lambda )
+    & alpha1=alpha,  &
+    & beta1=beta,  &
+    & alpha2=alpha,  &
+    & beta2=beta,  &
+    & lambda1=lambda,  &
+    & lambda2=lambda)
 
 CASE (Tetrahedron)
   N = OrthogonalBasis_Tetrahedron( &
@@ -119,15 +117,15 @@ CASE (Hexahedron)
     & basisType1=basisType0,  &
     & basisType2=basisType0,  &
     & basisType3=basisType0,  &
-    & alpha1 = alpha,  &
-    & beta1 = beta,  &
-    & lambda1 = lambda,  &
-    & alpha2 = alpha,  &
-    & beta2 = beta,  &
-    & lambda2 = lambda,  &
-    & alpha3 = alpha,  &
-    & beta3 = beta,  &
-    & lambda3 = lambda  &
+    & alpha1=alpha,  &
+    & beta1=beta,  &
+    & lambda1=lambda,  &
+    & alpha2=alpha,  &
+    & beta2=beta,  &
+    & lambda2=lambda,  &
+    & alpha3=alpha,  &
+    & beta3=beta,  &
+    & lambda3=lambda  &
     & )
 
   dNdXi = OrthogonalBasisGradient_Hexahedron( &
@@ -138,15 +136,15 @@ CASE (Hexahedron)
     & basisType1=basisType0,  &
     & basisType2=basisType0,  &
     & basisType3=basisType0,  &
-    & alpha1 = alpha,  &
-    & beta1 = beta,  &
-    & lambda1 = lambda,  &
-    & alpha2 = alpha,  &
-    & beta2 = beta,  &
-    & lambda2 = lambda,  &
-    & alpha3 = alpha,  &
-    & beta3 = beta,  &
-    & lambda3 = lambda  &
+    & alpha1=alpha,  &
+    & beta1=beta,  &
+    & lambda1=lambda,  &
+    & alpha2=alpha,  &
+    & beta2=beta,  &
+    & lambda2=lambda,  &
+    & alpha3=alpha,  &
+    & beta3=beta,  &
+    & lambda3=lambda  &
     & )
 
 CASE DEFAULT
