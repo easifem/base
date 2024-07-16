@@ -23,10 +23,10 @@ target_sources(
           ${src_path}/ElemshapeData_DivergenceMethods.F90
           ${src_path}/ElemshapeData_GradientMethods.F90
           ${src_path}/ElemshapeData_GetMethods.F90
-          ${src_path}/ElemshapeData_H1Methods.F90
-          ${src_path}/ElemshapeData_DGMethods.F90
-          ${src_path}/ElemshapeData_HDivMethods.F90
-          ${src_path}/ElemshapeData_HCurlMethods.F90
+          # ${src_path}/ElemshapeData_H1Methods.F90
+          # ${src_path}/ElemshapeData_DGMethods.F90
+          # ${src_path}/ElemshapeData_HDivMethods.F90
+          # ${src_path}/ElemshapeData_HCurlMethods.F90
           ${src_path}/ElemshapeData_Lagrange.F90
           ${src_path}/ElemshapeData_Hierarchical.F90
           ${src_path}/ElemshapeData_HminHmaxMethods.F90
