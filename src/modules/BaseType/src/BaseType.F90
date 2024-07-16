@@ -1460,41 +1460,47 @@ END TYPE STShapeDataPointer_
 !{!pages/docs-api/ElemShapeData/ElemshapeData_.md!}
 !
 TYPE :: ElemShapeData_
+  INTEGER(I4B) :: nsd = 0
+  !! spatial dimension of an element
+  INTEGER(I4B) :: xidim = 0
+  !! xidimension
+  INTEGER(I4B) :: nips = 0
+  !! number of integration points
+  INTEGER(I4B) :: nns = 0
+  !! total degrees of freedom
+  !! number of shape functions
   REAL(DFP), ALLOCATABLE :: N(:, :)
-    !! Shape function value `N(I, ips)`
+  !! Shape function value `N(I, ips)`
+  !! nrow = nns
+  !! ncol = nips
   REAL(DFP), ALLOCATABLE :: dNdXi(:, :, :)
-    !! Local derivative of a shape function
+  !! Local derivative of a shape function
+  !! shape = nns, xidim, nips
   REAL(DFP), ALLOCATABLE :: jacobian(:, :, :)
-    !! Jacobian of mapping `J(:,:,ips)` also $\mathbf{F}_{\Xi x}$
+  !! Jacobian of mapping `J(:,:,ips)` also $\mathbf{F}_{\Xi x}$
+  !! shape = nsd, xidim, nips
   REAL(DFP), ALLOCATABLE :: js(:)
-    !! Determinant of Jacobian at ips
+  !! Determinant of Jacobian at ips
+  !! nips
   REAL(DFP), ALLOCATABLE :: ws(:)
-    !! Weighting functions
+  !! Weighting functions
+  !! nips
   REAL(DFP), ALLOCATABLE :: dNdXt(:, :, :)
-    !! Spatial derivative of shape function
+  !! Spatial derivative of shape function
+  !! shape = nns, nsd, nips
   REAL(DFP), ALLOCATABLE :: thickness(:)
-    !! Thickness of element
+  !! Thickness of element
+  !! nips
   REAL(DFP), ALLOCATABLE :: coord(:, :)
-    !! Barycentric coordinate
+  !! Barycentric coordinate
+  !! shape = nsd, nips
   REAL(DFP), ALLOCATABLE :: normal(:, :)
-    !! Normal in case of facet element
-  TYPE(ReferenceElement_) :: refelem
-    !! Refererece element
-  TYPE(QuadraturePoint_) :: quad
-    !! Quadrature points
+  !! Normal in case of facet element
 END TYPE ElemShapeData_
 
-TYPE(ElemShapeData_), PARAMETER :: &
-  & TypeElemShapeData = ElemShapeData_( &
-  & N=NULL(), &
-  & dNdXi=NULL(), &
-  & Jacobian=NULL(), &
-  & Js=NULL(), &
-  & Ws=NULL(), &
-  & dNdXt=NULL(), &
-  & Thickness=NULL(), &
-  & Coord=NULL(), &
-  & Normal=NULL())
+TYPE(ElemShapeData_), PARAMETER :: TypeElemShapeData = &
+          ElemShapeData_(N=NULL(), dNdXi=NULL(), Jacobian=NULL(), Js=NULL(), &
+       Ws=NULL(), dNdXt=NULL(), Thickness=NULL(), Coord=NULL(), Normal=NULL())
 
 TYPE :: ElemShapeDataPointer_
   CLASS(ShapeDataPointer_), POINTER :: ptr => NULL()
@@ -1511,35 +1517,34 @@ END TYPE ElemShapeDataPointer_
 
 TYPE, EXTENDS(ElemShapeData_) :: STElemShapeData_
   REAL(DFP) :: wt = 0.0
-    !! Weight of gauss point in time domain
-  REAL(DFP) :: theta = 0.0
-    !! Gauss point in time domain
+  !! Weight of gauss point in time domain
+  ! REAL(DFP) :: theta = 0.0
+  ! Gauss point in time domain
   REAL(DFP) :: jt = 0.0
-    !! Jacobian $\frac{dt}{d\theta}$
+  !! Jacobian $\frac{dt}{d\theta}$
+  INTEGER(I4B) :: nnt = 0
+  !! number of nodes in time domain
   REAL(DFP), ALLOCATABLE :: T(:)
-    !! Shape function in time domain
+  !! Shape function in time domain
+  !! size is nnt
   REAL(DFP), ALLOCATABLE :: dTdTheta(:)
-    !! Local shape function derivative in time domain
+  !! Local shape function derivative in time domain
+  !! size if nnt
   REAL(DFP), ALLOCATABLE :: dNTdt(:, :, :)
+  !! size is nns, nnt, nips
   REAL(DFP), ALLOCATABLE :: dNTdXt(:, :, :, :)
-    !! (I, a, i, ips)
+  !! (I, a, i, ips)
+  !! size is nns, nnt, nsd, nips
+  !! dim1 = nns
+  !! dim2 = nnt
+  !! dim3 = nsd
+  !! dim4 = nips
 END TYPE STElemShapeData_
 
-TYPE(STElemShapeData_), PARAMETER :: &
-  & TypeSTElemShapeData = STElemShapeData_( &
-  & N=NULL(), &
-  & dNdXi=NULL(), &
-  & Jacobian=NULL(), &
-  & Js=NULL(), &
-  & Ws=NULL(), &
-  & dNdXt=NULL(), &
-  & Thickness=NULL(), &
-  & Coord=NULL(), &
-  & Normal=NULL(), &
-  & T=NULL(), &
-  & dTdTheta=NULL(), &
-  & dNTdt=NULL(), &
-  & dNTdXt=NULL())
+TYPE(STElemShapeData_), PARAMETER :: TypeSTElemShapeData = &
+        STElemShapeData_(N=NULL(), dNdXi=NULL(), Jacobian=NULL(), Js=NULL(), &
+     Ws=NULL(), dNdXt=NULL(), Thickness=NULL(), Coord=NULL(), Normal=NULL(), &
+                       T=NULL(), dTdTheta=NULL(), dNTdt=NULL(), dNTdXt=NULL())
 
 !----------------------------------------------------------------------------
 !                                                              Meshquality_
