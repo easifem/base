@@ -15,13 +15,15 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-module ElemshapeData_GetMethods
-USE BaseType
-USE GlobalData
+MODULE ElemshapeData_GetMethods
+USE BaseType, ONLY: ElemshapeData_, STElemshapeData_, FEVariable_
+
+USE GlobalData, ONLY: DFP, I4B, LGT
+
 IMPLICIT NONE
 PRIVATE
 
-PUBLIC :: getNormal
+PUBLIC :: GetNormal
 
 !----------------------------------------------------------------------------
 !                                                                 GetNormal
@@ -32,18 +34,14 @@ PUBLIC :: getNormal
 ! update: 28 Jan 2022
 ! summary: This routine returns the normal vector stored in [[ElemShapeData_]]
 
-INTERFACE
+INTERFACE GetNormal
   MODULE PURE SUBROUTINE elemsd_getNormal_1(obj, normal, nsd)
     CLASS(ElemshapeData_), INTENT(IN) :: obj
     REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: normal(:, :)
     !! normal(1:3, 1:nip) = obj%normal
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: nsd
   END SUBROUTINE elemsd_getNormal_1
-END INTERFACE
-
-INTERFACE getNormal
-  MODULE PROCEDURE elemsd_getNormal_1
-END INTERFACE getNormal
+END INTERFACE GetNormal
 
 !----------------------------------------------------------------------------
 !                                                                 GetNormal
@@ -54,7 +52,7 @@ END INTERFACE getNormal
 ! update: 28 Jan 2022
 ! summary: This routine returns the normal vector stored in [[ElemShapeData_]]
 
-INTERFACE
+INTERFACE GetNormal
   MODULE PURE SUBROUTINE elemsd_getNormal_2(obj, normal, nsd)
     CLASS(ElemshapeData_), INTENT(IN) :: obj
     TYPE(FEVariable_), INTENT(INOUT) :: normal
@@ -62,11 +60,7 @@ INTERFACE
     !! Quadrature, Vector, Space
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: nsd
   END SUBROUTINE elemsd_getNormal_2
-END INTERFACE
-
-INTERFACE getNormal
-  MODULE PROCEDURE elemsd_getNormal_2
-END INTERFACE getNormal
+END INTERFACE GetNormal
 
 !----------------------------------------------------------------------------
 !                                                                 GetNormal
@@ -77,7 +71,7 @@ END INTERFACE getNormal
 ! update: 28 Jan 2022
 ! summary: This routine returns the normal vector stored in [[ElemShapeData_]]
 
-INTERFACE
+INTERFACE GetNormal
   MODULE PURE SUBROUTINE elemsd_getNormal_3(obj, normal, nsd)
     CLASS(STElemshapeData_), INTENT(IN) :: obj(:)
     TYPE(FEVariable_), INTENT(INOUT) :: normal
@@ -85,10 +79,6 @@ INTERFACE
     !! Quadrature, Vector, SpaceTime
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: nsd
   END SUBROUTINE elemsd_getNormal_3
-END INTERFACE
+END INTERFACE GetNormal
 
-INTERFACE getNormal
-  MODULE PROCEDURE elemsd_getNormal_3
-END INTERFACE getNormal
-
-end module ElemshapeData_GetMethods
+END MODULE ElemshapeData_GetMethods
