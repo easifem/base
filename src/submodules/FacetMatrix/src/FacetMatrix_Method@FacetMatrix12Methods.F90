@@ -26,24 +26,24 @@ CONTAINS
 
 MODULE PROCEDURE FacetMatrix12_1
   !!
-  REAL( DFP ), ALLOCATABLE :: realval( : ), C1( :, : )
-  INTEGER( I4B ) :: ips, nips, nns, nsd
+REAL(DFP), ALLOCATABLE :: realval(:), C1(:, :)
+INTEGER(I4B) :: ips, nips, nns, nsd
   !!
-  nns = SIZE( elemsd%dNdXt, 1 )
-  nsd = SIZE( elemsd%dNdXt, 2 )
-  nips = SIZE( elemsd%dNdXt, 3 )
-  CALL Reallocate(ans, nns, nns)
-  CALL getProjectionOfdNdXt( &
-    & obj=elemsd, &
-    & cdNdXt=C1, &
-    & val=elemsd%normal )
-  realval = elemsd%js * elemsd%ws * elemsd%thickness
-  DO ips = 1, nips
-    ans( :, : ) = ans( :, : ) &
-      & + realval( ips )*OUTERPROD( C1( :, ips ), C1( :, ips ) )
-  END DO
-  IF( PRESENT( nCopy ) ) CALL MakeDiagonalCopies(ans, nCopy)
-  DEALLOCATE( realval, C1 )
+nns = SIZE(elemsd%dNdXt, 1)
+nsd = SIZE(elemsd%dNdXt, 2)
+nips = SIZE(elemsd%dNdXt, 3)
+CALL Reallocate(ans, nns, nns)
+CALL getProjectionOfdNdXt( &
+  & obj=elemsd, &
+  & cdNdXt=C1, &
+  & val=elemsd%normal)
+realval = elemsd%js * elemsd%ws * elemsd%thickness
+DO ips = 1, nips
+  ans(:, :) = ans(:, :) &
+    & + realval(ips) * OUTERPROD(C1(:, ips), C1(:, ips))
+END DO
+IF (PRESENT(nCopy)) CALL MakeDiagonalCopies(ans, nCopy)
+DEALLOCATE (realval, C1)
   !!
 END PROCEDURE FacetMatrix12_1
 
@@ -53,24 +53,24 @@ END PROCEDURE FacetMatrix12_1
 
 MODULE PROCEDURE FacetMatrix12_2
   !!
-  REAL( DFP ), ALLOCATABLE :: realval( : ), C1( :, : )
-  INTEGER( I4B ) :: ips, nips, nns, nsd
+REAL(DFP), ALLOCATABLE :: realval(:), C1(:, :)
+INTEGER(I4B) :: ips, nips, nns, nsd
   !!
-  nns = SIZE( elemsd%dNdXt, 1 )
-  nsd = SIZE( elemsd%dNdXt, 2 )
-  nips = SIZE( elemsd%dNdXt, 3 )
-  CALL Reallocate(ans, nns, nns)
-  CALL getProjectionOfdNdXt( &
-    & obj=elemsd, &
-    & cdNdXt=C1, &
-    & val=elemsd%normal )
-  realval = elemsd%js * elemsd%ws * elemsd%thickness * mu * mu
-  DO ips = 1, nips
-    ans( :, : ) = ans( :, : ) &
-      & + realval( ips )*OUTERPROD( C1( :, ips ), C1( :, ips ) )
-  END DO
-  IF( PRESENT( nCopy ) ) CALL MakeDiagonalCopies(ans, nCopy)
-  DEALLOCATE( realval, C1 )
+nns = SIZE(elemsd%dNdXt, 1)
+nsd = SIZE(elemsd%dNdXt, 2)
+nips = SIZE(elemsd%dNdXt, 3)
+CALL Reallocate(ans, nns, nns)
+CALL getProjectionOfdNdXt( &
+  & obj=elemsd, &
+  & cdNdXt=C1, &
+  & val=elemsd%normal)
+realval = elemsd%js * elemsd%ws * elemsd%thickness * mu * mu
+DO ips = 1, nips
+  ans(:, :) = ans(:, :) &
+    & + realval(ips) * OUTERPROD(C1(:, ips), C1(:, ips))
+END DO
+IF (PRESENT(nCopy)) CALL MakeDiagonalCopies(ans, nCopy)
+DEALLOCATE (realval, C1)
   !!
 END PROCEDURE FacetMatrix12_2
 
@@ -80,25 +80,25 @@ END PROCEDURE FacetMatrix12_2
 
 MODULE PROCEDURE FacetMatrix12_3
   !!
-  REAL( DFP ), ALLOCATABLE :: realval( : ), C1( :, : ), taubar( : )
-  INTEGER( I4B ) :: ips, nips, nns, nsd
+REAL(DFP), ALLOCATABLE :: realval(:), C1(:, :), taubar(:)
+INTEGER(I4B) :: ips, nips, nns, nsd
   !!
-  nns = SIZE( elemsd%dNdXt, 1 )
-  nsd = SIZE( elemsd%dNdXt, 2 )
-  nips = SIZE( elemsd%dNdXt, 3 )
-  CALL Reallocate(ans, nns, nns)
-  CALL getProjectionOfdNdXt( &
-    & obj=elemsd, &
-    & cdNdXt=C1, &
-    & val=elemsd%normal )
-  CALL getInterpolation(obj=elemsd, Interpol=taubar, val=tauvar)
-  realval = elemsd%js * elemsd%ws * elemsd%thickness * taubar * mu * mu
-  DO ips = 1, nips
-    ans( :, : ) = ans( :, : ) &
-      & + realval( ips )*OUTERPROD( C1( :, ips ), C1( :, ips ) )
-  END DO
-  IF( PRESENT( nCopy ) ) CALL MakeDiagonalCopies(ans, nCopy)
-  DEALLOCATE( realval, C1, taubar )
+nns = SIZE(elemsd%dNdXt, 1)
+nsd = SIZE(elemsd%dNdXt, 2)
+nips = SIZE(elemsd%dNdXt, 3)
+CALL Reallocate(ans, nns, nns)
+CALL getProjectionOfdNdXt( &
+  & obj=elemsd, &
+  & cdNdXt=C1, &
+  & val=elemsd%normal)
+CALL getInterpolation(obj=elemsd, Interpol=taubar, val=tauvar)
+realval = elemsd%js * elemsd%ws * elemsd%thickness * taubar * mu * mu
+DO ips = 1, nips
+  ans(:, :) = ans(:, :) &
+    & + realval(ips) * OUTERPROD(C1(:, ips), C1(:, ips))
+END DO
+IF (PRESENT(nCopy)) CALL MakeDiagonalCopies(ans, nCopy)
+DEALLOCATE (realval, C1, taubar)
   !!
 END PROCEDURE FacetMatrix12_3
 
@@ -108,22 +108,22 @@ END PROCEDURE FacetMatrix12_3
 
 MODULE PROCEDURE FacetMatrix12_4
   !!
-  REAL( DFP ), ALLOCATABLE :: realval( : ), C1( :, : ), muBar( : )
-  INTEGER( I4B ) :: ips, nips, nns, nsd
+REAL(DFP), ALLOCATABLE :: realval(:), C1(:, :), muBar(:)
+INTEGER(I4B) :: ips, nips, nns, nsd
   !!
-  nns = SIZE( elemsd%dNdXt, 1 )
-  nsd = SIZE( elemsd%dNdXt, 2 )
-  nips = SIZE( elemsd%dNdXt, 3 )
-  CALL Reallocate(ans, nns, nns)
-  CALL getProjectionOfdNdXt(obj=elemsd, cdNdXt=C1, val=elemsd%normal )
-  CALL getInterpolation( obj=elemsd, interpol=muBar, val=mu )
-  realval = elemsd%js * elemsd%ws * elemsd%thickness * muBar * muBar
-  DO ips = 1, nips
-    ans( :, : ) = ans( :, : ) &
-      & + realval( ips )*OUTERPROD( C1( :, ips ), C1( :, ips ) )
-  END DO
-  IF( PRESENT( nCopy ) ) CALL MakeDiagonalCopies(ans, nCopy)
-  DEALLOCATE( realval, C1, muBar )
+nns = SIZE(elemsd%dNdXt, 1)
+nsd = SIZE(elemsd%dNdXt, 2)
+nips = SIZE(elemsd%dNdXt, 3)
+CALL Reallocate(ans, nns, nns)
+CALL getProjectionOfdNdXt(obj=elemsd, cdNdXt=C1, val=elemsd%normal)
+CALL getInterpolation(obj=elemsd, interpol=muBar, val=mu)
+realval = elemsd%js * elemsd%ws * elemsd%thickness * muBar * muBar
+DO ips = 1, nips
+  ans(:, :) = ans(:, :) &
+    & + realval(ips) * OUTERPROD(C1(:, ips), C1(:, ips))
+END DO
+IF (PRESENT(nCopy)) CALL MakeDiagonalCopies(ans, nCopy)
+DEALLOCATE (realval, C1, muBar)
   !!
 END PROCEDURE FacetMatrix12_4
 
@@ -133,24 +133,24 @@ END PROCEDURE FacetMatrix12_4
 
 MODULE PROCEDURE FacetMatrix12_5
   !!
-  REAL( DFP ), ALLOCATABLE :: realval( : ), C1( :, : ), &
-    & muBar( : ), tauBar( : )
-  INTEGER( I4B ) :: ips, ii, jj, nips, nns, nsd
+REAL(DFP), ALLOCATABLE :: realval(:), C1(:, :), &
+  & muBar(:), tauBar(:)
+INTEGER(I4B) :: ips, ii, jj, nips, nns, nsd
   !!
-  nns = SIZE( elemsd%dNdXt, 1 )
-  nsd = SIZE( elemsd%dNdXt, 2 )
-  nips = SIZE( elemsd%dNdXt, 3 )
-  CALL Reallocate(ans, nns, nns)
-  CALL getProjectionOfdNdXt(obj=elemsd, cdNdXt=C1, val=elemsd%normal )
-  CALL getInterpolation( obj=elemsd, interpol=muBar, val=mu )
-  CALL getInterpolation( obj=elemsd, interpol=tauBar, val=tauvar )
-  realval = elemsd%js * elemsd%ws * elemsd%thickness * tauBar * muBar * muBar
-  DO ips = 1, nips
-    ans( :, : ) = ans( :, : ) &
-      & + realval( ips )*OUTERPROD( C1( :, ips ), C1( :, ips ) )
-  END DO
-  IF( PRESENT( nCopy ) ) CALL MakeDiagonalCopies(ans, nCopy)
-  DEALLOCATE( realval, C1, muBar )
+nns = SIZE(elemsd%dNdXt, 1)
+nsd = SIZE(elemsd%dNdXt, 2)
+nips = SIZE(elemsd%dNdXt, 3)
+CALL Reallocate(ans, nns, nns)
+CALL getProjectionOfdNdXt(obj=elemsd, cdNdXt=C1, val=elemsd%normal)
+CALL getInterpolation(obj=elemsd, interpol=muBar, val=mu)
+CALL getInterpolation(obj=elemsd, interpol=tauBar, val=tauvar)
+realval = elemsd%js * elemsd%ws * elemsd%thickness * tauBar * muBar * muBar
+DO ips = 1, nips
+  ans(:, :) = ans(:, :) &
+    & + realval(ips) * OUTERPROD(C1(:, ips), C1(:, ips))
+END DO
+IF (PRESENT(nCopy)) CALL MakeDiagonalCopies(ans, nCopy)
+DEALLOCATE (realval, C1, muBar)
   !!
 END PROCEDURE FacetMatrix12_5
 
