@@ -17,12 +17,12 @@
 MODULE IntVector_ConstructorMethod
 USE BaseType, ONLY: IntVector_
 USE GlobalData, ONLY: I4B, DFP, LGT, INT8, INT16, INT32, INT64, &
-& REAL64, REAL32
+                      REAL64, REAL32
 PRIVATE
 
 PUBLIC :: Shape
 PUBLIC :: SIZE
-PUBLIC :: getTotalDimension
+PUBLIC :: GetTotalDimension
 PUBLIC :: ALLOCATE
 PUBLIC :: DEALLOCATE
 PUBLIC :: Reallocate
