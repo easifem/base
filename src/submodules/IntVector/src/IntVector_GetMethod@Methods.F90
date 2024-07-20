@@ -30,8 +30,8 @@ CONTAINS
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE intVec_get_1
-IF (ALLOCATED(obj%Val)) THEN
-  Val = IntVector(obj%Val)
+IF (ALLOCATED(obj%val)) THEN
+  val = IntVector(obj%val)
 END IF
 END PROCEDURE intVec_get_1
 
@@ -40,8 +40,8 @@ END PROCEDURE intVec_get_1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE intVec_get_2
-IF (ALLOCATED(obj%Val)) THEN
-  Val = IntVector(obj%Val(Indx))
+IF (ALLOCATED(obj%val)) THEN
+  val = IntVector(obj%val(Indx))
 END IF
 END PROCEDURE intVec_get_2
 
@@ -50,8 +50,8 @@ END PROCEDURE intVec_get_2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE intVec_get_3
-IF (ALLOCATED(obj%Val)) THEN
-  Val = IntVector(obj%Val( &
+IF (ALLOCATED(obj%val)) THEN
+  val = IntVector(obj%val( &
     & istart:&
     & Input(default=SIZE(obj), option=iend):&
     & Input(option=stride, default=1)))
@@ -63,7 +63,7 @@ END PROCEDURE intVec_get_3
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE intVec_get_4
-Val = IntVector(get(obj, TypeInt))
+val = IntVector(get(obj, TypeInt))
 END PROCEDURE intVec_get_4
 
 !----------------------------------------------------------------------------
@@ -71,7 +71,7 @@ END PROCEDURE intVec_get_4
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE intVec_get_5
-Val = IntVector(get(obj, Indx, TypeInt))
+val = IntVector(get(obj, Indx, TypeInt))
 END PROCEDURE intVec_get_5
 
 !----------------------------------------------------------------------------
@@ -79,7 +79,7 @@ END PROCEDURE intVec_get_5
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE intVec_get_6
-Val = IntVector(get(obj, iStart, iEnd, Stride, &
+val = IntVector(get(obj, iStart, iEnd, Stride, &
   & TypeInt))
 END PROCEDURE intVec_get_6
 
@@ -88,23 +88,23 @@ END PROCEDURE intVec_get_6
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE intVec_get_7a
-IF (ALLOCATED(obj%Val)) THEN
-  Val = obj%Val
+IF (ALLOCATED(obj%val)) THEN
+  val = obj%val
 END IF
 END PROCEDURE intVec_get_7a
 MODULE PROCEDURE intVec_get_7b
-IF (ALLOCATED(obj%Val)) THEN
-  Val = obj%Val
+IF (ALLOCATED(obj%val)) THEN
+  val = obj%val
 END IF
 END PROCEDURE intVec_get_7b
 MODULE PROCEDURE intVec_get_7c
-IF (ALLOCATED(obj%Val)) THEN
-  Val = obj%Val
+IF (ALLOCATED(obj%val)) THEN
+  val = obj%val
 END IF
 END PROCEDURE intVec_get_7c
 MODULE PROCEDURE intVec_get_7d
-IF (ALLOCATED(obj%Val)) THEN
-  Val = obj%Val
+IF (ALLOCATED(obj%val)) THEN
+  val = obj%val
 END IF
 END PROCEDURE intVec_get_7d
 
@@ -113,26 +113,26 @@ END PROCEDURE intVec_get_7d
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE intVec_get_8a
-IF (ALLOCATED(obj%Val)) THEN
-  Val = obj%Val(Indx)
+IF (ALLOCATED(obj%val)) THEN
+  val = obj%val(Indx)
 END IF
 END PROCEDURE intVec_get_8a
 
 MODULE PROCEDURE intVec_get_8b
-IF (ALLOCATED(obj%Val)) THEN
-  Val = obj%Val(Indx)
+IF (ALLOCATED(obj%val)) THEN
+  val = obj%val(Indx)
 END IF
 END PROCEDURE intVec_get_8b
 
 MODULE PROCEDURE intVec_get_8c
-IF (ALLOCATED(obj%Val)) THEN
-  Val = obj%Val(Indx)
+IF (ALLOCATED(obj%val)) THEN
+  val = obj%val(Indx)
 END IF
 END PROCEDURE intVec_get_8c
 
 MODULE PROCEDURE intVec_get_8d
-IF (ALLOCATED(obj%Val)) THEN
-  Val = obj%Val(Indx)
+IF (ALLOCATED(obj%val)) THEN
+  val = obj%val(Indx)
 END IF
 END PROCEDURE intVec_get_8d
 
@@ -141,26 +141,26 @@ END PROCEDURE intVec_get_8d
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE intVec_get_9a
-IF (ALLOCATED(obj%Val)) THEN
-  Val = obj%Val(iStart:iEnd:Stride)
+IF (ALLOCATED(obj%val)) THEN
+  val = obj%val(iStart:iEnd:Stride)
 END IF
 END PROCEDURE intVec_get_9a
 
 MODULE PROCEDURE intVec_get_9b
-IF (ALLOCATED(obj%Val)) THEN
-  Val = obj%Val(iStart:iEnd:Stride)
+IF (ALLOCATED(obj%val)) THEN
+  val = obj%val(iStart:iEnd:Stride)
 END IF
 END PROCEDURE intVec_get_9b
 
 MODULE PROCEDURE intVec_get_9c
-IF (ALLOCATED(obj%Val)) THEN
-  Val = obj%Val(iStart:iEnd:Stride)
+IF (ALLOCATED(obj%val)) THEN
+  val = obj%val(iStart:iEnd:Stride)
 END IF
 END PROCEDURE intVec_get_9c
 
 MODULE PROCEDURE intVec_get_9d
-IF (ALLOCATED(obj%Val)) THEN
-  Val = obj%Val(iStart:iEnd:Stride)
+IF (ALLOCATED(obj%val)) THEN
+  val = obj%val(iStart:iEnd:Stride)
 END IF
 END PROCEDURE intVec_get_9d
 
@@ -237,7 +237,7 @@ END PROCEDURE intVec_get_13d
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE intVec_getPointer_1
-Val => obj
+val => obj
 END PROCEDURE intVec_getPointer_1
 
 !----------------------------------------------------------------------------
@@ -245,7 +245,7 @@ END PROCEDURE intVec_getPointer_1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE intVec_getPointer_2
-Val => obj%Val
+val => obj%val
 END PROCEDURE intVec_getPointer_2
 
 !----------------------------------------------------------------------------
@@ -253,7 +253,7 @@ END PROCEDURE intVec_getPointer_2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE intVec_getIndex1
-Ans = MINLOC(ABS(obj%Val - val), 1)
+ans = MINLOC(ABS(obj%val - val), 1)
 END PROCEDURE intVec_getIndex1
 
 !----------------------------------------------------------------------------
@@ -262,19 +262,19 @@ END PROCEDURE intVec_getIndex1
 
 MODULE PROCEDURE intVec_getIndex2
 INTEGER(I4B) :: i, j, m
-LOGICAL(LGT), ALLOCATABLE :: Search(:)
+LOGICAL(LGT), ALLOCATABLE :: search(:)
 !
 m = SIZE(val)
-ALLOCATE (Search(m), Ans(m))
-Search = .TRUE.
-Ans = 0
+ALLOCATE (search(m), ans(m))
+search = .TRUE.
+ans = 0
 
-DO i = 1, SIZE(obj%Val)
+DO i = 1, SIZE(obj%val)
   DO j = 1, m
-    IF (Search(j)) THEN
-      IF (val(j) .EQ. obj%Val(i)) THEN
-        Search(j) = .FALSE.
-        Ans(j) = i
+    IF (search(j)) THEN
+      IF (val(j) .EQ. obj%val(i)) THEN
+        search(j) = .FALSE.
+        ans(j) = i
       END IF
     END IF
   END DO
