@@ -131,19 +131,19 @@ END PROCEDURE obj_GetMultiIndices2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE in_1a
-#include "./In/In_1.inc"
+#include "./In/In_1.F90"
 END PROCEDURE in_1a
 
 MODULE PROCEDURE in_1b
-#include "./In/In_1.inc"
+#include "./In/In_1.F90"
 END PROCEDURE in_1b
 
 MODULE PROCEDURE in_1c
-#include "./In/In_1.inc"
+#include "./In/In_1.F90"
 END PROCEDURE in_1c
 
 MODULE PROCEDURE in_1d
-#include "./In/In_1.inc"
+#include "./In/In_1.F90"
 END PROCEDURE in_1d
 
 !----------------------------------------------------------------------------
@@ -151,19 +151,19 @@ END PROCEDURE in_1d
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE IsIn_1a
-#include "./In/IsIn_1.inc"
+#include "./In/IsIn_1.F90"
 END PROCEDURE IsIn_1a
 
 MODULE PROCEDURE IsIn_1b
-#include "./In/IsIn_1.inc"
+#include "./In/IsIn_1.F90"
 END PROCEDURE IsIn_1b
 
 MODULE PROCEDURE IsIn_1c
-#include "./In/IsIn_1.inc"
+#include "./In/IsIn_1.F90"
 END PROCEDURE IsIn_1c
 
 MODULE PROCEDURE IsIn_1d
-#include "./In/IsIn_1.inc"
+#include "./In/IsIn_1.F90"
 END PROCEDURE IsIn_1d
 
 !----------------------------------------------------------------------------

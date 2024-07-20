@@ -15,7 +15,6 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-
 INTEGER(I4B) :: ii
 
 ans = .TRUE.
