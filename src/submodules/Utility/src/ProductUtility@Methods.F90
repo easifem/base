@@ -17,10 +17,9 @@
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 22 March 2021
-! summary: This submodule contains outerprod
+! summary: This submodule contains OuterProd
 
 SUBMODULE(ProductUtility) Methods
-USE BaseMethod
 IMPLICIT NONE
 CONTAINS
 
@@ -48,453 +47,493 @@ END PROCEDURE vectorProduct_2
 !
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE outerprod_r1r1
+MODULE PROCEDURE OuterProd_r1r1
 ans = 0.0_DFP
 ans = SPREAD(a, dim=2, ncopies=SIZE(b)) * &
-      & SPREAD(b, dim=1, ncopies=SIZE(a))
-END PROCEDURE outerprod_r1r1
+      SPREAD(b, dim=1, ncopies=SIZE(a))
+END PROCEDURE OuterProd_r1r1
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE OuterProd_r1r1_
+INTEGER(I4B) :: ii, jj
+
+nrow = SIZE(a)
+ncol = SIZE(b)
+DO CONCURRENT(ii=1:nrow, jj=1:ncol)
+  ans(ii, jj) = anscoeff * ans(ii, jj) + scale * a(ii) * b(jj)
+END DO
+END PROCEDURE OuterProd_r1r1_
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE OuterProd_r1r1s_
+INTEGER(I4B) :: ii, jj
+REAL(DFP) :: s
+
+IF (sym) THEN
+  nrow = SIZE(a)
+  ncol = SIZE(b)
+  s = 0.5_DFP * scale
+
+  DO CONCURRENT(ii=1:nrow, jj=1:ncol)
+    ans(ii, jj) = anscoeff * ans(ii, jj) + s * a(ii) * b(jj) + &
+                  s * b(ii) * a(jj)
+  END DO
+
+  RETURN
+END IF
+
+CALL OuterProd_(a=a, b=b, ans=ans, anscoeff=anscoeff, scale=scale, &
+                nrow=nrow, ncol=ncol)
+
+END PROCEDURE OuterProd_r1r1s_
 
 !--------------------------------------------------------------------
 !
 !--------------------------------------------------------------------
 
-MODULE PROCEDURE outerprod_r1r1s
+MODULE PROCEDURE OuterProd_r1r1s
 ans = 0.0_DFP
 IF (Sym) THEN
   ans = SPREAD(0.5_DFP * a, dim=2, ncopies=SIZE(b)) &
-      & * SPREAD(b, dim=1, ncopies=SIZE(a)) &
-      & + SPREAD(0.5_DFP * b, dim=2, ncopies=SIZE(a)) &
-      & * SPREAD(a, dim=1, ncopies=SIZE(b))
+        * SPREAD(b, dim=1, ncopies=SIZE(a)) &
+        + SPREAD(0.5_DFP * b, dim=2, ncopies=SIZE(a)) &
+        * SPREAD(a, dim=1, ncopies=SIZE(b))
 ELSE
   ans = SPREAD(a, dim=2, ncopies=SIZE(b)) * &
-          & SPREAD(b, dim=1, ncopies=SIZE(a))
+        SPREAD(b, dim=1, ncopies=SIZE(a))
 END IF
-END PROCEDURE outerprod_r1r1s
+END PROCEDURE OuterProd_r1r1s
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE outerprod_r1r2
-INTEGER(I4B) :: ii
-do ii = 1, size(b, 2)
-  ans(:, :, ii) = outerprod(a, b(:, ii))
-end do
-END PROCEDURE outerprod_r1r2
-
-!----------------------------------------------------------------------------
-!
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE outerprod_r1r3
-INTEGER(I4B) :: ii
-do ii = 1, size(b, 3)
-  ans(:, :, :, ii) = outerprod(a, b(:, :, ii))
-end do
-END PROCEDURE outerprod_r1r3
-
-!----------------------------------------------------------------------------
-!
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE outerprod_r1r4
-INTEGER(I4B) :: ii
-do ii = 1, size(b, 4)
-  ans(:, :, :, :, ii) = outerprod(a, b(:, :, :, ii))
-end do
-END PROCEDURE outerprod_r1r4
-
-!----------------------------------------------------------------------------
-!
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE outerprod_r1r5
-INTEGER(I4B) :: ii
-do ii = 1, size(b, 5)
-  ans(:, :, :, :, :, ii) = outerprod(a, b(:, :, :, :, ii))
-end do
-END PROCEDURE outerprod_r1r5
-
-!--------------------------------------------------------------------
-!
-!--------------------------------------------------------------------
-
-MODULE PROCEDURE outerprod_r2r1
-INTEGER(I4B) :: ii
-do ii = 1, size(b, 1)
-  ans(:, :, ii) = a * b(ii)
-end do
-END PROCEDURE outerprod_r2r1
-
-!----------------------------------------------------------------------------
-!
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE outerprod_r2r2
+MODULE PROCEDURE OuterProd_r1r2
 INTEGER(I4B) :: ii
 DO ii = 1, SIZE(b, 2)
-  ans(:, :, :, ii) = outerprod(a, b(:, ii))
+  ans(:, :, ii) = OuterProd(a, b(:, ii))
 END DO
-END PROCEDURE outerprod_r2r2
+END PROCEDURE OuterProd_r1r2
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE outerprod_r2r3
+MODULE PROCEDURE OuterProd_r1r3
 INTEGER(I4B) :: ii
 DO ii = 1, SIZE(b, 3)
-  ans(:, :, :, :, ii) = outerprod(a, b(:, :, ii))
+  ans(:, :, :, ii) = OuterProd(a, b(:, :, ii))
 END DO
-END PROCEDURE outerprod_r2r3
+END PROCEDURE OuterProd_r1r3
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE outerprod_r2r4
+MODULE PROCEDURE OuterProd_r1r4
 INTEGER(I4B) :: ii
 DO ii = 1, SIZE(b, 4)
-  ans(:, :, :, :, :, ii) = outerprod(a, b(:, :, :, ii))
+  ans(:, :, :, :, ii) = OuterProd(a, b(:, :, :, ii))
 END DO
-END PROCEDURE outerprod_r2r4
+END PROCEDURE OuterProd_r1r4
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE outerprod_r3r1
+MODULE PROCEDURE OuterProd_r1r5
+INTEGER(I4B) :: ii
+DO ii = 1, SIZE(b, 5)
+  ans(:, :, :, :, :, ii) = OuterProd(a, b(:, :, :, :, ii))
+END DO
+END PROCEDURE OuterProd_r1r5
+
+!--------------------------------------------------------------------
+!
+!--------------------------------------------------------------------
+
+MODULE PROCEDURE OuterProd_r2r1
+INTEGER(I4B) :: ii
+DO ii = 1, SIZE(b, 1)
+  ans(:, :, ii) = a * b(ii)
+END DO
+END PROCEDURE OuterProd_r2r1
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE OuterProd_r2r2
+INTEGER(I4B) :: ii
+DO ii = 1, SIZE(b, 2)
+  ans(:, :, :, ii) = OuterProd(a, b(:, ii))
+END DO
+END PROCEDURE OuterProd_r2r2
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE OuterProd_r2r3
+INTEGER(I4B) :: ii
+DO ii = 1, SIZE(b, 3)
+  ans(:, :, :, :, ii) = OuterProd(a, b(:, :, ii))
+END DO
+END PROCEDURE OuterProd_r2r3
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE OuterProd_r2r4
+INTEGER(I4B) :: ii
+DO ii = 1, SIZE(b, 4)
+  ans(:, :, :, :, :, ii) = OuterProd(a, b(:, :, :, ii))
+END DO
+END PROCEDURE OuterProd_r2r4
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE OuterProd_r3r1
 INTEGER(I4B) :: ii
 DO ii = 1, SIZE(b, 1)
   ans(:, :, :, ii) = a(:, :, :) * b(ii)
 END DO
-END PROCEDURE outerprod_r3r1
+END PROCEDURE OuterProd_r3r1
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE outerprod_r3r2
+MODULE PROCEDURE OuterProd_r3r2
 INTEGER(I4B) :: ii
 DO ii = 1, SIZE(b, 2)
-  ans(:, :, :, :, ii) = outerprod(a, b(:, ii))
+  ans(:, :, :, :, ii) = OuterProd(a, b(:, ii))
 END DO
-END PROCEDURE outerprod_r3r2
+END PROCEDURE OuterProd_r3r2
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE outerprod_r3r3
+MODULE PROCEDURE OuterProd_r3r3
 INTEGER(I4B) :: ii
 DO ii = 1, SIZE(b, 3)
-  ans(:, :, :, :, :, ii) = outerprod(a, b(:, :, ii))
+  ans(:, :, :, :, :, ii) = OuterProd(a, b(:, :, ii))
 END DO
-END PROCEDURE outerprod_r3r3
+END PROCEDURE OuterProd_r3r3
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE outerprod_r4r1
+MODULE PROCEDURE OuterProd_r4r1
 INTEGER(I4B) :: ii
 DO ii = 1, SIZE(b, 1)
   ans(:, :, :, :, ii) = a * b(ii)
 END DO
-END PROCEDURE outerprod_r4r1
+END PROCEDURE OuterProd_r4r1
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE outerprod_r4r2
+MODULE PROCEDURE OuterProd_r4r2
 INTEGER(I4B) :: ii
 DO ii = 1, SIZE(b, 2)
-  ans(:, :, :, :, :, ii) = outerprod(a, b(:, ii))
+  ans(:, :, :, :, :, ii) = OuterProd(a, b(:, ii))
 END DO
-END PROCEDURE outerprod_r4r2
+END PROCEDURE OuterProd_r4r2
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE outerprod_r5r1
+MODULE PROCEDURE OuterProd_r5r1
 INTEGER(I4B) :: ii
 DO ii = 1, SIZE(b)
   ans(:, :, :, :, :, ii) = a * b(ii)
 END DO
-END PROCEDURE outerprod_r5r1
+END PROCEDURE OuterProd_r5r1
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE outerprod_r1r1r1
-ans = outerprod(outerprod(a, b), c)
-END PROCEDURE outerprod_r1r1r1
+MODULE PROCEDURE OuterProd_r1r1r1
+ans = OuterProd(OuterProd(a, b), c)
+END PROCEDURE OuterProd_r1r1r1
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE outerprod_r1r1r2
-ans = outerprod(outerprod(a, b), c)
-END PROCEDURE outerprod_r1r1r2
+MODULE PROCEDURE OuterProd_r1r1r2
+ans = OuterProd(OuterProd(a, b), c)
+END PROCEDURE OuterProd_r1r1r2
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE outerprod_r1r1r3
-ans = outerprod(outerprod(a, b), c)
-END PROCEDURE outerprod_r1r1r3
+MODULE PROCEDURE OuterProd_r1r1r3
+ans = OuterProd(OuterProd(a, b), c)
+END PROCEDURE OuterProd_r1r1r3
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE outerprod_r1r1r4
-ans = outerprod(outerprod(a, b), c)
-END PROCEDURE outerprod_r1r1r4
+MODULE PROCEDURE OuterProd_r1r1r4
+ans = OuterProd(OuterProd(a, b), c)
+END PROCEDURE OuterProd_r1r1r4
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE outerprod_r1r2r1
-ans = outerprod(outerprod(a, b), c)
-END PROCEDURE outerprod_r1r2r1
+MODULE PROCEDURE OuterProd_r1r2r1
+ans = OuterProd(OuterProd(a, b), c)
+END PROCEDURE OuterProd_r1r2r1
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE outerprod_r1r2r2
-ans = outerprod(outerprod(a, b), c)
-END PROCEDURE outerprod_r1r2r2
+MODULE PROCEDURE OuterProd_r1r2r2
+ans = OuterProd(OuterProd(a, b), c)
+END PROCEDURE OuterProd_r1r2r2
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE outerprod_r1r2r3
-ans = outerprod(outerprod(a, b), c)
-END PROCEDURE outerprod_r1r2r3
+MODULE PROCEDURE OuterProd_r1r2r3
+ans = OuterProd(OuterProd(a, b), c)
+END PROCEDURE OuterProd_r1r2r3
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE outerprod_r1r3r1
-ans = outerprod(outerprod(a, b), c)
-END PROCEDURE outerprod_r1r3r1
+MODULE PROCEDURE OuterProd_r1r3r1
+ans = OuterProd(OuterProd(a, b), c)
+END PROCEDURE OuterProd_r1r3r1
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE outerprod_r1r3r2
-ans = outerprod(outerprod(a, b), c)
-END PROCEDURE outerprod_r1r3r2
+MODULE PROCEDURE OuterProd_r1r3r2
+ans = OuterProd(OuterProd(a, b), c)
+END PROCEDURE OuterProd_r1r3r2
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE outerprod_r1r4r1
-ans = outerprod(outerprod(a, b), c)
-END PROCEDURE outerprod_r1r4r1
+MODULE PROCEDURE OuterProd_r1r4r1
+ans = OuterProd(OuterProd(a, b), c)
+END PROCEDURE OuterProd_r1r4r1
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE outerprod_r2r1r1
-ans = outerprod(outerprod(a, b), c)
-END PROCEDURE outerprod_r2r1r1
+MODULE PROCEDURE OuterProd_r2r1r1
+ans = OuterProd(OuterProd(a, b), c)
+END PROCEDURE OuterProd_r2r1r1
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE outerprod_r2r1r2
-ans = outerprod(outerprod(a, b), c)
-END PROCEDURE outerprod_r2r1r2
+MODULE PROCEDURE OuterProd_r2r1r2
+ans = OuterProd(OuterProd(a, b), c)
+END PROCEDURE OuterProd_r2r1r2
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE outerprod_r2r1r3
-ans = outerprod(outerprod(a, b), c)
-END PROCEDURE outerprod_r2r1r3
+MODULE PROCEDURE OuterProd_r2r1r3
+ans = OuterProd(OuterProd(a, b), c)
+END PROCEDURE OuterProd_r2r1r3
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE outerprod_r2r2r1
-ans = outerprod(outerprod(a, b), c)
-END PROCEDURE outerprod_r2r2r1
+MODULE PROCEDURE OuterProd_r2r2r1
+ans = OuterProd(OuterProd(a, b), c)
+END PROCEDURE OuterProd_r2r2r1
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE outerprod_r2r2r2
-ans = outerprod(outerprod(a, b), c)
-END PROCEDURE outerprod_r2r2r2
+MODULE PROCEDURE OuterProd_r2r2r2
+ans = OuterProd(OuterProd(a, b), c)
+END PROCEDURE OuterProd_r2r2r2
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE outerprod_r3r1r1
-ans = outerprod(outerprod(a, b), c)
-END PROCEDURE outerprod_r3r1r1
+MODULE PROCEDURE OuterProd_r3r1r1
+ans = OuterProd(OuterProd(a, b), c)
+END PROCEDURE OuterProd_r3r1r1
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE outerprod_r3r1r2
-ans = outerprod(outerprod(a, b), c)
-END PROCEDURE outerprod_r3r1r2
+MODULE PROCEDURE OuterProd_r3r1r2
+ans = OuterProd(OuterProd(a, b), c)
+END PROCEDURE OuterProd_r3r1r2
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE outerprod_r3r2r1
-ans = outerprod(outerprod(a, b), c)
-END PROCEDURE outerprod_r3r2r1
+MODULE PROCEDURE OuterProd_r3r2r1
+ans = OuterProd(OuterProd(a, b), c)
+END PROCEDURE OuterProd_r3r2r1
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE outerprod_r4r1r1
-ans = outerprod(outerprod(a, b), c)
-END PROCEDURE outerprod_r4r1r1
+MODULE PROCEDURE OuterProd_r4r1r1
+ans = OuterProd(OuterProd(a, b), c)
+END PROCEDURE OuterProd_r4r1r1
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE outerprod_r1r1r1r1
-ans = outerprod(outerprod(a, outerprod(b, c)), d)
-END PROCEDURE outerprod_r1r1r1r1
+MODULE PROCEDURE OuterProd_r1r1r1r1
+ans = OuterProd(OuterProd(a, OuterProd(b, c)), d)
+END PROCEDURE OuterProd_r1r1r1r1
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE outerprod_r1r1r1r2
-ans = outerprod(outerprod(a, outerprod(b, c)), d)
-END PROCEDURE outerprod_r1r1r1r2
+MODULE PROCEDURE OuterProd_r1r1r1r2
+ans = OuterProd(OuterProd(a, OuterProd(b, c)), d)
+END PROCEDURE OuterProd_r1r1r1r2
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE outerprod_r1r1r1r3
-ans = outerprod(outerprod(a, outerprod(b, c)), d)
-END PROCEDURE outerprod_r1r1r1r3
+MODULE PROCEDURE OuterProd_r1r1r1r3
+ans = OuterProd(OuterProd(a, OuterProd(b, c)), d)
+END PROCEDURE OuterProd_r1r1r1r3
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE outerprod_r1r1r2r1
-ans = outerprod(outerprod(a, outerprod(b, c)), d)
-END PROCEDURE outerprod_r1r1r2r1
+MODULE PROCEDURE OuterProd_r1r1r2r1
+ans = OuterProd(OuterProd(a, OuterProd(b, c)), d)
+END PROCEDURE OuterProd_r1r1r2r1
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE outerprod_r1r1r2r2
-ans = outerprod(outerprod(a, outerprod(b, c)), d)
-END PROCEDURE outerprod_r1r1r2r2
+MODULE PROCEDURE OuterProd_r1r1r2r2
+ans = OuterProd(OuterProd(a, OuterProd(b, c)), d)
+END PROCEDURE OuterProd_r1r1r2r2
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE outerprod_r1r1r3r1
-ans = outerprod(outerprod(a, outerprod(b, c)), d)
-END PROCEDURE outerprod_r1r1r3r1
+MODULE PROCEDURE OuterProd_r1r1r3r1
+ans = OuterProd(OuterProd(a, OuterProd(b, c)), d)
+END PROCEDURE OuterProd_r1r1r3r1
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE outerprod_r1r2r1r1
-ans = outerprod(outerprod(a, outerprod(b, c)), d)
-END PROCEDURE outerprod_r1r2r1r1
+MODULE PROCEDURE OuterProd_r1r2r1r1
+ans = OuterProd(OuterProd(a, OuterProd(b, c)), d)
+END PROCEDURE OuterProd_r1r2r1r1
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE outerprod_r1r2r1r2
-ans = outerprod(outerprod(a, outerprod(b, c)), d)
-END PROCEDURE outerprod_r1r2r1r2
+MODULE PROCEDURE OuterProd_r1r2r1r2
+ans = OuterProd(OuterProd(a, OuterProd(b, c)), d)
+END PROCEDURE OuterProd_r1r2r1r2
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE outerprod_r1r2r2r1
-ans = outerprod(outerprod(a, outerprod(b, c)), d)
-END PROCEDURE outerprod_r1r2r2r1
+MODULE PROCEDURE OuterProd_r1r2r2r1
+ans = OuterProd(OuterProd(a, OuterProd(b, c)), d)
+END PROCEDURE OuterProd_r1r2r2r1
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE outerprod_r1r3r1r1
-ans = outerprod(outerprod(a, outerprod(b, c)), d)
-END PROCEDURE outerprod_r1r3r1r1
+MODULE PROCEDURE OuterProd_r1r3r1r1
+ans = OuterProd(OuterProd(a, OuterProd(b, c)), d)
+END PROCEDURE OuterProd_r1r3r1r1
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE outerprod_r2r1r1r1
-ans = outerprod(outerprod(a, outerprod(b, c)), d)
-END PROCEDURE outerprod_r2r1r1r1
+MODULE PROCEDURE OuterProd_r2r1r1r1
+ans = OuterProd(OuterProd(a, OuterProd(b, c)), d)
+END PROCEDURE OuterProd_r2r1r1r1
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE outerprod_r2r1r1r2
-ans = outerprod(outerprod(a, outerprod(b, c)), d)
-END PROCEDURE outerprod_r2r1r1r2
+MODULE PROCEDURE OuterProd_r2r1r1r2
+ans = OuterProd(OuterProd(a, OuterProd(b, c)), d)
+END PROCEDURE OuterProd_r2r1r1r2
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE outerprod_r2r1r2r1
-ans = outerprod(outerprod(a, outerprod(b, c)), d)
-END PROCEDURE outerprod_r2r1r2r1
+MODULE PROCEDURE OuterProd_r2r1r2r1
+ans = OuterProd(OuterProd(a, OuterProd(b, c)), d)
+END PROCEDURE OuterProd_r2r1r2r1
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE outerprod_r2r2r1r1
-ans = outerprod(outerprod(a, outerprod(b, c)), d)
-END PROCEDURE outerprod_r2r2r1r1
+MODULE PROCEDURE OuterProd_r2r2r1r1
+ans = OuterProd(OuterProd(a, OuterProd(b, c)), d)
+END PROCEDURE OuterProd_r2r2r1r1
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE outerprod_r3r1r1r1
-ans = outerprod(outerprod(a, outerprod(b, c)), d)
-END PROCEDURE outerprod_r3r1r1r1
+MODULE PROCEDURE OuterProd_r3r1r1r1
+ans = OuterProd(OuterProd(a, OuterProd(b, c)), d)
+END PROCEDURE OuterProd_r3r1r1r1
 
 END SUBMODULE Methods
