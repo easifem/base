@@ -187,7 +187,11 @@ END PROCEDURE ElemshapeData_MdEncode
 
 MODULE PROCEDURE elemsd_display_1
 CALL Util_Display(msg, unitno=unitno)
-CALL Util_Display("SHAPE FUNCTION IN SPACE: ", unitno=unitno)
+CALL Util_Display(obj%nsd, "nsd: ", unitno)
+CALL Util_Display(obj%xidim, "xidim: ", unitno)
+CALL Util_Display(obj%nns, "nns: ", unitno)
+CALL Util_Display(obj%nips, "nips: ", unitno)
+
 IF (ALLOCATED(obj%N)) THEN
   CALL Util_Display(obj%N, "N: ", unitno)
 ELSE
