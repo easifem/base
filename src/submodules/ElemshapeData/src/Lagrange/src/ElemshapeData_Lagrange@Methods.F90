@@ -61,6 +61,13 @@ nips = SIZE(quad%points, 2)
 
 nns = LagrangeDOF(order=order, elemType=elemType)
 
+#ifdef DEBUG_VER
+IF (nns .EQ. 0) THEN
+  CALL Display("Error: LagrangeDOF returned zero DOF")
+  STOP
+END IF
+#endif
+
 CALL Elemsd_Allocate(obj=obj, nsd=nsd, xidim=xidim, nns=nns, nips=nips)
 
 obj%ws = quad%points(quad%txi + 1, 1:nips)
