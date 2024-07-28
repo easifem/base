@@ -123,6 +123,8 @@ INTEGER(I4B) :: topo
 
 topo = ElementTopology(elemType)
 
+ans = 0
+
 SELECT CASE (topo)
 CASE (Point)
   ans = 1
