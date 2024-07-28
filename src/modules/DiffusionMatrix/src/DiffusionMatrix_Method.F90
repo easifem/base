@@ -20,15 +20,23 @@
 ! summary: This module contains method to construct finite element matrices
 
 MODULE DiffusionMatrix_Method
-USE BaseType
-USE GlobalData
+USE BaseType, ONLY: ElemShapeData_, &
+                    FEVariable_, &
+                    FEVariableScalar_, &
+                    FEVariableVector_, &
+                    FEVariableMatrix_
+
+USE GlobalData, ONLY: I4B, DFP, LGT
+
 IMPLICIT NONE
+
 PRIVATE
 
 PUBLIC :: DiffusionMatrix
+PUBLIC :: DiffusionMatrix_
 
 !----------------------------------------------------------------------------
-!                                     DiffusionMatrix@DiffusionMatrixMethods
+!                                                            DiffusionMatrix
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -51,18 +59,32 @@ PUBLIC :: DiffusionMatrix
 ! {\partial x_{k}}\frac{\partial N^{J}}{\partial x_{k}}d\Omega
 ! $$
 
-INTERFACE
+INTERFACE DiffusionMatrix
   MODULE PURE FUNCTION DiffusionMatrix_1(test, trial, opt) RESULT(ans)
     CLASS(ElemshapeData_), INTENT(IN) :: test
     CLASS(ElemshapeData_), INTENT(IN) :: trial
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: opt
     REAL(DFP), ALLOCATABLE :: ans(:, :)
   END FUNCTION DiffusionMatrix_1
-END INTERFACE
-
-INTERFACE DiffusionMatrix
-  MODULE PROCEDURE DiffusionMatrix_1
 END INTERFACE DiffusionMatrix
+
+!----------------------------------------------------------------------------
+!                                                           DiffusionMatrix_
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2024-07-28
+! summary:  DiffusionMatrix_1 without allocation
+
+INTERFACE DiffusionMatrix_
+  MODULE PURE SUBROUTINE DiffusionMatrix1_(test, trial, ans, nrow, ncol, opt)
+    CLASS(ElemshapeData_), INTENT(IN) :: test
+    CLASS(ElemshapeData_), INTENT(IN) :: trial
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: opt
+  END SUBROUTINE DiffusionMatrix1_
+END INTERFACE DiffusionMatrix_
 
 !----------------------------------------------------------------------------
 !                                     DiffusionMatrix@DiffusionMatrixMethods
@@ -80,7 +102,7 @@ END INTERFACE DiffusionMatrix
 ! $$
 !
 
-INTERFACE
+INTERFACE DiffusionMatrix
   MODULE PURE FUNCTION DiffusionMatrix_2(test, trial, k, krank, opt) &
     & RESULT(ans)
     CLASS(ElemshapeData_), INTENT(IN) :: test
@@ -94,10 +116,6 @@ INTERFACE
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: opt
     REAL(DFP), ALLOCATABLE :: ans(:, :)
   END FUNCTION DiffusionMatrix_2
-END INTERFACE
-
-INTERFACE DiffusionMatrix
-  MODULE PROCEDURE DiffusionMatrix_2
 END INTERFACE DiffusionMatrix
 
 !----------------------------------------------------------------------------
@@ -115,7 +133,7 @@ END INTERFACE DiffusionMatrix
 ! \frac{\partial N^{J}}{\partial x_{j}}d\Omega
 ! $$
 
-INTERFACE
+INTERFACE DiffusionMatrix
   MODULE PURE FUNCTION DiffusionMatrix_3(test, trial, k, krank, opt) &
     & RESULT(ans)
     CLASS(ElemshapeData_), INTENT(IN) :: test
@@ -129,10 +147,6 @@ INTERFACE
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: opt
     REAL(DFP), ALLOCATABLE :: ans(:, :)
   END FUNCTION DiffusionMatrix_3
-END INTERFACE
-
-INTERFACE DiffusionMatrix
-  MODULE PROCEDURE DiffusionMatrix_3
 END INTERFACE DiffusionMatrix
 
 !----------------------------------------------------------------------------
@@ -150,7 +164,7 @@ END INTERFACE DiffusionMatrix
 ! \frac{\partial N^{J}}{\partial x_{j}}d\Omega
 ! $$
 
-INTERFACE
+INTERFACE DiffusionMatrix
   MODULE PURE FUNCTION DiffusionMatrix_4(test, trial, k, krank, opt) &
     & RESULT(ans)
     CLASS(ElemshapeData_), INTENT(IN) :: test
@@ -165,10 +179,6 @@ INTERFACE
     !! ncopy
     REAL(DFP), ALLOCATABLE :: ans(:, :)
   END FUNCTION DiffusionMatrix_4
-END INTERFACE
-
-INTERFACE DiffusionMatrix
-  MODULE PROCEDURE DiffusionMatrix_4
 END INTERFACE DiffusionMatrix
 
 !----------------------------------------------------------------------------
@@ -186,7 +196,7 @@ END INTERFACE DiffusionMatrix
 ! \frac{\partial N^{J}}{\partial x_{j}}d\Omega
 ! $$
 
-INTERFACE
+INTERFACE DiffusionMatrix
   MODULE PURE FUNCTION DiffusionMatrix_5(test, trial, c1, c2, c1rank, &
     & c2rank, opt) RESULT(ans)
     CLASS(ElemshapeData_), INTENT(IN) :: test
@@ -205,10 +215,6 @@ INTERFACE
     !! ncopy
     REAL(DFP), ALLOCATABLE :: ans(:, :)
   END FUNCTION DiffusionMatrix_5
-END INTERFACE
-
-INTERFACE DiffusionMatrix
-  MODULE PROCEDURE DiffusionMatrix_5
 END INTERFACE DiffusionMatrix
 
 !----------------------------------------------------------------------------
@@ -226,7 +232,7 @@ END INTERFACE DiffusionMatrix
 ! \frac{\partial N^{J}}{\partial x_{j}}d\Omega
 ! $$
 
-INTERFACE
+INTERFACE DiffusionMatrix
   MODULE PURE FUNCTION DiffusionMatrix_6(test, trial, c1, c2, c1rank, &
     & c2rank, opt) RESULT(ans)
     CLASS(ElemshapeData_), INTENT(IN) :: test
@@ -245,10 +251,6 @@ INTERFACE
     !! ncopy
     REAL(DFP), ALLOCATABLE :: ans(:, :)
   END FUNCTION DiffusionMatrix_6
-END INTERFACE
-
-INTERFACE DiffusionMatrix
-  MODULE PROCEDURE DiffusionMatrix_6
 END INTERFACE DiffusionMatrix
 
 !----------------------------------------------------------------------------
@@ -266,7 +268,7 @@ END INTERFACE DiffusionMatrix
 ! \frac{\partial N^{J}}{\partial x_{j}}d\Omega
 ! $$
 
-INTERFACE
+INTERFACE DiffusionMatrix
   MODULE PURE FUNCTION DiffusionMatrix_7(test, trial, c1, c2, c1rank, &
     & c2rank, opt) RESULT(ans)
     CLASS(ElemshapeData_), INTENT(IN) :: test
@@ -285,10 +287,6 @@ INTERFACE
     !! ncopy
     REAL(DFP), ALLOCATABLE :: ans(:, :)
   END FUNCTION DiffusionMatrix_7
-END INTERFACE
-
-INTERFACE DiffusionMatrix
-  MODULE PROCEDURE DiffusionMatrix_7
 END INTERFACE DiffusionMatrix
 
 !----------------------------------------------------------------------------
@@ -305,7 +303,7 @@ END INTERFACE DiffusionMatrix
 !
 ! $$
 
-INTERFACE
+INTERFACE DiffusionMatrix
   MODULE PURE FUNCTION DiffusionMatrix_8(test, trial, c1, c2, c1rank, &
     & c2rank, opt) RESULT(ans)
     CLASS(ElemshapeData_), INTENT(IN) :: test
@@ -324,10 +322,6 @@ INTERFACE
     !! ncopy
     REAL(DFP), ALLOCATABLE :: ans(:, :)
   END FUNCTION DiffusionMatrix_8
-END INTERFACE
-
-INTERFACE DiffusionMatrix
-  MODULE PROCEDURE DiffusionMatrix_8
 END INTERFACE DiffusionMatrix
 
 !----------------------------------------------------------------------------
@@ -344,7 +338,7 @@ END INTERFACE DiffusionMatrix
 !
 ! $$
 
-INTERFACE
+INTERFACE DiffusionMatrix
   MODULE PURE FUNCTION DiffusionMatrix_9(test, trial, c1, c2, c1rank, &
     & c2rank, opt) RESULT(ans)
     CLASS(ElemshapeData_), INTENT(IN) :: test
@@ -363,10 +357,6 @@ INTERFACE
     !! ncopy
     REAL(DFP), ALLOCATABLE :: ans(:, :)
   END FUNCTION DiffusionMatrix_9
-END INTERFACE
-
-INTERFACE DiffusionMatrix
-  MODULE PROCEDURE DiffusionMatrix_9
 END INTERFACE DiffusionMatrix
 
 !----------------------------------------------------------------------------
@@ -377,7 +367,7 @@ END INTERFACE DiffusionMatrix
 ! date: 6 March 2021
 ! summary: This subroutine returns the diffusion matrix in space domain
 
-INTERFACE
+INTERFACE DiffusionMatrix
   MODULE PURE FUNCTION DiffusionMatrix_10(test, trial, c1, c2, c1rank, &
     & c2rank, opt) RESULT(ans)
     CLASS(ElemshapeData_), INTENT(IN) :: test
@@ -396,10 +386,6 @@ INTERFACE
     !! ncopy
     REAL(DFP), ALLOCATABLE :: ans(:, :)
   END FUNCTION DiffusionMatrix_10
-END INTERFACE
-
-INTERFACE DiffusionMatrix
-  MODULE PROCEDURE DiffusionMatrix_10
 END INTERFACE DiffusionMatrix
 
 !----------------------------------------------------------------------------
@@ -410,7 +396,7 @@ END INTERFACE DiffusionMatrix
 ! date: 6 March 2021
 ! summary: This subroutine returns the diffusion matrix in space domain
 
-INTERFACE
+INTERFACE DiffusionMatrix
   MODULE PURE FUNCTION DiffusionMatrix_11(test, trial, c1, c2, c1rank, &
     & c2rank, opt) RESULT(ans)
     CLASS(ElemshapeData_), INTENT(IN) :: test
@@ -429,10 +415,6 @@ INTERFACE
     !! ncopy
     REAL(DFP), ALLOCATABLE :: ans(:, :)
   END FUNCTION DiffusionMatrix_11
-END INTERFACE
-
-INTERFACE DiffusionMatrix
-  MODULE PROCEDURE DiffusionMatrix_11
 END INTERFACE DiffusionMatrix
 
 !----------------------------------------------------------------------------
@@ -443,7 +425,7 @@ END INTERFACE DiffusionMatrix
 ! date: 6 March 2021
 ! summary: This subroutine returns the diffusion matrix in space domain
 
-INTERFACE
+INTERFACE DiffusionMatrix
   MODULE PURE FUNCTION DiffusionMatrix_12(test, trial, c1, c2, c1rank, &
     & c2rank, opt) RESULT(ans)
     CLASS(ElemshapeData_), INTENT(IN) :: test
@@ -462,10 +444,6 @@ INTERFACE
     !! ncopy
     REAL(DFP), ALLOCATABLE :: ans(:, :)
   END FUNCTION DiffusionMatrix_12
-END INTERFACE
-
-INTERFACE DiffusionMatrix
-  MODULE PROCEDURE DiffusionMatrix_12
 END INTERFACE DiffusionMatrix
 
 !----------------------------------------------------------------------------
@@ -476,7 +454,7 @@ END INTERFACE DiffusionMatrix
 ! date: 6 March 2021
 ! summary: This subroutine returns the diffusion matrix in space domain
 
-INTERFACE
+INTERFACE DiffusionMatrix
   MODULE PURE FUNCTION DiffusionMatrix_13(test, trial, c1, c2, c1rank, &
     & c2rank, opt) RESULT(ans)
     CLASS(ElemshapeData_), INTENT(IN) :: test
@@ -495,10 +473,6 @@ INTERFACE
     !! ncopy
     REAL(DFP), ALLOCATABLE :: ans(:, :)
   END FUNCTION DiffusionMatrix_13
-END INTERFACE
-
-INTERFACE DiffusionMatrix
-  MODULE PROCEDURE DiffusionMatrix_13
 END INTERFACE DiffusionMatrix
 
 !----------------------------------------------------------------------------
@@ -525,17 +499,13 @@ END INTERFACE DiffusionMatrix
 ! \frac{\partial N^{J}}{\partial x_{i}}d\Omega
 ! $$
 
-INTERFACE
+INTERFACE DiffusionMatrix
   MODULE PURE FUNCTION DiffusionMatrix_14(test, trial, opt) RESULT(ans)
     CLASS(ElemshapeData_), INTENT(IN) :: test
     CLASS(ElemshapeData_), INTENT(IN) :: trial
     INTEGER(I4B), INTENT(IN) :: opt(1)
     REAL(DFP), ALLOCATABLE :: ans(:, :)
   END FUNCTION DiffusionMatrix_14
-END INTERFACE
-
-INTERFACE DiffusionMatrix
-  MODULE PROCEDURE DiffusionMatrix_14
 END INTERFACE DiffusionMatrix
 
 !----------------------------------------------------------------------------
@@ -554,7 +524,7 @@ END INTERFACE DiffusionMatrix
 ! $$
 !
 
-INTERFACE
+INTERFACE DiffusionMatrix
   MODULE PURE FUNCTION DiffusionMatrix_15(test, trial, k, krank, opt) &
     & RESULT(ans)
     CLASS(ElemshapeData_), INTENT(IN) :: test
@@ -568,10 +538,10 @@ INTERFACE
     INTEGER(I4B), INTENT(IN) :: opt(1)
     REAL(DFP), ALLOCATABLE :: ans(:, :)
   END FUNCTION DiffusionMatrix_15
-END INTERFACE
-
-INTERFACE DiffusionMatrix
-  MODULE PROCEDURE DiffusionMatrix_15
 END INTERFACE DiffusionMatrix
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
 
 END MODULE DiffusionMatrix_Method
