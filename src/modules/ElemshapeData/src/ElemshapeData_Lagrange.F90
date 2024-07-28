@@ -116,10 +116,10 @@ MODULE SUBROUTINE LagrangeElemShapeData3(obj, quad, refelem, baseContinuity, &
               baseInterpolation, order, ipType, basisType, coeff, firstCall, &
                                            alpha, beta, lambda)
     CLASS(ElemshapeData_), INTENT(INOUT) :: obj
-    CLASS(QuadraturePoint_), INTENT(IN) :: quad
+    TYPE(QuadraturePoint_), INTENT(IN) :: quad
     CLASS(ReferenceElement_), INTENT(IN) :: refelem
-    CLASS(H1_), INTENT(IN) :: baseContinuity
-    CLASS(LagrangeInterpolation_), INTENT(IN) :: baseInterpolation
+    TYPE(H1_), INTENT(IN) :: baseContinuity
+    TYPE(LagrangeInterpolation_), INTENT(IN) :: baseInterpolation
     INTEGER(I4B), INTENT(IN) :: order
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: ipType
     !! Interpolation point type
