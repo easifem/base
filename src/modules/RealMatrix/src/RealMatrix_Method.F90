@@ -27,8 +27,8 @@ PRIVATE
 
 PUBLIC :: Shape
 PUBLIC :: Size
-PUBLIC :: TotalDimension
-PUBLIC :: SetTotalDimension
+PUBLIC :: totalDimension
+PUBLIC :: SettotalDimension
 PUBLIC :: ALLOCATE
 PUBLIC :: DEALLOCATE
 PUBLIC :: Initiate
@@ -39,6 +39,7 @@ PUBLIC :: RealMatrix_Pointer
 PUBLIC :: SYM
 PUBLIC :: SkewSym
 PUBLIC :: MakeDiagonalCopies
+PUBLIC :: MakeDiagonalCopies_
 PUBLIC :: RANDOM_NUMBER
 PUBLIC :: TestMatrix
 PUBLIC :: ASSIGNMENT(=)
@@ -108,7 +109,7 @@ INTERFACE Size
 END INTERFACE Size
 
 !----------------------------------------------------------------------------
-!                                         TotalDimension@ConstructorMethods
+!                                         totalDimension@ConstructorMethods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -119,15 +120,15 @@ END INTERFACE Size
 !
 ! This function returns the total dimension (or rank) of an array,
 
-INTERFACE TotalDimension
+INTERFACE totalDimension
   MODULE PURE FUNCTION Get_tdimension(obj) RESULT(Ans)
     CLASS(RealMatrix_), INTENT(IN) :: obj
     INTEGER(I4B) :: Ans
   END FUNCTION Get_tdimension
-END INTERFACE TotalDimension
+END INTERFACE totalDimension
 
 !----------------------------------------------------------------------------
-!                                               SetTotalDimension@GetMethods
+!                                               SettotalDimension@GetMethods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -138,12 +139,12 @@ END INTERFACE TotalDimension
 !
 ! This subroutine Sets the rank(total dimension) of an array
 
-INTERFACE SetTotalDimension
+INTERFACE SettotalDimension
   MODULE PURE SUBROUTINE Set_tdimension(obj, tDimension)
     CLASS(RealMatrix_), INTENT(INOUT) :: obj
     INTEGER(I4B), INTENT(IN) :: tDimension
   END SUBROUTINE Set_tdimension
-END INTERFACE SetTotalDimension
+END INTERFACE SettotalDimension
 
 !----------------------------------------------------------------------------
 !                                           Allocate@ConstructorMethods
@@ -402,14 +403,14 @@ END INTERFACE Eye
 !
 
 INTERFACE Convert
-  MODULE PURE SUBROUTINE realmat_convert_1(From, To, Conversion, &
+  MODULE PURE SUBROUTINE realmat_convert_1(from, to, Conversion, &
     & nns, tdof)
-    TYPE(RealMatrix_), INTENT(IN) :: From
+    TYPE(RealMatrix_), INTENT(IN) :: from
     !! Matrix in one format
-    TYPE(RealMatrix_), INTENT(INOUT) :: To
+    TYPE(RealMatrix_), INTENT(INOUT) :: to
     !! Matrix in one format
     INTEGER(I4B), INTENT(IN) :: Conversion
-    !! `Conversion` can be `NodesToDOF` or `DOFToNodes`
+    !! `Conversion` can be `NodestoDOF` or `DOFToNodes`
     INTEGER(I4B), INTENT(IN) :: nns, tdof
   END SUBROUTINE realmat_convert_1
 END INTERFACE Convert
@@ -539,21 +540,35 @@ END INTERFACE SkewSym
 !
 !# Introduction
 !
-! This subroutine makes `nCopy` diagonal copies of `Mat` The size of `Mat` on
-! return is nCopy * SIZE( Mat, 1 )
+! This subroutine makes `ncopy` diagonal copies of `Mat` The size of `Mat` on
+! return is ncopy * SIZE( Mat, 1 )
 !
 !### Usage
 !
 !```fortran
-!        call MakeDiagonalCopies( Mat, nCopy )
+!        call MakeDiagonalCopies( Mat, ncopy )
 !```
 
 INTERFACE MakeDiagonalCopies
-  MODULE PURE SUBROUTINE realmat_make_diag_Copy1(Mat, nCopy)
-    REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: Mat(:, :)
-    INTEGER(I4B), INTENT(IN) :: nCopy
-  END SUBROUTINE realmat_make_diag_Copy1
+  MODULE PURE SUBROUTINE MakeDiagonalCopies1(mat, ncopy)
+    REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: mat(:, :)
+    INTEGER(I4B), INTENT(IN) :: ncopy
+  END SUBROUTINE MakeDiagonalCopies1
 END INTERFACE MakeDiagonalCopies
+
+!----------------------------------------------------------------------------
+!                                      MakeDiagonalCopies@ConstructorMethods
+!----------------------------------------------------------------------------
+
+INTERFACE MakeDiagonalCopies_
+  MODULE PURE SUBROUTINE MakeDiagonalCopies1_(mat, ncopy, nrow, ncol)
+    REAL(DFP), INTENT(INOUT) :: mat(:, :)
+    INTEGER(I4B), INTENT(IN) :: ncopy
+    INTEGER(i4b), INTENT(IN) :: nrow, ncol
+    !! nrow and ncol are size of data which is used for making
+    !! diagonal copies
+  END SUBROUTINE MakeDiagonalCopies1_
+END INTERFACE MakeDiagonalCopies_
 
 !----------------------------------------------------------------------------
 !                                      MakeDiagonalCopies@ConstructorMethods
@@ -563,21 +578,33 @@ END INTERFACE MakeDiagonalCopies
 ! date: 6 March 2021
 ! summary: Make diagonal copies of Matrix
 !
-! This subroutine makes `nCopy` diagonal copies of `Mat`
+! This subroutine makes `ncopy` diagonal copies of `Mat`
 !
 !### Usage
 !
 !```fortran
-! call MakeDiagonalCopies( From = Mat, To = anotherMat, nCopy = nCopy )
+! call MakeDiagonalCopies( from = Mat, to = anotherMat, ncopy = nCopy )
 !```
 
 INTERFACE MakeDiagonalCopies
-  MODULE PURE SUBROUTINE realmat_make_diag_Copy2(From, To, nCopy)
-    REAL(DFP), INTENT(IN) :: From(:, :)
-    REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: To(:, :)
-    INTEGER(I4B), INTENT(IN) :: nCopy
-  END SUBROUTINE realmat_make_diag_Copy2
+  MODULE PURE SUBROUTINE MakeDiagonalCopies2(from, to, ncopy)
+    REAL(DFP), INTENT(IN) :: from(:, :)
+    REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: to(:, :)
+    INTEGER(I4B), INTENT(IN) :: ncopy
+  END SUBROUTINE MakeDiagonalCopies2
 END INTERFACE MakeDiagonalCopies
+
+!----------------------------------------------------------------------------
+!                                             MakeDiagonalCopies
+!----------------------------------------------------------------------------
+
+INTERFACE MakeDiagonalCopies_
+  MODULE PURE SUBROUTINE MakeDiagonalCopies2_(from, to, ncopy)
+    REAL(DFP), INTENT(IN) :: from(:, :)
+    REAL(DFP), INTENT(INOUT) :: to(:, :)
+    INTEGER(I4B), INTENT(IN) :: ncopy
+  END SUBROUTINE MakeDiagonalCopies2_
+END INTERFACE MakeDiagonalCopies_
 
 !----------------------------------------------------------------------------
 !                                       MakeDiagonalCopies@ConstructorMethods
@@ -587,21 +614,25 @@ END INTERFACE MakeDiagonalCopies
 ! date:         6 March 2021
 ! summary: Make diagonal copies of [[realmatrix_]]
 !
-! This subroutine makes `nCopy` diagonal copies of `Mat`, The size of `Mat`
-! on return is nCopy * SIZE( Mat, 1 )
+! This subroutine makes `ncopy` diagonal copies of `Mat`, The size of `Mat`
+! on return is ncopy * SIZE( Mat, 1 )
 !
 !### Usage
 !
 !```fortran
-! call MakeDiagonalCopies( Mat, nCopy )
+! call MakeDiagonalCopies( Mat, ncopy )
 !```
 
 INTERFACE MakeDiagonalCopies
-  MODULE PURE SUBROUTINE realmat_make_diag_Copy3(Mat, nCopy)
+  MODULE PURE SUBROUTINE MakeDiagonalCopies3(Mat, ncopy)
     TYPE(RealMatrix_), INTENT(INOUT) :: Mat
-    INTEGER(I4B), INTENT(IN) :: nCopy
-  END SUBROUTINE realmat_make_diag_Copy3
+    INTEGER(I4B), INTENT(IN) :: ncopy
+  END SUBROUTINE MakeDiagonalCopies3
 END INTERFACE MakeDiagonalCopies
+
+!----------------------------------------------------------------------------
+!                                                          MakeDiagonalCopies
+!----------------------------------------------------------------------------
 
 !----------------------------------------------------------------------------
 !                                      MakeDiagonalCopies@ConstructorMethods
@@ -613,20 +644,20 @@ END INTERFACE MakeDiagonalCopies
 !
 !# Introduction
 !
-! This subroutine makes `nCopy` diagonal copies of `Mat`
+! This subroutine makes `ncopy` diagonal copies of `Mat`
 !
 !### Usage
 !
 !```fortran
-! call MakeDiagonalCopies( From = Mat, To = anotherMat, nCopy = nCopy )
+! call MakeDiagonalCopies( from = Mat, to = anotherMat, ncopy = nCopy )
 !```
 
 INTERFACE MakeDiagonalCopies
-  MODULE PURE SUBROUTINE realmat_make_diag_Copy4(From, To, nCopy)
-    TYPE(RealMatrix_), INTENT(IN) :: From
-    TYPE(RealMatrix_), INTENT(INOUT) :: To
-    INTEGER(I4B), INTENT(IN) :: nCopy
-  END SUBROUTINE realmat_make_diag_Copy4
+  MODULE PURE SUBROUTINE MakeDiagonalCopies4(from, to, ncopy)
+    TYPE(RealMatrix_), INTENT(IN) :: from
+    TYPE(RealMatrix_), INTENT(INOUT) :: to
+    INTEGER(I4B), INTENT(IN) :: ncopy
+  END SUBROUTINE MakeDiagonalCopies4
 END INTERFACE MakeDiagonalCopies
 
 !----------------------------------------------------------------------------
@@ -900,9 +931,9 @@ END INTERFACE Get
 ! fortran array
 
 INTERFACE Copy
-  MODULE PURE SUBROUTINE realmat_Copy1(From, To)
-    TYPE(RealMatrix_), INTENT(IN) :: From
-    REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: To(:, :)
+  MODULE PURE SUBROUTINE realmat_Copy1(from, to)
+    TYPE(RealMatrix_), INTENT(IN) :: from
+    REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: to(:, :)
   END SUBROUTINE realmat_Copy1
 END INTERFACE Copy
 
@@ -924,9 +955,9 @@ END INTERFACE Convert
 ! RealMatrix object
 
 INTERFACE Copy
-  MODULE PURE SUBROUTINE realmat_Copy2(From, To)
-    TYPE(RealMatrix_), INTENT(IN) :: From
-    TYPE(RealMatrix_), INTENT(INOUT) :: To
+  MODULE PURE SUBROUTINE realmat_Copy2(from, to)
+    TYPE(RealMatrix_), INTENT(IN) :: from
+    TYPE(RealMatrix_), INTENT(INOUT) :: to
   END SUBROUTINE realmat_Copy2
 END INTERFACE Copy
 
@@ -952,9 +983,9 @@ END INTERFACE
 ! object
 
 INTERFACE Copy
-  MODULE PURE SUBROUTINE realmat_Copy3(From, To)
-    REAL(DFP), INTENT(IN) :: From(:, :)
-    TYPE(RealMatrix_), INTENT(INOUT) :: To
+  MODULE PURE SUBROUTINE realmat_Copy3(from, to)
+    REAL(DFP), INTENT(IN) :: from(:, :)
+    TYPE(RealMatrix_), INTENT(INOUT) :: to
   END SUBROUTINE realmat_Copy3
 END INTERFACE Copy
 
@@ -1038,7 +1069,7 @@ INTERFACE LinearSolver_CG
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: convergenceIn
   !! convergenceInRes <-- default
   !! convergenceInSol
-    LOGICAL(LGT), OPTIONAL, INTENT(IN) :: relativeToRHS
+    LOGICAL(LGT), OPTIONAL, INTENT(IN) :: relativetoRHS
   !! FALSE <--- relative converfence is checked with respect to ||res||
   !! TRUE Convergence is checked with respect to ||rhs||
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: restartAfter
