@@ -65,7 +65,8 @@ PUBLIC :: ElementQuality
 PUBLIC :: ContainsPoint
 PUBLIC :: TotalEntities
 PUBLIC :: GetFacetTopology
-PUBLIC :: GetVTKelementType
+PUBLIC :: GetVTKElementType
+PUBLIC :: GetVTKElementType_
 PUBLIC :: GetEdgeConnectivity
 PUBLIC :: GetFaceConnectivity
 PUBLIC :: GetTotalNodes
@@ -1380,12 +1381,25 @@ END INTERFACE TotalEntities
 !                                              getVTKelementType@VTKMethods
 !----------------------------------------------------------------------------
 
-INTERFACE GetVTKelementType
-  MODULE PURE SUBROUTINE get_vtk_elemType(elemType, vtk_type, nptrs)
+INTERFACE GetVTKElementType
+  MODULE PURE SUBROUTINE GetVTKElementType1(elemType, vtk_type, nptrs)
     INTEGER(I4B), INTENT(IN) :: elemType
     INTEGER(INT8), INTENT(OUT) :: vtk_type
     INTEGER(I4B), ALLOCATABLE, INTENT(INOUT) :: nptrs(:)
-  END SUBROUTINE get_vtk_elemType
-END INTERFACE GetVTKelementType
+  END SUBROUTINE GetVTKElementType1
+END INTERFACE GetVTKElementType
+
+!----------------------------------------------------------------------------
+!                                               GetVTKElementType@VTKMethods
+!----------------------------------------------------------------------------
+
+INTERFACE GetVTKElementType_
+  MODULE PURE SUBROUTINE GetVTKElementType1_(elemType, vtk_type, nptrs, tsize)
+    INTEGER(I4B), INTENT(IN) :: elemType
+    INTEGER(INT8), INTENT(OUT) :: vtk_type
+    INTEGER(I4B), INTENT(INOUT) :: nptrs(:)
+    INTEGER(I4B), INTENT(OUT) :: tsize
+  END SUBROUTINE GetVTKElementType1_
+END INTERFACE GetVTKElementType_
 
 END MODULE ReferenceElement_Method
