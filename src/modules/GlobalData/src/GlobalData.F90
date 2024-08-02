@@ -16,7 +16,7 @@
 
 MODULE GlobalData
 USE, INTRINSIC :: ISO_FORTRAN_ENV, ONLY: INPUT_UNIT, &
-  & OUTPUT_UNIT, ERROR_UNIT
+                                                       OUTPUT_UNIT, ERROR_UNIT
 IMPLICIT NONE
 PUBLIC
 
