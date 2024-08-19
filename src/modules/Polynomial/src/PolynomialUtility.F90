@@ -16,21 +16,22 @@
 !
 
 MODULE PolynomialUtility
-USE InterpolationUtility
-USE LagrangePolynomialUtility
-USE OrthogonalPolynomialUtility
-USE JacobiPolynomialUtility
-USE UltrasphericalPolynomialUtility
-USE LegendrePolynomialUtility
-USE LobattoPolynomialUtility
-USE UnscaledLobattoPolynomialUtility
 USE Chebyshev1PolynomialUtility
-USE LineInterpolationUtility
-USE TriangleInterpolationUtility
-USE QuadrangleInterpolationUtility
-USE TetrahedronInterpolationUtility
 USE HexahedronInterpolationUtility
+USE HierarchicalPolynomialUtility
+USE InterpolationUtility
+USE JacobiPolynomialUtility
+USE LagrangePolynomialUtility
+USE LegendrePolynomialUtility
+USE LineInterpolationUtility
+USE LobattoPolynomialUtility
+USE OrthogonalPolynomialUtility
 USE PrismInterpolationUtility
 USE PyramidInterpolationUtility
+USE QuadrangleInterpolationUtility
 USE RecursiveNodesUtility
+USE TetrahedronInterpolationUtility
+USE TriangleInterpolationUtility
+USE UltrasphericalPolynomialUtility
+USE UnscaledLobattoPolynomialUtility
 END MODULE PolynomialUtility
