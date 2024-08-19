@@ -16,8 +16,28 @@
 !
 
 SUBMODULE(Chebyshev1PolynomialUtility) Methods
-USE BaseMethod
+USE OrthogonalPolynomialUtility, ONLY: JacobiMatrix
+
+#ifdef USE_LAPACK95
+USE F95_Lapack, ONLY: STEV
+#endif
+
+USE ErrorHandling, ONLY: ErrorMsg
+
+USE MiscUtility, ONLY: Factorial
+
+USE BaseType, ONLY: qp => TypeQuadratureOpt
+
+USE GlobalData, ONLY: pi
+
+USE UltrasphericalPolynomialUtility, ONLY: UltrasphericalDMatEvenOdd
+
+USE JacobiPolynomialUtility, ONLY: JacobiJacobiMatrix, &
+                                   JacobiJacobiRadauMatrix, &
+                                   JacobiJacobiLobattoMatrix
+
 IMPLICIT NONE
+
 CONTAINS
 
 !----------------------------------------------------------------------------
@@ -243,12 +263,12 @@ ELSE
 END IF
 !!
 SELECT CASE (QuadType)
-CASE (Gauss)
+CASE (qp%Gauss)
   !!
   order = n
   CALL Chebyshev1GaussQuadrature(n=order, pt=pt, wt=wt)
   !!
-CASE (GaussRadau, GaussRadauLeft)
+CASE (qp%GaussRadau, qp%GaussRadauLeft)
   !!
   IF (inside) THEN
     order = n
@@ -261,7 +281,7 @@ CASE (GaussRadau, GaussRadauLeft)
     CALL Chebyshev1GaussRadauQuadrature(a=left, n=order, pt=pt, wt=wt)
   END IF
   !!
-CASE (GaussRadauRight)
+CASE (qp%GaussRadauRight)
   !!
   IF (inside) THEN
     order = n
@@ -273,7 +293,7 @@ CASE (GaussRadauRight)
     CALL Chebyshev1GaussRadauQuadrature(a=right, n=order, pt=pt, wt=wt)
   END IF
   !!
-CASE (GaussLobatto)
+CASE (qp%GaussLobatto)
   !!
   IF (inside) THEN
     order = n
@@ -831,127 +851,193 @@ END PROCEDURE Chebyshev1GradientEvalSum4
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Chebyshev1Transform1
-REAL(DFP), DIMENSION(0:n) :: nrmsqr, temp
-REAL(DFP), DIMENSION(0:n, 0:n) :: PP
-INTEGER(I4B) :: jj
-REAL(DFP) :: rn
-!!
-nrmsqr = Chebyshev1NormSQR2(n=n)
-!!
-!! Correct nrmsqr(n)
-!!
-rn = REAL(n, KIND=DFP)
-!!
-IF (quadType .EQ. GaussLobatto) THEN
-  nrmsqr(n) = pi
-END IF
-!!
-PP = Chebyshev1EvalAll(n=n, x=x)
-!!
-DO jj = 0, n
-  temp = PP(:, jj) * w * coeff
-  ans(jj) = SUM(temp) / nrmsqr(jj)
-END DO
-!!
+INTEGER(I4B) :: tsize
+CALL Chebyshev1Transform1_(n, coeff, x, w, quadType, ans, tsize)
 END PROCEDURE Chebyshev1Transform1
+
+!----------------------------------------------------------------------------
+!                                                         Chebyshev1Transform
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE Chebyshev1Transform1_
+REAL(DFP), DIMENSION(0:n, 0:n) :: PP
+INTEGER(I4B) :: ii, jj
+REAL(DFP) :: nrmsqr, areal
+
+tsize = n + 1
+CALL Chebyshev1EvalAll_(n=n, x=x, ans=PP, nrow=ii, ncol=jj)
+
+DO jj = 0, n
+  areal = 0.0_DFP
+  DO ii = 0, n
+    areal = areal + PP(ii, jj) * w(ii) * coeff(ii)
+  END DO
+  nrmsqr = Chebyshev1NormSQR(n=jj)
+  ans(jj) = areal / nrmsqr
+END DO
+
+IF (quadType .EQ. qp%GaussLobatto) THEN
+  areal = 0.0_DFP
+  jj = n
+  DO ii = 0, n
+    areal = areal + PP(ii, jj) * w(ii) * coeff(ii)
+  END DO
+
+  nrmsqr = pi
+  ans(jj) = areal / nrmsqr
+END IF
+
+END PROCEDURE Chebyshev1Transform1_
 
 !----------------------------------------------------------------------------
 !                                                    Chebyshev1Transform
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Chebyshev1Transform2
-REAL(DFP), DIMENSION(0:n) :: nrmsqr, temp
+INTEGER(I4B) :: nrow, ncol
+CALL Chebyshev1Transform2_(n, coeff, x, w, quadType, ans, nrow, ncol)
+END PROCEDURE Chebyshev1Transform2
+
+!----------------------------------------------------------------------------
+!                                                       Chebyshev1Transform
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE Chebyshev1Transform2_
 REAL(DFP), DIMENSION(0:n, 0:n) :: PP
-INTEGER(I4B) :: jj, kk
-REAL(DFP) :: rn
-!!
-nrmsqr = Chebyshev1NormSQR2(n=n)
-!!
-!! Correct nrmsqr(n)
-!!
-rn = REAL(n, KIND=DFP)
-!!
-IF (quadType .EQ. GaussLobatto) THEN
-  nrmsqr(n) = pi
-END IF
-!!
-PP = Chebyshev1EvalAll(n=n, x=x)
-!!
-DO kk = 1, SIZE(coeff, 2)
+INTEGER(I4B) :: ii, jj, kk
+REAL(DFP) :: nrmsqr, areal
+
+nrow = n + 1
+ncol = SIZE(coeff, 2)
+
+CALL Chebyshev1EvalAll_(n=n, x=x, ans=PP, nrow=ii, ncol=jj)
+
+DO kk = 1, ncol
   DO jj = 0, n
-    temp = PP(:, jj) * w * coeff(:, kk)
-    ans(jj, kk) = SUM(temp) / nrmsqr(jj)
+    areal = 0.0_DFP
+    DO ii = 0, n
+      areal = areal + PP(ii, jj) * w(ii) * coeff(ii, jj)
+    END DO
+    nrmsqr = Chebyshev1NormSQR(n=jj)
+    ans(jj, kk) = areal / nrmsqr
   END DO
 END DO
-!!
-END PROCEDURE Chebyshev1Transform2
+
+IF (quadType .EQ. qp%GaussLobatto) THEN
+
+  nrmsqr = pi
+  jj = n
+
+  DO kk = 1, ncol
+    areal = 0.0_DFP
+
+    DO ii = 0, n
+      areal = areal + PP(ii, jj) * w(ii) * coeff(ii, kk)
+    END DO
+
+    ans(jj, kk) = areal / nrmsqr
+  END DO
+
+END IF
+
+END PROCEDURE Chebyshev1Transform2_
 
 !----------------------------------------------------------------------------
 !                                                    Chebyshev1Transform
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Chebyshev1Transform3
-REAL(DFP) :: pt(0:n), wt(0:n), coeff(0:n)
-INTEGER(I4B) :: ii
-!!
-CALL Chebyshev1Quadrature(n=n + 1, pt=pt, wt=wt,&
-  & quadType=quadType)
-!!
-DO ii = 0, n
-  coeff(ii) = f(pt(ii))
-END DO
-!!
-ans = Chebyshev1Transform(n=n, coeff=coeff, x=pt, &
-  & w=wt, quadType=quadType)
-!!
+INTEGER(I4B) :: tsize
+CALL Chebyshev1Transform3_(n, f, quadType, x1, x2, ans, tsize)
 END PROCEDURE Chebyshev1Transform3
+
+!----------------------------------------------------------------------------
+!                                                       Chebyshev1Transform
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE Chebyshev1Transform3_
+REAL(DFP) :: pt(0:n), wt(0:n), coeff(0:n), x
+REAL(DFP), PARAMETER :: one = 1.0_DFP, half = 0.5_DFP
+INTEGER(I4B) :: ii
+
+CALL Chebyshev1Quadrature(n=n + 1, pt=pt, wt=wt, quadType=quadType)
+
+DO ii = 0, n
+  x = (one - pt(ii)) * x1 + (one + pt(ii)) * x2
+  x = x * half
+  coeff(ii) = f(x)
+END DO
+
+CALL Chebyshev1Transform_(n=n, coeff=coeff, x=pt, w=wt, quadType=quadType, &
+                          ans=ans, tsize=tsize)
+
+END PROCEDURE Chebyshev1Transform3_
 
 !----------------------------------------------------------------------------
 !                                                  Chebyshev1Transform4
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Chebyshev1Transform4
+INTEGER(I4B) :: tsize
+CALL Chebyshev1Transform4_(n, coeff, quadType, ans, tsize)
+END PROCEDURE Chebyshev1Transform4
+
+!----------------------------------------------------------------------------
+!                                                      Chebyshev1Transform
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE Chebyshev1Transform4_
 INTEGER(I4B) :: ii, jj
-REAL(DFP) :: avar
-!!
-ans = 0.0_DFP
-!!
-IF (quadType .EQ. GaussLobatto) THEN
-  !!
+REAL(DFP) :: avar, asign, pi_by_n, one_by_n
+REAL(DFP), PARAMETER :: half = 0.5_DFP, minusOne = -1.0_DFP
+
+tsize = n + 1
+ans(1:tsize) = 0.0_DFP
+
+one_by_n = 1.0_DFP / REAL(n, KIND=DFP)
+pi_by_n = pi * one_by_n
+
+IF (quadType .EQ. qp%GaussLobatto) THEN
+
   DO jj = 0, n
-    !!
-    ans(jj) = coeff(0) * 0.5_DFP + coeff(n) * 0.5_DFP * (-1.0)**jj
-    !!
+
+    asign = minusOne**jj
+
+    ans(jj) = coeff(0) * half + coeff(n) * half * asign
+
     DO ii = 1, n - 1
-      ans(jj) = ans(jj) + coeff(ii) * COS(jj * pi * ii / n)
+      ans(jj) = ans(jj) + coeff(ii) * COS(jj * pi_by_n * ii)
     END DO
-    !!
-    ans(jj) = ans(jj) * 2.0_DFP / n
-    !!
+
+    ans(jj) = ans(jj) * 2.0_DFP * one_by_n
+
   END DO
-  !!
-  ans(0) = ans(0) * 0.5_DFP
-  ans(n) = ans(n) * 0.5_DFP
-  !!
+
+  ans(0) = ans(0) * half
+  ans(n) = ans(n) * half
+
 ELSE
-  !!
+
+  one_by_n = 1.0_DFP / REAL(n + 1, KIND=DFP)
+  pi_by_n = pi * half * one_by_n
+
   DO jj = 0, n
-    !!
-    avar = jj * pi * 0.5_DFP / (n + 1.0_DFP)
-    !!
+
+    avar = jj * pi_by_n
+
     DO ii = 0, n
       ans(jj) = ans(jj) + coeff(ii) * COS((2.0 * ii + 1.0) * avar)
     END DO
-    !!
-    ans(jj) = ans(jj) * 2.0_DFP / (n + 1.0)
-    !!
+
+    ans(jj) = ans(jj) * 2.0_DFP * one_by_n
+
   END DO
-  !!
-  ans(0) = ans(0) * 0.5_DFP
-  !!
+
+  ans(0) = ans(0) * half
+
 END IF
-!!
-END PROCEDURE Chebyshev1Transform4
+
+END PROCEDURE Chebyshev1Transform4_
 
 !----------------------------------------------------------------------------
 !                                                Chebyshev1InvTransform
@@ -1004,9 +1090,9 @@ END PROCEDURE Chebyshev1GradientCoeff1
 
 MODULE PROCEDURE Chebyshev1DMatrix1
 SELECT CASE (quadType)
-CASE (GaussLobatto)
+CASE (qp%GaussLobatto)
   CALL Chebyshev1DMatrixGL2(n=n, x=x, D=ans)
-CASE (Gauss)
+CASE (qp%Gauss)
   CALL Chebyshev1DMatrixG2(n=n, x=x, D=ans)
 END SELECT
 END PROCEDURE Chebyshev1DMatrix1
