@@ -25,9 +25,49 @@ PRIVATE
 PUBLIC :: OuterProd
 PUBLIC :: OuterProd_
 
+PUBLIC :: OTimesTilda
+
 PUBLIC :: Cross_Product
 PUBLIC :: Vector_Product
 PUBLIC :: VectorProduct
+
+!----------------------------------------------------------------------------
+!                                                        OTimesTilda@Methods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2024-08-13
+! summary:  returns a space-time matrix from time and space matrix
+
+INTERFACE OTimesTilda
+  MODULE SUBROUTINE OTimesTilda1(a, b, ans, nrow, ncol, anscoeff, scale)
+    REAL(DFP), INTENT(IN) :: a(:, :)
+    REAL(DFP), INTENT(IN) :: b(:, :)
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+    REAL(DFP), INTENT(IN) :: anscoeff
+    REAL(DFP), INTENT(IN) :: scale
+  END SUBROUTINE OTimesTilda1
+END INTERFACE OTimesTilda
+
+!----------------------------------------------------------------------------
+!                                                       OtimesTilda@Methods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2024-08-13
+! summary:  returns a space-time vector from time and space vector
+
+INTERFACE OTimesTilda
+  MODULE SUBROUTINE OTimesTilda2(a, b, ans, tsize, anscoeff, scale)
+    REAL(DFP), INTENT(IN) :: a(:)
+    REAL(DFP), INTENT(IN) :: b(:)
+    REAL(DFP), INTENT(INOUT) :: ans(:)
+    INTEGER(I4B), INTENT(OUT) :: tsize
+    REAL(DFP), INTENT(IN) :: anscoeff
+    REAL(DFP), INTENT(IN) :: scale
+  END SUBROUTINE OTimesTilda2
+END INTERFACE OTimesTilda
 
 !----------------------------------------------------------------------------
 !                                            Cross_Product@ProductMethods
