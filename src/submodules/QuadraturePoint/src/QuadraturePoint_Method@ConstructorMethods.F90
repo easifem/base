@@ -20,8 +20,13 @@
 ! summary:  Constructor methods for [[QuadraturePoint_]]
 
 SUBMODULE(QuadraturePoint_Method) ConstructorMethods
+USE GlobalData, ONLY: stderr
+
+USE ErrorHandling, ONLY: ErrorMsg
+
 USE BaseInterpolation_Method, ONLY: BaseInterpolation_ToString, &
-                                    BaseInterpolation_ToInteger
+                                    BaseInterpolation_ToInteger, &
+                                    BaseInterpolation_ToChar
 USE ReallocateUtility, ONLY: Reallocate
 
 USE ReferenceElement_Method, ONLY: ElementTopology, &
@@ -41,6 +46,8 @@ USE TetrahedronInterpolationUtility, ONLY: QuadraturePoint_Tetrahedron_, &
 USE HexahedronInterpolationUtility, ONLY: QuadraturePoint_Hexahedron_, &
                                           QuadratureNumber_Hexahedron
 
+USE BaseType, ONLY: elem => TypeElemNameOpt
+
 IMPLICIT NONE
 
 CONTAINS
@@ -52,6 +59,14 @@ CONTAINS
 MODULE PROCEDURE QuadraturePointIDToName
 ans = BaseInterpolation_ToString(name)
 END PROCEDURE QuadraturePointIDToName
+
+!----------------------------------------------------------------------------
+!                                                  QuadraturePointIDToName
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE QuadraturePoint_ToChar
+ans = BaseInterpolation_ToChar(name)
+END PROCEDURE QuadraturePoint_ToChar
 
 !----------------------------------------------------------------------------
 !                                                  QuadraturePointNameToID
@@ -98,26 +113,33 @@ INTEGER(I4B) :: ncol
 
 SELECT CASE (topo)
 
-CASE (Line)
+CASE (elem%line)
 
   ans = QuadratureNumber_Line(order=order, quadtype=quadratureType)
 
-CASE (Triangle)
+CASE (elem%triangle)
 
   ans = QuadratureNumber_Triangle(order=order, quadtype=quadratureType)
 
-CASE (Quadrangle)
+CASE (elem%quadrangle)
 
   ans = QuadratureNumber_Line(order=order, quadtype=quadratureType)
 
-CASE (Tetrahedron)
+CASE (elem%tetrahedron)
+
   ans = QuadratureNumber_Tetrahedron(order=order, quadtype=quadratureType)
 
-CASE (Hexahedron)
+! CASE (elem%hexahedron)
+!
+! CASE (elem%prism)
+!
+! CASE (elem%pyramid)
 
-CASE (Prism)
-
-CASE (Pyramid)
+CASE DEFAULT
+  CALL Errormsg(msg="No case found for give topo", &
+            file=__FILE__, routine="obj_QuadratureNumber1()", line=__LINE__, &
+                unitno=stderr)
+  STOP
 
 END SELECT
 
@@ -249,7 +271,7 @@ nrow = nrow + 1
 
 SELECT CASE (topo)
 
-CASE (Line)
+CASE (elem%line)
 
   nipsx(1) = QuadratureNumber_Line(order=p, quadtype=quadratureType1)
 
@@ -261,7 +283,7 @@ CASE (Line)
                      layout="INCREASING", xij=xij, alpha=alpha1, beta=beta1, &
                          lambda=lambda1, ans=obj%points, nrow=nrow, ncol=ncol)
 
-CASE (Triangle)
+CASE (elem%triangle)
 
   nipsx(1) = QuadratureNumber_Triangle(order=p, quadtype=quadratureType1)
   ncol = nipsx(1)
@@ -271,7 +293,7 @@ CASE (Triangle)
   CALL QuadraturePoint_Triangle_(nips=nipsx, quadType=quadratureType1, &
         refTriangle=domainName, xij=xij, ans=obj%points, nrow=nrow, ncol=ncol)
 
-CASE (Quadrangle)
+CASE (elem%quadrangle)
 
   nipsx(1) = QuadratureNumber_Line(order=p, quadtype=quadratureType1)
   nipsy(1) = QuadratureNumber_Line(order=q, quadtype=quadratureType2)
@@ -286,7 +308,7 @@ CASE (Quadrangle)
                lambda1=lambda1, alpha2=alpha2, beta2=beta2, lambda2=lambda2, &
                                    ans=obj%points, nrow=nrow, ncol=ncol)
 
-CASE (Tetrahedron)
+CASE (elem%tetrahedron)
 
   nipsx(1) = QuadratureNumber_Tetrahedron(order=p, quadtype=quadratureType1)
   ncol = nipsx(1)
@@ -296,7 +318,7 @@ CASE (Tetrahedron)
   CALL QuadraturePoint_Tetrahedron_(nips=nipsx, quadType=quadratureType1, &
      refTetrahedron=domainName, xij=xij, ans=obj%points, nrow=nrow, ncol=ncol)
 
-CASE (Hexahedron)
+CASE (elem%hexahedron)
 
   nipsx(1) = QuadratureNumber_Line(order=p, quadtype=quadratureType1)
   nipsy(1) = QuadratureNumber_Line(order=q, quadtype=quadratureType2)
@@ -316,9 +338,15 @@ CASE (Hexahedron)
                                 alpha3=alpha3, beta3=beta3, lambda3=lambda3, &
                                    ans=obj%points, nrow=nrow, ncol=ncol)
 
-CASE (Prism)
+! CASE (Prism)
 
-CASE (Pyramid)
+! CASE (Pyramid)
+
+CASE DEFAULT
+  CALL Errormsg(msg="No case found for give topo", &
+                file=__FILE__, routine="obj_Initiate11()", line=__LINE__, &
+                unitno=stderr)
+  STOP
 
 END SELECT
 
@@ -347,7 +375,7 @@ nrow = nrow + 1
 
 SELECT CASE (topo)
 
-CASE (Line)
+CASE (elem%line)
   ncol = nipsx(1)
   CALL Reallocate(obj%points, nrow, ncol)
 
@@ -355,7 +383,7 @@ CASE (Line)
                      layout="INCREASING", xij=xij, alpha=alpha1, beta=beta1, &
                          lambda=lambda1, ans=obj%points, nrow=nrow, ncol=ncol)
 
-CASE (Triangle)
+CASE (elem%triangle)
 
   ncol = nipsx(1)
 
@@ -364,7 +392,7 @@ CASE (Triangle)
   CALL QuadraturePoint_Triangle_(nips=nipsx, quadType=quadratureType1, &
         refTriangle=domainName, xij=xij, ans=obj%points, nrow=nrow, ncol=ncol)
 
-CASE (Quadrangle)
+CASE (elem%quadrangle)
 
   ncol = nipsx(1) * nipsy(1)
 
@@ -376,7 +404,7 @@ CASE (Quadrangle)
                lambda1=lambda1, alpha2=alpha2, beta2=beta2, lambda2=lambda2, &
                                    ans=obj%points, nrow=nrow, ncol=ncol)
 
-CASE (Tetrahedron)
+CASE (elem%tetrahedron)
 
   ncol = nipsx(1)
 
@@ -385,7 +413,7 @@ CASE (Tetrahedron)
   CALL QuadraturePoint_Tetrahedron_(nips=nipsx, quadType=quadratureType1, &
      refTetrahedron=domainName, xij=xij, ans=obj%points, nrow=nrow, ncol=ncol)
 
-CASE (Hexahedron)
+CASE (elem%hexahedron)
 
   ncol = nipsx(1) * nipsy(1) * nipsz(1)
 
@@ -402,14 +430,24 @@ CASE (Hexahedron)
                                 alpha3=alpha3, beta3=beta3, lambda3=lambda3, &
                                    ans=obj%points, nrow=nrow, ncol=ncol)
 
-CASE (Prism)
+! CASE (Prism)
+!
+! CASE (Pyramid)
 
-CASE (Pyramid)
+CASE DEFAULT
+  CALL Errormsg(msg="No case found for give topo", &
+                file=__FILE__, routine="obj_Initiate12()", line=__LINE__, &
+                unitno=stderr)
+  STOP
 
 END SELECT
 
 obj%txi = SIZE(obj%points, 1) - 1
 
 END PROCEDURE obj_Initiate12
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
 
 END SUBMODULE ConstructorMethods
