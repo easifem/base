@@ -24,6 +24,48 @@ IMPLICIT NONE
 CONTAINS
 
 !----------------------------------------------------------------------------
+!                                                               OTimesTilda
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE OTimesTilda1
+INTEGER(I4B) :: sa(2), sb(2)
+INTEGER(I4B) :: ii, jj, pp, qq
+
+sa = SHAPE(a)
+sb = SHAPE(b)
+
+nrow = sa(1) * sb(1)
+ncol = sa(2) * sb(2)
+
+DO CONCURRENT(ii=1:sa(1), jj=1:sa(2), pp=1:sb(1), qq=1:sb(2))
+  ans((ii - 1) * sb(1) + pp, (jj - 1) * sb(2) + qq) = &
+    anscoeff * ans((ii - 1) * sb(1) + pp, (jj - 1) * sb(2) + qq) + &
+    scale * a(ii, jj) * b(pp, qq)
+END DO
+
+END PROCEDURE OTimesTilda1
+
+!----------------------------------------------------------------------------
+!                                                                OTimesTilda
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE OTimesTilda2
+INTEGER(I4B) :: sa, sb
+INTEGER(I4B) :: ii, jj
+
+sa = SIZE(a)
+sb = SIZE(b)
+
+tsize = sa * sb
+
+DO CONCURRENT(ii=1:sa, jj=1:sb)
+  ans((ii - 1) * sb + jj) = &
+    anscoeff * ans((ii - 1) * sb + jj) + scale * a(ii) * b(jj)
+END DO
+
+END PROCEDURE OTimesTilda2
+
+!----------------------------------------------------------------------------
 !                                                                 VectorProd
 !----------------------------------------------------------------------------
 
