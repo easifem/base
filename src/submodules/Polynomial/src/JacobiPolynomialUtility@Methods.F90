@@ -26,6 +26,8 @@ USE ErrorHandling, ONLY: ErrorMsg
 
 USE MiscUtility, ONLY: Factorial
 
+USE BaseType, ONLY: qp => TypeQuadratureOpt
+
 IMPLICIT NONE
 CONTAINS
 
@@ -445,19 +447,19 @@ INTEGER(I4B) :: order
 REAL(DFP), PARAMETER :: left = -1.0_DFP, right = 1.0_DFP
   !!
 SELECT CASE (quadType)
-CASE (Gauss)
+CASE (qp%Gauss)
   order = n
   CALL JacobiGaussQuadrature(n=order, alpha=alpha, beta=beta, &
     & pt=pt, wt=wt)
-CASE (GaussRadau, GaussRadauLeft)
+CASE (qp%GaussRadau, qp%GaussRadauLeft)
   order = n - 1
   CALL JacobiGaussRadauQuadrature(a=left, n=order, alpha=alpha, beta=beta, &
     & pt=pt, wt=wt)
-CASE (GaussRadauRight)
+CASE (qp%GaussRadauRight)
   order = n - 1
   CALL JacobiGaussRadauQuadrature(a=right, n=order, alpha=alpha, beta=beta, &
     & pt=pt, wt=wt)
-CASE (GaussLobatto)
+CASE (qp%GaussLobatto)
   order = n - 2
   CALL JacobiGaussLobattoQuadrature(n=order, alpha=alpha, beta=beta, &
     & pt=pt, wt=wt)
@@ -1245,7 +1247,7 @@ DO jj = 0, n
 
 END DO
 
-IF (quadType .EQ. GaussLobatto) THEN
+IF (quadType .EQ. qp%GaussLobatto) THEN
 
   areal = 0.0_DFP
   jj = n
@@ -1299,7 +1301,7 @@ DO kk = 1, ncol
   END DO
 END DO
 
-IF (quadType .EQ. GaussLobatto) THEN
+IF (quadType .EQ. qp%GaussLobatto) THEN
 
   jj = n
 
@@ -1413,10 +1415,10 @@ END PROCEDURE JacobiGradientCoeff1
 
 MODULE PROCEDURE JacobiDMatrix1
 SELECT CASE (quadType)
-CASE (GaussLobatto)
+CASE (qp%GaussLobatto)
   CALL JacobiDMatrixGL(n=n, alpha=alpha, beta=beta, x=x, quadType=quadType,&
     & D=ans)
-CASE (Gauss)
+CASE (qp%Gauss)
   CALL JacobiDMatrixG(n=n, alpha=alpha, beta=beta, x=x, quadType=quadType, &
     &  D=ans)
 END SELECT
