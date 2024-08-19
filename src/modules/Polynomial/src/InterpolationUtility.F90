@@ -20,7 +20,9 @@ USE GlobalData, ONLY: I4B, DFP, REAL32, REAL64
 USE String_Class, ONLY: String
 
 IMPLICIT NONE
+
 PRIVATE
+
 PUBLIC :: VandermondeMatrix
 PUBLIC :: GetTotalInDOF
 PUBLIC :: GetTotalDOF
