@@ -54,6 +54,7 @@ PUBLIC :: LegendreGradientEval
 PUBLIC :: LegendreEvalSum
 PUBLIC :: LegendreGradientEvalSum
 PUBLIC :: LegendreTransform
+PUBLIC :: LegendreTransform_
 PUBLIC :: LegendreInvTransform
 PUBLIC :: LegendreGradientCoeff
 PUBLIC :: LegendreDMatrix
@@ -942,22 +943,58 @@ END INTERFACE LegendreGradientEvalSum
 
 INTERFACE LegendreTransform
   MODULE PURE FUNCTION LegendreTransform1(n, coeff, x, w, &
-    &  quadType) RESULT(ans)
+                                          quadType) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: n
     !! order of Legendre polynomials
+    !! n+1  coefficient (modal values)
     REAL(DFP), INTENT(IN) :: coeff(0:n)
-    !! nodal value (at quad points)
+    !! value of function at quadrature points
     REAL(DFP), INTENT(IN) :: x(0:n)
     !! quadrature points
+    !! These quadrature points are used in LegendreEvalAll method
     REAL(DFP), INTENT(IN) :: w(0:n)
     !! weights
     INTEGER(I4B), INTENT(IN) :: quadType
     !! Quadrature type, Gauss, GaussLobatto, GaussRadau, GaussRadauLeft
     !! GaussRadauRight
     REAL(DFP) :: ans(0:n)
-    !! modal values  or coefficients
+    !! modal values  or coefficients of Legendre polynomial
+    !! ans(0) is coefficient of P0
+    !! ans(1) is coefficient of P1
+    !! and so on
   END FUNCTION LegendreTransform1
 END INTERFACE LegendreTransform
+
+!----------------------------------------------------------------------------
+!                                                 LegendreTransform@Methods
+!----------------------------------------------------------------------------
+
+INTERFACE LegendreTransform_
+  MODULE PURE SUBROUTINE LegendreTransform1_(n, coeff, x, w, quadType, ans, &
+                                             tsize)
+    INTEGER(I4B), INTENT(IN) :: n
+    !! Order of Legendre polynomials
+    !! n+1  coefficient (modal values)
+    REAL(DFP), INTENT(IN) :: coeff(0:n)
+    !! Value of function at quadrature points
+    REAL(DFP), INTENT(IN) :: x(0:n)
+    !! Quadrature points
+    !! These quadrature points are used in LegendreEvalAll method
+    REAL(DFP), INTENT(IN) :: w(0:n)
+    !! Weights
+    INTEGER(I4B), INTENT(IN) :: quadType
+    !! Quadrature type, Gauss, GaussLobatto, GaussRadau, GaussRadauLeft
+    !! GaussRadauRight
+    REAL(DFP), INTENT(INOUT) :: ans(0:)
+    !! modal values  or coefficients of Legendre polynomial
+    !! ans(0) is coefficient of P0
+    !! ans(1) is coefficient of P1
+    !! and so on
+    ! REAL(DFP) :: ans(0:n)
+    INTEGER(I4B), INTENT(OUT) :: tsize
+    !! total size of ans
+  END SUBROUTINE LegendreTransform1_
+END INTERFACE LegendreTransform_
 
 !----------------------------------------------------------------------------
 !                                                   LegendreTransform
@@ -969,11 +1006,11 @@ END INTERFACE LegendreTransform
 
 INTERFACE LegendreTransform
   MODULE PURE FUNCTION LegendreTransform2(n, coeff, x, w, &
-    & quadType) RESULT(ans)
+                                          quadType) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: n
     !! order of polynomial
     REAL(DFP), INTENT(IN) :: coeff(0:, 1:)
-    !! nodal value (at quad points)
+    !! values of function at quadrature points
     REAL(DFP), INTENT(IN) :: x(0:n)
     !! quadrature points
     REAL(DFP), INTENT(IN) :: w(0:n)
@@ -985,6 +1022,32 @@ INTERFACE LegendreTransform
     !! modal values  or coefficients for each column of val
   END FUNCTION LegendreTransform2
 END INTERFACE LegendreTransform
+
+!----------------------------------------------------------------------------
+!                                                 LegendreTransform@Methods
+!----------------------------------------------------------------------------
+
+INTERFACE LegendreTransform_
+  MODULE PURE SUBROUTINE LegendreTransform2_(n, coeff, x, w, &
+                                             quadType, ans, nrow, ncol)
+    INTEGER(I4B), INTENT(IN) :: n
+    !! order of polynomial
+    REAL(DFP), INTENT(IN) :: coeff(0:, 1:)
+    !! values of function at quadrature points
+    REAL(DFP), INTENT(IN) :: x(0:n)
+    !! quadrature points
+    REAL(DFP), INTENT(IN) :: w(0:n)
+    !! weights
+    INTEGER(I4B), INTENT(IN) :: quadType
+    !! Quadrature type, Gauss, GaussLobatto, GaussRadau, GaussRadauLeft
+    !! GaussRadauRight
+    REAL(DFP), INTENT(INOUT) :: ans(0:, 1:)
+    !! modal values  or coefficients for each column of val
+    ! REAL(DFP) :: ans(0:n, 1:SIZE(coeff, 2))
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+    !! number of rows and columns writen in ans
+  END SUBROUTINE LegendreTransform2_
+END INTERFACE LegendreTransform_
 
 !----------------------------------------------------------------------------
 !                                                          LegendreTransform
@@ -1015,8 +1078,7 @@ END INTERFACE LegendreTransform
 !@endnote
 
 INTERFACE LegendreTransform
-  MODULE FUNCTION LegendreTransform3(n, f, quadType) &
-    & RESULT(ans)
+  MODULE FUNCTION LegendreTransform3(n, f, quadType, x1, x2) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: n
     !! order of jacobi polynomial
     PROCEDURE(iface_1DFunction), POINTER, INTENT(IN) :: f
@@ -1024,10 +1086,35 @@ INTERFACE LegendreTransform
     INTEGER(I4B), INTENT(IN) :: quadType
     !! Quadrature type, Gauss, GaussLobatto, GaussRadau, GaussRadauLeft
     !! GaussRadauRight
+    REAL(DFP), INTENT(IN) :: x1, x2
+    !! domain of function f
     REAL(DFP) :: ans(0:n)
     !! modal values  or coefficients
   END FUNCTION LegendreTransform3
 END INTERFACE LegendreTransform
+
+!----------------------------------------------------------------------------
+!                                                 LegendreTransform@Methods
+!----------------------------------------------------------------------------
+
+INTERFACE LegendreTransform_
+  MODULE SUBROUTINE LegendreTransform3_(n, f, quadType, x1, x2, ans, tsize)
+    INTEGER(I4B), INTENT(IN) :: n
+    !! order of jacobi polynomial
+    PROCEDURE(iface_1DFunction), POINTER, INTENT(IN) :: f
+    !! 1D space function
+    INTEGER(I4B), INTENT(IN) :: quadType
+    !! Quadrature type, Gauss, GaussLobatto, GaussRadau, GaussRadauLeft
+    !! GaussRadauRight
+    REAL(DFP), INTENT(IN) :: x1, x2
+    !! domain of function f
+    REAL(DFP), INTENT(INOUT) :: ans(0:)
+    !! modal values  or coefficients
+    !! ans(0:n)
+    INTEGER(I4B), INTENT(OUT) :: tsize
+    !! n+1
+  END SUBROUTINE LegendreTransform3_
+END INTERFACE LegendreTransform_
 
 !----------------------------------------------------------------------------
 !                                                       LegendreInvTransform
@@ -1039,7 +1126,7 @@ END INTERFACE LegendreTransform
 
 INTERFACE LegendreInvTransform
   MODULE PURE FUNCTION LegendreInvTransform1(n, coeff, x) &
-        & RESULT(ans)
+    RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: n
     !! order of Jacobi polynomial
     REAL(DFP), INTENT(IN) :: coeff(0:n)
@@ -1061,7 +1148,7 @@ END INTERFACE LegendreInvTransform
 
 INTERFACE LegendreInvTransform
   MODULE PURE FUNCTION LegendreInvTransform2(n, coeff, x) &
-        & RESULT(ans)
+    RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: n
     !! order of Jacobi polynomial
     REAL(DFP), INTENT(IN) :: coeff(0:n)
@@ -1089,7 +1176,7 @@ END INTERFACE LegendreInvTransform
 
 INTERFACE LegendreGradientCoeff
   MODULE PURE FUNCTION LegendreGradientCoeff1(n, coeff) &
-    & RESULT(ans)
+    RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: n
       !! order of Jacobi polynomial
     REAL(DFP), INTENT(IN) :: coeff(0:n)
@@ -1109,7 +1196,7 @@ END INTERFACE LegendreGradientCoeff
 
 INTERFACE LegendreDMatrix
   MODULE PURE FUNCTION LegendreDMatrix1(n, x, quadType) &
-    & RESULT(ans)
+    RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: n
       !! order of Legendre polynomial
     REAL(DFP), INTENT(IN) :: x(0:n)
