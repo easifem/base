@@ -16,7 +16,28 @@
 !
 
 SUBMODULE(UltrasphericalPolynomialUtility) Methods
-USE BaseMethod
+USE OrthogonalPolynomialUtility, ONLY: JacobiMatrix
+
+#ifdef USE_LAPACK95
+USE F95_Lapack, ONLY: STEV
+#endif
+
+USE ErrorHandling, ONLY: ErrorMsg
+
+USE MiscUtility, ONLY: Factorial
+
+USE BaseType, ONLY: qp => TypeQuadratureOpt
+
+USE GlobalData, ONLY: pi
+
+USE JacobiPolynomialUtility, ONLY: JacobiGaussQuadrature, &
+                                   JacobiGaussRadauQuadrature, &
+                                   JacobiGaussLobattoQuadrature, &
+                                   JacobiJacobiMatrix, &
+                                   JacobiJacobiRadauMatrix, &
+                                   JacobiJacobiLobattoMatrix, &
+                                   JacobiZeros
+
 IMPLICIT NONE
 CONTAINS
 
@@ -254,12 +275,12 @@ ELSE
 END IF
 !!
 SELECT CASE (QuadType)
-CASE (Gauss)
+CASE (qp%Gauss)
   !!
   order = n
   CALL UltrasphericalGaussQuadrature(n=order, lambda=lambda, pt=pt, wt=wt)
   !!
-CASE (GaussRadau, GaussRadauLeft)
+CASE (qp%GaussRadau, qp%GaussRadauLeft)
   !!
   IF (inside) THEN
     order = n
@@ -274,7 +295,7 @@ CASE (GaussRadau, GaussRadauLeft)
       & n=order, pt=pt, wt=wt)
   END IF
   !!
-CASE (GaussRadauRight)
+CASE (qp%GaussRadauRight)
   !!
   IF (inside) THEN
     order = n
@@ -288,7 +309,7 @@ CASE (GaussRadauRight)
       & n=order, pt=pt, wt=wt)
   END IF
   !!
-CASE (GaussLobatto)
+CASE (qp%GaussLobatto)
   !!
   IF (inside) THEN
     order = n
@@ -548,7 +569,7 @@ DO ii = 2, n
 
 p(1:nrow, ii + 1) = ((r_ii + lambda - 1.0_DFP) * 2.0_DFP * x * p(1:nrow, ii) &
                 & - (2.0_DFP * lambda + r_ii - 2.0_DFP) * p(1:nrow, ii - 1)) &
-                                & / r_ii
+                                                                      & / r_ii
 
   ans(1:nrow, ii + 1) = 2.0_DFP * (r_ii + lambda - 1.0_DFP) * p(1:nrow, ii) &
                   & + ans(1:nrow, ii - 1)
@@ -839,80 +860,140 @@ END PROCEDURE UltrasphericalGradientEvalSum4
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE UltrasphericalTransform1
-REAL(DFP), DIMENSION(0:n) :: nrmsqr, temp
-REAL(DFP), DIMENSION(0:n, 0:n) :: PP
-INTEGER(I4B) :: jj
-REAL(DFP) :: rn
-!!
-nrmsqr = UltrasphericalNormSQR2(n=n, lambda=lambda)
-!!
-!! Correct nrmsqr(n)
-!!
-rn = REAL(n, KIND=DFP)
-!!
-IF (quadType .EQ. GaussLobatto) THEN
-  nrmsqr(n) = 2.0_DFP * (rn + lambda) / rn * nrmsqr(n)
-END IF
-!!
-PP = UltrasphericalEvalAll(n=n, lambda=lambda, x=x)
-!!
-DO jj = 0, n
-  temp = PP(:, jj) * w * coeff
-  ans(jj) = SUM(temp) / nrmsqr(jj)
-END DO
-!!
+INTEGER(I4B) :: tsize
+CALL UltrasphericalTransform1_(n, lambda, coeff, x, w, quadType, ans, tsize)
 END PROCEDURE UltrasphericalTransform1
+
+!----------------------------------------------------------------------------
+!                                                   UltrasphericalTransform
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE UltrasphericalTransform1_
+REAL(DFP), DIMENSION(0:n, 0:n) :: PP
+REAL(DFP) :: nrmsqr, areal, rn
+INTEGER(I4B) :: jj, ii
+
+tsize = n + 1
+
+CALL UltrasphericalEvalAll_(n=n, lambda=lambda, x=x, ans=PP, nrow=ii, ncol=jj)
+
+DO jj = 0, n
+  areal = 0.0_DFP
+
+  DO ii = 0, n
+    areal = areal + PP(ii, jj) * w(ii) * coeff(ii)
+  END DO
+
+  nrmsqr = UltrasphericalNormSQR(n=jj, lambda=lambda)
+  ans(jj) = areal / nrmsqr
+
+END DO
+
+IF (quadType .EQ. qp%GaussLobatto) THEN
+
+  areal = 0.0_DFP
+  jj = n
+  DO ii = 0, n
+    areal = areal + PP(ii, jj) * w(ii) * coeff(ii)
+  END DO
+
+  rn = REAL(n, KIND=DFP)
+  nrmsqr = 2.0_DFP * (rn + lambda) / rn * nrmsqr
+
+  ans(jj) = areal / nrmsqr
+
+END IF
+
+END PROCEDURE UltrasphericalTransform1_
 
 !----------------------------------------------------------------------------
 !                                                    UltrasphericalTransform
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE UltrasphericalTransform2
-REAL(DFP), DIMENSION(0:n) :: nrmsqr, temp
+INTEGER(I4B) :: nrow, ncol
+CALL UltrasphericalTransform2_(n, lambda, coeff, x, w, quadType, ans, nrow, &
+                               ncol)
+END PROCEDURE UltrasphericalTransform2
+
+!----------------------------------------------------------------------------
+!                                                   UltrasphericalTransform
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE UltrasphericalTransform2_
 REAL(DFP), DIMENSION(0:n, 0:n) :: PP
-INTEGER(I4B) :: jj, kk
-REAL(DFP) :: rn
-!!
-nrmsqr = UltrasphericalNormSQR2(n=n, lambda=lambda)
-!!
-!! Correct nrmsqr(n)
-!!
-rn = REAL(n, KIND=DFP)
-!!
-IF (quadType .EQ. GaussLobatto) THEN
-  nrmsqr(n) = 2.0_DFP * (rn + lambda) / rn * nrmsqr(n)
-END IF
-!!
-PP = UltrasphericalEvalAll(n=n, lambda=lambda, x=x)
-!!
-DO kk = 1, SIZE(coeff, 2)
+REAL(DFP) :: nrmsqr, areal, rn
+INTEGER(I4B) :: jj, ii, kk
+
+nrow = n + 1
+ncol = SIZE(coeff, 2)
+
+CALL UltrasphericalEvalAll_(n=n, lambda=lambda, x=x, ans=PP, nrow=ii, ncol=jj)
+
+DO kk = 1, ncol
   DO jj = 0, n
-    temp = PP(:, jj) * w * coeff(:, kk)
-    ans(jj, kk) = SUM(temp) / nrmsqr(jj)
+    areal = 0.0_DFP
+
+    DO ii = 0, n
+      areal = areal + PP(ii, jj) * w(ii) * coeff(ii, kk)
+    END DO
+
+    nrmsqr = UltrasphericalNormSQR(n=jj, lambda=lambda)
+    ans(jj, kk) = areal / nrmsqr
+
   END DO
 END DO
-!!
-END PROCEDURE UltrasphericalTransform2
+
+IF (quadType .EQ. qp%GaussLobatto) THEN
+  jj = n
+  rn = REAL(n, KIND=DFP)
+  nrmsqr = 2.0_DFP * (rn + lambda) / rn * nrmsqr
+
+  DO kk = 1, ncol
+    areal = 0.0_DFP
+    DO ii = 0, n
+      areal = areal + PP(ii, jj) * w(ii) * coeff(ii, kk)
+    END DO
+
+    ans(jj, kk) = areal / nrmsqr
+  END DO
+
+END IF
+
+END PROCEDURE UltrasphericalTransform2_
 
 !----------------------------------------------------------------------------
 !                                                    UltrasphericalTransform
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE UltrasphericalTransform3
-REAL(DFP) :: pt(0:n), wt(0:n), coeff(0:n)
+INTEGER(I4B) :: tsize
+CALL UltrasphericalTransform3_(n=n, lambda=lambda, x1=x1, x2=x2, f=f, &
+                               ans=ans, tsize=tsize, quadType=quadType)
+END PROCEDURE UltrasphericalTransform3
+
+!----------------------------------------------------------------------------
+!                                                   UltrasphericalTransform
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE UltrasphericalTransform3_
+REAL(DFP) :: pt(0:n), wt(0:n), coeff(0:n), x
+REAL(DFP), PARAMETER :: one = 1.0_DFP, half = 0.5_DFP
 INTEGER(I4B) :: ii
 
-CALL UltrasphericalQuadrature(n=n + 1, lambda=lambda, pt=pt, wt=wt,&
-  & quadType=quadType)
+CALL UltrasphericalQuadrature(n=n + 1, lambda=lambda, pt=pt, wt=wt, &
+                              quadType=quadType)
 
 DO ii = 0, n
-  coeff(ii) = f(pt(ii))
+  x = (one - pt(ii)) * x1 + (one + pt(ii)) * x2
+  x = x * half
+  coeff(ii) = f(x)
 END DO
 
-ans = UltrasphericalTransform(n=n, lambda=lambda, coeff=coeff, x=pt, &
-  & w=wt, quadType=quadType)
+CALL UltrasphericalTransform_(n=n, lambda=lambda, coeff=coeff, x=pt, &
+                              w=wt, quadType=quadType, ans=ans, tsize=tsize)
 
-END PROCEDURE UltrasphericalTransform3
+END PROCEDURE UltrasphericalTransform3_
 
 !----------------------------------------------------------------------------
 !                                                UltrasphericalInvTransform
@@ -962,12 +1043,10 @@ END PROCEDURE UltrasphericalGradientCoeff1
 
 MODULE PROCEDURE UltrasphericalDMatrix1
 SELECT CASE (quadType)
-CASE (GaussLobatto)
-  CALL UltrasphericalDMatrixGL2(n=n, lambda=lambda, x=x,&
-    & D=ans)
-CASE (Gauss)
-  CALL UltrasphericalDMatrixG2(n=n, lambda=lambda, x=x, &
-    &  D=ans)
+CASE (qp%GaussLobatto)
+  CALL UltrasphericalDMatrixGL2(n=n, lambda=lambda, x=x, D=ans)
+CASE (qp%Gauss)
+  CALL UltrasphericalDMatrixG2(n=n, lambda=lambda, x=x, D=ans)
 END SELECT
 END PROCEDURE UltrasphericalDMatrix1
 

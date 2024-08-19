@@ -22,9 +22,12 @@
 !{!pages/UltrasphericalPolynomialUtility.md!}
 
 MODULE UltrasphericalPolynomialUtility
-USE GlobalData
+USE GlobalData, ONLY: DFP, I4B, LGT
+
 USE BaseType, ONLY: iface_1DFunction
+
 IMPLICIT NONE
+
 PRIVATE
 PUBLIC :: UltrasphericalAlpha
 PUBLIC :: UltrasphericalBeta
@@ -52,6 +55,7 @@ PUBLIC :: UltrasphericalGradientEval
 PUBLIC :: UltrasphericalEvalSum
 PUBLIC :: UltrasphericalGradientEvalSum
 PUBLIC :: UltrasphericalTransform
+PUBLIC :: UltrasphericalTransform_
 PUBLIC :: UltrasphericalInvTransform
 PUBLIC :: UltrasphericalGradientCoeff
 PUBLIC :: UltrasphericalDMatrix
@@ -456,7 +460,7 @@ END INTERFACE
 ! the point
 ! X.
 
-INTERFACE
+INTERFACE UltrasphericalEval
   MODULE PURE FUNCTION UltrasphericalEval1(n, lambda, x) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: n
     !! order of polynomial
@@ -466,10 +470,6 @@ INTERFACE
     REAL(DFP) :: ans
     !! Evaluate Ultraspherical polynomial of order n at point x
   END FUNCTION UltrasphericalEval1
-END INTERFACE
-
-INTERFACE UltrasphericalEval
-  MODULE PROCEDURE UltrasphericalEval1
 END INTERFACE UltrasphericalEval
 
 !----------------------------------------------------------------------------
@@ -493,7 +493,7 @@ END INTERFACE UltrasphericalEval
 ! the point
 ! X.
 
-INTERFACE
+INTERFACE UltrasphericalEval
   MODULE PURE FUNCTION UltrasphericalEval2(n, lambda, x) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: n
     !! order of polynomial
@@ -503,10 +503,6 @@ INTERFACE
     REAL(DFP) :: ans(SIZE(x))
     !! Evaluate Ultraspherical polynomial of order n at point x
   END FUNCTION UltrasphericalEval2
-END INTERFACE
-
-INTERFACE UltrasphericalEval
-  MODULE PROCEDURE UltrasphericalEval2
 END INTERFACE UltrasphericalEval
 
 !----------------------------------------------------------------------------
@@ -762,7 +758,7 @@ END INTERFACE UltrasphericalGradientEvalAll_
 !
 ! Evaluate gradient of Ultraspherical polynomial of order upto n.
 
-INTERFACE
+INTERFACE UltrasphericalGradientEval
   MODULE PURE FUNCTION UltrasphericalGradientEval1(n, lambda, x) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: n
     !! order of polynomial
@@ -771,11 +767,6 @@ INTERFACE
     REAL(DFP), INTENT(IN) :: x
     REAL(DFP) :: ans
   END FUNCTION UltrasphericalGradientEval1
-END INTERFACE
-!!
-
-INTERFACE UltrasphericalGradientEval
-  MODULE PROCEDURE UltrasphericalGradientEval1
 END INTERFACE UltrasphericalGradientEval
 
 !----------------------------------------------------------------------------
@@ -790,7 +781,7 @@ END INTERFACE UltrasphericalGradientEval
 !
 ! Evaluate gradient of Ultraspherical polynomial of order upto n.
 
-INTERFACE
+INTERFACE UltrasphericalGradientEval
   MODULE PURE FUNCTION UltrasphericalGradientEval2(n, lambda, x) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: n
     !! order of polynomial
@@ -799,10 +790,6 @@ INTERFACE
     REAL(DFP), INTENT(IN) :: x(:)
     REAL(DFP) :: ans(1:SIZE(x))
   END FUNCTION UltrasphericalGradientEval2
-END INTERFACE
-
-INTERFACE UltrasphericalGradientEval
-  MODULE PROCEDURE UltrasphericalGradientEval2
 END INTERFACE UltrasphericalGradientEval
 
 !----------------------------------------------------------------------------
@@ -813,7 +800,7 @@ END INTERFACE UltrasphericalGradientEval
 ! date: 6 Sept 2022
 ! summary: Evaluate finite sum of Ultraspherical polynomials at point x
 
-INTERFACE
+INTERFACE UltrasphericalEvalSum
   MODULE PURE FUNCTION UltrasphericalEvalSum1(n, lambda, x, coeff) &
     & RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: n
@@ -827,10 +814,6 @@ INTERFACE
     REAL(DFP) :: ans
     !! Evaluate Ultraspherical polynomial of order n at point x
   END FUNCTION UltrasphericalEvalSum1
-END INTERFACE
-
-INTERFACE UltrasphericalEvalSum
-  MODULE PROCEDURE UltrasphericalEvalSum1
 END INTERFACE UltrasphericalEvalSum
 
 !----------------------------------------------------------------------------
@@ -841,7 +824,7 @@ END INTERFACE UltrasphericalEvalSum
 ! date: 6 Sept 2022
 ! summary: Evaluate finite sum of Ultraspherical polynomials at several x
 
-INTERFACE
+INTERFACE UltrasphericalEvalSum
   MODULE PURE FUNCTION UltrasphericalEvalSum2(n, lambda, x, coeff) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: n
     !! order of polynomial
@@ -854,10 +837,6 @@ INTERFACE
     REAL(DFP) :: ans(SIZE(x))
     !! Evaluate Ultraspherical polynomial of order n at point x
   END FUNCTION UltrasphericalEvalSum2
-END INTERFACE
-
-INTERFACE UltrasphericalEvalSum
-  MODULE PROCEDURE UltrasphericalEvalSum2
 END INTERFACE UltrasphericalEvalSum
 
 !----------------------------------------------------------------------------
@@ -869,7 +848,7 @@ END INTERFACE UltrasphericalEvalSum
 ! summary: Evaluate the gradient of finite sum of Ultraspherical polynomials
 ! at point x
 
-INTERFACE
+INTERFACE UltrasphericalGradientEvalSum
   MODULE PURE FUNCTION UltrasphericalGradientEvalSum1(n, lambda, x, &
     &  coeff) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: n
@@ -883,10 +862,6 @@ INTERFACE
     REAL(DFP) :: ans
     !! Evaluate Ultraspherical polynomial of order n at point x
   END FUNCTION UltrasphericalGradientEvalSum1
-END INTERFACE
-
-INTERFACE UltrasphericalGradientEvalSum
-  MODULE PROCEDURE UltrasphericalGradientEvalSum1
 END INTERFACE UltrasphericalGradientEvalSum
 
 !----------------------------------------------------------------------------
@@ -898,7 +873,7 @@ END INTERFACE UltrasphericalGradientEvalSum
 ! summary: Evaluate the gradient of finite sum of Ultraspherical polynomials
 ! at several x
 
-INTERFACE
+INTERFACE UltrasphericalGradientEvalSum
   MODULE PURE FUNCTION UltrasphericalGradientEvalSum2(n, lambda, x, coeff) &
     & RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: n
@@ -912,10 +887,6 @@ INTERFACE
     REAL(DFP) :: ans(SIZE(x))
     !! Evaluate Ultraspherical polynomial of order n at point x
   END FUNCTION UltrasphericalGradientEvalSum2
-END INTERFACE
-
-INTERFACE UltrasphericalGradientEvalSum
-  MODULE PROCEDURE UltrasphericalGradientEvalSum2
 END INTERFACE UltrasphericalGradientEvalSum
 
 !----------------------------------------------------------------------------
@@ -927,7 +898,7 @@ END INTERFACE UltrasphericalGradientEvalSum
 ! summary: Evaluate the kth derivative of finite sum of Ultraspherical
 ! polynomials at point x
 
-INTERFACE
+INTERFACE UltrasphericalGradientEvalSum
   MODULE PURE FUNCTION UltrasphericalGradientEvalSum3(n, lambda, x, &
     & coeff, k) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: n
@@ -943,10 +914,6 @@ INTERFACE
     REAL(DFP) :: ans
     !! Evaluate Ultraspherical polynomial of order n at point x
   END FUNCTION UltrasphericalGradientEvalSum3
-END INTERFACE
-
-INTERFACE UltrasphericalGradientEvalSum
-  MODULE PROCEDURE UltrasphericalGradientEvalSum3
 END INTERFACE UltrasphericalGradientEvalSum
 
 !----------------------------------------------------------------------------
@@ -958,7 +925,7 @@ END INTERFACE UltrasphericalGradientEvalSum
 ! summary: Evaluate the kth gradient of finite sum of Ultraspherical
 !  polynomials at several x
 
-INTERFACE
+INTERFACE UltrasphericalGradientEvalSum
   MODULE PURE FUNCTION UltrasphericalGradientEvalSum4(n, lambda, x, &
     &  coeff, k) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: n
@@ -974,10 +941,6 @@ INTERFACE
     REAL(DFP) :: ans(SIZE(x))
     !! Evaluate Ultraspherical polynomial of order n at point x
   END FUNCTION UltrasphericalGradientEvalSum4
-END INTERFACE
-
-INTERFACE UltrasphericalGradientEvalSum
-  MODULE PROCEDURE UltrasphericalGradientEvalSum4
 END INTERFACE UltrasphericalGradientEvalSum
 
 !----------------------------------------------------------------------------
@@ -988,7 +951,7 @@ END INTERFACE UltrasphericalGradientEvalSum
 ! date: 13 Oct 2022
 ! summary: Discrete Ultraspherical Transform
 
-INTERFACE
+INTERFACE UltrasphericalTransform
   MODULE PURE FUNCTION UltrasphericalTransform1(n, lambda, coeff, x, w, &
     &  quadType) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: n
@@ -1007,11 +970,40 @@ INTERFACE
     REAL(DFP) :: ans(0:n)
     !! modal values  or coefficients
   END FUNCTION UltrasphericalTransform1
-END INTERFACE
-
-INTERFACE UltrasphericalTransform
-  MODULE PROCEDURE UltrasphericalTransform1
 END INTERFACE UltrasphericalTransform
+
+!----------------------------------------------------------------------------
+!                                                   UltrasphericalTransform
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2024-08-19
+! summary:  Ultraspherical transform
+
+INTERFACE UltrasphericalTransform_
+  MODULE PURE SUBROUTINE UltrasphericalTransform1_(n, lambda, coeff, x, w, &
+                                                   quadType, ans, tsize)
+    INTEGER(I4B), INTENT(IN) :: n
+    !! order of jacobi polynomial
+    REAL(DFP), INTENT(IN) :: lambda
+    !! $\lambda > -0.5, \lambda \ne 0.0$
+    REAL(DFP), INTENT(IN) :: coeff(0:n)
+    !! nodal value (at quad points)
+    REAL(DFP), INTENT(IN) :: x(0:n)
+    !! quadrature points
+    REAL(DFP), INTENT(IN) :: w(0:n)
+    !! weights
+    INTEGER(I4B), INTENT(IN) :: quadType
+    !! Quadrature type, Gauss, GaussLobatto, GaussRadau, GaussRadauLeft
+    !! GaussRadauRight
+    REAL(DFP), INTENT(INOUT) :: ans(0:)
+    !! ans(0:n)
+    !! modal values  or coefficients
+    INTEGER(I4B), INTENT(OUT) :: tsize
+    !! size of ans
+    !! n + 1
+  END SUBROUTINE UltrasphericalTransform1_
+END INTERFACE UltrasphericalTransform_
 
 !----------------------------------------------------------------------------
 !                                                   UltrasphericalTransform
@@ -1021,7 +1013,7 @@ END INTERFACE UltrasphericalTransform
 ! date: 13 Oct 2022
 ! summary: Columnwise Discrete Ultraspherical Transform
 
-INTERFACE
+INTERFACE UltrasphericalTransform
   MODULE PURE FUNCTION UltrasphericalTransform2(n, lambda, coeff, x, w, &
     & quadType) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: n
@@ -1040,11 +1032,35 @@ INTERFACE
     REAL(DFP) :: ans(0:n, 1:SIZE(coeff, 2))
     !! modal values  or coefficients for each column of val
   END FUNCTION UltrasphericalTransform2
-END INTERFACE
-
-INTERFACE UltrasphericalTransform
-  MODULE PROCEDURE UltrasphericalTransform2
 END INTERFACE UltrasphericalTransform
+
+!----------------------------------------------------------------------------
+!                                                    UltrasphericalTransform
+!----------------------------------------------------------------------------
+
+INTERFACE UltrasphericalTransform_
+  MODULE PURE SUBROUTINE UltrasphericalTransform2_(n, lambda, coeff, x, w, &
+                                                   quadType, ans, nrow, ncol)
+    INTEGER(I4B), INTENT(IN) :: n
+    !! order of polynomial
+    REAL(DFP), INTENT(IN) :: lambda
+    !! $\lambda > -0.5, \lambda \ne 0.0$
+    REAL(DFP), INTENT(IN) :: coeff(0:, 1:)
+    !! nodal value (at quad points)
+    REAL(DFP), INTENT(IN) :: x(0:n)
+    !! quadrature points
+    REAL(DFP), INTENT(IN) :: w(0:n)
+    !! weights
+    INTEGER(I4B), INTENT(IN) :: quadType
+    !! Quadrature type, Gauss, GaussLobatto, GaussRadau, GaussRadauLeft
+    !! GaussRadauRight
+    REAL(DFP), INTENT(INOUT) :: ans(0:, 1:)
+    !! ans(0:n, 1:SIZE(coeff, 2))
+    !! modal values  or coefficients for each column of val
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+    !! n+1, size(coeff, 2)
+  END SUBROUTINE UltrasphericalTransform2_
+END INTERFACE UltrasphericalTransform_
 
 !----------------------------------------------------------------------------
 !                                                   UltrasphericalTransform
@@ -1074,9 +1090,9 @@ END INTERFACE UltrasphericalTransform
 !  `UltrasphericalQuadrature` which is not pure due to Lapack call.
 !@endnote
 
-INTERFACE
-  MODULE FUNCTION UltrasphericalTransform3(n, lambda, f, quadType) &
-    & RESULT(ans)
+INTERFACE UltrasphericalTransform
+  MODULE FUNCTION UltrasphericalTransform3(n, lambda, f, quadType, x1, x2) &
+    RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: n
     !! order of jacobi polynomial
     REAL(DFP), INTENT(IN) :: lambda
@@ -1086,14 +1102,36 @@ INTERFACE
     INTEGER(I4B), INTENT(IN) :: quadType
     !! Quadrature type, Gauss, GaussLobatto, GaussRadau, GaussRadauLeft
     !! GaussRadauRight
+    REAL(DFP), INTENT(IN) :: x1, x2
     REAL(DFP) :: ans(0:n)
     !! modal values  or coefficients
   END FUNCTION UltrasphericalTransform3
-END INTERFACE
-
-INTERFACE UltrasphericalTransform
-  MODULE PROCEDURE UltrasphericalTransform3
 END INTERFACE UltrasphericalTransform
+
+!----------------------------------------------------------------------------
+!                                                    UltrasphericalTransform
+!----------------------------------------------------------------------------
+
+INTERFACE UltrasphericalTransform_
+  MODULE SUBROUTINE UltrasphericalTransform3_(n, lambda, f, quadType, &
+                                              x1, x2, ans, tsize)
+    INTEGER(I4B), INTENT(IN) :: n
+    !! order of jacobi polynomial
+    REAL(DFP), INTENT(IN) :: lambda
+    !! $\lambda > -0.5, \lambda \ne 0.0$
+    PROCEDURE(iface_1DFunction), POINTER, INTENT(IN) :: f
+    !! 1D space function
+    INTEGER(I4B), INTENT(IN) :: quadType
+    !! Quadrature type, Gauss, GaussLobatto, GaussRadau, GaussRadauLeft
+    !! GaussRadauRight
+    REAL(DFP), INTENT(IN) :: x1, x2
+    !! domain of function f
+    REAL(DFP), INTENT(INOUT) :: ans(0:)
+    !! ans(0:n)
+    !! modal values  or coefficients
+    INTEGER(I4B), INTENT(OUT) :: tsize
+  END SUBROUTINE UltrasphericalTransform3_
+END INTERFACE UltrasphericalTransform_
 
 !----------------------------------------------------------------------------
 !                                                 UltrasphericalInvTransform
