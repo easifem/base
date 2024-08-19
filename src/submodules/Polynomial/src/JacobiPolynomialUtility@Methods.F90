@@ -16,7 +16,16 @@
 !
 
 SUBMODULE(JacobiPolynomialUtility) Methods
-USE BaseMethod
+USE OrthogonalPolynomialUtility, ONLY: JacobiMatrix
+
+#ifdef USE_LAPACK95
+USE F95_Lapack, ONLY: STEV
+#endif
+
+USE ErrorHandling, ONLY: ErrorMsg
+
+USE MiscUtility, ONLY: Factorial
+
 IMPLICIT NONE
 CONTAINS
 

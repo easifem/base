@@ -22,10 +22,14 @@
 !{!pages/LegendrePolynomialUtility.md!}
 
 MODULE LegendrePolynomialUtility
-USE GlobalData
+USE GlobalData, ONLY: DFP, I4B, LGT
+
 USE BaseType, ONLY: iface_1DFunction
+
 IMPLICIT NONE
+
 PRIVATE
+
 PUBLIC :: LegendreAlpha
 PUBLIC :: LegendreBeta
 PUBLIC :: GetLegendreRecurrenceCoeff

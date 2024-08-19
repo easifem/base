@@ -22,7 +22,8 @@
 !{!pages/JacobiPolynomialUtility.md!}
 
 MODULE JacobiPolynomialUtility
-USE GlobalData
+USE GlobalData, ONLY: DFP, I4B, LGT
+
 USE BaseType, ONLY: iface_1DFunction
 
 IMPLICIT NONE
