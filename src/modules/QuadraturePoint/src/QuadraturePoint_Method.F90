@@ -19,8 +19,8 @@
 ! summary: This module contains the methods for data type [[QuadraturePoint_]]
 
 MODULE QuadraturePoint_Method
-USE BaseType
-USE GlobalData
+USE BaseType, ONLY: QuadraturePoint_, ReferenceElement_
+USE GlobalData, ONLY: DFP, I4B, LGT
 USE String_Class, ONLY: String
 
 IMPLICIT NONE
@@ -41,6 +41,7 @@ PUBLIC :: Outerprod
 PUBLIC :: Display
 ! PUBLIC :: QuadraturePoint_MdEncode
 PUBLIC :: QuadraturePointIdToName
+PUBLIC :: QuadraturePoint_ToChar
 PUBLIC :: QuadraturePointNameToId
 PUBLIC :: MdEncode
 
@@ -72,6 +73,17 @@ INTERFACE
     INTEGER(I4B), INTENT(IN) :: name
     TYPE(String) :: ans
   END FUNCTION QuadraturePointIdToName
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                  QuadraturePoint_ToChar@ConstructorMethods
+!----------------------------------------------------------------------------
+
+INTERFACE
+  MODULE FUNCTION QuadraturePoint_ToChar(name) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: name
+    TYPE(String) :: ans
+  END FUNCTION QuadraturePoint_ToChar
 END INTERFACE
 
 !----------------------------------------------------------------------------
