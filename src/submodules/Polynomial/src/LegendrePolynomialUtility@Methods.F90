@@ -31,6 +31,8 @@ USE ErrorHandling, ONLY: ErrorMsg
 
 USE MiscUtility, ONLY: Factorial
 
+USE BaseType, ONLY: qp => TypeQuadratureOpt
+
 IMPLICIT NONE
 
 CONTAINS
@@ -340,12 +342,12 @@ ELSE
 END IF
 !!
 SELECT CASE (QuadType)
-CASE (Gauss)
+CASE (qp%Gauss)
   !!
   order = n
   CALL LegendreGaussQuadrature(n=order, pt=pt, wt=wt)
   !!
-CASE (GaussRadau, GaussRadauLeft)
+CASE (qp%GaussRadau, qp%GaussRadauLeft)
   !!
   IF (inside) THEN
     order = n
@@ -358,7 +360,7 @@ CASE (GaussRadau, GaussRadauLeft)
     CALL LegendreGaussRadauQuadrature(a=left, n=order, pt=pt, wt=wt)
   END IF
   !!
-CASE (GaussRadauRight)
+CASE (qp%GaussRadauRight)
   !!
   IF (inside) THEN
     order = n
@@ -370,7 +372,7 @@ CASE (GaussRadauRight)
     CALL LegendreGaussRadauQuadrature(a=right, n=order, pt=pt, wt=wt)
   END IF
   !!
-CASE (GaussLobatto)
+CASE (qp%GaussLobatto)
   !!
   IF (inside) THEN
     order = n
@@ -968,7 +970,7 @@ DO jj = 0, n
   ans(jj) = areal / nrmsqr
 END DO
 
-IF (quadType .EQ. GaussLobatto) THEN
+IF (quadType .EQ. qp%GaussLobatto) THEN
   areal = 0.0_DFP
   jj = n
   DO ii = 0, n
@@ -1020,7 +1022,7 @@ DO kk = 1, ncol
   END DO
 END DO
 
-IF (quadType .EQ. GaussLobatto) THEN
+IF (quadType .EQ. qp%GaussLobatto) THEN
 
   jj = n
   nrmsqr = 2.0_DFP / REAL(n, KIND=DFP)
@@ -1099,9 +1101,9 @@ END PROCEDURE LegendreGradientCoeff1
 
 MODULE PROCEDURE LegendreDMatrix1
 SELECT CASE (quadType)
-CASE (GaussLobatto)
+CASE (qp%GaussLobatto)
   CALL LegendreDMatrixGL2(n=n, x=x, D=ans)
-CASE (Gauss)
+CASE (qp%Gauss)
   CALL LegendreDMatrixG2(n=n, x=x, D=ans)
 END SELECT
 END PROCEDURE LegendreDMatrix1
