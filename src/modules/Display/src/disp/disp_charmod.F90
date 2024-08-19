@@ -11,7 +11,7 @@
 
 MODULE DISP_CHARMOD
 USE DISPMODULE_UTIL
-USE GlobalData, ONLY: Real32
+USE GlobalData, ONLY: REAL32
 PRIVATE
 PUBLIC DISP
 
@@ -27,59 +27,59 @@ CONTAINS
 
 subroutine disp_v_dchr(x, fmt, advance, lbound, sep, style, trim, unit, orient)
   ! Default character vector without title
-  character(*), intent(in), optional :: fmt, advance, sep, style, trim, orient
-  character(*), intent(in) :: x(:)
-  integer, intent(in), optional :: unit, lbound(:)
-  call disp_tv_dchr('', x, fmt, advance, lbound, sep, style, trim, unit, orient)
-end subroutine disp_v_dchr
+  CHARACTER(*), INTENT(in), OPTIONAL :: fmt, advance, sep, style, trim, orient
+  CHARACTER(*), INTENT(in) :: x(:)
+  INTEGER, INTENT(in), OPTIONAL :: unit, LBOUND(:)
+CALL disp_tv_dchr('', x, fmt, advance, lbound, sep, style, trim, unit, orient)
+END SUBROUTINE disp_v_dchr
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
-subroutine disp_m_dchr(x, fmt, advance, lbound, sep, style, trim, unit)
+SUBROUTINE disp_m_dchr(x, fmt, advance, lbound, sep, style, trim, unit)
   ! Default character matrix without title
-  character(*), intent(in), optional :: fmt, advance, sep, style, trim
-  character(*), intent(in) :: x(:,:)
-  integer, intent(in), optional :: unit, lbound(:)
-  call disp_tm_dchr('', x, fmt, advance, lbound, sep, style, trim, unit)
-end subroutine disp_m_dchr
+  CHARACTER(*), INTENT(in), OPTIONAL :: fmt, advance, sep, style, trim
+  CHARACTER(*), INTENT(in) :: x(:, :)
+  INTEGER, INTENT(in), OPTIONAL :: unit, LBOUND(:)
+  CALL disp_tm_dchr('', x, fmt, advance, lbound, sep, style, trim, unit)
+END SUBROUTINE disp_m_dchr
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
-subroutine disp_ts_dchr(title, x, fmt, advance, sep, style, trim, unit)
+SUBROUTINE disp_ts_dchr(title, x, fmt, advance, sep, style, trim, unit)
   ! Default character scalar with title
-  character(*), intent(in), optional :: title, x, fmt, advance, sep, style, trim
-  character(0) empty(1,0)
-  integer, intent(in), optional :: unit
+CHARACTER(*), INTENT(in), OPTIONAL :: title, x, fmt, advance, sep, style, trim
+  CHARACTER(0) empty(1, 0)
+  INTEGER, INTENT(in), OPTIONAL :: unit
   empty = ''
-  if (present(title).and.present(x)) then
+  IF (PRESENT(title) .AND. PRESENT(x)) THEN
     call disp_nonopt_dchr(title, x, fmt, advance, sep=sep, style=style, trim=trim, unit=unit)
-  elseif (present(x)) then
+  ELSEIF (PRESENT(x)) THEN
     call disp_nonopt_dchr('', x, fmt, advance, sep=sep, style='left', trim=trim, unit=unit)
-  elseif (present(title)) then
+  ELSEIF (PRESENT(title)) THEN
     call disp_nonopt_dchr('', title, fmt, advance, sep=sep, style='left', trim=trim, unit=unit)
-  else
+  ELSE
     call disp_tm_dchr('', empty, fmt, advance, sep=sep, style=style, trim=trim, unit=unit)
-  end if
-end subroutine disp_ts_dchr
+  END IF
+END SUBROUTINE disp_ts_dchr
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
-subroutine disp_nonopt_dchr(title, x, fmt, advance, sep, style, trim, unit)
+SUBROUTINE disp_nonopt_dchr(title, x, fmt, advance, sep, style, trim, unit)
   ! This routine exists to circumvent bug in gfortran, that made it not possible to change scalar strings
   ! to matrices with reshape in calls of disp_tm_dchr. This intermediate routine provides work-around.
-  character(*), intent(in) :: title, x, fmt, advance, sep, style, trim
-  optional fmt, advance, sep, style, trim
-  integer, intent(in), optional :: unit
-  character(len(x)) :: xm(1,1)
-  xm(1,1) = x
+  CHARACTER(*), INTENT(in) :: title, x, fmt, advance, sep, style, trim
+  OPTIONAL fmt, advance, sep, style, trim
+  INTEGER, INTENT(in), OPTIONAL :: unit
+  CHARACTER(LEN(x)) :: xm(1, 1)
+  xm(1, 1) = x
   call disp_tm_dchr(title, xm, fmt, advance, sep=sep, style=style, trim=trim, unit=unit)
-end subroutine disp_nonopt_dchr
+END SUBROUTINE disp_nonopt_dchr
 
 !----------------------------------------------------------------------------
 !
@@ -87,17 +87,17 @@ end subroutine disp_nonopt_dchr
 
 subroutine disp_tv_dchr(title, x, fmt, advance, lbound, sep, style, trim, unit, orient)
   ! Default character vector with title
-  character(*), intent(in) :: title, x(:)
-  character(*), intent(in), optional :: fmt, advance, sep, style, trim, orient
-  integer, intent(in), optional :: unit, lbound(:)
-  type(settings) :: SE
+  CHARACTER(*), INTENT(in) :: title, x(:)
+  CHARACTER(*), INTENT(in), OPTIONAL :: fmt, advance, sep, style, trim, orient
+  INTEGER, INTENT(in), OPTIONAL :: unit, LBOUND(:)
+  TYPE(settings) :: SE
   call get_SE(SE, title, shape(x), fmt, advance, lbound, sep, style, trim, unit, orient)
-  if (SE%row) then
-    call disp_dchr(title, reshape(x, (/1, size(x)/)), SE)
-  else
-    call disp_dchr(title, reshape(x, (/size(x), 1/)), SE)
-  end if
-end subroutine disp_tv_dchr
+  IF (SE%row) THEN
+    CALL disp_dchr(title, RESHAPE(x, (/1, SIZE(x)/)), SE)
+  ELSE
+    CALL disp_dchr(title, RESHAPE(x, (/SIZE(x), 1/)), SE)
+  END IF
+END SUBROUTINE disp_tv_dchr
 
 !----------------------------------------------------------------------------
 !
@@ -105,71 +105,71 @@ end subroutine disp_tv_dchr
 
 subroutine disp_tm_dchr(title, x, fmt, advance, lbound, sep, style, trim, unit)
   ! Default character matrix with title
-  character(*), intent(in)           :: title      ! The title to use for the matrix
-  character(*), intent(in)           :: x(:,:)     ! The matrix to be written
-  character(*), intent(in), optional :: fmt        ! Format edit descriptor to use for each matrix element (e.g.'A4')
-  integer,      intent(in), optional :: unit       ! Unit to display on
-  character(*), intent(in), optional :: advance    ! 'No' to print next matrix to right of current, otherewise 'Yes'
-  character(*), intent(in), optional :: sep        ! Separator between matrix columns (e.g. ", ")
-  character(*), intent(in), optional :: style      ! Style(s): see NOTE 1 below
-  character(*), intent(in), optional :: trim       ! 'Auto' (the default) to trim if fmt absent, 'no' for no
+  CHARACTER(*), INTENT(in) :: title ! The title to use for the matrix
+  CHARACTER(*), INTENT(in) :: x(:, :) ! The matrix to be written
+  CHARACTER(*), INTENT(in), OPTIONAL :: fmt ! Format edit descriptor to use for each matrix element (e.g.'A4')
+  INTEGER, INTENT(in), OPTIONAL :: unit ! Unit to display on
+  CHARACTER(*), INTENT(in), OPTIONAL :: advance ! 'No' to print next matrix to right of current, otherewise 'Yes'
+  CHARACTER(*), INTENT(in), OPTIONAL :: sep ! Separator between matrix columns (e.g. ", ")
+  CHARACTER(*), INTENT(in), OPTIONAL :: style ! Style(s): see NOTE 1 below
+  CHARACTER(*), INTENT(in), OPTIONAL :: trim ! 'Auto' (the default) to trim if fmt absent, 'no' for no
   !                                                ! trimming, 'yes' for trimming
-  integer,      intent(in), optional :: lbound(:)  ! Lower bounds of x
+  INTEGER, INTENT(in), OPTIONAL :: LBOUND(:) ! Lower bounds of x
   !
-  type(settings) :: SE
-  call get_SE(SE, title, shape(x), fmt, advance, lbound, sep, style, trim, unit)
-  call disp_dchr(title, x, SE)
-end subroutine disp_tm_dchr
+  TYPE(settings) :: SE
+CALL get_SE(SE, title, SHAPE(x), fmt, advance, lbound, sep, style, trim, unit)
+  CALL disp_dchr(title, x, SE)
+END SUBROUTINE disp_tm_dchr
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
-subroutine disp_dchr(title, x, SE)
+SUBROUTINE disp_dchr(title, x, SE)
   ! Default character item to box
-  character(*), intent(in)      :: title, x(:,:)
-  type(settings), intent(INOUT ) :: SE
-  character(13)                 :: edesc
-  character, pointer            :: boxp(:,:)
-  integer                       :: m, n, j, lin1, wleft, lx, w
-  integer, dimension(size(x,2)) :: wid, nbl, n1, n2, widp
-  m = size(x,1)
-  n = size(x,2)
-  lx = len(x)
+  CHARACTER(*), INTENT(in) :: title, x(:, :)
+  TYPE(settings), INTENT(INOUT) :: SE
+  CHARACTER(13) :: edesc
+  CHARACTER, POINTER :: boxp(:, :)
+  INTEGER :: m, n, j, lin1, wleft, lx, w
+  INTEGER, DIMENSION(SIZE(x, 2)) :: wid, nbl, n1, n2, widp
+  m = SIZE(x, 1)
+  n = SIZE(x, 2)
+  lx = LEN(x)
   w = SE%w
-  if (w <= 0) then
+  IF (w <= 0) THEN
     w = lx
-    if (w < 0) then
+    IF (w < 0) THEN
       edesc = '(A__________)'
-      write(edesc(3:12), '(SS,I10)') w
+      WRITE (edesc(3:12), '(SS,I10)') w
       SE%ed = edesc
-    end if
-  end if
-  if (SE%trm .and. size(x) > 0) then
-    n1 = minval(mod(verify(x, ' ') - w - 1, w + 1), 1) + w + 1
-    n2 = maxval(verify(x, ' ', back = .true.), 1)
+    END IF
+  END IF
+  IF (SE%trm .AND. SIZE(x) > 0) THEN
+    n1 = MINVAL(MOD(VERIFY(x, ' ') - w - 1, w + 1), 1) + w + 1
+    n2 = MAXVAL(VERIFY(x, ' ', back=.TRUE.), 1)
     wid = n2 - n1 + 1
     nbl = w - wid
-  else
+  ELSE
     n1 = 1
     n2 = w
     wid = w
     nbl = 0
-  end if
-  if (all(wid == 0)) n = 0
+  END IF
+  IF (ALL(wid == 0)) n = 0
   SE%w = w
-  call preparebox(title, SE, m, n, wid, widp, lin1, wleft, boxp)
-  do j=1,n
-    if (SE%trm) then
+  CALL preparebox(title, SE, m, n, wid, widp, lin1, wleft, boxp)
+  DO j = 1, n
+    IF (SE%trm) THEN
       call copytobox(x(:,j)(n1(j):n2(j)), lin1, wid(j), widp(j), nbl(j), boxp,  wleft)
-    else
+    ELSE
       if (widp(j) > lx) call copyseptobox(repeat(' ', widp(j)-lx), m, lin1, boxp,  wleft)
-      call copytobox(x(:,j), lin1, lx, lx, 0, boxp,  wleft)
-    end if
-    if (j<n) call copyseptobox(SE%sep(1:SE%lsep), m, lin1, boxp,  wleft)
-  enddo
-  call finishbox(title, SE, boxp)
-end subroutine disp_dchr
+      CALL copytobox(x(:, j), lin1, lx, lx, 0, boxp, wleft)
+    END IF
+    IF (j < n) CALL copyseptobox(SE%sep(1:SE%lsep), m, lin1, boxp, wleft)
+  END DO
+  CALL finishbox(title, SE, boxp)
+END SUBROUTINE disp_dchr
 
 !----------------------------------------------------------------------------
 !
