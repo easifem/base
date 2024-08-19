@@ -1893,6 +1893,7 @@ TYPE :: QuadratureOpt_
   INTEGER(I4B) :: Gauss = GaussQP
   INTEGER(I4B) :: GaussLegendre = GaussLegendreQP
   INTEGER(I4B) :: GaussLegendreLobatto = GaussLegendreLobattoQP
+  INTEGER(I4B) :: GaussLegendreRadau = GaussLegendreRadau
   INTEGER(I4B) :: GaussLegendreRadauLeft = GaussLegendreRadauLeft
   INTEGER(I4B) :: GaussLegendreRadauRight = GaussLegendreRadauRight
   INTEGER(I4B) :: GaussRadau = GaussRadauQP
@@ -1901,14 +1902,17 @@ TYPE :: QuadratureOpt_
   INTEGER(I4B) :: GaussLobatto = GaussLobattoQP
   INTEGER(I4B) :: GaussChebyshev = GaussChebyshevQP
   INTEGER(I4B) :: GaussChebyshevLobatto = GaussChebyshevLobattoQP
+  INTEGER(I4B) :: GaussChebyshevRadau = GaussChebyshevRadau
   INTEGER(I4B) :: GaussChebyshevRadauLeft = GaussChebyshevRadauLeft
   INTEGER(I4B) :: GaussChebyshevRadauRight = GaussChebyshevRadauRight
   INTEGER(I4B) :: GaussJacobi = GaussJacobiQP
   INTEGER(I4B) :: GaussJacobiLobatto = GaussJacobiLobattoQP
+  INTEGER(I4B) :: GaussJacobiRadau = GaussJacobiRadau
   INTEGER(I4B) :: GaussJacobiRadauLeft = GaussJacobiRadauLeft
   INTEGER(I4B) :: GaussJacobiRadauRight = GaussJacobiRadauRight
   INTEGER(I4B) :: GaussUltraSpherical = GaussUltraSphericalQP
   INTEGER(I4B) :: GaussUltraSphericalLobatto = GaussUltraSphericalLobattoQP
+  INTEGER(I4B) :: GaussUltraSphericalRadau = GaussUltraSphericalRadau
   INTEGER(I4B) :: GaussUltraSphericalRadauLeft = GaussUltraSphericalRadauLeft
   INTEGER(I4B) :: GaussUltraSphericalRadauRight = &
                   GaussUltraSphericalRadauRight
