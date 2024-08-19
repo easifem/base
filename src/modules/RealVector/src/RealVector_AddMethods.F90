@@ -177,7 +177,7 @@ INTERFACE Add
   MODULE SUBROUTINE obj_Add8(obj, dofobj, nodenum, VALUE, &
                              scale, conversion)
     TYPE(Realvector_), INTENT(INOUT) :: obj
-    CLASS(DOF_), INTENT(IN) :: dofobj
+    TYPE(DOF_), INTENT(IN) :: dofobj
     INTEGER(I4B), INTENT(IN) :: nodenum(:)
     REAL(DFP), INTENT(IN) :: VALUE(:)
     REAL(DFP), INTENT(IN) :: scale
@@ -197,7 +197,7 @@ INTERFACE Add
   MODULE SUBROUTINE obj_Add9(obj, dofobj, nodenum, VALUE, &
                              scale)
     TYPE(Realvector_), INTENT(INOUT) :: obj
-    CLASS(DOF_), INTENT(IN) :: dofobj
+    TYPE(DOF_), INTENT(IN) :: dofobj
     INTEGER(I4B), INTENT(IN) :: nodenum(:)
     REAL(DFP), INTENT(IN) :: VALUE
     REAL(DFP), INTENT(IN) :: scale
@@ -216,7 +216,7 @@ INTERFACE Add
   MODULE SUBROUTINE obj_Add10(obj, dofobj, nodenum, VALUE, &
                               scale, idof)
     TYPE(Realvector_), INTENT(INOUT) :: obj
-    CLASS(DOF_), INTENT(IN) :: dofobj
+    TYPE(DOF_), INTENT(IN) :: dofobj
     INTEGER(I4B), INTENT(IN) :: nodenum(:)
     REAL(DFP), INTENT(IN) :: VALUE(:)
     REAL(DFP), INTENT(IN) :: scale
@@ -236,7 +236,7 @@ INTERFACE Add
   MODULE SUBROUTINE obj_Add11(obj, dofobj, nodenum, VALUE, &
                               scale, idof)
     TYPE(Realvector_), INTENT(INOUT) :: obj
-    CLASS(DOF_), INTENT(IN) :: dofobj
+    TYPE(DOF_), INTENT(IN) :: dofobj
     INTEGER(I4B), INTENT(IN) :: nodenum(:)
     REAL(DFP), INTENT(IN) :: VALUE
     REAL(DFP), INTENT(IN) :: scale
@@ -256,7 +256,7 @@ INTERFACE Add
   MODULE SUBROUTINE obj_Add12(obj, dofobj, nodenum, VALUE, &
                               scale, ivar, idof)
     TYPE(Realvector_), INTENT(INOUT) :: obj
-    CLASS(DOF_), INTENT(IN) :: dofobj
+    TYPE(DOF_), INTENT(IN) :: dofobj
     INTEGER(I4B), INTENT(IN) :: nodenum(:)
     REAL(DFP), INTENT(IN) :: VALUE(:)
     REAL(DFP), INTENT(IN) :: scale
@@ -277,7 +277,7 @@ INTERFACE Add
   MODULE SUBROUTINE obj_Add13(obj, dofobj, nodenum, VALUE, &
                               scale, ivar, idof)
     TYPE(Realvector_), INTENT(INOUT) :: obj
-    CLASS(DOF_), INTENT(IN) :: dofobj
+    TYPE(DOF_), INTENT(IN) :: dofobj
     INTEGER(I4B), INTENT(IN) :: nodenum(:)
     REAL(DFP), INTENT(IN) :: VALUE
     REAL(DFP), INTENT(IN) :: scale
@@ -298,7 +298,7 @@ INTERFACE Add
   MODULE SUBROUTINE obj_Add14(obj, dofobj, nodenum, VALUE, &
                               scale, ivar, spacecompo, timecompo)
     TYPE(Realvector_), INTENT(INOUT) :: obj
-    CLASS(DOF_), INTENT(IN) :: dofobj
+    TYPE(DOF_), INTENT(IN) :: dofobj
     INTEGER(I4B), INTENT(IN) :: nodenum(:)
     REAL(DFP), INTENT(IN) :: VALUE(:)
     REAL(DFP), INTENT(IN) :: scale
@@ -320,7 +320,7 @@ INTERFACE Add
   MODULE SUBROUTINE obj_Add15(obj, dofobj, nodenum, VALUE, &
                               scale, ivar, spacecompo, timecompo)
     TYPE(Realvector_), INTENT(INOUT) :: obj
-    CLASS(DOF_), INTENT(IN) :: dofobj
+    TYPE(DOF_), INTENT(IN) :: dofobj
     INTEGER(I4B), INTENT(IN) :: nodenum(:)
     REAL(DFP), INTENT(IN) :: VALUE
     REAL(DFP), INTENT(IN) :: scale
@@ -342,7 +342,7 @@ INTERFACE Add
   MODULE SUBROUTINE obj_Add16(obj, dofobj, nodenum, VALUE, &
                               scale, ivar, spacecompo, timecompo)
     TYPE(Realvector_), INTENT(INOUT) :: obj
-    CLASS(DOF_), INTENT(IN) :: dofobj
+    TYPE(DOF_), INTENT(IN) :: dofobj
     INTEGER(I4B), INTENT(IN) :: nodenum(:)
     REAL(DFP), INTENT(IN) :: VALUE(:)
     REAL(DFP), INTENT(IN) :: scale
@@ -364,7 +364,7 @@ INTERFACE Add
   MODULE SUBROUTINE obj_Add17(obj, dofobj, nodenum, VALUE, &
                               scale, ivar, spacecompo, timecompo)
     TYPE(Realvector_), INTENT(INOUT) :: obj
-    CLASS(DOF_), INTENT(IN) :: dofobj
+    TYPE(DOF_), INTENT(IN) :: dofobj
     INTEGER(I4B), INTENT(IN) :: nodenum(:)
     REAL(DFP), INTENT(IN) :: VALUE
     REAL(DFP), INTENT(IN) :: scale
@@ -386,7 +386,7 @@ INTERFACE Add
   MODULE SUBROUTINE obj_Add18(obj, dofobj, nodenum, VALUE, &
                               scale, ivar, spacecompo, timecompo)
     TYPE(Realvector_), INTENT(INOUT) :: obj
-    CLASS(DOF_), INTENT(IN) :: dofobj
+    TYPE(DOF_), INTENT(IN) :: dofobj
     INTEGER(I4B), INTENT(IN) :: nodenum(:)
     REAL(DFP), INTENT(IN) :: VALUE(:)
     REAL(DFP), INTENT(IN) :: scale
@@ -408,7 +408,7 @@ INTERFACE Add
   MODULE SUBROUTINE obj_Add19(obj, dofobj, nodenum, VALUE, &
                               scale, ivar, spacecompo, timecompo)
     TYPE(Realvector_), INTENT(INOUT) :: obj
-    CLASS(DOF_), INTENT(IN) :: dofobj
+    TYPE(DOF_), INTENT(IN) :: dofobj
     INTEGER(I4B), INTENT(IN) :: nodenum(:)
     REAL(DFP), INTENT(IN) :: VALUE
     REAL(DFP), INTENT(IN) :: scale
@@ -430,7 +430,7 @@ INTERFACE Add
   MODULE SUBROUTINE obj_Add20(obj, dofobj, nodenum, VALUE, &
                               scale)
     TYPE(Realvector_), INTENT(INOUT) :: obj
-    CLASS(DOF_), INTENT(IN) :: dofobj
+    TYPE(DOF_), INTENT(IN) :: dofobj
     INTEGER(I4B), INTENT(IN) :: nodenum
     REAL(DFP), INTENT(IN) :: VALUE
     REAL(DFP), INTENT(IN) :: scale
@@ -449,7 +449,7 @@ INTERFACE Add
   MODULE SUBROUTINE obj_Add21(obj, dofobj, nodenum, VALUE, &
                               scale, idof)
     TYPE(Realvector_), INTENT(INOUT) :: obj
-    CLASS(DOF_), INTENT(IN) :: dofobj
+    TYPE(DOF_), INTENT(IN) :: dofobj
     INTEGER(I4B), INTENT(IN) :: nodenum
     REAL(DFP), INTENT(IN) :: VALUE
     REAL(DFP), INTENT(IN) :: scale
@@ -469,7 +469,7 @@ INTERFACE Add
   MODULE SUBROUTINE obj_Add22(obj, dofobj, nodenum, VALUE, &
                               scale, ivar, idof)
     TYPE(Realvector_), INTENT(INOUT) :: obj
-    CLASS(DOF_), INTENT(IN) :: dofobj
+    TYPE(DOF_), INTENT(IN) :: dofobj
     INTEGER(I4B), INTENT(IN) :: nodenum
     REAL(DFP), INTENT(IN) :: VALUE
     REAL(DFP), INTENT(IN) :: scale
@@ -490,7 +490,7 @@ INTERFACE Add
   MODULE SUBROUTINE obj_Add23(obj, dofobj, nodenum, VALUE, &
                               scale, ivar, spacecompo, timecompo)
     TYPE(Realvector_), INTENT(INOUT) :: obj
-    CLASS(DOF_), INTENT(IN) :: dofobj
+    TYPE(DOF_), INTENT(IN) :: dofobj
     INTEGER(I4B), INTENT(IN) :: nodenum
     REAL(DFP), INTENT(IN) :: VALUE
     REAL(DFP), INTENT(IN) :: scale
@@ -512,7 +512,7 @@ INTERFACE Add
   MODULE SUBROUTINE obj_Add24(obj, dofobj, nodenum, VALUE, &
                               scale, ivar, spacecompo, timecompo)
     TYPE(Realvector_), INTENT(INOUT) :: obj
-    CLASS(DOF_), INTENT(IN) :: dofobj
+    TYPE(DOF_), INTENT(IN) :: dofobj
     INTEGER(I4B), INTENT(IN) :: nodenum
     REAL(DFP), INTENT(IN) :: VALUE
     REAL(DFP), INTENT(IN) :: scale
@@ -534,7 +534,7 @@ INTERFACE Add
   MODULE SUBROUTINE obj_Add25(obj, dofobj, nodenum, VALUE, &
                               scale, ivar, spacecompo, timecompo)
     TYPE(Realvector_), INTENT(INOUT) :: obj
-    CLASS(DOF_), INTENT(IN) :: dofobj
+    TYPE(DOF_), INTENT(IN) :: dofobj
     INTEGER(I4B), INTENT(IN) :: nodenum
     REAL(DFP), INTENT(IN) :: VALUE
     REAL(DFP), INTENT(IN) :: scale
