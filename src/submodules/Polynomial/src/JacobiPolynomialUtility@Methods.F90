@@ -1207,75 +1207,139 @@ END PROCEDURE JacobiGradientEvalSum4
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE JacobiTransform1
-REAL(DFP), DIMENSION(0:n) :: Gamma, temp
-REAL(DFP), DIMENSION(0:n, 0:n) :: PP
-INTEGER(I4B) :: jj
-!!
-Gamma = JacobiNormSQR2(n=n, alpha=alpha, beta=beta)
-!!
-!! Correct Gamma(n)
-!!
-IF (quadType .EQ. GaussLobatto) THEN
-  GAMMA(n) = (2.0_DFP + (alpha + beta + 1.0_DFP) / REAL(n, KIND=DFP)) &
-            & * GAMMA(n)
-END IF
-!!
-PP = JacobiEvalAll(n=n, alpha=alpha, beta=beta, x=x)
-!!
-DO jj = 0, n
-  temp = PP(:, jj) * w * coeff
-  ans(jj) = SUM(temp) / GAMMA(jj)
-END DO
-!!
+INTEGER(I4B) :: tsize
+CALL JacobiTransform1_(n, alpha, beta, coeff, x, w, quadType, ans, tsize)
 END PROCEDURE JacobiTransform1
+
+!----------------------------------------------------------------------------
+!                                                           JacobiTransform
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE JacobiTransform1_
+REAL(DFP), DIMENSION(0:n, 0:n) :: PP
+REAL(DFP) :: nrmsqr, areal
+INTEGER(I4B) :: jj, ii
+
+tsize = n + 1
+
+PP = JacobiEvalAll(n=n, alpha=alpha, beta=beta, x=x)
+
+DO jj = 0, n
+  areal = 0.0_DFP
+
+  DO ii = 0, n
+    areal = areal + PP(ii, jj) * w(ii) * coeff(ii)
+  END DO
+
+  nrmsqr = JacobiNormSQR(n=jj, alpha=alpha, beta=beta)
+  ans(jj) = areal / nrmsqr
+
+END DO
+
+IF (quadType .EQ. GaussLobatto) THEN
+
+  areal = 0.0_DFP
+  jj = n
+  DO ii = 0, n
+    areal = areal + PP(ii, jj) * w(ii) * coeff(ii)
+  END DO
+
+  nrmsqr = (2.0_DFP + (alpha + beta + 1.0_DFP) / REAL(n, KIND=DFP)) * nrmsqr
+
+  ans(jj) = areal / nrmsqr
+
+END IF
+
+END PROCEDURE JacobiTransform1_
 
 !----------------------------------------------------------------------------
 !                                                         JacobiTransform
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE JacobiTransform2
-REAL(DFP), DIMENSION(0:n) :: Gamma, temp
-REAL(DFP), DIMENSION(0:n, 0:n) :: PP
-INTEGER(I4B) :: jj, kk
-!!
-Gamma = JacobiNormSQR2(n=n, alpha=alpha, beta=beta)
-!!
-!! Correct Gamma(n)
-!!
-IF (quadType .EQ. GaussLobatto) THEN
-  GAMMA(n) = (2.0_DFP + (alpha + beta + 1.0_DFP) / REAL(n, KIND=DFP)) &
-            & * GAMMA(n)
-END IF
-!!
-PP = JacobiEvalAll(n=n, alpha=alpha, beta=beta, x=x)
-!!
-DO kk = 1, SIZE(coeff, 2)
-  DO jj = 0, n
-    temp = PP(:, jj) * w * coeff(:, kk)
-    ans(jj, kk) = SUM(temp) / GAMMA(jj)
-  END DO
-END DO
-!!
+INTEGER(I4B) :: nrow, ncol
+CALL JacobiTransform2_(n, alpha, beta, coeff, x, w, quadType, ans, nrow, ncol)
 END PROCEDURE JacobiTransform2
 
 !----------------------------------------------------------------------------
 !                                                         JacobiTransform
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE JacobiTransform3
-REAL(DFP) :: pt(0:n), wt(0:n), coeff(0:n)
-INTEGER(I4B) :: ii
-!!
-CALL JacobiQuadrature(n=n + 1, alpha=alpha, beta=beta, pt=pt, wt=wt,&
-  & quadType=quadType)
-!!
-DO ii = 0, n
-  coeff(ii) = f(pt(ii))
+MODULE PROCEDURE JacobiTransform2_
+REAL(DFP), DIMENSION(0:n, 0:n) :: PP
+REAL(DFP) :: nrmsqr, areal
+INTEGER(I4B) :: jj, ii, kk
+
+nrow = n + 1
+ncol = SIZE(coeff, 2)
+
+PP = JacobiEvalAll(n=n, alpha=alpha, beta=beta, x=x)
+
+DO kk = 1, ncol
+  DO jj = 0, n
+
+    areal = 0.0_DFP
+
+    DO ii = 0, n
+      areal = areal + PP(ii, jj) * w(ii) * coeff(ii, kk)
+    END DO
+
+    nrmsqr = JacobiNormSQR(n=jj, alpha=alpha, beta=beta)
+    ans(jj, kk) = areal / nrmsqr
+
+  END DO
 END DO
-!!
-ans = JacobiTransform(n=n, alpha=alpha, beta=beta, coeff=coeff, x=pt, &
-  & w=wt, quadType=quadType)
+
+IF (quadType .EQ. GaussLobatto) THEN
+
+  jj = n
+
+  nrmsqr = (2.0_DFP + (alpha + beta + 1.0_DFP) / REAL(n, KIND=DFP)) * nrmsqr
+
+  DO kk = 1, ncol
+
+    areal = 0.0_DFP
+    DO ii = 0, n
+      areal = areal + PP(ii, jj) * w(ii) * coeff(ii, kk)
+    END DO
+
+    ans(jj, kk) = areal / nrmsqr
+  END DO
+
+END IF
+
+END PROCEDURE JacobiTransform2_
+
+!----------------------------------------------------------------------------
+!                                                         JacobiTransform
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE JacobiTransform3
+INTEGER(I4B) :: tsize
+CALL JacobiTransform3_(n, alpha, beta, f, quadType, x1, x2, ans, tsize)
 END PROCEDURE JacobiTransform3
+
+!----------------------------------------------------------------------------
+!                                                           JacobiTransform
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE JacobiTransform3_
+REAL(DFP) :: pt(0:n), wt(0:n), coeff(0:n), x
+REAL(DFP), PARAMETER :: one = 1.0_DFP, half = 0.5_DFP
+INTEGER(I4B) :: ii
+
+CALL JacobiQuadrature(n=n + 1, alpha=alpha, beta=beta, pt=pt, wt=wt, &
+                      quadType=quadType)
+
+DO ii = 0, n
+  x = (one - pt(ii)) * x1 + (one + pt(ii)) * x2
+  x = x * half
+  coeff(ii) = f(x)
+END DO
+
+CALL JacobiTransform_(n=n, alpha=alpha, beta=beta, coeff=coeff, x=pt, &
+                      w=wt, quadType=quadType, ans=ans, tsize=tsize)
+END PROCEDURE JacobiTransform3_
 
 !----------------------------------------------------------------------------
 !                                                        JacobiInvTransform
@@ -1283,7 +1347,7 @@ END PROCEDURE JacobiTransform3
 
 MODULE PROCEDURE JacobiInvTransform1
 ans = JacobiEvalSum(n=n, alpha=alpha, beta=beta, coeff=coeff, &
-  & x=x)
+                    x=x)
 END PROCEDURE JacobiInvTransform1
 
 !----------------------------------------------------------------------------
@@ -1292,7 +1356,7 @@ END PROCEDURE JacobiInvTransform1
 
 MODULE PROCEDURE JacobiInvTransform2
 ans = JacobiEvalSum(n=n, alpha=alpha, beta=beta, coeff=coeff, &
-  & x=x)
+                    x=x)
 END PROCEDURE JacobiInvTransform2
 
 !----------------------------------------------------------------------------
