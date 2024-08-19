@@ -16,8 +16,23 @@
 !
 
 SUBMODULE(LegendrePolynomialUtility) Methods
-USE BaseMethod
+USE UltrasphericalPolynomialUtility, ONLY: UltrasphericalDMatEvenOdd, &
+                                           UltrasphericalGradientCoeff
+
+USE OrthogonalPolynomialUtility, ONLY: JacobiMatrix
+
+#ifdef USE_LAPACK95
+USE F95_Lapack, ONLY: STEV
+#endif
+
+USE JacobiPolynomialUtility, ONLY: JacobiZeros
+
+USE ErrorHandling, ONLY: ErrorMsg
+
+USE MiscUtility, ONLY: Factorial
+
 IMPLICIT NONE
+
 CONTAINS
 
 !----------------------------------------------------------------------------
@@ -34,7 +49,7 @@ END PROCEDURE LegendreAlpha
 
 MODULE PROCEDURE LegendreBeta
 REAL(DFP) :: avar
-!!
+
 IF (n .EQ. 0_I4B) THEN
   ans = 2.0_DFP
 ELSE
@@ -51,18 +66,18 @@ MODULE PROCEDURE GetLegendreRecurrenceCoeff
 REAL(DFP), PARAMETER :: one = 1.0_DFP, two = 2.0_DFP, four = 4.0_DFP
 REAL(DFP) :: avar
 INTEGER(I4B) :: ii
-!!
+
 IF (n .LE. 0) RETURN
-!!
+
 alphaCoeff = 0.0_DFP
 betaCoeff(0) = two
 IF (n .EQ. 1) RETURN
-!!
+
 DO ii = 1, n - 1
   avar = REAL(ii**2, KIND=DFP)
   betaCoeff(ii) = avar / (four * avar - one)
 END DO
-!!
+
 END PROCEDURE GetLegendreRecurrenceCoeff
 
 !----------------------------------------------------------------------------
@@ -72,16 +87,16 @@ END PROCEDURE GetLegendreRecurrenceCoeff
 MODULE PROCEDURE GetLegendreRecurrenceCoeff2
 REAL(DFP) :: j
 INTEGER(I4B) :: ii
-!!
+
 IF (n .LT. 1) RETURN
 B = 0.0_DFP
-!!
+
 DO ii = 1, n
   j = REAL(ii, KIND=DFP)
-  A(ii - 1) = (2.0_DFP * j - 1.0_DFP) / j; 
-  C(ii - 1) = (j - 1.0_DFP) / j; 
+  A(ii - 1) = (2.0_DFP * j - 1.0_DFP) / j
+  C(ii - 1) = (j - 1.0_DFP) / j
 END DO
-!!
+
 END PROCEDURE GetLegendreRecurrenceCoeff2
 
 !----------------------------------------------------------------------------
@@ -137,17 +152,17 @@ END PROCEDURE LegendreNormSqr2
 
 MODULE PROCEDURE LegendreJacobiMatrix
 REAL(DFP), DIMENSION(0:n - 1) :: alphaCoeff0, betaCoeff0
-!!
+
 IF (n .LT. 1) RETURN
-!!
+
 CALL GetLegendreRecurrenceCoeff(n=n, alphaCoeff=alphaCoeff0, &
-  & betaCoeff=betaCoeff0)
+                                betaCoeff=betaCoeff0)
 IF (PRESENT(alphaCoeff)) alphaCoeff(0:n - 1) = alphaCoeff0
 IF (PRESENT(betaCoeff)) betaCoeff(0:n - 1) = betaCoeff0
-!!
+
 CALL JacobiMatrix(alphaCoeff=alphaCoeff0, &
   & betaCoeff=betaCoeff0, D=D, E=E)
-!!
+
 END PROCEDURE LegendreJacobiMatrix
 
 !----------------------------------------------------------------------------
@@ -157,12 +172,12 @@ END PROCEDURE LegendreJacobiMatrix
 MODULE PROCEDURE LegendreGaussQuadrature
 REAL(DFP) :: pn(n), fixvar
 INTEGER(I4B) :: ii
-!!
+
 CALL LegendreJacobiMatrix(n=n, D=pt, E=pn)
-!!
+
 #ifdef USE_LAPACK95
 CALL STEV(D=pt, E=pn)
-!!
+
 IF (PRESENT(wt)) THEN
   wt = pn
   pn = LegendreEval(n=n - 1, x=pt)
@@ -171,16 +186,15 @@ IF (PRESENT(wt)) THEN
     wt(ii) = fixvar * (1.0_DFP - pt(ii)**2) / (pn(ii)**2)
   END DO
 END IF
-  !!
+
 #else
-CALL ErrorMsg( &
-  & msg="The subroutine requires Lapack95 package", &
-  & file=__FILE__, &
-  & routine="LegendreGaussQuadrature", &
-  & line=__LINE__, &
-  & unitno=stdout)
+CALL ErrorMsg(msg="The subroutine requires Lapack95 package", &
+              file=__FILE__, &
+              routine="LegendreGaussQuadrature", &
+              line=__LINE__, &
+              unitno=stdout)
 #endif
-  !!
+
 END PROCEDURE LegendreGaussQuadrature
 
 !----------------------------------------------------------------------------
@@ -189,21 +203,21 @@ END PROCEDURE LegendreGaussQuadrature
 
 MODULE PROCEDURE LegendreJacobiRadauMatrix
 REAL(DFP) :: avar, r1, r2
-!!
+
 IF (n .LT. 1) RETURN
-!!
+
 CALL LegendreJacobiMatrix(n=n, D=D, E=E, &
   & alphaCoeff=alphaCoeff, betaCoeff=betaCoeff)
-!!
+
 r1 = a * REAL(n + 1, KIND=DFP)
 r2 = REAL(2 * n + 1, KIND=DFP)
 D(n + 1) = r1 / r2
-!!
+
 r1 = REAL(n**2, KIND=DFP)
 r2 = 4.0_DFP * r1 - 1.0_DFP
-!!
+
 E(n) = SQRT(r1 / r2)
-!!
+
 END PROCEDURE LegendreJacobiRadauMatrix
 
 !----------------------------------------------------------------------------
@@ -926,80 +940,134 @@ END PROCEDURE LegendreGradientEvalSum4
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE LegendreTransform1
-REAL(DFP), DIMENSION(0:n) :: nrmsqr, temp
-REAL(DFP), DIMENSION(0:n, 0:n) :: PP
-INTEGER(I4B) :: jj
-REAL(DFP) :: rn
-!!
-nrmsqr = LegendreNormSQR2(n=n)
-!!
-!! Correct nrmsqr(n)
-!!
-rn = REAL(n, KIND=DFP)
-!!
-IF (quadType .EQ. GaussLobatto) THEN
-  nrmsqr(n) = 2.0_DFP / rn
-END IF
-!!
-PP = LegendreEvalAll(n=n, x=x)
-!!
-DO jj = 0, n
-  temp = PP(:, jj) * w * coeff
-  ans(jj) = SUM(temp) / nrmsqr(jj)
-END DO
-!!
+INTEGER(I4B) :: tsize
+CALL LegendreTransform1_(n=n, coeff=coeff, x=x, w=w, quadType=quadType, &
+                         ans=ans, tsize=tsize)
 END PROCEDURE LegendreTransform1
+
+!----------------------------------------------------------------------------
+!                                                         LegendreTransform_
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE LegendreTransform1_
+REAL(DFP), DIMENSION(0:n, 0:n) :: PP
+INTEGER(I4B) :: ii, jj
+REAL(DFP) :: nrmsqr, areal
+
+tsize = n + 1
+
+! PP = LegendreEvalAll(n=n, x=x)
+CALL LegendreEvalAll_(n=n, x=x, ans=PP, nrow=ii, ncol=jj)
+
+DO jj = 0, n
+  areal = 0.0_DFP
+  DO ii = 0, n
+    areal = areal + PP(ii, jj) * w(ii) * coeff(ii)
+  END DO
+  nrmsqr = LegendreNormSQR(n=jj)
+  ans(jj) = areal / nrmsqr
+END DO
+
+IF (quadType .EQ. GaussLobatto) THEN
+  areal = 0.0_DFP
+  jj = n
+  DO ii = 0, n
+    areal = areal + PP(ii, jj) * w(ii) * coeff(ii)
+  END DO
+
+  nrmsqr = 2.0_DFP / REAL(n, KIND=DFP)
+  ans(jj) = areal / nrmsqr
+END IF
+
+END PROCEDURE LegendreTransform1_
 
 !----------------------------------------------------------------------------
 !                                                    LegendreTransform
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE LegendreTransform2
-REAL(DFP), DIMENSION(0:n) :: nrmsqr, temp
+INTEGER(I4B) :: ii, jj
+CALL LegendreTransform2_(n=n, coeff=coeff, x=x, w=w, quadType=quadType, &
+                         ans=ans, nrow=ii, ncol=jj)
+END PROCEDURE LegendreTransform2
+
+!----------------------------------------------------------------------------
+!                                                          LegendreTransform
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE LegendreTransform2_
 REAL(DFP), DIMENSION(0:n, 0:n) :: PP
-INTEGER(I4B) :: jj, kk
-REAL(DFP) :: rn
-!!
-nrmsqr = LegendreNormSQR2(n=n)
-!!
-!! Correct nrmsqr(n)
-!!
-rn = REAL(n, KIND=DFP)
-!!
-IF (quadType .EQ. GaussLobatto) THEN
-  nrmsqr(n) = 2.0_DFP / rn
-END IF
-!!
-PP = LegendreEvalAll(n=n, x=x)
-!!
-DO kk = 1, SIZE(coeff, 2)
+INTEGER(I4B) :: ii, jj, kk
+REAL(DFP) :: nrmsqr, areal
+
+nrow = n + 1
+ncol = SIZE(coeff, 2)
+
+CALL LegendreEvalAll_(n=n, x=x, nrow=ii, ncol=jj, ans=PP)
+
+DO kk = 1, ncol
   DO jj = 0, n
-    temp = PP(:, jj) * w * coeff(:, kk)
-    ans(jj, kk) = SUM(temp) / nrmsqr(jj)
+
+    areal = 0.0_DFP
+
+    DO ii = 0, n
+      areal = areal + PP(ii, jj) * w(ii) * coeff(ii, kk)
+    END DO
+
+    nrmsqr = LegendreNormSQR(n=jj)
+    ans(jj, kk) = areal / nrmsqr
+
   END DO
 END DO
-!!
-END PROCEDURE LegendreTransform2
+
+IF (quadType .EQ. GaussLobatto) THEN
+
+  jj = n
+  nrmsqr = 2.0_DFP / REAL(n, KIND=DFP)
+
+  DO kk = 1, ncol
+    areal = 0.0_DFP
+    DO ii = 0, n
+      areal = areal + PP(ii, jj) * w(ii) * coeff(ii, kk)
+    END DO
+    ans(jj, kk) = areal / nrmsqr
+  END DO
+
+END IF
+
+END PROCEDURE LegendreTransform2_
 
 !----------------------------------------------------------------------------
 !                                                    LegendreTransform
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE LegendreTransform3
-REAL(DFP) :: pt(0:n), wt(0:n), coeff(0:n)
-INTEGER(I4B) :: ii
-!!
-CALL LegendreQuadrature(n=n + 1, pt=pt, wt=wt,&
-  & quadType=quadType)
-!!
-DO ii = 0, n
-  coeff(ii) = f(pt(ii))
-END DO
-!!
-ans = LegendreTransform(n=n, coeff=coeff, x=pt, &
-  & w=wt, quadType=quadType)
-!!
+INTEGER(I4B) :: tsize
+CALL LegendreTransform3_(n=n, f=f, x1=x1, x2=x2, quadType=quadType, &
+                         ans=ans, tsize=tsize)
 END PROCEDURE LegendreTransform3
+
+!----------------------------------------------------------------------------
+!                                                          LegendreTransform
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE LegendreTransform3_
+REAL(DFP) :: pt(0:n), wt(0:n), coeff(0:n), x
+REAL(DFP), PARAMETER :: one = 1.0_DFP, half = 0.5_DFP
+INTEGER(I4B) :: ii
+
+CALL LegendreQuadrature(n=n + 1, pt=pt, wt=wt, quadType=quadType)
+
+DO ii = 0, n
+  x = (one - pt(ii)) * x1 + (one + pt(ii)) * x2
+  x = x * half
+  coeff(ii) = f(x)
+END DO
+
+CALL LegendreTransform_(n=n, coeff=coeff, x=pt, w=wt, quadType=quadType, &
+                        ans=ans, tsize=tsize)
+
+END PROCEDURE LegendreTransform3_
 
 !----------------------------------------------------------------------------
 !                                                       LegendreInvTransform
