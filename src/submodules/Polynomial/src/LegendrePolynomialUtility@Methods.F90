@@ -954,90 +954,44 @@ END PROCEDURE LegendreTransform1
 MODULE PROCEDURE LegendreTransform1_
 REAL(DFP), DIMENSION(0:n, 0:n) :: PP
 INTEGER(I4B) :: ii, jj
+CALL LegendreEvalAll_(n=n, x=x, ans=PP, nrow=ii, ncol=jj)
+CALL LegendreTransform4_(n, coeff, PP, w, quadType, ans, tsize)
+END PROCEDURE LegendreTransform1_
+
+!----------------------------------------------------------------------------
+!                                                         LegendreTransform4_
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE LegendreTransform4_
+INTEGER(I4B) :: ii, jj, nips
 REAL(DFP) :: nrmsqr, areal
+LOGICAL(LGT) :: abool
 
 tsize = n + 1
-
-! PP = LegendreEvalAll(n=n, x=x)
-CALL LegendreEvalAll_(n=n, x=x, ans=PP, nrow=ii, ncol=jj)
+nips = SIZE(coeff)
 
 DO jj = 0, n
   areal = 0.0_DFP
-  DO ii = 0, n
+  DO ii = 0, nips - 1
     areal = areal + PP(ii, jj) * w(ii) * coeff(ii)
   END DO
   nrmsqr = LegendreNormSQR(n=jj)
   ans(jj) = areal / nrmsqr
 END DO
 
-IF (quadType .EQ. qp%GaussLobatto) THEN
+abool = (quadType .EQ. qp%GaussLobatto) .AND. (nips .EQ. n + 1)
+
+IF (abool) THEN
   areal = 0.0_DFP
   jj = n
-  DO ii = 0, n
+  DO ii = 0, nips - 1
     areal = areal + PP(ii, jj) * w(ii) * coeff(ii)
   END DO
 
   nrmsqr = 2.0_DFP / REAL(n, KIND=DFP)
   ans(jj) = areal / nrmsqr
 END IF
-
-END PROCEDURE LegendreTransform1_
-
-!----------------------------------------------------------------------------
-!                                                    LegendreTransform
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE LegendreTransform2
-INTEGER(I4B) :: ii, jj
-CALL LegendreTransform2_(n=n, coeff=coeff, x=x, w=w, quadType=quadType, &
-                         ans=ans, nrow=ii, ncol=jj)
-END PROCEDURE LegendreTransform2
-
-!----------------------------------------------------------------------------
-!                                                          LegendreTransform
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE LegendreTransform2_
-REAL(DFP), DIMENSION(0:n, 0:n) :: PP
-INTEGER(I4B) :: ii, jj, kk
-REAL(DFP) :: nrmsqr, areal
-
-nrow = n + 1
-ncol = SIZE(coeff, 2)
-
-CALL LegendreEvalAll_(n=n, x=x, nrow=ii, ncol=jj, ans=PP)
-
-DO kk = 1, ncol
-  DO jj = 0, n
-
-    areal = 0.0_DFP
-
-    DO ii = 0, n
-      areal = areal + PP(ii, jj) * w(ii) * coeff(ii, kk)
-    END DO
-
-    nrmsqr = LegendreNormSQR(n=jj)
-    ans(jj, kk) = areal / nrmsqr
-
-  END DO
-END DO
-
-IF (quadType .EQ. qp%GaussLobatto) THEN
-
-  jj = n
-  nrmsqr = 2.0_DFP / REAL(n, KIND=DFP)
-
-  DO kk = 1, ncol
-    areal = 0.0_DFP
-    DO ii = 0, n
-      areal = areal + PP(ii, jj) * w(ii) * coeff(ii, kk)
-    END DO
-    ans(jj, kk) = areal / nrmsqr
-  END DO
-
-END IF
-
-END PROCEDURE LegendreTransform2_
+END PROCEDURE LegendreTransform4_
 
 !----------------------------------------------------------------------------
 !                                                    LegendreTransform
