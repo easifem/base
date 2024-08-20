@@ -860,11 +860,15 @@ END PROCEDURE Chebyshev1Transform1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Chebyshev1Transform1_
-REAL(DFP), DIMENSION(0:n, 0:n) :: PP
-INTEGER(I4B) :: ii, jj
+REAL(DFP), ALLOCATABLE :: PP(:, :)
+INTEGER(I4B) :: ii, jj, nips
+nips = SIZE(coeff)
+ALLOCATE (PP(nips, n + 1))
 
 CALL Chebyshev1EvalAll_(n=n, x=x, ans=PP, nrow=ii, ncol=jj)
 CALL Chebyshev1Transform4_(n, coeff, PP, w, quadType, ans, tsize)
+
+DEALLOCATE (PP)
 
 END PROCEDURE Chebyshev1Transform1_
 
