@@ -987,11 +987,11 @@ INTERFACE UltrasphericalTransform_
     !! order of jacobi polynomial
     REAL(DFP), INTENT(IN) :: lambda
     !! $\lambda > -0.5, \lambda \ne 0.0$
-    REAL(DFP), INTENT(IN) :: coeff(0:n)
+    REAL(DFP), INTENT(IN) :: coeff(0:)
     !! nodal value (at quad points)
-    REAL(DFP), INTENT(IN) :: x(0:n)
+    REAL(DFP), INTENT(IN) :: x(0:)
     !! quadrature points
-    REAL(DFP), INTENT(IN) :: w(0:n)
+    REAL(DFP), INTENT(IN) :: w(0:)
     !! weights
     INTEGER(I4B), INTENT(IN) :: quadType
     !! Quadrature type, Gauss, GaussLobatto, GaussRadau, GaussRadauLeft
@@ -1009,57 +1009,33 @@ END INTERFACE UltrasphericalTransform_
 !                                                   UltrasphericalTransform
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 13 Oct 2022
-! summary: Columnwise Discrete Ultraspherical Transform
-
-INTERFACE UltrasphericalTransform
-  MODULE PURE FUNCTION UltrasphericalTransform2(n, lambda, coeff, x, w, &
-    & quadType) RESULT(ans)
-    INTEGER(I4B), INTENT(IN) :: n
-    !! order of polynomial
-    REAL(DFP), INTENT(IN) :: lambda
-    !! $\lambda > -0.5, \lambda \ne 0.0$
-    REAL(DFP), INTENT(IN) :: coeff(0:, 1:)
-    !! nodal value (at quad points)
-    REAL(DFP), INTENT(IN) :: x(0:n)
-    !! quadrature points
-    REAL(DFP), INTENT(IN) :: w(0:n)
-    !! weights
-    INTEGER(I4B), INTENT(IN) :: quadType
-    !! Quadrature type, Gauss, GaussLobatto, GaussRadau, GaussRadauLeft
-    !! GaussRadauRight
-    REAL(DFP) :: ans(0:n, 1:SIZE(coeff, 2))
-    !! modal values  or coefficients for each column of val
-  END FUNCTION UltrasphericalTransform2
-END INTERFACE UltrasphericalTransform
-
-!----------------------------------------------------------------------------
-!                                                    UltrasphericalTransform
-!----------------------------------------------------------------------------
-
 INTERFACE UltrasphericalTransform_
-  MODULE PURE SUBROUTINE UltrasphericalTransform2_(n, lambda, coeff, x, w, &
-                                                   quadType, ans, nrow, ncol)
+  MODULE PURE SUBROUTINE UltrasphericalTransform4_(n, lambda, coeff, PP, w, &
+                                                   quadType, ans, tsize)
     INTEGER(I4B), INTENT(IN) :: n
-    !! order of polynomial
+    !! order of jacobi polynomial
     REAL(DFP), INTENT(IN) :: lambda
     !! $\lambda > -0.5, \lambda \ne 0.0$
-    REAL(DFP), INTENT(IN) :: coeff(0:, 1:)
+    REAL(DFP), INTENT(IN) :: coeff(0:)
     !! nodal value (at quad points)
-    REAL(DFP), INTENT(IN) :: x(0:n)
+    !! size is number of quadrature points
+    REAL(DFP), INTENT(IN) :: PP(0:, 0:)
     !! quadrature points
-    REAL(DFP), INTENT(IN) :: w(0:n)
+    !! number of rows is number of quadrature points
+    !! number of columns is n+1
+    REAL(DFP), INTENT(IN) :: w(0:)
     !! weights
+    !! size of number of quadrature points
     INTEGER(I4B), INTENT(IN) :: quadType
     !! Quadrature type, Gauss, GaussLobatto, GaussRadau, GaussRadauLeft
     !! GaussRadauRight
-    REAL(DFP), INTENT(INOUT) :: ans(0:, 1:)
-    !! ans(0:n, 1:SIZE(coeff, 2))
-    !! modal values  or coefficients for each column of val
-    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
-    !! n+1, size(coeff, 2)
-  END SUBROUTINE UltrasphericalTransform2_
+    REAL(DFP), INTENT(INOUT) :: ans(0:)
+    !! ans(0:n)
+    !! modal values  or coefficients
+    INTEGER(I4B), INTENT(OUT) :: tsize
+    !! size of ans
+    !! n + 1
+  END SUBROUTINE UltrasphericalTransform4_
 END INTERFACE UltrasphericalTransform_
 
 !----------------------------------------------------------------------------
@@ -1143,7 +1119,7 @@ END INTERFACE UltrasphericalTransform_
 
 INTERFACE
   MODULE PURE FUNCTION UltrasphericalInvTransform1(n, lambda, coeff, x) &
-        & RESULT(ans)
+    RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: n
     !! order of Jacobi polynomial
     REAL(DFP), INTENT(IN) :: lambda
