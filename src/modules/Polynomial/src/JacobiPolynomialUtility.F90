@@ -992,12 +992,15 @@ INTERFACE JacobiTransform_
     !! alpha of Jacobi polynomial > -1.0_DFP
     REAL(DFP), INTENT(IN) :: beta
     !! beta of Jacobi polynomial > -1.0_DFP
-    REAL(DFP), INTENT(IN) :: coeff(0:n)
+    REAL(DFP), INTENT(IN) :: coeff(0:)
     !! nodal value (at quad points)
-    REAL(DFP), INTENT(IN) :: x(0:n)
+    !! size is number of quadrature points
+    REAL(DFP), INTENT(IN) :: x(0:)
     !! quadrature points
-    REAL(DFP), INTENT(IN) :: w(0:n)
+    !! size is quadrature points
+    REAL(DFP), INTENT(IN) :: w(0:)
     !! weights
+    !! size is quadrature points
     INTEGER(I4B), INTENT(IN) :: quadType
     !! Quadrature type, Gauss, GaussLobatto, GaussRadau, GaussRadauLeft
     !! GaussRadauRight
@@ -1012,66 +1015,33 @@ END INTERFACE JacobiTransform_
 !                                                           JacobiTransform
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 13 Oct 2022
-! summary: Columnwise Discrete Jacobi Transform
-
-INTERFACE JacobiTransform
-  MODULE PURE FUNCTION JacobiTransform2(n, alpha, beta, coeff, x, w, &
-                                        quadType) RESULT(ans)
-    INTEGER(I4B), INTENT(IN) :: n
-    !! order of polynomial
-    REAL(DFP), INTENT(IN) :: alpha
-    !! alpha of Jacobi polynomial > -1.0_DFP
-    REAL(DFP), INTENT(IN) :: beta
-    !! beta of Jacobi polynomial > -1.0_DFP
-    REAL(DFP), INTENT(IN) :: coeff(0:, 1:)
-    !! nodal value (at quad points)
-    REAL(DFP), INTENT(IN) :: x(0:n)
-    !! quadrature points
-    REAL(DFP), INTENT(IN) :: w(0:n)
-    !! weights
-    INTEGER(I4B), INTENT(IN) :: quadType
-    !! Quadrature type, Gauss, GaussLobatto, GaussRadau, GaussRadauLeft
-    !! GaussRadauRight
-    REAL(DFP) :: ans(0:n, 1:SIZE(coeff, 2))
-    !! modal values  or coefficients for each column of val
-  END FUNCTION JacobiTransform2
-END INTERFACE JacobiTransform
-
-!----------------------------------------------------------------------------
-!                                                          JacobiTransform_
-!----------------------------------------------------------------------------
-
-!> author: Vikas Sharma, Ph. D.
-! date:  2024-08-19
-! summary:  Jacobi transform
-
 INTERFACE JacobiTransform_
-  MODULE PURE SUBROUTINE JacobiTransform2_(n, alpha, beta, coeff, x, w, &
-                                           quadType, ans, nrow, ncol)
+  MODULE PURE SUBROUTINE JacobiTransform4_(n, alpha, beta, coeff, PP, w, &
+                                           quadType, ans, tsize)
     INTEGER(I4B), INTENT(IN) :: n
-    !! order of polynomial
+    !! order of jacobi polynomial
     REAL(DFP), INTENT(IN) :: alpha
     !! alpha of Jacobi polynomial > -1.0_DFP
     REAL(DFP), INTENT(IN) :: beta
     !! beta of Jacobi polynomial > -1.0_DFP
-    REAL(DFP), INTENT(IN) :: coeff(0:, 1:)
+    REAL(DFP), INTENT(IN) :: coeff(0:)
     !! nodal value (at quad points)
-    REAL(DFP), INTENT(IN) :: x(0:n)
+    !! size is number of quadrature points
+    REAL(DFP), INTENT(IN) :: PP(0:, 0:)
     !! quadrature points
-    REAL(DFP), INTENT(IN) :: w(0:n)
+    !! number of rows in number of quadrature points
+    !! number of columns is n+1
+    REAL(DFP), INTENT(IN) :: w(0:)
     !! weights
+    !! size is quadrature points
     INTEGER(I4B), INTENT(IN) :: quadType
     !! Quadrature type, Gauss, GaussLobatto, GaussRadau, GaussRadauLeft
     !! GaussRadauRight
-    REAL(DFP), INTENT(INOUT) :: ans(0:, 1:)
-    !! ans(0:n, 1:SIZE(coeff, 2))
-    !! modal values  or coefficients for each column of val
-    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
-    !! nrow = n+1
-    !! ncol = SIZE(coeff, 2)
-  END SUBROUTINE JacobiTransform2_
+    REAL(DFP), INTENT(INOUT) :: ans(0:)
+    !! modal values  or coefficients
+    INTEGER(I4B), INTENT(OUT) :: tsize
+    !! n+1
+  END SUBROUTINE JacobiTransform4_
 END INTERFACE JacobiTransform_
 
 !----------------------------------------------------------------------------
