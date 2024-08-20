@@ -1227,11 +1227,14 @@ END PROCEDURE JacobiTransform1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE JacobiTransform1_
-REAL(DFP), DIMENSION(0:n, 0:n) :: PP
-INTEGER(I4B) :: jj, ii
+REAL(DFP), ALLOCATABLE :: PP(:, :)
+INTEGER(I4B) :: ii, jj, nips
+nips = SIZE(coeff)
+ALLOCATE (PP(nips, n + 1))
 CALL JacobiEvalAll_(n=n, alpha=alpha, beta=beta, x=x, nrow=ii, ncol=jj, &
                     ans=PP)
 CALL JacobiTransform4_(n, alpha, beta, coeff, PP, w, quadType, ans, tsize)
+DEALLOCATE (PP)
 END PROCEDURE JacobiTransform1_
 
 !----------------------------------------------------------------------------
