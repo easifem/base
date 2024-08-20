@@ -869,9 +869,11 @@ END PROCEDURE UltrasphericalTransform1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE UltrasphericalTransform1_
-REAL(DFP), DIMENSION(0:n, 0:n) :: PP
 REAL(DFP) :: nrmsqr, areal, rn
-INTEGER(I4B) :: jj, ii
+REAL(DFP), ALLOCATABLE :: PP(:, :)
+INTEGER(I4B) :: ii, jj, nips
+nips = SIZE(coeff)
+ALLOCATE (PP(nips, n + 1))
 
 tsize = n + 1
 
@@ -903,6 +905,8 @@ IF (quadType .EQ. qp%GaussLobatto) THEN
   ans(jj) = areal / nrmsqr
 
 END IF
+
+DEALLOCATE (PP)
 
 END PROCEDURE UltrasphericalTransform1_
 
