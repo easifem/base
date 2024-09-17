@@ -49,8 +49,8 @@ END PROCEDURE GetEdgeDOF_Hexahedron1
 
 MODULE PROCEDURE GetEdgeDOF_Hexahedron2
 ans = GetEdgeDOF_Hexahedron(p, p, p, p) &
-  & + GetEdgeDOF_Hexahedron(q, q, q, q) &
-  & + GetEdgeDOF_Hexahedron(r, r, r, r)
+      + GetEdgeDOF_Hexahedron(q, q, q, q) &
+      + GetEdgeDOF_Hexahedron(r, r, r, r)
 END PROCEDURE GetEdgeDOF_Hexahedron2
 
 !----------------------------------------------------------------------------
@@ -67,8 +67,8 @@ END PROCEDURE GetEdgeDOF_Hexahedron3
 
 MODULE PROCEDURE GetEdgeDOF_Hexahedron4
 ans = GetEdgeDOF_Hexahedron(px1, px2, px3, px4) &
-  & + GetEdgeDOF_Hexahedron(py1, py2, py3, py4) &
-  & + GetEdgeDOF_Hexahedron(pz1, pz2, pz3, pz4)
+      + GetEdgeDOF_Hexahedron(py1, py2, py3, py4) &
+      + GetEdgeDOF_Hexahedron(pz1, pz2, pz3, pz4)
 END PROCEDURE GetEdgeDOF_Hexahedron4
 
 !----------------------------------------------------------------------------
@@ -77,8 +77,8 @@ END PROCEDURE GetEdgeDOF_Hexahedron4
 
 MODULE PROCEDURE GetFacetDOF_Hexahedron1
 ans = GetFacetDOF_Hexahedron(pxy1, pxy2) &
-  & + GetFacetDOF_Hexahedron(pxz1, pxz2) &
-  & + GetFacetDOF_Hexahedron(pyz1, pyz2)
+      + GetFacetDOF_Hexahedron(pxz1, pxz2) &
+      + GetFacetDOF_Hexahedron(pyz1, pyz2)
 ans = 2_I4B * ans
 END PROCEDURE GetFacetDOF_Hexahedron1
 
@@ -88,8 +88,8 @@ END PROCEDURE GetFacetDOF_Hexahedron1
 
 MODULE PROCEDURE GetFacetDOF_Hexahedron2
 ans = GetFacetDOF_Hexahedron(p, q) &
-  & + GetFacetDOF_Hexahedron(p, r) &
-  & + GetFacetDOF_Hexahedron(q, r)
+      + GetFacetDOF_Hexahedron(p, r) &
+      + GetFacetDOF_Hexahedron(q, r)
 ans = ans * 2_I4B
 END PROCEDURE GetFacetDOF_Hexahedron2
 
@@ -523,9 +523,9 @@ END PROCEDURE InterpolationPoint_Hexahedron2
 
 MODULE PROCEDURE IJK2VEFC_Hexahedron
 ! internal variables
-INTEGER(I4B) :: cnt, ii, jj, kk, ll, N, &
+INTEGER(I4B) :: cnt, ii, jj, kk, N, &
   & ii1, ii2, jj1, jj2, kk1, kk2, ijk(3, 8),  &
-  & iedge, iface, p1, p2, dii, djj, dkk, startNode
+  & iedge, p1, p2, dii, djj, dkk, startNode
 INTEGER(I4B), PARAMETER :: tPoints = 8, tEdges = 12, tFacets = 6
 INTEGER(I4B) :: edgeConnectivity(2, tEdges)
 INTEGER(I4B) :: facetConnectivity(4, tFacets)
@@ -1043,96 +1043,98 @@ END PROCEDURE LagrangeCoeff_Hexahedron5_
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE TensorProdBasis_Hexahedron1
-REAL(DFP) :: x(SIZE(xij, 2)), y(SIZE(xij, 2)), z(SIZE(xij, 2))
-REAL(DFP) :: P1(SIZE(xij, 2), p + 1)
-REAL(DFP) :: Q1(SIZE(xij, 2), q + 1)
-REAL(DFP) :: R1(SIZE(xij, 2), r + 1)
-INTEGER(I4B) :: ii, k1, k2, k3, cnt
-
-x = xij(1, :)
-y = xij(2, :)
-z = xij(3, :)
-
-P1 = BasisEvalAll_Line( &
-  & order=p, &
-  & x=x, &
-  & refLine="BIUNIT", &
-  & basisType=basisType1,  &
-  & alpha=alpha1, &
-  & beta=beta1, &
-  & lambda=lambda1)
-
-Q1 = BasisEvalAll_Line( &
-  & order=q, &
-  & x=y, &
-  & refLine="BIUNIT", &
-  & basisType=basisType1,  &
-  & alpha=alpha2, &
-  & beta=beta2, &
-  & lambda=lambda2)
-
-R1 = BasisEvalAll_Line( &
-  & order=r, &
-  & x=z, &
-  & refLine="BIUNIT", &
-  & basisType=basisType3,  &
-  & alpha=alpha3, &
-  & beta=beta3, &
-  & lambda=lambda3)
-
-cnt = 0
-
-DO k3 = 1, r + 1
-  DO k2 = 1, q + 1
-    DO k1 = 1, p + 1
-      cnt = cnt + 1
-      ans(:, cnt) = P1(:, k1) * Q1(:, k2) * R1(:, k3)
-    END DO
-  END DO
-END DO
-
+INTEGER(I4B) :: nrow, ncol
+CALL TensorProdBasis_Hexahedron1_(p, q, r, xij, basisType1, &
+                                  basisType2, basisType3, ans, nrow, ncol, &
+                                  alpha1, beta1, lambda1, alpha2, beta2, &
+                                  lambda2, alpha3, beta3, lambda3)
 END PROCEDURE TensorProdBasis_Hexahedron1
 
 !----------------------------------------------------------------------------
 !                                                 TensorProdBasis_Hexahedron
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE TensorProdBasis_Hexahedron2
-REAL(DFP) :: xij(3, SIZE(x) * SIZE(y) * SIZE(z))
-INTEGER(I4B) :: ii, jj, cnt, kk
+MODULE PROCEDURE TensorProdBasis_Hexahedron1_
+INTEGER(I4B) :: ii, k1, k2, k3, o(3), p1, q1, r1
+REAL(DFP), ALLOCATABLE :: temp(:, :)
 
-xij = 0.0_DFP
-cnt = 0
-DO ii = 1, SIZE(x)
-  DO jj = 1, SIZE(y)
-    DO kk = 1, SIZE(z)
-      cnt = cnt + 1
-      xij(1, cnt) = x(ii)
-      xij(2, cnt) = y(jj)
-      xij(3, cnt) = z(kk)
-    END DO
-  END DO
+nrow = SIZE(xij, 2)
+p1 = p + 1
+q1 = q + 1
+r1 = r + 1
+ncol = p1 * q1 * r1
+
+ALLOCATE (temp(nrow, ncol))
+
+o(1) = 0
+o(2) = o(1) + p1
+o(3) = o(2) + q1
+
+k1 = 1
+CALL BasisEvalAll_Line_(order=p, x=xij(1, :), refLine="BIUNIT", &
+             basisType=basisType1, alpha=alpha1, beta=beta1, lambda=lambda1, &
+                        ans=temp(:, k1:), nrow=k2, ncol=k3)
+k1 = k1 + k3
+
+CALL BasisEvalAll_Line_(order=q, x=xij(2, :), refLine="BIUNIT", &
+             basisType=basisType2, alpha=alpha2, beta=beta2, lambda=lambda2, &
+                        ans=temp(:, k1:), nrow=k2, ncol=k3)
+k1 = k1 + k3
+
+CALL BasisEvalAll_Line_(order=r, x=xij(3, :), refLine="BIUNIT", &
+             basisType=basisType3, alpha=alpha3, beta=beta3, lambda=lambda3, &
+                        ans=temp(:, k1:), nrow=k2, ncol=k3)
+k1 = k1 + k3
+
+DO CONCURRENT(ii=1:nrow, k1=1:p1, k2=1:q1, k3=1:r1)
+  ans(ii, k1 + p1 * (k2 - 1) + p1 * q1 * (k3 - 1)) = &
+    temp(ii, o(1) + k1) * temp(ii, o(2) + k2) * temp(ii, o(3) + k3)
 END DO
 
-ans = TensorProdBasis_Hexahedron1( &
-  & p=p, &
-  & q=q, &
-  & r=r, &
-  & xij=xij, &
-  & basisType1=basisType1, &
-  & basisType2=basisType2, &
-  & basisType3=basisType3, &
-  & alpha1=alpha1, &
-  & alpha2=alpha2, &
-  & alpha3=alpha3, &
-  & beta1=beta1, &
-  & beta2=beta2, &
-  & beta3=beta3, &
-  & lambda1=lambda1, &
-  & lambda2=lambda2, &
-  & lambda3=lambda3)
+DEALLOCATE (temp)
 
+END PROCEDURE TensorProdBasis_Hexahedron1_
+
+!----------------------------------------------------------------------------
+!                                                 TensorProdBasis_Hexahedron
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE TensorProdBasis_Hexahedron2
+INTEGER(I4B) :: nrow, ncol
+CALL TensorProdBasis_Hexahedron2_(p, q, r, x, y, z, basisType1, basisType2, &
+         basisType3, ans, nrow, ncol, alpha1, beta1, lambda1, alpha2, beta2, &
+                                  lambda2, alpha3, beta3, lambda3)
 END PROCEDURE TensorProdBasis_Hexahedron2
+
+!----------------------------------------------------------------------------
+!                                               TensorProdBasis_Hexahedron2_
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE TensorProdBasis_Hexahedron2_
+REAL(DFP), ALLOCATABLE :: xij(:, :)
+INTEGER(I4B) :: ii, p1, q1, r1, k1, k2, k3
+
+p1 = SIZE(x, 1)
+q1 = SIZE(y, 1)
+r1 = SIZE(z, 1)
+ii = p1 * q1 * r1
+ALLOCATE (xij(3, ii))
+
+DO CONCURRENT(k1=1:p1, k2=1:q1, k3=1:r1)
+  xij(1, k1 + p1 * (k2 - 1) + p1 * q1 * (k3 - 1)) = x(k1)
+  xij(2, k1 + p1 * (k2 - 1) + p1 * q1 * (k3 - 1)) = y(k2)
+  xij(3, k1 + p1 * (k2 - 1) + p1 * q1 * (k3 - 1)) = z(k3)
+END DO
+
+CALL TensorProdBasis_Hexahedron1_(p=p, q=q, r=r, xij=xij, &
+        basisType1=basisType1, basisType2=basisType2, basisType3=basisType3, &
+      alpha1=alpha1, alpha2=alpha2, alpha3=alpha3, beta1=beta1, beta2=beta2, &
+             beta3=beta3, lambda1=lambda1, lambda2=lambda2, lambda3=lambda3, &
+                                  ans=ans, nrow=nrow, ncol=ncol)
+
+DEALLOCATE (xij)
+
+END PROCEDURE TensorProdBasis_Hexahedron2_
 
 !----------------------------------------------------------------------------
 !                                                     VertexBasis_Hexahedron
@@ -2754,87 +2756,84 @@ END PROCEDURE LagrangeGradientEvalAll_Hexahedron1_
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE TensorProdBasisGradient_Hexahedron1
-REAL(DFP) :: x(SIZE(xij, 2)), y(SIZE(xij, 2)), z(SIZE(xij, 2))
-REAL(DFP) :: P1(SIZE(xij, 2), p + 1)
-REAL(DFP) :: Q1(SIZE(xij, 2), q + 1)
-REAL(DFP) :: R1(SIZE(xij, 2), r + 1)
-REAL(DFP) :: dP1(SIZE(xij, 2), p + 1)
-REAL(DFP) :: dQ1(SIZE(xij, 2), q + 1)
-REAL(DFP) :: dR1(SIZE(xij, 2), r + 1)
-
-INTEGER(I4B) :: ii, k1, k2, k3, cnt
-
-x = xij(1, :)
-y = xij(2, :)
-z = xij(3, :)
-
-P1 = BasisEvalAll_Line( &
-  & order=p, &
-  & x=x, &
-  & refLine="BIUNIT", &
-  & basisType=basisType1,  &
-  & alpha=alpha1, &
-  & beta=beta1, &
-  & lambda=lambda1)
-
-Q1 = BasisEvalAll_Line( &
-  & order=q, &
-  & x=y, &
-  & refLine="BIUNIT", &
-  & basisType=basisType1,  &
-  & alpha=alpha2, &
-  & beta=beta2, &
-  & lambda=lambda2)
-
-R1 = BasisEvalAll_Line( &
-  & order=r, &
-  & x=z, &
-  & refLine="BIUNIT", &
-  & basisType=basisType3,  &
-  & alpha=alpha3, &
-  & beta=beta3, &
-  & lambda=lambda3)
-
-dP1 = BasisGradientEvalAll_Line( &
-  & order=p, &
-  & x=x, &
-  & refLine="BIUNIT", &
-  & basisType=basisType1,  &
-  & alpha=alpha1, &
-  & beta=beta1, &
-  & lambda=lambda1)
-
-dQ1 = BasisGradientEvalAll_Line( &
-  & order=q, &
-  & x=y, &
-  & refLine="BIUNIT", &
-  & basisType=basisType1,  &
-  & alpha=alpha2, &
-  & beta=beta2, &
-  & lambda=lambda2)
-
-dR1 = BasisGradientEvalAll_Line( &
-  & order=r, &
-  & x=z, &
-  & refLine="BIUNIT", &
-  & basisType=basisType3,  &
-  & alpha=alpha3, &
-  & beta=beta3, &
-  & lambda=lambda3)
-
-cnt = 0
-
-DO k3 = 1, r + 1
-  DO k2 = 1, q + 1
-    DO k1 = 1, p + 1
-      cnt = cnt + 1
-      ans(:, cnt, 1) = dP1(:, k1) * Q1(:, k2) * R1(:, k3)
-      ans(:, cnt, 2) = P1(:, k1) * dQ1(:, k2) * R1(:, k3)
-      ans(:, cnt, 3) = P1(:, k1) * Q1(:, k2) * dR1(:, k3)
-    END DO
-  END DO
-END DO
+INTEGER(I4B) :: dim1, dim2, dim3
+CALL TensorProdBasisGradient_Hexahedron1_(p, q, r, xij, &
+                  basisType1, basisType2, basisType3, ans, dim1, dim2, dim3, &
+                             alpha1, beta1, lambda1, alpha2, beta2, lambda2, &
+                                          alpha3, beta3, lambda3)
 END PROCEDURE TensorProdBasisGradient_Hexahedron1
+
+!----------------------------------------------------------------------------
+!                                         TensorProdBasisGradient_Hexahedron
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE TensorProdBasisGradient_Hexahedron1_
+REAL(DFP), ALLOCATABLE :: temp(:, :)
+INTEGER(I4B) :: ii, k1, k2, k3, p1, q1, r1, o(6)
+
+p1 = p + 1
+q1 = q + 1
+r1 = r + 1
+
+dim1 = SIZE(xij, 2)
+dim2 = p1 * q1 * r1
+dim3 = 3
+
+ii = 2 * dim2
+ALLOCATE (temp(dim1, ii))
+
+o(1) = 0
+o(2) = o(1) + p1
+o(3) = o(2) + q1
+o(4) = o(3) + r1
+o(5) = o(4) + p1
+o(6) = o(5) + q1
+
+k1 = 1
+CALL BasisEvalAll_Line_(order=p, x=xij(1, :), refLine="BIUNIT", &
+             basisType=basisType1, alpha=alpha1, beta=beta1, lambda=lambda1, &
+                        ans=temp(1:, 1:), nrow=ii, ncol=k2)
+k1 = k1 + k2
+
+CALL BasisEvalAll_Line_(order=q, x=xij(2, :), refLine="BIUNIT", &
+             basisType=basisType2, alpha=alpha2, beta=beta2, lambda=lambda2, &
+                        ans=temp(1:, k1:), nrow=ii, ncol=k2)
+k1 = k1 + k2
+
+CALL BasisEvalAll_Line_(order=r, x=xij(3, :), refLine="BIUNIT", &
+             basisType=basisType3, alpha=alpha3, beta=beta3, lambda=lambda3, &
+                        ans=temp(1:, k1:), nrow=ii, ncol=k2)
+k1 = k1 + k2
+
+CALL BasisGradientEvalAll_Line_(order=p, x=xij(1, :), refLine="BIUNIT", &
+             basisType=basisType1, alpha=alpha1, beta=beta1, lambda=lambda1, &
+                                ans=temp(1:, k1:), nrow=ii, ncol=k2)
+k1 = k1 + k2
+
+CALL BasisGradientEvalAll_Line_(order=q, x=xij(2, :), refLine="BIUNIT", &
+             basisType=basisType2, alpha=alpha2, beta=beta2, lambda=lambda2, &
+                                ans=temp(1:, k1:), nrow=ii, ncol=k2)
+k1 = k1 + k2
+
+CALL BasisGradientEvalAll_Line_(order=r, x=xij(3, :), refLine="BIUNIT", &
+             basisType=basisType3, alpha=alpha3, beta=beta3, lambda=lambda3, &
+                                ans=temp(1:, k1:), nrow=ii, ncol=k2)
+k1 = k1 + k2
+
+DO CONCURRENT(ii=1:dim1, k1=1:p1, k2=1:q1, k3=1:r1)
+  ans(ii, k1 + p1 * (k2 - 1) + p1 * q1 * (k3 - 1), 1) = &
+    temp(ii, o(4) + k1) * temp(ii, o(2) + k2) * temp(ii, o(3) + k3)
+
+  ans(ii, k1 + p1 * (k2 - 1) + p1 * q1 * (k3 - 1), 2) = &
+    temp(ii, o(1) + k1) * temp(ii, o(5) + k2) * temp(ii, o(2) + k3)
+
+  ans(ii, k1 + p1 * (k2 - 1) + p1 * q1 * (k3 - 1), 3) = &
+    temp(ii, o(1) + k1) * temp(ii, o(2) + k2) * temp(ii, o(6) + k3)
+END DO
+
+DEALLOCATE (temp)
+
+END PROCEDURE TensorProdBasisGradient_Hexahedron1_
 
 !----------------------------------------------------------------------------
 !

@@ -1227,18 +1227,33 @@ END PROCEDURE JacobiTransform1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE JacobiTransform1_
-REAL(DFP), DIMENSION(0:n, 0:n) :: PP
+REAL(DFP), ALLOCATABLE :: PP(:, :)
+INTEGER(I4B) :: ii, jj, nips
+nips = SIZE(coeff)
+ALLOCATE (PP(nips, n + 1))
+CALL JacobiEvalAll_(n=n, alpha=alpha, beta=beta, x=x, nrow=ii, ncol=jj, &
+                    ans=PP)
+CALL JacobiTransform4_(n, alpha, beta, coeff, PP, w, quadType, ans, tsize)
+DEALLOCATE (PP)
+END PROCEDURE JacobiTransform1_
+
+!----------------------------------------------------------------------------
+!                                                         JacobiTransform
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE JacobiTransform4_
 REAL(DFP) :: nrmsqr, areal
-INTEGER(I4B) :: jj, ii
+INTEGER(I4B) :: jj, ii, nips
+LOGICAL(LGT) :: abool
 
 tsize = n + 1
 
-PP = JacobiEvalAll(n=n, alpha=alpha, beta=beta, x=x)
+nips = SIZE(coeff)
 
 DO jj = 0, n
   areal = 0.0_DFP
 
-  DO ii = 0, n
+  DO ii = 0, nips - 1
     areal = areal + PP(ii, jj) * w(ii) * coeff(ii)
   END DO
 
@@ -1247,11 +1262,13 @@ DO jj = 0, n
 
 END DO
 
-IF (quadType .EQ. qp%GaussLobatto) THEN
+abool = (quadType .EQ. qp%GaussLobatto) .AND. (nips .EQ. n + 1)
+
+IF (abool) THEN
 
   areal = 0.0_DFP
   jj = n
-  DO ii = 0, n
+  DO ii = 0, nips - 1
     areal = areal + PP(ii, jj) * w(ii) * coeff(ii)
   END DO
 
@@ -1261,65 +1278,7 @@ IF (quadType .EQ. qp%GaussLobatto) THEN
 
 END IF
 
-END PROCEDURE JacobiTransform1_
-
-!----------------------------------------------------------------------------
-!                                                         JacobiTransform
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE JacobiTransform2
-INTEGER(I4B) :: nrow, ncol
-CALL JacobiTransform2_(n, alpha, beta, coeff, x, w, quadType, ans, nrow, ncol)
-END PROCEDURE JacobiTransform2
-
-!----------------------------------------------------------------------------
-!                                                         JacobiTransform
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE JacobiTransform2_
-REAL(DFP), DIMENSION(0:n, 0:n) :: PP
-REAL(DFP) :: nrmsqr, areal
-INTEGER(I4B) :: jj, ii, kk
-
-nrow = n + 1
-ncol = SIZE(coeff, 2)
-
-PP = JacobiEvalAll(n=n, alpha=alpha, beta=beta, x=x)
-
-DO kk = 1, ncol
-  DO jj = 0, n
-
-    areal = 0.0_DFP
-
-    DO ii = 0, n
-      areal = areal + PP(ii, jj) * w(ii) * coeff(ii, kk)
-    END DO
-
-    nrmsqr = JacobiNormSQR(n=jj, alpha=alpha, beta=beta)
-    ans(jj, kk) = areal / nrmsqr
-
-  END DO
-END DO
-
-IF (quadType .EQ. qp%GaussLobatto) THEN
-
-  jj = n
-
-  nrmsqr = (2.0_DFP + (alpha + beta + 1.0_DFP) / REAL(n, KIND=DFP)) * nrmsqr
-
-  DO kk = 1, ncol
-
-    areal = 0.0_DFP
-    DO ii = 0, n
-      areal = areal + PP(ii, jj) * w(ii) * coeff(ii, kk)
-    END DO
-
-    ans(jj, kk) = areal / nrmsqr
-  END DO
-
-END IF
-
-END PROCEDURE JacobiTransform2_
+END PROCEDURE JacobiTransform4_
 
 !----------------------------------------------------------------------------
 !                                                         JacobiTransform

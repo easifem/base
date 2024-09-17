@@ -1833,12 +1833,30 @@ END PROCEDURE HeirarchicalGradientBasis_Line2_
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE OrthogonalBasis_Line1
-CHARACTER(1) :: astr
-LOGICAL(LGT) :: isok, abool
+INTEGER(I4B) :: nrow, ncol
+CALL OrthogonalBasis_Line1_(order=order, xij=xij, refline=refline, &
+                         basisType=basisType, ans=ans, nrow=nrow, ncol=ncol, &
+                            alpha=alpha, beta=beta, lambda=lambda)
+END PROCEDURE OrthogonalBasis_Line1
 
-ans = 0.0_DFP
+!----------------------------------------------------------------------------
+!                                                     OrthogonalBasis_Line1_
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE OrthogonalBasis_Line1_
+LOGICAL(LGT) :: isok, abool
+#ifdef DEBUG_VER
+#endif
+
+CHARACTER(1) :: astr
+REAL(DFP) :: x(SIZE(xij, 2))
+
+nrow = SIZE(xij, 2)
+ncol = order + 1
 
 #ifdef DEBUG_VER
+
+ans(1:nrow, 1:ncol) = 0.0_DFP
 
 isok = basisType .EQ. polyopt%Jacobi
 
@@ -1849,7 +1867,6 @@ IF (isok) THEN
     CALL Errormsg(routine="OrthogonalBasis_Line1()", &
                 msg="alpha and beta should be present for basisType=Jacobi", &
                   file=__FILE__, line=__LINE__, unitno=stderr)
-
     RETURN
   END IF
 
@@ -1875,19 +1892,18 @@ astr = UpperCase(refLine(1:1))
 
 SELECT CASE (astr)
 CASE ("U")
-
-  ans = EvalAllOrthopol(n=order, &
-               x=FromUnitLine2BiUnitLine(xin=xij(1, :)), orthopol=basisType, &
-                        alpha=alpha, beta=beta, lambda=lambda)
+  CALL FromUnitLine2BiUnitLine_(xin=xij(1, :), ans=x, tsize=nrow)
+  CALL EvalAllOrthopol_(n=order, x=x, orthopol=basisType, alpha=alpha, &
+                      beta=beta, lambda=lambda, ans=ans, nrow=nrow, ncol=ncol)
 
 CASE ("B")
-
-  ans = EvalAllOrthopol(n=order, x=xij(1, :), orthopol=basisType, &
-                        alpha=alpha, beta=beta, lambda=lambda)
+  CALL EvalAllOrthopol_(n=order, x=xij(1, :), orthopol=basisType, &
+                        alpha=alpha, beta=beta, lambda=lambda, ans=ans, &
+                        nrow=nrow, ncol=ncol)
 
 CASE DEFAULT
 
-  ans = 0.0_DFP
+  ans(1:nrow, 1:ncol) = 0.0_DFP
   CALL Errormsg(msg="No case found for refLine.", &
                 routine="OrthogonalBasis_Line1()", &
                 file=__FILE__, line=__LINE__, unitno=stderr)
@@ -1895,39 +1911,58 @@ CASE DEFAULT
 
 END SELECT
 
-END PROCEDURE OrthogonalBasis_Line1
+END PROCEDURE OrthogonalBasis_Line1_
 
 !----------------------------------------------------------------------------
 !                                            OrthogonalBasisGradient_Line1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE OrthogonalBasisGradient_Line1
-TYPE(String) :: astr
-astr = UpperCase(refLine)
-
-SELECT CASE (astr%chars())
-CASE ("UNIT")
-  ans(:, :, 1) = GradientEvalAllOrthopol( &
-    & n=order, &
-    & x=FromUnitLine2BiUnitLine(xin=xij(1, :)), &
-    & orthopol=basisType)
-  ans = ans * 2.0_DFP
-CASE ("BIUNIT")
-  ans(:, :, 1) = GradientEvalAllOrthopol( &
-    & n=order, &
-    & x=xij(1, :), &
-    & orthopol=basisType)
-CASE DEFAULT
-  ans = 0.0_DFP
-  CALL Errormsg(&
-    & msg="No case found for refline.", &
-    & file=__FILE__, &
-    & routine=" OrthogonalBasisGradient_Line1", &
-    & line=__LINE__, &
-    & unitno=stderr)
-  RETURN
-END SELECT
+INTEGER(I4B) :: dim1, dim2, dim3
+CALL OrthogonalBasisGradient_Line1_(order=order, xij=xij, refline=refline, &
+              basisType=basisType, ans=ans, dim1=dim1, dim2=dim2, dim3=dim3, &
+                                    alpha=alpha, beta=beta, lambda=lambda)
 END PROCEDURE OrthogonalBasisGradient_Line1
+
+!----------------------------------------------------------------------------
+!                                                OrthogonalBasisGradient_Line
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE OrthogonalBasisGradient_Line1_
+CHARACTER(1) :: astr
+REAL(DFP) :: x(SIZE(xij, 2))
+INTEGER(I4B) :: ii, jj
+
+astr = UpperCase(refline(1:1))
+dim1 = SIZE(xij, 2)
+dim2 = order + 1
+dim3 = 1
+
+SELECT CASE (astr)
+CASE ("U")
+
+  CALL FromUnitLine2BiUnitLine_(xin=xij(1, :), ans=x, tsize=dim1)
+  CALL GradientEvalAllOrthopol_(n=order, x=x, orthopol=basisType, &
+                                ans=ans(:, :, 1), nrow=dim1, ncol=dim2)
+
+  DO CONCURRENT(ii=1:dim1, jj=1:dim2)
+    ans(ii, jj, 1) = ans(ii, jj, 1) * 2.0_DFP
+  END DO
+
+CASE ("B")
+  CALL GradientEvalAllOrthopol_(n=order, x=xij(1, :), orthopol=basisType, &
+                                ans=ans(:, :, 1), nrow=dim1, ncol=dim2)
+
+CASE DEFAULT
+
+  ans(1:dim1, 1:dim2, 1:dim3) = 0.0_DFP
+  CALL Errormsg(msg="No case found for refline.", &
+                routine=" OrthogonalBasisGradient_Line1_", &
+                file=__FILE__, line=__LINE__, unitno=stderr)
+  RETURN
+
+END SELECT
+END PROCEDURE OrthogonalBasisGradient_Line1_
 
 !----------------------------------------------------------------------------
 !

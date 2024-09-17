@@ -97,10 +97,10 @@ END PROCEDURE GetEdgeDOF_Tetrahedron2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE GetFacetDOF_Tetrahedron1
-ans = (ps1 - 1) * (ps1 - 2) / 2  &
-      & + (ps2 - 1) * (ps2 - 2) / 2  &
-      & + (ps3 - 1) * (ps3 - 2) / 2  &
-      & + (ps4 - 1) * (ps4 - 2) / 2
+ans = (ps1 - 1) * (ps1 - 2) / 2 &
+      + (ps2 - 1) * (ps2 - 2) / 2 &
+      + (ps3 - 1) * (ps3 - 2) / 2 &
+      + (ps4 - 1) * (ps4 - 2) / 2
 END PROCEDURE GetFacetDOF_Tetrahedron1
 
 !----------------------------------------------------------------------------
@@ -145,15 +145,15 @@ baseContinuity0 = UpperCase(baseContinuity)
 
 SELECT CASE (baseInterpol0%chars())
 CASE ( &
-  & "HIERARCHYPOLYNOMIAL", &
-  & "HIERARCHY", &
-  & "HEIRARCHYPOLYNOMIAL", &
-  & "HEIRARCHY", &
-  & "HIERARCHYINTERPOLATION", &
-  & "HEIRARCHYINTERPOLATION", &
-  & "ORTHOGONALPOLYNOMIAL", &
-  & "ORTHOGONAL", &
-  & "ORTHOGONALINTERPOLATION")
+  "HIERARCHYPOLYNOMIAL", &
+  "HIERARCHY", &
+  "HEIRARCHYPOLYNOMIAL", &
+  "HEIRARCHY", &
+  "HIERARCHYINTERPOLATION", &
+  "HEIRARCHYINTERPOLATION", &
+  "ORTHOGONALPOLYNOMIAL", &
+  "ORTHOGONAL", &
+  "ORTHOGONALINTERPOLATION")
   ans(:, 1) = [1, 2, 3]
   ans(:, 2) = [1, 2, 4]
   ans(:, 3) = [1, 3, 4]
@@ -2897,6 +2897,145 @@ ELSE
 END IF
 
 END PROCEDURE OrthogonalBasisGradient_Tetrahedron1
+
+!----------------------------------------------------------------------------
+!                                       OrthogonalBasisGradient_Tetrahedron
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE OrthogonalBasisGradient_Tetrahedron1_
+CHARACTER(1) :: layout
+REAL(DFP) :: x(1:3, 1:SIZE(xij, 2))
+REAL(DFP) :: P1(SIZE(xij, 2), 0:order)
+REAL(DFP) :: Q1(SIZE(xij, 2), 0:order)
+REAL(DFP) :: R1(SIZE(xij, 2), 0:order)
+REAL(DFP) :: dP1(SIZE(xij, 2), 0:order)
+REAL(DFP) :: dQ1(SIZE(xij, 2), 0:order)
+REAL(DFP) :: dR1(SIZE(xij, 2), 0:order)
+REAL(DFP) :: temp(SIZE(xij, 2), 10), areal, breal
+INTEGER(I4B) :: cnt
+INTEGER(I4B) :: p, q, r
+LOGICAL(LGT) :: isBiunit
+REAL(DFP) :: ans0(SIZE(ans, 1), SIZE(ans, 2), SIZE(ans, 3))
+
+dim1 = SIZE(xij, 2)
+dim2 = (order + 1) * (order + 2) * (order + 3) / 6
+dim3 = 3
+
+ans0 = 0.0_DFP
+layout = UpperCase(refTetrahedron(1:1))
+
+SELECT CASE (layout)
+CASE ("B")
+  x = FromBiUnitTetrahedron2BiUnitHexahedron(xin=xij)
+  isBiunit = .TRUE.
+CASE ("U")
+  x = FromUnitTetrahedron2BiUnitHexahedron(xin=xij)
+  isBiunit = .FALSE.
+END SELECT
+
+temp(:, 1) = 0.5_DFP * (1.0_DFP - x(2, :))
+temp(:, 2) = 0.5_DFP * (1.0_DFP - x(3, :))
+
+P1 = LegendreEvalAll(n=order, x=x(1, :))
+dP1 = LegendreGradientEvalAll(n=order, x=x(1, :))
+cnt = 0
+
+DO p = 0, order
+  areal = -0.5_DFP * REAL(p, DFP)
+
+  Q1 = JacobiEvalAll( &
+    & n=order, &
+    & x=x(2, :), &
+    & alpha=REAL(2 * p + 1, DFP), &
+    & beta=0.0_DFP  &
+    & )
+
+  dQ1 = JacobiGradientEvalAll( &
+    & n=order, &
+    & x=x(2, :), &
+    & alpha=REAL(2 * p + 1, DFP), &
+    & beta=0.0_DFP  &
+    & )
+
+  temp(:, 3) = temp(:, 1)**MAX(p - 1_I4B, 0_I4B)
+  temp(:, 4) = temp(:, 3) * temp(:, 1)
+
+  DO q = 0, order - p
+
+    breal = -0.5_DFP * REAL(p + q, DFP)
+
+    R1 = JacobiEvalAll( &
+      & n=order, &
+      & x=x(3, :), &
+      & alpha=REAL(2 * p + 2 * q + 2, DFP), &
+      & beta=0.0_DFP  &
+      & )
+
+    dR1 = JacobiGradientEvalAll( &
+      & n=order, &
+      & x=x(3, :), &
+      & alpha=REAL(2 * p + 2 * q + 2, DFP), &
+      & beta=0.0_DFP  &
+      & )
+
+    temp(:, 5) = P1(:, p) * Q1(:, q)
+    temp(:, 6) = P1(:, p) * dQ1(:, q)
+    temp(:, 7) = dP1(:, p) * Q1(:, q)
+    temp(:, 9) = temp(:, 2)**MAX(p + q - 1_I4B, 0_I4B)
+    temp(:, 10) = temp(:, 9) * temp(:, 2)
+
+    DO r = 0, order - p - q
+      temp(:, 8) = temp(:, 5) * R1(:, r)
+      cnt = cnt + 1
+      ans0(:, cnt, 1) = temp(:, 7) * R1(:, r) * temp(:, 4) * temp(:, 10)
+      ans0(:, cnt, 2) = temp(:, 8) * areal * temp(:, 3) * temp(:, 10) &
+                        + temp(:, 6) * R1(:, r) * temp(:, 4) * temp(:, 10)
+      ans0(:, cnt, 2) = temp(:, 8) * breal * temp(:, 4) * temp(:, 9) &
+                        + temp(:, 5) * dR1(:, r) * temp(:, 4) * temp(:, 10)
+    END DO
+  END DO
+END DO
+
+IF (isBiunit) THEN
+  temp(:, 1) = x(1, :)
+  temp(:, 2) = x(2, :)
+  temp(:, 3) = x(3, :)
+
+  temp(:, 4) = 2.0_DFP / (temp(:, 2) + temp(:, 3))
+  temp(:, 5) = (1.0_DFP + temp(:, 1)) * temp(:, 4) / (temp(:, 2) + temp(:, 3))
+  temp(:, 6) = 2.0_DFP / (1.0_DFP - temp(:, 3))
+  temp(:, 7) = 1.0_DFP / (1.0_DFP - temp(:, 3))**2
+
+  DO CONCURRENT(p=1:dim2)
+    ans(1:dim1, p, 1) = -temp(:, 4) * ans0(:, p, 1)
+   ans(1:dim1, p, 2) = temp(:, 5) * ans0(:, p, 1) + temp(:, 6) * ans0(:, p, 2)
+    ans(1:dim1, p, 3) = temp(:, 5) * ans0(:, p, 1) &
+                        + temp(:, 7) * ans0(:, p, 2) &
+                        + ans0(:, p, 3)
+  END DO
+
+ELSE
+
+  temp(:, 1:3) = FromUnitTetrahedron2BiUnitTetrahedron(x)
+
+  temp(:, 4) = 2.0_DFP / (temp(:, 2) + temp(:, 3))
+  temp(:, 5) = (1.0_DFP + temp(:, 1)) * temp(:, 4) / (temp(:, 2) + temp(:, 3))
+  temp(:, 6) = 2.0_DFP / (1.0_DFP - temp(:, 3))
+  temp(:, 7) = 1.0_DFP / (1.0_DFP - temp(:, 3))**2
+
+  DO CONCURRENT(p=1:dim2)
+    ans(1:dim1, p, 1) = -temp(:, 4) * ans0(:, p, 1)
+   ans(1:dim1, p, 2) = temp(:, 5) * ans0(:, p, 1) + temp(:, 6) * ans0(:, p, 2)
+    ans(1:dim1, p, 3) = temp(:, 5) * ans0(:, p, 1)  &
+                & + temp(:, 7) * ans0(:, p, 2)  &
+                & + ans0(:, p, 3)
+  END DO
+
+  ans(1:dim1, 1:dim2, 1:dim3) = 2.0_DFP * ans(1:dim1, 1:dim2, 1:dim3)
+
+END IF
+
+END PROCEDURE OrthogonalBasisGradient_Tetrahedron1_
 
 !----------------------------------------------------------------------------
 !

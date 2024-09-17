@@ -251,8 +251,8 @@ CASE (elemopt%Line)
 
 #ifdef DEBUG_VER
   CALL check_error_1d(ierr=ierr, routine=routine, &
-              cellOrder=cellOrder, faceOrder=faceOrder, edgeOrder=edgeOrder, &
-          cellOrient=cellOrient, faceOrient=faceOrient, edgeOrient=edgeOrient)
+                      cellOrder=cellOrder, cellOrient=cellOrient)
+
   IF (ierr .LT. 0) RETURN
 #endif
 
@@ -377,9 +377,9 @@ SELECT CASE (topo)
 CASE (elemopt%Line)
 
 #ifdef DEBUG_VER
-  CALL check_error_2d(ierr=ierr, tface=3, routine=routine, &
-              cellOrder=cellOrder, faceOrder=faceOrder, edgeOrder=edgeOrder, &
-          cellOrient=cellOrient, faceOrient=faceOrient, edgeOrient=edgeOrient)
+  CALL check_error_1d(ierr=ierr, routine=routine, cellOrder=cellOrder, &
+                      cellOrient=cellOrient)
+
   IF (ierr .LT. 0) RETURN
 #endif
 
@@ -471,16 +471,11 @@ END PROCEDURE HierarchicalGradientEvalAll_
 !
 !----------------------------------------------------------------------------
 
-SUBROUTINE check_error_1d(ierr, routine, cellOrder, faceOrder, edgeOrder, &
-                          cellOrient, faceOrient, edgeOrient)
+SUBROUTINE check_error_1d(ierr, routine, cellOrder, cellOrient)
   INTEGER(I4B), INTENT(OUT) :: ierr
   CHARACTER(*), INTENT(IN) :: routine
   INTEGER(I4B), OPTIONAL, INTENT(IN) :: cellOrder(:)
-  INTEGER(I4B), OPTIONAL, INTENT(IN) :: faceOrder(:, :)
-  INTEGER(I4B), OPTIONAL, INTENT(IN) :: edgeOrder(:)
   INTEGER(I4B), OPTIONAL, INTENT(IN) :: cellOrient(:)
-  INTEGER(I4B), OPTIONAL, INTENT(IN) :: faceOrient(:, :)
-  INTEGER(I4B), OPTIONAL, INTENT(IN) :: edgeOrient(:)
 
   ! internal variables
   LOGICAL(LGT) :: isok

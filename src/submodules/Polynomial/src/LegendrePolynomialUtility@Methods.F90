@@ -33,6 +33,8 @@ USE MiscUtility, ONLY: Factorial
 
 USE BaseType, ONLY: qp => TypeQuadratureOpt
 
+USE GlobalData, ONLY: stderr
+
 IMPLICIT NONE
 
 CONTAINS
@@ -172,12 +174,14 @@ END PROCEDURE LegendreJacobiMatrix
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE LegendreGaussQuadrature
-REAL(DFP) :: pn(n), fixvar
+#ifdef USE_LAPACK95
+REAL(DFP) :: fixvar
+REAL(DFP) :: pn(n)
 INTEGER(I4B) :: ii
-
-CALL LegendreJacobiMatrix(n=n, D=pt, E=pn)
+#endif
 
 #ifdef USE_LAPACK95
+CALL LegendreJacobiMatrix(n=n, D=pt, E=pn)
 CALL STEV(D=pt, E=pn)
 
 IF (PRESENT(wt)) THEN
@@ -194,7 +198,7 @@ CALL ErrorMsg(msg="The subroutine requires Lapack95 package", &
               file=__FILE__, &
               routine="LegendreGaussQuadrature", &
               line=__LINE__, &
-              unitno=stdout)
+              unitno=stderr)
 #endif
 
 END PROCEDURE LegendreGaussQuadrature
@@ -204,7 +208,7 @@ END PROCEDURE LegendreGaussQuadrature
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE LegendreJacobiRadauMatrix
-REAL(DFP) :: avar, r1, r2
+REAL(DFP) :: r1, r2
 
 IF (n .LT. 1) RETURN
 
@@ -227,34 +231,32 @@ END PROCEDURE LegendreJacobiRadauMatrix
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE LegendreGaussRadauQuadrature
+#ifdef USE_LAPACK95
 REAL(DFP) :: pn(n + 1), fixvar
 INTEGER(I4B) :: ii
-  !!
+
 CALL LegendreJacobiRadauMatrix(a=a, n=n, D=pt, E=pn)
-!!
-#ifdef USE_LAPACK95
-!!
 CALL STEV(D=pt, E=pn)
-!!
+
 IF (PRESENT(wt)) THEN
   wt = pn
   pn = LegendreEval(n=n, x=pt)
   fixvar = 1.0_DFP / REAL((n + 1)**2, KIND=DFP)
-  !!
+
   DO ii = 1, n + 1
     wt(ii) = fixvar * (1.0_DFP + a * pt(ii)) / (pn(ii)**2)
   END DO
 END IF
-  !!
+
 #else
-CALL ErrorMsg( &
-  & msg="The subroutine requires Lapack95 package", &
-  & file=__FILE__, &
-  & routine="LegendreGaussRadauQuadrature", &
-  & line=__LINE__, &
-  & unitno=stdout)
+
+CALL ErrorMsg(msg="The subroutine requires Lapack95 package", &
+              file=__FILE__, &
+              routine="LegendreGaussRadauQuadrature", &
+              line=__LINE__, &
+              unitno=stderr)
 #endif
-  !!
+
 END PROCEDURE LegendreGaussRadauQuadrature
 
 !----------------------------------------------------------------------------
@@ -262,24 +264,24 @@ END PROCEDURE LegendreGaussRadauQuadrature
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE LegendreJacobiLobattoMatrix
-  !!
+
 REAL(DFP) :: r1, r2
-  !!
+
 IF (n .LT. 0) RETURN
-  !!
+
 CALL LegendreJacobiMatrix(  &
   & n=n + 1, &
   & D=D, &
   & E=E, &
   & alphaCoeff=alphaCoeff, &
   & betaCoeff=betaCoeff)
-  !!
+
 D(n + 2) = 0.0_DFP
 r1 = REAL(n + 1, KIND=DFP)
 r2 = REAL(2 * n + 1, KIND=DFP)
-  !!
+
 E(n + 1) = SQRT(r1 / r2)
-  !!
+
 END PROCEDURE LegendreJacobiLobattoMatrix
 
 !----------------------------------------------------------------------------
@@ -287,34 +289,33 @@ END PROCEDURE LegendreJacobiLobattoMatrix
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE LegendreGaussLobattoQuadrature
+#ifdef USE_LAPACK95
 REAL(DFP) :: pn(n + 2), fixvar
 INTEGER(I4B) :: ii
-!!
+
 CALL LegendreJacobiLobattoMatrix(n=n, D=pt, E=pn)
-!!
-#ifdef USE_LAPACK95
-!!
+
 CALL STEV(D=pt, E=pn)
-!!
+
 IF (PRESENT(wt)) THEN
   wt = pn
   pn = LegendreEval(n=n + 1, x=pt)
   fixvar = 2.0_DFP / REAL((n + 1) * (n + 2), KIND=DFP)
-  !!
+
   DO ii = 1, n + 2
     wt(ii) = fixvar / (pn(ii)**2)
   END DO
 END IF
-  !!
+
 #else
 CALL ErrorMsg( &
   & msg="The subroutine requires Lapack95 package", &
   & file=__FILE__, &
   & routine="LegendreGaussLobattoQuadrature", &
   & line=__LINE__, &
-  & unitno=stdout)
+  & unitno=stderr)
 #endif
-  !!
+
 END PROCEDURE LegendreGaussLobattoQuadrature
 
 !----------------------------------------------------------------------------
@@ -334,21 +335,21 @@ INTEGER(I4B) :: order
 REAL(DFP), PARAMETER :: left = -1.0_DFP, right = 1.0_DFP
 REAL(DFP), ALLOCATABLE :: p(:), w(:)
 LOGICAL(LGT) :: inside
-!!
+
 IF (PRESENT(onlyInside)) THEN
   inside = onlyInside
 ELSE
   inside = .FALSE.
 END IF
-!!
+
 SELECT CASE (QuadType)
 CASE (qp%Gauss)
-  !!
+
   order = n
   CALL LegendreGaussQuadrature(n=order, pt=pt, wt=wt)
-  !!
+
 CASE (qp%GaussRadau, qp%GaussRadauLeft)
-  !!
+
   IF (inside) THEN
     order = n
     ALLOCATE (p(n + 1), w(n + 1))
@@ -359,9 +360,9 @@ CASE (qp%GaussRadau, qp%GaussRadauLeft)
     order = n - 1
     CALL LegendreGaussRadauQuadrature(a=left, n=order, pt=pt, wt=wt)
   END IF
-  !!
+
 CASE (qp%GaussRadauRight)
-  !!
+
   IF (inside) THEN
     order = n
     ALLOCATE (p(n + 1), w(n + 1))
@@ -371,9 +372,9 @@ CASE (qp%GaussRadauRight)
     order = n - 1
     CALL LegendreGaussRadauQuadrature(a=right, n=order, pt=pt, wt=wt)
   END IF
-  !!
+
 CASE (qp%GaussLobatto)
-  !!
+
   IF (inside) THEN
     order = n
     ALLOCATE (p(n + 2), w(n + 2))
@@ -393,33 +394,33 @@ END PROCEDURE LegendreQuadrature
 MODULE PROCEDURE LegendreEval1
 INTEGER(I4B) :: i
 REAL(DFP) :: c1, c2, c3, r_i, ans_1, ans_2
-!!
+
 ans = 0.0_DFP
-!!
+
 IF (n < 0) THEN
   RETURN
 END IF
-!!
+
 ans = 1.0_DFP
 ans_2 = ans
-!!
+
 IF (n .EQ. 0) THEN
   RETURN
 END IF
-!!
+
 ans = x
-!!
+
 DO i = 1, n - 1
-  !!
+
   r_i = REAL(i, kind=DFP)
   c1 = r_i + 1.0_DFP
   c2 = 2.0_DFP * r_i + 1.0_DFP
   c3 = -r_i
-  !!
+
   ans_1 = ans
   ans = ((c2 * x) * ans + c3 * ans_2) / c1
   ans_2 = ans_1
-  !!
+
 END DO
 END PROCEDURE LegendreEval1
 
@@ -431,33 +432,33 @@ MODULE PROCEDURE LegendreEval2
 INTEGER(I4B) :: i
 REAL(DFP) :: c1, c2, c3, r_i
 REAL(DFP), DIMENSION(SIZE(x)) :: ans_1, ans_2
-!!
+
 ans = 0.0_DFP
-!!
+
 IF (n < 0) THEN
   RETURN
 END IF
-!!
+
 ans = 1.0_DFP
 ans_2 = ans
-!!
+
 IF (n .EQ. 0) THEN
   RETURN
 END IF
-!!
+
 ans = x
-!!
+
 DO i = 1, n - 1
-  !!
+
   r_i = REAL(i, kind=DFP)
   c1 = r_i + 1.0_DFP
   c2 = 2.0_DFP * r_i + 1.0_DFP
   c3 = -r_i
-  !!
+
   ans_1 = ans
   ans = ((c2 * x) * ans + c3 * ans_2) / c1
   ans_2 = ans_1
-  !!
+
 END DO
 END PROCEDURE LegendreEval2
 
@@ -555,30 +556,30 @@ END PROCEDURE LegendreEvalAll2_
 MODULE PROCEDURE LegendreMonomialExpansionAll
 REAL(DFP) :: r_i
 INTEGER(I4B) :: ii
-  !!
+
 IF (n < 0) THEN
   RETURN
 END IF
-!!
+
 ans = 0.0_DFP
 ans(1, 1) = 1.0_DFP
-  !!
+
 IF (n .EQ. 0) THEN
   RETURN
 END IF
-  !!
+
 ans(2, 2) = 1.0_DFP
-  !!
+
 DO ii = 2, n
-    !!
+
   r_i = REAL(ii, KIND=DFP)
-  !!
+
   ans(1:ii - 1, ii + 1) = &
     & (-r_i + 1.0) * ans(1:ii - 1, ii - 1) / r_i
-  !!
+
   ans(2:ii + 1, ii + 1) = ans(2:ii + 1, ii + 1) &
     & + (2.0 * r_i - 1.0) * ans(1:ii, ii) / r_i
-  !!
+
 END DO
 END PROCEDURE LegendreMonomialExpansionAll
 
@@ -689,46 +690,46 @@ END PROCEDURE LegendreGradientEvalAll2_
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE LegendreGradientEval1
-  !!
+
 INTEGER(I4B) :: ii
 REAL(DFP) :: r_ii
 REAL(DFP) :: p, p_1, p_2
 REAL(DFP) :: ans_1, ans_2
-!!
+
 IF (n < 0) THEN
   RETURN
 END IF
-!!
+
 p = 1.0_DFP
 ans = 0.0_DFP
 p_2 = p
 ans_2 = ans
-!!
+
 IF (n < 1) THEN
   RETURN
 END IF
-!!
+
 p = x
 ans = 1.0_DFP
-!!
+
 DO ii = 2, n
-  !!
+
   r_ii = REAL(ii, KIND=DFP)
-  !!
+
   p_1 = p
-  !!
+
   p = ((2.0_DFP * r_ii - 1) * x * p &
               & - (r_ii - 1.0_DFP) * p_2) &
               & / r_ii
-  !!
+
   p_2 = p_1
-  !!
+
   ans_1 = ans
   ans = (2.0_DFP * r_ii - 1.0_DFP) * p_1 + ans_2
   ans_2 = ans_1
-  !!
+
 END DO
-!!
+
 END PROCEDURE LegendreGradientEval1
 
 !----------------------------------------------------------------------------
@@ -736,46 +737,46 @@ END PROCEDURE LegendreGradientEval1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE LegendreGradientEval2
-!!
+
 INTEGER(I4B) :: ii
 REAL(DFP) :: r_ii
 REAL(DFP), DIMENSION(SIZE(x)) :: p, p_1, p_2
 REAL(DFP), DIMENSION(SIZE(x)) :: ans_1, ans_2
-!!
+
 IF (n < 0) THEN
   RETURN
 END IF
-!!
+
 p = 1.0_DFP
 ans = 0.0_DFP
 p_2 = p
 ans_2 = ans
-!!
+
 IF (n < 1) THEN
   RETURN
 END IF
-!!
+
 p = x
 ans = 1.0_DFP
-!!
+
 DO ii = 2, n
-  !!
+
   r_ii = REAL(ii, KIND=DFP)
-  !!
+
   p_1 = p
-  !!
+
   p = ((2.0_DFP * r_ii - 1) * x * p &
               & - (r_ii - 1.0_DFP) * p_2) &
               & / r_ii
-  !!
+
   p_2 = p_1
-  !!
+
   ans_1 = ans
   ans = (2.0_DFP * r_ii - 1.0_DFP) * p_1 + ans_2
   ans_2 = ans_1
-  !!
+
 END DO
-!!
+
 END PROCEDURE LegendreGradientEval2
 
 !----------------------------------------------------------------------------
@@ -786,21 +787,21 @@ MODULE PROCEDURE LegendreEvalSum1
 REAL(DFP) :: t, b1, b2
 INTEGER(I4B) :: j
 REAL(DFP) :: i
-!!
+
 IF (n .LT. 0) RETURN
-!!
+
 b1 = 0.0_DFP
 b2 = 0.0_DFP
-!!
+
 DO j = n, 1, -1
   i = REAL(j, KIND=DFP)
   t = (2 * i + 1) / (i + 1) * x * b1 - (i + 1) / (i + 2) * b2 + coeff(j)
   b2 = b1
   b1 = t
 END DO
-!!
+
 ans = x * b1 - b2 / 2.0_DFP + coeff(0)
-!!
+
 END PROCEDURE LegendreEvalSum1
 
 !----------------------------------------------------------------------------
@@ -811,21 +812,21 @@ MODULE PROCEDURE LegendreEvalSum2
 REAL(DFP), DIMENSION(SIZE(x)) :: t, b1, b2
 INTEGER(I4B) :: j
 REAL(DFP) :: i
-!!
+
 IF (n .LT. 0) RETURN
-!!
+
 b1 = 0.0_DFP
 b2 = 0.0_DFP
-!!
+
 DO j = n, 1, -1
   i = REAL(j, KIND=DFP)
   t = (2 * i + 1) / (i + 1) * x * b1 - (i + 1) / (i + 2) * b2 + coeff(j)
   b2 = b1
   b1 = t
 END DO
-!!
+
 ans = x * b1 - b2 / 2.0_DFP + coeff(0)
-!!
+
 END PROCEDURE LegendreEvalSum2
 
 !----------------------------------------------------------------------------
@@ -836,12 +837,12 @@ MODULE PROCEDURE LegendreGradientEvalSum1
 REAL(DFP) :: t, b1, b2
 INTEGER(I4B) :: j
 REAL(DFP) :: i
-!!
+
 IF (n .LT. 0) RETURN
-!!
+
 b1 = 0
 b2 = 0
-!!
+
 DO j = n - 1, 0, -1
   i = REAL(j, KIND=DFP)
   t = (2 * i + 3) / (i + 1) * x * b1 - (i + 3) / (i + 2) * b2 + coeff(j + 1); 
@@ -859,12 +860,12 @@ MODULE PROCEDURE LegendreGradientEvalSum2
 REAL(DFP), DIMENSION(SIZE(x)) :: t, b1, b2
 INTEGER(I4B) :: j
 REAL(DFP) :: i
-!!
+
 IF (n .LT. 0) RETURN
-!!
+
 b1 = 0
 b2 = 0
-!!
+
 DO j = n - 1, 0, -1
   i = REAL(j, KIND=DFP)
   t = (2 * i + 3) / (i + 1) * x * b1 - (i + 3) / (i + 2) * b2 + coeff(j + 1); 
@@ -883,17 +884,17 @@ REAL(DFP) :: t, b1, b2
 REAL(DFP) :: s, A1, A2
 INTEGER(I4B) :: j
 REAL(DFP) :: i
-!!
+
 IF (n .LT. 0) RETURN
-!!
+
 b1 = 0
 b2 = 0
 s = 1.0_DFP
-!!
+
 DO j = 2 * k - 1, 1, -2
   s = j * s
 END DO
-!!
+
 DO j = n - k, 0, -1
   i = REAL(j, KIND=DFP)
   A1 = (2 * i + 2 * k + 1) / (i + 1) * x; 
@@ -914,26 +915,26 @@ REAL(DFP), DIMENSION(SIZE(x)) :: t, b1, b2, A1
 REAL(DFP) :: s, A2
 INTEGER(I4B) :: j
 REAL(DFP) :: i
-!!
+
 IF (n .LT. 0) RETURN
-!!
+
 b1 = 0
 b2 = 0
 s = 1.0_DFP
-!!
+
 DO j = 2 * k - 1, 1, -2
   s = j * s
 END DO
-!!
+
 DO j = n - k, 0, -1
   i = REAL(j, KIND=DFP)
-  A1 = (2 * i + 2 * k + 1) / (i + 1) * x; 
-  A2 = -(i + 2 * k + 1) / (i + 2); 
-  t = A1 * b1 + A2 * b2 + coeff(j + k); 
-  b2 = b1; 
-  b1 = t; 
+  A1 = (2 * i + 2 * k + 1) / (i + 1) * x
+  A2 = -(i + 2 * k + 1) / (i + 2)
+  t = A1 * b1 + A2 * b2 + coeff(j + k)
+  b2 = b1
+  b1 = t
 END DO
-!!
+
 ans = s * b1
 END PROCEDURE LegendreGradientEvalSum4
 
@@ -952,92 +953,51 @@ END PROCEDURE LegendreTransform1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE LegendreTransform1_
-REAL(DFP), DIMENSION(0:n, 0:n) :: PP
-INTEGER(I4B) :: ii, jj
+REAL(DFP), ALLOCATABLE :: PP(:, :)
+INTEGER(I4B) :: ii, jj, nips
+nips = SIZE(coeff)
+ALLOCATE (PP(nips, n + 1))
+
+CALL LegendreEvalAll_(n=n, x=x, ans=PP, nrow=ii, ncol=jj)
+CALL LegendreTransform4_(n=n, coeff=coeff, PP=PP, w=w, quadType=quadType, &
+                         ans=ans, tsize=tsize)
+DEALLOCATE (PP)
+END PROCEDURE LegendreTransform1_
+
+!----------------------------------------------------------------------------
+!                                                         LegendreTransform4_
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE LegendreTransform4_
+INTEGER(I4B) :: ii, jj, nips
 REAL(DFP) :: nrmsqr, areal
+LOGICAL(LGT) :: abool
 
 tsize = n + 1
-
-! PP = LegendreEvalAll(n=n, x=x)
-CALL LegendreEvalAll_(n=n, x=x, ans=PP, nrow=ii, ncol=jj)
+nips = SIZE(coeff)
 
 DO jj = 0, n
   areal = 0.0_DFP
-  DO ii = 0, n
+  DO ii = 0, nips - 1
     areal = areal + PP(ii, jj) * w(ii) * coeff(ii)
   END DO
   nrmsqr = LegendreNormSQR(n=jj)
   ans(jj) = areal / nrmsqr
 END DO
 
-IF (quadType .EQ. qp%GaussLobatto) THEN
+abool = (quadType .EQ. qp%GaussLobatto) .AND. (nips .EQ. n + 1)
+
+IF (abool) THEN
   areal = 0.0_DFP
   jj = n
-  DO ii = 0, n
+  DO ii = 0, nips - 1
     areal = areal + PP(ii, jj) * w(ii) * coeff(ii)
   END DO
 
   nrmsqr = 2.0_DFP / REAL(n, KIND=DFP)
   ans(jj) = areal / nrmsqr
 END IF
-
-END PROCEDURE LegendreTransform1_
-
-!----------------------------------------------------------------------------
-!                                                    LegendreTransform
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE LegendreTransform2
-INTEGER(I4B) :: ii, jj
-CALL LegendreTransform2_(n=n, coeff=coeff, x=x, w=w, quadType=quadType, &
-                         ans=ans, nrow=ii, ncol=jj)
-END PROCEDURE LegendreTransform2
-
-!----------------------------------------------------------------------------
-!                                                          LegendreTransform
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE LegendreTransform2_
-REAL(DFP), DIMENSION(0:n, 0:n) :: PP
-INTEGER(I4B) :: ii, jj, kk
-REAL(DFP) :: nrmsqr, areal
-
-nrow = n + 1
-ncol = SIZE(coeff, 2)
-
-CALL LegendreEvalAll_(n=n, x=x, nrow=ii, ncol=jj, ans=PP)
-
-DO kk = 1, ncol
-  DO jj = 0, n
-
-    areal = 0.0_DFP
-
-    DO ii = 0, n
-      areal = areal + PP(ii, jj) * w(ii) * coeff(ii, kk)
-    END DO
-
-    nrmsqr = LegendreNormSQR(n=jj)
-    ans(jj, kk) = areal / nrmsqr
-
-  END DO
-END DO
-
-IF (quadType .EQ. qp%GaussLobatto) THEN
-
-  jj = n
-  nrmsqr = 2.0_DFP / REAL(n, KIND=DFP)
-
-  DO kk = 1, ncol
-    areal = 0.0_DFP
-    DO ii = 0, n
-      areal = areal + PP(ii, jj) * w(ii) * coeff(ii, kk)
-    END DO
-    ans(jj, kk) = areal / nrmsqr
-  END DO
-
-END IF
-
-END PROCEDURE LegendreTransform2_
+END PROCEDURE LegendreTransform4_
 
 !----------------------------------------------------------------------------
 !                                                    LegendreTransform
@@ -1114,33 +1074,32 @@ END PROCEDURE LegendreDMatrix1
 
 PURE SUBROUTINE LegendreDMatrixGL(n, x, D)
   INTEGER(I4B), INTENT(IN) :: n
-      !! order of Jacobi polynomial
+  ! order of Jacobi polynomial
   REAL(DFP), INTENT(IN) :: x(0:n)
-      !! quadrature points
+  ! quadrature points
   REAL(DFP), INTENT(OUT) :: D(0:n, 0:n)
-      !! D matrix
-  !!
-  !! main
-  !!
+  ! D matrix
+
+  ! main
   REAL(DFP) :: J(0:n)
   REAL(DFP) :: rn
   INTEGER(I4B) :: ii, jj
-  !!
+
   rn = REAL(n, KIND=DFP)
-  !!
+
   J = LegendreEval(n=n, x=x)
-  !!
+
   D = 0.0_DFP
   D(0, 0) = 0.125_DFP * rn * (rn + 1.0_DFP)
   D(n, n) = -D(0, 0)
-  !!
+
   DO jj = 0, n
     DO ii = 0, n
       IF (ii .NE. jj) &
         & D(ii, jj) = J(ii) / J(jj) / (x(ii) - x(jj))
     END DO
   END DO
-  !!
+
 END SUBROUTINE LegendreDMatrixGL
 
 !----------------------------------------------------------------------------
@@ -1149,45 +1108,45 @@ END SUBROUTINE LegendreDMatrixGL
 
 PURE SUBROUTINE LegendreDMatrixGL2(n, x, D)
   INTEGER(I4B), INTENT(IN) :: n
-      !! order of Jacobi polynomial
+  ! order of Jacobi polynomial
   REAL(DFP), INTENT(IN) :: x(0:n)
-      !! quadrature points
+  ! quadrature points
   REAL(DFP), INTENT(OUT) :: D(0:n, 0:n)
-      !! D matrix
-  !!
-  !! main
-  !!
+  ! D matrix
+
+  ! main
+
   REAL(DFP) :: J(0:n)
   REAL(DFP) :: rn
   INTEGER(I4B) :: ii, jj, nb2
-  !!
+
   nb2 = INT(n / 2)
   rn = REAL(n, KIND=DFP)
-  !!
+
   J = LegendreEval(n=n, x=x)
   D = 0.0_DFP
-  !!
+
   DO jj = 0, n
     DO ii = 0, nb2
       IF (ii .NE. jj) &
         & D(ii, jj) = J(ii) / J(jj) / (x(ii) - x(jj))
     END DO
   END DO
-  !!
-  !! correct diagonal entries
-  !!
+
+  ! correct diagonal entries
+
   DO ii = 0, nb2
     D(ii, ii) = -SUM(D(ii, :))
   END DO
-  !!
-  !! copy
-  !!
+  !
+  ! copy
+
   DO jj = 0, n
     DO ii = 0, nb2
       D(n - ii, n - jj) = -D(ii, jj)
     END DO
   END DO
-  !!
+
 END SUBROUTINE LegendreDMatrixGL2
 
 !----------------------------------------------------------------------------
@@ -1196,21 +1155,21 @@ END SUBROUTINE LegendreDMatrixGL2
 
 PURE SUBROUTINE LegendreDMatrixG(n, x, D)
   INTEGER(I4B), INTENT(IN) :: n
-      !! order of Jacobi polynomial
+  ! order of Jacobi polynomial
   REAL(DFP), INTENT(IN) :: x(0:n)
-      !! quadrature points
+  ! quadrature points
   REAL(DFP), INTENT(OUT) :: D(0:n, 0:n)
-      !! D matrix
-  !!
-  !! main
-  !!
+  ! D matrix
+
+  ! main
+
   REAL(DFP) :: J(0:n)
   INTEGER(I4B) :: ii, jj
-  !!
-  !! Compute dJ_{N-1}(a+1,b+1)
-  !!
+
+  ! Compute dJ_{N-1}(a+1,b+1)
+
   J = LegendreGradientEval(n=n + 1, x=x)
-  !!
+
   DO jj = 0, n
     DO ii = 0, n
       IF (ii .EQ. jj) THEN
@@ -1220,7 +1179,7 @@ PURE SUBROUTINE LegendreDMatrixG(n, x, D)
       END IF
     END DO
   END DO
-!!
+
 END SUBROUTINE LegendreDMatrixG
 
 !----------------------------------------------------------------------------
@@ -1229,45 +1188,40 @@ END SUBROUTINE LegendreDMatrixG
 
 PURE SUBROUTINE LegendreDMatrixG2(n, x, D)
   INTEGER(I4B), INTENT(IN) :: n
-      !! order of Jacobi polynomial
+  ! order of Jacobi polynomial
   REAL(DFP), INTENT(IN) :: x(0:n)
-      !! quadrature points
+  ! quadrature points
   REAL(DFP), INTENT(OUT) :: D(0:n, 0:n)
-      !! D matrix
-  !!
-  !! internal variables
-  !!
+  ! D matrix
+
+  ! internal variables
   REAL(DFP) :: J(0:n)
   INTEGER(I4B) :: ii, jj, nb2
-  !!
-  !! main
-  !!
+
+  ! main
   nb2 = INT(n / 2)
   D = 0.0_DFP
-  !!
+
   J = LegendreGradientEval(n=n + 1, x=x)
-  !!
+
   DO jj = 0, n
     DO ii = 0, nb2
       IF (ii .NE. jj) &
       & D(ii, jj) = J(ii) / J(jj) / (x(ii) - x(jj))
     END DO
   END DO
-  !!
-  !! correct diagonal entries
-  !!
+
+  ! correct diagonal entries
   DO ii = 0, nb2
     D(ii, ii) = -SUM(D(ii, :))
   END DO
-  !!
-  !! copy
-  !!
+
+  ! copy
   DO jj = 0, n
     DO ii = 0, nb2
       D(n - ii, n - jj) = -D(ii, jj)
     END DO
   END DO
-  !!
 END SUBROUTINE LegendreDMatrixG2
 
 !----------------------------------------------------------------------------
