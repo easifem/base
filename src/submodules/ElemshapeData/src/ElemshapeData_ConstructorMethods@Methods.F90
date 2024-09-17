@@ -45,6 +45,7 @@ CALL Reallocate(obj%js, nips)
 CALL Reallocate(obj%thickness, nips)
 obj%thickness = 1.0_DFP
 CALL Reallocate(obj%coord, nsd, nips)
+CALL Reallocate(obj%ws, nips)
 obj%nsd = nsd
 obj%xidim = xidim
 obj%nips = nips

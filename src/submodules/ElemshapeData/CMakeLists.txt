@@ -34,11 +34,7 @@ target_sources(
           ${src_path}/ElemshapeData_StabilizationParamMethods@SUGN3.F90
           ${src_path}/ElemshapeData_StabilizationParamMethods@SUPG.F90
           ${src_path}/ElemshapeData_StabilizationParamMethods@Takizawa2018.F90
-          ${src_path}/ElemshapeData_UnitNormalMethods@Methods.F90)
-
-# include(${src_path}/H1/CMakeLists.txt)
-# include(${src_path}/HDiv/CMakeLists.txt)
-# include(${src_path}/HCurl/CMakeLists.txt)
-# include(${src_path}/DG/CMakeLists.txt)
-include(${src_path}/Lagrange/CMakeLists.txt)
-include(${src_path}/Hierarchical/CMakeLists.txt)
+          ${src_path}/ElemshapeData_UnitNormalMethods@Methods.F90
+          ${src_path}/ElemshapeData_Lagrange@Methods.F90
+          ${src_path}/ElemshapeData_Hierarchical@Methods.F90
+          ${src_path}/ElemshapeData_Orthogonal@Methods.F90)
