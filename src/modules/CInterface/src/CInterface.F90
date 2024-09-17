@@ -18,8 +18,8 @@ MODULE CInterface
 USE GlobalData
 USE String_Class, ONLY: String
 USE, INTRINSIC :: ISO_C_BINDING, C_PTR => C_PTR, &
-  & C_CHAR_PTR => C_PTR, C_CONST_CHAR_PTR => C_PTR, &
-  & C_void_ptr => C_PTR, C_CONST_VOID_PTR => C_PTR
+                             C_CHAR_PTR => C_PTR, C_CONST_CHAR_PTR => C_PTR, &
+                                C_void_ptr => C_PTR, C_CONST_VOID_PTR => C_PTR
 IMPLICIT NONE
 PRIVATE
 
