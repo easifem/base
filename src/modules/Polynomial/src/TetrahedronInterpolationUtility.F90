@@ -31,7 +31,10 @@ PUBLIC :: LagrangeCoeff_Tetrahedron
 PUBLIC :: LagrangeCoeff_Tetrahedron_
 PUBLIC :: InterpolationPoint_Tetrahedron
 PUBLIC :: InterpolationPoint_Tetrahedron_
+
 PUBLIC :: OrthogonalBasis_Tetrahedron
+PUBLIC :: OrthogonalBasis_Tetrahedron_
+
 PUBLIC :: BarycentricVertexBasis_Tetrahedron
 PUBLIC :: BarycentricEdgeBasis_Tetrahedron
 PUBLIC :: BarycentricFacetBasis_Tetrahedron
@@ -67,6 +70,8 @@ PUBLIC :: HeirarchicalBasisGradient_Tetrahedron
 PUBLIC :: HeirarchicalBasisGradient_Tetrahedron_
 
 PUBLIC :: OrthogonalBasisGradient_Tetrahedron
+PUBLIC :: OrthogonalBasisGradient_Tetrahedron_
+
 PUBLIC :: GetTotalDOF_Tetrahedron
 PUBLIC :: GetTotalInDOF_Tetrahedron
 
@@ -903,9 +908,8 @@ END INTERFACE OrthogonalBasis_Tetrahedron_
 ! summary: Orthogongal basis on Tetrahedron
 
 INTERFACE OrthogonalBasis_Tetrahedron
-  MODULE FUNCTION OrthogonalBasis_Tetrahedron2( &
-    & order, &
-    & x, y, z, refTetrahedron) RESULT(ans)
+  MODULE FUNCTION OrthogonalBasis_Tetrahedron2(order, x, y, z, &
+                                               refTetrahedron) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
     !! order of polynomial space
     REAL(DFP), INTENT(IN) :: x(:)
@@ -2685,10 +2689,8 @@ END INTERFACE LagrangeGradientEvalAll_Tetrahedron_
 ! summary: Orthogongal basis on Tetrahedron
 
 INTERFACE OrthogonalBasisGradient_Tetrahedron
-  MODULE FUNCTION OrthogonalBasisGradient_Tetrahedron1( &
-    & order, &
-    & xij, &
-    & refTetrahedron) RESULT(ans)
+  MODULE FUNCTION OrthogonalBasisGradient_Tetrahedron1(order, xij, &
+                                                   refTetrahedron) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
     !! order of polynomial space
     REAL(DFP), INTENT(IN) :: xij(:, :)
@@ -2699,14 +2701,42 @@ INTERFACE OrthogonalBasisGradient_Tetrahedron
     CHARACTER(*), INTENT(IN) :: refTetrahedron
     !! "UNIT"
     !! "BIUNIT"
-    REAL(DFP) :: ans( &
-      & SIZE(xij, 2), &
-      & (order + 1) * (order + 2) * (order + 3) / 6, 3)
+    REAL(DFP) :: ans(SIZE(xij, 2), &
+                     (order + 1) * (order + 2) * (order + 3) / 6, 3)
     !! shape functions
     !! ans(:, j), jth shape functions at all points
     !! ans(j, :), all shape functions at jth point
   END FUNCTION OrthogonalBasisGradient_Tetrahedron1
 END INTERFACE OrthogonalBasisGradient_Tetrahedron
+
+!----------------------------------------------------------------------------
+!                                       OrthogonalBasisGradient_Tetrahedron_
+!----------------------------------------------------------------------------
+
+INTERFACE OrthogonalBasisGradient_Tetrahedron_
+  MODULE SUBROUTINE OrthogonalBasisGradient_Tetrahedron1_(order, xij, &
+                                        refTetrahedron, ans, dim1, dim2, dim3)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order of polynomial space
+    REAL(DFP), INTENT(IN) :: xij(:, :)
+    !! Points of evaluation in reference Tetrahedron.
+    !! The shape functions will be evaluated
+    !! at these points.
+    !! the SIZE(xij,1) = 3, and SIZE(xij, 2) = number of points
+    CHARACTER(*), INTENT(IN) :: refTetrahedron
+    !! "UNIT"
+    !! "BIUNIT"
+    REAL(DFP), INTENT(INOUT) :: ans(:, :, :)
+    !! gradient of  shape functions
+    !! first dimension = evaluation point
+    !! second dimension = shape function number
+    !! third dimension = spatial dimension
+    INTEGER(I4B), INTENT(OUT) :: dim1, dim2, dim3
+    !! dim1 = size(xij, 2)
+    !! dim2 = (order + 1) * (order + 2) * (order + 3) / 6
+    !! dim3 = 3
+  END SUBROUTINE OrthogonalBasisGradient_Tetrahedron1_
+END INTERFACE OrthogonalBasisGradient_Tetrahedron_
 
 !----------------------------------------------------------------------------
 !                                    HeirarchicalBasisGradient_Tetrahedron

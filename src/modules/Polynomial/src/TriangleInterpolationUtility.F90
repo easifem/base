@@ -34,8 +34,13 @@ PUBLIC :: LagrangeCoeff_Triangle
 PUBLIC :: LagrangeCoeff_Triangle_
 
 PUBLIC :: Dubiner_Triangle
+PUBLIC :: Dubiner_Triangle_
+
 PUBLIC :: OrthogonalBasis_Triangle
+PUBLIC :: OrthogonalBasis_Triangle_
+
 PUBLIC :: OrthogonalBasisGradient_Triangle
+PUBLIC :: OrthogonalBasisGradient_Triangle_
 
 PUBLIC :: VertexBasis_Triangle
 PUBLIC :: EdgeBasis_Triangle
@@ -865,6 +870,10 @@ INTERFACE Dubiner_Triangle_
   END SUBROUTINE Dubiner_Triangle1_
 END INTERFACE Dubiner_Triangle_
 
+INTERFACE OrthogonalBasis_Triangle_
+  MODULE PROCEDURE Dubiner_Triangle1_
+END INTERFACE OrthogonalBasis_Triangle_
+
 !----------------------------------------------------------------------------
 !                                                       DubinerPolynomial
 !----------------------------------------------------------------------------
@@ -937,6 +946,10 @@ INTERFACE Dubiner_Triangle_
     INTEGER(I4B), INTENT(OUT) :: nrow, ncol
   END SUBROUTINE Dubiner_Triangle2_
 END INTERFACE Dubiner_Triangle_
+
+INTERFACE OrthogonalBasis_Triangle_
+  MODULE PROCEDURE Dubiner_Triangle2_
+END INTERFACE OrthogonalBasis_Triangle_
 
 !----------------------------------------------------------------------------
 !                                                    VertexBasis_Triangle

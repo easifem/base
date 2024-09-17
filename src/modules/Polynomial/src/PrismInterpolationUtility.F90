@@ -18,8 +18,11 @@
 MODULE PrismInterpolationUtility
 USE GlobalData
 USE String_Class, ONLY: String
+
 IMPLICIT NONE
+
 PRIVATE
+
 PUBLIC :: LagrangeDegree_Prism
 PUBLIC :: LagrangeDOF_Prism
 PUBLIC :: LagrangeInDOF_Prism
@@ -72,7 +75,7 @@ INTERFACE
 END INTERFACE
 
 !----------------------------------------------------------------------------
-!                                                  LagrangeInDOF_Prism
+!                                                       LagrangeInDOF_Prism
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -650,10 +653,6 @@ INTERFACE TensorQuadraturePoint_Prism
     !! Quadrature points
   END FUNCTION TensorQuadraturePoint_Prism2
 END INTERFACE TensorQuadraturePoint_Prism
-
-INTERFACE OrthogonalBasisGradient_Prism
-  MODULE PROCEDURE TensorQuadraturePoint_Prism2
-END INTERFACE OrthogonalBasisGradient_Prism
 
 !----------------------------------------------------------------------------
 !                                             LagrangeEvalAll_Prism

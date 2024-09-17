@@ -18,6 +18,7 @@
 MODULE HexahedronInterpolationUtility
 USE GlobalData
 USE String_Class, ONLY: String
+
 IMPLICIT NONE
 PRIVATE
 PUBLIC :: LagrangeDegree_Hexahedron
@@ -33,7 +34,10 @@ PUBLIC :: LagrangeCoeff_Hexahedron_
 PUBLIC :: EdgeConnectivity_Hexahedron
 PUBLIC :: FacetConnectivity_Hexahedron
 PUBLIC :: TensorProdBasis_Hexahedron
+
 PUBLIC :: OrthogonalBasis_Hexahedron
+PUBLIC :: OrthogonalBasis_Hexahedron_
+
 PUBLIC :: VertexBasis_Hexahedron
 PUBLIC :: xEdgeBasis_Hexahedron
 PUBLIC :: yEdgeBasis_Hexahedron
@@ -44,6 +48,7 @@ PUBLIC :: yzFacetBasis_Hexahedron
 PUBLIC :: xzFacetBasis_Hexahedron
 PUBLIC :: FacetBasis_Hexahedron
 PUBLIC :: CellBasis_Hexahedron
+
 PUBLIC :: HeirarchicalBasis_Hexahedron
 PUBLIC :: HeirarchicalBasis_Hexahedron_
 
@@ -60,10 +65,15 @@ PUBLIC :: GetCellDOF_Hexahedron
 PUBLIC :: RefElemDomain_Hexahedron
 PUBLIC :: LagrangeGradientEvalAll_Hexahedron
 PUBLIC :: LagrangeGradientEvalAll_Hexahedron_
+
 PUBLIC :: OrthogonalBasisGradient_Hexahedron
+PUBLIC :: OrthogonalBasisGradient_Hexahedron_
+
 PUBLIC :: TensorProdBasisGradient_Hexahedron
+
 PUBLIC :: HeirarchicalBasisGradient_Hexahedron
 PUBLIC :: HeirarchicalBasisGradient_Hexahedron_
+
 PUBLIC :: GetTotalDOF_Hexahedron
 PUBLIC :: GetTotalInDOF_Hexahedron
 
@@ -1229,6 +1239,59 @@ INTERFACE OrthogonalBasis_Hexahedron
 END INTERFACE OrthogonalBasis_Hexahedron
 
 !----------------------------------------------------------------------------
+!                                                OrthogonalBasis_Hexahedron_
+!----------------------------------------------------------------------------
+
+INTERFACE TensorProdBasis_Hexahedron_
+  MODULE SUBROUTINE TensorProdBasis_Hexahedron1_(p, q, r, xij, basisType1, &
+                                    basisType2, basisType3, ans, nrow, ncol, &
+                                      alpha1, beta1, lambda1, alpha2, beta2, &
+                                              lambda2, alpha3, beta3, lambda3)
+    INTEGER(I4B), INTENT(IN) :: p
+    !! highest order in x1 direction
+    INTEGER(I4B), INTENT(IN) :: q
+    !! highest order in x2 direction
+    INTEGER(I4B), INTENT(IN) :: r
+    !! highest order in x3 direction
+    REAL(DFP), INTENT(IN) :: xij(:, :)
+    !! points of evaluation in xij format
+    INTEGER(I4B), INTENT(IN) :: basisType1, basisType2, basisType3
+    !! basis type in x1 direction
+    !! Monomials ! Jacobi ! Legendre ! Chebyshev ! Ultraspherical
+    !! Heirarchical
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    !! Tensor basis
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+    !! number of rows and cols
+    !! nrow = SIZE(xij, 2)
+    !! ncol = (p + 1) * (q + 1) * (r + 1)
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha1
+    !! alpha1 needed when  basisType1 "Jacobi"
+    REAL(DFP), OPTIONAL, INTENT(IN) :: beta1
+    !! beta1 is needed when basisType1 is "Jacobi"
+    REAL(DFP), OPTIONAL, INTENT(IN) :: lambda1
+    !! lambda1 is needed when basisType1 is "Ultraspherical"
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha2
+    !! alpha2 needed when basisType2 is "Jacobi"
+    REAL(DFP), OPTIONAL, INTENT(IN) :: beta2
+    !! beta2 needed when basisType2 is "Jacobi"
+    REAL(DFP), OPTIONAL, INTENT(IN) :: lambda2
+    !! lambda2 is needed when basisType2 is "Ultraspherical"
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha3
+    !! alpha3 needed when  basisType3 "Jacobi"
+    REAL(DFP), OPTIONAL, INTENT(IN) :: beta3
+    !! beta3 is needed when basisType3 is "Jacobi"
+    REAL(DFP), OPTIONAL, INTENT(IN) :: lambda3
+    !! lambda3 is needed when basisType3 is "Ultraspherical"
+    !!
+  END SUBROUTINE TensorProdBasis_Hexahedron1_
+END INTERFACE TensorProdBasis_Hexahedron_
+
+INTERFACE OrthogonalBasis_Hexahedron_
+  MODULE PROCEDURE TensorProdBasis_Hexahedron1_
+END INTERFACE OrthogonalBasis_Hexahedron_
+
+!----------------------------------------------------------------------------
 !                                            TensorProdBasis_Hexahedron
 !----------------------------------------------------------------------------
 
@@ -1243,26 +1306,10 @@ END INTERFACE OrthogonalBasis_Hexahedron
 ! outer product of x and y
 
 INTERFACE TensorProdBasis_Hexahedron
-  MODULE FUNCTION TensorProdBasis_Hexahedron2( &
-    & p, &
-    & q, &
-    & r, &
-    & x, &
-    & y, &
-    & z, &
-    & basisType1, &
-    & basisType2, &
-    & basisType3, &
-    & alpha1, &
-    & beta1, &
-    & lambda1, &
-    & alpha2, &
-    & beta2, &
-    & lambda2, &
-    & alpha3,  &
-    & beta3,  &
-    & lambda3) &
-    & RESULT(ans)
+  MODULE FUNCTION TensorProdBasis_Hexahedron2(p, q, r, x, y, z, basisType1, &
+              basisType2, basisType3, alpha1, beta1, lambda1, alpha2, beta2, &
+                                  lambda2, alpha3, beta3, lambda3) RESULT(ans)
+
     INTEGER(I4B), INTENT(IN) :: p
     !! highest order in x1 direction
     INTEGER(I4B), INTENT(IN) :: q
@@ -1273,11 +1320,7 @@ INTERFACE TensorProdBasis_Hexahedron
     !! points of evaluation in xij format
     INTEGER(I4B), INTENT(IN) :: basisType1, basisType2, basisType3
     !! orthogonal polynomial family in x1 direction
-    !! Monomials
-    !! Jacobi
-    !! Legendre
-    !! Chebyshev
-    !! Ultraspherical
+    !! Monomial ! Jacobi ! Legendre ! Chebyshev ! Ultraspherical
     !! Heirarchical
     REAL(DFP), OPTIONAL, INTENT(IN) :: alpha1, beta1, lambda1
     REAL(DFP), OPTIONAL, INTENT(IN) :: alpha2, beta2, lambda2
@@ -1292,6 +1335,54 @@ END INTERFACE TensorProdBasis_Hexahedron
 INTERFACE OrthogonalBasis_Hexahedron
   MODULE PROCEDURE TensorProdBasis_Hexahedron2
 END INTERFACE OrthogonalBasis_Hexahedron
+
+!----------------------------------------------------------------------------
+!                                                OrthogonalBasis_Hexahedron_
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 27 Oct 2022
+! summary: Evaluate all tensor product orthogoanl polynomial on quadrangle
+!
+!# Introduction
+!
+! This function returns the tensor product expansion of orthogonal
+! polynomial on biunit quadrangle. Here xij is obtained by
+! outer product of x and y
+
+INTERFACE TensorProdBasis_Hexahedron_
+  MODULE SUBROUTINE TensorProdBasis_Hexahedron2_(p, q, r, x, &
+                  y, z, basisType1, basisType2, basisType3, ans, nrow, ncol, &
+                             alpha1, beta1, lambda1, alpha2, beta2, lambda2, &
+                                                 alpha3, beta3, lambda3)
+    INTEGER(I4B), INTENT(IN) :: p
+    !! highest order in x1 direction
+    INTEGER(I4B), INTENT(IN) :: q
+    !! highest order in x2 direction
+    INTEGER(I4B), INTENT(IN) :: r
+    !! highest order in x3 direction
+    REAL(DFP), INTENT(IN) :: x(:), y(:), z(:)
+    !! points of evaluation in xij format
+    INTEGER(I4B), INTENT(IN) :: basisType1, basisType2, basisType3
+    !! orthogonal polynomial family in x1 direction
+    !! Monomials ! Jacobi ! Legendre ! Chebyshev ! Ultraspherical
+    !! Heirarchical
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    !! Tensor basis
+    !! The number of rows corresponds to the
+    !! total number of points
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+    !! nrow = SIZE(x) * SIZE(y) * SIZE(z)
+    !! ncol = (p + 1) * (q + 1) * (r + 1)
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha1, beta1, lambda1
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha2, beta2, lambda2
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha3, beta3, lambda3
+  END SUBROUTINE TensorProdBasis_Hexahedron2_
+END INTERFACE TensorProdBasis_Hexahedron_
+
+INTERFACE OrthogonalBasis_Hexahedron_
+  MODULE PROCEDURE TensorProdBasis_Hexahedron2_
+END INTERFACE OrthogonalBasis_Hexahedron_
 
 !----------------------------------------------------------------------------
 !                                                    VertexBasis_Hexahedron
@@ -2993,24 +3084,9 @@ END INTERFACE LagrangeGradientEvalAll_Hexahedron_
 ! summary: Evaluate all tensor product orthogoanl polynomial on hexahedron
 
 INTERFACE TensorProdBasisGradient_Hexahedron
-  MODULE FUNCTION TensorProdBasisGradient_Hexahedron1(  &
-    & p,  &
-    & q,  &
-    & r,  &
-    & xij, &
-    & basisType1,  &
-    & basisType2,  &
-    & basisType3,  &
-    & alpha1,  &
-    & beta1,  &
-    & lambda1,  &
-    & alpha2,  &
-    & beta2,  &
-    & lambda2,  &
-    & alpha3,  &
-    & beta3,  &
-    & lambda3) &
-    & RESULT(ans)
+  MODULE FUNCTION TensorProdBasisGradient_Hexahedron1(p, q, r, xij, &
+                 basisType1, basisType2, basisType3, alpha1, beta1, lambda1, &
+                   alpha2, beta2, lambda2, alpha3, beta3, lambda3) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: p
     !! highest order in x1 direction
     INTEGER(I4B), INTENT(IN) :: q
@@ -3021,11 +3097,7 @@ INTERFACE TensorProdBasisGradient_Hexahedron
     !! points of evaluation in xij format
     INTEGER(I4B), INTENT(IN) :: basisType1, basisType2, basisType3
     !! basis type in x1 direction
-    !! Monomials
-    !! Jacobi
-    !! Legendre
-    !! Chebyshev
-    !! Ultraspherical
+    !! Monomial ! Jacobi ! Legendre ! Chebyshev ! Ultraspherical
     !! Heirarchical
     REAL(DFP), OPTIONAL, INTENT(IN) :: alpha1
     !! alpha1 needed when  basisType1 "Jacobi"
@@ -3052,6 +3124,62 @@ END INTERFACE TensorProdBasisGradient_Hexahedron
 INTERFACE OrthogonalBasisGradient_Hexahedron
   MODULE PROCEDURE TensorProdBasisGradient_Hexahedron1
 END INTERFACE OrthogonalBasisGradient_Hexahedron
+
+!----------------------------------------------------------------------------
+!                                        TensorProdBasisGradient_Hexahedron_
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 27 Oct 2022
+! summary: Evaluate all tensor product orthogoanl polynomial on hexahedron
+
+INTERFACE TensorProdBasisGradient_Hexahedron_
+  MODULE SUBROUTINE TensorProdBasisGradient_Hexahedron1_(p, q, r, &
+                                    xij, basisType1, basisType2, basisType3, &
+                              ans, dim1, dim2, dim3, alpha1, beta1, lambda1, &
+                               alpha2, beta2, lambda2, alpha3, beta3, lambda3)
+    INTEGER(I4B), INTENT(IN) :: p
+    !! highest order in x1 direction
+    INTEGER(I4B), INTENT(IN) :: q
+    !! highest order in x2 direction
+    INTEGER(I4B), INTENT(IN) :: r
+    !! highest order in x3 direction
+    REAL(DFP), INTENT(IN) :: xij(:, :)
+    !! points of evaluation in xij format
+    INTEGER(I4B), INTENT(IN) :: basisType1, basisType2, basisType3
+    !! basis type in x1 direction
+    !! Monomials ! Jacobi ! Legendre ! Chebyshev ! Ultraspherical
+    !! Heirarchical
+    REAL(DFP), INTENT(INOUT) :: ans(:, :, :)
+    !! Value of gradient of nth order Lagrange polynomials at point x
+    INTEGER(I4B), INTENT(OUT) :: dim1, dim2, dim3
+    !! dim1 = SIZE(xij, 2)
+    !! dim2 = (p + 1) * (q + 1) * (r + 1)
+    !! dim3 = 3
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha1
+    !! alpha1 needed when  basisType1 "Jacobi"
+    REAL(DFP), OPTIONAL, INTENT(IN) :: beta1
+    !! beta1 is needed when basisType1 is "Jacobi"
+    REAL(DFP), OPTIONAL, INTENT(IN) :: lambda1
+    !! lambda1 is needed when basisType1 is "Ultraspherical"
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha2
+    !! alpha2 needed when basisType2 is "Jacobi"
+    REAL(DFP), OPTIONAL, INTENT(IN) :: beta2
+    !! beta2 needed when basisType2 is "Jacobi"
+    REAL(DFP), OPTIONAL, INTENT(IN) :: lambda2
+    !! lambda2 is needed when basisType2 is "Ultraspherical"
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha3
+    !! alpha3 needed when  basisType3 "Jacobi"
+    REAL(DFP), OPTIONAL, INTENT(IN) :: beta3
+    !! beta3 is needed when basisType3 is "Jacobi"
+    REAL(DFP), OPTIONAL, INTENT(IN) :: lambda3
+    !! lambda3 is needed when basisType3 is "Ultraspherical"
+  END SUBROUTINE TensorProdBasisGradient_Hexahedron1_
+END INTERFACE TensorProdBasisGradient_Hexahedron_
+
+INTERFACE OrthogonalBasisGradient_Hexahedron_
+  MODULE PROCEDURE TensorProdBasisGradient_Hexahedron1_
+END INTERFACE OrthogonalBasisGradient_Hexahedron_
 
 !----------------------------------------------------------------------------
 !                                      HeirarchicalBasisGradient_Hexahedron

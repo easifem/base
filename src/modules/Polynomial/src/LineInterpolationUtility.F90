@@ -60,7 +60,9 @@ PUBLIC :: HeirarchicalBasisGradient_Line
 PUBLIC :: HeirarchicalBasisGradient_Line_
 
 PUBLIC :: OrthogonalBasis_Line
+PUBLIC :: OrthogonalBasis_Line_
 PUBLIC :: OrthogonalBasisGradient_Line
+PUBLIC :: OrthogonalBasisGradient_Line_
 
 !----------------------------------------------------------------------------
 !                                                       RefElemDomain_Line
@@ -1223,6 +1225,40 @@ INTERFACE OrthogonalBasis_Line
 END INTERFACE OrthogonalBasis_Line
 
 !----------------------------------------------------------------------------
+!                                                     OrthogonalBasis_Line_
+!----------------------------------------------------------------------------
+
+INTERFACE OrthogonalBasis_Line_
+  MODULE SUBROUTINE OrthogonalBasis_Line1_(order, xij, refLine, basisType, &
+                                         ans, nrow, ncol, alpha, beta, lambda)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order of  polynomials
+    REAL(DFP), INTENT(IN) :: xij(:, :)
+    !! point of evaluation
+    !! Number of rows in xij is 1
+    CHARACTER(*), INTENT(IN) :: refLine
+    !! UNIT ! BIUNIT
+    INTEGER(I4B), INTENT(IN) :: basisType
+    !! Jacobi ! Ultraspherical ! Legendre ! Chebyshev ! Lobatto
+    !! UnscaledLobatto
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
+    !! Jacobi polynomial parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: beta
+    !! Jacobi polynomial parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: lambda
+    !! Ultraspherical parameter
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    !! Value of n+1  polynomials at point x
+    !  ans(SIZE(xij, 2), order + 1)
+    !! ans(:, j) is the value of jth polynomial at x points
+    !! ans(i, :) is the value of all polynomials at x(i) point
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+    !! nrow = size(xij, 2)
+    !! ncol = order+1
+  END SUBROUTINE OrthogonalBasis_Line1_
+END INTERFACE OrthogonalBasis_Line_
+
+!----------------------------------------------------------------------------
 !                                                         BasisEvalAll_Line
 !----------------------------------------------------------------------------
 
@@ -1260,6 +1296,50 @@ INTERFACE OrthogonalBasisGradient_Line
     !! ans(i, :) is the value of all polynomials at x(i) point
   END FUNCTION OrthogonalBasisGradient_Line1
 END INTERFACE OrthogonalBasisGradient_Line
+
+!----------------------------------------------------------------------------
+!                                               OrthgonalBasisGradient_Line
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2024-09-10
+! summary:  gradient of orthogonal basis without allocation
+
+INTERFACE OrthogonalBasisGradient_Line_
+  MODULE SUBROUTINE OrthogonalBasisGradient_Line1_(order, xij, refLine, &
+                        basisType, ans, dim1, dim2, dim3, alpha, beta, lambda)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order of  polynomials
+    REAL(DFP), INTENT(IN) :: xij(:, :)
+    !! point of evaluation
+    !! Number of rows in xij is 1
+    CHARACTER(*), INTENT(IN) :: refLine
+    !! UNIT
+    !! BIUNIT
+    INTEGER(I4B), INTENT(IN) :: basisType
+    !! Jacobi
+    !! Ultraspherical
+    !! Legendre
+    !! Chebyshev
+    !! Lobatto
+    !! UnscaledLobatto
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
+    !! Jacobi polynomial parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: beta
+    !! Jacobi polynomial parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: lambda
+    !! Ultraspherical parameter
+    REAL(DFP), INTENT(INOUT) :: ans(:, :, :)
+    !! ans(SIZE(xij, 2), order + 1, 1)
+    !! Value of n+1  polynomials at point x
+    !! ans(:, j) is the value of jth polynomial at x points
+    !! ans(i, :) is the value of all polynomials at x(i) point
+    INTEGER(I4B), INTENT(OUT) :: dim1, dim2, dim3
+    !! dim1 = size(xij,2)
+    !! dim2 = order+1
+    !! dim3 = 1
+  END SUBROUTINE OrthogonalBasisGradient_Line1_
+END INTERFACE OrthogonalBasisGradient_Line_
 
 !----------------------------------------------------------------------------
 !                                              HeirarchicalBasis_Line

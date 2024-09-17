@@ -46,6 +46,7 @@ PUBLIC :: DubinerGradient_Quadrangle_
 PUBLIC :: TensorProdBasis_Quadrangle
 
 PUBLIC :: OrthogonalBasis_Quadrangle
+PUBLIC :: OrthogonalBasis_Quadrangle_
 
 PUBLIC :: VertexBasis_Quadrangle
 
@@ -80,6 +81,7 @@ PUBLIC :: HeirarchicalBasisGradient_Quadrangle_
 PUBLIC :: TensorProdBasisGradient_Quadrangle
 
 PUBLIC :: OrthogonalBasisGradient_Quadrangle
+PUBLIC :: OrthogonalBasisGradient_Quadrangle_
 
 PUBLIC :: GetTotalDOF_Quadrangle
 PUBLIC :: GetTotalInDOF_Quadrangle
@@ -1482,6 +1484,10 @@ INTERFACE TensorProdBasis_Quadrangle_
   END SUBROUTINE TensorProdBasis_Quadrangle2_
 END INTERFACE TensorProdBasis_Quadrangle_
 
+INTERFACE OrthogonalBasis_Quadrangle_
+  MODULE PROCEDURE TensorProdBasis_Quadrangle2_
+END INTERFACE OrthogonalBasis_Quadrangle_
+
 !----------------------------------------------------------------------------
 !                                                    VertexBasis_Quadrangle
 !----------------------------------------------------------------------------
@@ -2630,10 +2636,6 @@ INTERFACE TensorProdBasisGradient_Quadrangle_
     !! lambda2 is needed when basisType2 is "Ultraspherical"
   END SUBROUTINE TensorProdBasisGradient_Quadrangle1_
 END INTERFACE TensorProdBasisGradient_Quadrangle_
-
-!----------------------------------------------------------------------------
-!
-!----------------------------------------------------------------------------
 
 INTERFACE OrthogonalBasisGradient_Quadrangle_
   MODULE PROCEDURE TensorProdBasisGradient_Quadrangle1_

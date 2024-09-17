@@ -625,6 +625,10 @@ END INTERFACE LegendreEvalAll
 !                                                          LegendreEvalAll_
 !----------------------------------------------------------------------------
 
+!> author: Vikas Sharma, Ph. D.
+! date:  2024-08-19
+! summary: Evaluate Legendre polynomials from 0 to n at several points
+
 INTERFACE LegendreEvalAll_
   MODULE PURE SUBROUTINE LegendreEvalAll2_(n, x, ans, nrow, ncol)
     INTEGER(I4B), INTENT(IN) :: n
@@ -635,6 +639,8 @@ INTERFACE LegendreEvalAll_
     REAL(DFP), INTENT(INOUT) :: ans(:, :)
     !! ans(SIZE(x), n + 1)
     !! shape (M,N+1)
+    !! ans(:, jj) denotes value of Pjj at x
+    !! ans(ii, :) denotes value of all polynomials at x(ii)
     INTEGER(I4B), INTENT(OUT) :: nrow, ncol
   END SUBROUTINE LegendreEvalAll2_
 END INTERFACE LegendreEvalAll_
@@ -951,13 +957,17 @@ INTERFACE LegendreTransform
     INTEGER(I4B), INTENT(IN) :: n
     !! order of Legendre polynomials
     !! n+1  coefficient (modal values)
-    REAL(DFP), INTENT(IN) :: coeff(0:n)
+    REAL(DFP), INTENT(IN) :: coeff(0:)
     !! value of function at quadrature points
-    REAL(DFP), INTENT(IN) :: x(0:n)
+    !! size if number of quadrature points
+    !! number of quadrature points should be at least n+1
+    REAL(DFP), INTENT(IN) :: x(0:)
     !! quadrature points
     !! These quadrature points are used in LegendreEvalAll method
-    REAL(DFP), INTENT(IN) :: w(0:n)
+    !! size is number of quadrature points
+    REAL(DFP), INTENT(IN) :: w(0:)
     !! weights
+    !! size is number of quadrature points
     INTEGER(I4B), INTENT(IN) :: quadType
     !! Quadrature type, Gauss, GaussLobatto, GaussRadau, GaussRadauLeft
     !! GaussRadauRight
@@ -979,12 +989,12 @@ INTERFACE LegendreTransform_
     INTEGER(I4B), INTENT(IN) :: n
     !! Order of Legendre polynomials
     !! n+1  coefficient (modal values)
-    REAL(DFP), INTENT(IN) :: coeff(0:n)
+    REAL(DFP), INTENT(IN) :: coeff(0:)
     !! Value of function at quadrature points
-    REAL(DFP), INTENT(IN) :: x(0:n)
+    REAL(DFP), INTENT(IN) :: x(0:)
     !! Quadrature points
     !! These quadrature points are used in LegendreEvalAll method
-    REAL(DFP), INTENT(IN) :: w(0:n)
+    REAL(DFP), INTENT(IN) :: w(0:)
     !! Weights
     INTEGER(I4B), INTENT(IN) :: quadType
     !! Quadrature type, Gauss, GaussLobatto, GaussRadau, GaussRadauLeft
@@ -1001,56 +1011,37 @@ INTERFACE LegendreTransform_
 END INTERFACE LegendreTransform_
 
 !----------------------------------------------------------------------------
-!                                                   LegendreTransform
-!----------------------------------------------------------------------------
-
-!> author: Vikas Sharma, Ph. D.
-! date: 13 Oct 2022
-! summary: Columnwise Discrete Legendre Transform
-
-INTERFACE LegendreTransform
-  MODULE PURE FUNCTION LegendreTransform2(n, coeff, x, w, &
-                                          quadType) RESULT(ans)
-    INTEGER(I4B), INTENT(IN) :: n
-    !! order of polynomial
-    REAL(DFP), INTENT(IN) :: coeff(0:, 1:)
-    !! values of function at quadrature points
-    REAL(DFP), INTENT(IN) :: x(0:n)
-    !! quadrature points
-    REAL(DFP), INTENT(IN) :: w(0:n)
-    !! weights
-    INTEGER(I4B), INTENT(IN) :: quadType
-    !! Quadrature type, Gauss, GaussLobatto, GaussRadau, GaussRadauLeft
-    !! GaussRadauRight
-    REAL(DFP) :: ans(0:n, 1:SIZE(coeff, 2))
-    !! modal values  or coefficients for each column of val
-  END FUNCTION LegendreTransform2
-END INTERFACE LegendreTransform
-
-!----------------------------------------------------------------------------
-!                                                 LegendreTransform@Methods
+!                                                          LegendreTransform
 !----------------------------------------------------------------------------
 
 INTERFACE LegendreTransform_
-  MODULE PURE SUBROUTINE LegendreTransform2_(n, coeff, x, w, &
-                                             quadType, ans, nrow, ncol)
+  MODULE PURE SUBROUTINE LegendreTransform4_(n, coeff, PP, w, quadType, ans, &
+                                             tsize)
     INTEGER(I4B), INTENT(IN) :: n
-    !! order of polynomial
-    REAL(DFP), INTENT(IN) :: coeff(0:, 1:)
-    !! values of function at quadrature points
-    REAL(DFP), INTENT(IN) :: x(0:n)
-    !! quadrature points
-    REAL(DFP), INTENT(IN) :: w(0:n)
-    !! weights
+    !! Order of Legendre polynomials
+    !! n+1  coefficient (modal values)
+    REAL(DFP), INTENT(IN) :: coeff(0:)
+    !! Value of function at quadrature points
+    !! size is number of quadrature points
+    REAL(DFP), INTENT(IN) :: PP(0:, 0:)
+    !! Quadrature points
+    !! These quadrature points are used in LegendreEvalAll method
+    !! number of rows in PP is number of quadrature points
+    !! number of columns in PP is n+1
+    REAL(DFP), INTENT(IN) :: w(0:)
+    !! Weights
+    !! soze of w is number of quadrature points
     INTEGER(I4B), INTENT(IN) :: quadType
     !! Quadrature type, Gauss, GaussLobatto, GaussRadau, GaussRadauLeft
-    !! GaussRadauRight
-    REAL(DFP), INTENT(INOUT) :: ans(0:, 1:)
-    !! modal values  or coefficients for each column of val
-    ! REAL(DFP) :: ans(0:n, 1:SIZE(coeff, 2))
-    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
-    !! number of rows and columns writen in ans
-  END SUBROUTINE LegendreTransform2_
+    REAL(DFP), INTENT(INOUT) :: ans(0:)
+    !! modal values  or coefficients of Legendre polynomial
+    !! ans(0) is coefficient of P0
+    !! ans(1) is coefficient of P1
+    !! and so on
+    ! REAL(DFP) :: ans(0:n)
+    INTEGER(I4B), INTENT(OUT) :: tsize
+    !! total size of ans
+  END SUBROUTINE LegendreTransform4_
 END INTERFACE LegendreTransform_
 
 !----------------------------------------------------------------------------
