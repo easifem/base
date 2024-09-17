@@ -22,7 +22,6 @@ USE GlobalData, ONLY: DFP, I4B, LGT
 IMPLICIT NONE
 PRIVATE
 
-PUBLIC :: SymSolve
 PUBLIC :: SymLinSolve
 
 !----------------------------------------------------------------------------
@@ -59,9 +58,9 @@ PUBLIC :: SymLinSolve
 ! Therefore, when A is large this routine should be avoided.
 !@endnote
 
-INTERFACE
+INTERFACE SymLinSolve
   MODULE SUBROUTINE SymLinSolve_1(X, A, B, preserveA, IPIV, SolverName, &
-    & UPLO, INFO)
+                                  UPLO, INFO)
     REAL(DFP), INTENT(INOUT) :: X(:)
       !! Unknown vector to be found
     REAL(DFP), INTENT(IN) :: A(:, :)
@@ -81,14 +80,6 @@ INTERFACE
       !! "U" or "L", Default is "U"
     INTEGER(I4B), OPTIONAL, INTENT(OUT) :: INFO
   END SUBROUTINE SymLinSolve_1
-END INTERFACE
-
-INTERFACE SymSolve
-  MODULE PROCEDURE SymLinSolve_1
-END INTERFACE SymSolve
-
-INTERFACE SymLinSolve
-  MODULE PROCEDURE SymLinSolve_1
 END INTERFACE SymLinSolve
 
 !----------------------------------------------------------------------------
@@ -107,7 +98,7 @@ END INTERFACE SymLinSolve
 !
 ! All other things are same as `ge_solve_1`.
 
-INTERFACE
+INTERFACE SymLinSolve
   MODULE SUBROUTINE SymLinSolve_2(X, A, B, preserveA, IPIV, SolverName, &
     & UPLO, INFO)
     REAL(DFP), INTENT(INOUT) :: X(:, :)
@@ -127,15 +118,7 @@ INTERFACE
       !! "U" or "L", default is "U"
     INTEGER(I4B), OPTIONAL, INTENT(OUT) :: INFO
   END SUBROUTINE SymLinSolve_2
-END INTERFACE
-
-INTERFACE SymLinSolve
-  MODULE PROCEDURE SymLinSolve_2
 END INTERFACE SymLinSolve
-
-INTERFACE SymSolve
-  MODULE PROCEDURE SymLinSolve_2
-END INTERFACE SymSolve
 
 !----------------------------------------------------------------------------
 !
@@ -153,7 +136,7 @@ END INTERFACE SymSolve
 ! modified on return. Note that B will not be modified as we still
 ! make a copy of B.
 
-INTERFACE
+INTERFACE SymLinSolve
   MODULE SUBROUTINE SymLinSolve_3(X, A, B, IPIV, SolverName, UPLO, INFO)
     REAL(DFP), INTENT(INOUT) :: X(:)
       !! Unknown vector solution
@@ -169,15 +152,7 @@ INTERFACE
       !! "U" or "L", default is "U"
     INTEGER(I4B), OPTIONAL, INTENT(OUT) :: INFO
   END SUBROUTINE SymLinSolve_3
-END INTERFACE
-
-INTERFACE SymLinSolve
-  MODULE PROCEDURE SymLinSolve_3
 END INTERFACE SymLinSolve
-
-INTERFACE SymSolve
-  MODULE PROCEDURE SymLinSolve_3
-END INTERFACE SymSolve
 
 !----------------------------------------------------------------------------
 !                                               LinSolve@LinearSolveMethods
@@ -187,7 +162,7 @@ END INTERFACE SymSolve
 ! date: 7 July 2022
 ! summary: This function solves Ax=b using lapack DGESV x and b are 2d arrays
 
-INTERFACE
+INTERFACE SymLinSolve
   MODULE SUBROUTINE SymLinSolve_4(X, A, B, IPIV, SolverName, UPLO, INFO)
     REAL(DFP), INTENT(INOUT) :: X(:, :)
       !! Unknown vector or solution
@@ -203,15 +178,7 @@ INTERFACE
       !! "U" or "L", default is "U"
     INTEGER(I4B), OPTIONAL, INTENT(OUT) :: INFO
   END SUBROUTINE SymLinSolve_4
-END INTERFACE
-
-INTERFACE SymLinSolve
-  MODULE PROCEDURE SymLinSolve_4
 END INTERFACE SymLinSolve
-
-INTERFACE Solve
-  MODULE PROCEDURE SymLinSolve_4
-END INTERFACE Solve
 
 !----------------------------------------------------------------------------
 !
@@ -228,7 +195,7 @@ END INTERFACE Solve
 ! We do not make any copy of B. The solution is returned in B. This
 ! means B will be destroyed on return.
 
-INTERFACE
+INTERFACE SymLinSolve
   MODULE SUBROUTINE SymLinSolve_5(A, B, IPIV, SolverName, UPLO, info)
     REAL(DFP), INTENT(INOUT) :: A(:, :)
       !! General square symmetric matrix, its content will be modified on
@@ -243,15 +210,7 @@ INTERFACE
       !! "L" or "U", default is "U"
     INTEGER(I4B), OPTIONAL, INTENT(OUT) :: INFO
   END SUBROUTINE SymLinSolve_5
-END INTERFACE
-
-INTERFACE SymLinSolve
-  MODULE PROCEDURE SymLinSolve_5
 END INTERFACE SymLinSolve
-
-INTERFACE SymSolve
-  MODULE PROCEDURE SymLinSolve_5
-END INTERFACE SymSolve
 
 !----------------------------------------------------------------------------
 !                                               LinSolve@LinearSolveMethods
@@ -261,7 +220,7 @@ END INTERFACE SymSolve
 ! date: 28 July 2022
 ! summary: Solve Ax=y
 
-INTERFACE
+INTERFACE SymLinSolve
   MODULE SUBROUTINE SymLinSolve_6(A, B, IPIV, SolverName, UPLO, INFO)
     REAL(DFP), INTENT(INOUT) :: A(:, :)
       !! General square/rectangle matrix, its content will be modifie
@@ -277,14 +236,6 @@ INTERFACE
       !! "U" or "L", default is "U"
     INTEGER(I4B), OPTIONAL, INTENT(OUT) :: INFO
   END SUBROUTINE SymLinSolve_6
-END INTERFACE
-
-INTERFACE SymLinSolve
-  MODULE PROCEDURE SymLinSolve_6
 END INTERFACE SymLinSolve
-
-INTERFACE SymSolve
-  MODULE PROCEDURE SymLinSolve_6
-END INTERFACE SymSolve
 
 END MODULE Sym_LinearSolveMethods
