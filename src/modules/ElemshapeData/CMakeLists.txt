@@ -29,6 +29,7 @@ target_sources(
           # ${src_path}/ElemshapeData_HCurlMethods.F90
           ${src_path}/ElemshapeData_Lagrange.F90
           ${src_path}/ElemshapeData_Hierarchical.F90
+          ${src_path}/ElemshapeData_Orthogonal.F90
           ${src_path}/ElemshapeData_HminHmaxMethods.F90
           ${src_path}/ElemshapeData_HRGNParamMethods.F90
           ${src_path}/ElemshapeData_HRQIParamMethods.F90

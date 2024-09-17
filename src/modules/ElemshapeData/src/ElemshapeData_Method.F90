@@ -27,6 +27,7 @@ USE ElemshapeData_GradientMethods
 
 USE ElemshapeData_Lagrange
 USE ElemshapeData_Hierarchical
+USE ElemshapeData_Orthogonal
 
 USE ElemshapeData_HRGNParamMethods
 USE ElemshapeData_HRQIParamMethods
@@ -39,4 +40,5 @@ USE ElemshapeData_ProjectionMethods
 USE ElemshapeData_SetMethods
 USE ElemshapeData_StabilizationParamMethods
 USE ElemshapeData_UnitNormalMethods
+
 END MODULE ElemshapeData_Method
