@@ -25,10 +25,10 @@ CONTAINS
 
 MODULE PROCEDURE obj_GetSubMatrix1
 LOGICAL(LGT), ALLOCATABLE :: selectCol(:)
-INTEGER(I4B) :: nnz, nrow, ncol, submat_nnz, ii, nn, irow, colIndx(2),  &
-& icol, jj
+INTEGER(I4B) :: nnz, nrow, ncol, submat_nnz, ii, nn, irow, colIndx(2), &
+                icol, jj
 REAL(DFP) :: aval
-TYPE(String) :: astr
+CHARACTER(:), ALLOCATABLE :: astr
 
 nnz = GetNNZ(obj=obj)
 nrow = SIZE(obj, 1)
@@ -41,16 +41,19 @@ selectCol = .FALSE.
 nn = SIZE(cols)
 DO ii = 1, nn
   jj = cols(ii)
+
+#ifdef DEBUG_VER
   IF (jj .GT. ncol) THEN
-    astr = "Error cols( "//tostring(ii)//") is greater than "//  &
-    & "ncol = "//tostring(ncol)
-    CALL ErrorMSG( &
-      & astr%chars(), &
-      & "CSRMatrix_GetSubMatrixMethods@Methods.F90", &
-      & "obj_GetSubMatrix1()", &
-      & __LINE__, stderr)
+    astr = "Error cols( "//tostring(ii)//") is greater than "// &
+           "ncol = "//tostring(ncol)
+    CALL ErrorMSG(msg=astr, &
+                  file="CSRMatrix_GetSubMatrixMethods@Methods.F90", &
+                  routine="obj_GetSubMatrix1()", &
+                  line=__LINE__, unitno=stderr)
     STOP
   END IF
+#endif
+
   selectCol(jj) = .TRUE.
 END DO
 
