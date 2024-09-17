@@ -198,6 +198,18 @@ FUNCTION BaseType_ToInteger1(name) RESULT(ans)
   CASE ("ORTH")
     ans = poly%orthogonal
 
+  CASE ("LEGE")
+    ans = poly%legendre
+
+  CASE ("JACO")
+    ans = poly%jacobi
+
+  CASE ("ULTR")
+    ans = poly%ultraspherical
+
+  CASE ("CHEB")
+    ans = poly%chebyshev
+
   CASE DEFAULT
     CALL ErrorMsg(msg="NO CASE FOUND for name: "//astr, &
                   routine="BaseType_ToInteger1()", &
@@ -444,6 +456,18 @@ FUNCTION BaseType_ToChar(name) RESULT(ans)
 
   CASE (poly%orthogonal)
     ans = "OrthogonalInterpolation"
+
+  CASE (poly%legendre)
+    ans = "LegendreInterpolation"
+
+  CASE (poly%jacobi)
+    ans = "JacobiInterpolation"
+
+  CASE (poly%ultraspherical)
+    ans = "UltrasphericalInterpolation"
+
+  CASE (poly%chebyshev)
+    ans = "ChebyshevInterpolation"
 
   CASE DEFAULT
     CALL ErrorMsg(msg="No Case Found For name "//tostring(name), &
