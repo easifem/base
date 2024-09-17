@@ -1418,7 +1418,7 @@ TYPE(ShapeData_), PARAMETER :: &
     & Jacobian=NULL())
 
 TYPE :: ShapeDataPointer_
-  CLASS(ShapeDataPointer_), POINTER :: ptr => NULL()
+  CLASS(ShapeData_), POINTER :: ptr => NULL()
 END TYPE ShapeDataPointer_
 
 !----------------------------------------------------------------------------
@@ -1503,7 +1503,7 @@ TYPE(ElemShapeData_), PARAMETER :: TypeElemShapeData = &
        Ws=NULL(), dNdXt=NULL(), Thickness=NULL(), Coord=NULL(), Normal=NULL())
 
 TYPE :: ElemShapeDataPointer_
-  CLASS(ShapeDataPointer_), POINTER :: ptr => NULL()
+  CLASS(ElemShapeData_), POINTER :: ptr => NULL()
 END TYPE ElemShapeDataPointer_
 
 !----------------------------------------------------------------------------
