@@ -16,88 +16,9 @@
 !
 
 SUBMODULE(LobattoPolynomialUtility) Methods
-USE Sym_LinearSolveMethods, ONLY: SymLinSolve
-
-USE LegendrePolynomialUtility, ONLY: LegendreLeadingCoeff, &
-                                     LegendreNormSqr, &
-                                     LegendreEval, &
-                                     LegendreEvalAll_, &
-                                     LegendreMonomialExpansionAll, &
-                                     LegendreQuadrature
-
-USE JacobiPolynomialUtility, ONLY: JacobiZeros
-
-USE UltrasphericalPolynomialUtility, ONLY: UltrasphericalEvalAll_, &
-                                           UltrasphericalGradientEvalAll_, &
-                                           UltrasphericalGradientEvalAll
-
+USE BaseMethod
 IMPLICIT NONE
 CONTAINS
-
-!----------------------------------------------------------------------------
-!                                                       LobattoTransform
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE LobattoTransform1_
-INTEGER(I4B) :: ii, jj, nips
-REAL(DFP) :: areal(0:n), massmat(0:n, 0:n)
-
-tsize = n + 1
-areal = 0.0_DFP
-nips = SIZE(coeff)
-
-DO jj = 0, n
-  DO ii = 0, nips - 1
-    areal(jj) = areal(jj) + PP(ii, jj) * w(ii) * coeff(ii)
-  END DO
-END DO
-
-massmat = LobattoMassMatrix(n=n)
-
-CALL SymLinSolve(X=ans(0:n), A=massmat(0:n, 0:n), B=areal(0:n))
-
-END PROCEDURE LobattoTransform1_
-
-!----------------------------------------------------------------------------
-!                                                          LobattoTransform_
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE LobattoTransform2_
-REAL(DFP), ALLOCATABLE :: PP(:, :)
-INTEGER(I4B) :: ii, jj, nips
-
-nips = SIZE(coeff)
-ALLOCATE (PP(nips, n + 1))
-CALL LobattoEvalAll_(n=n, x=x, ans=PP, nrow=ii, ncol=jj)
-CALL LobattoTransform_(n=n, coeff=coeff, PP=PP, w=w, quadType=quadType, &
-                       ans=ans, tsize=tsize)
-DEALLOCATE (PP)
-END PROCEDURE LobattoTransform2_
-
-!----------------------------------------------------------------------------
-!                                                         LobattoTransform_
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE LobattoTransform3_
-REAL(DFP) :: pt(0:n + 1), wt(0:n + 1), coeff(0:n + 1), x
-REAL(DFP), PARAMETER :: one = 1.0_DFP, half = 0.5_DFP
-INTEGER(I4B) :: ii, nips
-
-nips = n + 2
-CALL LegendreQuadrature(n=nips, pt=pt, wt=wt, quadType=quadType)
-!! We are using n+2 quadrature points as it works well in case of
-!! GaussLobatto quadrature points also
-
-DO ii = 0, nips - 1
-  x = (one - pt(ii)) * x1 + (one + pt(ii)) * x2
-  x = x * half
-  coeff(ii) = f(x)
-END DO
-
-CALL LobattoTransform_(n=n, coeff=coeff, x=pt, w=wt, quadType=quadType, &
-                       ans=ans, tsize=tsize)
-
-END PROCEDURE LobattoTransform3_
 
 !----------------------------------------------------------------------------
 !                                                       LobattoLeadingCoeff
@@ -105,7 +26,7 @@ END PROCEDURE LobattoTransform3_
 
 MODULE PROCEDURE LobattoLeadingCoeff
 REAL(DFP) :: avar, m
-
+  !!
 SELECT CASE (n)
 CASE (0)
   ans = 0.5_DFP
@@ -459,6 +380,7 @@ CASE DEFAULT
   ans(1:nrow, 1) = -0.5_DFP
   ans(1:nrow, 2) = 0.5_DFP
 
+  !! p = LegendreEvalAll(n=n - 1_I4B, x=x)
   CALL LegendreEvalAll_(n=n - 1_I4B, x=x, ans=p, nrow=nrow, ncol=ii)
 
   DO ii = 1, n - 1
@@ -586,66 +508,6 @@ ans(1, 2) = -0.5_DFP
 ans(2, 1) = ans(1, 2)
 
 END PROCEDURE LobattoStiffnessMatrix
-
-!----------------------------------------------------------------------------
-!                                                                 Lobatto0
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE Lobatto0
-ans = 0.5_DFP * (1.0_DFP - x)
-END PROCEDURE Lobatto0
-
-MODULE PROCEDURE Lobatto1
-ans = 0.5_DFP * (1.0_DFP + x)
-END PROCEDURE Lobatto1
-
-MODULE PROCEDURE Lobatto2
-REAL(DFP), PARAMETER :: coeff = 0.5_DFP * SQRT(3.0_DFP) / SQRT(2.0_DFP)
-ans = coeff * (x**2 - 1.0_DFP)
-END PROCEDURE Lobatto2
-
-MODULE PROCEDURE Lobatto3
-REAL(DFP), PARAMETER :: coeff = 0.5_DFP * SQRT(5.0_DFP) / SQRT(2.0_DFP)
-ans = coeff * (x**2 - 1.0_DFP) * x
-END PROCEDURE Lobatto3
-
-MODULE PROCEDURE Lobatto4
-REAL(DFP), PARAMETER :: coeff = SQRT(7.0_DFP) / SQRT(2.0_DFP) / 8.0_DFP
-ans = coeff * (x**2 - 1.0_DFP) * (5.0_DFP * x**2 - 1.0_DFP)
-END PROCEDURE Lobatto4
-
-MODULE PROCEDURE Lobatto5
-REAL(DFP), PARAMETER :: coeff = SQRT(9.0_DFP) / SQRT(2.0_DFP) / 8.0_DFP
-ans = coeff * (x**2 - 1.0_DFP) * (7.0_DFP * x**2 - 3.0_DFP) * x
-END PROCEDURE Lobatto5
-
-MODULE PROCEDURE Lobatto6
-REAL(DFP), PARAMETER :: coeff = SQRT(11.0_DFP) / SQRT(2.0_DFP) / 16.0_DFP
-ans = coeff * (x**2 - 1.0_DFP) * (21.0_DFP * x**4 - 14.0_DFP * x**2 + 1.0_DFP)
-END PROCEDURE Lobatto6
-
-MODULE PROCEDURE Lobatto7
-REAL(DFP), PARAMETER :: coeff = SQRT(13.0_DFP) / SQRT(2.0_DFP) / 16.0_DFP
-ans = coeff * (x**2 - 1.0_DFP) * (33.0_DFP * x**4 - 30.0_DFP * x**2 + 5.0_DFP) * x
-END PROCEDURE Lobatto7
-
-MODULE PROCEDURE Lobatto8
-REAL(DFP), PARAMETER :: coeff = SQRT(15.0_DFP) / SQRT(2.0_DFP) / 128.0_DFP
-ans = coeff * (x**2 - 1.0_DFP) * (429.0_DFP * x**6 - 495.0_DFP * x**4 &
-                                  + 135.0_DFP * x**2 - 5.0_DFP)
-END PROCEDURE Lobatto8
-
-MODULE PROCEDURE Lobatto9
-REAL(DFP), PARAMETER :: coeff = SQRT(17.0_DFP) / SQRT(2.0_DFP) / 128.0_DFP
-ans = coeff * (x**2 - 1.0_DFP) * (715.0_DFP * x**6 - 1001.0_DFP * x**4 &
-                                  + 385.0_DFP * x**2 - 35.0_DFP) * x
-END PROCEDURE Lobatto9
-
-MODULE PROCEDURE Lobatto10
-REAL(DFP), PARAMETER :: coeff = SQRT(19.0_DFP) / SQRT(2.0_DFP) / 256.0_DFP
-ans = coeff * (x**2 - 1.0_DFP) * (2431.0_DFP * x**8 - 4004.0_DFP * x**6 &
-                             + 2002.0_DFP * x**4 - 308.0_DFP * x**2 + 7.0_DFP)
-END PROCEDURE Lobatto10
 
 !----------------------------------------------------------------------------
 !

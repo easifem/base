@@ -869,11 +869,9 @@ END PROCEDURE UltrasphericalTransform1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE UltrasphericalTransform1_
+REAL(DFP), DIMENSION(0:n, 0:n) :: PP
 REAL(DFP) :: nrmsqr, areal, rn
-REAL(DFP), ALLOCATABLE :: PP(:, :)
-INTEGER(I4B) :: ii, jj, nips
-nips = SIZE(coeff)
-ALLOCATE (PP(nips, n + 1))
+INTEGER(I4B) :: jj, ii
 
 tsize = n + 1
 
@@ -906,52 +904,63 @@ IF (quadType .EQ. qp%GaussLobatto) THEN
 
 END IF
 
-DEALLOCATE (PP)
-
 END PROCEDURE UltrasphericalTransform1_
 
 !----------------------------------------------------------------------------
 !                                                    UltrasphericalTransform
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE UltrasphericalTransform4_
+MODULE PROCEDURE UltrasphericalTransform2
+INTEGER(I4B) :: nrow, ncol
+CALL UltrasphericalTransform2_(n, lambda, coeff, x, w, quadType, ans, nrow, &
+                               ncol)
+END PROCEDURE UltrasphericalTransform2
+
+!----------------------------------------------------------------------------
+!                                                   UltrasphericalTransform
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE UltrasphericalTransform2_
+REAL(DFP), DIMENSION(0:n, 0:n) :: PP
 REAL(DFP) :: nrmsqr, areal, rn
-INTEGER(I4B) :: jj, ii, nips
-LOGICAL(LGT) :: abool
+INTEGER(I4B) :: jj, ii, kk
 
-tsize = n + 1
-nips = SIZE(coeff)
+nrow = n + 1
+ncol = SIZE(coeff, 2)
 
-DO jj = 0, n
-  areal = 0.0_DFP
+CALL UltrasphericalEvalAll_(n=n, lambda=lambda, x=x, ans=PP, nrow=ii, ncol=jj)
 
-  DO ii = 0, nips - 1
-    areal = areal + PP(ii, jj) * w(ii) * coeff(ii)
+DO kk = 1, ncol
+  DO jj = 0, n
+    areal = 0.0_DFP
+
+    DO ii = 0, n
+      areal = areal + PP(ii, jj) * w(ii) * coeff(ii, kk)
+    END DO
+
+    nrmsqr = UltrasphericalNormSQR(n=jj, lambda=lambda)
+    ans(jj, kk) = areal / nrmsqr
+
   END DO
-
-  nrmsqr = UltrasphericalNormSQR(n=jj, lambda=lambda)
-  ans(jj) = areal / nrmsqr
-
 END DO
 
-abool = (quadType .EQ. qp%GaussLobatto) .AND. (nips .EQ. n + 1)
-
-IF (abool) THEN
-
-  areal = 0.0_DFP
+IF (quadType .EQ. qp%GaussLobatto) THEN
   jj = n
-  DO ii = 0, nips - 1
-    areal = areal + PP(ii, jj) * w(ii) * coeff(ii)
-  END DO
-
   rn = REAL(n, KIND=DFP)
   nrmsqr = 2.0_DFP * (rn + lambda) / rn * nrmsqr
 
-  ans(jj) = areal / nrmsqr
+  DO kk = 1, ncol
+    areal = 0.0_DFP
+    DO ii = 0, n
+      areal = areal + PP(ii, jj) * w(ii) * coeff(ii, kk)
+    END DO
+
+    ans(jj, kk) = areal / nrmsqr
+  END DO
 
 END IF
 
-END PROCEDURE UltrasphericalTransform4_
+END PROCEDURE UltrasphericalTransform2_
 
 !----------------------------------------------------------------------------
 !                                                    UltrasphericalTransform

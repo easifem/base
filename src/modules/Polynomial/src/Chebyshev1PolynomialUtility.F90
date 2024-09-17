@@ -879,11 +879,11 @@ INTERFACE Chebyshev1Transform_
                                                quadType, ans, tsize)
     INTEGER(I4B), INTENT(IN) :: n
     !! order of jacobi polynomial
-    REAL(DFP), INTENT(IN) :: coeff(0:)
+    REAL(DFP), INTENT(IN) :: coeff(0:n)
     !! nodal value (at quad points)
-    REAL(DFP), INTENT(IN) :: x(0:)
+    REAL(DFP), INTENT(IN) :: x(0:n)
     !! quadrature points
-    REAL(DFP), INTENT(IN) :: w(0:)
+    REAL(DFP), INTENT(IN) :: w(0:n)
     !! weights
     INTEGER(I4B), INTENT(IN) :: quadType
     !! Quadrature type, Gauss, GaussLobatto, GaussRadau, GaussRadauLeft
@@ -897,29 +897,61 @@ INTERFACE Chebyshev1Transform_
 END INTERFACE Chebyshev1Transform_
 
 !----------------------------------------------------------------------------
-!                                                     Chebyshev1Transform
+!                                                   Chebyshev1Transform
 !----------------------------------------------------------------------------
 
-INTERFACE Chebyshev1Transform_
-  MODULE PURE SUBROUTINE Chebyshev1Transform4_(n, coeff, PP, w, &
-                                               quadType, ans, tsize)
+!> author: Vikas Sharma, Ph. D.
+! date: 13 Oct 2022
+! summary: Columnwise Discrete Chebyshev1 Transform
+
+INTERFACE Chebyshev1Transform
+  MODULE PURE FUNCTION Chebyshev1Transform2(n, coeff, x, w, quadType) &
+    RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: n
-    !! order of jacobi polynomial
-    REAL(DFP), INTENT(IN) :: coeff(0:)
+    !! order of polynomial
+    REAL(DFP), INTENT(IN) :: coeff(0:, 1:)
     !! nodal value (at quad points)
-    REAL(DFP), INTENT(IN) :: PP(0:, 0:)
+    REAL(DFP), INTENT(IN) :: x(0:n)
     !! quadrature points
-    REAL(DFP), INTENT(IN) :: w(0:)
+    REAL(DFP), INTENT(IN) :: w(0:n)
     !! weights
     INTEGER(I4B), INTENT(IN) :: quadType
     !! Quadrature type, Gauss, GaussLobatto, GaussRadau, GaussRadauLeft
     !! GaussRadauRight
-    REAL(DFP), INTENT(INOUT) :: ans(0:)
-    !! ans(0:n)
-    !! modal values  or coefficients
-    INTEGER(I4B), INTENT(OUT) :: tsize
-    !! tsize = n+1
-  END SUBROUTINE Chebyshev1Transform4_
+    REAL(DFP) :: ans(0:n, 1:SIZE(coeff, 2))
+    !! modal values  or coefficients for each column of val
+  END FUNCTION Chebyshev1Transform2
+END INTERFACE Chebyshev1Transform
+
+!----------------------------------------------------------------------------
+!                                                     Chebyshev1Transform
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2024-08-19
+! summary:  Columnwise Discrete Chebyshev1 Transform
+
+INTERFACE Chebyshev1Transform_
+  MODULE PURE SUBROUTINE Chebyshev1Transform2_(n, coeff, x, w, &
+                                               quadType, ans, nrow, ncol)
+    INTEGER(I4B), INTENT(IN) :: n
+    !! order of polynomial
+    REAL(DFP), INTENT(IN) :: coeff(0:, 1:)
+    !! nodal value (at quad points)
+    REAL(DFP), INTENT(IN) :: x(0:n)
+    !! quadrature points
+    REAL(DFP), INTENT(IN) :: w(0:n)
+    !! weights
+    INTEGER(I4B), INTENT(IN) :: quadType
+    !! Quadrature type, Gauss, GaussLobatto, GaussRadau, GaussRadauLeft
+    !! GaussRadauRight
+    REAL(DFP), INTENT(INOUT) :: ans(0:, 1:)
+    !! ans(0:n, 1:SIZE(coeff, 2))
+    !! modal values  or coefficients for each column of val
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+    !! nrow = n+1
+    !! ncol = SIZE(coeff, 2)
+  END SUBROUTINE Chebyshev1Transform2_
 END INTERFACE Chebyshev1Transform_
 
 !----------------------------------------------------------------------------
@@ -1005,18 +1037,17 @@ END INTERFACE Chebyshev1Transform_
 ! internally.
 
 INTERFACE Chebyshev1Transform
-  MODULE PURE FUNCTION Chebyshev1Transform2(n, coeff, quadType) RESULT(ans)
+  MODULE PURE FUNCTION Chebyshev1Transform4(n, coeff, quadType) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: n
     !! order of jacobi polynomial
-    REAL(DFP), INTENT(IN) :: coeff(0:)
+    REAL(DFP), INTENT(IN) :: coeff(0:n)
     !! nodal value (at quad points)
-    !! size if quadrature points
     INTEGER(I4B), INTENT(IN) :: quadType
     !! Quadrature type, Gauss, GaussLobatto, GaussRadau, GaussRadauLeft
     !! GaussRadauRight
     REAL(DFP) :: ans(0:n)
     !! modal values  or coefficients
-  END FUNCTION Chebyshev1Transform2
+  END FUNCTION Chebyshev1Transform4
 END INTERFACE Chebyshev1Transform
 
 !----------------------------------------------------------------------------
@@ -1028,12 +1059,11 @@ END INTERFACE Chebyshev1Transform
 ! summary:  Discrete Chebyshev1 Transform
 
 INTERFACE Chebyshev1Transform_
-  MODULE PURE SUBROUTINE Chebyshev1Transform2_(n, coeff, quadType, ans, tsize)
+  MODULE PURE SUBROUTINE Chebyshev1Transform4_(n, coeff, quadType, ans, tsize)
     INTEGER(I4B), INTENT(IN) :: n
     !! order of jacobi polynomial
-    REAL(DFP), INTENT(IN) :: coeff(0:)
+    REAL(DFP), INTENT(IN) :: coeff(0:n)
     !! nodal value (at quad points)
-    !! size is quadrature points
     INTEGER(I4B), INTENT(IN) :: quadType
     !! Quadrature type, Gauss, GaussLobatto, GaussRadau, GaussRadauLeft
     !! GaussRadauRight
@@ -1041,7 +1071,7 @@ INTERFACE Chebyshev1Transform_
     !! modal values  or coefficients
     INTEGER(I4B), INTENT(OUT) :: tsize
     !! tsize = n+1
-  END SUBROUTINE Chebyshev1Transform2_
+  END SUBROUTINE Chebyshev1Transform4_
 END INTERFACE Chebyshev1Transform_
 
 !----------------------------------------------------------------------------
