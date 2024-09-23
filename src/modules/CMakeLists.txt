@@ -61,7 +61,7 @@ include(${CMAKE_CURRENT_LIST_DIR}/ARPACK/CMakeLists.txt)
 include(${CMAKE_CURRENT_LIST_DIR}/Hashing/CMakeLists.txt)
 
 # Gnuplot
-include(${CMAKE_CURRENT_LIST_DIR}/Gnuplot/CMakeLists.txt)
+# include(${CMAKE_CURRENT_LIST_DIR}/Gnuplot/CMakeLists.txt)
 
 # CInterface
 include(${CMAKE_CURRENT_LIST_DIR}/CInterface/CMakeLists.txt)
