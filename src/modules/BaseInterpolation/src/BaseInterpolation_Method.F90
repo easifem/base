@@ -303,10 +303,10 @@ FUNCTION BaseInterpolation_ToInteger2(name) RESULT(ans)
   CASE DEFAULT
 
     ans = -1_I4B
-    CALL Errormsg(msg="No case found for baseInterpolation ="//name, &
-                  routine="BaseInterpolation_ToInteger2()", &
-                  file=__FILE__, line=__LINE__, unitno=stderr)
-    STOP
+    ! CALL Errormsg(msg="No case found for baseInterpolation ="//name, &
+    !               routine="BaseInterpolation_ToInteger2()", &
+    !               file=__FILE__, line=__LINE__, unitno=stderr)
+    ! STOP
   END SELECT
 
   astr = ""
