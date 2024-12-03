@@ -313,7 +313,7 @@ FUNCTION BaseInterpolation_ToInteger2(name) RESULT(ans)
 END FUNCTION BaseInterpolation_ToInteger2
 
 !----------------------------------------------------------------------------
-!                                                BaseInterpolation_fromInteger
+!                                             BaseInterpolation_fromInteger
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
