@@ -212,11 +212,19 @@ IF (ALLOCATED(obj%jacobian)) THEN
 ELSE
   CALL Util_Display("jacobian: NOT ALLOCATED", unitno)
 END IF
+
 IF (ALLOCATED(obj%js)) THEN
   CALL Util_Display(obj%js, "js: ", unitno)
 ELSE
   CALL Util_Display("js: NOT ALLOCATED", unitno)
 END IF
+
+IF (ALLOCATED(obj%ws)) THEN
+  CALL Util_Display(obj%ws, "ws: ", unitno)
+ELSE
+  CALL Util_Display("ws: NOT ALLOCATED", unitno)
+END IF
+
 IF (ALLOCATED(obj%thickness)) THEN
   CALL Util_Display(obj%thickness, "thickness: ", unitno)
 ELSE
