@@ -27,7 +27,9 @@ USE HierarchicalPolynomialUtility, ONLY: HierarchicalDOF, &
                                          HierarchicalGradientEvalAll_
 
 USE QuadraturePoint_Method, ONLY: GetQuadraturePoints, &
-                                  QuadraturePoint_Size => Size
+                                  QuadraturePoint_Size => Size, &
+                                  GetTotalQuadraturePoints, &
+                                  GetQuadratureWeights_
 
 USE BaseType, ONLY: TypeQuadratureOpt, &
                     TypePolynomialOpt
@@ -50,7 +52,7 @@ INTEGER(I4B) :: ipType0, basisType0, nips, nns, ii, jj, kk
 
 ! CALL DEALLOCATE (obj)
 
-nips = SIZE(quad%points, 2)
+nips = GetTotalQuadraturePoints(obj=quad)
 ! pt = quad%points(1:quad%txi, 1:nips)
 ! wt = quad%points(quad%txi + 1, 1:nips)
 
@@ -59,7 +61,7 @@ nns = HierarchicalDOF(elemType=elemType, cellOrder=cellOrder, &
 
 CALL Elemsd_Allocate(obj=obj, nsd=nsd, xidim=xidim, nns=nns, nips=nips)
 
-obj%ws = quad%points(1 + xidim, 1:nips)
+CALL GetQuadratureWeights_(obj=quad, weights=obj%ws, tsize=nips)
 
 ALLOCATE (temp(nips, nns, 3))
 
