@@ -53,8 +53,6 @@ INTEGER(I4B) :: ipType0, basisType0, nips, nns, ii, jj, kk
 ! CALL DEALLOCATE (obj)
 
 nips = GetTotalQuadraturePoints(obj=quad)
-! pt = quad%points(1:quad%txi, 1:nips)
-! wt = quad%points(quad%txi + 1, 1:nips)
 
 nns = HierarchicalDOF(elemType=elemType, cellOrder=cellOrder, &
                       faceOrder=faceOrder, edgeOrder=edgeOrder)
