@@ -314,6 +314,8 @@ include(${PROJECT_SOURCE_DIR}/cmake/addPLPLOT.cmake)
 include(${PROJECT_SOURCE_DIR}/cmake/addFFTW.cmake)
 include(${PROJECT_SOURCE_DIR}/cmake/addGTKFortran.cmake)
 include(${PROJECT_SOURCE_DIR}/cmake/addLua.cmake)
+include(${PROJECT_SOURCE_DIR}/cmake/addGmsh.cmake)
+include(${PROJECT_SOURCE_DIR}/cmake/addHDF5.cmake)
 
 # Add source files
 include(src/modules/CMakeLists.txt)

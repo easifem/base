@@ -1,6 +1,5 @@
-# This program is a part of EASIFEM library Expandable And Scalable
-# Infrastructure for Finite Element Methods htttps://www.easifem.com Vikas
-# Sharma, Ph.D., vickysharma0812@gmail.com
+# This program is a part of EASIFEM library Copyright (C) 2020-2021  Vikas
+# Sharma, Ph.D
 #
 # This program is free software: you can redistribute it and/or modify it under
 # the terms of the GNU General Public License as published by the Free Software
@@ -14,15 +13,20 @@
 #
 # You should have received a copy of the GNU General Public License along with
 # this program.  If not, see <https: //www.gnu.org/licenses/>
-#
 
-find_package(toml-f REQUIRED)
+option(USE_GMSH_SDK OFF)
+if(USE_GMSH_SDK)
 
-if(toml-f_FOUND)
-  message(STATUS "[INFO] :: FOUND toml-f")
-  target_link_libraries(${PROJECT_NAME} PUBLIC toml-f::toml-f)
+  message(STATUS "USING GMSH SDK")
+  list(APPEND TARGET_COMPILE_DEF "-DUSE_GMSH_SDK")
+
+  find_library(GMSH_LIBRARIES NAMES gmsh gmsh.4.13.0 gmsh.4.13 REQUIRED)
+
+  target_link_libraries(${PROJECT_NAME} PUBLIC ${GMSH_LIBRARIES})
+  message(STATUS "GMSH_LIBRARIES : ${GMSH_LIBRARIES}")
 
 else()
-  message(ERROR "[ERROR] :: NOT FOUND toml-f")
+
+  message(STATUS "NOT USING GMSH SDK")
 
 endif()
