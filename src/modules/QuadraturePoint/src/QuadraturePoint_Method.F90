@@ -577,9 +577,8 @@ END INTERFACE SIZE
 ! summary: This routine returns total number of quadrature points
 
 INTERFACE GetTotalQuadraturepoints
-  MODULE PURE FUNCTION obj_GetTotalQuadraturepoints(obj, dims) RESULT(ans)
+  MODULE PURE FUNCTION obj_GetTotalQuadraturepoints(obj) RESULT(ans)
     TYPE(QuadraturePoint_), INTENT(IN) :: obj
-    INTEGER(I4B), INTENT(IN) :: dims
     INTEGER(I4B) :: ans
   END FUNCTION obj_GetTotalQuadraturepoints
 END INTERFACE GetTotalQuadraturepoints
