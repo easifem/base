@@ -64,6 +64,15 @@ weights = obj%points(obj%tXi + 1, 1:n)
 END PROCEDURE obj_GetQuadraturePoints2
 
 !----------------------------------------------------------------------------
+!                                                       GetQuadratureWeights
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE obj_GetQuadratureWeights1_
+tsize = SIZE(obj%points, 2) !#column
+weights(1:tsize) = obj%points(obj%tXi + 1, 1:tsize)
+END PROCEDURE obj_GetQuadratureWeights1_
+
+!----------------------------------------------------------------------------
 !                                                         getQuadraturepoints
 !----------------------------------------------------------------------------
 

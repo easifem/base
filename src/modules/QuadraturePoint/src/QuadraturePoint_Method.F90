@@ -32,10 +32,11 @@ PUBLIC :: QuadraturePoint
 PUBLIC :: QuadraturePoint_Pointer
 PUBLIC :: DEALLOCATE
 PUBLIC :: SIZE
-PUBLIC :: GetTotalQuadraturepoints
+PUBLIC :: GetTotalQuadraturePoints
 
-PUBLIC :: GetQuadraturepoints
-PUBLIC :: GetQuadraturepoints_
+PUBLIC :: GetQuadraturePoints
+PUBLIC :: GetQuadraturePoints_
+PUBLIC :: GetQuadratureWeights_
 
 PUBLIC :: Outerprod
 PUBLIC :: Display
@@ -577,10 +578,10 @@ END INTERFACE SIZE
 ! summary: This routine returns total number of quadrature points
 
 INTERFACE GetTotalQuadraturepoints
-  MODULE PURE FUNCTION obj_GetTotalQuadraturepoints(obj) RESULT(ans)
+  MODULE PURE FUNCTION obj_GetTotalQuadraturePoints(obj) RESULT(ans)
     TYPE(QuadraturePoint_), INTENT(IN) :: obj
     INTEGER(I4B) :: ans
-  END FUNCTION obj_GetTotalQuadraturepoints
+  END FUNCTION obj_GetTotalQuadraturePoints
 END INTERFACE GetTotalQuadraturepoints
 
 !----------------------------------------------------------------------------
@@ -592,7 +593,7 @@ END INTERFACE GetTotalQuadraturepoints
 ! summary: This routine returns quadrature points
 
 INTERFACE GetQuadraturePoints
-  MODULE PURE SUBROUTINE obj_GetQuadraturepoints1(obj, points, weights, num)
+  MODULE PURE SUBROUTINE obj_GetQuadraturePoints1(obj, points, weights, num)
     TYPE(QuadraturePoint_), INTENT(IN) :: obj
     REAL(DFP), INTENT(INOUT) :: points(3)
     !! [xi, eta, zeta]
@@ -600,7 +601,7 @@ INTERFACE GetQuadraturePoints
     !! weights
     INTEGER(I4B), INTENT(IN) :: num
     !! quadrature number
-  END SUBROUTINE obj_GetQuadraturepoints1
+  END SUBROUTINE obj_GetQuadraturePoints1
 END INTERFACE GetQuadraturePoints
 
 !----------------------------------------------------------------------------
@@ -612,13 +613,13 @@ END INTERFACE GetQuadraturePoints
 ! summary: This routine returns total number of quadrature points
 
 INTERFACE GetQuadraturePoints
-  MODULE PURE SUBROUTINE obj_GetQuadraturepoints2(obj, points, weights)
+  MODULE PURE SUBROUTINE obj_GetQuadraturePoints2(obj, points, weights)
     TYPE(QuadraturePoint_), INTENT(IN) :: obj
     REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: points(:, :)
     !! Point( :, j ) = [xi, eta, zeta] of jth quadrature point
     REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: weights(:)
     !! Weight(j) weight of jth quadrature point
-  END SUBROUTINE obj_GetQuadraturepoints2
+  END SUBROUTINE obj_GetQuadraturePoints2
 END INTERFACE GetQuadraturePoints
 
 !----------------------------------------------------------------------------
@@ -630,7 +631,7 @@ END INTERFACE GetQuadraturePoints
 ! summary: This routine returns total number of quadrature points
 
 INTERFACE GetQuadraturePoints_
-  MODULE PURE SUBROUTINE obj_GetQuadraturepoints1_(obj, points, weights, &
+  MODULE PURE SUBROUTINE obj_GetQuadraturePoints1_(obj, points, weights, &
                                                    nrow, ncol)
     TYPE(QuadraturePoint_), INTENT(IN) :: obj
     REAL(DFP), INTENT(INOUT) :: points(:, :)
@@ -640,8 +641,26 @@ INTERFACE GetQuadraturePoints_
     INTEGER(I4B), INTENT(OUT) :: nrow, ncol
     !! number of rows and columns
     !! ncol is number of columns in points and weights
-  END SUBROUTINE obj_GetQuadraturepoints1_
+  END SUBROUTINE obj_GetQuadraturePoints1_
 END INTERFACE GetQuadraturePoints_
+
+!----------------------------------------------------------------------------
+!                                              GetQuadratureWeight@GetMethods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2024-07-07
+! summary: This routine returns the quadrature weights
+
+INTERFACE GetQuadratureWeights_
+  MODULE PURE SUBROUTINE obj_GetQuadratureWeights1_(obj, weights, tsize)
+    TYPE(QuadraturePoint_), INTENT(IN) :: obj
+    REAL(DFP), INTENT(INOUT) :: weights(:)
+    !! Weight(j) weight of jth quadrature point
+    INTEGER(I4B), INTENT(OUT) :: tsize
+    !! The number of data written in weights
+  END SUBROUTINE obj_GetQuadratureWeights1_
+END INTERFACE GetQuadratureWeights_
 
 !----------------------------------------------------------------------------
 !                                                       OuterProd@GetMethods
