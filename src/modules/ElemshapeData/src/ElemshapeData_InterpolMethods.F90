@@ -492,7 +492,7 @@ END INTERFACE GetInterpolation_
 ! date: 4 March 2021
 ! summary: This subroutine performs interpolation of matrix
 
-INTERFACE
+INTERFACE GetInterpolation
   MODULE PURE SUBROUTINE matrix_getInterpolation_1(obj, interpol, val)
     CLASS(ElemshapeData_), INTENT(IN) :: obj
     REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: interpol(:, :, :)
@@ -500,11 +500,25 @@ INTERFACE
     REAL(DFP), INTENT(IN) :: val(:, :, :)
     !! nodal value of matrix
   END SUBROUTINE matrix_getInterpolation_1
-END INTERFACE
+END INTERFACE GetInterpolation
 
-INTERFACE getInterpolation
-  MODULE PROCEDURE matrix_getInterpolation_1
-END INTERFACE getInterpolation
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+!> author: Shion Shimizu
+! date:   2025-03-04
+! summary:  get interpolation of matrix without allocation
+
+INTERFACE GetInterpolation_
+  MODULE PURE SUBROUTINE matrix_getInterpolation1_(obj, interpol, val, &
+                                                   dim1, dim2, dim3)
+    CLASS(ElemshapeData_), INTENT(IN) :: obj
+    REAL(DFP), INTENT(INOUT) :: interpol(:, :, :)
+    REAL(DFP), INTENT(IN) :: val(:, :, :)
+    INTEGER(I4B), INTENT(OUT) :: dim1, dim2, dim3
+  END SUBROUTINE matrix_getInterpolation1_
+END INTERFACE GetInterpolation_
 
 !----------------------------------------------------------------------------
 !                                           getInterpolation@InterpolMethods
@@ -519,18 +533,32 @@ END INTERFACE getInterpolation
 ! This subroutine performs interpolation of matrix from its space-time
 ! nodal values
 
-INTERFACE
+INTERFACE GetInterpolation
   MODULE PURE SUBROUTINE matrix_getInterpolation_2(obj, interpol, val)
     CLASS(ElemshapeData_), INTENT(IN) :: obj
     REAL(DFP), INTENT(INOUT), ALLOCATABLE :: interpol(:, :, :)
     REAL(DFP), INTENT(IN) :: val(:, :, :, :)
     !! space-time nodal value of matrix
   END SUBROUTINE matrix_getInterpolation_2
-END INTERFACE
+END INTERFACE GetInterpolation
 
-INTERFACE getInterpolation
-  MODULE PROCEDURE matrix_getInterpolation_2
-END INTERFACE getInterpolation
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+!> author: Shion Shimizu
+! date:   2025-03-04
+! summary:  get interpolation of matrix without allocation
+
+INTERFACE GetInterpolation_
+  MODULE PURE SUBROUTINE matrix_getInterpolation2_(obj, interpol, val, &
+                                                   dim1, dim2, dim3)
+    CLASS(ElemshapeData_), INTENT(IN) :: obj
+    REAL(DFP), INTENT(INOUT) :: interpol(:, :, :)
+    REAL(DFP), INTENT(IN) :: val(:, :, :, :)
+    INTEGER(I4B), INTENT(OUT) :: dim1, dim2, dim3
+  END SUBROUTINE matrix_getInterpolation2_
+END INTERFACE GetInterpolation_
 
 !----------------------------------------------------------------------------
 !                                           getInterpolation@InterpolMethods
@@ -545,7 +573,7 @@ END INTERFACE getInterpolation
 ! This subroutine performs interpolation of matrix from its space-time
 ! nodal values
 
-INTERFACE
+INTERFACE GetInterpolation
   MODULE PURE SUBROUTINE matrix_getInterpolation_3(obj, interpol, val)
     CLASS(STElemshapeData_), INTENT(IN) :: obj(:)
     REAL(DFP), INTENT(INOUT), ALLOCATABLE :: interpol(:, :, :, :)
@@ -553,11 +581,7 @@ INTERFACE
     REAL(DFP), INTENT(IN) :: val(:, :, :, :)
     !! space-time nodal value of matrix
   END SUBROUTINE matrix_getInterpolation_3
-END INTERFACE
-
-INTERFACE getInterpolation
-  MODULE PROCEDURE matrix_getInterpolation_3
-END INTERFACE getInterpolation
+END INTERFACE GetInterpolation
 
 !----------------------------------------------------------------------------
 !                                           getInterpolation@InterpolMethods
@@ -567,7 +591,7 @@ END INTERFACE getInterpolation
 ! date: 4 March 2021
 ! summary: This subroutine performs interpolation of matrix FEVariable
 !
-INTERFACE
+INTERFACE GetInterpolation
   MODULE PURE SUBROUTINE matrix_getInterpolation_4(obj, interpol, val)
     CLASS(ElemshapeData_), INTENT(IN) :: obj
     REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: interpol(:, :, :)
@@ -575,17 +599,31 @@ INTERFACE
     TYPE(FEVariable_), INTENT(IN) :: val
     !! matrix fe variable
   END SUBROUTINE matrix_getInterpolation_4
-END INTERFACE
+END INTERFACE GetInterpolation
 
-INTERFACE getInterpolation
-  MODULE PROCEDURE matrix_getInterpolation_4
-END INTERFACE getInterpolation
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+!> author: Shion Shimizu
+! date:   2025-03-04
+! summary:  get interpolation of matrix without allocation
+
+INTERFACE GetInterpolation_
+  MODULE PURE SUBROUTINE matrix_getInterpolation4_(obj, interpol, val, &
+                                                   dim1, dim2, dim3)
+    CLASS(ElemshapeData_), INTENT(IN) :: obj
+    REAL(DFP), INTENT(INOUT) :: interpol(:, :, :)
+    TYPE(FEVariable_), INTENT(IN) :: val
+    INTEGER(I4B), INTENT(OUT) :: dim1, dim2, dim3
+  END SUBROUTINE matrix_getInterpolation4_
+END INTERFACE GetInterpolation_
 
 !----------------------------------------------------------------------------
 !                                           getInterpolation@InterpolMethods
 !----------------------------------------------------------------------------
 
-INTERFACE
+INTERFACE GetInterpolation
   MODULE PURE SUBROUTINE matrix_getInterpolation_5(obj, interpol, val)
     CLASS(STElemshapeData_), INTENT(IN) :: obj(:)
     REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: interpol(:, :, :, :)
@@ -593,11 +631,25 @@ INTERFACE
     TYPE(FEVariable_), INTENT(IN) :: val
     !! matrix fe variable
   END SUBROUTINE matrix_getInterpolation_5
-END INTERFACE
+END INTERFACE GetInterpolation
 
-INTERFACE getInterpolation
-  MODULE PROCEDURE matrix_getInterpolation_5
-END INTERFACE getInterpolation
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+!> author: Shion Shimizu
+! date:   2025-03-04
+! summary:  get interpolation of matrix without allocation
+
+INTERFACE GetInterpolation_
+  MODULE PURE SUBROUTINE matrix_getInterpolation5_(obj, interpol, val, &
+                                                   dim1, dim2, dim3, dim4)
+    CLASS(STElemshapeData_), INTENT(IN) :: obj(:)
+    REAL(DFP), INTENT(INOUT) :: interpol(:, :, :, :)
+    TYPE(FEVariable_), INTENT(IN) :: val
+    INTEGER(I4B), INTENT(OUT) :: dim1, dim2, dim3, dim4
+  END SUBROUTINE matrix_getInterpolation5_
+END INTERFACE GetInterpolation_
 
 !----------------------------------------------------------------------------
 !                                           getInterpolation@InterpolMethods
@@ -619,17 +671,13 @@ END INTERFACE getInterpolation
 ! - the val can be defined on quadrature (do nothing) or nodal (interpol)
 ! - The `vartype` of val can be constant, space, time, spacetime
 !
-INTERFACE
+INTERFACE GetInterpolation
   MODULE PURE SUBROUTINE master_getInterpolation_1(obj, interpol, val)
     CLASS(ElemshapeData_), INTENT(IN) :: obj
     TYPE(FEVariable_), INTENT(INOUT) :: interpol
     TYPE(FEVariable_), INTENT(IN) :: val
   END SUBROUTINE master_getInterpolation_1
-END INTERFACE
-
-INTERFACE getInterpolation
-  MODULE PROCEDURE master_getInterpolation_1
-END INTERFACE getInterpolation
+END INTERFACE GetInterpolation
 
 !----------------------------------------------------------------------------
 !                                           getInterpolation@InterpolMethods
@@ -651,17 +699,13 @@ END INTERFACE getInterpolation
 ! - the val can be defined on quadrature (do nothing) or nodal (interpol)
 ! - The `vartype` of val can be constant, space, time, spacetime
 !
-INTERFACE
+INTERFACE GetInterpolation
   MODULE PURE SUBROUTINE master_getInterpolation_2(obj, interpol, val)
     CLASS(STElemshapeData_), INTENT(IN) :: obj(:)
     TYPE(FEVariable_), INTENT(INOUT) :: interpol
     TYPE(FEVariable_), INTENT(IN) :: val
   END SUBROUTINE master_getInterpolation_2
-END INTERFACE
-
-INTERFACE getInterpolation
-  MODULE PROCEDURE master_getInterpolation_2
-END INTERFACE getInterpolation
+END INTERFACE GetInterpolation
 
 !----------------------------------------------------------------------------
 !                                              Interpolation@InterpolMethods

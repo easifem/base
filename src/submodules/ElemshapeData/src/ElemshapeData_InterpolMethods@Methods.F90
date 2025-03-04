@@ -128,7 +128,9 @@ CASE (Space)
                                    TypeFEVariableSpace), &
                            tsize=tsize)
   ELSE
-    interpol(1:tsize) = Get(val, TypeFEVariableScalar, TypeFEVariableSpace)
+    CALL Get_(obj=val, rank=TypeFEVariableScalar, &
+              vartype=TypeFEVariableSpace, &
+              val=interpol, tsize=tsize)
   END IF
 CASE (SpaceTime)
   SELECT TYPE (obj)
@@ -234,8 +236,9 @@ CASE (Space)
                              tsize=nrow)
     END DO
   ELSE
-    interpol(1:nrow, 1) = Get(val, TypeFEVariableScalar, &
-                              TypeFEVariableSpace)
+    CALL Get_(obj=val, rank=TypeFEVariableScalar, &
+              vartype=TypeFEVariableSpace, &
+              val=interpol(1:nrow, 1), tsize=nrow)
     DO ii = 2, ncol
       interpol(1:nrow, ii) = interpol(1:nrow, 1)
     END DO
@@ -250,8 +253,9 @@ CASE (SpaceTime)
                              tsize=nrow)
     END DO
   ELSE
-    interpol(1:nrow, 1:ncol) = Get(val, TypeFEVariableScalar, &
-                                   typeFEVariableSpaceTime)
+    CALL Get_(obj=val, rank=TypeFEVariableScalar, &
+              vartype=typeFEVariableSpaceTime, &
+              val=interpol, nrow=nrow, ncol=ncol)
   END IF
 END SELECT
 
@@ -380,18 +384,17 @@ END PROCEDURE vector_getinterpolation_4
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE vector_getinterpolation4_
-REAL(DFP), ALLOCATABLE :: m1(:)
 INTEGER(I4B) :: ii
 
 SELECT CASE (val%vartype)
 CASE (Constant)
-  m1 = Get(val, TypeFEVariableVector, TypeFEVariableConstant)
-  nrow = SIZE(m1)
+  CALL Get_(obj=val, rank=TypeFEVariableVector, &
+            vartype=TypeFEVariableConstant, &
+            val=interpol(:, 1), tsize=nrow)
   ncol = SIZE(obj%N, 2)
-  DO ii = 1, ncol
-    interpol(1:nrow, ii) = m1
+  DO ii = 2, ncol
+    interpol(1:nrow, ii) = interpol(1:nrow, 1)
   END DO
-  DEALLOCATE (m1)
 CASE (Space)
   IF (val%DefineOn .EQ. Nodal) THEN
     CALL GetInterpolation_(obj=obj, &
@@ -400,8 +403,9 @@ CASE (Space)
                            interpol=interpol, &
                            nrow=nrow, ncol=ncol)
   ELSE
-    ! TODO: edit after change get method
-    interpol = Get(val, TypeFEVariableVector, TypeFEVariableSpace)
+    CALL Get_(obj=val, rank=TypeFEVariableVector, &
+              vartype=TypeFEVariableSpace, &
+              val=interpol, nrow=nrow, ncol=ncol)
   END IF
 CASE (SpaceTime)
   SELECT TYPE (obj)
@@ -505,7 +509,6 @@ END PROCEDURE vector_getinterpolation_5
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE vector_getinterpolation5_
-REAL(DFP), ALLOCATABLE :: m1(:)
 INTEGER(I4B) :: ii, jj
 
 dim1 = SIZE(val, 1)
@@ -513,13 +516,15 @@ dim2 = SIZE(obj(1)%N, 2)
 dim3 = SIZE(obj)
 SELECT CASE (val%vartype)
 CASE (Constant)
-  m1 = Get(val, TypeFEVariableVector, TypeFEVariableConstant)
+  CALL Get_(obj=val, rank=TypeFEVariableVector, &
+            vartype=TypeFEVariableConstant, &
+            val=interpol(:, 1, 1), tsize=dim1)
   DO jj = 1, dim3
     DO ii = 1, dim2
-      interpol(1:dim1, ii, jj) = m1
+      IF (jj .EQ. 1 .AND. ii .EQ. 1) CYCLE
+      interpol(1:dim1, ii, jj) = interpol(1:dim1, 1, 1)
     END DO
   END DO
-  DEALLOCATE (m1)
 CASE (Space)
   IF (val%DefineOn .EQ. Nodal) THEN
     DO ii = 1, dim3
@@ -530,8 +535,9 @@ CASE (Space)
                              nrow=dim1, ncol=dim2)
     END DO
   ELSE
-    interpol(1:dim1, 1:dim2, 1) = Get(val, TypeFEVariableVector, &
-                                      TypeFEVariableSpace)
+    CALL Get_(obj=val, rank=TypeFEVariableVector, &
+              vartype=TypeFEVariableSpace, &
+              val=interpol(:, :, 1), nrow=dim1, ncol=dim2)
     DO ii = 2, SIZE(obj)
       interpol(1:dim1, 1:dim2, ii) = interpol(1:dim1, 1:dim2, 1)
     END DO
@@ -546,8 +552,9 @@ CASE (SpaceTime)
                              nrow=dim1, ncol=dim2)
     END DO
   ELSE
-    interpol(1:dim1, 1:dim2, 1:dim3) = Get(val, TypeFEVariableVector, &
-                                           typeFEVariableSpaceTime)
+    CALL Get_(obj=val, rank=TypeFEVariableVector, &
+              vartype=TypeFEVariableSpaceTime, &
+              val=interpol, dim1=dim1, dim2=dim2, dim3=dim3)
   END IF
 END SELECT
 
@@ -562,6 +569,17 @@ interpol = MATMUL(val, obj%N)
 END PROCEDURE matrix_getinterpolation_1
 
 !----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE matrix_getinterpolation1_
+dim1 = SIZE(val, 1)
+dim2 = SIZE(val, 2)
+dim3 = SIZE(obj%N, 2)
+interpol(1:dim1, 1:dim2, 1:dim3) = MATMUL(val, obj%N)
+END PROCEDURE matrix_getinterpolation1_
+
+!----------------------------------------------------------------------------
 !                                                         getSTinterpolation
 !----------------------------------------------------------------------------
 
@@ -571,6 +589,20 @@ TYPE IS (STElemShapeData_)
   interpol = MATMUL(MATMUL(val, obj%T), obj%N)
 END SELECT
 END PROCEDURE matrix_getinterpolation_2
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE matrix_getinterpolation2_
+SELECT TYPE (obj)
+TYPE IS (STElemShapeData_)
+  dim1 = SIZE(val, 1)
+  dim2 = SIZE(val, 2)
+  dim3 = SIZE(obj%N, 2)
+  interpol(1:dim1, 1:dim2, 1:dim3) = MATMUL(MATMUL(val, obj%T), obj%N)
+END SELECT
+END PROCEDURE matrix_getinterpolation2_
 
 !----------------------------------------------------------------------------
 !                                                         getSTinterpolation
@@ -614,6 +646,48 @@ CASE (SpaceTime)
   END SELECT
 END SELECT
 END PROCEDURE matrix_getinterpolation_4
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE matrix_getinterpolation4_
+INTEGER(I4B) :: ii
+
+SELECT CASE (val%vartype)
+CASE (Constant)
+  dim3 = SIZE(obj%N, 2)
+  CALL Get_(obj=val, rank=TypeFEVariableMatrix, &
+            vartype=TypeFEVariableConstant, &
+            val=interpol(:, :, 1), nrow=dim1, ncol=dim2)
+  DO ii = 2, dim3
+    interpol(1:dim1, 1:dim2, ii) = interpol(1:dim1, 1:dim2, 1)
+  END DO
+CASE (Space)
+  IF (val%DefineOn .EQ. Nodal) THEN
+    CALL GetInterpolation_(obj=obj, &
+                           val=Get(val, TypeFEVariableMatrix, &
+                                   TypeFEVariableSpace), &
+                           interpol=interpol, &
+                           dim1=dim1, dim2=dim2, dim3=dim3)
+  ELSE
+    CALL Get_(obj=val, rank=TypeFEVariableMatrix, &
+              vartype=TypeFEVariableSpace, val=interpol, &
+              dim1=dim1, dim2=dim2, dim3=dim3)
+  END IF
+CASE (SpaceTime)
+  SELECT TYPE (obj)
+  TYPE IS (STElemShapeData_)
+    IF (val%DefineOn .EQ. Nodal) THEN
+      CALL GetInterpolation_(obj=obj, &
+                             val=Get(val, TypeFEVariableMatrix, &
+                                     TypeFEVariableSpaceTime), &
+                             interpol=interpol, &
+                             dim1=dim1, dim2=dim2, dim3=dim3)
+    END IF
+  END SELECT
+END SELECT
+END PROCEDURE matrix_getinterpolation4_
 
 !----------------------------------------------------------------------------
 !                                                           getinterpolation
@@ -702,6 +776,63 @@ CASE (SpaceTime)
 END SELECT
 !!
 END PROCEDURE matrix_getinterpolation_5
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE matrix_getinterpolation5_
+INTEGER(I4B) :: ii, jj
+dim1 = SIZE(val, 1)
+dim2 = SIZE(val, 2)
+dim3 = SIZE(obj(1)%N, 2)
+dim4 = SIZE(obj)
+
+SELECT CASE (val%vartype)
+CASE (Constant)
+  CALL Get_(obj=val, rank=TypeFEVariableMatrix, &
+            vartype=TypeFEVariableConstant, val=interpol(:, :, 1, 1), &
+            nrow=dim1, ncol=dim2)
+  DO jj = 1, dim3
+    DO ii = 1, dim4
+      IF (jj .EQ. 1 .AND. ii .EQ. 1) CYCLE
+      interpol(1:dim1, 1:dim2, ii, jj) = interpol(1:dim1, 1:dim2, 1, 1)
+    END DO
+  END DO
+CASE (Space)
+  IF (val%DefineOn .EQ. Nodal) THEN
+    DO ii = 1, dim4
+      CALL GetInterpolation_(obj=obj(ii), &
+                             val=Get(val, TypeFEVariableMatrix, &
+                                     TypeFEVariableSpace), &
+                             interpol=interpol(:, :, :, ii), &
+                             dim1=dim1, dim2=dim2, dim3=dim3)
+    END DO
+  ELSE
+    CALL Get_(obj=val, rank=TypeFEVariableMatrix, &
+              vartype=TypeFEVariableSpace, val=interpol(:, :, :, 1), &
+              dim1=dim1, dim2=dim2, dim3=dim3)
+    DO ii = 2, dim4
+      interpol(1:dim1, 1:dim2, 1:dim3, ii) = &
+        interpol(1:dim1, 1:dim2, 1:dim3, 1)
+    END DO
+  END IF
+CASE (SpaceTime)
+  IF (val%DefineOn .EQ. Nodal) THEN
+    DO ii = 1, dim4
+      CALL GetInterpolation_(obj=obj(ii), &
+                             val=Get(val, TypeFEVariableMatrix, &
+                                     TypeFEVariableSpaceTime), &
+                             interpol=interpol(:, :, :, ii), &
+                             dim1=dim1, dim2=dim2, dim3=dim3)
+    END DO
+  ELSE
+    CALL Get_(obj=val, rank=TypeFEVariableMatrix, &
+              vartype=TypeFEVariableSpaceTime, val=interpol, &
+              dim1=dim1, dim2=dim2, dim3=dim3, dim4=dim4)
+  END IF
+END SELECT
+END PROCEDURE matrix_getinterpolation5_
 
 !----------------------------------------------------------------------------
 !                                                           getinterpolation
