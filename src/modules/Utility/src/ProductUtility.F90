@@ -193,6 +193,21 @@ INTERFACE OuterProd
   END FUNCTION OuterProd_r1r2
 END INTERFACE OuterProd
 
+!> author: Shion Shimizu
+! date:   2025-03-05
+! summary:  a x b
+
+INTERFACE OuterProd_
+  MODULE PURE SUBROUTINE OuterProd_r1r2_(a, b, anscoeff, scale, ans, &
+                                         dim1, dim2, dim3)
+    REAL(DFP), INTENT(IN) :: a(:)
+    REAL(DFP), INTENT(IN) :: b(:, :)
+    REAL(DFP), INTENT(IN) :: anscoeff, scale
+    REAL(DFP), INTENT(INOUT) :: ans(:, :, :)
+    INTEGER(I4B), INTENT(OUT) :: dim1, dim2, dim3
+  END SUBROUTINE OuterProd_r1r2_
+END INTERFACE OuterProd_
+
 !----------------------------------------------------------------------------
 !                                                   OuterProd@ProductMethods
 !----------------------------------------------------------------------------
