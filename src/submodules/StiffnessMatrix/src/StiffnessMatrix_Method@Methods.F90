@@ -88,7 +88,9 @@ END PROCEDURE obj_StiffnessMatrix1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE obj_StiffnessMatrix1_
-REAL(DFP) :: Cbar(test%nsd, trial%nsd, trial%nips), &
+REAL(DFP) :: Cbar(test%nsd * (test%nsd + 1) / 2, &
+                  trial%nsd * (trial%nsd + 1) / 2, &
+                  trial%nips), &
              Ce(test%nsd * test%nsd, trial%nsd * trial%nsd), &
              BMat1(test%nsd * test%nns, trial%nsd * trial%nsd), &
              BMat2(trial%nsd * trial%nns, trial%nsd * trial%nsd)
