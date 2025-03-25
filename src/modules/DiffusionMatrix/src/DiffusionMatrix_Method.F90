@@ -119,6 +119,23 @@ INTERFACE DiffusionMatrix
 END INTERFACE DiffusionMatrix
 
 !----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE DiffusionMatrix_
+  MODULE PURE SUBROUTINE DiffusionMatrix2_(test, trial, k, krank, opt, &
+                                           ans, nrow, ncol)
+    CLASS(ElemshapeData_), INTENT(IN) :: test
+    CLASS(ElemshapeData_), INTENT(IN) :: trial
+    CLASS(FEVariable_), INTENT(IN) :: k
+    TYPE(FEVariableScalar_), INTENT(IN) :: krank
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: opt
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+  END SUBROUTINE DiffusionMatrix2_
+END INTERFACE DiffusionMatrix_
+
+!----------------------------------------------------------------------------
 !                                     DiffusionMatrix@DiffusionMatrixMethods
 !----------------------------------------------------------------------------
 
@@ -148,6 +165,23 @@ INTERFACE DiffusionMatrix
     REAL(DFP), ALLOCATABLE :: ans(:, :)
   END FUNCTION DiffusionMatrix_3
 END INTERFACE DiffusionMatrix
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE DiffusionMatrix_
+  MODULE PURE SUBROUTINE DiffusionMatrix3_(test, trial, k, krank, opt, &
+                                           ans, nrow, ncol)
+    CLASS(ElemshapeData_), INTENT(IN) :: test
+    CLASS(ElemshapeData_), INTENT(IN) :: trial
+    CLASS(FEVariable_), INTENT(IN) :: k
+    TYPE(FEVariableVector_), INTENT(IN) :: krank
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: opt
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+  END SUBROUTINE DiffusionMatrix3_
+END INTERFACE DiffusionMatrix_
 
 !----------------------------------------------------------------------------
 !                                     DiffusionMatrix@DiffusionMatrixMethods
@@ -180,6 +214,23 @@ INTERFACE DiffusionMatrix
     REAL(DFP), ALLOCATABLE :: ans(:, :)
   END FUNCTION DiffusionMatrix_4
 END INTERFACE DiffusionMatrix
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE DiffusionMatrix_
+  MODULE PURE SUBROUTINE DiffusionMatrix4_(test, trial, k, krank, opt, &
+                                           ans, nrow, ncol)
+    CLASS(ElemshapeData_), INTENT(IN) :: test
+    CLASS(ElemshapeData_), INTENT(IN) :: trial
+    CLASS(FEVariable_), INTENT(IN) :: k
+    TYPE(FEVariableMatrix_), INTENT(IN) :: krank
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: opt
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+  END SUBROUTINE DiffusionMatrix4_
+END INTERFACE DiffusionMatrix_
 
 !----------------------------------------------------------------------------
 !                                     DiffusionMatrix@DiffusionMatrixMethods
@@ -218,6 +269,25 @@ INTERFACE DiffusionMatrix
 END INTERFACE DiffusionMatrix
 
 !----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE DiffusionMatrix_
+  MODULE PURE SUBROUTINE DiffusionMatrix5_(test, trial, c1, c2, c1rank, &
+                                           c2rank, opt, ans, nrow, ncol)
+    CLASS(ElemshapeData_), INTENT(IN) :: test
+    CLASS(ElemshapeData_), INTENT(IN) :: trial
+    CLASS(FEVariable_), INTENT(IN) :: c1
+    CLASS(FEVariable_), INTENT(IN) :: c2
+    TYPE(FEVariableScalar_), INTENT(IN) :: c1rank
+    TYPE(FEVariableScalar_), INTENT(IN) :: c2rank
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: opt
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+  END SUBROUTINE DiffusionMatrix5_
+END INTERFACE DiffusionMatrix_
+
+!----------------------------------------------------------------------------
 !                                     DiffusionMatrix@DiffusionMatrixMethods
 !----------------------------------------------------------------------------
 
@@ -252,6 +322,25 @@ INTERFACE DiffusionMatrix
     REAL(DFP), ALLOCATABLE :: ans(:, :)
   END FUNCTION DiffusionMatrix_6
 END INTERFACE DiffusionMatrix
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE DiffusionMatrix_
+  MODULE PURE SUBROUTINE DiffusionMatrix6_(test, trial, c1, c2, c1rank, &
+                                           c2rank, opt, ans, nrow, ncol)
+    CLASS(ElemshapeData_), INTENT(IN) :: test
+    CLASS(ElemshapeData_), INTENT(IN) :: trial
+    CLASS(FEVariable_), INTENT(IN) :: c1
+    CLASS(FEVariable_), INTENT(IN) :: c2
+    TYPE(FEVariableScalar_), INTENT(IN) :: c1rank
+    TYPE(FEVariableVector_), INTENT(IN) :: c2rank
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: opt
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+  END SUBROUTINE DiffusionMatrix6_
+END INTERFACE DiffusionMatrix_
 
 !----------------------------------------------------------------------------
 !                                     DiffusionMatrix@DiffusionMatrixMethods

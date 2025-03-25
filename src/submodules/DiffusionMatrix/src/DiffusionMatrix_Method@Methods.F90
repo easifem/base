@@ -89,6 +89,34 @@ DEALLOCATE (kbar, realval)
 END PROCEDURE DiffusionMatrix_2
 
 !----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE DiffusionMatrix2_
+REAL(DFP) :: realval, kbar(trial%nips)
+INTEGER(I4B) :: ii
+
+CALL GetInterpolation_(obj=trial, Interpol=kbar, val=k, tsize=ii)
+nrow = test%nns
+ncol = trial%nns
+ans(1:nrow, 1:ncol) = 0.0
+
+DO ii = 1, trial%nips
+  realval = trial%js(ii) * trial%ws(ii) * trial%thickness(ii) * kbar(ii)
+  ans(1:nrow, 1:ncol) = ans(1:nrow, 1:ncol) + &
+                        realval * MATMUL(test%dNdXt(:, :, ii), &
+                                         TRANSPOSE(trial%dNdXt(:, :, ii)))
+END DO
+
+IF (PRESENT(opt)) THEN
+  CALL MakeDiagonalCopies_(mat=ans, ncopy=opt, nrow=nrow, ncol=ncol)
+  nrow = opt * nrow
+  ncol = opt * ncol
+END IF
+
+END PROCEDURE DiffusionMatrix2_
+
+!----------------------------------------------------------------------------
 !                                                            DiffusionMatrix
 !----------------------------------------------------------------------------
 
@@ -105,6 +133,35 @@ END DO
 IF (PRESENT(opt)) CALL MakeDiagonalCopies(ans, opt)
 DEALLOCATE (c1bar, c2bar, realval)
 END PROCEDURE DiffusionMatrix_3
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE DiffusionMatrix3_
+REAL(DFP) :: c1bar(test%nns, test%nips), c2bar(trial%nns, trial%nips)
+REAL(DFP) :: realval
+INTEGER(I4B) :: ii, jj, kk
+REAL(DFP), PARAMETER :: one = 1.0_DFP
+
+CALL getProjectionOfdNdXt_(obj=test, cdNdXt=c1bar, val=k, nrow=nrow, ncol=ii)
+CALL getProjectionOfdNdXt_(obj=trial, cdNdXt=c2bar, val=k, nrow=ncol, ncol=ii)
+
+ans(1:nrow, 1:ncol) = 0.0
+
+DO ii = 1, trial%nips
+  realval = trial%js(ii) * trial%ws(ii) * trial%thickness(ii)
+  CALL OuterProd_(a=c1bar(1:nrow, ii), b=c2bar(1:ncol, ii), &
+                  nrow=jj, ncol=kk, ans=ans, &
+                  scale=realval, anscoeff=one)
+END DO
+
+IF (PRESENT(opt)) THEN
+  CALL MakeDiagonalCopies_(mat=ans, ncopy=opt, nrow=nrow, ncol=ncol)
+  nrow = opt * nrow
+  ncol = opt * ncol
+END IF
+END PROCEDURE DiffusionMatrix3_
 
 !----------------------------------------------------------------------------
 !                                                            DiffusionMatrix
@@ -128,6 +185,37 @@ DEALLOCATE (kbar, realval)
 END PROCEDURE DiffusionMatrix_4
 
 !----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE DiffusionMatrix4_
+REAL(DFP) :: kbar(test%nsd, test%nsd, trial%nips)
+REAL(DFP) :: realval
+REAL(DFP), PARAMETER :: one = 1.0_DFP
+INTEGER(I4B) :: ii, jj, kk
+
+CALL getInterpolation_(obj=trial, Interpol=kbar, val=k, &
+                       dim1=ii, dim2=jj, dim3=kk)
+nrow = test%nns
+ncol = trial%nns
+ans(1:nrow, 1:ncol) = 0.0
+
+DO ii = 1, trial%nips
+  realval = trial%js(ii) * trial%ws(ii) * trial%thickness(ii)
+  ans(1:nrow, 1:ncol) = ans(1:nrow, 1:ncol) + &
+              realval * MATMUL(MATMUL(test%dNdXt(:, :, ii), kbar(:, :, ii)), &
+                                         TRANSPOSE(trial%dNdXt(:, :, ii)))
+END DO
+
+IF (PRESENT(opt)) THEN
+  CALL MakeDiagonalCopies_(mat=ans, ncopy=opt, nrow=nrow, ncol=ncol)
+  nrow = opt * nrow
+  ncol = opt * ncol
+END IF
+
+END PROCEDURE DiffusionMatrix4_
+
+!----------------------------------------------------------------------------
 !                                                            DiffusionMatrix
 !----------------------------------------------------------------------------
 
@@ -147,6 +235,36 @@ DEALLOCATE (cbar, realval)
 END PROCEDURE DiffusionMatrix_5
 
 !----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE DiffusionMatrix5_
+REAL(DFP) :: realval(trial%nips), cbar(trial%nips)
+INTEGER(I4B) :: ii
+
+CALL getInterpolation_(obj=trial, Interpol=cbar, val=c1, tsize=ii)
+CALL getInterpolation_(obj=trial, Interpol=realval, val=c2, tsize=ii)
+realval = realval * trial%js * trial%ws * trial%thickness * cbar
+
+nrow = test%nns
+ncol = trial%nns
+ans(1:nrow, 1:ncol) = 0.0
+
+DO ii = 1, trial%nips
+  ans(1:nrow, 1:ncol) = ans(1:nrow, 1:ncol) + &
+                        realval(ii) * MATMUL(test%dNdXt(:, :, ii), &
+                                             TRANSPOSE(trial%dNdXt(:, :, ii)))
+END DO
+
+IF (PRESENT(opt)) THEN
+  CALL MakeDiagonalCopies_(mat=ans, ncopy=opt, nrow=nrow, ncol=ncol)
+  nrow = opt * nrow
+  ncol = opt * ncol
+END IF
+
+END PROCEDURE DiffusionMatrix5_
+
+!----------------------------------------------------------------------------
 !                                                            DiffusionMatrix
 !----------------------------------------------------------------------------
 
@@ -164,6 +282,42 @@ END DO
 IF (PRESENT(opt)) CALL MakeDiagonalCopies(ans, opt)
 DEALLOCATE (c1bar, c2bar, realval)
 END PROCEDURE DiffusionMatrix_6
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE DiffusionMatrix6_
+REAL(DFP) :: c1bar(test%nns, test%nips), c2bar(trial%nns, trial%nips), &
+             realval(trial%nips)
+INTEGER(I4B) :: ii, jj, kk
+REAL(DFP), PARAMETER :: one = 1.0_DFP
+
+CALL getProjectionOfdNdXt_(obj=test, cdNdXt=c1bar, val=c2, &
+                           nrow=nrow, ncol=ii)
+CALL getProjectionOfdNdXt_(obj=trial, cdNdXt=c2bar, val=c2, &
+                           nrow=ncol, ncol=ii)
+
+CALL getInterpolation_(obj=trial, interpol=realval, val=c1, &
+                       tsize=ii)
+
+realval = realval * trial%js * trial%ws * trial%thickness
+
+ans(1:nrow, 1:ncol) = 0.0
+
+DO ii = 1, trial%nips
+  CALL OuterProd_(a=c1bar(1:nrow, ii), b=c2bar(1:ncol, ii), &
+                  nrow=jj, ncol=kk, ans=ans, &
+                  scale=realval(ii), anscoeff=one)
+END DO
+
+IF (PRESENT(opt)) THEN
+  CALL MakeDiagonalCopies_(mat=ans, ncopy=opt, nrow=nrow, ncol=ncol)
+  nrow = opt * nrow
+  ncol = opt * ncol
+END IF
+
+END PROCEDURE DiffusionMatrix6_
 
 !----------------------------------------------------------------------------
 !                                                            DiffusionMatrix

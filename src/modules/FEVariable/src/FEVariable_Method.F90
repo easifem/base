@@ -42,6 +42,7 @@ PUBLIC :: OPERATOR(.defineon.)
 PUBLIC :: isNodalVariable
 PUBLIC :: isQuadratureVariable
 PUBLIC :: Get
+PUBLIC :: Get_
 PUBLIC :: OPERATOR(+)
 PUBLIC :: OPERATOR(-)
 PUBLIC :: OPERATOR(*)
@@ -1078,6 +1079,24 @@ INTERFACE Get
 END INTERFACE Get
 
 !----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+!> author: Shion Shimizu
+! date:   2025-03-04
+! summary:  Returns value which is scalar, space without allocation
+
+INTERFACE Get_
+  MODULE PURE SUBROUTINE Scalar_Space_(obj, rank, vartype, val, tsize)
+    CLASS(FEVariable_), INTENT(IN) :: obj
+    TYPE(FEVariableScalar_), INTENT(IN) :: rank
+    TYPE(FEVariableSpace_), INTENT(IN) :: vartype
+    REAL(DFP), INTENT(INOUT) :: val(:)
+    INTEGER(I4B), INTENT(OUT) :: tsize
+  END SUBROUTINE Scalar_Space_
+END INTERFACE Get_
+
+!----------------------------------------------------------------------------
 !                                                             Get@GetMethods
 !----------------------------------------------------------------------------
 
@@ -1093,6 +1112,24 @@ INTERFACE Get
     REAL(DFP), ALLOCATABLE :: val(:)
   END FUNCTION Scalar_Time
 END INTERFACE Get
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+!> author: Shion Shimizu
+! date:   2025-03-04
+! summary:  Returns value which is scalar, time without allocation
+
+INTERFACE Get_
+  MODULE PURE SUBROUTINE Scalar_Time_(obj, rank, vartype, val, tsize)
+    CLASS(FEVariable_), INTENT(IN) :: obj
+    TYPE(FEVariableScalar_), INTENT(IN) :: rank
+    TYPE(FEVariableTime_), INTENT(IN) :: vartype
+    REAL(DFP), INTENT(INOUT) :: val(:)
+    INTEGER(I4B), INTENT(OUT) :: tsize
+  END SUBROUTINE Scalar_Time_
+END INTERFACE Get_
 
 !----------------------------------------------------------------------------
 !                                                             Get@GetMethods
@@ -1112,6 +1149,25 @@ INTERFACE Get
 END INTERFACE Get
 
 !----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+!> author: Shion Shimizu
+! date:   2025-03-04
+! summary:  Returns value which is scalar, SpaceTime without allocation
+
+INTERFACE Get_
+  MODULE PURE SUBROUTINE Scalar_SpaceTime_(obj, rank, vartype, val, &
+                                           nrow, ncol)
+    CLASS(FEVariable_), INTENT(IN) :: obj
+    TYPE(FEVariableScalar_), INTENT(IN) :: rank
+    TYPE(FEVariableSpaceTime_), INTENT(IN) :: vartype
+    REAL(DFP), INTENT(INOUT) :: val(:, :)
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+  END SUBROUTINE Scalar_SpaceTime_
+END INTERFACE Get_
+
+!----------------------------------------------------------------------------
 !                                                             Get@GetMethods
 !----------------------------------------------------------------------------
 
@@ -1127,6 +1183,24 @@ INTERFACE Get
     REAL(DFP), ALLOCATABLE :: val(:)
   END FUNCTION Vector_Constant
 END INTERFACE Get
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+!> author: Shion Shimizu
+! date:   2025-03-04
+! summary:  Returns value which is vector, constant without allocation
+
+INTERFACE Get_
+  MODULE PURE SUBROUTINE Vector_Constant_(obj, rank, vartype, val, tsize)
+    CLASS(FEVariable_), INTENT(IN) :: obj
+    TYPE(FEVariableVector_), INTENT(IN) :: rank
+    TYPE(FEVariableConstant_), INTENT(IN) :: vartype
+    REAL(DFP), INTENT(INOUT) :: val(:)
+    INTEGER(I4B), INTENT(OUT) :: tsize
+  END SUBROUTINE Vector_Constant_
+END INTERFACE Get_
 
 !----------------------------------------------------------------------------
 !                                                             Get@GetMethods
@@ -1146,6 +1220,25 @@ INTERFACE Get
 END INTERFACE Get
 
 !----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+!> author: Shion Shimizu
+! date:   2025-03-04
+! summary:  Returns value which is vector, space without allocation
+
+INTERFACE Get_
+  MODULE PURE SUBROUTINE Vector_Space_(obj, rank, vartype, val, &
+                                       nrow, ncol)
+    CLASS(FEVariable_), INTENT(IN) :: obj
+    TYPE(FEVariableVector_), INTENT(IN) :: rank
+    TYPE(FEVariableSpace_), INTENT(IN) :: vartype
+    REAL(DFP), INTENT(INOUT) :: val(:, :)
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+  END SUBROUTINE Vector_Space_
+END INTERFACE Get_
+
+!----------------------------------------------------------------------------
 !                                                             Get@GetMethods
 !----------------------------------------------------------------------------
 
@@ -1161,6 +1254,25 @@ INTERFACE Get
     REAL(DFP), ALLOCATABLE :: val(:, :)
   END FUNCTION Vector_Time
 END INTERFACE Get
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+!> author: Shion Shimizu
+! date:   2025-03-04
+! summary:  Returns value which is vector, time without allocation
+
+INTERFACE Get_
+  MODULE PURE SUBROUTINE Vector_Time_(obj, rank, vartype, val, &
+                                      nrow, ncol)
+    CLASS(FEVariable_), INTENT(IN) :: obj
+    TYPE(FEVariableVector_), INTENT(IN) :: rank
+    TYPE(FEVariableTime_), INTENT(IN) :: vartype
+    REAL(DFP), INTENT(INOUT) :: val(:, :)
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+  END SUBROUTINE Vector_Time_
+END INTERFACE Get_
 
 !----------------------------------------------------------------------------
 !                                                             Get@GetMethods
@@ -1180,6 +1292,25 @@ INTERFACE Get
 END INTERFACE Get
 
 !----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+!> author: Shion Shimizu
+! date:   2025-03-04
+! summary:  Returns value which is vector, spaceTime without allocation
+
+INTERFACE Get_
+  MODULE PURE SUBROUTINE Vector_SpaceTime_(obj, rank, vartype, val, &
+                                           dim1, dim2, dim3)
+    CLASS(FEVariable_), INTENT(IN) :: obj
+    TYPE(FEVariableVector_), INTENT(IN) :: rank
+    TYPE(FEVariableSpaceTime_), INTENT(IN) :: vartype
+    REAL(DFP), INTENT(INOUT) :: val(:, :, :)
+    INTEGER(I4B), INTENT(OUT) :: dim1, dim2, dim3
+  END SUBROUTINE Vector_SpaceTime_
+END INTERFACE Get_
+
+!----------------------------------------------------------------------------
 !                                                            Get@GetMethods
 !----------------------------------------------------------------------------
 
@@ -1195,6 +1326,25 @@ INTERFACE Get
     REAL(DFP), ALLOCATABLE :: val(:, :)
   END FUNCTION Matrix_Constant
 END INTERFACE Get
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+!> author: Shion Shimizu
+! date:   2025-03-04
+! summary:  Returns value which is Matrix, Constant without allocation
+
+INTERFACE Get_
+  MODULE PURE SUBROUTINE Matrix_Constant_(obj, rank, vartype, val, &
+                                          nrow, ncol)
+    CLASS(FEVariable_), INTENT(IN) :: obj
+    TYPE(FEVariableMatrix_), INTENT(IN) :: rank
+    TYPE(FEVariableConstant_), INTENT(IN) :: vartype
+    REAL(DFP), INTENT(inout) :: val(:, :)
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+  END SUBROUTINE Matrix_Constant_
+END INTERFACE Get_
 
 !----------------------------------------------------------------------------
 !                                                            Get@GetMethods
@@ -1214,6 +1364,25 @@ INTERFACE Get
 END INTERFACE Get
 
 !----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+!> author: Shion Shimizu
+! date:   2025-03-04
+! summary:  Returns value which is Matrix, Space without allocation
+
+INTERFACE Get_
+  MODULE PURE SUBROUTINE Matrix_Space_(obj, rank, vartype, val, &
+                                       dim1, dim2, dim3)
+    CLASS(FEVariable_), INTENT(IN) :: obj
+    TYPE(FEVariableMatrix_), INTENT(IN) :: rank
+    TYPE(FEVariableSpace_), INTENT(IN) :: vartype
+    REAL(DFP), INTENT(INOUT) :: val(:, :, :)
+    INTEGER(I4B), INTENT(OUT) :: dim1, dim2, dim3
+  END SUBROUTINE Matrix_Space_
+END INTERFACE Get_
+
+!----------------------------------------------------------------------------
 !                                                            Get@GetMethods
 !----------------------------------------------------------------------------
 
@@ -1231,6 +1400,25 @@ INTERFACE Get
 END INTERFACE Get
 
 !----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+!> author: Shion Shimizu
+! date:   2025-03-04
+! summary:  Returns value which is Matrix, Time without allocation
+
+INTERFACE Get_
+  MODULE PURE SUBROUTINE Matrix_Time_(obj, rank, vartype, val, &
+                                      dim1, dim2, dim3)
+    CLASS(FEVariable_), INTENT(IN) :: obj
+    TYPE(FEVariableMatrix_), INTENT(IN) :: rank
+    TYPE(FEVariableTime_), INTENT(IN) :: vartype
+    REAL(DFP), INTENT(INOUT) :: val(:, :, :)
+    INTEGER(I4B), INTENT(OUT) :: dim1, dim2, dim3
+  END SUBROUTINE Matrix_Time_
+END INTERFACE Get_
+
+!----------------------------------------------------------------------------
 !                                                            Get@GetMethods
 !----------------------------------------------------------------------------
 
@@ -1246,6 +1434,25 @@ INTERFACE Get
     REAL(DFP), ALLOCATABLE :: val(:, :, :, :)
   END FUNCTION Matrix_SpaceTime
 END INTERFACE Get
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+!> author: Shion Shimizu
+! date:   2025-03-04
+! summary:  Returns value which is Matrix, SpaceTime without allocation
+
+INTERFACE Get_
+  MODULE PURE SUBROUTINE Matrix_SpaceTime_(obj, rank, vartype, val, &
+                                           dim1, dim2, dim3, dim4)
+    CLASS(FEVariable_), INTENT(IN) :: obj
+    TYPE(FEVariableMatrix_), INTENT(IN) :: rank
+    TYPE(FEVariableSpaceTime_), INTENT(IN) :: vartype
+    REAL(DFP), INTENT(INOUT) :: val(:, :, :, :)
+    INTEGER(I4B), INTENT(OUT) :: dim1, dim2, dim3, dim4
+  END SUBROUTINE Matrix_SpaceTime_
+END INTERFACE Get_
 
 !----------------------------------------------------------------------------
 !                                                   Addition@AdditioMethods

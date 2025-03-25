@@ -89,7 +89,7 @@ INTEGER(I4B) :: ii, jj, p1
 
 nrow = LagrangeDOF_Quadrangle(p=p, q=q)
 ncol = 2
-p1 = p1 + 1
+p1 = p + 1
 
 DO CONCURRENT(jj=0:q, ii=0:p)
   ans(p1 * jj + ii + 1, 1) = ii

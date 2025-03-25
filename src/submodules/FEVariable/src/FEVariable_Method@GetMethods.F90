@@ -138,6 +138,69 @@ val = obj%val(1)
 END PROCEDURE Scalar_Constant
 
 !----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+PURE SUBROUTINE Master_Get_vec_(obj, val, tsize)
+  CLASS(FEVariable_), INTENT(IN) :: obj
+  REAL(DFP), INTENT(INOUT) :: val(:)
+  INTEGER(I4B), INTENT(OUT) :: tsize
+
+  tsize = obj%len
+  val(1:tsize) = obj%val(1:tsize)
+
+END SUBROUTINE Master_Get_vec_
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+PURE SUBROUTINE Master_Get_mat_(obj, val, nrow, ncol)
+  CLASS(FEVariable_), INTENT(IN) :: obj
+  REAL(DFP), INTENT(INOUT) :: val(:, :)
+  INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+
+  INTEGER(I4B) :: ii, jj, cnt
+
+  nrow = obj%s(1)
+  ncol = obj%s(2)
+
+  cnt = 0
+  DO jj = 1, ncol
+    DO ii = 1, nrow
+      cnt = cnt + 1
+      val(ii, jj) = obj%val(cnt)
+    END DO
+  END DO
+END SUBROUTINE Master_Get_mat_
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+PURE SUBROUTINE Master_get_mat3_(obj, val, dim1, dim2, dim3)
+  CLASS(FEVariable_), INTENT(IN) :: obj
+  REAL(DFP), INTENT(INOUT) :: val(:, :, :)
+  INTEGER(I4B), INTENT(OUT) :: dim1, dim2, dim3
+  INTEGER(I4B) :: ii, jj, kk, cnt
+
+  dim1 = obj%s(1)
+  dim2 = obj%s(2)
+  dim3 = obj%s(3)
+
+  cnt = 0
+  DO kk = 1, dim3
+    DO jj = 1, dim2
+      DO ii = 1, dim1
+        cnt = cnt + 1
+        val(ii, jj, kk) = obj%val(cnt)
+      END DO
+    END DO
+  END DO
+
+END SUBROUTINE Master_get_mat3_
+
+!----------------------------------------------------------------------------
 !                                                            getNodalvalues
 !----------------------------------------------------------------------------
 
@@ -147,6 +210,14 @@ val = obj%val(1:obj%len)
 END PROCEDURE Scalar_Space
 
 !----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE Scalar_Space_
+CALL Master_Get_vec_(obj, val, tsize)
+END PROCEDURE Scalar_Space_
+
+!----------------------------------------------------------------------------
 !                                                            getNodalvalues
 !----------------------------------------------------------------------------
 
@@ -154,6 +225,14 @@ MODULE PROCEDURE Scalar_Time
 ALLOCATE (val(obj%len))
 val = obj%val(1:obj%len)
 END PROCEDURE Scalar_Time
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE Scalar_Time_
+CALL Master_Get_vec_(obj, val, tsize)
+END PROCEDURE Scalar_Time_
 
 !----------------------------------------------------------------------------
 !                                                            getNodalvalues
@@ -176,6 +255,14 @@ END DO
 END PROCEDURE Scalar_SpaceTime
 
 !----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE Scalar_SpaceTime_
+CALL Master_Get_mat_(obj, val, nrow, ncol)
+END PROCEDURE Scalar_SpaceTime_
+
+!----------------------------------------------------------------------------
 !                                                            getNodalvalues
 !----------------------------------------------------------------------------
 
@@ -183,6 +270,14 @@ MODULE PROCEDURE Vector_Constant
 ALLOCATE (val(obj%len))
 val = obj%val(1:obj%len)
 END PROCEDURE Vector_Constant
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE Vector_Constant_
+CALL Master_Get_vec_(obj, val, tsize)
+END PROCEDURE Vector_Constant_
 
 !----------------------------------------------------------------------------
 !                                                            getNodalvalues
@@ -204,6 +299,14 @@ END DO
 END PROCEDURE Vector_Space
 
 !----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE Vector_Space_
+CALL Master_Get_mat_(obj, val, nrow, ncol)
+END PROCEDURE Vector_Space_
+
+!----------------------------------------------------------------------------
 !                                                            getNodalvalues
 !----------------------------------------------------------------------------
 
@@ -220,6 +323,14 @@ DO jj = 1, obj%s(2)
   END DO
 END DO
 END PROCEDURE Vector_Time
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE Vector_Time_
+CALL Master_Get_mat_(obj, val, nrow, ncol)
+END PROCEDURE Vector_Time_
 
 !----------------------------------------------------------------------------
 !                                                            getNodalvalues
@@ -242,6 +353,14 @@ END DO
 END PROCEDURE Vector_SpaceTime
 
 !----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE Vector_SpaceTime_
+CALL Master_Get_mat3_(obj, val, dim1, dim2, dim3)
+END PROCEDURE Vector_SpaceTime_
+
+!----------------------------------------------------------------------------
 !                                                            getNodalvalues
 !----------------------------------------------------------------------------
 
@@ -258,6 +377,14 @@ DO jj = 1, obj%s(2)
   END DO
 END DO
 END PROCEDURE Matrix_Constant
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE Matrix_Constant_
+CALL Master_Get_mat_(obj, val, nrow, ncol)
+END PROCEDURE Matrix_Constant_
 
 !----------------------------------------------------------------------------
 !                                                            getNodalvalues
@@ -280,6 +407,14 @@ END DO
 END PROCEDURE Matrix_Space
 
 !----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE Matrix_Space_
+CALL Master_Get_mat3_(obj, val, dim1, dim2, dim3)
+END PROCEDURE Matrix_Space_
+
+!----------------------------------------------------------------------------
 !                                                            getNodalvalues
 !----------------------------------------------------------------------------
 
@@ -298,6 +433,14 @@ DO kk = 1, obj%s(3)
   END DO
 END DO
 END PROCEDURE Matrix_Time
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE Matrix_Time_
+CALL Master_Get_mat3_(obj, val, dim1, dim2, dim3)
+END PROCEDURE Matrix_Time_
 
 !----------------------------------------------------------------------------
 !                                                            getNodalvalues
@@ -320,6 +463,32 @@ DO ll = 1, obj%s(4)
   END DO
 END DO
 END PROCEDURE Matrix_SpaceTime
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE Matrix_SpaceTime_
+INTEGER(I4B) :: ii, jj, kk, ll, cnt
+
+dim1 = obj%s(1)
+dim2 = obj%s(2)
+dim3 = obj%s(3)
+dim4 = obj%s(4)
+
+cnt = 0
+DO ll = 1, dim4
+  DO kk = 1, dim3
+    DO jj = 1, dim2
+      DO ii = 1, dim1
+        cnt = cnt + 1
+        val(ii, jj, kk, ll) = obj%val(cnt)
+      END DO
+    END DO
+  END DO
+END DO
+
+END PROCEDURE Matrix_SpaceTime_
 
 !----------------------------------------------------------------------------
 !
