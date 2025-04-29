@@ -1542,7 +1542,7 @@ IF (changeLayout) THEN
 END IF
 
 IF (PRESENT(xij)) THEN
-  CALL FromBiunitLine2Segment_(xin=ans(1, 1:nrow), x1=xij(:, 1), &
+  CALL FromBiunitLine2Segment_(xin=ans(1, 1:ncol), x1=xij(:, 1), &
                                x2=xij(:, 2), ans=ans, nrow=ii, ncol=jj)
 
   areal = NORM2(xij(:, 2) - xij(:, 1)) / 2.0_DFP
