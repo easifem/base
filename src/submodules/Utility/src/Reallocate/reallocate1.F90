@@ -19,7 +19,9 @@ IF (acase) THEN
   END IF
 
   ! CALL setzeros
-  DO CONCURRENT(ii=1:row); mat(ii) = ZEROVALUE; END DO
+  DO CONCURRENT(ii=1:row)
+    mat(ii) = ZEROVALUE
+  END DO
   RETURN
 END IF
 
@@ -32,10 +34,14 @@ IF (acase) THEN
     ALLOCATE (mat(row * fac))
   END IF
 
-  DO CONCURRENT(ii=1:row); mat(ii) = ZEROVALUE; END DO
+  DO CONCURRENT(ii=1:row)
+    mat(ii) = ZEROVALUE
+  END DO
   RETURN
 END IF
 
 ALLOCATE (mat(row * fac))
-DO CONCURRENT(ii=1:row); mat(ii) = ZEROVALUE; END DO
+DO CONCURRENT(ii=1:row)
+  mat(ii) = ZEROVALUE
+END DO
 ! CALL setzeros
