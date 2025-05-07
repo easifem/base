@@ -40,7 +40,7 @@ LOGICAL(LGT) :: ismin, ismax
 !! Main
 !!
 nips = SIZE(obj%N, 2)
-nsd = obj%refelem%nsd
+nsd = obj%nsd
 CALL Reallocate(h, nips)
 CALL Reallocate(G, nsd, nsd, nips)
 CALL Reallocate(FFT, nsd, nsd)
@@ -276,7 +276,7 @@ CHARACTER(LEN=3) :: cod
   !!
 nips = SIZE(obj(1)%N, 2)
 nipt = SIZE(obj)
-nsd = obj(1)%refelem%nsd
+nsd = obj(1)%nsd
   !!
 CALL Reallocate(h, nips, nipt)
   !!

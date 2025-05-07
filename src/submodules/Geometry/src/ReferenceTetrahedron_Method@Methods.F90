@@ -489,21 +489,24 @@ END PROCEDURE TetrahedronVolume3D
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE RefCoord_Tetrahedron
-CHARACTER(:), ALLOCATABLE :: layout
-layout = UpperCase(refTetrahedron)
+CHARACTER(1) :: layout
+
+layout = refTetrahedron(1:1)
+
 SELECT CASE (layout)
-CASE ("BIUNIT")
-  ans(:, 1) = [-1.0_DFP, -1.0_DFP, -1.0_DFP]
-  ans(:, 2) = [1.0_DFP, -1.0_DFP, -1.0_DFP]
-  ans(:, 3) = [-1.0_DFP, 1.0_DFP, -1.0_DFP]
-  ans(:, 4) = [-1.0_DFP, -1.0_DFP, 1.0_DFP]
-CASE ("UNIT")
-  ans(:, 1) = [0.0_DFP, 0.0_DFP, 0.0_DFP]
-  ans(:, 2) = [1.0_DFP, 0.0_DFP, 0.0_DFP]
-  ans(:, 3) = [0.0_DFP, 1.0_DFP, 0.0_DFP]
-  ans(:, 4) = [0.0_DFP, 0.0_DFP, 1.0_DFP]
+CASE ("B", "b")
+  ans(1:3, 1) = [-1.0_DFP, -1.0_DFP, -1.0_DFP]
+  ans(1:3, 2) = [1.0_DFP, -1.0_DFP, -1.0_DFP]
+  ans(1:3, 3) = [-1.0_DFP, 1.0_DFP, -1.0_DFP]
+  ans(1:3, 4) = [-1.0_DFP, -1.0_DFP, 1.0_DFP]
+
+CASE ("U", "u")
+  ans(1:3, 1) = [0.0_DFP, 0.0_DFP, 0.0_DFP]
+  ans(1:3, 2) = [1.0_DFP, 0.0_DFP, 0.0_DFP]
+  ans(1:3, 3) = [0.0_DFP, 1.0_DFP, 0.0_DFP]
+  ans(1:3, 4) = [0.0_DFP, 0.0_DFP, 1.0_DFP]
+
 END SELECT
-layout = ""
 END PROCEDURE RefCoord_Tetrahedron
 
 !----------------------------------------------------------------------------

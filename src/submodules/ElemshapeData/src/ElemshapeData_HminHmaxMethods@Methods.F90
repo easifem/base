@@ -33,7 +33,7 @@ REAL(DFP) :: areal
 !! Main
 !!
 nips = SIZE(obj%N, 2)
-nsd = obj%refelem%nsd
+nsd = obj%nsd
 !!
 CALL Reallocate(G, nsd, nsd)
 CALL Reallocate(w, nsd)
@@ -68,7 +68,7 @@ REAL(DFP), ALLOCATABLE :: w(:)
 !! Main
 !!
 nips = SIZE(obj%N, 2)
-nsd = obj%refelem%nsd
+nsd = obj%nsd
 !!
 CALL Reallocate(w, nsd)
 CALL Reallocate(hmax, nips, hmin, nips)

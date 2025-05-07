@@ -177,7 +177,7 @@ END INTERFACE Add
 
 INTERFACE Add
   MODULE PURE SUBROUTINE obj_Add6(obj, iNodeNum, jNodeNum, &
-    & ivar, jvar, VALUE, scale)
+                                  ivar, jvar, VALUE, scale)
     TYPE(CSRMatrix_), INTENT(INOUT) :: obj
     INTEGER(I4B), INTENT(IN) :: iNodeNum(:)
     INTEGER(I4B), INTENT(IN) :: jNodeNum(:)
@@ -247,8 +247,8 @@ END INTERFACE Add
 ! summary:         Adds the specific row and column entry to a given value
 
 INTERFACE Add
-  MODULE PURE SUBROUTINE obj_Add8(obj, iNodeNum, jNodeNum, ivar,  &
-    & jvar, iDOF, jDOF, VALUE, scale)
+  MODULE PURE SUBROUTINE obj_Add8(obj, iNodeNum, jNodeNum, ivar, &
+                                  jvar, iDOF, jDOF, VALUE, scale)
     TYPE(CSRMatrix_), INTENT(INOUT) :: obj
     INTEGER(I4B), INTENT(IN) :: iNodeNum(:)
     !! row node number
@@ -297,8 +297,8 @@ END INTERFACE Add
 !@endnote
 
 INTERFACE Add
-  MODULE PURE SUBROUTINE obj_Add9(obj, iNodeNum, jNodeNum, ivar,  &
-    & jvar, ispacecompo, itimecompo, jspacecompo, jtimecompo, VALUE, scale)
+  MODULE PURE SUBROUTINE obj_Add9(obj, iNodeNum, jNodeNum, ivar, &
+         jvar, ispacecompo, itimecompo, jspacecompo, jtimecompo, VALUE, scale)
     TYPE(CSRMatrix_), INTENT(INOUT) :: obj
     INTEGER(I4B), INTENT(IN) :: iNodeNum
     !! row node number
@@ -339,7 +339,7 @@ END INTERFACE Add
 
 INTERFACE Add
   MODULE PURE SUBROUTINE obj_Add10(obj, iNodeNum, jNodeNum, &
-    & ivar, jvar, VALUE, scale)
+                                   ivar, jvar, VALUE, scale)
     TYPE(CSRMatrix_), INTENT(INOUT) :: obj
     INTEGER(I4B), INTENT(IN) :: iNodeNum(:)
     INTEGER(I4B), INTENT(IN) :: jNodeNum(:)
@@ -359,8 +359,8 @@ END INTERFACE Add
 ! summary:         Adds the specific row and column entry to a given value
 
 INTERFACE Add
-  MODULE PURE SUBROUTINE obj_Add11(obj, iNodeNum, jNodeNum, ivar,  &
-    & jvar, iDOF, jDOF, VALUE, scale)
+  MODULE PURE SUBROUTINE obj_Add11(obj, iNodeNum, jNodeNum, ivar, &
+                                   jvar, iDOF, jDOF, VALUE, scale)
     TYPE(CSRMatrix_), INTENT(INOUT) :: obj
     INTEGER(I4B), INTENT(IN) :: iNodeNum(:)
     !! row node number
@@ -389,8 +389,8 @@ END INTERFACE Add
 ! summary:         Adds the specific row and column entry to a given value
 
 INTERFACE Add
-  MODULE PURE SUBROUTINE obj_Add12(obj, iNodeNum, jNodeNum, ivar,  &
-    & jvar, ispacecompo, itimecompo, jspacecompo, jtimecompo, VALUE, scale)
+  MODULE PURE SUBROUTINE obj_Add12(obj, iNodeNum, jNodeNum, ivar, &
+         jvar, ispacecompo, itimecompo, jspacecompo, jtimecompo, VALUE, scale)
     TYPE(CSRMatrix_), INTENT(INOUT) :: obj
     INTEGER(I4B), INTENT(IN) :: iNodeNum(:)
     !! row node number
@@ -419,17 +419,17 @@ END INTERFACE Add
 ! summary:         Adds the specific row and column entry to a given value
 
 INTERFACE Add
-  MODULE PURE SUBROUTINE obj_Add13(obj, iNodeNum, jNodeNum, ivar,  &
-    & jvar, ispacecompo, itimecompo, jspacecompo, jtimecompo, VALUE, scale)
+  MODULE PURE SUBROUTINE obj_Add13(obj, iNodeNum, jNodeNum, ivar, &
+         jvar, ispacecompo, itimecompo, jspacecompo, jtimecompo, VALUE, scale)
     TYPE(CSRMatrix_), INTENT(INOUT) :: obj
     INTEGER(I4B), INTENT(IN) :: iNodeNum(:)
     !! row node number
     INTEGER(I4B), INTENT(IN) :: jNodeNum(:)
     !! column node number
     INTEGER(I4B), INTENT(IN) :: ivar
-    !!
+    !! row variable
     INTEGER(I4B), INTENT(IN) :: jvar
-    !!
+    !! column variable
     INTEGER(I4B), INTENT(IN) :: ispacecompo
     INTEGER(I4B), INTENT(IN) :: itimecompo(:)
     INTEGER(I4B), INTENT(IN) :: jspacecompo

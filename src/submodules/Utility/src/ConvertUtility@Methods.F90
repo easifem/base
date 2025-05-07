@@ -97,6 +97,35 @@ END DO
 END PROCEDURE convert_2
 
 !----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE convert2_
+INTEGER(I4B) :: a, b, r1, r2, c1, c2
+INTEGER(I4B) :: dim1, dim2, dim3, dim4
+
+dim1 = SIZE(From, 1)
+dim2 = SIZE(From, 2)
+dim3 = SIZE(From, 3)
+dim4 = SIZE(From, 4)
+nrow = dim1 * dim3
+ncol = dim2 * dim4
+c1 = 0; c2 = 0
+
+DO b = 1, dim4
+  c1 = c2 + 1
+  c2 = b * dim2
+  r1 = 0; r2 = 0
+  DO a = 1, dim3
+    r1 = r2 + 1; 
+    r2 = a * dim1
+    To(r1:r2, c1:c2) = From(1:dim1, 1:dim2, a, b)
+  END DO
+END DO
+
+END PROCEDURE convert2_
+
+!----------------------------------------------------------------------------
 !                                                                 Convert
 !----------------------------------------------------------------------------
 
@@ -115,6 +144,34 @@ DO b = 1, s(6)
 END DO
 DEALLOCATE (m2)
 END PROCEDURE convert_3
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE convert3_
+INTEGER(I4B) :: a, b
+INTEGER(I4B) :: n1, n2, n3, n4, n5, n6
+
+n1 = SIZE(from, 1)
+n2 = SIZE(from, 2)
+n3 = SIZE(from, 3)
+n4 = SIZE(from, 4)
+n5 = SIZE(from, 5)
+n6 = SIZE(from, 6)
+
+dim3 = n5
+dim4 = n6
+
+DO b = 1, n6
+  DO a = 1, n5
+    CALL Convert_(from=from(1:n1, 1:n2, 1:n3, 1:n4, a, b), &
+                  to=to(1:n1 * n3, 1:n2 * n4, a, b), &
+                  nrow=dim1, ncol=dim2)
+  END DO
+END DO
+
+END PROCEDURE convert3_
 
 !----------------------------------------------------------------------------
 !

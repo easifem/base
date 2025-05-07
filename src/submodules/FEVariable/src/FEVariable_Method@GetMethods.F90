@@ -15,8 +15,13 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 
 SUBMODULE(FEVariable_Method) GetMethods
-USE BaseMethod, ONLY: Reallocate
+
+USE ReallocateUtility, ONLY: Reallocate
+
+USE GlobalData, ONLY: Scalar, Vector, Matrix, Constant, Space, &
+                      Time, SpaceTime, Nodal, Quadrature
 IMPLICIT NONE
+
 CONTAINS
 
 !----------------------------------------------------------------------------
@@ -24,29 +29,16 @@ CONTAINS
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE fevar_GetLambdaFromYoungsModulus
-INTEGER(I4B) :: tsize, ii
-LOGICAL(LGT) :: isok
+INTEGER(I4B) :: ii
 
-isok = ALLOCATED(youngsModulus%val)
+lambda = youngsModulus
 
-IF (isok) THEN
-  tsize = SIZE(youngsModulus%val)
-ELSE
-  tsize = 0
-END IF
-
-CALL Reallocate(lambda%val, tsize)
-
-DO ii = 1, tsize
-  lambda%val(1:tsize) = shearModulus%val *  &
-    & (youngsModulus%val - 2.0_DFP * shearModulus%val) /  &
-    & (3.0_DFP * shearModulus%val - youngsModulus%val)
+DO CONCURRENT(ii=1:lambda%len)
+  lambda%val(ii) = shearModulus%val(ii) * &
+                  (youngsModulus%val(ii) - 2.0_DFP * shearModulus%val(ii)) / &
+                   (3.0_DFP * shearModulus%val(ii) - youngsModulus%val(ii))
 END DO
 
-lambda%s = youngsModulus%s
-lambda%defineOn = youngsModulus%defineOn
-lambda%varType = youngsModulus%varType
-lambda%rank = youngsModulus%rank
 END PROCEDURE fevar_GetLambdaFromYoungsModulus
 
 !----------------------------------------------------------------------------
@@ -57,14 +49,7 @@ MODULE PROCEDURE fevar_Size
 IF (PRESENT(dim)) THEN
   ans = obj%s(dim)
 ELSE
-  SELECT CASE (obj%rank)
-  CASE (Scalar)
-    ans = 1
-  CASE (Vector)
-    ans = obj%s(1)
-  CASE (Matrix)
-    ans = obj%s(1) * obj%s(2)
-  END SELECT
+  ans = obj%len
 END IF
 END PROCEDURE fevar_Size
 
@@ -133,11 +118,7 @@ END PROCEDURE fevar_defineon
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE fevar_isNodalVariable
-IF (obj%defineon .EQ. nodal) THEN
-  ans = .TRUE.
-ELSE
-  ans = .FALSE.
-END IF
+ans = obj%defineon .EQ. nodal
 END PROCEDURE fevar_isNodalVariable
 
 !----------------------------------------------------------------------------
@@ -145,11 +126,7 @@ END PROCEDURE fevar_isNodalVariable
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE fevar_isQuadratureVariable
-IF (obj%defineon .EQ. nodal) THEN
-  ans = .FALSE.
-ELSE
-  ans = .TRUE.
-END IF
+ans = obj%defineon .NE. nodal
 END PROCEDURE fevar_isQuadratureVariable
 
 !----------------------------------------------------------------------------
@@ -161,92 +138,357 @@ val = obj%val(1)
 END PROCEDURE Scalar_Constant
 
 !----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+PURE SUBROUTINE Master_Get_vec_(obj, val, tsize)
+  CLASS(FEVariable_), INTENT(IN) :: obj
+  REAL(DFP), INTENT(INOUT) :: val(:)
+  INTEGER(I4B), INTENT(OUT) :: tsize
+
+  tsize = obj%len
+  val(1:tsize) = obj%val(1:tsize)
+
+END SUBROUTINE Master_Get_vec_
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+PURE SUBROUTINE Master_Get_mat_(obj, val, nrow, ncol)
+  CLASS(FEVariable_), INTENT(IN) :: obj
+  REAL(DFP), INTENT(INOUT) :: val(:, :)
+  INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+
+  INTEGER(I4B) :: ii, jj, cnt
+
+  nrow = obj%s(1)
+  ncol = obj%s(2)
+
+  cnt = 0
+  DO jj = 1, ncol
+    DO ii = 1, nrow
+      cnt = cnt + 1
+      val(ii, jj) = obj%val(cnt)
+    END DO
+  END DO
+END SUBROUTINE Master_Get_mat_
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+PURE SUBROUTINE Master_get_mat3_(obj, val, dim1, dim2, dim3)
+  CLASS(FEVariable_), INTENT(IN) :: obj
+  REAL(DFP), INTENT(INOUT) :: val(:, :, :)
+  INTEGER(I4B), INTENT(OUT) :: dim1, dim2, dim3
+  INTEGER(I4B) :: ii, jj, kk, cnt
+
+  dim1 = obj%s(1)
+  dim2 = obj%s(2)
+  dim3 = obj%s(3)
+
+  cnt = 0
+  DO kk = 1, dim3
+    DO jj = 1, dim2
+      DO ii = 1, dim1
+        cnt = cnt + 1
+        val(ii, jj, kk) = obj%val(cnt)
+      END DO
+    END DO
+  END DO
+
+END SUBROUTINE Master_get_mat3_
+
+!----------------------------------------------------------------------------
 !                                                            getNodalvalues
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Scalar_Space
-val = obj%val
+ALLOCATE (val(obj%len))
+val = obj%val(1:obj%len)
 END PROCEDURE Scalar_Space
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE Scalar_Space_
+CALL Master_Get_vec_(obj, val, tsize)
+END PROCEDURE Scalar_Space_
 
 !----------------------------------------------------------------------------
 !                                                            getNodalvalues
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Scalar_Time
-val = obj%val
+ALLOCATE (val(obj%len))
+val = obj%val(1:obj%len)
 END PROCEDURE Scalar_Time
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE Scalar_Time_
+CALL Master_Get_vec_(obj, val, tsize)
+END PROCEDURE Scalar_Time_
 
 !----------------------------------------------------------------------------
 !                                                            getNodalvalues
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Scalar_SpaceTime
-val = RESHAPE(obj%val, obj%s(1:2))
+INTEGER(I4B) :: ii, jj, cnt
+
+ALLOCATE (val(obj%s(1), obj%s(2)))
+
+cnt = 0
+DO jj = 1, obj%s(2)
+  DO ii = 1, obj%s(1)
+    cnt = cnt + 1
+    val(ii, jj) = obj%val(cnt)
+
+  END DO
+END DO
+
 END PROCEDURE Scalar_SpaceTime
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE Scalar_SpaceTime_
+CALL Master_Get_mat_(obj, val, nrow, ncol)
+END PROCEDURE Scalar_SpaceTime_
 
 !----------------------------------------------------------------------------
 !                                                            getNodalvalues
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Vector_Constant
-val = obj%val
+ALLOCATE (val(obj%len))
+val = obj%val(1:obj%len)
 END PROCEDURE Vector_Constant
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE Vector_Constant_
+CALL Master_Get_vec_(obj, val, tsize)
+END PROCEDURE Vector_Constant_
 
 !----------------------------------------------------------------------------
 !                                                            getNodalvalues
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Vector_Space
-val = RESHAPE(obj%val, obj%s(1:2))
+INTEGER(I4B) :: ii, jj, cnt
+
+ALLOCATE (val(obj%s(1), obj%s(2)))
+
+cnt = 0
+DO jj = 1, obj%s(2)
+  DO ii = 1, obj%s(1)
+    cnt = cnt + 1
+    val(ii, jj) = obj%val(cnt)
+  END DO
+END DO
+
 END PROCEDURE Vector_Space
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE Vector_Space_
+CALL Master_Get_mat_(obj, val, nrow, ncol)
+END PROCEDURE Vector_Space_
 
 !----------------------------------------------------------------------------
 !                                                            getNodalvalues
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Vector_Time
-val = RESHAPE(obj%val, obj%s(1:2))
+INTEGER(I4B) :: ii, jj, cnt
+
+ALLOCATE (val(obj%s(1), obj%s(2)))
+
+cnt = 0
+DO jj = 1, obj%s(2)
+  DO ii = 1, obj%s(1)
+    cnt = cnt + 1
+    val(ii, jj) = obj%val(cnt)
+  END DO
+END DO
 END PROCEDURE Vector_Time
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE Vector_Time_
+CALL Master_Get_mat_(obj, val, nrow, ncol)
+END PROCEDURE Vector_Time_
 
 !----------------------------------------------------------------------------
 !                                                            getNodalvalues
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Vector_SpaceTime
-val = RESHAPE(obj%val, obj%s(1:3))
+INTEGER(I4B) :: ii, jj, kk, cnt
+
+ALLOCATE (val(obj%s(1), obj%s(2), obj%s(3)))
+
+cnt = 0
+DO kk = 1, obj%s(3)
+  DO jj = 1, obj%s(2)
+    DO ii = 1, obj%s(1)
+      cnt = cnt + 1
+      val(ii, jj, kk) = obj%val(cnt)
+    END DO
+  END DO
+END DO
 END PROCEDURE Vector_SpaceTime
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE Vector_SpaceTime_
+CALL Master_Get_mat3_(obj, val, dim1, dim2, dim3)
+END PROCEDURE Vector_SpaceTime_
 
 !----------------------------------------------------------------------------
 !                                                            getNodalvalues
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Matrix_Constant
-val = RESHAPE(obj%val, obj%s(1:2))
+INTEGER(I4B) :: ii, jj, cnt
+
+ALLOCATE (val(obj%s(1), obj%s(2)))
+
+cnt = 0
+DO jj = 1, obj%s(2)
+  DO ii = 1, obj%s(1)
+    cnt = cnt + 1
+    val(ii, jj) = obj%val(cnt)
+  END DO
+END DO
 END PROCEDURE Matrix_Constant
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE Matrix_Constant_
+CALL Master_Get_mat_(obj, val, nrow, ncol)
+END PROCEDURE Matrix_Constant_
 
 !----------------------------------------------------------------------------
 !                                                            getNodalvalues
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Matrix_Space
-val = RESHAPE(obj%val, obj%s(1:3))
+INTEGER(I4B) :: ii, jj, kk, cnt
+
+ALLOCATE (val(obj%s(1), obj%s(2), obj%s(3)))
+
+cnt = 0
+DO kk = 1, obj%s(3)
+  DO jj = 1, obj%s(2)
+    DO ii = 1, obj%s(1)
+      cnt = cnt + 1
+      val(ii, jj, kk) = obj%val(cnt)
+    END DO
+  END DO
+END DO
 END PROCEDURE Matrix_Space
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE Matrix_Space_
+CALL Master_Get_mat3_(obj, val, dim1, dim2, dim3)
+END PROCEDURE Matrix_Space_
 
 !----------------------------------------------------------------------------
 !                                                            getNodalvalues
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Matrix_Time
-val = RESHAPE(obj%val, obj%s(1:3))
+INTEGER(I4B) :: ii, jj, kk, cnt
+
+ALLOCATE (val(obj%s(1), obj%s(2), obj%s(3)))
+
+cnt = 0
+DO kk = 1, obj%s(3)
+  DO jj = 1, obj%s(2)
+    DO ii = 1, obj%s(1)
+      cnt = cnt + 1
+      val(ii, jj, kk) = obj%val(cnt)
+    END DO
+  END DO
+END DO
 END PROCEDURE Matrix_Time
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE Matrix_Time_
+CALL Master_Get_mat3_(obj, val, dim1, dim2, dim3)
+END PROCEDURE Matrix_Time_
 
 !----------------------------------------------------------------------------
 !                                                            getNodalvalues
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Matrix_SpaceTime
-val = RESHAPE(obj%val, obj%s(1:4))
+INTEGER(I4B) :: ii, jj, kk, ll, cnt
+
+ALLOCATE (val(obj%s(1), obj%s(2), obj%s(3), obj%s(4)))
+
+cnt = 0
+DO ll = 1, obj%s(4)
+  DO kk = 1, obj%s(3)
+    DO jj = 1, obj%s(2)
+      DO ii = 1, obj%s(1)
+        cnt = cnt + 1
+        val(ii, jj, kk, ll) = obj%val(cnt)
+      END DO
+    END DO
+  END DO
+END DO
 END PROCEDURE Matrix_SpaceTime
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE Matrix_SpaceTime_
+INTEGER(I4B) :: ii, jj, kk, ll, cnt
+
+dim1 = obj%s(1)
+dim2 = obj%s(2)
+dim3 = obj%s(3)
+dim4 = obj%s(4)
+
+cnt = 0
+DO ll = 1, dim4
+  DO kk = 1, dim3
+    DO jj = 1, dim2
+      DO ii = 1, dim1
+        cnt = cnt + 1
+        val(ii, jj, kk, ll) = obj%val(cnt)
+      END DO
+    END DO
+  END DO
+END DO
+
+END PROCEDURE Matrix_SpaceTime_
 
 !----------------------------------------------------------------------------
 !

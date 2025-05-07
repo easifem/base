@@ -740,19 +740,21 @@ END PROCEDURE GetFaceConnectivity_Triangle
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE RefTriangleCoord
-CHARACTER(:), ALLOCATABLE :: layout
-layout = UpperCase(refTriangle)
-SELECT CASE (layout)
-CASE ("BIUNIT")
-  ans(:, 1) = [-1.0_DFP, -1.0_DFP]
-  ans(:, 2) = [1.0_DFP, -1.0_DFP]
-  ans(:, 3) = [-1.0_DFP, 1.0_DFP]
-CASE ("UNIT")
-  ans(:, 1) = [0.0_DFP, 0.0_DFP]
-  ans(:, 2) = [1.0_DFP, 0.0_DFP]
-  ans(:, 3) = [0.0_DFP, 1.0_DFP]
+CHARACTER(1) :: astr
+
+astr = reftriangle(1:1)
+
+SELECT CASE (astr)
+CASE ("B", "b")
+  ans(1:2, 1) = [-1.0_DFP, -1.0_DFP]
+  ans(1:2, 2) = [1.0_DFP, -1.0_DFP]
+  ans(1:2, 3) = [-1.0_DFP, 1.0_DFP]
+
+CASE ("U", "u")
+  ans(1:2, 1) = [0.0_DFP, 0.0_DFP]
+  ans(1:2, 2) = [1.0_DFP, 0.0_DFP]
+  ans(1:2, 3) = [0.0_DFP, 1.0_DFP]
 END SELECT
-layout = ""
 END PROCEDURE RefTriangleCoord
 
 !----------------------------------------------------------------------------

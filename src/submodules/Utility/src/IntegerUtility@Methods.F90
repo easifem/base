@@ -51,58 +51,79 @@ END PROCEDURE obj_Size2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE obj_GetMultiIndices1
-INTEGER(I4B) :: ii, m
-INTEGER(I4B), ALLOCATABLE :: indx(:, :), acol(:), indx2(:, :)
-
-SELECT CASE (d)
-CASE (1_I4B)
-
-  ALLOCATE (ans(2, n + 1))
-  DO ii = 0, n
-    ans(1:2, ii + 1) = [ii, n - ii]
-  END DO
-
-CASE DEFAULT
-
-  ALLOCATE (ans(d + 1, 1))
-  ans = 0; ans(1, 1) = n
-
-  DO ii = n - 1, 0_I4B, -1_I4B
-
-    indx = GetMultiIndices(n=n - ii, d=d - 1)
-    m = SIZE(indx, 2)
-    acol = ii * ones(m, 1_I4B)
-    indx2 = acol.ROWCONCAT.indx
-    ans = indx2.COLCONCAT.ans
-
-  END DO
-
-END SELECT
-
-IF (ALLOCATED(indx)) DEALLOCATE (indx)
-IF (ALLOCATED(acol)) DEALLOCATE (acol)
-IF (ALLOCATED(indx2)) DEALLOCATE (indx2)
-
+INTEGER(I4B) :: nrow, ncol
+nrow = d + 1
+ncol = SIZE(n=n, d=d)
+ALLOCATE (ans(nrow, ncol))
+CALL GetMultiIndices_(n=n, d=d, ans=ans, nrow=nrow, ncol=ncol)
 END PROCEDURE obj_GetMultiIndices1
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE obj_GetMultiIndices2
-INTEGER(I4B) :: ii, m, r1, r2
+MODULE PROCEDURE obj_GetMultiIndices1_
+INTEGER(I4B) :: ii, aint, bint, tsize
 
-m = SIZE(n, d, .TRUE.)
-ALLOCATE (ans(d + 1, m))
+IF (d .EQ. 1) THEN
 
-r1 = 0; r2 = 0
-DO ii = 0, n
-  m = SIZE(n=ii, d=d)
-  r1 = r2 + 1_I4B
-  r2 = r1 + m - 1
-  ans(:, r1:r2) = GetMultiIndices(n=ii, d=d)
+  nrow = 2
+  ncol = n + 1
+
+  DO ii = 0, n
+    ans(1, ii + 1) = ii
+    ans(2, ii + 1) = n - ii
+  END DO
+
+  RETURN
+END IF
+
+nrow = d + 1
+ncol = SIZE(n=n, d=d)
+
+ans(1:nrow, 1:ncol) = 0
+ans(1, ncol) = n
+
+bint = ncol
+
+DO ii = n - 1, 0_I4B, -1_I4B
+  tsize = SIZE(n=n - ii, d=d - 1)
+  bint = bint - tsize
+  ans(1, bint:bint + tsize - 1) = ii
+  CALL GetMultiIndices_(n=n - ii, d=d - 1, ans=ans(2:, bint:), nrow=aint, &
+                        ncol=tsize)
 END DO
 
+END PROCEDURE obj_GetMultiIndices1_
+
+!----------------------------------------------------------------------------
+!                                                           GetMultiIndices_
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE obj_GetMultiIndices2_
+INTEGER(I4B) :: ii, aint, bint, indx
+
+nrow = d + 1
+ncol = SIZE(n, d, .TRUE.)
+
+indx = 1
+DO ii = 0, n
+  CALL GetMultiIndices_(n=ii, d=d, ans=ans(:, indx:), nrow=aint, ncol=bint)
+  indx = indx + bint
+END DO
+
+END PROCEDURE obj_GetMultiIndices2_
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE obj_GetMultiIndices2
+INTEGER(I4B) :: nrow, ncol
+nrow = d + 1
+ncol = SIZE(n=n, d=d, upto=upto)
+ALLOCATE (ans(nrow, ncol))
+CALL GetMultiIndices_(n=n, d=d, ans=ans, nrow=nrow, ncol=ncol, upto=upto)
 END PROCEDURE obj_GetMultiIndices2
 
 !----------------------------------------------------------------------------
@@ -110,19 +131,19 @@ END PROCEDURE obj_GetMultiIndices2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE in_1a
-#include "./In/In_1.inc"
+#include "./In/In_1.F90"
 END PROCEDURE in_1a
 
 MODULE PROCEDURE in_1b
-#include "./In/In_1.inc"
+#include "./In/In_1.F90"
 END PROCEDURE in_1b
 
 MODULE PROCEDURE in_1c
-#include "./In/In_1.inc"
+#include "./In/In_1.F90"
 END PROCEDURE in_1c
 
 MODULE PROCEDURE in_1d
-#include "./In/In_1.inc"
+#include "./In/In_1.F90"
 END PROCEDURE in_1d
 
 !----------------------------------------------------------------------------
@@ -130,19 +151,19 @@ END PROCEDURE in_1d
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE IsIn_1a
-#include "./In/IsIn_1.inc"
+#include "./In/IsIn_1.F90"
 END PROCEDURE IsIn_1a
 
 MODULE PROCEDURE IsIn_1b
-#include "./In/IsIn_1.inc"
+#include "./In/IsIn_1.F90"
 END PROCEDURE IsIn_1b
 
 MODULE PROCEDURE IsIn_1c
-#include "./In/IsIn_1.inc"
+#include "./In/IsIn_1.F90"
 END PROCEDURE IsIn_1c
 
 MODULE PROCEDURE IsIn_1d
-#include "./In/IsIn_1.inc"
+#include "./In/IsIn_1.F90"
 END PROCEDURE IsIn_1d
 
 !----------------------------------------------------------------------------
@@ -357,5 +378,30 @@ END PROCEDURE GetIntersection3
 MODULE PROCEDURE GetIntersection4
 #include "./Intersection/Intersection.inc"
 END PROCEDURE GetIntersection4
+
+!----------------------------------------------------------------------------
+!                                               Get1DIndexFrom2DFortranIndex
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE Get1DIndexFrom2DFortranIndex
+ans = (j - 1) * dim1 + i
+END PROCEDURE Get1DIndexFrom2DFortranIndex
+
+!----------------------------------------------------------------------------
+!                                               Get1DIndexFrom2DFortranIndex
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE Get1DIndexFrom3DFortranIndex
+ans = (k - 1) * dim1 * dim2 + (j - 1) * dim1 + i
+END PROCEDURE Get1DIndexFrom3DFortranIndex
+
+!----------------------------------------------------------------------------
+!                                               Get1DIndexFrom2DFortranIndex
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE Get1DIndexFrom4DFortranIndex
+ans = (l - 1) * dim1 * dim2 * dim3 + (k - 1) * dim1 * dim2 &
+      + (j - 1) * dim1 + i
+END PROCEDURE Get1DIndexFrom4DFortranIndex
 
 END SUBMODULE Methods

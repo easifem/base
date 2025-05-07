@@ -558,6 +558,13 @@ INTERFACE Swap_
       !! make sure i2 is less than or equal to 2
   END SUBROUTINE Swap_index_1
 
+END INTERFACE Swap_
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE Swap_
   MODULE PURE SUBROUTINE Swap_index_2(a, b, i1, i2)
     REAL(REAL64), INTENT(INOUT) :: a(:, :)
       !! the returned array

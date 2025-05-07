@@ -37,18 +37,18 @@ PUBLIC :: DOF
 
 !> author: Vikas Sharma, Ph. D.
 ! date:         23 Feb 2021
-! summary: This subroutine initiate DOF_ object
+! summary: This subroutine Initiate DOF_ object
 !
 !# Introduction
 !
-! This subroutine initiate DOF_ object
+! This subroutine Initiate DOF_ object
 !
 !- If the size of all physical variables are equal then set
 ! tNodes = [tNodes] otherwise we need to provide size of each dof
 !- For a scalar physical variable such as pressure and temperature,
 ! `spacecompo` is set to -1.
 !- For a time independent physical variable `timecompo` is set to 1.
-!- The size of `Names`, `spacecompo`, `timecompo` should be same
+!- The size of `names`, `spacecompo`, `timecompo` should be same
 !
 !@note
 !         $\matbf{v}$ is a physical variable, however,
@@ -56,21 +56,21 @@ PUBLIC :: DOF
 !@endnote
 
 INTERFACE Initiate
-  MODULE PURE SUBROUTINE obj_initiate1(obj, tNodes, Names, spacecompo, &
-    & timecompo, StorageFMT)
+  MODULE PURE SUBROUTINE obj_Initiate1(obj, tNodes, names, spacecompo, &
+                                       timecompo, storagefmt)
     CLASS(DOF_), INTENT(INOUT) :: obj
     !! degree of freedom object
     INTEGER(I4B), INTENT(IN) :: tNodes(:)
     !! number of nodes for each physical variable
-    CHARACTER(1), INTENT(IN) :: Names(:)
-    !! Names of each physical variable
+    CHARACTER(1), INTENT(IN) :: names(:)
+    !! names of each physical variable
     INTEGER(I4B), INTENT(IN) :: spacecompo(:)
     !! Space component of each physical variable
     INTEGER(I4B), INTENT(IN) :: timecompo(:)
     !! Time component of each physical variable
-    INTEGER(I4B), INTENT(IN) :: StorageFMT
+    INTEGER(I4B), INTENT(IN) :: storagefmt
     !! Storage format `FMT_DOF`, `FMT_Nodes`
-  END SUBROUTINE obj_initiate1
+  END SUBROUTINE obj_Initiate1
 END INTERFACE Initiate
 
 !----------------------------------------------------------------------------
@@ -83,18 +83,18 @@ END INTERFACE Initiate
 !
 !# Introduction
 !
-! This subroutine initiates a fortran vector (rank-1 fortran array ) of
+! This subroutine Initiates a fortran vector (rank-1 fortran array ) of
 ! real using the information stored inside DOF_ object. This subroutine
 ! gets the size of array from the DOF_ object and then reallocates
 ! `val` and set its all values to zero.
 
 INTERFACE Initiate
-  MODULE PURE SUBROUTINE obj_initiate2(val, obj)
+  MODULE PURE SUBROUTINE obj_Initiate2(val, obj)
     REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: val(:)
-    !! This vector will be initiated by using obj
+    !! This vector will be Initiated by using obj
     CLASS(DOF_), INTENT(IN) :: obj
     !! DOF object
-  END SUBROUTINE obj_initiate2
+  END SUBROUTINE obj_Initiate2
 END INTERFACE Initiate
 
 !----------------------------------------------------------------------------
@@ -107,14 +107,14 @@ END INTERFACE Initiate
 !
 !# Introduction
 !
-! This subroutine can initiate two fortran vectors (rank-1 fortran arrays)
+! This subroutine can Initiate two fortran vectors (rank-1 fortran arrays)
 ! using  the information stored inside the DOF_ object
 
 INTERFACE Initiate
-  MODULE PURE SUBROUTINE obj_initiate3(Val1, Val2, obj)
+  MODULE PURE SUBROUTINE obj_Initiate3(Val1, Val2, obj)
     REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: Val1(:), Val2(:)
     CLASS(DOF_), INTENT(IN) :: obj
-  END SUBROUTINE obj_initiate3
+  END SUBROUTINE obj_Initiate3
 END INTERFACE Initiate
 
 !----------------------------------------------------------------------------
@@ -130,14 +130,14 @@ END INTERFACE Initiate
 ! This routine copy obj2 into obj1. It also define an assignment operator
 
 INTERFACE Initiate
-  MODULE PURE SUBROUTINE obj_initiate4(obj1, obj2)
+  MODULE PURE SUBROUTINE obj_Initiate4(obj1, obj2)
     CLASS(DOF_), INTENT(INOUT) :: obj1
     CLASS(DOF_), INTENT(IN) :: obj2
-  END SUBROUTINE obj_initiate4
+  END SUBROUTINE obj_Initiate4
 END INTERFACE Initiate
 
 INTERFACE ASSIGNMENT(=)
-  MODULE PROCEDURE obj_initiate4
+  MODULE PROCEDURE obj_Initiate4
 END INTERFACE ASSIGNMENT(=)
 
 !----------------------------------------------------------------------------
@@ -155,12 +155,12 @@ END INTERFACE ASSIGNMENT(=)
 ! for more see dof_
 
 INTERFACE DOF
- MODULE PURE FUNCTION obj_Constructor1(tNodes, Names, spacecompo, timecompo, &
-                             & StorageFMT) RESULT(obj)
+ MODULE PURE FUNCTION obj_Constructor1(tNodes, names, spacecompo, timecompo, &
+                                    & storagefmt) RESULT(obj)
     TYPE(DOF_) :: obj
     INTEGER(I4B), INTENT(IN) :: tNodes(:), spacecompo(:), &
-      & timecompo(:), StorageFMT
-    CHARACTER(1), INTENT(IN) :: Names(:)
+      & timecompo(:), storagefmt
+    CHARACTER(1), INTENT(IN) :: names(:)
   END FUNCTION obj_Constructor1
 END INTERFACE DOF
 
@@ -178,19 +178,19 @@ END INTERFACE DOF
 ! for more see dof_
 
 INTERFACE DOF_Pointer
-  MODULE FUNCTION obj_Constructor_1(tNodes, Names, spacecompo, timecompo, &
-    & StorageFMT) RESULT(obj)
+  MODULE FUNCTION obj_Constructor_1(tNodes, names, spacecompo, timecompo, &
+    & storagefmt) RESULT(obj)
     CLASS(DOF_), POINTER :: obj
     !! dof_ object
     INTEGER(I4B), INTENT(IN) :: tNodes(:)
     !! total number of nodes for each dof
-    CHARACTER(1), INTENT(IN) :: Names(:)
+    CHARACTER(1), INTENT(IN) :: names(:)
     !! name of each dof
     INTEGER(I4B), INTENT(IN) :: spacecompo(:)
     !! space components for each dof
     INTEGER(I4B), INTENT(IN) :: timecompo(:)
     !! time component for each dof
-    INTEGER(I4B), INTENT(IN) :: StorageFMT
+    INTEGER(I4B), INTENT(IN) :: storagefmt
     !! storage format for dof
   END FUNCTION obj_Constructor_1
 END INTERFACE DOF_Pointer

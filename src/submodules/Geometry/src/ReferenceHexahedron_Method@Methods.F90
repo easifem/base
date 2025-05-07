@@ -504,25 +504,26 @@ END PROCEDURE HexahedronVolume3D
 
 MODULE PROCEDURE RefHexahedronCoord
 REAL(DFP) :: one, mone
-CHARACTER(:), ALLOCATABLE :: astr
+CHARACTER(1), ALLOCATABLE :: astr
 
-astr = UpperCase(refHexahedron)
+astr = refHexahedron(1:1)
 
 SELECT CASE (astr)
-CASE ("UNIT")
+CASE ("U", "u")
   one = 1.0_DFP
   mone = 0.0_DFP
-CASE ("BIUNIT")
+
+CASE ("B", "b")
   one = 1.0_DFP
   mone = -1.0_DFP
-END SELECT
 
-astr = ""
+END SELECT
 
 ans(3, 1:4) = mone
 ans(3, 5:8) = one
 ans(1:2, 1:4) = RefQuadrangleCoord(refHexahedron)
 ans(1:2, 5:8) = ans(1:2, 1:4)
+
 END PROCEDURE RefHexahedronCoord
 
 !----------------------------------------------------------------------------

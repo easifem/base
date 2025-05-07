@@ -53,12 +53,9 @@ END PROCEDURE FacetConnectivity_Pyramid
 
 MODULE PROCEDURE RefElemDomain_Pyramid
 !FIX: Implement RefElemDomain
-CALL Errormsg(&
-  & msg="[WORK IN PROGRESS] We are working on it", &
-  & file=__FILE__, &
-  & line=__LINE__,&
-  & routine="RefElemDomain_Pyramid()", &
-  & unitno=stderr)
+CALL Errormsg(msg="[WORK IN PROGRESS] We are working on it", &
+              routine="RefElemDomain_Pyramid()", &
+              file=__FILE__, line=__LINE__, unitno=stderr)
 END PROCEDURE RefElemDomain_Pyramid
 
 !----------------------------------------------------------------------------
@@ -102,18 +99,31 @@ ans = (order - 1) * (order - 2) * (2 * order - 3) / 6
 END PROCEDURE GetTotalInDOF_Pyramid
 
 !----------------------------------------------------------------------------
-!                                              EquidistancePoint_Pyramid
+!                                              EquidistancePoint_Prism
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE EquidistancePoint_Pyramid
-!FIX: Implement EquidistancePoint_Pyramid
-!ISSUE: #161 Implement EquidistancePoint_Pyramid routine
+INTEGER(I4B) :: nrow, ncol
+nrow = 3
+ncol = LagrangeDOF_Pyramid(order=order)
+ALLOCATE (ans(nrow, ncol))
+CALL EquidistancePoint_Pyramid_(order=order, ans=ans, nrow=nrow, ncol=ncol, &
+                                xij=xij)
+END PROCEDURE EquidistancePoint_Pyramid
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE EquidistancePoint_Pyramid_
+nrow = 3
+ncol = LagrangeDOF_Pyramid(order=order)
 ! nodecoord(:, 1) = [-1, -1, 0]
 ! nodecoord(:, 2) = [1, -1, 0]
 ! nodecoord(:, 3) = [1, 1, 0]
 ! nodecoord(:, 4) = [-1, 1, 0]
 ! nodecoord(:, 5) = [0, 0, 1]
-END PROCEDURE EquidistancePoint_Pyramid
+END PROCEDURE EquidistancePoint_Pyramid_
 
 !----------------------------------------------------------------------------
 !                                            EquidistanceInPoint_Pyramid
@@ -122,7 +132,6 @@ END PROCEDURE EquidistancePoint_Pyramid
 MODULE PROCEDURE EquidistanceInPoint_Pyramid
 ! FIX: Implement EquidistanceInPoint_Pyramid
 ! ISSUE: #161 Implement EquidistanceInPoint_Pyramid routine
-
 END PROCEDURE EquidistanceInPoint_Pyramid
 
 !----------------------------------------------------------------------------
@@ -142,17 +151,26 @@ END SELECT
 END PROCEDURE InterpolationPoint_Pyramid
 
 !----------------------------------------------------------------------------
+!                                                 InterpolationPoint_Pyramid
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE InterpolationPoint_Pyramid_
+CALL ErrorMsg(&
+  & msg="InterpolationPoint_Pyramid_ is not implemented", &
+  & file=__FILE__, &
+  & routine="InterpolationPoint_Pyramid_", &
+  & line=__LINE__, &
+  & unitno=stderr)
+END PROCEDURE InterpolationPoint_Pyramid_
+
+!----------------------------------------------------------------------------
 !                                                  LagrangeCoeff_Pyramid
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE LagrangeCoeff_Pyramid1
-REAL(DFP), DIMENSION(SIZE(xij, 2), SIZE(xij, 2)) :: V
-INTEGER(I4B), DIMENSION(SIZE(xij, 2)) :: ipiv
-INTEGER(I4B) :: info
-ipiv = 0_I4B; ans = 0.0_DFP; ans(i) = 1.0_DFP
-V = LagrangeVandermonde(order=order, xij=xij, elemType=Pyramid)
-CALL GetLU(A=V, IPIV=ipiv, info=info)
-CALL LUSolve(A=V, B=ans, IPIV=ipiv, info=info)
+INTEGER(I4B) :: tsize
+CALL LagrangeCoeff_Pyramid1_(order=order, i=i, xij=xij, ans=ans, &
+                             tsize=tsize)
 END PROCEDURE LagrangeCoeff_Pyramid1
 
 !----------------------------------------------------------------------------
@@ -160,12 +178,9 @@ END PROCEDURE LagrangeCoeff_Pyramid1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE LagrangeCoeff_Pyramid2
-REAL(DFP), DIMENSION(SIZE(v, 1), SIZE(v, 2)) :: vtemp
-INTEGER(I4B), DIMENSION(SIZE(v, 1)) :: ipiv
-INTEGER(I4B) :: info
-vtemp = v; ans = 0.0_DFP; ans(i) = 1.0_DFP; ipiv = 0_I4B
-CALL GetLU(A=vtemp, IPIV=ipiv, info=info)
-CALL LUSolve(A=vtemp, B=ans, IPIV=ipiv, info=info)
+INTEGER(I4B) :: tsize
+CALL LagrangeCoeff_Pyramid2_(order=order, i=i, v=v, &
+                             isVandermonde=.TRUE., ans=ans, tsize=tsize)
 END PROCEDURE LagrangeCoeff_Pyramid2
 
 !----------------------------------------------------------------------------
@@ -173,9 +188,9 @@ END PROCEDURE LagrangeCoeff_Pyramid2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE LagrangeCoeff_Pyramid3
-INTEGER(I4B) :: info
-ans = 0.0_DFP; ans(i) = 1.0_DFP
-CALL LUSolve(A=v, B=ans, IPIV=ipiv, info=info)
+INTEGER(I4B) :: tsize
+CALL LagrangeCoeff_Pyramid3_(order=order, i=i, v=v, ipiv=ipiv, &
+                             ans=ans, tsize=tsize)
 END PROCEDURE LagrangeCoeff_Pyramid3
 
 !----------------------------------------------------------------------------
@@ -183,9 +198,73 @@ END PROCEDURE LagrangeCoeff_Pyramid3
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE LagrangeCoeff_Pyramid4
-ans = LagrangeVandermonde(order=order, xij=xij, elemType=Pyramid)
-CALL GetInvMat(ans)
+INTEGER(I4B) :: nrow, ncol
+
+CALL LagrangeCoeff_Pyramid4_(order=order, xij=xij, basisType=basisType, &
+               refPyramid=refPyramid, alpha=alpha, beta=beta, lambda=lambda, &
+                             ans=ans, nrow=nrow, ncol=ncol)
+
 END PROCEDURE LagrangeCoeff_Pyramid4
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE LagrangeCoeff_Pyramid1_
+REAL(DFP), DIMENSION(SIZE(xij, 2), SIZE(xij, 2)) :: V
+INTEGER(I4B), DIMENSION(SIZE(xij, 2)) :: ipiv
+INTEGER(I4B) :: info, nrow, ncol
+
+tsize = SIZE(xij, 2)
+
+ipiv = 0_I4B; ans(1:tsize) = 0.0_DFP; ans(i) = 1.0_DFP
+
+CALL LagrangeVandermonde_(order=order, xij=xij, elemType=Pyramid, &
+                          ans=V, nrow=nrow, ncol=ncol)
+
+CALL GetLU(A=V, IPIV=ipiv, info=info)
+
+CALL LUSolve(A=V, B=ans(1:tsize), IPIV=ipiv, info=info)
+END PROCEDURE LagrangeCoeff_Pyramid1_
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE LagrangeCoeff_Pyramid2_
+REAL(DFP), DIMENSION(SIZE(v, 1), SIZE(v, 2)) :: vtemp
+INTEGER(I4B), DIMENSION(SIZE(v, 1)) :: ipiv
+INTEGER(I4B) :: info
+
+tsize = SIZE(v, 1)
+
+vtemp = v; ans(1:tsize) = 0.0_DFP; ans(i) = 1.0_DFP; ipiv = 0_I4B
+CALL GetLU(A=vtemp, IPIV=ipiv, info=info)
+CALL LUSolve(A=vtemp, B=ans(1:tsize), IPIV=ipiv, info=info)
+END PROCEDURE LagrangeCoeff_Pyramid2_
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE LagrangeCoeff_Pyramid3_
+INTEGER(I4B) :: info
+
+tsize = SIZE(v, 1)
+
+ans(1:tsize) = 0.0_DFP; ans(i) = 1.0_DFP
+CALL LUSolve(A=v, B=ans(1:tsize), IPIV=ipiv, info=info)
+END PROCEDURE LagrangeCoeff_Pyramid3_
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE LagrangeCoeff_Pyramid4_
+CALL LagrangeVandermonde_(order=order, xij=xij, ans=ans, nrow=nrow, &
+                          ncol=ncol, elemType=Pyramid)
+CALL GetInvMat(ans(1:nrow, 1:ncol))
+END PROCEDURE LagrangeCoeff_Pyramid4_
 
 !----------------------------------------------------------------------------
 !                                                   QuadraturePoint_Pyramid
@@ -248,41 +327,64 @@ END PROCEDURE TensorQuadraturePoint_Pyramid2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE LagrangeEvalAll_Pyramid1
-!FIX: LagrangeEvalAll_Pyramid1
-CALL ErrorMsg(&
-& msg="Work in progress",  &
-& unitno=stdout,  &
-& line=__LINE__,  &
-& routine="LagrangeEvalAll_Pyramid1()", &
-& file=__FILE__)
+INTEGER(I4B) :: tsize
+
 END PROCEDURE LagrangeEvalAll_Pyramid1
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE LagrangeEvalAll_Pyramid1_
+!FIX: LagrangeEvalAll_Pyramid1
+CALL ErrorMsg(msg="Work in progress", routine="LagrangeEvalAll_Pyramid1()", &
+              unitno=stdout, line=__LINE__, file=__FILE__)
+END PROCEDURE LagrangeEvalAll_Pyramid1_
 
 !----------------------------------------------------------------------------
 !                                             LagrangeEvalAll_Pyramid
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE LagrangeEvalAll_Pyramid2
-!FIX: LagrangeEvalAll_Pyramid2
-CALL ErrorMsg(&
-& msg="Work in progress",  &
-& unitno=stdout,  &
-& line=__LINE__,  &
-& routine="LagrangeEvalAll_Pyramid2()", &
-& file=__FILE__)
+INTEGER(I4B) :: nrow, ncol
+CALL LagrangeEvalAll_Pyramid2_(order=order, x=x, xij=xij, ans=ans, &
+                   nrow=nrow, ncol=ncol, refPyramid=refPyramid, coeff=coeff, &
+           firstCall=firstCall, basisType=basisType, alpha=alpha, beta=beta, &
+                               lambda=lambda)
 END PROCEDURE LagrangeEvalAll_Pyramid2
 
 !----------------------------------------------------------------------------
-!                                          LagrangeGradientEvalAll_Pyramid
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE LagrangeEvalAll_Pyramid2_
+!FIX: LagrangeEvalAll_Pyramid2
+CALL ErrorMsg(msg="Work in progress", unitno=stdout, line=__LINE__, &
+              routine="LagrangeEvalAll_Pyramid2()", file=__FILE__)
+END PROCEDURE LagrangeEvalAll_Pyramid2_
+
+!----------------------------------------------------------------------------
+!
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE LagrangeGradientEvalAll_Pyramid1
-!FIX: LagrangeGradientEvalAll_Pyramid1
-CALL ErrorMsg(&
-& msg="Work in progress",  &
-& unitno=stdout,  &
-& line=__LINE__,  &
-& routine="LagrangeGradientEvalAll_Pyramid1()", &
-& file=__FILE__)
+INTEGER(I4B) :: dim1, dim2, dim3
+CALL LagrangeGradientEvalAll_Pyramid1_(order=order, x=x, xij=xij, ans=ans, &
+        dim1=dim1, dim2=dim2, dim3=dim3, refPyramid=refPyramid, coeff=coeff, &
+           firstCall=firstCall, basisType=basisType, alpha=alpha, beta=beta, &
+                                       lambda=lambda)
 END PROCEDURE LagrangeGradientEvalAll_Pyramid1
+
+!----------------------------------------------------------------------------
+!                                             LagrangeGradientEvalAll_Pyramid
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE LagrangeGradientEvalAll_Pyramid1_
+!FIX: Implement LagrangeGradientEvalAll_Pyramid1_
+CALL ErrorMsg(msg="Work in progress", &
+              routine="LagrangeGradientEvalAll_Pyramid1_()", &
+              unitno=stdout, line=__LINE__, file=__FILE__)
+RETURN
+END PROCEDURE LagrangeGradientEvalAll_Pyramid1_
 
 END SUBMODULE Methods

@@ -16,9 +16,12 @@
 !
 
 MODULE ElemshapeData_IOMethods
-USE BaseType
-USE GlobalData
+USE BaseType, ONLY: ElemshapeData_, STElemShapeData_
+
+USE GlobalData, ONLY: I4B, DFP, LGT
+
 USE String_Class, ONLY: String
+
 IMPLICIT NONE
 PRIVATE
 

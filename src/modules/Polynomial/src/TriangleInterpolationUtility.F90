@@ -16,7 +16,7 @@
 !
 
 MODULE TriangleInterpolationUtility
-USE GlobalData
+USE GlobalData, ONLY: DFP, I4B, LGT
 USE String_Class, ONLY: String
 IMPLICIT NONE
 PRIVATE
@@ -24,23 +24,44 @@ PUBLIC :: LagrangeDegree_Triangle
 PUBLIC :: LagrangeDOF_Triangle
 PUBLIC :: LagrangeInDOF_Triangle
 PUBLIC :: EquidistanceInPoint_Triangle
+
 PUBLIC :: EquidistancePoint_Triangle
+PUBLIC :: EquidistancePoint_Triangle_
+
 PUBLIC :: InterpolationPoint_Triangle
+PUBLIC :: InterpolationPoint_Triangle_
 PUBLIC :: LagrangeCoeff_Triangle
+PUBLIC :: LagrangeCoeff_Triangle_
 
 PUBLIC :: Dubiner_Triangle
+PUBLIC :: Dubiner_Triangle_
+
 PUBLIC :: OrthogonalBasis_Triangle
+PUBLIC :: OrthogonalBasis_Triangle_
+
 PUBLIC :: OrthogonalBasisGradient_Triangle
+PUBLIC :: OrthogonalBasisGradient_Triangle_
 
 PUBLIC :: VertexBasis_Triangle
 PUBLIC :: EdgeBasis_Triangle
 PUBLIC :: CellBasis_Triangle
+
 PUBLIC :: HeirarchicalBasis_Triangle
+PUBLIC :: HeirarchicalBasis_Triangle_
+
 PUBLIC :: HeirarchicalBasisGradient_Triangle
+PUBLIC :: HeirarchicalBasisGradient_Triangle_
 
 PUBLIC :: LagrangeEvalAll_Triangle
+PUBLIC :: LagrangeEvalAll_Triangle_
+
 PUBLIC :: LagrangeGradientEvalAll_Triangle
+PUBLIC :: LagrangeGradientEvalAll_Triangle_
+
+PUBLIC :: QuadratureNumber_Triangle
 PUBLIC :: QuadraturePoint_Triangle
+PUBLIC :: QuadraturePoint_Triangle_
+
 PUBLIC :: IJ2VEFC_Triangle
 PUBLIC :: FacetConnectivity_Triangle
 PUBLIC :: RefElemDomain_Triangle
@@ -48,13 +69,8 @@ PUBLIC :: RefElemDomain_Triangle
 PUBLIC :: GetTotalDOF_Triangle
 PUBLIC :: GetTotalInDOF_Triangle
 
-! PUBLIC :: BarycentricVertexBasis_Triangle
-! PUBLIC :: BarycentricEdgeBasis_Triangle
-! PUBLIC :: BarycentricHeirarchicalBasis_Triangle
-! PUBLIC :: BarycentricHeirarchicalBasisGradient_Triangle
-
 !----------------------------------------------------------------------------
-!                                                         GetTotalDOF_Triangle
+!                                                      GetTotalDOF_Triangle
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -147,7 +163,7 @@ INTERFACE
   MODULE SUBROUTINE IJ2VEFC_Triangle(xi, eta, temp, order, N)
     REAL(DFP), INTENT(IN) :: xi(:, :)
     REAL(DFP), INTENT(IN) :: eta(:, :)
-    REAL(DFP), INTENT(OUT) :: temp(:, :)
+    REAL(DFP), INTENT(INOUT) :: temp(:, :)
     INTEGER(I4B), INTENT(IN) :: order
     INTEGER(I4B), INTENT(IN) :: N
   END SUBROUTINE IJ2VEFC_Triangle
@@ -255,6 +271,36 @@ INTERFACE
 END INTERFACE
 
 !----------------------------------------------------------------------------
+!                                              EquidistanceInPoint_Triangle
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 14 Aug 2022
+! summary: Returns equidistance points in triangle
+!
+!# Introduction
+!
+!- This function returns the equidistance points in triangle
+!- All points are inside the triangle
+
+INTERFACE
+  MODULE PURE SUBROUTINE EquidistanceInPoint_Triangle_(order, ans, nrow, &
+                                                       ncol, xij)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    !! returned coordinates in $x_{iJ}$ format
+    !! If xij is present then number of rows in ans is same as xij
+    !! If xij is not present then number of rows in ans is 2.
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+    REAL(DFP), OPTIONAL, INTENT(IN) :: xij(:, :)
+    !! coordinates of point 1 and point 2 in $x_{iJ}$ format
+    !! number of rows = nsd
+    !! number of cols = 3
+  END SUBROUTINE EquidistanceInPoint_Triangle_
+END INTERFACE
+
+!----------------------------------------------------------------------------
 !                                              EquidistancePoint_Triangle
 !----------------------------------------------------------------------------
 
@@ -285,6 +331,26 @@ INTERFACE
 END INTERFACE
 
 !----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE
+  MODULE RECURSIVE PURE SUBROUTINE EquidistancePoint_Triangle_(order, ans, &
+                                                              nrow, ncol, xij)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    !! returned coordinates in $x_{iJ}$ format
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+    !! number of rows and cols
+    REAL(DFP), OPTIONAL, INTENT(IN) :: xij(:, :)
+    !! coordinates of point 1 and point 2 in $x_{iJ}$ format
+    !! number of rows = nsd
+    !! number of cols = 3
+  END SUBROUTINE EquidistancePoint_Triangle_
+END INTERFACE
+
+!----------------------------------------------------------------------------
 !                                                BlythPozrikidis_Triangle
 !----------------------------------------------------------------------------
 
@@ -301,9 +367,8 @@ END INTERFACE
 ! doi:10.1093/imamat/hxh077.
 
 INTERFACE
-  MODULE FUNCTION BlythPozrikidis_Triangle(order, ipType, layout, xij,  &
-  & alpha, beta, lambda) &
-    & RESULT(ans)
+  MODULE FUNCTION BlythPozrikidis_Triangle(order, ipType, layout, xij, &
+                                           alpha, beta, lambda) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
     !! order
     INTEGER(I4B), INTENT(IN) :: ipType
@@ -326,6 +391,37 @@ INTERFACE
 END INTERFACE
 
 !----------------------------------------------------------------------------
+!                                                 BlythPozrikidis_Triangle_
+!----------------------------------------------------------------------------
+
+INTERFACE
+ MODULE SUBROUTINE BlythPozrikidis_Triangle_(order, ipType, ans, nrow, ncol, &
+                                             layout, xij, alpha, beta, lambda)
+
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order
+    INTEGER(I4B), INTENT(IN) :: ipType
+    !! Equidistance, GaussLegendre, GaussLegendreLobatto, GaussChebyshev,
+    !! GaussChebyshevLobatto, GaussJacobi, GaussJacobiLobatto
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    !!
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+    !! number of rows and columns written in ans
+    REAL(DFP), OPTIONAL, INTENT(IN) :: xij(:, :)
+    !! xij coordinates
+    CHARACTER(*), INTENT(IN) :: layout
+    !! local node numbering layout
+    !! only layout = "VEFC" is allowed
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
+    !! Jacobi polynomial parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: beta
+    !! Jacobi polynomial parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: lambda
+    !! Ultraspherical polynomial parameter
+  END SUBROUTINE BlythPozrikidis_Triangle_
+END INTERFACE
+
+!----------------------------------------------------------------------------
 !                                                            Isaac_Triangle
 !----------------------------------------------------------------------------
 
@@ -334,8 +430,8 @@ END INTERFACE
 ! summary: Isaac points on triangle
 
 INTERFACE
-  MODULE FUNCTION Isaac_Triangle(order, ipType, layout, xij,  &
-  & alpha, beta, lambda) &
+  MODULE FUNCTION Isaac_Triangle(order, ipType, layout, xij, &
+   alpha, beta, lambda) &
     & RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
     !! order
@@ -356,6 +452,36 @@ INTERFACE
     REAL(DFP), ALLOCATABLE :: ans(:, :)
     !! xij coordinates
   END FUNCTION Isaac_Triangle
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                            Isaac_Triangle
+!----------------------------------------------------------------------------
+
+INTERFACE
+  MODULE SUBROUTINE Isaac_Triangle_(order, ipType, ans, nrow, ncol, &
+                                    layout, xij, alpha, beta, lambda)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order
+    INTEGER(I4B), INTENT(IN) :: ipType
+    !! Equidistance, GaussLegendre, GaussLegendreLobatto, GaussChebyshev,
+    !! GaussChebyshevLobatto, GaussJacobi, GaussJacobiLobatto
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    !!
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+    !! number of rows and columns written in ans
+    REAL(DFP), OPTIONAL, INTENT(IN) :: xij(:, :)
+    !! xij coordinates
+    CHARACTER(*), INTENT(IN) :: layout
+    !! local node numbering layout
+    !! only layout = "VEFC" is allowed
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
+    !! Jacobi polynomial parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: beta
+    !! Jacobi polynomial parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: lambda
+    !! Ultraspherical polynomial parameter
+  END SUBROUTINE Isaac_Triangle_
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -391,7 +517,7 @@ END INTERFACE
 
 INTERFACE
   MODULE FUNCTION InterpolationPoint_Triangle(order, ipType, &
-    & layout, xij, alpha, beta, lambda) RESULT(ans)
+                                 layout, xij, alpha, beta, lambda) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
     !! order
     INTEGER(I4B), INTENT(IN) :: ipType
@@ -409,6 +535,34 @@ INTERFACE
     REAL(DFP), ALLOCATABLE :: ans(:, :)
     !! xij coordinates
   END FUNCTION InterpolationPoint_Triangle
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                               InterpolationPoint_Triangle_
+!----------------------------------------------------------------------------
+
+INTERFACE
+  MODULE SUBROUTINE InterpolationPoint_Triangle_(order, ipType, ans, nrow, &
+                                       ncol, layout, xij, alpha, beta, lambda)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order
+    INTEGER(I4B), INTENT(IN) :: ipType
+    !! interpolation point type
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    !! xij coordinates
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+    !! number of rows and columns written in ans
+    REAL(DFP), OPTIONAL, INTENT(IN) :: xij(:, :)
+    !! Coord of domain in xij format
+    CHARACTER(*), INTENT(IN) :: layout
+    !! local node numbering layout, always VEFC
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
+    !! Jacobi polynomial parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: beta
+    !! Jacobi polynomial parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: lambda
+    !! Ultraspherical polynomial parameter
+  END SUBROUTINE InterpolationPoint_Triangle_
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -431,6 +585,25 @@ INTERFACE LagrangeCoeff_Triangle
     !! coefficients
   END FUNCTION LagrangeCoeff_Triangle1
 END INTERFACE LagrangeCoeff_Triangle
+
+!----------------------------------------------------------------------------
+!                                                   LagrangeCoeff_Triangle_
+!----------------------------------------------------------------------------
+
+INTERFACE LagrangeCoeff_Triangle_
+  MODULE SUBROUTINE LagrangeCoeff_Triangle1_(order, i, xij, ans, tsize)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order of polynomial
+    INTEGER(I4B), INTENT(IN) :: i
+    !! ith coefficients for lagrange polynomial
+    REAL(DFP), INTENT(IN) :: xij(:, :)
+    !! points in xij format, size(xij,2)
+    REAL(DFP), INTENT(INOUT) :: ans(:)
+    !! ans(SIZE(xij, 2))
+    !! coefficients
+    INTEGER(I4B), INTENT(OUT) :: tsize
+  END SUBROUTINE LagrangeCoeff_Triangle1_
+END INTERFACE LagrangeCoeff_Triangle_
 
 !----------------------------------------------------------------------------
 !                                                   LagrangeCoeff_Triangle
@@ -458,6 +631,29 @@ INTERFACE LagrangeCoeff_Triangle
 END INTERFACE LagrangeCoeff_Triangle
 
 !----------------------------------------------------------------------------
+!                                                     LagrangeCoeff_Triangle_
+!----------------------------------------------------------------------------
+
+INTERFACE LagrangeCoeff_Triangle_
+  MODULE SUBROUTINE LagrangeCoeff_Triangle2_(order, i, v, isVandermonde, &
+                                             ans, tsize)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order of polynomial, it should be SIZE(v,2)-1
+    INTEGER(I4B), INTENT(IN) :: i
+    !! ith lagrange polynomial
+    REAL(DFP), INTENT(IN) :: v(:, :)
+    !! vandermonde matrix size should be (order+1,order+1)
+    LOGICAL(LGT), INTENT(IN) :: isVandermonde
+    !! This is just to resolve interface issue, the value of isVandermonde
+    !! is not used in thesubroutine _
+    REAL(DFP), INTENT(INOUT) :: ans(:)
+    ! ans(SIZE(v, 1))
+    !! coefficients of ith Lagrange polynomial
+    INTEGER(I4B), INTENT(OUT) :: tsize
+  END SUBROUTINE LagrangeCoeff_Triangle2_
+END INTERFACE LagrangeCoeff_Triangle_
+
+!----------------------------------------------------------------------------
 !                                                     LagrangeCoeff_Triangle
 !----------------------------------------------------------------------------
 
@@ -479,6 +675,27 @@ INTERFACE LagrangeCoeff_Triangle
     !! coefficients
   END FUNCTION LagrangeCoeff_Triangle3
 END INTERFACE LagrangeCoeff_Triangle
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE LagrangeCoeff_Triangle_
+  MODULE SUBROUTINE LagrangeCoeff_Triangle3_(order, i, v, ipiv, ans, tsize)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order of polynomial, it should be SIZE(x,2)-1
+    INTEGER(I4B), INTENT(IN) :: i
+    !! ith coefficients for lagrange polynomial
+    REAL(DFP), INTENT(INOUT) :: v(:, :)
+    !! LU decomposition of vandermonde matrix
+    INTEGER(I4B), INTENT(IN) :: ipiv(:)
+    !! inverse pivoting mapping, compes from LU decomposition
+    REAL(DFP), INTENT(INOUT) :: ans(:)
+    !! ans(SIZE(v, 1))
+    !! coefficients
+    INTEGER(I4B), INTENT(OUT) :: tsize
+  END SUBROUTINE LagrangeCoeff_Triangle3_
+END INTERFACE LagrangeCoeff_Triangle_
 
 !----------------------------------------------------------------------------
 !                                                    LagrangeCoeff_Triangle
@@ -653,6 +870,10 @@ INTERFACE Dubiner_Triangle_
   END SUBROUTINE Dubiner_Triangle1_
 END INTERFACE Dubiner_Triangle_
 
+INTERFACE OrthogonalBasis_Triangle_
+  MODULE PROCEDURE Dubiner_Triangle1_
+END INTERFACE OrthogonalBasis_Triangle_
+
 !----------------------------------------------------------------------------
 !                                                       DubinerPolynomial
 !----------------------------------------------------------------------------
@@ -726,25 +947,9 @@ INTERFACE Dubiner_Triangle_
   END SUBROUTINE Dubiner_Triangle2_
 END INTERFACE Dubiner_Triangle_
 
-!----------------------------------------------------------------------------
-!                                          BarycentricVertexBasis_Triangle
-!----------------------------------------------------------------------------
-
-!> author: Vikas Sharma, Ph. D.
-! date: 28 Oct 2022
-! summary: Returns the vertex basis functions on reference Triangle
-
-INTERFACE
-  MODULE PURE SUBROUTINE BarycentricVertexBasis_Triangle(lambda, ans)
-    REAL(DFP), INTENT(IN) :: lambda(:, :)
-    !! point of evaluation in terms of barycentrix coords
-    !! number of rows = 3 corresponding to three coordinates
-    !! number of columns = number of points
-    REAL(DFP), INTENT(INOUT) :: ans(:, :)
-    ! REAL(DFP) :: ans(SIZE(lambda, 2), 3)
-    !! ans(:,v1) basis function of vertex v1 at all points
-  END SUBROUTINE BarycentricVertexBasis_Triangle
-END INTERFACE
+INTERFACE OrthogonalBasis_Triangle_
+  MODULE PROCEDURE Dubiner_Triangle2_
+END INTERFACE OrthogonalBasis_Triangle_
 
 !----------------------------------------------------------------------------
 !                                                    VertexBasis_Triangle
@@ -766,37 +971,6 @@ INTERFACE
 END INTERFACE
 
 !----------------------------------------------------------------------------
-!                                              BarycentricEdgeBasis_Triangle
-!----------------------------------------------------------------------------
-
-!> author: Vikas Sharma, Ph. D.
-! date: 28 Oct 2022
-! summary: Eval basis on edge of triangle
-!
-!# Introduction
-!
-! Evaluate basis functions on edges of triangle
-! pe1, pe2, pe3 should be greater than or equal to 2
-
-INTERFACE
-  MODULE PURE SUBROUTINE BarycentricEdgeBasis_Triangle(pe1, pe2, pe3, &
-                                                       lambda, ans)
-    INTEGER(I4B), INTENT(IN) :: pe1
-    !! order on  edge (e1)
-    INTEGER(I4B), INTENT(IN) :: pe2
-    !! order on edge (e2)
-    INTEGER(I4B), INTENT(IN) :: pe3
-    !! order on edge (e3)
-    REAL(DFP), INTENT(IN) :: lambda(:, :)
-    !! point of evaluation in terms of barycentric coordinates
-    !! Number of rows in lambda is equal to three corresponding to
-    !! three coordinates
-    REAL(DFP), INTENT(INOUT) :: ans(:, :)
-    ! REAL(DFP) :: ans(SIZE(lambda, 2), pe1 + pe2 + pe3 - 3)
-  END SUBROUTINE BarycentricEdgeBasis_Triangle
-END INTERFACE
-
-!----------------------------------------------------------------------------
 !                                                        EdgeBasis_Triangle
 !----------------------------------------------------------------------------
 
@@ -812,7 +986,7 @@ END INTERFACE
 
 INTERFACE
   MODULE PURE FUNCTION EdgeBasis_Triangle(pe1, pe2, pe3, xij, refTriangle) &
-    & RESULT(ans)
+    RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: pe1
     !! order on left vertical edge (e1), should be greater than 1
     INTEGER(I4B), INTENT(IN) :: pe2
@@ -825,27 +999,6 @@ INTERFACE
     !! Reference triangle
     REAL(DFP) :: ans(SIZE(xij, 2), pe1 + pe2 + pe3 - 3)
   END FUNCTION EdgeBasis_Triangle
-END INTERFACE
-
-!----------------------------------------------------------------------------
-!                                          BarycentricCellBasis_Triangle
-!----------------------------------------------------------------------------
-
-!> author: Vikas Sharma, Ph. D.
-! date: 28 Oct 2022
-! summary: Returns the Cell basis functions on reference Triangle
-
-INTERFACE
-  MODULE PURE SUBROUTINE BarycentricCellBasis_Triangle(order, lambda, ans)
-    INTEGER(I4B), INTENT(IN) :: order
-    !! order in this cell, it should be greater than 2
-    REAL(DFP), INTENT(IN) :: lambda(:, :)
-    !! point of evaluation in terms of barycentrix coords
-    !! number of rows = 3 corresponding to three coordinates
-    !! number of columns = number of points
-    REAL(DFP), INTENT(INOUT) :: ans(:, :)
-    ! ans(SIZE(lambda, 2), INT((order - 1) * (order - 2) / 2))
-  END SUBROUTINE BarycentricCellBasis_Triangle
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -873,67 +1026,6 @@ INTERFACE
 END INTERFACE
 
 !----------------------------------------------------------------------------
-!                                      BarycentricHeirarchicalBasis_Triangle
-!----------------------------------------------------------------------------
-
-!> author: Vikas Sharma, Ph. D.
-! date: 27 Oct 2022
-! summary: Evaluate all modal basis (heirarchical polynomial) on Triangle
-
-INTERFACE BarycentricHeirarchicalBasis_Triangle
-  MODULE PURE SUBROUTINE BarycentricHeirarchicalBasis_Triangle1(order, &
-    & pe1, pe2, pe3, lambda, refTriangle, ans, nrow, ncol)
-    INTEGER(I4B), INTENT(IN) :: order
-    !! order in the cell of triangle, it should be greater than 2
-    INTEGER(I4B), INTENT(IN) :: pe1
-    !! order of interpolation on edge e1
-    INTEGER(I4B), INTENT(IN) :: pe2
-    !! order of interpolation on edge e2
-    INTEGER(I4B), INTENT(IN) :: pe3
-    !! order of interpolation on edge e3
-    REAL(DFP), INTENT(IN) :: lambda(:, :)
-    !! Barycenteric coordinates
-    !! number of rows = 3
-    !! number of cols = number of points
-    CHARACTER(*), INTENT(IN) :: refTriangle
-    !! reference triangle, "BIUNIT", "UNIT"
-    REAL(DFP), INTENT(INOUT) :: ans(:, :)
-    ! REAL(DFP) :: ans( &
-    !   & SIZE(lambda, 2), &
-    !   & pe1 + pe2 + pe3 + INT((order - 1) * (order - 2) / 2))
-    !!
-    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
-  END SUBROUTINE BarycentricHeirarchicalBasis_Triangle1
-END INTERFACE BarycentricHeirarchicalBasis_Triangle
-
-!----------------------------------------------------------------------------
-!                                      BarycentricHeirarchicalBasis_Triangle
-!----------------------------------------------------------------------------
-
-!> author: Vikas Sharma, Ph. D.
-! date: 27 Oct 2022
-! summary: Evaluate all modal basis (heirarchical polynomial) on Triangle
-
-INTERFACE BarycentricHeirarchicalBasis_Triangle
-MODULE PURE SUBROUTINE BarycentricHeirarchicalBasis_Triangle2(order, lambda, &
-                                               & refTriangle, ans, nrow, ncol)
-    INTEGER(I4B), INTENT(IN) :: order
-    !! order of approximation on triangle
-    REAL(DFP), INTENT(IN) :: lambda(:, :)
-    !! Barycenteric coordinates
-    !! number of rows = 3
-    !! number of cols = number of points
-    CHARACTER(*), INTENT(IN) :: refTriangle
-    !! reference triangle, "BIUNIT", "UNIT"
-    REAL(DFP), INTENT(INOUT) :: ans(:, :)
-    ! REAL(DFP) :: ans( &
-    !   & SIZE(lambda, 2), &
-    !   & INT((order + 1) * (order + 2) / 2))
-    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
-  END SUBROUTINE BarycentricHeirarchicalBasis_Triangle2
-END INTERFACE BarycentricHeirarchicalBasis_Triangle
-
-!----------------------------------------------------------------------------
 !                                              HeirarchicalBasis_Triangle
 !----------------------------------------------------------------------------
 
@@ -942,8 +1034,8 @@ END INTERFACE BarycentricHeirarchicalBasis_Triangle
 ! summary: Evaluate all modal basis (heirarchical polynomial) on Triangle
 
 INTERFACE HeirarchicalBasis_Triangle
-  MODULE PURE FUNCTION HeirarchicalBasis_Triangle1(order, pe1, pe2, pe3,&
-    & xij, refTriangle) RESULT(ans)
+  MODULE PURE FUNCTION HeirarchicalBasis_Triangle1(order, pe1, pe2, pe3, &
+                                                 xij, refTriangle) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
     !! Order of approximation inside the triangle (i.e., cell)
     !! it should be greater than 2 for cell bubble to exist
@@ -1067,107 +1159,48 @@ INTERFACE HeirarchicalBasis_Triangle_
 END INTERFACE HeirarchicalBasis_Triangle_
 
 !----------------------------------------------------------------------------
-!
+!                                              HeirarchicalBasis_Triangle
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date:   2024-04-21
-! summary: Evaluate the gradient of the edge basis on triangle
-! using barycentric coordinate
+! date: 2024-07-04
+! summary: Evaluate all modal basis (heirarchical polynomial) on Triangle
 
-INTERFACE
-  MODULE PURE SUBROUTINE BarycentricVertexBasisGradient_Triangle(lambda, ans)
-    REAL(DFP), INTENT(IN) :: lambda(:, :)
-    !! point of evaluation in terms of barycentric coordinates
-    !! size(lambda,1) = 3
-    !! size(lambda,2) = number of points of evaluation
-    REAL(DFP), INTENT(INOUT) :: ans(:, :, :)
-    ! ans(SIZE(lambda, 2), 3, 3)
-  END SUBROUTINE BarycentricVertexBasisGradient_Triangle
-END INTERFACE
-
-!----------------------------------------------------------------------------
-!
-!----------------------------------------------------------------------------
-
-!> author: Shion Shimizu
-! date:   2024-04-21
-! summary: Evaluate the gradient of the edge basis on triangle
-! using barycentric coordinate
-
-INTERFACE
- MODULE PURE SUBROUTINE BarycentricEdgeBasisGradient_Triangle(pe1, pe2, pe3, &
-                                                               lambda, ans)
-    INTEGER(I4B), INTENT(IN) :: pe1
-    !! order on  edge (e1)
-    INTEGER(I4B), INTENT(IN) :: pe2
-    !! order on edge (e2)
-    INTEGER(I4B), INTENT(IN) :: pe3
-    !! order on edge (e3)
-    REAL(DFP), INTENT(IN) :: lambda(:, :)
-    !! point of evaluation in terms of barycentric coordinates
-    !! size(lambda,1) = 3
-    !! size(lambda,2) = number of points of evaluation
-    REAL(DFP), INTENT(INOUT) :: ans(:, :, :)
-    ! REAL(DFP) :: ans(SIZE(lambda, 2), pe1 + pe2 + pe3 - 3, 3)
-  END SUBROUTINE BarycentricEdgeBasisGradient_Triangle
-END INTERFACE
-
-!----------------------------------------------------------------------------
-!
-!----------------------------------------------------------------------------
-
-!> author: Shion Shimizu
-! date:   2024-04-21
-! summary: Evaluate the gradient of the edge basis on triangle
-! using barycentric coordinate
-
-INTERFACE
- MODULE PURE SUBROUTINE BarycentricCellBasisGradient_Triangle(order, lambda, &
-                                                               ans)
+INTERFACE HeirarchicalBasis_Triangle_
+  MODULE PURE SUBROUTINE HeirarchicalBasis_Triangle3_(order, pe1, pe2, pe3, &
+        xij, refTriangle, edgeOrient1, edgeOrient2, edgeOrient3, faceOrient, &
+                                                      ans, nrow, ncol)
     INTEGER(I4B), INTENT(IN) :: order
-    !! order on  Cell (e1)
-    REAL(DFP), INTENT(IN) :: lambda(:, :)
-    !! point of evaluation in terms of barycentric coordinates
-    !! size(lambda,1) = 3
-    !! size(lambda,2) = number of points of evaluation
-    REAL(DFP), INTENT(INOUT) :: ans(:, :, :)
-    ! REAL(DFP) :: ans(SIZE(lambda, 2), 3*order - 3, 3)
-  END SUBROUTINE BarycentricCellBasisGradient_Triangle
-END INTERFACE
-
-!----------------------------------------------------------------------------
-!                               BarycentricHeirarchicalBasisGradient_Triangle
-!----------------------------------------------------------------------------
-
-!> author: Shion Shimizu and Vikas Sharma
-! date:   2024-04-21
-! summary:  Evaluate the gradient of the Hierarchical basis on triangle
-
-INTERFACE BarycentricHeirarchicalBasisGradient_Triangle
-MODULE PURE SUBROUTINE BarycentricHeirarchicalBasisGradient_Triangle1(order, &
-                                    & pe1, pe2, pe3, lambda, refTriangle, ans)
-    INTEGER(I4B), INTENT(IN) :: order
-    !! order in the cell of triangle, it should be greater than 2
+    !! Order of approximation inside the triangle (i.e., cell)
+    !! it should be greater than 2 for cell bubble to exist
     INTEGER(I4B), INTENT(IN) :: pe1
-    !! order of interpolation on edge e1
+    !! Order of interpolation on edge e1
+    !! It should be greater than 1 for edge bubble to exists
     INTEGER(I4B), INTENT(IN) :: pe2
-    !! order of interpolation on edge e2
+    !! Order of interpolation on edge e2
+    !! It should be greater than 1 for edge bubble to exists
     INTEGER(I4B), INTENT(IN) :: pe3
-    !! order of interpolation on edge e3
-    REAL(DFP), INTENT(IN) :: lambda(:, :)
-    !! Barycenteric coordinates
-    !! number of rows = 3
-    !! number of cols = number of points
+    !! Order of interpolation on edge e3
+    !! It should be greater than 1 for edge bubble to exists
+    REAL(DFP), INTENT(IN) :: xij(:, :)
+    !! Points of evaluation in xij format
     CHARACTER(*), INTENT(IN) :: refTriangle
-    !! reference triangle, "BIUNIT", "UNIT"
-    REAL(DFP), INTENT(INOUT) :: ans(:, :, :)
+    !! This parameter denotes the type of reference triangle.
+    !! It can take following values:
+    !! UNIT: in this case xij is in unit Triangle.
+    !! BIUNIT: in this case xij is in biunit triangle.
+    INTEGER(I4B), INTENT(IN) :: edgeOrient1, edgeOrient2, edgeOrient3
+    !! edge orientation, 1 or -1
+    INTEGER(I4B), INTENT(IN) :: faceOrient(:)
+    !! face orient, size is 2, 1 or -1
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
     ! REAL(DFP) :: ans( &
-    !   & SIZE(lambda, 2), &
-    !   & pe1 + pe2 + pe3 + INT((order - 1) * (order - 2) / 2), 3)
+    !   & SIZE(xij, 2), &
+    !   & pe1 + pe2 + pe3 + INT((order - 1) * (order - 2) / 2))
     !!
-  END SUBROUTINE BarycentricHeirarchicalBasisGradient_Triangle1
-END INTERFACE BarycentricHeirarchicalBasisGradient_Triangle
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+  END SUBROUTINE HeirarchicalBasis_Triangle3_
+END INTERFACE HeirarchicalBasis_Triangle_
 
 !----------------------------------------------------------------------------
 !                                                   LagrangeEvalAll_Triangle
@@ -1178,14 +1211,8 @@ END INTERFACE BarycentricHeirarchicalBasisGradient_Triangle
 ! summary: Evaluate all Lagrange polynomial of order n at single points
 
 INTERFACE LagrangeEvalAll_Triangle
-  MODULE FUNCTION LagrangeEvalAll_Triangle1( &
-    & order, &
-    & x, &
-    & xij, &
-    & refTriangle, &
-    & coeff, &
-    & firstCall, &
-    & basisType) RESULT(ans)
+  MODULE FUNCTION LagrangeEvalAll_Triangle1(order, x, xij, refTriangle, &
+                                      coeff, firstCall, basisType) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
     !! order of Lagrange polynomials
     REAL(DFP), INTENT(IN) :: x(2)
@@ -1212,6 +1239,42 @@ INTERFACE LagrangeEvalAll_Triangle
 END INTERFACE LagrangeEvalAll_Triangle
 
 !----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE LagrangeEvalAll_Triangle_
+  MODULE SUBROUTINE LagrangeEvalAll_Triangle1_(order, x, xij, ans, tsize, &
+                                     refTriangle, coeff, firstCall, basisType)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order of Lagrange polynomials
+    REAL(DFP), INTENT(IN) :: x(2)
+    !! point of evaluation
+    !! x(1) is x coord
+    !! x(2) is y coord
+    REAL(DFP), INTENT(INOUT) :: xij(:, :)
+    !!
+    CHARACTER(*), INTENT(IN) :: refTriangle
+    !! interpolation points
+    REAL(DFP), INTENT(INOUT) :: ans(:)
+    !! ans(SIZE(xij, 2))
+    !! Value of n+1 Lagrange polynomials at point x
+    INTEGER(I4B), INTENT(OUT) :: tsize
+    !! Total size written in ans
+    REAL(DFP), OPTIONAL, INTENT(INOUT) :: coeff(:, :)
+    !! coeff(SIZE(xij, 2), SIZE(xij, 2))
+    !! coefficient of Lagrange polynomials
+    LOGICAL(LGT), OPTIONAL :: firstCall
+    !! If firstCall is true, then coeff will be made
+    !! If firstCall is False, then coeff will be used
+    !! Default value of firstCall is True
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: basisType
+    !! Monomials *Default
+    !! Jacobi=Dubiner
+    !! Heirarchical
+  END SUBROUTINE LagrangeEvalAll_Triangle1_
+END INTERFACE LagrangeEvalAll_Triangle_
+
+!----------------------------------------------------------------------------
 !                                                   LagrangeEvalAll_Triangle
 !----------------------------------------------------------------------------
 
@@ -1220,15 +1283,8 @@ END INTERFACE LagrangeEvalAll_Triangle
 ! summary: Evaluate all Lagrange polynomials of order n at several points
 
 INTERFACE LagrangeEvalAll_Triangle
-  MODULE FUNCTION LagrangeEvalAll_Triangle2( &
-    & order, &
-    & x, &
-    & xij, &
-    & refTriangle, &
-    & coeff, &
-    & firstCall, &
-    & basisType, &
-    & alpha, beta, lambda) RESULT(ans)
+  MODULE FUNCTION LagrangeEvalAll_Triangle2(order, x, xij, refTriangle, &
+                 coeff, firstCall, basisType, alpha, beta, lambda) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
     !! Order of Lagrange polynomials
     REAL(DFP), INTENT(IN) :: x(:, :)
@@ -1258,6 +1314,61 @@ INTERFACE LagrangeEvalAll_Triangle
 END INTERFACE LagrangeEvalAll_Triangle
 
 !----------------------------------------------------------------------------
+!                             LagrangeEvalAll_Triangle_@LagrnageBasisMethods
+!----------------------------------------------------------------------------
+
+INTERFACE LagrangeEvalAll_Triangle_
+  MODULE SUBROUTINE LagrangeEvalAll_Triangle2_(order, x, xij, ans, nrow, &
+          ncol, refTriangle, coeff, firstCall, basisType, alpha, beta, lambda)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! Order of Lagrange polynomials
+    REAL(DFP), INTENT(IN) :: x(:, :)
+    !! Point of evaluation
+    !! x(1, :) is x coord
+    !! x(2, :) is y coord
+    REAL(DFP), INTENT(INOUT) :: xij(:, :)
+    !! Interpolation points
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    !! ans(SIZE(x, 2), SIZE(xij, 2))
+    !! Value of n+1 Lagrange polynomials at point x
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+    !! Number of rows and columns written to ans
+    CHARACTER(*), INTENT(IN) :: refTriangle
+    !! Reference triangle
+    !! Biunit
+    !! Unit
+    REAL(DFP), OPTIONAL, INTENT(INOUT) :: coeff(:, :)
+    !! coeff(SIZE(xij, 2), SIZE(xij, 2))
+    !! Coefficient of Lagrange polynomials
+    LOGICAL(LGT), OPTIONAL :: firstCall
+    !! If firstCall is true, then coeff will be made
+    !! If firstCall is False, then coeff will be used
+    !! Default value of firstCall is True
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: basisType
+    !! Monomials *Default
+    !! Jacobi=Dubiner
+    !! Heirarchical
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha, beta, lambda
+  END SUBROUTINE LagrangeEvalAll_Triangle2_
+END INTERFACE LagrangeEvalAll_Triangle_
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE
+  MODULE FUNCTION QuadratureNumber_Triangle(order, quadType) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order of integrand
+    INTEGER(I4B), INTENT(IN) :: quadType
+    !! quadrature point type
+    !! currently this variable is not used
+    INTEGER(I4B) :: ans
+    !! Quadrature points
+  END FUNCTION QuadratureNumber_Triangle
+END INTERFACE
+
+!----------------------------------------------------------------------------
 !                                                 QuadraturePoints_Triangle
 !----------------------------------------------------------------------------
 
@@ -1275,8 +1386,7 @@ INTERFACE QuadraturePoint_Triangle
     !! currently this variable is not used
     CHARACTER(*), INTENT(IN) :: refTriangle
     !! Reference triangle
-    !! Biunit
-    !! Unit
+    !! Biunit ! Unit
     !! If xij is present,then this parameter is not used
     REAL(DFP), OPTIONAL, INTENT(IN) :: xij(:, :)
     !! nodal coordinates of triangle.
@@ -1286,6 +1396,32 @@ INTERFACE QuadraturePoint_Triangle
     !! Quadrature points
   END FUNCTION QuadraturePoint_Triangle1
 END INTERFACE QuadraturePoint_Triangle
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE QuadraturePoint_Triangle_
+  MODULE SUBROUTINE QuadraturePoint_Triangle1_(order, quadType, refTriangle, &
+                                               xij, ans, nrow, ncol)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order of integrand
+    INTEGER(I4B), INTENT(IN) :: quadType
+    !! quadrature point type
+    !! currently this variable is not used
+    CHARACTER(*), INTENT(IN) :: refTriangle
+    !! Reference triangle
+    !! Biunit ! Unit
+    !! If xij is present,then this parameter is not used
+    REAL(DFP), OPTIONAL, INTENT(IN) :: xij(:, :)
+    !! nodal coordinates of triangle.
+    !! The number of rows in xij can be 2 or 3.
+    !! The number of columns in xij should be 3
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    !! Quadrature points
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+  END SUBROUTINE QuadraturePoint_Triangle1_
+END INTERFACE QuadraturePoint_Triangle_
 
 !----------------------------------------------------------------------------
 !                                            QuadraturePoints_Triangle
@@ -1308,8 +1444,7 @@ INTERFACE QuadraturePoint_Triangle
     !! currently this variable is not used
     CHARACTER(*), INTENT(IN) :: refTriangle
     !! Reference triangle
-    !! Biunit
-    !! Unit
+    !! Biunit ! Unit
     REAL(DFP), OPTIONAL, INTENT(IN) :: xij(:, :)
     !! nodal coordinates of triangle.
     !! The number of rows in xij can be 2 or 3.
@@ -1318,6 +1453,34 @@ INTERFACE QuadraturePoint_Triangle
     !! Quadrature points
   END FUNCTION QuadraturePoint_Triangle2
 END INTERFACE QuadraturePoint_Triangle
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE QuadraturePoint_Triangle_
+  MODULE SUBROUTINE QuadraturePoint_Triangle2_(nips, quadType, refTriangle, &
+                                               xij, ans, nrow, ncol)
+    INTEGER(I4B), INTENT(IN) :: nips(1)
+    !! nips(1) .LE. 79, then we call
+    !! economical quadrature rules.
+    !! Otherwise, this routine will retport
+    !! error
+    INTEGER(I4B), INTENT(IN) :: quadType
+    !! quadrature point type,
+    !! currently this variable is not used
+    CHARACTER(*), INTENT(IN) :: refTriangle
+    !! Reference triangle
+    !! Biunit ! Unit
+    REAL(DFP), OPTIONAL, INTENT(IN) :: xij(:, :)
+    !! nodal coordinates of triangle.
+    !! The number of rows in xij can be 2 or 3.
+    !! The number of columns in xij should be 3
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    !! Quadrature points
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+  END SUBROUTINE QuadraturePoint_Triangle2_
+END INTERFACE QuadraturePoint_Triangle_
 
 !----------------------------------------------------------------------------
 !                                            TensorQuadraturePoints_Triangle
@@ -1347,6 +1510,31 @@ INTERFACE TensorQuadraturePoint_Triangle
     !! Quadrature points
   END FUNCTION TensorQuadraturePoint_Triangle1
 END INTERFACE TensorQuadraturePoint_Triangle
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE TensorQuadraturePoint_Triangle_
+  MODULE SUBROUTINE TensorQuadraturePoint_Triangle1_(order, quadType, &
+                                            refTriangle, xij, ans, nrow, ncol)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order of integrand
+    INTEGER(I4B), INTENT(IN) :: quadType
+    !! quadrature point type
+    !! currently this variable is not used
+    CHARACTER(*), INTENT(IN) :: refTriangle
+    !! Reference triangle ! Biunit ! Unit
+    REAL(DFP), OPTIONAL, INTENT(IN) :: xij(:, :)
+    !! nodal coordinates of triangle.
+    !! The number of rows in xij can be 2 or 3.
+    !! The number of columns in xij should be 3
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    !! Quadrature points
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+   !! number of rows and columns written in ans
+  END SUBROUTINE TensorQuadraturePoint_Triangle1_
+END INTERFACE TensorQuadraturePoint_Triangle_
 
 !----------------------------------------------------------------------------
 !                                            TensorQuadraturePoints_Triangle
@@ -1380,12 +1568,37 @@ INTERFACE TensorQuadraturePoint_Triangle
 END INTERFACE TensorQuadraturePoint_Triangle
 
 !----------------------------------------------------------------------------
-!                                          LagrangeGradientEvalAll_Triangle
+!
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date:  2023-06-23
-! summary: Evaluate Lagrange polynomials of n at several points
+INTERFACE TensorQuadraturePoint_Triangle_
+  MODULE SUBROUTINE TensorQuadraturePoint_Triangle2_(nipsx, nipsy, quadType, &
+                                            refTriangle, xij, ans, nrow, ncol)
+    INTEGER(I4B), INTENT(IN) :: nipsx(1)
+    !! number of integration points in x direction
+    INTEGER(I4B), INTENT(IN) :: nipsy(1)
+    !! number of integration points in y direction
+    INTEGER(I4B), INTENT(IN) :: quadType
+    !! quadrature point type
+    !! currently this variable is not used
+    CHARACTER(*), INTENT(IN) :: refTriangle
+    !! Reference triangle
+    !! Biunit
+    !! Unit
+    REAL(DFP), OPTIONAL, INTENT(IN) :: xij(:, :)
+    !! nodal coordinates of triangle.
+    !! The number of rows in xij can be 2 or 3.
+    !! The number of columns in xij should be 3
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    !! Quadrature points
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+    !! number of rows and columns written in ans
+  END SUBROUTINE TensorQuadraturePoint_Triangle2_
+END INTERFACE TensorQuadraturePoint_Triangle_
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
 
 INTERFACE LagrangeGradientEvalAll_Triangle
   MODULE FUNCTION LagrangeGradientEvalAll_Triangle1( &
@@ -1439,6 +1652,57 @@ INTERFACE LagrangeGradientEvalAll_Triangle
 END INTERFACE LagrangeGradientEvalAll_Triangle
 
 !----------------------------------------------------------------------------
+!                                          LagrangeGradientEvalAll_Triangle
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2023-06-23
+! summary: Evaluate Lagrange polynomials of n at several points
+
+INTERFACE LagrangeGradientEvalAll_Triangle_
+  MODULE SUBROUTINE LagrangeGradientEvalAll_Triangle1_(order, x, xij, ans, &
+          dim1, dim2, dim3, refTriangle, coeff, firstCall, basisType, alpha, &
+                                                       beta, lambda)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order of Lagrange polynomials
+    REAL(DFP), INTENT(IN) :: x(:, :)
+    !! point of evaluation in xij format
+    REAL(DFP), INTENT(INOUT) :: xij(:, :)
+    !! interpolation points
+    !! xij should be present when firstCall is true.
+    !! It is used for computing the coeff
+    !! If coeff is absent then xij should be present
+    REAL(DFP), INTENT(INOUT) :: ans(:, :, :)
+    !! ans(SIZE(x, 2), SIZE(xij, 2), 2)
+    !! Value of gradient of nth order Lagrange polynomials at point x
+    !! The first index denotes point of evaluation
+    !! the second index denotes Lagrange polynomial number
+    !! The third index denotes the spatial dimension in which gradient is
+    !! computed
+    INTEGER(I4B), INTENT(OUT) :: dim1, dim2, dim3
+    !! SIZE(x, 2), SIZE(xij, 2), 2
+    CHARACTER(*), INTENT(IN) :: refTriangle
+    !! Reference triangle
+    !! Biunit
+    !! Unit
+    REAL(DFP), OPTIONAL, INTENT(INOUT) :: coeff(:, :)
+    !! coefficient of Lagrange polynomials
+    LOGICAL(LGT), OPTIONAL :: firstCall
+    !! If firstCall is true, then coeff will be made
+    !! If firstCall is False, then coeff will be used
+    !! Default value of firstCall is True
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: basisType
+    !! Monomial ! Jacobi ! Legendre ! Chebyshev ! Lobatto ! UnscaledLobatto
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
+    !! Jacobi polynomial parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: beta
+    !! Jacobi polynomial parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: lambda
+    !! Ultraspherical parameter
+  END SUBROUTINE LagrangeGradientEvalAll_Triangle1_
+END INTERFACE LagrangeGradientEvalAll_Triangle_
+
+!----------------------------------------------------------------------------
 !                                        HeirarchicalBasisGradient_Triangle
 !----------------------------------------------------------------------------
 
@@ -1447,8 +1711,8 @@ END INTERFACE LagrangeGradientEvalAll_Triangle
 ! summary:  Evaluate all modal basis (heirarchical polynomial) on Triangle
 
 INTERFACE HeirarchicalBasisGradient_Triangle
-  MODULE FUNCTION HeirarchicalBasisGradient_Triangle1(order, pe1, pe2, pe3,&
-    & xij, refTriangle) RESULT(ans)
+  MODULE FUNCTION HeirarchicalBasisGradient_Triangle1(order, pe1, pe2, pe3, &
+                                                 xij, refTriangle) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
     !! Order of approximation inside the triangle (i.e., cell)
     !! it should be greater than 2 for cell bubble to exist
@@ -1483,8 +1747,8 @@ END INTERFACE HeirarchicalBasisGradient_Triangle
 ! summary:  Evaluate all modal basis (heirarchical polynomial) on Triangle
 
 INTERFACE HeirarchicalBasisGradient_Triangle_
- MODULE SUBROUTINE HeirarchicalBasisGradient_Triangle1_(order, pe1, pe2, pe3,&
-          & xij, refTriangle, ans, tsize1, tsize2, tsize3)
+  MODULE SUBROUTINE HeirarchicalBasisGradient_Triangle1_(order, pe1, pe2, &
+                           pe3, xij, refTriangle, ans, tsize1, tsize2, tsize3)
     INTEGER(I4B), INTENT(IN) :: order
     !! Order of approximation inside the triangle (i.e., cell)
     !! it should be greater than 2 for cell bubble to exist
@@ -1505,11 +1769,54 @@ INTERFACE HeirarchicalBasisGradient_Triangle_
     !! UNIT: in this case xij is in unit Triangle.
     !! BIUNIT: in this case xij is in biunit triangle.
     REAL(DFP), INTENT(INOUT) :: ans(:, :, :)
-     !! ans( &
-     !!  & SIZE(xij, 2), &
-     !!  & pe1 + pe2 + pe3 + INT((order - 1) * (order - 2) / 2), 2)
+     !! tsize1 = SIZE(xij, 2)
+     !! tsize2 = pe1 + pe2 + pe3 + INT((order - 1) * (order - 2) / 2)
+     !! tsize3 = 2
     INTEGER(I4B), INTENT(OUT) :: tsize1, tsize2, tsize3
   END SUBROUTINE HeirarchicalBasisGradient_Triangle1_
+END INTERFACE HeirarchicalBasisGradient_Triangle_
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE HeirarchicalBasisGradient_Triangle_
+  MODULE SUBROUTINE HeirarchicalBasisGradient_Triangle2_(order, pe1, pe2, &
+                pe3, xij, edgeOrient1, edgeOrient2, edgeOrient3, faceOrient, &
+                                     refTriangle, ans, tsize1, tsize2, tsize3)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! Order of approximation inside the triangle (i.e., cell)
+    !! it should be greater than 2 for cell bubble to exist
+    INTEGER(I4B), INTENT(IN) :: pe1
+    !! Order of interpolation on edge e1
+    !! It should be greater than 1 for edge bubble to exists
+    INTEGER(I4B), INTENT(IN) :: pe2
+    !! Order of interpolation on edge e2
+    !! It should be greater than 1 for edge bubble to exists
+    INTEGER(I4B), INTENT(IN) :: pe3
+    !! Order of interpolation on edge e3
+    !! It should be greater than 1 for edge bubble to exists
+    REAL(DFP), INTENT(IN) :: xij(:, :)
+    !! Points of evaluation in xij format
+    INTEGER(I4B), INTENT(IN) :: edgeOrient1
+    !! edge orientation, 1 or -1
+    INTEGER(I4B), INTENT(IN) :: edgeOrient2
+    !! edge orientation, 1 or -1
+    INTEGER(I4B), INTENT(IN) :: edgeOrient3
+    !! edge orientation, 1 or -1
+    INTEGER(I4B), INTENT(IN) :: faceOrient(:)
+    !! orientation of face
+    CHARACTER(*), INTENT(IN) :: refTriangle
+    !! This parameter denotes the type of reference triangle.
+    !! It can take following values:
+    !! UNIT: in this case xij is in unit Triangle.
+    !! BIUNIT: in this case xij is in biunit triangle.
+    REAL(DFP), INTENT(INOUT) :: ans(:, :, :)
+     !! tsize1 = SIZE(xij, 2)
+     !! tsize2 = pe1 + pe2 + pe3 + INT((order - 1) * (order - 2) / 2)
+     !! tsize3 = 2
+    INTEGER(I4B), INTENT(OUT) :: tsize1, tsize2, tsize3
+  END SUBROUTINE HeirarchicalBasisGradient_Triangle2_
 END INTERFACE HeirarchicalBasisGradient_Triangle_
 
 !----------------------------------------------------------------------------
@@ -1550,10 +1857,8 @@ END INTERFACE HeirarchicalBasisGradient_Triangle_
 !$$
 
 INTERFACE OrthogonalBasisGradient_Triangle
-  MODULE FUNCTION OrthogonalBasisGradient_Triangle1( &
-    & order, &
-    & xij, &
-    & refTriangle) RESULT(ans)
+  MODULE FUNCTION OrthogonalBasisGradient_Triangle1(order, xij, refTriangle) &
+    RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
     !! order of polynomial space
     REAL(DFP), INTENT(IN) :: xij(:, :)

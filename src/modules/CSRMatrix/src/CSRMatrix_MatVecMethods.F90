@@ -17,7 +17,7 @@
 
 MODULE CSRMatrix_MatVecMethods
 USE GlobalData, ONLY: I4B, DFP, LGT
-USE BaseType, ONLY: CSRMatrix_
+USE BaseType, ONLY: CSRMatrix_, RealVector_
 IMPLICIT NONE
 PRIVATE
 
@@ -216,7 +216,7 @@ END INTERFACE AtMatvec
 
 INTERFACE MatVec
   MODULE SUBROUTINE csrMat_MatVec1(obj, x, y, isTranspose, addContribution, &
-    & scale)
+                                   scale)
     TYPE(CSRMatrix_), INTENT(IN) :: obj
     REAL(DFP), INTENT(IN) :: x(:)
     REAL(DFP), INTENT(INOUT) :: y(:)
@@ -240,7 +240,7 @@ END INTERFACE MatVec
 
 INTERFACE MatVec
   MODULE SUBROUTINE csrMat_MatVec2(A, JA, x, y, addContribution, &
-    & scale)
+                                   scale)
     REAL(DFP), INTENT(IN) :: A(:)
     INTEGER(I4B), INTENT(IN) :: JA(:)
     REAL(DFP), INTENT(IN) :: x(:)
@@ -248,6 +248,22 @@ INTERFACE MatVec
     LOGICAL(LGT), OPTIONAL, INTENT(IN) :: addContribution
     REAL(DFP), OPTIONAL, INTENT(IN) :: scale
   END SUBROUTINE csrMat_MatVec2
+END INTERFACE MatVec
+
+!----------------------------------------------------------------------------
+!                                                             Matvec@MatVec
+!----------------------------------------------------------------------------
+
+INTERFACE MatVec
+  MODULE SUBROUTINE csrMat_MatVec3(obj, x, y, isTranspose, addContribution, &
+                                   scale)
+    TYPE(CSRMatrix_), INTENT(IN) :: obj
+    TYPE(RealVector_), INTENT(IN) :: x
+    TYPE(RealVector_), INTENT(INOUT) :: y
+    LOGICAL(LGT), OPTIONAL, INTENT(IN) :: isTranspose
+    LOGICAL(LGT), OPTIONAL, INTENT(IN) :: addContribution
+    REAL(DFP), OPTIONAL, INTENT(IN) :: scale
+  END SUBROUTINE csrMat_MatVec3
 END INTERFACE MatVec
 
 !----------------------------------------------------------------------------

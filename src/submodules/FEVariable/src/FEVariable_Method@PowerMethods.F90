@@ -16,7 +16,17 @@
 !
 
 SUBMODULE(FEVariable_Method) PowerMethods
-USE BaseMethod
+USE GlobalData, ONLY: Constant, Space, Time, SpaceTime, &
+                      Scalar, Vector, Matrix, &
+                      Nodal, Quadrature
+USE BaseType, ONLY: TypeFEVariableScalar, &
+                    TypeFEVariableVector, &
+                    TypeFEVariableMatrix, &
+                    TypeFEVariableConstant, &
+                    TypeFEVariableSpace, &
+                    TypeFEVariableTime, &
+                    TypeFEVariableSpaceTime
+
 IMPLICIT NONE
 CONTAINS
 
@@ -26,18 +36,13 @@ CONTAINS
 
 MODULE PROCEDURE fevar_power
 SELECT CASE (obj%rank)
-!!
-CASE (SCALAR)
-#include "./ScalarPower.inc"
-!!
-CASE (VECTOR)
-#include "./VectorPower.inc"
-!!
-CASE (MATRIX)
-#include "./MatrixPower.inc"
-!!
+CASE (scalar)
+#include "./include/ScalarPower.F90"
+CASE (vector)
+#include "./include/VectorPower.F90"
+CASE (matrix)
+#include "./include/MatrixPower.F90"
 END SELECT
-!!
 END PROCEDURE fevar_power
 
 !----------------------------------------------------------------------------

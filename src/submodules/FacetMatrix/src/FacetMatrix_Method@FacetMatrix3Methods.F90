@@ -26,55 +26,55 @@ CONTAINS
 
 MODULE PROCEDURE FacetMatrix3_1
   !!
-  REAL( DFP ), ALLOCATABLE :: realval( : ), masterC1( :, : ), &
-    & G12( :, :, : ), m4( :, :, :, : ), i3( :, : )
-  INTEGER( I4B ) :: ips, ii, nips, nns1, nns2, nsd1, nsd2, nsd, jj
+REAL(DFP), ALLOCATABLE :: realval(:), masterC1(:, :), &
+  & G12(:, :, :), m4(:, :, :, :), i3(:, :)
+INTEGER(I4B) :: ips, ii, nips, nns1, nns2, nsd1, nsd2, nsd, jj
   !!
-  nns1 = SIZE( elemsd%dNdXt, 1 )
-  nsd = SIZE( elemsd%dNdXt, 2 )
-  nips = SIZE( elemsd%dNdXt, 3 )
-  nns2 = SIZE( elemsd%N, 1 )
-  i3 = Eye( nsd )
+nns1 = SIZE(elemsd%dNdXt, 1)
+nsd = SIZE(elemsd%dNdXt, 2)
+nips = SIZE(elemsd%dNdXt, 3)
+nns2 = SIZE(elemsd%N, 1)
+i3 = Eye(nsd)
   !!
-  IF( opt .EQ. 1 ) THEN
-    nsd1 = nsd
-    nsd2 = 1
-  ELSE
-    nsd1 = 1
-    nsd2 = nsd
-  END IF
+IF (opt .EQ. 1) THEN
+  nsd1 = nsd
+  nsd2 = 1
+ELSE
+  nsd1 = 1
+  nsd2 = nsd
+END IF
   !!
-  CALL Reallocate(G12, nns1, nsd, nsd)
-  CALL Reallocate(m4, nns1, nns2, nsd1, nsd2)
+CALL Reallocate(G12, nns1, nsd, nsd)
+CALL Reallocate(m4, nns1, nns2, nsd1, nsd2)
   !!
-  CALL getProjectionOfdNdXt( &
-    & obj=elemsd, &
-    & cdNdXt=masterC1, &
-    & val=elemsd%normal )
+CALL getProjectionOfdNdXt( &
+  & obj=elemsd, &
+  & cdNdXt=masterC1, &
+  & val=elemsd%normal)
   !!
-  realval = elemsd%js * elemsd%ws * elemsd%thickness
+realval = elemsd%js * elemsd%ws * elemsd%thickness
   !!
-  DO ips = 1, nips
+DO ips = 1, nips
     !!
-    G12 = OUTERPROD( masterC1( :, ips ), i3 ) &
-      & + OUTERPROD( elemsd%dNdXt( :, :, ips ),  &
-      & elemsd%normal( 1:nsd, ips ) )
+  G12 = OUTERPROD(masterC1(:, ips), i3) &
+    & + OUTERPROD(elemsd%dNdXt(:, :, ips),  &
+    & elemsd%normal(1:nsd, ips))
     !!
-    DO jj = 1, nsd2
-      DO ii = 1, nsd1
-        m4( :, :, ii, jj ) = m4( :, :, ii, jj ) &
-          & + realval( ips ) * OUTERPROD( &
-          & MATMUL( &
-          & G12( :, :, ii+jj-1 ), elemsd%normal( 1:nsd, ips ) ), &
-          & elemsd%N( :, ips ) )
-      END DO
+  DO jj = 1, nsd2
+    DO ii = 1, nsd1
+      m4(:, :, ii, jj) = m4(:, :, ii, jj) &
+        & + realval(ips) * OUTERPROD( &
+        & MATMUL( &
+        & G12(:, :, ii + jj - 1), elemsd%normal(1:nsd, ips)), &
+        & elemsd%N(:, ips))
     END DO
-    !!
   END DO
+    !!
+END DO
   !!
-  CALL Convert( from=m4, to=ans )
+CALL Convert(from=m4, to=ans)
   !!
-  DEALLOCATE( m4, realval, masterC1, G12, i3 )
+DEALLOCATE (m4, realval, masterC1, G12, i3)
   !!
 END PROCEDURE FacetMatrix3_1
 
@@ -84,55 +84,55 @@ END PROCEDURE FacetMatrix3_1
 
 MODULE PROCEDURE FacetMatrix3_2
   !!
-  REAL( DFP ), ALLOCATABLE :: realval( : ), masterC1( :, : ), &
-    & G12( :, :, : ), m4( :, :, :, : ), i3( :, : )
-  INTEGER( I4B ) :: ips, ii, nips, nns1, nns2, nsd, jj, nsd1, nsd2
+REAL(DFP), ALLOCATABLE :: realval(:), masterC1(:, :), &
+  & G12(:, :, :), m4(:, :, :, :), i3(:, :)
+INTEGER(I4B) :: ips, ii, nips, nns1, nns2, nsd, jj, nsd1, nsd2
   !!
-  nns1 = SIZE( elemsd%dNdXt, 1 )
-  nsd = SIZE( elemsd%dNdXt, 2 )
-  nips = SIZE( elemsd%dNdXt, 3 )
-  nns2 = SIZE( elemsd%N, 1 )
-  i3 = Eye( nsd )
+nns1 = SIZE(elemsd%dNdXt, 1)
+nsd = SIZE(elemsd%dNdXt, 2)
+nips = SIZE(elemsd%dNdXt, 3)
+nns2 = SIZE(elemsd%N, 1)
+i3 = Eye(nsd)
   !!
-  IF( opt .EQ. 1 ) THEN
-    nsd1 = nsd
-    nsd2 = 1
-  ELSE
-    nsd1 = 1
-    nsd2 = nsd
-  END IF
+IF (opt .EQ. 1) THEN
+  nsd1 = nsd
+  nsd2 = 1
+ELSE
+  nsd1 = 1
+  nsd2 = nsd
+END IF
   !!
-  CALL Reallocate(G12, nns1, nsd, nsd)
-  CALL Reallocate(m4, nns1, nns2, nsd1, nsd2)
+CALL Reallocate(G12, nns1, nsd, nsd)
+CALL Reallocate(m4, nns1, nns2, nsd1, nsd2)
   !!
-  CALL getProjectionOfdNdXt( &
-    & obj=elemsd, &
-    & cdNdXt=masterC1, &
-    & val=elemsd%normal )
+CALL getProjectionOfdNdXt( &
+  & obj=elemsd, &
+  & cdNdXt=masterC1, &
+  & val=elemsd%normal)
   !!
-  realval = elemsd%js * elemsd%ws * elemsd%thickness * mu
+realval = elemsd%js * elemsd%ws * elemsd%thickness * mu
   !!
-  DO ips = 1, nips
+DO ips = 1, nips
     !!
-    G12 = OUTERPROD( masterC1( :, ips ), i3 ) &
-      & + OUTERPROD( elemsd%dNdXt( :, :, ips ),  &
-      & elemsd%normal( 1:nsd, ips ) )
+  G12 = OUTERPROD(masterC1(:, ips), i3) &
+    & + OUTERPROD(elemsd%dNdXt(:, :, ips),  &
+    & elemsd%normal(1:nsd, ips))
     !!
-    DO jj = 1, nsd2
-      DO ii = 1, nsd1
-        m4( :, :, ii, jj ) = m4( :, :, ii, jj ) &
-          & + realval( ips ) * OUTERPROD( &
-            & MATMUL( &
-            & G12( :, :, ii+jj-1 ), elemsd%normal( 1:nsd, ips ) ), &
-            & elemsd%N( :, ips ) )
-      END DO
+  DO jj = 1, nsd2
+    DO ii = 1, nsd1
+      m4(:, :, ii, jj) = m4(:, :, ii, jj) &
+        & + realval(ips) * OUTERPROD( &
+          & MATMUL( &
+          & G12(:, :, ii + jj - 1), elemsd%normal(1:nsd, ips)), &
+          & elemsd%N(:, ips))
     END DO
-    !!
   END DO
+    !!
+END DO
   !!
-  CALL Convert( from=m4, to=ans )
+CALL Convert(from=m4, to=ans)
   !!
-  DEALLOCATE( m4, realval, masterC1, G12 )
+DEALLOCATE (m4, realval, masterC1, G12)
   !!
 END PROCEDURE FacetMatrix3_2
 
@@ -142,57 +142,57 @@ END PROCEDURE FacetMatrix3_2
 
 MODULE PROCEDURE FacetMatrix3_3
   !!
-  REAL( DFP ), ALLOCATABLE :: realval( : ), masterC1( :, : ), &
-    & G12( :, :, : ), m4( :, :, :, : ), taubar( : ), i3( :, : )
-  INTEGER( I4B ) :: ips, ii, nips, nns1, nns2, nsd, jj, nsd1, nsd2
+REAL(DFP), ALLOCATABLE :: realval(:), masterC1(:, :), &
+  & G12(:, :, :), m4(:, :, :, :), taubar(:), i3(:, :)
+INTEGER(I4B) :: ips, ii, nips, nns1, nns2, nsd, jj, nsd1, nsd2
   !!
-  nns1 = SIZE( elemsd%dNdXt, 1 )
-  nsd = SIZE( elemsd%dNdXt, 2 )
-  nips = SIZE( elemsd%dNdXt, 3 )
-  nns2 = SIZE( elemsd%N, 1 )
-  i3 = Eye( nsd )
+nns1 = SIZE(elemsd%dNdXt, 1)
+nsd = SIZE(elemsd%dNdXt, 2)
+nips = SIZE(elemsd%dNdXt, 3)
+nns2 = SIZE(elemsd%N, 1)
+i3 = Eye(nsd)
   !!
-  IF( opt .EQ. 1 ) THEN
-    nsd1 = nsd
-    nsd2 = 1
-  ELSE
-    nsd1 = 1
-    nsd2 = nsd
-  END IF
+IF (opt .EQ. 1) THEN
+  nsd1 = nsd
+  nsd2 = 1
+ELSE
+  nsd1 = 1
+  nsd2 = nsd
+END IF
   !!
-  CALL Reallocate(G12, nns1, nsd, nsd)
-  CALL Reallocate(m4, nns1, nns2, nsd1, nsd2)
+CALL Reallocate(G12, nns1, nsd, nsd)
+CALL Reallocate(m4, nns1, nns2, nsd1, nsd2)
   !!
-  CALL getProjectionOfdNdXt( &
-    & obj=elemsd, &
-    & cdNdXt=masterC1, &
-    & val=elemsd%normal )
+CALL getProjectionOfdNdXt( &
+  & obj=elemsd, &
+  & cdNdXt=masterC1, &
+  & val=elemsd%normal)
   !!
-  CALL getInterpolation(obj=elemsd, Interpol=taubar, val=tauvar)
+CALL getInterpolation(obj=elemsd, Interpol=taubar, val=tauvar)
   !!
-  realval = elemsd%js * elemsd%ws * elemsd%thickness * mu * taubar
+realval = elemsd%js * elemsd%ws * elemsd%thickness * mu * taubar
   !!
-  DO ips = 1, nips
+DO ips = 1, nips
     !!
-    G12 = OUTERPROD( masterC1( :, ips ), i3 ) &
-      & + OUTERPROD( elemsd%dNdXt( :, :, ips ),  &
-      & elemsd%normal( 1:nsd, ips ) )
+  G12 = OUTERPROD(masterC1(:, ips), i3) &
+    & + OUTERPROD(elemsd%dNdXt(:, :, ips),  &
+    & elemsd%normal(1:nsd, ips))
     !!
-    DO jj = 1, nsd2
-      DO ii = 1, nsd1
-        m4( :, :, ii, jj ) = m4( :, :, ii, jj ) &
-          & + realval( ips ) * OUTERPROD( &
-          & MATMUL( &
-          & G12( :, :, ii+jj-1 ), elemsd%normal( 1:nsd, ips ) ), &
-          & elemsd%N( :, ips ) )
-      END DO
+  DO jj = 1, nsd2
+    DO ii = 1, nsd1
+      m4(:, :, ii, jj) = m4(:, :, ii, jj) &
+        & + realval(ips) * OUTERPROD( &
+        & MATMUL( &
+        & G12(:, :, ii + jj - 1), elemsd%normal(1:nsd, ips)), &
+        & elemsd%N(:, ips))
     END DO
-    !!
   END DO
+    !!
+END DO
   !!
-  CALL Convert( from=m4, to=ans )
+CALL Convert(from=m4, to=ans)
   !!
-  DEALLOCATE( m4, realval, masterC1, G12, taubar, i3 )
+DEALLOCATE (m4, realval, masterC1, G12, taubar, i3)
   !!
 END PROCEDURE FacetMatrix3_3
 
@@ -202,59 +202,59 @@ END PROCEDURE FacetMatrix3_3
 
 MODULE PROCEDURE FacetMatrix3_4
   !!
-  REAL( DFP ), ALLOCATABLE :: realval( : ), masterC1( :, : ), &
-    & G12( :, :, : ), m4( :, :, :, : ), mubar( : ), i3( :, : )
-  INTEGER( I4B ) :: ips, ii, nips, nns1, nns2, nsd, jj, nsd1, nsd2
+REAL(DFP), ALLOCATABLE :: realval(:), masterC1(:, :), &
+  & G12(:, :, :), m4(:, :, :, :), mubar(:), i3(:, :)
+INTEGER(I4B) :: ips, ii, nips, nns1, nns2, nsd, jj, nsd1, nsd2
   !!
-  nns1 = SIZE( elemsd%dNdXt, 1 )
-  nsd = SIZE( elemsd%dNdXt, 2 )
-  nips = SIZE( elemsd%dNdXt, 3 )
-  nns2 = SIZE( elemsd%N, 1 )
-  i3 = Eye( nsd )
+nns1 = SIZE(elemsd%dNdXt, 1)
+nsd = SIZE(elemsd%dNdXt, 2)
+nips = SIZE(elemsd%dNdXt, 3)
+nns2 = SIZE(elemsd%N, 1)
+i3 = Eye(nsd)
   !!
-  IF( opt .EQ. 1 ) THEN
-    nsd1 = nsd
-    nsd2 = 1
-  ELSE
-    nsd1 = 1
-    nsd2 = nsd
-  END IF
+IF (opt .EQ. 1) THEN
+  nsd1 = nsd
+  nsd2 = 1
+ELSE
+  nsd1 = 1
+  nsd2 = nsd
+END IF
   !!
-  CALL Reallocate(G12, nns1, nsd, nsd)
-  CALL Reallocate(m4, nns1, nns2, nsd1, nsd2)
+CALL Reallocate(G12, nns1, nsd, nsd)
+CALL Reallocate(m4, nns1, nns2, nsd1, nsd2)
   !!
-  CALL getProjectionOfdNdXt( &
-    & obj=elemsd, &
-    & cdNdXt=masterC1, &
-    & val=elemsd%normal )
+CALL getProjectionOfdNdXt( &
+  & obj=elemsd, &
+  & cdNdXt=masterC1, &
+  & val=elemsd%normal)
   !!
-  CALL getInterpolation(obj=elemsd, Interpol=mubar, val=mu)
+CALL getInterpolation(obj=elemsd, Interpol=mubar, val=mu)
   !!
-  realval = elemsd%js * elemsd%ws * elemsd%thickness * mubar
+realval = elemsd%js * elemsd%ws * elemsd%thickness * mubar
   !!
-  DO ips = 1, nips
+DO ips = 1, nips
     !!
-    G12 = OUTERPROD( masterC1( :, ips ), eye( nsd, 1.0_DFP ) ) &
-      & + OUTERPROD( elemsd%dNdXt( :, :, ips ),  &
-      & elemsd%normal( 1:nsd, ips ) )
+  G12 = OUTERPROD(masterC1(:, ips), eye(nsd, 1.0_DFP)) &
+    & + OUTERPROD(elemsd%dNdXt(:, :, ips),  &
+    & elemsd%normal(1:nsd, ips))
     !!
-    DO jj = 1, nsd2
-      DO ii = 1, nsd1
+  DO jj = 1, nsd2
+    DO ii = 1, nsd1
         !!
-        m4( :, :, ii, jj ) = m4( :, :, ii, jj ) &
-          & + realval( ips ) * OUTERPROD( &
-            & MATMUL( &
-            & G12( :, :, ii+jj-1 ), elemsd%normal( 1:nsd, ips ) ), &
-            & elemsd%N( :, ips ) )
+      m4(:, :, ii, jj) = m4(:, :, ii, jj) &
+        & + realval(ips) * OUTERPROD( &
+          & MATMUL( &
+          & G12(:, :, ii + jj - 1), elemsd%normal(1:nsd, ips)), &
+          & elemsd%N(:, ips))
         !!
-      END DO
     END DO
-    !!
   END DO
+    !!
+END DO
   !!
-  CALL Convert( from=m4, to=ans )
+CALL Convert(from=m4, to=ans)
   !!
-  DEALLOCATE( m4, realval, masterC1, G12, mubar, i3 )
+DEALLOCATE (m4, realval, masterC1, G12, mubar, i3)
   !!
 END PROCEDURE FacetMatrix3_4
 
@@ -264,60 +264,60 @@ END PROCEDURE FacetMatrix3_4
 
 MODULE PROCEDURE FacetMatrix3_5
   !!
-  REAL( DFP ), ALLOCATABLE :: realval( : ), masterC1( :, : ), &
-    & G12( :, :, : ), m4( :, :, :, : ), mubar( : ), taubar( : ), i3( :, : )
-  INTEGER( I4B ) :: ips, ii, nips, nns1, nns2, nsd, nsd1, nsd2, jj
+REAL(DFP), ALLOCATABLE :: realval(:), masterC1(:, :), &
+  & G12(:, :, :), m4(:, :, :, :), mubar(:), taubar(:), i3(:, :)
+INTEGER(I4B) :: ips, ii, nips, nns1, nns2, nsd, nsd1, nsd2, jj
   !!
-  nns1 = SIZE( elemsd%dNdXt, 1 )
-  nsd = SIZE( elemsd%dNdXt, 2 )
-  nips = SIZE( elemsd%dNdXt, 3 )
-  nns2 = SIZE( elemsd%N, 1 )
-  i3 = Eye( nsd )
+nns1 = SIZE(elemsd%dNdXt, 1)
+nsd = SIZE(elemsd%dNdXt, 2)
+nips = SIZE(elemsd%dNdXt, 3)
+nns2 = SIZE(elemsd%N, 1)
+i3 = Eye(nsd)
   !!
-  IF( opt .EQ. 1 ) THEN
-    nsd1 = nsd
-    nsd2 = 1
-  ELSE
-    nsd1 = 1
-    nsd2 = nsd
-  END IF
+IF (opt .EQ. 1) THEN
+  nsd1 = nsd
+  nsd2 = 1
+ELSE
+  nsd1 = 1
+  nsd2 = nsd
+END IF
   !!
-  CALL Reallocate(G12, nns1, nsd, nsd)
-  CALL Reallocate(m4, nns1, nns2, nsd1, nsd2)
+CALL Reallocate(G12, nns1, nsd, nsd)
+CALL Reallocate(m4, nns1, nns2, nsd1, nsd2)
   !!
-  CALL getProjectionOfdNdXt( &
-    & obj=elemsd, &
-    & cdNdXt=masterC1, &
-    & val=elemsd%normal )
+CALL getProjectionOfdNdXt( &
+  & obj=elemsd, &
+  & cdNdXt=masterC1, &
+  & val=elemsd%normal)
   !!
-  CALL getInterpolation(obj=elemsd, Interpol=mubar, val=mu)
-  CALL getInterpolation(obj=elemsd, Interpol=taubar, val=tauvar)
+CALL getInterpolation(obj=elemsd, Interpol=mubar, val=mu)
+CALL getInterpolation(obj=elemsd, Interpol=taubar, val=tauvar)
   !!
-  realval = elemsd%js * elemsd%ws * elemsd%thickness * mubar * taubar
+realval = elemsd%js * elemsd%ws * elemsd%thickness * mubar * taubar
   !!
-  DO ips = 1, nips
+DO ips = 1, nips
     !!
-    G12 = OUTERPROD( masterC1( :, ips ), eye( nsd, 1.0_DFP ) ) &
-      & + OUTERPROD( elemsd%dNdXt( :, :, ips ),  &
-      & elemsd%normal( 1:nsd, ips ) )
+  G12 = OUTERPROD(masterC1(:, ips), eye(nsd, 1.0_DFP)) &
+    & + OUTERPROD(elemsd%dNdXt(:, :, ips),  &
+    & elemsd%normal(1:nsd, ips))
     !!
-    DO jj = 1, nsd2
-      DO ii = 1, nsd1
+  DO jj = 1, nsd2
+    DO ii = 1, nsd1
         !!
-        m4( :, :, ii, jj ) = m4( :, :, ii, jj ) &
-          & + realval( ips ) * OUTERPROD( &
-            & MATMUL( &
-            & G12( :, :, ii+jj-1 ), elemsd%normal( 1:nsd, ips ) ), &
-            & elemsd%N( :, ips ) )
+      m4(:, :, ii, jj) = m4(:, :, ii, jj) &
+        & + realval(ips) * OUTERPROD( &
+          & MATMUL( &
+          & G12(:, :, ii + jj - 1), elemsd%normal(1:nsd, ips)), &
+          & elemsd%N(:, ips))
         !!
-      END DO
     END DO
-    !!
   END DO
+    !!
+END DO
   !!
-  CALL Convert( from=m4, to=ans )
+CALL Convert(from=m4, to=ans)
   !!
-  DEALLOCATE( m4, realval, masterC1, G12, mubar, taubar )
+DEALLOCATE (m4, realval, masterC1, G12, mubar, taubar)
   !!
 END PROCEDURE FacetMatrix3_5
 

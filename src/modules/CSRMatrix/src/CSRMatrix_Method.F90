@@ -16,34 +16,34 @@
 !
 
 MODULE CSRMatrix_Method
-USE CSRMatrix_ConstructorMethods
-USE CSRMatrix_IOMethods
-USE CSRMatrix_SparsityMethods
-USE CSRMatrix_SetMethods
 USE CSRMatrix_AddMethods
-USE CSRMatrix_SetRowMethods
-USE CSRMatrix_SetColMethods
-USE CSRMatrix_SetBlockRowMethods
-USE CSRMatrix_SetBlockColMethods
+USE CSRMatrix_ConstructorMethods
+USE CSRMatrix_DBCMethods
+USE CSRMatrix_DiagonalScalingMethods
+USE CSRMatrix_GetBlockColMethods
+USE CSRMatrix_GetBlockRowMethods
+USE CSRMatrix_GetColMethods
 USE CSRMatrix_GetMethods
 USE CSRMatrix_GetRowMethods
-USE CSRMatrix_GetColMethods
 USE CSRMatrix_GetSubMatrixMethods
-USE CSRMatrix_GetBlockRowMethods
-USE CSRMatrix_GetBlockColMethods
-USE CSRMatrix_UnaryMethods
 USE CSRMatrix_ILUMethods
+USE CSRMatrix_IOMethods
 USE CSRMatrix_LUSolveMethods
-USE CSRMatrix_MatVecMethods
-USE CSRMatrix_SymMatmulMethods
-USE CSRMatrix_ReorderingMethods
-USE CSRMatrix_DiagonalScalingMethods
-USE CSRMatrix_MatrixMarketIO
-USE CSRMatrix_Superlu
-USE CSRMatrix_SpectralMethods
-USE CSRMatrix_SchurMethods
-USE CSRMatrix_DBCMethods
 USE CSRMatrix_LinSolveMethods
+USE CSRMatrix_MatVecMethods
+USE CSRMatrix_MatrixMarketIO
+USE CSRMatrix_ReorderingMethods
+USE CSRMatrix_SchurMethods
+USE CSRMatrix_SetBlockColMethods
+USE CSRMatrix_SetBlockRowMethods
+USE CSRMatrix_SetColMethods
+USE CSRMatrix_SetMethods
+USE CSRMatrix_SetRowMethods
+USE CSRMatrix_SparsityMethods
+USE CSRMatrix_SpectralMethods
+USE CSRMatrix_Superlu
+USE CSRMatrix_SymMatmulMethods
+USE CSRMatrix_UnaryMethods
 USE GlobalData, ONLY: I4B
 INTEGER(I4B), PARAMETER, PUBLIC :: SPARSE_FMT_CSR = 0
 INTEGER(I4B), PARAMETER, PUBLIC :: SPARSE_FMT_COO = 1

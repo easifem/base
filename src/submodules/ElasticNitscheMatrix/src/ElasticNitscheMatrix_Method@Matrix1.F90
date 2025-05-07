@@ -75,7 +75,7 @@ REAL(DFP) :: dd(3, 3)
 nns1 = SIZE(test%N, 1)
 nns2 = SIZE(trial%N, 1)
 nips = SIZE(trial%N, 2)
-nsd = trial%refElem%nsd
+nsd = trial%nsd
 ALLOCATE (ff(nns1, nsd * nns2), realval(nips))
 realval = trial%Ws * trial%Js * trial%Thickness
 ALLOCATE (ans(nns1 * nsd, nns2 * nsd)); ans = 0.0_DFP
@@ -124,7 +124,7 @@ REAL(DFP) :: dd(3, 3)
 nns1 = SIZE(test%N, 1)
 nns2 = SIZE(trial%N, 1)
 nips = SIZE(trial%N, 2)
-nsd = trial%refElem%nsd
+nsd = trial%nsd
 ALLOCATE (ff(nns1, nsd * nns2), realval(nips))
 realval = trial%Ws * trial%Js * trial%Thickness
 ALLOCATE (ans(nns1 * nsd, nns2 * nsd))
@@ -208,7 +208,7 @@ REAL(DFP) :: dd(3, 3)
 nns1 = SIZE(test%N, 1)
 nns2 = SIZE(trial%N, 1)
 nips = SIZE(trial%N, 2)
-nsd = trial%refElem%nsd
+nsd = trial%nsd
 ALLOCATE (ff(nns1, nsd * nns2), realval(nips))
 realval = trial%Ws * trial%Js * trial%Thickness
 ALLOCATE (ans(nns1 * nsd, nns2 * nsd))
@@ -256,7 +256,7 @@ REAL(DFP) :: dd(3, 3)
 nns1 = SIZE(test%N, 1)
 nns2 = SIZE(trial%N, 1)
 nips = SIZE(trial%N, 2)
-nsd = trial%refElem%nsd
+nsd = trial%nsd
 ALLOCATE (ff(nns1, nsd * nns2), realval(nips))
 realval = trial%Ws * trial%Js * trial%Thickness
 ALLOCATE (ans(nns1 * nsd, nns2 * nsd))

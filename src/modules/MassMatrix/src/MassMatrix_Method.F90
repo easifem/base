@@ -26,6 +26,7 @@ IMPLICIT NONE
 PRIVATE
 
 PUBLIC :: MassMatrix
+PUBLIC :: MassMatrix_
 PUBLIC :: ViscousBoundaryMassMatrix
 
 !----------------------------------------------------------------------------
@@ -57,6 +58,20 @@ INTERFACE MassMatrix
 END INTERFACE MassMatrix
 
 !----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE MassMatrix_
+  MODULE PURE SUBROUTINE MassMatrix1_(test, trial, ans, nrow, ncol, opt)
+    CLASS(ElemshapeData_), INTENT(IN) :: test
+    CLASS(ElemshapeData_), INTENT(IN) :: trial
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: opt
+  END SUBROUTINE MassMatrix1_
+END INTERFACE MassMatrix_
+
+!----------------------------------------------------------------------------
 !                                              MassMatrix@MassMatrixMethods
 !----------------------------------------------------------------------------
 
@@ -79,6 +94,23 @@ INTERFACE MassMatrix
     REAL(DFP), ALLOCATABLE :: ans(:, :)
   END FUNCTION MassMatrix_2
 END INTERFACE MassMatrix
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE MassMatrix_
+  MODULE PURE SUBROUTINE MassMatrix2_(test, trial, rho, rhorank, &
+                                      ans, nrow, ncol, opt)
+    CLASS(ElemshapeData_), INTENT(IN) :: test
+    CLASS(ElemshapeData_), INTENT(IN) :: trial
+    CLASS(FEVariable_), INTENT(IN) :: rho
+    TYPE(FEVariableScalar_), INTENT(IN) :: rhorank
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: opt
+  END SUBROUTINE MassMatrix2_
+END INTERFACE MassMatrix_
 
 !----------------------------------------------------------------------------
 !                                              MassMatrix@MassMatrixMethods
@@ -105,6 +137,27 @@ INTERFACE MassMatrix
 END INTERFACE MassMatrix
 
 !----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+!> author: Shion Shimizu
+! date:   2025-03-02
+! summary:  mass matrix in space
+! notice: not implemented yet
+
+INTERFACE MassMatrix_
+  MODULE PURE SUBROUTINE MassMatrix3_(test, trial, rho, &
+                                      opt, nrow, ncol, ans)
+    CLASS(ElemshapeData_), INTENT(IN) :: test
+    CLASS(ElemshapeData_), INTENT(IN) :: trial
+    CLASS(FEVariable_), INTENT(IN) :: rho
+    INTEGER(I4B), INTENT(IN) :: opt
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+  END SUBROUTINE MassMatrix3_
+END INTERFACE MassMatrix_
+
+!----------------------------------------------------------------------------
 !                                              MassMatrix@MassMatrixMethods
 !----------------------------------------------------------------------------
 
@@ -125,6 +178,27 @@ INTERFACE MassMatrix
     REAL(DFP), ALLOCATABLE :: ans(:, :)
   END FUNCTION MassMatrix_4
 END INTERFACE MassMatrix
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+!> author: Shion Shimizu
+! date:   2025-03-02
+! summary:  mass matrix in space
+! notice: not implemented yet
+
+INTERFACE MassMatrix_
+  MODULE PURE SUBROUTINE MassMatrix4_(test, trial, rho, rhorank, &
+                                      nrow, ncol, ans)
+    CLASS(ElemshapeData_), INTENT(IN) :: test
+    CLASS(ElemshapeData_), INTENT(IN) :: trial
+    CLASS(FEVariable_), INTENT(IN) :: rho
+    TYPE(FEVariableMatrix_), INTENT(IN) :: rhorank
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+  END SUBROUTINE MassMatrix4_
+END INTERFACE MassMatrix_
 
 !----------------------------------------------------------------------------
 !                                              MassMatrix@MassMatrixMethods

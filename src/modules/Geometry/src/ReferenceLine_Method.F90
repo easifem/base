@@ -20,10 +20,16 @@
 ! summary: This submodule contains method for [[ReferenceLine_]]
 
 MODULE ReferenceLine_Method
-USE BaseType
-USE GlobalData
+USE BaseType, ONLY: ReferenceTopology_, &
+                    ReferenceElement_, &
+                    ReferenceLine_
+
+USE GlobalData, ONLY: I4B, DFP, LGT
+
 IMPLICIT NONE
+
 PRIVATE
+
 PUBLIC :: Initiate
 PUBLIC :: ReferenceLine
 PUBLIC :: ReferenceLine_Pointer
@@ -54,11 +60,11 @@ INTEGER(I4B), PARAMETER :: MaxOrder_Line = 5_I4B
 #endif
 
 #ifdef REF_LINE_IS_UNIT
-REAL(DFP), PARAMETER :: DEFAULT_Ref_LINE_COORD(3, 2) =  &
-  & RESHAPE([0, 0, 0, 1, 0, 0], [3, 2])
+REAL(DFP), PARAMETER :: DEFAULT_Ref_LINE_COORD(3, 2) = &
+                        RESHAPE([0, 0, 0, 1, 0, 0], [3, 2])
 #else
-REAL(DFP), PARAMETER :: DEFAULT_Ref_LINE_COORD(3, 2) =  &
-  & RESHAPE([-1, 0, 0, 1, 0, 0], [3, 2])
+REAL(DFP), PARAMETER :: DEFAULT_Ref_LINE_COORD(3, 2) = &
+                        RESHAPE([-1, 0, 0, 1, 0, 0], [3, 2])
 #endif
 
 !----------------------------------------------------------------------------
@@ -351,8 +357,7 @@ END INTERFACE ReferenceLine_Pointer
 !```
 
 INTERFACE
-  MODULE SUBROUTINE HighOrderElement_Line(refelem, order, obj, &
-    & ipType)
+  MODULE SUBROUTINE HighOrderElement_Line(refelem, order, obj, ipType)
     CLASS(ReferenceElement_), INTENT(IN) :: refelem
     !! Linear line element
     INTEGER(I4B), INTENT(IN) :: order

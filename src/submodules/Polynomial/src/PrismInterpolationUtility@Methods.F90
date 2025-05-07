@@ -102,6 +102,19 @@ END PROCEDURE GetTotalInDOF_Prism
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE EquidistancePoint_Prism
+INTEGER(I4B) :: nrow, ncol
+nrow = 3
+ncol = LagrangeDOF_Prism(order=order)
+ALLOCATE (ans(nrow, ncol))
+CALL EquidistancePoint_Prism_(order=order, ans=ans, nrow=nrow, ncol=ncol, &
+                              xij=xij)
+END PROCEDURE EquidistancePoint_Prism
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE EquidistancePoint_Prism_
 ! nodecoord( :, 1 ) = [0,0,-1]
 ! nodecoord( :, 2 ) = [1,0,-1]
 ! nodecoord( :, 3 ) = [0,1,-1]
@@ -109,7 +122,9 @@ MODULE PROCEDURE EquidistancePoint_Prism
 ! nodecoord( :, 5 ) = [1,0,1]
 ! nodecoord( :, 6 ) = [0,1,1]
 !ISSUE: #160 Implement EquidistancePoint_Prism routine
-END PROCEDURE EquidistancePoint_Prism
+nrow = 3
+ncol = LagrangeDOF_Prism(order=order)
+END PROCEDURE EquidistancePoint_Prism_
 
 !----------------------------------------------------------------------------
 !                                            EquidistanceInPoint_Prism
@@ -135,17 +150,26 @@ END SELECT
 END PROCEDURE InterpolationPoint_Prism
 
 !----------------------------------------------------------------------------
+!                                                  InterpolationPoint_Prism
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE InterpolationPoint_Prism_
+CALL ErrorMsg(&
+  & msg="InterpolationPoint_Prism_ is not implemented", &
+  & file=__FILE__, &
+  & routine="InterpolationPoint_Prism_", &
+  & line=__LINE__, &
+  & unitno=stderr)
+END PROCEDURE InterpolationPoint_Prism_
+
+!----------------------------------------------------------------------------
 !                                                  LagrangeCoeff_Prism
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE LagrangeCoeff_Prism1
-REAL(DFP), DIMENSION(SIZE(xij, 2), SIZE(xij, 2)) :: V
-INTEGER(I4B), DIMENSION(SIZE(xij, 2)) :: ipiv
-INTEGER(I4B) :: info
-ipiv = 0_I4B; ans = 0.0_DFP; ans(i) = 1.0_DFP
-V = LagrangeVandermonde(order=order, xij=xij, elemType=Prism)
-CALL GetLU(A=V, IPIV=ipiv, info=info)
-CALL LUSolve(A=V, B=ans, IPIV=ipiv, info=info)
+INTEGER(I4B) :: tsize
+CALL LagrangeCoeff_Prism1_(order=order, i=i, xij=xij, ans=ans, &
+                           tsize=tsize)
 END PROCEDURE LagrangeCoeff_Prism1
 
 !----------------------------------------------------------------------------
@@ -153,12 +177,9 @@ END PROCEDURE LagrangeCoeff_Prism1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE LagrangeCoeff_Prism2
-REAL(DFP), DIMENSION(SIZE(v, 1), SIZE(v, 2)) :: vtemp
-INTEGER(I4B), DIMENSION(SIZE(v, 1)) :: ipiv
-INTEGER(I4B) :: info
-vtemp = v; ans = 0.0_DFP; ans(i) = 1.0_DFP; ipiv = 0_I4B
-CALL GetLU(A=vtemp, IPIV=ipiv, info=info)
-CALL LUSolve(A=vtemp, B=ans, IPIV=ipiv, info=info)
+INTEGER(I4B) :: tsize
+CALL LagrangeCoeff_Prism2_(order=order, i=i, v=v, &
+                           isVandermonde=.TRUE., ans=ans, tsize=tsize)
 END PROCEDURE LagrangeCoeff_Prism2
 
 !----------------------------------------------------------------------------
@@ -166,9 +187,9 @@ END PROCEDURE LagrangeCoeff_Prism2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE LagrangeCoeff_Prism3
-INTEGER(I4B) :: info
-ans = 0.0_DFP; ans(i) = 1.0_DFP
-CALL LUSolve(A=v, B=ans, IPIV=ipiv, info=info)
+INTEGER(I4B) :: tsize
+CALL LagrangeCoeff_Prism3_(order=order, i=i, v=v, ipiv=ipiv, &
+                           ans=ans, tsize=tsize)
 END PROCEDURE LagrangeCoeff_Prism3
 
 !----------------------------------------------------------------------------
@@ -176,9 +197,73 @@ END PROCEDURE LagrangeCoeff_Prism3
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE LagrangeCoeff_Prism4
-ans = LagrangeVandermonde(order=order, xij=xij, elemType=Prism)
-CALL GetInvMat(ans)
+INTEGER(I4B) :: nrow, ncol
+
+CALL LagrangeCoeff_Prism4_(order=order, xij=xij, basisType=basisType, &
+                   refPrism=refPrism, alpha=alpha, beta=beta, lambda=lambda, &
+                           ans=ans, nrow=nrow, ncol=ncol)
+
 END PROCEDURE LagrangeCoeff_Prism4
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE LagrangeCoeff_Prism1_
+REAL(DFP), DIMENSION(SIZE(xij, 2), SIZE(xij, 2)) :: V
+INTEGER(I4B), DIMENSION(SIZE(xij, 2)) :: ipiv
+INTEGER(I4B) :: info, nrow, ncol
+
+tsize = SIZE(xij, 2)
+
+ipiv = 0_I4B; ans(1:tsize) = 0.0_DFP; ans(i) = 1.0_DFP
+
+CALL LagrangeVandermonde_(order=order, xij=xij, elemType=Prism, &
+                          ans=V, nrow=nrow, ncol=ncol)
+
+CALL GetLU(A=V, IPIV=ipiv, info=info)
+
+CALL LUSolve(A=V, B=ans(1:tsize), IPIV=ipiv, info=info)
+END PROCEDURE LagrangeCoeff_Prism1_
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE LagrangeCoeff_Prism2_
+REAL(DFP), DIMENSION(SIZE(v, 1), SIZE(v, 2)) :: vtemp
+INTEGER(I4B), DIMENSION(SIZE(v, 1)) :: ipiv
+INTEGER(I4B) :: info
+
+tsize = SIZE(v, 1)
+
+vtemp = v; ans(1:tsize) = 0.0_DFP; ans(i) = 1.0_DFP; ipiv = 0_I4B
+CALL GetLU(A=vtemp, IPIV=ipiv, info=info)
+CALL LUSolve(A=vtemp, B=ans(1:tsize), IPIV=ipiv, info=info)
+END PROCEDURE LagrangeCoeff_Prism2_
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE LagrangeCoeff_Prism3_
+INTEGER(I4B) :: info
+
+tsize = SIZE(v, 1)
+
+ans(1:tsize) = 0.0_DFP; ans(i) = 1.0_DFP
+CALL LUSolve(A=v, B=ans(1:tsize), IPIV=ipiv, info=info)
+END PROCEDURE LagrangeCoeff_Prism3_
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE LagrangeCoeff_Prism4_
+CALL LagrangeVandermonde_(order=order, xij=xij, ans=ans, nrow=nrow, &
+                          ncol=ncol, elemType=Prism)
+CALL GetInvMat(ans(1:nrow, 1:ncol))
+END PROCEDURE LagrangeCoeff_Prism4_
 
 !----------------------------------------------------------------------------
 !                                                   QuadraturePoint_Prism
@@ -241,42 +326,66 @@ END PROCEDURE TensorQuadraturePoint_Prism2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE LagrangeEvalAll_Prism1
-! FIX: Implement LagrangeEvalAll_Prism1
-CALL ErrorMsg(&
-& msg="Work in progress",  &
-& unitno=stdout,  &
-& line=__LINE__,  &
-& routine="LagrangeEvalAll_Prism1()", &
-& file=__FILE__)
+INTEGER(I4B) :: tsize
+CALL LagrangeEvalAll_Prism1_(order=order, x=x, xij=xij, ans=ans, &
+           tsize=tsize, refPrism=refPrism, coeff=coeff, firstCall=firstCall, &
+                   basisType=basisType, alpha=alpha, beta=beta, lambda=lambda)
 END PROCEDURE LagrangeEvalAll_Prism1
 
 !----------------------------------------------------------------------------
 !                                             LagrangeEvalAll_Prism
 !----------------------------------------------------------------------------
 
+MODULE PROCEDURE LagrangeEvalAll_Prism1_
+! FIX: Implement LagrangeEvalAll_Prism1
+CALL ErrorMsg(msg="Work in progress", routine="LagrangeEvalAll_Prism1_()", &
+              unitno=stdout, line=__LINE__, file=__FILE__)
+END PROCEDURE LagrangeEvalAll_Prism1_
+
+!----------------------------------------------------------------------------
+!                                             LagrangeEvalAll_Prism
+!----------------------------------------------------------------------------
+
 MODULE PROCEDURE LagrangeEvalAll_Prism2
-! FIX: Implement LagrangeEvalAll_Prism2
-CALL ErrorMsg(&
-& msg="Work in progress",  &
-& unitno=stdout,  &
-& line=__LINE__,  &
-& routine="LagrangeEvalAll_Prism2()", &
-& file=__FILE__)
+INTEGER(I4B) :: nrow, ncol
+CALL LagrangeEvalAll_Prism2_(order=order, x=x, xij=xij, ans=ans, nrow=nrow, &
+             ncol=ncol, refPrism=refPrism, coeff=coeff, firstCall=firstCall, &
+                   basisType=basisType, alpha=alpha, beta=beta, lambda=lambda)
 END PROCEDURE LagrangeEvalAll_Prism2
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE LagrangeEvalAll_Prism2_
+! FIX: Implement LagrangeEvalAll_Prism2
+CALL ErrorMsg(msg="Work in progress", routine="LagrangeEvalAll_Prism2_()", &
+              unitno=stdout, line=__LINE__, file=__FILE__)
+END PROCEDURE LagrangeEvalAll_Prism2_
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE LagrangeGradientEvalAll_Prism1
+INTEGER(I4B) :: dim1, dim2, dim3
+CALL LagrangeGradientEvalAll_Prism1_(order=order, x=x, xij=xij, ans=ans, &
+            dim1=dim1, dim2=dim2, dim3=dim3, refPrism=refPrism, coeff=coeff, &
+           firstCall=firstCall, basisType=basisType, alpha=alpha, beta=beta, &
+                                     lambda=lambda)
+END PROCEDURE LagrangeGradientEvalAll_Prism1
 
 !----------------------------------------------------------------------------
 !                                             LagrangeGradientEvalAll_Prism
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE LagrangeGradientEvalAll_Prism1
-!FIX: Implement LagrangeGradientEvalAll_Prism1
-CALL ErrorMsg(&
-& msg="Work in progress",  &
-& unitno=stdout,  &
-& line=__LINE__,  &
-& routine="LagrangeGradientEvalAll_Prism1()", &
-& file=__FILE__)
-END PROCEDURE LagrangeGradientEvalAll_Prism1
+MODULE PROCEDURE LagrangeGradientEvalAll_Prism1_
+!FIX: Implement LagrangeGradientEvalAll_Prism1_
+CALL ErrorMsg(msg="Work in progress", &
+              routine="LagrangeGradientEvalAll_Prism1_()", &
+              unitno=stdout, line=__LINE__, file=__FILE__)
+RETURN
+END PROCEDURE LagrangeGradientEvalAll_Prism1_
 
 !----------------------------------------------------------------------------
 !

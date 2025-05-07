@@ -26,6 +26,7 @@ IMPLICIT NONE
 PRIVATE
 
 PUBLIC :: ConvectiveMatrix
+PUBLIC :: ConvectiveMatrix_
 
 !----------------------------------------------------------------------------
 !                                   ConvectiveMatrix@ConvectiveMatrixMethods
@@ -36,7 +37,7 @@ PUBLIC :: ConvectiveMatrix
 ! update: 2021-11-21
 ! summary: returns the convective matrix
 
-INTERFACE
+INTERFACE ConvectiveMatrix
   MODULE PURE FUNCTION ConvectiveMatrix_1(test, trial, term1, &
       & term2, opt) RESULT(Ans)
     CLASS(ElemshapeData_), INTENT(IN) :: test
@@ -45,14 +46,31 @@ INTERFACE
     !! del_x, del_y, del_z, del_x_all, del_none
     INTEGER(I4B), INTENT(IN) :: term2
     !! del_x, del_y, del_z, del_x_all, del_none
-    INTEGER( I4B ), OPTIONAL, INTENT( IN ) :: opt
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: opt
     REAL(DFP), ALLOCATABLE :: ans(:, :)
   END FUNCTION ConvectiveMatrix_1
-END INTERFACE
-
-INTERFACE ConvectiveMatrix
-  MODULE PROCEDURE ConvectiveMatrix_1
 END INTERFACE ConvectiveMatrix
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+!> author: Shion Shimizu
+! date:   2025-03-05
+! summary:  Convective matrix without allcation
+
+INTERFACE ConvectiveMatrix_
+  MODULE PURE SUBROUTINE ConvectiveMatrix1_(test, trial, term1, &
+      & term2, nrow, ncol, opt, ans)
+    CLASS(ElemshapeData_), INTENT(IN) :: test
+    CLASS(ElemshapeData_), INTENT(IN) :: trial
+    INTEGER(I4B), INTENT(IN) :: term1
+    INTEGER(I4B), INTENT(IN) :: term2
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: opt
+    REAL(DFP), INTENT(inout) :: ans(:, :)
+  END SUBROUTINE ConvectiveMatrix1_
+END INTERFACE ConvectiveMatrix_
 
 !----------------------------------------------------------------------------
 !                                   ConvectiveMatrix@ConvectiveMatrixMethods
@@ -63,7 +81,7 @@ END INTERFACE ConvectiveMatrix
 ! update: 2021-11-21
 ! summary: returns the convective matrix
 
-INTERFACE
+INTERFACE ConvectiveMatrix
   MODULE PURE FUNCTION ConvectiveMatrix_2(test, trial, c, crank, term1, &
       & term2, opt) RESULT(Ans)
     CLASS(ElemshapeData_), INTENT(IN) :: test
@@ -76,15 +94,34 @@ INTERFACE
     !! del_x, del_y, del_z, del_x_all, del_none
     INTEGER(I4B), INTENT(IN) :: term2
     !! del_x, del_y, del_z, del_x_all, del_none
-    INTEGER( I4B ), OPTIONAL, INTENT( IN ) :: opt
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: opt
     !! number of copies
     REAL(DFP), ALLOCATABLE :: ans(:, :)
   END FUNCTION ConvectiveMatrix_2
-END INTERFACE
-
-INTERFACE ConvectiveMatrix
-  MODULE PROCEDURE ConvectiveMatrix_2
 END INTERFACE ConvectiveMatrix
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+!> author: Shion Shimizu
+! date:   2025-03-05
+! summary:  Convective matrix without allcation
+
+INTERFACE ConvectiveMatrix_
+  MODULE PURE SUBROUTINE ConvectiveMatrix2_(test, trial, c, crank, term1, &
+      & term2, opt, ans, nrow, ncol)
+    CLASS(ElemshapeData_), INTENT(IN) :: test
+    CLASS(ElemshapeData_), INTENT(IN) :: trial
+    TYPE(FEVariable_), INTENT(IN) :: c
+    TYPE(FEVariableScalar_), INTENT(IN) :: crank
+    INTEGER(I4B), INTENT(IN) :: term1
+    INTEGER(I4B), INTENT(IN) :: term2
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: opt
+    REAL(DFP), INTENT(inout) :: ans(:, :)
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+  END SUBROUTINE ConvectiveMatrix2_
+END INTERFACE ConvectiveMatrix_
 
 !----------------------------------------------------------------------------
 !                                   ConvectiveMatrix@ConvectiveMatrixMethods
@@ -95,7 +132,7 @@ END INTERFACE ConvectiveMatrix
 ! update: 2021-11-21
 ! summary: returns the convective matrix
 
-INTERFACE
+INTERFACE ConvectiveMatrix
   MODULE PURE FUNCTION ConvectiveMatrix_3(test, trial, c, crank, term1, &
       & term2, opt) RESULT(Ans)
     CLASS(ElemshapeData_), INTENT(IN) :: test
@@ -108,15 +145,34 @@ INTERFACE
     !! del_x, del_y, del_z, del_x_all, del_none
     INTEGER(I4B), INTENT(IN) :: term2
     !! del_x, del_y, del_z, del_x_all, del_none
-    INTEGER( I4B ), OPTIONAL, INTENT( IN ) :: opt
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: opt
     !! number of copies
     REAL(DFP), ALLOCATABLE :: ans(:, :)
   END FUNCTION ConvectiveMatrix_3
-END INTERFACE
-
-INTERFACE ConvectiveMatrix
-  MODULE PROCEDURE ConvectiveMatrix_3
 END INTERFACE ConvectiveMatrix
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+!> author: Shion Shimizu
+! date:   2025-03-05
+! summary:  Convective matrix without allcation
+
+INTERFACE ConvectiveMatrix_
+  MODULE PURE SUBROUTINE ConvectiveMatrix3_(test, trial, c, crank, term1, &
+      & term2, opt, ans, nrow, ncol)
+    CLASS(ElemshapeData_), INTENT(IN) :: test
+    CLASS(ElemshapeData_), INTENT(IN) :: trial
+    TYPE(FEVariable_), INTENT(IN) :: c
+    TYPE(FEVariableVector_), INTENT(IN) :: crank
+    INTEGER(I4B), INTENT(IN) :: term1
+    INTEGER(I4B), INTENT(IN) :: term2
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: opt
+    REAL(DFP), INTENT(inout) :: ans(:, :)
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+  END SUBROUTINE ConvectiveMatrix3_
+END INTERFACE ConvectiveMatrix_
 
 !----------------------------------------------------------------------------
 !

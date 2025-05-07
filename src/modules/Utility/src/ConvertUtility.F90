@@ -21,6 +21,7 @@ IMPLICIT NONE
 PRIVATE
 
 PUBLIC :: Convert
+PUBLIC :: Convert_
 PUBLIC :: ConvertSafe
 
 !----------------------------------------------------------------------------
@@ -127,6 +128,22 @@ INTERFACE Convert
 END INTERFACE Convert
 
 !----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+!> author: Shion Shimizu
+! date:   2025-03-03
+! summary:  convert without allocation
+
+INTERFACE Convert_
+  MODULE PURE SUBROUTINE convert2_(From, To, nrow, ncol)
+    REAL(DFP), INTENT(IN) :: From(:, :, :, :)
+    REAL(DFP), INTENT(INOUT) :: To(:, :)
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+  END SUBROUTINE convert2_
+END INTERFACE Convert_
+
+!----------------------------------------------------------------------------
 !                                                    Convert@ConvertMethods
 !----------------------------------------------------------------------------
 
@@ -143,6 +160,22 @@ INTERFACE Convert
   !! I, J, a, b
   END SUBROUTINE convert_3
 END INTERFACE Convert
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+!> author: Shion Shimizu
+! date:   2025-03-03
+! summary:  convert without allocation
+
+INTERFACE Convert_
+  MODULE PURE SUBROUTINE convert3_(From, To, dim1, dim2, dim3, dim4)
+    REAL(DFP), INTENT(IN) :: From(:, :, :, :, :, :)
+    REAL(DFP), INTENT(INOUT) :: To(:, :, :, :)
+    INTEGER(I4B), INTENT(OUT) :: dim1, dim2, dim3, dim4
+  END SUBROUTINE convert3_
+END INTERFACE Convert_
 
 !----------------------------------------------------------------------------
 !

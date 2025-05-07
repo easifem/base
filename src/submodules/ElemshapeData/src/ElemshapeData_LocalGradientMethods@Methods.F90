@@ -21,148 +21,147 @@ IMPLICIT NONE
 CONTAINS
 
 !----------------------------------------------------------------------------
-!                                                           getLocalGradient
+!                                                           GetLocalGradient
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE elemsd_getLocalGradient_1
+MODULE PROCEDURE elemsd_GetLocalGradient_1
 lg = MATMUL(Val, obj%dNdXi)
 !! matmul r1 r3
-END PROCEDURE elemsd_getLocalGradient_1
+END PROCEDURE elemsd_GetLocalGradient_1
 
 !----------------------------------------------------------------------------
-!                                                           getLocalGradient
+!                                                           GetLocalGradient
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE elemsd_getLocalGradient_2
+MODULE PROCEDURE elemsd_GetLocalGradient_2
 lg = MATMUL(Val, obj%dNdXi)
 !! matmul r2 r3
-END PROCEDURE elemsd_getLocalGradient_2
+END PROCEDURE elemsd_GetLocalGradient_2
 
 !----------------------------------------------------------------------------
-!                                                           getLocalGradient
+!                                                           GetLocalGradient
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE elemsd_getLocalGradient_3
+MODULE PROCEDURE elemsd_GetLocalGradient_3
 SELECT TYPE (obj)
 TYPE IS (STElemshapeData_)
   lg = MATMUL(MATMUL(Val, obj%T), obj%dNdXi)
   !! matmul r1 r3
 END SELECT
-END PROCEDURE elemsd_getLocalGradient_3
+END PROCEDURE elemsd_GetLocalGradient_3
 
 !----------------------------------------------------------------------------
-!                                                           getLocalGradient
+!                                                           GetLocalGradient
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE elemsd_getLocalGradient_4
+MODULE PROCEDURE elemsd_GetLocalGradient_4
 SELECT TYPE (obj)
 TYPE IS (STElemshapeData_)
   lg = MATMUL(MATMUL(Val, obj%T), obj%dNdXi)
   !! (r3.r1).r3 => r2.r3
 END SELECT
-END PROCEDURE elemsd_getLocalGradient_4
+END PROCEDURE elemsd_GetLocalGradient_4
 
 !----------------------------------------------------------------------------
-!                                                           getLocalGradient
+!                                                           GetLocalGradient
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE elemsd_getLocalGradient_5
+MODULE PROCEDURE elemsd_GetLocalGradient_5
 SELECT CASE (val%varType)
 CASE (constant)
-  CALL reallocate(lg, obj%refelem%xidimension, SIZE(obj%N, 2))
+  CALL Reallocate(lg, obj%xidim, obj%nips)
 CASE (space)
-  CALL getLocalGradient(obj=obj, lg=lg, &
+  CALL GetLocalGradient(obj=obj, lg=lg, &
        & Val=Get(val, TypeFEVariableScalar, TypeFEVariableSpace))
 CASE (spacetime)
   SELECT TYPE (obj)
   TYPE is (STElemShapeData_)
-    CALL getLocalGradient(obj=obj, lg=lg, &
+    CALL GetLocalGradient(obj=obj, lg=lg, &
          & Val=Get(val, TypeFEVariableScalar, TypeFEVariableSpaceTime))
   END SELECT
 END SELECT
-END PROCEDURE elemsd_getLocalGradient_5
+END PROCEDURE elemsd_GetLocalGradient_5
 
 !----------------------------------------------------------------------------
-!                                                           getLocalGradient
+!                                                           GetLocalGradient
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE elemsd_getLocalGradient_6
+MODULE PROCEDURE elemsd_GetLocalGradient_6
 INTEGER(I4B) :: s(1)
 !!
 SELECT CASE (val%varType)
 CASE (constant)
   s = SHAPE(val)
-  CALL reallocate(lg, s(1), obj%refelem%xidimension, SIZE(obj%N, 2))
+  CALL Reallocate(lg, s(1), obj%xidim, obj%nips)
 CASE (space)
-  CALL getLocalGradient(obj=obj, lg=lg, &
+  CALL GetLocalGradient(obj=obj, lg=lg, &
        & Val=Get(val, TypeFEVariableVector, TypeFEVariableSpace))
 CASE (spacetime)
   SELECT TYPE (obj)
   TYPE is (STElemShapeData_)
-    CALL getLocalGradient(obj=obj, lg=lg, &
+    CALL GetLocalGradient(obj=obj, lg=lg, &
          & Val=Get(val, TypeFEVariableVector, TypeFEVariableSpaceTime))
   END SELECT
 END SELECT
-END PROCEDURE elemsd_getLocalGradient_6
+END PROCEDURE elemsd_GetLocalGradient_6
 
 !----------------------------------------------------------------------------
-!                                                           getLocalGradient
+!                                                           GetLocalGradient
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE elemsd_getLocalGradient_7
+MODULE PROCEDURE elemsd_GetLocalGradient_7
 lg = MATMUL(val, obj%dNdXi)
 !! r3.r4
-END PROCEDURE elemsd_getLocalGradient_7
+END PROCEDURE elemsd_GetLocalGradient_7
 
 !----------------------------------------------------------------------------
-!                                                           getLocalGradient
+!                                                           GetLocalGradient
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE elemsd_getLocalGradient_8
+MODULE PROCEDURE elemsd_GetLocalGradient_8
 SELECT TYPE (obj)
 TYPE IS (STElemShapeData_)
   lg = MATMUL(MATMUL(Val, obj%T), obj%dNdXi)
   !! (r4.r1).r3
 END SELECT
-END PROCEDURE elemsd_getLocalGradient_8
+END PROCEDURE elemsd_GetLocalGradient_8
 
 !----------------------------------------------------------------------------
-!                                                           getLocalGradient
+!                                                           GetLocalGradient
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE elemsd_getLocalGradient_9
+MODULE PROCEDURE elemsd_GetLocalGradient_9
 INTEGER(I4B) :: s(2)
 SELECT CASE (val%varType)
 CASE (constant)
   s = SHAPE(val)
-  CALL reallocate(lg, s(1), s(2),  &
-       & obj%refelem%xidimension, SIZE(obj%N, 2))
+  CALL Reallocate(lg, s(1), s(2), obj%xidim, obj%nips)
 CASE (space)
-  CALL getLocalGradient(obj=obj, lg=lg, &
+  CALL GetLocalGradient(obj=obj, lg=lg, &
        & Val=Get(val, TypeFEVariableMatrix, TypeFEVariableSpace))
 CASE (spacetime)
   SELECT TYPE (obj)
   TYPE is (STElemShapeData_)
-    CALL getLocalGradient(obj=obj, lg=lg, &
+    CALL GetLocalGradient(obj=obj, lg=lg, &
          & Val=Get(val, TypeFEVariableMatrix, TypeFEVariableSpaceTime))
   END SELECT
 END SELECT
-END PROCEDURE elemsd_getLocalGradient_9
+END PROCEDURE elemsd_GetLocalGradient_9
 
 !----------------------------------------------------------------------------
-!                                                         getLocalGradient
+!                                                         GetLocalGradient
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE elemsd_getLocalGradient_10
+MODULE PROCEDURE elemsd_GetLocalGradient_10
 REAL(DFP), ALLOCATABLE :: r2(:, :), r3(:, :, :)
 !!
 SELECT CASE (val%rank)
 CASE (scalar)
-  CALL getLocalGradient(obj=obj, lg=r2, val=val)
+  CALL GetLocalGradient(obj=obj, lg=r2, val=val)
   lg = QuadratureVariable(r2, typeFEVariableVector, typeFEVariableSpace)
   DEALLOCATE (r2)
 CASE (vector)
-  CALL getLocalGradient(obj=obj, lg=r3, val=val)
+  CALL GetLocalGradient(obj=obj, lg=r3, val=val)
   lg = QuadratureVariable(r3, typeFEVariableMatrix, typeFEVariableSpace)
   DEALLOCATE (r3)
 CASE (matrix)
@@ -170,13 +169,13 @@ CASE (matrix)
    !! TODO Extend FEVariable to support r3, which is necessary to keep
    !! the gradient of rank02 tensors
 END SELECT
-END PROCEDURE elemsd_getLocalGradient_10
+END PROCEDURE elemsd_GetLocalGradient_10
 
 !----------------------------------------------------------------------------
-!                                                         getLocalGradient
+!                                                         GetLocalGradient
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE elemsd_getLocalGradient_11
+MODULE PROCEDURE elemsd_GetLocalGradient_11
 REAL(DFP), ALLOCATABLE :: r2(:, :), r3(:, :, :), r4(:, :, :, :)
 INTEGER(I4B) :: ii
 !!
@@ -186,9 +185,9 @@ SELECT CASE (val%rank)
 !!
 CASE (scalar)
   DO ii = 1, SIZE(obj)
-    CALL getLocalGradient(obj=obj(ii), lg=r2, val=val)
+    CALL GetLocalGradient(obj=obj(ii), lg=r2, val=val)
     IF (.NOT. ALLOCATED(r3)) THEN
-      CALL reallocate(r3, SIZE(r2, 1), SIZE(r2, 2), SIZE(obj))
+      CALL Reallocate(r3, SIZE(r2, 1), SIZE(r2, 2), SIZE(obj))
     END IF
      !!
     r3(:, :, ii) = r2(:, :)
@@ -201,9 +200,9 @@ CASE (scalar)
 !!
 CASE (vector)
   DO ii = 1, SIZE(obj)
-    CALL getLocalGradient(obj=obj(ii), lg=r3, val=val)
+    CALL GetLocalGradient(obj=obj(ii), lg=r3, val=val)
     IF (.NOT. ALLOCATED(r4)) THEN
-      CALL reallocate(r4, SIZE(r3, 1), SIZE(r3, 2), SIZE(r3, 3), SIZE(obj))
+      CALL Reallocate(r4, SIZE(r3, 1), SIZE(r3, 2), SIZE(r3, 3), SIZE(obj))
     END IF
      !!
     r4(:, :, :, ii) = r3(:, :, :)
@@ -219,14 +218,14 @@ CASE (matrix)
    !! TODO Extend FEVariable to support r3, which is necessary to keep
    !! the gradient of rank02 tensors
 END SELECT
-END PROCEDURE elemsd_getLocalGradient_11
+END PROCEDURE elemsd_GetLocalGradient_11
 
 !----------------------------------------------------------------------------
 !                                                              LocalGradient
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE elemsd_LocalGradient_1
-CALL getLocalGradient(obj=obj, lg=ans, val=val)
+CALL GetLocalGradient(obj=obj, lg=ans, val=val)
 END PROCEDURE elemsd_LocalGradient_1
 
 !----------------------------------------------------------------------------
@@ -234,7 +233,7 @@ END PROCEDURE elemsd_LocalGradient_1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE elemsd_LocalGradient_2
-CALL getLocalGradient(obj=obj, lg=ans, val=val)
+CALL GetLocalGradient(obj=obj, lg=ans, val=val)
 END PROCEDURE elemsd_LocalGradient_2
 
 !----------------------------------------------------------------------------

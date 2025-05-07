@@ -16,7 +16,8 @@
 !
 
 SUBMODULE(FEVariable_Method) EqualMethods
-USE BaseMethod
+USE ApproxUtility, ONLY: OPERATOR(.APPROXEQ.)
+
 IMPLICIT NONE
 CONTAINS
 
@@ -27,11 +28,13 @@ CONTAINS
 MODULE PROCEDURE fevar_isequal
 !! Internal variable
 ans = .FALSE.
-IF( ALL(obj1%val .APPROXEQ. obj2%val) ) ans = .TRUE.
-IF( obj1%defineon .ne. obj2%defineon ) ans = .FALSE.
-IF( obj1%rank .ne. obj2%rank ) ans = .FALSE.
-IF( obj1%varType .ne. obj2%varType ) ans = .FALSE.
-IF( ANY(obj1%s .NE. obj2%s) ) ans = .FALSE.
+IF (obj1%len .NE. obj2%len) RETURN
+IF (obj1%defineon .NE. obj2%defineon) RETURN
+IF (obj1%rank .NE. obj2%rank) RETURN
+IF (obj1%varType .NE. obj2%varType) RETURN
+IF (ANY(obj1%s .NE. obj2%s)) RETURN
+
+IF (ALL(obj1%val(1:obj1%len) .APPROXEQ.obj2%val(1:obj2%len))) ans = .TRUE.
 !!
 END PROCEDURE fevar_isequal
 
@@ -40,33 +43,32 @@ END PROCEDURE fevar_isequal
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE fevar_notEqual
-!! Internal variable
 ans = .FALSE.
-IF( .NOT. ALL(obj1%val .APPROXEQ. obj2%val) ) THEN
+IF (.NOT. ALL(obj1%val.APPROXEQ.obj2%val)) THEN
   ans = .TRUE.
   RETURN
 END IF
-!!
-IF( obj1%defineon .ne. obj2%defineon ) THEN
+
+IF (obj1%defineon .NE. obj2%defineon) THEN
   ans = .TRUE.
   RETURN
 END IF
-!!
-IF( obj1%rank .ne. obj2%rank ) THEN
+
+IF (obj1%rank .NE. obj2%rank) THEN
   ans = .TRUE.
   RETURN
 END IF
-!!
-IF( obj1%varType .ne. obj2%varType ) THEN
+
+IF (obj1%varType .NE. obj2%varType) THEN
   ans = .TRUE.
   RETURN
 END IF
-!!
-IF( ANY(obj1%s .NE. obj2%s) ) THEN
+
+IF (ANY(obj1%s .NE. obj2%s)) THEN
   ans = .TRUE.
   RETURN
 END IF
-!!
+
 END PROCEDURE fevar_notEqual
 
 !----------------------------------------------------------------------------

@@ -16,12 +16,14 @@
 
 SUBMODULE(TetrahedronInterpolationUtility) Methods
 USE BaseMethod
-USE QuadraturePoint_Tetrahedron_Solin, ONLY:   &
-& QuadratureNumberTetrahedronSolin,  &
-& QuadratureOrderTetrahedronSolin,  &
-& QuadraturePointTetrahedronSolin,  &
-& MAX_ORDER_TETRAHEDRON_SOLIN
+USE QuadraturePoint_Tetrahedron_Solin, ONLY: &
+  QuadratureNumberTetrahedronSolin, &
+  QuadratureOrderTetrahedronSolin, &
+  QuadraturePointTetrahedronSolin, &
+  MAX_ORDER_TETRAHEDRON_SOLIN
+
 IMPLICIT NONE
+
 CONTAINS
 
 !----------------------------------------------------------------------------
@@ -95,10 +97,10 @@ END PROCEDURE GetEdgeDOF_Tetrahedron2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE GetFacetDOF_Tetrahedron1
-ans = (ps1 - 1) * (ps1 - 2) / 2  &
-      & + (ps2 - 1) * (ps2 - 2) / 2  &
-      & + (ps3 - 1) * (ps3 - 2) / 2  &
-      & + (ps4 - 1) * (ps4 - 2) / 2
+ans = (ps1 - 1) * (ps1 - 2) / 2 &
+      + (ps2 - 1) * (ps2 - 2) / 2 &
+      + (ps3 - 1) * (ps3 - 2) / 2 &
+      + (ps4 - 1) * (ps4 - 2) / 2
 END PROCEDURE GetFacetDOF_Tetrahedron1
 
 !----------------------------------------------------------------------------
@@ -143,15 +145,15 @@ baseContinuity0 = UpperCase(baseContinuity)
 
 SELECT CASE (baseInterpol0%chars())
 CASE ( &
-  & "HIERARCHYPOLYNOMIAL", &
-  & "HIERARCHY", &
-  & "HEIRARCHYPOLYNOMIAL", &
-  & "HEIRARCHY", &
-  & "HIERARCHYINTERPOLATION", &
-  & "HEIRARCHYINTERPOLATION", &
-  & "ORTHOGONALPOLYNOMIAL", &
-  & "ORTHOGONAL", &
-  & "ORTHOGONALINTERPOLATION")
+  "HIERARCHYPOLYNOMIAL", &
+  "HIERARCHY", &
+  "HEIRARCHYPOLYNOMIAL", &
+  "HEIRARCHY", &
+  "HIERARCHYINTERPOLATION", &
+  "HEIRARCHYINTERPOLATION", &
+  "ORTHOGONALPOLYNOMIAL", &
+  "ORTHOGONAL", &
+  "ORTHOGONALINTERPOLATION")
   ans(:, 1) = [1, 2, 3]
   ans(:, 2) = [1, 2, 4]
   ans(:, 3) = [1, 3, 4]
@@ -170,9 +172,23 @@ END PROCEDURE FacetConnectivity_Tetrahedron
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE LagrangeDegree_Tetrahedron
-INTEGER(I4B) :: n, ii, jj, kk, ll
-n = LagrangeDOF_Tetrahedron(order=order)
-ALLOCATE (ans(n, 3))
+INTEGER(I4B) :: nrow, ncol
+nrow = LagrangeDOF_Tetrahedron(order=order)
+ncol = 3
+ALLOCATE (ans(nrow, ncol))
+CALL LagrangeDegree_Tetrahedron_(order=order, ans=ans, nrow=nrow, ncol=ncol)
+END PROCEDURE LagrangeDegree_Tetrahedron
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE LagrangeDegree_Tetrahedron_
+INTEGER(I4B) :: ii, jj, kk, ll
+
+nrow = LagrangeDOF_Tetrahedron(order=order)
+ncol = 3
+
 ll = 0
 DO kk = 0, order
   DO jj = 0, order
@@ -186,7 +202,8 @@ DO kk = 0, order
     END DO
   END DO
 END DO
-END PROCEDURE LagrangeDegree_Tetrahedron
+
+END PROCEDURE LagrangeDegree_Tetrahedron_
 
 !----------------------------------------------------------------------------
 !                                                    LagrangeDOF_Tetrahedron
@@ -433,13 +450,21 @@ END PROCEDURE EquidistanceInPoint_Tetrahedron_old
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE EquidistancePoint_Tetrahedron
-ans = InterpolationPoint_Tetrahedron( &
-  & order=order, &
-  & ipType=Equidistance, &
-  & layout="VEFC", &
-  & xij=xij  &
-  &)
+INTEGER(I4B) :: nrow, ncol
+ncol = SIZE(n=order, d=3)
+ALLOCATE (ans(3, ncol))
+CALL EquidistancePoint_Tetrahedron_(order=order, xij=xij, ans=ans, &
+                                    nrow=nrow, ncol=ncol)
 END PROCEDURE EquidistancePoint_Tetrahedron
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE EquidistancePoint_Tetrahedron_
+CALL InterpolationPoint_Tetrahedron_(order=order, ipType=Equidistance, &
+                        layout="VEFC", xij=xij, ans=ans, nrow=nrow, ncol=ncol)
+END PROCEDURE EquidistancePoint_Tetrahedron_
 
 !----------------------------------------------------------------------------
 !                                            EquidistanceInPoint_Tetrahedron
@@ -461,28 +486,31 @@ END PROCEDURE EquidistanceInPoint_Tetrahedron
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE InterpolationPoint_Tetrahedron
-ans = Isaac_Tetrahedron( &
-  & order=order, &
-  & ipType=ipType, &
-  & layout=layout, &
-  & xij=xij, &
-  & alpha=alpha,  &
-  & beta=beta,  &
-  & lambda=lambda)
+INTEGER(I4B) :: nrow, ncol
+ncol = SIZE(n=order, d=3)
+ALLOCATE (ans(3, ncol))
+CALL InterpolationPoint_Tetrahedron_(order=order, ipType=ipType, &
+              layout=layout, xij=xij, alpha=alpha, beta=beta, lambda=lambda, &
+                                     ans=ans, nrow=nrow, ncol=ncol)
 END PROCEDURE InterpolationPoint_Tetrahedron
+
+!----------------------------------------------------------------------------
+!                                            InterpolationPoint_Tetrahedron
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE InterpolationPoint_Tetrahedron_
+CALL Isaac_Tetrahedron(order=order, ipType=ipType, layout=layout, xij=xij, &
+         alpha=alpha, beta=beta, lambda=lambda, ans=ans, nrow=nrow, ncol=ncol)
+END PROCEDURE InterpolationPoint_Tetrahedron_
 
 !----------------------------------------------------------------------------
 !                                                  LagrangeCoeff_Tetrahedron
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE LagrangeCoeff_Tetrahedron1
-REAL(DFP), DIMENSION(SIZE(xij, 2), SIZE(xij, 2)) :: V
-INTEGER(I4B), DIMENSION(SIZE(xij, 2)) :: ipiv
-INTEGER(I4B) :: info
-ipiv = 0_I4B; ans = 0.0_DFP; ans(i) = 1.0_DFP
-V = LagrangeVandermonde(order=order, xij=xij, elemType=Tetrahedron)
-CALL GetLU(A=V, IPIV=ipiv, info=info)
-CALL LUSolve(A=V, B=ans, IPIV=ipiv, info=info)
+INTEGER(I4B) :: tsize
+CALL LagrangeCoeff_Tetrahedron1_(order=order, i=i, xij=xij, ans=ans, &
+                                 tsize=tsize)
 END PROCEDURE LagrangeCoeff_Tetrahedron1
 
 !----------------------------------------------------------------------------
@@ -490,12 +518,9 @@ END PROCEDURE LagrangeCoeff_Tetrahedron1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE LagrangeCoeff_Tetrahedron2
-REAL(DFP), DIMENSION(SIZE(v, 1), SIZE(v, 2)) :: vtemp
-INTEGER(I4B), DIMENSION(SIZE(v, 1)) :: ipiv
-INTEGER(I4B) :: info
-vtemp = v; ans = 0.0_DFP; ans(i) = 1.0_DFP; ipiv = 0_I4B
-CALL GetLU(A=vtemp, IPIV=ipiv, info=info)
-CALL LUSolve(A=vtemp, B=ans, IPIV=ipiv, info=info)
+INTEGER(I4B) :: tsize
+CALL LagrangeCoeff_Tetrahedron2_(order=order, i=i, v=v, &
+                                 isVandermonde=.TRUE., ans=ans, tsize=tsize)
 END PROCEDURE LagrangeCoeff_Tetrahedron2
 
 !----------------------------------------------------------------------------
@@ -503,9 +528,9 @@ END PROCEDURE LagrangeCoeff_Tetrahedron2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE LagrangeCoeff_Tetrahedron3
-INTEGER(I4B) :: info
-ans = 0.0_DFP; ans(i) = 1.0_DFP
-CALL LUSolve(A=v, B=ans, IPIV=ipiv, info=info)
+INTEGER(I4B) :: tsize
+CALL LagrangeCoeff_Tetrahedron3_(order=order, i=i, v=v, ipiv=ipiv, &
+                                 ans=ans, tsize=tsize)
 END PROCEDURE LagrangeCoeff_Tetrahedron3
 
 !----------------------------------------------------------------------------
@@ -513,68 +538,118 @@ END PROCEDURE LagrangeCoeff_Tetrahedron3
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE LagrangeCoeff_Tetrahedron4
+INTEGER(I4B) :: nrow, ncol
+
+CALL LagrangeCoeff_Tetrahedron4_(order=order, xij=xij, basisType=basisType, &
+       refTetrahedron=refTetrahedron, alpha=alpha, beta=beta, lambda=lambda, &
+                                 ans=ans, nrow=nrow, ncol=ncol)
+
+END PROCEDURE LagrangeCoeff_Tetrahedron4
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE LagrangeCoeff_Tetrahedron1_
+REAL(DFP), DIMENSION(SIZE(xij, 2), SIZE(xij, 2)) :: V
+INTEGER(I4B), DIMENSION(SIZE(xij, 2)) :: ipiv
+INTEGER(I4B) :: info, nrow, ncol
+
+tsize = SIZE(xij, 2)
+
+ipiv = 0_I4B; ans(1:tsize) = 0.0_DFP; ans(i) = 1.0_DFP
+
+CALL LagrangeVandermonde_(order=order, xij=xij, elemType=Tetrahedron, &
+                          ans=V, nrow=nrow, ncol=ncol)
+
+CALL GetLU(A=V, IPIV=ipiv, info=info)
+
+CALL LUSolve(A=V, B=ans(1:tsize), IPIV=ipiv, info=info)
+END PROCEDURE LagrangeCoeff_Tetrahedron1_
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE LagrangeCoeff_Tetrahedron2_
+REAL(DFP), DIMENSION(SIZE(v, 1), SIZE(v, 2)) :: vtemp
+INTEGER(I4B), DIMENSION(SIZE(v, 1)) :: ipiv
+INTEGER(I4B) :: info
+
+tsize = SIZE(v, 1)
+
+vtemp = v; ans(1:tsize) = 0.0_DFP; ans(i) = 1.0_DFP; ipiv = 0_I4B
+CALL GetLU(A=vtemp, IPIV=ipiv, info=info)
+CALL LUSolve(A=vtemp, B=ans(1:tsize), IPIV=ipiv, info=info)
+END PROCEDURE LagrangeCoeff_Tetrahedron2_
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE LagrangeCoeff_Tetrahedron3_
+INTEGER(I4B) :: info
+
+tsize = SIZE(v, 1)
+
+ans(1:tsize) = 0.0_DFP; ans(i) = 1.0_DFP
+CALL LUSolve(A=v, B=ans(1:tsize), IPIV=ipiv, info=info)
+END PROCEDURE LagrangeCoeff_Tetrahedron3_
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE LagrangeCoeff_Tetrahedron4_
 INTEGER(I4B) :: basisType0
+CHARACTER(:), ALLOCATABLE :: aname
+
 basisType0 = input(default=Monomial, option=basisType)
+nrow = SIZE(xij, 2)
+ncol = nrow
 
 SELECT CASE (basisType0)
 CASE (Monomial)
-  ans = LagrangeVandermonde(order=order, xij=xij, elemType=Tetrahedron)
-CASE (Heirarchical)
-  IF (PRESENT(refTetrahedron)) THEN
-    ans = HeirarchicalBasis_Tetrahedron(&
-      & order=order, &
-      & xij=xij, &
-      & refTetrahedron=refTetrahedron &
-      & )
-  ELSE
-    ans = HeirarchicalBasis_Tetrahedron(&
-      & order=order, &
-      & xij=xij, &
-      & refTetrahedron="UNIT" &
-      & )
-  END IF
-CASE DEFAULT
-  IF (PRESENT(refTetrahedron)) THEN
-    ans = OrthogonalBasis_Tetrahedron(&
-      & order=order, &
-      & xij=xij, &
-      & refTetrahedron=refTetrahedron &
-      & )
-  ELSE
-    ans = OrthogonalBasis_Tetrahedron(&
-      & order=order, &
-      & xij=xij, &
-      & refTetrahedron="UNIT" &
-      & )
-  END IF
-END SELECT
-CALL GetInvMat(ans)
+  CALL LagrangeVandermonde_(order=order, xij=xij, ans=ans, nrow=nrow, &
+                            ncol=ncol, elemType=Tetrahedron)
 
-END PROCEDURE LagrangeCoeff_Tetrahedron4
+CASE (Heirarchical)
+  aname = Input(default="UNIT", option=refTetrahedron)
+
+  ans(1:nrow, 1:ncol) = HeirarchicalBasis_Tetrahedron(order=order, xij=xij, &
+                                                      refTetrahedron=aname)
+
+CASE DEFAULT
+  aname = Input(default="UNIT", option=refTetrahedron)
+
+  ans(1:nrow, 1:ncol) = OrthogonalBasis_Tetrahedron(order=order, &
+                                       xij=xij, refTetrahedron=refTetrahedron)
+
+END SELECT
+
+CALL GetInvMat(ans(1:nrow, 1:ncol))
+
+END PROCEDURE LagrangeCoeff_Tetrahedron4_
 
 !----------------------------------------------------------------------------
 !                                                         Isaac_Tetrahedron
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Isaac_Tetrahedron
+! CHARACTER(*), PARAMETER :: myName = "Isaac_Tetrahedron"
+
 REAL(DFP), DIMENSION(order + 1, order + 1, order + 1) :: xi, eta, zeta
-REAL(DFP), ALLOCATABLE :: temp(:, :), rPoints(:, :)
-INTEGER(I4B) :: nsd, N, cnt, ii, jj, kk
-CHARACTER(*), PARAMETER :: myName = "Isaac_Tetrahedron"
 
-rPoints = RecursiveNode3D( &
-  & order=order, &
-  & ipType=ipType, &
-  & domain="UNIT", &
-  & alpha=alpha, &
-  & beta=beta, &
-  & lambda=lambda)
+INTEGER(I4B) :: cnt, ii, jj, kk
 
-N = SIZE(rPoints, 2)
+ncol = SIZE(n=order, d=3)
+nrow = 3
 
-nsd = 3
-CALL Reallocate(ans, nsd, N)
-CALL Reallocate(temp, nsd, N)
+CALL RecursiveNode3D_(order=order, ipType=ipType, domain="UNIT", &
+         alpha=alpha, beta=beta, lambda=lambda, ans=ans, nrow=nrow, ncol=ncol)
+
+! CALL Reallocate(ans, nsd, N)
+! CALL Reallocate(temp, nrow, ncol)
 
 !! convert from rPoints to xi and eta
 cnt = 0
@@ -587,39 +662,26 @@ DO ii = 0, order
     DO kk = 0, order
       IF (ii + jj + kk .LE. order) THEN
         cnt = cnt + 1
-        xi(ii + 1, jj + 1, kk + 1) = rPoints(1, cnt)
-        eta(ii + 1, jj + 1, kk + 1) = rPoints(2, cnt)
-        zeta(ii + 1, jj + 1, kk + 1) = rPoints(3, cnt)
+        xi(ii + 1, jj + 1, kk + 1) = ans(1, cnt)
+        eta(ii + 1, jj + 1, kk + 1) = ans(2, cnt)
+        zeta(ii + 1, jj + 1, kk + 1) = ans(3, cnt)
       END IF
     END DO
   END DO
 END DO
 
 IF (layout .EQ. "VEFC") THEN
-  CALL IJK2VEFC_Tetrahedron( &
-    & xi=xi, &
-    & eta=eta, &
-    & zeta=zeta, &
-    & temp=temp, &
-    & order=order, &
-    & N=N)
-ELSE
-  temp = rPoints
+  CALL IJK2VEFC_Tetrahedron(xi=xi, eta=eta, zeta=zeta, temp=ans, &
+                            order=order, N=ncol)
 END IF
 
 IF (PRESENT(xij)) THEN
-  ans = FromUnitTetrahedron2Tetrahedron( &
-    & xin=temp, &
-    & x1=xij(:, 1), &
-    & x2=xij(:, 2), &
-    & x3=xij(:, 3), &
-    & x4=xij(:, 4))
-ELSE
-  ans = temp
+  ! convert temp to ans using xij
+  CALL FromUnitTetrahedron2Tetrahedron_(xin=ans(1:nrow, 1:ncol), &
+            x1=xij(:, 1), x2=xij(:, 2), x3=xij(:, 3), x4=xij(:, 4), ans=ans, &
+                                        nrow=nrow, ncol=ncol)
 END IF
 
-IF (ALLOCATED(temp)) DEALLOCATE (temp)
-IF (ALLOCATED(rPoints)) DEALLOCATE (rPoints)
 END PROCEDURE Isaac_Tetrahedron
 
 !----------------------------------------------------------------------------
@@ -642,21 +704,33 @@ END PROCEDURE BlythPozrikidis_Tetrahedron
 
 MODULE PROCEDURE IJK2VEFC_Tetrahedron
 INTEGER(I4B) :: indof, ii, cnt, jj, kk, ll
+REAL(DFP) :: x(3)
+INTEGER(I4B), PARAMETER :: nrow = 3
+
 REAL(DFP), DIMENSION(3, (order + 1)*(order + 2)/2) :: temp_face_in
 REAL(DFP), DIMENSION(order + 1, order + 1) :: xi2, eta2, zeta2
 
 SELECT CASE (order)
 CASE (0)
-  temp(:, 1) = [xi(1, 1, 1), eta(1, 1, 1), zeta(1, 1, 1)]
+  x = [xi(1, 1, 1), eta(1, 1, 1), zeta(1, 1, 1)]
+  temp(1:nrow, 1) = x
 CASE (1)
   !  | 0 | 0 | 0 |
   !  | 0 | 0 | 1 |
   !  | 0 | 1 | 0 |
   !  | 1 | 0 | 0 |
-  temp(:, 1) = [xi(1, 1, 1), eta(1, 1, 1), zeta(1, 1, 1)]
-  temp(:, 2) = [xi(order+1, 1, 1), eta(order+1, 1, 1), zeta(order+1, 1, 1)]
-  temp(:, 3) = [xi(1, order+1, 1), eta(1, order+1, 1), zeta(1, order+1, 1)]
-  temp(:, 4) = [xi(1, 1, order+1), eta(1, 1, order+1), zeta(1, 1, order+1)]
+  x = [xi(1, 1, 1), eta(1, 1, 1), zeta(1, 1, 1)]
+  temp(1:nrow, 1) = x
+
+  x = [xi(order + 1, 1, 1), eta(order + 1, 1, 1), zeta(order + 1, 1, 1)]
+  temp(1:nrow, 2) = x
+
+  x = [xi(1, order + 1, 1), eta(1, order + 1, 1), zeta(1, order + 1, 1)]
+  temp(1:nrow, 3) = x
+
+  x = [xi(1, 1, order + 1), eta(1, 1, order + 1), zeta(1, 1, order + 1)]
+  temp(1:nrow, 4) = x
+
 CASE (2)
   ! | 0 | 0 | 0 |
   ! | 0 | 0 | 0.5 |
@@ -670,23 +744,41 @@ CASE (2)
   ! | 1 | 0 | 0 |
 
   ! four vertex
-  temp(:, 1) = [xi(1, 1, 1), eta(1, 1, 1), zeta(1, 1, 1)]
-  temp(:, 2) = [xi(order+1, 1, 1), eta(order+1, 1, 1), zeta(order+1, 1, 1)]
-  temp(:, 3) = [xi(1, order+1, 1), eta(1, order+1, 1), zeta(1, order+1, 1)]
-  temp(:, 4) = [xi(1, 1, order+1), eta(1, 1, order+1), zeta(1, 1, order+1)]
+  x = [xi(1, 1, 1), eta(1, 1, 1), zeta(1, 1, 1)]
+  temp(1:nrow, 1) = x
+
+  x = [xi(order + 1, 1, 1), eta(order + 1, 1, 1), zeta(order + 1, 1, 1)]
+  temp(1:nrow, 2) = x
+
+  x = [xi(1, order + 1, 1), eta(1, order + 1, 1), zeta(1, order + 1, 1)]
+  temp(1:nrow, 3) = x
+
+  x = [xi(1, 1, order + 1), eta(1, 1, order + 1), zeta(1, 1, order + 1)]
+  temp(1:nrow, 4) = x
 
   ! edge1 x
-  temp(:, 5) = [xi(2, 1, 1), eta(2, 1, 1), zeta(2, 1, 1)]
+  x = [xi(2, 1, 1), eta(2, 1, 1), zeta(2, 1, 1)]
+  temp(1:nrow, 5) = x
+
   ! edge2 y
-  temp(:, 6) = [xi(1, 2, 1), eta(1, 2, 1), zeta(1, 2, 1)]
+  x = [xi(1, 2, 1), eta(1, 2, 1), zeta(1, 2, 1)]
+  temp(1:nrow, 6) = x
+
   ! edge3 z
-  temp(:, 7) = [xi(1, 1, 2), eta(1, 1, 2), zeta(1, 1, 2)]
+  x = [xi(1, 1, 2), eta(1, 1, 2), zeta(1, 1, 2)]
+  temp(1:nrow, 7) = x
+
   ! edge4 xy
-  temp(:, 8) = [xi(2, 2, 1), eta(2, 2, 1), zeta(2, 2, 1)]
+  x = [xi(2, 2, 1), eta(2, 2, 1), zeta(2, 2, 1)]
+  temp(1:nrow, 8) = x
+
   ! edge5, xz
-  temp(:, 9) = [xi(2, 1, 2), eta(2, 1, 2), zeta(2, 1, 2)]
+  x = [xi(2, 1, 2), eta(2, 1, 2), zeta(2, 1, 2)]
+  temp(1:nrow, 9) = x
+
   ! edge6, yz
-  temp(:, 10) = [xi(1, 2, 2), eta(1, 2, 2), zeta(1, 2, 2)]
+  x = [xi(1, 2, 2), eta(1, 2, 2), zeta(1, 2, 2)]
+  temp(1:nrow, 10) = x
 
 CASE (3)
   ! | 0 | 0 | 0 |
@@ -711,149 +803,179 @@ CASE (3)
   ! | 1 | 0 | 0 |
 
   ! four vertex
-  temp(:, 1) = [xi(1, 1, 1), eta(1, 1, 1), zeta(1, 1, 1)]
-  temp(:, 2) = [xi(order+1, 1, 1), eta(order+1, 1, 1), zeta(order+1, 1, 1)]
-  temp(:, 3) = [xi(1, order+1, 1), eta(1, order+1, 1), zeta(1, order+1, 1)]
-  temp(:, 4) = [xi(1, 1, order+1), eta(1, 1, order+1), zeta(1, 1, order+1)]
+  x = [xi(1, 1, 1), eta(1, 1, 1), zeta(1, 1, 1)]
+  temp(1:nrow, 1) = x
+
+  x = [xi(order + 1, 1, 1), eta(order + 1, 1, 1), zeta(order + 1, 1, 1)]
+  temp(1:nrow, 2) = x
+
+  x = [xi(1, order + 1, 1), eta(1, order + 1, 1), zeta(1, order + 1, 1)]
+  temp(1:nrow, 3) = x
+
+  x = [xi(1, 1, order + 1), eta(1, 1, order + 1), zeta(1, 1, order + 1)]
+  temp(1:nrow, 4) = x
 
   cnt = 4
   ! edge1 x
   DO ii = 1, order - 1
     cnt = cnt + 1
-    temp(:, cnt) = [xi(1 + ii, 1, 1), eta(1 + ii, 1, 1), zeta(1 + ii, 1, 1)]
+    x = [xi(1 + ii, 1, 1), eta(1 + ii, 1, 1), zeta(1 + ii, 1, 1)]
+    temp(1:nrow, cnt) = x
   END DO
+
   ! edge2 y
   DO ii = 1, order - 1
     cnt = cnt + 1
-    temp(:, cnt) = [xi(1, 1 + ii, 1), eta(1, 1 + ii, 1), zeta(1, 1 + ii, 1)]
+    x = [xi(1, 1 + ii, 1), eta(1, 1 + ii, 1), zeta(1, 1 + ii, 1)]
+    temp(1:nrow, cnt) = x
   END DO
+
   ! edge3 z
   DO ii = 1, order - 1
     cnt = cnt + 1
-    temp(:, cnt) = [xi(1, 1, 1 + ii), eta(1, 1, 1 + ii), zeta(1, 1, 1 + ii)]
+    x = [xi(1, 1, 1 + ii), eta(1, 1, 1 + ii), zeta(1, 1, 1 + ii)]
+    temp(1:nrow, cnt) = x
   END DO
+
   ! edge4 xy
   DO ii = 1, order - 1
     cnt = cnt + 1
-   temp(:, cnt) = [xi(4-ii, 1+ii, 1), eta(4-ii, 1+ii, 1), zeta(4-ii, 1+ii, 1)]
+    x = [xi(4 - ii, 1 + ii, 1), eta(4 - ii, 1 + ii, 1), &
+         zeta(4 - ii, 1 + ii, 1)]
+    temp(1:nrow, cnt) = x
   END DO
+
   ! edge5, xz
   DO ii = 1, order - 1
     cnt = cnt + 1
-   temp(:, cnt) = [xi(4-ii, 1, ii+1), eta(4-ii, 1, ii+1), zeta(4-ii, 1, ii+1)]
+    x = [xi(4 - ii, 1, ii + 1), eta(4 - ii, 1, ii + 1), &
+         zeta(4 - ii, 1, ii + 1)]
+    temp(1:nrow, cnt) = x
   END DO
   ! edge6, yz
   DO ii = 1, order - 1
     cnt = cnt + 1
-   temp(:, cnt) = [xi(1, 4-ii, ii+1), eta(1, 4-ii, ii+1), zeta(1, 4-ii, ii+1)]
+    x = [xi(1, 4 - ii, ii + 1), eta(1, 4 - ii, ii + 1), &
+         zeta(1, 4 - ii, ii + 1)]
+    temp(1:nrow, cnt) = x
+
   END DO
 
   ! facet xy
   cnt = cnt + 1
-  temp(:, cnt) = [xi(2, 2, 1), eta(2, 2, 1), zeta(2, 2, 1)]
+  x = [xi(2, 2, 1), eta(2, 2, 1), zeta(2, 2, 1)]
+  temp(1:nrow, cnt) = x
 
   ! facet xz
   cnt = cnt + 1
-  temp(:, cnt) = [xi(2, 1, 2), eta(2, 1, 2), zeta(2, 1, 2)]
+  x = [xi(2, 1, 2), eta(2, 1, 2), zeta(2, 1, 2)]
+  temp(1:nrow, cnt) = x
 
   ! facet yz
   cnt = cnt + 1
-  temp(:, cnt) = [xi(1, 2, 2), eta(1, 2, 2), zeta(1, 2, 2)]
+  x = [xi(1, 2, 2), eta(1, 2, 2), zeta(1, 2, 2)]
+  temp(1:nrow, cnt) = x
 
   ! facet 4
   cnt = cnt + 1
-  temp(:, cnt) = [xi(2, 2, 2), eta(2, 2, 2), zeta(2, 2, 2)]
+  x = [xi(2, 2, 2), eta(2, 2, 2), zeta(2, 2, 2)]
+  temp(1:nrow, cnt) = x
 
 CASE DEFAULT
 
   ! four vertex
-  temp(:, 1) = [xi(1, 1, 1), eta(1, 1, 1), zeta(1, 1, 1)]
-  temp(:, 2) = [xi(order+1, 1, 1), eta(order+1, 1, 1), zeta(order+1, 1, 1)]
-  temp(:, 3) = [xi(1, order+1, 1), eta(1, order+1, 1), zeta(1, order+1, 1)]
-  temp(:, 4) = [xi(1, 1, order+1), eta(1, 1, order+1), zeta(1, 1, order+1)]
+  x = [xi(1, 1, 1), eta(1, 1, 1), zeta(1, 1, 1)]
+  temp(1:nrow, 1) = x
+
+  x = [xi(order + 1, 1, 1), eta(order + 1, 1, 1), zeta(order + 1, 1, 1)]
+  temp(1:nrow, 2) = x
+
+  x = [xi(1, order + 1, 1), eta(1, order + 1, 1), zeta(1, order + 1, 1)]
+  temp(1:nrow, 3) = x
+
+  x = [xi(1, 1, order + 1), eta(1, 1, order + 1), zeta(1, 1, order + 1)]
+  temp(1:nrow, 4) = x
 
   cnt = 4
   ! edge1 x
   DO ii = 1, order - 1
     cnt = cnt + 1
-    temp(:, cnt) = [xi(1 + ii, 1, 1), eta(1 + ii, 1, 1), zeta(1 + ii, 1, 1)]
+    x = [xi(1 + ii, 1, 1), eta(1 + ii, 1, 1), zeta(1 + ii, 1, 1)]
+    temp(1:nrow, cnt) = x
+
   END DO
   ! edge2 y
   DO ii = 1, order - 1
     cnt = cnt + 1
-    temp(:, cnt) = [xi(1, 1 + ii, 1), eta(1, 1 + ii, 1), zeta(1, 1 + ii, 1)]
+    x = [xi(1, 1 + ii, 1), eta(1, 1 + ii, 1), zeta(1, 1 + ii, 1)]
+    temp(1:nrow, cnt) = x
+
   END DO
   ! edge3 z
   DO ii = 1, order - 1
     cnt = cnt + 1
-    temp(:, cnt) = [xi(1, 1, 1 + ii), eta(1, 1, 1 + ii), zeta(1, 1, 1 + ii)]
+    x = [xi(1, 1, 1 + ii), eta(1, 1, 1 + ii), zeta(1, 1, 1 + ii)]
+    temp(1:nrow, cnt) = x
+
   END DO
   ! edge4 xy
   jj = order + 1
   DO ii = 1, order - 1
     cnt = cnt + 1
-    temp(:, cnt) = [ &
-                & xi(jj - ii, 1 + ii, 1), &
-                & eta(jj - ii, 1 + ii, 1), &
-                & zeta(jj - ii, 1 + ii, 1)]
+    x = [xi(jj - ii, 1 + ii, 1), eta(jj - ii, 1 + ii, 1), &
+         zeta(jj - ii, 1 + ii, 1)]
+    temp(1:nrow, cnt) = x
   END DO
+
   ! edge5, xz
   DO ii = 1, order - 1
     cnt = cnt + 1
-    temp(:, cnt) = [ &
-              & xi(jj - ii, 1, ii + 1), &
-              & eta(jj - ii, 1, ii + 1), &
-              & zeta(jj - ii, 1, ii + 1)]
+    x = [xi(jj - ii, 1, ii + 1), eta(jj - ii, 1, ii + 1), &
+         zeta(jj - ii, 1, ii + 1)]
+    temp(1:nrow, cnt) = x
   END DO
+
   ! edge6, yz
   DO ii = 1, order - 1
     cnt = cnt + 1
-    temp(:, cnt) = [ &
-              & xi(1, jj - ii, ii + 1), &
-              & eta(1, jj - ii, ii + 1), &
-              & zeta(1, jj - ii, ii + 1)]
+    x = [xi(1, jj - ii, ii + 1), eta(1, jj - ii, ii + 1), &
+         zeta(1, jj - ii, ii + 1)]
+    temp(1:nrow, cnt) = x
   END DO
 
   ! facet xy
   jj = LagrangeDOF_Triangle(order)
-  CALL IJ2VEFC_Triangle( &
-    & xi=xi(:, :, 1), &
-    & eta=eta(:, :, 1), &
-    & temp=temp_face_in, &
-    & order=order, &
-    & N=jj)
+  CALL IJ2VEFC_Triangle(xi=xi(:, :, 1), eta=eta(:, :, 1), &
+                        temp=temp_face_in, order=order, N=jj)
+
   kk = LagrangeInDOF_Triangle(order)
   DO ii = jj - kk + 1, jj
     cnt = cnt + 1
-    temp(:, cnt) = [temp_face_in(1, ii), temp_face_in(2, ii), zeta(1, 1, 1)]
+    x = [temp_face_in(1, ii), temp_face_in(2, ii), zeta(1, 1, 1)]
+    temp(1:nrow, cnt) = x
   END DO
 
   ! facet xz
   ! jj = LagrangeDOF_Triangle(order)
-  CALL IJ2VEFC_Triangle( &
-    & xi=xi(:, 1, :), &
-    & eta=zeta(:, 1, :), &
-    & temp=temp_face_in, &
-    & order=order, &
-    & N=jj)
+  CALL IJ2VEFC_Triangle(xi=xi(:, 1, :), eta=zeta(:, 1, :), &
+                        temp=temp_face_in, order=order, N=jj)
+
   ! kk = LagrangeInDOF_Triangle(order)
   DO ii = jj - kk + 1, jj
     cnt = cnt + 1
-    temp(:, cnt) = [temp_face_in(1, ii), eta(1, 1, 1), temp_face_in(2, ii)]
+    x = [temp_face_in(1, ii), eta(1, 1, 1), temp_face_in(2, ii)]
+    temp(1:nrow, cnt) = x
   END DO
 
   ! facet yz
   ! jj = LagrangeDOF_Triangle(order)
-  CALL IJ2VEFC_Triangle( &
-    & xi=eta(1, :, :), &
-    & eta=zeta(1, :, :), &
-    & temp=temp_face_in, &
-    & order=order, &
-    & N=jj)
+  CALL IJ2VEFC_Triangle(xi=eta(1, :, :), eta=zeta(1, :, :), &
+                        temp=temp_face_in, order=order, N=jj)
   ! kk = LagrangeInDOF_Triangle(order)
   DO ii = jj - kk + 1, jj
     cnt = cnt + 1
-    temp(:, cnt) = [xi(1, 1, 1), temp_face_in(1, ii), temp_face_in(2, ii)]
+    x = [xi(1, 1, 1), temp_face_in(1, ii), temp_face_in(2, ii)]
+    temp(1:nrow, cnt) = x
   END DO
 
   ! ! facet 4
@@ -877,23 +999,13 @@ CASE DEFAULT
   END DO
 
   temp_face_in = 0.0_DFP
-  CALL IJK2VEFC_Triangle( &
-    & xi=xi2, &
-    & eta=eta2, &
-    & zeta=zeta2, &
-    & temp=temp_face_in, &
-    & order=order, &
-    & N=SIZE(temp_face_in, 2))
+  CALL IJK2VEFC_Triangle(xi=xi2, eta=eta2, zeta=zeta2, temp=temp_face_in, &
+                         order=order, N=SIZE(temp_face_in, 2))
 
   ! facet 4
   jj = LagrangeDOF_Triangle(order)
-  CALL IJK2VEFC_Triangle( &
-    & xi=xi2, &
-    & eta=eta2, &
-    & zeta=zeta2, &
-    & temp=temp_face_in, &
-    & order=order, &
-    & N=jj)
+  CALL IJK2VEFC_Triangle(xi=xi2, eta=eta2, zeta=zeta2, temp=temp_face_in, &
+                         order=order, N=jj)
   kk = LagrangeInDOF_Triangle(order)
   DO ii = jj - kk + 1, jj
     cnt = cnt + 1
@@ -902,12 +1014,10 @@ CASE DEFAULT
 
   jj = LagrangeDOF_Tetrahedron(order)
   kk = LagrangeInDOF_Tetrahedron(order=order)
-  CALL IJK2VEFC_Tetrahedron( &
-    & xi(2:order - 2, 2:order - 2, 2:order - 2), &
-    & eta(2:order - 2, 2:order - 2, 2:order - 2), &
-    & zeta(2:order - 2, 2:order - 2, 2:order - 2), &
-    & temp(:, cnt + 1:), &
-    & order - 4, kk)
+  CALL IJK2VEFC_Tetrahedron(xi(2:order - 2, 2:order - 2, 2:order - 2), &
+                            eta(2:order - 2, 2:order - 2, 2:order - 2), &
+             zeta(2:order - 2, 2:order - 2, 2:order - 2), temp(:, cnt + 1:), &
+                            order - 4, kk)
 END SELECT
 
 END PROCEDURE IJK2VEFC_Tetrahedron
@@ -916,13 +1026,7 @@ END PROCEDURE IJK2VEFC_Tetrahedron
 !                                                         IJ2VEFC_Triangle
 !----------------------------------------------------------------------------
 
-SUBROUTINE IJK2VEFC_Triangle( &
-  & xi, &
-  & eta, &
-  & zeta, &
-  & temp,  &
-  & order, &
-  & N)
+SUBROUTINE IJK2VEFC_Triangle(xi, eta, zeta, temp, order, N)
   REAL(DFP), INTENT(IN) :: xi(:, :)
   REAL(DFP), INTENT(IN) :: eta(:, :)
   REAL(DFP), INTENT(IN) :: zeta(:, :)
@@ -1002,6 +1106,7 @@ SUBROUTINE IJK2VEFC_Triangle( &
       & unitno=stderr)
     RETURN
   END IF
+
 END SUBROUTINE IJK2VEFC_Triangle
 
 !----------------------------------------------------------------------------
@@ -1009,6 +1114,16 @@ END SUBROUTINE IJK2VEFC_Triangle
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE OrthogonalBasis_Tetrahedron1
+INTEGER(I4B) :: nrow, ncol
+CALL OrthogonalBasis_Tetrahedron1_(order=order, xij=xij, &
+                 refTetrahedron=refTetrahedron, ans=ans, nrow=nrow, ncol=ncol)
+END PROCEDURE OrthogonalBasis_Tetrahedron1
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE OrthogonalBasis_Tetrahedron1_
 CHARACTER(20) :: layout
 REAL(DFP) :: x(1:3, 1:SIZE(xij, 2))
 REAL(DFP) :: P1(SIZE(xij, 2), 0:order)
@@ -1017,7 +1132,10 @@ REAL(DFP) :: R1(SIZE(xij, 2), 0:order)
 REAL(DFP) :: x2(SIZE(xij, 2), 0:order)
 REAL(DFP) :: x3(SIZE(xij, 2), 0:order)
 INTEGER(I4B) :: cnt
-INTEGER(I4B) :: p, q, r
+INTEGER(I4B) :: p, q, r, indx(7)
+
+nrow = SIZE(xij, 2)
+ncol = (order + 1) * (order + 2) * (order + 3) / 6
 
 layout = TRIM(UpperCase(refTetrahedron))
 SELECT CASE (TRIM(layout))
@@ -1032,40 +1150,52 @@ DO p = 0, order
   x3(:, p) = 0.5_DFP * (1.0_DFP - x(3, :))
 END DO
 
-P1 = LegendreEvalAll(n=order, x=x(1, :))
+! P1 = LegendreEvalAll(n=order, x=x(1, :))
+CALL LegendreEvalAll_(n=order, x=x(1, :), ans=P1, nrow=indx(1), ncol=indx(2))
 
 cnt = 0
 
 DO p = 0, order
 
   Q1 = (x2**p) * JacobiEvalAll( &
-    & n=order, &
-    & x=x(2, :), &
-    & alpha=REAL(2 * p + 1, DFP), &
-    & beta=0.0_DFP)
+       n=order, &
+       x=x(2, :), &
+       alpha=REAL(2 * p + 1, DFP), &
+       beta=0.0_DFP)
 
   DO q = 0, order - p
 
     R1 = (x3**(p + q)) * JacobiEvalAll( &
-    & n=order, &
-    & x=x(3, :), &
-    & alpha=REAL(2 * p + 2 * q + 2, DFP), &
-    & beta=0.0_DFP)
+         n=order, &
+         x=x(3, :), &
+         alpha=REAL(2 * p + 2 * q + 2, DFP), &
+         beta=0.0_DFP)
 
     DO r = 0, order - p - q
       cnt = cnt + 1
-      ans(:, cnt) = P1(:, p) * Q1(:, q) * R1(:, r)
+      ans(1:nrow, cnt) = P1(1:nrow, p) * Q1(1:nrow, q) * R1(1:nrow, r)
     END DO
   END DO
+
 END DO
 
-END PROCEDURE OrthogonalBasis_Tetrahedron1
+END PROCEDURE OrthogonalBasis_Tetrahedron1_
 
 !----------------------------------------------------------------------------
 !                                             OrthogonalBasis_Tetrahedron
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE OrthogonalBasis_Tetrahedron2
+INTEGER(I4B) :: nrow, ncol
+CALL OrthogonalBasis_Tetrahedron2_(order=order, x=x, y=y, z=z, &
+                 refTetrahedron=refTetrahedron, ans=ans, nrow=nrow, ncol=ncol)
+END PROCEDURE OrthogonalBasis_Tetrahedron2
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE OrthogonalBasis_Tetrahedron2_
 CHARACTER(20) :: layout
 REAL(DFP) :: x0(SIZE(x)), y0(SIZE(y)), z0(SIZE(z))
 REAL(DFP) :: xij(3, SIZE(x) * SIZE(y) * SIZE(z))
@@ -1076,6 +1206,9 @@ REAL(DFP) :: R1(1:3, 0:order)
 REAL(DFP) :: x2(SIZE(xij, 2), 0:order)
 REAL(DFP) :: x3(SIZE(xij, 2), 0:order)
 INTEGER(I4B) :: p, q, r
+
+nrow = SIZE(x) * SIZE(y) * SIZE(z)
+ncol = (order + 1) * (order + 2) * (order + 3) / 6
 
 layout = TRIM(UpperCase(refTetrahedron))
 
@@ -1130,20 +1263,36 @@ DO p = 0, order
 
     DO r = 0, order - p - q
       cnt = cnt + 1
-      ans(:, cnt) = P1(:, p) * Q1(:, q) * R1(:, r)
+      ans(1:nrow, cnt) = P1(:, p) * Q1(:, q) * R1(:, r)
     END DO
   END DO
 END DO
 
-END PROCEDURE OrthogonalBasis_Tetrahedron2
+END PROCEDURE OrthogonalBasis_Tetrahedron2_
 
 !----------------------------------------------------------------------------
 !                                       BarycentricVertexBasis_Tetrahedron
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE BarycentricVertexBasis_Tetrahedron
-ans = TRANSPOSE(lambda(1:4, :))
+INTEGER(I4B) :: nrow, ncol
+CALL BarycentricVertexBasis_Tetrahedron_(lambda=lambda, ans=ans, &
+                                         nrow=nrow, ncol=ncol)
 END PROCEDURE BarycentricVertexBasis_Tetrahedron
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE BarycentricVertexBasis_Tetrahedron_
+INTEGER(I4B) :: ii, jj
+nrow = SIZE(lambda, 2)
+ncol = 4
+
+DO CONCURRENT(ii=1:nrow, jj=1:ncol)
+  ans(ii, jj) = lambda(jj, ii)
+END DO
+END PROCEDURE BarycentricVertexBasis_Tetrahedron_
 
 !----------------------------------------------------------------------------
 !                                 BarycentricVertexBasisGradient_Tetrahedron
@@ -1163,127 +1312,125 @@ END PROCEDURE BarycentricVertexBasisGradient_Tetrahedron
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE BarycentricEdgeBasis_Tetrahedron
-REAL(DFP) :: d_lambda(6 * SIZE(lambda, 2))
-REAL(DFP) :: phi( &
-  & 1:6 * SIZE(lambda, 2), &
-  & 0:MAX( &
-  & pe1 - 2, &
-  & pe2 - 2, &
-  & pe3 - 2, &
-  & pe4 - 2, &
-  & pe5 - 2, &
-  & pe6 - 2))
-INTEGER(I4B) :: maxP, tPoints, i1, i2
-
-tPoints = SIZE(lambda, 2)
-maxP = SIZE(phi, 2) - 1
-
-i1 = 1
-i2 = i1 + tPoints - 1
-d_lambda(i1:i2) = lambda(2, :) - lambda(1, :)
-
-i1 = i2 + 1
-i2 = i1 + tPoints - 1
-d_lambda(i1:i2) = lambda(3, :) - lambda(1, :)
-
-i1 = i2 + 1
-i2 = i1 + tPoints - 1
-d_lambda(i1:i2) = lambda(4, :) - lambda(1, :)
-
-i1 = i2 + 1
-i2 = i1 + tPoints - 1
-d_lambda(i1:i2) = lambda(3, :) - lambda(2, :)
-
-i1 = i2 + 1
-i2 = i1 + tPoints - 1
-d_lambda(i1:i2) = lambda(4, :) - lambda(2, :)
-
-i1 = i2 + 1
-i2 = i1 + tPoints - 1
-d_lambda(i1:i2) = lambda(4, :) - lambda(3, :)
-
-phi = LobattoKernelEvalAll(n=maxP, x=d_lambda)
-
-ans = BarycentricEdgeBasis_Tetrahedron2( &
-  & pe1=pe1, &
-  & pe2=pe2, &
-  & pe3=pe3, &
-  & pe4=pe4, &
-  & pe5=pe5, &
-  & pe6=pe6, &
-  & lambda=lambda, &
-  & phi=phi &
-  & )
-
+INTEGER(I4B) :: nrow, ncol
+CALL BarycentricEdgeBasis_Tetrahedron_(pe1=pe1, pe2=pe2, pe3=pe3, pe4=pe4, &
+               pe5=pe5, pe6=pe6, lambda=lambda, ans=ans, nrow=nrow, ncol=ncol)
 END PROCEDURE BarycentricEdgeBasis_Tetrahedron
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE BarycentricEdgeBasis_Tetrahedron_
+REAL(DFP) :: d_lambda(6 * SIZE(lambda, 2))
+REAL(DFP), ALLOCATABLE :: phi(:, :)
+INTEGER(I4B) :: maxP, indx(7)
+
+nrow = SIZE(lambda, 2)
+ncol = pe1 + pe2 + pe3 + pe4 + pe5 + pe6 - 6
+
+maxP = MAX(pe1 - 2, pe2 - 2, pe3 - 2, pe4 - 2, pe5 - 2, pe6 - 2)
+
+indx(1) = 6 * nrow
+ALLOCATE (phi(1:indx(1), 0:maxP))
+
+indx = [0, 1, 2, 3, 4, 5, 6] * nrow
+
+d_lambda(indx(1) + 1:indx(2)) = lambda(2, 1:nrow) - lambda(1, 1:nrow)
+d_lambda(indx(2) + 1:indx(3)) = lambda(3, 1:nrow) - lambda(1, 1:nrow)
+d_lambda(indx(3) + 1:indx(4)) = lambda(4, 1:nrow) - lambda(1, 1:nrow)
+d_lambda(indx(4) + 1:indx(5)) = lambda(3, 1:nrow) - lambda(2, 1:nrow)
+d_lambda(indx(5) + 1:indx(6)) = lambda(4, 1:nrow) - lambda(2, 1:nrow)
+d_lambda(indx(6) + 1:indx(7)) = lambda(4, 1:nrow) - lambda(3, 1:nrow)
+
+! phi = LobattoKernelEvalAll(n=maxP, x=d_lambda)
+CALL LobattoKernelEvalAll_(n=maxP, x=d_lambda, ans=phi, nrow=nrow, ncol=ncol)
+
+! ans = BarycentricEdgeBasis_Tetrahedron2
+CALL BarycentricEdgeBasis_Tetrahedron2_(pe1=pe1, pe2=pe2, pe3=pe3, pe4=pe4, &
+      pe5=pe5, pe6=pe6, lambda=lambda, phi=phi, ans=ans, nrow=nrow, ncol=ncol)
+
+DEALLOCATE (phi)
+
+END PROCEDURE BarycentricEdgeBasis_Tetrahedron_
 
 !----------------------------------------------------------------------------
 !                                          BarycentricEdgeBasis_Tetrahedron2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE BarycentricEdgeBasis_Tetrahedron2
-INTEGER(I4B) :: tPoints, a, ii, i1, i2
+INTEGER(I4B) :: nrow, ncol
+CALL BarycentricEdgeBasis_Tetrahedron2_(pe1=pe1, pe2=pe2, pe3=pe3, pe4=pe4, &
+      pe5=pe5, pe6=pe6, lambda=lambda, phi=phi, ans=ans, nrow=nrow, ncol=ncol)
+END PROCEDURE BarycentricEdgeBasis_Tetrahedron2
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE BarycentricEdgeBasis_Tetrahedron2_
+INTEGER(I4B) :: a, ii, i1, i2
 REAL(DFP) :: temp(SIZE(lambda, 2))
 
-ans = 0.0_DFP
-tPoints = SIZE(temp)
+nrow = SIZE(lambda, 2)
+ncol = pe1 + pe2 + pe3 + pe4 + pe5 + pe6 - 6
 
 !! edge(1) = (v1, v2)
 a = 0
-temp = lambda(1, :) * lambda(2, :)
+temp = lambda(1, 1:nrow) * lambda(2, 1:nrow)
 i1 = 1
-i2 = i1 + tPoints - 1
+i2 = i1 + nrow - 1
 DO ii = 1, pe1 - 1
   a = a + 1
-  ans(:, a) = temp * phi(i1:i2, ii - 1)
+  ans(1:nrow, a) = temp * phi(i1:i2, ii - 1)
 END DO
 
 !! edge(2) = (v1, v3)
-temp = lambda(1, :) * lambda(3, :)
+temp = lambda(1, 1:nrow) * lambda(3, 1:nrow)
 i1 = i2 + 1
-i2 = i1 + tPoints - 1
+i2 = i1 + nrow - 1
 DO ii = 1, pe2 - 1
   a = a + 1
-  ans(:, a) = temp * phi(i1:i2, ii - 1)
+  ans(1:nrow, a) = temp * phi(i1:i2, ii - 1)
 END DO
 
 !! edge(3) = (v1, v4)
-temp = lambda(1, :) * lambda(4, :)
+temp = lambda(1, 1:nrow) * lambda(4, 1:nrow)
 i1 = i2 + 1
-i2 = i1 + tPoints - 1
+i2 = i1 + nrow - 1
 DO ii = 1, pe3 - 1
   a = a + 1
-  ans(:, a) = temp * phi(i1:i2, ii - 1)
+  ans(1:nrow, a) = temp * phi(i1:i2, ii - 1)
 END DO
 
 !! edge(4) = (v2, v3)
-temp = lambda(2, :) * lambda(3, :)
+temp = lambda(2, 1:nrow) * lambda(3, 1:nrow)
 i1 = i2 + 1
-i2 = i1 + tPoints - 1
+i2 = i1 + nrow - 1
 DO ii = 1, pe4 - 1
   a = a + 1
-  ans(:, a) = temp * phi(i1:i2, ii - 1)
+  ans(1:nrow, a) = temp * phi(i1:i2, ii - 1)
 END DO
 
 !! edge(5) = (v2, v4)
-temp = lambda(2, :) * lambda(4, :)
+temp = lambda(2, 1:nrow) * lambda(4, 1:nrow)
 i1 = i2 + 1
-i2 = i1 + tPoints - 1
+i2 = i1 + nrow - 1
 DO ii = 1, pe5 - 1
   a = a + 1
-  ans(:, a) = temp * phi(i1:i2, ii - 1)
+  ans(1:nrow, a) = temp * phi(i1:i2, ii - 1)
 END DO
 
 !! edge(5) = (v3, v4)
-temp = lambda(3, :) * lambda(4, :)
+temp = lambda(3, 1:nrow) * lambda(4, 1:nrow)
 i1 = i2 + 1
-i2 = i1 + tPoints - 1
+i2 = i1 + nrow - 1
 DO ii = 1, pe6 - 1
   a = a + 1
-  ans(:, a) = temp * phi(i1:i2, ii - 1)
+  ans(1:nrow, a) = temp * phi(i1:i2, ii - 1)
 END DO
 
-END PROCEDURE BarycentricEdgeBasis_Tetrahedron2
+END PROCEDURE BarycentricEdgeBasis_Tetrahedron2_
 
 !----------------------------------------------------------------------------
 !                                   BarycentricEdgeBasisGradient_Tetrahedron2
@@ -1291,7 +1438,7 @@ END PROCEDURE BarycentricEdgeBasis_Tetrahedron2
 
 MODULE PROCEDURE BarycentricEdgeBasisGradient_Tetrahedron2
 INTEGER(I4B) :: a, ii, i1, i2, edges(2, 6), orders(6), iedge, v1, v2, &
-  & tPoints
+                tPoints
 REAL(DFP) :: temp(SIZE(lambda, 2), 6)
 
 tPoints = SIZE(lambda, 2)
@@ -1326,98 +1473,114 @@ END PROCEDURE BarycentricEdgeBasisGradient_Tetrahedron2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE BarycentricFacetBasis_Tetrahedron
-REAL(DFP) :: d_lambda(6 * SIZE(lambda, 2))
-REAL(DFP) :: phi( &
-  & 1:6 * SIZE(lambda, 2), &
-  & 0:MAX( &
-  & ps1 - 1, &
-  & ps2 - 1, &
-  & ps3 - 1, &
-  & ps4 - 1))
-INTEGER(I4B) :: maxP, tPoints, i1, i2
-
-tPoints = SIZE(lambda, 2)
-maxP = SIZE(phi, 2) - 1
-
-i1 = 1
-i2 = i1 + tPoints - 1
-d_lambda(i1:i2) = lambda(2, :) - lambda(1, :)
-
-i1 = i2 + 1
-i2 = i1 + tPoints - 1
-d_lambda(i1:i2) = lambda(3, :) - lambda(1, :)
-
-i1 = i2 + 1
-i2 = i1 + tPoints - 1
-d_lambda(i1:i2) = lambda(4, :) - lambda(1, :)
-
-i1 = i2 + 1
-i2 = i1 + tPoints - 1
-d_lambda(i1:i2) = lambda(3, :) - lambda(2, :)
-
-i1 = i2 + 1
-i2 = i1 + tPoints - 1
-d_lambda(i1:i2) = lambda(4, :) - lambda(2, :)
-
-i1 = i2 + 1
-i2 = i1 + tPoints - 1
-d_lambda(i1:i2) = lambda(4, :) - lambda(3, :)
-
-phi = LobattoKernelEvalAll(n=maxP, x=d_lambda)
-ans = BarycentricFacetBasis_Tetrahedron2( &
-  & ps1=ps1, &
-  & ps2=ps2, &
-  & ps3=ps3, &
-  & ps4=ps4, &
-  & lambda=lambda, &
-  & phi=phi)
-
+INTEGER(I4B) :: nrow, ncol
+CALL BarycentricFacetBasis_Tetrahedron_(ps1=ps1, ps2=ps2, ps3=ps3, &
+                        ps4=ps4, lambda=lambda, ans=ans, nrow=nrow, ncol=ncol)
 END PROCEDURE BarycentricFacetBasis_Tetrahedron
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE BarycentricFacetBasis_Tetrahedron_
+REAL(DFP) :: d_lambda(6 * SIZE(lambda, 2))
+REAL(DFP), ALLOCATABLE :: phi(:, :)
+
+INTEGER(I4B) :: maxP, indx(7)
+
+nrow = SIZE(lambda, 2)
+ncol = (ps1 - 1) * (ps1 - 2) / 2 + (ps2 - 1) * (ps2 - 2) / 2 &
+       + (ps3 - 1) * (ps3 - 2) / 2 + (ps4 - 1) * (ps4 - 2) / 2
+
+indx(1) = 6 * nrow
+maxP = MAX(ps1 - 1, ps2 - 1, ps3 - 1, ps4 - 1)
+ALLOCATE (phi(1:indx(1), 0:maxP))
+
+indx = [0, 1, 2, 3, 4, 5, 6] * nrow
+
+d_lambda(indx(1) + 1:indx(2)) = lambda(2, 1:nrow) - lambda(1, 1:nrow)
+d_lambda(indx(2) + 1:indx(3)) = lambda(3, 1:nrow) - lambda(1, 1:nrow)
+d_lambda(indx(3) + 1:indx(4)) = lambda(4, 1:nrow) - lambda(1, 1:nrow)
+d_lambda(indx(4) + 1:indx(5)) = lambda(3, 1:nrow) - lambda(2, 1:nrow)
+d_lambda(indx(5) + 1:indx(6)) = lambda(4, 1:nrow) - lambda(2, 1:nrow)
+d_lambda(indx(6) + 1:indx(7)) = lambda(4, 1:nrow) - lambda(3, 1:nrow)
+
+! phi = LobattoKernelEvalAll(n=maxP, x=d_lambda)
+CALL LobattoKernelEvalAll_(n=maxP, x=d_lambda, ans=phi, nrow=nrow, ncol=ncol)
+
+! ans = BarycentricFacetBasis_Tetrahedron2( &
+CALL BarycentricFacetBasis_Tetrahedron2_(ps1=ps1, ps2=ps2, ps3=ps3, &
+               ps4=ps4, lambda=lambda, phi=phi, ans=ans, nrow=nrow, ncol=ncol)
+
+DEALLOCATE (phi)
+
+END PROCEDURE BarycentricFacetBasis_Tetrahedron_
 
 !----------------------------------------------------------------------------
 !                                         BarycentricFacetBasis_Tetrahedron
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE BarycentricFacetBasis_Tetrahedron2
+INTEGER(I4B) :: nrow, ncol
+CALL BarycentricFacetBasis_Tetrahedron2_(ps1=ps1, ps2=ps2, ps3=ps3, ps4=ps4, &
+                        lambda=lambda, phi=phi, ans=ans, nrow=nrow, ncol=ncol)
+END PROCEDURE BarycentricFacetBasis_Tetrahedron2
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE BarycentricFacetBasis_Tetrahedron2_
 REAL(DFP) :: temp(SIZE(lambda, 2))
-INTEGER(I4B) :: tPoints, i1, i2, ii, a
+INTEGER(I4B) :: i1, i2
 INTEGER(I4B) :: i21(2), i31(2), i41(2), i32(2), i42(2), i43(2)
 INTEGER(I4B) :: facetConn(3, 4), fid, n1, n2, cnt, indx1(2, 4), indx2(2, 4)
 
-tPoints = SIZE(temp)
+nrow = SIZE(lambda, 2)
+ncol = (ps1 - 1) * (ps1 - 2) / 2 + (ps2 - 1) * (ps2 - 2) / 2 &
+       + (ps3 - 1) * (ps3 - 2) / 2 + (ps4 - 1) * (ps4 - 2) / 2
 
-i21 = [1, tPoints]
-i31 = i21 + tPoints
-i41 = i31 + tPoints
-i32 = i41 + tPoints
-i42 = i32 + tPoints
-i43 = i42 + tPoints
-facetConn = FacetConnectivity_Tetrahedron( &
-  & baseInterpol="HIERARCHY", &
-  & baseContinuity="H1")
-indx1 = ((i21.rowconcat.i21) .rowconcat.i31) .rowconcat.i32
-indx2 = ((i31.rowconcat.i41) .rowconcat.i41) .rowconcat.i42
+i21(1) = 1; i21(2) = nrow
+i31 = i21 + nrow
+i41 = i31 + nrow
+i32 = i41 + nrow
+i42 = i32 + nrow
+i43 = i42 + nrow
 
-ans = 0.0_DFP
+facetConn(1:3, 1:4) = &
+  FacetConnectivity_Tetrahedron(baseInterpol="HIERARCHY", baseContinuity="H1")
+
+indx1(1:2, 1) = i21
+indx1(1:2, 2) = i21
+indx1(1:2, 3) = i31
+indx1(1:2, 4) = i32
+
+indx2(1:2, 1) = i31
+indx2(1:2, 2) = i41
+indx2(1:2, 3) = i41
+indx2(1:2, 4) = i42
+
+! ans = 0.0_DFP
 i2 = 0
 cnt = 0
 
 !! Face1
 DO fid = 1, SIZE(facetConn, 2)
-  temp = lambda(facetConn(1, fid), :) &
-        & * lambda(facetConn(2, fid), :)  &
-        & * lambda(facetConn(3, fid), :)
+  temp(1:nrow) = lambda(facetConn(1, fid), 1:nrow) &
+                 * lambda(facetConn(2, fid), 1:nrow) &
+                 * lambda(facetConn(3, fid), 1:nrow)
+
   DO n1 = 1, ps1 - 1
     DO n2 = 1, ps1 - 1 - n1
       cnt = cnt + 1
-      ans(:, cnt) = temp  &
-                   & * phi(indx1(1, fid):indx1(2, fid), n1 - 1)  &
-                   & * phi(indx2(1, fid):indx2(2, fid), n2 - 1)
+      ans(1:nrow, cnt) = temp &
+                         * phi(indx1(1, fid):indx1(2, fid), n1 - 1) &
+                         * phi(indx2(1, fid):indx2(2, fid), n2 - 1)
     END DO
   END DO
 END DO
 
-END PROCEDURE BarycentricFacetBasis_Tetrahedron2
+END PROCEDURE BarycentricFacetBasis_Tetrahedron2_
 
 !----------------------------------------------------------------------------
 !                                 BarycentricFacetBasisGradient_Tetrahedron
@@ -1482,70 +1645,91 @@ END PROCEDURE BarycentricFacetBasisGradient_Tetrahedron2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE BarycentricCellBasis_Tetrahedron
+INTEGER(I4B) :: nrow, ncol
+CALL BarycentricCellBasis_Tetrahedron_(pb=pb, lambda=lambda, ans=ans, &
+                                       nrow=nrow, ncol=ncol)
+END PROCEDURE BarycentricCellBasis_Tetrahedron
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE BarycentricCellBasis_Tetrahedron_
 REAL(DFP) :: d_lambda(3 * SIZE(lambda, 2))
 REAL(DFP) :: phi(1:3 * SIZE(lambda, 2), 0:pb)
 INTEGER(I4B) :: maxP, tPoints, i1, i2
 
-tPoints = SIZE(lambda, 2)
+nrow = SIZE(lambda, 2)
+ncol = (pb - 1) * (pb - 2) * (pb - 3) / 6_I4B
+
 maxP = SIZE(phi, 2) - 1
 
 i1 = 1
-i2 = i1 + tPoints - 1
-d_lambda(i1:i2) = lambda(2, :) - lambda(1, :)
+i2 = i1 + nrow - 1
+d_lambda(i1:i2) = lambda(2, 1:nrow) - lambda(1, 1:nrow)
 
 i1 = i2 + 1
-i2 = i1 + tPoints - 1
-d_lambda(i1:i2) = lambda(3, :) - lambda(1, :)
+i2 = i1 + nrow - 1
+d_lambda(i1:i2) = lambda(3, 1:nrow) - lambda(1, 1:nrow)
 
 i1 = i2 + 1
-i2 = i1 + tPoints - 1
-d_lambda(i1:i2) = lambda(4, :) - lambda(1, :)
+i2 = i1 + nrow - 1
+d_lambda(i1:i2) = lambda(4, 1:nrow) - lambda(1, 1:nrow)
 
-phi = LobattoKernelEvalAll(n=maxP, x=d_lambda)
-ans = BarycentricCellBasis_Tetrahedron2( &
-  & pb=pb, &
-  & lambda=lambda, &
-  & phi=phi)
+! phi = LobattoKernelEvalAll(n=maxP, x=d_lambda)
+CALL LobattoKernelEvalAll_(n=maxP, x=d_lambda, ans=phi, nrow=nrow, ncol=ncol)
 
-END PROCEDURE BarycentricCellBasis_Tetrahedron
+! ans = BarycentricCellBasis_Tetrahedron2( &
+CALL BarycentricCellBasis_Tetrahedron2_(pb=pb, lambda=lambda, phi=phi, &
+                                        ans=ans, nrow=nrow, ncol=ncol)
+
+END PROCEDURE BarycentricCellBasis_Tetrahedron_
 
 !----------------------------------------------------------------------------
 !                                         BarycentricCellBasis_Tetrahedron
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE BarycentricCellBasis_Tetrahedron2
+INTEGER(I4B) :: nrow, ncol
+CALL BarycentricCellBasis_Tetrahedron2_(pb=pb, lambda=lambda, phi=phi, &
+                                        ans=ans, nrow=nrow, ncol=ncol)
+END PROCEDURE BarycentricCellBasis_Tetrahedron2
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE BarycentricCellBasis_Tetrahedron2_
 REAL(DFP) :: temp(SIZE(lambda, 2))
-INTEGER(I4B) :: tPoints
 INTEGER(I4B) :: i21(2), i31(2), i41(2)
 INTEGER(I4B) :: n1, n2, n3, cnt
 
-tPoints = SIZE(temp)
+nrow = SIZE(lambda, 2)
+ncol = (pb - 1) * (pb - 2) * (pb - 3) / 6_I4B
 
-i21 = [1, tPoints]
-i31 = i21 + tPoints
-i41 = i31 + tPoints
+i21(1) = 1; i21(2) = nrow
+i31 = i21 + nrow
+i41 = i31 + nrow
 
 ans = 0.0_DFP
 cnt = 0
 
-temp = lambda(1, :) &
-      & * lambda(2, :)  &
-      & * lambda(3, :)  &
-      & * lambda(4, :)
+temp(1:nrow) = lambda(1, 1:nrow) * lambda(2, 1:nrow) &
+               * lambda(3, 1:nrow) * lambda(4, 1:nrow)
 
 DO n1 = 1, pb - 1
   DO n2 = 1, pb - 1 - n1
     DO n3 = 1, pb - 1 - n1 - n2
       cnt = cnt + 1
-      ans(:, cnt) = temp  &
-                   & * phi(i21(1):i21(2), n1 - 1)  &
-                   & * phi(i31(1):i31(2), n2 - 1)  &
-                   & * phi(i41(1):i41(2), n3 - 1)
+      ans(1:nrow, cnt) = temp &
+                         * phi(i21(1):i21(2), n1 - 1) &
+                         * phi(i31(1):i31(2), n2 - 1) &
+                         * phi(i41(1):i41(2), n3 - 1)
     END DO
   END DO
 END DO
 
-END PROCEDURE BarycentricCellBasis_Tetrahedron2
+END PROCEDURE BarycentricCellBasis_Tetrahedron2_
 
 !----------------------------------------------------------------------------
 !                                 BarycentricCellBasisGradient_Tetrahedron
@@ -1611,126 +1795,105 @@ END PROCEDURE BarycentricCellBasisGradient_Tetrahedron2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE BarycentricHeirarchicalBasis_Tetrahedron1
-REAL(DFP) :: phi( &
-  & 1:6 * SIZE(lambda, 2), &
-  & 0:MAX(  &
-  & pe1 - 2, &
-  & pe2 - 2, &
-  & pe3 - 2, &
-  & pe4 - 2, &
-  & pe5 - 2, &
-  & pe6 - 2, &
-  & ps1 - 1, &
-  & ps2 - 1, &
-  & ps3 - 1, &
-  & ps4 - 1, &
-  & order &
-  & ))
+INTEGER(I4B) :: nrow, ncol
+CALL BarycentricHeirarchicalBasis_Tetrahedron1_(order=order, &
+              pe1=pe1, pe2=pe2, pe3=pe3, pe4=pe4, pe5=pe5, pe6=pe6, ps1=ps1, &
+      ps2=ps2, ps3=ps3, ps4=ps4, lambda=lambda, ans=ans, nrow=nrow, ncol=ncol)
+END PROCEDURE BarycentricHeirarchicalBasis_Tetrahedron1
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE BarycentricHeirarchicalBasis_Tetrahedron1_
 REAL(DFP) :: d_lambda(6 * SIZE(lambda, 2))
-INTEGER(I4B) :: a, b, maxP, tPoints, i1, i2
+INTEGER(I4B) :: maxP, bint, indx(7)
+REAL(DFP), ALLOCATABLE :: phi(:, :)
+LOGICAL(LGT) :: isok
 
-tPoints = SIZE(lambda, 2)
-maxP = SIZE(phi, 2) - 1_I4B
+nrow = SIZE(lambda, 2)
+ncol = 0
 
-i1 = 1
-i2 = i1 + tPoints - 1
-d_lambda(i1:i2) = lambda(2, :) - lambda(1, :)
+indx(1) = 6 * nrow
+maxP = MAX(pe1 - 2, pe2 - 2, pe3 - 2, pe4 - 2, pe5 - 2, pe6 - 2, &
+           ps1 - 1, ps2 - 1, ps3 - 1, ps4 - 1, order)
 
-i1 = i2 + 1
-i2 = i1 + tPoints - 1
-d_lambda(i1:i2) = lambda(3, :) - lambda(1, :)
+ALLOCATE (phi(1:indx(1), 0:maxP))
 
-i1 = i2 + 1
-i2 = i1 + tPoints - 1
-d_lambda(i1:i2) = lambda(4, :) - lambda(1, :)
+indx = [0, 1, 2, 3, 4, 5, 6] * nrow
 
-i1 = i2 + 1
-i2 = i1 + tPoints - 1
-d_lambda(i1:i2) = lambda(3, :) - lambda(2, :)
+d_lambda(indx(1) + 1:indx(2)) = lambda(2, 1:nrow) - lambda(1, 1:nrow)
+d_lambda(indx(2) + 1:indx(3)) = lambda(3, 1:nrow) - lambda(1, 1:nrow)
+d_lambda(indx(3) + 1:indx(4)) = lambda(4, 1:nrow) - lambda(1, 1:nrow)
+d_lambda(indx(4) + 1:indx(5)) = lambda(3, 1:nrow) - lambda(2, 1:nrow)
+d_lambda(indx(5) + 1:indx(6)) = lambda(4, 1:nrow) - lambda(2, 1:nrow)
+d_lambda(indx(6) + 1:indx(7)) = lambda(4, 1:nrow) - lambda(3, 1:nrow)
 
-i1 = i2 + 1
-i2 = i1 + tPoints - 1
-d_lambda(i1:i2) = lambda(4, :) - lambda(2, :)
-
-i1 = i2 + 1
-i2 = i1 + tPoints - 1
-d_lambda(i1:i2) = lambda(4, :) - lambda(3, :)
-
-phi = LobattoKernelEvalAll(n=maxP, x=d_lambda)
+! phi = LobattoKernelEvalAll(n=maxP, x=d_lambda)
+CALL LobattoKernelEvalAll_(n=maxP, x=d_lambda, ans=phi, nrow=indx(1), ncol=indx(2))
 
 !! Vertex basis function
-ans = 0.0_DFP
-ans(:, 1:4) = BarycentricVertexBasis_Tetrahedron(lambda=lambda)
-b = 4
+CALL BarycentricVertexBasis_Tetrahedron_(lambda=lambda, ans=ans, nrow=indx(1), &
+                                         ncol=bint)
+
+ncol = ncol + bint
 
 !! Edge basis function
-IF (ANY([pe1, pe2, pe3, pe4, pe5, pe6] .GE. 2_I4B)) THEN
-  a = b + 1
-  b = a - 1 + pe1 + pe2 + pe3 + pe4 + pe5 + pe6 - 6
-  ans(:, a:b) = BarycentricEdgeBasis_Tetrahedron2( &
-    & pe1=pe1,  &
-    & pe2=pe2, &
-    & pe3=pe3, &
-    & pe4=pe4, &
-    & pe5=pe5, &
-    & pe6=pe6, &
-    & lambda=lambda, &
-    & phi=phi  &
-    & )
+indx(1:6) = [pe1, pe2, pe3, pe4, pe5, pe6]
+isok = ANY(indx(1:6) .GE. 2_I4B)
+
+IF (isok) THEN
+  CALL BarycentricEdgeBasis_Tetrahedron2_(pe1=pe1, pe2=pe2, pe3=pe3, &
+   pe4=pe4, pe5=pe5, pe6=pe6, lambda=lambda, phi=phi, ans=ans(:, ncol + 1:), &
+                                          nrow=nrow, ncol=bint)
+
+  ncol = ncol + bint
 END IF
 
 !! Facet basis function
-IF (ANY([ps1, ps2, ps3, ps4] .GE. 3_I4B)) THEN
-  a = b + 1
-  b = a - 1  &
-    & + (ps1 - 1_I4B) * (ps1 - 2_I4B) / 2_I4B  &
-    & + (ps2 - 1_I4B) * (ps2 - 2_I4B) / 2_I4B  &
-    & + (ps3 - 1_I4B) * (ps3 - 2_I4B) / 2_I4B  &
-    & + (ps4 - 1_I4B) * (ps4 - 2_I4B) / 2_I4B
+indx(1:4) = [ps1, ps2, ps3, ps4]
+isok = ANY(indx(1:4) .GE. 3_I4B)
+IF (isok) THEN
+  CALL BarycentricFacetBasis_Tetrahedron2_(ps1=ps1, ps2=ps2, ps3=ps3, &
+          ps4=ps4, lambda=lambda, phi=phi, ans=ans(:, ncol + 1:), nrow=nrow, &
+                                           ncol=bint)
 
-  ans(:, a:b) = BarycentricFacetBasis_Tetrahedron2( &
-    & ps1=ps1, &
-    & ps2=ps2, &
-    & ps3=ps3, &
-    & ps4=ps4, &
-    & lambda=lambda, &
-    & phi=phi  &
-    & )
+  ncol = ncol + bint
 END IF
 
 !! Cell basis function
-IF (order .GE. 4_I4B) THEN
-  a = b + 1
-  b = a - 1 &
-    & + (order - 1_I4B) * (order - 2_I4B) * (order - 3_I4B) / 6_I4B
+isok = order .GE. 4_I4B
+IF (isok) THEN
+  CALL BarycentricCellBasis_Tetrahedron2_(pb=order, lambda=lambda, phi=phi, &
+                                  ans=ans(:, ncol + 1:), nrow=nrow, ncol=bint)
 
-  ans(:, a:b) = BarycentricCellBasis_Tetrahedron2( &
-    & pb=order, &
-    & lambda=lambda, &
-    & phi=phi)
+  ncol = ncol + bint
 END IF
-END PROCEDURE BarycentricHeirarchicalBasis_Tetrahedron1
+
+DEALLOCATE (phi)
+
+END PROCEDURE BarycentricHeirarchicalBasis_Tetrahedron1_
 
 !----------------------------------------------------------------------------
 !                                  BarycentricHeirarchicalBasis_Tetrahedron
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE BarycentricHeirarchicalBasis_Tetrahedron2
-ans = BarycentricHeirarchicalBasis_Tetrahedron( &
-    & order=order,  &
-    & pe1=order,  &
-    & pe2=order,  &
-    & pe3=order,  &
-    & pe4=order,  &
-    & pe5=order,  &
-    & pe6=order,  &
-    & ps1=order, &
-    & ps2=order,  &
-    & ps3=order,  &
-    & ps4=order,  &
-    & lambda=lambda  &
-    & )
+INTEGER(I4B) :: nrow, ncol
+CALL BarycentricHeirarchicalBasis_Tetrahedron2_(order=order, &
+                                 lambda=lambda, ans=ans, nrow=nrow, ncol=ncol)
 END PROCEDURE BarycentricHeirarchicalBasis_Tetrahedron2
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE BarycentricHeirarchicalBasis_Tetrahedron2_
+CALL BarycentricHeirarchicalBasis_Tetrahedron1_(order=order, pe1=order, &
+           pe2=order, pe3=order, pe4=order, pe5=order, pe6=order, ps1=order, &
+         ps2=order, ps3=order, ps4=order, lambda=lambda, ans=ans, nrow=nrow, &
+                                                ncol=ncol)
+END PROCEDURE BarycentricHeirarchicalBasis_Tetrahedron2_
 
 !----------------------------------------------------------------------------
 !                         BarycentricHeirarchicalBasisGradient_Tetrahedron
@@ -1881,173 +2044,188 @@ END PROCEDURE BarycentricHeirarchicalBasisGradient_Tetrahedron2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE VertexBasis_Tetrahedron
-ans = BarycentricVertexBasis_Tetrahedron(&
-  & lambda=BarycentricCoordTetrahedron( &
-  & xin=xij, &
-  & refTetrahedron=refTetrahedron))
+INTEGER(I4B) :: nrow, ncol
+CALL VertexBasis_Tetrahedron_(xij=xij, refTetrahedron=refTetrahedron, &
+                              ans=ans, nrow=nrow, ncol=ncol)
 END PROCEDURE VertexBasis_Tetrahedron
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE VertexBasis_Tetrahedron_
+REAL(DFP), ALLOCATABLE :: lambda(:, :)
+
+nrow = SIZE(xij, 2)
+ALLOCATE (lambda(4, nrow))
+
+CALL BarycentricCoordTetrahedron_(xin=xij, refTetrahedron=refTetrahedron, &
+                                  ans=lambda, nrow=nrow, ncol=ncol)
+
+CALL BarycentricVertexBasis_Tetrahedron_(lambda=lambda, ans=ans, &
+                                         nrow=nrow, ncol=ncol)
+
+DEALLOCATE (lambda)
+END PROCEDURE VertexBasis_Tetrahedron_
 
 !----------------------------------------------------------------------------
 !                                                  EdgeBasis_Tetrahedron
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE EdgeBasis_Tetrahedron
-ans = BarycentricEdgeBasis_Tetrahedron(&
-  & lambda=BarycentricCoordTetrahedron( &
-  & xin=xij, &
-  & refTetrahedron=refTetrahedron), &
-  & pe1=pe1,  &
-  & pe2=pe2,  &
-  & pe3=pe3,  &
-  & pe4=pe4,  &
-  & pe5=pe5,  &
-  & pe6=pe6)
+INTEGER(I4B) :: nrow, ncol
+CALL EdgeBasis_Tetrahedron_(pe1=pe1, pe2=pe2, pe3=pe3, pe4=pe4, pe5=pe5, &
+        pe6=pe6, xij=xij, refTetrahedron=refTetrahedron, ans=ans, nrow=nrow, &
+                            ncol=ncol)
 END PROCEDURE EdgeBasis_Tetrahedron
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE EdgeBasis_Tetrahedron_
+REAL(DFP), ALLOCATABLE :: lambda(:, :)
+
+nrow = SIZE(xij, 2)
+ALLOCATE (lambda(4, nrow))
+
+CALL BarycentricCoordTetrahedron_(xin=xij, refTetrahedron=refTetrahedron, &
+                                  ans=lambda, nrow=nrow, ncol=ncol)
+
+CALL BarycentricEdgeBasis_Tetrahedron_(lambda=lambda, pe1=pe1, pe2=pe2, &
+            pe3=pe3, pe4=pe4, pe5=pe5, pe6=pe6, ans=ans, nrow=nrow, ncol=ncol)
+
+DEALLOCATE (lambda)
+END PROCEDURE EdgeBasis_Tetrahedron_
 
 !----------------------------------------------------------------------------
 !                                                  FacetBasis_Tetrahedron
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE FacetBasis_Tetrahedron
-ans = BarycentricFacetBasis_Tetrahedron(&
-  & lambda=BarycentricCoordTetrahedron( &
-  & xin=xij, &
-  & refTetrahedron=refTetrahedron), &
-  & ps1=ps1,  &
-  & ps2=ps2,  &
-  & ps3=ps3,  &
-  & ps4=ps4)
+INTEGER(I4B) :: nrow, ncol
+CALL FacetBasis_Tetrahedron_(ps1=ps1, ps2=ps2, ps3=ps3, ps4=ps4, xij=xij, &
+                 refTetrahedron=refTetrahedron, ans=ans, nrow=nrow, ncol=ncol)
 END PROCEDURE FacetBasis_Tetrahedron
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE FacetBasis_Tetrahedron_
+REAL(DFP), ALLOCATABLE :: lambda(:, :)
+
+nrow = SIZE(xij, 2)
+ALLOCATE (lambda(4, nrow))
+
+CALL BarycentricCoordTetrahedron_(xin=xij, refTetrahedron=refTetrahedron, &
+                                  ans=lambda, nrow=nrow, ncol=ncol)
+
+CALL BarycentricFacetBasis_Tetrahedron_(lambda=lambda, ps1=ps1, ps2=ps2, &
+                              ps3=ps3, ps4=ps4, ans=ans, nrow=nrow, ncol=ncol)
+
+DEALLOCATE (lambda)
+END PROCEDURE FacetBasis_Tetrahedron_
 
 !----------------------------------------------------------------------------
 !                                                  CellBasis_Tetrahedron
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE CellBasis_Tetrahedron
-ans = BarycentricCellBasis_Tetrahedron(&
-  & lambda=BarycentricCoordTetrahedron( &
-    & xin=xij, &
-    & refTetrahedron=refTetrahedron), &
-  & pb=pb)
+INTEGER(I4B) :: nrow, ncol
+CALL CellBasis_Tetrahedron_(pb=pb, xij=xij, refTetrahedron=refTetrahedron, &
+                            ans=ans, nrow=nrow, ncol=ncol)
 END PROCEDURE CellBasis_Tetrahedron
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE CellBasis_Tetrahedron_
+REAL(DFP), ALLOCATABLE :: lambda(:, :)
+
+nrow = SIZE(xij, 2)
+ALLOCATE (lambda(4, nrow))
+
+CALL BarycentricCoordTetrahedron_(xin=xij, refTetrahedron=refTetrahedron, &
+                                  ans=lambda, nrow=nrow, ncol=ncol)
+
+CALL BarycentricCellBasis_Tetrahedron_(lambda=lambda, pb=pb, ans=ans, &
+                                       nrow=nrow, ncol=ncol)
+
+DEALLOCATE (lambda)
+END PROCEDURE CellBasis_Tetrahedron_
 
 !----------------------------------------------------------------------------
 !                                             HeirarchicalBasis_Tetrahedron
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE HeirarchicalBasis_Tetrahedron1
-ans = BarycentricHeirarchicalBasis_Tetrahedron(&
-  & lambda=BarycentricCoordTetrahedron( &
-    & xin=xij, &
-    & refTetrahedron=refTetrahedron), &
-  & order=order, &
-  & pe1=pe1,  &
-  & pe2=pe2,  &
-  & pe3=pe3,  &
-  & pe4=pe4,  &
-  & pe5=pe5,  &
-  & pe6=pe6,  &
-  & ps1=ps1,  &
-  & ps2=ps2,  &
-  & ps3=ps3,  &
-  & ps4=ps4)
+INTEGER(I4B) :: nrow, ncol
+CALL HeirarchicalBasis_Tetrahedron1_(order, pe1, pe2, pe3, pe4, pe5, pe6, &
+                     ps1, ps2, ps3, ps4, xij, refTetrahedron, ans, nrow, ncol)
 END PROCEDURE HeirarchicalBasis_Tetrahedron1
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE HeirarchicalBasis_Tetrahedron1_
+REAL(DFP), ALLOCATABLE :: lambda(:, :)
+
+nrow = SIZE(xij, 2)
+
+ALLOCATE (lambda(4, nrow))
+
+CALL BarycentricCoordTetrahedron_(xin=xij, refTetrahedron=refTetrahedron, &
+                                  ans=lambda, nrow=nrow, ncol=ncol)
+
+! ans(1:nrow, 1:ncol) = BarycentricHeirarchicalBasis_Tetrahedron( &
+CALL BarycentricHeirarchicalBasis_Tetrahedron_(lambda=lambda, order=order, &
+         pe1=pe1, pe2=pe2, pe3=pe3, pe4=pe4, pe5=pe5, pe6=pe6, ps1=ps1, ps2= &
+                         ps2, ps3=ps3, ps4=ps4, ans=ans, nrow=nrow, ncol=ncol)
+
+DEALLOCATE (lambda)
+END PROCEDURE HeirarchicalBasis_Tetrahedron1_
 
 !----------------------------------------------------------------------------
 !                                             HeirarchicalBasis_Tetrahedron
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE HeirarchicalBasis_Tetrahedron2
-ans = BarycentricHeirarchicalBasis_Tetrahedron(&
-  & lambda=BarycentricCoordTetrahedron( &
-    & xin=xij, &
-    & refTetrahedron=refTetrahedron), &
-  & order=order)
+INTEGER(I4B) :: nrow, ncol
+CALL HeirarchicalBasis_Tetrahedron2_(order, xij, refTetrahedron, ans, nrow, &
+                                     ncol)
 END PROCEDURE HeirarchicalBasis_Tetrahedron2
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE HeirarchicalBasis_Tetrahedron2_
+REAL(DFP), ALLOCATABLE :: lambda(:, :)
+
+nrow = SIZE(xij, 2)
+ALLOCATE (lambda(4, nrow))
+CALL BarycentricCoordTetrahedron_(xin=xij, refTetrahedron=refTetrahedron, &
+                                  ans=lambda, nrow=nrow, ncol=ncol)
+
+CALL BarycentricHeirarchicalBasis_Tetrahedron_(lambda=lambda, order=order, &
+                                               ans=ans, nrow=nrow, ncol=ncol)
+
+DEALLOCATE (lambda)
+END PROCEDURE HeirarchicalBasis_Tetrahedron2_
 
 !----------------------------------------------------------------------------
 !                                               LagrangeEvallAll_Tetrahedron
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE LagrangeEvalAll_Tetrahedron1
-LOGICAL(LGT) :: firstCall0
-INTEGER(I4B) :: ii, basisType0, tdof
-INTEGER(I4B) :: degree(SIZE(xij, 2), 3)
-REAL(DFP) :: coeff0(SIZE(xij, 2), SIZE(xij, 2)), xx(1, SIZE(xij, 2))
-TYPE(String) :: ref0
-
-basisType0 = INPUT(default=Monomial, option=basisType)
-firstCall0 = INPUT(default=.TRUE., option=firstCall)
-ref0 = INPUT(default="UNIT", option=refTetrahedron)
-
-IF (PRESENT(coeff)) THEN
-  IF (firstCall0) THEN
-    coeff = LagrangeCoeff_Tetrahedron(&
-      & order=order, &
-      & xij=xij, &
-      & basisType=basisType0, &
-      & alpha=alpha, &
-      & beta=beta, &
-      & lambda=lambda, &
-      & refTetrahedron=ref0%chars() &
-      & )
-    coeff0 = TRANSPOSE(coeff)
-  ELSE
-    coeff0 = TRANSPOSE(coeff)
-  END IF
-ELSE
-  coeff0 = TRANSPOSE( &
-    & LagrangeCoeff_Tetrahedron(&
-    & order=order, &
-    & xij=xij, &
-    & basisType=basisType0, &
-    & alpha=alpha, &
-    & beta=beta, &
-    & lambda=lambda, &
-    & refTetrahedron=ref0%chars() &
-    & ))
-END IF
-
-SELECT CASE (basisType0)
-
-CASE (Monomial)
-
-  degree = LagrangeDegree_Tetrahedron(order=order)
-  tdof = SIZE(xij, 2)
-
-  IF (tdof .NE. SIZE(degree, 1)) THEN
-    CALL Errormsg(&
-      & msg="tdof is not same as size(degree,1)", &
-      & file=__FILE__, &
-      & routine="LagrangeEvalAll_Tetrahedron1", &
-      & line=__LINE__, &
-      & unitno=stderr)
-    RETURN
-  END IF
-
-  DO ii = 1, tdof
-    xx(1, ii) = x(1)**degree(ii, 1) &
-               & * x(2)**degree(ii, 2) &
-               & * x(3)**degree(ii, 3)
-  END DO
-
-CASE (Heirarchical)
-
-  xx = HeirarchicalBasis_Tetrahedron( &
-    & order=order, &
-    & xij=RESHAPE(x, [3, 1]), &
-    & refTetrahedron=ref0%chars())
-
-CASE DEFAULT
-  xx = OrthogonalBasis_Tetrahedron( &
-    & order=order, &
-    & xij=RESHAPE(x, [3, 1]),  &
-    & refTetrahedron=ref0%chars() &
-    & )
-
-END SELECT
-
-ans = MATMUL(coeff0, xx(1, :))
+INTEGER(I4B) :: tsize
+CALL LagrangeEvalAll_Tetrahedron1_(order=order, x=x, xij=xij, ans=ans, &
+                    tsize=tsize, refTetrahedron=refTetrahedron, coeff=coeff, &
+                      firstCall=firstCall, basisType=basisType, alpha=alpha, &
+                                   beta=beta, lambda=lambda)
 
 END PROCEDURE LagrangeEvalAll_Tetrahedron1
 
@@ -2055,250 +2233,454 @@ END PROCEDURE LagrangeEvalAll_Tetrahedron1
 !
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE LagrangeEvalAll_Tetrahedron2
+MODULE PROCEDURE LagrangeEvalAll_Tetrahedron1_
 LOGICAL(LGT) :: firstCall0
-INTEGER(I4B) :: ii, basisType0, tdof
+INTEGER(I4B) :: ii, basisType0, nrow, ncol
 INTEGER(I4B) :: degree(SIZE(xij, 2), 3)
-REAL(DFP) :: coeff0(SIZE(xij, 2), SIZE(xij, 2))
-REAL(DFP) :: xx(SIZE(x, 2), SIZE(xij, 2))
-TYPE(String) :: ref0
+REAL(DFP) :: coeff0(SIZE(xij, 2), SIZE(xij, 2)), xx(1, SIZE(xij, 2)), &
+             x31(3, 1)
+CHARACTER(:), ALLOCATABLE :: ref0
+
+tsize = SIZE(xij, 2)
 
 basisType0 = INPUT(default=Monomial, option=basisType)
 firstCall0 = INPUT(default=.TRUE., option=firstCall)
+
 ref0 = INPUT(default="UNIT", option=refTetrahedron)
 
 IF (PRESENT(coeff)) THEN
+
   IF (firstCall0) THEN
-    coeff = LagrangeCoeff_Tetrahedron(&
-      & order=order, &
-      & xij=xij, &
-      & basisType=basisType0, &
-      & alpha=alpha, &
-      & beta=beta, &
-      & lambda=lambda, &
-      & refTetrahedron=ref0%chars() &
-      & )
+    CALL LagrangeCoeff_Tetrahedron_(order=order, xij=xij, &
+                basisType=basisType0, alpha=alpha, beta=beta, lambda=lambda, &
+                         refTetrahedron=ref0, ans=coeff, nrow=nrow, ncol=ncol)
   END IF
-  coeff0 = coeff
+
+  coeff0(1:tsize, 1:tsize) = coeff(1:tsize, 1:tsize)
+
 ELSE
-  coeff0 = LagrangeCoeff_Tetrahedron(&
-    & order=order, &
-    & xij=xij, &
-    & basisType=basisType0, &
-    & alpha=alpha, &
-    & beta=beta, &
-    & lambda=lambda, &
-    & refTetrahedron=ref0%chars() &
-    & )
+  ! coeff0 = TRANSPOSE( &
+  CALL LagrangeCoeff_Tetrahedron_(order=order, xij=xij, &
+                basisType=basisType0, alpha=alpha, beta=beta, lambda=lambda, &
+                        refTetrahedron=ref0, ans=coeff0, nrow=nrow, ncol=ncol)
 END IF
 
 SELECT CASE (basisType0)
 
 CASE (Monomial)
 
-  degree = LagrangeDegree_Tetrahedron(order=order)
-  tdof = SIZE(xij, 2)
+  ! degree = LagrangeDegree_Tetrahedron(order=order)
+  CALL LagrangeDegree_Tetrahedron_(order=order, ans=degree, nrow=nrow, &
+                                   ncol=ncol)
 
-  IF (tdof .NE. SIZE(degree, 1)) THEN
-    CALL Errormsg(&
-      & msg="tdof is not same as size(degree,1)", &
-      & file=__FILE__, &
-      & routine="LagrangeEvalAll_Tetrahedron1", &
-      & line=__LINE__, &
-      & unitno=stderr)
+#ifdef DEBUG_VER
+
+  IF (tsize .NE. SIZE(degree, 1)) THEN
+    CALL Errormsg(msg="tdof is not same as size(degree,1)", &
+                  routine="LagrangeEvalAll_Tetrahedron1", &
+                  file=__FILE__, line=__LINE__, unitno=stderr)
     RETURN
   END IF
 
-  DO ii = 1, tdof
-    xx(:, ii) = x(1, :)**degree(ii, 1)  &
-               & * x(2, :)**degree(ii, 2)  &
-               & * x(3, :)**degree(ii, 3)
+#endif
+
+  DO ii = 1, tsize
+   xx(1, ii) = x(1)**degree(ii, 1) * x(2)**degree(ii, 2) * x(3)**degree(ii, 3)
   END DO
 
 CASE (Heirarchical)
 
-  xx = HeirarchicalBasis_Tetrahedron( &
-    & order=order, &
-    & xij=x, &
-    & refTetrahedron=ref0%chars())
+  ! FIXME:
+  x31(1:3, 1) = x(1:3)
+  ! xx = HeirarchicalBasis_Tetrahedron(order=order, xij=x31, refTetrahedron=ref0)
+ call HeirarchicalBasis_Tetrahedron_(order=order, xij=x31, refTetrahedron=ref0, &
+                                      ans=xx, nrow=nrow, ncol=ncol)
 
 CASE DEFAULT
 
-  xx = OrthogonalBasis_Tetrahedron( &
-    & order=order, &
-    & xij=x,  &
-    & refTetrahedron=ref0%chars() &
-    & )
+  !FIXME:
+  x31(1:3, 1) = x(1:3)
+CALL OrthogonalBasis_Tetrahedron_(order=order, xij=x31, refTetrahedron=ref0, &
+                                    ans=xx, nrow=nrow, ncol=ncol)
 
 END SELECT
 
-ans = MATMUL(xx, coeff0)
+DO CONCURRENT(ii=1:tsize)
+  ans(ii) = DOT_PRODUCT(coeff0(:, ii), xx(1, :))
+END DO
 
+END PROCEDURE LagrangeEvalAll_Tetrahedron1_
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE LagrangeEvalAll_Tetrahedron2
+INTEGER(I4B) :: nrow, ncol
+CALL LagrangeEvalAll_Tetrahedron2_(order=order, x=x, xij=xij, ans=ans, &
+           nrow=nrow, ncol=ncol, refTetrahedron=refTetrahedron, coeff=coeff, &
+           firstCall=firstCall, basisType=basisType, alpha=alpha, beta=beta, &
+                                   lambda=lambda)
 END PROCEDURE LagrangeEvalAll_Tetrahedron2
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE LagrangeEvalAll_Tetrahedron2_
+LOGICAL(LGT) :: firstCall0
+
+INTEGER(I4B) :: ii, jj, basisType0, indx(7), degree(SIZE(xij, 2), 3)
+
+REAL(DFP) :: coeff0(SIZE(xij, 2), SIZE(xij, 2)), &
+             xx(SIZE(x, 2), SIZE(xij, 2)), areal
+
+CHARACTER(:), ALLOCATABLE :: ref0
+
+nrow = SIZE(x, 2)
+ncol = SIZE(xij, 2)
+
+basisType0 = INPUT(default=Monomial, option=basisType)
+firstCall0 = INPUT(default=.TRUE., option=firstCall)
+ref0 = INPUT(default="UNIT", option=refTetrahedron)
+
+IF (PRESENT(coeff)) THEN
+
+  IF (firstCall0) THEN
+
+    ! coeff = LagrangeCoeff_Tetrahedron(&
+    CALL LagrangeCoeff_Tetrahedron_(order=order, xij=xij, &
+                basisType=basisType0, alpha=alpha, beta=beta, lambda=lambda, &
+                   refTetrahedron=ref0, ans=coeff, nrow=indx(1), ncol=indx(2))
+
+  END IF
+
+  coeff0(1:ncol, 1:ncol) = coeff(1:ncol, 1:ncol)
+
+ELSE
+
+  ! coeff0 = LagrangeCoeff_Tetrahedron(&
+  CALL LagrangeCoeff_Tetrahedron_(order=order, xij=xij, &
+                basisType=basisType0, alpha=alpha, beta=beta, lambda=lambda, &
+                  refTetrahedron=ref0, ans=coeff0, nrow=indx(1), ncol=indx(2))
+END IF
+
+SELECT CASE (basisType0)
+
+CASE (Monomial)
+
+  ! degree = LagrangeDegree_Tetrahedron(order=order)
+  CALL LagrangeDegree_Tetrahedron_(order=order, ans=degree, nrow=indx(1), &
+                                   ncol=indx(2))
+
+#ifdef DEBUG_VER
+  IF (ncol .NE. SIZE(degree, 1)) THEN
+    CALL Errormsg(msg="tdof is not same as size(degree,1)", &
+                  routine="LagrangeEvalAll_Tetrahedron1", &
+                  file=__FILE__, line=__LINE__, unitno=stderr)
+    RETURN
+  END IF
+#endif
+
+  DO ii = 1, ncol
+    indx(1:3) = degree(ii, 1:3)
+
+    DO jj = 1, nrow
+      areal = x(1, jj)**indx(1) * x(2, jj)**indx(2) * x(3, jj)**indx(3)
+      xx(jj, ii) = areal
+    END DO
+
+  END DO
+
+CASE (Heirarchical)
+
+  CALL HeirarchicalBasis_Tetrahedron_(order=order, xij=x, &
+                      refTetrahedron=ref0, ans=xx, nrow=indx(1), ncol=indx(2))
+
+CASE DEFAULT
+
+  CALL OrthogonalBasis_Tetrahedron_(order=order, xij=x, refTetrahedron=ref0, &
+                                    ans=xx, nrow=indx(1), ncol=indx(2))
+
+END SELECT
+
+! ans = MATMUL(xx, coeff0)
+
+CALL GEMM(C=ans(1:nrow, 1:ncol), alpha=1.0_DFP, A=xx, B=coeff0)
+
+END PROCEDURE LagrangeEvalAll_Tetrahedron2_
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE QuadratureNumber_Tetrahedron
+INTEGER(I4B) :: n
+
+ans = QuadratureNumberTetrahedronSolin(order=order)
+
+IF (ans .LT. 0) THEN
+  n = 1_I4B + INT(order / 2, kind=I4B)
+  ans = n * (n + 1) * n
+END IF
+
+END PROCEDURE QuadratureNumber_Tetrahedron
 
 !----------------------------------------------------------------------------
 !                                               QuadraturePoint_Tetrahedron
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE QuadraturePoint_Tetrahedron1
-REAL(DFP), ALLOCATABLE :: temp_t(:, :)
-TYPE(string) :: astr
+INTEGER(I4B) :: nrow, ncol, n
 
-IF (order .LE. MAX_ORDER_TETRAHEDRON_SOLIN) THEN
-  astr = TRIM(UpperCase(refTetrahedron))
-  temp_t = QuadraturePointTetrahedronSolin(order=order)
-  CALL Reallocate(ans, 4_I4B, SIZE(temp_t, 2, kind=I4B))
+nrow = 4
+ncol = QuadratureNumber_Tetrahedron(order=order, quadType=quadType)
 
-  IF (PRESENT(xij)) THEN
-    ans(1:3, :) = FromUnitTetrahedron2Tetrahedron(  &
-      & xin=temp_t(1:3, :), &
-      & x1=xij(:, 1), &
-      & x2=xij(:, 2), &
-      & x3=xij(:, 3), &
-      & x4=xij(:, 4) &
-      & )
+ALLOCATE (ans(nrow, ncol))
 
-    ans(4, :) = temp_t(4, :) * JacobianTetrahedron( &
-      & from="UNIT", &
-      & to="TETRAHEDRON", &
-      & xij=xij)
+CALL QuadraturePoint_Tetrahedron1_(order, quadType, refTetrahedron, xij, &
+                                   ans, nrow, ncol)
 
-  ELSE
-
-    IF (astr%chars() .EQ. "BIUNIT") THEN
-      ans(1:3, :) = FromUnitTetrahedron2BiUnitTetrahedron(xin=temp_t(1:3, :))
-      ans(4, :) = temp_t(4, :) * JacobianTetrahedron( &
-        & from="UNIT", &
-        & to="BIUNIT")
-
-    ELSE
-      ans = temp_t
-    END IF
-  END IF
-
-  IF (ALLOCATED(temp_t)) DEALLOCATE (temp_t)
-ELSE
-  ans = TensorQuadraturepoint_Tetrahedron( &
-    & order=order, &
-    & quadtype=quadtype, &
-    & refTetrahedron=refTetrahedron, &
-    & xij=xij)
-END IF
 END PROCEDURE QuadraturePoint_Tetrahedron1
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE QuadraturePoint_Tetrahedron1_
+INTEGER(I4B), PARAMETER :: nsd = 3
+CHARACTER(1) :: astr
+INTEGER(I4B) :: ii, jj
+REAL(DFP) :: areal
+LOGICAL(LGT) :: abool
+
+abool = order .GT. MAX_ORDER_TETRAHEDRON_SOLIN
+IF (abool) THEN
+  CALL TensorQuadraturepoint_Tetrahedron_(order=order, quadtype=quadtype, &
+        refTetrahedron=refTetrahedron, xij=xij, ans=ans, nrow=nrow, ncol=ncol)
+  RETURN
+END IF
+
+CALL QuadraturePointTetrahedronSolin(order=order, ans=ans, nrow=nrow, &
+                                     ncol=ncol)
+
+! CALL Reallocate(ans, 4_I4B, SIZE(temp_t, 2, kind=I4B))
+
+IF (PRESENT(xij)) THEN
+  ! ans(1:3, :) = FromUnitTetrahedron2Tetrahedron(  &
+  CALL FromUnitTetrahedron2Tetrahedron_(xin=ans(1:nsd, 1:ncol), &
+            x1=xij(:, 1), x2=xij(:, 2), x3=xij(:, 3), x4=xij(:, 4), ans=ans, &
+                                        nrow=ii, ncol=jj)
+
+  areal = JacobianTetrahedron(from="UNIT", to="TETRAHEDRON", xij=xij)
+
+  DO CONCURRENT(ii=1:ncol)
+    ans(nrow, ii) = ans(nrow, ii) * areal
+  END DO
+
+  RETURN
+
+END IF
+
+astr = UpperCase(reftetrahedron(1:1))
+
+IF (astr .EQ. "B") THEN
+
+  CALL FromUnitTetrahedron2BiUnitTetrahedron_(xin=ans(1:nsd, 1:ncol), &
+                                              nrow=ii, ncol=jj, ans=ans)
+
+  areal = JacobianTetrahedron(from="UNIT", to="BIUNIT")
+
+  DO CONCURRENT(ii=1:ncol)
+    ans(nrow, ii) = ans(nrow, ii) * areal
+  END DO
+
+END IF
+
+END PROCEDURE QuadraturePoint_Tetrahedron1_
 
 !----------------------------------------------------------------------------
 !                                              QuadraturePoint_Tetrahedron2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE QuadraturePoint_Tetrahedron2
-INTEGER(I4B) :: order
-order = QuadratureOrderTetrahedronSolin(nips(1))
-IF (order .LT. 0) THEN
-  ans = Quadraturepoint_Tetrahedron1( &
-    & order=order,  &
-    & quadtype=quadType, &
-    & refTetrahedron=refTetrahedron, &
-    & xij=xij)
-ELSE
-  CALL Errormsg(&
-    & msg="This routine is available for nips = [  &
-    &  1, 4, 5, 11, 14, 24, 31, 43, 53, 126, 210, 330, 495, 715, 1001]  &
-    & TRY CALLING TensorQuadraturePoint_Tetrahedron() instead.", &
-    & file=__FILE__, &
-    & routine="QuadraturePoint_Tetrahedron2()", &
-    & line=__LINE__, &
-    & unitno=stderr)
-END IF
+INTEGER(I4B) :: nrow, ncol
+nrow = 4
+ncol = nips(1)
+ALLOCATE (ans(nrow, ncol))
+CALL QuadraturePoint_Tetrahedron2_(nips=nips, quadType=quadType, &
+        refTetrahedron=refTetrahedron, xij=xij, ans=ans, nrow=nrow, ncol=ncol)
 END PROCEDURE QuadraturePoint_Tetrahedron2
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE QuadraturePoint_Tetrahedron2_
+INTEGER(I4B) :: order
+
+order = QuadratureOrderTetrahedronSolin(nips(1))
+
+IF (order .LT. 0) THEN
+
+  CALL Errormsg( &
+    msg="This routine is available for nips = [&
+    &  1, 4, 5, 11, 14, 24, 31, 43, 53, 126, 210, 330, 495, 715, 1001] &
+    & TRY CALLING TensorQuadraturePoint_Tetrahedron() instead.", &
+     routine="QuadraturePoint_Tetrahedron2()", &
+     file=__FILE__, line=__LINE__, unitno=stderr)
+
+  nrow = 0; ncol = 0
+  RETURN
+
+END IF
+
+CALL Quadraturepoint_Tetrahedron1_(order=order, quadtype=quadType, &
+        refTetrahedron=refTetrahedron, xij=xij, ans=ans, nrow=nrow, ncol=ncol)
+END PROCEDURE QuadraturePoint_Tetrahedron2_
 
 !----------------------------------------------------------------------------
 !                                         TensorQuadraturePoint_Tetrahedron
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE TensorQuadraturePoint_Tetrahedron1
-INTEGER(I4B) :: n(4)
+INTEGER(I4B) :: n(3), nrow, ncol
+
 n = 1_I4B + INT(order / 2, kind=I4B)
 n(2) = n(2) + 1
-ans = TensorQuadraturePoint_Tetrahedron2( &
-  & nipsx=n(1), &
-  & nipsy=n(2), &
-  & nipsz=n(3), &
-  & quadType=quadType, &
-  & refTetrahedron=refTetrahedron, &
-  & xij=xij)
+
+nrow = 4
+ncol = n(1) * n(2) * n(3)
+
+ALLOCATE (ans(nrow, ncol))
+
+CALL TensorQuadraturePoint_Tetrahedron2_(nipsx=n(1), nipsy=n(2), &
+      nipsz=n(3), quadType=quadType, reftetrahedron=reftetrahedron, xij=xij, &
+                                         ans=ans, nrow=nrow, ncol=ncol)
 END PROCEDURE TensorQuadraturePoint_Tetrahedron1
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE TensorQuadraturePoint_Tetrahedron1_
+INTEGER(I4B) :: n(3)
+
+n = 1_I4B + INT(order / 2, kind=I4B)
+n(2) = n(2) + 1
+
+CALL TensorQuadraturePoint_Tetrahedron2_(nipsx=n(1), nipsy=n(2), &
+      nipsz=n(3), quadType=quadType, refTetrahedron=refTetrahedron, xij=xij, &
+                                         ans=ans, nrow=nrow, ncol=ncol)
+
+END PROCEDURE TensorQuadraturePoint_Tetrahedron1_
 
 !----------------------------------------------------------------------------
 !                                         TensorQuadraturePoint_Tetrahedron
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE TensorQuadraturePoint_Tetrahedron2
-INTEGER(I4B) :: n(3), nsd
-REAL(DFP), ALLOCATABLE :: temp_q(:, :), temp_t(:, :)
-TYPE(String) :: astr
+INTEGER(I4B) :: nrow, ncol
 
-astr = TRIM(UpperCase(refTetrahedron))
-n(1) = nipsx(1)
-n(2) = nipsy(1)
-n(3) = nipsz(1)
+nrow = 4
+ncol = nipsx(1) * nipsy(1) * nipsz(1)
 
-temp_q = QuadraturePoint_Hexahedron(&
-  & nipsx=n(1:1),  &
-  & nipsy=n(2:2),  &
-  & nipsz=n(3:3),  &
-  & quadType1=GaussLegendreLobatto, &
-  & quadType2=GaussJacobiRadauLeft, &
-  & quadType3=GaussJacobiRadauLeft, &
-  & refHexahedron="BIUNIT", &
-  & alpha2=1.0_DFP, &
-  & beta2=0.0_DFP, &
-  & alpha3=2.0_DFP, &
-  & beta3=0.0_DFP)
+ALLOCATE (ans(nrow, ncol))
 
-CALL Reallocate(temp_t, SIZE(temp_q, 1, KIND=I4B), SIZE(temp_q, 2, KIND=I4B))
-temp_t(1:3, :) = FromBiUnitHexahedron2UnitTetrahedron(xin=temp_q(1:3, :))
-temp_t(4, :) = temp_q(4, :) / 8.0_DFP
-nsd = 3_I4B
-CALL Reallocate(ans, 4_I4B, SIZE(temp_q, 2, KIND=I4B))
+CALL TensorQuadraturePoint_Tetrahedron2_(nipsx=nipsx, nipsy=nipsy, &
+     nipsz=nipsz, quadType=quadType, refTetrahedron=refTetrahedron, xij=xij, &
+                                         ans=ans, nrow=nrow, ncol=ncol)
+END PROCEDURE TensorQuadraturePoint_Tetrahedron2
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE TensorQuadraturePoint_Tetrahedron2_
+INTEGER(I4B), PARAMETER :: nsd = 3
+REAL(DFP), PARAMETER :: one_by_8 = 1.0_DFP / 8.0_DFP
+
+REAL(DFP) :: areal
+
+INTEGER(I4B) :: ii, jj
+CHARACTER(1) :: astr
+
+nrow = 4
+ncol = nipsx(1) * nipsy(1) * nipsz(1)
+
+! temp_q = QuadraturePoint_Hexahedron(&
+CALL QuadraturePoint_Hexahedron_(nipsx=nipsx, nipsy=nipsy, nipsz=nipsz, &
+             quadType1=GaussLegendreLobatto, quadType2=GaussJacobiRadauLeft, &
+     quadType3=GaussJacobiRadauLeft, refHexahedron="BIUNIT", alpha2=1.0_DFP, &
+      beta2=0.0_DFP, alpha3=2.0_DFP, beta3=0.0_DFP, ans=ans, nrow=ii, ncol=jj)
+
+! ans(1:nsd, :) = FromBiUnitHexahedron2UnitTetrahedron(xin=temp_q(1:3, :))
+CALL FromBiUnitHexahedron2UnitTetrahedron_(xin=ans(1:nsd, 1:ncol), ans=ans, &
+                                           nrow=ii, ncol=jj)
+
+DO CONCURRENT(ii=1:ncol)
+  ans(nrow, ii) = ans(nrow, ii) * one_by_8
+END DO
 
 IF (PRESENT(xij)) THEN
-  ans(1:3, :) = FromUnitTetrahedron2Tetrahedron(  &
-    & xin=temp_t(1:3, :), &
-    & x1=xij(:, 1), &
-    & x2=xij(:, 2), &
-    & x3=xij(:, 3), &
-    & x4=xij(:, 4) &
-    & )
-  ans(4, :) = temp_t(4, :) * JacobianTetrahedron( &
-    & from="UNIT", &
-    & to="TETRAHEDRON", &
-    & xij=xij)
-ELSE
-  IF (astr%chars() .EQ. "BIUNIT") THEN
-    ans(1:3, :) = FromUnitTetrahedron2BiUnitTetrahedron(xin=temp_t(1:3, :))
-    ans(4, :) = temp_t(4, :) * JacobianTetrahedron( &
-      & from="UNIT", &
-      & to="BIUNIT")
-  ELSE
-    ans = temp_t
-  END IF
+
+  ! ans(1:3, :) = FromUnitTetrahedron2Tetrahedron(  &
+  CALL FromUnitTetrahedron2Tetrahedron_(xin=ans(1:nsd, 1:ncol), &
+            x1=xij(:, 1), x2=xij(:, 2), x3=xij(:, 3), x4=xij(:, 4), ans=ans, &
+                                        nrow=ii, ncol=jj)
+
+  areal = JacobianTetrahedron(from="UNIT", to="TETRAHEDRON", xij=xij)
+
+  DO CONCURRENT(ii=1:ncol)
+    ans(nrow, ii) = ans(nrow, ii) * areal
+  END DO
+
+  RETURN
 END IF
 
-IF (ALLOCATED(temp_q)) DEALLOCATE (temp_q)
-IF (ALLOCATED(temp_t)) DEALLOCATE (temp_t)
-END PROCEDURE TensorQuadraturePoint_Tetrahedron2
+astr = UpperCase(reftetrahedron(1:1))
+
+IF (astr .EQ. "B") THEN
+  CALL FromUnitTetrahedron2BiUnitTetrahedron_(xin=ans(1:nsd, 1:ncol), &
+                                              ans=ans, nrow=ii, ncol=jj)
+
+  areal = JacobianTetrahedron(from="UNIT", to="BIUNIT")
+
+  DO CONCURRENT(ii=1:ncol)
+    ans(nrow, ii) = ans(nrow, ii) * areal
+  END DO
+  RETURN
+END IF
+
+END PROCEDURE TensorQuadraturePoint_Tetrahedron2_
 
 !----------------------------------------------------------------------------
 !                                       LagrangeGradientEvalAll_Tetrahedron
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE LagrangeGradientEvalAll_Tetrahedron1
+INTEGER(I4B) :: dim1, dim2, dim3
+CALL LagrangeGradientEvalAll_Tetrahedron1_(order=order, x=x, xij=xij, &
+    ans=ans, dim1=dim1, dim2=dim2, dim3=dim3, refTetrahedron=refTetrahedron, &
+         coeff=coeff, firstCall=firstCall, basisType=basisType, alpha=alpha, &
+                                           beta=beta, lambda=lambda)
+END PROCEDURE LagrangeGradientEvalAll_Tetrahedron1
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE LagrangeGradientEvalAll_Tetrahedron1_
 LOGICAL(LGT) :: firstCall0
-INTEGER(I4B) :: ii, basisType0, tdof, ai, bi, ci
-INTEGER(I4B) :: degree(SIZE(xij, 2), 3)
+INTEGER(I4B) :: ii, basisType0, ai, bi, ci, degree(SIZE(xij, 2), 3), &
+                indx(3), jj
 REAL(DFP) :: coeff0(SIZE(xij, 2), SIZE(xij, 2)), &
-  & xx(SIZE(x, 2), SIZE(xij, 2), 3), ar, br, cr
-TYPE(String) :: ref0
+             xx(SIZE(x, 2), SIZE(xij, 2), 3), ar, br, cr, areal, breal, creal
+CHARACTER(:), ALLOCATABLE :: ref0
+
+dim1 = SIZE(x, 2)
+dim2 = SIZE(xij, 2)
+dim3 = 3
 
 basisType0 = INPUT(default=Monomial, option=basisType)
 firstCall0 = INPUT(default=.TRUE., option=firstCall)
@@ -2306,47 +2688,40 @@ ref0 = INPUT(default="UNIT", option=refTetrahedron)
 
 IF (PRESENT(coeff)) THEN
   IF (firstCall0) THEN
-    coeff = LagrangeCoeff_Tetrahedron(&
-      & order=order, &
-      & xij=xij, &
-      & basisType=basisType0, &
-      & alpha=alpha, &
-      & beta=beta, &
-      & lambda=lambda, &
-      & refTetrahedron=ref0%chars() &
-      & )
+    ! coeff = LagrangeCoeff_Tetrahedron(order=order, xij=xij, &
+    CALL LagrangeCoeff_Tetrahedron_(order=order, xij=xij, &
+                basisType=basisType0, alpha=alpha, beta=beta, lambda=lambda, &
+                   refTetrahedron=ref0, ans=coeff, nrow=indx(1), ncol=indx(2))
+
   END IF
-  coeff0 = coeff
+
+  coeff0(1:dim2, 1:dim2) = coeff(1:dim2, 1:dim2)
+
 ELSE
-  coeff0 = LagrangeCoeff_Tetrahedron(&
-    & order=order, &
-    & xij=xij, &
-    & basisType=basisType0, &
-    & alpha=alpha, &
-    & beta=beta, &
-    & lambda=lambda, &
-    & refTetrahedron=ref0%chars() &
-    & )
+
+  CALL LagrangeCoeff_Tetrahedron_(order=order, xij=xij, ans=coeff0, &
+              nrow=indx(1), ncol=indx(2), basisType=basisType0, alpha=alpha, &
+                                beta=beta, lambda=lambda, refTetrahedron=ref0)
 END IF
 
 SELECT CASE (basisType0)
 
 CASE (Monomial)
 
-  degree = LagrangeDegree_Tetrahedron(order=order)
-  tdof = SIZE(xij, 2)
+  CALL LagrangeDegree_Tetrahedron_(order=order, ans=degree, nrow=indx(1), &
+                                   ncol=indx(2))
 
-  IF (tdof .NE. SIZE(degree, 1)) THEN
-    CALL Errormsg(&
-      & msg="tdof is not same as size(degree,1)", &
-      & file=__FILE__, &
-      & routine="LagrangeEvalAll_Tetrahedron1", &
-      & line=__LINE__, &
-      & unitno=stderr)
+#ifdef DEBUG_VER
+  IF (dim2 .NE. SIZE(degree, 1)) THEN
+    CALL Errormsg(msg="tdof is not same as size(degree,1)", &
+                  routine="LagrangeEvalAll_Tetrahedron1", &
+                  file=__FILE__, line=__LINE__, unitno=stderr)
     RETURN
   END IF
 
-  DO ii = 1, tdof
+#endif
+
+  DO ii = 1, dim2
     ai = MAX(degree(ii, 1_I4B) - 1_I4B, 0_I4B)
     bi = MAX(degree(ii, 2_I4B) - 1_I4B, 0_I4B)
     ci = MAX(degree(ii, 3_I4B) - 1_I4B, 0_I4B)
@@ -2355,42 +2730,39 @@ CASE (Monomial)
     br = REAL(degree(ii, 2_I4B), DFP)
     cr = REAL(degree(ii, 3_I4B), DFP)
 
-    xx(:, ii, 1) = (ar * x(1, :)**ai) *  &
-                & x(2, :)**degree(ii, 2) *  &
-                & x(3, :)**degree(ii, 3)
+    indx(1:3) = degree(ii, 1:3)
 
-    xx(:, ii, 2) = x(1, :)**degree(ii, 1) *  &
-                & (br * x(2, :)**bi) *  &
-                & x(3, :)**degree(ii, 3)
+    DO jj = 1, dim1
+      areal = (ar * x(1, jj)**ai) * x(2, jj)**indx(2) * x(3, jj)**indx(3)
+      breal = x(1, jj)**indx(1) * (br * x(2, jj)**bi) * x(3, jj)**indx(3)
+      creal = x(1, jj)**indx(1) * x(2, jj)**indx(2) * (cr * x(2, jj)**ci)
 
-    xx(:, ii, 3) = x(1, :)**degree(ii, 1) *  &
-                & x(2, :)**degree(ii, 2) * &
-                & (cr * x(2, :)**ci)
+      xx(jj, ii, 1) = areal
+      xx(jj, ii, 2) = breal
+      xx(jj, ii, 3) = creal
+    END DO
+
   END DO
 
 CASE (Heirarchical)
 
-  xx = HeirarchicalBasisGradient_Tetrahedron( &
-    & order=order, &
-    & xij=x, &
-    & refTetrahedron=ref0%chars())
+  xx = HeirarchicalBasisGradient_Tetrahedron(order=order, xij=x, &
+                                             refTetrahedron=ref0)
 
 CASE DEFAULT
-
-  xx = OrthogonalBasisGradient_Tetrahedron( &
-    & order=order, &
-    & xij=x,  &
-    & refTetrahedron=ref0%chars() &
-    & )
+  xx = OrthogonalBasisGradient_Tetrahedron(order=order, xij=x, &
+                                           refTetrahedron=ref0)
 
 END SELECT
 
 DO ii = 1, 3
   ! ans(:, ii, :) = TRANSPOSE(MATMUL(xx(:, :, ii), coeff0))
-  ans(:, :, ii) = MATMUL(xx(:, :, ii), coeff0)
+  ans(1:dim1, 1:dim2, ii) = MATMUL(xx(:, :, ii), coeff0)
 END DO
 
-END PROCEDURE LagrangeGradientEvalAll_Tetrahedron1
+ref0 = ""
+
+END PROCEDURE LagrangeGradientEvalAll_Tetrahedron1_
 
 !----------------------------------------------------------------------------
 !                                       OrthogonalBasisGradient_Tetrahedron
@@ -2527,37 +2899,196 @@ END IF
 END PROCEDURE OrthogonalBasisGradient_Tetrahedron1
 
 !----------------------------------------------------------------------------
-!                                     HeirarchicalBasisGradient_Tetrahedron
+!                                       OrthogonalBasisGradient_Tetrahedron
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE OrthogonalBasisGradient_Tetrahedron1_
+CHARACTER(1) :: layout
+REAL(DFP) :: x(1:3, 1:SIZE(xij, 2))
+REAL(DFP) :: P1(SIZE(xij, 2), 0:order)
+REAL(DFP) :: Q1(SIZE(xij, 2), 0:order)
+REAL(DFP) :: R1(SIZE(xij, 2), 0:order)
+REAL(DFP) :: dP1(SIZE(xij, 2), 0:order)
+REAL(DFP) :: dQ1(SIZE(xij, 2), 0:order)
+REAL(DFP) :: dR1(SIZE(xij, 2), 0:order)
+REAL(DFP) :: temp(SIZE(xij, 2), 10), areal, breal
+INTEGER(I4B) :: cnt
+INTEGER(I4B) :: p, q, r
+LOGICAL(LGT) :: isBiunit
+REAL(DFP) :: ans0(SIZE(ans, 1), SIZE(ans, 2), SIZE(ans, 3))
+
+dim1 = SIZE(xij, 2)
+dim2 = (order + 1) * (order + 2) * (order + 3) / 6
+dim3 = 3
+
+ans0 = 0.0_DFP
+layout = UpperCase(refTetrahedron(1:1))
+
+SELECT CASE (layout)
+CASE ("B")
+  x = FromBiUnitTetrahedron2BiUnitHexahedron(xin=xij)
+  isBiunit = .TRUE.
+CASE ("U")
+  x = FromUnitTetrahedron2BiUnitHexahedron(xin=xij)
+  isBiunit = .FALSE.
+END SELECT
+
+temp(:, 1) = 0.5_DFP * (1.0_DFP - x(2, :))
+temp(:, 2) = 0.5_DFP * (1.0_DFP - x(3, :))
+
+P1 = LegendreEvalAll(n=order, x=x(1, :))
+dP1 = LegendreGradientEvalAll(n=order, x=x(1, :))
+cnt = 0
+
+DO p = 0, order
+  areal = -0.5_DFP * REAL(p, DFP)
+
+  Q1 = JacobiEvalAll( &
+    & n=order, &
+    & x=x(2, :), &
+    & alpha=REAL(2 * p + 1, DFP), &
+    & beta=0.0_DFP  &
+    & )
+
+  dQ1 = JacobiGradientEvalAll( &
+    & n=order, &
+    & x=x(2, :), &
+    & alpha=REAL(2 * p + 1, DFP), &
+    & beta=0.0_DFP  &
+    & )
+
+  temp(:, 3) = temp(:, 1)**MAX(p - 1_I4B, 0_I4B)
+  temp(:, 4) = temp(:, 3) * temp(:, 1)
+
+  DO q = 0, order - p
+
+    breal = -0.5_DFP * REAL(p + q, DFP)
+
+    R1 = JacobiEvalAll( &
+      & n=order, &
+      & x=x(3, :), &
+      & alpha=REAL(2 * p + 2 * q + 2, DFP), &
+      & beta=0.0_DFP  &
+      & )
+
+    dR1 = JacobiGradientEvalAll( &
+      & n=order, &
+      & x=x(3, :), &
+      & alpha=REAL(2 * p + 2 * q + 2, DFP), &
+      & beta=0.0_DFP  &
+      & )
+
+    temp(:, 5) = P1(:, p) * Q1(:, q)
+    temp(:, 6) = P1(:, p) * dQ1(:, q)
+    temp(:, 7) = dP1(:, p) * Q1(:, q)
+    temp(:, 9) = temp(:, 2)**MAX(p + q - 1_I4B, 0_I4B)
+    temp(:, 10) = temp(:, 9) * temp(:, 2)
+
+    DO r = 0, order - p - q
+      temp(:, 8) = temp(:, 5) * R1(:, r)
+      cnt = cnt + 1
+      ans0(:, cnt, 1) = temp(:, 7) * R1(:, r) * temp(:, 4) * temp(:, 10)
+      ans0(:, cnt, 2) = temp(:, 8) * areal * temp(:, 3) * temp(:, 10) &
+                        + temp(:, 6) * R1(:, r) * temp(:, 4) * temp(:, 10)
+      ans0(:, cnt, 2) = temp(:, 8) * breal * temp(:, 4) * temp(:, 9) &
+                        + temp(:, 5) * dR1(:, r) * temp(:, 4) * temp(:, 10)
+    END DO
+  END DO
+END DO
+
+IF (isBiunit) THEN
+  temp(:, 1) = x(1, :)
+  temp(:, 2) = x(2, :)
+  temp(:, 3) = x(3, :)
+
+  temp(:, 4) = 2.0_DFP / (temp(:, 2) + temp(:, 3))
+  temp(:, 5) = (1.0_DFP + temp(:, 1)) * temp(:, 4) / (temp(:, 2) + temp(:, 3))
+  temp(:, 6) = 2.0_DFP / (1.0_DFP - temp(:, 3))
+  temp(:, 7) = 1.0_DFP / (1.0_DFP - temp(:, 3))**2
+
+  DO CONCURRENT(p=1:dim2)
+    ans(1:dim1, p, 1) = -temp(:, 4) * ans0(:, p, 1)
+   ans(1:dim1, p, 2) = temp(:, 5) * ans0(:, p, 1) + temp(:, 6) * ans0(:, p, 2)
+    ans(1:dim1, p, 3) = temp(:, 5) * ans0(:, p, 1) &
+                        + temp(:, 7) * ans0(:, p, 2) &
+                        + ans0(:, p, 3)
+  END DO
+
+ELSE
+
+  temp(:, 1:3) = FromUnitTetrahedron2BiUnitTetrahedron(x)
+
+  temp(:, 4) = 2.0_DFP / (temp(:, 2) + temp(:, 3))
+  temp(:, 5) = (1.0_DFP + temp(:, 1)) * temp(:, 4) / (temp(:, 2) + temp(:, 3))
+  temp(:, 6) = 2.0_DFP / (1.0_DFP - temp(:, 3))
+  temp(:, 7) = 1.0_DFP / (1.0_DFP - temp(:, 3))**2
+
+  DO CONCURRENT(p=1:dim2)
+    ans(1:dim1, p, 1) = -temp(:, 4) * ans0(:, p, 1)
+   ans(1:dim1, p, 2) = temp(:, 5) * ans0(:, p, 1) + temp(:, 6) * ans0(:, p, 2)
+    ans(1:dim1, p, 3) = temp(:, 5) * ans0(:, p, 1)  &
+                & + temp(:, 7) * ans0(:, p, 2)  &
+                & + ans0(:, p, 3)
+  END DO
+
+  ans(1:dim1, 1:dim2, 1:dim3) = 2.0_DFP * ans(1:dim1, 1:dim2, 1:dim3)
+
+END IF
+
+END PROCEDURE OrthogonalBasisGradient_Tetrahedron1_
+
+!----------------------------------------------------------------------------
+!
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE HeirarchicalBasisGradient_Tetrahedron1
-TYPE(String) :: name
-REAL(DFP) :: ans0(SIZE(ans, 1), SIZE(ans, 2), 4)
-ans0 = BarycentricHeirarchicalBasisGradient_Tetrahedron(&
-  & lambda=BarycentricCoordTetrahedron( &
-    & xin=xij, &
-    & refTetrahedron=refTetrahedron), &
-  & order=order, &
-  & pe1=pe1,  &
-  & pe2=pe2,  &
-  & pe3=pe3,  &
-  & pe4=pe4,  &
-  & pe5=pe5,  &
-  & pe6=pe6,  &
-  & ps1=ps1,  &
-  & ps2=ps2,  &
-  & ps3=ps3,  &
-  & ps4=ps4)
-
-ans(:, :, 1) = ans0(:, :, 2) - ans0(:, :, 1)
-ans(:, :, 2) = ans0(:, :, 3) - ans0(:, :, 1)
-ans(:, :, 3) = ans0(:, :, 4) - ans0(:, :, 1)
-
-name = UpperCase(refTetrahedron)
-IF (name == "BIUNIT") THEN
-  ans = 0.5_DFP * ans
-END IF
+INTEGER(I4B) :: dim1, dim2, dim3
+CALL HeirarchicalBasisGradient_Tetrahedron1_(order=order, pe1=pe1, pe2=pe2, &
+     pe3=pe3, pe4=pe4, pe5=pe5, pe6=pe6, ps1=ps1, ps2=ps2, ps3=ps3, ps4=ps4, &
+      xij=xij, refTetrahedron=refTetrahedron, ans=ans, dim1=dim1, dim2=dim2, &
+                                             dim3=dim3)
 END PROCEDURE HeirarchicalBasisGradient_Tetrahedron1
+
+!----------------------------------------------------------------------------
+!                                     HeirarchicalBasisGradient_Tetrahedron
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE HeirarchicalBasisGradient_Tetrahedron1_
+CHARACTER(1) :: name
+REAL(DFP), ALLOCATABLE :: ans0(:, :, :), lambda(:, :)
+INTEGER(I4B) :: indx(2)
+
+dim1 = SIZE(xij, 2)
+
+dim2 = 4 + pe1 + pe2 + pe3 + pe4 + pe5 + pe6 - 6 &
+       + (ps1 - 1) * (ps1 - 2) / 2 &
+       + (ps2 - 1) * (ps2 - 2) / 2 &
+       + (ps3 - 1) * (ps3 - 2) / 2 &
+       + (ps4 - 1) * (ps4 - 2) / 2 &
+       + (order - 1) * (order - 2) * (order - 3) / 6_I4B
+
+dim3 = 3
+
+ALLOCATE (ans0(dim1, dim2, dim3 + 1), lambda(4, dim1))
+
+CALL BarycentricCoordTetrahedron_(xin=xij, refTetrahedron=refTetrahedron, &
+                                  ans=lambda, nrow=indx(1), ncol=indx(2))
+
+ans0 = BarycentricHeirarchicalBasisGradient_Tetrahedron(lambda=lambda, &
+          order=order, pe1=pe1, pe2=pe2, pe3=pe3, pe4=pe4, pe5=pe5, pe6=pe6, &
+                                           ps1=ps1, ps2=ps2, ps3=ps3, ps4=ps4)
+
+ans(1:dim1, 1:dim2, 1) = ans0(:, :, 2) - ans0(:, :, 1)
+ans(1:dim1, 1:dim2, 2) = ans0(:, :, 3) - ans0(:, :, 1)
+ans(1:dim1, 1:dim2, 3) = ans0(:, :, 4) - ans0(:, :, 1)
+
+name = UpperCase(refTetrahedron(1:1))
+IF (name .EQ. "B") THEN
+  ans(1:dim1, 1:dim2, 1:dim3) = 0.5_DFP * ans(1:dim1, 1:dim2, 1:dim3)
+END IF
+
+DEALLOCATE (ans0, lambda)
+END PROCEDURE HeirarchicalBasisGradient_Tetrahedron1_
 
 !----------------------------------------------------------------------------
 !                                     HeirarchicalBasisGradient_Tetrahedron

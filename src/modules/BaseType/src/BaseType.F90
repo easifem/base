@@ -189,6 +189,16 @@ PUBLIC :: iface_VectorFunction
 PUBLIC :: iface_MatrixFunction
 PUBLIC :: Range_
 PUBLIC :: Interval1D_
+PUBLIC :: TypePrecondOpt
+PUBLIC :: TypeConvergenceOpt
+PUBLIC :: TypeSolverNameOpt
+PUBLIC :: TypeElemNameOpt
+PUBLIC :: TypePolynomialOpt
+PUBLIC :: TypeQuadratureOpt
+PUBLIC :: TypeInterpolationOpt
+PUBLIC :: TypeFEVariableOpt
+
+INTEGER(I4B), PARAMETER, PUBLIC :: MAX_RANK_FEVARIABLE = 6
 
 !----------------------------------------------------------------------------
 !                                                                 Math_
@@ -1027,8 +1037,6 @@ TYPE(KeyValue_), PARAMETER :: TypeKeyValue = KeyValue_(VALUE=NULL())
 !
 ! {!pages/FEVariable_.md!}
 
-INTEGER(I4B), PARAMETER, PUBLIC :: MAX_RANK_FEVARIABLE = 6
-
 TYPE :: FEVariable_
   REAL(DFP), ALLOCATABLE :: val(:)
   !! values
@@ -1046,6 +1054,10 @@ TYPE :: FEVariable_
   !! Scalar
   !! Vector
   !! Matrix
+  INTEGER(I4B) :: len = 0_I4B
+  !! current total size
+  INTEGER(I4B) :: capacity = 0_I4B
+  !! capacity of the val
 END TYPE FEVariable_
 
 TYPE(FEVariable_), PARAMETER :: TypeFEVariable = FEVariable_(val=NULL())
@@ -1406,7 +1418,7 @@ TYPE(ShapeData_), PARAMETER :: &
     & Jacobian=NULL())
 
 TYPE :: ShapeDataPointer_
-  CLASS(ShapeDataPointer_), POINTER :: ptr => NULL()
+  CLASS(ShapeData_), POINTER :: ptr => NULL()
 END TYPE ShapeDataPointer_
 
 !----------------------------------------------------------------------------
@@ -1448,44 +1460,50 @@ END TYPE STShapeDataPointer_
 !{!pages/docs-api/ElemShapeData/ElemshapeData_.md!}
 !
 TYPE :: ElemShapeData_
+  INTEGER(I4B) :: nsd = 0
+  !! spatial dimension of an element
+  INTEGER(I4B) :: xidim = 0
+  !! xidimension
+  INTEGER(I4B) :: nips = 0
+  !! number of integration points
+  INTEGER(I4B) :: nns = 0
+  !! total degrees of freedom
+  !! number of shape functions
   REAL(DFP), ALLOCATABLE :: N(:, :)
-    !! Shape function value `N(I, ips)`
+  !! Shape function value `N(I, ips)`
+  !! nrow = nns
+  !! ncol = nips
   REAL(DFP), ALLOCATABLE :: dNdXi(:, :, :)
-    !! Local derivative of a shape function
+  !! Local derivative of a shape function
+  !! shape = nns, xidim, nips
   REAL(DFP), ALLOCATABLE :: jacobian(:, :, :)
-    !! Jacobian of mapping `J(:,:,ips)` also $\mathbf{F}_{\Xi x}$
+  !! Jacobian of mapping `J(:,:,ips)` also $\mathbf{F}_{\Xi x}$
+  !! shape = nsd, xidim, nips
   REAL(DFP), ALLOCATABLE :: js(:)
-    !! Determinant of Jacobian at ips
+  !! Determinant of Jacobian at ips
+  !! nips
   REAL(DFP), ALLOCATABLE :: ws(:)
-    !! Weighting functions
+  !! Weighting functions
+  !! nips
   REAL(DFP), ALLOCATABLE :: dNdXt(:, :, :)
-    !! Spatial derivative of shape function
+  !! Spatial derivative of shape function
+  !! shape = nns, nsd, nips
   REAL(DFP), ALLOCATABLE :: thickness(:)
-    !! Thickness of element
+  !! Thickness of element
+  !! nips
   REAL(DFP), ALLOCATABLE :: coord(:, :)
-    !! Barycentric coordinate
+  !! Barycentric coordinate
+  !! shape = nsd, nips
   REAL(DFP), ALLOCATABLE :: normal(:, :)
-    !! Normal in case of facet element
-  TYPE(ReferenceElement_) :: refelem
-    !! Refererece element
-  TYPE(QuadraturePoint_) :: quad
-    !! Quadrature points
+  !! Normal in case of facet element
 END TYPE ElemShapeData_
 
-TYPE(ElemShapeData_), PARAMETER :: &
-  & TypeElemShapeData = ElemShapeData_( &
-  & N=NULL(), &
-  & dNdXi=NULL(), &
-  & Jacobian=NULL(), &
-  & Js=NULL(), &
-  & Ws=NULL(), &
-  & dNdXt=NULL(), &
-  & Thickness=NULL(), &
-  & Coord=NULL(), &
-  & Normal=NULL())
+TYPE(ElemShapeData_), PARAMETER :: TypeElemShapeData = &
+          ElemShapeData_(N=NULL(), dNdXi=NULL(), Jacobian=NULL(), Js=NULL(), &
+       Ws=NULL(), dNdXt=NULL(), Thickness=NULL(), Coord=NULL(), Normal=NULL())
 
 TYPE :: ElemShapeDataPointer_
-  CLASS(ShapeDataPointer_), POINTER :: ptr => NULL()
+  CLASS(ElemShapeData_), POINTER :: ptr => NULL()
 END TYPE ElemShapeDataPointer_
 
 !----------------------------------------------------------------------------
@@ -1499,35 +1517,34 @@ END TYPE ElemShapeDataPointer_
 
 TYPE, EXTENDS(ElemShapeData_) :: STElemShapeData_
   REAL(DFP) :: wt = 0.0
-    !! Weight of gauss point in time domain
-  REAL(DFP) :: theta = 0.0
-    !! Gauss point in time domain
+  !! Weight of gauss point in time domain
+  ! REAL(DFP) :: theta = 0.0
+  ! Gauss point in time domain
   REAL(DFP) :: jt = 0.0
-    !! Jacobian $\frac{dt}{d\theta}$
+  !! Jacobian $\frac{dt}{d\theta}$
+  INTEGER(I4B) :: nnt = 0
+  !! number of nodes in time domain
   REAL(DFP), ALLOCATABLE :: T(:)
-    !! Shape function in time domain
+  !! Shape function in time domain
+  !! size is nnt
   REAL(DFP), ALLOCATABLE :: dTdTheta(:)
-    !! Local shape function derivative in time domain
+  !! Local shape function derivative in time domain
+  !! size if nnt
   REAL(DFP), ALLOCATABLE :: dNTdt(:, :, :)
+  !! size is nns, nnt, nips
   REAL(DFP), ALLOCATABLE :: dNTdXt(:, :, :, :)
-    !! (I, a, i, ips)
+  !! (I, a, i, ips)
+  !! size is nns, nnt, nsd, nips
+  !! dim1 = nns
+  !! dim2 = nnt
+  !! dim3 = nsd
+  !! dim4 = nips
 END TYPE STElemShapeData_
 
-TYPE(STElemShapeData_), PARAMETER :: &
-  & TypeSTElemShapeData = STElemShapeData_( &
-  & N=NULL(), &
-  & dNdXi=NULL(), &
-  & Jacobian=NULL(), &
-  & Js=NULL(), &
-  & Ws=NULL(), &
-  & dNdXt=NULL(), &
-  & Thickness=NULL(), &
-  & Coord=NULL(), &
-  & Normal=NULL(), &
-  & T=NULL(), &
-  & dTdTheta=NULL(), &
-  & dNTdt=NULL(), &
-  & dNTdXt=NULL())
+TYPE(STElemShapeData_), PARAMETER :: TypeSTElemShapeData = &
+        STElemShapeData_(N=NULL(), dNdXi=NULL(), Jacobian=NULL(), Js=NULL(), &
+     Ws=NULL(), dNdXt=NULL(), Thickness=NULL(), Coord=NULL(), Normal=NULL(), &
+                       T=NULL(), dTdTheta=NULL(), dNTdt=NULL(), dNTdXt=NULL())
 
 !----------------------------------------------------------------------------
 !                                                              Meshquality_
@@ -1590,7 +1607,7 @@ TYPE(OpenMP_) :: OMP
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 4 Sept 2022
-! summary:         Multi-indices object is defined
+! summary:         Multi-indices object is definedstringclass
 
 TYPE :: MultiIndices_
   INTEGER(I4B) :: d
@@ -1740,5 +1757,195 @@ ABSTRACT INTERFACE
     REAL(DFP), ALLOCATABLE :: ans(:, :)
   END FUNCTION iface_MatrixFunction
 END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                              TypePreconOpt
+!----------------------------------------------------------------------------
+
+TYPE :: PrecondOpt_
+  INTEGER(I4B) :: NONE = NO_PRECONDITION
+  INTEGER(I4B) :: left = LEFT_PRECONDITION
+  INTEGER(I4B) :: right = RIGHT_PRECONDITION
+  INTEGER(I4B) :: both = LEFT_RIGHT_PRECONDITION
+  INTEGER(I4B) :: jacobi = PRECOND_JACOBI
+  INTEGER(I4B) :: ilu = PRECOND_ILU
+  INTEGER(I4B) :: ssor = PRECOND_SSOR
+  INTEGER(I4B) :: hybrid = PRECOND_HYBRID
+  INTEGER(I4B) :: is = PRECOND_IS
+  INTEGER(I4B) :: sainv = PRECOND_SAINV
+  INTEGER(I4B) :: saamg = PRECOND_SAAMG
+  INTEGER(I4B) :: iluc = PRECOND_ILUC
+  INTEGER(I4B) :: adds = PRECOND_ADDS
+  INTEGER(I4B) :: ilutp = PRECOND_ILUTP
+  INTEGER(I4B) :: ilud = PRECOND_ILUD
+  INTEGER(I4B) :: iludp = PRECOND_ILUDP
+  INTEGER(I4B) :: ilu0 = PRECOND_ILU0
+  INTEGER(I4B) :: iluk = PRECOND_ILUK
+  INTEGER(I4B) :: ilut = PRECOND_ILUT
+END TYPE PrecondOpt_
+
+TYPE(PrecondOpt_), PARAMETER :: TypePrecondOpt = PrecondOpt_()
+
+!----------------------------------------------------------------------------
+!                                                              TypePreconOpt
+!----------------------------------------------------------------------------
+
+TYPE :: ConvergenceOpt_
+  INTEGER(I4B) :: res = convergenceInRes
+  INTEGER(I4B) :: sol = convergenceInSol
+  INTEGER(I4B) :: both = convergenceInResSol
+  INTEGER(I4B) :: relative = relativeConvergence
+  INTEGER(I4B) :: absolute = absoluteConvergence
+END TYPE ConvergenceOpt_
+
+TYPE(ConvergenceOpt_), PARAMETER :: TypeConvergenceOpt = ConvergenceOpt_()
+
+!----------------------------------------------------------------------------
+!                                                           SolverNameOpt_
+!----------------------------------------------------------------------------
+
+TYPE SolverNameOpt_
+  INTEGER(I4B) :: cg = LIS_CG
+  INTEGER(I4B) :: bcg = LIS_BCG
+  INTEGER(I4B) :: bicg = LIS_BICG
+  INTEGER(I4B) :: cgs = LIS_CGS
+  INTEGER(I4B) :: bcgstab = LIS_BCGSTAB
+  INTEGER(I4B) :: bicgstab = LIS_BICGSTAB
+  INTEGER(I4B) :: bicgstabl = LIS_BICGSTABL
+  INTEGER(I4B) :: gpbicg = LIS_GPBICG
+  INTEGER(I4B) :: tfqmr = LIS_TFQMR
+  INTEGER(I4B) :: omn = LIS_OMN
+  INTEGER(I4B) :: fom = LIS_FOM
+  INTEGER(I4B) :: orthomin = LIS_ORTHOMIN
+  INTEGER(I4B) :: gmres = LIS_GMRES
+  INTEGER(I4B) :: gmr = LIS_GMR
+  INTEGER(I4B) :: jacobi = LIS_JACOBI
+  INTEGER(I4B) :: gs = LIS_GS
+  INTEGER(I4B) :: sor = LIS_SOR
+  INTEGER(I4B) :: bicgsafe = LIS_BICGSAFE
+  INTEGER(I4B) :: cr = LIS_CR
+  INTEGER(I4B) :: bicr = LIS_BICR
+  INTEGER(I4B) :: crs = LIS_CRS
+  INTEGER(I4B) :: bicrstab = LIS_BICRSTAB
+  INTEGER(I4B) :: gpbicr = LIS_GPBICR
+  INTEGER(I4B) :: bicrsafe = LIS_BICRSAFE
+  INTEGER(I4B) :: fgmres = LIS_FGMRES
+  INTEGER(I4B) :: idrs = LIS_IDRS
+  INTEGER(I4B) :: idr1 = LIS_IDR1
+  INTEGER(I4B) :: minres = LIS_MINRES
+  INTEGER(I4B) :: cocg = LIS_COCG
+  INTEGER(I4B) :: cocr = LIS_COCR
+  INTEGER(I4B) :: cgnr = LIS_CGNR
+  INTEGER(I4B) :: cgn = LIS_CGN
+  INTEGER(I4B) :: dbcg = LIS_DBCG
+  INTEGER(I4B) :: dbicg = LIS_DBICG
+  INTEGER(I4B) :: dqgmres = LIS_DQGMRES
+  INTEGER(I4B) :: superlu = LIS_SUPERLU
+END TYPE SolverNameOpt_
+
+TYPE(SolverNameOpt_), PARAMETER :: TypeSolverNameOpt = &
+                                   SolverNameOpt_()
+
+!----------------------------------------------------------------------------
+!                                                            TypeElemNameOpt
+!----------------------------------------------------------------------------
+
+TYPE :: ElemNameOpt_
+  INTEGER(I4B) :: point = Point
+  INTEGER(I4B) :: line = Line
+  INTEGER(I4B) :: triangle = Triangle
+  INTEGER(I4B) :: quadrangle = Quadrangle
+  INTEGER(I4B) :: tetrahedron = Tetrahedron
+  INTEGER(I4B) :: hexahedron = Hexahedron
+  INTEGER(I4B) :: prism = Prism
+  INTEGER(I4B) :: pyramid = Pyramid
+END TYPE ElemNameOpt_
+
+TYPE(ElemNameOpt_), PARAMETER :: TypeElemNameOpt = ElemNameOpt_()
+
+!----------------------------------------------------------------------------
+!                                                          TypePolynomialOpt
+!----------------------------------------------------------------------------
+
+TYPE :: PolynomialOpt_
+  INTEGER(I4B) :: monomial = Monomial
+  INTEGER(I4B) :: lagrange = LagrangePolynomial
+  INTEGER(I4B) :: serendipity = SerendipityPolynomial
+  INTEGER(I4B) :: hierarchical = HierarchicalPolynomial
+  INTEGER(I4B) :: orthogonal = OrthogonalPolynomial
+  INTEGER(I4B) :: jacobi = JacobiPolynomial
+  INTEGER(I4B) :: legendre = LegendrePolynomial
+  INTEGER(I4B) :: chebyshev = ChebyshevPolynomial
+  INTEGER(I4B) :: lobatto = LobattoPolynomial
+  INTEGER(I4B) :: unscaledLobatto = UnscaledLobattoPolynomial
+  INTEGER(I4B) :: hermit = HermitPolynomial
+  INTEGER(I4B) :: ultraspherical = UltrasphericalPolynomial
+END TYPE PolynomialOpt_
+
+TYPE(PolynomialOpt_), PARAMETER :: TypePolynomialOpt = PolynomialOpt_()
+
+!----------------------------------------------------------------------------
+!                                                         TypeQuadratureOpt
+!----------------------------------------------------------------------------
+
+TYPE :: QuadratureOpt_
+  INTEGER(I4B) :: equidistance = EquidistanceQP
+  INTEGER(I4B) :: Gauss = GaussQP
+  INTEGER(I4B) :: GaussLegendre = GaussLegendreQP
+  INTEGER(I4B) :: GaussLegendreLobatto = GaussLegendreLobattoQP
+  INTEGER(I4B) :: GaussLegendreRadau = GaussLegendreRadau
+  INTEGER(I4B) :: GaussLegendreRadauLeft = GaussLegendreRadauLeft
+  INTEGER(I4B) :: GaussLegendreRadauRight = GaussLegendreRadauRight
+  INTEGER(I4B) :: GaussRadau = GaussRadauQP
+  INTEGER(I4B) :: GaussRadauLeft = GaussRadauLeftQP
+  INTEGER(I4B) :: GaussRadauRight = GaussRadauRightQP
+  INTEGER(I4B) :: GaussLobatto = GaussLobattoQP
+  INTEGER(I4B) :: GaussChebyshev = GaussChebyshevQP
+  INTEGER(I4B) :: GaussChebyshevLobatto = GaussChebyshevLobattoQP
+  INTEGER(I4B) :: GaussChebyshevRadau = GaussChebyshevRadau
+  INTEGER(I4B) :: GaussChebyshevRadauLeft = GaussChebyshevRadauLeft
+  INTEGER(I4B) :: GaussChebyshevRadauRight = GaussChebyshevRadauRight
+  INTEGER(I4B) :: GaussJacobi = GaussJacobiQP
+  INTEGER(I4B) :: GaussJacobiLobatto = GaussJacobiLobattoQP
+  INTEGER(I4B) :: GaussJacobiRadau = GaussJacobiRadau
+  INTEGER(I4B) :: GaussJacobiRadauLeft = GaussJacobiRadauLeft
+  INTEGER(I4B) :: GaussJacobiRadauRight = GaussJacobiRadauRight
+  INTEGER(I4B) :: GaussUltraSpherical = GaussUltraSphericalQP
+  INTEGER(I4B) :: GaussUltraSphericalLobatto = GaussUltraSphericalLobattoQP
+  INTEGER(I4B) :: GaussUltraSphericalRadau = GaussUltraSphericalRadau
+  INTEGER(I4B) :: GaussUltraSphericalRadauLeft = GaussUltraSphericalRadauLeft
+  INTEGER(I4B) :: GaussUltraSphericalRadauRight = &
+                  GaussUltraSphericalRadauRight
+  INTEGER(I4B) :: ChenBabuska = ChenBabuskaQP
+  INTEGER(I4B) :: Hesthaven = HesthavenQP
+  INTEGER(I4B) :: Feket = FeketQP
+  INTEGER(I4B) :: BlythPozLegendre = BlythPozLegendreQP
+  INTEGER(I4B) :: BlythPozChebyshev = BlythPozChebyshevQP
+  INTEGER(I4B) :: IsaacLegendre = IsaacLegendreQP
+  INTEGER(I4B) :: IsaacChebyshev = IsaacChebyshevQP
+END TYPE QuadratureOpt_
+
+TYPE(QuadratureOpt_), PARAMETER :: TypeQuadratureOpt = QuadratureOpt_()
+TYPE(QuadratureOpt_), PARAMETER :: TypeInterpolationOpt = QuadratureOpt_()
+
+!----------------------------------------------------------------------------
+!                                                           TypeFeVariableOpt
+!----------------------------------------------------------------------------
+
+TYPE :: FEVariableOpt_
+  INTEGER(I4B) :: scalar = scalar
+  INTEGER(I4B) :: vector = vector
+  INTEGER(I4B) :: matrix = matrix
+  INTEGER(I4B) :: nodal = nodal
+  INTEGER(i4b) :: quadrature = quadrature
+  INTEGER(I4B) :: constant = constant
+  INTEGER(I4B) :: space = space
+  INTEGER(I4B) :: time = time
+  INTEGER(I4B) :: spacetime = spacetime
+  INTEGER(I4B) :: solutionDependent = solutionDependent
+  INTEGER(I4B) :: randomSpace = randomSpace
+END TYPE FEVariableOpt_
+
+TYPE(FEVariableOpt_), PARAMETER :: TypeFEVariableOpt = FEVariableOpt_()
 
 END MODULE BaseType

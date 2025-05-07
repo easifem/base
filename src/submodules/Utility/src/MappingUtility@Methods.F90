@@ -16,16 +16,18 @@
 
 SUBMODULE(MappingUtility) Methods
 USE BaseMethod, ONLY: UpperCase, &
-  & SOFTLE, &
-  & RefCoord_Tetrahedron, &
-  & RefCoord_Hexahedron, &
-  & TriangleArea2D, &
-  & TriangleArea3D, &
-  & QuadrangleArea2D,  &
-  & QuadrangleArea3D, &
-  & TetrahedronVolume3D, &
-  & HexahedronVolume3D
+                      SOFTLE, &
+                      RefCoord_Tetrahedron, &
+                      RefCoord_Hexahedron, &
+                      TriangleArea2D, &
+                      TriangleArea3D, &
+                      QuadrangleArea2D, &
+                      QuadrangleArea3D, &
+                      TetrahedronVolume3D, &
+                      HexahedronVolume3D
+
 IMPLICIT NONE
+
 CONTAINS
 
 !----------------------------------------------------------------------------
@@ -40,12 +42,34 @@ END PROCEDURE FromBiunitLine2Segment1
 !                                                       FromBiunitLine2Segment
 !----------------------------------------------------------------------------
 
+MODULE PROCEDURE FromBiunitLine2Segment1_
+tsize = SIZE(xin)
+ans(1:tsize) = 0.5_DFP * (x1 + x2) + 0.5_DFP * (x2 - x1) * xin
+END PROCEDURE FromBiunitLine2Segment1_
+
+!----------------------------------------------------------------------------
+!                                                       FromBiunitLine2Segment
+!----------------------------------------------------------------------------
+
 MODULE PROCEDURE FromBiunitLine2Segment2
 INTEGER(I4B) :: ii
 DO ii = 1, SIZE(xin)
   ans(:, ii) = 0.5_DFP * (x1 + x2) + 0.5_DFP * (x2 - x1) * xin(ii)
 END DO
 END PROCEDURE FromBiunitLine2Segment2
+
+!----------------------------------------------------------------------------
+!                                                       FromBiunitLine2Segment
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE FromBiunitLine2Segment2_
+INTEGER(I4B) :: ii
+nrow = SIZE(x1)
+ncol = SIZE(xin)
+DO ii = 1, ncol
+  ans(1:nrow, ii) = 0.5_DFP * (x1 + x2) + 0.5_DFP * (x2 - x1) * xin(ii)
+END DO
+END PROCEDURE FromBiunitLine2Segment2_
 
 !----------------------------------------------------------------------------
 !                                                   FromBiUnitLine2UnitLine
@@ -60,8 +84,18 @@ END PROCEDURE FromBiUnitLine2UnitLine
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE FromUnitLine2BiUnitLine
-ans = 2.0_DFP * xin - 1.0_DFP
+INTEGER(I4B) :: tsize
+CALL FromUnitLine2BiUnitLine_(xin=xin, ans=ans, tsize=tsize)
 END PROCEDURE FromUnitLine2BiUnitLine
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE FromUnitLine2BiUnitLine_
+tsize = SIZE(xin)
+ans(1:tsize) = 2.0_DFP * xin(1:tsize) - 1.0_DFP
+END PROCEDURE FromUnitLine2BiUnitLine_
 
 !----------------------------------------------------------------------------
 !                                                            FromLine2Line
@@ -109,17 +143,42 @@ END DO
 END PROCEDURE FromUnitTriangle2Triangle1
 
 !----------------------------------------------------------------------------
+!                                                  FromUnitTriangle2Triangle_
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE FromUnitTriangle2Triangle1_
+INTEGER(I4B) :: ii, jj
+
+nrow = SIZE(x1)
+ncol = SIZE(xin, 2)
+
+DO CONCURRENT(jj=1:ncol, ii=1:nrow)
+  ans(ii, jj) = x1(ii) + (x2(ii) - x1(ii)) * xin(1, jj) &
+                + (x3(ii) - x1(ii)) * xin(2, jj)
+END DO
+END PROCEDURE FromUnitTriangle2Triangle1_
+
+!----------------------------------------------------------------------------
 !                                        FromBiUnitQuadrangle2UnitQuadrangle
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE FromBiUnitQuadrangle2UnitQuadrangle1
-ans = FromBiUnitQuadrangle2Quadrangle(&
-  & xin=xin, &
-  & x1=[0.0_DFP, 0.0_DFP],  &
-  & x2=[1.0_DFP, 0.0_DFP],  &
-  & x3=[1.0_DFP, 1.0_DFP],  &
-  & x4=[0.0_DFP, 1.0_DFP])
+INTEGER(I4B) :: nrow, ncol
+CALL FromBiUnitQuadrangle2UnitQuadrangle1_(xin=xin, ans=ans, nrow=nrow, &
+                                           ncol=ncol)
 END PROCEDURE FromBiUnitQuadrangle2UnitQuadrangle1
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE FromBiUnitQuadrangle2UnitQuadrangle1_
+REAL(DFP), PARAMETER :: azero = 0.0_DFP, aone = 1.0_DFP
+REAL(DFP), PARAMETER :: x1(2) = [azero, azero], x2(2) = [aone, azero], &
+                        x3(2) = [aone, aone], x4(2) = [azero, aone]
+CALL FromBiUnitQuadrangle2Quadrangle_(xin=xin, x1=x1, x2=x2, x3=x3, x4=x4, &
+                                      ans=ans, nrow=nrow, ncol=ncol)
+END PROCEDURE FromBiUnitQuadrangle2UnitQuadrangle1_
 
 !----------------------------------------------------------------------------
 !                                        FromBiUnitQuadrangle2UnitQuadrangle
@@ -149,30 +208,58 @@ END PROCEDURE FromUnitQuadrangle2BiUnitQuadrangle1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE FromBiUnitQuadrangle2Quadrangle1
+INTEGER(I4B) :: nrow, ncol
+CALL FromBiUnitQuadrangle2Quadrangle1_(xin=xin, ans=ans, x1=x1, x2=x2, &
+                                       x3=x3, x4=x4, nrow=nrow, ncol=ncol)
+END PROCEDURE FromBiUnitQuadrangle2Quadrangle1
+
+!----------------------------------------------------------------------------
+!                                           FromBiUnitQuadrangle2Quadrangle_
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE FromBiUnitQuadrangle2Quadrangle1_
 INTEGER(I4B) :: ii
 REAL(DFP) :: xi, eta, p1, p2, p3, p4
-!!
-DO ii = 1, SIZE(ans, 2)
+
+! ans(SIZE(x1), SIZE(xin, 2))
+nrow = SIZE(x1)
+ncol = SIZE(xin, 2)
+
+DO ii = 1, ncol
   xi = xin(1, ii)
   eta = xin(2, ii)
   p1 = 0.25 * (1.0 - xi) * (1.0 - eta)
   p2 = 0.25 * (1.0 + xi) * (1.0 - eta)
   p3 = 0.25 * (1.0 + xi) * (1.0 + eta)
   p4 = 0.25 * (1.0 - xi) * (1.0 + eta)
-  ans(:, ii) = x1 * p1 + x2 * p2 + x3 * p3 + x4 * p4
+  ans(1:nrow, ii) = x1 * p1 + x2 * p2 + x3 * p3 + x4 * p4
 END DO
-END PROCEDURE FromBiUnitQuadrangle2Quadrangle1
+END PROCEDURE FromBiUnitQuadrangle2Quadrangle1_
 
 !----------------------------------------------------------------------------
 !                                           FromBiUnitHexahedron2Hexahedron
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE FromBiUnitHexahedron2Hexahedron1
+INTEGER(I4B) :: nrow, ncol
+CALL FromBiUnitHexahedron2Hexahedron1_(xin, x1, x2, x3, x4, x5, x6, x7, x8, &
+                                       ans, nrow, ncol)
+
+END PROCEDURE FromBiUnitHexahedron2Hexahedron1
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE FromBiUnitHexahedron2Hexahedron1_
 INTEGER(I4B) :: ii
 REAL(DFP) :: xi, eta, p1, p2, p3, p4, p5, p6, p7, p8, zeta
 REAL(DFP), PARAMETER :: one = 1.0_DFP, p125 = 0.125_DFP
 
-DO ii = 1, SIZE(ans, 2)
+nrow = SIZE(x1)
+ncol = SIZE(xin, 2)
+
+DO ii = 1, ncol
   xi = xin(1, ii)
   eta = xin(2, ii)
   zeta = xin(3, ii)
@@ -184,35 +271,48 @@ DO ii = 1, SIZE(ans, 2)
   p6 = p125 * (one + xi) * (one - eta) * (one + zeta)
   p7 = p125 * (one + xi) * (one + eta) * (one + zeta)
   p8 = p125 * (one - xi) * (one + eta) * (one + zeta)
-  ans(:, ii) = x1 * p1 + x2 * p2 + x3 * p3 + x4 * p4 + &
-    & x5 * p5 + x6 * p6 + x7 * p7 + x8 * p8
+  ans(1:nrow, ii) = x1 * p1 + x2 * p2 + x3 * p3 + x4 * p4 + &
+                    x5 * p5 + x6 * p6 + x7 * p7 + x8 * p8
 END DO
-END PROCEDURE FromBiUnitHexahedron2Hexahedron1
+END PROCEDURE FromBiUnitHexahedron2Hexahedron1_
 
 !----------------------------------------------------------------------------
 !                                       FromBiUnitHexahedron2UnitHexahedron
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE FromBiUnitHexahedron2UnitHexahedron1
-REAL(DFP) :: xij(3, 8)
-xij = RefCoord_Hexahedron(refHexahedron="UNIT")
-ans = FromBiUnitHexahedron2Hexahedron(&
-  & xin=xin,  &
-  & x1=xij(:, 1),  &
-  & x2=xij(:, 2), &
-  & x3=xij(:, 3), &
-  & x4=xij(:, 4), &
-  & x5=xij(:, 5), &
-  & x6=xij(:, 6), &
-  & x7=xij(:, 7), &
-  & x8=xij(:, 8))
+INTEGER(I4B) :: nrow, ncol
+CALL FromBiUnitHexahedron2UnitHexahedron1_(xin, ans, nrow, ncol)
 END PROCEDURE FromBiUnitHexahedron2UnitHexahedron1
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE FromBiUnitHexahedron2UnitHexahedron1_
+REAL(DFP) :: xij(3, 8)
+
+xij = RefCoord_Hexahedron(refHexahedron="UNIT")
+
+CALL FromBiUnitHexahedron2Hexahedron_(xin=xin, x1=xij(:, 1), x2=xij(:, 2), &
+       x3=xij(:, 3), x4=xij(:, 4), x5=xij(:, 5), x6=xij(:, 6), x7=xij(:, 7), &
+                                  x8=xij(:, 8), ans=ans, nrow=nrow, ncol=ncol)
+END PROCEDURE FromBiUnitHexahedron2UnitHexahedron1_
 
 !----------------------------------------------------------------------------
 !                                           FromBiUnitHexahedron2Hexahedron
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE FromUnitHexahedron2BiUnitHexahedron1
+INTEGER(I4B) :: nrow, ncol
+CALL FromUnitHexahedron2BiUnitHexahedron1_(xin, ans, nrow, ncol)
+END PROCEDURE FromUnitHexahedron2BiUnitHexahedron1
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE FromUnitHexahedron2BiUnitHexahedron1_
 INTEGER(I4B) :: ii
 REAL(DFP) :: xi, eta, p1, p2, p3, p4, p5, p6, p7, p8, zeta
 REAL(DFP), PARAMETER :: one = 1.0_DFP, p125 = 0.125_DFP
@@ -220,7 +320,10 @@ REAL(DFP) :: x(3, 8)
 
 x = RefCoord_Hexahedron(refHexahedron="BIUNIT")
 
-DO ii = 1, SIZE(ans, 2)
+nrow = SIZE(xin, 1)
+ncol = SIZE(xin, 2)
+
+DO ii = 1, ncol
   xi = xin(1, ii)
   eta = xin(2, ii)
   zeta = xin(3, ii)
@@ -232,10 +335,11 @@ DO ii = 1, SIZE(ans, 2)
   p6 = (xi) * (one - eta) * (zeta)
   p7 = (xi) * (eta) * (zeta)
   p8 = (one - xi) * (eta) * (zeta)
-  ans(:, ii) = x(:, 1) * p1 + x(:, 2) * p2 + x(:, 3) * p3 + x(:, 4) * p4 + &
-    & x(:, 5) * p5 + x(:, 6) * p6 + x(:, 7) * p7 + x(:, 8) * p8
+ ans(1:nrow, ii) = x(1:nrow, 1) * p1 + x(1:nrow, 2) * p2 + x(1:nrow, 3) * p3 &
+                 + x(1:nrow, 4) * p4 + x(1:nrow, 5) * p5 + x(1:nrow, 6) * p6 &
+                    + x(1:nrow, 7) * p7 + x(1:nrow, 8) * p8
 END DO
-END PROCEDURE FromUnitHexahedron2BiUnitHexahedron1
+END PROCEDURE FromUnitHexahedron2BiUnitHexahedron1_
 
 !----------------------------------------------------------------------------
 !                                                     FromTriangle2Square_
@@ -275,6 +379,7 @@ END PROCEDURE FromBiUnitTriangle2BiUnitSqr
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE FromUnitTriangle2BiUnitSqr
+INTEGER(I4B) :: nrow, ncol
 CALL FromTriangle2Square_(xin=xin, ans=ans, from="U", to="B")
 END PROCEDURE FromUnitTriangle2BiUnitSqr
 
@@ -283,21 +388,46 @@ END PROCEDURE FromUnitTriangle2BiUnitSqr
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE FromSquare2Triangle_
+REAL(DFP) :: rr(4)
+INTEGER(I4B) :: ii
 CHARACTER(2) :: acase
-acase = from(1:1)//to(1:1)
+
+acase(1:1) = UpperCase(from(1:1))
+acase(2:2) = UpperCase(to(1:1))
+
+nrow = 2
+ncol = SIZE(xin, 2)
 
 SELECT CASE (acase)
 
-CASE ("BB", "bb", "Bb", "bB")
+CASE ("BB")
 
-  ans(1, :) = 0.5_DFP * (1.0_DFP + xin(1, :)) * (1.0_DFP - xin(2, :)) &
-              - 1.0_DFP
-  ans(2, :) = xin(2, :)
+  DO ii = 1, ncol
 
-CASE ("BU", "bu", "Bu", "bU")
+    rr(1) = xin(2, ii)
+    rr(2) = xin(1, ii)
+    rr(3) = 0.5_DFP * (1.0_DFP + rr(2))
+    rr(4) = 1.0_DFP - rr(1)
+    rr(2) = rr(3) * rr(4) - 1.0_DFP
 
-  ans(1, :) = 0.25_DFP * (1.0_DFP + xin(1, :)) * (1.0_DFP - xin(2, :))
-  ans(2, :) = 0.5_DFP * (xin(2, :) + 1.0_DFP)
+    ans(1, ii) = rr(2)
+    ans(2, ii) = rr(1)
+
+  END DO
+
+CASE ("BU")
+
+  DO ii = 1, ncol
+    rr(1) = xin(1, ii)
+    rr(2) = xin(2, ii)
+    rr(3) = 0.25_DFP * (1.0_DFP + rr(1))
+    rr(4) = 1.0_DFP - rr(2)
+    rr(1) = rr(3) * rr(4)
+    rr(3) = 0.5_DFP * (rr(2) + 1.0_DFP)
+
+    ans(1, ii) = rr(1)
+    ans(2, ii) = rr(3)
+  END DO
 
 END SELECT
 END PROCEDURE FromSquare2Triangle_
@@ -307,7 +437,9 @@ END PROCEDURE FromSquare2Triangle_
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE FromBiUnitSqr2BiUnitTriangle
-CALL FromSquare2Triangle_(xin=xin, ans=ans, from="B", to="B")
+INTEGER(I4B) :: nrow, ncol
+CALL FromSquare2Triangle_(xin=xin, ans=ans, from="B", to="B", nrow=nrow, &
+                          ncol=ncol)
 END PROCEDURE FromBiUnitSqr2BiUnitTriangle
 
 !----------------------------------------------------------------------------
@@ -315,7 +447,9 @@ END PROCEDURE FromBiUnitSqr2BiUnitTriangle
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE FromBiUnitSqr2UnitTriangle
-CALL FromSquare2Triangle_(xin=xin, ans=ans, from="B", to="U")
+INTEGER(I4B) :: nrow, ncol
+CALL FromSquare2Triangle_(xin=xin, ans=ans, from="B", to="U", nrow=nrow, &
+                          ncol=ncol)
 END PROCEDURE FromBiUnitSqr2UnitTriangle
 
 !----------------------------------------------------------------------------
@@ -366,25 +500,41 @@ END PROCEDURE BarycentricCoordTriangle_
 
 MODULE PROCEDURE FromTriangle2Triangle_
 CHARACTER(2) :: acase
-INTEGER(I4B) :: ii, n
+INTEGER(I4B) :: ii, jj
+REAL(DFP) :: x21(3), x31(3)
 
-acase = from(1:1)//to(1:1)
+ncol = SIZE(xin, 2)
+
+acase(1:1) = Uppercase(from(1:1))
+acase(2:2) = Uppercase(to(1:1))
 
 SELECT CASE (acase)
 
-CASE ("BU", "bu", "bU", "Bu")
+CASE ("BU")
 
-  ans = 0.5_DFP * (1.0_DFP + xin)
+  nrow = SIZE(xin, 1)
 
-CASE ("UB", "ub", "Ub", "uB")
+  DO CONCURRENT(ii=1:nrow, jj=1:ncol)
+    ans(ii, jj) = 0.5_DFP * (1.0_DFP + xin(ii, jj))
+  END DO
 
-  ans = -1.0_DFP + 2.0_DFP * xin
+CASE ("UB")
 
-CASE ("UT", "ut", "Ut", "uT")
+  nrow = SIZE(xin, 1)
 
-  n = SIZE(xin, 2)
-  DO CONCURRENT(ii=1:n)
-    ans(:, ii) = x1 + (x2 - x1) * xin(1, ii) + (x3 - x1) * xin(2, ii)
+  DO CONCURRENT(ii=1:nrow, jj=1:ncol)
+    ans(ii, jj) = -1.0_DFP + 2.0_DFP * xin(ii, jj)
+  END DO
+
+CASE ("UT")
+
+  nrow = SIZE(x1)
+
+  x21(1:nrow) = x2(1:nrow) - x1(1:nrow)
+  x31(1:nrow) = x3(1:nrow) - x1(1:nrow)
+
+  DO CONCURRENT(ii=1:nrow, jj=1:ncol)
+    ans(ii, jj) = x1(ii) + x21(ii) * xin(1, jj) + x31(ii) * xin(2, jj)
   END DO
 
 END SELECT
@@ -395,7 +545,9 @@ END PROCEDURE FromTriangle2Triangle_
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE FromBiUnitTriangle2UnitTriangle
-CALL FromTriangle2Triangle_(xin=xin, ans=ans, from="B", to="U")
+INTEGER(I4B) :: nrow, ncol
+CALL FromTriangle2Triangle_(xin=xin, ans=ans, from="B", to="U", nrow=nrow, &
+                            ncol=ncol)
 END PROCEDURE FromBiUnitTriangle2UnitTriangle
 
 !----------------------------------------------------------------------------
@@ -403,7 +555,9 @@ END PROCEDURE FromBiUnitTriangle2UnitTriangle
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE FromUnitTriangle2BiUnitTriangle
-CALL FromTriangle2Triangle_(xin=xin, ans=ans, from="U", to="B")
+INTEGER(I4B) :: nrow, ncol
+CALL FromTriangle2Triangle_(xin=xin, ans=ans, from="U", to="B", nrow=nrow, &
+                            ncol=ncol)
 END PROCEDURE FromUnitTriangle2BiUnitTriangle
 
 !----------------------------------------------------------------------------
@@ -411,16 +565,52 @@ END PROCEDURE FromUnitTriangle2BiUnitTriangle
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE FromBiUnitTetrahedron2UnitTetrahedron
-ans = 0.5_DFP * (1.0_DFP + xin)
+INTEGER(I4B) :: nrow, ncol
+CALL FromBiUnitTetrahedron2UnitTetrahedron_(xin, ans, nrow, ncol)
 END PROCEDURE FromBiUnitTetrahedron2UnitTetrahedron
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE FromBiUnitTetrahedron2UnitTetrahedron_
+INTEGER(I4B) :: ii, jj
+REAL(DFP), PARAMETER :: half = 0.5_DFP, one = 1.0_DFP
+
+nrow = SIZE(xin, 1)
+ncol = SIZE(xin, 2)
+
+DO CONCURRENT(ii=1:nrow, jj=1:ncol)
+  ans(ii, jj) = half * (one + xin(ii, jj))
+END DO
+
+END PROCEDURE FromBiUnitTetrahedron2UnitTetrahedron_
 
 !----------------------------------------------------------------------------
 !                                      FromUnitTetrahedron2BiUnitTetrahedron
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE FromUnitTetrahedron2BiUnitTetrahedron
-ans = -1.0_DFP + 2.0_DFP * xin
+INTEGER(I4B) :: nrow, ncol
+CALL FromUnitTetrahedron2BiUnitTetrahedron_(xin, ans, nrow, ncol)
 END PROCEDURE FromUnitTetrahedron2BiUnitTetrahedron
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE FromUnitTetrahedron2BiUnitTetrahedron_
+REAL(DFP), PARAMETER :: minus_one = -1.0_DFP, two = 2.0_DFP
+INTEGER(I4B) :: ii, jj
+
+nrow = SIZE(xin, 1)
+ncol = SIZE(xin, 2)
+
+DO CONCURRENT(ii=1:nrow, jj=1:ncol)
+  ans(ii, jj) = minus_one + two * xin(ii, jj)
+END DO
+
+END PROCEDURE FromUnitTetrahedron2BiUnitTetrahedron_
 
 !----------------------------------------------------------------------------
 !                                         FromBiUnitTetrahedron2Tetrahedron
@@ -442,50 +632,113 @@ END PROCEDURE FromBiUnitTetrahedron2Tetrahedron
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE FromUnitTetrahedron2Tetrahedron
-INTEGER(I4B) :: ii
-DO ii = 1, SIZE(xin, 2)
-  ans(:, ii) = &
-    (1.0_DFP - xin(1, ii) - xin(2, ii) - xin(3, ii)) * x1(:) &
-    + xin(1, ii) * x2(:) &
-    + xin(2, ii) * x3(:) &
-    + xin(3, ii) * x4(:)
-END DO
+INTEGER(I4B) :: nrow, ncol
+CALL FromUnitTetrahedron2Tetrahedron_(xin=xin, ans=ans, x1=x1, x2=x2, &
+                                      x3=x3, x4=x4, nrow=nrow, ncol=ncol)
 END PROCEDURE FromUnitTetrahedron2Tetrahedron
+
+!----------------------------------------------------------------------------
+!                                            FromUnitTetrahedron2Tetrahedron
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE FromUnitTetrahedron2Tetrahedron_
+INTEGER(I4B) :: ii
+REAL(DFP), PARAMETER :: one = 1.0_DFP
+REAL(DFP) :: rr(10)
+
+nrow = SIZE(x1)
+ncol = SIZE(xin, 2)
+
+DO ii = 1, ncol
+
+  rr(1:3) = xin(1:3, ii)
+  rr(4) = one - rr(1) - rr(2) - rr(3)
+
+  ans(1:nrow, ii) = rr(4) * x1(1:nrow) + rr(1) * x2(1:nrow) + rr(2) * x3(1:nrow) &
+                    + rr(3) * x4(1:nrow)
+END DO
+END PROCEDURE FromUnitTetrahedron2Tetrahedron_
 
 !----------------------------------------------------------------------------
 !                                            BarycentricCoordUnitTetrahedron
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE BarycentricCoordUnitTetrahedron
-ans(1, :) = 1.0_DFP - xin(1, :) - xin(2, :) - xin(3, :)
-ans(2, :) = xin(1, :)
-ans(3, :) = xin(2, :)
-ans(4, :) = xin(3, :)
+INTEGER(I4B) :: nrow, ncol
+CALL BarycentricCoordUnitTetrahedron_(xin=xin, ans=ans, nrow=nrow, ncol=ncol)
 END PROCEDURE BarycentricCoordUnitTetrahedron
+
+!----------------------------------------------------------------------------
+!                                            BarycentricCoordUnitTetrahedron
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE BarycentricCoordUnitTetrahedron_
+INTEGER(I4B) :: ii
+
+nrow = 4
+ncol = SIZE(xin, 2)
+
+DO CONCURRENT(ii=1:ncol)
+  ans(1, ii) = 1.0_DFP - xin(1, ii) - xin(2, ii) - xin(3, ii)
+  ans(2, ii) = xin(1, ii)
+  ans(3, ii) = xin(2, ii)
+  ans(4, ii) = xin(3, ii)
+END DO
+END PROCEDURE BarycentricCoordUnitTetrahedron_
 
 !----------------------------------------------------------------------------
 !                                           BarycentricCoordBiUnitTetrahedron
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE BarycentricCoordBiUnitTetrahedron
-ans(1, :) = -0.5_DFP * (1.0_DFP + xin(1, :) + xin(2, :) + xin(3, :))
-ans(2, :) = 0.5_DFP * (1.0_DFP + xin(1, :))
-ans(3, :) = 0.5_DFP * (1.0_DFP + xin(2, :))
-ans(4, :) = 0.5_DFP * (1.0_DFP + xin(3, :))
+INTEGER(I4B) :: nrow, ncol
+CALL BarycentricCoordBiUnitTetrahedron_(xin=xin, ans=ans, nrow=nrow, &
+                                        ncol=ncol)
 END PROCEDURE BarycentricCoordBiUnitTetrahedron
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE BarycentricCoordBiUnitTetrahedron_
+INTEGER(I4B) :: ii
+
+nrow = 4
+ncol = SIZE(xin, 2)
+
+DO CONCURRENT(ii=1:ncol)
+  ans(1, ii) = -0.5_DFP * (1.0_DFP + xin(1, ii) + xin(2, ii) + xin(3, ii))
+  ans(2, ii) = 0.5_DFP * (1.0_DFP + xin(1, ii))
+  ans(3, ii) = 0.5_DFP * (1.0_DFP + xin(2, ii))
+  ans(4, ii) = 0.5_DFP * (1.0_DFP + xin(3, ii))
+END DO
+
+END PROCEDURE BarycentricCoordBiUnitTetrahedron_
 
 !----------------------------------------------------------------------------
 !                                                BarycentricCoordTetrahedron
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE BarycentricCoordTetrahedron
+INTEGER(I4B) :: nrow, ncol
+CALL BarycentricCoordTetrahedron_(xin=xin, refTetrahedron=refTetrahedron, &
+                                  ans=ans, nrow=nrow, ncol=ncol)
+END PROCEDURE BarycentricCoordTetrahedron
+
+!----------------------------------------------------------------------------
+!                                                BarycentricCoordTetrahedron
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE BarycentricCoordTetrahedron_
 SELECT CASE (refTetrahedron(1:1))
 CASE ("B", "b")
-  ans = BarycentricCoordBiUnitTetrahedron(xin)
+  CALL BarycentricCoordBiUnitTetrahedron_(xin=xin, ans=ans, nrow=nrow, &
+                                          ncol=ncol)
 CASE ("U", "u")
-  ans = BarycentricCoordUnitTetrahedron(xin)
+  CALL BarycentricCoordUnitTetrahedron_(xin=xin, ans=ans, nrow=nrow, &
+                                        ncol=ncol)
 END SELECT
-END PROCEDURE BarycentricCoordTetrahedron
+END PROCEDURE BarycentricCoordTetrahedron_
 
 !----------------------------------------------------------------------------
 !                                     FromBiUnitTetrahedron2BiUnitHexahedron
@@ -523,17 +776,41 @@ END PROCEDURE FromBiUnitTetrahedron2BiUnitHexahedron
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE FromBiUnitHexahedron2BiUnitTetrahedron
-ans(1, :) = 0.25_DFP  &
-           & * (1.0_DFP + xin(1, :)) &
-           & * (1.0_DFP - xin(2, :)) &
-           & * (1.0_DFP - xin(3, :)) - 1.0_DFP
-
-ans(2, :) = 0.5_DFP  &
-           & * (1.0_DFP + xin(2, :)) &
-           & * (1.0_DFP - xin(3, :)) - 1.0_DFP
-
-ans(3, :) = xin(3, :)
+INTEGER(I4B) :: nrow, ncol
+CALL FromBiUnitHexahedron2BiUnitTetrahedron_(xin, ans, nrow, ncol)
 END PROCEDURE FromBiUnitHexahedron2BiUnitTetrahedron
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE FromBiUnitHexahedron2BiUnitTetrahedron_
+
+INTEGER(I4B) :: ii
+REAL(DFP) :: rr(10)
+REAL(DFP), PARAMETER :: one = 1.0_DFP
+
+nrow = 3
+ncol = SIZE(xin, 2)
+
+DO ii = 1, ncol
+
+  rr(1:3) = xin(1:3, ii)
+
+  rr(4) = one + rr(1)
+  rr(5) = one - rr(2)
+  rr(6) = one - rr(3)
+  rr(7) = 0.25_DFP * rr(4) * rr(5) * rr(6)
+  rr(8) = one + rr(2)
+  rr(9) = 0.5_DFP * rr(8) * rr(6)
+
+  ans(1, ii) = rr(7) - one
+  ans(2, ii) = rr(9) - one
+  ans(3, ii) = rr(3)
+
+END DO
+
+END PROCEDURE FromBiUnitHexahedron2BiUnitTetrahedron_
 
 !----------------------------------------------------------------------------
 !                                       FromUnitTetrahedron2BiUnitHexahedron
@@ -549,9 +826,23 @@ END PROCEDURE FromUnitTetrahedron2BiUnitHexahedron
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE FromBiUnitHexahedron2UnitTetrahedron
-ans = FromBiUnitTetrahedron2UnitTetrahedron( &
-  & FromBiUnitHexahedron2BiUnitTetrahedron(xin))
+INTEGER(I4B) :: nrow, ncol
+CALL FromBiUnitHexahedron2UnitTetrahedron_(xin, ans, nrow, ncol)
 END PROCEDURE FromBiUnitHexahedron2UnitTetrahedron
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE FromBiUnitHexahedron2UnitTetrahedron_
+
+CALL FromBiUnitHexahedron2BiUnitTetrahedron_(xin=xin, ans=ans, &
+                                             nrow=nrow, ncol=ncol)
+
+CALL FromBiUnitTetrahedron2UnitTetrahedron_(xin=ans, ans=ans, nrow=nrow, &
+                                            ncol=ncol)
+
+END PROCEDURE FromBiUnitHexahedron2UnitTetrahedron_
 
 !----------------------------------------------------------------------------
 !                                                             JacobianLine

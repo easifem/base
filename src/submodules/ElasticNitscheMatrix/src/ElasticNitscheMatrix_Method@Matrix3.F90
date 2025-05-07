@@ -58,7 +58,7 @@ REAL(DFP), ALLOCATABLE :: dd(:, :)
 nns1 = SIZE(test%N, 1)
 nns2 = SIZE(trial%N, 1)
 nips = SIZE(trial%N, 2)
-nsd = trial%refElem%nsd
+nsd = trial%nsd
 realval = trial%Ws * trial%Js * trial%Thickness * alpha
 ALLOCATE (ans(nns1 * nsd, nns2 * nsd), dd(nns1, nns2))
 ans = 0.0_DFP
@@ -99,7 +99,7 @@ REAL(DFP), ALLOCATABLE :: dd(:, :)
 nns1 = SIZE(test%N, 1)
 nns2 = SIZE(trial%N, 1)
 nips = SIZE(trial%N, 2)
-nsd = trial%refElem%nsd
+nsd = trial%nsd
 realval = trial%Ws * trial%Js * trial%Thickness * alpha
 ALLOCATE (ans(nns1 * nsd, nns2 * nsd), dd(nns1, nns2))
 ans = 0.0_DFP
@@ -140,7 +140,7 @@ REAL(DFP), ALLOCATABLE :: dd(:, :)
 nns1 = SIZE(test%N, 1)
 nns2 = SIZE(trial%N, 1)
 nips = SIZE(trial%N, 2)
-nsd = trial%refElem%nsd
+nsd = trial%nsd
 realval = trial%Ws * trial%Js * trial%Thickness * alpha
 ALLOCATE (ans(nns1 * nsd, nns2 * nsd), dd(nns1, nns2))
 ans = 0.0_DFP
@@ -191,7 +191,7 @@ REAL(DFP), ALLOCATABLE :: realval(:)
 nns1 = SIZE(test%N, 1)
 nns2 = SIZE(trial%N, 1)
 nips = SIZE(trial%N, 2)
-nsd = trial%refElem%nsd
+nsd = trial%nsd
 realval = trial%Ws * trial%Js * trial%Thickness * alpha
 ALLOCATE (ans(nns1 * nsd, nns2 * nsd))
 ans = 0.0_DFP
@@ -217,7 +217,7 @@ REAL(DFP), ALLOCATABLE :: realval(:)
 nns1 = SIZE(test%N, 1)
 nns2 = SIZE(trial%N, 1)
 nips = SIZE(trial%N, 2)
-nsd = trial%refElem%nsd
+nsd = trial%nsd
 realval = trial%Ws * trial%Js * trial%Thickness * alpha
 ALLOCATE (ans(nns1 * nsd, nns2 * nsd))
 ans = 0.0_DFP

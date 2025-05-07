@@ -20,11 +20,15 @@
 ! summary: This module contains methods for [[ReferenceQuadrangle_]]
 
 MODULE ReferenceQuadrangle_Method
-USE GlobalData
+USE GlobalData, ONLY: DFP, I4B, LGT
+
 USE BaseType, ONLY: ReferenceQuadrangle_, ReferenceElement_, &
                     ReferenceTopology_
+
 IMPLICIT NONE
+
 PRIVATE
+
 PUBLIC :: Initiate
 PUBLIC :: ReferenceQuadrangle
 PUBLIC :: ReferenceQuadrangle_Pointer
@@ -254,8 +258,8 @@ END INTERFACE ReferenceQuadrangle
 ! summary: Returns linear Quadrangle element
 
 INTERFACE ReferenceQuadrangle_Pointer
-  MODULE FUNCTION reference_Quadrangle_Pointer(NSD, xij, domainName)  &
-    & RESULT(obj)
+  MODULE FUNCTION reference_Quadrangle_Pointer(NSD, xij, domainName) &
+    RESULT(obj)
     INTEGER(I4B), INTENT(IN) :: NSD
     REAL(DFP), INTENT(IN), OPTIONAL :: xij(:, :)
     CHARACTER(*), OPTIONAL, INTENT(IN) :: domainName
@@ -287,7 +291,7 @@ END INTERFACE ReferenceQuadrangle_Pointer
 
 INTERFACE
   MODULE SUBROUTINE HighorderElement_Quadrangle(refelem, order, obj, &
-    & ipType)
+                                                ipType)
     CLASS(ReferenceElement_), INTENT(IN) :: refelem
     INTEGER(I4B), INTENT(IN) :: order
     CLASS(ReferenceElement_), INTENT(INOUT) :: obj
@@ -448,8 +452,8 @@ END INTERFACE RefCoord_Quadrangle
 ! summary:  Returns meta data for global orientation of face
 
 INTERFACE
-  MODULE SUBROUTINE FaceShapeMetaData_Quadrangle(face, sorted_face,  &
-    & faceOrient, localFaces)
+  MODULE SUBROUTINE FaceShapeMetaData_Quadrangle(face, sorted_face, &
+                                                 faceOrient, localFaces)
     INTEGER(I4B), INTENT(INOUT) :: face(:)
     INTEGER(I4B), INTENT(INOUT) :: sorted_face(:)
     INTEGER(I4B), OPTIONAL, INTENT(INOUT) :: faceOrient(:)
@@ -466,8 +470,8 @@ END INTERFACE
 ! summary:  Returns the element type of each face
 
 INTERFACE
-MODULE PURE SUBROUTINE GetFaceElemType_Quadrangle(elemType, faceElemType, opt, &
-                                                    tFaceNodes)
+  MODULE PURE SUBROUTINE GetFaceElemType_Quadrangle(elemType, faceElemType, &
+                                                    opt, tFaceNodes)
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: elemType
     !! name of element
     INTEGER(I4B), OPTIONAL, INTENT(INOUT) :: faceElemType(:)

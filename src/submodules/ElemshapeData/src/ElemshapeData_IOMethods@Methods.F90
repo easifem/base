@@ -20,7 +20,14 @@
 ! summary: Methods for IO of [[elemshapedata_]] and [[stelemshapedata_]]
 
 SUBMODULE(ElemshapeData_IOMethods) Methods
-USE BaseMethod
+USE Display_Method, ONLY: Util_Display => Display, Tostring
+
+USE MdEncode_Method, ONLY: Util_MdEncode => MdEncode
+
+USE GlobalData, ONLY: CHAR_LF2
+
+USE String_Class, ONLY: StringReallocate => Reallocate
+
 IMPLICIT NONE
 CONTAINS
 
@@ -40,139 +47,138 @@ MODULE PROCEDURE ElemshapeData_MdEncode
 INTEGER(I4B) :: ii
 TYPE(String), ALLOCATABLE :: rh(:), ch(:)
 
-ans = MdEncode(obj%quad)//CHAR_LF2
-
 IF (ALLOCATED(obj%N)) THEN
-  CALL Reallocate(rh, SIZE(obj%N, 1))
-  CALL Reallocate(ch, SIZE(obj%N, 2))
-  DO ii = 1, SIZE(obj%N, 1)
+  CALL StringReallocate(rh, obj%nns)
+  CALL StringReallocate(ch, obj%nips)
+
+  DO ii = 1, obj%nns
     rh(ii) = "$N_{"//tostring(ii)//"}$"
   END DO
-  DO ii = 1, SIZE(obj%N, 2)
+
+  DO ii = 1, obj%nips
     ch(ii) = "$ips_{"//tostring(ii)//"}$"
   END DO
-  ans = ans//"**N**"//CHAR_LF2//MdEncode(val=obj%N, rh=rh, ch=ch)//CHAR_LF2
+
+ans = ans//"**N**"//CHAR_LF2//Util_MdEncode(val=obj%N, rh=rh, ch=ch)//CHAR_LF2
+
 ELSE
   ans = ans//"**N Not ALLOCATED**"//CHAR_LF2
 END IF
 
 IF (ALLOCATED(obj%dNdXi)) THEN
-  CALL Reallocate(rh, SIZE(obj%dNdXi, 1))
-  CALL Reallocate(ch, SIZE(obj%dNdXi, 2))
-  DO ii = 1, SIZE(obj%dNdXi, 1)
+  CALL StringReallocate(rh, obj%nns)
+  CALL StringReallocate(ch, obj%xidim)
+
+  DO ii = 1, obj%nns
     rh(ii) = "$\frac{\partial N^{"//tostring(ii)//"}}{\partial \xi}$"
   END DO
-  DO ii = 1, SIZE(obj%dNdXi, 2)
+
+  DO ii = 1, obj%xidim
     ch(ii) = "$\frac{\partial N}{\partial \xi_{"//tostring(ii)//"}}$"
   END DO
-  DO ii = 1, SIZE(obj%dNdXi, 3)
+
+  DO ii = 1, obj%nips
     ans = ans//"**dNdXi(:, :, "//tostring(ii)//" )**"//CHAR_LF2// &
-      & MdEncode(val=obj%dNdXi(:, :, ii), rh=rh, ch=ch)//CHAR_LF2
+          Util_MdEncode(val=obj%dNdXi(:, :, ii), rh=rh, ch=ch)//CHAR_LF2
   END DO
+
 ELSE
+
   ans = ans//"**dNdXi Not ALLOCATED**"//CHAR_LF2
+
 END IF
 
 IF (ALLOCATED(obj%dNdXt)) THEN
-  CALL Reallocate(rh, SIZE(obj%dNdXt, 1))
-  CALL Reallocate(ch, SIZE(obj%dNdXt, 2))
-  DO ii = 1, SIZE(obj%dNdXt, 1)
+  CALL StringReallocate(rh, obj%nns)
+  CALL StringReallocate(ch, obj%nsd)
+
+  DO ii = 1, obj%nns
     rh(ii) = "$\frac{\partial N^{"//tostring(ii)//"}}{\partial x}$"
   END DO
-  DO ii = 1, SIZE(obj%dNdXt, 2)
+
+  DO ii = 1, obj%nsd
     ch(ii) = "$\frac{\partial N}{\partial {x}_{"//tostring(ii)//"}}$"
   END DO
-  DO ii = 1, SIZE(obj%dNdXt, 3)
+
+  DO ii = 1, obj%nips
     ans = ans//"**dNdXt(:, :, "//tostring(ii)//" )**"//CHAR_LF2// &
-      & MdEncode(val=obj%dNdXt(:, :, ii), rh=rh, ch=ch)//CHAR_LF2
+          Util_MdEncode(val=obj%dNdXt(:, :, ii), rh=rh, ch=ch)//CHAR_LF2
   END DO
+
 ELSE
+
   ans = ans//"**dNdXt Not ALLOCATED**"//CHAR_LF2
+
 END IF
 
 IF (ALLOCATED(obj%jacobian)) THEN
-  CALL Reallocate(rh, SIZE(obj%jacobian, 1))
-  CALL Reallocate(ch, SIZE(obj%jacobian, 2))
-  DO ii = 1, SIZE(obj%jacobian, 1)
+  CALL StringReallocate(rh, obj%nsd)
+  CALL StringReallocate(ch, obj%xidim)
+
+  DO ii = 1, obj%nsd
     rh(ii) = "row-"//tostring(ii)
   END DO
-  DO ii = 1, SIZE(obj%jacobian, 2)
+
+  DO ii = 1, obj%xidim
     ch(ii) = "col-"//tostring(ii)
   END DO
-  DO ii = 1, SIZE(obj%jacobian, 3)
+
+  DO ii = 1, obj%nips
     ans = ans//"**jacobian(:, :, "//tostring(ii)//" )**"//CHAR_LF2// &
-      & MdEncode(val=obj%jacobian(:, :, ii), rh=rh, ch=ch)//CHAR_LF2
+          Util_MdEncode(val=obj%jacobian(:, :, ii), rh=rh, ch=ch)//CHAR_LF2
   END DO
+
 ELSE
   ans = ans//"**jacobian Not ALLOCATED**"//CHAR_LF2
 END IF
 
 IF (ALLOCATED(obj%js)) THEN
-  CALL Reallocate(rh, 1)
-  CALL Reallocate(ch, SIZE(obj%js, 1))
+  CALL StringReallocate(rh, 1)
+  CALL StringReallocate(ch, obj%nips)
   rh(1) = "js"
-  DO ii = 1, SIZE(obj%js, 1)
+  DO ii = 1, obj%nips
     ch(ii) = "$js_{"//tostring(ii)//"}$"
   END DO
-  ans = ans//"**Js**"//CHAR_LF2//MdEncode(val=obj%js, rh=rh, ch=ch)//CHAR_LF2
+
+  ans = ans//"**Js**"//CHAR_LF2//Util_MdEncode(val=obj%js, rh=rh, ch=ch)//CHAR_LF2
+
 ELSE
   ans = ans//"**js Not ALLOCATED**"//CHAR_LF2
 END IF
 
 IF (ALLOCATED(obj%thickness)) THEN
-  CALL Reallocate(rh, 1)
-  CALL Reallocate(ch, SIZE(obj%thickness, 1))
+  CALL StringReallocate(rh, 1)
+  CALL StringReallocate(ch, obj%nips)
+
   rh(1) = "thickness"
-  DO ii = 1, SIZE(obj%thickness, 1)
+  DO ii = 1, obj%nips
     ch(ii) = "thickness${}_{"//tostring(ii)//"}$"
   END DO
+
   ans = ans//"**thickness**"//CHAR_LF2// &
-  & MdEncode(val=obj%thickness, rh=rh, ch=ch)//CHAR_LF2
+        Util_MdEncode(val=obj%thickness, rh=rh, ch=ch)//CHAR_LF2
 ELSE
   ans = ans//"**thickness Not ALLOCATED**"//CHAR_LF2
 END IF
 
 IF (ALLOCATED(obj%normal)) THEN
-  CALL Reallocate(rh, SIZE(obj%normal, 1))
-  CALL Reallocate(ch, SIZE(obj%normal, 2))
+  CALL StringReallocate(rh, SIZE(obj%normal, 1))
+  CALL StringReallocate(ch, obj%nips)
+
   DO ii = 1, SIZE(obj%normal, 1)
     rh(ii) = "$n_{"//tostring(ii)//"}$"
   END DO
-  DO ii = 1, SIZE(obj%normal, 2)
+
+  DO ii = 1, obj%nips
     ch(ii) = "$ips_{"//tostring(ii)//"}$"
   END DO
+
   ans = ans//"**normal**"//CHAR_LF2// &
-    & MdEncode(val=obj%normal, rh=rh, ch=ch)//CHAR_LF2
+        Util_MdEncode(val=obj%normal, rh=rh, ch=ch)//CHAR_LF2
 ELSE
   ans = ans//"**normal not ALLOCATED**"//CHAR_LF2
 END IF
 
-! SELECT TYPE (obj); TYPE IS (STElemShapeData_)
-!   CALL Display("# SHAPE FUNCTION IN TIME: ", unitno=unitno)
-!   CALL Display(obj%jt, "# jt: ", unitno=unitno)
-!   CALL Display(obj%theta, "# theta: ", unitno=unitno)
-!   CALL Display(obj%wt, "# wt: ", unitno=unitno)
-!   IF (ALLOCATED(obj%T)) THEN
-!     CALL Display(obj%T, "# T: ", unitno=unitno)
-!   ELSE
-!     CALL Display("# T: NOT ALLOCATED", unitno=unitno)
-!   END IF
-!   IF (ALLOCATED(obj%dTdTheta)) THEN
-!     CALL Display(obj%dTdTheta, "# dTdTheta: ", unitno=unitno)
-!   ELSE
-!     CALL Display("# dTdTheta: NOT ALLOCATED", unitno=unitno)
-!   END IF
-!   IF (ALLOCATED(obj%dNTdt)) THEN
-!     CALL Display(obj%dNTdt, "# dNTdt: ", unitno=unitno)
-!   ELSE
-!     CALL Display("# dNTdt: NOT ALLOCATED", unitno=unitno)
-!   END IF
-!   IF (ALLOCATED(obj%dNTdXt)) THEN
-!     CALL Display(obj%dNTdXt, "# dNTdXt: ", unitno=unitno)
-!   ELSE
-!     CALL Display("# dNTdXt: NOT ALLOCATED", unitno=unitno)
-!   END IF
-! END SELECT
 END PROCEDURE ElemshapeData_MdEncode
 
 !----------------------------------------------------------------------------
@@ -180,73 +186,83 @@ END PROCEDURE ElemshapeData_MdEncode
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE elemsd_display_1
-CALL Display(msg, unitno=unitno)
-CALL Display("# SHAPE FUNCTION IN SPACE: ", unitno=unitno)
-CALL Display(obj%Quad, "# Quadrature Point: ", unitno=unitno)
+CALL Util_Display(msg, unitno=unitno)
+CALL Util_Display(obj%nsd, "nsd: ", unitno)
+CALL Util_Display(obj%xidim, "xidim: ", unitno)
+CALL Util_Display(obj%nns, "nns: ", unitno)
+CALL Util_Display(obj%nips, "nips: ", unitno)
+
 IF (ALLOCATED(obj%N)) THEN
-  CALL Display(obj%N, "# N: ", unitno)
+  CALL Util_Display(obj%N, "N: ", unitno)
 ELSE
-  CALL Display("# N: NOT ALLOCATED", unitno)
+  CALL Util_Display("N: NOT ALLOCATED", unitno)
 END IF
 IF (ALLOCATED(obj%dNdXi)) THEN
-  CALL Display(obj%dNdXi, "# dNdXi: ", unitno)
+  CALL Util_Display(obj%dNdXi, "dNdXi: ", unitno)
 ELSE
-  CALL Display("# dNdXi: NOT ALLOCATED", unitno)
+  CALL Util_Display("dNdXi: NOT ALLOCATED", unitno)
 END IF
 IF (ALLOCATED(obj%dNdXt)) THEN
-  CALL Display(obj%dNdXt, "# dNdXt: ", unitno)
+  CALL Util_Display(obj%dNdXt, "dNdXt: ", unitno)
 ELSE
-  CALL Display("# dNdXt: NOT ALLOCATED", unitno)
+  CALL Util_Display("dNdXt: NOT ALLOCATED", unitno)
 END IF
 IF (ALLOCATED(obj%jacobian)) THEN
-  CALL Display(obj%Jacobian, "# jacobian: ", unitno)
+  CALL Util_Display(obj%Jacobian, "jacobian: ", unitno)
 ELSE
-  CALL Display("# jacobian: NOT ALLOCATED", unitno)
+  CALL Util_Display("jacobian: NOT ALLOCATED", unitno)
 END IF
+
 IF (ALLOCATED(obj%js)) THEN
-  CALL Display(obj%js, "# js: ", unitno)
+  CALL Util_Display(obj%js, "js: ", unitno)
 ELSE
-  CALL Display("# js: NOT ALLOCATED", unitno)
+  CALL Util_Display("js: NOT ALLOCATED", unitno)
 END IF
-IF (ALLOCATED(obj%thickness)) THEN
-  CALL Display(obj%thickness, "# thickness: ", unitno)
+
+IF (ALLOCATED(obj%ws)) THEN
+  CALL Util_Display(obj%ws, "ws: ", unitno)
 ELSE
-  CALL Display("# thickness: NOT ALLOCATED", unitno)
+  CALL Util_Display("ws: NOT ALLOCATED", unitno)
+END IF
+
+IF (ALLOCATED(obj%thickness)) THEN
+  CALL Util_Display(obj%thickness, "thickness: ", unitno)
+ELSE
+  CALL Util_Display("thickness: NOT ALLOCATED", unitno)
 END IF
 IF (ALLOCATED(obj%coord)) THEN
-  CALL Display(obj%coord, "# coord: ", unitno)
+  CALL Util_Display(obj%coord, "coord: ", unitno)
 ELSE
-  CALL Display("# coord: NOT ALLOCATED", unitno)
+  CALL Util_Display("coord: NOT ALLOCATED", unitno)
 END IF
 IF (ALLOCATED(obj%normal)) THEN
-  CALL Display(obj%normal, "# normal: ", unitno)
+  CALL Util_Display(obj%normal, "normal: ", unitno)
 ELSE
-  CALL Display("# normal: NOT ALLOCATED", unitno)
+  CALL Util_Display("normal: NOT ALLOCATED", unitno)
 END IF
 SELECT TYPE (obj); TYPE IS (STElemShapeData_)
-  CALL Display("# SHAPE FUNCTION IN TIME: ", unitno=unitno)
-  CALL Display(obj%jt, "# jt: ", unitno=unitno)
-  CALL Display(obj%theta, "# theta: ", unitno=unitno)
-  CALL Display(obj%wt, "# wt: ", unitno=unitno)
+  CALL Util_Display("SHAPE FUNCTION IN TIME: ", unitno=unitno)
+  CALL Util_Display(obj%jt, "jt: ", unitno=unitno)
+  CALL Util_Display(obj%wt, "wt: ", unitno=unitno)
   IF (ALLOCATED(obj%T)) THEN
-    CALL Display(obj%T, "# T: ", unitno=unitno)
+    CALL Util_Display(obj%T, "T: ", unitno=unitno)
   ELSE
-    CALL Display("# T: NOT ALLOCATED", unitno=unitno)
+    CALL Util_Display("T: NOT ALLOCATED", unitno=unitno)
   END IF
   IF (ALLOCATED(obj%dTdTheta)) THEN
-    CALL Display(obj%dTdTheta, "# dTdTheta: ", unitno=unitno)
+    CALL Util_Display(obj%dTdTheta, "dTdTheta: ", unitno=unitno)
   ELSE
-    CALL Display("# dTdTheta: NOT ALLOCATED", unitno=unitno)
+    CALL Util_Display("dTdTheta: NOT ALLOCATED", unitno=unitno)
   END IF
   IF (ALLOCATED(obj%dNTdt)) THEN
-    CALL Display(obj%dNTdt, "# dNTdt: ", unitno=unitno)
+    CALL Util_Display(obj%dNTdt, "dNTdt: ", unitno=unitno)
   ELSE
-    CALL Display("# dNTdt: NOT ALLOCATED", unitno=unitno)
+    CALL Util_Display("dNTdt: NOT ALLOCATED", unitno=unitno)
   END IF
   IF (ALLOCATED(obj%dNTdXt)) THEN
-    CALL Display(obj%dNTdXt, "# dNTdXt: ", unitno=unitno)
+    CALL Util_Display(obj%dNTdXt, "dNTdXt: ", unitno=unitno)
   ELSE
-    CALL Display("# dNTdXt: NOT ALLOCATED", unitno=unitno)
+    CALL Util_Display("dNTdXt: NOT ALLOCATED", unitno=unitno)
   END IF
 END SELECT
 END PROCEDURE elemsd_display_1
@@ -259,7 +275,7 @@ MODULE PROCEDURE elemsd_display_2
 INTEGER(I4B) :: ii
 DO ii = 1, SIZE(obj)
   CALL Display(obj=obj(ii), msg=TRIM(msg)//"("//tostring(ii)//"): ", &
-    & unitno=unitno)
+               unitno=unitno)
 END DO
 END PROCEDURE elemsd_display_2
 

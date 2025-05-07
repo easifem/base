@@ -197,6 +197,36 @@ DEALLOCATE (realval)
 END PROCEDURE MassMatrix_1
 
 !----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE Massmatrix1_
+REAL(DFP), PARAMETER :: one = 1.0_DFP
+REAL(DFP) :: realval
+INTEGER(I4B) :: ii, jj, ips
+
+nrow = test%nns
+ncol = trial%nns
+ans(1:nrow, 1:ncol) = 0.0
+
+DO ips = 1, trial%nips
+  realval = trial%js(ips) * trial%ws(ips) * trial%thickness(ips)
+
+  CALL OuterProd_(a=test%N(1:nrow, ips), &
+                  b=trial%N(1:ncol, ips), &
+                  nrow=ii, ncol=jj, ans=ans, scale=realval, anscoeff=one)
+
+END DO
+
+IF (PRESENT(opt)) THEN
+  CALL MakeDiagonalCopies_(mat=ans, ncopy=opt, nrow=nrow, ncol=ncol)
+  nrow = opt * nrow
+  ncol = opt * ncol
+END IF
+
+END PROCEDURE Massmatrix1_
+
+!----------------------------------------------------------------------------
 !                                                                MassMatrix
 !----------------------------------------------------------------------------
 
@@ -219,6 +249,37 @@ DEALLOCATE (realval)
 END PROCEDURE MassMatrix_2
 
 !----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE MassMatrix2_
+REAL(DFP) :: realval(trial%nips)
+REAL(DFP), PARAMETER :: one = 1.0_DFP
+INTEGER(I4B) :: ips, ii, jj
+
+nrow = test%nns
+ncol = trial%nns
+realval = 0.0_DFP
+CALL GetInterpolation_(obj=trial, interpol=realval, &
+                       val=rho, tsize=ii)
+realval = trial%js * trial%ws * trial%thickness * realval
+
+DO ips = 1, SIZE(realval)
+  CALL OuterProd_(a=test%N(1:nrow, ips), &
+                  b=trial%N(1:ncol, ips), &
+                  nrow=ii, ncol=jj, ans=ans, scale=realval(ips), &
+                  anscoeff=one)
+END DO
+
+IF (PRESENT(opt)) THEN
+  CALL MakeDiagonalCopies_(mat=ans, ncopy=opt, nrow=nrow, ncol=ncol)
+  nrow = opt * nrow
+  ncol = opt * ncol
+END IF
+
+END PROCEDURE MassMatrix2_
+
+!----------------------------------------------------------------------------
 !                                                                MassMatrix
 !----------------------------------------------------------------------------
 
@@ -234,6 +295,14 @@ CASE (4)
   CALL MM_2d(ans=ans, test=test, trial=trial, rho=rho)
 END SELECT
 END PROCEDURE MassMatrix_3
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE massmatrix3_
+! TODO: implement
+END PROCEDURE massmatrix3_
 
 !----------------------------------------------------------------------------
 !                                                                MassMatrix
@@ -268,6 +337,14 @@ DEALLOCATE (realval, m2, kbar, m4)
 END PROCEDURE MassMatrix_4
 
 !----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE MassMatrix4_
+! TODO: implement
+END PROCEDURE MassMatrix4_
+
+!----------------------------------------------------------------------------
 !                                                                MassMatrix
 !----------------------------------------------------------------------------
 
@@ -292,7 +369,7 @@ ALLOCATE (acoeff(SIZE(lambdaBar, 1)), bcoeff(SIZE(lambdaBar, 1)))
 bcoeff = SQRT(rhoBar * muBar)
 acoeff = SQRT(rhoBar * (lambdaBar + 2.0_DFP * muBar)) - bcoeff
 
-nsd = trial%refelem%nsd
+nsd = trial%nsd
 eyemat = Eye(nsd, 1.0_DFP)
 nns = SIZE(test%N, 1)
 ALLOCATE (m4(nns, nns, nsd, nsd))

@@ -23,194 +23,279 @@ IMPLICIT NONE
 CONTAINS
 
 !----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE QuadratureNumber_Triangle
+ans = QuadratureNumberTriangleSolin(order=order)
+
+IF (ans .LE. 0) THEN
+  ans = 1_I4B + INT(order / 2, kind=I4B)
+  ans = ans * (ans + 1)
+END IF
+END PROCEDURE QuadratureNumber_Triangle
+
+!----------------------------------------------------------------------------
 !                                            TensorQuadraturePoint_Triangle
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE TensorQuadraturePoint_Triangle1
-INTEGER(I4B) :: np(1), nq(1), n
-n = 1_I4B + INT(order / 2, kind=I4B)
-np(1) = n + 1
-nq(1) = n
-ans = TensorQuadraturePoint_Triangle2( &
-  & nipsx=np, &
-  & nipsy=nq, &
-  & quadType=quadType, &
-  & refTriangle=refTriangle, &
-  & xij=xij)
+INTEGER(I4B) :: nipsx(1), nipsy(1), nrow, ncol
+
+nrow = 1_I4B + INT(order / 2, kind=I4B)
+nipsx(1) = nrow + 1
+nipsy(1) = nrow
+
+IF (PRESENT(xij)) THEN
+  nrow = MAX(SIZE(xij, 1), 2_I4B)
+ELSE
+  nrow = 2_I4B
+END IF
+
+nrow = nrow + 1_I4B
+ncol = nipsx(1) * nipsy(1)
+
+ALLOCATE (ans(nrow, ncol))
+
+CALL TensorQuadraturePoint_Triangle2_(nipsx=nipsx, nipsy=nipsy, &
+    quadType=quadType, refTriangle=refTriangle, xij=xij, ans=ans, nrow=nrow, &
+                                      ncol=ncol)
 END PROCEDURE TensorQuadraturePoint_Triangle1
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE TensorQuadraturePoint_Triangle1_
+INTEGER(I4B) :: nipsx(1), nipsy(1), n
+
+n = 1_I4B + INT(order / 2, kind=I4B)
+nipsx(1) = n + 1
+nipsy(1) = n
+
+CALL TensorQuadraturePoint_Triangle2_(nipsx=nipsx, nipsy=nipsy, &
+               quadType=quadType, refTriangle=refTriangle, xij=xij, ans=ans, &
+                                      nrow=nrow, ncol=ncol)
+END PROCEDURE TensorQuadraturePoint_Triangle1_
 
 !----------------------------------------------------------------------------
 !                                           TensorQuadraturePoint_Triangle
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE TensorQuadraturePoint_Triangle2
-INTEGER(I4B) :: np(1), nq(1), nsd
-REAL(DFP), ALLOCATABLE :: temp_q(:, :), temp_t(:, :)
-TYPE(String) :: astr
-
-astr = TRIM(UpperCase(refTriangle))
-np(1) = nipsx(1)
-nq(1) = nipsy(1)
-
-temp_q = QuadraturePoint_Quadrangle(&
-  & nipsx=np,  &
-  & nipsy=nq,  &
-  & quadType1=GaussLegendreLobatto, &
-  & quadType2=GaussJacobiRadauLeft, &
-  & refQuadrangle="BIUNIT", &
-  & alpha2=1.0_DFP, &
-  & beta2=0.0_DFP)
-
-CALL Reallocate(temp_t, SIZE(temp_q, 1, kind=I4B), SIZE(temp_q, 2, kind=I4B))
-temp_t(1:2, :) = FromBiUnitSqr2UnitTriangle(xin=temp_q(1:2, :))
-temp_t(3, :) = temp_q(3, :) / 8.0_DFP
+INTEGER(I4B) :: nrow, ncol
 
 IF (PRESENT(xij)) THEN
-  nsd = SIZE(xij, 1)
+  nrow = MAX(SIZE(xij, 1), 2_I4B)
+ELSE
+  nrow = 2_I4B
+END IF
+
+nrow = nrow + 1_I4B
+ncol = nipsx(1) * nipsy(1)
+
+ALLOCATE (ans(nrow, ncol))
+
+CALL TensorQuadraturePoint_Triangle2_(nipsx=nipsx, nipsy=nipsy, &
+    quadType=quadType, refTriangle=refTriangle, xij=xij, ans=ans, nrow=nrow, &
+                                      ncol=ncol)
+END PROCEDURE TensorQuadraturePoint_Triangle2
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE TensorQuadraturePoint_Triangle2_
+INTEGER(I4B) :: nsd, ii, jj
+REAL(DFP), ALLOCATABLE :: temp(:, :)
+REAL(DFP) :: areal
+REAL(DFP), PARAMETER :: oneby8 = 1.0_DFP / 8.0_DFP
+
+CHARACTER(1) :: astr
+
+IF (PRESENT(xij)) THEN
+  nsd = MAX(SIZE(xij, 1), 2_I4B)
 ELSE
   nsd = 2_I4B
 END IF
 
-CALL Reallocate(ans, nsd + 1_I4B, SIZE(temp_q, 2, kind=I4B))
+nrow = nsd + 1_I4B
+ncol = nipsx(1) * nipsy(1)
+
+! ALLOCATE (temp(nrow, ncol))
+
+CALL QuadraturePoint_Quadrangle_(nipsx=nipsx, nipsy=nipsy, &
+             quadType1=GaussLegendreLobatto, quadType2=GaussJacobiRadauLeft, &
+             refQuadrangle="BIUNIT", alpha2=1.0_DFP, beta2=0.0_DFP, ans=ans, &
+                                 nrow=ii, ncol=jj)
+
+! temp_t(1:2, :) = FromBiUnitSqr2UnitTriangle(xin=temp_q(1:2, :))
+CALL FromSquare2Triangle_(xin=ans(1:2, :), ans=ans, nrow=ii, ncol=jj, &
+                          from="BIUNIT", to="UNIT")
+
+DO CONCURRENT(ii=1:ncol)
+  ans(nrow, ii) = ans(nrow, ii) * oneby8
+END DO
 
 IF (PRESENT(xij)) THEN
-  ans(1:nsd, :) = FromUnitTriangle2Triangle(  &
-    & xin=temp_t(1:2, :), &
-    & x1=xij(:, 1), &
-    & x2=xij(:, 2), &
-    & x3=xij(:, 3))
-  ans(nsd + 1, :) = temp_t(3, :) * JacobianTriangle( &
-    & from="UNIT", &
-    & to="TRIANGLE", &
-    & xij=xij)
-ELSE
-  IF (astr%chars() .EQ. "BIUNIT") THEN
-    ans(1:nsd, :) = FromUnitTriangle2BiUnitTriangle(xin=temp_t(1:2, :))
+  CALL FromUnitTriangle2Triangle_(xin=ans(1:2, :), x1=xij(:, 1), &
+                        x2=xij(:, 2), x3=xij(:, 3), ans=ans, nrow=ii, ncol=jj)
 
-    ans(nsd + 1, :) = temp_t(3, :) * JacobianTriangle( &
-      & from="UNIT", &
-      & to="BIUNIT")
+  areal = JacobianTriangle(from="UNIT", to="TRIANGLE", xij=xij)
 
-  ELSE
-    ans = temp_t
-  END IF
+  DO CONCURRENT(ii=1:ncol)
+    ans(nrow, ii) = ans(nrow, ii) * areal
+  END DO
+
+  RETURN
 END IF
 
-IF (ALLOCATED(temp_q)) DEALLOCATE (temp_q)
-IF (ALLOCATED(temp_t)) DEALLOCATE (temp_t)
+astr = UpperCase(refTriangle(1:1))
 
-END PROCEDURE TensorQuadraturePoint_Triangle2
+IF (astr .EQ. "B") THEN
+  CALL FromTriangle2Triangle_(xin=ans(1:2, :), ans=ans, nrow=ii, &
+                              ncol=jj, from="UNIT", to="BIUNIT")
+
+  areal = JacobianTriangle(from="UNIT", to="BIUNIT")
+
+  DO CONCURRENT(ii=1:ncol)
+    ans(nrow, ii) = ans(nrow, ii) * areal
+  END DO
+
+  RETURN
+
+END IF
+
+END PROCEDURE TensorQuadraturePoint_Triangle2_
 
 !----------------------------------------------------------------------------
 !                                                 QuadraturePoint_Triangle
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE QuadraturePoint_Triangle1
-INTEGER(I4B) :: nips(1), nsd, ii, jj
-REAL(DFP), ALLOCATABLE :: temp_t(:, :)
+INTEGER(I4B) :: nrow, ncol
 LOGICAL(LGT) :: abool
+
+ncol = QuadratureNumberTriangleSolin(order=order)
+
+nrow = 2_I4B
+abool = PRESENT(xij)
+IF (abool) nrow = SIZE(xij, 1)
+nrow = nrow + 1
+
+ALLOCATE (ans(nrow, ncol))
+
+CALL QuadraturePoint_Triangle1_(order=order, quadType=quadType, &
+              refTriangle=refTriangle, xij=xij, ans=ans, nrow=nrow, ncol=ncol)
+END PROCEDURE QuadraturePoint_Triangle1
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE QuadraturePoint_Triangle1_
+INTEGER(I4B) :: nips(1)
 
 nips(1) = QuadratureNumberTriangleSolin(order=order)
 
 IF (nips(1) .LE. 0) THEN
-  ans = TensorQuadraturepoint_Triangle(order=order, quadtype=quadtype, &
-                                       reftriangle=reftriangle, xij=xij)
+  CALL TensorQuadraturepoint_Triangle_(order=order, quadtype=quadtype, &
+                                       reftriangle=reftriangle, xij=xij, &
+                                       ans=ans, nrow=nrow, ncol=ncol)
   RETURN
 END IF
 
-ALLOCATE (temp_t(3, nips(1)))
-CALL QuadraturePointTriangleSolin_(nips=nips, ans=temp_t, nrow=ii, &
-                                   ncol=jj)
+CALL QuadraturePoint_Triangle2_(nips=nips, quadType=quadType, &
+              refTriangle=refTriangle, xij=xij, ans=ans, nrow=nrow, ncol=ncol)
 
-nsd = 2_I4B
-abool = PRESENT(xij)
-IF (abool) nsd = SIZE(xij, 1)
-
-ii = nsd + 1
-ALLOCATE (ans(ii, jj))
-
-IF (abool) THEN
-
-  CALL FromTriangle2Triangle_(xin=temp_t(1:2, :), x1=xij(1:nsd, 1), &
-                      x2=xij(1:nsd, 2), x3=xij(1:nsd, 3), ans=ans(1:nsd, :), &
-                              from="U", to="T")
-
-  ans(nsd + 1, :) = temp_t(3, :) * JacobianTriangle(from="UNIT", &
-                                                    to="TRIANGLE", xij=xij)
-
-  RETURN
-
-END IF
-
-abool = reftriangle(1:1) == "B" .OR. reftriangle(1:1) == "b"
-
-IF (abool) THEN
-  ans(1:nsd, :) = FromUnitTriangle2BiUnitTriangle(xin=temp_t(1:2, :))
-  ans(nsd + 1, :) = temp_t(3, :) * JacobianTriangle(from="UNIT", to="BIUNIT")
-  RETURN
-END IF
-
-ans = temp_t
-
-IF (ALLOCATED(temp_t)) DEALLOCATE (temp_t)
-
-END PROCEDURE QuadraturePoint_Triangle1
+END PROCEDURE QuadraturePoint_Triangle1_
 
 !----------------------------------------------------------------------------
 !                                               QuadraturePoint_Triangle2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE QuadraturePoint_Triangle2
-INTEGER(I4B) :: nsd
-REAL(DFP), ALLOCATABLE :: temp_t(:, :)
-TYPE(string) :: astr
+INTEGER(I4B) :: nrow, ncol
+LOGICAL(LGT) :: abool
 
-IF (nips(1) .LE. QuadratureNumberTriangleSolin(order=20_I4B)) THEN
-  astr = TRIM(UpperCase(refTriangle))
-  temp_t = QuadraturePointTriangleSolin(nips=nips)
+nrow = 2_I4B
+abool = PRESENT(xij)
+IF (abool) nrow = SIZE(xij, 1)
 
-  IF (PRESENT(xij)) THEN
-    nsd = SIZE(xij, 1)
-  ELSE
-    nsd = 2_I4B
-  END IF
+nrow = nrow + 1
+ncol = nips(1)
 
-  CALL Reallocate(ans, nsd + 1_I4B, SIZE(temp_t, 2, kind=I4B))
+ALLOCATE (ans(nrow, ncol))
 
-  IF (PRESENT(xij)) THEN
-    ans(1:nsd, :) = FromUnitTriangle2Triangle(  &
-      & xin=temp_t(1:2, :), &
-      & x1=xij(:, 1), &
-      & x2=xij(:, 2), &
-      & x3=xij(:, 3))
-    ans(nsd + 1, :) = temp_t(3, :) * JacobianTriangle( &
-      & from="UNIT", &
-      & to="TRIANGLE", &
-      & xij=xij)
-  ELSE
-    IF (astr%chars() .EQ. "BIUNIT") THEN
-      ans(1:nsd, :) = FromUnitTriangle2BiUnitTriangle(xin=temp_t(1:2, :))
-      ans(nsd + 1, :) = temp_t(3, :) * JacobianTriangle( &
-        & from="UNIT", &
-        & to="BIUNIT")
+CALL QuadraturePoint_Triangle2_(nips=nips, quadType=quadType, &
+              refTriangle=refTriangle, xij=xij, ans=ans, nrow=nrow, ncol=ncol)
 
-    ELSE
-      ans = temp_t
-    END IF
-  END IF
+END PROCEDURE QuadraturePoint_Triangle2
 
-  IF (ALLOCATED(temp_t)) DEALLOCATE (temp_t)
-ELSE
-  CALL Errormsg( &
-    & msg="This routine should be called for economical"// &
-    & " quadrature points only, otherwise call QuadraturePoint_Triangle1()", &
-    & file=__FILE__, &
-    & line=__LINE__, &
-    & routine="QuadraturePoint_Triangle2()", &
-    & unitNo=stdout)
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE QuadraturePoint_Triangle2_
+INTEGER(I4B) :: nsd, ii, jj
+LOGICAL(LGT) :: abool
+REAL(DFP) :: areal
+CHARACTER(1) :: astr
+
+nrow = 0
+ncol = 0
+
+ii = QuadratureNumberTriangleSolin(order=20)
+abool = nips(1) .GT. ii
+IF (abool) THEN
+  CALL Errormsg(msg="This routine should be called for economical &
+    & quadrature points only, otherwise call QuadraturePoint_Triangle1()", &
+    routine="QuadraturePoint_Triangle2()", &
+    file=__FILE__, line=__LINE__, unitNo=stdout)
   RETURN
 END IF
-END PROCEDURE QuadraturePoint_Triangle2
+
+nsd = 2_I4B
+abool = PRESENT(xij)
+IF (abool) nsd = SIZE(xij, 1)
+
+nrow = nsd + 1
+ncol = nips(1)
+
+CALL QuadraturePointTriangleSolin_(nips=nips, ans=ans, nrow=ii, ncol=jj)
+
+IF (abool) THEN
+  CALL FromTriangle2Triangle_(xin=ans(1:2, 1:ncol), x1=xij(1:nsd, 1), &
+                              x2=xij(1:nsd, 2), x3=xij(1:nsd, 3), ans=ans, &
+                              from="U", to="T", nrow=ii, ncol=jj)
+
+  areal = JacobianTriangle(from="UNIT", to="TRIANGLE", xij=xij)
+
+  DO CONCURRENT(ii=1:ncol)
+    ans(nrow, ii) = ans(nrow, ii) * areal
+  END DO
+
+  RETURN
+
+END IF
+
+astr = UpperCase(reftriangle(1:1))
+abool = astr == "B"
+
+IF (abool) THEN
+  CALL FromTriangle2Triangle_(xin=ans(1:2, 1:ncol), ans=ans, &
+                              from="U", to="B", nrow=ii, ncol=jj)
+
+  areal = JacobianTriangle(from="UNIT", to="BIUNIT")
+
+  DO CONCURRENT(ii=1:ncol)
+    ans(nrow, ii) = ans(nrow, ii) * areal
+  END DO
+
+  RETURN
+END IF
+
+END PROCEDURE QuadraturePoint_Triangle2_
 
 !----------------------------------------------------------------------------
 !

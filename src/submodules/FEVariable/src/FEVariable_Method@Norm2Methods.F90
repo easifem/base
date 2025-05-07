@@ -16,8 +16,24 @@
 !
 
 SUBMODULE(FEVariable_Method) Norm2Methods
-USE BaseMethod
+USE IntegerUtility, ONLY: Get1DIndexFortran
+
+USE GlobalData, ONLY: Scalar, Vector, Matrix, &
+                      Constant, Space, Time, &
+                      SpaceTime, Nodal, Quadrature
+
+USE BaseType, ONLY: TypeFEVariableScalar, &
+                    TypeFEVariableVector, &
+                    TypeFEVariableMatrix, &
+                    TypeFEVariableConstant, &
+                    TypeFEVariableSpace, &
+                    TypeFEVariableTime, &
+                    TypeFEVariableSpaceTime
+
+USE ReallocateUtility, ONLY: Reallocate
+
 IMPLICIT NONE
+
 CONTAINS
 
 !----------------------------------------------------------------------------
@@ -25,108 +41,79 @@ CONTAINS
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE fevar_norm2
-!! Internal variable
-REAL(DFP), ALLOCATABLE :: r1(:), r2(:, :), m2(:,:), r3(:, :, :), m3(:,:,:)
+REAL(DFP), ALLOCATABLE :: r1(:), r2(:, :), m2(:, :), r3(:, :, :), m3(:, :, :)
+
 INTEGER(I4B) :: jj, kk
-!!
-!! main
-!!
+
 SELECT CASE (obj%vartype)
-!!
-!!
-!!
-!!
+
 CASE (constant)
-  !!
-  IF( obj%defineon .EQ. nodal ) THEN
-    ans = NodalVariable( &
-      & NORM2(obj%val(:)), &
-      & typeFEVariableScalar, &
-      & typeFEVariableConstant)
+
+  IF (obj%defineon .EQ. nodal) THEN
+    ans = NodalVariable(NORM2(obj%val(1:obj%len)), &
+                        typeFEVariableScalar, typeFEVariableConstant)
   ELSE
-    ans = QuadratureVariable( &
-      & NORM2(obj%val(:)), &
-      & typeFEVariableScalar, &
-      & typeFEVariableConstant)
+    ans = QuadratureVariable(NORM2(obj%val(1:obj%len)), &
+                             typeFEVariableScalar, typeFEVariableConstant)
   END IF
-!!
-!!
-!!
-!!
+
 CASE (space)
-  !!
+
   r2 = GET(obj, TypeFEVariableVector, TypeFEVariableSpace)
-  CALL Reallocate(r1, size(r2,2))
-  DO jj = 1, size(r1)
-    r1(jj) = NORM2(r2(:,jj))
+
+  CALL Reallocate(r1, SIZE(r2, 2))
+
+  DO jj = 1, SIZE(r1)
+    r1(jj) = NORM2(r2(:, jj))
   END DO
-  !!
-  IF( obj%defineon .EQ. nodal ) THEN
-    ans = NodalVariable(&
-      & r1, &
-      & typeFEVariableScalar, &
-      & typeFEVariableSpace)
+
+  IF (obj%defineon .EQ. nodal) THEN
+    ans = NodalVariable(r1, &
+                        typeFEVariableScalar, typeFEVariableSpace)
   ELSE
-    ans = QuadratureVariable(&
-      & r1, &
-      & typeFEVariableScalar, &
-      & typeFEVariableSpace)
+    ans = QuadratureVariable(r1, &
+                             typeFEVariableScalar, typeFEVariableSpace)
   END IF
-!!
-!!
-!!
-!!
+
 CASE (time)
-  !!
+
   r2 = GET(obj, TypeFEVariableVector, TypeFEVariableTime)
-  CALL Reallocate(r1, size(r2,2))
-  DO jj = 1, size(r1)
-    r1(jj) = NORM2(r2(:,jj))
+
+  CALL Reallocate(r1, SIZE(r2, 2))
+
+  DO jj = 1, SIZE(r1)
+    r1(jj) = NORM2(r2(:, jj))
   END DO
-  !!
-  IF( obj%defineon .EQ. nodal ) THEN
-    ans = NodalVariable(&
-      & r1, &
-      & typeFEVariableScalar, &
-      & typeFEVariableTime)
+
+  IF (obj%defineon .EQ. nodal) THEN
+    ans = NodalVariable(r1, &
+                        typeFEVariableScalar, typeFEVariableTime)
   ELSE
-    ans = QuadratureVariable(&
-      & r1, &
-      & typeFEVariableScalar, &
-      & typeFEVariableTime)
+    ans = QuadratureVariable(r1, &
+                             typeFEVariableScalar, typeFEVariableTime)
   END IF
-!!
-!!
-!!
-!!
+
 CASE (spacetime)
-  !!
+
   r3 = GET(obj, TypeFEVariableVector, TypeFEVariableSpaceTime)
-  CALL Reallocate( r2, size(r3,2), size(r3,3) )
-  !!
+
+  CALL Reallocate(r2, SIZE(r3, 2), SIZE(r3, 3))
+
   DO kk = 1, SIZE(r3, 3)
     DO jj = 1, SIZE(r3, 2)
       r2(jj, kk) = NORM2(r3(:, jj, kk))
     END DO
   END DO
-  !!
-  IF( obj%defineon .EQ. nodal ) THEN
-    ans = NodalVariable(&
-      & r2, &
-      & typeFEVariableScalar, &
-      & typeFEVariableSpaceTime)
+
+  IF (obj%defineon .EQ. nodal) THEN
+    ans = NodalVariable(r2, &
+                        typeFEVariableScalar, typeFEVariableSpaceTime)
   ELSE
-    ans = QuadratureVariable(&
-      & r2, &
-      & typeFEVariableScalar, &
-      & typeFEVariableSpaceTime)
+    ans = QuadratureVariable(r2, &
+                             typeFEVariableScalar, typeFEVariableSpaceTime)
   END IF
-  !!
+
 END SELECT
-!!
-!!
-!!
-!!
 END PROCEDURE fevar_norm2
 
 !----------------------------------------------------------------------------

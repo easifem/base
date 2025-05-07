@@ -45,7 +45,7 @@ PURE SUBROUTINE STCM_7a(ans, test, trial, term1, term2, c, opt)
     CALL Reallocate(m6, &
       & SIZE(test(1)%N, 1), &
       & SIZE(trial(1)%N, 1), &
-      & trial(1)%refelem%nsd, 1, &
+      & trial(1)%nsd, 1, &
       & SIZE(test(1)%T), &
       & SIZE(trial(1)%T))
     !!
@@ -75,7 +75,7 @@ PURE SUBROUTINE STCM_7a(ans, test, trial, term1, term2, c, opt)
     CALL Reallocate(m6, &
       & SIZE(test(1)%N, 1), &
       & SIZE(trial(1)%N, 1), &
-      & 1, trial(1)%refelem%nsd, &
+      & 1, trial(1)%nsd, &
       & SIZE(test(1)%T), &
       & SIZE(trial(1)%T))
     !!
@@ -137,7 +137,7 @@ PURE SUBROUTINE STCM_7b(ans, test, trial, term1, term2, c, opt)
     CALL Reallocate(m6, &
       & SIZE(test(1)%N, 1), &
       & SIZE(trial(1)%N, 1), &
-      & trial(1)%refelem%nsd, 1, &
+      & trial(1)%nsd, 1, &
       & SIZE(test(1)%T), &
       & SIZE(trial(1)%T))
     !!
@@ -167,7 +167,7 @@ PURE SUBROUTINE STCM_7b(ans, test, trial, term1, term2, c, opt)
     CALL Reallocate(m6, &
       & SIZE(test(1)%N, 1), &
       & SIZE(trial(1)%N, 1), &
-      & 1, trial(1)%refelem%nsd, &
+      & 1, trial(1)%nsd, &
       & SIZE(test(1)%T), &
       & SIZE(trial(1)%T))
     !!

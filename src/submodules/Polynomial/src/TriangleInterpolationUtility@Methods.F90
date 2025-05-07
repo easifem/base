@@ -15,7 +15,27 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 
 SUBMODULE(TriangleInterpolationUtility) Methods
-USE BaseMethod
+USE BaseType, ONLY: ipopt => TypeInterpolationOpt
+
+USE StringUtility, ONLY: UpperCase
+
+USE LineInterpolationUtility, ONLY: EquidistanceInPoint_Line, &
+                                    EquidistanceInPoint_Line_, &
+                                    LagrangeInDOF_Line, &
+                                    InterpolationPoint_Line_
+
+USE MappingUtility, ONLY: FromUnitTriangle2Triangle_
+
+USE ErrorHandling, ONLY: Errormsg
+
+USE RecursiveNodesUtility, ONLY: RecursiveNode2D_
+
+USE IntegerUtility, ONLY: Size
+
+USE Display_Method, ONLY: ToString
+
+USE GlobalData, ONLY: stderr
+
 IMPLICIT NONE
 CONTAINS
 
@@ -40,41 +60,46 @@ END PROCEDURE GetTotalInDOF_Triangle
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE RefElemDomain_Triangle
-SELECT CASE (UpperCase(baseContinuity))
+CHARACTER(2) :: bc
+CHARACTER(3) :: bi
+
+bc = UpperCase(baseContinuity(1:2))
+bi = UpperCase(baseInterpol(1:3))
+
+SELECT CASE (bc)
+
 CASE ("H1")
-  SELECT CASE (UpperCase(baseInterpol))
-  CASE ("LAGRANGEPOLYNOMIAL", "LAGRANGE", "LAGRANGEINTERPOLATION")
+
+  SELECT CASE (bi)
+
+  !! Lagrange
+  CASE ("LAG", "SER", "HER")
     ans = "UNIT"
-  CASE ("SERENDIPITYPOLYNOMIAL", "SERENDIPITY", "SERENDIPITYINTERPOLATION")
-    ans = "UNIT"
-  CASE ("HERMITPOLYNOMIAL", "HERMIT", "HERMITINTERPOLATION")
-    ans = "UNIT"
-  CASE ( &
-    & "HIERARCHICALPOLYNOMIAL", &
-    & "HIERARCHY", &
-    & "HEIRARCHICALPOLYNOMIAL", &
-    & "HEIRARCHY", &
-    & "HIERARCHYINTERPOLATION", &
-    & "HEIRARCHYINTERPOLATION")
+
+  CASE ("HIE", "HEI")
     ans = "BIUNIT"
-  CASE ("ORTHOGONALPOLYNOMIAL", "ORTHOGONAL", "ORTHOGONALINTERPOLATION")
+
+  CASE ("ORT")
     ans = "BIUNIT"
+
   CASE DEFAULT
-    CALL Errormsg(&
-      & msg="No case found for given baseInterpol="//TRIM(baseInterpol), &
-      & file=__FILE__, &
-      & line=__LINE__,&
-      & routine="RefElemDomain_Triangle()", &
-      & unitno=stderr)
+
+    CALL Errormsg( &
+      msg="No case found for given baseInterpol="//TRIM(baseInterpol), &
+      routine="RefElemDomain_Triangle()", file=__FILE__, line=__LINE__, &
+      unitno=stderr)
+
   END SELECT
+
 CASE DEFAULT
-  CALL Errormsg(&
-    & msg="No case found for given baseContinuity="//TRIM(baseContinuity), &
-    & file=__FILE__, &
-    & line=__LINE__,&
-    & routine="RefElemDomain_Triangle()", &
-    & unitno=stderr)
+
+  CALL Errormsg( &
+    msg="No case found for given baseContinuity="//TRIM(baseContinuity), &
+    file=__FILE__, line=__LINE__, routine="RefElemDomain_Triangle()", &
+    unitno=stderr)
+
 END SELECT
+
 END PROCEDURE RefElemDomain_Triangle
 
 !----------------------------------------------------------------------------
@@ -82,30 +107,21 @@ END PROCEDURE RefElemDomain_Triangle
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE FacetConnectivity_Triangle
-TYPE(String) :: baseInterpol0
-TYPE(String) :: baseContinuity0
+CHARACTER(3) :: bi
 
-baseInterpol0 = UpperCase(baseInterpol)
-baseContinuity0 = UpperCase(baseContinuity)
+bi = UpperCase(baseInterpol(1:3))
 
-SELECT CASE (baseInterpol0%chars())
-CASE ( &
-  & "HIERARCHYPOLYNOMIAL", &
-  & "HIERARCHY", &
-  & "HEIRARCHYPOLYNOMIAL", &
-  & "HEIRARCHY", &
-  & "HIERARCHYINTERPOLATION", &
-  & "HEIRARCHYINTERPOLATION", &
-  & "ORTHOGONALPOLYNOMIAL", &
-  & "ORTHOGONAL", &
-  & "ORTHOGONALINTERPOLATION")
+SELECT CASE (bi)
+CASE ("HIE", "HEI", "ORT")
   ans(:, 1) = [1, 2]
   ans(:, 2) = [1, 3]
   ans(:, 3) = [2, 3]
+
 CASE DEFAULT
   ans(:, 1) = [1, 2]
   ans(:, 2) = [2, 3]
   ans(:, 3) = [3, 1]
+
 END SELECT
 END PROCEDURE FacetConnectivity_Triangle
 
@@ -114,201 +130,261 @@ END PROCEDURE FacetConnectivity_Triangle
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE EquidistancePoint_Triangle
-INTEGER(I4B) :: nsd, n, ne, i1, i2
+INTEGER(I4B) :: nrow, ncol
+
+IF (PRESENT(xij)) THEN
+  nrow = SIZE(xij, 1)
+ELSE
+  nrow = 2_I4B
+END IF
+
+ncol = LagrangeDOF_Triangle(order=order)
+ALLOCATE (ans(nrow, ncol))
+
+CALL EquidistancePoint_Triangle_(order=order, xij=xij, ans=ans, nrow=nrow, &
+                                 ncol=ncol)
+
+END PROCEDURE EquidistancePoint_Triangle
+
+!----------------------------------------------------------------------------
+!                                                 EquidistancePoint_Triangle
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE EquidistancePoint_Triangle_
+INTEGER(I4B) :: i1, i2, aint, bint
 REAL(DFP) :: x(3, 3), xin(3, 3), e1(3), e2(3), lam, avar, mu
 
 x = 0.0_DFP; xin = 0.0_DFP; e1 = 0.0_DFP; e2 = 0.0_DFP
 
 IF (PRESENT(xij)) THEN
-  nsd = SIZE(xij, 1)
-  x(1:nsd, 1:3) = xij(1:nsd, 1:3)
+  nrow = SIZE(xij, 1)
+  x(1:nrow, 1:3) = xij(1:nrow, 1:3)
 ELSE
-  nsd = 2_I4B
-  x(1:nsd, 1) = [0.0, 0.0]
-  x(1:nsd, 2) = [1.0, 0.0]
-  x(1:nsd, 3) = [0.0, 1.0]
+  nrow = 2_I4B
+  x(1:nrow, 1) = [0.0, 0.0]
+  x(1:nrow, 2) = [1.0, 0.0]
+  x(1:nrow, 3) = [0.0, 1.0]
 END IF
 
-n = LagrangeDOF_Triangle(order=order)
-ALLOCATE (ans(nsd, n))
-ans = 0.0_DFP
+ncol = LagrangeDOF_Triangle(order=order)
+! ALLOCATE (ans(nrow, n))
+! ans = 0.0_DFP
 
 !! points on vertex
-ans(1:nsd, 1:3) = x(1:nsd, 1:3)
+ans(1:nrow, 1:3) = x(1:nrow, 1:3)
 
 !! points on edge
-ne = LagrangeInDOF_Line(order=order)
+! ne = LagrangeInDOF_Line(order=order)
 i2 = 3
 IF (order .GT. 1_I4B) THEN
-  i1 = i2 + 1; i2 = i1 + ne - 1
-  ans(1:nsd, i1:i2) = EquidistanceInPoint_Line( &
-    & order=order, &
-    & xij=x(1:nsd, [1, 2]))
-    !!
-  i1 = i2 + 1; i2 = i1 + ne - 1
-  ans(1:nsd, i1:i2) = EquidistanceInPoint_Line( &
-    & order=order, &
-    & xij=x(1:nsd, [2, 3]))
-    !!
-  i1 = i2 + 1; i2 = i1 + ne - 1
-  ans(1:nsd, i1:i2) = EquidistanceInPoint_Line( &
-    & order=order, &
-    & xij=x(1:nsd, [3, 1]))
-    !!
+  i1 = i2 + 1
+  ! i1 = i2 + 1; i2 = i1 + ne - 1
+  ! ans(1:nrow, i1:i2) = EquidistanceInPoint_Line( &
+  !                      order=order, &
+  !                      xij=x(1:nrow, [1, 2]))
+  CALL EquidistanceInPoint_Line_(order=order, xij=x(1:nrow, [1, 2]), &
+                                 ans=ans(:, i1:), nrow=aint, ncol=bint)
+
+  i1 = i1 + bint
+  ! i1 = i2 + 1; i2 = i1 + ne - 1
+  ! ans(1:nrow, i1:i2) = EquidistanceInPoint_Line( &
+  !                      order=order, &
+  !                      xij=x(1:nrow, [2, 3]))
+  CALL EquidistanceInPoint_Line_(order=order, xij=x(1:nrow, [2, 3]), &
+                                 ans=ans(:, i1:), nrow=aint, ncol=bint)
+
+  i1 = i1 + bint
+  ! i1 = i2 + 1; i2 = i1 + ne - 1
+  ! ans(1:nrow, i1:i2) = EquidistanceInPoint_Line( &
+  !                      order=order, &
+  !                      xij=x(1:nrow, [3, 1]))
+  CALL EquidistanceInPoint_Line_(order=order, xij=x(1:nrow, [3, 1]), &
+                                 ans=ans(:, i1:), nrow=aint, ncol=bint)
+  i2 = i1 + bint - 1
+
 END IF
+
+IF (order .LE. 2_I4B) RETURN
 
 !! points on face
-IF (order .GT. 2_I4B) THEN
-    !!
-  IF (order .EQ. 3_I4B) THEN
-    i1 = i2 + 1
-    ans(1:nsd, i1) = (x(1:nsd, 1) + x(1:nsd, 2) + x(1:nsd, 3)) / 3.0_DFP
-  ELSE
-      !!
-    e1 = x(:, 2) - x(:, 1)
-    avar = NORM2(e1)
-    e1 = e1 / avar
-    lam = avar / order
-    e2 = x(:, 3) - x(:, 1)
-    avar = NORM2(e2)
-    e2 = e2 / avar
-    mu = avar / order
-    xin(1:nsd, 1) = x(1:nsd, 1) + lam * e1(1:nsd) + mu * e2(1:nsd)
-      !!
-    e1 = x(:, 3) - x(:, 2)
-    avar = NORM2(e1)
-    e1 = e1 / avar
-    lam = avar / order
-    e2 = x(:, 1) - x(:, 2)
-    avar = NORM2(e2)
-    e2 = e2 / avar
-    mu = avar / order
-    xin(1:nsd, 2) = x(1:nsd, 2) + lam * e1(1:nsd) + mu * e2(1:nsd)
-      !!
-    e1 = x(:, 1) - x(:, 3)
-    avar = NORM2(e1)
-    e1 = e1 / avar
-    lam = avar / order
-    e2 = x(:, 2) - x(:, 3)
-    avar = NORM2(e2)
-    e2 = e2 / avar
-    mu = avar / order
-    xin(1:nsd, 3) = x(1:nsd, 3) + lam * e1(1:nsd) + mu * e2(1:nsd)
-      !!
-    i1 = i2 + 1
-    ans(1:nsd, i1:) = EquidistancePoint_Triangle( &
-      & order=order - 3, &
-      & xij=xin(1:nsd, 1:3))
-      !!
-  END IF
+IF (order .EQ. 3_I4B) THEN
+  i1 = i2 + 1
+  ans(1:nrow, i1) = (x(1:nrow, 1) + x(1:nrow, 2) + x(1:nrow, 3)) / 3.0_DFP
+  RETURN
 END IF
 
-END PROCEDURE EquidistancePoint_Triangle
+e1 = x(:, 2) - x(:, 1)
+avar = NORM2(e1)
+e1 = e1 / avar
+lam = avar / order
+e2 = x(:, 3) - x(:, 1)
+avar = NORM2(e2)
+e2 = e2 / avar
+mu = avar / order
+xin(1:nrow, 1) = x(1:nrow, 1) + lam * e1(1:nrow) + mu * e2(1:nrow)
+
+e1 = x(:, 3) - x(:, 2)
+avar = NORM2(e1)
+e1 = e1 / avar
+lam = avar / order
+e2 = x(:, 1) - x(:, 2)
+avar = NORM2(e2)
+e2 = e2 / avar
+mu = avar / order
+xin(1:nrow, 2) = x(1:nrow, 2) + lam * e1(1:nrow) + mu * e2(1:nrow)
+
+e1 = x(:, 1) - x(:, 3)
+avar = NORM2(e1)
+e1 = e1 / avar
+lam = avar / order
+e2 = x(:, 2) - x(:, 3)
+avar = NORM2(e2)
+e2 = e2 / avar
+mu = avar / order
+xin(1:nrow, 3) = x(1:nrow, 3) + lam * e1(1:nrow) + mu * e2(1:nrow)
+
+i1 = i2 + 1
+! ans(1:nrow, i1:) = EquidistancePoint_Triangle(order=order - 3, &
+!                                               xij=xin(1:nrow, 1:3))
+CALL EquidistancePoint_Triangle_(order=order - 3, xij=xin(1:nrow, 1:3), &
+                                 ans=ans(1:nrow, i1:), nrow=aint, ncol=bint)
+
+END PROCEDURE EquidistancePoint_Triangle_
 
 !----------------------------------------------------------------------------
 !                                              EquidistanceInPoint_Triangle
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE EquidistanceInPoint_Triangle
-INTEGER(I4B) :: nsd, n
-REAL(DFP) :: x(3, 3), xin(3, 3), e1(3), e2(3), lam, avar, mu
+INTEGER(I4B) :: nrow, ncol
 
 IF (order .LT. 3_I4B) THEN
   ALLOCATE (ans(0, 0))
   RETURN
 END IF
 
+IF (PRESENT(xij)) THEN
+  nrow = SIZE(xij, 1)
+ELSE
+  nrow = 2_I4B
+END IF
+
+ncol = LagrangeInDOF_Triangle(order=order)
+
+CALL EquidistanceInPoint_Triangle_(order=order, ans=ans, nrow=nrow, &
+                                   ncol=ncol)
+
+END PROCEDURE EquidistanceInPoint_Triangle
+
+!----------------------------------------------------------------------------
+!                                               EquidistanceInPoint_Triangle
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE EquidistanceInPoint_Triangle_
+REAL(DFP) :: x(3, 3), xin(3, 3), e1(3), e2(3), lam, avar, mu
+INTEGER(I4B) :: aint, bint
+
+nrow = 0; ncol = 0
+IF (order .LT. 3_I4B) RETURN
+
 x = 0.0_DFP; xin = 0.0_DFP; e1 = 0.0_DFP; e2 = 0.0_DFP
 
 IF (PRESENT(xij)) THEN
-  nsd = SIZE(xij, 1)
-  x(1:nsd, 1:3) = xij(1:nsd, 1:3)
+  nrow = SIZE(xij, 1)
+  x(1:nrow, 1:3) = xij(1:nrow, 1:3)
 ELSE
-  nsd = 2_I4B
-  x(1:nsd, 1) = [0.0, 0.0]
-  x(1:nsd, 2) = [1.0, 0.0]
-  x(1:nsd, 3) = [0.0, 1.0]
+  nrow = 2_I4B
+  x(1:nrow, 1) = [0.0, 0.0]
+  x(1:nrow, 2) = [1.0, 0.0]
+  x(1:nrow, 3) = [0.0, 1.0]
 END IF
 
-n = LagrangeInDOF_Triangle(order=order)
-ALLOCATE (ans(nsd, n))
-ans = 0.0_DFP
+ncol = LagrangeInDOF_Triangle(order=order)
+! ALLOCATE (ans(nrow, n))
+! ans = 0.0_DFP
 
 !! points on face
 IF (order .EQ. 3_I4B) THEN
-  ans(1:nsd, 1) = (x(1:nsd, 1) + x(1:nsd, 2) + x(1:nsd, 3)) / 3.0_DFP
-ELSE
-    !!
-  e1 = x(:, 2) - x(:, 1)
-  avar = NORM2(e1)
-  e1 = e1 / avar
-  lam = avar / order
-  e2 = x(:, 3) - x(:, 1)
-  avar = NORM2(e2)
-  e2 = e2 / avar
-  mu = avar / order
-  xin(1:nsd, 1) = x(1:nsd, 1) + lam * e1(1:nsd) + mu * e2(1:nsd)
-    !!
-  e1 = x(:, 3) - x(:, 2)
-  avar = NORM2(e1)
-  e1 = e1 / avar
-  lam = avar / order
-  e2 = x(:, 1) - x(:, 2)
-  avar = NORM2(e2)
-  e2 = e2 / avar
-  mu = avar / order
-  xin(1:nsd, 2) = x(1:nsd, 2) + lam * e1(1:nsd) + mu * e2(1:nsd)
-    !!
-  e1 = x(:, 1) - x(:, 3)
-  avar = NORM2(e1)
-  e1 = e1 / avar
-  lam = avar / order
-  e2 = x(:, 2) - x(:, 3)
-  avar = NORM2(e2)
-  e2 = e2 / avar
-  mu = avar / order
-  xin(1:nsd, 3) = x(1:nsd, 3) + lam * e1(1:nsd) + mu * e2(1:nsd)
-    !!
-  ans(1:nsd, 1:) = EquidistancePoint_Triangle( &
-    & order=order - 3, &
-    & xij=xin(1:nsd, 1:3))
-    !!
+  ans(1:nrow, 1) = (x(1:nrow, 1) + x(1:nrow, 2) + x(1:nrow, 3)) / 3.0_DFP
+  RETURN
 END IF
 
-END PROCEDURE EquidistanceInPoint_Triangle
+e1 = x(:, 2) - x(:, 1)
+avar = NORM2(e1)
+e1 = e1 / avar
+lam = avar / order
+e2 = x(:, 3) - x(:, 1)
+avar = NORM2(e2)
+e2 = e2 / avar
+mu = avar / order
+xin(1:nrow, 1) = x(1:nrow, 1) + lam * e1(1:nrow) + mu * e2(1:nrow)
+
+e1 = x(:, 3) - x(:, 2)
+avar = NORM2(e1)
+e1 = e1 / avar
+lam = avar / order
+e2 = x(:, 1) - x(:, 2)
+avar = NORM2(e2)
+e2 = e2 / avar
+mu = avar / order
+xin(1:nrow, 2) = x(1:nrow, 2) + lam * e1(1:nrow) + mu * e2(1:nrow)
+
+e1 = x(:, 1) - x(:, 3)
+avar = NORM2(e1)
+e1 = e1 / avar
+lam = avar / order
+e2 = x(:, 2) - x(:, 3)
+avar = NORM2(e2)
+e2 = e2 / avar
+mu = avar / order
+xin(1:nrow, 3) = x(1:nrow, 3) + lam * e1(1:nrow) + mu * e2(1:nrow)
+
+CALL EquidistancePoint_Triangle_(order=order - 3, xij=xin(1:nrow, 1:3), &
+                                 ans=ans, nrow=aint, ncol=bint)
+
+END PROCEDURE EquidistanceInPoint_Triangle_
 
 !----------------------------------------------------------------------------
 !                                                   BlythPozrikidis_Triangle
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE BlythPozrikidis_Triangle
-REAL(DFP) :: v(order + 1), xi(order + 1, order + 1), eta(order + 1, order + 1)
-REAL(DFP), ALLOCATABLE :: temp(:, :)
-INTEGER(I4B) :: nsd, N, ii, jj, kk
-CHARACTER(*), PARAMETER :: myName = "BlythPozrikidis_Triangle"
+INTEGER(I4B) :: nrow, ncol
+ncol = LagrangeDOF_Triangle(order=order)
+nrow = 2; IF (PRESENT(xij)) nrow = SIZE(xij, 1)
+ALLOCATE (ans(nrow, ncol))
+CALL BlythPozrikidis_Triangle_(order=order, ipType=ipType, ans=ans,nrow=nrow,&
+     ncol=ncol, layout=layout, xij=xij, alpha=alpha, beta=beta, lambda=lambda)
+END PROCEDURE BlythPozrikidis_Triangle
 
-v = InterpolationPoint_Line( &
-  & order=order, &
-  & ipType=ipType, &
-  & xij=[0.0_DFP, 1.0_DFP], &
-  & layout="INCREASING", &
-  & lambda=lambda, &
-  & beta=beta, &
-  & alpha=alpha)
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
 
-N = LagrangeDOF_Triangle(order=order)
+MODULE PROCEDURE BlythPozrikidis_Triangle_
+INTEGER(I4B), PARAMETER :: max_order = 30
+CHARACTER(*), PARAMETER :: myName = "BlythPozrikidis_Triangle()"
+REAL(DFP), PARAMETER :: x(2) = [0.0_DFP, 1.0_DFP]
 
-IF (PRESENT(xij)) THEN
-  nsd = SIZE(xij, 1)
-ELSE
-  nsd = 2
-END IF
+REAL(DFP) :: v(max_order + 1), xi(max_order + 1, max_order + 1), &
+             eta(max_order + 1, max_order + 1), temp(2, 512)
 
-CALL Reallocate(ans, nsd, N)
-CALL Reallocate(temp, 2, N)
+INTEGER(I4B) :: ii, jj, kk, tsize
 
-xi = 0.0_DFP
-eta = 0.0_DFP
+LOGICAL(LGT) :: isx
+
+CALL InterpolationPoint_Line_(order=order, ipType=ipType, xij=x, &
+                              layout="INCREASING", lambda=lambda, &
+                              beta=beta, alpha=alpha, ans=v, tsize=tsize)
+
+ncol = LagrangeDOF_Triangle(order=order)
+nrow = 2
+
+isx = .FALSE.; IF (PRESENT(xij)) isx = .TRUE.
+IF (isx) nrow = SIZE(xij, 1)
+
+xi(1:order + 1, 1:order + 1) = 0.0_DFP
+eta(1:order + 1, 1:order + 1) = 0.0_DFP
 
 DO ii = 1, order + 1
   DO jj = 1, order + 2 - ii
@@ -318,91 +394,101 @@ DO ii = 1, order + 1
   END DO
 END DO
 
-IF (layout .EQ. "VEFC") THEN
+SELECT CASE (layout)
 
-  CALL IJ2VEFC_Triangle(xi=xi, eta=eta, temp=temp, order=order, N=N)
+CASE ("VEFC")
 
-  IF (PRESENT(xij)) THEN
-    ans = FromUnitTriangle2Triangle(xin=temp, &
-      & x1=xij(:, 1), x2=xij(:, 2), x3=xij(:, 3))
-  ELSE
-    ans = temp
+  CALL IJ2VEFC_Triangle(xi=xi, eta=eta, temp=temp, order=order, N=ncol)
+
+  IF (isx) THEN
+    CALL FromUnitTriangle2Triangle_(xin=temp(1:2, 1:ncol), x1=xij(:, 1), &
+                    x2=xij(:, 2), x3=xij(:, 3), ans=ans, nrow=nrow, ncol=ncol)
+    RETURN
   END IF
 
-ELSE
-  CALL ErrorMsg( &
-    & msg="Only layout=VEFC is allowed, given layout is " &
-    & //TRIM(layout), &
-    & file=__FILE__, &
-    & routine=myname, &
-    & line=__LINE__, &
-    & unitno=stderr)
-  RETURN
-END IF
+  ans(1:2, 1:ncol) = temp(1:2, 1:ncol)
 
-IF (ALLOCATED(temp)) DEALLOCATE (temp)
+CASE DEFAULT
 
-END PROCEDURE BlythPozrikidis_Triangle
+ CALL ErrorMsg(msg="layout=VEFC is allowed, found layout is "//TRIM(layout), &
+                file=__FILE__, routine=myname, line=__LINE__, unitno=stderr)
+
+END SELECT
+
+END PROCEDURE BlythPozrikidis_Triangle_
 
 !----------------------------------------------------------------------------
 !                                                            Isaac_Triangle
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Isaac_Triangle
-REAL(DFP) :: xi(order + 1, order + 1), eta(order + 1, order + 1)
-REAL(DFP), ALLOCATABLE :: temp(:, :), rPoints(:, :)
-INTEGER(I4B) :: nsd, N, cnt, ii, jj
-CHARACTER(*), PARAMETER :: myName = "Isaac_Triangle"
+INTEGER(I4B) :: nrow, ncol
 
-rPoints = RecursiveNode2D(order=order, ipType=ipType, domain="UNIT",  &
-  & alpha=alpha, beta=beta, lambda=lambda)
+ncol = SIZE(n=order, d=2)
+nrow = 2; IF (PRESENT(xij)) nrow = SIZE(xij, 1)
 
-N = SIZE(rPoints, 2)
+ALLOCATE (ans(nrow, ncol))
 
-IF (PRESENT(xij)) THEN
-  nsd = SIZE(xij, 1)
-ELSE
-  nsd = 2
-END IF
+CALL Isaac_Triangle_(order=order, ipType=ipType, ans=ans, nrow=nrow, &
+                     ncol=ncol, layout=layout, xij=xij, alpha=alpha, &
+                     beta=beta, lambda=lambda)
 
-CALL Reallocate(ans, nsd, N)
+END PROCEDURE Isaac_Triangle
+
+!----------------------------------------------------------------------------
+!                                                             Isaac_Triangle
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE Isaac_Triangle_
+CHARACTER(*), PARAMETER :: myName = "Isaac_Triangle()"
+INTEGER(I4B), PARAMETER :: max_order = 30
+REAL(DFP) :: xi(max_order + 1, max_order + 1), &
+             eta(max_order + 1, max_order + 1), &
+             temp(2, 512)
+
+! REAL(DFP), ALLOCATABLE :: temp(:, :), rPoints(:, :)
+INTEGER(I4B) :: cnt, ii, jj
+INTEGER(I4B) :: nn
+
+nn = 1 + order
+
+CALL RecursiveNode2D_(order=order, ipType=ipType, domain="UNIT", &
+                      alpha=alpha, beta=beta, lambda=lambda, ans=temp, &
+                      nrow=nrow, ncol=ncol)
+
+IF (PRESENT(xij)) nrow = SIZE(xij, 1)
 
 !! convert from rPoints to xi and eta
 cnt = 0
-xi = 0.0_DFP
-eta = 0.0_DFP
+xi(1:nn, 1:nn) = 0.0_DFP
+eta(1:nn, 1:nn) = 0.0_DFP
 
-DO ii = 1, order + 1
-  DO jj = 1, order + 2 - ii
+DO ii = 1, nn
+  DO jj = 1, nn + 1 - ii
     cnt = cnt + 1
-    xi(ii, jj) = rPoints(1, cnt)
-    eta(ii, jj) = rPoints(2, cnt)
+    xi(ii, jj) = temp(1, cnt)
+    eta(ii, jj) = temp(2, cnt)
   END DO
 END DO
 
 IF (layout .EQ. "VEFC") THEN
-  CALL Reallocate(temp, 2, N)
-  CALL IJ2VEFC_Triangle(xi=xi, eta=eta, temp=temp, order=order, N=N)
+  ! CALL Reallocate(temp, 2, N)
+  CALL IJ2VEFC_Triangle(xi=xi, eta=eta, temp=temp, order=order, N=ncol)
+
   IF (PRESENT(xij)) THEN
-    ans = FromUnitTriangle2Triangle(xin=temp, &
-      & x1=xij(:, 1), x2=xij(:, 2), x3=xij(:, 3))
-  ELSE
-    ans = temp
+    CALL FromUnitTriangle2Triangle_(xin=temp(:, 1:ncol), ans=ans, &
+               nrow=nrow, ncol=ncol, x1=xij(:, 1), x2=xij(:, 2), x3=xij(:, 3))
+    RETURN
   END IF
-ELSE
-  CALL ErrorMsg( &
-    & msg="Only layout=VEFC is allowed, given layout is " &
-    & //TRIM(layout), &
-    & file=__FILE__, &
-    & routine=myname, &
-    & line=__LINE__, &
-    & unitno=stderr)
+
+  ans(1:nrow, 1:ncol) = temp(1:nrow, 1:ncol)
   RETURN
 END IF
 
-IF (ALLOCATED(temp)) DEALLOCATE (temp)
-IF (ALLOCATED(rPoints)) DEALLOCATE (rPoints)
-END PROCEDURE Isaac_Triangle
+CALL ErrorMsg(file=__FILE__, routine=myname, line=__LINE__, unitno=stderr, &
+              msg="Only layout=VEFC is allowed, found layout is "//layout)
+
+END PROCEDURE Isaac_Triangle_
 
 !----------------------------------------------------------------------------
 !
@@ -465,15 +551,13 @@ IF (llr .EQ. 2_I4B) THEN
 END IF
 
 IF (cnt .NE. N) THEN
-  CALL ErrorMsg( &
-    & msg="cnt="//tostring(cnt)//" not equal to total DOF, N=" &
-    & //tostring(N), &
-    & file=__FILE__, &
-    & routine="IJ2VEFC_Triangle()", &
-    & line=__LINE__, &
-    & unitno=stderr)
+  CALL ErrorMsg(file=__FILE__, routine="IJ2VEFC_Triangle()", &
+                line=__LINE__, unitno=stderr, &
+                msg="cnt="//ToString(cnt)//" not equal to total DOF, N=" &
+                //ToString(N))
   RETURN
 END IF
+
 END PROCEDURE IJ2VEFC_Triangle
 
 !----------------------------------------------------------------------------
@@ -481,66 +565,77 @@ END PROCEDURE IJ2VEFC_Triangle
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE InterpolationPoint_Triangle
-CHARACTER(*), PARAMETER :: myName = "InterpolationPoint_Triangle"
+INTEGER(I4B) :: nrow, ncol
+
+IF (PRESENT(xij)) THEN
+  nrow = SIZE(xij, 1)
+ELSE
+  nrow = 2
+END IF
 
 SELECT CASE (ipType)
-CASE (Equidistance)
-  ans = EquidistancePoint_Triangle(xij=xij, order=order)
-CASE (Feket, Hesthaven, ChenBabuska)
-  CALL ErrorMsg( &
-    & msg="Feket, Hesthaven, ChenBabuska nodes not available", &
-    & file=__FILE__, &
-    & routine=myname, &
-    & line=__LINE__, &
-    & unitno=stderr)
-  RETURN
-CASE (BlythPozLegendre)
-  ans = BlythPozrikidis_Triangle( &
-    & order=order, &
-    & ipType=GaussLegendreLobatto,  &
-    & layout="VEFC", &
-    & xij=xij, &
-    & alpha=alpha, &
-    & beta=beta, &
-    & lambda=lambda)
-CASE (BlythPozChebyshev)
-  ans = BlythPozrikidis_Triangle( &
-    & order=order, &
-    & ipType=GaussChebyshevLobatto,  &
-    & layout="VEFC", &
-    & xij=xij, &
-    & alpha=alpha, &
-    & beta=beta, &
-    & lambda=lambda)
-CASE (IsaacLegendre, GaussLegendreLobatto)
-  ans = Isaac_Triangle( &
-    & order=order, &
-    & ipType=GaussLegendreLobatto, &
-    & layout="VEFC", &
-    & xij=xij, &
-    & alpha=alpha, &
-    & beta=beta, &
-    & lambda=lambda)
-CASE (IsaacChebyshev, GaussChebyshevLobatto)
-  ans = Isaac_Triangle( &
-    & order=order, &
-    & ipType=GaussChebyshevLobatto, &
-    & layout="VEFC", &
-    & xij=xij, &
-    & alpha=alpha, &
-    & beta=beta, &
-    & lambda=lambda)
-CASE DEFAULT
-  ans = Isaac_Triangle( &
-    & order=order, &
-    & ipType=ipType, &
-    & layout="VEFC", &
-    & xij=xij, &
-    & alpha=alpha, &
-    & beta=beta, &
-    & lambda=lambda)
+CASE (ipopt%Equidistance, ipopt%BlythPozChebyshev, ipopt%BlythPozLegendre)
+  ncol = LagrangeDOF_Triangle(order=order)
+
+CASE (ipopt%IsaacLegendre, ipopt%IsaacChebyshev, &
+      ipopt%GaussLegendreLobatto, ipopt%GaussChebyshevLobatto)
+  ncol = SIZE(n=order, d=2)
+
 END SELECT
+
+ALLOCATE (ans(nrow, ncol))
+
+CALL InterpolationPoint_Triangle_(order=order, ipType=ipType, ans=ans, &
+                                 nrow=nrow, ncol=ncol, xij=xij, alpha=alpha, &
+                                  beta=beta, lambda=lambda, layout=layout)
+
 END PROCEDURE InterpolationPoint_Triangle
+
+!----------------------------------------------------------------------------
+!                                               InterpolationPoint_Triangle
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE InterpolationPoint_Triangle_
+CHARACTER(*), PARAMETER :: myName = "InterpolationPoint_Triangle_()"
+
+SELECT CASE (ipType)
+CASE (ipopt%Equidistance)
+  CALL EquidistancePoint_Triangle_(xij=xij, order=order, ans=ans, &
+                                   nrow=nrow, ncol=ncol)
+
+CASE (ipopt%BlythPozLegendre)
+  CALL BlythPozrikidis_Triangle_(order=order, ans=ans, nrow=nrow, ncol=ncol, &
+                  ipType=ipopt%GaussLegendreLobatto, layout="VEFC", xij=xij, &
+                                 alpha=alpha, beta=beta, lambda=lambda)
+
+CASE (ipopt%BlythPozChebyshev)
+  CALL BlythPozrikidis_Triangle_(order=order, &
+                                 ipType=ipopt%GaussChebyshevLobatto, &
+              layout="VEFC", xij=xij, alpha=alpha, beta=beta, lambda=lambda, &
+                                 ans=ans, nrow=nrow, ncol=ncol)
+
+CASE (ipopt%IsaacLegendre, ipopt%GaussLegendreLobatto)
+  CALL Isaac_Triangle_(order=order, &
+                       ipType=ipopt%GaussLegendreLobatto, &
+              layout="VEFC", xij=xij, alpha=alpha, beta=beta, lambda=lambda, &
+                       ans=ans, nrow=nrow, ncol=ncol)
+
+CASE (ipopt%IsaacChebyshev, ipopt%GaussChebyshevLobatto)
+  CALL Isaac_Triangle_(order=order, ipType=ipopt%GaussChebyshevLobatto, &
+              layout="VEFC", xij=xij, alpha=alpha, beta=beta, lambda=lambda, &
+                       ans=ans, nrow=nrow, ncol=ncol)
+
+CASE (ipopt%Feket, ipopt%Hesthaven, ipopt%ChenBabuska)
+  CALL ErrorMsg(msg="Feket, Hesthaven, ChenBabuska nodes not available", &
+                file=__FILE__, routine=myname, line=__LINE__, unitno=stderr)
+
+CASE DEFAULT
+  CALL Isaac_Triangle_(order=order, ipType=ipType, layout="VEFC", &
+                       xij=xij, alpha=alpha, beta=beta, lambda=lambda, &
+                       ans=ans, nrow=nrow, ncol=ncol)
+END SELECT
+
+END PROCEDURE InterpolationPoint_Triangle_
 
 !----------------------------------------------------------------------------
 !

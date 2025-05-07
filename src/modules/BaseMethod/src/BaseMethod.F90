@@ -83,7 +83,7 @@ USE CInterface
 USE OpenMP_Method
 USE GlobalData
 USE Hashing32
-USE OGPF
+! USE OGPF
 USE Test_Method
 USE MdEncode_Method
 ! USE DISPMODULE

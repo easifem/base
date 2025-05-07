@@ -15,56 +15,23 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 
 MODULE ElemshapeData_H1Methods
-USE BaseType
-USE GlobalData
+USE BaseType, ONLY: ElemshapeData_, &
+                    QuadraturePoint_, &
+                    ReferenceElement_, &
+                    H1_, &
+                    LagrangeInterpolation_, &
+                    HierarchyInterpolation_, &
+                    OrthogonalInterpolation_, &
+                    HermitInterpolation_, &
+                    SerendipityInterpolation_
+
+USE GlobalData, ONLY: I4B, DFP, LGT
+
 IMPLICIT NONE
+
 PRIVATE
+
 PUBLIC :: Initiate
-
-!----------------------------------------------------------------------------
-!                                                          Initiate@Methods
-!----------------------------------------------------------------------------
-
-!> author: Vikas Sharma, Ph. D.
-! date: 2023-08-16
-! summary: This routine initiate the shape data
-
-INTERFACE Initiate
-  MODULE SUBROUTINE H1_Lagrange1( &
-    & obj, &
-    & quad, &
-    & refelem, &
-    & baseContinuity, &
-    & baseInterpolation, &
-    & order,  &
-    & ipType, &
-    & basisType, &
-    & coeff,  &
-    & firstCall,  &
-    & alpha, &
-    & beta, &
-    & lambda)
-    CLASS(ElemshapeData_), INTENT(INOUT) :: obj
-    CLASS(QuadraturePoint_), INTENT(IN) :: quad
-    CLASS(ReferenceElement_), INTENT(IN) :: refelem
-    CLASS(H1_), INTENT(IN) :: baseContinuity
-    CLASS(LagrangeInterpolation_), INTENT(IN) :: baseInterpolation
-    INTEGER(I4B), INTENT(IN) :: order
-    INTEGER(I4B), OPTIONAL, INTENT(IN) :: ipType
-    !! Interpolation point type
-    !! Default value is Equidistance
-    INTEGER(I4B), OPTIONAL, INTENT(IN) :: basisType
-    !! Basis function types
-    !! Default value is Monomial
-    REAL(DFP), OPTIONAL, ALLOCATABLE, INTENT(INOUT) :: coeff(:, :)
-    !! Coefficient of Lagrange polynomials
-    LOGICAL(LGT), OPTIONAL :: firstCall
-    !! If firstCall is true, then coeff will be made
-    !! If firstCall is False, then coeff will be used
-    !! Default value of firstCall is True
-    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha, beta, lambda
-  END SUBROUTINE H1_Lagrange1
-END INTERFACE Initiate
 
 !----------------------------------------------------------------------------
 !                                                    Initiate@H1Hierarchy
@@ -79,17 +46,8 @@ END INTERFACE Initiate
 ! This routine initiates the shape function related data inside the element.
 
 INTERFACE Initiate
-  MODULE SUBROUTINE H1_Hierarchy1( &
-    & obj, &
-    & quad, &
-    & refelem, &
-    & baseContinuity, &
-    & baseInterpolation,  &
-    & order,  &
-    & ipType,  &
-    & basisType,  &
-    & alpha, beta, lambda &
-    &)
+  MODULE SUBROUTINE H1_Hierarchy1(obj, quad, refelem, baseContinuity, &
+             baseInterpolation, order, ipType, basisType, alpha, beta, lambda)
     CLASS(ElemshapeData_), INTENT(INOUT) :: obj
     !! Element shape data
     CLASS(QuadraturePoint_), INTENT(IN) :: quad
@@ -128,17 +86,8 @@ END INTERFACE Initiate
 ! This routine initiates the shape function related data inside the element.
 
 INTERFACE Initiate
-  MODULE SUBROUTINE H1_Orthogonal1( &
-    & obj, &
-    & quad, &
-    & refelem, &
-    & baseContinuity, &
-    & baseInterpolation,  &
-    & order,  &
-    & ipType,  &
-    & basisType,  &
-    & alpha, beta, lambda &
-    &)
+  MODULE SUBROUTINE H1_Orthogonal1(obj, quad, refelem, baseContinuity, &
+             baseInterpolation, order, ipType, basisType, alpha, beta, lambda)
     CLASS(ElemshapeData_), INTENT(INOUT) :: obj
     !! Element shape data
     CLASS(QuadraturePoint_), INTENT(IN) :: quad
@@ -174,17 +123,8 @@ END INTERFACE Initiate
 ! This routine initiates the shape function related data inside the element.
 
 INTERFACE Initiate
-  MODULE SUBROUTINE H1_Hermit1( &
-    & obj, &
-    & quad, &
-    & refelem, &
-    & baseContinuity, &
-    & baseInterpolation,  &
-    & order,  &
-    & ipType,  &
-    & basisType,  &
-    & alpha, beta, lambda &
-    &)
+  MODULE SUBROUTINE H1_Hermit1(obj, quad, refelem, baseContinuity, &
+             baseInterpolation, order, ipType, basisType, alpha, beta, lambda)
     CLASS(ElemshapeData_), INTENT(INOUT) :: obj
     !! Element shape data
     CLASS(QuadraturePoint_), INTENT(IN) :: quad
@@ -216,17 +156,8 @@ END INTERFACE Initiate
 ! summary: This routine initiate the shape data
 
 INTERFACE Initiate
-  MODULE SUBROUTINE H1_Serendipity1( &
-    & obj, &
-    & quad, &
-    & refelem, &
-    & baseContinuity, &
-    & baseInterpolation,  &
-    & order,  &
-    & ipType,  &
-    & basisType,  &
-    & alpha, beta, lambda &
-    &)
+  MODULE SUBROUTINE H1_Serendipity1(obj, quad, refelem, baseContinuity, &
+             baseInterpolation, order, ipType, basisType, alpha, beta, lambda)
     CLASS(ElemshapeData_), INTENT(INOUT) :: obj
     !! Element shape data
     CLASS(QuadraturePoint_), INTENT(IN) :: quad

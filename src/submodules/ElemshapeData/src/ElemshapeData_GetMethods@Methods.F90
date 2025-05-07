@@ -16,7 +16,14 @@
 !
 
 SUBMODULE(ElemshapeData_GetMethods) Methods
-USE BaseMethod
+USE ReallocateUtility, ONLY: Reallocate
+
+USE FEVariable_Method, ONLY: QuadratureVariable, NodalVariable
+
+USE BaseType, ONLY: TypeFEVariableSpace, &
+                    TypeFEVariableVector, &
+                    TypeFEVariableSpaceTime
+
 IMPLICIT NONE
 CONTAINS
 
@@ -26,9 +33,11 @@ CONTAINS
 
 MODULE PROCEDURE elemsd_getnormal_1
 IF (PRESENT(nsd)) THEN
-  normal = obj%normal(1:nsd, :)
+  CALL Reallocate(normal, nsd, obj%nips)
+  normal(1:nsd, 1:obj%nips) = obj%normal(1:nsd, 1:obj%nips)
 ELSE
-  normal = obj%normal
+  CALL Reallocate(normal, 3, obj%nips)
+  normal(1:3, 1:obj%nips) = obj%normal(1:3, 1:obj%nips)
 END IF
 END PROCEDURE elemsd_GetNormal_1
 
@@ -38,13 +47,13 @@ END PROCEDURE elemsd_GetNormal_1
 
 MODULE PROCEDURE elemsd_getnormal_2
 IF (PRESENT(nsd)) THEN
-  normal = QuadratureVariable(obj%normal(1:nsd, :), &
-    & TypeFEVariableVector, &
-    & TypeFEVariableSpace)
+  normal = QuadratureVariable(obj%normal(1:nsd, 1:obj%nips), &
+                              TypeFEVariableVector, &
+                              TypeFEVariableSpace)
 ELSE
-  normal = QuadratureVariable(obj%normal, &
-    & TypeFEVariableVector, &
-    & TypeFEVariableSpace)
+  normal = QuadratureVariable(obj%normal(1:3, 1:obj%nips), &
+                              TypeFEVariableVector, &
+                              TypeFEVariableSpace)
 END IF
 END PROCEDURE elemsd_getnormal_2
 
@@ -53,39 +62,28 @@ END PROCEDURE elemsd_getnormal_2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE elemsd_getnormal_3
-  !!
 REAL(DFP), ALLOCATABLE :: m3(:, :, :)
-INTEGER(I4B) :: ii
-  !!
-IF (PRESENT(nsd)) THEN
-    !!
-  CALL Reallocate(m3, &
-    & nsd, &
-    & SIZE(obj(1)%normal, 2), &
-    & SIZE(obj))
-    !!
-  DO ii = 1, SIZE(obj)
-    m3(1:nsd, :, ii) = obj(ii)%normal(1:nsd, :)
-  END DO
-    !!
-ELSE
-    !!
-  CALL Reallocate(m3, &
-    & SIZE(obj(1)%normal, 1), &
-    & SIZE(obj(1)%normal, 2), &
-    & SIZE(obj))
-    !!
-  DO ii = 1, SIZE(obj)
-    m3(:, :, ii) = obj(ii)%normal
-  END DO
-    !!
-END IF
-  !!
+INTEGER(I4B) :: ii, nips, nipt, nsd0
+
+nipt = SIZE(obj)
+nips = 0
+DO ii = 1, nipt
+  IF (obj(ii)%nips > nips) nips = obj(ii)%nips
+END DO
+
+nsd0 = 3
+IF (PRESENT(nsd)) nsd0 = nsd
+
+ALLOCATE (m3(nsd0, nips, nipt))
+
+DO ii = 1, nipt
+  m3(1:nsd0, 1:obj(ii)%nips, ii) = obj(ii)%normal(1:nsd0, 1:obj(ii)%nips)
+END DO
+
 normal = QuadratureVariable(m3, TypeFEVariableVector, &
-  & TypeFEVariableSpaceTime)
-  !!
+                            TypeFEVariableSpaceTime)
+
 DEALLOCATE (m3)
-  !!
 END PROCEDURE elemsd_getnormal_3
 
 !----------------------------------------------------------------------------

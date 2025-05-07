@@ -16,7 +16,20 @@
 !
 
 SUBMODULE(FEVariable_Method) MeanMethods
-USE BaseMethod
+USE IntegerUtility, ONLY: Get1DIndexFortran
+
+USE GlobalData, ONLY: Scalar, Vector, Matrix, &
+                      Constant, Space, Time, &
+                      SpaceTime, Nodal, Quadrature
+
+USE BaseType, ONLY: TypeFEVariableScalar, &
+                    TypeFEVariableVector, &
+                    TypeFEVariableMatrix, &
+                    TypeFEVariableConstant, &
+                    TypeFEVariableSpace, &
+                    TypeFEVariableTime, &
+                    TypeFEVariableSpaceTime
+
 IMPLICIT NONE
 CONTAINS
 
@@ -25,53 +38,35 @@ CONTAINS
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE fevar_Mean1
-  REAL( DFP ) :: val0
-  REAL( DFP ), ALLOCATABLE :: val1( : ), val2( :, : )
-  !!
-  SELECT CASE (obj%rank)
-  !!
-  !! Scalar
-  !!
-  CASE (SCALAR)
-    !!
-    IF( obj%defineOn .EQ. NODAL ) THEN
-      ans = NodalVariable( MEAN( obj, TypeFEVariableScalar ), &
-        & TypeFEVariableScalar, &
-        & TypeFEVariableConstant )
-    ELSE
-      ans = QuadratureVariable( MEAN( obj, TypeFEVariableScalar ), &
-        & TypeFEVariableScalar, &
-        & TypeFEVariableConstant )
-    END IF
-  !!
-  !! Vector
-  !!
-  CASE (VECTOR)
-    !!
-    IF( obj%defineOn .EQ. NODAL ) THEN
-      ans = NodalVariable( MEAN( obj, TypeFEVariableVector ), &
-        & TypeFEVariableVector, &
-        & TypeFEVariableConstant )
-    ELSE
-      ans = QuadratureVariable( MEAN( obj, TypeFEVariableVector ), &
-        & TypeFEVariableVector, &
-        & TypeFEVariableConstant )
-    END IF
-    !!
-  CASE (MATRIX)
-    !!
-    IF( obj%defineOn .EQ. NODAL ) THEN
-      ans = NodalVariable( MEAN( obj, TypeFEVariableMatrix ), &
-        & TypeFEVariableMatrix, &
-        & TypeFEVariableConstant )
-    ELSE
-      ans = QuadratureVariable( MEAN( obj, TypeFEVariableMatrix ), &
-        & TypeFEVariableMatrix, &
-        & TypeFEVariableConstant )
-    END IF
-    !!
-  END SELECT
-  !!
+REAL(DFP) :: val0
+SELECT CASE (obj%rank)
+CASE (scalar)
+  IF (obj%defineOn .EQ. NODAL) THEN
+  ans = NodalVariable(MEAN(obj, TypeFEVariableScalar), TypeFEVariableScalar, &
+                        TypeFEVariableConstant)
+  ELSE
+    ans = QuadratureVariable(MEAN(obj, TypeFEVariableScalar), &
+                             TypeFEVariableScalar, TypeFEVariableConstant)
+  END IF
+
+CASE (vector)
+  IF (obj%defineOn .EQ. NODAL) THEN
+    ans = NodalVariable(MEAN(obj, TypeFEVariableVector), &
+                        TypeFEVariableVector, TypeFEVariableConstant)
+  ELSE
+    ans = QuadratureVariable(MEAN(obj, TypeFEVariableVector), &
+                             TypeFEVariableVector, TypeFEVariableConstant)
+  END IF
+
+CASE (matrix)
+  IF (obj%defineOn .EQ. NODAL) THEN
+    ans = NodalVariable(MEAN(obj, TypeFEVariableMatrix), &
+                        TypeFEVariableMatrix, TypeFEVariableConstant)
+  ELSE
+    ans = QuadratureVariable(MEAN(obj, TypeFEVariableMatrix), &
+                             TypeFEVariableMatrix, TypeFEVariableConstant)
+  END IF
+END SELECT
 END PROCEDURE fevar_Mean1
 
 !----------------------------------------------------------------------------
@@ -79,10 +74,7 @@ END PROCEDURE fevar_Mean1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE fevar_Mean2
-  REAL( DFP ) :: val0
-  !!
-  ans = SUM( obj%val( : ) ) / SIZE( obj%val )
-  !!
+ans = SUM(obj%val(1:obj%len)) / obj%len
 END PROCEDURE fevar_Mean2
 
 !----------------------------------------------------------------------------
@@ -90,43 +82,37 @@ END PROCEDURE fevar_Mean2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE fevar_Mean3
-  REAL( DFP ), ALLOCATABLE :: val2( :, : ), val3( :, :, : )
-  INTEGER( I4B ) :: ii, jj
-  !!
-  CALL Reallocate( ans, obj%s(1) )
-  !!
-  SELECT CASE( obj%varType )
-    !!
-  CASE( Constant )
-    !!
-    ans = obj%val( : )
-    !!
-  CASE( Space, Time )
-    !!
-    val2 = RESHAPE( obj%val, obj%s(1:2) )
-    !!
-    DO ii = 1, obj%s(2)
-      ans = ans + val2( :, ii )
-    END DO
-    !!
-    ans = ans / obj%s(2)
-    !!
-  CASE( SpaceTime )
-    !!
-    val3 = RESHAPE( obj%val, obj%s(1:3) )
-    DO jj = 1, obj%s(3)
-      DO ii = 1, obj%s(2)
-        ans = ans + val3( :, ii, jj )
-      END DO
-    END DO
-    !!
-    ans = ans / obj%s(2) / obj%s(3)
-    !!
-  END SELECT
-  !!
-  IF( ALLOCATED( val2 ) ) DEALLOCATE( val2 )
-  IF( ALLOCATED( val3 ) ) DEALLOCATE( val3 )
-  !!
+INTEGER(I4B) :: ii, tsize
+
+tsize = obj%s(1)
+ALLOCATE (ans(tsize))
+
+SELECT CASE (obj%varType)
+
+CASE (Constant)
+
+  ans(1:tsize) = obj%val(1:tsize)
+
+CASE (Space, Time)
+
+  ans = 0.0
+  DO ii = 1, obj%s(2)
+    ans(1:tsize) = ans(1:tsize) + obj%val((ii - 1) * tsize + 1:ii * tsize)
+  END DO
+
+  ans(1:tsize) = ans(1:tsize) / obj%s(2)
+
+CASE (SpaceTime)
+
+  ans = 0.0
+  DO ii = 1, obj%s(2) * obj%s(3)
+    ans(1:tsize) = ans(1:tsize) + obj%val((ii - 1) * tsize + 1:ii * tsize)
+  END DO
+
+  ans(1:tsize) = ans(1:tsize) / (obj%s(2) * obj%s(3))
+
+END SELECT
+
 END PROCEDURE fevar_Mean3
 
 !----------------------------------------------------------------------------
@@ -134,44 +120,53 @@ END PROCEDURE fevar_Mean3
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE fevar_Mean4
-  REAL( DFP ), ALLOCATABLE :: val3( :, :, : ), val4( :, :, :, : )
-  INTEGER( I4B ) :: ii, jj
-  !!
-  CALL Reallocate( ans, obj%s(1), obj%s(2) )
-  !!
-  SELECT CASE( obj%varType )
-    !!
-  CASE( Constant )
-    !!
-    ans = RESHAPE( obj%val, obj%s(1:2) )
-    !!
-  CASE( Space, Time )
-    !!
-    val3 = RESHAPE( obj%val, obj%s(1:3) )
-    !!
-    DO ii = 1, obj%s(3)
-      ans = ans + val3( :, :, ii )
-    END DO
-    !!
-    ans = ans / obj%s(3)
-    !!
-  CASE( SpaceTime )
-    !!
-    val4 = RESHAPE( obj%val, obj%s(1:4) )
-    !!
-    DO jj = 1, obj%s(4)
-      DO ii = 1, obj%s(3)
-        ans = ans + val4( :, :, ii, jj )
+INTEGER(I4B) :: ii, jj, kk, ll
+
+ALLOCATE (ans(obj%s(1), obj%s(2)))
+
+SELECT CASE (obj%varType)
+
+CASE (Constant)
+
+  DO CONCURRENT(ii=1:obj%s(1), jj=1:obj%s(2))
+    ans(ii, jj) = obj%val(Get1DIndexFortran(i=ii, j=jj, &
+                                            dim1=obj%s(1), dim2=obj%s(2)))
+  END DO
+
+CASE (Space, Time)
+
+  DO CONCURRENT(kk=1:obj%s(3))
+    DO jj = 1, obj%s(2)
+      DO ii = 1, obj%s(1)
+
+        ans(ii, jj) = ans(ii, jj) &
+                      + obj%val(Get1DIndexFortran(i=ii, j=jj, k=kk, &
+                                 dim1=obj%s(1), dim2=obj%s(2), dim3=obj%s(3)))
+
       END DO
     END DO
-    !!
-    ans = ans / obj%s(3) / obj%s(4)
-    !!
-  END SELECT
-  !!
-  IF( ALLOCATED( val3 ) ) DEALLOCATE( val3 )
-  IF( ALLOCATED( val4 ) ) DEALLOCATE( val4 )
-  !!
+  END DO
+
+  ans = ans / obj%s(3)
+
+CASE (SpaceTime)
+
+  DO CONCURRENT(kk=1:obj%s(3), ll=1:obj%s(4))
+
+    DO jj = 1, obj%s(2)
+      DO ii = 1, obj%s(1)
+        ans(ii, jj) = ans(ii, jj) + obj%val(Get1DIndexFortran( &
+                                            i=ii, j=jj, k=kk, l=ll, &
+                  dim1=obj%s(1), dim2=obj%s(2), dim3=obj%s(3), dim4=obj%s(4)))
+
+      END DO
+    END DO
+  END DO
+
+  ans = ans / (obj%s(3) * obj%s(4))
+
+END SELECT
+
 END PROCEDURE fevar_Mean4
 
 !----------------------------------------------------------------------------

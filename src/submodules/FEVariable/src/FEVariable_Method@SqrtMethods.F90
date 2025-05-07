@@ -18,7 +18,17 @@
 #define _ELEM_METHOD_ SQRT
 
 SUBMODULE(FEVariable_Method) SqrtMethods
-USE BaseMethod
+USE GlobalData, ONLY: Constant, Space, Time, SpaceTime, &
+                      Scalar, Vector, Matrix, &
+                      Nodal, Quadrature
+USE BaseType, ONLY: TypeFEVariableScalar, &
+                    TypeFEVariableVector, &
+                    TypeFEVariableMatrix, &
+                    TypeFEVariableConstant, &
+                    TypeFEVariableSpace, &
+                    TypeFEVariableTime, &
+                    TypeFEVariableSpaceTime
+
 IMPLICIT NONE
 CONTAINS
 
@@ -28,18 +38,13 @@ CONTAINS
 
 MODULE PROCEDURE fevar_sqrt
 SELECT CASE (obj%rank)
-!!
-CASE (SCALAR)
-#include "./ScalarElemMethod.inc"
-!!
-CASE (VECTOR)
-#include "./VectorElemMethod.inc"
-!!
-CASE (MATRIX)
-#include "./MatrixElemMethod.inc"
-!!
+CASE (scalar)
+#include "./include/ScalarElemMethod.F90"
+CASE (vector)
+#include "./include/VectorElemMethod.F90"
+CASE (matrix)
+#include "./include/MatrixElemMethod.F90"
 END SELECT
-!!
 END PROCEDURE fevar_sqrt
 
 !----------------------------------------------------------------------------

@@ -18,20 +18,31 @@
 MODULE PrismInterpolationUtility
 USE GlobalData
 USE String_Class, ONLY: String
+
 IMPLICIT NONE
+
 PRIVATE
+
 PUBLIC :: LagrangeDegree_Prism
 PUBLIC :: LagrangeDOF_Prism
 PUBLIC :: LagrangeInDOF_Prism
 PUBLIC :: EquidistanceInPoint_Prism
+
 PUBLIC :: EquidistancePoint_Prism
+PUBLIC :: EquidistancePoint_Prism_
+
 PUBLIC :: InterpolationPoint_Prism
+PUBLIC :: InterpolationPoint_Prism_
 PUBLIC :: LagrangeCoeff_Prism
+PUBLIC :: LagrangeCoeff_Prism_
 PUBLIC :: QuadraturePoint_Prism
 PUBLIC :: TensorQuadraturePoint_Prism
 PUBLIC :: RefElemDomain_Prism
 PUBLIC :: LagrangeEvalAll_Prism
+PUBLIC :: LagrangeEvalAll_Prism_
 PUBLIC :: LagrangeGradientEvalAll_Prism
+PUBLIC :: LagrangeGradientEvalAll_Prism_
+
 PUBLIC :: EdgeConnectivity_Prism
 PUBLIC :: FacetConnectivity_Prism
 PUBLIC :: GetTotalDOF_Prism
@@ -64,7 +75,7 @@ INTERFACE
 END INTERFACE
 
 !----------------------------------------------------------------------------
-!                                                  LagrangeInDOF_Prism
+!                                                       LagrangeInDOF_Prism
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -248,14 +259,34 @@ END INTERFACE
 INTERFACE
   MODULE PURE FUNCTION EquidistancePoint_Prism(order, xij) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
-  !! order
+    !! order
     REAL(DFP), OPTIONAL, INTENT(IN) :: xij(:, :)
-  !! coordinates of point 1 and point 2 in $x_{iJ}$ format
-  !! number of rows = nsd
-  !! number of cols = 3
+    !! coordinates of point 1 and point 2 in $x_{iJ}$ format
+    !! number of rows = nsd
+    !! number of cols = 3
     REAL(DFP), ALLOCATABLE :: ans(:, :)
-  !! returned coordinates in $x_{iJ}$ format
+    !! returned coordinates in $x_{iJ}$ format
   END FUNCTION EquidistancePoint_Prism
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE
+  MODULE PURE SUBROUTINE EquidistancePoint_Prism_(order, ans, nrow, ncol, &
+                                                  xij)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    !! equidistance points in xij format
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+    !! number of rows and columns in ans
+    REAL(DFP), OPTIONAL, INTENT(IN) :: xij(:, :)
+    !! coordinates of point 1 and point 2 in $x_{iJ}$ format
+    !! number of rows = nsd
+    !! number of cols = 3
+  END SUBROUTINE EquidistancePoint_Prism_
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -267,13 +298,8 @@ END INTERFACE
 ! summary: Interpolation point on Prism
 
 INTERFACE
-  MODULE PURE FUNCTION InterpolationPoint_Prism( &
-    & order, &
-    & ipType, &
-    & layout, &
-    & xij, &
-    & alpha, beta, lambda) &
-    & RESULT(nodecoord)
+  MODULE FUNCTION InterpolationPoint_Prism(order, ipType, layout, &
+                                   xij, alpha, beta, lambda) RESULT(nodecoord)
     INTEGER(I4B), INTENT(IN) :: order
     !! order
     INTEGER(I4B), INTENT(IN) :: ipType
@@ -287,6 +313,33 @@ INTERFACE
     REAL(DFP), ALLOCATABLE :: nodecoord(:, :)
     !! interpolation points in $x_{iJ}$ format
   END FUNCTION InterpolationPoint_Prism
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                  InterpolationPoint_Prism
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 18 Aug 2022
+! summary: Interpolation point on Prism
+
+INTERFACE
+  MODULE SUBROUTINE InterpolationPoint_Prism_(order, ipType, ans, &
+                                 nrow, ncol, layout, xij, alpha, beta, lambda)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order
+    INTEGER(I4B), INTENT(IN) :: ipType
+    !! Interpolation point type
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    !! Interpolation points in $x_{iJ}$ format
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+    CHARACTER(*), INTENT(IN) :: layout
+    !!
+    REAL(DFP), OPTIONAL, INTENT(IN) :: xij(:, :)
+    !! coords of vertices in $x_{iJ}$ format
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha, beta, lambda
+    !! Jacobi and Ultraspherical parameters
+  END SUBROUTINE InterpolationPoint_Prism_
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -350,15 +403,122 @@ END INTERFACE LagrangeCoeff_Prism
 !----------------------------------------------------------------------------
 
 INTERFACE LagrangeCoeff_Prism
-  MODULE FUNCTION LagrangeCoeff_Prism4(order, xij) RESULT(ans)
+  MODULE FUNCTION LagrangeCoeff_Prism4(order, xij, basisType, &
+                                    refPrism, alpha, beta, lambda) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
     !! order of polynomial
     REAL(DFP), INTENT(IN) :: xij(:, :)
     !! points in xij format, size(xij,2)
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: basisType
+    !! Monomials
+    !! Jacobi (Dubiner)
+    !! Heirarchical
+    CHARACTER(*), OPTIONAL, INTENT(IN) :: refPrism
+    !! UNIT * default
+    !! BIUNIT
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
+    !! Jacobi polynomial parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: beta
+    !! Jacobi polynomial parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: lambda
+    !! Ultraspherical polynomial parameter
     REAL(DFP) :: ans(SIZE(xij, 2), SIZE(xij, 2))
     !! coefficients
   END FUNCTION LagrangeCoeff_Prism4
 END INTERFACE LagrangeCoeff_Prism
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE LagrangeCoeff_Prism_
+  MODULE SUBROUTINE LagrangeCoeff_Prism1_(order, i, xij, ans, tsize)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order of polynomial
+    INTEGER(I4B), INTENT(IN) :: i
+    !! ith coefficients for lagrange polynomial
+    REAL(DFP), INTENT(IN) :: xij(:, :)
+    !! points in xij format, size(xij,2)
+    REAL(DFP), INTENT(INOUT) :: ans(:)
+    !! ans(SIZE(xij, 2))
+    !! coefficients
+    INTEGER(I4B), INTENT(OUT) :: tsize
+  END SUBROUTINE LagrangeCoeff_Prism1_
+END INTERFACE LagrangeCoeff_Prism_
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE LagrangeCoeff_Prism_
+  MODULE SUBROUTINE LagrangeCoeff_Prism2_(order, i, v, isVandermonde, &
+                                          ans, tsize)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order of polynomial, it should be SIZE(v,2)-1
+    INTEGER(I4B), INTENT(IN) :: i
+    !! coefficient for ith lagrange polynomial
+    REAL(DFP), INTENT(IN) :: v(:, :)
+    !! vandermonde matrix size should be (order+1,order+1)
+    LOGICAL(LGT), INTENT(IN) :: isVandermonde
+    !! This is just to resolve interface issue
+    REAL(DFP), INTENT(INOUT) :: ans(:)
+    ! ans(SIZE(v, 1))
+    !! coefficients
+    INTEGER(I4B), INTENT(OUT) :: tsize
+  END SUBROUTINE LagrangeCoeff_Prism2_
+END INTERFACE LagrangeCoeff_Prism_
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE LagrangeCoeff_Prism_
+  MODULE SUBROUTINE LagrangeCoeff_Prism3_(order, i, v, ipiv, ans, tsize)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order of polynomial, it should be SIZE(x,2)-1
+    INTEGER(I4B), INTENT(IN) :: i
+    !! ith coefficients for lagrange polynomial
+    REAL(DFP), INTENT(INOUT) :: v(:, :)
+    !! LU decomposition of vandermonde matrix
+    INTEGER(I4B), INTENT(IN) :: ipiv(:)
+    !! inverse pivoting mapping, compes from LU decomposition
+    REAL(DFP), INTENT(INOUT) :: ans(:)
+    !! ans(SIZE(v, 1))
+    !! coefficients
+    INTEGER(I4B), INTENT(OUT) :: tsize
+  END SUBROUTINE LagrangeCoeff_Prism3_
+END INTERFACE LagrangeCoeff_Prism_
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE LagrangeCoeff_Prism_
+  MODULE SUBROUTINE LagrangeCoeff_Prism4_(order, xij, basisType, &
+                               refPrism, alpha, beta, lambda, ans, nrow, ncol)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order of polynomial
+    REAL(DFP), INTENT(IN) :: xij(:, :)
+    !! points in xij format, size(xij,2)
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: basisType
+    !! Monomials
+    !! Jacobi (Dubiner)
+    !! Heirarchical
+    CHARACTER(*), OPTIONAL, INTENT(IN) :: refPrism
+    !! UNIT * default
+    !! BIUNIT
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
+    !! Jacobi polynomial parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: beta
+    !! Jacobi polynomial parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: lambda
+    !! Ultraspherical polynomial parameter
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    !! ans(SIZE(xij, 2), SIZE(xij, 2))
+    !! coefficients
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+  END SUBROUTINE LagrangeCoeff_Prism4_
+END INTERFACE LagrangeCoeff_Prism_
 
 !----------------------------------------------------------------------------
 !                                                    QuadraturePoints_Prism
@@ -494,10 +654,6 @@ INTERFACE TensorQuadraturePoint_Prism
   END FUNCTION TensorQuadraturePoint_Prism2
 END INTERFACE TensorQuadraturePoint_Prism
 
-INTERFACE OrthogonalBasisGradient_Prism
-  MODULE PROCEDURE TensorQuadraturePoint_Prism2
-END INTERFACE OrthogonalBasisGradient_Prism
-
 !----------------------------------------------------------------------------
 !                                             LagrangeEvalAll_Prism
 !----------------------------------------------------------------------------
@@ -562,6 +718,58 @@ INTERFACE LagrangeEvalAll_Prism
 END INTERFACE LagrangeEvalAll_Prism
 
 !----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE LagrangeEvalAll_Prism_
+  MODULE SUBROUTINE LagrangeEvalAll_Prism1_(order, x, xij, ans, tsize, &
+                   refPrism, coeff, firstCall, basisType, alpha, beta, lambda)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order of Lagrange polynomials
+    REAL(DFP), INTENT(IN) :: x(3)
+    !! point of evaluation
+    !! x(1) is x coord
+    !! x(2) is y coord
+    !! x(3) is z coord
+    REAL(DFP), INTENT(INOUT) :: xij(:, :)
+    !! Interpolation points
+    !! The number of rows in xij is 3
+    !! The number of columns in xij should be equal to total
+    !! degree of freedom
+    REAL(DFP), INTENT(INOUT) :: ans(:)
+    !! Value of n+1 Lagrange polynomials at point x
+    INTEGER(I4B), INTENT(OUT) :: tsize
+    !! ans(SIZE(xij, 2))
+    CHARACTER(*), OPTIONAL, INTENT(IN) :: refPrism
+    !! UNIT *default
+    !! BIUNIT
+    REAL(DFP), OPTIONAL, INTENT(INOUT) :: coeff(SIZE(xij, 2), SIZE(xij, 2))
+    !! coefficient of Lagrange polynomials
+    LOGICAL(LGT), OPTIONAL :: firstCall
+    !! If firstCall is true, then coeff will be computed and returned
+    !! by this routine.
+    !! If firstCall is False, then coeff should be given, which will be
+    !! used.
+    !! Default value of firstCall is True
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: basisType
+    !! Monomials *Default
+    !! Legendre
+    !! Lobatto
+    !! Chebyshev
+    !! Jacobi
+    !! Ultraspherical
+    !! Heirarchical
+    !! Orthogonal
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
+    !! Jacobi parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: beta
+    !! Jacobi parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: lambda
+    !! Ultraspherical parameter
+  END SUBROUTINE LagrangeEvalAll_Prism1_
+END INTERFACE LagrangeEvalAll_Prism_
+
+!----------------------------------------------------------------------------
 !                                                LagrangeEvalAll_Prism
 !----------------------------------------------------------------------------
 
@@ -621,6 +829,47 @@ INTERFACE LagrangeEvalAll_Prism
 END INTERFACE LagrangeEvalAll_Prism
 
 !----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE LagrangeEvalAll_Prism_
+  MODULE SUBROUTINE LagrangeEvalAll_Prism2_(order, x, xij, ans, nrow, ncol, &
+                   refPrism, coeff, firstCall, basisType, alpha, beta, lambda)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! Order of Lagrange polynomials
+    REAL(DFP), INTENT(IN) :: x(:, :)
+    !! Point of evaluation
+    !! x(1, :) is x coord
+    !! x(2, :) is y coord
+    !! x(3, :) is z coord
+    REAL(DFP), INTENT(INOUT) :: xij(:, :)
+    !! Interpolation points
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    !! Value of n+1 Lagrange polynomials at point x
+    !! ans(SIZE(x, 2), SIZE(xij, 2))
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+    !! number of rows and columns in ans
+    CHARACTER(*), OPTIONAL, INTENT(IN) :: refPrism
+    !! UNIT *default
+    !! BIUNIT
+    REAL(DFP), OPTIONAL, INTENT(INOUT) :: coeff(SIZE(xij, 2), SIZE(xij, 2))
+    !! Coefficient of Lagrange polynomials
+    LOGICAL(LGT), OPTIONAL :: firstCall
+    !! If firstCall is true, then coeff will be made
+    !! If firstCall is False, then coeff will be used
+    !! Default value of firstCall is True
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: basisType
+    !! Monomials *Default
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
+    !! Jacobi parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: beta
+    !! Jacobi parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: lambda
+    !! Ultraspherical parameter
+  END SUBROUTINE LagrangeEvalAll_Prism2_
+END INTERFACE LagrangeEvalAll_Prism_
+
+!----------------------------------------------------------------------------
 !                                       LagrangeGradientEvalAll_Prism
 !----------------------------------------------------------------------------
 
@@ -654,7 +903,7 @@ INTERFACE LagrangeGradientEvalAll_Prism
     !! UNIT *default
     !! BIUNIT
     REAL(DFP), OPTIONAL, INTENT(INOUT) :: coeff(SIZE(xij, 2), SIZE(xij, 2))
-    !! Coefficient of Lagrange polynomials
+    !!!! Coefficient of Lagrange polynomials
     LOGICAL(LGT), OPTIONAL :: firstCall
     !! If firstCall is true, then coeff will be made
     !! If firstCall is False, then coeff will be used
@@ -682,6 +931,52 @@ INTERFACE LagrangeGradientEvalAll_Prism
     !! computed
   END FUNCTION LagrangeGradientEvalAll_Prism1
 END INTERFACE LagrangeGradientEvalAll_Prism
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE LagrangeGradientEvalAll_Prism_
+  MODULE SUBROUTINE LagrangeGradientEvalAll_Prism1_(order, x, xij, ans, &
+       dim1, dim2, dim3, refPrism, coeff, firstCall, basisType, alpha, beta, &
+                                                    lambda)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! Order of Lagrange polynomials
+    REAL(DFP), INTENT(IN) :: x(:, :)
+    !! Point of evaluation
+    !! x(1, :) is x coord
+    !! x(2, :) is y coord
+    !! x(3, :) is z coord
+    REAL(DFP), INTENT(INOUT) :: xij(:, :)
+    !! Interpolation points
+    REAL(DFP), INTENT(INOUT) :: ans(:, :, :)
+    !! Value of gradient of nth order Lagrange polynomials at point x
+    !! The first index denotes point of evaluation
+    !! the second index denotes Lagrange polynomial number
+    !! The third index denotes the spatial dimension in which gradient is
+    !! computed
+    INTEGER(I4B), INTENT(OUT) :: dim1, dim2, dim3
+    !! SIZE(x, 2), SIZE(xij, 2), 3
+    CHARACTER(*), OPTIONAL, INTENT(IN) :: refPrism
+    !! UNIT *default
+    !! BIUNIT
+    REAL(DFP), OPTIONAL, INTENT(INOUT) :: coeff(SIZE(xij, 2), SIZE(xij, 2))
+    !! Coefficient of Lagrange polynomials
+    LOGICAL(LGT), OPTIONAL :: firstCall
+    !! If firstCall is true, then coeff will be made
+    !! If firstCall is False, then coeff will be used
+    !! Default value of firstCall is True
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: basisType
+    !! Monomials *Default ! Legendre ! Lobatto ! Chebyshev ! Jacobi
+    !! Ultraspherical ! Heirarchical ! Orthogonal
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
+    !! Jacobi parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: beta
+    !! Jacobi parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: lambda
+    !! Ultraspherical parameter
+  END SUBROUTINE LagrangeGradientEvalAll_Prism1_
+END INTERFACE LagrangeGradientEvalAll_Prism_
 
 !----------------------------------------------------------------------------
 !

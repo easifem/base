@@ -16,7 +16,57 @@
 !
 
 SUBMODULE(LineInterpolationUtility) Methods
-USE BaseMethod
+USE BaseType, ONLY: ipopt => TypeInterpolationOpt, &
+                    qpopt => TypeQuadratureOpt, &
+                    polyopt => TypePolynomialOpt, &
+                    elmopt => TypeElemNameOpt
+
+USE GlobalData, ONLY: stderr
+
+USE StringUtility, ONLY: UpperCase
+
+USE MappingUtility, ONLY: FromBiunitLine2Segment_, &
+                          FromBiunitLine2Segment, &
+                          FromUnitLine2BiUnitLine, &
+                          FromUnitLine2BiUnitLine_
+
+USE OrthogonalPolynomialUtility, ONLY: GradientEvalAllOrthopol, &
+                                       GradientEvalAllOrthopol_, &
+                                       EvalAllOrthopol, &
+                                       EvalAllOrthopol_
+
+USE InputUtility, ONLY: Input
+
+USE LagrangePolynomialUtility, ONLY: LagrangeVandermonde, &
+                                     LagrangeCoeff, &
+                                     LagrangeVandermonde_
+
+USE ErrorHandling, ONLY: ErrorMsg
+
+USE LegendrePolynomialUtility, ONLY: LegendreQuadrature
+
+USE Chebyshev1PolynomialUtility, ONLY: Chebyshev1Quadrature
+
+USE JacobiPolynomialUtility, ONLY: JacobiQuadrature
+
+USE UltrasphericalPolynomialUtility, ONLY: UltrasphericalQuadrature
+
+USE Lapack_Method, ONLY: GetLU, LUSolve, GetInvMat
+
+USE SortUtility, ONLY: HeapSort
+
+USE F95_BLAS, ONLY: GEMM
+
+#ifndef USE_BLAS95
+
+USE SwapUtility, ONLY: Swap
+
+#else
+
+USE F95_BLAS, ONLY: Swap
+
+#endif
+
 IMPLICIT NONE
 CONTAINS
 
@@ -34,7 +84,8 @@ END PROCEDURE RefElemDomain_Line
 
 MODULE PROCEDURE QuadratureNumber_Line
 SELECT CASE (quadType)
-CASE (GaussLegendre, GaussChebyshev, GaussJacobi, GaussUltraspherical)
+CASE (qpopt%GaussLegendre, qpopt%GaussChebyshev, &
+      qpopt%GaussJacobi, qpopt%GaussUltraspherical)
   ans = 1_I4B + INT(order / 2, kind=I4B)
 CASE DEFAULT
   ans = 2_I4B + INT(order / 2, kind=I4B)
@@ -114,257 +165,228 @@ END PROCEDURE GetTotalInDOF_Line
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE EquidistanceInPoint_Line1
-INTEGER(I4B) :: n, ii
-REAL(DFP) :: avar
+INTEGER(I4B) :: tsize
+
 IF (order .LE. 1_I4B) THEN
   ALLOCATE (ans(0))
   RETURN
 END IF
-n = LagrangeInDOF_Line(order=order)
-ALLOCATE (ans(n))
-avar = (xij(2) - xij(1)) / order
-DO ii = 1, n
-  ans(ii) = xij(1) + ii * avar
-END DO
+
+tsize = LagrangeInDOF_Line(order=order)
+ALLOCATE (ans(tsize))
+CALL EquidistanceInPoint_Line1_(order=order, xij=xij, ans=ans, tsize=tsize)
+
 END PROCEDURE EquidistanceInPoint_Line1
 
 !----------------------------------------------------------------------------
 !                                                   EquidistanceInPoint_Line
 !----------------------------------------------------------------------------
 
+MODULE PROCEDURE EquidistanceInPoint_Line1_
+INTEGER(I4B) :: ii
+REAL(DFP) :: avar
+
+tsize = 0
+IF (order .LE. 1_I4B) RETURN
+
+tsize = LagrangeInDOF_Line(order=order)
+
+avar = (xij(2) - xij(1)) / order
+
+DO ii = 1, tsize
+  ans(ii) = xij(1) + REAL(ii, kind=dfp) * avar
+END DO
+
+END PROCEDURE EquidistanceInPoint_Line1_
+
+!----------------------------------------------------------------------------
+!                                                   EquidistanceInPoint_Line
+!----------------------------------------------------------------------------
+
 MODULE PROCEDURE EquidistanceInPoint_Line2
-INTEGER(I4B) :: n, ii, nsd
-REAL(DFP) :: x0(3, 2)
-REAL(DFP) :: avar(3)
+INTEGER(I4B) :: nrow, ncol
+
 IF (order .LE. 1_I4B) THEN
   ALLOCATE (ans(0, 0))
   RETURN
 END IF
+
 IF (PRESENT(xij)) THEN
-  nsd = SIZE(xij, 1)
-  x0(1:nsd, 1) = xij(1:nsd, 1)
-  x0(1:nsd, 2) = xij(1:nsd, 2)
+  nrow = SIZE(xij, 1)
 ELSE
-  nsd = 1_I4B
-  x0(1:nsd, 1) = [-1.0]
-  x0(1:nsd, 2) = [1.0]
+  nrow = 1_I4B
 END IF
-n = LagrangeInDOF_Line(order=order)
-ALLOCATE (ans(nsd, n))
-avar(1:nsd) = (x0(1:nsd, 2) - x0(1:nsd, 1)) / order
-DO ii = 1, n
-  ans(1:nsd, ii) = x0(1:nsd, 1) + ii * avar(1:nsd)
-END DO
+
+ncol = LagrangeInDOF_Line(order=order)
+
+ALLOCATE (ans(nrow, ncol))
+
+CALL EquidistanceInPoint_Line2_(order=order, xij=xij, ans=ans, nrow=nrow, &
+                                ncol=ncol)
+
 END PROCEDURE EquidistanceInPoint_Line2
+
+!----------------------------------------------------------------------------
+!                                                   EquidistanceInPoint_Line
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE EquidistanceInPoint_Line2_
+INTEGER(I4B) :: ii
+REAL(DFP) :: x0(3, 3)
+
+nrow = 0; ncol = 0
+IF (order .LE. 1_I4B) RETURN
+
+IF (PRESENT(xij)) THEN
+  nrow = SIZE(xij, 1)
+  x0(1:nrow, 1) = xij(1:nrow, 1)
+  x0(1:nrow, 2) = xij(1:nrow, 2)
+ELSE
+  nrow = 1_I4B
+  x0(1, 1) = -1.0
+  x0(1, 2) = 1.0
+END IF
+
+ncol = LagrangeInDOF_Line(order=order)
+
+x0(1:nrow, 3) = (x0(1:nrow, 2) - x0(1:nrow, 1)) / order
+
+DO ii = 1, ncol
+  ans(1:nrow, ii) = x0(1:nrow, 1) + ii * x0(1:nrow, 3)
+END DO
+END PROCEDURE EquidistanceInPoint_Line2_
 
 !----------------------------------------------------------------------------
 !                                                     EquidistancePoint_Line
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE EquidistancePoint_Line1
-CALL Reallocate(ans, order + 1)
-IF (order .EQ. 0_I4B) THEN
-  ans(1) = 0.5_DFP * (xij(1) + xij(2))
-  RETURN
-END IF
-ans(1) = xij(1)
-ans(2) = xij(2)
-IF (order .GE. 2) THEN
-  ans(3:) = EquidistanceInPoint_Line(order=order, xij=xij)
-END IF
+INTEGER(I4B) :: tsize
+
+tsize = order + 1
+ALLOCATE (ans(tsize))
+CALL EquidistancePoint_Line1_(order=order, xij=xij, ans=ans, tsize=tsize)
 END PROCEDURE EquidistancePoint_Line1
+
+!----------------------------------------------------------------------------
+!                                                   EquidistancePoint_Line_
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE EquidistancePoint_Line1_
+INTEGER(I4B) :: tempint
+
+tsize = order + 1
+
+SELECT CASE (order)
+CASE (0)
+  ans(1) = 0.5_DFP * (xij(1) + xij(2))
+
+CASE (1)
+  ans(1) = xij(1)
+  ans(2) = xij(2)
+
+CASE DEFAULT
+  ans(1) = xij(1)
+  ans(2) = xij(2)
+  CALL EquidistanceInPoint_Line_(order=order, xij=xij, ans=ans(3:), &
+                                 tsize=tempint)
+END SELECT
+
+END PROCEDURE EquidistancePoint_Line1_
 
 !----------------------------------------------------------------------------
 !                                                     EquidistancePoint_Line
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE EquidistancePoint_Line2
-INTEGER(I4B) :: nsd
+INTEGER(I4B) :: nrow, ncol
 
 IF (PRESENT(xij)) THEN
-  nsd = SIZE(xij, 1)
-  CALL Reallocate(ans, nsd, order + 1)
-  IF (order .EQ. 0_I4B) THEN
-    ans(1:nsd, 1) = 0.5_DFP * (xij(1:nsd, 1) + xij(1:nsd, 2))
-    RETURN
-  END IF
-  ans(1:nsd, 1) = xij(1:nsd, 1)
-  ans(1:nsd, 2) = xij(1:nsd, 2)
+  nrow = SIZE(xij, 1)
 ELSE
-  nsd = 1_I4B
-  CALL Reallocate(ans, nsd, order + 1)
-  IF (order .EQ. 0_I4B) THEN
-    ans(1:nsd, 1) = 0.0_DFP
+  nrow = 1_I4B
+END IF
+
+ncol = order + 1
+ALLOCATE (ans(nrow, ncol))
+
+CALL EquidistancePoint_Line2_(order=order, xij=xij, ans=ans, nrow=nrow, &
+                              ncol=ncol)
+END PROCEDURE EquidistancePoint_Line2
+
+!----------------------------------------------------------------------------
+!                                                     EquidistancePoint_Line
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE EquidistancePoint_Line2_
+INTEGER(I4B) :: tempint
+
+ncol = order + 1
+
+SELECT CASE (order)
+
+CASE (0)
+
+  IF (PRESENT(xij)) THEN
+    nrow = SIZE(xij, 1)
+    ans(1:nrow, 1) = 0.5_DFP * (xij(1:nrow, 1) + xij(1:nrow, 2))
     RETURN
   END IF
-  ans(1:nsd, 1) = [-1.0]
-  ans(1:nsd, 2) = [1.0]
-END IF
-IF (order .GE. 2) THEN
-  ans(1:nsd, 3:) = EquidistanceInPoint_Line(order=order, xij=xij)
-END IF
-END PROCEDURE EquidistancePoint_Line2
+
+  nrow = 1_I4B
+  ans(1, 1) = 0.0_DFP
+
+CASE (1)
+
+  IF (PRESENT(xij)) THEN
+    nrow = SIZE(xij, 1)
+    ans(1:nrow, 1:2) = xij(1:nrow, 1:2)
+    RETURN
+  END IF
+
+  nrow = 1
+  ans(1, 1) = -1.0_DFP
+  ans(1, 2) = 1.0_DFP
+
+CASE DEFAULT
+
+  IF (PRESENT(xij)) THEN
+    nrow = SIZE(xij, 1)
+    ans(1:nrow, 1:2) = xij(1:nrow, 1:2)
+  ELSE
+    nrow = 1
+    ans(1, 1) = -1.0_DFP
+    ans(1, 2) = 1.0_DFP
+  END IF
+
+  CALL EquidistanceInPoint_Line2_(order=order, xij=xij, ans=ans(:, 3:), &
+                                  nrow=nrow, ncol=tempint)
+
+END SELECT
+
+END PROCEDURE EquidistancePoint_Line2_
 
 !----------------------------------------------------------------------------
 !                                                   InterpolationPoint_Line
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE InterpolationPoint_Line1
-CHARACTER(20) :: astr
-INTEGER(I4B) :: nsd, ii
-REAL(DFP) :: temp(order + 1), t1
+INTEGER(I4B) :: nrow, ncol
 
-IF (order .EQ. 0_I4B) THEN
-  IF (PRESENT(xij)) THEN
-    nsd = SIZE(xij, 1)
-    CALL Reallocate(ans, nsd, 1)
-    ans(1:nsd, 1) = 0.5_DFP * (xij(1:nsd, 1) + xij(1:nsd, 2))
-  ELSE
-    CALL Reallocate(ans, 1, 1)
-    ans = 0.0_DFP
-  END IF
-  RETURN
+IF (PRESENT(xij)) THEN
+  nrow = SIZE(xij, 1)
+ELSE
+  nrow = 1
 END IF
 
-astr = TRIM(UpperCase(layout))
+ncol = order + 1
 
-SELECT CASE (ipType)
+ALLOCATE (ans(nrow, ncol))
 
-CASE (Equidistance)
-  ans = EquidistancePoint_Line(xij=xij, order=order)
-  IF (astr .EQ. "INCREASING") THEN
-    DO ii = 1, SIZE(ans, 1)
-      ans(ii, :) = SORT(ans(ii, :))
-    END DO
-  END IF
-  RETURN
-CASE (GaussLegendre)
-  CALL LegendreQuadrature(n=order + 1, pt=temp, quadType=Gauss)
-CASE (GaussLegendreLobatto)
-  CALL LegendreQuadrature(n=order + 1, pt=temp, quadType=GaussLobatto)
-  IF (layout .EQ. "VEFC") THEN
-    t1 = temp(order + 1)
-    IF (order .GE. 2) THEN
-      temp(3:) = temp(2:order)
-    END IF
-    temp(2) = t1
-  END IF
+CALL InterpolationPoint_Line1_(order=order, ipType=ipType, ans=ans, &
+                  nrow=nrow, ncol=ncol, layout=layout, xij=xij, alpha=alpha, &
+                               beta=beta, lambda=lambda)
 
-CASE (GaussChebyshev)
-  CALL Chebyshev1Quadrature(n=order + 1, pt=temp, quadType=Gauss)
-
-CASE (GaussChebyshevLobatto)
-  CALL Chebyshev1Quadrature(n=order + 1, pt=temp, quadType=GaussLobatto)
-  IF (layout .EQ. "VEFC") THEN
-    t1 = temp(order + 1)
-    IF (order .GE. 2) THEN
-      temp(3:) = temp(2:order)
-    END IF
-    temp(2) = t1
-  END IF
-
-CASE (GaussJacobi)
-  IF (.NOT. PRESENT(alpha) .OR. .NOT. PRESENT(beta)) THEN
-    CALL ErrorMsg(&
-      & msg="alpha and beta should be present for ipType=GaussJacobi", &
-      & file=__FILE__, &
-      & routine="InterpolationPoint_Line1", &
-      & line=__LINE__, &
-      & unitno=stderr)
-  END IF
-
-  CALL JacobiQuadrature( &
-    & n=order + 1, &
-    & pt=temp, &
-    & quadType=Gauss, &
-    & alpha=alpha, &
-    & beta=beta)
-
-CASE (GaussJacobiLobatto)
-  IF (.NOT. PRESENT(alpha) .OR. .NOT. PRESENT(beta)) THEN
-    CALL ErrorMsg(&
-      & msg="alpha and beta should be present for ipType=GaussJacobi", &
-      & file=__FILE__, &
-      & routine="InterpolationPoint_Line1", &
-      & line=__LINE__, &
-      & unitno=stderr)
-  END IF
-
-  CALL JacobiQuadrature( &
-    & n=order + 1, &
-    & pt=temp, &
-    & quadType=GaussLobatto, &
-    & alpha=alpha, &
-    & beta=beta)
-
-  IF (layout .EQ. "VEFC") THEN
-    t1 = temp(order + 1)
-    IF (order .GE. 2) THEN
-      temp(3:) = temp(2:order)
-    END IF
-    temp(2) = t1
-  END IF
-
-CASE (GaussUltraspherical)
-  IF (.NOT. PRESENT(lambda)) THEN
-    CALL ErrorMsg(&
-      & msg="lambda should be present for ipType=GaussUltraspherical", &
-      & file=__FILE__, &
-      & routine="InterpolationPoint_Line1", &
-      & line=__LINE__, &
-      & unitno=stderr)
-  END IF
-
-  CALL UltrasphericalQuadrature( &
-    & n=order + 1, &
-    & pt=temp, &
-    & quadType=Gauss, &
-    & lambda=lambda)
-
-CASE (GaussUltrasphericalLobatto)
-  IF (.NOT. PRESENT(lambda)) THEN
-    CALL ErrorMsg(&
-     & msg="lambda should be present for ipType=GaussUltrasphericalLobatto", &
-      & file=__FILE__, &
-      & routine="InterpolationPoint_Line1", &
-      & line=__LINE__, &
-      & unitno=stderr)
-  END IF
-
-  CALL UltrasphericalQuadrature( &
-    & n=order + 1, &
-    & pt=temp, &
-    & quadType=GaussLobatto, &
-    & lambda=lambda)
-
-  IF (layout .EQ. "VEFC") THEN
-    t1 = temp(order + 1)
-    IF (order .GE. 2) THEN
-      temp(3:) = temp(2:order)
-    END IF
-    temp(2) = t1
-  END IF
-
-CASE DEFAULT
-  CALL ErrorMsg(&
-    & msg="Unknown iptype", &
-    & file=__FILE__, &
-    & routine="InterpolationPoint_Line1", &
-    & line=__LINE__, &
-    & unitno=stderr)
-END SELECT
-
-IF (ipType .NE. Equidistance) THEN
-  IF (PRESENT(xij)) THEN
-    nsd = SIZE(xij, 1)
-    CALL Reallocate(ans, nsd, order + 1)
-    ans = FromBiunitLine2Segment(xin=temp, x1=xij(:, 1), &
-      & x2=xij(:, 2))
-  ELSE
-    CALL Reallocate(ans, 1, order + 1)
-    ans(1, :) = temp
-  END IF
-END IF
 END PROCEDURE InterpolationPoint_Line1
 
 !----------------------------------------------------------------------------
@@ -372,601 +394,948 @@ END PROCEDURE InterpolationPoint_Line1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE InterpolationPoint_Line2
-CHARACTER(20) :: astr
-REAL(DFP) :: t1
+INTEGER(I4B) :: tsize
+tsize = order + 1
+ALLOCATE (ans(tsize))
+CALL InterpolationPoint_Line2_(order=order, ipType=ipType, &
+              xij=xij, layout=layout, alpha=alpha, beta=beta, lambda=lambda, &
+                               ans=ans, tsize=tsize)
+END PROCEDURE InterpolationPoint_Line2
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE InterpolationPoint_Line1_
+REAL(DFP) :: temp(64)
 
 IF (order .EQ. 0_I4B) THEN
-  ans = [0.5_DFP * (xij(1) + xij(2))]
+  CALL EquidistancePoint_Line_(xij=xij, order=order, ans=ans, nrow=nrow, &
+                               ncol=ncol)
   RETURN
 END IF
 
-CALL Reallocate(ans, order + 1)
-astr = TRIM(UpperCase(layout))
+CALL handle_error
+!! handle_error is defined in this routine, see below
+
+ncol = order + 1
 
 SELECT CASE (ipType)
-CASE (Equidistance)
-  ans = EquidistancePoint_Line(xij=xij, order=order)
-  IF (astr .EQ. "INCREASING") ans = SORT(ans)
-  RETURN
 
-CASE (GaussLegendre)
-  CALL LegendreQuadrature(n=order + 1, pt=ans, quadType=Gauss)
+CASE (ipopt%Equidistance)
+  CALL EquidistancePoint_Line_(xij=xij, order=order, nrow=nrow, ncol=ncol, &
+                               ans=ans)
+  CALL handle_increasing
 
-CASE (GaussLegendreLobatto)
-  CALL LegendreQuadrature(n=order + 1, pt=ans, quadType=GaussLobatto)
-  IF (layout .EQ. "VEFC") THEN
-    t1 = ans(order + 1)
-    IF (order .GE. 2) THEN
-      ans(3:) = ans(2:order)
-    END IF
-    ans(2) = t1
-  END IF
+CASE (ipopt%GaussLegendre)
+  CALL LegendreQuadrature(n=ncol, pt=temp(1:ncol), quadType=ipopt%Gauss)
+  CALL handle_non_equidistance
 
-CASE (GaussChebyshev)
-  CALL Chebyshev1Quadrature(n=order + 1, pt=ans, quadType=Gauss)
+CASE (ipopt%GaussChebyshev)
+  CALL Chebyshev1Quadrature(n=ncol, pt=temp(1:ncol), quadType=ipopt%Gauss)
+  CALL handle_non_equidistance
 
-CASE (GaussChebyshevLobatto)
-  CALL Chebyshev1Quadrature(n=order + 1, pt=ans, quadType=GaussLobatto)
-  IF (layout .EQ. "VEFC") THEN
-    t1 = ans(order + 1)
-    IF (order .GE. 2) THEN
-      ans(3:) = ans(2:order)
-    END IF
-    ans(2) = t1
-  END IF
+CASE (ipopt%GaussLegendreLobatto)
+ CALL LegendreQuadrature(n=ncol, pt=temp(1:ncol), quadType=ipopt%GaussLobatto)
+  CALL handle_vefc
+  CALL handle_non_equidistance
 
-CASE (GaussJacobi)
-  IF (.NOT. PRESENT(alpha) .OR. .NOT. PRESENT(beta)) THEN
-    CALL ErrorMsg(&
-      & msg="alpha and beta should be present for ipType=GaussJacobi", &
-      & file=__FILE__, &
-      & routine="InterpolationPoint_Line2", &
-      & line=__LINE__, &
-      & unitno=stderr)
-  END IF
+CASE (ipopt%GaussChebyshevLobatto)
+  CALL Chebyshev1Quadrature(n=ncol, pt=temp(1:ncol), quadType=ipopt%GaussLobatto)
+  CALL handle_vefc
+  CALL handle_non_equidistance
 
-  CALL JacobiQuadrature( &
-    & n=order + 1, &
-    & pt=ans, &
-    & quadType=Gauss, &
-    & alpha=alpha, &
-    & beta=beta)
+CASE (ipopt%GaussJacobi)
+  CALL JacobiQuadrature(n=ncol, pt=temp(1:ncol), quadType=ipopt%Gauss, &
+                        alpha=alpha, beta=beta)
+  CALL handle_non_equidistance
 
-CASE (GaussJacobiLobatto)
-  IF (.NOT. PRESENT(alpha) .OR. .NOT. PRESENT(beta)) THEN
-    CALL ErrorMsg(&
-    & msg="alpha and beta should be present for ipType=GaussJacobiLobatto", &
-    & file=__FILE__, &
-    & routine="InterpolationPoint_Line2", &
-    & line=__LINE__, &
-    & unitno=stderr)
-  END IF
+CASE (ipopt%GaussJacobiLobatto)
+ CALL JacobiQuadrature(n=ncol, pt=temp(1:ncol), quadType=ipopt%GaussLobatto, &
+                        alpha=alpha, beta=beta)
+  CALL handle_vefc
+  CALL handle_non_equidistance
 
-  CALL JacobiQuadrature( &
-    & n=order + 1, &
-    & pt=ans, &
-    & quadType=GaussLobatto, &
-    & alpha=alpha, &
-    & beta=beta)
+CASE (ipopt%GaussUltraspherical)
+CALL UltrasphericalQuadrature(n=ncol, pt=temp(1:ncol), quadType=ipopt%Gauss, &
+                                lambda=lambda)
+  CALL handle_non_equidistance
 
-  IF (layout .EQ. "VEFC") THEN
-    t1 = ans(order + 1)
-    IF (order .GE. 2) THEN
-      ans(3:) = ans(2:order)
-    END IF
-    ans(2) = t1
-  END IF
+CASE (ipopt%GaussUltrasphericalLobatto)
+  CALL UltrasphericalQuadrature(n=ncol, pt=temp(1:ncol), quadType=ipopt%GaussLobatto, &
+                                lambda=lambda)
 
-CASE (GaussUltraspherical)
-  IF (.NOT. PRESENT(lambda)) THEN
-    CALL ErrorMsg(&
-      & msg="lambda should be present for ipType=GaussUltraspherical", &
-      & file=__FILE__, &
-      & routine="InterpolationPoint_Line2", &
-      & line=__LINE__, &
-      & unitno=stderr)
-  END IF
-
-  CALL UltrasphericalQuadrature( &
-    & n=order + 1, &
-    & pt=ans, &
-    & quadType=Gauss, &
-    & lambda=lambda)
-
-CASE (GaussUltrasphericalLobatto)
-  IF (.NOT. PRESENT(lambda)) THEN
-    CALL ErrorMsg(&
-     & msg="lambda should be present for ipType=GaussUltrasphericalLobatto", &
-      & file=__FILE__, &
-      & routine="InterpolationPoint_Line2", &
-      & line=__LINE__, &
-      & unitno=stderr)
-  END IF
-
-  CALL UltrasphericalQuadrature( &
-    & n=order + 1, &
-    & pt=ans, &
-    & quadType=GaussLobatto, &
-    & lambda=lambda)
-
-  IF (layout .EQ. "VEFC") THEN
-    t1 = ans(order + 1)
-    IF (order .GE. 2) THEN
-      ans(3:) = ans(2:order)
-    END IF
-    ans(2) = t1
-  END IF
+  CALL handle_vefc
+  CALL handle_non_equidistance
 
 CASE DEFAULT
-  CALL ErrorMsg(&
-    & msg="Unknown iptype", &
-    & file=__FILE__, &
-    & routine="InterpolationPoint_Line2", &
-    & line=__LINE__, &
-    & unitno=stderr)
+  CALL ErrorMsg(msg="Unknown iptype", routine="InterpolationPoint_Line1_()", &
+                file=__FILE__, line=__LINE__, unitno=stderr)
 END SELECT
 
-IF (ipType .NE. Equidistance) THEN
-  ans = FromBiunitLine2Segment(xin=ans, x1=xij(1), x2=xij(2))
+CONTAINS
+
+SUBROUTINE handle_vefc
+  REAL(DFP) :: t1
+
+  IF (layout(1:2) .EQ. "VE") THEN
+    t1 = temp(order + 1)
+    IF (order .GE. 2) THEN
+      temp(3:order + 1) = temp(2:order)
+    END IF
+    temp(2) = t1
+  END IF
+
+END SUBROUTINE handle_vefc
+
+SUBROUTINE handle_increasing
+  INTEGER(I4B) :: ii
+
+  IF (layout(1:2) .EQ. "IN") THEN
+    DO ii = 1, nrow
+      CALL HeapSort(ans(ii, :))
+    END DO
+  END IF
+END SUBROUTINE
+
+SUBROUTINE handle_non_equidistance
+  IF (PRESENT(xij)) THEN
+  CALL FromBiunitLine2Segment_(xin=temp(1:ncol), x1=xij(:, 1), x2=xij(:, 2), &
+                                 ans=ans, nrow=nrow, ncol=ncol)
+  ELSE
+    nrow = 1
+    ans(1, 1:ncol) = temp(1:ncol)
+  END IF
+
+END SUBROUTINE handle_non_equidistance
+
+SUBROUTINE handle_error
+
+#ifdef DEBUG_VER
+  LOGICAL(LGT) :: isok
+  CHARACTER(:), ALLOCATABLE :: msg
+
+  SELECT CASE (ipType)
+  CASE (ipopt%GaussJacobi, ipopt%GaussJacobiLobatto)
+    isok = PRESENT(alpha) .AND. PRESENT(beta)
+    IF (.NOT. isok) THEN
+      msg = "alpha and beta should be present for ipType=GaussJacobi"
+
+      CALL ErrorMsg(msg=msg, file=__FILE__, &
+                    routine="InterpolationPoint_Line1_()", &
+                    line=__LINE__, unitno=stderr)
+    END IF
+
+  CASE (ipopt%GaussUltraSpherical, ipopt%GaussUltraSphericalLobatto)
+    isok = PRESENT(lambda)
+    IF (.NOT. isok) THEN
+      msg = "lambda should be present for ipType=GaussUltraSpherical"
+      CALL ErrorMsg(msg=msg, file=__FILE__, &
+                    routine="InterpolationPoint_Line1_()", &
+                    line=__LINE__, unitno=stderr)
+    END IF
+  END SELECT
+
+#endif
+
+END SUBROUTINE handle_error
+
+END PROCEDURE InterpolationPoint_Line1_
+
+!----------------------------------------------------------------------------
+!                                                   InterpolationPoint_Line2_
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE InterpolationPoint_Line2_
+tsize = order + 1
+IF (order .EQ. 0_I4B) THEN
+  ans(1) = 0.5_DFP * (xij(1) + xij(2))
+  RETURN
 END IF
-END PROCEDURE InterpolationPoint_Line2
+
+CALL handle_error
+
+SELECT CASE (ipType)
+
+CASE (ipopt%Equidistance)
+  CALL EquidistancePoint_Line_(xij=xij, order=order, tsize=tsize, ans=ans)
+
+  IF (layout(1:2) .EQ. "IN") CALL HeapSort(ans(1:tsize))
+
+CASE (ipopt%GaussLegendre)
+  CALL LegendreQuadrature(n=tsize, pt=ans, quadType=ipopt%Gauss)
+  CALL handle_non_equidistance
+
+CASE (ipopt%GaussChebyshev)
+  CALL Chebyshev1Quadrature(n=tsize, pt=ans, quadType=ipopt%Gauss)
+  CALL handle_non_equidistance
+
+CASE (ipopt%GaussJacobi)
+  CALL JacobiQuadrature(n=tsize, pt=ans, quadType=ipopt%Gauss, alpha=alpha, &
+                        beta=beta)
+  CALL handle_non_equidistance
+
+CASE (ipopt%GaussUltraspherical)
+  CALL UltrasphericalQuadrature(n=tsize, pt=ans, quadType=ipopt%Gauss, &
+                                lambda=lambda)
+  CALL handle_non_equidistance
+
+CASE (ipopt%GaussLegendreLobatto)
+  CALL LegendreQuadrature(n=tsize, pt=ans, quadType=ipopt%GaussLobatto)
+  CALL handle_vefc
+  CALL handle_non_equidistance
+
+CASE (ipopt%GaussChebyshevLobatto)
+  CALL Chebyshev1Quadrature(n=tsize, pt=ans, quadType=ipopt%GaussLobatto)
+  CALL handle_vefc
+  CALL handle_non_equidistance
+
+CASE (ipopt%GaussJacobiLobatto)
+  CALL JacobiQuadrature(n=tsize, pt=ans, quadType=ipopt%GaussLobatto, alpha=alpha, &
+                        beta=beta)
+  CALL handle_vefc
+  CALL handle_non_equidistance
+
+CASE (ipopt%GaussUltrasphericalLobatto)
+ CALL UltrasphericalQuadrature(n=tsize, pt=ans, quadType=ipopt%GaussLobatto, &
+                                lambda=lambda)
+  CALL handle_vefc
+  CALL handle_non_equidistance
+
+CASE DEFAULT
+  CALL ErrorMsg(msg="Unknown iptype", routine="InterpolationPoint_Line2", &
+                file=__FILE__, line=__LINE__, unitno=stderr)
+END SELECT
+
+CONTAINS
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+SUBROUTINE handle_vefc
+  REAL(DFP) :: t1
+
+  IF (layout(1:2) .EQ. "VE") THEN
+    t1 = ans(order + 1)
+    IF (order .GE. 2) THEN
+      ans(3:) = ans(2:order)
+    END IF
+    ans(2) = t1
+  END IF
+
+END SUBROUTINE handle_vefc
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+SUBROUTINE handle_non_equidistance
+  CALL FromBiunitLine2Segment_(xin=ans, x1=xij(1), x2=xij(2), &
+                               ans=ans, tsize=tsize)
+
+END SUBROUTINE handle_non_equidistance
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+SUBROUTINE handle_error
+
+#ifdef DEBUG_VER
+  LOGICAL(LGT) :: isok
+  CHARACTER(:), ALLOCATABLE :: msg
+
+  SELECT CASE (ipType)
+  CASE (ipopt%GaussJacobi, ipopt%GaussJacobiLobatto)
+    isok = PRESENT(alpha) .AND. PRESENT(beta)
+    IF (.NOT. isok) THEN
+      msg = "alpha and beta should be present for ipType=GaussJacobi"
+
+      CALL ErrorMsg(msg=msg, file=__FILE__, &
+                    routine="InterpolationPoint_Line1_()", &
+                    line=__LINE__, unitno=stderr)
+    END IF
+
+  CASE (ipopt%GaussUltraSpherical, ipopt%GaussUltraSphericalLobatto)
+    isok = PRESENT(lambda)
+    IF (.NOT. isok) THEN
+      msg = "lambda should be present for ipType=GaussUltraSpherical"
+      CALL ErrorMsg(msg=msg, file=__FILE__, &
+                    routine="InterpolationPoint_Line1_()", &
+                    line=__LINE__, unitno=stderr)
+    END IF
+  END SELECT
+
+#endif
+
+END SUBROUTINE handle_error
+
+END PROCEDURE InterpolationPoint_Line2_
 
 !----------------------------------------------------------------------------
 !                                                        LagrangeCoeff_Line
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE LagrangeCoeff_Line1
-REAL(DFP) :: v(SIZE(xij, 2), SIZE(xij, 2))
-INTEGER(I4B), DIMENSION(SIZE(xij, 2)) :: ipiv
-INTEGER(I4B) :: info
-v = LagrangeVandermonde(order=order, xij=xij, elemType=Line2)
-CALL getLU(A=v, IPIV=ipiv, info=info)
-ans = 0.0_DFP; ans(i) = 1.0_DFP
-CALL LUSolve(A=v, B=ans, IPIV=ipiv, info=info)
+INTEGER(I4B) :: tsize
+CALL LagrangeCoeff_Line1_(order=order, i=i, xij=xij, ans=ans, tsize=tsize)
 END PROCEDURE LagrangeCoeff_Line1
 
 !----------------------------------------------------------------------------
 !                                                        LagrangeCoeff_Line
 !----------------------------------------------------------------------------
 
+MODULE PROCEDURE LagrangeCoeff_Line1_
+REAL(DFP) :: v(SIZE(xij, 2), SIZE(xij, 2))
+INTEGER(I4B), DIMENSION(SIZE(xij, 2)) :: ipiv
+INTEGER(I4B) :: info, nrow, ncol
+
+tsize = order + 1
+CALL LagrangeVandermonde_(order=order, xij=xij, elemType=elmopt%Line, &
+                          ans=v, nrow=nrow, ncol=ncol)
+
+CALL GetLU(A=v, IPIV=ipiv, info=info)
+
+ans(1:tsize) = 0.0_DFP; ans(i) = 1.0_DFP
+
+CALL LUSolve(A=v, B=ans(1:tsize), IPIV=ipiv, info=info)
+
+END PROCEDURE LagrangeCoeff_Line1_
+
+!----------------------------------------------------------------------------
+!                                                        LagrangeCoeff_Line
+!----------------------------------------------------------------------------
+
 MODULE PROCEDURE LagrangeCoeff_Line2
-REAL(DFP) :: vtemp(SIZE(v, 1), SIZE(v, 2))
-INTEGER(I4B), DIMENSION(SIZE(v, 1)) :: ipiv
-INTEGER(I4B) :: info
-vtemp = v; ipiv = 0
-CALL getLU(A=vtemp, IPIV=ipiv, info=info)
-ans = 0.0_DFP; ans(i) = 1.0_DFP
-CALL LUSolve(A=vtemp, B=ans, IPIV=ipiv, info=info)
+INTEGER(I4B) :: tsize
+CALL LagrangeCoeff_Line2_(order=order, i=i, v=v, isVandermonde=.TRUE., &
+                          ans=ans, tsize=tsize)
 END PROCEDURE LagrangeCoeff_Line2
 
 !----------------------------------------------------------------------------
 !                                                        LagrangeCoeff_Line
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE LagrangeCoeff_Line3
+MODULE PROCEDURE LagrangeCoeff_Line2_
+REAL(DFP) :: vtemp(SIZE(v, 1), SIZE(v, 2))
+INTEGER(I4B), DIMENSION(SIZE(v, 1)) :: ipiv
 INTEGER(I4B) :: info
-ans = 0.0_DFP; ans(i) = 1.0_DFP
-CALL LUSolve(A=v, B=ans, IPIV=ipiv, info=info)
+
+tsize = order + 1
+
+vtemp = v
+! ipiv = 0
+
+CALL GetLU(A=vtemp, IPIV=ipiv, info=info)
+
+ans(1:tsize) = 0.0_DFP; ans(i) = 1.0_DFP
+
+CALL LUSolve(A=vtemp, B=ans(1:tsize), IPIV=ipiv, info=info)
+
+END PROCEDURE LagrangeCoeff_Line2_
+
+!----------------------------------------------------------------------------
+!                                                        LagrangeCoeff_Line
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE LagrangeCoeff_Line3
+INTEGER(I4B) :: tsize
+CALL LagrangeCoeff_Line3_(order=order, i=i, v=v, ipiv=ipiv, ans=ans, &
+                          tsize=tsize)
 END PROCEDURE LagrangeCoeff_Line3
 
 !----------------------------------------------------------------------------
 !                                                        LagrangeCoeff_Line
 !----------------------------------------------------------------------------
 
+MODULE PROCEDURE LagrangeCoeff_Line3_
+INTEGER(I4B) :: info
+tsize = 1 + order
+ans(1:tsize) = 0.0_DFP; ans(i) = 1.0_DFP
+CALL LUSolve(A=v, B=ans(1:tsize), IPIV=ipiv, info=info)
+END PROCEDURE LagrangeCoeff_Line3_
+
+!----------------------------------------------------------------------------
+!                                                        LagrangeCoeff_Line
+!----------------------------------------------------------------------------
+
 MODULE PROCEDURE LagrangeCoeff_Line4
-ans = LagrangeVandermonde(order=order, xij=xij, elemType=Line2)
-CALL GetInvMat(ans)
+INTEGER(I4B) :: nrow, ncol
+CALL LagrangeCoeff_Line4_(order=order, xij=xij, ans=ans, nrow=nrow, &
+                          ncol=ncol)
 END PROCEDURE LagrangeCoeff_Line4
+
+!----------------------------------------------------------------------------
+!                                                        LagrangeCoeff_Line
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE LagrangeCoeff_Line4_
+CALL LagrangeVandermonde_(order=order, xij=xij, elemType=elmopt%Line, &
+                          ans=ans, nrow=nrow, ncol=ncol)
+CALL GetInvMat(ans(1:nrow, 1:ncol))
+END PROCEDURE LagrangeCoeff_Line4_
 
 !----------------------------------------------------------------------------
 !                                                         LagrangeCoeff_Line
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE LagrangeCoeff_Line5
-SELECT CASE (basisType)
-CASE (Monomial)
-  ans = LagrangeCoeff_Line(order=order, xij=xij)
-CASE DEFAULT
-  ans = EvalAllOrthopol(&
-    & n=order, &
-    & x=xij(1, :), &
-    & orthopol=basisType, &
-    & alpha=alpha, &
-    & beta=beta, &
-    & lambda=lambda)
-  CALL GetInvMat(ans)
-END SELECT
+INTEGER(I4B) :: nrow, ncol
+CALL LagrangeCoeff_Line5_(order=order, xij=xij, basisType=basisType, &
+         alpha=alpha, beta=beta, lambda=lambda, ans=ans, nrow=nrow, ncol=ncol)
 END PROCEDURE LagrangeCoeff_Line5
+
+!----------------------------------------------------------------------------
+!                                                         LagrangeCoeff_Line
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE LagrangeCoeff_Line5_
+IF (basisType .EQ. polyopt%Monomial) THEN
+  CALL LagrangeCoeff_Line_(order=order, xij=xij, ans=ans, nrow=nrow, &
+                           ncol=ncol)
+  RETURN
+END IF
+
+CALL EvalAllOrthopol_(n=order, x=xij(1, :), &
+                      orthopol=basisType, &
+                      alpha=alpha, beta=beta, lambda=lambda, &
+                      ans=ans, nrow=nrow, ncol=ncol)
+
+CALL GetInvMat(ans(1:nrow, 1:ncol))
+END PROCEDURE LagrangeCoeff_Line5_
 
 !----------------------------------------------------------------------------
 !                                                       LagrangeEvalAll_Line
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE LagrangeEvalAll_Line1
-LOGICAL(LGT) :: firstCall0
-REAL(DFP) :: coeff0(SIZE(xij, 2), SIZE(xij, 2)), xx(1, SIZE(xij, 2))
-INTEGER(I4B) :: ii, orthopol0
+INTEGER(I4B) :: tsize
+CALL LagrangeEvalAll_Line1_(order=order, x=x, xij=xij, coeff=coeff, &
+           firstCall=firstCall, basisType=basisType, alpha=alpha, beta=beta, &
+                            lambda=lambda, ans=ans, tsize=tsize)
+END PROCEDURE LagrangeEvalAll_Line1
 
-IF (SIZE(xij, 2) .NE. order + 1) THEN
-  CALL Errormsg(&
-    & msg="Size(xij, 1) .NE. order+1 ", &
-    & file=__FILE__, &
-    & routine="LagrangeEvalAll_Line2", &
-    & line=__LINE__, &
-    & unitno=stderr)
+!----------------------------------------------------------------------------
+!                                                     LagrangeEvalAll_Line_
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE LagrangeEvalAll_Line1_
+LOGICAL(LGT) :: firstCall0
+REAL(DFP) :: coeff0(SIZE(xij, 2), SIZE(xij, 2)), xx(1, SIZE(xij, 2)), x1(1)
+INTEGER(I4B) :: ii, orthopol0, nrow, ncol
+
+tsize = SIZE(xij, 2)
+
+#ifdef DEBUG_VER
+
+IF (tsize .NE. order + 1) THEN
+  CALL Errormsg(msg="Size(xij, 1) .NE. order+1 ", &
+                routine="LagrangeEvalAll_Line2", &
+                file=__FILE__, line=__LINE__, unitno=stderr)
   RETURN
 END IF
 
-orthopol0 = input(default=Monomial, option=basisType)
-firstCall0 = input(default=.TRUE., option=firstCall)
+#endif
+
+orthopol0 = Input(default=polyopt%Monomial, option=basisType)
+firstCall0 = Input(default=.TRUE., option=firstCall)
+
+! make coeff0
 
 IF (PRESENT(coeff)) THEN
   IF (firstCall0) THEN
-    coeff = LagrangeCoeff_Line(&
-      & order=order, &
-      & xij=xij, &
-      & basisType=orthopol0, &
-      & alpha=alpha, &
-      & beta=beta, &
-      & lambda=lambda)
+    CALL LagrangeCoeff_Line_(order=order, xij=xij, &
+                 basisType=orthopol0, alpha=alpha, beta=beta, lambda=lambda, &
+                             ans=coeff, nrow=nrow, ncol=ncol)
   END IF
-  coeff0 = TRANSPOSE(coeff)
+
+  ! coeff0(1:nrow, 1:ncol) = TRANSPOSE(coeff(1:nrow, 1:ncol))
+  coeff0(1:tsize, 1:tsize) = coeff(1:tsize, 1:tsize)
+
 ELSE
-  coeff0 = TRANSPOSE(LagrangeCoeff_Line(&
-    & order=order, &
-    & xij=xij, &
-    & basisType=orthopol0, &
-    & alpha=alpha, &
-    & beta=beta, &
-    & lambda=lambda &
-    & ))
+
+  CALL LagrangeCoeff_Line_(order=order, xij=xij, basisType=orthopol0, &
+                           alpha=alpha, beta=beta, lambda=lambda, &
+                           ans=coeff0, nrow=nrow, ncol=ncol)
+
+  ! coeff0(1:nrow, 1:ncol) = TRANSPOSE(coeff0(1:nrow, 1:ncol))
 END IF
 
-SELECT CASE (orthopol0)
-CASE (Monomial)
+IF (orthopol0 .EQ. polyopt%monomial) THEN
+
   xx(1, 1) = 1.0_DFP
   DO ii = 1, order
     xx(1, ii + 1) = xx(1, ii) * x
   END DO
-CASE DEFAULT
-  xx = EvalAllOrthopol(&
-    & n=order, &
-    & x=[x], &
-    & orthopol=orthopol0, &
-    & alpha=alpha, &
-    & beta=beta, &
-    & lambda=lambda)
-END SELECT
 
-ans = MATMUL(coeff0, xx(1, :))
+ELSE
 
-END PROCEDURE LagrangeEvalAll_Line1
+  x1(1) = x
+  CALL EvalAllOrthopol_(n=order, x=x1, orthopol=orthopol0, &
+                        alpha=alpha, beta=beta, lambda=lambda, &
+                        ans=xx, nrow=nrow, ncol=ncol)
+
+END IF
+
+DO CONCURRENT(ii=1:tsize)
+  ans(ii) = DOT_PRODUCT(coeff0(:, ii), xx(1, :))
+END DO
+
+END PROCEDURE LagrangeEvalAll_Line1_
 
 !----------------------------------------------------------------------------
 !                                                       LagrangeEvalAll_Line
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE LagrangeEvalAll_Line2
+INTEGER(I4B) :: nrow, ncol
+CALL LagrangeEvalAll_Line2_(order=order, x=x, xij=xij, coeff=coeff, &
+           firstCall=firstCall, basisType=basisType, alpha=alpha, beta=beta, &
+                            lambda=lambda, ans=ans, nrow=nrow, ncol=ncol)
+END PROCEDURE LagrangeEvalAll_Line2
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE LagrangeEvalAll_Line2_
 LOGICAL(LGT) :: firstCall0
 REAL(DFP) :: coeff0(SIZE(xij, 2), SIZE(xij, 2)), xx(SIZE(x, 2), SIZE(xij, 2))
-INTEGER(I4B) :: ii, orthopol0
+INTEGER(I4B) :: ii, orthopol0, aint, bint
 
-IF (SIZE(xij, 2) .NE. order + 1) THEN
-  CALL Errormsg(&
-    & msg="Size(xij, 1) .NE. order+1 ", &
-    & file=__FILE__, &
-    & routine="LagrangeEvalAll_Line2", &
-    & line=__LINE__, &
-    & unitno=stderr)
+nrow = SIZE(x, 2)
+ncol = SIZE(xij, 2)
+
+#ifdef DEBUG_VER
+
+IF (ncol .NE. order + 1) THEN
+  CALL Errormsg(msg="Size(xij, 1) .NE. order+1 ", &
+                routine="LagrangeEvalAll_Line2", &
+                file=__FILE__, line=__LINE__, unitno=stderr)
   RETURN
 END IF
 
-orthopol0 = Input(default=Monomial, option=basisType)
+#endif
+
+orthopol0 = Input(default=polyopt%Monomial, option=basisType)
 firstCall0 = Input(default=.TRUE., option=firstCall)
 
 IF (PRESENT(coeff)) THEN
+
   IF (firstCall0) THEN
-    coeff = LagrangeCoeff_Line(&
-      & order=order, &
-      & xij=xij, &
-      & basisType=orthopol0, &
-      & alpha=alpha, &
-      & beta=beta, &
-      & lambda=lambda)
+    ! coeff = LagrangeCoeff_Line(&
+    CALL LagrangeCoeff_Line_(order=order, xij=xij, basisType=orthopol0, &
+       alpha=alpha, beta=beta, lambda=lambda, ans=coeff, nrow=aint, ncol=bint)
   END IF
-  coeff0 = coeff
+
+  coeff0(1:ncol, 1:ncol) = coeff(1:ncol, 1:ncol)
+
 ELSE
-  coeff0 = LagrangeCoeff_Line(&
-    & order=order, &
-    & xij=xij, &
-    & basisType=orthopol0, &
-    & alpha=alpha, &
-    & beta=beta, &
-    & lambda=lambda &
-    & )
+
+  ! coeff0 = LagrangeCoeff_Line(&
+  CALL LagrangeCoeff_Line_(order=order, xij=xij, basisType=orthopol0, &
+      alpha=alpha, beta=beta, lambda=lambda, ans=coeff0, nrow=aint, ncol=bint)
+
 END IF
 
-SELECT CASE (orthopol0)
-CASE (Monomial)
+IF (orthopol0 .EQ. polyopt%monomial) THEN
+
   xx(:, 1) = 1.0_DFP
   DO ii = 1, order
     xx(:, ii + 1) = xx(:, ii) * x(1, :)
   END DO
-CASE DEFAULT
-  xx = EvalAllOrthopol(&
-    & n=order, &
-    & x=x(1, :), &
-    & orthopol=orthopol0, &
-    & alpha=alpha, &
-    & beta=beta, &
-    & lambda=lambda)
-END SELECT
 
-ans = MATMUL(xx, coeff0)
+ELSE
 
-END PROCEDURE LagrangeEvalAll_Line2
+  ! xx = EvalAllOrthopol(
+  CALL EvalAllOrthopol_(n=order, x=x(1, :), orthopol=orthopol0, alpha=alpha, &
+                       beta=beta, lambda=lambda, ans=xx, nrow=aint, ncol=bint)
+
+END IF
+
+! ans = MATMUL(xx, coeff0)
+CALL GEMM(C=ans, alpha=1.0_DFP, A=xx, B=coeff0)
+
+END PROCEDURE LagrangeEvalAll_Line2_
 
 !----------------------------------------------------------------------------
 !                                                               EvalAll_Line
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE BasisEvalAll_Line1
-INTEGER(I4B) :: ii, basisType0
-TYPE(String) :: astr
-astr = UpperCase(refLine)
+INTEGER(I4B) :: tsize
+CALL BasisEvalAll_Line1_(order=order, x=x, ans=ans, tsize=tsize, &
+               refline=refline, basistype=basistype, alpha=alpha, beta=beta, &
+                         lambda=lambda)
+END PROCEDURE BasisEvalAll_Line1
 
-IF (astr%chars() .EQ. "UNIT") THEN
-  CALL Errormsg(&
-    & msg="refLine should be BIUNIT", &
-    & file=__FILE__, &
-    & routine="BasisEvalAll_Line1", &
-    & line=__LINE__, &
-    & unitno=stderr)
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE BasisEvalAll_Line1_
+#ifdef DEBUG_VER
+CHARACTER(1) :: astr
+#endif
+
+INTEGER(I4B) :: ii, basisType0, nrow, ncol
+REAL(DFP) :: temp(1, 100), x1(1)
+
+tsize = order + 1
+
+#ifdef DEBUG_VER
+
+astr = UpperCase(refLine(1:1))
+IF (astr .EQ. "U") THEN
+  CALL Errormsg(msg="refLine should be BIUNIT", &
+                routine="BasisEvalAll_Line1", &
+                file=__FILE__, line=__LINE__, unitno=stderr)
   RETURN
 END IF
 
-basisType0 = input(default=Monomial, option=basisType)
+#endif
+
+basisType0 = Input(default=polyopt%Monomial, option=basisType)
+
 SELECT CASE (basisType0)
-CASE (Monomial)
+
+CASE (polyopt%Monomial)
   ans(1) = 1.0_DFP
   DO ii = 1, order
     ans(ii + 1) = ans(ii) * x
   END DO
+
 CASE DEFAULT
 
-  IF (basisType0 .EQ. Jacobi) THEN
+#ifdef DEBUG_VER
+
+  IF (basisType0 .EQ. polyopt%Jacobi) THEN
     IF (.NOT. PRESENT(alpha) .OR. .NOT. PRESENT(beta)) THEN
-      CALL Errormsg(&
-        & msg="alpha and beta should be present for basisType=Jacobi", &
-        & file=__FILE__, &
-        & routine="BasisEvalAll_Line1", &
-        & line=__LINE__, &
-        & unitno=stderr)
+      CALL Errormsg( &
+        msg="alpha and beta should be present for basisType=Jacobi", &
+        routine="BasisEvalAll_Line1", &
+        file=__FILE__, line=__LINE__, unitno=stderr)
       RETURN
     END IF
   END IF
 
-  IF (basisType0 .EQ. Ultraspherical) THEN
+  IF (basisType0 .EQ. polyopt%Ultraspherical) THEN
     IF (.NOT. PRESENT(lambda)) THEN
-      CALL Errormsg(&
-        & msg="lambda should be present for basisType=Ultraspherical", &
-        & file=__FILE__, &
-        & routine="BasisEvalAll_Line1", &
-        & line=__LINE__, &
-        & unitno=stderr)
+      CALL Errormsg( &
+        msg="lambda should be present for basisType=Ultraspherical", &
+        routine="BasisEvalAll_Line1", &
+        file=__FILE__, line=__LINE__, unitno=stderr)
       RETURN
     END IF
   END IF
 
-  ans = RESHAPE(EvalAllOrthopol(&
-    & n=order, &
-    & x=[x], &
-    & orthopol=basisType0, &
-    & alpha=alpha, &
-    & beta=beta, &
-    & lambda=lambda), [order + 1])
+  IF (order + 1 .GT. SIZE(temp, 2)) THEN
+    CALL Errormsg( &
+      msg="order+1 is greater than number of col in temp", &
+      routine="BasisEvalAll_Line1_", &
+      file=__FILE__, line=__LINE__, unitno=stderr)
+    RETURN
+  END IF
+
+#endif
+
+  x1(1) = x
+  CALL EvalAllOrthopol_(n=order, x=x1, orthopol=basisType0, alpha=alpha, &
+                     beta=beta, lambda=lambda, ans=temp, nrow=nrow, ncol=ncol)
+
+  ans(1:tsize) = temp(1, 1:tsize)
+
 END SELECT
 
-END PROCEDURE BasisEvalAll_Line1
+END PROCEDURE BasisEvalAll_Line1_
 
 !----------------------------------------------------------------------------
 !                                                 BasisGradientEvalAll_Line
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE BasisGradientEvalAll_Line1
-INTEGER(I4B) :: ii, basisType0
-TYPE(String) :: astr
-astr = UpperCase(refLine)
+INTEGER(I4B) :: tsize
+CALL BasisGradientEvalAll_Line1_(order=order, x=x, refLine=refLine, &
+        basisType=basisType, alpha=alpha, beta=beta, lambda=lambda, ans=ans, &
+                                 tsize=tsize)
+END PROCEDURE BasisGradientEvalAll_Line1
 
-IF (astr%chars() .EQ. "UNIT") THEN
-  CALL Errormsg(&
-    & msg="refLine should be BIUNIT", &
-    & file=__FILE__, &
-    & routine="BasisGradientEvalAll_Line1", &
-    & line=__LINE__, &
-    & unitno=stderr)
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE BasisGradientEvalAll_Line1_
+INTEGER(I4B) :: ii, basisType0
+CHARACTER(:), ALLOCATABLE :: astr
+REAL(DFP) :: areal, breal, x1(1), temp(1, order + 1)
+
+astr = UpperCase(refline)
+
+tsize = order + 1
+
+#ifdef DEBUG_VER
+
+IF (astr .EQ. "UNIT") THEN
+  CALL Errormsg(msg="refLine should be BIUNIT", &
+                routine="BasisGradientEvalAll_Line1", &
+                file=__FILE__, line=__LINE__, unitno=stderr)
   RETURN
 END IF
 
-basisType0 = input(default=Monomial, option=basisType)
+#endif
+
+basisType0 = Input(default=polyopt%Monomial, option=basisType)
 SELECT CASE (basisType0)
-CASE (Monomial)
+
+CASE (polyopt%Monomial)
+
   ans(1) = 0.0_DFP
   DO ii = 1, order
-    ans(ii + 1) = REAL(ii, dfp) * x**(ii - 1)
+    areal = REAL(ii, kind=DFP)
+    breal = x**(ii - 1)
+    ans(ii + 1) = areal * breal
   END DO
+
 CASE DEFAULT
 
-  IF (basisType0 .EQ. Jacobi) THEN
+#ifdef DEBUG_VER
+
+  IF (basisType0 .EQ. polyopt%Jacobi) THEN
+
     IF (.NOT. PRESENT(alpha) .OR. .NOT. PRESENT(beta)) THEN
-      CALL Errormsg(&
-        & msg="alpha and beta should be present for basisType=Jacobi", &
-        & file=__FILE__, &
-        & routine="BasisGradientEvalAll_Line1", &
-        & line=__LINE__, &
-        & unitno=stderr)
+      CALL Errormsg( &
+        msg="alpha and beta should be present for basisType=Jacobi", &
+        routine="BasisGradientEvalAll_Line1", &
+        file=__FILE__, line=__LINE__, unitno=stderr)
       RETURN
     END IF
+
   END IF
 
-  IF (basisType0 .EQ. Ultraspherical) THEN
+  IF (basisType0 .EQ. polyopt%Ultraspherical) THEN
+
     IF (.NOT. PRESENT(lambda)) THEN
-      CALL Errormsg(&
-        & msg="lambda should be present for basisType=Ultraspherical", &
-        & file=__FILE__, &
-        & routine="BasisGradientEvalAll_Line1", &
-        & line=__LINE__, &
-        & unitno=stderr)
+      CALL Errormsg( &
+        msg="lambda should be present for basisType=Ultraspherical", &
+        routine="BasisGradientEvalAll_Line1", &
+        file=__FILE__, line=__LINE__, unitno=stderr)
       RETURN
     END IF
+
   END IF
 
-  ans = RESHAPE(GradientEvalAllOrthopol(&
-    & n=order, &
-    & x=[x], &
-    & orthopol=basisType0, &
-    & alpha=alpha, &
-    & beta=beta, &
-    & lambda=lambda), [order + 1])
+#endif
+
+  x1(1) = x
+  CALL GradientEvalAllOrthopol_(n=order, x=x1, orthopol=basisType0, &
+         alpha=alpha, beta=beta, lambda=lambda, ans=temp, nrow=ii, ncol=tsize)
+
+  ans(1:tsize) = temp(1, 1:tsize)
+
 END SELECT
 
-END PROCEDURE BasisGradientEvalAll_Line1
+END PROCEDURE BasisGradientEvalAll_Line1_
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE BasisGradientEvalAll_Line2
+INTEGER(I4B) :: nrow, ncol
+CALL BasisGradientEvalAll_Line2_(order=order, x=x, ans=ans, nrow=nrow, &
+    ncol=ncol, refLine=refLine, basisType=basisType, alpha=alpha, beta=beta, &
+                                 lambda=lambda)
+END PROCEDURE BasisGradientEvalAll_Line2
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE BasisGradientEvalAll_Line2_
+INTEGER(I4B) :: ii, basisType0, jj
+REAL(DFP) :: areal, breal
+CHARACTER(:), ALLOCATABLE :: astr
+
+nrow = SIZE(x)
+ncol = 1 + order
+
+astr = UpperCase(refLine)
+
+#ifdef DEBUG_VER
+
+IF (astr .EQ. "UNIT") THEN
+  CALL Errormsg(msg="refLine should be BIUNIT", &
+                routine="BasisGradientEvalAll_Line2", &
+                file=__FILE__, line=__LINE__, unitno=stderr)
+  RETURN
+END IF
+
+#endif
+
+basisType0 = Input(default=polyopt%Monomial, option=basisType)
+SELECT CASE (basisType0)
+
+CASE (polyopt%Monomial)
+
+  ans(1:nrow, 1) = 0.0_DFP
+
+  DO ii = 1, order
+    areal = REAL(ii, kind=dfp)
+
+    DO jj = 1, nrow
+
+      breal = x(jj)**(ii - 1)
+      ans(jj, ii + 1) = areal * breal
+
+    END DO
+
+  END DO
+
+CASE DEFAULT
+
+#ifdef DEBUG_VER
+
+  IF (basisType0 .EQ. polyopt%Jacobi) THEN
+    IF (.NOT. PRESENT(alpha) .OR. .NOT. PRESENT(beta)) THEN
+      CALL Errormsg( &
+        msg="alpha and beta should be present for basisType=Jacobi", &
+        routine="BasisGradientEvalAll_Line2", &
+        file=__FILE__, line=__LINE__, unitno=stderr)
+      RETURN
+    END IF
+  END IF
+
+  IF (basisType0 .EQ. polyopt%Ultraspherical) THEN
+    IF (.NOT. PRESENT(lambda)) THEN
+      CALL Errormsg( &
+        msg="lambda should be present for basisType=Ultraspherical", &
+        routine="BasisGradientEvalAll_Line2", &
+        file=__FILE__, line=__LINE__, unitno=stderr)
+      RETURN
+    END IF
+  END IF
+
+#endif
+
+  ! ans = GradientEvalAllOrthopol(&
+  CALL GradientEvalAllOrthopol_(n=order, x=x, orthopol=basisType0, &
+         alpha=alpha, beta=beta, lambda=lambda, ans=ans, nrow=nrow, ncol=ncol)
+
+END SELECT
+
+END PROCEDURE BasisGradientEvalAll_Line2_
 
 !----------------------------------------------------------------------------
 !                                                        BasisEvalAll_Line
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE BasisEvalAll_Line2
-INTEGER(I4B) :: ii, basisType0
-TYPE(String) :: astr
-astr = UpperCase(refLine)
+INTEGER(I4B) :: nrow, ncol
+CALL BasisEvalAll_Line2_(order=order, x=x, ans=ans, nrow=nrow, ncol=ncol, &
+                         refline=refline, basistype=basistype, &
+                         alpha=alpha, beta=beta, lambda=lambda)
+END PROCEDURE BasisEvalAll_Line2
 
-IF (astr%chars() .EQ. "UNIT") THEN
-  CALL Errormsg(&
-    & msg="refLine should be BIUNIT", &
-    & file=__FILE__, &
-    & routine="BasisEvalAll_Line2", &
-    & line=__LINE__, &
-    & unitno=stderr)
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE BasisEvalAll_Line2_
+#ifdef DEBUG_VER
+CHARACTER(1) :: astr
+
+#endif
+
+INTEGER(I4B) :: ii, basisType0
+
+nrow = SIZE(x)
+ncol = order + 1
+
+#ifdef DEBUG_VER
+
+astr = UpperCase(refline(1:1))
+
+IF (astr .EQ. "U") THEN
+  CALL Errormsg(msg="refLine should be BIUNIT", &
+                routine="BasisEvalAll_Line2", &
+                file=__FILE__, line=__LINE__, unitno=stderr)
   RETURN
 END IF
 
-basisType0 = input(default=Monomial, option=basisType)
+#endif
+
+basisType0 = Input(default=polyopt%Monomial, option=basisType)
+
 SELECT CASE (basisType0)
-CASE (Monomial)
-  ans(:, 1) = 1.0_DFP
+
+CASE (polyopt%Monomial)
+  ans(1:nrow, 1) = 1.0_DFP
   DO ii = 1, order
-    ans(:, ii + 1) = ans(:, ii) * x
+    ans(1:nrow, ii + 1) = ans(1:nrow, ii) * x
   END DO
+
 CASE DEFAULT
 
-  IF (basisType0 .EQ. Jacobi) THEN
+#ifdef DEBUG_VER
+
+  IF (basisType0 .EQ. polyopt%Jacobi) THEN
     IF (.NOT. PRESENT(alpha) .OR. .NOT. PRESENT(beta)) THEN
-      CALL Errormsg(&
-        & msg="alpha and beta should be present for basisType=Jacobi", &
-        & file=__FILE__, &
-        & routine="BasisEvalAll_Line2", &
-        & line=__LINE__, &
-        & unitno=stderr)
+      CALL Errormsg( &
+        msg="alpha and beta should be present for basisType=Jacobi", &
+        routine="BasisEvalAll_Line2", &
+        file=__FILE__, line=__LINE__, unitno=stderr)
       RETURN
     END IF
   END IF
 
-  IF (basisType0 .EQ. Ultraspherical) THEN
+  IF (basisType0 .EQ. polyopt%Ultraspherical) THEN
     IF (.NOT. PRESENT(lambda)) THEN
-      CALL Errormsg(&
-        & msg="lambda should be present for basisType=Ultraspherical", &
-        & file=__FILE__, &
-        & routine="BasisEvalAll_Line2", &
-        & line=__LINE__, &
-        & unitno=stderr)
+      CALL Errormsg( &
+        msg="lambda should be present for basisType=Ultraspherical", &
+        routine="BasisEvalAll_Line2", &
+        file=__FILE__, line=__LINE__, unitno=stderr)
       RETURN
     END IF
   END IF
 
-  ans = EvalAllOrthopol(&
-    & n=order, &
-    & x=x, &
-    & orthopol=basisType0, &
-    & alpha=alpha, &
-    & beta=beta, &
-    & lambda=lambda)
+#endif
+
+  CALL EvalAllOrthopol_(n=order, x=x, orthopol=basisType0, alpha=alpha, &
+                        beta=beta, lambda=lambda, ans=ans, nrow=nrow, &
+                        ncol=ncol)
 END SELECT
 
-END PROCEDURE BasisEvalAll_Line2
+END PROCEDURE BasisEvalAll_Line2_
 
 !----------------------------------------------------------------------------
 !                                                  BasisGradientEvalAll_Line
 !----------------------------------------------------------------------------
-
-MODULE PROCEDURE BasisGradientEvalAll_Line2
-INTEGER(I4B) :: ii, basisType0
-TYPE(String) :: astr
-astr = UpperCase(refLine)
-
-IF (astr%chars() .EQ. "UNIT") THEN
-  CALL Errormsg(&
-    & msg="refLine should be BIUNIT", &
-    & file=__FILE__, &
-    & routine="BasisGradientEvalAll_Line2", &
-    & line=__LINE__, &
-    & unitno=stderr)
-  RETURN
-END IF
-
-basisType0 = input(default=Monomial, option=basisType)
-SELECT CASE (basisType0)
-CASE (Monomial)
-  ans(:, 1) = 0.0_DFP
-  DO ii = 1, order
-    ans(:, ii + 1) = REAL(ii, dfp) * x**(ii - 1)
-  END DO
-CASE DEFAULT
-
-  IF (basisType0 .EQ. Jacobi) THEN
-    IF (.NOT. PRESENT(alpha) .OR. .NOT. PRESENT(beta)) THEN
-      CALL Errormsg(&
-        & msg="alpha and beta should be present for basisType=Jacobi", &
-        & file=__FILE__, &
-        & routine="BasisGradientEvalAll_Line2", &
-        & line=__LINE__, &
-        & unitno=stderr)
-      RETURN
-    END IF
-  END IF
-
-  IF (basisType0 .EQ. Ultraspherical) THEN
-    IF (.NOT. PRESENT(lambda)) THEN
-      CALL Errormsg(&
-        & msg="lambda should be present for basisType=Ultraspherical", &
-        & file=__FILE__, &
-        & routine="BasisGradientEvalAll_Line2", &
-        & line=__LINE__, &
-        & unitno=stderr)
-      RETURN
-    END IF
-  END IF
-
-  ans = GradientEvalAllOrthopol(&
-    & n=order, &
-    & x=x, &
-    & orthopol=basisType0, &
-    & alpha=alpha, &
-    & beta=beta, &
-    & lambda=lambda)
-END SELECT
-
-END PROCEDURE BasisGradientEvalAll_Line2
 
 !----------------------------------------------------------------------------
 !                                                   QuadraturePoint_Line
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE QuadraturePoint_Line1
-INTEGER(I4B) :: nips(1)
+INTEGER(I4B) :: nips(1), nrow, ncol
+
 nips(1) = QuadratureNumber_Line(order=order, quadType=quadType)
-ans = QuadraturePoint_Line3(nips=nips, quadType=quadType, &
-& layout=layout, xij=xij, alpha=alpha, beta=beta, lambda=lambda)
+
+IF (PRESENT(xij)) THEN
+  nrow = SIZE(xij, 1)
+ELSE
+  nrow = 1
+END IF
+
+nrow = nrow + 1
+ncol = nips(1)
+
+ALLOCATE (ans(nrow, ncol))
+
+CALL QuadraturePoint_Line1_(nips=nips, quadType=quadType, layout=layout, &
+         xij=xij, alpha=alpha, beta=beta, lambda=lambda, ans=ans, nrow=nrow, &
+                            ncol=ncol)
+
 END PROCEDURE QuadraturePoint_Line1
 
 !----------------------------------------------------------------------------
@@ -974,63 +1343,113 @@ END PROCEDURE QuadraturePoint_Line1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE QuadraturePoint_Line2
-ans = QuadraturePoint_Line1(&
-    & order=order, &
-    & quadType=quadType, &
-    & layout=layout, &
-    & xij=RESHAPE(xij, [1, 2]), &
-    & alpha=alpha, &
-    & beta=beta, &
-    & lambda=lambda)
+INTEGER(I4B) :: nips(1), nrow, ncol
+REAL(DFP) :: x12(1, 2)
+
+nips(1) = QuadratureNumber_Line(order=order, quadType=quadType)
+nrow = 2
+ncol = nips(1)
+
+ALLOCATE (ans(nrow, ncol))
+
+x12(1, 1:2) = xij(1:2)
+
+CALL QuadraturePoint_Line1_(nips=nips, quadType=quadType, layout=layout, &
+         xij=x12, alpha=alpha, beta=beta, lambda=lambda, ans=ans, nrow=nrow, &
+                            ncol=ncol)
 END PROCEDURE QuadraturePoint_Line2
-
-!----------------------------------------------------------------------------
-!                                                        QuadraturePoint_Line
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE QuadraturePoint_Line4
-ans = QuadraturePoint_Line3(&
-    & nips=nips, &
-    & quadType=quadType, &
-    & layout=layout, &
-    & xij=RESHAPE(xij, [1, 2]), &
-    & alpha=alpha, &
-    & beta=beta, &
-    & lambda=lambda)
-END PROCEDURE QuadraturePoint_Line4
 
 !----------------------------------------------------------------------------
 !                                                       QuadraturePoint_Line
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE QuadraturePoint_Line3
-CHARACTER(20) :: astr
-INTEGER(I4B) :: np, nsd, ii
-REAL(DFP) :: pt(nips(1)), wt(nips(1))
-REAL(DFP) :: t1
+INTEGER(I4B) :: nrow, ncol
+
+IF (PRESENT(xij)) THEN
+  nrow = SIZE(xij, 1)
+ELSE
+  nrow = 1
+END IF
+
+nrow = nrow + 1
+ncol = nips(1)
+
+ALLOCATE (ans(nrow, ncol))
+
+CALL QuadraturePoint_Line1_(nips=nips, quadType=quadType, layout=layout, &
+         xij=xij, alpha=alpha, beta=beta, lambda=lambda, ans=ans, nrow=nrow, &
+                            ncol=ncol)
+
+END PROCEDURE QuadraturePoint_Line3
+
+!----------------------------------------------------------------------------
+!                                                        QuadraturePoint_Line
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE QuadraturePoint_Line4
+REAL(DFP) :: x12(1, 2)
+INTEGER(I4B) :: nrow, ncol
+
+nrow = 2
+ncol = nips(1)
+
+ALLOCATE (ans(nrow, ncol))
+
+x12(1, 1:2) = xij(1:2)
+
+CALL QuadraturePoint_Line1_(nips=nips, quadType=quadType, layout=layout, &
+         xij=x12, alpha=alpha, beta=beta, lambda=lambda, ans=ans, nrow=nrow, &
+                            ncol=ncol)
+
+END PROCEDURE QuadraturePoint_Line4
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE QuadraturePoint_Line1_
+#ifdef DEBUG_VER
+LOGICAL(LGT) :: isok
+#endif
+
+INTEGER(I4B) :: np, nsd, ii, jj
+REAL(DFP) :: areal
 LOGICAL(LGT) :: changeLayout
 
-IF (ANY([GaussJacobi, GaussJacobiLobatto] .EQ. quadType)) THEN
-  IF (.NOT. PRESENT(alpha) .OR. .NOT. PRESENT(beta)) THEN
-    CALL ErrorMsg(&
-      & msg="alpha and beta should be present for quadType=GaussJacobi", &
-      & file=__FILE__, &
-      & routine="QuadraturePoint_Line3", &
-      & line=__LINE__, &
-      & unitno=stderr)
+nrow = 0
+ncol = 0
+
+#ifdef DEBUG_VER
+
+SELECT CASE (quadType)
+CASE (ipopt%GaussJacobi, ipopt%GaussJacobiLobatto, &
+      ipopt%GaussJacobiRadauLeft, ipopt%GaussJacobiRadauRight)
+
+  isok = PRESENT(alpha) .AND. PRESENT(beta)
+
+  IF (.NOT. isok) THEN
+    CALL ErrorMsg(routine="QuadraturePoint_Line3", &
+      msg="alpha and beta should be present for quadType=ipopt%GaussJacobi", &
+                  file=__FILE__, line=__LINE__, unitno=stderr)
+    RETURN
   END IF
-  RETURN
-ELSEIF (ANY([GaussJacobi, GaussJacobiLobatto] .EQ. quadType)) THEN
-  IF (.NOT. PRESENT(lambda)) THEN
-    CALL ErrorMsg(&
-      & msg="lambda should be present for quadType=GaussUltraspherical", &
-      & file=__FILE__, &
-      & routine="QuadraturePoint_Line3", &
-      & line=__LINE__, &
-      & unitno=stderr)
+
+CASE (ipopt%GaussUltraSpherical, ipopt%GaussUltraSphericalLobatto, &
+      ipopt%GaussUltraSphericalRadauLeft, ipopt%GaussUltraSphericalRadauRight)
+
+  isok = PRESENT(lambda)
+
+  IF (.NOT. isok) THEN
+    CALL ErrorMsg(routine="QuadraturePoint_Line3", &
+      msg="lambda should be present for quadType=ipopt%GaussUltraspherical", &
+                  file=__FILE__, line=__LINE__, unitno=stderr)
+    RETURN
   END IF
-  RETURN
-END IF
+
+END SELECT
+
+#endif
 
 IF (PRESENT(xij)) THEN
   nsd = SIZE(xij, 1)
@@ -1038,135 +1457,104 @@ ELSE
   nsd = 1
 END IF
 
-astr = TRIM(UpperCase(layout))
 np = nips(1)
-CALL Reallocate(ans, nsd + 1_I4B, np)
+nrow = nsd + 1
+ncol = nips(1)
+
 changeLayout = .FALSE.
+IF (layout(1:1) .EQ. "V") changeLayout = .TRUE.
 
 SELECT CASE (quadType)
 
-CASE (GaussLegendre)
-  CALL LegendreQuadrature(n=np, pt=pt, wt=wt, quadType=Gauss)
+CASE (ipopt%GaussLegendre)
+  CALL LegendreQuadrature(n=np, pt=ans(1, 1:ncol), wt=ans(nrow, 1:ncol), &
+                          quadType=ipopt%Gauss)
 
-CASE (GaussLegendreRadauLeft)
-  CALL LegendreQuadrature(n=np, pt=pt, wt=wt, quadType=GaussRadauLeft)
+CASE (ipopt%GaussLegendreRadauLeft)
+  CALL LegendreQuadrature(n=np, pt=ans(1, 1:ncol), wt=ans(nrow, 1:ncol), &
+                          quadType=ipopt%GaussRadauLeft)
 
-CASE (GaussLegendreRadauRight)
-  CALL LegendreQuadrature(n=np, pt=pt, wt=wt, quadType=GaussRadauRight)
+CASE (ipopt%GaussLegendreRadauRight)
+  CALL LegendreQuadrature(n=np, pt=ans(1, 1:ncol), wt=ans(nrow, 1:ncol), &
+                          quadType=ipopt%GaussRadauRight)
 
-CASE (GaussLegendreLobatto)
-  CALL LegendreQuadrature(n=np, pt=pt, wt=wt, quadType=GaussLobatto)
-  IF (layout .EQ. "VEFC") changeLayout = .TRUE.
+CASE (ipopt%GaussLegendreLobatto)
+  CALL LegendreQuadrature(n=np, pt=ans(1, 1:ncol), wt=ans(nrow, 1:ncol), &
+                          quadType=ipopt%GaussLobatto)
 
-CASE (GaussChebyshev)
-  CALL Chebyshev1Quadrature(n=np, pt=pt, wt=wt, quadType=Gauss)
+CASE (ipopt%GaussChebyshev)
+  CALL Chebyshev1Quadrature(n=np, pt=ans(1, 1:ncol), wt=ans(nrow, 1:ncol), &
+                            quadType=ipopt%Gauss)
 
-CASE (GaussChebyshevRadauLeft)
-  CALL Chebyshev1Quadrature(n=np, pt=pt, wt=wt, quadType=GaussRadauLeft)
+CASE (ipopt%GaussChebyshevRadauLeft)
+  CALL Chebyshev1Quadrature(n=np, pt=ans(1, 1:ncol), wt=ans(nrow, 1:ncol), &
+                            quadType=ipopt%GaussRadauLeft)
 
-CASE (GaussChebyshevRadauRight)
-  CALL Chebyshev1Quadrature(n=np, pt=pt, wt=wt, quadType=GaussRadauRight)
+CASE (ipopt%GaussChebyshevRadauRight)
+  CALL Chebyshev1Quadrature(n=np, pt=ans(1, 1:ncol), wt=ans(nrow, 1:ncol), &
+                            quadType=ipopt%GaussRadauRight)
 
-CASE (GaussChebyshevLobatto)
-  CALL Chebyshev1Quadrature(n=np, pt=pt, wt=wt, quadType=GaussLobatto)
-  IF (layout .EQ. "VEFC") changeLayout = .TRUE.
+CASE (ipopt%GaussChebyshevLobatto)
+  CALL Chebyshev1Quadrature(n=np, pt=ans(1, 1:ncol), wt=ans(nrow, 1:ncol), &
+                            quadType=ipopt%GaussLobatto)
 
-CASE (GaussJacobi)
-  CALL JacobiQuadrature( &
-    & n=np, &
-    & pt=pt, &
-    & wt=wt, &
-    & quadType=Gauss, &
-    & alpha=alpha, &
-    & beta=beta)
+CASE (ipopt%GaussJacobi)
+  CALL JacobiQuadrature(n=np, pt=ans(1, 1:ncol), wt=ans(nrow, 1:ncol), &
+                        quadType=ipopt%Gauss, alpha=alpha, beta=beta)
 
-CASE (GaussJacobiRadauLeft)
-  CALL JacobiQuadrature( &
-    & n=np, &
-    & pt=pt, &
-    & wt=wt, &
-    & quadType=GaussRadauLeft, &
-    & alpha=alpha, &
-    & beta=beta)
+CASE (ipopt%GaussJacobiRadauLeft)
+  CALL JacobiQuadrature(n=np, pt=ans(1, 1:ncol), wt=ans(nrow, 1:ncol), &
+                        quadType=ipopt%GaussRadauLeft, alpha=alpha, beta=beta)
 
-CASE (GaussJacobiRadauRight)
-  CALL JacobiQuadrature( &
-    & n=np, &
-    & pt=pt, &
-    & wt=wt, &
-    & quadType=GaussRadauRight, &
-    & alpha=alpha, &
-    & beta=beta)
+CASE (ipopt%GaussJacobiRadauRight)
+  CALL JacobiQuadrature(n=np, pt=ans(1, 1:ncol), wt=ans(nrow, 1:ncol), &
+                       quadType=ipopt%GaussRadauRight, alpha=alpha, beta=beta)
 
-CASE (GaussJacobiLobatto)
-  CALL JacobiQuadrature( &
-    & n=np, &
-    & pt=pt, &
-    & wt=wt, &
-    & quadType=GaussLobatto, &
-    & alpha=alpha, &
-    & beta=beta)
-  IF (layout .EQ. "VEFC") changeLayout = .TRUE.
+CASE (ipopt%GaussJacobiLobatto)
+  CALL JacobiQuadrature(n=np, pt=ans(1, 1:ncol), wt=ans(nrow, 1:ncol), &
+                        quadType=ipopt%GaussLobatto, alpha=alpha, beta=beta)
 
-CASE (GaussUltraspherical)
-  CALL UltrasphericalQuadrature( &
-    & n=np, &
-    & pt=pt, &
-    & wt=wt, &
-    & quadType=Gauss, &
-    & lambda=lambda)
+CASE (ipopt%GaussUltraspherical)
+CALL UltrasphericalQuadrature(n=np, pt=ans(1, 1:ncol), wt=ans(nrow, 1:ncol), &
+                                quadType=ipopt%Gauss, lambda=lambda)
 
-CASE (GaussUltrasphericalRadauLeft)
-  CALL UltrasphericalQuadrature( &
-    & n=np, &
-    & pt=pt, &
-    & wt=wt, &
-    & quadType=GaussRadauLeft, &
-    & lambda=lambda)
+CASE (ipopt%GaussUltrasphericalRadauLeft)
+CALL UltrasphericalQuadrature(n=np, pt=ans(1, 1:ncol), wt=ans(nrow, 1:ncol), &
+                                quadType=ipopt%GaussRadauLeft, lambda=lambda)
 
-CASE (GaussUltrasphericalRadauRight)
-  CALL UltrasphericalQuadrature( &
-    & n=np, &
-    & pt=pt, &
-    & wt=wt, &
-    & quadType=GaussRadauRight, &
-    & lambda=lambda)
+CASE (ipopt%GaussUltrasphericalRadauRight)
+CALL UltrasphericalQuadrature(n=np, pt=ans(1, 1:ncol), wt=ans(nrow, 1:ncol), &
+                                quadType=ipopt%GaussRadauRight, lambda=lambda)
 
-CASE (GaussUltrasphericalLobatto)
-  CALL UltrasphericalQuadrature( &
-    & n=np, &
-    & pt=pt, &
-    & wt=wt, &
-    & quadType=GaussLobatto, &
-    & lambda=lambda)
-  IF (layout .EQ. "VEFC") changeLayout = .TRUE.
+CASE (ipopt%GaussUltrasphericalLobatto)
+CALL UltrasphericalQuadrature(n=np, pt=ans(1, 1:ncol), wt=ans(nrow, 1:ncol), &
+                                quadType=ipopt%GaussLobatto, lambda=lambda)
 
 CASE DEFAULT
-  CALL ErrorMsg(&
-    & msg="Unknown iptype", &
-    & file=__FILE__, &
-    & routine="QuadraturePoint_Line3", &
-    & line=__LINE__, &
-    & unitno=stderr)
+  CALL ErrorMsg(msg="Unknown iptype", routine="QuadraturePoint_Line3", &
+                file=__FILE__, line=__LINE__, unitno=stderr)
   RETURN
 END SELECT
 
 IF (changeLayout) THEN
-  CALL ToVEFC_Line(pt)
-  CALL ToVEFC_Line(wt)
+  CALL ToVEFC_Line(ans(1, 1:ncol))
+  CALL ToVEFC_Line(ans(nrow, 1:ncol))
 END IF
 
 IF (PRESENT(xij)) THEN
-  ans(1:nsd, :) = FromBiunitLine2Segment( &
-    & xin=pt, &
-    & x1=xij(:, 1), &
-    & x2=xij(:, 2))
-  ans(nsd + 1, :) = wt * NORM2(xij(:, 2) - xij(:, 1)) / 2.0_DFP
-ELSE
-  ans(1, :) = pt
-  ans(nsd + 1, :) = wt
+  CALL FromBiunitLine2Segment_(xin=ans(1, 1:ncol), x1=xij(:, 1), &
+                               x2=xij(:, 2), ans=ans, nrow=ii, ncol=jj)
+
+  areal = NORM2(xij(:, 2) - xij(:, 1)) / 2.0_DFP
+
+  DO CONCURRENT(ii=1:ncol)
+    ans(nrow, ii) = ans(nrow, ii) * areal
+  END DO
+
+  RETURN
 END IF
-END PROCEDURE QuadraturePoint_Line3
+
+END PROCEDURE QuadraturePoint_Line1_
 
 !----------------------------------------------------------------------------
 !                                              LagrangeGradientEvalAll_Line
@@ -1177,7 +1565,7 @@ LOGICAL(LGT) :: firstCall0
 REAL(DFP) :: coeff0(order + 1, order + 1), xx(SIZE(x, 2), order + 1)
 INTEGER(I4B) :: ii, orthopol0
 
-orthopol0 = input(default=Monomial, option=basisType)
+orthopol0 = input(default=polyopt%Monomial, option=basisType)
 firstCall0 = input(default=.TRUE., option=firstCall)
 
 IF (PRESENT(coeff)) THEN
@@ -1203,7 +1591,7 @@ ELSE
 END IF
 
 SELECT CASE (orthopol0)
-CASE (Monomial)
+CASE (polyopt%Monomial)
 
   IF (SIZE(xij, 2) .NE. order + 1) THEN
     CALL Errormsg(&
@@ -1234,168 +1622,347 @@ ans(:, :, 1) = MATMUL(xx, coeff0)
 END PROCEDURE LagrangeGradientEvalAll_Line1
 
 !----------------------------------------------------------------------------
-!                                                        BasisEvalAll_Line
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE LagrangeGradientEvalAll_Line1_
+LOGICAL(LGT) :: firstCall0
+REAL(DFP) :: coeff0(order + 1, order + 1), xx(SIZE(x, 2), order + 1), areal
+INTEGER(I4B) :: ii, orthopol0, indx(2), jj
+
+dim1 = SIZE(x, 2)
+dim2 = SIZE(xij, 2)
+dim3 = 1
+!! ans(SIZE(x, 2), SIZE(xij, 2), 1)
+
+orthopol0 = input(default=polyopt%Monomial, option=basisType)
+firstCall0 = input(default=.TRUE., option=firstCall)
+
+IF (PRESENT(coeff)) THEN
+  IF (firstCall0) THEN
+
+    ! coeff = LagrangeCoeff_Line(&
+    CALL LagrangeCoeff_Line_(order=order, xij=xij, basisType=orthopol0, &
+                           alpha=alpha, beta=beta, lambda=lambda, ans=coeff, &
+                             nrow=indx(1), ncol=indx(2))
+
+  END IF
+
+  coeff0(1:dim2, 1:dim2) = coeff(1:dim2, 1:dim2)
+
+ELSE
+
+  ! coeff0 = LagrangeCoeff_Line(&
+  CALL LagrangeCoeff_Line_(order=order, xij=xij, basisType=orthopol0, &
+                          alpha=alpha, beta=beta, lambda=lambda, ans=coeff0, &
+                           nrow=indx(1), ncol=indx(2))
+END IF
+
+SELECT CASE (orthopol0)
+CASE (polyopt%Monomial)
+
+#ifdef DEBUG_VER
+
+  IF (dim2 .NE. order + 1) THEN
+    CALL Errormsg(msg="size(xij, 2) is not same as order+1", &
+                  routine="LagrangeGradientEvalAll_Line1", &
+                  file=__FILE__, line=__LINE__, unitno=stderr)
+    RETURN
+  END IF
+
+#endif
+
+  DO ii = 0, order
+    indx(1) = MAX(ii - 1_I4B, 0_I4B)
+    areal = REAL(ii, kind=DFP)
+    DO jj = 1, dim1
+      xx(jj, ii + 1) = areal * (x(1, jj)**(indx(1)))
+    END DO
+  END DO
+
+CASE DEFAULT
+
+  ! xx(1:dim1, 1:dim2) = GradientEvalAllOrthopol(n=order, x=x(1, :), &
+  CALL GradientEvalAllOrthopol_(n=order, x=x(1, :), orthopol=orthopol0, &
+          alpha=alpha, beta=beta, lambda=lambda, ans=xx, nrow=dim1, ncol=dim2)
+
+END SELECT
+
+! ans(:, :, 1) = MATMUL(xx, coeff0)
+CALL GEMM(C=ans(1:dim1, 1:dim2, 1), alpha=1.0_DFP, A=xx, B=coeff0)
+
+END PROCEDURE LagrangeGradientEvalAll_Line1_
+
+!----------------------------------------------------------------------------
+!
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE HeirarchicalBasis_Line1
-TYPE(String) :: astr
-astr = UpperCase(refLine)
+INTEGER(I4B) :: nrow, ncol
+CALL HeirarchicalBasis_Line1_(order=order, xij=xij, refLine=refLine, &
+                              ans=ans, nrow=nrow, ncol=ncol)
+END PROCEDURE HeirarchicalBasis_Line1
 
-SELECT CASE (astr%chars())
-CASE ("UNIT")
-  ans = EvalAllOrthopol( &
-    & n=order, &
-    & x=FromUnitLine2BiUnitLine(xin=xij(1, :)), &
-    & orthopol=Lobatto)
-CASE ("BIUNIT")
-  ans = EvalAllOrthopol( &
-    & n=order, &
-    & x=xij(1, :), &
-    & orthopol=Lobatto)
+!----------------------------------------------------------------------------
+!                                                        BasisEvalAll_Line
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE HeirarchicalBasis_Line1_
+INTEGER(I4B), PARAMETER :: orient = 1
+CALL HeirarchicalBasis_Line2_(order=order, xij=xij, refLine=refLine, &
+                              orient=orient, ans=ans, nrow=nrow, ncol=ncol)
+END PROCEDURE HeirarchicalBasis_Line1_
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE HeirarchicalBasis_Line2_
+CHARACTER(1) :: astr
+REAL(DFP) :: temp(SIZE(xij, 2)), o1
+INTEGER(I4B) :: ii, k
+
+o1 = REAL(orient, kind=DFP)
+astr = UpperCase(refLine(1:1))
+
+! nrow = SIZE(xij, 2)
+! ncol = order + 1
+
+SELECT CASE (astr)
+CASE ("U")
+  CALL FromUnitLine2BiUnitLine_(xin=xij(1, :), ans=temp, tsize=nrow)
+  CALL EvalAllOrthopol_(n=order, x=temp, orthopol=polyopt%Lobatto, ans=ans, &
+                        nrow=nrow, ncol=ncol)
+
+CASE ("B")
+  CALL EvalAllOrthopol_(n=order, x=xij(1, :), orthopol=polyopt%Lobatto, &
+                        ans=ans, nrow=nrow, ncol=ncol)
+
 CASE DEFAULT
-  ans = 0.0_DFP
-  CALL Errormsg(&
-    & msg="No case found for refline.", &
-    & file=__FILE__, &
-    & routine="HeirarchicalBasis_Line1", &
-    & line=__LINE__, &
-    & unitno=stderr)
-  RETURN
+  nrow = 0
+  ncol = 0
 END SELECT
 
-END PROCEDURE HeirarchicalBasis_Line1
+DO CONCURRENT(k=2:order, ii=1:nrow)
+  ans(ii, k + 1) = (o1**k) * ans(ii, k + 1)
+END DO
+
+END PROCEDURE HeirarchicalBasis_Line2_
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE HeirarchicalGradientBasis_Line1
+INTEGER(I4B) :: dim1, dim2, dim3
+CALL HeirarchicalGradientBasis_Line1_(order=order, xij=xij, refLine=refLine, &
+                                     ans=ans, dim1=dim1, dim2=dim2, dim3=dim3)
+END PROCEDURE HeirarchicalGradientBasis_Line1
 
 !----------------------------------------------------------------------------
 !                                            HeirarchicalGradientBasis_Line
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE HeirarchicalGradientBasis_Line1
-TYPE(String) :: astr
-astr = UpperCase(refLine)
+MODULE PROCEDURE HeirarchicalGradientBasis_Line1_
+INTEGER(I4B), PARAMETER :: orient = 1
+CALL HeirarchicalGradientBasis_Line2_(order=order, xij=xij, refLine=refLine, &
+                      orient=orient, ans=ans, dim1=dim1, dim2=dim2, dim3=dim3)
+END PROCEDURE HeirarchicalGradientBasis_Line1_
 
-SELECT CASE (astr%chars())
-CASE ("UNIT")
-  ans(:, :, 1) = GradientEvalAllOrthopol( &
-    & n=order, &
-    & x=FromUnitLine2BiUnitLine(xin=xij(1, :)), &
-    & orthopol=Lobatto)
-  ans = ans * 2.0_DFP
-CASE ("BIUNIT")
-  ans(:, :, 1) = GradientEvalAllOrthopol( &
-    & n=order, &
-    & x=xij(1, :), &
-    & orthopol=Lobatto)
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE HeirarchicalGradientBasis_Line2
+INTEGER(I4B) :: dim1, dim2, dim3
+
+dim1 = SIZE(xij, 2)
+dim2 = order + 1
+dim3 = 1
+
+ALLOCATE (ans(dim1, dim2, dim3))
+
+CALL HeirarchicalGradientBasis_Line2_(order=order, xij=xij, refLine=refLine, &
+                      orient=orient, ans=ans, dim1=dim1, dim2=dim2, dim3=dim3)
+
+END PROCEDURE HeirarchicalGradientBasis_Line2
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE HeirarchicalGradientBasis_Line2_
+CHARACTER(1) :: astr
+REAL(DFP) :: temp(SIZE(xij, 2)), o1
+INTEGER(I4B) :: ii, jj, k
+
+o1 = REAL(orient, kind=DFP)
+astr = UpperCase(refLine(1:1))
+
+dim3 = 1
+
+SELECT CASE (astr)
+
+CASE ("U")
+  CALL FromUnitLine2BiUnitLine_(xin=xij(1, :), ans=temp, tsize=dim1)
+  CALL GradientEvalAllOrthopol_(n=order, x=temp, orthopol=polyopt%Lobatto, &
+                                ans=ans(:, :, 1), nrow=dim1, ncol=dim2)
+
+  DO CONCURRENT(ii=1:dim1, jj=1:dim2)
+    ans(ii, jj, 1) = ans(ii, jj, 1) * 2.0_DFP
+  END DO
+
+CASE ("B")
+  CALL GradientEvalAllOrthopol_(n=order, x=xij(1, :), &
+             orthopol=polyopt%Lobatto, ans=ans(:, :, 1), nrow=dim1, ncol=dim2)
+
 CASE DEFAULT
-  ans = 0.0_DFP
-  CALL Errormsg(&
-    & msg="No case found for refline.", &
-    & file=__FILE__, &
-    & routine="HeirarchicalGradientBasis_Line1", &
-    & line=__LINE__, &
-    & unitno=stderr)
+  dim1 = 0; dim2 = 0; dim3 = 0
   RETURN
+
 END SELECT
 
-END PROCEDURE HeirarchicalGradientBasis_Line1
+DO CONCURRENT(k=2:order, ii=1:dim1)
+  ans(ii, k + 1, 1) = (o1**(k - 1)) * ans(ii, k + 1, 1)
+END DO
+
+END PROCEDURE HeirarchicalGradientBasis_Line2_
 
 !----------------------------------------------------------------------------
 !                                                        OrthogonalBasis_Line
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE OrthogonalBasis_Line1
-INTEGER(I4B) :: ii
-TYPE(String) :: astr
+INTEGER(I4B) :: nrow, ncol
+CALL OrthogonalBasis_Line1_(order=order, xij=xij, refline=refline, &
+                         basisType=basisType, ans=ans, nrow=nrow, ncol=ncol, &
+                            alpha=alpha, beta=beta, lambda=lambda)
+END PROCEDURE OrthogonalBasis_Line1
 
-ans = 0.0_DFP
-astr = UpperCase(refLine)
+!----------------------------------------------------------------------------
+!                                                     OrthogonalBasis_Line1_
+!----------------------------------------------------------------------------
 
-IF (basisType .EQ. Jacobi) THEN
-  IF (.NOT. PRESENT(alpha) .OR. .NOT. PRESENT(beta)) THEN
-    CALL Errormsg(&
-      & msg="alpha and beta should be present for basisType=Jacobi", &
-      & file=__FILE__, &
-      & routine="BasisEvalAll_Line2", &
-      & line=__LINE__, &
-      & unitno=stderr)
+MODULE PROCEDURE OrthogonalBasis_Line1_
+LOGICAL(LGT) :: isok, abool
+#ifdef DEBUG_VER
+#endif
+
+CHARACTER(1) :: astr
+REAL(DFP) :: x(SIZE(xij, 2))
+
+nrow = SIZE(xij, 2)
+ncol = order + 1
+
+#ifdef DEBUG_VER
+
+ans(1:nrow, 1:ncol) = 0.0_DFP
+
+isok = basisType .EQ. polyopt%Jacobi
+
+IF (isok) THEN
+  abool = (.NOT. PRESENT(alpha)) .OR. (.NOT. PRESENT(beta))
+
+  IF (abool) THEN
+    CALL Errormsg(routine="OrthogonalBasis_Line1()", &
+                msg="alpha and beta should be present for basisType=Jacobi", &
+                  file=__FILE__, line=__LINE__, unitno=stderr)
     RETURN
   END IF
+
 END IF
 
-IF (basisType .EQ. Ultraspherical) THEN
-  IF (.NOT. PRESENT(lambda)) THEN
-    CALL Errormsg(&
-      & msg="lambda should be present for basisType=Ultraspherical", &
-      & file=__FILE__, &
-      & routine="BasisEvalAll_Line2", &
-      & line=__LINE__, &
-      & unitno=stderr)
+isok = basisType .EQ. polyopt%Ultraspherical
+IF (isok) THEN
+
+  abool = .NOT. PRESENT(lambda)
+
+  IF (abool) THEN
+    CALL Errormsg(routine="OrthogonalBasis_Line1()", file=__FILE__, &
+                msg="lambda should be present for basisType=Ultraspherical", &
+                  line=__LINE__, unitno=stderr)
     RETURN
   END IF
+
 END IF
 
-SELECT CASE (astr%chars())
-CASE ("UNIT")
-  ans = EvalAllOrthopol(&
-    & n=order, &
-    & x=FromUnitLine2BiUnitLine(xin=xij(1, :)), &
-    & orthopol=basisType, &
-    & alpha=alpha, &
-    & beta=beta, &
-    & lambda=lambda)
+#endif
 
-CASE ("BIUNIT")
-  ans = EvalAllOrthopol(&
-    & n=order, &
-    & x=xij(1, :), &
-    & orthopol=basisType, &
-    & alpha=alpha, &
-    & beta=beta, &
-    & lambda=lambda)
+astr = UpperCase(refLine(1:1))
+
+SELECT CASE (astr)
+CASE ("U")
+  CALL FromUnitLine2BiUnitLine_(xin=xij(1, :), ans=x, tsize=nrow)
+  CALL EvalAllOrthopol_(n=order, x=x, orthopol=basisType, alpha=alpha, &
+                      beta=beta, lambda=lambda, ans=ans, nrow=nrow, ncol=ncol)
+
+CASE ("B")
+  CALL EvalAllOrthopol_(n=order, x=xij(1, :), orthopol=basisType, &
+                        alpha=alpha, beta=beta, lambda=lambda, ans=ans, &
+                        nrow=nrow, ncol=ncol)
 
 CASE DEFAULT
-  ans = 0.0_DFP
-  CALL Errormsg(&
-    & msg="No case found for refLine.", &
-    & file=__FILE__, &
-    & routine="OrthogonalBasis_Line1()", &
-    & line=__LINE__, &
-    & unitno=stderr)
+
+  ans(1:nrow, 1:ncol) = 0.0_DFP
+  CALL Errormsg(msg="No case found for refLine.", &
+                routine="OrthogonalBasis_Line1()", &
+                file=__FILE__, line=__LINE__, unitno=stderr)
   RETURN
+
 END SELECT
 
-END PROCEDURE OrthogonalBasis_Line1
+END PROCEDURE OrthogonalBasis_Line1_
 
 !----------------------------------------------------------------------------
 !                                            OrthogonalBasisGradient_Line1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE OrthogonalBasisGradient_Line1
-TYPE(String) :: astr
-astr = UpperCase(refLine)
-
-SELECT CASE (astr%chars())
-CASE ("UNIT")
-  ans(:, :, 1) = GradientEvalAllOrthopol( &
-    & n=order, &
-    & x=FromUnitLine2BiUnitLine(xin=xij(1, :)), &
-    & orthopol=basisType)
-  ans = ans * 2.0_DFP
-CASE ("BIUNIT")
-  ans(:, :, 1) = GradientEvalAllOrthopol( &
-    & n=order, &
-    & x=xij(1, :), &
-    & orthopol=basisType)
-CASE DEFAULT
-  ans = 0.0_DFP
-  CALL Errormsg(&
-    & msg="No case found for refline.", &
-    & file=__FILE__, &
-    & routine=" OrthogonalBasisGradient_Line1", &
-    & line=__LINE__, &
-    & unitno=stderr)
-  RETURN
-END SELECT
+INTEGER(I4B) :: dim1, dim2, dim3
+CALL OrthogonalBasisGradient_Line1_(order=order, xij=xij, refline=refline, &
+              basisType=basisType, ans=ans, dim1=dim1, dim2=dim2, dim3=dim3, &
+                                    alpha=alpha, beta=beta, lambda=lambda)
 END PROCEDURE OrthogonalBasisGradient_Line1
+
+!----------------------------------------------------------------------------
+!                                                OrthogonalBasisGradient_Line
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE OrthogonalBasisGradient_Line1_
+CHARACTER(1) :: astr
+REAL(DFP) :: x(SIZE(xij, 2))
+INTEGER(I4B) :: ii, jj
+
+astr = UpperCase(refline(1:1))
+dim1 = SIZE(xij, 2)
+dim2 = order + 1
+dim3 = 1
+
+SELECT CASE (astr)
+CASE ("U")
+
+  CALL FromUnitLine2BiUnitLine_(xin=xij(1, :), ans=x, tsize=dim1)
+  CALL GradientEvalAllOrthopol_(n=order, x=x, orthopol=basisType, &
+                                ans=ans(:, :, 1), nrow=dim1, ncol=dim2)
+
+  DO CONCURRENT(ii=1:dim1, jj=1:dim2)
+    ans(ii, jj, 1) = ans(ii, jj, 1) * 2.0_DFP
+  END DO
+
+CASE ("B")
+  CALL GradientEvalAllOrthopol_(n=order, x=xij(1, :), orthopol=basisType, &
+                                ans=ans(:, :, 1), nrow=dim1, ncol=dim2)
+
+CASE DEFAULT
+
+  ans(1:dim1, 1:dim2, 1:dim3) = 0.0_DFP
+  CALL Errormsg(msg="No case found for refline.", &
+                routine=" OrthogonalBasisGradient_Line1_", &
+                file=__FILE__, line=__LINE__, unitno=stderr)
+  RETURN
+
+END SELECT
+END PROCEDURE OrthogonalBasisGradient_Line1_
 
 !----------------------------------------------------------------------------
 !
