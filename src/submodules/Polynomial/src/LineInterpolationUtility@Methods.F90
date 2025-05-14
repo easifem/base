@@ -478,7 +478,8 @@ CONTAINS
 SUBROUTINE handle_vefc
   REAL(DFP) :: t1
 
-  IF (layout(1:2) .EQ. "VE") THEN
+  !! layout VEFC
+  IF (layout(1:1) .EQ. "V") THEN
     t1 = temp(order + 1)
     IF (order .GE. 2) THEN
       temp(3:order + 1) = temp(2:order)
@@ -491,7 +492,8 @@ END SUBROUTINE handle_vefc
 SUBROUTINE handle_increasing
   INTEGER(I4B) :: ii
 
-  IF (layout(1:2) .EQ. "IN") THEN
+  !! layout INCREASING
+  IF (layout(1:1) .EQ. "I") THEN
     DO ii = 1, nrow
       CALL HeapSort(ans(ii, :))
     END DO
