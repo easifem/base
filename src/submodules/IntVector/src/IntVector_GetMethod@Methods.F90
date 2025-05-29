@@ -171,6 +171,11 @@ END PROCEDURE intVec_get_9d
 MODULE PROCEDURE intVec_get_10a
 #include "./include/intvec_get_10.inc"
 END PROCEDURE intVec_get_10a
+
+!----------------------------------------------------------------------------
+!                                                                        get
+!----------------------------------------------------------------------------
+
 MODULE PROCEDURE intVec_get_10b
 #include "./include/intvec_get_10.inc"
 END PROCEDURE intVec_get_10b
@@ -222,12 +227,26 @@ END PROCEDURE intVec_get_12d
 MODULE PROCEDURE intVec_get_13a
 #include "./include/intvec_get_13.inc"
 END PROCEDURE intVec_get_13a
+
+
+!----------------------------------------------------------------------------
+!                                                                        get
+!----------------------------------------------------------------------------
 MODULE PROCEDURE intVec_get_13b
 #include "./include/intvec_get_13.inc"
 END PROCEDURE intVec_get_13b
+
+!----------------------------------------------------------------------------
+!                                                                        get
+!----------------------------------------------------------------------------
 MODULE PROCEDURE intVec_get_13c
 #include "./include/intvec_get_13.inc"
 END PROCEDURE intVec_get_13c
+
+!----------------------------------------------------------------------------
+!                                                                        get
+!----------------------------------------------------------------------------
+!
 MODULE PROCEDURE intVec_get_13d
 #include "./include/intvec_get_13.inc"
 END PROCEDURE intVec_get_13d
@@ -247,6 +266,14 @@ END PROCEDURE intVec_getPointer_1
 MODULE PROCEDURE intVec_getPointer_2
 val => obj%val
 END PROCEDURE intVec_getPointer_2
+
+!----------------------------------------------------------------------------
+!                                                                 getPointer
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE intVec_getPointer_3
+val => obj%val
+END PROCEDURE intVec_getPointer_3
 
 !----------------------------------------------------------------------------
 !                                                                     IndexOf
