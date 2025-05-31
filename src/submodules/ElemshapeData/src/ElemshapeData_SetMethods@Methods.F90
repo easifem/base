@@ -49,7 +49,10 @@ END PROCEDURE stsd_SetThickness
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE elemsd_SetBarycentricCoord
-obj%coord(1:obj%nsd, 1:obj%nips) = MATMUL(val, N)
+INTEGER(I4B) :: nns
+nns = SIZE(N, 1)
+obj%coord(1:obj%nsd, 1:obj%nips) = MATMUL(val(1:obj%nsd, 1:nns), &
+                                          N(1:nns, 1:obj%nips))
 END PROCEDURE elemsd_SetBarycentricCoord
 
 !----------------------------------------------------------------------------
@@ -57,6 +60,8 @@ END PROCEDURE elemsd_SetBarycentricCoord
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE stsd_SetBarycentricCoord
+! TODO: Improve this function by removing the temporary variable 
+! It is better to store a temporary variable in obj itself
 CALL SetBarycentricCoord(obj=obj, val=MATMUL(val, T), N=N)
 END PROCEDURE stsd_SetBarycentricCoord
 
@@ -136,7 +141,8 @@ END PROCEDURE elemsd_SetdNdXt
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE elemsd_SetJacobian
-obj%jacobian(1:obj%nsd, 1:obj%xidim, 1:obj%nips) = MATMUL(val, dNdXi)
+obj%jacobian(1:obj%nsd, 1:obj%xidim, 1:obj%nips) = &
+  MATMUL(val(1:obj%nsd, 1:obj%nns), dNdXi(1:obj%nns, 1:obj%xidim, 1:obj%nips))
 END PROCEDURE elemsd_SetJacobian
 
 !----------------------------------------------------------------------------
@@ -144,7 +150,9 @@ END PROCEDURE elemsd_SetJacobian
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE stsd_SetJacobian
-obj%jacobian = MATMUL(MATMUL(val, T), dNdXi)
+obj%jacobian(1:obj%nsd, 1:obj%xidim, 1:obj%nips) = &
+  MATMUL(MATMUL(val(1:obj%nsd, 1:obj%nns, :), T), &
+         dNdXi(1:obj%nns, 1:obj%xidim, 1:obj%nips))
 END PROCEDURE stsd_SetJacobian
 
 !----------------------------------------------------------------------------

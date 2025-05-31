@@ -242,6 +242,9 @@ INTERFACE SetJacobian
     CLASS(STElemshapeData_), INTENT(INOUT) :: obj
     REAL(DFP), INTENT(IN) :: val(:, :, :)
     !! Space time nodal values of coordinates
+    !! dim1 = spatial coordinates
+    !! dim2 = space nodes
+    !! dim3 = time nodes
     REAL(DFP), INTENT(IN) :: dNdXi(:, :, :)
     !! Local derivative of shape function for geometry
     REAL(DFP), INTENT(IN) :: T(:)
