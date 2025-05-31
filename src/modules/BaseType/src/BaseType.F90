@@ -1471,11 +1471,15 @@ TYPE :: ElemShapeData_
   !! number of shape functions
   REAL(DFP), ALLOCATABLE :: N(:, :)
   !! Shape function value `N(I, ips)`
-  !! nrow = nns
-  !! ncol = nips
+  !! shape: (nns, nips)
+  !! dim 1 = number of nodes in element
+  !! dim 2 = number of integration points
   REAL(DFP), ALLOCATABLE :: dNdXi(:, :, :)
   !! Local derivative of a shape function
   !! shape = nns, xidim, nips
+  !! dim 1 = number of nodes in element 
+  !! dim 2 = xi dimension (xi, eta, zeta)
+  !! dim 3 = number of integration points
   REAL(DFP), ALLOCATABLE :: jacobian(:, :, :)
   !! Jacobian of mapping `J(:,:,ips)` also $\mathbf{F}_{\Xi x}$
   !! shape = nsd, xidim, nips
