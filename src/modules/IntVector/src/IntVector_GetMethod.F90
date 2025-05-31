@@ -396,6 +396,21 @@ INTERFACE GetPointer
 END INTERFACE GetPointer
 
 !----------------------------------------------------------------------------
+!                                                    GetPointers@getMethod
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2025-05-29
+! summary: Get the pointer to the raw data of the IntVector instance.
+
+INTERFACE GetPointer
+  MODULE FUNCTION intVec_getPointer_3(obj) RESULT(val)
+    CLASS(IntVector_), INTENT(IN), TARGET :: obj
+    INTEGER(I4B), POINTER :: val(:)
+  END FUNCTION intVec_getPointer_3
+END INTERFACE GetPointer
+
+!----------------------------------------------------------------------------
 !                                                         getIndex@getMethod
 !----------------------------------------------------------------------------
 

@@ -193,10 +193,12 @@ END INTERFACE Initiate
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 23 July 2021
-! summary: This routine Initiates the quadrature points
+! summary: This routine Initiates the quadrature points from number of IP
 !
 !# Introduction
 !
+! This routine is used to initiate the quadrature points from number of
+! integration points.
 ! We call obj_Initiate6 in this routine
 
 INTERFACE Initiate
@@ -207,7 +209,7 @@ INTERFACE Initiate
     CLASS(ReferenceElement_), INTENT(IN) :: refElem
     !! Reference element
     INTEGER(I4B), INTENT(IN) :: nips(1)
-    !! order of integrand
+    !! number of quadrature points
     CHARACTER(*), INTENT(IN) :: quadratureType
     !! Total number quadrature points
     REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
@@ -366,6 +368,17 @@ END INTERFACE Initiate
 !
 !----------------------------------------------------------------------------
 
+!> author: Vikas Sharma, Ph. D.
+! date: 2025-05-21
+! summary:  This routine Initiates the quadrature points
+!
+!# Introduction
+!
+! This routine is used to initiate the quadrature points from order of
+! of integrand.
+! This subroutine does not require formation of reference element.
+! This routine calls obj_Initiate11 method.
+
 INTERFACE Initiate
   MODULE SUBROUTINE obj_Initiate9(obj, elemType, domainName, order, &
                                   quadratureType, alpha, beta, lambda, xij)
@@ -374,9 +387,8 @@ INTERFACE Initiate
     INTEGER(I4B), INTENT(IN) :: elemType
     !! element name
     CHARACTER(*), INTENT(IN) :: domainName
-    !! domain name
+    !! domain name for reference element
     !! unit or biunit
-    !! Reference-element
     INTEGER(I4B), INTENT(IN) :: order
     !! order of integrand
     INTEGER(I4B), INTENT(IN) :: quadratureType
@@ -398,6 +410,17 @@ END INTERFACE Initiate
 !
 !----------------------------------------------------------------------------
 
+!> author: Vikas Sharma, Ph. D.
+! date: 2025-05-21
+! summary:  This routine Initiates the quadrature points
+!
+!# Introduction
+!
+! This routine is used to initiate the quadrature points from number of
+! integration points.
+! This subroutine does not require formation of reference element.
+! This routine calls obj_Initiate12 method.
+
 INTERFACE Initiate
   MODULE SUBROUTINE obj_Initiate10(obj, elemType, domainName, nips, &
                                    quadratureType, alpha, beta, lambda, xij)
@@ -406,11 +429,10 @@ INTERFACE Initiate
     INTEGER(I4B), INTENT(IN) :: elemType
     !! element name
     CHARACTER(*), INTENT(IN) :: domainName
-    !! domain name
+    !! domain name, reference element
     !! unit or biunit
-    !! Reference-element
     INTEGER(I4B), INTENT(IN) :: nips(1)
-    !! order of integrand
+    !! Number of integration points
     !! in the case of  quadrangle element nips(1) denotes the
     !! number of quadrature points in the x and y direction
     !! so the total number of quadrature points are nips(1)*nips(1)

@@ -92,16 +92,31 @@ IF (ALLOCATED(obj%val)) THEN
   val = obj%val
 END IF
 END PROCEDURE intVec_get_7a
+
+!----------------------------------------------------------------------------
+!                                                                       get
+!----------------------------------------------------------------------------
+
 MODULE PROCEDURE intVec_get_7b
 IF (ALLOCATED(obj%val)) THEN
   val = obj%val
 END IF
 END PROCEDURE intVec_get_7b
+
+!----------------------------------------------------------------------------
+!                                                                       get
+!----------------------------------------------------------------------------
+
 MODULE PROCEDURE intVec_get_7c
 IF (ALLOCATED(obj%val)) THEN
   val = obj%val
 END IF
 END PROCEDURE intVec_get_7c
+
+!----------------------------------------------------------------------------
+!                                                                       get
+!----------------------------------------------------------------------------
+
 MODULE PROCEDURE intVec_get_7d
 IF (ALLOCATED(obj%val)) THEN
   val = obj%val
@@ -118,17 +133,29 @@ IF (ALLOCATED(obj%val)) THEN
 END IF
 END PROCEDURE intVec_get_8a
 
+!----------------------------------------------------------------------------
+!                                                                       get
+!----------------------------------------------------------------------------
+
 MODULE PROCEDURE intVec_get_8b
 IF (ALLOCATED(obj%val)) THEN
   val = obj%val(Indx)
 END IF
 END PROCEDURE intVec_get_8b
 
+!----------------------------------------------------------------------------
+!                                                                       get
+!----------------------------------------------------------------------------
+
 MODULE PROCEDURE intVec_get_8c
 IF (ALLOCATED(obj%val)) THEN
   val = obj%val(Indx)
 END IF
 END PROCEDURE intVec_get_8c
+
+!----------------------------------------------------------------------------
+!                                                                       get
+!----------------------------------------------------------------------------
 
 MODULE PROCEDURE intVec_get_8d
 IF (ALLOCATED(obj%val)) THEN
@@ -146,17 +173,29 @@ IF (ALLOCATED(obj%val)) THEN
 END IF
 END PROCEDURE intVec_get_9a
 
+!----------------------------------------------------------------------------
+!                                                                       get
+!----------------------------------------------------------------------------
+
 MODULE PROCEDURE intVec_get_9b
 IF (ALLOCATED(obj%val)) THEN
   val = obj%val(iStart:iEnd:Stride)
 END IF
 END PROCEDURE intVec_get_9b
 
+!----------------------------------------------------------------------------
+!                                                                       get
+!----------------------------------------------------------------------------
+
 MODULE PROCEDURE intVec_get_9c
 IF (ALLOCATED(obj%val)) THEN
   val = obj%val(iStart:iEnd:Stride)
 END IF
 END PROCEDURE intVec_get_9c
+
+!----------------------------------------------------------------------------
+!                                                                       get
+!----------------------------------------------------------------------------
 
 MODULE PROCEDURE intVec_get_9d
 IF (ALLOCATED(obj%val)) THEN
@@ -169,16 +208,31 @@ END PROCEDURE intVec_get_9d
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE intVec_get_10a
-#include "./include/intvec_get_10.inc"
+#include "./include/intvec_get_10.F90"
 END PROCEDURE intVec_get_10a
+
+!----------------------------------------------------------------------------
+!                                                                        get
+!----------------------------------------------------------------------------
+
 MODULE PROCEDURE intVec_get_10b
-#include "./include/intvec_get_10.inc"
+#include "./include/intvec_get_10.F90"
 END PROCEDURE intVec_get_10b
+
+!----------------------------------------------------------------------------
+!                                                                       get
+!----------------------------------------------------------------------------
+
 MODULE PROCEDURE intVec_get_10c
-#include "./include/intvec_get_10.inc"
+#include "./include/intvec_get_10.F90"
 END PROCEDURE intVec_get_10c
+
+!----------------------------------------------------------------------------
+!                                                                       get
+!----------------------------------------------------------------------------
+
 MODULE PROCEDURE intVec_get_10d
-#include "./include/intvec_get_10.inc"
+#include "./include/intvec_get_10.F90"
 END PROCEDURE intVec_get_10d
 
 !----------------------------------------------------------------------------
@@ -186,16 +240,31 @@ END PROCEDURE intVec_get_10d
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE intVec_get_11a
-#include "./include/intvec_get_11.inc"
+#include "./include/intvec_get_11.F90"
 END PROCEDURE intVec_get_11a
+
+!----------------------------------------------------------------------------
+!                                                                       get
+!----------------------------------------------------------------------------
+
 MODULE PROCEDURE intVec_get_11b
-#include "./include/intvec_get_11.inc"
+#include "./include/intvec_get_11.F90"
 END PROCEDURE intVec_get_11b
+
+!----------------------------------------------------------------------------
+!                                                                       get
+!----------------------------------------------------------------------------
+
 MODULE PROCEDURE intVec_get_11c
-#include "./include/intvec_get_11.inc"
+#include "./include/intvec_get_11.F90"
 END PROCEDURE intVec_get_11c
+
+!----------------------------------------------------------------------------
+!                                                                       get
+!----------------------------------------------------------------------------
+
 MODULE PROCEDURE intVec_get_11d
-#include "./include/intvec_get_11.inc"
+#include "./include/intvec_get_11.F90"
 END PROCEDURE intVec_get_11d
 
 !----------------------------------------------------------------------------
@@ -203,16 +272,31 @@ END PROCEDURE intVec_get_11d
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE intVec_get_12a
-#include "./include/intvec_get_12.inc"
+#include "./include/intvec_get_12.F90"
 END PROCEDURE intVec_get_12a
+
+!----------------------------------------------------------------------------
+!                                                                       get
+!----------------------------------------------------------------------------
+
 MODULE PROCEDURE intVec_get_12b
-#include "./include/intvec_get_12.inc"
+#include "./include/intvec_get_12.F90"
 END PROCEDURE intVec_get_12b
+
+!----------------------------------------------------------------------------
+!                                                                       get
+!----------------------------------------------------------------------------
+
 MODULE PROCEDURE intVec_get_12c
-#include "./include/intvec_get_12.inc"
+#include "./include/intvec_get_12.F90"
 END PROCEDURE intVec_get_12c
+
+!----------------------------------------------------------------------------
+!                                                                       get
+!----------------------------------------------------------------------------
+
 MODULE PROCEDURE intVec_get_12d
-#include "./include/intvec_get_12.inc"
+#include "./include/intvec_get_12.F90"
 END PROCEDURE intVec_get_12d
 
 !----------------------------------------------------------------------------
@@ -220,16 +304,29 @@ END PROCEDURE intVec_get_12d
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE intVec_get_13a
-#include "./include/intvec_get_13.inc"
+#include "./include/intvec_get_13.F90"
 END PROCEDURE intVec_get_13a
+
+!----------------------------------------------------------------------------
+!                                                                        get
+!----------------------------------------------------------------------------
 MODULE PROCEDURE intVec_get_13b
-#include "./include/intvec_get_13.inc"
+#include "./include/intvec_get_13.F90"
 END PROCEDURE intVec_get_13b
+
+!----------------------------------------------------------------------------
+!                                                                        get
+!----------------------------------------------------------------------------
 MODULE PROCEDURE intVec_get_13c
-#include "./include/intvec_get_13.inc"
+#include "./include/intvec_get_13.F90"
 END PROCEDURE intVec_get_13c
+
+!----------------------------------------------------------------------------
+!                                                                        get
+!----------------------------------------------------------------------------
+!
 MODULE PROCEDURE intVec_get_13d
-#include "./include/intvec_get_13.inc"
+#include "./include/intvec_get_13.F90"
 END PROCEDURE intVec_get_13d
 
 !----------------------------------------------------------------------------
@@ -247,6 +344,14 @@ END PROCEDURE intVec_getPointer_1
 MODULE PROCEDURE intVec_getPointer_2
 val => obj%val
 END PROCEDURE intVec_getPointer_2
+
+!----------------------------------------------------------------------------
+!                                                                 getPointer
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE intVec_getPointer_3
+val => obj%val
+END PROCEDURE intVec_getPointer_3
 
 !----------------------------------------------------------------------------
 !                                                                     IndexOf
