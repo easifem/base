@@ -129,20 +129,40 @@ END SUBROUTINE BaseContinuity_Copy
 ! date:  2023-08-09
 ! summary:  Returns a string name of base interpolation type
 
-FUNCTION BaseContinuity_ToString(obj) RESULT(ans)
+FUNCTION BaseContinuity_ToString(obj, isUpper) RESULT(ans)
   CLASS(BaseContinuity_), INTENT(IN) :: obj
+  LOGICAL(LGT), OPTIONAL, INTENT(IN) :: isUpper
   TYPE(String) :: ans
+
+  ! internal variables
+  LOGICAL(LGT) :: isUpper0
+
+  isUpper0 = .FALSE.
+  IF (PRESENT(isUpper)) isUpper0 = isUpper
 
   SELECT TYPE (obj)
   CLASS IS (H1_)
     ans = "H1"
+
   CLASS IS (HCurl_)
-    ans = "HCurl"
+    IF (isUpper0) THEN
+      ans = "HCURL"
+    ELSE
+      ans = "HCurl"
+    END IF
+
   CLASS IS (HDiv_)
-    ans = "HDiv"
+    IF (isUpper0) THEN
+      ans = "HDIV"
+    ELSE
+      ans = "HDiv"
+    END IF
+
   CLASS IS (DG_)
     ans = "DG"
+
   CLASS DEFAULT
+
     CALL ErrorMsg(msg="NO CASE FOUND for type of obj", &
                   routine="BaseContinuity_toString()", &
                   line=__LINE__, unitno=stderr, file=__FILE__)
