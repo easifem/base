@@ -28,6 +28,8 @@ IMPLICIT NONE
 PRIVATE
 
 PUBLIC :: Initiate
+PUBLIC :: Copy
+public :: ASSIGNMENT(=)
 PUBLIC :: QuadraturePoint
 PUBLIC :: QuadraturePoint_Pointer
 PUBLIC :: DEALLOCATE
@@ -109,6 +111,29 @@ INTERFACE QuadratureNumber
     !! so total number of quadrature points are ans*ans
   END FUNCTION obj_QuadratureNumber1
 END INTERFACE QuadratureNumber
+
+!----------------------------------------------------------------------------
+!                                                    Copy@ConstructorMethods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 23 July 2021
+! summary: This routine Initiates the quadrature points
+
+INTERFACE Initiate
+  MODULE PURE SUBROUTINE obj_Copy(obj, obj2)
+    TYPE(QuadraturePoint_), INTENT(INOUT) :: obj
+    TYPE(QuadraturePoint_), INTENT(IN) :: obj2
+  END SUBROUTINE obj_Copy
+END INTERFACE Initiate
+
+INTERFACE Copy
+  MODULE PROCEDURE obj_Copy
+END INTERFACE Copy
+
+INTERFACE ASSIGNMENT(=)
+  MODULE PROCEDURE obj_Copy
+END INTERFACE ASSIGNMENT(=)
 
 !----------------------------------------------------------------------------
 !                                                Initiate@ConstructorMethods
