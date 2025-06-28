@@ -401,25 +401,52 @@ END SUBROUTINE BaseInterpolation_FromString
 ! date:  2023-08-09
 ! summary:  Returns a string name of base interpolation type
 
-FUNCTION BaseInterpolation_ToString1(obj) RESULT(ans)
+FUNCTION BaseInterpolation_ToString1(obj, isUpper) RESULT(ans)
   CLASS(BaseInterpolation_), INTENT(IN) :: obj
+  LOGICAL(LGT), OPTIONAL, INTENT(IN) :: isUpper
   TYPE(String) :: ans
+
+  ! internal variables
+  LOGICAL(LGT) :: isUpper0
+
+  isUpper0 = .FALSE.
+  IF (PRESENT(isUpper)) isUpper0 = isUpper
 
   SELECT TYPE (obj)
   CLASS IS (LagrangeInterpolation_)
-    ans = "LagrangeInterpolation"
+    IF (isUpper0) THEN
+      ans = "LAGRANGEINTERPOLATION"
+    ELSE
+      ans = "LagrangeInterpolation"
+    END IF
 
   CLASS IS (SerendipityInterpolation_)
-    ans = "SerendipityInterpolation"
+    IF (isUpper0) THEN
+      ans = "SERENDIPITYINTERPOLATION"
+    ELSE
+      ans = "SerendipityInterpolation"
+    END IF
 
   CLASS IS (HermitInterpolation_)
-    ans = "HermitInterpolation"
+    IF (isUpper0) THEN
+      ans = "HERMITINTERPOLATION"
+    ELSE
+      ans = "HermitInterpolation"
+    END IF
 
   CLASS IS (HierarchyInterpolation_)
-    ans = "HierarchyInterpolation"
+    IF (isUpper0) THEN
+      ans = "HIERARCHYINTERPOLATION"
+    ELSE
+      ans = "HierarchyInterpolation"
+    END IF
 
   CLASS IS (OrthogonalInterpolation_)
-    ans = "OrthogonalInterpolation"
+    IF (isUpper0) THEN
+      ans = "ORTHOGONALINTERPOLATION"
+    ELSE
+      ans = "OrthogonalInterpolation"
+    END IF
 
   CLASS DEFAULT
     CALL ErrorMsg(msg="No Case Found For Type of obj2", &
@@ -434,40 +461,87 @@ END FUNCTION BaseInterpolation_ToString1
 !                                                           BaseType_ToChar
 !----------------------------------------------------------------------------
 
-FUNCTION BaseType_ToChar(name) RESULT(ans)
+FUNCTION BaseType_ToChar(name, isUpper) RESULT(ans)
   INTEGER(I4B), INTENT(IN) :: name
+  LOGICAL(LGT), OPTIONAL, INTENT(IN) :: isUpper
   CHARACTER(:), ALLOCATABLE :: ans
+
+  ! internal variable
+  LOGICAL(LGT) :: isUpper0
+
+  isUpper0 = .FALSE.
+  IF (PRESENT(isUpper)) isUpper0 = isUpper
 
   SELECT CASE (name)
   CASE (poly%monomial)
-    ans = "Monomial"
+    IF (isUpper0) THEN
+      ans = "MONOMIAL"
+    ELSE
+      ans = "Monomial"
+    END IF
 
   CASE (poly%lagrange)
-    ans = "LagrangeInterpolation"
+    IF (isUpper0) THEN
+      ans = "LAGRANGEINTERPOLATION"
+    ELSE
+      ans = "LagrangeInterpolation"
+    END IF
 
   CASE (poly%serendipity)
-    ans = "SerendipityInterpolation"
+    IF (isUpper0) THEN
+      ans = "SERENDIPITYINTERPOLATION"
+    ELSE
+      ans = "SerendipityInterpolation"
+    END IF
 
   CASE (poly%hermit)
-    ans = "HermitInterpolation"
+    IF (isUpper0) THEN
+      ans = "HERMITINTERPOLATION"
+    ELSE
+      ans = "HermitInterpolation"
+    END IF
 
   CASE (poly%hierarchical)
-    ans = "HierarchyInterpolation"
+    IF (isUpper0) THEN
+      ans = "HIERARCHYINTERPOLATION"
+    ELSE
+      ans = "HierarchyInterpolation"
+    END IF
 
   CASE (poly%orthogonal)
-    ans = "OrthogonalInterpolation"
+    IF (isUpper0) THEN
+      ans = "ORTHOGONALINTERPOLATION"
+    ELSE
+      ans = "OrthogonalInterpolation"
+    END IF
 
   CASE (poly%legendre)
-    ans = "LegendreInterpolation"
+    IF (isUpper0) THEN
+      ans = "LEGENDREINTERPOLATION"
+    ELSE
+      ans = "LegendreInterpolation"
+    END IF
 
   CASE (poly%jacobi)
-    ans = "JacobiInterpolation"
+    IF (isUpper0) THEN
+      ans = "JACOBIINTERPOLATION"
+    ELSE
+      ans = "JacobiInterpolation"
+    END IF
 
   CASE (poly%ultraspherical)
-    ans = "UltrasphericalInterpolation"
+    IF (isUpper0) THEN
+      ans = "ULTRASPHERICALINTERPOLATION"
+    ELSE
+      ans = "UltrasphericalInterpolation"
+    END IF
 
   CASE (poly%chebyshev)
-    ans = "ChebyshevInterpolation"
+    IF (isUpper0) THEN
+      ans = "CHEBYSHEVINTERPOLATION"
+    ELSE
+      ans = "ChebyshevInterpolation"
+    END IF
 
   CASE DEFAULT
     CALL ErrorMsg(msg="No Case Found For name "//tostring(name), &
@@ -482,83 +556,175 @@ END FUNCTION BaseType_ToChar
 !                                                   QuadraturePointIDToName
 !----------------------------------------------------------------------------
 
-FUNCTION BaseInterpolation_ToString2(name) RESULT(ans)
+FUNCTION BaseInterpolation_ToString2(name, isUpper) RESULT(ans)
   INTEGER(I4B), INTENT(IN) :: name
+  LOGICAL(LGT), OPTIONAL, INTENT(IN) :: isUpper
   TYPE(String) :: ans
-  ans = BaseInterpolation_ToChar(name)
+  ans = BaseInterpolation_ToChar(name=name, isUpper=isUpper)
 END FUNCTION BaseInterpolation_ToString2
 
 !----------------------------------------------------------------------------
 !                                                   BaseInterpolation_ToChar
 !----------------------------------------------------------------------------
 
-FUNCTION BaseInterpolation_ToChar(name) RESULT(ans)
+FUNCTION BaseInterpolation_ToChar(name, isUpper) RESULT(ans)
   INTEGER(I4B), INTENT(IN) :: name
+  LOGICAL(LGT), OPTIONAL, INTENT(IN) :: isUpper
   CHARACTER(:), ALLOCATABLE :: ans
+
+  ! internal varibles
+  LOGICAL(LGT) :: isUpper0
+
+  isUpper0 = .FALSE.
+  IF (PRESENT(isUpper)) isUpper0 = isUpper
 
   SELECT CASE (name)
   CASE (ip%equidistance)
-    ans = "Equidistance"
+    IF (isUpper0) THEN
+      ans = "EQUIDISTANCE"
+    ELSE
+      ans = "Equidistance"
+    END IF
 
   CASE (ip%GaussLegendre)
-    ans = "GaussLegendre"
+    IF (isUpper0) THEN
+      ans = "GAUSSLEGENDRE"
+    ELSE
+      ans = "GaussLegendre"
+    END IF
 
   CASE (ip%GaussLegendreLobatto)
-    ans = "GaussLegendreLobatto"
+    IF (isUpper0) THEN
+      ans = "GAUSSLEGENDRELOBATTO"
+    ELSE
+      ans = "GaussLegendreLobatto"
+    END IF
 
   CASE (ip%GaussLegendreRadau)
-    ans = "GaussLegendreRadau"
+    IF (isUpper0) THEN
+      ans = "GAUSSLEGENDRERADAU"
+    ELSE
+      ans = "GaussLegendreRadau"
+    END IF
 
   CASE (ip%GaussLegendreRadauLeft)
-    ans = "GaussLegendreRadauLeft"
+    IF (isUpper0) THEN
+      ans = "GAUSSLEGENDRERADAULEFT"
+    ELSE
+      ans = "GaussLegendreRadauLeft"
+    END IF
 
   CASE (ip%GaussLegendreRadauRight)
-    ans = "GaussLegendreRadauRight"
+    IF (isUpper0) THEN
+      ans = "GAUSSLEGENDRERADAURIGHT"
+    ELSE
+      ans = "GaussLegendreRadauRight"
+    END IF
 
   CASE (ip%GaussChebyshev)
-    ans = "GaussChebyshev"
+    IF (isUpper0) THEN
+      ans = "GAUSSCHEBYSHEV"
+    ELSE
+      ans = "GaussChebyshev"
+    END IF
 
   CASE (ip%GaussChebyshevLobatto)
-    ans = "GaussChebyshevLobatto"
+    IF (isUpper0) THEN
+      ans = "GAUSSCHEBYSHEVLOBATTO"
+    ELSE
+      ans = "GaussChebyshevLobatto"
+    END IF
 
   CASE (ip%GaussChebyshevRadau)
-    ans = "GaussChebyshevRadau"
+    IF (isUpper0) THEN
+      ans = "GAUSSCHEBYSHEVRADAU"
+    ELSE
+      ans = "GaussChebyshevRadau"
+    END IF
 
   CASE (ip%GaussChebyshevRadauLeft)
-    ans = "GaussChebyshevRadauLeft"
+    IF (isUpper0) THEN
+      ans = "GAUSSCHEBYSHEVRADAULEFT"
+    ELSE
+      ans = "GaussChebyshevRadauLeft"
+    END IF
 
   CASE (ip%GaussChebyshevRadauRight)
-    ans = "GaussChebyshevRadauRight"
+    IF (isUpper0) THEN
+      ans = "GAUSSCHEBYSHEVRADAURIGHT"
+    ELSE
+      ans = "GaussChebyshevRadauRight"
+    END IF
 
   CASE (ip%GaussJacobi)
-    ans = "GaussJacobi"
+    IF (isUpper0) THEN
+      ans = "GAUSSJACOBI"
+    ELSE
+      ans = "GaussJacobi"
+    END IF
 
   CASE (ip%GaussJacobiLobatto)
-    ans = "GaussJacobiLobatto"
+    IF (isUpper0) THEN
+      ans = "GAUSSJACOBILOBATTO"
+    ELSE
+      ans = "GaussJacobiLobatto"
+    END IF
 
   CASE (ip%GaussJacobiRadau)
-    ans = "GaussJacobiRadau"
+    IF (isUpper0) THEN
+      ans = "GAUSSJACOBIRADAU"
+    ELSE
+      ans = "GaussJacobiRadau"
+    END IF
 
   CASE (ip%GaussJacobiRadauLeft)
-    ans = "GaussJacobiRadauLeft"
+    IF (isUpper0) THEN
+      ans = "GAUSSJACOBIRADAULEFT"
+    ELSE
+      ans = "GaussJacobiRadauLeft"
+    END IF
 
   CASE (ip%GaussJacobiRadauRight)
-    ans = "GaussJacobiRadauRight"
+    IF (isUpper0) THEN
+      ans = "GAUSSJACOBIRADAURIGHT"
+    ELSE
+      ans = "GaussJacobiRadauRight"
+    END IF
 
   CASE (ip%GaussUltraspherical)
-    ans = "GaussUltraspherical"
+    IF (isUpper0) THEN
+      ans = "GAUSSULTRASPHERICAL"
+    ELSE
+      ans = "GaussUltraspherical"
+    END IF
 
   CASE (ip%GaussUltrasphericalLobatto)
-    ans = "GaussUltrasphericalLobatto"
+    IF (isUpper0) THEN
+      ans = "GAUSSULTRASPHERICALLOBATTO"
+    ELSE
+      ans = "GaussUltrasphericalLobatto"
+    END IF
 
   CASE (ip%GaussUltrasphericalRadau)
-    ans = "GaussUltrasphericalRadau"
+    IF (isUpper0) THEN
+      ans = "GAUSSULTRASPHERICALRADAU"
+    ELSE
+      ans = "GaussUltrasphericalRadau"
+    END IF
 
   CASE (ip%GaussUltrasphericalRadauLeft)
-    ans = "GaussUltrasphericalRadauLeft"
+    IF (isUpper0) THEN
+      ans = "GAUSSULTRASPHERICALRADAULEFT"
+    ELSE
+      ans = "GaussUltrasphericalRadauLeft"
+    END IF
 
   CASE (ip%GaussUltrasphericalRadauRight)
-    ans = "GaussUltrasphericalRadauRight"
+    IF (isUpper0) THEN
+      ans = "GAUSSULTRASPHERICALRADAURIGHT"
+    ELSE
+      ans = "GaussUltrasphericalRadauRight"
+    END IF
 
   CASE DEFAULT
     CALL Errormsg(msg="No case found for given quadratureType name", &
@@ -569,5 +735,9 @@ FUNCTION BaseInterpolation_ToChar(name) RESULT(ans)
   END SELECT
 
 END FUNCTION BaseInterpolation_ToChar
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
 
 END MODULE BaseInterpolation_Method

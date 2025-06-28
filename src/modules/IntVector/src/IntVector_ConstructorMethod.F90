@@ -31,6 +31,8 @@ PUBLIC :: ASSIGNMENT(=)
 PUBLIC :: IntVector
 PUBLIC :: IntVector_Pointer
 PUBLIC :: Convert
+PUBLIC :: Copy
+PUBLIC :: Copy_
 
 !----------------------------------------------------------------------------
 !                                                         Shape@Constructor
@@ -76,10 +78,10 @@ END INTERFACE Size
 ! This function returns the total dimension (or rank) of an array,
 
 INTERFACE GetTotalDimension
-  MODULE PURE FUNCTION IntVec_getTotalDimension(obj) RESULT(Ans)
+  MODULE PURE FUNCTION intVec_getTotalDimension(obj) RESULT(Ans)
     TYPE(IntVector_), INTENT(IN) :: obj
     INTEGER(I4B) :: ans
-  END FUNCTION IntVec_getTotalDimension
+  END FUNCTION intVec_getTotalDimension
 END INTERFACE GetTotalDimension
 
 !----------------------------------------------------------------------------
@@ -370,5 +372,122 @@ INTERFACE Convert
     INTEGER(I4B), ALLOCATABLE, INTENT(INOUT) :: To(:)
   END SUBROUTINE obj_convert_int
 END INTERFACE Convert
+
+!----------------------------------------------------------------------------
+!                                                           Copy@Constructor
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2025-06-22
+! summary:  Copy y into x, x will be reallocated
+!
+!# Introduction
+!
+! Get the size of y and reallocate x to the same size.
+! If x is already allocated, it will be reallocated to the size of y.
+
+INTERFACE Copy
+  MODULE PURE SUBROUTINE obj_Copy_Int8(x, y)
+    INTEGER(INT8), INTENT(INOUT), ALLOCATABLE :: x(:)
+    INTEGER(INT8), INTENT(IN) :: y(:)
+  END SUBROUTINE obj_Copy_Int8
+END INTERFACE Copy
+
+!----------------------------------------------------------------------------
+!                                                           Copy@Constructor
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2025-06-22
+! summary:  Copy y into x, x will be reallocated
+!
+!# Introduction
+!
+! Get the size of y and reallocate x to the same size.
+! If x is already allocated, it will be reallocated to the size of y.
+
+INTERFACE Copy
+  MODULE PURE SUBROUTINE obj_Copy_Int16(x, y)
+    INTEGER(INT16), INTENT(INOUT), ALLOCATABLE :: x(:)
+    INTEGER(INT16), INTENT(IN) :: y(:)
+  END SUBROUTINE obj_Copy_Int16
+END INTERFACE Copy
+
+!----------------------------------------------------------------------------
+!                                                           Copy@Constructor
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2025-06-22
+! summary:  Copy y into x, x will be reallocated
+!
+! Introduction
+!
+! Get the size of y and reallocate x to the same size.
+! If x is already allocated, it will be reallocated to the size of y.
+
+INTERFACE Copy
+  MODULE PURE SUBROUTINE obj_Copy_Int32(x, y)
+    INTEGER(INT32), INTENT(INOUT), ALLOCATABLE :: x(:)
+    INTEGER(INT32), INTENT(IN) :: y(:)
+  END SUBROUTINE obj_Copy_Int32
+END INTERFACE Copy
+
+!----------------------------------------------------------------------------
+!                                                           Copy@Constructor
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2025-06-22
+! summary:  Copy y into x, x will be reallocated
+!
+!# Introduction
+!
+! Get the size of y and reallocate x to the same size.
+! If x is already allocated, it will be reallocated to the size of y.
+
+INTERFACE Copy
+  MODULE PURE SUBROUTINE obj_Copy_Int64(x, y)
+    INTEGER(INT64), INTENT(INOUT), ALLOCATABLE :: x(:)
+    INTEGER(INT64), INTENT(IN) :: y(:)
+  END SUBROUTINE obj_Copy_Int64
+END INTERFACE Copy
+
+!----------------------------------------------------------------------------
+!                                                           Copy@Constructor
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2025-06-22
+! summary:  Copy portion of y into x
+
+INTERFACE Copy_
+  MODULE PURE SUBROUTINE obj_Copy1_(x, x_start, y, y_start, y_end)
+    INTEGER(I4B), INTENT(INOUT) :: x(:)
+    !! x vector should be allocated
+    INTEGER(I4B), INTENT(IN) :: y(:)
+    INTEGER(I4B), INTENT(IN) :: x_start
+    INTEGER(I4B), INTENT(IN) :: y_start, y_end
+  END SUBROUTINE obj_Copy1_
+END INTERFACE Copy_
+
+!----------------------------------------------------------------------------
+!                                                           Copy@Constructor
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2025-06-22
+! summary:  Copy y into x
+
+INTERFACE Copy_
+  MODULE PURE SUBROUTINE obj_Copy2_(x, y)
+    INTEGER(I4B), INTENT(INOUT) :: x(:)
+    INTEGER(I4B), INTENT(IN) :: y(:)
+  END SUBROUTINE obj_Copy2_
+END INTERFACE Copy_
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
 
 END MODULE IntVector_ConstructorMethod

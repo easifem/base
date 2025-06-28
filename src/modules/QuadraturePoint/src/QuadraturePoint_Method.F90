@@ -28,6 +28,8 @@ IMPLICIT NONE
 PRIVATE
 
 PUBLIC :: Initiate
+PUBLIC :: Copy
+PUBLIC :: ASSIGNMENT(=)
 PUBLIC :: QuadraturePoint
 PUBLIC :: QuadraturePoint_Pointer
 PUBLIC :: DEALLOCATE
@@ -67,12 +69,13 @@ END INTERFACE
 
 !> author: Vikas Sharma, Ph. D.
 ! date:  2023-08-06
-! summary:  Quadrature point name to quadrature point id
+! summary: Convert Quadrature point from int id to string name
 
 INTERFACE
-  MODULE FUNCTION QuadraturePointIdToName(name) RESULT(ans)
+  MODULE FUNCTION QuadraturePointIdToName(name, isUpper) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: name
     TYPE(String) :: ans
+    LOGICAL, INTENT(IN), OPTIONAL :: isUpper
   END FUNCTION QuadraturePointIdToName
 END INTERFACE
 
@@ -80,10 +83,15 @@ END INTERFACE
 !                                  QuadraturePoint_ToChar@ConstructorMethods
 !----------------------------------------------------------------------------
 
+!> author: Vikas Sharma, Ph. D.
+! date: 2025-06-18
+! summary:  Convert Quadrature poitn from int id to char name
+
 INTERFACE
-  MODULE FUNCTION QuadraturePoint_ToChar(name) RESULT(ans)
+  MODULE FUNCTION QuadraturePoint_ToChar(name, isUpper) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: name
-    TYPE(String) :: ans
+    LOGICAL(LGT), OPTIONAL, INTENT(IN) :: isUpper
+    CHARACTER(:), ALLOCATABLE :: ans
   END FUNCTION QuadraturePoint_ToChar
 END INTERFACE
 
@@ -109,6 +117,29 @@ INTERFACE QuadratureNumber
     !! so total number of quadrature points are ans*ans
   END FUNCTION obj_QuadratureNumber1
 END INTERFACE QuadratureNumber
+
+!----------------------------------------------------------------------------
+!                                                    Copy@ConstructorMethods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 23 July 2021
+! summary: This routine Initiates the quadrature points
+
+INTERFACE Initiate
+  MODULE PURE SUBROUTINE obj_Copy(obj, obj2)
+    TYPE(QuadraturePoint_), INTENT(INOUT) :: obj
+    TYPE(QuadraturePoint_), INTENT(IN) :: obj2
+  END SUBROUTINE obj_Copy
+END INTERFACE Initiate
+
+INTERFACE Copy
+  MODULE PROCEDURE obj_Copy
+END INTERFACE Copy
+
+INTERFACE ASSIGNMENT(=)
+  MODULE PROCEDURE obj_Copy
+END INTERFACE ASSIGNMENT(=)
 
 !----------------------------------------------------------------------------
 !                                                Initiate@ConstructorMethods

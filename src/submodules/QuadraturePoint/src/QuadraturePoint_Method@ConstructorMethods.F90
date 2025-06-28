@@ -146,6 +146,20 @@ END SELECT
 END PROCEDURE obj_QuadratureNumber1
 
 !----------------------------------------------------------------------------
+!                                                                      Copy
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE obj_Copy
+INTEGER(I4B) :: s(2)
+obj%txi = obj2%txi
+IF (ALLOCATED(obj2%points)) THEN
+  s = SHAPE(obj2%points)
+  CALL Reallocate(obj%points, s(1), s(2))
+  obj%points(1:s(1), 1:s(2)) = obj2%points(1:s(1), 1:s(2))
+END IF
+END PROCEDURE obj_Copy
+
+!----------------------------------------------------------------------------
 !                                                                   Initiate
 !----------------------------------------------------------------------------
 

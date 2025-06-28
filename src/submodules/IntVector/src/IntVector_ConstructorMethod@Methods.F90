@@ -241,4 +241,80 @@ IF (ALLOCATED(From%Val)) THEN
 END IF
 END PROCEDURE obj_convert_int
 
+!----------------------------------------------------------------------------
+!                                                                     Copy
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE obj_Copy_Int8
+INTEGER(I4B) :: tsize, ii
+tsize = SIZE(y)
+CALL Reallocate(x, tsize)
+DO ii = 1, tsize
+  x(ii) = y(ii)
+END DO
+
+END PROCEDURE obj_Copy_Int8
+
+!----------------------------------------------------------------------------
+!                                                                     Copy
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE obj_Copy_Int16
+INTEGER(I4B) :: tsize, ii
+tsize = SIZE(y)
+CALL Reallocate(x, tsize)
+DO ii = 1, tsize
+  x(ii) = y(ii)
+END DO
+END PROCEDURE obj_Copy_Int16
+
+!----------------------------------------------------------------------------
+!                                                                     Copy
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE obj_Copy_Int32
+INTEGER(I4B) :: tsize, ii
+tsize = SIZE(y)
+CALL Reallocate(x, tsize)
+DO ii = 1, tsize
+  x(ii) = y(ii)
+END DO
+END PROCEDURE obj_Copy_Int32
+
+!----------------------------------------------------------------------------
+!                                                                     Copy
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE obj_Copy_Int64
+INTEGER(I4B) :: tsize, ii
+tsize = SIZE(y)
+CALL Reallocate(x, tsize)
+DO ii = 1, tsize
+  x(ii) = y(ii)
+END DO
+END PROCEDURE obj_Copy_Int64
+
+!----------------------------------------------------------------------------
+!                                                                     Copy
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE obj_Copy1_
+INTEGER(I4B) :: xx, yy
+
+DO yy = y_start, y_end
+  xx = x_start + yy - y_start
+  x(xx) = y(yy)
+END DO
+END PROCEDURE obj_Copy1_
+
+!----------------------------------------------------------------------------
+!                                                                     Copy
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE obj_Copy2_
+INTEGER(I4B) :: tsize
+tsize = SIZE(y)
+CALL obj_Copy1_(x=x, y=y, x_start=1, y_start=1, y_end=tsize)
+END PROCEDURE obj_Copy2_
+
 END SUBMODULE Methods
