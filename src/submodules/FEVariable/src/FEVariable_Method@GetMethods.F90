@@ -16,6 +16,7 @@
 
 SUBMODULE(FEVariable_Method) GetMethods
 USE ReallocateUtility, ONLY: Reallocate
+USE StringUtility, ONLY: UpperCase
 
 USE BaseType, ONLY: feopt => TypeFEVariableOpt
 
@@ -27,24 +28,30 @@ CONTAINS
 !                                                        FEVariable_ToString
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE FEVariable_ToString
+MODULE PROCEDURE FEVariable_ToChar
 
 SELECT CASE (name)
 CASE (feopt%scalar)
-  ans = "SCALAR"
+  ans = "Scalar"
 
 CASE (feopt%vector)
-  ans = "VECTOR"
+  ans = "Scalar"
 
 CASE (feopt%matrix)
-  ans = "MATRIX"
+  ans = "Matrix"
 
 CASE DEFAULT
-  ans = "SCALAR"
+  ans = "Scalar"
 
 END SELECT
 
-END PROCEDURE FEVariable_ToString
+IF (PRESENT(isUpper)) THEN
+  IF (isUpper) THEN
+    ans = UpperCase(ans)
+  END IF
+END IF
+
+END PROCEDURE FEVariable_ToChar
 
 !----------------------------------------------------------------------------
 !                                                        FEVariable_ToInteger

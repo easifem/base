@@ -57,7 +57,7 @@ PUBLIC :: OPERATOR(.NE.)
 PUBLIC :: MEAN
 PUBLIC :: GetLambdaFromYoungsModulus
 PUBLIC :: ASSIGNMENT(=)
-PUBLIC :: FEVariable_ToString
+PUBLIC :: FEVariable_ToChar
 PUBLIC :: FEVariable_ToInteger
 
 INTEGER(I4B), PARAMETER :: CAPACITY_EXPAND_FACTOR = 1
@@ -894,7 +894,7 @@ INTERFACE ASSIGNMENT(=)
 END INTERFACE
 
 !----------------------------------------------------------------------------
-!                                              FEVariable_ToString@GetMethods
+!                                              FEVariable_ToChar@GetMethods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -902,10 +902,11 @@ END INTERFACE
 ! summary:  Converts scalar, vector, matrix to string name
 
 INTERFACE
-  MODULE PURE FUNCTION FEVariable_ToString(name) RESULT(ans)
+  MODULE PURE FUNCTION FEVariable_ToChar(name, isUpper) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: name
     CHARACTER(:), ALLOCATABLE :: ans
-  END FUNCTION FEVariable_ToString
+    LOGICAL(LGT), INTENT(IN), OPTIONAL :: isUpper
+  END FUNCTION FEVariable_ToChar
 END INTERFACE
 
 !----------------------------------------------------------------------------
