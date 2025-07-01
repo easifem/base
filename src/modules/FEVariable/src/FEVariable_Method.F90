@@ -57,6 +57,8 @@ PUBLIC :: OPERATOR(.NE.)
 PUBLIC :: MEAN
 PUBLIC :: GetLambdaFromYoungsModulus
 PUBLIC :: ASSIGNMENT(=)
+PUBLIC :: FEVariable_ToString
+PUBLIC :: FEVariable_ToInteger
 
 INTEGER(I4B), PARAMETER :: CAPACITY_EXPAND_FACTOR = 1
 ! capacity = tsize * CAPACITY_EXPAND_FACTOR
@@ -877,7 +879,7 @@ INTERFACE NodalVariable
 END INTERFACE NodalVariable
 
 !----------------------------------------------------------------------------
-!                                               Assignment@ConstructorMethods
+!                                              Assignment@ConstructorMethods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -889,6 +891,36 @@ INTERFACE ASSIGNMENT(=)
     TYPE(FEVariable_), INTENT(INOUT) :: obj1
     TYPE(FEVariable_), INTENT(IN) :: obj2
   END SUBROUTINE obj_Copy
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                              FEVariable_ToString@GetMethods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2025-07-01
+! summary:  Converts scalar, vector, matrix to string name
+
+INTERFACE
+  MODULE PURE FUNCTION FEVariable_ToString(name) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: name
+    CHARACTER(:), ALLOCATABLE :: ans
+  END FUNCTION FEVariable_ToString
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                            FEVariable_ToInteger@GetMethods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2025-07-01
+! summary:  Converts scalar, vector, matrix to string name
+
+INTERFACE
+  MODULE PURE FUNCTION FEVariable_ToInteger(name) RESULT(ans)
+    CHARACTER(*), INTENT(IN) :: name
+    INTEGER(I4B) :: ans
+  END FUNCTION FEVariable_ToInteger
 END INTERFACE
 
 !----------------------------------------------------------------------------

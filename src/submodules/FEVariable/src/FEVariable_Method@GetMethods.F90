@@ -15,14 +15,62 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 
 SUBMODULE(FEVariable_Method) GetMethods
-
 USE ReallocateUtility, ONLY: Reallocate
 
-USE GlobalData, ONLY: Scalar, Vector, Matrix, Constant, Space, &
-                      Time, SpaceTime, Nodal, Quadrature
+USE BaseType, ONLY: feopt => TypeFEVariableOpt
+
 IMPLICIT NONE
 
 CONTAINS
+
+!----------------------------------------------------------------------------
+!                                                        FEVariable_ToString
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE FEVariable_ToString
+
+SELECT CASE (name)
+CASE (feopt%scalar)
+  ans = "SCALAR"
+
+CASE (feopt%vector)
+  ans = "VECTOR"
+
+CASE (feopt%matrix)
+  ans = "MATRIX"
+
+CASE DEFAULT
+  ans = "SCALAR"
+
+END SELECT
+
+END PROCEDURE FEVariable_ToString
+
+!----------------------------------------------------------------------------
+!                                                        FEVariable_ToInteger
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE FEVariable_ToInteger
+CHARACTER(1) :: name0
+
+name0 = name(1:1)
+
+SELECT CASE (name0)
+CASE ("S", "s")
+  ans = feopt%scalar
+
+CASE ("V", "v")
+  ans = feopt%vector
+
+CASE ("M", "m")
+  ans = feopt%matrix
+
+CASE DEFAULT
+  ans = feopt%scalar
+
+END SELECT
+
+END PROCEDURE FEVariable_ToInteger
 
 !----------------------------------------------------------------------------
 !                                                GetLambdaFromYoungsModulus
@@ -59,33 +107,36 @@ END PROCEDURE fevar_Size
 
 MODULE PROCEDURE fevar_Shape
 SELECT CASE (obj%rank)
-CASE (Scalar)
+CASE (feopt%scalar)
   SELECT CASE (obj%vartype)
-  CASE (Constant)
+  CASE (feopt%constant)
     ans = [1]
-  CASE (Space, Time)
+  CASE (feopt%space, feopt%time)
     ans = obj%s(1:1)
-  CASE (SpaceTime)
+  CASE (feopt%spaceTime)
     ans = obj%s(1:2)
   END SELECT
-CASE (Vector)
+
+CASE (feopt%vector)
   SELECT CASE (obj%vartype)
-  CASE (Constant)
+  CASE (feopt%constant)
     ans = obj%s(1:1)
-  CASE (Space, Time)
+  CASE (feopt%space, feopt%time)
     ans = obj%s(1:2)
-  CASE (SpaceTime)
+  CASE (feopt%spaceTime)
     ans = obj%s(1:3)
   END SELECT
-CASE (Matrix)
+
+CASE (feopt%matrix)
   SELECT CASE (obj%vartype)
-  CASE (Constant)
+  CASE (feopt%constant)
     ans = obj%s(1:2)
-  CASE (Space, Time)
+  CASE (feopt%space, feopt%time)
     ans = obj%s(1:3)
-  CASE (SpaceTime)
+  CASE (feopt%spaceTime)
     ans = obj%s(1:4)
   END SELECT
+
 END SELECT
 END PROCEDURE fevar_Shape
 
@@ -118,7 +169,7 @@ END PROCEDURE fevar_defineon
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE fevar_isNodalVariable
-ans = obj%defineon .EQ. nodal
+ans = obj%defineon .EQ. feopt%nodal
 END PROCEDURE fevar_isNodalVariable
 
 !----------------------------------------------------------------------------
@@ -126,7 +177,7 @@ END PROCEDURE fevar_isNodalVariable
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE fevar_isQuadratureVariable
-ans = obj%defineon .NE. nodal
+ans = obj%defineon .NE. feopt%nodal
 END PROCEDURE fevar_isQuadratureVariable
 
 !----------------------------------------------------------------------------
