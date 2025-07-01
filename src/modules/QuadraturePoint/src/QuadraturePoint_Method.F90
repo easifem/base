@@ -45,6 +45,7 @@ PUBLIC :: Display
 ! PUBLIC :: QuadraturePoint_MdEncode
 PUBLIC :: QuadraturePointIdToName
 PUBLIC :: QuadraturePoint_ToChar
+PUBLIC :: QuadraturePoint_ToInteger
 PUBLIC :: QuadraturePointNameToId
 PUBLIC :: MdEncode
 
@@ -56,12 +57,12 @@ PUBLIC :: MdEncode
 ! date:  2023-08-06
 ! summary:  Quadrature point name to quadrature point id
 
-INTERFACE
+INTERFACE QuadraturePoint_ToInteger
   MODULE FUNCTION QuadraturePointNameToId(name) RESULT(ans)
     CHARACTER(*), INTENT(IN) :: name
     INTEGER(I4B) :: ans
   END FUNCTION QuadraturePointNameToId
-END INTERFACE
+END INTERFACE QuadraturePoint_ToInteger
 
 !----------------------------------------------------------------------------
 !                                 QuadratuePointIdToName@ConstructorMethods
