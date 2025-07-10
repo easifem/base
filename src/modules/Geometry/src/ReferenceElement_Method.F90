@@ -39,7 +39,7 @@ PUBLIC :: ASSIGNMENT(=)
 PUBLIC :: ReferenceElement_Pointer
 PUBLIC :: GetConnectivity
 PUBLIC :: ElementType
-PUBLIC :: Elementname
+PUBLIC :: ElementName
 PUBLIC :: TotalNodesInElement
 PUBLIC :: ElementOrder
 PUBLIC :: OPERATOR(.order.)
@@ -690,7 +690,7 @@ INTERFACE GetConnectivity
 END INTERFACE GetConnectivity
 
 !----------------------------------------------------------------------------
-!                                            ElementType@ElementnameMethods
+!                                            ElementType@ElementNameMethods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -705,7 +705,7 @@ INTERFACE ElementType
 END INTERFACE ElementType
 
 !----------------------------------------------------------------------------
-!                                             ElementType@ElementnameMethods
+!                                             ElementType@ElementNameMethods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -720,37 +720,37 @@ INTERFACE ElementType
 END INTERFACE ElementType
 
 !----------------------------------------------------------------------------
-!                                           Elementname@ElementNameMethods
+!                                           ElementName@ElementNameMethods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 21 May 2022
 ! summary: Returns element name in character from element number/type
 
-INTERFACE Elementname
+INTERFACE ElementName
   MODULE PURE FUNCTION Element_name(elemType) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: elemType
     CHARACTER(:), ALLOCATABLE :: ans
   END FUNCTION Element_name
-END INTERFACE Elementname
+END INTERFACE ElementName
 
 !----------------------------------------------------------------------------
-!                                             Elementname@ElementNameMethods
+!                                             ElementName@ElementNameMethods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 21 May 2022
 ! summary: Returns element name in character from ReferenceElement
 
-INTERFACE Elementname
+INTERFACE ElementName
   MODULE PURE FUNCTION Element_name_obj(obj) RESULT(ans)
     CLASS(ReferenceElement_), INTENT(IN) :: obj
     CHARACTER(:), ALLOCATABLE :: ans
   END FUNCTION Element_name_obj
-END INTERFACE Elementname
+END INTERFACE ElementName
 
 !----------------------------------------------------------------------------
-!                                   TotalNodesInElement@ElementnameMethods
+!                                   TotalNodesInElement@ElementNameMethods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -765,7 +765,7 @@ INTERFACE TotalNodesInElement
 END INTERFACE TotalNodesInElement
 
 !----------------------------------------------------------------------------
-!                                           ElementOrder@ElementnameMethods
+!                                           ElementOrder@ElementNameMethods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -780,7 +780,7 @@ INTERFACE ElementOrder
 END INTERFACE ElementOrder
 
 !----------------------------------------------------------------------------
-!                                           ElementOrder@ElementnameMethods
+!                                           ElementOrder@ElementNameMethods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -799,7 +799,7 @@ INTERFACE OPERATOR(.order.)
 END INTERFACE OPERATOR(.order.)
 
 !----------------------------------------------------------------------------
-!                                            XiDimension@ElementnameMethods
+!                                            XiDimension@ElementNameMethods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -815,7 +815,7 @@ INTERFACE XiDimension
 END INTERFACE Xidimension
 
 !----------------------------------------------------------------------------
-!                                             Xidimension@ElementnameMethods
+!                                             Xidimension@ElementNameMethods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -1161,7 +1161,7 @@ INTERFACE isSerendipityElement
 END INTERFACE isSerendipityElement
 
 !----------------------------------------------------------------------------
-!                                         ElementTopology@ElementnameMethods
+!                                         ElementTopology@ElementNameMethods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -1189,7 +1189,7 @@ INTERFACE OPERATOR(.topology.)
 END INTERFACE OPERATOR(.topology.)
 
 !----------------------------------------------------------------------------
-!                                       ElementTopology@ElementnameMethods
+!                                       ElementTopology@ElementNameMethods
 !----------------------------------------------------------------------------
 
 INTERFACE ElementTopology
