@@ -15,8 +15,6 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-!> author: Vikas Sharma, Ph. D.
-! date:         3 March 2021
 ! summary:  Constructor methods for [[QuadraturePoint_]]
 
 SUBMODULE(QuadraturePoint_Method) ConstructorMethods
@@ -24,9 +22,10 @@ USE GlobalData, ONLY: stderr
 
 USE ErrorHandling, ONLY: ErrorMsg
 
-USE BaseInterpolation_Method, ONLY: BaseInterpolation_ToString, &
-                                    BaseInterpolation_ToInteger, &
-                                    BaseInterpolation_ToChar
+USE BaseInterpolation_Method, ONLY: InterpolationPoint_ToChar, &
+                                    InterpolationPoint_ToInteger, &
+                                    InterpolationPoint_ToString
+
 USE ReallocateUtility, ONLY: Reallocate
 
 USE ReferenceElement_Method, ONLY: ElementTopology, &
@@ -57,7 +56,7 @@ CONTAINS
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE QuadraturePointIDToName
-ans = BaseInterpolation_ToString(name)
+ans = InterpolationPoint_ToString(name)
 END PROCEDURE QuadraturePointIDToName
 
 !----------------------------------------------------------------------------
@@ -65,7 +64,7 @@ END PROCEDURE QuadraturePointIDToName
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE QuadraturePoint_ToChar
-ans = BaseInterpolation_ToChar(name)
+ans = InterpolationPoint_ToChar(name)
 END PROCEDURE QuadraturePoint_ToChar
 
 !----------------------------------------------------------------------------
@@ -73,7 +72,7 @@ END PROCEDURE QuadraturePoint_ToChar
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE QuadraturePointNameToID
-ans = BaseInterpolation_ToInteger(name)
+ans = InterpolationPoint_ToInteger(name)
 END PROCEDURE QuadraturePointNameToID
 
 !----------------------------------------------------------------------------
