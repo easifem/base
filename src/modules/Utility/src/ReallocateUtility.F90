@@ -111,7 +111,8 @@ END INTERFACE Reallocate
 !----------------------------------------------------------------------------
 
 INTERFACE Reallocate
-  MODULE PURE SUBROUTINE Reallocate_Real64_R2(mat, row, col, isExpand, expandFactor)
+  MODULE PURE SUBROUTINE Reallocate_Real64_R2(mat, row, col, isExpand, &
+                                              expandFactor)
     REAL(REAL64), ALLOCATABLE, INTENT(INOUT) :: mat(:, :)
     INTEGER(I4B), INTENT(IN) :: row, col
     LOGICAL(LGT), OPTIONAL, INTENT(IN) :: isExpand
@@ -143,7 +144,8 @@ END INTERFACE Reallocate
 !----------------------------------------------------------------------------
 
 INTERFACE Reallocate
-  MODULE PURE SUBROUTINE Reallocate_Real32_R2(mat, row, col, isExpand, expandFactor)
+  MODULE PURE SUBROUTINE Reallocate_Real32_R2(mat, row, col, isExpand, &
+                                              expandFactor)
     REAL(REAL32), ALLOCATABLE, INTENT(INOUT) :: mat(:, :)
     INTEGER(I4B), INTENT(IN) :: row, col
     LOGICAL(LGT), OPTIONAL, INTENT(IN) :: isExpand
@@ -175,7 +177,8 @@ END INTERFACE Reallocate
 !----------------------------------------------------------------------------
 
 INTERFACE Reallocate
-  MODULE PURE SUBROUTINE Reallocate_Real64_R3(mat, i1, i2, i3, isExpand, expandFactor)
+  MODULE PURE SUBROUTINE Reallocate_Real64_R3(mat, i1, i2, i3, isExpand, &
+                                              expandFactor)
     REAL(REAL64), ALLOCATABLE, INTENT(INOUT) :: mat(:, :, :)
     INTEGER(I4B), INTENT(IN) :: i1, i2, i3
     LOGICAL(LGT), OPTIONAL, INTENT(IN) :: isExpand
@@ -207,7 +210,8 @@ END INTERFACE Reallocate
 !----------------------------------------------------------------------------
 
 INTERFACE Reallocate
-  MODULE PURE SUBROUTINE Reallocate_Real32_R3(mat, i1, i2, i3, isExpand, expandFactor)
+  MODULE PURE SUBROUTINE Reallocate_Real32_R3(mat, i1, i2, i3, isExpand, &
+                                              expandFactor)
     REAL(REAL32), ALLOCATABLE, INTENT(INOUT) :: mat(:, :, :)
     INTEGER(I4B), INTENT(IN) :: i1, i2, i3
     LOGICAL(LGT), OPTIONAL, INTENT(IN) :: isExpand
@@ -239,7 +243,8 @@ END INTERFACE Reallocate
 !----------------------------------------------------------------------------
 
 INTERFACE Reallocate
-  MODULE PURE SUBROUTINE Reallocate_Real64_R4(mat, i1, i2, i3, i4, isExpand, expandFactor)
+  MODULE PURE SUBROUTINE Reallocate_Real64_R4(mat, i1, i2, i3, i4, isExpand, &
+                                              expandFactor)
     REAL(REAL64), ALLOCATABLE, INTENT(INOUT) :: mat(:, :, :, :)
     INTEGER(I4B), INTENT(IN) :: i1, i2, i3, i4
     LOGICAL(LGT), OPTIONAL, INTENT(IN) :: isExpand
@@ -271,7 +276,8 @@ END INTERFACE Reallocate
 !----------------------------------------------------------------------------
 
 INTERFACE Reallocate
-  MODULE PURE SUBROUTINE Reallocate_Real32_R4(mat, i1, i2, i3, i4, isExpand, expandFactor)
+  MODULE PURE SUBROUTINE Reallocate_Real32_R4(mat, i1, i2, i3, i4, isExpand, &
+                                              expandFactor)
     REAL(REAL32), ALLOCATABLE, INTENT(INOUT) :: mat(:, :, :, :)
     INTEGER(I4B), INTENT(IN) :: i1, i2, i3, i4
     LOGICAL(LGT), OPTIONAL, INTENT(IN) :: isExpand
@@ -303,7 +309,8 @@ END INTERFACE Reallocate
 !----------------------------------------------------------------------------
 
 INTERFACE Reallocate
-  MODULE PURE SUBROUTINE Reallocate_Real64_R5(mat, i1, i2, i3, i4, i5, isExpand, expandFactor)
+  MODULE PURE SUBROUTINE Reallocate_Real64_R5(mat, i1, i2, i3, i4, i5, &
+                                              isExpand, expandFactor)
     REAL(REAL64), ALLOCATABLE, INTENT(INOUT) :: mat(:, :, :, :, :)
     INTEGER(I4B), INTENT(IN) :: i1, i2, i3, i4, i5
     LOGICAL(LGT), OPTIONAL, INTENT(IN) :: isExpand
@@ -335,7 +342,8 @@ END INTERFACE Reallocate
 !----------------------------------------------------------------------------
 
 INTERFACE Reallocate
-  MODULE PURE SUBROUTINE Reallocate_Real32_R5(mat, i1, i2, i3, i4, i5, isExpand, expandFactor)
+  MODULE PURE SUBROUTINE Reallocate_Real32_R5(mat, i1, i2, i3, i4, i5, &
+                                              isExpand, expandFactor)
     REAL(REAL32), ALLOCATABLE, INTENT(INOUT) :: mat(:, :, :, :, :)
     INTEGER(I4B), INTENT(IN) :: i1, i2, i3, i4, i5
     LOGICAL(LGT), OPTIONAL, INTENT(IN) :: isExpand
@@ -400,7 +408,8 @@ END INTERFACE Reallocate
 !----------------------------------------------------------------------------
 
 INTERFACE Reallocate
-  MODULE PURE SUBROUTINE Reallocate_Real32_R6(mat, i1, i2, i3, i4, i5, i6, isExpand, expandFactor)
+  MODULE PURE SUBROUTINE Reallocate_Real32_R6(mat, i1, i2, i3, i4, i5, i6, &
+                                              isExpand, expandFactor)
     REAL(REAL32), ALLOCATABLE, INTENT(INOUT) :: mat(:, :, :, :, :, :)
     INTEGER(I4B), INTENT(IN) :: i1, i2, i3, i4, i5, i6
     LOGICAL(LGT), OPTIONAL, INTENT(IN) :: isExpand
@@ -630,7 +639,8 @@ END INTERFACE Reallocate
 !----------------------------------------------------------------------------
 
 INTERFACE Reallocate
-  MODULE PURE SUBROUTINE Reallocate_Int64_R2(mat, row, col, isExpand, expandFactor)
+  MODULE PURE SUBROUTINE Reallocate_Int64_R2(mat, row, col, isExpand, &
+                                             expandFactor)
     INTEGER(INT64), ALLOCATABLE, INTENT(INOUT) :: mat(:, :)
     INTEGER(I4B), INTENT(IN) :: row, col
     LOGICAL(LGT), OPTIONAL, INTENT(IN) :: isExpand
@@ -650,7 +660,8 @@ INTERFACE Reallocate
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: expandFactor
   END SUBROUTINE Reallocate_Int64_R2b
 
-  MODULE PURE SUBROUTINE Reallocate_Int32_R2(mat, row, col, isExpand, expandFactor)
+  MODULE PURE SUBROUTINE Reallocate_Int32_R2(mat, row, col, isExpand, &
+                                             expandFactor)
     INTEGER(INT32), ALLOCATABLE, INTENT(INOUT) :: mat(:, :)
     INTEGER(I4B), INTENT(IN) :: row, col
     LOGICAL(LGT), OPTIONAL, INTENT(IN) :: isExpand
@@ -670,7 +681,8 @@ INTERFACE Reallocate
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: expandFactor
   END SUBROUTINE Reallocate_Int32_R2b
 
-  MODULE PURE SUBROUTINE Reallocate_Int16_R2(mat, row, col, isExpand, expandFactor)
+  MODULE PURE SUBROUTINE Reallocate_Int16_R2(mat, row, col, isExpand, &
+                                             expandFactor)
     INTEGER(INT16), ALLOCATABLE, INTENT(INOUT) :: mat(:, :)
     INTEGER(I4B), INTENT(IN) :: row, col
     LOGICAL(LGT), OPTIONAL, INTENT(IN) :: isExpand
@@ -690,7 +702,8 @@ INTERFACE Reallocate
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: expandFactor
   END SUBROUTINE Reallocate_Int16_R2b
 
-  MODULE PURE SUBROUTINE Reallocate_Int8_R2(mat, row, col, isExpand, expandFactor)
+  MODULE PURE SUBROUTINE Reallocate_Int8_R2(mat, row, col, isExpand, &
+                                            expandFactor)
     INTEGER(INT8), ALLOCATABLE, INTENT(INOUT) :: mat(:, :)
     INTEGER(I4B), INTENT(IN) :: row, col
     LOGICAL(LGT), OPTIONAL, INTENT(IN) :: isExpand
@@ -716,7 +729,8 @@ END INTERFACE Reallocate
 !----------------------------------------------------------------------------
 
 INTERFACE Reallocate
-  MODULE PURE SUBROUTINE Reallocate_Int64_R3(mat, i1, i2, i3, isExpand, expandFactor)
+  MODULE PURE SUBROUTINE Reallocate_Int64_R3(mat, i1, i2, i3, isExpand, &
+                                             expandFactor)
     INTEGER(INT64), ALLOCATABLE, INTENT(INOUT) :: mat(:, :, :)
     INTEGER(I4B), INTENT(IN) :: i1, i2, i3
     LOGICAL(LGT), OPTIONAL, INTENT(IN) :: isExpand
@@ -748,7 +762,8 @@ END INTERFACE Reallocate
 !----------------------------------------------------------------------------
 
 INTERFACE Reallocate
-  MODULE PURE SUBROUTINE Reallocate_Int32_R3(mat, i1, i2, i3, isExpand, expandFactor)
+  MODULE PURE SUBROUTINE Reallocate_Int32_R3(mat, i1, i2, i3, isExpand, &
+                                             expandFactor)
     INTEGER(INT32), ALLOCATABLE, INTENT(INOUT) :: mat(:, :, :)
     INTEGER(I4B), INTENT(IN) :: i1, i2, i3
     LOGICAL(LGT), OPTIONAL, INTENT(IN) :: isExpand
@@ -780,8 +795,8 @@ END INTERFACE Reallocate
 !----------------------------------------------------------------------------
 
 INTERFACE Reallocate
-  MODULE PURE SUBROUTINE Reallocate_Int64_R4(mat, i1, &
-                                           i2, i3, i4, isExpand, expandFactor)
+  MODULE PURE SUBROUTINE Reallocate_Int64_R4(mat, i1, i2, i3, i4, isExpand, &
+                                             expandFactor)
     INTEGER(INT64), ALLOCATABLE, INTENT(INOUT) :: mat(:, :, :, :)
     INTEGER(I4B), INTENT(IN) :: i1, i2, i3, i4
     LOGICAL(LGT), OPTIONAL, INTENT(IN) :: isExpand
@@ -813,7 +828,8 @@ END INTERFACE Reallocate
 !----------------------------------------------------------------------------
 
 INTERFACE Reallocate
-  MODULE PURE SUBROUTINE Reallocate_Int32_R4(mat, i1, i2, i3, i4, isExpand, expandFactor)
+  MODULE PURE SUBROUTINE Reallocate_Int32_R4(mat, i1, i2, i3, i4, isExpand, &
+                                             expandFactor)
     INTEGER(INT32), ALLOCATABLE, INTENT(INOUT) :: mat(:, :, :, :)
     INTEGER(I4B), INTENT(IN) :: i1, i2, i3, i4
     LOGICAL(LGT), OPTIONAL, INTENT(IN) :: isExpand
@@ -978,7 +994,7 @@ END INTERFACE Reallocate
 
 INTERFACE Reallocate
   MODULE PURE SUBROUTINE Reallocate_Int64_R7(mat, i1, i2, i3, i4, i5, &
-    & i6, i7, isExpand, expandFactor)
+                                             i6, i7, isExpand, expandFactor)
     INTEGER(INT64), ALLOCATABLE, INTENT(INOUT) :: mat(:, :, :, :, :, :, :)
     INTEGER(I4B), INTENT(IN) :: i1, i2, i3, i4, i5, i6, i7
     LOGICAL(LGT), OPTIONAL, INTENT(IN) :: isExpand
@@ -1044,7 +1060,8 @@ END INTERFACE Reallocate
 
 INTERFACE Reallocate
   MODULE PURE SUBROUTINE Reallocate_Int32_R1_6(vec1, n1, vec2, n2, vec3, &
-                     n3, vec4, n4, vec5, n5, vec6, n6, isExpand, expandFactor)
+                                               n3, vec4, n4, vec5, n5, vec6, &
+                                               n6, isExpand, expandFactor)
     INTEGER(I4B), ALLOCATABLE, INTENT(INOUT) :: vec1(:), vec2(:)
     INTEGER(I4B), ALLOCATABLE, OPTIONAL, INTENT(INOUT) :: vec3(:), &
                                                      vec4(:), vec5(:), vec6(:)
@@ -1064,7 +1081,9 @@ END INTERFACE Reallocate
 
 INTERFACE Reallocate
   MODULE PURE SUBROUTINE Reallocate_Real64_R1_6(vec1, n1, vec2, &
-           n2, vec3, n3, vec4, n4, vec5, n5, vec6, n6, isExpand, expandFactor)
+                                                n2, vec3, n3, vec4, n4, &
+                                                vec5, n5, vec6, n6, &
+                                                isExpand, expandFactor)
     REAL(REAL64), ALLOCATABLE, INTENT(INOUT) :: vec1(:), vec2(:)
     REAL(REAL64), ALLOCATABLE, OPTIONAL, INTENT(INOUT) :: vec3(:), &
                                                      vec4(:), vec5(:), vec6(:)
@@ -1084,7 +1103,9 @@ END INTERFACE Reallocate
 
 INTERFACE Reallocate
   MODULE PURE SUBROUTINE Reallocate_Real32_R1_6(vec1, n1, vec2, &
-           n2, vec3, n3, vec4, n4, vec5, n5, vec6, n6, isExpand, expandFactor)
+                                                n2, vec3, n3, vec4, &
+                                                n4, vec5, n5, vec6, &
+                                                n6, isExpand, expandFactor)
     REAL(REAL32), ALLOCATABLE, INTENT(INOUT) :: vec1(:), vec2(:)
     REAL(REAL32), ALLOCATABLE, OPTIONAL, INTENT(INOUT) :: vec3(:), &
                                                      vec4(:), vec5(:), vec6(:)
