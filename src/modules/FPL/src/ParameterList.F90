@@ -136,27 +136,27 @@ CONTAINS
     ParameterList_isAssignable6D, &
     ParameterList_isAssignable7D
   PROCEDURE, NON_OVERRIDABLE, PUBLIC :: DataSizeInBytes => &
-    & ParameterList_DataSizeInBytes
+    ParameterList_DataSizeInBytes
   PROCEDURE, NON_OVERRIDABLE, PUBLIC :: Del => ParameterList_RemoveEntry
   GENERIC, PUBLIC :: Remove => Del
   PROCEDURE, NON_OVERRIDABLE, PUBLIC :: Init => ParameterList_Init
   GENERIC, PUBLIC :: Initiate => Init
   PROCEDURE, NON_OVERRIDABLE, PUBLIC :: GetShape => ParameterList_GetShape
   PROCEDURE, NON_OVERRIDABLE, PUBLIC :: GetDimensions => &
-    & ParameterList_GetDimensions
+    ParameterList_GetDimensions
   PROCEDURE, NON_OVERRIDABLE, PUBLIC :: NewSubList => ParameterList_NewSubList
   PROCEDURE, NON_OVERRIDABLE, PUBLIC :: GetSubList => ParameterList_GetSubList
   PROCEDURE, NON_OVERRIDABLE, PUBLIC :: isPresent => ParameterList_isPresent
   PROCEDURE, NON_OVERRIDABLE, PUBLIC :: isSubList => ParameterList_isSubList
   PROCEDURE, NON_OVERRIDABLE, PUBLIC :: GetAsString => &
-    & ParameterList_GetAsString
+    ParameterList_GetAsString
   PROCEDURE, NON_OVERRIDABLE, PUBLIC :: Free => ParameterList_Free
   GENERIC, PUBLIC :: DEALLOCATE => Free
   PROCEDURE, NON_OVERRIDABLE, PUBLIC :: PRINT => ParameterList_Print
   PROCEDURE, NON_OVERRIDABLE, PUBLIC :: Display => ParameterList_Display
   PROCEDURE, NON_OVERRIDABLE, PUBLIC :: Length => ParameterList_Length
   PROCEDURE, NON_OVERRIDABLE, PUBLIC :: GetIterator => &
-    & ParameterList_GetIterator
+    ParameterList_GetIterator
   FINAL :: ParameterList_Finalize
 END TYPE ParameterList_t
 
@@ -200,30 +200,30 @@ CONTAINS
   PROCEDURE, NON_OVERRIDABLE :: GetEntry => ParameterListIterator_GetEntry
   PROCEDURE, NON_OVERRIDABLE :: GetIndex => ParameterListIterator_GetIndex
   PROCEDURE, NON_OVERRIDABLE :: PointToValue => &
-    & ParameterListIterator_PointToValue
+    ParameterListIterator_PointToValue
   PROCEDURE, NON_OVERRIDABLE :: NextNotEmptyListIterator => &
-    & ParameterListIterator_NextNotEmptyListIterator
+    ParameterListIterator_NextNotEmptyListIterator
   PROCEDURE, PUBLIC, NON_OVERRIDABLE :: GetKey => ParameterListIterator_GetKey
   PROCEDURE, PUBLIC, NON_OVERRIDABLE :: Init => ParameterListIterator_Init
   PROCEDURE, PUBLIC, NON_OVERRIDABLE :: Begin => ParameterListIterator_Begin
   PROCEDURE, PUBLIC, NON_OVERRIDABLE :: END => ParameterListIterator_End
   PROCEDURE, PUBLIC, NON_OVERRIDABLE :: Next => ParameterListIterator_Next
   PROCEDURE, PUBLIC, NON_OVERRIDABLE :: HasFinished => &
-    & ParameterListIterator_HasFinished
+    ParameterListIterator_HasFinished
   PROCEDURE, PUBLIC, NON_OVERRIDABLE :: GetShape => &
-    & ParameterListIterator_GetShape
+    ParameterListIterator_GetShape
   PROCEDURE, PUBLIC, NON_OVERRIDABLE :: GetDimensions => &
-    & ParameterListIterator_GetDimensions
+    ParameterListIterator_GetDimensions
   PROCEDURE, PUBLIC, NON_OVERRIDABLE :: DataSizeInBytes => &
-    & ParameterListIterator_DataSizeInBytes
+    ParameterListIterator_DataSizeInBytes
   PROCEDURE, PUBLIC, NON_OVERRIDABLE :: GetAsString => &
-    & ParameterListIterator_GetAsString
+    ParameterListIterator_GetAsString
   PROCEDURE, PUBLIC, NON_OVERRIDABLE :: GetSubList => &
-    & ParameterListIterator_GetSubList
+    ParameterListIterator_GetSubList
   PROCEDURE, PUBLIC, NON_OVERRIDABLE :: isSubList => &
-    & ParameterListIterator_isSubList
+    ParameterListIterator_isSubList
   PROCEDURE, PUBLIC, NON_OVERRIDABLE :: toString => &
-    & ParameterListIterator_toString
+    ParameterListIterator_toString
   PROCEDURE, PUBLIC, NON_OVERRIDABLE :: PRINT => ParameterListIterator_Print
   PROCEDURE, PUBLIC, NON_OVERRIDABLE :: Free => ParameterListIterator_Free
   GENERIC, PUBLIC :: Get => ParameterListIterator_Get0D, &
@@ -364,21 +364,19 @@ END SUBROUTINE ParameterList_Finalize
 !
 !----------------------------------------------------------------------------
 
-
 !> author: Vikas Sharma, Ph. D.
-! date:  2023-09-22 
+! date:  2023-09-22
 ! summary:  Set a Key/Value pair into the dictionary
 
 FUNCTION ParameterList_NewSubList(this, Key, Size) RESULT(SubListPointer)
 
-
-  CLASS(ParameterList_t), INTENT(INOUT) :: this 
+  CLASS(ParameterList_t), INTENT(INOUT) :: this
     !! Parameter List
-  CHARACTER(*), INTENT(IN) :: Key 
+  CHARACTER(*), INTENT(IN) :: Key
     !! String Key
-  INTEGER(I4P), OPTIONAL, INTENT(IN) :: Size 
+  INTEGER(I4P), OPTIONAL, INTENT(IN) :: Size
     !! Sublist Size
-  TYPE(ParameterList_t), POINTER :: SublistPointer 
+  TYPE(ParameterList_t), POINTER :: SublistPointer
     !! New Sublist pointer
 
   ! Internal variables
@@ -431,7 +429,7 @@ FUNCTION ParameterList_GetSublist(this, Key, Sublist) RESULT(FPLerror)
 END FUNCTION ParameterList_GetSubList
 
 !----------------------------------------------------------------------------
-!                                                                 
+!
 !----------------------------------------------------------------------------
 
 FUNCTION ParameterList_Set0D(this, Key, VALUE) RESULT(FPLerror)
@@ -1656,13 +1654,14 @@ END FUNCTION ParameterList_GetAsString
 !
 !----------------------------------------------------------------------------
 
+!> author: Vikas Sharma, Ph. D.
+! date: 2025-07-20
+! summary:  Print the content of the DataBase
+
 SUBROUTINE ParameterList_Display(this, msg, unitno)
-
-  !< Print the content of the DataBase
-
-  CLASS(ParameterList_t), INTENT(in) :: this
-  CHARACTER(*), INTENT(in) :: msg
-  INTEGER(i4p), OPTIONAL, INTENT(in) :: unitno
+  CLASS(ParameterList_t), INTENT(IN) :: this
+  CHARACTER(*), INTENT(IN) :: msg
+  INTEGER(i4p), OPTIONAL, INTENT(IN) :: unitno
   CALL this%PRINT(unitno, msg)
 END SUBROUTINE ParameterList_Display
 
@@ -1760,8 +1759,10 @@ SUBROUTINE ParameterListIterator_Assignment(this, ParameterListIterator)
 
   !< Dictionary iterator Assignment
 
-  CLASS(ParameterListIterator_t), INTENT(INOUT) :: this ! Output Dictionary iterator
-  TYPE(ParameterListIterator_t), INTENT(IN) :: ParameterListIterator ! Input Dictionary iterator
+  CLASS(ParameterListIterator_t), INTENT(INOUT) :: this
+  !! Output Dictionary iterator
+  TYPE(ParameterListIterator_t), INTENT(IN) :: ParameterListIterator
+  !! Input Dictionary iterator
 
   this%DataBase(0:) => ParameterListIterator%DataBase
   this%EntryListIterator = ParameterListIterator%EntryListIterator
@@ -1859,7 +1860,7 @@ SUBROUTINE ParameterListIterator_Next(this)
 END SUBROUTINE ParameterListIterator_Next
 
 !----------------------------------------------------------------------------
-!                                                                 
+!
 !----------------------------------------------------------------------------
 
 FUNCTION ParameterListIterator_GetEntry(this) RESULT(CurrentEntry)
@@ -1880,7 +1881,7 @@ FUNCTION ParameterListIterator_GetEntry(this) RESULT(CurrentEntry)
 END FUNCTION ParameterListIterator_GetEntry
 
 !----------------------------------------------------------------------------
-!                                                                 
+!
 !----------------------------------------------------------------------------
 
 FUNCTION ParameterListIterator_PointToValue(this) RESULT(VALUE)
