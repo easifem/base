@@ -20,7 +20,9 @@
 ! summary: This submodule contains the contructor methods for [[IntVector_]]
 
 SUBMODULE(IntVector_ConstructorMethod) Methods
-USE BaseMethod
+USE IntVector_SetMethod, ONLY: SetTotalDimension
+USE ReallocateUtility, ONLY: Util_Reallocate => Reallocate
+
 IMPLICIT NONE
 
 CONTAINS
@@ -29,216 +31,268 @@ CONTAINS
 !
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE intVec_shape
-IF (ALLOCATED(obj%Val)) THEN
-  Ans(1) = SIZE(obj%Val)
-ELSE
-  Ans = 0
-END IF
-END PROCEDURE intVec_shape
+MODULE PROCEDURE obj_shape
+LOGICAL(LGT) :: isok
+
+ans = 0
+isok = ALLOCATED(obj%val)
+IF (isok) ans(1) = SIZE(obj%val)
+END PROCEDURE obj_shape
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE intVec_Size
-IF (ALLOCATED(obj%Val)) THEN
-  Ans = SIZE(obj%Val)
-ELSE
-  Ans = 0
-END IF
-END PROCEDURE intVec_Size
+MODULE PROCEDURE obj_Size
+LOGICAL(LGT) :: isok
+
+ans = 0
+isok = ALLOCATED(obj%val)
+IF (isok) ans = SIZE(obj%val)
+END PROCEDURE obj_Size
 
 !----------------------------------------------------------------------------
 !                                                         getTotalDimension
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE IntVec_getTotalDimension
+MODULE PROCEDURE obj_getTotalDimension
 ans = obj%tDimension
-END PROCEDURE IntVec_getTotalDimension
+END PROCEDURE obj_getTotalDimension
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE intVec_AllocateData
-CALL Reallocate(obj%Val, Dims)
-CALL setTotalDimension(obj, 1_I4B)
-END PROCEDURE intVec_AllocateData
+MODULE PROCEDURE obj_AllocateData
+CALL Util_Reallocate(obj%val, dims)
+CALL SetTotalDimension(obj, 1_I4B)
+END PROCEDURE obj_AllocateData
 
 !----------------------------------------------------------------------------
 !                                                                 Reallocate
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE intVec_Reallocate
-IF (ALLOCATED(obj)) THEN
-  IF (SIZE(obj) .NE. row) THEN
-    DEALLOCATE (obj)
-    ALLOCATE (obj(row))
-  END IF
-ELSE
+MODULE PROCEDURE obj_Reallocate
+LOGICAL(LGT) :: isok
+INTEGER(I4B) :: tsize
+
+isok = ALLOCATED(obj)
+IF (.NOT. isok) THEN
+  ALLOCATE (obj(row))
+  RETURN
+END IF
+
+tsize = SIZE(obj)
+isok = tsize .NE. row
+IF (isok) THEN
+  DEALLOCATE (obj)
   ALLOCATE (obj(row))
 END IF
-END PROCEDURE intVec_Reallocate
+END PROCEDURE obj_Reallocate
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE intVec_Deallocate
-IF (ALLOCATED(obj%Val)) DEALLOCATE (obj%Val)
-END PROCEDURE intVec_Deallocate
+MODULE PROCEDURE obj_Deallocate
+LOGICAL(LGT) :: isok
+obj%tDimension = 0_I4B
+isok = ALLOCATED(obj%val)
+IF (isok) DEALLOCATE (obj%val)
+END PROCEDURE obj_Deallocate
 
 !----------------------------------------------------------------------------
 !                                                                  Initiate
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE intVec_initiate1
-CALL ALLOCATE (obj, tSize)
-END PROCEDURE intVec_initiate1
+MODULE PROCEDURE obj_initiate1
+CALL obj_AllocateData(obj=obj, dims=tSize)
+END PROCEDURE obj_initiate1
 
 !----------------------------------------------------------------------------
 !                                                                  Initiate
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE intVec_initiate2
+MODULE PROCEDURE obj_initiate2
 INTEGER(I4B) :: n, i
+LOGICAL(LGT) :: isok
+
 n = SIZE(tSize)
-IF (ALLOCATED(obj)) THEN
-  IF (SIZE(obj) .NE. n) THEN
-    DEALLOCATE (obj)
-    ALLOCATE (obj(n))
-  END IF
-ELSE
+isok = ALLOCATED(obj)
+
+IF (.NOT. isok) THEN
+  ALLOCATE (obj(n))
+  DO i = 1, n
+    CALL obj_AllocateData(obj=obj(i), dims=tSize(i))
+  END DO
+  RETURN
+END IF
+
+i = SIZE(obj)
+isok = i .NE. n
+IF (isok) THEN
+  DEALLOCATE (obj)
   ALLOCATE (obj(n))
 END IF
+
 DO i = 1, n
-  CALL ALLOCATE (obj(i), tSize(i))
+  CALL obj_AllocateData(obj=obj(i), dims=tSize(i))
 END DO
-END PROCEDURE intVec_initiate2
+END PROCEDURE obj_initiate2
 
 !----------------------------------------------------------------------------
 !                                                                 Initiate
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE intVec_initiate3
-IF (ALLOCATED(obj%Val)) DEALLOCATE (obj%Val)
-ALLOCATE (obj%Val(a:b))
-obj%Val = 0
-CALL setTotalDimension(obj, 1_I4B)
-END PROCEDURE intVec_initiate3
+MODULE PROCEDURE obj_initiate3
+LOGICAL(LGT) :: isok
+
+isok = ALLOCATED(obj%val)
+IF (isok) DEALLOCATE (obj%val)
+ALLOCATE (obj%val(a:b))
+obj%val(a:b) = 0
+CALL SetTotalDimension(obj, 1_I4B)
+END PROCEDURE obj_initiate3
 
 !----------------------------------------------------------------------------
 !                                                                 Initiate
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE intVec_initiate4a
-obj%Val = Val
-CALL setTotalDimension(obj, 1_I4B)
-END PROCEDURE intVec_initiate4a
-
-MODULE PROCEDURE intVec_initiate4b
-obj%Val = Val
-CALL setTotalDimension(obj, 1_I4B)
-END PROCEDURE intVec_initiate4b
-
-MODULE PROCEDURE intVec_initiate4c
-obj%Val = Val
-CALL setTotalDimension(obj, 1_I4B)
-END PROCEDURE intVec_initiate4c
-
-MODULE PROCEDURE intVec_initiate4d
-obj%Val = Val
-CALL setTotalDimension(obj, 1_I4B)
-END PROCEDURE intVec_initiate4d
+MODULE PROCEDURE obj_initiate4a
+#include "./include/Initiate4.F90"
+END PROCEDURE obj_initiate4a
 
 !----------------------------------------------------------------------------
-!                                                                 Initiate
+!                                                                  Initiate
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE intVec_initiate5a
-obj%Val = Val
-CALL setTotalDimension(obj, 1_I4B)
-END PROCEDURE intVec_initiate5a
+MODULE PROCEDURE obj_initiate4b
+#include "./include/Initiate4.F90"
+END PROCEDURE obj_initiate4b
 
-MODULE PROCEDURE intVec_initiate5b
-obj%Val = Val
-CALL setTotalDimension(obj, 1_I4B)
-END PROCEDURE intVec_initiate5b
+!----------------------------------------------------------------------------
+!                                                                  Initiate
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE obj_initiate4c
+#include "./include/Initiate4.F90"
+END PROCEDURE obj_initiate4c
+
+!----------------------------------------------------------------------------
+!                                                                  Initiate
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE obj_initiate4d
+#include "./include/Initiate4.F90"
+END PROCEDURE obj_initiate4d
+
+!----------------------------------------------------------------------------
+!                                                                    Initiate
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE obj_initiate5a
+#include "./include/Initiate4.F90"
+END PROCEDURE obj_initiate5a
+
+!----------------------------------------------------------------------------
+!                                                                    Initiate
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE obj_initiate5b
+#include "./include/Initiate4.F90"
+END PROCEDURE obj_initiate5b
+
+!----------------------------------------------------------------------------
+!                                                                    Initiate
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE obj_Initiate6
+LOGICAL(LGT) :: isok
+INTEGER(I4B) :: tsize
+
+obj%tDimension = obj2%tDimension
+isok = ALLOCATED(obj2%val)
+IF (isok) THEN
+  tsize = SIZE(obj2%val)
+  CALL Util_Reallocate(obj%val, tsize)
+  CALL Copy_(x=obj%val, y=obj2%val)
+END IF
+
+END PROCEDURE obj_Initiate6
 
 !----------------------------------------------------------------------------
 !                                                                     Vector
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE IntVec_Constructor1
-CALL ALLOCATE (obj, tSize)
-END PROCEDURE IntVec_Constructor1
+MODULE PROCEDURE obj_Constructor1
+CALL obj_AllocateData(obj=obj, dims=tSize)
+END PROCEDURE obj_Constructor1
 
 !----------------------------------------------------------------------------
 !                                                              Vector_Pointer
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE IntVec_Constructor2
-obj%Val = Val
-CALL setTotalDimension(obj, 1_I4B)
-END PROCEDURE IntVec_Constructor2
+MODULE PROCEDURE obj_Constructor2
+CALL Initiate(obj=obj, val=val)
+END PROCEDURE obj_Constructor2
 
 !----------------------------------------------------------------------------
 !                                                              Vector_Pointer
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE IntVec_Constructor3
-obj%Val = Val
-CALL setTotalDimension(obj, 1_I4B)
-END PROCEDURE IntVec_Constructor3
+MODULE PROCEDURE obj_Constructor3
+CALL Initiate(obj=obj, val=val)
+END PROCEDURE obj_Constructor3
 
 !----------------------------------------------------------------------------
 !                                                              Vector_Pointer
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE IntVec_Constructor_1
+MODULE PROCEDURE obj_Constructor_1
 ALLOCATE (obj)
-CALL ALLOCATE (obj, tSize)
-END PROCEDURE IntVec_Constructor_1
+CALL Initiate(obj=obj, tsize=tsize)
+END PROCEDURE obj_Constructor_1
 
 !----------------------------------------------------------------------------
 !                                                                     Vector
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE IntVec_Constructor_2
+MODULE PROCEDURE obj_Constructor_2
 ALLOCATE (obj)
-obj%Val = Val
-CALL setTotalDimension(obj, 1_I4B)
-END PROCEDURE IntVec_Constructor_2
+CALL Initiate(obj=obj, val=val)
+END PROCEDURE obj_Constructor_2
 
 !----------------------------------------------------------------------------
 !                                                                      Vector
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE IntVec_Constructor_3
+MODULE PROCEDURE obj_Constructor_3
 ALLOCATE (obj)
-obj%Val = Val
-CALL setTotalDimension(obj, 1_I4B)
-END PROCEDURE IntVec_Constructor_3
+CALL Initiate(obj=obj, val=val)
+END PROCEDURE obj_Constructor_3
 
 !----------------------------------------------------------------------------
 !                                                                 Assignment
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE IntVec_assign_a
-IF (ALLOCATED(obj%Val)) THEN
-  Val = obj%Val
-END IF
-END PROCEDURE IntVec_assign_a
+MODULE PROCEDURE obj_assign_a
+LOGICAL(LGT) :: isok
+INTEGER(I4B) :: tsize
+
+isok = ALLOCATED(obj%val)
+IF (.NOT. isok) RETURN
+
+tsize = SIZE(obj%val)
+CALL Util_Reallocate(val, tsize)
+CALL Copy_(x=val, y=obj%val)
+END PROCEDURE obj_assign_a
 
 !----------------------------------------------------------------------------
 !                                                                    Convert
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE obj_convert_int
-IF (ALLOCATED(From%Val)) THEN
-  To = From%Val
-END IF
+CALL obj_assign_a(val=to, obj=from)
 END PROCEDURE obj_convert_int
 
 !----------------------------------------------------------------------------
@@ -247,12 +301,13 @@ END PROCEDURE obj_convert_int
 
 MODULE PROCEDURE obj_Copy_Int8
 INTEGER(I4B) :: tsize, ii
+
 tsize = SIZE(y)
-CALL Reallocate(x, tsize)
-DO ii = 1, tsize
+CALL Util_Reallocate(x, tsize)
+
+DO CONCURRENT(ii=1:tsize)
   x(ii) = y(ii)
 END DO
-
 END PROCEDURE obj_Copy_Int8
 
 !----------------------------------------------------------------------------
@@ -261,9 +316,11 @@ END PROCEDURE obj_Copy_Int8
 
 MODULE PROCEDURE obj_Copy_Int16
 INTEGER(I4B) :: tsize, ii
+
 tsize = SIZE(y)
-CALL Reallocate(x, tsize)
-DO ii = 1, tsize
+CALL Util_Reallocate(x, tsize)
+
+DO CONCURRENT(ii=1:tsize)
   x(ii) = y(ii)
 END DO
 END PROCEDURE obj_Copy_Int16
@@ -274,9 +331,11 @@ END PROCEDURE obj_Copy_Int16
 
 MODULE PROCEDURE obj_Copy_Int32
 INTEGER(I4B) :: tsize, ii
+
 tsize = SIZE(y)
-CALL Reallocate(x, tsize)
-DO ii = 1, tsize
+CALL Util_Reallocate(x, tsize)
+
+DO CONCURRENT(ii=1:tsize)
   x(ii) = y(ii)
 END DO
 END PROCEDURE obj_Copy_Int32
@@ -287,9 +346,11 @@ END PROCEDURE obj_Copy_Int32
 
 MODULE PROCEDURE obj_Copy_Int64
 INTEGER(I4B) :: tsize, ii
+
 tsize = SIZE(y)
-CALL Reallocate(x, tsize)
-DO ii = 1, tsize
+CALL Util_Reallocate(x, tsize)
+
+DO CONCURRENT(ii=1:tsize)
   x(ii) = y(ii)
 END DO
 END PROCEDURE obj_Copy_Int64
@@ -299,11 +360,10 @@ END PROCEDURE obj_Copy_Int64
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE obj_Copy1_
-INTEGER(I4B) :: xx, yy
+INTEGER(I4B) :: yy
 
-DO yy = y_start, y_end
-  xx = x_start + yy - y_start
-  x(xx) = y(yy)
+DO CONCURRENT(yy=y_start:y_end)
+  x(x_start + yy - y_start) = y(yy)
 END DO
 END PROCEDURE obj_Copy1_
 

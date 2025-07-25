@@ -278,11 +278,11 @@ END TYPE BoundingBoxPointer_
 
 TYPE :: RealMatrix_
   INTEGER(I4B) :: tDimension = 0_I4B
-  CHARACTER(5) :: MatrixProp = 'UNSYM'
-  REAL(DFP), ALLOCATABLE :: Val(:, :)
+  CHARACTER(5) :: matrixProp = 'UNSYM'
+  REAL(DFP), ALLOCATABLE :: val(:, :)
 END TYPE RealMatrix_
 
-TYPE(RealMatrix_), PARAMETER :: TypeRealMatrix = RealMatrix_(Val=NULL())
+TYPE(RealMatrix_), PARAMETER :: TypeRealMatrix = RealMatrix_(val=NULL())
 
 TYPE :: RealMatrixPointer_
   CLASS(RealMatrix_), POINTER :: ptr => NULL()
@@ -300,10 +300,10 @@ END TYPE RealMatrixPointer_
 
 TYPE :: IntVector_
   INTEGER(I4B) :: tDimension = 1_I4B
-  INTEGER(I4B), ALLOCATABLE :: Val(:)
+  INTEGER(I4B), ALLOCATABLE :: val(:)
 END TYPE IntVector_
 
-TYPE(IntVector_), PARAMETER :: TypeIntVector = IntVector_(Val=NULL())
+TYPE(IntVector_), PARAMETER :: TypeIntVector = IntVector_(val=NULL())
 
 TYPE :: IntVectorPointer_
   CLASS(IntVector_), POINTER :: ptr => NULL()

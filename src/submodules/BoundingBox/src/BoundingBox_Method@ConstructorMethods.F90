@@ -175,6 +175,29 @@ END IF
 END PROCEDURE bb_deallocate2
 
 !----------------------------------------------------------------------------
+!                                                                 Reallocate
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE obj_Reallocate
+LOGICAL(LGT) :: isok
+INTEGER(I4B) :: tempint
+
+isok = ALLOCATED(obj)
+
+IF (.NOT. isok) THEN
+  ALLOCATE (obj(tsize))
+  RETURN
+END IF
+
+tempint = SIZE(obj)
+isok = tempint .NE. tsize
+IF (isok) THEN
+  DEALLOCATE (obj)
+  ALLOCATE (obj(tsize))
+END IF
+END PROCEDURE obj_Reallocate
+
+!----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 END SUBMODULE ConstructorMethods
