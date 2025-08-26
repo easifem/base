@@ -15,8 +15,8 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 
 MODULE GlobalData
-USE, INTRINSIC :: ISO_FORTRAN_ENV, ONLY: INPUT_UNIT, &
-                                                       OUTPUT_UNIT, ERROR_UNIT
+USE ISO_FORTRAN_ENV, ONLY: INPUT_UNIT, &
+                           OUTPUT_UNIT, ERROR_UNIT
 IMPLICIT NONE
 PUBLIC
 

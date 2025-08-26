@@ -1,6 +1,6 @@
 !-----------------------------------------------------------------
 ! FPL (Fortran Parameter List)
-! Copyright (c) 2015 Santiago Badia, Alberto F. Martín, 
+! Copyright (c) 2015 Santiago Badia, Alberto F. Martín,
 ! Javier Principe and Víctor Sande.
 ! All rights reserved.
 !
@@ -18,10 +18,10 @@
 ! License along with this library.
 !-----------------------------------------------------------------
 
-module I4PWrapperFactory
+MODULE I4PWrapperFactory
 
 USE WrapperFactory
-USE PENF, only: I1P, I4P
+USE PENF, ONLY: I1P, I4P
 USE DimensionsWrapper
 USE DimensionsWrapper0D_I4P
 USE DimensionsWrapper1D_I4P
@@ -32,322 +32,306 @@ USE DimensionsWrapper5D_I4P
 USE DimensionsWrapper6D_I4P
 USE DimensionsWrapper7D_I4P
 
-implicit none
-private
+IMPLICIT NONE
+PRIVATE
 
-    type, extends(WrapperFactory_t) :: I4PWrapperFactory_t
-    private
+TYPE, EXTENDS(WrapperFactory_t) :: I4PWrapperFactory_t
+  PRIVATE
 
-    contains
-        procedure         :: Wrap0D      => I4PWrapperFactory_Wrap0D
-        procedure         :: Wrap1D      => I4PWrapperFactory_Wrap1D
-        procedure         :: Wrap2D      => I4PWrapperFactory_Wrap2D
-        procedure         :: Wrap3D      => I4PWrapperFactory_Wrap3D
-        procedure         :: Wrap4D      => I4PWrapperFactory_Wrap4D
-        procedure         :: Wrap5D      => I4PWrapperFactory_Wrap5D
-        procedure         :: Wrap6D      => I4PWrapperFactory_Wrap6D
-        procedure         :: Wrap7D      => I4PWrapperFactory_Wrap7D
-        procedure         :: UnWrap0D    => I4PWrapperFactory_UnWrap0D
-        procedure         :: UnWrap1D    => I4PWrapperFactory_UnWrap1D
-        procedure         :: UnWrap2D    => I4PWrapperFactory_UnWrap2D
-        procedure         :: UnWrap3D    => I4PWrapperFactory_UnWrap3D
-        procedure         :: UnWrap4D    => I4PWrapperFactory_UnWrap4D
-        procedure         :: UnWrap5D    => I4PWrapperFactory_UnWrap5D
-        procedure         :: UnWrap6D    => I4PWrapperFactory_UnWrap6D
-        procedure         :: UnWrap7D    => I4PWrapperFactory_UnWrap7D
-        procedure, public :: hasSameType => I4PWrapperFactory_hasSameType
-    end type
+CONTAINS
+  PROCEDURE :: Wrap0D => I4PWrapperFactory_Wrap0D
+  PROCEDURE :: Wrap1D => I4PWrapperFactory_Wrap1D
+  PROCEDURE :: Wrap2D => I4PWrapperFactory_Wrap2D
+  PROCEDURE :: Wrap3D => I4PWrapperFactory_Wrap3D
+  PROCEDURE :: Wrap4D => I4PWrapperFactory_Wrap4D
+  PROCEDURE :: Wrap5D => I4PWrapperFactory_Wrap5D
+  PROCEDURE :: Wrap6D => I4PWrapperFactory_Wrap6D
+  PROCEDURE :: Wrap7D => I4PWrapperFactory_Wrap7D
+  PROCEDURE :: UnWrap0D => I4PWrapperFactory_UnWrap0D
+  PROCEDURE :: UnWrap1D => I4PWrapperFactory_UnWrap1D
+  PROCEDURE :: UnWrap2D => I4PWrapperFactory_UnWrap2D
+  PROCEDURE :: UnWrap3D => I4PWrapperFactory_UnWrap3D
+  PROCEDURE :: UnWrap4D => I4PWrapperFactory_UnWrap4D
+  PROCEDURE :: UnWrap5D => I4PWrapperFactory_UnWrap5D
+  PROCEDURE :: UnWrap6D => I4PWrapperFactory_UnWrap6D
+  PROCEDURE :: UnWrap7D => I4PWrapperFactory_UnWrap7D
+  PROCEDURE, PUBLIC :: hasSameType => I4PWrapperFactory_hasSameType
+END TYPE
 
-    type(I4PWrapperFactory_t), save, public :: WrapperFactoryI4P
-   !$OMP THREADPRIVATE(WrapperFactoryI4P)
+TYPE(I4PWrapperFactory_t), SAVE, PUBLIC :: WrapperFactoryI4P
+!$OMP THREADPRIVATE(WrapperFactoryI4P)
 
-contains
+CONTAINS
 
-    function I4PWrapperFactory_hasSameType(this, Value) result(hasSameType)
-    !-----------------------------------------------------------------
-    !< Check if Value type agrees with wrapper type
-    !-----------------------------------------------------------------
-        class(I4PWrapperFactory_t), intent(IN) :: this
-        class(*),                   intent(IN) :: Value
-        logical                                :: hasSameType
-    !-----------------------------------------------------------------
-        hasSameType = .false.
-        select type(Value)
-            type is (integer(I4P))
-                hasSameType = .true.
-        end select
-    end function I4PWrapperFactory_hasSameType
+FUNCTION I4PWrapperFactory_hasSameType(this, VALUE) RESULT(hasSameType)
+  !-----------------------------------------------------------------
+  !< Check if Value type agrees with wrapper type
+  !-----------------------------------------------------------------
+  CLASS(I4PWrapperFactory_t), INTENT(IN) :: this
+  CLASS(*), INTENT(IN) :: VALUE
+  LOGICAL :: hasSameType
+  !-----------------------------------------------------------------
+  hasSameType = .FALSE.
+  SELECT TYPE (VALUE)
+  TYPE is (INTEGER(I4P))
+    hasSameType = .TRUE.
+  END SELECT
+END FUNCTION I4PWrapperFactory_hasSameType
 
+FUNCTION I4PWrapperFactory_Wrap0D(this, VALUE) RESULT(Wrapper)
+  !-----------------------------------------------------------------
+  !< Create I4P 0D Wrapper
+  !-----------------------------------------------------------------
+  CLASS(I4PWrapperFactory_t), INTENT(IN) :: this
+  CLASS(*), INTENT(IN) :: VALUE
+  CLASS(DimensionsWrapper_t), POINTER :: Wrapper
+  !-----------------------------------------------------------------
+  IF (this%hasSameType(VALUE)) THEN
+    ALLOCATE (DimensionsWrapper0D_I4P_t :: Wrapper)
+    CALL Wrapper%SetDimensions(Dimensions=0_I1P)
+    SELECT TYPE (Wrapper)
+    TYPE is (DimensionsWrapper0D_I4P_t)
+      CALL Wrapper%Set(VALUE=VALUE)
+    END SELECT
+  END IF
+END FUNCTION I4PWrapperFactory_Wrap0D
 
-    function I4PWrapperFactory_Wrap0D(this, Value) result(Wrapper)
-    !-----------------------------------------------------------------
-    !< Create I4P 0D Wrapper
-    !-----------------------------------------------------------------
-        class(I4PWrapperFactory_t),              intent(IN)    :: this
-        class(*),                                intent(IN)    :: Value
-        class(DimensionsWrapper_t), pointer                    :: Wrapper
-    !-----------------------------------------------------------------
-        if(this%hasSameType(Value)) then
-            allocate(DimensionsWrapper0D_I4P_t::Wrapper)
-            call Wrapper%SetDimensions(Dimensions=0_I1P)
-            select type (Wrapper)
-                type is(DimensionsWrapper0D_I4P_t)
-                    call Wrapper%Set(Value=Value)
-            end select
-        endif
-    end function I4PWrapperFactory_Wrap0D
+FUNCTION I4PWrapperFactory_Wrap1D(this, VALUE) RESULT(Wrapper)
+  !-----------------------------------------------------------------
+  !< Create I4P 1D Wrapper
+  !-----------------------------------------------------------------
+  CLASS(I4PWrapperFactory_t), INTENT(IN) :: this
+  CLASS(*), INTENT(IN) :: VALUE(1:)
+  CLASS(DimensionsWrapper_t), POINTER :: Wrapper
+  !-----------------------------------------------------------------
+  IF (this%hasSameType(VALUE(1))) THEN
+    ALLOCATE (DimensionsWrapper1D_I4P_t :: Wrapper)
+    CALL Wrapper%SetDimensions(Dimensions=1_I1P)
+    SELECT TYPE (Wrapper)
+    TYPE is (DimensionsWrapper1D_I4P_t)
+      CALL Wrapper%Set(VALUE=VALUE)
+    END SELECT
+  END IF
+END FUNCTION I4PWrapperFactory_Wrap1D
 
+FUNCTION I4PWrapperFactory_Wrap2D(this, VALUE) RESULT(Wrapper)
+  !-----------------------------------------------------------------
+  !< Create I4P 2D Wrapper
+  !-----------------------------------------------------------------
+  CLASS(I4PWrapperFactory_t), INTENT(IN) :: this
+  CLASS(*), INTENT(IN) :: VALUE(1:, 1:)
+  CLASS(DimensionsWrapper_t), POINTER :: Wrapper
+  !-----------------------------------------------------------------
+  IF (this%hasSameType(VALUE(1, 1))) THEN
+    ALLOCATE (DimensionsWrapper2D_I4P_t :: Wrapper)
+    CALL Wrapper%SetDimensions(Dimensions=2_I1P)
+    SELECT TYPE (Wrapper)
+    TYPE is (DimensionsWrapper2D_I4P_t)
+      CALL Wrapper%Set(VALUE=VALUE)
+    END SELECT
+  END IF
+END FUNCTION I4PWrapperFactory_Wrap2D
 
-    function I4PWrapperFactory_Wrap1D(this, Value) result(Wrapper)
-    !-----------------------------------------------------------------
-    !< Create I4P 1D Wrapper
-    !-----------------------------------------------------------------
-        class(I4PWrapperFactory_t),              intent(IN)    :: this
-        class(*),                                intent(IN)    :: Value(1:)
-        class(DimensionsWrapper_t), pointer                    :: Wrapper
-    !-----------------------------------------------------------------
-        if(this%hasSameType(Value(1))) then
-            allocate(DimensionsWrapper1D_I4P_t::Wrapper)
-            call Wrapper%SetDimensions(Dimensions=1_I1P)
-            select type (Wrapper)
-                type is(DimensionsWrapper1D_I4P_t)
-                    call Wrapper%Set(Value=Value)
-            end select
-        endif
-    end function I4PWrapperFactory_Wrap1D
+FUNCTION I4PWrapperFactory_Wrap3D(this, VALUE) RESULT(Wrapper)
+  !-----------------------------------------------------------------
+  !< Create I4P 3D Wrapper
+  !-----------------------------------------------------------------
+  CLASS(I4PWrapperFactory_t), INTENT(IN) :: this
+  CLASS(*), INTENT(IN) :: VALUE(1:, 1:, 1:)
+  CLASS(DimensionsWrapper_t), POINTER :: Wrapper
+  !-----------------------------------------------------------------
+  IF (this%hasSameType(VALUE(1, 1, 1))) THEN
+    ALLOCATE (DimensionsWrapper3D_I4P_t :: Wrapper)
+    CALL Wrapper%SetDimensions(Dimensions=3_I1P)
+    SELECT TYPE (Wrapper)
+    TYPE is (DimensionsWrapper3D_I4P_t)
+      CALL Wrapper%Set(VALUE=VALUE)
+    END SELECT
+  END IF
+END FUNCTION I4PWrapperFactory_Wrap3D
 
+FUNCTION I4PWrapperFactory_Wrap4D(this, VALUE) RESULT(Wrapper)
+  !-----------------------------------------------------------------
+  !< Create I4P 4D Wrapper
+  !-----------------------------------------------------------------
+  CLASS(I4PWrapperFactory_t), INTENT(IN) :: this
+  CLASS(*), INTENT(IN) :: VALUE(1:, 1:, 1:, 1:)
+  CLASS(DimensionsWrapper_t), POINTER :: Wrapper
+  !-----------------------------------------------------------------
+  IF (this%hasSameType(VALUE(1, 1, 1, 1))) THEN
+    ALLOCATE (DimensionsWrapper4D_I4P_t :: Wrapper)
+    CALL Wrapper%SetDimensions(Dimensions=4_I1P)
+    SELECT TYPE (Wrapper)
+    TYPE is (DimensionsWrapper4D_I4P_t)
+      CALL Wrapper%Set(VALUE=VALUE)
+    END SELECT
+  END IF
+END FUNCTION I4PWrapperFactory_Wrap4D
 
-    function I4PWrapperFactory_Wrap2D(this, Value) result(Wrapper)
-    !-----------------------------------------------------------------
-    !< Create I4P 2D Wrapper
-    !-----------------------------------------------------------------
-        class(I4PWrapperFactory_t),              intent(IN)    :: this
-        class(*),                                intent(IN)    :: Value(1:,1:)
-        class(DimensionsWrapper_t), pointer                    :: Wrapper
-    !-----------------------------------------------------------------
-        if(this%hasSameType(Value(1,1))) then
-            allocate(DimensionsWrapper2D_I4P_t::Wrapper)
-            call Wrapper%SetDimensions(Dimensions=2_I1P)
-            select type (Wrapper)
-                type is(DimensionsWrapper2D_I4P_t)
-                    call Wrapper%Set(Value=Value)
-            end select
-        endif
-    end function I4PWrapperFactory_Wrap2D
+FUNCTION I4PWrapperFactory_Wrap5D(this, VALUE) RESULT(Wrapper)
+  !-----------------------------------------------------------------
+  !< Create I4P 5D Wrapper
+  !-----------------------------------------------------------------
+  CLASS(I4PWrapperFactory_t), INTENT(IN) :: this
+  CLASS(*), INTENT(IN) :: VALUE(1:, 1:, 1:, 1:, 1:)
+  CLASS(DimensionsWrapper_t), POINTER :: Wrapper
+  !-----------------------------------------------------------------
+  IF (this%hasSameType(VALUE(1, 1, 1, 1, 1))) THEN
+    ALLOCATE (DimensionsWrapper5D_I4P_t :: Wrapper)
+    CALL Wrapper%SetDimensions(Dimensions=5_I1P)
+    SELECT TYPE (Wrapper)
+    TYPE is (DimensionsWrapper5D_I4P_t)
+      CALL Wrapper%Set(VALUE=VALUE)
+    END SELECT
+  END IF
+END FUNCTION I4PWrapperFactory_Wrap5D
 
+FUNCTION I4PWrapperFactory_Wrap6D(this, VALUE) RESULT(Wrapper)
+  !-----------------------------------------------------------------
+  !< Create I4P 6D Wrapper
+  !-----------------------------------------------------------------
+  CLASS(I4PWrapperFactory_t), INTENT(IN) :: this
+  CLASS(*), INTENT(IN) :: VALUE(1:, 1:, 1:, 1:, 1:, 1:)
+  CLASS(DimensionsWrapper_t), POINTER :: Wrapper
+  !-----------------------------------------------------------------
+  IF (this%hasSameType(VALUE(1, 1, 1, 1, 1, 1))) THEN
+    ALLOCATE (DimensionsWrapper6D_I4P_t :: Wrapper)
+    CALL Wrapper%SetDimensions(Dimensions=6_I1P)
+    SELECT TYPE (Wrapper)
+    TYPE is (DimensionsWrapper6D_I4P_t)
+      CALL Wrapper%Set(VALUE=VALUE)
+    END SELECT
+  END IF
+END FUNCTION I4PWrapperFactory_Wrap6D
 
-    function I4PWrapperFactory_Wrap3D(this, Value) result(Wrapper)
-    !-----------------------------------------------------------------
-    !< Create I4P 3D Wrapper
-    !-----------------------------------------------------------------
-        class(I4PWrapperFactory_t),              intent(IN)    :: this
-        class(*),                                intent(IN)    :: Value(1:,1:,1:)
-        class(DimensionsWrapper_t), pointer                    :: Wrapper
-    !-----------------------------------------------------------------
-        if(this%hasSameType(Value(1,1,1))) then
-            allocate(DimensionsWrapper3D_I4P_t::Wrapper)
-            call Wrapper%SetDimensions(Dimensions=3_I1P)
-            select type (Wrapper)
-                type is(DimensionsWrapper3D_I4P_t)
-                    call Wrapper%Set(Value=Value)
-            end select
-        endif
-    end function I4PWrapperFactory_Wrap3D
+FUNCTION I4PWrapperFactory_Wrap7D(this, VALUE) RESULT(Wrapper)
+  !-----------------------------------------------------------------
+  !< Create I4P 7D Wrapper
+  !-----------------------------------------------------------------
+  CLASS(I4PWrapperFactory_t), INTENT(IN) :: this
+  CLASS(*), INTENT(IN) :: VALUE(1:, 1:, 1:, 1:, 1:, 1:, 1:)
+  CLASS(DimensionsWrapper_t), POINTER :: Wrapper
+  !-----------------------------------------------------------------
+  IF (this%hasSameType(VALUE(1, 1, 1, 1, 1, 1, 1))) THEN
+    ALLOCATE (DimensionsWrapper7D_I4P_t :: Wrapper)
+    CALL Wrapper%SetDimensions(Dimensions=7_I1P)
+    SELECT TYPE (Wrapper)
+    TYPE is (DimensionsWrapper7D_I4P_t)
+      CALL Wrapper%Set(VALUE=VALUE)
+    END SELECT
+  END IF
+END FUNCTION I4PWrapperFactory_Wrap7D
 
+SUBROUTINE I4PWrapperFactory_UnWrap0D(this, Wrapper, VALUE)
+  !-----------------------------------------------------------------
+  !< Return the I4P 0D Wrapped Value
+  !-----------------------------------------------------------------
+  CLASS(I4PWrapperFactory_t), INTENT(IN) :: this
+  CLASS(DimensionsWrapper_t), POINTER, INTENT(IN) :: Wrapper
+  CLASS(*), INTENT(INOUT) :: VALUE
+  !-----------------------------------------------------------------
+  SELECT TYPE (Wrapper)
+  TYPE is (DimensionsWrapper0D_I4P_t)
+    CALL Wrapper%Get(VALUE=VALUE)
+  END SELECT
+END SUBROUTINE
 
-    function I4PWrapperFactory_Wrap4D(this, Value) result(Wrapper)
-    !-----------------------------------------------------------------
-    !< Create I4P 4D Wrapper
-    !-----------------------------------------------------------------
-        class(I4PWrapperFactory_t),              intent(IN)    :: this
-        class(*),                                intent(IN)    :: Value(1:,1:,1:,1:)
-        class(DimensionsWrapper_t), pointer                    :: Wrapper
-    !-----------------------------------------------------------------
-        if(this%hasSameType(Value(1,1,1,1))) then
-            allocate(DimensionsWrapper4D_I4P_t::Wrapper)
-            call Wrapper%SetDimensions(Dimensions=4_I1P)
-            select type (Wrapper)
-                type is(DimensionsWrapper4D_I4P_t)
-                    call Wrapper%Set(Value=Value)
-            end select
-        endif
-    end function I4PWrapperFactory_Wrap4D
+SUBROUTINE I4PWrapperFactory_UnWrap1D(this, Wrapper, VALUE)
+  !-----------------------------------------------------------------
+  !< Return the I4P 1D Wrapped Value
+  !-----------------------------------------------------------------
+  CLASS(I4PWrapperFactory_t), INTENT(IN) :: this
+  CLASS(DimensionsWrapper_t), POINTER, INTENT(IN) :: Wrapper
+  CLASS(*), INTENT(INOUT) :: VALUE(:)
+  !-----------------------------------------------------------------
+  SELECT TYPE (Wrapper)
+  TYPE is (DimensionsWrapper1D_I4P_t)
+    CALL Wrapper%Get(VALUE=VALUE)
+  END SELECT
+END SUBROUTINE
 
+SUBROUTINE I4PWrapperFactory_UnWrap2D(this, Wrapper, VALUE)
+  !-----------------------------------------------------------------
+  !< Return the I4P 2D Wrapped Value
+  !-----------------------------------------------------------------
+  CLASS(I4PWrapperFactory_t), INTENT(IN) :: this
+  CLASS(DimensionsWrapper_t), POINTER, INTENT(IN) :: Wrapper
+  CLASS(*), INTENT(INOUT) :: VALUE(:, :)
+  !-----------------------------------------------------------------
+  SELECT TYPE (Wrapper)
+  TYPE is (DimensionsWrapper2D_I4P_t)
+    CALL Wrapper%Get(VALUE=VALUE)
+  END SELECT
+END SUBROUTINE
 
-    function I4PWrapperFactory_Wrap5D(this, Value) result(Wrapper)
-    !-----------------------------------------------------------------
-    !< Create I4P 5D Wrapper
-    !-----------------------------------------------------------------
-        class(I4PWrapperFactory_t),              intent(IN)    :: this
-        class(*),                                intent(IN)    :: Value(1:,1:,1:,1:,1:)
-        class(DimensionsWrapper_t), pointer                    :: Wrapper
-    !-----------------------------------------------------------------
-        if(this%hasSameType(Value(1,1,1,1,1))) then
-            allocate(DimensionsWrapper5D_I4P_t::Wrapper)
-            call Wrapper%SetDimensions(Dimensions=5_I1P)
-            select type (Wrapper)
-                type is(DimensionsWrapper5D_I4P_t)
-                    call Wrapper%Set(Value=Value)
-            end select
-        endif
-    end function I4PWrapperFactory_Wrap5D
+SUBROUTINE I4PWrapperFactory_UnWrap3D(this, Wrapper, VALUE)
+  !-----------------------------------------------------------------
+  !< Return the I4P 3D Wrapped Value
+  !-----------------------------------------------------------------
+  CLASS(I4PWrapperFactory_t), INTENT(IN) :: this
+  CLASS(DimensionsWrapper_t), POINTER, INTENT(IN) :: Wrapper
+  CLASS(*), INTENT(INOUT) :: VALUE(:, :, :)
+  !-----------------------------------------------------------------
+  SELECT TYPE (Wrapper)
+  TYPE is (DimensionsWrapper3D_I4P_t)
+    CALL Wrapper%Get(VALUE=VALUE)
+  END SELECT
+END SUBROUTINE
 
+SUBROUTINE I4PWrapperFactory_UnWrap4D(this, Wrapper, VALUE)
+  !-----------------------------------------------------------------
+  !< Return the I4P 4D Wrapped Value
+  !-----------------------------------------------------------------
+  CLASS(I4PWrapperFactory_t), INTENT(IN) :: this
+  CLASS(DimensionsWrapper_t), POINTER, INTENT(IN) :: Wrapper
+  CLASS(*), INTENT(INOUT) :: VALUE(:, :, :, :)
+  !-----------------------------------------------------------------
+  SELECT TYPE (Wrapper)
+  TYPE is (DimensionsWrapper4D_I4P_t)
+    CALL Wrapper%Get(VALUE=VALUE)
+  END SELECT
+END SUBROUTINE
 
-    function I4PWrapperFactory_Wrap6D(this, Value) result(Wrapper)
-    !-----------------------------------------------------------------
-    !< Create I4P 6D Wrapper
-    !-----------------------------------------------------------------
-        class(I4PWrapperFactory_t),              intent(IN)    :: this
-        class(*),                                intent(IN)    :: Value(1:,1:,1:,1:,1:,1:)
-        class(DimensionsWrapper_t), pointer                    :: Wrapper
-    !-----------------------------------------------------------------
-        if(this%hasSameType(Value(1,1,1,1,1,1))) then
-            allocate(DimensionsWrapper6D_I4P_t::Wrapper)
-            call Wrapper%SetDimensions(Dimensions=6_I1P)
-            select type (Wrapper)
-                type is(DimensionsWrapper6D_I4P_t)
-                    call Wrapper%Set(Value=Value)
-            end select
-        endif
-    end function I4PWrapperFactory_Wrap6D
+SUBROUTINE I4PWrapperFactory_UnWrap5D(this, Wrapper, VALUE)
+  !-----------------------------------------------------------------
+  !< Return the I4P 5D Wrapped Value
+  !-----------------------------------------------------------------
+  CLASS(I4PWrapperFactory_t), INTENT(IN) :: this
+  CLASS(DimensionsWrapper_t), POINTER, INTENT(IN) :: Wrapper
+  CLASS(*), INTENT(INOUT) :: VALUE(:, :, :, :, :)
+  !-----------------------------------------------------------------
+  SELECT TYPE (Wrapper)
+  TYPE is (DimensionsWrapper5D_I4P_t)
+    CALL Wrapper%Get(VALUE=VALUE)
+  END SELECT
+END SUBROUTINE
 
+SUBROUTINE I4PWrapperFactory_UnWrap6D(this, Wrapper, VALUE)
+  !-----------------------------------------------------------------
+  !< Return the I4P 6D Wrapped Value
+  !-----------------------------------------------------------------
+  CLASS(I4PWrapperFactory_t), INTENT(IN) :: this
+  CLASS(DimensionsWrapper_t), POINTER, INTENT(IN) :: Wrapper
+  CLASS(*), INTENT(INOUT) :: VALUE(:, :, :, :, :, :)
+  !-----------------------------------------------------------------
+  SELECT TYPE (Wrapper)
+  TYPE is (DimensionsWrapper6D_I4P_t)
+    CALL Wrapper%Get(VALUE=VALUE)
+  END SELECT
+END SUBROUTINE
 
-    function I4PWrapperFactory_Wrap7D(this, Value) result(Wrapper)
-    !-----------------------------------------------------------------
-    !< Create I4P 7D Wrapper
-    !-----------------------------------------------------------------
-        class(I4PWrapperFactory_t),              intent(IN)    :: this
-        class(*),                                intent(IN)    :: Value(1:,1:,1:,1:,1:,1:,1:)
-        class(DimensionsWrapper_t), pointer                    :: Wrapper
-    !-----------------------------------------------------------------
-        if(this%hasSameType(Value(1,1,1,1,1,1,1))) then
-            allocate(DimensionsWrapper7D_I4P_t::Wrapper)
-            call Wrapper%SetDimensions(Dimensions=7_I1P)
-            select type (Wrapper)
-                type is(DimensionsWrapper7D_I4P_t)
-                    call Wrapper%Set(Value=Value)
-            end select
-        endif
-    end function I4PWrapperFactory_Wrap7D
+SUBROUTINE I4PWrapperFactory_UnWrap7D(this, Wrapper, VALUE)
+  !-----------------------------------------------------------------
+  !< Return the I4P 7D Wrapped Value
+  !-----------------------------------------------------------------
+  CLASS(I4PWrapperFactory_t), INTENT(IN) :: this
+  CLASS(DimensionsWrapper_t), POINTER, INTENT(IN) :: Wrapper
+  CLASS(*), INTENT(INOUT) :: VALUE(:, :, :, :, :, :, :)
+  !-----------------------------------------------------------------
+  SELECT TYPE (Wrapper)
+  TYPE is (DimensionsWrapper7D_I4P_t)
+    CALL Wrapper%Get(VALUE=VALUE)
+  END SELECT
+END SUBROUTINE
 
-
-    subroutine I4PWrapperFactory_UnWrap0D(this, Wrapper, Value)
-    !-----------------------------------------------------------------
-    !< Return the I4P 0D Wrapped Value
-    !-----------------------------------------------------------------
-        class(I4PWrapperFactory_t),              intent(IN)    :: this
-        class(DimensionsWrapper_t), pointer,     intent(IN)    :: Wrapper
-        class(*),                                intent(INOUT) :: Value
-    !-----------------------------------------------------------------
-        select type (Wrapper)
-            type is(DimensionsWrapper0D_I4P_t)
-                call Wrapper%Get(Value = Value)
-        end select
-    end subroutine
-
-
-    subroutine I4PWrapperFactory_UnWrap1D(this, Wrapper, Value)
-    !-----------------------------------------------------------------
-    !< Return the I4P 1D Wrapped Value
-    !-----------------------------------------------------------------
-        class(I4PWrapperFactory_t),              intent(IN)    :: this
-        class(DimensionsWrapper_t), pointer,     intent(IN)    :: Wrapper
-        class(*),                                intent(INOUT) :: Value(:)
-    !-----------------------------------------------------------------
-        select type (Wrapper)
-            type is(DimensionsWrapper1D_I4P_t)
-                call Wrapper%Get(Value = Value)
-        end select
-    end subroutine
-
-
-    subroutine I4PWrapperFactory_UnWrap2D(this, Wrapper, Value)
-    !-----------------------------------------------------------------
-    !< Return the I4P 2D Wrapped Value
-    !-----------------------------------------------------------------
-        class(I4PWrapperFactory_t),              intent(IN)    :: this
-        class(DimensionsWrapper_t), pointer,     intent(IN)    :: Wrapper
-        class(*),                                intent(INOUT) :: Value(:,:)
-    !-----------------------------------------------------------------
-        select type (Wrapper)
-            type is(DimensionsWrapper2D_I4P_t)
-                call Wrapper%Get(Value = Value)
-        end select
-    end subroutine
-
-
-    subroutine I4PWrapperFactory_UnWrap3D(this, Wrapper, Value)
-    !-----------------------------------------------------------------
-    !< Return the I4P 3D Wrapped Value
-    !-----------------------------------------------------------------
-        class(I4PWrapperFactory_t),              intent(IN)    :: this
-        class(DimensionsWrapper_t), pointer,     intent(IN)    :: Wrapper
-        class(*),                                intent(INOUT) :: Value(:,:,:)
-    !-----------------------------------------------------------------
-        select type (Wrapper)
-            type is(DimensionsWrapper3D_I4P_t)
-                call Wrapper%Get(Value = Value)
-        end select
-    end subroutine
-
-
-    subroutine I4PWrapperFactory_UnWrap4D(this, Wrapper, Value)
-    !-----------------------------------------------------------------
-    !< Return the I4P 4D Wrapped Value
-    !-----------------------------------------------------------------
-        class(I4PWrapperFactory_t),              intent(IN)    :: this
-        class(DimensionsWrapper_t), pointer,     intent(IN)    :: Wrapper
-        class(*),                                intent(INOUT) :: Value(:,:,:,:)
-    !-----------------------------------------------------------------
-        select type (Wrapper)
-            type is(DimensionsWrapper4D_I4P_t)
-                call Wrapper%Get(Value = Value)
-        end select
-    end subroutine
-
-
-    subroutine I4PWrapperFactory_UnWrap5D(this, Wrapper, Value)
-    !-----------------------------------------------------------------
-    !< Return the I4P 5D Wrapped Value
-    !-----------------------------------------------------------------
-        class(I4PWrapperFactory_t),              intent(IN)    :: this
-        class(DimensionsWrapper_t), pointer,     intent(IN)    :: Wrapper
-        class(*),                                intent(INOUT) :: Value(:,:,:,:,:)
-    !-----------------------------------------------------------------
-        select type (Wrapper)
-            type is(DimensionsWrapper5D_I4P_t)
-                call Wrapper%Get(Value = Value)
-        end select
-    end subroutine
-
-
-    subroutine I4PWrapperFactory_UnWrap6D(this, Wrapper, Value)
-    !-----------------------------------------------------------------
-    !< Return the I4P 6D Wrapped Value
-    !-----------------------------------------------------------------
-        class(I4PWrapperFactory_t),              intent(IN)    :: this
-        class(DimensionsWrapper_t), pointer,     intent(IN)    :: Wrapper
-        class(*),                                intent(INOUT) :: Value(:,:,:,:,:,:)
-    !-----------------------------------------------------------------
-        select type (Wrapper)
-            type is(DimensionsWrapper6D_I4P_t)
-                call Wrapper%Get(Value = Value)
-        end select
-    end subroutine
-
-
-    subroutine I4PWrapperFactory_UnWrap7D(this, Wrapper, Value)
-    !-----------------------------------------------------------------
-    !< Return the I4P 7D Wrapped Value
-    !-----------------------------------------------------------------
-        class(I4PWrapperFactory_t),              intent(IN)    :: this
-        class(DimensionsWrapper_t), pointer,     intent(IN)    :: Wrapper
-        class(*),                                intent(INOUT) :: Value(:,:,:,:,:,:,:)
-    !-----------------------------------------------------------------
-        select type (Wrapper)
-            type is(DimensionsWrapper7D_I4P_t)
-                call Wrapper%Get(Value = Value)
-        end select
-    end subroutine
-
-end module I4PWrapperFactory
+END MODULE I4PWrapperFactory

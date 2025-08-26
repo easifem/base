@@ -21,7 +21,7 @@ INTERFACE colorize
 #ifdef UCS4_SUPPORTED
   MODULE PROCEDURE colorize_ucs4
 #endif
-end interface
+END INTERFACE
 
 ! kind parameters
 #ifdef ASCII_SUPPORTED
@@ -119,7 +119,7 @@ SUBROUTINE colors_samples()
       colorize(COLORS_BG(1, c), color_bg=COLORS_BG(1, c))// &
          ' code: '//colorize(trim(COLORS_BG(2, c)), color_bg=COLORS_BG(1, c), style='inverse_on')
   END DO
-end subroutine colors_samples
+END SUBROUTINE colors_samples
 
 SUBROUTINE styles_samples()
   !< Print to standard output all styles samples.
@@ -131,7 +131,7 @@ SUBROUTINE styles_samples()
       colorize(STYLES(1, s), style=STYLES(1, s))// &
          ' code: '//colorize(trim(STYLES(2, s)), color_fg='magenta', style='inverse_on')
   END DO
-end subroutine styles_samples
+END SUBROUTINE styles_samples
 
 ! private procedures
    pure function colorize_ascii(string, color_fg, color_bg, style) result(colorized)
@@ -172,7 +172,7 @@ end subroutine styles_samples
       colorized = colorized//buffer
     END IF
   END IF
-end function colorize_ascii
+END FUNCTION colorize_ascii
 
    pure function colorize_default(string, color_fg, color_bg, style) result(colorized)
   !< Colorize and stylize strings, DEFAULT kind.
@@ -196,7 +196,7 @@ end function colorize_ascii
     i = style_index(upper(style))
       if (i>0) colorized = CODE_START//trim(STYLES(2, i))//CODE_END//colorized//CODE_CLEAR
   END IF
-end function colorize_default
+END FUNCTION colorize_default
 
    pure function colorize_ucs4(string, color_fg, color_bg, style) result(colorized)
   !< Colorize and stylize strings, UCS4 kind.
@@ -236,7 +236,7 @@ end function colorize_default
       colorized = colorized//buffer
     END IF
   END IF
-end function colorize_ucs4
+END FUNCTION colorize_ucs4
 
 ELEMENTAL FUNCTION color_index(color)
   !< Return the array-index corresponding to the queried color.
@@ -254,7 +254,7 @@ ELEMENTAL FUNCTION color_index(color)
       EXIT
     END IF
   END DO
-end function color_index
+END FUNCTION color_index
 
 ELEMENTAL FUNCTION style_index(style)
   !< Return the array-index corresponding to the queried style.
@@ -269,7 +269,7 @@ ELEMENTAL FUNCTION style_index(style)
       EXIT
     END IF
   END DO
-end function style_index
+END FUNCTION style_index
 
 ELEMENTAL FUNCTION upper(string)
   !< Return a string with all uppercase characters.
@@ -283,5 +283,5 @@ ELEMENTAL FUNCTION upper(string)
     n2 = INDEX(LOWER_ALPHABET, string(n1:n1))
     IF (n2 > 0) upper(n1:n1) = UPPER_ALPHABET(n2:n2)
   END DO
-end function upper
+END FUNCTION upper
 endmodule face
