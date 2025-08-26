@@ -20,12 +20,72 @@
 ! [[BaseType]] module contains several userful user defined data types.
 
 MODULE BaseType
-USE GlobalData
+USE GlobalData, ONLY: Monomial, LagrangePolynomial, SerendipityPolynomial, &
+                      HierarchicalPolynomial, OrthogonalPolynomial, &
+                      JacobiPolynomial, LegendrePolynomial, &
+                      ChebyshevPolynomial, LobattoPolynomial, &
+                      UnscaledLobattoPolynomial, HermitPolynomial, &
+                      UltrasphericalPolynomial
+
+USE GlobalData, ONLY: I4B, LGT, DFP, DFPC
+
+USE GlobalData, ONLY: FMT_NODES, FMT_DOF
+
+USE GlobalData, ONLY: RelativeConvergence, ConvergenceInRes, &
+                      ConvergenceInSol, ConvergenceInResSol, &
+                      AbsoluteConvergence, NormL2, &
+                      StressTypeVoigt, OMP_THREADS_JOINED
+
+USE GlobalData, ONLY: Equidistance, EquidistanceQP, GaussQP, &
+                      GaussLegendreQP, GaussLegendreLobattoQP, &
+                      GaussLegendreRadau, GaussLegendreRadauLeft, &
+                      GaussLegendreRadauRight, GaussRadauQP, &
+                      GaussRadauLeftQP, GaussRadauRightQP, &
+                      GaussLobattoQP, GaussChebyshevQP, &
+                      GaussChebyshevLobattoQP, GaussChebyshevRadau, &
+                      GaussChebyshevRadauLeft, GaussChebyshevRadauRight, &
+                      GaussJacobiQP, GaussJacobiLobattoQP, &
+                      GaussJacobiRadau, GaussJacobiRadauLeft, &
+                      GaussJacobiRadauRight, GaussUltraSphericalQP, &
+                      GaussUltraSphericalLobattoQP, &
+                      GaussUltraSphericalRadau, &
+                      GaussUltraSphericalRadauLeft, &
+                      GaussUltraSphericalRadauRight, &
+                      ChenBabuskaQP, HesthavenQP, &
+                      FeketQP, BlythPozLegendreQP, &
+                      BlythPozChebyshevQP, IsaacLegendreQP, IsaacChebyshevQP
+
+USE GlobalData, ONLY: NO_PRECONDITION, LEFT_PRECONDITION, &
+                      RIGHT_PRECONDITION, LEFT_RIGHT_PRECONDITION, &
+                      PRECOND_JACOBI, PRECOND_ILU, PRECOND_SSOR, &
+                      PRECOND_HYBRID, PRECOND_IS, PRECOND_SAINV, &
+                      PRECOND_SAAMG, PRECOND_ILUC, PRECOND_ADDS, &
+                      PRECOND_ILUTP, PRECOND_ILUD, PRECOND_ILUDP, &
+                      PRECOND_ILU0, PRECOND_ILUK, PRECOND_ILUT
+
+USE GlobalData, ONLY: LIS_CG, LIS_BCG, LIS_BICG, LIS_CGS, LIS_BCGSTAB, &
+                      LIS_BICGSTAB, LIS_BICGSTABL, LIS_GPBICG, LIS_TFQMR, &
+                      LIS_OMN, LIS_FOM, LIS_ORTHOMIN, LIS_GMRES, LIS_GMR, &
+                      LIS_JACOBI, LIS_GS, LIS_SOR, LIS_BICGSAFE, LIS_CR, &
+                      LIS_BICR, LIS_CRS, LIS_BICRSTAB, LIS_GPBICR, &
+                      LIS_BICRSAFE, LIS_FGMRES, LIS_IDRS, LIS_IDR1, &
+                      LIS_MINRES, LIS_COCG, LIS_COCR, LIS_CGNR, LIS_CGN, &
+                      LIS_DBCG, LIS_DBICG, LIS_DQGMRES, LIS_SUPERLU
+
+USE GlobalData, ONLY: Scalar, Vector, Matrix, Nodal, Quadrature, &
+                      Constant, Space, Time, Spacetime, &
+                      SolutionDependent, RandomSpace
+
+USE GlobalData, ONLY: Point, Line, Triangle, Quadrangle, Tetrahedron, &
+                      Hexahedron, Prism, Pyramid
+
 USE String_Class, ONLY: String
+
 #ifdef USE_SuperLU
 USE SuperLUInterface
 USE ISO_C_BINDING, ONLY: C_CHAR, C_PTR, C_SIZE_T
 #endif
+
 IMPLICIT NONE
 PRIVATE
 
@@ -529,8 +589,8 @@ TYPE :: CSRMatrix_
 #endif
 END TYPE CSRMatrix_
 
-TYPE(CSRMatrix_), PARAMETER :: TypeCSRMatrix = CSRMatrix_(&
-  & A=NULL(), slu=NULL())
+TYPE(CSRMatrix_), PARAMETER :: TypeCSRMatrix = CSRMatrix_( &
+                               A=NULL(), slu=NULL())
 
 TYPE :: CSRMatrixPointer_
   CLASS(CSRMatrix_), POINTER :: ptr => NULL()
@@ -1094,10 +1154,8 @@ TYPE :: FEVariableSpace_
 !! INTEGER(I4B):: Val = 2
 END TYPE FEVariableSpace_
 
-TYPE(FEVariableSpace_), PARAMETER :: TypeFEVariableSpace = &
-  & FEVariableSpace_()
-TYPE(FEVariableSpace_), PARAMETER :: TypeVariableSpace = &
-  & FEVariableSpace_()
+TYPE(FEVariableSpace_), PARAMETER :: TypeFEVariableSpace = FEVariableSpace_()
+TYPE(FEVariableSpace_), PARAMETER :: TypeVariableSpace = FEVariableSpace_()
 
 !----------------------------------------------------------------------------
 !                                                       FEVariableSpaceTime_
@@ -1477,7 +1535,7 @@ TYPE :: ElemShapeData_
   REAL(DFP), ALLOCATABLE :: dNdXi(:, :, :)
   !! Local derivative of a shape function
   !! shape = nns, xidim, nips
-  !! dim 1 = number of nodes in element 
+  !! dim 1 = number of nodes in element
   !! dim 2 = xi dimension (xi, eta, zeta)
   !! dim 3 = number of integration points
   REAL(DFP), ALLOCATABLE :: jacobian(:, :, :)
@@ -1948,6 +2006,7 @@ TYPE :: FEVariableOpt_
   INTEGER(I4B) :: spacetime = spacetime
   INTEGER(I4B) :: solutionDependent = solutionDependent
   INTEGER(I4B) :: randomSpace = randomSpace
+  INTEGER(I4B) :: maxRank = MAX_RANK_FEVARIABLE
 END TYPE FEVariableOpt_
 
 TYPE(FEVariableOpt_), PARAMETER :: TypeFEVariableOpt = FEVariableOpt_()
