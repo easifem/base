@@ -96,8 +96,8 @@ CASE (Constant)
   interpol = Get(val, TypeFEVariableScalar, TypeFEVariableConstant)
 CASE (Space)
   IF (val%DefineOn .EQ. Nodal) THEN
-    interpol = interpolation(obj, &
-      & Get(val, TypeFEVariableScalar, TypeFEVariableSpace))
+    interpol = Interpolation(obj, &
+                          Get(val, TypeFEVariableScalar, TypeFEVariableSpace))
   ELSE
     interpol = Get(val, TypeFEVariableScalar, TypeFEVariableSpace)
   END IF
@@ -106,7 +106,7 @@ CASE (SpaceTime)
   TYPE IS (STElemShapeData_)
     IF (val%DefineOn .EQ. Nodal) THEN
       interpol = STinterpolation(obj, &
-        & Get(val, TypeFEVariableScalar, TypeFEVariableSpaceTime))
+                      Get(val, TypeFEVariableScalar, TypeFEVariableSpaceTime))
     END IF
   END SELECT
 END SELECT
