@@ -206,7 +206,6 @@ PURE SUBROUTINE Master_Get_vec_(obj, val, tsize)
 
   tsize = obj%len
   val(1:tsize) = obj%val(1:tsize)
-
 END SUBROUTINE Master_Get_vec_
 
 !----------------------------------------------------------------------------
@@ -259,12 +258,43 @@ PURE SUBROUTINE Master_get_mat3_(obj, val, dim1, dim2, dim3)
 END SUBROUTINE Master_get_mat3_
 
 !----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+PURE SUBROUTINE Master_get_mat4_(obj, val, dim1, dim2, dim3, dim4)
+  CLASS(FEVariable_), INTENT(IN) :: obj
+  REAL(DFP), INTENT(INOUT) :: val(:, :, :, :)
+  INTEGER(I4B), INTENT(OUT) :: dim1, dim2, dim3, dim4
+
+  ! Internal variables
+  INTEGER(I4B) :: ii, jj, kk, ll, cnt
+
+  dim1 = obj%s(1)
+  dim2 = obj%s(2)
+  dim3 = obj%s(3)
+  dim4 = obj%s(4)
+
+  cnt = 0
+  DO ll = 1, dim4
+    DO kk = 1, dim3
+      DO jj = 1, dim2
+        DO ii = 1, dim1
+          cnt = cnt + 1
+          val(ii, jj, kk, ll) = obj%val(cnt)
+        END DO
+      END DO
+    END DO
+  END DO
+END SUBROUTINE Master_get_mat4_
+
+!----------------------------------------------------------------------------
 !                                                            getNodalvalues
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Scalar_Space
+INTEGER(I4B) :: tsize
 ALLOCATE (val(obj%len))
-val = obj%val(1:obj%len)
+CALL Master_Get_vec_(obj=obj, val=val, tsize=tsize)
 END PROCEDURE Scalar_Space
 
 !----------------------------------------------------------------------------
@@ -272,7 +302,7 @@ END PROCEDURE Scalar_Space
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Scalar_Space_
-CALL Master_Get_vec_(obj, val, tsize)
+CALL Master_Get_vec_(obj=obj, val=val, tsize=tsize)
 END PROCEDURE Scalar_Space_
 
 !----------------------------------------------------------------------------
@@ -280,8 +310,9 @@ END PROCEDURE Scalar_Space_
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Scalar_Time
+INTEGER(I4B) :: tsize
 ALLOCATE (val(obj%len))
-val = obj%val(1:obj%len)
+CALL Master_Get_vec_(obj=obj, val=val, tsize=tsize)
 END PROCEDURE Scalar_Time
 
 !----------------------------------------------------------------------------
@@ -289,7 +320,7 @@ END PROCEDURE Scalar_Time
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Scalar_Time_
-CALL Master_Get_vec_(obj, val, tsize)
+CALL Master_Get_vec_(obj=obj, val=val, tsize=tsize)
 END PROCEDURE Scalar_Time_
 
 !----------------------------------------------------------------------------
@@ -297,19 +328,9 @@ END PROCEDURE Scalar_Time_
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Scalar_SpaceTime
-INTEGER(I4B) :: ii, jj, cnt
-
+INTEGER(I4B) :: nrow, ncol
 ALLOCATE (val(obj%s(1), obj%s(2)))
-
-cnt = 0
-DO jj = 1, obj%s(2)
-  DO ii = 1, obj%s(1)
-    cnt = cnt + 1
-    val(ii, jj) = obj%val(cnt)
-
-  END DO
-END DO
-
+CALL Master_Get_mat_(obj=obj, val=val, nrow=nrow, ncol=ncol)
 END PROCEDURE Scalar_SpaceTime
 
 !----------------------------------------------------------------------------
@@ -317,7 +338,7 @@ END PROCEDURE Scalar_SpaceTime
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Scalar_SpaceTime_
-CALL Master_Get_mat_(obj, val, nrow, ncol)
+CALL Master_Get_mat_(obj=obj, val=val, nrow=nrow, ncol=ncol)
 END PROCEDURE Scalar_SpaceTime_
 
 !----------------------------------------------------------------------------
@@ -325,8 +346,9 @@ END PROCEDURE Scalar_SpaceTime_
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Vector_Constant
+INTEGER(I4B) :: tsize
 ALLOCATE (val(obj%len))
-val = obj%val(1:obj%len)
+CALL Master_Get_vec_(obj=obj, val=val, tsize=tsize)
 END PROCEDURE Vector_Constant
 
 !----------------------------------------------------------------------------
@@ -334,7 +356,7 @@ END PROCEDURE Vector_Constant
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Vector_Constant_
-CALL Master_Get_vec_(obj, val, tsize)
+CALL Master_Get_vec_(obj=obj, val=val, tsize=tsize)
 END PROCEDURE Vector_Constant_
 
 !----------------------------------------------------------------------------
@@ -342,18 +364,9 @@ END PROCEDURE Vector_Constant_
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Vector_Space
-INTEGER(I4B) :: ii, jj, cnt
-
+INTEGER(I4B) :: nrow, ncol
 ALLOCATE (val(obj%s(1), obj%s(2)))
-
-cnt = 0
-DO jj = 1, obj%s(2)
-  DO ii = 1, obj%s(1)
-    cnt = cnt + 1
-    val(ii, jj) = obj%val(cnt)
-  END DO
-END DO
-
+CALL Master_Get_mat_(obj=obj, val=val, nrow=nrow, ncol=ncol)
 END PROCEDURE Vector_Space
 
 !----------------------------------------------------------------------------
@@ -361,7 +374,7 @@ END PROCEDURE Vector_Space
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Vector_Space_
-CALL Master_Get_mat_(obj, val, nrow, ncol)
+CALL Master_Get_mat_(obj=obj, val=val, nrow=nrow, ncol=ncol)
 END PROCEDURE Vector_Space_
 
 !----------------------------------------------------------------------------
@@ -369,17 +382,9 @@ END PROCEDURE Vector_Space_
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Vector_Time
-INTEGER(I4B) :: ii, jj, cnt
-
+INTEGER(I4B) :: nrow, ncol
 ALLOCATE (val(obj%s(1), obj%s(2)))
-
-cnt = 0
-DO jj = 1, obj%s(2)
-  DO ii = 1, obj%s(1)
-    cnt = cnt + 1
-    val(ii, jj) = obj%val(cnt)
-  END DO
-END DO
+CALL Master_Get_mat_(obj=obj, val=val, nrow=nrow, ncol=ncol)
 END PROCEDURE Vector_Time
 
 !----------------------------------------------------------------------------
@@ -387,7 +392,7 @@ END PROCEDURE Vector_Time
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Vector_Time_
-CALL Master_Get_mat_(obj, val, nrow, ncol)
+CALL Master_Get_mat_(obj=obj, val=val, nrow=nrow, ncol=ncol)
 END PROCEDURE Vector_Time_
 
 !----------------------------------------------------------------------------
@@ -395,19 +400,9 @@ END PROCEDURE Vector_Time_
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Vector_SpaceTime
-INTEGER(I4B) :: ii, jj, kk, cnt
-
+INTEGER(I4B) :: dim1, dim2, dim3
 ALLOCATE (val(obj%s(1), obj%s(2), obj%s(3)))
-
-cnt = 0
-DO kk = 1, obj%s(3)
-  DO jj = 1, obj%s(2)
-    DO ii = 1, obj%s(1)
-      cnt = cnt + 1
-      val(ii, jj, kk) = obj%val(cnt)
-    END DO
-  END DO
-END DO
+CALL Master_Get_mat3_(obj=obj, val=val, dim1=dim1, dim2=dim2, dim3=dim3)
 END PROCEDURE Vector_SpaceTime
 
 !----------------------------------------------------------------------------
@@ -415,7 +410,7 @@ END PROCEDURE Vector_SpaceTime
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Vector_SpaceTime_
-CALL Master_Get_mat3_(obj, val, dim1, dim2, dim3)
+CALL Master_Get_mat3_(obj=obj, val=val, dim1=dim1, dim2=dim2, dim3=dim3)
 END PROCEDURE Vector_SpaceTime_
 
 !----------------------------------------------------------------------------
@@ -423,17 +418,9 @@ END PROCEDURE Vector_SpaceTime_
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Matrix_Constant
-INTEGER(I4B) :: ii, jj, cnt
-
+INTEGER(I4B) :: nrow, ncol
 ALLOCATE (val(obj%s(1), obj%s(2)))
-
-cnt = 0
-DO jj = 1, obj%s(2)
-  DO ii = 1, obj%s(1)
-    cnt = cnt + 1
-    val(ii, jj) = obj%val(cnt)
-  END DO
-END DO
+CALL Master_Get_mat_(obj=obj, val=val, nrow=nrow, ncol=ncol)
 END PROCEDURE Matrix_Constant
 
 !----------------------------------------------------------------------------
@@ -441,7 +428,7 @@ END PROCEDURE Matrix_Constant
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Matrix_Constant_
-CALL Master_Get_mat_(obj, val, nrow, ncol)
+CALL Master_Get_mat_(obj=obj, val=val, nrow=nrow, ncol=ncol)
 END PROCEDURE Matrix_Constant_
 
 !----------------------------------------------------------------------------
@@ -449,19 +436,9 @@ END PROCEDURE Matrix_Constant_
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Matrix_Space
-INTEGER(I4B) :: ii, jj, kk, cnt
-
+INTEGER(I4B) :: dim1, dim2, dim3
 ALLOCATE (val(obj%s(1), obj%s(2), obj%s(3)))
-
-cnt = 0
-DO kk = 1, obj%s(3)
-  DO jj = 1, obj%s(2)
-    DO ii = 1, obj%s(1)
-      cnt = cnt + 1
-      val(ii, jj, kk) = obj%val(cnt)
-    END DO
-  END DO
-END DO
+CALL Master_Get_mat3_(obj=obj, val=val, dim1=dim1, dim2=dim2, dim3=dim3)
 END PROCEDURE Matrix_Space
 
 !----------------------------------------------------------------------------
@@ -469,7 +446,7 @@ END PROCEDURE Matrix_Space
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Matrix_Space_
-CALL Master_Get_mat3_(obj, val, dim1, dim2, dim3)
+CALL Master_Get_mat3_(obj=obj, val=val, dim1=dim1, dim2=dim2, dim3=dim3)
 END PROCEDURE Matrix_Space_
 
 !----------------------------------------------------------------------------
@@ -477,19 +454,9 @@ END PROCEDURE Matrix_Space_
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Matrix_Time
-INTEGER(I4B) :: ii, jj, kk, cnt
-
+INTEGER(I4B) :: dim1, dim2, dim3
 ALLOCATE (val(obj%s(1), obj%s(2), obj%s(3)))
-
-cnt = 0
-DO kk = 1, obj%s(3)
-  DO jj = 1, obj%s(2)
-    DO ii = 1, obj%s(1)
-      cnt = cnt + 1
-      val(ii, jj, kk) = obj%val(cnt)
-    END DO
-  END DO
-END DO
+CALL Master_Get_mat3_(obj=obj, val=val, dim1=dim1, dim2=dim2, dim3=dim3)
 END PROCEDURE Matrix_Time
 
 !----------------------------------------------------------------------------
@@ -497,7 +464,7 @@ END PROCEDURE Matrix_Time
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Matrix_Time_
-CALL Master_Get_mat3_(obj, val, dim1, dim2, dim3)
+CALL Master_Get_mat3_(obj=obj, val=val, dim1=dim1, dim2=dim2, dim3=dim3)
 END PROCEDURE Matrix_Time_
 
 !----------------------------------------------------------------------------
@@ -505,21 +472,10 @@ END PROCEDURE Matrix_Time_
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Matrix_SpaceTime
-INTEGER(I4B) :: ii, jj, kk, ll, cnt
-
+INTEGER(I4B) :: dim1, dim2, dim3, dim4
 ALLOCATE (val(obj%s(1), obj%s(2), obj%s(3), obj%s(4)))
-
-cnt = 0
-DO ll = 1, obj%s(4)
-  DO kk = 1, obj%s(3)
-    DO jj = 1, obj%s(2)
-      DO ii = 1, obj%s(1)
-        cnt = cnt + 1
-        val(ii, jj, kk, ll) = obj%val(cnt)
-      END DO
-    END DO
-  END DO
-END DO
+CALL Master_get_mat4_(obj=obj, val=val, dim1=dim1, dim2=dim2, dim3=dim3, &
+                      dim4=dim4)
 END PROCEDURE Matrix_SpaceTime
 
 !----------------------------------------------------------------------------
@@ -527,25 +483,8 @@ END PROCEDURE Matrix_SpaceTime
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Matrix_SpaceTime_
-INTEGER(I4B) :: ii, jj, kk, ll, cnt
-
-dim1 = obj%s(1)
-dim2 = obj%s(2)
-dim3 = obj%s(3)
-dim4 = obj%s(4)
-
-cnt = 0
-DO ll = 1, dim4
-  DO kk = 1, dim3
-    DO jj = 1, dim2
-      DO ii = 1, dim1
-        cnt = cnt + 1
-        val(ii, jj, kk, ll) = obj%val(cnt)
-      END DO
-    END DO
-  END DO
-END DO
-
+CALL Master_get_mat4_(obj=obj, val=val, dim1=dim1, dim2=dim2, dim3=dim3, &
+                      dim4=dim4)
 END PROCEDURE Matrix_SpaceTime_
 
 !----------------------------------------------------------------------------
