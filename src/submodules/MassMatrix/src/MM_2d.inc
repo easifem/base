@@ -36,7 +36,7 @@ PURE SUBROUTINE MM_2d(ans, test, trial, rho)
   !!
   !! main
   !!
-  CALL getInterpolation(obj=trial, interpol=vbar, val=rho)
+  CALL getInterpolation(obj=trial, ans=vbar, val=rho)
   !!
   CALL reallocate(m4, SIZE(test%N, 1), SIZE(trial%N, 1), &
     & SIZE(vbar, 1), SIZE(vbar, 1))

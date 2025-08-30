@@ -40,8 +40,8 @@ PURE SUBROUTINE STMM_27(ans, test, trial, term1, term2, c1, c2)
   !!
   !! main
   !!
-  CALL getInterpolation(obj=trial, interpol=c1bar, val=c1)
-  CALL getInterpolation(obj=trial, interpol=kbar, val=c2)
+  CALL getInterpolation(obj=trial, ans=c1bar, val=c1)
+  CALL getInterpolation(obj=trial, ans=kbar, val=c2)
   !!
   CALL Reallocate(m6, &
     & SIZE(test(1)%N, 1), &

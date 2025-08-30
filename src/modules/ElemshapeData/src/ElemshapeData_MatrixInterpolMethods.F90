@@ -37,9 +37,9 @@ PUBLIC :: STInterpolation
 ! summary: This subroutine performs interpolation of matrix
 
 INTERFACE GetInterpolation
-  MODULE PURE SUBROUTINE matrix_getInterpolation_1(obj, interpol, val)
+  MODULE PURE SUBROUTINE matrix_getInterpolation_1(obj, ans, val)
     CLASS(ElemshapeData_), INTENT(IN) :: obj
-    REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: interpol(:, :, :)
+    REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: ans(:, :, :)
     !! interpolation of matrix
     REAL(DFP), INTENT(IN) :: val(:, :, :)
     !! nodal value of matrix
@@ -55,10 +55,10 @@ END INTERFACE GetInterpolation
 ! summary:  get interpolation of matrix without allocation
 
 INTERFACE GetInterpolation_
-  MODULE PURE SUBROUTINE matrix_getInterpolation1_(obj, interpol, val, &
+  MODULE PURE SUBROUTINE matrix_getInterpolation1_(obj, ans, val, &
                                                    dim1, dim2, dim3)
     CLASS(ElemshapeData_), INTENT(IN) :: obj
-    REAL(DFP), INTENT(INOUT) :: interpol(:, :, :)
+    REAL(DFP), INTENT(INOUT) :: ans(:, :, :)
     REAL(DFP), INTENT(IN) :: val(:, :, :)
     INTEGER(I4B), INTENT(OUT) :: dim1, dim2, dim3
   END SUBROUTINE matrix_getInterpolation1_
@@ -78,9 +78,9 @@ END INTERFACE GetInterpolation_
 ! nodal values
 
 INTERFACE GetInterpolation
-  MODULE PURE SUBROUTINE matrix_getInterpolation_2(obj, interpol, val)
+  MODULE PURE SUBROUTINE matrix_getInterpolation_2(obj, ans, val)
     CLASS(ElemshapeData_), INTENT(IN) :: obj
-    REAL(DFP), INTENT(INOUT), ALLOCATABLE :: interpol(:, :, :)
+    REAL(DFP), INTENT(INOUT), ALLOCATABLE :: ans(:, :, :)
     REAL(DFP), INTENT(IN) :: val(:, :, :, :)
     !! space-time nodal value of matrix
   END SUBROUTINE matrix_getInterpolation_2
@@ -95,10 +95,10 @@ END INTERFACE GetInterpolation
 ! summary:  get interpolation of matrix without allocation
 
 INTERFACE GetInterpolation_
-  MODULE PURE SUBROUTINE matrix_getInterpolation2_(obj, interpol, val, &
+  MODULE PURE SUBROUTINE matrix_getInterpolation2_(obj, ans, val, &
                                                    dim1, dim2, dim3)
     CLASS(ElemshapeData_), INTENT(IN) :: obj
-    REAL(DFP), INTENT(INOUT) :: interpol(:, :, :)
+    REAL(DFP), INTENT(INOUT) :: ans(:, :, :)
     REAL(DFP), INTENT(IN) :: val(:, :, :, :)
     INTEGER(I4B), INTENT(OUT) :: dim1, dim2, dim3
   END SUBROUTINE matrix_getInterpolation2_
@@ -118,9 +118,9 @@ END INTERFACE GetInterpolation_
 ! nodal values
 
 INTERFACE GetInterpolation
-  MODULE PURE SUBROUTINE matrix_getInterpolation_3(obj, interpol, val)
+  MODULE PURE SUBROUTINE matrix_getInterpolation_3(obj, ans, val)
     CLASS(STElemshapeData_), INTENT(IN) :: obj(:)
-    REAL(DFP), INTENT(INOUT), ALLOCATABLE :: interpol(:, :, :, :)
+    REAL(DFP), INTENT(INOUT), ALLOCATABLE :: ans(:, :, :, :)
     !! space-time interpolation
     REAL(DFP), INTENT(IN) :: val(:, :, :, :)
     !! space-time nodal value of matrix
@@ -136,9 +136,9 @@ END INTERFACE GetInterpolation
 ! summary: This subroutine performs interpolation of matrix FEVariable
 !
 INTERFACE GetInterpolation
-  MODULE PURE SUBROUTINE matrix_getInterpolation_4(obj, interpol, val)
+  MODULE PURE SUBROUTINE matrix_getInterpolation_4(obj, ans, val)
     CLASS(ElemshapeData_), INTENT(IN) :: obj
-    REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: interpol(:, :, :)
+    REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: ans(:, :, :)
     !! interpolation of matrix
     TYPE(FEVariable_), INTENT(IN) :: val
     !! matrix fe variable
@@ -154,10 +154,10 @@ END INTERFACE GetInterpolation
 ! summary:  get interpolation of matrix without allocation
 
 INTERFACE GetInterpolation_
-  MODULE PURE SUBROUTINE matrix_getInterpolation4_(obj, interpol, val, &
+  MODULE PURE SUBROUTINE matrix_getInterpolation4_(obj, ans, val, &
                                                    dim1, dim2, dim3)
     CLASS(ElemshapeData_), INTENT(IN) :: obj
-    REAL(DFP), INTENT(INOUT) :: interpol(:, :, :)
+    REAL(DFP), INTENT(INOUT) :: ans(:, :, :)
     TYPE(FEVariable_), INTENT(IN) :: val
     INTEGER(I4B), INTENT(OUT) :: dim1, dim2, dim3
   END SUBROUTINE matrix_getInterpolation4_
@@ -168,9 +168,9 @@ END INTERFACE GetInterpolation_
 !----------------------------------------------------------------------------
 
 INTERFACE GetInterpolation
-  MODULE PURE SUBROUTINE matrix_getInterpolation_5(obj, interpol, val)
+  MODULE PURE SUBROUTINE matrix_getInterpolation_5(obj, ans, val)
     CLASS(STElemshapeData_), INTENT(IN) :: obj(:)
-    REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: interpol(:, :, :, :)
+    REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: ans(:, :, :, :)
     !! space-time interpolation of matrix
     TYPE(FEVariable_), INTENT(IN) :: val
     !! matrix fe variable
@@ -186,10 +186,10 @@ END INTERFACE GetInterpolation
 ! summary:  get interpolation of matrix without allocation
 
 INTERFACE GetInterpolation_
-  MODULE PURE SUBROUTINE matrix_getInterpolation5_(obj, interpol, val, &
+  MODULE PURE SUBROUTINE matrix_getInterpolation5_(obj, ans, val, &
                                                    dim1, dim2, dim3, dim4)
     CLASS(STElemshapeData_), INTENT(IN) :: obj(:)
-    REAL(DFP), INTENT(INOUT) :: interpol(:, :, :, :)
+    REAL(DFP), INTENT(INOUT) :: ans(:, :, :, :)
     TYPE(FEVariable_), INTENT(IN) :: val
     INTEGER(I4B), INTENT(OUT) :: dim1, dim2, dim3, dim4
   END SUBROUTINE matrix_getInterpolation5_
@@ -204,10 +204,10 @@ END INTERFACE GetInterpolation_
 ! summary: This function returns the interpolation of matrix
 
 INTERFACE
-  MODULE PURE FUNCTION matrix_interpolation_1(obj, val) RESULT(interpol)
+  MODULE PURE FUNCTION matrix_interpolation_1(obj, val) RESULT(ans)
     CLASS(ElemshapeData_), INTENT(IN) :: obj
     REAL(DFP), INTENT(IN) :: val(:, :, :)
-    REAL(DFP), ALLOCATABLE :: interpol(:, :, :)
+    REAL(DFP), ALLOCATABLE :: ans(:, :, :)
   END FUNCTION matrix_interpolation_1
 END INTERFACE
 
@@ -231,11 +231,11 @@ END INTERFACE Interpolation
 
 INTERFACE
 
-  MODULE PURE FUNCTION matrix_stinterpolation_1(obj, val) RESULT(interpol)
+  MODULE PURE FUNCTION matrix_stinterpolation_1(obj, val) RESULT(ans)
     CLASS(STElemshapeData_), INTENT(IN) :: obj
     REAL(DFP), INTENT(IN) :: val(:, :, :, :)
     !! spatial nodal values of matrix
-    REAL(DFP), ALLOCATABLE :: interpol(:, :, :)
+    REAL(DFP), ALLOCATABLE :: ans(:, :, :)
     !! Interpolation value of matrix
   END FUNCTION matrix_stinterpolation_1
 END INTERFACE

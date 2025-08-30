@@ -128,7 +128,7 @@ MODULE PROCEDURE matrix_getinterpolation4_
 !     CALL GetInterpolation_(obj=obj, &
 !                            val=Get(val, TypeFEVariableMatrix, &
 !                                    TypeFEVariableSpace), &
-!                            interpol=interpol, &
+!                            ans=interpol, &
 !                            dim1=dim1, dim2=dim2, dim3=dim3)
 !   ELSE
 !     CALL Get_(obj=val, rank=TypeFEVariableMatrix, &
@@ -142,7 +142,7 @@ MODULE PROCEDURE matrix_getinterpolation4_
 !       CALL GetInterpolation_(obj=obj, &
 !                              val=Get(val, TypeFEVariableMatrix, &
 !                                      TypeFEVariableSpaceTime), &
-!                              interpol=interpol, &
+!                              ans=interpol, &
 !                              dim1=dim1, dim2=dim2, dim3=dim3)
 !     END IF
 !   END SELECT
@@ -253,7 +253,7 @@ MODULE PROCEDURE matrix_getinterpolation5_
 !       CALL GetInterpolation_(obj=obj(ii), &
 !                              val=Get(val, TypeFEVariableMatrix, &
 !                                      TypeFEVariableSpace), &
-!                              interpol=interpol(:, :, :, ii), &
+!                              ans=interpol(:, :, :, ii), &
 !                              dim1=dim1, dim2=dim2, dim3=dim3)
 !     END DO
 !   ELSE
@@ -271,7 +271,7 @@ MODULE PROCEDURE matrix_getinterpolation5_
 !       CALL GetInterpolation_(obj=obj(ii), &
 !                              val=Get(val, TypeFEVariableMatrix, &
 !                                      TypeFEVariableSpaceTime), &
-!                              interpol=interpol(:, :, :, ii), &
+!                              ans=interpol(:, :, :, ii), &
 !                              dim1=dim1, dim2=dim2, dim3=dim3)
 !     END DO
 !   ELSE

@@ -65,7 +65,7 @@ REAL(DFP), ALLOCATABLE :: cbar(:, :)
   !!
   !! main
   !!
-CALL getInterpolation(obj=obj, val=val, interpol=cbar)
+CALL getInterpolation(obj=obj, val=val, ans=cbar)
 CALL Reallocate(cdNdXt, SIZE(obj%dNdXt, 1), SIZE(obj%dNdXt, 3))
 nsd = SIZE(obj%dNdXt, 2)
 DO ii = 1, SIZE(cdNdXt, 2)
@@ -84,7 +84,7 @@ MODULE PROCEDURE getProjectionOfdNdXt2_
 INTEGER(I4B) :: ii, nsd
 REAL(DFP) :: cbar(SIZE(obj%dNdXt, 2), SIZE(obj%dNdXt, 3))
 
-CALL GetInterpolation_(obj=obj, val=val, interpol=cbar, nrow=nrow, ncol=ncol)
+CALL GetInterpolation_(obj=obj, val=val, ans=cbar, nrow=nrow, ncol=ncol)
 nsd = nrow
 nrow = SIZE(obj%dNdXt, 1)
 
@@ -159,7 +159,7 @@ REAL(DFP), ALLOCATABLE :: cbar(:, :)
   !!
   !! main
   !!
-CALL getInterpolation(obj=obj, val=val, interpol=cbar)
+CALL getInterpolation(obj=obj, val=val, ans=cbar)
 CALL Reallocate(cdNTdXt, SIZE(obj%dNTdXt, 1), SIZE(obj%dNTdXt, 2), &
   & SIZE(obj%dNTdXt, 4))
 nsd = SIZE(obj%dNTdXt, 3)
@@ -182,7 +182,7 @@ REAL(DFP), ALLOCATABLE :: cbar(:, :, :)
   !!
   !! main
   !!
-CALL getInterpolation(obj=obj, val=val, interpol=cbar)
+CALL getInterpolation(obj=obj, val=val, ans=cbar)
   !!
 CALL Reallocate(cdNTdXt, &
   & SIZE(obj(1)%dNTdXt, 1), &

@@ -41,7 +41,7 @@ PURE SUBROUTINE CM_5(ans, test, trial, term1, term2, c, opt)
   !!
   !! main
   !!
-  CALL GetInterpolation(obj=trial, val=c, interpol=realval)
+  CALL GetInterpolation(obj=trial, val=c, ans=realval)
   !!
   realval = trial%js * trial%ws * trial%thickness * realval
   !!

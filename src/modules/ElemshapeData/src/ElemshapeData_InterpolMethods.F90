@@ -47,9 +47,9 @@ PUBLIC :: Interpolation
 ! - The `vartype` of val can be constant, space, time, spacetime
 !
 INTERFACE GetInterpolation
-  MODULE PURE SUBROUTINE master_getInterpolation_1(obj, interpol, val)
+  MODULE PURE SUBROUTINE master_getInterpolation_1(obj, ans, val)
     CLASS(ElemshapeData_), INTENT(IN) :: obj
-    TYPE(FEVariable_), INTENT(INOUT) :: interpol
+    TYPE(FEVariable_), INTENT(INOUT) :: ans
     TYPE(FEVariable_), INTENT(IN) :: val
   END SUBROUTINE master_getInterpolation_1
 END INTERFACE GetInterpolation
@@ -75,9 +75,9 @@ END INTERFACE GetInterpolation
 ! - The `vartype` of val can be constant, space, time, spacetime
 !
 INTERFACE GetInterpolation
-  MODULE PURE SUBROUTINE master_getInterpolation_2(obj, interpol, val)
+  MODULE PURE SUBROUTINE master_getInterpolation_2(obj, ans, val)
     CLASS(STElemshapeData_), INTENT(IN) :: obj(:)
-    TYPE(FEVariable_), INTENT(INOUT) :: interpol
+    TYPE(FEVariable_), INTENT(INOUT) :: ans
     TYPE(FEVariable_), INTENT(IN) :: val
   END SUBROUTINE master_getInterpolation_2
 END INTERFACE GetInterpolation
@@ -92,7 +92,7 @@ END INTERFACE GetInterpolation
 ! summary: Interpolation of FEVariable
 
 INTERFACE
-  MODULE PURE FUNCTION master_interpolation_1(obj, val) RESULT(Ans)
+  MODULE PURE FUNCTION master_interpolation_1(obj, val) RESULT(ans)
     CLASS(ElemshapeData_), INTENT(IN) :: obj
     TYPE(FEVariable_), INTENT(IN) :: val
     TYPE(FEVariable_) :: ans

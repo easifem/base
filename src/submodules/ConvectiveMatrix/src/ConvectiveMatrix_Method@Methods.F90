@@ -273,7 +273,7 @@ PURE SUBROUTINE CM3_(ans, test, trial, term1, term2, c, opt, nrow, ncol)
   ncol = trial%nns
   ans(1:nrow, 1:ncol) = 0.0_DFP
 
-  CALL GetInterpolation_(obj=trial, val=c, interpol=realval, tsize=ii)
+  CALL GetInterpolation_(obj=trial, val=c, ans=realval, tsize=ii)
   realval(1:ii) = trial%js * trial%ws * trial%thickness * realval(1:ii)
 
   DO ips = 1, trial%nips
@@ -311,7 +311,7 @@ PURE SUBROUTINE CM4_(ans, test, trial, term1, term2, c, opt, nrow, ncol)
   ncol = SIZE(trial%N, 1)
   ans(1:nrow, 1:ncol) = 0.0_DFP
 
-  CALL GetInterpolation_(obj=trial, val=c, interpol=realval, tsize=ii)
+  CALL GetInterpolation_(obj=trial, val=c, ans=realval, tsize=ii)
   realval(1:ii) = trial%js * trial%ws * trial%thickness * realval(1:ii)
 
   DO ips = 1, trial%nips
@@ -347,7 +347,7 @@ PURE SUBROUTINE CM5_(ans, test, trial, term1, term2, c, opt, nrow, ncol)
   REAL(DFP) :: m4_2(test%nns, trial%nns, 1, trial%nsd)
   REAL(DFP), PARAMETER :: one = 1.0_DFP
 
-  CALL GetInterpolation_(obj=trial, val=c, interpol=realval, tsize=ii)
+  CALL GetInterpolation_(obj=trial, val=c, ans=realval, tsize=ii)
   realval(1:trial%nips) = trial%js * trial%ws * trial%thickness * realval(1:trial%nips)
 
   nrow = test%nns
@@ -400,7 +400,7 @@ PURE SUBROUTINE CM6_(ans, test, trial, term1, term2, c, opt, nrow, ncol)
   nrow = test%nns
   ncol = trial%nns
 
-  CALL GetInterpolation_(obj=trial, val=c, interpol=realval, tsize=ii)
+  CALL GetInterpolation_(obj=trial, val=c, ans=realval, tsize=ii)
   realval(1:ii) = trial%js * trial%ws * trial%thickness * realval(1:ii)
 
   IF (opt .EQ. 1) THEN

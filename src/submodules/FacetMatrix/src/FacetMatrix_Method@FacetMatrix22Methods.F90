@@ -109,7 +109,7 @@ CALL getProjectionOfdNdXt( &
   & cdNdXt=masterC1, &
   & val=elemsd%normal)
   !!
-CALL getInterpolation(obj=elemsd, Interpol=taubar, val=tauvar)
+CALL getInterpolation(obj=elemsd, ans=taubar, val=tauvar)
   !!
 realval = elemsd%js * elemsd%ws * elemsd%thickness * taubar
   !!

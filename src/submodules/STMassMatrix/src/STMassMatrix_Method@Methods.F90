@@ -206,7 +206,7 @@ PURE SUBROUTINE STMM_5(ans, test, trial, term1, term2, rho, opt)
   !!
   CALL Reallocate(iajb, SIZE(test(1)%N, 1), SIZE(test(1)%T), &
     & SIZE(trial(1)%N, 1), SIZE(trial(1)%T))
-  CALL getInterpolation(obj=trial, interpol=rhobar, val=rho)
+  CALL getInterpolation(obj=trial, ans=rhobar, val=rho)
   !!
   DO ipt = 1, SIZE(trial)
     realval = trial(ipt)%js * trial(ipt)%ws * trial(ipt)%thickness * &
@@ -255,7 +255,7 @@ PURE SUBROUTINE STMM_6(ans, test, trial, term1, term2, rho, opt)
   !!
   CALL Reallocate(iajb, SIZE(test(1)%N, 1), SIZE(test(1)%T), &
     & SIZE(trial(1)%N, 1), SIZE(trial(1)%T))
-  CALL getInterpolation(obj=trial, interpol=rhobar, val=rho)
+  CALL GetInterpolation(obj=trial, ans=rhobar, val=rho)
   !!
   DO ipt = 1, SIZE(trial)
     realval = trial(ipt)%js * trial(ipt)%ws * trial(ipt)%thickness * &
@@ -309,7 +309,7 @@ PURE SUBROUTINE STMM_7(ans, test, trial, term1, term2, rho, opt)
     & SIZE(trial(1)%N, 1), &
     & SIZE(trial(1)%T))
   !!
-  CALL getInterpolation(obj=trial, interpol=rhobar, val=rho)
+  CALL GetInterpolation(obj=trial, ans=rhobar, val=rho)
   !!
   DO ipt = 1, SIZE(trial)
     realval = trial(ipt)%js * trial(ipt)%ws * trial(ipt)%thickness * &
@@ -358,7 +358,7 @@ PURE SUBROUTINE STMM_8(ans, test, trial, term1, term2, rho, opt)
   !!
   CALL Reallocate(iajb, SIZE(test(1)%N, 1), SIZE(test(1)%T), &
     & SIZE(trial(1)%N, 1), SIZE(trial(1)%T))
-  CALL getInterpolation(obj=trial, interpol=rhobar, val=rho)
+  CALL GetInterpolation(obj=trial, ans=rhobar, val=rho)
   !!
   DO ipt = 1, SIZE(trial)
     realval = trial(ipt)%js * trial(ipt)%ws * trial(ipt)%thickness * &
@@ -405,7 +405,7 @@ PURE SUBROUTINE STMM_9a(ans, test, trial, term1, term2, rho)
 !!
 !! main
 !!
-  CALL getInterpolation(obj=trial, interpol=vbar, val=rho)
+  CALL getInterpolation(obj=trial, ans=vbar, val=rho)
 !!
   CALL Reallocate(m6, &
     & SIZE(test(1)%N, 1), &
@@ -466,7 +466,7 @@ PURE SUBROUTINE STMM_9b(ans, test, trial, term1, term2, rho)
 !!
 !! main
 !!
-  CALL getInterpolation(obj=trial, interpol=vbar, val=rho)
+  CALL getInterpolation(obj=trial, ans=vbar, val=rho)
 !!
   CALL Reallocate(m6, &
     & SIZE(test(1)%N, 1), &
@@ -527,7 +527,7 @@ PURE SUBROUTINE STMM_9c(ans, test, trial, term1, term2, rho)
 !!
 !! main
 !!
-  CALL getInterpolation(obj=trial, interpol=vbar, val=rho)
+  CALL getInterpolation(obj=trial, ans=vbar, val=rho)
 !!
   CALL Reallocate(m6, &
     & SIZE(test(1)%N, 1), &
@@ -588,7 +588,7 @@ PURE SUBROUTINE STMM_9d(ans, test, trial, term1, term2, rho)
 !!
 !! main
 !!
-  CALL getInterpolation(obj=trial, interpol=vbar, val=rho)
+  CALL getInterpolation(obj=trial, ans=vbar, val=rho)
 !!
   CALL Reallocate(m6, &
     & SIZE(test(1)%N, 1), &
@@ -651,7 +651,7 @@ PURE SUBROUTINE STMM_10a(ans, test, trial, term1, term2, rho)
 !!
 !! main
 !!
-  CALL getInterpolation(obj=trial, interpol=vbar, val=rho)
+  CALL getInterpolation(obj=trial, ans=vbar, val=rho)
 !!
   CALL Reallocate(m6, &
     & SIZE(test(1)%N, 1), &
@@ -724,7 +724,7 @@ PURE SUBROUTINE STMM_10b(ans, test, trial, term1, term2, rho)
 !!
 !! main
 !!
-  CALL getInterpolation(obj=trial, interpol=vbar, val=rho)
+  CALL getInterpolation(obj=trial, ans=vbar, val=rho)
 !!
   CALL Reallocate(m6, &
     & SIZE(test(1)%N, 1), &
@@ -797,7 +797,7 @@ PURE SUBROUTINE STMM_10c(ans, test, trial, term1, term2, rho)
 !!
 !! main
 !!
-  CALL getInterpolation(obj=trial, interpol=vbar, val=rho)
+  CALL getInterpolation(obj=trial, ans=vbar, val=rho)
 !!
   CALL Reallocate(m6, &
     & SIZE(test(1)%N, 1), &
@@ -871,7 +871,7 @@ PURE SUBROUTINE STMM_10d(ans, test, trial, term1, term2, rho)
 !!
 !! main
 !!
-  CALL getInterpolation(obj=trial, interpol=vbar, val=rho)
+  CALL getInterpolation(obj=trial, ans=vbar, val=rho)
 !!
   CALL Reallocate(m6, &
     & SIZE(test(1)%N, 1), &
@@ -943,7 +943,7 @@ PURE SUBROUTINE STMM_11a(ans, test, trial, term1, term2, rho)
   !!
   !! main
   !!
-  CALL getInterpolation(obj=trial, interpol=vbar, val=rho)
+  CALL getInterpolation(obj=trial, ans=vbar, val=rho)
   !!
   CALL Reallocate(m6, &
     & SIZE(test(1)%N, 1), &
@@ -1010,7 +1010,7 @@ PURE SUBROUTINE STMM_11b(ans, test, trial, term1, term2, rho)
   !!
   !! main
   !!
-  CALL getInterpolation(obj=trial, interpol=vbar, val=rho)
+  CALL getInterpolation(obj=trial, ans=vbar, val=rho)
   !!
   CALL Reallocate(m6, &
     & SIZE(test(1)%N, 1), &
@@ -1076,7 +1076,7 @@ PURE SUBROUTINE STMM_11c(ans, test, trial, term1, term2, rho)
   !!
   !! main
   !!
-  CALL getInterpolation(obj=trial, interpol=vbar, val=rho)
+  CALL getInterpolation(obj=trial, ans=vbar, val=rho)
   !!
   CALL Reallocate(m6, &
     & SIZE(test(1)%N, 1), &
@@ -1144,7 +1144,7 @@ PURE SUBROUTINE STMM_11d(ans, test, trial, term1, term2, rho)
   !!
   !! main
   !!
-  CALL getInterpolation(obj=trial, interpol=vbar, val=rho)
+  CALL getInterpolation(obj=trial, ans=vbar, val=rho)
   !!
   CALL Reallocate(m6, &
     & SIZE(test(1)%N, 1), &
@@ -1215,7 +1215,7 @@ PURE SUBROUTINE STMM_12a(ans, test, trial, term1, term2, rho)
 !!
 !! main
 !!
-  CALL getInterpolation(obj=trial, interpol=vbar, val=rho)
+  CALL getInterpolation(obj=trial, ans=vbar, val=rho)
 
 !!
   CALL Reallocate(m6, &
@@ -1284,7 +1284,7 @@ PURE SUBROUTINE STMM_12b(ans, test, trial, term1, term2, rho)
 !!
 !! main
 !!
-  CALL getInterpolation(obj=trial, interpol=vbar, val=rho)
+  CALL getInterpolation(obj=trial, ans=vbar, val=rho)
 
 !!
   CALL Reallocate(m6, &
@@ -1353,7 +1353,7 @@ PURE SUBROUTINE STMM_12c(ans, test, trial, term1, term2, rho)
 !!
 !! main
 !!
-  CALL getInterpolation(obj=trial, interpol=vbar, val=rho)
+  CALL getInterpolation(obj=trial, ans=vbar, val=rho)
 
 !!
   CALL Reallocate(m6, &
@@ -1422,7 +1422,7 @@ PURE SUBROUTINE STMM_12d(ans, test, trial, term1, term2, rho)
 !!
 !! main
 !!
-  CALL getInterpolation(obj=trial, interpol=vbar, val=rho)
+  CALL getInterpolation(obj=trial, ans=vbar, val=rho)
 
 !!
   CALL Reallocate(m6, &
@@ -1486,7 +1486,7 @@ PURE SUBROUTINE STMM_13(ans, test, trial, term1, term2, rho)
 !!
 !! main
 !!
-  CALL getInterpolation(obj=trial, interpol=kbar, val=rho)
+  CALL getInterpolation(obj=trial, ans=kbar, val=rho)
 !!
   CALL Reallocate(m6, &
     & SIZE(test(1)%N, 1), &
@@ -1540,7 +1540,7 @@ PURE SUBROUTINE STMM_14(ans, test, trial, term1, term2, rho)
 !!
 !! main
 !!
-  CALL getInterpolation(obj=trial, interpol=kbar, val=rho)
+  CALL getInterpolation(obj=trial, ans=kbar, val=rho)
 !!
   CALL Reallocate(m6, &
     & SIZE(test(1)%N, 1), &
@@ -1602,7 +1602,7 @@ PURE SUBROUTINE STMM_15(ans, test, trial, term1, term2, rho)
   !!
   !! main
   !!
-  CALL getInterpolation(obj=trial, interpol=kbar, val=rho)
+  CALL getInterpolation(obj=trial, ans=kbar, val=rho)
   !!
   CALL Reallocate(m6, &
     & SIZE(test(1)%N, 1), &
@@ -1658,7 +1658,7 @@ PURE SUBROUTINE STMM_16(ans, test, trial, term1, term2, rho)
 !!
 !! main
 !!
-  CALL getInterpolation(obj=trial, interpol=kbar, val=rho)
+  CALL getInterpolation(obj=trial, ans=kbar, val=rho)
 
 !!
   CALL Reallocate(m6, &
@@ -1730,8 +1730,8 @@ PURE SUBROUTINE STMM_17(ans, test, trial, term1, term2, c1, c2, opt)
     & SIZE(trial(1)%N, 1), &
     & SIZE(trial(1)%T))
 !!
-  CALL GetInterpolation(obj=trial, interpol=m2, val=c1)
-  CALL GetInterpolation(obj=trial, interpol=m2b, val=c2)
+  CALL GetInterpolation(obj=trial, ans=m2, val=c1)
+  CALL GetInterpolation(obj=trial, ans=m2b, val=c2)
 !!
   DO ipt = 1, SIZE(trial)
   !!
@@ -1790,8 +1790,8 @@ PURE SUBROUTINE STMM_18(ans, test, trial, term1, term2, c1, c2, opt)
     & SIZE(trial(1)%N, 1), &
     & SIZE(trial(1)%T))
 !!
-  CALL GetInterpolation(obj=trial, interpol=m2, val=c1)
-  CALL GetInterpolation(obj=trial, interpol=m2b, val=c2)
+  CALL GetInterpolation(obj=trial, ans=m2, val=c1)
+  CALL GetInterpolation(obj=trial, ans=m2b, val=c2)
 !!
   DO ipt = 1, SIZE(trial)
   !!
@@ -1850,8 +1850,8 @@ PURE SUBROUTINE STMM_19(ans, test, trial, term1, term2, c1, c2, opt)
     & SIZE(trial(1)%N, 1), &
     & SIZE(trial(1)%T))
 !!
-  CALL GetInterpolation(obj=trial, interpol=m2, val=c1)
-  CALL GetInterpolation(obj=trial, interpol=m2b, val=c2)
+  CALL GetInterpolation(obj=trial, ans=m2, val=c1)
+  CALL GetInterpolation(obj=trial, ans=m2b, val=c2)
 !!
   DO ipt = 1, SIZE(trial)
   !!
@@ -1910,8 +1910,8 @@ PURE SUBROUTINE STMM_20(ans, test, trial, term1, term2, c1, c2, opt)
     & SIZE(trial(1)%N, 1), &
     & SIZE(trial(1)%T))
 !!
-  CALL GetInterpolation(obj=trial, interpol=m2, val=c1)
-  CALL GetInterpolation(obj=trial, interpol=m2b, val=c2)
+  CALL GetInterpolation(obj=trial, ans=m2, val=c1)
+  CALL GetInterpolation(obj=trial, ans=m2b, val=c2)
 !!
   DO ipt = 1, SIZE(trial)
   !!
@@ -1964,8 +1964,8 @@ PURE SUBROUTINE STMM_21a(ans, test, trial, term1, term2, c1, c2)
 !!
 !! main
 !!
-  CALL getInterpolation(obj=trial, interpol=c1bar, val=c1)
-  CALL getInterpolation(obj=trial, interpol=vbar, val=c2)
+  CALL getInterpolation(obj=trial, ans=c1bar, val=c1)
+  CALL getInterpolation(obj=trial, ans=vbar, val=c2)
 !!
   CALL Reallocate(m6, &
     & SIZE(test(1)%N, 1), &
@@ -2028,8 +2028,8 @@ PURE SUBROUTINE STMM_21b(ans, test, trial, term1, term2, c1, c2)
 !!
 !! main
 !!
-  CALL getInterpolation(obj=trial, interpol=c1bar, val=c1)
-  CALL getInterpolation(obj=trial, interpol=vbar, val=c2)
+  CALL getInterpolation(obj=trial, ans=c1bar, val=c1)
+  CALL getInterpolation(obj=trial, ans=vbar, val=c2)
 !!
   CALL Reallocate(m6, &
     & SIZE(test(1)%N, 1), &
@@ -2092,8 +2092,8 @@ PURE SUBROUTINE STMM_21c(ans, test, trial, term1, term2, c1, c2)
 !!
 !! main
 !!
-  CALL getInterpolation(obj=trial, interpol=c1bar, val=c1)
-  CALL getInterpolation(obj=trial, interpol=vbar, val=c2)
+  CALL getInterpolation(obj=trial, ans=c1bar, val=c1)
+  CALL getInterpolation(obj=trial, ans=vbar, val=c2)
 !!
   CALL Reallocate(m6, &
     & SIZE(test(1)%N, 1), &
@@ -2156,8 +2156,8 @@ PURE SUBROUTINE STMM_21d(ans, test, trial, term1, term2, c1, c2)
 !!
 !! main
 !!
-  CALL getInterpolation(obj=trial, interpol=c1bar, val=c1)
-  CALL getInterpolation(obj=trial, interpol=vbar, val=c2)
+  CALL getInterpolation(obj=trial, ans=c1bar, val=c1)
+  CALL getInterpolation(obj=trial, ans=vbar, val=c2)
 !!
   CALL Reallocate(m6, &
     & SIZE(test(1)%N, 1), &
@@ -2222,8 +2222,8 @@ PURE SUBROUTINE STMM_22a(ans, test, trial, term1, term2, c1, c2)
 !!
 !! main
 !!
-  CALL getInterpolation(obj=trial, interpol=c1bar, val=c1)
-  CALL getInterpolation(obj=trial, interpol=vbar, val=c2)
+  CALL getInterpolation(obj=trial, ans=c1bar, val=c1)
+  CALL getInterpolation(obj=trial, ans=vbar, val=c2)
 !!
   CALL Reallocate(m6, &
     & SIZE(test(1)%N, 1), &
@@ -2297,8 +2297,8 @@ PURE SUBROUTINE STMM_22b(ans, test, trial, term1, term2, c1, c2)
 !!
 !! main
 !!
-  CALL getInterpolation(obj=trial, interpol=c1bar, val=c1)
-  CALL getInterpolation(obj=trial, interpol=vbar, val=c2)
+  CALL getInterpolation(obj=trial, ans=c1bar, val=c1)
+  CALL getInterpolation(obj=trial, ans=vbar, val=c2)
 !!
   CALL Reallocate(m6, &
     & SIZE(test(1)%N, 1), &
@@ -2372,8 +2372,8 @@ PURE SUBROUTINE STMM_22c(ans, test, trial, term1, term2, c1, c2)
 !!
 !! main
 !!
-  CALL getInterpolation(obj=trial, interpol=c1bar, val=c1)
-  CALL getInterpolation(obj=trial, interpol=vbar, val=c2)
+  CALL getInterpolation(obj=trial, ans=c1bar, val=c1)
+  CALL getInterpolation(obj=trial, ans=vbar, val=c2)
 !!
   CALL Reallocate(m6, &
     & SIZE(test(1)%N, 1), &
@@ -2447,8 +2447,8 @@ PURE SUBROUTINE STMM_22d(ans, test, trial, term1, term2, c1, c2)
 !!
 !! main
 !!
-  CALL getInterpolation(obj=trial, interpol=c1bar, val=c1)
-  CALL getInterpolation(obj=trial, interpol=vbar, val=c2)
+  CALL getInterpolation(obj=trial, ans=c1bar, val=c1)
+  CALL getInterpolation(obj=trial, ans=vbar, val=c2)
 !!
   CALL Reallocate(m6, &
     & SIZE(test(1)%N, 1), &
@@ -2521,8 +2521,8 @@ PURE SUBROUTINE STMM_23a(ans, test, trial, term1, term2, c1, c2)
 !!
 !! main
 !!
-  CALL getInterpolation(obj=trial, interpol=c1bar, val=c1)
-  CALL getInterpolation(obj=trial, interpol=vbar, val=c2)
+  CALL getInterpolation(obj=trial, ans=c1bar, val=c1)
+  CALL getInterpolation(obj=trial, ans=vbar, val=c2)
 !!
   CALL Reallocate(m6, &
     & SIZE(test(1)%N, 1), &
@@ -2591,8 +2591,8 @@ PURE SUBROUTINE STMM_23b(ans, test, trial, term1, term2, c1, c2)
 !!
 !! main
 !!
-  CALL getInterpolation(obj=trial, interpol=c1bar, val=c1)
-  CALL getInterpolation(obj=trial, interpol=vbar, val=c2)
+  CALL getInterpolation(obj=trial, ans=c1bar, val=c1)
+  CALL getInterpolation(obj=trial, ans=vbar, val=c2)
 !!
   CALL Reallocate(m6, &
     & SIZE(test(1)%N, 1), &
@@ -2661,8 +2661,8 @@ PURE SUBROUTINE STMM_23c(ans, test, trial, term1, term2, c1, c2)
 !!
 !! main
 !!
-  CALL getInterpolation(obj=trial, interpol=c1bar, val=c1)
-  CALL getInterpolation(obj=trial, interpol=vbar, val=c2)
+  CALL getInterpolation(obj=trial, ans=c1bar, val=c1)
+  CALL getInterpolation(obj=trial, ans=vbar, val=c2)
 !!
   CALL Reallocate(m6, &
     & SIZE(test(1)%N, 1), &
@@ -2731,8 +2731,8 @@ PURE SUBROUTINE STMM_23d(ans, test, trial, term1, term2, c1, c2)
 !!
 !! main
 !!
-  CALL getInterpolation(obj=trial, interpol=c1bar, val=c1)
-  CALL getInterpolation(obj=trial, interpol=vbar, val=c2)
+  CALL getInterpolation(obj=trial, ans=c1bar, val=c1)
+  CALL getInterpolation(obj=trial, ans=vbar, val=c2)
 !!
   CALL Reallocate(m6, &
     & SIZE(test(1)%N, 1), &
@@ -2864,8 +2864,8 @@ PURE SUBROUTINE STMM_25(ans, test, trial, term1, term2, c1, c2)
 !!
 !! main
 !!
-  CALL getInterpolation(obj=trial, interpol=c1bar, val=c1)
-  CALL getInterpolation(obj=trial, interpol=kbar, val=c2)
+  CALL GetInterpolation(obj=trial, ans=c1bar, val=c1)
+  CALL GetInterpolation(obj=trial, ans=kbar, val=c2)
 !!
   CALL Reallocate(m6, &
     & SIZE(test(1)%N, 1), &
@@ -2923,8 +2923,8 @@ PURE SUBROUTINE STMM_26(ans, test, trial, term1, term2, c1, c2)
 !!
 !! main
 !!
-  CALL getInterpolation(obj=trial, interpol=c1bar, val=c1)
-  CALL getInterpolation(obj=trial, interpol=kbar, val=c2)
+  CALL GetInterpolation(obj=trial, ans=c1bar, val=c1)
+  CALL GetInterpolation(obj=trial, ans=kbar, val=c2)
 !!
   CALL Reallocate(m6, &
     & SIZE(test(1)%N, 1), &
@@ -2989,8 +2989,8 @@ PURE SUBROUTINE STMM_27(ans, test, trial, term1, term2, c1, c2)
   !!
   !! main
   !!
-  CALL getInterpolation(obj=trial, interpol=c1bar, val=c1)
-  CALL getInterpolation(obj=trial, interpol=kbar, val=c2)
+  CALL GetInterpolation(obj=trial, ans=c1bar, val=c1)
+  CALL GetInterpolation(obj=trial, ans=kbar, val=c2)
   !!
   CALL Reallocate(m6, &
     & SIZE(test(1)%N, 1), &
@@ -3049,8 +3049,8 @@ PURE SUBROUTINE STMM_28(ans, test, trial, term1, term2, c1, c2)
 !!
 !! main
 !!
-  CALL getInterpolation(obj=trial, interpol=c1bar, val=c1)
-  CALL getInterpolation(obj=trial, interpol=kbar, val=c2)
+  CALL GetInterpolation(obj=trial, ans=c1bar, val=c1)
+  CALL GetInterpolation(obj=trial, ans=kbar, val=c2)
 !!
   CALL Reallocate(m6, &
     & SIZE(test(1)%N, 1), &

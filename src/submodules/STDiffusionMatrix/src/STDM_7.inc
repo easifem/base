@@ -41,7 +41,7 @@ PURE SUBROUTINE STDM_7(ans, test, trial, c1, c2, opt)
   !! main
   CALL Reallocate(iajb, SIZE(test(1)%N, 1), SIZE(test(1)%T), &
       & SIZE(trial(1)%N, 1), SIZE(trial(1)%T))
-  CALL getInterpolation(obj=trial, interpol=c1bar, val=c1)
+  CALL getInterpolation(obj=trial, ans=c1bar, val=c1)
   !!
   DO ipt = 1, SIZE(trial)
     !!

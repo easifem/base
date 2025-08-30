@@ -279,12 +279,12 @@ CALL getProjectionOfdNdXt( &
   !!
 CALL getInterpolation( &
   & obj=masterElemSD, &
-  & interpol=muMasterBar, &
+  & ans=muMasterBar, &
   & val=muMaster)
   !!
 CALL getInterpolation( &
   & obj=slaveElemSD, &
-  & interpol=muSlaveBar, &
+  & ans=muSlaveBar, &
   & val=muSlave)
   !!
 DO ips = 1, nips
@@ -360,12 +360,12 @@ CALL getProjectionOfdNdXt( &
   !!
 CALL getInterpolation( &
   & obj=masterElemSD, &
-  & interpol=tauMasterBar, &
+  & ans=tauMasterBar, &
   & val=tauMaster)
   !!
 CALL getInterpolation( &
   & obj=slaveElemSD, &
-  & interpol=tauSlaveBar, &
+  & ans=tauSlaveBar, &
   & val=tauSlave)
   !!
 masterC1 = muMaster * masterC1
@@ -447,22 +447,22 @@ CALL getProjectionOfdNdXt( &
   !!
 CALL getInterpolation( &
   & obj=masterElemSD, &
-  & interpol=muMasterBar, &
+  & ans=muMasterBar, &
   & val=muMaster)
   !!
 CALL getInterpolation( &
   & obj=slaveElemSD, &
-  & interpol=muSlaveBar, &
+  & ans=muSlaveBar, &
   & val=muSlave)
   !!
 CALL getInterpolation( &
   & obj=masterElemSD, &
-  & interpol=tauMasterBar, &
+  & ans=tauMasterBar, &
   & val=tauMaster)
   !!
 CALL getInterpolation( &
   & obj=slaveElemSD, &
-  & interpol=tauSlaveBar, &
+  & ans=tauSlaveBar, &
   & val=tauSlave)
   !!
 DO ips = 1, nips

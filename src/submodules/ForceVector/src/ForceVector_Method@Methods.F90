@@ -18,7 +18,7 @@
 SUBMODULE(ForceVector_Method) Methods
 USE ReallocateUtility, ONLY: Reallocate
 USE ElemshapeData_Method, ONLY: GetInterpolation
-use ProductUtility, only: OuterProd
+USE ProductUtility, ONLY: OuterProd
 IMPLICIT NONE
 CONTAINS
 
@@ -51,7 +51,7 @@ REAL(DFP), ALLOCATABLE :: realval(:)
 INTEGER(I4B) :: ips
 
 ! main
-CALL GetInterpolation(obj=test, interpol=realval, val=c)
+CALL GetInterpolation(obj=test, ans=realval, val=c)
 realval = test%js * test%ws * test%thickness * realval
 CALL Reallocate(ans, SIZE(test%N, 1))
 
@@ -73,7 +73,7 @@ REAL(DFP), ALLOCATABLE :: cbar(:, :)
 INTEGER(I4B) :: ips
 
 ! main
-CALL GetInterpolation(obj=test, interpol=cbar, val=c)
+CALL GetInterpolation(obj=test, ans=cbar, val=c)
 realval = test%js * test%ws * test%thickness
 CALL Reallocate(ans, SIZE(cbar, 1), SIZE(test%N, 1))
 
@@ -95,7 +95,7 @@ REAL(DFP), ALLOCATABLE :: cbar(:, :, :)
 INTEGER(I4B) :: ips
 
 ! main
-CALL GetInterpolation(obj=test, interpol=cbar, val=c)
+CALL GetInterpolation(obj=test, ans=cbar, val=c)
 realval = test%js * test%ws * test%thickness
 CALL Reallocate(ans, SIZE(cbar, 1), SIZE(cbar, 2), SIZE(test%N, 1))
 
@@ -118,8 +118,8 @@ REAL(DFP), ALLOCATABLE :: c2bar(:)
 INTEGER(I4B) :: ips
 
 ! main
-CALL GetInterpolation(obj=test, interpol=c1bar, val=c1)
-CALL GetInterpolation(obj=test, interpol=c2bar, val=c2)
+CALL GetInterpolation(obj=test, ans=c1bar, val=c1)
+CALL GetInterpolation(obj=test, ans=c2bar, val=c2)
 realval = test%js * test%ws * test%thickness * c1bar * c2bar
 CALL Reallocate(ans, SIZE(test%N, 1))
 
@@ -142,8 +142,8 @@ REAL(DFP), ALLOCATABLE :: c2bar(:, :)
 INTEGER(I4B) :: ips
 
 ! main
-CALL GetInterpolation(obj=test, interpol=c1bar, val=c1)
-CALL GetInterpolation(obj=test, interpol=c2bar, val=c2)
+CALL GetInterpolation(obj=test, ans=c1bar, val=c1)
+CALL GetInterpolation(obj=test, ans=c2bar, val=c2)
 realval = test%js * test%ws * test%thickness * c1bar
 CALL Reallocate(ans, SIZE(c2bar, 1), SIZE(test%N, 1))
 
@@ -166,8 +166,8 @@ REAL(DFP), ALLOCATABLE :: c2bar(:, :, :)
 INTEGER(I4B) :: ips
 
 ! main
-CALL GetInterpolation(obj=test, interpol=c1bar, val=c1)
-CALL GetInterpolation(obj=test, interpol=c2bar, val=c2)
+CALL GetInterpolation(obj=test, ans=c1bar, val=c1)
+CALL GetInterpolation(obj=test, ans=c2bar, val=c2)
 realval = test%js * test%ws * test%thickness * c1bar
 CALL Reallocate(ans, SIZE(c2bar, 1), SIZE(c2bar, 2), SIZE(test%N, 1))
 

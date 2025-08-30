@@ -33,7 +33,7 @@ PURE SUBROUTINE STDM_1(ans, test, trial, k, opt)
   !!
   !! main
   !!
-  CALL getInterpolation(obj=trial, interpol=kbar, val=k)
+  CALL getInterpolation(obj=trial, ans=kbar, val=k)
   !!
   CALL Reallocate(iajb, SIZE(test(1)%N, 1), SIZE(test(1)%T), &
     & SIZE(trial(1)%N, 1), SIZE(trial(1)%T))

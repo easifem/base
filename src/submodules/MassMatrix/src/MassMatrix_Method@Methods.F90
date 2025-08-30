@@ -40,7 +40,7 @@ PURE SUBROUTINE MM_2a(ans, test, trial, rho)
   INTEGER(I4B) :: ii, ips
 
   ! main
-  CALL GetInterpolation(obj=trial, interpol=vbar, val=rho)
+  CALL GetInterpolation(obj=trial, ans=vbar, val=rho)
   CALL Reallocate(m4, SIZE(test%N, 1), SIZE(trial%N, 1), SIZE(vbar, 1), 1)
   realval = trial%js * trial%ws * trial%thickness
 
@@ -77,7 +77,7 @@ PURE SUBROUTINE MM_2b(ans, test, trial, rho)
   INTEGER(I4B) :: ii, ips
 
   ! main
-  CALL GetInterpolation(obj=trial, interpol=vbar, val=rho)
+  CALL GetInterpolation(obj=trial, ans=vbar, val=rho)
   CALL Reallocate(m4, SIZE(test%N, 1), SIZE(trial%N, 1), 1, SIZE(vbar, 1))
   realval = trial%js * trial%ws * trial%thickness
 
@@ -113,7 +113,7 @@ PURE SUBROUTINE MM_2c(ans, test, trial, rho)
   INTEGER(I4B) :: ips, ii
 
   ! main
-  CALL GetInterpolation(obj=trial, interpol=vbar, val=rho)
+  CALL GetInterpolation(obj=trial, ans=vbar, val=rho)
   CALL Reallocate(m4, SIZE(test%N, 1), SIZE(trial%N, 1), &
     & SIZE(vbar, 1), SIZE(vbar, 1))
 
@@ -152,7 +152,7 @@ PURE SUBROUTINE MM_2d(ans, test, trial, rho)
   INTEGER(I4B) :: ips, ii, jj
 
   ! main
-  CALL GetInterpolation(obj=trial, interpol=vbar, val=rho)
+  CALL GetInterpolation(obj=trial, ans=vbar, val=rho)
   CALL Reallocate(m4, SIZE(test%N, 1), SIZE(trial%N, 1), &
     & SIZE(vbar, 1), SIZE(vbar, 1))
 
@@ -236,7 +236,7 @@ INTEGER(I4B) :: ips
 
 ! main
 CALL Reallocate(ans, SIZE(test%N, 1), SIZE(trial%N, 1))
-CALL GetInterpolation(obj=trial, interpol=realval, val=rho)
+CALL GetInterpolation(obj=trial, ans=realval, val=rho)
 realval = trial%js * trial%ws * trial%thickness * realval
 
 DO ips = 1, SIZE(realval)
@@ -260,8 +260,7 @@ INTEGER(I4B) :: ips, ii, jj
 nrow = test%nns
 ncol = trial%nns
 realval = 0.0_DFP
-CALL GetInterpolation_(obj=trial, interpol=realval, &
-                       val=rho, tsize=ii)
+CALL GetInterpolation_(obj=trial, ans=realval, val=rho, tsize=ii)
 realval = trial%js * trial%ws * trial%thickness * realval
 
 DO ips = 1, SIZE(realval)
@@ -316,7 +315,7 @@ REAL(DFP), ALLOCATABLE :: m4(:, :, :, :)
 INTEGER(I4B) :: ii, jj, ips
 
 ! main
-CALL GetInterpolation(obj=trial, interpol=kbar, val=rho)
+CALL GetInterpolation(obj=trial, ans=kbar, val=rho)
 CALL Reallocate(m4, SIZE(test%N, 1), SIZE(trial%N, 1), &
   & SIZE(kbar, 1), SIZE(kbar, 2))
 
@@ -360,9 +359,9 @@ REAL(DFP), ALLOCATABLE :: m4(:, :, :, :)
 INTEGER(I4B) :: ii, jj, ips, nsd, nns
 
 ! main
-CALL GetInterpolation(obj=trial, interpol=lambdaBar, val=lambda)
-CALL GetInterpolation(obj=trial, interpol=muBar, val=mu)
-CALL GetInterpolation(obj=trial, interpol=rhoBar, val=rho)
+CALL GetInterpolation(obj=trial, ans=lambdaBar, val=lambda)
+CALL GetInterpolation(obj=trial, ans=muBar, val=mu)
+CALL GetInterpolation(obj=trial, ans=rhoBar, val=rho)
 
 ALLOCATE (acoeff(SIZE(lambdaBar, 1)), bcoeff(SIZE(lambdaBar, 1)))
 

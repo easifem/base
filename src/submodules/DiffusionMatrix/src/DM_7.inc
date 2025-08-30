@@ -41,7 +41,7 @@ PURE SUBROUTINE DM_7(ans, test, trial, c1, c2, opt)
   !! main
   CALL getProjectionOfdNdXt(obj=test, cdNdXt=c1bar, val=c2)
   CALL getProjectionOfdNdXt(obj=trial, cdNdXt=c2bar, val=c2)
-  CALL getInterpolation(obj=trial, interpol=realval, val=c1)
+  CALL getInterpolation(obj=trial, ans=realval, val=c1)
   realval = realval * trial%js * trial%ws * trial%thickness
   CALL reallocate(ans, SIZE(test%N, 1), SIZE(trial%N, 1))
   DO ii = 1, SIZE(realval)

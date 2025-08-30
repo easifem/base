@@ -30,8 +30,8 @@ CONTAINS
 
 MODULE PROCEDURE GetInterpolation1
 INTEGER(I4B) :: tsize
-CALL Reallocate(interpol, obj%nips)
-CALL GetInterpolation_(obj=obj, interpol=interpol, val=val, &
+CALL Reallocate(ans, obj%nips)
+CALL GetInterpolation_(obj=obj, ans=ans, val=val, &
                        tsize=tsize, scale=1.0_DFP, addContribution=.FALSE.)
 END PROCEDURE GetInterpolation1
 
@@ -40,7 +40,7 @@ END PROCEDURE GetInterpolation1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE GetInterpolation_1
-CALL GetInterpolation_(obj=obj, interpol=interpol, val=val, &
+CALL GetInterpolation_(obj=obj, ans=ans, val=val, &
                        tsize=tsize, scale=1.0_DFP, addContribution=.FALSE.)
 END PROCEDURE GetInterpolation_1
 
@@ -55,12 +55,12 @@ tsize = obj%nips
 valNNS = SIZE(val)
 minNNS = MIN(valNNS, obj%nns)
 
-IF (.NOT. addContribution) interpol(1:tsize) = 0.0_DFP
+IF (.NOT. addContribution) ans(1:tsize) = 0.0_DFP
 
-! interpol(1:obj%nips) = MATMUL(val(1:minNNS), obj%N(1:minNNS, 1:obj%nips))
+!ans(1:obj%nips) = MATMUL(val(1:minNNS), obj%N(1:minNNS, 1:obj%nips))
 DO ips = 1, obj%nips
   DO ii = 1, minNNS
-    interpol(ips) = interpol(ips) + scale * val(ii) * obj%N(ii, ips)
+    ans(ips) = ans(ips) + scale * val(ii) * obj%N(ii, ips)
   END DO
 END DO
 END PROCEDURE GetInterpolation_1a
@@ -71,8 +71,8 @@ END PROCEDURE GetInterpolation_1a
 
 MODULE PROCEDURE GetInterpolation2
 INTEGER(I4B) :: tsize
-CALL Reallocate(interpol, obj%nips)
-CALL GetInterpolation_(obj=obj, interpol=interpol, val=val, &
+CALL Reallocate(ans, obj%nips)
+CALL GetInterpolation_(obj=obj, ans=ans, val=val, &
                        tsize=tsize, scale=1.0_DFP, addContribution=.FALSE.)
 END PROCEDURE GetInterpolation2
 
@@ -81,7 +81,7 @@ END PROCEDURE GetInterpolation2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE GetInterpolation_2
-CALL GetInterpolation_(obj=obj, interpol=interpol, val=val, &
+CALL GetInterpolation_(obj=obj, ans=ans, val=val, &
                        tsize=tsize, scale=1.0_DFP, addContribution=.FALSE.)
 END PROCEDURE GetInterpolation_2
 
@@ -97,11 +97,11 @@ tsize = 0 !! We will read tsize in the loop below
 valNNT = SIZE(val, 2)
 minNNT = MIN(valNNT, obj%nnt)
 
-IF (.NOT. addContribution) interpol(1:obj%nips) = 0.0_DFP
+IF (.NOT. addContribution) ans(1:obj%nips) = 0.0_DFP
 
 DO aa = 1, minNNT
   myscale = obj%T(aa) * scale
-  CALL GetInterpolation_(obj=obj, interpol=interpol, val=val(:, aa), &
+  CALL GetInterpolation_(obj=obj, ans=ans, val=val(:, aa), &
                          tsize=tsize, scale=myscale, addContribution=.TRUE.)
 END DO
 END PROCEDURE GetInterpolation_2a
@@ -115,8 +115,8 @@ INTEGER(I4B) :: nrow, ncol
 
 nrow = obj(1)%nips
 ncol = SIZE(obj)
-CALL Reallocate(interpol, nrow, ncol)
-CALL GetInterpolation_(obj=obj, interpol=interpol, &
+CALL Reallocate(ans, nrow, ncol)
+CALL GetInterpolation_(obj=obj, ans=ans, &
                        val=val, nrow=nrow, ncol=ncol, scale=1.0_DFP, &
                        addContribution=.FALSE.)
 END PROCEDURE GetInterpolation3
@@ -126,7 +126,7 @@ END PROCEDURE GetInterpolation3
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE GetInterpolation_3
-CALL GetInterpolation_(obj=obj, interpol=interpol, &
+CALL GetInterpolation_(obj=obj, ans=ans, &
                        val=val, nrow=nrow, ncol=ncol, scale=1.0_DFP, &
                        addContribution=.FALSE.)
 END PROCEDURE GetInterpolation_3
@@ -142,7 +142,7 @@ nrow = 0 !! We will read nrow in the loop below
 ncol = SIZE(obj)
 
 DO ipt = 1, ncol
-  CALL GetInterpolation_(obj=obj(ipt), interpol=interpol(:, ipt), &
+  CALL GetInterpolation_(obj=obj(ipt), ans=ans(:, ipt), &
                          val=val, tsize=nrow, scale=scale, &
                          addContribution=addContribution)
 END DO
@@ -154,8 +154,8 @@ END PROCEDURE GetInterpolation_3a
 
 MODULE PROCEDURE GetInterpolation4
 INTEGER(I4B) :: tsize
-CALL Reallocate(interpol, obj%nips)
-CALL GetInterpolation_(obj=obj, interpol=interpol, val=val, tsize=tsize)
+CALL Reallocate(ans, obj%nips)
+CALL GetInterpolation_(obj=obj, ans=ans, val=val, tsize=tsize)
 END PROCEDURE GetInterpolation4
 
 !----------------------------------------------------------------------------
@@ -165,7 +165,7 @@ END PROCEDURE GetInterpolation4
 MODULE PROCEDURE GetInterpolation_4
 REAL(DFP), PARAMETER :: one = 1.0_DFP
 LOGICAL(LGT), PARAMETER :: no = .FALSE.
-CALL GetInterpolation_(obj=obj, interpol=interpol, val=val, tsize=tsize, &
+CALL GetInterpolation_(obj=obj, ans=ans, val=val, tsize=tsize, &
                        scale=one, addContribution=no)
 END PROCEDURE GetInterpolation_4
 
@@ -186,7 +186,7 @@ CASE (TypeFEVariableOpt%constant)
                                    N=obj%N, nns=obj%nns, nips=obj%nips, &
                                    scale=scale, &
                                    addContribution=addContribution, &
-                                   ans=interpol, tsize=tsize)
+                                   ans=ans, tsize=tsize)
 
 CASE (TypeFEVariableOpt%space)
   CALL FEVariableGetInterpolation_(obj=val, rank=TypeFEVariableScalar, &
@@ -194,7 +194,7 @@ CASE (TypeFEVariableOpt%space)
                                    N=obj%N, nns=obj%nns, nips=obj%nips, &
                                    scale=scale, &
                                    addContribution=addContribution, &
-                                   ans=interpol, tsize=tsize)
+                                   ans=ans, tsize=tsize)
 
 CASE (TypeFEVariableOpt%spacetime)
   SELECT TYPE (obj); TYPE IS (STElemShapeData_)
@@ -204,7 +204,7 @@ CASE (TypeFEVariableOpt%spacetime)
                                      T=obj%T, nnt=obj%nnt, &
                                      scale=scale, &
                                      addContribution=addContribution, &
-                                     ans=interpol, tsize=tsize, &
+                                     ans=ans, tsize=tsize, &
                                      timeIndx=timeIndx0)
 
   END SELECT
@@ -223,8 +223,8 @@ LOGICAL(LGT), PARAMETER :: no = .FALSE.
 
 nrow = obj(1)%nips
 ncol = SIZE(obj)
-CALL Reallocate(interpol, nrow, ncol)
-CALL GetInterpolation_(obj=obj, interpol=interpol, val=val, nrow=nrow, &
+CALL Reallocate(ans, nrow, ncol)
+CALL GetInterpolation_(obj=obj, ans=ans, val=val, nrow=nrow, &
                        ncol=ncol, scale=one, addContribution=no)
 END PROCEDURE GetInterpolation5
 
@@ -236,7 +236,7 @@ MODULE PROCEDURE GetInterpolation_5
 REAL(DFP), PARAMETER :: one = 1.0_DFP
 LOGICAL(LGT), PARAMETER :: no = .FALSE.
 
-CALL GetInterpolation_(obj=obj, interpol=interpol, val=val, nrow=nrow, &
+CALL GetInterpolation_(obj=obj, ans=ans, val=val, nrow=nrow, &
                        ncol=ncol, scale=one, addContribution=no)
 END PROCEDURE GetInterpolation_5
 
@@ -251,7 +251,7 @@ nrow = 0
 ncol = SIZE(obj)
 
 DO ipt = 1, ncol
-  CALL GetInterpolation_(obj=obj(ipt), interpol=interpol(:, ipt), &
+  CALL GetInterpolation_(obj=obj(ipt), ans=ans(:, ipt), &
                          val=val, tsize=nrow, scale=scale, &
                          addContribution=addContribution, timeIndx=ipt)
 END DO
@@ -265,8 +265,8 @@ MODULE PROCEDURE Interpolation1
 REAL(DFP), PARAMETER :: one = 1.0_DFP
 LOGICAL(LGT), PARAMETER :: no = .FALSE.
 INTEGER(I4B) :: tsize
-CALL Reallocate(interpol, obj%nips)
-CALL GetInterpolation_(obj=obj, interpol=interpol, val=val, tsize=tsize, &
+CALL Reallocate(ans, obj%nips)
+CALL GetInterpolation_(obj=obj, ans=ans, val=val, tsize=tsize, &
                        scale=one, addContribution=no)
 END PROCEDURE Interpolation1
 
@@ -278,8 +278,8 @@ MODULE PROCEDURE STInterpolation1
 REAL(DFP), PARAMETER :: one = 1.0_DFP
 LOGICAL(LGT), PARAMETER :: no = .FALSE.
 INTEGER(I4B) :: tsize
-CALL Reallocate(interpol, obj%nips)
-CALL GetInterpolation_(obj=obj, interpol=interpol, val=val, tsize=tsize, &
+CALL Reallocate(ans, obj%nips)
+CALL GetInterpolation_(obj=obj, ans=ans, val=val, tsize=tsize, &
                        scale=one, addContribution=no)
 END PROCEDURE STInterpolation1
 

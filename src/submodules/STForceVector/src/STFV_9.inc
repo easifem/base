@@ -36,7 +36,7 @@ PURE SUBROUTINE STFV_9(ans, test, term1, c, crank)
   !!
   !! main
   !!
-  CALL getInterpolation(obj=test, interpol=cbar, val=c)
+  CALL getInterpolation(obj=test, ans=cbar, val=c)
   !!
   CALL reallocate( &
     & ans, &

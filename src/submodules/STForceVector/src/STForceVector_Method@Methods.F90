@@ -89,7 +89,7 @@ INTEGER(I4B) :: ips, ipt
   !!
   !! main
   !!
-CALL getInterpolation(obj=test, interpol=cbar, val=c)
+CALL getInterpolation(obj=test, ans=cbar, val=c)
   !!
 CALL reallocate( &
   & ans, &
@@ -125,7 +125,7 @@ INTEGER(I4B) :: ips, ipt
   !!
   !! main
   !!
-CALL getInterpolation(obj=test, interpol=cbar, val=c)
+CALL getInterpolation(obj=test, ans=cbar, val=c)
   !!
 CALL reallocate( &
   & ans, &
@@ -164,7 +164,7 @@ INTEGER(I4B) :: ips, ipt
   !!
   !! main
   !!
-CALL getInterpolation(obj=test, interpol=cbar, val=c)
+CALL getInterpolation(obj=test, ans=cbar, val=c)
   !!
 CALL reallocate( &
   & ans, &
@@ -204,8 +204,8 @@ INTEGER(I4B) :: ips, ipt
   !!
   !! main
   !!
-CALL getInterpolation(obj=test, interpol=c1bar, val=c1)
-CALL getInterpolation(obj=test, interpol=c2bar, val=c2)
+CALL getInterpolation(obj=test, ans=c1bar, val=c1)
+CALL getInterpolation(obj=test, ans=c2bar, val=c2)
   !!
 CALL reallocate( &
   & ans, &
@@ -243,8 +243,8 @@ INTEGER(I4B) :: ips, ipt
   !!
   !! main
   !!
-CALL getInterpolation(obj=test, interpol=c1bar, val=c1)
-CALL getInterpolation(obj=test, interpol=c2bar, val=c2)
+CALL getInterpolation(obj=test, ans=c1bar, val=c1)
+CALL getInterpolation(obj=test, ans=c2bar, val=c2)
   !!
 CALL reallocate( &
   & ans, &
@@ -285,8 +285,8 @@ INTEGER(I4B) :: ips, ipt
   !!
   !! main
   !!
-CALL getInterpolation(obj=test, interpol=c1bar, val=c1)
-CALL getInterpolation(obj=test, interpol=c2bar, val=c2)
+CALL getInterpolation(obj=test, ans=c1bar, val=c1)
+CALL getInterpolation(obj=test, ans=c2bar, val=c2)
   !!
 CALL reallocate( &
   & ans, &
@@ -626,7 +626,7 @@ INTEGER(I4B) :: ips, ipt
   !! main
   !!
 CALL GetProjectionOfdNTdXt(obj=test, cdNTdXt=p1, val=c1)
-CALL getInterpolation(obj=test, interpol=c2bar, val=c2)
+CALL getInterpolation(obj=test, ans=c2bar, val=c2)
   !!
 CALL reallocate( &
   & ans, &
@@ -662,7 +662,7 @@ INTEGER(I4B) :: ips, ipt
   !! main
   !!
 CALL GetProjectionOfdNTdXt(obj=test, cdNTdXt=p1, val=c1)
-CALL getInterpolation(obj=test, interpol=c2bar, val=c2)
+CALL getInterpolation(obj=test, ans=c2bar, val=c2)
   !!
 CALL reallocate( &
   & ans, &
@@ -704,7 +704,7 @@ INTEGER(I4B) :: ips, ipt
   !! main
   !!
 CALL GetProjectionOfdNTdXt(obj=test, cdNTdXt=p1, val=c1)
-CALL getInterpolation(obj=test, interpol=c2bar, val=c2)
+CALL getInterpolation(obj=test, ans=c2bar, val=c2)
   !!
 CALL reallocate( &
   & ans, &
@@ -745,8 +745,8 @@ INTEGER(I4B) :: ips, ipt
   !! main
   !!
 CALL GetProjectionOfdNTdXt(obj=test, cdNTdXt=p1, val=c1)
-CALL getInterpolation(obj=test, interpol=c2bar, val=c2)
-CALL getInterpolation(obj=test, interpol=c3bar, val=c3)
+CALL getInterpolation(obj=test, ans=c2bar, val=c2)
+CALL getInterpolation(obj=test, ans=c3bar, val=c3)
   !!
 CALL reallocate( &
   & ans, &
@@ -787,8 +787,8 @@ INTEGER(I4B) :: ips, ipt
   !! main
   !!
 CALL GetProjectionOfdNTdXt(obj=test, cdNTdXt=p1, val=c1)
-CALL getInterpolation(obj=test, interpol=c2bar, val=c2)
-CALL getInterpolation(obj=test, interpol=c3bar, val=c3)
+CALL getInterpolation(obj=test, ans=c2bar, val=c2)
+CALL getInterpolation(obj=test, ans=c3bar, val=c3)
   !!
 CALL reallocate( &
   & ans, &
@@ -830,8 +830,8 @@ INTEGER(I4B) :: ips, ipt
   !! main
   !!
 CALL GetProjectionOfdNTdXt(obj=test, cdNTdXt=p1, val=c1)
-CALL getInterpolation(obj=test, interpol=c2bar, val=c2)
-CALL getInterpolation(obj=test, interpol=c3bar, val=c3)
+CALL getInterpolation(obj=test, ans=c2bar, val=c2)
+CALL getInterpolation(obj=test, ans=c3bar, val=c3)
   !!
 CALL reallocate( &
   & ans, &

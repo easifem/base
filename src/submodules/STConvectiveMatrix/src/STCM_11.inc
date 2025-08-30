@@ -43,7 +43,7 @@ PURE SUBROUTINE STCM_11a(ans, test, trial, term1, term2, rho, c, opt)
   !!
   !! main
   !!
-  CALL GetInterpolation(obj=trial, val=rho, interpol=rhobar)
+  CALL GetInterpolation(obj=trial, val=rho, ans=rhobar)
   !!
   if( opt .eq. 1 ) then
     !!
@@ -144,7 +144,7 @@ PURE SUBROUTINE STCM_11b(ans, test, trial, term1, term2, rho, c, opt)
   !!
   !! main
   !!
-  CALL GetInterpolation(obj=trial, val=rho, interpol=rhobar)
+  CALL GetInterpolation(obj=trial, val=rho, ans=rhobar)
   !!
   if( opt .eq. 1 ) then
     CALL Reallocate(m6, &

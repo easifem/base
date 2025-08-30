@@ -40,7 +40,7 @@ PURE SUBROUTINE MM_3(ans, test, trial, rho, opt)
   !!
   !! main
   !!
-  CALL getInterpolation(obj=trial, interpol=kbar, val=rho)
+  CALL getInterpolation(obj=trial, ans=kbar, val=rho)
   CALL reallocate(m4, SIZE(test%N, 1), SIZE(trial%N, 1), &
     & SIZE(kbar, 1), SIZE(kbar, 2))
   !!

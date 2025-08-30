@@ -43,7 +43,7 @@ PURE SUBROUTINE STCM_3a(ans, test, trial, term1, &
   !! make c bar at ips and ipt
   !!
   IF (PRESENT(c)) THEN
-    CALL GetInterpolation(obj=trial, val=c, interpol=cbar)
+    CALL GetInterpolation(obj=trial, val=c, ans=cbar)
   ELSE
     CALL Reallocate(cbar, SIZE(trial(1)%N, 2), SIZE(trial))
     cbar = 1.0_DFP
@@ -152,7 +152,7 @@ PURE SUBROUTINE STCM_3b(ans, test, trial, term1, &
   !! make c bar at ips and ipt
   !!
   IF (PRESENT(c)) THEN
-    CALL GetInterpolation(obj=trial, val=c, interpol=cbar)
+    CALL GetInterpolation(obj=trial, val=c, ans=cbar)
   ELSE
     CALL Reallocate(cbar, SIZE(trial(1)%N, 2), SIZE(trial))
     cbar = 1.0_DFP

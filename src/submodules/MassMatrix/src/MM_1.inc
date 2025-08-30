@@ -38,7 +38,7 @@ PURE SUBROUTINE MM_1(ans, test, trial, rho, opt)
   !! main
   !!
   CALL reallocate(ans, SIZE(test%N, 1), SIZE(trial%N, 1))
-  CALL getInterpolation(obj=trial, interpol=realval, val=rho)
+  CALL getInterpolation(obj=trial, ans=realval, val=rho)
   realval = trial%js * trial%ws * trial%thickness * realval
   !!
   DO ips = 1, size(realval)

@@ -26,7 +26,7 @@ CONTAINS
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE vector_getinterpolation_1
-interpol = MATMUL(val, obj%N)
+ans = MATMUL(val, obj%N)
 END PROCEDURE vector_getinterpolation_1
 
 !----------------------------------------------------------------------------
@@ -36,7 +36,7 @@ END PROCEDURE vector_getinterpolation_1
 MODULE PROCEDURE vector_getinterpolation1_
 nrow = SIZE(val, 1)
 ncol = SIZE(obj%N, 2)
-interpol(1:nrow, 1:ncol) = MATMUL(val, obj%N)
+ans(1:nrow, 1:ncol) = MATMUL(val, obj%N)
 END PROCEDURE vector_getinterpolation1_
 
 !----------------------------------------------------------------------------
@@ -160,7 +160,7 @@ MODULE PROCEDURE vector_getinterpolation4_
 !     CALL GetInterpolation_(obj=obj, &
 !                            val=Get(val, TypeFEVariableVector, &
 !                                    TypeFEVariableSpace), &
-!                            interpol=interpol, &
+!                            ans=interpol, &
 !                            nrow=nrow, ncol=ncol)
 !   ELSE
 !     CALL Get_(obj=val, rank=TypeFEVariableVector, &
@@ -173,7 +173,7 @@ MODULE PROCEDURE vector_getinterpolation4_
 !     CALL GetInterpolation_(obj=obj, &
 !                            val=Get(val, TypeFEVariableVector, &
 !                                    TypeFEVariableSpaceTime), &
-!                            interpol=interpol, &
+!                            ans=interpol, &
 !                            nrow=nrow, ncol=ncol)
 !   END SELECT
 ! END SELECT
@@ -278,7 +278,7 @@ MODULE PROCEDURE vector_getinterpolation5_
 !       CALL GetInterpolation_(obj=obj(ii), &
 !                              val=Get(val, TypeFEVariableVector, &
 !                                      TypeFEVariableSpace), &
-!                              interpol=interpol(1:dim1, 1:dim2, ii), &
+!                              ans=interpol(1:dim1, 1:dim2, ii), &
 !                              nrow=dim1, ncol=dim2)
 !     END DO
 !   ELSE
@@ -295,7 +295,7 @@ MODULE PROCEDURE vector_getinterpolation5_
 !       CALL GetInterpolation_(obj=obj(ii), &
 !                              val=Get(val, TypeFEVariableVector, &
 !                                      TypeFEVariableSpaceTime), &
-!                              interpol=interpol(1:dim1, 1:dim2, ii), &
+!                              ans=interpol(1:dim1, 1:dim2, ii), &
 !                              nrow=dim1, ncol=dim2)
 !     END DO
 !   ELSE

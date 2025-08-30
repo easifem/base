@@ -39,17 +39,17 @@ MODULE PROCEDURE master_getinterpolation_1
 ! !!
 ! SELECT CASE (val%rank)
 ! CASE (Scalar)
-!   CALL getInterpolation(obj=obj, interpol=r1, val=val)
+!   CALL getInterpolation(obj=obj, ans=r1, val=val)
 !   interpol = QuadratureVariable(r1, typeFEVariableScalar, &
 !     & typeFEVariableSpace)
 !   DEALLOCATE (r1)
 ! CASE (Vector)
-!   CALL getInterpolation(obj=obj, interpol=r2, val=val)
+!   CALL getInterpolation(obj=obj, ans=r2, val=val)
 !   interpol = QuadratureVariable(r2, typeFEVariableVector, &
 !     & typeFEVariableSpace)
 !   DEALLOCATE (r2)
 ! CASE (Matrix)
-!   CALL getInterpolation(obj=obj, interpol=r3, val=val)
+!   CALL getInterpolation(obj=obj, ans=r3, val=val)
 !   interpol = QuadratureVariable(r3, typeFEVariableMatrix, &
 !     & typeFEVariableSpace)
 !   DEALLOCATE (r3)
@@ -75,17 +75,17 @@ MODULE PROCEDURE master_getInterpolation_2
 ! !!
 ! SELECT CASE (val%rank)
 ! CASE (Scalar)
-!   CALL getInterpolation(obj=obj, interpol=r2, val=val)
+!   CALL getInterpolation(obj=obj, ans=r2, val=val)
 !   interpol = QuadratureVariable(r2, typeFEVariableScalar, &
 !     & typeFEVariableSpaceTime)
 !   DEALLOCATE (r2)
 ! CASE (Vector)
-!   CALL getInterpolation(obj=obj, interpol=r3, val=val)
+!   CALL getInterpolation(obj=obj, ans=r3, val=val)
 !   interpol = QuadratureVariable(r3, typeFEVariableVector, &
 !     & typeFEVariableSpaceTime)
 !   DEALLOCATE (r3)
 ! CASE (Matrix)
-!   CALL getInterpolation(obj=obj, interpol=r4, val=val)
+!   CALL getInterpolation(obj=obj, ans=r4, val=val)
 !   interpol = QuadratureVariable(r4, typeFEVariableMatrix, &
 !     & typeFEVariableSpaceTime)
 !   DEALLOCATE (r4)
@@ -98,7 +98,7 @@ END PROCEDURE master_getInterpolation_2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE master_interpolation_1
-! CALL getInterpolation(obj=obj, val=val, interpol=ans)
+! CALL getInterpolation(obj=obj, val=val, ans=ans)
 END PROCEDURE master_interpolation_1
 
 END SUBMODULE Methods

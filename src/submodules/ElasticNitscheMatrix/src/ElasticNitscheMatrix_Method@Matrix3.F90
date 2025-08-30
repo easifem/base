@@ -27,8 +27,8 @@ CONTAINS
 
 MODULE PROCEDURE ElasticNitscheMatrix3a
 REAL(DFP), ALLOCATABLE :: alphaBar(:), evecBar(:, :)
-CALL getInterpolation(obj=trial, interpol=alphaBar, val=alpha)
-CALL getInterpolation(obj=trial, interpol=evecBar, val=evec)
+CALL GetInterpolation(obj=trial, ans=alphaBar, val=alpha)
+CALL GetInterpolation(obj=trial, ans=evecBar, val=evec)
 ans = ElasticNitscheMatrix( &
 & test=test, trial=trial, alpha=alphaBar, evec=evecBar)
 DEALLOCATE (alphaBar, evecBar)
@@ -40,7 +40,7 @@ END PROCEDURE ElasticNitscheMatrix3a
 
 MODULE PROCEDURE ElasticNitscheMatrix3b
 REAL(DFP), ALLOCATABLE :: evecBar(:, :)
-CALL getInterpolation(obj=trial, interpol=evecBar, val=evec)
+CALL getInterpolation(obj=trial, ans=evecBar, val=evec)
 ans = ElasticNitscheMatrix( &
 & test=test, trial=trial, alpha=alpha, evec=evecBar)
 DEALLOCATE (evecBar)
@@ -175,9 +175,8 @@ END PROCEDURE ElasticNitscheMatrix3e
 
 MODULE PROCEDURE ElasticNitscheMatrix3f
 REAL(DFP), ALLOCATABLE :: alphaBar(:)
-CALL getInterpolation(obj=trial, interpol=alphaBar, val=alpha)
-ans = ElasticNitscheMatrix( &
-& test=test, trial=trial, alpha=alphaBar, dim=dim)
+CALL GetInterpolation(obj=trial, ans=alphaBar, val=alpha)
+ans = ElasticNitscheMatrix(test=test, trial=trial, alpha=alphaBar, dim=dim)
 DEALLOCATE (alphaBar)
 END PROCEDURE ElasticNitscheMatrix3f
 

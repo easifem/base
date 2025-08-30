@@ -39,7 +39,7 @@ PURE SUBROUTINE STDM_12a(ans, test, trial, k, opt)
   !!
   !! main
   !!
-  CALL getInterpolation(obj=trial, interpol=vbar, val=k)
+  CALL getInterpolation(obj=trial, ans=vbar, val=k)
   !!
   CALL Reallocate( &
     & IJab, &
@@ -121,7 +121,7 @@ PURE SUBROUTINE STDM_12b(ans, test, trial, k, opt)
   !!
   !! main
   !!
-  CALL getInterpolation(obj=trial, interpol=vbar, val=k)
+  CALL getInterpolation(obj=trial, ans=vbar, val=k)
   !!
   CALL Reallocate( &
     & IJab, &
@@ -178,4 +178,3 @@ PURE SUBROUTINE STDM_12b(ans, test, trial, k, opt)
   DEALLOCATE (realval, IJab, vbar, m6)
   !!
 END SUBROUTINE STDM_12b
-

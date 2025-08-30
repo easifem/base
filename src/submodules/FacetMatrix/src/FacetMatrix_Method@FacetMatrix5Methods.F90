@@ -323,15 +323,9 @@ CALL getProjectionOfdNdXt( &
   & cdNdXt=slaveC1, &
   & val=slaveElemsd%normal)
   !!
-CALL getInterpolation( &
-  & obj=masterElemSD, &
-  & interpol=muMasterBar, &
-  & val=muMaster)
+CALL GetInterpolation(obj=masterElemSD, ans=muMasterBar, val=muMaster)
   !!
-CALL getInterpolation( &
-  & obj=slaveElemSD, &
-  & interpol=muSlaveBar, &
-  & val=muSlave)
+CALL getInterpolation(obj=slaveElemSD, ans=muSlaveBar, val=muSlave)
   !!
 DO ips = 1, nips
   masterC1(:, ips) = muMasterBar(ips) * masterC1(:, ips)
@@ -425,15 +419,9 @@ CALL getProjectionOfdNdXt( &
   & cdNdXt=slaveC1, &
   & val=slaveElemsd%normal)
   !!
-CALL getInterpolation( &
-  & obj=masterElemSD, &
-  & interpol=tauMasterBar, &
-  & val=tauMaster)
+CALL GetInterpolation(obj=masterElemSD, ans=tauMasterBar, val=tauMaster)
   !!
-CALL getInterpolation( &
-  & obj=slaveElemSD, &
-  & interpol=tauSlaveBar, &
-  & val=tauSlave)
+CALL GetInterpolation(obj=slaveElemSD, ans=tauSlaveBar, val=tauSlave)
   !!
 masterC1 = muMaster * masterC1
 slaveC1 = muSlave * slaveC1
@@ -528,25 +516,13 @@ CALL getProjectionOfdNdXt( &
   & cdNdXt=slaveC1, &
   & val=slaveElemsd%normal)
   !!
-CALL getInterpolation( &
-  & obj=masterElemSD, &
-  & interpol=muMasterBar, &
-  & val=muMaster)
+CALL GetInterpolation(obj=masterElemSD, ans=muMasterBar, val=muMaster)
   !!
-CALL getInterpolation( &
-  & obj=slaveElemSD, &
-  & interpol=muSlaveBar, &
-  & val=muSlave)
+CALL GetInterpolation(obj=slaveElemSD, ans=muSlaveBar, val=muSlave)
   !!
-CALL getInterpolation( &
-  & obj=masterElemSD, &
-  & interpol=tauMasterBar, &
-  & val=tauMaster)
+CALL GetInterpolation(obj=masterElemSD, ans=tauMasterBar, val=tauMaster)
   !!
-CALL getInterpolation( &
-  & obj=slaveElemSD, &
-  & interpol=tauSlaveBar, &
-  & val=tauSlave)
+CALL GetInterpolation(obj=slaveElemSD, ans=tauSlaveBar, val=tauSlave)
   !!
 DO ips = 1, nips
   masterC1(:, ips) = muMasterBar(ips) * masterC1(:, ips)

@@ -46,7 +46,7 @@ PURE SUBROUTINE STCM_12a(ans, test, trial, term1, term2, rho, c, opt)
   CALL Reallocate(IaJb, SIZE(test(1)%N, 1), SIZE(test(1)%T), &
     & SIZE(trial(1)%N, 1), SIZE(trial(1)%T))
   !!
-  CALL GetInterpolation(obj=trial, val=rho, interpol=rhobar)
+  CALL GetInterpolation(obj=trial, val=rho, ans=rhobar)
   !!
   DO ipt = 1, SIZE(trial)
     !!
@@ -99,7 +99,7 @@ PURE SUBROUTINE STCM_12b(ans, test, trial, term1, term2, rho, c, opt)
   CALL Reallocate(IaJb, SIZE(test(1)%N, 1), SIZE(test(1)%T), &
     & SIZE(trial(1)%N, 1), SIZE(trial(1)%T))
   !!
-  CALL GetInterpolation(obj=trial, val=rho, interpol=rhobar)
+  CALL GetInterpolation(obj=trial, val=rho, ans=rhobar)
   !!
   DO ipt = 1, SIZE(trial)
     !!

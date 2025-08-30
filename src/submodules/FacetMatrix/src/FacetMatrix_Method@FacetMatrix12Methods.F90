@@ -91,7 +91,7 @@ CALL getProjectionOfdNdXt( &
   & obj=elemsd, &
   & cdNdXt=C1, &
   & val=elemsd%normal)
-CALL getInterpolation(obj=elemsd, Interpol=taubar, val=tauvar)
+CALL GetInterpolation(obj=elemsd, ans=taubar, val=tauvar)
 realval = elemsd%js * elemsd%ws * elemsd%thickness * taubar * mu * mu
 DO ips = 1, nips
   ans(:, :) = ans(:, :) &
@@ -116,7 +116,7 @@ nsd = SIZE(elemsd%dNdXt, 2)
 nips = SIZE(elemsd%dNdXt, 3)
 CALL Reallocate(ans, nns, nns)
 CALL getProjectionOfdNdXt(obj=elemsd, cdNdXt=C1, val=elemsd%normal)
-CALL getInterpolation(obj=elemsd, interpol=muBar, val=mu)
+CALL getInterpolation(obj=elemsd, ans=muBar, val=mu)
 realval = elemsd%js * elemsd%ws * elemsd%thickness * muBar * muBar
 DO ips = 1, nips
   ans(:, :) = ans(:, :) &
@@ -142,8 +142,8 @@ nsd = SIZE(elemsd%dNdXt, 2)
 nips = SIZE(elemsd%dNdXt, 3)
 CALL Reallocate(ans, nns, nns)
 CALL getProjectionOfdNdXt(obj=elemsd, cdNdXt=C1, val=elemsd%normal)
-CALL getInterpolation(obj=elemsd, interpol=muBar, val=mu)
-CALL getInterpolation(obj=elemsd, interpol=tauBar, val=tauvar)
+CALL getInterpolation(obj=elemsd, ans=muBar, val=mu)
+CALL getInterpolation(obj=elemsd, ans=tauBar, val=tauvar)
 realval = elemsd%js * elemsd%ws * elemsd%thickness * tauBar * muBar * muBar
 DO ips = 1, nips
   ans(:, :) = ans(:, :) &
