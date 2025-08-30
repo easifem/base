@@ -33,7 +33,12 @@ USE ElemshapeData_HRGNParamMethods
 USE ElemshapeData_HRQIParamMethods
 USE ElemshapeData_HminHmaxMethods
 USE ElemshapeData_IOMethods
+
 USE ElemshapeData_InterpolMethods
+USE ElemshapeData_ScalarInterpolMethods
+USE ElemshapeData_VectorInterpolMethods
+USE ElemshapeData_MatrixInterpolMethods
+
 USE ElemshapeData_LocalDivergenceMethods
 USE ElemshapeData_LocalGradientMethods
 USE ElemshapeData_ProjectionMethods
