@@ -29,7 +29,7 @@ PUBLIC :: Interpolation
 PUBLIC :: STInterpolation
 
 !----------------------------------------------------------------------------
-!                                           getInterpolation@InterpolMethods
+!                                                    GetInterpolation@Methods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -44,35 +44,54 @@ PUBLIC :: STInterpolation
 ! $$u_{i}=u_{iI}N^{I}$$
 
 INTERFACE GetInterpolation
-  MODULE PURE SUBROUTINE vector_getInterpolation_1(obj, ans, val)
+  MODULE PURE SUBROUTINE GetInterpolation1(obj, ans, val)
     CLASS(ElemshapeData_), INTENT(IN) :: obj
     REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: ans(:, :)
     !! interpolation of vector
     REAL(DFP), INTENT(IN) :: val(:, :)
     !! nodal values of vector in `xiJ` format
-  END SUBROUTINE vector_getInterpolation_1
+  END SUBROUTINE GetInterpolation1
 END INTERFACE GetInterpolation
 
 !----------------------------------------------------------------------------
-!
+!                                                   GetInterpolation_@Methods
 !----------------------------------------------------------------------------
 
-!> author: Shion Shimizu
-! date:   2025-03-03
-! summary:  get interpolation of vector without allocation
+!> author: Vikas Sharma, Ph. D.
+! date: 2025-08-30
+! summary: get interpolation of vector without allocation
 
 INTERFACE GetInterpolation_
-  MODULE PURE SUBROUTINE vector_getInterpolation1_(obj,ans, val, &
-                                                   nrow, ncol)
+  MODULE PURE SUBROUTINE GetInterpolation_1(obj, ans, val, nrow, ncol)
     CLASS(ElemshapeData_), INTENT(IN) :: obj
     REAL(DFP), INTENT(INOUT) :: ans(:, :)
     REAL(DFP), INTENT(IN) :: val(:, :)
     INTEGER(I4B), INTENT(OUT) :: nrow, ncol
-  END SUBROUTINE vector_getInterpolation1_
+  END SUBROUTINE GetInterpolation_1
 END INTERFACE GetInterpolation_
 
 !----------------------------------------------------------------------------
-!                                           getInterpolation@InterpolMethods
+!                                                   GetInterpolation_@Methods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2025-08-30
+! summary:  get interpolation of vector without allocation
+
+INTERFACE GetInterpolation_
+  MODULE PURE SUBROUTINE GetInterpolation_1a(obj, ans, val, nrow, ncol, &
+                                             scale, addContribution)
+    CLASS(ElemshapeData_), INTENT(IN) :: obj
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    REAL(DFP), INTENT(IN) :: val(:, :)
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+    REAL(DFP), INTENT(IN) :: scale
+    LOGICAL(LGT), INTENT(IN) :: addContribution
+  END SUBROUTINE GetInterpolation_1a
+END INTERFACE GetInterpolation_
+
+!----------------------------------------------------------------------------
+!                                                    GetInterpolation@Methods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -87,17 +106,17 @@ END INTERFACE GetInterpolation_
 ! $$u_{i}=u^{a}_{iI}N^{I}T_{a}$$
 
 INTERFACE GetInterpolation
-  MODULE PURE SUBROUTINE vector_getInterpolation_2(obj, ans, val)
-    CLASS(ElemshapeData_), INTENT(IN) :: obj
+  MODULE PURE SUBROUTINE GetInterpolation2(obj, ans, val)
+    CLASS(STElemshapeData_), INTENT(IN) :: obj
     REAL(DFP), INTENT(INOUT), ALLOCATABLE :: ans(:, :)
     !!
     REAL(DFP), INTENT(IN) :: val(:, :, :)
     !! space-time nodal values of vector in `xiJa` format
-  END SUBROUTINE vector_getInterpolation_2
+  END SUBROUTINE GetInterpolation2
 END INTERFACE GetInterpolation
 
 !----------------------------------------------------------------------------
-!
+!                                                   GetInterpolation_@Methods
 !----------------------------------------------------------------------------
 
 !> author: Shion Shimizu
@@ -105,17 +124,36 @@ END INTERFACE GetInterpolation
 ! summary:  get interpolation of vector without allocation
 
 INTERFACE GetInterpolation_
-  MODULE PURE SUBROUTINE vector_getInterpolation2_(obj, ans, val, &
-                                                   nrow, ncol)
-    CLASS(ElemshapeData_), INTENT(IN) :: obj
+  MODULE PURE SUBROUTINE GetInterpolation_2(obj, ans, val, nrow, ncol)
+    CLASS(STElemshapeData_), INTENT(IN) :: obj
     REAL(DFP), INTENT(INOUT) :: ans(:, :)
     REAL(DFP), INTENT(IN) :: val(:, :, :)
     INTEGER(I4B), INTENT(OUT) :: nrow, ncol
-  END SUBROUTINE vector_getInterpolation2_
+  END SUBROUTINE GetInterpolation_2
 END INTERFACE GetInterpolation_
 
 !----------------------------------------------------------------------------
-!                                           getInterpolation@InterpolMethods
+!                                                   GetInterpolation_@Methods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2025-08-30
+! summary:  get interpolation of vector without allocation
+
+INTERFACE GetInterpolation_
+  MODULE PURE SUBROUTINE GetInterpolation_2a(obj, ans, val, nrow, ncol, &
+                                             scale, addContribution)
+    CLASS(STElemshapeData_), INTENT(IN) :: obj
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    REAL(DFP), INTENT(IN) :: val(:, :, :)
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+    REAL(DFP), INTENT(IN) :: scale
+    LOGICAL(LGT), INTENT(IN) :: addContribution
+  END SUBROUTINE GetInterpolation_2a
+END INTERFACE GetInterpolation_
+
+!----------------------------------------------------------------------------
+!                                                    GetInterpolation@Methods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -130,35 +168,54 @@ END INTERFACE GetInterpolation_
 ! $$u_{i}=u^{a}_{iI}N^{I}T_{a}$$
 
 INTERFACE GetInterpolation
-  MODULE PURE SUBROUTINE vector_getInterpolation_3(obj, ans, val)
+  MODULE PURE SUBROUTINE GetInterpolation3(obj, ans, val)
     CLASS(STElemshapeData_), INTENT(IN) :: obj(:)
-    REAL(DFP), INTENT(INOUT), ALLOCATABLE ::ans(:, :, :)
+    REAL(DFP), INTENT(INOUT), ALLOCATABLE :: ans(:, :, :)
     !!
     REAL(DFP), INTENT(IN) :: val(:, :, :)
     !! space-time nodal values of vector in `xiJa` format
-  END SUBROUTINE vector_getInterpolation_3
+  END SUBROUTINE GetInterpolation3
 END INTERFACE GetInterpolation
 
 !----------------------------------------------------------------------------
-!
+!                                                   GetInterpolation_@Methods
 !----------------------------------------------------------------------------
 
-!> author: Shion Shimizu
-! date:   2025-03-03
+!> author: Vikas Sharma, Ph. D.
+! date: 2025-08-30
 ! summary:  get interpolation of vector without allocation
 
 INTERFACE GetInterpolation_
-  MODULE PURE SUBROUTINE vector_getInterpolation3_(obj,ans, val, &
-                                                   dim1, dim2, dim3)
+  MODULE PURE SUBROUTINE GetInterpolation_3(obj, ans, val, dim1, dim2, dim3)
     CLASS(STElemshapeData_), INTENT(IN) :: obj(:)
-    REAL(DFP), INTENT(INOUT) ::ans(:, :, :)
+    REAL(DFP), INTENT(INOUT) :: ans(:, :, :)
     REAL(DFP), INTENT(IN) :: val(:, :, :)
     INTEGER(I4B), INTENT(OUT) :: dim1, dim2, dim3
-  END SUBROUTINE vector_getInterpolation3_
+  END SUBROUTINE GetInterpolation_3
 END INTERFACE GetInterpolation_
 
 !----------------------------------------------------------------------------
-!                                           getInterpolation@InterpolMethods
+!                                                   GetInterpolation_@Methods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2025-08-30
+! summary:  get interpolation of vector without allocation
+
+INTERFACE GetInterpolation_
+  MODULE PURE SUBROUTINE GetInterpolation_3a(obj, ans, val, dim1, dim2, &
+                                             dim3, scale, addContribution)
+    CLASS(STElemshapeData_), INTENT(IN) :: obj(:)
+    REAL(DFP), INTENT(INOUT) :: ans(:, :, :)
+    REAL(DFP), INTENT(IN) :: val(:, :, :)
+    INTEGER(I4B), INTENT(OUT) :: dim1, dim2, dim3
+    REAL(DFP), INTENT(IN) :: scale
+    LOGICAL(LGT), INTENT(IN) :: addContribution
+  END SUBROUTINE GetInterpolation_3a
+END INTERFACE GetInterpolation_
+
+!----------------------------------------------------------------------------
+!                                                    GetInterpolation@Methods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -178,35 +235,54 @@ END INTERFACE GetInterpolation_
 ! NOTE This routine calls [[Interpolation]] function from the same module.
 !
 INTERFACE GetInterpolation
-  MODULE PURE SUBROUTINE vector_getInterpolation_4(obj,ans, val)
+  MODULE PURE SUBROUTINE GetInterpolation4(obj, ans, val)
     CLASS(ElemshapeData_), INTENT(IN) :: obj
     REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: ans(:, :)
     !! interpolation of vector
     TYPE(FEVariable_), INTENT(IN) :: val
     !! vector FEvariable
-  END SUBROUTINE vector_getInterpolation_4
+  END SUBROUTINE GetInterpolation4
 END INTERFACE GetInterpolation
 
 !----------------------------------------------------------------------------
-!
+!                                                   GetInterpolation_@Methods
 !----------------------------------------------------------------------------
 
-!> author: Shion Shimizu
-! date:   2025-03-03
+!> author: Vikas Sharma, Ph. D.
+! date: 2025-08-30
 ! summary:  get interpolation of vector without allocation
 
 INTERFACE GetInterpolation_
-  MODULE PURE SUBROUTINE vector_getInterpolation4_(obj, ans, val, &
-                                                   nrow, ncol)
+  MODULE PURE SUBROUTINE GetInterpolation_4(obj, ans, val, nrow, ncol)
     CLASS(ElemshapeData_), INTENT(IN) :: obj
     REAL(DFP), INTENT(INOUT) :: ans(:, :)
     TYPE(FEVariable_), INTENT(IN) :: val
     INTEGER(I4B), INTENT(OUT) :: nrow, ncol
-  END SUBROUTINE vector_getInterpolation4_
+  END SUBROUTINE GetInterpolation_4
 END INTERFACE GetInterpolation_
 
 !----------------------------------------------------------------------------
-!                                           getInterpolation@InterpolMethods
+!                                                   GetInterpolation_@Methods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2025-08-30
+! summary:  get interpolation of vector without allocation
+
+INTERFACE GetInterpolation_
+  MODULE PURE SUBROUTINE GetInterpolation_4a(obj, ans, val, nrow, ncol, &
+                                             scale, addContribution)
+    CLASS(ElemshapeData_), INTENT(IN) :: obj
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    TYPE(FEVariable_), INTENT(IN) :: val
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+    REAL(DFP), INTENT(IN) :: scale
+    LOGICAL(LGT), INTENT(IN) :: addContribution
+  END SUBROUTINE GetInterpolation_4a
+END INTERFACE GetInterpolation_
+
+!----------------------------------------------------------------------------
+!                                                    GetInterpolation@Methods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -226,31 +302,50 @@ END INTERFACE GetInterpolation_
 ! NOTE This routine calls [[Interpolation]] function from the same module.
 !
 INTERFACE GetInterpolation
-  MODULE PURE SUBROUTINE vector_getInterpolation_5(obj, ans, val)
+  MODULE PURE SUBROUTINE GetInterpolation5(obj, ans, val)
     CLASS(STElemshapeData_), INTENT(IN) :: obj(:)
     REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: ans(:, :, :)
     !! space-time interpolation of vector
     TYPE(FEVariable_), INTENT(IN) :: val
     !! vector FEvariable
-  END SUBROUTINE vector_getInterpolation_5
+  END SUBROUTINE GetInterpolation5
 END INTERFACE GetInterpolation
 
 !----------------------------------------------------------------------------
-!
+!                                                   GetInterpolation_@Methods
 !----------------------------------------------------------------------------
 
-!> author: Shion Shimizu
-! date:   2025-03-03
+!> author: Vikas Sharma, Ph. D.
+! date: 2025-08-30
 ! summary:  get interpolation of vector without allocation
 
 INTERFACE GetInterpolation_
-  MODULE PURE SUBROUTINE vector_getInterpolation5_(obj, ans, val, &
-                                                   dim1, dim2, dim3)
+  MODULE PURE SUBROUTINE GetInterpolation_5(obj, ans, val, dim1, dim2, dim3)
     CLASS(STElemshapeData_), INTENT(IN) :: obj(:)
     REAL(DFP), INTENT(INOUT) :: ans(:, :, :)
     TYPE(FEVariable_), INTENT(IN) :: val
     INTEGER(I4B), INTENT(OUT) :: dim1, dim2, dim3
-  END SUBROUTINE vector_getInterpolation5_
+  END SUBROUTINE GetInterpolation_5
+END INTERFACE GetInterpolation_
+
+!----------------------------------------------------------------------------
+!                                                   GetInterpolation_@Methods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2025-08-30
+! summary:  get interpolation of vector without allocation
+
+INTERFACE GetInterpolation_
+  MODULE PURE SUBROUTINE GetInterpolation_5a(obj, ans, val, dim1, dim2, &
+                                             dim3, scale, addContribution)
+    CLASS(STElemshapeData_), INTENT(IN) :: obj(:)
+    REAL(DFP), INTENT(INOUT) :: ans(:, :, :)
+    TYPE(FEVariable_), INTENT(IN) :: val
+    INTEGER(I4B), INTENT(OUT) :: dim1, dim2, dim3
+    REAL(DFP), INTENT(IN) :: scale
+    LOGICAL(LGT), INTENT(IN) :: addContribution
+  END SUBROUTINE GetInterpolation_5a
 END INTERFACE GetInterpolation_
 
 !----------------------------------------------------------------------------
@@ -262,15 +357,15 @@ END INTERFACE GetInterpolation_
 ! summary: This function returns the interpolation of vector
 
 INTERFACE
-  MODULE PURE FUNCTION vector_interpolation_1(obj, val) RESULT(ans)
+  MODULE PURE FUNCTION Interpolation1(obj, val) RESULT(ans)
     CLASS(ElemshapeData_), INTENT(IN) :: obj
     REAL(DFP), INTENT(IN) :: val(:, :)
     REAL(DFP), ALLOCATABLE :: ans(:, :)
-  END FUNCTION vector_interpolation_1
+  END FUNCTION Interpolation1
 END INTERFACE
 
 INTERFACE Interpolation
-  MODULE PROCEDURE vector_interpolation_1
+  MODULE PROCEDURE Interpolation1
 END INTERFACE Interpolation
 
 !----------------------------------------------------------------------------
@@ -286,17 +381,17 @@ INTERFACE
 ! values.
 ! $$u=u^{a}_{I}N^{I}T_{a}$$
 
-  MODULE PURE FUNCTION vector_stinterpolation_1(obj, val) RESULT(ans)
+  MODULE PURE FUNCTION STInterpolation1(obj, val) RESULT(ans)
     CLASS(STElemshapeData_), INTENT(IN) :: obj
     REAL(DFP), INTENT(IN) :: val(:, :, :)
     !! spatial nodal values of vector
     REAL(DFP), ALLOCATABLE :: ans(:, :)
     !! Interpolation value of vector
-  END FUNCTION vector_stinterpolation_1
+  END FUNCTION STInterpolation1
 END INTERFACE
 
 INTERFACE STInterpolation
-  MODULE PROCEDURE vector_stinterpolation_1
+  MODULE PROCEDURE STInterpolation1
 END INTERFACE STInterpolation
 
 END MODULE ElemshapeData_VectorInterpolMethods

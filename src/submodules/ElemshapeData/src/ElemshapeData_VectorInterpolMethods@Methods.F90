@@ -17,133 +17,189 @@
 
 SUBMODULE(ElemshapeData_VectorInterpolMethods) Methods
 USE ReallocateUtility, ONLY: Reallocate
+USE FEVariable_Method, ONLY: FEVariableSize => Size
+
 IMPLICIT NONE
 
 CONTAINS
 
 !---------------------------------------------------------------------------
-!                                                          getinterpolation
+!                                                          GetInterpolation_
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE vector_getinterpolation_1
-ans = MATMUL(val, obj%N)
-END PROCEDURE vector_getinterpolation_1
+MODULE PROCEDURE GetInterpolation1
+REAL(DFP), PARAMETER :: one = 1.0_DFP
+LOGICAL(LGT), PARAMETER :: no = .FALSE.
+INTEGER(I4B) :: nrow, ncol
 
-!----------------------------------------------------------------------------
-!
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE vector_getinterpolation1_
 nrow = SIZE(val, 1)
-ncol = SIZE(obj%N, 2)
-ans(1:nrow, 1:ncol) = MATMUL(val, obj%N)
-END PROCEDURE vector_getinterpolation1_
+ncol = obj%nips
+CALL Reallocate(ans, nrow, ncol)
+CALL GetInterpolation_(obj=obj, ans=ans, val=val, nrow=nrow, ncol=ncol, &
+                       scale=one, addContribution=no)
+END PROCEDURE GetInterpolation1
 
 !----------------------------------------------------------------------------
-!                                                         getSTinterpolation
+!                                                           GetInterpolation_
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE vector_getinterpolation_2
-! SELECT TYPE (obj)
-! TYPE IS (STElemShapeData_)
-!   interpol = MATMUL(MATMUL(val, obj%T), obj%N)
-! END SELECT
-END PROCEDURE vector_getinterpolation_2
+MODULE PROCEDURE GetInterpolation_1
+REAL(DFP), PARAMETER :: one = 1.0_DFP
+LOGICAL(LGT), PARAMETER :: no = .FALSE.
+CALL GetInterpolation_(obj=obj, ans=ans, val=val, nrow=nrow, ncol=ncol, &
+                       scale=one, addContribution=no)
+END PROCEDURE GetInterpolation_1
 
 !----------------------------------------------------------------------------
-!
+!                                                           GetInterpolation_
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE vector_getinterpolation2_
-! SELECT TYPE (obj)
-! TYPE IS (STElemShapeData_)
-!   nrow = SIZE(val, 1)
-!   ncol = SIZE(obj%N, 2)
-!   interpol(1:nrow, 1:ncol) = MATMUL(MATMUL(val, obj%T), obj%N)
-! END SELECT
-END PROCEDURE vector_getinterpolation2_
+MODULE PROCEDURE GetInterpolation_1a
+INTEGER(I4B) :: valNNS, minNNS
+nrow = SIZE(val, 1)
+ncol = obj%nips
+
+valNNS = SIZE(val, 2)
+minNNS = MIN(valNNS, obj%nns)
+
+IF (.NOT. addContribution) ans(1:nrow, 1:ncol) = 0.0_DFP
+ans(1:nrow, 1:ncol) = ans(1:nrow, 1:ncol) + &
+                      scale * MATMUL(val(1:nrow, 1:minNNS), &
+                                     obj%N(1:minNNS, 1:ncol))
+END PROCEDURE GetInterpolation_1a
 
 !----------------------------------------------------------------------------
-!                                                         getSTinterpolation
+!                                                           GetInterpolation_
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE vector_getinterpolation_3
-! INTEGER(I4B) :: ipt
-! !!
-! CALL reallocate(interpol, SIZE(val, 1), SIZE(obj(1)%N, 2), SIZE(obj))
-! DO ipt = 1, SIZE(obj)
-!   interpol(:, :, ipt) = MATMUL(MATMUL(val, obj(ipt)%T), obj(ipt)%N)
-! END DO
-END PROCEDURE vector_getinterpolation_3
+MODULE PROCEDURE GetInterpolation2
+REAL(DFP), PARAMETER :: one = 1.0_DFP
+LOGICAL(LGT), PARAMETER :: no = .FALSE.
+INTEGER(I4B) :: nrow, ncol
+
+nrow = SIZE(val, 1)
+ncol = obj%nips
+CALL Reallocate(ans, nrow, ncol)
+CALL GetInterpolation_(obj=obj, ans=ans, val=val, nrow=nrow, ncol=ncol, &
+                       scale=one, addContribution=no)
+END PROCEDURE GetInterpolation2
 
 !----------------------------------------------------------------------------
-!
+!                                                           GetInterpolation_
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE vector_getinterpolation3_
-! INTEGER(I4B) :: ipt
-!
-! dim1 = SIZE(val, 1)
-! dim2 = SIZE(obj(1)%N, 2)
-! dim3 = SIZE(obj)
-! DO ipt = 1, dim3
-!   interpol(1:dim1, 1:dim2, ipt) = MATMUL(MATMUL(val, obj(ipt)%T), &
-!                                          obj(ipt)%N)
-! END DO
-END PROCEDURE vector_getinterpolation3_
+MODULE PROCEDURE GetInterpolation_2
+REAL(DFP), PARAMETER :: one = 1.0_DFP
+LOGICAL(LGT), PARAMETER :: no = .FALSE.
+CALL GetInterpolation_(obj=obj, ans=ans, val=val, nrow=nrow, ncol=ncol, &
+                       scale=one, addContribution=no)
+END PROCEDURE GetInterpolation_2
 
 !----------------------------------------------------------------------------
-!                                                           getinterpolation
+!                                                           GetInterpolation_
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE vector_getinterpolation_4
-! REAL(DFP), ALLOCATABLE :: m1(:)
-! INTEGER(I4B) :: ii
-! !! main
-! SELECT CASE (val%vartype)
-! !!
-! !! Constant
-! !!
-! CASE (Constant)
-!   !!
-!   m1 = Get(val, TypeFEVariableVector, TypeFEVariableConstant)
-!   CALL Reallocate(interpol, SIZE(m1), SIZE(obj%N, 2))
-!   DO ii = 1, SIZE(interpol, 2)
-!     interpol(:, ii) = m1
-!   END DO
-!   DEALLOCATE (m1)
-! !!
-! !! Space
-! !!
-! CASE (Space)
-!   !!
-!   IF (val%DefineOn .EQ. Nodal) THEN
-!     interpol = interpolation(obj, &
-!       & Get(val, TypeFEVariableVector, TypeFEVariableSpace))
-!   ELSE
-!     interpol = Get(val, TypeFEVariableVector, TypeFEVariableSpace)
-!   END IF
-! !!
-! !! SpaceTime
-! !!
-! CASE (SpaceTime)
-!   !!
-!   SELECT TYPE (obj)
-!   TYPE IS (STElemShapeData_)
-!     interpol = STinterpolation(obj, &
-!       & Get(val, TypeFEVariableVector, TypeFEVariableSpaceTime))
-!   END SELECT
-! END SELECT
-! !!
-! !!
-! !!
-END PROCEDURE vector_getinterpolation_4
+MODULE PROCEDURE GetInterpolation_2a
+LOGICAL(LGT), PARAMETER :: yes = .TRUE.
+INTEGER(I4B) :: minNNT, valNNT, aa
+REAL(DFP) :: myscale
+
+nrow = SIZE(val, 1)
+ncol = obj%nips
+
+valNNT = SIZE(val, 3)
+minNNT = MIN(valNNT, obj%nnt)
+
+IF (.NOT. addContribution) ans(1:nrow, 1:ncol) = 0.0_DFP
+
+DO aa = 1, minNNT
+  myscale = obj%T(aa) * scale
+  CALL GetInterpolation_(obj=obj, ans=ans, val=val(:, :, aa), nrow=nrow, &
+                         ncol=ncol, scale=myscale, addContribution=yes)
+END DO
+END PROCEDURE GetInterpolation_2a
 
 !----------------------------------------------------------------------------
-!
+!                                                           GetInterpolation_
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE vector_getinterpolation4_
+MODULE PROCEDURE GetInterpolation3
+REAL(DFP), PARAMETER :: one = 1.0_DFP
+LOGICAL(LGT), PARAMETER :: no = .FALSE.
+
+INTEGER(I4B) :: dim1, dim2, dim3
+
+dim1 = SIZE(val, 1)
+dim2 = obj(1)%nips
+dim3 = SIZE(obj)
+
+CALL Reallocate(ans, dim1, dim2, dim3)
+CALL GetInterpolation_(obj=obj, ans=ans, val=val, dim1=dim1, dim2=dim2, &
+                       dim3=dim3, scale=one, addContribution=no)
+END PROCEDURE GetInterpolation3
+
+!----------------------------------------------------------------------------
+!                                                           GetInterpolation_
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE GetInterpolation_3
+REAL(DFP), PARAMETER :: one = 1.0_DFP
+LOGICAL(LGT), PARAMETER :: no = .FALSE.
+
+CALL GetInterpolation_(obj=obj, ans=ans, val=val, dim1=dim1, dim2=dim2, &
+                       dim3=dim3, scale=one, addContribution=no)
+END PROCEDURE GetInterpolation_3
+
+!----------------------------------------------------------------------------
+!                                                           GetInterpolation_
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE GetInterpolation_3a
+INTEGER(I4B) :: ipt
+
+dim3 = SIZE(obj)
+
+DO ipt = 1, dim3
+  CALL GetInterpolation_(obj=obj(ipt), ans=ans(:, :, ipt), &
+                         val=val, nrow=dim1, ncol=dim2, scale=scale, &
+                         addContribution=addContribution)
+END DO
+END PROCEDURE GetInterpolation_3a
+
+!----------------------------------------------------------------------------
+!                                                           GetInterpolation_
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE GetInterpolation4
+REAL(DFP), PARAMETER :: one = 1.0_DFP
+LOGICAL(LGT), PARAMETER :: no = .FALSE.
+INTEGER(I4B) :: nrow, ncol
+
+nrow = FEVariableSize(val, 1)
+ncol = obj%nips
+
+CALL Reallocate(ans, nrow, ncol)
+CALL GetInterpolation_(obj=obj, ans=ans, val=val, nrow=nrow, ncol=ncol, &
+                       scale=one, addContribution=no)
+END PROCEDURE GetInterpolation4
+
+!----------------------------------------------------------------------------
+!                                                           GetInterpolation_
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE GetInterpolation_4
+REAL(DFP), PARAMETER :: one = 1.0_DFP
+LOGICAL(LGT), PARAMETER :: no = .FALSE.
+
+CALL GetInterpolation_(obj=obj, ans=ans, val=val, nrow=nrow, ncol=ncol, &
+                       scale=one, addContribution=no)
+END PROCEDURE GetInterpolation_4
+
+!----------------------------------------------------------------------------
+!                                                           GetInterpolation_
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE GetInterpolation_4a
 ! INTEGER(I4B) :: ii
 !
 ! SELECT CASE (val%vartype)
@@ -177,13 +233,13 @@ MODULE PROCEDURE vector_getinterpolation4_
 !                            nrow=nrow, ncol=ncol)
 !   END SELECT
 ! END SELECT
-END PROCEDURE vector_getinterpolation4_
+END PROCEDURE GetInterpolation_4a
 
 !----------------------------------------------------------------------------
-!                                                         getSTinterpolation
+!                                                           GetInterpolation_
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE vector_getinterpolation_5
+MODULE PROCEDURE GetInterpolation5
 ! REAL(DFP), ALLOCATABLE :: m1(:)
 ! INTEGER(I4B) :: ii, jj
 ! INTEGER(I4B), ALLOCATABLE :: s(:)
@@ -249,13 +305,13 @@ MODULE PROCEDURE vector_getinterpolation_5
 ! !!
 ! END SELECT
 ! !!
-END PROCEDURE vector_getinterpolation_5
+END PROCEDURE GetInterpolation5
 
 !----------------------------------------------------------------------------
-!
+!                                                           GetInterpolation_
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE vector_getinterpolation5_
+MODULE PROCEDURE GetInterpolation_5
 ! INTEGER(I4B) :: ii, jj
 !
 ! dim1 = SIZE(val, 1)
@@ -304,14 +360,22 @@ MODULE PROCEDURE vector_getinterpolation5_
 !               val=interpol, dim1=dim1, dim2=dim2, dim3=dim3)
 !   END IF
 ! END SELECT
-END PROCEDURE vector_getinterpolation5_
+END PROCEDURE GetInterpolation_5
 
 !----------------------------------------------------------------------------
-!                                                      interpolationOfVector
+!                                                               Interpolation
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE vector_interpolation_1
+MODULE PROCEDURE Interpolation1
 ! interpol = MATMUL(val, obj%N)
-END PROCEDURE vector_interpolation_1
+END PROCEDURE Interpolation1
+
+!----------------------------------------------------------------------------
+!                                                             STInterpolation
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE STInterpolation1
+
+END PROCEDURE STInterpolation1
 
 END SUBMODULE Methods
