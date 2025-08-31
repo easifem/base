@@ -2217,4 +2217,33 @@ INTERFACE GetInterpolation_
   END SUBROUTINE MatrixSpaceTimeGetInterpolation_
 END INTERFACE GetInterpolation_
 
+!----------------------------------------------------------------------------
+!                                      GetInterpolation_@InterpolationMethods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2025-08-29
+! summary: Get interpolation of Matrix, space-time
+
+INTERFACE GetInterpolation_
+  MODULE PURE SUBROUTINE FEVariableGetInterpolation_1(obj, N, nns, nips, &
+                                                     scale, addContribution, &
+                                                     ans)
+    CLASS(FEVariable_), INTENT(IN) :: obj
+    REAL(DFP), INTENT(IN) :: N(:, :)
+    !! shape functions data, N(I, ips) : I is node or dof number
+    !! ips is integration point number
+    INTEGER(I4B), INTENT(IN) :: nns
+    !! number of nodes in N, bound for dim1 in N
+    INTEGER(I4B), INTENT(IN) :: nips
+    !! number of integration points in N, bound for dim2 in N
+    REAL(DFP), INTENT(IN) :: scale
+    !! scale factor to be applied to the interpolated value
+    LOGICAL(LGT), INTENT(IN) :: addContribution
+    !! if true, the interpolated value is added to ans
+    TYPE(FEVariable_), INTENT(INOUT) :: ans
+    !! Interpolated value in FEVariable_ format
+  END SUBROUTINE FEVariableGetInterpolation_1
+END INTERFACE GetInterpolation_
+
 END MODULE FEVariable_Method
