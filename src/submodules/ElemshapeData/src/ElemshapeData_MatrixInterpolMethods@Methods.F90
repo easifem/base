@@ -17,6 +17,8 @@
 
 SUBMODULE(ElemshapeData_MatrixInterpolMethods) Methods
 USE ReallocateUtility, ONLY: Reallocate
+USE FEVariable_Method, ONLY: FEVariableSize => Size
+
 IMPLICIT NONE
 CONTAINS
 
@@ -24,278 +26,309 @@ CONTAINS
 !                                                           getinterpolation
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE matrix_getinterpolation_1
-! interpol = MATMUL(val, obj%N)
-END PROCEDURE matrix_getinterpolation_1
+MODULE PROCEDURE GetInterpolation1
+REAL(DFP), PARAMETER :: one = 1.0_DFP
+LOGICAL(LGT), PARAMETER :: no = .FALSE.
+INTEGER(I4B) :: dim1, dim2, dim3
+
+dim1 = SIZE(val, 1)
+dim2 = SIZE(val, 2)
+dim3 = obj%nips
+CALL Reallocate(ans, dim1, dim2, dim3)
+CALL GetInterpolation_(obj=obj, val=val, ans=ans, dim1=dim1, dim2=dim2, &
+                       dim3=dim3, scale=one, addContribution=no)
+END PROCEDURE GetInterpolation1
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE matrix_getinterpolation1_
-! dim1 = SIZE(val, 1)
-! dim2 = SIZE(val, 2)
-! dim3 = SIZE(obj%N, 2)
-! interpol(1:dim1, 1:dim2, 1:dim3) = MATMUL(val, obj%N)
-END PROCEDURE matrix_getinterpolation1_
+MODULE PROCEDURE GetInterpolation_1
+REAL(DFP), PARAMETER :: one = 1.0_DFP
+LOGICAL(LGT), PARAMETER :: no = .FALSE.
+
+dim1 = SIZE(val, 1)
+dim2 = SIZE(val, 2)
+dim3 = obj%nips
+CALL GetInterpolation_(obj=obj, val=val, ans=ans, dim1=dim1, dim2=dim2, &
+                       dim3=dim3, scale=one, addContribution=no)
+END PROCEDURE GetInterpolation_1
+
+!----------------------------------------------------------------------------
+!                                                          GetInterpolation_
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE GetInterpolation_1a
+INTEGER(I4B) :: ips, ii, valNNS, minNNS
+
+dim1 = SIZE(val, 1)
+dim2 = SIZE(val, 2)
+dim3 = obj%nips
+
+IF (.NOT. addContribution) ans(1:dim1, 1:dim2, 1:dim3) = 0.0_DFP
+
+valNNS = SIZE(val, 3)
+minNNS = MIN(valNNS, obj%nns)
+
+DO ips = 1, dim3
+  DO ii = 1, minNNS
+    ans(1:dim1, 1:dim2, ips) = ans(1:dim1, 1:dim2, ips) + &
+                              scale * val(1:dim1, 1:dim2, ii) * obj%N(ii, ips)
+  END DO
+END DO
+END PROCEDURE GetInterpolation_1a
 
 !----------------------------------------------------------------------------
 !                                                         getSTinterpolation
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE matrix_getinterpolation_2
-! SELECT TYPE (obj)
-! TYPE IS (STElemShapeData_)
-!   interpol = MATMUL(MATMUL(val, obj%T), obj%N)
-! END SELECT
-END PROCEDURE matrix_getinterpolation_2
+MODULE PROCEDURE GetInterpolation2
+REAL(DFP), PARAMETER :: one = 1.0_DFP
+LOGICAL(LGT), PARAMETER :: no = .FALSE.
+INTEGER(I4B) :: dim1, dim2, dim3
+
+dim1 = SIZE(val, 1)
+dim2 = SIZE(val, 2)
+dim3 = obj%nips
+CALL Reallocate(ans, dim1, dim2, dim3)
+CALL GetInterpolation_(obj=obj, ans=ans, val=val, dim1=dim1, dim2=dim2, &
+                       dim3=dim3, scale=one, addContribution=no)
+END PROCEDURE GetInterpolation2
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE matrix_getinterpolation2_
-! SELECT TYPE (obj)
-! TYPE IS (STElemShapeData_)
-!   dim1 = SIZE(val, 1)
-!   dim2 = SIZE(val, 2)
-!   dim3 = SIZE(obj%N, 2)
-!   interpol(1:dim1, 1:dim2, 1:dim3) = MATMUL(MATMUL(val, obj%T), obj%N)
-! END SELECT
-END PROCEDURE matrix_getinterpolation2_
+MODULE PROCEDURE GetInterpolation_2
+REAL(DFP), PARAMETER :: one = 1.0_DFP
+LOGICAL(LGT), PARAMETER :: no = .FALSE.
+
+dim1 = SIZE(val, 1)
+dim2 = SIZE(val, 2)
+dim3 = obj%nips
+CALL GetInterpolation_(obj=obj, ans=ans, val=val, dim1=dim1, dim2=dim2, &
+                       dim3=dim3, scale=one, addContribution=no)
+END PROCEDURE GetInterpolation_2
+
+!----------------------------------------------------------------------------
+!                                                           GetInterpolation_
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE GetInterpolation_2a
+LOGICAL(LGT), PARAMETER :: yes = .TRUE.
+INTEGER(I4B) :: minNNT, valNNT, aa
+REAL(DFP) :: myscale
+
+dim1 = SIZE(val, 1)
+dim2 = SIZE(val, 2)
+dim3 = obj%nips
+
+valNNT = SIZE(val, 4)
+minNNT = MIN(valNNT, obj%nnt)
+
+IF (.NOT. addContribution) ans(1:dim1, 1:dim2, 1:dim3) = 0.0_DFP
+
+DO aa = 1, minNNT
+  myscale = obj%T(aa) * scale
+  CALL GetInterpolation_(obj=obj, ans=ans, val=val(:, :, :, aa), &
+                         dim1=dim1, dim2=dim2, dim3=dim3, scale=myscale, &
+                         addContribution=yes)
+END DO
+END PROCEDURE GetInterpolation_2a
 
 !----------------------------------------------------------------------------
 !                                                         getSTinterpolation
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE matrix_getinterpolation_3
-!! TODO
-END PROCEDURE matrix_getinterpolation_3
+MODULE PROCEDURE GetInterpolation3
+REAL(DFP), PARAMETER :: one = 1.0_DFP
+LOGICAL(LGT), PARAMETER :: no = .FALSE.
+
+INTEGER(I4B) :: dim1, dim2, dim3, dim4
+
+dim1 = SIZE(val, 1)
+dim2 = SIZE(val, 2)
+dim3 = obj(1)%nips
+dim4 = SIZE(obj)
+
+CALL Reallocate(ans, dim1, dim2, dim3, dim4)
+CALL GetInterpolation_(obj=obj, ans=ans, val=val, dim1=dim1, dim2=dim2, &
+                       dim3=dim3, dim4=dim4, scale=one, addContribution=no)
+END PROCEDURE GetInterpolation3
+
+!----------------------------------------------------------------------------
+!                                                            GetInterpolation
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE GetInterpolation_3
+REAL(DFP), PARAMETER :: one = 1.0_DFP
+LOGICAL(LGT), PARAMETER :: no = .FALSE.
+
+dim1 = SIZE(val, 1)
+dim2 = SIZE(val, 2)
+dim3 = obj(1)%nips
+dim4 = SIZE(obj)
+
+CALL GetInterpolation_(obj=obj, ans=ans, val=val, dim1=dim1, dim2=dim2, &
+                       dim3=dim3, dim4=dim4, scale=one, addContribution=no)
+END PROCEDURE GetInterpolation_3
+
+!----------------------------------------------------------------------------
+!                                                         GetInterpolation_3a
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE GetInterpolation_3a
+INTEGER(I4B) :: ipt
+
+dim1 = 0
+dim2 = 0
+dim3 = 0
+dim4 = SIZE(obj)
+
+DO ipt = 1, dim4
+  CALL GetInterpolation_(obj=obj(ipt), ans=ans(:, :, :, ipt), &
+                         val=val, dim1=dim1, dim2=dim2, dim3=dim3, &
+                         scale=scale, addContribution=addContribution)
+END DO
+END PROCEDURE GetInterpolation_3a
 
 !----------------------------------------------------------------------------
 !                                                           getinterpolation
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE matrix_getinterpolation_4
-! INTEGER(I4B) :: i
-! INTEGER(I4B) :: s(2)
-! !! main
-! SELECT CASE (val%vartype)
-! CASE (Constant)
-!   s(1:2) = SHAPE(val)
-!   CALL reallocate(interpol, s(1), s(2), SIZE(obj%N, 2))
-!   interpol(:, :, 1) = Get(val, TypeFEVariableMatrix, &
-!     & TypeFEVariableConstant)
-!   DO i = 2, SIZE(interpol, 3)
-!     interpol(:, :, i) = interpol(:, :, 1)
-!   END DO
-! CASE (Space)
-!   IF (val%DefineOn .EQ. Nodal) THEN
-!     interpol = interpolation(obj, &
-!       & Get(val, TypeFEVariableMatrix, TypeFEVariableSpace))
-!   ELSE
-!     interpol = Get(val, TypeFEVariableMatrix, TypeFEVariableSpace)
-!   END IF
-! CASE (SpaceTime)
-!   SELECT TYPE (obj)
-!   TYPE IS (STElemShapeData_)
-!     IF (val%DefineOn .EQ. Nodal) THEN
-!       interpol = STinterpolation(obj, &
-!         & Get(val, TypeFEVariableMatrix, TypeFEVariableSpaceTime))
-!     END IF
-!   END SELECT
-! END SELECT
-END PROCEDURE matrix_getinterpolation_4
+MODULE PROCEDURE GetInterpolation4
+REAL(DFP), PARAMETER :: one = 1.0_DFP
+LOGICAL(LGT), PARAMETER :: no = .FALSE.
+INTEGER(I4B) :: dim1, dim2, dim3
+
+dim1 = FEVariableSize(val, 1)
+dim2 = FEVariableSize(val, 2)
+dim3 = obj%nips
+
+CALL Reallocate(ans, dim1, dim2, dim3)
+CALL GetInterpolation_(obj=obj, ans=ans, val=val, dim1=dim1, dim2=dim2, &
+                       dim3=dim3, scale=one, addContribution=no)
+END PROCEDURE GetInterpolation4
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE matrix_getinterpolation4_
-! INTEGER(I4B) :: ii
+MODULE PROCEDURE GetInterpolation_4
+REAL(DFP), PARAMETER :: one = 1.0_DFP
+LOGICAL(LGT), PARAMETER :: no = .FALSE.
+
+CALL GetInterpolation_(obj=obj, ans=ans, val=val, dim1=dim1, dim2=dim2, &
+                       dim3=dim3, scale=one, addContribution=no)
+END PROCEDURE GetInterpolation_4
+
+!----------------------------------------------------------------------------
+!                                                         GetInterpolation_4a
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE GetInterpolation_4a
+! INTEGER(I4B) :: timeIndx0
+! timeIndx0 = 1_I4B
+! IF (PRESENT(timeIndx)) timeIndx0 = timeIndx
 !
 ! SELECT CASE (val%vartype)
-! CASE (Constant)
-!   dim3 = SIZE(obj%N, 2)
-!   CALL Get_(obj=val, rank=TypeFEVariableMatrix, &
-!             vartype=TypeFEVariableConstant, &
-!             val=interpol(:, :, 1), nrow=dim1, ncol=dim2)
-!   DO ii = 2, dim3
-!     interpol(1:dim1, 1:dim2, ii) = interpol(1:dim1, 1:dim2, 1)
-!   END DO
-! CASE (Space)
-!   IF (val%DefineOn .EQ. Nodal) THEN
-!     CALL GetInterpolation_(obj=obj, &
-!                            val=Get(val, TypeFEVariableMatrix, &
-!                                    TypeFEVariableSpace), &
-!                            ans=interpol, &
-!                            dim1=dim1, dim2=dim2, dim3=dim3)
-!   ELSE
-!     CALL Get_(obj=val, rank=TypeFEVariableMatrix, &
-!               vartype=TypeFEVariableSpace, val=interpol, &
-!               dim1=dim1, dim2=dim2, dim3=dim3)
-!   END IF
-! CASE (SpaceTime)
-!   SELECT TYPE (obj)
-!   TYPE IS (STElemShapeData_)
-!     IF (val%DefineOn .EQ. Nodal) THEN
-!       CALL GetInterpolation_(obj=obj, &
-!                              val=Get(val, TypeFEVariableMatrix, &
-!                                      TypeFEVariableSpaceTime), &
-!                              ans=interpol, &
-!                              dim1=dim1, dim2=dim2, dim3=dim3)
-!     END IF
+! CASE (TypeFEVariableOpt%constant)
+!   CALL FEVariableGetInterpolation_(obj=val, rank=TypeFEVariableVector, &
+!                                    vartype=TypeFEVariableConstant, &
+!                                    N=obj%N, nns=obj%nns, nips=obj%nips, &
+!                                    scale=scale, &
+!                                    addContribution=addContribution, &
+!                                    ans=ans, nrow=nrow, ncol=ncol)
+!
+! CASE (TypeFEVariableOpt%space)
+!
+!   CALL FEVariableGetInterpolation_(obj=val, rank=TypeFEVariableVector, &
+!                                    vartype=TypeFEVariableSpace, &
+!                                    N=obj%N, nns=obj%nns, nips=obj%nips, &
+!                                    scale=scale, &
+!                                    addContribution=addContribution, &
+!                                    ans=ans, nrow=nrow, ncol=ncol)
+!
+! CASE (TypeFEVariableOpt%spacetime)
+!   SELECT TYPE (obj); TYPE IS (STElemShapeData_)
+!     CALL FEVariableGetInterpolation_(obj=val, rank=TypeFEVariableVector, &
+!                                      vartype=TypeFEVariableSpaceTime, &
+!                                      N=obj%N, nns=obj%nns, nips=obj%nips, &
+!                                      T=obj%T, nnt=obj%nnt, &
+!                                      scale=scale, &
+!                                      addContribution=addContribution, &
+!                                      ans=ans, nrow=nrow, ncol=ncol, &
+!                                      timeIndx=timeIndx0)
+!
 !   END SELECT
+!
 ! END SELECT
-END PROCEDURE matrix_getinterpolation4_
+END PROCEDURE GetInterpolation_4a
 
 !----------------------------------------------------------------------------
 !                                                           getinterpolation
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE matrix_getinterpolation_5
-! INTEGER(I4B) :: ii, jj
-! INTEGER(I4B), ALLOCATABLE :: s(:)
-! REAL(DFP), ALLOCATABLE :: m2(:, :)
-! !!
-! !! main
-! !!
-! s = SHAPE(val)
-! CALL Reallocate(interpol, s(1), s(2), SIZE(obj(1)%N, 2), SIZE(obj))
-! !!
-! SELECT CASE (val%vartype)
-! !!
-! !!
-! !!
-! !!
-! CASE (Constant)
-!   !!
-!   m2 = Get(val, TypeFEVariableMatrix, TypeFEVariableConstant)
-!   !!
-!   DO jj = 1, SIZE(interpol, 4)
-!     DO ii = 1, SIZE(interpol, 3)
-!       interpol(:, :, ii, jj) = m2
-!     END DO
-!   END DO
-!   !!
-!   DEALLOCATE (m2)
-! !!
-! !!
-! !!
-! !!
-! CASE (Space)
-!   !!
-!   IF (val%DefineOn .EQ. Nodal) THEN
-!     !!
-!     DO ii = 1, SIZE(obj)
-!       interpol(:, :, :, ii) = Interpolation(obj(ii), &
-!         & Get(val, TypeFEVariableMatrix, TypeFEVariableSpace))
-!     END DO
-!     !!
-!   ELSE
-!     !!
-!     interpol(:, :, :, 1) = Get(val, TypeFEVariableMatrix, TypeFEVariableSpace)
-!     !!
-!     DO ii = 2, SIZE(obj)
-!       interpol(:, :, :, ii) = interpol(:, :, :, 1)
-!     END DO
-!     !!
-!   END IF
-! !!
-! !!
-! !!
-! !!
-! CASE (SpaceTime)
-!   !!
-!   IF (val%DefineOn .EQ. Nodal) THEN
-!     !!
-!     DO ii = 1, SIZE(obj)
-!       interpol(:, :, :, ii) = STinterpolation(obj(ii), &
-!         & Get(val, TypeFEVariableMatrix, TypeFEVariableSpaceTime))
-!     END DO
-!     !!
-!   ELSE
-!     interpol = Get(val, TypeFEVariableMatrix, typeFEVariableSpaceTime)
-!   END IF
-! !!
-! !!
-! !!
-! !!
-! END SELECT
-! !!
-END PROCEDURE matrix_getinterpolation_5
+MODULE PROCEDURE GetInterpolation5
+INTEGER(I4B) :: dim1, dim2, dim3, dim4
+REAL(DFP), PARAMETER :: one = 1.0_DFP
+LOGICAL(LGT), PARAMETER :: no = .FALSE.
+
+dim1 = FEVariableSIZE(val, 1)
+dim2 = FEVariableSIZE(val, 2)
+dim3 = obj(1)%nips
+dim4 = SIZE(obj)
+
+CALL Reallocate(ans, dim1, dim2, dim3, dim4)
+CALL GetInterpolation_(obj=obj, ans=ans, val=val, dim1=dim1, dim2=dim2, &
+                       dim3=dim3, dim4=dim4, scale=one, addContribution=no)
+END PROCEDURE GetInterpolation5
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE matrix_getinterpolation5_
-! INTEGER(I4B) :: ii, jj
-! dim1 = SIZE(val, 1)
-! dim2 = SIZE(val, 2)
-! dim3 = SIZE(obj(1)%N, 2)
-! dim4 = SIZE(obj)
-!
-! SELECT CASE (val%vartype)
-! CASE (Constant)
-!   CALL Get_(obj=val, rank=TypeFEVariableMatrix, &
-!             vartype=TypeFEVariableConstant, val=interpol(:, :, 1, 1), &
-!             nrow=dim1, ncol=dim2)
-!   DO jj = 1, dim3
-!     DO ii = 1, dim4
-!       IF (jj .EQ. 1 .AND. ii .EQ. 1) CYCLE
-!       interpol(1:dim1, 1:dim2, ii, jj) = interpol(1:dim1, 1:dim2, 1, 1)
-!     END DO
-!   END DO
-! CASE (Space)
-!   IF (val%DefineOn .EQ. Nodal) THEN
-!     DO ii = 1, dim4
-!       CALL GetInterpolation_(obj=obj(ii), &
-!                              val=Get(val, TypeFEVariableMatrix, &
-!                                      TypeFEVariableSpace), &
-!                              ans=interpol(:, :, :, ii), &
-!                              dim1=dim1, dim2=dim2, dim3=dim3)
-!     END DO
-!   ELSE
-!     CALL Get_(obj=val, rank=TypeFEVariableMatrix, &
-!               vartype=TypeFEVariableSpace, val=interpol(:, :, :, 1), &
-!               dim1=dim1, dim2=dim2, dim3=dim3)
-!     DO ii = 2, dim4
-!       interpol(1:dim1, 1:dim2, 1:dim3, ii) = &
-!         interpol(1:dim1, 1:dim2, 1:dim3, 1)
-!     END DO
-!   END IF
-! CASE (SpaceTime)
-!   IF (val%DefineOn .EQ. Nodal) THEN
-!     DO ii = 1, dim4
-!       CALL GetInterpolation_(obj=obj(ii), &
-!                              val=Get(val, TypeFEVariableMatrix, &
-!                                      TypeFEVariableSpaceTime), &
-!                              ans=interpol(:, :, :, ii), &
-!                              dim1=dim1, dim2=dim2, dim3=dim3)
-!     END DO
-!   ELSE
-!     CALL Get_(obj=val, rank=TypeFEVariableMatrix, &
-!               vartype=TypeFEVariableSpaceTime, val=interpol, &
-!               dim1=dim1, dim2=dim2, dim3=dim3, dim4=dim4)
-!   END IF
-! END SELECT
-END PROCEDURE matrix_getinterpolation5_
+MODULE PROCEDURE GetInterpolation_5
+REAL(DFP), PARAMETER :: one = 1.0_DFP
+LOGICAL(LGT), PARAMETER :: no = .FALSE.
+
+CALL GetInterpolation_(obj=obj, ans=ans, val=val, dim1=dim1, dim2=dim2, &
+                       dim3=dim3, dim4=dim4, scale=one, addContribution=no)
+END PROCEDURE GetInterpolation_5
+
+!----------------------------------------------------------------------------
+!                                                         GetInterpolation_5a
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE GetInterpolation_5a
+INTEGER(I4B) :: ipt
+
+dim1 = 0
+dim2 = 0
+dim3 = 0
+dim4 = SIZE(obj)
+DO ipt = 1, dim4
+  CALL GetInterpolation_(obj=obj(ipt), ans=ans(:, :, :, ipt), &
+                         val=val, dim1=dim1, dim2=dim2, dim3=dim3, &
+                         scale=scale, addContribution=addContribution, &
+                         timeIndx=ipt)
+END DO
+END PROCEDURE GetInterpolation_5a
 
 !----------------------------------------------------------------------------
 !                                                      interpolationOfVector
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE matrix_interpolation_1
+MODULE PROCEDURE Interpolation1
 ! interpol = MATMUL(val, obj%N)
-END PROCEDURE matrix_interpolation_1
+END PROCEDURE Interpolation1
 
 !----------------------------------------------------------------------------
 !                                                            STinterpolation
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE matrix_stinterpolation_1
+MODULE PROCEDURE STInterpolation1
 ! interpol = MATMUL(MATMUL(val, obj%T), obj%N)
-END PROCEDURE matrix_stinterpolation_1
+END PROCEDURE STInterpolation1
 
 END SUBMODULE Methods

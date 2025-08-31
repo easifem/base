@@ -271,13 +271,14 @@ END INTERFACE GetInterpolation_
 
 INTERFACE GetInterpolation_
   MODULE PURE SUBROUTINE GetInterpolation_4a(obj, ans, val, nrow, ncol, &
-                                             scale, addContribution)
+                                             scale, addContribution, timeIndx)
     CLASS(ElemshapeData_), INTENT(IN) :: obj
     REAL(DFP), INTENT(INOUT) :: ans(:, :)
     TYPE(FEVariable_), INTENT(IN) :: val
     INTEGER(I4B), INTENT(OUT) :: nrow, ncol
     REAL(DFP), INTENT(IN) :: scale
     LOGICAL(LGT), INTENT(IN) :: addContribution
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: timeIndx
   END SUBROUTINE GetInterpolation_4a
 END INTERFACE GetInterpolation_
 

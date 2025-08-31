@@ -262,12 +262,7 @@ END PROCEDURE GetInterpolation_5a
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Interpolation1
-REAL(DFP), PARAMETER :: one = 1.0_DFP
-LOGICAL(LGT), PARAMETER :: no = .FALSE.
-INTEGER(I4B) :: tsize
-CALL Reallocate(ans, obj%nips)
-CALL GetInterpolation_(obj=obj, ans=ans, val=val, tsize=tsize, &
-                       scale=one, addContribution=no)
+CALL GetInterpolation(obj=obj, ans=ans, val=val)
 END PROCEDURE Interpolation1
 
 !----------------------------------------------------------------------------
@@ -275,12 +270,7 @@ END PROCEDURE Interpolation1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE STInterpolation1
-REAL(DFP), PARAMETER :: one = 1.0_DFP
-LOGICAL(LGT), PARAMETER :: no = .FALSE.
-INTEGER(I4B) :: tsize
-CALL Reallocate(ans, obj%nips)
-CALL GetInterpolation_(obj=obj, ans=ans, val=val, tsize=tsize, &
-                       scale=one, addContribution=no)
+CALL GetInterpolation(obj=obj, ans=ans, val=val)
 END PROCEDURE STInterpolation1
 
 END SUBMODULE Methods

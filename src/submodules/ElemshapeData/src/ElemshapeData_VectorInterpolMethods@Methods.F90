@@ -19,6 +19,12 @@ SUBMODULE(ElemshapeData_VectorInterpolMethods) Methods
 USE ReallocateUtility, ONLY: Reallocate
 USE FEVariable_Method, ONLY: FEVariableSize => Size
 
+USE BaseType, ONLY: TypeFEVariableOpt, TypeFEVariableVector, &
+                    TypeFEVariableConstant, TypeFEVariableSpace, &
+                    TypeFEVariableSpaceTime
+
+USE FEVariable_Method, ONLY: FEVariableGetInterpolation_ => GetInterpolation_
+
 IMPLICIT NONE
 
 CONTAINS
@@ -200,39 +206,42 @@ END PROCEDURE GetInterpolation_4
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE GetInterpolation_4a
-! INTEGER(I4B) :: ii
-!
-! SELECT CASE (val%vartype)
-! CASE (Constant)
-!   CALL Get_(obj=val, rank=TypeFEVariableVector, &
-!             vartype=TypeFEVariableConstant, &
-!             val=interpol(:, 1), tsize=nrow)
-!   ncol = SIZE(obj%N, 2)
-!   DO ii = 2, ncol
-!     interpol(1:nrow, ii) = interpol(1:nrow, 1)
-!   END DO
-! CASE (Space)
-!   IF (val%DefineOn .EQ. Nodal) THEN
-!     CALL GetInterpolation_(obj=obj, &
-!                            val=Get(val, TypeFEVariableVector, &
-!                                    TypeFEVariableSpace), &
-!                            ans=interpol, &
-!                            nrow=nrow, ncol=ncol)
-!   ELSE
-!     CALL Get_(obj=val, rank=TypeFEVariableVector, &
-!               vartype=TypeFEVariableSpace, &
-!               val=interpol, nrow=nrow, ncol=ncol)
-!   END IF
-! CASE (SpaceTime)
-!   SELECT TYPE (obj)
-!   TYPE IS (STElemShapeData_)
-!     CALL GetInterpolation_(obj=obj, &
-!                            val=Get(val, TypeFEVariableVector, &
-!                                    TypeFEVariableSpaceTime), &
-!                            ans=interpol, &
-!                            nrow=nrow, ncol=ncol)
-!   END SELECT
-! END SELECT
+INTEGER(I4B) :: timeIndx0
+timeIndx0 = 1_I4B
+IF (PRESENT(timeIndx)) timeIndx0 = timeIndx
+
+SELECT CASE (val%vartype)
+CASE (TypeFEVariableOpt%constant)
+  CALL FEVariableGetInterpolation_(obj=val, rank=TypeFEVariableVector, &
+                                   vartype=TypeFEVariableConstant, &
+                                   N=obj%N, nns=obj%nns, nips=obj%nips, &
+                                   scale=scale, &
+                                   addContribution=addContribution, &
+                                   ans=ans, nrow=nrow, ncol=ncol)
+
+CASE (TypeFEVariableOpt%space)
+
+  CALL FEVariableGetInterpolation_(obj=val, rank=TypeFEVariableVector, &
+                                   vartype=TypeFEVariableSpace, &
+                                   N=obj%N, nns=obj%nns, nips=obj%nips, &
+                                   scale=scale, &
+                                   addContribution=addContribution, &
+                                   ans=ans, nrow=nrow, ncol=ncol)
+
+CASE (TypeFEVariableOpt%spacetime)
+  SELECT TYPE (obj); TYPE IS (STElemShapeData_)
+    CALL FEVariableGetInterpolation_(obj=val, rank=TypeFEVariableVector, &
+                                     vartype=TypeFEVariableSpaceTime, &
+                                     N=obj%N, nns=obj%nns, nips=obj%nips, &
+                                     T=obj%T, nnt=obj%nnt, &
+                                     scale=scale, &
+                                     addContribution=addContribution, &
+                                     ans=ans, nrow=nrow, ncol=ncol, &
+                                     timeIndx=timeIndx0)
+
+  END SELECT
+
+END SELECT
 END PROCEDURE GetInterpolation_4a
 
 !----------------------------------------------------------------------------
@@ -240,71 +249,18 @@ END PROCEDURE GetInterpolation_4a
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE GetInterpolation5
-! REAL(DFP), ALLOCATABLE :: m1(:)
-! INTEGER(I4B) :: ii, jj
-! INTEGER(I4B), ALLOCATABLE :: s(:)
-! !!
-! !! main
-! !!
-! s = SHAPE(val)
-! CALL Reallocate(interpol, s(1), SIZE(obj(1)%N, 2), SIZE(obj))
-! !!
-! SELECT CASE (val%vartype)
-! !!
-! !! Constant
-! !!
-! CASE (Constant)
-!   !!
-!   m1 = Get(val, TypeFEVariableVector, TypeFEVariableConstant)
-!   !!
-!   DO jj = 1, SIZE(interpol, 3)
-!     DO ii = 1, SIZE(interpol, 2)
-!       interpol(:, ii, jj) = m1
-!     END DO
-!   END DO
-!   DEALLOCATE (m1)
-! !!
-! !! Space
-! !!
-! CASE (Space)
-!   !!
-!   IF (val%DefineOn .EQ. Nodal) THEN
-!     !!
-!     DO ii = 1, SIZE(obj)
-!       interpol(:, :, ii) = Interpolation(obj(ii), &
-!         & Get(val, TypeFEVariableVector, TypeFEVariableSpace))
-!     END DO
-!     !!
-!   ELSE
-!     !!
-!     interpol(:, :, 1) = Get(val, TypeFEVariableVector, TypeFEVariableSpace)
-!     !!
-!     DO ii = 2, SIZE(obj)
-!       interpol(:, :, ii) = interpol(:, :, 1)
-!     END DO
-!     !!
-!   END IF
-! !!
-! !! SpaceTime
-! !!
-! CASE (SpaceTime)
-!   !!
-!   IF (val%DefineOn .EQ. Nodal) THEN
-!     !!
-!     DO ii = 1, SIZE(obj)
-!       interpol(:, :, ii) = STinterpolation(obj(ii), &
-!         & Get(val, TypeFEVariableVector, TypeFEVariableSpaceTime))
-!     END DO
-!     !!
-!   ELSE
-!     interpol = Get(val, TypeFEVariableVector, typeFEVariableSpaceTime)
-!   END IF
-! !!
-! !!
-! !!
-! !!
-! END SELECT
-! !!
+INTEGER(I4B) :: dim1, dim2, dim3
+REAL(DFP), PARAMETER :: one = 1.0_DFP
+LOGICAL(LGT), PARAMETER :: no = .FALSE.
+
+dim1 = FEVariableSIZE(val, 1)
+dim2 = obj(1)%nips
+dim3 = SIZE(obj)
+
+CALL Reallocate(ans, dim1, dim2, dim3)
+
+CALL GetInterpolation_(obj=obj, ans=ans, val=val, dim1=dim1, dim2=dim2, &
+                       dim3=dim3, scale=one, addContribution=no)
 END PROCEDURE GetInterpolation5
 
 !----------------------------------------------------------------------------
@@ -312,62 +268,41 @@ END PROCEDURE GetInterpolation5
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE GetInterpolation_5
-! INTEGER(I4B) :: ii, jj
-!
-! dim1 = SIZE(val, 1)
-! dim2 = SIZE(obj(1)%N, 2)
-! dim3 = SIZE(obj)
-! SELECT CASE (val%vartype)
-! CASE (Constant)
-!   CALL Get_(obj=val, rank=TypeFEVariableVector, &
-!             vartype=TypeFEVariableConstant, &
-!             val=interpol(:, 1, 1), tsize=dim1)
-!   DO jj = 1, dim3
-!     DO ii = 1, dim2
-!       IF (jj .EQ. 1 .AND. ii .EQ. 1) CYCLE
-!       interpol(1:dim1, ii, jj) = interpol(1:dim1, 1, 1)
-!     END DO
-!   END DO
-! CASE (Space)
-!   IF (val%DefineOn .EQ. Nodal) THEN
-!     DO ii = 1, dim3
-!       CALL GetInterpolation_(obj=obj(ii), &
-!                              val=Get(val, TypeFEVariableVector, &
-!                                      TypeFEVariableSpace), &
-!                              ans=interpol(1:dim1, 1:dim2, ii), &
-!                              nrow=dim1, ncol=dim2)
-!     END DO
-!   ELSE
-!     CALL Get_(obj=val, rank=TypeFEVariableVector, &
-!               vartype=TypeFEVariableSpace, &
-!               val=interpol(:, :, 1), nrow=dim1, ncol=dim2)
-!     DO ii = 2, SIZE(obj)
-!       interpol(1:dim1, 1:dim2, ii) = interpol(1:dim1, 1:dim2, 1)
-!     END DO
-!   END IF
-! CASE (SpaceTime)
-!   IF (val%DefineOn .EQ. Nodal) THEN
-!     DO ii = 1, SIZE(obj)
-!       CALL GetInterpolation_(obj=obj(ii), &
-!                              val=Get(val, TypeFEVariableVector, &
-!                                      TypeFEVariableSpaceTime), &
-!                              ans=interpol(1:dim1, 1:dim2, ii), &
-!                              nrow=dim1, ncol=dim2)
-!     END DO
-!   ELSE
-!     CALL Get_(obj=val, rank=TypeFEVariableVector, &
-!               vartype=TypeFEVariableSpaceTime, &
-!               val=interpol, dim1=dim1, dim2=dim2, dim3=dim3)
-!   END IF
-! END SELECT
+REAL(DFP), PARAMETER :: one = 1.0_DFP
+LOGICAL(LGT), PARAMETER :: no = .FALSE.
+
+dim1 = FEVariableSIZE(val, 1)
+dim2 = obj(1)%nips
+dim3 = SIZE(obj)
+
+CALL GetInterpolation_(obj=obj, ans=ans, val=val, dim1=dim1, dim2=dim2, &
+                       dim3=dim3, scale=one, addContribution=no)
 END PROCEDURE GetInterpolation_5
+
+!----------------------------------------------------------------------------
+!                                                          GetInterpolation_
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE GetInterpolation_5a
+INTEGER(I4B) :: ipt
+
+dim1 = 0
+dim2 = 0
+dim3 = SIZE(obj)
+DO ipt = 1, dim3
+  CALL GetInterpolation_(obj=obj(ipt), ans=ans(:, :, ipt), &
+                         val=val, nrow=dim1, ncol=dim2, &
+                         scale=scale, addContribution=addContribution, &
+                         timeIndx=ipt)
+END DO
+END PROCEDURE GetInterpolation_5a
 
 !----------------------------------------------------------------------------
 !                                                               Interpolation
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Interpolation1
-! interpol = MATMUL(val, obj%N)
+CALL GetInterpolation(obj=obj, ans=ans, val=val)
 END PROCEDURE Interpolation1
 
 !----------------------------------------------------------------------------
@@ -375,7 +310,7 @@ END PROCEDURE Interpolation1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE STInterpolation1
-
+CALL GetInterpolation(obj=obj, ans=ans, val=val)
 END PROCEDURE STInterpolation1
 
 END SUBMODULE Methods
