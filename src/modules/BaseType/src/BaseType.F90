@@ -1098,26 +1098,23 @@ TYPE(KeyValue_), PARAMETER :: TypeKeyValue = KeyValue_(VALUE=NULL())
 ! {!pages/FEVariable_.md!}
 
 TYPE :: FEVariable_
-  REAL(DFP), ALLOCATABLE :: val(:)
-  !! values
+  LOGICAL( LGT ) :: isInit = .false.
+  !! True if it is initiated
   INTEGER(I4B) :: s(MAX_RANK_FEVARIABLE) = 0
   !! shape of the data
   INTEGER(I4B) :: defineOn = 0
   !! Nodal: nodal values
   !! Quadrature: quadrature values
   INTEGER(I4B) :: varType = 0
-  !! Space
-  !! Time
-  !! SpaceTime
-  !! Constant
+  !! Space ! Time ! SpaceTime ! Constant
   INTEGER(I4B) :: rank = 0
-  !! Scalar
-  !! Vector
-  !! Matrix
+  !! Scalar ! Vector ! Matrix
   INTEGER(I4B) :: len = 0_I4B
   !! current total size
   INTEGER(I4B) :: capacity = 0_I4B
   !! capacity of the val
+  REAL(DFP), ALLOCATABLE :: val(:)
+  !! values
 END TYPE FEVariable_
 
 TYPE(FEVariable_), PARAMETER :: TypeFEVariable = FEVariable_(val=NULL())
