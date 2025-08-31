@@ -96,7 +96,7 @@ END SUBROUTINE MasterGetInterpolationFromQuadrature_
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE VectorSpaceGetInterpolation_
-INTEGER(I4B) :: ips, valEnd
+INTEGER(I4B) :: valEnd
 
 nrow = obj%s(1)
 ncol = nips
