@@ -33,4 +33,5 @@ target_sources(
           ${src_path}/FEVariable_Method@EqualMethods.F90
           ${src_path}/FEVariable_Method@MeanMethods.F90
           ${src_path}/FEVariable_Method@ScalarInterpolationMethods.F90
-          ${src_path}/FEVariable_Method@VectorInterpolationMethods.F90)
+          ${src_path}/FEVariable_Method@VectorInterpolationMethods.F90
+          ${src_path}/FEVariable_Method@MatrixInterpolationMethods.F90)
