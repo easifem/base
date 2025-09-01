@@ -8,3 +8,4 @@ obj%s(1:2) = s(1:2)
 obj%defineOn = _DEFINEON_
 obj%rank = Matrix
 obj%varType = Constant
+obj%isInit = .TRUE.

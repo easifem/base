@@ -16,3 +16,4 @@ obj%s(1:2) = SHAPE(val)
 obj%defineOn = _DEFINEON_
 obj%rank = Vector
 obj%varType = Space
+obj%isInit = .TRUE.

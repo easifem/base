@@ -6,3 +6,4 @@ obj%s(1) = 1
 obj%defineOn = _DEFINEON_
 obj%rank = Scalar
 obj%varType = Constant
+obj%isInit = .TRUE.

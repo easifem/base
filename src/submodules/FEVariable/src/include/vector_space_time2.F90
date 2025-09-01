@@ -8,3 +8,4 @@ obj%s(1:3) = s(1:3)
 obj%defineOn = _DEFINEON_
 obj%rank = Vector
 obj%varType = SpaceTime
+obj%isInit = .TRUE.

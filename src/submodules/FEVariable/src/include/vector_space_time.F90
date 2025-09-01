@@ -19,3 +19,4 @@ obj%s(1:3) = SHAPE(val)
 obj%defineOn = _DEFINEON_
 obj%rank = Vector
 obj%varType = SpaceTime
+obj%isInit = .TRUE.

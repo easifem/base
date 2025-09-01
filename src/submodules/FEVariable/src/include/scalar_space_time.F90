@@ -16,3 +16,4 @@ obj%s(1:2) = SHAPE(val)
 obj%defineOn = _DEFINEON_
 obj%rank = SCALAR
 obj%varType = SpaceTime
+obj%isInit = .TRUE.

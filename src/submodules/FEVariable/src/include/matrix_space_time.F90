@@ -21,3 +21,4 @@ obj%s(1:4) = SHAPE(val)
 obj%defineOn = _DEFINEON_
 obj%rank = Matrix
 obj%varType = SpaceTime
+obj%isInit = .TRUE.

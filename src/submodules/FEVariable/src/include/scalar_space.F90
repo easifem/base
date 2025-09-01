@@ -6,3 +6,4 @@ obj%s(1) = SIZE(val)
 obj%defineOn = _DEFINEON_
 obj%rank = SCALAR
 obj%varType = Space
+obj%isInit = .TRUE.

@@ -19,3 +19,4 @@ obj%s(1:3) = SHAPE(val)
 obj%defineOn = _DEFINEON_
 obj%rank = Matrix
 obj%varType = Space
+obj%isInit = .TRUE.

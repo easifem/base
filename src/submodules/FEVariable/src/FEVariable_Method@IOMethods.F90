@@ -131,6 +131,7 @@ CALL Util_Display(obj%s, "s: ", unitno=unitno)
 CALL Util_Display(obj%defineOn, "defineOn: ", unitno=unitno)
 CALL Util_Display(obj%len, "len: ", unitno=unitno)
 CALL Util_Display(obj%capacity, "capacity: ", unitno=unitno)
+CALL Util_Display(obj%isInit, "isInit: ", unitno=unitno)
 CALL Util_Display(SafeSize(obj%val), "Size of obj%val: ", unitno=unitno)
 
 END PROCEDURE fevar_Display

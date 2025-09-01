@@ -36,6 +36,7 @@ obj%varType = 0
 obj%rank = 0
 obj%len = 0
 obj%capacity = 0
+obj%isInit = .FALSE.
 END PROCEDURE fevar_Deallocate
 
 !----------------------------------------------------------------------------
@@ -443,11 +444,14 @@ END PROCEDURE Quadrature_Matrix_SpaceTime2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE obj_Copy
+LOGICAL(LGT) :: isok
+
 obj1%s = obj2%s
 obj1%defineOn = obj2%defineOn
 obj1%rank = obj2%rank
 obj1%varType = obj2%varType
 obj1%len = obj2%len
+obj1%isInit = obj2%isInit
 
 IF (obj1%capacity .GE. obj1%len) THEN
   obj1%val(1:obj1%len) = obj2%val(1:obj1%len)
@@ -456,7 +460,9 @@ END IF
 
 obj1%capacity = CAPACITY_EXPAND_FACTOR * obj1%len
 CALL Reallocate(obj1%val, obj1%capacity)
-obj1%val(1:obj1%len) = obj2%val(1:obj1%len)
+
+isok = ALLOCATED(obj2%val)
+IF (isok) obj1%val(1:obj1%len) = obj2%val(1:obj1%len)
 
 END PROCEDURE obj_Copy
 

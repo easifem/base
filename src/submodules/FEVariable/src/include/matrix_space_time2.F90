@@ -8,3 +8,4 @@ obj%s(1:4) = s(1:4)
 obj%defineOn = _DEFINEON_
 obj%rank = Matrix
 obj%varType = SpaceTime
+obj%isInit = .TRUE.

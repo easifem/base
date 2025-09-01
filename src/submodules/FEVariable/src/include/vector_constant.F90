@@ -8,3 +8,4 @@ obj%s(1:1) = SHAPE(val)
 obj%defineOn = _DEFINEON_
 obj%rank = Vector
 obj%varType = Constant
+obj%isInit = .TRUE.

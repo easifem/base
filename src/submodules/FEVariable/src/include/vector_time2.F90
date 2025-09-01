@@ -8,3 +8,4 @@ obj%s(1:2) = s(1:2)
 obj%defineOn = _DEFINEON_
 obj%rank = Vector
 obj%varType = TIME
+obj%isInit = .TRUE.
