@@ -17,14 +17,16 @@
 
 SUBMODULE(ElemshapeData_InterpolMethods) Methods
 USE ReallocateUtility, ONLY: Reallocate
+USE FEVariable_Method, ONLY: FEVariableGetInterpolation_ => GetInterpolation_
+
 IMPLICIT NONE
 CONTAINS
 
 !----------------------------------------------------------------------------
-!                                                           getinterpolation
+!                                                           GetInterpolation
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE master_getinterpolation_1
+MODULE PROCEDURE GetInterpolation1
 ! REAL(DFP), ALLOCATABLE :: r1(:), r2(:, :), r3(:, :, :)
 ! !! main
 ! !!
@@ -54,13 +56,35 @@ MODULE PROCEDURE master_getinterpolation_1
 !     & typeFEVariableSpace)
 !   DEALLOCATE (r3)
 ! END SELECT
-END PROCEDURE master_getinterpolation_1
+END PROCEDURE GetInterpolation1
 
 !----------------------------------------------------------------------------
-!                                                         getInterpolation
+!                                                           GetInterpolation_
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE master_getInterpolation_2
+MODULE PROCEDURE GetInterpolation_1
+REAL(DFP), PARAMETER :: one = 1.0_DFP
+LOGICAL, PARAMETER :: no = .FALSE.
+
+CALL FEVariableGetInterpolation_(obj=val, ans=ans, N=obj%N, nns=obj%nns, &
+                                 nips=obj%nips, scale=one, addContribution=no)
+END PROCEDURE GetInterpolation_1
+
+!----------------------------------------------------------------------------
+!                                                           GetInterpolation_
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE GetInterpolation_1a
+CALL FEVariableGetInterpolation_(obj=val, ans=ans, N=obj%N, nns=obj%nns, &
+                                 nips=obj%nips, scale=scale, &
+                                 addContribution=addContribution)
+END PROCEDURE GetInterpolation_1a
+
+!----------------------------------------------------------------------------
+!                                                            GetInterpolation
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE GetInterpolation2
 ! REAL(DFP), ALLOCATABLE :: r2(:, :), r3(:, :, :), r4(:, :, :, :)
 ! !! main
 ! !!
@@ -91,14 +115,28 @@ MODULE PROCEDURE master_getInterpolation_2
 !   DEALLOCATE (r4)
 ! END SELECT
 ! !!
-END PROCEDURE master_getInterpolation_2
+END PROCEDURE GetInterpolation2
+
+!----------------------------------------------------------------------------
+!                                                         GetInterpolation_
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE GetInterpolation_2
+END PROCEDURE GetInterpolation_2
+
+!----------------------------------------------------------------------------
+!                                                          GetInterpolation_
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE GetInterpolation_2a
+END PROCEDURE GetInterpolation_2a
 
 !----------------------------------------------------------------------------
 !                                                      interpolationOfVector
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE master_interpolation_1
+MODULE PROCEDURE Interpolation1
 ! CALL getInterpolation(obj=obj, val=val, ans=ans)
-END PROCEDURE master_interpolation_1
+END PROCEDURE Interpolation1
 
 END SUBMODULE Methods
