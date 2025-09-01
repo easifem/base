@@ -2004,6 +2004,7 @@ TYPE :: FEVariableOpt_
   INTEGER(I4B) :: solutionDependent = solutionDependent
   INTEGER(I4B) :: randomSpace = randomSpace
   INTEGER(I4B) :: maxRank = MAX_RANK_FEVARIABLE
+  INTEGER(I4B) :: capacityExpandFactor = 1
 END TYPE FEVariableOpt_
 
 TYPE(FEVariableOpt_), PARAMETER :: TypeFEVariableOpt = FEVariableOpt_()
