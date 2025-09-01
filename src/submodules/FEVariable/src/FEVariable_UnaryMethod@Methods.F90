@@ -15,12 +15,11 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-SUBMODULE(FEVariable_Method) Norm2Methods
-USE IntegerUtility, ONLY: Get1DIndexFortran
-
-USE GlobalData, ONLY: Scalar, Vector, Matrix, &
-                      Constant, Space, Time, &
-                      SpaceTime, Nodal, Quadrature
+SUBMODULE(FEVariable_UnaryMethod) Methods
+USE ApproxUtility, ONLY: OPERATOR(.APPROXEQ.)
+USE GlobalData, ONLY: Constant, Space, Time, SpaceTime, &
+                      Scalar, Vector, Matrix, &
+                      Nodal, Quadrature
 
 USE BaseType, ONLY: TypeFEVariableScalar, &
                     TypeFEVariableVector, &
@@ -30,11 +29,118 @@ USE BaseType, ONLY: TypeFEVariableScalar, &
                     TypeFEVariableTime, &
                     TypeFEVariableSpaceTime
 
+USE FEVariable_Method, ONLY: NodalVariable, QuadratureVariable, Get
+USE IntegerUtility, ONLY: Get1DIndexFortran
 USE ReallocateUtility, ONLY: Reallocate
 
 IMPLICIT NONE
 
 CONTAINS
+
+!----------------------------------------------------------------------------
+!                                                                         Abs
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE fevar_Abs
+SELECT CASE (obj%rank)
+
+#define _ELEM_METHOD_ ABS
+CASE (scalar)
+#include "./include/ScalarElemMethod.F90"
+
+CASE (vector)
+#include "./include/VectorElemMethod.F90"
+
+CASE (matrix)
+#include "./include/MatrixElemMethod.F90"
+
+END SELECT
+#undef _ELEM_METHOD_
+
+END PROCEDURE fevar_Abs
+
+!----------------------------------------------------------------------------
+!                                                                      Power
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE fevar_Power
+SELECT CASE (obj%rank)
+CASE (scalar)
+#include "./include/ScalarPower.F90"
+CASE (vector)
+#include "./include/VectorPower.F90"
+CASE (matrix)
+#include "./include/MatrixPower.F90"
+END SELECT
+END PROCEDURE fevar_Power
+
+!----------------------------------------------------------------------------
+!                                                                       Sqrt
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE fevar_Sqrt
+#define _ELEM_METHOD_ SQRT
+
+SELECT CASE (obj%rank)
+CASE (scalar)
+#include "./include/ScalarElemMethod.F90"
+CASE (vector)
+#include "./include/VectorElemMethod.F90"
+CASE (matrix)
+#include "./include/MatrixElemMethod.F90"
+END SELECT
+
+#define _ELEM_METHOD_ SQRT
+END PROCEDURE fevar_Sqrt
+
+!----------------------------------------------------------------------------
+!                                                                    IsEqual
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE fevar_IsEqual
+!! Internal variable
+ans = .FALSE.
+IF (obj1%len .NE. obj2%len) RETURN
+IF (obj1%defineon .NE. obj2%defineon) RETURN
+IF (obj1%rank .NE. obj2%rank) RETURN
+IF (obj1%varType .NE. obj2%varType) RETURN
+IF (ANY(obj1%s .NE. obj2%s)) RETURN
+
+IF (ALL(obj1%val(1:obj1%len) .APPROXEQ.obj2%val(1:obj2%len))) ans = .TRUE.
+!!
+END PROCEDURE fevar_IsEqual
+
+!----------------------------------------------------------------------------
+!                                                                   NotEqual
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE fevar_NotEqual
+ans = .FALSE.
+IF (.NOT. ALL(obj1%val.APPROXEQ.obj2%val)) THEN
+  ans = .TRUE.
+  RETURN
+END IF
+
+IF (obj1%defineon .NE. obj2%defineon) THEN
+  ans = .TRUE.
+  RETURN
+END IF
+
+IF (obj1%rank .NE. obj2%rank) THEN
+  ans = .TRUE.
+  RETURN
+END IF
+
+IF (obj1%varType .NE. obj2%varType) THEN
+  ans = .TRUE.
+  RETURN
+END IF
+
+IF (ANY(obj1%s .NE. obj2%s)) THEN
+  ans = .TRUE.
+  RETURN
+END IF
+END PROCEDURE fevar_NotEqual
 
 !----------------------------------------------------------------------------
 !                                                             NORM2
@@ -120,4 +226,5 @@ END PROCEDURE fevar_norm2
 !
 !----------------------------------------------------------------------------
 
-END SUBMODULE Norm2Methods
+END SUBMODULE Methods
+

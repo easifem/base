@@ -16,7 +16,7 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-SUBMODULE(FEVariable_Method) VectorInterpolationMethods
+SUBMODULE(FEVariable_InterpolationMethod) MatrixMethods
 IMPLICIT NONE
 CONTAINS
 
@@ -24,28 +24,36 @@ CONTAINS
 !                                                           GetInterpolation_
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE VectorConstantGetInterpolation_
-INTEGER(I4B) :: ii
+MODULE PROCEDURE MatrixConstantGetInterpolation_
+INTEGER(I4B) :: ips, jj, istart, iend
 
-nrow = obj%s(1)
-ncol = nips
-IF (.NOT. addContribution) ans(1:nrow, 1:ncol) = 0.0_DFP
+dim1 = obj%s(1)
+dim2 = obj%s(2)
+dim3 = nips
 
-DO ii = 1, ncol
-  ans(1:nrow, ii) = ans(1:nrow, ii) + scale * obj%val(1:nrow)
+IF (.NOT. addContribution) ans(1:dim1, 1:dim2, 1:dim3) = 0.0_DFP
+
+DO ips = 1, dim3
+  DO jj = 1, dim2
+    istart = (jj - 1) * dim1 + 1
+    iend = jj * dim1
+    ans(1:dim1, jj, ips) = ans(1:dim1, jj, ips) &
+                           + scale * obj%val(istart:iend)
+  END DO
 END DO
-END PROCEDURE VectorConstantGetInterpolation_
+END PROCEDURE MatrixConstantGetInterpolation_
 
 !----------------------------------------------------------------------------
 !                                                    MasterGetInterpolation_
 !----------------------------------------------------------------------------
 
-PURE SUBROUTINE MasterGetInterpolationFromNodal_(ans, scale, N, nns, nsd, &
-                                                 nips, val, valStart, valEnd)
-  REAL(DFP), INTENT(INOUT) :: ans(:, :)
+PURE SUBROUTINE MasterGetInterpolationFromNodal_(ans, scale, N, nns, dim1, &
+                                                 dim2, nips, val, valStart, &
+                                                 valEnd)
+  REAL(DFP), INTENT(INOUT) :: ans(:, :, :)
   REAL(DFP), INTENT(IN) :: scale
   REAL(DFP), INTENT(IN) :: N(:, :)
-  INTEGER(I4B), INTENT(IN) :: nns, nsd, nips
+  INTEGER(I4B), INTENT(IN) :: nns, nips, dim1, dim2
   REAL(DFP), INTENT(IN) :: val(:)
   INTEGER(I4B), INTENT(IN) :: valStart
   INTEGER(I4B), INTENT(OUT) :: valEnd
@@ -53,15 +61,15 @@ PURE SUBROUTINE MasterGetInterpolationFromNodal_(ans, scale, N, nns, nsd, &
   INTEGER(I4B) :: ips, jj, istart, iend
 
   DO ips = 1, nips
-    DO jj = 1, nns
-      istart = (jj - 1) * nsd + 1 + valStart
-      iend = jj * nsd + valStart
-      ans(1:nsd, ips) = ans(1:nsd, ips) &
-                        + scale * N(jj, ips) * val(istart:iend)
+    DO jj = 1, dim2
+      istart = (jj - 1) * dim1 + 1 + valStart
+      iend = jj * dim1 + valStart
+      ans(1:dim1, jj, ips) = ans(1:dim1, jj, ips) &
+                             + scale * N(jj, ips) * val(istart:iend)
     END DO
   END DO
 
-  valEnd = valStart + nns * nsd
+  valEnd = valStart + nns * dim1 * dim2
 
 END SUBROUTINE MasterGetInterpolationFromNodal_
 
@@ -69,25 +77,27 @@ END SUBROUTINE MasterGetInterpolationFromNodal_
 !                                                    MasterGetInterpolation_
 !----------------------------------------------------------------------------
 
-PURE SUBROUTINE MasterGetInterpolationFromQuadrature_(ans, scale, nsd, &
-                                                      nips, val, valStart, &
-                                                      valEnd)
-  REAL(DFP), INTENT(INOUT) :: ans(:, :)
+PURE SUBROUTINE MasterGetInterpolationFromQuadrature_(ans, scale, dim1, &
+                                                      dim2, nips, val, &
+                                                      valStart, valEnd)
+  REAL(DFP), INTENT(INOUT) :: ans(:, :, :)
   REAL(DFP), INTENT(IN) :: scale
-  INTEGER(I4B), INTENT(IN) :: nsd, nips
+  INTEGER(I4B), INTENT(IN) :: dim1, dim2, nips
   REAL(DFP), INTENT(IN) :: val(:)
   INTEGER(I4B), INTENT(IN) :: valStart
   INTEGER(I4B), INTENT(OUT) :: valEnd
 
-  INTEGER(I4B) :: ips, istart, iend
+  INTEGER(I4B) :: ips, istart, iend, jj
 
   DO ips = 1, nips
-    istart = (ips - 1) * nsd + 1 + valStart
-    iend = ips * nsd + valStart
-    ans(1:nsd, ips) = ans(1:nsd, ips) + scale * val(istart:iend)
+    DO jj = 1, dim2
+      istart = (jj - 1) * dim1 + 1 + valStart
+      iend = jj * dim1 + valStart
+      ans(1:dim1, jj, ips) = ans(1:dim1, jj, ips) + scale * val(istart:iend)
+    END DO
   END DO
 
-  valEnd = valStart + nips * nsd
+  valEnd = valStart + nips * dim1 * dim2
 
 END SUBROUTINE MasterGetInterpolationFromQuadrature_
 
@@ -95,21 +105,24 @@ END SUBROUTINE MasterGetInterpolationFromQuadrature_
 !                                                           GetInterpolation_
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE VectorSpaceGetInterpolation_
+MODULE PROCEDURE MatrixSpaceGetInterpolation_
 INTEGER(I4B) :: valEnd
 
-nrow = obj%s(1)
-ncol = nips
-IF (.NOT. addContribution) ans(1:nrow, 1:ncol) = 0.0_DFP
+dim1 = obj%s(1)
+dim2 = obj%s(2)
+dim3 = nips
+
+IF (.NOT. addContribution) ans(1:dim1, 1:dim2, 1:dim3) = 0.0_DFP
 
 SELECT CASE (obj%varType)
 CASE (TypeFEVariableOpt%nodal)
-  !! Nodal Vector Space
+  !! Nodal Matrix Space
   !! Convert nodal values to quadrature values by using N(:,:)
   !! make sure nns .LE. obj%len
 
-  CALL MasterGetInterpolationFromNodal_(ans=ans, scale=scale, N=N, nns=nns, &
-                                        nsd=nrow, nips=nips, val=obj%val, &
+  CALL MasterGetInterpolationFromNodal_(ans=ans, scale=scale, N=N, &
+                                        nns=nns, nips=nips, val=obj%val, &
+                                        dim1=dim1, dim2=dim2, &
                                         valStart=0, valEnd=valEnd)
 
 CASE (TypeFEVariableOpt%quadrature)
@@ -117,26 +130,26 @@ CASE (TypeFEVariableOpt%quadrature)
   !! make sure nips .LE. obj%len
 
   CALL MasterGetInterpolationFromQuadrature_(ans=ans, scale=scale, &
-                                             nsd=nrow, nips=nips, &
-                                             val=obj%val, valStart=0, &
-                                             valEnd=valEnd)
+                                             nips=nips, dim1=dim1, &
+                                             dim2=dim2, val=obj%val, &
+                                             valStart=0, valEnd=valEnd)
 
 END SELECT
-
-END PROCEDURE VectorSpaceGetInterpolation_
+END PROCEDURE MatrixSpaceGetInterpolation_
 
 !----------------------------------------------------------------------------
 !                                                           GetInterpolation_
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE VectorSpaceTimeGetInterpolation_
+MODULE PROCEDURE MatrixSpaceTimeGetInterpolation_
 INTEGER(I4B) :: aa, valStart, valEnd
 REAL(DFP) :: myscale
-LOGICAL(LGT), PARAMETER :: yes = .TRUE.
 
-nrow = obj%s(1)
-ncol = nips
-IF (.NOT. addContribution) ans(1:nrow, 1:ncol) = 0.0_DFP
+dim1 = obj%s(1)
+dim2 = obj%s(2)
+dim3 = nips
+
+IF (.NOT. addContribution) ans(1:dim1, 1:dim2, 1:dim3) = 0.0_DFP
 
 SELECT CASE (obj%varType)
 CASE (TypeFEVariableOpt%nodal)
@@ -151,24 +164,22 @@ CASE (TypeFEVariableOpt%nodal)
     myscale = scale * T(aa)
     valStart = valEnd
     CALL MasterGetInterpolationFromNodal_(ans=ans, scale=myscale, N=N, &
-                                          nns=nns, nsd=nrow, nips=nips, &
-                                          val=obj%val, valStart=valStart, &
-                                          valEnd=valEnd)
+                                          nns=nns, dim1=dim1, dim2=dim2, &
+                                          nips=nips, val=obj%val, &
+                                          valStart=valStart, valEnd=valEnd)
   END DO
 
 CASE (TypeFEVariableOpt%quadrature)
   !! No need for interpolation, just returnt the quadrature values
   !! make sure nips .LE. obj%len
 
-  valStart = nips * nrow * (timeIndx - 1)
+  valStart = nips * dim1 * dim2 * (timeIndx - 1)
   CALL MasterGetInterpolationFromQuadrature_(ans=ans, scale=scale, &
-                                             nsd=nrow, nips=nips, &
-                                             val=obj%val, &
-                                             valStart=valStart, &
-                                             valEnd=valEnd)
+                                             dim1=dim1, dim2=dim2, &
+                                             nips=nips, val=obj%val, &
+                                             valStart=valStart, valEnd=valEnd)
 
 END SELECT
+END PROCEDURE MatrixSpaceTimeGetInterpolation_
 
-END PROCEDURE VectorSpaceTimeGetInterpolation_
-
-END SUBMODULE VectorInterpolationMethods
+END SUBMODULE MatrixMethods

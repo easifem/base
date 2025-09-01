@@ -1,7 +1,7 @@
 INTEGER(I4B) :: ii, jj, kk, ll, cnt
 
 obj%len = SIZE(val)
-obj%capacity = CAPACITY_EXPAND_FACTOR * obj%len
+obj%capacity = TypeFEVariableOpt%capacityExpandFactor * obj%len
 ALLOCATE (obj%val(obj%capacity))
 
 cnt = 0

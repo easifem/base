@@ -15,7 +15,7 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-SUBMODULE(FEVariable_Method) MeanMethods
+SUBMODULE(FEVariable_MeanMethod) Methods
 USE IntegerUtility, ONLY: Get1DIndexFortran
 
 USE GlobalData, ONLY: Scalar, Vector, Matrix, &
@@ -30,6 +30,8 @@ USE BaseType, ONLY: TypeFEVariableScalar, &
                     TypeFEVariableTime, &
                     TypeFEVariableSpaceTime
 
+USE FEVariable_Method, ONLY: NodalVariable, QuadratureVariable, Get
+
 IMPLICIT NONE
 CONTAINS
 
@@ -38,7 +40,6 @@ CONTAINS
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE fevar_Mean1
-REAL(DFP) :: val0
 SELECT CASE (obj%rank)
 CASE (scalar)
   IF (obj%defineOn .EQ. NODAL) THEN
@@ -173,4 +174,4 @@ END PROCEDURE fevar_Mean4
 !
 !----------------------------------------------------------------------------
 
-END SUBMODULE MeanMethods
+END SUBMODULE Methods

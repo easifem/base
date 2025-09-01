@@ -16,7 +16,7 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-SUBMODULE(FEVariable_Method) ScalarInterpolationMethods
+SUBMODULE(FEVariable_InterpolationMethod) ScalarMethods
 IMPLICIT NONE
 CONTAINS
 
@@ -127,4 +127,4 @@ END SELECT
 
 END PROCEDURE ScalarSpaceTimeGetInterpolation_
 
-END SUBMODULE ScalarInterpolationMethods
+END SUBMODULE ScalarMethods

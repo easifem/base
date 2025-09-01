@@ -16,7 +16,7 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-SUBMODULE(FEVariable_Method) InterpolationMethods
+SUBMODULE(FEVariable_InterpolationMethod) Methods
 IMPLICIT NONE
 CONTAINS
 
@@ -28,4 +28,4 @@ MODULE PROCEDURE FEVariableGetInterpolation_1
 
 END PROCEDURE FEVariableGetInterpolation_1
 
-END SUBMODULE InterpolationMethods
+END SUBMODULE Methods

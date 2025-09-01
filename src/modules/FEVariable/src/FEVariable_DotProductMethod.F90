@@ -13,52 +13,45 @@
 !
 ! You should have received a copy of the GNU General Public License
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
-!
 
-#define _ELEM_METHOD_ ABS
+MODULE FEVariable_DotProductMethod
+USE BaseType, ONLY: FEVariable_, &
+                    FEVariableScalar_, &
+                    FEVariableVector_, &
+                    FEVariableMatrix_, &
+                    FEVariableConstant_, &
+                    FEVariableSpace_, &
+                    FEVariableTime_, &
+                    FEVariableSpaceTime_, &
+                    TypeFEVariableOpt
 
-SUBMODULE(FEVariable_Method) AbsMethods
-
-USE GlobalData, ONLY: Constant, Space, Time, SpaceTime, &
-                      Scalar, Vector, Matrix, &
-                      Nodal, Quadrature
-
-USE BaseType, ONLY: TypeFEVariableScalar, &
-                    TypeFEVariableVector, &
-                    TypeFEVariableMatrix, &
-                    TypeFEVariableConstant, &
-                    TypeFEVariableSpace, &
-                    TypeFEVariableTime, &
-                    TypeFEVariableSpaceTime
+USE GlobalData, ONLY: I4B, DFP, LGT
 
 IMPLICIT NONE
 
-CONTAINS
+PRIVATE
 
-!----------------------------------------------------------------------------
-!                                                                      Abs
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE fevar_Abs
-SELECT CASE (obj%rank)
-
-CASE (scalar)
-#include "./include/ScalarElemMethod.F90"
-
-CASE (vector)
-#include "./include/VectorElemMethod.F90"
-
-CASE (matrix)
-#include "./include/MatrixElemMethod.F90"
-
-END SELECT
-
-END PROCEDURE fevar_Abs
+PUBLIC :: DOT_PRODUCT
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
-END SUBMODULE AbsMethods
+!> author: Vikas Sharma, Ph. D.
+! date: 2021-12-12
+! update: 2021-12-12
+! summary: FEVariable = FEVariable + FEVariable
 
-#undef _ELEM_METHOD_
+INTERFACE DOT_PRODUCT
+  MODULE PURE FUNCTION fevar_dot_product(obj1, obj2) RESULT(ans)
+    CLASS(FEVariable_), INTENT(IN) :: obj1
+    CLASS(FEVariable_), INTENT(IN) :: obj2
+    TYPE(FEVariable_) :: ans
+  END FUNCTION fevar_dot_product
+END INTERFACE DOT_PRODUCT
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+END MODULE FEVariable_DotProductMethod

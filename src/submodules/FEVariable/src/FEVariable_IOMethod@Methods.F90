@@ -15,7 +15,7 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-SUBMODULE(FEVariable_Method) IOMethods
+SUBMODULE(FEVariable_IOMethod) Methods
 USE Display_Method, ONLY: Util_Display => Display, ToString
 
 USE GlobalData, ONLY: Scalar, Vector, Matrix, &
@@ -31,6 +31,8 @@ USE BaseType, ONLY: TypeFEVariableConstant, &
                     TypeFEVariableMatrix
 
 USE SafeSizeUtility, ONLY: SafeSize
+
+USE FEVariable_Method, ONLY: GET, NodalVariable, QuadratureVariable
 
 IMPLICIT NONE
 
@@ -136,4 +138,4 @@ CALL Util_Display(SafeSize(obj%val), "Size of obj%val: ", unitno=unitno)
 
 END PROCEDURE fevar_Display
 
-END SUBMODULE IOMethods
+END SUBMODULE Methods

@@ -15,11 +15,10 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-SUBMODULE(FEVariable_Method) AdditionMethods
-
+SUBMODULE(FEVariable_MultiplicationMethod) Methods
 USE GlobalData, ONLY: Constant, Space, Time, SpaceTime, &
-                      Scalar, Vector, Matrix, &
-                      Nodal, Quadrature
+                      Scalar, Vector, Matrix, Nodal, Quadrature
+
 USE BaseType, ONLY: TypeFEVariableScalar, &
                     TypeFEVariableVector, &
                     TypeFEVariableMatrix, &
@@ -30,16 +29,19 @@ USE BaseType, ONLY: TypeFEVariableScalar, &
 
 USE ReallocateUtility, ONLY: Reallocate
 
-#define _OP_ +
+USE FEVariable_Method, ONLY: NodalVariable, QuadratureVariable, Get
+
+#define _OP_ *
 
 IMPLICIT NONE
+
 CONTAINS
 
 !----------------------------------------------------------------------------
-!                                                                  Addition
+!                                                             Multiplication
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE fevar_addition1
+MODULE PROCEDURE fevar_Multiplication1
 REAL(DFP), ALLOCATABLE :: r2(:, :), r3(:, :, :), r4(:, :, :, :), m2(:, :)
 INTEGER(I4B) :: jj, kk
 SELECT CASE (obj1%rank)
@@ -67,13 +69,13 @@ CASE (matrix)
 #include "./include/MatrixOperatorMatrix.F90"
   END SELECT
 END SELECT
-END PROCEDURE fevar_addition1
+END PROCEDURE fevar_Multiplication1
 
 !----------------------------------------------------------------------------
-!                                                                  Addition
+!                                                             Multiplication
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE fevar_addition2
+MODULE PROCEDURE fevar_Multiplication2
 SELECT CASE (obj1%rank)
 CASE (scalar)
 #include "./include/ScalarOperatorReal.F90"
@@ -82,13 +84,13 @@ CASE (vector)
 CASE (matrix)
 #include "./include/MatrixOperatorReal.F90"
 END SELECT
-END PROCEDURE fevar_addition2
+END PROCEDURE fevar_Multiplication2
 
 !----------------------------------------------------------------------------
-!                                                                  Addition
+!                                                             Multiplication
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE fevar_addition3
+MODULE PROCEDURE fevar_Multiplication3
 SELECT CASE (obj1%rank)
 CASE (scalar)
 #include "./include/RealOperatorScalar.F90"
@@ -97,11 +99,12 @@ CASE (vector)
 CASE (matrix)
 #include "./include/RealOperatorMatrix.F90"
 END SELECT
-END PROCEDURE fevar_addition3
+END PROCEDURE fevar_Multiplication3
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
-END SUBMODULE AdditionMethods
 #undef _OP_
+
+END SUBMODULE Methods

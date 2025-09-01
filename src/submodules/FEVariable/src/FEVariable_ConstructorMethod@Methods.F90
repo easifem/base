@@ -15,64 +15,56 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-SUBMODULE(FEVariable_Method) EqualMethods
-USE ApproxUtility, ONLY: OPERATOR(.APPROXEQ.)
+SUBMODULE(FEVariable_ConstructorMethod) Methods
+USE ReallocateUtility, ONLY: Reallocate
 
 IMPLICIT NONE
 CONTAINS
 
 !----------------------------------------------------------------------------
-!                                                             NORM2
+!                                                            Deallocate
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE fevar_isequal
-!! Internal variable
-ans = .FALSE.
-IF (obj1%len .NE. obj2%len) RETURN
-IF (obj1%defineon .NE. obj2%defineon) RETURN
-IF (obj1%rank .NE. obj2%rank) RETURN
-IF (obj1%varType .NE. obj2%varType) RETURN
-IF (ANY(obj1%s .NE. obj2%s)) RETURN
-
-IF (ALL(obj1%val(1:obj1%len) .APPROXEQ.obj2%val(1:obj2%len))) ans = .TRUE.
-!!
-END PROCEDURE fevar_isequal
+MODULE PROCEDURE fevar_Deallocate
+IF (ALLOCATED(obj%val)) DEALLOCATE (obj%val)
+obj%s = 0
+obj%defineOn = 0
+obj%varType = 0
+obj%rank = 0
+obj%len = 0
+obj%capacity = 0
+obj%isInit = .FALSE.
+END PROCEDURE fevar_Deallocate
 
 !----------------------------------------------------------------------------
-!                                                             NORM2
+!                                                                      Copy
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE fevar_notEqual
-ans = .FALSE.
-IF (.NOT. ALL(obj1%val.APPROXEQ.obj2%val)) THEN
-  ans = .TRUE.
+MODULE PROCEDURE obj_Copy
+LOGICAL(LGT) :: isok
+
+obj1%s = obj2%s
+obj1%defineOn = obj2%defineOn
+obj1%rank = obj2%rank
+obj1%varType = obj2%varType
+obj1%len = obj2%len
+obj1%isInit = obj2%isInit
+
+IF (obj1%capacity .GE. obj1%len) THEN
+  obj1%val(1:obj1%len) = obj2%val(1:obj1%len)
   RETURN
 END IF
 
-IF (obj1%defineon .NE. obj2%defineon) THEN
-  ans = .TRUE.
-  RETURN
-END IF
+obj1%capacity = TypeFEVariableOpt%capacityExpandFactor * obj1%len
+CALL Reallocate(obj1%val, obj1%capacity)
 
-IF (obj1%rank .NE. obj2%rank) THEN
-  ans = .TRUE.
-  RETURN
-END IF
+isok = ALLOCATED(obj2%val)
+IF (isok) obj1%val(1:obj1%len) = obj2%val(1:obj1%len)
 
-IF (obj1%varType .NE. obj2%varType) THEN
-  ans = .TRUE.
-  RETURN
-END IF
-
-IF (ANY(obj1%s .NE. obj2%s)) THEN
-  ans = .TRUE.
-  RETURN
-END IF
-
-END PROCEDURE fevar_notEqual
+END PROCEDURE obj_Copy
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
-END SUBMODULE EqualMethods
+END SUBMODULE Methods

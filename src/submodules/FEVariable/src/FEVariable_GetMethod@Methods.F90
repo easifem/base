@@ -14,7 +14,7 @@
 ! You should have received a copy of the GNU General Public License
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 
-SUBMODULE(FEVariable_Method) GetMethods
+SUBMODULE(FEVariable_GetMethod) Methods
 USE ReallocateUtility, ONLY: Reallocate
 USE StringUtility, ONLY: UpperCase
 
@@ -491,4 +491,4 @@ END PROCEDURE Matrix_SpaceTime_
 !
 !----------------------------------------------------------------------------
 
-END SUBMODULE GetMethods
+END SUBMODULE Methods

@@ -18,21 +18,19 @@
 set(src_path "${CMAKE_CURRENT_LIST_DIR}/src/")
 target_sources(
   ${PROJECT_NAME}
-  PRIVATE ${src_path}/FEVariable_Method@ConstructorMethods.F90
-          ${src_path}/FEVariable_Method@IOMethods.F90
-          ${src_path}/FEVariable_Method@GetMethods.F90
-          ${src_path}/FEVariable_Method@AdditionMethods.F90
-          ${src_path}/FEVariable_Method@SubtractionMethods.F90
-          ${src_path}/FEVariable_Method@MultiplicationMethods.F90
-          ${src_path}/FEVariable_Method@DivisionMethods.F90
-          ${src_path}/FEVariable_Method@PowerMethods.F90
-          ${src_path}/FEVariable_Method@SqrtMethods.F90
-          ${src_path}/FEVariable_Method@AbsMethods.F90
-          ${src_path}/FEVariable_Method@DotProductMethods.F90
-          ${src_path}/FEVariable_Method@Norm2Methods.F90
-          ${src_path}/FEVariable_Method@EqualMethods.F90
-          ${src_path}/FEVariable_Method@MeanMethods.F90
-          ${src_path}/FEVariable_Method@ScalarInterpolationMethods.F90
-          ${src_path}/FEVariable_Method@VectorInterpolationMethods.F90
-          ${src_path}/FEVariable_Method@MatrixInterpolationMethods.F90
-          ${src_path}/FEVariable_Method@InterpolationMethods.F90)
+  PRIVATE ${src_path}/FEVariable_AdditionMethod@Methods.F90
+          ${src_path}/FEVariable_ConstructorMethod@Methods.F90
+          ${src_path}/FEVariable_NodalVariableMethod@Methods.F90
+          ${src_path}/FEVariable_QuadratureVariableMethod@Methods.F90
+          ${src_path}/FEVariable_DivisionMethod@Methods.F90
+          ${src_path}/FEVariable_MultiplicationMethod@Methods.F90
+          ${src_path}/FEVariable_DotProductMethod@Methods.F90
+          ${src_path}/FEVariable_SubtractionMethod@Methods.F90
+          ${src_path}/FEVariable_MeanMethod@Methods.F90
+          ${src_path}/FEVariable_UnaryMethod@Methods.F90
+          ${src_path}/FEVariable_GetMethod@Methods.F90
+          ${src_path}/FEVariable_IOMethod@Methods.F90
+          ${src_path}/FEVariable_InterpolationMethod@ScalarMethods.F90
+          ${src_path}/FEVariable_InterpolationMethod@VectorMethods.F90
+          ${src_path}/FEVariable_InterpolationMethod@MatrixMethods.F90
+          ${src_path}/FEVariable_InterpolationMethod@Methods.F90)

@@ -15,7 +15,7 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-SUBMODULE(FEVariable_Method) SubtractionMethods
+SUBMODULE(FEVariable_SubtractionMethod) Methods
 
 USE GlobalData, ONLY: Constant, Space, Time, SpaceTime, &
                       Scalar, Vector, Matrix, &
@@ -29,6 +29,8 @@ USE BaseType, ONLY: TypeFEVariableScalar, &
                     TypeFEVariableSpaceTime
 
 USE ReallocateUtility, ONLY: Reallocate
+
+USE FEVariable_Method, ONLY: NodalVariable, QuadratureVariable, Get
 
 #define _OP_ -
 
@@ -138,5 +140,5 @@ END PROCEDURE fevar_Subtraction3
 !
 !----------------------------------------------------------------------------
 
-END SUBMODULE SubtractionMethods
+END SUBMODULE Methods
 #undef _OP_
