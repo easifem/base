@@ -16,13 +16,6 @@
 
 MODULE FEVariable_ConstructorMethod
 USE BaseType, ONLY: FEVariable_, &
-                    FEVariableScalar_, &
-                    FEVariableVector_, &
-                    FEVariableMatrix_, &
-                    FEVariableConstant_, &
-                    FEVariableSpace_, &
-                    FEVariableTime_, &
-                    FEVariableSpaceTime_, &
                     TypeFEVariableOpt
 
 USE GlobalData, ONLY: I4B, DFP, LGT
