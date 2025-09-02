@@ -73,7 +73,7 @@ END INTERFACE GetInterpolation
 ! - The val can have following ranks; scalar, vector, matrix
 ! - the val can be defined on quadrature (do nothing) or nodal (interpol)
 ! - The `vartype` of val can be constant, space, time, spacetime
-!
+
 INTERFACE GetInterpolation_
   MODULE PURE SUBROUTINE GetInterpolation_1(obj, ans, val)
     CLASS(ElemshapeData_), INTENT(IN) :: obj

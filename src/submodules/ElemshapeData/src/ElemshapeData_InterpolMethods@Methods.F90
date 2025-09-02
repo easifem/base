@@ -75,9 +75,20 @@ END PROCEDURE GetInterpolation_1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE GetInterpolation_1a
-CALL FEVariableGetInterpolation_(obj=val, ans=ans, N=obj%N, nns=obj%nns, &
-                                 nips=obj%nips, scale=scale, &
-                                 addContribution=addContribution)
+INTEGER(I4B), PARAMETER :: timeIndx = 1
+
+SELECT TYPE (obj)
+TYPE IS (ElemShapeData_)
+  CALL FEVariableGetInterpolation_(obj=val, ans=ans, N=obj%N, nns=obj%nns, &
+                                   nips=obj%nips, scale=scale, &
+                                   addContribution=addContribution)
+CLASS IS (STElemShapeData_)
+  CALL FEVariableGetInterpolation_(obj=val, N=obj%N, nns=obj%nns, &
+                                   nips=obj%nips, T=obj%T, nnt=obj%nnt, &
+                                   scale=scale, &
+                                   addContribution=addContribution, &
+                                   timeIndx=timeIndx, ans=ans)
+END SELECT
 END PROCEDURE GetInterpolation_1a
 
 !----------------------------------------------------------------------------
@@ -122,6 +133,11 @@ END PROCEDURE GetInterpolation2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE GetInterpolation_2
+REAL(DFP), PARAMETER :: one = 1.0_DFP
+LOGICAL, PARAMETER :: no = .FALSE.
+
+CALL GetInterpolation_(obj=obj, ans=ans, val=val, scale=one, &
+                       addContribution=no)
 END PROCEDURE GetInterpolation_2
 
 !----------------------------------------------------------------------------
@@ -129,6 +145,17 @@ END PROCEDURE GetInterpolation_2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE GetInterpolation_2a
+INTEGER(I4B) :: aa, nipt
+
+nipt = SIZE(obj)
+
+DO aa = 1, nipt
+  CALL FEVariableGetInterpolation_(obj=val, N=obj(aa)%N, nns=obj(aa)%nns, &
+                                   nips=obj(aa)%nips, T=obj(aa)%T, &
+                                   nnt=obj(aa)%nnt, scale=scale, &
+                                   addContribution=addContribution, &
+                                   timeIndx=aa, ans=ans)
+END DO
 END PROCEDURE GetInterpolation_2a
 
 !----------------------------------------------------------------------------
@@ -136,7 +163,7 @@ END PROCEDURE GetInterpolation_2a
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Interpolation1
-! CALL getInterpolation(obj=obj, val=val, ans=ans)
+CALL GetInterpolation(obj=obj, val=val, ans=ans)
 END PROCEDURE Interpolation1
 
 END SUBMODULE Methods
