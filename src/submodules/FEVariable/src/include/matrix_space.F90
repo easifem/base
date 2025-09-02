@@ -6,7 +6,6 @@ obj%capacity = TypeFEVariableOpt%capacityExpandFactor * obj%len
 ALLOCATE (obj%val(obj%capacity))
 
 cnt = 0
-
 DO kk = 1, SIZE(val, 3)
   DO jj = 1, SIZE(val, 2)
     DO ii = 1, SIZE(val, 1)

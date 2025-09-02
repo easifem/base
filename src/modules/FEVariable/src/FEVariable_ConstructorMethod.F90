@@ -34,6 +34,59 @@ PRIVATE
 PUBLIC :: DEALLOCATE
 PUBLIC :: ASSIGNMENT(=)
 PUBLIC :: Copy
+PUBLIC :: Initiate
+
+!----------------------------------------------------------------------------
+!                                                 Initiate@ConstructorMethods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2025-09-02
+! summary: Initiate FEVariable
+
+INTERFACE Initiate
+  MODULE PURE SUBROUTINE obj_Initiate1(obj, s, defineon, vartype, rank, &
+                                       len, val)
+    TYPE(FEVariable_), INTENT(INOUT) :: obj
+    INTEGER(I4B), INTENT(IN) :: s(:)
+    !! shape of data
+    INTEGER(I4B), INTENT(IN) :: defineon
+    !! where is the data defined nodal or quadrature
+    INTEGER(I4B), INTENT(IN) :: vartype
+    !! variable type
+    INTEGER(I4B), INTENT(IN) :: rank
+    !! rank of the variable
+    INTEGER(I4B), INTENT(IN) :: len
+    !! length of data to be extractd from val
+    REAL(DFP), INTENT(IN) :: val(:)
+    !! The size of val should be atleast len
+  END SUBROUTINE obj_Initiate1
+END INTERFACE Initiate
+
+!----------------------------------------------------------------------------
+!                                                 Initiate@ConstructorMethods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2025-09-02
+! summary: Initiate FEVariable
+
+INTERFACE Initiate
+  MODULE PURE SUBROUTINE obj_Initiate2(obj, s, defineon, vartype, rank, &
+                                       len)
+    TYPE(FEVariable_), INTENT(INOUT) :: obj
+    INTEGER(I4B), INTENT(IN) :: s(:)
+    !! shape of data
+    INTEGER(I4B), INTENT(IN) :: defineon
+    !! where is the data defined nodal or quadrature
+    INTEGER(I4B), INTENT(IN) :: vartype
+    !! variable type
+    INTEGER(I4B), INTENT(IN) :: rank
+    !! rank of the variable
+    INTEGER(I4B), INTENT(IN) :: len
+    !! length of data to be extractd from val
+  END SUBROUTINE obj_Initiate2
+END INTERFACE Initiate
 
 !----------------------------------------------------------------------------
 !                                              Deallocate@ConstructorMethods
@@ -41,13 +94,12 @@ PUBLIC :: Copy
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2021-12-10
-! update: 2021-12-10
 ! summary: Deallocates the content of FEVariable
 
 INTERFACE DEALLOCATE
-  MODULE PURE SUBROUTINE fevar_Deallocate(obj)
+  MODULE PURE SUBROUTINE obj_Deallocate(obj)
     TYPE(FEVariable_), INTENT(INOUT) :: obj
-  END SUBROUTINE fevar_Deallocate
+  END SUBROUTINE obj_Deallocate
 END INTERFACE DEALLOCATE
 
 !----------------------------------------------------------------------------

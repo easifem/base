@@ -16,10 +16,9 @@
 !
 
 SUBMODULE(FEVariable_NodalVariableMethod) Methods
-USE GlobalData, ONLY: Scalar, Vector, Matrix, Constant, Space, &
-                      Time, SpaceTime, Nodal, Quadrature
-
 USE ReallocateUtility, ONLY: Reallocate
+
+USE FEVariable_ConstructorMethod, ONLY: FEVariableInitiate => Initiate
 
 IMPLICIT NONE
 CONTAINS
@@ -28,200 +27,485 @@ CONTAINS
 !                                                             NodalVariable
 !----------------------------------------------------------------------------
 
+! MODULE PROCEDURE Nodal_Scalar_Constant
+! #define _DEFINEON_ Nodal
+! #include "./include/scalar_constant.F90"
+! #undef _DEFINEON_
+! END PROCEDURE Nodal_Scalar_Constant
+
 MODULE PROCEDURE Nodal_Scalar_Constant
-#define _DEFINEON_ Nodal
-#include "./include/scalar_constant.F90"
-#undef _DEFINEON_
+INTEGER(I4B) :: s(1)
+
+s(1) = 1
+CALL FEVariableInitiate(obj=obj, s=s, defineon=TypeFEVariableOpt%nodal, &
+                        vartype=TypeFEVariableOpt%constant, &
+                        rank=TypeFEVariableOpt%scalar, len=1)
+obj%val(1) = val
 END PROCEDURE Nodal_Scalar_Constant
 
 !----------------------------------------------------------------------------
 !                                                             NodalVariable
 !----------------------------------------------------------------------------
 
+! MODULE PROCEDURE Nodal_Scalar_Space
+! #define _DEFINEON_ Nodal
+! #include "./include/scalar_space.F90"
+! #undef _DEFINEON_
+! END PROCEDURE Nodal_Scalar_Space
+
 MODULE PROCEDURE Nodal_Scalar_Space
-#define _DEFINEON_ Nodal
-#include "./include/scalar_space.F90"
-#undef _DEFINEON_
+INTEGER(I4B) :: s(1)
+
+s(1) = SIZE(val)
+CALL FEVariableInitiate(obj=obj, s=s, defineon=TypeFEVariableOpt%nodal, &
+                        vartype=TypeFEVariableOpt%space, &
+                        rank=TypeFEVariableOpt%scalar, len=s(1))
+obj%val(1:obj%len) = val
 END PROCEDURE Nodal_Scalar_Space
 
 !----------------------------------------------------------------------------
 !                                                             NodalVariable
 !----------------------------------------------------------------------------
 
+! MODULE PROCEDURE Nodal_Scalar_Time
+! #define _DEFINEON_ Nodal
+! #include "./include/scalar_time.F90"
+! #undef _DEFINEON_
+! END PROCEDURE Nodal_Scalar_Time
+
 MODULE PROCEDURE Nodal_Scalar_Time
-#define _DEFINEON_ Nodal
-#include "./include/scalar_time.F90"
-#undef _DEFINEON_
+INTEGER(I4B) :: s(1)
+
+s(1) = SIZE(val)
+CALL FEVariableInitiate(obj=obj, s=s, defineon=TypeFEVariableOpt%nodal, &
+                        vartype=TypeFEVariableOpt%time, &
+                        rank=TypeFEVariableOpt%scalar, len=s(1))
+obj%val(1:obj%len) = val
 END PROCEDURE Nodal_Scalar_Time
 
 !----------------------------------------------------------------------------
 !                                                             NodalVariable
 !----------------------------------------------------------------------------
 
+! MODULE PROCEDURE Nodal_Scalar_SpaceTime
+! #define _DEFINEON_ Nodal
+! #include "./include/scalar_space_time.F90"
+! #undef _DEFINEON_
+! END PROCEDURE Nodal_Scalar_SpaceTime
+
 MODULE PROCEDURE Nodal_Scalar_SpaceTime
-#define _DEFINEON_ Nodal
-#include "./include/scalar_space_time.F90"
-#undef _DEFINEON_
+INTEGER(I4B) :: s(2), tsize, ii, jj, kk
+s = SHAPE(val)
+tsize = s(1) * s(2)
+
+CALL FEVariableInitiate(obj=obj, s=s, defineon=TypeFEVariableOpt%nodal, &
+                        vartype=TypeFEVariableOpt%spacetime, &
+                        rank=TypeFEVariableOpt%scalar, len=tsize)
+
+kk = 0
+DO jj = 1, s(2)
+  DO ii = 1, s(1)
+    kk = kk + 1
+    obj%val(kk) = val(ii, jj)
+  END DO
+END DO
 END PROCEDURE Nodal_Scalar_SpaceTime
 
 !----------------------------------------------------------------------------
 !                                                             NodalVariable
 !----------------------------------------------------------------------------
 
+! MODULE PROCEDURE Nodal_Scalar_SpaceTime2
+! #define _DEFINEON_ Nodal
+! #include "./include/scalar_space_time2.F90"
+! #undef _DEFINEON_
+! END PROCEDURE Nodal_Scalar_SpaceTime2
+
 MODULE PROCEDURE Nodal_Scalar_SpaceTime2
-#define _DEFINEON_ Nodal
-#include "./include/scalar_space_time2.F90"
-#undef _DEFINEON_
+INTEGER(I4B) :: tsize
+
+tsize = s(1) * s(2)
+
+CALL FEVariableInitiate(obj=obj, s=s, defineon=TypeFEVariableOpt%nodal, &
+                        vartype=TypeFEVariableOpt%spacetime, &
+                        rank=TypeFEVariableOpt%scalar, len=tsize, &
+                        val=val)
 END PROCEDURE Nodal_Scalar_SpaceTime2
 
 !----------------------------------------------------------------------------
 !                                                             NodalVariable
 !----------------------------------------------------------------------------
 
+! MODULE PROCEDURE Nodal_Vector_Constant
+! #define _DEFINEON_ Nodal
+! #include "./include/vector_constant.F90"
+! #undef _DEFINEON_
+! END PROCEDURE Nodal_Vector_Constant
+
 MODULE PROCEDURE Nodal_Vector_Constant
-#define _DEFINEON_ Nodal
-#include "./include/vector_constant.F90"
-#undef _DEFINEON_
+INTEGER(I4B) :: s(1), tsize
+
+tsize = SIZE(val)
+s(1) = tsize
+
+CALL FEVariableInitiate(obj=obj, s=s, defineon=TypeFEVariableOpt%nodal, &
+                        vartype=TypeFEVariableOpt%constant, &
+                        rank=TypeFEVariableOpt%vector, len=tsize, &
+                        val=val)
+
 END PROCEDURE Nodal_Vector_Constant
 
 !----------------------------------------------------------------------------
 !                                                             NodalVariable
 !----------------------------------------------------------------------------
 
+! MODULE PROCEDURE Nodal_Vector_Space
+! #define _DEFINEON_ Nodal
+! #include "./include/vector_space.F90"
+! #undef _DEFINEON_
+! END PROCEDURE Nodal_Vector_Space
+
 MODULE PROCEDURE Nodal_Vector_Space
-#define _DEFINEON_ Nodal
-#include "./include/vector_space.F90"
-#undef _DEFINEON_
+INTEGER(I4B) :: s(2), tsize, ii, jj, cnt
+
+s = SHAPE(val)
+tsize = s(1) * s(2)
+
+CALL FEVariableInitiate(obj=obj, s=s, defineon=TypeFEVariableOpt%nodal, &
+                        vartype=TypeFEVariableOpt%space, &
+                        rank=TypeFEVariableOpt%vector, len=tsize)
+
+cnt = 0
+DO jj = 1, s(2)
+  DO ii = 1, s(1)
+    cnt = cnt + 1
+    obj%val(cnt) = val(ii, jj)
+  END DO
+END DO
 END PROCEDURE Nodal_Vector_Space
 
 !----------------------------------------------------------------------------
 !                                                             NodalVariable
 !----------------------------------------------------------------------------
 
+! MODULE PROCEDURE Nodal_Vector_Space2
+! #define _DEFINEON_ Nodal
+! #include "./include/vector_space2.F90"
+! #undef _DEFINEON_
+! END PROCEDURE Nodal_Vector_Space2
+
 MODULE PROCEDURE Nodal_Vector_Space2
-#define _DEFINEON_ Nodal
-#include "./include/vector_space2.F90"
-#undef _DEFINEON_
+INTEGER(I4B) :: tsize
+
+tsize = s(1) * s(2)
+
+CALL FEVariableInitiate(obj=obj, s=s, defineon=TypeFEVariableOpt%nodal, &
+                        vartype=TypeFEVariableOpt%space, &
+                        rank=TypeFEVariableOpt%vector, len=tsize, val=val)
+
 END PROCEDURE Nodal_Vector_Space2
 
 !----------------------------------------------------------------------------
 !                                                             NodalVariable
 !----------------------------------------------------------------------------
 
+! MODULE PROCEDURE Nodal_Vector_Time
+! #define _DEFINEON_ Nodal
+! #include "./include/vector_time.F90"
+! #undef _DEFINEON_
+! END PROCEDURE Nodal_Vector_Time
+
 MODULE PROCEDURE Nodal_Vector_Time
-#define _DEFINEON_ Nodal
-#include "./include/vector_time.F90"
-#undef _DEFINEON_
+INTEGER(I4B) :: s(2), tsize, ii, jj, cnt
+
+s = SHAPE(val)
+tsize = s(1) * s(2)
+
+CALL FEVariableInitiate(obj=obj, s=s, defineon=TypeFEVariableOpt%nodal, &
+                        vartype=TypeFEVariableOpt%time, &
+                        rank=TypeFEVariableOpt%vector, len=tsize)
+
+cnt = 0
+DO jj = 1, s(2)
+  DO ii = 1, s(1)
+    cnt = cnt + 1
+    obj%val(cnt) = val(ii, jj)
+  END DO
+END DO
 END PROCEDURE Nodal_Vector_Time
 
 !----------------------------------------------------------------------------
 !                                                             NodalVariable
 !----------------------------------------------------------------------------
 
+! MODULE PROCEDURE Nodal_Vector_Time2
+! #define _DEFINEON_ Nodal
+! #include "./include/vector_time2.F90"
+! #undef _DEFINEON_
+! END PROCEDURE Nodal_Vector_Time2
+
 MODULE PROCEDURE Nodal_Vector_Time2
-#define _DEFINEON_ Nodal
-#include "./include/vector_time2.F90"
-#undef _DEFINEON_
+INTEGER(I4B) :: tsize
+
+tsize = s(1) * s(2)
+
+CALL FEVariableInitiate(obj=obj, s=s, defineon=TypeFEVariableOpt%nodal, &
+                        vartype=TypeFEVariableOpt%time, &
+                        rank=TypeFEVariableOpt%vector, len=tsize, val=val)
+
 END PROCEDURE Nodal_Vector_Time2
 
 !----------------------------------------------------------------------------
 !                                                             NodalVariable
 !----------------------------------------------------------------------------
 
+! MODULE PROCEDURE Nodal_Vector_SpaceTime
+! #define _DEFINEON_ Nodal
+! #include "./include/vector_space_time.F90"
+! #undef _DEFINEON_
+! END PROCEDURE Nodal_Vector_SpaceTime
+
 MODULE PROCEDURE Nodal_Vector_SpaceTime
-#define _DEFINEON_ Nodal
-#include "./include/vector_space_time.F90"
-#undef _DEFINEON_
+INTEGER(I4B) :: s(3), tsize, ii, jj, kk, cnt
+s = SHAPE(val)
+tsize = s(1) * s(2) * s(3)
+CALL FEVariableInitiate(obj=obj, s=s, defineon=TypeFEVariableOpt%nodal, &
+                        vartype=TypeFEVariableOpt%spacetime, &
+                        rank=TypeFEVariableOpt%vector, len=tsize)
+
+cnt = 0
+DO kk = 1, SIZE(val, 3)
+  DO jj = 1, SIZE(val, 2)
+    DO ii = 1, SIZE(val, 1)
+      cnt = cnt + 1
+      obj%val(cnt) = val(ii, jj, kk)
+    END DO
+  END DO
+END DO
 END PROCEDURE Nodal_Vector_SpaceTime
 
 !----------------------------------------------------------------------------
 !                                                             NodalVariable
 !----------------------------------------------------------------------------
 
+! MODULE PROCEDURE Nodal_Vector_SpaceTime2
+! #define _DEFINEON_ Nodal
+! #include "./include/vector_space_time2.F90"
+! #undef _DEFINEON_
+! END PROCEDURE Nodal_Vector_SpaceTime2
+
 MODULE PROCEDURE Nodal_Vector_SpaceTime2
-#define _DEFINEON_ Nodal
-#include "./include/vector_space_time2.F90"
-#undef _DEFINEON_
+INTEGER(I4B) :: tsize
+
+tsize = s(1) * s(2) * s(3)
+CALL FEVariableInitiate(obj=obj, s=s, defineon=TypeFEVariableOpt%nodal, &
+                        vartype=TypeFEVariableOpt%spacetime, &
+                        rank=TypeFEVariableOpt%vector, len=tsize, &
+                        val=val)
 END PROCEDURE Nodal_Vector_SpaceTime2
 
 !----------------------------------------------------------------------------
 !                                                             NodalVariable
 !----------------------------------------------------------------------------
 
+! MODULE PROCEDURE Nodal_Matrix_Constant
+! #define _DEFINEON_ Nodal
+! #include "./include/matrix_constant.F90"
+! #undef _DEFINEON_
+! END PROCEDURE Nodal_Matrix_Constant
+
 MODULE PROCEDURE Nodal_Matrix_Constant
-#define _DEFINEON_ Nodal
-#include "./include/matrix_constant.F90"
-#undef _DEFINEON_
+INTEGER(I4B) :: s(2), tsize, ii, jj, cnt
+
+s = SHAPE(val)
+tsize = s(1) * s(2)
+
+CALL FEVariableInitiate(obj=obj, s=s, defineon=TypeFEVariableOpt%nodal, &
+                        vartype=TypeFEVariableOpt%constant, &
+                        rank=TypeFEVariableOpt%matrix, len=tsize)
+
+cnt = 0
+DO jj = 1, s(2)
+  DO ii = 1, s(1)
+    cnt = cnt + 1
+    obj%val(cnt) = val(ii, jj)
+  END DO
+END DO
+
 END PROCEDURE Nodal_Matrix_Constant
 
 !----------------------------------------------------------------------------
 !                                                             NodalVariable
 !----------------------------------------------------------------------------
 
+! MODULE PROCEDURE Nodal_Matrix_Constant2
+! #define _DEFINEON_ Nodal
+! #include "./include/matrix_constant2.F90"
+! #undef _DEFINEON_
+! END PROCEDURE Nodal_Matrix_Constant2
+
 MODULE PROCEDURE Nodal_Matrix_Constant2
-#define _DEFINEON_ Nodal
-#include "./include/matrix_constant2.F90"
-#undef _DEFINEON_
+INTEGER(I4B) :: tsize
+
+tsize = s(1) * s(2)
+CALL FEVariableInitiate(obj=obj, s=s, defineon=TypeFEVariableOpt%nodal, &
+                        vartype=TypeFEVariableOpt%constant, &
+                        rank=TypeFEVariableOpt%matrix, len=tsize, val=val)
 END PROCEDURE Nodal_Matrix_Constant2
 
 !----------------------------------------------------------------------------
 !                                                             NodalVariable
 !----------------------------------------------------------------------------
 
+! MODULE PROCEDURE Nodal_Matrix_Space
+! #define _DEFINEON_ Nodal
+! #include "./include/matrix_space.F90"
+! #undef _DEFINEON_
+! END PROCEDURE Nodal_Matrix_Space
+
 MODULE PROCEDURE Nodal_Matrix_Space
-#define _DEFINEON_ Nodal
-#include "./include/matrix_space.F90"
-#undef _DEFINEON_
+INTEGER(I4B) :: s(3), tsize, ii, jj, kk, cnt
+
+s = SHAPE(val)
+tsize = s(1) * s(2) * s(3)
+CALL FEVariableInitiate(obj=obj, s=s, defineon=TypeFEVariableOpt%nodal, &
+                        vartype=TypeFEVariableOpt%space, &
+                        rank=TypeFEVariableOpt%matrix, len=tsize)
+
+cnt = 0
+DO kk = 1, s(3)
+  DO jj = 1, s(2)
+    DO ii = 1, s(1)
+      cnt = cnt + 1
+      obj%val(cnt) = val(ii, jj, kk)
+    END DO
+  END DO
+END DO
 END PROCEDURE Nodal_Matrix_Space
 
 !----------------------------------------------------------------------------
 !                                                             NodalVariable
 !----------------------------------------------------------------------------
 
+! MODULE PROCEDURE Nodal_Matrix_Space2
+! #define _DEFINEON_ Nodal
+! #include "./include/matrix_space2.F90"
+! #undef _DEFINEON_
+! END PROCEDURE Nodal_Matrix_Space2
+
 MODULE PROCEDURE Nodal_Matrix_Space2
-#define _DEFINEON_ Nodal
-#include "./include/matrix_space2.F90"
-#undef _DEFINEON_
+INTEGER(I4B) :: tsize
+
+tsize = s(1) * s(2) * s(3)
+CALL FEVariableInitiate(obj=obj, s=s, defineon=TypeFEVariableOpt%nodal, &
+                        vartype=TypeFEVariableOpt%space, &
+                        rank=TypeFEVariableOpt%matrix, &
+                        len=tsize, val=val)
 END PROCEDURE Nodal_Matrix_Space2
 
 !----------------------------------------------------------------------------
 !                                                             NodalVariable
 !----------------------------------------------------------------------------
 
+! MODULE PROCEDURE Nodal_Matrix_Time
+! #define _DEFINEON_ Nodal
+! #include "./include/matrix_time.F90"
+! #undef _DEFINEON_
+! END PROCEDURE Nodal_Matrix_Time
+
 MODULE PROCEDURE Nodal_Matrix_Time
-#define _DEFINEON_ Nodal
-#include "./include/matrix_time.F90"
-#undef _DEFINEON_
+INTEGER(I4B) :: s(3), tsize, ii, jj, kk, cnt
+
+s = SHAPE(val)
+tsize = s(1) * s(2) * s(3)
+
+CALL FEVariableInitiate(obj=obj, s=s, defineon=TypeFEVariableOpt%nodal, &
+                        vartype=TypeFEVariableOpt%time, &
+                        rank=TypeFEVariableOpt%matrix, len=tsize)
+
+cnt = 0
+DO kk = 1, SIZE(val, 3)
+  DO jj = 1, SIZE(val, 2)
+    DO ii = 1, SIZE(val, 1)
+      cnt = cnt + 1
+      obj%val(cnt) = val(ii, jj, kk)
+    END DO
+  END DO
+END DO
 END PROCEDURE Nodal_Matrix_Time
 
 !----------------------------------------------------------------------------
 !                                                             NodalVariable
 !----------------------------------------------------------------------------
 
+! MODULE PROCEDURE Nodal_Matrix_Time2
+! #define _DEFINEON_ Nodal
+! #include "./include/matrix_time2.F90"
+! #undef _DEFINEON_
+! END PROCEDURE Nodal_Matrix_Time2
+
 MODULE PROCEDURE Nodal_Matrix_Time2
-#define _DEFINEON_ Nodal
-#include "./include/matrix_time2.F90"
-#undef _DEFINEON_
+INTEGER(I4B) :: tsize
+
+tsize = s(1) * s(2) * s(3)
+
+CALL FEVariableInitiate(obj=obj, s=s, defineon=TypeFEVariableOpt%nodal, &
+                        vartype=TypeFEVariableOpt%time, &
+                        rank=TypeFEVariableOpt%matrix, &
+                        len=tsize, val=val)
+
 END PROCEDURE Nodal_Matrix_Time2
 
 !----------------------------------------------------------------------------
 !                                                             NodalVariable
 !----------------------------------------------------------------------------
 
+! MODULE PROCEDURE Nodal_Matrix_SpaceTime
+! #define _DEFINEON_ Nodal
+! #include "./include/matrix_space_time.F90"
+! #undef _DEFINEON_
+! END PROCEDURE Nodal_Matrix_SpaceTime
+
 MODULE PROCEDURE Nodal_Matrix_SpaceTime
-#define _DEFINEON_ Nodal
-#include "./include/matrix_space_time.F90"
-#undef _DEFINEON_
+INTEGER(I4B) :: s(4), tsize, ii, jj, kk, ll, cnt
+
+s = SHAPE(val)
+tsize = s(1) * s(2) * s(3) * s(4)
+
+CALL FEVariableInitiate(obj=obj, s=s, defineon=TypeFEVariableOpt%nodal, &
+                        vartype=TypeFEVariableOpt%spacetime, &
+                        rank=TypeFEVariableOpt%matrix, len=tsize)
+
+cnt = 0
+DO ll = 1, SIZE(val, 4)
+  DO kk = 1, SIZE(val, 3)
+    DO jj = 1, SIZE(val, 2)
+      DO ii = 1, SIZE(val, 1)
+        cnt = cnt + 1
+        obj%val(cnt) = val(ii, jj, kk, ll)
+      END DO
+    END DO
+  END DO
+END DO
 END PROCEDURE Nodal_Matrix_SpaceTime
 
 !----------------------------------------------------------------------------
 !                                                              NodalVariable
 !----------------------------------------------------------------------------
 
+! MODULE PROCEDURE Nodal_Matrix_SpaceTime2
+! #define _DEFINEON_ Nodal
+! #include "./include/matrix_space_time2.F90"
+! #undef _DEFINEON_
+! END PROCEDURE Nodal_Matrix_SpaceTime2
+
 MODULE PROCEDURE Nodal_Matrix_SpaceTime2
-#define _DEFINEON_ Nodal
-#include "./include/matrix_space_time2.F90"
-#undef _DEFINEON_
+INTEGER(I4B) :: tsize
+
+tsize = PRODUCT(s)
+CALL FEVariableInitiate(obj=obj, s=s, defineon=TypeFEVariableOpt%nodal, &
+                        vartype=TypeFEVariableOpt%spacetime, &
+                        rank=TypeFEVariableOpt%matrix, len=tsize, val=val)
 END PROCEDURE Nodal_Matrix_SpaceTime2
 
 !----------------------------------------------------------------------------

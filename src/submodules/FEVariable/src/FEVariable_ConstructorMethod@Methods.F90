@@ -22,19 +22,62 @@ IMPLICIT NONE
 CONTAINS
 
 !----------------------------------------------------------------------------
+!                                                                   Initiate
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE obj_Initiate1
+CALL Initiate(obj=obj, s=s, defineon=defineon, vartype=vartype, rank=rank, &
+              len=len)
+obj%val(1:obj%len) = val(1:obj%len)
+END PROCEDURE obj_Initiate1
+
+!----------------------------------------------------------------------------
+!                                                                   Initiate
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE obj_Initiate2
+INTEGER(I4B) :: tsize
+LOGICAL(LGT) :: isok
+
+tsize = SIZE(s)
+obj%isInit = .TRUE.
+obj%s(1:tsize) = s(1:tsize)
+obj%defineon = defineon
+obj%vartype = vartype
+obj%rank = rank
+obj%len = len
+obj%capacity = TypeFEVariableOpt%capacityExpandFactor * obj%len
+
+isok = ALLOCATED(obj%val)
+IF (isok) THEN
+  tsize = SIZE(obj%val)
+
+  IF (tsize .GE. obj%len) THEN
+    obj%capacity = tsize
+    obj%val(1:obj%capacity) = 0.0_DFP
+
+  ELSE
+    CALL Reallocate(obj%val, obj%capacity)
+  END IF
+
+END IF
+
+END PROCEDURE obj_Initiate2
+
+!----------------------------------------------------------------------------
 !                                                            Deallocate
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE fevar_Deallocate
+MODULE PROCEDURE obj_Deallocate
 IF (ALLOCATED(obj%val)) DEALLOCATE (obj%val)
 obj%s = 0
 obj%defineOn = 0
-obj%varType = 0
+obj%vartype = 0
 obj%rank = 0
 obj%len = 0
 obj%capacity = 0
 obj%isInit = .FALSE.
-END PROCEDURE fevar_Deallocate
+END PROCEDURE obj_Deallocate
 
 !----------------------------------------------------------------------------
 !                                                                      Copy
@@ -46,7 +89,7 @@ LOGICAL(LGT) :: isok
 obj1%s = obj2%s
 obj1%defineOn = obj2%defineOn
 obj1%rank = obj2%rank
-obj1%varType = obj2%varType
+obj1%vartype = obj2%vartype
 obj1%len = obj2%len
 obj1%isInit = obj2%isInit
 

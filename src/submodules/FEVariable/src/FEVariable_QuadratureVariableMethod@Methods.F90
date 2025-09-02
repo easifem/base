@@ -16,92 +16,144 @@
 !
 
 SUBMODULE(FEVariable_QuadratureVariableMethod) Methods
-USE GlobalData, ONLY: Scalar, Vector, Matrix, Constant, Space, &
-                      Time, SpaceTime, Nodal, Quadrature
-
 USE ReallocateUtility, ONLY: Reallocate
+
+USE FEVariable_ConstructorMethod, ONLY: FEVariableInitiate => Initiate
 
 IMPLICIT NONE
 CONTAINS
 
 !----------------------------------------------------------------------------
-!                                                       QuadratureVariable
+!                                                          QuadratureVariable
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Quadrature_Scalar_Constant
-#define _DEFINEON_ Quadrature
-#include "./include/scalar_constant.F90"
-#undef _DEFINEON_
+INTEGER(I4B) :: s(1)
+
+s(1) = 1
+CALL FEVariableInitiate(obj=obj, s=s, &
+                        defineon=TypeFEVariableOpt%quadrature, &
+                        vartype=TypeFEVariableOpt%constant, &
+                        rank=TypeFEVariableOpt%scalar, len=1)
+obj%val(1) = val
 END PROCEDURE Quadrature_Scalar_Constant
 
 !----------------------------------------------------------------------------
-!                                                     QuadratureVariable
+!                                                          QuadratureVariable
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Quadrature_Scalar_Space
-#define _DEFINEON_ Quadrature
-#include "./include/scalar_space.F90"
-#undef _DEFINEON_
+INTEGER(I4B) :: s(1)
+
+s(1) = SIZE(val)
+CALL FEVariableInitiate(obj=obj, s=s, defineon=TypeFEVariableOpt%Quadrature, &
+                        vartype=TypeFEVariableOpt%space, &
+                        rank=TypeFEVariableOpt%scalar, len=s(1))
+obj%val(1:obj%len) = val
 END PROCEDURE Quadrature_Scalar_Space
 
 !----------------------------------------------------------------------------
-!                                                     QuadratureVariable
+!                                                         QuadratureVariable
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Quadrature_Scalar_Time
-#define _DEFINEON_ Quadrature
-#include "./include/scalar_time.F90"
-#undef _DEFINEON_
+INTEGER(I4B) :: s(1)
+
+s(1) = SIZE(val)
+CALL FEVariableInitiate(obj=obj, s=s, defineon=TypeFEVariableOpt%Quadrature, &
+                        vartype=TypeFEVariableOpt%time, &
+                        rank=TypeFEVariableOpt%scalar, len=s(1))
+obj%val(1:obj%len) = val
 END PROCEDURE Quadrature_Scalar_Time
 
 !----------------------------------------------------------------------------
-!                                                     QuadratureVariable
+!                                                         QuadratureVariable
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Quadrature_Scalar_SpaceTime
-#define _DEFINEON_ Quadrature
-#include "./include/scalar_space_time.F90"
-#undef _DEFINEON_
+INTEGER(I4B) :: s(2), tsize, ii, jj, kk
+s = SHAPE(val)
+tsize = s(1) * s(2)
+
+CALL FEVariableInitiate(obj=obj, s=s, defineon=TypeFEVariableOpt%Quadrature, &
+                        vartype=TypeFEVariableOpt%spacetime, &
+                        rank=TypeFEVariableOpt%scalar, len=tsize)
+
+kk = 0
+DO jj = 1, s(2)
+  DO ii = 1, s(1)
+    kk = kk + 1
+    obj%val(kk) = val(ii, jj)
+  END DO
+END DO
 END PROCEDURE Quadrature_Scalar_SpaceTime
 
 !----------------------------------------------------------------------------
-!                                                     QuadratureVariable
+!                                                          QuadratureVariable
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Quadrature_Scalar_SpaceTime2
-#define _DEFINEON_ Quadrature
-#include "./include/scalar_space_time2.F90"
-#undef _DEFINEON_
+INTEGER(I4B) :: tsize
+
+tsize = s(1) * s(2)
+
+CALL FEVariableInitiate(obj=obj, s=s, defineon=TypeFEVariableOpt%Quadrature, &
+                        vartype=TypeFEVariableOpt%spacetime, &
+                        rank=TypeFEVariableOpt%scalar, len=tsize, &
+                        val=val)
 END PROCEDURE Quadrature_Scalar_SpaceTime2
 
 !----------------------------------------------------------------------------
-!                                                     QuadratureVariable
+!                                                          QuadratureVariable
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Quadrature_Vector_Constant
-#define _DEFINEON_ Quadrature
-#include "./include/vector_constant.F90"
-#undef _DEFINEON_
+INTEGER(I4B) :: s(1), tsize
+
+tsize = SIZE(val)
+s(1) = tsize
+
+CALL FEVariableInitiate(obj=obj, s=s, defineon=TypeFEVariableOpt%Quadrature, &
+                        vartype=TypeFEVariableOpt%constant, &
+                        rank=TypeFEVariableOpt%vector, len=tsize, &
+                        val=val)
 END PROCEDURE Quadrature_Vector_Constant
 
 !----------------------------------------------------------------------------
-!                                                         QuadratureVariable
+!                                                          QuadratureVariable
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Quadrature_Vector_Space
-#define _DEFINEON_ Quadrature
-#include "./include/vector_space.F90"
-#undef _DEFINEON_
+INTEGER(I4B) :: s(2), tsize, ii, jj, cnt
+
+s = SHAPE(val)
+tsize = s(1) * s(2)
+
+CALL FEVariableInitiate(obj=obj, s=s, defineon=TypeFEVariableOpt%Quadrature, &
+                        vartype=TypeFEVariableOpt%space, &
+                        rank=TypeFEVariableOpt%vector, len=tsize)
+
+cnt = 0
+DO jj = 1, s(2)
+  DO ii = 1, s(1)
+    cnt = cnt + 1
+    obj%val(cnt) = val(ii, jj)
+  END DO
+END DO
 END PROCEDURE Quadrature_Vector_Space
 
 !----------------------------------------------------------------------------
-!                                                         QuadratureVariable
+!                                                          QuadratureVariable
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Quadrature_Vector_Space2
-#define _DEFINEON_ Quadrature
-#include "./include/vector_space2.F90"
-#undef _DEFINEON_
+INTEGER(I4B) :: tsize
+
+tsize = s(1) * s(2)
+CALL FEVariableInitiate(obj=obj, s=s, defineon=TypeFEVariableOpt%Quadrature, &
+                        vartype=TypeFEVariableOpt%space, &
+                        rank=TypeFEVariableOpt%vector, len=tsize, val=val)
+
 END PROCEDURE Quadrature_Vector_Space2
 
 !----------------------------------------------------------------------------
@@ -109,119 +161,230 @@ END PROCEDURE Quadrature_Vector_Space2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Quadrature_Vector_Time
-#define _DEFINEON_ Quadrature
-#include "./include/vector_time.F90"
-#undef _DEFINEON_
+INTEGER(I4B) :: s(2), tsize, ii, jj, cnt
+
+s = SHAPE(val)
+tsize = s(1) * s(2)
+
+CALL FEVariableInitiate(obj=obj, s=s, defineon=TypeFEVariableOpt%Quadrature, &
+                        vartype=TypeFEVariableOpt%time, &
+                        rank=TypeFEVariableOpt%vector, len=tsize)
+
+cnt = 0
+DO jj = 1, s(2)
+  DO ii = 1, s(1)
+    cnt = cnt + 1
+    obj%val(cnt) = val(ii, jj)
+  END DO
+END DO
 END PROCEDURE Quadrature_Vector_Time
 
 !----------------------------------------------------------------------------
-!                                                         QuadratureVariable
+!                                                          QuadratureVariable
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Quadrature_Vector_Time2
-#define _DEFINEON_ Quadrature
-#include "./include/vector_time2.F90"
-#undef _DEFINEON_
+INTEGER(I4B) :: tsize
+
+tsize = s(1) * s(2)
+
+CALL FEVariableInitiate(obj=obj, s=s, defineon=TypeFEVariableOpt%Quadrature, &
+                        vartype=TypeFEVariableOpt%time, &
+                        rank=TypeFEVariableOpt%vector, len=tsize, val=val)
+
 END PROCEDURE Quadrature_Vector_Time2
 
 !----------------------------------------------------------------------------
-!                                                         QuadratureVariable
+!                                                          QuadratureVariable
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Quadrature_Vector_SpaceTime
-#define _DEFINEON_ Quadrature
-#include "./include/vector_space_time.F90"
-#undef _DEFINEON_
+INTEGER(I4B) :: s(3), tsize, ii, jj, kk, cnt
+s = SHAPE(val)
+tsize = s(1) * s(2) * s(3)
+CALL FEVariableInitiate(obj=obj, s=s, defineon=TypeFEVariableOpt%Quadrature, &
+                        vartype=TypeFEVariableOpt%spacetime, &
+                        rank=TypeFEVariableOpt%vector, len=tsize)
+
+cnt = 0
+DO kk = 1, SIZE(val, 3)
+  DO jj = 1, SIZE(val, 2)
+    DO ii = 1, SIZE(val, 1)
+      cnt = cnt + 1
+      obj%val(cnt) = val(ii, jj, kk)
+    END DO
+  END DO
+END DO
 END PROCEDURE Quadrature_Vector_SpaceTime
 
 !----------------------------------------------------------------------------
-!                                                         QuadratureVariable
+!                                                          QuadratureVariable
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Quadrature_Vector_SpaceTime2
-#define _DEFINEON_ Quadrature
-#include "./include/vector_space_time2.F90"
-#undef _DEFINEON_
+INTEGER(I4B) :: tsize
+
+tsize = s(1) * s(2) * s(3)
+CALL FEVariableInitiate(obj=obj, s=s, defineon=TypeFEVariableOpt%Quadrature, &
+                        vartype=TypeFEVariableOpt%spacetime, &
+                        rank=TypeFEVariableOpt%vector, len=tsize, &
+                        val=val)
 END PROCEDURE Quadrature_Vector_SpaceTime2
 
 !----------------------------------------------------------------------------
-!                                                         QuadratureVariable
+!                                                          QuadratureVariable
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Quadrature_Matrix_Constant
-#define _DEFINEON_ Quadrature
-#include "./include/matrix_constant.F90"
-#undef _DEFINEON_
+INTEGER(I4B) :: s(2), tsize, ii, jj, cnt
+
+s = SHAPE(val)
+tsize = s(1) * s(2)
+
+CALL FEVariableInitiate(obj=obj, s=s, defineon=TypeFEVariableOpt%Quadrature, &
+                        vartype=TypeFEVariableOpt%constant, &
+                        rank=TypeFEVariableOpt%matrix, len=tsize)
+
+cnt = 0
+DO jj = 1, s(2)
+  DO ii = 1, s(1)
+    cnt = cnt + 1
+    obj%val(cnt) = val(ii, jj)
+  END DO
+END DO
+
 END PROCEDURE Quadrature_Matrix_Constant
 
 !----------------------------------------------------------------------------
-!                                                         QuadratureVariable
+!                                                          QuadratureVariable
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Quadrature_Matrix_Constant2
-#define _DEFINEON_ Quadrature
-#include "./include/matrix_constant2.F90"
-#undef _DEFINEON_
+INTEGER(I4B) :: tsize
+
+tsize = s(1) * s(2)
+CALL FEVariableInitiate(obj=obj, s=s, defineon=TypeFEVariableOpt%Quadrature, &
+                        vartype=TypeFEVariableOpt%constant, &
+                        rank=TypeFEVariableOpt%matrix, len=tsize, val=val)
 END PROCEDURE Quadrature_Matrix_Constant2
 
 !----------------------------------------------------------------------------
-!                                                         QuadratureVariable
+!                                                          QuadratureVariable
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Quadrature_Matrix_Space
-#define _DEFINEON_ Quadrature
-#include "./include/matrix_space.F90"
-#undef _DEFINEON_
+INTEGER(I4B) :: s(3), tsize, ii, jj, kk, cnt
+
+s = SHAPE(val)
+tsize = s(1) * s(2) * s(3)
+CALL FEVariableInitiate(obj=obj, s=s, defineon=TypeFEVariableOpt%Quadrature, &
+                        vartype=TypeFEVariableOpt%space, &
+                        rank=TypeFEVariableOpt%matrix, len=tsize)
+
+cnt = 0
+DO kk = 1, s(3)
+  DO jj = 1, s(2)
+    DO ii = 1, s(1)
+      cnt = cnt + 1
+      obj%val(cnt) = val(ii, jj, kk)
+    END DO
+  END DO
+END DO
 END PROCEDURE Quadrature_Matrix_Space
 
 !----------------------------------------------------------------------------
-!                                                         QuadratureVariable
+!                                                          QuadratureVariable
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Quadrature_Matrix_Space2
-#define _DEFINEON_ Quadrature
-#include "./include/matrix_space2.F90"
-#undef _DEFINEON_
+INTEGER(I4B) :: tsize
+
+tsize = s(1) * s(2) * s(3)
+CALL FEVariableInitiate(obj=obj, s=s, defineon=TypeFEVariableOpt%Quadrature, &
+                        vartype=TypeFEVariableOpt%space, &
+                        rank=TypeFEVariableOpt%matrix, &
+                        len=tsize, val=val)
 END PROCEDURE Quadrature_Matrix_Space2
 
 !----------------------------------------------------------------------------
-!                                                         QuadratureVariable
+!                                                          QuadratureVariable
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Quadrature_Matrix_Time
-#define _DEFINEON_ Quadrature
-#include "./include/matrix_time.F90"
-#undef _DEFINEON_
+INTEGER(I4B) :: s(3), tsize, ii, jj, kk, cnt
+
+s = SHAPE(val)
+tsize = s(1) * s(2) * s(3)
+
+CALL FEVariableInitiate(obj=obj, s=s, defineon=TypeFEVariableOpt%Quadrature, &
+                        vartype=TypeFEVariableOpt%time, &
+                        rank=TypeFEVariableOpt%matrix, len=tsize)
+
+cnt = 0
+DO kk = 1, SIZE(val, 3)
+  DO jj = 1, SIZE(val, 2)
+    DO ii = 1, SIZE(val, 1)
+      cnt = cnt + 1
+      obj%val(cnt) = val(ii, jj, kk)
+    END DO
+  END DO
+END DO
 END PROCEDURE Quadrature_Matrix_Time
 
 !----------------------------------------------------------------------------
-!                                                         QuadratureVariable
+!                                                          QuadratureVariable
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Quadrature_Matrix_Time2
-#define _DEFINEON_ Quadrature
-#include "./include/matrix_time2.F90"
-#undef _DEFINEON_
+INTEGER(I4B) :: tsize
+
+tsize = s(1) * s(2) * s(3)
+
+CALL FEVariableInitiate(obj=obj, s=s, defineon=TypeFEVariableOpt%Quadrature, &
+                        vartype=TypeFEVariableOpt%time, &
+                        rank=TypeFEVariableOpt%matrix, &
+                        len=tsize, val=val)
+
 END PROCEDURE Quadrature_Matrix_Time2
 
 !----------------------------------------------------------------------------
-!                                                         QuadratureVariable
+!                                                          QuadratureVariable
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Quadrature_Matrix_SpaceTime
-#define _DEFINEON_ Quadrature
-#include "./include/matrix_space_time.F90"
-#undef _DEFINEON_
+INTEGER(I4B) :: s(4), tsize, ii, jj, kk, ll, cnt
+
+s = SHAPE(val)
+tsize = s(1) * s(2) * s(3) * s(4)
+
+CALL FEVariableInitiate(obj=obj, s=s, defineon=TypeFEVariableOpt%Quadrature, &
+                        vartype=TypeFEVariableOpt%spacetime, &
+                        rank=TypeFEVariableOpt%matrix, len=tsize)
+
+cnt = 0
+DO ll = 1, SIZE(val, 4)
+  DO kk = 1, SIZE(val, 3)
+    DO jj = 1, SIZE(val, 2)
+      DO ii = 1, SIZE(val, 1)
+        cnt = cnt + 1
+        obj%val(cnt) = val(ii, jj, kk, ll)
+      END DO
+    END DO
+  END DO
+END DO
 END PROCEDURE Quadrature_Matrix_SpaceTime
 
 !----------------------------------------------------------------------------
-!                                                       QuadratureVariable
+!                                                          QuadratureVariable
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Quadrature_Matrix_SpaceTime2
-#define _DEFINEON_ Quadrature
-#include "./include/matrix_space_time2.F90"
-#undef _DEFINEON_
+INTEGER(I4B) :: tsize
+
+tsize = PRODUCT(s)
+CALL FEVariableInitiate(obj=obj, s=s, defineon=TypeFEVariableOpt%Quadrature, &
+                        vartype=TypeFEVariableOpt%spacetime, &
+                        rank=TypeFEVariableOpt%matrix, len=tsize, val=val)
 END PROCEDURE Quadrature_Matrix_SpaceTime2
 
 !----------------------------------------------------------------------------
