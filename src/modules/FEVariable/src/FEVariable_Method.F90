@@ -29,6 +29,9 @@ USE FEVariable_QuadratureVariableMethod
 
 USE FEVariable_GetMethod
 
+USE FEVariable_ScalarInterpolationMethod
+USE FEVariable_VectorInterpolationMethod
+USE FEVariable_MatrixInterpolationMethod
 USE FEVariable_InterpolationMethod
 USE FEVariable_IOMethod
 

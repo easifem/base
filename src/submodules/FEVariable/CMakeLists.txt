@@ -30,7 +30,7 @@ target_sources(
           ${src_path}/FEVariable_UnaryMethod@Methods.F90
           ${src_path}/FEVariable_GetMethod@Methods.F90
           ${src_path}/FEVariable_IOMethod@Methods.F90
-          ${src_path}/FEVariable_InterpolationMethod@ScalarMethods.F90
-          ${src_path}/FEVariable_InterpolationMethod@VectorMethods.F90
-          ${src_path}/FEVariable_InterpolationMethod@MatrixMethods.F90
+          ${src_path}/FEVariable_ScalarInterpolationMethod@Methods.F90
+          ${src_path}/FEVariable_VectorInterpolationMethod@Methods.F90
+          ${src_path}/FEVariable_MatrixInterpolationMethod@Methods.F90
           ${src_path}/FEVariable_InterpolationMethod@Methods.F90)

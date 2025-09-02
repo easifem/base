@@ -31,11 +31,11 @@ IMPLICIT NONE
 
 PRIVATE
 
+PUBLIC :: ABS
+PUBLIC :: OPERATOR(**)
+PUBLIC :: Sqrt
 PUBLIC :: OPERATOR(.EQ.)
 PUBLIC :: OPERATOR(.NE.)
-PUBLIC :: OPERATOR(**)
-PUBLIC :: ABS
-PUBLIC :: Sqrt
 PUBLIC :: Norm2
 
 !----------------------------------------------------------------------------
