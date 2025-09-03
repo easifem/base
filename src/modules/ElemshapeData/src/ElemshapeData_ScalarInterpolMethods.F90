@@ -306,6 +306,29 @@ INTERFACE GetInterpolation_
 END INTERFACE GetInterpolation_
 
 !----------------------------------------------------------------------------
+!                                                   GetInterpolation_@Methods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2025-09-03
+! summary:  Get Interpolation of scalar variable at a single space
+! and time integration point
+
+INTERFACE GetInterpolation_
+  MODULE PURE SUBROUTINE GetInterpolation_4b(obj, ans, val, scale, &
+                                             addContribution, timeIndx, &
+                                             spaceIndx)
+    CLASS(ElemshapeData_), INTENT(IN) :: obj
+    REAL(DFP), INTENT(INOUT) :: ans
+    TYPE(FEVariable_), INTENT(IN) :: val
+    REAL(DFP), INTENT(IN) :: scale
+    LOGICAL(LGT), INTENT(IN) :: addContribution
+    INTEGER(I4B), INTENT(IN) :: timeIndx
+    INTEGER(I4B), INTENT(IN) :: spaceIndx
+  END SUBROUTINE GetInterpolation_4b
+END INTERFACE GetInterpolation_
+
+!----------------------------------------------------------------------------
 !                                           getInterpolation@InterpolMethods
 !----------------------------------------------------------------------------
 

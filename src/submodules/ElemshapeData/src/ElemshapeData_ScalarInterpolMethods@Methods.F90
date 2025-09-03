@@ -213,6 +213,48 @@ END SELECT
 END PROCEDURE GetInterpolation_4a
 
 !----------------------------------------------------------------------------
+!                                                           GetInterpolation_
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE GetInterpolation_4b
+SELECT CASE (val%vartype)
+CASE (TypeFEVariableOpt%constant)
+  CALL FEVariableGetInterpolation_(obj=val, rank=TypeFEVariableScalar, &
+                                   vartype=TypeFEVariableConstant, &
+                                   N=obj%N, nns=obj%nns, &
+                                   spaceIndx=spaceIndx, &
+                                   timeIndx=timeIndx, &
+                                   scale=scale, &
+                                   addContribution=addContribution, &
+                                   ans=ans)
+
+CASE (TypeFEVariableOpt%space)
+  CALL FEVariableGetInterpolation_(obj=val, rank=TypeFEVariableScalar, &
+                                   vartype=TypeFEVariableSpace, &
+                                   N=obj%N, nns=obj%nns, &
+                                   spaceIndx=spaceIndx, &
+                                   timeIndx=timeIndx, &
+                                   scale=scale, &
+                                   addContribution=addContribution, &
+                                   ans=ans)
+
+CASE (TypeFEVariableOpt%spaceTime)
+  SELECT TYPE (obj); TYPE IS (STElemShapeData_)
+    CALL FEVariableGetInterpolation_(obj=val, rank=TypeFEVariableScalar, &
+                                     vartype=TypeFEVariableSpaceTime, &
+                                     N=obj%N, nns=obj%nns, &
+                                     spaceIndx=spaceIndx, &
+                                     timeIndx=timeIndx, &
+                                     T=obj%T, nnt=obj%nnt, &
+                                     scale=scale, &
+                                     addContribution=addContribution, &
+                                     ans=ans)
+
+  END SELECT
+END SELECT
+END PROCEDURE GetInterpolation_4b
+
+!----------------------------------------------------------------------------
 !                                                            GetInterpolation
 !----------------------------------------------------------------------------
 
