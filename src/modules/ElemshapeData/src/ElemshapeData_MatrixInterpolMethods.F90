@@ -265,9 +265,9 @@ END INTERFACE GetInterpolation_
 !                                                   GetInterpolation@Methods
 !----------------------------------------------------------------------------
 
-!> author: Shion Shimizu
-! date:   2025-03-04
-! summary:  get interpolation of matrix without allocation
+!> author: Vikas Sharma, Ph. D.
+! date: 2025-09-04
+! summary: Get interpolation of matrix without allocation
 
 INTERFACE GetInterpolation_
   MODULE PURE SUBROUTINE GetInterpolation_4a(obj, ans, val, &
@@ -281,6 +281,29 @@ INTERFACE GetInterpolation_
     LOGICAL(LGT), INTENT(IN) :: addContribution
     INTEGER(I4B), INTENT(IN), OPTIONAL :: timeIndx
   END SUBROUTINE GetInterpolation_4a
+END INTERFACE GetInterpolation_
+
+!----------------------------------------------------------------------------
+!                                                   GetInterpolation@Methods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2025-09-04
+! summary:  get interpolation of matrix without allocation
+
+INTERFACE GetInterpolation_
+  MODULE PURE SUBROUTINE GetInterpolation_4b(obj, ans, val, &
+                                             nrow, ncol, scale, &
+                                             addContribution, spaceIndx, &
+                                             timeIndx)
+    CLASS(ElemshapeData_), INTENT(IN) :: obj
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    TYPE(FEVariable_), INTENT(IN) :: val
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+    REAL(DFP), INTENT(IN) :: scale
+    LOGICAL(LGT), INTENT(IN) :: addContribution
+    INTEGER(I4B), INTENT(IN) :: timeIndx, spaceIndx
+  END SUBROUTINE GetInterpolation_4b
 END INTERFACE GetInterpolation_
 
 !----------------------------------------------------------------------------
