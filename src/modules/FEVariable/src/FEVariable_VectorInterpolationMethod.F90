@@ -109,6 +109,43 @@ INTERFACE GetInterpolation_
 END INTERFACE GetInterpolation_
 
 !----------------------------------------------------------------------------
+!                                     GetInterpolation_@InterpolationMethods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2025-08-29
+! summary: Get interpolation of Vector, constant
+
+INTERFACE GetInterpolation_
+ MODULE PURE SUBROUTINE VectorConstantGetInterpolation_3(obj, rank, vartype, &
+                                                          N, nns, spaceIndx, &
+                                                          timeIndx, &
+                                                          scale, &
+                                                          addContribution, &
+                                                          ans, tsize)
+    CLASS(FEVariable_), INTENT(IN) :: obj
+    TYPE(FEVariableVector_), INTENT(IN) :: rank
+    TYPE(FEVariableConstant_), INTENT(IN) :: vartype
+    REAL(DFP), INTENT(IN) :: N(:, :)
+    !! shape functions data, N(I, ips) : I is node or dof number
+    !! ips is integration point number
+    INTEGER(I4B), INTENT(IN) :: nns
+    !! number of nodes in N, bound for dim1 in N
+    INTEGER(I4B), INTENT(IN) :: spaceIndx, timeIndx
+    !! number of integration points in N, bound for dim2 in N
+    REAL(DFP), INTENT(IN) :: scale
+    !! scale factor to be applied to the interpolated value
+    LOGICAL(LGT), INTENT(IN) :: addContribution
+    !! if true, the interpolated value is added to ans
+    REAL(DFP), INTENT(INOUT) :: ans(:)
+    !! Interpolated value
+    !! Size of ans should be at least nips
+    INTEGER(I4B), INTENT(OUT) :: tsize
+    !! Number of data written in ans
+  END SUBROUTINE VectorConstantGetInterpolation_3
+END INTERFACE GetInterpolation_
+
+!----------------------------------------------------------------------------
 !                               GetInterpolation_@VectorInterpolationMethods
 !----------------------------------------------------------------------------
 
@@ -178,6 +215,43 @@ INTERFACE GetInterpolation_
     !! Interpolated value
     !! Size of ans should be at least nips
   END SUBROUTINE VectorSpaceGetInterpolation_2
+END INTERFACE GetInterpolation_
+
+!----------------------------------------------------------------------------
+!                               GetInterpolation_@VectorInterpolationMethods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2025-08-29
+! summary: Get interpolation of Vector, space
+
+INTERFACE GetInterpolation_
+  MODULE PURE SUBROUTINE VectorSpaceGetInterpolation_3(obj, rank, vartype, &
+                                                       N, nns, spaceIndx, &
+                                                       timeIndx, &
+                                                       scale, &
+                                                       addContribution, &
+                                                       ans, tsize)
+    CLASS(FEVariable_), INTENT(IN) :: obj
+    TYPE(FEVariableVector_), INTENT(IN) :: rank
+    TYPE(FEVariableSpace_), INTENT(IN) :: vartype
+    REAL(DFP), INTENT(IN) :: N(:, :)
+    !! shape functions data, N(I, ips) : I is node or dof number
+    !! ips is integration point number
+    INTEGER(I4B), INTENT(IN) :: nns
+    !! number of nodes in N, bound for dim1 in N
+    INTEGER(I4B), INTENT(IN) :: spaceIndx, timeIndx
+    !! number of integration points in N, bound for dim2 in N
+    REAL(DFP), INTENT(INOUT) :: ans(:)
+    !! Interpolated value
+    !! Size of ans should be at least nips
+    REAL(DFP), INTENT(IN) :: scale
+    !! scale factor to be applied to the interpolated value
+    LOGICAL(LGT), INTENT(IN) :: addContribution
+    !! if true, the interpolated value is added to ans
+    INTEGER(I4B), INTENT(OUT) :: tsize
+    !! Number of data written in ans
+  END SUBROUTINE VectorSpaceGetInterpolation_3
 END INTERFACE GetInterpolation_
 
 !----------------------------------------------------------------------------
@@ -278,6 +352,48 @@ INTERFACE GetInterpolation_
     !! Interpolated value
     !! Size of ans should be at least nips
   END SUBROUTINE VectorSpaceTimeGetInterpolation_2
+END INTERFACE GetInterpolation_
+
+!----------------------------------------------------------------------------
+!                               GetInterpolation_@VectorInterpolationMethods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2025-08-29
+! summary: Get interpolation of Vector, space-time
+
+INTERFACE GetInterpolation_
+  MODULE PURE SUBROUTINE VectorSpaceTimeGetInterpolation_3(obj, rank, &
+                                                           vartype, &
+                                                           N, nns, spaceIndx, &
+                                                           timeIndx, T, nnt, &
+                                                           scale, &
+                                                           addContribution, &
+                                                           ans, tsize)
+    CLASS(FEVariable_), INTENT(IN) :: obj
+    TYPE(FEVariableVector_), INTENT(IN) :: rank
+    TYPE(FEVariableSpaceTime_), INTENT(IN) :: vartype
+    REAL(DFP), INTENT(IN) :: N(:, :)
+    !! shape functions data, N(I, ips) : I is node or dof number
+    !! ips is integration point number
+    INTEGER(I4B), INTENT(IN) :: nns
+    !! number of nodes in N, bound for dim1 in N
+    INTEGER(I4B), INTENT(IN) :: spaceIndx, timeIndx
+    !! number of integration points in N, bound for dim2 in N
+    REAL(DFP), INTENT(IN) :: T(:)
+    !! time shape functions data, T(a) : a is time node or dof number
+    INTEGER(I4B), INTENT(IN) :: nnt
+    !! number of time nodes in T, bound for dim1 in T
+    REAL(DFP), INTENT(INOUT) :: ans(:)
+    !! Interpolated value
+    !! Size of ans should be at least nips
+    REAL(DFP), INTENT(IN) :: scale
+    !! scale factor to be applied to the interpolated value
+    LOGICAL(LGT), INTENT(IN) :: addContribution
+    !! if true, the interpolated value is added to ans
+    INTEGER(I4B), INTENT(OUT) :: tsize
+    !! Number of data written in ans
+  END SUBROUTINE VectorSpaceTimeGetInterpolation_3
 END INTERFACE GetInterpolation_
 
 !----------------------------------------------------------------------------
