@@ -20,10 +20,9 @@
 ! summary: Constructor method for ElemshapeData_ and STElemshapeData_
 
 SUBMODULE(ElemshapeData_ConstructorMethods) Methods
+USE GlobalData, ONLY: stderr
 USE ReallocateUtility, ONLY: Reallocate
-
 USE QuadraturePoint_Method, ONLY: GetQuadraturePoints
-
 USE ErrorHandling, ONLY: Errormsg
 
 IMPLICIT NONE
@@ -33,12 +32,12 @@ CONTAINS
 !                                                                  Initiate
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE elemsd_Allocate
+MODULE PROCEDURE obj_Allocate
 LOGICAL(LGT) :: isok
 
 CALL Reallocate(obj%N, nns, nips)
 CALL Reallocate(obj%dNdXi, nns, xidim, nips)
-CALL Reallocate(obj%Normal, 3, nips)
+CALL Reallocate(obj%normal, 3, nips)
 CALL Reallocate(obj%dNdXt, nns, nsd, nips)
 CALL Reallocate(obj%jacobian, nsd, xidim, nips)
 CALL Reallocate(obj%js, nips)
@@ -52,41 +51,32 @@ obj%nips = nips
 obj%nns = nns
 
 isok = PRESENT(nnt)
+IF (.NOT. isok) RETURN
 
-IF (isok) THEN
-  SELECT TYPE (obj); TYPE is (STElemShapeData_)
-    obj%nnt = nnt
-
-    CALL Reallocate(obj%T, nnt)
-    CALL Reallocate(obj%dTdTheta, nnt)
-    CALL Reallocate(obj%dNTdt, nns, nnt, nips)
-    CALL Reallocate(obj%dNTdXt, nns, nnt, nsd, nips)
-
-  END SELECT
-END IF
-
-END PROCEDURE elemsd_Allocate
+SELECT TYPE (obj); TYPE is (STElemShapeData_)
+  obj%nnt = nnt
+  CALL Reallocate(obj%T, nnt)
+  CALL Reallocate(obj%dTdTheta, nnt)
+  CALL Reallocate(obj%dNTdt, nns, nnt, nips)
+  CALL Reallocate(obj%dNTdXt, nns, nnt, nsd, nips)
+END SELECT
+END PROCEDURE obj_Allocate
 
 !----------------------------------------------------------------------------
 !                                                                 Initiate
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE elemsd_Initiate1
-
-CALL ErrorMSG( &
-  & Msg="[WORK IN PROGRESS]", &
-  & File=__FILE__, &
-  & Routine="elemsd_Initiate1()", &
-  & Line=__LINE__, &
-  & UnitNo=stdout)
+MODULE PROCEDURE obj_Initiate1
+CALL ErrorMSG(msg="[WORK IN PROGRESS]", file=__FILE__, &
+              routine="obj_Initiate1()", line=__LINE__, unitno=stderr)
 STOP
-END PROCEDURE elemsd_Initiate1
+END PROCEDURE obj_Initiate1
 
 !----------------------------------------------------------------------------
 !                                                                 Initiate
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE elemsd_Initiate2
+MODULE PROCEDURE obj_Initiate2
 INTEGER(I4B) :: ii, jj, kk, nns, nsd, xidim, nips, nnt, ll, nnt
 
 nns = obj2%nns
@@ -98,8 +88,8 @@ SELECT TYPE (obj2); TYPE is (STElemShapeData_)
   nnt = obj2%nnt
 END SELECT
 
-CALL elemsd_Allocate(obj=obj1, nsd=nsd, xidim=xidim, nns=nns, &
-                     nips=nips, nnt=nnt)
+CALL obj_Allocate(obj=obj1, nsd=nsd, xidim=xidim, nns=nns, &
+                  nips=nips, nnt=nnt)
 
 DO CONCURRENT(jj=1:nips, ii=1:nns)
   obj1%N(ii, jj) = obj2%N(ii, jj)
@@ -128,7 +118,7 @@ END DO
 SELECT TYPE (obj1); TYPE is (STElemShapeData_)
   SELECT TYPE (obj2); TYPE is (STElemShapeData_)
     obj1%wt = obj2%wt
-! obj1%theta = obj2%theta
+    ! obj1%theta = obj2%theta
     obj1%jt = obj2%jt
     obj1%nnt = obj2%nnt
     nnt = obj1%nnt
@@ -149,21 +139,26 @@ SELECT TYPE (obj1); TYPE is (STElemShapeData_)
   END SELECT
 END SELECT
 
-END PROCEDURE elemsd_Initiate2
+END PROCEDURE obj_Initiate2
 
 !----------------------------------------------------------------------------
 !                                                                 Initiate
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE stsd_Initiate
-INTEGER(I4B) :: tip, ip, nnt
+MODULE PROCEDURE obj_Initiate3
+LOGICAL(LGT) :: isok
+INTEGER(I4B) :: tip, ip, nnt, tsize
 
 tip = elemsd%nips
 
-IF (ALLOCATED(obj)) THEN
-  DO ip = 1, SIZE(obj)
+isok = ALLOCATED(obj)
+IF (isok) THEN
+  tsize = SIZE(obj)
+
+  DO ip = 1, tsize
     CALL DEALLOCATE (obj(ip))
   END DO
+
   DEALLOCATE (obj)
 END IF
 
@@ -183,13 +178,13 @@ DO ip = 1, tip
   obj(ip)%dTdTheta(1:nnt) = elemsd%dNdXi(1:nnt, 1, ip)
 END DO
 
-END PROCEDURE stsd_Initiate
+END PROCEDURE obj_Initiate3
 
 !----------------------------------------------------------------------------
 !                                                             Deallocate
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE elemsd_Deallocate
+MODULE PROCEDURE obj_Deallocate
 IF (ALLOCATED(obj%normal)) DEALLOCATE (obj%normal)
 IF (ALLOCATED(obj%N)) DEALLOCATE (obj%N)
 IF (ALLOCATED(obj%dNdXi)) DEALLOCATE (obj%dNdXi)
@@ -216,7 +211,7 @@ TYPE IS (STElemShapeData_)
   IF (ALLOCATED(obj%dNTdt)) DEALLOCATE (obj%dNTdt)
   IF (ALLOCATED(obj%dNTdXt)) DEALLOCATE (obj%dNTdXt)
 END SELECT
-END PROCEDURE elemsd_Deallocate
+END PROCEDURE obj_Deallocate
 
 !----------------------------------------------------------------------------
 !

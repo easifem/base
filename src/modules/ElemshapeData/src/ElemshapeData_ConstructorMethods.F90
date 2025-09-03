@@ -16,8 +16,9 @@
 !
 
 MODULE ElemshapeData_ConstructorMethods
-USE BaseType
-USE GlobalData
+USE BaseType, ONLY: ElemShapeData_, STElemShapeData_, QuadraturePoint_, &
+                    ReferenceElement_
+USE GlobalData, ONLY: I4B, DFP, LGT
 IMPLICIT NONE
 PRIVATE
 
@@ -40,7 +41,7 @@ PUBLIC :: ASSIGNMENT(=)
 !- This subroutine belongs to the generic interface called `Allocate()`.
 
 INTERFACE ALLOCATE
-  MODULE PURE SUBROUTINE elemsd_Allocate(obj, nsd, xidim, nns, nips, nnt)
+  MODULE PURE SUBROUTINE obj_Allocate(obj, nsd, xidim, nns, nips, nnt)
     CLASS(ElemshapeData_), INTENT(INOUT) :: obj
     !! object to be returned
     INTEGER(I4B), INTENT(IN) :: nsd
@@ -53,8 +54,12 @@ INTERFACE ALLOCATE
     !! number of integration points
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: nnt
     !! it is used when elemshape data is STElemShapeData
-  END SUBROUTINE elemsd_Allocate
+  END SUBROUTINE obj_Allocate
 END INTERFACE ALLOCATE
+
+INTERFACE Initiate
+  MODULE PROCEDURE obj_Allocate
+END INTERFACE Initiate
 
 !----------------------------------------------------------------------------
 !                                               Initiate@ConstructorMethods
@@ -65,8 +70,8 @@ END INTERFACE ALLOCATE
 ! summary: This routine Initiate the element shapefunction data
 
 INTERFACE Initiate
-  MODULE SUBROUTINE elemsd_Initiate1(obj, quad, refelem, continuityType, &
-                                     interpolType)
+  MODULE SUBROUTINE obj_Initiate1(obj, quad, refelem, continuityType, &
+                                  interpolType)
     CLASS(ElemshapeData_), INTENT(INOUT) :: obj
     !! ElemshapeData to be formed
     CLASS(QuadraturePoint_), INTENT(IN) :: quad
@@ -77,7 +82,7 @@ INTERFACE Initiate
     !! - continuity/ conformity of shape function (basis functions)
     CHARACTER(*), INTENT(IN) :: interpolType
     !! interpolation/polynomial family for basis functions
-  END SUBROUTINE elemsd_Initiate1
+  END SUBROUTINE obj_Initiate1
 END INTERFACE Initiate
 
 !----------------------------------------------------------------------------
@@ -89,14 +94,14 @@ END INTERFACE Initiate
 ! summary: Copy data from an instance of elemshapedata to another instance
 
 INTERFACE Initiate
-  MODULE SUBROUTINE elemsd_Initiate2(obj1, obj2)
+  MODULE SUBROUTINE obj_Initiate2(obj1, obj2)
     CLASS(ElemshapeData_), INTENT(INOUT) :: obj1
     CLASS(ElemshapeData_), INTENT(IN) :: obj2
-  END SUBROUTINE elemsd_Initiate2
+  END SUBROUTINE obj_Initiate2
 END INTERFACE Initiate
 
 INTERFACE ASSIGNMENT(=)
-  MODULE PROCEDURE elemsd_Initiate2
+  MODULE PROCEDURE obj_Initiate2
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -125,11 +130,11 @@ END INTERFACE
 !
 
 INTERFACE Initiate
-  MODULE PURE SUBROUTINE stsd_Initiate(obj, elemsd)
+  MODULE PURE SUBROUTINE obj_Initiate3(obj, elemsd)
     TYPE(STElemshapeData_), ALLOCATABLE, INTENT(INOUT) :: obj(:)
     TYPE(ElemshapeData_), INTENT(IN) :: elemsd
     !! It has information about location shape function for time element
-  END SUBROUTINE stsd_Initiate
+  END SUBROUTINE obj_Initiate3
 END INTERFACE Initiate
 
 !----------------------------------------------------------------------------
@@ -147,9 +152,9 @@ END INTERFACE Initiate
 !
 
 INTERFACE DEALLOCATE
-  MODULE PURE SUBROUTINE elemsd_Deallocate(obj)
+  MODULE PURE SUBROUTINE obj_Deallocate(obj)
     CLASS(ElemshapeData_), INTENT(INOUT) :: obj
-  END SUBROUTINE elemsd_Deallocate
+  END SUBROUTINE obj_Deallocate
 END INTERFACE DEALLOCATE
 
 END MODULE ElemshapeData_ConstructorMethods
