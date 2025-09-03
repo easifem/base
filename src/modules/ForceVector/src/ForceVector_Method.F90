@@ -132,7 +132,7 @@ END INTERFACE ForceVector_
 ! This routine computes the following integral
 !
 ! $$
-! F(i,I)=\int_{\Omega}v_{i}N^{I}d\Omega
+! F(i,I)=\int_{\Omega}c_{i}N^{I}d\Omega
 ! $$
 
 INTERFACE ForceVector
@@ -183,7 +183,7 @@ END INTERFACE ForceVector_
 ! This routine computes the following integral
 !
 ! $$
-! F(i,j,I)=\int_{\Omega}k_{ij}N^{I}d\Omega
+! F(i,j,I)=\int_{\Omega}c_{ij}N^{I}d\Omega
 ! $$
 
 INTERFACE ForceVector
@@ -263,7 +263,7 @@ END INTERFACE ForceVector
 ! This routine computes the following integral
 !
 ! $$
-! F_{I}=\int_{\Omega}\rho_{1}\rho_{2}N^{I}d\Omega
+! F_{I}=\int_{\Omega}c_{1}c_{2}N^{I}d\Omega
 ! $$
 
 INTERFACE ForceVector_
