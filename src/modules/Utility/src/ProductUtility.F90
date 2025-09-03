@@ -124,6 +124,10 @@ INTERFACE OuterProd
   END FUNCTION OuterProd_r1r1
 END INTERFACE OuterProd
 
+!----------------------------------------------------------------------------
+!                                                  OuterProd_@ProductMethods
+!----------------------------------------------------------------------------
+
 INTERFACE OuterProd_
   MODULE PURE SUBROUTINE OuterProd_r1r1_(a, b, anscoeff, scale, ans, nrow, &
                                          ncol)
@@ -163,6 +167,10 @@ INTERFACE OuterProd
   END FUNCTION OuterProd_r1r1s
 END INTERFACE OuterProd
 
+!----------------------------------------------------------------------------
+!                                                  OuterProd_@ProductMethods
+!----------------------------------------------------------------------------
+
 INTERFACE OuterProd_
   MODULE PURE SUBROUTINE OuterProd_r1r1s_(a, b, sym, anscoeff, scale, ans, &
                                           nrow, ncol)
@@ -192,6 +200,10 @@ INTERFACE OuterProd
     REAL(DFP) :: ans(SIZE(a), SIZE(b, 1), SIZE(b, 2))
   END FUNCTION OuterProd_r1r2
 END INTERFACE OuterProd
+
+!----------------------------------------------------------------------------
+!                                                   OuterProd_@ProductMethods
+!----------------------------------------------------------------------------
 
 !> author: Shion Shimizu
 ! date:   2025-03-05
@@ -280,6 +292,25 @@ INTERFACE OuterProd
     REAL(DFP) :: ans(SIZE(a, 1), SIZE(a, 2), SIZE(b))
   END FUNCTION OuterProd_r2r1
 END INTERFACE OuterProd
+
+!----------------------------------------------------------------------------
+!                                                   OuterProd_@ProductMethods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2025-09-04
+! summary:  a x b
+
+INTERFACE OuterProd_
+  MODULE PURE SUBROUTINE OuterProd_r2r1_(a, b, anscoeff, scale, ans, &
+                                         dim1, dim2, dim3)
+    REAL(DFP), INTENT(IN) :: a(:, :)
+    REAL(DFP), INTENT(IN) :: b(:)
+    REAL(DFP), INTENT(IN) :: anscoeff, scale
+    REAL(DFP), INTENT(INOUT) :: ans(:, :, :)
+    INTEGER(I4B), INTENT(OUT) :: dim1, dim2, dim3
+  END SUBROUTINE OuterProd_r2r1_
+END INTERFACE OuterProd_
 
 !----------------------------------------------------------------------------
 !                                                  OuterProd@ProductMethods
