@@ -16,8 +16,12 @@
 !
 
 SUBMODULE(ElemshapeData_InterpolMethods) Methods
-USE ReallocateUtility, ONLY: Reallocate
-USE FEVariable_Method, ONLY: FEVariableGetInterpolation_ => GetInterpolation_
+USE BaseType, ONLY: TypeFEVariableOpt
+USE FEVariable_Method, ONLY: FEVariableGetInterpolation_ => GetInterpolation_,&
+                             FEVariableInitiate => Initiate, &
+                             FEVariableGetRank => GetRank, &
+                             FEVariableGetTotalShape => GetTotalShape, &
+                             FEVariableSize => Size
 
 IMPLICIT NONE
 CONTAINS
@@ -27,35 +31,45 @@ CONTAINS
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE GetInterpolation1
-! REAL(DFP), ALLOCATABLE :: r1(:), r2(:, :), r3(:, :, :)
-! !! main
-! !!
-! !! if val is a quadrature variable then do nothing
-! !!
-! IF (val%defineOn .EQ. Quadrature) THEN
-!   interpol = val
-!   RETURN
-! END IF
-! !!
-! !! if val is a nodal variable then interpolate
-! !!
-! SELECT CASE (val%rank)
-! CASE (Scalar)
-!   CALL getInterpolation(obj=obj, ans=r1, val=val)
-!   interpol = QuadratureVariable(r1, typeFEVariableScalar, &
-!     & typeFEVariableSpace)
-!   DEALLOCATE (r1)
-! CASE (Vector)
-!   CALL getInterpolation(obj=obj, ans=r2, val=val)
-!   interpol = QuadratureVariable(r2, typeFEVariableVector, &
-!     & typeFEVariableSpace)
-!   DEALLOCATE (r2)
-! CASE (Matrix)
-!   CALL getInterpolation(obj=obj, ans=r3, val=val)
-!   interpol = QuadratureVariable(r3, typeFEVariableMatrix, &
-!     & typeFEVariableSpace)
-!   DEALLOCATE (r3)
-! END SELECT
+INTEGER(I4B) :: s(TypeFEVariableOpt%maxRank), totalShape, myrank, mylen
+
+IF (ans%isInit) THEN
+  CALL GetInterpolation_(obj=obj, ans=ans, val=val)
+ELSE
+
+  myrank = FEVariableGetRank(val)
+  totalShape = 0
+
+  SELECT CASE (myrank)
+  CASE (TypeFEVariableOpt%scalar)
+    totalShape = 1
+    s(1) = obj%nips
+    mylen = s(1)
+
+  CASE (TypeFEVariableOpt%vector)
+    totalShape = 2
+    s(1) = FEVariableSize(val, 1)
+    s(2) = obj%nips
+    mylen = s(1) * s(2)
+
+  CASE (TypeFEVariableOpt%matrix)
+    totalShape = 3
+    s(1) = FEVariableSize(val, 1)
+    s(2) = FEVariableSize(val, 2)
+    s(3) = obj%nips
+    mylen = s(1) * s(2) * s(3)
+
+  END SELECT
+
+  CALL FEVariableInitiate(obj=ans, &
+                          s=s(1:totalShape), &
+                          defineon=TypeFEVariableOpt%quadrature, &
+                          vartype=TypeFEVariableOpt%space, &
+                          rank=FEVariableGetRank(val), &
+                          len=mylen)
+
+  CALL GetInterpolation_(obj=obj, ans=ans, val=val)
+END IF
 END PROCEDURE GetInterpolation1
 
 !----------------------------------------------------------------------------
@@ -96,36 +110,51 @@ END PROCEDURE GetInterpolation_1a
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE GetInterpolation2
-! REAL(DFP), ALLOCATABLE :: r2(:, :), r3(:, :, :), r4(:, :, :, :)
-! !! main
-! !!
-! !! if val is a quadrature variable then do nothing
-! !!
-! IF (val%defineOn .EQ. Quadrature) THEN
-!   interpol = val
-!   RETURN
-! END IF
-! !!
-! !! if val is a nodal variable then interpolate
-! !!
-! SELECT CASE (val%rank)
-! CASE (Scalar)
-!   CALL getInterpolation(obj=obj, ans=r2, val=val)
-!   interpol = QuadratureVariable(r2, typeFEVariableScalar, &
-!     & typeFEVariableSpaceTime)
-!   DEALLOCATE (r2)
-! CASE (Vector)
-!   CALL getInterpolation(obj=obj, ans=r3, val=val)
-!   interpol = QuadratureVariable(r3, typeFEVariableVector, &
-!     & typeFEVariableSpaceTime)
-!   DEALLOCATE (r3)
-! CASE (Matrix)
-!   CALL getInterpolation(obj=obj, ans=r4, val=val)
-!   interpol = QuadratureVariable(r4, typeFEVariableMatrix, &
-!     & typeFEVariableSpaceTime)
-!   DEALLOCATE (r4)
-! END SELECT
-! !!
+INTEGER(I4B) :: s(TypeFEVariableOpt%maxRank), totalShape, myrank, mylen, &
+                nipt
+
+IF (ans%isInit) THEN
+  CALL GetInterpolation_(obj=obj, ans=ans, val=val)
+ELSE
+
+  myrank = FEVariableGetRank(val)
+  totalShape = 0
+  nipt = SIZE(obj)
+
+  SELECT CASE (myrank)
+  CASE (TypeFEVariableOpt%scalar)
+
+    totalShape = 2
+    s(1) = obj(1)%nips
+    s(2) = nipt
+    mylen = s(1) * s(2)
+
+  CASE (TypeFEVariableOpt%vector)
+    totalShape = 3
+    s(1) = FEVariableSize(val, 1)
+    s(2) = obj(1)%nips
+    s(3) = nipt
+    mylen = s(1) * s(2) * s(3)
+
+  CASE (TypeFEVariableOpt%matrix)
+    totalShape = 4
+    s(1) = FEVariableSize(val, 1)
+    s(2) = FEVariableSize(val, 2)
+    s(3) = obj(1)%nips
+    s(4) = nipt
+    mylen = s(1) * s(2) * s(3) * s(4)
+
+  END SELECT
+
+  CALL FEVariableInitiate(obj=ans, &
+                          s=s(1:totalShape), &
+                          defineon=TypeFEVariableOpt%quadrature, &
+                          vartype=TypeFEVariableOpt%spacetime, &
+                          rank=FEVariableGetRank(val), &
+                          len=mylen)
+
+  CALL GetInterpolation_(obj=obj, ans=ans, val=val)
+END IF
 END PROCEDURE GetInterpolation2
 
 !----------------------------------------------------------------------------

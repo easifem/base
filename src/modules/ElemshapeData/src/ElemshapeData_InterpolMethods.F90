@@ -23,6 +23,7 @@ USE BaseType, ONLY: ElemShapeData_, STElemShapeData_, FEVariable_
 IMPLICIT NONE
 PRIVATE
 
+PUBLIC :: GetInterpolation_
 PUBLIC :: GetInterpolation
 PUBLIC :: Interpolation
 
@@ -36,16 +37,28 @@ PUBLIC :: Interpolation
 !
 !# Introduction
 !
-! - Returns the interpolation of a [[fevariable_]]
-! - The result is returned in interpol
-! - interpol is a FEVariable
-! - The rank of interpol is same as the rank of val
-! - interpol is defined on Quadrature, that is, interpol is QuadratureVariable
+! If ans is not initiated then it will be initiated
+! If ans is initiated then we will just call GetInterpolation_
+! which does not alter the properties of ans, it just fills the
+! value of ans
+!
+! - Returns the interpolation of a FEVariable_
+! - The result is returned in ans, which is a FEVariable
+! - The rank of ans is same as the rank of val
+! - ans is defined on Quadrature, that is, ans is QuadratureVariable
+! - ans will vary in space only
 !
 ! - The val can have following ranks; scalar, vector, matrix
 ! - the val can be defined on quadrature (do nothing) or nodal (interpol)
 ! - The `vartype` of val can be constant, space, time, spacetime
 !
+! - If ans is not initiated then  it will be initiated and then we will call
+!   GetInterpolation_. In this case following properties are set for ans
+!   - rank of ans and rank of val will be same
+!   - vartype of ans will Space (We cannot set spacetime or time as
+!                                we do not have time shape function for
+!                                all quadrature points in time in obj)
+
 INTERFACE GetInterpolation
   MODULE PURE SUBROUTINE GetInterpolation1(obj, ans, val)
     CLASS(ElemshapeData_), INTENT(IN) :: obj
@@ -123,16 +136,20 @@ END INTERFACE GetInterpolation_
 !
 !# Introduction
 !
-! - Returns the interpolation of a [[fevariable_]]
-! - The result is returned in interpol
-! - interpol is a FEVariable
-! - The rank of interpol is same as the rank of val
-! - interpol is defined on Quadrature, that is, interpol is QuadratureVariable
+! If ans is not initiated then it will be initiated. If
+! ans is initiated then its properties will not be altered.
+!
+! - Returns the interpolation of a FEVariable
+! - The result is returned in ans, which is a FEVariable
+! - The rank of ans is same as the rank of val
+! - ans is defined on Quadrature, that is, ans is QuadratureVariable
 !
 ! - The val can have following ranks; scalar, vector, matrix
 ! - the val can be defined on quadrature (do nothing) or nodal (interpol)
 ! - The `vartype` of val can be constant, space, time, spacetime
 !
+! - ans will Quadrature and SpaceTime
+
 INTERFACE GetInterpolation
   MODULE PURE SUBROUTINE GetInterpolation2(obj, ans, val)
     CLASS(STElemshapeData_), INTENT(IN) :: obj(:)
