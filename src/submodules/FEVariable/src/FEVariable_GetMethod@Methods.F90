@@ -17,12 +17,19 @@
 SUBMODULE(FEVariable_GetMethod) Methods
 USE ReallocateUtility, ONLY: Reallocate
 USE StringUtility, ONLY: UpperCase
-
 USE BaseType, ONLY: feopt => TypeFEVariableOpt
 
 IMPLICIT NONE
 
 CONTAINS
+
+!----------------------------------------------------------------------------
+!                                                                        Len
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE fevar_len
+ans = obj%len
+END PROCEDURE fevar_len
 
 !----------------------------------------------------------------------------
 !                                                        FEVariable_ToString
@@ -35,7 +42,7 @@ CASE (feopt%scalar)
   ans = "Scalar"
 
 CASE (feopt%vector)
-  ans = "Scalar"
+  ans = "Vector"
 
 CASE (feopt%matrix)
   ans = "Matrix"
@@ -101,7 +108,10 @@ END PROCEDURE fevar_GetLambdaFromYoungsModulus
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE fevar_Size
-IF (PRESENT(dim)) THEN
+LOGICAL(LGT) :: isok
+
+isok = PRESENT(dim)
+IF (isok) THEN
   ans = obj%s(dim)
 ELSE
   ans = obj%len
@@ -109,42 +119,51 @@ END IF
 END PROCEDURE fevar_Size
 
 !----------------------------------------------------------------------------
-!                                                                      Shape
+!                                                              GetTotalShape
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE fevar_Shape
+MODULE PROCEDURE fevar_GetTotalShape
 SELECT CASE (obj%rank)
 CASE (feopt%scalar)
   SELECT CASE (obj%vartype)
-  CASE (feopt%constant)
-    ans = [1]
-  CASE (feopt%space, feopt%time)
-    ans = obj%s(1:1)
+  CASE (feopt%constant, feopt%space, feopt%time)
+    ans = 1
   CASE (feopt%spaceTime)
-    ans = obj%s(1:2)
+    ans = 2
   END SELECT
 
 CASE (feopt%vector)
   SELECT CASE (obj%vartype)
   CASE (feopt%constant)
-    ans = obj%s(1:1)
+    ans = 1
   CASE (feopt%space, feopt%time)
-    ans = obj%s(1:2)
+    ans = 2
   CASE (feopt%spaceTime)
-    ans = obj%s(1:3)
+    ans = 3
   END SELECT
 
 CASE (feopt%matrix)
   SELECT CASE (obj%vartype)
   CASE (feopt%constant)
-    ans = obj%s(1:2)
+    ans = 2
   CASE (feopt%space, feopt%time)
-    ans = obj%s(1:3)
+    ans = 3
   CASE (feopt%spaceTime)
-    ans = obj%s(1:4)
+    ans = 4
   END SELECT
 
 END SELECT
+END PROCEDURE fevar_GetTotalShape
+
+!----------------------------------------------------------------------------
+!                                                                      Shape
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE fevar_Shape
+INTEGER(I4B) :: tsize
+tsize = GetTotalShape(obj=obj)
+CALL Reallocate(ans, tsize)
+ans(1:tsize) = obj%s(1:tsize)
 END PROCEDURE fevar_Shape
 
 !----------------------------------------------------------------------------

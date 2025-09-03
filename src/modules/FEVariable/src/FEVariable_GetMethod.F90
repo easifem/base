@@ -32,14 +32,20 @@ PRIVATE
 
 PUBLIC :: SIZE
 PUBLIC :: SHAPE
-PUBLIC :: OPERATOR(.RANK.)
+PUBLIC :: OPERATOR(.rank.)
+PUBLIC :: GetRank
 PUBLIC :: OPERATOR(.vartype.)
+PUBLIC :: GetVarType
 PUBLIC :: OPERATOR(.defineon.)
+PUBLIC :: GetDefineOn
+PUBLIC :: OPERATOR(.len.)
+PUBLIC :: GetLen
 PUBLIC :: isNodalVariable
 PUBLIC :: isQuadratureVariable
 PUBLIC :: FEVariable_ToChar
 PUBLIC :: FEVariable_ToInteger
 PUBLIC :: GetLambdaFromYoungsModulus
+PUBLIC :: GetTotalShape
 
 PUBLIC :: Get
 PUBLIC :: Get_
@@ -165,6 +171,37 @@ INTERFACE Shape
 END INTERFACE Shape
 
 !----------------------------------------------------------------------------
+!                                                    GetTotalShape@GetMethods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2025-09-03
+! summary: Returns the total size of shape of data
+!
+!# Introduction
+!
+! ans depends on the rank and vartype
+!
+!| rank | vartype | ans |
+!| --- | --- | ---  |
+!| Scalar | Constant | 1 |
+!| Scalar | Space, Time | 1 |
+!| Scalar | SpaceTime | 2 |
+!| Vector | Constant | 1 |
+!| Vector | Space, Time | 2 |
+!| Vector | SpaceTime | 3 |
+!| Matrix | Constant | 2 |
+!| Matrix | Space, Time | 3 |
+!| Matrix | SpaceTime | 4 |
+
+INTERFACE GetTotalShape
+  MODULE PURE FUNCTION fevar_GetTotalShape(obj) RESULT(ans)
+    CLASS(FEVariable_), INTENT(IN) :: obj
+    INTEGER(I4B) :: ans
+  END FUNCTION fevar_GetTotalShape
+END INTERFACE GetTotalShape
+
+!----------------------------------------------------------------------------
 !                                                            rank@GetMethods
 !----------------------------------------------------------------------------
 
@@ -178,7 +215,11 @@ INTERFACE OPERATOR(.RANK.)
     CLASS(FEVariable_), INTENT(IN) :: obj
     INTEGER(I4B) :: ans
   END FUNCTION fevar_rank
-END INTERFACE
+END INTERFACE OPERATOR(.RANK.)
+
+INTERFACE GetRank
+  MODULE PROCEDURE fevar_rank
+END INTERFACE GetRank
 
 !----------------------------------------------------------------------------
 !                                                        vartype@GetMethods
@@ -194,7 +235,11 @@ INTERFACE OPERATOR(.vartype.)
     CLASS(FEVariable_), INTENT(IN) :: obj
     INTEGER(I4B) :: ans
   END FUNCTION fevar_vartype
-END INTERFACE
+END INTERFACE OPERATOR(.vartype.)
+
+INTERFACE GetVarType
+  MODULE PROCEDURE fevar_vartype
+END INTERFACE GetVarType
 
 !----------------------------------------------------------------------------
 !                                                       defineon@GetMethods
@@ -210,7 +255,28 @@ INTERFACE OPERATOR(.defineon.)
     CLASS(FEVariable_), INTENT(IN) :: obj
     INTEGER(I4B) :: ans
   END FUNCTION fevar_defineon
-END INTERFACE
+END INTERFACE OPERATOR(.defineon.)
+
+INTERFACE GetDefineOn
+  MODULE PROCEDURE fevar_defineon
+END INTERFACE GetDefineOn
+
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2021-11-27
+! summary: Returns the defineon of FEvariable
+
+INTERFACE OPERATOR(.len.)
+  MODULE PURE FUNCTION fevar_len(obj) RESULT(ans)
+    CLASS(FEVariable_), INTENT(IN) :: obj
+    INTEGER(I4B) :: ans
+  END FUNCTION fevar_len
+END INTERFACE OPERATOR(.len.)
+
+INTERFACE GetLen
+  MODULE PROCEDURE fevar_len
+END INTERFACE GetLen
 
 !----------------------------------------------------------------------------
 !                                                IsNodalVariable@GetMethods
