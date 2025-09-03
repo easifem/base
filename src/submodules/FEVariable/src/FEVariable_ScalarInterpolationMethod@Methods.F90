@@ -51,11 +51,20 @@ END DO
 END PROCEDURE ScalarConstantGetInterpolation_2
 
 !----------------------------------------------------------------------------
+!                                                           GetInterpolation_
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE ScalarConstantGetInterpolation_3
+IF (.NOT. addContribution) ans = 0.0_DFP
+ans = ans + scale * obj%val(1)
+END PROCEDURE ScalarConstantGetInterpolation_3
+
+!----------------------------------------------------------------------------
 !                                                    MasterGetInterpolation_
 !----------------------------------------------------------------------------
 
-PURE SUBROUTINE MasterGetInterpolation_(ans, scale, N, nns, nips, val, &
-                                        valStart, ansStart)
+PURE SUBROUTINE MasterGetInterpolation1_(ans, scale, N, nns, nips, val, &
+                                         valStart, ansStart)
   REAL(DFP), INTENT(INOUT) :: ans(:)
   REAL(DFP), INTENT(IN) :: scale
   REAL(DFP), INTENT(IN) :: N(:, :)
@@ -72,7 +81,27 @@ PURE SUBROUTINE MasterGetInterpolation_(ans, scale, N, nns, nips, val, &
     END DO
   END DO
 
-END SUBROUTINE MasterGetInterpolation_
+END SUBROUTINE MasterGetInterpolation1_
+
+!----------------------------------------------------------------------------
+!                                                    MasterGetInterpolation_
+!----------------------------------------------------------------------------
+
+PURE SUBROUTINE MasterGetInterpolation3_(ans, scale, N, nns, spaceIndx, val, &
+                                         valStart)
+  REAL(DFP), INTENT(INOUT) :: ans
+  REAL(DFP), INTENT(IN) :: scale
+  REAL(DFP), INTENT(IN) :: N(:, :)
+  INTEGER(I4B), INTENT(IN) :: nns, spaceIndx
+  REAL(DFP), INTENT(IN) :: val(:)
+  INTEGER(I4B), INTENT(IN) :: valStart
+
+  INTEGER(I4B) :: ii
+
+  DO ii = 1, nns
+    ans = ans + scale * N(ii, spaceIndx) * val(valStart + ii)
+  END DO
+END SUBROUTINE MasterGetInterpolation3_
 
 !----------------------------------------------------------------------------
 !                                                          GetInterpolation_
@@ -89,9 +118,9 @@ CASE (TypeFEVariableOpt%nodal)
   !! convert nodal values to quadrature values by using N
   !! make sure nns .LE. obj%len
 
-  CALL MasterGetInterpolation_(ans=ans, scale=scale, N=N, nns=nns, &
-                               nips=nips, val=obj%val, valStart=0, &
-                               ansStart=0)
+  CALL MasterGetInterpolation1_(ans=ans, scale=scale, N=N, nns=nns, &
+                                nips=nips, val=obj%val, valStart=0, &
+                                ansStart=0)
 
 CASE (TypeFEVariableOpt%quadrature)
   !! No need for interpolation, just returnt the quadrature values
@@ -119,9 +148,9 @@ IF (.NOT. addContribution) ans%val(1 + ansStart:nips + ansStart) = 0.0_DFP
 
 SELECT CASE (obj%varType)
 CASE (TypeFEVariableOpt%nodal)
-  CALL MasterGetInterpolation_(ans=ans%val, scale=scale, N=N, &
-                               nns=nns, nips=nips, val=obj%val, &
-                               valStart=valStart, ansStart=ansStart)
+  CALL MasterGetInterpolation1_(ans=ans%val, scale=scale, N=N, &
+                                nns=nns, nips=nips, val=obj%val, &
+                                valStart=valStart, ansStart=ansStart)
 
 CASE (TypeFEVariableOpt%quadrature)
   DO ips = 1, nips
@@ -131,6 +160,31 @@ CASE (TypeFEVariableOpt%quadrature)
 END SELECT
 
 END PROCEDURE ScalarSpaceGetInterpolation_2
+
+!----------------------------------------------------------------------------
+!                                                          GetInterpolation_
+!----------------------------------------------------------------------------
+
+! obj%vartype is nodal
+! convert nodal values to quadrature values by using N
+! make sure nns .LE. obj%len
+!
+! obj%vartype is quadrature
+! No need for interpolation, just returnt the quadrature values
+! make sure nips .LE. obj%len
+MODULE PROCEDURE ScalarSpaceGetInterpolation_3
+IF (.NOT. addContribution) ans = 0.0_DFP
+
+SELECT CASE (obj%vartype)
+CASE (TypeFEVariableOpt%nodal)
+  CALL MasterGetInterpolation3_(ans=ans, scale=scale, N=N, nns=nns, &
+                                spaceIndx=spaceIndx, val=obj%val, valStart=0)
+
+CASE (TypeFEVariableOpt%quadrature)
+  ans = ans + scale * obj%val(spaceIndx)
+
+END SELECT
+END PROCEDURE ScalarSpaceGetInterpolation_3
 
 !----------------------------------------------------------------------------
 !                                                           GetInterpolation_
@@ -156,9 +210,9 @@ CASE (TypeFEVariableOpt%nodal)
   DO aa = 1, nnt
     myscale = scale * T(aa)
     valStart = (aa - 1) * obj%s(1)
-    CALL MasterGetInterpolation_(ans=ans, scale=myscale, N=N, nns=nns, &
-                                 nips=nips, val=obj%val, valStart=valStart, &
-                                 ansStart=ansStart)
+    CALL MasterGetInterpolation1_(ans=ans, scale=myscale, N=N, nns=nns, &
+                                  nips=nips, val=obj%val, valStart=valStart, &
+                                  ansStart=ansStart)
   END DO
 
 CASE (TypeFEVariableOpt%quadrature)
@@ -184,7 +238,7 @@ REAL(DFP) :: myscale
 LOGICAL(LGT), PARAMETER :: yes = .TRUE.
 
 ansStart = (timeIndx - 1) * ans%s(1)
-IF (.NOT. addContribution) ans%val(1+ansStart:nips+ansStart) = 0.0_DFP
+IF (.NOT. addContribution) ans%val(1 + ansStart:nips + ansStart) = 0.0_DFP
 
 SELECT CASE (obj%varType)
 
@@ -192,9 +246,9 @@ CASE (TypeFEVariableOpt%nodal)
   DO aa = 1, nnt
     myscale = scale * T(aa)
     valStart = (aa - 1) * obj%s(1)
-    CALL MasterGetInterpolation_(ans=ans%val, scale=myscale, N=N, nns=nns, &
-                                 nips=nips, val=obj%val, valStart=valStart, &
-                                 ansStart=ansStart)
+    CALL MasterGetInterpolation1_(ans=ans%val, scale=myscale, N=N, nns=nns, &
+                                  nips=nips, val=obj%val, valStart=valStart, &
+                                  ansStart=ansStart)
   END DO
 
 CASE (TypeFEVariableOpt%quadrature)
@@ -207,5 +261,44 @@ CASE (TypeFEVariableOpt%quadrature)
 END SELECT
 
 END PROCEDURE ScalarSpaceTimeGetInterpolation_2
+
+!----------------------------------------------------------------------------
+!                                                           GetInterpolation_
+!----------------------------------------------------------------------------
+
+! obj%vartype is nodal
+! convert nodal values to quadrature values by using N
+! make sure nns .LE. obj%len
+! obj%s(1) should be atleast nns
+! obj%s(2) should be atleast nnt
+!
+! obj%vartype is quadrature
+! No need for interpolation, just returnt the quadrature values
+! make sure nips .LE. obj%len
+
+MODULE PROCEDURE ScalarSpaceTimeGetInterpolation_3
+INTEGER(I4B) :: aa, valStart
+REAL(DFP) :: myscale
+LOGICAL(LGT), PARAMETER :: yes = .TRUE.
+
+IF (.NOT. addContribution) ans = 0.0_DFP
+
+SELECT CASE (obj%varType)
+
+CASE (TypeFEVariableOpt%nodal)
+  DO aa = 1, nnt
+    myscale = scale * T(aa)
+    valStart = (aa - 1) * obj%s(1)
+    CALL MasterGetInterpolation3_(ans=ans, scale=myscale, N=N, nns=nns, &
+                                  spaceIndx=spaceIndx, val=obj%val, &
+                                  valStart=valStart)
+  END DO
+
+CASE (TypeFEVariableOpt%quadrature)
+  valStart = (timeIndx - 1) * obj%s(1)
+  ans = ans + scale * obj%val(valStart + spaceIndx)
+
+END SELECT
+END PROCEDURE ScalarSpaceTimeGetInterpolation_3
 
 END SUBMODULE Methods
