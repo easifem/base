@@ -283,6 +283,28 @@ INTERFACE GetInterpolation_
 END INTERFACE GetInterpolation_
 
 !----------------------------------------------------------------------------
+!                                                   GetInterpolation_@Methods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2025-08-30
+! summary:  get interpolation of vector without allocation
+
+INTERFACE GetInterpolation_
+  MODULE PURE SUBROUTINE GetInterpolation_4b(obj, ans, val, tsize, &
+                                             scale, addContribution, &
+                                             timeIndx, spaceIndx)
+    CLASS(ElemshapeData_), INTENT(IN) :: obj
+    REAL(DFP), INTENT(INOUT) :: ans(:)
+    TYPE(FEVariable_), INTENT(IN) :: val
+    INTEGER(I4B), INTENT(OUT) :: tsize
+    REAL(DFP), INTENT(IN) :: scale
+    LOGICAL(LGT), INTENT(IN) :: addContribution
+    INTEGER(I4B), INTENT(IN) :: spaceIndx, timeIndx
+  END SUBROUTINE GetInterpolation_4b
+END INTERFACE GetInterpolation_
+
+!----------------------------------------------------------------------------
 !                                                    GetInterpolation@Methods
 !----------------------------------------------------------------------------
 

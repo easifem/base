@@ -248,6 +248,51 @@ END PROCEDURE GetInterpolation_4a
 !                                                           GetInterpolation_
 !----------------------------------------------------------------------------
 
+MODULE PROCEDURE GetInterpolation_4b
+SELECT CASE (val%vartype)
+CASE (TypeFEVariableOpt%constant)
+  CALL FEVariableGetInterpolation_(obj=val, rank=TypeFEVariableVector, &
+                                   vartype=TypeFEVariableConstant, &
+                                   N=obj%N, nns=obj%nns, &
+                                   spaceIndx=spaceIndx, &
+                                   timeIndx=timeIndx, &
+                                   scale=scale, &
+                                   addContribution=addContribution, &
+                                   ans=ans, tsize=tsize)
+
+CASE (TypeFEVariableOpt%space)
+
+  CALL FEVariableGetInterpolation_(obj=val, rank=TypeFEVariableVector, &
+                                   vartype=TypeFEVariableSpace, &
+                                   N=obj%N, nns=obj%nns, &
+                                   spaceIndx=spaceIndx, &
+                                   timeIndx=timeIndx, &
+                                   scale=scale, &
+                                   addContribution=addContribution, &
+                                   ans=ans, tsize=tsize)
+
+CASE (TypeFEVariableOpt%spacetime)
+
+  SELECT TYPE (obj); TYPE IS (STElemShapeData_)
+    CALL FEVariableGetInterpolation_(obj=val, rank=TypeFEVariableVector, &
+                                     vartype=TypeFEVariableSpaceTime, &
+                                     N=obj%N, nns=obj%nns, &
+                                     spaceIndx=spaceIndx, &
+                                     timeIndx=timeIndx, &
+                                     T=obj%T, nnt=obj%nnt, &
+                                     scale=scale, &
+                                     addContribution=addContribution, &
+                                     ans=ans, tsize=tsize)
+
+  END SELECT
+
+END SELECT
+END PROCEDURE GetInterpolation_4b
+
+!----------------------------------------------------------------------------
+!                                                           GetInterpolation_
+!----------------------------------------------------------------------------
+
 MODULE PROCEDURE GetInterpolation5
 INTEGER(I4B) :: dim1, dim2, dim3
 REAL(DFP), PARAMETER :: one = 1.0_DFP
