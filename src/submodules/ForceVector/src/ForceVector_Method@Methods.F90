@@ -1,5 +1,6 @@
 ! This program is a part of EASIFEM library
-! Copyright (C) 2020-2021  Vikas Sharma, Ph.D
+! Expandable And Scalable Infrastructure for Finite Element Methods
+! htttps://www.easifem.com
 !
 ! This program is free software: you can redistribute it and/or modify
 ! it under the terms of the GNU General Public License as published by
@@ -13,11 +14,10 @@
 !
 ! You should have received a copy of the GNU General Public License
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
-!
 
 SUBMODULE(ForceVector_Method) Methods
 USE ReallocateUtility, ONLY: Reallocate
-USE ElemshapeData_Method, ONLY: GetInterpolation
+USE ElemshapeData_Method, ONLY: GetInterpolation, GetInterpolation_
 USE ProductUtility, ONLY: OuterProd
 IMPLICIT NONE
 CONTAINS
@@ -27,40 +27,63 @@ CONTAINS
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE ForceVector1
+INTEGER(I4B) :: tsize
+CALL Reallocate(ans, test%nns)
+CALL ForceVector_(test=test, ans=ans, tsize=tsize)
+END PROCEDURE ForceVector1
+
+!----------------------------------------------------------------------------
+!                                                               ForceVector_
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE ForceVector_1
 ! Define internal variable
 REAL(DFP) :: realval
 INTEGER(I4B) :: ips
 
 ! main
-CALL Reallocate(ans, test%nns)
+tsize = test%nns
 
 DO ips = 1, test%nips
   realval = test%js(ips) * test%ws(ips) * test%thickness(ips)
-  ans(1:test%nns) = ans(1:test%nns) + realval * test%N(1:test%nns, ips)
+  ans(1:tsize) = ans(1:tsize) + realval * test%N(1:tsize, ips)
 END DO
 
-END PROCEDURE ForceVector1
+END PROCEDURE ForceVector_1
 
 !----------------------------------------------------------------------------
 !                                                               ForceVector
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE ForceVector2
-! Define internal variable
-REAL(DFP), ALLOCATABLE :: realval(:)
+INTEGER(I4B) :: tsize
+tsize = test%nns
+CALL Reallocate(ans, tsize)
+CALL ForceVector_(test=test, c=c, crank=crank, ans=ans, tsize=tsize)
+END PROCEDURE ForceVector2
+
+!----------------------------------------------------------------------------
+!                                                               ForceVector
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE ForceVector_2
+REAL(DFP), PARAMETER :: one = 1.0_DFP
+LOGICAL(LGT), PARAMETER :: no = .FALSE.
+
+REAL(DFP) :: realval
 INTEGER(I4B) :: ips
 
-! main
-CALL GetInterpolation(obj=test, ans=realval, val=c)
-realval = test%js * test%ws * test%thickness * realval
-CALL Reallocate(ans, SIZE(test%N, 1))
+tsize = test%nns
+! CALL Reallocate(ans, SIZE(test%N, 1))
 
 DO ips = 1, test%nips
-  ans = ans + realval(ips) * test%N(1:test%nns, ips)
+  CALL GetInterpolation_(obj=test, ans=realval, val=c, scale=one, &
+                         addContribution=no, timeIndx=1, spaceIndx=ips)
+  realval = test%js(ips) * test%ws(ips) * test%thickness(ips) * realval
+  ans(1:tsize) = ans(1:tsize) + realval * test%N(1:tsize, ips)
 END DO
 
-DEALLOCATE (realval)
-END PROCEDURE ForceVector2
+END PROCEDURE ForceVector_2
 
 !----------------------------------------------------------------------------
 !                                                               ForceVector
@@ -83,6 +106,28 @@ END DO
 
 DEALLOCATE (realval, cbar)
 END PROCEDURE ForceVector3
+
+!----------------------------------------------------------------------------
+!                                                               ForceVector
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE ForceVector_3
+! ! Define internal variable
+! REAL(DFP), ALLOCATABLE :: realval(:)
+! REAL(DFP), ALLOCATABLE :: cbar(:, :)
+! INTEGER(I4B) :: ips
+!
+! ! main
+! CALL GetInterpolation(obj=test, ans=cbar, val=c)
+! realval = test%js * test%ws * test%thickness
+! CALL Reallocate(ans, SIZE(cbar, 1), SIZE(test%N, 1))
+!
+! DO ips = 1, SIZE(realval)
+!   ans = ans + realval(ips) * OuterProd(cbar(:, ips), test%N(:, ips))
+! END DO
+!
+! DEALLOCATE (realval, cbar)
+END PROCEDURE ForceVector_3
 
 !----------------------------------------------------------------------------
 !                                                               ForceVector
