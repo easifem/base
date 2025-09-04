@@ -23,6 +23,7 @@ IMPLICIT NONE
 PRIVATE
 
 PUBLIC :: ForceVector
+public :: ForceVector_
 
 !----------------------------------------------------------------------------
 !                                                               ForceVector
