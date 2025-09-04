@@ -49,17 +49,17 @@ obj%len = len
 obj%capacity = TypeFEVariableOpt%capacityExpandFactor * obj%len
 
 isok = ALLOCATED(obj%val)
-IF (isok) THEN
-  tsize = SIZE(obj%val)
+IF (.NOT. isok) THEN
+  CALL Reallocate(obj%val, obj%capacity)
+  RETURN
+END IF
 
-  IF (tsize .GE. obj%len) THEN
-    obj%capacity = tsize
-    obj%val(1:obj%capacity) = 0.0_DFP
-
-  ELSE
-    CALL Reallocate(obj%val, obj%capacity)
-  END IF
-
+tsize = SIZE(obj%val)
+IF (tsize .GE. obj%len) THEN
+  obj%capacity = tsize
+  obj%val(1:obj%capacity) = 0.0_DFP
+ELSE
+  CALL Reallocate(obj%val, obj%capacity)
 END IF
 
 END PROCEDURE obj_Initiate2
