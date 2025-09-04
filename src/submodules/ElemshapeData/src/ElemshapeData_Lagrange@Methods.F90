@@ -77,7 +77,8 @@ CALL GetQuadratureWeights_(obj=quad, weights=obj%ws, tsize=nips)
 ALLOCATE (xij(3, nns), temp(nips, nns, 3))
 
 CALL InterpolationPoint_(order=order, elemType=elemType, ipType=ipType0, &
-        layout="VEFC", xij=refelemCoord(1:xidim, :), alpha=alpha, beta=beta, &
+                         layout="VEFC", xij=refelemCoord(1:xidim, :), &
+                         alpha=alpha, beta=beta, &
                          lambda=lambda, ans=xij, nrow=indx(1), ncol=indx(2))
 
 IF (PRESENT(coeff)) THEN
