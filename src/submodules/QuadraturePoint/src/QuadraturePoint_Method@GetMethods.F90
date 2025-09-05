@@ -21,6 +21,14 @@
 
 SUBMODULE(QuadraturePoint_Method) GetMethods
 USE ReallocateUtility, ONLY: Reallocate
+USE BaseType, ONLY: TypeElemNameOpt
+
+USE LineInterpolationUtility, ONLY: QuadratureNumber_Line
+USE TriangleInterpolationUtility, ONLY: QuadratureNumber_Triangle
+USE QuadrangleInterpolationUtility, ONLY: QuadratureNumber_Quadrangle
+USE TetrahedronInterpolationUtility, ONLY: QuadratureNumber_Tetrahedron
+USE HexahedronInterpolationUtility, ONLY: QuadratureNumber_Hexahedron
+USE ReferenceElement_Method, ONLY: ElementTopology
 
 IMPLICIT NONE
 CONTAINS
@@ -37,9 +45,48 @@ END PROCEDURE obj_Size
 !                                                  getTotalQuadraturepoints
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE obj_GetTotalQuadraturepoints
+MODULE PROCEDURE obj_GetTotalQuadraturepoints1
 ans = SIZE(obj, 2)
-END PROCEDURE obj_GetTotalQuadraturepoints
+END PROCEDURE obj_GetTotalQuadraturepoints1
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE obj_GetTotalQuadraturePoints2
+INTEGER(I4B) :: topo, myint(3)
+
+topo = ElementTopology(elemType)
+
+SELECT CASE (topo)
+CASE (TypeElemNameOpt%line)
+  ans = QuadratureNumber_Line(order=p, quadtype=quadratureType1)
+
+CASE (TypeElemNameOpt%triangle)
+  ans = QuadratureNumber_Triangle(order=p, quadtype=quadratureType1)
+
+CASE (TypeElemNameOpt%quadrangle)
+  myint(1:2) = QuadratureNumber_Quadrangle(p=p, q=q, &
+                                           quadType1=quadratureType1, &
+                                           quadType2=quadratureType2)
+  ans = myint(1) * myint(2)
+
+CASE (TypeElemNameOpt%tetrahedron)
+  ans = QuadratureNumber_Tetrahedron(order=p, quadtype=quadratureType1)
+
+CASE (TypeElemNameOpt%hexahedron)
+  myint(1:3) = QuadratureNumber_Hexahedron(p=p, q=q, r=r, &
+                                           quadType1=quadratureType1, &
+                                           quadType2=quadratureType2, &
+                                           quadType3=quadratureType3)
+  ans = PRODUCT(myint)
+
+! CASE (Prism)
+! CASE (Pyramid)
+
+END SELECT
+
+END PROCEDURE obj_GetTotalQuadraturePoints2
 
 !----------------------------------------------------------------------------
 !                                                         getQuadraturepoints

@@ -325,8 +325,10 @@ END INTERFACE Initiate
 
 INTERFACE Initiate
   MODULE SUBROUTINE obj_Initiate7(obj, refElem, p, q, r, quadratureType1, &
-           quadratureType2, quadratureType3, alpha1, beta1, lambda1, alpha2, &
-                                  beta2, lambda2, alpha3, beta3, lambda3)
+                                  quadratureType2, quadratureType3, &
+                                  alpha1, beta1, lambda1, &
+                                  alpha2, beta2, lambda2, &
+                                  alpha3, beta3, lambda3)
     TYPE(QuadraturePoint_), INTENT(INOUT) :: obj
     !! Total number of xidimension
     CLASS(ReferenceElement_), INTENT(IN) :: refElem
@@ -365,8 +367,10 @@ END INTERFACE Initiate
 
 INTERFACE Initiate
   MODULE SUBROUTINE obj_Initiate8(obj, refElem, nipsx, nipsy, nipsz, &
-           quadratureType1, quadratureType2, quadratureType3, alpha1, beta1, &
-                      lambda1, alpha2, beta2, lambda2, alpha3, beta3, lambda3)
+                                  quadratureType1, quadratureType2, &
+                                  quadratureType3, alpha1, beta1, lambda1, &
+                                  alpha2, beta2, lambda2, &
+                                  alpha3, beta3, lambda3)
     TYPE(QuadraturePoint_), INTENT(INOUT) :: obj
     !! Total number of xidimension
     CLASS(ReferenceElement_), INTENT(IN) :: refElem
@@ -489,8 +493,10 @@ END INTERFACE Initiate
 
 INTERFACE Initiate
   MODULE SUBROUTINE obj_Initiate11(obj, elemType, domainName, p, q, r, &
-           quadratureType1, quadratureType2, quadratureType3, alpha1, beta1, &
-                 lambda1, alpha2, beta2, lambda2, alpha3, beta3, lambda3, xij)
+                                   quadratureType1, quadratureType2, &
+                                   quadratureType3, alpha1, beta1, lambda1, &
+                                   alpha2, beta2, lambda2, &
+                                   alpha3, beta3, lambda3, xij)
     TYPE(QuadraturePoint_), INTENT(INOUT) :: obj
     !! Total number of xidimension
     INTEGER(I4B), INTENT(IN) :: elemtype
@@ -528,8 +534,10 @@ END INTERFACE Initiate
 
 INTERFACE Initiate
   MODULE SUBROUTINE obj_Initiate12(obj, elemType, domainName, nipsx, nipsy, &
-    nipsz, quadratureType1, quadratureType2, quadratureType3, alpha1, beta1, &
-                 lambda1, alpha2, beta2, lambda2, alpha3, beta3, lambda3, xij)
+                                   nipsz, quadratureType1, quadratureType2, &
+                                   quadratureType3, alpha1, beta1, lambda1, &
+                                   alpha2, beta2, lambda2, &
+                                   alpha3, beta3, lambda3, xij)
     TYPE(QuadraturePoint_), INTENT(INOUT) :: obj
     !! Total number of xidimension
     INTEGER(I4B), INTENT(IN) :: elemType
@@ -632,11 +640,41 @@ END INTERFACE SIZE
 ! summary: This routine returns total number of quadrature points
 
 INTERFACE GetTotalQuadraturepoints
-  MODULE PURE FUNCTION obj_GetTotalQuadraturePoints(obj) RESULT(ans)
+  MODULE PURE FUNCTION obj_GetTotalQuadraturePoints1(obj) RESULT(ans)
     TYPE(QuadraturePoint_), INTENT(IN) :: obj
     INTEGER(I4B) :: ans
-  END FUNCTION obj_GetTotalQuadraturePoints
+  END FUNCTION obj_GetTotalQuadraturePoints1
 END INTERFACE GetTotalQuadraturepoints
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE GetTotalQuadraturePoints
+  MODULE FUNCTION obj_GetTotalQuadraturePoints2(elemType, p, q, r, &
+                                                quadratureType1, &
+                                                quadratureType2, &
+                                                quadratureType3) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: elemtype
+    !! Reference-element
+    INTEGER(I4B), INTENT(IN) :: p
+    !! order of integrand in x
+    INTEGER(I4B), INTENT(IN) :: q
+    !! order of integrand in y
+    INTEGER(I4B), INTENT(IN) :: r
+    !! order of integrand in z direction
+    INTEGER(I4B), INTENT(IN) :: quadratureType1
+    !! Type of quadrature points: GaussLegendre, GaussLegendreLobatto
+    !! GaussLegendreRadau, GaussLegendreRadauLeft, GaussLegendreRadauRight
+    !! GaussChebyshev, GaussChebyshevLobatto, GaussChebyshevRadau
+    !! GaussChebyshevRadauLeft, GaussChebyshevRadauRight
+    INTEGER(I4B), INTENT(IN) :: quadratureType2
+    !! Type of quadrature points
+    INTEGER(I4B), INTENT(IN) :: quadratureType3
+    !! Type of quadrature points
+    INTEGER(I4B) :: ans
+  END FUNCTION obj_GetTotalQuadraturePoints2
+END INTERFACE GetTotalQuadraturePoints
 
 !----------------------------------------------------------------------------
 !                                              GetQuadraturePoint@GetMethods

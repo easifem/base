@@ -108,24 +108,18 @@ END PROCEDURE quad_Deallocate
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE obj_QuadratureNumber1
-INTEGER(I4B) :: ncol
-
 SELECT CASE (topo)
 
 CASE (elem%line)
-
   ans = QuadratureNumber_Line(order=order, quadtype=quadratureType)
 
 CASE (elem%triangle)
-
   ans = QuadratureNumber_Triangle(order=order, quadtype=quadratureType)
 
 CASE (elem%quadrangle)
-
   ans = QuadratureNumber_Line(order=order, quadtype=quadratureType)
 
 CASE (elem%tetrahedron)
-
   ans = QuadratureNumber_Tetrahedron(order=order, quadtype=quadratureType)
 
 ! CASE (elem%hexahedron)
@@ -134,11 +128,15 @@ CASE (elem%tetrahedron)
 !
 ! CASE (elem%pyramid)
 
+#ifdef DEBUG_VER
 CASE DEFAULT
   CALL Errormsg(msg="No case found for give topo", &
-            file=__FILE__, routine="obj_QuadratureNumber1()", line=__LINE__, &
+                file=__FILE__, &
+                routine="obj_QuadratureNumber1()", &
+                line=__LINE__, &
                 unitno=stderr)
   STOP
+#endif
 
 END SELECT
 
@@ -150,8 +148,12 @@ END PROCEDURE obj_QuadratureNumber1
 
 MODULE PROCEDURE obj_Copy
 INTEGER(I4B) :: s(2)
+LOGICAL(LGT) :: isok
+
 obj%txi = obj2%txi
-IF (ALLOCATED(obj2%points)) THEN
+isok = ALLOCATED(obj2%points)
+
+IF (isok) THEN
   s = SHAPE(obj2%points)
   CALL Reallocate(obj%points, s(1), s(2))
   obj%points(1:s(1), 1:s(2)) = obj2%points(1:s(1), 1:s(2))
@@ -211,9 +213,15 @@ END PROCEDURE obj_Initiate4
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE obj_Initiate5
-CALL obj_Initiate9(obj=obj, elemType=refelem%name, &
-  domainName=refelem%domainName, order=order, quadratureType=quadratureType, &
-                   alpha=alpha, beta=beta, lambda=lambda, xij=refelem%xij)
+CALL obj_Initiate9(obj=obj, &
+                   elemType=refelem%name, &
+                   domainName=refelem%domainName, &
+                   order=order, &
+                   quadratureType=quadratureType, &
+                   alpha=alpha, &
+                   beta=beta, &
+                   lambda=lambda, &
+                   xij=refelem%xij)
 END PROCEDURE obj_Initiate5
 
 !----------------------------------------------------------------------------
@@ -221,9 +229,15 @@ END PROCEDURE obj_Initiate5
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE obj_Initiate6
-CALL obj_Initiate10(obj=obj, elemType=refelem%name, &
-    domainName=refelem%domainName, nips=nips, quadratureType=quadratureType, &
-                    alpha=alpha, beta=beta, lambda=lambda, xij=refelem%xij)
+CALL obj_Initiate10(obj=obj, &
+                    elemType=refelem%name, &
+                    domainName=refelem%domainName, &
+                    nips=nips, &
+                    quadratureType=quadratureType, &
+                    alpha=alpha, &
+                    beta=beta, &
+                    lambda=lambda, &
+                    xij=refelem%xij)
 END PROCEDURE obj_Initiate6
 
 !----------------------------------------------------------------------------
@@ -231,12 +245,23 @@ END PROCEDURE obj_Initiate6
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE obj_Initiate8
-CALL obj_Initiate12(obj=obj, elemType=refelem%name, &
-       domainName=refelem%domainName, nipsx=nipsx, nipsy=nipsy, nipsz=nipsz, &
-           quadratureType1=quadratureType1, quadratureType2=quadratureType2, &
-                quadratureType3=quadratureType3, alpha1=alpha1, beta1=beta1, &
-               lambda1=lambda1, alpha2=alpha2, beta2=beta2, lambda2=lambda2, &
-                 alpha3=alpha3, beta3=beta3, lambda3=lambda3, xij=refelem%xij)
+CALL obj_Initiate12(obj=obj, &
+                    elemType=refelem%name, &
+                    domainName=refelem%domainName, &
+                    nipsx=nipsx, nipsy=nipsy, nipsz=nipsz, &
+                    quadratureType1=quadratureType1, &
+                    quadratureType2=quadratureType2, &
+                    quadratureType3=quadratureType3, &
+                    alpha1=alpha1, &
+                    beta1=beta1, &
+                    lambda1=lambda1, &
+                    alpha2=alpha2, &
+                    beta2=beta2, &
+                    lambda2=lambda2, &
+                    alpha3=alpha3, &
+                    beta3=beta3, &
+                    lambda3=lambda3, &
+                    xij=refelem%xij)
 END PROCEDURE obj_Initiate8
 
 !----------------------------------------------------------------------------
@@ -245,10 +270,14 @@ END PROCEDURE obj_Initiate8
 
 MODULE PROCEDURE obj_Initiate9
 CALL obj_Initiate11(obj=obj, elemType=elemtype, domainName=domainname, &
-                  p=order, q=order, r=order, quadratureType1=quadratureType, &
-             quadratureType2=quadratureType, quadratureType3=quadratureType, &
-         alpha1=alpha, beta1=beta, lambda1=lambda, alpha2=alpha, beta2=beta, &
-            lambda2=lambda, alpha3=alpha, beta3=beta, lambda3=lambda, xij=xij)
+                    p=order, q=order, r=order, &
+                    quadratureType1=quadratureType, &
+                    quadratureType2=quadratureType, &
+                    quadratureType3=quadratureType, &
+                    alpha1=alpha, beta1=beta, lambda1=lambda, &
+                    alpha2=alpha, beta2=beta, lambda2=lambda, &
+                    alpha3=alpha, beta3=beta, lambda3=lambda, &
+                    xij=xij)
 END PROCEDURE obj_Initiate9
 
 !----------------------------------------------------------------------------
@@ -257,10 +286,14 @@ END PROCEDURE obj_Initiate9
 
 MODULE PROCEDURE obj_Initiate10
 CALL obj_Initiate12(obj=obj, elemType=elemtype, domainName=domainName, &
-         nipsx=nips, nipsy=nips, nipsz=nips, quadratureType1=quadratureType, &
-             quadratureType2=quadratureType, quadratureType3=quadratureType, &
-         alpha1=alpha, beta1=beta, lambda1=lambda, alpha2=alpha, beta2=beta, &
-            lambda2=lambda, alpha3=alpha, beta3=beta, lambda3=lambda, xij=xij)
+                    nipsx=nips, nipsy=nips, nipsz=nips, &
+                    quadratureType1=quadratureType, &
+                    quadratureType2=quadratureType, &
+                    quadratureType3=quadratureType, &
+                    alpha1=alpha, beta1=beta, lambda1=lambda, &
+                    alpha2=alpha, beta2=beta, lambda2=lambda, &
+                    alpha3=alpha, beta3=beta, lambda3=lambda, &
+                    xij=xij)
 END PROCEDURE obj_Initiate10
 
 !----------------------------------------------------------------------------
@@ -269,12 +302,14 @@ END PROCEDURE obj_Initiate10
 
 MODULE PROCEDURE obj_Initiate11
 INTEGER(I4B) :: topo, nrow, ncol, ii, nipsx(1), nipsy(1), nipsz(1)
+LOGICAL(LGT) :: isok
 
 topo = ElementTopology(elemType)
 
 ii = XiDimension(elemType)
 
-IF (PRESENT(xij)) THEN
+isok = PRESENT(xij)
+IF (isok) THEN
   nrow = MAX(SIZE(xij, 1), ii)
 ELSE
   nrow = ii
@@ -287,39 +322,43 @@ SELECT CASE (topo)
 CASE (elem%line)
 
   nipsx(1) = QuadratureNumber_Line(order=p, quadtype=quadratureType1)
-
   ncol = nipsx(1)
-
   CALL Reallocate(obj%points, nrow, ncol)
-
   CALL QuadraturePoint_Line_(nips=nipsx, quadType=quadratureType1, &
-                     layout="INCREASING", xij=xij, alpha=alpha1, beta=beta1, &
-                         lambda=lambda1, ans=obj%points, nrow=nrow, ncol=ncol)
+                             layout="INCREASING", xij=xij, alpha=alpha1, &
+                             beta=beta1, lambda=lambda1, ans=obj%points, &
+                             nrow=nrow, ncol=ncol)
 
 CASE (elem%triangle)
 
   nipsx(1) = QuadratureNumber_Triangle(order=p, quadtype=quadratureType1)
   ncol = nipsx(1)
-
   CALL Reallocate(obj%points, nrow, ncol)
-
   CALL QuadraturePoint_Triangle_(nips=nipsx, quadType=quadratureType1, &
-        refTriangle=domainName, xij=xij, ans=obj%points, nrow=nrow, ncol=ncol)
+                                 refTriangle=domainName, xij=xij, &
+                                 ans=obj%points, nrow=nrow, ncol=ncol)
 
 CASE (elem%quadrangle)
 
   nipsx(1) = QuadratureNumber_Line(order=p, quadtype=quadratureType1)
   nipsy(1) = QuadratureNumber_Line(order=q, quadtype=quadratureType2)
-
   ncol = nipsx(1) * nipsy(1)
 
   CALL Reallocate(obj%points, nrow, ncol)
-
   CALL QuadraturePoint_Quadrangle_(nipsx=nipsx, nipsy=nipsy, &
-                       quadType1=quadratureType1, quadType2=quadratureType2, &
-              refQuadrangle=domainName, xij=xij, alpha1=alpha1, beta1=beta1, &
-               lambda1=lambda1, alpha2=alpha2, beta2=beta2, lambda2=lambda2, &
-                                   ans=obj%points, nrow=nrow, ncol=ncol)
+                                   quadType1=quadratureType1, &
+                                   quadType2=quadratureType2, &
+                                   refQuadrangle=domainName, &
+                                   xij=xij, &
+                                   alpha1=alpha1, &
+                                   beta1=beta1, &
+                                   lambda1=lambda1, &
+                                   alpha2=alpha2, &
+                                   beta2=beta2, &
+                                   lambda2=lambda2, &
+                                   ans=obj%points, &
+                                   nrow=nrow, &
+                                   ncol=ncol)
 
 CASE (elem%tetrahedron)
 
@@ -329,7 +368,11 @@ CASE (elem%tetrahedron)
   CALL Reallocate(obj%points, nrow, ncol)
 
   CALL QuadraturePoint_Tetrahedron_(nips=nipsx, quadType=quadratureType1, &
-     refTetrahedron=domainName, xij=xij, ans=obj%points, nrow=nrow, ncol=ncol)
+                                    refTetrahedron=domainName, &
+                                    xij=xij, &
+                                    ans=obj%points, &
+                                    nrow=nrow, &
+                                    ncol=ncol)
 
 CASE (elem%hexahedron)
 
@@ -346,25 +389,33 @@ CASE (elem%hexahedron)
                                    quadType2=quadratureType2, &
                                    quadType3=quadratureType3, &
                                    refHexahedron=domainName, xij=xij, &
-                                alpha1=alpha1, beta1=beta1, lambda1=lambda1, &
-                                alpha2=alpha2, beta2=beta2, lambda2=lambda2, &
-                                alpha3=alpha3, beta3=beta3, lambda3=lambda3, &
-                                   ans=obj%points, nrow=nrow, ncol=ncol)
+                                   alpha1=alpha1, &
+                                   beta1=beta1, &
+                                   lambda1=lambda1, &
+                                   alpha2=alpha2, &
+                                   beta2=beta2, &
+                                   lambda2=lambda2, &
+                                   alpha3=alpha3, &
+                                   beta3=beta3, &
+                                   lambda3=lambda3, &
+                                   ans=obj%points, &
+                                   nrow=nrow, &
+                                   ncol=ncol)
 
 ! CASE (Prism)
-
 ! CASE (Pyramid)
 
+#ifdef DEBUG_VER
 CASE DEFAULT
   CALL Errormsg(msg="No case found for give topo", &
-                file=__FILE__, routine="obj_Initiate11()", line=__LINE__, &
-                unitno=stderr)
+                file=__FILE__, routine="obj_Initiate11()", &
+                line=__LINE__, unitno=stderr)
   STOP
+#endif
 
 END SELECT
 
 obj%txi = SIZE(obj%points, 1) - 1
-
 END PROCEDURE obj_Initiate11
 
 !----------------------------------------------------------------------------
@@ -373,12 +424,14 @@ END PROCEDURE obj_Initiate11
 
 MODULE PROCEDURE obj_Initiate12
 INTEGER(I4B) :: topo, nrow, ncol, ii
+LOGICAL(LGT) :: isok
 
 topo = ElementTopology(elemType)
 
 ii = XiDimension(elemType)
 
-IF (PRESENT(xij)) THEN
+isok = PRESENT(xij)
+IF (isok) THEN
   nrow = MAX(SIZE(xij, 1), ii)
 ELSE
   nrow = ii
@@ -389,74 +442,93 @@ nrow = nrow + 1
 SELECT CASE (topo)
 
 CASE (elem%line)
+
   ncol = nipsx(1)
   CALL Reallocate(obj%points, nrow, ncol)
-
   CALL QuadraturePoint_Line_(nips=nipsx, quadType=quadratureType1, &
-                     layout="INCREASING", xij=xij, alpha=alpha1, beta=beta1, &
-                         lambda=lambda1, ans=obj%points, nrow=nrow, ncol=ncol)
+                             layout="INCREASING", &
+                             xij=xij, &
+                             alpha=alpha1, &
+                             beta=beta1, &
+                             lambda=lambda1, &
+                             ans=obj%points, &
+                             nrow=nrow, &
+                             ncol=ncol)
 
 CASE (elem%triangle)
 
   ncol = nipsx(1)
-
   CALL Reallocate(obj%points, nrow, ncol)
-
   CALL QuadraturePoint_Triangle_(nips=nipsx, quadType=quadratureType1, &
-        refTriangle=domainName, xij=xij, ans=obj%points, nrow=nrow, ncol=ncol)
+                                 refTriangle=domainName, &
+                                 xij=xij, &
+                                 ans=obj%points, &
+                                 nrow=nrow, &
+                                 ncol=ncol)
 
 CASE (elem%quadrangle)
 
   ncol = nipsx(1) * nipsy(1)
-
   CALL Reallocate(obj%points, nrow, ncol)
-
   CALL QuadraturePoint_Quadrangle_(nipsx=nipsx, nipsy=nipsy, &
-                       quadType1=quadratureType1, quadType2=quadratureType2, &
-              refQuadrangle=domainName, xij=xij, alpha1=alpha1, beta1=beta1, &
-               lambda1=lambda1, alpha2=alpha2, beta2=beta2, lambda2=lambda2, &
+                                   quadType1=quadratureType1, &
+                                   quadType2=quadratureType2, &
+                                   refQuadrangle=domainName, &
+                                   xij=xij, alpha1=alpha1, beta1=beta1, &
+                                   lambda1=lambda1, alpha2=alpha2, &
+                                   beta2=beta2, lambda2=lambda2, &
                                    ans=obj%points, nrow=nrow, ncol=ncol)
 
 CASE (elem%tetrahedron)
 
   ncol = nipsx(1)
-
   CALL Reallocate(obj%points, nrow, ncol)
-
   CALL QuadraturePoint_Tetrahedron_(nips=nipsx, quadType=quadratureType1, &
-     refTetrahedron=domainName, xij=xij, ans=obj%points, nrow=nrow, ncol=ncol)
+                                    refTetrahedron=domainName, &
+                                    xij=xij, &
+                                    ans=obj%points, &
+                                    nrow=nrow, &
+                                    ncol=ncol)
 
 CASE (elem%hexahedron)
 
   ncol = nipsx(1) * nipsy(1) * nipsz(1)
-
   CALL Reallocate(obj%points, nrow, ncol)
-
   CALL QuadraturePoint_Hexahedron_(nipsx=nipsx, nipsy=nipsy, nipsz=nipsz, &
                                    quadType1=quadratureType1, &
                                    quadType2=quadratureType2, &
                                    quadType3=quadratureType3, &
                                    refHexahedron=domainName, &
                                    xij=xij, &
-                                alpha1=alpha1, beta1=beta1, lambda1=lambda1, &
-                                alpha2=alpha2, beta2=beta2, lambda2=lambda2, &
-                                alpha3=alpha3, beta3=beta3, lambda3=lambda3, &
-                                   ans=obj%points, nrow=nrow, ncol=ncol)
+                                   alpha1=alpha1, &
+                                   beta1=beta1, &
+                                   lambda1=lambda1, &
+                                   alpha2=alpha2, &
+                                   beta2=beta2, &
+                                   lambda2=lambda2, &
+                                   alpha3=alpha3, &
+                                   beta3=beta3, &
+                                   lambda3=lambda3, &
+                                   ans=obj%points, &
+                                   nrow=nrow, &
+                                   ncol=ncol)
 
 ! CASE (Prism)
-!
 ! CASE (Pyramid)
 
+#ifdef DEBUG_VER
 CASE DEFAULT
   CALL Errormsg(msg="No case found for give topo", &
-                file=__FILE__, routine="obj_Initiate12()", line=__LINE__, &
+                file=__FILE__, &
+                routine="obj_Initiate12()", &
+                line=__LINE__, &
                 unitno=stderr)
   STOP
+#endif
 
 END SELECT
 
 obj%txi = SIZE(obj%points, 1) - 1
-
 END PROCEDURE obj_Initiate12
 
 !----------------------------------------------------------------------------
