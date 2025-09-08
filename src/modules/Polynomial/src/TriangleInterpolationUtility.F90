@@ -517,7 +517,8 @@ END INTERFACE
 
 INTERFACE
   MODULE FUNCTION InterpolationPoint_Triangle(order, ipType, &
-                                 layout, xij, alpha, beta, lambda) RESULT(ans)
+                                              layout, xij, alpha, &
+                                              beta, lambda) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
     !! order
     INTEGER(I4B), INTENT(IN) :: ipType
@@ -543,7 +544,8 @@ END INTERFACE
 
 INTERFACE
   MODULE SUBROUTINE InterpolationPoint_Triangle_(order, ipType, ans, nrow, &
-                                       ncol, layout, xij, alpha, beta, lambda)
+                                                 ncol, layout, xij, &
+                                                 alpha, beta, lambda)
     INTEGER(I4B), INTENT(IN) :: order
     !! order
     INTEGER(I4B), INTENT(IN) :: ipType
@@ -1099,7 +1101,8 @@ END INTERFACE HeirarchicalBasis_Triangle
 
 INTERFACE HeirarchicalBasis_Triangle_
   MODULE PURE SUBROUTINE HeirarchicalBasis_Triangle1_(order, pe1, pe2, pe3, &
-                                            xij, refTriangle, ans, nrow, ncol)
+                                                      xij, refTriangle, &
+                                                      ans, nrow, ncol)
     INTEGER(I4B), INTENT(IN) :: order
     !! Order of approximation inside the triangle (i.e., cell)
     !! it should be greater than 2 for cell bubble to exist
@@ -1138,7 +1141,8 @@ END INTERFACE HeirarchicalBasis_Triangle_
 
 INTERFACE HeirarchicalBasis_Triangle_
   MODULE PURE SUBROUTINE HeirarchicalBasis_Triangle2_(order, xij, &
-                                                 refTriangle, ans, nrow, ncol)
+                                                      refTriangle, &
+                                                      ans, nrow, ncol)
     INTEGER(I4B), INTENT(IN) :: order
     !! Order of approximation inside the triangle (i.e., cell)
     !! it should be greater than 2 for cell bubble to exist
@@ -1168,7 +1172,11 @@ END INTERFACE HeirarchicalBasis_Triangle_
 
 INTERFACE HeirarchicalBasis_Triangle_
   MODULE PURE SUBROUTINE HeirarchicalBasis_Triangle3_(order, pe1, pe2, pe3, &
-        xij, refTriangle, edgeOrient1, edgeOrient2, edgeOrient3, faceOrient, &
+                                                      xij, refTriangle, &
+                                                      edgeOrient1, &
+                                                      edgeOrient2, &
+                                                      edgeOrient3, &
+                                                      faceOrient, &
                                                       ans, nrow, ncol)
     INTEGER(I4B), INTENT(IN) :: order
     !! Order of approximation inside the triangle (i.e., cell)
@@ -1212,7 +1220,8 @@ END INTERFACE HeirarchicalBasis_Triangle_
 
 INTERFACE LagrangeEvalAll_Triangle
   MODULE FUNCTION LagrangeEvalAll_Triangle1(order, x, xij, refTriangle, &
-                                      coeff, firstCall, basisType) RESULT(ans)
+                                            coeff, firstCall, &
+                                            basisType) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
     !! order of Lagrange polynomials
     REAL(DFP), INTENT(IN) :: x(2)
@@ -1244,7 +1253,8 @@ END INTERFACE LagrangeEvalAll_Triangle
 
 INTERFACE LagrangeEvalAll_Triangle_
   MODULE SUBROUTINE LagrangeEvalAll_Triangle1_(order, x, xij, ans, tsize, &
-                                     refTriangle, coeff, firstCall, basisType)
+                                               refTriangle, coeff, &
+                                               firstCall, basisType)
     INTEGER(I4B), INTENT(IN) :: order
     !! order of Lagrange polynomials
     REAL(DFP), INTENT(IN) :: x(2)
@@ -1284,7 +1294,8 @@ END INTERFACE LagrangeEvalAll_Triangle_
 
 INTERFACE LagrangeEvalAll_Triangle
   MODULE FUNCTION LagrangeEvalAll_Triangle2(order, x, xij, refTriangle, &
-                 coeff, firstCall, basisType, alpha, beta, lambda) RESULT(ans)
+                                            coeff, firstCall, basisType, &
+                                            alpha, beta, lambda) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
     !! Order of Lagrange polynomials
     REAL(DFP), INTENT(IN) :: x(:, :)
@@ -1319,7 +1330,9 @@ END INTERFACE LagrangeEvalAll_Triangle
 
 INTERFACE LagrangeEvalAll_Triangle_
   MODULE SUBROUTINE LagrangeEvalAll_Triangle2_(order, x, xij, ans, nrow, &
-          ncol, refTriangle, coeff, firstCall, basisType, alpha, beta, lambda)
+                                               ncol, refTriangle, coeff, &
+                                               firstCall, basisType, alpha, &
+                                               beta, lambda)
     INTEGER(I4B), INTENT(IN) :: order
     !! Order of Lagrange polynomials
     REAL(DFP), INTENT(IN) :: x(:, :)
