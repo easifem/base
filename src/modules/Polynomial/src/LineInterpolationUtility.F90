@@ -1812,7 +1812,8 @@ END INTERFACE QuadraturePoint_Line
 
 INTERFACE QuadraturePoint_Line_
   MODULE SUBROUTINE QuadraturePoint_Line1_(nips, quadType, layout, xij, &
-                                         alpha, beta, lambda, ans, nrow, ncol)
+                                           alpha, beta, lambda, ans, nrow, &
+                                           ncol)
     INTEGER(I4B), INTENT(IN) :: nips(1)
     !! Order of interpolation
     INTEGER(I4B), INTENT(IN) :: quadType
