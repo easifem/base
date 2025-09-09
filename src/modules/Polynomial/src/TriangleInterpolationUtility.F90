@@ -123,7 +123,7 @@ END INTERFACE
 
 INTERFACE
   MODULE FUNCTION RefElemDomain_Triangle(baseContinuity, baseInterpol) &
-    & RESULT(ans)
+    RESULT(ans)
     CHARACTER(*), INTENT(IN) :: baseContinuity
     !! Cointinuity (conformity) of basis functions
     !! "H1", "HDiv", "HCurl", "DG"
@@ -144,11 +144,10 @@ END INTERFACE
 ! summary:  This function returns the edge connectivity of Triangle
 
 INTERFACE
-  MODULE FUNCTION FacetConnectivity_Triangle( &
-    & baseInterpol, &
-    & baseContinuity) RESULT(ans)
-    CHARACTER(*), INTENT(IN) :: baseInterpol
-    CHARACTER(*), INTENT(IN) :: baseContinuity
+  MODULE FUNCTION FacetConnectivity_Triangle(baseInterpol, &
+                                             baseContinuity) RESULT(ans)
+    CHARACTER(*), OPTIONAL, INTENT(IN) :: baseInterpol
+    CHARACTER(*), OPTIONAL, INTENT(IN) :: baseContinuity
     INTEGER(I4B) :: ans(2, 3)
     !! rows represents the end points of an edges
     !! columns denote the edge (facet)

@@ -107,20 +107,26 @@ END PROCEDURE RefElemDomain_Triangle
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE FacetConnectivity_Triangle
-CHARACTER(3) :: bi
+CHARACTER(1) :: bi
+LOGICAL(LGT) :: isok
 
-bi = UpperCase(baseInterpol(1:3))
+isok = PRESENT(baseInterpol)
+IF (isok) THEN
+  bi = UpperCase(baseInterpol(1:1))
+ELSE
+  bi = "L"
+END IF
 
 SELECT CASE (bi)
-CASE ("HIE", "HEI", "ORT")
-  ans(:, 1) = [1, 2]
-  ans(:, 2) = [1, 3]
-  ans(:, 3) = [2, 3]
+CASE ("H", "O")
+  ans(1:2, 1) = [1, 2]
+  ans(1:2, 2) = [1, 3]
+  ans(1:2, 3) = [2, 3]
 
 CASE DEFAULT
-  ans(:, 1) = [1, 2]
-  ans(:, 2) = [2, 3]
-  ans(:, 3) = [3, 1]
+  ans(1:2, 1) = [1, 2]
+  ans(1:2, 2) = [2, 3]
+  ans(1:2, 3) = [3, 1]
 
 END SELECT
 END PROCEDURE FacetConnectivity_Triangle
