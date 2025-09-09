@@ -176,8 +176,8 @@ END INTERFACE
 INTERFACE
   MODULE FUNCTION FacetConnectivity_Quadrangle(baseInterpol, baseContinuity) &
     RESULT(ans)
-    CHARACTER(*), INTENT(IN) :: baseInterpol
-    CHARACTER(*), INTENT(IN) :: baseContinuity
+    CHARACTER(*), OPTIONAL, INTENT(IN) :: baseInterpol
+    CHARACTER(*), OPTIONAL, INTENT(IN) :: baseContinuity
     INTEGER(I4B) :: ans(2, 4)
     !! rows represents the end points of an edges
     !! columns denote the edge (facet)
