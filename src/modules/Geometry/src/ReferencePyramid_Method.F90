@@ -335,9 +335,11 @@ END INTERFACE
 ! date: 2024-03-11
 ! summary:  Returns the element type of each face
 
-INTERFACE
-  MODULE PURE SUBROUTINE GetFaceElemType_Pyramid(faceElemType, opt,  &
-    & tFaceNodes, elemType)
+INTERFACE GetFaceElemType_Pyramid
+  MODULE PURE SUBROUTINE GetFaceElemType_Pyramid1(elemType, faceElemType, &
+                                                  tFaceNodes, opt)
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: elemType
+    !!  Element type
     INTEGER(I4B), OPTIONAL, INTENT(INOUT) :: faceElemType(:)
     !! Face element type
     INTEGER(I4B), OPTIONAL, INTENT(INOUT) :: tFaceNodes(:)
@@ -346,9 +348,33 @@ INTERFACE
     !! If opt = 1, then edge connectivity for hierarchial approximation
     !! If opt = 2, then edge connectivity for Lagrangian approximation
     !! opt = 1 is default
-    INTEGER(I4B), OPTIONAL, INTENT(IN) :: elemType
-    !!  Element type
-  END SUBROUTINE GetFaceElemType_Pyramid
-END INTERFACE
+  END SUBROUTINE GetFaceElemType_Pyramid1
+END INTERFACE GetFaceElemType_Pyramid
+
+!----------------------------------------------------------------------------
+!                                        GetFaceElemType@GeometryMethods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2024-03-11
+! summary:  Returns the element type of each face
+
+INTERFACE GetFaceElemType_Pyramid
+  MODULE PURE SUBROUTINE GetFaceElemType_Pyramid2( &
+    elemType, localFaceNumber, faceElemType, tFaceNodes, opt)
+    INTEGER(I4B), INTENT(IN) :: elemType
+    !! element type for prism
+    INTEGER(I4B), INTENT(IN) :: localFaceNumber
+    !! local face number
+    INTEGER(I4B), INTENT(OUT) :: faceElemType
+    !! Face element type
+    INTEGER(I4B), INTENT(OUT) :: tFaceNodes
+    !! total nodes in each face
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: opt
+    !! If opt = 1, then edge connectivity for hierarchial approximation
+    !! If opt = 2, then edge connectivity for Lagrangian approximation
+    !! opt = 1 is default
+  END SUBROUTINE GetFaceElemType_Pyramid2
+END INTERFACE GetFaceElemType_Pyramid
 
 END MODULE ReferencePyramid_Method

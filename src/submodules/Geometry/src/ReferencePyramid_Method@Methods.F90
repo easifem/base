@@ -352,14 +352,29 @@ END PROCEDURE GetFaceConnectivity_Pyramid
 !                                               GetFaceElemType_Pyramid
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE GetFaceElemType_Pyramid
-
+MODULE PROCEDURE GetFaceElemType_Pyramid1
 IF (PRESENT(faceElemType)) &
   faceElemType(1:5) = [Quadrangle4, Triangle3, Triangle3, Triangle3, &
                        Triangle3]
 
 IF (PRESENT(tFaceNodes)) tFaceNodes(1:5) = [4, 3, 3, 3, 3]
-END PROCEDURE GetFaceElemType_Pyramid
+END PROCEDURE GetFaceElemType_Pyramid1
+
+!----------------------------------------------------------------------------
+!                                               GetFaceElemType_Pyramid
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE GetFaceElemType_Pyramid2
+
+SELECT CASE (localFaceNumber)
+CASE (1)
+  faceElemType = Quadrangle4
+  tFaceNodes = 4
+CASE DEFAULT
+  faceElemType = Triangle3
+  tFaceNodes = 3
+END SELECT
+END PROCEDURE GetFaceElemType_Pyramid2
 
 !----------------------------------------------------------------------------
 !

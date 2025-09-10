@@ -570,7 +570,7 @@ END PROCEDURE GetFaceConnectivity_Tetrahedron
 !                                                            GetFaceElemType
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE GetFaceElemType_Tetrahedron
+MODULE PROCEDURE GetFaceElemType_Tetrahedron1
 INTEGER(I4B) :: elemType0
 elemType0 = Input(default=Tetrahedron4, option=elemType)
 
@@ -606,6 +606,35 @@ CASE (Tetrahedron56)
   IF (PRESENT(tFaceNodes)) tFaceNodes(1:4) = 21_I4B
 
 END SELECT
-END PROCEDURE GetFaceElemType_Tetrahedron
+END PROCEDURE GetFaceElemType_Tetrahedron1
+
+!----------------------------------------------------------------------------
+!                                                            GetFaceElemType
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE GetFaceElemType_Tetrahedron2
+SELECT CASE (elemType)
+CASE (Tetrahedron4)
+  faceElemType = Triangle3
+  tFaceNodes = 3_I4B
+
+CASE (Tetrahedron10)
+  faceElemType = Triangle6
+  tFaceNodes = 6_I4B
+
+CASE (Tetrahedron20)
+  faceElemType = Triangle10
+  tFaceNodes = 10_I4B
+
+CASE (Tetrahedron35)
+  faceElemType = Triangle15
+  tFaceNodes = 15_I4B
+
+CASE (Tetrahedron56)
+  faceElemType = Triangle21
+  tFaceNodes = 21_I4B
+
+END SELECT
+END PROCEDURE GetFaceElemType_Tetrahedron2
 
 END SUBMODULE Methods

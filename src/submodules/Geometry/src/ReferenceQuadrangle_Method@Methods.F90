@@ -663,11 +663,22 @@ END PROCEDURE FaceShapeMetaData_Quadrangle
 !                                             GetFaceElemType_Quadrangle
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE GetFaceElemType_Quadrangle
+MODULE PROCEDURE GetFaceElemType_Quadrangle1
 INTEGER(I4B) :: order
 order = ElementOrder_Quadrangle(Input(default=Quadrangle, option=elemType))
 IF (PRESENT(faceElemType)) faceElemType(1:4) = LineName(order)
 IF (PRESENT(tFaceNodes)) tFaceNodes(1:4) = order + 1
-END PROCEDURE GetFaceElemType_Quadrangle
+END PROCEDURE GetFaceElemType_Quadrangle1
+
+!----------------------------------------------------------------------------
+!                                             GetFaceElemType_Quadrangle
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE GetFaceElemType_Quadrangle2
+INTEGER(I4B) :: order
+order = ElementOrder_Quadrangle(elemType)
+faceElemType = LineName(order)
+tFaceNodes = order + 1
+END PROCEDURE GetFaceElemType_Quadrangle2
 
 END SUBMODULE Methods

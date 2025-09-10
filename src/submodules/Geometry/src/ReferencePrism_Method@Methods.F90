@@ -377,13 +377,29 @@ END PROCEDURE GetFaceConnectivity_Prism
 !                                                      GetFaceElemType_Prism
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE GetFaceElemType_Prism
+MODULE PROCEDURE GetFaceElemType_Prism1
 IF (PRESENT(faceElemType)) &
   faceElemType(1:5) = [Triangle3, Quadrangle4, Quadrangle4, Quadrangle4, &
                        Triangle3]
 
 IF (PRESENT(tFaceNodes)) tFaceNodes(1:5) = [3, 4, 4, 4, 3]
-END PROCEDURE GetFaceElemType_Prism
+END PROCEDURE GetFaceElemType_Prism1
+
+!----------------------------------------------------------------------------
+!                                                      GetFaceElemType_Prism
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE GetFaceElemType_Prism2
+
+SELECT CASE (localFaceNumber)
+CASE (1, 5)
+  faceElemType = Triangle3
+  tFaceNodes = 3
+CASE DEFAULT
+  faceElemType = Quadrangle4
+  tFaceNodes = 4
+END SELECT
+END PROCEDURE GetFaceElemType_Prism2
 
 !----------------------------------------------------------------------------
 !

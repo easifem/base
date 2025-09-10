@@ -469,9 +469,9 @@ END INTERFACE
 ! date: 2024-04-19
 ! summary:  Returns the element type of each face
 
-INTERFACE
-  MODULE PURE SUBROUTINE GetFaceElemType_Quadrangle(elemType, faceElemType, &
-                                                    opt, tFaceNodes)
+INTERFACE GetFaceElemType_Quadrangle
+  MODULE PURE SUBROUTINE GetFaceElemType_Quadrangle1(elemType, faceElemType, &
+                                                     opt, tFaceNodes)
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: elemType
     !! name of element
     INTEGER(I4B), OPTIONAL, INTENT(INOUT) :: faceElemType(:)
@@ -482,7 +482,33 @@ INTERFACE
     !! If opt = 1, then edge connectivity for hierarchial approximation
     !! If opt = 2, then edge connectivity for Lagrangian approximation
     !! opt = 1 is default
-  END SUBROUTINE GetFaceElemType_Quadrangle
-END INTERFACE
+  END SUBROUTINE GetFaceElemType_Quadrangle1
+END INTERFACE GetFaceElemType_Quadrangle
+
+!----------------------------------------------------------------------------
+!                                                GetFaceElemType_Quadrangle
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2024-04-19
+! summary:  Returns the element type of each face
+
+INTERFACE GetFaceElemType_Quadrangle
+  MODULE PURE SUBROUTINE GetFaceElemType_Quadrangle2( &
+    elemType, localFaceNumber, faceElemType, opt, tFaceNodes)
+    INTEGER(I4B), INTENT(IN) :: elemType
+    !! name of element
+    INTEGER(I4B), INTENT(IN) :: localFaceNumber
+    !! local face number
+    INTEGER(I4B), INTENT(OUT) :: faceElemType
+    !! Element names of faces
+    INTEGER(I4B), INTENT(INOUT) :: tFaceNodes
+    !! Total number of nodes in each face
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: opt
+    !! If opt = 1, then edge connectivity for hierarchial approximation
+    !! If opt = 2, then edge connectivity for Lagrangian approximation
+    !! opt = 1 is default
+  END SUBROUTINE GetFaceElemType_Quadrangle2
+END INTERFACE GetFaceElemType_Quadrangle
 
 END MODULE ReferenceQuadrangle_Method

@@ -598,7 +598,7 @@ END PROCEDURE GetFaceConnectivity_Hexahedron
 !                                               GetFaceElemType_Hexahedron
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE GetFaceElemType_Hexahedron
+MODULE PROCEDURE GetFaceElemType_Hexahedron1
 INTEGER(I4B) :: elemType0
 elemType0 = Input(default=Hexahedron8, option=elemType)
 
@@ -621,7 +621,31 @@ CASE (Hexahedron64)
   IF (PRESENT(tFaceNodes)) tFaceNodes(1:6) = 16_I4B
 
 END SELECT
-END PROCEDURE GetFaceElemType_Hexahedron
+END PROCEDURE GetFaceElemType_Hexahedron1
+
+!----------------------------------------------------------------------------
+!                                                 GetFaceElemType_Hexahedron
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE GetFaceElemType_Hexahedron2
+SELECT CASE (elemType)
+CASE (Hexahedron8)
+  faceElemType = Quadrangle4
+  tFaceNodes = 4_I4B
+
+CASE (Hexahedron20)
+  faceElemType = Quadrangle8
+  tFaceNodes = 8_I4B
+
+CASE (Hexahedron27)
+  faceElemType = Quadrangle9
+  tFaceNodes = 9_I4B
+
+CASE (Hexahedron64)
+  faceElemType = Quadrangle16
+  tFaceNodes = 16_I4B
+END SELECT
+END PROCEDURE GetFaceElemType_Hexahedron2
 
 !----------------------------------------------------------------------------
 !

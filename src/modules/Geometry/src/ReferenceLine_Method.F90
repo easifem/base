@@ -500,9 +500,9 @@ END INTERFACE
 ! date: 2024-04-19
 ! summary:  Returns the element type of each face
 
-INTERFACE
-  MODULE PURE SUBROUTINE GetFaceElemType_Line(elemType, faceElemType, opt, &
-                                              tFaceNodes)
+INTERFACE GetFaceElemType_Line
+  MODULE PURE SUBROUTINE GetFaceElemType_Line1(elemType, faceElemType, opt, &
+                                               tFaceNodes)
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: elemType
     !! name of element
     INTEGER(I4B), OPTIONAL, INTENT(INOUT) :: faceElemType(:)
@@ -513,8 +513,34 @@ INTERFACE
     !! If opt = 1, then edge connectivity for hierarchial approximation
     !! If opt = 2, then edge connectivity for Lagrangian approximation
     !! opt = 1 is default
-  END SUBROUTINE GetFaceElemType_Line
-END INTERFACE
+  END SUBROUTINE GetFaceElemType_Line1
+END INTERFACE GetFaceElemType_Line
+
+!----------------------------------------------------------------------------
+!                                           GetFaceElemType@GeometryMethods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2024-04-19
+! summary:  Returns the element type of each face
+
+INTERFACE GetFaceElemType_Line
+  MODULE PURE SUBROUTINE GetFaceElemType_Line2(elemType, localFaceNumber, &
+                                               faceElemType, opt, tFaceNodes)
+    INTEGER(I4B), INTENT(IN) :: elemType
+    !! name of element
+    INTEGER(I4B), INTENT(IN) :: localFaceNumber
+    !! local face number
+    INTEGER(I4B), INTENT(INOUT) :: faceElemType
+    !! Element names of faces
+    INTEGER(I4B), INTENT(INOUT) :: tFaceNodes
+    !! Total number of nodes in each face
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: opt
+    !! If opt = 1, then edge connectivity for hierarchial approximation
+    !! If opt = 2, then edge connectivity for Lagrangian approximation
+    !! opt = 1 is default
+  END SUBROUTINE GetFaceElemType_Line2
+END INTERFACE GetFaceElemType_Line
 
 !----------------------------------------------------------------------------
 !

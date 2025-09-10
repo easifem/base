@@ -341,16 +341,19 @@ INTERFACE
 END INTERFACE
 
 !----------------------------------------------------------------------------
-!                                        GetFaceElemType@GeometryMethods
+!                                             GetFaceElemType@GeometryMethods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2024-03-11
 ! summary:  Returns the element type of each face
 
-INTERFACE
-  MODULE PURE SUBROUTINE GetFaceElemType_Tetrahedron(faceElemType, opt,  &
-    & tFaceNodes, elemType)
+INTERFACE GetFaceElemType_Tetrahedron
+ MODULE PURE SUBROUTINE GetFaceElemType_Tetrahedron1(elemType, faceElemType, &
+                                                      tFaceNodes, opt)
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: elemType
+    !! element type for Tetrahedron
+    !! default is Tetrahedron4
     INTEGER(I4B), OPTIONAL, INTENT(INOUT) :: faceElemType(:)
     !! Face element type
     INTEGER(I4B), OPTIONAL, INTENT(INOUT) :: tFaceNodes(:)
@@ -359,10 +362,33 @@ INTERFACE
     !! If opt = 1, then edge connectivity for hierarchial approximation
     !! If opt = 2, then edge connectivity for Lagrangian approximation
     !! opt = 1 is default
-    INTEGER(I4B), OPTIONAL, INTENT(IN) :: elemType
+  END SUBROUTINE GetFaceElemType_Tetrahedron1
+END INTERFACE GetFaceElemType_Tetrahedron
+
+!----------------------------------------------------------------------------
+!                                             GetFaceElemType@GeometryMethods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2024-03-11
+! summary:  Returns the element type of each face
+
+INTERFACE GetFaceElemType_Tetrahedron
+  MODULE PURE SUBROUTINE GetFaceElemType_Tetrahedron2( &
+    elemType, localFaceNumber, faceElemType, tFaceNodes, opt)
+    INTEGER(I4B), INTENT(IN) :: elemType
     !! element type for Tetrahedron
-    !! default is Tetrahedron4
-  END SUBROUTINE GetFaceElemType_Tetrahedron
-END INTERFACE
+    INTEGER(I4B), INTENT(IN) :: localFaceNumber
+    !! local face number
+    INTEGER(I4B), INTENT(OUT) :: faceElemType
+    !! Face element type
+    INTEGER(I4B), INTENT(OUT) :: tFaceNodes
+    !! total nodes in each face
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: opt
+    !! If opt = 1, then edge connectivity for hierarchial approximation
+    !! If opt = 2, then edge connectivity for Lagrangian approximation
+    !! opt = 1 is default
+  END SUBROUTINE GetFaceElemType_Tetrahedron2
+END INTERFACE GetFaceElemType_Tetrahedron
 
 END MODULE ReferenceTetrahedron_Method

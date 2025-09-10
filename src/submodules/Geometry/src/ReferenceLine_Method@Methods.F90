@@ -372,12 +372,21 @@ END PROCEDURE GetEdgeConnectivity_Line
 !                                                 GetFaceElemType_Line
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE GetFaceElemType_Line
+MODULE PROCEDURE GetFaceElemType_Line1
 INTEGER(I4B) :: elemType0
 elemType0 = Input(default=Line, option=elemType)
 IF (PRESENT(faceElemType)) faceElemType(1:2) = Point1
 IF (PRESENT(tFaceNodes)) tFaceNodes(1:2) = 1_I4B
-END PROCEDURE GetFaceElemType_Line
+END PROCEDURE GetFaceElemType_Line1
+
+!----------------------------------------------------------------------------
+!                                                 GetFaceElemType_Line
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE GetFaceElemType_Line2
+faceElemType = Point1
+tFaceNodes = 1_I4B
+END PROCEDURE GetFaceElemType_Line2
 
 !----------------------------------------------------------------------------
 !                                               GetFaceConnectivity_Triangle

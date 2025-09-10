@@ -479,42 +479,84 @@ topo = refelem_ElementTopology1(elemType)
 SELECT CASE (topo)
 
 CASE (Line)
-
   CALL GetFaceElemType_Line(faceElemType=faceElemType, opt=opt, &
                             tFaceNodes=tFaceNodes, elemType=elemType)
 
 CASE (Triangle)
-
   CALL GetFaceElemType_Triangle(faceElemType=faceElemType, opt=opt, &
                                 tFaceNodes=tFaceNodes, elemType=elemType)
 
 CASE (Quadrangle)
-
   CALL GetFaceElemType_Quadrangle(faceElemType=faceElemType, opt=opt, &
                                   tFaceNodes=tFaceNodes, elemType=elemType)
 
 CASE (Tetrahedron)
-
   CALL GetFaceElemType_Tetrahedron(faceElemType=faceElemType, opt=opt, &
                                    tFaceNodes=tFaceNodes, elemType=elemType)
 
 CASE (Hexahedron)
-
   CALL GetFaceElemType_Hexahedron(faceElemType=faceElemType, opt=opt, &
                                   tFaceNodes=tFaceNodes, elemType=elemType)
 
 CASE (Prism)
-
   CALL GetFaceElemType_Prism(faceElemType=faceElemType, opt=opt, &
                              tFaceNodes=tFaceNodes, elemType=elemType)
 
 CASE (Pyramid)
-
   CALL GetFaceElemType_Pyramid(faceElemType=faceElemType, opt=opt, &
                                tFaceNodes=tFaceNodes, elemType=elemType)
 
 END SELECT
 END PROCEDURE GetFaceElemType1
+
+!----------------------------------------------------------------------------
+!                                                            GetFaceElemType
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE GetFaceElemType2
+INTEGER(I4B) :: topo
+
+topo = ElementTopology(elemType)
+
+SELECT CASE (topo)
+
+CASE (Line)
+  CALL GetFaceElemType_Line(faceElemType=faceElemType, opt=opt, &
+                            tFaceNodes=tFaceNodes, elemType=elemType, &
+                            localFaceNumber=localFaceNumber)
+
+CASE (Triangle)
+  CALL GetFaceElemType_Triangle(faceElemType=faceElemType, opt=opt, &
+                                tFaceNodes=tFaceNodes, elemType=elemType, &
+                                localFaceNumber=localFaceNumber)
+
+CASE (Quadrangle)
+  CALL GetFaceElemType_Quadrangle(faceElemType=faceElemType, opt=opt, &
+                                  tFaceNodes=tFaceNodes, elemType=elemType, &
+                                  localFaceNumber=localFaceNumber)
+
+CASE (Tetrahedron)
+  CALL GetFaceElemType_Tetrahedron(faceElemType=faceElemType, opt=opt, &
+                                   tFaceNodes=tFaceNodes, elemType=elemType, &
+                                   localFaceNumber=localFaceNumber)
+
+CASE (Hexahedron)
+  CALL GetFaceElemType_Hexahedron(faceElemType=faceElemType, opt=opt, &
+                                  tFaceNodes=tFaceNodes, elemType=elemType, &
+                                  localFaceNumber=localFaceNumber)
+
+CASE (Prism)
+  CALL GetFaceElemType_Prism(faceElemType=faceElemType, opt=opt, &
+                             tFaceNodes=tFaceNodes, elemType=elemType, &
+                             localFaceNumber=localFaceNumber)
+
+CASE (Pyramid)
+  CALL GetFaceElemType_Pyramid(faceElemType=faceElemType, opt=opt, &
+                               tFaceNodes=tFaceNodes, elemType=elemType, &
+                               localFaceNumber=localFaceNumber)
+
+END SELECT
+END PROCEDURE GetFaceElemType2
 
 !----------------------------------------------------------------------------
 !                                                            MeasureSimplex

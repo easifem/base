@@ -802,9 +802,9 @@ END INTERFACE
 ! date: 2024-04-19
 ! summary:  Returns the element type of each face
 
-INTERFACE
-MODULE PURE SUBROUTINE GetFaceElemType_Triangle(elemType, faceElemType, opt, &
-                                                  tFaceNodes)
+INTERFACE GetFaceElemType_Triangle
+MODULE PURE SUBROUTINE GetFaceElemType_Triangle1(elemType, faceElemType, opt, &
+                                                   tFaceNodes)
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: elemType
     !! name of element
     INTEGER(I4B), OPTIONAL, INTENT(INOUT) :: faceElemType(:)
@@ -815,8 +815,34 @@ MODULE PURE SUBROUTINE GetFaceElemType_Triangle(elemType, faceElemType, opt, &
     !! If opt = 1, then edge connectivity for hierarchial approximation
     !! If opt = 2, then edge connectivity for Lagrangian approximation
     !! opt = 1 is default
-  END SUBROUTINE GetFaceElemType_Triangle
-END INTERFACE
+  END SUBROUTINE GetFaceElemType_Triangle1
+END INTERFACE GetFaceElemType_Triangle
+
+!----------------------------------------------------------------------------
+!                                           GetFaceElemType@GeometryMethods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2024-04-19
+! summary:  Returns the element type of each face
+
+INTERFACE GetFaceElemType_Triangle
+ MODULE PURE SUBROUTINE GetFaceElemType_Triangle2(elemType, localFaceNumber, &
+                                                faceElemType, opt, tFaceNodes)
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: elemType
+    !! name of element
+    INTEGER(I4B), INTENT(IN) :: localFaceNumber
+    !! local face number
+    INTEGER(I4B), INTENT(OUT) :: faceElemType
+    !! Element names of faces
+    INTEGER(I4B), INTENT(OUT) :: tFaceNodes
+    !! Total number of nodes in each face
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: opt
+    !! If opt = 1, then edge connectivity for hierarchial approximation
+    !! If opt = 2, then edge connectivity for Lagrangian approximation
+    !! opt = 1 is default
+  END SUBROUTINE GetFaceElemType_Triangle2
+END INTERFACE GetFaceElemType_Triangle
 
 !----------------------------------------------------------------------------
 !

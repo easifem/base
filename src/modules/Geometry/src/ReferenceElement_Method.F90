@@ -162,7 +162,7 @@ INTERFACE
 END INTERFACE
 
 !----------------------------------------------------------------------------
-!
+!                                                   RefCoord_@GeometryMethods
 !----------------------------------------------------------------------------
 
 INTERFACE
@@ -330,6 +330,32 @@ INTERFACE GetFaceElemType
     !! If opt = 2, then edge connectivity for Lagrangian approximation
     !! opt = 1 is default
   END SUBROUTINE GetFaceElemType1
+END INTERFACE GetFaceElemType
+
+!----------------------------------------------------------------------------
+!                                           GetFaceElemType@GeometryMethods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2024-03-11
+! summary:  Returns the element type of each face
+
+INTERFACE GetFaceElemType
+  MODULE PURE SUBROUTINE GetFaceElemType2(elemType, localFaceNumber, &
+                                          faceElemType, opt, tFaceNodes)
+    INTEGER(I4B), INTENT(IN) :: elemType
+    !! name of element
+    INTEGER(I4B), INTENT(IN) :: localFaceNumber
+    !! local face number
+    INTEGER(I4B), INTENT(OUT) :: faceElemType
+    !! Element names of faces
+    INTEGER(I4B), INTENT(OUT) :: tFaceNodes
+    !! Total number of nodes in each face
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: opt
+    !! If opt = 1, then edge connectivity for hierarchial approximation
+    !! If opt = 2, then edge connectivity for Lagrangian approximation
+    !! opt = 1 is default
+  END SUBROUTINE GetFaceElemType2
 END INTERFACE GetFaceElemType
 
 !----------------------------------------------------------------------------
