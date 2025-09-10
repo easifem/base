@@ -132,7 +132,6 @@ DO ips = 1, obj%nips
     MATMUL(obj%dNdXi(1:obj%nns, 1:obj%nsd, ips), &
            invJacobian(1:obj%nsd, 1:obj%nsd))
 END DO
-
 END PROCEDURE elemsd_SetdNdXt
 
 !----------------------------------------------------------------------------
@@ -249,28 +248,24 @@ CALL SetJacobian(obj=cellobj, val=cellVal, dNdXi=celldNdXi)
 CALL SetJs(obj=cellobj)
 CALL SetdNdXt(obj=cellobj)
 CALL SetBarycentricCoord(obj=cellobj, val=cellval, N=cellN)
-
-CALL SetJacobian(obj=facetobj, val=cellVal(:, facetNptrs), &
-                 dNdXi=facetdNdXi)
+CALL SetJacobian(obj=facetobj, val=facetval, dNdXi=facetdNdXi)
 CALL SetJs(obj=facetobj)
-CALL SetBarycentricCoord(obj=facetobj, val=cellval(:, facetNptrs), &
-                         N=facetN)
-
+CALL SetBarycentricCoord(obj=facetobj, val=facetval, N=facetN)
 CALL SetNormal(obj=facetobj)
 
 ! gradient depends upon all nodes of the element
 ! therefore the SIZE( dNdXt, 1 ) = NNS of cell
-
 ! CALL Reallocate( facetobj%dNdXt, SHAPE( cellobj%dNdXt) )
-facetobj%dNdXt = cellobj%dNdXt
+facetobj%dNdXt(1:facetobj%nns, 1:facetobj%nsd, 1:facetobj%nips) = &
+  cellobj%dNdXt(1:cellobj%nns, 1:cellobj%nsd, 1:cellobj%nips)
 
 ! I am copying normal Js from facet to cell
 ! In this way, we can use cellobj to construct the element matrix
+cellobj%normal(1:cellobj%nsd, 1:cellobj%nips) = &
+  facetobj%normal(1:facetobj%nsd, 1:facetobj%nips)
 
-cellobj%normal = facetobj%normal
-cellobj%Js = facetobj%Js
-cellobj%Ws = facetobj%Ws
-
+cellobj%Js(1:cellobj%nips) = facetobj%Js(1:facetobj%nips)
+cellobj%Ws(1:cellobj%nips) = facetobj%Ws(1:facetobj%nips)
 END PROCEDURE elemsd_Set2
 
 !----------------------------------------------------------------------------
@@ -278,25 +273,15 @@ END PROCEDURE elemsd_Set2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE elemsd_Set3
-!
 CALL Set( &
-  & facetobj=masterFacetObj, &
-  & cellobj=masterCellObj, &
-  & cellVal=masterCellVal, &
-  & cellN=masterCellN, &
-  & celldNdXi=masterCelldNdXi, &
-  & facetN=masterFacetN, &
-  & facetdNdXi=masterFacetdNdXi, facetNptrs=masterFacetNptrs)
-!
+  facetobj=masterFacetObj, cellobj=masterCellObj, cellVal=masterCellVal, &
+  cellN=masterCellN, celldNdXi=masterCelldNdXi, facetN=masterFacetN, &
+  facetdNdXi=masterFacetdNdXi, facetval=masterFacetVal)
+
 CALL Set( &
-  & facetobj=slaveFacetObj, &
-  & cellobj=slaveCellObj, &
-  & cellVal=slaveCellVal, &
-  & cellN=slaveCellN, &
-  & celldNdXi=slaveCelldNdXi, &
-  & facetN=slaveFacetN, &
-  & facetdNdXi=slaveFacetdNdXi, facetNptrs=slaveFacetNptrs)
-!
+  facetobj=slaveFacetObj, cellobj=slaveCellObj, cellVal=slaveCellVal, &
+  cellN=slaveCellN, celldNdXi=slaveCelldNdXi, facetN=slaveFacetN, &
+  facetdNdXi=slaveFacetdNdXi, facetVal=slaveFacetVal)
 END PROCEDURE elemsd_Set3
 
 !----------------------------------------------------------------------------

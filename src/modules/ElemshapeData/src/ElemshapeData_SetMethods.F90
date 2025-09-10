@@ -388,12 +388,17 @@ END INTERFACE Set
 !@endnote
 
 INTERFACE Set
-  MODULE PURE SUBROUTINE elemsd_Set2(facetobj, cellobj, cellval, cellN, &
-                                    celldNdXi, facetN, facetdNdXi, facetNptrs)
+  MODULE PURE SUBROUTINE elemsd_Set2( &
+    facetobj, cellobj, cellval, facetval, cellN, celldNdXi, facetN, &
+    facetdNdXi)
     CLASS(ElemshapeData_), INTENT(INOUT) :: facetobj
+    !! facet element shape data
     CLASS(ElemshapeData_), INTENT(INOUT) :: cellobj
+    !! cell element shape data
     REAL(DFP), INTENT(IN) :: cellval(:, :)
     !! Spatial nodal coordinates of cell
+    REAL(DFP), INTENT(IN) :: facetval(:, :)
+    !! Spatial nodal coordinates of facet element
     REAL(DFP), INTENT(IN) :: cellN(:, :)
     !! shape function for cell
     REAL(DFP), INTENT(IN) :: facetN(:, :)
@@ -401,7 +406,6 @@ INTERFACE Set
     REAL(DFP), INTENT(IN) :: celldNdXi(:, :, :)
     REAL(DFP), INTENT(IN) :: facetdNdXi(:, :, :)
     !! Local derivative of shape functions for geometry
-    INTEGER(I4B), INTENT(IN) :: facetNptrs(:)
   END SUBROUTINE elemsd_Set2
 END INTERFACE Set
 
@@ -419,22 +423,10 @@ END INTERFACE Set
 
 INTERFACE Set
   MODULE PURE SUBROUTINE elemsd_Set3( &
-    & masterFacetobj, &
-    & masterCellobj, &
-    & masterCellval, &
-    & masterCellN, &
-    & masterCelldNdXi, &
-    & masterFacetN, &
-    & masterFacetdNdXi, &
-    & masterFacetNptrs, &
-    & slaveFacetobj, &
-    & slaveCellobj, &
-    & slaveCellval, &
-    & slaveCellN, &
-    & slaveCelldNdXi, &
-    & slaveFacetN, &
-    & slaveFacetdNdXi, &
-    & slaveFacetNptrs)
+    masterFacetobj, masterCellobj, masterCellval, masterCellN, &
+    masterCelldNdXi, masterFacetN, masterFacetdNdXi, masterFacetVal, &
+    slaveFacetobj, slaveCellobj, slaveCellval, slaveCellN, slaveCelldNdXi, &
+    slaveFacetN, slaveFacetdNdXi, slaveFacetVal)
     CLASS(ElemshapeData_), INTENT(INOUT) :: masterFacetobj
     CLASS(ElemshapeData_), INTENT(INOUT) :: masterCellobj
     REAL(DFP), INTENT(IN) :: masterCellval(:, :)
@@ -448,8 +440,8 @@ INTERFACE Set
     REAL(DFP), INTENT(IN) :: masterFacetdNdXi(:, :, :)
     !! Local gradient of shape functions for geometry of
     !! facet element of master cell
-    INTEGER(I4B), INTENT(IN) :: masterFacetNptrs(:)
-    !!
+    REAL(DFP), INTENT(IN) :: masterFacetVal(:, :)
+    !! master facet xij
     CLASS(ElemshapeData_), INTENT(INOUT) :: slaveFacetobj
     !! Shape function data for facet element of slave cell
     CLASS(ElemshapeData_), INTENT(INOUT) :: slaveCellobj
@@ -466,7 +458,8 @@ INTERFACE Set
     REAL(DFP), INTENT(IN) :: slaveFacetdNdXi(:, :, :)
     !! Local derivative of shape function for geometry of facet element
     !! of slave
-    INTEGER(I4B), INTENT(IN) :: slaveFacetNptrs(:)
+    REAL(DFP), INTENT(IN) :: slaveFacetVal(:, :)
+    !! slave facet xij
   END SUBROUTINE elemsd_Set3
 END INTERFACE Set
 
