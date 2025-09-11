@@ -256,8 +256,8 @@ CALL SetNormal(obj=facetobj)
 ! gradient depends upon all nodes of the element
 ! therefore the SIZE( dNdXt, 1 ) = NNS of cell
 ! CALL Reallocate( facetobj%dNdXt, SHAPE( cellobj%dNdXt) )
-facetobj%dNdXt(1:facetobj%nns, 1:facetobj%nsd, 1:facetobj%nips) = &
-  cellobj%dNdXt(1:cellobj%nns, 1:cellobj%nsd, 1:cellobj%nips)
+! facetobj%dNdXt(1:facetobj%nns, 1:facetobj%nsd, 1:facetobj%nips) = &
+!   cellobj%dNdXt(1:cellobj%nns, 1:cellobj%nsd, 1:cellobj%nips)
 
 ! I am copying normal Js from facet to cell
 ! In this way, we can use cellobj to construct the element matrix
