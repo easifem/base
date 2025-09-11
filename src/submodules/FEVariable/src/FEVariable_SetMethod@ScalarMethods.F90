@@ -25,6 +25,8 @@ CONTAINS
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE obj_Set1
+obj%len = 1
+obj%s(1) = obj%len
 IF (addContribution) THEN
   obj%val(1) = obj%val(1) + scale * val
 ELSE
@@ -37,6 +39,8 @@ END PROCEDURE obj_Set1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE obj_Set2
+obj%len = SIZE(val)
+obj%s(1) = obj%len
 IF (addContribution) THEN
   obj%val(1:obj%len) = obj%val(1:obj%len) + scale * val(1:obj%len)
 ELSE
@@ -50,6 +54,9 @@ END PROCEDURE obj_Set2
 
 MODULE PROCEDURE obj_Set3
 INTEGER(I4B) :: ii, jj, cnt
+
+obj%s(1:2) = SHAPE(val)
+obj%len = obj%s(1) * obj%s(2)
 
 cnt = 0
 

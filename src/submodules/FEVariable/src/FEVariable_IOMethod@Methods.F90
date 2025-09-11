@@ -54,8 +54,9 @@ CASE (Scalar)
   SELECT CASE (obj%varType)
   CASE (Constant)
     CALL Util_Display("VarType: Constant", unitno=unitno)
-   CALL Util_Display(GET(obj, TypeFEVariableScalar, TypeFEVariableConstant), &
-                      'VALUE: ', unitno=unitno)
+    CALL Util_Display( &
+      GET(obj, TypeFEVariableScalar, TypeFEVariableConstant), &
+      'VALUE: ', unitno=unitno)
 
   CASE (Space)
     CALL Util_Display("VarType: Space", unitno=unitno)
@@ -67,8 +68,9 @@ CASE (Scalar)
                       'VALUE: ', unitno=unitno)
   CASE (SpaceTime)
     CALL Util_Display("VarType: Space & Time", unitno=unitno)
-  CALL Util_Display(GET(obj, TypeFEVariableScalar, TypeFEVariableSpaceTime), &
-                      'VALUE: ', unitno=unitno)
+    CALL Util_Display( &
+      GET(obj, TypeFEVariableScalar, TypeFEVariableSpaceTime), &
+      'VALUE: ', unitno=unitno)
 
   CASE DEFAULT
     CALL Util_Display("VarType: UNKNOWN", unitno=unitno)

@@ -30,7 +30,10 @@ USE BaseType, ONLY: FEVariable_, &
 USE GlobalData, ONLY: I4B, DFP, LGT
 
 IMPLICIT NONE
+
 PRIVATE
+
+PUBLIC :: Set
 
 !----------------------------------------------------------------------------
 !                                                                        Set
