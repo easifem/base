@@ -278,8 +278,8 @@ END PROCEDURE IJ2VEFC_Quadrangle
 !
 !----------------------------------------------------------------------------
 
-PURE SUBROUTINE GetEdgeConnectivityHelpAntiClock(edgeConnectivity, pointsOrder, &
-                                                 startNode)
+PURE SUBROUTINE GetEdgeConnectivityHelpAntiClock(edgeConnectivity, &
+                                                 pointsOrder, startNode)
   INTEGER(I4B), INTENT(INOUT) :: edgeConnectivity(:, :)
   INTEGER(I4B), INTENT(OUT) :: pointsOrder(:)
   INTEGER(I4B), INTENT(IN) :: startNode
