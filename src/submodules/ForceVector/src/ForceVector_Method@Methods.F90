@@ -21,6 +21,10 @@ USE ElemshapeData_Method, ONLY: GetInterpolation, GetInterpolation_
 USE ProductUtility, ONLY: OuterProd, OuterProd_
 USE FEVariable_Method, ONLY: FEVariableSize => Size
 
+#ifdef DEBUG_VER
+USE Display_Method, ONLY: Display
+#endif
+
 IMPLICIT NONE
 CONTAINS
 
@@ -45,6 +49,7 @@ INTEGER(I4B) :: ips
 
 ! main
 tsize = test%nns
+ans(1:tsize) = 0.0_DFP
 
 DO ips = 1, test%nips
   realval = test%js(ips) * test%ws(ips) * test%thickness(ips)
@@ -76,11 +81,14 @@ REAL(DFP) :: realval
 INTEGER(I4B) :: ips
 
 tsize = test%nns
+ans(1:tsize) = 0.0_DFP
 
 DO ips = 1, test%nips
   CALL GetInterpolation_(obj=test, ans=realval, val=c, scale=one, &
                          addContribution=no, timeIndx=1, spaceIndx=ips)
+
   realval = test%js(ips) * test%ws(ips) * test%thickness(ips) * realval
+
   ans(1:tsize) = ans(1:tsize) + realval * test%N(1:tsize, ips)
 END DO
 
@@ -219,6 +227,7 @@ INTEGER(I4B) :: ips
 
 ! main
 tsize = test%nns
+ans(1:tsize) = 0.0_DFP
 
 DO ips = 1, test%nips
   CALL GetInterpolation_(obj=test, ans=c1bar, val=c1, &
@@ -398,6 +407,7 @@ INTEGER(I4B) :: ips
 REAL(DFP) :: realval
 
 tsize = test%nns
+ans(1:tsize) = 0.0_DFP
 
 DO ips = 1, test%nips
   realval = test%js(ips) * test%ws(ips) * test%thickness(ips) * c(ips)
