@@ -113,7 +113,7 @@ INTEGER(I4B) :: ips
 tsize = nips
 IF (.NOT. addContribution) ans(1:tsize) = 0.0_DFP
 
-SELECT CASE (obj%varType)
+SELECT CASE (obj%defineon)
 CASE (TypeFEVariableOpt%nodal)
   !! convert nodal values to quadrature values by using N
   !! make sure nns .LE. obj%len
@@ -146,7 +146,7 @@ valStart = 0
 
 IF (.NOT. addContribution) ans%val(1 + ansStart:nips + ansStart) = 0.0_DFP
 
-SELECT CASE (obj%varType)
+SELECT CASE (obj%defineon)
 CASE (TypeFEVariableOpt%nodal)
   CALL MasterGetInterpolation1_(ans=ans%val, scale=scale, N=N, &
                                 nns=nns, nips=nips, val=obj%val, &
@@ -165,17 +165,17 @@ END PROCEDURE ScalarSpaceGetInterpolation_2
 !                                                          GetInterpolation_
 !----------------------------------------------------------------------------
 
-! obj%vartype is nodal
+! obj%defineon is nodal
 ! convert nodal values to quadrature values by using N
 ! make sure nns .LE. obj%len
 !
-! obj%vartype is quadrature
+! obj%defineon is quadrature
 ! No need for interpolation, just returnt the quadrature values
 ! make sure nips .LE. obj%len
 MODULE PROCEDURE ScalarSpaceGetInterpolation_3
 IF (.NOT. addContribution) ans = 0.0_DFP
 
-SELECT CASE (obj%vartype)
+SELECT CASE (obj%defineon)
 CASE (TypeFEVariableOpt%nodal)
   CALL MasterGetInterpolation3_(ans=ans, scale=scale, N=N, nns=nns, &
                                 spaceIndx=spaceIndx, val=obj%val, valStart=0)
@@ -200,7 +200,7 @@ IF (.NOT. addContribution) ans(1:tsize) = 0.0_DFP
 
 ansStart = 0
 
-SELECT CASE (obj%varType)
+SELECT CASE (obj%defineon)
 CASE (TypeFEVariableOpt%nodal)
   !! convert nodal values to quadrature values by using N
   !! make sure nns .LE. obj%len
@@ -240,7 +240,7 @@ LOGICAL(LGT), PARAMETER :: yes = .TRUE.
 ansStart = (timeIndx - 1) * ans%s(1)
 IF (.NOT. addContribution) ans%val(1 + ansStart:nips + ansStart) = 0.0_DFP
 
-SELECT CASE (obj%varType)
+SELECT CASE (obj%defineon)
 
 CASE (TypeFEVariableOpt%nodal)
   DO aa = 1, nnt
@@ -266,13 +266,13 @@ END PROCEDURE ScalarSpaceTimeGetInterpolation_2
 !                                                           GetInterpolation_
 !----------------------------------------------------------------------------
 
-! obj%vartype is nodal
+! obj%defineon is nodal
 ! convert nodal values to quadrature values by using N
 ! make sure nns .LE. obj%len
 ! obj%s(1) should be atleast nns
 ! obj%s(2) should be atleast nnt
 !
-! obj%vartype is quadrature
+! obj%defineon is quadrature
 ! No need for interpolation, just returnt the quadrature values
 ! make sure nips .LE. obj%len
 
@@ -283,7 +283,7 @@ LOGICAL(LGT), PARAMETER :: yes = .TRUE.
 
 IF (.NOT. addContribution) ans = 0.0_DFP
 
-SELECT CASE (obj%varType)
+SELECT CASE (obj%defineon)
 
 CASE (TypeFEVariableOpt%nodal)
   DO aa = 1, nnt

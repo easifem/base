@@ -23,7 +23,7 @@ IMPLICIT NONE
 PRIVATE
 
 PUBLIC :: ForceVector
-public :: ForceVector_
+PUBLIC :: ForceVector_
 
 !----------------------------------------------------------------------------
 !                                                               ForceVector
@@ -42,7 +42,7 @@ public :: ForceVector_
 ! $$
 
 INTERFACE ForceVector
-  MODULE PURE FUNCTION ForceVector1(test) RESULT(ans)
+  MODULE FUNCTION ForceVector1(test) RESULT(ans)
     CLASS(ElemshapeData_), INTENT(IN) :: test
     REAL(DFP), ALLOCATABLE :: ans(:)
   END FUNCTION ForceVector1
@@ -65,7 +65,7 @@ END INTERFACE ForceVector
 ! $$
 
 INTERFACE ForceVector_
-  MODULE PURE SUBROUTINE ForceVector_1(test, ans, tsize)
+  MODULE SUBROUTINE ForceVector_1(test, ans, tsize)
     CLASS(ElemshapeData_), INTENT(IN) :: test
     REAL(DFP), INTENT(INOUT) :: ans(:)
     INTEGER(I4B), INTENT(OUT) :: tsize
@@ -87,7 +87,7 @@ END INTERFACE ForceVector_
 ! $$
 
 INTERFACE ForceVector
-  MODULE PURE FUNCTION ForceVector2(test, c, crank) RESULT(ans)
+  MODULE FUNCTION ForceVector2(test, c, crank) RESULT(ans)
     CLASS(ElemshapeData_), INTENT(IN) :: test
     TYPE(FEVariable_), INTENT(IN) :: c
     TYPE(FEVariableScalar_), INTENT(IN) :: crank
@@ -110,7 +110,7 @@ END INTERFACE ForceVector
 ! $$
 
 INTERFACE ForceVector_
-  MODULE PURE SUBROUTINE ForceVector_2(test, c, crank, ans, tsize)
+  MODULE SUBROUTINE ForceVector_2(test, c, crank, ans, tsize)
     CLASS(ElemshapeData_), INTENT(IN) :: test
     TYPE(FEVariable_), INTENT(IN) :: c
     !! Scalar variables
@@ -137,7 +137,7 @@ END INTERFACE ForceVector_
 ! $$
 
 INTERFACE ForceVector
-  MODULE PURE FUNCTION ForceVector3(test, c, crank) RESULT(ans)
+  MODULE FUNCTION ForceVector3(test, c, crank) RESULT(ans)
     CLASS(ElemshapeData_), INTENT(IN) :: test
     TYPE(FEVariable_), INTENT(IN) :: c
     TYPE(FEVariableVector_), INTENT(IN) :: crank
@@ -162,7 +162,7 @@ END INTERFACE ForceVector
 ! $$
 
 INTERFACE ForceVector_
-  MODULE PURE SUBROUTINE ForceVector_3(test, c, crank, ans, nrow, ncol)
+  MODULE SUBROUTINE ForceVector_3(test, c, crank, ans, nrow, ncol)
     CLASS(ElemshapeData_), INTENT(IN) :: test
     TYPE(FEVariable_), INTENT(IN) :: c
     TYPE(FEVariableVector_), INTENT(IN) :: crank
@@ -188,7 +188,7 @@ END INTERFACE ForceVector_
 ! $$
 
 INTERFACE ForceVector
-  MODULE PURE FUNCTION ForceVector4(test, c, crank) RESULT(ans)
+  MODULE FUNCTION ForceVector4(test, c, crank) RESULT(ans)
     CLASS(ElemshapeData_), INTENT(IN) :: test
     TYPE(FEVariable_), INTENT(IN) :: c
     TYPE(FEVariableMatrix_), INTENT(IN) :: crank
@@ -213,8 +213,8 @@ END INTERFACE ForceVector
 ! $$
 
 INTERFACE ForceVector_
-  MODULE PURE SUBROUTINE ForceVector_4(test, c, crank, ans, dim1, dim2, &
-                                       dim3)
+  MODULE SUBROUTINE ForceVector_4(test, c, crank, ans, dim1, dim2, &
+                                  dim3)
     CLASS(ElemshapeData_), INTENT(IN) :: test
     TYPE(FEVariable_), INTENT(IN) :: c
     TYPE(FEVariableMatrix_), INTENT(IN) :: crank
@@ -240,7 +240,7 @@ END INTERFACE ForceVector_
 ! $$
 
 INTERFACE ForceVector
-  MODULE PURE FUNCTION ForceVector5(test, c1, c1rank, c2, c2rank) &
+  MODULE FUNCTION ForceVector5(test, c1, c1rank, c2, c2rank) &
     RESULT(ans)
     CLASS(ElemshapeData_), INTENT(IN) :: test
     TYPE(FEVariable_), INTENT(IN) :: c1
@@ -268,8 +268,8 @@ END INTERFACE ForceVector
 ! $$
 
 INTERFACE ForceVector_
-  MODULE PURE SUBROUTINE ForceVector_5(test, c1, c1rank, c2, c2rank, ans, &
-                                       tsize)
+  MODULE SUBROUTINE ForceVector_5(test, c1, c1rank, c2, c2rank, ans, &
+                                  tsize)
     CLASS(ElemshapeData_), INTENT(IN) :: test
     TYPE(FEVariable_), INTENT(IN) :: c1
     TYPE(FEVariable_), INTENT(IN) :: c2
@@ -289,7 +289,7 @@ END INTERFACE ForceVector_
 ! summary: Force vector
 
 INTERFACE ForceVector
-  MODULE PURE FUNCTION ForceVector6(test, c1, c1rank, c2, c2rank) &
+  MODULE FUNCTION ForceVector6(test, c1, c1rank, c2, c2rank) &
     RESULT(ans)
     CLASS(ElemshapeData_), INTENT(IN) :: test
     TYPE(FEVariable_), INTENT(IN) :: c1
@@ -309,8 +309,8 @@ END INTERFACE ForceVector
 ! summary: Force vector
 
 INTERFACE ForceVector_
-  MODULE PURE SUBROUTINE ForceVector_6(test, c1, c1rank, c2, c2rank, ans, &
-                                       nrow, ncol)
+  MODULE SUBROUTINE ForceVector_6(test, c1, c1rank, c2, c2rank, ans, &
+                                  nrow, ncol)
     CLASS(ElemshapeData_), INTENT(IN) :: test
     TYPE(FEVariable_), INTENT(IN) :: c1
     TYPE(FEVariable_), INTENT(IN) :: c2
@@ -338,7 +338,7 @@ END INTERFACE ForceVector_
 ! $$
 
 INTERFACE ForceVector
-  MODULE PURE FUNCTION ForceVector7(test, c1, c1rank, c2, c2rank) &
+  MODULE FUNCTION ForceVector7(test, c1, c1rank, c2, c2rank) &
     RESULT(ans)
     CLASS(ElemshapeData_), INTENT(IN) :: test
     TYPE(FEVariable_), INTENT(IN) :: c1
@@ -366,8 +366,8 @@ END INTERFACE ForceVector
 ! $$
 
 INTERFACE ForceVector_
-  MODULE PURE SUBROUTINE ForceVector_7(test, c1, c1rank, c2, c2rank, ans, &
-                                       dim1, dim2, dim3)
+  MODULE SUBROUTINE ForceVector_7(test, c1, c1rank, c2, c2rank, ans, &
+                                  dim1, dim2, dim3)
     CLASS(ElemshapeData_), INTENT(IN) :: test
     TYPE(FEVariable_), INTENT(IN) :: c1
     TYPE(FEVariable_), INTENT(IN) :: c2
@@ -393,7 +393,7 @@ END INTERFACE ForceVector_
 ! $$
 
 INTERFACE ForceVector
-  MODULE PURE FUNCTION ForceVector8(test, c) RESULT(ans)
+  MODULE FUNCTION ForceVector8(test, c) RESULT(ans)
     CLASS(ElemshapeData_), INTENT(IN) :: test
     REAL(DFP), INTENT(IN) :: c(:)
     !! defined on quadrature point
@@ -416,7 +416,7 @@ END INTERFACE ForceVector
 ! $$
 
 INTERFACE ForceVector_
-  MODULE PURE SUBROUTINE ForceVector_8(test, c, ans, tsize)
+  MODULE SUBROUTINE ForceVector_8(test, c, ans, tsize)
     CLASS(ElemshapeData_), INTENT(IN) :: test
     REAL(DFP), INTENT(IN) :: c(:)
     !! defined on quadrature point

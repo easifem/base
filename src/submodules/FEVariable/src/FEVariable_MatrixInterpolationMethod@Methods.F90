@@ -292,12 +292,12 @@ END SUBROUTINE MasterGetInterpolationFromQuadrature3_
 !                                                           GetInterpolation_
 !----------------------------------------------------------------------------
 
-! obj%vartype is nodal
+! obj%defineon is nodal
 ! Nodal Matrix Space
 ! Convert nodal values to quadrature values by using N(:,:)
 ! make sure nns .LE. obj%len
 !
-! obj%vartype is quadrature
+! obj%defineon is quadrature
 ! No need for interpolation, just returnt the quadrature values
 ! make sure nips .LE. obj%len
 MODULE PROCEDURE MatrixSpaceGetInterpolation_1
@@ -309,7 +309,7 @@ dim3 = nips
 
 IF (.NOT. addContribution) ans(1:dim1, 1:dim2, 1:dim3) = 0.0_DFP
 
-SELECT CASE (obj%varType)
+SELECT CASE (obj%defineon )
 CASE (TypeFEVariableOpt%nodal)
 
   CALL MasterGetInterpolationFromNodal1_(ans=ans, scale=scale, N=N, &
@@ -345,7 +345,7 @@ valStart = 0
 
 IF (.NOT. addContribution) ans%val(ansStart + 1:ansEnd) = 0.0_DFP
 
-SELECT CASE (obj%varType)
+SELECT CASE (obj%defineon)
 CASE (TypeFEVariableOpt%nodal)
 
   CALL MasterGetInterpolationFromNodal2_(ans=ans%val, scale=scale, N=N, &
@@ -378,7 +378,7 @@ nrow = obj%s(1)
 ncol = obj%s(2)
 IF (.NOT. addContribution) ans(1:nrow, 1:ncol) = 0.0_DFP
 
-SELECT CASE (obj%varType)
+SELECT CASE (obj%defineon)
 CASE (TypeFEVariableOpt%nodal)
 
   CALL MasterGetInterpolationFromNodal3_(ans=ans, scale=scale, N=N, &
@@ -420,7 +420,7 @@ dim3 = nips
 
 IF (.NOT. addContribution) ans(1:dim1, 1:dim2, 1:dim3) = 0.0_DFP
 
-SELECT CASE (obj%varType)
+SELECT CASE (obj%defineon)
 CASE (TypeFEVariableOpt%nodal)
 
   valEnd = 0
@@ -465,7 +465,7 @@ valStart = 0
 
 IF (.NOT. addContribution) ans%val(ansStart + 1:ansEnd) = 0.0_DFP
 
-SELECT CASE (obj%varType)
+SELECT CASE (obj%defineon)
 CASE (TypeFEVariableOpt%nodal)
 
   valEnd = 0
@@ -506,7 +506,7 @@ ncol = obj%s(2)
 
 IF (.NOT. addContribution) ans(1:nrow, 1:ncol) = 0.0_DFP
 
-SELECT CASE (obj%varType)
+SELECT CASE (obj%defineon)
 CASE (TypeFEVariableOpt%nodal)
 
   valEnd = 0
