@@ -15,7 +15,29 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 
 SUBMODULE(QuadrangleInterpolationUtility) Methods
-USE BaseMethod
+USE LineInterpolationUtility, ONLY: QuadratureNumber_Line, &
+                                    InterpolationPoint_Line_, &
+                                    BasisEvalAll_Line_, &
+                                    BasisGradientEvalAll_Line_, &
+                                    QuadraturePoint_Line_
+USE ReallocateUtility, ONLY: Reallocate
+USE MappingUtility, ONLY: FromBiUnitQuadrangle2Quadrangle_, &
+                          FromBiUnitQuadrangle2UnitQuadrangle_, &
+                          JacobianQuadrangle
+USE LagrangePolynomialUtility, ONLY: LagrangeVandermonde_
+USE GE_LUMethods, ONLY: GetLU, LUSolve
+USE InputUtility, ONLY: Input
+USE LegendrePolynomialUtility, ONLY: LegendreEvalAll_, &
+                                     LegendreGradientEvalAll_
+USE JacobiPolynomialUtility, ONLY: JacobiEvalAll_, &
+                                   JacobiGradientEvalAll_
+USE LobattoPolynomialUtility, ONLY: LobattoEvalAll_, &
+                                    LobattoGradientEvalAll_
+USE ErrorHandling, ONLY: Errormsg
+USE F95_BLAS, ONLY: GEMM
+USE StringUtility, ONLY: UpperCase
+USE GE_CompRoutineMethods, ONLY: GetInvMat
+
 IMPLICIT NONE
 CONTAINS
 
@@ -203,8 +225,9 @@ END PROCEDURE EquidistancePoint_Quadrangle2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE EquidistancePoint_Quadrangle2_
-CALL InterpolationPoint_Quadrangle2_(p=p, q=q, ipType1=Equidistance, &
-  ipType2=Equidistance, ans=ans, nrow=nrow, ncol=ncol, layout="VEFC", xij=xij)
+CALL InterpolationPoint_Quadrangle2_( &
+  p=p, q=q, ipType1=Equidistance, ipType2=Equidistance, ans=ans, &
+  nrow=nrow, ncol=ncol, layout="VEFC", xij=xij)
 END PROCEDURE EquidistancePoint_Quadrangle2_
 
 !----------------------------------------------------------------------------
@@ -358,7 +381,7 @@ END SUBROUTINE GetEdgeConnectivityHelpClock
 
 MODULE PROCEDURE IJ2VEFC_Quadrangle_Clockwise
 ! internal variables
-INTEGER(I4B) :: cnt, m, ii, jj, ll, N, ij(2, 4), iedge, p1, p2
+INTEGER(I4B) :: cnt, ii, jj, ll, N, ij(2, 4), iedge, p1, p2
 INTEGER(I4B), PARAMETER :: tEdges = 4
 INTEGER(I4B) :: edgeConnectivity(2, 4), ii1, ii2, dii, jj1, jj2, djj, &
                 pointsOrder(4)
@@ -648,12 +671,8 @@ IF (ALL([p, q] .GE. 1_I4B)) THEN
     eta_in = eta(ii1:ii2, jj1:jj2)
 
     CALL IJ2VEFC_Quadrangle_AntiClockwise( &
-      & xi=xi_in,  &
-      & eta=eta_in, &
-      & temp=temp_in, &
-      & p=MAX(p - 2, 0_I4B), &
-      & q=MAX(q - 2, 0_I4B), &
-      & startNode=startNode)
+      xi=xi_in, eta=eta_in, temp=temp_in, p=MAX(p - 2, 0_I4B), &
+      q=MAX(q - 2, 0_I4B), startNode=startNode)
 
     ii1 = cnt + 1
     ii2 = ii1 + SIZE(temp_in, 2) - 1
@@ -673,9 +692,10 @@ END PROCEDURE IJ2VEFC_Quadrangle_AntiClockwise
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE InterpolationPoint_Quadrangle1
-ans = InterpolationPoint_Quadrangle2(p=order, q=order, ipType1=ipType, &
-           ipType2=ipType, xij=xij, layout=layout, alpha1=alpha, beta1=beta, &
-                     lambda1=lambda, alpha2=alpha, beta2=beta, lambda2=lambda)
+ans = InterpolationPoint_Quadrangle2( &
+      p=order, q=order, ipType1=ipType, ipType2=ipType, xij=xij, &
+      layout=layout, alpha1=alpha, beta1=beta, lambda1=lambda, alpha2=alpha, &
+      beta2=beta, lambda2=lambda)
 END PROCEDURE InterpolationPoint_Quadrangle1
 
 !----------------------------------------------------------------------------
@@ -683,10 +703,10 @@ END PROCEDURE InterpolationPoint_Quadrangle1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE InterpolationPoint_Quadrangle1_
-CALL InterpolationPoint_Quadrangle2_(p=order, q=order, ipType1=ipType, &
-           ipType2=ipType, xij=xij, layout=layout, alpha1=alpha, beta1=beta, &
-                   lambda1=lambda, alpha2=alpha, beta2=beta, lambda2=lambda, &
-                                     ans=ans, nrow=nrow, ncol=ncol)
+CALL InterpolationPoint_Quadrangle2_( &
+  p=order, q=order, ipType1=ipType, ipType2=ipType, xij=xij, layout=layout, &
+  alpha1=alpha, beta1=beta, lambda1=lambda, alpha2=alpha, beta2=beta, &
+  lambda2=lambda, ans=ans, nrow=nrow, ncol=ncol)
 END PROCEDURE InterpolationPoint_Quadrangle1_
 
 !----------------------------------------------------------------------------
@@ -700,10 +720,10 @@ nrow = 2; IF (PRESENT(xij)) nrow = SIZE(xij, 1)
 ncol = (p + 1) * (q + 1)
 ALLOCATE (ans(nrow, ncol))
 
-CALL InterpolationPoint_Quadrangle2_(p=p, q=q, ipType1=ipType1, &
-     ipType2=ipType2, ans=ans, nrow=nrow, ncol=ncol, layout=layout, xij=xij, &
-                 alpha1=alpha1, beta1=beta1, lambda1=lambda1, alpha2=alpha2, &
-                                     beta2=beta2, lambda2=lambda2)
+CALL InterpolationPoint_Quadrangle2_( &
+  p=p, q=q, ipType1=ipType1, ipType2=ipType2, ans=ans, nrow=nrow, ncol=ncol, &
+  layout=layout, xij=xij, alpha1=alpha1, beta1=beta1, lambda1=lambda1, &
+  alpha2=alpha2, beta2=beta2, lambda2=lambda2)
 
 END PROCEDURE InterpolationPoint_Quadrangle2
 
@@ -725,13 +745,13 @@ END IF
 
 ncol = (p + 1) * (q + 1)
 
-CALL InterpolationPoint_Line_(order=p, ipType=ipType1, xij=biunit_xij, &
-              layout="INCREASING", alpha=alpha1, beta=beta1, lambda=lambda1, &
-                              ans=x, tsize=tsize)
+CALL InterpolationPoint_Line_( &
+  order=p, ipType=ipType1, xij=biunit_xij, layout="INCREASING", &
+  alpha=alpha1, beta=beta1, lambda=lambda1, ans=x, tsize=tsize)
 
-CALL InterpolationPoint_Line_(order=q, ipType=ipType2, xij=biunit_xij, &
-              layout="INCREASING", alpha=alpha2, beta=beta2, lambda=lambda2, &
-                              ans=y, tsize=tsize)
+CALL InterpolationPoint_Line_( &
+  order=q, ipType=ipType2, xij=biunit_xij, layout="INCREASING", &
+  alpha=alpha2, beta=beta2, lambda=lambda2, ans=y, tsize=tsize)
 
 kk = 0
 DO ii = 1, p + 1
@@ -750,10 +770,9 @@ IF (layout(1:4) .EQ. "VEFC") THEN
 END IF
 
 IF (PRESENT(xij)) THEN
-  CALL FromBiUnitQuadrangle2Quadrangle_(xin=ans(1:2, 1:ncol), &
-                                        x1=xij(:, 1), x2=xij(:, 2), &
-                                        x3=xij(:, 3), x4=xij(:, 4), &
-                                        ans=ans, nrow=ii, ncol=jj)
+  CALL FromBiUnitQuadrangle2Quadrangle_( &
+    xin=ans(1:2, 1:ncol), x1=xij(:, 1), x2=xij(:, 2), &
+    x3=xij(:, 3), x4=xij(:, 4), ans=ans, nrow=ii, ncol=jj)
 END IF
 
 END PROCEDURE InterpolationPoint_Quadrangle2_
@@ -781,8 +800,8 @@ tsize = SIZE(xij, 2)
 
 ipiv = 0_I4B; ans(1:tsize) = 0.0_DFP; ans(i) = 1.0_DFP
 ! V = LagrangeVandermonde(order=order, xij=xij, elemType=Quadrangle)
-CALL LagrangeVandermonde_(order=order, xij=xij, elemType=Quadrangle, &
-                          ans=V, nrow=nrow, ncol=ncol)
+CALL LagrangeVandermonde_(order=order, xij=xij, elemType=Quadrangle, ans=V, &
+                          nrow=nrow, ncol=ncol)
 CALL GetLU(A=V, IPIV=ipiv, info=info)
 CALL LUSolve(A=V, B=ans(1:tsize), IPIV=ipiv, info=info)
 END PROCEDURE LagrangeCoeff_Quadrangle1_
@@ -887,7 +906,7 @@ END PROCEDURE LagrangeCoeff_Quadrangle5
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE LagrangeCoeff_Quadrangle5_
-INTEGER(I4B) :: jj, kk, basisType(2)
+INTEGER(I4B) :: basisType(2)
 
 basisType(1) = Input(default=Monomial, option=basisType1)
 basisType(2) = Input(default=Monomial, option=basisType2)
@@ -1202,7 +1221,6 @@ PURE SUBROUTINE VertexBasis_Quadrangle3_(L1, L2, ans, nrow, ncol)
     ans(ii, 3) = L1(ii, 1) * L2(ii, 1)
     ans(ii, 4) = L1(ii, 0) * L2(ii, 1)
   END DO
-
 END SUBROUTINE VertexBasis_Quadrangle3_
 
 !----------------------------------------------------------------------------
@@ -1708,9 +1726,9 @@ END PROCEDURE HeirarchicalBasis_Quadrangle3
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE HeirarchicalBasis_Quadrangle3_
-INTEGER(I4B) :: a, b, indx(4), maxP, maxQ
+INTEGER(I4B) :: indx(4), maxP, maxQ
 REAL(DFP), ALLOCATABLE :: L1(:, :), L2(:, :)
-LOGICAL(LGT) :: isok, abool
+LOGICAL(LGT) :: isok
 
 nrow = SIZE(xij, 2)
 ! ncol = pb * qb - pb - qb + pe3 + pe4 + qe1 + qe2 + 1
@@ -2059,7 +2077,7 @@ END PROCEDURE QuadraturePoint_Quadrangle4
 MODULE PROCEDURE QuadraturePoint_Quadrangle1_
 ! internal variables
 REAL(DFP) :: x(4, nipsx(1)), y(2, nipsy(1)), areal
-INTEGER(I4B) :: ii, jj, kk, nsd, np, nq
+INTEGER(I4B) :: ii, jj, nsd, np, nq
 CHARACTER(len=1) :: astr
 
 REAL(DFP), PARAMETER :: x12(1, 2) = RESHAPE([-1.0_DFP, 1.0_DFP], [1, 2])
