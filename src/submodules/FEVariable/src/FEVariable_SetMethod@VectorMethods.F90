@@ -88,6 +88,32 @@ END IF
 END PROCEDURE obj_Set6
 
 !----------------------------------------------------------------------------
+!                                                                         Set
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE obj_Set11
+INTEGER(I4B) :: ii, jj, cnt
+
+cnt = 0
+
+IF (addContribution) THEN
+  DO jj = 1, obj%s(2)
+    DO ii = 1, obj%s(1)
+      cnt = cnt + 1
+      obj%val(cnt) = obj%val(cnt) + scale * val(ii, jj)
+    END DO
+  END DO
+ELSE
+  DO jj = 1, obj%s(2)
+    DO ii = 1, obj%s(1)
+      cnt = cnt + 1
+      obj%val(cnt) = scale * val(ii, jj)
+    END DO
+  END DO
+END IF
+END PROCEDURE obj_Set11
+
+!----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 

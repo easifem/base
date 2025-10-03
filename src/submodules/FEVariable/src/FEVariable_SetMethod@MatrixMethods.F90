@@ -108,6 +108,35 @@ END IF
 END PROCEDURE obj_Set9
 
 !----------------------------------------------------------------------------
+!                                                                         Set
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE obj_Set12
+INTEGER(I4B) :: ii, jj, kk, cnt
+
+cnt = 0
+IF (addContribution) THEN
+  DO kk = 1, obj%s(3)
+    DO jj = 1, obj%s(2)
+      DO ii = 1, obj%s(1)
+        cnt = cnt + 1
+        obj%val(cnt) = obj%val(cnt) + scale * val(ii, jj, kk)
+      END DO
+    END DO
+  END DO
+ELSE
+  DO kk = 1, obj%s(3)
+    DO jj = 1, obj%s(2)
+      DO ii = 1, obj%s(1)
+        cnt = cnt + 1
+        obj%val(cnt) = scale * val(ii, jj, kk)
+      END DO
+    END DO
+  END DO
+END IF
+END PROCEDURE obj_Set12
+
+!----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 

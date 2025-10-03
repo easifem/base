@@ -78,6 +78,20 @@ END IF
 END PROCEDURE obj_Set3
 
 !----------------------------------------------------------------------------
+!                                                                         Set
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE obj_Set10
+obj%len = SIZE(val)
+obj%s(1) = obj%len
+IF (addContribution) THEN
+  obj%val(1:obj%len) = obj%val(1:obj%len) + scale * val(1:obj%len)
+ELSE
+  obj%val(1:obj%len) = scale * val(1:obj%len)
+END IF
+END PROCEDURE obj_Set10
+
+!----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 

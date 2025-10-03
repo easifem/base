@@ -179,4 +179,52 @@ INTERFACE Set
   END SUBROUTINE obj_Set9
 END INTERFACE Set
 
+!----------------------------------------------------------------------------
+!                                                                        Set
+!----------------------------------------------------------------------------
+
+INTERFACE Set
+  MODULE PURE SUBROUTINE obj_Set10(obj, val, rank, vartype, scale, &
+                                   addContribution)
+    TYPE(FEVariable_), INTENT(INOUT) :: obj
+    REAL(DFP), INTENT(IN) :: val(:)
+    TYPE(FEVariableScalar_), INTENT(IN) :: rank
+    TYPE(FEVariableTime_), INTENT(IN) :: vartype
+    REAL(DFP), INTENT(IN) :: scale
+    LOGICAL(LGT), INTENT(IN) :: addContribution
+  END SUBROUTINE obj_Set10
+END INTERFACE Set
+
+!----------------------------------------------------------------------------
+!                                                                        Set
+!----------------------------------------------------------------------------
+
+INTERFACE Set
+  MODULE PURE SUBROUTINE obj_Set11(obj, val, rank, vartype, scale, &
+                                   addContribution)
+    TYPE(FEVariable_), INTENT(INOUT) :: obj
+    REAL(DFP), INTENT(IN) :: val(:, :)
+    TYPE(FEVariableVector_), INTENT(IN) :: rank
+    TYPE(FEVariableTime_), INTENT(IN) :: vartype
+    REAL(DFP), INTENT(IN) :: scale
+    LOGICAL(LGT), INTENT(IN) :: addContribution
+  END SUBROUTINE obj_Set11
+END INTERFACE Set
+
+!----------------------------------------------------------------------------
+!                                                                        Set
+!----------------------------------------------------------------------------
+
+INTERFACE Set
+  MODULE PURE SUBROUTINE obj_Set12(obj, val, rank, vartype, scale, &
+                                   addContribution)
+    TYPE(FEVariable_), INTENT(INOUT) :: obj
+    REAL(DFP), INTENT(IN) :: val(:, :, :)
+    TYPE(FEVariableMatrix_), INTENT(IN) :: rank
+    TYPE(FEVariableTime_), INTENT(IN) :: vartype
+    REAL(DFP), INTENT(IN) :: scale
+    LOGICAL(LGT), INTENT(IN) :: addContribution
+  END SUBROUTINE obj_Set12
+END INTERFACE Set
+
 END MODULE FEVariable_SetMethod
