@@ -76,8 +76,10 @@ USE GlobalData, ONLY: Scalar, Vector, Matrix, Nodal, Quadrature, &
                       Constant, Space, Time, Spacetime, &
                       SolutionDependent, RandomSpace
 
-USE GlobalData, ONLY: Point, Line, Triangle, Quadrangle, Tetrahedron, &
-                      Hexahedron, Prism, Pyramid
+USE GlobalData, ONLY: Point, Line, Triangle, &
+                      Quadrangle, Quadrangle4, Quadrangle8, Quadrangle9, &
+                      Quadrangle16, &
+                      Tetrahedron, Hexahedron, Prism, Pyramid
 
 USE String_Class, ONLY: String
 
@@ -1098,7 +1100,7 @@ TYPE(KeyValue_), PARAMETER :: TypeKeyValue = KeyValue_(VALUE=NULL())
 ! {!pages/FEVariable_.md!}
 
 TYPE :: FEVariable_
-  LOGICAL( LGT ) :: isInit = .false.
+  LOGICAL(LGT) :: isInit = .FALSE.
   !! True if it is initiated
   INTEGER(I4B) :: s(MAX_RANK_FEVARIABLE) = 0
   !! shape of the data
@@ -1914,6 +1916,9 @@ TYPE :: ElemNameOpt_
   INTEGER(I4B) :: line = Line
   INTEGER(I4B) :: triangle = Triangle
   INTEGER(I4B) :: quadrangle = Quadrangle
+  INTEGER(I4B) :: quadrangle8 = Quadrangle8
+  INTEGER(I4B) :: quadrangle9 = Quadrangle9
+  INTEGER(I4B) :: quadrangle16 = Quadrangle16
   INTEGER(I4B) :: tetrahedron = Tetrahedron
   INTEGER(I4B) :: hexahedron = Hexahedron
   INTEGER(I4B) :: prism = Prism
