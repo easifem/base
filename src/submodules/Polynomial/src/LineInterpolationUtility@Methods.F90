@@ -158,6 +158,7 @@ END PROCEDURE GetTotalDOF_Line
 
 MODULE PROCEDURE GetTotalInDOF_Line
 ans = order - 1_I4B
+IF (ans .LT. 0_I4B) ans = 0_I4B
 END PROCEDURE GetTotalInDOF_Line
 
 !----------------------------------------------------------------------------
