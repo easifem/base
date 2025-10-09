@@ -60,8 +60,7 @@ include(${CMAKE_CURRENT_LIST_DIR}/ARPACK/CMakeLists.txt)
 # Hashing
 include(${CMAKE_CURRENT_LIST_DIR}/Hashing/CMakeLists.txt)
 
-# Gnuplot
-# include(${CMAKE_CURRENT_LIST_DIR}/Gnuplot/CMakeLists.txt)
+# Gnuplot include(${CMAKE_CURRENT_LIST_DIR}/Gnuplot/CMakeLists.txt)
 
 # CInterface
 include(${CMAKE_CURRENT_LIST_DIR}/CInterface/CMakeLists.txt)
@@ -95,6 +94,9 @@ include(${CMAKE_CURRENT_LIST_DIR}/BaseInterpolation/CMakeLists.txt)
 
 # BaseContinuity
 include(${CMAKE_CURRENT_LIST_DIR}/BaseContinuity/CMakeLists.txt)
+
+# Quadrangle
+include(${CMAKE_CURRENT_LIST_DIR}/Quadrangle/CMakeLists.txt)
 
 # Polynomial
 include(${CMAKE_CURRENT_LIST_DIR}/Polynomial/CMakeLists.txt)

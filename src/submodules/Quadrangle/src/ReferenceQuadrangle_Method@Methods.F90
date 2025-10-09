@@ -20,9 +20,7 @@
 ! summary: This submodule contains method for [[ReferenceQuadrangle_]]
 
 SUBMODULE(ReferenceQuadrangle_Method) Methods
-
-USE GlobalData, ONLY: Quadrangle, Quadrangle4, Quadrangle8, Quadrangle9, &
-                      Quadrangle16, Point, Line2, Equidistance, INT8
+USE GlobalData, ONLY: INT8
 
 USE ReferenceElement_Method, ONLY: ReferenceTopology, DEALLOCATE, &
                                    ReferenceElement_Initiate => Initiate
@@ -40,7 +38,7 @@ USE ReferenceLine_Method, ONLY: Linename, ElementType_Line
 
 USE ApproxUtility, ONLY: OPERATOR(.approxeq.)
 
-USE AppendUtility
+USE AppendUtility, ONLY: OPERATOR(.append.)
 
 USE StringUtility, ONLY: UpperCase
 
@@ -56,6 +54,8 @@ USE Display_Method, ONLY: ToString
 
 USE MiscUtility, ONLY: Int2Str
 
+USE BaseType, ONLY: TypeElemNameOpt, TypeInterpolationOpt
+
 IMPLICIT NONE
 CONTAINS
 
@@ -65,15 +65,15 @@ CONTAINS
 
 MODULE PROCEDURE ElementName_Quadrangle
 SELECT CASE (elemType)
-CASE (Quadrangle4)
+CASE (TypeElemNameOpt%Quadrangle)
   ans = "Quadrangle4"
-CASE (Quadrangle8)
+CASE (TypeElemNameOpt%Quadrangle8)
   ans = "Quadrangle8"
-CASE (Quadrangle9)
+CASE (TypeElemNameOpt%Quadrangle9)
   ans = "Quadrangle9"
-CASE (Quadrangle16)
+CASE (TypeElemNameOpt%Quadrangle16)
   ans = "Quadrangle16"
-CASE default
+CASE DEFAULT
   ans = ""
 END SELECT
 END PROCEDURE ElementName_Quadrangle
@@ -117,13 +117,13 @@ END PROCEDURE TotalEntities_Quadrangle
 
 MODULE PROCEDURE TotalNodesInElement_Quadrangle
 SELECT CASE (elemType)
-CASE (Quadrangle4)
+CASE (TypeElemNameOpt%Quadrangle)
   ans = 4
-CASE (Quadrangle8)
+CASE (TypeElemNameOpt%Quadrangle8)
   ans = 8
-CASE (Quadrangle9)
+CASE (TypeElemNameOpt%Quadrangle9)
   ans = 9
-CASE (Quadrangle16)
+CASE (TypeElemNameOpt%Quadrangle16)
   ans = 16
 CASE DEFAULT
   ans = 0
@@ -136,13 +136,13 @@ END PROCEDURE TotalNodesInElement_Quadrangle
 
 MODULE PROCEDURE ElementOrder_Quadrangle
 SELECT CASE (elemType)
-CASE (Quadrangle4)
+CASE (TypeElemNameOpt%Quadrangle)
   ans = 1
-CASE (Quadrangle8)
+CASE (TypeElemNameOpt%Quadrangle8)
   ans = 2
-CASE (Quadrangle9)
+CASE (TypeElemNameOpt%Quadrangle9)
   ans = 2
-CASE (Quadrangle16)
+CASE (TypeElemNameOpt%Quadrangle16)
   ans = 3
 END SELECT
 END PROCEDURE ElementOrder_Quadrangle
@@ -154,13 +154,13 @@ END PROCEDURE ElementOrder_Quadrangle
 MODULE PROCEDURE ElementType_Quadrangle
 SELECT CASE (elemName)
 CASE ("Quadrangle4", "Quadrangle")
-  ans = Quadrangle4
+  ans = TypeElemNameOpt%Quadrangle
 CASE ("Quadrangle8")
-  ans = Quadrangle8
+  ans = TypeElemNameOpt%Quadrangle8
 CASE ("Quadrangle9")
-  ans = Quadrangle9
+  ans = TypeElemNameOpt%Quadrangle9
 CASE ("Quadrangle16")
-  ans = Quadrangle16
+  ans = TypeElemNameOpt%Quadrangle16
 CASE DEFAULT
   ans = 0
 END SELECT
@@ -201,7 +201,7 @@ DO ii = 1, 4
 
   DO jj = 1, tsize
     ans(ii)%topology(jj) = Referencetopology( &
-      & nptrs=topo%nptrs(jj:jj), name=Point)
+                          nptrs=topo%nptrs(jj:jj), name=TypeElemNameOpt%Point)
   END DO
 
   ans(ii)%topology(tsize + 1) = Referencetopology( &
@@ -232,9 +232,10 @@ DO ii = 1, 4
   ans(ii)%xiDimension = 1
   ans(ii)%order = order
   ans(ii)%name = ElementType_Line("Line"//tostring(order + 1))
-  ans(ii)%interpolationPointType = Equidistance
-  ans(ii)%xij = InterpolationPoint_Line(order=order, ipType=Equidistance, &
-                                        layout="VEFC")
+  ans(ii)%interpolationPointType = TypeInterpolationOpt%Equidistance
+  ans(ii)%xij = InterpolationPoint_Line( &
+                order=order, ipType=TypeInterpolationOpt%Equidistance, &
+                layout="VEFC")
 
   ans(ii)%nsd = nsd
   ans(ii)%entityCounts = [order + 1, 1, 0, 0]
@@ -242,7 +243,7 @@ DO ii = 1, 4
 
   DO jj = 1, order + 1
     ans(ii)%topology(jj) = Referencetopology(nptrs=edgeCon(jj:jj, ii), &
-                                             name=Point)
+                                             name=TypeElemNameOpt%Point)
   END DO
 
   ans(ii)%topology(order + 2) = Referencetopology(nptrs=edgeCon(1:2, ii), &
@@ -261,13 +262,13 @@ END PROCEDURE FacetElements_Quadrangle2
 MODULE PROCEDURE Quadranglename1
 SELECT CASE (order)
 CASE (1)
-  ans = Quadrangle4
+  ans = TypeElemNameOpt%Quadrangle
 CASE (2)
-  ans = Quadrangle9
+  ans = TypeElemNameOpt%Quadrangle9
 CASE (3)
-  ans = Quadrangle16
+  ans = TypeElemNameOpt%Quadrangle16
 CASE (4:)
-  ans = Quadrangle16 + order - 3_I4B
+  ans = TypeElemNameOpt%Quadrangle16 + order - 3_I4B
 END SELECT
 END PROCEDURE Quadranglename1
 
@@ -308,19 +309,19 @@ END IF
 
 obj%entityCounts = [4, 4, 1, 0]
 obj%xidimension = 2
-obj%name = Quadrangle4
+obj%name = TypeElemNameOpt%Quadrangle
 obj%order = 1
 obj%NSD = NSD
 ALLOCATE (obj%topology(9))
-obj%topology(1) = ReferenceTopology([1], Point)
-obj%topology(2) = ReferenceTopology([2], Point)
-obj%topology(3) = ReferenceTopology([3], Point)
-obj%topology(4) = ReferenceTopology([4], Point)
-obj%topology(5) = ReferenceTopology([1, 2], Line2)
-obj%topology(6) = ReferenceTopology([2, 3], Line2)
-obj%topology(7) = ReferenceTopology([3, 4], Line2)
-obj%topology(8) = ReferenceTopology([4, 1], Line2)
-obj%topology(9) = ReferenceTopology([1, 2, 3, 4], Quadrangle4)
+obj%topology(1) = ReferenceTopology([1], TypeElemNameOpt%Point)
+obj%topology(2) = ReferenceTopology([2], TypeElemNameOpt%Point)
+obj%topology(3) = ReferenceTopology([3], TypeElemNameOpt%Point)
+obj%topology(4) = ReferenceTopology([4], TypeElemNameOpt%Point)
+obj%topology(5) = ReferenceTopology([1, 2], TypeElemNameOpt%Line)
+obj%topology(6) = ReferenceTopology([2, 3], TypeElemNameOpt%Line)
+obj%topology(7) = ReferenceTopology([3, 4], TypeElemNameOpt%Line)
+obj%topology(8) = ReferenceTopology([4, 1], TypeElemNameOpt%Line)
+obj%topology(9) = ReferenceTopology([1, 2, 3, 4], TypeElemNameOpt%Quadrangle)
 obj%highorderElement => highorderElement_Quadrangle
 END PROCEDURE Initiate_ref_Quadrangle
 
@@ -365,7 +366,7 @@ CASE DEFAULT
   obj%NSD = refelem%NSD
   ALLOCATE (obj%topology(SUM(obj%entityCounts)))
   DO I = 1, NNS
-    obj%topology(I) = ReferenceTopology([I], Point)
+    obj%topology(I) = ReferenceTopology([I], TypeElemNameOpt%Point)
   END DO
   aintvec = [1, 2] .append.arange(5_I4B, 3_I4B + order)
   obj%topology(NNS + 1) = ReferenceTopology(aintvec, Linename(order=order))
@@ -664,8 +665,10 @@ END PROCEDURE FaceShapeMetaData_Quadrangle
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE GetFaceElemType_Quadrangle1
-INTEGER(I4B) :: order
-order = ElementOrder_Quadrangle(Input(default=Quadrangle, option=elemType))
+INTEGER(I4B) :: order, elemType0
+
+elemType0 = Input(default=TypeElemNameOpt%Quadrangle, option=elemType)
+order = ElementOrder_Quadrangle(elemType0)
 IF (PRESENT(faceElemType)) faceElemType(1:4) = LineName(order)
 IF (PRESENT(tFaceNodes)) tFaceNodes(1:4) = order + 1
 END PROCEDURE GetFaceElemType_Quadrangle1

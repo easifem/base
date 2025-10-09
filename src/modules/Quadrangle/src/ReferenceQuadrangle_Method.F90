@@ -21,7 +21,6 @@
 
 MODULE ReferenceQuadrangle_Method
 USE GlobalData, ONLY: DFP, I4B, LGT
-
 USE BaseType, ONLY: ReferenceQuadrangle_, ReferenceElement_, &
                     ReferenceTopology_
 
@@ -61,13 +60,13 @@ INTEGER(I4B), PARAMETER :: MaxOrder_Quadrangle = MAX_QUADRANGLE_ORDER
 INTEGER(I4B), PARAMETER :: MaxOrder_Quadrangle = 2_I4B
 #endif
 
-INTEGER(I4B), PUBLIC, PARAMETER :: HelpFaceData_Quadrangle(3, 4) =  &
-  & RESHAPE([ &
-    & 2, 3, 4, &
-    & 3, 4, 1, &
-    & 4, 1, 2, &
-    & 1, 2, 3 &
-  & ], [3, 4])
+INTEGER(I4B), PUBLIC, PARAMETER :: HelpFaceData_Quadrangle(3, 4) = &
+                                   RESHAPE([ &
+                                           2, 3, 4, &
+                                           3, 4, 1, &
+                                           4, 1, 2, &
+                                           1, 2, 3 &
+                                           ], [3, 4])
 
 #ifdef QUADRANGLE_EDGE_CON_DEFAULT_OPT_1
 INTEGER(I4B), PARAMETER :: DEFAULT_OPT_QUADRANGLE_EDGE_CON = 1_I4B

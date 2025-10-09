@@ -135,8 +135,13 @@ TYPE :: ReferenceElementInfo_
   INTEGER(I4B) :: faceElemTypePrism(5) = 0
   INTEGER(I4B) :: faceElemTypePyramid(5) = 0
   !! TODO: add faceElemTypePrism and faceElemTypePyramid
-
   !! element types of faces of triangle
+
+#ifdef MAX_QUADRANGLE_ORDER
+  INTEGER(I4B) :: maxOrder_Quadrangle = MAX_QUADRANGLE_ORDER
+#else
+  INTEGER(I4B) :: maxOrder_Quadrangle = 2_I4B
+#endif
 END TYPE ReferenceElementInfo_
 
 TYPE(ReferenceElementInfo_), PARAMETER :: ReferenceElementInfo = &

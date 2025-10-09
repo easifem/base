@@ -32,7 +32,6 @@ target_sources(
           ${src_path}/ReferenceTriangle_Method@Methods.F90
           ${src_path}/Triangle_Method@Methods.F90
           ${src_path}/Plane_Method@Methods.F90
-          ${src_path}/ReferenceQuadrangle_Method@Methods.F90
           ${src_path}/ReferenceTetrahedron_Method@Methods.F90
           ${src_path}/ReferenceHexahedron_Method@Methods.F90
           ${src_path}/ReferencePrism_Method@Methods.F90
