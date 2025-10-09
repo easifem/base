@@ -62,23 +62,27 @@ CONTAINS
 
 MODULE PROCEDURE HierarchicalDOF
 INTEGER(I4B) :: ii
+LOGICAL(LGT) :: isok
 
 ans = 0
 
 ii = HierarchicalVertexDOF(elemType=elemType)
 ans = ans + ii
 
-IF (PRESENT(cellOrder)) THEN
+isok = PRESENT(cellOrder)
+IF (isok) THEN
   ii = HierarchicalCellDOF(elemType=elemType, order=cellOrder)
   ans = ans + ii
 END IF
 
-IF (PRESENT(faceOrder)) THEN
+isok = PRESENT(faceOrder)
+IF (isok) THEN
   ii = HierarchicalFaceDOF(elemType=elemType, order=faceOrder)
   ans = ans + ii
 END IF
 
-IF (PRESENT(edgeOrder)) THEN
+isok = PRESENT(edgeOrder)
+IF (isok) THEN
   ii = HierarchicalEdgeDOF(elemType=elemType, order=edgeOrder)
   ans = ans + ii
 END IF
