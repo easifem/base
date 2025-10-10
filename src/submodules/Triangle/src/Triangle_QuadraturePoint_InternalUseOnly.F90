@@ -71,7 +71,7 @@
 ! ISBN: 0750663200,
 ! LC: TA640.2.Z54
 
-module QuadraturePoint_Triangle_InternalUseOnly
+module Triangle_QuadraturePoint_InternalUseOnly
 USE GlobalData, only: DFP
 implicit none 
 private
@@ -472,6 +472,4 @@ REAL(DFP), DIMENSION(3, 37), PUBLIC, PARAMETER :: TPW37 = &
 
 !!TOMS706_37, order 37, degree of precision 13, a rule from ACM TOMS algorithm 706.
 
-
-
-end module QuadraturePoint_Triangle_InternalUseOnly
+end module Triangle_QuadraturePoint_InternalUseOnly

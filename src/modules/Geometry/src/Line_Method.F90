@@ -18,6 +18,18 @@
 MODULE Line_Method
 USE GlobalData
 IMPLICIT NONE
+PRIVATE
+
+PUBLIC :: line_exp_is_degenerate_nd, &
+          line_exp2imp_2d, &
+          line_imp_is_degenerate_2d, &
+          lines_imp_int_2d, &
+          line_exp_perp_2d, &
+          lines_exp_int_2d, &
+          segment_point_dist_2d, &
+          segment_point_dist_3d, &
+          line_exp_point_dist_signed_2d, &
+          segment_point_near_2d
 
 !----------------------------------------------------------------------------
 !
@@ -46,14 +58,14 @@ IMPLICIT NONE
 ! line is degenerate.
 !
 
-interface
-  module pure function line_exp_is_degenerate_nd(dim_num, p1, p2) result(ans)
+INTERFACE
+  MODULE PURE FUNCTION line_exp_is_degenerate_nd(dim_num, p1, p2) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: dim_num
-    real(dfp), INTENT(IN) :: p1(dim_num)
-    real(dfp), INTENT(IN) :: p2(dim_num)
-    logical(lgt) :: ans
-  end function
-end interface
+    REAL(dfp), INTENT(IN) :: p1(dim_num)
+    REAL(dfp), INTENT(IN) :: p2(dim_num)
+    LOGICAL(lgt) :: ans
+  END FUNCTION
+END INTERFACE
 
 !----------------------------------------------------------------------------
 !
@@ -80,13 +92,13 @@ end interface
 !    Output, real ( kind = 8 ) A, B, C, the implicit form of the line.
 !
 
-interface
-  module pure subroutine line_exp2imp_2d(p1, p2, a, b, c)
-    real(kind=8), intent(out) :: a, b, c
-    real(kind=8), intent(in) :: p1(:)
-    real(kind=8), intent(in) :: p2(:)
-  end subroutine
-end interface
+INTERFACE
+  MODULE PURE SUBROUTINE line_exp2imp_2d(p1, p2, a, b, c)
+    REAL(kind=8), INTENT(out) :: a, b, c
+    REAL(kind=8), INTENT(in) :: p1(:)
+    REAL(kind=8), INTENT(in) :: p2(:)
+  END SUBROUTINE
+END INTERFACE
 
 !----------------------------------------------------------------------------
 !
@@ -110,12 +122,12 @@ end interface
 !    line is degenerate.
 !
 
-interface
-  module pure function line_imp_is_degenerate_2d(a, b, c) result(ans)
-    real(dfp), intent(in) :: a, b, c
-    logical(lgt) :: ans
-  end function
-end interface
+INTERFACE
+  MODULE PURE FUNCTION line_imp_is_degenerate_2d(a, b, c) RESULT(ans)
+    REAL(dfp), INTENT(in) :: a, b, c
+    LOGICAL(lgt) :: ans
+  END FUNCTION
+END INTERFACE
 
 !----------------------------------------------------------------------------
 !
@@ -151,14 +163,14 @@ end interface
 !    the intersection point.  Otherwise, P = 0.
 !
 
-interface
-  module pure subroutine lines_imp_int_2d(a1, b1, c1, a2, b2, c2, ival, p)
-    implicit none
-    real(dfp), intent(in) :: a1, b1, c1, a2, b2, c2
-    real(dfp), intent(out) :: p(2)
-    integer(i4b), intent(out) :: ival
-  end subroutine
-end interface
+INTERFACE
+  MODULE PURE SUBROUTINE lines_imp_int_2d(a1, b1, c1, a2, b2, c2, ival, p)
+    IMPLICIT NONE
+    REAL(dfp), INTENT(in) :: a1, b1, c1, a2, b2, c2
+    REAL(dfp), INTENT(out) :: p(2)
+    INTEGER(i4b), INTENT(out) :: ival
+  END SUBROUTINE
+END INTERFACE
 
 !----------------------------------------------------------------------------
 !
@@ -197,15 +209,15 @@ end interface
 !    Output, logical ( kind = 4 ) FLAG, is TRUE if the value could
 !    not be computed.
 
-interface
-  module pure subroutine line_exp_perp_2d(p1, p2, p3, p4, flag)
-    real(dfp), intent(in) :: p1(2)
-    real(dfp), intent(in) :: p2(2)
-    real(dfp), intent(in) :: p3(2)
-    real(dfp), intent(out) :: p4(2)
-    logical(lgt), intent(out) :: flag
-  end subroutine
-end interface
+INTERFACE
+  MODULE PURE SUBROUTINE line_exp_perp_2d(p1, p2, p3, p4, flag)
+    REAL(dfp), INTENT(in) :: p1(2)
+    REAL(dfp), INTENT(in) :: p2(2)
+    REAL(dfp), INTENT(in) :: p3(2)
+    REAL(dfp), INTENT(out) :: p4(2)
+    LOGICAL(lgt), INTENT(out) :: flag
+  END SUBROUTINE
+END INTERFACE
 
 !----------------------------------------------------------------------------
 !
@@ -237,16 +249,16 @@ end interface
 !    Output, real ( kind = 8 ) P(2), if IVAl = 1, P is
 !    the intersection point.  Otherwise, P = 0.
 
-interface
-  module pure subroutine lines_exp_int_2d(p1, p2, q1, q2, ival, p)
-    real(kind=8), intent(in) :: p1(2)
-    real(kind=8), intent(in) :: p2(2)
-    real(kind=8), intent(in) :: q1(2)
-    real(kind=8), intent(in) :: q2(2)
-    real(kind=8), intent(out) :: p(2)
-    integer(i4b), intent(out) :: ival
-  end subroutine
-end interface
+INTERFACE
+  MODULE PURE SUBROUTINE lines_exp_int_2d(p1, p2, q1, q2, ival, p)
+    REAL(kind=8), INTENT(in) :: p1(2)
+    REAL(kind=8), INTENT(in) :: p2(2)
+    REAL(kind=8), INTENT(in) :: q1(2)
+    REAL(kind=8), INTENT(in) :: q2(2)
+    REAL(kind=8), INTENT(out) :: p(2)
+    INTEGER(i4b), INTENT(out) :: ival
+  END SUBROUTINE
+END INTERFACE
 
 !----------------------------------------------------------------------------
 !
@@ -278,14 +290,14 @@ end interface
 !    Output, real ( kind = 8 ) DIST, the distance from the point to the
 !    line segment.
 
-interface
-  module pure function segment_point_dist_2d(p1, p2, p) result(dist)
-    real(dfp), intent(in) :: p1(2)
-    real(dfp), intent(in) :: p2(2)
-    real(dfp), intent(in) :: p(2)
-    real(dfp) :: dist
-  end function
-end interface
+INTERFACE
+  MODULE PURE FUNCTION segment_point_dist_2d(p1, p2, p) RESULT(dist)
+    REAL(dfp), INTENT(in) :: p1(2)
+    REAL(dfp), INTENT(in) :: p2(2)
+    REAL(dfp), INTENT(in) :: p(2)
+    REAL(dfp) :: dist
+  END FUNCTION
+END INTERFACE
 
 !----------------------------------------------------------------------------
 !
@@ -319,14 +331,14 @@ end interface
 !    line segment.
 !
 
-interface
-  module pure function segment_point_dist_3d(p1, p2, p) result(dist)
-    real(dfp), intent(in) :: p1(3)
-    real(dfp), intent(in) :: p2(3)
-    real(dfp), intent(in) :: p(3)
-    real(dfp) :: dist
-  end function
-end interface
+INTERFACE
+  MODULE PURE FUNCTION segment_point_dist_3d(p1, p2, p) RESULT(dist)
+    REAL(dfp), INTENT(in) :: p1(3)
+    REAL(dfp), INTENT(in) :: p2(3)
+    REAL(dfp), INTENT(in) :: p(3)
+    REAL(dfp) :: dist
+  END FUNCTION
+END INTERFACE
 
 !----------------------------------------------------------------------------
 !
@@ -370,15 +382,15 @@ end interface
 !    Output, real ( kind = 8 ) DIST_SIGNED, the signed distance from the
 !    point to the line.
 
-interface
-  module pure function line_exp_point_dist_signed_2d(p1, p2, p) &
-    & result(dist_signed)
-    real(dfp), intent(in) :: p(2)
-    real(dfp), intent(in) :: p1(2)
-    real(dfp), intent(in) :: p2(2)
-    real(dfp) :: dist_signed
-  end function
-end interface
+INTERFACE
+  MODULE PURE FUNCTION line_exp_point_dist_signed_2d(p1, p2, p) &
+    & RESULT(dist_signed)
+    REAL(dfp), INTENT(in) :: p(2)
+    REAL(dfp), INTENT(in) :: p1(2)
+    REAL(dfp), INTENT(in) :: p2(2)
+    REAL(dfp) :: dist_signed
+  END FUNCTION
+END INTERFACE
 
 !----------------------------------------------------------------------------
 !
@@ -417,15 +429,15 @@ end interface
 !    to the points P1 and P2.
 !
 
-interface
-  module pure subroutine segment_point_near_2d(p1, p2, p, pn, dist, t)
-    real(dfp), intent(in) :: p1(2)
-    real(dfp), intent(in) :: p2(2)
-    real(dfp), intent(in) :: p(2)
-    real(dfp), intent(out) :: pn(2)
-    real(dfp), intent(out) :: dist
-    real(dfp), intent(out) :: t
-  end subroutine
-end interface
+INTERFACE
+  MODULE PURE SUBROUTINE segment_point_near_2d(p1, p2, p, pn, dist, t)
+    REAL(dfp), INTENT(in) :: p1(2)
+    REAL(dfp), INTENT(in) :: p2(2)
+    REAL(dfp), INTENT(in) :: p(2)
+    REAL(dfp), INTENT(out) :: pn(2)
+    REAL(dfp), INTENT(out) :: dist
+    REAL(dfp), INTENT(out) :: t
+  END SUBROUTINE
+END INTERFACE
 
 END MODULE Line_Method

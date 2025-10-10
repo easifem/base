@@ -16,7 +16,22 @@
 !
 
 SUBMODULE(Triangle_Method) Methods
-USE BaseMethod
+! USE BaseMethod
+USE SwapUtility, ONLY: Swap
+USE MiscUtility, ONLY: safe_ACOS
+USE Line_Method, ONLY: line_exp_is_degenerate_nd, &
+                       line_exp2imp_2d, &
+                       lines_imp_int_2d, &
+                       line_exp_perp_2d, &
+                       lines_exp_int_2d, &
+                       segment_point_dist_2d, &
+                       segment_point_dist_3d, &
+                       line_exp_point_dist_signed_2d, &
+                       segment_point_near_2d
+
+USE Plane_Method, ONLY: plane_normal_line_exp_int_3d
+
+USE Random_Method, ONLY: rvec_uniform_01
 IMPLICIT NONE
 CONTAINS
 
@@ -524,7 +539,7 @@ normal(1:dim_num) = normal(1:dim_num) / temp
 !  Find the intersection of the plane and the line.
 !
 CALL plane_normal_line_exp_int_3d(t(1:dim_num, 1), normal, p1, p2, &
-  & ival, pint)
+                                  ival, pint)
 !
 IF (ival == 0) THEN
   inside = .FALSE.
@@ -1303,7 +1318,7 @@ pn(1:dim_num) = 0.0D+00
 DO j = 1, side_num
   jp1 = i4_wrap(j + 1, 1, side_num)
   CALL segment_point_near_2d(t(1:dim_num, j), t(1:dim_num, jp1), p, &
-    & pn2, dist2, tval)
+                             pn2, dist2, tval)
   IF (dist2 < dist) THEN
     dist = dist2
     pn(1:dim_num) = pn2(1:dim_num)
@@ -1426,7 +1441,224 @@ END PROCEDURE triangle_xy_to_xsi_2d
 !
 !----------------------------------------------------------------------------
 
-#include "./inc/aux.inc"
+!> author: Vikas Sharma, Ph. D.
+! date: 28 Aug 2022
+! summary: r8mat solve
+!
+!# Introduction
+!
+!    Input, integer ( kind = 4 ) N, the order of the matrix.
+!
+!    Input, integer ( kind = 4 ) RHS_NUM, the number of right hand sides.
+!    RHS_NUM must be at least 0.
+!
+!    Input/output, real ( kind = 8 ) A(N,N+rhs_num), contains in rows and
+!    columns 1 to N the coefficient matrix, and in columns N+1 through
+!    N+rhs_num, the right hand sides.  On output, the coefficient matrix
+!    area has been destroyed, while the right hand sides have
+!    been overwritten with the corresponding solutions.
+!
+!    Output, integer ( kind = 4 ) INFO, singularity flag.
+!    0, the matrix was not singular, the solutions were computed;
+!    J, factorization failed on step J, and the solutions could not
+!    be computed.
+
+PURE SUBROUTINE r8mat_solve(n, rhs_num, a, info)
+  INTEGER(I4B), INTENT(IN) :: n
+  INTEGER(I4B), INTENT(IN) :: rhs_num
+  REAL(DFP), INTENT(INOUT) :: a(n, n + rhs_num)
+  INTEGER(I4B), INTENT(OUT) :: info
+  !!
+  REAL(DFP) :: apivot
+  REAL(DFP) :: factor
+  INTEGER(I4B) :: i
+  INTEGER(I4B) :: ipivot
+  INTEGER(I4B) :: j
+  !!
+  info = 0
+  !!
+  DO j = 1, n
+    !
+    !  Choose a pivot row.
+    !
+    ipivot = j
+    apivot = a(j, j)
+    !
+    DO i = j + 1, n
+      IF (ABS(apivot) < ABS(a(i, j))) THEN
+        apivot = a(i, j)
+        ipivot = i
+      END IF
+    END DO
+    !
+    IF (apivot == 0.0D+00) THEN
+      info = j
+      RETURN
+    END IF
+    !
+    !  Interchange.
+    !
+    DO i = 1, n + rhs_num
+      CALL swap(a(ipivot, i), a(j, i))
+    END DO
+    !
+    !  A(J,J) becomes 1.
+    !
+    a(j, j) = 1.0D+00
+    a(j, j + 1:n + rhs_num) = a(j, j + 1:n + rhs_num) / apivot
+    !
+    !  A(I,J) becomes 0.
+    !
+    DO i = 1, n
+      IF (i /= j) THEN
+        factor = a(i, j)
+        a(i, j) = 0.0D+00
+        a(i,j+1:n+rhs_num) = a(i,j+1:n+rhs_num) - factor * a(j,j+1:n+rhs_num)
+      END IF
+    END DO
+  END DO
+END SUBROUTINE r8mat_solve
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+PURE FUNCTION r8vec_normsq_affine(n, v0, v1) RESULT(ans)
+  INTEGER(i4b), INTENT(in) :: n
+  REAL(dfp), INTENT(in) :: v0(n)
+  REAL(dfp), INTENT(in) :: v1(n)
+  REAL(dfp) :: ans
+  ans = SUM((v0(1:n) - v1(1:n))**2)
+END FUNCTION r8vec_normsq_affine
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+PURE FUNCTION i4_wrap(ival, ilo, ihi) RESULT(ans)
+  INTEGER(i4b), INTENT(in) :: ival
+  INTEGER(i4b), INTENT(in) :: ilo
+  INTEGER(i4b), INTENT(in) :: ihi
+  INTEGER(i4b) :: ans
+  !!
+  INTEGER(i4b) :: jhi
+  INTEGER(i4b) :: jlo
+  INTEGER(i4b) :: wide
+  !!
+  jlo = MIN(ilo, ihi)
+  jhi = MAX(ilo, ihi)
+  !!
+  wide = jhi - jlo + 1
+  !!
+  IF (wide == 1) THEN
+    ans = jlo
+  ELSE
+    ans = jlo + i4_modp(ival - jlo, wide)
+  END IF
+  !!
+END FUNCTION
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+PURE FUNCTION i4_modp(i, j) RESULT(ans)
+  INTEGER(i4b), INTENT(IN) :: i
+  INTEGER(i4b), INTENT(IN) :: j
+  INTEGER(i4b) :: ans
+  IF (j == 0) THEN
+    RETURN
+  END IF
+  ans = MOD(i, j)
+  IF (ans < 0) THEN
+    ans = ans + ABS(j)
+  END IF
+END FUNCTION
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+PURE FUNCTION i4vec_lcm(n, v)
+  INTEGER(i4b), INTENT(in) :: n
+  INTEGER(i4b), INTENT(in) :: v(n)
+  INTEGER(i4b) :: i4vec_lcm
+  INTEGER(i4b) :: i
+  INTEGER(i4b) :: lcm
+  !
+  lcm = 1
+  DO i = 1, n
+    IF (v(i) == 0) THEN
+      lcm = 0
+      i4vec_lcm = lcm
+      RETURN
+    END IF
+    lcm = i4_lcm(lcm, v(i))
+  END DO
+  i4vec_lcm = lcm
+END FUNCTION
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+PURE FUNCTION i4_lcm(i, j)
+  INTEGER(i4b), INTENT(in) :: i, j
+  INTEGER(I4B) :: i4_lcm
+  i4_lcm = ABS(i * (j / i4_gcd(i, j)))
+END FUNCTION
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+PURE FUNCTION i4_gcd(i, j)
+  INTEGER(I4B), INTENT(IN) :: i, j
+  INTEGER(I4B) :: i4_gcd
+  !!
+  INTEGER(kind=4) p
+  INTEGER(kind=4) q
+  INTEGER(kind=4) r
+  !
+  i4_gcd = 1
+  !
+  !  Return immediately if either I or J is zero.
+  !
+  IF (i == 0) THEN
+    i4_gcd = MAX(1, ABS(j))
+    RETURN
+  ELSE IF (j == 0) THEN
+    i4_gcd = MAX(1, ABS(i))
+    RETURN
+  END IF
+  !
+  !  Set P to the larger of I and J, Q to the smaller.
+  !  This way, we can alter P and Q as we go.
+  !
+  p = MAX(ABS(i), ABS(j))
+  q = MIN(ABS(i), ABS(j))
+  !
+  !  Carry out the Euclidean algorithm.
+  !
+  DO
+    r = MOD(p, q)
+    IF (r == 0) THEN
+      EXIT
+    END IF
+    p = q
+    q = r
+  END DO
+  i4_gcd = q
+END FUNCTION
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+PURE FUNCTION r8_huge()
+  REAL(dfp) :: r8_huge
+  r8_huge = 1.0D+30
+END FUNCTION
 
 !----------------------------------------------------------------------------
 !

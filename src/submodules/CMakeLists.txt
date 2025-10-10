@@ -27,6 +27,9 @@ include(${CMAKE_CURRENT_LIST_DIR}/MdEncode/CMakeLists.txt)
 # Utility
 include(${CMAKE_CURRENT_LIST_DIR}/Utility/CMakeLists.txt)
 
+# Triangle
+include(${CMAKE_CURRENT_LIST_DIR}/Triangle/CMakeLists.txt)
+
 # Quadrangle
 include(${CMAKE_CURRENT_LIST_DIR}/Quadrangle/CMakeLists.txt)
 

@@ -29,7 +29,7 @@
 ! easifem.
 
 MODULE Triangle_Method
-USE GlobalData
+USE GlobalData, ONLY: I4B, LGT, DFP
 IMPLICIT NONE
 PRIVATE
 PUBLIC :: triangle_angles_2d

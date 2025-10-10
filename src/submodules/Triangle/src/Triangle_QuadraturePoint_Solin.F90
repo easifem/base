@@ -19,9 +19,10 @@
 ! https://gitlab.onelab.info/gmsh/gmsh/-/blame/master/src/numeric/GaussQuadratureTri.cpp#L28
 ! 'Higher-order Finite Elements', P.Solin, K.Segeth and I. Dolezel */
 
-module QuadraturePoint_Triangle_Solin
+module Triangle_QuadraturePoint_Solin
 USE GlobalData, only: DFP, I4B
-implicit none 
+implicit none
+
 private
 public :: QuadratureNumberTriangleSolin
 public :: QuadraturePointTriangleSolin
@@ -2167,4 +2168,4 @@ pure subroutine QuadraturePointTriangleSolin_(nips, ans, nrow, ncol)
   end select
 end subroutine QuadraturePointTriangleSolin_
 
-END MODULE QuadraturePoint_Triangle_Solin
+END MODULE Triangle_QuadraturePoint_Solin

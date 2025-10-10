@@ -25,12 +25,12 @@ USE ReferenceElement_Method
 USE StringUtility
 USE ApproxUtility
 USE ArangeUtility
-USE TriangleInterpolationUtility, ONLY: InterpolationPoint_Triangle,  &
-  & LagrangeDOF_Triangle
+USE TriangleInterpolationUtility, ONLY: InterpolationPoint_Triangle, &
+                                        LagrangeDOF_Triangle
 USE Triangle_Method
 USE InputUtility
-USE ReferenceLine_Method, ONLY: ElementType_Line,  &
-  & ElementOrder_Line
+USE ReferenceLine_Method, ONLY: ElementType_Line, &
+                                ElementOrder_Line
 USE LineInterpolationUtility, ONLY: InterpolationPoint_Line
 USE MiscUtility, ONLY: Int2Str
 USE Display_Method
