@@ -110,6 +110,9 @@ include(${CMAKE_CURRENT_LIST_DIR}/Tetrahedron/CMakeLists.txt)
 # Hexahedron
 include(${CMAKE_CURRENT_LIST_DIR}/Hexahedron/CMakeLists.txt)
 
+# Prism
+include(${CMAKE_CURRENT_LIST_DIR}/Prism/CMakeLists.txt)
+
 # Polynomial
 include(${CMAKE_CURRENT_LIST_DIR}/Polynomial/CMakeLists.txt)
 

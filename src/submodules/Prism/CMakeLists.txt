@@ -17,16 +17,5 @@
 
 set(src_path "${CMAKE_CURRENT_LIST_DIR}/src/")
 target_sources(
-  ${PROJECT_NAME}
-  PRIVATE ${src_path}/PyramidInterpolationUtility@Methods.F90
-          ${src_path}/InterpolationUtility@Methods.F90
-          ${src_path}/LagrangePolynomialUtility@Methods.F90
-          ${src_path}/HierarchicalPolynomialUtility@Methods.F90
-          ${src_path}/JacobiPolynomialUtility@Methods.F90
-          ${src_path}/UltrasphericalPolynomialUtility@Methods.F90
-          ${src_path}/LegendrePolynomialUtility@Methods.F90
-          ${src_path}/LobattoPolynomialUtility@Methods.F90
-          ${src_path}/UnscaledLobattoPolynomialUtility@Methods.F90
-          ${src_path}/Chebyshev1PolynomialUtility@Methods.F90
-          ${src_path}/OrthogonalPolynomialUtility@Methods.F90
-          ${src_path}/RecursiveNodesUtility@Methods.F90)
+  ${PROJECT_NAME} PRIVATE ${src_path}/ReferencePrism_Method@Methods.F90
+                          ${src_path}/PrismInterpolationUtility@Methods.F90)
