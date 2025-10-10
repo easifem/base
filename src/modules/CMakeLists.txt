@@ -104,6 +104,9 @@ include(${CMAKE_CURRENT_LIST_DIR}/Triangle/CMakeLists.txt)
 # Quadrangle
 include(${CMAKE_CURRENT_LIST_DIR}/Quadrangle/CMakeLists.txt)
 
+# Tetrahedron
+include(${CMAKE_CURRENT_LIST_DIR}/Tetrahedron/CMakeLists.txt)
+
 # Polynomial
 include(${CMAKE_CURRENT_LIST_DIR}/Polynomial/CMakeLists.txt)
 

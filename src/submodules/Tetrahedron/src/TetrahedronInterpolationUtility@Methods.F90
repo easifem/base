@@ -16,7 +16,7 @@
 
 SUBMODULE(TetrahedronInterpolationUtility) Methods
 USE BaseMethod
-USE QuadraturePoint_Tetrahedron_Solin, ONLY: &
+USE Tetrahedron_QuadraturePoint_Solin, ONLY: &
   QuadratureNumberTetrahedronSolin, &
   QuadratureOrderTetrahedronSolin, &
   QuadraturePointTetrahedronSolin, &

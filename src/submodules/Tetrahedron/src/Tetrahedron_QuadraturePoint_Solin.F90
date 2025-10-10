@@ -15,7 +15,7 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-MODULE QuadraturePoint_Tetrahedron_Solin
+MODULE Tetrahedron_QuadraturePoint_Solin
 USE GlobalData, ONLY: DFP, I4B, LGT
 
 IMPLICIT NONE
@@ -210,4 +210,4 @@ END SUBROUTINE QuadraturePointTetrahedronSolin
 !
 !----------------------------------------------------------------------------
 
-END MODULE QuadraturePoint_Tetrahedron_Solin
+END MODULE Tetrahedron_QuadraturePoint_Solin
