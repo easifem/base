@@ -18,12 +18,6 @@
 set(src_path "${CMAKE_CURRENT_LIST_DIR}/src/")
 target_sources(
   ${PROJECT_NAME}
-  PRIVATE ${src_path}/ReferenceElement_Method.F90
-          ${src_path}/ReferencePoint_Method.F90
-          ${src_path}/Plane_Method.F90
-          ${src_path}/ReferenceTetrahedron_Method.F90
-          ${src_path}/ReferenceHexahedron_Method.F90
-          ${src_path}/ReferencePrism_Method.F90
-          ${src_path}/ReferencePyramid_Method.F90
-          ${src_path}/Geometry_Method.F90)
-
+  PRIVATE ${src_path}/Line_Method.F90
+          ${src_path}/ReferenceLine_Method.F90
+          ${src_path}/LineInterpolationUtility.F90)

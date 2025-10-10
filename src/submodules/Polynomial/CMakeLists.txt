@@ -18,8 +18,7 @@
 set(src_path "${CMAKE_CURRENT_LIST_DIR}/src/")
 target_sources(
   ${PROJECT_NAME}
-  PRIVATE ${src_path}/LineInterpolationUtility@Methods.F90
-          ${src_path}/QuadraturePoint_Tetrahedron_Solin.F90
+  PRIVATE ${src_path}/QuadraturePoint_Tetrahedron_Solin.F90
           ${src_path}/TetrahedronInterpolationUtility@Methods.F90
           ${src_path}/HexahedronInterpolationUtility@Methods.F90
           ${src_path}/PrismInterpolationUtility@Methods.F90

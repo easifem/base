@@ -28,8 +28,6 @@ target_sources(
           ${src_path}/LobattoPolynomialUtility.F90
           ${src_path}/UnscaledLobattoPolynomialUtility.F90
           ${src_path}/Chebyshev1PolynomialUtility.F90
-          ${src_path}/LineInterpolationUtility.F90
-          # ${src_path}/TriangleInterpolationUtility.F90
           ${src_path}/TetrahedronInterpolationUtility.F90
           ${src_path}/HexahedronInterpolationUtility.F90
           ${src_path}/PrismInterpolationUtility.F90
