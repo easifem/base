@@ -1262,8 +1262,8 @@ TYPE :: QuadraturePoint_
   INTEGER(I4B) :: txi = 0
 END TYPE QuadraturePoint_
 
-TYPE(QuadraturePoint_), PARAMETER :: TypeQuadraturePoint  &
-  & = QuadraturePoint_(points=NULL())
+TYPE(QuadraturePoint_), PARAMETER :: TypeQuadraturePoint = &
+                                     QuadraturePoint_(points=NULL())
 
 TYPE :: QuadraturePointPointer_
   CLASS(QuadraturePoint_), POINTER :: ptr => NULL()
@@ -1944,6 +1944,7 @@ TYPE :: PolynomialOpt_
   INTEGER(I4B) :: unscaledLobatto = UnscaledLobattoPolynomial
   INTEGER(I4B) :: hermit = HermitPolynomial
   INTEGER(I4B) :: ultraspherical = UltrasphericalPolynomial
+  INTEGER(I4B) :: default = Monomial
 END TYPE PolynomialOpt_
 
 TYPE(PolynomialOpt_), PARAMETER :: TypePolynomialOpt = PolynomialOpt_()
@@ -1953,7 +1954,7 @@ TYPE(PolynomialOpt_), PARAMETER :: TypePolynomialOpt = PolynomialOpt_()
 !----------------------------------------------------------------------------
 
 TYPE :: QuadratureOpt_
-  INTEGER(I4B) :: equidistance = EquidistanceQP
+  INTEGER(I4B) :: Equidistance = EquidistanceQP
   INTEGER(I4B) :: Gauss = GaussQP
   INTEGER(I4B) :: GaussLegendre = GaussLegendreQP
   INTEGER(I4B) :: GaussLegendreLobatto = GaussLegendreLobattoQP
@@ -1987,6 +1988,7 @@ TYPE :: QuadratureOpt_
   INTEGER(I4B) :: BlythPozChebyshev = BlythPozChebyshevQP
   INTEGER(I4B) :: IsaacLegendre = IsaacLegendreQP
   INTEGER(I4B) :: IsaacChebyshev = IsaacChebyshevQP
+  INTEGER(I4B) :: default = GaussLegendreQP
 END TYPE QuadratureOpt_
 
 TYPE(QuadratureOpt_), PARAMETER :: TypeQuadratureOpt = QuadratureOpt_()
