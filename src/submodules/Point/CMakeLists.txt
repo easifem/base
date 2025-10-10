@@ -16,9 +16,5 @@
 #
 
 set(src_path "${CMAKE_CURRENT_LIST_DIR}/src/")
-target_sources(
-  ${PROJECT_NAME}
-  PRIVATE ${src_path}/ReferenceElement_Method.F90
-          ${src_path}/Plane_Method.F90
-          ${src_path}/Geometry_Method.F90)
-
+target_sources(${PROJECT_NAME}
+               PRIVATE ${src_path}/ReferencePoint_Method@Methods.F90)

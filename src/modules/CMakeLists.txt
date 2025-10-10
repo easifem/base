@@ -95,6 +95,9 @@ include(${CMAKE_CURRENT_LIST_DIR}/BaseInterpolation/CMakeLists.txt)
 # BaseContinuity
 include(${CMAKE_CURRENT_LIST_DIR}/BaseContinuity/CMakeLists.txt)
 
+# Point
+include(${CMAKE_CURRENT_LIST_DIR}/Point/CMakeLists.txt)
+
 # Line
 include(${CMAKE_CURRENT_LIST_DIR}/Line/CMakeLists.txt)
 
