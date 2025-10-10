@@ -28,7 +28,6 @@ target_sources(
           ${src_path}/LobattoPolynomialUtility.F90
           ${src_path}/UnscaledLobattoPolynomialUtility.F90
           ${src_path}/Chebyshev1PolynomialUtility.F90
-          ${src_path}/PyramidInterpolationUtility.F90
           ${src_path}/RecursiveNodesUtility.F90
           ${src_path}/PolynomialUtility.F90)
 

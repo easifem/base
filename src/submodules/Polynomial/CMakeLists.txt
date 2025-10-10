@@ -18,8 +18,7 @@
 set(src_path "${CMAKE_CURRENT_LIST_DIR}/src/")
 target_sources(
   ${PROJECT_NAME}
-  PRIVATE ${src_path}/PyramidInterpolationUtility@Methods.F90
-          ${src_path}/InterpolationUtility@Methods.F90
+  PRIVATE ${src_path}/InterpolationUtility@Methods.F90
           ${src_path}/LagrangePolynomialUtility@Methods.F90
           ${src_path}/HierarchicalPolynomialUtility@Methods.F90
           ${src_path}/JacobiPolynomialUtility@Methods.F90

@@ -113,6 +113,9 @@ include(${CMAKE_CURRENT_LIST_DIR}/Hexahedron/CMakeLists.txt)
 # Prism
 include(${CMAKE_CURRENT_LIST_DIR}/Prism/CMakeLists.txt)
 
+# Pyramid
+include(${CMAKE_CURRENT_LIST_DIR}/Pyramid/CMakeLists.txt)
+
 # Polynomial
 include(${CMAKE_CURRENT_LIST_DIR}/Polynomial/CMakeLists.txt)
 

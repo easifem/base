@@ -27,5 +27,4 @@ target_sources(
           ${src_path}/ReferenceElement_Method@EnquireMethods.F90
           ${src_path}/ReferenceElement_Method@VTKMethods.F90
           ${src_path}/ReferencePoint_Method@Methods.F90
-          ${src_path}/Plane_Method@Methods.F90
-          ${src_path}/ReferencePyramid_Method@Methods.F90)
+          ${src_path}/Plane_Method@Methods.F90)
