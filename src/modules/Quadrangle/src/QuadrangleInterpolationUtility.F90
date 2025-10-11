@@ -2600,9 +2600,9 @@ END INTERFACE QuadraturePoint_Quadrangle
 !----------------------------------------------------------------------------
 
 INTERFACE QuadraturePoint_Quadrangle_
-  MODULE SUBROUTINE QuadraturePoint_Quadrangle1_(nipsx, nipsy, quadType1, &
-       quadType2, refQuadrangle, xij, alpha1, beta1, lambda1, alpha2, beta2, &
-                                                 lambda2, ans, nrow, ncol)
+  MODULE SUBROUTINE QuadraturePoint_Quadrangle1_( &
+    nipsx, nipsy, quadType1, quadType2, refQuadrangle, xij, alpha1, beta1, &
+    lambda1, alpha2, beta2, lambda2, ans, nrow, ncol)
     INTEGER(I4B), INTENT(IN) :: nipsx(1)
     !! order of integrand in x direction
     INTEGER(I4B), INTENT(IN) :: nipsy(1)
