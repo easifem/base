@@ -18,9 +18,9 @@
 SUBMODULE(ElemShapeData_Lagrange) Methods
 USE InputUtility, ONLY: Input
 
-USE ReferenceElement_Method, ONLY: Refelem_Initiate => Initiate, &
-                                 Refelem_GetFaceElemType => GetFaceElemType, &
-                                   Refelem_RefCoord_ => RefCoord_
+USE ReferenceElement_Method, ONLY: &
+  Refelem_Initiate => Initiate, Refelem_GetFaceElemType => GetFaceElemType, &
+  Refelem_RefCoord_ => RefCoord_
 
 USE ElemShapeData_Method, ONLY: Elemsd_Allocate => ALLOCATE
 
