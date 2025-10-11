@@ -546,8 +546,9 @@ END INTERFACE LagrangeCoeff_Quadrangle_
 ! summary: Evaluate all Lagrange polynomial of order n at single points
 
 INTERFACE LagrangeEvalAll_Quadrangle
-  MODULE FUNCTION LagrangeEvalAll_Quadrangle1(order, x, xij, coeff, &
-                        firstCall, basisType, alpha, beta, lambda) RESULT(ans)
+  MODULE FUNCTION LagrangeEvalAll_Quadrangle1( &
+    order, x, xij, coeff, firstCall, basisType, alpha, beta, lambda) &
+    RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
     !! order of Lagrange polynomials
     REAL(DFP), INTENT(IN) :: x(2)
@@ -587,8 +588,9 @@ END INTERFACE LagrangeEvalAll_Quadrangle
 !----------------------------------------------------------------------------
 
 INTERFACE LagrangeEvalAll_Quadrangle_
-  MODULE SUBROUTINE LagrangeEvalAll_Quadrangle1_(order, x, xij, ans, tsize, &
-                             coeff, firstCall, basisType, alpha, beta, lambda)
+  MODULE SUBROUTINE LagrangeEvalAll_Quadrangle1_( &
+    order, x, xij, ans, tsize, coeff, firstCall, basisType, alpha, beta, &
+    lambda)
     INTEGER(I4B), INTENT(IN) :: order
     !! order of Lagrange polynomials
     REAL(DFP), INTENT(IN) :: x(2)
@@ -635,8 +637,9 @@ END INTERFACE LagrangeEvalAll_Quadrangle_
 ! summary: Evaluate all Lagrange polynomials of order n at several points
 
 INTERFACE LagrangeEvalAll_Quadrangle
-  MODULE FUNCTION LagrangeEvalAll_Quadrangle2(order, x, xij, coeff, &
-                        firstCall, basisType, alpha, beta, lambda) RESULT(ans)
+  MODULE FUNCTION LagrangeEvalAll_Quadrangle2( &
+    order, x, xij, coeff, firstCall, basisType, alpha, beta, lambda) &
+    RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
     !! Order of Lagrange polynomials
     REAL(DFP), INTENT(IN) :: x(:, :)
@@ -671,8 +674,9 @@ END INTERFACE LagrangeEvalAll_Quadrangle
 !----------------------------------------------------------------------------
 
 INTERFACE LagrangeEvalAll_Quadrangle_
-  MODULE SUBROUTINE LagrangeEvalAll_Quadrangle2_(order, x, xij, ans, &
-                 nrow, ncol, coeff, firstCall, basisType, alpha, beta, lambda)
+  MODULE SUBROUTINE LagrangeEvalAll_Quadrangle2_( &
+    order, x, xij, ans, nrow, ncol, coeff, firstCall, basisType, alpha, &
+    beta, lambda)
     INTEGER(I4B), INTENT(IN) :: order
     !! Order of Lagrange polynomials
     REAL(DFP), INTENT(IN) :: x(:, :)
@@ -715,8 +719,9 @@ END INTERFACE LagrangeEvalAll_Quadrangle_
 ! summary: Evaluate Lagrange polynomials of n at several points
 
 INTERFACE LagrangeGradientEvalAll_Quadrangle
-  MODULE FUNCTION LagrangeGradientEvalAll_Quadrangle1(order, x, xij, coeff, &
-                        firstCall, basisType, alpha, beta, lambda) RESULT(ans)
+  MODULE FUNCTION LagrangeGradientEvalAll_Quadrangle1( &
+    order, x, xij, coeff, firstCall, basisType, alpha, beta, lambda) &
+    RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
     !! order of Lagrange polynomials
     REAL(DFP), INTENT(IN) :: x(:, :)
@@ -754,9 +759,9 @@ END INTERFACE LagrangeGradientEvalAll_Quadrangle
 !----------------------------------------------------------------------------
 
 INTERFACE LagrangeGradientEvalAll_Quadrangle_
-  MODULE SUBROUTINE LagrangeGradientEvalAll_Quadrangle1_(order, x, xij, &
-            ans, dim1, dim2, dim3, coeff, firstCall, basisType, alpha, beta, &
-                                                         lambda)
+  MODULE SUBROUTINE LagrangeGradientEvalAll_Quadrangle1_( &
+    order, x, xij, ans, dim1, dim2, dim3, coeff, firstCall, basisType, &
+    alpha, beta, lambda)
     INTEGER(I4B), INTENT(IN) :: order
     !! order of Lagrange polynomials
     REAL(DFP), INTENT(IN) :: x(:, :)
