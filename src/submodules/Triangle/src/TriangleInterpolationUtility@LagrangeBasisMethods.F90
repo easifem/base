@@ -360,12 +360,10 @@ END PROCEDURE LagrangeEvalAll_Triangle2_
 
 MODULE PROCEDURE LagrangeGradientEvalAll_Triangle1
 INTEGER(I4B) :: dim1, dim2, dim3
-
-CALL LagrangeGradientEvalAll_Triangle1_(order=order, x=x, xij=xij, ans=ans, &
-      dim1=dim1, dim2=dim2, dim3=dim3, refTriangle=refTriangle, coeff=coeff, &
-           firstCall=firstCall, basisType=basisType, alpha=alpha, beta=beta, &
-                                        lambda=lambda)
-
+CALL LagrangeGradientEvalAll_Triangle1_( &
+  order=order, x=x, xij=xij, ans=ans, dim1=dim1, dim2=dim2, dim3=dim3, &
+  refTriangle=refTriangle, coeff=coeff, firstCall=firstCall, &
+  basisType=basisType, alpha=alpha, beta=beta, lambda=lambda)
 END PROCEDURE LagrangeGradientEvalAll_Triangle1
 
 !----------------------------------------------------------------------------
