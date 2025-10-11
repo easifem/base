@@ -1672,9 +1672,9 @@ END INTERFACE LagrangeGradientEvalAll_Triangle
 ! summary: Evaluate Lagrange polynomials of n at several points
 
 INTERFACE LagrangeGradientEvalAll_Triangle_
-  MODULE SUBROUTINE LagrangeGradientEvalAll_Triangle1_(order, x, xij, ans, &
-          dim1, dim2, dim3, refTriangle, coeff, firstCall, basisType, alpha, &
-                                                       beta, lambda)
+  MODULE SUBROUTINE LagrangeGradientEvalAll_Triangle1_( &
+    order, x, xij, ans, dim1, dim2, dim3, refTriangle, coeff, firstCall, &
+    basisType, alpha, beta, lambda)
     INTEGER(I4B), INTENT(IN) :: order
     !! order of Lagrange polynomials
     REAL(DFP), INTENT(IN) :: x(:, :)
