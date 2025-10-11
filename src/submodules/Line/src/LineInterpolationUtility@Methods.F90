@@ -22,6 +22,8 @@ USE BaseType, ONLY: ipopt => TypeInterpolationOpt, &
                     elmopt => TypeElemNameOpt
 
 USE GlobalData, ONLY: stderr
+USE ErrorHandling, ONLY: Errormsg
+USE Display_Method, ONLY: ToString
 
 USE StringUtility, ONLY: UpperCase
 
@@ -41,8 +43,6 @@ USE LagrangePolynomialUtility, ONLY: LagrangeVandermonde, &
                                      LagrangeCoeff, &
                                      LagrangeVandermonde_
 
-USE ErrorHandling, ONLY: ErrorMsg
-
 USE LegendrePolynomialUtility, ONLY: LegendreQuadrature
 
 USE Chebyshev1PolynomialUtility, ONLY: Chebyshev1Quadrature
@@ -58,16 +58,17 @@ USE SortUtility, ONLY: HeapSort
 USE F95_BLAS, ONLY: GEMM
 
 #ifndef USE_BLAS95
-
 USE SwapUtility, ONLY: Swap
-
 #else
-
 USE F95_BLAS, ONLY: Swap
-
 #endif
 
 IMPLICIT NONE
+
+#ifdef DEBUG_VER
+CHARACTER(*), PARAMETER :: modName = "LineInterpolationUtility@Methods.F90"
+#endif
+
 CONTAINS
 
 !----------------------------------------------------------------------------
@@ -824,6 +825,11 @@ END PROCEDURE LagrangeEvalAll_Line1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE LagrangeEvalAll_Line1_
+#ifdef DEBUG_VER
+CHARACTER(*), PARAMETER :: myName = "LagrangeEvalAll_Line1_()"
+LOGICAL(LGT) :: isok
+#endif
+
 LOGICAL(LGT) :: firstCall0
 REAL(DFP) :: coeff0(SIZE(xij, 2), SIZE(xij, 2)), xx(1, SIZE(xij, 2)), x1(1)
 INTEGER(I4B) :: ii, orthopol0, nrow, ncol
@@ -831,14 +837,9 @@ INTEGER(I4B) :: ii, orthopol0, nrow, ncol
 tsize = SIZE(xij, 2)
 
 #ifdef DEBUG_VER
-
-IF (tsize .NE. order + 1) THEN
-  CALL Errormsg(msg="Size(xij, 1) .NE. order+1 ", &
-                routine="LagrangeEvalAll_Line2", &
-                file=__FILE__, line=__LINE__, unitno=stderr)
-  RETURN
-END IF
-
+isok = tsize .EQ. order + 1
+CALL AssertError1(isok, myName, modName, __LINE__, &
+    'Size(xij, 1)='//ToString(tsize)//' .NE. order+1 = '//ToString(order + 1))
 #endif
 
 orthopol0 = Input(default=polyopt%Monomial, option=basisType)
@@ -903,6 +904,11 @@ END PROCEDURE LagrangeEvalAll_Line2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE LagrangeEvalAll_Line2_
+#ifdef DEBUG_VER
+CHARACTER(*), PARAMETER :: myName = "LagrangeEvalAll_Line2_()"
+LOGICAL(LGT) :: isok
+#endif
+
 LOGICAL(LGT) :: firstCall0
 REAL(DFP) :: coeff0(SIZE(xij, 2), SIZE(xij, 2)), xx(SIZE(x, 2), SIZE(xij, 2))
 INTEGER(I4B) :: ii, orthopol0, aint, bint
@@ -911,14 +917,9 @@ nrow = SIZE(x, 2)
 ncol = SIZE(xij, 2)
 
 #ifdef DEBUG_VER
-
-IF (ncol .NE. order + 1) THEN
-  CALL Errormsg(msg="Size(xij, 1) .NE. order+1 ", &
-                routine="LagrangeEvalAll_Line2", &
-                file=__FILE__, line=__LINE__, unitno=stderr)
-  RETURN
-END IF
-
+isok = ncol .EQ. order + 1
+CALL AssertError1(isok, myName, modName, __LINE__, &
+     'Size(xij, 2)='//ToString(ncol)//' .NE. order+1 = '//ToString(order + 1))
 #endif
 
 orthopol0 = Input(default=polyopt%Monomial, option=basisType)
@@ -979,6 +980,8 @@ END PROCEDURE BasisEvalAll_Line1
 
 MODULE PROCEDURE BasisEvalAll_Line1_
 #ifdef DEBUG_VER
+CHARACTER(*), PARAMETER :: myName = "BasisEvalAll_Line1_()"
+LOGICAL(LGT) :: isok
 CHARACTER(1) :: astr
 #endif
 
@@ -988,15 +991,9 @@ REAL(DFP) :: temp(1, 100), x1(1)
 tsize = order + 1
 
 #ifdef DEBUG_VER
-
-astr = UpperCase(refLine(1:1))
-IF (astr .EQ. "U") THEN
-  CALL Errormsg(msg="refLine should be BIUNIT", &
-                routine="BasisEvalAll_Line1", &
-                file=__FILE__, line=__LINE__, unitno=stderr)
-  RETURN
-END IF
-
+isok = astr .EQ. "B"
+CALL AssertError1(isok, myName, modName, __LINE__, &
+                  "refLine should be BIUNIT")
 #endif
 
 basisType0 = Input(default=polyopt%Monomial, option=basisType)
@@ -1970,5 +1967,7 @@ END PROCEDURE OrthogonalBasisGradient_Line1_
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
+
+#include "../../include/errors.F90"
 
 END SUBMODULE Methods

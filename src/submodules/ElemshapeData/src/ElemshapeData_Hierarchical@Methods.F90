@@ -45,6 +45,10 @@ USE Display_Method, ONLY: Display
 
 IMPLICIT NONE
 
+#ifdef DEBUG_VER
+CHARACTER(*), PARAMETER :: modName = "ElemshapeData_Hierarchical@Methods.F90"
+#endif
+
 CONTAINS
 
 !----------------------------------------------------------------------------
@@ -154,7 +158,7 @@ CALL Refelem_RefCoord_(elemType=faceElemType, refElem=domainName, &
                        ans=faceRefelemCoord, nrow=nrow, ncol=ncol)
 
 #ifdef DEBUG_VER
-CALL AssertError1(.FALSE., myName, &
+CALL AssertError1(.FALSE., myName, modName, __LINE__, &
                   "This is routine is under development")
 #endif
 
