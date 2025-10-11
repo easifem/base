@@ -1007,8 +1007,9 @@ END INTERFACE LagrangeGradientEvalAll_Line
 !----------------------------------------------------------------------------
 
 INTERFACE LagrangeGradientEvalAll_Line_
-  MODULE SUBROUTINE LagrangeGradientEvalAll_Line1_(order, x, xij, ans, &
-           dim1, dim2, dim3, coeff, firstCall, basisType, alpha, beta, lambda)
+  MODULE SUBROUTINE LagrangeGradientEvalAll_Line1_( &
+    order, x, xij, ans, dim1, dim2, dim3, coeff, firstCall, basisType, &
+    alpha, beta, lambda)
     INTEGER(I4B), INTENT(IN) :: order
     !! order of Lagrange polynomials
     REAL(DFP), INTENT(IN) :: x(:, :)
