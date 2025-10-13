@@ -449,9 +449,8 @@ END INTERFACE EquidistancePoint_Line_
 !- `layout=INCREASING` points are arranged in increasing order
 
 INTERFACE InterpolationPoint_Line
-  MODULE FUNCTION InterpolationPoint_Line1(order, ipType, &
-                                 layout, xij, alpha, beta, lambda) RESULT(ans)
-    !!
+  MODULE FUNCTION InterpolationPoint_Line1( &
+    order, ipType, layout, xij, alpha, beta, lambda) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
     !! Order of interpolation
     INTEGER(I4B), INTENT(IN) :: ipType
@@ -483,25 +482,25 @@ END INTERFACE InterpolationPoint_Line
 !> author: Vikas Sharma, Ph. D.
 ! date:  2024-06-25
 ! summary:  Interpolation without allocation
+!
+!# Introduction
+!
+! ipType can take value from TypeInterpolationOpt
 
 INTERFACE InterpolationPoint_Line_
- MODULE SUBROUTINE InterpolationPoint_Line1_(order, ipType, ans, nrow, ncol, &
-                                             layout, xij, alpha, beta, lambda)
+  MODULE SUBROUTINE InterpolationPoint_Line1_( &
+    order, ipType, ans, nrow, ncol, layout, xij, alpha, beta, lambda)
     INTEGER(I4B), INTENT(IN) :: order
     !! Order of interpolation
     INTEGER(I4B), INTENT(IN) :: ipType
     !! Interpolation point type
-    !! Equidistance, GaussLegendre, GaussLegendreLobatto, GaussChebyshev,
-    !! GaussChebyshevLobatto, GaussJacobi, GaussJacobiLobatto
     REAL(DFP), INTENT(INOUT) :: ans(:, :)
     !! interpolation points in xij format
-    !! size(ans,1) = 1
-    !! size(ans,2) = order+1
+    !! size(ans,1) = 1, size(ans,2) = order+1
     INTEGER(I4B), INTENT(OUT) :: nrow, ncol
     !! number of rows and columns written to ans
     CHARACTER(*), INTENT(IN) :: layout
-    !! "VEFC"
-    !! "INCREASING"
+    !! "VEFC" or "INCREASING"
     REAL(DFP), OPTIONAL, INTENT(IN) :: xij(:, :)
     !! domain of interpolation
     REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
@@ -522,26 +521,16 @@ END INTERFACE InterpolationPoint_Line_
 ! summary: Returns the interpolation point
 
 INTERFACE InterpolationPoint_Line
-  MODULE FUNCTION InterpolationPoint_Line2(order, ipType, xij, &
-                                      layout, alpha, beta, lambda) RESULT(ans)
-    !!
+  MODULE FUNCTION InterpolationPoint_Line2( &
+    order, ipType, xij, layout, alpha, beta, lambda) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
     !! order of interpolation
     INTEGER(I4B), INTENT(IN) :: ipType
     !! Interpolation point type
-    !! Equidistance
-    !! GaussLegendre
-    !! GaussLegendreLobatto
-    !! GaussChebyshev,
-    !! GaussChebyshevLobatto
-    !! GaussJacobi
-    !! GaussJacobiLobatto
     REAL(DFP), INTENT(IN) :: xij(2)
     !! end points
     CHARACTER(*), INTENT(IN) :: layout
-    !! "VEFC"
-    !! "INCREASING"
-    !! "DECREASING"
+    !! "VEFC", "INCREASING", "DECREASING"
     REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
     !! Jacobi parameter
     REAL(DFP), OPTIONAL, INTENT(IN) :: beta
@@ -558,14 +547,12 @@ END INTERFACE InterpolationPoint_Line
 !----------------------------------------------------------------------------
 
 INTERFACE InterpolationPoint_Line_
-  MODULE SUBROUTINE InterpolationPoint_Line2_(order, ipType, ans, tsize, &
-                                             xij, layout, alpha, beta, lambda)
-    !!
+  MODULE SUBROUTINE InterpolationPoint_Line2_( &
+    order, ipType, ans, tsize, xij, layout, alpha, beta, lambda)
     INTEGER(I4B), INTENT(IN) :: order
     !! order of interpolation
     INTEGER(I4B), INTENT(IN) :: ipType
-    !! Interpolation point type
-    !! See TypeInterpolationOpt
+    !! Interpolation point type, see TypeInterpolationOpt
     REAL(DFP), INTENT(INOUT) :: ans(:)
     !! one dimensional interpolation point
     INTEGER(I4B), INTENT(OUT) :: tsize
@@ -573,9 +560,7 @@ INTERFACE InterpolationPoint_Line_
     REAL(DFP), INTENT(IN) :: xij(2)
     !! end points
     CHARACTER(*), INTENT(IN) :: layout
-    !! "VEFC"
-    !! "INCREASING"
-    !! "DECREASING"
+    !! "VEFC", "INCREASING", "DECREASING"
     REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
     !! Jacobi parameter
     REAL(DFP), OPTIONAL, INTENT(IN) :: beta
