@@ -542,9 +542,8 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-  MODULE SUBROUTINE InterpolationPoint_Triangle_(order, ipType, ans, nrow, &
-                                                 ncol, layout, xij, &
-                                                 alpha, beta, lambda)
+  MODULE SUBROUTINE InterpolationPoint_Triangle_( &
+    order, ipType, ans, nrow, ncol, layout, xij, alpha, beta, lambda)
     INTEGER(I4B), INTENT(IN) :: order
     !! order
     INTEGER(I4B), INTENT(IN) :: ipType

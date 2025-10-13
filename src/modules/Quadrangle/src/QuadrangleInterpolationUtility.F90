@@ -1061,8 +1061,8 @@ END INTERFACE EquidistanceInPoint_Quadrangle
 ! GaussJacobiRadauRight
 
 INTERFACE InterpolationPoint_Quadrangle
-  MODULE FUNCTION InterpolationPoint_Quadrangle1(order, ipType, layout, &
-                                         xij, alpha, beta, lambda) RESULT(ans)
+  MODULE FUNCTION InterpolationPoint_Quadrangle1( &
+    order, ipType, layout, xij, alpha, beta, lambda) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
     !! order of element
     INTEGER(I4B), INTENT(IN) :: ipType
@@ -1087,8 +1087,8 @@ END INTERFACE InterpolationPoint_Quadrangle
 !----------------------------------------------------------------------------
 
 INTERFACE InterpolationPoint_Quadrangle_
-  MODULE SUBROUTINE InterpolationPoint_Quadrangle1_(order, ipType, ans, &
-                                 nrow, ncol, layout, xij, alpha, beta, lambda)
+  MODULE SUBROUTINE InterpolationPoint_Quadrangle1_( &
+    order, ipType, ans, nrow, ncol, layout, xij, alpha, beta, lambda)
     INTEGER(I4B), INTENT(IN) :: order
     !! order of element
     INTEGER(I4B), INTENT(IN) :: ipType
@@ -1139,8 +1139,9 @@ END INTERFACE InterpolationPoint_Quadrangle_
 ! also follow the same convention. Please read Gmsh manual  on this topic.
 
 INTERFACE InterpolationPoint_Quadrangle
-  MODULE FUNCTION InterpolationPoint_Quadrangle2(p, q, ipType1, ipType2, &
-      layout, xij, alpha1, beta1, lambda1, alpha2, beta2, lambda2) RESULT(ans)
+  MODULE FUNCTION InterpolationPoint_Quadrangle2( &
+    p, q, ipType1, ipType2, layout, xij, alpha1, beta1, lambda1, alpha2, &
+    beta2, lambda2) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: p
     !! order of element in x direction
     INTEGER(I4B), INTENT(IN) :: q
@@ -1175,9 +1176,9 @@ END INTERFACE InterpolationPoint_Quadrangle
 !----------------------------------------------------------------------------
 
 INTERFACE InterpolationPoint_Quadrangle_
-  MODULE SUBROUTINE InterpolationPoint_Quadrangle2_(p, q, ipType1, ipType2, &
-                       ans, nrow, ncol, layout, xij, alpha1, beta1, lambda1, &
-                                                    alpha2, beta2, lambda2)
+  MODULE SUBROUTINE InterpolationPoint_Quadrangle2_( &
+    p, q, ipType1, ipType2, ans, nrow, ncol, layout, xij, alpha1, beta1, &
+    lambda1, alpha2, beta2, lambda2)
     INTEGER(I4B), INTENT(IN) :: p
     !! order of element in x direction
     INTEGER(I4B), INTENT(IN) :: q
