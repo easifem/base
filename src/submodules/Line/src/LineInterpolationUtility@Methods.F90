@@ -374,21 +374,18 @@ END PROCEDURE EquidistancePoint_Line2_
 
 MODULE PROCEDURE InterpolationPoint_Line1
 INTEGER(I4B) :: nrow, ncol
+LOGICAL(LGT) :: isok
 
-IF (PRESENT(xij)) THEN
-  nrow = SIZE(xij, 1)
-ELSE
-  nrow = 1
-END IF
-
+nrow = 1
+isok = PRESENT(xij)
+IF (isok) nrow = SIZE(xij, 1)
 ncol = order + 1
 
 ALLOCATE (ans(nrow, ncol))
 
-CALL InterpolationPoint_Line1_(order=order, ipType=ipType, ans=ans, &
-                  nrow=nrow, ncol=ncol, layout=layout, xij=xij, alpha=alpha, &
-                               beta=beta, lambda=lambda)
-
+CALL InterpolationPoint_Line1_( &
+  order=order, ipType=ipType, ans=ans, nrow=nrow, ncol=ncol, layout=layout, &
+  xij=xij, alpha=alpha, beta=beta, lambda=lambda)
 END PROCEDURE InterpolationPoint_Line1
 
 !----------------------------------------------------------------------------
@@ -399,9 +396,9 @@ MODULE PROCEDURE InterpolationPoint_Line2
 INTEGER(I4B) :: tsize
 tsize = order + 1
 ALLOCATE (ans(tsize))
-CALL InterpolationPoint_Line2_(order=order, ipType=ipType, &
-              xij=xij, layout=layout, alpha=alpha, beta=beta, lambda=lambda, &
-                               ans=ans, tsize=tsize)
+CALL InterpolationPoint_Line2_( &
+  order=order, ipType=ipType, xij=xij, layout=layout, alpha=alpha, &
+  beta=beta, lambda=lambda, ans=ans, tsize=tsize)
 END PROCEDURE InterpolationPoint_Line2
 
 !----------------------------------------------------------------------------
