@@ -19,6 +19,10 @@ MODULE SwapUtility
 USE GlobalData, ONLY: INT8, INT16, INT32, INT64, REAL32, REAL64, &
                       DFPC, LGT, I4B
 
+#ifdef USE_BLAS95
+USE F95_BLAS, ONLY: SWAP
+#endif
+
 IMPLICIT NONE
 
 PRIVATE
