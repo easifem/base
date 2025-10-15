@@ -94,7 +94,7 @@ END PROCEDURE obj_InitiateFacetQuadrature2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE obj_InitiateFacetQuadrature3
-INTEGER(I4B) :: topo, nrow, ncol, nipsx(1), nipsy(1), nipsz(1), tsize, nsd
+INTEGER(I4B) :: topo, nrow, ncol, nipsx(1), nsd
 INTEGER(I4B) :: facecon(ReferenceElementInfo%maxPoints, &
                         ReferenceElementInfo%maxEdges)
 REAL(DFP) :: x1(3), x2(3)
