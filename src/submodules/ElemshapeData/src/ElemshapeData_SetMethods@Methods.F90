@@ -244,10 +244,8 @@ END PROCEDURE elemsd_Set1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE elemsd_Set2
-CALL SetJacobian(obj=cellobj, val=cellVal, dNdXi=celldNdXi)
-CALL SetJs(obj=cellobj)
-CALL SetdNdXt(obj=cellobj)
-CALL SetBarycentricCoord(obj=cellobj, val=cellval, N=cellN)
+call elemsd_Set1(obj=cellobj, val=cellval, N=cellN, dNdXi=celldNdXi)
+
 CALL SetJacobian(obj=facetobj, val=facetval, dNdXi=facetdNdXi)
 CALL SetJs(obj=facetobj)
 CALL SetBarycentricCoord(obj=facetobj, val=facetval, N=facetN)
