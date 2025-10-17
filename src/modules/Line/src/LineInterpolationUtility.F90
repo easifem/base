@@ -1479,8 +1479,8 @@ END INTERFACE HeirarchicalBasisGradient_Line
 !----------------------------------------------------------------------------
 
 INTERFACE HeirarchicalBasisGradient_Line_
-  MODULE SUBROUTINE HeirarchicalGradientBasis_Line2_(order, xij, refLine, &
-                                                orient, ans, dim1, dim2, dim3)
+  MODULE SUBROUTINE HeirarchicalGradientBasis_Line2_( &
+    order, xij, refLine, orient, ans, dim1, dim2, dim3)
     INTEGER(I4B), INTENT(IN) :: order
     !! Polynomial order of interpolation
     REAL(DFP), INTENT(IN) :: xij(:, :)
