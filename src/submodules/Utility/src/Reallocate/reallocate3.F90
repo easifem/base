@@ -34,6 +34,7 @@ IF (acase) THEN
   RETURN
 END IF
 
+! If allocated and isExpand is true
 fac = 1
 IF (PRESENT(expandFactor)) fac = expandFactor
 
