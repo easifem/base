@@ -23,6 +23,30 @@ IMPLICIT NONE
 CONTAINS
 
 !----------------------------------------------------------------------------
+!                                                GetHierarchicalDOF_Triangle
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE GetHierarchicalDOF_Triangle
+ans = 0
+
+SELECT CASE (opt)
+
+CASE ("v", "V")
+  ans = 3
+
+CASE ("e", "E")
+  ans = pe1 + pe2 + pe3 - 3
+
+CASE ("c", "C")
+  ans = (order - 1) * (order - 2) / 2_I4B
+
+CASE DEFAULT
+  ans = pe1 + pe2 + pe3 + (order - 1) * (order - 2) / 2_I4B
+
+END SELECT
+END PROCEDURE GetHierarchicalDOF_Triangle
+
+!----------------------------------------------------------------------------
 !                                          BarycentricVertexBasis_Triangle
 !----------------------------------------------------------------------------
 
