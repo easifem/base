@@ -1999,8 +1999,8 @@ END INTERFACE HeirarchicalBasis_Quadrangle
 !----------------------------------------------------------------------------
 
 INTERFACE HeirarchicalBasis_Quadrangle_
-  MODULE PURE SUBROUTINE HeirarchicalBasis_Quadrangle1_(pb, qb, pe3, pe4, &
-                                               qe1, qe2, xij, ans, nrow, ncol)
+  MODULE PURE SUBROUTINE HeirarchicalBasis_Quadrangle1_( &
+    pb, qb, pe3, pe4, qe1, qe2, xij, ans, nrow, ncol)
     INTEGER(I4B), INTENT(IN) :: pb
     !! order of interpolation inside the quadrangle in x1 direction
     INTEGER(I4B), INTENT(IN) :: qb

@@ -514,8 +514,9 @@ END SUBROUTINE CellBasisGradient_Quadrangle2_
 
 MODULE PROCEDURE HeirarchicalBasis_Quadrangle1
 INTEGER(I4B) :: nrow, ncol
-CALL HeirarchicalBasis_Quadrangle1_(pb=pb, qb=qb, pe3=pe3, pe4=pe4, &
-                     qe1=qe1, qe2=qe2, xij=xij, ans=ans, nrow=nrow, ncol=ncol)
+CALL HeirarchicalBasis_Quadrangle_( &
+  pb=pb, qb=qb, pe3=pe3, pe4=pe4, qe1=qe1, qe2=qe2, xij=xij, ans=ans, &
+  nrow=nrow, ncol=ncol)
 END PROCEDURE HeirarchicalBasis_Quadrangle1
 
 !----------------------------------------------------------------------------
@@ -524,7 +525,7 @@ END PROCEDURE HeirarchicalBasis_Quadrangle1
 
 MODULE PROCEDURE HeirarchicalBasis_Quadrangle1_
 INTEGER(I4B), PARAMETER :: orient = 1, faceOrient(2) = [1, 1]
-CALL HeirarchicalBasis_Quadrangle3_( &
+CALL HeirarchicalBasis_Quadrangle_( &
   pb=pb, qb=qb, pe3=pe3, pe4=pe4, qe1=qe1, qe2=qe2, xij=xij, &
   pe3Orient=orient, pe4Orient=orient, qe1Orient=orient, qe2Orient=orient, &
   faceOrient=faceOrient, ans=ans, nrow=nrow, ncol=ncol)
@@ -536,7 +537,7 @@ END PROCEDURE HeirarchicalBasis_Quadrangle1_
 
 MODULE PROCEDURE HeirarchicalBasis_Quadrangle2
 INTEGER(I4B) :: nrow, ncol
-CALL HeirarchicalBasis_Quadrangle1_( &
+CALL HeirarchicalBasis_Quadrangle_( &
   pb=p, pe3=p, pe4=p, qb=q, qe1=q, qe2=q, xij=xij, ans=ans, nrow=nrow, &
   ncol=ncol)
 END PROCEDURE HeirarchicalBasis_Quadrangle2
@@ -546,7 +547,7 @@ END PROCEDURE HeirarchicalBasis_Quadrangle2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE HeirarchicalBasis_Quadrangle2_
-CALL HeirarchicalBasis_Quadrangle1_( &
+CALL HeirarchicalBasis_Quadrangle_( &
   pb=p, pe3=p, pe4=p, qb=q, qe1=q, qe2=q, xij=xij, ans=ans, nrow=nrow, &
   ncol=ncol)
 END PROCEDURE HeirarchicalBasis_Quadrangle2_
@@ -563,7 +564,7 @@ ncol = pb * qb - pb - qb + pe3 + pe4 + qe1 + qe2 + 1
 
 ALLOCATE (ans(1:nrow, 1:ncol))
 
-CALL HeirarchicalBasis_Quadrangle3_( &
+CALL HeirarchicalBasis_Quadrangle_( &
   pb=pb, qb=qb, pe3=pe3, pe4=pe4, qe1=qe1, qe2=qe2, xij=xij, &
   pe3Orient=pe3Orient, pe4Orient=pe4Orient, qe1Orient=qe1Orient, &
   qe2Orient=qe2Orient, faceOrient=faceOrient, ans=ans, nrow=nrow, ncol=ncol)
@@ -592,7 +593,8 @@ CALL LobattoEvalAll_(n=maxP, x=xij(1, :), ans=L1, nrow=indx(1), ncol=indx(2))
 CALL LobattoEvalAll_(n=maxQ, x=xij(2, :), ans=L2, nrow=indx(1), ncol=indx(2))
 
 ! Vertex basis function
-CALL VertexBasis_Quadrangle3_(L1=L1, L2=L2, ans=ans, nrow=indx(1), ncol=indx(2))
+CALL VertexBasis_Quadrangle3_(L1=L1, L2=L2, ans=ans, nrow=indx(1), &
+                              ncol=indx(2))
 
 ncol = indx(2)
 
