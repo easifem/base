@@ -90,6 +90,33 @@ PUBLIC :: OrthogonalBasisGradient_Quadrangle_
 PUBLIC :: GetTotalDOF_Quadrangle
 PUBLIC :: GetTotalInDOF_Quadrangle
 
+PUBLIC :: GetHierarchicalDOF_Quadrangle
+
+!----------------------------------------------------------------------------
+!                                               GetHierarchicalDOF_Quadrangle
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2025-10-18
+! summary:  Get the Hierarchical DOF for Quadrangle
+
+! order, pe1, pe2, pe3
+INTERFACE
+  MODULE PURE FUNCTION GetHierarchicalDOF_Quadrangle( &
+    pb, qb, pe3, pe4, qe1, qe2, opt) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: pb, qb
+    !! cell order
+    INTEGER(I4B), INTENT(IN) :: qe1, qe2, pe3, pe4
+    !! face order
+    CHARACTER(1), INTENT(IN) :: opt
+    !! 'V' - vertex
+    !! 'E' - edge
+    !! 'C' - cell
+    !! 'H' - total hierarchical dof
+    INTEGER(I4B) :: ans
+  END FUNCTION GetHierarchicalDOF_Quadrangle
+END INTERFACE
+
 !----------------------------------------------------------------------------
 !                                           GetTotalDOF_Quadrangle@DOFMethods
 !----------------------------------------------------------------------------

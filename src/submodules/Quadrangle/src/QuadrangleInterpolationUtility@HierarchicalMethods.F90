@@ -22,6 +22,30 @@ IMPLICIT NONE
 CONTAINS
 
 !----------------------------------------------------------------------------
+!                                                GetHierarchicalDOF_Quadrangle
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE GetHierarchicalDOF_Quadrangle
+ans = 0
+
+SELECT CASE (opt)
+
+CASE ("v", "V")
+  ans = 4
+
+CASE ("e", "E")
+  ans = qe1 + qe2 + pe3 + pe4 - 4
+
+CASE ("c", "C")
+  ans = (pb - 1) * (qb - 1)
+
+CASE DEFAULT
+  ans = qe1 + qe2 + pe3 + pe4 + (pb - 1) * (qb - 1)
+
+END SELECT
+END PROCEDURE GetHierarchicalDOF_Quadrangle
+
+!----------------------------------------------------------------------------
 !                                                     VertexBasis_Quadrangle
 !----------------------------------------------------------------------------
 
@@ -143,66 +167,148 @@ INTEGER(I4B) :: maxQ, aint, bint
 INTEGER(I4B), PARAMETER :: maxP = 1, orient = 1
 REAL(DFP), ALLOCATABLE :: L2(:, :), L1(:, :)
 
-maxQ = MAX(qe1, qe2)
-
-aint = SIZE(y)
 nrow = SIZE(x)
+ncol = 0
+
+maxQ = MAX(qe1, qe2)
+aint = SIZE(y)
 ALLOCATE (L1(1:nrow, 0:maxP), L2(1:aint, 0:maxQ))
 
 CALL LobattoEvalAll_(n=maxP, x=x, ans=L1, nrow=aint, ncol=bint)
 CALL LobattoEvalAll_(n=maxQ, x=y, ans=L2, nrow=aint, ncol=bint)
 
-CALL VerticalEdgeBasis_Quadrangle2_( &
-  qe1=qe1, qe2=qe2, L1=L1, L2=L2, ans=ans, nrow=nrow, ncol=ncol, &
-  qe1Orient=orient, qe2Orient=orient)
+! Left vertical
+CALL LeftVerticalEdgeBasis_Quadrangle_( &
+  order=qe1, L1=L1, L2=L2, ans=ans, nrow=nrow, ncol=aint, &
+  orient=orient, offset=ncol)
+ncol = ncol + aint
+
+! Right vertical
+CALL RightVerticalEdgeBasis_Quadrangle_( &
+  order=qe2, L1=L1, L2=L2, ans=ans, nrow=nrow, ncol=aint, &
+  orient=orient, offset=ncol)
+ncol = ncol + aint
 
 DEALLOCATE (L2, L1)
-
 END PROCEDURE VerticalEdgeBasis_Quadrangle_
 
 !----------------------------------------------------------------------------
-!
+!                                           LeftVerticalEdgeBasis_Quadrangle_
 !----------------------------------------------------------------------------
 
-PURE SUBROUTINE VerticalEdgeBasis_Quadrangle2_( &
-  qe1, qe2, L1, L2, ans, nrow, ncol, qe1Orient, qe2Orient)
-  INTEGER(I4B), INTENT(IN) :: qe1
+PURE SUBROUTINE LeftVerticalEdgeBasis_Quadrangle_( &
+  order, L1, L2, ans, nrow, ncol, orient, offset)
+  INTEGER(I4B), INTENT(IN) :: order
   !! order on left vertical edge (e1), it should be greater than 1
-  INTEGER(I4B), INTENT(IN) :: qe2
-  !! order on right vertical edge(e2), it should be greater than 1
   REAL(DFP), INTENT(IN) :: L1(1:, 0:), L2(1:, 0:)
   !! Lobatto polynomials in x and y direction.
   REAL(DFP), INTENT(INOUT) :: ans(:, :)
   !! ans(SIZE(L1, 1), qe1 + qe2 - 2)
   INTEGER(I4B), INTENT(OUT) :: nrow, ncol
   !! number of rows and columns written to ans
-  INTEGER(I4B), INTENT(IN), OPTIONAL :: qe1Orient, qe2Orient
+  INTEGER(I4B), INTENT(IN) :: orient
   !! orientation of left and right vertical edge
   !! it can be 1 or -1
+  INTEGER(I4B), INTENT(IN) :: offset
+  !! data will we written in ans from offset + 1
+  !! If you want to start from ans(:, 1) then set offset = 0
 
-  INTEGER(I4B) :: k2, cnt, ii
-  REAL(DFP) :: o1, o2
+  INTEGER(I4B) :: k2, ii
+  REAL(DFP) :: o1
 
-  o1 = REAL(-qe1Orient, kind=DFP)
-  ! NOTE: Here we multiply by -1 because the left edge is oriented downwards &
+  o1 = REAL(-orient, kind=DFP)
+  ! Here we multiply by -1 because the left edge is oriented downwards
   ! in master element
-  o2 = REAL(qe2Orient, kind=DFP)
 
-  nrow = SIZE(L1, 1)
-  ncol = qe1 + qe2 - 2
-  cnt = qe1 - 1
+  nrow = SIZE(L1, 1) !! Number of points of evaluation
+  ncol = order - 1 !! these are internal DOFs on edge
 
-  !! left vertical
-  DO CONCURRENT(k2=2:qe1, ii=1:nrow)
-    ans(ii, k2 - 1) = (o1**k2) * L1(ii, 0) * L2(ii, k2)
+  DO CONCURRENT(k2=2:order, ii=1:nrow)
+    ans(ii, offset + k2 - 1) = (o1**k2) * L1(ii, 0) * L2(ii, k2)
   END DO
+
+END SUBROUTINE LeftVerticalEdgeBasis_Quadrangle_
+
+!----------------------------------------------------------------------------
+!                                          RightVerticalEdgeBasis_Quadrangle_
+!----------------------------------------------------------------------------
+
+PURE SUBROUTINE RightVerticalEdgeBasis_Quadrangle_( &
+  order, L1, L2, ans, nrow, ncol, orient, offset)
+  INTEGER(I4B), INTENT(IN) :: order
+  !! order on left vertical edge (e1), it should be greater than 1
+  REAL(DFP), INTENT(IN) :: L1(1:, 0:), L2(1:, 0:)
+  !! Lobatto polynomials in x and y direction.
+  REAL(DFP), INTENT(INOUT) :: ans(:, :)
+  !! ans(SIZE(L1, 1), qe1 + qe2 - 2)
+  INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+  !! number of rows and columns written to ans
+  INTEGER(I4B), INTENT(IN) :: orient
+  !! orientation of left and right vertical edge
+  !! it can be 1 or -1
+  INTEGER(I4B), INTENT(IN) :: offset
+  !! data will we written in ans from offset + 1
+  !! If you want to start from ans(:, 1) then set offset = 0
+
+  INTEGER(I4B) :: k2, ii
+  REAL(DFP) :: mysign
+
+  mysign = REAL(orient, kind=DFP)
+
+  nrow = SIZE(L1, 1) !! number of points of evaluation
+  ncol = order - 1 !! these are internal dof on edge
 
   !! right vertical
-  DO CONCURRENT(k2=2:qe2, ii=1:nrow)
-    ans(ii, cnt + k2 - 1) = (o2**k2) * L1(ii, 1) * L2(ii, k2)
+  DO CONCURRENT(k2=2:order, ii=1:nrow)
+    ans(ii, offset + k2 - 1) = (mysign**k2) * L1(ii, 1) * L2(ii, k2)
   END DO
 
-END SUBROUTINE VerticalEdgeBasis_Quadrangle2_
+END SUBROUTINE RightVerticalEdgeBasis_Quadrangle_
+
+!----------------------------------------------------------------------------
+!                                    LeftVerticalEdgeBasisGradient_Quadrangle
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 28 Oct 2022
+! summary: Returns the vertex basis functions on biunit quadrangle
+
+PURE SUBROUTINE LeftVerticalEdgeBasisGradient_Quadrangle_( &
+  order, L1, L2, dL1, dL2, ans, dim1, dim2, dim3, orient, offset)
+  INTEGER(I4B), INTENT(IN) :: order
+  !! order on left vertical edge (e1), it should be greater than 1
+  REAL(DFP), INTENT(IN) :: L1(1:, 0:), L2(1:, 0:)
+  !! Lobatto polynomials in x and y direction.
+  REAL(DFP), INTENT(IN) :: dL1(1:, 0:), dL2(1:, 0:)
+  !! Lobatto polynomials in x and y direction.
+  REAL(DFP), INTENT(INOUT) :: ans(:, :, :)
+  !! dim1=SIZE(L1, 1)
+  !! dim2=order-1
+  !! dim3= 2
+  INTEGER(I4B), INTENT(OUT) :: dim1, dim2, dim3
+  !! range of data written to ans
+  INTEGER(I4B), INTENT(IN) :: orient
+  !! orientation fo left and write vertical edge
+  !! it can be 1 or -1
+  INTEGER(I4B), INTENT(IN) :: offset
+
+  INTEGER(I4B) :: k2, ii
+  REAL(DFP) :: mysign
+
+  mysign = REAL(-orient, kind=DFP)
+  ! Here we multiply by -1 because the left edge is oriented downwards &
+  ! in master element
+
+  dim1 = SIZE(L1, 1)
+  dim2 = order - 1
+  dim3 = 2
+
+  DO CONCURRENT(k2=2:order, ii=1:dim1)
+    ans(ii, offset + k2 - 1, 1) = (mysign**(k2 - 1)) * dL1(ii, 0) * L2(ii, k2)
+    ans(ii, offset + k2 - 1, 2) = (mysign**(k2 - 1)) * L1(ii, 0) * dL2(ii, k2)
+  END DO
+
+END SUBROUTINE LeftVerticalEdgeBasisGradient_Quadrangle_
 
 !----------------------------------------------------------------------------
 !                                       VerticalEdgeBasisGradient_Quadrangle
@@ -212,11 +318,9 @@ END SUBROUTINE VerticalEdgeBasis_Quadrangle2_
 ! date: 28 Oct 2022
 ! summary: Returns the vertex basis functions on biunit quadrangle
 
-PURE SUBROUTINE VerticalEdgeBasisGradient_Quadrangle2_( &
-  qe1, qe2, L1, L2, dL1, dL2, ans, dim1, dim2, dim3, qe1Orient, qe2Orient)
-  INTEGER(I4B), INTENT(IN) :: qe1
-  !! order on left vertical edge (e1), it should be greater than 1
-  INTEGER(I4B), INTENT(IN) :: qe2
+PURE SUBROUTINE RightVerticalEdgeBasisGradient_Quadrangle_( &
+  order, L1, L2, dL1, dL2, ans, dim1, dim2, dim3, orient, offset)
+  INTEGER(I4B), INTENT(IN) :: order
   !! order on right vertical edge(e2), it should be greater than 1
   REAL(DFP), INTENT(IN) :: L1(1:, 0:), L2(1:, 0:)
   !! Lobatto polynomials in x and y direction.
@@ -224,39 +328,30 @@ PURE SUBROUTINE VerticalEdgeBasisGradient_Quadrangle2_( &
   !! Lobatto polynomials in x and y direction.
   REAL(DFP), INTENT(INOUT) :: ans(:, :, :)
   !! dim1=SIZE(L1, 1)
-  !! dim2=qe1 + qe2 - 2
+  !! dim2=order-1
   !! dim3= 2
   INTEGER(I4B), INTENT(OUT) :: dim1, dim2, dim3
   !! range of data written to ans
-  INTEGER(I4B), INTENT(IN) :: qe1Orient, qe2Orient
+  INTEGER(I4B), INTENT(IN) :: orient
   !! orientation fo left and write vertical edge
   !! it can be 1 or -1
+  INTEGER(I4B), INTENT(IN) :: offset
 
-  INTEGER(I4B) :: k2, cnt, ii
-  REAL(DFP) :: o1, o2
+  INTEGER(I4B) :: k2, ii
+  REAL(DFP) :: mysign
 
-  o1 = REAL(-qe1Orient, kind=DFP)
-  ! NOTE: Here we multiply by -1 because the left edge is oriented downwards &
-  ! in master element
-  o2 = REAL(qe2Orient, kind=DFP)
+  mysign = REAL(orient, kind=DFP)
 
   dim1 = SIZE(L1, 1)
-  dim2 = qe1 + qe2 - 2
+  dim2 = order - 1
   dim3 = 2
 
-  cnt = qe1 - 1
-
-  DO CONCURRENT(k2=2:qe1, ii=1:dim1)
-    ans(ii, k2 - 1, 1) = (o1**(k2 - 1)) * dL1(ii, 0) * L2(ii, k2)
-    ans(ii, k2 - 1, 2) = (o1**(k2 - 1)) * L1(ii, 0) * dL2(ii, k2)
+  ! Right vertical
+  DO CONCURRENT(k2=2:order, ii=1:dim1)
+    ans(ii, offset + k2 - 1, 1) = (mysign**(k2 - 1)) * dL1(ii, 1) * L2(ii, k2)
+    ans(ii, offset + k2 - 1, 2) = (mysign**(k2 - 1)) * L1(ii, 1) * dL2(ii, k2)
   END DO
-
-  DO CONCURRENT(k2=2:qe2, ii=1:dim1)
-    ans(ii, cnt + k2 - 1, 1) = (o2**(k2 - 1)) * dL1(ii, 1) * L2(ii, k2)
-    ans(ii, cnt + k2 - 1, 2) = (o2**(k2 - 1)) * L1(ii, 1) * dL2(ii, k2)
-  END DO
-
-END SUBROUTINE VerticalEdgeBasisGradient_Quadrangle2_
+END SUBROUTINE RightVerticalEdgeBasisGradient_Quadrangle_
 
 !----------------------------------------------------------------------------
 !                                             HorizontalEdgeBasis_Quadrangle
@@ -280,6 +375,7 @@ REAL(DFP), ALLOCATABLE :: L1(:, :), L2(:, :)
 maxP = MAX(pe3, pe4)
 
 nrow = SIZE(x)
+ncol = 0
 aint = SIZE(y)
 
 ALLOCATE (L1(1:nrow, 0:maxP), L2(1:aint, 0:maxQ))
@@ -287,67 +383,97 @@ ALLOCATE (L1(1:nrow, 0:maxP), L2(1:aint, 0:maxQ))
 CALL LobattoEvalAll_(n=maxP, x=x, ans=L1, nrow=aint, ncol=bint)
 CALL LobattoEvalAll_(n=maxQ, x=y, ans=L2, nrow=aint, ncol=bint)
 
-CALL HorizontalEdgeBasis_Quadrangle2_(pe3=pe3, pe4=pe4, L1=L1, L2=L2, &
-            ans=ans, nrow=nrow, ncol=ncol, pe3Orient=orient, pe4Orient=orient)
+! Bottom Horizontal
+CALL BottomHorizontalEdgeBasis_Quadrangle_( &
+  order=pe3, L1=L1, L2=L2, ans=ans, nrow=nrow, ncol=aint, orient=orient, &
+  offset=ncol)
+ncol = ncol + aint
+
+! Top Horizontal
+CALL TopHorizontalEdgeBasis_Quadrangle_( &
+  order=pe4, L1=L1, L2=L2, ans=ans, nrow=nrow, ncol=aint, orient=orient, &
+  offset=ncol)
+ncol = ncol + aint
 
 DEALLOCATE (L1, L2)
 
 END PROCEDURE HorizontalEdgeBasis_Quadrangle_
 
 !----------------------------------------------------------------------------
-!
+!                                       BottomHorizontalEdgeBasis_Quadrangle_
 !----------------------------------------------------------------------------
 
-PURE SUBROUTINE HorizontalEdgeBasis_Quadrangle2_( &
-  pe3, pe4, L1, L2, ans, nrow, ncol, pe3Orient, pe4Orient)
-  INTEGER(I4B), INTENT(IN) :: pe3
+PURE SUBROUTINE BottomHorizontalEdgeBasis_Quadrangle_( &
+  order, L1, L2, ans, nrow, ncol, orient, offset)
+  INTEGER(I4B), INTENT(IN) :: order
   !! order on bottom vertical edge (e3), it should be greater than 1
-  INTEGER(I4B), INTENT(IN) :: pe4
-  !! order on top vertical edge(e4), it should be greater than 1
   REAL(DFP), INTENT(IN) :: L1(1:, 0:), L2(1:, 0:)
   !! point of evaluation
   REAL(DFP), INTENT(INOUT) :: ans(:, :)
   !! ans(SIZE(L1, 1), pe3 + pe4 - 2)
   INTEGER(I4B), INTENT(OUT) :: nrow, ncol
   !! number of rows and columns written to ans
-  INTEGER(I4B), INTENT(IN) :: pe3Orient, pe4Orient
+  INTEGER(I4B), INTENT(IN) :: orient
   !! orientaion of bottom and top edge
+  INTEGER(I4B), INTENT(IN) :: offset
 
-  INTEGER(I4B) :: k1, cnt, ii
-  REAL(DFP) :: o1, o2
+  INTEGER(I4B) :: k1, ii
+  REAL(DFP) :: mysign
 
-  o1 = REAL(pe3Orient, kind=DFP)
+  mysign = REAL(orient, kind=DFP)
 
-  o2 = REAL(-pe4Orient, kind=DFP)
-  ! NOTE: Here we multiply by -1 because the top edge is oriented leftwards &
-  ! in master element
-
-  nrow = SIZE(L1, 1)
-  ncol = pe3 + pe4 - 2
-  cnt = pe3 - 1
+  nrow = SIZE(L1, 1) !! number of points of evaluation
+  ncol = order - 1 !! these are internal dof on edge
 
   !! bottom edge
-  DO CONCURRENT(k1=2:pe3, ii=1:nrow)
-    ans(ii, k1 - 1) = (o1**k1) * L1(ii, k1) * L2(ii, 0)
+  DO CONCURRENT(k1=2:order, ii=1:nrow)
+    ans(ii, offset + k1 - 1) = (mysign**k1) * L1(ii, k1) * L2(ii, 0)
   END DO
+
+END SUBROUTINE BottomHorizontalEdgeBasis_Quadrangle_
+
+!----------------------------------------------------------------------------
+!                                          TopHorizontalEdgeBasis_Quadrangle_
+!----------------------------------------------------------------------------
+
+PURE SUBROUTINE TopHorizontalEdgeBasis_Quadrangle_( &
+  order, L1, L2, ans, nrow, ncol, orient, offset)
+  INTEGER(I4B), INTENT(IN) :: order
+  !! order on bottom vertical edge (e3), it should be greater than 1
+  REAL(DFP), INTENT(IN) :: L1(1:, 0:), L2(1:, 0:)
+  !! point of evaluation
+  REAL(DFP), INTENT(INOUT) :: ans(:, :)
+  !! ans(SIZE(L1, 1), pe3 + pe4 - 2)
+  INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+  !! number of rows and columns written to ans
+  INTEGER(I4B), INTENT(IN) :: orient
+  !! orientaion of bottom and top edge
+  INTEGER(I4B), INTENT(IN) :: offset
+
+  INTEGER(I4B) :: k1, ii
+  REAL(DFP) :: mysign
+
+  mysign = REAL(-orient, kind=DFP)
+  ! We multiply by -1 because the top edge is oriented leftwards
+  ! in master element
+
+  nrow = SIZE(L1, 1) !! number of points of evaluation
+  ncol = order - 1 !! these are internal dof on edge
 
   !! top edge
-  DO CONCURRENT(k1=2:pe4, ii=1:nrow)
-    ans(ii, cnt + k1 - 1) = (o2**k1) * L1(ii, k1) * L2(ii, 1)
+  DO CONCURRENT(k1=2:order, ii=1:nrow)
+    ans(ii, offset + k1 - 1) = (mysign**k1) * L1(ii, k1) * L2(ii, 1)
   END DO
-
-END SUBROUTINE HorizontalEdgeBasis_Quadrangle2_
+END SUBROUTINE TopHorizontalEdgeBasis_Quadrangle_
 
 !----------------------------------------------------------------------------
-!                                     HorizontalEdgeBasisGradient_Quadrangle
+!                                BottomHorizontalEdgeBasisGradient_Quadrangle
 !----------------------------------------------------------------------------
 
-PURE SUBROUTINE HorizontalEdgeBasisGradient_Quadrangle2_( &
-  pe3, pe4, L1, L2, dL1, dL2, ans, dim1, dim2, dim3, pe3Orient, pe4Orient)
-  INTEGER(I4B), INTENT(IN) :: pe3
+PURE SUBROUTINE BottomHorizontalEdgeBasisGradient_Quadrangle_( &
+  order, L1, L2, dL1, dL2, ans, dim1, dim2, dim3, orient, offset)
+  INTEGER(I4B), INTENT(IN) :: order
   !! order on bottom vertical edge (e3), it should be greater than 1
-  INTEGER(I4B), INTENT(IN) :: pe4
-  !! order on top vertical edge(e4), it should be greater than 1
   REAL(DFP), INTENT(IN) :: L1(1:, 0:), L2(1:, 0:)
   REAL(DFP), INTENT(IN) :: dL1(1:, 0:), dL2(1:, 0:)
   REAL(DFP), INTENT(INOUT) :: ans(:, :, :)
@@ -355,37 +481,67 @@ PURE SUBROUTINE HorizontalEdgeBasisGradient_Quadrangle2_( &
   !! dim1 = SIZE(L1, 1)
   !! dim2 = pe3 + pe4 - 2
   !! dim3 = 2
-  INTEGER(I4B), INTENT(IN) :: pe3Orient, pe4Orient
+  INTEGER(I4B), INTENT(IN) :: orient
   !! orientation of bottom and top horizontal edge
+  INTEGER(I4B), INTENT(IN) :: offset
 
   !! internal variable
-  INTEGER(I4B) :: k1, cnt, ii
-  REAL(DFP) :: o1, o2
+  INTEGER(I4B) :: k1, ii
+  REAL(DFP) :: mysign
 
-  o1 = REAL(pe3Orient, kind=DFP)
+  mysign = REAL(orient, kind=DFP)
 
-  o2 = REAL(-pe4Orient, kind=DFP)
-  ! NOTE: Here we multiply by -1 because the top edge is oriented leftwards &
-  ! in master element
-
-  dim1 = SIZE(L1, 1)
-  dim2 = pe3 + pe4 - 2
-  dim3 = 2
-  cnt = pe3 - 1
+  dim1 = SIZE(L1, 1) !! number of points of evaluation
+  dim2 = order - 1 !! these are internal dof on edge
+  dim3 = 2 !! x and y component of gradient
 
   !! bottom edge
-  DO CONCURRENT(k1=2:pe3, ii=1:dim1)
-    ans(ii, k1 - 1, 1) = (o1**(k1 - 1)) * dL1(ii, k1) * L2(ii, 0)
-    ans(ii, k1 - 1, 2) = (o1**(k1 - 1)) * L1(ii, k1) * dL2(ii, 0)
+  DO CONCURRENT(k1=2:order, ii=1:dim1)
+    ans(ii, offset + k1 - 1, 1) = (mysign**(k1 - 1)) * dL1(ii, k1) * L2(ii, 0)
+    ans(ii, offset + k1 - 1, 2) = (mysign**(k1 - 1)) * L1(ii, k1) * dL2(ii, 0)
   END DO
+
+END SUBROUTINE BottomHorizontalEdgeBasisGradient_Quadrangle_
+
+!----------------------------------------------------------------------------
+!                                  TopHorizontalEdgeBasisGradient_Quadrangle
+!----------------------------------------------------------------------------
+
+PURE SUBROUTINE TopHorizontalEdgeBasisGradient_Quadrangle_( &
+  order, L1, L2, dL1, dL2, ans, dim1, dim2, dim3, orient, offset)
+  INTEGER(I4B), INTENT(IN) :: order
+  !! order on top vertical edge(e4), it should be greater than 1
+  REAL(DFP), INTENT(IN) :: L1(1:, 0:), L2(1:, 0:)
+  REAL(DFP), INTENT(IN) :: dL1(1:, 0:), dL2(1:, 0:)
+  REAL(DFP), INTENT(INOUT) :: ans(:, :, :)
+  INTEGER(I4B), INTENT(OUT) :: dim1, dim2, dim3
+  !! dim1 = SIZE(L1, 1)
+  !! dim2 = order - 1
+  !! dim3 = 2
+  INTEGER(I4B), INTENT(IN) :: orient
+  !! orientation of bottom and top horizontal edge
+  INTEGER(I4B), INTENT(IN) :: offset
+  !! data will we written in ans from offset + 1
+
+  !! internal variable
+  INTEGER(I4B) :: k1, ii
+  REAL(DFP) :: mysign
+
+  mysign = REAL(-orient, kind=DFP)
+  ! Here we multiply by -1 because the top edge is oriented leftwards &
+  ! in master element
+
+  dim1 = SIZE(L1, 1) !! number of points of evaluation
+  dim2 = order - 1 !! these are internal dof on edge
+  dim3 = 2
 
   !! top edge
-  DO CONCURRENT(k1=2:pe4, ii=1:dim1)
-    ans(ii, cnt + k1 - 1, 1) = (o2**(k1 - 1)) * dL1(ii, k1) * L2(ii, 1)
-    ans(ii, cnt + k1 - 1, 2) = (o2**(k1 - 1)) * L1(ii, k1) * dL2(ii, 1)
+  DO CONCURRENT(k1=2:order, ii=1:dim1)
+    ans(ii, offset + k1 - 1, 1) = (mysign**(k1 - 1)) * dL1(ii, k1) * L2(ii, 1)
+    ans(ii, offset + k1 - 1, 2) = (mysign**(k1 - 1)) * L1(ii, k1) * dL2(ii, 1)
   END DO
 
-END SUBROUTINE HorizontalEdgeBasisGradient_Quadrangle2_
+END SUBROUTINE TopHorizontalEdgeBasisGradient_Quadrangle_
 
 !----------------------------------------------------------------------------
 !                                                      CellBasis_Quadrangle
@@ -410,7 +566,7 @@ CALL LobattoEvalAll_(n=pb, x=x, ans=L1, nrow=nrow, ncol=ncol)
 CALL LobattoEvalAll_(n=qb, x=y, ans=L2, nrow=nrow, ncol=ncol)
 
 CALL CellBasis_Quadrangle2_(pb=pb, qb=qb, L1=L1, L2=L2, ans=ans, nrow=nrow, &
-                            ncol=ncol, faceOrient=faceOrient)
+                            ncol=ncol, faceOrient=faceOrient, offset=0_I4B)
 
 END PROCEDURE CellBasis_Quadrangle_
 
@@ -419,7 +575,7 @@ END PROCEDURE CellBasis_Quadrangle_
 !----------------------------------------------------------------------------
 
 PURE SUBROUTINE CellBasis_Quadrangle2_(pb, qb, L1, L2, ans, nrow, ncol, &
-                                       faceOrient)
+                                       faceOrient, offset)
   INTEGER(I4B), INTENT(IN) :: pb
   !! order on bottom vertical edge (e3), it should be greater than 1
   INTEGER(I4B), INTENT(IN) :: qb
@@ -432,6 +588,8 @@ PURE SUBROUTINE CellBasis_Quadrangle2_(pb, qb, L1, L2, ans, nrow, ncol, &
   !! number of rows and cols written to ans
   INTEGER(I4B), INTENT(IN) :: faceOrient(3)
   !! face orientation
+  INTEGER(I4B), INTENT(IN) :: offset
+  !! data will we written in ans from offset + 1
 
   !! Internal variables
   INTEGER(I4B) :: k1, k2, ii, p, q
@@ -452,7 +610,7 @@ PURE SUBROUTINE CellBasis_Quadrangle2_(pb, qb, L1, L2, ans, nrow, ncol, &
   END IF
 
   DO CONCURRENT(k1=2:p, k2=2:q, ii=1:nrow)
-    ans(ii, (q - 1) * (k1 - 2) + k2 - 1) = &
+    ans(ii, offset + (q - 1) * (k1 - 2) + k2 - 1) = &
       (o1**k1) * (o2**k2) * L1(ii, k1) * L2(ii, k2)
   END DO
 
@@ -462,8 +620,8 @@ END SUBROUTINE CellBasis_Quadrangle2_
 !                                               CellBasisGradient_Quadrangle
 !----------------------------------------------------------------------------
 
-PURE SUBROUTINE CellBasisGradient_Quadrangle2_(pb, qb, L1, L2, &
-                                  dL1, dL2, ans, dim1, dim2, dim3, faceOrient)
+PURE SUBROUTINE CellBasisGradient_Quadrangle2_( &
+  pb, qb, L1, L2, dL1, dL2, ans, dim1, dim2, dim3, faceOrient, offset)
   INTEGER(I4B), INTENT(IN) :: pb
   !! order on bottom vertical edge (e3), it should be greater than 1
   INTEGER(I4B), INTENT(IN) :: qb
@@ -476,6 +634,9 @@ PURE SUBROUTINE CellBasisGradient_Quadrangle2_(pb, qb, L1, L2, &
   !! dim2=(pb - 1) * (qb - 1)
   !! dim3=2
   INTEGER(I4B), INTENT(IN) :: faceOrient(3)
+  !! face orientation
+  INTEGER(I4B), INTENT(IN) :: offset
+  !! data will we written in ans from offset + 1
 
   !! internal variables
   INTEGER(I4B) :: k1, k2, ii, p, q
@@ -497,13 +658,11 @@ PURE SUBROUTINE CellBasisGradient_Quadrangle2_(pb, qb, L1, L2, &
   END IF
 
   DO CONCURRENT(k1=2:p, k2=2:q, ii=1:dim1)
-
-    ans(ii, (q - 1) * (k1 - 2) + k2 - 1, 1) = &
+    ans(ii, offset + (q - 1) * (k1 - 2) + k2 - 1, 1) = &
       (o1**(k1 - 1)) * (o2**k2) * dL1(ii, k1) * L2(ii, k2)
 
-    ans(ii, (q - 1) * (k1 - 2) + k2 - 1, 2) = &
+    ans(ii, offset + (q - 1) * (k1 - 2) + k2 - 1, 2) = &
       (o1**k1) * (o2**(k2 - 1)) * L1(ii, k1) * dL2(ii, k2)
-
   END DO
 
 END SUBROUTINE CellBasisGradient_Quadrangle2_
@@ -598,22 +757,39 @@ CALL VertexBasis_Quadrangle3_(L1=L1, L2=L2, ans=ans, nrow=indx(1), &
 
 ncol = indx(2)
 
-! Edge basis function
-isok = (qe1 .GE. 2_I4B) .OR. (qe2 .GE. 2_I4B)
+! Bottom Horizontal Edge
+isok = (pe3 .GE. 2_I4B)
 IF (isok) THEN
-  CALL VerticalEdgeBasis_Quadrangle2_( &
-    qe1=qe1, qe2=qe2, L1=L1, L2=L2, ans=ans(:, ncol + 1:), nrow=indx(1), &
-    ncol=indx(2), qe1Orient=qe1Orient, qe2Orient=qe2Orient)
-
+  CALL BottomHorizontalEdgeBasis_Quadrangle_( &
+    order=pe3, L1=L1, L2=L2, ans=ans, nrow=indx(1), ncol=indx(2), &
+    orient=pe3Orient, offset=ncol)
   ncol = ncol + indx(2)
 END IF
 
-! Edge basis function
-isok = (pe3 .GE. 2_I4B) .OR. (pe4 .GE. 2_I4B)
+! Right Vertical Edge
+isok = (qe2 .GE. 2_I4B)
 IF (isok) THEN
-  CALL HorizontalEdgeBasis_Quadrangle2_( &
-    pe3=pe3, pe4=pe4, L1=L1, L2=L2, ans=ans(:, ncol + 1:), nrow=indx(1), &
-    ncol=indx(2), pe3Orient=pe3Orient, pe4Orient=pe4Orient)
+  CALL RightVerticalEdgeBasis_Quadrangle_( &
+    order=qe2, L1=L1, L2=L2, ans=ans, nrow=indx(1), ncol=indx(2), &
+    orient=qe2Orient, offset=ncol)
+  ncol = ncol + indx(2)
+END IF
+
+! Top Horizontal Edge
+isok = (pe4 .GE. 2_I4B)
+IF (isok) THEN
+  CALL TopHorizontalEdgeBasis_Quadrangle_( &
+    order=pe4, L1=L1, L2=L2, ans=ans, nrow=indx(1), ncol=indx(2), &
+    orient=pe4Orient, offset=ncol)
+  ncol = ncol + indx(2)
+END IF
+
+! Left Vertical Edge
+isok = (qe1 .GE. 2_I4B)
+IF (isok) THEN
+  CALL LeftVerticalEdgeBasis_Quadrangle_( &
+    order=qe1, L1=L1, L2=L2, ans=ans, nrow=indx(1), ncol=indx(2), &
+    orient=qe1Orient, offset=ncol)
   ncol = ncol + indx(2)
 END IF
 
@@ -621,13 +797,12 @@ END IF
 isok = (pb .GE. 2_I4B) .OR. (qb .GE. 2_I4B)
 IF (isok) THEN
   CALL CellBasis_Quadrangle2_( &
-    pb=pb, qb=qb, L1=L1, L2=L2, ans=ans(:, ncol + 1:), nrow=indx(1), &
-    ncol=indx(2), faceOrient=faceOrient)
+    pb=pb, qb=qb, L1=L1, L2=L2, ans=ans, nrow=indx(1), ncol=indx(2), &
+    faceOrient=faceOrient, offset=ncol)
   ncol = ncol + indx(2)
 END IF
 
 DEALLOCATE (L1, L2)
-
 END PROCEDURE HeirarchicalBasis_Quadrangle3_
 
 !----------------------------------------------------------------------------
@@ -636,8 +811,9 @@ END PROCEDURE HeirarchicalBasis_Quadrangle3_
 
 MODULE PROCEDURE HeirarchicalBasisGradient_Quadrangle1
 INTEGER(I4B) :: dim1, dim2, dim3
-CALL HeirarchicalBasisGradient_Quadrangle1_(pb=pb, qb=qb, pe3=pe3, pe4=pe4, &
-          qe1=qe1, qe2=qe2, xij=xij, ans=ans, dim1=dim1, dim2=dim2, dim3=dim3)
+CALL HeirarchicalBasisGradient_Quadrangle1_( &
+  pb=pb, qb=qb, pe3=pe3, pe4=pe4, qe1=qe1, qe2=qe2, xij=xij, ans=ans, &
+  dim1=dim1, dim2=dim2, dim3=dim3)
 END PROCEDURE HeirarchicalBasisGradient_Quadrangle1
 
 !----------------------------------------------------------------------------
@@ -646,12 +822,10 @@ END PROCEDURE HeirarchicalBasisGradient_Quadrangle1
 
 MODULE PROCEDURE HeirarchicalBasisGradient_Quadrangle1_
 INTEGER(I4B), PARAMETER :: orient = 1, faceOrient(3) = [1, 1, 1]
-
-CALL HeirarchicalBasisGradient_Quadrangle3_(pb=pb, qb=qb, pe3=pe3, pe4=pe4, &
-              qe1=qe1, qe2=qe2, xij=xij, qe1Orient=orient, qe2Orient=orient, &
-         pe3Orient=orient, pe4Orient=orient, faceOrient=faceOrient, ans=ans, &
-                                            dim1=dim1, dim2=dim2, dim3=dim3)
-
+CALL HeirarchicalBasisGradient_Quadrangle3_( &
+  pb=pb, qb=qb, pe3=pe3, pe4=pe4, qe1=qe1, qe2=qe2, xij=xij, &
+  qe1Orient=orient, qe2Orient=orient, pe3Orient=orient, pe4Orient=orient, &
+  faceOrient=faceOrient, ans=ans, dim1=dim1, dim2=dim2, dim3=dim3)
 END PROCEDURE HeirarchicalBasisGradient_Quadrangle1_
 
 !----------------------------------------------------------------------------
@@ -669,8 +843,9 @@ END PROCEDURE HeirarchicalBasisGradient_Quadrangle2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE HeirarchicalBasisGradient_Quadrangle2_
-CALL HeirarchicalBasisGradient_Quadrangle1_(pb=p, pe3=p, pe4=p, qb=q, qe1=q, &
-                     qe2=q, xij=xij, ans=ans, dim1=dim1, dim2=dim2, dim3=dim3)
+CALL HeirarchicalBasisGradient_Quadrangle1_( &
+  pb=p, pe3=p, pe4=p, qb=q, qe1=q, qe2=q, xij=xij, ans=ans, dim1=dim1, &
+  dim2=dim2, dim3=dim3)
 END PROCEDURE HeirarchicalBasisGradient_Quadrangle2_
 
 !----------------------------------------------------------------------------
@@ -685,11 +860,11 @@ dim3 = 2
 
 ALLOCATE (ans(1:dim1, 1:dim2, 1:dim3))
 
-CALL HeirarchicalBasisGradient_Quadrangle3_(pb=pb, qb=qb, pe3=pe3, pe4=pe4, &
-        qe1=qe1, qe2=qe2, xij=xij, qe1Orient=qe1Orient, qe2Orient=qe2Orient, &
-   pe3Orient=pe3Orient, pe4Orient=pe4Orient, faceOrient=faceOrient, ans=ans, &
-                                            dim1=dim1, dim2=dim2, dim3=dim3)
-
+CALL HeirarchicalBasisGradient_Quadrangle3_( &
+  pb=pb, qb=qb, pe3=pe3, pe4=pe4, qe1=qe1, qe2=qe2, xij=xij, &
+  qe1Orient=qe1Orient, qe2Orient=qe2Orient, pe3Orient=pe3Orient, &
+  pe4Orient=pe4Orient, faceOrient=faceOrient, ans=ans, &
+  dim1=dim1, dim2=dim2, dim3=dim3)
 END PROCEDURE HeirarchicalBasisGradient_Quadrangle3
 
 !----------------------------------------------------------------------------
@@ -723,38 +898,54 @@ CALL VertexBasisGradient_Quadrangle2_(L1=L1, L2=L2, dL1=dL1, dL2=dL2, &
 
 dim2 = indx(2)
 
-isok = (qe1 .GE. 2_I4B) .OR. (qe2 .GE. 2_I4B)
-
+! Bottom Horizontal Edge basis function
+isok = (pe3 .GE. 2_I4B)
 IF (isok) THEN
-  CALL VerticalEdgeBasisGradient_Quadrangle2_(qe1=qe1, qe2=qe2, L1=L1, &
-            L2=L2, dL1=dL1, dL2=dL2, ans=ans(:, dim2 + 1:, :), dim1=indx(1), &
-         dim2=indx(2), dim3=indx(3), qe1Orient=qe1Orient, qe2Orient=qe2Orient)
-
+  CALL BottomHorizontalEdgeBasisGradient_Quadrangle_( &
+    order=pe3, L1=L1, L2=L2, dL1=dL1, dL2=dL2, ans=ans, dim1=indx(1), &
+    dim2=indx(2), dim3=indx(3), orient=pe3Orient, offset=dim2)
   dim2 = dim2 + indx(2)
-
 END IF
 
-! Edge basis function
-isok = (pe3 .GE. 2_I4B) .OR. (pe4 .GE. 2_I4B)
+! Right Vertical Edge basis function
+isok = (qe1 .GE. 2_I4B)
 IF (isok) THEN
-  CALL HorizontalEdgeBasisGradient_Quadrangle2_(pe3=pe3, pe4=pe4, L1=L1, &
-            L2=L2, dL1=dL1, dL2=dL2, ans=ans(:, dim2 + 1:, :), dim1=indx(1), &
-         dim2=indx(2), dim3=indx(3), pe3Orient=pe3Orient, pe4Orient=pe4Orient)
+  CALL RightVerticalEdgeBasisGradient_Quadrangle_( &
+    order=qe2, L1=L1, L2=L2, dL1=dL1, dL2=dL2, ans=ans, dim1=indx(1), &
+    dim2=indx(2), dim3=indx(3), orient=qe2Orient, offset=dim2)
+  dim2 = dim2 + indx(2)
+END IF
+
+! Top Horizontal Edge basis function
+isok = (pe4 .GE. 2_I4B)
+IF (isok) THEN
+  CALL TopHorizontalEdgeBasisGradient_Quadrangle_( &
+    order=pe4, L1=L1, L2=L2, dL1=dL1, dL2=dL2, ans=ans, dim1=indx(1), &
+    dim2=indx(2), dim3=indx(3), orient=pe4Orient, offset=dim2)
+  dim2 = dim2 + indx(2)
+END IF
+
+! Left Vertical Edge basis function
+isok = (qe2 .GE. 2_I4B)
+IF (isok) THEN
+  CALL LeftVerticalEdgeBasisGradient_Quadrangle_( &
+    order=qe2, L1=L1, L2=L2, dL1=dL1, dL2=dL2, ans=ans, dim1=indx(1), &
+    dim2=indx(2), dim3=indx(3), orient=qe2Orient, offset=dim2)
   dim2 = dim2 + indx(2)
 END IF
 
 ! Cell basis function
 isok = (pb .GE. 2_I4B) .OR. (qb .GE. 2_I4B)
 IF (isok) THEN
-  CALL CellBasisGradient_Quadrangle2_(pb=pb, qb=qb, L1=L1, L2=L2, dL1=dL1, &
-                            dL2=dL2, ans=ans(:, dim2 + 1:, :), dim1=indx(1), &
-                            dim2=indx(2), dim3=indx(3), faceOrient=faceOrient)
+  CALL CellBasisGradient_Quadrangle2_( &
+    pb=pb, qb=qb, L1=L1, L2=L2, dL1=dL1, dL2=dL2, ans=ans, &
+    dim1=indx(1), dim2=indx(2), dim3=indx(3), faceOrient=faceOrient, &
+    offset=dim2)
 
   dim2 = dim2 + indx(2)
 END IF
 
 DEALLOCATE (L1, L2, dL1, dL2)
-
 END PROCEDURE HeirarchicalBasisGradient_Quadrangle3_
 
 END SUBMODULE HierarchicalMethods
