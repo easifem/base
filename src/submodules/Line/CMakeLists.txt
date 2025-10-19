@@ -20,4 +20,10 @@ target_sources(
   ${PROJECT_NAME}
   PRIVATE ${src_path}/Line_Method@Methods.F90
           ${src_path}/ReferenceLine_Method@Methods.F90
-          ${src_path}/LineInterpolationUtility@Methods.F90)
+          ${src_path}/LineInterpolationUtility@Methods.F90
+          ${src_path}/LineInterpolationUtility@BasisMethods.F90
+          ${src_path}/LineInterpolationUtility@OrthogonalMethods.F90
+          ${src_path}/LineInterpolationUtility@LagrangeMethods.F90
+          ${src_path}/LineInterpolationUtility@HierarchicalMethods.F90
+          ${src_path}/LineInterpolationUtility@QuadratureMethods.F90
+          ${src_path}/LineInterpolationUtility@InterpolationMethods.F90)
