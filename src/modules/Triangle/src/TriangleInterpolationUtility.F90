@@ -1739,8 +1739,8 @@ END INTERFACE LagrangeGradientEvalAll_Triangle_
 ! summary:  Evaluate all modal basis (heirarchical polynomial) on Triangle
 
 INTERFACE HeirarchicalBasisGradient_Triangle
-  MODULE FUNCTION HeirarchicalBasisGradient_Triangle1(order, pe1, pe2, pe3, &
-                                                 xij, refTriangle) RESULT(ans)
+  MODULE FUNCTION HeirarchicalBasisGradient_Triangle1( &
+    order, pe1, pe2, pe3, xij, refTriangle) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
     !! Order of approximation inside the triangle (i.e., cell)
     !! it should be greater than 2 for cell bubble to exist
@@ -1775,8 +1775,8 @@ END INTERFACE HeirarchicalBasisGradient_Triangle
 ! summary:  Evaluate all modal basis (heirarchical polynomial) on Triangle
 
 INTERFACE HeirarchicalBasisGradient_Triangle_
-  MODULE SUBROUTINE HeirarchicalBasisGradient_Triangle1_(order, pe1, pe2, &
-                           pe3, xij, refTriangle, ans, tsize1, tsize2, tsize3)
+  MODULE SUBROUTINE HeirarchicalBasisGradient_Triangle1_( &
+    order, pe1, pe2, pe3, xij, refTriangle, ans, tsize1, tsize2, tsize3)
     INTEGER(I4B), INTENT(IN) :: order
     !! Order of approximation inside the triangle (i.e., cell)
     !! it should be greater than 2 for cell bubble to exist
@@ -1809,9 +1809,9 @@ END INTERFACE HeirarchicalBasisGradient_Triangle_
 !----------------------------------------------------------------------------
 
 INTERFACE HeirarchicalBasisGradient_Triangle_
-  MODULE SUBROUTINE HeirarchicalBasisGradient_Triangle2_(order, pe1, pe2, &
-                pe3, xij, edgeOrient1, edgeOrient2, edgeOrient3, faceOrient, &
-                                     refTriangle, ans, tsize1, tsize2, tsize3)
+  MODULE SUBROUTINE HeirarchicalBasisGradient_Triangle2_( &
+    order, pe1, pe2, pe3, xij, edgeOrient1, edgeOrient2, edgeOrient3, &
+    faceOrient, refTriangle, ans, tsize1, tsize2, tsize3)
     INTEGER(I4B), INTENT(IN) :: order
     !! Order of approximation inside the triangle (i.e., cell)
     !! it should be greater than 2 for cell bubble to exist
