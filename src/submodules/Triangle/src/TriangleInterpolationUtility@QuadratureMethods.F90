@@ -15,11 +15,24 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 
 SUBMODULE(TriangleInterpolationUtility) QuadratureMethods
-USE BaseMethod
 USE Triangle_QuadraturePoint_Solin, ONLY: QuadraturePointTriangleSolin, &
                                           QuadraturePointTriangleSolin_, &
                                           QuadratureNumberTriangleSolin
+USE BaseType, ONLY: TypeQuadratureOpt
+USE StringUtility, ONLY: UpperCase
+USE QuadrangleInterpolationUtility, ONLY: QuadraturePoint_Quadrangle_
+USE MappingUtility, ONLY: FromSquare2Triangle_, &
+                          FromUnitTriangle2Triangle_, &
+                          JacobianTriangle, &
+                          FromTriangle2Triangle_
+
 IMPLICIT NONE
+
+#ifdef DEBUG_VER
+CHARACTER(*), PARAMETER :: modName = &
+                           "TriangleInterpolationUtility@QuadratureMethods"
+#endif
+
 CONTAINS
 
 !----------------------------------------------------------------------------
@@ -27,9 +40,12 @@ CONTAINS
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE QuadratureNumber_Triangle
+LOGICAL(LGT) :: isok
+
 ans = QuadratureNumberTriangleSolin(order=order)
 
-IF (ans .LE. 0) THEN
+isok = ans .LE. 0
+IF (isok) THEN
   ans = 1_I4B + INT(order / 2, kind=I4B)
   ans = ans * (ans + 1)
 END IF
@@ -41,25 +57,24 @@ END PROCEDURE QuadratureNumber_Triangle
 
 MODULE PROCEDURE TensorQuadraturePoint_Triangle1
 INTEGER(I4B) :: nipsx(1), nipsy(1), nrow, ncol
+LOGICAL(LGT) :: isok
 
 nrow = 1_I4B + INT(order / 2, kind=I4B)
 nipsx(1) = nrow + 1
 nipsy(1) = nrow
 
-IF (PRESENT(xij)) THEN
-  nrow = MAX(SIZE(xij, 1), 2_I4B)
-ELSE
-  nrow = 2_I4B
-END IF
+nrow = 2_I4B
+isok = PRESENT(xij)
+IF (isok) nrow = MAX(SIZE(xij, 1), 2_I4B)
 
 nrow = nrow + 1_I4B
 ncol = nipsx(1) * nipsy(1)
 
 ALLOCATE (ans(nrow, ncol))
 
-CALL TensorQuadraturePoint_Triangle2_(nipsx=nipsx, nipsy=nipsy, &
-    quadType=quadType, refTriangle=refTriangle, xij=xij, ans=ans, nrow=nrow, &
-                                      ncol=ncol)
+CALL TensorQuadraturePoint_Triangle2_( &
+  nipsx=nipsx, nipsy=nipsy, quadType=quadType, refTriangle=refTriangle, &
+  xij=xij, ans=ans, nrow=nrow, ncol=ncol)
 END PROCEDURE TensorQuadraturePoint_Triangle1
 
 !----------------------------------------------------------------------------
@@ -73,9 +88,9 @@ n = 1_I4B + INT(order / 2, kind=I4B)
 nipsx(1) = n + 1
 nipsy(1) = n
 
-CALL TensorQuadraturePoint_Triangle2_(nipsx=nipsx, nipsy=nipsy, &
-               quadType=quadType, refTriangle=refTriangle, xij=xij, ans=ans, &
-                                      nrow=nrow, ncol=ncol)
+CALL TensorQuadraturePoint_Triangle2_( &
+  nipsx=nipsx, nipsy=nipsy, quadType=quadType, refTriangle=refTriangle, &
+  xij=xij, ans=ans, nrow=nrow, ncol=ncol)
 END PROCEDURE TensorQuadraturePoint_Triangle1_
 
 !----------------------------------------------------------------------------
@@ -84,21 +99,20 @@ END PROCEDURE TensorQuadraturePoint_Triangle1_
 
 MODULE PROCEDURE TensorQuadraturePoint_Triangle2
 INTEGER(I4B) :: nrow, ncol
+LOGICAL(LGT) :: isok
 
-IF (PRESENT(xij)) THEN
-  nrow = MAX(SIZE(xij, 1), 2_I4B)
-ELSE
-  nrow = 2_I4B
-END IF
+nrow = 2_I4B
+isok = PRESENT(xij)
+IF (isok) nrow = MAX(SIZE(xij, 1), 2_I4B)
 
 nrow = nrow + 1_I4B
 ncol = nipsx(1) * nipsy(1)
 
 ALLOCATE (ans(nrow, ncol))
 
-CALL TensorQuadraturePoint_Triangle2_(nipsx=nipsx, nipsy=nipsy, &
-    quadType=quadType, refTriangle=refTriangle, xij=xij, ans=ans, nrow=nrow, &
-                                      ncol=ncol)
+CALL TensorQuadraturePoint_Triangle2_( &
+  nipsx=nipsx, nipsy=nipsy, quadType=quadType, refTriangle=refTriangle, &
+  xij=xij, ans=ans, nrow=nrow, ncol=ncol)
 END PROCEDURE TensorQuadraturePoint_Triangle2
 
 !----------------------------------------------------------------------------
@@ -110,24 +124,22 @@ INTEGER(I4B) :: nsd, ii, jj
 REAL(DFP), ALLOCATABLE :: temp(:, :)
 REAL(DFP) :: areal
 REAL(DFP), PARAMETER :: oneby8 = 1.0_DFP / 8.0_DFP
-
+LOGICAL(LGT) :: isok
 CHARACTER(1) :: astr
 
-IF (PRESENT(xij)) THEN
-  nsd = MAX(SIZE(xij, 1), 2_I4B)
-ELSE
-  nsd = 2_I4B
-END IF
+nsd = 2_I4B
+isok = PRESENT(xij)
+IF (isok) nsd = MAX(SIZE(xij, 1), 2_I4B)
 
 nrow = nsd + 1_I4B
 ncol = nipsx(1) * nipsy(1)
 
-! ALLOCATE (temp(nrow, ncol))
-
-CALL QuadraturePoint_Quadrangle_(nipsx=nipsx, nipsy=nipsy, &
-             quadType1=GaussLegendreLobatto, quadType2=GaussJacobiRadauLeft, &
-             refQuadrangle="BIUNIT", alpha2=1.0_DFP, beta2=0.0_DFP, ans=ans, &
-                                 nrow=ii, ncol=jj)
+CALL QuadraturePoint_Quadrangle_( &
+  nipsx=nipsx, nipsy=nipsy, &
+  quadType1=TypeQuadratureOpt%GaussLegendreLobatto, &
+  quadType2=TypeQuadratureOpt%GaussJacobiRadauLeft, &
+  refQuadrangle="BIUNIT", alpha2=1.0_DFP, beta2=0.0_DFP, &
+  ans=ans, nrow=ii, ncol=jj)
 
 ! temp_t(1:2, :) = FromBiUnitSqr2UnitTriangle(xin=temp_q(1:2, :))
 CALL FromSquare2Triangle_(xin=ans(1:2, :), ans=ans, nrow=ii, ncol=jj, &
@@ -138,8 +150,9 @@ DO CONCURRENT(ii=1:ncol)
 END DO
 
 IF (PRESENT(xij)) THEN
-  CALL FromUnitTriangle2Triangle_(xin=ans(1:2, :), x1=xij(:, 1), &
-                        x2=xij(:, 2), x3=xij(:, 3), ans=ans, nrow=ii, ncol=jj)
+  CALL FromUnitTriangle2Triangle_( &
+    xin=ans(1:2, :), x1=xij(:, 1), x2=xij(:, 2), x3=xij(:, 3), ans=ans, &
+    nrow=ii, ncol=jj)
 
   areal = JacobianTriangle(from="UNIT", to="TRIANGLE", xij=xij)
 
@@ -163,9 +176,7 @@ IF (astr .EQ. "B") THEN
   END DO
 
   RETURN
-
 END IF
-
 END PROCEDURE TensorQuadraturePoint_Triangle2_
 
 !----------------------------------------------------------------------------
@@ -185,8 +196,9 @@ nrow = nrow + 1
 
 ALLOCATE (ans(nrow, ncol))
 
-CALL QuadraturePoint_Triangle1_(order=order, quadType=quadType, &
-              refTriangle=refTriangle, xij=xij, ans=ans, nrow=nrow, ncol=ncol)
+CALL QuadraturePoint_Triangle1_( &
+  order=order, quadType=quadType, refTriangle=refTriangle, xij=xij, &
+  ans=ans, nrow=nrow, ncol=ncol)
 END PROCEDURE QuadraturePoint_Triangle1
 
 !----------------------------------------------------------------------------
@@ -199,19 +211,19 @@ INTEGER(I4B) :: nips(1)
 nips(1) = QuadratureNumberTriangleSolin(order=order)
 
 IF (nips(1) .LE. 0) THEN
-  CALL TensorQuadraturepoint_Triangle_(order=order, quadtype=quadtype, &
-                                       reftriangle=reftriangle, xij=xij, &
-                                       ans=ans, nrow=nrow, ncol=ncol)
+  CALL TensorQuadraturepoint_Triangle_( &
+    order=order, quadtype=quadtype, reftriangle=reftriangle, xij=xij, &
+    ans=ans, nrow=nrow, ncol=ncol)
   RETURN
 END IF
 
-CALL QuadraturePoint_Triangle2_(nips=nips, quadType=quadType, &
-              refTriangle=refTriangle, xij=xij, ans=ans, nrow=nrow, ncol=ncol)
-
+CALL QuadraturePoint_Triangle2_( &
+  nips=nips, quadType=quadType, refTriangle=refTriangle, xij=xij, ans=ans, &
+  nrow=nrow, ncol=ncol)
 END PROCEDURE QuadraturePoint_Triangle1_
 
 !----------------------------------------------------------------------------
-!                                               QuadraturePoint_Triangle2
+!                                                   QuadraturePoint_Triangle2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE QuadraturePoint_Triangle2
@@ -227,9 +239,9 @@ ncol = nips(1)
 
 ALLOCATE (ans(nrow, ncol))
 
-CALL QuadraturePoint_Triangle2_(nips=nips, quadType=quadType, &
-              refTriangle=refTriangle, xij=xij, ans=ans, nrow=nrow, ncol=ncol)
-
+CALL QuadraturePoint_Triangle2_( &
+  nips=nips, quadType=quadType, refTriangle=refTriangle, xij=xij, ans=ans, &
+  nrow=nrow, ncol=ncol)
 END PROCEDURE QuadraturePoint_Triangle2
 
 !----------------------------------------------------------------------------
@@ -237,8 +249,12 @@ END PROCEDURE QuadraturePoint_Triangle2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE QuadraturePoint_Triangle2_
+#ifdef DEBUG_VER
+CHARACTER(*), PARAMETER :: myName = "QuadraturePoint_Triangle2_()"
+#endif
+
 INTEGER(I4B) :: nsd, ii, jj
-LOGICAL(LGT) :: abool
+LOGICAL(LGT) :: isok
 REAL(DFP) :: areal
 CHARACTER(1) :: astr
 
@@ -246,25 +262,24 @@ nrow = 0
 ncol = 0
 
 ii = QuadratureNumberTriangleSolin(order=20)
-abool = nips(1) .GT. ii
-IF (abool) THEN
-  CALL Errormsg(msg="This routine should be called for economical &
-    & quadrature points only, otherwise call QuadraturePoint_Triangle1()", &
-    routine="QuadraturePoint_Triangle2()", &
-    file=__FILE__, line=__LINE__, unitNo=stdout)
-  RETURN
-END IF
+
+#ifdef DEBUG_VER
+isok = nips(1) .LE. ii
+CALL AssertError1(isok, myName, modName, __LINE__, &
+  "This routine should be called for economical quadrature points only,&
+  &otherwise call QuadraturePoint_Triangle1()")
+#endif
 
 nsd = 2_I4B
-abool = PRESENT(xij)
-IF (abool) nsd = SIZE(xij, 1)
+isok = PRESENT(xij)
+IF (isok) nsd = SIZE(xij, 1)
 
 nrow = nsd + 1
 ncol = nips(1)
 
 CALL QuadraturePointTriangleSolin_(nips=nips, ans=ans, nrow=ii, ncol=jj)
 
-IF (abool) THEN
+IF (isok) THEN
   CALL FromTriangle2Triangle_(xin=ans(1:2, 1:ncol), x1=xij(1:nsd, 1), &
                               x2=xij(1:nsd, 2), x3=xij(1:nsd, 3), ans=ans, &
                               from="U", to="T", nrow=ii, ncol=jj)
@@ -280,9 +295,9 @@ IF (abool) THEN
 END IF
 
 astr = UpperCase(reftriangle(1:1))
-abool = astr == "B"
+isok = astr == "B"
 
-IF (abool) THEN
+IF (isok) THEN
   CALL FromTriangle2Triangle_(xin=ans(1:2, 1:ncol), ans=ans, &
                               from="U", to="B", nrow=ii, ncol=jj)
 
@@ -294,11 +309,12 @@ IF (abool) THEN
 
   RETURN
 END IF
-
 END PROCEDURE QuadraturePoint_Triangle2_
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
+
+#include "../../include/errors.F90"
 
 END SUBMODULE QuadratureMethods

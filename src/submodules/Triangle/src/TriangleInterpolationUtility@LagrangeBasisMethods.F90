@@ -16,13 +16,10 @@
 
 SUBMODULE(TriangleInterpolationUtility) LagrangeBasisMethods
 USE LagrangePolynomialUtility, ONLY: LagrangeVandermonde_
-USE ErrorHandling, ONLY: Errormsg
 USE InputUtility, ONLY: Input
 USE GE_CompRoutineMethods, ONLY: GetInvMat
 USE GE_LUMethods, ONLY: LUSolve, GetLU
-
 USE F95_BLAS, ONLY: GEMM
-
 USE BaseType, ONLY: polyopt => TypePolynomialOpt, elemopt => TypeElemNameOpt
 
 IMPLICIT NONE
@@ -173,7 +170,6 @@ END PROCEDURE LagrangeCoeff_Triangle4
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE LagrangeCoeff_Triangle4_
-
 SELECT CASE (basisType)
 
 CASE (polyopt%Monomial)
@@ -188,14 +184,55 @@ CASE (polyopt%Jacobi, polyopt%Orthogonal, polyopt%Legendre, &
 
 CASE (polyopt%Hierarchical)
 
-  CALL HeirarchicalBasis_Triangle_(order=order, pe1=order, pe2=order, &
-                                pe3=order, xij=xij, refTriangle=refTriangle, &
-                                   ans=ans, nrow=nrow, ncol=ncol)
+  CALL HeirarchicalBasis_Triangle_( &
+    order=order, pe1=order, pe2=order, pe3=order, xij=xij, &
+    refTriangle=refTriangle, ans=ans, nrow=nrow, ncol=ncol)
 END SELECT
 
 CALL GetInvMat(ans(1:nrow, 1:ncol))
-
 END PROCEDURE LagrangeCoeff_Triangle4_
+
+!----------------------------------------------------------------------------
+!                                                   LagrangeCoeff_Triangle4
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE LagrangeCoeff_Triangle5_
+SELECT CASE (basisType)
+
+CASE (polyopt%Monomial)
+  CALL LagrangeVandermonde_Triangle_(xij=xij, degree=degree, &
+                                     ans=ans, nrow=nrow, ncol=ncol)
+
+CASE (polyopt%Jacobi, polyopt%Orthogonal, polyopt%Legendre, &
+      polyopt%Lobatto, polyopt%Ultraspherical)
+
+  CALL Dubiner_Triangle_(order=order, xij=xij, refTriangle=refTriangle, &
+                         ans=ans, nrow=nrow, ncol=ncol)
+
+CASE (polyopt%Hierarchical)
+
+  CALL HeirarchicalBasis_Triangle_( &
+    order=order, pe1=order, pe2=order, pe3=order, xij=xij, &
+    refTriangle=refTriangle, ans=ans, nrow=nrow, ncol=ncol)
+END SELECT
+
+CALL GetInvMat(ans(1:nrow, 1:ncol))
+END PROCEDURE LagrangeCoeff_Triangle5_
+
+!----------------------------------------------------------------------------
+!                                                        LagrangeVandermonde
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE LagrangeVandermonde_Triangle1_
+INTEGER(I4B) :: jj, ii
+
+nrow = SIZE(xij, 2)
+ncol = SIZE(degree, 1)
+
+DO CONCURRENT(ii=1:nrow, jj=1:ncol)
+  ans(ii, jj) = xij(1, ii)**degree(jj, 1) * xij(2, ii)**degree(jj, 2)
+END DO
+END PROCEDURE LagrangeVandermonde_Triangle1_
 
 !----------------------------------------------------------------------------
 !                                                   LagrangeEvalAll_Triangle
@@ -203,10 +240,9 @@ END PROCEDURE LagrangeCoeff_Triangle4_
 
 MODULE PROCEDURE LagrangeEvalAll_Triangle1
 INTEGER(I4B) :: tsize
-
-CALL LagrangeEvalAll_Triangle1_(order=order, x=x, xij=xij, ans=ans, &
-                          tsize=tsize, refTriangle=refTriangle, coeff=coeff, &
-                                firstCall=firstCall, basisType=basisType)
+CALL LagrangeEvalAll_Triangle1_( &
+  order=order, x=x, xij=xij, ans=ans, tsize=tsize, refTriangle=refTriangle, &
+  coeff=coeff, firstCall=firstCall, basisType=basisType)
 END PROCEDURE LagrangeEvalAll_Triangle1
 
 !----------------------------------------------------------------------------
@@ -285,13 +321,12 @@ END PROCEDURE LagrangeEvalAll_Triangle1_
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE LagrangeEvalAll_Triangle2
-
 INTEGER(I4B) :: nrow, ncol
 
-CALL LagrangeEvalAll_Triangle2_(order=order, x=x, xij=xij, &
-                                reftriangle=reftriangle, &
-         coeff=coeff, firstCall=firstCall, basisType=basisType, alpha=alpha, &
-                      beta=beta, lambda=lambda, nrow=nrow, ncol=ncol, ans=ans)
+CALL LagrangeEvalAll_Triangle2_( &
+  order=order, x=x, xij=xij, reftriangle=reftriangle, coeff=coeff, &
+  firstCall=firstCall, basisType=basisType, alpha=alpha, beta=beta, &
+  lambda=lambda, nrow=nrow, ncol=ncol, ans=ans)
 END PROCEDURE LagrangeEvalAll_Triangle2
 
 !----------------------------------------------------------------------------
@@ -313,8 +348,9 @@ firstCall0 = Input(default=.TRUE., option=firstCall)
 IF (PRESENT(coeff)) THEN
   IF (firstCall0) THEN
 
-    CALL LagrangeCoeff_Triangle_(order=order, xij=xij, basisType=basisType0, &
-                     refTriangle=refTriangle, ans=coeff, nrow=aint, ncol=bint)
+    CALL LagrangeCoeff_Triangle_( &
+      order=order, xij=xij, basisType=basisType0, refTriangle=refTriangle, &
+      ans=coeff, nrow=aint, ncol=bint)
 
   END IF
 
@@ -322,8 +358,9 @@ IF (PRESENT(coeff)) THEN
 
 ELSE
 
-  CALL LagrangeCoeff_Triangle_(order=order, xij=xij, basisType=basisType0, &
-                    refTriangle=refTriangle, ans=coeff0, nrow=aint, ncol=bint)
+  CALL LagrangeCoeff_Triangle_( &
+    order=order, xij=xij, basisType=basisType0, refTriangle=refTriangle, &
+    ans=coeff0, nrow=aint, ncol=bint)
 
 END IF
 
@@ -340,8 +377,9 @@ CASE (polyopt%Monomial)
 
 CASE (polyopt%Hierarchical)
 
-  CALL HeirarchicalBasis_Triangle_(order=order, pe1=order, pe2=order, &
-      pe3=order, xij=x, refTriangle=refTriangle, ans=xx, nrow=aint, ncol=bint)
+  CALL HeirarchicalBasis_Triangle_( &
+    order=order, pe1=order, pe2=order, pe3=order, xij=x, &
+    refTriangle=refTriangle, ans=xx, nrow=aint, ncol=bint)
 
 CASE (polyopt%Jacobi, polyopt%Orthogonal, polyopt%Legendre, polyopt%Lobatto, &
       polyopt%Ultraspherical)
@@ -386,15 +424,17 @@ firstCall0 = Input(default=.TRUE., option=firstCall)
 
 IF (PRESENT(coeff)) THEN
   IF (firstCall0) THEN
-    CALL LagrangeCoeff_Triangle_(order=order, xij=xij, basisType=basisType0, &
-                     refTriangle=refTriangle, ans=coeff, nrow=s(1), ncol=s(2))
+    CALL LagrangeCoeff_Triangle_( &
+      order=order, xij=xij, basisType=basisType0, refTriangle=refTriangle, &
+      ans=coeff, nrow=s(1), ncol=s(2))
   END IF
 
   coeff0(1:dim2, 1:dim2) = coeff(1:dim2, 1:dim2)
 
 ELSE
-  CALL LagrangeCoeff_Triangle_(order=order, xij=xij, basisType=basisType0, &
-                    refTriangle=refTriangle, ans=coeff0, nrow=s(1), ncol=s(2))
+  CALL LagrangeCoeff_Triangle_( &
+    order=order, xij=xij, basisType=basisType0, refTriangle=refTriangle, &
+    ans=coeff0, nrow=s(1), ncol=s(2))
 END IF
 
 SELECT CASE (basisType0)
@@ -416,15 +456,16 @@ CASE (polyopt%Monomial)
 
 CASE (polyopt%Hierarchical)
 
- CALL HeirarchicalBasisGradient_Triangle_(order=order, pe1=order, pe2=order, &
-             pe3=order, xij=x, refTriangle=refTriangle, ans=xx, tsize1=s(1), &
-                                           tsize2=s(2), tsize3=s(3))
+  CALL HeirarchicalBasisGradient_Triangle_( &
+    order=order, pe1=order, pe2=order, pe3=order, xij=x, &
+    refTriangle=refTriangle, ans=xx, tsize1=s(1), tsize2=s(2), tsize3=s(3))
 
 CASE (polyopt%Jacobi, polyopt%Orthogonal, polyopt%Legendre, polyopt%Lobatto, &
       polyopt%Ultraspherical)
 
-  CALL OrthogonalBasisGradient_Triangle_(order=order, xij=x, &
-       refTriangle=refTriangle, ans=xx, tsize1=s(1), tsize2=s(2), tsize3=s(3))
+  CALL OrthogonalBasisGradient_Triangle_( &
+    order=order, xij=x, refTriangle=refTriangle, ans=xx, tsize1=s(1), &
+    tsize2=s(2), tsize3=s(3))
 
 END SELECT
 
@@ -434,6 +475,51 @@ DO ii = 1, 2
 END DO
 
 END PROCEDURE LagrangeGradientEvalAll_Triangle1_
+
+!----------------------------------------------------------------------------
+!                                                  LagrangeEvalAll_Triangle_
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE LagrangeEvalAll_Triangle3_
+INTEGER(I4B) :: ii, tdof, aint, bint
+
+nrow = SIZE(x, 2)
+ncol = SIZE(xij, 2)
+
+IF (firstCall) THEN
+  CALL LagrangeCoeff_Triangle_( &
+    order=order, xij=xij, basisType=basisType, refTriangle=refTriangle, &
+    ans=coeff, nrow=aint, ncol=bint)
+END IF
+
+SELECT CASE (basisType)
+
+CASE (polyopt%Monomial)
+
+  CALL LagrangeDegree_Triangle_(order=order, ans=degree, nrow=aint, &
+                                ncol=bint)
+  tdof = SIZE(xij, 2)
+
+  DO ii = 1, tdof
+    xx(:, ii) = x(1, :)**degree(ii, 1) * x(2, :)**degree(ii, 2)
+  END DO
+
+CASE (polyopt%Hierarchical)
+
+  CALL HeirarchicalBasis_Triangle_( &
+    order=order, pe1=order, pe2=order, pe3=order, xij=x, &
+    refTriangle=refTriangle, ans=xx, nrow=aint, ncol=bint)
+
+CASE (polyopt%Jacobi, polyopt%Orthogonal, polyopt%Legendre, &
+      polyopt%Lobatto, polyopt%Ultraspherical)
+
+  CALL Dubiner_Triangle_(order=order, xij=x, refTriangle=refTriangle, &
+                         ans=xx, nrow=aint, ncol=bint)
+
+END SELECT
+
+CALL GEMM(C=ans(1:nrow, 1:ncol), alpha=1.0_DFP, A=xx, B=coeff)
+END PROCEDURE LagrangeEvalAll_Triangle3_
 
 !----------------------------------------------------------------------------
 !

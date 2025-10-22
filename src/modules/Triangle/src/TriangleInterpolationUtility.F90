@@ -674,8 +674,7 @@ INTERFACE LagrangeCoeff_Triangle_
     !! This is just to resolve interface issue, the value of isVandermonde
     !! is not used in thesubroutine _
     REAL(DFP), INTENT(INOUT) :: ans(:)
-    ! ans(SIZE(v, 1))
-    !! coefficients of ith Lagrange polynomial
+    ! ans(SIZE(v, 1)) ! coefficients of ith Lagrange polynomial
     INTEGER(I4B), INTENT(OUT) :: tsize
   END SUBROUTINE LagrangeCoeff_Triangle2_
 END INTERFACE LagrangeCoeff_Triangle_
@@ -718,8 +717,7 @@ INTERFACE LagrangeCoeff_Triangle_
     INTEGER(I4B), INTENT(IN) :: ipiv(:)
     !! inverse pivoting mapping, compes from LU decomposition
     REAL(DFP), INTENT(INOUT) :: ans(:)
-    !! ans(SIZE(v, 1))
-    !! coefficients
+    !! ans(SIZE(v, 1)) ! coefficients
     INTEGER(I4B), INTENT(OUT) :: tsize
   END SUBROUTINE LagrangeCoeff_Triangle3_
 END INTERFACE LagrangeCoeff_Triangle_
@@ -740,12 +738,9 @@ INTERFACE LagrangeCoeff_Triangle
     REAL(DFP), INTENT(IN) :: xij(:, :)
     !! points in xij format, size(xij,2)
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: basisType
-    !! Monomials
-    !! Jacobi (Dubiner)
-    !! Heirarchical
+    !! Monomials ! Jacobi (Dubiner) ! Heirarchical
     CHARACTER(*), OPTIONAL, INTENT(IN) :: refTriangle
-    !! UNIT
-    !! BIUNIT
+    !! UNIT ! BIUNIT
     REAL(DFP) :: ans(SIZE(xij, 2), SIZE(xij, 2))
     !! coefficients
   END FUNCTION LagrangeCoeff_Triangle4
@@ -767,18 +762,66 @@ INTERFACE LagrangeCoeff_Triangle_
     REAL(DFP), INTENT(IN) :: xij(:, :)
     !! points in xij format, size(xij,2)
     INTEGER(I4B), INTENT(IN) :: basisType
-    !! Monomials
-    !! Jacobi (Dubiner)
-    !! Heirarchical
+    !! Monomials ! Jacobi (Dubiner) ! Heirarchical
     CHARACTER(*), INTENT(IN) :: refTriangle
-    !! UNIT
-    !! BIUNIT
+    !! UNIT ! BIUNIT
     REAL(DFP), INTENT(INOUT) :: ans(:, :)
     ! REAL(DFP) :: ans(SIZE(xij, 2), SIZE(xij, 2))
     !! coefficients
     INTEGER(I4B), INTENT(OUT) :: nrow, ncol
   END SUBROUTINE LagrangeCoeff_Triangle4_
 END INTERFACE LagrangeCoeff_Triangle_
+
+!----------------------------------------------------------------------------
+!                                                    LagrangeCoeff_Triangle
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 27 Oct 2022
+! summary: Returns the coefficients for ith lagrange polynomial
+
+INTERFACE LagrangeCoeff_Triangle_
+  MODULE SUBROUTINE LagrangeCoeff_Triangle5_( &
+    order, xij, basisType, refTriangle, degree, ans, nrow, ncol)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order of polynomial
+    REAL(DFP), INTENT(IN) :: xij(:, :)
+    !! points in xij format, size(xij,2)
+    INTEGER(I4B), INTENT(IN) :: basisType
+    !! Monomials, Jacobi (Dubiner), Hierarchical
+    CHARACTER(*), INTENT(IN) :: refTriangle
+    !! UNIT, BIUNIT
+    INTEGER(I4B), INTENT(IN) :: degree(:, :)
+    !! degree of monomials, used when basisType is Monomial
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    !! ans(SIZE(xij, 2), SIZE(xij, 2))
+    !! coefficients
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+  END SUBROUTINE LagrangeCoeff_Triangle5_
+END INTERFACE LagrangeCoeff_Triangle_
+
+!----------------------------------------------------------------------------
+!                                              LagrangeVandermonde_Triangle
+!----------------------------------------------------------------------------
+
+INTERFACE LagrangeVandermonde_Triangle_
+  MODULE PURE SUBROUTINE LagrangeVandermonde_Triangle1_(xij, degree, ans, &
+                                                        nrow, ncol)
+    REAL(DFP), INTENT(IN) :: xij(:, :)
+    !!  points in $x_{iJ}$ format
+    !! nrow = number of spatial dimensions
+    !! ncol = number of points of evaluation
+    INTEGER(I4B), INTENT(IN) :: degree(:, :)
+    !! degree of monomials
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    !! Vandermonde matrix
+    !! nrows := number of points
+    !! ncols := number of dof
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+    !! nrow = SIZE(xij, 2)
+    !! ncol = SIZE(degree, 1)
+  END SUBROUTINE LagrangeVandermonde_Triangle1_
+END INTERFACE LagrangeVandermonde_Triangle_
 
 !----------------------------------------------------------------------------
 !                                                       DubinerPolynomial
@@ -1381,6 +1424,49 @@ INTERFACE LagrangeEvalAll_Triangle_
 END INTERFACE LagrangeEvalAll_Triangle_
 
 !----------------------------------------------------------------------------
+!                                   LagrangeEvalAll_Triangle_@LagrangeMethods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2025-10-22
+! summary:  Master routine for LagrangeEvalAll_Triangle_
+
+INTERFACE LagrangeEvalAll_Triangle_
+  MODULE SUBROUTINE LagrangeEvalAll_Triangle3_( &
+    order, x, xij, ans, nrow, ncol, refTriangle, coeff, firstCall, &
+    basisType, xx, degree)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! Order of Lagrange polynomials
+    REAL(DFP), INTENT(IN) :: x(:, :)
+    !! Point of evaluation; x(1, :) is x coord; x(2, :) is y coord
+    REAL(DFP), INTENT(INOUT) :: xij(:, :)
+    !! Interpolation points
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    !! ans(SIZE(x, 2), SIZE(xij, 2))
+    !! Value of n+1 Lagrange polynomials at point x
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+    !! Number of rows and columns written to ans
+    !! nrow = size(x, 2), points of evaluation
+    !! ncol = size(xij, 2), number of interpolation points
+    CHARACTER(*), INTENT(IN) :: refTriangle
+    !! Reference triangle ! Biunit ! Unit
+    REAL(DFP), INTENT(INOUT) :: coeff(:, :)
+    !! coeff(SIZE(xij, 2), SIZE(xij, 2))
+    !! Coefficient of Lagrange polynomials
+    LOGICAL(LGT) :: firstCall
+    !! If firstCall is true, then coeff will be made
+    !! If firstCall is False, then coeff will be used
+    !! Default value of firstCall is True
+    INTEGER(I4B), INTENT(IN) :: basisType
+    !! Monomials *Default ! Jacobi=Dubiner ! Heirarchical
+    REAL(DFP), INTENT(INOUT) :: xx(:, :)
+  !! xx(SIZE(x, 2), SIZE(xij, 2))
+    INTEGER(I4B) :: degree(:, :)
+    ! degree(SIZE(xij, 2), 2)
+  END SUBROUTINE LagrangeEvalAll_Triangle3_
+END INTERFACE LagrangeEvalAll_Triangle_
+
+!----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
@@ -1574,7 +1660,7 @@ END INTERFACE TensorQuadraturePoint_Triangle_
 
 INTERFACE TensorQuadraturePoint_Triangle
   MODULE FUNCTION TensorQuadraturePoint_Triangle2(nipsx, nipsy, quadType, &
-    & refTriangle, xij) RESULT(ans)
+     & refTriangle, xij) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: nipsx(1)
     !! number of integration points in x direction
     INTEGER(I4B), INTENT(IN) :: nipsy(1)
