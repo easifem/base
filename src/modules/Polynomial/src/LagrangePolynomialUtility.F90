@@ -153,9 +153,9 @@ END INTERFACE
 ! date: 12 Aug 2022
 ! summary: Returns the Vandermonde matrix
 
-INTERFACE
-  MODULE PURE SUBROUTINE LagrangeVandermonde_(xij, order, elemType, ans, &
-                                              nrow, ncol)
+INTERFACE LagrangeVandermonde_
+  MODULE PURE SUBROUTINE LagrangeVandermonde1_(xij, order, elemType, ans, &
+                                               nrow, ncol)
     REAL(DFP), INTENT(IN) :: xij(:, :)
     !!  points in $x_{iJ}$ format
     INTEGER(I4B), INTENT(IN) :: order
@@ -167,8 +167,32 @@ INTERFACE
     !! nrows := number of points
     !! ncols := number of dof
     INTEGER(I4B), INTENT(OUT) :: nrow, ncol
-  END SUBROUTINE LagrangeVandermonde_
-END INTERFACE
+  END SUBROUTINE LagrangeVandermonde1_
+END INTERFACE LagrangeVandermonde_
+
+!----------------------------------------------------------------------------
+!                                                       LagrangeVandermonde
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 12 Aug 2022
+! summary: Returns the Vandermonde matrix
+
+INTERFACE LagrangeVandermonde_
+  MODULE PURE SUBROUTINE LagrangeVandermonde2_(xij, degree, ans, nrow, ncol)
+    REAL(DFP), INTENT(IN) :: xij(:, :)
+    !!  points in $x_{iJ}$ format
+    INTEGER(I4B), INTENT(IN) :: degree(:, :)
+    !! degree of monomials
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    !! vandermonde matrix
+    !! nrows := number of points
+    !! ncols := number of dof
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+    !! nrow = SIZE(xij, 2)
+    !! ncol = SIZE(degree, 1)
+  END SUBROUTINE LagrangeVandermonde2_
+END INTERFACE LagrangeVandermonde_
 
 !----------------------------------------------------------------------------
 !                                                          EquidistancePoint
