@@ -201,6 +201,8 @@ END PROCEDURE EvalAllOrthopol
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE EvalAllOrthopol_
+INTEGER(I4B) :: ii
+
 SELECT CASE (orthopol)
 CASE (poly%Jacobi)
   CALL JacobiEvalAll_(n=n, alpha=alpha, beta=beta, x=x, ans=ans, nrow=nrow, &
@@ -219,6 +221,17 @@ CASE (poly%Lobatto)
 
 CASE (poly%UnscaledLobatto)
   CALL UnscaledLobattoEvalAll_(n=n, x=x, ans=ans, nrow=nrow, ncol=ncol)
+
+CASE (poly%Monomial)
+
+  nrow = SIZE(x) !! Number of points of evaluation
+  ncol = n + 1 !! Number of basis functions
+
+  ans(1:nrow, 1) = 1.0_DFP
+  DO ii = 1, n
+    ans(1:nrow, ii + 1) = ans(1:nrow, ii) * x(1:nrow)
+  END DO
+
 END SELECT
 END PROCEDURE EvalAllOrthopol_
 

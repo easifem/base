@@ -817,9 +817,14 @@ END INTERFACE LagrangeEvalAll_Line
 !                                               LagrangeEvalAll_Line_
 !----------------------------------------------------------------------------
 
-INTERFACE LagrangeEvalAll_Line_
-  MODULE SUBROUTINE LagrangeEvalAll_Line1_(order, x, xij, coeff, firstCall, &
-                                   basisType, alpha, beta, lambda, ans, tsize)
+!> author: Vikas Sharma, Ph. D.
+! date: 2025-10-27
+! summary: Lagrange evall all at a single point
+
+INTERFACE
+  MODULE SUBROUTINE LagrangeEvalAll_Line1_( &
+    order, x, xij, coeff, firstCall, basisType, alpha, beta, lambda, ans, &
+    tsize)
     INTEGER(I4B), INTENT(IN) :: order
     !! order of Lagrange polynomials
     REAL(DFP), INTENT(IN) :: x
@@ -846,6 +851,10 @@ INTERFACE LagrangeEvalAll_Line_
     !! Value of n+1 Lagrange polynomials at point x
     INTEGER(I4B), INTENT(OUT) :: tsize
   END SUBROUTINE LagrangeEvalAll_Line1_
+END INTERFACE
+
+INTERFACE LagrangeEvalAll_Line_
+  MODULE PROCEDURE LagrangeEvalAll_Line1_
 END INTERFACE LagrangeEvalAll_Line_
 
 !----------------------------------------------------------------------------
@@ -857,8 +866,9 @@ END INTERFACE LagrangeEvalAll_Line_
 ! summary: Evaluate Lagrange polynomials of n at several points
 
 INTERFACE LagrangeEvalAll_Line
-  MODULE FUNCTION LagrangeEvalAll_Line2(order, x, xij, coeff, firstCall, &
-                                   basisType, alpha, beta, lambda) RESULT(ans)
+  MODULE FUNCTION LagrangeEvalAll_Line2( &
+    order, x, xij, coeff, firstCall, basisType, alpha, beta, lambda) &
+    RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
     !! order of Lagrange polynomials
     REAL(DFP), INTENT(IN) :: x(:, :)
@@ -897,8 +907,12 @@ INTERFACE LagrangeEvalAll_Line
 END INTERFACE LagrangeEvalAll_Line
 
 !----------------------------------------------------------------------------
-!
+!                                       LagrangeEvalAll_Line_@LagrangeMethods
 !----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2025-10-27
+! summary: Lagrange eval all at several points without allocation
 
 INTERFACE LagrangeEvalAll_Line_
   MODULE SUBROUTINE LagrangeEvalAll_Line2_( &
@@ -938,6 +952,65 @@ INTERFACE LagrangeEvalAll_Line_
     REAL(DFP), OPTIONAL, INTENT(IN) :: lambda
     !! Ultraspherical parameter
   END SUBROUTINE LagrangeEvalAll_Line2_
+END INTERFACE LagrangeEvalAll_Line_
+
+!----------------------------------------------------------------------------
+!                                       LagrangeEvalAll_Line_@LagrangeMethods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2025-10-27
+! summary: Lagrange eval all at several points without allocation
+
+INTERFACE
+  MODULE SUBROUTINE LagrangeEvalAll_Line3_( &
+    order, x, xij, ans, nrow, ncol, coeff, xx, firstCall, basisType, alpha, &
+    beta, lambda)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order of Lagrange polynomials
+    REAL(DFP), INTENT(IN) :: x(:, :)
+    !! point of evaluation in xij format
+    !! size(xij, 1) = nsd
+    !! size(xij, 2) = number of points, ncol
+    REAL(DFP), INTENT(INOUT) :: xij(:, :)
+    !! interpolation points
+    !! xij should be present when firstCall is true.
+    !! It is used for computing the coeff
+    !! If coeff is absent then xij should be present
+    !! rows of xij = nsd
+    !! cols of xij = ncol
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    !! ans(SIZE(x, 2), SIZE(xij, 2))
+    !! Value of n+1 Lagrange polynomials at point x
+    !! ans(:, j) is the value of jth polynomial at x points
+    !! ans(i, :) is the value of all polynomials at x(i) point
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+    !! nubmer of rows and cols writte in ans
+    !! nrow = size(x, 2), number of points of evaluation
+    !! ncol = size(xij, 2), number of interpolation points
+    REAL(DFP), INTENT(INOUT) :: coeff(:, :), xx(:, :)
+    !! coefficient of Lagrange polynomials
+    !! The size should be at least ncol by ncol
+    !! The size of xx should be at least nrow by ncol
+    !! It contains the evaluation of basis functions on x
+    !! Size of xx is nrow by ncol
+    LOGICAL(LGT) :: firstCall
+    !! If firstCall is true, then coeff will be made
+    !! If firstCall is False, then coeff will be used
+    !! Default value of firstCall is True
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: basisType
+    !! Monomial, Jacobi, Legendre, Chebyshev, Lobatto, UnscaledLobatto
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
+    !! Jacobi polynomial parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: beta
+    !! Jacobi polynomial parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: lambda
+    !! Ultraspherical parameter
+  END SUBROUTINE LagrangeEvalAll_Line3_
+END INTERFACE
+
+INTERFACE LagrangeEvalAll_Line_
+  MODULE PROCEDURE LagrangeEvalAll_Line3_
 END INTERFACE LagrangeEvalAll_Line_
 
 !----------------------------------------------------------------------------

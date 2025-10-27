@@ -309,14 +309,40 @@ END PROCEDURE LagrangeEvalAll_Line2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE LagrangeEvalAll_Line2_
+LOGICAL(LGT) :: isok, firstCall0
+REAL(DFP) :: coeff0(SIZE(xij, 2), SIZE(xij, 2)), xx(SIZE(x, 2), SIZE(xij, 2))
+
+firstCall0 = Input(default=.TRUE., option=firstCall)
+isok = PRESENT(coeff)
+
+IF (isok) THEN
+
+  CALL LagrangeEvalAll_Line_( &
+    order=order, x=x, xij=xij, ans=ans, nrow=nrow, ncol=ncol, coeff=coeff, &
+    xx=xx, firstCall=firstCall0, basisType=basisType, alpha=alpha, &
+    beta=beta, lambda=lambda)
+
+ELSE
+
+  CALL LagrangeEvalAll_Line_( &
+    order=order, x=x, xij=xij, ans=ans, nrow=nrow, ncol=ncol, coeff=coeff0, &
+    xx=xx, firstCall=firstCall0, basisType=basisType, alpha=alpha, &
+    beta=beta, lambda=lambda)
+
+END IF
+END PROCEDURE LagrangeEvalAll_Line2_
+
+!----------------------------------------------------------------------------
+!                                                      LagrangeEvalAll_Line_
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE LagrangeEvalAll_Line3_
 #ifdef DEBUG_VER
-CHARACTER(*), PARAMETER :: myName = "LagrangeEvalAll_Line2_()"
+CHARACTER(*), PARAMETER :: myName = "LagrangeEvalAll_Line3_()"
 LOGICAL(LGT) :: isok
 #endif
 
-LOGICAL(LGT) :: firstCall0
-REAL(DFP) :: coeff0(SIZE(xij, 2), SIZE(xij, 2)), xx(SIZE(x, 2), SIZE(xij, 2))
-INTEGER(I4B) :: ii, orthopol0, aint, bint
+INTEGER(I4B) :: orthopol0, xx_i, xx_j, coeff_i, coeff_j
 
 nrow = SIZE(x, 2)
 ncol = SIZE(xij, 2)
@@ -328,46 +354,22 @@ CALL AssertError1(isok, myName, modName, __LINE__, &
 #endif
 
 orthopol0 = Input(default=polyopt%Monomial, option=basisType)
-firstCall0 = Input(default=.TRUE., option=firstCall)
 
-IF (PRESENT(coeff)) THEN
-
-  IF (firstCall0) THEN
-    CALL LagrangeCoeff_Line_(order=order, xij=xij, basisType=orthopol0, &
-                             alpha=alpha, beta=beta, lambda=lambda, &
-                             ans=coeff, nrow=aint, ncol=bint)
-  END IF
-
-  coeff0(1:ncol, 1:ncol) = coeff(1:ncol, 1:ncol)
-
-ELSE
-
-  ! coeff0 = LagrangeCoeff_Line(&
-  CALL LagrangeCoeff_Line_(order=order, xij=xij, basisType=orthopol0, &
-                          alpha=alpha, beta=beta, lambda=lambda, ans=coeff0, &
-                           nrow=aint, ncol=bint)
-
+IF (firstCall) THEN
+  CALL LagrangeCoeff_Line_( &
+    order=order, xij=xij, basisType=orthopol0, alpha=alpha, beta=beta, &
+    lambda=lambda, ans=coeff, nrow=coeff_i, ncol=coeff_j)
 END IF
 
-IF (orthopol0 .EQ. polyopt%monomial) THEN
-
-  xx(:, 1) = 1.0_DFP
-  DO ii = 1, order
-    xx(:, ii + 1) = xx(:, ii) * x(1, :)
-  END DO
-
-ELSE
-
-  CALL EvalAllOrthopol_(n=order, x=x(1, :), orthopol=orthopol0, alpha=alpha, &
-                       beta=beta, lambda=lambda, ans=xx, nrow=aint, ncol=bint)
-
-END IF
+CALL EvalAllOrthopol_( &
+  n=order, x=x(1, 1:nrow), orthopol=orthopol0, alpha=alpha, beta=beta, &
+  lambda=lambda, ans=xx, nrow=xx_i, ncol=xx_j)
 
 ! ans = MATMUL(xx, coeff0)
 CALL GEMM(C=ans(1:nrow, 1:ncol), alpha=1.0_DFP, A=xx(1:nrow, 1:ncol), &
-          B=coeff0(1:ncol, 1:ncol))
+          B=coeff(1:ncol, 1:ncol))
 
-END PROCEDURE LagrangeEvalAll_Line2_
+END PROCEDURE LagrangeEvalAll_Line3_
 
 !----------------------------------------------------------------------------
 !                                              LagrangeGradientEvalAll_Line
