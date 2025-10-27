@@ -313,6 +313,26 @@ INTERFACE LagrangeDegree_Quadrangle_
 END INTERFACE LagrangeDegree_Quadrangle_
 
 !----------------------------------------------------------------------------
+!                                    MonomialBasis_Quadrangle@LagrangeMethods
+!----------------------------------------------------------------------------
+
+INTERFACE
+  MODULE PURE SUBROUTINE MonomialBasis_Quadrangle_( &
+    p, q, xij, ans, nrow, ncol)
+    INTEGER(I4B), INTENT(IN) :: p
+    !! order of interpolation inside the quadrangle in x1 direction
+    INTEGER(I4B), INTENT(IN) :: q
+    !! order of interpolation inside the quadrangle in x2 direction
+    REAL(DFP), INTENT(IN) :: xij(:, :)
+    !! points of evaluation in xij format
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    !! nrow = SIZE(xij, 2) -> Number of points of evaluation
+    !! ncol = (p + 1) * (q + 1)
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+  END SUBROUTINE MonomialBasis_Quadrangle_
+END INTERFACE
+
+!----------------------------------------------------------------------------
 !                                    LagrangeCoeff_Quadrangle@LagrangeMethods
 !----------------------------------------------------------------------------
 
@@ -735,6 +755,47 @@ INTERFACE LagrangeEvalAll_Quadrangle_
     REAL(DFP), OPTIONAL, INTENT(IN) :: lambda
     !! Ultraspherical parameter
   END SUBROUTINE LagrangeEvalAll_Quadrangle2_
+END INTERFACE LagrangeEvalAll_Quadrangle_
+
+!----------------------------------------------------------------------------
+!                                 LagrangeEvalAll_Quadrangle@LagrangeMethods
+!----------------------------------------------------------------------------
+
+INTERFACE LagrangeEvalAll_Quadrangle_
+  MODULE SUBROUTINE LagrangeEvalAll_Quadrangle3_( &
+    order, x, xij, ans, nrow, ncol, coeff, xx, firstCall, basisType, alpha, &
+    beta, lambda)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! Order of Lagrange polynomials
+    REAL(DFP), INTENT(IN) :: x(:, :)
+    !! Point of evaluation, x(1, :) is x coord, x(2, :) is y coord
+    REAL(DFP), INTENT(INOUT) :: xij(:, :)
+    !! Interpolation points
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    !! ans(SIZE(x, 2), SIZE(xij, 2))
+    !! Value of n+1 Lagrange polynomials at point x
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+    !! number of rows and columns written in ans
+    !! nrow = number of points of evaluation
+    !! ncol = number of degrees of freedom
+    REAL(DFP), INTENT(INOUT) :: coeff(:, :), xx(:, :)
+    !! Coefficient of Lagrange polynomials, The size is ncol by ncol
+    !! The size of xx is nrow by ncol (it is used internally)
+    !! nrow is number of points of evaluation
+    !! ncol is number of degrees of freedom
+    LOGICAL(LGT) :: firstCall
+    !! If firstCall is true, then coeff will be made
+    !! If firstCall is False, then coeff will be used
+    !! Default value of firstCall is True
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: basisType
+    !! Monomials *Default, Jacobi=Dubiner, Heirarchical
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
+    !! Jacobi parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: beta
+    !! Jacobi parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: lambda
+    !! Ultraspherical parameter
+  END SUBROUTINE LagrangeEvalAll_Quadrangle3_
 END INTERFACE LagrangeEvalAll_Quadrangle_
 
 !----------------------------------------------------------------------------
