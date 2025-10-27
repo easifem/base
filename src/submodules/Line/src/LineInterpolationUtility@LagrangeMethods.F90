@@ -17,7 +17,7 @@
 
 SUBMODULE(LineInterpolationUtility) LagrangeMethods
 USE BaseType, ONLY: polyopt => TypePolynomialOpt, elmopt => TypeElemNameOpt
-USE Display_Method, ONLY: ToString
+USE Display_Method, ONLY: ToString, Display
 USE InputUtility, ONLY: Input
 USE Lapack_Method, ONLY: GetLU, LUSolve, GetInvMat
 USE F95_BLAS, ONLY: GEMM
@@ -333,7 +333,6 @@ firstCall0 = Input(default=.TRUE., option=firstCall)
 IF (PRESENT(coeff)) THEN
 
   IF (firstCall0) THEN
-    ! coeff = LagrangeCoeff_Line(&
     CALL LagrangeCoeff_Line_(order=order, xij=xij, basisType=orthopol0, &
                              alpha=alpha, beta=beta, lambda=lambda, &
                              ans=coeff, nrow=aint, ncol=bint)
@@ -365,7 +364,8 @@ ELSE
 END IF
 
 ! ans = MATMUL(xx, coeff0)
-CALL GEMM(C=ans, alpha=1.0_DFP, A=xx, B=coeff0)
+CALL GEMM(C=ans(1:nrow, 1:ncol), alpha=1.0_DFP, A=xx(1:nrow, 1:ncol), &
+          B=coeff0(1:ncol, 1:ncol))
 
 END PROCEDURE LagrangeEvalAll_Line2_
 

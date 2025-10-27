@@ -901,8 +901,9 @@ END INTERFACE LagrangeEvalAll_Line
 !----------------------------------------------------------------------------
 
 INTERFACE LagrangeEvalAll_Line_
-  MODULE SUBROUTINE LagrangeEvalAll_Line2_(order, x, xij, ans, nrow, ncol, &
-                             coeff, firstCall, basisType, alpha, beta, lambda)
+  MODULE SUBROUTINE LagrangeEvalAll_Line2_( &
+    order, x, xij, ans, nrow, ncol, coeff, firstCall, basisType, alpha, &
+    beta, lambda)
     INTEGER(I4B), INTENT(IN) :: order
     !! order of Lagrange polynomials
     REAL(DFP), INTENT(IN) :: x(:, :)
