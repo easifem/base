@@ -26,6 +26,9 @@ CONTAINS
 MODULE PROCEDURE obj_Set7
 INTEGER(I4B) :: ii, jj, cnt
 
+obj%s(1:2) = SHAPE(val)
+obj%len = obj%s(1) * obj%s(2)
+
 cnt = 0
 
 IF (addContribution) THEN
@@ -51,6 +54,9 @@ END PROCEDURE obj_Set7
 
 MODULE PROCEDURE obj_Set8
 INTEGER(I4B) :: ii, jj, kk, cnt
+
+obj%s(1:3) = SHAPE(val)
+obj%len = obj%s(1) * obj%s(2) * obj%s(3)
 
 cnt = 0
 IF (addContribution) THEN
@@ -80,6 +86,9 @@ END PROCEDURE obj_Set8
 
 MODULE PROCEDURE obj_Set9
 INTEGER(I4B) :: ii, jj, kk, ll, cnt
+
+obj%s(1:4) = SHAPE(val)
+obj%len = obj%s(1) * obj%s(2) * obj%s(3) * obj%s(4)
 
 cnt = 0
 IF (addContribution) THEN
@@ -113,6 +122,9 @@ END PROCEDURE obj_Set9
 
 MODULE PROCEDURE obj_Set12
 INTEGER(I4B) :: ii, jj, kk, cnt
+
+obj%s(1:3) = SHAPE(val)
+obj%len = obj%s(1) * obj%s(2) * obj%s(3)
 
 cnt = 0
 IF (addContribution) THEN

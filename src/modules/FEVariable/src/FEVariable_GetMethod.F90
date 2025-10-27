@@ -32,6 +32,7 @@ PRIVATE
 
 PUBLIC :: SIZE
 PUBLIC :: SHAPE
+PUBLIC :: GetShape
 PUBLIC :: OPERATOR(.rank.)
 PUBLIC :: GetRank
 PUBLIC :: OPERATOR(.vartype.)
@@ -169,6 +170,22 @@ INTERFACE Shape
     INTEGER(I4B), ALLOCATABLE :: ans(:)
   END FUNCTION fevar_Shape
 END INTERFACE Shape
+
+!----------------------------------------------------------------------------
+!                                                         GetShape@GetMethods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2025-10-28
+! summary: Returns the shape of data
+
+INTERFACE GetShape
+  MODULE PURE SUBROUTINE fevar_GetShape(obj, ans, tsize)
+    CLASS(FEVariable_), INTENT(IN) :: obj
+    INTEGER(I4B), INTENT(INOUT) :: ans(:)
+    INTEGER(I4B), INTENT(OUT) :: tsize
+  END SUBROUTINE fevar_GetShape
+END INTERFACE GetShape
 
 !----------------------------------------------------------------------------
 !                                                    GetTotalShape@GetMethods
