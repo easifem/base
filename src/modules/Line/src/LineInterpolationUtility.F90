@@ -1110,6 +1110,17 @@ END INTERFACE LagrangeGradientEvalAll_Line_
 !> author: Vikas Sharma, Ph. D.
 ! date:  2023-06-23
 ! summary: Evaluate basis functions of order upto n
+!
+!# Introduction
+!
+! BasisType can take following values
+! Monomial
+! Jacobi
+! Ultraspherical
+! Legendre
+! Chebyshev
+! Lobatto
+! UnscaledLobatto
 
 INTERFACE BasisEvalAll_Line
   MODULE FUNCTION BasisEvalAll_Line1(order, x, refLine, basisType, alpha, &
@@ -1121,13 +1132,7 @@ INTERFACE BasisEvalAll_Line
     CHARACTER(*), INTENT(IN) :: refLine
     !! Refline should be  BIUNIT
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: basisType
-    !! Monomial
-    !! Jacobi
-    !! Ultraspherical
-    !! Legendre
-    !! Chebyshev
-    !! Lobatto
-    !! UnscaledLobatto
+    !! BasisType
     REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
     !! Jacobi polynomial parameter
     REAL(DFP), OPTIONAL, INTENT(IN) :: beta
@@ -1157,13 +1162,7 @@ INTERFACE BasisEvalAll_Line_
     CHARACTER(*), INTENT(IN) :: refLine
     !! Refline should be  BIUNIT
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: basisType
-    !! Monomial
-    !! Jacobi
-    !! Ultraspherical
-    !! Legendre
-    !! Chebyshev
-    !! Lobatto
-    !! UnscaledLobatto
+    !! BasisType
     REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
     !! Jacobi polynomial parameter
     REAL(DFP), OPTIONAL, INTENT(IN) :: beta
@@ -1189,16 +1188,9 @@ INTERFACE BasisEvalAll_Line
     REAL(DFP), INTENT(IN) :: x(:)
     !! point of evaluation
     CHARACTER(*), INTENT(IN) :: refLine
-    !! UNIT
-    !! BIUNIT
+    !! UNIT, BIUNIT
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: basisType
-    !! Monomial
-    !! Jacobi
-    !! Ultraspherical
-    !! Legendre
-    !! Chebyshev
-    !! Lobatto
-    !! UnscaledLobatto
+    !! BasisType
     REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
     !! Jacobi polynomial parameter
     REAL(DFP), OPTIONAL, INTENT(IN) :: beta
@@ -1231,16 +1223,9 @@ INTERFACE BasisEvalAll_Line_
     INTEGER(I4B), INTENT(OUT) :: nrow, ncol
     !! number of rows and columns written to ans
     CHARACTER(*), INTENT(IN) :: refLine
-    !! UNIT
-    !! BIUNIT
+    !! UNIT, BIUNIT
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: basisType
-    !! Monomial
-    !! Jacobi
-    !! Ultraspherical
-    !! Legendre
-    !! Chebyshev
-    !! Lobatto
-    !! UnscaledLobatto
+    !! basis type
     REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
     !! Jacobi polynomial parameter
     REAL(DFP), OPTIONAL, INTENT(IN) :: beta
