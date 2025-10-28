@@ -1104,6 +1104,21 @@ TYPE :: FEVariable_
   !! True if it is initiated
   INTEGER(I4B) :: s(MAX_RANK_FEVARIABLE) = 0
   !! shape of the data
+  INTEGER(I4B) :: tshape = 0
+  !! Total shape of the data.
+  !! Following values are set based on rank and varType
+  !! Scalar, constant: 1
+  !! Scalar, space: 1
+  !! Scalar, time: 1
+  !! Scalar, spaceTime: 2
+  !! Vector, constant: 1
+  !! Vector, space: 2
+  !! Vector, time: 2
+  !! Vector, spaceTime: 3
+  !! Matrix, constant: 2
+  !! Matrix, space: 3
+  !! Matrix, time: 3
+  !! Matrix, spaceTime: 4
   INTEGER(I4B) :: defineOn = 0
   !! Nodal: nodal values
   !! Quadrature: quadrature values

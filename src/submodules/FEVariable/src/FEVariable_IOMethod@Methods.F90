@@ -132,6 +132,7 @@ CASE DEFAULT
 END SELECT
 
 CALL Util_Display(obj%s, "s: ", unitno=unitno)
+CALL Util_Display(obj%tshape, "tshape: ", unitno=unitno)
 CALL Util_Display(obj%defineOn, "defineOn: ", unitno=unitno)
 CALL Util_Display(obj%len, "len: ", unitno=unitno)
 CALL Util_Display(obj%capacity, "capacity: ", unitno=unitno)

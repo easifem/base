@@ -123,36 +123,37 @@ END PROCEDURE fevar_Size
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE fevar_GetTotalShape
-SELECT CASE (obj%rank)
-CASE (feopt%scalar)
-  SELECT CASE (obj%vartype)
-  CASE (feopt%constant, feopt%space, feopt%time)
-    ans = 1
-  CASE (feopt%spaceTime)
-    ans = 2
-  END SELECT
-
-CASE (feopt%vector)
-  SELECT CASE (obj%vartype)
-  CASE (feopt%constant)
-    ans = 1
-  CASE (feopt%space, feopt%time)
-    ans = 2
-  CASE (feopt%spaceTime)
-    ans = 3
-  END SELECT
-
-CASE (feopt%matrix)
-  SELECT CASE (obj%vartype)
-  CASE (feopt%constant)
-    ans = 2
-  CASE (feopt%space, feopt%time)
-    ans = 3
-  CASE (feopt%spaceTime)
-    ans = 4
-  END SELECT
-
-END SELECT
+ans = obj%tshape
+! SELECT CASE (obj%rank)
+! CASE (feopt%scalar)
+!   SELECT CASE (obj%vartype)
+!   CASE (feopt%constant, feopt%space, feopt%time)
+!     ans = 1
+!   CASE (feopt%spaceTime)
+!     ans = 2
+!   END SELECT
+!
+! CASE (feopt%vector)
+!   SELECT CASE (obj%vartype)
+!   CASE (feopt%constant)
+!     ans = 1
+!   CASE (feopt%space, feopt%time)
+!     ans = 2
+!   CASE (feopt%spaceTime)
+!     ans = 3
+!   END SELECT
+!
+! CASE (feopt%matrix)
+!   SELECT CASE (obj%vartype)
+!   CASE (feopt%constant)
+!     ans = 2
+!   CASE (feopt%space, feopt%time)
+!     ans = 3
+!   CASE (feopt%spaceTime)
+!     ans = 4
+!   END SELECT
+!
+! END SELECT
 END PROCEDURE fevar_GetTotalShape
 
 !----------------------------------------------------------------------------
@@ -160,10 +161,10 @@ END PROCEDURE fevar_GetTotalShape
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE fevar_Shape
-INTEGER(I4B) :: tsize
-tsize = GetTotalShape(obj=obj)
-CALL Reallocate(ans, tsize)
-ans(1:tsize) = obj%s(1:tsize)
+! INTEGER(I4B) :: tsize
+! tsize = GetTotalShape(obj=obj)
+CALL Reallocate(ans, obj%tshape)
+ans(1:obj%tshape) = obj%s(1:obj%tshape)
 END PROCEDURE fevar_Shape
 
 !----------------------------------------------------------------------------
@@ -171,7 +172,8 @@ END PROCEDURE fevar_Shape
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE fevar_GetShape
-tsize = GetTotalShape(obj=obj)
+! tsize = GetTotalShape(obj=obj)
+tsize = obj%tshape
 ans(1:tsize) = obj%s(1:tsize)
 END PROCEDURE fevar_GetShape
 

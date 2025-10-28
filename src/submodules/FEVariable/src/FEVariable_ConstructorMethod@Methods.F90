@@ -36,12 +36,12 @@ END PROCEDURE obj_Initiate1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE obj_Initiate2
-INTEGER(I4B) :: tsize
 LOGICAL(LGT) :: isok
+INTEGER(I4B) :: tsize
 
-tsize = SIZE(s)
+obj%tshape = SIZE(s)
 obj%isInit = .TRUE.
-obj%s(1:tsize) = s(1:tsize)
+obj%s(1:obj%tshape) = s(1:obj%tshape)
 obj%defineon = defineon
 obj%vartype = vartype
 obj%rank = rank
@@ -69,14 +69,15 @@ END PROCEDURE obj_Initiate2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE obj_Deallocate
-IF (ALLOCATED(obj%val)) DEALLOCATE (obj%val)
+obj%isInit = .FALSE.
 obj%s = 0
+obj%tshape = 0
 obj%defineOn = 0
 obj%vartype = 0
 obj%rank = 0
 obj%len = 0
 obj%capacity = 0
-obj%isInit = .FALSE.
+IF (ALLOCATED(obj%val)) DEALLOCATE (obj%val)
 END PROCEDURE obj_Deallocate
 
 !----------------------------------------------------------------------------
@@ -87,6 +88,7 @@ MODULE PROCEDURE obj_Copy
 LOGICAL(LGT) :: isok
 
 obj1%s = obj2%s
+obj1%tshape = obj2%tshape
 obj1%defineOn = obj2%defineOn
 obj1%rank = obj2%rank
 obj1%vartype = obj2%vartype
@@ -103,7 +105,6 @@ CALL Reallocate(obj1%val, obj1%capacity)
 
 isok = ALLOCATED(obj2%val)
 IF (isok) obj1%val(1:obj1%len) = obj2%val(1:obj1%len)
-
 END PROCEDURE obj_Copy
 
 !----------------------------------------------------------------------------

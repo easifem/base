@@ -60,8 +60,8 @@ PUBLIC :: Get_
 ! summary:  Get lame parameter lambda from YoungsModulus
 
 INTERFACE GetLambdaFromYoungsModulus
-  MODULE PURE SUBROUTINE fevar_GetLambdaFromYoungsModulus(youngsModulus, &
-                                                         shearModulus, lambda)
+  MODULE PURE SUBROUTINE fevar_GetLambdaFromYoungsModulus( &
+    youngsModulus, shearModulus, lambda)
     TYPE(FEVariable_), INTENT(IN) :: youngsModulus, shearModulus
     TYPE(FEVariable_), INTENT(INOUT) :: lambda
   END SUBROUTINE fevar_GetLambdaFromYoungsModulus
