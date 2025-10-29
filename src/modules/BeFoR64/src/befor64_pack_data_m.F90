@@ -57,13 +57,16 @@ INTERFACE pack_data
   !<...
   !<call pack_data(a1=array_r4,a2=array_i4,packed=rpack)
   !<```
-  module procedure pack_data_R8_R4, pack_data_R8_I8, pack_data_R8_I4, pack_data_R8_I2, pack_data_R8_I1, &
-                   pack_data_R4_R8, pack_data_R4_I8, pack_data_R4_I4, pack_data_R4_I2, pack_data_R4_I1, &
-                   pack_data_I8_R8, pack_data_I8_R4, pack_data_I8_I4, pack_data_I8_I2, pack_data_I8_I1, &
-                   pack_data_I4_R8, pack_data_I4_R4, pack_data_I4_I8, pack_data_I4_I2, pack_data_I4_I1, &
-                   pack_data_I2_R8, pack_data_I2_R4, pack_data_I2_I8, pack_data_I2_I4, pack_data_I2_I1, &
-                   pack_data_I1_R8, pack_data_I1_R4, pack_data_I1_I8, pack_data_I1_I4, pack_data_I1_I2
-end interface
+  MODULE PROCEDURE &
+    pack_data_R8_R4, pack_data_R8_I8, pack_data_R8_I4, pack_data_R8_I2, &
+    pack_data_R8_I1, pack_data_R4_R8, pack_data_R4_I8, pack_data_R4_I4, &
+    pack_data_R4_I2, pack_data_R4_I1, pack_data_I8_R8, pack_data_I8_R4, &
+    pack_data_I8_I4, pack_data_I8_I2, pack_data_I8_I1, pack_data_I4_R8, &
+    pack_data_I4_R4, pack_data_I4_I8, pack_data_I4_I2, pack_data_I4_I1, &
+    pack_data_I2_R8, pack_data_I2_R4, pack_data_I2_I8, pack_data_I2_I4, &
+    pack_data_I2_I1, pack_data_I1_R8, pack_data_I1_R4, pack_data_I1_I8, &
+    pack_data_I1_I4, pack_data_I1_I2, pack_data_I4_I4
+END INTERFACE
 
 CONTAINS
 PURE SUBROUTINE pack_data_R8_R4(a1, a2, packed)
@@ -90,7 +93,7 @@ PURE SUBROUTINE pack_data_R8_R4(a1, a2, packed)
   p1 = TRANSFER(a1, p1)
   p2 = TRANSFER(a2, p2)
   packed = [p1, p2]
-end subroutine pack_data_R8_R4
+END SUBROUTINE pack_data_R8_R4
 
 PURE SUBROUTINE pack_data_R8_I8(a1, a2, packed)
   !< Pack different kinds of data into single I1P array.
@@ -116,7 +119,7 @@ PURE SUBROUTINE pack_data_R8_I8(a1, a2, packed)
   p1 = TRANSFER(a1, p1)
   p2 = TRANSFER(a2, p2)
   packed = [p1, p2]
-end subroutine pack_data_R8_I8
+END SUBROUTINE pack_data_R8_I8
 
 PURE SUBROUTINE pack_data_R8_I4(a1, a2, packed)
   !< Pack different kinds of data into single I1P array.
@@ -142,7 +145,7 @@ PURE SUBROUTINE pack_data_R8_I4(a1, a2, packed)
   p1 = TRANSFER(a1, p1)
   p2 = TRANSFER(a2, p2)
   packed = [p1, p2]
-end subroutine pack_data_R8_I4
+END SUBROUTINE pack_data_R8_I4
 
 PURE SUBROUTINE pack_data_R8_I2(a1, a2, packed)
   !< Pack different kinds of data into single I1P array.
@@ -168,7 +171,7 @@ PURE SUBROUTINE pack_data_R8_I2(a1, a2, packed)
   p1 = TRANSFER(a1, p1)
   p2 = TRANSFER(a2, p2)
   packed = [p1, p2]
-end subroutine pack_data_R8_I2
+END SUBROUTINE pack_data_R8_I2
 
 PURE SUBROUTINE pack_data_R8_I1(a1, a2, packed)
   !< Pack different kinds of data into single I1P array.
@@ -194,7 +197,7 @@ PURE SUBROUTINE pack_data_R8_I1(a1, a2, packed)
   p1 = TRANSFER(a1, p1)
   p2 = TRANSFER(a2, p2)
   packed = [p1, p2]
-end subroutine pack_data_R8_I1
+END SUBROUTINE pack_data_R8_I1
 
 PURE SUBROUTINE pack_data_R4_R8(a1, a2, packed)
   !< Pack different kinds of data into single I1P array.
@@ -220,7 +223,7 @@ PURE SUBROUTINE pack_data_R4_R8(a1, a2, packed)
   p1 = TRANSFER(a1, p1)
   p2 = TRANSFER(a2, p2)
   packed = [p1, p2]
-end subroutine pack_data_R4_R8
+END SUBROUTINE pack_data_R4_R8
 
 PURE SUBROUTINE pack_data_R4_I8(a1, a2, packed)
   !< Pack different kinds of data into single I1P array.
@@ -246,7 +249,7 @@ PURE SUBROUTINE pack_data_R4_I8(a1, a2, packed)
   p1 = TRANSFER(a1, p1)
   p2 = TRANSFER(a2, p2)
   packed = [p1, p2]
-end subroutine pack_data_R4_I8
+END SUBROUTINE pack_data_R4_I8
 
 PURE SUBROUTINE pack_data_R4_I4(a1, a2, packed)
   !< Pack different kinds of data into single I1P array.
@@ -272,7 +275,7 @@ PURE SUBROUTINE pack_data_R4_I4(a1, a2, packed)
   p1 = TRANSFER(a1, p1)
   p2 = TRANSFER(a2, p2)
   packed = [p1, p2]
-end subroutine pack_data_R4_I4
+END SUBROUTINE pack_data_R4_I4
 
 PURE SUBROUTINE pack_data_R4_I2(a1, a2, packed)
   !< Pack different kinds of data into single I1P array.
@@ -298,7 +301,7 @@ PURE SUBROUTINE pack_data_R4_I2(a1, a2, packed)
   p1 = TRANSFER(a1, p1)
   p2 = TRANSFER(a2, p2)
   packed = [p1, p2]
-end subroutine pack_data_R4_I2
+END SUBROUTINE pack_data_R4_I2
 
 PURE SUBROUTINE pack_data_R4_I1(a1, a2, packed)
   !< Pack different kinds of data into single I1P array.
@@ -324,7 +327,7 @@ PURE SUBROUTINE pack_data_R4_I1(a1, a2, packed)
   p1 = TRANSFER(a1, p1)
   p2 = TRANSFER(a2, p2)
   packed = [p1, p2]
-end subroutine pack_data_R4_I1
+END SUBROUTINE pack_data_R4_I1
 
 PURE SUBROUTINE pack_data_I8_R8(a1, a2, packed)
   !< Pack different kinds of data into single I1P array.
@@ -350,7 +353,7 @@ PURE SUBROUTINE pack_data_I8_R8(a1, a2, packed)
   p1 = TRANSFER(a1, p1)
   p2 = TRANSFER(a2, p2)
   packed = [p1, p2]
-end subroutine pack_data_I8_R8
+END SUBROUTINE pack_data_I8_R8
 
 PURE SUBROUTINE pack_data_I8_R4(a1, a2, packed)
   !< Pack different kinds of data into single I1P array.
@@ -376,7 +379,7 @@ PURE SUBROUTINE pack_data_I8_R4(a1, a2, packed)
   p1 = TRANSFER(a1, p1)
   p2 = TRANSFER(a2, p2)
   packed = [p1, p2]
-end subroutine pack_data_I8_R4
+END SUBROUTINE pack_data_I8_R4
 
 PURE SUBROUTINE pack_data_I8_I4(a1, a2, packed)
   !< Pack different kinds of data into single I1P array.
@@ -402,7 +405,7 @@ PURE SUBROUTINE pack_data_I8_I4(a1, a2, packed)
   p1 = TRANSFER(a1, p1)
   p2 = TRANSFER(a2, p2)
   packed = [p1, p2]
-end subroutine pack_data_I8_I4
+END SUBROUTINE pack_data_I8_I4
 
 PURE SUBROUTINE pack_data_I8_I2(a1, a2, packed)
   !< Pack different kinds of data into single I1P array.
@@ -428,7 +431,7 @@ PURE SUBROUTINE pack_data_I8_I2(a1, a2, packed)
   p1 = TRANSFER(a1, p1)
   p2 = TRANSFER(a2, p2)
   packed = [p1, p2]
-end subroutine pack_data_I8_I2
+END SUBROUTINE pack_data_I8_I2
 
 PURE SUBROUTINE pack_data_I8_I1(a1, a2, packed)
   !< Pack different kinds of data into single I1P array.
@@ -454,7 +457,7 @@ PURE SUBROUTINE pack_data_I8_I1(a1, a2, packed)
   p1 = TRANSFER(a1, p1)
   p2 = TRANSFER(a2, p2)
   packed = [p1, p2]
-end subroutine pack_data_I8_I1
+END SUBROUTINE pack_data_I8_I1
 
 PURE SUBROUTINE pack_data_I4_R8(a1, a2, packed)
   !< Pack different kinds of data into single I1P array.
@@ -480,7 +483,7 @@ PURE SUBROUTINE pack_data_I4_R8(a1, a2, packed)
   p1 = TRANSFER(a1, p1)
   p2 = TRANSFER(a2, p2)
   packed = [p1, p2]
-end subroutine pack_data_I4_R8
+END SUBROUTINE pack_data_I4_R8
 
 PURE SUBROUTINE pack_data_I4_R4(a1, a2, packed)
   !< Pack different kinds of data into single I1P array.
@@ -506,7 +509,7 @@ PURE SUBROUTINE pack_data_I4_R4(a1, a2, packed)
   p1 = TRANSFER(a1, p1)
   p2 = TRANSFER(a2, p2)
   packed = [p1, p2]
-end subroutine pack_data_I4_R4
+END SUBROUTINE pack_data_I4_R4
 
 PURE SUBROUTINE pack_data_I4_I8(a1, a2, packed)
   !< Pack different kinds of data into single I1P array.
@@ -532,7 +535,7 @@ PURE SUBROUTINE pack_data_I4_I8(a1, a2, packed)
   p1 = TRANSFER(a1, p1)
   p2 = TRANSFER(a2, p2)
   packed = [p1, p2]
-end subroutine pack_data_I4_I8
+END SUBROUTINE pack_data_I4_I8
 
 PURE SUBROUTINE pack_data_I4_I2(a1, a2, packed)
   !< Pack different kinds of data into single I1P array.
@@ -558,7 +561,7 @@ PURE SUBROUTINE pack_data_I4_I2(a1, a2, packed)
   p1 = TRANSFER(a1, p1)
   p2 = TRANSFER(a2, p2)
   packed = [p1, p2]
-end subroutine pack_data_I4_I2
+END SUBROUTINE pack_data_I4_I2
 
 PURE SUBROUTINE pack_data_I4_I1(a1, a2, packed)
   !< Pack different kinds of data into single I1P array.
@@ -584,7 +587,7 @@ PURE SUBROUTINE pack_data_I4_I1(a1, a2, packed)
   p1 = TRANSFER(a1, p1)
   p2 = TRANSFER(a2, p2)
   packed = [p1, p2]
-end subroutine pack_data_I4_I1
+END SUBROUTINE pack_data_I4_I1
 
 PURE SUBROUTINE pack_data_I2_R8(a1, a2, packed)
   !< Pack different kinds of data into single I1P array.
@@ -610,7 +613,7 @@ PURE SUBROUTINE pack_data_I2_R8(a1, a2, packed)
   p1 = TRANSFER(a1, p1)
   p2 = TRANSFER(a2, p2)
   packed = [p1, p2]
-end subroutine pack_data_I2_R8
+END SUBROUTINE pack_data_I2_R8
 
 PURE SUBROUTINE pack_data_I2_R4(a1, a2, packed)
   !< Pack different kinds of data into single I1P array.
@@ -636,7 +639,7 @@ PURE SUBROUTINE pack_data_I2_R4(a1, a2, packed)
   p1 = TRANSFER(a1, p1)
   p2 = TRANSFER(a2, p2)
   packed = [p1, p2]
-end subroutine pack_data_I2_R4
+END SUBROUTINE pack_data_I2_R4
 
 PURE SUBROUTINE pack_data_I2_I8(a1, a2, packed)
   !< Pack different kinds of data into single I1P array.
@@ -662,7 +665,7 @@ PURE SUBROUTINE pack_data_I2_I8(a1, a2, packed)
   p1 = TRANSFER(a1, p1)
   p2 = TRANSFER(a2, p2)
   packed = [p1, p2]
-end subroutine pack_data_I2_I8
+END SUBROUTINE pack_data_I2_I8
 
 PURE SUBROUTINE pack_data_I2_I4(a1, a2, packed)
   !< Pack different kinds of data into single I1P array.
@@ -688,7 +691,7 @@ PURE SUBROUTINE pack_data_I2_I4(a1, a2, packed)
   p1 = TRANSFER(a1, p1)
   p2 = TRANSFER(a2, p2)
   packed = [p1, p2]
-end subroutine pack_data_I2_I4
+END SUBROUTINE pack_data_I2_I4
 
 PURE SUBROUTINE pack_data_I2_I1(a1, a2, packed)
   !< Pack different kinds of data into single I1P array.
@@ -714,7 +717,7 @@ PURE SUBROUTINE pack_data_I2_I1(a1, a2, packed)
   p1 = TRANSFER(a1, p1)
   p2 = TRANSFER(a2, p2)
   packed = [p1, p2]
-end subroutine pack_data_I2_I1
+END SUBROUTINE pack_data_I2_I1
 
 PURE SUBROUTINE pack_data_I1_R8(a1, a2, packed)
   !< Pack different kinds of data into single I1P array.
@@ -740,7 +743,7 @@ PURE SUBROUTINE pack_data_I1_R8(a1, a2, packed)
   p1 = TRANSFER(a1, p1)
   p2 = TRANSFER(a2, p2)
   packed = [p1, p2]
-end subroutine pack_data_I1_R8
+END SUBROUTINE pack_data_I1_R8
 
 PURE SUBROUTINE pack_data_I1_R4(a1, a2, packed)
   !< Pack different kinds of data into single I1P array.
@@ -766,7 +769,7 @@ PURE SUBROUTINE pack_data_I1_R4(a1, a2, packed)
   p1 = TRANSFER(a1, p1)
   p2 = TRANSFER(a2, p2)
   packed = [p1, p2]
-end subroutine pack_data_I1_R4
+END SUBROUTINE pack_data_I1_R4
 
 PURE SUBROUTINE pack_data_I1_I8(a1, a2, packed)
   !< Pack different kinds of data into single I1P array.
@@ -792,7 +795,7 @@ PURE SUBROUTINE pack_data_I1_I8(a1, a2, packed)
   p1 = TRANSFER(a1, p1)
   p2 = TRANSFER(a2, p2)
   packed = [p1, p2]
-end subroutine pack_data_I1_I8
+END SUBROUTINE pack_data_I1_I8
 
 PURE SUBROUTINE pack_data_I1_I4(a1, a2, packed)
   !< Pack different kinds of data into single I1P array.
@@ -818,7 +821,7 @@ PURE SUBROUTINE pack_data_I1_I4(a1, a2, packed)
   p1 = TRANSFER(a1, p1)
   p2 = TRANSFER(a2, p2)
   packed = [p1, p2]
-end subroutine pack_data_I1_I4
+END SUBROUTINE pack_data_I1_I4
 
 PURE SUBROUTINE pack_data_I1_I2(a1, a2, packed)
   !< Pack different kinds of data into single I1P array.
@@ -844,5 +847,21 @@ PURE SUBROUTINE pack_data_I1_I2(a1, a2, packed)
   p1 = TRANSFER(a1, p1)
   p2 = TRANSFER(a2, p2)
   packed = [p1, p2]
-end subroutine pack_data_I1_I2
+END SUBROUTINE pack_data_I1_I2
+
+PURE SUBROUTINE pack_data_I4_I4(a1, a2, packed)
+  INTEGER(I4P), INTENT(IN) :: a1(1:)
+  INTEGER(I4P), INTENT(IN) :: a2(1:)
+  INTEGER(I1P), ALLOCATABLE, INTENT(INOUT) :: packed(:)
+  !> main
+  INTEGER(I1P), ALLOCATABLE :: p1(:)
+  INTEGER(I1P), ALLOCATABLE :: p2(:)
+  p1 = TRANSFER(a1, p1)
+  p2 = TRANSFER(a2, p2)
+  packed = [p1, p2]
+END SUBROUTINE pack_data_I4_I4
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
 endmodule befor64_pack_data_m
