@@ -27,6 +27,7 @@ IMPLICIT NONE
 
 PRIVATE
 
+PUBLIC :: Set
 PUBLIC :: Initiate
 PUBLIC :: InitiateFacetQuadrature
 PUBLIC :: Copy
@@ -1234,6 +1235,26 @@ INTERFACE InitiateFacetQuadrature
     !! coordinates of reference element
   END SUBROUTINE obj_InitiateFacetQuadrature4
 END INTERFACE InitiateFacetQuadrature
+
+!----------------------------------------------------------------------------
+!                                                              Set@SetMethods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2025-10-29
+! summary: This routine sets the quadrature points
+!          We do not allocate anything here
+
+INTERFACE Set
+  MODULE PURE SUBROUTINE obj_Set1(obj, points)
+    TYPE(QuadraturePoint_), INTENT(INOUT) :: obj
+    REAL(DFP), INTENT(IN) :: points(:, :)
+    !! points contains the quadrature points and weights
+    !! points( :, ipoint ) contains quadrature points and weights of ipoint
+    !! quadrature point. The last row contains the weight. The rest of the
+    !! rows contains the coordinates of quadrature.
+  END SUBROUTINE obj_Set1
+END INTERFACE Set
 
 !----------------------------------------------------------------------------
 !

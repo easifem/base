@@ -21,4 +21,5 @@ target_sources(
   PRIVATE ${src_path}/QuadraturePoint_Method@IOMethods.F90
           ${src_path}/QuadraturePoint_Method@GetMethods.F90
           ${src_path}/QuadraturePoint_Method@ConstructorMethods.F90
-          ${src_path}/QuadraturePoint_Method@FacetQuadratureMethods.F90)
+          ${src_path}/QuadraturePoint_Method@FacetQuadratureMethods.F90
+          ${src_path}/QuadraturePoint_Method@SetMethods.F90)
