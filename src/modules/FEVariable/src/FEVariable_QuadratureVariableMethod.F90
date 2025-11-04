@@ -41,7 +41,7 @@ PUBLIC :: QuadratureVariable
 ! update: 2021-12-10
 ! summary: Create quadrature variable, which is Scalar, Constant
 
-INTERFACE QuadratureVariable
+INTERFACE
   MODULE PURE FUNCTION Quadrature_Scalar_Constant(val, rank, vartype) &
     RESULT(obj)
     TYPE(FEVariable_) :: obj
@@ -49,6 +49,10 @@ INTERFACE QuadratureVariable
     TYPE(FEVariableScalar_), INTENT(IN) :: rank
     TYPE(FEVariableConstant_), INTENT(IN) :: vartype
   END FUNCTION Quadrature_Scalar_Constant
+END INTERFACE
+
+INTERFACE QuadratureVariable
+  MODULE PROCEDURE Quadrature_Scalar_Constant
 END INTERFACE QuadratureVariable
 
 !----------------------------------------------------------------------------
@@ -60,7 +64,7 @@ END INTERFACE QuadratureVariable
 ! update: 2021-12-10
 ! summary: Create quadrature variable, which is Scalar, Space
 
-INTERFACE QuadratureVariable
+INTERFACE
   MODULE PURE FUNCTION Quadrature_Scalar_Space(val, rank, vartype) &
     RESULT(obj)
     TYPE(FEVariable_) :: obj
@@ -68,6 +72,32 @@ INTERFACE QuadratureVariable
     TYPE(FEVariableScalar_), INTENT(IN) :: rank
     TYPE(FEVariableSpace_), INTENT(IN) :: vartype
   END FUNCTION Quadrature_Scalar_Space
+END INTERFACE
+
+INTERFACE QuadratureVariable
+  MODULE PROCEDURE Quadrature_Scalar_Space
+END INTERFACE QuadratureVariable
+
+!----------------------------------------------------------------------------
+!                                      QuadratureVariable@ConstructorMethods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2025-11-04
+! summary: Create quadrature variable, which is Scalar, Space
+
+INTERFACE
+  MODULE PURE FUNCTION Quadrature_Scalar_Space2(tsize, rank, vartype) &
+    RESULT(obj)
+    TYPE(FEVariable_) :: obj
+    INTEGER(I4B), INTENT(IN) :: tsize
+    TYPE(FEVariableScalar_), INTENT(IN) :: rank
+    TYPE(FEVariableSpace_), INTENT(IN) :: vartype
+  END FUNCTION Quadrature_Scalar_Space2
+END INTERFACE
+
+INTERFACE QuadratureVariable
+  MODULE PROCEDURE Quadrature_Scalar_Space2
 END INTERFACE QuadratureVariable
 
 !----------------------------------------------------------------------------
@@ -79,7 +109,7 @@ END INTERFACE QuadratureVariable
 ! update: 2021-12-10
 ! summary: Create quadrature variable, which is Scalar, Time
 
-INTERFACE QuadratureVariable
+INTERFACE
   MODULE PURE FUNCTION Quadrature_Scalar_Time(val, rank, vartype) &
     RESULT(obj)
     TYPE(FEVariable_) :: obj
@@ -87,6 +117,10 @@ INTERFACE QuadratureVariable
     TYPE(FEVariableScalar_), INTENT(IN) :: rank
     TYPE(FEVariableTime_), INTENT(IN) :: vartype
   END FUNCTION Quadrature_Scalar_Time
+END INTERFACE
+
+INTERFACE QuadratureVariable
+  MODULE PROCEDURE Quadrature_Scalar_Time
 END INTERFACE QuadratureVariable
 
 !----------------------------------------------------------------------------
@@ -98,7 +132,7 @@ END INTERFACE QuadratureVariable
 ! update: 2021-12-10
 ! summary: Create quadrature variable, which is Scalar, SpaceTime
 
-INTERFACE QuadratureVariable
+INTERFACE
   MODULE PURE FUNCTION Quadrature_Scalar_SpaceTime(val, rank, vartype) &
     RESULT(obj)
     TYPE(FEVariable_) :: obj
@@ -106,6 +140,10 @@ INTERFACE QuadratureVariable
     TYPE(FEVariableScalar_), INTENT(IN) :: rank
     TYPE(FEVariableSpaceTime_), INTENT(IN) :: vartype
   END FUNCTION Quadrature_Scalar_SpaceTime
+END INTERFACE
+
+INTERFACE QuadratureVariable
+  MODULE PROCEDURE Quadrature_Scalar_SpaceTime
 END INTERFACE QuadratureVariable
 
 !----------------------------------------------------------------------------
@@ -117,7 +155,7 @@ END INTERFACE QuadratureVariable
 ! update: 2021-12-10
 ! summary: Create quadrature variable, which is Scalar, SpaceTime
 
-INTERFACE QuadratureVariable
+INTERFACE
   MODULE PURE FUNCTION Quadrature_Scalar_SpaceTime2(val, rank, vartype, s) &
     RESULT(obj)
     TYPE(FEVariable_) :: obj
@@ -126,6 +164,10 @@ INTERFACE QuadratureVariable
     TYPE(FEVariableSpaceTime_), INTENT(IN) :: vartype
     INTEGER(I4B), INTENT(IN) :: s(2)
   END FUNCTION Quadrature_Scalar_SpaceTime2
+END INTERFACE
+
+INTERFACE QuadratureVariable
+  MODULE PROCEDURE Quadrature_Scalar_SpaceTime2
 END INTERFACE QuadratureVariable
 
 !----------------------------------------------------------------------------
@@ -137,7 +179,7 @@ END INTERFACE QuadratureVariable
 ! update: 2021-12-10
 ! summary: Create quadrature variable, which is Vector, Constant
 
-INTERFACE QuadratureVariable
+INTERFACE
   MODULE PURE FUNCTION Quadrature_Vector_Constant(val, rank, vartype) &
     RESULT(obj)
     TYPE(FEVariable_) :: obj
@@ -145,6 +187,10 @@ INTERFACE QuadratureVariable
     TYPE(FEVariableVector_), INTENT(IN) :: rank
     TYPE(FEVariableConstant_), INTENT(IN) :: vartype
   END FUNCTION Quadrature_Vector_Constant
+END INTERFACE
+
+INTERFACE QuadratureVariable
+  MODULE PROCEDURE Quadrature_Vector_Constant
 END INTERFACE QuadratureVariable
 
 !----------------------------------------------------------------------------
@@ -156,7 +202,7 @@ END INTERFACE QuadratureVariable
 ! update: 2021-12-10
 ! summary: Create quadrature variable, which is Vector, Space
 
-INTERFACE QuadratureVariable
+INTERFACE
   MODULE PURE FUNCTION Quadrature_Vector_Space(val, rank, vartype) &
     RESULT(obj)
     TYPE(FEVariable_) :: obj
@@ -164,6 +210,10 @@ INTERFACE QuadratureVariable
     TYPE(FEVariableVector_), INTENT(IN) :: rank
     TYPE(FEVariableSpace_), INTENT(IN) :: vartype
   END FUNCTION Quadrature_Vector_Space
+END INTERFACE
+
+INTERFACE QuadratureVariable
+  MODULE PROCEDURE Quadrature_Vector_Space
 END INTERFACE QuadratureVariable
 
 !----------------------------------------------------------------------------
@@ -175,7 +225,7 @@ END INTERFACE QuadratureVariable
 ! update: 2021-12-10
 ! summary: Create quadrature variable, which is Vector, Space
 
-INTERFACE QuadratureVariable
+INTERFACE
 
   MODULE PURE FUNCTION Quadrature_Vector_Space2(val, rank, vartype, s) &
     RESULT(obj)
@@ -185,6 +235,10 @@ INTERFACE QuadratureVariable
     TYPE(FEVariableSpace_), INTENT(IN) :: vartype
     INTEGER(I4B), INTENT(IN) :: s(2)
   END FUNCTION Quadrature_Vector_Space2
+END INTERFACE
+
+INTERFACE QuadratureVariable
+  MODULE PROCEDURE Quadrature_Vector_Space2
 END INTERFACE QuadratureVariable
 
 !----------------------------------------------------------------------------
@@ -196,7 +250,7 @@ END INTERFACE QuadratureVariable
 ! update: 2021-12-10
 ! summary: Create quadrature variable, which is Vector, Time
 
-INTERFACE QuadratureVariable
+INTERFACE
   MODULE PURE FUNCTION Quadrature_Vector_Time(val, rank, vartype) &
     RESULT(obj)
     TYPE(FEVariable_) :: obj
@@ -204,6 +258,10 @@ INTERFACE QuadratureVariable
     TYPE(FEVariableVector_), INTENT(IN) :: rank
     TYPE(FEVariableTime_), INTENT(IN) :: vartype
   END FUNCTION Quadrature_Vector_Time
+END INTERFACE
+
+INTERFACE QuadratureVariable
+  MODULE PROCEDURE Quadrature_Vector_Time
 END INTERFACE QuadratureVariable
 
 !----------------------------------------------------------------------------
@@ -215,7 +273,7 @@ END INTERFACE QuadratureVariable
 ! update: 2021-12-10
 ! summary: Create quadrature variable, which is Vector, Time
 
-INTERFACE QuadratureVariable
+INTERFACE
   MODULE PURE FUNCTION Quadrature_Vector_Time2(val, rank, vartype, s) &
     RESULT(obj)
     TYPE(FEVariable_) :: obj
@@ -224,6 +282,10 @@ INTERFACE QuadratureVariable
     TYPE(FEVariableTime_), INTENT(IN) :: vartype
     INTEGER(I4B), INTENT(IN) :: s(2)
   END FUNCTION Quadrature_Vector_Time2
+END INTERFACE
+
+INTERFACE QuadratureVariable
+  MODULE PROCEDURE Quadrature_Vector_Time2
 END INTERFACE QuadratureVariable
 
 !----------------------------------------------------------------------------
@@ -235,7 +297,7 @@ END INTERFACE QuadratureVariable
 ! update: 2021-12-10
 ! summary: Create quadrature variable, which is Vector, SpaceTime
 
-INTERFACE QuadratureVariable
+INTERFACE
   MODULE PURE FUNCTION Quadrature_Vector_SpaceTime(val, rank, vartype) &
     RESULT(obj)
     TYPE(FEVariable_) :: obj
@@ -243,6 +305,10 @@ INTERFACE QuadratureVariable
     TYPE(FEVariableVector_), INTENT(IN) :: rank
     TYPE(FEVariableSpaceTime_), INTENT(IN) :: vartype
   END FUNCTION Quadrature_Vector_SpaceTime
+END INTERFACE
+
+INTERFACE QuadratureVariable
+  MODULE PROCEDURE Quadrature_Vector_SpaceTime
 END INTERFACE QuadratureVariable
 
 !----------------------------------------------------------------------------
@@ -254,7 +320,7 @@ END INTERFACE QuadratureVariable
 ! update: 2021-12-10
 ! summary: Create quadrature variable, which is Vector, SpaceTime
 
-INTERFACE QuadratureVariable
+INTERFACE
   MODULE PURE FUNCTION Quadrature_Vector_SpaceTime2(val, rank, vartype, s) &
     RESULT(obj)
     TYPE(FEVariable_) :: obj
@@ -263,6 +329,10 @@ INTERFACE QuadratureVariable
     TYPE(FEVariableSpaceTime_), INTENT(IN) :: vartype
     INTEGER(I4B), INTENT(IN) :: s(3)
   END FUNCTION Quadrature_Vector_SpaceTime2
+END INTERFACE
+
+INTERFACE QuadratureVariable
+  MODULE PROCEDURE Quadrature_Vector_SpaceTime2
 END INTERFACE QuadratureVariable
 
 !----------------------------------------------------------------------------
@@ -274,7 +344,7 @@ END INTERFACE QuadratureVariable
 ! update: 2021-12-10
 ! summary: Create quadrature variable, which is Matrix, Constant
 
-INTERFACE QuadratureVariable
+INTERFACE
   MODULE PURE FUNCTION Quadrature_Matrix_Constant(val, rank, vartype) &
     RESULT(obj)
     TYPE(FEVariable_) :: obj
@@ -282,6 +352,10 @@ INTERFACE QuadratureVariable
     TYPE(FEVariableMatrix_), INTENT(IN) :: rank
     TYPE(FEVariableConstant_), INTENT(IN) :: vartype
   END FUNCTION Quadrature_Matrix_Constant
+END INTERFACE
+
+INTERFACE QuadratureVariable
+  MODULE PROCEDURE Quadrature_Matrix_Constant
 END INTERFACE QuadratureVariable
 
 !----------------------------------------------------------------------------
@@ -293,7 +367,7 @@ END INTERFACE QuadratureVariable
 ! update: 2021-12-10
 ! summary: Create quadrature variable, which is Matrix, Constant
 
-INTERFACE QuadratureVariable
+INTERFACE
   MODULE PURE FUNCTION Quadrature_Matrix_Constant2(val, rank, vartype, s) &
     RESULT(obj)
     TYPE(FEVariable_) :: obj
@@ -302,6 +376,10 @@ INTERFACE QuadratureVariable
     TYPE(FEVariableConstant_), INTENT(IN) :: vartype
     INTEGER(I4B), INTENT(IN) :: s(2)
   END FUNCTION Quadrature_Matrix_Constant2
+END INTERFACE
+
+INTERFACE QuadratureVariable
+  MODULE PROCEDURE Quadrature_Matrix_Constant2
 END INTERFACE QuadratureVariable
 
 !----------------------------------------------------------------------------
@@ -313,7 +391,7 @@ END INTERFACE QuadratureVariable
 ! update: 2021-12-10
 ! summary: Create quadrature variable, which is Matrix, Space
 
-INTERFACE QuadratureVariable
+INTERFACE
   MODULE PURE FUNCTION Quadrature_Matrix_Space(val, rank, vartype) &
     RESULT(obj)
     TYPE(FEVariable_) :: obj
@@ -321,6 +399,10 @@ INTERFACE QuadratureVariable
     TYPE(FEVariableMatrix_), INTENT(IN) :: rank
     TYPE(FEVariableSpace_), INTENT(IN) :: vartype
   END FUNCTION Quadrature_Matrix_Space
+END INTERFACE
+
+INTERFACE QuadratureVariable
+  MODULE PROCEDURE Quadrature_Matrix_Space
 END INTERFACE QuadratureVariable
 
 !----------------------------------------------------------------------------
@@ -332,7 +414,7 @@ END INTERFACE QuadratureVariable
 ! update: 2021-12-10
 ! summary: Create quadrature variable, which is Matrix, Space
 
-INTERFACE QuadratureVariable
+INTERFACE
   MODULE PURE FUNCTION Quadrature_Matrix_Space2(val, rank, vartype, s) &
     RESULT(obj)
     TYPE(FEVariable_) :: obj
@@ -341,6 +423,10 @@ INTERFACE QuadratureVariable
     TYPE(FEVariableSpace_), INTENT(IN) :: vartype
     INTEGER(I4B), INTENT(IN) :: s(3)
   END FUNCTION Quadrature_Matrix_Space2
+END INTERFACE
+
+INTERFACE QuadratureVariable
+  MODULE PROCEDURE Quadrature_Matrix_Space2
 END INTERFACE QuadratureVariable
 
 !----------------------------------------------------------------------------
@@ -352,7 +438,7 @@ END INTERFACE QuadratureVariable
 ! update: 2021-12-10
 ! summary: Create quadrature variable, which is Matrix, Time
 
-INTERFACE QuadratureVariable
+INTERFACE
   MODULE PURE FUNCTION Quadrature_Matrix_Time(val, rank, vartype) &
     RESULT(obj)
     TYPE(FEVariable_) :: obj
@@ -360,6 +446,10 @@ INTERFACE QuadratureVariable
     TYPE(FEVariableMatrix_), INTENT(IN) :: rank
     TYPE(FEVariableTime_), INTENT(IN) :: vartype
   END FUNCTION Quadrature_Matrix_Time
+END INTERFACE
+
+INTERFACE QuadratureVariable
+  MODULE PROCEDURE Quadrature_Matrix_Time
 END INTERFACE QuadratureVariable
 
 !----------------------------------------------------------------------------
@@ -371,7 +461,7 @@ END INTERFACE QuadratureVariable
 ! update: 2021-12-10
 ! summary: Create quadrature variable, which is Matrix, Time
 
-INTERFACE QuadratureVariable
+INTERFACE
   MODULE PURE FUNCTION Quadrature_Matrix_Time2(val, rank, vartype, s) &
     RESULT(obj)
     TYPE(FEVariable_) :: obj
@@ -380,6 +470,10 @@ INTERFACE QuadratureVariable
     TYPE(FEVariableTime_), INTENT(IN) :: vartype
     INTEGER(I4B), INTENT(IN) :: s(3)
   END FUNCTION Quadrature_Matrix_Time2
+END INTERFACE
+
+INTERFACE QuadratureVariable
+  MODULE PROCEDURE Quadrature_Matrix_Time2
 END INTERFACE QuadratureVariable
 
 !----------------------------------------------------------------------------
@@ -391,7 +485,7 @@ END INTERFACE QuadratureVariable
 ! update: 2021-12-10
 ! summary: Create quadrature variable, which is Matrix, SpaceTime
 
-INTERFACE QuadratureVariable
+INTERFACE
   MODULE PURE FUNCTION Quadrature_Matrix_SpaceTime(val, rank, vartype) &
     RESULT(obj)
     TYPE(FEVariable_) :: obj
@@ -399,6 +493,10 @@ INTERFACE QuadratureVariable
     TYPE(FEVariableMatrix_), INTENT(IN) :: rank
     TYPE(FEVariableSpaceTime_), INTENT(IN) :: vartype
   END FUNCTION Quadrature_Matrix_SpaceTime
+END INTERFACE
+
+INTERFACE QuadratureVariable
+  MODULE PROCEDURE Quadrature_Matrix_SpaceTime
 END INTERFACE QuadratureVariable
 
 !----------------------------------------------------------------------------
@@ -410,7 +508,7 @@ END INTERFACE QuadratureVariable
 ! update: 2021-12-10
 ! summary: Create quadrature variable, which is Matrix, SpaceTime
 
-INTERFACE QuadratureVariable
+INTERFACE
   MODULE PURE FUNCTION Quadrature_Matrix_SpaceTime2(val, rank, vartype, s) &
     RESULT(obj)
     TYPE(FEVariable_) :: obj
@@ -419,6 +517,10 @@ INTERFACE QuadratureVariable
     TYPE(FEVariableSpaceTime_), INTENT(IN) :: vartype
     INTEGER(I4B), INTENT(IN) :: s(4)
   END FUNCTION Quadrature_Matrix_SpaceTime2
+END INTERFACE
+
+INTERFACE QuadratureVariable
+  MODULE PROCEDURE Quadrature_Matrix_SpaceTime2
 END INTERFACE QuadratureVariable
 
 END MODULE FEVariable_QuadratureVariableMethod

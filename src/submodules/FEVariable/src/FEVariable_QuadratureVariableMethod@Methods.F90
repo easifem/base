@@ -53,6 +53,20 @@ obj%val(1:obj%len) = val
 END PROCEDURE Quadrature_Scalar_Space
 
 !----------------------------------------------------------------------------
+!                                                          QuadratureVariable
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE Quadrature_Scalar_Space2
+INTEGER(I4B) :: s(1)
+
+s(1) = tsize
+CALL FEVariableInitiate(obj=obj, s=s, defineon=TypeFEVariableOpt%Quadrature, &
+                        vartype=TypeFEVariableOpt%space, &
+                        rank=TypeFEVariableOpt%scalar, len=s(1))
+obj%val(1:obj%len) = 0.0_DFP
+END PROCEDURE Quadrature_Scalar_Space2
+
+!----------------------------------------------------------------------------
 !                                                         QuadratureVariable
 !----------------------------------------------------------------------------
 
