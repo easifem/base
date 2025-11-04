@@ -117,7 +117,6 @@ PURE SUBROUTINE VertexBasisGradient_Quadrangle2_(L1, L2, dL1, dL2, &
   ans(1:dim1, 2, 2) = L1(1:dim1, 1) * dL2(1:dim1, 0)
   ans(1:dim1, 3, 2) = L1(1:dim1, 1) * dL2(1:dim1, 1)
   ans(1:dim1, 4, 2) = L1(1:dim1, 0) * dL2(1:dim1, 1)
-
 END SUBROUTINE VertexBasisGradient_Quadrangle2_
 
 !----------------------------------------------------------------------------
@@ -304,8 +303,8 @@ PURE SUBROUTINE LeftVerticalEdgeBasisGradient_Quadrangle_( &
   dim3 = 2
 
   DO CONCURRENT(k2=2:order, ii=1:dim1)
-    ans(ii, offset + k2 - 1, 1) = (mysign**(k2 - 1)) * dL1(ii, 0) * L2(ii, k2)
-    ans(ii, offset + k2 - 1, 2) = (mysign**(k2 - 1)) * L1(ii, 0) * dL2(ii, k2)
+    ans(ii, offset + k2 - 1, 1) = (mysign**k2) * dL1(ii, 0) * L2(ii, k2)
+    ans(ii, offset + k2 - 1, 2) = (mysign**k2) * L1(ii, 0) * dL2(ii, k2)
   END DO
 
 END SUBROUTINE LeftVerticalEdgeBasisGradient_Quadrangle_
@@ -348,8 +347,8 @@ PURE SUBROUTINE RightVerticalEdgeBasisGradient_Quadrangle_( &
 
   ! Right vertical
   DO CONCURRENT(k2=2:order, ii=1:dim1)
-    ans(ii, offset + k2 - 1, 1) = (mysign**(k2 - 1)) * dL1(ii, 1) * L2(ii, k2)
-    ans(ii, offset + k2 - 1, 2) = (mysign**(k2 - 1)) * L1(ii, 1) * dL2(ii, k2)
+    ans(ii, offset + k2 - 1, 1) = (mysign**k2) * dL1(ii, 1) * L2(ii, k2)
+    ans(ii, offset + k2 - 1, 2) = (mysign**k2) * L1(ii, 1) * dL2(ii, k2)
   END DO
 END SUBROUTINE RightVerticalEdgeBasisGradient_Quadrangle_
 
@@ -497,8 +496,8 @@ PURE SUBROUTINE BottomHorizontalEdgeBasisGradient_Quadrangle_( &
 
   !! bottom edge
   DO CONCURRENT(k1=2:order, ii=1:dim1)
-    ans(ii, offset + k1 - 1, 1) = (mysign**(k1 - 1)) * dL1(ii, k1) * L2(ii, 0)
-    ans(ii, offset + k1 - 1, 2) = (mysign**(k1 - 1)) * L1(ii, k1) * dL2(ii, 0)
+    ans(ii, offset + k1 - 1, 1) = (mysign**k1) * dL1(ii, k1) * L2(ii, 0)
+    ans(ii, offset + k1 - 1, 2) = (mysign**k1) * L1(ii, k1) * dL2(ii, 0)
   END DO
 
 END SUBROUTINE BottomHorizontalEdgeBasisGradient_Quadrangle_
@@ -537,10 +536,9 @@ PURE SUBROUTINE TopHorizontalEdgeBasisGradient_Quadrangle_( &
 
   !! top edge
   DO CONCURRENT(k1=2:order, ii=1:dim1)
-    ans(ii, offset + k1 - 1, 1) = (mysign**(k1 - 1)) * dL1(ii, k1) * L2(ii, 1)
-    ans(ii, offset + k1 - 1, 2) = (mysign**(k1 - 1)) * L1(ii, k1) * dL2(ii, 1)
+    ans(ii, offset + k1 - 1, 1) = (mysign**k1) * dL1(ii, k1) * L2(ii, 1)
+    ans(ii, offset + k1 - 1, 2) = (mysign**k1) * L1(ii, k1) * dL2(ii, 1)
   END DO
-
 END SUBROUTINE TopHorizontalEdgeBasisGradient_Quadrangle_
 
 !----------------------------------------------------------------------------
@@ -601,12 +599,11 @@ PURE SUBROUTINE CellBasis_Quadrangle2_(pb, qb, L1, L2, ans, nrow, ncol, &
   o1 = REAL(faceOrient(1), kind=DFP)
   o2 = REAL(faceOrient(2), kind=DFP)
 
+  p = pb
+  q = qb
   IF (faceOrient(3) .LT. 0_I4B) THEN
     p = qb
     q = pb
-  ELSE
-    p = pb
-    q = qb
   END IF
 
   DO CONCURRENT(k1=2:p, k2=2:q, ii=1:nrow)
@@ -648,21 +645,20 @@ PURE SUBROUTINE CellBasisGradient_Quadrangle2_( &
 
   o1 = REAL(faceOrient(1), kind=DFP)
   o2 = REAL(faceOrient(2), kind=DFP)
+  p = pb
+  q = qb
 
   IF (faceOrient(3) .LT. 0_I4B) THEN
     p = qb
     q = pb
-  ELSE
-    p = pb
-    q = qb
   END IF
 
   DO CONCURRENT(k1=2:p, k2=2:q, ii=1:dim1)
     ans(ii, offset + (q - 1) * (k1 - 2) + k2 - 1, 1) = &
-      (o1**(k1 - 1)) * (o2**k2) * dL1(ii, k1) * L2(ii, k2)
+      (o1**k1) * (o2**k2) * dL1(ii, k1) * L2(ii, k2)
 
     ans(ii, offset + (q - 1) * (k1 - 2) + k2 - 1, 2) = &
-      (o1**k1) * (o2**(k2 - 1)) * L1(ii, k1) * dL2(ii, k2)
+      (o1**k1) * (o2**k2) * L1(ii, k1) * dL2(ii, k2)
   END DO
 
 END SUBROUTINE CellBasisGradient_Quadrangle2_
@@ -888,13 +884,15 @@ ALLOCATE (L1(1:dim1, 0:maxP), L2(1:dim1, 0:maxQ), &
 
 CALL LobattoEvalAll_(n=maxP, x=xij(1, :), ans=L1, nrow=indx(1), ncol=indx(2))
 CALL LobattoEvalAll_(n=maxQ, x=xij(2, :), ans=L2, nrow=indx(1), ncol=indx(2))
+
 CALL LobattoGradientEvalAll_(n=maxP, x=xij(1, :), ans=dL1, nrow=indx(1), &
                              ncol=indx(2))
 CALL LobattoGradientEvalAll_(n=maxQ, x=xij(2, :), ans=dL2, nrow=indx(1), &
                              ncol=indx(2))
 
-CALL VertexBasisGradient_Quadrangle2_(L1=L1, L2=L2, dL1=dL1, dL2=dL2, &
-                            ans=ans, dim1=indx(1), dim2=indx(2), dim3=indx(3))
+CALL VertexBasisGradient_Quadrangle2_( &
+  L1=L1, L2=L2, dL1=dL1, dL2=dL2, ans=ans, dim1=indx(1), dim2=indx(2), &
+  dim3=indx(3))
 
 dim2 = indx(2)
 
@@ -908,7 +906,7 @@ IF (isok) THEN
 END IF
 
 ! Right Vertical Edge basis function
-isok = (qe1 .GE. 2_I4B)
+isok = (qe2 .GE. 2_I4B)
 IF (isok) THEN
   CALL RightVerticalEdgeBasisGradient_Quadrangle_( &
     order=qe2, L1=L1, L2=L2, dL1=dL1, dL2=dL2, ans=ans, dim1=indx(1), &
@@ -926,11 +924,11 @@ IF (isok) THEN
 END IF
 
 ! Left Vertical Edge basis function
-isok = (qe2 .GE. 2_I4B)
+isok = (qe1 .GE. 2_I4B)
 IF (isok) THEN
   CALL LeftVerticalEdgeBasisGradient_Quadrangle_( &
-    order=qe2, L1=L1, L2=L2, dL1=dL1, dL2=dL2, ans=ans, dim1=indx(1), &
-    dim2=indx(2), dim3=indx(3), orient=qe2Orient, offset=dim2)
+    order=qe1, L1=L1, L2=L2, dL1=dL1, dL2=dL2, ans=ans, dim1=indx(1), &
+    dim2=indx(2), dim3=indx(3), orient=qe1Orient, offset=dim2)
   dim2 = dim2 + indx(2)
 END IF
 
@@ -947,5 +945,9 @@ END IF
 
 DEALLOCATE (L1, L2, dL1, dL2)
 END PROCEDURE HeirarchicalBasisGradient_Quadrangle3_
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
 
 END SUBMODULE HierarchicalMethods
