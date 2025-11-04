@@ -27,12 +27,6 @@ CONTAINS
 !                                                             NodalVariable
 !----------------------------------------------------------------------------
 
-! MODULE PROCEDURE Nodal_Scalar_Constant
-! #define _DEFINEON_ Nodal
-! #include "./include/scalar_constant.F90"
-! #undef _DEFINEON_
-! END PROCEDURE Nodal_Scalar_Constant
-
 MODULE PROCEDURE Nodal_Scalar_Constant
 INTEGER(I4B) :: s(1)
 
@@ -46,12 +40,6 @@ END PROCEDURE Nodal_Scalar_Constant
 !----------------------------------------------------------------------------
 !                                                             NodalVariable
 !----------------------------------------------------------------------------
-
-! MODULE PROCEDURE Nodal_Scalar_Space
-! #define _DEFINEON_ Nodal
-! #include "./include/scalar_space.F90"
-! #undef _DEFINEON_
-! END PROCEDURE Nodal_Scalar_Space
 
 MODULE PROCEDURE Nodal_Scalar_Space
 INTEGER(I4B) :: s(1)
@@ -67,11 +55,19 @@ END PROCEDURE Nodal_Scalar_Space
 !                                                             NodalVariable
 !----------------------------------------------------------------------------
 
-! MODULE PROCEDURE Nodal_Scalar_Time
-! #define _DEFINEON_ Nodal
-! #include "./include/scalar_time.F90"
-! #undef _DEFINEON_
-! END PROCEDURE Nodal_Scalar_Time
+MODULE PROCEDURE Nodal_Scalar_Space2
+INTEGER(I4B) :: s(1)
+
+s(1) = tsize
+CALL FEVariableInitiate(obj=obj, s=s, defineon=TypeFEVariableOpt%nodal, &
+                        vartype=TypeFEVariableOpt%space, &
+                        rank=TypeFEVariableOpt%scalar, len=s(1))
+obj%val(1:obj%len) = 0.0_DFP
+END PROCEDURE Nodal_Scalar_Space2
+
+!----------------------------------------------------------------------------
+!                                                             NodalVariable
+!----------------------------------------------------------------------------
 
 MODULE PROCEDURE Nodal_Scalar_Time
 INTEGER(I4B) :: s(1)
@@ -86,12 +82,6 @@ END PROCEDURE Nodal_Scalar_Time
 !----------------------------------------------------------------------------
 !                                                             NodalVariable
 !----------------------------------------------------------------------------
-
-! MODULE PROCEDURE Nodal_Scalar_SpaceTime
-! #define _DEFINEON_ Nodal
-! #include "./include/scalar_space_time.F90"
-! #undef _DEFINEON_
-! END PROCEDURE Nodal_Scalar_SpaceTime
 
 MODULE PROCEDURE Nodal_Scalar_SpaceTime
 INTEGER(I4B) :: s(2), tsize, ii, jj, kk
@@ -115,12 +105,6 @@ END PROCEDURE Nodal_Scalar_SpaceTime
 !                                                             NodalVariable
 !----------------------------------------------------------------------------
 
-! MODULE PROCEDURE Nodal_Scalar_SpaceTime2
-! #define _DEFINEON_ Nodal
-! #include "./include/scalar_space_time2.F90"
-! #undef _DEFINEON_
-! END PROCEDURE Nodal_Scalar_SpaceTime2
-
 MODULE PROCEDURE Nodal_Scalar_SpaceTime2
 INTEGER(I4B) :: tsize
 
@@ -135,12 +119,6 @@ END PROCEDURE Nodal_Scalar_SpaceTime2
 !----------------------------------------------------------------------------
 !                                                             NodalVariable
 !----------------------------------------------------------------------------
-
-! MODULE PROCEDURE Nodal_Vector_Constant
-! #define _DEFINEON_ Nodal
-! #include "./include/vector_constant.F90"
-! #undef _DEFINEON_
-! END PROCEDURE Nodal_Vector_Constant
 
 MODULE PROCEDURE Nodal_Vector_Constant
 INTEGER(I4B) :: s(1), tsize
@@ -158,12 +136,6 @@ END PROCEDURE Nodal_Vector_Constant
 !----------------------------------------------------------------------------
 !                                                             NodalVariable
 !----------------------------------------------------------------------------
-
-! MODULE PROCEDURE Nodal_Vector_Space
-! #define _DEFINEON_ Nodal
-! #include "./include/vector_space.F90"
-! #undef _DEFINEON_
-! END PROCEDURE Nodal_Vector_Space
 
 MODULE PROCEDURE Nodal_Vector_Space
 INTEGER(I4B) :: s(2), tsize, ii, jj, cnt
@@ -188,12 +160,6 @@ END PROCEDURE Nodal_Vector_Space
 !                                                             NodalVariable
 !----------------------------------------------------------------------------
 
-! MODULE PROCEDURE Nodal_Vector_Space2
-! #define _DEFINEON_ Nodal
-! #include "./include/vector_space2.F90"
-! #undef _DEFINEON_
-! END PROCEDURE Nodal_Vector_Space2
-
 MODULE PROCEDURE Nodal_Vector_Space2
 INTEGER(I4B) :: tsize
 
@@ -208,12 +174,6 @@ END PROCEDURE Nodal_Vector_Space2
 !----------------------------------------------------------------------------
 !                                                             NodalVariable
 !----------------------------------------------------------------------------
-
-! MODULE PROCEDURE Nodal_Vector_Time
-! #define _DEFINEON_ Nodal
-! #include "./include/vector_time.F90"
-! #undef _DEFINEON_
-! END PROCEDURE Nodal_Vector_Time
 
 MODULE PROCEDURE Nodal_Vector_Time
 INTEGER(I4B) :: s(2), tsize, ii, jj, cnt
@@ -238,12 +198,6 @@ END PROCEDURE Nodal_Vector_Time
 !                                                             NodalVariable
 !----------------------------------------------------------------------------
 
-! MODULE PROCEDURE Nodal_Vector_Time2
-! #define _DEFINEON_ Nodal
-! #include "./include/vector_time2.F90"
-! #undef _DEFINEON_
-! END PROCEDURE Nodal_Vector_Time2
-
 MODULE PROCEDURE Nodal_Vector_Time2
 INTEGER(I4B) :: tsize
 
@@ -258,12 +212,6 @@ END PROCEDURE Nodal_Vector_Time2
 !----------------------------------------------------------------------------
 !                                                             NodalVariable
 !----------------------------------------------------------------------------
-
-! MODULE PROCEDURE Nodal_Vector_SpaceTime
-! #define _DEFINEON_ Nodal
-! #include "./include/vector_space_time.F90"
-! #undef _DEFINEON_
-! END PROCEDURE Nodal_Vector_SpaceTime
 
 MODULE PROCEDURE Nodal_Vector_SpaceTime
 INTEGER(I4B) :: s(3), tsize, ii, jj, kk, cnt
@@ -288,12 +236,6 @@ END PROCEDURE Nodal_Vector_SpaceTime
 !                                                             NodalVariable
 !----------------------------------------------------------------------------
 
-! MODULE PROCEDURE Nodal_Vector_SpaceTime2
-! #define _DEFINEON_ Nodal
-! #include "./include/vector_space_time2.F90"
-! #undef _DEFINEON_
-! END PROCEDURE Nodal_Vector_SpaceTime2
-
 MODULE PROCEDURE Nodal_Vector_SpaceTime2
 INTEGER(I4B) :: tsize
 
@@ -307,12 +249,6 @@ END PROCEDURE Nodal_Vector_SpaceTime2
 !----------------------------------------------------------------------------
 !                                                             NodalVariable
 !----------------------------------------------------------------------------
-
-! MODULE PROCEDURE Nodal_Matrix_Constant
-! #define _DEFINEON_ Nodal
-! #include "./include/matrix_constant.F90"
-! #undef _DEFINEON_
-! END PROCEDURE Nodal_Matrix_Constant
 
 MODULE PROCEDURE Nodal_Matrix_Constant
 INTEGER(I4B) :: s(2), tsize, ii, jj, cnt
@@ -338,12 +274,6 @@ END PROCEDURE Nodal_Matrix_Constant
 !                                                             NodalVariable
 !----------------------------------------------------------------------------
 
-! MODULE PROCEDURE Nodal_Matrix_Constant2
-! #define _DEFINEON_ Nodal
-! #include "./include/matrix_constant2.F90"
-! #undef _DEFINEON_
-! END PROCEDURE Nodal_Matrix_Constant2
-
 MODULE PROCEDURE Nodal_Matrix_Constant2
 INTEGER(I4B) :: tsize
 
@@ -356,12 +286,6 @@ END PROCEDURE Nodal_Matrix_Constant2
 !----------------------------------------------------------------------------
 !                                                             NodalVariable
 !----------------------------------------------------------------------------
-
-! MODULE PROCEDURE Nodal_Matrix_Space
-! #define _DEFINEON_ Nodal
-! #include "./include/matrix_space.F90"
-! #undef _DEFINEON_
-! END PROCEDURE Nodal_Matrix_Space
 
 MODULE PROCEDURE Nodal_Matrix_Space
 INTEGER(I4B) :: s(3), tsize, ii, jj, kk, cnt
@@ -387,12 +311,6 @@ END PROCEDURE Nodal_Matrix_Space
 !                                                             NodalVariable
 !----------------------------------------------------------------------------
 
-! MODULE PROCEDURE Nodal_Matrix_Space2
-! #define _DEFINEON_ Nodal
-! #include "./include/matrix_space2.F90"
-! #undef _DEFINEON_
-! END PROCEDURE Nodal_Matrix_Space2
-
 MODULE PROCEDURE Nodal_Matrix_Space2
 INTEGER(I4B) :: tsize
 
@@ -406,12 +324,6 @@ END PROCEDURE Nodal_Matrix_Space2
 !----------------------------------------------------------------------------
 !                                                             NodalVariable
 !----------------------------------------------------------------------------
-
-! MODULE PROCEDURE Nodal_Matrix_Time
-! #define _DEFINEON_ Nodal
-! #include "./include/matrix_time.F90"
-! #undef _DEFINEON_
-! END PROCEDURE Nodal_Matrix_Time
 
 MODULE PROCEDURE Nodal_Matrix_Time
 INTEGER(I4B) :: s(3), tsize, ii, jj, kk, cnt
@@ -438,12 +350,6 @@ END PROCEDURE Nodal_Matrix_Time
 !                                                             NodalVariable
 !----------------------------------------------------------------------------
 
-! MODULE PROCEDURE Nodal_Matrix_Time2
-! #define _DEFINEON_ Nodal
-! #include "./include/matrix_time2.F90"
-! #undef _DEFINEON_
-! END PROCEDURE Nodal_Matrix_Time2
-
 MODULE PROCEDURE Nodal_Matrix_Time2
 INTEGER(I4B) :: tsize
 
@@ -459,12 +365,6 @@ END PROCEDURE Nodal_Matrix_Time2
 !----------------------------------------------------------------------------
 !                                                             NodalVariable
 !----------------------------------------------------------------------------
-
-! MODULE PROCEDURE Nodal_Matrix_SpaceTime
-! #define _DEFINEON_ Nodal
-! #include "./include/matrix_space_time.F90"
-! #undef _DEFINEON_
-! END PROCEDURE Nodal_Matrix_SpaceTime
 
 MODULE PROCEDURE Nodal_Matrix_SpaceTime
 INTEGER(I4B) :: s(4), tsize, ii, jj, kk, ll, cnt
@@ -492,12 +392,6 @@ END PROCEDURE Nodal_Matrix_SpaceTime
 !----------------------------------------------------------------------------
 !                                                              NodalVariable
 !----------------------------------------------------------------------------
-
-! MODULE PROCEDURE Nodal_Matrix_SpaceTime2
-! #define _DEFINEON_ Nodal
-! #include "./include/matrix_space_time2.F90"
-! #undef _DEFINEON_
-! END PROCEDURE Nodal_Matrix_SpaceTime2
 
 MODULE PROCEDURE Nodal_Matrix_SpaceTime2
 INTEGER(I4B) :: tsize
