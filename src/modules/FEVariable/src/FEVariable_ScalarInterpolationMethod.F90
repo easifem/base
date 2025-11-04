@@ -40,11 +40,8 @@ PUBLIC :: GetInterpolation_
 ! summary: Get interpolation of scalar, constant
 
 INTERFACE GetInterpolation_
- MODULE PURE SUBROUTINE ScalarConstantGetInterpolation_1(obj, rank, vartype, &
-                                                          N, nns, nips, &
-                                                          scale, &
-                                                          addContribution, &
-                                                          ans, tsize)
+  MODULE PURE SUBROUTINE ScalarConstantGetInterpolation_1( &
+    obj, rank, vartype, N, nns, nips, scale, addContribution, ans, tsize)
     CLASS(FEVariable_), INTENT(IN) :: obj
     TYPE(FEVariableScalar_), INTENT(IN) :: rank
     TYPE(FEVariableConstant_), INTENT(IN) :: vartype
@@ -76,11 +73,8 @@ END INTERFACE GetInterpolation_
 ! summary: Get interpolation of scalar, constant
 
 INTERFACE GetInterpolation_
- MODULE PURE SUBROUTINE ScalarConstantGetInterpolation_2(obj, rank, vartype, &
-                                                          N, nns, nips, &
-                                                          scale, &
-                                                          addContribution, &
-                                                          timeIndx, ans)
+  MODULE PURE SUBROUTINE ScalarConstantGetInterpolation_2( &
+    obj, rank, vartype, N, nns, nips, scale, addContribution, timeIndx, ans)
     CLASS(FEVariable_), INTENT(IN) :: obj
     TYPE(FEVariableScalar_), INTENT(IN) :: rank
     TYPE(FEVariableConstant_), INTENT(IN) :: vartype
@@ -112,11 +106,9 @@ END INTERFACE GetInterpolation_
 ! summary: Get interpolation of scalar, constant
 
 INTERFACE GetInterpolation_
- MODULE PURE SUBROUTINE ScalarConstantGetInterpolation_3(obj, rank, vartype, &
-                                                          N, nns, spaceIndx, &
-                                                          timeIndx, scale, &
-                                                          addContribution, &
-                                                          ans)
+  MODULE PURE SUBROUTINE ScalarConstantGetInterpolation_3( &
+    obj, rank, vartype, N, nns, spaceIndx, timeIndx, scale, addContribution, &
+    ans)
     CLASS(FEVariable_), INTENT(IN) :: obj
     TYPE(FEVariableScalar_), INTENT(IN) :: rank
     TYPE(FEVariableConstant_), INTENT(IN) :: vartype
@@ -148,11 +140,8 @@ END INTERFACE GetInterpolation_
 ! summary: Get interpolation of scalar, space
 
 INTERFACE GetInterpolation_
-  MODULE PURE SUBROUTINE ScalarSpaceGetInterpolation_1(obj, rank, vartype, &
-                                                       N, nns, nips, &
-                                                       scale, &
-                                                       addContribution, &
-                                                       ans, tsize)
+  MODULE PURE SUBROUTINE ScalarSpaceGetInterpolation_1( &
+    obj, rank, vartype, N, nns, nips, scale, addContribution, ans, tsize)
     CLASS(FEVariable_), INTENT(IN) :: obj
     TYPE(FEVariableScalar_), INTENT(IN) :: rank
     TYPE(FEVariableSpace_), INTENT(IN) :: vartype
@@ -184,11 +173,8 @@ END INTERFACE GetInterpolation_
 ! summary: Get interpolation of scalar, space
 
 INTERFACE GetInterpolation_
-  MODULE PURE SUBROUTINE ScalarSpaceGetInterpolation_2(obj, rank, vartype, &
-                                                       N, nns, nips, &
-                                                       scale, &
-                                                       addContribution, &
-                                                       timeIndx, ans)
+  MODULE PURE SUBROUTINE ScalarSpaceGetInterpolation_2( &
+    obj, rank, vartype, N, nns, nips, scale, addContribution, timeIndx, ans)
     CLASS(FEVariable_), INTENT(IN) :: obj
     TYPE(FEVariableScalar_), INTENT(IN) :: rank
     TYPE(FEVariableSpace_), INTENT(IN) :: vartype
@@ -220,11 +206,9 @@ END INTERFACE GetInterpolation_
 ! summary: Get interpolation of scalar, space
 
 INTERFACE GetInterpolation_
-  MODULE PURE SUBROUTINE ScalarSpaceGetInterpolation_3(obj, rank, vartype, &
-                                                       N, nns, spaceIndx, &
-                                                       timeIndx, scale, &
-                                                       addContribution, &
-                                                       ans)
+  MODULE PURE SUBROUTINE ScalarSpaceGetInterpolation_3( &
+    obj, rank, vartype, N, nns, spaceIndx, timeIndx, scale, addContribution, &
+    ans)
     CLASS(FEVariable_), INTENT(IN) :: obj
     TYPE(FEVariableScalar_), INTENT(IN) :: rank
     TYPE(FEVariableSpace_), INTENT(IN) :: vartype
@@ -254,14 +238,9 @@ END INTERFACE GetInterpolation_
 ! summary: Get interpolation of scalar, space-time
 
 INTERFACE GetInterpolation_
-  MODULE PURE SUBROUTINE ScalarSpaceTimeGetInterpolation_1(obj, rank, &
-                                                           vartype, &
-                                                           N, nns, nips, &
-                                                           T, nnt, &
-                                                           scale, &
-                                                           addContribution, &
-                                                           ans, tsize, &
-                                                           timeIndx)
+  MODULE PURE SUBROUTINE ScalarSpaceTimeGetInterpolation_1( &
+    obj, rank, vartype, N, nns, nips, T, nnt, scale, addContribution, &
+    ans, tsize, timeIndx)
     CLASS(FEVariable_), INTENT(IN) :: obj
     TYPE(FEVariableScalar_), INTENT(IN) :: rank
     TYPE(FEVariableSpaceTime_), INTENT(IN) :: vartype
@@ -310,13 +289,9 @@ END INTERFACE GetInterpolation_
 ! END DO
 
 INTERFACE GetInterpolation_
-  MODULE PURE SUBROUTINE ScalarSpaceTimeGetInterpolation_2(obj, rank, &
-                                                           vartype, &
-                                                           N, nns, nips, &
-                                                           T, nnt, &
-                                                           scale, &
-                                                           addContribution, &
-                                                           timeIndx, ans)
+  MODULE PURE SUBROUTINE ScalarSpaceTimeGetInterpolation_2( &
+    obj, rank, vartype, N, nns, nips, T, nnt, scale, addContribution, &
+    timeIndx, ans)
     CLASS(FEVariable_), INTENT(IN) :: obj
     TYPE(FEVariableScalar_), INTENT(IN) :: rank
     TYPE(FEVariableSpaceTime_), INTENT(IN) :: vartype
@@ -352,14 +327,9 @@ END INTERFACE GetInterpolation_
 ! summary: Get interpolation of scalar, space-time
 
 INTERFACE GetInterpolation_
-  MODULE PURE SUBROUTINE ScalarSpaceTimeGetInterpolation_3(obj, rank, &
-                                                           vartype, &
-                                                           N, nns, &
-                                                           spaceIndx, &
-                                                           timeIndx, T, nnt, &
-                                                           scale, &
-                                                           addContribution, &
-                                                           ans)
+  MODULE PURE SUBROUTINE ScalarSpaceTimeGetInterpolation_3( &
+    obj, rank, vartype, N, nns, spaceIndx, timeIndx, T, nnt, scale, &
+    addContribution, ans)
     CLASS(FEVariable_), INTENT(IN) :: obj
     TYPE(FEVariableScalar_), INTENT(IN) :: rank
     TYPE(FEVariableSpaceTime_), INTENT(IN) :: vartype

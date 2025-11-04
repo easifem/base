@@ -152,6 +152,9 @@ CASE (TypeFEVariableOpt%nodal)
                                 nns=nns, nips=nips, val=obj%val, &
                                 valStart=valStart, ansStart=ansStart)
 
+  ans%s(1) = nips
+  ans%len = nips
+
 CASE (TypeFEVariableOpt%quadrature)
   DO ips = 1, nips
     ans%val(ansStart + ips) = ans%val(ansStart + ips) + scale * obj%val(ips)

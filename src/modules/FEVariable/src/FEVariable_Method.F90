@@ -22,16 +22,16 @@ USE FEVariable_DivisionMethod
 USE FEVariable_DotProductMethod
 USE FEVariable_GetMethod
 USE FEVariable_IOMethod
-USE FEVariable_InterpolationMethod
-USE FEVariable_MatrixInterpolationMethod
 USE FEVariable_MeanMethod
 USE FEVariable_MultiplicationMethod
 USE FEVariable_NodalVariableMethod
 USE FEVariable_QuadratureVariableMethod
-USE FEVariable_ScalarInterpolationMethod
 USE FEVariable_SetMethod
 USE FEVariable_SubtractionMethod
 USE FEVariable_UnaryMethod
+USE FEVariable_ScalarInterpolationMethod
 USE FEVariable_VectorInterpolationMethod
+USE FEVariable_MatrixInterpolationMethod
+USE FEVariable_InterpolationMethod
 
 END MODULE FEVariable_Method

@@ -34,10 +34,8 @@ PUBLIC :: GetInterpolation_
 ! summary: Get interpolation of Matrix, space-time
 
 INTERFACE GetInterpolation_
-  MODULE PURE SUBROUTINE FEVariableGetInterpolation_1(obj, N, nns, nips, &
-                                                      scale, &
-                                                      addContribution, &
-                                                      ans)
+  MODULE PURE SUBROUTINE FEVariableGetInterpolation_1( &
+    obj, N, nns, nips, scale, addContribution, ans)
     CLASS(FEVariable_), INTENT(IN) :: obj
     REAL(DFP), INTENT(IN) :: N(:, :)
     !! shape functions data, N(I, ips) : I is node or dof number
@@ -65,10 +63,8 @@ END INTERFACE GetInterpolation_
 ! summary: Get interpolation of Matrix, space-time
 
 INTERFACE GetInterpolation_
-  MODULE PURE SUBROUTINE FEVariableGetInterpolation_2(obj, N, nns, nips, &
-                                                      T, nnt, scale, &
-                                                      addContribution, &
-                                                      timeIndx, ans)
+  MODULE PURE SUBROUTINE FEVariableGetInterpolation_2( &
+    obj, N, nns, nips, T, nnt, scale, addContribution, timeIndx, ans)
     CLASS(FEVariable_), INTENT(IN) :: obj
     REAL(DFP), INTENT(IN) :: N(:, :)
     !! shape functions data, N(I, ips) : I is node or dof number

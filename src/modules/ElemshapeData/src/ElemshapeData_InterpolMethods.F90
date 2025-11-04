@@ -59,12 +59,16 @@ PUBLIC :: Interpolation
 !                                we do not have time shape function for
 !                                all quadrature points in time in obj)
 
-INTERFACE GetInterpolation
+INTERFACE
   MODULE PURE SUBROUTINE GetInterpolation1(obj, ans, val)
     CLASS(ElemshapeData_), INTENT(IN) :: obj
     TYPE(FEVariable_), INTENT(INOUT) :: ans
     TYPE(FEVariable_), INTENT(IN) :: val
   END SUBROUTINE GetInterpolation1
+END INTERFACE
+
+INTERFACE GetInterpolation
+  MODULE PROCEDURE GetInterpolation1
 END INTERFACE GetInterpolation
 
 !----------------------------------------------------------------------------
@@ -87,12 +91,16 @@ END INTERFACE GetInterpolation
 ! - the val can be defined on quadrature (do nothing) or nodal (interpol)
 ! - The `vartype` of val can be constant, space, time, spacetime
 
-INTERFACE GetInterpolation_
+INTERFACE
   MODULE PURE SUBROUTINE GetInterpolation_1(obj, ans, val)
     CLASS(ElemshapeData_), INTENT(IN) :: obj
     TYPE(FEVariable_), INTENT(INOUT) :: ans
     TYPE(FEVariable_), INTENT(IN) :: val
   END SUBROUTINE GetInterpolation_1
+END INTERFACE
+
+INTERFACE GetInterpolation_
+  MODULE PROCEDURE GetInterpolation_1
 END INTERFACE GetInterpolation_
 
 !----------------------------------------------------------------------------
@@ -115,7 +123,7 @@ END INTERFACE GetInterpolation_
 ! - the val can be defined on quadrature (do nothing) or nodal (interpol)
 ! - The `vartype` of val can be constant, space, time, spacetime
 !
-INTERFACE GetInterpolation_
+INTERFACE
   MODULE PURE SUBROUTINE GetInterpolation_1a(obj, ans, val, scale, &
                                              addContribution)
     CLASS(ElemshapeData_), INTENT(IN) :: obj
@@ -124,6 +132,10 @@ INTERFACE GetInterpolation_
     REAL(DFP), INTENT(IN) :: scale
     LOGICAL, INTENT(IN) :: addContribution
   END SUBROUTINE GetInterpolation_1a
+END INTERFACE
+
+INTERFACE GetInterpolation_
+  MODULE PROCEDURE GetInterpolation_1a
 END INTERFACE GetInterpolation_
 
 !----------------------------------------------------------------------------
@@ -150,12 +162,16 @@ END INTERFACE GetInterpolation_
 !
 ! - ans will Quadrature and SpaceTime
 
-INTERFACE GetInterpolation
+INTERFACE
   MODULE PURE SUBROUTINE GetInterpolation2(obj, ans, val)
     CLASS(STElemshapeData_), INTENT(IN) :: obj(:)
     TYPE(FEVariable_), INTENT(INOUT) :: ans
     TYPE(FEVariable_), INTENT(IN) :: val
   END SUBROUTINE GetInterpolation2
+END INTERFACE
+
+INTERFACE GetInterpolation
+  MODULE PROCEDURE GetInterpolation2
 END INTERFACE GetInterpolation
 
 !----------------------------------------------------------------------------
@@ -178,12 +194,16 @@ END INTERFACE GetInterpolation
 ! - the val can be defined on quadrature (do nothing) or nodal (interpol)
 ! - The `vartype` of val can be constant, space, time, spacetime
 !
-INTERFACE GetInterpolation_
+INTERFACE
   MODULE PURE SUBROUTINE GetInterpolation_2(obj, ans, val)
     CLASS(STElemshapeData_), INTENT(IN) :: obj(:)
     TYPE(FEVariable_), INTENT(INOUT) :: ans
     TYPE(FEVariable_), INTENT(IN) :: val
   END SUBROUTINE GetInterpolation_2
+END INTERFACE
+
+INTERFACE GetInterpolation_
+  MODULE PROCEDURE GetInterpolation_2
 END INTERFACE GetInterpolation_
 
 !----------------------------------------------------------------------------
@@ -206,7 +226,7 @@ END INTERFACE GetInterpolation_
 ! - the val can be defined on quadrature (do nothing) or nodal (interpol)
 ! - The `vartype` of val can be constant, space, time, spacetime
 
-INTERFACE GetInterpolation_
+INTERFACE
   MODULE PURE SUBROUTINE GetInterpolation_2a(obj, ans, val, scale, &
                                              addContribution)
     CLASS(STElemshapeData_), INTENT(IN) :: obj(:)
@@ -215,10 +235,14 @@ INTERFACE GetInterpolation_
     REAL(DFP), INTENT(IN) :: scale
     LOGICAL, INTENT(IN) :: addContribution
   END SUBROUTINE GetInterpolation_2a
+END INTERFACE
+
+INTERFACE GetInterpolation_
+  MODULE PROCEDURE GetInterpolation_2a
 END INTERFACE GetInterpolation_
 
 !----------------------------------------------------------------------------
-!                                                       Interpolation@Methods
+!                                                      Interpolation@Methods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
