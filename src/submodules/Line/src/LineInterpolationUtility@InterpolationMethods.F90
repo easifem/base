@@ -391,7 +391,7 @@ SUBROUTINE handle_increasing
   !! layout INCREASING
   IF (layout(1:1) .EQ. "I") THEN
     DO ii = 1, nrow
-      CALL HeapSort(ans(ii, :))
+      CALL HeapSort(ans(ii, 1:ncol))
     END DO
   END IF
 END SUBROUTINE
