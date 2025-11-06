@@ -42,6 +42,11 @@ SELECT CASE (quadType)
 CASE (qpopt%GaussLegendre, qpopt%GaussChebyshev, &
       qpopt%GaussJacobi, qpopt%GaussUltraspherical)
   ans = 1_I4B + INT(order / 2, kind=I4B)
+CASE (qpopt%GaussLegendreRadauRight, qpopt%GaussLegendreRadauLeft, &
+      qpopt%GaussChebyshevRadauLeft, qpopt%GaussChebyshevRadauRight, &
+      qpopt%GaussJacobiRadauLeft, qpopt%GaussJacobiRadauRight, &
+      qpopt%GaussUltraSphericalRadauLeft, qpopt%GaussUltraSphericalRadauRight)
+  ans = 2_I4B + INT((order - 1) / 2, kind=I4B)
 CASE DEFAULT
   ans = 2_I4B + INT(order / 2, kind=I4B)
 END SELECT
