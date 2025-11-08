@@ -473,7 +473,7 @@ REAL(DFP) :: Ce(test%nsd * test%nsd, trial%nsd * trial%nsd), &
              BMat1(test%nsd * test%nns, test%nsd * test%nsd), &
              BMat2(trial%nsd * trial%nns, trial%nsd * trial%nsd)
 INTEGER(I4B) :: nips, nns1, nns2, ii, jj, ips, nsd
-INTEGER(I4B), ALLOCATABLE :: indx(:, :)
+INTEGER(I4B) :: indx(3, 3)
 
 nns1 = SIZE(test%N, 1)
 nns2 = SIZE(trial%N, 1)
