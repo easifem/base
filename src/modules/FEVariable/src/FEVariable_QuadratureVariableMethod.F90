@@ -226,7 +226,6 @@ END INTERFACE QuadratureVariable
 ! summary: Create quadrature variable, which is Vector, Space
 
 INTERFACE
-
   MODULE PURE FUNCTION Quadrature_Vector_Space2(val, rank, vartype, s) &
     RESULT(obj)
     TYPE(FEVariable_) :: obj
@@ -239,6 +238,28 @@ END INTERFACE
 
 INTERFACE QuadratureVariable
   MODULE PROCEDURE Quadrature_Vector_Space2
+END INTERFACE QuadratureVariable
+
+!----------------------------------------------------------------------------
+!                                      QuadratureVariable@ConstructorMethods
+!----------------------------------------------------------------------------
+
+!> author: Shion Shimizu
+! date: 2025-11-05
+! summary:  Create quadrature variable, which is Vector, Space
+
+INTERFACE
+  MODULE PURE FUNCTION Quadrature_Vector_Space3(nrow, ncol, rank, vartype) &
+    RESULT(obj)
+    TYPE(FEVariable_) :: obj
+    INTEGER(I4B), INTENT(IN) :: nrow, ncol
+    TYPE(FEVariableVector_), INTENT(IN) :: rank
+    TYPE(FEVariableSpace_), INTENT(IN) :: vartype
+  END FUNCTION Quadrature_Vector_Space3
+END INTERFACE
+
+INTERFACE QuadratureVariable
+  MODULE PROCEDURE Quadrature_Vector_Space3
 END INTERFACE QuadratureVariable
 
 !----------------------------------------------------------------------------

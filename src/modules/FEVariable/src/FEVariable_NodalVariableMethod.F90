@@ -242,6 +242,28 @@ END INTERFACE NodalVariable
 !                                           NodalVariable@ConstructorMethods
 !----------------------------------------------------------------------------
 
+!> author: Shion Shimizu
+! date: 2025-11-05
+! summary:  Create nodal variable, which is vector, Space
+
+INTERFACE
+  MODULE PURE FUNCTION Nodal_Vector_Space3(nrow, ncol, rank, vartype) &
+    RESULT(obj)
+    TYPE(FEVariable_) :: obj
+    INTEGER(I4B), INTENT(IN) :: nrow, ncol
+    TYPE(FEVariableVector_), INTENT(IN) :: rank
+    TYPE(FEVariableSpace_), INTENT(IN) :: vartype
+  END FUNCTION Nodal_Vector_Space3
+END INTERFACE
+
+INTERFACE NodalVariable
+  MODULE PROCEDURE Nodal_Vector_Space3
+END INTERFACE NodalVariable
+
+!----------------------------------------------------------------------------
+!                                           NodalVariable@ConstructorMethods
+!----------------------------------------------------------------------------
+
 !> author: Vikas Sharma, Ph. D.
 ! date: 2021-12-10
 ! update: 2021-12-10
