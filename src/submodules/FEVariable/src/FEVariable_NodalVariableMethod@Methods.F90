@@ -172,6 +172,24 @@ CALL FEVariableInitiate(obj=obj, s=s, defineon=TypeFEVariableOpt%nodal, &
 END PROCEDURE Nodal_Vector_Space2
 
 !----------------------------------------------------------------------------
+!                                                               NodalVariable
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE Nodal_Vector_Space3
+INTEGER(I4B) :: s(2), tsize
+
+s(1) = nrow
+s(2) = ncol
+tsize = s(1) * s(2)
+
+CALL FEVariableInitiate(obj=obj, s=s, defineon=TypeFEVariableOpt%nodal, &
+                        vartype=TypeFEVariableOpt%space, &
+                        rank=TypeFEVariableOpt%vector, len=tsize)
+
+obj%val(1:obj%len) = 0.0_DFP
+END PROCEDURE Nodal_Vector_Space3
+
+!----------------------------------------------------------------------------
 !                                                             NodalVariable
 !----------------------------------------------------------------------------
 
