@@ -256,6 +256,7 @@ MODULE PROCEDURE MassMatrix2_
 REAL(DFP) :: realval(trial%nips)
 REAL(DFP), PARAMETER :: one = 1.0_DFP
 INTEGER(I4B) :: ips, ii, jj
+LOGICAL(LGT) :: isopt
 
 nrow = test%nns
 ncol = trial%nns
@@ -263,14 +264,15 @@ realval = 0.0_DFP
 CALL GetInterpolation_(obj=trial, ans=realval, val=rho, tsize=ii)
 realval = trial%js * trial%ws * trial%thickness * realval
 
-DO ips = 1, SIZE(realval)
+DO ips = 1, test%nips
   CALL OuterProd_(a=test%N(1:nrow, ips), &
                   b=trial%N(1:ncol, ips), &
                   nrow=ii, ncol=jj, ans=ans, scale=realval(ips), &
                   anscoeff=one)
 END DO
 
-IF (PRESENT(opt)) THEN
+isopt = PRESENT(opt)
+IF (isopt) THEN
   CALL MakeDiagonalCopies_(mat=ans, ncopy=opt, nrow=nrow, ncol=ncol)
   nrow = opt * nrow
   ncol = opt * ncol
