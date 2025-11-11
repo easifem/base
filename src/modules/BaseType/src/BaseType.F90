@@ -1113,7 +1113,7 @@ TYPE :: FEVariable_
   !! Scalar, spaceTime: 2
   !! Vector, constant: 1
   !! Vector, space: 2
-  !! Vector, time: 2
+  !! Vector, time: 3
   !! Vector, spaceTime: 3
   !! Matrix, constant: 2
   !! Matrix, space: 3
