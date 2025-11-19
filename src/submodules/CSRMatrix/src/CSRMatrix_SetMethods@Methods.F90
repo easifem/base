@@ -20,7 +20,15 @@
 ! summary: It contains method for setting values in [[CSRMatrix_]]
 
 SUBMODULE(CSRMatrix_SetMethods) Methods
-USE BaseMethod
+USE GlobalData, ONLY: FMT_NODES, FMT_DOF, NodesToDOF, DofToNodes
+USE DOF_Method, ONLY: GetIndex, GetNodeLoc, OPERATOR(.tdof.)
+USE CSRMatrix_GetMethods, ONLY: OPERATOR(.StorageFMT.)
+USE ConvertUtility, ONLY: Convert
+USE CSRSparsity_Method, ONLY: CSR_SetIA => SetIA, CSR_SetJA => SetJA
+USE InputUtility, ONLY: Input
+USE F95_BLAS, ONLY: Scal, Copy
+USE ReallocateUtility, ONLY: Reallocate
+
 IMPLICIT NONE
 CONTAINS
 
@@ -41,8 +49,8 @@ MODULE PROCEDURE obj_set0
 INTEGER(I4B), ALLOCATABLE :: row(:), col(:)
 INTEGER(I4B) :: ii, jj, kk
 
-row = getIndex(obj=obj%csr%idof, nodeNum=nodenum)
-col = getIndex(obj=obj%csr%jdof, nodeNum=nodenum)
+row = GetIndex(obj=obj%csr%idof, nodeNum=nodenum)
+col = GetIndex(obj=obj%csr%jdof, nodeNum=nodenum)
 DO ii = 1, SIZE(row)
   DO kk = 1, SIZE(col)
     DO jj = obj%csr%IA(row(ii)), obj%csr%IA(row(ii) + 1) - 1
@@ -72,14 +80,14 @@ CASE (FMT_NODES)
     m2 = VALUE
   ELSE
     CALL Convert(From=VALUE, To=m2, Conversion=NodesToDOF, &
-      & nns=SIZE(nodenum), tDOF=tdof)
+                 nns=SIZE(nodenum), tDOF=tdof)
   END IF
 CASE (FMT_DOF)
   IF ((obj.StorageFMT.1) .EQ. FMT_DOF) THEN
     m2 = VALUE
   ELSE
     CALL Convert(From=VALUE, To=m2, Conversion=DofToNodes, &
-      & nns=SIZE(nodenum), tDOF=tdof)
+                 nns=SIZE(nodenum), tDOF=tdof)
   END IF
 END SELECT
 CALL Set(obj=obj, nodenum=nodenum, VALUE=m2)
@@ -378,9 +386,9 @@ END PROCEDURE obj_set14
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE obj_set15
-CALL COPY(Y=obj%A, X=VALUE%A)
+CALL Copy(Y=obj%A, X=VALUE%A)
 IF (PRESENT(scale)) THEN
-  CALL SCAL(X=obj%A, A=scale)
+  CALL Scal(X=obj%A, A=scale)
 END IF
 END PROCEDURE obj_set15
 
@@ -389,7 +397,7 @@ END PROCEDURE obj_set15
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE obj_SetIA
-CALL SetIA(obj%csr, irow, VALUE)
+CALL CSR_SetIA(obj=obj%csr, irow=irow, VALUE=VALUE)
 END PROCEDURE obj_SetIA
 
 !----------------------------------------------------------------------------
@@ -397,7 +405,22 @@ END PROCEDURE obj_SetIA
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE obj_SetJA
-CALL SetJA(obj%csr, indx, VALUE)
+CALL CSR_SetJA(obj=obj%csr, indx=indx, VALUE=VALUE)
 END PROCEDURE obj_SetJA
+
+!----------------------------------------------------------------------------
+!                                                               SetToSTMatrix
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE obj_SetToSTMatrix1
+REAL(DFP) :: scale0
+INTEGER(I4B) :: istart_lhs, iend_lhs, istride_lhs
+INTEGER(I4B) :: istart_rhs, iend_rhs, istride_rhs
+
+scale0 = Input(default=1.0_DFP, option=scale)
+
+! obj%A(istart_lhs:iend_lhs:istride_lhs) = scale0 * VALUE(istart_rhs:iend_rhs:istride_rhs)
+
+END PROCEDURE obj_SetToSTMatrix1
 
 END SUBMODULE Methods

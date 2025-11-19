@@ -679,7 +679,7 @@ tsize = tsize - 1
 END PROCEDURE obj_GetNodeLoc_13
 
 !----------------------------------------------------------------------------
-!                                                               GetIndex
+!                                                                   GetIndex
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE obj_GetIndex1
@@ -691,7 +691,7 @@ CALL GetNodeLoc_(obj=obj, nodenum=nodenum, idof=Arange(1, tsize), &
 END PROCEDURE obj_GetIndex1
 
 !----------------------------------------------------------------------------
-!                                                               GetIndex_
+!                                                                   GetIndex_
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE obj_GetIndex_1
@@ -701,7 +701,7 @@ CALL GetNodeLoc_(obj=obj, nodenum=nodenum, idof=Arange(1, tsize), &
 END PROCEDURE obj_GetIndex_1
 
 !----------------------------------------------------------------------------
-!                                                                 GetIndex
+!                                                                   GetIndex
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE obj_GetIndex2
@@ -713,7 +713,7 @@ CALL GetNodeLoc_(obj=obj, nodenum=nodenum, ans=ans, tsize=tsize, &
 END PROCEDURE obj_GetIndex2
 
 !----------------------------------------------------------------------------
-!                                                                 GetIndex_
+!                                                                   GetIndex_
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE obj_GetIndex_2
