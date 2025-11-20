@@ -50,16 +50,40 @@ PUBLIC :: ConvertSafe
 !@endnote
 
 INTERFACE Convert
-  MODULE PURE SUBROUTINE convert_1(From, To, Conversion, nns, tdof)
-    REAL(DFP), INTENT(IN) :: From(:, :)
+  MODULE PURE SUBROUTINE obj_Convert_1(from, to, conversion, nns, tdof)
+    REAL(DFP), INTENT(IN) :: from(:, :)
     !! Matrix in one format
-    REAL(DFP), INTENT(INOUT), ALLOCATABLE :: To(:, :)
+    REAL(DFP), INTENT(INOUT), ALLOCATABLE :: to(:, :)
     !! Matrix is desired format
-    INTEGER(I4B), INTENT(IN) :: Conversion
-    !! `Conversion` can be `NodesToDOF` or `DOFToNodes`
+    INTEGER(I4B), INTENT(IN) :: conversion
+    !! `conversion` can be `NodestoDOF` or `DOFtoNodes`
     INTEGER(I4B), INTENT(IN) :: nns, tdof
-  END SUBROUTINE convert_1
+  END SUBROUTINE obj_Convert_1
 END INTERFACE Convert
+
+!----------------------------------------------------------------------------
+!                                                                 Convert_
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2025-11-20
+! summary: Like Convert_1, but no allocation
+
+INTERFACE Convert_
+ MODULE PURE SUBROUTINE obj_Convert1_(from, to, conversion, nns, tdof, nrow, &
+                                       ncol)
+    REAL(DFP), INTENT(IN) :: from(:, :)
+    !! Matrix in one format
+    REAL(DFP), INTENT(INOUT) :: to(:, :)
+    !! Matrix is desired format
+    INTEGER(I4B), INTENT(IN) :: conversion
+    !! `conversion` can be `NodestoDOF` or `DOFtoNodes`
+    INTEGER(I4B), INTENT(IN) :: nns, tdof
+    !! number of nodes in space and tdod
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+    !! number of data written in to
+  END SUBROUTINE obj_Convert1_
+END INTERFACE Convert_
 
 !----------------------------------------------------------------------------
 !                                                   Convert@ConvertMethods
@@ -87,15 +111,15 @@ END INTERFACE Convert
 !@endnote
 
 INTERFACE ConvertSafe
-  MODULE PURE SUBROUTINE convert_1_safe(From, To, Conversion, nns, tdof)
-    REAL(DFP), INTENT(IN) :: From(:, :)
+  MODULE PURE SUBROUTINE obj_ConvertSafe1(from, to, conversion, nns, tdof)
+    REAL(DFP), INTENT(IN) :: from(:, :)
     !! Matrix in one format
-    REAL(DFP), INTENT(INOUT) :: To(:, :)
+    REAL(DFP), INTENT(INOUT) :: to(:, :)
     !! Matrix is desired format
-    INTEGER(I4B), INTENT(IN) :: Conversion
-    !! `Conversion` can be `NodesToDOF` or `DOFToNodes`
+    INTEGER(I4B), INTENT(IN) :: conversion
+    !! `conversion` can be `NodestoDOF` or `DOFtoNodes`
     INTEGER(I4B), INTENT(IN) :: nns, tdof
-  END SUBROUTINE convert_1_safe
+  END SUBROUTINE obj_ConvertSafe1
 END INTERFACE ConvertSafe
 
 !----------------------------------------------------------------------------
@@ -111,20 +135,20 @@ END INTERFACE ConvertSafe
 !  This subroutine converts rank4 matrix to rank2 matrix
 ! This routine can be used in Space-Time FEM
 !
-! - The first and second dimension of From is spatial nodes
-! - The third and forth dimension of From is temporal nodes
+! - The first and second dimension of from is spatial nodes
+! - The third and forth dimension of from is temporal nodes
 !
-! - In this way `From(:, :, a, b)` denotes the `a,b` block matrix
+! - In this way `from(:, :, a, b)` denotes the `a,b` block matrix
 !
-! Format of To  matrix
+! Format of to  matrix
 !
 ! Contains the block matrix structure in 2D.
 
 INTERFACE Convert
-  MODULE PURE SUBROUTINE convert_2(From, To)
-    REAL(DFP), INTENT(IN) :: From(:, :, :, :)
-    REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: To(:, :)
-  END SUBROUTINE convert_2
+  MODULE PURE SUBROUTINE obj_Convert_2(from, to)
+    REAL(DFP), INTENT(IN) :: from(:, :, :, :)
+    REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: to(:, :)
+  END SUBROUTINE obj_Convert_2
 END INTERFACE Convert
 
 !----------------------------------------------------------------------------
@@ -136,11 +160,11 @@ END INTERFACE Convert
 ! summary:  convert without allocation
 
 INTERFACE Convert_
-  MODULE PURE SUBROUTINE convert2_(From, To, nrow, ncol)
-    REAL(DFP), INTENT(IN) :: From(:, :, :, :)
-    REAL(DFP), INTENT(INOUT) :: To(:, :)
+  MODULE PURE SUBROUTINE obj_Convert2_(from, to, nrow, ncol)
+    REAL(DFP), INTENT(IN) :: from(:, :, :, :)
+    REAL(DFP), INTENT(INOUT) :: to(:, :)
     INTEGER(I4B), INTENT(OUT) :: nrow, ncol
-  END SUBROUTINE convert2_
+  END SUBROUTINE obj_Convert2_
 END INTERFACE Convert_
 
 !----------------------------------------------------------------------------
@@ -153,12 +177,12 @@ END INTERFACE Convert_
 !
 
 INTERFACE Convert
-  MODULE PURE SUBROUTINE convert_3(From, To)
-    REAL(DFP), INTENT(IN) :: From(:, :, :, :, :, :)
+  MODULE PURE SUBROUTINE obj_Convert_3(from, to)
+    REAL(DFP), INTENT(IN) :: from(:, :, :, :, :, :)
   !! I, J, ii, jj, a, b
-    REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: To(:, :, :, :)
+    REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: to(:, :, :, :)
   !! I, J, a, b
-  END SUBROUTINE convert_3
+  END SUBROUTINE obj_Convert_3
 END INTERFACE Convert
 
 !----------------------------------------------------------------------------
@@ -170,11 +194,11 @@ END INTERFACE Convert
 ! summary:  convert without allocation
 
 INTERFACE Convert_
-  MODULE PURE SUBROUTINE convert3_(From, To, dim1, dim2, dim3, dim4)
-    REAL(DFP), INTENT(IN) :: From(:, :, :, :, :, :)
-    REAL(DFP), INTENT(INOUT) :: To(:, :, :, :)
+  MODULE PURE SUBROUTINE obj_Convert3_(from, to, dim1, dim2, dim3, dim4)
+    REAL(DFP), INTENT(IN) :: from(:, :, :, :, :, :)
+    REAL(DFP), INTENT(INOUT) :: to(:, :, :, :)
     INTEGER(I4B), INTENT(OUT) :: dim1, dim2, dim3, dim4
-  END SUBROUTINE convert3_
+  END SUBROUTINE obj_Convert3_
 END INTERFACE Convert_
 
 !----------------------------------------------------------------------------
