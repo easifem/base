@@ -24,6 +24,7 @@ PUBLIC :: Set
 PUBLIC :: SetSingleValue
 PUBLIC :: ASSIGNMENT(=)
 PUBLIC :: SetIA, SetJA
+PUBLIC :: SetToSTMatrix
 
 !----------------------------------------------------------------------------
 !                                                            Set@setMethod

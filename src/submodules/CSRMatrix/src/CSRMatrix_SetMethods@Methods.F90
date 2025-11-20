@@ -22,12 +22,15 @@
 SUBMODULE(CSRMatrix_SetMethods) Methods
 USE GlobalData, ONLY: FMT_NODES, FMT_DOF, NodesToDOF, DofToNodes
 USE DOF_Method, ONLY: GetIndex, GetNodeLoc, OPERATOR(.tdof.)
-USE CSRMatrix_GetMethods, ONLY: OPERATOR(.StorageFMT.)
 USE ConvertUtility, ONLY: Convert
 USE CSRSparsity_Method, ONLY: CSR_SetIA => SetIA, CSR_SetJA => SetJA
 USE InputUtility, ONLY: Input
 USE F95_BLAS, ONLY: Scal, Copy
 USE ReallocateUtility, ONLY: Reallocate
+
+USE CSRMatrix_GetMethods, ONLY: OPERATOR(.StorageFMT.), &
+                                CSRMatrix_GetColIndex => GetColIndex
+USE CSRMatrix_ConstructorMethods, ONLY: CSRMatrix_Size => Size
 
 IMPLICIT NONE
 CONTAINS
@@ -414,12 +417,36 @@ END PROCEDURE obj_SetJA
 
 MODULE PROCEDURE obj_SetToSTMatrix1
 REAL(DFP) :: scale0
-INTEGER(I4B) :: istart_lhs, iend_lhs, istride_lhs
-INTEGER(I4B) :: istart_rhs, iend_rhs, istride_rhs
+INTEGER(I4B) :: icol
+INTEGER(I4B) :: irow_rhs, trow_rhs, icol_rhs, colIndex_rhs(2), &
+                tcol_rhs
+INTEGER(I4B) :: irow_lhs, icol_lhs, colIndex_lhs(2), &
+                offset_row_lhs, offset_col_lhs
 
 scale0 = Input(default=1.0_DFP, option=scale)
 
-! obj%A(istart_lhs:iend_lhs:istride_lhs) = scale0 * VALUE(istart_rhs:iend_rhs:istride_rhs)
+trow_rhs = CSRMatrix_Size(obj=VALUE, dims=1)
+offset_row_lhs = (itimecompo - 1) * trow_rhs
+
+! start row loop
+DO irow_rhs = 1, trow_rhs
+  ! Get the starting and ending data index for irow in value
+  colIndex_rhs = CSRMatrix_GetColIndex(obj=VALUE, irow=irow_rhs)
+  tcol_rhs = colIndex_rhs(2) - colIndex_rhs(1) + 1
+
+  ! Calculate the column offset for lhs
+  offset_col_lhs = (jtimecompo - 1) * tcol_rhs
+
+  irow_lhs = offset_row_lhs + irow_rhs
+  colIndex_lhs = CSRMatrix_GetColIndex(obj=obj, irow=irow_lhs)
+
+  DO icol = 1, tcol_rhs
+    icol_rhs = colIndex_rhs(1) + icol - 1
+    icol_lhs = colIndex_lhs(1) + offset_col_lhs + icol - 1
+
+    obj%A(icol_lhs) = scale0 * VALUE%A(icol_rhs)
+  END DO
+END DO
 
 END PROCEDURE obj_SetToSTMatrix1
 
