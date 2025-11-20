@@ -165,7 +165,7 @@ INTERFACE isSquare
 END INTERFACE isSquare
 
 !----------------------------------------------------------------------------
-!                                                    isRectangle
+!                                                                isRectangle
 !----------------------------------------------------------------------------
 
 INTERFACE isRectangle
@@ -176,7 +176,7 @@ INTERFACE isRectangle
 END INTERFACE isRectangle
 
 !----------------------------------------------------------------------------
-!                                                   GetColNumber
+!                                                                GetColNumber
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
