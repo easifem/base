@@ -20,7 +20,7 @@ USE BaseType, ONLY: CSRMatrix_
 IMPLICIT NONE
 PRIVATE
 
-PUBLIC :: Add
+PUBLIC :: Add, Add_
 PUBLIC :: AddToSTMatrix
 
 !----------------------------------------------------------------------------
