@@ -21,8 +21,9 @@
 
 SUBMODULE(CSRMatrix_AddMethods) Methods
 USE GlobalData, ONLY: FMT_NODES, FMT_DOF, NodesToDOF, DofToNodes
-USE DOF_Method, ONLY: GetIndex, GetNodeLoc, OPERATOR(.tdof.)
-USE ConvertUtility, ONLY: Convert
+USE DOF_Method, ONLY: GetIndex, GetNodeLoc, OPERATOR(.tdof.), &
+                      GetIndex_, GetNodeLoc_
+USE ConvertUtility, ONLY: Convert, Convert_
 USE CSRSparsity_Method, ONLY: CSR_SetIA => SetIA, CSR_SetJA => SetJA
 USE InputUtility, ONLY: Input
 USE F95_BLAS, ONLY: Scal, Copy
@@ -109,6 +110,17 @@ IF (ALLOCATED(col)) DEALLOCATE (col)
 END PROCEDURE obj_Add0
 
 !----------------------------------------------------------------------------
+!                                                                        Add
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE obj_Add_0
+CALL GetIndex_(obj=obj%csr%idof, nodeNum=nodenum, ans=row, tsize=nrow)
+CALL GetIndex_(obj=obj%csr%jdof, nodeNum=nodenum, ans=col, tsize=ncol)
+CALL AddMaster(obj=obj, row=row(1:nrow), col=col(1:ncol), VALUE=VALUE, &
+               scale=scale)
+END PROCEDURE obj_Add_0
+
+!----------------------------------------------------------------------------
 !                                                                       Add
 !----------------------------------------------------------------------------
 
@@ -141,6 +153,41 @@ IF (ALLOCATED(m2)) DEALLOCATE (m2)
 END PROCEDURE obj_Add1
 
 !----------------------------------------------------------------------------
+!                                                                        Add_
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE obj_Add_1
+INTEGER(I4B) :: tdof, nns, conversion, objStorageFMT
+LOGICAL(LGT) :: m2formed, isnode2dof
+
+objStorageFMT = (obj.StorageFMT.1)
+m2formed = storageFMT .EQ. objStorageFMT
+
+IF (m2formed) THEN
+  m2_nrow = 0
+  m2_ncol = 0
+  CALL Add_(obj=obj, nodenum=nodenum, VALUE=VALUE, scale=scale, &
+            row=row, col=col, nrow=nrow, ncol=ncol)
+  RETURN
+END IF
+
+isnode2dof = (storageFMT .EQ. FMT_NODES) .AND. (objStorageFMT .EQ. FMT_DOF)
+IF (isnode2dof) THEN
+  conversion = NodesToDOF
+ELSE
+  conversion = DofToNodes
+END IF
+
+tdof = .tdof.obj%csr%idof
+nns = SIZE(nodenum)
+CALL Convert_(from=VALUE, to=m2, conversion=conversion, &
+              nns=nns, tDOF=tdof, nrow=m2_nrow, ncol=m2_ncol)
+
+CALL Add_(obj=obj, nodenum=nodenum, VALUE=m2, scale=scale, &
+          row=row, col=col, nrow=nrow, ncol=ncol)
+END PROCEDURE obj_Add_1
+
+!----------------------------------------------------------------------------
 !                                                                        Add
 !----------------------------------------------------------------------------
 
@@ -168,13 +215,11 @@ END PROCEDURE obj_Add3
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE obj_Add4
+INTEGER(I4B) :: irow, icolumn
 
-CALL Add( &
-  obj=obj, &
-  irow=GetNodeLoc(obj=obj%csr%idof, nodenum=inodenum, idof=idof), &
-  icolumn=GetNodeLoc(obj=obj%csr%jdof, nodenum=jnodenum, idof=jdof), &
-  VALUE=VALUE, scale=scale)
-
+irow = GetNodeLoc(obj=obj%csr%idof, nodenum=inodenum, idof=idof)
+icolumn = GetNodeLoc(obj=obj%csr%jdof, nodenum=jnodenum, idof=jdof)
+CALL Add_(obj=obj, irow=irow, icolumn=icolumn, VALUE=VALUE, scale=scale)
 END PROCEDURE obj_Add4
 
 !----------------------------------------------------------------------------
@@ -197,6 +242,17 @@ DEALLOCATE (m2)
 END PROCEDURE obj_Add5
 
 !----------------------------------------------------------------------------
+!                                                                        Add_
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE obj_Add_5
+CALL GetIndex_(obj=obj%csr%idof, nodeNum=nodenum, ans=row, tsize=nrow)
+CALL GetIndex_(obj=obj%csr%jdof, nodeNum=nodenum, ans=col, tsize=ncol)
+CALL AddMaster(obj=obj, row=row(1:nrow), col=col(1:ncol), VALUE=VALUE, &
+               scale=scale)
+END PROCEDURE obj_Add_5
+
+!----------------------------------------------------------------------------
 !                                                                       Add
 !----------------------------------------------------------------------------
 
@@ -213,16 +269,31 @@ DEALLOCATE (row, col)
 END PROCEDURE obj_Add6
 
 !----------------------------------------------------------------------------
+!                                                                       Add
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE obj_Add_6
+CALL GetIndex_(obj=obj%csr%idof, nodeNum=iNodeNum, ivar=ivar, ans=row, &
+               tsize=nrow)
+CALL GetIndex_(obj=obj%csr%jdof, nodeNum=jNodeNum, ivar=jvar, ans=col, &
+               tsize=ncol)
+CALL AddMaster(obj=obj, row=row(1:nrow), col=col(1:ncol), VALUE=VALUE, &
+               scale=scale)
+END PROCEDURE obj_Add_6
+
+!----------------------------------------------------------------------------
 !                                                                        Add
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE obj_Add7
-CALL Add( &
-  obj=obj, irow=getNodeLoc(obj=obj%csr%idof, nodenum=iNodeNum, ivar=ivar, &
-                           idof=iDOF), &
-  icolumn=getNodeLoc(obj=obj%csr%jdof, nodenum=jNodeNum, ivar=jvar, &
-                     idof=jDOF), &
-  VALUE=VALUE, scale=scale)
+INTEGER(I4B) :: irow, icolumn
+
+irow = GetNodeLoc(obj=obj%csr%idof, nodenum=iNodeNum, ivar=ivar, &
+                  idof=idof)
+icolumn = GetNodeLoc(obj=obj%csr%jdof, nodenum=jNodeNum, ivar=jvar, &
+                     idof=jdof)
+
+CALL Add_(obj=obj, irow=irow, icolumn=icolumn, VALUE=VALUE, scale=scale)
 END PROCEDURE obj_Add7
 
 !----------------------------------------------------------------------------
@@ -242,17 +313,30 @@ DEALLOCATE (row, col)
 END PROCEDURE obj_Add8
 
 !----------------------------------------------------------------------------
+!                                                                       Add
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE obj_Add_8
+CALL GetIndex_(obj=obj%csr%idof, nodeNum=iNodeNum, ivar=ivar, idof=idof, &
+               ans=row, tsize=nrow)
+CALL GetIndex_(obj=obj%csr%jdof, nodeNum=jNodeNum, ivar=jvar, idof=jdof, &
+               ans=col, tsize=ncol)
+CALL AddMaster(obj=obj, row=row(1:nrow), col=col(1:ncol), VALUE=VALUE, &
+               scale=scale)
+END PROCEDURE obj_Add_8
+
+!----------------------------------------------------------------------------
 !                                                                        Add
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE obj_Add9
-CALL Add( &
-  obj=obj, &
-  irow=GetNodeLoc(obj=obj%csr%idof, nodenum=iNodeNum, ivar=ivar, &
-                  spacecompo=ispacecompo, timecompo=itimecompo), &
-  icolumn=GetNodeLoc(obj=obj%csr%jdof, nodenum=jNodeNum, ivar=jvar, &
-                     spacecompo=jspacecompo, timecompo=jtimecompo), &
-  VALUE=VALUE, scale=scale)
+INTEGER(I4B) :: irow, icolumn
+
+irow = GetNodeLoc(obj=obj%csr%idof, nodenum=iNodeNum, ivar=ivar, &
+                  spacecompo=ispacecompo, timecompo=itimecompo)
+icolumn = GetNodeLoc(obj=obj%csr%jdof, nodenum=jNodeNum, ivar=jvar, &
+                     spacecompo=jspacecompo, timecompo=jtimecompo)
+CALL Add_(obj=obj, irow=irow, icolumn=icolumn, VALUE=VALUE, scale=scale)
 END PROCEDURE obj_Add9
 
 !----------------------------------------------------------------------------
@@ -271,6 +355,20 @@ DEALLOCATE (row, col)
 END PROCEDURE obj_Add10
 
 !----------------------------------------------------------------------------
+!                                                                        Add_
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE obj_Add_10
+CALL GetIndex_(obj=obj%csr%idof, nodeNum=iNodeNum, ivar=ivar, &
+               ans=row, tsize=nrow)
+CALL GetIndex_(obj=obj%csr%jdof, nodeNum=jNodeNum, ivar=jvar, &
+               ans=col, tsize=ncol)
+
+CALL AddMaster(obj=obj, row=row(1:nrow), col=col(1:ncol), &
+               VALUE=VALUE, scale=scale)
+END PROCEDURE obj_Add_10
+
+!----------------------------------------------------------------------------
 !                                                                       Add
 !----------------------------------------------------------------------------
 
@@ -284,6 +382,19 @@ CALL AddMaster(obj=obj, row=row, col=col, VALUE=VALUE, scale=scale)
 
 DEALLOCATE (row, col)
 END PROCEDURE obj_Add11
+
+!----------------------------------------------------------------------------
+!                                                                       Add_
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE obj_Add_11
+CALL GetNodeLoc_(obj=obj%csr%idof, nodeNum=iNodeNum, ivar=ivar, idof=idof, &
+                 ans=row, tsize=nrow)
+CALL GetNodeLoc_(obj=obj%csr%jdof, nodeNum=jNodeNum, ivar=jvar, idof=jdof, &
+                 ans=col, tsize=ncol)
+CALL AddMaster(obj=obj, row=row(1:nrow), col=col(1:ncol), VALUE=VALUE, &
+               scale=scale)
+END PROCEDURE obj_Add_11
 
 !----------------------------------------------------------------------------
 !                                                                       Add
@@ -308,6 +419,23 @@ END PROCEDURE obj_Add12
 !                                                                       Add
 !----------------------------------------------------------------------------
 
+MODULE PROCEDURE obj_Add_12
+CALL GetNodeLoc_(obj=obj%csr%idof, nodeNum=iNodeNum, ivar=ivar, &
+                 spacecompo=ispacecompo, timecompo=itimecompo, &
+                 ans=row, tsize=nrow)
+
+CALL GetNodeLoc_(obj=obj%csr%jdof, nodeNum=jNodeNum, ivar=jvar, &
+                 spacecompo=jspacecompo, timecompo=jtimecompo, &
+                 ans=col, tsize=ncol)
+
+CALL AddMaster(obj=obj, row=row(1:nrow), col=col(1:ncol), VALUE=VALUE, &
+               scale=scale)
+END PROCEDURE obj_Add_12
+
+!----------------------------------------------------------------------------
+!                                                                       Add
+!----------------------------------------------------------------------------
+
 MODULE PROCEDURE obj_Add13
 ! Internal variables
 INTEGER(I4B), ALLOCATABLE :: row(:), col(:)
@@ -321,6 +449,22 @@ col = GetNodeLoc(obj=obj%csr%jdof, nodeNum=jNodeNum, ivar=jvar, &
 CALL AddMaster(obj=obj, row=row, col=col, VALUE=VALUE, scale=scale)
 DEALLOCATE (row, col)
 END PROCEDURE obj_Add13
+
+!----------------------------------------------------------------------------
+!                                                                       Add_
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE obj_Add_13
+CALL GetNodeLoc_(obj=obj%csr%idof, nodeNum=iNodeNum, ivar=ivar, &
+                 spacecompo=ispacecompo, timecompo=itimecompo, &
+                 ans=row, tsize=nrow)
+
+CALL GetNodeLoc_(obj=obj%csr%jdof, nodeNum=jNodeNum, ivar=jvar, &
+                 spacecompo=jspacecompo, timecompo=jtimecompo, &
+                 ans=col, tsize=ncol)
+CALL AddMaster(obj=obj, row=row(1:nrow), col=col(1:ncol), VALUE=VALUE, &
+               scale=scale)
+END PROCEDURE obj_Add_13
 
 !----------------------------------------------------------------------------
 !                                                                       Add
@@ -339,6 +483,23 @@ col = GetNodeLoc(obj=obj%csr%jdof, nodeNum=jNodeNum, ivar=jvar, &
 CALL AddMaster(obj=obj, row=row, col=col, VALUE=VALUE, scale=scale)
 DEALLOCATE (row, col)
 END PROCEDURE obj_Add14
+
+!----------------------------------------------------------------------------
+!                                                                       Add
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE obj_Add_14
+CALL GetNodeLoc_(obj=obj%csr%idof, nodeNum=iNodeNum, ivar=ivar, &
+                 spacecompo=ispacecompo, timecompo=itimecompo, &
+                 ans=row, tsize=nrow)
+
+CALL GetNodeLoc_(obj=obj%csr%jdof, nodeNum=jNodeNum, ivar=jvar, &
+                 spacecompo=jspacecompo, timecompo=jtimecompo, &
+                 ans=col, tsize=ncol)
+
+CALL AddMaster(obj=obj, row=row(1:nrow), col=col(1:ncol), VALUE=VALUE, &
+               scale=scale)
+END PROCEDURE obj_Add_14
 
 !----------------------------------------------------------------------------
 !                                                                       Add
