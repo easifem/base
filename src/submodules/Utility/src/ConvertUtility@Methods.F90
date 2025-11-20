@@ -29,22 +29,22 @@ CONTAINS
 !                                                                    Convert
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE obj_Convert_1
+MODULE PROCEDURE obj_Convert1
 CALL Reallocate(to, nns * tdof, nns * tdof)
 CALL ConvertSafe(from=from, to=to, conversion=conversion, &
                  nns=nns, tdof=tdof)
-END PROCEDURE obj_Convert_1
+END PROCEDURE obj_Convert1
 
 !----------------------------------------------------------------------------
 !                                                             ConvertSafe
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE obj_Convert1_
+MODULE PROCEDURE obj_Convert_1
 nrow = nns * tdof
 ncol = nns * tdof
 CALL ConvertSafe(from=from, to=to(1:nrow, 1:ncol), conversion=conversion, &
                  nns=nns, tdof=tdof)
-END PROCEDURE obj_Convert1_
+END PROCEDURE obj_Convert_1
 
 !----------------------------------------------------------------------------
 !                                                             ConvertSafe
@@ -89,7 +89,7 @@ END PROCEDURE obj_ConvertSafe1
 !                                                                   Convert
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE obj_Convert_2
+MODULE PROCEDURE obj_Convert2
 !   Define internal variables
 INTEGER(I4B) :: a, b, I(4), r1, r2, c1, c2
 I = SHAPE(From)
@@ -105,13 +105,13 @@ DO b = 1, I(4)
     To(r1:r2, c1:c2) = From(:, :, a, b)
   END DO
 END DO
-END PROCEDURE obj_Convert_2
+END PROCEDURE obj_Convert2
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE obj_Convert2_
+MODULE PROCEDURE obj_Convert_2
 INTEGER(I4B) :: a, b, r1, r2, c1, c2
 INTEGER(I4B) :: dim1, dim2, dim3, dim4
 
@@ -134,13 +134,13 @@ DO b = 1, dim4
   END DO
 END DO
 
-END PROCEDURE obj_Convert2_
+END PROCEDURE obj_Convert_2
 
 !----------------------------------------------------------------------------
 !                                                                 Convert
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE obj_Convert_3
+MODULE PROCEDURE obj_Convert3
 INTEGER(I4B) :: a, b, s(6)
 REAL(DFP), ALLOCATABLE :: m2(:, :)
   !!
@@ -154,13 +154,13 @@ DO b = 1, s(6)
   END DO
 END DO
 DEALLOCATE (m2)
-END PROCEDURE obj_Convert_3
+END PROCEDURE obj_Convert3
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE obj_Convert3_
+MODULE PROCEDURE obj_Convert_3
 INTEGER(I4B) :: a, b
 INTEGER(I4B) :: n1, n2, n3, n4, n5, n6
 
@@ -182,7 +182,7 @@ DO b = 1, n6
   END DO
 END DO
 
-END PROCEDURE obj_Convert3_
+END PROCEDURE obj_Convert_3
 
 !----------------------------------------------------------------------------
 !
