@@ -1365,8 +1365,8 @@ END INTERFACE OrthogonalBasis_Line_
 ! summary: Evaluate basis functions of order upto n
 
 INTERFACE
-  MODULE FUNCTION OrthogonalBasisGradient_Line1(order, xij, refLine, &
-                                   basisType, alpha, beta, lambda) RESULT(ans)
+  MODULE FUNCTION OrthogonalBasisGradient_Line1( &
+    order, xij, refLine, basisType, alpha, beta, lambda) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
     !! order of  polynomials
     REAL(DFP), INTENT(IN) :: xij(:, :)
