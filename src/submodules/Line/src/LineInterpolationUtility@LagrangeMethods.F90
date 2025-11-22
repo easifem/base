@@ -388,62 +388,62 @@ END PROCEDURE LagrangeGradientEvalAll_Line1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE LagrangeGradientEvalAll_Line1_
-#ifdef DEBUG_VER
-CHARACTER(*), PARAMETER :: myName = "LagrangeGradientEvalAll_Line1_()"
-LOGICAL(LGT) :: isok
-#endif
+LOGICAL(LGT) :: firstCall0, iscoeff
+REAL(DFP) :: coeff0(order + 1, order + 1), xx(SIZE(x, 2), order + 1)
+INTEGER(I4B) :: basisType0
 
-LOGICAL(LGT) :: firstCall0
-REAL(DFP) :: coeff0(order + 1, order + 1), xx(SIZE(x, 2), order + 1), areal
-INTEGER(I4B) :: ii, orthopol0, indx(2), jj
-
-dim1 = SIZE(x, 2)
-dim2 = SIZE(xij, 2)
-dim3 = 1
-
-orthopol0 = Input(default=polyopt%Monomial, option=basisType)
 firstCall0 = Input(default=.TRUE., option=firstCall)
+basisType0 = Input(default=polyopt%Monomial, option=basisType)
+iscoeff = PRESENT(coeff)
 
-IF (PRESENT(coeff)) THEN
-  IF (firstCall0) THEN
-    CALL LagrangeCoeff_Line_(order=order, xij=xij, basisType=orthopol0, &
-                             alpha=alpha, beta=beta, lambda=lambda, &
-                             ans=coeff, nrow=indx(1), ncol=indx(2))
-  END IF
-  coeff0(1:dim2, 1:dim2) = coeff(1:dim2, 1:dim2)
+IF (iscoeff) THEN
+  CALL LagrangeGradientEvalAll_Line_( &
+    order=order, x=x, xij=xij, ans=ans, dim1=dim1, dim2=dim2, dim3=dim3, &
+    coeff=coeff, xx=xx, firstCall=firstCall0, basisType=basisType0, &
+    alpha=alpha, beta=beta, lambda=lambda)
 
 ELSE
-  CALL LagrangeCoeff_Line_(order=order, xij=xij, basisType=orthopol0, &
-                           alpha=alpha, beta=beta, lambda=lambda, &
-                           ans=coeff0, nrow=indx(1), ncol=indx(2))
+
+  CALL LagrangeGradientEvalAll_Line_( &
+    order=order, x=x, xij=xij, ans=ans, dim1=dim1, dim2=dim2, dim3=dim3, &
+    coeff=coeff0, xx=xx, firstCall=firstCall0, basisType=basisType0, &
+    alpha=alpha, beta=beta, lambda=lambda)
+
 END IF
 
-SELECT CASE (orthopol0)
-CASE (polyopt%Monomial)
+END PROCEDURE LagrangeGradientEvalAll_Line1_
 
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE LagrangeGradientEvalAll_Line2_
 #ifdef DEBUG_VER
-  isok = dim2 .EQ. order + 1
-  CALL AssertError1(isok, myName, modName, __LINE__, &
-                    "size(xij, 2) is not same as order+1")
+CHARACTER(*), PARAMETER :: myName = "LagrangeGradientEvalAll_Line2_()"
 #endif
 
-  DO ii = 0, order
-    indx(1) = MAX(ii - 1_I4B, 0_I4B)
-    areal = REAL(ii, kind=DFP)
-    DO jj = 1, dim1
-      xx(jj, ii + 1) = areal * (x(1, jj)**(indx(1)))
-    END DO
-  END DO
+! coeff0(order + 1, order + 1)
+! xx(SIZE(x, 2), order + 1)
 
-CASE DEFAULT
-  CALL GradientEvalAllOrthopol_(n=order, x=x(1, :), orthopol=orthopol0, &
-                                alpha=alpha, beta=beta, lambda=lambda, &
-                                ans=xx, nrow=dim1, ncol=dim2)
+INTEGER(I4B) :: indx(2)
 
-END SELECT
+dim1 = SIZE(x, 2) !! nips
+dim2 = SIZE(xij, 2) !! tdof
+dim3 = 1
 
-CALL GEMM(C=ans(1:dim1, 1:dim2, 1), alpha=1.0_DFP, A=xx, B=coeff0)
-END PROCEDURE LagrangeGradientEvalAll_Line1_
+IF (firstCall) THEN
+  CALL LagrangeCoeff_Line_( &
+    order=order, xij=xij, basisType=basisType, alpha=alpha, beta=beta, &
+    lambda=lambda, ans=coeff, nrow=indx(1), ncol=indx(2))
+END IF
+
+CALL GradientEvalAllOrthopol_( &
+  n=order, x=x(1, 1:dim1), orthopol=basisType, alpha=alpha, beta=beta, &
+  lambda=lambda, ans=xx, nrow=dim1, ncol=dim2)
+
+CALL GEMM(C=ans(1:dim1, 1:dim2, 1), alpha=1.0_DFP, A=xx(1:dim1, 1:dim2), &
+          B=coeff(1:indx(1), 1:indx(2)))
+END PROCEDURE LagrangeGradientEvalAll_Line2_
 
 !----------------------------------------------------------------------------
 !                                                              Include error

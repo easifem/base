@@ -1022,8 +1022,9 @@ END INTERFACE LagrangeEvalAll_Line_
 ! summary: Evaluate Lagrange polynomials of n at several points
 
 INTERFACE LagrangeGradientEvalAll_Line
-  MODULE FUNCTION LagrangeGradientEvalAll_Line1(order, x, xij, coeff, &
-                        firstCall, basisType, alpha, beta, lambda) RESULT(ans)
+  MODULE FUNCTION LagrangeGradientEvalAll_Line1( &
+    order, x, xij, coeff, firstCall, basisType, alpha, beta, lambda) &
+    RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
     !! order of Lagrange polynomials
     REAL(DFP), INTENT(IN) :: x(:, :)
@@ -1040,12 +1041,7 @@ INTERFACE LagrangeGradientEvalAll_Line
     !! If firstCall is False, then coeff will be used
     !! Default value of firstCall is True
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: basisType
-    !! Monomial
-    !! Jacobi
-    !! Legendre
-    !! Chebyshev
-    !! Lobatto
-    !! UnscaledLobatto
+    !! Monomial ! Jacobi ! Legendre ! Chebyshev ! Lobatto ! UnscaledLobatto
     REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
     !! Jacobi polynomial parameter
     REAL(DFP), OPTIONAL, INTENT(IN) :: beta
@@ -1062,10 +1058,10 @@ INTERFACE LagrangeGradientEvalAll_Line
 END INTERFACE LagrangeGradientEvalAll_Line
 
 !----------------------------------------------------------------------------
-!
+!                               LagrangeGradientEvalAll_Line_@LagrangeMethods
 !----------------------------------------------------------------------------
 
-INTERFACE LagrangeGradientEvalAll_Line_
+INTERFACE
   MODULE SUBROUTINE LagrangeGradientEvalAll_Line1_( &
     order, x, xij, ans, dim1, dim2, dim3, coeff, firstCall, basisType, &
     alpha, beta, lambda)
@@ -1101,6 +1097,59 @@ INTERFACE LagrangeGradientEvalAll_Line_
     REAL(DFP), OPTIONAL, INTENT(IN) :: lambda
     !! Ultraspherical parameter
   END SUBROUTINE LagrangeGradientEvalAll_Line1_
+END INTERFACE
+
+INTERFACE LagrangeGradientEvalAll_Line_
+  MODULE PROCEDURE LagrangeGradientEvalAll_Line1_
+END INTERFACE LagrangeGradientEvalAll_Line_
+
+!----------------------------------------------------------------------------
+!                               LagrangeGradientEvalAll_Line_@LagrangeMethods
+!----------------------------------------------------------------------------
+
+INTERFACE
+  MODULE SUBROUTINE LagrangeGradientEvalAll_Line2_( &
+    order, x, xij, ans, dim1, dim2, dim3, coeff, xx, firstCall, basisType, &
+    alpha, beta, lambda)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order of Lagrange polynomials
+    REAL(DFP), INTENT(IN) :: x(:, :)
+    !! point of evaluation in xij format
+    REAL(DFP), INTENT(INOUT) :: xij(:, :)
+    !! interpolation points
+    !! xij should be present when firstCall is true.
+    !! It is used for computing the coeff
+    !! If coeff is absent then xij should be present
+    REAL(DFP), INTENT(INOUT) :: ans(:, :, :)
+    !! Value of gradient of nth order Lagrange polynomials at point x
+    !! The first index denotes point of evaluation
+    !! the second index denotes Lagrange polynomial number
+    !! The third index denotes the spatial dimension in which gradient is
+    !! computed
+    INTEGER(I4B), INTENT(OUT) :: dim1, dim2, dim3
+    !! ans(SIZE(x, 2), SIZE(xij, 2), 1)
+    REAL(DFP), INTENT(INOUT) :: coeff(:, :)
+    !! coefficient of Lagrange polynomials
+    !! shape nrow = size(xij, 2), ncol = size(xij, 2)
+    REAL(DFP), INTENT(INOUT) :: xx(:, :)
+    !! nrow: size(x, 2), ncol: order + 1
+    LOGICAL(LGT) :: firstCall
+    !! If firstCall is true, then coeff will be made
+    !! If firstCall is False, then coeff will be used
+    !! Default value of firstCall is True
+    INTEGER(I4B), INTENT(IN) :: basisType
+    !! Monomial
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
+    !! Jacobi polynomial parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: beta
+    !! Jacobi polynomial parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: lambda
+    !! Ultraspherical parameter
+  END SUBROUTINE LagrangeGradientEvalAll_Line2_
+END INTERFACE
+
+INTERFACE LagrangeGradientEvalAll_Line_
+  MODULE PROCEDURE LagrangeGradientEvalAll_Line2_
 END INTERFACE LagrangeGradientEvalAll_Line_
 
 !----------------------------------------------------------------------------
@@ -1273,9 +1322,9 @@ END INTERFACE OrthogonalBasis_Line
 !                                                     OrthogonalBasis_Line_
 !----------------------------------------------------------------------------
 
-INTERFACE OrthogonalBasis_Line_
-  MODULE SUBROUTINE OrthogonalBasis_Line1_(order, xij, refLine, basisType, &
-                                         ans, nrow, ncol, alpha, beta, lambda)
+INTERFACE
+  MODULE SUBROUTINE OrthogonalBasis_Line1_( &
+    order, xij, refLine, basisType, ans, nrow, ncol, alpha, beta, lambda)
     INTEGER(I4B), INTENT(IN) :: order
     !! order of  polynomials
     REAL(DFP), INTENT(IN) :: xij(:, :)
@@ -1301,6 +1350,10 @@ INTERFACE OrthogonalBasis_Line_
     !! nrow = size(xij, 2)
     !! ncol = order+1
   END SUBROUTINE OrthogonalBasis_Line1_
+END INTERFACE
+
+INTERFACE OrthogonalBasis_Line_
+  MODULE PROCEDURE OrthogonalBasis_Line1_
 END INTERFACE OrthogonalBasis_Line_
 
 !----------------------------------------------------------------------------
@@ -1311,7 +1364,7 @@ END INTERFACE OrthogonalBasis_Line_
 ! date:  2023-06-23
 ! summary: Evaluate basis functions of order upto n
 
-INTERFACE OrthogonalBasisGradient_Line
+INTERFACE
   MODULE FUNCTION OrthogonalBasisGradient_Line1(order, xij, refLine, &
                                    basisType, alpha, beta, lambda) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
@@ -1320,15 +1373,9 @@ INTERFACE OrthogonalBasisGradient_Line
     !! point of evaluation
     !! Number of rows in xij is 1
     CHARACTER(*), INTENT(IN) :: refLine
-    !! UNIT
-    !! BIUNIT
+    !! UNIT ! BIUNIT
     INTEGER(I4B), INTENT(IN) :: basisType
-    !! Jacobi
-    !! Ultraspherical
-    !! Legendre
-    !! Chebyshev
-    !! Lobatto
-    !! UnscaledLobatto
+    ! basisType
     REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
     !! Jacobi polynomial parameter
     REAL(DFP), OPTIONAL, INTENT(IN) :: beta
@@ -1340,6 +1387,10 @@ INTERFACE OrthogonalBasisGradient_Line
     !! ans(:, j) is the value of jth polynomial at x points
     !! ans(i, :) is the value of all polynomials at x(i) point
   END FUNCTION OrthogonalBasisGradient_Line1
+END INTERFACE
+
+INTERFACE OrthogonalBasisGradient_Line
+  MODULE PROCEDURE OrthogonalBasisGradient_Line1
 END INTERFACE OrthogonalBasisGradient_Line
 
 !----------------------------------------------------------------------------
@@ -1349,25 +1400,26 @@ END INTERFACE OrthogonalBasisGradient_Line
 !> author: Vikas Sharma, Ph. D.
 ! date:  2024-09-10
 ! summary:  gradient of orthogonal basis without allocation
+!
+!# Introduction
+!
+! refline: Unit, Biunit
+! basisType: Jacobi, Ultraspherical, Legendre, Chebyshev, Lobatto,
+!            UnscaledLobatto
 
-INTERFACE OrthogonalBasisGradient_Line_
-  MODULE SUBROUTINE OrthogonalBasisGradient_Line1_(order, xij, refLine, &
-                        basisType, ans, dim1, dim2, dim3, alpha, beta, lambda)
+INTERFACE
+  MODULE SUBROUTINE OrthogonalBasisGradient_Line1_( &
+    order, xij, refLine, basisType, ans, dim1, dim2, dim3, alpha, beta, &
+    lambda)
     INTEGER(I4B), INTENT(IN) :: order
     !! order of  polynomials
     REAL(DFP), INTENT(IN) :: xij(:, :)
     !! point of evaluation
     !! Number of rows in xij is 1
     CHARACTER(*), INTENT(IN) :: refLine
-    !! UNIT
-    !! BIUNIT
+    !! reference line element: UNIT, BIUNIT
     INTEGER(I4B), INTENT(IN) :: basisType
-    !! Jacobi
-    !! Ultraspherical
-    !! Legendre
-    !! Chebyshev
-    !! Lobatto
-    !! UnscaledLobatto
+    !! basisType
     REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
     !! Jacobi polynomial parameter
     REAL(DFP), OPTIONAL, INTENT(IN) :: beta
@@ -1380,10 +1432,12 @@ INTERFACE OrthogonalBasisGradient_Line_
     !! ans(:, j) is the value of jth polynomial at x points
     !! ans(i, :) is the value of all polynomials at x(i) point
     INTEGER(I4B), INTENT(OUT) :: dim1, dim2, dim3
-    !! dim1 = size(xij,2)
-    !! dim2 = order+1
-    !! dim3 = 1
+    !! dim1 = size(xij,2) ! dim2 = order+1 ! dim3 = 1
   END SUBROUTINE OrthogonalBasisGradient_Line1_
+END INTERFACE
+
+INTERFACE OrthogonalBasisGradient_Line_
+  MODULE PROCEDURE OrthogonalBasisGradient_Line1_
 END INTERFACE OrthogonalBasisGradient_Line_
 
 !----------------------------------------------------------------------------
@@ -1394,7 +1448,7 @@ END INTERFACE OrthogonalBasisGradient_Line_
 ! date: 27 Oct 2022
 ! summary: Evaluate all modal basis (heirarchical polynomial) on Line
 
-INTERFACE HeirarchicalBasis_Line
+INTERFACE
   MODULE FUNCTION HeirarchicalBasis_Line1(order, xij, refLine) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
     !! Polynomial order of interpolation
@@ -1408,15 +1462,19 @@ INTERFACE HeirarchicalBasis_Line
     REAL(DFP) :: ans(SIZE(xij, 2), order + 1)
     !! Hierarchical basis
   END FUNCTION HeirarchicalBasis_Line1
+END INTERFACE
+
+INTERFACE HeirarchicalBasis_Line
+  MODULE PROCEDURE HeirarchicalBasis_Line1
 END INTERFACE HeirarchicalBasis_Line
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
-INTERFACE HeirarchicalBasis_Line_
-  MODULE SUBROUTINE HeirarchicalBasis_Line1_(order, xij, refLine, ans, &
-                                             nrow, ncol)
+INTERFACE
+  MODULE SUBROUTINE HeirarchicalBasis_Line1_( &
+    order, xij, refLine, ans, nrow, ncol)
     INTEGER(I4B), INTENT(IN) :: order
     !! Polynomial order of interpolation
     REAL(DFP), INTENT(IN) :: xij(:, :)
@@ -1431,15 +1489,19 @@ INTERFACE HeirarchicalBasis_Line_
     INTEGER(I4B), INTENT(OUT) :: nrow, ncol
     !! SIZE(xij, 2), order + 1
   END SUBROUTINE HeirarchicalBasis_Line1_
+END INTERFACE
+
+INTERFACE HeirarchicalBasis_Line_
+  MODULE PROCEDURE HeirarchicalBasis_Line1_
 END INTERFACE HeirarchicalBasis_Line_
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
-INTERFACE HeirarchicalBasis_Line_
-  MODULE SUBROUTINE HeirarchicalBasis_Line2_(order, xij, refLine, orient, &
-                                             ans, nrow, ncol)
+INTERFACE
+  MODULE SUBROUTINE HeirarchicalBasis_Line2_( &
+    order, xij, refLine, orient, ans, nrow, ncol)
     INTEGER(I4B), INTENT(IN) :: order
     !! Polynomial order of interpolation
     REAL(DFP), INTENT(IN) :: xij(:, :)
@@ -1456,6 +1518,10 @@ INTERFACE HeirarchicalBasis_Line_
     INTEGER(I4B), INTENT(OUT) :: nrow, ncol
     !! SIZE(xij, 2), order + 1
   END SUBROUTINE HeirarchicalBasis_Line2_
+END INTERFACE
+
+INTERFACE HeirarchicalBasis_Line_
+  MODULE PROCEDURE HeirarchicalBasis_Line2_
 END INTERFACE HeirarchicalBasis_Line_
 
 !----------------------------------------------------------------------------
@@ -1466,7 +1532,7 @@ END INTERFACE HeirarchicalBasis_Line_
 ! date: 27 Oct 2022
 ! summary: Eval gradient of all modal basis (heirarchical polynomial) on Line
 
-INTERFACE HeirarchicalBasisGradient_Line
+INTERFACE
   MODULE FUNCTION HeirarchicalGradientBasis_Line1(order, xij, refLine) &
     RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
@@ -1482,15 +1548,19 @@ INTERFACE HeirarchicalBasisGradient_Line
     REAL(DFP) :: ans(SIZE(xij, 2), order + 1, 1)
     !! Gradient of Hierarchical basis
   END FUNCTION HeirarchicalGradientBasis_Line1
+END INTERFACE
+
+INTERFACE HeirarchicalBasisGradient_Line
+  MODULE PROCEDURE HeirarchicalGradientBasis_Line1
 END INTERFACE HeirarchicalBasisGradient_Line
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
-INTERFACE HeirarchicalBasisGradient_Line_
-  MODULE SUBROUTINE HeirarchicalGradientBasis_Line1_(order, xij, refLine, &
-                                                     ans, dim1, dim2, dim3)
+INTERFACE
+  MODULE SUBROUTINE HeirarchicalGradientBasis_Line1_( &
+    order, xij, refLine, ans, dim1, dim2, dim3)
     INTEGER(I4B), INTENT(IN) :: order
     !! Polynomial order of interpolation
     REAL(DFP), INTENT(IN) :: xij(:, :)
@@ -1506,15 +1576,19 @@ INTERFACE HeirarchicalBasisGradient_Line_
     INTEGER(I4B), INTENT(OUT) :: dim1, dim2, dim3
     !! SIZE(xij, 2), order + 1, 1
   END SUBROUTINE HeirarchicalGradientBasis_Line1_
+END INTERFACE
+
+INTERFACE HeirarchicalBasisGradient_Line_
+  MODULE PROCEDURE HeirarchicalGradientBasis_Line1_
 END INTERFACE HeirarchicalBasisGradient_Line_
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
-INTERFACE HeirarchicalBasisGradient_Line
-  MODULE FUNCTION HeirarchicalGradientBasis_Line2(order, xij, refLine, &
-                                                  orient) RESULT(ans)
+INTERFACE
+  MODULE FUNCTION HeirarchicalGradientBasis_Line2( &
+    order, xij, refLine, orient) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
     !! Polynomial order of interpolation
     REAL(DFP), INTENT(IN) :: xij(:, :)
@@ -1531,13 +1605,17 @@ INTERFACE HeirarchicalBasisGradient_Line
     !! Gradient of Hierarchical basis
     !! SIZE(xij, 2), order + 1, 1
   END FUNCTION HeirarchicalGradientBasis_Line2
+END INTERFACE
+
+INTERFACE HeirarchicalBasisGradient_Line
+  MODULE PROCEDURE HeirarchicalGradientBasis_Line2
 END INTERFACE HeirarchicalBasisGradient_Line
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
-INTERFACE HeirarchicalBasisGradient_Line_
+INTERFACE
   MODULE SUBROUTINE HeirarchicalGradientBasis_Line2_( &
     order, xij, refLine, orient, ans, dim1, dim2, dim3)
     INTEGER(I4B), INTENT(IN) :: order
@@ -1557,6 +1635,10 @@ INTERFACE HeirarchicalBasisGradient_Line_
     INTEGER(I4B), INTENT(OUT) :: dim1, dim2, dim3
     !! SIZE(xij, 2), order + 1, 1
   END SUBROUTINE HeirarchicalGradientBasis_Line2_
+END INTERFACE
+
+INTERFACE HeirarchicalBasisGradient_Line_
+  MODULE PROCEDURE HeirarchicalGradientBasis_Line2_
 END INTERFACE HeirarchicalBasisGradient_Line_
 
 !----------------------------------------------------------------------------
@@ -1567,9 +1649,9 @@ END INTERFACE HeirarchicalBasisGradient_Line_
 ! date:  2023-06-23
 ! summary: Evaluate the gradient of basis functions of order upto n
 
-INTERFACE BasisGradientEvalAll_Line
-  MODULE FUNCTION BasisGradientEvalAll_Line1(order, x, refLine, basisType, &
-                                             alpha, beta, lambda) RESULT(ans)
+INTERFACE
+  MODULE FUNCTION BasisGradientEvalAll_Line1( &
+    order, x, refLine, basisType, alpha, beta, lambda) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
     !! order of  polynomials
     REAL(DFP), INTENT(IN) :: x
@@ -1588,15 +1670,19 @@ INTERFACE BasisGradientEvalAll_Line
     REAL(DFP) :: ans(order + 1)
     !! Value of n+1  polynomials at point x
   END FUNCTION BasisGradientEvalAll_Line1
+END INTERFACE
+
+INTERFACE BasisGradientEvalAll_Line
+  MODULE PROCEDURE BasisGradientEvalAll_Line1
 END INTERFACE BasisGradientEvalAll_Line
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
-INTERFACE BasisGradientEvalAll_Line_
-  MODULE SUBROUTINE BasisGradientEvalAll_Line1_(order, x, refLine, &
-                                   basisType, alpha, beta, lambda, ans, tsize)
+INTERFACE
+  MODULE SUBROUTINE BasisGradientEvalAll_Line1_( &
+    order, x, refLine, basisType, alpha, beta, lambda, ans, tsize)
     INTEGER(I4B), INTENT(IN) :: order
     !! order of  polynomials
     REAL(DFP), INTENT(IN) :: x
@@ -1618,6 +1704,10 @@ INTERFACE BasisGradientEvalAll_Line_
     REAL(DFP), OPTIONAL, INTENT(IN) :: lambda
     !! Ultraspherical parameter
   END SUBROUTINE BasisGradientEvalAll_Line1_
+END INTERFACE
+
+INTERFACE BasisGradientEvalAll_Line_
+  MODULE PROCEDURE BasisGradientEvalAll_Line1_
 END INTERFACE BasisGradientEvalAll_Line_
 
 !----------------------------------------------------------------------------
@@ -1628,9 +1718,9 @@ END INTERFACE BasisGradientEvalAll_Line_
 ! date:  2023-06-23
 ! summary: Evaluate gradient of basis functions of order upto n
 
-INTERFACE BasisGradientEvalAll_Line
-  MODULE FUNCTION BasisGradientEvalAll_Line2(order, x, refLine, basisType, &
-                                             alpha, beta, lambda) RESULT(ans)
+INTERFACE
+  MODULE FUNCTION BasisGradientEvalAll_Line2( &
+    order, x, refLine, basisType, alpha, beta, lambda) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
     !! order of  polynomials
     REAL(DFP), INTENT(IN) :: x(:)
@@ -1651,6 +1741,10 @@ INTERFACE BasisGradientEvalAll_Line
     !! ans(:, j) is the value of jth polynomial at x points
     !! ans(i, :) is the value of all polynomials at x(i) point
   END FUNCTION BasisGradientEvalAll_Line2
+END INTERFACE
+
+INTERFACE BasisGradientEvalAll_Line
+  MODULE PROCEDURE BasisGradientEvalAll_Line2
 END INTERFACE BasisGradientEvalAll_Line
 
 !----------------------------------------------------------------------------
@@ -1658,9 +1752,8 @@ END INTERFACE BasisGradientEvalAll_Line
 !----------------------------------------------------------------------------
 
 INTERFACE BasisGradientEvalAll_Line_
-  MODULE SUBROUTINE BasisGradientEvalAll_Line2_(order, x, ans, nrow, ncol, &
-                                      refLine, basisType, alpha, beta, lambda)
-
+  MODULE SUBROUTINE BasisGradientEvalAll_Line2_( &
+    order, x, ans, nrow, ncol, refLine, basisType, alpha, beta, lambda)
     INTEGER(I4B), INTENT(IN) :: order
     !! order of  polynomials
     REAL(DFP), INTENT(IN) :: x(:)
