@@ -24,36 +24,32 @@ CONTAINS
 !                                                       getProjectionOfdNdXt
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE getProjectionOfdNdXt_1
-  !! Define internal variables
-INTEGER(I4B) :: ii, nsd
-  !!
-  !! main
-  !!
-CALL Reallocate(cdNdXt, SIZE(obj%dNdXt, 1), SIZE(obj%dNdXt, 3))
-nsd = SIZE(obj%dNdXt, 2)
-DO ii = 1, SIZE(cdNdXt, 2)
-  cdNdXt(:, ii) = MATMUL(obj%dNdXt(:, :, ii), Val(1:nsd))
-END DO
-  !!
-END PROCEDURE getProjectionOfdNdXt_1
+MODULE PROCEDURE GetProjectionOfdNdXt_1
+INTEGER(I4B) :: nrow, ncol
+
+nrow = obj%nns
+ncol = obj%nips
+CALL Reallocate(ans, nrow, ncol)
+
+CALL GetProjectionOfdNdXt_(obj=obj, ans=ans, val=val, nrow=nrow, &
+                           ncol=ncol)
+END PROCEDURE GetProjectionOfdNdXt_1
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE getProjectionOfdNdXt1_
+MODULE PROCEDURE GetProjectionOfdNdXt1_
 INTEGER(I4B) :: ii, nsd
 
-nrow = SIZE(obj%dNdXt, 1)
-ncol = SIZE(obj%dNdXt, 3)
-nsd = SIZE(obj%dNdXt, 2)
+nrow = obj%nns !!SIZE(obj%dNdXt, 1)
+ncol = obj%nips !!SIZE(obj%dNdXt, 3)
+nsd = obj%nsd !!SIZE(obj%dNdXt, 2)
 
 DO ii = 1, ncol
-  cdNdXt(1:nrow, ii) = MATMUL(obj%dNdXt(1:nrow, 1:nsd, ii), Val(1:nsd))
+  ans(1:nrow, ii) = MATMUL(obj%dNdXt(1:nrow, 1:nsd, ii), val(1:nsd))
 END DO
-
-END PROCEDURE getProjectionOfdNdXt1_
+END PROCEDURE GetProjectionOfdNdXt1_
 
 !----------------------------------------------------------------------------
 !                                                       getProjectionOfdNdXt
