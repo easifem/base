@@ -431,6 +431,9 @@ dim1 = SIZE(x, 2) !! nips
 dim2 = SIZE(xij, 2) !! tdof
 dim3 = 1
 
+indx(1) = dim2
+indx(2) = dim2
+
 IF (firstCall) THEN
   CALL LagrangeCoeff_Line_( &
     order=order, xij=xij, basisType=basisType, alpha=alpha, beta=beta, &
