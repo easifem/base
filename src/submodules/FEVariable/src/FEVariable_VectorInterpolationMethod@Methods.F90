@@ -17,6 +17,8 @@
 !
 
 SUBMODULE(FEVariable_VectorInterpolationMethod) Methods
+USE BaseType, ONLY: TypeFEVariableConstant, TypeFEVariableSpace, &
+                    TypeFEVariableTime, TypeFEVariableSpaceTime
 IMPLICIT NONE
 CONTAINS
 
@@ -494,5 +496,48 @@ CASE (TypeFEVariableOpt%quadrature)
 END SELECT
 
 END PROCEDURE VectorSpaceTimeGetInterpolation_3
+
+!----------------------------------------------------------------------------
+!                                                    VectorGetInterpolation_
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE VectorGetInterpolation_3
+INTEGER(I4B) :: vartype
+
+vartype = obj%varType
+
+SELECT CASE (vartype)
+CASE (TypeFEVariableOpt%constant)
+  CALL GetInterpolation_( &
+    obj=obj, rank=rank, vartype=TypeFEVariableConstant, N=N, nns=nns, &
+    spaceIndx=spaceIndx, timeIndx=timeIndx, scale=scale, ans=ans, &
+    tsize=tsize, addContribution=addContribution)
+
+CASE (TypeFEVariableOpt%space)
+  CALL GetInterpolation_( &
+    obj=obj, rank=rank, vartype=TypeFEVariableSpace, N=N, nns=nns, &
+    spaceIndx=spaceIndx, timeIndx=timeIndx, scale=scale, ans=ans, &
+    tsize=tsize, addContribution=addContribution)
+
+CASE (TypeFEVariableOpt%time)
+  ! CALL GetInterpolation_( &
+  !   obj=obj, rank=rank, vartype=TypeFEVariableTime, N=N, nns=nns, &
+  !   spaceIndx=spaceIndx, timeIndx=timeIndx, scale=scale, ans=ans, &
+  !   tsize=tsize, addContribution=addContribution)
+
+CASE (TypeFEVariableOpt%spacetime)
+  CALL GetInterpolation_( &
+    obj=obj, rank=rank, vartype=TypeFEVariableSpaceTime, N=N, nns=nns, &
+    spaceIndx=spaceIndx, timeIndx=timeIndx, T=T, nnt=nnt, scale=scale, &
+    ans=ans, tsize=tsize, addContribution=addContribution)
+
+END SELECT
+END PROCEDURE VectorGetInterpolation_3
+
+!----------------------------------------------------------------------------
+!                                                              Include error
+!----------------------------------------------------------------------------
+
+#include "../../include/errors.F90"
 
 END SUBMODULE Methods
