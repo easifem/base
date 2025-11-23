@@ -15,7 +15,6 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 
 MODULE FEVariable_Method
-
 USE FEVariable_AdditionMethod
 USE FEVariable_ConstructorMethod
 USE FEVariable_DivisionMethod
@@ -33,5 +32,4 @@ USE FEVariable_ScalarInterpolationMethod
 USE FEVariable_VectorInterpolationMethod
 USE FEVariable_MatrixInterpolationMethod
 USE FEVariable_InterpolationMethod
-
 END MODULE FEVariable_Method
