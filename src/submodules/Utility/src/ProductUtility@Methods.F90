@@ -350,6 +350,26 @@ END PROCEDURE OuterProd_r1r1r1
 !
 !----------------------------------------------------------------------------
 
+! ans(i, j, k) = anscoeff * ans + scale * (a(i) * b(j)) * c(k))
+MODULE PROCEDURE OuterProd_r1r1r1_
+REAL(DFP) :: scale0
+INTEGER(I4B) :: kk
+
+dim1 = SIZE(a)
+dim2 = SIZE(b)
+dim3 = SIZE(c)
+
+DO kk = 1, dim3
+  scale0 = scale * c(kk)
+  CALL OuterProd_(a=a, b=b, ans=ans(:, :, kk), nrow=dim1, ncol=dim2, &
+                  anscoeff=anscoeff, scale=scale0)
+END DO
+END PROCEDURE OuterProd_r1r1r1_
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
 MODULE PROCEDURE OuterProd_r1r1r2
 ans = OuterProd(OuterProd(a, b), c)
 END PROCEDURE OuterProd_r1r1r2

@@ -542,6 +542,31 @@ END INTERFACE OuterProd
 ! update: 2021-12-19
 ! summary: a b c
 
+INTERFACE
+  MODULE PURE SUBROUTINE OuterProd_r1r1r1_( &
+    a, b, c, anscoeff, scale, ans, dim1, dim2, dim3)
+    REAL(DFP), INTENT(IN) :: a(:)
+    REAL(DFP), INTENT(IN) :: b(:)
+    REAL(DFP), INTENT(IN) :: c(:)
+    REAL(DFP), INTENT(INOUT) :: ans(:, :, :)
+    INTEGER(I4B), INTENT(OUT) :: dim1, dim2, dim3
+    REAL(DFP), INTENT(IN) :: anscoeff, scale
+  END SUBROUTINE OuterProd_r1r1r1_
+END INTERFACE
+
+INTERFACE OuterProd_
+  MODULE PROCEDURE OuterProd_r1r1r1_
+END INTERFACE OuterProd_
+
+!----------------------------------------------------------------------------
+!                                                            OuterProd@PROD
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2021-12-19
+! update: 2021-12-19
+! summary: a b c
+
 INTERFACE OuterProd
   MODULE PURE FUNCTION OuterProd_r1r1r2(a, b, c) RESULT(ans)
     REAL(DFP), INTENT(IN) :: a(:)
