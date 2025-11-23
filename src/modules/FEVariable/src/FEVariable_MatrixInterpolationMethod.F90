@@ -39,12 +39,9 @@ PUBLIC :: GetInterpolation_
 ! summary: Get interpolation of Matrix, constant
 
 INTERFACE GetInterpolation_
- MODULE PURE SUBROUTINE MatrixConstantGetInterpolation_1(obj, rank, vartype, &
-                                                          N, nns, nips, &
-                                                          scale, &
-                                                          addContribution, &
-                                                          ans, dim1, dim2, &
-                                                          dim3)
+  MODULE PURE SUBROUTINE MatrixConstantGetInterpolation_1( &
+    obj, rank, vartype, N, nns, nips, scale, addContribution, ans, dim1, &
+    dim2, dim3)
     CLASS(FEVariable_), INTENT(IN) :: obj
     TYPE(FEVariableMatrix_), INTENT(IN) :: rank
     TYPE(FEVariableConstant_), INTENT(IN) :: vartype
@@ -76,11 +73,8 @@ END INTERFACE GetInterpolation_
 ! summary: Get interpolation of Matrix, constant
 
 INTERFACE GetInterpolation_
- MODULE PURE SUBROUTINE MatrixConstantGetInterpolation_2(obj, rank, vartype, &
-                                                          N, nns, nips, &
-                                                          scale, &
-                                                          addContribution, &
-                                                          timeIndx, ans)
+  MODULE PURE SUBROUTINE MatrixConstantGetInterpolation_2( &
+    obj, rank, vartype, N, nns, nips, scale, addContribution, timeIndx, ans)
     CLASS(FEVariable_), INTENT(IN) :: obj
     TYPE(FEVariableMatrix_), INTENT(IN) :: rank
     TYPE(FEVariableConstant_), INTENT(IN) :: vartype
@@ -112,11 +106,9 @@ END INTERFACE GetInterpolation_
 ! summary: Get interpolation of Matrix, constant
 
 INTERFACE GetInterpolation_
- MODULE PURE SUBROUTINE MatrixConstantGetInterpolation_3(obj, rank, vartype, &
-                                                          N, nns, spaceIndx, &
-                                                          timeIndx, scale, &
-                                                          addContribution, &
-                                                          ans, nrow, ncol)
+  MODULE PURE SUBROUTINE MatrixConstantGetInterpolation_3( &
+    obj, rank, vartype, N, nns, spaceIndx, timeIndx, scale, addContribution, &
+    ans, nrow, ncol)
     CLASS(FEVariable_), INTENT(IN) :: obj
     TYPE(FEVariableMatrix_), INTENT(IN) :: rank
     TYPE(FEVariableConstant_), INTENT(IN) :: vartype
@@ -376,6 +368,43 @@ INTERFACE GetInterpolation_
     INTEGER(I4B), INTENT(OUT) :: nrow, ncol
     !! Number of data written in ans
   END SUBROUTINE MatrixSpaceTimeGetInterpolation_3
+END INTERFACE GetInterpolation_
+
+!----------------------------------------------------------------------------
+!                               GetInterpolation_@MatrixInterpolationMethods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2025-08-29
+! summary: Get interpolation of Matrix, space-time
+
+INTERFACE GetInterpolation_
+  MODULE PURE SUBROUTINE MatrixGetInterpolation_3( &
+    obj, rank, N, nns, spaceIndx, timeIndx, T, nnt, scale, addContribution, &
+    ans, nrow, ncol)
+    CLASS(FEVariable_), INTENT(IN) :: obj
+    TYPE(FEVariableMatrix_), INTENT(IN) :: rank
+    REAL(DFP), INTENT(IN) :: N(:, :)
+    !! shape functions data, N(I, ips) : I is node or dof number
+    !! ips is integration point number
+    INTEGER(I4B), INTENT(IN) :: nns
+    !! number of nodes in N, bound for dim1 in N
+    INTEGER(I4B), INTENT(IN) :: spaceIndx, timeIndx
+    !! number of integration points in N, bound for dim2 in N
+    REAL(DFP), INTENT(IN) :: T(:)
+    !! time shape functions data, T(a) : a is time node or dof number
+    INTEGER(I4B), INTENT(IN) :: nnt
+    !! number of time nodes in T, bound for dim1 in T
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    !! Interpolated value
+    !! Size of ans should be at least nips
+    REAL(DFP), INTENT(IN) :: scale
+    !! scale factor to be applied to the interpolated value
+    LOGICAL(LGT), INTENT(IN) :: addContribution
+    !! if true, the interpolated value is added to ans
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+    !! Number of data written in ans
+  END SUBROUTINE MatrixGetInterpolation_3
 END INTERFACE GetInterpolation_
 
 !----------------------------------------------------------------------------

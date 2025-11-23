@@ -16,6 +16,8 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 
 SUBMODULE(FEVariable_MatrixInterpolationMethod) Methods
+USE BaseType, ONLY: TypeFEVariableConstant, TypeFEVariableSpace, &
+                    TypeFEVariableTime, TypeFEVariableSpaceTime
 IMPLICIT NONE
 CONTAINS
 
@@ -309,7 +311,7 @@ dim3 = nips
 
 IF (.NOT. addContribution) ans(1:dim1, 1:dim2, 1:dim3) = 0.0_DFP
 
-SELECT CASE (obj%defineon )
+SELECT CASE (obj%defineon)
 CASE (TypeFEVariableOpt%nodal)
 
   CALL MasterGetInterpolationFromNodal1_(ans=ans, scale=scale, N=N, &
@@ -531,6 +533,36 @@ CASE (TypeFEVariableOpt%quadrature)
 
 END SELECT
 END PROCEDURE MatrixSpaceTimeGetInterpolation_3
+
+!----------------------------------------------------------------------------
+!                                                        MatrixInterpolation_
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE MatrixGetInterpolation_3
+INTEGER(I4B) :: vartype
+vartype = obj%varType
+SELECT CASE (vartype)
+CASE (TypeFEVariableOpt%constant)
+  CALL GetInterpolation_( &
+    obj=obj, rank=rank, vartype=TypeFEVariableConstant, N=N, nns=nns, &
+    spaceIndx=spaceIndx, timeIndx=timeIndx, scale=scale, &
+    addContribution=addContribution, ans=ans, nrow=nrow, ncol=ncol)
+
+CASE (TypeFEVariableOpt%space)
+  CALL GetInterpolation_( &
+    obj=obj, rank=rank, vartype=TypeFEVariableSpace, N=N, nns=nns, &
+    spaceIndx=spaceIndx, timeIndx=timeIndx, scale=scale, &
+    addContribution=addContribution, ans=ans, nrow=nrow, ncol=ncol)
+
+CASE (TypeFEVariableOpt%time)
+
+CASE (TypeFEVariableOpt%spacetime)
+  CALL GetInterpolation_( &
+    obj=obj, rank=rank, vartype=TypeFEVariableSpaceTime, N=N, nns=nns, &
+    spaceIndx=spaceIndx, timeIndx=timeIndx, T=T, nnt=nnt, scale=scale, &
+    addContribution=addContribution, ans=ans, nrow=nrow, ncol=ncol)
+END SELECT
+END PROCEDURE MatrixGetInterpolation_3
 
 !----------------------------------------------------------------------------
 !
