@@ -17,6 +17,8 @@
 !
 
 SUBMODULE(FEVariable_ScalarInterpolationMethod) Methods
+USE BaseType, ONLY: TypeFEVariableConstant, TypeFEVariableSpace, &
+                    TypeFEVariableSpaceTime, TypeFEVariableTime
 IMPLICIT NONE
 CONTAINS
 
@@ -266,7 +268,7 @@ END SELECT
 END PROCEDURE ScalarSpaceTimeGetInterpolation_2
 
 !----------------------------------------------------------------------------
-!                                                           GetInterpolation_
+!                                                          GetInterpolation_
 !----------------------------------------------------------------------------
 
 ! obj%defineon is nodal
@@ -303,5 +305,43 @@ CASE (TypeFEVariableOpt%quadrature)
 
 END SELECT
 END PROCEDURE ScalarSpaceTimeGetInterpolation_3
+
+!----------------------------------------------------------------------------
+!                                                          GetInterpolation_
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE ScalarGetInterpolation_3
+INTEGER(I4B) :: vartype
+
+vartype = obj%varType
+
+SELECT CASE (vartype)
+CASE (TypeFEVariableOpt%constant)
+  CALL GetInterpolation_( &
+    obj=obj, rank=rank, vartype=TypeFEVariableConstant, N=N, nns=nns, &
+    spaceIndx=spaceIndx, timeIndx=timeIndx, scale=scale, &
+    addContribution=addContribution, ans=ans)
+
+CASE (TypeFEVariableOpt%space)
+  CALL GetInterpolation_( &
+    obj=obj, rank=rank, vartype=TypeFEVariableSpace, N=N, nns=nns, &
+    spaceIndx=spaceIndx, timeIndx=timeIndx, scale=scale, &
+    addContribution=addContribution, ans=ans)
+
+CASE (TypeFEVariableOpt%time)
+  ! CALL GetInterpolation_( &
+  !   obj=obj, rank=rank, N=N, nns=nns, spaceIndx=spaceIndx, &
+  !   timeIndx=timeIndx, T=T, nnt=nnt, scale=scale, &
+  !   addContribution=addContribution, ans=ans)
+
+CASE (TypeFEVariableOpt%spacetime)
+  CALL GetInterpolation_( &
+    obj=obj, rank=rank, vartype=TypeFEVariableSpaceTime, N=N, nns=nns, &
+    spaceIndx=spaceIndx, timeIndx=timeIndx, T=T, nnt=nnt, scale=scale, &
+    addContribution=addContribution, ans=ans)
+
+END SELECT
+
+END PROCEDURE ScalarGetInterpolation_3
 
 END SUBMODULE Methods
