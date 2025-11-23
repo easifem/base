@@ -70,11 +70,12 @@ PURE SUBROUTINE elemsd_getSUPGParam_a(obj, tau, c, val, nu, k, &
   !!
   opt0 = INPUT(default=1_I4B, option=opt)
   !!
-  CALL GetProjectionOfdNdXt(obj=obj, cdNdXt=p, val=c)
+  CALL GetProjectionOfdNdXt(obj=obj, ans=p, c=c, crank=TypeFEVariableVector)
   !!
   CALL GetUnitNormal(obj=obj, val=val, r=r)
   rvar = QuadratureVariable(r, TypeFEVariableVector, TypeFEVariableSpace)
-  CALL GetProjectionOfdNdXt(obj=obj, cdNdXt=q, val=rvar)
+  CALL GetProjectionOfdNdXt(obj=obj, ans=q, c=rvar, &
+                            crank=TypeFEVariableVector)
   !!
   CALL GetInterpolation(obj=obj, val=nu, ans=nubar)
   !!
@@ -350,11 +351,12 @@ PURE SUBROUTINE elemsd_getSUPGParam_c(obj, tau, c, val, nu, k, &
   !!
   opt0 = INPUT(default=1_I4B, option=opt)
   !!
-  CALL GetProjectionOfdNdXt(obj=obj, cdNdXt=p, val=c)
+  CALL GetProjectionOfdNdXt(obj=obj, ans=p, c=c, crank=TypeFEVariableVector)
   !!
   CALL GetUnitNormal(obj=obj, val=val, r=r)
   rvar = QuadratureVariable(r, TypeFEVariableVector, TypeFEVariableSpace)
-  CALL GetProjectionOfdNdXt(obj=obj, cdNdXt=q, val=rvar)
+  CALL GetProjectionOfdNdXt(obj=obj, ans=q, c=rvar, &
+                            crank=TypeFEVariableVector)
   !!
   IF (PRESENT(k)) THEN
     kbar = k

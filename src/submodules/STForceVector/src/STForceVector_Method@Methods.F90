@@ -73,6 +73,8 @@ nipt = SIZE(test)
 nrow = test(1)%nns
 ncol = test(1)%nnt
 
+ans(1:nrow, 1:ncol) = 0.0_DFP
+
 DO ipt = 1, nipt
   DO ips = 1, test(ipt)%nips
     realval = test(ipt)%js(ips) * test(ipt)%ws(ips) * test(ipt)%jt * &
@@ -111,6 +113,8 @@ INTEGER(I4B) :: nipt, ipt, ips, i1, i2
 nipt = SIZE(test)
 nrow = test(1)%nns
 ncol = test(1)%nnt
+
+ans(1:nrow, 1:ncol) = 0.0_DFP
 
 DO ipt = 1, nipt
   DO ips = 1, test(ipt)%nips
@@ -158,6 +162,8 @@ nipt = SIZE(test)
 dim1 = FEVariableSize(obj=c, dim=1)
 dim2 = test(1)%nns
 dim3 = test(1)%nnt
+
+ans(1:dim1, 1:dim2, 1:dim3) = 0.0_DFP
 
 DO ipt = 1, nipt
 
@@ -411,7 +417,7 @@ INTEGER(I4B) :: ips, ipt
 
 CALL GetProjectionOfdNTdXt(obj=test, cdNTdXt=p1, val=c)
 
-CALL reallocate(ans, SIZE(test(1)%N, 1), SIZE(test(1)%T))
+CALL Reallocate(ans, SIZE(test(1)%N, 1), SIZE(test(1)%T))
 
 DO ipt = 1, SIZE(test)
 
@@ -427,6 +433,36 @@ DEALLOCATE (realval, p1)
 END PROCEDURE obj_STForceVector15
 
 !----------------------------------------------------------------------------
+!                                                            STForceVector_
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE obj_STForceVector_15
+REAL(DFP), ALLOCATABLE :: realval(:)
+REAL(DFP), ALLOCATABLE :: p1(:, :, :, :)
+INTEGER(I4B) :: ips, ipt, nipt
+
+nipt = SIZE(test)
+nrow = test(1)%nns
+ncol = test(1)%nnt
+
+CALL GetProjectionOfdNTdXt(obj=test, cdNTdXt=p1, val=c)
+
+! CALL Reallocate(ans, SIZE(test(1)%N, 1), SIZE(test(1)%T))
+
+DO ipt = 1, nipt
+
+  realval = test(ipt)%js * test(ipt)%ws * test(ipt)%thickness
+
+  DO ips = 1, test(ipt)%nips
+    ans = ans + realval(ips) * p1(:, :, ips, ipt)
+  END DO
+
+END DO
+
+DEALLOCATE (realval, p1)
+END PROCEDURE obj_STForceVector_15
+
+!----------------------------------------------------------------------------
 !                                                            STForceVector
 !----------------------------------------------------------------------------
 
@@ -439,7 +475,7 @@ INTEGER(I4B) :: ips, ipt
 CALL GetProjectionOfdNTdXt(obj=test, cdNTdXt=p1, val=c1)
 CALL getInterpolation(obj=test, ans=c2bar, val=c2)
 
-CALL reallocate(ans, SIZE(test(1)%N, 1), SIZE(test(1)%T))
+CALL Reallocate(ans, SIZE(test(1)%N, 1), SIZE(test(1)%T))
 
 DO ipt = 1, SIZE(test)
   realval = test(ipt)%js * test(ipt)%ws * test(ipt)%thickness * c2bar(:, ipt)
@@ -461,9 +497,9 @@ REAL(DFP), ALLOCATABLE :: p1(:, :, :, :)
 INTEGER(I4B) :: ips, ipt
 
 CALL GetProjectionOfdNTdXt(obj=test, cdNTdXt=p1, val=c1)
-CALL getInterpolation(obj=test, ans=c2bar, val=c2)
+CALL GetInterpolation(obj=test, ans=c2bar, val=c2)
 
-CALL reallocate(ans, SIZE(c2bar, 1), SIZE(test(1)%N, 1), SIZE(test(1)%T))
+CALL Reallocate(ans, SIZE(c2bar, 1), SIZE(test(1)%N, 1), SIZE(test(1)%T))
 
 DO ipt = 1, SIZE(test)
 
@@ -488,9 +524,9 @@ REAL(DFP), ALLOCATABLE :: p1(:, :, :, :)
 INTEGER(I4B) :: ips, ipt
 
 CALL GetProjectionOfdNTdXt(obj=test, cdNTdXt=p1, val=c1)
-CALL getInterpolation(obj=test, ans=c2bar, val=c2)
+CALL GetInterpolation(obj=test, ans=c2bar, val=c2)
 
-CALL reallocate(ans, SIZE(c2bar, 1), SIZE(c2bar, 2), SIZE(test(1)%N, 1), &
+CALL Reallocate(ans, SIZE(c2bar, 1), SIZE(c2bar, 2), SIZE(test(1)%N, 1), &
                 SIZE(test(1)%T))
 
 DO ipt = 1, SIZE(test)
@@ -515,8 +551,8 @@ REAL(DFP), ALLOCATABLE :: p1(:, :, :, :)
 INTEGER(I4B) :: ips, ipt
 
 CALL GetProjectionOfdNTdXt(obj=test, cdNTdXt=p1, val=c1)
-CALL getInterpolation(obj=test, ans=c2bar, val=c2)
-CALL getInterpolation(obj=test, ans=c3bar, val=c3)
+CALL GetInterpolation(obj=test, ans=c2bar, val=c2)
+CALL GetInterpolation(obj=test, ans=c3bar, val=c3)
 
 CALL reallocate(ans, SIZE(test(1)%N, 1), SIZE(test(1)%T))
 
@@ -545,10 +581,10 @@ REAL(DFP), ALLOCATABLE :: p1(:, :, :, :)
 INTEGER(I4B) :: ips, ipt
 
 CALL GetProjectionOfdNTdXt(obj=test, cdNTdXt=p1, val=c1)
-CALL getInterpolation(obj=test, ans=c2bar, val=c2)
-CALL getInterpolation(obj=test, ans=c3bar, val=c3)
+CALL GetInterpolation(obj=test, ans=c2bar, val=c2)
+CALL GetInterpolation(obj=test, ans=c3bar, val=c3)
 
-CALL reallocate(ans, SIZE(c3bar, 1), SIZE(test(1)%N, 1), SIZE(test(1)%T))
+CALL Reallocate(ans, SIZE(c3bar, 1), SIZE(test(1)%N, 1), SIZE(test(1)%T))
 
 DO ipt = 1, SIZE(test)
   realval = test(ipt)%js * test(ipt)%ws * test(ipt)%thickness &
@@ -576,10 +612,10 @@ REAL(DFP), ALLOCATABLE :: p1(:, :, :, :)
 INTEGER(I4B) :: ips, ipt
 
 CALL GetProjectionOfdNTdXt(obj=test, cdNTdXt=p1, val=c1)
-CALL getInterpolation(obj=test, ans=c2bar, val=c2)
-CALL getInterpolation(obj=test, ans=c3bar, val=c3)
+CALL GetInterpolation(obj=test, ans=c2bar, val=c2)
+CALL GetInterpolation(obj=test, ans=c3bar, val=c3)
 
-CALL reallocate(ans, SIZE(c3bar, 1), SIZE(c3bar, 2), SIZE(test(1)%N, 1), &
+CALL Reallocate(ans, SIZE(c3bar, 1), SIZE(c3bar, 2), SIZE(test(1)%N, 1), &
                 SIZE(test(1)%T))
 
 DO ipt = 1, SIZE(test)

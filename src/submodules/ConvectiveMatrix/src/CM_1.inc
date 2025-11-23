@@ -46,7 +46,7 @@ PURE SUBROUTINE CM_1(ans, test, trial, c, term1, term2, opt)
   !!
   !! projection on trial
   !!
-  CALL GetProjectionOfdNdXt(obj=trial, cdNdXt=p, val=c)
+  CALL GetProjectionOfdNdXt(obj=trial, ans=p, c=c, crank=TypeFEVariableVector)
   !!
   DO ips = 1, SIZE(trial%N, 2)
     ans = ans + outerprod(a=test%N(:, ips), &

@@ -29,7 +29,7 @@ PUBLIC :: GetProjectionOfdNTdXt
 ! PUBLIC :: getProjectionOfdNTdXt_
 
 !----------------------------------------------------------------------------
-!                                     getProjectionOfdNdXt@ProjectionMethods
+!                                                        GetProjectionOfdNdXt
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -44,35 +44,43 @@ PUBLIC :: GetProjectionOfdNTdXt
 !
 ! $$P^{I}=c_{i}\frac{\partial N^{I}}{\partial x_{i}} $$
 
-INTERFACE GetProjectionOfdNdXt
-  MODULE PURE SUBROUTINE GetProjectionOfdNdXt_1(obj, val, ans)
+INTERFACE
+  MODULE PURE SUBROUTINE GetProjectionOfdNdXt_1(obj, c, ans)
     CLASS(ElemshapeData_), INTENT(IN) :: obj
-    REAL(DFP), INTENT(IN) :: val(:)
+    REAL(DFP), INTENT(IN) :: c(:)
     !! constant value of vector
     REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: ans(:, :)
     !! returned $c_{i}\frac{\partial N^{I}}{\partial x_{i}}$
   END SUBROUTINE GetProjectionOfdNdXt_1
+END INTERFACE
+
+INTERFACE GetProjectionOfdNdXt
+  MODULE PROCEDURE GetProjectionOfdNdXt_1
 END INTERFACE GetProjectionOfdNdXt
 
 !----------------------------------------------------------------------------
-!
+!                                                      GetProjectionOfdNdXt_
 !----------------------------------------------------------------------------
 
 !> author: Shion Shimizu
 ! date:   2025-03-05
 ! summary:  get interpolation of vector without allocation
 
-INTERFACE GetProjectionOfdNdXt_
-  MODULE PURE SUBROUTINE GetProjectionOfdNdXt1_(obj, val, ans, nrow, ncol)
+INTERFACE
+  MODULE PURE SUBROUTINE GetProjectionOfdNdXt1_(obj, c, ans, nrow, ncol)
     CLASS(ElemshapeData_), INTENT(IN) :: obj
-    REAL(DFP), INTENT(IN) :: val(:)
+    REAL(DFP), INTENT(IN) :: c(:)
     REAL(DFP), INTENT(INOUT) :: ans(:, :)
     INTEGER(I4B), INTENT(OUT) :: nrow, ncol
   END SUBROUTINE GetProjectionOfdNdXt1_
+END INTERFACE
+
+INTERFACE GetProjectionOfdNdXt_
+  MODULE PROCEDURE GetProjectionOfdNdXt1_
 END INTERFACE GetProjectionOfdNdXt_
 
 !----------------------------------------------------------------------------
-!                                            getProjectionOfdNdXt@getMethod
+!                                                        GetProjectionOfdNdXt
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -87,28 +95,40 @@ END INTERFACE GetProjectionOfdNdXt_
 !
 ! $$P^{I}=c_{i}\frac{\partial N^{I}}{\partial x_{i}} $$
 
-INTERFACE GetProjectionOfdNdXt
-  MODULE PURE SUBROUTINE getProjectionOfdNdXt_2(obj, cdNdXt, val)
+INTERFACE
+  MODULE PURE SUBROUTINE GetProjectionOfdNdXt_2(obj, c, crank, ans)
     CLASS(ElemshapeData_), INTENT(IN) :: obj
     !! ElemshapeData object
-    REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: cdNdXt(:, :)
-    !! returned $c_{i}\frac{\partial N^{I}}{\partial x_{i}}$
-    CLASS(FEVariable_), INTENT(IN) :: val
+    CLASS(FEVariable_), INTENT(IN) :: c
     !! FEVariable vector
-  END SUBROUTINE getProjectionOfdNdXt_2
+    TYPE(FEVariableVector_), INTENT(IN) :: crank
+    !! rank of c should be vector
+    REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: ans(:, :)
+    !! returned $c_{i}\frac{\partial N^{I}}{\partial x_{i}}$
+  END SUBROUTINE GetProjectionOfdNdXt_2
+END INTERFACE
+
+INTERFACE GetProjectionOfdNdXt
+  MODULE PROCEDURE GetProjectionOfdNdXt_2
 END INTERFACE GetProjectionOfdNdXt
 
 !----------------------------------------------------------------------------
-!
+!                                                       GetProjectionofdNdXt_
 !----------------------------------------------------------------------------
 
-INTERFACE GetProjectionOfdNdXt_
-  MODULE PURE SUBROUTINE getProjectionOfdNdXt2_(obj, cdNdXt, val, nrow, ncol)
+INTERFACE
+  MODULE PURE SUBROUTINE GetProjectionOfdNdXt2_(obj, c, crank, ans, nrow, &
+                                                ncol)
     CLASS(ElemshapeData_), INTENT(IN) :: obj
-    REAL(DFP), INTENT(INOUT) :: cdNdXt(:, :)
-    CLASS(FEVariable_), INTENT(IN) :: val
+    CLASS(FEVariable_), INTENT(IN) :: c
+    TYPE(FEVariableVector_), INTENT(IN) :: crank
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
     INTEGER(I4B), INTENT(OUT) :: nrow, ncol
-  END SUBROUTINE getProjectionOfdNdXt2_
+  END SUBROUTINE GetProjectionOfdNdXt2_
+END INTERFACE
+
+INTERFACE GetProjectionOfdNdXt_
+  MODULE PROCEDURE GetProjectionOfdNdXt2_
 END INTERFACE GetProjectionOfdNdXt_
 
 !----------------------------------------------------------------------------

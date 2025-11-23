@@ -195,8 +195,9 @@ PURE SUBROUTINE CM1_(ans, test, trial, c, term1, term2, opt, nrow, ncol)
   ncol = trial%nns
   ans(1:nrow, 1:ncol) = 0.0_DFP
 
-  CALL GetProjectionOfdNdXt_(obj=trial, cdNdXt=p, val=c, nrow=ii, ncol=jj)
-  !!
+  CALL GetProjectionOfdNdXt_(obj=trial, ans=p, c=c, nrow=ii, ncol=jj, &
+                             crank=TypeFEVariableVector)
+  
   DO ips = 1, trial%nips
     realval = trial%js(ips) * trial%ws(ips) * trial%thickness(ips)
     CALL OuterProd_(a=test%N(1:nrow, ips), &
@@ -235,7 +236,8 @@ PURE SUBROUTINE CM2_(ans, test, trial, c, term1, term2, opt, nrow, ncol)
   ncol = trial%nns
   ans(1:nrow, 1:ncol) = 0.0_DFP
 
-  CALL GetProjectionOfdNdXt_(obj=test, cdNdXt=p, val=c, nrow=ii, ncol=jj)
+  CALL GetProjectionOfdNdXt_(obj=test, ans=p, c=c, nrow=ii, ncol=jj, &
+                             crank=TypeFEVariableVector)
 
   DO ips = 1, trial%nips
     realval = trial%js(ips) * trial%ws(ips) * trial%thickness(ips)
