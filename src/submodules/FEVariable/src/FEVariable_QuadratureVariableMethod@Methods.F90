@@ -17,7 +17,6 @@
 
 SUBMODULE(FEVariable_QuadratureVariableMethod) Methods
 USE ReallocateUtility, ONLY: Reallocate
-
 USE FEVariable_ConstructorMethod, ONLY: FEVariableInitiate => Initiate
 
 IMPLICIT NONE
@@ -84,6 +83,20 @@ END PROCEDURE Quadrature_Scalar_Time
 !                                                         QuadratureVariable
 !----------------------------------------------------------------------------
 
+MODULE PROCEDURE Quadrature_Scalar_Time2
+INTEGER(I4B) :: s(1)
+
+s(1) = tsize
+CALL FEVariableInitiate( &
+  obj=obj, s=s, defineon=TypeFEVariableOpt%Quadrature, len=s(1), &
+  vartype=TypeFEVariableOpt%time, rank=TypeFEVariableOpt%scalar)
+obj%val(1:obj%len) = 0.0_DFP
+END PROCEDURE Quadrature_Scalar_Time2
+
+!----------------------------------------------------------------------------
+!                                                         QuadratureVariable
+!----------------------------------------------------------------------------
+
 MODULE PROCEDURE Quadrature_Scalar_SpaceTime
 INTEGER(I4B) :: s(2), tsize, ii, jj, kk
 s = SHAPE(val)
@@ -111,11 +124,26 @@ INTEGER(I4B) :: tsize
 
 tsize = s(1) * s(2)
 
-CALL FEVariableInitiate(obj=obj, s=s, defineon=TypeFEVariableOpt%Quadrature, &
-                        vartype=TypeFEVariableOpt%spacetime, &
-                        rank=TypeFEVariableOpt%scalar, len=tsize, &
-                        val=val)
+CALL FEVariableInitiate( &
+  obj=obj, s=s, defineon=TypeFEVariableOpt%Quadrature, len=tsize, val=val, &
+  vartype=TypeFEVariableOpt%spacetime, rank=TypeFEVariableOpt%scalar)
 END PROCEDURE Quadrature_Scalar_SpaceTime2
+
+!----------------------------------------------------------------------------
+!                                                          QuadratureVariable
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE Quadrature_Scalar_SpaceTime3
+INTEGER(I4B) :: tsize, s(2)
+
+s(1) = nrow
+s(2) = ncol
+tsize = s(1) * s(2)
+
+CALL FEVariableInitiate( &
+  obj=obj, s=s, defineon=TypeFEVariableOpt%Quadrature, len=tsize, &
+  vartype=TypeFEVariableOpt%spacetime, rank=TypeFEVariableOpt%scalar)
+END PROCEDURE Quadrature_Scalar_SpaceTime3
 
 !----------------------------------------------------------------------------
 !                                                          QuadratureVariable

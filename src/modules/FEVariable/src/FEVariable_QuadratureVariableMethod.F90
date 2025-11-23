@@ -130,6 +130,29 @@ END INTERFACE QuadratureVariable
 !> author: Vikas Sharma, Ph. D.
 ! date: 2021-12-10
 ! update: 2021-12-10
+! summary: Create quadrature variable, which is Scalar, Time
+
+INTERFACE
+  MODULE PURE FUNCTION Quadrature_Scalar_Time2(tsize, rank, vartype) &
+    RESULT(obj)
+    TYPE(FEVariable_) :: obj
+    INTEGER(I4B), INTENT(IN) :: tsize
+    TYPE(FEVariableScalar_), INTENT(IN) :: rank
+    TYPE(FEVariableTime_), INTENT(IN) :: vartype
+  END FUNCTION Quadrature_Scalar_Time2
+END INTERFACE
+
+INTERFACE QuadratureVariable
+  MODULE PROCEDURE Quadrature_Scalar_Time2
+END INTERFACE QuadratureVariable
+
+!----------------------------------------------------------------------------
+!                                      QuadratureVariable@ConstructorMethods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2021-12-10
+! update: 2021-12-10
 ! summary: Create quadrature variable, which is Scalar, SpaceTime
 
 INTERFACE
@@ -168,6 +191,29 @@ END INTERFACE
 
 INTERFACE QuadratureVariable
   MODULE PROCEDURE Quadrature_Scalar_SpaceTime2
+END INTERFACE QuadratureVariable
+
+!----------------------------------------------------------------------------
+!                                      QuadratureVariable@ConstructorMethods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2021-12-10
+! update: 2021-12-10
+! summary: Create quadrature variable, which is Scalar, SpaceTime
+
+INTERFACE
+  MODULE PURE FUNCTION Quadrature_Scalar_SpaceTime3( &
+    nrow, ncol, rank, vartype) RESULT(obj)
+    TYPE(FEVariable_) :: obj
+    INTEGER(I4B), INTENT(IN) :: nrow, ncol
+    TYPE(FEVariableScalar_), INTENT(IN) :: rank
+    TYPE(FEVariableSpaceTime_), INTENT(IN) :: vartype
+  END FUNCTION Quadrature_Scalar_SpaceTime3
+END INTERFACE
+
+INTERFACE QuadratureVariable
+  MODULE PROCEDURE Quadrature_Scalar_SpaceTime3
 END INTERFACE QuadratureVariable
 
 !----------------------------------------------------------------------------
