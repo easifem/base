@@ -221,6 +221,7 @@ PUBLIC :: TypeHCURL
 PUBLIC :: DG_
 PUBLIC :: TypeDG
 PUBLIC :: DEL_NONE, DEL_X, DEL_Y, DEL_Z, DEL_X_ALL, DEL_t
+PUBLIC :: DerivativeTerm_, TypeDerivativeTerm
 PUBLIC :: ElementData_
 PUBLIC :: TypeElementData
 PUBLIC :: ElementDataPointer_
@@ -1435,6 +1436,21 @@ INTEGER(I4B), PARAMETER :: DEL_Y = 2
 INTEGER(I4B), PARAMETER :: DEL_Z = 3
 INTEGER(I4B), PARAMETER :: DEL_X_ALL = 4
 INTEGER(I4B), PARAMETER :: DEL_t = -1
+
+!----------------------------------------------------------------------------
+!                                                             DerivativeTerm_
+!----------------------------------------------------------------------------
+
+TYPE :: DerivativeTerm_
+  INTEGER(I4B) :: NONE = 0
+  INTEGER(I4B) :: x = 1
+  INTEGER(I4B) :: y = 2
+  INTEGER(I4B) :: z = 3
+  INTEGER(I4B) :: xAll = 4
+  INTEGER(I4B) :: t = -1
+END TYPE DerivativeTerm_
+
+TYPE(DerivativeTerm_), PARAMETER :: TypeDerivativeTerm = DerivativeTerm_()
 
 !----------------------------------------------------------------------------
 !                                                            ElementData_
