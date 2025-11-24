@@ -759,9 +759,11 @@ DO ipt = 1, SIZE(trial)
   realval = trial(ipt)%js * trial(ipt)%ws * trial(ipt)%thickness &
    & * trial(ipt)%wt * trial(ipt)%jt
     !!
-  CALL GetProjectionOfdNTdXt(obj=test(ipt), cdNTdXt=p1, val=k)
+  CALL GetProjectionOfdNTdXt(obj=test(ipt), ans=p1, c=k, &
+                             crank=TypeFEVariableVector)
     !!
-  CALL GetProjectionOfdNTdXt(obj=trial(ipt), cdNTdXt=p2, val=k)
+  CALL GetProjectionOfdNTdXt(obj=trial(ipt), ans=p2, c=k, &
+                             crank=TypeFEVariableVector)
     !!
   DO ips = 1, SIZE(realval)
       !!
@@ -903,8 +905,10 @@ DO ipt = 1, SIZE(trial)
     !!
   realval = trial(ipt)%js * trial(ipt)%ws * trial(ipt)%thickness &
    & * trial(ipt)%wt * trial(ipt)%jt * c1bar(:, ipt)
-  CALL GetProjectionOfdNTdXt(obj=test(ipt), cdNTdXt=p1, val=c2)
-  CALL GetProjectionOfdNTdXt(obj=trial(ipt), cdNTdXt=p2, val=c2)
+  CALL GetProjectionOfdNTdXt(obj=test(ipt), ans=p1, c=c2, &
+                             crank=TypeFEVariableVector)
+  CALL GetProjectionOfdNTdXt(obj=trial(ipt), ans=p2, c=c2, &
+                             crank=TypeFEVariableVector)
     !!
   DO ips = 1, SIZE(realval)
       !!
@@ -1016,8 +1020,10 @@ DO ipt = 1, SIZE(trial)
     !!
   realval = trial(ipt)%js * trial(ipt)%ws * trial(ipt)%thickness &
    & * trial(ipt)%wt * trial(ipt)%jt
-  CALL GetProjectionOfdNTdXt(obj=test(ipt), cdNTdXt=p1, val=c1)
-  CALL GetProjectionOfdNTdXt(obj=trial(ipt), cdNTdXt=p2, val=c2)
+  CALL GetProjectionOfdNTdXt(obj=test(ipt), ans=p1, c=c1, &
+                             crank=TypeFEVariableVector)
+  CALL GetProjectionOfdNTdXt(obj=trial(ipt), ans=p2, c=c2, &
+                             crank=TypeFEVariableVector)
     !!
   DO ips = 1, SIZE(realval)
       !!

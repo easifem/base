@@ -121,77 +121,77 @@ END DO
 END PROCEDURE GetProjectionOfdNdXt3_
 
 !----------------------------------------------------------------------------
-!                                                      getProjectionOfdNTdXt
+!                                                      GetProjectionOfdNTdXt
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE GetProjectionOfdNTdXt_1
-INTEGER(I4B) :: ii, nsd
-
-CALL Reallocate(cdNTdXt, SIZE(obj%dNTdXt, 1), SIZE(obj%dNTdXt, 2), &
-  & SIZE(obj%dNTdXt, 4))
-nsd = SIZE(obj%dNTdXt, 3)
-
-DO ii = 1, SIZE(cdNTdXt, 3)
-  cdNTdXt(:, :, ii) = MATMUL(obj%dNTdXt(:, :, :, ii), Val(1:nsd))
-END DO
+! INTEGER(I4B) :: ii, nsd
+!
+! CALL Reallocate(cdNTdXt, SIZE(obj%dNTdXt, 1), SIZE(obj%dNTdXt, 2), &
+!   & SIZE(obj%dNTdXt, 4))
+! nsd = SIZE(obj%dNTdXt, 3)
+!
+! DO ii = 1, SIZE(cdNTdXt, 3)
+!   cdNTdXt(:, :, ii) = MATMUL(obj%dNTdXt(:, :, :, ii), Val(1:nsd))
+! END DO
 END PROCEDURE GetProjectionOfdNTdXt_1
 
 !----------------------------------------------------------------------------
-!                                                      getProjectionOfdNTdXt
+!                                                      GetProjectionOfdNTdXt
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE getProjectionOfdNTdXt_2
-INTEGER(I4B) :: ii, nsd
-REAL(DFP), ALLOCATABLE :: cbar(:, :)
-
-CALL getInterpolation(obj=obj, val=val, ans=cbar)
-CALL Reallocate(cdNTdXt, SIZE(obj%dNTdXt, 1), SIZE(obj%dNTdXt, 2), &
-                SIZE(obj%dNTdXt, 4))
-nsd = SIZE(obj%dNTdXt, 3)
-
-DO ii = 1, SIZE(cdNTdXt, 3)
-  cdNTdXt(:, :, ii) = MATMUL(obj%dNTdXt(:, :, :, ii), cbar(1:nsd, ii))
-END DO
-
-DEALLOCATE (cbar)
-END PROCEDURE getProjectionOfdNTdXt_2
+MODULE PROCEDURE GetProjectionOfdNTdXt_2
+! INTEGER(I4B) :: ii, nsd
+! REAL(DFP), ALLOCATABLE :: cbar(:, :)
+!
+! CALL getInterpolation(obj=obj, val=val, ans=cbar)
+! CALL Reallocate(cdNTdXt, SIZE(obj%dNTdXt, 1), SIZE(obj%dNTdXt, 2), &
+!                 SIZE(obj%dNTdXt, 4))
+! nsd = SIZE(obj%dNTdXt, 3)
+!
+! DO ii = 1, SIZE(cdNTdXt, 3)
+!   cdNTdXt(:, :, ii) = MATMUL(obj%dNTdXt(:, :, :, ii), cbar(1:nsd, ii))
+! END DO
+!
+! DEALLOCATE (cbar)
+END PROCEDURE GetProjectionOfdNTdXt_2
 
 !----------------------------------------------------------------------------
-!                                                      getProjectionOfdNTdXt
+!                                                      GetProjectionOfdNTdXt
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE getProjectionOfdNTdXt_3
-INTEGER(I4B) :: ii, jj, nsd
-REAL(DFP), ALLOCATABLE :: cbar(:, :, :)
-
-CALL getInterpolation(obj=obj, val=val, ans=cbar)
-
-CALL Reallocate(cdNTdXt, &
-  & SIZE(obj(1)%dNTdXt, 1), &
-  & SIZE(obj(1)%dNTdXt, 2), &
-  & SIZE(obj(1)%dNTdXt, 4), SIZE(obj))
-
-! CALL Reallocate( &
-!   & cdNTdXt, &
-!   & SIZE(obj(1)%N, 1), &
-!   & SIZE(obj(1)%T), &
-!   & SIZE(obj(1)%N, 2), &
-!   & SIZE(obj) )
-
-nsd = SIZE(obj(1)%dNTdXt, 3)
-
-DO jj = 1, SIZE(cbar, 3)
-  DO ii = 1, SIZE(cbar, 2)
-
-    cdNTdXt(:, :, ii, jj) = MATMUL( &
-      & obj(jj)%dNTdXt(:, :, :, ii), &
-      & cbar(1:nsd, ii, jj))
-
-  END DO
-END DO
-
-DEALLOCATE (cbar)
-END PROCEDURE getProjectionOfdNTdXt_3
+MODULE PROCEDURE GetProjectionOfdNTdXt_3
+! INTEGER(I4B) :: ii, jj, nsd
+! REAL(DFP), ALLOCATABLE :: cbar(:, :, :)
+!
+! CALL getInterpolation(obj=obj, val=val, ans=cbar)
+!
+! CALL Reallocate(cdNTdXt, &
+!   & SIZE(obj(1)%dNTdXt, 1), &
+!   & SIZE(obj(1)%dNTdXt, 2), &
+!   & SIZE(obj(1)%dNTdXt, 4), SIZE(obj))
+!
+! ! CALL Reallocate( &
+! !   & cdNTdXt, &
+! !   & SIZE(obj(1)%N, 1), &
+! !   & SIZE(obj(1)%T), &
+! !   & SIZE(obj(1)%N, 2), &
+! !   & SIZE(obj) )
+!
+! nsd = SIZE(obj(1)%dNTdXt, 3)
+!
+! DO jj = 1, SIZE(cbar, 3)
+!   DO ii = 1, SIZE(cbar, 2)
+!
+!     cdNTdXt(:, :, ii, jj) = MATMUL( &
+!       & obj(jj)%dNTdXt(:, :, :, ii), &
+!       & cbar(1:nsd, ii, jj))
+!
+!   END DO
+! END DO
+!
+! DEALLOCATE (cbar)
+END PROCEDURE GetProjectionOfdNTdXt_3
 
 !----------------------------------------------------------------------------
 !

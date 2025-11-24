@@ -198,14 +198,18 @@ END INTERFACE GetProjectionOfdNdXt_
 !
 ! $$P^{I,a}=c_{i}\frac{\partial N^{I} T_a}{\partial x_{i}}$$
 
-INTERFACE GetProjectionOfdNTdXt
-  MODULE PURE SUBROUTINE getProjectionOfdNTdXt_1(obj, cdNTdXt, val)
+INTERFACE
+  MODULE PURE SUBROUTINE GetProjectionOfdNTdXt_1(obj, c, ans)
     CLASS(STElemshapeData_), INTENT(IN) :: obj
-    REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: cdNTdXt(:, :, :)
-    !! returned $c_{i}\frac{\partial N^{I} T_a}{\partial x_{i}}$
-    REAL(DFP), INTENT(IN) :: val(:)
+    REAL(DFP), INTENT(IN) :: c(:)
     !! constant value of vector
-  END SUBROUTINE getProjectionOfdNTdXt_1
+    REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: ans(:, :, :)
+    !! returned $c_{i}\frac{\partial N^{I} T_a}{\partial x_{i}}$
+  END SUBROUTINE GetProjectionOfdNTdXt_1
+END INTERFACE
+
+INTERFACE GetProjectionOfdNTdXt
+  MODULE PROCEDURE GetProjectionOfdNdXt_1
 END INTERFACE GetProjectionOfdNTdXt
 
 !----------------------------------------------------------------------------
@@ -227,19 +231,24 @@ END INTERFACE GetProjectionOfdNTdXt
 ! - It can vary in space and time domain
 !
 ! $$P^{I,a}=c_{i}\frac{\partial N^{I} T_a}{\partial x_{i}}$$
-!
-INTERFACE GetProjectionOfdNTdXt
-  MODULE PURE SUBROUTINE getProjectionOfdNTdXt_2(obj, cdNTdXt, val)
+
+INTERFACE
+  MODULE PURE SUBROUTINE GetProjectionOfdNTdXt_2(obj, c, crank, ans)
     CLASS(STElemshapeData_), INTENT(IN) :: obj
-    REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: cdNTdXt(:, :, :)
-    !! returned $c_{i}\frac{\partial N^{I} T_a}{\partial x_{i}}$
-    TYPE(FEVariable_), INTENT(IN) :: val
+    TYPE(FEVariable_), INTENT(IN) :: c
     !! constant value of vector
-  END SUBROUTINE getProjectionOfdNTdXt_2
+    TYPE(FEVariableVector_), INTENT(IN) :: crank
+    REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: ans(:, :, :)
+    !! returned $c_{i}\frac{\partial N^{I} T_a}{\partial x_{i}}$
+  END SUBROUTINE GetProjectionOfdNTdXt_2
+END INTERFACE
+
+INTERFACE GetProjectionOfdNTdXt
+  MODULE PROCEDURE GetProjectionOfdNTdXt_2
 END INTERFACE GetProjectionOfdNTdXt
 
 !----------------------------------------------------------------------------
-!                                            getProjectionOfdNTdXt@getMethod
+!                                            GetProjectionOfdNTdXt@getMethod
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -258,13 +267,18 @@ END INTERFACE GetProjectionOfdNTdXt
 ! - It can vary in space and time domain
 !
 ! $$P^{I,a}=c_{i}\frac{\partial N^{I} T_a}{\partial x_{i}}$$
-!
-INTERFACE GetProjectionOfdNTdXt
-  MODULE PURE SUBROUTINE getProjectionOfdNTdXt_3(obj, cdNTdXt, val)
+
+INTERFACE
+  MODULE PURE SUBROUTINE GetProjectionOfdNTdXt_3(obj, c, crank, ans)
     CLASS(STElemshapeData_), INTENT(IN) :: obj(:)
-    REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: cdNTdXt(:, :, :, :)
-    TYPE(FEVariable_), INTENT(IN) :: val
-  END SUBROUTINE getProjectionOfdNTdXt_3
+    TYPE(FEVariable_), INTENT(IN) :: c
+    TYPE(FEVariableVector_), INTENT(IN) :: crank
+    REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: ans(:, :, :, :)
+  END SUBROUTINE GetProjectionOfdNTdXt_3
+END INTERFACE
+
+INTERFACE GetProjectionOfdNTdXt
+  MODULE PROCEDURE GetProjectionOfdNTdXt_3
 END INTERFACE GetProjectionOfdNTdXt
 
 END MODULE ElemshapeData_ProjectionMethods

@@ -54,7 +54,8 @@ PURE SUBROUTINE STCM_7a(ans, test, trial, term1, term2, c, opt)
       realval = trial(ipt)%js * trial(ipt)%ws * trial(ipt)%thickness * &
         & trial(ipt)%wt * trial(ipt)%jt
       !!
-      CALL GetProjectionOfdNTdXt(obj=trial(ipt), cdNTdXt=p, val=c)
+      CALL GetProjectionOfdNTdXt(obj=trial(ipt), ans=p,c=c, &
+      crank=TypeFEVariableVector)
       !!
       DO ips = 1, SIZE(realval)
         DO b = 1, SIZE(m6, 6)
@@ -84,7 +85,8 @@ PURE SUBROUTINE STCM_7a(ans, test, trial, term1, term2, c, opt)
       realval = trial(ipt)%js * trial(ipt)%ws * trial(ipt)%thickness * &
         & trial(ipt)%wt * trial(ipt)%jt
       !!
-      CALL GetProjectionOfdNTdXt(obj=trial(ipt), cdNTdXt=p, val=c)
+      CALL GetProjectionOfdNTdXt(obj=trial(ipt), ans=p, c=c, &
+      crank=TypeFEVariableVector)
       !!
       DO ips = 1, SIZE(realval)
         DO b = 1, SIZE(m6, 6)
@@ -146,7 +148,8 @@ PURE SUBROUTINE STCM_7b(ans, test, trial, term1, term2, c, opt)
       realval = trial(ipt)%js * trial(ipt)%ws * trial(ipt)%thickness * &
         & trial(ipt)%wt * trial(ipt)%jt
       !!
-      CALL GetProjectionOfdNTdXt(obj=test(ipt), cdNTdXt=p, val=c)
+      CALL GetProjectionOfdNTdXt(obj=test(ipt), ans=p, c=c, &
+      crank=TypeFEVariableVector)
       !!
       DO ips = 1, SIZE(realval)
         DO b = 1, SIZE(m6, 6)
@@ -176,7 +179,8 @@ PURE SUBROUTINE STCM_7b(ans, test, trial, term1, term2, c, opt)
       realval = trial(ipt)%js * trial(ipt)%ws * trial(ipt)%thickness * &
         & trial(ipt)%wt * trial(ipt)%jt
       !!
-      CALL GetProjectionOfdNTdXt(obj=test(ipt), cdNTdXt=p, val=c)
+      CALL GetProjectionOfdNTdXt(obj=test(ipt), ans=p, c=c, &
+      crank=TypeFEVariableVector)
       !!
       DO ips = 1, SIZE(realval)
         DO b = 1, SIZE(m6, 6)

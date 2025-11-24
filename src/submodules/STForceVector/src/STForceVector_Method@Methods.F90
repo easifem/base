@@ -415,7 +415,8 @@ REAL(DFP), ALLOCATABLE :: realval(:)
 REAL(DFP), ALLOCATABLE :: p1(:, :, :, :)
 INTEGER(I4B) :: ips, ipt
 
-CALL GetProjectionOfdNTdXt(obj=test, cdNTdXt=p1, val=c)
+CALL GetProjectionOfdNTdXt(obj=test, ans=p1, c=c, &
+                           crank=TypeFEVariableVector)
 
 CALL Reallocate(ans, SIZE(test(1)%N, 1), SIZE(test(1)%T))
 
@@ -445,7 +446,8 @@ nipt = SIZE(test)
 nrow = test(1)%nns
 ncol = test(1)%nnt
 
-CALL GetProjectionOfdNTdXt(obj=test, cdNTdXt=p1, val=c)
+CALL GetProjectionOfdNTdXt(obj=test, ans=p1, c=c, &
+                           crank=TypeFEVariableVector)
 
 ! CALL Reallocate(ans, SIZE(test(1)%N, 1), SIZE(test(1)%T))
 
@@ -472,7 +474,8 @@ REAL(DFP), ALLOCATABLE :: c2bar(:, :)
 REAL(DFP), ALLOCATABLE :: p1(:, :, :, :)
 INTEGER(I4B) :: ips, ipt
 
-CALL GetProjectionOfdNTdXt(obj=test, cdNTdXt=p1, val=c1)
+CALL GetProjectionOfdNTdXt(obj=test, ans=p1, c=c1, &
+                           crank=TypeFEVariableVector)
 CALL getInterpolation(obj=test, ans=c2bar, val=c2)
 
 CALL Reallocate(ans, SIZE(test(1)%N, 1), SIZE(test(1)%T))
@@ -496,7 +499,8 @@ REAL(DFP), ALLOCATABLE :: c2bar(:, :, :)
 REAL(DFP), ALLOCATABLE :: p1(:, :, :, :)
 INTEGER(I4B) :: ips, ipt
 
-CALL GetProjectionOfdNTdXt(obj=test, cdNTdXt=p1, val=c1)
+CALL GetProjectionOfdNTdXt(obj=test, ans=p1, c=c1, &
+                           crank=TypeFEVariableVector)
 CALL GetInterpolation(obj=test, ans=c2bar, val=c2)
 
 CALL Reallocate(ans, SIZE(c2bar, 1), SIZE(test(1)%N, 1), SIZE(test(1)%T))
@@ -523,7 +527,8 @@ REAL(DFP), ALLOCATABLE :: c2bar(:, :, :, :)
 REAL(DFP), ALLOCATABLE :: p1(:, :, :, :)
 INTEGER(I4B) :: ips, ipt
 
-CALL GetProjectionOfdNTdXt(obj=test, cdNTdXt=p1, val=c1)
+CALL GetProjectionOfdNTdXt(obj=test, ans=p1, c=c1, &
+                           crank=TypeFEVariableVector)
 CALL GetInterpolation(obj=test, ans=c2bar, val=c2)
 
 CALL Reallocate(ans, SIZE(c2bar, 1), SIZE(c2bar, 2), SIZE(test(1)%N, 1), &
@@ -550,7 +555,8 @@ REAL(DFP), ALLOCATABLE :: c3bar(:, :)
 REAL(DFP), ALLOCATABLE :: p1(:, :, :, :)
 INTEGER(I4B) :: ips, ipt
 
-CALL GetProjectionOfdNTdXt(obj=test, cdNTdXt=p1, val=c1)
+CALL GetProjectionOfdNTdXt(obj=test, ans=p1, c=c1, &
+                           crank=TypeFEVariableVector)
 CALL GetInterpolation(obj=test, ans=c2bar, val=c2)
 CALL GetInterpolation(obj=test, ans=c3bar, val=c3)
 
@@ -580,7 +586,8 @@ REAL(DFP), ALLOCATABLE :: c3bar(:, :, :)
 REAL(DFP), ALLOCATABLE :: p1(:, :, :, :)
 INTEGER(I4B) :: ips, ipt
 
-CALL GetProjectionOfdNTdXt(obj=test, cdNTdXt=p1, val=c1)
+CALL GetProjectionOfdNTdXt(obj=test, ans=p1, c=c1, &
+                           crank=TypeFEVariableVector)
 CALL GetInterpolation(obj=test, ans=c2bar, val=c2)
 CALL GetInterpolation(obj=test, ans=c3bar, val=c3)
 
@@ -611,7 +618,8 @@ REAL(DFP), ALLOCATABLE :: c3bar(:, :, :, :)
 REAL(DFP), ALLOCATABLE :: p1(:, :, :, :)
 INTEGER(I4B) :: ips, ipt
 
-CALL GetProjectionOfdNTdXt(obj=test, cdNTdXt=p1, val=c1)
+CALL GetProjectionOfdNTdXt(obj=test, ans=p1, c=c1, &
+                           crank=TypeFEVariableVector)
 CALL GetInterpolation(obj=test, ans=c2bar, val=c2)
 CALL GetInterpolation(obj=test, ans=c3bar, val=c3)
 

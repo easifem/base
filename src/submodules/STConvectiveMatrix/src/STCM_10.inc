@@ -52,7 +52,8 @@ PURE SUBROUTINE STCM_10a(ans, test, trial, term1, term2, rho, c, opt)
     realval = trial(ipt)%js * trial(ipt)%ws * trial(ipt)%thickness * &
       & trial(ipt)%wt * trial(ipt)%jt * rhobar(:,ipt)
     !!
-    CALL GetProjectionOfdNTdXt(obj=trial(ipt), cdNTdXt=p, val=c)
+    CALL GetProjectionOfdNTdXt(obj=trial(ipt), ans=p, c=c, &
+    crank=TypeFEVariableVector)
     !!
     DO ips = 1, SIZE(realval)
       IaJb = IaJb + realval(ips) &
@@ -107,7 +108,8 @@ PURE SUBROUTINE STCM_10b(ans, test, trial, term1, term2, rho, c, opt)
       realval = trial(ipt)%js * trial(ipt)%ws * trial(ipt)%thickness * &
         & trial(ipt)%wt * trial(ipt)%jt * rhobar(:, ipt)
       !!
-      CALL GetProjectionOfdNTdXt(obj=test(ipt), cdNTdXt=p, val=c)
+      CALL GetProjectionOfdNTdXt(obj=test(ipt), ans=p, c=c, &
+      crank=TypeFEVariableVector)
       !!
       DO ips = 1, SIZE(realval)
         IaJb = IaJb + realval(ips) &
