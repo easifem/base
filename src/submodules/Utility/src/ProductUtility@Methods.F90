@@ -254,6 +254,22 @@ END PROCEDURE OuterProd_r2r2
 !
 !----------------------------------------------------------------------------
 
+MODULE PROCEDURE OuterProd_r2r2_
+INTEGER(I4B) :: ii
+
+dim4 = SIZE(b, 2)
+
+DO ii = 1, dim4
+  CALL OuterProd_( &
+    a=a, b=b(:, ii), ans=ans(:, :, :, ii), anscoeff=anscoeff, &
+    scale=scale, dim1=dim1, dim2=dim2, dim3=dim3)
+END DO
+END PROCEDURE OuterProd_r2r2_
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
 MODULE PROCEDURE OuterProd_r2r3
 INTEGER(I4B) :: ii
 DO ii = 1, SIZE(b, 3)
