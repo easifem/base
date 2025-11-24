@@ -16,36 +16,42 @@
 !
 
 SUBMODULE(STForceVector_Method) Methods
-USE BaseMethod
 USE FEVariable_Method, ONLY: FEVariableGetInterpolation_ => GetInterpolation_
 USE FEVariable_Method, ONLY: FEVariableSize => Size
+USE ReallocateUtility, ONLY: Reallocate
+USE ProductUtility, ONLY: OuterProd_
+USE BaseType, ONLY: TypeDerivativeTerm
+USE BaseType, ONLY: TypeFEVariableSpace, TypeFEVariableVector
+USE BaseType, ONLY: TypeFEVariableMatrix
+USE ElemshapeData_Method, ONLY: GetProjectionOfdNdXt
+USE ElemshapeData_Method, ONLY: GetProjectionOfdNTdXt_
 
 IMPLICIT NONE
 CONTAINS
 
-#include "./include/STFV_1.F90"
-#include "./include/STFV_2.F90"
-#include "./include/STFV_3.F90"
-#include "./include/STFV_4.F90"
-#include "./include/STFV_5.F90"
-#include "./include/STFV_6.F90"
-#include "./include/STFV_7.F90"
-
-#include "./include/STFV_8.F90"
-#include "./include/STFV_9.F90"
-#include "./include/STFV_10.F90"
-#include "./include/STFV_11.F90"
-#include "./include/STFV_12.F90"
-#include "./include/STFV_13.F90"
-#include "./include/STFV_14.F90"
-
-#include "./include/STFV_15.F90"
-#include "./include/STFV_16.F90"
-#include "./include/STFV_17.F90"
-#include "./include/STFV_18.F90"
-#include "./include/STFV_19.F90"
-#include "./include/STFV_20.F90"
-#include "./include/STFV_21.F90"
+! #include "./include/STFV_1.F90"
+! #include "./include/STFV_2.F90"
+! #include "./include/STFV_3.F90"
+! #include "./include/STFV_4.F90"
+! #include "./include/STFV_5.F90"
+! #include "./include/STFV_6.F90"
+! #include "./include/STFV_7.F90"
+!
+! #include "./include/STFV_8.F90"
+! #include "./include/STFV_9.F90"
+! #include "./include/STFV_10.F90"
+! #include "./include/STFV_11.F90"
+! #include "./include/STFV_12.F90"
+! #include "./include/STFV_13.F90"
+! #include "./include/STFV_14.F90"
+!
+! #include "./include/STFV_15.F90"
+! #include "./include/STFV_16.F90"
+! #include "./include/STFV_17.F90"
+! #include "./include/STFV_18.F90"
+! #include "./include/STFV_19.F90"
+! #include "./include/STFV_20.F90"
+! #include "./include/STFV_21.F90"
 
 !----------------------------------------------------------------------------
 !                                                               STForceVector
@@ -169,7 +175,7 @@ DO ipt = 1, nipt
 
   DO ips = 1, test(ipt)%nips
 
-    CALL GetInterpolation_( &
+    CALL FEVariableGetInterpolation_( &
       obj=c, rank=crank, N=test(ipt)%N, nns=test(ipt)%nns, spaceIndx=ips, &
       timeIndx=ipt, T=test(ipt)%T, nnt=test(ipt)%nns, scale=1.0_DFP, &
       addContribution=.TRUE., ans=cbar, tsize=spaceCompo)
@@ -223,7 +229,7 @@ DO ipt = 1, nipt
 
   DO ips = 1, test(ipt)%nips
 
-    CALL GetInterpolation_( &
+    CALL FEVariableGetInterpolation_( &
       obj=c, rank=crank, N=test(ipt)%N, nns=test(ipt)%nns, spaceIndx=ips, &
       timeIndx=ipt, T=test(ipt)%T, nnt=test(ipt)%nns, scale=1.0_DFP, &
       addContribution=.TRUE., ans=cbar, nrow=i1, ncol=i2)
@@ -411,26 +417,17 @@ END PROCEDURE obj_STForceVector_7
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE obj_STForceVector15
-REAL(DFP), ALLOCATABLE :: realval(:)
-REAL(DFP), ALLOCATABLE :: p1(:, :, :, :)
-INTEGER(I4B) :: ips, ipt
+REAL(DFP), ALLOCATABLE :: temp(:, :)
+INTEGER(I4B) :: nrow, ncol
 
-CALL GetProjectionOfdNTdXt(obj=test, ans=p1, c=c, &
-                           crank=TypeFEVariableVector)
+nrow = test(1)%nns
+ncol = test(1)%nnt
+CALL Reallocate(temp, nrow, ncol)
+CALL Reallocate(ans, nrow, ncol)
+CALL STForceVector_(test=test, projection=projection, c=c, crank=crank, &
+                    ans=ans, nrow=nrow, ncol=ncol, temp=temp)
 
-CALL Reallocate(ans, SIZE(test(1)%N, 1), SIZE(test(1)%T))
-
-DO ipt = 1, SIZE(test)
-
-  realval = test(ipt)%js * test(ipt)%ws * test(ipt)%thickness
-
-  DO ips = 1, SIZE(realval)
-    ans = ans + realval(ips) * p1(:, :, ips, ipt)
-  END DO
-
-END DO
-
-DEALLOCATE (realval, p1)
+DEALLOCATE (temp)
 END PROCEDURE obj_STForceVector15
 
 !----------------------------------------------------------------------------
@@ -438,30 +435,29 @@ END PROCEDURE obj_STForceVector15
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE obj_STForceVector_15
-REAL(DFP), ALLOCATABLE :: realval(:)
-REAL(DFP), ALLOCATABLE :: p1(:, :, :, :)
-INTEGER(I4B) :: ips, ipt, nipt
+REAL(DFP) :: realval
+INTEGER(I4B) :: ips, ipt, nipt, i1, i2
 
 nipt = SIZE(test)
 nrow = test(1)%nns
 ncol = test(1)%nnt
 
-CALL GetProjectionOfdNTdXt(obj=test, ans=p1, c=c, &
-                           crank=TypeFEVariableVector)
-
-! CALL Reallocate(ans, SIZE(test(1)%N, 1), SIZE(test(1)%T))
+ans(1:nrow, 1:ncol) = 0.0_DFP
 
 DO ipt = 1, nipt
-
-  realval = test(ipt)%js * test(ipt)%ws * test(ipt)%thickness
-
   DO ips = 1, test(ipt)%nips
-    ans = ans + realval(ips) * p1(:, :, ips, ipt)
+
+    realval = test(ipt)%js(ips) * test(ipt)%ws(ips) * &
+      test(ipt)%thickness(ips) * test(ipt)%jt * test(ipt)%wt
+
+    CALL GetProjectionOfdNTdXt_( &
+      obj=test, ans=temp, c=c, crank=crank, nrow=i1, ncol=i2, ips=ips, &
+      ipt=ipt)
+
+    ans(1:nrow, 1:ncol) = ans(1:nrow, 1:ncol) + realval * temp(1:i1, 1:i2)
   END DO
 
 END DO
-
-DEALLOCATE (realval, p1)
 END PROCEDURE obj_STForceVector_15
 
 !----------------------------------------------------------------------------
@@ -469,195 +465,371 @@ END PROCEDURE obj_STForceVector_15
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE obj_STForceVector16
-REAL(DFP), ALLOCATABLE :: realval(:)
-REAL(DFP), ALLOCATABLE :: c2bar(:, :)
-REAL(DFP), ALLOCATABLE :: p1(:, :, :, :)
-INTEGER(I4B) :: ips, ipt
+INTEGER(I4B) :: nrow, ncol
+REAL(DFP), ALLOCATABLE :: temp(:, :)
 
-CALL GetProjectionOfdNTdXt(obj=test, ans=p1, c=c1, &
-                           crank=TypeFEVariableVector)
-CALL getInterpolation(obj=test, ans=c2bar, val=c2)
+nrow = test(1)%nns
+ncol = test(1)%nnt
+CALL Reallocate(temp, nrow, ncol)
+CALL Reallocate(ans, nrow, ncol)
+CALL STForceVector_( &
+  test=test, projection=projection, c1=c1, c1rank=c1rank, c2=c2, &
+  c2rank=c2rank, ans=ans, nrow=nrow, ncol=ncol, temp=temp)
+END PROCEDURE obj_STForceVector16
 
-CALL Reallocate(ans, SIZE(test(1)%N, 1), SIZE(test(1)%T))
+!----------------------------------------------------------------------------
+!                                                            STForceVector_
+!----------------------------------------------------------------------------
 
-DO ipt = 1, SIZE(test)
-  realval = test(ipt)%js * test(ipt)%ws * test(ipt)%thickness * c2bar(:, ipt)
-  DO ips = 1, SIZE(realval)
-    ans = ans + realval(ips) * p1(:, :, ips, ipt)
+MODULE PROCEDURE obj_STForceVector_16
+INTEGER(I4B) :: nipt, ipt, ips, i1, i2
+REAL(DFP) :: realval
+
+nipt = SIZE(test)
+nrow = test(1)%nns
+ncol = test(1)%nnt
+
+DO ipt = 1, nipt
+  DO ips = 1, test(ipt)%nips
+
+    CALL FEVariableGetInterpolation_( &
+      obj=c2, rank=c2rank, N=test(ipt)%N, nns=test(ipt)%nns, &
+      spaceIndx=ips, timeIndx=ipt, T=test(ipt)%T, nnt=test(ipt)%nns, &
+      scale=1.0_DFP, addContribution=.FALSE., ans=realval)
+
+    realval = realval * test(ipt)%js(ips) * test(ipt)%ws(ips) * &
+      test(ipt)%thickness(ips) * test(ipt)%wt * test(ipt)%jt
+
+    CALL GetProjectionOfdNTdXt_( &
+      obj=test, c=c1, crank=c1rank, ips=ips, ipt=ipt, &
+      ans=temp, nrow=i1, ncol=i2)
+
+    ans(1:i1, 1:i2) = ans(1:i1, 1:i2) + realval * temp(1:i1, 1:i2)
   END DO
 END DO
-DEALLOCATE (realval, p1, c2bar)
-END PROCEDURE obj_STForceVector16
+END PROCEDURE obj_STForceVector_16
 
 !----------------------------------------------------------------------------
 !                                                            STForceVector
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE obj_STForceVector17
-REAL(DFP), ALLOCATABLE :: realval(:)
-REAL(DFP), ALLOCATABLE :: c2bar(:, :, :)
-REAL(DFP), ALLOCATABLE :: p1(:, :, :, :)
-INTEGER(I4B) :: ips, ipt
+INTEGER(I4B) :: dim1, dim2, dim3
+REAL(DFP), ALLOCATABLE :: temp(:, :)
 
-CALL GetProjectionOfdNTdXt(obj=test, ans=p1, c=c1, &
-                           crank=TypeFEVariableVector)
-CALL GetInterpolation(obj=test, ans=c2bar, val=c2)
+dim1 = FEVariableSize(obj=c2, dim=1)
+dim2 = test(1)%nns
+dim3 = test(1)%nnt
+CALL Reallocate(temp, dim2, dim3)
+CALL Reallocate(ans, dim1, dim2, dim3)
+CALL STForceVector_( &
+  test=test, projection=projection, c1=c1, c1rank=c1rank, c2=c2, &
+  c2rank=c2rank, ans=ans, dim1=dim1, dim2=dim2, dim3=dim3, temp=temp)
+DEALLOCATE (temp)
+END PROCEDURE obj_STForceVector17
 
-CALL Reallocate(ans, SIZE(c2bar, 1), SIZE(test(1)%N, 1), SIZE(test(1)%T))
+!----------------------------------------------------------------------------
+!                                                              STForceVector_
+!----------------------------------------------------------------------------
 
-DO ipt = 1, SIZE(test)
+MODULE PROCEDURE obj_STForceVector_17
+INTEGER(I4B) :: nipt, ipt, ips, i1, i2, i3
+REAL(DFP) :: realval, c2bar(3)
 
-  realval = test(ipt)%js * test(ipt)%ws * test(ipt)%thickness
+nipt = SIZE(test)
+dim1 = FEVariableSize(obj=c2, dim=1)
+dim2 = test(1)%nns
+dim3 = test(1)%nnt
 
-  DO ips = 1, SIZE(realval)
-    ans = ans + realval(ips) * OUTERPROD(c2bar(:, ips, ipt), &
-                                         p1(:, :, ips, ipt))
+DO ipt = 1, nipt
+  DO ips = 1, test(ipt)%nips
+
+    realval = test(ipt)%js(ips) * test(ipt)%ws(ips) * &
+      test(ipt)%thickness(ips) * test(ipt)%wt * test(ipt)%jt
+
+    CALL FEVariableGetInterpolation_( &
+      obj=c2, rank=c2rank, N=test(ipt)%N, nns=test(ipt)%nns, &
+      spaceIndx=ips, timeIndx=ipt, T=test(ipt)%T, nnt=test(ipt)%nns, &
+      scale=1.0_DFP, addContribution=.FALSE., ans=c2bar, tsize=i1)
+
+    CALL GetProjectionOfdNTdXt_( &
+      obj=test, c=c1, crank=c1rank, ips=ips, ipt=ipt, ans=temp, nrow=i1, &
+      ncol=i2)
+
+    CALL OuterProd_( &
+      a=c2bar(1:dim1), b=temp(1:dim2, 1:dim3), &
+      ans=ans, dim1=i1, dim2=i2, dim3=i3, anscoeff=1.0_DFP, scale=realval)
+
   END DO
 END DO
-DEALLOCATE (realval, p1, c2bar)
-END PROCEDURE obj_STForceVector17
+END PROCEDURE obj_STForceVector_17
 
 !----------------------------------------------------------------------------
 !                                                            STForceVector
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE obj_STForceVector18
-REAL(DFP), ALLOCATABLE :: realval(:)
-REAL(DFP), ALLOCATABLE :: c2bar(:, :, :, :)
-REAL(DFP), ALLOCATABLE :: p1(:, :, :, :)
-INTEGER(I4B) :: ips, ipt
+INTEGER(I4B) :: dim1, dim2, dim3, dim4
+REAL(DFP), ALLOCATABLE :: temp(:, :)
 
-CALL GetProjectionOfdNTdXt(obj=test, ans=p1, c=c1, &
-                           crank=TypeFEVariableVector)
-CALL GetInterpolation(obj=test, ans=c2bar, val=c2)
+dim1 = FEVariableSize(obj=c2, dim=1)
+dim2 = FEVariableSize(obj=c2, dim=2)
+dim3 = test(1)%nns
+dim4 = test(1)%nnt
 
-CALL Reallocate(ans, SIZE(c2bar, 1), SIZE(c2bar, 2), SIZE(test(1)%N, 1), &
-                SIZE(test(1)%T))
+CALL Reallocate(temp, dim3, dim4)
+CALL Reallocate(ans, dim1, dim2, dim3, dim4)
+CALL STForceVector_( &
+  test=test, projection=projection, c1=c1, c1rank=c1rank, c2=c2, &
+  c2rank=c2rank, ans=ans, dim1=dim1, dim2=dim2, dim3=dim3, dim4=dim4, &
+  temp=temp)
 
-DO ipt = 1, SIZE(test)
-  realval = test(ipt)%js * test(ipt)%ws * test(ipt)%thickness
-  DO ips = 1, SIZE(realval)
-    ans = ans + realval(ips) * OUTERPROD(c2bar(:, :, ips, ipt), &
-                                         p1(:, :, ips, ipt))
+DEALLOCATE (temp)
+END PROCEDURE obj_STForceVector18
+
+!----------------------------------------------------------------------------
+!                                                              STForceVector_
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE obj_STForceVector_18
+INTEGER(I4B) :: nipt, ipt, ips, i1, i2, i3, i4
+REAL(DFP) :: realval, c2bar(3, 3)
+
+nipt = SIZE(test)
+dim1 = FEVariableSize(obj=c2, dim=1)
+dim2 = FEVariableSize(obj=c2, dim=2)
+dim3 = test(1)%nns
+dim4 = test(1)%nnt
+
+DO ipt = 1, nipt
+  DO ips = 1, test(ipt)%nips
+
+    realval = test(ipt)%js(ips) * test(ipt)%ws(ips) * &
+      test(ipt)%thickness(ips) * test(ipt)%wt * test(ipt)%jt
+
+    CALL FEVariableGetInterpolation_( &
+      obj=c2, rank=c2rank, N=test(ipt)%N, nns=test(ipt)%nns, &
+      spaceIndx=ips, timeIndx=ipt, T=test(ipt)%T, nnt=test(ipt)%nns, &
+      scale=1.0_DFP, addContribution=.FALSE., ans=c2bar, nrow=i1, ncol=i2)
+
+    CALL GetProjectionOfdNTdXt_( &
+      obj=test, c=c1, crank=c1rank, ips=ips, ipt=ipt, ans=temp, nrow=i1, &
+      ncol=i2)
+
+    CALL OuterProd_( &
+      a=c2bar(1:dim1, 1:dim2), b=temp(1:dim3, 1:dim4), &
+      ans=ans, dim1=i1, dim2=i2, dim3=i3, dim4=i4, &
+      anscoeff=1.0_DFP, scale=realval)
+
   END DO
 END DO
-DEALLOCATE (realval, p1, c2bar)
-END PROCEDURE obj_STForceVector18
+END PROCEDURE obj_STForceVector_18
 
 !----------------------------------------------------------------------------
 !                                                            STForceVector
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE obj_STForceVector19
-REAL(DFP), ALLOCATABLE :: realval(:)
-REAL(DFP), ALLOCATABLE :: c2bar(:, :)
-REAL(DFP), ALLOCATABLE :: c3bar(:, :)
-REAL(DFP), ALLOCATABLE :: p1(:, :, :, :)
-INTEGER(I4B) :: ips, ipt
+INTEGER(I4B) :: nrow, ncol
+REAL(DFP), ALLOCATABLE :: temp(:, :)
 
-CALL GetProjectionOfdNTdXt(obj=test, ans=p1, c=c1, &
-                           crank=TypeFEVariableVector)
-CALL GetInterpolation(obj=test, ans=c2bar, val=c2)
-CALL GetInterpolation(obj=test, ans=c3bar, val=c3)
+nrow = test(1)%nns
+ncol = test(1)%nnt
+CALL Reallocate(temp, nrow, ncol)
+CALL Reallocate(ans, nrow, ncol)
 
-CALL reallocate(ans, SIZE(test(1)%N, 1), SIZE(test(1)%T))
+CALL STForceVector_( &
+  test=test, projection=projection, c1=c1, c1rank=c1rank, c2=c2, &
+  c2rank=c2rank, c3=c3, c3rank=c3rank, ans=ans, nrow=nrow, ncol=ncol, &
+  temp=temp)
 
-DO ipt = 1, SIZE(test)
-  realval = test(ipt)%js * test(ipt)%ws * test(ipt)%thickness &
-    * c2bar(:, ipt) * c3bar(:, ipt)
-
-  DO ips = 1, SIZE(realval)
-    ans = ans + realval(ips) * p1(:, :, ips, ipt)
-  END DO
-
-END DO
-
-DEALLOCATE (realval, p1, c2bar, c3bar)
+DEALLOCATE (temp)
 END PROCEDURE obj_STForceVector19
 
 !----------------------------------------------------------------------------
 !                                                            STForceVector
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE obj_STForceVector20
-REAL(DFP), ALLOCATABLE :: realval(:)
-REAL(DFP), ALLOCATABLE :: c2bar(:, :)
-REAL(DFP), ALLOCATABLE :: c3bar(:, :, :)
-REAL(DFP), ALLOCATABLE :: p1(:, :, :, :)
-INTEGER(I4B) :: ips, ipt
+MODULE PROCEDURE obj_STForceVector_19
+INTEGER(I4B) :: nipt, ipt, ips, i1, i2
+REAL(DFP) :: realval, c2bar, c3bar
 
-CALL GetProjectionOfdNTdXt(obj=test, ans=p1, c=c1, &
-                           crank=TypeFEVariableVector)
-CALL GetInterpolation(obj=test, ans=c2bar, val=c2)
-CALL GetInterpolation(obj=test, ans=c3bar, val=c3)
+nipt = SIZE(test)
+nrow = test(1)%nns
+ncol = test(1)%nnt
 
-CALL Reallocate(ans, SIZE(c3bar, 1), SIZE(test(1)%N, 1), SIZE(test(1)%T))
+DO ipt = 1, nipt
+  DO ips = 1, test(ipt)%nips
+    CALL FEVariableGetInterpolation_( &
+      obj=c2, rank=c2rank, N=test(ipt)%N, nns=test(ipt)%nns, &
+      spaceIndx=ips, timeIndx=ipt, T=test(ipt)%T, nnt=test(ipt)%nns, &
+      scale=1.0_DFP, addContribution=.FALSE., ans=c2bar)
 
-DO ipt = 1, SIZE(test)
-  realval = test(ipt)%js * test(ipt)%ws * test(ipt)%thickness &
-    * c2bar(:, ipt)
+    CALL FEVariableGetInterpolation_( &
+      obj=c3, rank=c3rank, N=test(ipt)%N, nns=test(ipt)%nns, &
+      spaceIndx=ips, timeIndx=ipt, T=test(ipt)%T, nnt=test(ipt)%nns, &
+      scale=1.0_DFP, addContribution=.FALSE., ans=c3bar)
 
-  DO ips = 1, SIZE(realval)
-    ans = ans + realval(ips) * OUTERPROD(c3bar(:, ips, ipt), &
-                                         p1(:, :, ips, ipt))
+    realval = c2bar * c3bar * test(ipt)%js(ips) * test(ipt)%ws(ips) * &
+      test(ipt)%thickness(ips) * test(ipt)%wt * test(ipt)%jt
+
+    CALL GetProjectionOfdNTdXt_( &
+      obj=test, c=c1, crank=c1rank, ips=ips, ipt=ipt, &
+      ans=temp, nrow=i1, ncol=i2)
+
+    ans(1:i1, 1:i2) = ans(1:i1, 1:i2) + realval * temp(1:i1, 1:i2)
   END DO
-
 END DO
+END PROCEDURE obj_STForceVector_19
 
-DEALLOCATE (realval, p1, c2bar, c3bar)
+!----------------------------------------------------------------------------
+!                                                            STForceVector
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE obj_STForceVector20
+INTEGER(I4B) :: dim1, dim2, dim3
+REAL(DFP), ALLOCATABLE :: temp(:, :)
+
+dim1 = FEVariableSize(obj=c3, dim=1)
+dim2 = test(1)%nns
+dim3 = test(1)%nnt
+
+CALL Reallocate(temp, dim2, dim3)
+CALL Reallocate(ans, dim1, dim2, dim3)
+
+CALL STForceVector_( &
+  test=test, projection=projection, c1=c1, c1rank=c1rank, c2=c2, &
+  c2rank=c2rank, c3=c3, c3rank=c3rank, ans=ans, dim1=dim1, dim2=dim2, &
+  dim3=dim3, temp=temp)
+
+DEALLOCATE (temp)
 END PROCEDURE obj_STForceVector20
+
+!----------------------------------------------------------------------------
+!                                                              STForceVector_
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE obj_STForceVector_20
+INTEGER(I4B) :: nipt, ipt, ips, i1, i2, i3
+REAL(DFP) :: realval, c2bar, c3bar(3)
+
+nipt = SIZE(test)
+dim1 = FEVariableSize(obj=c3, dim=1)
+dim2 = test(1)%nns
+dim3 = test(1)%nnt
+
+DO ipt = 1, nipt
+  DO ips = 1, test(ipt)%nips
+
+    CALL FEVariableGetInterpolation_( &
+      obj=c2, rank=c2rank, N=test(ipt)%N, nns=test(ipt)%nns, &
+      spaceIndx=ips, timeIndx=ipt, T=test(ipt)%T, nnt=test(ipt)%nns, &
+      scale=1.0_DFP, addContribution=.FALSE., ans=c2bar)
+
+    CALL FEVariableGetInterpolation_( &
+      obj=c3, rank=c3rank, N=test(ipt)%N, nns=test(ipt)%nns, &
+      spaceIndx=ips, timeIndx=ipt, T=test(ipt)%T, nnt=test(ipt)%nns, &
+      scale=1.0_DFP, addContribution=.FALSE., ans=c3bar, tsize=i1)
+
+    CALL GetProjectionOfdNTdXt_( &
+      obj=test, c=c1, crank=c1rank, ips=ips, ipt=ipt, ans=temp, nrow=i1, &
+      ncol=i2)
+
+    realval = c2bar * test(ipt)%js(ips) * test(ipt)%ws(ips) * &
+      test(ipt)%thickness(ips) * test(ipt)%wt * test(ipt)%jt
+
+    CALL OuterProd_( &
+      a=c3bar(1:dim1), b=temp(1:dim2, 1:dim3), &
+      ans=ans, dim1=i1, dim2=i2, dim3=i3, anscoeff=1.0_DFP, scale=realval)
+
+  END DO
+END DO
+END PROCEDURE obj_STForceVector_20
 
 !----------------------------------------------------------------------------
 !                                                            STForceVector
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE obj_STForceVector21
-REAL(DFP), ALLOCATABLE :: realval(:)
-REAL(DFP), ALLOCATABLE :: c2bar(:, :)
-REAL(DFP), ALLOCATABLE :: c3bar(:, :, :, :)
-REAL(DFP), ALLOCATABLE :: p1(:, :, :, :)
-INTEGER(I4B) :: ips, ipt
+INTEGER(I4B) :: dim1, dim2, dim3, dim4
+REAL(DFP), ALLOCATABLE :: temp(:, :)
 
-CALL GetProjectionOfdNTdXt(obj=test, ans=p1, c=c1, &
-                           crank=TypeFEVariableVector)
-CALL GetInterpolation(obj=test, ans=c2bar, val=c2)
-CALL GetInterpolation(obj=test, ans=c3bar, val=c3)
+dim1 = FEVariableSize(obj=c3, dim=1)
+dim2 = FEVariableSize(obj=c3, dim=2)
+dim3 = test(1)%nns
+dim4 = test(1)%nnt
 
-CALL Reallocate(ans, SIZE(c3bar, 1), SIZE(c3bar, 2), SIZE(test(1)%N, 1), &
-                SIZE(test(1)%T))
+CALL Reallocate(temp, dim3, dim4)
+CALL Reallocate(ans, dim1, dim2, dim3, dim4)
+CALL STForceVector_( &
+  test=test, projection=projection, c1=c1, c1rank=c1rank, c2=c2, &
+  c2rank=c2rank, c3=c3, c3rank=c3rank, ans=ans, dim1=dim1, dim2=dim2, &
+  dim3=dim3, dim4=dim4, temp=temp)
 
-DO ipt = 1, SIZE(test)
-  realval = test(ipt)%js * test(ipt)%ws * test(ipt)%thickness * &
-    c2bar(:, ipt)
+DEALLOCATE (temp)
+END PROCEDURE obj_STForceVector21
 
-  DO ips = 1, SIZE(realval)
-    ans = ans + realval(ips) * OUTERPROD(c3bar(:, :, ips, ipt), &
-                                         p1(:, :, ips, ipt))
+!----------------------------------------------------------------------------
+!                                                          STForceVector21_
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE obj_STForceVector_21
+INTEGER(I4B) :: nipt, ipt, ips, i1, i2, i3, i4
+REAL(DFP) :: realval, c3bar(3, 3), c2bar
+
+nipt = SIZE(test)
+dim1 = FEVariableSize(obj=c3, dim=1)
+dim2 = FEVariableSize(obj=c3, dim=2)
+dim3 = test(1)%nns
+dim4 = test(1)%nnt
+
+DO ipt = 1, nipt
+  DO ips = 1, test(ipt)%nips
+
+    CALL GetProjectionOfdNTdXt_( &
+      obj=test, c=c1, crank=c1rank, ips=ips, ipt=ipt, ans=temp, nrow=i1, &
+      ncol=i2)
+
+    CALL FEVariableGetInterpolation_( &
+      obj=c2, rank=c2rank, N=test(ipt)%N, nns=test(ipt)%nns, &
+      spaceIndx=ips, timeIndx=ipt, T=test(ipt)%T, nnt=test(ipt)%nns, &
+      scale=1.0_DFP, addContribution=.FALSE., ans=c2bar)
+
+    CALL FEVariableGetInterpolation_( &
+      obj=c3, rank=c3rank, N=test(ipt)%N, nns=test(ipt)%nns, &
+      spaceIndx=ips, timeIndx=ipt, T=test(ipt)%T, nnt=test(ipt)%nns, &
+      scale=1.0_DFP, addContribution=.FALSE., ans=c3bar, nrow=i1, ncol=i2)
+
+    realval = c2bar * test(ipt)%js(ips) * test(ipt)%ws(ips) * &
+      test(ipt)%thickness(ips) * test(ipt)%wt * test(ipt)%jt
+
+    CALL OuterProd_( &
+      a=c3bar(1:dim1, 1:dim2), b=temp(1:dim3, 1:dim4), &
+      ans=ans, dim1=i1, dim2=i2, dim3=i3, dim4=i4, &
+      anscoeff=1.0_DFP, scale=realval)
+
   END DO
 END DO
-
-DEALLOCATE (realval, p1, c2bar, c3bar)
-END PROCEDURE obj_STForceVector21
+END PROCEDURE obj_STForceVector_21
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE obj_STForceVector8
-SELECT CASE (term1)
-CASE (DEL_NONE)
-  CALL STFV_1(ans=ans, test=test, term1=term1)
-
-CASE (DEL_t)
-  CALL STFV_8(ans=ans, test=test, term1=term1)
-
-CASE (DEL_X, DEL_Y, DEL_Z)
-  CALL STFV_15(ans=ans, test=test, term1=term1)
-
-CASE (DEL_X_ALL)
-
-END SELECT
-
+! SELECT CASE (term1)
+! CASE (TypeDerivativeTerm%NONE)
+!   CALL STFV_1(ans=ans, test=test, term1=term1)
+!
+! CASE (TypeDerivativeTerm%t)
+!   CALL STFV_8(ans=ans, test=test, term1=term1)
+!
+! CASE (TypeDerivativeTerm%x, TypeDerivativeTerm%y, TypeDerivativeTerm%z)
+!   CALL STFV_15(ans=ans, test=test, term1=term1)
+!
+! CASE (TypeDerivativeTerm%xAll)
+!
+! END SELECT
 END PROCEDURE obj_STForceVector8
 
 !----------------------------------------------------------------------------
@@ -665,19 +837,18 @@ END PROCEDURE obj_STForceVector8
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE obj_STForceVector9
-SELECT CASE (term1)
-CASE (DEL_NONE)
-  CALL STFV_2(ans=ans, test=test, term1=term1, c=c, crank=crank)
-
-CASE (DEL_t)
-  CALL STFV_9(ans=ans, test=test, term1=term1, c=c, crank=crank)
-
-CASE (DEL_X, DEL_Y, DEL_Z)
-  CALL STFV_16(ans=ans, test=test, term1=term1, c=c, crank=crank)
-
-CASE (DEL_X_ALL)
-END SELECT
-
+! SELECT CASE (term1)
+! CASE (TypeDerivativeTerm%NONE)
+!   CALL STFV_2(ans=ans, test=test, term1=term1, c=c, crank=crank)
+!
+! CASE (TypeDerivativeTerm%t)
+!   CALL STFV_9(ans=ans, test=test, term1=term1, c=c, crank=crank)
+!
+! CASE (TypeDerivativeTerm%x, TypeDerivativeTerm%y, TypeDerivativeTerm%z)
+!   CALL STFV_16(ans=ans, test=test, term1=term1, c=c, crank=crank)
+!
+! CASE (TypeDerivativeTerm%xAll)
+! END SELECT
 END PROCEDURE obj_STForceVector9
 
 !----------------------------------------------------------------------------
@@ -685,19 +856,19 @@ END PROCEDURE obj_STForceVector9
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE obj_STForceVector10
-SELECT CASE (term1)
-CASE (DEL_NONE)
-  CALL STFV_3(ans=ans, test=test, term1=term1, c=c, crank=crank)
-
-CASE (DEL_t)
-  CALL STFV_10(ans=ans, test=test, term1=term1, c=c, crank=crank)
-
-CASE (DEL_X, DEL_Y, DEL_Z)
-  CALL STFV_17(ans=ans, test=test, term1=term1, c=c, crank=crank)
-
-CASE (DEL_X_ALL)
-
-END SELECT
+! SELECT CASE (term1)
+! CASE (TypeDerivativeTerm%NONE)
+!   CALL STFV_3(ans=ans, test=test, term1=term1, c=c, crank=crank)
+!
+! CASE (TypeDerivativeTerm%t)
+!   CALL STFV_10(ans=ans, test=test, term1=term1, c=c, crank=crank)
+!
+! CASE (TypeDerivativeTerm%x, TypeDerivativeTerm%y, TypeDerivativeTerm%z)
+!   CALL STFV_17(ans=ans, test=test, term1=term1, c=c, crank=crank)
+!
+! CASE (TypeDerivativeTerm%xAll)
+!
+! END SELECT
 END PROCEDURE obj_STForceVector10
 
 !----------------------------------------------------------------------------
@@ -705,19 +876,19 @@ END PROCEDURE obj_STForceVector10
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE obj_STForceVector11
-SELECT CASE (term1)
-CASE (DEL_NONE)
-  CALL STFV_4(ans=ans, test=test, term1=term1, c=c, crank=crank)
-
-CASE (DEL_t)
-  CALL STFV_11(ans=ans, test=test, term1=term1, c=c, crank=crank)
-
-CASE (DEL_X, DEL_Y, DEL_Z)
-  CALL STFV_18(ans=ans, test=test, term1=term1, c=c, crank=crank)
-
-CASE (DEL_X_ALL)
-
-END SELECT
+! SELECT CASE (term1)
+! CASE (TypeDerivativeTerm%NONE)
+!   CALL STFV_4(ans=ans, test=test, term1=term1, c=c, crank=crank)
+!
+! CASE (TypeDerivativeTerm%t)
+!   CALL STFV_11(ans=ans, test=test, term1=term1, c=c, crank=crank)
+!
+! CASE (TypeDerivativeTerm%x, TypeDerivativeTerm%y, TypeDerivativeTerm%z)
+!   CALL STFV_18(ans=ans, test=test, term1=term1, c=c, crank=crank)
+!
+! CASE (TypeDerivativeTerm%xAll)
+!
+! END SELECT
 END PROCEDURE obj_STForceVector11
 
 !----------------------------------------------------------------------------
@@ -725,21 +896,21 @@ END PROCEDURE obj_STForceVector11
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE obj_STForceVector12
-SELECT CASE (term1)
-CASE (DEL_NONE)
-  CALL STFV_5(ans=ans, test=test, term1=term1, c1=c1, c1rank=c1rank, &
-              c2=c2, c2rank=c2rank)
-CASE (DEL_t)
-  CALL STFV_12(ans=ans, test=test, term1=term1, c1=c1, c1rank=c1rank, &
-               c2=c2, c2rank=c2rank)
-
-CASE (DEL_X, DEL_Y, DEL_Z)
-  CALL STFV_19(ans=ans, test=test, term1=term1, c1=c1, c1rank=c1rank, &
-               c2=c2, c2rank=c2rank)
-
-CASE (DEL_X_ALL)
-
-END SELECT
+! SELECT CASE (term1)
+! CASE (TypeDerivativeTerm%NONE)
+!   CALL STFV_5(ans=ans, test=test, term1=term1, c1=c1, c1rank=c1rank, &
+!               c2=c2, c2rank=c2rank)
+! CASE (TypeDerivativeTerm%t)
+!   CALL STFV_12(ans=ans, test=test, term1=term1, c1=c1, c1rank=c1rank, &
+!                c2=c2, c2rank=c2rank)
+!
+! CASE (TypeDerivativeTerm%x, TypeDerivativeTerm%y, TypeDerivativeTerm%z)
+!   CALL STFV_19(ans=ans, test=test, term1=term1, c1=c1, c1rank=c1rank, &
+!                c2=c2, c2rank=c2rank)
+!
+! CASE (TypeDerivativeTerm%xAll)
+!
+! END SELECT
 END PROCEDURE obj_STForceVector12
 
 !----------------------------------------------------------------------------
@@ -747,19 +918,22 @@ END PROCEDURE obj_STForceVector12
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE obj_STForceVector13
-SELECT CASE (term1)
-
-CASE (DEL_NONE)
-  CALL STFV_6(ans=ans, test=test, term1=term1, c1=c1, c1rank=c1rank, &
-              c2=c2, c2rank=c2rank)
-CASE (DEL_t)
-  CALL STFV_13(ans=ans, test=test, term1=term1, c1=c1, c1rank=c1rank, &
-               c2=c2, c2rank=c2rank)
-CASE (DEL_X, DEL_Y, DEL_Z)
-  CALL STFV_20(ans=ans, test=test, term1=term1, c1=c1, c1rank=c1rank, &
-               c2=c2, c2rank=c2rank)
-CASE (DEL_X_ALL)
-END SELECT
+! SELECT CASE (term1)
+!
+! CASE (TypeDerivativeTerm%NONE)
+!   CALL STFV_6(ans=ans, test=test, term1=term1, c1=c1, c1rank=c1rank, &
+!               c2=c2, c2rank=c2rank)
+!
+! CASE (TypeDerivativeTerm%t)
+!   CALL STFV_13(ans=ans, test=test, term1=term1, c1=c1, c1rank=c1rank, &
+!                c2=c2, c2rank=c2rank)
+!
+! CASE (TypeDerivativeTerm%x, TypeDerivativeTerm%y, TypeDerivativeTerm%z)
+!   CALL STFV_20(ans=ans, test=test, term1=term1, c1=c1, c1rank=c1rank, &
+!                c2=c2, c2rank=c2rank)
+!
+! CASE (TypeDerivativeTerm%xAll)
+! END SELECT
 END PROCEDURE obj_STForceVector13
 
 !----------------------------------------------------------------------------
@@ -767,18 +941,22 @@ END PROCEDURE obj_STForceVector13
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE obj_STForceVector14
-SELECT CASE (term1)
-CASE (DEL_NONE)
-  CALL STFV_7(ans=ans, test=test, term1=term1, c1=c1, c1rank=c1rank, &
-              c2=c2, c2rank=c2rank)
-CASE (DEL_t)
-  CALL STFV_14(ans=ans, test=test, term1=term1, c1=c1, c1rank=c1rank, &
-               c2=c2, c2rank=c2rank)
-CASE (DEL_X, DEL_Y, DEL_Z)
-  CALL STFV_21(ans=ans, test=test, term1=term1, c1=c1, c1rank=c1rank, &
-               c2=c2, c2rank=c2rank)
-CASE (DEL_X_ALL)
-END SELECT
+! SELECT CASE (term1)
+!
+! CASE (TypeDerivativeTerm%NONE)
+!   CALL STFV_7(ans=ans, test=test, term1=term1, c1=c1, c1rank=c1rank, &
+!               c2=c2, c2rank=c2rank)
+!
+! CASE (TypeDerivativeTerm%t)
+!   CALL STFV_14(ans=ans, test=test, term1=term1, c1=c1, c1rank=c1rank, &
+!                c2=c2, c2rank=c2rank)
+!
+! CASE (TypeDerivativeTerm%x, TypeDerivativeTerm%y, TypeDerivativeTerm%z)
+!   CALL STFV_21(ans=ans, test=test, term1=term1, c1=c1, c1rank=c1rank, &
+!                c2=c2, c2rank=c2rank)
+!
+! CASE (TypeDerivativeTerm%xAll)
+! END SELECT
 END PROCEDURE obj_STForceVector14
 
 !----------------------------------------------------------------------------

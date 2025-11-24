@@ -683,10 +683,10 @@ END INTERFACE STForceVector_
 ! summary: Force vector
 
 INTERFACE
-  MODULE PURE FUNCTION obj_STForceVector15(test, projecton, c, crank) &
+  MODULE PURE FUNCTION obj_STForceVector15(test, projection, c, crank) &
     RESULT(ans)
     CLASS(STElemshapeData_), INTENT(IN) :: test(:)
-    CHARACTER(LEN=*), INTENT(IN) :: projecton
+    CHARACTER(LEN=*), INTENT(IN) :: projection
     TYPE(FEVariable_), INTENT(IN) :: c
     TYPE(FEVariableVector_), INTENT(IN) :: crank
     REAL(DFP), ALLOCATABLE :: ans(:, :)
@@ -706,17 +706,18 @@ END INTERFACE STForceVector
 ! summary: Space time force vector
 !
 
-
-
 INTERFACE
   MODULE PURE SUBROUTINE obj_STForceVector_15( &
-    test, projecton, c, crank, ans, nrow, ncol)
+    test, projection, c, crank, ans, nrow, ncol, temp)
     CLASS(STElemshapeData_), INTENT(IN) :: test(:)
-    CHARACTER(LEN=*), INTENT(IN) :: projecton
+    CHARACTER(LEN=*), INTENT(IN) :: projection
     TYPE(FEVariable_), INTENT(IN) :: c
     TYPE(FEVariableVector_), INTENT(IN) :: crank
     REAL(DFP), INTENT(INOUT) :: ans(:, :)
     INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+    REAL(DFP), INTENT(INOUT) :: temp(:, :)
+    !! temp array to keep projection data at ips and ipt
+    !! size should be at least (nns x nnt)
   END SUBROUTINE obj_STForceVector_15
 END INTERFACE
 
@@ -734,9 +735,9 @@ END INTERFACE STForceVector_
 
 INTERFACE
   MODULE PURE FUNCTION obj_STForceVector16( &
-    test, projecton, c1, c1rank, c2, c2rank) RESULT(ans)
+    test, projection, c1, c1rank, c2, c2rank) RESULT(ans)
     CLASS(STElemshapeData_), INTENT(IN) :: test(:)
-    CHARACTER(LEN=*), INTENT(IN) :: projecton
+    CHARACTER(LEN=*), INTENT(IN) :: projection
     TYPE(FEVariable_), INTENT(IN) :: c1
     TYPE(FEVariable_), INTENT(IN) :: c2
     TYPE(FEVariableVector_), INTENT(IN) :: c1rank
@@ -759,15 +760,18 @@ END INTERFACE STForceVector
 
 INTERFACE
   MODULE PURE SUBROUTINE obj_STForceVector_16( &
-    test, projecton, c1, c1rank, c2, c2rank, ans, nrow, ncol)
+    test, projection, c1, c1rank, c2, c2rank, ans, nrow, ncol, temp)
     CLASS(STElemshapeData_), INTENT(IN) :: test(:)
-    CHARACTER(LEN=*), INTENT(IN) :: projecton
+    CHARACTER(LEN=*), INTENT(IN) :: projection
     TYPE(FEVariable_), INTENT(IN) :: c1
     TYPE(FEVariable_), INTENT(IN) :: c2
     TYPE(FEVariableVector_), INTENT(IN) :: c1rank
     TYPE(FEVariableScalar_), INTENT(IN) :: c2rank
     REAL(DFP), INTENT(INOUT) :: ans(:, :)
     INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+    REAL(DFP), INTENT(INOUT) :: temp(:, :)
+    !! temp array to keep projection data at ips and ipt
+    !! size should be at least (nns x nnt)
   END SUBROUTINE obj_STForceVector_16
 END INTERFACE
 
@@ -785,11 +789,13 @@ END INTERFACE STForceVector_
 
 INTERFACE
   MODULE PURE FUNCTION obj_STForceVector17( &
-    test, projecton, c1, c1rank, c2, c2rank) RESULT(ans)
+    test, projection, c1, c1rank, c2, c2rank) RESULT(ans)
     CLASS(STElemshapeData_), INTENT(IN) :: test(:)
-    CHARACTER(LEN=*), INTENT(IN) :: projecton
+    CHARACTER(LEN=*), INTENT(IN) :: projection
     TYPE(FEVariable_), INTENT(IN) :: c1
+    !! projection is made on c1
     TYPE(FEVariable_), INTENT(IN) :: c2
+    !!
     TYPE(FEVariableVector_), INTENT(IN) :: c1rank
     TYPE(FEVariableVector_), INTENT(IN) :: c2rank
     REAL(DFP), ALLOCATABLE :: ans(:, :, :)
@@ -810,15 +816,18 @@ END INTERFACE STForceVector
 
 INTERFACE
   MODULE PURE SUBROUTINE obj_STForceVector_17( &
-    test, projecton, c1, c1rank, c2, c2rank, ans, dim1, dim2, dim3)
+    test, projection, c1, c1rank, c2, c2rank, ans, dim1, dim2, dim3, temp)
     CLASS(STElemshapeData_), INTENT(IN) :: test(:)
-    CHARACTER(LEN=*), INTENT(IN) :: projecton
+    CHARACTER(LEN=*), INTENT(IN) :: projection
     TYPE(FEVariable_), INTENT(IN) :: c1
+    !! projection is made on c1
     TYPE(FEVariable_), INTENT(IN) :: c2
+    !! c2 force vector
     TYPE(FEVariableVector_), INTENT(IN) :: c1rank
     TYPE(FEVariableVector_), INTENT(IN) :: c2rank
     REAL(DFP), INTENT(INOUT) :: ans(:, :, :)
     INTEGER(I4B), INTENT(OUT) :: dim1, dim2, dim3
+    REAL(DFP), INTENT(INOUT) :: temp(:, :)
   END SUBROUTINE obj_STForceVector_17
 END INTERFACE
 
@@ -836,9 +845,9 @@ END INTERFACE STForceVector_
 
 INTERFACE
   MODULE PURE FUNCTION obj_STForceVector18( &
-    test, projecton, c1, c1rank, c2, c2rank) RESULT(ans)
+    test, projection, c1, c1rank, c2, c2rank) RESULT(ans)
     CLASS(STElemshapeData_), INTENT(IN) :: test(:)
-    CHARACTER(LEN=*), INTENT(IN) :: projecton
+    CHARACTER(LEN=*), INTENT(IN) :: projection
     TYPE(FEVariable_), INTENT(IN) :: c1
     TYPE(FEVariable_), INTENT(IN) :: c2
     TYPE(FEVariableVector_), INTENT(IN) :: c1rank
@@ -861,15 +870,18 @@ END INTERFACE STForceVector
 
 INTERFACE
   MODULE PURE SUBROUTINE obj_STForceVector_18( &
-    test, projecton, c1, c1rank, c2, c2rank, ans, dim1, dim2, dim3, dim4)
+    test, projection, c1, c1rank, c2, c2rank, ans, dim1, dim2, dim3, dim4, &
+    temp)
     CLASS(STElemshapeData_), INTENT(IN) :: test(:)
-    CHARACTER(LEN=*), INTENT(IN) :: projecton
+    CHARACTER(LEN=*), INTENT(IN) :: projection
     TYPE(FEVariable_), INTENT(IN) :: c1
+    !! projection vector
     TYPE(FEVariable_), INTENT(IN) :: c2
     TYPE(FEVariableVector_), INTENT(IN) :: c1rank
     TYPE(FEVariableMatrix_), INTENT(IN) :: c2rank
     REAL(DFP), INTENT(INOUT) :: ans(:, :, :, :)
     INTEGER(I4B), INTENT(OUT) :: dim1, dim2, dim3, dim4
+    REAL(DFP), INTENT(INOUT) :: temp(:, :)
   END SUBROUTINE obj_STForceVector_18
 END INTERFACE
 
@@ -887,9 +899,9 @@ END INTERFACE STForceVector_
 
 INTERFACE
   MODULE PURE FUNCTION obj_STForceVector19( &
-    test, projecton, c1, c1rank, c2, c2rank, c3, c3rank) RESULT(ans)
+    test, projection, c1, c1rank, c2, c2rank, c3, c3rank) RESULT(ans)
     CLASS(STElemshapeData_), INTENT(IN) :: test(:)
-    CHARACTER(LEN=*), INTENT(IN) :: projecton
+    CHARACTER(LEN=*), INTENT(IN) :: projection
     TYPE(FEVariable_), INTENT(IN) :: c1
     TYPE(FEVariable_), INTENT(IN) :: c2
     TYPE(FEVariable_), INTENT(IN) :: c3
@@ -914,9 +926,10 @@ END INTERFACE STForceVector
 
 INTERFACE
   MODULE PURE SUBROUTINE obj_STForceVector_19( &
-    test, projecton, c1, c1rank, c2, c2rank, c3, c3rank, ans, nrow, ncol)
+    test, projection, c1, c1rank, c2, c2rank, c3, c3rank, ans, nrow, ncol, &
+    temp)
     CLASS(STElemshapeData_), INTENT(IN) :: test(:)
-    CHARACTER(LEN=*), INTENT(IN) :: projecton
+    CHARACTER(LEN=*), INTENT(IN) :: projection
     TYPE(FEVariable_), INTENT(IN) :: c1
     TYPE(FEVariable_), INTENT(IN) :: c2
     TYPE(FEVariable_), INTENT(IN) :: c3
@@ -925,6 +938,7 @@ INTERFACE
     TYPE(FEVariableScalar_), INTENT(IN) :: c3rank
     REAL(DFP), INTENT(INOUT) :: ans(:, :)
     INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+    REAL(DFP), INTENT(INOUT) :: temp(:, :)
   END SUBROUTINE obj_STForceVector_19
 END INTERFACE
 
@@ -942,9 +956,9 @@ END INTERFACE STForceVector_
 
 INTERFACE
   MODULE PURE FUNCTION obj_STForceVector20( &
-    test, projecton, c1, c1rank, c2, c2rank, c3, c3rank) RESULT(ans)
+    test, projection, c1, c1rank, c2, c2rank, c3, c3rank) RESULT(ans)
     CLASS(STElemshapeData_), INTENT(IN) :: test(:)
-    CHARACTER(LEN=*), INTENT(IN) :: projecton
+    CHARACTER(LEN=*), INTENT(IN) :: projection
     TYPE(FEVariable_), INTENT(IN) :: c1
     TYPE(FEVariable_), INTENT(IN) :: c2
     TYPE(FEVariable_), INTENT(IN) :: c3
@@ -969,18 +983,20 @@ END INTERFACE STForceVector
 
 INTERFACE
   MODULE PURE SUBROUTINE obj_STForceVector_20( &
-    test, projecton, c1, c1rank, c2, c2rank, c3, c3rank, ans, &
-    dim1, dim2, dim3)
+    test, projection, c1, c1rank, c2, c2rank, c3, c3rank, ans, &
+    dim1, dim2, dim3, temp)
     CLASS(STElemshapeData_), INTENT(IN) :: test(:)
-    CHARACTER(LEN=*), INTENT(IN) :: projecton
+    CHARACTER(LEN=*), INTENT(IN) :: projection
     TYPE(FEVariable_), INTENT(IN) :: c1
     TYPE(FEVariable_), INTENT(IN) :: c2
     TYPE(FEVariable_), INTENT(IN) :: c3
     TYPE(FEVariableVector_), INTENT(IN) :: c1rank
+    !! projection on c1
     TYPE(FEVariableScalar_), INTENT(IN) :: c2rank
     TYPE(FEVariableVector_), INTENT(IN) :: c3rank
     REAL(DFP), INTENT(INOUT) :: ans(:, :, :)
     INTEGER(I4B), INTENT(OUT) :: dim1, dim2, dim3
+    REAL(DFP), INTENT(INOUT) :: temp(:, :)
   END SUBROUTINE obj_STForceVector_20
 END INTERFACE
 
@@ -998,9 +1014,9 @@ END INTERFACE STForceVector_
 
 INTERFACE
   MODULE PURE FUNCTION obj_STForceVector21( &
-    test, projecton, c1, c1rank, c2, c2rank, c3, c3rank) RESULT(ans)
+    test, projection, c1, c1rank, c2, c2rank, c3, c3rank) RESULT(ans)
     CLASS(STElemshapeData_), INTENT(IN) :: test(:)
-    CHARACTER(LEN=*), INTENT(IN) :: projecton
+    CHARACTER(LEN=*), INTENT(IN) :: projection
     TYPE(FEVariable_), INTENT(IN) :: c1
     TYPE(FEVariable_), INTENT(IN) :: c2
     TYPE(FEVariable_), INTENT(IN) :: c3
@@ -1025,10 +1041,10 @@ END INTERFACE STForceVector
 
 INTERFACE
   MODULE PURE SUBROUTINE obj_STForceVector_21( &
-    test, projecton, c1, c1rank, c2, c2rank, c3, c3rank, ans, dim1, dim2, &
-    dim3, dim4)
+    test, projection, c1, c1rank, c2, c2rank, c3, c3rank, ans, dim1, dim2, &
+    dim3, dim4, temp)
     CLASS(STElemshapeData_), INTENT(IN) :: test(:)
-    CHARACTER(LEN=*), INTENT(IN) :: projecton
+    CHARACTER(LEN=*), INTENT(IN) :: projection
     TYPE(FEVariable_), INTENT(IN) :: c1
     TYPE(FEVariable_), INTENT(IN) :: c2
     TYPE(FEVariable_), INTENT(IN) :: c3
@@ -1037,6 +1053,7 @@ INTERFACE
     TYPE(FEVariableMatrix_), INTENT(IN) :: c3rank
     REAL(DFP), INTENT(INOUT) :: ans(:, :, :, :)
     INTEGER(I4B), INTENT(OUT) :: dim1, dim2, dim3, dim4
+    REAL( DFP ), INTENT(INOUT) :: temp(:, :)
   END SUBROUTINE obj_STForceVector_21
 END INTERFACE
 
