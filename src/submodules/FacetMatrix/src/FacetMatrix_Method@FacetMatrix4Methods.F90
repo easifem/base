@@ -49,8 +49,8 @@ CALL Reallocate(m4, nns2, nns1, nsd1, nsd2)
   !!
 CALL getProjectionOfdNdXt( &
   & obj=elemsd, &
-  & cdNdXt=masterC1, &
-  & val=elemsd%normal)
+  & ans=masterC1, &
+  & c=elemsd%normal)
   !!
 realval = elemsd%js * elemsd%ws * elemsd%thickness
   !!
@@ -109,8 +109,8 @@ CALL Reallocate(m4, nns2, nns1, nsd1, nsd2)
   !!
 CALL getProjectionOfdNdXt( &
   & obj=elemsd, &
-  & cdNdXt=masterC1, &
-  & val=elemsd%normal)
+  & ans=masterC1, &
+  & c=elemsd%normal)
   !!
 realval = elemsd%js * elemsd%ws * elemsd%thickness * mu
   !!
@@ -169,8 +169,8 @@ CALL Reallocate(m4, nns2, nns1, nsd1, nsd2)
   !!
 CALL getProjectionOfdNdXt( &
   & obj=elemsd, &
-  & cdNdXt=masterC1, &
-  & val=elemsd%normal)
+  & ans=masterC1, &
+  & c=elemsd%normal)
   !!
 CALL getInterpolation(obj=elemsd, ans=taubar, val=tauvar)
   !!
@@ -231,8 +231,8 @@ CALL Reallocate(m4, nns2, nns1, nsd1, nsd2)
   !!
 CALL getProjectionOfdNdXt( &
   & obj=elemsd, &
-  & cdNdXt=masterC1, &
-  & val=elemsd%normal)
+  & ans=masterC1, &
+  & c=elemsd%normal)
   !!
 CALL getInterpolation(obj=elemsd, ans=mubar, val=mu)
   !!
@@ -293,8 +293,8 @@ CALL Reallocate(m4, nns2, nns1, nsd1, nsd2)
   !!
 CALL getProjectionOfdNdXt( &
   & obj=elemsd, &
-  & cdNdXt=masterC1, &
-  & val=elemsd%normal)
+  & ans=masterC1, &
+  & c=elemsd%normal)
   !!
 CALL getInterpolation(obj=elemsd, ans=mubar, val=mu)
 CALL getInterpolation(obj=elemsd, ans=taubar, val=tauvar)

@@ -38,13 +38,13 @@ nsd = masterElemSD%nsd
   !!
 CALL getProjectionOfdNdXt( &
   & obj=masterElemsd, &
-  & cdNdXt=masterC1, &
-  & val=masterElemsd%normal)
+  & ans=masterC1, &
+  & c=masterElemsd%normal)
   !!
 CALL getProjectionOfdNdXt( &
   & obj=slaveElemsd, &
-  & cdNdXt=slaveC1, &
-  & val=slaveElemsd%normal)
+  & ans=slaveC1, &
+  & c=slaveElemsd%normal)
   !!
 ALLOCATE (C1(nns, nips), ans(nns, nns)); ans = 0.0_DFP
   !!
@@ -89,13 +89,13 @@ ALLOCATE (C1(nns, nips), ans(nns, nns)); ans = 0.0_DFP
   !!
 CALL getProjectionOfdNdXt( &
   & obj=masterElemsd, &
-  & cdNdXt=masterC1, &
-  & val=masterElemsd%normal)
+  & ans=masterC1, &
+  & c=masterElemsd%normal)
   !!
 CALL getProjectionOfdNdXt( &
   & obj=slaveElemsd, &
-  & cdNdXt=slaveC1, &
-  & val=slaveElemsd%normal)
+  & ans=slaveC1, &
+  & c=slaveElemsd%normal)
   !!
 masterC1 = masterC1 * muMaster
 slaveC1 = slaveC1 * muSlave
@@ -141,13 +141,13 @@ ALLOCATE (C1(nns, nips), ans(nns, nns)); ans = 0.0_DFP
   !!
 CALL getProjectionOfdNdXt( &
   & obj=masterElemsd, &
-  & cdNdXt=masterC1, &
-  & val=masterElemsd%normal)
+  & ans=masterC1, &
+  & c=masterElemsd%normal)
   !!
 CALL getProjectionOfdNdXt( &
   & obj=slaveElemsd, &
-  & cdNdXt=slaveC1, &
-  & val=slaveElemsd%normal)
+  & ans=slaveC1, &
+  & c=slaveElemsd%normal)
   !!
 CALL GetInterpolation(obj=masterElemSD, ans=taubar, val=tauvar)
   !!
@@ -194,13 +194,13 @@ ALLOCATE (C1(nns, nips), ans(nns, nns)); ans = 0.0_DFP
   !!
 CALL getProjectionOfdNdXt( &
   & obj=masterElemsd, &
-  & cdNdXt=masterC1, &
-  & val=masterElemsd%normal)
+  & ans=masterC1, &
+  & c=masterElemsd%normal)
   !!
 CALL getProjectionOfdNdXt( &
   & obj=slaveElemsd, &
-  & cdNdXt=slaveC1, &
-  & val=slaveElemsd%normal)
+  & ans=slaveC1, &
+  & c=slaveElemsd%normal)
   !!
 CALL GetInterpolation(obj=masterElemSD, ans=muMasterBar, val=muMaster)
   !!
@@ -248,13 +248,13 @@ ALLOCATE (C1(nns, nips), ans(nns, nns))
   !!
 CALL getProjectionOfdNdXt( &
   & obj=masterElemsd, &
-  & cdNdXt=masterC1, &
-  & val=masterElemsd%normal)
+  & ans=masterC1, &
+  & c=masterElemsd%normal)
   !!
 CALL getProjectionOfdNdXt( &
   & obj=slaveElemsd, &
-  & cdNdXt=slaveC1, &
-  & val=slaveElemsd%normal)
+  & ans=slaveC1, &
+  & c=slaveElemsd%normal)
   !!
 CALL GetInterpolation(obj=masterElemSD, ans=muMasterBar, val=muMaster)
   !!

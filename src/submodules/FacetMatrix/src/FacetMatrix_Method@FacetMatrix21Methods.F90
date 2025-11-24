@@ -35,8 +35,8 @@ nips = SIZE(elemsd%dNdXt, 3)
   !!
 CALL getProjectionOfdNdXt( &
   & obj=elemsd, &
-  & cdNdXt=masterC1, &
-  & val=elemsd%normal)
+  & ans=masterC1, &
+  & c=elemsd%normal)
   !!
 ALLOCATE (ans(nns1, nns2))
 ans = 0.0_DFP
@@ -72,8 +72,8 @@ ans = 0.0_DFP
   !!
 CALL getProjectionOfdNdXt( &
   & obj=elemsd, &
-  & cdNdXt=masterC1, &
-  & val=elemsd%normal)
+  & ans=masterC1, &
+  & c=elemsd%normal)
   !!
 realval = elemsd%js * elemsd%ws * elemsd%thickness * tauvar
   !!
@@ -106,8 +106,8 @@ ans = 0.0_DFP
   !!
 CALL getProjectionOfdNdXt( &
   & obj=elemsd, &
-  & cdNdXt=masterC1, &
-  & val=elemsd%normal)
+  & ans=masterC1, &
+  & c=elemsd%normal)
   !!
 CALL getInterpolation(obj=elemsd, ans=taubar, val=tauvar)
   !!

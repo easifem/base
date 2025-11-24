@@ -147,15 +147,19 @@ END INTERFACE GetProjectionOfdNdXt_
 !
 ! $$P^{I}=c_{i}\frac{\partial N^{I}}{\partial x_{i}} $$
 
-INTERFACE GetProjectionOfdNdXt
-  MODULE PURE SUBROUTINE getProjectionOfdNdXt_3(obj, cdNdXt, val)
+INTERFACE
+  MODULE PURE SUBROUTINE GetProjectionOfdNdXt_3(obj, c, ans)
     CLASS(ElemshapeData_), INTENT(IN) :: obj
     !! ElemshapeData object
-    REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: cdNdXt(:, :)
-    !! returned $c_{i}\frac{\partial N^{I}}{\partial x_{i}}$
-    REAL(DFP), INTENT(IN) :: val(:, :)
+    REAL(DFP), INTENT(IN) :: c(:, :)
     !! a vector, defined over quadrature points
-  END SUBROUTINE getProjectionOfdNdXt_3
+    REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: ans(:, :)
+    !! returned $c_{i}\frac{\partial N^{I}}{\partial x_{i}}$
+  END SUBROUTINE GetProjectionOfdNdXt_3
+END INTERFACE
+
+INTERFACE GetProjectionOfdNdXt
+  MODULE PROCEDURE GetProjectionOfdNdXt_3
 END INTERFACE GetProjectionOfdNdXt
 
 !----------------------------------------------------------------------------
@@ -166,13 +170,18 @@ END INTERFACE GetProjectionOfdNdXt
 ! date:   2025-03-05
 ! summary:  get interpolation of vector without allocation
 
-INTERFACE GetProjectionOfdNdXt_
-  MODULE PURE SUBROUTINE getProjectionOfdNdXt3_(obj, cdNdXt, val, nrow, ncol)
+INTERFACE
+  MODULE PURE SUBROUTINE GetProjectionOfdNdXt3_(obj, c, ans, nrow, ncol)
     CLASS(ElemshapeData_), INTENT(IN) :: obj
-    REAL(DFP), INTENT(INOUT) :: cdNdXt(:, :)
-    REAL(DFP), INTENT(IN) :: val(:, :)
+    REAL(DFP), INTENT(IN) :: c(:, :)
+    !! a vector, defined over quadrature points
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
     INTEGER(I4B), INTENT(OUT) :: nrow, ncol
-  END SUBROUTINE getProjectionOfdNdXt3_
+  END SUBROUTINE GetProjectionOfdNdXt3_
+END INTERFACE
+
+INTERFACE GetProjectionOfdNdXt_
+  MODULE PROCEDURE GetProjectionOfdNdXt3_
 END INTERFACE GetProjectionOfdNdXt_
 
 !----------------------------------------------------------------------------
