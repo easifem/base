@@ -23,7 +23,6 @@ USE ProductUtility, ONLY: OuterProd_
 USE BaseType, ONLY: TypeDerivativeTerm
 USE BaseType, ONLY: TypeFEVariableSpace, TypeFEVariableVector
 USE BaseType, ONLY: TypeFEVariableMatrix
-USE ElemshapeData_Method, ONLY: GetProjectionOfdNdXt
 USE ElemshapeData_Method, ONLY: GetProjectionOfdNTdXt_
 
 IMPLICIT NONE
@@ -103,8 +102,8 @@ DO ipt = 1, nipt
 
     CALL FEVariableGetInterpolation_( &
       obj=c, rank=crank, N=test(ipt)%N, nns=test(ipt)%nns, &
-      spaceIndx=ips, timeIndx=ipt, T=test(ipt)%T, nnt=test(ipt)%nns, &
-      scale=1.0_DFP, addContribution=.TRUE., ans=cbar)
+      spaceIndx=ips, timeIndx=ipt, T=test(ipt)%T, nnt=test(ipt)%nnt, &
+      scale=1.0_DFP, addContribution=.FALSE., ans=cbar)
 
     realval = cbar * test(ipt)%js(ips) * test(ipt)%ws(ips) * &
       test(ipt)%thickness(ips) * test(ipt)%jt * test(ipt)%wt
@@ -153,8 +152,8 @@ DO ipt = 1, nipt
 
     CALL FEVariableGetInterpolation_( &
       obj=c, rank=crank, N=test(ipt)%N, nns=test(ipt)%nns, spaceIndx=ips, &
-      timeIndx=ipt, T=test(ipt)%T, nnt=test(ipt)%nns, scale=1.0_DFP, &
-      addContribution=.TRUE., ans=cbar, tsize=spaceCompo)
+      timeIndx=ipt, T=test(ipt)%T, nnt=test(ipt)%nnt, scale=1.0_DFP, &
+      addContribution=.FALSE., ans=cbar, tsize=spaceCompo)
 
     realval = test(ipt)%js(ips) * test(ipt)%ws(ips) * &
       test(ipt)%thickness(ips) * test(ipt)%jt * test(ipt)%wt
@@ -207,8 +206,8 @@ DO ipt = 1, nipt
 
     CALL FEVariableGetInterpolation_( &
       obj=c, rank=crank, N=test(ipt)%N, nns=test(ipt)%nns, spaceIndx=ips, &
-      timeIndx=ipt, T=test(ipt)%T, nnt=test(ipt)%nns, scale=1.0_DFP, &
-      addContribution=.TRUE., ans=cbar, nrow=i1, ncol=i2)
+      timeIndx=ipt, T=test(ipt)%T, nnt=test(ipt)%nnt, scale=1.0_DFP, &
+      addContribution=.FALSE., ans=cbar, nrow=i1, ncol=i2)
 
     realval = test(ipt)%js(ips) * test(ipt)%ws(ips) * &
       test(ipt)%thickness(ips) * test(ipt)%jt * test(ipt)%wt
@@ -314,7 +313,7 @@ DO ipt = 1, nipt
     CALL FEVariableGetInterpolation_( &
       obj=c2, rank=c2rank, N=test(ipt)%N, nns=test(ipt)%nns, &
       spaceIndx=ips, timeIndx=ipt, T=test(ipt)%T, nnt=test(ipt)%nnt, &
-      scale=1.0_DFP, addContribution=.TRUE., ans=c2bar, tsize=i1)
+      scale=1.0_DFP, addContribution=.FALSE., ans=c2bar, tsize=i1)
 
     realval = c1bar * test(ipt)%js(ips) * test(ipt)%ws(ips) * &
       test(ipt)%thickness(ips) * test(ipt)%jt * test(ipt)%wt
@@ -368,13 +367,13 @@ DO ipt = 1, nipt
 
     CALL FEVariableGetInterpolation_( &
       obj=c1, rank=c1rank, N=test(ipt)%N, nns=test(ipt)%nns, &
-      spaceIndx=ips, timeIndx=ipt, T=test(ipt)%T, nnt=test(ipt)%nns, &
-      scale=1.0_DFP, addContribution=.TRUE., ans=c1bar)
+      spaceIndx=ips, timeIndx=ipt, T=test(ipt)%T, nnt=test(ipt)%nnt, &
+      scale=1.0_DFP, addContribution=.FALSE., ans=c1bar)
 
     CALL FEVariableGetInterpolation_( &
       obj=c2, rank=c2rank, N=test(ipt)%N, nns=test(ipt)%nns, &
-      spaceIndx=ips, timeIndx=ipt, T=test(ipt)%T, nnt=test(ipt)%nns, &
-      scale=1.0_DFP, addContribution=.TRUE., ans=c2bar, nrow=i1, ncol=i2)
+      spaceIndx=ips, timeIndx=ipt, T=test(ipt)%T, nnt=test(ipt)%nnt, &
+      scale=1.0_DFP, addContribution=.FALSE., ans=c2bar, nrow=i1, ncol=i2)
 
     realval = c1bar * test(ipt)%js(ips) * test(ipt)%ws(ips) * &
       test(ipt)%thickness(ips) * test(ipt)%jt * test(ipt)%wt
@@ -472,7 +471,7 @@ DO ipt = 1, nipt
 
     CALL FEVariableGetInterpolation_( &
       obj=c2, rank=c2rank, N=test(ipt)%N, nns=test(ipt)%nns, &
-      spaceIndx=ips, timeIndx=ipt, T=test(ipt)%T, nnt=test(ipt)%nns, &
+      spaceIndx=ips, timeIndx=ipt, T=test(ipt)%T, nnt=test(ipt)%nnt, &
       scale=1.0_DFP, addContribution=.FALSE., ans=realval)
 
     realval = realval * test(ipt)%js(ips) * test(ipt)%ws(ips) * &
@@ -529,7 +528,7 @@ DO ipt = 1, nipt
 
     CALL FEVariableGetInterpolation_( &
       obj=c2, rank=c2rank, N=test(ipt)%N, nns=test(ipt)%nns, &
-      spaceIndx=ips, timeIndx=ipt, T=test(ipt)%T, nnt=test(ipt)%nns, &
+      spaceIndx=ips, timeIndx=ipt, T=test(ipt)%T, nnt=test(ipt)%nnt, &
       scale=1.0_DFP, addContribution=.FALSE., ans=c2bar, tsize=i1)
 
     CALL GetProjectionOfdNTdXt_( &
@@ -591,7 +590,7 @@ DO ipt = 1, nipt
 
     CALL FEVariableGetInterpolation_( &
       obj=c2, rank=c2rank, N=test(ipt)%N, nns=test(ipt)%nns, &
-      spaceIndx=ips, timeIndx=ipt, T=test(ipt)%T, nnt=test(ipt)%nns, &
+      spaceIndx=ips, timeIndx=ipt, T=test(ipt)%T, nnt=test(ipt)%nnt, &
       scale=1.0_DFP, addContribution=.FALSE., ans=c2bar, nrow=i1, ncol=i2)
 
     CALL GetProjectionOfdNTdXt_( &
@@ -646,12 +645,12 @@ DO ipt = 1, nipt
   DO ips = 1, test(ipt)%nips
     CALL FEVariableGetInterpolation_( &
       obj=c2, rank=c2rank, N=test(ipt)%N, nns=test(ipt)%nns, &
-      spaceIndx=ips, timeIndx=ipt, T=test(ipt)%T, nnt=test(ipt)%nns, &
+      spaceIndx=ips, timeIndx=ipt, T=test(ipt)%T, nnt=test(ipt)%nnt, &
       scale=1.0_DFP, addContribution=.FALSE., ans=c2bar)
 
     CALL FEVariableGetInterpolation_( &
       obj=c3, rank=c3rank, N=test(ipt)%N, nns=test(ipt)%nns, &
-      spaceIndx=ips, timeIndx=ipt, T=test(ipt)%T, nnt=test(ipt)%nns, &
+      spaceIndx=ips, timeIndx=ipt, T=test(ipt)%T, nnt=test(ipt)%nnt, &
       scale=1.0_DFP, addContribution=.FALSE., ans=c3bar)
 
     realval = c2bar * c3bar * test(ipt)%js(ips) * test(ipt)%ws(ips) * &
@@ -709,12 +708,12 @@ DO ipt = 1, nipt
 
     CALL FEVariableGetInterpolation_( &
       obj=c2, rank=c2rank, N=test(ipt)%N, nns=test(ipt)%nns, &
-      spaceIndx=ips, timeIndx=ipt, T=test(ipt)%T, nnt=test(ipt)%nns, &
+      spaceIndx=ips, timeIndx=ipt, T=test(ipt)%T, nnt=test(ipt)%nnt, &
       scale=1.0_DFP, addContribution=.FALSE., ans=c2bar)
 
     CALL FEVariableGetInterpolation_( &
       obj=c3, rank=c3rank, N=test(ipt)%N, nns=test(ipt)%nns, &
-      spaceIndx=ips, timeIndx=ipt, T=test(ipt)%T, nnt=test(ipt)%nns, &
+      spaceIndx=ips, timeIndx=ipt, T=test(ipt)%T, nnt=test(ipt)%nnt, &
       scale=1.0_DFP, addContribution=.FALSE., ans=c3bar, tsize=i1)
 
     CALL GetProjectionOfdNTdXt_( &
@@ -780,12 +779,12 @@ DO ipt = 1, nipt
 
     CALL FEVariableGetInterpolation_( &
       obj=c2, rank=c2rank, N=test(ipt)%N, nns=test(ipt)%nns, &
-      spaceIndx=ips, timeIndx=ipt, T=test(ipt)%T, nnt=test(ipt)%nns, &
+      spaceIndx=ips, timeIndx=ipt, T=test(ipt)%T, nnt=test(ipt)%nnt, &
       scale=1.0_DFP, addContribution=.FALSE., ans=c2bar)
 
     CALL FEVariableGetInterpolation_( &
       obj=c3, rank=c3rank, N=test(ipt)%N, nns=test(ipt)%nns, &
-      spaceIndx=ips, timeIndx=ipt, T=test(ipt)%T, nnt=test(ipt)%nns, &
+      spaceIndx=ips, timeIndx=ipt, T=test(ipt)%T, nnt=test(ipt)%nnt, &
       scale=1.0_DFP, addContribution=.FALSE., ans=c3bar, nrow=i1, ncol=i2)
 
     realval = c2bar * test(ipt)%js(ips) * test(ipt)%ws(ips) * &
