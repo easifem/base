@@ -23,6 +23,7 @@ USE ProductUtility, ONLY: OuterProd_
 USE BaseType, ONLY: TypeDerivativeTerm
 USE BaseType, ONLY: TypeFEVariableSpace, TypeFEVariableVector
 USE BaseType, ONLY: TypeFEVariableMatrix
+USE BaseType, ONLY: math => TypeMathOpt
 USE ElemshapeData_Method, ONLY: GetProjectionOfdNTdXt_
 
 IMPLICIT NONE
@@ -54,7 +55,7 @@ nipt = SIZE(test)
 nrow = test(1)%nns
 ncol = test(1)%nnt
 
-ans(1:nrow, 1:ncol) = 0.0_DFP
+ans(1:nrow, 1:ncol) = math%zero
 
 DO ipt = 1, nipt
   DO ips = 1, test(ipt)%nips
@@ -62,7 +63,7 @@ DO ipt = 1, nipt
       test(ipt)%thickness(ips) * test(ipt)%wt * test(ipt)%jt
 
     CALL OuterProd_( &
-      a=test(ipt)%N(1:nrow, ips), b=test(ipt)%T(1:ncol), anscoeff=1.0_DFP, &
+      a=test(ipt)%N(1:nrow, ips), b=test(ipt)%T(1:ncol), anscoeff=math%one, &
       scale=realval, ans=ans, nrow=i1, ncol=i2)
   END DO
 END DO
@@ -95,7 +96,7 @@ nipt = SIZE(test)
 nrow = test(1)%nns
 ncol = test(1)%nnt
 
-ans(1:nrow, 1:ncol) = 0.0_DFP
+ans(1:nrow, 1:ncol) = math%zero
 
 DO ipt = 1, nipt
   DO ips = 1, test(ipt)%nips
@@ -103,13 +104,13 @@ DO ipt = 1, nipt
     CALL FEVariableGetInterpolation_( &
       obj=c, rank=crank, N=test(ipt)%N, nns=test(ipt)%nns, &
       spaceIndx=ips, timeIndx=ipt, T=test(ipt)%T, nnt=test(ipt)%nnt, &
-      scale=1.0_DFP, addContribution=.FALSE., ans=cbar)
+      scale=math%one, addContribution=math%no, ans=cbar)
 
     realval = cbar * test(ipt)%js(ips) * test(ipt)%ws(ips) * &
       test(ipt)%thickness(ips) * test(ipt)%jt * test(ipt)%wt
 
     CALL OuterProd_( &
-      a=test(ipt)%N(1:nrow, ips), b=test(ipt)%T(1:ncol), anscoeff=1.0_DFP, &
+      a=test(ipt)%N(1:nrow, ips), b=test(ipt)%T(1:ncol), anscoeff=math%one, &
       scale=realval, ans=ans, nrow=i1, ncol=i2)
 
   END DO
@@ -144,7 +145,7 @@ dim1 = FEVariableSize(obj=c, dim=1)
 dim2 = test(1)%nns
 dim3 = test(1)%nnt
 
-ans(1:dim1, 1:dim2, 1:dim3) = 0.0_DFP
+ans(1:dim1, 1:dim2, 1:dim3) = math%zero
 
 DO ipt = 1, nipt
 
@@ -152,14 +153,14 @@ DO ipt = 1, nipt
 
     CALL FEVariableGetInterpolation_( &
       obj=c, rank=crank, N=test(ipt)%N, nns=test(ipt)%nns, spaceIndx=ips, &
-      timeIndx=ipt, T=test(ipt)%T, nnt=test(ipt)%nnt, scale=1.0_DFP, &
-      addContribution=.FALSE., ans=cbar, tsize=spaceCompo)
+      timeIndx=ipt, T=test(ipt)%T, nnt=test(ipt)%nnt, scale=math%one, &
+      addContribution=math%no, ans=cbar, tsize=spaceCompo)
 
     realval = test(ipt)%js(ips) * test(ipt)%ws(ips) * &
       test(ipt)%thickness(ips) * test(ipt)%jt * test(ipt)%wt
 
     CALL OuterProd_(a=cbar(1:dim1), b=test(ipt)%N(1:dim2, ips), &
-                    c=test(ipt)%T(1:dim3), anscoeff=1.0_DFP, scale=realval, &
+                    c=test(ipt)%T(1:dim3), anscoeff=math%one, scale=realval, &
                     ans=ans, dim1=i1, dim2=i2, dim3=i3)
 
   END DO
@@ -198,7 +199,7 @@ dim2 = FEVariableSize(obj=c, dim=2)
 dim3 = test(1)%nns
 dim4 = test(1)%nnt
 
-ans(1:dim1, 1:dim2, 1:dim3, 1:dim4) = 0.0_DFP
+ans(1:dim1, 1:dim2, 1:dim3, 1:dim4) = math%zero
 
 DO ipt = 1, nipt
 
@@ -206,14 +207,14 @@ DO ipt = 1, nipt
 
     CALL FEVariableGetInterpolation_( &
       obj=c, rank=crank, N=test(ipt)%N, nns=test(ipt)%nns, spaceIndx=ips, &
-      timeIndx=ipt, T=test(ipt)%T, nnt=test(ipt)%nnt, scale=1.0_DFP, &
-      addContribution=.FALSE., ans=cbar, nrow=i1, ncol=i2)
+      timeIndx=ipt, T=test(ipt)%T, nnt=test(ipt)%nnt, scale=math%one, &
+      addContribution=math%no, ans=cbar, nrow=i1, ncol=i2)
 
     realval = test(ipt)%js(ips) * test(ipt)%ws(ips) * &
       test(ipt)%thickness(ips) * test(ipt)%jt * test(ipt)%wt
 
     CALL OuterProd_(a=cbar(1:dim1, 1:dim2), b=test(ipt)%N(1:dim3, ips), &
-                    c=test(ipt)%T(1:dim4), anscoeff=1.0_DFP, scale=realval, &
+                    c=test(ipt)%T(1:dim4), anscoeff=math%one, scale=realval, &
                     ans=ans, dim1=i1, dim2=i2, dim3=i3, dim4=i4)
 
   END DO
@@ -246,7 +247,7 @@ nipt = SIZE(test)
 nrow = test(1)%nns
 ncol = test(1)%nnt
 
-ans(1:nrow, 1:ncol) = 0.0_DFP
+ans(1:nrow, 1:ncol) = math%zero
 
 DO ipt = 1, nipt
   DO ips = 1, test(ipt)%nips
@@ -254,18 +255,18 @@ DO ipt = 1, nipt
     CALL FEVariableGetInterpolation_( &
       obj=c1, rank=c1rank, N=test(ipt)%N, nns=test(ipt)%nns, &
       spaceIndx=ips, timeIndx=ipt, T=test(ipt)%T, nnt=test(ipt)%nnt, &
-      scale=1.0_DFP, addContribution=.FALSE., ans=c1bar)
+      scale=math%one, addContribution=math%no, ans=c1bar)
 
     CALL FEVariableGetInterpolation_( &
       obj=c2, rank=c2rank, N=test(ipt)%N, nns=test(ipt)%nns, &
       spaceIndx=ips, timeIndx=ipt, T=test(ipt)%T, nnt=test(ipt)%nnt, &
-      scale=1.0_DFP, addContribution=.FALSE., ans=c2bar)
+      scale=math%one, addContribution=math%no, ans=c2bar)
 
     realval = c1bar * c2bar * test(ipt)%js(ips) * test(ipt)%ws(ips) * &
       test(ipt)%thickness(ips) * test(ipt)%jt * test(ipt)%wt
 
     CALL OuterProd_( &
-      a=test(ipt)%N(1:nrow, ips), b=test(ipt)%T(1:ncol), anscoeff=1.0_DFP, &
+      a=test(ipt)%N(1:nrow, ips), b=test(ipt)%T(1:ncol), anscoeff=math%one, &
       scale=realval, ans=ans, nrow=i1, ncol=i2)
 
   END DO
@@ -300,7 +301,7 @@ dim1 = FEVariableSize(obj=c2, dim=1)
 dim2 = test(1)%nns
 dim3 = test(1)%nnt
 
-ans(1:dim1, 1:dim2, 1:dim3) = 0.0_DFP
+ans(1:dim1, 1:dim2, 1:dim3) = math%zero
 
 DO ipt = 1, nipt
   DO ips = 1, test(ipt)%nips
@@ -308,19 +309,19 @@ DO ipt = 1, nipt
     CALL FEVariableGetInterpolation_( &
       obj=c1, rank=c1rank, N=test(ipt)%N, nns=test(ipt)%nns, &
       spaceIndx=ips, timeIndx=ipt, T=test(ipt)%T, nnt=test(ipt)%nnt, &
-      scale=1.0_DFP, addContribution=.FALSE., ans=c1bar)
+      scale=math%one, addContribution=math%no, ans=c1bar)
 
     CALL FEVariableGetInterpolation_( &
       obj=c2, rank=c2rank, N=test(ipt)%N, nns=test(ipt)%nns, &
       spaceIndx=ips, timeIndx=ipt, T=test(ipt)%T, nnt=test(ipt)%nnt, &
-      scale=1.0_DFP, addContribution=.FALSE., ans=c2bar, tsize=i1)
+      scale=math%one, addContribution=math%no, ans=c2bar, tsize=i1)
 
     realval = c1bar * test(ipt)%js(ips) * test(ipt)%ws(ips) * &
       test(ipt)%thickness(ips) * test(ipt)%jt * test(ipt)%wt
 
     CALL OuterProd_( &
       a=c2bar(1:dim1), b=test(ipt)%N(1:dim2, ips), &
-      c=test(ipt)%T(1:dim3), anscoeff=1.0_DFP, &
+      c=test(ipt)%T(1:dim3), anscoeff=math%one, &
       scale=realval, ans=ans, dim1=i1, dim2=i2, dim3=i3)
 
   END DO
@@ -359,7 +360,7 @@ dim2 = FEVariableSize(obj=c2, dim=2)
 dim3 = test(1)%nns
 dim4 = test(1)%nnt
 
-ans(1:dim1, 1:dim2, 1:dim3, 1:dim4) = 0.0_DFP
+ans(1:dim1, 1:dim2, 1:dim3, 1:dim4) = math%zero
 
 DO ipt = 1, nipt
 
@@ -368,19 +369,19 @@ DO ipt = 1, nipt
     CALL FEVariableGetInterpolation_( &
       obj=c1, rank=c1rank, N=test(ipt)%N, nns=test(ipt)%nns, &
       spaceIndx=ips, timeIndx=ipt, T=test(ipt)%T, nnt=test(ipt)%nnt, &
-      scale=1.0_DFP, addContribution=.FALSE., ans=c1bar)
+      scale=math%one, addContribution=math%no, ans=c1bar)
 
     CALL FEVariableGetInterpolation_( &
       obj=c2, rank=c2rank, N=test(ipt)%N, nns=test(ipt)%nns, &
       spaceIndx=ips, timeIndx=ipt, T=test(ipt)%T, nnt=test(ipt)%nnt, &
-      scale=1.0_DFP, addContribution=.FALSE., ans=c2bar, nrow=i1, ncol=i2)
+      scale=math%one, addContribution=math%no, ans=c2bar, nrow=i1, ncol=i2)
 
     realval = c1bar * test(ipt)%js(ips) * test(ipt)%ws(ips) * &
       test(ipt)%thickness(ips) * test(ipt)%jt * test(ipt)%wt
 
     CALL OuterProd_( &
       a=c2bar(1:dim1, 1:dim2), b=test(ipt)%N(1:dim3, ips), &
-      c=test(ipt)%T(1:dim4), anscoeff=1.0_DFP, &
+      c=test(ipt)%T(1:dim4), anscoeff=math%one, &
       scale=realval, ans=ans, dim1=i1, dim2=i2, dim3=i3, dim4=i4)
 
   END DO
@@ -417,7 +418,7 @@ nipt = SIZE(test)
 nrow = test(1)%nns
 ncol = test(1)%nnt
 
-ans(1:nrow, 1:ncol) = 0.0_DFP
+ans(1:nrow, 1:ncol) = math%zero
 
 DO ipt = 1, nipt
   DO ips = 1, test(ipt)%nips
@@ -464,7 +465,7 @@ nipt = SIZE(test)
 nrow = test(1)%nns
 ncol = test(1)%nnt
 
-ans(1:nrow, 1:ncol) = 0.0_DFP
+ans(1:nrow, 1:ncol) = math%zero
 
 DO ipt = 1, nipt
   DO ips = 1, test(ipt)%nips
@@ -472,7 +473,7 @@ DO ipt = 1, nipt
     CALL FEVariableGetInterpolation_( &
       obj=c2, rank=c2rank, N=test(ipt)%N, nns=test(ipt)%nns, &
       spaceIndx=ips, timeIndx=ipt, T=test(ipt)%T, nnt=test(ipt)%nnt, &
-      scale=1.0_DFP, addContribution=.FALSE., ans=realval)
+      scale=math%one, addContribution=math%no, ans=realval)
 
     realval = realval * test(ipt)%js(ips) * test(ipt)%ws(ips) * &
       test(ipt)%thickness(ips) * test(ipt)%wt * test(ipt)%jt
@@ -518,7 +519,7 @@ dim1 = FEVariableSize(obj=c2, dim=1)
 dim2 = test(1)%nns
 dim3 = test(1)%nnt
 
-ans(1:dim1, 1:dim2, 1:dim3) = 0.0_DFP
+ans(1:dim1, 1:dim2, 1:dim3) = math%zero
 
 DO ipt = 1, nipt
   DO ips = 1, test(ipt)%nips
@@ -529,7 +530,7 @@ DO ipt = 1, nipt
     CALL FEVariableGetInterpolation_( &
       obj=c2, rank=c2rank, N=test(ipt)%N, nns=test(ipt)%nns, &
       spaceIndx=ips, timeIndx=ipt, T=test(ipt)%T, nnt=test(ipt)%nnt, &
-      scale=1.0_DFP, addContribution=.FALSE., ans=c2bar, tsize=i1)
+      scale=math%one, addContribution=math%no, ans=c2bar, tsize=i1)
 
     CALL GetProjectionOfdNTdXt_( &
       obj=test, c=c1, crank=c1rank, ips=ips, ipt=ipt, ans=temp, nrow=i1, &
@@ -537,7 +538,7 @@ DO ipt = 1, nipt
 
     CALL OuterProd_( &
       a=c2bar(1:dim1), b=temp(1:dim2, 1:dim3), &
-      ans=ans, dim1=i1, dim2=i2, dim3=i3, anscoeff=1.0_DFP, scale=realval)
+      ans=ans, dim1=i1, dim2=i2, dim3=i3, anscoeff=math%one, scale=realval)
 
   END DO
 END DO
@@ -580,7 +581,7 @@ dim2 = FEVariableSize(obj=c2, dim=2)
 dim3 = test(1)%nns
 dim4 = test(1)%nnt
 
-ans(1:dim1, 1:dim2, 1:dim3, 1:dim4) = 0.0_DFP
+ans(1:dim1, 1:dim2, 1:dim3, 1:dim4) = math%zero
 
 DO ipt = 1, nipt
   DO ips = 1, test(ipt)%nips
@@ -591,7 +592,7 @@ DO ipt = 1, nipt
     CALL FEVariableGetInterpolation_( &
       obj=c2, rank=c2rank, N=test(ipt)%N, nns=test(ipt)%nns, &
       spaceIndx=ips, timeIndx=ipt, T=test(ipt)%T, nnt=test(ipt)%nnt, &
-      scale=1.0_DFP, addContribution=.FALSE., ans=c2bar, nrow=i1, ncol=i2)
+      scale=math%one, addContribution=math%no, ans=c2bar, nrow=i1, ncol=i2)
 
     CALL GetProjectionOfdNTdXt_( &
       obj=test, c=c1, crank=c1rank, ips=ips, ipt=ipt, ans=temp, nrow=i1, &
@@ -600,7 +601,7 @@ DO ipt = 1, nipt
     CALL OuterProd_( &
       a=c2bar(1:dim1, 1:dim2), b=temp(1:dim3, 1:dim4), &
       ans=ans, dim1=i1, dim2=i2, dim3=i3, dim4=i4, &
-      anscoeff=1.0_DFP, scale=realval)
+      anscoeff=math%one, scale=realval)
 
   END DO
 END DO
@@ -639,19 +640,19 @@ nipt = SIZE(test)
 nrow = test(1)%nns
 ncol = test(1)%nnt
 
-ans(1:nrow, 1:ncol) = 0.0_DFP
+ans(1:nrow, 1:ncol) = math%zero
 
 DO ipt = 1, nipt
   DO ips = 1, test(ipt)%nips
     CALL FEVariableGetInterpolation_( &
       obj=c2, rank=c2rank, N=test(ipt)%N, nns=test(ipt)%nns, &
       spaceIndx=ips, timeIndx=ipt, T=test(ipt)%T, nnt=test(ipt)%nnt, &
-      scale=1.0_DFP, addContribution=.FALSE., ans=c2bar)
+      scale=math%one, addContribution=math%no, ans=c2bar)
 
     CALL FEVariableGetInterpolation_( &
       obj=c3, rank=c3rank, N=test(ipt)%N, nns=test(ipt)%nns, &
       spaceIndx=ips, timeIndx=ipt, T=test(ipt)%T, nnt=test(ipt)%nnt, &
-      scale=1.0_DFP, addContribution=.FALSE., ans=c3bar)
+      scale=math%one, addContribution=math%no, ans=c3bar)
 
     realval = c2bar * c3bar * test(ipt)%js(ips) * test(ipt)%ws(ips) * &
       test(ipt)%thickness(ips) * test(ipt)%wt * test(ipt)%jt
@@ -701,7 +702,7 @@ dim1 = FEVariableSize(obj=c3, dim=1)
 dim2 = test(1)%nns
 dim3 = test(1)%nnt
 
-ans(1:dim1, 1:dim2, 1:dim3) = 0.0_DFP
+ans(1:dim1, 1:dim2, 1:dim3) = math%zero
 
 DO ipt = 1, nipt
   DO ips = 1, test(ipt)%nips
@@ -709,12 +710,12 @@ DO ipt = 1, nipt
     CALL FEVariableGetInterpolation_( &
       obj=c2, rank=c2rank, N=test(ipt)%N, nns=test(ipt)%nns, &
       spaceIndx=ips, timeIndx=ipt, T=test(ipt)%T, nnt=test(ipt)%nnt, &
-      scale=1.0_DFP, addContribution=.FALSE., ans=c2bar)
+      scale=math%one, addContribution=math%no, ans=c2bar)
 
     CALL FEVariableGetInterpolation_( &
       obj=c3, rank=c3rank, N=test(ipt)%N, nns=test(ipt)%nns, &
       spaceIndx=ips, timeIndx=ipt, T=test(ipt)%T, nnt=test(ipt)%nnt, &
-      scale=1.0_DFP, addContribution=.FALSE., ans=c3bar, tsize=i1)
+      scale=math%one, addContribution=math%no, ans=c3bar, tsize=i1)
 
     CALL GetProjectionOfdNTdXt_( &
       obj=test, c=c1, crank=c1rank, ips=ips, ipt=ipt, ans=temp, nrow=i1, &
@@ -725,7 +726,7 @@ DO ipt = 1, nipt
 
     CALL OuterProd_( &
       a=c3bar(1:dim1), b=temp(1:dim2, 1:dim3), &
-      ans=ans, dim1=i1, dim2=i2, dim3=i3, anscoeff=1.0_DFP, scale=realval)
+      ans=ans, dim1=i1, dim2=i2, dim3=i3, anscoeff=math%one, scale=realval)
 
   END DO
 END DO
@@ -768,7 +769,7 @@ dim2 = FEVariableSize(obj=c3, dim=2)
 dim3 = test(1)%nns
 dim4 = test(1)%nnt
 
-ans(1:dim1, 1:dim2, 1:dim3, 1:dim4) = 0.0_DFP
+ans(1:dim1, 1:dim2, 1:dim3, 1:dim4) = math%zero
 
 DO ipt = 1, nipt
   DO ips = 1, test(ipt)%nips
@@ -780,12 +781,12 @@ DO ipt = 1, nipt
     CALL FEVariableGetInterpolation_( &
       obj=c2, rank=c2rank, N=test(ipt)%N, nns=test(ipt)%nns, &
       spaceIndx=ips, timeIndx=ipt, T=test(ipt)%T, nnt=test(ipt)%nnt, &
-      scale=1.0_DFP, addContribution=.FALSE., ans=c2bar)
+      scale=math%one, addContribution=math%no, ans=c2bar)
 
     CALL FEVariableGetInterpolation_( &
       obj=c3, rank=c3rank, N=test(ipt)%N, nns=test(ipt)%nns, &
       spaceIndx=ips, timeIndx=ipt, T=test(ipt)%T, nnt=test(ipt)%nnt, &
-      scale=1.0_DFP, addContribution=.FALSE., ans=c3bar, nrow=i1, ncol=i2)
+      scale=math%one, addContribution=math%no, ans=c3bar, nrow=i1, ncol=i2)
 
     realval = c2bar * test(ipt)%js(ips) * test(ipt)%ws(ips) * &
       test(ipt)%thickness(ips) * test(ipt)%wt * test(ipt)%jt
@@ -793,7 +794,7 @@ DO ipt = 1, nipt
     CALL OuterProd_( &
       a=c3bar(1:dim1, 1:dim2), b=temp(1:dim3, 1:dim4), &
       ans=ans, dim1=i1, dim2=i2, dim3=i3, dim4=i4, &
-      anscoeff=1.0_DFP, scale=realval)
+      anscoeff=math%one, scale=realval)
 
   END DO
 END DO
@@ -849,7 +850,7 @@ PURE SUBROUTINE STFV_8a(test, ans, nrow, ncol)
   nrow = test(1)%nns
   ncol = test(1)%nnt
 
-  ans(1:nrow, 1:ncol) = 0.0_DFP
+  ans(1:nrow, 1:ncol) = math%zero
 
   DO ipt = 1, nipt
     DO ips = 1, test(ipt)%nips
@@ -859,7 +860,7 @@ PURE SUBROUTINE STFV_8a(test, ans, nrow, ncol)
 
       CALL OuterProd_(a=test(ipt)%N(1:nrow, ips), &
                       b=test(ipt)%T(1:ncol), &
-                      anscoeff=1.0_DFP, scale=realval, &
+                      anscoeff=math%one, scale=realval, &
                       ans=ans, nrow=i1, ncol=i2)
     END DO
   END DO
@@ -884,7 +885,7 @@ PURE SUBROUTINE STFV_8b(test, ans, nrow, ncol)
   nrow = test(1)%nns
   ncol = test(1)%nnt
 
-  ans(1:nrow, 1:ncol) = 0.0_DFP
+  ans(1:nrow, 1:ncol) = math%zero
 
   DO ipt = 1, nipt
     DO ips = 1, test(ipt)%nips
@@ -916,7 +917,7 @@ PURE SUBROUTINE STFV_8c(test, ans, term1, nrow, ncol)
   nrow = test(1)%nns
   ncol = test(1)%nnt
 
-  ans(1:nrow, 1:ncol) = 0.0_DFP
+  ans(1:nrow, 1:ncol) = math%zero
 
   DO ipt = 1, nipt
     DO ips = 1, test(ipt)%nips
@@ -979,7 +980,7 @@ PURE SUBROUTINE STFV_9a(test, c, crank, ans, nrow, ncol)
   nrow = test(1)%nns
   ncol = test(1)%nnt
 
-  ans(1:nrow, 1:ncol) = 0.0_DFP
+  ans(1:nrow, 1:ncol) = math%zero
 
   DO ipt = 1, nipt
     DO ips = 1, test(ipt)%nips
@@ -987,14 +988,14 @@ PURE SUBROUTINE STFV_9a(test, c, crank, ans, nrow, ncol)
       CALL FEVariableGetInterpolation_( &
         obj=c, rank=crank, N=test(ipt)%N, nns=test(ipt)%nns, &
         spaceIndx=ips, timeIndx=ipt, T=test(ipt)%T, nnt=test(ipt)%nnt, &
-        scale=1.0_DFP, addContribution=.FALSE., ans=cbar)
+        scale=math%one, addContribution=math%no, ans=cbar)
 
       realval = test(ipt)%js(ips) * test(ipt)%ws(ips) &
         * test(ipt)%thickness(ips) * cbar * test(ipt)%jt * test(ipt)%wt
 
       CALL OuterProd_( &
         a=test(ipt)%N(1:nrow, ips), b=test(ipt)%T(1:ncol), &
-        anscoeff=1.0_DFP, scale=realval, ans=ans, nrow=i1, ncol=i2)
+        anscoeff=math%one, scale=realval, ans=ans, nrow=i1, ncol=i2)
     END DO
   END DO
 END SUBROUTINE STFV_9a
@@ -1019,7 +1020,7 @@ PURE SUBROUTINE STFV_9b(test, c, crank, ans, nrow, ncol)
   nrow = test(1)%nns
   ncol = test(1)%nnt
 
-  ans(1:nrow, 1:ncol) = 0.0_DFP
+  ans(1:nrow, 1:ncol) = math%zero
 
   DO ipt = 1, nipt
     DO ips = 1, test(ipt)%nips
@@ -1027,7 +1028,7 @@ PURE SUBROUTINE STFV_9b(test, c, crank, ans, nrow, ncol)
       CALL FEVariableGetInterpolation_( &
         obj=c, rank=crank, N=test(ipt)%N, nns=test(ipt)%nns, &
         spaceIndx=ips, timeIndx=ipt, T=test(ipt)%T, nnt=test(ipt)%nnt, &
-        scale=1.0_DFP, addContribution=.FALSE., ans=cbar)
+        scale=math%one, addContribution=math%no, ans=cbar)
 
       realval = cbar * test(ipt)%js(ips) * test(ipt)%ws(ips) * &
         test(ipt)%thickness(ips) * test(ipt)%jt * test(ipt)%wt
@@ -1060,14 +1061,14 @@ PURE SUBROUTINE STFV_9c(test, term1, c, crank, ans, nrow, ncol)
   nrow = test(1)%nns
   ncol = test(1)%nnt
 
-  ans(1:nrow, 1:ncol) = 0.0_DFP
+  ans(1:nrow, 1:ncol) = math%zero
 
   DO ipt = 1, nipt
     DO ips = 1, test(ipt)%nips
       CALL FEVariableGetInterpolation_( &
         obj=c, rank=crank, N=test(ipt)%N, nns=test(ipt)%nns, &
         spaceIndx=ips, timeIndx=ipt, T=test(ipt)%T, nnt=test(ipt)%nnt, &
-        scale=1.0_DFP, addContribution=.FALSE., ans=cbar)
+        scale=math%one, addContribution=math%no, ans=cbar)
 
       realval = cbar * test(ipt)%js(ips) * test(ipt)%ws(ips) * &
         test(ipt)%thickness(ips) * test(ipt)%jt * test(ipt)%wt
@@ -1135,7 +1136,7 @@ PURE SUBROUTINE STFV_10a(test, c, crank, ans, dim1, dim2, dim3)
   dim2 = test(1)%nns
   dim3 = test(1)%nnt
 
-  ans(1:dim1, 1:dim2, 1:dim3) = 0.0_DFP
+  ans(1:dim1, 1:dim2, 1:dim3) = math%zero
 
   DO ipt = 1, nipt
     DO ips = 1, test(ipt)%nips
@@ -1143,7 +1144,7 @@ PURE SUBROUTINE STFV_10a(test, c, crank, ans, dim1, dim2, dim3)
       CALL FEVariableGetInterpolation_( &
         obj=c, rank=crank, N=test(ipt)%N, nns=test(ipt)%nns, &
         spaceIndx=ips, timeIndx=ipt, T=test(ipt)%T, nnt=test(ipt)%nnt, &
-        scale=1.0_DFP, addContribution=.FALSE., ans=cbar, tsize=i1)
+        scale=math%one, addContribution=math%no, ans=cbar, tsize=i1)
 
       realval = test(ipt)%js(ips) * test(ipt)%ws(ips) * &
         test(ipt)%thickness(ips) * test(ipt)%jt * test(ipt)%wt
@@ -1152,7 +1153,7 @@ PURE SUBROUTINE STFV_10a(test, c, crank, ans, dim1, dim2, dim3)
         a=cbar(1:dim1), b=test(ipt)%N(1:dim2, ips), &
         c=test(ipt)%T(1:dim3), &
         ans=ans, dim1=i1, dim2=i2, dim3=i3, &
-        anscoeff=1.0_DFP, scale=realval)
+        anscoeff=math%one, scale=realval)
     END DO
   END DO
 END SUBROUTINE STFV_10a
@@ -1178,7 +1179,7 @@ PURE SUBROUTINE STFV_10b(test, c, crank, ans, dim1, dim2, dim3)
   dim2 = test(1)%nns
   dim3 = test(1)%nnt
 
-  ans(1:dim1, 1:dim2, 1:dim3) = 0.0_DFP
+  ans(1:dim1, 1:dim2, 1:dim3) = math%zero
 
   DO ipt = 1, nipt
     DO ips = 1, test(ipt)%nips
@@ -1186,14 +1187,14 @@ PURE SUBROUTINE STFV_10b(test, c, crank, ans, dim1, dim2, dim3)
       CALL FEVariableGetInterpolation_( &
         obj=c, rank=crank, N=test(ipt)%N, nns=test(ipt)%nns, &
         spaceIndx=ips, timeIndx=ipt, T=test(ipt)%T, nnt=test(ipt)%nnt, &
-        scale=1.0_DFP, addContribution=.FALSE., ans=cbar, tsize=i1)
+        scale=math%one, addContribution=math%no, ans=cbar, tsize=i1)
 
       realval = test(ipt)%js(ips) * test(ipt)%ws(ips) * &
         test(ipt)%thickness(ips) * test(ipt)%jt * test(ipt)%wt
 
       CALL OuterProd_( &
         a=cbar(1:dim1), b=test(ipt)%dNTdt(1:dim2, 1:dim3, ips), &
-        ans=ans, dim1=i1, dim2=i2, dim3=i3, anscoeff=1.0_DFP, scale=realval)
+        ans=ans, dim1=i1, dim2=i2, dim3=i3, anscoeff=math%one, scale=realval)
 
     END DO
   END DO
@@ -1221,7 +1222,7 @@ PURE SUBROUTINE STFV_10c(test, term1, c, crank, ans, dim1, dim2, dim3)
   dim2 = test(1)%nns
   dim3 = test(1)%nnt
 
-  ans(1:dim1, 1:dim2, 1:dim3) = 0.0_DFP
+  ans(1:dim1, 1:dim2, 1:dim3) = math%zero
 
   DO ipt = 1, nipt
     DO ips = 1, test(ipt)%nips
@@ -1229,14 +1230,14 @@ PURE SUBROUTINE STFV_10c(test, term1, c, crank, ans, dim1, dim2, dim3)
       CALL FEVariableGetInterpolation_( &
         obj=c, rank=crank, N=test(ipt)%N, nns=test(ipt)%nns, &
         spaceIndx=ips, timeIndx=ipt, T=test(ipt)%T, nnt=test(ipt)%nnt, &
-        scale=1.0_DFP, addContribution=.FALSE., ans=cbar, tsize=i1)
+        scale=math%one, addContribution=math%no, ans=cbar, tsize=i1)
 
       realval = test(ipt)%js(ips) * test(ipt)%ws(ips) * &
         test(ipt)%thickness(ips) * test(ipt)%jt * test(ipt)%wt
 
       CALL OuterProd_( &
         a=cbar(1:dim1), b=test(ipt)%dNTdXt(1:dim2, 1:dim3, term1, ips), &
-        ans=ans, dim1=i1, dim2=i2, dim3=i3, anscoeff=1.0_DFP, scale=realval)
+        ans=ans, dim1=i1, dim2=i2, dim3=i3, anscoeff=math%one, scale=realval)
 
     END DO
   END DO
@@ -1302,7 +1303,7 @@ PURE SUBROUTINE STFV_11a(test, c, crank, ans, dim1, dim2, dim3, dim4)
   dim4 = test(1)%nnt
   nipt = SIZE(test)
 
-  ans(1:dim1, 1:dim2, 1:dim3, 1:dim4) = 0.0_DFP
+  ans(1:dim1, 1:dim2, 1:dim3, 1:dim4) = math%zero
 
   DO ipt = 1, nipt
     DO ips = 1, test(ipt)%nips
@@ -1310,7 +1311,7 @@ PURE SUBROUTINE STFV_11a(test, c, crank, ans, dim1, dim2, dim3, dim4)
       CALL FEVariableGetInterpolation_( &
         obj=c, rank=crank, N=test(ipt)%N, nns=test(ipt)%nns, &
         spaceIndx=ips, timeIndx=ipt, T=test(ipt)%T, nnt=test(ipt)%nnt, &
-        scale=1.0_DFP, addContribution=.FALSE., ans=cbar, nrow=i1, ncol=i2)
+        scale=math%one, addContribution=math%no, ans=cbar, nrow=i1, ncol=i2)
 
       realval = test(ipt)%js(ips) * test(ipt)%ws(ips) * &
         test(ipt)%thickness(ips) * test(ipt)%jt * test(ipt)%wt
@@ -1318,7 +1319,7 @@ PURE SUBROUTINE STFV_11a(test, c, crank, ans, dim1, dim2, dim3, dim4)
       CALL OuterProd_( &
         a=cbar(1:dim1, 1:dim2), b=test(ipt)%N(1:dim3, ips), &
         c=test(ipt)%T(1:dim4), ans=ans, dim1=i1, dim2=i2, dim3=i3, dim4=i4, &
-        anscoeff=1.0_DFP, scale=realval)
+        anscoeff=math%one, scale=realval)
 
     END DO
   END DO
@@ -1346,7 +1347,7 @@ PURE SUBROUTINE STFV_11b(test, c, crank, ans, dim1, dim2, dim3, dim4)
   dim4 = test(1)%nnt
   nipt = SIZE(test)
 
-  ans(1:dim1, 1:dim2, 1:dim3, 1:dim4) = 0.0_DFP
+  ans(1:dim1, 1:dim2, 1:dim3, 1:dim4) = math%zero
 
   DO ipt = 1, nipt
     DO ips = 1, test(ipt)%nips
@@ -1354,7 +1355,7 @@ PURE SUBROUTINE STFV_11b(test, c, crank, ans, dim1, dim2, dim3, dim4)
       CALL FEVariableGetInterpolation_( &
         obj=c, rank=crank, N=test(ipt)%N, nns=test(ipt)%nns, &
         spaceIndx=ips, timeIndx=ipt, T=test(ipt)%T, nnt=test(ipt)%nnt, &
-        scale=1.0_DFP, addContribution=.FALSE., ans=cbar, nrow=i1, ncol=i2)
+        scale=math%one, addContribution=math%no, ans=cbar, nrow=i1, ncol=i2)
 
       realval = test(ipt)%js(ips) * test(ipt)%ws(ips) * &
         test(ipt)%thickness(ips) * test(ipt)%jt * test(ipt)%wt
@@ -1362,7 +1363,7 @@ PURE SUBROUTINE STFV_11b(test, c, crank, ans, dim1, dim2, dim3, dim4)
       CALL OuterProd_( &
         a=cbar(1:dim1, 1:dim2), b=test(ipt)%dNTdt(1:dim3, 1:dim4, ips), &
         ans=ans, dim1=i1, dim2=i2, dim3=i3, dim4=i4, &
-        anscoeff=1.0_DFP, scale=realval)
+        anscoeff=math%one, scale=realval)
 
     END DO
   END DO
@@ -1391,7 +1392,7 @@ PURE SUBROUTINE STFV_11c(test, term1, c, crank, ans, dim1, dim2, dim3, dim4)
   dim4 = test(1)%nnt
   nipt = SIZE(test)
 
-  ans(1:dim1, 1:dim2, 1:dim3, 1:dim4) = 0.0_DFP
+  ans(1:dim1, 1:dim2, 1:dim3, 1:dim4) = math%zero
 
   DO ipt = 1, nipt
     DO ips = 1, test(ipt)%nips
@@ -1399,7 +1400,7 @@ PURE SUBROUTINE STFV_11c(test, term1, c, crank, ans, dim1, dim2, dim3, dim4)
       CALL FEVariableGetInterpolation_( &
         obj=c, rank=crank, N=test(ipt)%N, nns=test(ipt)%nns, &
         spaceIndx=ips, timeIndx=ipt, T=test(ipt)%T, nnt=test(ipt)%nnt, &
-        scale=1.0_DFP, addContribution=.FALSE., ans=cbar, nrow=i1, ncol=i2)
+        scale=math%one, addContribution=math%no, ans=cbar, nrow=i1, ncol=i2)
 
       realval = test(ipt)%js(ips) * test(ipt)%ws(ips) * &
         test(ipt)%thickness(ips) * test(ipt)%jt * test(ipt)%wt
@@ -1408,7 +1409,7 @@ PURE SUBROUTINE STFV_11c(test, term1, c, crank, ans, dim1, dim2, dim3, dim4)
         a=cbar(1:dim1, 1:dim2), &
         b=test(ipt)%dNTdXt(1:dim3, 1:dim4, term1, ips), &
         ans=ans, dim1=i1, dim2=i2, dim3=i3, dim4=i4, &
-        anscoeff=1.0_DFP, scale=realval)
+        anscoeff=math%one, scale=realval)
 
     END DO
   END DO
@@ -1472,7 +1473,7 @@ PURE SUBROUTINE STFV_12a(test, c1, c1rank, c2, c2rank, ans, nrow, ncol)
   nrow = test(1)%nns
   ncol = test(1)%nnt
 
-  ans(1:nrow, 1:ncol) = 0.0_DFP
+  ans(1:nrow, 1:ncol) = math%zero
 
   DO ipt = 1, nipt
     DO ips = 1, test(ipt)%nips
@@ -1480,19 +1481,19 @@ PURE SUBROUTINE STFV_12a(test, c1, c1rank, c2, c2rank, ans, nrow, ncol)
       CALL FEVariableGetInterpolation_( &
         obj=c1, rank=c1rank, N=test(ipt)%N, nns=test(ipt)%nns, &
         spaceIndx=ips, timeIndx=ipt, T=test(ipt)%T, nnt=test(ipt)%nnt, &
-        scale=1.0_DFP, addContribution=.FALSE., ans=c1bar)
+        scale=math%one, addContribution=math%no, ans=c1bar)
 
       CALL FEVariableGetInterpolation_( &
         obj=c2, rank=c2rank, N=test(ipt)%N, nns=test(ipt)%nns, &
         spaceIndx=ips, timeIndx=ipt, T=test(ipt)%T, nnt=test(ipt)%nnt, &
-        scale=1.0_DFP, addContribution=.FALSE., ans=c2bar)
+        scale=math%one, addContribution=math%no, ans=c2bar)
 
       realval = c1bar * c2bar * test(ipt)%js(ips) * test(ipt)%ws(ips) &
         * test(ipt)%thickness(ips) * test(ipt)%jt * test(ipt)%wt
 
       CALL OuterProd_( &
         a=test(ipt)%N(1:nrow, ips), b=test(ipt)%T(1:ncol), &
-        anscoeff=1.0_DFP, scale=realval, ans=ans, nrow=i1, ncol=i2)
+        anscoeff=math%one, scale=realval, ans=ans, nrow=i1, ncol=i2)
 
     END DO
   END DO
@@ -1521,7 +1522,7 @@ PURE SUBROUTINE STFV_12b(test, c1, c1rank, c2, c2rank, ans, nrow, ncol)
   nrow = test(1)%nns
   ncol = test(1)%nnt
 
-  ans(1:nrow, 1:ncol) = 0.0_DFP
+  ans(1:nrow, 1:ncol) = math%zero
 
   DO ipt = 1, nipt
     DO ips = 1, test(ipt)%nips
@@ -1529,12 +1530,12 @@ PURE SUBROUTINE STFV_12b(test, c1, c1rank, c2, c2rank, ans, nrow, ncol)
       CALL FEVariableGetInterpolation_( &
         obj=c1, rank=c1rank, N=test(ipt)%N, nns=test(ipt)%nns, &
         spaceIndx=ips, timeIndx=ipt, T=test(ipt)%T, nnt=test(ipt)%nnt, &
-        scale=1.0_DFP, addContribution=.FALSE., ans=c1bar)
+        scale=math%one, addContribution=math%no, ans=c1bar)
 
       CALL FEVariableGetInterpolation_( &
         obj=c2, rank=c2rank, N=test(ipt)%N, nns=test(ipt)%nns, &
         spaceIndx=ips, timeIndx=ipt, T=test(ipt)%T, nnt=test(ipt)%nnt, &
-        scale=1.0_DFP, addContribution=.FALSE., ans=c2bar)
+        scale=math%one, addContribution=math%no, ans=c2bar)
 
       realval = c1bar * c2bar * test(ipt)%js(ips) * test(ipt)%ws(ips) &
         * test(ipt)%thickness(ips) * test(ipt)%jt * test(ipt)%wt
@@ -1570,7 +1571,7 @@ PURE SUBROUTINE STFV_12c(test, term1, c1, c1rank, c2, c2rank, ans, nrow, ncol)
   nrow = test(1)%nns
   ncol = test(1)%nnt
 
-  ans(1:nrow, 1:ncol) = 0.0_DFP
+  ans(1:nrow, 1:ncol) = math%zero
 
   DO ipt = 1, nipt
     DO ips = 1, test(ipt)%nips
@@ -1578,12 +1579,12 @@ PURE SUBROUTINE STFV_12c(test, term1, c1, c1rank, c2, c2rank, ans, nrow, ncol)
       CALL FEVariableGetInterpolation_( &
         obj=c1, rank=c1rank, N=test(ipt)%N, nns=test(ipt)%nns, &
         spaceIndx=ips, timeIndx=ipt, T=test(ipt)%T, nnt=test(ipt)%nnt, &
-        scale=1.0_DFP, addContribution=.FALSE., ans=c1bar)
+        scale=math%one, addContribution=math%no, ans=c1bar)
 
       CALL FEVariableGetInterpolation_( &
         obj=c2, rank=c2rank, N=test(ipt)%N, nns=test(ipt)%nns, &
         spaceIndx=ips, timeIndx=ipt, T=test(ipt)%T, nnt=test(ipt)%nnt, &
-        scale=1.0_DFP, addContribution=.FALSE., ans=c2bar)
+        scale=math%one, addContribution=math%no, ans=c2bar)
 
       realval = c1bar * c2bar * test(ipt)%js(ips) * test(ipt)%ws(ips) &
         * test(ipt)%thickness(ips) * test(ipt)%jt * test(ipt)%wt
@@ -1600,46 +1601,381 @@ END SUBROUTINE STFV_12c
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE obj_STForceVector13
-! SELECT CASE (term1)
-!
-! CASE (TypeDerivativeTerm%NONE)
-!   CALL STFV_6(ans=ans, test=test, term1=term1, c1=c1, c1rank=c1rank, &
-!               c2=c2, c2rank=c2rank)
-!
-! CASE (TypeDerivativeTerm%t)
-!   CALL STFV_13(ans=ans, test=test, term1=term1, c1=c1, c1rank=c1rank, &
-!                c2=c2, c2rank=c2rank)
-!
-! CASE (TypeDerivativeTerm%x, TypeDerivativeTerm%y, TypeDerivativeTerm%z)
-!   CALL STFV_20(ans=ans, test=test, term1=term1, c1=c1, c1rank=c1rank, &
-!                c2=c2, c2rank=c2rank)
-!
-! CASE (TypeDerivativeTerm%xAll)
-! END SELECT
+INTEGER(I4B) :: dim1, dim2, dim3
+
+dim1 = FEVariableSize(obj=c2, dim=1)
+dim2 = test(1)%nns
+dim3 = test(1)%nnt
+CALL Reallocate(ans, dim1, dim2, dim3)
+CALL STForceVector_( &
+  test=test, term1=term1, c1=c1, c1rank=c1rank, c2=c2, c2rank=c2rank, &
+  ans=ans, dim1=dim1, dim2=dim2, dim3=dim3)
 END PROCEDURE obj_STForceVector13
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE obj_STForceVector14
-! SELECT CASE (term1)
-!
-! CASE (TypeDerivativeTerm%NONE)
-!   CALL STFV_7(ans=ans, test=test, term1=term1, c1=c1, c1rank=c1rank, &
-!               c2=c2, c2rank=c2rank)
-!
-! CASE (TypeDerivativeTerm%t)
-!   CALL STFV_14(ans=ans, test=test, term1=term1, c1=c1, c1rank=c1rank, &
-!                c2=c2, c2rank=c2rank)
-!
-! CASE (TypeDerivativeTerm%x, TypeDerivativeTerm%y, TypeDerivativeTerm%z)
-!   CALL STFV_21(ans=ans, test=test, term1=term1, c1=c1, c1rank=c1rank, &
-!                c2=c2, c2rank=c2rank)
-!
+MODULE PROCEDURE obj_STForceVector_13
+SELECT CASE (term1)
+
+CASE (TypeDerivativeTerm%NONE)
+  CALL STFV_13a(test=test, c1=c1, c1rank=c1rank, c2=c2, c2rank=c2rank, &
+                ans=ans, dim1=dim1, dim2=dim2, dim3=dim3)
+
+CASE (TypeDerivativeTerm%t)
+  CALL STFV_13b(test=test, c1=c1, c1rank=c1rank, c2=c2, c2rank=c2rank, &
+                ans=ans, dim1=dim1, dim2=dim2, dim3=dim3)
+
+CASE (TypeDerivativeTerm%x, TypeDerivativeTerm%y, TypeDerivativeTerm%z)
+  CALL STFV_13c(test=test, term1=term1, c1=c1, c1rank=c1rank, c2=c2, &
+                c2rank=c2rank, ans=ans, dim1=dim1, dim2=dim2, dim3=dim3)
+
 ! CASE (TypeDerivativeTerm%xAll)
-! END SELECT
+END SELECT
+END PROCEDURE obj_STForceVector_13
+
+!----------------------------------------------------------------------------
+!                                                              STForceVector_
+!----------------------------------------------------------------------------
+
+PURE SUBROUTINE STFV_13a(test, c1, c1rank, c2, c2rank, ans, dim1, dim2, dim3)
+  CLASS(STElemshapeData_), INTENT(IN) :: test(:)
+  TYPE(FEVariable_), INTENT(IN) :: c1
+  TYPE(FEVariable_), INTENT(IN) :: c2
+  TYPE(FEVariableScalar_), INTENT(IN) :: c1rank
+  TYPE(FEVariableVector_), INTENT(IN) :: c2rank
+  REAL(DFP), INTENT(INOUT) :: ans(:, :, :)
+  INTEGER(I4B), INTENT(OUT) :: dim1, dim2, dim3
+
+  ! Internal variables
+  REAL(DFP) :: realval, c2bar(3), c1bar
+  INTEGER(I4B) :: ips, ipt, nipt, i1, i2, i3
+
+  nipt = SIZE(test)
+  dim1 = FEVariableSize(obj=c2, dim=1)
+  dim2 = test(1)%nns
+  dim3 = test(1)%nnt
+
+  ans(1:dim1, 1:dim2, 1:dim3) = math%zero
+
+  DO ipt = 1, nipt
+    DO ips = 1, test(ipt)%nips
+
+      CALL FEVariableGetInterpolation_( &
+        obj=c1, rank=c1rank, N=test(ipt)%N, nns=test(ipt)%nns, &
+        spaceIndx=ips, timeIndx=ipt, T=test(ipt)%T, nnt=test(ipt)%nnt, &
+        scale=math%one, addContribution=math%no, ans=c1bar)
+
+      CALL FEVariableGetInterpolation_( &
+        obj=c2, rank=c2rank, N=test(ipt)%N, nns=test(ipt)%nns, &
+        spaceIndx=ips, timeIndx=ipt, T=test(ipt)%T, nnt=test(ipt)%nnt, &
+        scale=math%one, addContribution=math%no, ans=c2bar, tsize=i1)
+
+      realval = c1bar * test(ipt)%js(ips) * test(ipt)%ws(ips) &
+        * test(ipt)%thickness(ips) * test(ipt)%jt * test(ipt)%wt
+
+      CALL OuterProd_( &
+        a=c2bar(1:dim1), b=test(ipt)%N(1:dim2, ips), c=test(ipt)%T(1:dim3), &
+        anscoeff=math%one, scale=realval, ans=ans, dim1=i1, dim2=i2, dim3=i3)
+
+    END DO
+  END DO
+END SUBROUTINE STFV_13a
+
+!----------------------------------------------------------------------------
+!                                                             STForceVector_
+!----------------------------------------------------------------------------
+
+! term1 is t
+PURE SUBROUTINE STFV_13b(test, c1, c1rank, c2, c2rank, ans, dim1, dim2, dim3)
+  CLASS(STElemshapeData_), INTENT(IN) :: test(:)
+  TYPE(FEVariable_), INTENT(IN) :: c1
+  TYPE(FEVariable_), INTENT(IN) :: c2
+  TYPE(FEVariableScalar_), INTENT(IN) :: c1rank
+  TYPE(FEVariableVector_), INTENT(IN) :: c2rank
+  REAL(DFP), INTENT(INOUT) :: ans(:, :, :)
+  INTEGER(I4B), INTENT(OUT) :: dim1, dim2, dim3
+
+  ! Internal variables
+  REAL(DFP) :: realval, c2bar(3), c1bar
+  INTEGER(I4B) :: ips, ipt, nipt, i1, i2, i3
+
+  nipt = SIZE(test)
+  dim1 = FEVariableSize(obj=c2, dim=1)
+  dim2 = test(1)%nns
+  dim3 = test(1)%nnt
+
+  ans(1:dim1, 1:dim2, 1:dim3) = math%zero
+
+  DO ipt = 1, nipt
+    DO ips = 1, test(ipt)%nips
+
+      CALL FEVariableGetInterpolation_( &
+        obj=c1, rank=c1rank, N=test(ipt)%N, nns=test(ipt)%nns, &
+        spaceIndx=ips, timeIndx=ipt, T=test(ipt)%T, nnt=test(ipt)%nnt, &
+        scale=math%one, addContribution=math%no, ans=c1bar)
+
+      CALL FEVariableGetInterpolation_( &
+        obj=c2, rank=c2rank, N=test(ipt)%N, nns=test(ipt)%nns, &
+        spaceIndx=ips, timeIndx=ipt, T=test(ipt)%T, nnt=test(ipt)%nnt, &
+        scale=math%one, addContribution=math%no, ans=c2bar, tsize=i1)
+
+      realval = c1bar * test(ipt)%js(ips) * test(ipt)%ws(ips) &
+        * test(ipt)%thickness(ips) * test(ipt)%jt * test(ipt)%wt
+
+      CALL OuterProd_( &
+        a=c2bar(1:dim1), b=test(ipt)%dNTdt(1:dim2, 1:dim3, ips), &
+        anscoeff=math%one, scale=realval, ans=ans, dim1=i1, dim2=i2, dim3=i3)
+
+    END DO
+  END DO
+END SUBROUTINE STFV_13b
+
+!----------------------------------------------------------------------------
+!                                                           STForceVector_
+!----------------------------------------------------------------------------
+
+! term1 is x, y, z
+PURE SUBROUTINE STFV_13c(test, term1, c1, c1rank, c2, c2rank, ans, dim1, &
+                         dim2, dim3)
+  CLASS(STElemshapeData_), INTENT(IN) :: test(:)
+  INTEGER(I4B), INTENT(IN) :: term1
+  TYPE(FEVariable_), INTENT(IN) :: c1
+  TYPE(FEVariable_), INTENT(IN) :: c2
+  TYPE(FEVariableScalar_), INTENT(IN) :: c1rank
+  TYPE(FEVariableVector_), INTENT(IN) :: c2rank
+  REAL(DFP), INTENT(INOUT) :: ans(:, :, :)
+  INTEGER(I4B), INTENT(OUT) :: dim1, dim2, dim3
+
+  ! Internal variables
+  REAL(DFP) :: realval, c2bar(3), c1bar
+  INTEGER(I4B) :: ips, ipt, nipt, i1, i2, i3
+
+  nipt = SIZE(test)
+  dim1 = FEVariableSize(obj=c2, dim=1)
+  dim2 = test(1)%nns
+  dim3 = test(1)%nnt
+
+  ans(1:dim1, 1:dim2, 1:dim3) = math%zero
+
+  DO ipt = 1, nipt
+    DO ips = 1, test(ipt)%nips
+
+      CALL FEVariableGetInterpolation_( &
+        obj=c1, rank=c1rank, N=test(ipt)%N, nns=test(ipt)%nns, &
+        spaceIndx=ips, timeIndx=ipt, T=test(ipt)%T, nnt=test(ipt)%nnt, &
+        scale=math%one, addContribution=math%no, ans=c1bar)
+
+      CALL FEVariableGetInterpolation_( &
+        obj=c2, rank=c2rank, N=test(ipt)%N, nns=test(ipt)%nns, &
+        spaceIndx=ips, timeIndx=ipt, T=test(ipt)%T, nnt=test(ipt)%nnt, &
+        scale=math%one, addContribution=math%no, ans=c2bar, tsize=i1)
+
+      realval = c1bar * test(ipt)%js(ips) * test(ipt)%ws(ips) &
+        * test(ipt)%thickness(ips) * test(ipt)%jt * test(ipt)%wt
+
+      CALL OuterProd_( &
+        a=c2bar(1:dim1), b=test(ipt)%dNTdXt(1:dim2, 1:dim3, term1, ips), &
+        anscoeff=math%one, scale=realval, ans=ans, dim1=i1, dim2=i2, dim3=i3)
+
+    END DO
+  END DO
+END SUBROUTINE STFV_13c
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE obj_STForceVector14
+INTEGER(I4B) :: dim1, dim2, dim3, dim4
+dim1 = FEVariableSize(obj=c2, dim=1)
+dim2 = FEVariableSize(obj=c2, dim=2)
+dim3 = test(1)%nns
+dim4 = test(1)%nnt
+
+CALL Reallocate(ans, dim1, dim2, dim3, dim4)
+CALL STForceVector_( &
+  test=test, term1=term1, c1=c1, c1rank=c1rank, c2=c2, c2rank=c2rank, &
+  ans=ans, dim1=dim1, dim2=dim2, dim3=dim3, dim4=dim4)
 END PROCEDURE obj_STForceVector14
+
+!----------------------------------------------------------------------------
+!                                                             STForceVector_
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE obj_STForceVector_14
+SELECT CASE (term1)
+
+CASE (TypeDerivativeTerm%NONE)
+  CALL STFV_14a(test=test, c1=c1, c1rank=c1rank, c2=c2, c2rank=c2rank, &
+                ans=ans, dim1=dim1, dim2=dim2, dim3=dim3, dim4=dim4)
+
+CASE (TypeDerivativeTerm%t)
+  CALL STFV_14b(test=test, c1=c1, c1rank=c1rank, c2=c2, c2rank=c2rank, &
+                ans=ans, dim1=dim1, dim2=dim2, dim3=dim3, dim4=dim4)
+
+CASE (TypeDerivativeTerm%x, TypeDerivativeTerm%y, TypeDerivativeTerm%z)
+  CALL STFV_14c(test=test, term1=term1, c1=c1, c1rank=c1rank, c2=c2, &
+           c2rank=c2rank, ans=ans, dim1=dim1, dim2=dim2, dim3=dim3, dim4=dim4)
+
+CASE (TypeDerivativeTerm%xAll)
+END SELECT
+END PROCEDURE obj_STForceVector_14
+
+!----------------------------------------------------------------------------
+!                                                              STForceVector_
+!----------------------------------------------------------------------------
+
+! term1 is none
+PURE SUBROUTINE STFV_14a(test, c1, c1rank, c2, c2rank, ans, dim1, dim2, &
+                         dim3, dim4)
+  CLASS(STElemshapeData_), INTENT(IN) :: test(:)
+  TYPE(FEVariable_), INTENT(IN) :: c1
+  TYPE(FEVariable_), INTENT(IN) :: c2
+  TYPE(FEVariableScalar_), INTENT(IN) :: c1rank
+  TYPE(FEVariableMatrix_), INTENT(IN) :: c2rank
+  REAL(DFP), INTENT(INOUT) :: ans(:, :, :, :)
+  INTEGER(I4B), INTENT(OUT) :: dim1, dim2, dim3, dim4
+
+  !! Internal variables
+  REAL(DFP) :: realval, c1bar, c2bar(3, 3)
+  INTEGER(I4B) :: ips, ipt, nipt, i1, i2, i3, i4
+
+  nipt = SIZE(test)
+  dim1 = FEVariableSize(obj=c2, dim=1)
+  dim2 = FEVariableSize(obj=c2, dim=2)
+  dim3 = test(1)%nns
+  dim4 = test(1)%nnt
+  ans(1:dim1, 1:dim2, 1:dim3, 1:dim4) = math%zero
+
+  DO ipt = 1, nipt
+    DO ips = 1, test(ipt)%nips
+
+      CALL FEVariableGetInterpolation_( &
+        obj=c1, rank=c1rank, N=test(ipt)%N, nns=test(ipt)%nns, &
+        spaceIndx=ips, timeIndx=ipt, T=test(ipt)%T, nnt=test(ipt)%nnt, &
+        scale=math%one, addContribution=math%no, ans=c1bar)
+
+      CALL FEVariableGetInterpolation_( &
+        obj=c2, rank=c2rank, N=test(ipt)%N, nns=test(ipt)%nns, &
+        spaceIndx=ips, timeIndx=ipt, T=test(ipt)%T, nnt=test(ipt)%nnt, &
+        scale=math%one, addContribution=math%no, ans=c2bar, nrow=i1, ncol=i2)
+
+      realval = c1bar * test(ipt)%js(ips) * test(ipt)%ws(ips) &
+        * test(ipt)%thickness(ips) * test(ipt)%jt * test(ipt)%wt
+
+      CALL OuterProd_( &
+        a=c2bar(1:dim1, 1:dim2), b=test(ipt)%N(1:dim3, ips), &
+        c=test(ipt)%T(1:dim4), anscoeff=math%one, scale=realval, ans=ans, &
+        dim1=i1, dim2=i2, dim3=i3, dim4=i4)
+
+    END DO
+  END DO
+END SUBROUTINE STFV_14a
+
+!----------------------------------------------------------------------------
+!                                                              STForceVector_
+!----------------------------------------------------------------------------
+
+! term1 is t
+PURE SUBROUTINE STFV_14b(test, c1, c1rank, c2, c2rank, ans, dim1, dim2, &
+                         dim3, dim4)
+  CLASS(STElemshapeData_), INTENT(IN) :: test(:)
+  TYPE(FEVariable_), INTENT(IN) :: c1
+  TYPE(FEVariable_), INTENT(IN) :: c2
+  TYPE(FEVariableScalar_), INTENT(IN) :: c1rank
+  TYPE(FEVariableMatrix_), INTENT(IN) :: c2rank
+  REAL(DFP), INTENT(INOUT) :: ans(:, :, :, :)
+  INTEGER(I4B), INTENT(OUT) :: dim1, dim2, dim3, dim4
+
+  !! Internal variables
+  REAL(DFP) :: realval, c1bar, c2bar(3, 3)
+  INTEGER(I4B) :: ips, ipt, nipt, i1, i2, i3, i4
+
+  nipt = SIZE(test)
+  dim1 = FEVariableSize(obj=c2, dim=1)
+  dim2 = FEVariableSize(obj=c2, dim=2)
+  dim3 = test(1)%nns
+  dim4 = test(1)%nnt
+  ans(1:dim1, 1:dim2, 1:dim3, 1:dim4) = math%zero
+
+  DO ipt = 1, nipt
+    DO ips = 1, test(ipt)%nips
+
+      CALL FEVariableGetInterpolation_( &
+        obj=c1, rank=c1rank, N=test(ipt)%N, nns=test(ipt)%nns, &
+        spaceIndx=ips, timeIndx=ipt, T=test(ipt)%T, nnt=test(ipt)%nnt, &
+        scale=math%one, addContribution=math%no, ans=c1bar)
+
+      CALL FEVariableGetInterpolation_( &
+        obj=c2, rank=c2rank, N=test(ipt)%N, nns=test(ipt)%nns, &
+        spaceIndx=ips, timeIndx=ipt, T=test(ipt)%T, nnt=test(ipt)%nnt, &
+        scale=math%one, addContribution=math%no, ans=c2bar, nrow=i1, ncol=i2)
+
+      realval = c1bar * test(ipt)%js(ips) * test(ipt)%ws(ips) &
+        * test(ipt)%thickness(ips) * test(ipt)%jt * test(ipt)%wt
+
+      CALL OuterProd_( &
+        a=c2bar(1:dim1, 1:dim2), b=test(ipt)%dNTdt(1:dim3, 1:dim4, ips), &
+        anscoeff=math%one, scale=realval, ans=ans, dim1=i1, dim2=i2, &
+        dim3=i3, dim4=i4)
+
+    END DO
+  END DO
+END SUBROUTINE STFV_14b
+
+!----------------------------------------------------------------------------
+!                                                              STForceVector_
+!----------------------------------------------------------------------------
+
+! term1 is x, y, z
+PURE SUBROUTINE STFV_14c(test, term1, c1, c1rank, c2, c2rank, ans, dim1, &
+                         dim2, dim3, dim4)
+  CLASS(STElemshapeData_), INTENT(IN) :: test(:)
+  INTEGER(I4B), INTENT(IN) :: term1
+  TYPE(FEVariable_), INTENT(IN) :: c1
+  TYPE(FEVariable_), INTENT(IN) :: c2
+  TYPE(FEVariableScalar_), INTENT(IN) :: c1rank
+  TYPE(FEVariableMatrix_), INTENT(IN) :: c2rank
+  REAL(DFP), INTENT(INOUT) :: ans(:, :, :, :)
+  INTEGER(I4B), INTENT(OUT) :: dim1, dim2, dim3, dim4
+
+  !! Internal variables
+  REAL(DFP) :: realval, c1bar, c2bar(3, 3)
+  INTEGER(I4B) :: ips, ipt, nipt, i1, i2, i3, i4
+
+  nipt = SIZE(test)
+  dim1 = FEVariableSize(obj=c2, dim=1)
+  dim2 = FEVariableSize(obj=c2, dim=2)
+  dim3 = test(1)%nns
+  dim4 = test(1)%nnt
+  ans(1:dim1, 1:dim2, 1:dim3, 1:dim4) = math%zero
+
+  DO ipt = 1, nipt
+    DO ips = 1, test(ipt)%nips
+
+      CALL FEVariableGetInterpolation_( &
+        obj=c1, rank=c1rank, N=test(ipt)%N, nns=test(ipt)%nns, &
+        spaceIndx=ips, timeIndx=ipt, T=test(ipt)%T, nnt=test(ipt)%nnt, &
+        scale=math%one, addContribution=math%no, ans=c1bar)
+
+      CALL FEVariableGetInterpolation_( &
+        obj=c2, rank=c2rank, N=test(ipt)%N, nns=test(ipt)%nns, &
+        spaceIndx=ips, timeIndx=ipt, T=test(ipt)%T, nnt=test(ipt)%nnt, &
+        scale=math%one, addContribution=math%no, ans=c2bar, nrow=i1, ncol=i2)
+
+      realval = c1bar * test(ipt)%js(ips) * test(ipt)%ws(ips) &
+        * test(ipt)%thickness(ips) * test(ipt)%jt * test(ipt)%wt
+
+      CALL OuterProd_( &
+        a=c2bar(1:dim1, 1:dim2), &
+        b=test(ipt)%dNTdXt(1:dim3, 1:dim4, term1, ips), anscoeff=math%one, &
+        scale=realval, ans=ans, dim1=i1, dim2=i2, dim3=i3, dim4=i4)
+
+    END DO
+  END DO
+END SUBROUTINE STFV_14c
 
 !----------------------------------------------------------------------------
 !                                                              Include error

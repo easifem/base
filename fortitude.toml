@@ -1,0 +1,10 @@
+[check]
+preview = true
+select = ["C", "E", "S", "MOD", "OB"]
+# ignore = []
+file-extensions = ["f90", "F90"]
+line-length = 78
+fix = false
+# output-format =  "full"
+# show-fixes = false
+# unsafe-fixes = true
