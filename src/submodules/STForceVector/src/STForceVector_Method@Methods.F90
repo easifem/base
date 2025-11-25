@@ -70,6 +70,34 @@ END DO
 END PROCEDURE obj_STForceVector_1
 
 !----------------------------------------------------------------------------
+!                                                              STForceVector_
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE obj_STForceVector_22
+REAL(DFP) :: realval
+INTEGER(I4B) :: ips, ipt, nipt, nips, i1, i2
+
+nrow = testSpace%nns
+ncol = testTime%nns
+
+nips = testSpace%nips
+nipt = testTime%nips
+
+ans(1:nrow, 1:ncol) = math%zero
+
+DO ipt = 1, nipt
+  DO ips = 1, nips
+    realval = testSpace%js(ips) * testSpace%ws(ips) * &
+      testSpace%thickness(ips) * testTime%ws(ipt) * testTime%js(ipt)
+
+    CALL OuterProd_( &
+      a=testSpace%N(1:nrow, ips), b=testTime%N(1:ncol, ipt), &
+      anscoeff=math%one, scale=realval, ans=ans, nrow=i1, ncol=i2)
+  END DO
+END DO
+END PROCEDURE obj_STForceVector_22
+
+!----------------------------------------------------------------------------
 !                                                               STForceVector
 !----------------------------------------------------------------------------
 
@@ -116,6 +144,40 @@ DO ipt = 1, nipt
   END DO
 END DO
 END PROCEDURE obj_STForceVector_2
+
+!----------------------------------------------------------------------------
+!                                                              STForceVector_
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE obj_STForceVector_23
+REAL(DFP) :: realval, cbar
+INTEGER(I4B) :: ips, ipt, nipt, nips, i1, i2
+
+nrow = testSpace%nns
+ncol = testTime%nns
+
+nips = testSpace%nips
+nipt = testTime%nips
+
+ans(1:nrow, 1:ncol) = math%zero
+
+DO ipt = 1, nipt
+  DO ips = 1, nips
+
+    CALL FEVariableGetInterpolation_( &
+      obj=c, rank=crank, N=testSpace%N, nns=testSpace%nns, spaceIndx=ips, &
+      timeIndx=ipt, T=testTime%N(:, ipt), nnt=testTime%nns, scale=math%one, &
+      addContribution=math%no, ans=cbar)
+
+    realval = cbar * testSpace%js(ips) * testSpace%ws(ips) * &
+      testSpace%thickness(ips) * testTime%ws(ipt) * testTime%js(ipt)
+
+    CALL OuterProd_( &
+      a=testSpace%N(1:nrow, ips), b=testTime%N(1:ncol, ipt), &
+      anscoeff=math%one, scale=realval, ans=ans, nrow=i1, ncol=i2)
+  END DO
+END DO
+END PROCEDURE obj_STForceVector_23
 
 !----------------------------------------------------------------------------
 !                                                               STForceVector
