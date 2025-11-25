@@ -91,7 +91,7 @@ USE ISO_C_BINDING, ONLY: C_CHAR, C_PTR, C_SIZE_T
 IMPLICIT NONE
 PRIVATE
 
-PUBLIC :: Math
+PUBLIC :: TypeMathOpt
 PUBLIC :: BoundingBox_
 PUBLIC :: TypeBoundingBox
 PUBLIC :: BoundingBoxPointer_
@@ -264,29 +264,35 @@ PUBLIC :: TypeFEVariableOpt
 INTEGER(I4B), PARAMETER, PUBLIC :: MAX_RANK_FEVARIABLE = 6
 
 !----------------------------------------------------------------------------
-!                                                                 Math_
+!                                                                    MathOpt_
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 5 March 2022
 ! summary: Math class
 
-TYPE :: Math_
-  REAL(DFP) :: PI = 3.14159265359_DFP
+TYPE :: MathOpt_
+  REAL(DFP) :: one = 1.0_DFP
+  REAL(DFP) :: zero = 0.0_DFP
+  REAL(DFP) :: half = 0.5_DFP
+  REAL(DFP) :: pi = 3.14159265359_DFP
   REAL(DFP) :: e = 2.718281828459045_DFP
+  REAL(DFP), DIMENSION(3, 3) :: eye3 = RESHAPE([ &
+                                               1.0_DFP, 0.0_DFP, 0.0_DFP, &
+                                               0.0_DFP, 1.0_DFP, 0.0_DFP, &
+                                               0.0_DFP, 0.0_DFP, 1.0_DFP], &
+                                               [3, 3])
+  REAL(DFP), DIMENSION(2, 2) :: eye2 = RESHAPE([ &
+                                               1.0_DFP, 0.0_DFP, &
+                                               0.0_DFP, 1.0_DFP], &
+                                               [2, 2])
   COMPLEX(DFPC) :: i = (0.0_DFP, 1.0_DFP)
   COMPLEX(DFPC) :: j = (0.0_DFP, 1.0_DFP)
-  REAL(DFP), DIMENSION(3, 3) :: Eye3 = RESHAPE([ &
-                                & 1.0_DFP, 0.0_DFP, 0.0_DFP, &
-                                & 0.0_DFP, 1.0_DFP, 0.0_DFP, &
-                                & 0.0_DFP, 0.0_DFP, 1.0_DFP], &
-                                & [3, 3])
-  REAL(DFP), DIMENSION(2, 2) :: Eye2 = RESHAPE([ &
-                              & 1.0_DFP, 0.0_DFP, 0.0_DFP, 1.0_DFP], &
-                              & [2, 2])
-END TYPE Math_
+  LOGICAL(LGT) :: yes = .TRUE.
+  LOGICAL(LGT) :: no = .FALSE.
+END TYPE MathOpt_
 
-TYPE(Math_), PARAMETER :: Math = Math_()
+TYPE(MathOpt_), PARAMETER :: TypeMathOpt = MathOpt_()
 
 !----------------------------------------------------------------------------
 !                                                               BoundingBox_
