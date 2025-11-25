@@ -290,6 +290,8 @@ TYPE :: MathOpt_
   COMPLEX(DFPC) :: j = (0.0_DFP, 1.0_DFP)
   LOGICAL(LGT) :: yes = .TRUE.
   LOGICAL(LGT) :: no = .FALSE.
+  INTEGER(I4B) :: one_i = 1_I4B
+  INTEGER(I4B) :: zero_i = 0_I4B
 END TYPE MathOpt_
 
 TYPE(MathOpt_), PARAMETER :: TypeMathOpt = MathOpt_()
