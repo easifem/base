@@ -1053,7 +1053,7 @@ INTERFACE
     TYPE(FEVariableMatrix_), INTENT(IN) :: c3rank
     REAL(DFP), INTENT(INOUT) :: ans(:, :, :, :)
     INTEGER(I4B), INTENT(OUT) :: dim1, dim2, dim3, dim4
-    REAL( DFP ), INTENT(INOUT) :: temp(:, :)
+    REAL(DFP), INTENT(INOUT) :: temp(:, :)
   END SUBROUTINE obj_STForceVector_21
 END INTERFACE
 
