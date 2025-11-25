@@ -17,9 +17,10 @@
 
 SUBMODULE(ForceVector_Method) Methods
 USE ReallocateUtility, ONLY: Reallocate
-USE ElemshapeData_Method, ONLY: GetInterpolation, GetInterpolation_
-USE ProductUtility, ONLY: OuterProd, OuterProd_
+USE ProductUtility, ONLY: OuterProd_
 USE FEVariable_Method, ONLY: FEVariableSize => Size
+USE FEVariable_Method, ONLY: FEVariableGetInterpolation_ => GetInterpolation_
+USE BaseType, ONLY: math => TypeMathOpt
 
 #ifdef DEBUG_VER
 USE Display_Method, ONLY: Display
@@ -47,7 +48,6 @@ MODULE PROCEDURE ForceVector_1
 REAL(DFP) :: realval
 INTEGER(I4B) :: ips
 
-! main
 tsize = test%nns
 ans(1:tsize) = 0.0_DFP
 
@@ -74,24 +74,23 @@ END PROCEDURE ForceVector2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE ForceVector_2
-REAL(DFP), PARAMETER :: one = 1.0_DFP
-LOGICAL(LGT), PARAMETER :: no = .FALSE.
-
-REAL(DFP) :: realval
+REAL(DFP) :: realval, T(0), cbar
 INTEGER(I4B) :: ips
 
 tsize = test%nns
-ans(1:tsize) = 0.0_DFP
+
+ans(1:tsize) = math%zero
 
 DO ips = 1, test%nips
-  CALL GetInterpolation_(obj=test, ans=realval, val=c, scale=one, &
-                         addContribution=no, timeIndx=1, spaceIndx=ips)
+  CALL FEVariableGetInterpolation_( &
+    obj=c, rank=crank, N=test%N, nns=test%nns, spaceIndx=ips, &
+    timeIndx=math%one_i, T=T, nnt=math%zero_i, scale=math%one, &
+    addContribution=math%no, ans=cbar)
 
-  realval = test%js(ips) * test%ws(ips) * test%thickness(ips) * realval
+  realval = test%js(ips) * test%ws(ips) * test%thickness(ips) * cbar
 
   ans(1:tsize) = ans(1:tsize) + realval * test%N(1:tsize, ips)
 END DO
-
 END PROCEDURE ForceVector_2
 
 !----------------------------------------------------------------------------
@@ -113,49 +112,25 @@ END PROCEDURE ForceVector3
 
 MODULE PROCEDURE ForceVector_3
 ! Define internal variable
-REAL(DFP) :: realval, cbar3(3)
-INTEGER(I4B) :: ips, tsize
-REAL(DFP), ALLOCATABLE :: cbar(:)
-LOGICAL(LGT) :: isok
+REAL(DFP) :: realval, cbar(3), T(0)
+INTEGER(I4B) :: ips, i1, i2
 
 nrow = FEVariableSize(c, 1)
 ncol = test%nns
 ans(1:nrow, 1:ncol) = 0.0_DFP
 
-isok = nrow .GT. 3_I4B
-IF (isok) THEN
+DO ips = 1, test%nips
+  realval = test%js(ips) * test%ws(ips) * test%thickness(ips)
 
-  ALLOCATE (cbar(nrow))
-  DO ips = 1, test%nips
-    realval = test%js(ips) * test%ws(ips) * test%thickness(ips)
-    CALL GetInterpolation_(obj=test, val=c, ans=cbar, tsize=tsize, &
-                           scale=1.0_DFP, &
-                           addContribution=.FALSE., &
-                           timeIndx=1_I4B, spaceIndx=ips)
+  CALL FEVariableGetInterpolation_( &
+    obj=c, rank=crank, N=test%N, nns=test%nns, spaceIndx=ips, &
+    timeIndx=math%one_i, T=T, nnt=math%zero_i, scale=math%one, &
+    addContribution=math%no, ans=cbar, tsize=i1)
 
-    CALL OuterProd_(a=cbar(1:tsize), b=test%N(1:test%nns, ips), &
-                    anscoeff=1.0_DFP, scale=realval, &
-                    ans=ans, nrow=nrow, ncol=ncol)
-  END DO
-
-  DEALLOCATE (cbar)
-
-ELSE
-
-  DO ips = 1, test%nips
-    realval = test%js(ips) * test%ws(ips) * test%thickness(ips)
-    CALL GetInterpolation_(obj=test, val=c, ans=cbar3, tsize=tsize, &
-                           scale=1.0_DFP, &
-                           addContribution=.FALSE., &
-                           timeIndx=1_I4B, spaceIndx=ips)
-
-    CALL OuterProd_(a=cbar3(1:tsize), b=test%N(1:test%nns, ips), &
-                    anscoeff=1.0_DFP, scale=realval, &
-                    ans=ans, nrow=nrow, ncol=ncol)
-  END DO
-
-END IF
-
+  CALL OuterProd_(a=cbar(1:nrow), b=test%N(1:ncol, ips), &
+                  anscoeff=math%one, scale=realval, &
+                  ans=ans, nrow=i1, ncol=i2)
+END DO
 END PROCEDURE ForceVector_3
 
 !----------------------------------------------------------------------------
@@ -177,32 +152,27 @@ END PROCEDURE ForceVector4
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE ForceVector_4
-! Define internal variable
-REAL(DFP), ALLOCATABLE :: cbar(:, :)
-REAL(DFP) :: realval
-INTEGER(I4B) :: ips, ic, jc
+REAL(DFP) :: cbar(3, 3), realval, T(0)
+INTEGER(I4B) :: ips, i1, i2, i3
 
-! main
-ic = FEVariableSize(c, 1)
-jc = FEVariableSize(c, 2)
+dim1 = FEVariableSize(c, 1)
+dim2 = FEVariableSize(c, 2)
 dim3 = test%nns
-ans(1:ic, 1:jc, 1:dim3) = 0.0_DFP
 
-ALLOCATE (cbar(ic, jc))
+ans(1:dim1, 1:dim2, 1:dim3) = 0.0_DFP
 
 DO ips = 1, test%nips
   realval = test%js(ips) * test%ws(ips) * test%thickness(ips)
-  CALL GetInterpolation_(obj=test, val=c, ans=cbar, nrow=ic, &
-                         ncol=jc, scale=1.0_DFP, &
-                         addContribution=.FALSE., &
-                         timeIndx=1_I4B, spaceIndx=ips)
 
-  CALL OuterProd_(a=cbar(1:ic, 1:jc), b=test%N(1:test%nns, ips), &
-                  anscoeff=1.0_DFP, scale=realval, &
-                  ans=ans, dim1=dim1, dim2=dim2, dim3=dim3)
+  CALL FEVariableGetInterpolation_( &
+    obj=c, rank=crank, N=test%N, nns=test%nns, spaceIndx=ips, &
+    timeIndx=math%one_i, T=T, nnt=math%zero_i, scale=math%one, &
+    addContribution=math%no, ans=cbar, nrow=i1, ncol=i2)
+
+  CALL OuterProd_(a=cbar(1:dim1, 1:dim2), b=test%N(1:dim3, ips), &
+                  anscoeff=math%one, scale=realval, &
+                  ans=ans, dim1=i1, dim2=i2, dim3=i3)
 END DO
-
-DEALLOCATE (cbar)
 END PROCEDURE ForceVector_4
 
 !----------------------------------------------------------------------------
@@ -222,27 +192,29 @@ END PROCEDURE ForceVector5
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE ForceVector_5
-REAL(DFP) :: c1bar, c2bar, realval
+REAL(DFP) :: c1bar, c2bar, realval, T(0)
 INTEGER(I4B) :: ips
 
-! main
 tsize = test%nns
 ans(1:tsize) = 0.0_DFP
 
 DO ips = 1, test%nips
-  CALL GetInterpolation_(obj=test, ans=c1bar, val=c1, &
-                         scale=1.0_DFP, addContribution=.FALSE., &
-                         timeIndx=1_I4B, spaceIndx=ips)
 
-  CALL GetInterpolation_(obj=test, ans=c2bar, val=c2, &
-                         scale=1.0_DFP, addContribution=.FALSE., &
-                         timeIndx=1_I4B, spaceIndx=ips)
+  CALL FEVariableGetInterpolation_( &
+    obj=c1, rank=c1rank, N=test%N, nns=test%nns, spaceIndx=ips, &
+    timeIndx=math%one_i, T=T, nnt=math%zero_i, scale=math%one, &
+    addContribution=math%no, ans=c1bar)
 
-  realval = test%js(ips) * test%ws(ips) * test%thickness(ips) * c1bar * c2bar
+  CALL FEVariableGetInterpolation_( &
+    obj=c2, rank=c2rank, N=test%N, nns=test%nns, spaceIndx=ips, &
+    timeIndx=math%one_i, T=T, nnt=math%zero_i, scale=math%one, &
+    addContribution=math%no, ans=c2bar)
+
+  realval = test%js(ips) * test%ws(ips) * test%thickness(ips) &
+    * c1bar * c2bar
 
   ans(1:tsize) = ans(1:tsize) + realval * test%N(1:tsize, ips)
 END DO
-
 END PROCEDURE ForceVector_5
 
 !----------------------------------------------------------------------------
@@ -250,23 +222,12 @@ END PROCEDURE ForceVector_5
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE ForceVector6
-! Define internal variable
-REAL(DFP), ALLOCATABLE :: realval(:)
-REAL(DFP), ALLOCATABLE :: c1bar(:)
-REAL(DFP), ALLOCATABLE :: c2bar(:, :)
-INTEGER(I4B) :: ips
-
-! main
-CALL GetInterpolation(obj=test, ans=c1bar, val=c1)
-CALL GetInterpolation(obj=test, ans=c2bar, val=c2)
-realval = test%js * test%ws * test%thickness * c1bar
-CALL Reallocate(ans, SIZE(c2bar, 1), SIZE(test%N, 1))
-
-DO ips = 1, SIZE(realval)
-  ans = ans + realval(ips) * OUTERPROD(c2bar(:, ips), test%N(:, ips))
-END DO
-
-DEALLOCATE (realval, c1bar, c2bar)
+INTEGER(I4B) :: nrow, ncol
+nrow = FEVariableSize(c2, 1)
+ncol = test%nns
+CALL Reallocate(ans, nrow, ncol)
+CALL ForceVector_(test=test, c1=c1, c1rank=c1rank, c2=c2, c2rank=c2rank, &
+                  ans=ans, nrow=nrow, ncol=ncol)
 END PROCEDURE ForceVector6
 
 !----------------------------------------------------------------------------
@@ -275,61 +236,31 @@ END PROCEDURE ForceVector6
 
 MODULE PROCEDURE ForceVector_6
 ! Define internal variable
-REAL(DFP), ALLOCATABLE :: c2bar(:)
-REAL(DFP) :: c1bar, realval, c2bar3(3)
-INTEGER(I4B) :: ips, tsize
-LOGICAL(LGT) :: isok
+REAL(DFP) :: realval, c1bar, c2bar(3), T(0)
+INTEGER(I4B) :: ips, i1, i2
 
 nrow = FEVariableSize(c2, 1)
 ncol = test%nns
 ans(1:nrow, 1:ncol) = 0.0_DFP
 
-isok = nrow .GT. 3_I4B
+DO ips = 1, test%nips
 
-IF (isok) THEN
-  ALLOCATE (c2bar(nrow))
-  DO ips = 1, test%nips
-    CALL GetInterpolation_(obj=test, val=c2, ans=c2bar, tsize=tsize, &
-                           scale=1.0_DFP, &
-                           addContribution=.FALSE., &
-                           timeIndx=1_I4B, spaceIndx=ips)
+  CALL FEVariableGetInterpolation_( &
+    obj=c1, rank=c1rank, N=test%N, nns=test%nns, spaceIndx=ips, &
+    timeIndx=math%one_i, T=T, nnt=math%zero_i, scale=math%one, &
+    addContribution=math%no, ans=c1bar)
 
-    CALL GetInterpolation_(obj=test, val=c1, ans=c1bar, &
-                           scale=1.0_DFP, &
-                           addContribution=.FALSE., &
-                           timeIndx=1_I4B, spaceIndx=ips)
+  CALL FEVariableGetInterpolation_( &
+    obj=c2, rank=c2rank, N=test%N, nns=test%nns, spaceIndx=ips, &
+    timeIndx=math%one_i, T=T, nnt=math%zero_i, scale=math%one, &
+    addContribution=math%no, ans=c2bar, tsize=i1)
 
-    realval = test%js(ips) * test%ws(ips) * test%thickness(ips) * c1bar
+  realval = c1bar * test%js(ips) * test%ws(ips) * test%thickness(ips)
 
-    CALL OuterProd_(a=c2bar(1:tsize), b=test%N(1:test%nns, ips), &
-                    anscoeff=1.0_DFP, scale=realval, &
-                    ans=ans, nrow=nrow, ncol=ncol)
-  END DO
-
-  DEALLOCATE (c2bar)
-
-ELSE
-
-  DO ips = 1, test%nips
-    CALL GetInterpolation_(obj=test, val=c2, ans=c2bar3, tsize=tsize, &
-                           scale=1.0_DFP, &
-                           addContribution=.FALSE., &
-                           timeIndx=1_I4B, spaceIndx=ips)
-
-    CALL GetInterpolation_(obj=test, val=c1, ans=c1bar, &
-                           scale=1.0_DFP, &
-                           addContribution=.FALSE., &
-                           timeIndx=1_I4B, spaceIndx=ips)
-
-    realval = test%js(ips) * test%ws(ips) * test%thickness(ips) * c1bar
-
-    CALL OuterProd_(a=c2bar3(1:tsize), b=test%N(1:test%nns, ips), &
-                    anscoeff=1.0_DFP, scale=realval, &
-                    ans=ans, nrow=nrow, ncol=ncol)
-  END DO
-
-END IF
-
+  CALL OuterProd_(a=c2bar(1:nrow), b=test%N(1:ncol, ips), &
+                  anscoeff=math%one, scale=realval, &
+                  ans=ans, nrow=i1, ncol=i2)
+END DO
 END PROCEDURE ForceVector_6
 
 !----------------------------------------------------------------------------
@@ -354,36 +285,33 @@ END PROCEDURE ForceVector7
 
 MODULE PROCEDURE ForceVector_7
 ! Define internal variable
-REAL(DFP), ALLOCATABLE :: c2bar(:, :)
-REAL(DFP) :: realval, c1bar
-INTEGER(I4B) :: ips, ic, jc
+REAL(DFP) :: c2bar(3, 3), realval, c1bar, T(0)
+INTEGER(I4B) :: ips, i1, i2, i3
 
 ! main
-ic = FEVariableSize(c2, 1)
-jc = FEVariableSize(c2, 2)
+dim1 = FEVariableSize(c2, 1)
+dim2 = FEVariableSize(c2, 2)
 dim3 = test%nns
-ans(1:ic, 1:jc, 1:dim3) = 0.0_DFP
-
-ALLOCATE (c2bar(ic, jc))
+ans(1:dim1, 1:dim2, 1:dim3) = math%zero
 
 DO ips = 1, test%nips
-  CALL GetInterpolation_(obj=test, val=c2, ans=c2bar, nrow=ic, &
-                         ncol=jc, scale=1.0_DFP, &
-                         addContribution=.FALSE., &
-                         timeIndx=1_I4B, spaceIndx=ips)
 
-  CALL GetInterpolation_(obj=test, val=c1, ans=c1bar, scale=1.0_DFP, &
-                         addContribution=.FALSE., &
-                         timeIndx=1_I4B, spaceIndx=ips)
+  CALL FEVariableGetInterpolation_( &
+    obj=c1, rank=c1rank, N=test%N, nns=test%nns, spaceIndx=ips, &
+    timeIndx=math%one_i, T=T, nnt=math%zero_i, scale=math%one, &
+    addContribution=math%no, ans=c1bar)
 
-  realval = test%js(ips) * test%ws(ips) * test%thickness(ips) * c1bar
+  CALL FEVariableGetInterpolation_( &
+    obj=c2, rank=c2rank, N=test%N, nns=test%nns, spaceIndx=ips, &
+    timeIndx=math%one_i, T=T, nnt=math%zero_i, scale=math%one, &
+    addContribution=math%no, ans=c2bar, nrow=i1, ncol=i2)
 
-  CALL OuterProd_(a=c2bar(1:ic, 1:jc), b=test%N(1:test%nns, ips), &
-                  anscoeff=1.0_DFP, scale=realval, &
-                  ans=ans, dim1=dim1, dim2=dim2, dim3=dim3)
+  realval = c1bar * test%js(ips) * test%ws(ips) * test%thickness(ips)
+
+  CALL OuterProd_(a=c2bar(1:dim1, 1:dim2), b=test%N(1:dim3, ips), &
+                  anscoeff=math%one, scale=realval, &
+                  ans=ans, dim1=i1, dim2=i2, dim3=i3)
 END DO
-
-DEALLOCATE (c2bar)
 END PROCEDURE ForceVector_7
 
 !----------------------------------------------------------------------------
