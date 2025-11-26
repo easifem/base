@@ -17,7 +17,6 @@
 
 SUBMODULE(FEVariable_NodalVariableMethod) Methods
 USE ReallocateUtility, ONLY: Reallocate
-
 USE FEVariable_ConstructorMethod, ONLY: FEVariableInitiate => Initiate
 
 IMPLICIT NONE
@@ -83,6 +82,19 @@ END PROCEDURE Nodal_Scalar_Time
 !                                                             NodalVariable
 !----------------------------------------------------------------------------
 
+MODULE PROCEDURE Nodal_Scalar_Time2
+INTEGER(I4B) :: s(1)
+
+s(1) = tsize
+CALL FEVariableInitiate(obj=obj, s=s, defineon=TypeFEVariableOpt%nodal, &
+                        vartype=TypeFEVariableOpt%time, &
+                        rank=TypeFEVariableOpt%scalar, len=s(1))
+END PROCEDURE Nodal_Scalar_Time2
+
+!----------------------------------------------------------------------------
+!                                                             NodalVariable
+!----------------------------------------------------------------------------
+
 MODULE PROCEDURE Nodal_Scalar_SpaceTime
 INTEGER(I4B) :: s(2), tsize, ii, jj, kk
 s = SHAPE(val)
@@ -120,6 +132,22 @@ END PROCEDURE Nodal_Scalar_SpaceTime2
 !                                                             NodalVariable
 !----------------------------------------------------------------------------
 
+MODULE PROCEDURE Nodal_Scalar_SpaceTime3
+INTEGER(I4B) :: tsize, s(2)
+
+s(1) = nrow
+s(2) = ncol
+tsize = s(1) * s(2)
+
+CALL FEVariableInitiate(obj=obj, s=s, defineon=TypeFEVariableOpt%nodal, &
+                        vartype=TypeFEVariableOpt%spacetime, &
+                        rank=TypeFEVariableOpt%scalar, len=tsize)
+END PROCEDURE Nodal_Scalar_SpaceTime3
+
+!----------------------------------------------------------------------------
+!                                                             NodalVariable
+!----------------------------------------------------------------------------
+
 MODULE PROCEDURE Nodal_Vector_Constant
 INTEGER(I4B) :: s(1), tsize
 
@@ -130,8 +158,21 @@ CALL FEVariableInitiate(obj=obj, s=s, defineon=TypeFEVariableOpt%nodal, &
                         vartype=TypeFEVariableOpt%constant, &
                         rank=TypeFEVariableOpt%vector, len=tsize, &
                         val=val)
-
 END PROCEDURE Nodal_Vector_Constant
+
+!----------------------------------------------------------------------------
+!                                                             NodalVariable
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE Nodal_Vector_Constant2
+INTEGER(I4B) :: s(1)
+
+s(1) = tsize
+
+CALL FEVariableInitiate(obj=obj, s=s, defineon=TypeFEVariableOpt%nodal, &
+                        vartype=TypeFEVariableOpt%constant, &
+                        rank=TypeFEVariableOpt%vector, len=tsize)
+END PROCEDURE Nodal_Vector_Constant2
 
 !----------------------------------------------------------------------------
 !                                                             NodalVariable
@@ -185,8 +226,6 @@ tsize = s(1) * s(2)
 CALL FEVariableInitiate(obj=obj, s=s, defineon=TypeFEVariableOpt%nodal, &
                         vartype=TypeFEVariableOpt%space, &
                         rank=TypeFEVariableOpt%vector, len=tsize)
-
-obj%val(1:obj%len) = 0.0_DFP
 END PROCEDURE Nodal_Vector_Space3
 
 !----------------------------------------------------------------------------
@@ -224,8 +263,23 @@ tsize = s(1) * s(2)
 CALL FEVariableInitiate(obj=obj, s=s, defineon=TypeFEVariableOpt%nodal, &
                         vartype=TypeFEVariableOpt%time, &
                         rank=TypeFEVariableOpt%vector, len=tsize, val=val)
-
 END PROCEDURE Nodal_Vector_Time2
+
+!----------------------------------------------------------------------------
+!                                                             NodalVariable
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE Nodal_Vector_Time3
+INTEGER(I4B) :: tsize, s(2)
+
+s(1) = nrow
+s(2) = ncol
+tsize = s(1) * s(2)
+
+CALL FEVariableInitiate(obj=obj, s=s, defineon=TypeFEVariableOpt%nodal, &
+                        vartype=TypeFEVariableOpt%time, &
+                        rank=TypeFEVariableOpt%vector, len=tsize)
+END PROCEDURE Nodal_Vector_Time3
 
 !----------------------------------------------------------------------------
 !                                                             NodalVariable
@@ -268,6 +322,23 @@ END PROCEDURE Nodal_Vector_SpaceTime2
 !                                                             NodalVariable
 !----------------------------------------------------------------------------
 
+MODULE PROCEDURE Nodal_Vector_SpaceTime3
+INTEGER(I4B) :: tsize, s(3)
+
+s(1) = dim1
+s(2) = dim2
+s(3) = dim3
+tsize = s(1) * s(2) * s(3)
+
+CALL FEVariableInitiate(obj=obj, s=s, defineon=TypeFEVariableOpt%nodal, &
+                        vartype=TypeFEVariableOpt%spacetime, &
+                        rank=TypeFEVariableOpt%vector, len=tsize)
+END PROCEDURE Nodal_Vector_SpaceTime3
+
+!----------------------------------------------------------------------------
+!                                                             NodalVariable
+!----------------------------------------------------------------------------
+
 MODULE PROCEDURE Nodal_Matrix_Constant
 INTEGER(I4B) :: s(2), tsize, ii, jj, cnt
 
@@ -285,7 +356,6 @@ DO jj = 1, s(2)
     obj%val(cnt) = val(ii, jj)
   END DO
 END DO
-
 END PROCEDURE Nodal_Matrix_Constant
 
 !----------------------------------------------------------------------------
@@ -300,6 +370,22 @@ CALL FEVariableInitiate(obj=obj, s=s, defineon=TypeFEVariableOpt%nodal, &
                         vartype=TypeFEVariableOpt%constant, &
                         rank=TypeFEVariableOpt%matrix, len=tsize, val=val)
 END PROCEDURE Nodal_Matrix_Constant2
+
+!----------------------------------------------------------------------------
+!                                                             NodalVariable
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE Nodal_Matrix_Constant3
+INTEGER(I4B) :: s(2), tsize
+
+s(1) = nrow
+s(2) = ncol
+tsize = s(1) * s(2)
+
+CALL FEVariableInitiate(obj=obj, s=s, defineon=TypeFEVariableOpt%nodal, &
+                        vartype=TypeFEVariableOpt%constant, &
+                        rank=TypeFEVariableOpt%matrix, len=tsize)
+END PROCEDURE Nodal_Matrix_Constant3
 
 !----------------------------------------------------------------------------
 !                                                             NodalVariable
@@ -343,6 +429,23 @@ END PROCEDURE Nodal_Matrix_Space2
 !                                                             NodalVariable
 !----------------------------------------------------------------------------
 
+MODULE PROCEDURE Nodal_Matrix_Space3
+INTEGER(I4B) :: tsize, s(3)
+
+s(1) = dim1
+s(2) = dim2
+s(3) = dim3
+
+tsize = s(1) * s(2) * s(3)
+CALL FEVariableInitiate(obj=obj, s=s, defineon=TypeFEVariableOpt%nodal, &
+                        vartype=TypeFEVariableOpt%space, &
+                        rank=TypeFEVariableOpt%matrix, len=tsize)
+END PROCEDURE Nodal_Matrix_Space3
+
+!----------------------------------------------------------------------------
+!                                                             NodalVariable
+!----------------------------------------------------------------------------
+
 MODULE PROCEDURE Nodal_Matrix_Time
 INTEGER(I4B) :: s(3), tsize, ii, jj, kk, cnt
 
@@ -377,8 +480,25 @@ CALL FEVariableInitiate(obj=obj, s=s, defineon=TypeFEVariableOpt%nodal, &
                         vartype=TypeFEVariableOpt%time, &
                         rank=TypeFEVariableOpt%matrix, &
                         len=tsize, val=val)
-
 END PROCEDURE Nodal_Matrix_Time2
+
+!----------------------------------------------------------------------------
+!                                                             NodalVariable
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE Nodal_Matrix_Time3
+INTEGER(I4B) :: tsize, s(3)
+
+s(1) = dim1
+s(2) = dim2
+s(3) = dim3
+
+tsize = s(1) * s(2) * s(3)
+
+CALL FEVariableInitiate(obj=obj, s=s, defineon=TypeFEVariableOpt%nodal, &
+                        vartype=TypeFEVariableOpt%time, &
+                        rank=TypeFEVariableOpt%matrix, len=tsize)
+END PROCEDURE Nodal_Matrix_Time3
 
 !----------------------------------------------------------------------------
 !                                                             NodalVariable
@@ -419,6 +539,24 @@ CALL FEVariableInitiate(obj=obj, s=s, defineon=TypeFEVariableOpt%nodal, &
                         vartype=TypeFEVariableOpt%spacetime, &
                         rank=TypeFEVariableOpt%matrix, len=tsize, val=val)
 END PROCEDURE Nodal_Matrix_SpaceTime2
+
+!----------------------------------------------------------------------------
+!                                                              NodalVariable
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE Nodal_Matrix_SpaceTime3
+INTEGER(I4B) :: tsize, s(4)
+
+s(1) = dim1
+s(2) = dim2
+s(3) = dim3
+s(4) = dim4
+tsize = PRODUCT(s)
+
+CALL FEVariableInitiate(obj=obj, s=s, defineon=TypeFEVariableOpt%nodal, &
+                        vartype=TypeFEVariableOpt%spacetime, &
+                        rank=TypeFEVariableOpt%matrix, len=tsize)
+END PROCEDURE Nodal_Matrix_SpaceTime3
 
 !----------------------------------------------------------------------------
 !
