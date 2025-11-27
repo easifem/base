@@ -41,15 +41,7 @@ PUBLIC :: ViscousBoundaryMassMatrix
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 6 March 2021
-! summary: This subroutine makes mass matrix in space domain
-!
-!# Introduction
-!
-! This subroutine makes space matrix in space domain, Here Rho $\rho$ is a
-! finite element variable
-!
-! $$\int_{\Omega } N^{I} N^{J}d\Omega$$
-!
+! summary: This subroutine makes mass matrix in space domain (see below)
 
 INTERFACE
   MODULE PURE FUNCTION MassMatrix_1(test, trial, opt) RESULT(ans)
@@ -71,13 +63,29 @@ END INTERFACE MassMatrix
 !
 !----------------------------------------------------------------------------
 
+!> author: Vikas Sharma, Ph. D.
+! date: 2025-11-27
+! summary: This subroutine makes mass matrix in space domain
+!
+!# Introduction
+!
+! This subroutine makes space matrix in space domain, Here mass density
+! is constant and one.
+!
+! $$\int_{\Omega } N^{I} N^{J}d\Omega$$
+
 INTERFACE
   MODULE PURE SUBROUTINE MassMatrix1_(test, trial, ans, nrow, ncol, opt)
     CLASS(ElemshapeData_), INTENT(IN) :: test
+    !! Shape function data for test function
     CLASS(ElemshapeData_), INTENT(IN) :: trial
+    !! trial function data
     REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    !! mass matrix
     INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+    !! size of mass matrix
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: opt
+    !! option for ncopy
   END SUBROUTINE MassMatrix1_
 END INTERFACE
 
@@ -91,7 +99,7 @@ END INTERFACE MassMatrix_
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 6 March 2021
-! summary: This subroutine makes mass matrix in space domain
+! summary: This subroutine makes mass matrix in space domain (see below)
 
 INTERFACE
   MODULE PURE FUNCTION MassMatrix_2(test, trial, rho, rhorank, opt) &
@@ -117,6 +125,17 @@ END INTERFACE MassMatrix
 !
 !----------------------------------------------------------------------------
 
+!> author: Vikas Sharma, Ph. D.
+! date: 2025-11-27
+! summary: This subroutine makes mass matrix in space domain (see below)
+!
+!# Introduction
+!
+! This subroutine makes space matrix in space domain, Here mass density
+! is a FEVariable of scalar type.
+!
+! ans(I,J)=\int N^{I}\rho N^{J}d\Omega
+
 INTERFACE
   MODULE PURE SUBROUTINE MassMatrix2_(test, trial, rho, rhorank, &
                                       ans, nrow, ncol, opt)
@@ -140,7 +159,7 @@ END INTERFACE MassMatrix_
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 6 March 2021
-! summary: This subroutine makes mass matrix in space domain
+! summary: This subroutine makes mass matrix in space domain (see below)
 
 INTERFACE
   MODULE PURE FUNCTION MassMatrix_3(test, trial, rho, rhorank, opt) &
@@ -167,16 +186,28 @@ END INTERFACE MassMatrix
 !
 !----------------------------------------------------------------------------
 
-!> author: Shion Shimizu
-! date:   2025-03-02
-! summary:  mass matrix in space
-! notice: not implemented yet
+!> author: Vikas Sharma, Ph. D.
+! date: 2025-11-27
+! summary: This subroutine makes mass matrix in space domain
+!
+!# Introduction
+!
+! This subroutine makes space matrix in space domain, Here mass density
+! is a FEVariable of vector type.
+! Based on opt value following tasks can be perfoemd:
+!
+! opt=1: M_{i1}(I,J)=\int N^{I}v_{i}N^{J}d\Omega
+! opt=2: M_{1i}(I,J)=\int N^{I}v_{i}N^{J}d\Omega
+! opt=3: M_{ii}(I,J)=\int N^{I}v_{i}N^{J}d\Omega
+! opt=4: M_{ij}(I,J)=\int N^{I}v_{i}v_{j}N^{J}d\Omega
 
 INTERFACE
-  MODULE PURE SUBROUTINE MassMatrix3_(test, trial, rho, opt, nrow, ncol, ans)
+  MODULE PURE SUBROUTINE MassMatrix3_(test, trial, rho, rhorank, opt, &
+                                      nrow, ncol, ans)
     CLASS(ElemshapeData_), INTENT(IN) :: test
     CLASS(ElemshapeData_), INTENT(IN) :: trial
     CLASS(FEVariable_), INTENT(IN) :: rho
+    TYPE(FEVariableVector_), INTENT(IN) :: rhorank
     INTEGER(I4B), INTENT(IN) :: opt
     INTEGER(I4B), INTENT(OUT) :: nrow, ncol
     REAL(DFP), INTENT(INOUT) :: ans(:, :)
@@ -232,7 +263,7 @@ INTERFACE
     !! FEVariable
     TYPE(FEVariableMatrix_), INTENT(IN) :: rhorank
     !! Matrix FEVariable
-    REAL(DFP), INTENT(INOUT) ::  m4(:, :, :, :)
+    REAL(DFP), INTENT(INOUT) :: m4(:, :, :, :)
     !! These matrix is needed internally,
     !! size of m4: nns, nns, size(rho,1), size(rho,2)
     REAL(DFP), INTENT(INOUT) :: ans(:, :)
@@ -255,7 +286,8 @@ END INTERFACE MassMatrix_
 ! summary: This subroutine makes mass matrix used for viscous boundary
 
 INTERFACE
-  MODULE PURE FUNCTION MassMatrix_5(test, trial, lambda, mu, rho) &
+  MODULE PURE FUNCTION MassMatrix_5(test, trial, lambda, mu, rho, &
+                                    lambdaRank, muRank, rhoRank) &
     RESULT(ans)
     CLASS(ElemshapeData_), INTENT(IN) :: test
     !! Shapedata for test function
@@ -267,13 +299,50 @@ INTERFACE
       !! Lame parameter
     CLASS(FEVariable_), INTENT(IN) :: rho
       !! Mass Density
+    TYPE(FEVariableScalar_), INTENT(IN) :: lambdaRank, muRank, rhoRank
     REAL(DFP), ALLOCATABLE :: ans(:, :)
   END FUNCTION MassMatrix_5
 END INTERFACE
 
+INTERFACE MassMatrix
+  MODULE PROCEDURE MassMatrix_5
+END INTERFACE MassMatrix
+
 INTERFACE ViscousBoundaryMassMatrix
   MODULE PROCEDURE MassMatrix_5
 END INTERFACE ViscousBoundaryMassMatrix
+
+!----------------------------------------------------------------------------
+!                                              MassMatrix@MassMatrixMethods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2024-01-15
+! summary: This subroutine makes mass matrix used for viscous boundary
+
+INTERFACE
+  MODULE PURE SUBROUTINE MassMatrix5_( &
+    test, trial, lambda, mu, rho, lambdaRank, muRank, rhoRank, ans, &
+    nrow, ncol)
+    CLASS(ElemshapeData_), INTENT(IN) :: test
+    !! Shapedata for test function
+    CLASS(ElemshapeData_), INTENT(IN) :: trial
+    !! Shapedata for trial function
+    CLASS(FEVariable_), INTENT(IN) :: lambda
+      !! Lame parameter
+    CLASS(FEVariable_), INTENT(IN) :: mu
+      !! Lame parameter
+    CLASS(FEVariable_), INTENT(IN) :: rho
+      !! Mass Density
+    TYPE(FEVariableScalar_), INTENT(IN) :: lambdaRank, muRank, rhoRank
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+  END SUBROUTINE MassMatrix5_
+END INTERFACE
+
+INTERFACE MassMatrix_
+  MODULE PROCEDURE MassMatrix5_
+END INTERFACE MassMatrix_
 
 !----------------------------------------------------------------------------
 !

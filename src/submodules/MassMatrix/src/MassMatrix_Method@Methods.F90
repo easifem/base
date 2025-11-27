@@ -327,31 +327,22 @@ END PROCEDURE MassMatrix3_
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE MassMatrix_4
-REAL(DFP), ALLOCATABLE :: realval(:)
-REAL(DFP), ALLOCATABLE :: m2(:, :)
-REAL(DFP), ALLOCATABLE :: kbar(:, :, :)
+INTEGER(I4B) :: rhobar_i, rhobar_j, nns1, nns2
 REAL(DFP), ALLOCATABLE :: m4(:, :, :, :)
-INTEGER(I4B) :: ii, jj, ips
 
-! main
-CALL GetInterpolation(obj=trial, ans=kbar, val=rho)
-CALL Reallocate(m4, SIZE(test%N, 1), SIZE(trial%N, 1), &
-  & SIZE(kbar, 1), SIZE(kbar, 2))
+rhobar_i = FEVariableSize(obj=rho, dim=1)
+rhobar_j = FEVariableSize(obj=rho, dim=2)
+nns1 = test%nns
+nns2 = trial%nns
 
-realval = trial%js * trial%ws * trial%thickness
+CALL Reallocate(m4, nns1, nns2, rhobar_i, rhobar_j)
+CALL Reallocate(ans, nns1 * rhobar_i, nns2 * rhobar_j)
 
-DO ips = 1, SIZE(realval)
-  m2 = OUTERPROD(a=test%N(:, ips), b=trial%N(:, ips))
-  DO jj = 1, SIZE(kbar, 2)
-    DO ii = 1, SIZE(kbar, 1)
-      m4(:, :, ii, jj) = m4(:, :, ii, jj) &
-        & + realval(ips) * kbar(ii, jj, ips) * m2
-    END DO
-  END DO
-END DO
+CALL MassMatrix_(test=test, trial=trial, rho=rho, rhorank=rhorank, &
+                 ans=ans, nrow=nns1, ncol=nns2, m4=m4)
+! nns1 and nns2 are dummary values here as we dont use them
 
-CALL Convert(From=m4, To=ans)
-DEALLOCATE (realval, m2, kbar, m4)
+DEALLOCATE (m4)
 END PROCEDURE MassMatrix_4
 
 !----------------------------------------------------------------------------
@@ -359,18 +350,20 @@ END PROCEDURE MassMatrix_4
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE MassMatrix4_
-INTEGER(I4B) :: ii, jj, ips, rhobar_i, rhobar_j, nns1, nns2
+INTEGER(I4B) :: ips, rhobar_i, rhobar_j, nns1, nns2
 INTEGER(I4B) :: i1, i2, i3, i4
-REAL(DFP) :: realval, T(0), scale, &
+REAL(DFP) :: realval, T(0), &
              rhobar(varopt%defaultMatrixSize, varopt%defaultMatrixSize)
 
 ! main
 
 rhobar_i = FEVariableSize(obj=rho, dim=1)
 rhobar_j = FEVariableSize(obj=rho, dim=2)
-
 nns1 = test%nns
 nns2 = trial%nns
+
+! nrow = nns1 * rhobar_i
+! ncol = nns2 * rhobar_j
 
 m4(1:nns1, 1:nns2, 1:rhobar_i, 1:rhobar_j) = math%zero
 
@@ -444,6 +437,55 @@ CALL Convert(From=m4, To=ans)
 DEALLOCATE (realval, m2, lambdaBar, muBar, rhoBar, acoeff, bcoeff, m4,  &
   & eyemat, nij)
 END PROCEDURE MassMatrix_5
+
+!----------------------------------------------------------------------------
+!                                                                MassMatrix_
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE MassMatrix5_
+! REAL(DFP), ALLOCATABLE :: realval(:)
+! REAL(DFP), ALLOCATABLE :: m2(:, :), eyemat(:, :), nij(:, :)
+! REAL(DFP), ALLOCATABLE :: lambdaBar(:)
+! REAL(DFP), ALLOCATABLE :: muBar(:)
+! REAL(DFP), ALLOCATABLE :: rhoBar(:)
+! REAL(DFP), ALLOCATABLE :: acoeff(:)
+! REAL(DFP), ALLOCATABLE :: bcoeff(:)
+! REAL(DFP), ALLOCATABLE :: m4(:, :, :, :)
+! INTEGER(I4B) :: ii, jj, ips, nsd, nns
+! REAL(DFP) :: lambdaBar, muBar, rhoBar, acoeff, bcoeff
+!
+! ! main
+! ALLOCATE (acoeff(SIZE(lambdaBar, 1)), bcoeff(SIZE(lambdaBar, 1)))
+!
+! bcoeff = SQRT(rhoBar * muBar)
+! acoeff = SQRT(rhoBar * (lambdaBar + 2.0_DFP * muBar)) - bcoeff
+!
+! nsd = trial%nsd
+! eyemat = Eye(nsd, 1.0_DFP)
+! nns = SIZE(test%N, 1)
+! ALLOCATE (m4(nns, nns, nsd, nsd))
+!
+! realval = trial%js * trial%ws * trial%thickness
+!
+! DO ips = 1, SIZE(realval)
+!   m2 = OUTERPROD(a=test%normal(:, ips), b=trial%normal(:, ips))
+!   nij = OUTERPROD(a=test%N(:, ips), b=trial%N(:, ips))
+!
+!   DO jj = 1, nsd
+!     DO ii = 1, nsd
+!
+!       m4(:, :, ii, jj) = m4(:, :, ii, jj) + realval(ips) *  &
+!         & (acoeff(ips) * m2(ii, jj) + bcoeff(ips) * eyemat(ii, jj)) * nij
+!
+!     END DO
+!   END DO
+! END DO
+!
+! CALL Convert(From=m4, To=ans)
+!
+! DEALLOCATE (realval, m2, lambdaBar, muBar, rhoBar, acoeff, bcoeff, m4,  &
+!   & eyemat, nij)
+END PROCEDURE MassMatrix5_
 
 !----------------------------------------------------------------------------
 !
