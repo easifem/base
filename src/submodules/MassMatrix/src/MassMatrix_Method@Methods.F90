@@ -491,4 +491,25 @@ END PROCEDURE MassMatrix5_
 !
 !----------------------------------------------------------------------------
 
+MODULE PROCEDURE Massmatrix6_
+REAL(DFP) :: realval
+INTEGER(I4B) :: ii, jj, ips
+
+nrow = nns1
+ncol = nns2
+ans(1:nrow, 1:ncol) = 0.0
+
+DO ips = 1, nips
+  realval = js(ips) * ws(ips) * thickness(ips)
+
+  CALL OuterProd_( &
+    a=N(1:nrow, ips), b=M(1:ncol, ips), nrow=ii, ncol=jj, &
+    ans=ans, scale=realval, anscoeff=math%one)
+END DO
+END PROCEDURE Massmatrix6_
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
 END SUBMODULE Methods

@@ -345,6 +345,40 @@ INTERFACE MassMatrix_
 END INTERFACE MassMatrix_
 
 !----------------------------------------------------------------------------
+!                                              MassMatrix@MassMatrixMethods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2024-01-15
+! summary: This subroutine makes mass matrix mass routine
+
+INTERFACE
+  MODULE PURE SUBROUTINE MassMatrix6_( &
+    N, M, js, ws, thickness, nips, nns1, nns2, ans, nrow, ncol)
+    REAL(DFP), INTENT(IN) :: N(:, :)
+    !! test function data
+    REAL(DFP), INTENT(IN) :: M(:, :)
+    !! trial function data
+    REAL(DFP), INTENT(IN) :: js(:)
+    !! Jacobian determinant at integration points
+    REAL(DFP), INTENT(IN) :: ws(:)
+    !! Weights at integration points
+    REAL(DFP), INTENT(IN) :: thickness(:)
+    !! thickness at integration points
+    INTEGER(I4B), INTENT(IN) :: nips, nns1, nns2
+    !! number of integration points
+    !! number of shape functions for test function
+    !! number of shape functions for trial function
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+  END SUBROUTINE MassMatrix6_
+END INTERFACE
+
+INTERFACE MassMatrix_
+  MODULE PROCEDURE MassMatrix6_
+END INTERFACE MassMatrix_
+
+!----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
