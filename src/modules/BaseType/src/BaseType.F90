@@ -2051,6 +2051,8 @@ TYPE :: FEVariableOpt_
   INTEGER(I4B) :: randomSpace = randomSpace
   INTEGER(I4B) :: maxRank = MAX_RANK_FEVARIABLE
   INTEGER(I4B) :: capacityExpandFactor = 1
+  INTEGER(I4B) :: defaultVectorSize = 3
+  INTEGER(I4B) :: defaultMatrixSize = 3
 END TYPE FEVariableOpt_
 
 TYPE(FEVariableOpt_), PARAMETER :: TypeFEVariableOpt = FEVariableOpt_()
