@@ -52,9 +52,9 @@ ss = SIZE(val)
 IF (full_ .OR. ss .LE. (minRow + minRow)) THEN
 #ifdef COLOR_DISP
   CALL DISP( &
-    & title=TRIM(colorize(msg, color_fg=COLOR_FG, color_bg=COLOR_BG, &
-    & style=COLOR_STYLE)), &
-    & x=val, unit=I, orient=orient_, advance=advance)
+    title=TRIM(colorize(msg, color_fg=COLOR_FG, color_bg=COLOR_BG, &
+                        style=COLOR_STYLE)), &
+    x=val, unit=I, orient=orient_, advance=advance)
 #else
   CALL DISP(title=msg, x=val, unit=I, orient=orient_, advance=advance)
 #endif
