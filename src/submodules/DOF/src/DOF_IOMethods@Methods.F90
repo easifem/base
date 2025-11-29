@@ -85,8 +85,9 @@ DO jj = 1, tnames
 
   DO idof = obj%Map(jj, 5), obj%Map(jj + 1, 5) - 1
     a = GetNodeLoc(obj=obj, idof=idof)
-    CALL MyDisplay(Vec(a(1):a(2):a(3)), &
-                   msg="DOF-"//ToString(idof), unitNo=unitNo, advance="NO")
+    CALL MyDisplay( &
+      vec(a(1):a(2):a(3)), msg="DOF-"//ToString(idof), unitNo=unitNo, &
+      advance="NO", full=.TRUE.)
   END DO
   CALL MyDisplay(" ", unitNo=unitNo, advance=.TRUE.)
 END DO
