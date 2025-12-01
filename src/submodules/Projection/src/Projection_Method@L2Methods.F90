@@ -36,40 +36,29 @@ CONTAINS
 !                                       GetL2ProjectionDOFValueFromQuadrature
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE obj_GetL2ProjectionDOFValueFromQuadrature
+MODULE PROCEDURE obj_GetL2ProjectionDOFValueFromQuadrature1
 #ifdef DEBUG_VER
-CHARACTER(*), PARAMETER :: myName = "obj_GetFacetDOFValueFromQuadrature()"
+CHARACTER(*), PARAMETER :: myName = "obj_GetFacetDOFValueFromQuadrature1()"
 LOGICAL(LGT) :: isok
 #endif
 
 INTEGER(I4B) :: info, nrow, ncol, n1, n2, ii, nns
-LOGICAL(LGT) :: onlyFaceBubble0
-
-onlyFaceBubble0 = Input(option=onlyFaceBubble, default=math%no)
-
-#ifdef DEBUG_VER
-IF (onlyFaceBubble0) THEN
-  isok = PRESENT(tVertices)
-  CALL AssertError1(isok, myName, modName, __LINE__, &
-                    'tVertices must be provided when onlyFaceBubble is true')
-END IF
-#endif
 
 nns = elemsd%nns
 
 #ifdef DEBUG_VER
 n1 = SIZE(func)
-isok = n1 .GE. elemsd%nns
+isok = n1 .GE. elemsd%nips
 CALL AssertError1(isok, myName, modName, __LINE__, &
-              'Size of func='//ToString(n1)//' is lesser than elemsd%nns='// &
-                  ToString(elemsd%nns))
+             'Size of func='//ToString(n1)//' is lesser than elemsd%nips='// &
+                  ToString(elemsd%nips))
 #endif
 
 massMat(1:nns, 1:nns) = 0.0_DFP
 
 n1 = 1; n2 = nns
 
-IF (onlyFaceBubble0) THEN
+IF (skipVertices) THEN
   n1 = tVertices + 1; n2 = nns
 END IF
 
@@ -85,12 +74,62 @@ CALL GetLU(A=massMat(n1:n2, n1:n2), IPIV=ipiv(n1:n2), info=info)
 CALL LUSolve(A=massMat(n1:n2, n1:n2), B=ans(n1:n2), &
              IPIV=ipiv(n1:n2), info=info)
 
-IF (onlyFaceBubble0) THEN
+IF (skipVertices) THEN
   DO ii = tVertices + 1, nns
     ans(ii - 2) = ans(ii)
   END DO
 END IF
-END PROCEDURE obj_GetL2ProjectionDOFValueFromQuadrature
+END PROCEDURE obj_GetL2ProjectionDOFValueFromQuadrature1
+
+!----------------------------------------------------------------------------
+!                                       GetL2ProjectionDOFValueFromQuadrature
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE obj_GetL2ProjectionDOFValueFromQuadrature2
+#ifdef DEBUG_VER
+CHARACTER(*), PARAMETER :: myName = "obj_GetFacetDOFValueFromQuadrature2()"
+LOGICAL(LGT) :: isok
+INTEGER(I4B) :: n1
+#endif
+
+INTEGER(I4B) :: nns, nnt, tdof, i1, i2, j1, j2, info
+
+nrow = 0
+ncol = 0
+
+#ifdef DEBUG_VER
+n1 = SIZE(func, 1)
+isok = n1 .GE. elemsd%nips
+CALL AssertError1(isok, myName, modName, __LINE__, &
+             'Size of func='//ToString(n1)//' is lesser than elemsd%nips='// &
+                  ToString(elemsd%nips))
+#endif
+
+#ifdef DEBUG_VER
+n1 = SIZE(func, 2)
+isok = n1 .GE. timeElemsd%nips
+CALL AssertError1(isok, myName, modName, __LINE__, &
+         'Size of func='//ToString(n1)//' is lesser than timeElemsd%nips='// &
+                  ToString(timeElemsd%nips))
+#endif
+
+nns = elemsd%nns
+nnt = timeElemsd%nns
+tdof = nns * nnt
+
+massMat(1:tdof, 1:tdof) = 0.0_DFP
+
+i1 = 1; i2 = nnt
+j1 = 1; j2 = nnt
+
+! Make space-time mass matrix and force vector
+
+CALL GetLU(A=massMat(1:tdof, 1:tdof), IPIV=ipiv(1:tdof), info=info)
+
+! CALL LUSolve(A=massMat(1:tdof, 1:tdof), B=ans(1:tdof), &
+!              IPIV=ipiv(1:tdof), info=info)
+
+END PROCEDURE obj_GetL2ProjectionDOFValueFromQuadrature2
 
 !----------------------------------------------------------------------------
 !                                                            Include error

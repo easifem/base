@@ -41,8 +41,8 @@ PUBLIC :: GetL2ProjectionDOFValueFromQuadrature
 ! summary: L2 Projection method to get DOF values
 
 INTERFACE
-  MODULE SUBROUTINE obj_GetL2ProjectionDOFValueFromQuadrature( &
-    elemsd, func, ans, tsize, massMat, ipiv, onlyFaceBubble, tVertices)
+  MODULE SUBROUTINE obj_GetL2ProjectionDOFValueFromQuadrature1( &
+    elemsd, func, ans, tsize, massMat, ipiv, skipVertices, tVertices)
     TYPE(ElemShapeData_), INTENT(INOUT) :: elemsd
     !! shape function defined on the face of element
     REAL(DFP), INTENT(INOUT) :: func(:)
@@ -56,18 +56,66 @@ INTERFACE
     !! mass matrix
     INTEGER(I4B), INTENT(INOUT) :: ipiv(:)
     !! pivot indices for LU decomposition of mass matrix
-    LOGICAL(LGT), OPTIONAL, INTENT(IN) :: onlyFaceBubble
+    LOGICAL(LGT), INTENT(IN) :: skipVertices
     !! if true then we include only face bubble, that is,
     !! only include internal face bubble.
-    INTEGER(I4B), OPTIONAL, INTENT(IN) :: tVertices
+    INTEGER(I4B), INTENT(IN) :: tVertices
     !! tVertices are needed when onlyFaceBubble is true
     !! tVertices are total number of vertex degree of
     !! freedom
-  END SUBROUTINE obj_GetL2ProjectionDOFValueFromQuadrature
+  END SUBROUTINE obj_GetL2ProjectionDOFValueFromQuadrature1
 END INTERFACE
 
 INTERFACE GetL2ProjectionDOFValueFromQuadrature
-  MODULE PROCEDURE obj_GetL2ProjectionDOFValueFromQuadrature
+  MODULE PROCEDURE obj_GetL2ProjectionDOFValueFromQuadrature1
+END INTERFACE GetL2ProjectionDOFValueFromQuadrature
+
+!----------------------------------------------------------------------------
+!                                                                L2Projection
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2025-12-01
+! summary: L2 Projection method to get DOF values
+
+INTERFACE
+  MODULE SUBROUTINE obj_GetL2ProjectionDOFValueFromQuadrature2( &
+    elemsd, timeElemsd, func, ans, nrow, ncol, massMat, ipiv, &
+    skipVertices, tSpaceVertices, tTimeVertices)
+    TYPE(ElemShapeData_), INTENT(INOUT) :: elemsd, timeElemsd
+    !! shape function defined on the face of space element
+    !! timeElemsd is shape function data for time element
+    REAL(DFP), INTENT(INOUT) :: func(:, :)
+    !! user defined functions quadrature values of function
+    !! Each column contains value at a given time quadrature points
+    !! Each row contains value at a given space quadrature points
+    !! Size should be atleast elemsd%nips by timeElemsd%nips
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    !! nodal coordinates of interpolation points
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+    !! data written in ans
+    REAL(DFP), INTENT(INOUT) :: massMat(:, :)
+    !! mass matrix, the size should be atleast nns * nnt by nns * nnt
+    !! We will make space time mass matrix here
+    INTEGER(I4B), INTENT(INOUT) :: ipiv(:)
+    !! pivot indices for LU decomposition of mass matrix
+    !! the size should be atleast nns * nnt
+    LOGICAL(LGT), INTENT(IN) :: skipVertices
+    !! if true then we include only face bubble, that is,
+    !! only include internal face bubble.
+    INTEGER(I4B), INTENT(IN) :: tSpaceVertices
+    !! tSpaceVertices are needed when onlyFaceBubble is true
+    !! tSpaceVertices are total number of vertex degree of
+    !! freedom in space
+    INTEGER(I4B), INTENT(IN) :: tTimeVertices
+    !! tTimeVertices are needed when onlyFaceBubble is true
+    !! tTimeVertices are total number of vertex degree of
+    !! freedom in Time
+  END SUBROUTINE obj_GetL2ProjectionDOFValueFromQuadrature2
+END INTERFACE
+
+INTERFACE GetL2ProjectionDOFValueFromQuadrature
+  MODULE PROCEDURE obj_GetL2ProjectionDOFValueFromQuadrature2
 END INTERFACE GetL2ProjectionDOFValueFromQuadrature
 
 END MODULE Projection_Method
