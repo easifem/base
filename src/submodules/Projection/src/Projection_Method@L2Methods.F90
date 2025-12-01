@@ -40,11 +40,10 @@ MODULE PROCEDURE obj_GetL2ProjectionDOFValueFromQuadrature1
 #ifdef DEBUG_VER
 CHARACTER(*), PARAMETER :: myName = "obj_GetFacetDOFValueFromQuadrature1()"
 LOGICAL(LGT) :: isok
+INTEGER(I4B) :: n1
 #endif
 
-INTEGER(I4B) :: info, nrow, ncol, n1, n2, ii, nns
-
-nns = elemsd%nns
+INTEGER(I4B) :: info, nrow, ncol
 
 #ifdef DEBUG_VER
 n1 = SIZE(func)
@@ -54,31 +53,22 @@ CALL AssertError1(isok, myName, modName, __LINE__, &
                   ToString(elemsd%nips))
 #endif
 
-massMat(1:nns, 1:nns) = 0.0_DFP
+CALL MassMatrix_( &
+  N=elemsd%N, M=elemsd%N, js=elemsd%js, ws=elemsd%ws, &
+  thickness=elemsd%thickness, nips=elemsd%nips, nns1=elemsd%nns, &
+  nns2=elemsd%nns, skipVertices=skipVertices, tVertices=tVertices, &
+  ans=massMat, nrow=nrow, ncol=ncol)
 
-n1 = 1; n2 = nns
+CALL ForceVector_( &
+  N=elemsd%N, js=elemsd%js, ws=elemsd%ws, thickness=elemsd%thickness, &
+  nips=elemsd%nips, nns=elemsd%nns, skipVertices=skipVertices, &
+  tVertices=tVertices, ans=ans, tsize=tsize, c=func)
 
-IF (skipVertices) THEN
-  n1 = tVertices + 1; n2 = nns
-END IF
+CALL GetLU(A=massMat(1:nrow, 1:ncol), IPIV=ipiv(1:tsize), info=info)
 
-tsize = n2 - n1 + 1
+CALL LUSolve(A=massMat(1:nrow, 1:ncol), B=ans(1:tsize), &
+             IPIV=ipiv(1:tsize), info=info)
 
-CALL MassMatrix_(test=elemsd, trial=elemsd, ans=massMat, &
-                 nrow=nrow, ncol=ncol)
-
-CALL ForceVector_(test=elemsd, c=func, ans=ans, tsize=nrow)
-
-CALL GetLU(A=massMat(n1:n2, n1:n2), IPIV=ipiv(n1:n2), info=info)
-
-CALL LUSolve(A=massMat(n1:n2, n1:n2), B=ans(n1:n2), &
-             IPIV=ipiv(n1:n2), info=info)
-
-IF (skipVertices) THEN
-  DO ii = tVertices + 1, nns
-    ans(ii - 2) = ans(ii)
-  END DO
-END IF
 END PROCEDURE obj_GetL2ProjectionDOFValueFromQuadrature1
 
 !----------------------------------------------------------------------------
