@@ -46,6 +46,30 @@ END DO
 END PROCEDURE OTimesTilda1
 
 !----------------------------------------------------------------------------
+!                                                               OTimesTilda
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE OTimesTilda3
+INTEGER(I4B) :: sa(2), sb(2)
+INTEGER(I4B) :: ii, jj, pp, qq
+
+sa(1) = SIZE(a)
+sa(2) = SIZE(b)
+sb(3) = SIZE(c)
+sb(4) = SIZE(d)
+
+nrow = sa(1) * sb(1)
+ncol = sa(2) * sb(2)
+
+DO CONCURRENT(ii=1:sa(1), jj=1:sa(2), pp=1:sb(1), qq=1:sb(2))
+  ans((ii - 1) * sb(1) + pp, (jj - 1) * sb(2) + qq) = &
+    anscoeff * ans((ii - 1) * sb(1) + pp, (jj - 1) * sb(2) + qq) + &
+    scale * a(ii) * b(jj) * c(pp) * d(qq)
+END DO
+
+END PROCEDURE OTimesTilda3
+
+!----------------------------------------------------------------------------
 !                                                                OTimesTilda
 !----------------------------------------------------------------------------
 

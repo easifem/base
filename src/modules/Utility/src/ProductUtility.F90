@@ -88,6 +88,37 @@ INTERFACE OTimesTilda_
 END INTERFACE OTimesTilda_
 
 !----------------------------------------------------------------------------
+!                                                                OTimesTilda
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2024-08-13
+! summary:  returns a space-time matrix from time and space matrix
+
+INTERFACE
+  MODULE PURE SUBROUTINE OTimesTilda3(a, b, c, d, ans, nrow, ncol, &
+                                      anscoeff, scale)
+    REAL(DFP), INTENT(IN) :: a(:), b(:)
+    !! time matrix
+    REAL(DFP), INTENT(IN) :: c(:), d(:)
+    !! space matrix
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    !! space time matix in DOF Format
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+    REAL(DFP), INTENT(IN) :: anscoeff
+    REAL(DFP), INTENT(IN) :: scale
+  END SUBROUTINE OTimesTilda3
+END INTERFACE
+
+INTERFACE OTimesTilda
+  MODULE PROCEDURE OTimesTilda3
+END INTERFACE OTimesTilda
+
+INTERFACE OTimesTilda_
+  MODULE PROCEDURE OTimesTilda3
+END INTERFACE OTimesTilda_
+
+!----------------------------------------------------------------------------
 !                                                              Cross_Product
 !----------------------------------------------------------------------------
 
