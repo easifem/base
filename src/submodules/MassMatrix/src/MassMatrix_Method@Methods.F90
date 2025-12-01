@@ -21,7 +21,7 @@ USE ElemshapeData_Method, ONLY: GetInterpolation
 USE ElemshapeData_Method, ONLY: GetInterpolation_
 USE ProductUtility, ONLY: OuterProd_
 USE ProductUtility, ONLY: OuterProd
-USE ProductUtility, ONLY: OTimesTilda
+USE ProductUtility, ONLY: OTimesTilda_
 USE ConvertUtility, ONLY: Convert
 USE ConvertUtility, ONLY: Convert_
 USE RealMatrix_Method, ONLY: MakeDiagonalCopies
@@ -518,8 +518,9 @@ LOGICAL(LGT) :: isok
 INTEGER(I4B) :: a, b, c, d, mynns1, mynns2
 
 IF (.NOT. skipVertices) THEN
-  CALL MassMatrix_(N=N, M=M, js=js, ws=ws, thickness=thickness, &
-               nips=nips, nns1=nns1, nns2=nns2, ans=ans, nrow=nrow, ncol=ncol)
+  CALL MassMatrix_( &
+    N=N, M=M, js=js, ws=ws, thickness=thickness, &
+    nips=nips, nns1=nns1, nns2=nns2, ans=ans, nrow=nrow, ncol=ncol)
   RETURN
 END IF
 
@@ -537,8 +538,9 @@ d = nns2
 mynns1 = nns1 - tVertices
 mynns2 = nns2 - tVertices
 
-CALL MassMatrix_(N=N(a:b, :), M=M(c:d, :), js=js, ws=ws, thickness=thickness, &
-           nips=nips, nns1=mynns1, nns2=mynns2, ans=ans, nrow=nrow, ncol=ncol)
+CALL MassMatrix_( &
+  N=N(a:b, :), M=M(c:d, :), js=js, ws=ws, thickness=thickness, &
+  nips=nips, nns1=mynns1, nns2=mynns2, ans=ans, nrow=nrow, ncol=ncol)
 END PROCEDURE MassMatrix7_
 
 !----------------------------------------------------------------------------
@@ -546,21 +548,25 @@ END PROCEDURE MassMatrix7_
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE MassMatrix8_
-INTEGER(I4B) :: spaceRow, spaceCol, timeRow, timeCol
+INTEGER(I4B) :: ips, ipt
+REAL(DFP) :: realval
 
-CALL MassMatrix_( &
-  N=spaceN, M=spaceM, js=js, ws=ws, thickness=spaceThickness, nips=nips, &
-  nns1=nns1, nns2=nns2, ans=spaceMat, nrow=spaceRow, ncol=spaceCol)
+nrow = nnt1 * nns1
+ncol = nnt2 * nns2
+ans(1:nrow, 1:ncol) = 0.0
 
-CALL MassMatrix_( &
-  N=timeN, M=timeM, js=jt, ws=wt, thickness=timeThickness, nips=nipt, &
-  nns1=nnt1, nns2=nnt2, ans=timeMat, nrow=timeRow, ncol=timeCol)
+DO ipt = 1, nipt
+  DO ips = 1, nips
 
-CALL OTimesTilda(a=spaceMat(1:spaceRow, 1:spaceCol), &
-                 b=timeMat(1:timeRow, 1:timeCol), &
-                 ans=ans, nrow=nrow, ncol=ncol, &
-                 anscoeff=math%zero, scale=math%one)
+    realval = ws(ips) * js(ips) * spaceThickness(ips) * &
+      wt(ipt) * jt(ipt) * timeThickness(ipt)
 
+    CALL OTimesTilda_(a=timeN(1:nnt1, ipt), b=timeM(1:nnt2, ipt), &
+                      c=spaceN(1:nns1, ips), d=spaceM(1:nns2, ips), ans=ans, &
+                      nrow=nrow, ncol=ncol, anscoeff=math%one, scale=realval)
+
+  END DO
+END DO
 END PROCEDURE MassMatrix8_
 
 !----------------------------------------------------------------------------
@@ -576,8 +582,7 @@ IF (.NOT. skipVertices) THEN
     spaceN=spaceN, spaceM=spaceM, timeN=timeN, timeM=timeM, js=js, ws=ws, &
     jt=jt, wt=wt, spaceThickness=spaceThickness, &
     timeThickness=timeThickness, nips=nips, nns1=nns1, nns2=nns2, &
-    nipt=nipt, nnt1=nnt1, nnt2=nnt2, spaceMat=spaceMat, timeMat=timeMat, &
-    ans=ans, nrow=nrow, ncol=ncol)
+    nipt=nipt, nnt1=nnt1, nnt2=nnt2, ans=ans, nrow=nrow, ncol=ncol)
   RETURN
 END IF
 
@@ -611,8 +616,7 @@ CALL MassMatrix_( &
   timeN=timeN(e:f, :), timeM=timeM(g:h, :), js=js, ws=ws, &
   jt=jt, wt=wt, spaceThickness=spaceThickness, &
   timeThickness=timeThickness, nips=nips, nns1=mynns1, nns2=mynns2, &
-  nipt=nipt, nnt1=mynnt1, nnt2=mynnt2, spaceMat=spaceMat, timeMat=timeMat, &
-  ans=ans, nrow=nrow, ncol=ncol)
+  nipt=nipt, nnt1=mynnt1, nnt2=mynnt2, ans=ans, nrow=nrow, ncol=ncol)
 
 END PROCEDURE MassMatrix9_
 

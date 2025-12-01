@@ -429,8 +429,7 @@ END INTERFACE MassMatrix_
 INTERFACE
   MODULE PURE SUBROUTINE MassMatrix8_( &
     spaceN, spaceM, timeN, timeM, js, ws, jt, wt, spaceThickness, &
-    timeThickness, nips, nns1, &
-    nns2, nipt, nnt1, nnt2, spaceMat, timeMat, ans, nrow, ncol)
+    timeThickness, nips, nns1, nns2, nipt, nnt1, nnt2, ans, nrow, ncol)
     REAL(DFP), INTENT(IN) :: spaceN(:, :), spaceM(:, :)
     !! test and trial function data in space
     REAL(DFP), INTENT(IN) :: timeN(:, :), timeM(:, :)
@@ -445,12 +444,6 @@ INTERFACE
     !! number of integration points
     !! number of shape functions for test function
     !! number of shape functions for trial function
-    REAL(DFP), INTENT(INOUT) :: spaceMat(:, :)
-    !! space mass matrix, it will be formed internally
-    !! size should be at least nns1 x nns2
-    REAL(DFP), INTENT(INOUT) :: timeMat(:, :)
-    !! time mass matrix, it will be formed internally
-    !! size should be at least nnt1 x nnt2
     REAL(DFP), INTENT(INOUT) :: ans(:, :)
     INTEGER(I4B), INTENT(OUT) :: nrow, ncol
   END SUBROUTINE MassMatrix8_
@@ -471,7 +464,7 @@ END INTERFACE MassMatrix_
 INTERFACE
   MODULE PURE SUBROUTINE MassMatrix9_( &
     spaceN, spaceM, timeN, timeM, js, ws, jt, wt, spaceThickness, &
-    timeThickness, nips, nns1, nns2, nipt, nnt1, nnt2, spaceMat, timeMat, &
+    timeThickness, nips, nns1, nns2, nipt, nnt1, nnt2, &
     skipVertices, tSpaceVertices, tTimeVertices, ans, nrow, ncol)
     REAL(DFP), INTENT(IN) :: spaceN(:, :), spaceM(:, :)
     !! test and trial function data in space
@@ -487,12 +480,6 @@ INTERFACE
     !! number of integration points
     !! number of shape functions for test function
     !! number of shape functions for trial function
-    REAL(DFP), INTENT(INOUT) :: spaceMat(:, :)
-    !! space mass matrix, it will be formed internally
-    !! size should be at least nns1 x nns2
-    REAL(DFP), INTENT(INOUT) :: timeMat(:, :)
-    !! time mass matrix, it will be formed internally
-    !! size should be at least nnt1 x nnt2
     LOGICAL(LGT), INTENT(IN) :: skipVertices
     !! If true then we skip 1:tSpaceVertices rows and columns
     INTEGER(I4B), INTENT(IN) :: tSpaceVertices, tTimeVertices
