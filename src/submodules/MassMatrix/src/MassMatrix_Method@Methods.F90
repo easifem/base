@@ -19,8 +19,9 @@ SUBMODULE(MassMatrix_Method) Methods
 USE ReallocateUtility, ONLY: Reallocate
 USE ElemshapeData_Method, ONLY: GetInterpolation
 USE ElemshapeData_Method, ONLY: GetInterpolation_
-USE ProductUtility, ONLY: OuterProd
 USE ProductUtility, ONLY: OuterProd_
+USE ProductUtility, ONLY: OuterProd
+USE ProductUtility, ONLY: OTimesTilda
 USE ConvertUtility, ONLY: Convert
 USE ConvertUtility, ONLY: Convert_
 USE RealMatrix_Method, ONLY: MakeDiagonalCopies
@@ -54,7 +55,7 @@ END PROCEDURE MassMatrix_1
 !
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE Massmatrix1_
+MODULE PROCEDURE MassMatrix1_
 REAL(DFP) :: realval
 INTEGER(I4B) :: ii, jj, ips, opt0
 LOGICAL(LGT) :: isok
@@ -78,7 +79,7 @@ IF (isok) THEN
   nrow = opt0 * nrow
   ncol = opt0 * ncol
 END IF
-END PROCEDURE Massmatrix1_
+END PROCEDURE MassMatrix1_
 
 !----------------------------------------------------------------------------
 !                                                                MassMatrix
@@ -491,7 +492,7 @@ END PROCEDURE MassMatrix5_
 !
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE Massmatrix6_
+MODULE PROCEDURE MassMatrix6_
 REAL(DFP) :: realval
 INTEGER(I4B) :: ii, jj, ips
 
@@ -506,7 +507,114 @@ DO ips = 1, nips
     a=N(1:nrow, ips), b=M(1:ncol, ips), nrow=ii, ncol=jj, &
     ans=ans, scale=realval, anscoeff=math%one)
 END DO
-END PROCEDURE Massmatrix6_
+END PROCEDURE MassMatrix6_
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE MassMatrix7_
+LOGICAL(LGT) :: isok
+INTEGER(I4B) :: a, b, c, d, mynns1, mynns2
+
+IF (.NOT. skipVertices) THEN
+  CALL MassMatrix_(N=N, M=M, js=js, ws=ws, thickness=thickness, &
+               nips=nips, nns1=nns1, nns2=nns2, ans=ans, nrow=nrow, ncol=ncol)
+  RETURN
+END IF
+
+isok = (nns1 .GT. tVertices) .AND. (nns2 .GT. tVertices)
+IF (.NOT. isok) THEN
+  nrow = 0
+  ncol = 0
+  RETURN
+END IF
+
+a = tVertices + 1
+b = nns1
+c = tVertices + 1
+d = nns2
+mynns1 = nns1 - tVertices
+mynns2 = nns2 - tVertices
+
+CALL MassMatrix_(N=N(a:b, :), M=M(c:d, :), js=js, ws=ws, thickness=thickness, &
+           nips=nips, nns1=mynns1, nns2=mynns2, ans=ans, nrow=nrow, ncol=ncol)
+END PROCEDURE MassMatrix7_
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE MassMatrix8_
+INTEGER(I4B) :: spaceRow, spaceCol, timeRow, timeCol
+
+CALL MassMatrix_( &
+  N=spaceN, M=spaceM, js=js, ws=ws, thickness=spaceThickness, nips=nips, &
+  nns1=nns1, nns2=nns2, ans=spaceMat, nrow=spaceRow, ncol=spaceCol)
+
+CALL MassMatrix_( &
+  N=timeN, M=timeM, js=jt, ws=wt, thickness=timeThickness, nips=nipt, &
+  nns1=nnt1, nns2=nnt2, ans=timeMat, nrow=timeRow, ncol=timeCol)
+
+CALL OTimesTilda(a=spaceMat(1:spaceRow, 1:spaceCol), &
+                 b=timeMat(1:timeRow, 1:timeCol), &
+                 ans=ans, nrow=nrow, ncol=ncol, &
+                 anscoeff=math%zero, scale=math%one)
+
+END PROCEDURE MassMatrix8_
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE MassMatrix9_
+LOGICAL(LGT) :: donothing
+INTEGER(I4B) :: a, b, c, d, e, f, g, h, mynns1, mynns2, mynnt1, mynnt2
+
+IF (.NOT. skipVertices) THEN
+  CALL MassMatrix_( &
+    spaceN=spaceN, spaceM=spaceM, timeN=timeN, timeM=timeM, js=js, ws=ws, &
+    jt=jt, wt=wt, spaceThickness=spaceThickness, &
+    timeThickness=timeThickness, nips=nips, nns1=nns1, nns2=nns2, &
+    nipt=nipt, nnt1=nnt1, nnt2=nnt2, spaceMat=spaceMat, timeMat=timeMat, &
+    ans=ans, nrow=nrow, ncol=ncol)
+  RETURN
+END IF
+
+donothing = (nns1 .LE. tSpaceVertices) &
+            .OR. (nns2 .LE. tSpaceVertices) &
+            .OR. (nnt1 .LE. tTimeVertices) &
+            .OR. (nnt2 .LE. tTimeVertices)
+
+IF (donothing) THEN
+  nrow = 0
+  ncol = 0
+  RETURN
+END IF
+
+a = tSpaceVertices + 1
+b = nns1
+c = tSpaceVertices + 1
+d = nns2
+e = tTimeVertices + 1
+f = nnt1
+g = tTimeVertices + 1
+h = nnt2
+
+mynns1 = nns1 - tSpaceVertices
+mynns2 = nns2 - tSpaceVertices
+mynnt1 = nnt1 - tTimeVertices
+mynnt2 = nnt2 - tTimeVertices
+
+CALL MassMatrix_( &
+  spaceN=spaceN(a:b, :), spaceM=spaceM(c:d, :), &
+  timeN=timeN(e:f, :), timeM=timeM(g:h, :), js=js, ws=ws, &
+  jt=jt, wt=wt, spaceThickness=spaceThickness, &
+  timeThickness=timeThickness, nips=nips, nns1=mynns1, nns2=mynns2, &
+  nipt=nipt, nnt1=mynnt1, nnt2=mynnt2, spaceMat=spaceMat, timeMat=timeMat, &
+  ans=ans, nrow=nrow, ncol=ncol)
+
+END PROCEDURE MassMatrix9_
 
 !----------------------------------------------------------------------------
 !

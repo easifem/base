@@ -379,6 +379,134 @@ INTERFACE MassMatrix_
 END INTERFACE MassMatrix_
 
 !----------------------------------------------------------------------------
+!                                              MassMatrix@MassMatrixMethods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2024-01-15
+! summary: This subroutine makes mass matrix mass routine
+
+INTERFACE
+  MODULE PURE SUBROUTINE MassMatrix7_( &
+    N, M, js, ws, thickness, nips, nns1, nns2, skipVertices, tVertices, &
+    ans, nrow, ncol)
+    REAL(DFP), INTENT(IN) :: N(:, :)
+    !! test function data
+    REAL(DFP), INTENT(IN) :: M(:, :)
+    !! trial function data
+    REAL(DFP), INTENT(IN) :: js(:)
+    !! Jacobian determinant at integration points
+    REAL(DFP), INTENT(IN) :: ws(:)
+    !! Weights at integration points
+    REAL(DFP), INTENT(IN) :: thickness(:)
+    !! thickness at integration points
+    INTEGER(I4B), INTENT(IN) :: nips, nns1, nns2
+    !! number of integration points
+    !! number of shape functions for test function
+    !! number of shape functions for trial function
+    LOGICAL(LGT), INTENT(IN) :: skipVertices
+    !! If true then we skip 1:tVertices rows and columns
+    INTEGER(I4B), INTENT(IN) :: tVertices
+    !! total number of vertex shape functions to be skipped
+    !! Used when skipVertices is true
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+  END SUBROUTINE MassMatrix7_
+END INTERFACE
+
+INTERFACE MassMatrix_
+  MODULE PROCEDURE MassMatrix7_
+END INTERFACE MassMatrix_
+
+!----------------------------------------------------------------------------
+!                                              MassMatrix@MassMatrixMethods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2024-01-15
+! summary: This subroutine makes space time mass matrix in DOF format
+
+INTERFACE
+  MODULE PURE SUBROUTINE MassMatrix8_( &
+    spaceN, spaceM, timeN, timeM, js, ws, jt, wt, spaceThickness, &
+    timeThickness, nips, nns1, &
+    nns2, nipt, nnt1, nnt2, spaceMat, timeMat, ans, nrow, ncol)
+    REAL(DFP), INTENT(IN) :: spaceN(:, :), spaceM(:, :)
+    !! test and trial function data in space
+    REAL(DFP), INTENT(IN) :: timeN(:, :), timeM(:, :)
+    !! test and trial function data in time
+    REAL(DFP), INTENT(IN) :: js(:), jt(:)
+    !! Jacobian determinant at integration points
+    REAL(DFP), INTENT(IN) :: ws(:), wt(:)
+    !! Weights at integration points
+    REAL(DFP), INTENT(IN) :: spaceThickness(:), timeThickness(:)
+    !! thickness at integration points
+    INTEGER(I4B), INTENT(IN) :: nips, nns1, nns2, nipt, nnt1, nnt2
+    !! number of integration points
+    !! number of shape functions for test function
+    !! number of shape functions for trial function
+    REAL(DFP), INTENT(INOUT) :: spaceMat(:, :)
+    !! space mass matrix, it will be formed internally
+    !! size should be at least nns1 x nns2
+    REAL(DFP), INTENT(INOUT) :: timeMat(:, :)
+    !! time mass matrix, it will be formed internally
+    !! size should be at least nnt1 x nnt2
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+  END SUBROUTINE MassMatrix8_
+END INTERFACE
+
+INTERFACE MassMatrix_
+  MODULE PROCEDURE MassMatrix8_
+END INTERFACE MassMatrix_
+
+!----------------------------------------------------------------------------
+!                                              MassMatrix@MassMatrixMethods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2024-01-15
+! summary: This subroutine makes space time mass matrix in DOF format
+
+INTERFACE
+  MODULE PURE SUBROUTINE MassMatrix9_( &
+    spaceN, spaceM, timeN, timeM, js, ws, jt, wt, spaceThickness, &
+    timeThickness, nips, nns1, nns2, nipt, nnt1, nnt2, spaceMat, timeMat, &
+    skipVertices, tSpaceVertices, tTimeVertices, ans, nrow, ncol)
+    REAL(DFP), INTENT(IN) :: spaceN(:, :), spaceM(:, :)
+    !! test and trial function data in space
+    REAL(DFP), INTENT(IN) :: timeN(:, :), timeM(:, :)
+    !! test and trial function data in time
+    REAL(DFP), INTENT(IN) :: js(:), jt(:)
+    !! Jacobian determinant at integration points
+    REAL(DFP), INTENT(IN) :: ws(:), wt(:)
+    !! Weights at integration points
+    REAL(DFP), INTENT(IN) :: spaceThickness(:), timeThickness(:)
+    !! thickness at integration points
+    INTEGER(I4B), INTENT(IN) :: nips, nns1, nns2, nipt, nnt1, nnt2
+    !! number of integration points
+    !! number of shape functions for test function
+    !! number of shape functions for trial function
+    REAL(DFP), INTENT(INOUT) :: spaceMat(:, :)
+    !! space mass matrix, it will be formed internally
+    !! size should be at least nns1 x nns2
+    REAL(DFP), INTENT(INOUT) :: timeMat(:, :)
+    !! time mass matrix, it will be formed internally
+    !! size should be at least nnt1 x nnt2
+    LOGICAL(LGT), INTENT(IN) :: skipVertices
+    !! If true then we skip 1:tSpaceVertices rows and columns
+    INTEGER(I4B), INTENT(IN) :: tSpaceVertices, tTimeVertices
+    !! total number of vertex shape functions to be skipped
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+  END SUBROUTINE MassMatrix9_
+END INTERFACE
+
+INTERFACE MassMatrix_
+  MODULE PROCEDURE MassMatrix9_
+END INTERFACE MassMatrix_
+
+!----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
