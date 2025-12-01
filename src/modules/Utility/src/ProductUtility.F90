@@ -25,6 +25,7 @@ PRIVATE
 PUBLIC :: OuterProd
 PUBLIC :: OuterProd_
 PUBLIC :: OTimesTilda
+PUBLIC :: OTimesTilda_
 PUBLIC :: Cross_Product
 PUBLIC :: Vector_Product
 PUBLIC :: VectorProduct
@@ -38,10 +39,13 @@ PUBLIC :: VectorProduct
 ! summary:  returns a space-time matrix from time and space matrix
 
 INTERFACE
-  MODULE SUBROUTINE OTimesTilda1(a, b, ans, nrow, ncol, anscoeff, scale)
+  MODULE PURE SUBROUTINE OTimesTilda1(a, b, ans, nrow, ncol, anscoeff, scale)
     REAL(DFP), INTENT(IN) :: a(:, :)
+    !! time matrix
     REAL(DFP), INTENT(IN) :: b(:, :)
+    !! space matrix
     REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    !! space time matix in DOF Format
     INTEGER(I4B), INTENT(OUT) :: nrow, ncol
     REAL(DFP), INTENT(IN) :: anscoeff
     REAL(DFP), INTENT(IN) :: scale
@@ -52,16 +56,20 @@ INTERFACE OTimesTilda
   MODULE PROCEDURE OTimesTilda1
 END INTERFACE OTimesTilda
 
+INTERFACE OTimesTilda_
+  MODULE PROCEDURE OTimesTilda1
+END INTERFACE OTimesTilda_
+
 !----------------------------------------------------------------------------
 !                                                                OtimesTilda
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date:  2024-08-13
-! summary:  returns a space-time vector from time and space vector
+! summary: returns a space-time vector from time and space vector
 
 INTERFACE
-  MODULE SUBROUTINE OTimesTilda2(a, b, ans, tsize, anscoeff, scale)
+  MODULE PURE SUBROUTINE OTimesTilda2(a, b, ans, tsize, anscoeff, scale)
     REAL(DFP), INTENT(IN) :: a(:)
     REAL(DFP), INTENT(IN) :: b(:)
     REAL(DFP), INTENT(INOUT) :: ans(:)
@@ -74,6 +82,10 @@ END INTERFACE
 INTERFACE OTimesTilda
   MODULE PROCEDURE OTimesTilda2
 END INTERFACE OTimesTilda
+
+INTERFACE OTimesTilda_
+  MODULE PROCEDURE OTimesTilda2
+END INTERFACE OTimesTilda_
 
 !----------------------------------------------------------------------------
 !                                                              Cross_Product
@@ -665,7 +677,7 @@ INTERFACE
     REAL(DFP), INTENT(IN) :: a(:)
     REAL(DFP), INTENT(IN) :: b(:)
     REAL(DFP), INTENT(IN) :: c(:, :)
-    REAL( DFP ), INTENT(IN) :: anscoeff, scale
+    REAL(DFP), INTENT(IN) :: anscoeff, scale
     REAL(DFP), INTENT(INOUT) :: ans(:, :, :, :)
     INTEGER(I4B), INTENT(OUT) :: dim1, dim2, dim3, dim4
   END SUBROUTINE OuterProd_r1r1r2_
