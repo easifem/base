@@ -489,6 +489,135 @@ INTERFACE ForceVector_
 END INTERFACE ForceVector_
 
 !----------------------------------------------------------------------------
+!                                                               ForceVector
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 20 Jan 2022
+! summary: Force vector
+!
+!# Introduction
+!
+! $$
+! F_{I}=\int_{\Omega}\rho N^{I}d\Omega
+! $$
+
+INTERFACE
+  MODULE SUBROUTINE ForceVector_9( &
+    N, js, ws, thickness, nns, nips, c, ans, tsize)
+    REAL(DFP), INTENT(IN) :: N(:, :), js(:), ws(:), thickness(:)
+    INTEGER(I4B), INTENT(IN) :: nns, nips
+    REAL(DFP), INTENT(IN) :: c(:)
+    !! defined on quadrature point
+    REAL(DFP), INTENT(INOUT) :: ans(:)
+    INTEGER(I4B), INTENT(OUT) :: tsize
+  END SUBROUTINE ForceVector_9
+END INTERFACE
+
+INTERFACE ForceVector_
+  MODULE PROCEDURE ForceVector_9
+END INTERFACE ForceVector_
+
+!----------------------------------------------------------------------------
+!                                                               ForceVector
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 20 Jan 2022
+! summary: Force vector
+!
+!# Introduction
+!
+! $$
+! F_{I}=\int_{\Omega}\rho N^{I}d\Omega
+! $$
+
+INTERFACE
+  MODULE SUBROUTINE ForceVector_10( &
+    N, js, ws, thickness, nns, nips, c, skipVertices, tVertices, ans, tsize)
+    REAL(DFP), INTENT(IN) :: N(:, :), js(:), ws(:), thickness(:)
+    INTEGER(I4B), INTENT(IN) :: nns, nips
+    REAL(DFP), INTENT(IN) :: c(:)
+    !! defined on quadrature point
+    LOGICAL(LGT), INTENT(IN) :: skipVertices
+    INTEGER(I4B), INTENT(IN) :: tVertices
+    REAL(DFP), INTENT(INOUT) :: ans(:)
+    INTEGER(I4B), INTENT(OUT) :: tsize
+  END SUBROUTINE ForceVector_10
+END INTERFACE
+
+INTERFACE ForceVector_
+  MODULE PROCEDURE ForceVector_10
+END INTERFACE ForceVector_
+
+!----------------------------------------------------------------------------
+!                                                               ForceVector
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 20 Jan 2022
+! summary: Force vector
+!
+!# Introduction
+!
+! $$
+! F_{I}=\int_{\Omega}\rho N^{I}d\Omega
+! $$
+
+INTERFACE
+  MODULE SUBROUTINE ForceVector_11( &
+    spaceN, timeN, js, ws, jt, wt, spaceThickness, timeThickness, nns, nnt, &
+    nips, nipt, c, ans, tsize)
+    REAL(DFP), INTENT(IN) :: spaceN(:, :), js(:), ws(:), spaceThickness(:)
+    REAL(DFP), INTENT(IN) :: timeN(:, :), jt(:), wt(:), timeThickness(:)
+    INTEGER(I4B), INTENT(IN) :: nns, nips, nnt, nipt
+    REAL(DFP), INTENT(IN) :: c(:, :)
+    !! defined on quadrature point
+    REAL(DFP), INTENT(INOUT) :: ans(:)
+    !! Force vector is returned in DOF format
+    INTEGER(I4B), INTENT(OUT) :: tsize
+  END SUBROUTINE ForceVector_11
+END INTERFACE
+
+INTERFACE ForceVector_
+  MODULE PROCEDURE ForceVector_11
+END INTERFACE ForceVector_
+
+!----------------------------------------------------------------------------
+!                                                               ForceVector
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 20 Jan 2022
+! summary: Force vector
+!
+!# Introduction
+!
+! $$
+! F_{I}=\int_{\Omega}\rho N^{I}d\Omega
+! $$
+
+INTERFACE
+  MODULE SUBROUTINE ForceVector_12( &
+    spaceN, timeN, js, ws, jt, wt, spaceThickness, timeThickness, nns, nnt, &
+    nips, nipt, c, skipVertices, tSpaceVertices, tTimeVertices, ans, tsize)
+    REAL(DFP), INTENT(IN) :: spaceN(:, :), js(:), ws(:), spaceThickness(:)
+    REAL(DFP), INTENT(IN) :: timeN(:, :), jt(:), wt(:), timeThickness(:)
+    INTEGER(I4B), INTENT(IN) :: nns, nips, nnt, nipt
+    REAL(DFP), INTENT(IN) :: c(:, :)
+    !! defined on quadrature point
+    LOGICAL(LGT), INTENT(IN) :: skipVertices
+    INTEGER(I4B), INTENT(IN) :: tSpaceVertices, tTimeVertices
+    REAL(DFP), INTENT(INOUT) :: ans(:)
+    INTEGER(I4B), INTENT(OUT) :: tsize
+  END SUBROUTINE ForceVector_12
+END INTERFACE
+
+INTERFACE ForceVector_
+  MODULE PROCEDURE ForceVector_12
+END INTERFACE ForceVector_
+
+!----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 

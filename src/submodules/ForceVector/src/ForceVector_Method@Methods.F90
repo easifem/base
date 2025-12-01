@@ -18,6 +18,7 @@
 SUBMODULE(ForceVector_Method) Methods
 USE ReallocateUtility, ONLY: Reallocate
 USE ProductUtility, ONLY: OuterProd_
+USE ProductUtility, ONLY: OTimesTilda_
 USE FEVariable_Method, ONLY: FEVariableSize => Size
 USE FEVariable_Method, ONLY: FEVariableGetInterpolation_ => GetInterpolation_
 USE BaseType, ONLY: math => TypeMathOpt
@@ -342,6 +343,112 @@ DO ips = 1, test%nips
   ans(1:tsize) = ans(1:tsize) + realval * test%N(1:tsize, ips)
 END DO
 END PROCEDURE ForceVector_8
+
+!----------------------------------------------------------------------------
+!                                                               ForceVector_
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE ForceVector_9
+! Define internal variable
+INTEGER(I4B) :: ips
+REAL(DFP) :: realval
+
+tsize = nns
+ans(1:tsize) = 0.0_DFP
+
+DO ips = 1, nips
+  realval = js(ips) * ws(ips) * thickness(ips) * c(ips)
+  ans(1:tsize) = ans(1:tsize) + realval * N(1:tsize, ips)
+END DO
+END PROCEDURE ForceVector_9
+
+!----------------------------------------------------------------------------
+!                                                                ForceVector_
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE ForceVector_10
+LOGICAL(LGT) :: donothing
+INTEGER(I4B) :: a, b, mynns
+
+IF (.NOT. skipVertices) THEN
+  CALL ForceVector_( &
+    N=N, js=js, ws=ws, thickness=thickness, nns=nns, nips=nips, c=c, &
+    ans=ans, tsize=tsize)
+  RETURN
+END IF
+
+donothing = nns .LE. tVertices
+IF (donothing) THEN
+  tsize = 0
+  RETURN
+END IF
+
+a = tVertices + 1
+b = nns
+mynns = nns - tVertices
+
+CALL ForceVector_( &
+  N=N(a:b, :), js=js, ws=ws, thickness=thickness, nns=mynns, nips=nips, c=c, &
+  ans=ans, tsize=tsize)
+END PROCEDURE ForceVector_10
+
+!----------------------------------------------------------------------------
+!                                                               ForceVector_
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE ForceVector_11
+! Define internal variable
+INTEGER(I4B) :: ips, ipt
+REAL(DFP) :: realval
+
+tsize = nns * nnt
+ans(1:tsize) = 0.0_DFP
+
+DO ipt = 1, nipt
+  DO ips = 1, nips
+    realval = js(ips) * ws(ips) * spaceThickness(ips) * c(ips, ipt) * &
+      wt(ipt) * jt(ipt) * timeThickness(ipt)
+    CALL OTimesTilda_(a=timeN(1:nnt, ipt), b=spaceN(1:nns, ips), &
+                      anscoeff=math%one, scale=realval, ans=ans, tsize=tsize)
+  END DO
+END DO
+END PROCEDURE ForceVector_11
+
+!----------------------------------------------------------------------------
+!                                                                ForceVector_
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE ForceVector_12
+LOGICAL(LGT) :: donothing
+INTEGER(I4B) :: a, b, d, e, mynns, mynnt
+
+IF (.NOT. skipVertices) THEN
+  CALL ForceVector_( &
+    spaceN=spaceN, timeN=timeN, js=js, ws=ws, jt=jt, wt=wt, &
+    spaceThickness=spaceThickness, timeThickness=timeThickness, nns=nns, &
+    nnt=nnt, nips=nips, nipt=nipt, c=c, ans=ans, tsize=tsize)
+  RETURN
+END IF
+
+donothing = (nns .LE. tSpaceVertices) .OR. (nnt .LE. tTimeVertices)
+IF (donothing) THEN
+  tsize = 0
+  RETURN
+END IF
+
+a = tSpaceVertices + 1
+b = nns
+mynns = nns - tSpaceVertices
+
+d = tTimeVertices + 1
+e = nnt
+mynnt = nnt - tTimeVertices
+
+CALL ForceVector_( &
+  spaceN=spaceN(a:b, :), timeN=timeN(d:e, :), js=js, ws=ws, jt=jt, wt=wt, &
+  spaceThickness=spaceThickness, timeThickness=timeThickness, nns=mynns, &
+  nnt=mynnt, nips=nips, nipt=nipt, c=c, ans=ans, tsize=tsize)
+END PROCEDURE ForceVector_12
 
 !----------------------------------------------------------------------------
 !
