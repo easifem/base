@@ -141,6 +141,9 @@ include(${CMAKE_CURRENT_LIST_DIR}/ForceVector/CMakeLists.txt)
 # STForceVector
 include(${CMAKE_CURRENT_LIST_DIR}/STForceVector/CMakeLists.txt)
 
+# Projection
+include(${CMAKE_CURRENT_LIST_DIR}/Projection/CMakeLists.txt)
+
 # VoigtRank2Tensor
 include(${CMAKE_CURRENT_LIST_DIR}/VoigtRank2Tensor/CMakeLists.txt)
 
