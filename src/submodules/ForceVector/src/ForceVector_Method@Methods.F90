@@ -451,6 +451,112 @@ CALL ForceVector_( &
 END PROCEDURE ForceVector_12
 
 !----------------------------------------------------------------------------
+!                                                               ForceVector_
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE ForceVector_13
+! Define internal variable
+INTEGER(I4B) :: ips
+REAL(DFP) :: realval
+
+tsize = nns
+ans(1:tsize) = 0.0_DFP
+
+DO ips = 1, nips
+  realval = js(ips) * ws(ips) * thickness(ips) 
+  ans(1:tsize) = ans(1:tsize) + realval * N(1:tsize, ips)
+END DO
+END PROCEDURE ForceVector_13
+
+!----------------------------------------------------------------------------
+!                                                                ForceVector_
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE ForceVector_14
+LOGICAL(LGT) :: donothing
+INTEGER(I4B) :: a, b, mynns
+
+IF (.NOT. skipVertices) THEN
+  CALL ForceVector_( &
+    N=N, js=js, ws=ws, thickness=thickness, nns=nns, nips=nips, &
+    ans=ans, tsize=tsize)
+  RETURN
+END IF
+
+donothing = nns .LE. tVertices
+IF (donothing) THEN
+  tsize = 0
+  RETURN
+END IF
+
+a = tVertices + 1
+b = nns
+mynns = nns - tVertices
+
+CALL ForceVector_( &
+  N=N(a:b, :), js=js, ws=ws, thickness=thickness, nns=mynns, nips=nips, &
+  ans=ans, tsize=tsize)
+END PROCEDURE ForceVector_14
+
+!----------------------------------------------------------------------------
+!                                                               ForceVector_
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE ForceVector_15
+! Define internal variable
+INTEGER(I4B) :: ips, ipt
+REAL(DFP) :: realval
+
+tsize = nns * nnt
+ans(1:tsize) = 0.0_DFP
+
+DO ipt = 1, nipt
+  DO ips = 1, nips
+    realval = js(ips) * ws(ips) * spaceThickness(ips) * &
+      wt(ipt) * jt(ipt) * timeThickness(ipt)
+    CALL OTimesTilda_(a=timeN(1:nnt, ipt), b=spaceN(1:nns, ips), &
+                      anscoeff=math%one, scale=realval, ans=ans, tsize=tsize)
+  END DO
+END DO
+END PROCEDURE ForceVector_15
+
+!----------------------------------------------------------------------------
+!                                                                ForceVector_
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE ForceVector_16
+LOGICAL(LGT) :: donothing
+INTEGER(I4B) :: a, b, d, e, mynns, mynnt
+
+IF (.NOT. skipVertices) THEN
+  CALL ForceVector_( &
+    spaceN=spaceN, timeN=timeN, js=js, ws=ws, jt=jt, wt=wt, &
+    spaceThickness=spaceThickness, timeThickness=timeThickness, nns=nns, &
+    nnt=nnt, nips=nips, nipt=nipt, ans=ans, tsize=tsize)
+  RETURN
+END IF
+
+donothing = (nns .LE. tSpaceVertices) .OR. (nnt .LE. tTimeVertices)
+IF (donothing) THEN
+  tsize = 0
+  RETURN
+END IF
+
+a = tSpaceVertices + 1
+b = nns
+mynns = nns - tSpaceVertices
+
+d = tTimeVertices + 1
+e = nnt
+mynnt = nnt - tTimeVertices
+
+CALL ForceVector_( &
+  spaceN=spaceN(a:b, :), timeN=timeN(d:e, :), js=js, ws=ws, jt=jt, wt=wt, &
+  spaceThickness=spaceThickness, timeThickness=timeThickness, nns=mynns, &
+  nnt=mynnt, nips=nips, nipt=nipt, ans=ans, tsize=tsize)
+END PROCEDURE ForceVector_16
+
+!----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
