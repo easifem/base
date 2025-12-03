@@ -20,6 +20,7 @@ SUBMODULE(Projection_Method) L2Methods
 USE BaseType, ONLY: math => TypeMathOpt
 USE InputUtility, ONLY: Input
 USE Display_Method, ONLY: ToString
+USE Display_Method, ONLY: Display
 USE MassMatrix_Method, ONLY: MassMatrix_
 USE ForceVector_Method, ONLY: ForceVector_
 USE Lapack_Method, ONLY: GetLU, LUSolve, GetInvMat
@@ -48,9 +49,10 @@ INTEGER(I4B) :: info, nrow, ncol
 #ifdef DEBUG_VER
 n1 = SIZE(func)
 isok = n1 .GE. elemsd%nips
-CALL AssertError1(isok, myName, modName, __LINE__, &
-             'Size of func='//ToString(n1)//' is lesser than elemsd%nips='// &
-                  ToString(elemsd%nips))
+CALL AssertError1( &
+  isok, myName, modName, __LINE__, &
+  'Size of func='//ToString(n1)//' is lesser than elemsd%nips='// &
+  ToString(elemsd%nips))
 #endif
 
 CALL MassMatrix_( &
@@ -68,7 +70,6 @@ CALL GetLU(A=massMat(1:nrow, 1:ncol), IPIV=ipiv(1:tsize), info=info)
 
 CALL LUSolve(A=massMat(1:nrow, 1:ncol), B=ans(1:tsize), &
              IPIV=ipiv(1:tsize), info=info)
-
 END PROCEDURE obj_GetL2ProjectionDOFValueFromQuadrature1
 
 !----------------------------------------------------------------------------
@@ -82,44 +83,115 @@ LOGICAL(LGT) :: isok
 INTEGER(I4B) :: n1
 #endif
 
-INTEGER(I4B) :: nns, nnt, tdof, i1, i2, j1, j2, info
-
-nrow = 0
-ncol = 0
+INTEGER(I4B) :: info, nrow, ncol
 
 #ifdef DEBUG_VER
 n1 = SIZE(func, 1)
 isok = n1 .GE. elemsd%nips
-CALL AssertError1(isok, myName, modName, __LINE__, &
-             'Size of func='//ToString(n1)//' is lesser than elemsd%nips='// &
-                  ToString(elemsd%nips))
+CALL AssertError1( &
+  isok, myName, modName, __LINE__, &
+  'Size of func='//ToString(n1)//' is lesser than elemsd%nips='// &
+  ToString(elemsd%nips))
 #endif
 
 #ifdef DEBUG_VER
 n1 = SIZE(func, 2)
 isok = n1 .GE. timeElemsd%nips
-CALL AssertError1(isok, myName, modName, __LINE__, &
-         'Size of func='//ToString(n1)//' is lesser than timeElemsd%nips='// &
-                  ToString(timeElemsd%nips))
+CALL AssertError1( &
+  isok, myName, modName, __LINE__, &
+  'Size of func='//ToString(n1)//' is lesser than timeElemsd%nips='// &
+  ToString(timeElemsd%nips))
 #endif
 
-nns = elemsd%nns
-nnt = timeElemsd%nns
-tdof = nns * nnt
+CALL MassMatrix_( &
+  spaceN=elemsd%N, spaceM=elemsd%N, js=elemsd%js, ws=elemsd%ws, &
+  spaceThickness=elemsd%thickness, nips=elemsd%nips, nns1=elemsd%nns, &
+  nns2=elemsd%nns, skipVertices=skipVertices, tSpaceVertices=tSpaceVertices, &
+  timeN=timeElemsd%N, timeM=timeElemsd%N, jt=timeElemsd%js, &
+  wt=timeElemsd%ws, timeThickness=timeElemsd%thickness, &
+  nipt=timeElemsd%nips, nnt1=timeElemsd%nns, nnt2=timeElemsd%nns, &
+  tTimeVertices=tTimeVertices, ans=massMat, nrow=nrow, ncol=ncol)
 
-massMat(1:tdof, 1:tdof) = 0.0_DFP
+CALL ForceVector_( &
+  spaceN=elemsd%N, js=elemsd%js, ws=elemsd%ws, &
+  spaceThickness=elemsd%thickness, nips=elemsd%nips, nns=elemsd%nns, &
+  timeN=timeElemsd%N, jt=timeElemsd%js, wt=timeElemsd%ws, &
+  timeThickness=timeElemsd%thickness, nipt=timeElemsd%nips, &
+  nnt=timeElemsd%nns, skipVertices=skipVertices, &
+  tSpaceVertices=tSpaceVertices, tTimeVertices=tTimeVertices, &
+  c=func, ans=ans, tsize=tsize)
 
-i1 = 1; i2 = nnt
-j1 = 1; j2 = nnt
+CALL GetLU(A=massMat(1:nrow, 1:ncol), IPIV=ipiv(1:tsize), info=info)
 
-! Make space-time mass matrix and force vector
-
-CALL GetLU(A=massMat(1:tdof, 1:tdof), IPIV=ipiv(1:tdof), info=info)
-
-! CALL LUSolve(A=massMat(1:tdof, 1:tdof), B=ans(1:tdof), &
-!              IPIV=ipiv(1:tdof), info=info)
+CALL LUSolve(A=massMat(1:nrow, 1:ncol), B=ans(1:tsize), &
+             IPIV=ipiv(1:tsize), info=info)
 
 END PROCEDURE obj_GetL2ProjectionDOFValueFromQuadrature2
+
+!----------------------------------------------------------------------------
+!                                       GetL2ProjectionDOFValueFromQuadrature
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE obj_GetL2ProjectionDOFValueFromQuadrature3
+#ifdef DEBUG_VER
+CHARACTER(*), PARAMETER :: myName = "obj_GetFacetDOFValueFromQuadrature3()"
+#endif
+
+INTEGER(I4B) :: info, nrow, ncol
+
+CALL MassMatrix_( &
+  N=elemsd%N, M=elemsd%N, js=elemsd%js, ws=elemsd%ws, &
+  thickness=elemsd%thickness, nips=elemsd%nips, nns1=elemsd%nns, &
+  nns2=elemsd%nns, skipVertices=skipVertices, tVertices=tVertices, &
+  ans=massMat, nrow=nrow, ncol=ncol)
+
+CALL ForceVector_( &
+  N=elemsd%N, js=elemsd%js, ws=elemsd%ws, thickness=elemsd%thickness, &
+  nips=elemsd%nips, nns=elemsd%nns, skipVertices=skipVertices, &
+  tVertices=tVertices, ans=ans, tsize=tsize)
+
+CALL GetLU(A=massMat(1:nrow, 1:ncol), IPIV=ipiv(1:tsize), info=info)
+
+CALL LUSolve(A=massMat(1:nrow, 1:ncol), B=ans(1:tsize), &
+             IPIV=ipiv(1:tsize), info=info)
+END PROCEDURE obj_GetL2ProjectionDOFValueFromQuadrature3
+
+!----------------------------------------------------------------------------
+!                                       GetL2ProjectionDOFValueFromQuadrature
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE obj_GetL2ProjectionDOFValueFromQuadrature4
+#ifdef DEBUG_VER
+CHARACTER(*), PARAMETER :: myName = "obj_GetFacetDOFValueFromQuadrature4()"
+#endif
+
+INTEGER(I4B) :: info, nrow, ncol
+
+
+CALL MassMatrix_( &
+  spaceN=elemsd%N, spaceM=elemsd%N, js=elemsd%js, ws=elemsd%ws, &
+  spaceThickness=elemsd%thickness, nips=elemsd%nips, nns1=elemsd%nns, &
+  nns2=elemsd%nns, skipVertices=skipVertices, tSpaceVertices=tSpaceVertices, &
+  timeN=timeElemsd%N, timeM=timeElemsd%N, jt=timeElemsd%js, &
+  wt=timeElemsd%ws, timeThickness=timeElemsd%thickness, &
+  nipt=timeElemsd%nips, nnt1=timeElemsd%nns, nnt2=timeElemsd%nns, &
+  tTimeVertices=tTimeVertices, ans=massMat, nrow=nrow, ncol=ncol)
+
+CALL ForceVector_( &
+  spaceN=elemsd%N, js=elemsd%js, ws=elemsd%ws, &
+  spaceThickness=elemsd%thickness, nips=elemsd%nips, nns=elemsd%nns, &
+  timeN=timeElemsd%N, jt=timeElemsd%js, wt=timeElemsd%ws, &
+  timeThickness=timeElemsd%thickness, nipt=timeElemsd%nips, &
+  nnt=timeElemsd%nns, skipVertices=skipVertices, &
+  tSpaceVertices=tSpaceVertices, tTimeVertices=tTimeVertices, &
+  ans=ans, tsize=tsize)
+
+CALL GetLU(A=massMat(1:nrow, 1:ncol), IPIV=ipiv(1:tsize), info=info)
+
+CALL LUSolve(A=massMat(1:nrow, 1:ncol), B=ans(1:tsize), &
+             IPIV=ipiv(1:tsize), info=info)
+
+END PROCEDURE obj_GetL2ProjectionDOFValueFromQuadrature4
 
 !----------------------------------------------------------------------------
 !                                                            Include error
