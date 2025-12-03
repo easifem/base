@@ -55,8 +55,8 @@ INTEGER(I4B) :: ii, jj, pp, qq
 
 sa(1) = SIZE(a)
 sa(2) = SIZE(b)
-sb(3) = SIZE(c)
-sb(4) = SIZE(d)
+sb(1) = SIZE(c)
+sb(2) = SIZE(d)
 
 nrow = sa(1) * sb(1)
 ncol = sa(2) * sb(2)

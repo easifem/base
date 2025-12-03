@@ -612,11 +612,11 @@ mynnt1 = nnt1 - tTimeVertices
 mynnt2 = nnt2 - tTimeVertices
 
 CALL MassMatrix_( &
-  spaceN=spaceN(a:b, :), spaceM=spaceM(c:d, :), &
-  timeN=timeN(e:f, :), timeM=timeM(g:h, :), js=js, ws=ws, &
-  jt=jt, wt=wt, spaceThickness=spaceThickness, &
-  timeThickness=timeThickness, nips=nips, nns1=mynns1, nns2=mynns2, &
-  nipt=nipt, nnt1=mynnt1, nnt2=mynnt2, ans=ans, nrow=nrow, ncol=ncol)
+  spaceN=spaceN(a:b, :), spaceM=spaceM(c:d, :), timeN=timeN(e:f, :), &
+  timeM=timeM(g:h, :), js=js, ws=ws, jt=jt, wt=wt, &
+  spaceThickness=spaceThickness, timeThickness=timeThickness, nips=nips, &
+  nns1=mynns1, nns2=mynns2, nipt=nipt, nnt1=mynnt1, nnt2=mynnt2, ans=ans, &
+  nrow=nrow, ncol=ncol)
 
 END PROCEDURE MassMatrix9_
 
