@@ -22,6 +22,8 @@ IMPLICIT NONE
 
 PRIVATE
 PUBLIC :: GetSubMatrix
+PUBLIC :: GetSubMatrix_
+PUBLIC :: GetSubMatrixNNZ
 
 !----------------------------------------------------------------------------
 !                                                       GetColumn@Methods
@@ -31,13 +33,67 @@ PUBLIC :: GetSubMatrix
 ! date: 24 July 2021
 ! summary: This routine returns the submatrix
 
-INTERFACE GetSubMatrix
+INTERFACE
+  MODULE SUBROUTINE obj_GetSubMatrixNNZ(obj, cols, selectCol, ans)
+    TYPE(CSRMatrix_), INTENT(IN) :: obj
+    INTEGER(I4B), INTENT(IN) :: cols(:)
+    !! column indices to be extracted
+    LOGICAL(LGT), INTENT(INOUT) :: selectCol(:)
+    !! size of subIndices
+    INTEGER(I4B), INTENT(OUT) :: ans
+  END SUBROUTINE obj_GetSubMatrixNNZ
+END INTERFACE
+
+INTERFACE GetSubMatrixNNZ
+  MODULE PROCEDURE obj_GetSubMatrixNNZ
+END INTERFACE GetSubMatrixNNZ
+
+!----------------------------------------------------------------------------
+!                                                       GetColumn@Methods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 24 July 2021
+! summary: This routine returns the submatrix
+
+INTERFACE
+  MODULE SUBROUTINE obj_GetSubMatrix_1( &
+    obj, cols, submat, subIndices, selectCol, tsize)
+    TYPE(CSRMatrix_), INTENT(IN) :: obj
+    INTEGER(I4B), INTENT(IN) :: cols(:)
+    !! column indices to be extracted
+    TYPE(CSRMatrix_), INTENT(INOUT) :: submat
+    !! CSRMatrix to store the submatrix
+    INTEGER(I4B), INTENT(INOUT) :: subIndices(:)
+    LOGICAL(LGT), INTENT(INOUT) :: selectCol(:)
+    INTEGER(I4B), INTENT(OUT) :: tsize
+    !! size of subIndices
+  END SUBROUTINE obj_GetSubMatrix_1
+END INTERFACE
+
+INTERFACE GetSubMatrix_
+  MODULE PROCEDURE obj_GetSubMatrix_1
+END INTERFACE GetSubMatrix_
+
+!----------------------------------------------------------------------------
+!                                                       GetColumn@Methods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 24 July 2021
+! summary: This routine returns the submatrix
+
+INTERFACE
   MODULE SUBROUTINE obj_GetSubMatrix1(obj, cols, submat, subIndices)
     TYPE(CSRMatrix_), INTENT(IN) :: obj
     INTEGER(I4B), INTENT(IN) :: cols(:)
     TYPE(CSRMatrix_), INTENT(INOUT) :: submat
     INTEGER(I4B), ALLOCATABLE, INTENT(INOUT) :: subIndices(:)
   END SUBROUTINE obj_GetSubMatrix1
+END INTERFACE
+
+INTERFACE GetSubMatrix
+  MODULE PROCEDURE obj_GetSubMatrix1
 END INTERFACE GetSubMatrix
 
 !----------------------------------------------------------------------------
@@ -48,13 +104,21 @@ END INTERFACE GetSubMatrix
 ! date: 24 July 2021
 ! summary: This routine returns the submatrix
 
-INTERFACE GetSubMatrix
+INTERFACE
   MODULE SUBROUTINE obj_GetSubMatrix2(obj, subIndices, submat)
     TYPE(CSRMatrix_), INTENT(IN) :: obj
     INTEGER(I4B), INTENT(IN) :: subIndices(:)
     TYPE(CSRMatrix_), INTENT(INOUT) :: submat
   END SUBROUTINE obj_GetSubMatrix2
+END INTERFACE
+
+INTERFACE GetSubMatrix
+  MODULE PROCEDURE obj_GetSubMatrix2
 END INTERFACE GetSubMatrix
+
+INTERFACE GetSubMatrix_
+  MODULE PROCEDURE obj_GetSubMatrix2
+END INTERFACE GetSubMatrix_
 
 !----------------------------------------------------------------------------
 !
