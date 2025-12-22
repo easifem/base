@@ -29,7 +29,7 @@ MODULE PROCEDURE getUnitNormal_1
 REAL(DFP), ALLOCATABLE :: dp(:, :), p(:), pnorm(:)
 INTEGER(I4B) :: ii
 !! main
-CALL getInterpolation(obj=obj, Val=val, Interpol=p)
+CALL GetInterpolation(obj=obj, Val=val, ans=p)
 CALL getSpatialGradient(obj=obj, lg=dp, Val=Val)
 CALL Reallocate(R, obj%nsd, obj%nips)
 pnorm = NORM2(dp, DIM=1)
@@ -62,7 +62,7 @@ REAL(DFP) :: nrm
 INTEGER(I4B) :: i
 !! main
 !! interpolate the vector
-CALL getInterpolation(obj=obj, Interpol=p, Val=val)
+CALL getInterpolation(obj=obj, ans=p, Val=val)
 !! get gradient of nodal values
 CALL getSpatialGradient(obj=obj, lg=dp, Val=val)
 pnorm = NORM2(p, DIM=1)
@@ -106,9 +106,9 @@ PURE SUBROUTINE scalar_getUnitNormal_3(obj, r, val)
 ! Define internal variables
   REAL(DFP), ALLOCATABLE :: dp(:, :), p(:), pnorm(:)
   INTEGER(I4B) :: ii
-!! main
-  CALL getInterpolation(obj=obj, Val=val, Interpol=p)
-  CALL getSpatialGradient(obj=obj, lg=dp, Val=Val)
+
+  CALL GetInterpolation(obj=obj, Val=val, ans=p)
+  CALL GetSpatialGradient(obj=obj, lg=dp, Val=Val)
   CALL Reallocate(R, obj%nsd, obj%nips)
   pnorm = NORM2(dp, DIM=1)
 !!
@@ -140,7 +140,7 @@ PURE SUBROUTINE vector_getUnitNormal_3(obj, r, val)
   INTEGER(I4B) :: i
 !! main
 !! interpolate the vector
-  CALL getInterpolation(obj=obj, Interpol=p, Val=val)
+  CALL getInterpolation(obj=obj, ans=p, Val=val)
 !! get gradient of nodal values
   CALL getSpatialGradient(obj=obj, lg=dp, Val=val)
   pnorm = NORM2(p, DIM=1)

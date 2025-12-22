@@ -77,7 +77,7 @@ END PROCEDURE DiffusionMatrix1_
 MODULE PROCEDURE DiffusionMatrix_2
 REAL(DFP), ALLOCATABLE :: realval(:), kbar(:)
 INTEGER(I4B) :: ii
-CALL GetInterpolation(obj=trial, Interpol=kbar, val=k)
+CALL GetInterpolation(obj=trial, ans=kbar, val=k)
 realval = trial%js * trial%ws * trial%thickness * kbar
 CALL Reallocate(ans, SIZE(test%N, 1), SIZE(trial%N, 1))
 DO ii = 1, SIZE(realval)
@@ -96,7 +96,7 @@ MODULE PROCEDURE DiffusionMatrix2_
 REAL(DFP) :: realval, kbar(trial%nips)
 INTEGER(I4B) :: ii
 
-CALL GetInterpolation_(obj=trial, Interpol=kbar, val=k, tsize=ii)
+CALL GetInterpolation_(obj=trial, ans=kbar, val=k, tsize=ii)
 nrow = test%nns
 ncol = trial%nns
 ans(1:nrow, 1:ncol) = 0.0
@@ -123,8 +123,10 @@ END PROCEDURE DiffusionMatrix2_
 MODULE PROCEDURE DiffusionMatrix_3
 REAL(DFP), ALLOCATABLE :: c1bar(:, :), c2bar(:, :), realval(:)
 INTEGER(I4B) :: ii
-CALL getProjectionOfdNdXt(obj=test, cdNdXt=c1bar, val=k)
-CALL getProjectionOfdNdXt(obj=trial, cdNdXt=c2bar, val=k)
+CALL getProjectionOfdNdXt(obj=test, ans=c1bar, c=k, &
+                          crank=TypeFEVariableVector)
+CALL getProjectionOfdNdXt(obj=trial, ans=c2bar, c=k, &
+                          crank=TypeFEVariableVector)
 realval = trial%js * trial%ws * trial%thickness
 CALL reallocate(ans, SIZE(test%N, 1), SIZE(trial%N, 1))
 DO ii = 1, SIZE(realval)
@@ -144,8 +146,10 @@ REAL(DFP) :: realval
 INTEGER(I4B) :: ii, jj, kk
 REAL(DFP), PARAMETER :: one = 1.0_DFP
 
-CALL getProjectionOfdNdXt_(obj=test, cdNdXt=c1bar, val=k, nrow=nrow, ncol=ii)
-CALL getProjectionOfdNdXt_(obj=trial, cdNdXt=c2bar, val=k, nrow=ncol, ncol=ii)
+CALL getProjectionOfdNdXt_(obj=test, ans=c1bar, c=k, nrow=nrow, ncol=ii, &
+                           crank=TypeFEVariableVector)
+CALL getProjectionOfdNdXt_(obj=trial, ans=c2bar, c=k, nrow=ncol, ncol=ii, &
+                           crank=TypeFEVariableVector)
 
 ans(1:nrow, 1:ncol) = 0.0
 
@@ -172,7 +176,7 @@ MODULE PROCEDURE DiffusionMatrix_4
 REAL(DFP), ALLOCATABLE :: kbar(:, :, :)
 REAL(DFP), ALLOCATABLE :: realval(:)
 INTEGER(I4B) :: ii
-CALL getInterpolation(obj=trial, Interpol=kbar, val=k)
+CALL getInterpolation(obj=trial, ans=kbar, val=k)
 realval = trial%js * trial%ws * trial%thickness
 CALL reallocate(ans, SIZE(test%N, 1), SIZE(trial%N, 1))
 DO ii = 1, SIZE(realval)
@@ -194,7 +198,7 @@ REAL(DFP) :: realval
 REAL(DFP), PARAMETER :: one = 1.0_DFP
 INTEGER(I4B) :: ii, jj, kk
 
-CALL getInterpolation_(obj=trial, Interpol=kbar, val=k, &
+CALL getInterpolation_(obj=trial, ans=kbar, val=k, &
                        dim1=ii, dim2=jj, dim3=kk)
 nrow = test%nns
 ncol = trial%nns
@@ -222,8 +226,8 @@ END PROCEDURE DiffusionMatrix4_
 MODULE PROCEDURE DiffusionMatrix_5
 REAL(DFP), ALLOCATABLE :: realval(:), cbar(:)
 INTEGER(I4B) :: ii
-CALL getInterpolation(obj=trial, Interpol=cbar, val=c1)
-CALL getInterpolation(obj=trial, Interpol=realval, val=c2)
+CALL getInterpolation(obj=trial, ans=cbar, val=c1)
+CALL getInterpolation(obj=trial, ans=realval, val=c2)
 realval = realval * trial%js * trial%ws * trial%thickness * cbar
 CALL reallocate(ans, SIZE(test%N, 1), SIZE(trial%N, 1))
 DO ii = 1, SIZE(realval)
@@ -242,8 +246,8 @@ MODULE PROCEDURE DiffusionMatrix5_
 REAL(DFP) :: realval(trial%nips), cbar(trial%nips)
 INTEGER(I4B) :: ii
 
-CALL getInterpolation_(obj=trial, Interpol=cbar, val=c1, tsize=ii)
-CALL getInterpolation_(obj=trial, Interpol=realval, val=c2, tsize=ii)
+CALL GetInterpolation_(obj=trial, ans=cbar, val=c1, tsize=ii)
+CALL GetInterpolation_(obj=trial, ans=realval, val=c2, tsize=ii)
 realval = realval * trial%js * trial%ws * trial%thickness * cbar
 
 nrow = test%nns
@@ -271,11 +275,16 @@ END PROCEDURE DiffusionMatrix5_
 MODULE PROCEDURE DiffusionMatrix_6
 REAL(DFP), ALLOCATABLE :: c1bar(:, :), c2bar(:, :), realval(:)
 INTEGER(I4B) :: ii
-CALL getProjectionOfdNdXt(obj=test, cdNdXt=c1bar, val=c2)
-CALL getProjectionOfdNdXt(obj=trial, cdNdXt=c2bar, val=c2)
-CALL getInterpolation(obj=trial, interpol=realval, val=c1)
+
+CALL GetProjectionOfdNdXt(obj=test, ans=c1bar, c=c2, &
+                          crank=TypeFEVariableVector)
+CALL GetProjectionOfdNdXt(obj=trial, ans=c2bar, c=c2, &
+                          crank=TypeFEVariableVector)
+
+CALL GetInterpolation(obj=trial, ans=realval, val=c1)
 realval = realval * trial%js * trial%ws * trial%thickness
-CALL reallocate(ans, SIZE(test%N, 1), SIZE(trial%N, 1))
+
+CALL Reallocate(ans, SIZE(test%N, 1), SIZE(trial%N, 1))
 DO ii = 1, SIZE(realval)
   ans = ans + realval(ii) * OUTERPROD(c1bar(:, ii), c2bar(:, ii))
 END DO
@@ -293,12 +302,11 @@ REAL(DFP) :: c1bar(test%nns, test%nips), c2bar(trial%nns, trial%nips), &
 INTEGER(I4B) :: ii, jj, kk
 REAL(DFP), PARAMETER :: one = 1.0_DFP
 
-CALL getProjectionOfdNdXt_(obj=test, cdNdXt=c1bar, val=c2, &
-                           nrow=nrow, ncol=ii)
-CALL getProjectionOfdNdXt_(obj=trial, cdNdXt=c2bar, val=c2, &
-                           nrow=ncol, ncol=ii)
-
-CALL getInterpolation_(obj=trial, interpol=realval, val=c1, &
+CALL GetProjectionOfdNdXt_(obj=test, ans=c1bar, c=c2, &
+                           nrow=nrow, ncol=ii, crank=TypeFEVariableVector)
+CALL GetProjectionOfdNdXt_(obj=trial, ans=c2bar, c=c2, &
+                           nrow=ncol, ncol=ii, crank=TypeFEVariableVector)
+CALL GetInterpolation_(obj=trial, ans=realval, val=c1, &
                        tsize=ii)
 
 realval = realval * trial%js * trial%ws * trial%thickness
@@ -316,7 +324,6 @@ IF (PRESENT(opt)) THEN
   nrow = opt * nrow
   ncol = opt * ncol
 END IF
-
 END PROCEDURE DiffusionMatrix6_
 
 !----------------------------------------------------------------------------
@@ -327,8 +334,9 @@ MODULE PROCEDURE DiffusionMatrix_7
 REAL(DFP), ALLOCATABLE :: realval(:)
 REAL(DFP), ALLOCATABLE :: kbar(:, :, :)
 INTEGER(I4B) :: ii
-CALL getInterpolation(obj=trial, Interpol=realval, val=c1)
-CALL getInterpolation(obj=trial, Interpol=kbar, val=c2)
+
+CALL GetInterpolation(obj=trial, ans=realval, val=c1)
+CALL GetInterpolation(obj=trial, ans=kbar, val=c2)
 realval = realval * trial%js * trial%ws * trial%thickness
 DO ii = 1, SIZE(realval)
   ans = ans + realval(ii) * MATMUL(&
@@ -363,8 +371,10 @@ REAL(DFP), ALLOCATABLE :: c1bar(:, :), c2bar(:, :), realval(:)
 INTEGER(I4B) :: ii
   !! main
 CALL reallocate(ans, SIZE(test%N, 1), SIZE(trial%N, 1))
-CALL getProjectionOfdNdXt(obj=test, cdNdXt=c1bar, val=c1)
-CALL getProjectionOfdNdXt(obj=trial, cdNdXt=c2bar, val=c2)
+CALL getProjectionOfdNdXt(obj=test, ans=c1bar, c=c1, &
+                          crank=TypeFEVariableVector)
+CALL getProjectionOfdNdXt(obj=trial, ans=c2bar, c=c2, &
+                          crank=TypeFEVariableVector)
 realval = trial%js * trial%ws * trial%thickness
 DO ii = 1, SIZE(realval)
   ans = ans + realval(ii) * OUTERPROD(c1bar(:, ii), c2bar(:, ii))
@@ -384,15 +394,17 @@ REAL(DFP), ALLOCATABLE :: c2bar(:, :)
 REAL(DFP), ALLOCATABLE :: realval(:)
 TYPE(FEVariable_) :: k
 INTEGER(I4B) :: ii
-CALL getInterpolation(obj=trial, interpol=c2bar, val=c1)
-CALL getInterpolation(obj=trial, interpol=matbar, val=c2)
+CALL getInterpolation(obj=trial, ans=c2bar, val=c1)
+CALL getInterpolation(obj=trial, ans=matbar, val=c2)
 CALL Reallocate(c1bar, SIZE(matbar, 2), SIZE(matbar, 3))
 DO ii = 1, SIZE(c2bar, 2)
   c1bar(:, ii) = MATMUL(c2bar(:, ii), matbar(:, :, ii))
 END DO
 k = QuadratureVariable(c1bar, typeFEVariableVector, typeFEVariableSpace)
-CALL getProjectionOfdNdXt(obj=test, cdNdXt=c1bar, val=k)
-CALL getProjectionOfdNdXt(obj=trial, cdNdXt=c2bar, val=k)
+CALL getProjectionOfdNdXt(obj=test, ans=c1bar, c=k, &
+                          crank=TypeFEVariableVector)
+CALL getProjectionOfdNdXt(obj=trial, ans=c2bar, c=k, &
+                          crank=TypeFEVariableVector)
 realval = trial%js * trial%ws * trial%thickness
 CALL reallocate(ans, SIZE(test%N, 1), SIZE(trial%N, 1))
 DO ii = 1, SIZE(realval)
@@ -427,15 +439,17 @@ REAL(DFP), ALLOCATABLE :: c2bar(:, :)
 REAL(DFP), ALLOCATABLE :: realval(:)
 TYPE(FEVariable_) :: k
 INTEGER(I4B) :: ii
-CALL getInterpolation(obj=trial, interpol=matbar, val=c1)
-CALL getInterpolation(obj=trial, interpol=c2bar, val=c2)
+CALL getInterpolation(obj=trial, ans=matbar, val=c1)
+CALL getInterpolation(obj=trial, ans=c2bar, val=c2)
 CALL Reallocate(c1bar, SIZE(matbar, 1), SIZE(matbar, 3))
 DO ii = 1, SIZE(c2bar, 2)
   c1bar(:, ii) = MATMUL(matbar(:, :, ii), c2bar(:, ii))
 END DO
 k = QuadratureVariable(c1bar, typeFEVariableVector, typeFEVariableSpace)
-CALL getProjectionOfdNdXt(obj=test, cdNdXt=c1bar, val=k)
-CALL getProjectionOfdNdXt(obj=trial, cdNdXt=c2bar, val=k)
+CALL GetProjectionOfdNdXt(obj=test, ans=c1bar, c=k, &
+                          crank=TypeFEVariableVector)
+CALL GetProjectionOfdNdXt(obj=trial, ans=c2bar, c=k, &
+                          crank=TypeFEVariableVector)
 realval = trial%js * trial%ws * trial%thickness
 CALL reallocate(ans, SIZE(test%N, 1), SIZE(trial%N, 1))
 DO ii = 1, SIZE(realval)
@@ -452,8 +466,8 @@ END PROCEDURE DiffusionMatrix_12
 MODULE PROCEDURE DiffusionMatrix_13
 REAL(DFP), ALLOCATABLE :: k1bar(:, :, :), k2bar(:, :, :), realval(:)
 INTEGER(I4B) :: ii
-CALL getInterpolation(obj=trial, Interpol=k1bar, val=c1)
-CALL getInterpolation(obj=trial, Interpol=k2bar, val=c2)
+CALL getInterpolation(obj=trial, ans=k1bar, val=c1)
+CALL getInterpolation(obj=trial, ans=k2bar, val=c2)
 CALL reallocate(ans, SIZE(test%N, 1), SIZE(trial%N, 1))
 realval = trial%js * trial%ws * trial%thickness
 DO ii = 1, SIZE(realval)
@@ -559,7 +573,7 @@ PURE SUBROUTINE DiffusionMatrix_15a(test, trial, k, ans)
   INTEGER(I4B) :: ii, jj, nsd, ips
   nsd = test%nsd
   CALL Reallocate(m4, SIZE(test%N, 1), SIZE(trial%N, 1), nsd, nsd)
-  CALL getInterpolation(obj=trial, Interpol=kbar, val=k)
+  CALL GetInterpolation(obj=trial, ans=kbar, val=k)
   realval = trial%js * trial%ws * trial%thickness * kbar
   DO ips = 1, SIZE(trial%N, 2)
     DO jj = 1, nsd
@@ -589,7 +603,7 @@ PURE SUBROUTINE DiffusionMatrix_15b(test, trial, k, ans)
   INTEGER(I4B) :: ii, jj, nsd, ips
   nsd = test%nsd
   CALL Reallocate(m4, SIZE(test%N, 1), SIZE(trial%N, 1), nsd, nsd)
-  CALL getInterpolation(obj=trial, Interpol=kbar, val=k)
+  CALL GetInterpolation(obj=trial, ans=kbar, val=k)
   realval = trial%js * trial%ws * trial%thickness * kbar
   DO ips = 1, SIZE(trial%N, 2)
     DO jj = 1, nsd

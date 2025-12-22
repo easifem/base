@@ -33,6 +33,9 @@ PUBLIC :: outerdiff
 PUBLIC :: IMAXLOC
 PUBLIC :: IMINLOC
 PUBLIC :: IMG
+PUBLIC :: LOC_NearestPoint
+PUBLIC :: safe_ACOS
+PUBLIC :: safe_ASIN
 
 !----------------------------------------------------------------------------
 !                                                               Radian@MISC
@@ -125,8 +128,6 @@ END INTERFACE
 INTERFACE LOC_NearestPoint
   MODULE PROCEDURE Loc_Nearest_Point
 END INTERFACE LOC_NearestPoint
-
-PUBLIC :: LOC_NearestPoint
 
 INTERFACE SearchNearestCoord
   MODULE PROCEDURE Loc_Nearest_Point
@@ -254,21 +255,21 @@ END INTERFACE ARTH
 INTERFACE
   MODULE PURE FUNCTION outerdiff_r(a, b)
     REAL(SP), DIMENSION(:), INTENT(IN) :: a, b
-    REAL(SP), DIMENSION(size(a), size(b)) :: outerdiff_r
+    REAL(SP), DIMENSION(SIZE(a), SIZE(b)) :: outerdiff_r
   END FUNCTION
 END INTERFACE
 
 INTERFACE
   MODULE PURE FUNCTION outerdiff_d(a, b)
     REAL(DP), DIMENSION(:), INTENT(IN) :: a, b
-    REAL(DP), DIMENSION(size(a), size(b)) :: outerdiff_d
+    REAL(DP), DIMENSION(SIZE(a), SIZE(b)) :: outerdiff_d
   END FUNCTION
 END INTERFACE
 
 INTERFACE
   MODULE PURE FUNCTION outerdiff_i(a, b)
     INTEGER(I4B), DIMENSION(:), INTENT(IN) :: a, b
-    INTEGER(I4B), DIMENSION(size(a), size(b)) :: outerdiff_i
+    INTEGER(I4B), DIMENSION(SIZE(a), SIZE(b)) :: outerdiff_i
   END FUNCTION
 END INTERFACE
 
@@ -323,8 +324,8 @@ END INTERFACE IMINLOC
 
 INTERFACE
   MODULE ELEMENTAL FUNCTION IMG_1(x) RESULT(ans)
-    COMPLEX(Real32), INTENT(IN) :: x
-    REAL(Real32) :: ans
+    COMPLEX(REAL32), INTENT(IN) :: x
+    REAL(REAL32) :: ans
   END FUNCTION IMG_1
 END INTERFACE
 
@@ -342,8 +343,8 @@ END INTERFACE IMG
 
 INTERFACE
   MODULE ELEMENTAL FUNCTION IMG_2(x) RESULT(ans)
-    COMPLEX(Real64), INTENT(IN) :: x
-    REAL(Real64) :: ans
+    COMPLEX(REAL64), INTENT(IN) :: x
+    REAL(REAL64) :: ans
   END FUNCTION IMG_2
 END INTERFACE
 
@@ -362,8 +363,6 @@ INTERFACE
   END FUNCTION safe_ACOS
 END INTERFACE
 
-PUBLIC :: safe_ACOS
-
 !----------------------------------------------------------------------------
 !                                                                 safe_ASIN
 !----------------------------------------------------------------------------
@@ -374,8 +373,6 @@ INTERFACE
     REAL(DFP) :: ans
   END FUNCTION safe_ASIN
 END INTERFACE
-
-PUBLIC :: safe_ASIN
 
 !----------------------------------------------------------------------------
 !                                                            Factorial@MISC

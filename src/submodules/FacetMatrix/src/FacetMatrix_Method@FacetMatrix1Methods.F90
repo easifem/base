@@ -35,15 +35,15 @@ nsd = SIZE(masterElemSD%dNdXt, 2)
 nips = SIZE(masterElemSD%dNdXt, 3)
 nns2 = SIZE(slaveElemSD%dNdXt, 1)
   !!
-CALL getProjectionOfdNdXt( &
+CALL GetProjectionOfdNdXt( &
   & obj=masterElemSD, &
-  & cdNdXt=masterC1, &
-  & val=masterElemSD%normal)
+  & ans=masterC1, &
+  & c=masterElemSD%normal)
   !!
-CALL getProjectionOfdNdXt( &
+CALL GetProjectionOfdNdXt( &
   & obj=slaveElemSD, &
-  & cdNdXt=slaveC1, &
-  & val=slaveElemSD%normal)
+  & ans=slaveC1, &
+  & c=slaveElemSD%normal)
   !!
 i3 = eye(nsd)
   !!
@@ -101,15 +101,15 @@ nsd = SIZE(masterElemSD%dNdXt, 2)
 nips = SIZE(masterElemSD%dNdXt, 3)
 nns2 = SIZE(slaveElemSD%dNdXt, 1)
   !!
-CALL getProjectionOfdNdXt( &
+CALL GetProjectionOfdNdXt( &
   & obj=masterElemSD, &
-  & cdNdXt=masterC1, &
-  & val=masterElemSD%normal)
+  & ans=masterC1, &
+  & c=masterElemSD%normal)
   !!
-CALL getProjectionOfdNdXt( &
+CALL GetProjectionOfdNdXt( &
   & obj=slaveElemSD, &
-  & cdNdXt=slaveC1, &
-  & val=slaveElemSD%normal)
+  & ans=slaveC1, &
+  & c=slaveElemSD%normal)
   !!
 i3 = eye(nsd)
   !!
@@ -170,15 +170,15 @@ nns2 = SIZE(slaveElemSD%dNdXt, 1)
   !!
 CALL getProjectionOfdNdXt( &
   & obj=masterElemSD, &
-  & cdNdXt=masterC1, &
-  & val=masterElemSD%normal)
+  & ans=masterC1, &
+  & c=masterElemSD%normal)
   !!
 CALL getProjectionOfdNdXt( &
   & obj=slaveElemSD, &
-  & cdNdXt=slaveC1, &
-  & val=slaveElemSD%normal)
+  & ans=slaveC1, &
+  & c=slaveElemSD%normal)
   !!
-CALL getInterpolation(obj=masterElemSD, Interpol=taubar, val=tauvar)
+CALL GetInterpolation(obj=masterElemSD, ans=taubar, val=tauvar)
   !!
 i3 = eye(nsd)
   !!
@@ -240,18 +240,18 @@ nns2 = SIZE(slaveElemSD%dNdXt, 1)
   !!
 CALL getProjectionOfdNdXt( &
   & obj=masterElemSD, &
-  & cdNdXt=masterC1, &
-  & val=masterElemSD%normal)
+  & ans=masterC1, &
+  & c=masterElemSD%normal)
   !!
 CALL getProjectionOfdNdXt( &
   & obj=slaveElemSD, &
-  & cdNdXt=slaveC1, &
-  & val=slaveElemSD%normal)
+  & ans=slaveC1, &
+  & c=slaveElemSD%normal)
   !!
-CALL getInterpolation(obj=masterElemSD, interpol=muMasterBar, &
-  & val=muMaster)
-CALL getInterpolation(obj=slaveElemSD, interpol=muSlaveBar, &
-  & val=muSlave)
+CALL GetInterpolation(obj=masterElemSD, ans=muMasterBar, &
+                      val=muMaster)
+CALL GetInterpolation(obj=slaveElemSD, ans=muSlaveBar, &
+                      val=muSlave)
   !!
 i3 = eye(nsd)
   !!
@@ -313,19 +313,19 @@ nns2 = SIZE(slaveElemSD%dNdXt, 1)
   !!
 CALL getProjectionOfdNdXt( &
   & obj=masterElemSD, &
-  & cdNdXt=masterC1, &
-  & val=masterElemSD%normal)
+  & ans=masterC1, &
+  & c=masterElemSD%normal)
   !!
 CALL getProjectionOfdNdXt( &
   & obj=slaveElemSD, &
-  & cdNdXt=slaveC1, &
-  & val=slaveElemSD%normal)
+  & ans=slaveC1, &
+  & c=slaveElemSD%normal)
   !!
-CALL getInterpolation(obj=masterElemSD, interpol=muMasterBar, &
-  & val=muMaster)
-CALL getInterpolation(obj=slaveElemSD, interpol=muSlaveBar, &
-  & val=muSlave)
-CALL getInterpolation(obj=masterElemSD, interpol=taubar, val=tauvar)
+CALL GetInterpolation(obj=masterElemSD, ans=muMasterBar, &
+                      val=muMaster)
+CALL GetInterpolation(obj=slaveElemSD, ans=muSlaveBar, &
+                      val=muSlave)
+CALL GetInterpolation(obj=masterElemSD, ans=taubar, val=tauvar)
   !!
 i3 = eye(nsd)
   !!

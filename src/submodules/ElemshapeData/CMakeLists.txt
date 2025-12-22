@@ -26,6 +26,9 @@ target_sources(
           ${src_path}/ElemshapeData_HRGNParamMethods@Methods.F90
           ${src_path}/ElemshapeData_HRQIParamMethods@Methods.F90
           ${src_path}/ElemshapeData_InterpolMethods@Methods.F90
+          ${src_path}/ElemshapeData_ScalarInterpolMethods@Methods.F90
+          ${src_path}/ElemshapeData_VectorInterpolMethods@Methods.F90
+          ${src_path}/ElemshapeData_MatrixInterpolMethods@Methods.F90
           ${src_path}/ElemshapeData_IOMethods@Methods.F90
           ${src_path}/ElemshapeData_LocalDivergenceMethods@Methods.F90
           ${src_path}/ElemshapeData_LocalGradientMethods@Methods.F90

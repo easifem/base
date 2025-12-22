@@ -1,6 +1,6 @@
 !-----------------------------------------------------------------
 ! FPL (Fortran Parameter List)
-! Copyright (c) 2015 Santiago Badia, Alberto F. Martín, 
+! Copyright (c) 2015 Santiago Badia, Alberto F. Martín,
 ! Javier Principe and Víctor Sande.
 ! All rights reserved.
 !
@@ -18,47 +18,47 @@
 ! License along with this library.
 !-----------------------------------------------------------------
 
-module DimensionsWrapper7D
+MODULE DimensionsWrapper7D
 
 USE DimensionsWrapper
 
-implicit none
-private
+IMPLICIT NONE
+PRIVATE
 
-    type, extends(DimensionsWrapper_t), abstract :: DimensionsWrapper7D_t
-    private
-    contains
-        procedure(DimensionsWrapper7D_Set),            deferred :: Set
-        procedure(DimensionsWrapper7D_Get),            deferred :: Get
-        procedure(DimensionsWrapper7D_GetPointer),     deferred :: GetPointer
-    end type
+TYPE, EXTENDS(DimensionsWrapper_t), ABSTRACT :: DimensionsWrapper7D_t
+  PRIVATE
+CONTAINS
+  PROCEDURE(DimensionsWrapper7D_Set), DEFERRED :: Set
+  PROCEDURE(DimensionsWrapper7D_Get), DEFERRED :: Get
+  PROCEDURE(DimensionsWrapper7D_GetPointer), DEFERRED :: GetPointer
+END TYPE
 
-    abstract interface
-        subroutine DimensionsWrapper7D_Set(this, Value)
-            import DimensionsWrapper7D_t
-            class(DimensionsWrapper7D_t), intent(INOUT) :: this
-            class(*),                     intent(IN)    :: Value(:,:,:,:,:,:,:)
-        end subroutine
+ABSTRACT INTERFACE
+  SUBROUTINE DimensionsWrapper7D_Set(this, VALUE)
+    IMPORT DimensionsWrapper7D_t
+    CLASS(DimensionsWrapper7D_t), INTENT(INOUT) :: this
+    CLASS(*), INTENT(IN) :: VALUE(:, :, :, :, :, :, :)
+  END SUBROUTINE
 
-        subroutine DimensionsWrapper7D_Get(this, Value)
-            import DimensionsWrapper7D_t
-            class(DimensionsWrapper7D_t), intent(IN)  :: this
-            class(*),                     intent(OUT) :: Value(:,:,:,:,:,:,:)
-        end subroutine
+  SUBROUTINE DimensionsWrapper7D_Get(this, VALUE)
+    IMPORT DimensionsWrapper7D_t
+    CLASS(DimensionsWrapper7D_t), INTENT(IN) :: this
+    CLASS(*), INTENT(OUT) :: VALUE(:, :, :, :, :, :, :)
+  END SUBROUTINE
 
-        function DimensionsWrapper7D_GetPointer(this) result(Value)
-            import DimensionsWrapper7D_t
-            class(DimensionsWrapper7D_t), target, intent(IN)  :: this
-            class(*), pointer                                 :: Value(:,:,:,:,:,:,:)
-        end function
+  FUNCTION DimensionsWrapper7D_GetPointer(this) RESULT(VALUE)
+    IMPORT DimensionsWrapper7D_t
+    CLASS(DimensionsWrapper7D_t), TARGET, INTENT(IN) :: this
+    CLASS(*), POINTER :: VALUE(:, :, :, :, :, :, :)
+  END FUNCTION
 
-        subroutine DimensionsWrapper7D_GetPolymorphic(this, Value)
-            import DimensionsWrapper7D_t
-            class(DimensionsWrapper7D_t), intent(IN)  :: this
-            class(*), allocatable,        intent(OUT) :: Value(:,:,:,:,:,:,:)
-        end subroutine
-    end interface
+  SUBROUTINE DimensionsWrapper7D_GetPolymorphic(this, VALUE)
+    IMPORT DimensionsWrapper7D_t
+    CLASS(DimensionsWrapper7D_t), INTENT(IN) :: this
+    CLASS(*), ALLOCATABLE, INTENT(OUT) :: VALUE(:, :, :, :, :, :, :)
+  END SUBROUTINE
+END INTERFACE
 
-public :: DimensionsWrapper7D_t
+PUBLIC :: DimensionsWrapper7D_t
 
-end module DimensionsWrapper7D
+END MODULE DimensionsWrapper7D

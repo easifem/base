@@ -40,26 +40,15 @@ PUBLIC :: BaseInterpolation_ToInteger
 PUBLIC :: BaseInterpolation_FromInteger
 PUBLIC :: BaseInterpolation_FromString
 PUBLIC :: BaseInterpolationPointer_FromString
-PUBLIC :: BaseType_ToInteger
-
 PUBLIC :: BaseInterpolation_ToString
-PUBLIC :: BaseType_ToChar
 PUBLIC :: BaseInterpolation_ToChar
 
-INTERFACE BaseInterpolation_ToInteger
-  MODULE PROCEDURE BaseInterpolation_ToInteger1
-  MODULE PROCEDURE BaseInterpolation_ToInteger2
-END INTERFACE BaseInterpolation_ToInteger
+PUBLIC :: BaseType_ToChar
+PUBLIC :: BaseType_ToInteger
 
-INTERFACE BaseType_ToInteger
-  MODULE PROCEDURE BaseInterpolation_ToInteger1
-  MODULE PROCEDURE BaseType_ToInteger1
-END INTERFACE BaseType_ToInteger
-
-INTERFACE BaseInterpolation_ToString
-  MODULE PROCEDURE BaseInterpolation_ToString1
-  MODULE PROCEDURE BaseInterpolation_ToString2
-END INTERFACE BaseInterpolation_ToString
+PUBLIC :: InterpolationPoint_ToChar
+PUBLIC :: InterpolationPoint_ToString
+PUBLIC :: InterpolationPoint_ToInteger
 
 INTERFACE ASSIGNMENT(=)
   MODULE PROCEDURE BaseInterpolation_Copy
@@ -137,7 +126,7 @@ END SUBROUTINE BaseInterpolation_Copy
 ! date:  2023-08-09
 ! summary:  Returns a string name of base interpolation type
 
-FUNCTION BaseInterpolation_ToInteger1(obj) RESULT(ans)
+FUNCTION BaseInterpolation_ToInteger(obj) RESULT(ans)
   CLASS(BaseInterpolation_), INTENT(IN) :: obj
   INTEGER(I4B) :: ans
 
@@ -159,19 +148,19 @@ FUNCTION BaseInterpolation_ToInteger1(obj) RESULT(ans)
 
   CLASS DEFAULT
     CALL ErrorMsg(msg="NO CASE FOUND for type of obj2", &
-                  routine="BaseInterpolation_toInteger()", &
+                  routine="BaseInterpolation_ToInteger()", &
                   line=__LINE__, unitno=stdout, file=__FILE__)
 
     STOP
 
   END SELECT
-END FUNCTION BaseInterpolation_ToInteger1
+END FUNCTION BaseInterpolation_ToInteger
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
-FUNCTION BaseType_ToInteger1(name) RESULT(ans)
+FUNCTION BaseType_ToInteger(name) RESULT(ans)
   CHARACTER(*), INTENT(IN) :: name
   INTEGER(I4B) :: ans
 
@@ -212,12 +201,12 @@ FUNCTION BaseType_ToInteger1(name) RESULT(ans)
 
   CASE DEFAULT
     CALL ErrorMsg(msg="NO CASE FOUND for name: "//astr, &
-                  routine="BaseType_ToInteger1()", &
+                  routine="BaseType_ToInteger()", &
                   line=__LINE__, unitno=stdout, file=__FILE__)
     STOP
 
   END SELECT
-END FUNCTION BaseType_ToInteger1
+END FUNCTION BaseType_ToInteger
 
 !----------------------------------------------------------------------------
 !                                                BaseInterpolation_toInteger
@@ -227,7 +216,7 @@ END FUNCTION BaseType_ToInteger1
 ! date:  2023-08-09
 ! summary:  Returns a string name of base interpolation type
 
-FUNCTION BaseInterpolation_ToInteger2(name) RESULT(ans)
+FUNCTION InterpolationPoint_ToInteger(name) RESULT(ans)
   CHARACTER(*), INTENT(IN) :: name
   INTEGER(I4B) :: ans
 
@@ -310,7 +299,7 @@ FUNCTION BaseInterpolation_ToInteger2(name) RESULT(ans)
   END SELECT
 
   astr = ""
-END FUNCTION BaseInterpolation_ToInteger2
+END FUNCTION InterpolationPoint_ToInteger
 
 !----------------------------------------------------------------------------
 !                                             BaseInterpolation_fromInteger
@@ -401,10 +390,21 @@ END SUBROUTINE BaseInterpolation_FromString
 ! date:  2023-08-09
 ! summary:  Returns a string name of base interpolation type
 
-FUNCTION BaseInterpolation_ToString1(obj, isUpper) RESULT(ans)
+FUNCTION BaseInterpolation_ToString(obj, isUpper) RESULT(ans)
   CLASS(BaseInterpolation_), INTENT(IN) :: obj
   LOGICAL(LGT), OPTIONAL, INTENT(IN) :: isUpper
   TYPE(String) :: ans
+  ans = BaseInterpolation_ToChar(obj=obj, isUpper=isUpper)
+END FUNCTION BaseInterpolation_ToString
+
+!----------------------------------------------------------------------------
+!                                                   BaseInterpolation_ToChar
+!----------------------------------------------------------------------------
+
+FUNCTION BaseInterpolation_ToChar(obj, isUpper) RESULT(ans)
+  CLASS(BaseInterpolation_), INTENT(IN) :: obj
+  LOGICAL(LGT), OPTIONAL, INTENT(IN) :: isUpper
+  CHARACTER(:), ALLOCATABLE :: ans
 
   ! internal variables
   LOGICAL(LGT) :: isUpper0
@@ -449,13 +449,14 @@ FUNCTION BaseInterpolation_ToString1(obj, isUpper) RESULT(ans)
     END IF
 
   CLASS DEFAULT
+    ans = ""
     CALL ErrorMsg(msg="No Case Found For Type of obj2", &
-                  routine="BaseInterpolation_ToString1()", &
+                  routine="BaseInterpolation_ToString()", &
                   line=__LINE__, unitno=stdout, file=__FILE__)
     STOP
   END SELECT
 
-END FUNCTION BaseInterpolation_ToString1
+END FUNCTION BaseInterpolation_ToChar
 
 !----------------------------------------------------------------------------
 !                                                           BaseType_ToChar
@@ -556,18 +557,18 @@ END FUNCTION BaseType_ToChar
 !                                                   QuadraturePointIDToName
 !----------------------------------------------------------------------------
 
-FUNCTION BaseInterpolation_ToString2(name, isUpper) RESULT(ans)
+FUNCTION InterpolationPoint_ToString(name, isUpper) RESULT(ans)
   INTEGER(I4B), INTENT(IN) :: name
   LOGICAL(LGT), OPTIONAL, INTENT(IN) :: isUpper
   TYPE(String) :: ans
-  ans = BaseInterpolation_ToChar(name=name, isUpper=isUpper)
-END FUNCTION BaseInterpolation_ToString2
+  ans = InterpolationPoint_ToChar(name=name, isUpper=isUpper)
+END FUNCTION InterpolationPoint_ToString
 
 !----------------------------------------------------------------------------
 !                                                   BaseInterpolation_ToChar
 !----------------------------------------------------------------------------
 
-FUNCTION BaseInterpolation_ToChar(name, isUpper) RESULT(ans)
+FUNCTION InterpolationPoint_ToChar(name, isUpper) RESULT(ans)
   INTEGER(I4B), INTENT(IN) :: name
   LOGICAL(LGT), OPTIONAL, INTENT(IN) :: isUpper
   CHARACTER(:), ALLOCATABLE :: ans
@@ -734,7 +735,7 @@ FUNCTION BaseInterpolation_ToChar(name, isUpper) RESULT(ans)
     STOP
   END SELECT
 
-END FUNCTION BaseInterpolation_ToChar
+END FUNCTION InterpolationPoint_ToChar
 
 !----------------------------------------------------------------------------
 !

@@ -18,228 +18,218 @@
 ! License along with this library.
 !-----------------------------------------------------------------
 
-module DimensionsWrapper3D_R8P
-
+MODULE DimensionsWrapper3D_R8P
 USE DimensionsWrapper3D
-USE PENF, only: I4P, R8P, str, byte_size
+USE PENF, ONLY: I4P, R8P, str, byte_size
 USE ErrorMessages
 
-implicit none
-private
+IMPLICIT NONE
+PRIVATE
 
-    type, extends(DimensionsWrapper3D_t) :: DimensionsWrapper3D_R8P_t
-        real(R8P), allocatable :: Value(:,:,:)
-    contains
-    private
-        procedure, public :: Set            => DimensionsWrapper3D_R8P_Set
-        procedure, public :: Get            => DimensionsWrapper3D_R8P_Get
-        procedure, public :: GetShape       => DimensionsWrapper3D_R8P_GetShape
-        procedure, public :: GetPointer     => DimensionsWrapper3D_R8P_GetPointer
-        procedure, public :: GetPolymorphic => DimensionsWrapper3D_R8P_GetPolymorphic
-        procedure, public :: DataSizeInBytes=> DimensionsWrapper3D_R8P_DataSizeInBytes
-        procedure, public :: isOfDataType   => DimensionsWrapper3D_R8P_isOfDataType
-        procedure, public :: toString       => DimensionsWrapper3D_R8P_toString
-        procedure, public :: Free           => DimensionsWrapper3D_R8P_Free
-        procedure, public :: Print          => DimensionsWrapper3D_R8P_Print
-        final             ::                   DimensionsWrapper3D_R8P_Final
-    end type
+TYPE, EXTENDS(DimensionsWrapper3D_t) :: DimensionsWrapper3D_R8P_t
+  REAL(R8P), ALLOCATABLE :: VALUE(:, :, :)
+CONTAINS
+  PRIVATE
+  PROCEDURE, PUBLIC :: Set => DimensionsWrapper3D_R8P_Set
+  PROCEDURE, PUBLIC :: Get => DimensionsWrapper3D_R8P_Get
+  PROCEDURE, PUBLIC :: GetShape => DimensionsWrapper3D_R8P_GetShape
+  PROCEDURE, PUBLIC :: GetPointer => DimensionsWrapper3D_R8P_GetPointer
+  PROCEDURE, PUBLIC :: GetPolymorphic => &
+    DimensionsWrapper3D_R8P_GetPolymorphic
+  PROCEDURE, PUBLIC :: DataSizeInBytes => &
+    DimensionsWrapper3D_R8P_DataSizeInBytes
+  PROCEDURE, PUBLIC :: isOfDataType => DimensionsWrapper3D_R8P_isOfDataType
+  PROCEDURE, PUBLIC :: toString => DimensionsWrapper3D_R8P_toString
+  PROCEDURE, PUBLIC :: Free => DimensionsWrapper3D_R8P_Free
+  PROCEDURE, PUBLIC :: PRINT => DimensionsWrapper3D_R8P_Print
+  FINAL :: DimensionsWrapper3D_R8P_Final
+END TYPE
 
-public :: DimensionsWrapper3D_R8P_t
+PUBLIC :: DimensionsWrapper3D_R8P_t
 
-contains
+CONTAINS
 
+SUBROUTINE DimensionsWrapper3D_R8P_Final(this)
+  !-----------------------------------------------------------------
+  !< Final procedure of DimensionsWrapper3D
+  !-----------------------------------------------------------------
+  TYPE(DimensionsWrapper3D_R8P_t), INTENT(INOUT) :: this
+  !-----------------------------------------------------------------
+  CALL this%Free()
+END SUBROUTINE
 
-    subroutine DimensionsWrapper3D_R8P_Final(this)
-    !-----------------------------------------------------------------
-    !< Final procedure of DimensionsWrapper3D
-    !-----------------------------------------------------------------
-        type(DimensionsWrapper3D_R8P_t), intent(INOUT) :: this
-    !-----------------------------------------------------------------
-        call this%Free()
-    end subroutine
+SUBROUTINE DimensionsWrapper3D_R8P_Set(this, VALUE)
+  !-----------------------------------------------------------------
+  !< Set R8P Wrapper Value
+  !-----------------------------------------------------------------
+  CLASS(DimensionsWrapper3D_R8P_t), INTENT(INOUT) :: this
+  CLASS(*), INTENT(IN) :: VALUE(:, :, :)
+  INTEGER :: err
+  !-----------------------------------------------------------------
+  SELECT TYPE (VALUE)
+  TYPE is (REAL(R8P))
+    ALLOCATE (this%VALUE(SIZE(VALUE, dim=1), &
+                         SIZE(VALUE, dim=2), &
+                         SIZE(VALUE, dim=3)), &
+              stat=err)
+    this%VALUE = VALUE
+    IF (err /= 0) &
+      CALL msg%Error(txt='Setting Value: Allocation error ('// &
+                     str(no_sign=.TRUE., n=err)//')', &
+                     file=__FILE__, line=__LINE__)
+  CLASS Default
+    CALL msg%Warn(txt='Setting value: Expected data type (R8P)', &
+                  file=__FILE__, line=__LINE__)
+  END SELECT
+END SUBROUTINE
 
+SUBROUTINE DimensionsWrapper3D_R8P_Get(this, VALUE)
+  !-----------------------------------------------------------------
+  !< Get R8P Wrapper Value
+  !-----------------------------------------------------------------
+  CLASS(DimensionsWrapper3D_R8P_t), INTENT(IN) :: this
+  CLASS(*), INTENT(OUT) :: VALUE(:, :, :)
+  INTEGER(I4P), ALLOCATABLE :: ValueShape(:)
+  !-----------------------------------------------------------------
+  SELECT TYPE (VALUE)
+  TYPE is (REAL(R8P))
+    CALL this%GetShape(ValueShape)
+    IF (ALL(ValueShape == SHAPE(VALUE))) THEN
+      VALUE = this%VALUE
+    ELSE
+      CALL msg%Warn(txt='Getting value: Wrong shape ('// &
+                    str(no_sign=.TRUE., n=ValueShape)//'/='// &
+                    str(no_sign=.TRUE., n=SHAPE(VALUE))//')', &
+                    file=__FILE__, line=__LINE__)
+    END IF
+  CLASS Default
+    CALL msg%Warn(txt='Getting value: Expected data type (R8P)', &
+                  file=__FILE__, line=__LINE__)
+  END SELECT
+END SUBROUTINE
 
-    subroutine DimensionsWrapper3D_R8P_Set(this, Value)
-    !-----------------------------------------------------------------
-    !< Set R8P Wrapper Value
-    !-----------------------------------------------------------------
-        class(DimensionsWrapper3D_R8P_t), intent(INOUT) :: this
-        class(*),                         intent(IN)    :: Value(:,:,:)
-        integer                                         :: err
-    !-----------------------------------------------------------------
-        select type (Value)
-            type is (real(R8P))
-                allocate(this%Value(size(Value,dim=1),  &
-                                    size(Value,dim=2),  &
-                                    size(Value,dim=3)), &
-                                    stat=err)
-                this%Value = Value
-                if(err/=0) &
-                    call msg%Error( txt='Setting Value: Allocation error ('//&
-                                    str(no_sign=.true.,n=err)//')', &
-                                    file=__FILE__, line=__LINE__ )
-            class Default
-                call msg%Warn( txt='Setting value: Expected data type (R8P)', &
-                               file=__FILE__, line=__LINE__ )
-        end select
-    end subroutine
+SUBROUTINE DimensionsWrapper3D_R8P_GetShape(this, ValueShape)
+  !-----------------------------------------------------------------
+  !< Get Wrapper Value Shape
+  !-----------------------------------------------------------------
+  CLASS(DimensionsWrapper3D_R8P_t), INTENT(IN) :: this
+  INTEGER(I4P), ALLOCATABLE, INTENT(INOUT) :: ValueShape(:)
+  !-----------------------------------------------------------------
+  IF (ALLOCATED(ValueShape)) DEALLOCATE (ValueShape)
+  ALLOCATE (ValueShape(this%GetDimensions()))
+  ValueShape = SHAPE(this%VALUE, kind=I4P)
+END SUBROUTINE
 
+FUNCTION DimensionsWrapper3D_R8P_GetPointer(this) RESULT(VALUE)
+  !-----------------------------------------------------------------
+  !< Get Unlimited Polymorphic pointer to Wrapper Value
+  !-----------------------------------------------------------------
+  CLASS(DimensionsWrapper3D_R8P_t), TARGET, INTENT(IN) :: this
+  CLASS(*), POINTER :: VALUE(:, :, :)
+  !-----------------------------------------------------------------
+  VALUE => this%VALUE
+END FUNCTION
 
-    subroutine DimensionsWrapper3D_R8P_Get(this, Value)
-    !-----------------------------------------------------------------
-    !< Get R8P Wrapper Value
-    !-----------------------------------------------------------------
-        class(DimensionsWrapper3D_R8P_t), intent(IN)  :: this
-        class(*),                         intent(OUT) :: Value(:,:,:)
-        integer(I4P), allocatable                     :: ValueShape(:)
-    !-----------------------------------------------------------------
-        select type (Value)
-            type is (real(R8P))
-                call this%GetShape(ValueShape)
-                if(all(ValueShape == shape(Value))) then
-                    Value = this%Value
-                else
-                    call msg%Warn(txt='Getting value: Wrong shape ('//&
-                                  str(no_sign=.true.,n=ValueShape)//'/='//&
-                                  str(no_sign=.true.,n=shape(Value))//')',&
-                                  file=__FILE__, line=__LINE__ )
-                endif
-            class Default
-                call msg%Warn(txt='Getting value: Expected data type (R8P)',&
-                              file=__FILE__, line=__LINE__ )
-        end select
-    end subroutine
+SUBROUTINE DimensionsWrapper3D_R8P_GetPolymorphic(this, VALUE)
+  !-----------------------------------------------------------------
+  !< Get Unlimited Polymorphic Wrapper Value
+  !-----------------------------------------------------------------
+  CLASS(DimensionsWrapper3D_R8P_t), INTENT(IN) :: this
+  CLASS(*), ALLOCATABLE, INTENT(OUT) :: VALUE(:, :, :)
+  !-----------------------------------------------------------------
+  ALLOCATE (VALUE(SIZE(this%VALUE, dim=1), &
+                  SIZE(this%VALUE, dim=2), &
+                  SIZE(this%VALUE, dim=3)), &
+            source=this%VALUE)
+END SUBROUTINE
 
+SUBROUTINE DimensionsWrapper3D_R8P_Free(this)
+  !-----------------------------------------------------------------
+  !< Free a DimensionsWrapper3D
+  !-----------------------------------------------------------------
+  CLASS(DimensionsWrapper3D_R8P_t), INTENT(INOUT) :: this
+  INTEGER :: err
+  !-----------------------------------------------------------------
+  IF (ALLOCATED(this%VALUE)) THEN
+    DEALLOCATE (this%VALUE, stat=err)
+    IF (err /= 0) CALL msg%Error(txt='Freeing Value: Deallocation error ('// &
+                                 str(no_sign=.TRUE., n=err)//')', &
+                                 file=__FILE__, line=__LINE__)
+  END IF
+END SUBROUTINE
 
-    subroutine DimensionsWrapper3D_R8P_GetShape(this, ValueShape)
-    !-----------------------------------------------------------------
-    !< Get Wrapper Value Shape
-    !-----------------------------------------------------------------
-        class(DimensionsWrapper3D_R8P_t), intent(IN)    :: this
-        integer(I4P), allocatable,        intent(INOUT) :: ValueShape(:)
-    !-----------------------------------------------------------------
-        if(allocated(ValueShape)) deallocate(ValueShape)
-        allocate(ValueShape(this%GetDimensions()))
-        ValueShape = shape(this%Value, kind=I4P)
-    end subroutine
+FUNCTION DimensionsWrapper3D_R8P_DataSizeInBytes(this) RESULT(DataSizeInBytes)
+  !-----------------------------------------------------------------
+  !< Return the size in bytes of the stored data
+  !-----------------------------------------------------------------
+  CLASS(DimensionsWrapper3D_R8P_t), INTENT(IN) :: this !< Dimensions wrapper 3D
+  INTEGER(I4P) :: DataSizeInBytes !< Size of the stored data in bytes
+  !-----------------------------------------------------------------
+  DataSizeInBytes = byte_size(this%VALUE(1, 1, 1)) * SIZE(this%VALUE)
+END FUNCTION DimensionsWrapper3D_R8P_DataSizeInBytes
 
+FUNCTION DimensionsWrapper3D_R8P_isOfDataType(this, Mold) RESULT(isOfDataType)
+  !-----------------------------------------------------------------
+  !< Check if Mold and Value are of the same datatype
+  !-----------------------------------------------------------------
+  CLASS(DimensionsWrapper3D_R8P_t), INTENT(IN) :: this !< Dimensions wrapper 3D
+  CLASS(*), INTENT(IN) :: Mold !< Mold for data type comparison
+  LOGICAL :: isOfDataType !< Boolean flag to check if Value is of the same data type as Mold
+  !-----------------------------------------------------------------
+  isOfDataType = .FALSE.
+  SELECT TYPE (Mold)
+  TYPE is (REAL(R8P))
+    isOfDataType = .TRUE.
+  END SELECT
+END FUNCTION DimensionsWrapper3D_R8P_isOfDataType
 
-    function DimensionsWrapper3D_R8P_GetPointer(this) result(Value)
-    !-----------------------------------------------------------------
-    !< Get Unlimited Polymorphic pointer to Wrapper Value
-    !-----------------------------------------------------------------
-        class(DimensionsWrapper3D_R8P_t), target, intent(IN)  :: this
-        class(*), pointer                                     :: Value(:,:,:)
-    !-----------------------------------------------------------------
-        Value => this%Value
-    end function
+SUBROUTINE DimensionsWrapper3D_R8P_toString(this, String, Separator)
+  !-----------------------------------------------------------------
+  !< Return the wrapper value as a string
+  !-----------------------------------------------------------------
+  CLASS(DimensionsWrapper3D_R8P_t), INTENT(IN) :: this
+  CHARACTER(len=:), ALLOCATABLE, INTENT(INOUT) :: String
+  CHARACTER(len=1), OPTIONAL, INTENT(IN) :: Separator
+  CHARACTER(len=1) :: Sep
+  INTEGER(I4P) :: idx2, idx3
+  !-----------------------------------------------------------------
+  String = ''
+  Sep = ','
+  IF (ALLOCATED(this%VALUE)) THEN
+    IF (PRESENT(Separator)) Sep = Separator
+    DO idx3 = 1, SIZE(this%VALUE, 3)
+      DO idx2 = 1, SIZE(this%VALUE, 2)
+        String = String//TRIM(str(n=this%VALUE(:, idx2, idx3)))//Sep
+      END DO
+    END DO
+    String = TRIM(ADJUSTL(String(:LEN(String) - 1)))
+  END IF
+END SUBROUTINE
 
-
-    subroutine DimensionsWrapper3D_R8P_GetPolymorphic(this, Value)
-    !-----------------------------------------------------------------
-    !< Get Unlimited Polymorphic Wrapper Value
-    !-----------------------------------------------------------------
-        class(DimensionsWrapper3D_R8P_t), intent(IN)  :: this
-        class(*), allocatable,            intent(OUT) :: Value(:,:,:)
-    !-----------------------------------------------------------------
-        allocate(Value(size(this%Value,dim=1),  &
-                       size(this%Value,dim=2),  &
-                       size(this%Value,dim=3)), &
-                       source=this%Value)
-    end subroutine
-
-
-    subroutine DimensionsWrapper3D_R8P_Free(this)
-    !-----------------------------------------------------------------
-    !< Free a DimensionsWrapper3D
-    !-----------------------------------------------------------------
-        class(DimensionsWrapper3D_R8P_t), intent(INOUT) :: this
-        integer                                         :: err
-    !-----------------------------------------------------------------
-        if(allocated(this%Value)) then
-            deallocate(this%Value, stat=err)
-            if(err/=0) call msg%Error(txt='Freeing Value: Deallocation error ('// &
-                                      str(no_sign=.true.,n=err)//')',             &
-                                      file=__FILE__, line=__LINE__ )
-        endif
-    end subroutine
-
-
-    function DimensionsWrapper3D_R8P_DataSizeInBytes(this) result(DataSizeInBytes)
-    !-----------------------------------------------------------------
-    !< Return the size in bytes of the stored data
-    !-----------------------------------------------------------------
-        class(DimensionsWrapper3D_R8P_t), intent(IN) :: this            !< Dimensions wrapper 3D
-        integer(I4P)                                 :: DataSizeInBytes !< Size of the stored data in bytes
-    !-----------------------------------------------------------------
-        DataSizeInBytes = byte_size(this%value(1,1,1))*size(this%value)
-    end function DimensionsWrapper3D_R8P_DataSizeInBytes
-
-
-    function DimensionsWrapper3D_R8P_isOfDataType(this, Mold) result(isOfDataType)
-    !-----------------------------------------------------------------
-    !< Check if Mold and Value are of the same datatype
-    !-----------------------------------------------------------------
-        class(DimensionsWrapper3D_R8P_t), intent(IN) :: this          !< Dimensions wrapper 3D
-        class(*),                         intent(IN) :: Mold          !< Mold for data type comparison
-        logical                                      :: isOfDataType  !< Boolean flag to check if Value is of the same data type as Mold
-    !-----------------------------------------------------------------
-        isOfDataType = .false.
-        select type (Mold)
-            type is (real(R8P))
-                isOfDataType = .true.
-        end select
-    end function DimensionsWrapper3D_R8P_isOfDataType
-
-
-    subroutine DimensionsWrapper3D_R8P_toString(this, String, Separator)
-    !-----------------------------------------------------------------
-    !< Return the wrapper value as a string
-    !-----------------------------------------------------------------
-        class(DimensionsWrapper3D_R8P_t), intent(IN)    :: this
-        character(len=:), allocatable,    intent(INOUT) :: String
-        character(len=1), optional,       intent(IN)    :: Separator
-        character(len=1)                                :: Sep
-        integer(I4P)                                    :: idx2,idx3
-    !-----------------------------------------------------------------
-        String = ''
-        Sep = ','
-        if(allocated(this%Value)) then
-            if(present(Separator)) Sep = Separator
-            do idx3=1, size(this%Value,3)
-                do idx2=1, size(this%Value,2)
-                    String = String // trim(str(n=this%Value(:,idx2,idx3))) // Sep
-                enddo
-            enddo
-            String = trim(adjustl(String(:len(String)-1)))
-        endif
-    end subroutine
-
-
-    subroutine DimensionsWrapper3D_R8P_Print(this, unit, prefix, iostat, iomsg)
-    !-----------------------------------------------------------------
-    !< Print Wrapper
-    !-----------------------------------------------------------------
-        class(DimensionsWrapper3D_R8P_t), intent(IN)  :: this         !< DimensionsWrapper
-        integer(I4P),                     intent(IN)  :: unit         !< Logic unit.
-        character(*), optional,           intent(IN)  :: prefix       !< Prefixing string.
-        integer(I4P), optional,           intent(OUT) :: iostat       !< IO error.
-        character(*), optional,           intent(OUT) :: iomsg        !< IO error message.
-        character(len=:), allocatable                 :: prefd        !< Prefixing string.
-        character(len=:), allocatable                 :: strvalue     !< String value
-        integer(I4P)                                  :: iostatd      !< IO error.
-        character(500)                                :: iomsgd       !< Temporary variable for IO error message.
-    !-----------------------------------------------------------------
-        prefd = '' ; if (present(prefix)) prefd = prefix
+SUBROUTINE DimensionsWrapper3D_R8P_Print(this, unit, prefix, iostat, iomsg)
+  !-----------------------------------------------------------------
+  !< Print Wrapper
+  !-----------------------------------------------------------------
+  CLASS(DimensionsWrapper3D_R8P_t), INTENT(IN) :: this !< DimensionsWrapper
+  INTEGER(I4P), INTENT(IN) :: unit !< Logic unit.
+  CHARACTER(*), OPTIONAL, INTENT(IN) :: prefix !< Prefixing string.
+  INTEGER(I4P), OPTIONAL, INTENT(OUT) :: iostat !< IO error.
+  CHARACTER(*), OPTIONAL, INTENT(OUT) :: iomsg !< IO error message.
+  CHARACTER(len=:), ALLOCATABLE :: prefd !< Prefixing string.
+  CHARACTER(len=:), ALLOCATABLE :: strvalue !< String value
+  INTEGER(I4P) :: iostatd !< IO error.
+  CHARACTER(500) :: iomsgd !< Temporary variable for IO error message.
+  !-----------------------------------------------------------------
+  prefd = ''; IF (PRESENT(prefix)) prefd = prefix
         write(unit=unit,fmt='(A)', advance="no",iostat=iostatd,iomsg=iomsgd) prefd//' Data Type = R8P'//&
-                        ', Dimensions = '//trim(str(no_sign=.true., n=this%GetDimensions()))//&
-                        ', Bytes = '//trim(str(no_sign=.true., n=this%DataSizeInBytes()))//&
-                        ', Value = '
-        call this%toString(strvalue)
-        write(unit=unit,fmt=*,iostat=iostatd,iomsg=iomsgd) strvalue
+    ', Dimensions = '//TRIM(str(no_sign=.TRUE., n=this%GetDimensions()))// &
+    ', Bytes = '//TRIM(str(no_sign=.TRUE., n=this%DataSizeInBytes()))// &
+    ', Value = '
+  CALL this%toString(strvalue)
+  WRITE (unit=unit, fmt=*, iostat=iostatd, iomsg=iomsgd) strvalue
 
-        if (present(iostat)) iostat = iostatd
-        if (present(iomsg))  iomsg  = iomsgd
-    end subroutine DimensionsWrapper3D_R8P_Print
+  IF (PRESENT(iostat)) iostat = iostatd
+  IF (PRESENT(iomsg)) iomsg = iomsgd
+END SUBROUTINE DimensionsWrapper3D_R8P_Print
 
-end module DimensionsWrapper3D_R8P
+END MODULE DimensionsWrapper3D_R8P

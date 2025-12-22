@@ -18,7 +18,7 @@
 ! License along with this library.
 !-----------------------------------------------------------------
 
-module WrapperFactoryListSingleton
+MODULE WrapperFactoryListSingleton
 
 USE WrapperFactoryList
 USE DLCAWrapperFactory
@@ -30,23 +30,23 @@ USE LWrapperFactory
 USE R4PWrapperFactory
 USE R8PWrapperFactory
 
-implicit none
-private
+IMPLICIT NONE
+PRIVATE
 
-    type(WrapperFactoryList_t), save :: TheWrapperFactoryList
-    !$OMP THREADPRIVATE(TheWrapperFactoryList)
+TYPE(WrapperFactoryList_t), SAVE :: TheWrapperFactoryList
+!$OMP THREADPRIVATE(TheWrapperFactoryList)
 
-public :: TheWrapperFactoryList
-public :: TheWrapperFactoryList_Init
+PUBLIC :: TheWrapperFactoryList
+PUBLIC :: TheWrapperFactoryList_Init
 
-contains
+CONTAINS
 
-    subroutine TheWrapperFactoryList_Init()
-    !-----------------------------------------------------------------
-    !< Set the dimensions of the Value contained in the wrapper
-    !-----------------------------------------------------------------
-        ! Add some Wrapper Factories to the list
-        call TheWrapperFactoryList%Init()
+SUBROUTINE TheWrapperFactoryList_Init()
+  !-----------------------------------------------------------------
+  !< Set the dimensions of the Value contained in the wrapper
+  !-----------------------------------------------------------------
+  ! Add some Wrapper Factories to the list
+  CALL TheWrapperFactoryList%Init()
         call TheWrapperFactoryList%AddWrapperFactory(key='I1P',  WrapperFactory=WrapperFactoryI1P)
         call TheWrapperFactoryList%AddWrapperFactory(key='I2P',  WrapperFactory=WrapperFactoryI2P)
         call TheWrapperFactoryList%AddWrapperFactory(key='I4P',  WrapperFactory=WrapperFactoryI4P)
@@ -55,6 +55,6 @@ contains
         call TheWrapperFactoryList%AddWrapperFactory(key='R8P',  WrapperFactory=WrapperFactoryR8P)
         call TheWrapperFactoryList%AddWrapperFactory(key='L',    WrapperFactory=WrapperFactoryL)
         call TheWrapperFactoryList%AddWrapperFactory(key='DLCA', WrapperFactory=WrapperFactoryDLCA)
-    end subroutine TheWrapperFactoryList_Init
+END SUBROUTINE TheWrapperFactoryList_Init
 
-end module WrapperFactoryListSingleton
+END MODULE WrapperFactoryListSingleton

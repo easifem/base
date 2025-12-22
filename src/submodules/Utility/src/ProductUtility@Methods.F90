@@ -46,6 +46,30 @@ END DO
 END PROCEDURE OTimesTilda1
 
 !----------------------------------------------------------------------------
+!                                                               OTimesTilda
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE OTimesTilda3
+INTEGER(I4B) :: sa(2), sb(2)
+INTEGER(I4B) :: ii, jj, pp, qq
+
+sa(1) = SIZE(a)
+sa(2) = SIZE(b)
+sb(1) = SIZE(c)
+sb(2) = SIZE(d)
+
+nrow = sa(1) * sb(1)
+ncol = sa(2) * sb(2)
+
+DO CONCURRENT(ii=1:sa(1), jj=1:sa(2), pp=1:sb(1), qq=1:sb(2))
+  ans((ii - 1) * sb(1) + pp, (jj - 1) * sb(2) + qq) = &
+    anscoeff * ans((ii - 1) * sb(1) + pp, (jj - 1) * sb(2) + qq) + &
+    scale * a(ii) * b(jj) * c(pp) * d(qq)
+END DO
+
+END PROCEDURE OTimesTilda3
+
+!----------------------------------------------------------------------------
 !                                                                OTimesTilda
 !----------------------------------------------------------------------------
 
@@ -227,12 +251,44 @@ END PROCEDURE OuterProd_r2r1
 !
 !----------------------------------------------------------------------------
 
+MODULE PROCEDURE OuterProd_r2r1_
+INTEGER(I4B) :: ii
+dim1 = SIZE(a, 1)
+dim2 = SIZE(a, 2)
+dim3 = SIZE(b)
+
+DO ii = 1, dim3
+  ans(1:dim1, 1:dim2, ii) = anscoeff * ans(1:dim1, 1:dim2, ii) + &
+                            scale * a(1:dim1, 1:dim2) * b(ii)
+END DO
+END PROCEDURE OuterProd_r2r1_
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
 MODULE PROCEDURE OuterProd_r2r2
 INTEGER(I4B) :: ii
 DO ii = 1, SIZE(b, 2)
   ans(:, :, :, ii) = OuterProd(a, b(:, ii))
 END DO
 END PROCEDURE OuterProd_r2r2
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE OuterProd_r2r2_
+INTEGER(I4B) :: ii
+
+dim4 = SIZE(b, 2)
+
+DO ii = 1, dim4
+  CALL OuterProd_( &
+    a=a, b=b(:, ii), ans=ans(:, :, :, ii), anscoeff=anscoeff, &
+    scale=scale, dim1=dim1, dim2=dim2, dim3=dim3)
+END DO
+END PROCEDURE OuterProd_r2r2_
 
 !----------------------------------------------------------------------------
 !
@@ -334,9 +390,45 @@ END PROCEDURE OuterProd_r1r1r1
 !
 !----------------------------------------------------------------------------
 
+! ans(i, j, k) = anscoeff * ans + scale * (a(i) * b(j)) * c(k))
+MODULE PROCEDURE OuterProd_r1r1r1_
+REAL(DFP) :: scale0
+INTEGER(I4B) :: kk
+
+dim1 = SIZE(a)
+dim2 = SIZE(b)
+dim3 = SIZE(c)
+
+DO kk = 1, dim3
+  scale0 = scale * c(kk)
+  CALL OuterProd_(a=a, b=b, ans=ans(:, :, kk), nrow=dim1, ncol=dim2, &
+                  anscoeff=anscoeff, scale=scale0)
+END DO
+END PROCEDURE OuterProd_r1r1r1_
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
 MODULE PROCEDURE OuterProd_r1r1r2
 ans = OuterProd(OuterProd(a, b), c)
 END PROCEDURE OuterProd_r1r1r2
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE OuterProd_r1r1r2_
+INTEGER(I4B) :: ii
+
+dim4 = SIZE(c, 2)
+
+DO ii = 1, dim4
+  CALL OuterProd_(a=a, b=b, c=c(:, ii), ans=ans(:, :, :, ii), &
+                  dim1=dim1, dim2=dim2, dim3=dim3, anscoeff=anscoeff, &
+                  scale=scale)
+END DO
+END PROCEDURE OuterProd_r1r1r2_
 
 !----------------------------------------------------------------------------
 !
@@ -409,6 +501,27 @@ END PROCEDURE OuterProd_r1r4r1
 MODULE PROCEDURE OuterProd_r2r1r1
 ans = OuterProd(OuterProd(a, b), c)
 END PROCEDURE OuterProd_r2r1r1
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+! ans = OuterProd(OuterProd(a, b), c)
+MODULE PROCEDURE OuterProd_r2r1r1_
+REAL(DFP) :: scale0
+INTEGER(I4B) :: kk
+
+dim1 = SIZE(a, 1)
+dim2 = SIZE(a, 2)
+dim3 = SIZE(b)
+dim4 = SIZE(c)
+
+DO kk = 1, dim4
+  scale0 = scale * c(kk)
+  CALL OuterProd_(a=a, b=b, ans=ans(:, :, :, kk), dim1=dim1, dim2=dim2, &
+                  dim3=dim3, anscoeff=anscoeff, scale=scale0)
+END DO
+END PROCEDURE OuterProd_r2r1r1_
 
 !----------------------------------------------------------------------------
 !

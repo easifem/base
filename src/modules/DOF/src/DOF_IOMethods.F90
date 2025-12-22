@@ -16,8 +16,9 @@
 !
 
 MODULE DOF_IOMethods
-USE GlobalData
-USE BaseType
+USE GlobalData, ONLY: DFP, I4B, LGT
+USE BaseType, ONLY: RealVector_, DOF_
+
 IMPLICIT NONE
 PRIVATE
 

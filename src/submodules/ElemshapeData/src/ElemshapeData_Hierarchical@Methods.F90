@@ -16,9 +16,14 @@
 !
 
 SUBMODULE(ElemShapeData_Hierarchical) Methods
+USE ErrorHandling, ONLY: Errormsg
+USE GlobalData, ONLY: stderr
+
 USE InputUtility, ONLY: Input
 
-USE ReferenceElement_Method, ONLY: Refelem_Initiate => Initiate
+USE ReferenceElement_Method, ONLY: Refelem_Initiate => Initiate, &
+                                 Refelem_GetFaceElemType => GetFaceElemType, &
+                                   Refelem_RefCoord_ => RefCoord_
 
 USE ElemShapeData_Method, ONLY: Elemsd_Allocate => ALLOCATE
 
@@ -40,6 +45,10 @@ USE Display_Method, ONLY: Display
 
 IMPLICIT NONE
 
+#ifdef DEBUG_VER
+CHARACTER(*), PARAMETER :: modName = "ElemshapeData_Hierarchical@Methods.F90"
+#endif
+
 CONTAINS
 
 !----------------------------------------------------------------------------
@@ -48,7 +57,7 @@ CONTAINS
 
 MODULE PROCEDURE HierarchicalElemShapeData1
 REAL(DFP), ALLOCATABLE :: temp(:, :, :)
-INTEGER(I4B) :: ipType0, basisType0, nips, nns, ii, jj, kk
+INTEGER(I4B) :: nips, nns, ii, jj, kk
 
 ! CALL DEALLOCATE (obj)
 
@@ -101,11 +110,13 @@ END PROCEDURE HierarchicalElemShapeData1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE HierarchicalElemShapeData2
-CALL HierarchicalElemShapeData1(obj=obj, quad=quad, nsd=refelem%nsd, &
-                           xidim=refelem%xidimension, elemType=refelem%name, &
-                    refelemCoord=refelem%xij, domainName=refelem%domainName, &
-              cellOrder=cellOrder, faceOrder=faceOrder, edgeOrder=edgeOrder, &
-          cellOrient=cellOrient, faceOrient=faceOrient, edgeOrient=edgeOrient)
+CALL HierarchicalElemShapeData( &
+  obj=obj, quad=quad, nsd=refelem%nsd, xidim=refelem%xidimension, &
+  elemType=refelem%name, refelemCoord=refelem%xij, &
+  domainName=refelem%domainName, cellOrder=cellOrder, &
+  faceOrder=faceOrder, edgeOrder=edgeOrder, &
+  cellOrient=cellOrient, faceOrient=faceOrient, &
+  edgeOrient=edgeOrient)
 END PROCEDURE HierarchicalElemShapeData2
 
 !----------------------------------------------------------------------------
@@ -113,9 +124,56 @@ END PROCEDURE HierarchicalElemShapeData2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE HierarchicalElemShapeData3
-CALL HierarchicalElemShapeData2(obj=obj, quad=quad, refelem=refelem, &
-              cellOrder=cellOrder, faceOrder=faceOrder, edgeOrder=edgeOrder, &
-          cellOrient=cellOrient, faceOrient=faceOrient, edgeOrient=edgeOrient)
+CALL HierarchicalElemShapeData( &
+  obj=obj, quad=quad, refelem=refelem, cellOrder=cellOrder, &
+  faceOrder=faceOrder, edgeOrder=edgeOrder, cellOrient=cellOrient, &
+  faceOrient=faceOrient, edgeOrient=edgeOrient)
 END PROCEDURE HierarchicalElemShapeData3
+
+!----------------------------------------------------------------------------
+!                                              HierarchicalFacetElemShapeData
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE HierarchicalFacetElemShapeData1
+#ifdef DEBUG_VER
+CHARACTER(*), PARAMETER :: myName = "HierarchicalFacetElemShapeData1()"
+#endif
+
+INTEGER(I4B) :: faceElemType, faceXidim, tFaceNodes, nrow, ncol
+REAL(DFP) :: faceRefelemCoord(3, 8)
+
+CALL HierarchicalElemShapeData(obj=obj, quad=quad, nsd=nsd, xidim=xidim, &
+                               elemType=elemType, refelemCoord=refelemCoord, &
+                               domainName=domainName, cellOrder=cellOrder, &
+                               faceOrder=faceOrder, edgeOrder=edgeOrder, &
+                               cellOrient=cellOrient, faceOrient=faceOrient, &
+                               edgeOrient=edgeOrient)
+
+CALL Refelem_GetFaceElemType(elemType=elemType, &
+                             localFaceNumber=localFaceNumber, &
+                             faceElemType=faceElemType, &
+                             opt=1, tFaceNodes=tFaceNodes)
+
+CALL Refelem_RefCoord_(elemType=faceElemType, refElem=domainName, &
+                       ans=faceRefelemCoord, nrow=nrow, ncol=ncol)
+
+#ifdef DEBUG_VER
+CALL AssertError1(.FALSE., myName, modName, __LINE__, &
+                  "This is routine is under development")
+#endif
+
+faceXidim = xidim - 1
+CALL HierarchicalElemShapeData( &
+  obj=facetElemsd, quad=facetQuad, nsd=nsd, xidim=faceXidim, &
+  elemType=faceElemType, refelemCoord=faceRefelemCoord(1:nrow, 1:ncol), &
+  domainName=domainName, cellOrder=faceOrder(:, localFaceNumber))
+
+END PROCEDURE HierarchicalFacetElemShapeData1
+
+!----------------------------------------------------------------------------
+!                                                              Include error
+!----------------------------------------------------------------------------
+
+#include "../../include/errors.F90"
 
 END SUBMODULE Methods

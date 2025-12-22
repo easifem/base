@@ -19,16 +19,16 @@ USE BaseMethod
 IMPLICIT NONE
 CONTAINS
 
-#include "./CM_1.inc"
-#include "./CM_2.inc"
-#include "./CM_3.inc"
-#include "./CM_4.inc"
-#include "./CM_5.inc"
-#include "./CM_6.inc"
-#include "./CM_7.inc"
-#include "./CM_8.inc"
-#include "./CM_9.inc"
-#include "./CM_10.inc"
+#include "./include/CM_1.F90"
+#include "./include/CM_2.F90"
+#include "./include/CM_3.F90"
+#include "./include/CM_4.F90"
+#include "./include/CM_5.F90"
+#include "./include/CM_6.F90"
+#include "./include/CM_7.F90"
+#include "./include/CM_8.F90"
+#include "./include/CM_9.F90"
+#include "./include/CM_10.F90"
 
 !----------------------------------------------------------------------------
 !                                                           ConvectiveMatrix
@@ -195,8 +195,9 @@ PURE SUBROUTINE CM1_(ans, test, trial, c, term1, term2, opt, nrow, ncol)
   ncol = trial%nns
   ans(1:nrow, 1:ncol) = 0.0_DFP
 
-  CALL GetProjectionOfdNdXt_(obj=trial, cdNdXt=p, val=c, nrow=ii, ncol=jj)
-  !!
+  CALL GetProjectionOfdNdXt_(obj=trial, ans=p, c=c, nrow=ii, ncol=jj, &
+                             crank=TypeFEVariableVector)
+
   DO ips = 1, trial%nips
     realval = trial%js(ips) * trial%ws(ips) * trial%thickness(ips)
     CALL OuterProd_(a=test%N(1:nrow, ips), &
@@ -235,7 +236,8 @@ PURE SUBROUTINE CM2_(ans, test, trial, c, term1, term2, opt, nrow, ncol)
   ncol = trial%nns
   ans(1:nrow, 1:ncol) = 0.0_DFP
 
-  CALL GetProjectionOfdNdXt_(obj=test, cdNdXt=p, val=c, nrow=ii, ncol=jj)
+  CALL GetProjectionOfdNdXt_(obj=test, ans=p, c=c, nrow=ii, ncol=jj, &
+                             crank=TypeFEVariableVector)
 
   DO ips = 1, trial%nips
     realval = trial%js(ips) * trial%ws(ips) * trial%thickness(ips)
@@ -273,7 +275,7 @@ PURE SUBROUTINE CM3_(ans, test, trial, term1, term2, c, opt, nrow, ncol)
   ncol = trial%nns
   ans(1:nrow, 1:ncol) = 0.0_DFP
 
-  CALL GetInterpolation_(obj=trial, val=c, interpol=realval, tsize=ii)
+  CALL GetInterpolation_(obj=trial, val=c, ans=realval, tsize=ii)
   realval(1:ii) = trial%js * trial%ws * trial%thickness * realval(1:ii)
 
   DO ips = 1, trial%nips
@@ -311,7 +313,7 @@ PURE SUBROUTINE CM4_(ans, test, trial, term1, term2, c, opt, nrow, ncol)
   ncol = SIZE(trial%N, 1)
   ans(1:nrow, 1:ncol) = 0.0_DFP
 
-  CALL GetInterpolation_(obj=trial, val=c, interpol=realval, tsize=ii)
+  CALL GetInterpolation_(obj=trial, val=c, ans=realval, tsize=ii)
   realval(1:ii) = trial%js * trial%ws * trial%thickness * realval(1:ii)
 
   DO ips = 1, trial%nips
@@ -347,7 +349,7 @@ PURE SUBROUTINE CM5_(ans, test, trial, term1, term2, c, opt, nrow, ncol)
   REAL(DFP) :: m4_2(test%nns, trial%nns, 1, trial%nsd)
   REAL(DFP), PARAMETER :: one = 1.0_DFP
 
-  CALL GetInterpolation_(obj=trial, val=c, interpol=realval, tsize=ii)
+  CALL GetInterpolation_(obj=trial, val=c, ans=realval, tsize=ii)
   realval(1:trial%nips) = trial%js * trial%ws * trial%thickness * realval(1:trial%nips)
 
   nrow = test%nns
@@ -400,7 +402,7 @@ PURE SUBROUTINE CM6_(ans, test, trial, term1, term2, c, opt, nrow, ncol)
   nrow = test%nns
   ncol = trial%nns
 
-  CALL GetInterpolation_(obj=trial, val=c, interpol=realval, tsize=ii)
+  CALL GetInterpolation_(obj=trial, val=c, ans=realval, tsize=ii)
   realval(1:ii) = trial%js * trial%ws * trial%thickness * realval(1:ii)
 
   IF (opt .EQ. 1) THEN
@@ -513,6 +515,8 @@ PURE SUBROUTINE CM9_(ans, test, trial, term1, term2, opt, nrow, ncol)
   INTEGER(I4B), INTENT(IN) :: term2
   INTEGER(I4B), INTENT(IN) :: opt
   INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+
+  ! internal variables
   INTEGER(I4B) :: ips, ii, jj, kk
   REAL(DFP), PARAMETER :: one = 1.0_DFP
   REAL(DFP) :: realval

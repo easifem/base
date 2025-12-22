@@ -123,8 +123,8 @@ END PROCEDURE ElasticNitscheMatrixNormal1b
 
 MODULE PROCEDURE ElasticNitscheMatrixNormal1c
 REAL(DFP), ALLOCATABLE :: lamBar(:), muBar(:)
-CALL getInterpolation(obj=trial, interpol=lamBar, val=lambda)
-CALL getInterpolation(obj=trial, interpol=muBar, val=mu)
+CALL GetInterpolation(obj=trial, ans=lamBar, val=lambda)
+CALL GetInterpolation(obj=trial, ans=muBar, val=mu)
 ans = ElasticNitscheMatrixNormal( &
 & test=test, trial=trial, lambda=lamBar, mu=muBar)
 DEALLOCATE (lamBar, muBar)

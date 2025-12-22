@@ -249,11 +249,21 @@ END PROCEDURE LagrangeVandermonde
 !                                                       LagrangeVandermonde_
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE LagrangeVandermonde_
+MODULE PROCEDURE LagrangeVandermonde1_
 INTEGER(I4B), ALLOCATABLE :: degree(:, :)
+degree = LagrangeDegree(order=order, elemType=elemType)
+CALL LagrangeVandermonde2_(xij=xij, degree=degree, ans=ans, nrow=nrow, &
+                           ncol=ncol)
+IF (ALLOCATED(degree)) DEALLOCATE (degree)
+END PROCEDURE LagrangeVandermonde1_
+
+!----------------------------------------------------------------------------
+!                                                       LagrangeVandermonde_
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE LagrangeVandermonde2_
 INTEGER(I4B) :: jj, nsd, ii
 
-degree = LagrangeDegree(order=order, elemType=elemType)
 nrow = SIZE(xij, 2)
 nsd = SIZE(degree, 2)
 ncol = SIZE(degree, 1)
@@ -280,8 +290,7 @@ CASE (3)
 
 END SELECT
 
-IF (ALLOCATED(degree)) DEALLOCATE (degree)
-END PROCEDURE LagrangeVandermonde_
+END PROCEDURE LagrangeVandermonde2_
 
 !----------------------------------------------------------------------------
 !                                                          EquidistancePoint

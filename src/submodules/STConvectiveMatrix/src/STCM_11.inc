@@ -43,7 +43,7 @@ PURE SUBROUTINE STCM_11a(ans, test, trial, term1, term2, rho, c, opt)
   !!
   !! main
   !!
-  CALL GetInterpolation(obj=trial, val=rho, interpol=rhobar)
+  CALL GetInterpolation(obj=trial, val=rho, ans=rhobar)
   !!
   if( opt .eq. 1 ) then
     !!
@@ -59,7 +59,8 @@ PURE SUBROUTINE STCM_11a(ans, test, trial, term1, term2, rho, c, opt)
       realval = trial(ipt)%js * trial(ipt)%ws * trial(ipt)%thickness * &
         & trial(ipt)%wt * trial(ipt)%jt * rhobar(:, ipt)
       !!
-      CALL GetProjectionOfdNTdXt(obj=trial(ipt), cdNTdXt=p, val=c)
+      CALL GetProjectionOfdNTdXt(obj=trial(ipt), ans=p, c=c, &
+      crank=TypeFeVariableVector)
       !!
       DO ips = 1, SIZE(realval)
         DO b = 1, SIZE(m6, 6)
@@ -90,7 +91,8 @@ PURE SUBROUTINE STCM_11a(ans, test, trial, term1, term2, rho, c, opt)
       realval = trial(ipt)%js * trial(ipt)%ws * trial(ipt)%thickness * &
         & trial(ipt)%wt * trial(ipt)%jt * rhobar(:, ipt)
       !!
-      CALL GetProjectionOfdNTdXt(obj=trial(ipt), cdNTdXt=p, val=c)
+      CALL GetProjectionOfdNTdXt(obj=trial(ipt), ans=p, c=c, &
+      crank=TypeFeVariableVector)
       !!
       DO ips = 1, SIZE(realval)
         DO b = 1, SIZE(m6, 6)
@@ -144,7 +146,7 @@ PURE SUBROUTINE STCM_11b(ans, test, trial, term1, term2, rho, c, opt)
   !!
   !! main
   !!
-  CALL GetInterpolation(obj=trial, val=rho, interpol=rhobar)
+  CALL GetInterpolation(obj=trial, val=rho, ans=rhobar)
   !!
   if( opt .eq. 1 ) then
     CALL Reallocate(m6, &
@@ -159,7 +161,8 @@ PURE SUBROUTINE STCM_11b(ans, test, trial, term1, term2, rho, c, opt)
       realval = trial(ipt)%js * trial(ipt)%ws * trial(ipt)%thickness * &
         & trial(ipt)%wt * trial(ipt)%jt * rhobar(:, ipt)
       !!
-      CALL GetProjectionOfdNTdXt(obj=test(ipt), cdNTdXt=p, val=c)
+      CALL GetProjectionOfdNTdXt(obj=test(ipt), ans=p, c=c, &
+      crank=TypeFeVariableVector)
       !!
       DO ips = 1, SIZE(realval)
         DO b = 1, SIZE(m6, 6)
@@ -189,7 +192,8 @@ PURE SUBROUTINE STCM_11b(ans, test, trial, term1, term2, rho, c, opt)
       realval = trial(ipt)%js * trial(ipt)%ws * trial(ipt)%thickness * &
         & trial(ipt)%wt * trial(ipt)%jt * rhobar(:, ipt)
       !!
-      CALL GetProjectionOfdNTdXt(obj=test(ipt), cdNTdXt=p, val=c)
+      CALL GetProjectionOfdNTdXt(obj=test(ipt), ans=p,c=c, & 
+      crank=TypeFeVariableVector)
       !!
       DO ips = 1, SIZE(realval)
         DO b = 1, SIZE(m6, 6)

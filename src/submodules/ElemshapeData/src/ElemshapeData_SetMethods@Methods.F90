@@ -17,11 +17,8 @@
 
 SUBMODULE(ElemshapeData_SetMethods) Methods
 USE ProductUtility, ONLY: VectorProduct, OuterProd
-
 USE InvUtility, ONLY: Det, Inv
-
 USE ReallocateUtility, ONLY: Reallocate
-
 USE MatmulUtility
 
 IMPLICIT NONE
@@ -49,9 +46,11 @@ END PROCEDURE stsd_SetThickness
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE elemsd_SetBarycentricCoord
-INTEGER(I4B) :: nns
-obj%coord(1:obj%nsd, 1:obj%nips) = MATMUL(val(1:obj%nsd, :), &
-                                          N(:, 1:obj%nips))
+INTEGER(I4B) :: valNNS
+
+valNNS = SIZE(val, 2)
+obj%coord(1:obj%nsd, 1:obj%nips) = MATMUL(val(1:obj%nsd, 1:valNNS), &
+                                          N(1:valNNS, 1:obj%nips))
 END PROCEDURE elemsd_SetBarycentricCoord
 
 !----------------------------------------------------------------------------
@@ -59,7 +58,7 @@ END PROCEDURE elemsd_SetBarycentricCoord
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE stsd_SetBarycentricCoord
-! TODO: Improve this function by removing the temporary variable 
+! TODO: Improve this function by removing the temporary variable
 ! It is better to store a temporary variable in obj itself
 CALL SetBarycentricCoord(obj=obj, val=MATMUL(val, T), N=N)
 END PROCEDURE stsd_SetBarycentricCoord
@@ -90,9 +89,12 @@ CASE (1)
 CASE (2)
 
   DO ips = 1, obj%nips
-    aa = DOT_PRODUCT(obj%jacobian(1:obj%nsd, 1, ips), obj%jacobian(1:obj%nsd, 1, ips))
-    bb = DOT_PRODUCT(obj%jacobian(1:obj%nsd, 2, ips), obj%jacobian(1:obj%nsd, 2, ips))
-    ab = DOT_PRODUCT(obj%jacobian(1:obj%nsd, 1, ips), obj%jacobian(1:obj%nsd, 2, ips))
+    aa = DOT_PRODUCT(obj%jacobian(1:obj%nsd, 1, ips), &
+                     obj%jacobian(1:obj%nsd, 1, ips))
+    bb = DOT_PRODUCT(obj%jacobian(1:obj%nsd, 2, ips), &
+                     obj%jacobian(1:obj%nsd, 2, ips))
+    ab = DOT_PRODUCT(obj%jacobian(1:obj%nsd, 1, ips), &
+                     obj%jacobian(1:obj%nsd, 2, ips))
     obj%js(ips) = SQRT(aa * bb - ab * ab)
   END DO
 
@@ -113,9 +115,7 @@ END PROCEDURE elemsd_SetJs
 MODULE PROCEDURE elemsd_SetdNdXt
 ! Define internal variables
 INTEGER(I4B) :: ips
-
 REAL(DFP) :: invJacobian(3, 3)
-
 LOGICAL(LGT) :: abool
 
 abool = obj%nsd .NE. obj%xidim
@@ -129,10 +129,9 @@ DO ips = 1, obj%nips
   CALL Inv(InvA=invJacobian, A=obj%jacobian(1:obj%nsd, 1:obj%nsd, ips))
 
   obj%dNdXt(1:obj%nns, 1:obj%nsd, ips) = &
-    MATMUL(obj%dNdXi(1:obj%nns, 1:obj%xidim, ips), &
+    MATMUL(obj%dNdXi(1:obj%nns, 1:obj%nsd, ips), &
            invJacobian(1:obj%nsd, 1:obj%nsd))
 END DO
-
 END PROCEDURE elemsd_SetdNdXt
 
 !----------------------------------------------------------------------------
@@ -140,8 +139,16 @@ END PROCEDURE elemsd_SetdNdXt
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE elemsd_SetJacobian
-obj%jacobian(1:obj%nsd, 1:obj%xidim, 1:obj%nips) = &
-  MATMUL(val(1:obj%nsd, :), dNdXi(:, 1:obj%xidim, 1:obj%nips))
+INTEGER(I4B) :: valNNS, minNNS, ips
+
+valNNS = SIZE(val, 2)
+minNNS = MIN(valNNS, obj%nns)
+
+DO ips = 1, obj%nips
+  obj%jacobian(1:obj%nsd, 1:obj%xidim, ips) = MATMUL( &
+                                              val(1:obj%nsd, 1:minNNS), &
+                                            dNdXi(1:minNNS, 1:obj%xidim, ips))
+END DO
 END PROCEDURE elemsd_SetJacobian
 
 !----------------------------------------------------------------------------
@@ -237,32 +244,26 @@ END PROCEDURE elemsd_Set1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE elemsd_Set2
-CALL SetJacobian(obj=cellobj, val=cellVal, dNdXi=celldNdXi)
-CALL SetJs(obj=cellobj)
-CALL SetdNdXt(obj=cellobj)
-CALL SetBarycentricCoord(obj=cellobj, val=cellval, N=cellN)
+call elemsd_Set1(obj=cellobj, val=cellval, N=cellN, dNdXi=celldNdXi)
 
-CALL SetJacobian(obj=facetobj, val=cellVal(:, facetNptrs), &
-                 dNdXi=facetdNdXi)
+CALL SetJacobian(obj=facetobj, val=facetval, dNdXi=facetdNdXi)
 CALL SetJs(obj=facetobj)
-CALL SetBarycentricCoord(obj=facetobj, val=cellval(:, facetNptrs), &
-                         N=facetN)
-
+CALL SetBarycentricCoord(obj=facetobj, val=facetval, N=facetN)
 CALL SetNormal(obj=facetobj)
 
 ! gradient depends upon all nodes of the element
 ! therefore the SIZE( dNdXt, 1 ) = NNS of cell
-
 ! CALL Reallocate( facetobj%dNdXt, SHAPE( cellobj%dNdXt) )
-facetobj%dNdXt = cellobj%dNdXt
+! facetobj%dNdXt(1:facetobj%nns, 1:facetobj%nsd, 1:facetobj%nips) = &
+!   cellobj%dNdXt(1:cellobj%nns, 1:cellobj%nsd, 1:cellobj%nips)
 
 ! I am copying normal Js from facet to cell
 ! In this way, we can use cellobj to construct the element matrix
+cellobj%normal(1:cellobj%nsd, 1:cellobj%nips) = &
+  facetobj%normal(1:facetobj%nsd, 1:facetobj%nips)
 
-cellobj%normal = facetobj%normal
-cellobj%Js = facetobj%Js
-cellobj%Ws = facetobj%Ws
-
+cellobj%Js(1:cellobj%nips) = facetobj%Js(1:facetobj%nips)
+cellobj%Ws(1:cellobj%nips) = facetobj%Ws(1:facetobj%nips)
 END PROCEDURE elemsd_Set2
 
 !----------------------------------------------------------------------------
@@ -270,25 +271,15 @@ END PROCEDURE elemsd_Set2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE elemsd_Set3
-!
 CALL Set( &
-  & facetobj=masterFacetObj, &
-  & cellobj=masterCellObj, &
-  & cellVal=masterCellVal, &
-  & cellN=masterCellN, &
-  & celldNdXi=masterCelldNdXi, &
-  & facetN=masterFacetN, &
-  & facetdNdXi=masterFacetdNdXi, facetNptrs=masterFacetNptrs)
-!
+  facetobj=masterFacetObj, cellobj=masterCellObj, cellVal=masterCellVal, &
+  cellN=masterCellN, celldNdXi=masterCelldNdXi, facetN=masterFacetN, &
+  facetdNdXi=masterFacetdNdXi, facetval=masterFacetVal)
+
 CALL Set( &
-  & facetobj=slaveFacetObj, &
-  & cellobj=slaveCellObj, &
-  & cellVal=slaveCellVal, &
-  & cellN=slaveCellN, &
-  & celldNdXi=slaveCelldNdXi, &
-  & facetN=slaveFacetN, &
-  & facetdNdXi=slaveFacetdNdXi, facetNptrs=slaveFacetNptrs)
-!
+  facetobj=slaveFacetObj, cellobj=slaveCellObj, cellVal=slaveCellVal, &
+  cellN=slaveCellN, celldNdXi=slaveCelldNdXi, facetN=slaveFacetN, &
+  facetdNdXi=slaveFacetdNdXi, facetVal=slaveFacetVal)
 END PROCEDURE elemsd_Set3
 
 !----------------------------------------------------------------------------

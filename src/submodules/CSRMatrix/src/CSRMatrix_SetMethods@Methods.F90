@@ -20,7 +20,18 @@
 ! summary: It contains method for setting values in [[CSRMatrix_]]
 
 SUBMODULE(CSRMatrix_SetMethods) Methods
-USE BaseMethod
+USE GlobalData, ONLY: FMT_NODES, FMT_DOF, NodesToDOF, DofToNodes
+USE DOF_Method, ONLY: GetIndex, GetNodeLoc, OPERATOR(.tdof.)
+USE ConvertUtility, ONLY: Convert
+USE CSRSparsity_Method, ONLY: CSR_SetIA => SetIA, CSR_SetJA => SetJA
+USE InputUtility, ONLY: Input
+USE F95_BLAS, ONLY: Scal, Copy
+USE ReallocateUtility, ONLY: Reallocate
+
+USE CSRMatrix_GetMethods, ONLY: OPERATOR(.StorageFMT.), &
+                                CSRMatrix_GetColIndex => GetColIndex
+USE CSRMatrix_ConstructorMethods, ONLY: CSRMatrix_Size => Size
+
 IMPLICIT NONE
 CONTAINS
 
@@ -41,8 +52,8 @@ MODULE PROCEDURE obj_set0
 INTEGER(I4B), ALLOCATABLE :: row(:), col(:)
 INTEGER(I4B) :: ii, jj, kk
 
-row = getIndex(obj=obj%csr%idof, nodeNum=nodenum)
-col = getIndex(obj=obj%csr%jdof, nodeNum=nodenum)
+row = GetIndex(obj=obj%csr%idof, nodeNum=nodenum)
+col = GetIndex(obj=obj%csr%jdof, nodeNum=nodenum)
 DO ii = 1, SIZE(row)
   DO kk = 1, SIZE(col)
     DO jj = obj%csr%IA(row(ii)), obj%csr%IA(row(ii) + 1) - 1
@@ -72,14 +83,14 @@ CASE (FMT_NODES)
     m2 = VALUE
   ELSE
     CALL Convert(From=VALUE, To=m2, Conversion=NodesToDOF, &
-      & nns=SIZE(nodenum), tDOF=tdof)
+                 nns=SIZE(nodenum), tDOF=tdof)
   END IF
 CASE (FMT_DOF)
   IF ((obj.StorageFMT.1) .EQ. FMT_DOF) THEN
     m2 = VALUE
   ELSE
     CALL Convert(From=VALUE, To=m2, Conversion=DofToNodes, &
-      & nns=SIZE(nodenum), tDOF=tdof)
+                 nns=SIZE(nodenum), tDOF=tdof)
   END IF
 END SELECT
 CALL Set(obj=obj, nodenum=nodenum, VALUE=m2)
@@ -378,9 +389,9 @@ END PROCEDURE obj_set14
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE obj_set15
-CALL COPY(Y=obj%A, X=VALUE%A)
+CALL Copy(Y=obj%A, X=VALUE%A)
 IF (PRESENT(scale)) THEN
-  CALL SCAL(X=obj%A, A=scale)
+  CALL Scal(X=obj%A, A=scale)
 END IF
 END PROCEDURE obj_set15
 
@@ -389,7 +400,7 @@ END PROCEDURE obj_set15
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE obj_SetIA
-CALL SetIA(obj%csr, irow, VALUE)
+CALL CSR_SetIA(obj=obj%csr, irow=irow, VALUE=VALUE)
 END PROCEDURE obj_SetIA
 
 !----------------------------------------------------------------------------
@@ -397,7 +408,46 @@ END PROCEDURE obj_SetIA
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE obj_SetJA
-CALL SetJA(obj%csr, indx, VALUE)
+CALL CSR_SetJA(obj=obj%csr, indx=indx, VALUE=VALUE)
 END PROCEDURE obj_SetJA
+
+!----------------------------------------------------------------------------
+!                                                               SetToSTMatrix
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE obj_SetToSTMatrix1
+REAL(DFP) :: scale0
+INTEGER(I4B) :: icol
+INTEGER(I4B) :: irow_rhs, trow_rhs, icol_rhs, colIndex_rhs(2), &
+                tcol_rhs
+INTEGER(I4B) :: irow_lhs, icol_lhs, colIndex_lhs(2), &
+                offset_row_lhs, offset_col_lhs
+
+scale0 = Input(default=1.0_DFP, option=scale)
+
+trow_rhs = CSRMatrix_Size(obj=VALUE, dims=1)
+offset_row_lhs = (itimecompo - 1) * trow_rhs
+
+! start row loop
+DO irow_rhs = 1, trow_rhs
+  ! Get the starting and ending data index for irow in value
+  colIndex_rhs = CSRMatrix_GetColIndex(obj=VALUE, irow=irow_rhs)
+  tcol_rhs = colIndex_rhs(2) - colIndex_rhs(1) + 1
+
+  ! Calculate the column offset for lhs
+  offset_col_lhs = (jtimecompo - 1) * tcol_rhs
+
+  irow_lhs = offset_row_lhs + irow_rhs
+  colIndex_lhs = CSRMatrix_GetColIndex(obj=obj, irow=irow_lhs)
+
+  DO icol = 1, tcol_rhs
+    icol_rhs = colIndex_rhs(1) + icol - 1
+    icol_lhs = colIndex_lhs(1) + offset_col_lhs + icol - 1
+
+    obj%A(icol_lhs) = scale0 * VALUE%A(icol_rhs)
+  END DO
+END DO
+
+END PROCEDURE obj_SetToSTMatrix1
 
 END SUBMODULE Methods

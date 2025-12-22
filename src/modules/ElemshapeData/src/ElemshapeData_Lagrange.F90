@@ -28,6 +28,7 @@ IMPLICIT NONE
 PRIVATE
 
 PUBLIC :: LagrangeElemShapeData
+PUBLIC :: LagrangeFacetElemShapeData
 PUBLIC :: Initiate
 
 !----------------------------------------------------------------------------
@@ -40,8 +41,10 @@ PUBLIC :: Initiate
 
 INTERFACE LagrangeElemShapeData
   MODULE SUBROUTINE LagrangeElemShapeData1(obj, quad, nsd, xidim, &
-               elemType, refelemCoord, domainName, order, ipType, basisType, &
-                                        coeff, firstCall, alpha, beta, lambda)
+                                           elemType, refelemCoord, &
+                                           domainName, order, ipType, &
+                                           basisType, coeff, firstCall, &
+                                           alpha, beta, lambda)
     CLASS(ElemshapeData_), INTENT(INOUT) :: obj
     !! element shape data
     TYPE(QuadraturePoint_), INTENT(IN) :: quad
@@ -85,7 +88,8 @@ END INTERFACE LagrangeElemShapeData
 
 INTERFACE LagrangeElemShapeData
   MODULE SUBROUTINE LagrangeElemShapeData2(obj, quad, refelem, order, &
-                     ipType, basisType, coeff, firstCall, alpha, beta, lambda)
+                                           ipType, basisType, coeff, &
+                                           firstCall, alpha, beta, lambda)
     CLASS(ElemshapeData_), INTENT(INOUT) :: obj
     TYPE(QuadraturePoint_), INTENT(IN) :: quad
     CLASS(ReferenceElement_), INTENT(IN) :: refelem
@@ -113,7 +117,8 @@ END INTERFACE LagrangeElemShapeData
 
 INTERFACE LagrangeElemShapeData
 MODULE SUBROUTINE LagrangeElemShapeData3(obj, quad, refelem, baseContinuity, &
-              baseInterpolation, order, ipType, basisType, coeff, firstCall, &
+                                           baseInterpolation, order, ipType, &
+                                           basisType, coeff, firstCall, &
                                            alpha, beta, lambda)
     CLASS(ElemshapeData_), INTENT(INOUT) :: obj
     TYPE(QuadraturePoint_), INTENT(IN) :: quad
@@ -140,5 +145,57 @@ END INTERFACE LagrangeElemShapeData
 INTERFACE Initiate
   MODULE PROCEDURE LagrangeElemShapeData3
 END INTERFACE Initiate
+
+!----------------------------------------------------------------------------
+!                                         LagrangeFacetElemShapeData@Methods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2023-08-16
+! summary: This routine initiate the shape data
+
+INTERFACE LagrangeFacetElemShapeData
+  MODULE SUBROUTINE LagrangeFacetElemShapeData1( &
+    obj, facetElemsd, quad, facetQuad, localFaceNumber, nsd, xidim, &
+    elemType, refelemCoord, domainName, order, ipType, basisType, coeff, &
+    firstCall, alpha, beta, lambda)
+    CLASS(ElemshapeData_), INTENT(INOUT) :: obj
+    !! element shape data
+    CLASS(ElemshapeData_), INTENT(INOUT) :: facetElemsd
+    !! facet element shape data
+    TYPE(QuadraturePoint_), INTENT(IN) :: quad
+    !! quadrature point
+    TYPE(QuadraturePoint_), INTENT(IN) :: facetQuad
+    !! quadrature point on local facet
+    INTEGER(I4B), INTENT(IN) :: localFaceNumber
+    !! local face number
+    INTEGER(I4B), INTENT(IN) :: nsd
+    !! number of spatial dimension
+    INTEGER(I4B), INTENT(IN) :: xidim
+    !!  dimension of xi
+    INTEGER(I4B), INTENT(IN) :: elemType
+    !! element type
+    REAL(DFP), INTENT(IN) :: refelemCoord(:, :)
+    !! coordinate of reference element
+    CHARACTER(*), INTENT(IN) :: domainName
+    !! name of reference element domain
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order of interpolation
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: ipType
+    !! Interpolation point type
+    !! Default value is Equidistance
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: basisType
+    !! Basis function types
+    !! Default value is Monomial
+    REAL(DFP), OPTIONAL, INTENT(INOUT) :: coeff(:, :)
+    !! Coefficient of Lagrange polynomials
+    LOGICAL(LGT), OPTIONAL :: firstCall
+    !! If firstCall is true, then coeff will be made
+    !! If firstCall is false, then coeff will be used
+    !! Default value of firstCall is True
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha, beta, lambda
+    !! Jacobi parameter and Ultra-spherical parameter
+  END SUBROUTINE LagrangeFacetElemShapeData1
+END INTERFACE LagrangeFacetElemShapeData
 
 END MODULE ElemshapeData_Lagrange

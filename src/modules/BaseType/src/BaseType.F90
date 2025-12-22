@@ -20,16 +20,78 @@
 ! [[BaseType]] module contains several userful user defined data types.
 
 MODULE BaseType
-USE GlobalData
+USE GlobalData, ONLY: Monomial, LagrangePolynomial, SerendipityPolynomial, &
+                      HierarchicalPolynomial, OrthogonalPolynomial, &
+                      JacobiPolynomial, LegendrePolynomial, &
+                      ChebyshevPolynomial, LobattoPolynomial, &
+                      UnscaledLobattoPolynomial, HermitPolynomial, &
+                      UltrasphericalPolynomial
+
+USE GlobalData, ONLY: I4B, LGT, DFP, DFPC
+
+USE GlobalData, ONLY: FMT_NODES, FMT_DOF
+
+USE GlobalData, ONLY: RelativeConvergence, ConvergenceInRes, &
+                      ConvergenceInSol, ConvergenceInResSol, &
+                      AbsoluteConvergence, NormL2, &
+                      StressTypeVoigt, OMP_THREADS_JOINED
+
+USE GlobalData, ONLY: Equidistance, EquidistanceQP, GaussQP, &
+                      GaussLegendreQP, GaussLegendreLobattoQP, &
+                      GaussLegendreRadau, GaussLegendreRadauLeft, &
+                      GaussLegendreRadauRight, GaussRadauQP, &
+                      GaussRadauLeftQP, GaussRadauRightQP, &
+                      GaussLobattoQP, GaussChebyshevQP, &
+                      GaussChebyshevLobattoQP, GaussChebyshevRadau, &
+                      GaussChebyshevRadauLeft, GaussChebyshevRadauRight, &
+                      GaussJacobiQP, GaussJacobiLobattoQP, &
+                      GaussJacobiRadau, GaussJacobiRadauLeft, &
+                      GaussJacobiRadauRight, GaussUltraSphericalQP, &
+                      GaussUltraSphericalLobattoQP, &
+                      GaussUltraSphericalRadau, &
+                      GaussUltraSphericalRadauLeft, &
+                      GaussUltraSphericalRadauRight, &
+                      ChenBabuskaQP, HesthavenQP, &
+                      FeketQP, BlythPozLegendreQP, &
+                      BlythPozChebyshevQP, IsaacLegendreQP, IsaacChebyshevQP
+
+USE GlobalData, ONLY: NO_PRECONDITION, LEFT_PRECONDITION, &
+                      RIGHT_PRECONDITION, LEFT_RIGHT_PRECONDITION, &
+                      PRECOND_JACOBI, PRECOND_ILU, PRECOND_SSOR, &
+                      PRECOND_HYBRID, PRECOND_IS, PRECOND_SAINV, &
+                      PRECOND_SAAMG, PRECOND_ILUC, PRECOND_ADDS, &
+                      PRECOND_ILUTP, PRECOND_ILUD, PRECOND_ILUDP, &
+                      PRECOND_ILU0, PRECOND_ILUK, PRECOND_ILUT
+
+USE GlobalData, ONLY: LIS_CG, LIS_BCG, LIS_BICG, LIS_CGS, LIS_BCGSTAB, &
+                      LIS_BICGSTAB, LIS_BICGSTABL, LIS_GPBICG, LIS_TFQMR, &
+                      LIS_OMN, LIS_FOM, LIS_ORTHOMIN, LIS_GMRES, LIS_GMR, &
+                      LIS_JACOBI, LIS_GS, LIS_SOR, LIS_BICGSAFE, LIS_CR, &
+                      LIS_BICR, LIS_CRS, LIS_BICRSTAB, LIS_GPBICR, &
+                      LIS_BICRSAFE, LIS_FGMRES, LIS_IDRS, LIS_IDR1, &
+                      LIS_MINRES, LIS_COCG, LIS_COCR, LIS_CGNR, LIS_CGN, &
+                      LIS_DBCG, LIS_DBICG, LIS_DQGMRES, LIS_SUPERLU
+
+USE GlobalData, ONLY: Scalar, Vector, Matrix, Nodal, Quadrature, &
+                      Constant, Space, Time, Spacetime, &
+                      SolutionDependent, RandomSpace
+
+USE GlobalData, ONLY: Point, Line, Triangle, &
+                      Quadrangle, Quadrangle4, Quadrangle8, Quadrangle9, &
+                      Quadrangle16, &
+                      Tetrahedron, Hexahedron, Prism, Pyramid
+
 USE String_Class, ONLY: String
+
 #ifdef USE_SuperLU
 USE SuperLUInterface
 USE ISO_C_BINDING, ONLY: C_CHAR, C_PTR, C_SIZE_T
 #endif
+
 IMPLICIT NONE
 PRIVATE
 
-PUBLIC :: Math
+PUBLIC :: TypeMathOpt
 PUBLIC :: BoundingBox_
 PUBLIC :: TypeBoundingBox
 PUBLIC :: BoundingBoxPointer_
@@ -159,6 +221,7 @@ PUBLIC :: TypeHCURL
 PUBLIC :: DG_
 PUBLIC :: TypeDG
 PUBLIC :: DEL_NONE, DEL_X, DEL_Y, DEL_Z, DEL_X_ALL, DEL_t
+PUBLIC :: DerivativeTerm_, TypeDerivativeTerm
 PUBLIC :: ElementData_
 PUBLIC :: TypeElementData
 PUBLIC :: ElementDataPointer_
@@ -201,29 +264,39 @@ PUBLIC :: TypeFEVariableOpt
 INTEGER(I4B), PARAMETER, PUBLIC :: MAX_RANK_FEVARIABLE = 6
 
 !----------------------------------------------------------------------------
-!                                                                 Math_
+!                                                                    MathOpt_
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 5 March 2022
 ! summary: Math class
 
-TYPE :: Math_
-  REAL(DFP) :: PI = 3.14159265359_DFP
+TYPE :: MathOpt_
+  REAL(DFP) :: zero = 0.0_DFP
+  REAL(DFP) :: half = 0.5_DFP
+  REAL(DFP) :: one = 1.0_DFP
+  REAL(DFP) :: two = 2.0_DFP
+  REAL(DFP) :: pi = 3.14159265359_DFP
   REAL(DFP) :: e = 2.718281828459045_DFP
+  REAL(DFP), DIMENSION(3, 3) :: eye3 = RESHAPE([ &
+                                               1.0_DFP, 0.0_DFP, 0.0_DFP, &
+                                               0.0_DFP, 1.0_DFP, 0.0_DFP, &
+                                               0.0_DFP, 0.0_DFP, 1.0_DFP], &
+                                               [3, 3])
+  REAL(DFP), DIMENSION(2, 2) :: eye2 = RESHAPE([ &
+                                               1.0_DFP, 0.0_DFP, &
+                                               0.0_DFP, 1.0_DFP], &
+                                               [2, 2])
   COMPLEX(DFPC) :: i = (0.0_DFP, 1.0_DFP)
   COMPLEX(DFPC) :: j = (0.0_DFP, 1.0_DFP)
-  REAL(DFP), DIMENSION(3, 3) :: Eye3 = RESHAPE([ &
-                                & 1.0_DFP, 0.0_DFP, 0.0_DFP, &
-                                & 0.0_DFP, 1.0_DFP, 0.0_DFP, &
-                                & 0.0_DFP, 0.0_DFP, 1.0_DFP], &
-                                & [3, 3])
-  REAL(DFP), DIMENSION(2, 2) :: Eye2 = RESHAPE([ &
-                              & 1.0_DFP, 0.0_DFP, 0.0_DFP, 1.0_DFP], &
-                              & [2, 2])
-END TYPE Math_
+  LOGICAL(LGT) :: yes = .TRUE.
+  LOGICAL(LGT) :: no = .FALSE.
+  INTEGER(I4B) :: zero_i = 0_I4B
+  INTEGER(I4B) :: one_i = 1_I4B
+  INTEGER(I4B) :: two_i = 2_I4B
+END TYPE MathOpt_
 
-TYPE(Math_), PARAMETER :: Math = Math_()
+TYPE(MathOpt_), PARAMETER :: TypeMathOpt = MathOpt_()
 
 !----------------------------------------------------------------------------
 !                                                               BoundingBox_
@@ -278,11 +351,11 @@ END TYPE BoundingBoxPointer_
 
 TYPE :: RealMatrix_
   INTEGER(I4B) :: tDimension = 0_I4B
-  CHARACTER(5) :: MatrixProp = 'UNSYM'
-  REAL(DFP), ALLOCATABLE :: Val(:, :)
+  CHARACTER(5) :: matrixProp = 'UNSYM'
+  REAL(DFP), ALLOCATABLE :: val(:, :)
 END TYPE RealMatrix_
 
-TYPE(RealMatrix_), PARAMETER :: TypeRealMatrix = RealMatrix_(Val=NULL())
+TYPE(RealMatrix_), PARAMETER :: TypeRealMatrix = RealMatrix_(val=NULL())
 
 TYPE :: RealMatrixPointer_
   CLASS(RealMatrix_), POINTER :: ptr => NULL()
@@ -300,10 +373,10 @@ END TYPE RealMatrixPointer_
 
 TYPE :: IntVector_
   INTEGER(I4B) :: tDimension = 1_I4B
-  INTEGER(I4B), ALLOCATABLE :: Val(:)
+  INTEGER(I4B), ALLOCATABLE :: val(:)
 END TYPE IntVector_
 
-TYPE(IntVector_), PARAMETER :: TypeIntVector = IntVector_(Val=NULL())
+TYPE(IntVector_), PARAMETER :: TypeIntVector = IntVector_(val=NULL())
 
 TYPE :: IntVectorPointer_
   CLASS(IntVector_), POINTER :: ptr => NULL()
@@ -529,8 +602,8 @@ TYPE :: CSRMatrix_
 #endif
 END TYPE CSRMatrix_
 
-TYPE(CSRMatrix_), PARAMETER :: TypeCSRMatrix = CSRMatrix_(&
-  & A=NULL(), slu=NULL())
+TYPE(CSRMatrix_), PARAMETER :: TypeCSRMatrix = CSRMatrix_( &
+                               A=NULL(), slu=NULL())
 
 TYPE :: CSRMatrixPointer_
   CLASS(CSRMatrix_), POINTER :: ptr => NULL()
@@ -1038,26 +1111,38 @@ TYPE(KeyValue_), PARAMETER :: TypeKeyValue = KeyValue_(VALUE=NULL())
 ! {!pages/FEVariable_.md!}
 
 TYPE :: FEVariable_
-  REAL(DFP), ALLOCATABLE :: val(:)
-  !! values
+  LOGICAL(LGT) :: isInit = .FALSE.
+  !! True if it is initiated
   INTEGER(I4B) :: s(MAX_RANK_FEVARIABLE) = 0
   !! shape of the data
+  INTEGER(I4B) :: tshape = 0
+  !! Total shape of the data.
+  !! Following values are set based on rank and varType
+  !! Scalar, constant: 1
+  !! Scalar, space: 1
+  !! Scalar, time: 1
+  !! Scalar, spaceTime: 2
+  !! Vector, constant: 1
+  !! Vector, space: 2
+  !! Vector, time: 3
+  !! Vector, spaceTime: 3
+  !! Matrix, constant: 2
+  !! Matrix, space: 3
+  !! Matrix, time: 3
+  !! Matrix, spaceTime: 4
   INTEGER(I4B) :: defineOn = 0
   !! Nodal: nodal values
   !! Quadrature: quadrature values
   INTEGER(I4B) :: varType = 0
-  !! Space
-  !! Time
-  !! SpaceTime
-  !! Constant
+  !! Space ! Time ! SpaceTime ! Constant
   INTEGER(I4B) :: rank = 0
-  !! Scalar
-  !! Vector
-  !! Matrix
+  !! Scalar ! Vector ! Matrix
   INTEGER(I4B) :: len = 0_I4B
   !! current total size
   INTEGER(I4B) :: capacity = 0_I4B
   !! capacity of the val
+  REAL(DFP), ALLOCATABLE :: val(:)
+  !! values
 END TYPE FEVariable_
 
 TYPE(FEVariable_), PARAMETER :: TypeFEVariable = FEVariable_(val=NULL())
@@ -1094,10 +1179,8 @@ TYPE :: FEVariableSpace_
 !! INTEGER(I4B):: Val = 2
 END TYPE FEVariableSpace_
 
-TYPE(FEVariableSpace_), PARAMETER :: TypeFEVariableSpace = &
-  & FEVariableSpace_()
-TYPE(FEVariableSpace_), PARAMETER :: TypeVariableSpace = &
-  & FEVariableSpace_()
+TYPE(FEVariableSpace_), PARAMETER :: TypeFEVariableSpace = FEVariableSpace_()
+TYPE(FEVariableSpace_), PARAMETER :: TypeVariableSpace = FEVariableSpace_()
 
 !----------------------------------------------------------------------------
 !                                                       FEVariableSpaceTime_
@@ -1205,8 +1288,8 @@ TYPE :: QuadraturePoint_
   INTEGER(I4B) :: txi = 0
 END TYPE QuadraturePoint_
 
-TYPE(QuadraturePoint_), PARAMETER :: TypeQuadraturePoint  &
-  & = QuadraturePoint_(points=NULL())
+TYPE(QuadraturePoint_), PARAMETER :: TypeQuadraturePoint = &
+                                     QuadraturePoint_(points=NULL())
 
 TYPE :: QuadraturePointPointer_
   CLASS(QuadraturePoint_), POINTER :: ptr => NULL()
@@ -1365,6 +1448,21 @@ INTEGER(I4B), PARAMETER :: DEL_X_ALL = 4
 INTEGER(I4B), PARAMETER :: DEL_t = -1
 
 !----------------------------------------------------------------------------
+!                                                             DerivativeTerm_
+!----------------------------------------------------------------------------
+
+TYPE :: DerivativeTerm_
+  INTEGER(I4B) :: NONE = 0
+  INTEGER(I4B) :: x = 1
+  INTEGER(I4B) :: y = 2
+  INTEGER(I4B) :: z = 3
+  INTEGER(I4B) :: xAll = 4
+  INTEGER(I4B) :: t = -1
+END TYPE DerivativeTerm_
+
+TYPE(DerivativeTerm_), PARAMETER :: TypeDerivativeTerm = DerivativeTerm_()
+
+!----------------------------------------------------------------------------
 !                                                            ElementData_
 !----------------------------------------------------------------------------
 
@@ -1477,7 +1575,7 @@ TYPE :: ElemShapeData_
   REAL(DFP), ALLOCATABLE :: dNdXi(:, :, :)
   !! Local derivative of a shape function
   !! shape = nns, xidim, nips
-  !! dim 1 = number of nodes in element 
+  !! dim 1 = number of nodes in element
   !! dim 2 = xi dimension (xi, eta, zeta)
   !! dim 3 = number of integration points
   REAL(DFP), ALLOCATABLE :: jacobian(:, :, :)
@@ -1859,6 +1957,9 @@ TYPE :: ElemNameOpt_
   INTEGER(I4B) :: line = Line
   INTEGER(I4B) :: triangle = Triangle
   INTEGER(I4B) :: quadrangle = Quadrangle
+  INTEGER(I4B) :: quadrangle8 = Quadrangle8
+  INTEGER(I4B) :: quadrangle9 = Quadrangle9
+  INTEGER(I4B) :: quadrangle16 = Quadrangle16
   INTEGER(I4B) :: tetrahedron = Tetrahedron
   INTEGER(I4B) :: hexahedron = Hexahedron
   INTEGER(I4B) :: prism = Prism
@@ -1884,6 +1985,7 @@ TYPE :: PolynomialOpt_
   INTEGER(I4B) :: unscaledLobatto = UnscaledLobattoPolynomial
   INTEGER(I4B) :: hermit = HermitPolynomial
   INTEGER(I4B) :: ultraspherical = UltrasphericalPolynomial
+  INTEGER(I4B) :: default = Monomial
 END TYPE PolynomialOpt_
 
 TYPE(PolynomialOpt_), PARAMETER :: TypePolynomialOpt = PolynomialOpt_()
@@ -1893,7 +1995,7 @@ TYPE(PolynomialOpt_), PARAMETER :: TypePolynomialOpt = PolynomialOpt_()
 !----------------------------------------------------------------------------
 
 TYPE :: QuadratureOpt_
-  INTEGER(I4B) :: equidistance = EquidistanceQP
+  INTEGER(I4B) :: Equidistance = EquidistanceQP
   INTEGER(I4B) :: Gauss = GaussQP
   INTEGER(I4B) :: GaussLegendre = GaussLegendreQP
   INTEGER(I4B) :: GaussLegendreLobatto = GaussLegendreLobattoQP
@@ -1927,6 +2029,7 @@ TYPE :: QuadratureOpt_
   INTEGER(I4B) :: BlythPozChebyshev = BlythPozChebyshevQP
   INTEGER(I4B) :: IsaacLegendre = IsaacLegendreQP
   INTEGER(I4B) :: IsaacChebyshev = IsaacChebyshevQP
+  INTEGER(I4B) :: default = GaussLegendreQP
 END TYPE QuadratureOpt_
 
 TYPE(QuadratureOpt_), PARAMETER :: TypeQuadratureOpt = QuadratureOpt_()
@@ -1948,6 +2051,10 @@ TYPE :: FEVariableOpt_
   INTEGER(I4B) :: spacetime = spacetime
   INTEGER(I4B) :: solutionDependent = solutionDependent
   INTEGER(I4B) :: randomSpace = randomSpace
+  INTEGER(I4B) :: maxRank = MAX_RANK_FEVARIABLE
+  INTEGER(I4B) :: capacityExpandFactor = 1
+  INTEGER(I4B) :: defaultVectorSize = 3
+  INTEGER(I4B) :: defaultMatrixSize = 3
 END TYPE FEVariableOpt_
 
 TYPE(FEVariableOpt_), PARAMETER :: TypeFEVariableOpt = FEVariableOpt_()

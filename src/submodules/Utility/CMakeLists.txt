@@ -52,4 +52,5 @@ target_sources(
           ${src_path}/SymUtility@Methods.F90
           ${src_path}/TriagUtility@Methods.F90
           ${src_path}/LinearAlgebraUtility@Methods.F90
-          ${src_path}/SafeSizeUtility@Methods.F90)
+          ${src_path}/SafeSizeUtility@Methods.F90
+          ${src_path}/ReverseUtility@Methods.F90)

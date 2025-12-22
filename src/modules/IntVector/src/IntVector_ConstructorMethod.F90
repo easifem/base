@@ -43,10 +43,10 @@ PUBLIC :: Copy_
 ! summary: Returns shape of the vector
 
 INTERFACE Shape
-  MODULE PURE FUNCTION intVec_shape(obj) RESULT(Ans)
-    CLASS(IntVector_), INTENT(IN) :: obj
-    INTEGER(I4B) :: Ans(1)
-  END FUNCTION intVec_shape
+  MODULE PURE FUNCTION obj_shape(obj) RESULT(ans)
+    TYPE(IntVector_), INTENT(IN) :: obj
+    INTEGER(I4B) :: ans(1)
+  END FUNCTION obj_shape
 END INTERFACE Shape
 
 !----------------------------------------------------------------------------
@@ -58,11 +58,11 @@ END INTERFACE Shape
 ! summary:         Returns size of the vector
 
 INTERFACE Size
-  MODULE PURE FUNCTION intVec_Size(obj, Dims) RESULT(Ans)
+  MODULE PURE FUNCTION obj_Size(obj, dims) RESULT(ans)
     TYPE(IntVector_), INTENT(IN) :: obj
-    INTEGER(I4B), INTENT(IN), OPTIONAL :: Dims
-    INTEGER(I4B) :: Ans
-  END FUNCTION intVec_Size
+    INTEGER(I4B), INTENT(IN), OPTIONAL :: dims
+    INTEGER(I4B) :: ans
+  END FUNCTION obj_Size
 END INTERFACE Size
 
 !----------------------------------------------------------------------------
@@ -78,10 +78,10 @@ END INTERFACE Size
 ! This function returns the total dimension (or rank) of an array,
 
 INTERFACE GetTotalDimension
-  MODULE PURE FUNCTION intVec_getTotalDimension(obj) RESULT(Ans)
+  MODULE PURE FUNCTION obj_getTotalDimension(obj) RESULT(ans)
     TYPE(IntVector_), INTENT(IN) :: obj
     INTEGER(I4B) :: ans
-  END FUNCTION intVec_getTotalDimension
+  END FUNCTION obj_getTotalDimension
 END INTERFACE GetTotalDimension
 
 !----------------------------------------------------------------------------
@@ -93,10 +93,10 @@ END INTERFACE GetTotalDimension
 ! summary:         Allocate memory for the vector
 
 INTERFACE ALLOCATE
-  MODULE PURE SUBROUTINE intVec_AllocateData(obj, Dims)
-    CLASS(IntVector_), INTENT(INOUT) :: obj
-    INTEGER(I4B), INTENT(IN) :: Dims
-  END SUBROUTINE intVec_AllocateData
+  MODULE PURE SUBROUTINE obj_AllocateData(obj, dims)
+    TYPE(IntVector_), INTENT(INOUT) :: obj
+    INTEGER(I4B), INTENT(IN) :: dims
+  END SUBROUTINE obj_AllocateData
 END INTERFACE ALLOCATE
 
 !----------------------------------------------------------------------------
@@ -108,10 +108,10 @@ END INTERFACE ALLOCATE
 ! summary: Allocate memory for the vector
 
 INTERFACE Reallocate
-  MODULE PURE SUBROUTINE intVec_Reallocate(obj, row)
+  MODULE PURE SUBROUTINE obj_Reallocate(obj, row)
     TYPE(IntVector_), ALLOCATABLE, INTENT(INOUT) :: obj(:)
     INTEGER(I4B), INTENT(IN) :: row
-  END SUBROUTINE intVec_Reallocate
+  END SUBROUTINE obj_Reallocate
 END INTERFACE Reallocate
 
 !----------------------------------------------------------------------------
@@ -123,9 +123,9 @@ END INTERFACE Reallocate
 ! summary: Deallocate memory occupied by IntVector
 
 INTERFACE DEALLOCATE
-  MODULE PURE SUBROUTINE intVec_Deallocate(obj)
-    CLASS(IntVector_), INTENT(INOUT) :: obj
-  END SUBROUTINE intVec_Deallocate
+  MODULE PURE SUBROUTINE obj_Deallocate(obj)
+    TYPE(IntVector_), INTENT(INOUT) :: obj
+  END SUBROUTINE obj_Deallocate
 END INTERFACE DEALLOCATE
 
 !----------------------------------------------------------------------------
@@ -142,10 +142,10 @@ END INTERFACE DEALLOCATE
 ! Only the size of intvector is set.
 
 INTERFACE Initiate
-  MODULE PURE SUBROUTINE intVec_initiate1(obj, tSize)
-    CLASS(IntVector_), INTENT(INOUT) :: obj
+  MODULE PURE SUBROUTINE obj_initiate1(obj, tSize)
+    TYPE(IntVector_), INTENT(INOUT) :: obj
     INTEGER(I4B), INTENT(IN) :: tSize
-  END SUBROUTINE intVec_initiate1
+  END SUBROUTINE obj_initiate1
 END INTERFACE Initiate
 
 !----------------------------------------------------------------------------
@@ -157,10 +157,10 @@ END INTERFACE Initiate
 ! summary: This routine initiates the vector of [[IntVector_]]
 
 INTERFACE Initiate
-  MODULE PURE SUBROUTINE intVec_initiate2(obj, tSize)
+  MODULE PURE SUBROUTINE obj_initiate2(obj, tSize)
     TYPE(IntVector_), ALLOCATABLE, INTENT(INOUT) :: obj(:)
     INTEGER(I4B), INTENT(IN) :: tSize(:)
-  END SUBROUTINE intVec_initiate2
+  END SUBROUTINE obj_initiate2
 END INTERFACE Initiate
 
 !----------------------------------------------------------------------------
@@ -173,10 +173,10 @@ END INTERFACE Initiate
 ! summary: Initiates an instance on [[IntVector_]] with lower & upper bounds
 
 INTERFACE Initiate
-  MODULE PURE SUBROUTINE intVec_initiate3(obj, a, b)
-    CLASS(IntVector_), INTENT(INOUT) :: obj
+  MODULE PURE SUBROUTINE obj_initiate3(obj, a, b)
+    TYPE(IntVector_), INTENT(INOUT) :: obj
     INTEGER(I4B), INTENT(IN) :: a, b
-  END SUBROUTINE intVec_initiate3
+  END SUBROUTINE obj_initiate3
 END INTERFACE Initiate
 
 !----------------------------------------------------------------------------
@@ -195,30 +195,30 @@ END INTERFACE Initiate
 ! This routine also define an assignment operator, obj=val
 
 INTERFACE Initiate
-  MODULE PURE SUBROUTINE intVec_initiate4a(obj, val)
-    CLASS(IntVector_), INTENT(INOUT) :: obj
+  MODULE PURE SUBROUTINE obj_initiate4a(obj, val)
+    TYPE(IntVector_), INTENT(INOUT) :: obj
     INTEGER(INT8), INTENT(IN) :: val(:)
-  END SUBROUTINE intVec_initiate4a
+  END SUBROUTINE obj_initiate4a
   !!
-  MODULE PURE SUBROUTINE intVec_initiate4b(obj, val)
-    CLASS(IntVector_), INTENT(INOUT) :: obj
+  MODULE PURE SUBROUTINE obj_initiate4b(obj, val)
+    TYPE(IntVector_), INTENT(INOUT) :: obj
     INTEGER(INT16), INTENT(IN) :: val(:)
-  END SUBROUTINE intVec_initiate4b
+  END SUBROUTINE obj_initiate4b
   !!
-  MODULE PURE SUBROUTINE intVec_initiate4c(obj, val)
-    CLASS(IntVector_), INTENT(INOUT) :: obj
+  MODULE PURE SUBROUTINE obj_initiate4c(obj, val)
+    TYPE(IntVector_), INTENT(INOUT) :: obj
     INTEGER(INT32), INTENT(IN) :: val(:)
-  END SUBROUTINE intVec_initiate4c
+  END SUBROUTINE obj_initiate4c
   !!
-  MODULE PURE SUBROUTINE intVec_initiate4d(obj, val)
-    CLASS(IntVector_), INTENT(INOUT) :: obj
+  MODULE PURE SUBROUTINE obj_initiate4d(obj, val)
+    TYPE(IntVector_), INTENT(INOUT) :: obj
     INTEGER(INT64), INTENT(IN) :: val(:)
-  END SUBROUTINE intVec_initiate4d
+  END SUBROUTINE obj_initiate4d
 END INTERFACE Initiate
 
 INTERFACE ASSIGNMENT(=)
-  MODULE PROCEDURE intVec_initiate4a, intVec_initiate4b, &
-    & intVec_initiate4c, intVec_initiate4d
+  MODULE PROCEDURE obj_initiate4a, obj_initiate4b, &
+    obj_initiate4c, obj_initiate4d
 END INTERFACE ASSIGNMENT(=)
 
 !----------------------------------------------------------------------------
@@ -237,20 +237,43 @@ END INTERFACE ASSIGNMENT(=)
 ! obj=val
 
 INTERFACE Initiate
-  MODULE PURE SUBROUTINE intVec_initiate5a(obj, val)
-    CLASS(IntVector_), INTENT(INOUT) :: obj
+  MODULE PURE SUBROUTINE obj_initiate5a(obj, val)
+    TYPE(IntVector_), INTENT(INOUT) :: obj
     REAL(REAL32), INTENT(IN) :: val(:)
-  END SUBROUTINE intVec_initiate5a
+  END SUBROUTINE obj_initiate5a
   !!
-  MODULE PURE SUBROUTINE intVec_initiate5b(obj, val)
-    CLASS(IntVector_), INTENT(INOUT) :: obj
+  MODULE PURE SUBROUTINE obj_initiate5b(obj, val)
+    TYPE(IntVector_), INTENT(INOUT) :: obj
     REAL(REAL64), INTENT(IN) :: val(:)
-  END SUBROUTINE intVec_initiate5b
+  END SUBROUTINE obj_initiate5b
 END INTERFACE Initiate
 
 INTERFACE ASSIGNMENT(=)
-  MODULE PROCEDURE intVec_initiate5a, intVec_initiate5b
+  MODULE PROCEDURE obj_initiate5a, obj_initiate5b
 END INTERFACE ASSIGNMENT(=)
+
+!----------------------------------------------------------------------------
+!                                                       Initiate@Constructor
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2025-07-25
+! summary: Initiate an instance of IntVector by copying data from other
+
+INTERFACE Initiate
+  MODULE PURE SUBROUTINE obj_initiate6(obj, obj2)
+    TYPE(IntVector_), INTENT(INOUT) :: obj
+    TYPE(IntVector_), INTENT(IN) :: obj2
+  END SUBROUTINE obj_initiate6
+END INTERFACE Initiate
+
+INTERFACE ASSIGNMENT(=)
+  MODULE PROCEDURE obj_initiate6
+END INTERFACE ASSIGNMENT(=)
+
+INTERFACE COPY
+  MODULE PROCEDURE obj_initiate6
+END INTERFACE COPY
 
 !----------------------------------------------------------------------------
 !                                                      IntVector@Constructor
@@ -262,10 +285,10 @@ END INTERFACE ASSIGNMENT(=)
 ! summary: IntVector returns an instance of [[IntVector_]] of given size
 
 INTERFACE IntVector
-  MODULE PURE FUNCTION intVec_Constructor1(tSize) RESULT(obj)
+  MODULE PURE FUNCTION obj_Constructor1(tSize) RESULT(obj)
     TYPE(IntVector_) :: obj
     INTEGER(I4B), INTENT(IN) :: tSize
-  END FUNCTION intVec_Constructor1
+  END FUNCTION obj_Constructor1
 END INTERFACE IntVector
 
 !----------------------------------------------------------------------------
@@ -278,10 +301,10 @@ END INTERFACE IntVector
 ! summary: Convert a integer vector into [[IntVector_]]
 
 INTERFACE IntVector
-  MODULE PURE FUNCTION intVec_Constructor2(Val) RESULT(obj)
+  MODULE PURE FUNCTION obj_Constructor2(Val) RESULT(obj)
     TYPE(IntVector_) :: obj
     INTEGER(I4B), INTENT(IN) :: Val(:)
-  END FUNCTION intVec_Constructor2
+  END FUNCTION obj_Constructor2
 END INTERFACE IntVector
 
 !----------------------------------------------------------------------------
@@ -297,10 +320,10 @@ END INTERFACE IntVector
 ! Real32, Real64
 !
 INTERFACE IntVector
-  MODULE PURE FUNCTION intVec_Constructor3(Val) RESULT(obj)
+  MODULE PURE FUNCTION obj_Constructor3(Val) RESULT(obj)
     TYPE(IntVector_) :: obj
     REAL(DFP), INTENT(IN) :: Val(:)
-  END FUNCTION intVec_Constructor3
+  END FUNCTION obj_Constructor3
 END INTERFACE IntVector
 
 !----------------------------------------------------------------------------
@@ -313,10 +336,10 @@ END INTERFACE IntVector
 ! summary: Returns the pointer to an instance of [[IntVector_]] of tsize
 
 INTERFACE IntVector_Pointer
-  MODULE PURE FUNCTION intVec_Constructor_1(tSize) RESULT(obj)
-    CLASS(IntVector_), POINTER :: obj
+  MODULE PURE FUNCTION obj_Constructor_1(tSize) RESULT(obj)
+    TYPE(IntVector_), POINTER :: obj
     INTEGER(I4B), INTENT(IN) :: tSize
-  END FUNCTION intVec_Constructor_1
+  END FUNCTION obj_Constructor_1
 END INTERFACE IntVector_Pointer
 
 !----------------------------------------------------------------------------
@@ -329,10 +352,10 @@ END INTERFACE IntVector_Pointer
 ! summary: Converts integer vector into [[intvector_]] and returns the pointer
 
 INTERFACE IntVector_Pointer
-  MODULE PURE FUNCTION intVec_Constructor_2(Val) RESULT(obj)
-    CLASS(IntVector_), POINTER :: obj
+  MODULE PURE FUNCTION obj_Constructor_2(Val) RESULT(obj)
+    TYPE(IntVector_), POINTER :: obj
     INTEGER(I4B), INTENT(IN) :: Val(:)
-  END FUNCTION intVec_Constructor_2
+  END FUNCTION obj_Constructor_2
 END INTERFACE IntVector_Pointer
 
 !----------------------------------------------------------------------------
@@ -345,10 +368,10 @@ END INTERFACE IntVector_Pointer
 ! summary: Converts real vector into [[intvector_]] and returns the pointer
 
 INTERFACE IntVector_Pointer
-  MODULE PURE FUNCTION intVec_Constructor_3(Val) RESULT(obj)
-    CLASS(IntVector_), POINTER :: obj
+  MODULE PURE FUNCTION obj_Constructor_3(Val) RESULT(obj)
+    TYPE(IntVector_), POINTER :: obj
     REAL(DFP), INTENT(IN) :: Val(:)
-  END FUNCTION intVec_Constructor_3
+  END FUNCTION obj_Constructor_3
 END INTERFACE IntVector_Pointer
 
 !----------------------------------------------------------------------------
@@ -356,10 +379,10 @@ END INTERFACE IntVector_Pointer
 !----------------------------------------------------------------------------
 
 INTERFACE ASSIGNMENT(=)
-  MODULE PURE SUBROUTINE IntVec_assign_a(Val, obj)
+  MODULE PURE SUBROUTINE obj_assign_a(Val, obj)
     INTEGER(I4B), ALLOCATABLE, INTENT(INOUT) :: Val(:)
-    CLASS(IntVector_), INTENT(IN) :: obj
-  END SUBROUTINE IntVec_assign_a
+    TYPE(IntVector_), INTENT(IN) :: obj
+  END SUBROUTINE obj_assign_a
 END INTERFACE ASSIGNMENT(=)
 
 !----------------------------------------------------------------------------
@@ -368,7 +391,7 @@ END INTERFACE ASSIGNMENT(=)
 
 INTERFACE Convert
   MODULE PURE SUBROUTINE obj_convert_int(From, To)
-    CLASS(IntVector_), INTENT(IN) :: From
+    TYPE(IntVector_), INTENT(IN) :: From
     INTEGER(I4B), ALLOCATABLE, INTENT(INOUT) :: To(:)
   END SUBROUTINE obj_convert_int
 END INTERFACE Convert

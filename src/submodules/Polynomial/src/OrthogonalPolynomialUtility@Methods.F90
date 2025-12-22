@@ -201,6 +201,8 @@ END PROCEDURE EvalAllOrthopol
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE EvalAllOrthopol_
+INTEGER(I4B) :: ii
+
 SELECT CASE (orthopol)
 CASE (poly%Jacobi)
   CALL JacobiEvalAll_(n=n, alpha=alpha, beta=beta, x=x, ans=ans, nrow=nrow, &
@@ -219,6 +221,17 @@ CASE (poly%Lobatto)
 
 CASE (poly%UnscaledLobatto)
   CALL UnscaledLobattoEvalAll_(n=n, x=x, ans=ans, nrow=nrow, ncol=ncol)
+
+CASE (poly%Monomial)
+
+  nrow = SIZE(x) !! Number of points of evaluation
+  ncol = n + 1 !! Number of basis functions
+
+  ans(1:nrow, 1) = 1.0_DFP
+  DO ii = 1, n
+    ans(1:nrow, ii + 1) = ans(1:nrow, ii) * x(1:nrow)
+  END DO
+
 END SELECT
 END PROCEDURE EvalAllOrthopol_
 
@@ -237,6 +250,9 @@ END PROCEDURE GradientEvalAllOrthopol
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE GradientEvalAllOrthopol_
+INTEGER(I4B) :: indx, ii, jj
+REAL(DFP) :: areal
+
 SELECT CASE (orthopol)
 CASE (poly%Jacobi)
   ! ans(1:nrow, 1:ncol) = JacobiGradientEvalAll(n=n, alpha=alpha, beta=beta, x=x)
@@ -264,6 +280,18 @@ CASE (poly%UnscaledLobatto)
   ! ans(1:nrow, 1:ncol) = UnscaledLobattoGradientEvalAll(n=n, x=x)
   CALL UnscaledLobattoGradientEvalAll_(n=n, x=x, ans=ans, &
                                        nrow=nrow, ncol=ncol)
+
+CASE (poly%Monomial)
+  nrow = SIZE(x) !! Number of points of evaluation
+  ncol = n + 1 !! Number of basis functions
+
+  DO jj = 0, n
+    indx = MAX(jj - 1_I4B, 0_I4B)
+    areal = REAL(jj, kind=DFP)
+    DO ii = 1, nrow
+      ans(ii, jj + 1) = areal * (x(ii)**(indx))
+    END DO
+  END DO
 
 END SELECT
 END PROCEDURE GradientEvalAllOrthopol_

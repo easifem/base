@@ -18,641 +18,164 @@
 ! This file contains the interpolation methods interfaces\
 
 MODULE ElemshapeData_InterpolMethods
-USE BaseType
-USE GlobalData
+USE GlobalData, ONLY: DFP, I4B, LGT
+USE BaseType, ONLY: ElemShapeData_, STElemShapeData_, FEVariable_
 IMPLICIT NONE
 PRIVATE
 
-PUBLIC :: GetInterpolation
 PUBLIC :: GetInterpolation_
+PUBLIC :: GetInterpolation
 PUBLIC :: Interpolation
-PUBLIC :: STInterpolation
 
 !----------------------------------------------------------------------------
-!                                           getInterpolation@InterpolMethods
-!----------------------------------------------------------------------------
-
-!> author: Vikas Sharma, Ph. D.
-! date: 4 March 2021
-! summary: This subroutine performs interpolations of scalar
-!
-!# Introduction
-!
-! This subroutine performs interpolation of a scalar from its spatial nodal
-! values.
-!
-! $$u=u_{I}N^{I}$$
-!
-! - TODO Make it work when the size of val is not the same as NNS
-
-INTERFACE GetInterpolation
-  MODULE PURE SUBROUTINE scalar_getInterpolation_1(obj, interpol, val)
-    CLASS(ElemshapeData_), INTENT(IN) :: obj
-    REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: interpol(:)
-    !! Interpolation value of of scalar
-    REAL(DFP), INTENT(IN) :: val(:)
-    !! spatial nodal values of scalar
-  END SUBROUTINE scalar_getInterpolation_1
-END INTERFACE GetInterpolation
-
-!----------------------------------------------------------------------------
-!
-!----------------------------------------------------------------------------
-
-!> author: Shion Shimizu
-! date:   2025-03-03
-! summary:  get interpolation of scalar without allocation
-
-INTERFACE GetInterpolation_
-  MODULE PURE SUBROUTINE scalar_getInterpolation1_(obj, interpol, val, tsize)
-    CLASS(ElemshapeData_), INTENT(IN) :: obj
-    REAL(DFP), INTENT(INOUT) :: interpol(:)
-    REAL(DFP), INTENT(IN) :: val(:)
-    INTEGER(I4B), INTENT(OUT) :: tsize
-  END SUBROUTINE scalar_getInterpolation1_
-END INTERFACE GetInterpolation_
-
-!----------------------------------------------------------------------------
-!                                           getInterpolation@InterpolMethods
-!----------------------------------------------------------------------------
-
-!> author: Vikas Sharma, Ph. D.
-! date: 1 Nov 2021
-! summary: This subroutine performs interpolations of scalar nodal values
-!
-!# Introduction
-!
-! This subroutine performs interpolation of a scalar from its space-time nodal
-! values.
-!
-! $$u=u^{a}_{I}N^{I}T_{a}$$
-!
-! The resultant represents the interpolation value of `val` at
-! spatial-quadrature points
-
-INTERFACE GetInterpolation
-  MODULE PURE SUBROUTINE scalar_getInterpolation_2(obj, interpol, val)
-    CLASS(ElemshapeData_), INTENT(IN) :: obj
-    REAL(DFP), INTENT(INOUT), ALLOCATABLE :: interpol(:)
-    !! Interpolation of scalar
-    REAL(DFP), INTENT(IN) :: val(:, :)
-    !! space-time nodal values of scalar
-  END SUBROUTINE scalar_getInterpolation_2
-END INTERFACE GetInterpolation
-
-!----------------------------------------------------------------------------
-!
-!----------------------------------------------------------------------------
-
-INTERFACE GetInterpolation_
-  MODULE PURE SUBROUTINE scalar_getInterpolation2_(obj, interpol, val, tsize)
-    CLASS(ElemshapeData_), INTENT(IN) :: obj
-    REAL(DFP), INTENT(INOUT) :: interpol(:)
-    REAL(DFP), INTENT(IN) :: val(:, :)
-    INTEGER(I4B), INTENT(OUT) :: tsize
-  END SUBROUTINE scalar_getInterpolation2_
-END INTERFACE GetInterpolation_
-
-!----------------------------------------------------------------------------
-!                                           getInterpolation@InterpolMethods
-!----------------------------------------------------------------------------
-
-!> author: Vikas Sharma, Ph. D.
-! date: 1 Nov 2021
-! summary: This subroutine performs interpolations of scalar nodal values
-!
-!# Introduction
-!
-! This subroutine performs interpolation of a scalar from its space-time nodal
-! values.
-!
-! $$u=u^{a}_{I}N^{I}T_{a}$$
-!
-! The resultant represents the interpolation value of `val` at
-! spatial-temporal quadrature points
-
-INTERFACE GetInterpolation
-  MODULE PURE SUBROUTINE scalar_getInterpolation_3(obj, interpol, val)
-    CLASS(STElemshapeData_), INTENT(IN) :: obj(:)
-    REAL(DFP), INTENT(INOUT), ALLOCATABLE :: interpol(:, :)
-    !! space-time Interpolation of scalar
-    REAL(DFP), INTENT(IN) :: val(:, :)
-    !! space-time nodal values of scalar
-  END SUBROUTINE scalar_getInterpolation_3
-END INTERFACE GetInterpolation
-
-!----------------------------------------------------------------------------
-!
-!----------------------------------------------------------------------------
-
-!> author: Shion Shimizu
-! date:   2025-03-03
-! summary:  get interpolation of scalar without allocation
-
-INTERFACE GetInterpolation_
-  MODULE PURE SUBROUTINE scalar_getInterpolation3_(obj, interpol, val, &
-                                                   nrow, ncol)
-    CLASS(STElemshapeData_), INTENT(IN) :: obj(:)
-    REAL(DFP), INTENT(INOUT) :: interpol(:, :)
-    REAL(DFP), INTENT(IN) :: val(:, :)
-    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
-  END SUBROUTINE scalar_getInterpolation3_
-END INTERFACE GetInterpolation_
-
-!----------------------------------------------------------------------------
-!                                           getInterpolation@InterpolMethods
+!                                                   GetInterpolation@Methods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 4 March 2021
-! summary: returns the interpolation of scalar FEVariable
+! summary: returns the interpolation of a FEVariable
 !
 !# Introduction
 !
-! Returns the interpolation of scalar variable
-! The scalar variable can be+
+! If ans is not initiated then it will be initiated
+! If ans is initiated then we will just call GetInterpolation_
+! which does not alter the properties of ans, it just fills the
+! value of ans
 !
-! - constant
-! - spatial nodal values
-! - spatial quadrature values
-! - space-time nodal values
+! - Returns the interpolation of a FEVariable_
+! - The result is returned in ans, which is a FEVariable
+! - The rank of ans is same as the rank of val
+! - ans is defined on Quadrature, that is, ans is QuadratureVariable
+! - ans will vary in space only
 !
-!@note
-!This routine calls [[Interpolation]] function from the same module.
-!@endnote
+! - The val can have following ranks; scalar, vector, matrix
+! - the val can be defined on quadrature (do nothing) or nodal (interpol)
+! - The `vartype` of val can be constant, space, time, spacetime
+!
+! - If ans is not initiated then  it will be initiated and then we will call
+!   GetInterpolation_. In this case following properties are set for ans
+!   - rank of ans and rank of val will be same
+!   - vartype of ans will Space (We cannot set spacetime or time as
+!                                we do not have time shape function for
+!                                all quadrature points in time in obj)
+
+INTERFACE
+  MODULE PURE SUBROUTINE GetInterpolation1(obj, ans, val)
+    CLASS(ElemshapeData_), INTENT(IN) :: obj
+    TYPE(FEVariable_), INTENT(INOUT) :: ans
+    TYPE(FEVariable_), INTENT(IN) :: val
+  END SUBROUTINE GetInterpolation1
+END INTERFACE
 
 INTERFACE GetInterpolation
-  MODULE PURE SUBROUTINE scalar_getInterpolation_4(obj, interpol, val)
-    CLASS(ElemshapeData_), INTENT(IN) :: obj
-    REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: interpol(:)
-    !! interpolation of scalar
-    TYPE(FEVariable_), INTENT(IN) :: val
-    !! Scalar FE variable
-  END SUBROUTINE scalar_getInterpolation_4
+  MODULE PROCEDURE GetInterpolation1
 END INTERFACE GetInterpolation
 
 !----------------------------------------------------------------------------
-!
-!----------------------------------------------------------------------------
-
-!> author: Shion Shimizu
-! date:   2025-03-03
-! summary:  get interpolation of scalar without allocation
-
-INTERFACE GetInterpolation_
-  MODULE PURE SUBROUTINE scalar_getInterpolation4_(obj, interpol, val, tsize)
-    CLASS(ElemshapeData_), INTENT(IN) :: obj
-    REAL(DFP), INTENT(INOUT) :: interpol(:)
-    TYPE(FEVariable_), INTENT(IN) :: val
-    INTEGER(I4B), INTENT(OUT) :: tsize
-  END SUBROUTINE scalar_getInterpolation4_
-END INTERFACE GetInterpolation_
-
-!----------------------------------------------------------------------------
-!                                           getInterpolation@InterpolMethods
-!----------------------------------------------------------------------------
-
-!> author: Vikas Sharma, Ph. D.
-! date: 1 Nov 2021
-! summary: This subroutine performs interpolations of scalar FEVariable
-!
-!# Introduction
-!
-! This subroutine performs interpolation of a scalar [[FEVariable_]]
-! The FE Variable can be a
-!
-! - constant
-! - spatial nodal values
-! - spatial quadrature values
-! - space-time nodal values
-!
-! $$u=u^{a}_{I}N^{I}T_{a}$$
-!
-! The resultant represents the interpolation value of `val` at
-! spatial-quadrature points
-
-INTERFACE GetInterpolation
-  MODULE PURE SUBROUTINE scalar_getInterpolation_5(obj, interpol, val)
-    CLASS(STElemshapeData_), INTENT(IN) :: obj(:)
-    REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: interpol(:, :)
-    !! space-time interpolation of scalar
-    TYPE(FEVariable_), INTENT(IN) :: val
-    !! scalar FE variable
-  END SUBROUTINE scalar_getInterpolation_5
-END INTERFACE GetInterpolation
-
-!----------------------------------------------------------------------------
-!
-!----------------------------------------------------------------------------
-
-!> author: Shion Shimizu
-! date:   2025-03-03
-! summary:  get interpolation of scalar without allocation
-
-INTERFACE GetInterpolation_
-  MODULE PURE SUBROUTINE scalar_getInterpolation5_(obj, interpol, val, &
-                                                   nrow, ncol)
-    CLASS(STElemshapeData_), INTENT(IN) :: obj(:)
-    REAL(DFP), INTENT(INOUT) :: interpol(:, :)
-    TYPE(FEVariable_), INTENT(IN) :: val
-    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
-  END SUBROUTINE scalar_getInterpolation5_
-END INTERFACE GetInterpolation_
-
-!----------------------------------------------------------------------------
-!                                           getInterpolation@InterpolMethods
+!                                                   GetInterpolation@Methods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 4 March 2021
-! summary: This subroutine performs interpolation of a vector
+! summary: returns the interpolation of a FEVariable
 !
 !# Introduction
 !
-! This subroutine performs interpolation of a vector from its spatial
-! nodal values
+! - Returns the interpolation of a FEVariable_
+! - The result is returned in ans
+! - ans is a FEVariable
+! - The rank of ans is same as the rank of val
+! - ans is defined on Quadrature, that is, ans is QuadratureVariable
 !
-! $$u_{i}=u_{iI}N^{I}$$
+! - The val can have following ranks; scalar, vector, matrix
+! - the val can be defined on quadrature (do nothing) or nodal (interpol)
+! - The `vartype` of val can be constant, space, time, spacetime
 
-INTERFACE GetInterpolation
-  MODULE PURE SUBROUTINE vector_getInterpolation_1(obj, interpol, val)
+INTERFACE
+  MODULE PURE SUBROUTINE GetInterpolation_1(obj, ans, val)
     CLASS(ElemshapeData_), INTENT(IN) :: obj
-    REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: interpol(:, :)
-    !! interpolation of vector
-    REAL(DFP), INTENT(IN) :: val(:, :)
-    !! nodal values of vector in `xiJ` format
-  END SUBROUTINE vector_getInterpolation_1
-END INTERFACE GetInterpolation
-
-!----------------------------------------------------------------------------
-!
-!----------------------------------------------------------------------------
-
-!> author: Shion Shimizu
-! date:   2025-03-03
-! summary:  get interpolation of vector without allocation
+    TYPE(FEVariable_), INTENT(INOUT) :: ans
+    TYPE(FEVariable_), INTENT(IN) :: val
+  END SUBROUTINE GetInterpolation_1
+END INTERFACE
 
 INTERFACE GetInterpolation_
-  MODULE PURE SUBROUTINE vector_getInterpolation1_(obj, interpol, val, &
-                                                   nrow, ncol)
-    CLASS(ElemshapeData_), INTENT(IN) :: obj
-    REAL(DFP), INTENT(INOUT) :: interpol(:, :)
-    REAL(DFP), INTENT(IN) :: val(:, :)
-    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
-  END SUBROUTINE vector_getInterpolation1_
+  MODULE PROCEDURE GetInterpolation_1
 END INTERFACE GetInterpolation_
 
 !----------------------------------------------------------------------------
-!                                           getInterpolation@InterpolMethods
-!----------------------------------------------------------------------------
-
-!> author: Vikas Sharma, Ph. D.
-! date: 1 Nov 2021
-! summary: This subroutine performs interpolation of a vector
-!
-!# Introduction
-!
-! This subroutine performs interpolation of a vector from its space-time
-! nodal values
-!
-! $$u_{i}=u^{a}_{iI}N^{I}T_{a}$$
-
-INTERFACE GetInterpolation
-  MODULE PURE SUBROUTINE vector_getInterpolation_2(obj, interpol, val)
-    CLASS(ElemshapeData_), INTENT(IN) :: obj
-    REAL(DFP), INTENT(INOUT), ALLOCATABLE :: interpol(:, :)
-    !!
-    REAL(DFP), INTENT(IN) :: val(:, :, :)
-    !! space-time nodal values of vector in `xiJa` format
-  END SUBROUTINE vector_getInterpolation_2
-END INTERFACE GetInterpolation
-
-!----------------------------------------------------------------------------
-!
-!----------------------------------------------------------------------------
-
-!> author: Shion Shimizu
-! date:   2025-03-03
-! summary:  get interpolation of vector without allocation
-
-INTERFACE GetInterpolation_
-  MODULE PURE SUBROUTINE vector_getInterpolation2_(obj, interpol, val, &
-                                                   nrow, ncol)
-    CLASS(ElemshapeData_), INTENT(IN) :: obj
-    REAL(DFP), INTENT(INOUT) :: interpol(:, :)
-    REAL(DFP), INTENT(IN) :: val(:, :, :)
-    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
-  END SUBROUTINE vector_getInterpolation2_
-END INTERFACE GetInterpolation_
-
-!----------------------------------------------------------------------------
-!                                           getInterpolation@InterpolMethods
-!----------------------------------------------------------------------------
-
-!> author: Vikas Sharma, Ph. D.
-! date: 1 Nov 2021
-! summary: This subroutine performs interpolation of a vector
-!
-!# Introduction
-!
-! This subroutine performs interpolation of a vector from its space-time
-! nodal values
-!
-! $$u_{i}=u^{a}_{iI}N^{I}T_{a}$$
-
-INTERFACE GetInterpolation
-  MODULE PURE SUBROUTINE vector_getInterpolation_3(obj, interpol, val)
-    CLASS(STElemshapeData_), INTENT(IN) :: obj(:)
-    REAL(DFP), INTENT(INOUT), ALLOCATABLE :: interpol(:, :, :)
-    !!
-    REAL(DFP), INTENT(IN) :: val(:, :, :)
-    !! space-time nodal values of vector in `xiJa` format
-  END SUBROUTINE vector_getInterpolation_3
-END INTERFACE GetInterpolation
-
-!----------------------------------------------------------------------------
-!
-!----------------------------------------------------------------------------
-
-!> author: Shion Shimizu
-! date:   2025-03-03
-! summary:  get interpolation of vector without allocation
-
-INTERFACE GetInterpolation_
-  MODULE PURE SUBROUTINE vector_getInterpolation3_(obj, interpol, val, &
-                                                   dim1, dim2, dim3)
-    CLASS(STElemshapeData_), INTENT(IN) :: obj(:)
-    REAL(DFP), INTENT(INOUT) :: interpol(:, :, :)
-    REAL(DFP), INTENT(IN) :: val(:, :, :)
-    INTEGER(I4B), INTENT(OUT) :: dim1, dim2, dim3
-  END SUBROUTINE vector_getInterpolation3_
-END INTERFACE GetInterpolation_
-
-!----------------------------------------------------------------------------
-!                                           getInterpolation@InterpolMethods
+!                                                   GetInterpolation@Methods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 4 March 2021
-! summary: returns the interpolation of vector FEVariable
+! summary: returns the interpolation of a FEVariable
 !
 !# Introduction
 !
-! Returns the interpolation of vector variable
-! The vector variable can be+
+! - Returns the interpolation of a FEVariable_
+! - The result is returned in ans
+! - ans is a FEVariable
+! - The rank of ans is same as the rank of val
+! - ans is defined on Quadrature, that is, ans is QuadratureVariable
 !
-! - constant
-! - spatial nodal values
-! - spatial quadrature values
-! - space-time nodal values
+! - The val can have following ranks; scalar, vector, matrix
+! - the val can be defined on quadrature (do nothing) or nodal (interpol)
+! - The `vartype` of val can be constant, space, time, spacetime
 !
-! NOTE This routine calls [[Interpolation]] function from the same module.
-!
-INTERFACE GetInterpolation
-  MODULE PURE SUBROUTINE vector_getInterpolation_4(obj, interpol, val)
+INTERFACE
+  MODULE PURE SUBROUTINE GetInterpolation_1a(obj, ans, val, scale, &
+                                             addContribution)
     CLASS(ElemshapeData_), INTENT(IN) :: obj
-    REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: interpol(:, :)
-    !! interpolation of vector
+    TYPE(FEVariable_), INTENT(INOUT) :: ans
     TYPE(FEVariable_), INTENT(IN) :: val
-    !! vector FEvariable
-  END SUBROUTINE vector_getInterpolation_4
-END INTERFACE GetInterpolation
-
-!----------------------------------------------------------------------------
-!
-!----------------------------------------------------------------------------
-
-!> author: Shion Shimizu
-! date:   2025-03-03
-! summary:  get interpolation of vector without allocation
+    REAL(DFP), INTENT(IN) :: scale
+    LOGICAL, INTENT(IN) :: addContribution
+  END SUBROUTINE GetInterpolation_1a
+END INTERFACE
 
 INTERFACE GetInterpolation_
-  MODULE PURE SUBROUTINE vector_getInterpolation4_(obj, interpol, val, &
-                                                   nrow, ncol)
-    CLASS(ElemshapeData_), INTENT(IN) :: obj
-    REAL(DFP), INTENT(INOUT) :: interpol(:, :)
-    TYPE(FEVariable_), INTENT(IN) :: val
-    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
-  END SUBROUTINE vector_getInterpolation4_
+  MODULE PROCEDURE GetInterpolation_1a
 END INTERFACE GetInterpolation_
 
 !----------------------------------------------------------------------------
-!                                           getInterpolation@InterpolMethods
+!                                                    GetInterpolation@Methods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 4 March 2021
-! summary: returns the interpolation of vector FEVariable
+! summary: returns the interpolation of a FEVariable
 !
 !# Introduction
 !
-! Returns the interpolation of vector variable
-! The vector variable can be+
+! If ans is not initiated then it will be initiated. If
+! ans is initiated then its properties will not be altered.
 !
-! - constant
-! - spatial nodal values
-! - spatial quadrature values
-! - space-time nodal values
+! - Returns the interpolation of a FEVariable
+! - The result is returned in ans, which is a FEVariable
+! - The rank of ans is same as the rank of val
+! - ans is defined on Quadrature, that is, ans is QuadratureVariable
 !
-! NOTE This routine calls [[Interpolation]] function from the same module.
+! - The val can have following ranks; scalar, vector, matrix
+! - the val can be defined on quadrature (do nothing) or nodal (interpol)
+! - The `vartype` of val can be constant, space, time, spacetime
 !
-INTERFACE GetInterpolation
-  MODULE PURE SUBROUTINE vector_getInterpolation_5(obj, interpol, val)
+! - ans will Quadrature and SpaceTime
+
+INTERFACE
+  MODULE PURE SUBROUTINE GetInterpolation2(obj, ans, val)
     CLASS(STElemshapeData_), INTENT(IN) :: obj(:)
-    REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: interpol(:, :, :)
-    !! space-time interpolation of vector
+    TYPE(FEVariable_), INTENT(INOUT) :: ans
     TYPE(FEVariable_), INTENT(IN) :: val
-    !! vector FEvariable
-  END SUBROUTINE vector_getInterpolation_5
-END INTERFACE GetInterpolation
-
-!----------------------------------------------------------------------------
-!
-!----------------------------------------------------------------------------
-
-!> author: Shion Shimizu
-! date:   2025-03-03
-! summary:  get interpolation of vector without allocation
-
-INTERFACE GetInterpolation_
-  MODULE PURE SUBROUTINE vector_getInterpolation5_(obj, interpol, val, &
-                                                   dim1, dim2, dim3)
-    CLASS(STElemshapeData_), INTENT(IN) :: obj(:)
-    REAL(DFP), INTENT(INOUT) :: interpol(:, :, :)
-    TYPE(FEVariable_), INTENT(IN) :: val
-    INTEGER(I4B), INTENT(OUT) :: dim1, dim2, dim3
-  END SUBROUTINE vector_getInterpolation5_
-END INTERFACE GetInterpolation_
-
-!----------------------------------------------------------------------------
-!                                           getInterpolation@InterpolMethods
-!----------------------------------------------------------------------------
-
-!> author: Vikas Sharma, Ph. D.
-! date: 4 March 2021
-! summary: This subroutine performs interpolation of matrix
+  END SUBROUTINE GetInterpolation2
+END INTERFACE
 
 INTERFACE GetInterpolation
-  MODULE PURE SUBROUTINE matrix_getInterpolation_1(obj, interpol, val)
-    CLASS(ElemshapeData_), INTENT(IN) :: obj
-    REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: interpol(:, :, :)
-    !! interpolation of matrix
-    REAL(DFP), INTENT(IN) :: val(:, :, :)
-    !! nodal value of matrix
-  END SUBROUTINE matrix_getInterpolation_1
+  MODULE PROCEDURE GetInterpolation2
 END INTERFACE GetInterpolation
 
 !----------------------------------------------------------------------------
-!
-!----------------------------------------------------------------------------
-
-!> author: Shion Shimizu
-! date:   2025-03-04
-! summary:  get interpolation of matrix without allocation
-
-INTERFACE GetInterpolation_
-  MODULE PURE SUBROUTINE matrix_getInterpolation1_(obj, interpol, val, &
-                                                   dim1, dim2, dim3)
-    CLASS(ElemshapeData_), INTENT(IN) :: obj
-    REAL(DFP), INTENT(INOUT) :: interpol(:, :, :)
-    REAL(DFP), INTENT(IN) :: val(:, :, :)
-    INTEGER(I4B), INTENT(OUT) :: dim1, dim2, dim3
-  END SUBROUTINE matrix_getInterpolation1_
-END INTERFACE GetInterpolation_
-
-!----------------------------------------------------------------------------
-!                                           getInterpolation@InterpolMethods
-!----------------------------------------------------------------------------
-
-!> author: Vikas Sharma, Ph. D.
-! date: 1 Nov 2021
-! summary: This subroutine performs interpolation of matrix
-!
-!# Introduction
-!
-! This subroutine performs interpolation of matrix from its space-time
-! nodal values
-
-INTERFACE GetInterpolation
-  MODULE PURE SUBROUTINE matrix_getInterpolation_2(obj, interpol, val)
-    CLASS(ElemshapeData_), INTENT(IN) :: obj
-    REAL(DFP), INTENT(INOUT), ALLOCATABLE :: interpol(:, :, :)
-    REAL(DFP), INTENT(IN) :: val(:, :, :, :)
-    !! space-time nodal value of matrix
-  END SUBROUTINE matrix_getInterpolation_2
-END INTERFACE GetInterpolation
-
-!----------------------------------------------------------------------------
-!
-!----------------------------------------------------------------------------
-
-!> author: Shion Shimizu
-! date:   2025-03-04
-! summary:  get interpolation of matrix without allocation
-
-INTERFACE GetInterpolation_
-  MODULE PURE SUBROUTINE matrix_getInterpolation2_(obj, interpol, val, &
-                                                   dim1, dim2, dim3)
-    CLASS(ElemshapeData_), INTENT(IN) :: obj
-    REAL(DFP), INTENT(INOUT) :: interpol(:, :, :)
-    REAL(DFP), INTENT(IN) :: val(:, :, :, :)
-    INTEGER(I4B), INTENT(OUT) :: dim1, dim2, dim3
-  END SUBROUTINE matrix_getInterpolation2_
-END INTERFACE GetInterpolation_
-
-!----------------------------------------------------------------------------
-!                                           getInterpolation@InterpolMethods
-!----------------------------------------------------------------------------
-
-!> author: Vikas Sharma, Ph. D.
-! date: 1 Nov 2021
-! summary: This subroutine performs interpolation of matrix
-!
-!# Introduction
-!
-! This subroutine performs interpolation of matrix from its space-time
-! nodal values
-
-INTERFACE GetInterpolation
-  MODULE PURE SUBROUTINE matrix_getInterpolation_3(obj, interpol, val)
-    CLASS(STElemshapeData_), INTENT(IN) :: obj(:)
-    REAL(DFP), INTENT(INOUT), ALLOCATABLE :: interpol(:, :, :, :)
-    !! space-time interpolation
-    REAL(DFP), INTENT(IN) :: val(:, :, :, :)
-    !! space-time nodal value of matrix
-  END SUBROUTINE matrix_getInterpolation_3
-END INTERFACE GetInterpolation
-
-!----------------------------------------------------------------------------
-!                                           getInterpolation@InterpolMethods
-!----------------------------------------------------------------------------
-
-!> author: Vikas Sharma, Ph. D.
-! date: 4 March 2021
-! summary: This subroutine performs interpolation of matrix FEVariable
-!
-INTERFACE GetInterpolation
-  MODULE PURE SUBROUTINE matrix_getInterpolation_4(obj, interpol, val)
-    CLASS(ElemshapeData_), INTENT(IN) :: obj
-    REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: interpol(:, :, :)
-    !! interpolation of matrix
-    TYPE(FEVariable_), INTENT(IN) :: val
-    !! matrix fe variable
-  END SUBROUTINE matrix_getInterpolation_4
-END INTERFACE GetInterpolation
-
-!----------------------------------------------------------------------------
-!
-!----------------------------------------------------------------------------
-
-!> author: Shion Shimizu
-! date:   2025-03-04
-! summary:  get interpolation of matrix without allocation
-
-INTERFACE GetInterpolation_
-  MODULE PURE SUBROUTINE matrix_getInterpolation4_(obj, interpol, val, &
-                                                   dim1, dim2, dim3)
-    CLASS(ElemshapeData_), INTENT(IN) :: obj
-    REAL(DFP), INTENT(INOUT) :: interpol(:, :, :)
-    TYPE(FEVariable_), INTENT(IN) :: val
-    INTEGER(I4B), INTENT(OUT) :: dim1, dim2, dim3
-  END SUBROUTINE matrix_getInterpolation4_
-END INTERFACE GetInterpolation_
-
-!----------------------------------------------------------------------------
-!                                           getInterpolation@InterpolMethods
-!----------------------------------------------------------------------------
-
-INTERFACE GetInterpolation
-  MODULE PURE SUBROUTINE matrix_getInterpolation_5(obj, interpol, val)
-    CLASS(STElemshapeData_), INTENT(IN) :: obj(:)
-    REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: interpol(:, :, :, :)
-    !! space-time interpolation of matrix
-    TYPE(FEVariable_), INTENT(IN) :: val
-    !! matrix fe variable
-  END SUBROUTINE matrix_getInterpolation_5
-END INTERFACE GetInterpolation
-
-!----------------------------------------------------------------------------
-!
-!----------------------------------------------------------------------------
-
-!> author: Shion Shimizu
-! date:   2025-03-04
-! summary:  get interpolation of matrix without allocation
-
-INTERFACE GetInterpolation_
-  MODULE PURE SUBROUTINE matrix_getInterpolation5_(obj, interpol, val, &
-                                                   dim1, dim2, dim3, dim4)
-    CLASS(STElemshapeData_), INTENT(IN) :: obj(:)
-    REAL(DFP), INTENT(INOUT) :: interpol(:, :, :, :)
-    TYPE(FEVariable_), INTENT(IN) :: val
-    INTEGER(I4B), INTENT(OUT) :: dim1, dim2, dim3, dim4
-  END SUBROUTINE matrix_getInterpolation5_
-END INTERFACE GetInterpolation_
-
-!----------------------------------------------------------------------------
-!                                           getInterpolation@InterpolMethods
+!                                                    GetInterpolation@Methods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -671,100 +194,55 @@ END INTERFACE GetInterpolation_
 ! - the val can be defined on quadrature (do nothing) or nodal (interpol)
 ! - The `vartype` of val can be constant, space, time, spacetime
 !
-INTERFACE GetInterpolation
-  MODULE PURE SUBROUTINE master_getInterpolation_1(obj, interpol, val)
-    CLASS(ElemshapeData_), INTENT(IN) :: obj
-    TYPE(FEVariable_), INTENT(INOUT) :: interpol
+INTERFACE
+  MODULE PURE SUBROUTINE GetInterpolation_2(obj, ans, val)
+    CLASS(STElemshapeData_), INTENT(IN) :: obj(:)
+    TYPE(FEVariable_), INTENT(INOUT) :: ans
     TYPE(FEVariable_), INTENT(IN) :: val
-  END SUBROUTINE master_getInterpolation_1
-END INTERFACE GetInterpolation
+  END SUBROUTINE GetInterpolation_2
+END INTERFACE
+
+INTERFACE GetInterpolation_
+  MODULE PROCEDURE GetInterpolation_2
+END INTERFACE GetInterpolation_
 
 !----------------------------------------------------------------------------
-!                                           getInterpolation@InterpolMethods
+!                                                    GetInterpolation@Methods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date: 4 March 2021
+! date: 2025-09-01
 ! summary: returns the interpolation of a FEVariable
 !
 !# Introduction
 !
-! - Returns the interpolation of a [[fevariable_]]
-! - The result is returned in interpol
-! - interpol is a FEVariable
-! - The rank of interpol is same as the rank of val
-! - interpol is defined on Quadrature, that is, interpol is QuadratureVariable
+! - Returns the interpolation of a FEVariable_
+! - The result is returned in ans
+! - ans is a FEVariable
+! - The rank of ans is same as the rank of val
+! - ans is defined on Quadrature, that is, ans is QuadratureVariable
 !
 ! - The val can have following ranks; scalar, vector, matrix
 ! - the val can be defined on quadrature (do nothing) or nodal (interpol)
 ! - The `vartype` of val can be constant, space, time, spacetime
-!
-INTERFACE GetInterpolation
-  MODULE PURE SUBROUTINE master_getInterpolation_2(obj, interpol, val)
+
+INTERFACE
+  MODULE PURE SUBROUTINE GetInterpolation_2a(obj, ans, val, scale, &
+                                             addContribution)
     CLASS(STElemshapeData_), INTENT(IN) :: obj(:)
-    TYPE(FEVariable_), INTENT(INOUT) :: interpol
+    TYPE(FEVariable_), INTENT(INOUT) :: ans
     TYPE(FEVariable_), INTENT(IN) :: val
-  END SUBROUTINE master_getInterpolation_2
-END INTERFACE GetInterpolation
-
-!----------------------------------------------------------------------------
-!                                              Interpolation@InterpolMethods
-!----------------------------------------------------------------------------
-
-!> author: Vikas Sharma, Ph. D.
-! date: 4 March 2021
-! summary: This function returns the interpolation of a scalar
-
-INTERFACE Interpolation
-  MODULE PURE FUNCTION scalar_interpolation_1(obj, val) RESULT(interpol)
-    CLASS(ElemshapeData_), INTENT(IN) :: obj
-    REAL(DFP), INTENT(IN) :: val(:)
-    REAL(DFP), ALLOCATABLE :: interpol(:)
-  END FUNCTION scalar_interpolation_1
-END INTERFACE Interpolation
-
-!----------------------------------------------------------------------------
-!                                              Interpolation@InterpolMethods
-!----------------------------------------------------------------------------
-
-!> author: Vikas Sharma, Ph. D.
-! date: 4 March 2021
-! summary: This function returns the interpolation of vector
-
-INTERFACE
-  MODULE PURE FUNCTION vector_interpolation_1(obj, val) RESULT(interpol)
-    CLASS(ElemshapeData_), INTENT(IN) :: obj
-    REAL(DFP), INTENT(IN) :: val(:, :)
-    REAL(DFP), ALLOCATABLE :: interpol(:, :)
-  END FUNCTION vector_interpolation_1
+    REAL(DFP), INTENT(IN) :: scale
+    LOGICAL, INTENT(IN) :: addContribution
+  END SUBROUTINE GetInterpolation_2a
 END INTERFACE
 
-INTERFACE Interpolation
-  MODULE PROCEDURE vector_interpolation_1
-END INTERFACE Interpolation
+INTERFACE GetInterpolation_
+  MODULE PROCEDURE GetInterpolation_2a
+END INTERFACE GetInterpolation_
 
 !----------------------------------------------------------------------------
-!                                              Interpolation@InterpolMethods
-!----------------------------------------------------------------------------
-
-!> author: Vikas Sharma, Ph. D.
-! date: 4 March 2021
-! summary: This function returns the interpolation of matrix
-
-INTERFACE
-  MODULE PURE FUNCTION matrix_interpolation_1(obj, val) RESULT(interpol)
-    CLASS(ElemshapeData_), INTENT(IN) :: obj
-    REAL(DFP), INTENT(IN) :: val(:, :, :)
-    REAL(DFP), ALLOCATABLE :: interpol(:, :, :)
-  END FUNCTION matrix_interpolation_1
-END INTERFACE
-
-INTERFACE Interpolation
-  MODULE PROCEDURE matrix_interpolation_1
-END INTERFACE Interpolation
-
-!----------------------------------------------------------------------------
-!                                               Interpolation@InterpolMethods
+!                                                      Interpolation@Methods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -773,97 +251,15 @@ END INTERFACE Interpolation
 ! summary: Interpolation of FEVariable
 
 INTERFACE
-  MODULE PURE FUNCTION master_interpolation_1(obj, val) RESULT(Ans)
+  MODULE PURE FUNCTION Interpolation1(obj, val) RESULT(ans)
     CLASS(ElemshapeData_), INTENT(IN) :: obj
     TYPE(FEVariable_), INTENT(IN) :: val
     TYPE(FEVariable_) :: ans
-  END FUNCTION master_interpolation_1
+  END FUNCTION Interpolation1
 END INTERFACE
 
 INTERFACE Interpolation
-  MODULE PROCEDURE master_interpolation_1
+  MODULE PROCEDURE Interpolation1
 END INTERFACE Interpolation
-
-!----------------------------------------------------------------------------
-!                                            STInterpolation@InterpolMethods
-!----------------------------------------------------------------------------
-
-!> author: Vikas Sharma, Ph. D.
-! date: 2021-11-23
-! update: 2021-11-23
-! summary: This function performs interpolations of scalar
-!
-!# Introduction
-!
-! This function performs interpolation of a scalar from its space-time nodal
-! values.
-!
-! $$u=u^{a}_{I}N^{I}T_{a}$$
-
-INTERFACE
-  MODULE PURE FUNCTION scalar_stinterpolation_1(obj, val) RESULT(interpol)
-    CLASS(STElemshapeData_), INTENT(IN) :: obj
-    REAL(DFP), INTENT(IN) :: val(:, :)
-    !! space-time nodal values of scalar
-    REAL(DFP), ALLOCATABLE :: interpol(:)
-    !! Interpolation value of `val` at integration points
-  END FUNCTION scalar_stinterpolation_1
-END INTERFACE
-
-INTERFACE STInterpolation
-  MODULE PROCEDURE scalar_stinterpolation_1
-END INTERFACE STInterpolation
-
-!----------------------------------------------------------------------------
-!                                            STInterpolation@InterpolMethods
-!----------------------------------------------------------------------------
-
-INTERFACE
-!! This function performs interpolations of vector
-
-!> author: Dr. Vikas Sharma
-!
-! This function performs interpolation of a vector from its space-time nodal
-! values.
-! $$u=u^{a}_{I}N^{I}T_{a}$$
-
-  MODULE PURE FUNCTION vector_stinterpolation_1(obj, val) RESULT(interpol)
-    CLASS(STElemshapeData_), INTENT(IN) :: obj
-    REAL(DFP), INTENT(IN) :: val(:, :, :)
-    !! spatial nodal values of vector
-    REAL(DFP), ALLOCATABLE :: interpol(:, :)
-    !! Interpolation value of vector
-  END FUNCTION vector_stinterpolation_1
-END INTERFACE
-
-INTERFACE STInterpolation
-  MODULE PROCEDURE vector_stinterpolation_1
-END INTERFACE STInterpolation
-
-!----------------------------------------------------------------------------
-!                                            STInterpolation@InterpolMethods
-!----------------------------------------------------------------------------
-
-INTERFACE
-!! This function performs interpolations of matrix
-
-!> author: Dr. Vikas Sharma
-!
-! This function performs interpolation of a matrix from its space-time nodal
-! values.
-! $$u=u^{a}_{I}N^{I}T_{a}$$
-
-  MODULE PURE FUNCTION matrix_stinterpolation_1(obj, val) RESULT(interpol)
-    CLASS(STElemshapeData_), INTENT(IN) :: obj
-    REAL(DFP), INTENT(IN) :: val(:, :, :, :)
-    !! spatial nodal values of matrix
-    REAL(DFP), ALLOCATABLE :: interpol(:, :, :)
-    !! Interpolation value of matrix
-  END FUNCTION matrix_stinterpolation_1
-END INTERFACE
-
-INTERFACE STInterpolation
-  MODULE PROCEDURE matrix_stinterpolation_1
-END INTERFACE STInterpolation
 
 END MODULE ElemshapeData_InterpolMethods

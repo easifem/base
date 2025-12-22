@@ -41,8 +41,8 @@ INTEGER(I4B) :: ipt, ips, a, b
 !!
 !! main
 !!
-CALL getInterpolation(obj=trial, interpol=c1bar, val=c1)
-CALL getInterpolation(obj=trial, interpol=kbar, val=c2)
+CALL getInterpolation(obj=trial, ans=c1bar, val=c1)
+CALL getInterpolation(obj=trial, ans=kbar, val=c2)
 !!
 CALL Reallocate(m6, &
   & SIZE(test(1)%N, 1), &

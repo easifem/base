@@ -36,7 +36,7 @@ nips = SIZE(trial%N, 2)
 nsd = SIZE(trial%dNdXt, 2)
 
 CALL Reallocate(ans, nns1 * nsd, nns2 * nsd)
-CALL GetInterpolation(obj=test, interpol=CBar, val=Cijkl)
+CALL GetInterpolation(obj=test, ans=CBar, val=Cijkl)
 
 SELECT CASE (nsd)
 CASE (1)
@@ -106,7 +106,7 @@ nrow = nns1 * nsd
 ncol = nns2 * nsd
 ans(1:nrow, 1:ncol) = 0.0
 
-CALL GetInterpolation_(obj=test, interpol=CBar, val=Cijkl, &
+CALL GetInterpolation_(obj=test, ans=CBar, val=Cijkl, &
                        dim1=ii, dim2=jj, dim3=kk)
 
 SELECT CASE (nsd)
@@ -179,8 +179,8 @@ nsd = SIZE(trial%dNdXt, 2)
 ALLOCATE (ans(nns1 * nsd, nns2 * nsd))
 ans = 0.0_DFP
 
-CALL GetInterpolation(obj=test, interpol=lambdaBar, val=lambda0)
-CALL GetInterpolation(obj=test, interpol=muBar, val=mu)
+CALL GetInterpolation(obj=test, ans=lambdaBar, val=lambda0)
+CALL GetInterpolation(obj=test, ans=muBar, val=mu)
 
 CALL Reallocate(realval, nips)
 realval = trial%ws * trial%js * trial%thickness
@@ -256,8 +256,8 @@ nrow = nns1 * nsd
 ncol = nns2 * nsd
 ans(1:nrow, 1:ncol) = zero
 
-CALL GetInterpolation_(obj=test, interpol=lambdaBar, val=lambda0, tsize=ii)
-CALL GetInterpolation_(obj=test, interpol=muBar, val=mu, tsize=ii)
+CALL GetInterpolation_(obj=test, ans=lambdaBar, val=lambda0, tsize=ii)
+CALL GetInterpolation_(obj=test, ans=muBar, val=mu, tsize=ii)
 
 DO ips = 1, nips
 
@@ -473,7 +473,7 @@ REAL(DFP) :: Ce(test%nsd * test%nsd, trial%nsd * trial%nsd), &
              BMat1(test%nsd * test%nns, test%nsd * test%nsd), &
              BMat2(trial%nsd * trial%nns, trial%nsd * trial%nsd)
 INTEGER(I4B) :: nips, nns1, nns2, ii, jj, ips, nsd
-INTEGER(I4B), ALLOCATABLE :: indx(:, :)
+INTEGER(I4B) :: indx(3, 3)
 
 nns1 = SIZE(test%N, 1)
 nns2 = SIZE(trial%N, 1)

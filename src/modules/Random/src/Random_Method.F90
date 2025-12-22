@@ -21,6 +21,16 @@ USE BaseType
 IMPLICIT NONE
 PRIVATE
 
+PUBLIC :: Initiate
+PUBLIC :: RandomValue
+PUBLIC :: SaveRandom
+PUBLIC :: uniformRandom
+PUBLIC :: rvec_uniform_01
+PUBLIC :: rvec_uniform_ab
+PUBLIC :: rvec_uniform_unit
+PUBLIC :: rvec_normal_01
+PUBLIC :: r8_uniform_01
+
 !----------------------------------------------------------------------------
 !                                                      Initiate@Constructor
 !----------------------------------------------------------------------------
@@ -34,8 +44,6 @@ END INTERFACE
 INTERFACE Initiate
   MODULE PROCEDURE initRandom
 END INTERFACE Initiate
-
-PUBLIC :: Initiate
 
 !----------------------------------------------------------------------------
 !                                                                 getRandom
@@ -53,8 +61,6 @@ INTERFACE RandomValue
   MODULE PROCEDURE getRandom
 END INTERFACE RandomValue
 
-PUBLIC :: RandomValue
-
 !----------------------------------------------------------------------------
 !                                                                 SaveRandom
 !----------------------------------------------------------------------------
@@ -64,8 +70,6 @@ INTERFACE
     CLASS(Random_), INTENT(INOUT) :: obj
   END SUBROUTINE SaveRandom
 END INTERFACE
-
-PUBLIC :: SaveRandom
 
 !----------------------------------------------------------------------------
 !                                                             UniformRandom
@@ -78,8 +82,6 @@ INTERFACE
     REAL(DFP) :: Ans
   END FUNCTION uniformRandom
 END INTERFACE
-
-PUBLIC :: uniformRandom
 
 INTERFACE RandomValue
   MODULE PROCEDURE uniformRandom
@@ -175,8 +177,6 @@ INTERFACE
   END FUNCTION rvec_uniform_01
 END INTERFACE
 
-PUBLIC :: rvec_uniform_01
-
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
@@ -195,8 +195,6 @@ INTERFACE
   END FUNCTION rvec_uniform_ab
 END INTERFACE
 
-PUBLIC :: rvec_uniform_ab
-
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
@@ -212,8 +210,6 @@ INTERFACE
     REAL(DFP) :: w(m)
   END FUNCTION rvec_uniform_unit
 END INTERFACE
-
-PUBLIC :: rvec_uniform_unit
 
 !----------------------------------------------------------------------------
 !
@@ -281,8 +277,6 @@ INTERFACE
   END FUNCTION rvec_normal_01
 END INTERFACE
 
-PUBLIC :: rvec_normal_01
-
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
@@ -328,8 +322,6 @@ INTERFACE
     REAL(DFP) :: ans
   END FUNCTION r8_uniform_01
 END INTERFACE
-
-PUBLIC :: r8_uniform_01
 
 !----------------------------------------------------------------------------
 !

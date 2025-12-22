@@ -16,11 +16,12 @@
 !
 
 MODULE MatmulUtility
-USE GlobalData
+USE GlobalData, ONLY: DFP, I4B, LGT
 IMPLICIT NONE
 PRIVATE
 
 PUBLIC :: MATMUL
+PUBLIC :: MATMUL_
 
 !----------------------------------------------------------------------------
 !                                                               Matmul@Matmul
@@ -38,13 +39,38 @@ INTERFACE
   MODULE PURE FUNCTION matmul_r4_r1(a1, a2) RESULT(ans)
     REAL(DFP), INTENT(IN) :: a1(:, :, :, :)
     REAL(DFP), INTENT(IN) :: a2(:)
-    REAL(DFP) :: ans(size(a1, 1), size(a1, 2), size(a1, 3))
+    REAL(DFP) :: ans(SIZE(a1, 1), SIZE(a1, 2), SIZE(a1, 3))
   END FUNCTION
 END INTERFACE
 
 INTERFACE MATMUL
   MODULE PROCEDURE matmul_r4_r1
 END INTERFACE MATMUL
+
+!----------------------------------------------------------------------------
+!                                                                      Matmul
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 3 April 2021
+! summary: matmul for rank4 and rank1 array
+!
+!# Introduction
+!
+! `ans(i,j,k) = a1(i,j,k,l)*a2(l)`
+
+INTERFACE
+  MODULE PURE SUBROUTINE matmul_r4_r1_(a1, a2, ans, dim1, dim2, dim3)
+    REAL(DFP), INTENT(IN) :: a1(:, :, :, :)
+    REAL(DFP), INTENT(IN) :: a2(:)
+    REAL(DFP), INTENT(INOUT) :: ans(:, :, :)
+    INTEGER(I4B), INTENT(OUT) :: dim1, dim2, dim3
+  END SUBROUTINE matmul_r4_r1_
+END INTERFACE
+
+INTERFACE MATMUL_
+  MODULE PROCEDURE matmul_r4_r1_
+END INTERFACE MATMUL_
 
 !----------------------------------------------------------------------------
 !                                                               Matmul@Matmul
@@ -61,14 +87,31 @@ END INTERFACE MATMUL
 INTERFACE
   MODULE PURE FUNCTION matmul_r4_r2(a1, a2) RESULT(ans)
     REAL(DFP), INTENT(IN) :: a1(:, :, :, :)
-    REAL(DFP), INTENT(IN) :: a2(:,:)
-    REAL(DFP) :: ans(size(a1, 1), size(a1, 2), size(a1, 3), size(a2, 2))
+    REAL(DFP), INTENT(IN) :: a2(:, :)
+    REAL(DFP) :: ans(SIZE(a1, 1), SIZE(a1, 2), SIZE(a1, 3), SIZE(a2, 2))
   END FUNCTION
 END INTERFACE
 
 INTERFACE MATMUL
   MODULE PROCEDURE matmul_r4_r2
 END INTERFACE MATMUL
+
+!----------------------------------------------------------------------------
+!                                                                     Matmul_
+!----------------------------------------------------------------------------
+
+INTERFACE
+  MODULE PURE SUBROUTINE matmul_r4_r2_(a1, a2, ans, dim1, dim2, dim3, dim4)
+    REAL(DFP), INTENT(IN) :: a1(:, :, :, :)
+    REAL(DFP), INTENT(IN) :: a2(:, :)
+    REAL(DFP), INTENT(INOUT) :: ans(:, :, :, :)
+    INTEGER(I4B), INTENT(OUT) :: dim1, dim2, dim3, dim4
+  END SUBROUTINE matmul_r4_r2_
+END INTERFACE
+
+INTERFACE MATMUL_
+  MODULE PROCEDURE matmul_r4_r2_
+END INTERFACE MATMUL_
 
 !----------------------------------------------------------------------------
 !                                                               Matmul@Matmul
@@ -85,15 +128,33 @@ END INTERFACE MATMUL
 INTERFACE
   MODULE PURE FUNCTION matmul_r4_r3(a1, a2) RESULT(ans)
     REAL(DFP), INTENT(IN) :: a1(:, :, :, :)
-    REAL(DFP), INTENT(IN) :: a2(:,:,:)
-    REAL(DFP) :: ans(size(a1, 1), size(a1, 2), size(a1, 3), &
-      & size(a2, 2), size(a2, 3))
+    REAL(DFP), INTENT(IN) :: a2(:, :, :)
+    REAL(DFP) :: ans(SIZE(a1, 1), SIZE(a1, 2), SIZE(a1, 3), &
+      & SIZE(a2, 2), SIZE(a2, 3))
   END FUNCTION
 END INTERFACE
 
 INTERFACE MATMUL
   MODULE PROCEDURE matmul_r4_r3
 END INTERFACE MATMUL
+
+!----------------------------------------------------------------------------
+!                                                                     Matmul_
+!----------------------------------------------------------------------------
+
+INTERFACE
+  MODULE PURE SUBROUTINE matmul_r4_r3_(a1, a2, ans, dim1, dim2, dim3, dim4, &
+                                       dim5)
+    REAL(DFP), INTENT(IN) :: a1(:, :, :, :)
+    REAL(DFP), INTENT(IN) :: a2(:, :, :)
+    REAL(DFP), INTENT(INOUT) :: ans(:, :, :, :, :)
+    INTEGER(I4B), INTENT(OUT) :: dim1, dim2, dim3, dim4, dim5
+  END SUBROUTINE matmul_r4_r3_
+END INTERFACE
+
+INTERFACE MATMUL_
+  MODULE PROCEDURE matmul_r4_r3_
+END INTERFACE MATMUL_
 
 !----------------------------------------------------------------------------
 !                                                               Matmul@Matmul
@@ -110,15 +171,33 @@ END INTERFACE MATMUL
 INTERFACE
   MODULE PURE FUNCTION matmul_r4_r4(a1, a2) RESULT(ans)
     REAL(DFP), INTENT(IN) :: a1(:, :, :, :)
-    REAL(DFP), INTENT(IN) :: a2(:,:,:,:)
-    REAL(DFP) :: ans(size(a1, 1), size(a1, 2), size(a1, 3), &
-      & size(a2, 2), size(a2, 3), size(a2, 4))
+    REAL(DFP), INTENT(IN) :: a2(:, :, :, :)
+    REAL(DFP) :: ans(SIZE(a1, 1), SIZE(a1, 2), SIZE(a1, 3), &
+      & SIZE(a2, 2), SIZE(a2, 3), SIZE(a2, 4))
   END FUNCTION
 END INTERFACE
 
 INTERFACE MATMUL
   MODULE PROCEDURE matmul_r4_r4
 END INTERFACE MATMUL
+
+!----------------------------------------------------------------------------
+!                                                                     Matmul_
+!----------------------------------------------------------------------------
+
+INTERFACE
+  MODULE PURE SUBROUTINE matmul_r4_r4_(a1, a2, ans, dim1, dim2, dim3, &
+                                       dim4, dim5, dim6)
+    REAL(DFP), INTENT(IN) :: a1(:, :, :, :)
+    REAL(DFP), INTENT(IN) :: a2(:, :, :, :)
+    REAL(DFP), INTENT(INOUT) :: ans(:, :, :, :, :, :)
+    INTEGER(I4B), INTENT(OUT) :: dim1, dim2, dim3, dim4, dim5, dim6
+  END SUBROUTINE matmul_r4_r4_
+END INTERFACE
+
+INTERFACE MATMUL_
+  MODULE PROCEDURE matmul_r4_r4_
+END INTERFACE MATMUL_
 
 !----------------------------------------------------------------------------
 !                                                             Matmul@Matmul
@@ -137,13 +216,30 @@ INTERFACE
   MODULE PURE FUNCTION matmul_r3_r1(a1, a2) RESULT(ans)
     REAL(DFP), INTENT(IN) :: a1(:, :, :)
     REAL(DFP), INTENT(IN) :: a2(:)
-    REAL(DFP) :: ans(size(a1, 1), size(a1, 2))
+    REAL(DFP) :: ans(SIZE(a1, 1), SIZE(a1, 2))
   END FUNCTION
 END INTERFACE
 
 INTERFACE MATMUL
   MODULE PROCEDURE matmul_r3_r1
 END INTERFACE MATMUL
+
+!----------------------------------------------------------------------------
+!                                                                   Matmul_
+!----------------------------------------------------------------------------
+
+INTERFACE
+  MODULE PURE SUBROUTINE matmul_r3_r1_(a1, a2, ans, nrow, ncol)
+    REAL(DFP), INTENT(IN) :: a1(:, :, :)
+    REAL(DFP), INTENT(IN) :: a2(:)
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+  END SUBROUTINE matmul_r3_r1_
+END INTERFACE
+
+INTERFACE MATMUL_
+  MODULE PROCEDURE matmul_r3_r1_
+END INTERFACE MATMUL_
 
 !----------------------------------------------------------------------------
 !                                                               Matmul@Matmul
@@ -161,14 +257,31 @@ INTERFACE
   MODULE PURE FUNCTION matmul_r3_r2(a1, a2) RESULT(ans)
     REAL(DFP), INTENT(IN) :: a1(:, :, :)
     REAL(DFP), INTENT(IN) :: a2(:, :)
-    REAL(DFP) :: ans(size(a1, 1), size(a1, 2), &
-      & size(a2, 2))
+    REAL(DFP) :: ans(SIZE(a1, 1), SIZE(a1, 2), &
+      & SIZE(a2, 2))
   END FUNCTION
 END INTERFACE
 
 INTERFACE MATMUL
   MODULE PROCEDURE matmul_r3_r2
 END INTERFACE MATMUL
+
+!----------------------------------------------------------------------------
+!                                                                     Matmul_
+!----------------------------------------------------------------------------
+
+INTERFACE
+  MODULE PURE SUBROUTINE matmul_r3_r2_(a1, a2, ans, dim1, dim2, dim3)
+    REAL(DFP), INTENT(IN) :: a1(:, :, :)
+    REAL(DFP), INTENT(IN) :: a2(:, :)
+    REAL(DFP), INTENT(INOUT) :: ans(:, :, :)
+    INTEGER(I4B), INTENT(OUT) :: dim1, dim2, dim3
+  END SUBROUTINE matmul_r3_r2_
+END INTERFACE
+
+INTERFACE MATMUL_
+  MODULE PROCEDURE matmul_r3_r2_
+END INTERFACE MATMUL_
 
 !----------------------------------------------------------------------------
 !                                                              Matmul@Matmul
@@ -184,16 +297,34 @@ END INTERFACE MATMUL
 
 INTERFACE
   MODULE PURE FUNCTION matmul_r3_r3(a1, a2) RESULT(ans)
-    REAL(DFP), INTENT(IN) :: a1(:,:,:)
+    REAL(DFP), INTENT(IN) :: a1(:, :, :)
     REAL(DFP), INTENT(IN) :: a2(:, :, :)
-    REAL(DFP) :: ans(size(a1, 1), size(a1, 2), &
-      & size(a2, 2), size(a2, 3))
+    REAL(DFP) :: ans(SIZE(a1, 1), SIZE(a1, 2), &
+      & SIZE(a2, 2), SIZE(a2, 3))
   END FUNCTION
 END INTERFACE
 
 INTERFACE MATMUL
   MODULE PROCEDURE matmul_r3_r3
 END INTERFACE MATMUL
+
+!----------------------------------------------------------------------------
+!                                                                    Matmul_
+!----------------------------------------------------------------------------
+
+INTERFACE
+  MODULE PURE SUBROUTINE matmul_r3_r3_(a1, a2, ans, dim1, dim2, dim3, &
+                                       dim4)
+    REAL(DFP), INTENT(IN) :: a1(:, :, :)
+    REAL(DFP), INTENT(IN) :: a2(:, :, :)
+    REAL(DFP), INTENT(INOUT) :: ans(:, :, :, :)
+    INTEGER(I4B), INTENT(OUT) :: dim1, dim2, dim3, dim4
+  END SUBROUTINE matmul_r3_r3_
+END INTERFACE
+
+INTERFACE MATMUL_
+  MODULE PROCEDURE matmul_r3_r3_
+END INTERFACE MATMUL_
 
 !----------------------------------------------------------------------------
 !                                                              Matmul@Matmul
@@ -209,16 +340,34 @@ END INTERFACE MATMUL
 
 INTERFACE
   MODULE PURE FUNCTION matmul_r3_r4(a1, a2) RESULT(ans)
-    REAL(DFP), INTENT(IN) :: a1(:,:,:)
+    REAL(DFP), INTENT(IN) :: a1(:, :, :)
     REAL(DFP), INTENT(IN) :: a2(:, :, :, :)
-    REAL(DFP) :: ans(size(a1, 1), size(a1, 2), &
-      & size(a2, 2), size(a2, 3), size(a2, 4))
+    REAL(DFP) :: ans(SIZE(a1, 1), SIZE(a1, 2), &
+      & SIZE(a2, 2), SIZE(a2, 3), SIZE(a2, 4))
   END FUNCTION
 END INTERFACE
 
 INTERFACE MATMUL
   MODULE PROCEDURE matmul_r3_r4
 END INTERFACE MATMUL
+
+!----------------------------------------------------------------------------
+!                                                                     Matmul_
+!----------------------------------------------------------------------------
+
+INTERFACE
+  MODULE PURE SUBROUTINE matmul_r3_r4_(a1, a2, ans, dim1, dim2, dim3, &
+                                       dim4, dim5)
+    REAL(DFP), INTENT(IN) :: a1(:, :, :)
+    REAL(DFP), INTENT(IN) :: a2(:, :, :, :)
+    REAL(DFP), INTENT(INOUT) :: ans(:, :, :, :, :)
+    INTEGER(I4B), INTENT(OUT) :: dim1, dim2, dim3, dim4, dim5
+  END SUBROUTINE matmul_r3_r4_
+END INTERFACE
+
+INTERFACE MATMUL_
+  MODULE PROCEDURE matmul_r3_r4_
+END INTERFACE MATMUL_
 
 !----------------------------------------------------------------------------
 !                                                               Matmul@Matmul
@@ -237,13 +386,30 @@ INTERFACE
   MODULE PURE FUNCTION matmul_r2_r3(a1, a2) RESULT(ans)
     REAL(DFP), INTENT(IN) :: a1(:, :)
     REAL(DFP), INTENT(IN) :: a2(:, :, :)
-    REAL(DFP) :: ans(size(a1, 1), size(a2, 2), size(a2, 3))
+    REAL(DFP) :: ans(SIZE(a1, 1), SIZE(a2, 2), SIZE(a2, 3))
   END FUNCTION
 END INTERFACE
 
 INTERFACE MATMUL
   MODULE PROCEDURE matmul_r2_r3
 END INTERFACE MATMUL
+
+!----------------------------------------------------------------------------
+!                                                                    Matmul_
+!----------------------------------------------------------------------------
+
+INTERFACE
+  MODULE PURE SUBROUTINE matmul_r2_r3_(a1, a2, ans, dim1, dim2, dim3)
+    REAL(DFP), INTENT(IN) :: a1(:, :)
+    REAL(DFP), INTENT(IN) :: a2(:, :, :)
+    REAL(DFP), INTENT(INOUT) :: ans(:, :, :)
+    INTEGER(I4B), INTENT(OUT) :: dim1, dim2, dim3
+  END SUBROUTINE matmul_r2_r3_
+END INTERFACE
+
+INTERFACE MATMUL_
+  MODULE PROCEDURE matmul_r2_r3_
+END INTERFACE MATMUL_
 
 !----------------------------------------------------------------------------
 !                                                               Matmul@Matmul
@@ -262,14 +428,31 @@ INTERFACE
   MODULE PURE FUNCTION matmul_r2_r4(a1, a2) RESULT(ans)
     REAL(DFP), INTENT(IN) :: a1(:, :)
     REAL(DFP), INTENT(IN) :: a2(:, :, :, :)
-    REAL(DFP) :: ans(size(a1, 1), size(a2, 2), &
-      & size(a2, 3), size(a2, 4))
+    REAL(DFP) :: ans(SIZE(a1, 1), SIZE(a2, 2), &
+      & SIZE(a2, 3), SIZE(a2, 4))
   END FUNCTION
 END INTERFACE
 
 INTERFACE MATMUL
   MODULE PROCEDURE matmul_r2_r4
 END INTERFACE MATMUL
+
+!----------------------------------------------------------------------------
+!                                                                 Matmul_
+!----------------------------------------------------------------------------
+
+INTERFACE
+  MODULE PURE SUBROUTINE matmul_r2_r4_(a1, a2, ans, dim1, dim2, dim3, dim4)
+    REAL(DFP), INTENT(IN) :: a1(:, :)
+    REAL(DFP), INTENT(IN) :: a2(:, :, :, :)
+    REAL(DFP), INTENT(INOUT) :: ans(:, :, :, :)
+    INTEGER(I4B), INTENT(OUT) :: dim1, dim2, dim3, dim4
+  END SUBROUTINE matmul_r2_r4_
+END INTERFACE
+
+INTERFACE MATMUL_
+  MODULE PROCEDURE matmul_r2_r4_
+END INTERFACE MATMUL_
 
 !----------------------------------------------------------------------------
 !                                                              Matmul@Matmul
@@ -297,6 +480,22 @@ INTERFACE MATMUL
 END INTERFACE MATMUL
 
 !----------------------------------------------------------------------------
+!                                                                    Matmul_
+!----------------------------------------------------------------------------
+
+INTERFACE
+  MODULE PURE SUBROUTINE matmul_r1_r1_(a1, a2, ans)
+    REAL(DFP), INTENT(IN) :: a1(:)
+    REAL(DFP), INTENT(IN) :: a2(:)
+    REAL(DFP), INTENT(INOUT) :: ans
+  END SUBROUTINE matmul_r1_r1_
+END INTERFACE
+
+INTERFACE MATMUL_
+  MODULE PROCEDURE matmul_r1_r1_
+END INTERFACE MATMUL_
+
+!----------------------------------------------------------------------------
 !                                                              Matmul@Matmul
 !----------------------------------------------------------------------------
 
@@ -313,7 +512,7 @@ INTERFACE
   MODULE PURE FUNCTION matmul_r1_r3(a1, a2) RESULT(ans)
     REAL(DFP), INTENT(IN) :: a1(:)
     REAL(DFP), INTENT(IN) :: a2(:, :, :)
-    REAL(DFP) :: ans(size(a2, 2), size(a2, 3))
+    REAL(DFP) :: ans(SIZE(a2, 2), SIZE(a2, 3))
   END FUNCTION
 END INTERFACE
 
@@ -322,7 +521,24 @@ INTERFACE MATMUL
 END INTERFACE MATMUL
 
 !----------------------------------------------------------------------------
-!                                                              Matmul@Matmul
+!                                                                    Matmul_
+!----------------------------------------------------------------------------
+
+INTERFACE
+  MODULE PURE SUBROUTINE matmul_r1_r3_(a1, a2, ans, nrow, ncol)
+    REAL(DFP), INTENT(IN) :: a1(:)
+    REAL(DFP), INTENT(IN) :: a2(:, :, :)
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+  END SUBROUTINE matmul_r1_r3_
+END INTERFACE
+
+INTERFACE MATMUL_
+  MODULE PROCEDURE matmul_r1_r3_
+END INTERFACE MATMUL_
+
+!----------------------------------------------------------------------------
+!                                                                      Matmul
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -337,7 +553,7 @@ INTERFACE
   MODULE PURE FUNCTION matmul_r1_r4(a1, a2) RESULT(ans)
     REAL(DFP), INTENT(IN) :: a1(:)
     REAL(DFP), INTENT(IN) :: a2(:, :, :, :)
-    REAL(DFP) :: ans(size(a2, 2), size(a2, 3), size(a2, 4))
+    REAL(DFP) :: ans(SIZE(a2, 2), SIZE(a2, 3), SIZE(a2, 4))
   END FUNCTION
 END INTERFACE
 
@@ -346,7 +562,25 @@ INTERFACE MATMUL
 END INTERFACE MATMUL
 
 !----------------------------------------------------------------------------
+!                                                                    Matmul_
+!----------------------------------------------------------------------------
+
+INTERFACE
+  MODULE PURE SUBROUTINE matmul_r1_r4_(a1, a2, ans, dim1, dim2, dim3)
+    REAL(DFP), INTENT(IN) :: a1(:)
+    REAL(DFP), INTENT(IN) :: a2(:, :, :, :)
+    REAL(DFP), INTENT(INOUT) :: ans(:, :, :)
+    INTEGER(I4B), INTENT(OUT) :: dim1, dim2, dim3
+  END SUBROUTINE matmul_r1_r4_
+END INTERFACE
+
+INTERFACE MATMUL_
+  MODULE PROCEDURE matmul_r1_r4_
+END INTERFACE MATMUL_
+
+!----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
 END MODULE MatmulUtility
+

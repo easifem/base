@@ -18,7 +18,9 @@
 SUBMODULE(ElemShapeData_Lagrange) Methods
 USE InputUtility, ONLY: Input
 
-USE ReferenceElement_Method, ONLY: Refelem_Initiate => Initiate
+USE ReferenceElement_Method, ONLY: &
+  Refelem_Initiate => Initiate, Refelem_GetFaceElemType => GetFaceElemType, &
+  Refelem_RefCoord_ => RefCoord_
 
 USE ElemShapeData_Method, ONLY: Elemsd_Allocate => ALLOCATE
 
@@ -77,7 +79,8 @@ CALL GetQuadratureWeights_(obj=quad, weights=obj%ws, tsize=nips)
 ALLOCATE (xij(3, nns), temp(nips, nns, 3))
 
 CALL InterpolationPoint_(order=order, elemType=elemType, ipType=ipType0, &
-        layout="VEFC", xij=refelemCoord(1:xidim, :), alpha=alpha, beta=beta, &
+                         layout="VEFC", xij=refelemCoord(1:xidim, :), &
+                         alpha=alpha, beta=beta, &
                          lambda=lambda, ans=xij, nrow=indx(1), ncol=indx(2))
 
 IF (PRESENT(coeff)) THEN
@@ -149,11 +152,14 @@ END PROCEDURE LagrangeElemShapeData1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE LagrangeElemShapeData2
-CALL LagrangeElemShapeData1(obj=obj, quad=quad, nsd=refelem%nsd, &
+CALL LagrangeElemShapeData(obj=obj, quad=quad, nsd=refelem%nsd, &
                            xidim=refelem%xidimension, elemType=refelem%name, &
-       refelemCoord=refelem%xij, domainName=refelem%domainName, order=order, &
-       ipType=ipType, basisType=basisType, coeff=coeff, firstCall=firstCall, &
-                            alpha=alpha, beta=beta, lambda=lambda)
+                           refelemCoord=refelem%xij, &
+                           domainName=refelem%domainName, &
+                           order=order, ipType=ipType, &
+                           basisType=basisType, coeff=coeff, &
+                           firstCall=firstCall, &
+                           alpha=alpha, beta=beta, lambda=lambda)
 END PROCEDURE LagrangeElemShapeData2
 
 !----------------------------------------------------------------------------
@@ -161,9 +167,43 @@ END PROCEDURE LagrangeElemShapeData2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE LagrangeElemShapeData3
-CALL LagrangeElemShapeData2(obj=obj, quad=quad, refelem=refelem, &
-               order=order, ipType=ipType, basisType=basisType, coeff=coeff, &
-                   firstCall=firstCall, alpha=alpha, beta=beta, lambda=lambda)
+CALL LagrangeElemShapeData(obj=obj, quad=quad, refelem=refelem, &
+                           order=order, ipType=ipType, &
+                           basisType=basisType, coeff=coeff, &
+                           firstCall=firstCall, alpha=alpha, &
+                           beta=beta, lambda=lambda)
 END PROCEDURE LagrangeElemShapeData3
+
+!----------------------------------------------------------------------------
+!                                                 LagrangeFacetElemShapeData
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE LagrangeFacetElemShapeData1
+INTEGER(I4B) :: faceElemType, faceXidim, tFaceNodes, nrow, ncol
+REAL(DFP) :: faceRefelemCoord(3, 8)
+
+CALL LagrangeElemShapeData(obj=obj, quad=quad, nsd=nsd, xidim=xidim, &
+                           elemType=elemType, refelemCoord=refelemCoord, &
+                           domainName=domainName, order=order, &
+                           ipType=ipType, basisType=basisType, &
+                           coeff=coeff, firstCall=firstCall, &
+                           alpha=alpha, beta=beta, lambda=lambda)
+
+CALL Refelem_GetFaceElemType(elemType=elemType, localFaceNumber=localFaceNumber, &
+                             faceElemType=faceElemType, &
+                             opt=2, tFaceNodes=tFaceNodes)
+
+CALL Refelem_RefCoord_(elemType=faceElemType, refElem=domainName, &
+                       ans=faceRefelemCoord, nrow=nrow, ncol=ncol)
+
+faceXidim = xidim - 1
+CALL LagrangeElemShapeData(obj=facetElemsd, quad=facetQuad, &
+                           nsd=nsd, xidim=faceXidim, &
+                           elemType=faceElemType, &
+                           refelemCoord=faceRefelemCoord(1:nrow, 1:ncol), &
+                           domainName=domainName, order=order, &
+                           ipType=ipType, basisType=basisType, &
+                           alpha=alpha, beta=beta, lambda=lambda)
+END PROCEDURE LagrangeFacetElemShapeData1
 
 END SUBMODULE Methods

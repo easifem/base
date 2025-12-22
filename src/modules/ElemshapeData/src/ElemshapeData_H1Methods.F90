@@ -47,7 +47,8 @@ PUBLIC :: Initiate
 
 INTERFACE Initiate
   MODULE SUBROUTINE H1_Hierarchy1(obj, quad, refelem, baseContinuity, &
-             baseInterpolation, order, ipType, basisType, alpha, beta, lambda)
+                                  baseInterpolation, order, ipType, &
+                                  basisType, alpha, beta, lambda)
     CLASS(ElemshapeData_), INTENT(INOUT) :: obj
     !! Element shape data
     CLASS(QuadraturePoint_), INTENT(IN) :: quad
@@ -87,7 +88,8 @@ END INTERFACE Initiate
 
 INTERFACE Initiate
   MODULE SUBROUTINE H1_Orthogonal1(obj, quad, refelem, baseContinuity, &
-             baseInterpolation, order, ipType, basisType, alpha, beta, lambda)
+                                   baseInterpolation, order, ipType, &
+                                   basisType, alpha, beta, lambda)
     CLASS(ElemshapeData_), INTENT(INOUT) :: obj
     !! Element shape data
     CLASS(QuadraturePoint_), INTENT(IN) :: quad
@@ -124,7 +126,8 @@ END INTERFACE Initiate
 
 INTERFACE Initiate
   MODULE SUBROUTINE H1_Hermit1(obj, quad, refelem, baseContinuity, &
-             baseInterpolation, order, ipType, basisType, alpha, beta, lambda)
+                               baseInterpolation, order, ipType, &
+                               basisType, alpha, beta, lambda)
     CLASS(ElemshapeData_), INTENT(INOUT) :: obj
     !! Element shape data
     CLASS(QuadraturePoint_), INTENT(IN) :: quad
@@ -157,7 +160,8 @@ END INTERFACE Initiate
 
 INTERFACE Initiate
   MODULE SUBROUTINE H1_Serendipity1(obj, quad, refelem, baseContinuity, &
-             baseInterpolation, order, ipType, basisType, alpha, beta, lambda)
+                                    baseInterpolation, order, ipType, &
+                                    basisType, alpha, beta, lambda)
     CLASS(ElemshapeData_), INTENT(INOUT) :: obj
     !! Element shape data
     CLASS(QuadraturePoint_), INTENT(IN) :: quad

@@ -39,7 +39,7 @@ PUBLIC :: ASSIGNMENT(=)
 PUBLIC :: ReferenceElement_Pointer
 PUBLIC :: GetConnectivity
 PUBLIC :: ElementType
-PUBLIC :: Elementname
+PUBLIC :: ElementName
 PUBLIC :: TotalNodesInElement
 PUBLIC :: ElementOrder
 PUBLIC :: OPERATOR(.order.)
@@ -135,8 +135,13 @@ TYPE :: ReferenceElementInfo_
   INTEGER(I4B) :: faceElemTypePrism(5) = 0
   INTEGER(I4B) :: faceElemTypePyramid(5) = 0
   !! TODO: add faceElemTypePrism and faceElemTypePyramid
-
   !! element types of faces of triangle
+
+#ifdef MAX_QUADRANGLE_ORDER
+  INTEGER(I4B) :: maxOrder_Quadrangle = MAX_QUADRANGLE_ORDER
+#else
+  INTEGER(I4B) :: maxOrder_Quadrangle = 2_I4B
+#endif
 END TYPE ReferenceElementInfo_
 
 TYPE(ReferenceElementInfo_), PARAMETER :: ReferenceElementInfo = &
@@ -162,7 +167,7 @@ INTERFACE
 END INTERFACE
 
 !----------------------------------------------------------------------------
-!
+!                                                   RefCoord_@GeometryMethods
 !----------------------------------------------------------------------------
 
 INTERFACE
@@ -330,6 +335,32 @@ INTERFACE GetFaceElemType
     !! If opt = 2, then edge connectivity for Lagrangian approximation
     !! opt = 1 is default
   END SUBROUTINE GetFaceElemType1
+END INTERFACE GetFaceElemType
+
+!----------------------------------------------------------------------------
+!                                           GetFaceElemType@GeometryMethods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2024-03-11
+! summary:  Returns the element type of each face
+
+INTERFACE GetFaceElemType
+  MODULE PURE SUBROUTINE GetFaceElemType2(elemType, localFaceNumber, &
+                                          faceElemType, opt, tFaceNodes)
+    INTEGER(I4B), INTENT(IN) :: elemType
+    !! name of element
+    INTEGER(I4B), INTENT(IN) :: localFaceNumber
+    !! local face number
+    INTEGER(I4B), INTENT(OUT) :: faceElemType
+    !! Element names of faces
+    INTEGER(I4B), INTENT(OUT) :: tFaceNodes
+    !! Total number of nodes in each face
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: opt
+    !! If opt = 1, then edge connectivity for hierarchial approximation
+    !! If opt = 2, then edge connectivity for Lagrangian approximation
+    !! opt = 1 is default
+  END SUBROUTINE GetFaceElemType2
 END INTERFACE GetFaceElemType
 
 !----------------------------------------------------------------------------
@@ -690,7 +721,7 @@ INTERFACE GetConnectivity
 END INTERFACE GetConnectivity
 
 !----------------------------------------------------------------------------
-!                                            ElementType@ElementnameMethods
+!                                            ElementType@ElementNameMethods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -705,7 +736,7 @@ INTERFACE ElementType
 END INTERFACE ElementType
 
 !----------------------------------------------------------------------------
-!                                             ElementType@ElementnameMethods
+!                                             ElementType@ElementNameMethods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -720,37 +751,37 @@ INTERFACE ElementType
 END INTERFACE ElementType
 
 !----------------------------------------------------------------------------
-!                                           Elementname@ElementNameMethods
+!                                           ElementName@ElementNameMethods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 21 May 2022
 ! summary: Returns element name in character from element number/type
 
-INTERFACE Elementname
+INTERFACE ElementName
   MODULE PURE FUNCTION Element_name(elemType) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: elemType
     CHARACTER(:), ALLOCATABLE :: ans
   END FUNCTION Element_name
-END INTERFACE Elementname
+END INTERFACE ElementName
 
 !----------------------------------------------------------------------------
-!                                             Elementname@ElementNameMethods
+!                                             ElementName@ElementNameMethods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 21 May 2022
 ! summary: Returns element name in character from ReferenceElement
 
-INTERFACE Elementname
+INTERFACE ElementName
   MODULE PURE FUNCTION Element_name_obj(obj) RESULT(ans)
     CLASS(ReferenceElement_), INTENT(IN) :: obj
     CHARACTER(:), ALLOCATABLE :: ans
   END FUNCTION Element_name_obj
-END INTERFACE Elementname
+END INTERFACE ElementName
 
 !----------------------------------------------------------------------------
-!                                   TotalNodesInElement@ElementnameMethods
+!                                   TotalNodesInElement@ElementNameMethods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -765,7 +796,7 @@ INTERFACE TotalNodesInElement
 END INTERFACE TotalNodesInElement
 
 !----------------------------------------------------------------------------
-!                                           ElementOrder@ElementnameMethods
+!                                           ElementOrder@ElementNameMethods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -780,7 +811,7 @@ INTERFACE ElementOrder
 END INTERFACE ElementOrder
 
 !----------------------------------------------------------------------------
-!                                           ElementOrder@ElementnameMethods
+!                                           ElementOrder@ElementNameMethods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -799,7 +830,7 @@ INTERFACE OPERATOR(.order.)
 END INTERFACE OPERATOR(.order.)
 
 !----------------------------------------------------------------------------
-!                                            XiDimension@ElementnameMethods
+!                                            XiDimension@ElementNameMethods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -815,7 +846,7 @@ INTERFACE XiDimension
 END INTERFACE Xidimension
 
 !----------------------------------------------------------------------------
-!                                             Xidimension@ElementnameMethods
+!                                             Xidimension@ElementNameMethods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -1161,7 +1192,7 @@ INTERFACE isSerendipityElement
 END INTERFACE isSerendipityElement
 
 !----------------------------------------------------------------------------
-!                                         ElementTopology@ElementnameMethods
+!                                         ElementTopology@ElementNameMethods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -1189,7 +1220,7 @@ INTERFACE OPERATOR(.topology.)
 END INTERFACE OPERATOR(.topology.)
 
 !----------------------------------------------------------------------------
-!                                       ElementTopology@ElementnameMethods
+!                                       ElementTopology@ElementNameMethods
 !----------------------------------------------------------------------------
 
 INTERFACE ElementTopology

@@ -3178,7 +3178,7 @@ ELEMENTAL FUNCTION to_logical_1(self, kind) RESULT(ans)
   !! Mold parameter for kind detection.
   LOGICAL :: ans
   !! The number into the string.
- 
+
   ans = self%to_logical()
 END FUNCTION to_logical_1
 

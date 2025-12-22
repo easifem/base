@@ -27,7 +27,9 @@ IMPLICIT NONE
 
 PRIVATE
 
+PUBLIC :: Set
 PUBLIC :: Initiate
+PUBLIC :: InitiateFacetQuadrature
 PUBLIC :: Copy
 PUBLIC :: ASSIGNMENT(=)
 PUBLIC :: QuadraturePoint
@@ -45,6 +47,7 @@ PUBLIC :: Display
 ! PUBLIC :: QuadraturePoint_MdEncode
 PUBLIC :: QuadraturePointIdToName
 PUBLIC :: QuadraturePoint_ToChar
+PUBLIC :: QuadraturePoint_ToInteger
 PUBLIC :: QuadraturePointNameToId
 PUBLIC :: MdEncode
 
@@ -56,12 +59,12 @@ PUBLIC :: MdEncode
 ! date:  2023-08-06
 ! summary:  Quadrature point name to quadrature point id
 
-INTERFACE
+INTERFACE QuadraturePoint_ToInteger
   MODULE FUNCTION QuadraturePointNameToId(name) RESULT(ans)
     CHARACTER(*), INTENT(IN) :: name
     INTEGER(I4B) :: ans
   END FUNCTION QuadraturePointNameToId
-END INTERFACE
+END INTERFACE QuadraturePoint_ToInteger
 
 !----------------------------------------------------------------------------
 !                                 QuadratuePointIdToName@ConstructorMethods
@@ -314,6 +317,7 @@ INTERFACE Initiate
     !! Ultraspherical parameter
   END SUBROUTINE obj_Initiate6
 END INTERFACE Initiate
+
 !----------------------------------------------------------------------------
 !                                                Initiate@ConstructorMethods
 !----------------------------------------------------------------------------
@@ -324,8 +328,10 @@ END INTERFACE Initiate
 
 INTERFACE Initiate
   MODULE SUBROUTINE obj_Initiate7(obj, refElem, p, q, r, quadratureType1, &
-           quadratureType2, quadratureType3, alpha1, beta1, lambda1, alpha2, &
-                                  beta2, lambda2, alpha3, beta3, lambda3)
+                                  quadratureType2, quadratureType3, &
+                                  alpha1, beta1, lambda1, &
+                                  alpha2, beta2, lambda2, &
+                                  alpha3, beta3, lambda3)
     TYPE(QuadraturePoint_), INTENT(INOUT) :: obj
     !! Total number of xidimension
     CLASS(ReferenceElement_), INTENT(IN) :: refElem
@@ -364,8 +370,10 @@ END INTERFACE Initiate
 
 INTERFACE Initiate
   MODULE SUBROUTINE obj_Initiate8(obj, refElem, nipsx, nipsy, nipsz, &
-           quadratureType1, quadratureType2, quadratureType3, alpha1, beta1, &
-                      lambda1, alpha2, beta2, lambda2, alpha3, beta3, lambda3)
+                                  quadratureType1, quadratureType2, &
+                                  quadratureType3, alpha1, beta1, lambda1, &
+                                  alpha2, beta2, lambda2, &
+                                  alpha3, beta3, lambda3)
     TYPE(QuadraturePoint_), INTENT(INOUT) :: obj
     !! Total number of xidimension
     CLASS(ReferenceElement_), INTENT(IN) :: refElem
@@ -483,13 +491,15 @@ INTERFACE Initiate
 END INTERFACE Initiate
 
 !----------------------------------------------------------------------------
-!
+!                                                Initiate@ConstructorMethods
 !----------------------------------------------------------------------------
 
 INTERFACE Initiate
   MODULE SUBROUTINE obj_Initiate11(obj, elemType, domainName, p, q, r, &
-           quadratureType1, quadratureType2, quadratureType3, alpha1, beta1, &
-                 lambda1, alpha2, beta2, lambda2, alpha3, beta3, lambda3, xij)
+                                   quadratureType1, quadratureType2, &
+                                   quadratureType3, alpha1, beta1, lambda1, &
+                                   alpha2, beta2, lambda2, &
+                                   alpha3, beta3, lambda3, xij)
     TYPE(QuadraturePoint_), INTENT(INOUT) :: obj
     !! Total number of xidimension
     INTEGER(I4B), INTENT(IN) :: elemtype
@@ -527,8 +537,10 @@ END INTERFACE Initiate
 
 INTERFACE Initiate
   MODULE SUBROUTINE obj_Initiate12(obj, elemType, domainName, nipsx, nipsy, &
-    nipsz, quadratureType1, quadratureType2, quadratureType3, alpha1, beta1, &
-                 lambda1, alpha2, beta2, lambda2, alpha3, beta3, lambda3, xij)
+                                   nipsz, quadratureType1, quadratureType2, &
+                                   quadratureType3, alpha1, beta1, lambda1, &
+                                   alpha2, beta2, lambda2, &
+                                   alpha3, beta3, lambda3, xij)
     TYPE(QuadraturePoint_), INTENT(INOUT) :: obj
     !! Total number of xidimension
     INTEGER(I4B), INTENT(IN) :: elemType
@@ -631,11 +643,41 @@ END INTERFACE SIZE
 ! summary: This routine returns total number of quadrature points
 
 INTERFACE GetTotalQuadraturepoints
-  MODULE PURE FUNCTION obj_GetTotalQuadraturePoints(obj) RESULT(ans)
+  MODULE PURE FUNCTION obj_GetTotalQuadraturePoints1(obj) RESULT(ans)
     TYPE(QuadraturePoint_), INTENT(IN) :: obj
     INTEGER(I4B) :: ans
-  END FUNCTION obj_GetTotalQuadraturePoints
+  END FUNCTION obj_GetTotalQuadraturePoints1
 END INTERFACE GetTotalQuadraturepoints
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE GetTotalQuadraturePoints
+  MODULE FUNCTION obj_GetTotalQuadraturePoints2(elemType, p, q, r, &
+                                                quadratureType1, &
+                                                quadratureType2, &
+                                                quadratureType3) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: elemtype
+    !! Reference-element
+    INTEGER(I4B), INTENT(IN) :: p
+    !! order of integrand in x
+    INTEGER(I4B), INTENT(IN) :: q
+    !! order of integrand in y
+    INTEGER(I4B), INTENT(IN) :: r
+    !! order of integrand in z direction
+    INTEGER(I4B), INTENT(IN) :: quadratureType1
+    !! Type of quadrature points: GaussLegendre, GaussLegendreLobatto
+    !! GaussLegendreRadau, GaussLegendreRadauLeft, GaussLegendreRadauRight
+    !! GaussChebyshev, GaussChebyshevLobatto, GaussChebyshevRadau
+    !! GaussChebyshevRadauLeft, GaussChebyshevRadauRight
+    INTEGER(I4B), INTENT(IN) :: quadratureType2
+    !! Type of quadrature points
+    INTEGER(I4B), INTENT(IN) :: quadratureType3
+    !! Type of quadrature points
+    INTEGER(I4B) :: ans
+  END FUNCTION obj_GetTotalQuadraturePoints2
+END INTERFACE GetTotalQuadraturePoints
 
 !----------------------------------------------------------------------------
 !                                              GetQuadraturePoint@GetMethods
@@ -996,6 +1038,223 @@ END INTERFACE MdEncode
 !     TYPE(QuadraturePoint_) :: obj
 !   END FUNCTION getGaussLegendreRadauRightQP3
 ! END INTERFACE GaussLegendreRadauRightQuadrature
+
+!----------------------------------------------------------------------------
+!                              InitiateFacetQuadrature@FacetQuadratureMethods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2025-05-21
+! summary:  This routine Initiates the quadrature points
+!
+!# Introduction
+!
+! This routine is used to initiate the quadrature points from order of
+! of integrand.
+! This subroutine does not require formation of reference element.
+! This routine calls obj_Initiate11 method.
+
+INTERFACE InitiateFacetQuadrature
+  MODULE SUBROUTINE obj_InitiateFacetQuadrature1(obj, facetQuad, &
+                                                 localFaceNumber, elemType, &
+                                                 domainName, order, &
+                                                 quadratureType, &
+                                                 alpha, beta, lambda, xij)
+    TYPE(QuadraturePoint_), INTENT(INOUT) :: obj
+    !! Quadrature point in the cell
+    TYPE(QuadraturePoint_), INTENT(INOUT) :: facetQuad
+    !! Quadrature point on the local face
+    INTEGER(I4B), INTENT(IN) :: localFaceNumber
+    !! local face number
+    INTEGER(I4B), INTENT(IN) :: elemType
+    !! element name
+    CHARACTER(*), INTENT(IN) :: domainName
+    !! domain name for reference element
+    !! unit or biunit
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order of integrand
+    INTEGER(I4B), INTENT(IN) :: quadratureType
+    !! Type of quadrature points ! GaussLegendre ! GaussLegendreLobatto
+    !! GaussLegendreRadau ! GaussLegendreRadauLeft ! GaussLegendreRadauRight
+    !! GaussChebyshev ! GaussChebyshevLobatto ! GaussChebyshevRadau
+    !! GaussChebyshevRadauLeft ! GaussChebyshevRadauRight
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
+    !! Jacobi parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: beta
+    !! Jacobi parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: lambda
+    !! Ultraspherical parameter
+    REAL(DFP), INTENT(IN) :: xij(:, :)
+  END SUBROUTINE obj_InitiateFacetQuadrature1
+END INTERFACE InitiateFacetQuadrature
+
+!----------------------------------------------------------------------------
+!                             InitiateFacetQuadrature@FacetQuadratureMethods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2025-05-21
+! summary: This routine Initiates the quadrature points
+
+INTERFACE InitiateFacetQuadrature
+  MODULE SUBROUTINE obj_InitiateFacetQuadrature2(obj, facetQuad, &
+                                                 localFaceNumber, elemType, &
+                                                 domainName, nips, &
+                                                 quadratureType, alpha, &
+                                                 beta, lambda, xij)
+    TYPE(QuadraturePoint_), INTENT(INOUT) :: obj
+    !! Quadrature point in the cell
+    TYPE(QuadraturePoint_), INTENT(INOUT) :: facetQuad
+    !! Quadrature point on the local facet
+    INTEGER(I4B), INTENT(IN) :: localFaceNumber
+    !! local face number
+    INTEGER(I4B), INTENT(IN) :: elemType
+    !! element name
+    CHARACTER(*), INTENT(IN) :: domainName
+    !! domain name, reference element
+    !! unit or biunit
+    INTEGER(I4B), INTENT(IN) :: nips(1)
+    !! Number of integration points
+    !! in the case of  quadrangle element nips(1) denotes the
+    !! number of quadrature points in the x and y direction
+    !! so the total number of quadrature points are nips(1)*nips(1)
+    INTEGER(I4B), INTENT(IN) :: quadratureType
+    !! Type of quadrature points ! GaussLegendre ! GaussLegendreLobatto
+    !! GaussLegendreRadau ! GaussLegendreRadauLeft ! GaussLegendreRadauRight
+    !! GaussChebyshev ! GaussChebyshevLobatto ! GaussChebyshevRadau
+    !! GaussChebyshevRadauLeft ! GaussChebyshevRadauRight
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
+    !! Jacobi parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: beta
+    !! Jacobi parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: lambda
+    !! Ultraspherical parameter
+    REAL(DFP), INTENT(IN) :: xij(:, :)
+  END SUBROUTINE obj_InitiateFacetQuadrature2
+END INTERFACE InitiateFacetQuadrature
+
+!----------------------------------------------------------------------------
+!                              InitiateFacetQuadrature@FacetQuadratureMethods
+!----------------------------------------------------------------------------
+
+INTERFACE InitiateFacetQuadrature
+  MODULE SUBROUTINE obj_InitiateFacetQuadrature3(obj, facetQuad, &
+                                                 localFaceNumber, elemType, &
+                                                 domainName, p, q, r, &
+                                                 quadratureType1, &
+                                                 quadratureType2, &
+                                                 quadratureType3, &
+                                                 alpha1, beta1, lambda1, &
+                                                 alpha2, beta2, lambda2, &
+                                                 alpha3, beta3, lambda3, &
+                                                 xij)
+    TYPE(QuadraturePoint_), INTENT(INOUT) :: obj
+    !! Quadrature point in the cell
+    TYPE(QuadraturePoint_), INTENT(INOUT) :: facetQuad
+    !! Quadrature point on the local face element
+    INTEGER(I4B), INTENT(IN) :: localFaceNumber
+    !! local facet number
+    INTEGER(I4B), INTENT(IN) :: elemtype
+    !! Reference-element
+    CHARACTER(*), INTENT(IN) :: domainName
+    !! domain name
+    INTEGER(I4B), INTENT(IN) :: p
+    !! order of integrand in x
+    INTEGER(I4B), INTENT(IN) :: q
+    !! order of integrand in y
+    INTEGER(I4B), INTENT(IN) :: r
+    !! order of integrand in z direction
+    INTEGER(I4B), INTENT(IN) :: quadratureType1
+    !! Type of quadrature points ! GaussLegendre ! GaussLegendreLobatto
+    !! GaussLegendreRadau ! GaussLegendreRadauLeft ! GaussLegendreRadauRight
+    !! GaussChebyshev ! GaussChebyshevLobatto ! GaussChebyshevRadau
+    !! GaussChebyshevRadauLeft ! GaussChebyshevRadauRight
+    INTEGER(I4B), INTENT(IN) :: quadratureType2
+    !! Type of quadrature points
+    INTEGER(I4B), INTENT(IN) :: quadratureType3
+    !! Type of quadrature points
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha1, beta1, lambda1
+    !! Jacobi parameter and Ultraspherical parameters
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha2, beta2, lambda2
+    !! Jacobi parameter and Ultraspherical parameters
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha3, beta3, lambda3
+    !! Jacobi parameter and Ultraspherical parameters
+    REAL(DFP), INTENT(IN) :: xij(:, :)
+  END SUBROUTINE obj_InitiateFacetQuadrature3
+END INTERFACE InitiateFacetQuadrature
+
+!----------------------------------------------------------------------------
+!                              InitiateFacetQuadrature@FacetQuadratureMethods
+!----------------------------------------------------------------------------
+
+INTERFACE InitiateFacetQuadrature
+  MODULE SUBROUTINE obj_InitiateFacetQuadrature4(obj, facetQuad, &
+                                                 localFaceNumber, &
+                                                 elemType, domainName, &
+                                                 nipsx, nipsy, nipsz, &
+                                                 quadratureType1, &
+                                                 quadratureType2, &
+                                                 quadratureType3, &
+                                                 alpha1, beta1, &
+                                                 lambda1, &
+                                                 alpha2, beta2, lambda2, &
+                                                 alpha3, beta3, lambda3, xij)
+    TYPE(QuadraturePoint_), INTENT(INOUT) :: obj
+    !! Total number of xidimension
+    TYPE(QuadraturePoint_), INTENT(INOUT) :: facetQuad
+    !! Quadrature point on the local face element
+    INTEGER(I4B), INTENT(IN) :: localFaceNumber
+    !! local facet number
+    INTEGER(I4B), INTENT(IN) :: elemType
+    !! element type
+    CHARACTER(*), INTENT(IN) :: domainName
+    !! domain name
+    INTEGER(I4B), INTENT(IN) :: nipsx(1)
+    !! number of integration points in x direction
+    INTEGER(I4B), INTENT(IN) :: nipsy(1)
+    !! number of integration points in y direction
+    INTEGER(I4B), INTENT(IN) :: nipsz(1)
+    !! number of integration points in z direction
+    INTEGER(I4B), INTENT(IN) :: quadratureType1
+    !! Type of quadrature points
+    !! GaussLegendre ! GaussLegendreLobatto ! GaussLegendreRadau
+    !! GaussLegendreRadauLeft ! GaussLegendreRadauRight ! GaussChebyshev
+    !! GaussChebyshevLobatto ! GaussChebyshevRadau ! GaussChebyshevRadauLeft
+    !! GaussChebyshevRadauRight
+    INTEGER(I4B), INTENT(IN) :: quadratureType2
+    !! Type of quadrature points
+    INTEGER(I4B), INTENT(IN) :: quadratureType3
+    !! Type of quadrature points
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha1, beta1, lambda1
+    !! Jacobi parameter and Ultraspherical parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha2, beta2, lambda2
+    !! Jacobi parameter and Ultraspherical parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha3, beta3, lambda3
+    !! Jacobi parameter and Ultraspherical parameter
+    REAL(DFP), INTENT(IN) :: xij(:, :)
+    !! coordinates of reference element
+  END SUBROUTINE obj_InitiateFacetQuadrature4
+END INTERFACE InitiateFacetQuadrature
+
+!----------------------------------------------------------------------------
+!                                                              Set@SetMethods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2025-10-29
+! summary: This routine sets the quadrature points
+!          We do not allocate anything here
+
+INTERFACE Set
+  MODULE PURE SUBROUTINE obj_Set1(obj, points)
+    TYPE(QuadraturePoint_), INTENT(INOUT) :: obj
+    REAL(DFP), INTENT(IN) :: points(:, :)
+    !! points contains the quadrature points and weights
+    !! points( :, ipoint ) contains quadrature points and weights of ipoint
+    !! quadrature point. The last row contains the weight. The rest of the
+    !! rows contains the coordinates of quadrature.
+  END SUBROUTINE obj_Set1
+END INTERFACE Set
 
 !----------------------------------------------------------------------------
 !

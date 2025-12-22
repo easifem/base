@@ -30,6 +30,11 @@ USE CSRMatrix_SetMethods
 USE ErrorHandling
 USE GlobalData, ONLY: DofToNodes, NodesToDOF, FMT_NODES, FMT_DOF, stderr
 IMPLICIT NONE
+
+#ifdef DEBUG_VER
+CHARACTER(*), PARAMETER :: modName = "CSRMatrix_GetMethods@Methods.F90"
+#endif
+
 CONTAINS
 
 !----------------------------------------------------------------------------
@@ -247,25 +252,6 @@ END DO
 END PROCEDURE obj_Get2
 
 !----------------------------------------------------------------------------
-!                                                               GetValue
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE obj_Get10
-INTEGER(I4B) :: ii, jj
-
-! VALUE = 0.0_DFP
-nrow = SIZE(irow)
-ncol = SIZE(icolumn)
-DO jj = 1, ncol
-  DO ii = 1, nrow
-    CALL GetValue(obj=obj, VALUE=VALUE(ii, jj), irow=irow(ii), &
-                  icolumn=icolumn(jj))
-  END DO
-END DO
-
-END PROCEDURE obj_Get10
-
-!----------------------------------------------------------------------------
 !                                                                   GetValue
 !----------------------------------------------------------------------------
 
@@ -318,7 +304,6 @@ END PROCEDURE obj_Get5
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE obj_Get6
-! Internal variables
 INTEGER(I4B), ALLOCATABLE :: row(:), col(:)
 INTEGER(I4B) :: ii, jj
 
@@ -346,22 +331,110 @@ END PROCEDURE obj_Get6
 MODULE PROCEDURE obj_Get7
 INTEGER(I4B) :: irow, icolumn
 
-irow = GetNodeLoc( &
-  & obj=obj%csr%idof, &
-  & nodenum=iNodeNum, &
-  & ivar=ivar, &
-  & spacecompo=ispacecompo, &
-  & timecompo=itimecompo)
-
-icolumn = GetNodeLoc( &
-    & obj=obj%csr%jdof, &
-    & nodenum=jNodeNum, &
-    & ivar=jvar, &
-    & spacecompo=jspacecompo, &
-    & timecompo=jtimecompo)
-
+irow = GetNodeLoc(obj=obj%csr%idof, nodenum=iNodeNum, ivar=ivar, &
+                  spacecompo=ispacecompo, timecompo=itimecompo)
+icolumn = GetNodeLoc(obj=obj%csr%jdof, nodenum=jNodeNum, ivar=jvar, &
+                     spacecompo=jspacecompo, timecompo=jtimecompo)
 CALL GetValue(obj=obj, irow=irow, icolumn=icolumn, VALUE=VALUE)
 END PROCEDURE obj_Get7
+
+!----------------------------------------------------------------------------
+!                                                             GetValue
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE obj_Get8
+CHARACTER(*), PARAMETER :: myName = "obj_Get8()"
+INTEGER(I4B) :: myindx(6, 2), idof1, jdof1, idof2, jdof2, &
+                row1, row2, col1, col2
+CLASS(DOF_), POINTER :: dof_obj
+LOGICAL(LGT) :: isok
+
+! 1 ivar
+! 2 ispacecompo
+! 3 itimecompo
+! 4 jvar
+! 5 jspacecompo
+! 6 jtimecompo
+
+isok = PRESENT(ierr)
+IF (isok) ierr = 0
+
+myindx(1, 1) = Input(default=1, option=ivar1)
+myindx(2, 1) = Input(default=1, option=ispacecompo1)
+myindx(3, 1) = Input(default=1, option=itimecompo1)
+myindx(4, 1) = Input(default=1, option=jvar1)
+myindx(5, 1) = Input(default=1, option=jspacecompo1)
+myindx(6, 1) = Input(default=1, option=jtimecompo1)
+
+myindx(1, 2) = Input(default=1, option=ivar2)
+myindx(2, 2) = Input(default=1, option=ispacecompo2)
+myindx(3, 2) = Input(default=1, option=itimecompo2)
+myindx(4, 2) = Input(default=1, option=jvar2)
+myindx(5, 2) = Input(default=1, option=jspacecompo2)
+myindx(6, 2) = Input(default=1, option=jtimecompo2)
+
+NULLIFY (dof_obj)
+
+dof_obj => GetDOFPointer(obj1, 1)
+
+#ifdef DEBUG_VER
+isok = ASSOCIATED(dof_obj)
+CALL AssertError1(isok, myName, modName, __LINE__, &
+                  "dof_obj is not associated.")
+#endif
+
+idof1 = GetIDOF(obj=dof_obj, ivar=myindx(1, 1), spacecompo=myindx(2, 1), &
+                timecompo=myindx(3, 1))
+row1 = dof_obj.tNodes.idof1
+
+dof_obj => GetDOFPointer(obj1, 2)
+
+#ifdef DEBUG_VER
+isok = ASSOCIATED(dof_obj)
+CALL AssertError1(isok, myName, modName, __LINE__, &
+                  "dof_obj is not associated.")
+#endif
+
+jdof1 = GetIDOF(obj=dof_obj, ivar=myindx(4, 1), spacecompo=myindx(5, 1), &
+                timecompo=myindx(6, 1))
+col1 = dof_obj.tNodes.jdof1
+
+dof_obj => GetDOFPointer(obj2, 1)
+
+#ifdef DEBUG_VER
+isok = ASSOCIATED(dof_obj)
+CALL AssertError1(isok, myName, modName, __LINE__, &
+                  "dof_obj is not associated.")
+#endif
+
+idof2 = GetIDOF(obj=dof_obj, ivar=myindx(1, 2), spacecompo=myindx(2, 2), &
+                timecompo=myindx(3, 2))
+row2 = dof_obj.tNodes.idof2
+
+dof_obj => GetDOFPointer(obj2, 2)
+
+#ifdef DEBUG_VER
+isok = ASSOCIATED(dof_obj)
+CALL AssertError1(isok, myName, modName, __LINE__, &
+                  "dof_obj is not associated.")
+#endif
+
+jdof2 = GetIDOF(obj=dof_obj, ivar=myindx(4, 2), spacecompo=myindx(5, 2), &
+                timecompo=myindx(6, 2))
+
+col2 = dof_obj.tNodes.jdof2
+
+NULLIFY (dof_obj)
+
+#ifdef DEBUG_VER
+isok = (row1 .EQ. row2) .AND. (col1 .EQ. col2)
+CALL AssertError1(isok, myName, modName, __LINE__, &
+                  "Some error occured in sizes.")
+#endif
+
+CALL CSR2CSR_Get_Master(obj1=obj1, obj2=obj2, idof1=idof1, idof2=idof2, &
+                        jdof1=jdof1, jdof2=jdof2, tNodes1=row1, tNodes2=col1)
+END PROCEDURE obj_Get8
 
 !----------------------------------------------------------------------------
 !                                                                   GetValue
@@ -381,132 +454,41 @@ CALL GetValue(obj=obj, irow=irow, icolumn=icolumn, VALUE=VALUE, &
 END PROCEDURE obj_Get9
 
 !----------------------------------------------------------------------------
-!                                                             GetValue
+!                                                               GetValue
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE obj_Get8
-CHARACTER(*), PARAMETER :: myName = "CSR2CSR_Get_Master()"
-CHARACTER(*), PARAMETER :: filename = __FILE__
-INTEGER(I4B) :: myindx(6, 2), idof1, jdof1, idof2, jdof2,  &
-  & row1, row2, col1, col2, ierr0
-CLASS(DOF_), POINTER :: dof_obj
-LOGICAL(LGT) :: problem
+MODULE PROCEDURE obj_Get10
+INTEGER(I4B) :: ii, jj
 
-! 1 ivar
-! 2 ispacecompo
-! 3 itimecompo
-! 4 jvar
-! 5 jspacecompo
-! 6 jtimecompo
+! VALUE = 0.0_DFP
+nrow = SIZE(irow)
+ncol = SIZE(icolumn)
+DO jj = 1, ncol
+  DO ii = 1, nrow
+    CALL GetValue(obj=obj, VALUE=VALUE(ii, jj), irow=irow(ii), &
+                  icolumn=icolumn(jj))
+  END DO
+END DO
 
-IF (PRESENT(ierr)) ierr = 0
+END PROCEDURE obj_Get10
 
-myindx(1, 1) = Input(default=1, option=ivar1)
-myindx(2, 1) = Input(default=1, option=ispacecompo1)
-myindx(3, 1) = Input(default=1, option=itimecompo1)
-myindx(4, 1) = Input(default=1, option=jvar1)
-myindx(5, 1) = Input(default=1, option=jspacecompo1)
-myindx(6, 1) = Input(default=1, option=jtimecompo1)
+!----------------------------------------------------------------------------
+!                                                                    GetValue
+!----------------------------------------------------------------------------
 
-myindx(1, 2) = Input(default=1, option=ivar2)
-myindx(2, 2) = Input(default=1, option=ispacecompo2)
-myindx(3, 2) = Input(default=1, option=itimecompo2)
-myindx(4, 2) = Input(default=1, option=jvar2)
-myindx(5, 2) = Input(default=1, option=jspacecompo2)
-myindx(6, 2) = Input(default=1, option=jtimecompo2)
+MODULE PROCEDURE obj_Get11
+ans = obj%A(indx)
+END PROCEDURE obj_Get11
 
-NULLIFY (dof_obj)
+!----------------------------------------------------------------------------
+!                                                                    GetValue
+!----------------------------------------------------------------------------
 
-dof_obj => GetDOFPointer(obj1, 1)
-problem = .NOT. ASSOCIATED(dof_obj)
-IF (problem) THEN
-  CALL ErrorMSG( &
-    & "Cannot get idof pointer from obj1",  &
-    & filename, &
-    & myName, &
-    & __LINE__, stderr)
-  ierr0 = -1
-  IF (PRESENT(ierr)) ierr = ierr0
-  RETURN
-END IF
-idof1 = GetIDOF(obj=dof_obj,  &
-  & ivar=myindx(1, 1),  &
-  & spacecompo=myindx(2, 1),  &
-  & timecompo=myindx(3, 1))
-row1 = dof_obj.tNodes.idof1
-
-dof_obj => GetDOFPointer(obj1, 2)
-problem = .NOT. ASSOCIATED(dof_obj)
-IF (problem) THEN
-  CALL ErrorMSG( &
-    & "Cannot get jdof pointer from obj1",  &
-    & filename, &
-    & myName, &
-    & __LINE__, stderr)
-  ierr0 = -2
-  IF (PRESENT(ierr)) ierr = ierr0
-  RETURN
-END IF
-jdof1 = GetIDOF(obj=dof_obj,  &
-  & ivar=myindx(4, 1),  &
-  & spacecompo=myindx(5, 1),  &
-  & timecompo=myindx(6, 1))
-col1 = dof_obj.tNodes.jdof1
-
-dof_obj => GetDOFPointer(obj2, 1)
-problem = .NOT. ASSOCIATED(dof_obj)
-IF (problem) THEN
-  CALL ErrorMSG( &
-    & "Cannot get idof pointer from obj2",  &
-    & filename, &
-    & myName, &
-    & __LINE__, stderr)
-  ierr0 = -3
-  IF (PRESENT(ierr)) ierr = ierr0
-  RETURN
-END IF
-idof2 = GetIDOF(obj=dof_obj,  &
-  & ivar=myindx(1, 2),  &
-  & spacecompo=myindx(2, 2),  &
-  & timecompo=myindx(3, 2))
-row2 = dof_obj.tNodes.idof2
-
-dof_obj => GetDOFPointer(obj2, 2)
-problem = .NOT. ASSOCIATED(dof_obj)
-IF (problem) THEN
-  CALL ErrorMSG( &
-    & "Cannot get jdof pointer from obj2",  &
-    & filename, &
-    & myName, &
-    & __LINE__, stderr)
-  ierr0 = -4
-  IF (PRESENT(ierr)) ierr = ierr0
-  RETURN
-END IF
-jdof2 = GetIDOF(obj=dof_obj,  &
-  & ivar=myindx(4, 2),  &
-  & spacecompo=myindx(5, 2),  &
-  & timecompo=myindx(6, 2))
-col2 = dof_obj.tNodes.jdof2
-
-NULLIFY (dof_obj)
-
-problem = (row1 .NE. row2) .OR. (col1 .NE. col2)
-IF (problem) THEN
-  CALL ErrorMSG( &
-    & "Some error occured in sizes.", &
-    & filename, &
-    & myName, &
-    & __LINE__, stderr)
-  ierr0 = -5
-  IF (PRESENT(ierr)) ierr = ierr0
-  RETURN
-END IF
-
-CALL CSR2CSR_Get_Master(obj1=obj1, obj2=obj2, idof1=idof1, idof2=idof2,  &
-& jdof1=jdof1, jdof2=jdof2, tNodes1=row1, tNodes2=col1)
-
-END PROCEDURE obj_Get8
+MODULE PROCEDURE obj_Get12
+INTEGER(I4B) :: ii
+tsize = SIZE(indx)
+DO ii = 1, tsize; ans(ii) = obj%A(indx(ii)); END DO
+END PROCEDURE obj_Get12
 
 !----------------------------------------------------------------------------
 !                                                            CSR2CSRGetValue
@@ -517,22 +499,19 @@ INTEGER(I4B) :: ii, jj
 REAL(DFP) :: VALUE
 DO jj = 1, tNodes2
   DO ii = 1, tNodes1
-    CALL GetValue(obj=obj1,  &
-      & idof=idof1,  &
-      & jdof=jdof1,  &
-      & iNodeNum=ii,  &
-      & jNodeNum=jj, &
-      & VALUE=VALUE)
+    CALL GetValue(obj=obj1, idof=idof1, jdof=jdof1, iNodeNum=ii, &
+                  jNodeNum=jj, VALUE=VALUE)
 
-    CALL Set(obj=obj2,  &
-      & idof=idof2,  &
-      & jdof=jdof2,  &
-      & iNodeNum=ii,  &
-      & jNodeNum=jj, &
-      & VALUE=VALUE)
+    CALL Set(obj=obj2, idof=idof2, jdof=jdof2, iNodeNum=ii, jNodeNum=jj, &
+             VALUE=VALUE)
   END DO
 END DO
-
 END PROCEDURE CSR2CSR_Get_Master
+
+!----------------------------------------------------------------------------
+!                                                               Include error
+!----------------------------------------------------------------------------
+
+#include "../../include/errors.F90"
 
 END SUBMODULE Methods

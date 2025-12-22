@@ -18,20 +18,7 @@
 set(src_path "${CMAKE_CURRENT_LIST_DIR}/src/")
 target_sources(
   ${PROJECT_NAME}
-  PRIVATE ${src_path}/LineInterpolationUtility@Methods.F90
-          ${src_path}/QuadraturePoint_Triangle_Solin.F90
-          ${src_path}/QuadraturePoint_Tetrahedron_Solin.F90
-          ${src_path}/TriangleInterpolationUtility@Methods.F90
-          ${src_path}/TriangleInterpolationUtility@QuadratureMethods.F90
-          ${src_path}/TriangleInterpolationUtility@HeirarchicalBasisMethods.F90
-          ${src_path}/TriangleInterpolationUtility@LagrangeBasisMethods.F90
-          ${src_path}/TriangleInterpolationUtility@OrthogonalBasisMethods.F90
-          ${src_path}/QuadrangleInterpolationUtility@Methods.F90
-          ${src_path}/TetrahedronInterpolationUtility@Methods.F90
-          ${src_path}/HexahedronInterpolationUtility@Methods.F90
-          ${src_path}/PrismInterpolationUtility@Methods.F90
-          ${src_path}/PyramidInterpolationUtility@Methods.F90
-          ${src_path}/InterpolationUtility@Methods.F90
+  PRIVATE ${src_path}/InterpolationUtility@Methods.F90
           ${src_path}/LagrangePolynomialUtility@Methods.F90
           ${src_path}/HierarchicalPolynomialUtility@Methods.F90
           ${src_path}/JacobiPolynomialUtility@Methods.F90

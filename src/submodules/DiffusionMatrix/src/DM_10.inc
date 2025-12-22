@@ -36,8 +36,8 @@ PURE SUBROUTINE DM_10(ans, test, trial, c1, c2, opt)
   TYPE(FEVariable_) :: k
   INTEGER(I4B) :: ii
   !! main
-  CALL getInterpolation(obj=trial, interpol=c2bar, val=c1)
-  CALL getInterpolation(obj=trial, interpol=matbar, val=c2)
+  CALL getInterpolation(obj=trial, ans=c2bar, val=c1)
+  CALL getInterpolation(obj=trial, ans=matbar, val=c2)
   CALL Reallocate( c1bar, SIZE(matbar, 2),  SIZE(matbar, 3))
   !!
   DO ii = 1, SIZE(c2bar, 2)

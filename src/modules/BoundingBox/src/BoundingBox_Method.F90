@@ -30,25 +30,27 @@ USE BaseType, ONLY: BoundingBox_
 USE tomlf, ONLY: toml_table
 IMPLICIT NONE
 
-PUBLIC :: OPERATOR(.Xmin.)
-PUBLIC :: OPERATOR(.Xmax.)
-PUBLIC :: OPERATOR(.Ymin.)
-PUBLIC :: OPERATOR(.Ymax.)
-PUBLIC :: OPERATOR(.Zmin.)
-PUBLIC :: OPERATOR(.Zmax.)
-PUBLIC :: OPERATOR(.isIntersect.)
-PUBLIC :: OPERATOR(.Intersection.)
-PUBLIC :: OPERATOR(.UNION.)
 PUBLIC :: OPERATOR(.Center.)
-PUBLIC :: OPERATOR(.isInside.)
+PUBLIC :: OPERATOR(.Intersection.)
 PUBLIC :: OPERATOR(.Nptrs.)
+PUBLIC :: OPERATOR(.UNION.)
+PUBLIC :: OPERATOR(.Xmax.)
+PUBLIC :: OPERATOR(.Xmin.)
+PUBLIC :: OPERATOR(.Ymax.)
+PUBLIC :: OPERATOR(.Ymin.)
+PUBLIC :: OPERATOR(.Zmax.)
+PUBLIC :: OPERATOR(.Zmin.)
+PUBLIC :: OPERATOR(.isInside.)
+PUBLIC :: OPERATOR(.isIntersect.)
 
 PUBLIC :: ASSIGNMENT(=)
 
 PUBLIC :: Initiate
+PUBLIC :: Copy
 PUBLIC :: BoundingBox
 PUBLIC :: BoundingBox_Pointer
 PUBLIC :: DEALLOCATE
+PUBLIC :: Reallocate
 PUBLIC :: Display
 
 PUBLIC :: isIntersectInX
@@ -146,6 +148,10 @@ INTERFACE ASSIGNMENT(=)
   MODULE PROCEDURE Initiate_2
 END INTERFACE
 
+INTERFACE Copy
+  MODULE PROCEDURE Initiate_2
+END INTERFACE Copy
+
 !----------------------------------------------------------------------------
 !                                               Initiate@ConstructorMethods
 !----------------------------------------------------------------------------
@@ -164,6 +170,10 @@ END INTERFACE Initiate
 INTERFACE ASSIGNMENT(=)
   MODULE PROCEDURE Initiate_3
 END INTERFACE
+
+INTERFACE Copy
+  MODULE PROCEDURE Initiate_3
+END INTERFACE Copy
 
 !----------------------------------------------------------------------------
 !                                                Append@ConstructorMethods
@@ -358,7 +368,7 @@ INTERFACE DEALLOCATE
 END INTERFACE DEALLOCATE
 
 !----------------------------------------------------------------------------
-!                                                Deallocate@Constructor
+!                                                     Deallocate@Constructor
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -370,6 +380,21 @@ INTERFACE DEALLOCATE
     TYPE(BoundingBox_), ALLOCATABLE, INTENT(INOUT) :: obj(:)
   END SUBROUTINE BB_Deallocate2
 END INTERFACE DEALLOCATE
+
+!----------------------------------------------------------------------------
+!                                                     Reallocate@Constructor
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2025-07-25
+! summary: Reallocate the bounding box if necessary
+
+INTERFACE Reallocate
+  MODULE PURE SUBROUTINE obj_Reallocate(obj, tsize)
+    TYPE(BoundingBox_), ALLOCATABLE, INTENT(INOUT) :: obj(:)
+    INTEGER(I4B), INTENT(IN) :: tsize
+  END SUBROUTINE obj_Reallocate
+END INTERFACE Reallocate
 
 !----------------------------------------------------------------------------
 !                                                        Display@Constructor

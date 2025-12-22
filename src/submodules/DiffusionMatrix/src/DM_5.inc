@@ -41,9 +41,9 @@ PURE SUBROUTINE DM_5(ans, test, trial, c1, c2, opt)
   !!
   !! main
   !!
-  CALL getInterpolation(obj=trial, Interpol=realval, val=c1)
+  CALL getInterpolation(obj=trial, ans=realval, val=c1)
   !!
-  CALL getInterpolation(obj=trial, Interpol=kbar, val=c2)
+  CALL getInterpolation(obj=trial, ans=kbar, val=c2)
   !!
   realval =  realval * trial%js * trial%ws * trial%thickness
   !!

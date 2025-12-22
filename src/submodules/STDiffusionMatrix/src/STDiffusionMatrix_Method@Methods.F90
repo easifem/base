@@ -51,7 +51,7 @@ PURE SUBROUTINE STDM_11a(ans, test, trial, k, opt)
     & SIZE(test(1)%T), &
     & SIZE(trial(1)%T))
   !!
-  CALL getInterpolation(obj=trial, interpol=kbar, val=k)
+  CALL GetInterpolation(obj=trial, ans=kbar, val=k)
   !!
   nsd = trial(1)%nsd
   !!
@@ -117,7 +117,7 @@ PURE SUBROUTINE STDM_11b(ans, test, trial, k, opt)
     & SIZE(test(1)%T), &
     & SIZE(trial(1)%T))
   !!
-  CALL getInterpolation(obj=trial, interpol=kbar, val=k)
+  CALL getInterpolation(obj=trial, ans=kbar, val=k)
   !!
   nsd = trial(1)%nsd
   !!
@@ -177,7 +177,7 @@ PURE SUBROUTINE STDM_12a(ans, test, trial, k, opt)
   !!
   !! main
   !!
-  CALL getInterpolation(obj=trial, interpol=vbar, val=k)
+  CALL getInterpolation(obj=trial, ans=vbar, val=k)
   !!
   CALL Reallocate( &
     & IJab, &
@@ -259,7 +259,7 @@ PURE SUBROUTINE STDM_12b(ans, test, trial, k, opt)
   !!
   !! main
   !!
-  CALL getInterpolation(obj=trial, interpol=vbar, val=k)
+  CALL getInterpolation(obj=trial, ans=vbar, val=k)
   !!
   CALL Reallocate( &
     & IJab, &
@@ -351,8 +351,8 @@ PURE SUBROUTINE STDM_13a(ans, test, trial, c1, c2, opt)
     & SIZE(test(1)%T), &
     & SIZE(trial(1)%T))
   !!
-  CALL getInterpolation(obj=trial, interpol=c1bar, val=c1)
-  CALL getInterpolation(obj=trial, interpol=c2bar, val=c2)
+  CALL GetInterpolation(obj=trial, ans=c1bar, val=c1)
+  CALL GetInterpolation(obj=trial, ans=c2bar, val=c2)
   !!
   nsd = trial(1)%nsd
   !!
@@ -421,8 +421,8 @@ PURE SUBROUTINE STDM_13b(ans, test, trial, c1, c2, opt)
     & SIZE(test(1)%T), &
     & SIZE(trial(1)%T))
   !!
-  CALL getInterpolation(obj=trial, interpol=c1bar, val=c1)
-  CALL getInterpolation(obj=trial, interpol=c2bar, val=c2)
+  CALL GetInterpolation(obj=trial, ans=c1bar, val=c1)
+  CALL GetInterpolation(obj=trial, ans=c2bar, val=c2)
   !!
   nsd = trial(1)%nsd
   !!
@@ -485,8 +485,8 @@ PURE SUBROUTINE STDM_14a(ans, test, trial, c1, c2, opt)
   !!
   !! main
   !!
-  CALL getInterpolation(obj=trial, interpol=cbar, val=c1)
-  CALL getInterpolation(obj=trial, interpol=vbar, val=c2)
+  CALL GetInterpolation(obj=trial, ans=cbar, val=c1)
+  CALL GetInterpolation(obj=trial, ans=vbar, val=c2)
   !!
   CALL Reallocate( &
     & IJab, &
@@ -571,8 +571,8 @@ PURE SUBROUTINE STDM_14b(ans, test, trial, c1, c2, opt)
   !!
   !! main
   !!
-  CALL getInterpolation(obj=trial, interpol=cbar, val=c1)
-  CALL getInterpolation(obj=trial, interpol=vbar, val=c2)
+  CALL GetInterpolation(obj=trial, ans=cbar, val=c1)
+  CALL getInterpolation(obj=trial, ans=vbar, val=c2)
   !!
   CALL Reallocate( &
     & IJab, &
@@ -706,7 +706,7 @@ INTEGER(I4B) :: ips, ipt, ii, nsd
   !!
   !! main
   !!
-CALL getInterpolation(obj=trial, interpol=kbar, val=k)
+CALL GetInterpolation(obj=trial, ans=kbar, val=k)
   !!
 CALL Reallocate(iajb, SIZE(test(1)%N, 1), SIZE(test(1)%T), &
   & SIZE(trial(1)%N, 1), SIZE(trial(1)%T))
@@ -759,9 +759,11 @@ DO ipt = 1, SIZE(trial)
   realval = trial(ipt)%js * trial(ipt)%ws * trial(ipt)%thickness &
    & * trial(ipt)%wt * trial(ipt)%jt
     !!
-  CALL GetProjectionOfdNTdXt(obj=test(ipt), cdNTdXt=p1, val=k)
+  CALL GetProjectionOfdNTdXt(obj=test(ipt), ans=p1, c=k, &
+                             crank=TypeFEVariableVector)
     !!
-  CALL GetProjectionOfdNTdXt(obj=trial(ipt), cdNTdXt=p2, val=k)
+  CALL GetProjectionOfdNTdXt(obj=trial(ipt), ans=p2, c=k, &
+                             crank=TypeFEVariableVector)
     !!
   DO ips = 1, SIZE(realval)
       !!
@@ -791,7 +793,7 @@ INTEGER(I4B) :: ips, ipt, ii, jj, nsd
 CALL Reallocate(IaJb, SIZE(test(1)%N, 1), SIZE(test(1)%T), &
   & SIZE(trial(1)%N, 1), SIZE(trial(1)%T))
   !!
-CALL getInterpolation(obj=trial, interpol=kbar, val=k)
+CALL getInterpolation(obj=trial, ans=kbar, val=k)
   !!
 nsd = trial(1)%nsd
   !!
@@ -843,8 +845,8 @@ INTEGER(I4B) :: ips, ipt, ii, nsd
   !!
   !! main
   !!
-CALL getInterpolation(obj=trial, interpol=c1bar, val=c1)
-CALL getInterpolation(obj=trial, interpol=c2bar, val=c2)
+CALL GetInterpolation(obj=trial, ans=c1bar, val=c1)
+CALL GetInterpolation(obj=trial, ans=c2bar, val=c2)
   !!
 CALL Reallocate(iajb, SIZE(test(1)%N, 1), SIZE(test(1)%T), &
     & SIZE(trial(1)%N, 1), SIZE(trial(1)%T))
@@ -897,14 +899,16 @@ INTEGER(I4B) :: ips, ipt
   !! main
 CALL Reallocate(iajb, SIZE(test(1)%N, 1), SIZE(test(1)%T), &
     & SIZE(trial(1)%N, 1), SIZE(trial(1)%T))
-CALL getInterpolation(obj=trial, interpol=c1bar, val=c1)
+CALL GetInterpolation(obj=trial, ans=c1bar, val=c1)
   !!
 DO ipt = 1, SIZE(trial)
     !!
   realval = trial(ipt)%js * trial(ipt)%ws * trial(ipt)%thickness &
    & * trial(ipt)%wt * trial(ipt)%jt * c1bar(:, ipt)
-  CALL GetProjectionOfdNTdXt(obj=test(ipt), cdNTdXt=p1, val=c2)
-  CALL GetProjectionOfdNTdXt(obj=trial(ipt), cdNTdXt=p2, val=c2)
+  CALL GetProjectionOfdNTdXt(obj=test(ipt), ans=p1, c=c2, &
+                             crank=TypeFEVariableVector)
+  CALL GetProjectionOfdNTdXt(obj=trial(ipt), ans=p2, c=c2, &
+                             crank=TypeFEVariableVector)
     !!
   DO ips = 1, SIZE(realval)
       !!
@@ -943,8 +947,8 @@ INTEGER(I4B) :: ips, ipt, ii, jj, nsd
 CALL Reallocate(iajb, SIZE(test(1)%N, 1), SIZE(test(1)%T), &
     & SIZE(trial(1)%N, 1), SIZE(trial(1)%T))
   !!
-CALL getInterpolation(obj=trial, interpol=rhobar, val=c1)
-CALL getInterpolation(obj=trial, interpol=kbar, val=c2)
+CALL GetInterpolation(obj=trial, ans=rhobar, val=c1)
+CALL GetInterpolation(obj=trial, ans=kbar, val=c2)
   !!
 nsd = trial(1)%nsd
   !!
@@ -1016,8 +1020,10 @@ DO ipt = 1, SIZE(trial)
     !!
   realval = trial(ipt)%js * trial(ipt)%ws * trial(ipt)%thickness &
    & * trial(ipt)%wt * trial(ipt)%jt
-  CALL GetProjectionOfdNTdXt(obj=test(ipt), cdNTdXt=p1, val=c1)
-  CALL GetProjectionOfdNTdXt(obj=trial(ipt), cdNTdXt=p2, val=c2)
+  CALL GetProjectionOfdNTdXt(obj=test(ipt), ans=p1, c=c1, &
+                             crank=TypeFEVariableVector)
+  CALL GetProjectionOfdNTdXt(obj=trial(ipt), ans=p2, c=c2, &
+                             crank=TypeFEVariableVector)
     !!
   DO ips = 1, SIZE(realval)
       !!
@@ -1096,8 +1102,8 @@ INTEGER(I4B) :: ips, ipt, ii, jj, nsd
   !! main
 CALL Reallocate(iajb, SIZE(test(1)%N, 1), SIZE(test(1)%T), &
     & SIZE(trial(1)%N, 1), SIZE(trial(1)%T))
-CALL getInterpolation(obj=trial, interpol=k1bar, val=c1)
-CALL getInterpolation(obj=trial, interpol=k2bar, val=c2)
+CALL getInterpolation(obj=trial, ans=k1bar, val=c1)
+CALL getInterpolation(obj=trial, ans=k2bar, val=c2)
 nsd = trial(1)%nsd
   !!
 DO ipt = 1, SIZE(trial)

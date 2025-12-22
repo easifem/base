@@ -39,102 +39,126 @@ PUBLIC :: GetJA
 PUBLIC :: GetValue
 
 !----------------------------------------------------------------------------
-!                                                        GetIA
+!                                                                       GetIA
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2023-12-14
 ! summary:  Get entry in IA
 
-INTERFACE GetIA
+INTERFACE
   MODULE PURE FUNCTION obj_GetIA(obj, irow) RESULT(ans)
     TYPE(CSRMatrix_), INTENT(IN) :: obj
     INTEGER(I4B), INTENT(IN) :: irow
     INTEGER(I4B) :: ans
   END FUNCTION obj_GetIA
+END INTERFACE
+
+INTERFACE GetIA
+  MODULE PROCEDURE obj_GetIA
 END INTERFACE GetIA
 
 !----------------------------------------------------------------------------
-!                                                        GetJA
+!                                                                      GetJA
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2023-12-14
 ! summary:  Get entry in JA
 
-INTERFACE GetJA
+INTERFACE
   MODULE PURE FUNCTION obj_GetJA(obj, indx) RESULT(ans)
     TYPE(CSRMatrix_), INTENT(IN) :: obj
     INTEGER(I4B), INTENT(IN) :: indx
     INTEGER(I4B) :: ans
   END FUNCTION obj_GetJA
+END INTERFACE
+
+INTERFACE GetJA
+  MODULE PROCEDURE obj_GetJA
 END INTERFACE GetJA
 
 !----------------------------------------------------------------------------
-!                                                   GetSingleValue
+!                                                              GetSingleValue
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date:  2023-12-14
 ! summary:  Get single value
 
-INTERFACE GetSingleValue
+INTERFACE
   MODULE PURE FUNCTION obj_GetSingleValue(obj, indx) RESULT(ans)
     TYPE(CSRMatrix_), INTENT(IN) :: obj
     INTEGER(I4B), INTENT(IN) :: indx
     REAL(DFP) :: ans
   END FUNCTION obj_GetSingleValue
-END INTERFACE GetSingleValue
+END INTERFACE
 
 INTERFACE Get
   MODULE PROCEDURE obj_GetSingleValue
 END INTERFACE Get
 
+INTERFACE GetSingleValue
+  MODULE PROCEDURE obj_GetSingleValue
+END INTERFACE GetSingleValue
+
 !----------------------------------------------------------------------------
-!                                                   GetSingleValue
+!                                                              GetSingleValue
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date:  2023-12-14
 ! summary:  Get single value
 
-INTERFACE GetSeveralValue
+INTERFACE
   MODULE PURE FUNCTION obj_GetSeveralValue(obj, indx) RESULT(ans)
     TYPE(CSRMatrix_), INTENT(IN) :: obj
     INTEGER(I4B), INTENT(IN) :: indx(:)
     REAL(DFP) :: ans(SIZE(indx))
   END FUNCTION obj_GetSeveralValue
-END INTERFACE GetSeveralValue
+END INTERFACE
 
 INTERFACE Get
   MODULE PROCEDURE obj_GetSeveralValue
 END INTERFACE Get
 
+INTERFACE GetSeveralValue
+  MODULE PROCEDURE obj_GetSeveralValue
+END INTERFACE GetSeveralValue
+
 !----------------------------------------------------------------------------
 !                                                  GetStorageFMT
 !----------------------------------------------------------------------------
 
-INTERFACE GetStorageFMT
+INTERFACE
   MODULE PURE FUNCTION obj_GetStorageFMT(obj, i) RESULT(ans)
     TYPE(CSRMatrix_), INTENT(IN) :: obj
     INTEGER(I4B), INTENT(IN) :: i
     INTEGER(I4B) :: ans
   END FUNCTION obj_GetStorageFMT
+END INTERFACE
+
+INTERFACE GetStorageFMT
+  MODULE PROCEDURE obj_GetStorageFMT
 END INTERFACE GetStorageFMT
 
-INTERFACE OPERATOR(.storageFMT.)
+INTERFACE OPERATOR(.StorageFMT.)
   MODULE PROCEDURE obj_GetStorageFMT
-END INTERFACE OPERATOR(.storageFMT.)
+END INTERFACE OPERATOR(.StorageFMT.)
 
 !----------------------------------------------------------------------------
 !                                                   GetMatrixProp
 !----------------------------------------------------------------------------
 
-INTERFACE GetMatrixProp
+INTERFACE
   MODULE PURE FUNCTION obj_GetMatrixProp(obj) RESULT(ans)
     TYPE(CSRMatrix_), TARGET, INTENT(IN) :: obj
     CHARACTER(20) :: ans
   END FUNCTION obj_GetMatrixProp
+END INTERFACE
+
+INTERFACE GetMatrixProp
+  MODULE PROCEDURE obj_GetMatrixProp
 END INTERFACE GetMatrixProp
 
 INTERFACE OPERATOR(.MatrixProp.)
@@ -145,50 +169,66 @@ END INTERFACE OPERATOR(.MatrixProp.)
 !                                                  GetDOFPointer
 !----------------------------------------------------------------------------
 
-INTERFACE GetDOFPointer
+INTERFACE
   MODULE FUNCTION obj_GetDOFPointer(obj, i) RESULT(ans)
     TYPE(CSRMatrix_), TARGET, INTENT(IN) :: obj
     INTEGER(I4B), INTENT(IN) :: i
     CLASS(DOF_), POINTER :: ans
   END FUNCTION obj_GetDOFPointer
+END INTERFACE
+
+INTERFACE GetDOFPointer
+  MODULE PROCEDURE obj_GetDOFPointer
 END INTERFACE GetDOFPointer
 
 !----------------------------------------------------------------------------
 !                                                          isSquare
 !----------------------------------------------------------------------------
 
-INTERFACE isSquare
-  MODULE PURE FUNCTION obj_isSquare(obj) RESULT(ans)
+INTERFACE
+  MODULE PURE FUNCTION obj_IsSquare(obj) RESULT(ans)
     TYPE(CSRMatrix_), INTENT(IN) :: obj
     LOGICAL(LGT) :: ans
-  END FUNCTION obj_isSquare
-END INTERFACE isSquare
+  END FUNCTION obj_IsSquare
+END INTERFACE
+
+INTERFACE IsSquare
+  MODULE PROCEDURE obj_IsSquare
+END INTERFACE IsSquare
 
 !----------------------------------------------------------------------------
-!                                                    isRectangle
+!                                                                isRectangle
 !----------------------------------------------------------------------------
+
+INTERFACE
+  MODULE PURE FUNCTION obj_IsRectangle(obj) RESULT(ans)
+    TYPE(CSRMatrix_), INTENT(IN) :: obj
+    LOGICAL(LGT) :: ans
+  END FUNCTION obj_IsRectangle
+END INTERFACE
 
 INTERFACE isRectangle
-  MODULE PURE FUNCTION obj_isRectangle(obj) RESULT(ans)
-    TYPE(CSRMatrix_), INTENT(IN) :: obj
-    LOGICAL(LGT) :: ans
-  END FUNCTION obj_isRectangle
+  MODULE PROCEDURE obj_IsRectangle
 END INTERFACE isRectangle
 
 !----------------------------------------------------------------------------
-!                                                   GetColNumber
+!                                                                GetColNumber
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2023-12-14
 ! summary:  Get the column number from JA.
 
-INTERFACE GetColNumber
+INTERFACE
   MODULE PURE FUNCTION obj_GetColNumber(obj, indx) RESULT(ans)
     TYPE(CSRMatrix_), INTENT(IN) :: obj
     INTEGER(I4B), INTENT(IN) :: indx
     INTEGER(I4B) :: ans
   END FUNCTION obj_GetColNumber
+END INTERFACE
+
+INTERFACE GetColNumber
+  MODULE PROCEDURE obj_GetColNumber
 END INTERFACE GetColNumber
 
 !----------------------------------------------------------------------------
@@ -199,12 +239,16 @@ END INTERFACE GetColNumber
 ! date: 2023-12-14
 ! summary:  Get the starting  and ending column index of irow
 
-INTERFACE GetColIndex
+INTERFACE
   MODULE PURE FUNCTION obj_GetColIndex(obj, irow) RESULT(ans)
     TYPE(CSRMatrix_), INTENT(IN) :: obj
     INTEGER(I4B), INTENT(IN) :: irow
     INTEGER(I4B) :: ans(2)
   END FUNCTION obj_GetColIndex
+END INTERFACE
+
+INTERFACE GetColIndex
+  MODULE PROCEDURE obj_GetColIndex
 END INTERFACE GetColIndex
 
 !----------------------------------------------------------------------------
@@ -215,13 +259,17 @@ END INTERFACE GetColIndex
 ! date: 2023-12-14
 ! summary:  Get the starting column index of irow
 
-INTERFACE OPERATOR(.startColumn.)
-  MODULE PURE FUNCTION obj_startColumn(obj, irow) RESULT(ans)
+INTERFACE
+  MODULE PURE FUNCTION obj_StartColumn(obj, irow) RESULT(ans)
     TYPE(CSRMatrix_), INTENT(IN) :: obj
     INTEGER(I4B), INTENT(IN) :: irow
     INTEGER(I4B) :: ans
-  END FUNCTION obj_startColumn
-END INTERFACE OPERATOR(.startColumn.)
+  END FUNCTION obj_StartColumn
+END INTERFACE
+
+INTERFACE OPERATOR(.StartColumn.)
+  MODULE PROCEDURE obj_StartColumn
+END INTERFACE OPERATOR(.StartColumn.)
 
 !----------------------------------------------------------------------------
 !                                                        endColumn
@@ -231,13 +279,17 @@ END INTERFACE OPERATOR(.startColumn.)
 ! date: 2023-12-14
 ! summary:  Get the ending column index of irow
 
-INTERFACE OPERATOR(.endColumn.)
-  MODULE PURE FUNCTION obj_endColumn(obj, irow) RESULT(ans)
+INTERFACE
+  MODULE PURE FUNCTION obj_EndColumn(obj, irow) RESULT(ans)
     TYPE(CSRMatrix_), INTENT(IN) :: obj
     INTEGER(I4B), INTENT(IN) :: irow
     INTEGER(I4B) :: ans
-  END FUNCTION obj_endColumn
-END INTERFACE OPERATOR(.endColumn.)
+  END FUNCTION obj_EndColumn
+END INTERFACE
+
+INTERFACE OPERATOR(.EndColumn.)
+  MODULE PROCEDURE obj_EndColumn
+END INTERFACE OPERATOR(.EndColumn.)
 
 !----------------------------------------------------------------------------
 !                                                            Get
@@ -254,13 +306,17 @@ END INTERFACE OPERATOR(.endColumn.)
 ! - Usually `value` denotes the element matrix
 ! - Symbolic we are performing following task `obj(nodenum, nodenum)=value`
 
-INTERFACE GetValue
+INTERFACE
   MODULE PURE SUBROUTINE obj_Get0(obj, nodenum, VALUE, nrow, ncol)
     TYPE(CSRMatrix_), INTENT(IN) :: obj
     INTEGER(I4B), INTENT(IN) :: nodenum(:)
     REAL(DFP), INTENT(INOUT) :: VALUE(:, :)
     INTEGER(I4B), INTENT(OUT) :: nrow, ncol
   END SUBROUTINE obj_Get0
+END INTERFACE
+
+INTERFACE GetValue
+  MODULE PROCEDURE obj_Get0
 END INTERFACE GetValue
 
 !----------------------------------------------------------------------------
@@ -288,7 +344,7 @@ END INTERFACE GetValue
 !
 ! - Usually, element matrix is stored with `DOF_FMT`
 
-INTERFACE GetValue
+INTERFACE
   MODULE PURE SUBROUTINE obj_Get1(obj, nodenum, storageFMT, VALUE, nrow, ncol)
     TYPE(CSRMatrix_), INTENT(IN) :: obj
     INTEGER(I4B), INTENT(IN) :: nodenum(:)
@@ -297,6 +353,10 @@ INTERFACE GetValue
     REAL(DFP), INTENT(INOUT) :: VALUE(:, :)
     INTEGER(I4B), INTENT(OUT) :: nrow, ncol
   END SUBROUTINE obj_Get1
+END INTERFACE
+
+INTERFACE GetValue
+  MODULE PROCEDURE obj_Get1
 END INTERFACE GetValue
 
 !----------------------------------------------------------------------------
@@ -319,7 +379,7 @@ END INTERFACE GetValue
 ! This routine should be avoided by general user.
 !@endwarning
 
-INTERFACE GetValue
+INTERFACE
   MODULE PURE SUBROUTINE obj_Get2(obj, irow, icolumn, VALUE)
     TYPE(CSRMatrix_), INTENT(IN) :: obj
     INTEGER(I4B), INTENT(IN) :: irow
@@ -329,23 +389,10 @@ INTERFACE GetValue
     REAL(DFP), INTENT(INOUT) :: VALUE
     !! value
   END SUBROUTINE obj_Get2
-END INTERFACE GetValue
-
-!----------------------------------------------------------------------------
-!                                                                   GetValue
-!----------------------------------------------------------------------------
+END INTERFACE
 
 INTERFACE GetValue
-  MODULE PURE SUBROUTINE obj_Get10(obj, irow, icolumn, VALUE, nrow, ncol)
-    TYPE(CSRMatrix_), INTENT(IN) :: obj
-    INTEGER(I4B), INTENT(IN) :: irow(:)
-    !! row index
-    INTEGER(I4B), INTENT(IN) :: icolumn(:)
-    !! column index
-    REAL(DFP), INTENT(INOUT) :: VALUE(:, :)
-    !! value
-    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
-  END SUBROUTINE obj_Get10
+  MODULE PROCEDURE obj_Get2
 END INTERFACE GetValue
 
 !----------------------------------------------------------------------------
@@ -377,9 +424,9 @@ END INTERFACE GetValue
 ! or later physical variables will not start from 1.
 !@endnote
 
-INTERFACE GetValue
-  MODULE PURE SUBROUTINE obj_Get3(obj, iNodeNum, jNodeNum, iDOF, &
-                                  jDOF, VALUE)
+INTERFACE
+  MODULE PURE SUBROUTINE obj_Get3( &
+    obj, iNodeNum, jNodeNum, iDOF, jDOF, VALUE)
     TYPE(CSRMatrix_), INTENT(IN) :: obj
     INTEGER(I4B), INTENT(IN) :: iNodeNum
     !! row node number
@@ -392,6 +439,10 @@ INTERFACE GetValue
     REAL(DFP), INTENT(INOUT) :: VALUE
     !! scalar value to be Get
   END SUBROUTINE obj_Get3
+END INTERFACE
+
+INTERFACE GetValue
+  MODULE PROCEDURE obj_Get3
 END INTERFACE GetValue
 
 !----------------------------------------------------------------------------
@@ -412,9 +463,9 @@ END INTERFACE GetValue
 ! obj(Nptrs,Nptrs)=value(:,:)
 !$$
 
-INTERFACE GetValue
-  MODULE PURE SUBROUTINE obj_Get4(obj, iNodeNum, jNodeNum, &
-                                  ivar, jvar, VALUE, nrow, ncol)
+INTERFACE
+  MODULE PURE SUBROUTINE obj_Get4( &
+    obj, iNodeNum, jNodeNum, ivar, jvar, VALUE, nrow, ncol)
     TYPE(CSRMatrix_), INTENT(IN) :: obj
     !! Block csr matrix
     INTEGER(I4B), INTENT(IN) :: iNodeNum(:)
@@ -429,6 +480,10 @@ INTERFACE GetValue
     !! value
     INTEGER(I4B), INTENT(OUT) :: nrow, ncol
   END SUBROUTINE obj_Get4
+END INTERFACE
+
+INTERFACE GetValue
+  MODULE PROCEDURE obj_Get4
 END INTERFACE GetValue
 
 !----------------------------------------------------------------------------
@@ -459,18 +514,18 @@ END INTERFACE GetValue
 ! or later physical variables will not start from 1.
 !@endnote
 
-INTERFACE GetValue
-  MODULE PURE SUBROUTINE obj_Get5(obj, iNodeNum, jNodeNum, ivar, &
-                                  jvar, iDOF, jDOF, VALUE)
+INTERFACE
+  MODULE PURE SUBROUTINE obj_Get5( &
+    obj, iNodeNum, jNodeNum, ivar, jvar, iDOF, jDOF, VALUE)
     TYPE(CSRMatrix_), INTENT(IN) :: obj
     INTEGER(I4B), INTENT(IN) :: iNodeNum
     !! row node number
     INTEGER(I4B), INTENT(IN) :: jNodeNum
     !! column node number
     INTEGER(I4B), INTENT(IN) :: ivar
-    !!
+    !! physical variable for row
     INTEGER(I4B), INTENT(IN) :: jvar
-    !!
+    !! physical variable for column
     INTEGER(I4B), INTENT(IN) :: iDOF
     !! row degree of freedom
     INTEGER(I4B), INTENT(IN) :: jDOF
@@ -478,6 +533,10 @@ INTERFACE GetValue
     REAL(DFP), INTENT(INOUT) :: VALUE
     !! scalar value to be Get
   END SUBROUTINE obj_Get5
+END INTERFACE
+
+INTERFACE GetValue
+  MODULE PROCEDURE obj_Get5
 END INTERFACE GetValue
 
 !----------------------------------------------------------------------------
@@ -488,9 +547,9 @@ END INTERFACE GetValue
 ! date: 2023-12-23
 ! summary:  Gets the specific row and column entry from a given value
 
-INTERFACE GetValue
-  MODULE PURE SUBROUTINE obj_Get6(obj, iNodeNum, jNodeNum, ivar, &
-                                  jvar, iDOF, jDOF, VALUE, nrow, ncol)
+INTERFACE
+  MODULE PURE SUBROUTINE obj_Get6( &
+    obj, iNodeNum, jNodeNum, ivar, jvar, iDOF, jDOF, VALUE, nrow, ncol)
     TYPE(CSRMatrix_), INTENT(IN) :: obj
     !! block matrix field
     INTEGER(I4B), INTENT(IN) :: iNodeNum(:)
@@ -509,6 +568,10 @@ INTERFACE GetValue
     !! Matrix value
     INTEGER(I4B), INTENT(OUT) :: nrow, ncol
   END SUBROUTINE obj_Get6
+END INTERFACE
+
+INTERFACE GetValue
+  MODULE PROCEDURE obj_Get6
 END INTERFACE GetValue
 
 !----------------------------------------------------------------------------
@@ -539,9 +602,10 @@ END INTERFACE GetValue
 ! or later physical variables will not start from 1.
 !@endnote
 
-INTERFACE GetValue
-  MODULE PURE SUBROUTINE obj_Get7(obj, iNodeNum, jNodeNum, ivar, &
-                jvar, ispacecompo, itimecompo, jspacecompo, jtimecompo, VALUE)
+INTERFACE
+  MODULE PURE SUBROUTINE obj_Get7( &
+    obj, iNodeNum, jNodeNum, ivar, jvar, ispacecompo, itimecompo, &
+    jspacecompo, jtimecompo, VALUE)
     TYPE(CSRMatrix_), INTENT(IN) :: obj
     INTEGER(I4B), INTENT(IN) :: iNodeNum
     !! row node number
@@ -562,37 +626,10 @@ INTERFACE GetValue
     REAL(DFP), INTENT(INOUT) :: VALUE
     !! scalar value to be Get
   END SUBROUTINE obj_Get7
-END INTERFACE GetValue
-
-!----------------------------------------------------------------------------
-!                                                                   GetValue
-!----------------------------------------------------------------------------
+END INTERFACE
 
 INTERFACE GetValue
-  MODULE PURE SUBROUTINE obj_Get9(obj, iNodeNum, jNodeNum, ivar, &
-              jvar, ispacecompo, itimecompo, jspacecompo, jtimecompo, VALUE, &
-                                  nrow, ncol)
-    TYPE(CSRMatrix_), INTENT(IN) :: obj
-    INTEGER(I4B), INTENT(IN) :: iNodeNum(:)
-    !! row node number
-    INTEGER(I4B), INTENT(IN) :: jNodeNum(:)
-    !! column node number
-    INTEGER(I4B), INTENT(IN) :: ivar
-    !! row physical variable
-    INTEGER(I4B), INTENT(IN) :: jvar
-    !! col physical variable
-    INTEGER(I4B), INTENT(IN) :: ispacecompo
-    !! row space component
-    INTEGER(I4B), INTENT(IN) :: itimecompo
-    !! row time component
-    INTEGER(I4B), INTENT(IN) :: jspacecompo
-    !! col space component
-    INTEGER(I4B), INTENT(IN) :: jtimecompo
-    !! col time component
-    REAL(DFP), INTENT(INOUT) :: VALUE(:, :)
-    !! scalar value to be Get
-    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
-  END SUBROUTINE obj_Get9
+  MODULE PROCEDURE obj_Get7
 END INTERFACE GetValue
 
 !----------------------------------------------------------------------------
@@ -607,11 +644,11 @@ END INTERFACE GetValue
 !
 ! - The number of nodes in obj1 and obj2 should be same
 
-INTERFACE GetValue
-  MODULE SUBROUTINE obj_Get8(obj1, obj2, ivar1, jvar1, &
-                       ispacecompo1, jspacecompo1, itimecompo1, jtimecompo1, &
-                      ivar2, jvar2, ispacecompo2, jspacecompo2, itimecompo2, &
-                             jtimecompo2, ierr)
+INTERFACE
+  MODULE SUBROUTINE obj_Get8( &
+    obj1, obj2, ivar1, jvar1, ispacecompo1, jspacecompo1, itimecompo1, &
+    jtimecompo1, ivar2, jvar2, ispacecompo2, jspacecompo2, itimecompo2, &
+    jtimecompo2, ierr)
     TYPE(CSRMatrix_), INTENT(IN) :: obj1
     !! master object
     TYPE(CSRMatrix_), INTENT(INOUT) :: obj2
@@ -643,6 +680,66 @@ INTERFACE GetValue
     INTEGER(I4B), OPTIONAL, INTENT(INOUT) :: ierr
     !! Error code, if 0 no error, else error
   END SUBROUTINE obj_Get8
+END INTERFACE
+
+INTERFACE GetValue
+  MODULE PROCEDURE obj_Get8
+END INTERFACE GetValue
+
+!----------------------------------------------------------------------------
+!                                                                   GetValue
+!----------------------------------------------------------------------------
+
+INTERFACE
+  MODULE PURE SUBROUTINE obj_Get9( &
+    obj, iNodeNum, jNodeNum, ivar, jvar, ispacecompo, itimecompo, &
+    jspacecompo, jtimecompo, VALUE, nrow, ncol)
+    TYPE(CSRMatrix_), INTENT(IN) :: obj
+    INTEGER(I4B), INTENT(IN) :: iNodeNum(:)
+    !! row node number
+    INTEGER(I4B), INTENT(IN) :: jNodeNum(:)
+    !! column node number
+    INTEGER(I4B), INTENT(IN) :: ivar
+    !! row physical variable
+    INTEGER(I4B), INTENT(IN) :: jvar
+    !! col physical variable
+    INTEGER(I4B), INTENT(IN) :: ispacecompo
+    !! row space component
+    INTEGER(I4B), INTENT(IN) :: itimecompo
+    !! row time component
+    INTEGER(I4B), INTENT(IN) :: jspacecompo
+    !! col space component
+    INTEGER(I4B), INTENT(IN) :: jtimecompo
+    !! col time component
+    REAL(DFP), INTENT(INOUT) :: VALUE(:, :)
+    !! scalar value to be Get
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+  END SUBROUTINE obj_Get9
+END INTERFACE
+
+INTERFACE GetValue
+  MODULE PROCEDURE obj_Get9
+END INTERFACE GetValue
+
+!----------------------------------------------------------------------------
+!                                                                   GetValue
+!----------------------------------------------------------------------------
+
+INTERFACE
+  MODULE PURE SUBROUTINE obj_Get10(obj, irow, icolumn, VALUE, nrow, ncol)
+    TYPE(CSRMatrix_), INTENT(IN) :: obj
+    INTEGER(I4B), INTENT(IN) :: irow(:)
+    !! row index
+    INTEGER(I4B), INTENT(IN) :: icolumn(:)
+    !! column index
+    REAL(DFP), INTENT(INOUT) :: VALUE(:, :)
+    !! value
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+  END SUBROUTINE obj_Get10
+END INTERFACE
+
+INTERFACE GetValue
+  MODULE PROCEDURE obj_Get10
 END INTERFACE GetValue
 
 !----------------------------------------------------------------------------
@@ -658,8 +755,8 @@ END INTERFACE GetValue
 ! - The number of nodes in obj1 and obj2 should be same
 
 INTERFACE
-  MODULE SUBROUTINE CSR2CSR_Get_Master(obj1, obj2, idof1, jdof1, idof2, &
-                                       jdof2, tNodes1, tNodes2)
+  MODULE SUBROUTINE CSR2CSR_Get_Master( &
+    obj1, obj2, idof1, jdof1, idof2, jdof2, tNodes1, tNodes2)
     TYPE(CSRMatrix_), INTENT(IN) :: obj1
     !! master object
     TYPE(CSRMatrix_), INTENT(INOUT) :: obj2
@@ -676,5 +773,50 @@ INTERFACE
     INTEGER(I4B), INTENT(IN) :: tNodes2
   END SUBROUTINE CSR2CSR_Get_Master
 END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                              GetSingleValue
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2023-12-14
+! summary:  Get single value
+
+INTERFACE
+  MODULE PURE SUBROUTINE obj_Get11(obj, indx, ans)
+    TYPE(CSRMatrix_), INTENT(IN) :: obj
+    INTEGER(I4B), INTENT(IN) :: indx
+    REAL(DFP), INTENT(INOUT) :: ans
+  END SUBROUTINE obj_Get11
+END INTERFACE
+
+INTERFACE GetValue
+  MODULE PROCEDURE obj_Get11
+END INTERFACE GetValue
+
+!----------------------------------------------------------------------------
+!                                                              GetSingleValue
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2023-12-14
+! summary:  Get single value
+
+INTERFACE
+  MODULE PURE SUBROUTINE obj_Get12(obj, indx, ans, tsize)
+    TYPE(CSRMatrix_), INTENT(IN) :: obj
+    INTEGER(I4B), INTENT(IN) :: indx(:)
+    REAL(DFP), INTENT(INOUT) :: ans(:)
+    INTEGER(I4B), INTENT(OUT) :: tsize
+  END SUBROUTINE obj_Get12
+END INTERFACE
+
+INTERFACE GetValue
+  MODULE PROCEDURE obj_Get12
+END INTERFACE GetValue
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
 
 END MODULE CSRMatrix_GetMethods

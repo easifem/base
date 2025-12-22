@@ -20,8 +20,8 @@
 ! summary:         This submodule contains method for swaping
 
 SUBMODULE(ConvertUtility) Methods
-USE ReallocateUtility
-USE EyeUtility
+USE ReallocateUtility, ONLY: Reallocate
+USE EyeUtility, ONLY: eye
 IMPLICIT NONE
 CONTAINS
 
@@ -29,24 +29,35 @@ CONTAINS
 !                                                                    Convert
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE convert_1
+MODULE PROCEDURE obj_Convert1
 CALL Reallocate(to, nns * tdof, nns * tdof)
-CALL ConvertSafe(from=from, to=to, Conversion=conversion,  &
-  & nns=nns, tdof=tdof)
-END PROCEDURE convert_1
+CALL ConvertSafe(from=from, to=to, conversion=conversion, &
+                 nns=nns, tdof=tdof)
+END PROCEDURE obj_Convert1
 
 !----------------------------------------------------------------------------
 !                                                             ConvertSafe
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE convert_1_safe
+MODULE PROCEDURE obj_Convert_1
+nrow = nns * tdof
+ncol = nns * tdof
+CALL ConvertSafe(from=from, to=to(1:nrow, 1:ncol), conversion=conversion, &
+                 nns=nns, tdof=tdof)
+END PROCEDURE obj_Convert_1
+
+!----------------------------------------------------------------------------
+!                                                             ConvertSafe
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE obj_ConvertSafe1
 INTEGER(I4B) :: m, inode, idof, i, j
 INTEGER(I4B) :: T(nns * tdof, nns * tdof)
 !> main
 m = nns * tdof
 T = eye(m, TypeInt)
 
-SELECT CASE (Conversion)
+SELECT CASE (conversion)
 CASE (DofToNodes)
 
   DO inode = 1, nns
@@ -72,13 +83,13 @@ CASE (NodesToDOF)
 END SELECT
 
 to = MATMUL(TRANSPOSE(T), MATMUL(from, T))
-END PROCEDURE convert_1_safe
+END PROCEDURE obj_ConvertSafe1
 
 !----------------------------------------------------------------------------
 !                                                                   Convert
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE convert_2
+MODULE PROCEDURE obj_Convert2
 !   Define internal variables
 INTEGER(I4B) :: a, b, I(4), r1, r2, c1, c2
 I = SHAPE(From)
@@ -94,13 +105,13 @@ DO b = 1, I(4)
     To(r1:r2, c1:c2) = From(:, :, a, b)
   END DO
 END DO
-END PROCEDURE convert_2
+END PROCEDURE obj_Convert2
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE convert2_
+MODULE PROCEDURE obj_Convert_2
 INTEGER(I4B) :: a, b, r1, r2, c1, c2
 INTEGER(I4B) :: dim1, dim2, dim3, dim4
 
@@ -123,13 +134,13 @@ DO b = 1, dim4
   END DO
 END DO
 
-END PROCEDURE convert2_
+END PROCEDURE obj_Convert_2
 
 !----------------------------------------------------------------------------
 !                                                                 Convert
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE convert_3
+MODULE PROCEDURE obj_Convert3
 INTEGER(I4B) :: a, b, s(6)
 REAL(DFP), ALLOCATABLE :: m2(:, :)
   !!
@@ -143,13 +154,13 @@ DO b = 1, s(6)
   END DO
 END DO
 DEALLOCATE (m2)
-END PROCEDURE convert_3
+END PROCEDURE obj_Convert3
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE convert3_
+MODULE PROCEDURE obj_Convert_3
 INTEGER(I4B) :: a, b
 INTEGER(I4B) :: n1, n2, n3, n4, n5, n6
 
@@ -171,7 +182,7 @@ DO b = 1, n6
   END DO
 END DO
 
-END PROCEDURE convert3_
+END PROCEDURE obj_Convert_3
 
 !----------------------------------------------------------------------------
 !

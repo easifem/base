@@ -46,9 +46,9 @@ PURE SUBROUTINE STCM_17a(ans, test, trial, term1, term2, rho, c, &
   !!
   !! main
   !!
-  CALL GetInterpolation(obj=trial, interpol=vbar, val=c)
+  CALL GetInterpolation(obj=trial, ans=vbar, val=c)
   !!
-  CALL GetInterpolation(obj=trial, interpol=rhobar, val=rho)
+  CALL GetInterpolation(obj=trial, ans=rhobar, val=rho)
   !!
   CALL Reallocate(m6, &
     & SIZE(test(1)%N, 1), &
@@ -62,7 +62,8 @@ PURE SUBROUTINE STCM_17a(ans, test, trial, term1, term2, rho, c, &
     realval = trial(ipt)%js * trial(ipt)%ws * trial(ipt)%thickness * &
       & trial(ipt)%wt * trial(ipt)%jt * rhobar(:,ipt)
     !!
-    CALL GetProjectionOfdNTdXt(obj=test(ipt), cdNTdXt=p, val=c)
+    CALL GetProjectionOfdNTdXt(obj=test(ipt), ans=p, c=c, &
+    crank=TypeFEVariableVector)
     !!
     DO ips = 1, SIZE(realval)
       DO b = 1, SIZE(m6, 6)
@@ -120,9 +121,9 @@ PURE SUBROUTINE STCM_17b(ans, test, trial, term1, term2, rho, c, &
   !!
   !! main
   !!
-  CALL GetInterpolation(obj=trial, interpol=vbar, val=c)
+  CALL GetInterpolation(obj=trial, ans=vbar, val=c)
   !!
-  CALL GetInterpolation(obj=trial, interpol=rhobar, val=rho)
+  CALL GetInterpolation(obj=trial, ans=rhobar, val=rho)
   !!
   CALL Reallocate(m6, &
     & SIZE(test(1)%N, 1), &
@@ -136,7 +137,8 @@ PURE SUBROUTINE STCM_17b(ans, test, trial, term1, term2, rho, c, &
     realval = trial(ipt)%js * trial(ipt)%ws * trial(ipt)%thickness * &
       & trial(ipt)%wt * trial(ipt)%jt * rhobar(:,ipt)
     !!
-    CALL GetProjectionOfdNTdXt(obj=test(ipt), cdNTdXt=p, val=c)
+    CALL GetProjectionOfdNTdXt(obj=test(ipt), ans=p, c=c, &
+    crank=TypeFEVariableVector)
     !!
     DO ips = 1, SIZE(realval)
       DO b = 1, SIZE(m6, 6)
@@ -194,9 +196,9 @@ PURE SUBROUTINE STCM_17c(ans, test, trial, term1, term2, rho, c, &
   !!
   !! main
   !!
-  CALL GetInterpolation(obj=trial, interpol=vbar, val=c)
+  CALL GetInterpolation(obj=trial, ans=vbar, val=c)
   !!
-  CALL GetInterpolation(obj=trial, interpol=rhobar, val=rho)
+  CALL GetInterpolation(obj=trial, ans=rhobar, val=rho)
   !!
   CALL Reallocate(m6, &
     & SIZE(test(1)%N, 1), &
@@ -210,7 +212,8 @@ PURE SUBROUTINE STCM_17c(ans, test, trial, term1, term2, rho, c, &
     realval = trial(ipt)%js * trial(ipt)%ws * trial(ipt)%thickness * &
       & trial(ipt)%wt * trial(ipt)%jt * rhobar(:,ipt)
     !!
-    CALL GetProjectionOfdNTdXt(obj=trial(ipt), cdNTdXt=p, val=c)
+    CALL GetProjectionOfdNTdXt(obj=trial(ipt), ans=p, c=c, &
+    crank=TypeFEVariableVector)
     !!
     DO ips = 1, SIZE(realval)
       DO b = 1, SIZE(m6, 6)
@@ -268,8 +271,8 @@ PURE SUBROUTINE STCM_17d(ans, test, trial, term1, term2, rho, c, &
   !!
   !! main
   !!
-  CALL GetInterpolation(obj=trial, interpol=vbar, val=c)
-  CALL GetInterpolation(obj=trial, interpol=rhobar, val=rho)
+  CALL GetInterpolation(obj=trial, ans=vbar, val=c)
+  CALL GetInterpolation(obj=trial, ans=rhobar, val=rho)
   !!
   CALL Reallocate(m6, &
     & SIZE(test(1)%N, 1), &
@@ -283,7 +286,8 @@ PURE SUBROUTINE STCM_17d(ans, test, trial, term1, term2, rho, c, &
     realval = trial(ipt)%js * trial(ipt)%ws * trial(ipt)%thickness * &
       & trial(ipt)%wt * trial(ipt)%jt * rhobar(:,ipt)
     !!
-    CALL GetProjectionOfdNTdXt(obj=trial(ipt), cdNTdXt=p, val=c)
+    CALL GetProjectionOfdNTdXt(obj=trial(ipt), ans=p, c=c, &
+    crank=TypeFeVariableVector)
     !!
     DO ips = 1, SIZE(realval)
       DO b = 1, SIZE(m6, 6)
@@ -308,4 +312,3 @@ PURE SUBROUTINE STCM_17d(ans, test, trial, term1, term2, rho, c, &
   DEALLOCATE (m6, realval, vbar, rhobar, p)
   !!
 END SUBROUTINE STCM_17d
-

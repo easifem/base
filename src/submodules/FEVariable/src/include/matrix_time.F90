@@ -1,7 +1,8 @@
 INTEGER(I4B) :: ii, jj, kk, cnt
 
 obj%len = SIZE(val)
-obj%capacity = CAPACITY_EXPAND_FACTOR * obj%len
+! obj%capacity = CAPACITY_EXPAND_FACTOR * obj%len
+obj%capacity = TypeFEVariableOpt%capacityExpandFactor * obj%len
 ALLOCATE (obj%val(obj%capacity))
 
 cnt = 0
@@ -19,3 +20,4 @@ obj%s(1:3) = SHAPE(val)
 obj%defineOn = _DEFINEON_
 obj%rank = Matrix
 obj%varType = Time
+obj%isInit = .TRUE.

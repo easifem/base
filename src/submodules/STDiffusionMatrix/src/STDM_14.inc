@@ -42,8 +42,8 @@ PURE SUBROUTINE STDM_14a(ans, test, trial, c1, c2, opt)
   !!
   !! main
   !!
-  CALL getInterpolation(obj=trial, interpol=cbar, val=c1)
-  CALL getInterpolation(obj=trial, interpol=vbar, val=c2)
+  CALL getInterpolation(obj=trial, ans=cbar, val=c1)
+  CALL getInterpolation(obj=trial, ans=vbar, val=c2)
   !!
   CALL Reallocate( &
     & IJab, &
@@ -128,8 +128,8 @@ PURE SUBROUTINE STDM_14b(ans, test, trial, c1, c2, opt)
   !!
   !! main
   !!
-  CALL getInterpolation(obj=trial, interpol=cbar, val=c1)
-  CALL getInterpolation(obj=trial, interpol=vbar, val=c2)
+  CALL getInterpolation(obj=trial, ans=cbar, val=c1)
+  CALL getInterpolation(obj=trial, ans=vbar, val=c2)
   !!
   CALL Reallocate( &
     & IJab, &

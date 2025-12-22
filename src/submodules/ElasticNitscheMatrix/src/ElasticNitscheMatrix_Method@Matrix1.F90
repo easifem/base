@@ -27,11 +27,11 @@ CONTAINS
 
 MODULE PROCEDURE ElasticNitscheMatrix1a
 REAL(DFP), ALLOCATABLE :: lamBar(:), muBar(:), evecBar(:, :)
-CALL getInterpolation(obj=trial, interpol=lamBar, val=lambda)
-CALL getInterpolation(obj=trial, interpol=muBar, val=mu)
-CALL getInterpolation(obj=trial, interpol=evecBar, val=evec)
-ans = ElasticNitscheMatrix( &
-& test=test, trial=trial, lambda=lamBar, mu=muBar, evec=evecBar)
+CALL GetInterpolation(obj=trial, ans=lamBar, val=lambda)
+CALL GetInterpolation(obj=trial, ans=muBar, val=mu)
+CALL GetInterpolation(obj=trial, ans=evecBar, val=evec)
+ans = ElasticNitscheMatrix(test=test, trial=trial, lambda=lamBar, &
+                           mu=muBar, evec=evecBar)
 DEALLOCATE (lamBar, muBar, evecBar)
 END PROCEDURE ElasticNitscheMatrix1a
 
@@ -41,7 +41,7 @@ END PROCEDURE ElasticNitscheMatrix1a
 
 MODULE PROCEDURE ElasticNitscheMatrix1b
 REAL(DFP), ALLOCATABLE :: evecBar(:, :)
-CALL getInterpolation(obj=trial, interpol=evecBar, val=evec)
+CALL GetInterpolation(obj=trial, ans=evecBar, val=evec)
 ans = ElasticNitscheMatrix( &
 & test=test, &
 & trial=trial, &
@@ -57,7 +57,7 @@ END PROCEDURE ElasticNitscheMatrix1b
 
 MODULE PROCEDURE ElasticNitscheMatrix1c
 REAL(DFP), ALLOCATABLE :: evecBar(:, :)
-CALL getInterpolation(obj=trial, interpol=evecBar, val=evec)
+CALL getInterpolation(obj=trial, ans=evecBar, val=evec)
 ans = ElasticNitscheMatrix(test=test, trial=trial, &
   & lambda=lambda, mu=mu, evec=evecBar)
 DEALLOCATE (evecBar)
@@ -298,10 +298,10 @@ END PROCEDURE ElasticNitscheMatrix1i
 
 MODULE PROCEDURE ElasticNitscheMatrix1j
 REAL(DFP), ALLOCATABLE :: lamBar(:), muBar(:)
-CALL getInterpolation(obj=trial, interpol=lamBar, val=lambda)
-CALL getInterpolation(obj=trial, interpol=muBar, val=mu)
-ans = ElasticNitscheMatrix( &
-& test=test, trial=trial, lambda=lamBar, mu=muBar, dim=dim)
+CALL GetInterpolation(obj=trial, ans=lamBar, val=lambda)
+CALL GetInterpolation(obj=trial, ans=muBar, val=mu)
+ans = ElasticNitscheMatrix(test=test, trial=trial, lambda=lamBar, &
+                           mu=muBar, dim=dim)
 DEALLOCATE (lamBar, muBar)
 END PROCEDURE ElasticNitscheMatrix1j
 
