@@ -406,6 +406,29 @@ END INTERFACE QuadratureVariable
 !                                      QuadratureVariable@ConstructorMethods
 !----------------------------------------------------------------------------
 
+!> author: Shion Shimizu
+! date: 2025-12-11
+! summary:  Create FEVariable which is vector and space-time
+
+INTERFACE
+  MODULE PURE FUNCTION Quadrature_Vector_SpaceTime3(rank, vartype, &
+                                                    dim1, dim2, dim3) &
+    RESULT(obj)
+    TYPE(FEVariable_) :: obj
+    TYPE(FEVariableVector_), INTENT(IN) :: rank
+    TYPE(FEVariableSpaceTime_), INTENT(IN) :: vartype
+    INTEGER(I4B), INTENT(IN) :: dim1, dim2, dim3
+  END FUNCTION Quadrature_Vector_SpaceTime3
+END INTERFACE
+
+INTERFACE QuadratureVariable
+  MODULE PROCEDURE Quadrature_Vector_SpaceTime3
+END INTERFACE QuadratureVariable
+
+!----------------------------------------------------------------------------
+!                                      QuadratureVariable@ConstructorMethods
+!----------------------------------------------------------------------------
+
 !> author: Vikas Sharma, Ph. D.
 ! date: 2021-12-10
 ! update: 2021-12-10
