@@ -292,6 +292,24 @@ CALL FEVariableInitiate(obj=obj, s=s, defineon=TypeFEVariableOpt%Quadrature, &
 END PROCEDURE Quadrature_Vector_SpaceTime2
 
 !----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE Quadrature_Vector_SpaceTime3
+INTEGER(I4B) :: tsize, s(3)
+
+s(1) = dim1
+s(2) = dim2
+s(3) = dim3
+tsize = dim1 * dim2 * dim3
+
+CALL FEVariableInitiate(obj=obj, s=s, defineon=TypeFEVariableOpt%Quadrature, &
+                        vartype=TypeFEVariableOpt%spacetime, &
+                        rank=TypeFEVariableOpt%vector, len=tsize)
+
+END PROCEDURE Quadrature_Vector_SpaceTime3
+
+!----------------------------------------------------------------------------
 !                                                          QuadratureVariable
 !----------------------------------------------------------------------------
 

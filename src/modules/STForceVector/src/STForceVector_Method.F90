@@ -198,6 +198,27 @@ INTERFACE STForceVector_
 END INTERFACE STForceVector_
 
 !----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE
+  MODULE PURE SUBROUTINE obj_STForceVector_24( &
+    testSpace, testTime, c, crank, ans, &
+    dim1, dim2, dim3)
+    CLASS(ElemshapeData_), INTENT(IN) :: testSpace
+    CLASS(ElemshapeData_), INTENT(IN) :: testTime
+    TYPE(FEVariable_), INTENT(IN) :: c
+    TYPE(FEVariableVector_), INTENT(IN) :: crank
+    REAL(DFP), INTENT(INOUT) :: ans(:, :, :)
+    INTEGER(I4B), INTENT(OUT) :: dim1, dim2, dim3
+  END SUBROUTINE obj_STForceVector_24
+END INTERFACE
+
+INTERFACE STForceVector_
+  MODULE PROCEDURE obj_STForceVector_24
+END INTERFACE STForceVector_
+
+!----------------------------------------------------------------------------
 !                                                             STForceVector
 !----------------------------------------------------------------------------
 

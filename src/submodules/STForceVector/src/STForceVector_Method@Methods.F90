@@ -25,6 +25,7 @@ USE BaseType, ONLY: TypeFEVariableSpace, TypeFEVariableVector
 USE BaseType, ONLY: TypeFEVariableMatrix
 USE BaseType, ONLY: math => TypeMathOpt
 USE ElemshapeData_Method, ONLY: GetProjectionOfdNTdXt_
+USE Display_Method, ONLY: display
 
 IMPLICIT NONE
 CONTAINS
@@ -228,6 +229,46 @@ DO ipt = 1, nipt
   END DO
 END DO
 END PROCEDURE obj_STForceVector_3
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE obj_STForceVector_24
+INTEGER(I4B) :: ips, ipt, nipt, nips, spaceCompo, i1, i2, i3
+REAL(DFP) :: cbar(3), realval
+
+dim1 = FEVariableSize(obj=c, dim=1)
+
+dim2 = testSpace%nns
+nips = testSpace%nips
+
+dim3 = testTime%nns
+nipt = testTime%nips
+
+ans(1:dim1, 1:dim2, 1:dim3) = math%zero
+
+DO ipt = 1, nipt
+
+  DO ips = 1, nips
+
+    CALL FEVariableGetInterpolation_( &
+      obj=c, rank=crank, N=testSpace%N, nns=testSpace%nns, spaceIndx=ips, &
+      timeIndx=ipt, T=testTime%N(:, ipt), nnt=testTime%nns, scale=math%one, &
+      addContribution=math%no, ans=cbar, tsize=spaceCompo)
+
+    realval = testSpace%js(ips) * testSpace%ws(ips) * &
+      testSpace%thickness(ips) * testTime%js(ipt) * testTime%ws(ipt)
+
+    CALL OuterProd_(a=cbar(1:dim1), b=testSpace%N(1:dim2, ips), &
+                    c=testtime%N(1:dim3, ipt), &
+                    anscoeff=math%one, scale=realval, &
+                    ans=ans, dim1=i1, dim2=i2, dim3=i3)
+
+  END DO
+END DO
+
+END PROCEDURE obj_STForceVector_24
 
 !----------------------------------------------------------------------------
 !                                                               STForceVector
