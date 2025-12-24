@@ -17,12 +17,30 @@
 
 SUBMODULE(StringUtility) Methods
 USE GlobalData, ONLY: CHAR_BSLASH, CHAR_DOT, CHAR_FSLASH, CHAR_SLASH
-
-USE, INTRINSIC :: ISO_FORTRAN_ENV, ONLY: IOSTAT_END
+USE ISO_FORTRAN_ENV, ONLY: IOSTAT_END
 
 IMPLICIT NONE
 
 CONTAINS
+
+!----------------------------------------------------------------------------
+!                                                                  Deallocate
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE StringVectorDeallocate
+INTEGER(I4B) :: ii, tsize
+LOGICAL(LGT) :: isok
+
+isok = ALLOCATED(obj)
+
+IF (.NOT. isok) RETURN
+
+tsize = SIZE(obj)
+DO ii = 1, tsize
+  obj(ii) = ""
+END DO
+DEALLOCATE (obj)
+END PROCEDURE StringVectorDeallocate
 
 !----------------------------------------------------------------------------
 !                                                                 PathDir

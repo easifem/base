@@ -45,6 +45,25 @@ PUBLIC :: UpperCase
 PUBLIC :: PathJoin
 PUBLIC :: PathBase
 PUBLIC :: PathDir
+PUBLIC :: DEALLOCATE
+
+!----------------------------------------------------------------------------
+!                                                                 Deallocate
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2025-12-24
+! summary: Deallocate a vector string
+
+INTERFACE
+  MODULE PURE SUBROUTINE StringVectorDeallocate(obj)
+    TYPE(String), ALLOCATABLE, INTENT(INOUT) :: obj(:)
+  END SUBROUTINE StringVectorDeallocate
+END INTERFACE
+
+INTERFACE DEALLOCATE
+  MODULE PROCEDURE StringVectorDeallocate
+END INTERFACE DEALLOCATE
 
 !----------------------------------------------------------------------------
 !                                                                 PathBase
