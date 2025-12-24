@@ -17,6 +17,7 @@
 
 SUBMODULE(ReferenceElement_Method) GeometryMethods
 USE ErrorHandling, ONLY: Errormsg
+
 USE Display_Method
 
 USE ReferencePoint_Method, ONLY: Measure_Simplex_Point, Point_quality, &
@@ -28,7 +29,8 @@ USE ReferenceLine_Method, ONLY: Measure_Simplex_Line, &
                                 TotalEntities_Line, &
                                 GetFaceElemType_Line, &
                                 GetEdgeConnectivity_Line, &
-                                GetFaceConnectivity_Line
+                                GetFaceConnectivity_Line, &
+                                RefCoord_Line
 
 USE ReferenceTriangle_Method, ONLY: Measure_Simplex_Triangle, &
                                     Triangle_quality, &
@@ -37,7 +39,8 @@ USE ReferenceTriangle_Method, ONLY: Measure_Simplex_Triangle, &
                                     TotalNodesInElement_Triangle, &
                                     TotalEntities_Triangle, &
                                     GetFaceConnectivity_Triangle, &
-                                    GetFaceElemType_Triangle
+                                    GetFaceElemType_Triangle, &
+                                    RefCoord_Triangle
 
 USE ReferenceQuadrangle_Method, ONLY: Measure_Simplex_Quadrangle, &
                                       Quadrangle_quality, &
@@ -45,7 +48,8 @@ USE ReferenceQuadrangle_Method, ONLY: Measure_Simplex_Quadrangle, &
                                       TotalNodesInElement_Quadrangle, &
                                       TotalEntities_Quadrangle, &
                                       GetFaceConnectivity_Quadrangle, &
-                                      GetFaceElemType_Quadrangle
+                                      GetFaceElemType_Quadrangle, &
+                                      RefCoord_Quadrangle
 
 USE ReferenceTetrahedron_Method, ONLY: Measure_Simplex_Tetrahedron, &
                                        Tetrahedron_quality, &
@@ -53,7 +57,8 @@ USE ReferenceTetrahedron_Method, ONLY: Measure_Simplex_Tetrahedron, &
                                        GetFaceConnectivity_Tetrahedron, &
                                        GetFaceElemType_Tetrahedron, &
                                        TotalNodesInElement_Tetrahedron, &
-                                       TotalEntities_Tetrahedron
+                                       TotalEntities_Tetrahedron, &
+                                       RefCoord_Tetrahedron
 
 USE ReferenceHexahedron_Method, ONLY: Measure_Simplex_Hexahedron, &
                                       Hexahedron_quality, &
@@ -61,7 +66,8 @@ USE ReferenceHexahedron_Method, ONLY: Measure_Simplex_Hexahedron, &
                                       GetFaceConnectivity_Hexahedron, &
                                       GetFaceElemType_Hexahedron, &
                                       TotalNodesInElement_Hexahedron, &
-                                      TotalEntities_Hexahedron
+                                      TotalEntities_Hexahedron, &
+                                      RefCoord_Hexahedron
 
 USE ReferencePrism_Method, ONLY: Measure_Simplex_Prism, &
                                  Prism_quality, &
@@ -69,7 +75,8 @@ USE ReferencePrism_Method, ONLY: Measure_Simplex_Prism, &
                                  GetFaceConnectivity_Prism, &
                                  GetFaceElemType_Prism, &
                                  TotalNodesInElement_Prism, &
-                                 TotalEntities_Prism
+                                 TotalEntities_Prism, &
+                                 RefCoord_Prism
 
 USE ReferencePyramid_Method, ONLY: Measure_Simplex_Pyramid, &
                                    Pyramid_quality, &
@@ -77,10 +84,102 @@ USE ReferencePyramid_Method, ONLY: Measure_Simplex_Pyramid, &
                                    GetFaceConnectivity_Pyramid, &
                                    GetFaceElemType_Pyramid, &
                                    TotalNodesInElement_Pyramid, &
-                                   TotalEntities_Pyramid
+                                   TotalEntities_Pyramid, &
+                                   RefCoord_Pyramid
 
 IMPLICIT NONE
 CONTAINS
+
+!----------------------------------------------------------------------------
+!                                                                  RefCoord
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE RefCoord
+INTEGER(I4B) :: topo
+
+topo = ElementTopology(elemType)
+
+SELECT CASE (topo)
+
+CASE (Point)
+  ALLOCATE (ans(3, 1))
+  ans = 0.0_DFP
+
+CASE (Line)
+  ans = RefCoord_Line(refElem)
+
+CASE (Triangle)
+  ans = RefCoord_Triangle(refElem)
+
+CASE (Quadrangle)
+  ans = RefCoord_Quadrangle(refElem)
+
+CASE (Tetrahedron)
+  ans = RefCoord_Tetrahedron(refElem)
+
+CASE (Hexahedron)
+  ans = RefCoord_Hexahedron(refElem)
+
+CASE (Prism)
+  ans = RefCoord_Prism(refElem)
+
+CASE (Pyramid)
+  ans = RefCoord_Pyramid(refElem)
+END SELECT
+END PROCEDURE RefCoord
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE RefCoord_
+INTEGER(I4B) :: topo
+
+topo = ElementTopology(elemType)
+
+SELECT CASE (topo)
+
+CASE (Point)
+  nrow = 3
+  ncol = 1
+  ans(1:nrow, 1:ncol) = 0.0_DFP
+
+CASE (Line)
+  nrow = 1
+  ncol = 2
+  ans(1:nrow, 1:ncol) = RefCoord_Line(refElem)
+
+CASE (Triangle)
+  nrow = 2
+  ncol = 3
+  ans(1:nrow, 1:ncol) = RefCoord_Triangle(refElem)
+
+CASE (Quadrangle)
+  nrow = 2
+  ncol = 4
+  ans(1:nrow, 1:ncol) = RefCoord_Quadrangle(refElem)
+
+CASE (Tetrahedron)
+  nrow = 3
+  ncol = 4
+  ans(1:nrow, 1:ncol) = RefCoord_Tetrahedron(refElem)
+
+CASE (Hexahedron)
+  nrow = 3
+  ncol = 8
+  ans(1:nrow, 1:ncol) = RefCoord_Hexahedron(refElem)
+
+CASE (Prism)
+  nrow = 3
+  ncol = 6
+  ans(1:nrow, 1:ncol) = RefCoord_Prism(refElem)
+
+CASE (Pyramid)
+  nrow = 3
+  ncol = 5
+  ans(1:nrow, 1:ncol) = RefCoord_Pyramid(refElem)
+END SELECT
+END PROCEDURE RefCoord_
 
 !----------------------------------------------------------------------------
 !                                                     GetElementIndex
@@ -380,42 +479,84 @@ topo = refelem_ElementTopology1(elemType)
 SELECT CASE (topo)
 
 CASE (Line)
-
-  CALL GetFaceElemType_Line(faceElemType=faceElemType, opt=opt,  &
-    & tFaceNodes=tFaceNodes, elemType=elemType)
+  CALL GetFaceElemType_Line(faceElemType=faceElemType, opt=opt, &
+                            tFaceNodes=tFaceNodes, elemType=elemType)
 
 CASE (Triangle)
-
-  CALL GetFaceElemType_Triangle(faceElemType=faceElemType, opt=opt,  &
-    & tFaceNodes=tFaceNodes, elemType=elemType)
+  CALL GetFaceElemType_Triangle(faceElemType=faceElemType, opt=opt, &
+                                tFaceNodes=tFaceNodes, elemType=elemType)
 
 CASE (Quadrangle)
-
-  CALL GetFaceElemType_Quadrangle(faceElemType=faceElemType, opt=opt,  &
-    & tFaceNodes=tFaceNodes, elemType=elemType)
+  CALL GetFaceElemType_Quadrangle(faceElemType=faceElemType, opt=opt, &
+                                  tFaceNodes=tFaceNodes, elemType=elemType)
 
 CASE (Tetrahedron)
-
-  CALL GetFaceElemType_Tetrahedron(faceElemType=faceElemType, opt=opt,  &
-    & tFaceNodes=tFaceNodes, elemType=elemType)
+  CALL GetFaceElemType_Tetrahedron(faceElemType=faceElemType, opt=opt, &
+                                   tFaceNodes=tFaceNodes, elemType=elemType)
 
 CASE (Hexahedron)
-
-  CALL GetFaceElemType_Hexahedron(faceElemType=faceElemType, opt=opt,  &
-    & tFaceNodes=tFaceNodes, elemType=elemType)
+  CALL GetFaceElemType_Hexahedron(faceElemType=faceElemType, opt=opt, &
+                                  tFaceNodes=tFaceNodes, elemType=elemType)
 
 CASE (Prism)
-
-  CALL GetFaceElemType_Prism(faceElemType=faceElemType, opt=opt,  &
-    & tFaceNodes=tFaceNodes, elemType=elemType)
+  CALL GetFaceElemType_Prism(faceElemType=faceElemType, opt=opt, &
+                             tFaceNodes=tFaceNodes, elemType=elemType)
 
 CASE (Pyramid)
-
-  CALL GetFaceElemType_Pyramid(faceElemType=faceElemType, opt=opt,  &
-    & tFaceNodes=tFaceNodes, elemType=elemType)
+  CALL GetFaceElemType_Pyramid(faceElemType=faceElemType, opt=opt, &
+                               tFaceNodes=tFaceNodes, elemType=elemType)
 
 END SELECT
 END PROCEDURE GetFaceElemType1
+
+!----------------------------------------------------------------------------
+!                                                            GetFaceElemType
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE GetFaceElemType2
+INTEGER(I4B) :: topo
+
+topo = ElementTopology(elemType)
+
+SELECT CASE (topo)
+
+CASE (Line)
+  CALL GetFaceElemType_Line(faceElemType=faceElemType, opt=opt, &
+                            tFaceNodes=tFaceNodes, elemType=elemType, &
+                            localFaceNumber=localFaceNumber)
+
+CASE (Triangle)
+  CALL GetFaceElemType_Triangle(faceElemType=faceElemType, opt=opt, &
+                                tFaceNodes=tFaceNodes, elemType=elemType, &
+                                localFaceNumber=localFaceNumber)
+
+CASE (Quadrangle)
+  CALL GetFaceElemType_Quadrangle(faceElemType=faceElemType, opt=opt, &
+                                  tFaceNodes=tFaceNodes, elemType=elemType, &
+                                  localFaceNumber=localFaceNumber)
+
+CASE (Tetrahedron)
+  CALL GetFaceElemType_Tetrahedron(faceElemType=faceElemType, opt=opt, &
+                                   tFaceNodes=tFaceNodes, elemType=elemType, &
+                                   localFaceNumber=localFaceNumber)
+
+CASE (Hexahedron)
+  CALL GetFaceElemType_Hexahedron(faceElemType=faceElemType, opt=opt, &
+                                  tFaceNodes=tFaceNodes, elemType=elemType, &
+                                  localFaceNumber=localFaceNumber)
+
+CASE (Prism)
+  CALL GetFaceElemType_Prism(faceElemType=faceElemType, opt=opt, &
+                             tFaceNodes=tFaceNodes, elemType=elemType, &
+                             localFaceNumber=localFaceNumber)
+
+CASE (Pyramid)
+  CALL GetFaceElemType_Pyramid(faceElemType=faceElemType, opt=opt, &
+                               tFaceNodes=tFaceNodes, elemType=elemType, &
+                               localFaceNumber=localFaceNumber)
+
+END SELECT
+END PROCEDURE GetFaceElemType2
 
 !----------------------------------------------------------------------------
 !                                                            MeasureSimplex

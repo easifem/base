@@ -53,4 +53,5 @@ target_sources(
           ${src_path}/TriagUtility.F90
           ${src_path}/LinearAlgebraUtility.F90
           ${src_path}/SafeSizeUtility.F90
+          ${src_path}/ReverseUtility.F90
           ${src_path}/Utility.F90)

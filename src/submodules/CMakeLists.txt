@@ -27,6 +27,30 @@ include(${CMAKE_CURRENT_LIST_DIR}/MdEncode/CMakeLists.txt)
 # Utility
 include(${CMAKE_CURRENT_LIST_DIR}/Utility/CMakeLists.txt)
 
+# Point
+include(${CMAKE_CURRENT_LIST_DIR}/Point/CMakeLists.txt)
+
+# Line
+include(${CMAKE_CURRENT_LIST_DIR}/Line/CMakeLists.txt)
+
+# Triangle
+include(${CMAKE_CURRENT_LIST_DIR}/Triangle/CMakeLists.txt)
+
+# Quadrangle
+include(${CMAKE_CURRENT_LIST_DIR}/Quadrangle/CMakeLists.txt)
+
+# Tetrahedron
+include(${CMAKE_CURRENT_LIST_DIR}/Tetrahedron/CMakeLists.txt)
+
+# Hexahedron
+include(${CMAKE_CURRENT_LIST_DIR}/Hexahedron/CMakeLists.txt)
+
+# Prism
+include(${CMAKE_CURRENT_LIST_DIR}/Prism/CMakeLists.txt)
+
+# Pyramid
+include(${CMAKE_CURRENT_LIST_DIR}/Pyramid/CMakeLists.txt)
+
 # Polynomial
 include(${CMAKE_CURRENT_LIST_DIR}/Polynomial/CMakeLists.txt)
 
@@ -116,6 +140,9 @@ include(${CMAKE_CURRENT_LIST_DIR}/ForceVector/CMakeLists.txt)
 
 # STForceVector
 include(${CMAKE_CURRENT_LIST_DIR}/STForceVector/CMakeLists.txt)
+
+# Projection
+include(${CMAKE_CURRENT_LIST_DIR}/Projection/CMakeLists.txt)
 
 # VoigtRank2Tensor
 include(${CMAKE_CURRENT_LIST_DIR}/VoigtRank2Tensor/CMakeLists.txt)

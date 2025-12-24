@@ -20,7 +20,48 @@ USE BaseType, ONLY: CSRMatrix_
 IMPLICIT NONE
 PRIVATE
 
-PUBLIC :: Add
+PUBLIC :: Add, Add_
+PUBLIC :: AddToSTMatrix
+
+!----------------------------------------------------------------------------
+!                                                             Add@addMethod
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:         22 Marach 2021
+! summary: This subroutine Add contribution
+
+INTERFACE AddMaster
+  MODULE PURE SUBROUTINE AddMaster1(obj, row, col, VALUE, scale)
+    TYPE(CSRMatrix_), INTENT(INOUT) :: obj
+    INTEGER(I4B), INTENT(IN) :: row(:), col(:)
+    !! Node numbers
+    REAL(DFP), INTENT(IN) :: VALUE(:, :)
+    !! Element finite element matrix
+    REAL(DFP), INTENT(IN) :: scale
+    !! Scale is used to scale the Val before Adding it to the obj
+  END SUBROUTINE AddMaster1
+END INTERFACE AddMaster
+
+!----------------------------------------------------------------------------
+!                                                             Add@addMethod
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:         22 Marach 2021
+! summary: This subroutine Add contribution
+
+INTERFACE AddMaster
+  MODULE PURE SUBROUTINE AddMaster2(obj, row, col, VALUE, scale)
+    TYPE(CSRMatrix_), INTENT(INOUT) :: obj
+    INTEGER(I4B), INTENT(IN) :: row(:), col(:)
+    !! Node numbers
+    REAL(DFP), INTENT(IN) :: VALUE
+    !! Element finite element matrix
+    REAL(DFP), INTENT(IN) :: scale
+    !! Scale is used to scale the Val before Adding it to the obj
+  END SUBROUTINE AddMaster2
+END INTERFACE AddMaster
 
 !----------------------------------------------------------------------------
 !                                                             Add@addMethod
@@ -50,6 +91,33 @@ END INTERFACE Add
 ! date:         22 Marach 2021
 ! summary: This subroutine Add contribution
 
+INTERFACE Add_
+  MODULE PURE SUBROUTINE obj_Add_0(obj, nodenum, VALUE, scale, row, col, &
+                                   nrow, ncol)
+    TYPE(CSRMatrix_), INTENT(INOUT) :: obj
+    INTEGER(I4B), INTENT(IN) :: nodenum(:)
+    !! Node numbers
+    REAL(DFP), INTENT(IN) :: VALUE(:, :)
+    !! Element finite element matrix
+    REAL(DFP), INTENT(IN) :: scale
+    !! Scale is used to scale the Val before Adding it to the obj
+    INTEGER(I4B), INTENT(INOUT) :: row(:), col(:)
+    !! needed for internal working
+    !! size of row should be .tdof. obj%csr%idof * size(nodenum)
+    !! size of col should be .tdof. obj%csr%jdof * size(nodenum)
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+    !! data written in row and col
+  END SUBROUTINE obj_Add_0
+END INTERFACE Add_
+
+!----------------------------------------------------------------------------
+!                                                             Add@addMethod
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:         22 Marach 2021
+! summary: This subroutine Add contribution
+
 INTERFACE Add
   MODULE PURE SUBROUTINE obj_Add1(obj, nodenum, VALUE, scale, storageFMT)
     TYPE(CSRMatrix_), INTENT(INOUT) :: obj
@@ -63,6 +131,38 @@ INTERFACE Add
     !! Storage format of element finite matrix
   END SUBROUTINE obj_Add1
 END INTERFACE Add
+
+!----------------------------------------------------------------------------
+!                                                             Add@addMethod
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:         22 Marach 2021
+! summary: This subroutine Add contribution
+
+INTERFACE Add_
+  MODULE PURE SUBROUTINE obj_Add_1( &
+    obj, nodenum, VALUE, scale, storageFMT, m2, m2_nrow, m2_ncol, row, &
+    col, nrow, ncol)
+    TYPE(CSRMatrix_), INTENT(INOUT) :: obj
+    INTEGER(I4B), INTENT(IN) :: nodenum(:)
+    !! Node numbers
+    REAL(DFP), INTENT(IN) :: VALUE(:, :)
+    !! Element finite element matrix
+    REAL(DFP), INTENT(IN) :: scale
+    !! Scale is used to scale the Val before Adding it to the obj
+    INTEGER(I4B), INTENT(IN) :: storageFMT
+    !! Storage format of element finite matrix
+    REAL(DFP), INTENT(INOUT) :: m2(:, :)
+    !! need for internal working
+    !! Size should at least enough to hold value
+    INTEGER(I4B), INTENT(OUT) :: m2_nrow, m2_ncol
+    !! size of m2
+    INTEGER(I4B), INTENT(INOUT) :: row(:), col(:)
+    !! needed for internal working
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+  END SUBROUTINE obj_Add_1
+END INTERFACE Add_
 
 !----------------------------------------------------------------------------
 !                                                             Add@addMethod
@@ -83,6 +183,10 @@ INTERFACE Add
     REAL(DFP), INTENT(IN) :: scale
   END SUBROUTINE obj_Add2
 END INTERFACE Add
+
+INTERFACE Add_
+  MODULE PROCEDURE obj_Add2
+END INTERFACE Add_
 
 !----------------------------------------------------------------------------
 !                                                             Add@addMethod
@@ -110,6 +214,10 @@ INTERFACE Add
   END SUBROUTINE obj_Add3
 END INTERFACE Add
 
+INTERFACE Add_
+  MODULE PROCEDURE obj_Add3
+END INTERFACE Add_
+
 !----------------------------------------------------------------------------
 !                                                             Add@addMethod
 !----------------------------------------------------------------------------
@@ -128,7 +236,7 @@ END INTERFACE Add
 
 INTERFACE Add
   MODULE PURE SUBROUTINE obj_Add4(obj, iNodeNum, jNodeNum, idof, &
-    & jdof, VALUE, scale)
+                                  jdof, VALUE, scale)
     TYPE(CSRMatrix_), INTENT(INOUT) :: obj
     INTEGER(I4B), INTENT(IN) :: iNodeNum
     INTEGER(I4B), INTENT(IN) :: jNodeNum
@@ -138,6 +246,10 @@ INTERFACE Add
     REAL(DFP), INTENT(IN) :: scale
   END SUBROUTINE obj_Add4
 END INTERFACE Add
+
+INTERFACE Add_
+  MODULE PROCEDURE obj_Add4
+END INTERFACE Add_
 
 !----------------------------------------------------------------------------
 !                                                            Add@addMethod
@@ -162,6 +274,26 @@ END INTERFACE Add
 
 !> author: Vikas Sharma, Ph. D.
 ! date:         22 March 2021
+! summary: This subroutine Add the selected value in sparse matrix
+
+INTERFACE Add_
+  MODULE PURE SUBROUTINE obj_Add_5(obj, nodenum, VALUE, scale, &
+                                   row, col, nrow, ncol)
+    TYPE(CSRMatrix_), INTENT(INOUT) :: obj
+    INTEGER(I4B), INTENT(IN) :: nodenum(:)
+    REAL(DFP), INTENT(IN) :: VALUE
+    REAL(DFP), INTENT(IN) :: scale
+    INTEGER(I4B), INTENT(INOUT) :: row(:), col(:)
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+  END SUBROUTINE obj_Add_5
+END INTERFACE Add_
+
+!----------------------------------------------------------------------------
+!                                                            Add@addMethod
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:         22 March 2021
 ! summary: This subroutine Add the value in sparse matrix
 !
 !# Introduction
@@ -173,11 +305,10 @@ END INTERFACE Add
 !$$
 ! obj(Nptrs,Nptrs)=value(:,:)
 !$$
-!
 
 INTERFACE Add
   MODULE PURE SUBROUTINE obj_Add6(obj, iNodeNum, jNodeNum, &
-    & ivar, jvar, VALUE, scale)
+                                  ivar, jvar, VALUE, scale)
     TYPE(CSRMatrix_), INTENT(INOUT) :: obj
     INTEGER(I4B), INTENT(IN) :: iNodeNum(:)
     INTEGER(I4B), INTENT(IN) :: jNodeNum(:)
@@ -189,12 +320,31 @@ INTERFACE Add
 END INTERFACE Add
 
 !----------------------------------------------------------------------------
+!                                                                 Add_
+!----------------------------------------------------------------------------
+
+INTERFACE Add_
+  MODULE PURE SUBROUTINE obj_Add_6( &
+    obj, iNodeNum, jNodeNum, ivar, jvar, VALUE, scale, row, col, nrow, ncol)
+    TYPE(CSRMatrix_), INTENT(INOUT) :: obj
+    INTEGER(I4B), INTENT(IN) :: iNodeNum(:)
+    INTEGER(I4B), INTENT(IN) :: jNodeNum(:)
+    INTEGER(I4B), INTENT(IN) :: ivar
+    INTEGER(I4B), INTENT(IN) :: jvar
+    REAL(DFP), INTENT(IN) :: VALUE(:, :)
+    REAL(DFP), INTENT(IN) :: scale
+    INTEGER(I4B), INTENT(INOUT) :: row(:), col(:)
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+  END SUBROUTINE obj_Add_6
+END INTERFACE Add_
+
+!----------------------------------------------------------------------------
 !                                                             Add@addMethod
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date:         22 March 2021
-! summary:         Adds the specific row and column entry to a given value
+! date: 22 March 2021
+! summary: Adds the specific row and column entry to a given value
 !
 !# Introduction
 !
@@ -217,8 +367,8 @@ END INTERFACE Add
 !@endnote
 
 INTERFACE Add
-  MODULE PURE SUBROUTINE obj_Add7(obj, iNodeNum, jNodeNum, ivar,  &
-    & jvar, iDOF, jDOF, VALUE, scale)
+  MODULE PURE SUBROUTINE obj_Add7(obj, iNodeNum, jNodeNum, ivar, &
+                                  jvar, iDOF, jDOF, VALUE, scale)
     TYPE(CSRMatrix_), INTENT(INOUT) :: obj
     INTEGER(I4B), INTENT(IN) :: iNodeNum
     !! row node number
@@ -238,6 +388,10 @@ INTERFACE Add
   END SUBROUTINE obj_Add7
 END INTERFACE Add
 
+INTERFACE Add_
+  MODULE PROCEDURE obj_Add7
+END INTERFACE Add_
+
 !----------------------------------------------------------------------------
 !                                                             Add@addMethod
 !----------------------------------------------------------------------------
@@ -247,8 +401,8 @@ END INTERFACE Add
 ! summary:         Adds the specific row and column entry to a given value
 
 INTERFACE Add
-  MODULE PURE SUBROUTINE obj_Add8(obj, iNodeNum, jNodeNum, ivar,  &
-    & jvar, iDOF, jDOF, VALUE, scale)
+  MODULE PURE SUBROUTINE obj_Add8(obj, iNodeNum, jNodeNum, ivar, &
+                                  jvar, iDOF, jDOF, VALUE, scale)
     TYPE(CSRMatrix_), INTENT(INOUT) :: obj
     INTEGER(I4B), INTENT(IN) :: iNodeNum(:)
     !! row node number
@@ -267,6 +421,36 @@ INTERFACE Add
     REAL(DFP), INTENT(IN) :: scale
   END SUBROUTINE obj_Add8
 END INTERFACE Add
+
+!----------------------------------------------------------------------------
+!                                                                       Add_
+!----------------------------------------------------------------------------
+
+INTERFACE Add_
+  MODULE PURE SUBROUTINE obj_Add_8( &
+    obj, iNodeNum, jNodeNum, ivar, jvar, iDOF, jDOF, VALUE, scale, &
+    row, col, nrow, ncol)
+    TYPE(CSRMatrix_), INTENT(INOUT) :: obj
+    INTEGER(I4B), INTENT(IN) :: iNodeNum(:)
+    !! row node number
+    INTEGER(I4B), INTENT(IN) :: jNodeNum(:)
+    !! column node number
+    INTEGER(I4B), INTENT(IN) :: ivar
+    !!
+    INTEGER(I4B), INTENT(IN) :: jvar
+    !!
+    INTEGER(I4B), INTENT(IN) :: iDOF
+    !! row degree of freedom
+    INTEGER(I4B), INTENT(IN) :: jDOF
+    !! col degree of freedom
+    REAL(DFP), INTENT(IN) :: VALUE(:, :)
+    !! scalar value to be Add
+    REAL(DFP), INTENT(IN) :: scale
+    !! scale
+    INTEGER(I4B), INTENT(INOUT) :: row(:), col(:)
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+  END SUBROUTINE obj_Add_8
+END INTERFACE Add_
 
 !----------------------------------------------------------------------------
 !                                                             Add@addMethod
@@ -297,8 +481,8 @@ END INTERFACE Add
 !@endnote
 
 INTERFACE Add
-  MODULE PURE SUBROUTINE obj_Add9(obj, iNodeNum, jNodeNum, ivar,  &
-    & jvar, ispacecompo, itimecompo, jspacecompo, jtimecompo, VALUE, scale)
+  MODULE PURE SUBROUTINE obj_Add9(obj, iNodeNum, jNodeNum, ivar, &
+         jvar, ispacecompo, itimecompo, jspacecompo, jtimecompo, VALUE, scale)
     TYPE(CSRMatrix_), INTENT(INOUT) :: obj
     INTEGER(I4B), INTENT(IN) :: iNodeNum
     !! row node number
@@ -317,6 +501,10 @@ INTERFACE Add
     REAL(DFP), INTENT(IN) :: scale
   END SUBROUTINE obj_Add9
 END INTERFACE Add
+
+INTERFACE Add_
+  MODULE PROCEDURE obj_Add9
+END INTERFACE Add_
 
 !----------------------------------------------------------------------------
 !                                                            Add@addMethod
@@ -339,7 +527,7 @@ END INTERFACE Add
 
 INTERFACE Add
   MODULE PURE SUBROUTINE obj_Add10(obj, iNodeNum, jNodeNum, &
-    & ivar, jvar, VALUE, scale)
+                                   ivar, jvar, VALUE, scale)
     TYPE(CSRMatrix_), INTENT(INOUT) :: obj
     INTEGER(I4B), INTENT(IN) :: iNodeNum(:)
     INTEGER(I4B), INTENT(IN) :: jNodeNum(:)
@@ -351,6 +539,26 @@ INTERFACE Add
 END INTERFACE Add
 
 !----------------------------------------------------------------------------
+!                                                                       Add_
+!----------------------------------------------------------------------------
+
+INTERFACE Add_
+  MODULE PURE SUBROUTINE obj_Add_10( &
+    obj, iNodeNum, jNodeNum, ivar, jvar, VALUE, scale, row, col, nrow, &
+    ncol)
+    TYPE(CSRMatrix_), INTENT(INOUT) :: obj
+    INTEGER(I4B), INTENT(IN) :: iNodeNum(:)
+    INTEGER(I4B), INTENT(IN) :: jNodeNum(:)
+    INTEGER(I4B), INTENT(IN) :: ivar
+    INTEGER(I4B), INTENT(IN) :: jvar
+    REAL(DFP), INTENT(IN) :: VALUE
+    REAL(DFP), INTENT(IN) :: scale
+    INTEGER(I4B), INTENT(INOUT) :: row(:), col(:)
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+  END SUBROUTINE obj_Add_10
+END INTERFACE Add_
+
+!----------------------------------------------------------------------------
 !                                                             Add@addMethod
 !----------------------------------------------------------------------------
 
@@ -359,8 +567,8 @@ END INTERFACE Add
 ! summary:         Adds the specific row and column entry to a given value
 
 INTERFACE Add
-  MODULE PURE SUBROUTINE obj_Add11(obj, iNodeNum, jNodeNum, ivar,  &
-    & jvar, iDOF, jDOF, VALUE, scale)
+  MODULE PURE SUBROUTINE obj_Add11(obj, iNodeNum, jNodeNum, ivar, &
+                                   jvar, iDOF, jDOF, VALUE, scale)
     TYPE(CSRMatrix_), INTENT(INOUT) :: obj
     INTEGER(I4B), INTENT(IN) :: iNodeNum(:)
     !! row node number
@@ -381,6 +589,35 @@ INTERFACE Add
 END INTERFACE Add
 
 !----------------------------------------------------------------------------
+!                                                                 Add_
+!----------------------------------------------------------------------------
+
+INTERFACE Add_
+  MODULE PURE SUBROUTINE obj_Add_11( &
+    obj, iNodeNum, jNodeNum, ivar, jvar, iDOF, jDOF, VALUE, scale, &
+    row, col, nrow, ncol)
+    TYPE(CSRMatrix_), INTENT(INOUT) :: obj
+    INTEGER(I4B), INTENT(IN) :: iNodeNum(:)
+    !! row node number
+    INTEGER(I4B), INTENT(IN) :: jNodeNum(:)
+    !! column node number
+    INTEGER(I4B), INTENT(IN) :: ivar
+    !!
+    INTEGER(I4B), INTENT(IN) :: jvar
+    !!
+    INTEGER(I4B), INTENT(IN) :: iDOF
+    !! row degree of freedom
+    INTEGER(I4B), INTENT(IN) :: jDOF
+    !! col degree of freedom
+    REAL(DFP), INTENT(IN) :: VALUE
+    !! scalar value to be Add
+    REAL(DFP), INTENT(IN) :: scale
+    INTEGER(I4B), INTENT(INOUT) :: row(:), col(:)
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+  END SUBROUTINE obj_Add_11
+END INTERFACE Add_
+
+!----------------------------------------------------------------------------
 !                                                             Add@addMethod
 !----------------------------------------------------------------------------
 
@@ -389,8 +626,8 @@ END INTERFACE Add
 ! summary:         Adds the specific row and column entry to a given value
 
 INTERFACE Add
-  MODULE PURE SUBROUTINE obj_Add12(obj, iNodeNum, jNodeNum, ivar,  &
-    & jvar, ispacecompo, itimecompo, jspacecompo, jtimecompo, VALUE, scale)
+  MODULE PURE SUBROUTINE obj_Add12(obj, iNodeNum, jNodeNum, ivar, &
+         jvar, ispacecompo, itimecompo, jspacecompo, jtimecompo, VALUE, scale)
     TYPE(CSRMatrix_), INTENT(INOUT) :: obj
     INTEGER(I4B), INTENT(IN) :: iNodeNum(:)
     !! row node number
@@ -418,9 +655,10 @@ END INTERFACE Add
 ! date: 17/01/2022
 ! summary:         Adds the specific row and column entry to a given value
 
-INTERFACE Add
-  MODULE PURE SUBROUTINE obj_Add13(obj, iNodeNum, jNodeNum, ivar,  &
-    & jvar, ispacecompo, itimecompo, jspacecompo, jtimecompo, VALUE, scale)
+INTERFACE Add_
+  MODULE PURE SUBROUTINE obj_Add_12( &
+    obj, iNodeNum, jNodeNum, ivar, jvar, ispacecompo, itimecompo, &
+    jspacecompo, jtimecompo, VALUE, scale, row, col, nrow, ncol)
     TYPE(CSRMatrix_), INTENT(INOUT) :: obj
     INTEGER(I4B), INTENT(IN) :: iNodeNum(:)
     !! row node number
@@ -431,6 +669,38 @@ INTERFACE Add
     INTEGER(I4B), INTENT(IN) :: jvar
     !!
     INTEGER(I4B), INTENT(IN) :: ispacecompo
+    INTEGER(I4B), INTENT(IN) :: itimecompo
+    INTEGER(I4B), INTENT(IN) :: jspacecompo
+    INTEGER(I4B), INTENT(IN) :: jtimecompo
+    REAL(DFP), INTENT(IN) :: VALUE
+    !! scalar value to be Add
+    REAL(DFP), INTENT(IN) :: scale
+    INTEGER(I4B), INTENT(INOUT) :: row(:), col(:)
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+  END SUBROUTINE obj_Add_12
+END INTERFACE Add_
+
+!----------------------------------------------------------------------------
+!                                                             Add@addMethod
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 17/01/2022
+! summary:         Adds the specific row and column entry to a given value
+
+INTERFACE Add
+  MODULE PURE SUBROUTINE obj_Add13(obj, iNodeNum, jNodeNum, ivar, &
+         jvar, ispacecompo, itimecompo, jspacecompo, jtimecompo, VALUE, scale)
+    TYPE(CSRMatrix_), INTENT(INOUT) :: obj
+    INTEGER(I4B), INTENT(IN) :: iNodeNum(:)
+    !! row node number
+    INTEGER(I4B), INTENT(IN) :: jNodeNum(:)
+    !! column node number
+    INTEGER(I4B), INTENT(IN) :: ivar
+    !! row variable
+    INTEGER(I4B), INTENT(IN) :: jvar
+    !! column variable
+    INTEGER(I4B), INTENT(IN) :: ispacecompo
     INTEGER(I4B), INTENT(IN) :: itimecompo(:)
     INTEGER(I4B), INTENT(IN) :: jspacecompo
     INTEGER(I4B), INTENT(IN) :: jtimecompo(:)
@@ -439,6 +709,35 @@ INTERFACE Add
     REAL(DFP), INTENT(IN) :: scale
   END SUBROUTINE obj_Add13
 END INTERFACE Add
+
+!----------------------------------------------------------------------------
+!                                                                       Add_
+!----------------------------------------------------------------------------
+
+INTERFACE Add_
+  MODULE PURE SUBROUTINE obj_Add_13( &
+    obj, iNodeNum, jNodeNum, ivar, jvar, ispacecompo, itimecompo, &
+    jspacecompo, jtimecompo, VALUE, scale, row, col, nrow, ncol)
+    TYPE(CSRMatrix_), INTENT(INOUT) :: obj
+    INTEGER(I4B), INTENT(IN) :: iNodeNum(:)
+    !! row node number
+    INTEGER(I4B), INTENT(IN) :: jNodeNum(:)
+    !! column node number
+    INTEGER(I4B), INTENT(IN) :: ivar
+    !! row variable
+    INTEGER(I4B), INTENT(IN) :: jvar
+    !! column variable
+    INTEGER(I4B), INTENT(IN) :: ispacecompo
+    INTEGER(I4B), INTENT(IN) :: itimecompo(:)
+    INTEGER(I4B), INTENT(IN) :: jspacecompo
+    INTEGER(I4B), INTENT(IN) :: jtimecompo(:)
+    REAL(DFP), INTENT(IN) :: VALUE
+    !! scalar value to be Add
+    REAL(DFP), INTENT(IN) :: scale
+    INTEGER(I4B), INTENT(INOUT) :: row(:), col(:)
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+  END SUBROUTINE obj_Add_13
+END INTERFACE Add_
 
 !----------------------------------------------------------------------------
 !                                                             Add@addMethod
@@ -471,6 +770,35 @@ INTERFACE Add
 END INTERFACE Add
 
 !----------------------------------------------------------------------------
+!                                                                       Add_
+!----------------------------------------------------------------------------
+
+INTERFACE Add_
+  MODULE PURE SUBROUTINE obj_Add_14( &
+    obj, iNodeNum, jNodeNum, ivar, jvar, ispacecompo, itimecompo, &
+    jspacecompo, jtimecompo, VALUE, scale, row, col, nrow, ncol)
+    TYPE(CSRMatrix_), INTENT(INOUT) :: obj
+    INTEGER(I4B), INTENT(IN) :: iNodeNum(:)
+    !! row node number
+    INTEGER(I4B), INTENT(IN) :: jNodeNum(:)
+    !! column node number
+    INTEGER(I4B), INTENT(IN) :: ivar
+    !!
+    INTEGER(I4B), INTENT(IN) :: jvar
+    !!
+    INTEGER(I4B), INTENT(IN) :: ispacecompo(:)
+    INTEGER(I4B), INTENT(IN) :: itimecompo
+    INTEGER(I4B), INTENT(IN) :: jspacecompo(:)
+    INTEGER(I4B), INTENT(IN) :: jtimecompo
+    REAL(DFP), INTENT(IN) :: VALUE
+    !! scalar value to be Add
+    REAL(DFP), INTENT(IN) :: scale
+    INTEGER(I4B), INTENT(INOUT) :: row(:), col(:)
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+  END SUBROUTINE obj_Add_14
+END INTERFACE Add_
+
+!----------------------------------------------------------------------------
 !                                                             Add@Methods
 !----------------------------------------------------------------------------
 
@@ -483,8 +811,8 @@ END INTERFACE Add
 ! Add a csrmatrix to another csrmatrix
 
 INTERFACE Add
-  MODULE SUBROUTINE obj_Add15(obj, VALUE, scale, isSameStructure,  &
-    & isSorted)
+  MODULE SUBROUTINE obj_Add15(obj, VALUE, scale, isSameStructure, &
+                              isSorted)
     TYPE(CSRMatrix_), INTENT(INOUT) :: obj
     !! CSRMatrix_
     TYPE(CSRMatrix_), INTENT(IN) :: VALUE
@@ -497,6 +825,44 @@ INTERFACE Add
     !! True if the matrix is sorted.
   END SUBROUTINE obj_Add15
 END INTERFACE Add
+
+INTERFACE Add_
+  MODULE PROCEDURE obj_Add15
+END INTERFACE Add_
+
+!----------------------------------------------------------------------------
+!                                                             Add@AddMethod
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2023-12-17
+! summary: (Obj)ab = Value
+!
+!# Introduction
+!
+! In time discontinuous fem, tangent matrix is block matrix
+! First we assemble mass and stiffness matrix separately
+! they can be represented by Value.
+! Now we want to make one of the blocks of space-time matrix
+! which is represented by Obj.
+! This routine performs this task.
+! Note that the storage format of Obj should be FMT_DOF
+! Note that the storage format of Value and one of the blocks should be
+! identical.
+
+INTERFACE AddToSTMatrix
+  MODULE PURE SUBROUTINE obj_AddToSTMatrix1( &
+    obj, VALUE, itimecompo, jtimecompo, scale)
+    TYPE(CSRMatrix_), INTENT(INOUT) :: obj
+    !! space-time matrix, format should be FMT_DOF
+    TYPE(CSRMatrix_), INTENT(IN) :: VALUE
+    !! space matrix
+    INTEGER(I4B), INTENT(IN) :: itimecompo, jtimecompo
+    !! time components
+    REAL(DFP), OPTIONAL, INTENT(IN) :: scale
+    !! scale
+  END SUBROUTINE obj_AddToSTMatrix1
+END INTERFACE AddToSTMatrix
 
 !----------------------------------------------------------------------------
 !

@@ -46,14 +46,15 @@ PURE SUBROUTINE STCM_12a(ans, test, trial, term1, term2, rho, c, opt)
   CALL Reallocate(IaJb, SIZE(test(1)%N, 1), SIZE(test(1)%T), &
     & SIZE(trial(1)%N, 1), SIZE(trial(1)%T))
   !!
-  CALL GetInterpolation(obj=trial, val=rho, interpol=rhobar)
+  CALL GetInterpolation(obj=trial, val=rho, ans=rhobar)
   !!
   DO ipt = 1, SIZE(trial)
     !!
     realval = trial(ipt)%js * trial(ipt)%ws * trial(ipt)%thickness * &
       & trial(ipt)%wt * trial(ipt)%jt * rhobar(:,ipt)
     !!
-    CALL GetProjectionOfdNTdXt(obj=trial(ipt), cdNTdXt=p, val=c)
+    CALL GetProjectionOfdNTdXt(obj=trial(ipt), ans=p, c=c, &
+    crank=TypeFEVariableVector)
     !!
     DO ips = 1, SIZE(realval)
       IaJb = IaJb + realval(ips) &
@@ -99,14 +100,15 @@ PURE SUBROUTINE STCM_12b(ans, test, trial, term1, term2, rho, c, opt)
   CALL Reallocate(IaJb, SIZE(test(1)%N, 1), SIZE(test(1)%T), &
     & SIZE(trial(1)%N, 1), SIZE(trial(1)%T))
   !!
-  CALL GetInterpolation(obj=trial, val=rho, interpol=rhobar)
+  CALL GetInterpolation(obj=trial, val=rho, ans=rhobar)
   !!
   DO ipt = 1, SIZE(trial)
     !!
     realval = trial(ipt)%js * trial(ipt)%ws * trial(ipt)%thickness * &
       & trial(ipt)%wt * trial(ipt)%jt * rhobar(:,ipt)
     !!
-    CALL GetProjectionOfdNTdXt(obj=test(ipt), cdNTdXt=p, val=c)
+    CALL GetProjectionOfdNTdXt(obj=test(ipt), ans=p,  c=c, &
+    crank=TypeFEVariableVector)
     !!
     DO ips = 1, SIZE(realval)
       IaJb = IaJb + realval(ips) &

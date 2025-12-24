@@ -33,7 +33,7 @@ REAL(DFP) :: dd(3, 3)
 nns1 = SIZE(test%N, 1)
 nns2 = SIZE(trial%N, 1)
 nips = SIZE(trial%N, 2)
-nsd = trial%refElem%nsd
+nsd = trial%nsd
 ALLOCATE (ff(nns1, nsd * nns2), realval(nips))
 realval = trial%Ws * trial%Js * trial%Thickness
 ALLOCATE (ans(nns1 * nsd, nns2 * nsd))
@@ -81,7 +81,7 @@ REAL(DFP) :: dd(3, 3)
 nns1 = SIZE(test%N, 1)
 nns2 = SIZE(trial%N, 1)
 nips = SIZE(trial%N, 2)
-nsd = trial%refElem%nsd
+nsd = trial%nsd
 ALLOCATE (ff(nns1, nsd * nns2), realval(nips))
 realval = trial%Ws * trial%Js * trial%Thickness
 ALLOCATE (ans(nns1 * nsd, nns2 * nsd))
@@ -123,8 +123,8 @@ END PROCEDURE ElasticNitscheMatrixNormal1b
 
 MODULE PROCEDURE ElasticNitscheMatrixNormal1c
 REAL(DFP), ALLOCATABLE :: lamBar(:), muBar(:)
-CALL getInterpolation(obj=trial, interpol=lamBar, val=lambda)
-CALL getInterpolation(obj=trial, interpol=muBar, val=mu)
+CALL GetInterpolation(obj=trial, ans=lamBar, val=lambda)
+CALL GetInterpolation(obj=trial, ans=muBar, val=mu)
 ans = ElasticNitscheMatrixNormal( &
 & test=test, trial=trial, lambda=lamBar, mu=muBar)
 DEALLOCATE (lamBar, muBar)

@@ -312,18 +312,16 @@ CONTAINS
   PROCEDURE, PASS(self) :: tempname
     !! Return a safe temporary name suitable for temporary file
     !! or directories.
-  GENERIC :: to_number => &
-    to_integer_I1P, &
+  GENERIC :: to_number => to_integer_I1P, to_integer_I4P, to_integer_I8P, &
+    to_real_R8P, to_real_R4P, &
 #ifndef _NVF
     to_integer_I2P, &
 #endif
-    to_integer_I4P, &
-    to_integer_I8P, &
 #ifdef _R16P
     to_real_R16P, &
 #endif
-    to_real_R8P, &
-    to_real_R4P
+    to_logical_1
+
       !! Cast string to number.
   PROCEDURE, PASS(self) :: unescape
     !! Unescape double backslashes (or custom escaped character).
@@ -475,7 +473,7 @@ CONTAINS
     !! Cast string to real.
   PROCEDURE, PRIVATE, PASS(self) :: to_real_R16P
     !! Cast string to real.
-  PROCEDURE, PUBLIC, PASS(self) :: to_logical
+  PROCEDURE, PUBLIC, PASS(self) :: to_logical, to_logical_1
     !! Convert a string to logical
   ! assignments
   PROCEDURE, PRIVATE, PASS(lhs) :: string_assign_string
@@ -3164,6 +3162,25 @@ FUNCTION tempname(self, is_file, prefix, path)
     IF (.NOT. is_hold) EXIT
   END DO
 END FUNCTION tempname
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2025-05-29
+! summary: Cast string to logical
+
+ELEMENTAL FUNCTION to_logical_1(self, kind) RESULT(ans)
+  CLASS(string), INTENT(IN) :: self
+  !! The string.
+  LOGICAL, INTENT(IN) :: kind
+  !! Mold parameter for kind detection.
+  LOGICAL :: ans
+  !! The number into the string.
+
+  ans = self%to_logical()
+END FUNCTION to_logical_1
 
 !----------------------------------------------------------------------------
 !

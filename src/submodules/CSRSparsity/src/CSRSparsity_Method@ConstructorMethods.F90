@@ -63,11 +63,14 @@ IF (isok) THEN
   problem = tnodes1 .NE. nrow .OR. tnodes2 .NE. ncol
   IF (problem) THEN
     CALL ErrorMSG( &
-    & "Size of the matrix does not conform with the dof data! "//  &
-    & "tNodes1 = "//tostring(tnodes1)//" tNodes2="//tostring(tNodes2),  &
-    & "CSRSparsity_Method@Constructor.F90", &
-    & "obj_initiate1()", &
-    & __LINE__, stderr)
+      msg="Size of the matrix does not conform with the dof data! "// &
+      "tNodes in idof = "//tostring(tnodes1)// &
+      " it should be "//tostring(nrow)// &
+      " tnodes in jdof ="//tostring(tNodes2)// &
+      " it should be "//tostring(ncol), &
+      file="CSRSparsity_Method@Constructor.F90", &
+      routine="obj_initiate1()", &
+      line=__LINE__, unitno=stderr)
     STOP
   END IF
 END IF

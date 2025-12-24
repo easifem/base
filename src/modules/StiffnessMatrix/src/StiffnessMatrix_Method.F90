@@ -26,6 +26,7 @@ IMPLICIT NONE
 PRIVATE
 
 PUBLIC :: StiffnessMatrix
+PUBLIC :: StiffnessMatrix_
 
 !----------------------------------------------------------------------------
 !                                     StiffnessMatrix@StiffnessMatrixMethods
@@ -39,6 +40,23 @@ INTERFACE StiffnessMatrix
     REAL(DFP), ALLOCATABLE :: ans(:, :)
   END FUNCTION obj_StiffnessMatrix1
 END INTERFACE StiffnessMatrix
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+!> author: Shion Shimizu
+! date:   2025-02-28
+! summary: subroutine to calculate stiffness matrix
+
+INTERFACE StiffnessMatrix_
+  MODULE PURE SUBROUTINE obj_StiffnessMatrix1_(test, trial, Cijkl, nrow,ncol, ans)
+    CLASS(ElemshapeData_), INTENT(IN) :: test, trial
+    CLASS(FEVariable_), INTENT(IN) :: Cijkl
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+  END SUBROUTINE obj_StiffnessMatrix1_
+END INTERFACE StiffnessMatrix_
 
 !----------------------------------------------------------------------------
 !                                     StiffnessMatrix@StiffnessMatrixMethods
@@ -58,6 +76,21 @@ INTERFACE StiffnessMatrix
 END INTERFACE StiffnessMatrix
 
 !----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE StiffnessMatrix_
+  MODULE PURE SUBROUTINE obj_StiffnessMatrix2_(test, trial, lambda, mu, &
+                                       isLambdaYoungsModulus, ans, nrow, ncol)
+    CLASS(ElemshapeData_), INTENT(IN) :: test, trial
+    CLASS(FEVariable_), INTENT(IN) :: lambda, mu
+    LOGICAL(LGT), OPTIONAL, INTENT(IN) :: isLambdaYoungsModulus
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+  END SUBROUTINE obj_StiffnessMatrix2_
+END INTERFACE StiffnessMatrix_
+
+!----------------------------------------------------------------------------
 !                                     StiffnessMatrix@StiffnessMatrixMethods
 !----------------------------------------------------------------------------
 
@@ -69,6 +102,20 @@ INTERFACE StiffnessMatrix
     REAL(DFP), ALLOCATABLE :: ans(:, :)
   END FUNCTION obj_StiffnessMatrix3
 END INTERFACE StiffnessMatrix
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE StiffnessMatrix_
+  MODULE PURE SUBROUTINE obj_StiffnessMatrix3_(test, trial, lambda, &
+                                               mu, ans, nrow, ncol)
+    CLASS(ElemshapeData_), INTENT(IN) :: test, trial
+    REAL(DFP), INTENT(IN) :: lambda, mu
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+  END SUBROUTINE obj_StiffnessMatrix3_
+END INTERFACE StiffnessMatrix_
 
 !----------------------------------------------------------------------------
 !                                     StiffnessMatrix@StiffnessMatrixMethods
@@ -84,6 +131,20 @@ INTERFACE StiffnessMatrix
 END INTERFACE StiffnessMatrix
 
 !----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE StiffnessMatrix_
+  MODULE PURE SUBROUTINE obj_StiffnessMatrix4_(test, trial, Cijkl, ans, &
+                                               nrow, ncol)
+    CLASS(ElemshapeData_), INTENT(IN) :: test, trial
+    REAL(DFP), INTENT(IN) :: Cijkl(:, :)
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+  END SUBROUTINE obj_StiffnessMatrix4_
+END INTERFACE StiffnessMatrix_
+
+!----------------------------------------------------------------------------
 !                                     StiffnessMatrix@StiffnessMatrixMethods
 !----------------------------------------------------------------------------
 
@@ -96,6 +157,21 @@ INTERFACE StiffnessMatrix
     REAL(DFP), ALLOCATABLE :: ans(:, :)
   END FUNCTION obj_StiffnessMatrix5
 END INTERFACE StiffnessMatrix
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE StiffnessMatrix_
+  MODULE PURE SUBROUTINE obj_StiffnessMatrix5_(test, trial, lambda, mu, &
+                                               ans, nrow, ncol)
+    CLASS(ElemshapeData_), INTENT(IN) :: test, trial
+    REAL(DFP), INTENT(IN) :: lambda(:)
+    REAL(DFP), INTENT(IN) :: mu(:)
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+  END SUBROUTINE obj_StiffnessMatrix5_
+END INTERFACE StiffnessMatrix_
 
 !----------------------------------------------------------------------------
 !

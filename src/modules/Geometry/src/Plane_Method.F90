@@ -19,6 +19,10 @@ MODULE Plane_Method
 USE GlobalData
 IMPLICIT NONE
 
+PRIVATE
+
+PUBLIC :: plane_normal_line_exp_int_3d
+
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
@@ -54,16 +58,16 @@ IMPLICIT NONE
 !    Output, real ( kind = 8 ) PINT(3), the coordinates of a
 !    common point of the plane and line, when IVAL is 1 or 2.
 
-interface
-  module pure subroutine plane_normal_line_exp_int_3d(pp, normal, &
-    & p1, p2, ival, pint)
-    real(dfp), intent(in) :: pp(3)
-    real(dfp), intent(inout) :: normal(3)
-    real(dfp), intent(in) :: p1(3)
-    real(dfp), intent(in) :: p2(3)
-    integer(i4b), intent(out) :: ival
-    real(dfp), intent(out) :: pint(3)
-  end subroutine
-end interface
+INTERFACE
+  MODULE PURE SUBROUTINE plane_normal_line_exp_int_3d(pp, normal, &
+                                                      p1, p2, ival, pint)
+    REAL(dfp), INTENT(in) :: pp(3)
+    REAL(dfp), INTENT(inout) :: normal(3)
+    REAL(dfp), INTENT(in) :: p1(3)
+    REAL(dfp), INTENT(in) :: p2(3)
+    INTEGER(i4b), INTENT(out) :: ival
+    REAL(dfp), INTENT(out) :: pint(3)
+  END SUBROUTINE
+END INTERFACE
 
 END MODULE Plane_Method

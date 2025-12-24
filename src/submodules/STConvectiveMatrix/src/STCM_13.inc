@@ -40,12 +40,12 @@ PURE SUBROUTINE STCM_13a(ans, test, trial, term1, term2, c, opt)
   !!
   !! main
   !!
-  CALL GetInterpolation(obj=trial, interpol=vbar, val=c)
+  CALL GetInterpolation(obj=trial, ans=vbar, val=c)
   !!
   CALL Reallocate(m6, &
     & SIZE(test(1)%N, 1), &
     & SIZE(trial(1)%N, 1), &
-    & SIZE(vbar, 1), trial(1)%refelem%nsd, &
+    & SIZE(vbar, 1), trial(1)%nsd, &
     & SIZE(test(1)%T), &
     & SIZE(trial(1)%T))
   !!
@@ -104,12 +104,12 @@ PURE SUBROUTINE STCM_13b(ans, test, trial, term1, term2, c, opt)
   !!
   !! main
   !!
-  CALL GetInterpolation(obj=trial, interpol=vbar, val=c)
+  CALL GetInterpolation(obj=trial, ans=vbar, val=c)
   !!
   CALL Reallocate(m6, &
     & SIZE(test(1)%N, 1), &
     & SIZE(trial(1)%N, 1), &
-    & trial(1)%refelem%nsd, SIZE(vbar, 1), &
+    & trial(1)%nsd, SIZE(vbar, 1), &
     & SIZE(test(1)%T), &
     & SIZE(trial(1)%T))
   !!
@@ -168,12 +168,12 @@ PURE SUBROUTINE STCM_13c(ans, test, trial, term1, term2, c, opt)
   !!
   !! main
   !!
-  CALL GetInterpolation(obj=trial, interpol=vbar, val=c)
+  CALL GetInterpolation(obj=trial, ans=vbar, val=c)
   !!
   CALL Reallocate(m6, &
     & SIZE(test(1)%N, 1), &
     & SIZE(trial(1)%N, 1), &
-    & SIZE(vbar, 1), trial(1)%refelem%nsd, &
+    & SIZE(vbar, 1), trial(1)%nsd, &
     & SIZE(test(1)%T), &
     & SIZE(trial(1)%T))
   !!
@@ -232,12 +232,12 @@ PURE SUBROUTINE STCM_13d(ans, test, trial, term1, term2, c, opt)
   !!
   !! main
   !!
-  CALL GetInterpolation(obj=trial, interpol=vbar, val=c)
+  CALL GetInterpolation(obj=trial, ans=vbar, val=c)
   !!
   CALL Reallocate(m6, &
     & SIZE(test(1)%N, 1), &
     & SIZE(trial(1)%N, 1), &
-    & trial(1)%refelem%nsd, SIZE(vbar, 1), &
+    & trial(1)%nsd, SIZE(vbar, 1), &
     & SIZE(test(1)%T), &
     & SIZE(trial(1)%T))
   !!
@@ -269,4 +269,3 @@ PURE SUBROUTINE STCM_13d(ans, test, trial, term1, term2, c, opt)
   DEALLOCATE (m6, realval, vbar)
   !!
 END SUBROUTINE STCM_13d
-

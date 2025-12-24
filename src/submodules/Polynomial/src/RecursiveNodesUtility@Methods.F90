@@ -16,76 +16,173 @@
 !
 
 SUBMODULE(RecursiveNodesUtility) Methods
-USE BaseMethod
+USE StringUtility, ONLY: UpperCase
+
+USE IntegerUtility, ONLY: GetMultiIndices_, Size
+
+USE PushPopUtility, ONLY: Pop, Push
+
+USE LineInterpolationUtility, ONLY: InterpolationPoint_Line_
+
 CONTAINS
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+FUNCTION NumberofRows(d, domain) RESULT(nrow)
+  INTEGER(I4B), INTENT(IN) :: d
+  CHARACTER(LEN=*), INTENT(IN), OPTIONAL :: domain
+  INTEGER(I4B) :: nrow
+
+  LOGICAL(LGT) :: isdomain
+  CHARACTER(2) :: mydomain
+
+  isdomain = PRESENT(domain)
+  mydomain = "BA"
+  IF (isdomain) mydomain = UpperCase(domain(1:2))
+
+  IF (mydomain .EQ. "BA") THEN
+    nrow = d + 1
+  ELSE
+    nrow = d
+  END IF
+END FUNCTION NumberofRows
 
 !----------------------------------------------------------------------------
 !                                               RecursiveNode1D
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE RecursiveNode1D
-INTEGER(I4B) :: n, jj
-INTEGER(I4B), PARAMETER :: d = 1_I4B
-INTEGER(I4B) :: aindx(d + 1)
-REAL(DFP) :: avar
-REAL(DFP), PARAMETER :: xij(2) = [0.0_DFP, 1.0_DFP]
-INTEGER(I4B), ALLOCATABLE :: indices(:, :)
-REAL(DFP), ALLOCATABLE :: x(:)
+INTEGER(I4B) :: nrow, ncol
 
-n = order
-x = InterpolationPoint_Line( &
-  & order=order, &
-  & ipType=ipType, &
-  & xij=xij, &
-  & layout="INCREASING", &
-  & alpha=alpha, &
-  & beta=beta, &
-  & lambda=lambda)
+nrow = NumberofRows(d=1_I4B, domain=domain)
+ncol = SIZE(n=order, d=1_I4B)
 
-indices = GetMultiIndices(n=n, d=d)
-CALL Reallocate(ans, SIZE(indices, 1), SIZE(indices, 2))
+ALLOCATE (ans(nrow, ncol))
 
-DO jj = 1, SIZE(ans, 2)
-  aindx = indices(:, jj) + 1
-  avar = x(aindx(1)) + x(aindx(2))
-  ans(1, jj) = x(aindx(1)) / avar
-  ans(2, jj) = x(aindx(2)) / avar
-END DO
+CALL RecursiveNode1D_(order=order, ipType=ipType, ans=ans, nrow=nrow, &
+              ncol=ncol, alpha=alpha, beta=beta, lambda=lambda, domain=domain)
 
-IF (PRESENT(domain)) THEN
-  ans = Coord_Map(x=ans, from="BaryCentric", to=domain)
-END IF
-
-IF (ALLOCATED(indices)) DEALLOCATE (indices)
-IF (ALLOCATED(x)) DEALLOCATE (x)
 END PROCEDURE RecursiveNode1D
+
+!----------------------------------------------------------------------------
+!                                                            RecursiveNode1D
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE RecursiveNode1D_
+INTEGER(I4B), PARAMETER :: d = 1_I4B, max_order = 99_I4B
+INTEGER(I4B) :: jj, tsize, i1, i2, aint, bint
+REAL(DFP) :: avar, x(max_order + 1), xij(2, 1)
+LOGICAL(LGT) :: isdomain
+CHARACTER(2) :: mydomain
+
+INTEGER(I4B), ALLOCATABLE :: indices(:, :)
+
+isdomain = PRESENT(domain)
+mydomain = "BA"
+IF (isdomain) mydomain = domain(1:2)
+
+xij(1, 1) = 0.0_DFP
+xij(2, 1) = 1.0_DFP
+
+CALL InterpolationPoint_Line_(order=order, ipType=ipType, xij=xij(:, 1), &
+          ans=x, layout="INCREASING", alpha=alpha, beta=beta, lambda=lambda, &
+                              tsize=tsize)
+
+nrow = d + 1
+ncol = SIZE(n=order, d=d)
+
+ALLOCATE (indices(nrow, ncol))
+
+CALL GetMultiIndices_(n=order, d=d, ans=indices, nrow=nrow, ncol=ncol)
+
+SELECT CASE (mydomain)
+CASE ("BA", "Ba", "ba")
+  DO jj = 1, ncol
+    i1 = indices(1, jj) + 1
+    i2 = indices(2, jj) + 1
+
+    avar = x(i1) + x(i2)
+
+    ans(1, jj) = x(i1) / avar
+    ans(2, jj) = x(i2) / avar
+  END DO
+
+CASE default
+  nrow = nrow - 1
+
+  DO jj = 1, ncol
+    i1 = indices(1, jj) + 1
+    i2 = indices(2, jj) + 1
+
+    avar = x(i1) + x(i2)
+
+    xij(1, 1) = x(i1) / avar
+    xij(2, 1) = x(i2) / avar
+
+    CALL Coord_Map_(x=xij, from="BARYCENTRIC", to=mydomain, &
+                    ans=ans(:, jj:), nrow=aint, ncol=bint)
+  END DO
+
+END SELECT
+
+DEALLOCATE (indices)
+
+END PROCEDURE RecursiveNode1D_
 
 !----------------------------------------------------------------------------
 !                                               RecursiveNode2D
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE RecursiveNode2D
-INTEGER(I4B) :: n, jj, ii
-INTEGER(I4B), PARAMETER :: d = 2_I4B
-INTEGER(I4B) :: aindx(d + 1), indx(d)
-REAL(DFP) :: xi, xt, b(d + 1), bs(d), Xn(order + 1)
-REAL(DFP) :: BX(2, order + 1, order + 1)
+INTEGER(I4B) :: nrow, ncol
+nrow = NumberofRows(d=2_I4B, domain=domain)
+ncol = SIZE(n=order, d=2_I4B)
+ALLOCATE (ans(nrow, ncol))
+CALL RecursiveNode2D_(order=order, iptype=iptype, ans=ans, nrow=nrow, &
+              ncol=ncol, domain=domain, alpha=alpha, beta=beta, lambda=lambda)
+END PROCEDURE RecursiveNode2D
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE RecursiveNode2D_
+INTEGER(I4B), PARAMETER :: d = 2_I4B, dp1 = 3_I4B
+INTEGER(I4B), PARAMETER :: max_order = 100 !! max_order + 1
+
+INTEGER(I4B) :: aindx(dp1), indx(d), aint, bint, jj, ii
+
+REAL(DFP) :: xi, xt, b(dp1), bs(d), Xn(max_order), &
+             BX(d, max_order, max_order), xij(dp1, 1), &
+             bxn(d, max_order)
+
 INTEGER(I4B), ALLOCATABLE :: indices(:, :)
 
-n = order
-CALL BarycentericNodeFamily1D( &
-  & order=order, &
-  & ipType=ipType, &
-  & ans=BX, &
-  & Xn=Xn,  &
-  & alpha=alpha, beta=beta, lambda=lambda)
+CHARACTER(2) :: mydomain
+LOGICAL(LGT) :: isdomain
 
-indices = GetMultiIndices(n=n, d=d)
-CALL Reallocate(ans, SIZE(indices, 1), SIZE(indices, 2))
+isdomain = PRESENT(domain)
+mydomain = "BA"; IF (isdomain) mydomain = UpperCase(domain(1:2))
 
-DO jj = 1, SIZE(ans, 2)
+nrow = d + 1
+ncol = SIZE(n=order, d=d)
+ALLOCATE (indices(nrow, ncol))
+
+CALL BarycentericNodeFamily1D(order=order, ipType=ipType, ans=BX, &
+                              Xn=Xn, alpha=alpha, beta=beta, lambda=lambda, &
+                              indices=indices, bxn=bxn)
+
+CALL GetMultiIndices_(n=order, d=d, ans=indices, nrow=nrow, ncol=ncol)
+
+IF (mydomain .NE. "BA") nrow = d
+
+DO jj = 1, ncol
   aindx = indices(:, jj)
+
   xt = 0.0_DFP
+  xij = 0.0_DFP
 
   DO ii = 1, d + 1
     indx = Pop(aindx, ii)
@@ -93,158 +190,183 @@ DO jj = 1, SIZE(ans, 2)
     b = Push(vec=bs, VALUE=0.0_DFP, pos=ii)
     xi = Xn(SUM(indx) + 1)
     xt = xt + xi
-    ans(1:d + 1, jj) = ans(1:d + 1, jj) + xi * b
+    xij(:, 1) = xij(:, 1) + xi * b
   END DO
-  ans(:, jj) = ans(:, jj) / xt
+
+  xij = xij / xt
+
+  CALL Coord_Map_(x=xij, from="BARYCENTRIC", to=mydomain, &
+                  ans=ans(:, jj:), nrow=aint, ncol=bint)
+
 END DO
 
-IF (PRESENT(domain)) THEN
-  ans = Coord_Map(x=ans, from="BaryCentric", to=domain)
-END IF
-
 IF (ALLOCATED(indices)) DEALLOCATE (indices)
-END PROCEDURE RecursiveNode2D
+END PROCEDURE RecursiveNode2D_
 
 !----------------------------------------------------------------------------
 !                                                          RecursiveNode3D
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE RecursiveNode3D
-INTEGER(I4B) :: n, jj, ii
-INTEGER(I4B), PARAMETER :: d = 3_I4B
-INTEGER(I4B) :: aindx(d + 1), indx(d)
-REAL(DFP) :: xi, xt, b(d + 1), bs(d), Xn(order + 1)
-REAL(DFP) :: BX(3, order + 1, order + 1, order + 1)
+INTEGER(I4B) :: nrow, ncol
+nrow = NumberofRows(d=3_I4B, domain=domain)
+ncol = SIZE(n=order, d=3_I4B)
+ALLOCATE (ans(nrow, ncol))
+CALL RecursiveNode3D_(order=order, iptype=iptype, ans=ans, nrow=nrow, &
+              ncol=ncol, domain=domain, alpha=alpha, beta=beta, lambda=lambda)
+END PROCEDURE RecursiveNode3D
+
+!----------------------------------------------------------------------------
+!                                                           RecursiveNode3D_
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE RecursiveNode3D_
+INTEGER(I4B), PARAMETER :: d = 3_I4B, dp1 = 4_I4B, max_order = 26
+
+INTEGER(I4B) :: jj, ii, aint, bint, aindx(dp1), indx(d)
+
+REAL(DFP) :: xi, xt, b(dp1), bs(d), xn(max_order), &
+             bx(d, max_order, max_order, max_order), xij(dp1, 1)
+
 INTEGER(I4B), ALLOCATABLE :: indices(:, :)
+REAL(DFP), ALLOCATABLE :: bxn(:, :)
 
-n = order
-CALL BarycentericNodeFamily2D(order=order, ipType=ipType, ans=BX, Xn=Xn, &
-  & alpha=alpha, &
-  & beta=beta, &
-  & lambda=lambda)
+CHARACTER(2) :: mydomain
+LOGICAL(LGT) :: isdomain
 
-indices = GetMultiIndices(n=n, d=d)
-CALL Reallocate(ans, SIZE(indices, 1), SIZE(indices, 2))
-ans = 0.0_DFP
+isdomain = PRESENT(domain)
+mydomain = "BA"; IF (isdomain) mydomain = UpperCase(domain(1:2))
 
-DO jj = 1, SIZE(ans, 2)
+nrow = d + 1
+ncol = SIZE(n=order, d=d)
+ALLOCATE (indices(nrow, ncol), bxn(d, ncol))
+
+CALL BarycentericNodeFamily2D(order=order, ipType=ipType, ans=bx, Xn=Xn, &
+              alpha=alpha, beta=beta, lambda=lambda, indices=indices, bxn=bxn)
+
+CALL GetMultiIndices_(n=order, d=d, ans=indices, nrow=nrow, ncol=ncol)
+
+IF (mydomain .NE. "BA") nrow = d
+
+DO jj = 1, ncol
 
   aindx = indices(:, jj)
   xt = 0.0_DFP
+  xij = 0.0_DFP
 
-  DO ii = 1, d + 1
+  DO ii = 1, dp1
 
     indx = Pop(aindx, ii)
-    bs = BX(:, indx(1) + 1, indx(2) + 1, indx(3) + 1)
+    bs = bx(:, indx(1) + 1, indx(2) + 1, indx(3) + 1)
     b = Push(vec=bs, VALUE=0.0_DFP, pos=ii)
-    xi = Xn(SUM(indx) + 1)
+    xi = xn(SUM(indx) + 1)
     xt = xt + xi
-    ans(:, jj) = ans(:, jj) + xi * b
+    xij(:, 1) = xij(:, 1) + xi * b
 
   END DO
 
-  ans(:, jj) = ans(:, jj) / xt
+  xij = xij / xt
+
+  CALL Coord_Map_(x=xij, from="BARYCENTRIC", to=mydomain, &
+                  ans=ans(:, jj:), nrow=aint, ncol=bint)
 
 END DO
 
-IF (PRESENT(domain)) THEN
-  ans = Coord_Map(x=ans, from="BaryCentric", to=domain)
-END IF
-
 IF (ALLOCATED(indices)) DEALLOCATE (indices)
+IF (ALLOCATED(bxn)) DEALLOCATE (bxn)
 
-END PROCEDURE RecursiveNode3D
+END PROCEDURE RecursiveNode3D_
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
-SUBROUTINE BarycentericNodeFamily1D(order, ipType, ans, Xn, alpha,  &
-  & beta, lambda)
+SUBROUTINE BarycentericNodeFamily1D(order, ipType, ans, Xn, indices, bxn, &
+                                    alpha, beta, lambda)
   INTEGER(I4B), INTENT(IN) :: order
   INTEGER(I4B), INTENT(IN) :: ipType
-  REAL(DFP), INTENT(OUT) :: ans(2, order + 1, order + 1)
-  REAL(DFP), INTENT(OUT) :: Xn(order + 1)
+  REAL(DFP), INTENT(INOUT) :: ans(:, :, :)
+  !! ans(2, order + 1, order + 1)
+  REAL(DFP), INTENT(INOUT) :: Xn(:)
+  !! Xn(order + 1)
+  INTEGER(I4B), INTENT(INOUT) :: indices(:, :)
+  !!
+  REAL(DFP), INTENT(INOUT) :: bxn(:, :)
+  !!
   REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
-    !! Jacobi polynomial parameter
+  !! Jacobi polynomial parameter
   REAL(DFP), OPTIONAL, INTENT(IN) :: beta
-    !! Jacobi polynomial parameter
+  !! Jacobi polynomial parameter
   REAL(DFP), OPTIONAL, INTENT(IN) :: lambda
-    !! Ultraspherical polynomial parameter
-  !
-  INTEGER(I4B) :: ii, jj, n
-  INTEGER(I4B), PARAMETER :: d = 1_I4B
-  REAL(DFP), ALLOCATABLE :: BXn(:, :)
-  INTEGER(I4B), ALLOCATABLE :: indices(:, :)
-  !!
+  !! Ultraspherical polynomial parameter
+
+  INTEGER(I4B), PARAMETER :: d = 1_I4B, dp1 = 2_I4B
+  INTEGER(I4B) :: ii, jj, nrow, ncol
+
   DO ii = 0, order
-    n = ii
-    indices = GetMultiIndices(n=n, d=d)
-    BXn = RecursiveNode1D(order=n, ipType=ipType, &
-    & alpha=alpha, beta=beta, lambda=lambda)
-    !!
-    DO jj = 1, n + 1
-      ans(1:d + 1, indices(1, jj) + 1, indices(2, jj) + 1) = BXn(1:d + 1, jj)
+    ! indices = GetMultiIndices(n=ii, d=d)
+    CALL GetMultiIndices_(n=ii, d=d, ans=indices, nrow=nrow, ncol=ncol)
+
+    CALL RecursiveNode1D_(order=ii, ipType=ipType, ans=bxn, nrow=nrow, &
+                          ncol=ncol, alpha=alpha, beta=beta, lambda=lambda)
+
+    DO jj = 1, ii + 1
+      ans(1:dp1, indices(1, jj) + 1, indices(2, jj) + 1) = bxn(1:dp1, jj)
     END DO
-    !!
+
   END DO
-  !!
-  Xn = BXn(1, :)
-  !!
-  IF (ALLOCATED(BXn)) DEALLOCATE (BXn)
-  IF (ALLOCATED(indices)) DEALLOCATE (indices)
-  !!
+
+  Xn(1:order + 1) = bxn(1, 1:order + 1)
+
 END SUBROUTINE BarycentericNodeFamily1D
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
-SUBROUTINE BarycentericNodeFamily2D(order, ipType, ans, Xn, alpha, beta, lambda)
+SUBROUTINE BarycentericNodeFamily2D(order, ipType, ans, Xn, alpha, beta, &
+                                    lambda, indices, bxn)
+
   INTEGER(I4B), INTENT(IN) :: order
   INTEGER(I4B), INTENT(IN) :: ipType
-  REAL(DFP), INTENT(OUT) :: ans(3, order + 1, order + 1, order + 1)
-  REAL(DFP), INTENT(OUT) :: Xn(order + 1)
+  REAL(DFP), INTENT(inout) :: ans(:, :, :, :)
+  !! ans(3, order + 1, order + 1, order + 1)
+  REAL(DFP), INTENT(OUT) :: xn(:)
+  !! Xn(order + 1)
+  INTEGER(I4B), INTENT(INOUT) :: indices(:, :)
+  !!
+  REAL(DFP), INTENT(INOUT) :: bxn(:, :)
+  !!
   REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
-    !! Jacobi polynomial parameter
+  !! Jacobi polynomial parameter
   REAL(DFP), OPTIONAL, INTENT(IN) :: beta
-    !! Jacobi polynomial parameter
+  !! Jacobi polynomial parameter
   REAL(DFP), OPTIONAL, INTENT(IN) :: lambda
-    !! Ultraspherical polynomial parameter
-  !!
-  INTEGER(I4B) :: ii, jj, n
-  INTEGER(I4B), PARAMETER :: d = 2_I4B
-  REAL(DFP), ALLOCATABLE :: BXn(:, :)
-  INTEGER(I4B), ALLOCATABLE :: indices(:, :)
-  REAL(DFP) :: avar
+  !! Ultraspherical polynomial parameter
+
+  !! Internal varible
+
   REAL(DFP), PARAMETER :: xij(2) = [0.0_DFP, 1.0_DFP]
-  !!
+  INTEGER(I4B), PARAMETER :: d = 2_I4B
+  INTEGER(I4B) :: ii, jj, nrow, ncol
+
   DO ii = 0, order
-    n = ii
-    indices = GetMultiIndices(n=n, d=d)
-    BXn = RecursiveNode2D(order=n, ipType=ipType, alpha=alpha, beta=beta, lambda=lambda )
-    !!
-    DO jj = 1, SIZE(BXn, 2)
-      ans(1:3, &
-        & indices(1, jj) + 1, &
-        & indices(2, jj) + 1, &
-        & indices(3, jj) + 1) = BXn(1:3, jj)
+    CALL GetMultiIndices_(n=ii, d=d, ans=indices, nrow=nrow, ncol=ncol)
+
+    CALL RecursiveNode2D_(order=ii, ipType=ipType, alpha=alpha, &
+                      beta=beta, lambda=lambda, ans=bxn, nrow=nrow, ncol=ncol)
+
+    DO jj = 1, ncol
+      ans(1:3, indices(1, jj) + 1, indices(2, jj) + 1, indices(3, jj) + 1) = &
+        bxn(1:3, jj)
     END DO
-    !!
+
   END DO
-  !!
-  Xn = InterpolationPoint_Line(order=order, ipType=ipType, xij=xij, &
-    & layout="INCREASING", alpha=alpha, beta=beta, lambda=lambda)
-  !!
-  ! IF (order .GT. 1) THEN
-  !   avar = Xn(2)
-  !   Xn(2:order) = Xn(3:)
-  !   Xn(order + 1) = avar
-  ! END IF
-  !!
-  IF (ALLOCATED(BXn)) DEALLOCATE (BXn)
-  IF (ALLOCATED(indices)) DEALLOCATE (indices)
-  !!
+
+  CALL InterpolationPoint_Line_(ans=xn, tsize=nrow, order=order, &
+                   ipType=ipType, xij=xij, layout="INCREASING", alpha=alpha, &
+                                beta=beta, lambda=lambda)
+
 END SUBROUTINE BarycentericNodeFamily2D
 
 !----------------------------------------------------------------------------
@@ -253,7 +375,7 @@ END SUBROUTINE BarycentericNodeFamily2D
 
 MODULE PROCEDURE Unit2Equilateral
 INTEGER(I4B) :: ii
-!!
+
 IF (d .GT. 1_I4B) THEN
   ! Move the top vertex over the centroid
   DO ii = 1, d - 1
@@ -272,7 +394,7 @@ END PROCEDURE Unit2Equilateral
 
 MODULE PROCEDURE Equilateral2Unit
 INTEGER(I4B) :: ii
-!!
+
 IF (d .GT. 1_I4B) THEN
   x(d, :) = x(d, :) / SQRT((d + 1.0_DFP) / (2.0_DFP * d))
   CALL Equilateral2Unit(d=d - 1, x=x(1:d - 1, :))
@@ -287,49 +409,91 @@ END PROCEDURE Equilateral2Unit
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE ToUnit
-TYPE(String) :: astr
-INTEGER(I4B) :: d
-astr = UpperCase(TRIM(domain))
-SELECT CASE (astr%chars())
-CASE ("UNIT")
-  ans = x
-CASE ("BIUNIT")
-  ans = 0.5_DFP * (x + 1.0_DFP)
-CASE ("BARYCENTRIC")
-  d = SIZE(x, 1)
-  ans = x(1:d - 1, :)
-CASE ("EQUILATERAL")
-  d = SIZE(x, 1)
-  ans = x
-  ans = ans / 2.0_DFP
-  CALL Equilateral2Unit(d=d, x=ans)
-  ans = ans + 1.0_DFP / (d + 1.0_DFP)
-END SELECT
+INTEGER(I4B) :: nrow, ncol
+CHARACTER(2) :: mydomain
+mydomain = UpperCase(domain(1:2))
+nrow = SIZE(x, 1)
+ncol = SIZE(x, 2)
+IF (mydomain .EQ. "BA") nrow = nrow - 1
+ALLOCATE (ans(nrow, ncol))
+CALL ToUnit_(x=x, domain=mydomain, ans=ans, nrow=nrow, ncol=ncol)
 END PROCEDURE ToUnit
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE FromUnit
-TYPE(String) :: astr
-INTEGER(I4B) :: d
-astr = UpperCase(TRIM(domain))
-SELECT CASE (astr%chars())
-CASE ("UNIT")
-  ans = x
-CASE ("BIUNIT")
-  ans = 2.0_DFP * x - 1
-CASE ("BARYCENTRIC")
-  ans = x.ROWCONCAT. (1.0_DFP - SUM(x, dim=1))
-CASE ("EQUILATERAL")
-  d = SIZE(x, 1)
-  ans = x
-  ans = ans - 1.0_DFP / (d + 1.0_DFP)
-  CALL Unit2Equilateral(d=d, x=ans)
-  ans = ans * 2.0_DFP
+MODULE PROCEDURE ToUnit_
+nrow = SIZE(x, 1)
+ncol = SIZE(x, 2)
+
+SELECT CASE (domain(1:2))
+CASE ("UN", "un", "Un")
+  ans(1:nrow, 1:ncol) = x
+
+CASE ("BI", "bi", "Bi")
+  ans(1:nrow, 1:ncol) = 0.5_DFP * (x + 1.0_DFP)
+
+CASE ("BA", "ba", "Ba")
+  nrow = nrow - 1
+  ans(1:nrow, 1:ncol) = x(1:nrow, :)
+
+CASE ("EQ", "eq", "Eq")
+  ans(1:nrow, 1:ncol) = x
+
+  ans(1:nrow, 1:ncol) = ans(1:nrow, 1:ncol) * 0.5_DFP
+
+  CALL Equilateral2Unit(d=nrow, x=ans)
+
+  ans(1:nrow, 1:ncol) = ans(1:nrow, 1:ncol) + 1.0_DFP / &
+                        (REAL(nrow, kind=dfp) + 1.0_DFP)
+
 END SELECT
+END PROCEDURE ToUnit_
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE FromUnit
+INTEGER(I4B) :: nrow, ncol
+CHARACTER(2) :: mydomain
+mydomain = UpperCase(domain(1:2))
+nrow = SIZE(x, 1)
+ncol = SIZE(x, 2)
+IF (mydomain .EQ. "BA") nrow = nrow + 1
+CALL FromUnit_(x=x, domain=mydomain, ans=ans, nrow=nrow, ncol=ncol)
 END PROCEDURE FromUnit
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE FromUnit_
+nrow = SIZE(x, 1)
+ncol = SIZE(x, 2)
+
+SELECT CASE (domain(1:2))
+CASE ("UN", "Un", "un")
+  ans(1:nrow, 1:ncol) = x
+
+CASE ("BI", "Bi", "bi")
+  ans(1:nrow, 1:ncol) = 2.0_DFP * x - 1.0_DFP
+
+CASE ("BA", "Ba", "ba")
+  ans(1:nrow, 1:ncol) = x
+  nrow = nrow + 1
+  ans(nrow, 1:ncol) = (1.0_DFP - SUM(x, dim=1))
+
+CASE ("EQ", "Eq", "eq")
+  ans(1:nrow, 1:ncol) = x - 1.0_DFP / (REAL(nrow, kind=DFP) + 1.0_DFP)
+
+  CALL Unit2Equilateral(d=nrow, x=ans)
+
+  ans(1:nrow, 1:ncol) = ans(1:nrow, 1:ncol) * 2.0_DFP
+
+END SELECT
+END PROCEDURE FromUnit_
 
 !----------------------------------------------------------------------------
 !                                                                 Coord_Map
@@ -338,6 +502,17 @@ END PROCEDURE FromUnit
 MODULE PROCEDURE Coord_Map
 ans = FromUnit(x=(ToUnit(x=x, domain=from)), domain=to)
 END PROCEDURE Coord_Map
+
+!----------------------------------------------------------------------------
+!                                                                 Coord_Map
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE Coord_Map_
+INTEGER(I4B) :: aint, bint
+CALL ToUnit_(x=x, domain=from, ans=ans, nrow=aint, ncol=bint)
+CALL FromUnit_(x=ans(1:aint, 1:bint), domain=to, ans=ans, &
+               nrow=nrow, ncol=ncol)
+END PROCEDURE Coord_Map_
 
 !----------------------------------------------------------------------------
 !

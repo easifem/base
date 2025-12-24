@@ -317,10 +317,12 @@ END PROCEDURE obj_Set29
 
 MODULE PROCEDURE obj_Set30
 INTEGER(I4B) :: ii, jj
+!$OMP PARALLEL DO PRIVATE(ii, jj)
 DO ii = istart, iend, stride
   jj = GetNodeLoc(obj=dofobj, idof=idof, nodenum=ii)
   obj%val(jj) = VALUE
 END DO
+!$OMP END PARALLEL DO
 END PROCEDURE obj_Set30
 
 !----------------------------------------------------------------------------
@@ -329,14 +331,32 @@ END PROCEDURE obj_Set30
 
 MODULE PROCEDURE obj_Set31
 INTEGER(I4B) :: ii, jj
+!$OMP PARALLEL DO PRIVATE(ii, jj)
 DO ii = istart, iend, stride
   jj = GetNodeLoc(obj=dofobj, idof=idof, nodenum=ii)
   obj%val(jj) = VALUE((ii - istart + stride) / stride)
 END DO
+!$OMP END PARALLEL DO
 END PROCEDURE obj_Set31
 
 !----------------------------------------------------------------------------
-!                                                                      set
+!                                                                       set
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE obj_Set32
+INTEGER(I4B) :: tsize
+tsize = (iend - istart + stride) / stride
+CALL F77_Copy(N=tsize, X=VALUE(istart_value:), INCX=stride_value, &
+              Y=obj%val(istart:), INCY=stride)
+! !$OMP PARALLEL DO PRIVATE(ii)
+! DO ii = 1, tsize
+!   obj%val(istart+(stride-1)*ii) = value(istart_value+(stride_value-1)*ii)
+! END DO
+! !$OMP END PARALLEL DO
+END PROCEDURE obj_Set32
+
+!----------------------------------------------------------------------------
+!
 !----------------------------------------------------------------------------
 
 END SUBMODULE Methods

@@ -53,7 +53,8 @@ PURE SUBROUTINE elemsd_getHRGNParam_a(obj, h, val, opt)
   !!
   !! Call get projection of dNdXt in q
   !!
-  CALL GetProjectionOfdNdXt(obj=obj, cdNdXt=q, val=rvar)
+  CALL GetProjectionOfdNdXt(obj=obj, ans=q, c=rvar, &
+                            crank=TypeFEVariableVector)
   !!
   !! Calculate hmin and hmax
   !!
@@ -108,7 +109,8 @@ PURE SUBROUTINE elemsd_getHRGNParam_b(obj, h, val, opt)
   !!
   !! Get Projection of dNTdXt in q
   !!
-  CALL GetProjectionOfdNTdXt(obj=obj, cdNTdXt=q, val=rvar)
+  CALL GetProjectionOfdNTdXt(obj=obj, ans=q, c=rvar, &
+                             crank=TypeFEVariableVector)
   !!
   !! Calculate hmin and hmax
   !!

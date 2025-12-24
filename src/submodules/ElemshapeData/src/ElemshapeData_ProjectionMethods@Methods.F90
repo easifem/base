@@ -16,149 +16,248 @@
 !
 
 SUBMODULE(ElemshapeData_ProjectionMethods) Methods
-USE BaseMethod
+USE FEVariable_Method, ONLY: GetInterpolation_
+USE ReallocateUtility, ONLY: Reallocate
+USE MatmulUtility, ONLY: Matmul_
+
 IMPLICIT NONE
 CONTAINS
 
 !----------------------------------------------------------------------------
+!                                                       GetProjectionOfdNdXt
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE GetProjectionOfdNdXt_1
+INTEGER(I4B) :: nrow, ncol
+
+nrow = obj%nns
+ncol = obj%nips
+CALL Reallocate(ans, nrow, ncol)
+
+CALL GetProjectionOfdNdXt_(obj=obj, ans=ans, c=c, nrow=nrow, ncol=ncol)
+END PROCEDURE GetProjectionOfdNdXt_1
+
+!----------------------------------------------------------------------------
+!                                                      GetProjectionOfdNdXt_
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE GetProjectionOfdNdXt1_
+INTEGER(I4B) :: ii, nsd
+
+nrow = obj%nns !!SIZE(obj%dNdXt, 1)
+ncol = obj%nips !!SIZE(obj%dNdXt, 3)
+nsd = obj%nsd !!SIZE(obj%dNdXt, 2)
+
+DO ii = 1, ncol
+  ans(1:nrow, ii) = MATMUL(obj%dNdXt(1:nrow, 1:nsd, ii), c(1:nsd))
+END DO
+END PROCEDURE GetProjectionOfdNdXt1_
+
+!----------------------------------------------------------------------------
+!                                                       GetProjectionOfdNdXt
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE GetProjectionOfdNdXt_2
+INTEGER(I4B) :: nrow, ncol
+
+nrow = obj%nns
+ncol = obj%nips
+CALL Reallocate(ans, nrow, ncol)
+CALL GetProjectionOfdNdXt_(obj=obj, ans=ans, c=c, crank=crank, nrow=nrow, &
+                           ncol=ncol)
+END PROCEDURE GetProjectionOfdNdXt_2
+
+!----------------------------------------------------------------------------
+!                                                      GetProjectionOfdNdXt_
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE GetProjectionOfdNdXt2_
+INTEGER(I4B) :: ips, nsd, i1
+! REAL(DFP) :: cbar(SIZE(obj%dNdXt, 2), SIZE(obj%dNdXt, 3))
+REAL(DFP) :: cbar(3), T(0)
+
+nrow = obj%nns
+ncol = obj%nips
+nsd = obj%nsd
+cbar = 0.0_DFP
+
+! USE FEVariable_Method, only: FEVariableGetInterpolation_ => GetInterpolation_
+DO ips = 1, obj%nips
+  CALL GetInterpolation_( &
+    obj=c, rank=crank, N=obj%N, nns=obj%nns, spaceIndx=ips, timeIndx=0_I4B, &
+    T=T, nnt=0_I4B, scale=1.0_DFP, addContribution=.FALSE., ans=cbar, &
+    tsize=i1)
+
+  ans(1:nrow, ips) = MATMUL(obj%dNdXt(1:nrow, 1:nsd, ips), cbar(1:nsd))
+END DO
+END PROCEDURE GetProjectionOfdNdXt2_
+
+!----------------------------------------------------------------------------
 !                                                       getProjectionOfdNdXt
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE getProjectionOfdNdXt_1
-  !! Define internal variables
-INTEGER(I4B) :: ii, nsd
-  !!
-  !! main
-  !!
-CALL Reallocate(cdNdXt, SIZE(obj%dNdXt, 1), SIZE(obj%dNdXt, 3))
-nsd = SIZE(obj%dNdXt, 2)
-DO ii = 1, SIZE(cdNdXt, 2)
-  cdNdXt(:, ii) = MATMUL(obj%dNdXt(:, :, ii), Val(1:nsd))
+MODULE PROCEDURE GetProjectionOfdNdXt_3
+INTEGER(I4B) :: nrow, ncol
+
+nrow = obj%nns
+ncol = obj%nips
+CALL Reallocate(ans, nrow, ncol)
+CALL GetProjectionOfdNdXt_(obj=obj, ans=ans, c=c, nrow=nrow, ncol=ncol)
+END PROCEDURE GetProjectionOfdNdXt_3
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE GetProjectionOfdNdXt3_
+INTEGER(I4B) :: ips, nsd
+
+nrow = obj%nns
+ncol = obj%nips
+nsd = obj%nsd
+
+DO ips = 1, obj%nips
+  ans(1:nrow, ips) = MATMUL(obj%dNdXt(1:nrow, 1:nsd, ips), c(1:nsd, ips))
 END DO
-  !!
-END PROCEDURE getProjectionOfdNdXt_1
+END PROCEDURE GetProjectionOfdNdXt3_
 
 !----------------------------------------------------------------------------
-!                                                       getProjectionOfdNdXt
+!                                                      GetProjectionOfdNTdXt
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE getProjectionOfdNdXt_2
-INTEGER(I4B) :: ii, nsd
-REAL(DFP), ALLOCATABLE :: cbar(:, :)
-  !!
-  !! main
-  !!
-CALL getInterpolation(obj=obj, val=val, interpol=cbar)
-CALL Reallocate(cdNdXt, SIZE(obj%dNdXt, 1), SIZE(obj%dNdXt, 3))
-nsd = SIZE(obj%dNdXt, 2)
-DO ii = 1, SIZE(cdNdXt, 2)
-  cdNdXt(:, ii) = MATMUL(obj%dNdXt(:, :, ii), cbar(1:nsd, ii))
+MODULE PROCEDURE GetProjectionOfdNTdXt_1
+INTEGER(I4B) :: dim1, dim2, dim3
+
+dim1 = obj%nns
+dim2 = obj%nnt
+dim3 = obj%nips
+
+CALL Reallocate(ans, dim1, dim2, dim3)
+CALL GetProjectionOfdNTdXt_(obj=obj, ans=ans, c=c, dim1=dim1, dim2=dim2, &
+                            dim3=dim3)
+END PROCEDURE GetProjectionOfdNTdXt_1
+
+!----------------------------------------------------------------------------
+!                                                      GetProjectionOfdNTdXt_
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE GetProjectionOfdNTdXt1_
+INTEGER(I4B) :: ips, nsd, i1, i2
+
+dim1 = obj%nns
+dim2 = obj%nnt
+dim3 = obj%nips
+nsd = obj%nsd
+
+DO ips = 1, obj%nips
+  CALL Matmul_(a1=obj%dNTdXt(1:dim1, 1:dim2, 1:nsd, ips), &
+               a2=c(1:nsd), ans=ans(:, :, ips), nrow=i1, ncol=i2)
 END DO
-  !!
-DEALLOCATE (cbar)
-  !!
-END PROCEDURE getProjectionOfdNdXt_2
+END PROCEDURE GetProjectionOfdNTdXt1_
 
 !----------------------------------------------------------------------------
-!                                                       getProjectionOfdNdXt
+!                                                      GetProjectionOfdNTdXt
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE getProjectionOfdNdXt_3
-  !! Define internal variables
-INTEGER(I4B) :: ii, nsd
-  !!
-  !! main
-  !!
-CALL Reallocate(cdNdXt, SIZE(obj%dNdXt, 1), SIZE(obj%dNdXt, 3))
-nsd = SIZE(obj%dNdXt, 2)
-DO ii = 1, SIZE(cdNdXt, 2)
-  cdNdXt(:, ii) = MATMUL(obj%dNdXt(:, :, ii), val(1:nsd, ii))
+MODULE PROCEDURE GetProjectionOfdNTdXt_2
+INTEGER(I4B) :: dim1, dim2, dim3
+
+dim1 = obj%nns
+dim2 = obj%nnt
+dim3 = obj%nips
+
+CALL Reallocate(ans, dim1, dim2, dim3)
+CALL GetProjectionOfdNTdXt_(obj=obj, ans=ans, c=c, crank=crank, &
+                            dim1=dim1, dim2=dim2, dim3=dim3)
+END PROCEDURE GetProjectionOfdNTdXt_2
+
+!----------------------------------------------------------------------------
+!                                                      GetProjectionOfdNTdXt_
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE GetProjectionOfdNTdXt2_
+INTEGER(I4B) :: ips, nsd, i1, i2
+REAL(DFP) :: cbar(3)
+
+dim1 = obj%nns
+dim2 = obj%nnt
+dim3 = obj%nips
+nsd = obj%nsd
+
+DO ips = 1, obj%nips
+  CALL GetInterpolation_( &
+    obj=c, rank=crank, N=obj%N, nns=obj%nns, spaceIndx=ips, timeIndx=1_I4B, &
+    T=obj%T, nnt=obj%nnt, scale=1.0_DFP, addContribution=.FALSE., ans=cbar, &
+    tsize=i1)
+
+  CALL Matmul_(a1=obj%dNTdXt(1:dim1, 1:dim2, 1:nsd, ips), &
+               a2=cbar(1:nsd), ans=ans(:, :, ips), nrow=i1, ncol=i2)
 END DO
-  !!
-END PROCEDURE getProjectionOfdNdXt_3
+END PROCEDURE GetProjectionOfdNTdXt2_
 
 !----------------------------------------------------------------------------
-!                                                      getProjectionOfdNTdXt
+!                                                      GetProjectionOfdNTdXt
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE getProjectionOfdNTdXt_1
-INTEGER(I4B) :: ii, nsd
-  !!
-  !! main
-  !!
-CALL Reallocate(cdNTdXt, SIZE(obj%dNTdXt, 1), SIZE(obj%dNTdXt, 2), &
-  & SIZE(obj%dNTdXt, 4))
-nsd = SIZE(obj%dNTdXt, 3)
-  !!
-DO ii = 1, SIZE(cdNTdXt, 3)
-  cdNTdXt(:, :, ii) = MATMUL(obj%dNTdXt(:, :, :, ii), Val(1:nsd))
-END DO
-  !!
-END PROCEDURE getProjectionOfdNTdXt_1
+MODULE PROCEDURE GetProjectionOfdNTdXt_3
+INTEGER(I4B) :: dim1, dim2, dim3, dim4
+
+dim1 = obj(1)%nns
+dim2 = obj(1)%nnt
+dim3 = obj(1)%nips
+dim4 = SIZE(obj)
+CALL Reallocate(ans, dim1, dim2, dim3, dim4)
+CALL GetProjectionOfdNTdXt_(obj=obj, ans=ans, c=c, crank=crank, &
+                            dim1=dim1, dim2=dim2, dim3=dim3, dim4=dim4)
+END PROCEDURE GetProjectionOfdNTdXt_3
 
 !----------------------------------------------------------------------------
-!                                                      getProjectionOfdNTdXt
+!                                                      GetProjectionOfdNTdXt_
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE getProjectionOfdNTdXt_2
-  !!
-INTEGER(I4B) :: ii, nsd
-REAL(DFP), ALLOCATABLE :: cbar(:, :)
-  !!
-  !! main
-  !!
-CALL getInterpolation(obj=obj, val=val, interpol=cbar)
-CALL Reallocate(cdNTdXt, SIZE(obj%dNTdXt, 1), SIZE(obj%dNTdXt, 2), &
-  & SIZE(obj%dNTdXt, 4))
-nsd = SIZE(obj%dNTdXt, 3)
-  !!
-DO ii = 1, SIZE(cdNTdXt, 3)
-  cdNTdXt(:, :, ii) = MATMUL(obj%dNTdXt(:, :, :, ii), cbar(1:nsd, ii))
-END DO
-  !!
-DEALLOCATE (cbar)
-END PROCEDURE getProjectionOfdNTdXt_2
+MODULE PROCEDURE GetProjectionOfdNTdXt3_
+INTEGER(I4B) :: ips, ipt, nsd, i1, i2
+REAL(DFP) :: cbar(3)
 
-!----------------------------------------------------------------------------
-!                                                      getProjectionOfdNTdXt
-!----------------------------------------------------------------------------
+dim1 = obj(1)%nns
+dim2 = obj(1)%nnt
+dim3 = obj(1)%nips
+dim4 = SIZE(obj)
+nsd = obj(1)%nsd
 
-MODULE PROCEDURE getProjectionOfdNTdXt_3
-  !!
-INTEGER(I4B) :: ii, jj, nsd
-REAL(DFP), ALLOCATABLE :: cbar(:, :, :)
-  !!
-  !! main
-  !!
-CALL getInterpolation(obj=obj, val=val, interpol=cbar)
-  !!
-CALL Reallocate(cdNTdXt, &
-  & SIZE(obj(1)%dNTdXt, 1), &
-  & SIZE(obj(1)%dNTdXt, 2), &
-  & SIZE(obj(1)%dNTdXt, 4), SIZE(obj))
-  !!
-! CALL Reallocate( &
-!   & cdNTdXt, &
-!   & SIZE(obj(1)%N, 1), &
-!   & SIZE(obj(1)%T), &
-!   & SIZE(obj(1)%N, 2), &
-!   & SIZE(obj) )
-  !!
-nsd = SIZE(obj(1)%dNTdXt, 3)
-  !!
-DO jj = 1, SIZE(cbar, 3)
-  DO ii = 1, SIZE(cbar, 2)
-      !!
-    cdNTdXt(:, :, ii, jj) = MATMUL( &
-      & obj(jj)%dNTdXt(:, :, :, ii), &
-      & cbar(1:nsd, ii, jj))
-      !!
+DO ipt = 1, dim4
+  DO ips = 1, obj(ipt)%nips
+    CALL GetInterpolation_( &
+      obj=c, rank=crank, N=obj(ipt)%N, nns=obj(ipt)%nns, &
+      spaceIndx=ips, timeIndx=ipt, T=obj(ipt)%T, nnt=obj(ipt)%nnt, &
+      scale=1.0_DFP, addContribution=.FALSE., ans=cbar, tsize=i1)
+
+    CALL Matmul_(a1=obj(ipt)%dNTdXt(1:dim1, 1:dim2, 1:nsd, ips), &
+                 a2=cbar(1:nsd), ans=ans(:, :, ips, ipt), nrow=i1, ncol=i2)
   END DO
 END DO
-  !!
-DEALLOCATE (cbar)
-  !!
-END PROCEDURE getProjectionOfdNTdXt_3
+END PROCEDURE GetProjectionOfdNTdXt3_
+
+!----------------------------------------------------------------------------
+!                                                      GetProjectionOfdNTdXt_
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE GetProjectionOfdNTdXt4_
+INTEGER(I4B) :: nsd, i1, i2
+REAL(DFP) :: cbar(3)
+
+nrow = obj(ips)%nns
+ncol = obj(ips)%nnt
+nsd = obj(ips)%nsd
+
+CALL GetInterpolation_( &
+  obj=c, rank=crank, N=obj(ipt)%N, nns=obj(ipt)%nns, &
+  spaceIndx=ips, timeIndx=ipt, T=obj(ipt)%T, nnt=obj(ipt)%nnt, &
+  scale=1.0_DFP, addContribution=.FALSE., ans=cbar, tsize=i1)
+
+CALL Matmul_(a1=obj(ipt)%dNTdXt(1:nrow, 1:ncol, 1:nsd, ips), &
+             a2=cbar(1:nsd), ans=ans, nrow=i1, ncol=i2)
+END PROCEDURE GetProjectionOfdNTdXt4_
 
 !----------------------------------------------------------------------------
 !

@@ -15,9 +15,9 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-module FPL_Utils
-USE PENF, only: I1P, I4P
-contains
+MODULE FPL_Utils
+USE PENF, ONLY: I1P, I4P
+CONTAINS
 
 !----------------------------------------------------------------------------
 !
@@ -27,19 +27,19 @@ contains
 ! date: 2022-12-02
 ! summary: Procedure for computing the number of bytes of a logical variable.
 
-elemental function byte_size_logical(l) result(bytes)
-  logical, intent(IN) :: l
+ELEMENTAL FUNCTION byte_size_logical(l) RESULT(bytes)
+  LOGICAL, INTENT(IN) :: l
   !! Character variable whose number of bits must be computed.
-  integer(I4P) :: bytes
+  INTEGER(I4P) :: bytes
   !! Number of bits of l.
-  integer(I1P) :: mold(1)
+  INTEGER(I1P) :: mold(1)
   !! "Molding" dummy variable for bits counting.
-  bytes = size(transfer(l, mold), dim=1, kind=I1P)
-  return
-end function byte_size_logical
+  bytes = SIZE(TRANSFER(l, mold), dim=1, kind=I1P)
+  RETURN
+END FUNCTION byte_size_logical
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
-end module FPL_Utils
+END MODULE FPL_Utils

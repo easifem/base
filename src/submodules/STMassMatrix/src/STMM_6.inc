@@ -40,7 +40,7 @@ PURE SUBROUTINE STMM_6(ans, test, trial, term1, term2, rho, opt)
   !!
   CALL Reallocate(iajb, SIZE(test(1)%N, 1), SIZE(test(1)%T), &
     & SIZE(trial(1)%N, 1), SIZE(trial(1)%T))
-  CALL getInterpolation(obj=trial, interpol=rhobar, val=rho)
+  CALL getInterpolation(obj=trial, ans=rhobar, val=rho)
   !!
   DO ipt = 1, SIZE(trial)
     realval = trial(ipt)%js * trial(ipt)%ws * trial(ipt)%thickness * &

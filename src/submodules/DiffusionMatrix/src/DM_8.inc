@@ -39,9 +39,9 @@ PURE SUBROUTINE DM_8(ans, test, trial, c1, c2, opt)
   REAL(DFP), ALLOCATABLE :: k1bar(:, :, :), k2bar(:, :, :), realval(:)
   INTEGER(I4B) :: ii
   !! main
-  CALL getInterpolation(obj=trial, Interpol=k1bar, val=c1)
+  CALL getInterpolation(obj=trial, ans=k1bar, val=c1)
   !!
-  CALL getInterpolation(obj=trial, Interpol=k2bar, val=c2)
+  CALL getInterpolation(obj=trial, ans=k2bar, val=c2)
   !!
   realval = trial%js * trial%ws * trial%thickness
   !!

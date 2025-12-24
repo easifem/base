@@ -20,7 +20,8 @@
 ! summary: This submodule contains the methods for sparse matrix
 
 SUBMODULE(CSRMatrix_DBCMethods) Methods
-USE BaseMethod
+USE CSRMatrix_Method, ONLY: GetDiagonal, SIZE
+
 IMPLICIT NONE
 CONTAINS
 
@@ -29,7 +30,7 @@ CONTAINS
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE csrMat_ApplyDBC
-INTEGER(I4B) :: i, ii, nrow
+INTEGER(I4B) :: i, ii, nrow, tdbcptrs
 LOGICAL(LGT), ALLOCATABLE :: mask(:)
 REAL(DFP), ALLOCATABLE :: diag_entries(:)
 
@@ -42,7 +43,9 @@ ASSOCIATE (IA => obj%csr%IA, JA => obj%csr%JA, A => obj%A)
 
   ! make row zeros
 
-  DO CONCURRENT(i=1:SIZE(dbcPtrs))
+  tdbcptrs = SIZE(dbcPtrs)
+
+  DO CONCURRENT(i=1:tdbcptrs)
     ii = dbcPtrs(i)
     A(IA(ii):IA(ii + 1) - 1) = 0.0_DFP
   END DO

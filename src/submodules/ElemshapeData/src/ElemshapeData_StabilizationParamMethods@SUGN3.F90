@@ -35,7 +35,7 @@ IF (PRESENT(h)) THEN
     & TypeFEVariableSpace)
 END IF
 !!
-CALL GetInterpolation(obj=obj, val=nu, interpol=nubar)
+CALL GetInterpolation(obj=obj, val=nu, ans=nubar)
 !!
 DO ii = 1, SIZE(h0)
   h0(ii) = h0(ii)**2 / nubar(ii) / 4.0_DFP
@@ -66,7 +66,7 @@ IF (PRESENT(h)) THEN
     & TypeFEVariableSpaceTime)
 END IF
 !!
-CALL GetInterpolation(obj=obj, val=nu, interpol=nubar)
+CALL GetInterpolation(obj=obj, val=nu, ans=nubar)
 !!
 DO ii = 1, SIZE(obj)
   h0(:, ii) = h0(:, ii)**2 / nubar(:, ii) / 4.0_DFP

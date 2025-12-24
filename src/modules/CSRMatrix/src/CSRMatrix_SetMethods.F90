@@ -24,6 +24,7 @@ PUBLIC :: Set
 PUBLIC :: SetSingleValue
 PUBLIC :: ASSIGNMENT(=)
 PUBLIC :: SetIA, SetJA
+PUBLIC :: SetToSTMatrix
 
 !----------------------------------------------------------------------------
 !                                                            Set@setMethod
@@ -576,5 +577,39 @@ INTERFACE SetJA
     INTEGER(I4B), INTENT(IN) :: VALUE
   END SUBROUTINE obj_SetJA
 END INTERFACE SetJA
+
+!----------------------------------------------------------------------------
+!                                                             Set@setMethod
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2023-12-17
+! summary: (Obj)ab = Value
+!
+!# Introduction
+!
+! In time discontinuous fem, tangent matrix is block matrix
+! First we assemble mass and stiffness matrix separately
+! they can be represented by Value.
+! Now we want to make one of the blocks of space-time matrix
+! which is represented by Obj.
+! This routine performs this task.
+! Note that the storage format of Obj should be FMT_DOF
+! Note that the storage format of Value and one of the blocks should be
+! identical.
+
+INTERFACE SetToSTMatrix
+  MODULE PURE SUBROUTINE obj_SetToSTMatrix1( &
+    obj, VALUE, itimecompo, jtimecompo, scale)
+    TYPE(CSRMatrix_), INTENT(INOUT) :: obj
+    !! space-time matrix, format should be FMT_DOF
+    TYPE(CSRMatrix_), INTENT(IN) :: VALUE
+    !! space matrix
+    INTEGER(I4B), INTENT(IN) :: itimecompo, jtimecompo
+    !! time components
+    REAL(DFP), OPTIONAL, INTENT(IN) :: scale
+    !! scale
+  END SUBROUTINE obj_SetToSTMatrix1
+END INTERFACE SetToSTMatrix
 
 END MODULE CSRMatrix_SetMethods

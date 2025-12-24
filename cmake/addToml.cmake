@@ -18,7 +18,7 @@
 
 find_package(toml-f REQUIRED)
 
-if(Sparsekit_FOUND)
+if(toml-f_FOUND)
   message(STATUS "[INFO] :: FOUND toml-f")
   target_link_libraries(${PROJECT_NAME} PUBLIC toml-f::toml-f)
 

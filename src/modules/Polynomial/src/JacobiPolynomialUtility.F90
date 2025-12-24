@@ -22,10 +22,14 @@
 !{!pages/JacobiPolynomialUtility.md!}
 
 MODULE JacobiPolynomialUtility
-USE GlobalData
+USE GlobalData, ONLY: DFP, I4B, LGT
+
 USE BaseType, ONLY: iface_1DFunction
+
 IMPLICIT NONE
+
 PRIVATE
+
 PUBLIC :: GetJacobiRecurrenceCoeff
 PUBLIC :: GetJacobiRecurrenceCoeff2
 PUBLIC :: JacobiAlpha
@@ -44,12 +48,15 @@ PUBLIC :: JacobiGaussLobattoQuadrature
 PUBLIC :: JacobiZeros
 PUBLIC :: JacobiQuadrature
 PUBLIC :: JacobiEvalAll
+PUBLIC :: JacobiEvalAll_
 PUBLIC :: JacobiEval
 PUBLIC :: JacobiEvalSum
 PUBLIC :: JacobiGradientEval
 PUBLIC :: JacobiGradientEvalAll
+PUBLIC :: JacobiGradientEvalAll_
 PUBLIC :: JacobiGradientEvalSum
 PUBLIC :: JacobiTransform
+PUBLIC :: JacobiTransform_
 PUBLIC :: JacobiInvTransform
 PUBLIC :: JacobiGradientCoeff
 PUBLIC :: JacobiDMatrix
@@ -68,7 +75,7 @@ PUBLIC :: JacobiDMatrix
 
 INTERFACE
   MODULE PURE SUBROUTINE GetJacobiRecurrenceCoeff(n, alpha, beta, &
-    & alphaCoeff, betaCoeff)
+                                                  alphaCoeff, betaCoeff)
     INTEGER(I4B), INTENT(IN) :: n
     !! order of jacobi polynomial, it should be greater than 1
     REAL(DFP), INTENT(IN) :: alpha
@@ -97,7 +104,7 @@ END INTERFACE
 
 INTERFACE
   MODULE PURE SUBROUTINE GetJacobiRecurrenceCoeff2(n, alpha, beta, &
-    & A, B, C)
+                                                   A, B, C)
     INTEGER(I4B), INTENT(IN) :: n
     !! order of jacobi polynomial, it should be greater than 1
     REAL(DFP), INTENT(IN) :: alpha
@@ -267,7 +274,7 @@ END INTERFACE
 
 INTERFACE
   MODULE PURE SUBROUTINE JacobiJacobiMatrix(n, alpha, beta, D, E, &
-      & alphaCoeff, betaCoeff)
+                                            alphaCoeff, betaCoeff)
     INTEGER(I4B), INTENT(IN) :: n
     !! n should be greater than or equal to 1
     REAL(DFP), INTENT(IN) :: alpha
@@ -318,7 +325,7 @@ END INTERFACE
 
 INTERFACE
   MODULE PURE SUBROUTINE JacobiJacobiRadauMatrix(a, n, alpha, beta, D, &
-    & E, alphaCoeff, betaCoeff)
+                                                 E, alphaCoeff, betaCoeff)
     REAL(DFP), INTENT(IN) :: a
     !! one of the end of the domain
     INTEGER(I4B), INTENT(IN) :: n
@@ -385,7 +392,7 @@ END INTERFACE
 
 INTERFACE
   MODULE PURE SUBROUTINE JacobiJacobiLobattoMatrix(n, alpha, beta, D, &
-    & E, alphaCoeff, betaCoeff)
+                                                   E, alphaCoeff, betaCoeff)
     INTEGER(I4B), INTENT(IN) :: n
     !! n should be greater than or equal to 1
     REAL(DFP), INTENT(IN) :: alpha
@@ -535,6 +542,24 @@ INTERFACE JacobiEvalAll
 END INTERFACE JacobiEvalAll
 
 !----------------------------------------------------------------------------
+!                                                       JacobiEvalAll
+!----------------------------------------------------------------------------
+
+INTERFACE JacobiEvalAll_
+  MODULE PURE SUBROUTINE JacobiEvalAll1_(n, alpha, beta, x, ans, tsize)
+    INTEGER(I4B), INTENT(IN) :: n
+    REAL(DFP), INTENT(IN) :: alpha
+    REAL(DFP), INTENT(IN) :: beta
+    REAL(DFP), INTENT(IN) :: x
+    REAL(DFP), INTENT(INOUT) :: ans(:)
+    !! ans(n + 1)
+    !! Evaluate Jacobi polynomial of order = 0 to n (total n+1)
+    !! at point x
+    INTEGER(I4B), INTENT(OUT) :: tsize
+  END SUBROUTINE JacobiEvalAll1_
+END INTERFACE JacobiEvalAll_
+
+!----------------------------------------------------------------------------
 !                                                             JacobiEvalUpto
 !----------------------------------------------------------------------------
 
@@ -564,6 +589,24 @@ INTERFACE JacobiEvalAll
     !! at point x
   END FUNCTION JacobiEvalAll2
 END INTERFACE JacobiEvalAll
+
+!----------------------------------------------------------------------------
+!                                                              JacobiEvalAll
+!----------------------------------------------------------------------------
+
+INTERFACE JacobiEvalAll_
+  MODULE PURE SUBROUTINE JacobiEvalAll2_(n, alpha, beta, x, ans, nrow, ncol)
+    INTEGER(I4B), INTENT(IN) :: n
+    REAL(DFP), INTENT(IN) :: alpha
+    REAL(DFP), INTENT(IN) :: beta
+    REAL(DFP), INTENT(IN) :: x(:)
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    !! ans(SIZE(x), n + 1)
+    !! Evaluate Jacobi polynomial of order = 0 to n (total n+1)
+    !! at point x
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+  END SUBROUTINE JacobiEvalAll2_
+END INTERFACE JacobiEvalAll_
 
 !----------------------------------------------------------------------------
 !                                                             JacobiEval
@@ -735,6 +778,28 @@ INTERFACE JacobiGradientEvalAll
 END INTERFACE JacobiGradientEvalAll
 
 !----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE JacobiGradientEvalAll_
+  MODULE PURE SUBROUTINE JacobiGradientEvalAll1_(n, alpha, beta, x, &
+                                                 ans, tsize)
+    INTEGER(I4B), INTENT(IN) :: n
+    !! order of Jacobi polynomial
+    REAL(DFP), INTENT(IN) :: alpha
+    !! alpha > -1.0
+    REAL(DFP), INTENT(IN) :: beta
+    !! beta > -1.0
+    REAL(DFP), INTENT(IN) :: x
+    !! point
+    REAL(DFP), INTENT(INOUT) :: ans(:)
+    !! ans(n + 1)
+    !! Derivative of Jacobi polynomial of order n at point x
+    INTEGER(I4B), INTENT(OUT) :: tsize
+  END SUBROUTINE JacobiGradientEvalAll1_
+END INTERFACE JacobiGradientEvalAll_
+
+!----------------------------------------------------------------------------
 !                                                     JacobiGradientEvalAll
 !----------------------------------------------------------------------------
 
@@ -752,6 +817,24 @@ INTERFACE JacobiGradientEvalAll
     !! Derivative of Jacobi polynomial of order n at x
   END FUNCTION JacobiGradientEvalAll2
 END INTERFACE JacobiGradientEvalAll
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE JacobiGradientEvalAll_
+  MODULE PURE SUBROUTINE JacobiGradientEvalAll2_(n, alpha, beta, x, &
+                                                 ans, nrow, ncol)
+    INTEGER(I4B), INTENT(IN) :: n
+    REAL(DFP), INTENT(IN) :: alpha
+    REAL(DFP), INTENT(IN) :: beta
+    REAL(DFP), INTENT(IN) :: x(:)
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    !! ans(SIZE(x), n + 1)
+    !! Derivative of Jacobi polynomial of order n at x
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+  END SUBROUTINE JacobiGradientEvalAll2_
+END INTERFACE JacobiGradientEvalAll_
 
 !----------------------------------------------------------------------------
 !                                                      JacobiGradientEvalSum
@@ -791,7 +874,7 @@ END INTERFACE JacobiGradientEvalSum
 
 INTERFACE JacobiGradientEvalSum
   MODULE PURE FUNCTION JacobiGradientEvalSum2(n, alpha, beta, x, coeff) &
-    & RESULT(ans)
+    RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: n
     !! order of polynomial
     REAL(DFP), INTENT(IN) :: alpha
@@ -818,7 +901,7 @@ END INTERFACE JacobiGradientEvalSum
 
 INTERFACE JacobiGradientEvalSum
   MODULE PURE FUNCTION JacobiGradientEvalSum3(n, alpha, beta, x, coeff, k) &
-    & RESULT(ans)
+    RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: n
     !! order of polynomial
     REAL(DFP), INTENT(IN) :: alpha
@@ -847,7 +930,7 @@ END INTERFACE JacobiGradientEvalSum
 
 INTERFACE JacobiGradientEvalSum
   MODULE PURE FUNCTION JacobiGradientEvalSum4(n, alpha, beta, x, coeff, k) &
-    & RESULT(ans)
+    RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: n
     !! order of polynomial
     REAL(DFP), INTENT(IN) :: alpha
@@ -875,7 +958,7 @@ END INTERFACE JacobiGradientEvalSum
 
 INTERFACE JacobiTransform
   MODULE PURE FUNCTION JacobiTransform1(n, alpha, beta, coeff, x, w, &
-    &  quadType) RESULT(ans)
+                                        quadType) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: n
     !! order of jacobi polynomial
     REAL(DFP), INTENT(IN) :: alpha
@@ -897,35 +980,69 @@ INTERFACE JacobiTransform
 END INTERFACE JacobiTransform
 
 !----------------------------------------------------------------------------
-!                                                           JacobiTransform
+!                                                         JacobiTransform_
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 13 Oct 2022
-! summary: Columnwise Discrete Jacobi Transform
-
-INTERFACE JacobiTransform
-  MODULE PURE FUNCTION JacobiTransform2(n, alpha, beta, coeff, x, w, &
-    & quadType) RESULT(ans)
+INTERFACE JacobiTransform_
+  MODULE PURE SUBROUTINE JacobiTransform1_(n, alpha, beta, coeff, x, w, &
+                                           quadType, ans, tsize)
     INTEGER(I4B), INTENT(IN) :: n
-    !! order of polynomial
+    !! order of jacobi polynomial
     REAL(DFP), INTENT(IN) :: alpha
     !! alpha of Jacobi polynomial > -1.0_DFP
     REAL(DFP), INTENT(IN) :: beta
     !! beta of Jacobi polynomial > -1.0_DFP
-    REAL(DFP), INTENT(IN) :: coeff(0:, 1:)
+    REAL(DFP), INTENT(IN) :: coeff(0:)
     !! nodal value (at quad points)
-    REAL(DFP), INTENT(IN) :: x(0:n)
+    !! size is number of quadrature points
+    REAL(DFP), INTENT(IN) :: x(0:)
     !! quadrature points
-    REAL(DFP), INTENT(IN) :: w(0:n)
+    !! size is quadrature points
+    REAL(DFP), INTENT(IN) :: w(0:)
     !! weights
+    !! size is quadrature points
     INTEGER(I4B), INTENT(IN) :: quadType
     !! Quadrature type, Gauss, GaussLobatto, GaussRadau, GaussRadauLeft
     !! GaussRadauRight
-    REAL(DFP) :: ans(0:n, 1:SIZE(coeff, 2))
-    !! modal values  or coefficients for each column of val
-  END FUNCTION JacobiTransform2
-END INTERFACE JacobiTransform
+    REAL(DFP), INTENT(INOUT) :: ans(0:)
+    !! modal values  or coefficients
+    INTEGER(I4B), INTENT(OUT) :: tsize
+    !! n+1
+  END SUBROUTINE JacobiTransform1_
+END INTERFACE JacobiTransform_
+
+!----------------------------------------------------------------------------
+!                                                           JacobiTransform
+!----------------------------------------------------------------------------
+
+INTERFACE JacobiTransform_
+  MODULE PURE SUBROUTINE JacobiTransform4_(n, alpha, beta, coeff, PP, w, &
+                                           quadType, ans, tsize)
+    INTEGER(I4B), INTENT(IN) :: n
+    !! order of jacobi polynomial
+    REAL(DFP), INTENT(IN) :: alpha
+    !! alpha of Jacobi polynomial > -1.0_DFP
+    REAL(DFP), INTENT(IN) :: beta
+    !! beta of Jacobi polynomial > -1.0_DFP
+    REAL(DFP), INTENT(IN) :: coeff(0:)
+    !! nodal value (at quad points)
+    !! size is number of quadrature points
+    REAL(DFP), INTENT(IN) :: PP(0:, 0:)
+    !! quadrature points
+    !! number of rows in number of quadrature points
+    !! number of columns is n+1
+    REAL(DFP), INTENT(IN) :: w(0:)
+    !! weights
+    !! size is quadrature points
+    INTEGER(I4B), INTENT(IN) :: quadType
+    !! Quadrature type, Gauss, GaussLobatto, GaussRadau, GaussRadauLeft
+    !! GaussRadauRight
+    REAL(DFP), INTENT(INOUT) :: ans(0:)
+    !! modal values  or coefficients
+    INTEGER(I4B), INTENT(OUT) :: tsize
+    !! n+1
+  END SUBROUTINE JacobiTransform4_
+END INTERFACE JacobiTransform_
 
 !----------------------------------------------------------------------------
 !                                                           JacobiTransform
@@ -934,7 +1051,7 @@ END INTERFACE JacobiTransform
 !> author: Vikas Sharma, Ph. D.
 ! date: 13 Oct 2022
 ! summary: Discrete Jacobi Transform of a function on [-1,1]
-!
+
 !# Introduction
 !
 ! This function performs the jacobi transformation of a function defined
@@ -956,8 +1073,8 @@ END INTERFACE JacobiTransform
 !@endnote
 
 INTERFACE JacobiTransform
-  MODULE FUNCTION JacobiTransform3(n, alpha, beta, f, quadType) &
-    & RESULT(ans)
+  MODULE FUNCTION JacobiTransform3(n, alpha, beta, f, quadType, x1, x2) &
+    RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: n
     !! order of jacobi polynomial
     REAL(DFP), INTENT(IN) :: alpha
@@ -969,10 +1086,44 @@ INTERFACE JacobiTransform
     INTEGER(I4B), INTENT(IN) :: quadType
     !! Quadrature type, Gauss, GaussLobatto, GaussRadau, GaussRadauLeft
     !! GaussRadauRight
+    REAL(DFP), INTENT(IN) :: x1, x2
+    !! domain of function f
     REAL(DFP) :: ans(0:n)
     !! modal values  or coefficients
   END FUNCTION JacobiTransform3
 END INTERFACE JacobiTransform
+
+!----------------------------------------------------------------------------
+!                                                         JacobiTransform_
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2024-08-19
+! summary:  Jacobi transform
+
+INTERFACE JacobiTransform_
+  MODULE SUBROUTINE JacobiTransform3_(n, alpha, beta, f, quadType, x1, x2, &
+                                      ans, tsize)
+    INTEGER(I4B), INTENT(IN) :: n
+    !! order of jacobi polynomial
+    REAL(DFP), INTENT(IN) :: alpha
+    !! alpha of Jacobi polynomial > -1.0_DFP
+    REAL(DFP), INTENT(IN) :: beta
+    !! beta of Jacobi polynomial > -1.0_DFP
+    PROCEDURE(iface_1DFunction), POINTER, INTENT(IN) :: f
+    !! 1D space function
+    INTEGER(I4B), INTENT(IN) :: quadType
+    !! Quadrature type, Gauss, GaussLobatto, GaussRadau, GaussRadauLeft
+    !! GaussRadauRight
+    REAL(DFP), INTENT(IN) :: x1, x2
+    !! domain of function f
+    REAL(DFP), INTENT(INOUT) :: ans(0:)
+    !! ans(0:n)
+    !! modal values  or coefficients
+    INTEGER(I4B), INTENT(OUT) :: tsize
+    !! n+1
+  END SUBROUTINE JacobiTransform3_
+END INTERFACE JacobiTransform_
 
 !----------------------------------------------------------------------------
 !                                                        JacobiInvTransform
@@ -984,7 +1135,7 @@ END INTERFACE JacobiTransform
 
 INTERFACE JacobiInvTransform
   MODULE PURE FUNCTION JacobiInvTransform1(n, alpha, beta, coeff, x) &
-        & RESULT(ans)
+    RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: n
     !! order of Jacobi polynomial
     REAL(DFP), INTENT(IN) :: alpha
@@ -1010,7 +1161,7 @@ END INTERFACE JacobiInvTransform
 
 INTERFACE JacobiInvTransform
   MODULE PURE FUNCTION JacobiInvTransform2(n, alpha, beta, coeff, x) &
-        & RESULT(ans)
+    RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: n
     !! order of Jacobi polynomial
     REAL(DFP), INTENT(IN) :: alpha

@@ -18,12 +18,23 @@
 
 MODULE BaseContinuity_Method
 USE ErrorHandling, ONLY: Errormsg
-USE GlobalData
+
+USE GlobalData, ONLY: I4B, LGT, stderr
+
 USE String_Class, ONLY: String
-USE BaseType
-USE Utility, ONLY: UpperCase
+
+USE BaseType, ONLY: BaseContinuity_, &
+                    H1_, &
+                    HCURL_, &
+                    HDIV_, &
+                    DG_
+
+USE StringUtility, ONLY: UpperCase
+
 IMPLICIT NONE
+
 PRIVATE
+
 PUBLIC :: ASSIGNMENT(=)
 PUBLIC :: BaseContinuity_ToString
 PUBLIC :: BaseContinuity_FromString
@@ -47,26 +58,28 @@ FUNCTION BaseContinuityPointer_FromString(name) RESULT(ans)
   CHARACTER(*), INTENT(IN) :: name
   CLASS(BaseContinuity_), POINTER :: ans
   !!
-  TYPE(String) :: astr
-  astr = TRIM(UpperCase(name))
+  CHARACTER(len=2) :: astr
 
-  SELECT CASE (astr%chars())
+  astr = UpperCase(name(1:2))
+
+  SELECT CASE (astr)
   CASE ("H1")
     ALLOCATE (H1_ :: ans)
-  CASE ("HDIV")
+
+  CASE ("HD")
     ALLOCATE (HDiv_ :: ans)
-  CASE ("HCURL")
+
+  CASE ("HC")
     ALLOCATE (HCurl_ :: ans)
+
   CASE ("DG")
     ALLOCATE (DG_ :: ans)
+
   CASE DEFAULT
-    CALL ErrorMsg(&
-    & msg="NO CASE FOUND for given name="//astr, &
-    & line=__LINE__,  &
-    & unitno=stdout, &
-    & routine="BaseContinuityPointer_FromString()",  &
-    & file=__FILE__ &
-    & )
+    CALL ErrorMsg(msg="NO CASE FOUND for given name="//astr, &
+                  routine="BaseContinuityPointer_FromString()", &
+                  line=__LINE__, unitno=stderr, file=__FILE__)
+    STOP
   END SELECT
 END FUNCTION BaseContinuityPointer_FromString
 
@@ -89,20 +102,21 @@ SUBROUTINE BaseContinuity_Copy(obj1, obj2)
   SELECT TYPE (obj2)
   CLASS IS (H1_)
     ALLOCATE (H1_ :: obj1)
+
   CLASS IS (HDiv_)
     ALLOCATE (HDiv_ :: obj1)
+
   CLASS IS (HCurl_)
     ALLOCATE (HCurl_ :: obj1)
+
   CLASS IS (DG_)
     ALLOCATE (DG_ :: obj1)
+
   CLASS DEFAULT
-    CALL ErrorMsg(&
-    & msg="NO CASE FOUND for type of obj2", &
-    & line=__LINE__,  &
-    & unitno=stdout, &
-    & routine="BaseContinuity_Copy()",  &
-    & file=__FILE__ &
-    & )
+    CALL ErrorMsg(msg="NO CASE FOUND for type of obj2", &
+                  routine="BaseContinuity_Copy()", line=__LINE__, &
+                  unitno=stderr, file=__FILE__)
+    STOP
 
   END SELECT
 END SUBROUTINE BaseContinuity_Copy
@@ -115,26 +129,44 @@ END SUBROUTINE BaseContinuity_Copy
 ! date:  2023-08-09
 ! summary:  Returns a string name of base interpolation type
 
-FUNCTION BaseContinuity_ToString(obj) RESULT(ans)
+FUNCTION BaseContinuity_ToString(obj, isUpper) RESULT(ans)
   CLASS(BaseContinuity_), INTENT(IN) :: obj
+  LOGICAL(LGT), OPTIONAL, INTENT(IN) :: isUpper
   TYPE(String) :: ans
+
+  ! internal variables
+  LOGICAL(LGT) :: isUpper0
+
+  isUpper0 = .FALSE.
+  IF (PRESENT(isUpper)) isUpper0 = isUpper
+
   SELECT TYPE (obj)
   CLASS IS (H1_)
     ans = "H1"
+
   CLASS IS (HCurl_)
-    ans = "HCurl"
+    IF (isUpper0) THEN
+      ans = "HCURL"
+    ELSE
+      ans = "HCurl"
+    END IF
+
   CLASS IS (HDiv_)
-    ans = "HDiv"
+    IF (isUpper0) THEN
+      ans = "HDIV"
+    ELSE
+      ans = "HDiv"
+    END IF
+
   CLASS IS (DG_)
     ans = "DG"
+
   CLASS DEFAULT
-    CALL ErrorMsg(&
-    & msg="NO CASE FOUND for type of obj", &
-    & line=__LINE__,  &
-    & unitno=stdout, &
-    & routine="BaseContinuity_toString()",  &
-    & file=__FILE__ &
-    & )
+
+    CALL ErrorMsg(msg="NO CASE FOUND for type of obj", &
+                  routine="BaseContinuity_toString()", &
+                  line=__LINE__, unitno=stderr, file=__FILE__)
+    STOP
   END SELECT
 END FUNCTION BaseContinuity_ToString
 
@@ -147,30 +179,34 @@ END FUNCTION BaseContinuity_ToString
 ! summary:  Returns a string name of base interpolation type
 
 SUBROUTINE BaseContinuity_FromString(obj, name)
-  CLASS(BaseContinuity_), ALLOCATABLE, INTENT(OUT) :: obj
+  CLASS(BaseContinuity_), ALLOCATABLE, INTENT(INOUT) :: obj
   CHARACTER(*), INTENT(IN) :: name
-  TYPE(String) :: ans
 
-  ans = UpperCase(name)
+  CHARACTER(len=2) :: ans
+
+  ans = UpperCase(name(1:2))
+
   IF (ALLOCATED(obj)) DEALLOCATE (obj)
 
-  SELECT CASE (ans%chars())
+  SELECT CASE (ans)
+
   CASE ("H1")
     ALLOCATE (H1_ :: obj)
-  CASE ("HDIV")
+
+  CASE ("HD")
     ALLOCATE (HDiv_ :: obj)
-  CASE ("HCURL")
+
+  CASE ("HC")
     ALLOCATE (HCurl_ :: obj)
+
   CASE ("DG")
     ALLOCATE (DG_ :: obj)
+
   CASE DEFAULT
-    CALL ErrorMsg(&
-    & msg="NO CASE FOUND for given name="//TRIM(name), &
-    & line=__LINE__,  &
-    & unitno=stdout, &
-    & routine="BaseContinuity_fromString()",  &
-    & file=__FILE__ &
-    & )
+    CALL ErrorMsg(msg="NO CASE FOUND for given name="//TRIM(name), &
+                  routine="BaseContinuity_fromString()", &
+                  line=__LINE__, unitno=stderr, file=__FILE__)
+    STOP
   END SELECT
 END SUBROUTINE BaseContinuity_FromString
 

@@ -20,7 +20,7 @@
 ! summary:         This submodule contains method for swaping
 
 SUBMODULE(SwapUtility) Methods
-USE BaseMethod
+USE ReallocateUtility, ONLY: Reallocate
 IMPLICIT NONE
 CONTAINS
 
@@ -101,11 +101,13 @@ dum = a
 a = b
 b = dum
 END PROCEDURE swap_r32v
+#endif
 
 !----------------------------------------------------------------------------
 !                                                                      SWAP
 !----------------------------------------------------------------------------
 
+#ifndef USE_BLAS95
 MODULE PROCEDURE swap_r64v
 REAL(REAL64), DIMENSION(SIZE(a)) :: dum
 dum = a
@@ -119,10 +121,16 @@ END PROCEDURE swap_r64v
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE swap_Int8v
-INTEGER(INT8), DIMENSION(SIZE(a)) :: dum
-dum = a
-a = b
-b = dum
+INTEGER(INT8) :: dum
+INTEGER(I4B) :: ii, n
+
+n = SIZE(a)
+
+DO ii = 1, n
+  dum = a(ii)
+  a(ii) = b(ii)
+  b(ii) = dum
+END DO
 END PROCEDURE swap_Int8v
 
 !----------------------------------------------------------------------------
@@ -130,10 +138,16 @@ END PROCEDURE swap_Int8v
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE swap_Int16v
-INTEGER(INT16), DIMENSION(SIZE(a)) :: dum
-dum = a
-a = b
-b = dum
+INTEGER(INT16) :: dum
+INTEGER(I4B) :: ii, n
+
+n = SIZE(a)
+
+DO ii = 1, n
+  dum = a(ii)
+  a(ii) = b(ii)
+  b(ii) = dum
+END DO
 END PROCEDURE swap_Int16v
 
 !----------------------------------------------------------------------------
@@ -141,10 +155,16 @@ END PROCEDURE swap_Int16v
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE swap_Int32v
-INTEGER(INT32), DIMENSION(SIZE(a)) :: dum
-dum = a
-a = b
-b = dum
+INTEGER(INT32) :: dum
+INTEGER(I4B) :: ii, n
+
+n = SIZE(a)
+
+DO ii = 1, n
+  dum = a(ii)
+  a(ii) = b(ii)
+  b(ii) = dum
+END DO
 END PROCEDURE swap_Int32v
 
 !----------------------------------------------------------------------------
@@ -152,10 +172,16 @@ END PROCEDURE swap_Int32v
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE swap_Int64v
-INTEGER(INT64), DIMENSION(SIZE(a)) :: dum
-dum = a
-a = b
-b = dum
+INTEGER(INT64) :: dum
+INTEGER(I4B) :: ii, n
+
+n = SIZE(a)
+
+DO ii = 1, n
+  dum = a(ii)
+  a(ii) = b(ii)
+  b(ii) = dum
+END DO
 END PROCEDURE swap_Int64v
 
 !----------------------------------------------------------------------------
@@ -164,10 +190,16 @@ END PROCEDURE swap_Int64v
 
 #ifdef USE_Int128
 MODULE PROCEDURE swap_Int128v
-INTEGER(Int128), DIMENSION(SIZE(a)) :: dum
-dum = a
-a = b
-b = dum
+INTEGER(Int128) :: dum
+INTEGER(I4B) :: ii, n
+
+n = SIZE(a)
+
+DO ii = 1, n
+  dum = a(ii)
+  a(ii) = b(ii)
+  b(ii) = dum
+END DO
 END PROCEDURE swap_Int128v
 #endif
 
@@ -188,10 +220,16 @@ END PROCEDURE swap_c
 
 #ifndef USE_BLAS95
 MODULE PROCEDURE swap_cv
-COMPLEX(DFPC), DIMENSION(SIZE(a)) :: dum
-dum = a
-a = b
-b = dum
+COMPLEX(DFPC) :: dum
+INTEGER(I4B) :: ii, n
+
+n = SIZE(a)
+
+DO ii = 1, n
+  dum = a(ii)
+  a(ii) = b(ii)
+  b(ii) = dum
+END DO
 END PROCEDURE swap_cv
 #endif
 
@@ -200,10 +238,20 @@ END PROCEDURE swap_cv
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE swap_cm
-COMPLEX(DFPC), DIMENSION(SIZE(a, 1), SIZE(a, 2)) :: dum
-dum = a
-a = b
-b = dum
+COMPLEX(DFPC) :: dum
+INTEGER(I4B) :: ii, jj, nrow, ncol
+
+nrow = SIZE(a, 1)
+ncol = SIZE(a, 2)
+
+DO jj = 1, ncol
+  DO ii = 1, nrow
+    dum = a(ii, jj)
+    a(ii, jj) = b(ii, jj)
+    b(ii, jj) = dum
+  END DO
+END DO
+
 END PROCEDURE swap_cm
 
 !----------------------------------------------------------------------------
@@ -211,10 +259,19 @@ END PROCEDURE swap_cm
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE swap_r32m
-REAL(REAL32), DIMENSION(SIZE(a, 1), SIZE(a, 2)) :: dum
-dum = a
-a = b
-b = dum
+REAL(REAL32) :: dum
+INTEGER(I4B) :: ii, jj, nrow, ncol
+
+nrow = SIZE(a, 1)
+ncol = SIZE(a, 2)
+
+DO jj = 1, ncol
+  DO ii = 1, nrow
+    dum = a(ii, jj)
+    a(ii, jj) = b(ii, jj)
+    b(ii, jj) = dum
+  END DO
+END DO
 END PROCEDURE swap_r32m
 
 !----------------------------------------------------------------------------
@@ -222,10 +279,19 @@ END PROCEDURE swap_r32m
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE swap_r64m
-REAL(REAL32), DIMENSION(SIZE(a, 1), SIZE(a, 2)) :: dum
-dum = a
-a = b
-b = dum
+REAL(REAL64) :: dum
+INTEGER(I4B) :: ii, jj, nrow, ncol
+
+nrow = SIZE(a, 1)
+ncol = SIZE(a, 2)
+
+DO jj = 1, ncol
+  DO ii = 1, nrow
+    dum = a(ii, jj)
+    a(ii, jj) = b(ii, jj)
+    b(ii, jj) = dum
+  END DO
+END DO
 END PROCEDURE swap_r64m
 
 !----------------------------------------------------------------------------
@@ -233,10 +299,19 @@ END PROCEDURE swap_r64m
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE swap_Int8m
-INTEGER(INT8), DIMENSION(SIZE(a, 1), SIZE(a, 2)) :: dum
-dum = a
-a = b
-b = dum
+INTEGER(INT8) :: dum
+INTEGER(I4B) :: ii, jj, nrow, ncol
+
+nrow = SIZE(a, 1)
+ncol = SIZE(a, 2)
+
+DO jj = 1, ncol
+  DO ii = 1, nrow
+    dum = a(ii, jj)
+    a(ii, jj) = b(ii, jj)
+    b(ii, jj) = dum
+  END DO
+END DO
 END PROCEDURE swap_Int8m
 
 !----------------------------------------------------------------------------
@@ -244,10 +319,19 @@ END PROCEDURE swap_Int8m
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE swap_Int16m
-INTEGER(INT16), DIMENSION(SIZE(a, 1), SIZE(a, 2)) :: dum
-dum = a
-a = b
-b = dum
+INTEGER(INT16) :: dum
+INTEGER(I4B) :: ii, jj, nrow, ncol
+
+nrow = SIZE(a, 1)
+ncol = SIZE(a, 2)
+
+DO jj = 1, ncol
+  DO ii = 1, nrow
+    dum = a(ii, jj)
+    a(ii, jj) = b(ii, jj)
+    b(ii, jj) = dum
+  END DO
+END DO
 END PROCEDURE swap_Int16m
 
 !----------------------------------------------------------------------------
@@ -255,10 +339,19 @@ END PROCEDURE swap_Int16m
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE swap_Int32m
-INTEGER(INT32), DIMENSION(SIZE(a, 1), SIZE(a, 2)) :: dum
-dum = a
-a = b
-b = dum
+INTEGER(INT32) :: dum
+INTEGER(I4B) :: ii, jj, nrow, ncol
+
+nrow = SIZE(a, 1)
+ncol = SIZE(a, 2)
+
+DO jj = 1, ncol
+  DO ii = 1, nrow
+    dum = a(ii, jj)
+    a(ii, jj) = b(ii, jj)
+    b(ii, jj) = dum
+  END DO
+END DO
 END PROCEDURE swap_Int32m
 
 !----------------------------------------------------------------------------
@@ -266,10 +359,19 @@ END PROCEDURE swap_Int32m
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE swap_Int64m
-INTEGER(INT64), DIMENSION(SIZE(a, 1), SIZE(a, 2)) :: dum
-dum = a
-a = b
-b = dum
+INTEGER(INT64) :: dum
+INTEGER(I4B) :: ii, jj, nrow, ncol
+
+nrow = SIZE(a, 1)
+ncol = SIZE(a, 2)
+
+DO jj = 1, ncol
+  DO ii = 1, nrow
+    dum = a(ii, jj)
+    a(ii, jj) = b(ii, jj)
+    b(ii, jj) = dum
+  END DO
+END DO
 END PROCEDURE swap_Int64m
 
 !----------------------------------------------------------------------------
@@ -278,10 +380,19 @@ END PROCEDURE swap_Int64m
 
 #ifdef USE_Int128
 MODULE PROCEDURE swap_Int128m
-INTEGER(Int128), DIMENSION(SIZE(a, 1), SIZE(a, 2)) :: dum
-dum = a
-a = b
-b = dum
+INTEGER(INT128) :: dum
+INTEGER(I4B) :: ii, jj, nrow, ncol
+
+nrow = SIZE(a, 1)
+ncol = SIZE(a, 2)
+
+DO jj = 1, ncol
+  DO ii = 1, nrow
+    dum = a(ii, jj)
+    a(ii, jj) = b(ii, jj)
+    b(ii, jj) = dum
+  END DO
+END DO
 END PROCEDURE swap_Int128m
 #endif
 
@@ -591,6 +702,38 @@ END PROCEDURE swap_index1
 !                                                                  SWAP
 !----------------------------------------------------------------------------
 
+MODULE PROCEDURE swap_index_1
+INTEGER(I4B) :: ij(2), s(2), i, j
+!! main
+s = SHAPE(b)
+DO j = 1, s(2)
+  DO i = 1, s(1)
+    ij(1) = i; ij(2) = j
+    a(ij(i1), ij(i2)) = b(i, j)
+  END DO
+END DO
+END PROCEDURE swap_index_1
+
+!----------------------------------------------------------------------------
+!                                                                  SWAP
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE swap_index_2
+INTEGER(I4B) :: ij(2), s(2), i, j
+!! main
+s = SHAPE(b)
+DO j = 1, s(2)
+  DO i = 1, s(1)
+    ij(1) = i; ij(2) = j
+    a(ij(i1), ij(i2)) = b(i, j)
+  END DO
+END DO
+END PROCEDURE swap_index_2
+
+!----------------------------------------------------------------------------
+!                                                                  SWAP
+!----------------------------------------------------------------------------
+
 MODULE PROCEDURE swap_index2
 INTEGER(I4B) :: IJ(2), s(2), i, j
 !! main
@@ -664,6 +807,42 @@ END PROCEDURE swap_index4
 !                                                                  SWAP
 !----------------------------------------------------------------------------
 
+MODULE PROCEDURE swap_index_3
+INTEGER(I4B) :: ijk(3), s(3), i, j, k
+!! main
+s = SHAPE(b)
+DO k = 1, s(3)
+  DO j = 1, s(2)
+    DO i = 1, s(1)
+      ijk = [i, j, k]
+      a(ijk(i1), ijk(i2), ijk(i3)) = b(i, j, k)
+    END DO
+  END DO
+END DO
+END PROCEDURE swap_index_3
+
+!----------------------------------------------------------------------------
+!                                                                  SWAP
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE swap_index_4
+INTEGER(I4B) :: ijk(3), s(3), i, j, k
+!! main
+s = SHAPE(b)
+DO k = 1, s(3)
+  DO j = 1, s(2)
+    DO i = 1, s(1)
+      ijk = [i, j, k]
+      a(ijk(i1), ijk(i2), ijk(i3)) = b(i, j, k)
+    END DO
+  END DO
+END DO
+END PROCEDURE swap_index_4
+
+!----------------------------------------------------------------------------
+!                                                                  SWAP
+!----------------------------------------------------------------------------
+
 MODULE PROCEDURE swap_index5
 INTEGER(I4B) :: indx(4), s(4), i, j, k, l
 !! main
@@ -701,6 +880,46 @@ DO l = 1, s(4)
   END DO
 END DO
 END PROCEDURE swap_index6
+
+!----------------------------------------------------------------------------
+!                                                                  SWAP
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE swap_index_5
+INTEGER(I4B) :: indx(4), s(4), i, j, k, l
+!! main
+s = SHAPE(b)
+DO l = 1, s(4)
+  DO k = 1, s(3)
+    DO j = 1, s(2)
+      DO i = 1, s(1)
+        indx = [i, j, k, l]
+        a(indx(i1), indx(i2), indx(i3), indx(i4)) = b(i, j, k, l)
+      END DO
+    END DO
+  END DO
+END DO
+END PROCEDURE swap_index_5
+
+!----------------------------------------------------------------------------
+!                                                                  SWAP
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE swap_index_6
+INTEGER(I4B) :: indx(4), s(4), i, j, k, l
+!! main
+s = SHAPE(b)
+DO l = 1, s(4)
+  DO k = 1, s(3)
+    DO j = 1, s(2)
+      DO i = 1, s(1)
+        indx = [i, j, k, l]
+        a(indx(i1), indx(i2), indx(i3), indx(i4)) = b(i, j, k, l)
+      END DO
+    END DO
+  END DO
+END DO
+END PROCEDURE swap_index_6
 
 !----------------------------------------------------------------------------
 !

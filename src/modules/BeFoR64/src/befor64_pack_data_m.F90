@@ -1,14 +1,14 @@
 !< KISS library for packing heterogeneous data into single (homogeneous) packed one.
 !
-module befor64_pack_data_m
+MODULE befor64_pack_data_m
 !< KISS library for packing heterogeneous data into single (homogeneous) packed one.
-use penf
+USE penf
 
-implicit none
-private
-public :: pack_data
+IMPLICIT NONE
+PRIVATE
+PUBLIC :: pack_data
 
-interface pack_data
+INTERFACE pack_data
   !< Pack different kinds of data into single I1P array.
   !<
   !< This is useful for encoding different (heterogeneous) kinds variables into a single (homogeneous) stream of bits.
@@ -57,792 +57,811 @@ interface pack_data
   !<...
   !<call pack_data(a1=array_r4,a2=array_i4,packed=rpack)
   !<```
-  module procedure pack_data_R8_R4, pack_data_R8_I8, pack_data_R8_I4, pack_data_R8_I2, pack_data_R8_I1, &
-                   pack_data_R4_R8, pack_data_R4_I8, pack_data_R4_I4, pack_data_R4_I2, pack_data_R4_I1, &
-                   pack_data_I8_R8, pack_data_I8_R4, pack_data_I8_I4, pack_data_I8_I2, pack_data_I8_I1, &
-                   pack_data_I4_R8, pack_data_I4_R4, pack_data_I4_I8, pack_data_I4_I2, pack_data_I4_I1, &
-                   pack_data_I2_R8, pack_data_I2_R4, pack_data_I2_I8, pack_data_I2_I4, pack_data_I2_I1, &
-                   pack_data_I1_R8, pack_data_I1_R4, pack_data_I1_I8, pack_data_I1_I4, pack_data_I1_I2
-endinterface
+  MODULE PROCEDURE &
+    pack_data_R8_R4, pack_data_R8_I8, pack_data_R8_I4, pack_data_R8_I2, &
+    pack_data_R8_I1, pack_data_R4_R8, pack_data_R4_I8, pack_data_R4_I4, &
+    pack_data_R4_I2, pack_data_R4_I1, pack_data_I8_R8, pack_data_I8_R4, &
+    pack_data_I8_I4, pack_data_I8_I2, pack_data_I8_I1, pack_data_I4_R8, &
+    pack_data_I4_R4, pack_data_I4_I8, pack_data_I4_I2, pack_data_I4_I1, &
+    pack_data_I2_R8, pack_data_I2_R4, pack_data_I2_I8, pack_data_I2_I4, &
+    pack_data_I2_I1, pack_data_I1_R8, pack_data_I1_R4, pack_data_I1_I8, &
+    pack_data_I1_I4, pack_data_I1_I2, pack_data_I4_I4
+END INTERFACE
 
-contains
-   pure subroutine pack_data_R8_R4(a1, a2, packed)
-   !< Pack different kinds of data into single I1P array.
-   !<
-   !<```fortran
-   !< use befor64
-   !< use penf
-   !< real(R8P)                 :: a1(1)
-   !< real(R4P)                 :: a2(1)
-   !< integer(I1P), allocatable :: pack(:)
-   !< a1(1) = 0
-   !< a2(1) = 1
-   !< call pack_data(a1=a1, a2=a2, packed=pack)
-   !< print *, pack(size(pack, dim=1))
-   !<```
-   !=> 63 <<<
-   real(R8P),                 intent(in)    :: a1(1:)    !< Firs data stream.
-   real(R4P),                 intent(in)    :: a2(1:)    !< Second data stream.
-   integer(I1P), allocatable, intent(inout) :: packed(:) !< Packed data into I1P array.
-   integer(I1P), allocatable                :: p1(:)     !< Temporary packed data of first stream.
-   integer(I1P), allocatable                :: p2(:)     !< Temporary packed data of second stream.
+CONTAINS
+PURE SUBROUTINE pack_data_R8_R4(a1, a2, packed)
+  !< Pack different kinds of data into single I1P array.
+  !<
+  !<```fortran
+  !< use befor64
+  !< use penf
+  !< real(R8P)                 :: a1(1)
+  !< real(R4P)                 :: a2(1)
+  !< integer(I1P), allocatable :: pack(:)
+  !< a1(1) = 0
+  !< a2(1) = 1
+  !< call pack_data(a1=a1, a2=a2, packed=pack)
+  !< print *, pack(size(pack, dim=1))
+  !<```
+  !=> 63 <<<
+  REAL(R8P), INTENT(in) :: a1(1:) !< Firs data stream.
+  REAL(R4P), INTENT(in) :: a2(1:) !< Second data stream.
+  INTEGER(I1P), ALLOCATABLE, INTENT(inout) :: packed(:) !< Packed data into I1P array.
+  INTEGER(I1P), ALLOCATABLE :: p1(:) !< Temporary packed data of first stream.
+  INTEGER(I1P), ALLOCATABLE :: p2(:) !< Temporary packed data of second stream.
 
-   p1 = transfer(a1,p1)
-   p2 = transfer(a2,p2)
-   packed = [p1,p2]
-   endsubroutine pack_data_R8_R4
+  p1 = TRANSFER(a1, p1)
+  p2 = TRANSFER(a2, p2)
+  packed = [p1, p2]
+END SUBROUTINE pack_data_R8_R4
 
-   pure subroutine pack_data_R8_I8(a1, a2, packed)
-   !< Pack different kinds of data into single I1P array.
-   !<
-   !<```fortran
-   !< use befor64
-   !< use penf
-   !< real(R8P)                 :: a1(1)
-   !< integer(I8P)              :: a2(1)
-   !< integer(I1P), allocatable :: pack(:)
-   !< a1(1) = 0
-   !< a2(1) = 1
-   !< call pack_data(a1=a1, a2=a2, packed=pack)
-   !< print *, pack(9)
-   !<```
-   !=> 1 <<<
-   real(R8P),                 intent(in)    :: a1(1:)    !< First data stream.
-   integer(I8P),              intent(in)    :: a2(1:)    !< Second data stream.
-   integer(I1P), allocatable, intent(inout) :: packed(:) !< Packed data into I1P array.
-   integer(I1P), allocatable                :: p1(:)     !< Temporary packed data of first stream.
-   integer(I1P), allocatable                :: p2(:)     !< Temporary packed data of second stream.
+PURE SUBROUTINE pack_data_R8_I8(a1, a2, packed)
+  !< Pack different kinds of data into single I1P array.
+  !<
+  !<```fortran
+  !< use befor64
+  !< use penf
+  !< real(R8P)                 :: a1(1)
+  !< integer(I8P)              :: a2(1)
+  !< integer(I1P), allocatable :: pack(:)
+  !< a1(1) = 0
+  !< a2(1) = 1
+  !< call pack_data(a1=a1, a2=a2, packed=pack)
+  !< print *, pack(9)
+  !<```
+  !=> 1 <<<
+  REAL(R8P), INTENT(in) :: a1(1:) !< First data stream.
+  INTEGER(I8P), INTENT(in) :: a2(1:) !< Second data stream.
+  INTEGER(I1P), ALLOCATABLE, INTENT(inout) :: packed(:) !< Packed data into I1P array.
+  INTEGER(I1P), ALLOCATABLE :: p1(:) !< Temporary packed data of first stream.
+  INTEGER(I1P), ALLOCATABLE :: p2(:) !< Temporary packed data of second stream.
 
-   p1 = transfer(a1,p1)
-   p2 = transfer(a2,p2)
-   packed = [p1,p2]
-   endsubroutine pack_data_R8_I8
+  p1 = TRANSFER(a1, p1)
+  p2 = TRANSFER(a2, p2)
+  packed = [p1, p2]
+END SUBROUTINE pack_data_R8_I8
 
-   pure subroutine pack_data_R8_I4(a1, a2, packed)
-   !< Pack different kinds of data into single I1P array.
-   !<
-   !<```fortran
-   !< use befor64
-   !< use penf
-   !< real(R8P)                 :: a1(1)
-   !< integer(I4P)              :: a2(1)
-   !< integer(I1P), allocatable :: pack(:)
-   !< a1(1) = 0
-   !< a2(1) = 1
-   !< call pack_data(a1=a1, a2=a2, packed=pack)
-   !< print *, pack(9)
-   !<```
-   !=> 1 <<<
-   real(R8P),                 intent(in)    :: a1(1:)    !< First data stream.
-   integer(I4P),              intent(in)    :: a2(1:)    !< Second data stream.
-   integer(I1P), allocatable, intent(inout) :: packed(:) !< Packed data into I1P array.
-   integer(I1P), allocatable                :: p1(:)     !< Temporary packed data of first stream.
-   integer(I1P), allocatable                :: p2(:)     !< Temporary packed data of second stream.
+PURE SUBROUTINE pack_data_R8_I4(a1, a2, packed)
+  !< Pack different kinds of data into single I1P array.
+  !<
+  !<```fortran
+  !< use befor64
+  !< use penf
+  !< real(R8P)                 :: a1(1)
+  !< integer(I4P)              :: a2(1)
+  !< integer(I1P), allocatable :: pack(:)
+  !< a1(1) = 0
+  !< a2(1) = 1
+  !< call pack_data(a1=a1, a2=a2, packed=pack)
+  !< print *, pack(9)
+  !<```
+  !=> 1 <<<
+  REAL(R8P), INTENT(in) :: a1(1:) !< First data stream.
+  INTEGER(I4P), INTENT(in) :: a2(1:) !< Second data stream.
+  INTEGER(I1P), ALLOCATABLE, INTENT(inout) :: packed(:) !< Packed data into I1P array.
+  INTEGER(I1P), ALLOCATABLE :: p1(:) !< Temporary packed data of first stream.
+  INTEGER(I1P), ALLOCATABLE :: p2(:) !< Temporary packed data of second stream.
 
-   p1 = transfer(a1,p1)
-   p2 = transfer(a2,p2)
-   packed = [p1,p2]
-   endsubroutine pack_data_R8_I4
+  p1 = TRANSFER(a1, p1)
+  p2 = TRANSFER(a2, p2)
+  packed = [p1, p2]
+END SUBROUTINE pack_data_R8_I4
 
-   pure subroutine pack_data_R8_I2(a1, a2, packed)
-   !< Pack different kinds of data into single I1P array.
-   !<
-   !<```fortran
-   !< use befor64
-   !< use penf
-   !< real(R8P)                 :: a1(1)
-   !< integer(I2P)              :: a2(1)
-   !< integer(I1P), allocatable :: pack(:)
-   !< a1(1) = 0
-   !< a2(1) = 1
-   !< call pack_data(a1=a1, a2=a2, packed=pack)
-   !< print *, pack(9)
-   !<```
-   !=> 1 <<<
-   real(R8P),                 intent(in)    :: a1(1:)    !< First data stream.
-   integer(I2P),              intent(in)    :: a2(1:)    !< Second data stream.
-   integer(I1P), allocatable, intent(inout) :: packed(:) !< Packed data into I1P array.
-   integer(I1P), allocatable                :: p1(:)     !< Temporary packed data of first stream.
-   integer(I1P), allocatable                :: p2(:)     !< Temporary packed data of second stream.
+PURE SUBROUTINE pack_data_R8_I2(a1, a2, packed)
+  !< Pack different kinds of data into single I1P array.
+  !<
+  !<```fortran
+  !< use befor64
+  !< use penf
+  !< real(R8P)                 :: a1(1)
+  !< integer(I2P)              :: a2(1)
+  !< integer(I1P), allocatable :: pack(:)
+  !< a1(1) = 0
+  !< a2(1) = 1
+  !< call pack_data(a1=a1, a2=a2, packed=pack)
+  !< print *, pack(9)
+  !<```
+  !=> 1 <<<
+  REAL(R8P), INTENT(in) :: a1(1:) !< First data stream.
+  INTEGER(I2P), INTENT(in) :: a2(1:) !< Second data stream.
+  INTEGER(I1P), ALLOCATABLE, INTENT(inout) :: packed(:) !< Packed data into I1P array.
+  INTEGER(I1P), ALLOCATABLE :: p1(:) !< Temporary packed data of first stream.
+  INTEGER(I1P), ALLOCATABLE :: p2(:) !< Temporary packed data of second stream.
 
-   p1 = transfer(a1,p1)
-   p2 = transfer(a2,p2)
-   packed = [p1,p2]
-   endsubroutine pack_data_R8_I2
+  p1 = TRANSFER(a1, p1)
+  p2 = TRANSFER(a2, p2)
+  packed = [p1, p2]
+END SUBROUTINE pack_data_R8_I2
 
-   pure subroutine pack_data_R8_I1(a1, a2, packed)
-   !< Pack different kinds of data into single I1P array.
-   !<
-   !<```fortran
-   !< use befor64
-   !< use penf
-   !< real(R8P)                 :: a1(1)
-   !< integer(I1P)              :: a2(1)
-   !< integer(I1P), allocatable :: pack(:)
-   !< a1(1) = 0
-   !< a2(1) = 1
-   !< call pack_data(a1=a1, a2=a2, packed=pack)
-   !< print *, pack(9)
-   !<```
-   !=> 1 <<<
-   real(R8P),                 intent(in)    :: a1(1:)    !< First data stream.
-   integer(I1P),              intent(in)    :: a2(1:)    !< Second data stream.
-   integer(I1P), allocatable, intent(inout) :: packed(:) !< Packed data into I1P array.
-   integer(I1P), allocatable                :: p1(:)     !< Temporary packed data of first stream.
-   integer(I1P), allocatable                :: p2(:)     !< Temporary packed data of second stream.
+PURE SUBROUTINE pack_data_R8_I1(a1, a2, packed)
+  !< Pack different kinds of data into single I1P array.
+  !<
+  !<```fortran
+  !< use befor64
+  !< use penf
+  !< real(R8P)                 :: a1(1)
+  !< integer(I1P)              :: a2(1)
+  !< integer(I1P), allocatable :: pack(:)
+  !< a1(1) = 0
+  !< a2(1) = 1
+  !< call pack_data(a1=a1, a2=a2, packed=pack)
+  !< print *, pack(9)
+  !<```
+  !=> 1 <<<
+  REAL(R8P), INTENT(in) :: a1(1:) !< First data stream.
+  INTEGER(I1P), INTENT(in) :: a2(1:) !< Second data stream.
+  INTEGER(I1P), ALLOCATABLE, INTENT(inout) :: packed(:) !< Packed data into I1P array.
+  INTEGER(I1P), ALLOCATABLE :: p1(:) !< Temporary packed data of first stream.
+  INTEGER(I1P), ALLOCATABLE :: p2(:) !< Temporary packed data of second stream.
 
-   p1 = transfer(a1,p1)
-   p2 = transfer(a2,p2)
-   packed = [p1,p2]
-   endsubroutine pack_data_R8_I1
+  p1 = TRANSFER(a1, p1)
+  p2 = TRANSFER(a2, p2)
+  packed = [p1, p2]
+END SUBROUTINE pack_data_R8_I1
 
-   pure subroutine pack_data_R4_R8(a1, a2, packed)
-   !< Pack different kinds of data into single I1P array.
-   !<
-   !<```fortran
-   !< use befor64
-   !< use penf
-   !< real(R4P)                 :: a1(1)
-   !< real(R8P)                 :: a2(1)
-   !< integer(I1P), allocatable :: pack(:)
-   !< a1(1) = 0
-   !< a2(1) = 1
-   !< call pack_data(a1=a1, a2=a2, packed=pack)
-   !< print *, pack(size(pack, dim=1))
-   !<```
-   !=> 63 <<<
-   real(R4P),                 intent(in)    :: a1(1:)    !< Firs data stream.
-   real(R8P),                 intent(in)    :: a2(1:)    !< Second data stream.
-   integer(I1P), allocatable, intent(inout) :: packed(:) !< Packed data into I1P array.
-   integer(I1P), allocatable                :: p1(:)     !< Temporary packed data of first stream.
-   integer(I1P), allocatable                :: p2(:)     !< Temporary packed data of second stream.
+PURE SUBROUTINE pack_data_R4_R8(a1, a2, packed)
+  !< Pack different kinds of data into single I1P array.
+  !<
+  !<```fortran
+  !< use befor64
+  !< use penf
+  !< real(R4P)                 :: a1(1)
+  !< real(R8P)                 :: a2(1)
+  !< integer(I1P), allocatable :: pack(:)
+  !< a1(1) = 0
+  !< a2(1) = 1
+  !< call pack_data(a1=a1, a2=a2, packed=pack)
+  !< print *, pack(size(pack, dim=1))
+  !<```
+  !=> 63 <<<
+  REAL(R4P), INTENT(in) :: a1(1:) !< Firs data stream.
+  REAL(R8P), INTENT(in) :: a2(1:) !< Second data stream.
+  INTEGER(I1P), ALLOCATABLE, INTENT(inout) :: packed(:) !< Packed data into I1P array.
+  INTEGER(I1P), ALLOCATABLE :: p1(:) !< Temporary packed data of first stream.
+  INTEGER(I1P), ALLOCATABLE :: p2(:) !< Temporary packed data of second stream.
 
-   p1 = transfer(a1,p1)
-   p2 = transfer(a2,p2)
-   packed = [p1,p2]
-   endsubroutine pack_data_R4_R8
+  p1 = TRANSFER(a1, p1)
+  p2 = TRANSFER(a2, p2)
+  packed = [p1, p2]
+END SUBROUTINE pack_data_R4_R8
 
-   pure subroutine pack_data_R4_I8(a1, a2, packed)
-   !< Pack different kinds of data into single I1P array.
-   !<
-   !<```fortran
-   !< use befor64
-   !< use penf
-   !< real(R4P)                 :: a1(1)
-   !< integer(I8P)              :: a2(1)
-   !< integer(I1P), allocatable :: pack(:)
-   !< a1(1) = 0
-   !< a2(1) = 1
-   !< call pack_data(a1=a1, a2=a2, packed=pack)
-   !< print *, pack(5)
-   !<```
-   !=> 1 <<<
-   real(R4P),                 intent(in)    :: a1(1:)    !< First data stream.
-   integer(I8P),              intent(in)    :: a2(1:)    !< Second data stream.
-   integer(I1P), allocatable, intent(inout) :: packed(:) !< Packed data into I1P array.
-   integer(I1P), allocatable                :: p1(:)     !< Temporary packed data of first stream.
-   integer(I1P), allocatable                :: p2(:)     !< Temporary packed data of second stream.
+PURE SUBROUTINE pack_data_R4_I8(a1, a2, packed)
+  !< Pack different kinds of data into single I1P array.
+  !<
+  !<```fortran
+  !< use befor64
+  !< use penf
+  !< real(R4P)                 :: a1(1)
+  !< integer(I8P)              :: a2(1)
+  !< integer(I1P), allocatable :: pack(:)
+  !< a1(1) = 0
+  !< a2(1) = 1
+  !< call pack_data(a1=a1, a2=a2, packed=pack)
+  !< print *, pack(5)
+  !<```
+  !=> 1 <<<
+  REAL(R4P), INTENT(in) :: a1(1:) !< First data stream.
+  INTEGER(I8P), INTENT(in) :: a2(1:) !< Second data stream.
+  INTEGER(I1P), ALLOCATABLE, INTENT(inout) :: packed(:) !< Packed data into I1P array.
+  INTEGER(I1P), ALLOCATABLE :: p1(:) !< Temporary packed data of first stream.
+  INTEGER(I1P), ALLOCATABLE :: p2(:) !< Temporary packed data of second stream.
 
-   p1 = transfer(a1,p1)
-   p2 = transfer(a2,p2)
-   packed = [p1,p2]
-   endsubroutine pack_data_R4_I8
+  p1 = TRANSFER(a1, p1)
+  p2 = TRANSFER(a2, p2)
+  packed = [p1, p2]
+END SUBROUTINE pack_data_R4_I8
 
-   pure subroutine pack_data_R4_I4(a1, a2, packed)
-   !< Pack different kinds of data into single I1P array.
-   !<
-   !<```fortran
-   !< use befor64
-   !< use penf
-   !< real(R4P)                 :: a1(1)
-   !< integer(I4P)              :: a2(1)
-   !< integer(I1P), allocatable :: pack(:)
-   !< a1(1) = 0
-   !< a2(1) = 1
-   !< call pack_data(a1=a1, a2=a2, packed=pack)
-   !< print *, pack(5)
-   !<```
-   !=> 1 <<<
-   real(R4P),                 intent(in)    :: a1(1:)    !< First data stream.
-   integer(I4P),              intent(in)    :: a2(1:)    !< Second data stream.
-   integer(I1P), allocatable, intent(inout) :: packed(:) !< Packed data into I1P array.
-   integer(I1P), allocatable                :: p1(:)     !< Temporary packed data of first stream.
-   integer(I1P), allocatable                :: p2(:)     !< Temporary packed data of second stream.
+PURE SUBROUTINE pack_data_R4_I4(a1, a2, packed)
+  !< Pack different kinds of data into single I1P array.
+  !<
+  !<```fortran
+  !< use befor64
+  !< use penf
+  !< real(R4P)                 :: a1(1)
+  !< integer(I4P)              :: a2(1)
+  !< integer(I1P), allocatable :: pack(:)
+  !< a1(1) = 0
+  !< a2(1) = 1
+  !< call pack_data(a1=a1, a2=a2, packed=pack)
+  !< print *, pack(5)
+  !<```
+  !=> 1 <<<
+  REAL(R4P), INTENT(in) :: a1(1:) !< First data stream.
+  INTEGER(I4P), INTENT(in) :: a2(1:) !< Second data stream.
+  INTEGER(I1P), ALLOCATABLE, INTENT(inout) :: packed(:) !< Packed data into I1P array.
+  INTEGER(I1P), ALLOCATABLE :: p1(:) !< Temporary packed data of first stream.
+  INTEGER(I1P), ALLOCATABLE :: p2(:) !< Temporary packed data of second stream.
 
-   p1 = transfer(a1,p1)
-   p2 = transfer(a2,p2)
-   packed = [p1,p2]
-   endsubroutine pack_data_R4_I4
+  p1 = TRANSFER(a1, p1)
+  p2 = TRANSFER(a2, p2)
+  packed = [p1, p2]
+END SUBROUTINE pack_data_R4_I4
 
-   pure subroutine pack_data_R4_I2(a1, a2, packed)
-   !< Pack different kinds of data into single I1P array.
-   !<
-   !<```fortran
-   !< use befor64
-   !< use penf
-   !< real(R4P)                 :: a1(1)
-   !< integer(I2P)              :: a2(1)
-   !< integer(I1P), allocatable :: pack(:)
-   !< a1(1) = 0
-   !< a2(1) = 1
-   !< call pack_data(a1=a1, a2=a2, packed=pack)
-   !< print *, pack(5)
-   !<```
-   !=> 1 <<<
-   real(R4P),                 intent(in)    :: a1(1:)    !< First data stream.
-   integer(I2P),              intent(in)    :: a2(1:)    !< Second data stream.
-   integer(I1P), allocatable, intent(inout) :: packed(:) !< Packed data into I1P array.
-   integer(I1P), allocatable                :: p1(:)     !< Temporary packed data of first stream.
-   integer(I1P), allocatable                :: p2(:)     !< Temporary packed data of second stream.
+PURE SUBROUTINE pack_data_R4_I2(a1, a2, packed)
+  !< Pack different kinds of data into single I1P array.
+  !<
+  !<```fortran
+  !< use befor64
+  !< use penf
+  !< real(R4P)                 :: a1(1)
+  !< integer(I2P)              :: a2(1)
+  !< integer(I1P), allocatable :: pack(:)
+  !< a1(1) = 0
+  !< a2(1) = 1
+  !< call pack_data(a1=a1, a2=a2, packed=pack)
+  !< print *, pack(5)
+  !<```
+  !=> 1 <<<
+  REAL(R4P), INTENT(in) :: a1(1:) !< First data stream.
+  INTEGER(I2P), INTENT(in) :: a2(1:) !< Second data stream.
+  INTEGER(I1P), ALLOCATABLE, INTENT(inout) :: packed(:) !< Packed data into I1P array.
+  INTEGER(I1P), ALLOCATABLE :: p1(:) !< Temporary packed data of first stream.
+  INTEGER(I1P), ALLOCATABLE :: p2(:) !< Temporary packed data of second stream.
 
-   p1 = transfer(a1,p1)
-   p2 = transfer(a2,p2)
-   packed = [p1,p2]
-   endsubroutine pack_data_R4_I2
+  p1 = TRANSFER(a1, p1)
+  p2 = TRANSFER(a2, p2)
+  packed = [p1, p2]
+END SUBROUTINE pack_data_R4_I2
 
-   pure subroutine pack_data_R4_I1(a1, a2, packed)
-   !< Pack different kinds of data into single I1P array.
-   !<
-   !<```fortran
-   !< use befor64
-   !< use penf
-   !< real(R4P)                 :: a1(1)
-   !< integer(I1P)              :: a2(1)
-   !< integer(I1P), allocatable :: pack(:)
-   !< a1(1) = 0
-   !< a2(1) = 1
-   !< call pack_data(a1=a1, a2=a2, packed=pack)
-   !< print *, pack(5)
-   !<```
-   !=> 1 <<<
-   real(R4P),                 intent(in)    :: a1(1:)    !< First data stream.
-   integer(I1P),              intent(in)    :: a2(1:)    !< Second data stream.
-   integer(I1P), allocatable, intent(inout) :: packed(:) !< Packed data into I1P array.
-   integer(I1P), allocatable                :: p1(:)     !< Temporary packed data of first stream.
-   integer(I1P), allocatable                :: p2(:)     !< Temporary packed data of second stream.
+PURE SUBROUTINE pack_data_R4_I1(a1, a2, packed)
+  !< Pack different kinds of data into single I1P array.
+  !<
+  !<```fortran
+  !< use befor64
+  !< use penf
+  !< real(R4P)                 :: a1(1)
+  !< integer(I1P)              :: a2(1)
+  !< integer(I1P), allocatable :: pack(:)
+  !< a1(1) = 0
+  !< a2(1) = 1
+  !< call pack_data(a1=a1, a2=a2, packed=pack)
+  !< print *, pack(5)
+  !<```
+  !=> 1 <<<
+  REAL(R4P), INTENT(in) :: a1(1:) !< First data stream.
+  INTEGER(I1P), INTENT(in) :: a2(1:) !< Second data stream.
+  INTEGER(I1P), ALLOCATABLE, INTENT(inout) :: packed(:) !< Packed data into I1P array.
+  INTEGER(I1P), ALLOCATABLE :: p1(:) !< Temporary packed data of first stream.
+  INTEGER(I1P), ALLOCATABLE :: p2(:) !< Temporary packed data of second stream.
 
-   p1 = transfer(a1,p1)
-   p2 = transfer(a2,p2)
-   packed = [p1,p2]
-   endsubroutine pack_data_R4_I1
+  p1 = TRANSFER(a1, p1)
+  p2 = TRANSFER(a2, p2)
+  packed = [p1, p2]
+END SUBROUTINE pack_data_R4_I1
 
-   pure subroutine pack_data_I8_R8(a1, a2, packed)
-   !< Pack different kinds of data into single I1P array.
-   !<
-   !<```fortran
-   !< use befor64
-   !< use penf
-   !< integer(I8P)              :: a1(1)
-   !< real(R8P)                 :: a2(1)
-   !< integer(I1P), allocatable :: pack(:)
-   !< a1(1) = 0
-   !< a2(1) = 1
-   !< call pack_data(a1=a1, a2=a2, packed=pack)
-   !< print *, pack(size(pack, dim=1))
-   !<```
-   !=> 63 <<<
-   integer(I8P),              intent(in)    :: a1(1:)    !< First data stream.
-   real(R8P),                 intent(in)    :: a2(1:)    !< Second data stream.
-   integer(I1P), allocatable, intent(inout) :: packed(:) !< Packed data into I1P array.
-   integer(I1P), allocatable                :: p1(:)     !< Temporary packed data of first stream.
-   integer(I1P), allocatable                :: p2(:)     !< Temporary packed data of second stream.
+PURE SUBROUTINE pack_data_I8_R8(a1, a2, packed)
+  !< Pack different kinds of data into single I1P array.
+  !<
+  !<```fortran
+  !< use befor64
+  !< use penf
+  !< integer(I8P)              :: a1(1)
+  !< real(R8P)                 :: a2(1)
+  !< integer(I1P), allocatable :: pack(:)
+  !< a1(1) = 0
+  !< a2(1) = 1
+  !< call pack_data(a1=a1, a2=a2, packed=pack)
+  !< print *, pack(size(pack, dim=1))
+  !<```
+  !=> 63 <<<
+  INTEGER(I8P), INTENT(in) :: a1(1:) !< First data stream.
+  REAL(R8P), INTENT(in) :: a2(1:) !< Second data stream.
+  INTEGER(I1P), ALLOCATABLE, INTENT(inout) :: packed(:) !< Packed data into I1P array.
+  INTEGER(I1P), ALLOCATABLE :: p1(:) !< Temporary packed data of first stream.
+  INTEGER(I1P), ALLOCATABLE :: p2(:) !< Temporary packed data of second stream.
 
-   p1 = transfer(a1,p1)
-   p2 = transfer(a2,p2)
-   packed = [p1,p2]
-   endsubroutine pack_data_I8_R8
+  p1 = TRANSFER(a1, p1)
+  p2 = TRANSFER(a2, p2)
+  packed = [p1, p2]
+END SUBROUTINE pack_data_I8_R8
 
-   pure subroutine pack_data_I8_R4(a1, a2, packed)
-   !< Pack different kinds of data into single I1P array.
-   !<
-   !<```fortran
-   !< use befor64
-   !< use penf
-   !< integer(I8P)              :: a1(1)
-   !< real(R4P)                 :: a2(1)
-   !< integer(I1P), allocatable :: pack(:)
-   !< a1(1) = 0
-   !< a2(1) = 1
-   !< call pack_data(a1=a1, a2=a2, packed=pack)
-   !< print *, pack(size(pack, dim=1))
-   !<```
-   !=> 63 <<<
-   integer(I8P),              intent(in)    :: a1(1:)    !< First data stream.
-   real(R4P),                 intent(in)    :: a2(1:)    !< Second data stream.
-   integer(I1P), allocatable, intent(inout) :: packed(:) !< Packed data into I1P array.
-   integer(I1P), allocatable                :: p1(:)     !< Temporary packed data of first stream.
-   integer(I1P), allocatable                :: p2(:)     !< Temporary packed data of second stream.
+PURE SUBROUTINE pack_data_I8_R4(a1, a2, packed)
+  !< Pack different kinds of data into single I1P array.
+  !<
+  !<```fortran
+  !< use befor64
+  !< use penf
+  !< integer(I8P)              :: a1(1)
+  !< real(R4P)                 :: a2(1)
+  !< integer(I1P), allocatable :: pack(:)
+  !< a1(1) = 0
+  !< a2(1) = 1
+  !< call pack_data(a1=a1, a2=a2, packed=pack)
+  !< print *, pack(size(pack, dim=1))
+  !<```
+  !=> 63 <<<
+  INTEGER(I8P), INTENT(in) :: a1(1:) !< First data stream.
+  REAL(R4P), INTENT(in) :: a2(1:) !< Second data stream.
+  INTEGER(I1P), ALLOCATABLE, INTENT(inout) :: packed(:) !< Packed data into I1P array.
+  INTEGER(I1P), ALLOCATABLE :: p1(:) !< Temporary packed data of first stream.
+  INTEGER(I1P), ALLOCATABLE :: p2(:) !< Temporary packed data of second stream.
 
-   p1 = transfer(a1,p1)
-   p2 = transfer(a2,p2)
-   packed = [p1,p2]
-   endsubroutine pack_data_I8_R4
+  p1 = TRANSFER(a1, p1)
+  p2 = TRANSFER(a2, p2)
+  packed = [p1, p2]
+END SUBROUTINE pack_data_I8_R4
 
-   pure subroutine pack_data_I8_I4(a1, a2, packed)
-   !< Pack different kinds of data into single I1P array.
-   !<
-   !<```fortran
-   !< use befor64
-   !< use penf
-   !< integer(I8P)              :: a1(1)
-   !< integer(I4P)              :: a2(1)
-   !< integer(I1P), allocatable :: pack(:)
-   !< a1(1) = 0
-   !< a2(1) = 1
-   !< call pack_data(a1=a1, a2=a2, packed=pack)
-   !< print *, pack(9)
-   !<```
-   !=> 1 <<<
-   integer(I8P),              intent(in)    :: a1(1:)    !< First data stream.
-   integer(I4P),              intent(in)    :: a2(1:)    !< Second data stream.
-   integer(I1P), allocatable, intent(inout) :: packed(:) !< Packed data into I1P array.
-   integer(I1P), allocatable                :: p1(:)     !< Temporary packed data of first stream.
-   integer(I1P), allocatable                :: p2(:)     !< Temporary packed data of second stream.
+PURE SUBROUTINE pack_data_I8_I4(a1, a2, packed)
+  !< Pack different kinds of data into single I1P array.
+  !<
+  !<```fortran
+  !< use befor64
+  !< use penf
+  !< integer(I8P)              :: a1(1)
+  !< integer(I4P)              :: a2(1)
+  !< integer(I1P), allocatable :: pack(:)
+  !< a1(1) = 0
+  !< a2(1) = 1
+  !< call pack_data(a1=a1, a2=a2, packed=pack)
+  !< print *, pack(9)
+  !<```
+  !=> 1 <<<
+  INTEGER(I8P), INTENT(in) :: a1(1:) !< First data stream.
+  INTEGER(I4P), INTENT(in) :: a2(1:) !< Second data stream.
+  INTEGER(I1P), ALLOCATABLE, INTENT(inout) :: packed(:) !< Packed data into I1P array.
+  INTEGER(I1P), ALLOCATABLE :: p1(:) !< Temporary packed data of first stream.
+  INTEGER(I1P), ALLOCATABLE :: p2(:) !< Temporary packed data of second stream.
 
-   p1 = transfer(a1,p1)
-   p2 = transfer(a2,p2)
-   packed = [p1,p2]
-   endsubroutine pack_data_I8_I4
+  p1 = TRANSFER(a1, p1)
+  p2 = TRANSFER(a2, p2)
+  packed = [p1, p2]
+END SUBROUTINE pack_data_I8_I4
 
-   pure subroutine pack_data_I8_I2(a1, a2, packed)
-   !< Pack different kinds of data into single I1P array.
-   !<
-   !<```fortran
-   !< use befor64
-   !< use penf
-   !< integer(I8P)              :: a1(1)
-   !< integer(I2P)              :: a2(1)
-   !< integer(I1P), allocatable :: pack(:)
-   !< a1(1) = 0
-   !< a2(1) = 1
-   !< call pack_data(a1=a1, a2=a2, packed=pack)
-   !< print *, pack(9)
-   !<```
-   !=> 1 <<<
-   integer(I8P),              intent(in)    :: a1(1:)    !< First data stream.
-   integer(I2P),              intent(in)    :: a2(1:)    !< Second data stream.
-   integer(I1P), allocatable, intent(inout) :: packed(:) !< Packed data into I1P array.
-   integer(I1P), allocatable                :: p1(:)     !< Temporary packed data of first stream.
-   integer(I1P), allocatable                :: p2(:)     !< Temporary packed data of second stream.
+PURE SUBROUTINE pack_data_I8_I2(a1, a2, packed)
+  !< Pack different kinds of data into single I1P array.
+  !<
+  !<```fortran
+  !< use befor64
+  !< use penf
+  !< integer(I8P)              :: a1(1)
+  !< integer(I2P)              :: a2(1)
+  !< integer(I1P), allocatable :: pack(:)
+  !< a1(1) = 0
+  !< a2(1) = 1
+  !< call pack_data(a1=a1, a2=a2, packed=pack)
+  !< print *, pack(9)
+  !<```
+  !=> 1 <<<
+  INTEGER(I8P), INTENT(in) :: a1(1:) !< First data stream.
+  INTEGER(I2P), INTENT(in) :: a2(1:) !< Second data stream.
+  INTEGER(I1P), ALLOCATABLE, INTENT(inout) :: packed(:) !< Packed data into I1P array.
+  INTEGER(I1P), ALLOCATABLE :: p1(:) !< Temporary packed data of first stream.
+  INTEGER(I1P), ALLOCATABLE :: p2(:) !< Temporary packed data of second stream.
 
-   p1 = transfer(a1,p1)
-   p2 = transfer(a2,p2)
-   packed = [p1,p2]
-   endsubroutine pack_data_I8_I2
+  p1 = TRANSFER(a1, p1)
+  p2 = TRANSFER(a2, p2)
+  packed = [p1, p2]
+END SUBROUTINE pack_data_I8_I2
 
-   pure subroutine pack_data_I8_I1(a1, a2, packed)
-   !< Pack different kinds of data into single I1P array.
-   !<
-   !<```fortran
-   !< use befor64
-   !< use penf
-   !< integer(I8P)              :: a1(1)
-   !< integer(I1P)              :: a2(1)
-   !< integer(I1P), allocatable :: pack(:)
-   !< a1(1) = 0
-   !< a2(1) = 1
-   !< call pack_data(a1=a1, a2=a2, packed=pack)
-   !< print *, pack(9)
-   !<```
-   !=> 1 <<<
-   integer(I8P),              intent(in)    :: a1(1:)    !< First data stream.
-   integer(I1P),              intent(in)    :: a2(1:)    !< Second data stream.
-   integer(I1P), allocatable, intent(inout) :: packed(:) !< Packed data into I1P array.
-   integer(I1P), allocatable                :: p1(:)     !< Temporary packed data of first stream.
-   integer(I1P), allocatable                :: p2(:)     !< Temporary packed data of second stream.
+PURE SUBROUTINE pack_data_I8_I1(a1, a2, packed)
+  !< Pack different kinds of data into single I1P array.
+  !<
+  !<```fortran
+  !< use befor64
+  !< use penf
+  !< integer(I8P)              :: a1(1)
+  !< integer(I1P)              :: a2(1)
+  !< integer(I1P), allocatable :: pack(:)
+  !< a1(1) = 0
+  !< a2(1) = 1
+  !< call pack_data(a1=a1, a2=a2, packed=pack)
+  !< print *, pack(9)
+  !<```
+  !=> 1 <<<
+  INTEGER(I8P), INTENT(in) :: a1(1:) !< First data stream.
+  INTEGER(I1P), INTENT(in) :: a2(1:) !< Second data stream.
+  INTEGER(I1P), ALLOCATABLE, INTENT(inout) :: packed(:) !< Packed data into I1P array.
+  INTEGER(I1P), ALLOCATABLE :: p1(:) !< Temporary packed data of first stream.
+  INTEGER(I1P), ALLOCATABLE :: p2(:) !< Temporary packed data of second stream.
 
-   p1 = transfer(a1,p1)
-   p2 = transfer(a2,p2)
-   packed = [p1,p2]
-   endsubroutine pack_data_I8_I1
+  p1 = TRANSFER(a1, p1)
+  p2 = TRANSFER(a2, p2)
+  packed = [p1, p2]
+END SUBROUTINE pack_data_I8_I1
 
-   pure subroutine pack_data_I4_R8(a1, a2, packed)
-   !< Pack different kinds of data into single I1P array.
-   !<
-   !<```fortran
-   !< use befor64
-   !< use penf
-   !< integer(I4P)              :: a1(1)
-   !< real(R8P)                 :: a2(1)
-   !< integer(I1P), allocatable :: pack(:)
-   !< a1(1) = 0
-   !< a2(1) = 1
-   !< call pack_data(a1=a1, a2=a2, packed=pack)
-   !< print *, pack(size(pack, dim=1))
-   !<```
-   !=> 63 <<<
-   integer(I4P),              intent(in)    :: a1(1:)    !< First data stream.
-   real(R8P),                 intent(in)    :: a2(1:)    !< Second data stream.
-   integer(I1P), allocatable, intent(inout) :: packed(:) !< Packed data into I1P array.
-   integer(I1P), allocatable                :: p1(:)     !< Temporary packed data of first stream.
-   integer(I1P), allocatable                :: p2(:)     !< Temporary packed data of second stream.
+PURE SUBROUTINE pack_data_I4_R8(a1, a2, packed)
+  !< Pack different kinds of data into single I1P array.
+  !<
+  !<```fortran
+  !< use befor64
+  !< use penf
+  !< integer(I4P)              :: a1(1)
+  !< real(R8P)                 :: a2(1)
+  !< integer(I1P), allocatable :: pack(:)
+  !< a1(1) = 0
+  !< a2(1) = 1
+  !< call pack_data(a1=a1, a2=a2, packed=pack)
+  !< print *, pack(size(pack, dim=1))
+  !<```
+  !=> 63 <<<
+  INTEGER(I4P), INTENT(in) :: a1(1:) !< First data stream.
+  REAL(R8P), INTENT(in) :: a2(1:) !< Second data stream.
+  INTEGER(I1P), ALLOCATABLE, INTENT(inout) :: packed(:) !< Packed data into I1P array.
+  INTEGER(I1P), ALLOCATABLE :: p1(:) !< Temporary packed data of first stream.
+  INTEGER(I1P), ALLOCATABLE :: p2(:) !< Temporary packed data of second stream.
 
-   p1 = transfer(a1,p1)
-   p2 = transfer(a2,p2)
-   packed = [p1,p2]
-   endsubroutine pack_data_I4_R8
+  p1 = TRANSFER(a1, p1)
+  p2 = TRANSFER(a2, p2)
+  packed = [p1, p2]
+END SUBROUTINE pack_data_I4_R8
 
-   pure subroutine pack_data_I4_R4(a1, a2, packed)
-   !< Pack different kinds of data into single I1P array.
-   !<
-   !<```fortran
-   !< use befor64
-   !< use penf
-   !< integer(I4P)              :: a1(1)
-   !< real(R4P)                 :: a2(1)
-   !< integer(I1P), allocatable :: pack(:)
-   !< a1(1) = 0
-   !< a2(1) = 1
-   !< call pack_data(a1=a1, a2=a2, packed=pack)
-   !< print *, pack(size(pack, dim=1))
-   !<```
-   !=> 63 <<<
-   integer(I4P),              intent(in)    :: a1(1:)    !< First data stream.
-   real(R4P),                 intent(in)    :: a2(1:)    !< Second data stream.
-   integer(I1P), allocatable, intent(inout) :: packed(:) !< Packed data into I1P array.
-   integer(I1P), allocatable                :: p1(:)     !< Temporary packed data of first stream.
-   integer(I1P), allocatable                :: p2(:)     !< Temporary packed data of second stream.
+PURE SUBROUTINE pack_data_I4_R4(a1, a2, packed)
+  !< Pack different kinds of data into single I1P array.
+  !<
+  !<```fortran
+  !< use befor64
+  !< use penf
+  !< integer(I4P)              :: a1(1)
+  !< real(R4P)                 :: a2(1)
+  !< integer(I1P), allocatable :: pack(:)
+  !< a1(1) = 0
+  !< a2(1) = 1
+  !< call pack_data(a1=a1, a2=a2, packed=pack)
+  !< print *, pack(size(pack, dim=1))
+  !<```
+  !=> 63 <<<
+  INTEGER(I4P), INTENT(in) :: a1(1:) !< First data stream.
+  REAL(R4P), INTENT(in) :: a2(1:) !< Second data stream.
+  INTEGER(I1P), ALLOCATABLE, INTENT(inout) :: packed(:) !< Packed data into I1P array.
+  INTEGER(I1P), ALLOCATABLE :: p1(:) !< Temporary packed data of first stream.
+  INTEGER(I1P), ALLOCATABLE :: p2(:) !< Temporary packed data of second stream.
 
-   p1 = transfer(a1,p1)
-   p2 = transfer(a2,p2)
-   packed = [p1,p2]
-   endsubroutine pack_data_I4_R4
+  p1 = TRANSFER(a1, p1)
+  p2 = TRANSFER(a2, p2)
+  packed = [p1, p2]
+END SUBROUTINE pack_data_I4_R4
 
-   pure subroutine pack_data_I4_I8(a1, a2, packed)
-   !< Pack different kinds of data into single I1P array.
-   !<
-   !<```fortran
-   !< use befor64
-   !< use penf
-   !< integer(I4P)              :: a1(1)
-   !< integer(I8P)              :: a2(1)
-   !< integer(I1P), allocatable :: pack(:)
-   !< a1(1) = 0
-   !< a2(1) = 1
-   !< call pack_data(a1=a1, a2=a2, packed=pack)
-   !< print *, pack(5)
-   !<```
-   !=> 1 <<<
-   integer(I4P),              intent(in)    :: a1(1:)    !< First data stream.
-   integer(I8P),              intent(in)    :: a2(1:)    !< Second data stream.
-   integer(I1P), allocatable, intent(inout) :: packed(:) !< Packed data into I1P array.
-   integer(I1P), allocatable                :: p1(:)     !< Temporary packed data of first stream.
-   integer(I1P), allocatable                :: p2(:)     !< Temporary packed data of second stream.
+PURE SUBROUTINE pack_data_I4_I8(a1, a2, packed)
+  !< Pack different kinds of data into single I1P array.
+  !<
+  !<```fortran
+  !< use befor64
+  !< use penf
+  !< integer(I4P)              :: a1(1)
+  !< integer(I8P)              :: a2(1)
+  !< integer(I1P), allocatable :: pack(:)
+  !< a1(1) = 0
+  !< a2(1) = 1
+  !< call pack_data(a1=a1, a2=a2, packed=pack)
+  !< print *, pack(5)
+  !<```
+  !=> 1 <<<
+  INTEGER(I4P), INTENT(in) :: a1(1:) !< First data stream.
+  INTEGER(I8P), INTENT(in) :: a2(1:) !< Second data stream.
+  INTEGER(I1P), ALLOCATABLE, INTENT(inout) :: packed(:) !< Packed data into I1P array.
+  INTEGER(I1P), ALLOCATABLE :: p1(:) !< Temporary packed data of first stream.
+  INTEGER(I1P), ALLOCATABLE :: p2(:) !< Temporary packed data of second stream.
 
-   p1 = transfer(a1,p1)
-   p2 = transfer(a2,p2)
-   packed = [p1,p2]
-   endsubroutine pack_data_I4_I8
+  p1 = TRANSFER(a1, p1)
+  p2 = TRANSFER(a2, p2)
+  packed = [p1, p2]
+END SUBROUTINE pack_data_I4_I8
 
-   pure subroutine pack_data_I4_I2(a1, a2, packed)
-   !< Pack different kinds of data into single I1P array.
-   !<
-   !<```fortran
-   !< use befor64
-   !< use penf
-   !< integer(I4P)              :: a1(1)
-   !< integer(I2P)              :: a2(1)
-   !< integer(I1P), allocatable :: pack(:)
-   !< a1(1) = 0
-   !< a2(1) = 1
-   !< call pack_data(a1=a1, a2=a2, packed=pack)
-   !< print *, pack(5)
-   !<```
-   !=> 1 <<<
-   integer(I4P),              intent(in)    :: a1(1:)    !< First data stream.
-   integer(I2P),              intent(in)    :: a2(1:)    !< Second data stream.
-   integer(I1P), allocatable, intent(inout) :: packed(:) !< Packed data into I1P array.
-   integer(I1P), allocatable                :: p1(:)     !< Temporary packed data of first stream.
-   integer(I1P), allocatable                :: p2(:)     !< Temporary packed data of second stream.
+PURE SUBROUTINE pack_data_I4_I2(a1, a2, packed)
+  !< Pack different kinds of data into single I1P array.
+  !<
+  !<```fortran
+  !< use befor64
+  !< use penf
+  !< integer(I4P)              :: a1(1)
+  !< integer(I2P)              :: a2(1)
+  !< integer(I1P), allocatable :: pack(:)
+  !< a1(1) = 0
+  !< a2(1) = 1
+  !< call pack_data(a1=a1, a2=a2, packed=pack)
+  !< print *, pack(5)
+  !<```
+  !=> 1 <<<
+  INTEGER(I4P), INTENT(in) :: a1(1:) !< First data stream.
+  INTEGER(I2P), INTENT(in) :: a2(1:) !< Second data stream.
+  INTEGER(I1P), ALLOCATABLE, INTENT(inout) :: packed(:) !< Packed data into I1P array.
+  INTEGER(I1P), ALLOCATABLE :: p1(:) !< Temporary packed data of first stream.
+  INTEGER(I1P), ALLOCATABLE :: p2(:) !< Temporary packed data of second stream.
 
-   p1 = transfer(a1,p1)
-   p2 = transfer(a2,p2)
-   packed = [p1,p2]
-   endsubroutine pack_data_I4_I2
+  p1 = TRANSFER(a1, p1)
+  p2 = TRANSFER(a2, p2)
+  packed = [p1, p2]
+END SUBROUTINE pack_data_I4_I2
 
-   pure subroutine pack_data_I4_I1(a1, a2, packed)
-   !< Pack different kinds of data into single I1P array.
-   !<
-   !<```fortran
-   !< use befor64
-   !< use penf
-   !< integer(I4P)              :: a1(1)
-   !< integer(I1P)              :: a2(1)
-   !< integer(I1P), allocatable :: pack(:)
-   !< a1(1) = 0
-   !< a2(1) = 1
-   !< call pack_data(a1=a1, a2=a2, packed=pack)
-   !< print *, pack(5)
-   !<```
-   !=> 1 <<<
-   integer(I4P),              intent(in)    :: a1(1:)    !< First data stream.
-   integer(I1P),              intent(in)    :: a2(1:)    !< Second data stream.
-   integer(I1P), allocatable, intent(inout) :: packed(:) !< Packed data into I1P array.
-   integer(I1P), allocatable                :: p1(:)     !< Temporary packed data of first stream.
-   integer(I1P), allocatable                :: p2(:)     !< Temporary packed data of second stream.
+PURE SUBROUTINE pack_data_I4_I1(a1, a2, packed)
+  !< Pack different kinds of data into single I1P array.
+  !<
+  !<```fortran
+  !< use befor64
+  !< use penf
+  !< integer(I4P)              :: a1(1)
+  !< integer(I1P)              :: a2(1)
+  !< integer(I1P), allocatable :: pack(:)
+  !< a1(1) = 0
+  !< a2(1) = 1
+  !< call pack_data(a1=a1, a2=a2, packed=pack)
+  !< print *, pack(5)
+  !<```
+  !=> 1 <<<
+  INTEGER(I4P), INTENT(in) :: a1(1:) !< First data stream.
+  INTEGER(I1P), INTENT(in) :: a2(1:) !< Second data stream.
+  INTEGER(I1P), ALLOCATABLE, INTENT(inout) :: packed(:) !< Packed data into I1P array.
+  INTEGER(I1P), ALLOCATABLE :: p1(:) !< Temporary packed data of first stream.
+  INTEGER(I1P), ALLOCATABLE :: p2(:) !< Temporary packed data of second stream.
 
-   p1 = transfer(a1,p1)
-   p2 = transfer(a2,p2)
-   packed = [p1,p2]
-   endsubroutine pack_data_I4_I1
+  p1 = TRANSFER(a1, p1)
+  p2 = TRANSFER(a2, p2)
+  packed = [p1, p2]
+END SUBROUTINE pack_data_I4_I1
 
-   pure subroutine pack_data_I2_R8(a1, a2, packed)
-   !< Pack different kinds of data into single I1P array.
-   !<
-   !<```fortran
-   !< use befor64
-   !< use penf
-   !< integer(I2P)              :: a1(1)
-   !< real(R8P)                 :: a2(1)
-   !< integer(I1P), allocatable :: pack(:)
-   !< a1(1) = 0
-   !< a2(1) = 1
-   !< call pack_data(a1=a1, a2=a2, packed=pack)
-   !< print *, pack(size(pack, dim=1))
-   !<```
-   !=> 63 <<<
-   integer(I2P),              intent(in)    :: a1(1:)    !< First data stream.
-   real(R8P),                 intent(in)    :: a2(1:)    !< Second data stream.
-   integer(I1P), allocatable, intent(inout) :: packed(:) !< Packed data into I1P array.
-   integer(I1P), allocatable                :: p1(:)     !< Temporary packed data of first stream.
-   integer(I1P), allocatable                :: p2(:)     !< Temporary packed data of second stream.
+PURE SUBROUTINE pack_data_I2_R8(a1, a2, packed)
+  !< Pack different kinds of data into single I1P array.
+  !<
+  !<```fortran
+  !< use befor64
+  !< use penf
+  !< integer(I2P)              :: a1(1)
+  !< real(R8P)                 :: a2(1)
+  !< integer(I1P), allocatable :: pack(:)
+  !< a1(1) = 0
+  !< a2(1) = 1
+  !< call pack_data(a1=a1, a2=a2, packed=pack)
+  !< print *, pack(size(pack, dim=1))
+  !<```
+  !=> 63 <<<
+  INTEGER(I2P), INTENT(in) :: a1(1:) !< First data stream.
+  REAL(R8P), INTENT(in) :: a2(1:) !< Second data stream.
+  INTEGER(I1P), ALLOCATABLE, INTENT(inout) :: packed(:) !< Packed data into I1P array.
+  INTEGER(I1P), ALLOCATABLE :: p1(:) !< Temporary packed data of first stream.
+  INTEGER(I1P), ALLOCATABLE :: p2(:) !< Temporary packed data of second stream.
 
-   p1 = transfer(a1,p1)
-   p2 = transfer(a2,p2)
-   packed = [p1,p2]
-   endsubroutine pack_data_I2_R8
+  p1 = TRANSFER(a1, p1)
+  p2 = TRANSFER(a2, p2)
+  packed = [p1, p2]
+END SUBROUTINE pack_data_I2_R8
 
-   pure subroutine pack_data_I2_R4(a1, a2, packed)
-   !< Pack different kinds of data into single I1P array.
-   !<
-   !<```fortran
-   !< use befor64
-   !< use penf
-   !< integer(I2P)              :: a1(1)
-   !< real(R4P)                 :: a2(1)
-   !< integer(I1P), allocatable :: pack(:)
-   !< a1(1) = 0
-   !< a2(1) = 1
-   !< call pack_data(a1=a1, a2=a2, packed=pack)
-   !< print *, pack(size(pack, dim=1))
-   !<```
-   !=> 63 <<<
-   integer(I2P),              intent(in)    :: a1(1:)    !< First data stream.
-   real(R4P),                 intent(in)    :: a2(1:)    !< Second data stream.
-   integer(I1P), allocatable, intent(inout) :: packed(:) !< Packed data into I1P array.
-   integer(I1P), allocatable                :: p1(:)     !< Temporary packed data of first stream.
-   integer(I1P), allocatable                :: p2(:)     !< Temporary packed data of second stream.
+PURE SUBROUTINE pack_data_I2_R4(a1, a2, packed)
+  !< Pack different kinds of data into single I1P array.
+  !<
+  !<```fortran
+  !< use befor64
+  !< use penf
+  !< integer(I2P)              :: a1(1)
+  !< real(R4P)                 :: a2(1)
+  !< integer(I1P), allocatable :: pack(:)
+  !< a1(1) = 0
+  !< a2(1) = 1
+  !< call pack_data(a1=a1, a2=a2, packed=pack)
+  !< print *, pack(size(pack, dim=1))
+  !<```
+  !=> 63 <<<
+  INTEGER(I2P), INTENT(in) :: a1(1:) !< First data stream.
+  REAL(R4P), INTENT(in) :: a2(1:) !< Second data stream.
+  INTEGER(I1P), ALLOCATABLE, INTENT(inout) :: packed(:) !< Packed data into I1P array.
+  INTEGER(I1P), ALLOCATABLE :: p1(:) !< Temporary packed data of first stream.
+  INTEGER(I1P), ALLOCATABLE :: p2(:) !< Temporary packed data of second stream.
 
-   p1 = transfer(a1,p1)
-   p2 = transfer(a2,p2)
-   packed = [p1,p2]
-   endsubroutine pack_data_I2_R4
+  p1 = TRANSFER(a1, p1)
+  p2 = TRANSFER(a2, p2)
+  packed = [p1, p2]
+END SUBROUTINE pack_data_I2_R4
 
-   pure subroutine pack_data_I2_I8(a1, a2, packed)
-   !< Pack different kinds of data into single I1P array.
-   !<
-   !<```fortran
-   !< use befor64
-   !< use penf
-   !< integer(I2P)              :: a1(1)
-   !< integer(I8P)              :: a2(1)
-   !< integer(I1P), allocatable :: pack(:)
-   !< a1(1) = 0
-   !< a2(1) = 1
-   !< call pack_data(a1=a1, a2=a2, packed=pack)
-   !< print *, pack(3)
-   !<```
-   !=> 1 <<<
-   integer(I2P),              intent(in)    :: a1(1:)    !< First data stream.
-   integer(I8P),              intent(in)    :: a2(1:)    !< Second data stream.
-   integer(I1P), allocatable, intent(inout) :: packed(:) !< Packed data into I1P array.
-   integer(I1P), allocatable                :: p1(:)     !< Temporary packed data of first stream.
-   integer(I1P), allocatable                :: p2(:)     !< Temporary packed data of second stream.
+PURE SUBROUTINE pack_data_I2_I8(a1, a2, packed)
+  !< Pack different kinds of data into single I1P array.
+  !<
+  !<```fortran
+  !< use befor64
+  !< use penf
+  !< integer(I2P)              :: a1(1)
+  !< integer(I8P)              :: a2(1)
+  !< integer(I1P), allocatable :: pack(:)
+  !< a1(1) = 0
+  !< a2(1) = 1
+  !< call pack_data(a1=a1, a2=a2, packed=pack)
+  !< print *, pack(3)
+  !<```
+  !=> 1 <<<
+  INTEGER(I2P), INTENT(in) :: a1(1:) !< First data stream.
+  INTEGER(I8P), INTENT(in) :: a2(1:) !< Second data stream.
+  INTEGER(I1P), ALLOCATABLE, INTENT(inout) :: packed(:) !< Packed data into I1P array.
+  INTEGER(I1P), ALLOCATABLE :: p1(:) !< Temporary packed data of first stream.
+  INTEGER(I1P), ALLOCATABLE :: p2(:) !< Temporary packed data of second stream.
 
-   p1 = transfer(a1,p1)
-   p2 = transfer(a2,p2)
-   packed = [p1,p2]
-   endsubroutine pack_data_I2_I8
+  p1 = TRANSFER(a1, p1)
+  p2 = TRANSFER(a2, p2)
+  packed = [p1, p2]
+END SUBROUTINE pack_data_I2_I8
 
-   pure subroutine pack_data_I2_I4(a1, a2, packed)
-   !< Pack different kinds of data into single I1P array.
-   !<
-   !<```fortran
-   !< use befor64
-   !< use penf
-   !< integer(I2P)              :: a1(1)
-   !< integer(I4P)              :: a2(1)
-   !< integer(I1P), allocatable :: pack(:)
-   !< a1(1) = 0
-   !< a2(1) = 1
-   !< call pack_data(a1=a1, a2=a2, packed=pack)
-   !< print *, pack(3)
-   !<```
-   !=> 1 <<<
-   integer(I2P),              intent(in)    :: a1(1:)    !< First data stream.
-   integer(I4P),              intent(in)    :: a2(1:)    !< Second data stream.
-   integer(I1P), allocatable, intent(inout) :: packed(:) !< Packed data into I1P array.
-   integer(I1P), allocatable                :: p1(:)     !< Temporary packed data of first stream.
-   integer(I1P), allocatable                :: p2(:)     !< Temporary packed data of second stream.
+PURE SUBROUTINE pack_data_I2_I4(a1, a2, packed)
+  !< Pack different kinds of data into single I1P array.
+  !<
+  !<```fortran
+  !< use befor64
+  !< use penf
+  !< integer(I2P)              :: a1(1)
+  !< integer(I4P)              :: a2(1)
+  !< integer(I1P), allocatable :: pack(:)
+  !< a1(1) = 0
+  !< a2(1) = 1
+  !< call pack_data(a1=a1, a2=a2, packed=pack)
+  !< print *, pack(3)
+  !<```
+  !=> 1 <<<
+  INTEGER(I2P), INTENT(in) :: a1(1:) !< First data stream.
+  INTEGER(I4P), INTENT(in) :: a2(1:) !< Second data stream.
+  INTEGER(I1P), ALLOCATABLE, INTENT(inout) :: packed(:) !< Packed data into I1P array.
+  INTEGER(I1P), ALLOCATABLE :: p1(:) !< Temporary packed data of first stream.
+  INTEGER(I1P), ALLOCATABLE :: p2(:) !< Temporary packed data of second stream.
 
-   p1 = transfer(a1,p1)
-   p2 = transfer(a2,p2)
-   packed = [p1,p2]
-   endsubroutine pack_data_I2_I4
+  p1 = TRANSFER(a1, p1)
+  p2 = TRANSFER(a2, p2)
+  packed = [p1, p2]
+END SUBROUTINE pack_data_I2_I4
 
-   pure subroutine pack_data_I2_I1(a1, a2, packed)
-   !< Pack different kinds of data into single I1P array.
-   !<
-   !<```fortran
-   !< use befor64
-   !< use penf
-   !< integer(I2P)              :: a1(1)
-   !< integer(I1P)              :: a2(1)
-   !< integer(I1P), allocatable :: pack(:)
-   !< a1(1) = 0
-   !< a2(1) = 1
-   !< call pack_data(a1=a1, a2=a2, packed=pack)
-   !< print *, pack(3)
-   !<```
-   !=> 1 <<<
-   integer(I2P),              intent(in)    :: a1(1:)    !< First data stream.
-   integer(I1P),              intent(in)    :: a2(1:)    !< Second data stream.
-   integer(I1P), allocatable, intent(inout) :: packed(:) !< Packed data into I1P array.
-   integer(I1P), allocatable                :: p1(:)     !< Temporary packed data of first stream.
-   integer(I1P), allocatable                :: p2(:)     !< Temporary packed data of second stream.
+PURE SUBROUTINE pack_data_I2_I1(a1, a2, packed)
+  !< Pack different kinds of data into single I1P array.
+  !<
+  !<```fortran
+  !< use befor64
+  !< use penf
+  !< integer(I2P)              :: a1(1)
+  !< integer(I1P)              :: a2(1)
+  !< integer(I1P), allocatable :: pack(:)
+  !< a1(1) = 0
+  !< a2(1) = 1
+  !< call pack_data(a1=a1, a2=a2, packed=pack)
+  !< print *, pack(3)
+  !<```
+  !=> 1 <<<
+  INTEGER(I2P), INTENT(in) :: a1(1:) !< First data stream.
+  INTEGER(I1P), INTENT(in) :: a2(1:) !< Second data stream.
+  INTEGER(I1P), ALLOCATABLE, INTENT(inout) :: packed(:) !< Packed data into I1P array.
+  INTEGER(I1P), ALLOCATABLE :: p1(:) !< Temporary packed data of first stream.
+  INTEGER(I1P), ALLOCATABLE :: p2(:) !< Temporary packed data of second stream.
 
-   p1 = transfer(a1,p1)
-   p2 = transfer(a2,p2)
-   packed = [p1,p2]
-   endsubroutine pack_data_I2_I1
+  p1 = TRANSFER(a1, p1)
+  p2 = TRANSFER(a2, p2)
+  packed = [p1, p2]
+END SUBROUTINE pack_data_I2_I1
 
-   pure subroutine pack_data_I1_R8(a1, a2, packed)
-   !< Pack different kinds of data into single I1P array.
-   !<
-   !<```fortran
-   !< use befor64
-   !< use penf
-   !< integer(I1P)              :: a1(1)
-   !< real(R8P)                 :: a2(1)
-   !< integer(I1P), allocatable :: pack(:)
-   !< a1(1) = 0
-   !< a2(1) = 1
-   !< call pack_data(a1=a1, a2=a2, packed=pack)
-   !< print *, pack(size(pack, dim=1))
-   !<```
-   !=> 63 <<<
-   integer(I1P),              intent(in)    :: a1(1:)    !< First data stream.
-   real(R8P),                 intent(in)    :: a2(1:)    !< Second data stream.
-   integer(I1P), allocatable, intent(inout) :: packed(:) !< Packed data into I1P array.
-   integer(I1P), allocatable                :: p1(:)     !< Temporary packed data of first stream.
-   integer(I1P), allocatable                :: p2(:)     !< Temporary packed data of second stream.
+PURE SUBROUTINE pack_data_I1_R8(a1, a2, packed)
+  !< Pack different kinds of data into single I1P array.
+  !<
+  !<```fortran
+  !< use befor64
+  !< use penf
+  !< integer(I1P)              :: a1(1)
+  !< real(R8P)                 :: a2(1)
+  !< integer(I1P), allocatable :: pack(:)
+  !< a1(1) = 0
+  !< a2(1) = 1
+  !< call pack_data(a1=a1, a2=a2, packed=pack)
+  !< print *, pack(size(pack, dim=1))
+  !<```
+  !=> 63 <<<
+  INTEGER(I1P), INTENT(in) :: a1(1:) !< First data stream.
+  REAL(R8P), INTENT(in) :: a2(1:) !< Second data stream.
+  INTEGER(I1P), ALLOCATABLE, INTENT(inout) :: packed(:) !< Packed data into I1P array.
+  INTEGER(I1P), ALLOCATABLE :: p1(:) !< Temporary packed data of first stream.
+  INTEGER(I1P), ALLOCATABLE :: p2(:) !< Temporary packed data of second stream.
 
-   p1 = transfer(a1,p1)
-   p2 = transfer(a2,p2)
-   packed = [p1,p2]
-   endsubroutine pack_data_I1_R8
+  p1 = TRANSFER(a1, p1)
+  p2 = TRANSFER(a2, p2)
+  packed = [p1, p2]
+END SUBROUTINE pack_data_I1_R8
 
-   pure subroutine pack_data_I1_R4(a1, a2, packed)
-   !< Pack different kinds of data into single I1P array.
-   !<
-   !<```fortran
-   !< use befor64
-   !< use penf
-   !< integer(I1P)              :: a1(1)
-   !< real(R4P)                 :: a2(1)
-   !< integer(I1P), allocatable :: pack(:)
-   !< a1(1) = 0
-   !< a2(1) = 1
-   !< call pack_data(a1=a1, a2=a2, packed=pack)
-   !< print *, pack(size(pack, dim=1))
-   !<```
-   !=> 63 <<<
-   integer(I1P),              intent(in)    :: a1(1:)    !< First data stream.
-   real(R4P),                 intent(in)    :: a2(1:)    !< Second data stream.
-   integer(I1P), allocatable, intent(inout) :: packed(:) !< Packed data into I1P array.
-   integer(I1P), allocatable                :: p1(:)     !< Temporary packed data of first stream.
-   integer(I1P), allocatable                :: p2(:)     !< Temporary packed data of second stream.
+PURE SUBROUTINE pack_data_I1_R4(a1, a2, packed)
+  !< Pack different kinds of data into single I1P array.
+  !<
+  !<```fortran
+  !< use befor64
+  !< use penf
+  !< integer(I1P)              :: a1(1)
+  !< real(R4P)                 :: a2(1)
+  !< integer(I1P), allocatable :: pack(:)
+  !< a1(1) = 0
+  !< a2(1) = 1
+  !< call pack_data(a1=a1, a2=a2, packed=pack)
+  !< print *, pack(size(pack, dim=1))
+  !<```
+  !=> 63 <<<
+  INTEGER(I1P), INTENT(in) :: a1(1:) !< First data stream.
+  REAL(R4P), INTENT(in) :: a2(1:) !< Second data stream.
+  INTEGER(I1P), ALLOCATABLE, INTENT(inout) :: packed(:) !< Packed data into I1P array.
+  INTEGER(I1P), ALLOCATABLE :: p1(:) !< Temporary packed data of first stream.
+  INTEGER(I1P), ALLOCATABLE :: p2(:) !< Temporary packed data of second stream.
 
-   p1 = transfer(a1,p1)
-   p2 = transfer(a2,p2)
-   packed = [p1,p2]
-   endsubroutine pack_data_I1_R4
+  p1 = TRANSFER(a1, p1)
+  p2 = TRANSFER(a2, p2)
+  packed = [p1, p2]
+END SUBROUTINE pack_data_I1_R4
 
-   pure subroutine pack_data_I1_I8(a1, a2, packed)
-   !< Pack different kinds of data into single I1P array.
-   !<
-   !<```fortran
-   !< use befor64
-   !< use penf
-   !< integer(I1P)              :: a1(1)
-   !< integer(I8P)              :: a2(1)
-   !< integer(I1P), allocatable :: pack(:)
-   !< a1(1) = 0
-   !< a2(1) = 1
-   !< call pack_data(a1=a1, a2=a2, packed=pack)
-   !< print *, pack(2)
-   !<```
-   !=> 1 <<<
-   integer(I1P),              intent(in)    :: a1(1:)    !< First data stream.
-   integer(I8P),              intent(in)    :: a2(1:)    !< Second data stream.
-   integer(I1P), allocatable, intent(inout) :: packed(:) !< Packed data into I1P array.
-   integer(I1P), allocatable                :: p1(:)     !< Temporary packed data of first stream.
-   integer(I1P), allocatable                :: p2(:)     !< Temporary packed data of second stream.
+PURE SUBROUTINE pack_data_I1_I8(a1, a2, packed)
+  !< Pack different kinds of data into single I1P array.
+  !<
+  !<```fortran
+  !< use befor64
+  !< use penf
+  !< integer(I1P)              :: a1(1)
+  !< integer(I8P)              :: a2(1)
+  !< integer(I1P), allocatable :: pack(:)
+  !< a1(1) = 0
+  !< a2(1) = 1
+  !< call pack_data(a1=a1, a2=a2, packed=pack)
+  !< print *, pack(2)
+  !<```
+  !=> 1 <<<
+  INTEGER(I1P), INTENT(in) :: a1(1:) !< First data stream.
+  INTEGER(I8P), INTENT(in) :: a2(1:) !< Second data stream.
+  INTEGER(I1P), ALLOCATABLE, INTENT(inout) :: packed(:) !< Packed data into I1P array.
+  INTEGER(I1P), ALLOCATABLE :: p1(:) !< Temporary packed data of first stream.
+  INTEGER(I1P), ALLOCATABLE :: p2(:) !< Temporary packed data of second stream.
 
-   p1 = transfer(a1,p1)
-   p2 = transfer(a2,p2)
-   packed = [p1,p2]
-   endsubroutine pack_data_I1_I8
+  p1 = TRANSFER(a1, p1)
+  p2 = TRANSFER(a2, p2)
+  packed = [p1, p2]
+END SUBROUTINE pack_data_I1_I8
 
-   pure subroutine pack_data_I1_I4(a1, a2, packed)
-   !< Pack different kinds of data into single I1P array.
-   !<
-   !<```fortran
-   !< use befor64
-   !< use penf
-   !< integer(I1P)              :: a1(1)
-   !< integer(I4P)              :: a2(1)
-   !< integer(I1P), allocatable :: pack(:)
-   !< a1(1) = 0
-   !< a2(1) = 1
-   !< call pack_data(a1=a1, a2=a2, packed=pack)
-   !< print *, pack(2)
-   !<```
-   !=> 1 <<<
-   integer(I1P),              intent(in)    :: a1(1:)    !< First data stream.
-   integer(I4P),              intent(in)    :: a2(1:)    !< Second data stream.
-   integer(I1P), allocatable, intent(inout) :: packed(:) !< Packed data into I1P array.
-   integer(I1P), allocatable                :: p1(:)     !< Temporary packed data of first stream.
-   integer(I1P), allocatable                :: p2(:)     !< Temporary packed data of second stream.
+PURE SUBROUTINE pack_data_I1_I4(a1, a2, packed)
+  !< Pack different kinds of data into single I1P array.
+  !<
+  !<```fortran
+  !< use befor64
+  !< use penf
+  !< integer(I1P)              :: a1(1)
+  !< integer(I4P)              :: a2(1)
+  !< integer(I1P), allocatable :: pack(:)
+  !< a1(1) = 0
+  !< a2(1) = 1
+  !< call pack_data(a1=a1, a2=a2, packed=pack)
+  !< print *, pack(2)
+  !<```
+  !=> 1 <<<
+  INTEGER(I1P), INTENT(in) :: a1(1:) !< First data stream.
+  INTEGER(I4P), INTENT(in) :: a2(1:) !< Second data stream.
+  INTEGER(I1P), ALLOCATABLE, INTENT(inout) :: packed(:) !< Packed data into I1P array.
+  INTEGER(I1P), ALLOCATABLE :: p1(:) !< Temporary packed data of first stream.
+  INTEGER(I1P), ALLOCATABLE :: p2(:) !< Temporary packed data of second stream.
 
-   p1 = transfer(a1,p1)
-   p2 = transfer(a2,p2)
-   packed = [p1,p2]
-   endsubroutine pack_data_I1_I4
+  p1 = TRANSFER(a1, p1)
+  p2 = TRANSFER(a2, p2)
+  packed = [p1, p2]
+END SUBROUTINE pack_data_I1_I4
 
-   pure subroutine pack_data_I1_I2(a1, a2, packed)
-   !< Pack different kinds of data into single I1P array.
-   !<
-   !<```fortran
-   !< use befor64
-   !< use penf
-   !< integer(I1P)              :: a1(1)
-   !< integer(I2P)              :: a2(1)
-   !< integer(I1P), allocatable :: pack(:)
-   !< a1(1) = 0
-   !< a2(1) = 1
-   !< call pack_data(a1=a1, a2=a2, packed=pack)
-   !< print *, pack(2)
-   !<```
-   !=> 1 <<<
-   integer(I1P),              intent(in)    :: a1(1:)    !< First data stream.
-   integer(I2P),              intent(in)    :: a2(1:)    !< Second data stream.
-   integer(I1P), allocatable, intent(inout) :: packed(:) !< Packed data into I1P array.
-   integer(I1P), allocatable                :: p1(:)     !< Temporary packed data of first stream.
-   integer(I1P), allocatable                :: p2(:)     !< Temporary packed data of second stream.
+PURE SUBROUTINE pack_data_I1_I2(a1, a2, packed)
+  !< Pack different kinds of data into single I1P array.
+  !<
+  !<```fortran
+  !< use befor64
+  !< use penf
+  !< integer(I1P)              :: a1(1)
+  !< integer(I2P)              :: a2(1)
+  !< integer(I1P), allocatable :: pack(:)
+  !< a1(1) = 0
+  !< a2(1) = 1
+  !< call pack_data(a1=a1, a2=a2, packed=pack)
+  !< print *, pack(2)
+  !<```
+  !=> 1 <<<
+  INTEGER(I1P), INTENT(in) :: a1(1:) !< First data stream.
+  INTEGER(I2P), INTENT(in) :: a2(1:) !< Second data stream.
+  INTEGER(I1P), ALLOCATABLE, INTENT(inout) :: packed(:) !< Packed data into I1P array.
+  INTEGER(I1P), ALLOCATABLE :: p1(:) !< Temporary packed data of first stream.
+  INTEGER(I1P), ALLOCATABLE :: p2(:) !< Temporary packed data of second stream.
 
-   p1 = transfer(a1,p1)
-   p2 = transfer(a2,p2)
-   packed = [p1,p2]
-   endsubroutine pack_data_I1_I2
+  p1 = TRANSFER(a1, p1)
+  p2 = TRANSFER(a2, p2)
+  packed = [p1, p2]
+END SUBROUTINE pack_data_I1_I2
+
+PURE SUBROUTINE pack_data_I4_I4(a1, a2, packed)
+  INTEGER(I4P), INTENT(IN) :: a1(1:)
+  INTEGER(I4P), INTENT(IN) :: a2(1:)
+  INTEGER(I1P), ALLOCATABLE, INTENT(INOUT) :: packed(:)
+  !> main
+  INTEGER(I1P), ALLOCATABLE :: p1(:)
+  INTEGER(I1P), ALLOCATABLE :: p2(:)
+  p1 = TRANSFER(a1, p1)
+  p2 = TRANSFER(a2, p2)
+  packed = [p1, p2]
+END SUBROUTINE pack_data_I4_I4
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
 endmodule befor64_pack_data_m

@@ -26,66 +26,66 @@ CONTAINS
 
 MODULE PROCEDURE FacetMatrix15_1
   !!
-  REAL( DFP ), ALLOCATABLE :: realval( : ), masterC1( :, : ), &
-    & slaveC1( :, : ), C1( :, : ), C2( :, :, : ), m4( :, :, :, : )
-  INTEGER( I4B ) :: ips, nips, nns1, nns2, nsd, nns, nsd1, nsd2, ii, jj, &
-    & slaveips
+REAL(DFP), ALLOCATABLE :: realval(:), masterC1(:, :), &
+  & slaveC1(:, :), C1(:, :), C2(:, :, :), m4(:, :, :, :)
+INTEGER(I4B) :: ips, nips, nns1, nns2, nsd, nns, nsd1, nsd2, ii, jj, &
+  & slaveips
   !!
-  nns1 = SIZE( masterElemSD%dNdXt, 1 )
-  nsd = SIZE( masterElemSD%dNdXt, 2 )
-  nips = SIZE( masterElemSD%dNdXt, 3 )
-  nns2 = SIZE( slaveElemSD%dNdXt, 1 )
-  nns = nns1 + nns2
-  IF( opt .EQ. 1 ) THEN
+nns1 = SIZE(masterElemSD%dNdXt, 1)
+nsd = SIZE(masterElemSD%dNdXt, 2)
+nips = SIZE(masterElemSD%dNdXt, 3)
+nns2 = SIZE(slaveElemSD%dNdXt, 1)
+nns = nns1 + nns2
+IF (opt .EQ. 1) THEN
     !!
-    nsd1 = nsd
-    nsd2 = 1
+  nsd1 = nsd
+  nsd2 = 1
     !!
-  ELSE
-    nsd1 = 1
-    nsd2 = nsd
-  END IF
+ELSE
+  nsd1 = 1
+  nsd2 = nsd
+END IF
   !!
-  ALLOCATE( C1( nns, nips ), C2( nns, nsd, nips ), m4( nns, nns, nsd1, nsd2) )
-  m4 = 0.0_DFP
+ALLOCATE (C1(nns, nips), C2(nns, nsd, nips), m4(nns, nns, nsd1, nsd2))
+m4 = 0.0_DFP
   !!
-  CALL getProjectionOfdNdXt( &
-    & obj=masterElemsd, &
-    & cdNdXt=masterC1, &
-    & val=masterElemsd%normal )
+CALL getProjectionOfdNdXt( &
+  & obj=masterElemsd, &
+  & ans=masterC1, &
+  & c=masterElemsd%normal)
   !!
-  CALL getProjectionOfdNdXt( &
-    & obj=slaveElemsd, &
-    & cdNdXt=slaveC1, &
-    & val=slaveElemsd%normal )
+CALL getProjectionOfdNdXt( &
+  & obj=slaveElemsd, &
+  & ans=slaveC1, &
+  & c=slaveElemsd%normal)
   !!
-  DO ips = 1, nips
-    slaveips = quadMap( ips )
-    C1( 1:nns1, ips ) = masterC1(:, ips)
-    C1( 1+nns1:, ips ) = slaveC1(:, slaveips )
+DO ips = 1, nips
+  slaveips = quadMap(ips)
+  C1(1:nns1, ips) = masterC1(:, ips)
+  C1(1 + nns1:, ips) = slaveC1(:, slaveips)
     !!
-    C2(1:nns1, :, ips)=0.5_DFP*masterElemSD%dNdXt(:,:,ips)
-    C2(nns1+1:, :, ips)=0.5_DFP*slaveElemSD%dNdXt(:, :, slaveips)
-  END DO
+  C2(1:nns1, :, ips) = 0.5_DFP * masterElemSD%dNdXt(:, :, ips)
+  C2(nns1 + 1:, :, ips) = 0.5_DFP * slaveElemSD%dNdXt(:, :, slaveips)
+END DO
   !!
-  realval = masterElemSD%js * masterElemSD%ws * masterElemSD%thickness
+realval = masterElemSD%js * masterElemSD%ws * masterElemSD%thickness
   !!
-  DO ips = 1, nips
+DO ips = 1, nips
     !!
-    DO jj = 1, nsd2
-      DO ii = 1, nsd1
+  DO jj = 1, nsd2
+    DO ii = 1, nsd1
         !!
-        m4( :, :, ii, jj ) = m4( :, :, ii, jj ) &
-          & + realval( ips ) * OUTERPROD( C1(:,ips), C2(:, ii+jj-1, ips ) )
+      m4(:, :, ii, jj) = m4(:, :, ii, jj) &
+        & + realval(ips) * OUTERPROD(C1(:, ips), C2(:, ii + jj - 1, ips))
         !!
-      END DO
     END DO
-    !!
   END DO
+    !!
+END DO
   !!
-  CALL Convert( from=m4, to=ans )
+CALL Convert(from=m4, to=ans)
   !!
-  DEALLOCATE( realval, masterC1, slaveC1, C1, C2, m4 )
+DEALLOCATE (realval, masterC1, slaveC1, C1, C2, m4)
   !!
 END PROCEDURE FacetMatrix15_1
 
@@ -95,69 +95,69 @@ END PROCEDURE FacetMatrix15_1
 
 MODULE PROCEDURE FacetMatrix15_2
   !!
-  REAL( DFP ), ALLOCATABLE :: realval( : ), masterC1( :, : ), &
-    & slaveC1( :, : ), C1( :, : ), C2( :, :, : ), m4( :, :, :, : )
-  INTEGER( I4B ) :: ips, nips, nns1, nns2, nsd, nns, nsd1, nsd2, ii, jj, &
-    & slaveips
+REAL(DFP), ALLOCATABLE :: realval(:), masterC1(:, :), &
+  & slaveC1(:, :), C1(:, :), C2(:, :, :), m4(:, :, :, :)
+INTEGER(I4B) :: ips, nips, nns1, nns2, nsd, nns, nsd1, nsd2, ii, jj, &
+  & slaveips
   !!
-  nns1 = SIZE( masterElemSD%dNdXt, 1 )
-  nsd = SIZE( masterElemSD%dNdXt, 2 )
-  nips = SIZE( masterElemSD%dNdXt, 3 )
-  nns2 = SIZE( slaveElemSD%dNdXt, 1 )
-  nns = nns1 + nns2
-  IF( opt .EQ. 1 ) THEN
+nns1 = SIZE(masterElemSD%dNdXt, 1)
+nsd = SIZE(masterElemSD%dNdXt, 2)
+nips = SIZE(masterElemSD%dNdXt, 3)
+nns2 = SIZE(slaveElemSD%dNdXt, 1)
+nns = nns1 + nns2
+IF (opt .EQ. 1) THEN
     !!
-    nsd1 = nsd
-    nsd2 = 1
+  nsd1 = nsd
+  nsd2 = 1
     !!
-  ELSE
-    nsd1 = 1
-    nsd2 = nsd
-  END IF
+ELSE
+  nsd1 = 1
+  nsd2 = nsd
+END IF
   !!
-  ALLOCATE( C1( nns, nips ), C2( nns, nsd, nips ), m4( nns, nns, nsd1, nsd2) )
-  m4 = 0.0_DFP
+ALLOCATE (C1(nns, nips), C2(nns, nsd, nips), m4(nns, nns, nsd1, nsd2))
+m4 = 0.0_DFP
   !!
-  CALL getProjectionOfdNdXt( &
-    & obj=masterElemsd, &
-    & cdNdXt=masterC1, &
-    & val=masterElemsd%normal )
+CALL getProjectionOfdNdXt( &
+  & obj=masterElemsd, &
+  & ans=masterC1, &
+  & c=masterElemsd%normal)
   !!
-  CALL getProjectionOfdNdXt( &
-    & obj=slaveElemsd, &
-    & cdNdXt=slaveC1, &
-    & val=slaveElemsd%normal )
+CALL getProjectionOfdNdXt( &
+  & obj=slaveElemsd, &
+  & ans=slaveC1, &
+  & c=slaveElemsd%normal)
   !!
-  masterC1 = muMaster * masterC1
-  slaveC1 = muSlave * slaveC1
+masterC1 = muMaster * masterC1
+slaveC1 = muSlave * slaveC1
   !!
-  DO ips = 1, nips
-    slaveips = quadMap( ips )
-    C1( 1:nns1, ips ) = masterC1(:, ips)
-    C1( 1+nns1:, ips ) = slaveC1(:, slaveips )
+DO ips = 1, nips
+  slaveips = quadMap(ips)
+  C1(1:nns1, ips) = masterC1(:, ips)
+  C1(1 + nns1:, ips) = slaveC1(:, slaveips)
     !!
-    C2(1:nns1, :, ips)=0.5_DFP*masterElemSD%dNdXt(:,:,ips)
-    C2(nns1+1:, :, ips)=0.5_DFP*slaveElemSD%dNdXt(:, :, slaveips)
-  END DO
+  C2(1:nns1, :, ips) = 0.5_DFP * masterElemSD%dNdXt(:, :, ips)
+  C2(nns1 + 1:, :, ips) = 0.5_DFP * slaveElemSD%dNdXt(:, :, slaveips)
+END DO
   !!
-  realval = masterElemSD%js * masterElemSD%ws * masterElemSD%thickness
+realval = masterElemSD%js * masterElemSD%ws * masterElemSD%thickness
   !!
-  DO ips = 1, nips
+DO ips = 1, nips
     !!
-    DO jj = 1, nsd2
-      DO ii = 1, nsd1
+  DO jj = 1, nsd2
+    DO ii = 1, nsd1
         !!
-        m4( :, :, ii, jj ) = m4( :, :, ii, jj ) &
-          & + realval( ips ) * OUTERPROD( C1(:,ips), C2(:, ii+jj-1, ips ) )
+      m4(:, :, ii, jj) = m4(:, :, ii, jj) &
+        & + realval(ips) * OUTERPROD(C1(:, ips), C2(:, ii + jj - 1, ips))
         !!
-      END DO
     END DO
-    !!
   END DO
+    !!
+END DO
   !!
-  CALL Convert( from=m4, to=ans )
+CALL Convert(from=m4, to=ans)
   !!
-  DEALLOCATE( realval, masterC1, slaveC1, C1, C2, m4 )
+DEALLOCATE (realval, masterC1, slaveC1, C1, C2, m4)
   !!
 END PROCEDURE FacetMatrix15_2
 
@@ -167,71 +167,71 @@ END PROCEDURE FacetMatrix15_2
 
 MODULE PROCEDURE FacetMatrix15_3
   !!
-  REAL( DFP ), ALLOCATABLE :: realval( : ), masterC1( :, : ), &
-    & slaveC1( :, : ), C1( :, : ), C2( :, :, : ), m4( :, :, :, : )
-  INTEGER( I4B ) :: ips, nips, nns1, nns2, nsd, nns, nsd1, nsd2, ii, jj, &
-    & slaveips
+REAL(DFP), ALLOCATABLE :: realval(:), masterC1(:, :), &
+  & slaveC1(:, :), C1(:, :), C2(:, :, :), m4(:, :, :, :)
+INTEGER(I4B) :: ips, nips, nns1, nns2, nsd, nns, nsd1, nsd2, ii, jj, &
+  & slaveips
   !!
-  nns1 = SIZE( masterElemSD%dNdXt, 1 )
-  nsd = SIZE( masterElemSD%dNdXt, 2 )
-  nips = SIZE( masterElemSD%dNdXt, 3 )
-  nns2 = SIZE( slaveElemSD%dNdXt, 1 )
-  nns = nns1 + nns2
-  IF( opt .EQ. 1 ) THEN
+nns1 = SIZE(masterElemSD%dNdXt, 1)
+nsd = SIZE(masterElemSD%dNdXt, 2)
+nips = SIZE(masterElemSD%dNdXt, 3)
+nns2 = SIZE(slaveElemSD%dNdXt, 1)
+nns = nns1 + nns2
+IF (opt .EQ. 1) THEN
     !!
-    nsd1 = nsd
-    nsd2 = 1
+  nsd1 = nsd
+  nsd2 = 1
     !!
-  ELSE
-    nsd1 = 1
-    nsd2 = nsd
-  END IF
+ELSE
+  nsd1 = 1
+  nsd2 = nsd
+END IF
   !!
-  ALLOCATE( C1( nns, nips ), C2( nns, nsd, nips ), m4( nns, nns, nsd1, nsd2) )
-  m4 = 0.0_DFP
+ALLOCATE (C1(nns, nips), C2(nns, nsd, nips), m4(nns, nns, nsd1, nsd2))
+m4 = 0.0_DFP
   !!
-  CALL getProjectionOfdNdXt( &
-    & obj=masterElemsd, &
-    & cdNdXt=masterC1, &
-    & val=masterElemsd%normal )
+CALL getProjectionOfdNdXt( &
+  & obj=masterElemsd, &
+  & ans=masterC1, &
+  & c=masterElemsd%normal)
   !!
-  CALL getProjectionOfdNdXt( &
-    & obj=slaveElemsd, &
-    & cdNdXt=slaveC1, &
-    & val=slaveElemsd%normal )
+CALL getProjectionOfdNdXt( &
+  & obj=slaveElemsd, &
+  & ans=slaveC1, &
+  & c=slaveElemsd%normal)
   !!
-  masterC1 = muMaster * masterC1
-  slaveC1 = muSlave * slaveC1
+masterC1 = muMaster * masterC1
+slaveC1 = muSlave * slaveC1
   !!
-  DO ips = 1, nips
+DO ips = 1, nips
     !!
-    slaveips = quadMap( ips )
-    C1( 1:nns1, ips ) = masterC1(:, ips)
-    C1( 1+nns1:, ips ) = slaveC1(:, slaveips )
+  slaveips = quadMap(ips)
+  C1(1:nns1, ips) = masterC1(:, ips)
+  C1(1 + nns1:, ips) = slaveC1(:, slaveips)
     !!
-    C2(1:nns1, :, ips)=(0.5_DFP*tauMaster)*masterElemSD%dNdXt(:,:,ips)
-    C2(nns1+1:, :, ips)=(0.5_DFP*tauSlave)*slaveElemSD%dNdXt(:, :, slaveips)
+  C2(1:nns1, :, ips) = (0.5_DFP * tauMaster) * masterElemSD%dNdXt(:, :, ips)
+  C2(nns1+1:, :, ips)=(0.5_DFP*tauSlave)*slaveElemSD%dNdXt(:, :, slaveips)
     !!
-  END DO
+END DO
   !!
-  realval = masterElemSD%js * masterElemSD%ws * masterElemSD%thickness
+realval = masterElemSD%js * masterElemSD%ws * masterElemSD%thickness
   !!
-  DO ips = 1, nips
+DO ips = 1, nips
     !!
-    DO jj = 1, nsd2
-      DO ii = 1, nsd1
+  DO jj = 1, nsd2
+    DO ii = 1, nsd1
         !!
-        m4( :, :, ii, jj ) = m4( :, :, ii, jj ) &
-          & + realval( ips ) * OUTERPROD( C1(:,ips), C2(:, ii+jj-1, ips ) )
+      m4(:, :, ii, jj) = m4(:, :, ii, jj) &
+        & + realval(ips) * OUTERPROD(C1(:, ips), C2(:, ii + jj - 1, ips))
         !!
-      END DO
     END DO
-    !!
   END DO
+    !!
+END DO
   !!
-  CALL Convert( from=m4, to=ans )
+CALL Convert(from=m4, to=ans)
   !!
-  DEALLOCATE( realval, masterC1, slaveC1, C1, C2, m4 )
+DEALLOCATE (realval, masterC1, slaveC1, C1, C2, m4)
   !!
 END PROCEDURE FacetMatrix15_3
 
@@ -241,80 +241,80 @@ END PROCEDURE FacetMatrix15_3
 
 MODULE PROCEDURE FacetMatrix15_4
   !!
-  REAL( DFP ), ALLOCATABLE :: realval( : ), masterC1( :, : ), &
-    & slaveC1( :, : ), C1( :, : ), C2( :, :, : ), m4( :, :, :, : ), &
-    & muMasterBar( : ), muSlaveBar( : )
-  INTEGER( I4B ) :: ips, nips, nns1, nns2, nsd, nns, nsd1, nsd2, ii, jj, &
-    & slaveips
+REAL(DFP), ALLOCATABLE :: realval(:), masterC1(:, :), &
+  & slaveC1(:, :), C1(:, :), C2(:, :, :), m4(:, :, :, :), &
+  & muMasterBar(:), muSlaveBar(:)
+INTEGER(I4B) :: ips, nips, nns1, nns2, nsd, nns, nsd1, nsd2, ii, jj, &
+  & slaveips
   !!
-  nns1 = SIZE( masterElemSD%dNdXt, 1 )
-  nsd = SIZE( masterElemSD%dNdXt, 2 )
-  nips = SIZE( masterElemSD%dNdXt, 3 )
-  nns2 = SIZE( slaveElemSD%dNdXt, 1 )
-  nns = nns1 + nns2
+nns1 = SIZE(masterElemSD%dNdXt, 1)
+nsd = SIZE(masterElemSD%dNdXt, 2)
+nips = SIZE(masterElemSD%dNdXt, 3)
+nns2 = SIZE(slaveElemSD%dNdXt, 1)
+nns = nns1 + nns2
   !!
-  IF( opt .EQ. 1 ) THEN
+IF (opt .EQ. 1) THEN
     !!
-    nsd1 = nsd
-    nsd2 = 1
+  nsd1 = nsd
+  nsd2 = 1
     !!
-  ELSE
-    nsd1 = 1
-    nsd2 = nsd
-  END IF
+ELSE
+  nsd1 = 1
+  nsd2 = nsd
+END IF
   !!
   !!
-  ALLOCATE( C1( nns, nips ), C2( nns, nsd, nips ), m4( nns, nns, nsd1, nsd2) )
-  m4 = 0.0_DFP
+ALLOCATE (C1(nns, nips), C2(nns, nsd, nips), m4(nns, nns, nsd1, nsd2))
+m4 = 0.0_DFP
   !!
-  CALL getProjectionOfdNdXt( &
-    & obj=masterElemsd, &
-    & cdNdXt=masterC1, &
-    & val=masterElemsd%normal )
+CALL getProjectionOfdNdXt( &
+  & obj=masterElemsd, &
+  & ans=masterC1, &
+  & c=masterElemsd%normal)
   !!
-  CALL getProjectionOfdNdXt( &
-    & obj=slaveElemsd, &
-    & cdNdXt=slaveC1, &
-    & val=slaveElemsd%normal )
+CALL getProjectionOfdNdXt( &
+  & obj=slaveElemsd, &
+  & ans=slaveC1, &
+  & c=slaveElemsd%normal)
   !!
-  CALL getInterpolation( &
-    & obj=masterElemSD, &
-    & interpol=muMasterBar, &
-    & val=muMaster )
+CALL getInterpolation( &
+  & obj=masterElemSD, &
+  & ans=muMasterBar, &
+  & val=muMaster)
   !!
-  CALL getInterpolation( &
-    & obj=slaveElemSD, &
-    & interpol=muSlaveBar, &
-    & val=muSlave )
+CALL getInterpolation( &
+  & obj=slaveElemSD, &
+  & ans=muSlaveBar, &
+  & val=muSlave)
   !!
-  DO ips = 1, nips
-    slaveips = quadMap( ips )
-    C1( 1:nns1, ips ) = muMasterBar( ips ) * masterC1( :, ips )
-    C1( 1+nns1:, ips ) = muSlaveBar( ips ) * slaveC1( :, ips )
+DO ips = 1, nips
+  slaveips = quadMap(ips)
+  C1(1:nns1, ips) = muMasterBar(ips) * masterC1(:, ips)
+  C1(1 + nns1:, ips) = muSlaveBar(ips) * slaveC1(:, ips)
     !!
-    C2(1:nns1, :, ips)=0.5_DFP*masterElemSD%dNdXt(:,:,ips)
-    C2(nns1+1:, :, ips)=0.5_DFP*slaveElemSD%dNdXt(:, :, slaveips)
-  END DO
+  C2(1:nns1, :, ips) = 0.5_DFP * masterElemSD%dNdXt(:, :, ips)
+  C2(nns1 + 1:, :, ips) = 0.5_DFP * slaveElemSD%dNdXt(:, :, slaveips)
+END DO
   !!
-  realval = masterElemSD%js * masterElemSD%ws * masterElemSD%thickness
+realval = masterElemSD%js * masterElemSD%ws * masterElemSD%thickness
   !!
-  DO ips = 1, nips
+DO ips = 1, nips
     !!
-    DO jj = 1, nsd2
-      DO ii = 1, nsd1
+  DO jj = 1, nsd2
+    DO ii = 1, nsd1
         !!
-        m4( :, :, ii, jj ) = m4( :, :, ii, jj ) &
-          & + realval( ips ) * OUTERPROD( C1(:,ips), C2(:, ii+jj-1, ips ) )
+      m4(:, :, ii, jj) = m4(:, :, ii, jj) &
+        & + realval(ips) * OUTERPROD(C1(:, ips), C2(:, ii + jj - 1, ips))
         !!
-      END DO
     END DO
-    !!
   END DO
+    !!
+END DO
   !!
-  CALL Convert( from=m4, to=ans )
+CALL Convert(from=m4, to=ans)
   !!
-  DEALLOCATE( realval, masterC1, slaveC1, C1, C2, m4, muMasterBar, &
-    & muSlaveBar )
+DEALLOCATE (realval, masterC1, slaveC1, C1, C2, m4, muMasterBar, &
+  & muSlaveBar)
   !!
 END PROCEDURE FacetMatrix15_4
 
@@ -324,83 +324,83 @@ END PROCEDURE FacetMatrix15_4
 
 MODULE PROCEDURE FacetMatrix15_5
   !!
-  REAL( DFP ), ALLOCATABLE :: realval( : ), masterC1( :, : ), &
-    & slaveC1( :, : ), C1( :, : ), C2( :, :, : ), m4( :, :, :, : ), &
-    & tauMasterBar( : ), tauSlaveBar( : )
-  INTEGER( I4B ) :: ips, nips, nns1, nns2, nsd, nns, nsd1, nsd2, ii, jj, &
-    & slaveips
+REAL(DFP), ALLOCATABLE :: realval(:), masterC1(:, :), &
+  & slaveC1(:, :), C1(:, :), C2(:, :, :), m4(:, :, :, :), &
+  & tauMasterBar(:), tauSlaveBar(:)
+INTEGER(I4B) :: ips, nips, nns1, nns2, nsd, nns, nsd1, nsd2, ii, jj, &
+  & slaveips
   !!
-  nns1 = SIZE( masterElemSD%dNdXt, 1 )
-  nsd = SIZE( masterElemSD%dNdXt, 2 )
-  nips = SIZE( masterElemSD%dNdXt, 3 )
-  nns2 = SIZE( slaveElemSD%dNdXt, 1 )
-  nns = nns1 + nns2
-  IF( opt .EQ. 1 ) THEN
+nns1 = SIZE(masterElemSD%dNdXt, 1)
+nsd = SIZE(masterElemSD%dNdXt, 2)
+nips = SIZE(masterElemSD%dNdXt, 3)
+nns2 = SIZE(slaveElemSD%dNdXt, 1)
+nns = nns1 + nns2
+IF (opt .EQ. 1) THEN
     !!
-    nsd1 = nsd
-    nsd2 = 1
+  nsd1 = nsd
+  nsd2 = 1
     !!
-  ELSE
-    nsd1 = 1
-    nsd2 = nsd
-  END IF
+ELSE
+  nsd1 = 1
+  nsd2 = nsd
+END IF
   !!
-  ALLOCATE( C1( nns, nips ), C2( nns, nsd, nips ), m4( nns, nns, nsd1, nsd2) )
-  m4 = 0.0_DFP
+ALLOCATE (C1(nns, nips), C2(nns, nsd, nips), m4(nns, nns, nsd1, nsd2))
+m4 = 0.0_DFP
   !!
-  CALL getProjectionOfdNdXt( &
-    & obj=masterElemsd, &
-    & cdNdXt=masterC1, &
-    & val=masterElemsd%normal )
+CALL getProjectionOfdNdXt( &
+  & obj=masterElemsd, &
+  & ans=masterC1, &
+  & c=masterElemsd%normal)
   !!
-  CALL getProjectionOfdNdXt( &
-    & obj=slaveElemsd, &
-    & cdNdXt=slaveC1, &
-    & val=slaveElemsd%normal )
+CALL getProjectionOfdNdXt( &
+  & obj=slaveElemsd, &
+  & ans=slaveC1, &
+  & c=slaveElemsd%normal)
   !!
-  CALL getInterpolation( &
-    & obj=masterElemSD, &
-    & interpol=tauMasterBar, &
-    & val=tauMaster )
+CALL getInterpolation( &
+  & obj=masterElemSD, &
+  & ans=tauMasterBar, &
+  & val=tauMaster)
   !!
-  CALL getInterpolation( &
-    & obj=slaveElemSD, &
-    & interpol=tauSlaveBar, &
-    & val=tauSlave )
+CALL getInterpolation( &
+  & obj=slaveElemSD, &
+  & ans=tauSlaveBar, &
+  & val=tauSlave)
   !!
-  masterC1 = muMaster * masterC1
-  slaveC1 = muSlave * slaveC1
+masterC1 = muMaster * masterC1
+slaveC1 = muSlave * slaveC1
   !!
-  DO ips = 1, nips
-    slaveips = quadMap( ips )
-    C1( 1:nns1, ips ) = masterC1(:, ips)
-    C1( 1+nns1:, ips ) = slaveC1(:, slaveips )
+DO ips = 1, nips
+  slaveips = quadMap(ips)
+  C1(1:nns1, ips) = masterC1(:, ips)
+  C1(1 + nns1:, ips) = slaveC1(:, slaveips)
     !!
-    C2(1:nns1, :, ips)=(0.5_DFP*tauMasterBar(ips))*masterElemSD%dNdXt(:,:,ips)
-    C2(nns1+1:, :, ips)=(0.5_DFP*tauSlaveBar(slaveips)) &
-      & *slaveElemSD%dNdXt(:, :, slaveips)
+  C2(1:nns1, :, ips)=(0.5_DFP*tauMasterBar(ips))*masterElemSD%dNdXt(:,:,ips)
+  C2(nns1 + 1:, :, ips) = (0.5_DFP * tauSlaveBar(slaveips)) &
+                         & * slaveElemSD%dNdXt(:, :, slaveips)
     !!
-  END DO
+END DO
   !!
-  realval = masterElemSD%js * masterElemSD%ws * masterElemSD%thickness
+realval = masterElemSD%js * masterElemSD%ws * masterElemSD%thickness
   !!
-  DO ips = 1, nips
+DO ips = 1, nips
     !!
-    DO jj = 1, nsd2
-      DO ii = 1, nsd1
+  DO jj = 1, nsd2
+    DO ii = 1, nsd1
         !!
-        m4( :, :, ii, jj ) = m4( :, :, ii, jj ) &
-          & + realval( ips ) * OUTERPROD( C1(:,ips), C2(:, ii+jj-1, ips ) )
+      m4(:, :, ii, jj) = m4(:, :, ii, jj) &
+        & + realval(ips) * OUTERPROD(C1(:, ips), C2(:, ii + jj - 1, ips))
         !!
-      END DO
     END DO
-    !!
   END DO
+    !!
+END DO
   !!
-  CALL Convert( from=m4, to=ans )
+CALL Convert(from=m4, to=ans)
   !!
-  DEALLOCATE( realval, masterC1, slaveC1, C1, C2, m4, tauMasterBar, &
-    & tauSlaveBar )
+DEALLOCATE (realval, masterC1, slaveC1, C1, C2, m4, tauMasterBar, &
+  & tauSlaveBar)
   !!
 END PROCEDURE FacetMatrix15_5
 
@@ -410,91 +410,91 @@ END PROCEDURE FacetMatrix15_5
 
 MODULE PROCEDURE FacetMatrix15_6
   !!
-  REAL( DFP ), ALLOCATABLE :: realval( : ), masterC1( :, : ), &
-    & slaveC1( :, : ), C1( :, : ), C2( :, :, : ), m4( :, :, :, : ), &
-    & tauMasterBar( : ), tauSlaveBar( : ), muMasterBar( : ), &
-    & muSlaveBar( : ), C( : )
-  INTEGER( I4B ) :: ips, nips, nns1, nns2, nsd, nns, nsd1, nsd2, ii, jj, &
-    & slaveips
+REAL(DFP), ALLOCATABLE :: realval(:), masterC1(:, :), &
+  & slaveC1(:, :), C1(:, :), C2(:, :, :), m4(:, :, :, :), &
+  & tauMasterBar(:), tauSlaveBar(:), muMasterBar(:), &
+  & muSlaveBar(:), C(:)
+INTEGER(I4B) :: ips, nips, nns1, nns2, nsd, nns, nsd1, nsd2, ii, jj, &
+  & slaveips
   !!
-  nns1 = SIZE( masterElemSD%dNdXt, 1 )
-  nsd = SIZE( masterElemSD%dNdXt, 2 )
-  nips = SIZE( masterElemSD%dNdXt, 3 )
-  nns2 = SIZE( slaveElemSD%dNdXt, 1 )
-  nns = nns1 + nns2
-  IF( opt .EQ. 1 ) THEN
+nns1 = SIZE(masterElemSD%dNdXt, 1)
+nsd = SIZE(masterElemSD%dNdXt, 2)
+nips = SIZE(masterElemSD%dNdXt, 3)
+nns2 = SIZE(slaveElemSD%dNdXt, 1)
+nns = nns1 + nns2
+IF (opt .EQ. 1) THEN
     !!
-    nsd1 = nsd
-    nsd2 = 1
+  nsd1 = nsd
+  nsd2 = 1
     !!
-  ELSE
-    nsd1 = 1
-    nsd2 = nsd
-  END IF
+ELSE
+  nsd1 = 1
+  nsd2 = nsd
+END IF
   !!
-  ALLOCATE( C1( nns, nips ), C2( nns, nsd, nips ), m4( nns, nns, nsd1, nsd2) )
-  m4 = 0.0_DFP
+ALLOCATE (C1(nns, nips), C2(nns, nsd, nips), m4(nns, nns, nsd1, nsd2))
+m4 = 0.0_DFP
   !!
-  CALL getProjectionOfdNdXt( &
-    & obj=masterElemsd, &
-    & cdNdXt=masterC1, &
-    & val=masterElemsd%normal )
+CALL getProjectionOfdNdXt( &
+  & obj=masterElemsd, &
+  & ans=masterC1, &
+  & c=masterElemsd%normal)
   !!
-  CALL getProjectionOfdNdXt( &
-    & obj=slaveElemsd, &
-    & cdNdXt=slaveC1, &
-    & val=slaveElemsd%normal )
+CALL getProjectionOfdNdXt( &
+  & obj=slaveElemsd, &
+  & ans=slaveC1, &
+  & c=slaveElemsd%normal)
   !!
-  CALL getInterpolation( &
-    & obj=masterElemSD, &
-    & interpol=muMasterBar, &
-    & val=muMaster )
+CALL getInterpolation( &
+  & obj=masterElemSD, &
+  & ans=muMasterBar, &
+  & val=muMaster)
   !!
-  CALL getInterpolation( &
-    & obj=slaveElemSD, &
-    & interpol=muSlaveBar, &
-    & val=muSlave )
+CALL getInterpolation( &
+  & obj=slaveElemSD, &
+  & ans=muSlaveBar, &
+  & val=muSlave)
   !!
-  CALL getInterpolation( &
-    & obj=masterElemSD, &
-    & interpol=tauMasterBar, &
-    & val=tauMaster )
+CALL getInterpolation( &
+  & obj=masterElemSD, &
+  & ans=tauMasterBar, &
+  & val=tauMaster)
   !!
-  CALL getInterpolation( &
-    & obj=slaveElemSD, &
-    & interpol=tauSlaveBar, &
-    & val=tauSlave )
+CALL getInterpolation( &
+  & obj=slaveElemSD, &
+  & ans=tauSlaveBar, &
+  & val=tauSlave)
   !!
-  DO ips = 1, nips
-    slaveips = quadMap( ips )
-    C1( 1:nns1, ips ) = muMasterBar( ips ) * masterC1( :, ips )
-    C1( 1+nns1:, ips ) = muSlaveBar( ips ) * slaveC1( :, ips )
+DO ips = 1, nips
+  slaveips = quadMap(ips)
+  C1(1:nns1, ips) = muMasterBar(ips) * masterC1(:, ips)
+  C1(1 + nns1:, ips) = muSlaveBar(ips) * slaveC1(:, ips)
     !!
-    C2(1:nns1, :, ips)=(0.5_DFP*tauMasterBar(ips))*masterElemSD%dNdXt(:,:,ips)
-    C2(nns1+1:, :, ips)=(0.5_DFP*tauSlaveBar(slaveips)) &
-      & *slaveElemSD%dNdXt(:, :, slaveips)
+  C2(1:nns1, :, ips)=(0.5_DFP*tauMasterBar(ips))*masterElemSD%dNdXt(:,:,ips)
+  C2(nns1 + 1:, :, ips) = (0.5_DFP * tauSlaveBar(slaveips)) &
+                         & * slaveElemSD%dNdXt(:, :, slaveips)
     !!
-  END DO
+END DO
   !!
-  realval = masterElemSD%js * masterElemSD%ws * masterElemSD%thickness
+realval = masterElemSD%js * masterElemSD%ws * masterElemSD%thickness
   !!
-  DO ips = 1, nips
+DO ips = 1, nips
     !!
-    DO jj = 1, nsd2
-      DO ii = 1, nsd1
+  DO jj = 1, nsd2
+    DO ii = 1, nsd1
         !!
-        m4( :, :, ii, jj ) = m4( :, :, ii, jj ) &
-          & + realval( ips ) * OUTERPROD( C1(:,ips), C2(:, ii+jj-1, ips ) )
+      m4(:, :, ii, jj) = m4(:, :, ii, jj) &
+        & + realval(ips) * OUTERPROD(C1(:, ips), C2(:, ii + jj - 1, ips))
         !!
-      END DO
     END DO
-    !!
   END DO
+    !!
+END DO
   !!
-  CALL Convert( from=m4, to=ans )
+CALL Convert(from=m4, to=ans)
   !!
-  DEALLOCATE( realval, masterC1, slaveC1, C1, C2, m4, tauMasterBar, &
-    & tauSlaveBar, muMasterBar, muSlaveBar )
+DEALLOCATE (realval, masterC1, slaveC1, C1, C2, m4, tauMasterBar, &
+  & tauSlaveBar, muMasterBar, muSlaveBar)
   !!
 END PROCEDURE FacetMatrix15_6
 

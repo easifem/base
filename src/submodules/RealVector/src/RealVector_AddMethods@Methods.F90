@@ -348,6 +348,22 @@ END DO
 END PROCEDURE obj_Add31
 
 !----------------------------------------------------------------------------
+!                                                                        Add
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE obj_Add32
+INTEGER(I4B) :: tsize
+tsize = (iend - istart + stride) / stride
+CALL F77_AXPY(N=tsize, A=scale, X=VALUE(istart_value:), INCX=stride_value, &
+              Y=obj%val(istart:), INCY=stride)
+! !$OMP PARALLEL DO PRIVATE(ii)
+! DO ii = 1, tsize
+!   obj%val(istart+(stride-1)*ii) = value(istart_value+(stride_value-1)*ii)
+! END DO
+! !$OMP END PARALLEL DO
+END PROCEDURE obj_Add32
+
+!----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 

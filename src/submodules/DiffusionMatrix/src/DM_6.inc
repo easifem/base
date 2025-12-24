@@ -40,8 +40,8 @@ PURE SUBROUTINE DM_6(ans, test, trial, c1, c2, opt)
   REAL(DFP), ALLOCATABLE :: realval(:), cbar(:)
   INTEGER(I4B) :: ii
   !! main
-  CALL getInterpolation(obj=trial, Interpol=cbar, val=c1)
-  CALL getInterpolation(obj=trial, Interpol=realval, val=c2)
+  CALL getInterpolation(obj=trial, ans=cbar, val=c1)
+  CALL getInterpolation(obj=trial, ans=realval, val=c2)
   realval = realval * trial%js * trial%ws * trial%thickness * cbar
   CALL reallocate(ans, SIZE(test%N, 1), SIZE(trial%N, 1))
   DO ii = 1, SIZE(realval)

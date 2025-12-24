@@ -20,7 +20,7 @@
 ! summary: PENF string-to-number (and viceversa) facility.
 
 MODULE PENF_STRINGIFY
-USE, INTRINSIC :: ISO_FORTRAN_ENV, ONLY: stderr => error_unit
+USE, INTRINSIC :: ISO_FORTRAN_ENV, ONLY: stderr => ERROR_UNIT
 USE PENF_B_SIZE
 USE PENF_GLOBAL_PARAMETERS_VARIABLES
 IMPLICIT NONE
@@ -77,19 +77,10 @@ END INTERFACE
 
 INTERFACE STR
   MODULE PROCEDURE &
-    & strf_R8P, str_R8P, &
-    & strf_R4P, str_R4P, &
-    & strf_I8P, str_I8P, &
-    & strf_I4P, str_I4P, &
-    & strf_I2P, str_I2P, &
-    & strf_I1P, str_I1P, &
-    & str_bol, &
-    & str_a_R8P, &
-    & str_a_R4P, &
-    & str_a_I8P, &
-    & str_a_I4P, &
-    & str_a_I2P, &
-    & str_a_I1P
+    strf_R8P, str_R8P, strf_R4P, str_R4P, strf_I8P, str_I8P, &
+    strf_I4P, str_I4P, strf_I2P, str_I2P, strf_I1P, str_I1P, &
+    str_bol, str_a_R8P, str_a_R4P, str_a_I8P, str_a_I4P, &
+    str_a_I2P, str_a_I1P
 #ifdef _R16P
   MODULE PROCEDURE strf_R16P, str_R16P, str_a_R16P
 #endif

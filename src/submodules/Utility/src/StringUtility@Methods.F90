@@ -16,9 +16,155 @@
 !
 
 SUBMODULE(StringUtility) Methods
+USE GlobalData, ONLY: CHAR_BSLASH, CHAR_DOT, CHAR_FSLASH, CHAR_SLASH
+
 USE, INTRINSIC :: ISO_FORTRAN_ENV, ONLY: IOSTAT_END
+
 IMPLICIT NONE
+
 CONTAINS
+
+!----------------------------------------------------------------------------
+!                                                                 PathDir
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE PathDir
+INTEGER(I4B) :: tsize, last
+INTEGER(I4B), ALLOCATABLE :: indices(:)
+
+ans = TRIM(path)
+tsize = LEN(ans)
+IF (tsize .EQ. 0) THEN
+  ans = "."
+  RETURN
+END IF
+
+IF ((tsize .EQ. 1)) THEN
+  IF (ans(1:1) .NE. CHAR_SLASH) THEN
+    ans = "."
+  END IF
+  RETURN
+END IF
+
+last = tsize
+DO
+  IF (ans(last:last) .EQ. CHAR_SLASH) THEN
+    last = last - 1
+    ans = ans(1:last)
+  ELSE
+    EXIT
+  END IF
+
+  IF (last .EQ. 1) EXIT
+END DO
+
+IF (last .EQ. 1) RETURN
+
+tsize = LEN(ans)
+
+CALL StrFind(chars=ans, pattern=CHAR_SLASH, indices=indices)
+
+! It means no / found in the path
+IF (SIZE(indices) .EQ. 0) THEN
+  ans = "."
+  DEALLOCATE (indices)
+  RETURN
+END IF
+
+last = indices(SIZE(indices)) - 1
+
+! /abc type pattern
+IF (last .EQ. 0) THEN
+  ans = "/"
+  DEALLOCATE (indices)
+  RETURN
+END IF
+
+ans = ans(1:last)
+DEALLOCATE (indices)
+
+DO
+  IF (last .EQ. 1) EXIT
+  IF (ans(last:last) .EQ. CHAR_SLASH) THEN
+    last = last - 1
+    ans = ans(1:last)
+  ELSE
+    EXIT
+  END IF
+
+END DO
+
+END PROCEDURE PathDir
+
+!----------------------------------------------------------------------------
+!                                                                 PathBase
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE PathBase
+INTEGER(I4B) :: tsize, last
+INTEGER(I4B), ALLOCATABLE :: indices(:)
+
+ans = TRIM(path)
+
+tsize = LEN(ans)
+
+IF (tsize .EQ. 0) THEN
+  ans = "."
+  RETURN
+END IF
+
+IF ((tsize .EQ. 1)) RETURN
+
+last = tsize
+DO
+  IF (ans(last:last) .EQ. CHAR_SLASH) THEN
+    last = last - 1
+    ans = ans(1:last)
+  ELSE
+    EXIT
+  END IF
+
+  IF (last .EQ. 1) EXIT
+END DO
+
+IF (last .EQ. 1) RETURN
+
+tsize = LEN(ans)
+
+CALL StrFind(chars=ans, pattern=CHAR_SLASH, indices=indices)
+IF (SIZE(indices) .EQ. 0) THEN
+  last = 1
+ELSE
+  last = indices(SIZE(indices)) + 1
+END IF
+
+ans = ans(last:tsize)
+IF (ALLOCATED(indices)) DEALLOCATE (indices)
+END PROCEDURE PathBase
+
+!----------------------------------------------------------------------------
+!                                                                 PathJoin
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE PathJoin1
+ans = TRIM(path1)//CHAR_SLASH//TRIM(path2)
+END PROCEDURE PathJoin1
+
+!----------------------------------------------------------------------------
+!                                                                 PathJoin
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE PathJoin2
+INTEGER(I4B) :: tsize, ii
+
+tsize = SIZE(paths)
+ans = ""
+
+DO ii = 1, tsize
+  ans = ans//CHAR_SLASH//paths(ii)%chars()
+END DO
+
+END PROCEDURE PathJoin2
 
 !----------------------------------------------------------------------------
 !                                                                 UpperCase

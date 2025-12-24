@@ -20,7 +20,15 @@
 ! summary: This submodule contains the methods for sparse matrix
 
 SUBMODULE(CSRMatrix_MatVecMethods) Methods
-USE BaseMethod
+USE RealVector_Method, ONLY: RealVector_Size => Size
+USE InputUtility, ONLY: Input
+USE F95_BLAS, ONLY: AXPY, SCAL
+USE Display_Method, ONLY: ToString
+USE GlobalData, ONLY: stderr
+USE ErrorHandling, ONLY: Errormsg
+USE CSRMatrix_Method, ONLY: IsSquare, IsRectangle, &
+                            CSRMatrix_Size => Size
+
 IMPLICIT NONE
 CONTAINS
 
@@ -139,8 +147,8 @@ LOGICAL(LGT) :: add0
 REAL(DFP) :: scale0
 INTEGER(I4B) :: tsize
 
-add0 = input(default=.FALSE., option=addContribution)
-scale0 = input(default=1.0_DFP, option=scale)
+add0 = Input(default=.FALSE., option=addContribution)
+scale0 = Input(default=1.0_DFP, option=scale)
 tsize = SIZE(y)
 
 IF (add0) THEN
@@ -149,8 +157,8 @@ IF (add0) THEN
   RETURN
 END IF
 
-CALL CSRMatrixAMUX(n=tsize, x=x, y=y, a=obj%A,  &
-  & ja=obj%csr%JA, ia=obj%csr%IA, s=scale0)
+CALL CSRMatrixAMUX(n=tsize, x=x, y=y, a=obj%A, &
+                   ja=obj%csr%JA, ia=obj%csr%IA, s=scale0)
 
 END PROCEDURE csrMat_AMatvec1
 
@@ -164,8 +172,8 @@ LOGICAL(LGT) :: add0
 REAL(DFP) :: scale0
 INTEGER(I4B) :: tsize
 
-add0 = input(default=.FALSE., option=addContribution)
-scale0 = input(default=1.0_DFP, option=scale)
+add0 = Input(default=.FALSE., option=addContribution)
+scale0 = Input(default=1.0_DFP, option=scale)
 tsize = SIZE(y)
 
 IF (add0) THEN
@@ -190,14 +198,14 @@ INTEGER(I4B) :: ty, tx, nrow, ncol
 LOGICAL(LGT) :: squareCase, problem, rectCase
 
 add0 = INPUT(default=.FALSE., option=addContribution)
-scale0 = input(default=1.0_DFP, option=scale)
+scale0 = Input(default=1.0_DFP, option=scale)
 ty = SIZE(y)
 tx = SIZE(x)
-squareCase = isSquare(obj)
-rectCase = isRectangle(obj)
+squareCase = IsSquare(obj)
+rectCase = IsRectangle(obj)
 
-ncol = SIZE(obj, 2) !ncol
-nrow = SIZE(obj, 1) !nrow
+ncol = CSRMatrix_Size(obj, 2) !ncol
+nrow = CSRMatrix_Size(obj, 1) !nrow
 
 problem = tx .NE. nrow .OR. ty .NE. ncol
 
@@ -208,14 +216,13 @@ IF (add0 .AND. squareCase) THEN
 END IF
 
 IF (add0 .AND. rectCase .AND. problem) THEN
-  CALL Errormsg( &
-    & msg="Mismatch in shapes... nrow = "//tostring(nrow)// &
-    & " ncol = "//tostring(ncol)//" size(x) = "//tostring(tx)// &
-    & " size(y) = "//tostring(ty), &
-    & file=__FILE__, &
-    & routine="csrMat_AtMatvec()", &
-    & line=__LINE__, &
-    & unitno=stderr)
+  CALL Errormsg(msg="Mismatch in shapes... nrow = "//ToString(nrow)// &
+                " ncol = "//ToString(ncol)//" size(x) = "//ToString(tx)// &
+                " size(y) = "//ToString(ty), &
+                file=__FILE__, &
+                routine="csrMat_AtMatvec()", &
+                line=__LINE__, &
+                unitno=stderr)
   RETURN
 END IF
 
@@ -241,7 +248,7 @@ END PROCEDURE csrMat_AtMatvec
 
 MODULE PROCEDURE csrMat_MatVec1
 LOGICAL(LGT) :: trans
-trans = INPUT(option=isTranspose, default=.FALSE.)
+trans = Input(option=isTranspose, default=.FALSE.)
 
 IF (trans) THEN
   CALL AtMatvec(obj=obj, x=x, y=y, addContribution=addContribution, &
@@ -259,7 +266,18 @@ END PROCEDURE csrMat_MatVec1
 
 MODULE PROCEDURE csrMat_MatVec2
 CALL AMatvec(A=A, JA=JA, x=x, y=y, addContribution=addContribution, &
-  & scale=scale)
+             scale=scale)
 END PROCEDURE csrMat_MatVec2
+
+!----------------------------------------------------------------------------
+!                                                                    MatVec
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE csrMat_MatVec3
+INTEGER(I4B) :: n
+n = RealVector_Size(x)
+CALL csrMat_MatVec1(obj=obj, x=x%val(1:n), y=y%val(1:n), &
+        isTranspose=isTranspose, addContribution=addContribution, scale=scale)
+END PROCEDURE csrMat_MatVec3
 
 END SUBMODULE Methods

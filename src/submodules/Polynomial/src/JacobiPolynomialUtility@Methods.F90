@@ -16,7 +16,18 @@
 !
 
 SUBMODULE(JacobiPolynomialUtility) Methods
-USE BaseMethod
+USE OrthogonalPolynomialUtility, ONLY: JacobiMatrix
+
+#ifdef USE_LAPACK95
+USE F95_Lapack, ONLY: STEV
+#endif
+
+USE ErrorHandling, ONLY: ErrorMsg
+
+USE MiscUtility, ONLY: Factorial
+
+USE BaseType, ONLY: qp => TypeQuadratureOpt
+
 IMPLICIT NONE
 CONTAINS
 
@@ -120,11 +131,11 @@ IF (n .EQ. 1) RETURN
 !!
 DO ii = 2, n
   j = REAL(ii, KIND=DFP)
-  A(ii-1) = (2*j+alpha+beta-1)*(2*j+alpha+beta)/(2*j*(j+alpha+beta));
+  A(ii-1) = (2*j+alpha+beta-1)*(2*j+alpha+beta)/(2*j*(j+alpha+beta)); 
   B(ii - 1) = (alpha * alpha - beta * beta) * (2 * j + alpha + beta - 1) &
-    & / (2 * j * (j + alpha + beta) * (2 * j + alpha + beta - 2));
+    & / (2 * j * (j + alpha + beta) * (2 * j + alpha + beta - 2)); 
   C(ii - 1) = (j - 1 + alpha) * (j - 1 + beta) * (2 * j + alpha + beta) &
-    & / (j * (j + alpha + beta) * (2 * j + alpha + beta - 2));
+    & / (j * (j + alpha + beta) * (2 * j + alpha + beta - 2)); 
 END DO
 !!
 END PROCEDURE GetJacobiRecurrenceCoeff2
@@ -436,19 +447,19 @@ INTEGER(I4B) :: order
 REAL(DFP), PARAMETER :: left = -1.0_DFP, right = 1.0_DFP
   !!
 SELECT CASE (quadType)
-CASE (Gauss)
+CASE (qp%Gauss)
   order = n
   CALL JacobiGaussQuadrature(n=order, alpha=alpha, beta=beta, &
     & pt=pt, wt=wt)
-CASE (GaussRadau, GaussRadauLeft)
+CASE (qp%GaussRadau, qp%GaussRadauLeft)
   order = n - 1
   CALL JacobiGaussRadauQuadrature(a=left, n=order, alpha=alpha, beta=beta, &
     & pt=pt, wt=wt)
-CASE (GaussRadauRight)
+CASE (qp%GaussRadauRight)
   order = n - 1
   CALL JacobiGaussRadauQuadrature(a=right, n=order, alpha=alpha, beta=beta, &
     & pt=pt, wt=wt)
-CASE (GaussLobatto)
+CASE (qp%GaussLobatto)
   order = n - 2
   CALL JacobiGaussLobattoQuadrature(n=order, alpha=alpha, beta=beta, &
     & pt=pt, wt=wt)
@@ -460,117 +471,125 @@ END PROCEDURE JacobiQuadrature
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE JacobiEvalAll1
-INTEGER(I4B) :: i
-REAL(DFP) :: c1
-REAL(DFP) :: c2
-REAL(DFP) :: c3
-REAL(DFP) :: c4
-REAL(DFP) :: r_i
-!!
-ans = 0.0_DFP
-!!
-IF (alpha <= -1.0_DFP) THEN
-  RETURN
-END IF
-!!
-IF (beta <= -1.0_DFP) THEN
-  RETURN
-END IF
-!!
-IF (n < 0) THEN
-  RETURN
-END IF
-!!
-ans(1) = 1.0_DFP
-!!
-IF (n .EQ. 0) THEN
-  RETURN
-END IF
-!!
-ans(2) = (1.0_DFP + 0.5_DFP * (alpha + beta)) * x &
-  & + 0.5_DFP * (alpha - beta)
-!!
-DO i = 2, n
-  !!
-  r_i = real(i, kind=DFP)
-  !!
-  c1 = 2.0_DFP * r_i * (r_i + alpha + beta) &
-      & * (2.0_DFP * r_i - 2.0_DFP + alpha + beta)
-  !!
-  c2 = (2.0_DFP * r_i - 1.0_DFP + alpha + beta) &
-      & * (2.0_DFP * r_i + alpha + beta) &
-      & * (2.0_DFP * r_i - 2.0_DFP + alpha + beta)
-  !!
-  c3 = (2.0_DFP * r_i - 1.0_DFP + alpha + beta) &
-      & * (alpha + beta) * (alpha - beta)
-  !!
-  c4 = -2.0_DFP * (r_i - 1.0_DFP + alpha) &
-      & * (r_i - 1.0_DFP + beta) * (2.0_DFP * r_i + alpha + beta)
-  !!
-  ans(i + 1) = ((c3 + c2 * x) * ans(i) + c4 * ans(i - 1)) / c1
-  !!
-END DO
-
+INTEGER(I4B) :: tsize
+CALL JacobiEvalAll1_(n=n, x=x, alpha=alpha, beta=beta, ans=ans, tsize=tsize)
 END PROCEDURE JacobiEvalAll1
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE JacobiEvalAll2
+MODULE PROCEDURE JacobiEvalAll1_
 INTEGER(I4B) :: i
-REAL(DFP) :: c1
-REAL(DFP) :: c2
-REAL(DFP) :: c3
-REAL(DFP) :: c4
-REAL(DFP) :: r_i
-!!
-ans = 0.0_DFP
-!!
-IF (alpha <= -1.0_DFP) THEN
-  RETURN
-END IF
-!!
-IF (beta <= -1.0_DFP) THEN
-  RETURN
-END IF
-!!
-IF (n < 0) THEN
-  RETURN
-END IF
-!!
-ans(:, 1) = 1.0_DFP
-!!
-IF (n .EQ. 0) THEN
-  RETURN
-END IF
-!!
-ans(:, 2) = (1.0_DFP + 0.5_DFP * (alpha + beta)) * x &
-  & + 0.5_DFP * (alpha - beta)
-!!
+REAL(DFP) :: c1, c2, c3, c4, r_i, apb, amb, r2, apb_minus_2, apb_minus_1, &
+             alpha_minus_1, beta_minus_1
+
+tsize = 0
+
+IF (alpha <= -1.0_DFP) RETURN
+IF (beta <= -1.0_DFP) RETURN
+
+IF (n < 0) RETURN
+
+tsize = 1 + n
+ans(1) = 1.0_DFP
+
+IF (n .EQ. 0) RETURN
+
+apb = alpha + beta
+apb_minus_2 = apb - 2.0_DFP
+apb_minus_1 = apb - 1.0_DFP
+alpha_minus_1 = alpha - 1.0_DFP
+beta_minus_1 = beta - 1.0_DFP
+amb = alpha - beta
+
+ans(2) = (1.0_DFP + 0.5_DFP * apb) * x + 0.5_DFP * amb
+
 DO i = 2, n
-  !!
-  r_i = real(i, kind=DFP)
-  !!
-  c1 = 2.0_DFP * r_i * (r_i + alpha + beta) &
-      & * (2.0_DFP * r_i - 2.0_DFP + alpha + beta)
-  !!
-  c2 = (2.0_DFP * r_i - 1.0_DFP + alpha + beta) &
-      & * (2.0_DFP * r_i + alpha + beta) &
-      & * (2.0_DFP * r_i - 2.0_DFP + alpha + beta)
-  !!
-  c3 = (2.0_DFP * r_i - 1.0_DFP + alpha + beta) &
-      & * (alpha + beta) * (alpha - beta)
-  !!
-  c4 = -2.0_DFP * (r_i - 1.0_DFP + alpha) &
-      & * (r_i - 1.0_DFP + beta) * (2.0_DFP * r_i + alpha + beta)
-  !!
-  ans(:, i + 1) = ((c3 + c2 * x(:)) &
-                  & * ans(:, i) + c4 * ans(:, i - 1)) / c1
-  !!
+
+  r_i = REAL(i, kind=DFP)
+  r2 = 2.0_DFP * r_i
+
+  c1 = r2 * (r_i + apb) * (r2 + apb_minus_2)
+
+  c2 = (r2 + apb_minus_1) * (r2 + apb) * (r2 + apb_minus_2)
+  c2 = c2 / c1
+
+  c3 = (r2 + apb_minus_1) * apb * amb
+  c3 = c3 / c1
+
+  c4 = -2.0_DFP * (r_i + alpha_minus_1) * (r_i + beta_minus_1) * (r2 + apb)
+
+  c4 = c4 / c1
+
+  ans(i + 1) = (c3 + c2 * x) * ans(i) + c4 * ans(i - 1)
+
 END DO
-  !!
+
+END PROCEDURE JacobiEvalAll1_
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE JacobiEvalAll2
+INTEGER(I4B) :: nrow, ncol
+CALL JacobiEvalAll2_(n=n, alpha=alpha, beta=beta, x=x, ans=ans, nrow=nrow, &
+                     ncol=ncol)
 END PROCEDURE JacobiEvalAll2
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE JacobiEvalAll2_
+INTEGER(I4B) :: i
+REAL(DFP) :: c1, c2, c3, c4, r_i, apb, amb, r2, apb_minus_2, apb_minus_1, &
+             alpha_minus_1, beta_minus_1
+
+nrow = 0
+ncol = 0
+IF (alpha <= -1.0_DFP) RETURN
+IF (beta <= -1.0_DFP) RETURN
+IF (n < 0) RETURN
+
+nrow = SIZE(x)
+ncol = 1 + n
+
+ans(1:nrow, 1) = 1.0_DFP
+
+IF (n .EQ. 0) RETURN
+
+apb = alpha + beta
+apb_minus_2 = apb - 2.0_DFP
+apb_minus_1 = apb - 1.0_DFP
+alpha_minus_1 = alpha - 1.0_DFP
+beta_minus_1 = beta - 1.0_DFP
+
+ans(1:nrow, 2) = (1.0_DFP + 0.5_DFP * apb) * x + 0.5_DFP * amb
+
+DO i = 2, n
+
+  r_i = REAL(i, kind=DFP)
+  r2 = 2.0_DFP * r_i
+
+  c1 = r2 * (r_i + apb) * (r2 + apb_minus_2)
+
+  c2 = (r2 + apb_minus_1) * (r2 + apb) * (r2 + apb_minus_2)
+  c2 = c2 / c1
+
+  c3 = (r2 + apb_minus_1) * apb * amb
+  c3 = c3 / c1
+
+  c4 = -2.0_DFP * (r_i + alpha_minus_1) * (r_i + beta_minus_1) * (r2 + apb)
+  c4 = c4 / c1
+
+  ans(1:nrow, i + 1) = (c3 + c2 * x) * ans(1:nrow, i) &
+                       + c4 * ans(1:nrow, i - 1)
+
+END DO
+
+END PROCEDURE JacobiEvalAll2_
 
 !----------------------------------------------------------------------------
 !
@@ -606,7 +625,7 @@ ans = (1.0_DFP + 0.5_DFP * (alpha + beta)) * x &
 !!
 DO i = 2, n
   !!
-  r_i = real(i, kind=DFP)
+  r_i = REAL(i, kind=DFP)
   !!
   c1 = 2.0_DFP * r_i * (r_i + alpha + beta) &
       & * (2.0_DFP * r_i - 2.0_DFP + alpha + beta)
@@ -663,7 +682,7 @@ ans = (1.0_DFP + 0.5_DFP * (alpha + beta)) * x &
 !!
 DO i = 2, n
   !!
-  r_i = real(i, kind=DFP)
+  r_i = REAL(i, kind=DFP)
   !!
   c1 = 2.0_DFP * r_i * (r_i + alpha + beta) &
       & * (2.0_DFP * r_i - 2.0_DFP + alpha + beta)
@@ -704,7 +723,7 @@ b1 = 0.0_DFP
 b2 = 0.0_DFP
 !!
 DO j = n, 0, -1
-  t = (A(j) * x + B(j)) * b1 - C(j + 1) * b2 + coeff(j);
+  t = (A(j) * x + B(j)) * b1 - C(j + 1) * b2 + coeff(j); 
   b2 = b1
   b1 = t
 END DO
@@ -732,7 +751,7 @@ b1 = 0.0_DFP
 b2 = 0.0_DFP
 !!
 DO j = n, 0, -1
-  t = (A(j) * x + B(j)) * b1 - C(j + 1) * b2 + coeff(j);
+  t = (A(j) * x + B(j)) * b1 - C(j + 1) * b2 + coeff(j); 
   b2 = b1
   b1 = t
 END DO
@@ -778,11 +797,11 @@ DO ii = 2, n
   !!
   p_1 = p
   !!
-  a1 = (2*j+alpha+beta-1)*(2*j+alpha+beta)/(2*j*(j+alpha+beta));
+  a1 = (2*j+alpha+beta-1)*(2*j+alpha+beta)/(2*j*(j+alpha+beta)); 
   a2 = (alpha * alpha - beta * beta) * (2 * j + alpha + beta - 1) &
-    & / (2 * j * (j + alpha + beta) * (2 * j + alpha + beta - 2));
+    & / (2 * j * (j + alpha + beta) * (2 * j + alpha + beta - 2)); 
   a3 = (j - 1 + alpha) * (j - 1 + beta) * (2 * j + alpha + beta) &
-    & / (j * (j + alpha + beta) * (2 * j + alpha + beta - 2));
+    & / (j * (j + alpha + beta) * (2 * j + alpha + beta - 2)); 
   !!
   p = (a1 * x + a2) * p - a3 * p_2
   !!
@@ -838,11 +857,11 @@ DO ii = 2, n
   !!
   p_1 = p
   !!
-  a1 = (2*j+alpha+beta-1)*(2*j+alpha+beta)/(2*j*(j+alpha+beta));
+  a1 = (2*j+alpha+beta-1)*(2*j+alpha+beta)/(2*j*(j+alpha+beta)); 
   a2 = (alpha * alpha - beta * beta) * (2 * j + alpha + beta - 1) &
-    & / (2 * j * (j + alpha + beta) * (2 * j + alpha + beta - 2));
+    & / (2 * j * (j + alpha + beta) * (2 * j + alpha + beta - 2)); 
   a3 = (j - 1 + alpha) * (j - 1 + beta) * (2 * j + alpha + beta) &
-    & / (j * (j + alpha + beta) * (2 * j + alpha + beta - 2));
+    & / (j * (j + alpha + beta) * (2 * j + alpha + beta - 2)); 
   !!
   p = (a1 * x + a2) * p - a3 * p_2
   !!
@@ -867,51 +886,58 @@ END PROCEDURE JacobiGradientEval2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE JacobiGradientEvalAll1
-!!
+INTEGER(I4B) :: tsize
+CALL JacobiGradientEvalAll1_(n=n, alpha=alpha, beta=beta, x=x, ans=ans, &
+                             tsize=tsize)
+END PROCEDURE JacobiGradientEvalAll1
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE JacobiGradientEvalAll1_
 INTEGER(I4B) :: ii
 REAL(DFP) :: j
 REAL(DFP), DIMENSION(n + 1) :: p
 REAL(DFP) :: ab, amb, a1, a2, a3, b1, b2, b3
-!!
-IF (n < 0) THEN
-  RETURN
-END IF
-!!
+
+tsize = 0
+
+IF (n < 0) RETURN
+
+tsize = n + 1
+
 p(1) = 1.0_DFP
 ans(1) = 0.0_DFP
-!!
-IF (n < 1) THEN
-  RETURN
-END IF
-!!
-!!
+
+IF (n < 1) RETURN
+
 ab = alpha + beta
 amb = alpha - beta
 p(2) = 0.5 * (ab + 2.0) * x + 0.5 * amb
 ans(2) = 0.5 * (ab + 2.0)
-!!
+
 DO ii = 2, n
-  !!
+
   j = REAL(ii, KIND=DFP)
-  !!
-  a1 = (2*j+alpha+beta-1)*(2*j+alpha+beta)/(2*j*(j+alpha+beta));
+
+  a1 = (2*j+alpha+beta-1)*(2*j+alpha+beta)/(2*j*(j+alpha+beta)); 
   a2 = (alpha * alpha - beta * beta) * (2 * j + alpha + beta - 1) &
-    & / (2 * j * (j + alpha + beta) * (2 * j + alpha + beta - 2));
+       / (2 * j * (j + alpha + beta) * (2 * j + alpha + beta - 2)); 
   a3 = (j - 1 + alpha) * (j - 1 + beta) * (2 * j + alpha + beta) &
-    & / (j * (j + alpha + beta) * (2 * j + alpha + beta - 2));
-  !!
+       / (j * (j + alpha + beta) * (2 * j + alpha + beta - 2)); 
   p(ii + 1) = (a1 * x + a2) * p(ii) - a3 * p(ii - 1)
-  !!
+
   j = j - 1.0
   b1 = -2.0*(j+alpha)*(j+beta)/(j+ab)/(2.0*j+ab)/(2.0*j+ab+1.0)
   b2 = 2.0 * amb / (2.0 * j + ab) / (2.0 * j + ab + 2.0)
   b3 = 2.0 * (j + ab + 1.0) / (2.0 * j + ab + 1.0) / (2.0 * j + ab + 2.0)
-  !!
+
   ans(ii + 1) = (p(ii) - b1 * ans(ii - 1) - b2 * ans(ii)) / b3
-  !!
+
 END DO
-!!
-END PROCEDURE JacobiGradientEvalAll1
+
+END PROCEDURE JacobiGradientEvalAll1_
 
 !----------------------------------------------------------------------------
 !                                                     JacobiGradientEvalAll
@@ -944,11 +970,11 @@ DO ii = 2, n
   !!
   j = REAL(ii, KIND=DFP)
   !!
-  a1 = (2*j+alpha+beta-1)*(2*j+alpha+beta)/(2*j*(j+alpha+beta));
+  a1 = (2*j+alpha+beta-1)*(2*j+alpha+beta)/(2*j*(j+alpha+beta)); 
   a2 = (alpha * alpha - beta * beta) * (2 * j + alpha + beta - 1) &
-    & / (2 * j * (j + alpha + beta) * (2 * j + alpha + beta - 2));
+    & / (2 * j * (j + alpha + beta) * (2 * j + alpha + beta - 2)); 
   a3 = (j - 1 + alpha) * (j - 1 + beta) * (2 * j + alpha + beta) &
-    & / (j * (j + alpha + beta) * (2 * j + alpha + beta - 2));
+    & / (j * (j + alpha + beta) * (2 * j + alpha + beta - 2)); 
   !!
   p(:, ii + 1) = (a1 * x + a2) * p(:, ii) - a3 * p(:, ii - 1)
   !!
@@ -962,6 +988,61 @@ DO ii = 2, n
 END DO
 !!
 END PROCEDURE JacobiGradientEvalAll2
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE JacobiGradientEvalAll2_
+INTEGER(I4B) :: ii
+REAL(DFP) :: j
+REAL(DFP), DIMENSION(SIZE(x), n + 1) :: p
+REAL(DFP) :: ab, amb, a1, a2, a3, b1, b2, b3
+
+nrow = 0
+ncol = 0
+
+IF (n < 0) RETURN
+
+nrow = SIZE(x)
+ncol = 1 + n
+
+p(1:nrow, 1) = 1.0_DFP
+ans(1:nrow, 1) = 0.0_DFP
+
+IF (n < 1) RETURN
+
+ab = alpha + beta
+amb = alpha - beta
+p(:, 2) = 0.5 * (ab + 2.0) * x + 0.5 * amb
+ans(:, 2) = 0.5 * (ab + 2.0)
+
+DO ii = 2, n
+  j = REAL(ii, KIND=DFP)
+
+  a1 = (2*j+alpha+beta-1)*(2*j+alpha+beta)/(2*j*(j+alpha+beta))
+
+  a2 = (alpha * alpha - beta * beta) * (2 * j + alpha + beta - 1) &
+       / (2 * j * (j + alpha + beta) * (2 * j + alpha + beta - 2))
+
+  a3 = (j - 1 + alpha) * (j - 1 + beta) * (2 * j + alpha + beta) &
+       / (j * (j + alpha + beta) * (2 * j + alpha + beta - 2))
+
+  p(1:nrow, ii + 1) = (a1 * x + a2) * p(1:nrow, ii) - a3 * p(1:nrow, ii - 1)
+
+  j = j - 1.0
+  b1 = -2.0*(j+alpha)*(j+beta)/(j+ab)/(2.0*j+ab)/(2.0*j+ab+1.0)
+  b2 = 2.0 * amb / (2.0 * j + ab) / (2.0 * j + ab + 2.0)
+  b3 = 2.0 * (j + ab + 1.0) / (2.0 * j + ab + 1.0) / (2.0 * j + ab + 2.0)
+
+  ans(1:nrow, ii + 1) = p(1:nrow, ii) - b1 * ans(1:nrow, ii - 1) &
+                        - b2 * ans(1:nrow, ii)
+
+  ans(1:nrow, ii + 1) = ans(1:nrow, ii + 1) / b3
+
+END DO
+
+END PROCEDURE JacobiGradientEvalAll2_
 
 !----------------------------------------------------------------------------
 !                                                     JacobiGradientEvalSum
@@ -984,18 +1065,18 @@ DO i = n - 1, 0, -1
   !!
   !! Recurrence coeff
   !!
-  Ac = j + 2 + alpha + beta;
-  a10 = (2 * j + 3 + alpha + beta) / ((2 * j + 2) * (j + 3 + alpha + beta));
-  a11 = (2 * j + 4 + alpha + beta) * x;
-  a12 = ((alpha - beta) * (alpha + beta + 2)) / (alpha + beta + 2 * j + 2);
-  A1 = a10 * (a11 + a12);
+  Ac = j + 2 + alpha + beta; 
+  a10 = (2 * j + 3 + alpha + beta) / ((2 * j + 2) * (j + 3 + alpha + beta)); 
+  a11 = (2 * j + 4 + alpha + beta) * x; 
+  a12 = ((alpha - beta) * (alpha + beta + 2)) / (alpha + beta + 2 * j + 2); 
+  A1 = a10 * (a11 + a12); 
   a20 = -(j + 2 + alpha) * (j + 2 + beta) &
-      & / ((j + 2) * (alpha + beta + j + 4));
-  a21 = (alpha + beta + 2 * j + 6) / (alpha + beta + 2 * j + 4);
-  A2 = a20 * a21;
-  t = A1 * b1 + A2 * b2 + Ac * coeff(i + 1);
-  b2 = b1;
-  b1 = t;
+      & / ((j + 2) * (alpha + beta + j + 4)); 
+  a21 = (alpha + beta + 2 * j + 6) / (alpha + beta + 2 * j + 4); 
+  A2 = a20 * a21; 
+  t = A1 * b1 + A2 * b2 + Ac * coeff(i + 1); 
+  b2 = b1; 
+  b1 = t; 
 END DO
 
 ans = c * b1
@@ -1024,18 +1105,18 @@ DO i = n - 1, 0, -1
   !!
   !! Recurrence coeff
   !!
-  Ac = j + 2 + alpha + beta;
-  a10 = (2 * j + 3 + alpha + beta) / ((2 * j + 2) * (j + 3 + alpha + beta));
-  a11 = (2 * j + 4 + alpha + beta) * x;
-  a12 = ((alpha - beta) * (alpha + beta + 2)) / (alpha + beta + 2 * j + 2);
-  A1 = a10 * (a11 + a12);
+  Ac = j + 2 + alpha + beta; 
+  a10 = (2 * j + 3 + alpha + beta) / ((2 * j + 2) * (j + 3 + alpha + beta)); 
+  a11 = (2 * j + 4 + alpha + beta) * x; 
+  a12 = ((alpha - beta) * (alpha + beta + 2)) / (alpha + beta + 2 * j + 2); 
+  A1 = a10 * (a11 + a12); 
   a20 = -(j + 2 + alpha) * (j + 2 + beta) &
-      & / ((j + 2) * (alpha + beta + j + 4));
-  a21 = (alpha + beta + 2 * j + 6) / (alpha + beta + 2 * j + 4);
-  A2 = a20 * a21;
-  t = A1 * b1 + A2 * b2 + Ac * coeff(i + 1);
-  b2 = b1;
-  b1 = t;
+      & / ((j + 2) * (alpha + beta + j + 4)); 
+  a21 = (alpha + beta + 2 * j + 6) / (alpha + beta + 2 * j + 4); 
+  A2 = a20 * a21; 
+  t = A1 * b1 + A2 * b2 + Ac * coeff(i + 1); 
+  b2 = b1; 
+  b1 = t; 
 END DO
 
 ans = c * b1
@@ -1069,17 +1150,17 @@ DO i = n - k, 0, -1
     s = s * (alpha + beta + i + k + j)
   END DO
   !!
-  a10=(2*i+1+2*k+alpha+beta)/((2*i+2)*(i+1+2*k+alpha+beta));
-  a11 = (2 * i + 2 + 2 * k + alpha + beta) * x;
-  a12=((alpha-beta)*(alpha+beta+2*k))/(alpha+beta+2*i+2*k);
-  A1 = a10 * (a11 + a12);
-  a20=-(i+1+k+alpha)*(i+1+k+beta)/((i+2)*(alpha+beta+i+2+2*k));
+  a10=(2*i+1+2*k+alpha+beta)/((2*i+2)*(i+1+2*k+alpha+beta)); 
+  a11 = (2 * i + 2 + 2 * k + alpha + beta) * x; 
+  a12=((alpha-beta)*(alpha+beta+2*k))/(alpha+beta+2*i+2*k); 
+  A1 = a10 * (a11 + a12); 
+  a20=-(i+1+k+alpha)*(i+1+k+beta)/((i+2)*(alpha+beta+i+2+2*k)); 
   a21 = (alpha + beta + 2 * i + 4 + 2 * k) &
-      & / (alpha + beta + 2 * i + 2 + 2 * k);
-  A2 = a20 * a21;
-  t = A1 * b1 + A2 * b2 + s * coeff(i + k);
-  b2 = b1;
-  b1 = t;
+      & / (alpha + beta + 2 * i + 2 + 2 * k); 
+  A2 = a20 * a21; 
+  t = A1 * b1 + A2 * b2 + s * coeff(i + k); 
+  b2 = b1; 
+  b1 = t; 
 END DO
 
 ans = c * b1
@@ -1115,17 +1196,17 @@ DO i = n - k, 0, -1
     s = s * (alpha + beta + i + k + j)
   END DO
   !!
-  a10=(2*i+1+2*k+alpha+beta)/((2*i+2)*(i+1+2*k+alpha+beta));
-  a11 = (2 * i + 2 + 2 * k + alpha + beta) * x;
-  a12=((alpha-beta)*(alpha+beta+2*k))/(alpha+beta+2*i+2*k);
-  A1 = a10 * (a11 + a12);
-  a20=-(i+1+k+alpha)*(i+1+k+beta)/((i+2)*(alpha+beta+i+2+2*k));
+  a10=(2*i+1+2*k+alpha+beta)/((2*i+2)*(i+1+2*k+alpha+beta)); 
+  a11 = (2 * i + 2 + 2 * k + alpha + beta) * x; 
+  a12=((alpha-beta)*(alpha+beta+2*k))/(alpha+beta+2*i+2*k); 
+  A1 = a10 * (a11 + a12); 
+  a20=-(i+1+k+alpha)*(i+1+k+beta)/((i+2)*(alpha+beta+i+2+2*k)); 
   a21 = (alpha + beta + 2 * i + 4 + 2 * k) &
-      & / (alpha + beta + 2 * i + 2 + 2 * k);
-  A2 = a20 * a21;
-  t = A1 * b1 + A2 * b2 + s * coeff(i + k);
-  b2 = b1;
-  b1 = t;
+      & / (alpha + beta + 2 * i + 2 + 2 * k); 
+  A2 = a20 * a21; 
+  t = A1 * b1 + A2 * b2 + s * coeff(i + k); 
+  b2 = b1; 
+  b1 = t; 
 END DO
 
 ans = c * b1
@@ -1137,75 +1218,98 @@ END PROCEDURE JacobiGradientEvalSum4
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE JacobiTransform1
-REAL(DFP), DIMENSION(0:n) :: Gamma, temp
-REAL(DFP), DIMENSION(0:n, 0:n) :: PP
-INTEGER(I4B) :: jj
-!!
-Gamma = JacobiNormSQR2(n=n, alpha=alpha, beta=beta)
-!!
-!! Correct Gamma(n)
-!!
-IF (quadType .EQ. GaussLobatto) THEN
-  Gamma(n) = (2.0_DFP + (alpha + beta + 1.0_DFP) / REAL(n, KIND=DFP)) &
-            & * Gamma(n)
-END IF
-!!
-PP = JacobiEvalAll(n=n, alpha=alpha, beta=beta, x=x)
-!!
-DO jj = 0, n
-  temp = PP(:, jj) * w * coeff
-  ans(jj) = SUM(temp) / Gamma(jj)
-END DO
-!!
+INTEGER(I4B) :: tsize
+CALL JacobiTransform1_(n, alpha, beta, coeff, x, w, quadType, ans, tsize)
 END PROCEDURE JacobiTransform1
+
+!----------------------------------------------------------------------------
+!                                                           JacobiTransform
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE JacobiTransform1_
+REAL(DFP), ALLOCATABLE :: PP(:, :)
+INTEGER(I4B) :: ii, jj, nips
+nips = SIZE(coeff)
+ALLOCATE (PP(nips, n + 1))
+CALL JacobiEvalAll_(n=n, alpha=alpha, beta=beta, x=x, nrow=ii, ncol=jj, &
+                    ans=PP)
+CALL JacobiTransform4_(n, alpha, beta, coeff, PP, w, quadType, ans, tsize)
+DEALLOCATE (PP)
+END PROCEDURE JacobiTransform1_
 
 !----------------------------------------------------------------------------
 !                                                         JacobiTransform
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE JacobiTransform2
-REAL(DFP), DIMENSION(0:n) :: Gamma, temp
-REAL(DFP), DIMENSION(0:n, 0:n) :: PP
-INTEGER(I4B) :: jj, kk
-!!
-Gamma = JacobiNormSQR2(n=n, alpha=alpha, beta=beta)
-!!
-!! Correct Gamma(n)
-!!
-IF (quadType .EQ. GaussLobatto) THEN
-  Gamma(n) = (2.0_DFP + (alpha + beta + 1.0_DFP) / REAL(n, KIND=DFP)) &
-            & * Gamma(n)
-END IF
-!!
-PP = JacobiEvalAll(n=n, alpha=alpha, beta=beta, x=x)
-!!
-DO kk = 1, SIZE(coeff, 2)
-  DO jj = 0, n
-    temp = PP(:, jj) * w * coeff(:, kk)
-    ans(jj, kk) = SUM(temp) / Gamma(jj)
+MODULE PROCEDURE JacobiTransform4_
+REAL(DFP) :: nrmsqr, areal
+INTEGER(I4B) :: jj, ii, nips
+LOGICAL(LGT) :: abool
+
+tsize = n + 1
+
+nips = SIZE(coeff)
+
+DO jj = 0, n
+  areal = 0.0_DFP
+
+  DO ii = 0, nips - 1
+    areal = areal + PP(ii, jj) * w(ii) * coeff(ii)
   END DO
+
+  nrmsqr = JacobiNormSQR(n=jj, alpha=alpha, beta=beta)
+  ans(jj) = areal / nrmsqr
+
 END DO
-!!
-END PROCEDURE JacobiTransform2
+
+abool = (quadType .EQ. qp%GaussLobatto) .AND. (nips .EQ. n + 1)
+
+IF (abool) THEN
+
+  areal = 0.0_DFP
+  jj = n
+  DO ii = 0, nips - 1
+    areal = areal + PP(ii, jj) * w(ii) * coeff(ii)
+  END DO
+
+  nrmsqr = (2.0_DFP + (alpha + beta + 1.0_DFP) / REAL(n, KIND=DFP)) * nrmsqr
+
+  ans(jj) = areal / nrmsqr
+
+END IF
+
+END PROCEDURE JacobiTransform4_
 
 !----------------------------------------------------------------------------
 !                                                         JacobiTransform
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE JacobiTransform3
-REAL(DFP) :: pt(0:n), wt(0:n), coeff(0:n)
-INTEGER(I4B) :: ii
-!!
-CALL JacobiQuadrature(n=n + 1, alpha=alpha, beta=beta, pt=pt, wt=wt,&
-  & quadType=quadType)
-!!
-DO ii = 0, n
-  coeff(ii) = f(pt(ii))
-END DO
-!!
-ans = JacobiTransform(n=n, alpha=alpha, beta=beta, coeff=coeff, x=pt, &
-  & w=wt, quadType=quadType)
+INTEGER(I4B) :: tsize
+CALL JacobiTransform3_(n, alpha, beta, f, quadType, x1, x2, ans, tsize)
 END PROCEDURE JacobiTransform3
+
+!----------------------------------------------------------------------------
+!                                                           JacobiTransform
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE JacobiTransform3_
+REAL(DFP) :: pt(0:n), wt(0:n), coeff(0:n), x
+REAL(DFP), PARAMETER :: one = 1.0_DFP, half = 0.5_DFP
+INTEGER(I4B) :: ii
+
+CALL JacobiQuadrature(n=n + 1, alpha=alpha, beta=beta, pt=pt, wt=wt, &
+                      quadType=quadType)
+
+DO ii = 0, n
+  x = (one - pt(ii)) * x1 + (one + pt(ii)) * x2
+  x = x * half
+  coeff(ii) = f(x)
+END DO
+
+CALL JacobiTransform_(n=n, alpha=alpha, beta=beta, coeff=coeff, x=pt, &
+                      w=wt, quadType=quadType, ans=ans, tsize=tsize)
+END PROCEDURE JacobiTransform3_
 
 !----------------------------------------------------------------------------
 !                                                        JacobiInvTransform
@@ -1213,7 +1317,7 @@ END PROCEDURE JacobiTransform3
 
 MODULE PROCEDURE JacobiInvTransform1
 ans = JacobiEvalSum(n=n, alpha=alpha, beta=beta, coeff=coeff, &
-  & x=x)
+                    x=x)
 END PROCEDURE JacobiInvTransform1
 
 !----------------------------------------------------------------------------
@@ -1222,7 +1326,7 @@ END PROCEDURE JacobiInvTransform1
 
 MODULE PROCEDURE JacobiInvTransform2
 ans = JacobiEvalSum(n=n, alpha=alpha, beta=beta, coeff=coeff, &
-  & x=x)
+                    x=x)
 END PROCEDURE JacobiInvTransform2
 
 !----------------------------------------------------------------------------
@@ -1270,10 +1374,10 @@ END PROCEDURE JacobiGradientCoeff1
 
 MODULE PROCEDURE JacobiDMatrix1
 SELECT CASE (quadType)
-CASE (GaussLobatto)
+CASE (qp%GaussLobatto)
   CALL JacobiDMatrixGL(n=n, alpha=alpha, beta=beta, x=x, quadType=quadType,&
     & D=ans)
-CASE (Gauss)
+CASE (qp%Gauss)
   CALL JacobiDMatrixG(n=n, alpha=alpha, beta=beta, x=x, quadType=quadType, &
     &  D=ans)
 END SELECT

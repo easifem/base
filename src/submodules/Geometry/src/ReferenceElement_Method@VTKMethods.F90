@@ -51,7 +51,7 @@ CONTAINS
 !
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE get_vtk_elemType
+MODULE PROCEDURE GetVTKElementType1
 
 SELECT CASE (ElemType)
 CASE (Point1)
@@ -149,6 +149,132 @@ CASE (Quadrangle16)
   nptrs = [1, 2, 3, 4, 5, 6, 7, 8, 10, 9, &
            12, 11, 13, 14, 16, 15]
 END SELECT
-END PROCEDURE get_vtk_elemType
+END PROCEDURE GetVTKElementType1
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE GetVTKElementType1_
+
+SELECT CASE (ElemType)
+CASE (Point1)
+  vtk_type = vtk_point
+  tsize = 1
+  nptrs(1:tsize) = [1]
+
+CASE (Line2)
+  vtk_type = vtk_line2
+  tsize = 2
+  nptrs(1:tsize) = [1, 2]
+
+CASE (Triangle3)
+  vtk_type = vtk_triangle3
+  tsize = 3
+  nptrs(1:tsize) = [1, 2, 3]
+
+CASE (Quadrangle4)
+  vtk_type = vtk_quadrangle4
+  tsize = 4
+  nptrs(1:tsize) = [1, 2, 3, 4]
+
+CASE (Tetrahedron4)
+  vtk_type = vtk_Tetrahedron4
+  tsize = 4
+  nptrs(1:tsize) = [1, 2, 3, 4]
+
+CASE (Hexahedron8)
+  vtk_type = vtk_Hexahedron8
+  tsize = 8
+  nptrs(1:tsize) = [1, 2, 3, 4, 5, 6, 7, 8]
+
+CASE (Prism6)
+  vtk_type = vtk_Prism6
+  tsize = 6
+  nptrs(1:tsize) = [1, 2, 3, 4, 5, 6]
+
+CASE (Pyramid5)
+  vtk_type = vtk_Pyramid5
+  tsize = 5
+  nptrs(1:tsize) = [1, 2, 3, 4, 5]
+
+  !! Order=2 elements
+CASE (Line3)
+  vtk_type = vtk_line3
+  tsize = 3
+  nptrs(1:tsize) = [1, 2, 3]
+
+CASE (Triangle6)
+  vtk_type = vtk_Triangle6
+  tsize = 6
+  nptrs(1:tsize) = [1, 2, 3, 4, 5, 6]
+
+CASE (Quadrangle9)
+  vtk_type = vtk_Quadrangle9
+  tsize = 9
+  nptrs(1:tsize) = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+
+CASE (Quadrangle8)
+  vtk_type = vtk_Quadrangle8
+  tsize = 8
+  nptrs(1:tsize) = [1, 2, 3, 4, 5, 6, 7, 8]
+
+CASE (Tetrahedron10)
+  vtk_type = vtk_Tetrahedron10
+  tsize = 10
+  nptrs(1:tsize) = 1 + [0, 1, 2, 3, 4, 5, 6, 7, 9, 8]
+
+CASE (Hexahedron20)
+  vtk_type = vtk_Hexahedron20
+  tsize = 20
+  nptrs(1:tsize) = 1 + [0, 1, 2, 3, 4, 5, 6, 7, &
+                        8, 11, 16, 9, 17, 10, 18, 19, 12, 15, 13, 14]
+
+CASE (Hexahedron27)
+  vtk_type = vtk_Hexahedron27
+  tsize = 27
+  nptrs(1:tsize) = 1 + [0, 1, 2, 3, 4, 5, 6, 7, &
+                        8, 11, 16, 9, 17, 10, 18, 19, 12, 15, 13, 14, &
+                        24, 22, 20, 21, 23, 25, 26]
+
+CASE (Prism15)
+  vtk_type = vtk_Prism15
+  tsize = 15
+  nptrs(1:tsize) = 1 + [0, 1, 2, 3, 4, 5, &
+                        6, 8, 12, 7, 13, 14, 9, 11, 10]
+
+CASE (Prism18)
+  vtk_type = vtk_Prism18
+  tsize = 18
+  nptrs(1:tsize) = 1 + [0, 1, 2, 3, 4, 5, &
+                        6, 8, 12, 7, 13, 14, 9, 11, 10, &
+                        15, 17, 16]
+
+CASE (Pyramid13)
+  vtk_type = vtk_Pyramid13
+  tsize = 13
+  nptrs(1:tsize) = 1 + [0, 1, 2, 3, 4, 5, &
+                        5, 8, 9, 6, 10, 7, 11, 12]
+
+CASE (Pyramid14)
+  vtk_type = vtk_Pyramid13
+  tsize = 14
+  nptrs(1:tsize) = 1 + [0, 1, 2, 3, 4, 5, &
+                        5, 8, 9, 6, 10, 7, 11, 12]
+
+  !! order=3 element
+CASE (Line4)
+  vtk_type = vtk_line4
+  tsize = 4
+  nptrs(1:tsize) = [1, 2, 3, 4]
+
+CASE (Quadrangle16)
+  vtk_type = vtk_Quadrangle16
+  tsize = 16
+  nptrs(1:tsize) = [1, 2, 3, 4, 5, 6, 7, 8, 10, 9, &
+                    12, 11, 13, 14, 16, 15]
+END SELECT
+
+END PROCEDURE GetVTKElementType1_
 
 END SUBMODULE VTKMethods

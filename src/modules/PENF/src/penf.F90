@@ -1,129 +1,129 @@
 !< Portability Environment for Fortran poor people.
 
-module penf
+MODULE penf
 !< Portability Environment for Fortran poor people.
-use penf_global_parameters_variables
+USE penf_global_parameters_variables
 #ifdef __INTEL_COMPILER
-use penf_b_size
+USE penf_b_size
 #else
-use penf_b_size, only : bit_size, byte_size
+USE penf_b_size, ONLY: bit_size, byte_size
 #endif
-use penf_stringify, only : str_ascii, str_ucs4, str, strz, cton, bstr, bcton
+USE penf_stringify, ONLY: str_ascii, str_ucs4, str, strz, cton, bstr, bcton
 
-implicit none
-private
-save
+IMPLICIT NONE
+PRIVATE
+SAVE
 ! global parameters and variables
-public :: endianL, endianB, endian, is_initialized
-public :: ASCII, UCS4, CK
+PUBLIC :: endianL, endianB, endian, is_initialized
+PUBLIC :: ASCII, UCS4, CK
 public :: R16P, FR16P, DR16P, MinR16P, MaxR16P, BIR16P, BYR16P, smallR16P, ZeroR16P
-public :: R8P,  FR8P,  DR8P,  MinR8P,  MaxR8P,  BIR8P,  BYR8P,  smallR8P,  ZeroR8P
-public :: R4P,  FR4P,  DR4P,  MinR4P,  MaxR4P,  BIR4P,  BYR4P,  smallR4P,  ZeroR4P
-public :: R_P,  FR_P,  DR_P,  MinR_P,  MaxR_P,  BIR_P,  BYR_P,  smallR_P,  ZeroR_P
-public :: I8P,  FI8P,  DI8P,  MinI8P,  MaxI8P,  BII8P,  BYI8P
-public :: I4P,  FI4P,  DI4P,  MinI4P,  MaxI4P,  BII4P,  BYI4P
-public :: I2P,  FI2P,  DI2P,  MinI2P,  MaxI2P,  BII2P,  BYI2P
-public :: I1P,  FI1P,  DI1P,  MinI1P,  MaxI1P,  BII1P,  BYI1P
-public :: I_P,  FI_P,  DI_P,  MinI_P,  MaxI_P,  BII_P,  BYI_P
-public :: CHARACTER_KINDS_LIST, REAL_KINDS_LIST, REAL_FORMATS_LIST
-public :: INTEGER_KINDS_LIST, INTEGER_FORMATS_LIST
+PUBLIC :: R8P, FR8P, DR8P, MinR8P, MaxR8P, BIR8P, BYR8P, smallR8P, ZeroR8P
+PUBLIC :: R4P, FR4P, DR4P, MinR4P, MaxR4P, BIR4P, BYR4P, smallR4P, ZeroR4P
+PUBLIC :: R_P, FR_P, DR_P, MinR_P, MaxR_P, BIR_P, BYR_P, smallR_P, ZeroR_P
+PUBLIC :: I8P, FI8P, DI8P, MinI8P, MaxI8P, BII8P, BYI8P
+PUBLIC :: I4P, FI4P, DI4P, MinI4P, MaxI4P, BII4P, BYI4P
+PUBLIC :: I2P, FI2P, DI2P, MinI2P, MaxI2P, BII2P, BYI2P
+PUBLIC :: I1P, FI1P, DI1P, MinI1P, MaxI1P, BII1P, BYI1P
+PUBLIC :: I_P, FI_P, DI_P, MinI_P, MaxI_P, BII_P, BYI_P
+PUBLIC :: CHARACTER_KINDS_LIST, REAL_KINDS_LIST, REAL_FORMATS_LIST
+PUBLIC :: INTEGER_KINDS_LIST, INTEGER_FORMATS_LIST
 ! bit/byte size functions
-public :: bit_size, byte_size
+PUBLIC :: bit_size, byte_size
 ! stringify facility
-public :: str_ascii, str_ucs4
-public :: str, strz, cton
-public :: bstr, bcton
+PUBLIC :: str_ascii, str_ucs4
+PUBLIC :: str, strz, cton
+PUBLIC :: bstr, bcton
 ! miscellanea facility
-public :: check_endian
-public :: digit
-public :: penf_Init
-public :: penf_print
+PUBLIC :: check_endian
+PUBLIC :: digit
+PUBLIC :: penf_Init
+PUBLIC :: penf_print
 
-integer, protected :: endian         = endianL !< Bit ordering: Little endian (endianL), or Big endian (endianB).
-logical, protected :: is_initialized = .false. !< Check the initialization of some variables that must be initialized.
+INTEGER, PROTECTED :: endian = endianL !< Bit ordering: Little endian (endianL), or Big endian (endianB).
+LOGICAL, PROTECTED :: is_initialized = .FALSE. !< Check the initialization of some variables that must be initialized.
 
 #ifdef __GFORTRAN__
 ! work-around for strange gfortran bug...
-interface bit_size
+INTERFACE bit_size
   !< Overloading of the intrinsic *bit_size* function for computing the number of bits of (also) real and character variables.
-endinterface
+END INTERFACE
 #endif
 
-interface digit
+INTERFACE digit
   !< Compute the number of digits in decimal base of the input integer.
-  module procedure digit_I8, digit_I4, digit_I2, digit_I1
-endinterface
+  MODULE PROCEDURE digit_I8, digit_I4, digit_I2, digit_I1
+END INTERFACE
 
-contains
-   ! public procedures
-   subroutine check_endian()
-   !< Check the type of bit ordering (big or little endian) of the running architecture.
-   !<
-   !> @note The result is stored into the *endian* global variable.
-   !<
-   !<```fortran
-   !< use penf
-   !< call check_endian
-   !< print *, endian
-   !<```
-   !=> 1 <<<
-   if (is_little_endian()) then
-      endian = endianL
-   else
-      endian = endianB
-   endif
-   contains
-      pure function is_little_endian() result(is_little)
-      !< Check if the type of the bit ordering of the running architecture is little endian.
-      logical      :: is_little !< Logical output: true is the running architecture uses little endian ordering, false otherwise.
-      integer(I1P) :: int1(1:4) !< One byte integer array for casting 4 bytes integer.
+CONTAINS
+! public procedures
+SUBROUTINE check_endian()
+  !< Check the type of bit ordering (big or little endian) of the running architecture.
+  !<
+  !> @note The result is stored into the *endian* global variable.
+  !<
+  !<```fortran
+  !< use penf
+  !< call check_endian
+  !< print *, endian
+  !<```
+  !=> 1 <<<
+  IF (is_little_endian()) THEN
+    endian = endianL
+  ELSE
+    endian = endianB
+  END IF
+CONTAINS
+  PURE FUNCTION is_little_endian() RESULT(is_little)
+    !< Check if the type of the bit ordering of the running architecture is little endian.
+    LOGICAL :: is_little !< Logical output: true is the running architecture uses little endian ordering, false otherwise.
+    INTEGER(I1P) :: int1(1:4) !< One byte integer array for casting 4 bytes integer.
 
-      int1 = transfer(1_I4P, int1)
-      is_little = (int1(1)==1_I1P)
-      endfunction is_little_endian
-   endsubroutine check_endian
+    int1 = TRANSFER(1_I4P, int1)
+    is_little = (int1(1) == 1_I1P)
+  END FUNCTION is_little_endian
+END SUBROUTINE check_endian
 
-   subroutine penf_init()
-   !< Initialize PENF's variables that are not initialized into the definition specification.
-   !<
-   !<```fortran
-   !< use penf
-   !< call penf_init
-   !< print FI1P, BYR4P
-   !<```
-   !=> 4 <<<
+SUBROUTINE penf_init()
+  !< Initialize PENF's variables that are not initialized into the definition specification.
+  !<
+  !<```fortran
+  !< use penf
+  !< call penf_init
+  !< print FI1P, BYR4P
+  !<```
+  !=> 4 <<<
 
-   call check_endian
-   is_initialized = .true.
-   endsubroutine penf_init
+  CALL check_endian
+  is_initialized = .TRUE.
+END SUBROUTINE penf_init
 
-   subroutine penf_print(unit, pref, iostat, iomsg)
-   !< Print to the specified unit the PENF's environment data.
-   !<
-   !<```fortran
-   !< use penf
-   !< integer :: u
-   !< open(newunit=u, status='scratch')
-   !< call penf_print(u)
-   !< close(u)
-   !< print "(A)", 'done'
-   !<```
-   !=> done <<<
-   integer(I4P), intent(in)            :: unit    !< Logic unit.
-   character(*), intent(in),  optional :: pref    !< Prefixing string.
-   integer(I4P), intent(out), optional :: iostat  !< IO error.
-   character(*), intent(out), optional :: iomsg   !< IO error message.
-   character(len=:), allocatable       :: prefd   !< Prefixing string.
-   integer(I4P)                        :: iostatd !< IO error.
-   character(500)                      :: iomsgd  !< Temporary variable for IO error message.
+SUBROUTINE penf_print(unit, pref, iostat, iomsg)
+  !< Print to the specified unit the PENF's environment data.
+  !<
+  !<```fortran
+  !< use penf
+  !< integer :: u
+  !< open(newunit=u, status='scratch')
+  !< call penf_print(u)
+  !< close(u)
+  !< print "(A)", 'done'
+  !<```
+  !=> done <<<
+  INTEGER(I4P), INTENT(in) :: unit !< Logic unit.
+  CHARACTER(*), INTENT(in), OPTIONAL :: pref !< Prefixing string.
+  INTEGER(I4P), INTENT(out), OPTIONAL :: iostat !< IO error.
+  CHARACTER(*), INTENT(out), OPTIONAL :: iomsg !< IO error message.
+  CHARACTER(len=:), ALLOCATABLE :: prefd !< Prefixing string.
+  INTEGER(I4P) :: iostatd !< IO error.
+  CHARACTER(500) :: iomsgd !< Temporary variable for IO error message.
 
-   if (.not.is_initialized) call penf_init
-   prefd = '' ; if (present(pref)) prefd = pref
-   if (endian==endianL) then
+  IF (.NOT. is_initialized) CALL penf_init
+  prefd = ''; IF (PRESENT(pref)) prefd = pref
+  IF (endian == endianL) THEN
      write(unit=unit,fmt='(A)',iostat=iostatd,iomsg=iomsgd)prefd//'This architecture has LITTLE Endian bit ordering'
-   else
+  ELSE
      write(unit=unit,fmt='(A)',iostat=iostatd,iomsg=iomsgd)prefd//'This architecture has BIG Endian bit ordering'
-   endif
+  END IF
    write(unit=unit,fmt='(A)',iostat=iostatd,iomsg=iomsgd)  prefd//'Character kind:'
    write(unit=unit,fmt='(A)',iostat=iostatd,iomsg=iomsgd)  prefd//'  ASCII: '//str(n=ASCII)
    write(unit=unit,fmt='(A)',iostat=iostatd,iomsg=iomsgd)  prefd//'  UCS4:  '//str(n=UCS4)
@@ -163,77 +163,77 @@ contains
    write(unit=unit,fmt='(A)',iostat=iostatd,iomsg=iomsgd)  prefd//'  smallR8P:  '//str(smallR8P,  .true.)
    write(unit=unit,fmt='(A)',iostat=iostatd,iomsg=iomsgd)  prefd//'  smallR4P:  '//str(smallR4P,  .true.)
    write(unit=unit,fmt='(A)',iostat=iostatd,iomsg=iomsgd)  prefd//'  smallR_P:  '//str(smallR_P,  .true.)
-   write(unit=unit,fmt='(A)',iostat=iostatd,iomsg=iomsgd)  prefd//'Machine zero'
+ write(unit=unit,fmt='(A)',iostat=iostatd,iomsg=iomsgd)  prefd//'Machine zero'
    write(unit=unit,fmt='(A)',iostat=iostatd,iomsg=iomsgd)  prefd//'  ZeroR16P: '//str(ZeroR16P, .true.)
    write(unit=unit,fmt='(A)',iostat=iostatd,iomsg=iomsgd)  prefd//'  ZeroR8P:  '//str(ZeroR8P,  .true.)
    write(unit=unit,fmt='(A)',iostat=iostatd,iomsg=iomsgd)  prefd//'  ZeroR4P:  '//str(ZeroR4P,  .true.)
    write(unit=unit,fmt='(A)',iostat=iostatd,iomsg=iomsgd)  prefd//'  ZeroR_P:  '//str(ZeroR_P,  .true.)
-   if (present(iostat)) iostat = iostatd
-   if (present(iomsg))  iomsg  = iomsgd
-   endsubroutine penf_print
+  IF (PRESENT(iostat)) iostat = iostatd
+  IF (PRESENT(iomsg)) iomsg = iomsgd
+END SUBROUTINE penf_print
 
-   ! private procedures
-   elemental function digit_I8(n) result(digit)
-   !< Compute the number of digits in decimal base of the input integer.
-   !<
-   !<```fortran
-   !< use penf
-   !< print FI4P, digit(100_I8P)
-   !<```
-   !=> 3 <<<
-   integer(I8P), intent(in) :: n     !< Input integer.
-   character(DI8P)          :: str   !< Returned string containing input number plus padding zeros.
-   integer(I4P)             :: digit !< Number of digits.
+! private procedures
+ELEMENTAL FUNCTION digit_I8(n) RESULT(digit)
+  !< Compute the number of digits in decimal base of the input integer.
+  !<
+  !<```fortran
+  !< use penf
+  !< print FI4P, digit(100_I8P)
+  !<```
+  !=> 3 <<<
+  INTEGER(I8P), INTENT(in) :: n !< Input integer.
+  CHARACTER(DI8P) :: str !< Returned string containing input number plus padding zeros.
+  INTEGER(I4P) :: digit !< Number of digits.
 
-   write(str, FI8P) abs(n)        ! Casting of n to string.
-   digit = len_trim(adjustl(str)) ! Calculating the digits number of n.
-   endfunction digit_I8
+  WRITE (str, FI8P) ABS(n) ! Casting of n to string.
+  digit = LEN_TRIM(ADJUSTL(str)) ! Calculating the digits number of n.
+END FUNCTION digit_I8
 
-   elemental function digit_I4(n) result(digit)
-   !< Compute the number of digits in decimal base of the input integer.
-   !<
-   !<```fortran
-   !< use penf
-   !< print FI4P, digit(100_I4P)
-   !<```
-   !=> 3 <<<
-   integer(I4P), intent(in) :: n     !< Input integer.
-   character(DI4P)          :: str   !< Returned string containing input number plus padding zeros.
-   integer(I4P)             :: digit !< Number of digits.
+ELEMENTAL FUNCTION digit_I4(n) RESULT(digit)
+  !< Compute the number of digits in decimal base of the input integer.
+  !<
+  !<```fortran
+  !< use penf
+  !< print FI4P, digit(100_I4P)
+  !<```
+  !=> 3 <<<
+  INTEGER(I4P), INTENT(in) :: n !< Input integer.
+  CHARACTER(DI4P) :: str !< Returned string containing input number plus padding zeros.
+  INTEGER(I4P) :: digit !< Number of digits.
 
-   write(str, FI4P) abs(n)        ! Casting of n to string.
-   digit = len_trim(adjustl(str)) ! Calculating the digits number of n.
-   endfunction digit_I4
+  WRITE (str, FI4P) ABS(n) ! Casting of n to string.
+  digit = LEN_TRIM(ADJUSTL(str)) ! Calculating the digits number of n.
+END FUNCTION digit_I4
 
-   elemental function digit_I2(n) result(digit)
-   !< Compute the number of digits in decimal base of the input integer.
-   !<
-   !<```fortran
-   !< use penf
-   !< print FI4P, digit(100_I2P)
-   !<```
-   !=> 3 <<<
-   integer(I2P), intent(in) :: n     !< Input integer.
-   character(DI2P)          :: str   !< Returned string containing input number plus padding zeros.
-   integer(I4P)             :: digit !< Number of digits.
+ELEMENTAL FUNCTION digit_I2(n) RESULT(digit)
+  !< Compute the number of digits in decimal base of the input integer.
+  !<
+  !<```fortran
+  !< use penf
+  !< print FI4P, digit(100_I2P)
+  !<```
+  !=> 3 <<<
+  INTEGER(I2P), INTENT(in) :: n !< Input integer.
+  CHARACTER(DI2P) :: str !< Returned string containing input number plus padding zeros.
+  INTEGER(I4P) :: digit !< Number of digits.
 
-   write(str, FI2P) abs(n)        ! Casting of n to string.
-   digit = len_trim(adjustl(str)) ! Calculating the digits number of n.
-   endfunction digit_I2
+  WRITE (str, FI2P) ABS(n) ! Casting of n to string.
+  digit = LEN_TRIM(ADJUSTL(str)) ! Calculating the digits number of n.
+END FUNCTION digit_I2
 
-   elemental function digit_I1(n) result(digit)
-   !< Compute the number of digits in decimal base of the input integer.
-   !<
-   !<```fortran
-   !< use penf
-   !< print FI4P, digit(100_I1P)
-   !<```
-   !=> 3 <<<
-   integer(I1P), intent(in) :: n     !< Input integer.
-   character(DI1P)          :: str   !< Returned string containing input number plus padding zeros.
-   integer(I4P)             :: digit !< Number of digits.
+ELEMENTAL FUNCTION digit_I1(n) RESULT(digit)
+  !< Compute the number of digits in decimal base of the input integer.
+  !<
+  !<```fortran
+  !< use penf
+  !< print FI4P, digit(100_I1P)
+  !<```
+  !=> 3 <<<
+  INTEGER(I1P), INTENT(in) :: n !< Input integer.
+  CHARACTER(DI1P) :: str !< Returned string containing input number plus padding zeros.
+  INTEGER(I4P) :: digit !< Number of digits.
 
-   write(str, FI1P) abs(n)        ! Casting of n to string.
-   digit = len_trim(adjustl(str)) ! Calculating the digits number of n.
-   endfunction digit_I1
+  WRITE (str, FI1P) ABS(n) ! Casting of n to string.
+  digit = LEN_TRIM(ADJUSTL(str)) ! Calculating the digits number of n.
+END FUNCTION digit_I1
 endmodule penf

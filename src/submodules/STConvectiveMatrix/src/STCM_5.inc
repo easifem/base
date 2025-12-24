@@ -45,7 +45,7 @@ PURE SUBROUTINE STCM_5a(ans, test, trial, term1, term2, c, opt)
   !! make c bar at ips and ipt
   !!
   IF (PRESENT(c)) THEN
-    CALL GetInterpolation(obj=trial, val=c, interpol=cbar)
+    CALL GetInterpolation(obj=trial, val=c, ans=cbar)
   ELSE
     CALL Reallocate(cbar, SIZE(trial(1)%N, 2), SIZE(trial))
     cbar = 1.0_DFP
@@ -56,7 +56,7 @@ PURE SUBROUTINE STCM_5a(ans, test, trial, term1, term2, c, opt)
     CALL Reallocate(m6, &
       & SIZE(test(1)%N, 1), &
       & SIZE(trial(1)%N, 1), &
-      & trial(1)%refelem%nsd, 1, &
+      & trial(1)%nsd, 1, &
       & SIZE(test(1)%T), &
       & SIZE(trial(1)%T))
     !!
@@ -85,7 +85,7 @@ PURE SUBROUTINE STCM_5a(ans, test, trial, term1, term2, c, opt)
     CALL Reallocate(m6, &
       & SIZE(test(1)%N, 1), &
       & SIZE(trial(1)%N, 1), &
-      & 1, trial(1)%refelem%nsd, &
+      & 1, trial(1)%nsd, &
       & SIZE(test(1)%T), &
       & SIZE(trial(1)%T))
     !!
@@ -146,7 +146,7 @@ PURE SUBROUTINE STCM_5b(ans, test, trial, term1, term2, c, opt)
   !! make c bar at ips and ipt
   !!
   IF (PRESENT(c)) THEN
-    CALL GetInterpolation(obj=trial, val=c, interpol=cbar)
+    CALL GetInterpolation(obj=trial, val=c, ans=cbar)
   ELSE
     CALL Reallocate(cbar, SIZE(trial(1)%N, 2), SIZE(trial))
     cbar = 1.0_DFP
@@ -156,7 +156,7 @@ PURE SUBROUTINE STCM_5b(ans, test, trial, term1, term2, c, opt)
     CALL Reallocate(m6, &
       & SIZE(test(1)%N, 1), &
       & SIZE(trial(1)%N, 1), &
-      & trial(1)%refelem%nsd, 1, &
+      & trial(1)%nsd, 1, &
       & SIZE(test(1)%T), &
       & SIZE(trial(1)%T))
     !!
@@ -184,7 +184,7 @@ PURE SUBROUTINE STCM_5b(ans, test, trial, term1, term2, c, opt)
     CALL Reallocate(m6, &
       & SIZE(test(1)%N, 1), &
       & SIZE(trial(1)%N, 1), &
-      & 1, trial(1)%refelem%nsd, &
+      & 1, trial(1)%nsd, &
       & SIZE(test(1)%T), &
       & SIZE(trial(1)%T))
     !!

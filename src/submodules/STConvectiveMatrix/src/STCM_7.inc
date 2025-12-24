@@ -45,7 +45,7 @@ PURE SUBROUTINE STCM_7a(ans, test, trial, term1, term2, c, opt)
     CALL Reallocate(m6, &
       & SIZE(test(1)%N, 1), &
       & SIZE(trial(1)%N, 1), &
-      & trial(1)%refelem%nsd, 1, &
+      & trial(1)%nsd, 1, &
       & SIZE(test(1)%T), &
       & SIZE(trial(1)%T))
     !!
@@ -54,7 +54,8 @@ PURE SUBROUTINE STCM_7a(ans, test, trial, term1, term2, c, opt)
       realval = trial(ipt)%js * trial(ipt)%ws * trial(ipt)%thickness * &
         & trial(ipt)%wt * trial(ipt)%jt
       !!
-      CALL GetProjectionOfdNTdXt(obj=trial(ipt), cdNTdXt=p, val=c)
+      CALL GetProjectionOfdNTdXt(obj=trial(ipt), ans=p,c=c, &
+      crank=TypeFEVariableVector)
       !!
       DO ips = 1, SIZE(realval)
         DO b = 1, SIZE(m6, 6)
@@ -75,7 +76,7 @@ PURE SUBROUTINE STCM_7a(ans, test, trial, term1, term2, c, opt)
     CALL Reallocate(m6, &
       & SIZE(test(1)%N, 1), &
       & SIZE(trial(1)%N, 1), &
-      & 1, trial(1)%refelem%nsd, &
+      & 1, trial(1)%nsd, &
       & SIZE(test(1)%T), &
       & SIZE(trial(1)%T))
     !!
@@ -84,7 +85,8 @@ PURE SUBROUTINE STCM_7a(ans, test, trial, term1, term2, c, opt)
       realval = trial(ipt)%js * trial(ipt)%ws * trial(ipt)%thickness * &
         & trial(ipt)%wt * trial(ipt)%jt
       !!
-      CALL GetProjectionOfdNTdXt(obj=trial(ipt), cdNTdXt=p, val=c)
+      CALL GetProjectionOfdNTdXt(obj=trial(ipt), ans=p, c=c, &
+      crank=TypeFEVariableVector)
       !!
       DO ips = 1, SIZE(realval)
         DO b = 1, SIZE(m6, 6)
@@ -137,7 +139,7 @@ PURE SUBROUTINE STCM_7b(ans, test, trial, term1, term2, c, opt)
     CALL Reallocate(m6, &
       & SIZE(test(1)%N, 1), &
       & SIZE(trial(1)%N, 1), &
-      & trial(1)%refelem%nsd, 1, &
+      & trial(1)%nsd, 1, &
       & SIZE(test(1)%T), &
       & SIZE(trial(1)%T))
     !!
@@ -146,7 +148,8 @@ PURE SUBROUTINE STCM_7b(ans, test, trial, term1, term2, c, opt)
       realval = trial(ipt)%js * trial(ipt)%ws * trial(ipt)%thickness * &
         & trial(ipt)%wt * trial(ipt)%jt
       !!
-      CALL GetProjectionOfdNTdXt(obj=test(ipt), cdNTdXt=p, val=c)
+      CALL GetProjectionOfdNTdXt(obj=test(ipt), ans=p, c=c, &
+      crank=TypeFEVariableVector)
       !!
       DO ips = 1, SIZE(realval)
         DO b = 1, SIZE(m6, 6)
@@ -167,7 +170,7 @@ PURE SUBROUTINE STCM_7b(ans, test, trial, term1, term2, c, opt)
     CALL Reallocate(m6, &
       & SIZE(test(1)%N, 1), &
       & SIZE(trial(1)%N, 1), &
-      & 1, trial(1)%refelem%nsd, &
+      & 1, trial(1)%nsd, &
       & SIZE(test(1)%T), &
       & SIZE(trial(1)%T))
     !!
@@ -176,7 +179,8 @@ PURE SUBROUTINE STCM_7b(ans, test, trial, term1, term2, c, opt)
       realval = trial(ipt)%js * trial(ipt)%ws * trial(ipt)%thickness * &
         & trial(ipt)%wt * trial(ipt)%jt
       !!
-      CALL GetProjectionOfdNTdXt(obj=test(ipt), cdNTdXt=p, val=c)
+      CALL GetProjectionOfdNTdXt(obj=test(ipt), ans=p, c=c, &
+      crank=TypeFEVariableVector)
       !!
       DO ips = 1, SIZE(realval)
         DO b = 1, SIZE(m6, 6)

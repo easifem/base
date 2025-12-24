@@ -16,22 +16,34 @@
 
 MODULE ElemshapeData_Method
 USE ElemshapeData_ConstructorMethods
-USE ElemshapeData_DGMethods
 USE ElemshapeData_DivergenceMethods
 USE ElemshapeData_GetMethods
 USE ElemshapeData_GradientMethods
-USE ElemshapeData_H1Methods
-USE ElemshapeData_HCurlMethods
-USE ElemshapeData_HDivMethods
+
+! USE ElemshapeData_H1Methods
+! USE ElemshapeData_HCurlMethods
+! USE ElemshapeData_HDivMethods
+! USE ElemshapeData_DGMethods
+
+USE ElemshapeData_Lagrange
+USE ElemshapeData_Hierarchical
+USE ElemshapeData_Orthogonal
+
 USE ElemshapeData_HRGNParamMethods
 USE ElemshapeData_HRQIParamMethods
 USE ElemshapeData_HminHmaxMethods
 USE ElemshapeData_IOMethods
+
 USE ElemshapeData_InterpolMethods
+USE ElemshapeData_ScalarInterpolMethods
+USE ElemshapeData_VectorInterpolMethods
+USE ElemshapeData_MatrixInterpolMethods
+
 USE ElemshapeData_LocalDivergenceMethods
 USE ElemshapeData_LocalGradientMethods
 USE ElemshapeData_ProjectionMethods
 USE ElemshapeData_SetMethods
 USE ElemshapeData_StabilizationParamMethods
 USE ElemshapeData_UnitNormalMethods
+
 END MODULE ElemshapeData_Method

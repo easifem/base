@@ -364,7 +364,8 @@ END PROCEDURE obj_GetNodeLoc1
 
 MODULE PROCEDURE obj_GetNodeLoc2
 INTEGER(I4B) :: tsize
-CALL obj_getnodeloc_2(obj, nodenum, idof, ans, tsize)
+CALL obj_GetNodeLoc_2(obj=obj, nodenum=nodenum, idof=idof, ans=ans, &
+                      tsize=tsize)
 END PROCEDURE obj_GetNodeLoc2
 
 !----------------------------------------------------------------------------
@@ -386,7 +387,8 @@ END PROCEDURE obj_GetNodeLoc_2
 
 MODULE PROCEDURE obj_GetNodeLoc3
 INTEGER(I4B) :: tsize
-CALL obj_getnodeloc_3(obj, nodenum, idof, ans, tsize)
+CALL obj_GetNodeLoc_3(obj=obj, nodenum=nodenum, idof=idof, ans=ans, &
+                      tsize=tsize)
 END PROCEDURE obj_GetNodeLoc3
 
 !----------------------------------------------------------------------------
@@ -408,9 +410,13 @@ END PROCEDURE obj_GetNodeLoc_3
 
 MODULE PROCEDURE obj_GetNodeLoc4
 IF (obj%storageFMT .EQ. NODES_FMT) THEN
-  ans = [idof, .tnodes.obj, .tdof.obj]
+  ans(1) = idof
+  ans(2) = .tnodes.obj
+  ans(3) = .tdof.obj
 ELSE
-  ans = [obj%valmap(idof), obj%valmap(idof + 1) - 1, 1]
+  ans(1) = obj%valmap(idof)
+  ans(2) = obj%valmap(idof + 1) - 1
+  ans(3) = 1
 END IF
 END PROCEDURE obj_GetNodeLoc4
 
@@ -432,7 +438,8 @@ END PROCEDURE obj_GetNodeLoc5
 
 MODULE PROCEDURE obj_GetNodeLoc6
 INTEGER(I4B) :: tsize
-CALL obj_GetNodeLoc_6(obj, nodenum, ivar, idof, ans, tsize)
+CALL obj_GetNodeLoc_6(obj=obj, nodenum=nodenum, ivar=ivar, idof=idof, &
+                      ans=ans, tsize=tsize)
 END PROCEDURE obj_GetNodeLoc6
 
 !----------------------------------------------------------------------------
@@ -459,10 +466,15 @@ END PROCEDURE obj_GetNodeLoc_6
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE obj_GetNodeLoc7
+INTEGER(I4B) :: idof, tspacecompo
+
+tspacecompo = obj.spacecomponents.ivar
+idof = GetIDOF(spacecompo=spacecompo, timecompo=timecompo, &
+               tspacecompo=tspacecompo)
+
 ans = GetNodeLoc(obj=obj, nodenum=nodenum, ivar=ivar, &
-                 idof=GetIDOF(spacecompo=spacecompo, &
-                              timecompo=timecompo, &
-                              tspacecompo=obj.spacecomponents.ivar))
+                 idof=idof)
+
 END PROCEDURE obj_GetNodeLoc7
 
 !----------------------------------------------------------------------------
@@ -470,10 +482,13 @@ END PROCEDURE obj_GetNodeLoc7
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE obj_GetNodeLoc8
-INTEGER(I4B) :: tsize
+INTEGER(I4B) :: tsize, idof, tspacecompo
+
+tspacecompo = obj.spacecomponents.ivar
+idof = GetIDOF(spacecompo=spacecompo, timecompo=timecompo, &
+               tspacecompo=tspacecompo)
 CALL GetNodeLoc_(obj=obj, nodenum=nodenum, ivar=ivar, ans=ans, tsize=tsize, &
-                 idof=GetIDOF(spacecompo=spacecompo, timecompo=timecompo, &
-                              tspacecompo=obj.spacecomponents.ivar))
+                 idof=idof)
 END PROCEDURE obj_GetNodeLoc8
 
 !----------------------------------------------------------------------------
@@ -481,9 +496,14 @@ END PROCEDURE obj_GetNodeLoc8
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE obj_GetNodeLoc_8
+INTEGER(I4B) :: idof, tspacecompo
+
+tspacecompo = obj.spacecomponents.ivar
+idof = GetIDOF(spacecompo=spacecompo, timecompo=timecompo, &
+               tspacecompo=tspacecompo)
+
 CALL GetNodeLoc_(obj=obj, nodenum=nodenum, ivar=ivar, ans=ans, tsize=tsize, &
-                 idof=GetIDOF(spacecompo=spacecompo, timecompo=timecompo, &
-                              tspacecompo=obj.spacecomponents.ivar))
+                 idof=idof)
 END PROCEDURE obj_GetNodeLoc_8
 
 !----------------------------------------------------------------------------
@@ -492,7 +512,8 @@ END PROCEDURE obj_GetNodeLoc_8
 
 MODULE PROCEDURE obj_GetNodeLoc9
 INTEGER(I4B) :: tsize
-CALL obj_GetNodeLoc_9(obj, nodenum, ivar, idof, ans, tsize)
+CALL obj_GetNodeLoc_9(obj=obj, nodenum=nodenum, ivar=ivar, idof=idof, &
+                      ans=ans, tsize=tsize)
 END PROCEDURE obj_GetNodeLoc9
 
 !----------------------------------------------------------------------------
@@ -531,10 +552,14 @@ END PROCEDURE obj_GetNodeLoc_9
 
 MODULE PROCEDURE obj_GetNodeLoc10
 INTEGER(I4B) :: tsize
+INTEGER(I4B) :: idof(SIZE(timecompo)), tspacecompo
+
+tspacecompo = obj.spacecomponents.ivar
+idof = GetIDOF(spacecompo=spacecompo, timecompo=timecompo, &
+               tspacecompo=tspacecompo)
+
 CALL GetNodeLoc_(obj=obj, nodenum=nodenum, ivar=ivar, ans=ans, tsize=tsize, &
-                 idof=GetIDOF(spacecompo=spacecompo, &
-                              timecompo=timecompo, &
-                              tspacecompo=obj.spacecomponents.ivar))
+                 idof=idof)
 END PROCEDURE obj_GetNodeLoc10
 
 !----------------------------------------------------------------------------
@@ -542,9 +567,12 @@ END PROCEDURE obj_GetNodeLoc10
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE obj_GetNodeLoc_10
+INTEGER(I4B) :: idof(SIZE(timecompo)), tspacecompo
+tspacecompo = obj.spacecomponents.ivar
+idof = GetIDOF(spacecompo=spacecompo, timecompo=timecompo, &
+               tspacecompo=tspacecompo)
 CALL GetNodeLoc_(obj=obj, nodenum=nodenum, ivar=ivar, ans=ans, tsize=tsize, &
-                 idof=GetIDOF(spacecompo=spacecompo, timecompo=timecompo, &
-                              tspacecompo=obj.spacecomponents.ivar))
+                 idof=idof)
 END PROCEDURE obj_GetNodeLoc_10
 
 !----------------------------------------------------------------------------
@@ -553,9 +581,13 @@ END PROCEDURE obj_GetNodeLoc_10
 
 MODULE PROCEDURE obj_GetNodeLoc11
 INTEGER(I4B) :: tsize
+INTEGER(I4B) :: idof(SIZE(spacecompo)), tspacecompo
+
+tspacecompo = obj.spacecomponents.ivar
+idof = GetIDOF(spacecompo=spacecompo, timecompo=timecompo, &
+               tspacecompo=tspacecompo)
 CALL GetNodeLoc_(obj=obj, nodenum=nodenum, ivar=ivar, ans=ans, tsize=tsize, &
-                 idof=GetIDOF(spacecompo=spacecompo, timecompo=timecompo, &
-                              tspacecompo=obj.spacecomponents.ivar))
+                 idof=idof)
 END PROCEDURE obj_GetNodeLoc11
 
 !----------------------------------------------------------------------------
@@ -563,9 +595,13 @@ END PROCEDURE obj_GetNodeLoc11
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE obj_GetNodeLoc_11
+INTEGER(I4B) :: idof(SIZE(spacecompo)), tspacecompo
+
+tspacecompo = obj.spacecomponents.ivar
+idof = GetIDOF(spacecompo=spacecompo, timecompo=timecompo, &
+               tspacecompo=tspacecompo)
 CALL GetNodeLoc_(obj=obj, nodenum=nodenum, ivar=ivar, ans=ans, tsize=tsize, &
-                 idof=GetIDOF(spacecompo=spacecompo, timecompo=timecompo, &
-                              tspacecompo=obj.spacecomponents.ivar))
+                 idof=idof)
 END PROCEDURE obj_GetNodeLoc_11
 
 !----------------------------------------------------------------------------
@@ -574,8 +610,9 @@ END PROCEDURE obj_GetNodeLoc_11
 
 MODULE PROCEDURE obj_GetNodeLoc12
 INTEGER(I4B) :: tsize
-CALL obj_GetNodeLoc_12(obj, nodenum, ivar, spacecompo, &
-                       timecompo, ans, tsize)
+CALL obj_GetNodeLoc_12(obj=obj, nodenum=nodenum, ivar=ivar, &
+                       spacecompo=spacecompo, timecompo=timecompo, &
+                       ans=ans, tsize=tsize)
 END PROCEDURE obj_GetNodeLoc12
 
 !----------------------------------------------------------------------------
@@ -583,14 +620,16 @@ END PROCEDURE obj_GetNodeLoc12
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE obj_GetNodeLoc_12
-INTEGER(I4B) :: idofs(SIZE(timecompo)), ii, tempsize, tnode
+INTEGER(I4B) :: idofs(SIZE(timecompo))
+INTEGER(I4B) :: ii, tempsize, tnode, tspacecompo
 
 tempsize = SIZE(timecompo)
 tnode = SIZE(nodenum)
 tsize = tempsize * tnode
+tspacecompo = obj.spacecomponents.ivar
 
 idofs = GetIDOF(spacecompo=spacecompo, timecompo=timecompo, &
-                tspacecompo=obj.spacecomponents.ivar)
+                tspacecompo=tspacecompo)
 
 tsize = 1
 DO ii = 1, tnode
@@ -600,7 +639,6 @@ DO ii = 1, tnode
 END DO
 
 tsize = tsize - 1
-
 END PROCEDURE obj_GetNodeLoc_12
 
 !----------------------------------------------------------------------------
@@ -609,8 +647,9 @@ END PROCEDURE obj_GetNodeLoc_12
 
 MODULE PROCEDURE obj_GetNodeLoc13
 INTEGER(I4B) :: tsize
-CALL obj_GetNodeLoc_13(obj, nodenum, ivar, spacecompo, &
-                       timecompo, ans, tsize)
+CALL obj_GetNodeLoc_13(obj=obj, nodenum=nodenum, ivar=ivar, &
+                       spacecompo=spacecompo, timecompo=timecompo, &
+                       ans=ans, tsize=tsize)
 END PROCEDURE obj_GetNodeLoc13
 
 !----------------------------------------------------------------------------
@@ -618,14 +657,16 @@ END PROCEDURE obj_GetNodeLoc13
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE obj_GetNodeLoc_13
-INTEGER(I4B) :: idofs(SIZE(spacecompo)), ii, tempsize, tnode
+INTEGER(I4B) :: idofs(SIZE(spacecompo))
+INTEGER(I4B) :: ii, tempsize, tnode, tspacecompo
 
 tempsize = SIZE(spacecompo)
 tnode = SIZE(nodenum)
 tsize = tempsize * tnode
+tspacecompo = obj.spacecomponents.ivar
 
 idofs = GetIDOF(spacecompo=spacecompo, timecompo=timecompo, &
-                tspacecompo=obj.spacecomponents.ivar)
+                tspacecompo=tspacecompo)
 
 tsize = 1
 DO ii = 1, tnode
@@ -635,11 +676,10 @@ DO ii = 1, tnode
 END DO
 
 tsize = tsize - 1
-
 END PROCEDURE obj_GetNodeLoc_13
 
 !----------------------------------------------------------------------------
-!                                                               GetIndex
+!                                                                   GetIndex
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE obj_GetIndex1
@@ -651,7 +691,7 @@ CALL GetNodeLoc_(obj=obj, nodenum=nodenum, idof=Arange(1, tsize), &
 END PROCEDURE obj_GetIndex1
 
 !----------------------------------------------------------------------------
-!                                                               GetIndex_
+!                                                                   GetIndex_
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE obj_GetIndex_1
@@ -661,7 +701,7 @@ CALL GetNodeLoc_(obj=obj, nodenum=nodenum, idof=Arange(1, tsize), &
 END PROCEDURE obj_GetIndex_1
 
 !----------------------------------------------------------------------------
-!                                                                 GetIndex
+!                                                                   GetIndex
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE obj_GetIndex2
@@ -673,7 +713,7 @@ CALL GetNodeLoc_(obj=obj, nodenum=nodenum, ans=ans, tsize=tsize, &
 END PROCEDURE obj_GetIndex2
 
 !----------------------------------------------------------------------------
-!                                                                 GetIndex_
+!                                                                   GetIndex_
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE obj_GetIndex_2

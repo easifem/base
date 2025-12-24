@@ -119,7 +119,7 @@ CONTAINS
 !
 ! MODULE PROCEDURE ElasticNitscheMatrixTangent1c
 ! REAL(DFP), ALLOCATABLE :: muBar(:)
-! CALL getInterpolation(obj=trial, interpol=muBar, val=mu)
+! CALL getInterpolation(obj=trial, ans=muBar, val=mu)
 ! ans = ElasticNitscheMatrixTangent( &
 ! & test=test, trial=trial, mu=muBar)
 ! DEALLOCATE (muBar)

@@ -43,8 +43,8 @@ CALL Reallocate(IaJb, &
   & SIZE(trial(1)%N, 1), &
   & SIZE(trial(1)%T))
 !!
-CALL GetInterpolation(obj=trial, interpol=m2, val=c1)
-CALL GetInterpolation(obj=trial, interpol=m2b, val=c2)
+CALL GetInterpolation(obj=trial, ans=m2, val=c1)
+CALL GetInterpolation(obj=trial, ans=m2b, val=c2)
 !!
 DO ipt = 1, SIZE(trial)
   !!

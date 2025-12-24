@@ -20,7 +20,11 @@
 ! summary: Constructor method for ElemshapeData_ and STElemshapeData_
 
 SUBMODULE(ElemshapeData_ConstructorMethods) Methods
-USE BaseMethod
+USE GlobalData, ONLY: stderr
+USE ReallocateUtility, ONLY: Reallocate
+USE QuadraturePoint_Method, ONLY: GetQuadraturePoints
+USE ErrorHandling, ONLY: Errormsg
+
 IMPLICIT NONE
 CONTAINS
 
@@ -28,332 +32,186 @@ CONTAINS
 !                                                                  Initiate
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE elemsd_Allocate
-CALL reallocate(obj%N, nns, nips)
-CALL reallocate(obj%dNdXi, nns, xidim, nips)
-CALL reallocate(obj%Normal, 3, nips)
-CALL reallocate(obj%dNdXt, nns, nsd, nips)
-CALL reallocate(obj%Jacobian, nsd, xidim, nips)
-CALL reallocate(obj%Js, nips)
-CALL reallocate(obj%Thickness, nips)
-obj%Thickness = 1.0_DFP
-CALL reallocate(obj%Coord, nsd, nips)
-END PROCEDURE elemsd_Allocate
+MODULE PROCEDURE obj_Allocate
+LOGICAL(LGT) :: isok
+
+CALL Reallocate(obj%N, nns, nips)
+CALL Reallocate(obj%dNdXi, nns, xidim, nips)
+CALL Reallocate(obj%normal, 3, nips)
+CALL Reallocate(obj%dNdXt, nns, nsd, nips)
+CALL Reallocate(obj%jacobian, nsd, xidim, nips)
+CALL Reallocate(obj%js, nips)
+CALL Reallocate(obj%thickness, nips)
+obj%thickness = 1.0_DFP
+CALL Reallocate(obj%coord, nsd, nips)
+CALL Reallocate(obj%ws, nips)
+obj%nsd = nsd
+obj%xidim = xidim
+obj%nips = nips
+obj%nns = nns
+
+isok = PRESENT(nnt)
+IF (.NOT. isok) RETURN
+
+SELECT TYPE (obj); TYPE is (STElemShapeData_)
+  obj%nnt = nnt
+  CALL Reallocate(obj%T, nnt)
+  CALL Reallocate(obj%dTdTheta, nnt)
+  CALL Reallocate(obj%dNTdt, nns, nnt, nips)
+  CALL Reallocate(obj%dNTdXt, nns, nnt, nsd, nips)
+END SELECT
+END PROCEDURE obj_Allocate
 
 !----------------------------------------------------------------------------
 !                                                                 Initiate
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE elemsd_Initiate1
-
-CALL ErrorMSG( &
-  & Msg="[WORK IN PROGRESS]", &
-  & File=__FILE__, &
-  & Routine="elemsd_Initiate1()", &
-  & Line=__LINE__, &
-  & UnitNo=stdout)
+MODULE PROCEDURE obj_Initiate1
+CALL ErrorMSG(msg="[WORK IN PROGRESS]", file=__FILE__, &
+              routine="obj_Initiate1()", line=__LINE__, unitno=stderr)
 STOP
-
-! SELECT CASE (TRIM(interpolType)//TRIM(continuityType))
-! CASE ("LagrangeInterpolation"//"H1")
-!   CALL Initiate( &
-!     & obj=obj, &
-!     & quad=quad, &
-!     & refElem=refElem, &
-!     & continuityType=TypeH1, &
-!     & interpolType=TypeLagrangeInterpolation)
-!
-! CASE ("LagrangeInterpolation"//"HDiv")
-!   CALL ErrorMSG( &
-!     & Msg="BaseInterpolation: LagrangeInterpolation &
-!     & BaseContinuityType: HDiv", &
-!     & File="ElemshapeData_Method@Constructor.F90", &
-!     & Routine="elemsd_Initiate1()", &
-!     & Line=__LINE__, &
-!     & UnitNo=stdout)
-!   STOP
-!
-! CASE ("LagrangeInterpolation"//"HCurl")
-!   CALL ErrorMSG( &
-!     & Msg="BaseInterpolation: LagrangeInterpolation &
-!     & BaseContinuityType: HCurl", &
-!     & File="ElemshapeData_Method@Constructor.F90", &
-!     & Routine="elemsd_Initiate1()", &
-!     & Line=__LINE__, &
-!     & UnitNo=stdout)
-!   STOP
-!
-! CASE ("LagrangeInterpolation"//"DG")
-!   CALL ErrorMSG( &
-!     & Msg="BaseInterpolation: LagrangeInterpolation &
-!     & BaseContinuityType: DG", &
-!     & File="ElemshapeData_Method@Constructor.F90", &
-!     & Routine="elemsd_Initiate1()", &
-!     & Line=__LINE__, &
-!     & UnitNo=stdout)
-!   STOP
-!
-! CASE ("HermitInterpolation"//"H1")
-!   CALL ErrorMSG( &
-!     & Msg="BaseInterpolation: HermitInterpolation &
-!     & BaseContinuityType: H1", &
-!     & File="ElemshapeData_Method@Constructor.F90", &
-!     & Routine="elemsd_Initiate1()", &
-!     & Line=__LINE__, &
-!     & UnitNo=stdout)
-!   STOP
-!
-! CASE ("HermitInterpolation"//"HDiv")
-!   CALL ErrorMSG( &
-!     & Msg="BaseInterpolation: HermitInterpolation &
-!     & BaseContinuityType: HDiv", &
-!     & File="ElemshapeData_Method@Constructor.F90", &
-!     & Routine="elemsd_Initiate1()", &
-!     & Line=__LINE__, &
-!     & UnitNo=stdout)
-!   STOP
-!
-! CASE ("HermitInterpolation"//"HCurl")
-!   CALL ErrorMSG( &
-!     & Msg="BaseInterpolation: HermitInterpolation &
-!     & BaseContinuityType: HCurl", &
-!     & File="ElemshapeData_Method@Constructor.F90", &
-!     & Routine="elemsd_Initiate1()", &
-!     & Line=__LINE__, &
-!     & UnitNo=stdout)
-!   STOP
-!
-! CASE ("HermitInterpolation"//"DG")
-!   CALL ErrorMSG( &
-!     & Msg="BaseInterpolation: HermitInterpolation &
-!     & BaseContinuityType: DG", &
-!     & File="ElemshapeData_Method@Constructor.F90", &
-!     & Routine="elemsd_Initiate1()", &
-!     & Line=__LINE__, &
-!     & UnitNo=stdout)
-!   STOP
-!
-! CASE ("SerendipityInterpolation"//"H1")
-!   CALL ErrorMSG( &
-!     & Msg="BaseInterpolation: SerendipityInterpolation &
-!     & BaseContinuityType: H1", &
-!     & File="ElemshapeData_Method@Constructor.F90", &
-!     & Routine="elemsd_Initiate1()", &
-!     & Line=__LINE__, &
-!     & UnitNo=stdout)
-!   STOP
-!
-! CASE ("SerendipityInterpolation"//"HDiv")
-!   CALL ErrorMSG( &
-!     & Msg="BaseInterpolation: SerendipityInterpolation &
-!     & BaseContinuityType: HDiv", &
-!     & File="ElemshapeData_Method@Constructor.F90", &
-!     & Routine="elemsd_Initiate1()", &
-!     & Line=__LINE__, &
-!     & UnitNo=stdout)
-!   STOP
-!
-! CASE ("SerendipityInterpolation"//"HCurl")
-!   CALL ErrorMSG( &
-!     & Msg="BaseInterpolation: SerendipityInterpolation &
-!     & BaseContinuityType: HCurl", &
-!     & File="ElemshapeData_Method@Constructor.F90", &
-!     & Routine="elemsd_Initiate1()", &
-!     & Line=__LINE__, &
-!     & UnitNo=stdout)
-!   STOP
-!
-! CASE ("SerendipityInterpolation"//"DG")
-!   CALL ErrorMSG( &
-!     & Msg="BaseInterpolation: SerendipityInterpolation &
-!     & BaseContinuityType: DG", &
-!     & File="ElemshapeData_Method@Constructor.F90", &
-!     & Routine="elemsd_Initiate1()", &
-!     & Line=__LINE__, &
-!     & UnitNo=stdout)
-!   STOP
-!
-! CASE ("HierarchyInterpolation"//"H1")
-!   CALL ErrorMSG( &
-!     & Msg="BaseInterpolation: HierarchyInterpolation &
-!     & BaseContinuityType: H1", &
-!     & File="ElemshapeData_Method@Constructor.F90", &
-!     & Routine="elemsd_Initiate1()", &
-!     & Line=__LINE__, &
-!     & UnitNo=stdout)
-!   STOP
-!
-! CASE ("HierarchyInterpolation"//"HDiv")
-!   CALL ErrorMSG( &
-!     & Msg="BaseInterpolation: HierarchyInterpolation &
-!     & BaseContinuityType: HDiv", &
-!     & File="ElemshapeData_Method@Constructor.F90", &
-!     & Routine="elemsd_Initiate1()", &
-!     & Line=__LINE__, &
-!     & UnitNo=stdout)
-!   STOP
-!
-! CASE ("HierarchyInterpolation"//"HCurl")
-!   CALL ErrorMSG( &
-!     & Msg="BaseInterpolation: HierarchyInterpolation &
-!     & BaseContinuityType: HCurl", &
-!     & File="ElemshapeData_Method@Constructor.F90", &
-!     & Routine="elemsd_Initiate1()", &
-!     & Line=__LINE__, &
-!     & UnitNo=stdout)
-!   STOP
-!
-! CASE ("HierarchyInterpolation"//"DG")
-!   CALL ErrorMSG( &
-!     & Msg="BaseInterpolation: HierarchyInterpolation &
-!     & BaseContinuityType: DG", &
-!     & File="ElemshapeData_Method@Constructor.F90", &
-!     & Routine="elemsd_Initiate1()", &
-!     & Line=__LINE__, &
-!     & UnitNo=stdout)
-!   STOP
-!
-! CASE DEFAULT
-!   CALL ErrorMSG( &
-!     & Msg="Unknown child name of BaseInterpolation &
-!     & and BaseContinuityType", &
-!     & File="ElemshapeData_Method@Constructor.F90", &
-!     & Routine="elemsd_Initiate1()", &
-!     & Line=__LINE__, &
-!     & UnitNo=stdout)
-! END SELECT
-
-END PROCEDURE elemsd_Initiate1
+END PROCEDURE obj_Initiate1
 
 !----------------------------------------------------------------------------
 !                                                                 Initiate
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE elemsd_initiate2
-IF (ALLOCATED(obj2%N)) obj1%N = obj2%N
-IF (ALLOCATED(obj2%dNdXi)) obj1%dNdXi = obj2%dNdXi
-IF (ALLOCATED(obj2%jacobian)) obj1%jacobian = obj2%jacobian
-IF (ALLOCATED(obj2%js)) obj1%js = obj2%js
-IF (ALLOCATED(obj2%ws)) obj1%ws = obj2%ws
-IF (ALLOCATED(obj2%dNdXt)) obj1%dNdXt = obj2%dNdXt
-IF (ALLOCATED(obj2%thickness)) obj1%thickness = obj2%thickness
-IF (ALLOCATED(obj2%coord)) obj1%coord = obj2%coord
-IF (ALLOCATED(obj2%normal)) obj1%normal = obj2%normal
-obj1%refElem = obj2%refElem
-END PROCEDURE elemsd_initiate2
+MODULE PROCEDURE obj_Initiate2
+INTEGER(I4B) :: ii, jj, kk, nns, nsd, xidim, nips, nnt, ll, nnt
+
+nns = obj2%nns
+nsd = obj2%nsd
+xidim = obj2%xidim
+nips = obj2%nips
+
+SELECT TYPE (obj2); TYPE is (STElemShapeData_)
+  nnt = obj2%nnt
+END SELECT
+
+CALL obj_Allocate(obj=obj1, nsd=nsd, xidim=xidim, nns=nns, &
+                  nips=nips, nnt=nnt)
+
+DO CONCURRENT(jj=1:nips, ii=1:nns)
+  obj1%N(ii, jj) = obj2%N(ii, jj)
+END DO
+
+DO CONCURRENT(kk=1:nips, jj=1:xidim, ii=1:nns)
+  obj1%dNdXi(ii, jj, kk) = obj2%dNdXi(ii, jj, kk)
+END DO
+
+DO CONCURRENT(kk=1:nips, jj=1:nsd, ii=1:nns)
+  obj1%dNdXt(ii, jj, kk) = obj2%dNdXt(ii, jj, kk)
+END DO
+
+DO CONCURRENT(ii=1:nsd, jj=1:xidim, kk=1:nips)
+  obj1%jacobian(ii, jj, kk) = obj2%jacobian(ii, jj, kk)
+END DO
+
+DO CONCURRENT(ii=1:nips)
+  obj1%js(ii) = obj2%js(ii)
+  obj1%ws(ii) = obj2%ws(ii)
+  obj1%thickness(ii) = obj2%thickness(ii)
+  obj1%coord(1:nsd, ii) = obj2%coord(1:nsd, ii)
+  obj1%normal(1:3, ii) = obj2%normal(1:3, ii)
+END DO
+
+SELECT TYPE (obj1); TYPE is (STElemShapeData_)
+  SELECT TYPE (obj2); TYPE is (STElemShapeData_)
+    obj1%wt = obj2%wt
+    ! obj1%theta = obj2%theta
+    obj1%jt = obj2%jt
+    obj1%nnt = obj2%nnt
+    nnt = obj1%nnt
+
+    DO CONCURRENT(ii=1:nnt)
+      obj1%T(ii) = obj2%T(ii)
+      obj1%dTdTheta(ii) = obj2%dTdTheta(ii)
+    END DO
+
+    DO CONCURRENT(ii=1:nns, jj=1:nnt, kk=1:nips)
+      obj1%dNTdt(ii, jj, kk) = obj2%dNTdt(ii, jj, kk)
+    END DO
+
+    DO CONCURRENT(ii=1:nns, jj=1:nnt, kk=1:nsd, ll=1:nips)
+      obj1%dNTdXt(ii, jj, kk, ll) = obj2%dNTdXt(ii, jj, kk, ll)
+    END DO
+
+  END SELECT
+END SELECT
+
+END PROCEDURE obj_Initiate2
 
 !----------------------------------------------------------------------------
 !                                                                 Initiate
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE elemsd_initiate3
-IF (ALLOCATED(obj2%N)) obj1%N = obj2%N
-IF (ALLOCATED(obj2%dNdXi)) obj1%dNdXi = obj2%dNdXi
-IF (ALLOCATED(obj2%jacobian)) obj1%jacobian = obj2%jacobian
-IF (ALLOCATED(obj2%js)) obj1%js = obj2%js
-IF (ALLOCATED(obj2%ws)) obj1%ws = obj2%ws
-IF (ALLOCATED(obj2%dNdXt)) obj1%dNdXt = obj2%dNdXt
-IF (ALLOCATED(obj2%thickness)) obj1%thickness = obj2%thickness
-IF (ALLOCATED(obj2%coord)) obj1%coord = obj2%coord
-IF (ALLOCATED(obj2%normal)) obj1%normal = obj2%normal
-obj1%refElem = obj2%refElem
-END PROCEDURE elemsd_initiate3
+MODULE PROCEDURE obj_Initiate3
+LOGICAL(LGT) :: isok
+INTEGER(I4B) :: tip, ip, nnt, tsize
 
-!----------------------------------------------------------------------------
-!                                                                 Initiate
-!----------------------------------------------------------------------------
+tip = elemsd%nips
 
-MODULE PROCEDURE elemsd_initiate4
-IF (ALLOCATED(obj2%N)) obj1%N = obj2%N
-IF (ALLOCATED(obj2%dNdXi)) obj1%dNdXi = obj2%dNdXi
-IF (ALLOCATED(obj2%jacobian)) obj1%jacobian = obj2%jacobian
-IF (ALLOCATED(obj2%js)) obj1%js = obj2%js
-IF (ALLOCATED(obj2%ws)) obj1%ws = obj2%ws
-IF (ALLOCATED(obj2%dNdXt)) obj1%dNdXt = obj2%dNdXt
-IF (ALLOCATED(obj2%thickness)) obj1%thickness = obj2%thickness
-IF (ALLOCATED(obj2%coord)) obj1%coord = obj2%coord
-IF (ALLOCATED(obj2%normal)) obj1%normal = obj2%normal
-obj1%refElem = obj2%refElem
-END PROCEDURE elemsd_initiate4
+isok = ALLOCATED(obj)
+IF (isok) THEN
+  tsize = SIZE(obj)
 
-!----------------------------------------------------------------------------
-!                                                                 Initiate
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE elemsd_initiate5
-IF (ALLOCATED(obj2%N)) obj1%N = obj2%N
-IF (ALLOCATED(obj2%dNdXi)) obj1%dNdXi = obj2%dNdXi
-IF (ALLOCATED(obj2%jacobian)) obj1%jacobian = obj2%jacobian
-IF (ALLOCATED(obj2%js)) obj1%js = obj2%js
-IF (ALLOCATED(obj2%ws)) obj1%ws = obj2%ws
-IF (ALLOCATED(obj2%dNdXt)) obj1%dNdXt = obj2%dNdXt
-IF (ALLOCATED(obj2%thickness)) obj1%thickness = obj2%thickness
-IF (ALLOCATED(obj2%coord)) obj1%coord = obj2%coord
-IF (ALLOCATED(obj2%normal)) obj1%normal = obj2%normal
-obj1%refElem = obj2%refElem
-obj1%wt = obj2%wt
-obj1%theta = obj2%theta
-obj1%jt = obj2%jt
-IF (ALLOCATED(obj2%T)) obj1%T = obj2%T
-IF (ALLOCATED(obj2%dTdTheta)) obj1%dTdTheta = obj2%dTdTheta
-IF (ALLOCATED(obj2%dNTdt)) obj1%dNTdt = obj2%dNTdt
-IF (ALLOCATED(obj2%dNTdXt)) obj1%dNTdXt = obj2%dNTdXt
-END PROCEDURE elemsd_initiate5
-
-!----------------------------------------------------------------------------
-!                                                                 Initiate
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE stsd_initiate
-INTEGER(I4B) :: tip, ip
-REAL(DFP) :: x(3)
-
-tip = SIZE(elemsd%N, 2)
-IF (ALLOCATED(obj)) THEN
-  DO ip = 1, SIZE(obj)
+  DO ip = 1, tsize
     CALL DEALLOCATE (obj(ip))
   END DO
+
   DEALLOCATE (obj)
 END IF
 
 ALLOCATE (obj(tip))
+
+nnt = elemsd%nns
+
 DO ip = 1, tip
-  obj(ip)%T = elemsd%N(:, ip)
-  obj(ip)%dTdTheta = elemsd%dNdXi(:, 1, ip)
-  obj(ip)%Jt = elemsd%Js(ip)
-  CALL getQuadraturePoints( &
-    & obj=elemsd%quad, &
-    & weights=obj(ip)%wt,&
-    & points=x, &
-    & num=ip)
-  obj(ip)%theta = x(1)
+  obj(ip)%jt = elemsd%js(ip)
+  obj(ip)%wt = elemsd%ws(ip)
+  obj(ip)%nnt = nnt
+
+  CALL Reallocate(obj(ip)%T, nnt)
+  obj(ip)%T(1:nnt) = elemsd%N(1:nnt, ip)
+
+  CALL Reallocate(obj(ip)%dTdTheta, nnt)
+  obj(ip)%dTdTheta(1:nnt) = elemsd%dNdXi(1:nnt, 1, ip)
 END DO
-END PROCEDURE stsd_initiate
+
+END PROCEDURE obj_Initiate3
 
 !----------------------------------------------------------------------------
 !                                                             Deallocate
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE elemsd_Deallocate
-IF (ALLOCATED(obj%Normal)) DEALLOCATE (obj%Normal)
+MODULE PROCEDURE obj_Deallocate
+IF (ALLOCATED(obj%normal)) DEALLOCATE (obj%normal)
 IF (ALLOCATED(obj%N)) DEALLOCATE (obj%N)
 IF (ALLOCATED(obj%dNdXi)) DEALLOCATE (obj%dNdXi)
 IF (ALLOCATED(obj%dNdXt)) DEALLOCATE (obj%dNdXt)
-IF (ALLOCATED(obj%Jacobian)) DEALLOCATE (obj%Jacobian)
-IF (ALLOCATED(obj%Js)) DEALLOCATE (obj%Js)
-IF (ALLOCATED(obj%Ws)) DEALLOCATE (obj%Ws)
-IF (ALLOCATED(obj%Thickness)) DEALLOCATE (obj%Thickness)
-IF (ALLOCATED(obj%Coord)) DEALLOCATE (obj%Coord)
-CALL DEALLOCATE (obj%Quad)
-CALL DEALLOCATE (obj%refelem)
+IF (ALLOCATED(obj%jacobian)) DEALLOCATE (obj%jacobian)
+IF (ALLOCATED(obj%js)) DEALLOCATE (obj%js)
+IF (ALLOCATED(obj%ws)) DEALLOCATE (obj%ws)
+IF (ALLOCATED(obj%thickness)) DEALLOCATE (obj%thickness)
+IF (ALLOCATED(obj%coord)) DEALLOCATE (obj%coord)
+
+obj%nsd = 0
+obj%xidim = 0
+obj%nips = 0
+obj%nns = 0
+! CALL DEALLOCATE (obj%Quad)
+! CALL DEALLOCATE (obj%refelem)
 SELECT TYPE (obj)
 TYPE IS (STElemShapeData_)
+  obj%nnt = 0
+  obj%wt = 0
+  obj%jt = 0
   IF (ALLOCATED(obj%T)) DEALLOCATE (obj%T)
   IF (ALLOCATED(obj%dTdTheta)) DEALLOCATE (obj%dTdTheta)
   IF (ALLOCATED(obj%dNTdt)) DEALLOCATE (obj%dNTdt)
   IF (ALLOCATED(obj%dNTdXt)) DEALLOCATE (obj%dNTdXt)
 END SELECT
-END PROCEDURE elemsd_Deallocate
+END PROCEDURE obj_Deallocate
 
 !----------------------------------------------------------------------------
 !

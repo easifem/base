@@ -17,7 +17,7 @@
 
 !> author: Vikas Sharma, Ph. D.
 ! date:  19 Oct 2022
-! summary:         Some methods related to standard mapping are defined
+! summary: Some methods related to standard mapping are defined
 !
 !{!pages/MappingUtility_.md!}
 
@@ -27,13 +27,21 @@ IMPLICIT NONE
 PRIVATE
 
 PUBLIC :: FromBiunitLine2Segment
+PUBLIC :: FromBiunitLine2Segment_
 PUBLIC :: FromBiUnitLine2UnitLine
 PUBLIC :: FromUnitLine2BiUnitLine
+PUBLIC :: FromUnitLine2BiUnitLine_
 PUBLIC :: FromLine2Line_
 
 PUBLIC :: FromBiUnitQuadrangle2Quadrangle
+PUBLIC :: FromBiUnitQuadrangle2Quadrangle_
+
 PUBLIC :: FromBiUnitQuadrangle2UnitQuadrangle
+PUBLIC :: FromBiUnitQuadrangle2UnitQuadrangle_
 PUBLIC :: FromUnitQuadrangle2BiUnitQuadrangle
+PUBLIC :: FromBiUnitHexahedron2Hexahedron_
+PUBLIC :: FromBiUnitHexahedron2UnitHexahedron_
+PUBLIC :: FromUnitHexahedron2BiUnitHexahedron_
 
 PUBLIC :: FromBiUnitHexahedron2Hexahedron
 PUBLIC :: FromBiUnitHexahedron2UnitHexahedron
@@ -52,8 +60,10 @@ PUBLIC :: FromBiUnitSqr2UnitTriangle
 PUBLIC :: FromBiUnitQuadrangle2UnitTriangle
 
 PUBLIC :: FromTriangle2Square_
+PUBLIC :: FromSquare2Triangle_
 
 PUBLIC :: FromUnitTriangle2Triangle
+PUBLIC :: FromUnitTriangle2Triangle_
 
 PUBLIC :: BarycentricCoordUnitTriangle
 !! This is function
@@ -70,16 +80,27 @@ PUBLIC :: FromUnitTriangle2BiUnitTriangle
 PUBLIC :: FromTriangle2Triangle_
 
 PUBLIC :: FromUnitTetrahedron2BiUnitTetrahedron
+PUBLIC :: FromUnitTetrahedron2BiUnitTetrahedron_
+
 PUBLIC :: FromBiUnitTetrahedron2UnitTetrahedron
 PUBLIC :: FromUnitTetrahedron2Tetrahedron
+PUBLIC :: FromUnitTetrahedron2Tetrahedron_
 PUBLIC :: FromBiUnitTetrahedron2Tetrahedron
 PUBLIC :: BarycentricCoordUnitTetrahedron
+PUBLIC :: BarycentricCoordUnitTetrahedron_
 PUBLIC :: BarycentricCoordBiUnitTetrahedron
+PUBLIC :: BarycentricCoordBiUnitTetrahedron_
 PUBLIC :: BarycentricCoordTetrahedron
+PUBLIC :: BarycentricCoordTetrahedron_
 PUBLIC :: FromBiUnitTetrahedron2BiUnitHexahedron
+
 PUBLIC :: FromBiUnitHexahedron2BiUnitTetrahedron
+PUBLIC :: FromBiUnitHexahedron2BiUnitTetrahedron_
+
 PUBLIC :: FromUnitTetrahedron2BiUnitHexahedron
+
 PUBLIC :: FromBiUnitHexahedron2UnitTetrahedron
+PUBLIC :: FromBiUnitHexahedron2UnitTetrahedron_
 
 PUBLIC :: JacobianLine
 PUBLIC :: JacobianTriangle
@@ -97,7 +118,7 @@ PUBLIC :: JacobianTetrahedron
 ! date: 19 Oct 2022
 ! summary: Map from unit line to physical space
 
-INTERFACE
+INTERFACE FromBiunitLine2Segment
   MODULE PURE FUNCTION FromBiunitLine2Segment1(xin, x1, x2) RESULT(ans)
     REAL(DFP), INTENT(IN) :: xin(:)
     !! coordinates in [-1,1]
@@ -108,11 +129,25 @@ INTERFACE
     REAL(DFP) :: ans(SIZE(xin))
     !! mapped coordinates of xin in physical domain
   END FUNCTION FromBiunitLine2Segment1
-END INTERFACE
-
-INTERFACE FromBiunitLine2Segment
-  MODULE PROCEDURE FromBiunitLine2Segment1
 END INTERFACE FromBiunitLine2Segment
+
+!----------------------------------------------------------------------------
+!                                                    FromBiunitLine2Segment_
+!----------------------------------------------------------------------------
+
+INTERFACE FromBiunitLine2Segment_
+  MODULE PURE SUBROUTINE FromBiunitLine2Segment1_(xin, x1, x2, ans, tsize)
+    REAL(DFP), INTENT(IN) :: xin(:)
+    !! coordinates in [-1,1]
+    REAL(DFP), INTENT(IN) :: x1
+    !! x1 of physical domain
+    REAL(DFP), INTENT(IN) :: x2
+    !! x2 of physical  domain
+    REAL(DFP), INTENT(INOUT) :: ans(:)
+    !! mapped coordinates of xin in physical domain
+    INTEGER(I4B), INTENT(OUT) :: tsize
+  END SUBROUTINE FromBiunitLine2Segment1_
+END INTERFACE FromBiunitLine2Segment_
 
 !----------------------------------------------------------------------------
 !                                                     FromBiunitLine2Segment
@@ -122,7 +157,7 @@ END INTERFACE FromBiunitLine2Segment
 ! date: 19 Oct 2022
 ! summary: Map from unit line to physical space
 
-INTERFACE
+INTERFACE FromBiunitLine2Segment
   MODULE PURE FUNCTION FromBiunitLine2Segment2(xin, x1, x2) RESULT(ans)
     REAL(DFP), INTENT(IN) :: xin(:)
     !! coordinates in [-1,1], SIZE(xin) = n
@@ -134,11 +169,31 @@ INTERFACE
     !! returned coordinates in physical space
     !! ans is in xij format
   END FUNCTION FromBiunitLine2Segment2
-END INTERFACE
-
-INTERFACE FromBiunitLine2Segment
-  MODULE PROCEDURE FromBiunitLine2Segment2
 END INTERFACE FromBiunitLine2Segment
+
+!----------------------------------------------------------------------------
+!                                                     FromBiunitLine2Segment
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 19 Oct 2022
+! summary: from bi unit line to segment wo allocation
+
+INTERFACE FromBiunitLine2Segment_
+  MODULE PURE SUBROUTINE FromBiunitLine2Segment2_(xin, x1, x2, ans, nrow, &
+                                                  ncol)
+    REAL(DFP), INTENT(IN) :: xin(:)
+    !! coordinates in [-1,1], SIZE(xin) = n
+    REAL(DFP), INTENT(IN) :: x1(:)
+    !! x1 of physical domain, SIZE(x1) = nsd
+    REAL(DFP), INTENT(IN) :: x2(:)
+    !! x2 of physical  domain, SIZE(x2) = nsd
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    !! returned coordinates in physical space
+    !! ans is in xij format
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+  END SUBROUTINE FromBiunitLine2Segment2_
+END INTERFACE FromBiunitLine2Segment_
 
 !----------------------------------------------------------------------------
 !                                                 FromUnitTriangle2Triangle
@@ -167,7 +222,36 @@ INTERFACE FromUnitTriangle2Triangle
 END INTERFACE FromUnitTriangle2Triangle
 
 !----------------------------------------------------------------------------
-!                                            FromBiUnitQuadrangle2Quadrangle
+!                                                FromUnitTriangle2Triangle_
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2024-06-26
+! summary:  from unit triangle to triangle without allocation
+
+INTERFACE FromUnitTriangle2Triangle_
+  MODULE PURE SUBROUTINE FromUnitTriangle2Triangle1_(xin, x1, x2, x3, ans, &
+                                                     nrow, ncol)
+    REAL(DFP), INTENT(IN) :: xin(:, :)
+    !! vertex coordinate of unit triangle
+    !! (0,0), (1,0), (0,1)
+    !! shape(xin) = (2,N)
+    REAL(DFP), INTENT(IN) :: x1(:)
+    !! x1 of physical domain, size(x1) = nsd
+    REAL(DFP), INTENT(IN) :: x2(:)
+    !! x2 of physical domain, size(x2) = nsd
+    REAL(DFP), INTENT(IN) :: x3(:)
+    !! x3 of physical domain, size(x3) = nsd
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    ! REAL(DFP) :: ans(SIZE(x1), SIZE(xin, 2))
+    !! mapped coordinates of xin in physical domain
+    !! shape(ans) = nsd, N
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+  END SUBROUTINE FromUnitTriangle2Triangle1_
+END INTERFACE FromUnitTriangle2Triangle_
+
+!----------------------------------------------------------------------------
+!                                       FromBiUnitQuadrangle2UnitQuadrangle
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -176,7 +260,7 @@ END INTERFACE FromUnitTriangle2Triangle
 
 INTERFACE FromBiUnitQuadrangle2UnitQuadrangle
   MODULE PURE FUNCTION FromBiUnitQuadrangle2UnitQuadrangle1(xin) &
-    & RESULT(ans)
+    RESULT(ans)
     REAL(DFP), INTENT(IN) :: xin(:, :)
     !! vertex coordinate of biunit Quadrangle in xij format
     !! SIZE(xin,1) = 2
@@ -187,7 +271,26 @@ INTERFACE FromBiUnitQuadrangle2UnitQuadrangle
 END INTERFACE FromBiUnitQuadrangle2UnitQuadrangle
 
 !----------------------------------------------------------------------------
-!                                            FromBiUnitQuadrangle2Quadrangle
+!
+!----------------------------------------------------------------------------
+
+INTERFACE FromBiUnitQuadrangle2UnitQuadrangle_
+  MODULE PURE SUBROUTINE FromBiUnitQuadrangle2UnitQuadrangle1_(xin, ans, &
+                                                               nrow, ncol)
+    REAL(DFP), INTENT(IN) :: xin(:, :)
+    !! vertex coordinate of biunit Quadrangle in xij format
+    !! SIZE(xin,1) = 2
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    !! mapped coordinates of xin in physical domain
+    !! shape(ans) = nsd, N
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+    !! nrow = SIZE(xin, 1)
+    !! ncol = SIZE(xin, 2)
+  END SUBROUTINE FromBiUnitQuadrangle2UnitQuadrangle1_
+END INTERFACE FromBiUnitQuadrangle2UnitQuadrangle_
+
+!----------------------------------------------------------------------------
+!                                        FromUnitQuadrangle2BiUnitQuadrangle
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -196,7 +299,7 @@ END INTERFACE FromBiUnitQuadrangle2UnitQuadrangle
 
 INTERFACE FromUnitQuadrangle2BiUnitQuadrangle
   MODULE PURE FUNCTION FromUnitQuadrangle2BiUnitQuadrangle1(xin) &
-    & RESULT(ans)
+    RESULT(ans)
     REAL(DFP), INTENT(IN) :: xin(:, :)
     !! vertex coordinate of biunit Quadrangle in xij format
     !! SIZE(xin,1) = 2
@@ -216,7 +319,7 @@ END INTERFACE FromUnitQuadrangle2BiUnitQuadrangle
 
 INTERFACE FromBiUnitQuadrangle2Quadrangle
   MODULE PURE FUNCTION FromBiUnitQuadrangle2Quadrangle1(xin, x1, x2, x3, x4) &
-    & RESULT(ans)
+    RESULT(ans)
     REAL(DFP), INTENT(IN) :: xin(:, :)
     !! vertex coordinate of biunit Quadrangle in xij format
     !! SIZE(xin,1) = 2
@@ -233,6 +336,36 @@ INTERFACE FromBiUnitQuadrangle2Quadrangle
     !! shape(ans) = nsd, N
   END FUNCTION FromBiUnitQuadrangle2Quadrangle1
 END INTERFACE FromBiUnitQuadrangle2Quadrangle
+
+!----------------------------------------------------------------------------
+!                                            FromBiUnitQuadrangle2Quadrangle_
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 19 Oct 2022
+! summary: Map from unit line to physical space
+
+INTERFACE FromBiUnitQuadrangle2Quadrangle_
+  MODULE PURE SUBROUTINE FromBiUnitQuadrangle2Quadrangle1_(xin, x1, x2, x3, &
+                                                          x4, ans, nrow, ncol)
+    REAL(DFP), INTENT(IN) :: xin(:, :)
+    !! vertex coordinate of biunit Quadrangle in xij format
+    !! SIZE(xin,1) = 2
+    REAL(DFP), INTENT(IN) :: x1(:)
+    !! vertex x1 of physical domain, size(x1) = nsd
+    REAL(DFP), INTENT(IN) :: x2(:)
+    !! vertex x2 of physical domain, size(x2) = nsd
+    REAL(DFP), INTENT(IN) :: x3(:)
+    !! vertex x3 of physical domain, size(x3) = nsd
+    REAL(DFP), INTENT(IN) :: x4(:)
+    !! vertex x4 of physical domain, size(x4) = nsd
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    ! ans(SIZE(x1), SIZE(xin, 2))
+    !! mapped coordinates of xin in physical domain
+    !! shape(ans) = nsd, N
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+  END SUBROUTINE FromBiUnitQuadrangle2Quadrangle1_
+END INTERFACE FromBiUnitQuadrangle2Quadrangle_
 
 !----------------------------------------------------------------------------
 !                                            FromBiUnitHexahedron2Hexahedron
@@ -272,6 +405,41 @@ INTERFACE FromBiUnitHexahedron2Hexahedron
 END INTERFACE FromBiUnitHexahedron2Hexahedron
 
 !----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE FromBiUnitHexahedron2Hexahedron_
+  MODULE PURE SUBROUTINE FromBiUnitHexahedron2Hexahedron1_(xin, x1, x2, x3, &
+                                          x4, x5, x6, x7, x8, ans, nrow, ncol)
+    REAL(DFP), INTENT(IN) :: xin(:, :)
+    !! vertex coordinate of biunit Hexahedron in xij format
+    !! SIZE(xin,1) = 3
+    REAL(DFP), INTENT(IN) :: x1(:)
+    !! vertex x1 of physical domain, size(x1) = nsd
+    REAL(DFP), INTENT(IN) :: x2(:)
+    !! vertex x2 of physical domain, size(x2) = nsd
+    REAL(DFP), INTENT(IN) :: x3(:)
+    !! vertex x3 of physical domain, size(x3) = nsd
+    REAL(DFP), INTENT(IN) :: x4(:)
+    !! vertex x4 of physical domain, size(x4) = nsd
+    REAL(DFP), INTENT(IN) :: x5(:)
+    !! vertex x5 of physical domain, size(x5) = nsd
+    REAL(DFP), INTENT(IN) :: x6(:)
+    !! vertex x6 of physical domain, size(x6) = nsd
+    REAL(DFP), INTENT(IN) :: x7(:)
+    !! vertex x7 of physical domain, size(x7) = nsd
+    REAL(DFP), INTENT(IN) :: x8(:)
+    !! vertex x8 of physical domain, size(x8) = nsd
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    !! mapped coordinates of xin in physical domain
+    !! shape(ans) = nsd, N
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+    !! nrow = SIZE(x1)
+    !! ncol = SIZE(xin, 2)
+  END SUBROUTINE FromBiUnitHexahedron2Hexahedron1_
+END INTERFACE FromBiUnitHexahedron2Hexahedron_
+
+!----------------------------------------------------------------------------
 !                                            FromBiUnitHexahedron2Hexahedron
 !----------------------------------------------------------------------------
 
@@ -292,6 +460,26 @@ INTERFACE FromBiUnitHexahedron2UnitHexahedron
 END INTERFACE FromBiUnitHexahedron2UnitHexahedron
 
 !----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE FromBiUnitHexahedron2UnitHexahedron_
+  MODULE PURE SUBROUTINE FromBiUnitHexahedron2UnitHexahedron1_(xin, ans, &
+                                                               nrow, ncol)
+    REAL(DFP), INTENT(IN) :: xin(:, :)
+    !! vertex coordinate of biunit Hexahedron in xij format
+    !! SIZE(xin,1) = 3
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    !! mapped coordinates of xin in physical domain
+    !! shape(ans) = nsd, N
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+    !! number of rows and columns written in ans
+    !! nrow = SIZE(xin, 1)
+    !! ncol = SIZE(xin, 2)
+  END SUBROUTINE FromBiUnitHexahedron2UnitHexahedron1_
+END INTERFACE FromBiUnitHexahedron2UnitHexahedron_
+
+!----------------------------------------------------------------------------
 !                                            FromBiUnitHexahedron2Hexahedron
 !----------------------------------------------------------------------------
 
@@ -310,6 +498,26 @@ INTERFACE FromUnitHexahedron2BiUnitHexahedron
     !! shape(ans) = nsd, N
   END FUNCTION FromUnitHexahedron2BiUnitHexahedron1
 END INTERFACE FromUnitHexahedron2BiUnitHexahedron
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE FromUnitHexahedron2BiUnitHexahedron_
+
+  MODULE PURE SUBROUTINE FromUnitHexahedron2BiUnitHexahedron1_(xin, ans, &
+                                                               nrow, ncol)
+    REAL(DFP), INTENT(IN) :: xin(:, :)
+    !! vertex coordinate of biunit Hexahedron in xij format
+    !! SIZE(xin,1) = 3
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    !! mapped coordinates of xin in physical domain
+    !! shape(ans) = nsd, N
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+    !! nrow = SIZE(xin, 1)
+    !! ncol = SIZE(xin, 2)
+  END SUBROUTINE FromUnitHexahedron2BiUnitHexahedron1_
+END INTERFACE FromUnitHexahedron2BiUnitHexahedron_
 
 !----------------------------------------------------------------------------
 !                                                     FromBiUnitLine2UnitLine
@@ -353,6 +561,24 @@ INTERFACE
     REAL(DFP) :: ans(SIZE(xin))
     !! mapped coordinates of xin in biunit line
   END FUNCTION FromUnitLine2BiUnitLine
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2024-07-03
+! summary:  from unit line to bi unit line without allocation
+
+INTERFACE
+  MODULE PURE SUBROUTINE FromUnitLine2BiUnitLine_(xin, ans, tsize)
+    REAL(DFP), INTENT(IN) :: xin(:)
+    !! coordinates in  unit line
+    REAL(DFP), INTENT(INOUT) :: ans(:)
+    !! mapped coordinates of xin in biunit line
+    INTEGER(I4B), INTENT(OUT) :: tsize
+  END SUBROUTINE FromUnitLine2BiUnitLine_
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -475,12 +701,17 @@ END INTERFACE FromBiUnitQuadrangle2UnitTriangle
 ! summary: Map from triangle to square
 
 INTERFACE
- MODULE PURE SUBROUTINE FromTriangle2Triangle_(xin, ans, from, to, x1, x2, x3)
+  MODULE PURE SUBROUTINE FromTriangle2Triangle_(xin, ans, nrow, ncol, &
+                                                from, to, x1, x2, x3)
     REAL(DFP), INTENT(IN) :: xin(:, :)
     !! coordinates in bi-unit square in xij coordinate
     REAL(DFP), INTENT(INOUT) :: ans(:, :)
     !! ans(2, SIZE(xin, 2))
     !! coordinates in biunit triangle
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+    !! number of rows and columns written in ans
+    !! nrow=2
+    !! ncol=SIZE(xin, 2)
     CHARACTER(*), INTENT(IN) :: from
     CHARACTER(*), INTENT(IN) :: to
     REAL(DFP), OPTIONAL, INTENT(IN) :: x1(:)
@@ -521,7 +752,7 @@ END INTERFACE
 ! summary: Map from triangle to square
 
 INTERFACE
-  MODULE PURE SUBROUTINE FromSquare2Triangle_(xin, ans, from, to)
+  MODULE PURE SUBROUTINE FromSquare2Triangle_(xin, ans, from, to, nrow, ncol)
     REAL(DFP), INTENT(IN) :: xin(:, :)
     !! coordinates in bi-unit square in xij coordinate
     REAL(DFP), INTENT(INOUT) :: ans(:, :)
@@ -529,6 +760,10 @@ INTERFACE
     !! coordinates in biunit triangle
     CHARACTER(*), INTENT(IN) :: from
     CHARACTER(*), INTENT(IN) :: to
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+    !! number of rows and columns written in ans
+    !! nrow = 2
+    !! ncol = SIZE(xin, 2)
   END SUBROUTINE FromSquare2Triangle_
 END INTERFACE
 
@@ -637,7 +872,22 @@ INTERFACE
 END INTERFACE
 
 !----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE
+  MODULE PURE SUBROUTINE FromBiUnitTetrahedron2UnitTetrahedron_(xin, &
+                                                              ans, nrow, ncol)
+    REAL(DFP), INTENT(IN) :: xin(:, :)
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+    ! REAL(DFP) :: ans(3, SIZE(xin, 2))
+  END SUBROUTINE FromBiUnitTetrahedron2UnitTetrahedron_
+END INTERFACE
+
+!----------------------------------------------------------------------------
 !                                      FromUnitTetrahedron2BiUnitTetrahedron
+
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -649,6 +899,20 @@ INTERFACE
     REAL(DFP), INTENT(IN) :: xin(:, :)
     REAL(DFP) :: ans(3, SIZE(xin, 2))
   END FUNCTION FromUnitTetrahedron2BiUnitTetrahedron
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE
+  MODULE PURE SUBROUTINE FromUnitTetrahedron2BiUnitTetrahedron_(xin, &
+                                                              ans, nrow, ncol)
+    REAL(DFP), INTENT(IN) :: xin(:, :)
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+    ! REAL(DFP) :: ans(3, SIZE(xin, 2))
+  END SUBROUTINE FromUnitTetrahedron2BiUnitTetrahedron_
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -688,12 +952,8 @@ END INTERFACE
 ! summary: Unit Tetrahedron to tetrahedron
 
 INTERFACE
-  MODULE PURE FUNCTION FromUnitTetrahedron2Tetrahedron( &
-    & xin, &
-    & x1, &
-    & x2, &
-    & x3, &
-    & x4) RESULT(ans)
+  MODULE PURE FUNCTION FromUnitTetrahedron2Tetrahedron(xin, x1, x2, x3, x4) &
+    RESULT(ans)
     REAL(DFP), INTENT(IN) :: xin(:, :)
     REAL(DFP), INTENT(IN) :: x1(3)
     !! Coordinate of tetrahedron node 1
@@ -705,6 +965,32 @@ INTERFACE
     !! Coordinate of tetrahedron node 4
     REAL(DFP) :: ans(3, SIZE(xin, 2))
   END FUNCTION FromUnitTetrahedron2Tetrahedron
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                           FromUnitTetrahedron2Tetrahedron_
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2024-06-28
+! summary:  No allocation
+
+INTERFACE
+MODULE PURE SUBROUTINE FromUnitTetrahedron2Tetrahedron_(xin, x1, x2, x3, x4, &
+                                                          ans, nrow, ncol)
+    REAL(DFP), INTENT(IN) :: xin(:, :)
+    REAL(DFP), INTENT(IN) :: x1(3)
+    !! Coordinate of tetrahedron node 1
+    REAL(DFP), INTENT(IN) :: x2(3)
+    !! Coordinate of tetrahedron node 2
+    REAL(DFP), INTENT(IN) :: x3(3)
+    !! Coordinate of tetrahedron node 3
+    REAL(DFP), INTENT(IN) :: x4(3)
+    !! Coordinate of tetrahedron node 4
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    !! ans(3, SIZE(xin, 2))
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+  END SUBROUTINE FromUnitTetrahedron2Tetrahedron_
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -723,6 +1009,20 @@ INTERFACE
 END INTERFACE
 
 !----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE
+  MODULE PURE SUBROUTINE BarycentricCoordUnitTetrahedron_(xin, ans, &
+                                                          nrow, ncol)
+    REAL(DFP), INTENT(IN) :: xin(:, :)
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    !! ans(4, SIZE(xin, 2))
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+  END SUBROUTINE BarycentricCoordUnitTetrahedron_
+END INTERFACE
+
+!----------------------------------------------------------------------------
 !                                            BarycentricCoordBiUnitTetrahedron
 !----------------------------------------------------------------------------
 
@@ -738,6 +1038,20 @@ INTERFACE
 END INTERFACE
 
 !----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE
+  MODULE PURE SUBROUTINE BarycentricCoordBiUnitTetrahedron_(xin, &
+                                                            ans, nrow, ncol)
+    REAL(DFP), INTENT(IN) :: xin(:, :)
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    !! ans(4, SIZE(xin, 2))
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+  END SUBROUTINE BarycentricCoordBiUnitTetrahedron_
+END INTERFACE
+
+!----------------------------------------------------------------------------
 !                                                   BarycentricCoordTetrahedron
 !----------------------------------------------------------------------------
 
@@ -749,6 +1063,22 @@ INTERFACE
     !! "UNIT"
     !! "BIUNIT"
   END FUNCTION BarycentricCoordTetrahedron
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE
+  MODULE PURE SUBROUTINE BarycentricCoordTetrahedron_(xin, refTetrahedron, &
+                                                      ans, nrow, ncol)
+    REAL(DFP), INTENT(IN) :: xin(:, :)
+    CHARACTER(*), INTENT(IN) :: refTetrahedron
+    !! "UNIT" "BIUNIT"
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    !! ans(4, SIZE(xin, 2))
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+  END SUBROUTINE BarycentricCoordTetrahedron_
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -786,6 +1116,22 @@ INTERFACE
 END INTERFACE
 
 !----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE
+  MODULE PURE SUBROUTINE FromBiUnitHexahedron2BiUnitTetrahedron_(xin, ans, &
+                                                                 nrow, ncol)
+    REAL(DFP), INTENT(IN) :: xin(:, :)
+    !! coordinates in bi-unit hexahedron in xij coordinate
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+    ! REAL(DFP) :: ans(3, SIZE(xin, 2))
+    !! coordinates in biunit tetrahedron
+  END SUBROUTINE FromBiUnitHexahedron2BiUnitTetrahedron_
+END INTERFACE
+
+!----------------------------------------------------------------------------
 !                                      FromUnitTetrahedron2BiUnitHexahedron
 !----------------------------------------------------------------------------
 
@@ -817,6 +1163,25 @@ INTERFACE
     REAL(DFP) :: ans(3, SIZE(xin, 2))
     !! coordinates in unit tetrahedron
   END FUNCTION FromBiUnitHexahedron2UnitTetrahedron
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE
+
+  MODULE PURE SUBROUTINE FromBiUnitHexahedron2UnitTetrahedron_(xin, ans, &
+                                                               nrow, ncol)
+    REAL(DFP), INTENT(IN) :: xin(:, :)
+    !! coordinates in biunit hexahedron in xij coordinate
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    !!
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+    !! nrow = 3
+    !! ncol = SIZE(xin, 2)
+    !! coordinates in unit tetrahedron
+  END SUBROUTINE FromBiUnitHexahedron2UnitTetrahedron_
 END INTERFACE
 
 !----------------------------------------------------------------------------

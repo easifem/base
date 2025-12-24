@@ -54,7 +54,7 @@ IF (PRESENT(hmin)) THEN
     & TypeFEVariableSpace)
 END IF
 !
-CALL GetInterpolation(obj=obj, val=nu, interpol=nubar)
+CALL GetInterpolation(obj=obj, val=nu, ans=nubar)
 CALL Reallocate(tau0, SIZE(h0))
 !
 DO ii = 1, SIZE(h0)
@@ -120,7 +120,7 @@ END IF
 !
 nips = SIZE(h0, 1)
 !
-CALL GetInterpolation(obj=obj, val=nu, interpol=nubar)
+CALL GetInterpolation(obj=obj, val=nu, ans=nubar)
 CALL Reallocate(tau0, nips, nipt)
 !
 DO ipt = 1, nipt

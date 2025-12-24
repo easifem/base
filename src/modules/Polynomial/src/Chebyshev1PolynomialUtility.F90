@@ -16,9 +16,12 @@
 !
 
 MODULE Chebyshev1PolynomialUtility
-USE GlobalData
+USE GlobalData, ONLY: DFP, I4B, LGT
+
 USE BaseType, ONLY: iface_1DFunction
+
 IMPLICIT NONE
+
 PUBLIC :: Chebyshev1Alpha
 PUBLIC :: Chebyshev1Beta
 PUBLIC :: GetChebyshev1RecurrenceCoeff
@@ -41,10 +44,12 @@ PUBLIC :: Chebyshev1EvalAll
 PUBLIC :: Chebyshev1MonomialExpansionAll
 PUBLIC :: Chebyshev1MonomialExpansion
 PUBLIC :: Chebyshev1GradientEvalAll
+PUBLIC :: Chebyshev1GradientEvalAll_
 PUBLIC :: Chebyshev1GradientEval
 PUBLIC :: Chebyshev1EvalSum
 PUBLIC :: Chebyshev1GradientEvalSum
 PUBLIC :: Chebyshev1Transform
+PUBLIC :: Chebyshev1Transform_
 PUBLIC :: Chebyshev1InvTransform
 PUBLIC :: Chebyshev1GradientCoeff
 PUBLIC :: Chebyshev1DMatrix
@@ -407,7 +412,7 @@ END INTERFACE
 ! date: 6 Sept 2022
 ! summary: Evaluate Chebyshev1 polynomials of order = n at single x
 
-INTERFACE
+INTERFACE Chebyshev1Eval
   MODULE PURE FUNCTION Chebyshev1Eval1(n, x) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: n
     !! order of polynomial
@@ -416,10 +421,6 @@ INTERFACE
     REAL(DFP) :: ans
     !! Evaluate Chebyshev1 polynomial of order n at point x
   END FUNCTION Chebyshev1Eval1
-END INTERFACE
-
-INTERFACE Chebyshev1Eval
-  MODULE PROCEDURE Chebyshev1Eval1
 END INTERFACE Chebyshev1Eval
 
 !----------------------------------------------------------------------------
@@ -430,7 +431,7 @@ END INTERFACE Chebyshev1Eval
 ! date: 6 Sept 2022
 ! summary: Evaluate Chebyshev1 polynomials of order n at several points
 
-INTERFACE
+INTERFACE Chebyshev1Eval
   MODULE PURE FUNCTION Chebyshev1Eval2(n, x) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: n
     !! order of polynomial
@@ -439,10 +440,6 @@ INTERFACE
     REAL(DFP) :: ans(SIZE(x))
     !! Evaluate Chebyshev1 polynomial of order n at point x
   END FUNCTION Chebyshev1Eval2
-END INTERFACE
-
-INTERFACE Chebyshev1Eval
-  MODULE PROCEDURE Chebyshev1Eval2
 END INTERFACE Chebyshev1Eval
 
 !----------------------------------------------------------------------------
@@ -463,7 +460,7 @@ END INTERFACE Chebyshev1Eval
 !- ans(1:N+1), the values of the first N+1 Chebyshev1 polynomials at the
 ! point
 
-INTERFACE
+INTERFACE Chebyshev1EvalAll
   MODULE PURE FUNCTION Chebyshev1EvalAll1(n, x) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: n
     !! order of polynomial
@@ -473,11 +470,25 @@ INTERFACE
     !! Evaluate Chebyshev1 polynomial of order = 0 to n (total n+1)
     !! at point x
   END FUNCTION Chebyshev1EvalAll1
-END INTERFACE
-
-INTERFACE Chebyshev1EvalAll
-  MODULE PROCEDURE Chebyshev1EvalAll1
 END INTERFACE Chebyshev1EvalAll
+
+!----------------------------------------------------------------------------
+!                                                       Chebyshev1EvalAll
+!----------------------------------------------------------------------------
+
+INTERFACE Chebyshev1EvalAll_
+  MODULE PURE SUBROUTINE Chebyshev1EvalAll1_(n, x, ans, tsize)
+    INTEGER(I4B), INTENT(IN) :: n
+    !! order of polynomial
+    REAL(DFP), INTENT(IN) :: x
+    !! point of evaluation
+    REAL(DFP), INTENT(INOUT) :: ans(:)
+    ! ans(n + 1)
+    !! Evaluate Chebyshev1 polynomial of order = 0 to n (total n+1)
+    !! at point x
+    INTEGER(I4B), INTENT(OUT) :: tsize
+  END SUBROUTINE Chebyshev1EvalAll1_
+END INTERFACE Chebyshev1EvalAll_
 
 !----------------------------------------------------------------------------
 !                                                           Chebyshev1EvalAll
@@ -498,7 +509,7 @@ END INTERFACE Chebyshev1EvalAll
 !- ans(M,1:N+1), the values of the first N+1 Chebyshev1 polynomials at the
 ! points x(1:m)
 
-INTERFACE
+INTERFACE Chebyshev1EvalAll
   MODULE PURE FUNCTION Chebyshev1EvalAll2(n, x) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: n
     !! order of polynomial
@@ -508,11 +519,25 @@ INTERFACE
     !! Evaluate Chebyshev1 polynomial of order = 0 to n (total n+1)
     !! at points x
   END FUNCTION Chebyshev1EvalAll2
-END INTERFACE
-
-INTERFACE Chebyshev1EvalAll
-  MODULE PROCEDURE Chebyshev1EvalAll2
 END INTERFACE Chebyshev1EvalAll
+
+!----------------------------------------------------------------------------
+!                                                         ChebyshevEvalAll2_
+!----------------------------------------------------------------------------
+
+INTERFACE Chebyshev1EvalAll_
+  MODULE PURE SUBROUTINE Chebyshev1EvalAll2_(n, x, ans, nrow, ncol)
+    INTEGER(I4B), INTENT(IN) :: n
+    !! order of polynomial
+    REAL(DFP), INTENT(IN) :: x(:)
+    !! several points of evaluation
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    !! ans(SIZE(x), n + 1)
+    !! Evaluate Chebyshev1 polynomial of order = 0 to n (total n+1)
+    !! at points x
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+  END SUBROUTINE Chebyshev1EvalAll2_
+END INTERFACE Chebyshev1EvalAll_
 
 !----------------------------------------------------------------------------
 !                                             Chebyshev1MonomialExpansionAll
@@ -582,17 +607,27 @@ END INTERFACE
 !
 ! Evaluate gradient of Chebyshev1 polynomial of order upto n.
 
-INTERFACE
+INTERFACE Chebyshev1GradientEvalAll
   MODULE PURE FUNCTION Chebyshev1GradientEvalAll1(n, x) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: n
     REAL(DFP), INTENT(IN) :: x
     REAL(DFP) :: ans(1:n + 1)
   END FUNCTION Chebyshev1GradientEvalAll1
-END INTERFACE
-
-INTERFACE Chebyshev1GradientEvalAll
-  MODULE PROCEDURE Chebyshev1GradientEvalAll1
 END INTERFACE Chebyshev1GradientEvalAll
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE Chebyshev1GradientEvalAll_
+  MODULE PURE SUBROUTINE Chebyshev1GradientEvalAll1_(n, x, ans, tsize)
+    INTEGER(I4B), INTENT(IN) :: n
+    REAL(DFP), INTENT(IN) :: x
+    REAL(DFP), INTENT(INOUT) :: ans(:)
+    INTEGER(I4B), INTENT(OUT) :: tsize
+    !! ans(1:n + 1)
+  END SUBROUTINE Chebyshev1GradientEvalAll1_
+END INTERFACE Chebyshev1GradientEvalAll_
 
 !----------------------------------------------------------------------------
 !
@@ -606,17 +641,27 @@ END INTERFACE Chebyshev1GradientEvalAll
 !
 ! Evaluate gradient of Chebyshev1 polynomial of order upto n.
 
-INTERFACE
+INTERFACE Chebyshev1GradientEvalAll
   MODULE PURE FUNCTION Chebyshev1GradientEvalAll2(n, x) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: n
     REAL(DFP), INTENT(IN) :: x(:)
     REAL(DFP) :: ans(1:SIZE(x), 1:n + 1)
   END FUNCTION Chebyshev1GradientEvalAll2
-END INTERFACE
-
-INTERFACE Chebyshev1GradientEvalAll
-  MODULE PROCEDURE Chebyshev1GradientEvalAll2
 END INTERFACE Chebyshev1GradientEvalAll
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE Chebyshev1GradientEvalAll_
+  MODULE PURE SUBROUTINE Chebyshev1GradientEvalAll2_(n, x, ans, nrow, ncol)
+    INTEGER(I4B), INTENT(IN) :: n
+    REAL(DFP), INTENT(IN) :: x(:)
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    !! ans(1:SIZE(x), 1:n + 1)
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+  END SUBROUTINE Chebyshev1GradientEvalAll2_
+END INTERFACE Chebyshev1GradientEvalAll_
 
 !----------------------------------------------------------------------------
 !
@@ -630,17 +675,12 @@ END INTERFACE Chebyshev1GradientEvalAll
 !
 ! Evaluate gradient of Chebyshev1 polynomial of order upto n.
 
-INTERFACE
+INTERFACE Chebyshev1GradientEval
   MODULE PURE FUNCTION Chebyshev1GradientEval1(n, x) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: n
     REAL(DFP), INTENT(IN) :: x
     REAL(DFP) :: ans
   END FUNCTION Chebyshev1GradientEval1
-END INTERFACE
-!!
-
-INTERFACE Chebyshev1GradientEval
-  MODULE PROCEDURE Chebyshev1GradientEval1
 END INTERFACE Chebyshev1GradientEval
 
 !----------------------------------------------------------------------------
@@ -655,16 +695,12 @@ END INTERFACE Chebyshev1GradientEval
 !
 ! Evaluate gradient of Chebyshev1 polynomial of order upto n.
 
-INTERFACE
+INTERFACE Chebyshev1GradientEval
   MODULE PURE FUNCTION Chebyshev1GradientEval2(n, x) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: n
     REAL(DFP), INTENT(IN) :: x(:)
     REAL(DFP) :: ans(1:SIZE(x))
   END FUNCTION Chebyshev1GradientEval2
-END INTERFACE
-
-INTERFACE Chebyshev1GradientEval
-  MODULE PROCEDURE Chebyshev1GradientEval2
 END INTERFACE Chebyshev1GradientEval
 
 !----------------------------------------------------------------------------
@@ -675,7 +711,7 @@ END INTERFACE Chebyshev1GradientEval
 ! date: 6 Sept 2022
 ! summary: Evaluate finite sum of Chebyshev1 polynomials at point x
 
-INTERFACE
+INTERFACE Chebyshev1EvalSum
   MODULE PURE FUNCTION Chebyshev1EvalSum1(n, x, coeff) &
     & RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: n
@@ -687,10 +723,6 @@ INTERFACE
     REAL(DFP) :: ans
     !! Evaluate Chebyshev1 polynomial of order n at point x
   END FUNCTION Chebyshev1EvalSum1
-END INTERFACE
-
-INTERFACE Chebyshev1EvalSum
-  MODULE PROCEDURE Chebyshev1EvalSum1
 END INTERFACE Chebyshev1EvalSum
 
 !----------------------------------------------------------------------------
@@ -701,7 +733,7 @@ END INTERFACE Chebyshev1EvalSum
 ! date: 6 Sept 2022
 ! summary: Evaluate finite sum of Chebyshev1 polynomials at several x
 
-INTERFACE
+INTERFACE Chebyshev1EvalSum
   MODULE PURE FUNCTION Chebyshev1EvalSum2(n, x, coeff) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: n
     !! order of polynomial
@@ -712,10 +744,6 @@ INTERFACE
     REAL(DFP) :: ans(SIZE(x))
     !! Evaluate Chebyshev1 polynomial of order n at point x
   END FUNCTION Chebyshev1EvalSum2
-END INTERFACE
-
-INTERFACE Chebyshev1EvalSum
-  MODULE PROCEDURE Chebyshev1EvalSum2
 END INTERFACE Chebyshev1EvalSum
 
 !----------------------------------------------------------------------------
@@ -727,7 +755,7 @@ END INTERFACE Chebyshev1EvalSum
 ! summary: Evaluate the gradient of finite sum of Chebyshev1 polynomials
 ! at point x
 
-INTERFACE
+INTERFACE Chebyshev1GradientEvalSum
   MODULE PURE FUNCTION Chebyshev1GradientEvalSum1(n, x, coeff) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: n
     !! order of polynomial
@@ -738,10 +766,6 @@ INTERFACE
     REAL(DFP) :: ans
     !! Evaluate Chebyshev1 polynomial of order n at point x
   END FUNCTION Chebyshev1GradientEvalSum1
-END INTERFACE
-
-INTERFACE Chebyshev1GradientEvalSum
-  MODULE PROCEDURE Chebyshev1GradientEvalSum1
 END INTERFACE Chebyshev1GradientEvalSum
 
 !----------------------------------------------------------------------------
@@ -753,7 +777,7 @@ END INTERFACE Chebyshev1GradientEvalSum
 ! summary: Evaluate the gradient of finite sum of Chebyshev1 polynomials
 ! at several x
 
-INTERFACE
+INTERFACE Chebyshev1GradientEvalSum
   MODULE PURE FUNCTION Chebyshev1GradientEvalSum2(n, x, coeff) &
     & RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: n
@@ -765,10 +789,6 @@ INTERFACE
     REAL(DFP) :: ans(SIZE(x))
     !! Evaluate Chebyshev1 polynomial of order n at point x
   END FUNCTION Chebyshev1GradientEvalSum2
-END INTERFACE
-
-INTERFACE Chebyshev1GradientEvalSum
-  MODULE PROCEDURE Chebyshev1GradientEvalSum2
 END INTERFACE Chebyshev1GradientEvalSum
 
 !----------------------------------------------------------------------------
@@ -780,7 +800,7 @@ END INTERFACE Chebyshev1GradientEvalSum
 ! summary: Evaluate the kth derivative of finite sum of Chebyshev1
 ! polynomials at point x
 
-INTERFACE
+INTERFACE Chebyshev1GradientEvalSum
   MODULE PURE FUNCTION Chebyshev1GradientEvalSum3(n, x, coeff, k) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: n
     !! order of polynomial
@@ -793,10 +813,6 @@ INTERFACE
     REAL(DFP) :: ans
     !! Evaluate Chebyshev1 polynomial of order n at point x
   END FUNCTION Chebyshev1GradientEvalSum3
-END INTERFACE
-
-INTERFACE Chebyshev1GradientEvalSum
-  MODULE PROCEDURE Chebyshev1GradientEvalSum3
 END INTERFACE Chebyshev1GradientEvalSum
 
 !----------------------------------------------------------------------------
@@ -808,7 +824,7 @@ END INTERFACE Chebyshev1GradientEvalSum
 ! summary: Evaluate the kth gradient of finite sum of Chebyshev1
 !  polynomials at several x
 
-INTERFACE
+INTERFACE Chebyshev1GradientEvalSum
   MODULE PURE FUNCTION Chebyshev1GradientEvalSum4(n, x, coeff, k) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: n
     !! order of polynomial
@@ -821,10 +837,6 @@ INTERFACE
     REAL(DFP) :: ans(SIZE(x))
     !! Evaluate Chebyshev1 polynomial of order n at point x
   END FUNCTION Chebyshev1GradientEvalSum4
-END INTERFACE
-
-INTERFACE Chebyshev1GradientEvalSum
-  MODULE PROCEDURE Chebyshev1GradientEvalSum4
 END INTERFACE Chebyshev1GradientEvalSum
 
 !----------------------------------------------------------------------------
@@ -835,7 +847,7 @@ END INTERFACE Chebyshev1GradientEvalSum
 ! date: 13 Oct 2022
 ! summary: Discrete Chebyshev1 Transform
 
-INTERFACE
+INTERFACE Chebyshev1Transform
   MODULE PURE FUNCTION Chebyshev1Transform1(n, coeff, x, w, &
     &  quadType) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: n
@@ -852,42 +864,63 @@ INTERFACE
     REAL(DFP) :: ans(0:n)
     !! modal values  or coefficients
   END FUNCTION Chebyshev1Transform1
-END INTERFACE
-
-INTERFACE Chebyshev1Transform
-  MODULE PROCEDURE Chebyshev1Transform1
 END INTERFACE Chebyshev1Transform
 
 !----------------------------------------------------------------------------
-!                                                   Chebyshev1Transform
+!                                                     Chebyshev1Transform
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date: 13 Oct 2022
-! summary: Columnwise Discrete Chebyshev1 Transform
+! date:  2024-08-19
+! summary:  Discrete Chebyshev1 Transform
 
-INTERFACE
-  MODULE PURE FUNCTION Chebyshev1Transform2(n, coeff, x, w, &
-    & quadType) RESULT(ans)
+INTERFACE Chebyshev1Transform_
+  MODULE PURE SUBROUTINE Chebyshev1Transform1_(n, coeff, x, w, &
+                                               quadType, ans, tsize)
     INTEGER(I4B), INTENT(IN) :: n
-    !! order of polynomial
-    REAL(DFP), INTENT(IN) :: coeff(0:, 1:)
+    !! order of jacobi polynomial
+    REAL(DFP), INTENT(IN) :: coeff(0:)
     !! nodal value (at quad points)
-    REAL(DFP), INTENT(IN) :: x(0:n)
+    REAL(DFP), INTENT(IN) :: x(0:)
     !! quadrature points
-    REAL(DFP), INTENT(IN) :: w(0:n)
+    REAL(DFP), INTENT(IN) :: w(0:)
     !! weights
     INTEGER(I4B), INTENT(IN) :: quadType
     !! Quadrature type, Gauss, GaussLobatto, GaussRadau, GaussRadauLeft
     !! GaussRadauRight
-    REAL(DFP) :: ans(0:n, 1:SIZE(coeff, 2))
-    !! modal values  or coefficients for each column of val
-  END FUNCTION Chebyshev1Transform2
-END INTERFACE
+    REAL(DFP), INTENT(INOUT) :: ans(0:)
+    !! ans(0:n)
+    !! modal values  or coefficients
+    INTEGER(I4B), INTENT(OUT) :: tsize
+    !! tsize = n+1
+  END SUBROUTINE Chebyshev1Transform1_
+END INTERFACE Chebyshev1Transform_
 
-INTERFACE Chebyshev1Transform
-  MODULE PROCEDURE Chebyshev1Transform2
-END INTERFACE Chebyshev1Transform
+!----------------------------------------------------------------------------
+!                                                     Chebyshev1Transform
+!----------------------------------------------------------------------------
+
+INTERFACE Chebyshev1Transform_
+  MODULE PURE SUBROUTINE Chebyshev1Transform4_(n, coeff, PP, w, &
+                                               quadType, ans, tsize)
+    INTEGER(I4B), INTENT(IN) :: n
+    !! order of jacobi polynomial
+    REAL(DFP), INTENT(IN) :: coeff(0:)
+    !! nodal value (at quad points)
+    REAL(DFP), INTENT(IN) :: PP(0:, 0:)
+    !! quadrature points
+    REAL(DFP), INTENT(IN) :: w(0:)
+    !! weights
+    INTEGER(I4B), INTENT(IN) :: quadType
+    !! Quadrature type, Gauss, GaussLobatto, GaussRadau, GaussRadauLeft
+    !! GaussRadauRight
+    REAL(DFP), INTENT(INOUT) :: ans(0:)
+    !! ans(0:n)
+    !! modal values  or coefficients
+    INTEGER(I4B), INTENT(OUT) :: tsize
+    !! tsize = n+1
+  END SUBROUTINE Chebyshev1Transform4_
+END INTERFACE Chebyshev1Transform_
 
 !----------------------------------------------------------------------------
 !                                                   Chebyshev1Transform
@@ -917,9 +950,8 @@ END INTERFACE Chebyshev1Transform
 !  `Chebyshev1Quadrature` which is not pure due to Lapack call.
 !@endnote
 
-INTERFACE
-  MODULE FUNCTION Chebyshev1Transform3(n, f, quadType) &
-    & RESULT(ans)
+INTERFACE Chebyshev1Transform
+  MODULE FUNCTION Chebyshev1Transform3(n, f, quadType, x1, x2) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: n
     !! order of jacobi polynomial
     PROCEDURE(iface_1DFunction), POINTER, INTENT(IN) :: f
@@ -927,14 +959,38 @@ INTERFACE
     INTEGER(I4B), INTENT(IN) :: quadType
     !! Quadrature type, Gauss, GaussLobatto, GaussRadau, GaussRadauLeft
     !! GaussRadauRight
+    REAL(DFP), INTENT(IN) :: x1, x2
+    !! x1, x2 are the end points of the interval
     REAL(DFP) :: ans(0:n)
     !! modal values  or coefficients
   END FUNCTION Chebyshev1Transform3
-END INTERFACE
-
-INTERFACE Chebyshev1Transform
-  MODULE PROCEDURE Chebyshev1Transform3
 END INTERFACE Chebyshev1Transform
+
+!----------------------------------------------------------------------------
+!                                                       Chebyshev1Transform
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2024-08-19
+! summary:  Chebyshev1 Transform of a function on [-1,1]
+
+INTERFACE Chebyshev1Transform_
+  MODULE SUBROUTINE Chebyshev1Transform3_(n, f, quadType, x1, x2, ans, tsize)
+    INTEGER(I4B), INTENT(IN) :: n
+    !! order of jacobi polynomial
+    PROCEDURE(iface_1DFunction), POINTER, INTENT(IN) :: f
+    !! 1D space function
+    INTEGER(I4B), INTENT(IN) :: quadType
+    !! Quadrature type, Gauss, GaussLobatto, GaussRadau, GaussRadauLeft
+    !! GaussRadauRight
+    REAL(DFP), INTENT(IN) :: x1, x2
+    !! x1, x2 are the end points of the interval
+    REAL(DFP) :: ans(0:)
+    !! modal values  or coefficients
+    INTEGER(I4B), INTENT(OUT) :: tsize
+    !! tsize = n+1
+  END SUBROUTINE Chebyshev1Transform3_
+END INTERFACE Chebyshev1Transform_
 
 !----------------------------------------------------------------------------
 !                                                         Chebyshev1Transform
@@ -948,19 +1004,45 @@ END INTERFACE Chebyshev1Transform
 ! Discrete Chebyshev transform. We calculate weights and quadrature points
 ! internally.
 
-INTERFACE
-  MODULE PURE FUNCTION Chebyshev1Transform4(n, coeff, quadType) RESULT(ans)
+INTERFACE Chebyshev1Transform
+  MODULE PURE FUNCTION Chebyshev1Transform2(n, coeff, quadType) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: n
     !! order of jacobi polynomial
-    REAL(DFP), INTENT(IN) :: coeff(0:n)
+    REAL(DFP), INTENT(IN) :: coeff(0:)
     !! nodal value (at quad points)
+    !! size if quadrature points
     INTEGER(I4B), INTENT(IN) :: quadType
     !! Quadrature type, Gauss, GaussLobatto, GaussRadau, GaussRadauLeft
     !! GaussRadauRight
     REAL(DFP) :: ans(0:n)
     !! modal values  or coefficients
-  END FUNCTION Chebyshev1Transform4
-END INTERFACE
+  END FUNCTION Chebyshev1Transform2
+END INTERFACE Chebyshev1Transform
+
+!----------------------------------------------------------------------------
+!                                                       Chebyshev1Transform
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:
+! summary:  Discrete Chebyshev1 Transform
+
+INTERFACE Chebyshev1Transform_
+  MODULE PURE SUBROUTINE Chebyshev1Transform2_(n, coeff, quadType, ans, tsize)
+    INTEGER(I4B), INTENT(IN) :: n
+    !! order of jacobi polynomial
+    REAL(DFP), INTENT(IN) :: coeff(0:)
+    !! nodal value (at quad points)
+    !! size is quadrature points
+    INTEGER(I4B), INTENT(IN) :: quadType
+    !! Quadrature type, Gauss, GaussLobatto, GaussRadau, GaussRadauLeft
+    !! GaussRadauRight
+    REAL(DFP), INTENT(INOUT) :: ans(0:)
+    !! modal values  or coefficients
+    INTEGER(I4B), INTENT(OUT) :: tsize
+    !! tsize = n+1
+  END SUBROUTINE Chebyshev1Transform2_
+END INTERFACE Chebyshev1Transform_
 
 !----------------------------------------------------------------------------
 !                                                 Chebyshev1InvTransform
@@ -970,7 +1052,7 @@ END INTERFACE
 ! date: 13 Oct 2022
 ! summary: Inverse Chebyshev1 Transform
 
-INTERFACE
+INTERFACE Chebyshev1InvTransform
   MODULE PURE FUNCTION Chebyshev1InvTransform1(n, coeff, x) &
     & RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: n
@@ -982,10 +1064,6 @@ INTERFACE
     REAL(DFP) :: ans
     !! value in physical space
   END FUNCTION Chebyshev1InvTransform1
-END INTERFACE
-
-INTERFACE Chebyshev1InvTransform
-  MODULE PROCEDURE Chebyshev1InvTransform1
 END INTERFACE Chebyshev1InvTransform
 
 !----------------------------------------------------------------------------
@@ -996,7 +1074,7 @@ END INTERFACE Chebyshev1InvTransform
 ! date: 13 Oct 2022
 ! summary: Inverse Chebyshev1 Transform
 
-INTERFACE
+INTERFACE Chebyshev1InvTransform
   MODULE PURE FUNCTION Chebyshev1InvTransform2(n, coeff, x) &
         & RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: n
@@ -1008,10 +1086,6 @@ INTERFACE
     REAL(DFP) :: ans(SIZE(x))
     !! value in physical space
   END FUNCTION Chebyshev1InvTransform2
-END INTERFACE
-
-INTERFACE Chebyshev1InvTransform
-  MODULE PROCEDURE Chebyshev1InvTransform2
 END INTERFACE Chebyshev1InvTransform
 
 !----------------------------------------------------------------------------
@@ -1028,7 +1102,7 @@ END INTERFACE Chebyshev1InvTransform
 !- Input is coefficient of Chebyshev1 expansion (modal values)
 !- Output is coefficient of derivative of Chebyshev1 expansion (modal values)
 
-INTERFACE
+INTERFACE Chebyshev1GradientCoeff
   MODULE PURE FUNCTION Chebyshev1GradientCoeff1(n, coeff) &
     & RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: n
@@ -1038,10 +1112,6 @@ INTERFACE
     REAL(DFP) :: ans(0:n)
       !! coefficient of gradient
   END FUNCTION Chebyshev1GradientCoeff1
-END INTERFACE
-
-INTERFACE Chebyshev1GradientCoeff
-  MODULE PROCEDURE Chebyshev1GradientCoeff1
 END INTERFACE Chebyshev1GradientCoeff
 
 !----------------------------------------------------------------------------
@@ -1052,7 +1122,7 @@ END INTERFACE Chebyshev1GradientCoeff
 ! date: 15 Oct 2022
 ! summary: Returns differentiation matrix for Chebyshev1 expansion
 
-INTERFACE
+INTERFACE Chebyshev1DMatrix
   MODULE PURE FUNCTION Chebyshev1DMatrix1(n, x, quadType) &
     & RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: n
@@ -1064,10 +1134,6 @@ INTERFACE
     REAL(DFP) :: ans(0:n, 0:n)
       !! D matrix
   END FUNCTION Chebyshev1DMatrix1
-END INTERFACE
-
-INTERFACE Chebyshev1DMatrix
-  MODULE PROCEDURE Chebyshev1DMatrix1
 END INTERFACE Chebyshev1DMatrix
 
 !----------------------------------------------------------------------------
@@ -1078,7 +1144,7 @@ END INTERFACE Chebyshev1DMatrix
 ! date: 15 Oct 2022
 ! summary: Performs even and odd decomposition of Differential matrix
 
-INTERFACE
+INTERFACE Chebyshev1DMatEvenOdd
   MODULE PURE SUBROUTINE Chebyshev1DMatEvenOdd1(n, D, e, o)
     INTEGER(I4B), INTENT(IN) :: n
       !! order of Chebyshev1 polynomial
@@ -1089,10 +1155,6 @@ INTERFACE
     REAL(DFP), INTENT(OUT) :: o(0:, 0:)
       !! odd decomposition, 0:n/2, 0:n/2
   END SUBROUTINE Chebyshev1DMatEvenOdd1
-END INTERFACE
-
-INTERFACE Chebyshev1DMatEvenOdd
-  MODULE PROCEDURE Chebyshev1DMatEvenOdd1
 END INTERFACE Chebyshev1DMatEvenOdd
 
 END MODULE Chebyshev1PolynomialUtility

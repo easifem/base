@@ -48,8 +48,8 @@ PURE SUBROUTINE STDM_13a(ans, test, trial, c1, c2, opt)
     & SIZE(test(1)%T), &
     & SIZE(trial(1)%T))
   !!
-  CALL getInterpolation(obj=trial, interpol=c1bar, val=c1)
-  CALL getInterpolation(obj=trial, interpol=c2bar, val=c2)
+  CALL getInterpolation(obj=trial, ans=c1bar, val=c1)
+  CALL getInterpolation(obj=trial, ans=c2bar, val=c2)
   !!
   nsd = trial(1)%refelem%nsd
   !!
@@ -118,8 +118,8 @@ PURE SUBROUTINE STDM_13b(ans, test, trial, c1, c2, opt)
     & SIZE(test(1)%T), &
     & SIZE(trial(1)%T))
   !!
-  CALL getInterpolation(obj=trial, interpol=c1bar, val=c1)
-  CALL getInterpolation(obj=trial, interpol=c2bar, val=c2)
+  CALL getInterpolation(obj=trial, ans=c1bar, val=c1)
+  CALL getInterpolation(obj=trial, ans=c2bar, val=c2)
   !!
   nsd = trial(1)%refelem%nsd
   !!

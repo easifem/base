@@ -40,8 +40,8 @@ PURE SUBROUTINE STDM_8(ans, test, trial, c1, c2, opt)
   !! main
   CALL Reallocate(iajb, SIZE(test(1)%N, 1), SIZE(test(1)%T), &
       & SIZE(trial(1)%N, 1), SIZE(trial(1)%T))
-  CALL getInterpolation(obj=trial, interpol=k1bar, val=c1)
-  CALL getInterpolation(obj=trial, interpol=k2bar, val=c2)
+  CALL getInterpolation(obj=trial, ans=k1bar, val=c1)
+  CALL getInterpolation(obj=trial, ans=k2bar, val=c2)
   nsd = trial(1)%refelem%nsd
   !!
   DO ipt = 1, SIZE(trial)

@@ -1,35 +1,39 @@
-# This program is a part of EASIFEM library
-# Copyright (C) 2020-2021  Vikas Sharma, Ph.D
+# This program is a part of EASIFEM library Copyright (C) 2020-2021  Vikas
+# Sharma, Ph.D
 #
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
+# This program is free software: you can redistribute it and/or modify it under
+# the terms of the GNU General Public License as published by the Free Software
+# Foundation, either version 3 of the License, or (at your option) any later
+# version.
 #
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
+# This program is distributed in the hope that it will be useful, but WITHOUT
+# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+# FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+# details.
 #
-# You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <https: //www.gnu.org/licenses/>
+# You should have received a copy of the GNU General Public License along with
+# this program.  If not, see <https: //www.gnu.org/licenses/>
 #
 
-SET(src_path "${CMAKE_CURRENT_LIST_DIR}/src/")
-TARGET_SOURCES(
-  ${PROJECT_NAME} PRIVATE
-  ${src_path}/FEVariable_Method@ConstructorMethods.F90
-  ${src_path}/FEVariable_Method@IOMethods.F90
-  ${src_path}/FEVariable_Method@GetMethods.F90
-  ${src_path}/FEVariable_Method@AdditionMethods.F90
-  ${src_path}/FEVariable_Method@SubtractionMethods.F90
-  ${src_path}/FEVariable_Method@MultiplicationMethods.F90
-  ${src_path}/FEVariable_Method@DivisionMethods.F90
-  ${src_path}/FEVariable_Method@PowerMethods.F90
-  ${src_path}/FEVariable_Method@SqrtMethods.F90
-  ${src_path}/FEVariable_Method@AbsMethods.F90
-  ${src_path}/FEVariable_Method@DotProductMethods.F90
-  ${src_path}/FEVariable_Method@Norm2Methods.F90
-  ${src_path}/FEVariable_Method@EqualMethods.F90
-  ${src_path}/FEVariable_Method@MeanMethods.F90
-)
+set(src_path "${CMAKE_CURRENT_LIST_DIR}/src/")
+target_sources(
+  ${PROJECT_NAME}
+  PRIVATE ${src_path}/FEVariable_AdditionMethod@Methods.F90
+          ${src_path}/FEVariable_ConstructorMethod@Methods.F90
+          ${src_path}/FEVariable_NodalVariableMethod@Methods.F90
+          ${src_path}/FEVariable_QuadratureVariableMethod@Methods.F90
+          ${src_path}/FEVariable_DivisionMethod@Methods.F90
+          ${src_path}/FEVariable_MultiplicationMethod@Methods.F90
+          ${src_path}/FEVariable_DotProductMethod@Methods.F90
+          ${src_path}/FEVariable_SubtractionMethod@Methods.F90
+          ${src_path}/FEVariable_MeanMethod@Methods.F90
+          ${src_path}/FEVariable_UnaryMethod@Methods.F90
+          ${src_path}/FEVariable_GetMethod@Methods.F90
+          ${src_path}/FEVariable_IOMethod@Methods.F90
+          ${src_path}/FEVariable_ScalarInterpolationMethod@Methods.F90
+          ${src_path}/FEVariable_VectorInterpolationMethod@Methods.F90
+          ${src_path}/FEVariable_MatrixInterpolationMethod@Methods.F90
+          ${src_path}/FEVariable_InterpolationMethod@Methods.F90
+          ${src_path}/FEVariable_SetMethod@ScalarMethods.F90
+          ${src_path}/FEVariable_SetMethod@VectorMethods.F90
+          ${src_path}/FEVariable_SetMethod@MatrixMethods.F90)

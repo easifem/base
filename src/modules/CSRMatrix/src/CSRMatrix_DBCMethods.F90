@@ -17,7 +17,7 @@
 
 MODULE CSRMatrix_DBCMethods
 USE BaseType, ONLY: CSRMatrix_
-USE GlobalData, ONLY: I4B
+USE GlobalData, ONLY: I4B, LGT, DFP
 IMPLICIT NONE
 PRIVATE
 PUBLIC :: ApplyDBC

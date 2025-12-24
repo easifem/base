@@ -43,17 +43,16 @@ CHARACTER(*), PARAMETER :: COLOR_FG = "CYAN"
 CHARACTER(*), PARAMETER :: COLOR_BG = "BLACK"
 CHARACTER(*), PARAMETER :: COLOR_STYLE = "BOLD_ON"
 
-TYPE(DISP_SETTINGS), PUBLIC, PARAMETER :: &
-  & DisplayProfileTerminal = DISP_SETTINGS(&
-  & advance="YES", matsep=",", orient="COL", style="UNDERLINE", &
-  & trim="FALSE", ZEROAS=".")
+TYPE(DISP_SETTINGS), PUBLIC, PARAMETER :: DisplayProfileTerminal = &
+   DISP_SETTINGS(advance="YES", matsep=",", orient="COL", style="UNDERLINE", &
+                                                     trim="FALSE", ZEROAS=".")
 
-TYPE(DISP_SETTINGS), PUBLIC, PARAMETER :: &
-  & DisplayProfilePrint = DISP_SETTINGS(&
-  & advance="YES", matsep=",", orient="COL", style="UNDERLINE", &
-  & trim="FALSE", ZEROAS="")
+TYPE(DISP_SETTINGS), PUBLIC, PARAMETER :: DisplayProfilePrint = &
+   DISP_SETTINGS(advance="YES", matsep=",", orient="COL", style="UNDERLINE", &
+                                                      trim="FALSE", ZEROAS="")
 
-TYPE(DISP_SETTINGS), PARAMETER :: DisplayProfileOriginal = DISP_SETTINGS()
+! TYPE(DISP_SETTINGS), PARAMETER :: DisplayProfileOriginal = DISP_SETTINGS()
+
 LOGICAL(LGT) :: defaultSettingSet = .FALSE.
 
 !----------------------------------------------------------------------------
@@ -62,51 +61,51 @@ LOGICAL(LGT) :: defaultSettingSet = .FALSE.
 
 INTERFACE Display
   MODULE PROCEDURE &
-    & Display_Str, &
-    & Display_Str2, &
-    & Display_Real64, &
-    & Display_Real32, &
-    & Display_Cmplx64, &
-    & Display_Cmplx32, &
-    & Display_Int8, &
-    & Display_Int16, &
-    & Display_Int32, &
-    & Display_Int64, &
-    & Display_Logical, &
-    & Display_Vector_Logical, &
-    & Display_Vector_Real64, &
-    & Display_Vector_Real32, &
-    & Display_Vector_Cmplx64, &
-    & Display_Vector_Cmplx32, &
-    & Display_Vector_Int8, &
-    & Display_Vector_Int16, &
-    & Display_Vector_Int32, &
-    & Display_Vector_Int64, &
-    & Display_Mat2_Real64, &
-    & Display_Mat2_Real32, &
-    & Display_Mat2_Cmplx64, &
-    & Display_Mat2_Cmplx32, &
-    & Display_Mat2_Int64, &
-    & Display_Mat2_Int32, &
-    & Display_Mat2_Int16, &
-    & Display_Mat2_Int8, &
-    & Display_Mat2_Bool, &
-    & Display_Mat3_Real64, &
-    & Display_Mat3_Real32, &
-    & Display_Mat3_Cmplx64, &
-    & Display_Mat3_Cmplx32, &
-    & Display_Mat3_Int64, &
-    & Display_Mat3_Int32, &
-    & Display_Mat3_Int16, &
-    & Display_Mat3_Int8, &
-    & Display_Mat4_Real64, &
-    & Display_Mat4_Real32, &
-    & Display_Mat4_Cmplx64, &
-    & Display_Mat4_Cmplx32, &
-    & Display_Mat4_Int64, &
-    & Display_Mat4_Int32, &
-    & Display_Mat4_Int16, &
-    & Display_Mat4_Int8
+    Display_Str, &
+    Display_Str2, &
+    Display_Real64, &
+    Display_Real32, &
+    Display_Cmplx64, &
+    Display_Cmplx32, &
+    Display_Int8, &
+    Display_Int16, &
+    Display_Int32, &
+    Display_Int64, &
+    Display_Logical, &
+    Display_Vector_Logical, &
+    Display_Vector_Real64, &
+    Display_Vector_Real32, &
+    Display_Vector_Cmplx64, &
+    Display_Vector_Cmplx32, &
+    Display_Vector_Int8, &
+    Display_Vector_Int16, &
+    Display_Vector_Int32, &
+    Display_Vector_Int64, &
+    Display_Mat2_Real64, &
+    Display_Mat2_Real32, &
+    Display_Mat2_Cmplx64, &
+    Display_Mat2_Cmplx32, &
+    Display_Mat2_Int64, &
+    Display_Mat2_Int32, &
+    Display_Mat2_Int16, &
+    Display_Mat2_Int8, &
+    Display_Mat2_Bool, &
+    Display_Mat3_Real64, &
+    Display_Mat3_Real32, &
+    Display_Mat3_Cmplx64, &
+    Display_Mat3_Cmplx32, &
+    Display_Mat3_Int64, &
+    Display_Mat3_Int32, &
+    Display_Mat3_Int16, &
+    Display_Mat3_Int8, &
+    Display_Mat4_Real64, &
+    Display_Mat4_Real32, &
+    Display_Mat4_Cmplx64, &
+    Display_Mat4_Cmplx32, &
+    Display_Mat4_Int64, &
+    Display_Mat4_Int32, &
+    Display_Mat4_Int16, &
+    Display_Mat4_Int8
 END INTERFACE
 
 CONTAINS
@@ -267,7 +266,7 @@ SUBROUTINE Display_Real64(val, msg, unitNo, advance)
   CHARACTER(*), INTENT(IN) :: msg
   INTEGER(I4B), INTENT(IN), OPTIONAL :: unitNo
   CHARACTER(*), OPTIONAL, INTENT(IN) :: advance
-#include "./Display_Scalar.inc"
+#include "./include/Display_Scalar.F90"
 END SUBROUTINE Display_Real64
 
 !----------------------------------------------------------------------------
@@ -294,7 +293,7 @@ SUBROUTINE Display_Real32(val, msg, unitNo, advance)
   CHARACTER(*), INTENT(IN) :: msg
   INTEGER(I4B), INTENT(IN), OPTIONAL :: unitNo
   CHARACTER(*), OPTIONAL, INTENT(IN) :: advance
-#include "./Display_Scalar.inc"
+#include "./include/Display_Scalar.F90"
 END SUBROUTINE Display_Real32
 
 !----------------------------------------------------------------------------
@@ -317,7 +316,7 @@ SUBROUTINE Display_Cmplx64(val, msg, unitNo, advance)
   CHARACTER(*), INTENT(IN) :: msg
   INTEGER(I4B), INTENT(IN), OPTIONAL :: unitNo
   CHARACTER(*), OPTIONAL, INTENT(IN) :: advance
-#include "./Display_Scalar.inc"
+#include "./include/Display_Scalar.F90"
 END SUBROUTINE Display_Cmplx64
 
 !----------------------------------------------------------------------------
@@ -340,7 +339,7 @@ SUBROUTINE Display_Cmplx32(val, msg, unitNo, advance)
   CHARACTER(*), INTENT(IN) :: msg
   INTEGER(I4B), INTENT(IN), OPTIONAL :: unitNo
   CHARACTER(*), OPTIONAL, INTENT(IN) :: advance
-#include "./Display_Scalar.inc"
+#include "./include/Display_Scalar.F90"
 END SUBROUTINE Display_Cmplx32
 
 !----------------------------------------------------------------------------
@@ -367,7 +366,7 @@ SUBROUTINE Display_Int64(val, msg, unitNo, advance)
   CHARACTER(*), INTENT(IN) :: msg
   INTEGER(I4B), INTENT(IN), OPTIONAL :: unitNo
   CHARACTER(*), OPTIONAL, INTENT(IN) :: advance
-#include "./Display_Scalar.inc"
+#include "./include/Display_Scalar.F90"
 END SUBROUTINE Display_Int64
 
 !----------------------------------------------------------------------------
@@ -394,7 +393,7 @@ SUBROUTINE Display_Int32(val, msg, unitNo, advance)
   CHARACTER(*), INTENT(IN) :: msg
   INTEGER(I4B), INTENT(IN), OPTIONAL :: unitNo
   CHARACTER(*), OPTIONAL, INTENT(IN) :: advance
-#include "./Display_Scalar.inc"
+#include "./include/Display_Scalar.F90"
 END SUBROUTINE Display_Int32
 
 !----------------------------------------------------------------------------
@@ -421,7 +420,7 @@ SUBROUTINE Display_Int16(val, msg, unitNo, advance)
   CHARACTER(*), INTENT(IN) :: msg
   INTEGER(I4B), INTENT(IN), OPTIONAL :: unitNo
   CHARACTER(*), OPTIONAL, INTENT(IN) :: advance
-#include "./Display_Scalar.inc"
+#include "./include/Display_Scalar.F90"
 END SUBROUTINE Display_Int16
 
 !----------------------------------------------------------------------------
@@ -448,7 +447,7 @@ SUBROUTINE Display_Int8(val, msg, unitNo, advance)
   CHARACTER(*), INTENT(IN) :: msg
   INTEGER(I4B), INTENT(IN), OPTIONAL :: unitNo
   CHARACTER(*), OPTIONAL, INTENT(IN) :: advance
-#include "./Display_Scalar.inc"
+#include "./include/Display_Scalar.F90"
 END SUBROUTINE Display_Int8
 
 !----------------------------------------------------------------------------
@@ -531,7 +530,7 @@ SUBROUTINE Display_Vector_Logical(val, msg, unitNo, orient, full, advance)
   LOGICAL(LGT), INTENT(IN), OPTIONAL :: full
   ! logical variable to print the whole vector
   CHARACTER(*), OPTIONAL, INTENT(IN) :: advance
-#include "./Display_Vector.inc"
+#include "./include/Display_Vector.F90"
 END SUBROUTINE Display_Vector_Logical
 
 !----------------------------------------------------------------------------
@@ -569,7 +568,7 @@ SUBROUTINE Display_Vector_Real64(val, msg, unitNo, orient, full, advance)
   ! logical variable to print the whole vector
   CHARACTER(*), OPTIONAL, INTENT(IN) :: advance
     !! vector of real numbers
-#include "./Display_Vector.inc"
+#include "./include/Display_Vector.F90"
 END SUBROUTINE Display_Vector_Real64
 
 !----------------------------------------------------------------------------
@@ -606,7 +605,7 @@ SUBROUTINE Display_Vector_Real32(val, msg, unitNo, orient, full, advance)
   LOGICAL(LGT), INTENT(IN), OPTIONAL :: full
   ! logical variable to print the whole vector
   CHARACTER(*), OPTIONAL, INTENT(IN) :: advance
-#include "./Display_Vector.inc"
+#include "./include/Display_Vector.F90"
 END SUBROUTINE Display_Vector_Real32
 
 !----------------------------------------------------------------------------
@@ -644,7 +643,7 @@ SUBROUTINE Display_Vector_Cmplx64(val, msg, unitNo, orient, full, advance)
   ! logical variable to print the whole vector
   CHARACTER(*), OPTIONAL, INTENT(IN) :: advance
     !! vector of real numbers
-#include "./Display_Vector.inc"
+#include "./include/Display_Vector.F90"
 END SUBROUTINE Display_Vector_Cmplx64
 
 !----------------------------------------------------------------------------
@@ -681,7 +680,7 @@ SUBROUTINE Display_Vector_Cmplx32(val, msg, unitNo, orient, full, advance)
   LOGICAL(LGT), INTENT(IN), OPTIONAL :: full
   ! logical variable to print the whole vector
   CHARACTER(*), OPTIONAL, INTENT(IN) :: advance
-#include "./Display_Vector.inc"
+#include "./include/Display_Vector.F90"
 END SUBROUTINE Display_Vector_Cmplx32
 
 !----------------------------------------------------------------------------
@@ -719,7 +718,7 @@ SUBROUTINE Display_Vector_Int32(val, msg, unitNo, orient, full, advance)
   LOGICAL(LGT), INTENT(IN), OPTIONAL :: full
   ! logical variable to print the whole vector
   CHARACTER(*), OPTIONAL, INTENT(IN) :: advance
-#include "./Display_Vector.inc"
+#include "./include/Display_Vector.F90"
 END SUBROUTINE Display_Vector_Int32
 
 !----------------------------------------------------------------------------
@@ -757,7 +756,7 @@ SUBROUTINE Display_Vector_Int64(val, msg, unitNo, orient, full, advance)
   LOGICAL(LGT), INTENT(IN), OPTIONAL :: full
   ! logical variable to print the whole vector
   CHARACTER(*), OPTIONAL, INTENT(IN) :: advance
-#include "./Display_Vector.inc"
+#include "./include/Display_Vector.F90"
 END SUBROUTINE Display_Vector_Int64
 
 !----------------------------------------------------------------------------
@@ -794,7 +793,7 @@ SUBROUTINE Display_Vector_Int16(val, msg, unitNo, orient, full, advance)
   LOGICAL(LGT), INTENT(IN), OPTIONAL :: full
   ! logical variable to print the whole vector
   CHARACTER(*), OPTIONAL, INTENT(IN) :: advance
-#include "./Display_Vector.inc"
+#include "./include/Display_Vector.F90"
 END SUBROUTINE Display_Vector_Int16
 
 !----------------------------------------------------------------------------
@@ -831,7 +830,7 @@ SUBROUTINE Display_Vector_Int8(val, msg, unitNo, orient, full, advance)
   LOGICAL(LGT), INTENT(IN), OPTIONAL :: full
   ! logical variable to print the whole vector
   CHARACTER(*), OPTIONAL, INTENT(IN) :: advance
-#include "./Display_Vector.inc"
+#include "./include/Display_Vector.F90"
 END SUBROUTINE Display_Vector_Int8
 
 !----------------------------------------------------------------------------
@@ -858,7 +857,7 @@ SUBROUTINE Display_Mat2_Real64(Val, msg, unitNo, full, advance)
   INTEGER(I4B), INTENT(IN), OPTIONAL :: unitNo
   LOGICAL(LGT), INTENT(IN), OPTIONAL :: full
   CHARACTER(*), OPTIONAL, INTENT(IN) :: advance
-#include "./Display_Mat2.inc"
+#include "./include/Display_Mat2.F90"
 END SUBROUTINE Display_Mat2_Real64
 
 !----------------------------------------------------------------------------
@@ -885,7 +884,7 @@ SUBROUTINE Display_Mat2_Real32(Val, msg, unitNo, full, advance)
   INTEGER(I4B), INTENT(IN), OPTIONAL :: unitNo
   LOGICAL(LGT), INTENT(IN), OPTIONAL :: full
   CHARACTER(*), OPTIONAL, INTENT(IN) :: advance
-#include "./Display_Mat2.inc"
+#include "./include/Display_Mat2.F90"
 END SUBROUTINE Display_Mat2_Real32
 
 !----------------------------------------------------------------------------
@@ -913,7 +912,7 @@ SUBROUTINE Display_Mat2_Cmplx64(Val, msg, unitNo, full, advance)
   INTEGER(I4B), INTENT(IN), OPTIONAL :: unitNo
   LOGICAL(LGT), INTENT(IN), OPTIONAL :: full
   CHARACTER(*), OPTIONAL, INTENT(IN) :: advance
-#include "./Display_Mat2.inc"
+#include "./include/Display_Mat2.F90"
 END SUBROUTINE Display_Mat2_Cmplx64
 
 !----------------------------------------------------------------------------
@@ -941,7 +940,7 @@ SUBROUTINE Display_Mat2_Cmplx32(Val, msg, unitNo, full, advance)
   INTEGER(I4B), INTENT(IN), OPTIONAL :: unitNo
   LOGICAL(LGT), INTENT(IN), OPTIONAL :: full
   CHARACTER(*), OPTIONAL, INTENT(IN) :: advance
-#include "./Display_Mat2.inc"
+#include "./include/Display_Mat2.F90"
 END SUBROUTINE Display_Mat2_Cmplx32
 
 !----------------------------------------------------------------------------
@@ -966,7 +965,7 @@ SUBROUTINE Display_Mat2_Int64(Val, msg, unitNo, full, advance)
   INTEGER(I4B), INTENT(IN), OPTIONAL :: unitNo
   LOGICAL(LGT), INTENT(IN), OPTIONAL :: full
   CHARACTER(*), OPTIONAL, INTENT(IN) :: advance
-#include "./Display_Mat2.inc"
+#include "./include/Display_Mat2.F90"
 END SUBROUTINE Display_Mat2_Int64
 
 !----------------------------------------------------------------------------
@@ -991,7 +990,7 @@ SUBROUTINE Display_Mat2_Int32(Val, msg, unitNo, full, advance)
   INTEGER(I4B), INTENT(IN), OPTIONAL :: unitNo
   LOGICAL(LGT), INTENT(IN), OPTIONAL :: full
   CHARACTER(*), OPTIONAL, INTENT(IN) :: advance
-#include "./Display_Mat2.inc"
+#include "./include/Display_Mat2.F90"
 END SUBROUTINE Display_Mat2_Int32
 
 !----------------------------------------------------------------------------
@@ -1016,7 +1015,7 @@ SUBROUTINE Display_Mat2_Int16(Val, msg, unitNo, full, advance)
   INTEGER(I4B), INTENT(IN), OPTIONAL :: unitNo
   LOGICAL(LGT), INTENT(IN), OPTIONAL :: full
   CHARACTER(*), OPTIONAL, INTENT(IN) :: advance
-#include "./Display_Mat2.inc"
+#include "./include/Display_Mat2.F90"
 END SUBROUTINE Display_Mat2_Int16
 
 !----------------------------------------------------------------------------
@@ -1041,7 +1040,7 @@ SUBROUTINE Display_Mat2_Int8(Val, msg, unitNo, full, advance)
   INTEGER(I4B), INTENT(IN), OPTIONAL :: unitNo
   LOGICAL(LGT), INTENT(IN), OPTIONAL :: full
   CHARACTER(*), OPTIONAL, INTENT(IN) :: advance
-#include "./Display_Mat2.inc"
+#include "./include/Display_Mat2.F90"
 END SUBROUTINE Display_Mat2_Int8
 
 !----------------------------------------------------------------------------
@@ -1066,7 +1065,7 @@ SUBROUTINE Display_Mat2_Bool(Val, msg, unitNo, full, advance)
   INTEGER(I4B), INTENT(IN), OPTIONAL :: unitNo
   LOGICAL(LGT), INTENT(IN), OPTIONAL :: full
   CHARACTER(*), OPTIONAL, INTENT(IN) :: advance
-#include "./Display_Mat2.inc"
+#include "./include/Display_Mat2.F90"
 END SUBROUTINE Display_Mat2_Bool
 
 !----------------------------------------------------------------------------
@@ -1095,7 +1094,7 @@ SUBROUTINE Display_Mat3_Real64(Val, msg, unitNo, full, advance)
   INTEGER(I4B), INTENT(IN), OPTIONAL :: unitNo
   LOGICAL(LGT), OPTIONAL, INTENT(IN) :: full
   CHARACTER(*), OPTIONAL, INTENT(IN) :: advance
-#include "./Display_Mat3.inc"
+#include "./include/Display_Mat3.F90"
 END SUBROUTINE Display_Mat3_Real64
 
 !----------------------------------------------------------------------------
@@ -1124,7 +1123,7 @@ SUBROUTINE Display_Mat3_Real32(Val, msg, unitNo, full, advance)
   INTEGER(I4B), INTENT(IN), OPTIONAL :: unitNo
   LOGICAL(LGT), OPTIONAL, INTENT(IN) :: full
   CHARACTER(*), OPTIONAL, INTENT(IN) :: advance
-#include "./Display_Mat3.inc"
+#include "./include/Display_Mat3.F90"
 END SUBROUTINE Display_Mat3_Real32
 
 !----------------------------------------------------------------------------
@@ -1154,7 +1153,7 @@ SUBROUTINE Display_Mat3_Cmplx64(Val, msg, unitNo, full, advance)
   INTEGER(I4B), INTENT(IN), OPTIONAL :: unitNo
   LOGICAL(LGT), OPTIONAL, INTENT(IN) :: full
   CHARACTER(*), OPTIONAL, INTENT(IN) :: advance
-#include "./Display_Mat3.inc"
+#include "./include/Display_Mat3.F90"
 END SUBROUTINE Display_Mat3_Cmplx64
 
 !----------------------------------------------------------------------------
@@ -1184,7 +1183,7 @@ SUBROUTINE Display_Mat3_Cmplx32(Val, msg, unitNo, full, advance)
   INTEGER(I4B), INTENT(IN), OPTIONAL :: unitNo
   LOGICAL(LGT), OPTIONAL, INTENT(IN) :: full
   CHARACTER(*), OPTIONAL, INTENT(IN) :: advance
-#include "./Display_Mat3.inc"
+#include "./include/Display_Mat3.F90"
 END SUBROUTINE Display_Mat3_Cmplx32
 
 !----------------------------------------------------------------------------
@@ -1213,7 +1212,7 @@ SUBROUTINE Display_Mat3_Int64(Val, msg, unitNo, full, advance)
   INTEGER(I4B), INTENT(IN), OPTIONAL :: unitNo
   LOGICAL(LGT), OPTIONAL, INTENT(IN) :: full
   CHARACTER(*), OPTIONAL, INTENT(IN) :: advance
-#include "./Display_Mat3.inc"
+#include "./include/Display_Mat3.F90"
 END SUBROUTINE Display_Mat3_Int64
 
 !----------------------------------------------------------------------------
@@ -1242,7 +1241,7 @@ SUBROUTINE Display_Mat3_Int32(Val, msg, unitNo, full, advance)
   INTEGER(I4B), INTENT(IN), OPTIONAL :: unitNo
   LOGICAL(LGT), OPTIONAL, INTENT(IN) :: full
   CHARACTER(*), OPTIONAL, INTENT(IN) :: advance
-#include "./Display_Mat3.inc"
+#include "./include/Display_Mat3.F90"
 END SUBROUTINE Display_Mat3_Int32
 
 !----------------------------------------------------------------------------
@@ -1272,7 +1271,7 @@ SUBROUTINE Display_Mat3_Int16(Val, msg, unitNo, full, advance)
   INTEGER(I4B), INTENT(IN), OPTIONAL :: unitNo
   LOGICAL(LGT), OPTIONAL, INTENT(IN) :: full
   CHARACTER(*), OPTIONAL, INTENT(IN) :: advance
-#include "./Display_Mat3.inc"
+#include "./include/Display_Mat3.F90"
 END SUBROUTINE Display_Mat3_Int16
 
 !----------------------------------------------------------------------------
@@ -1302,7 +1301,7 @@ SUBROUTINE Display_Mat3_Int8(Val, msg, unitNo, full, advance)
   INTEGER(I4B), INTENT(IN), OPTIONAL :: unitNo
   LOGICAL(LGT), OPTIONAL, INTENT(IN) :: full
   CHARACTER(*), OPTIONAL, INTENT(IN) :: advance
-#include "./Display_Mat3.inc"
+#include "./include/Display_Mat3.F90"
 END SUBROUTINE Display_Mat3_Int8
 
 !----------------------------------------------------------------------------
@@ -1332,7 +1331,7 @@ SUBROUTINE Display_Mat4_Real64(Val, msg, unitNo, full, advance)
   INTEGER(I4B), INTENT(IN), OPTIONAL :: unitNo
   LOGICAL(LGT), OPTIONAL, INTENT(IN) :: full
   CHARACTER(*), OPTIONAL, INTENT(IN) :: advance
-#include "./Display_Mat4.inc"
+#include "./include/Display_Mat4.F90"
 END SUBROUTINE Display_Mat4_Real64
 
 !----------------------------------------------------------------------------
@@ -1362,7 +1361,7 @@ SUBROUTINE Display_Mat4_Real32(Val, msg, unitNo, full, advance)
   INTEGER(I4B), INTENT(IN), OPTIONAL :: unitNo
   LOGICAL(LGT), OPTIONAL, INTENT(IN) :: full
   CHARACTER(*), OPTIONAL, INTENT(IN) :: advance
-#include "./Display_Mat4.inc"
+#include "./include/Display_Mat4.F90"
 END SUBROUTINE Display_Mat4_Real32
 
 !----------------------------------------------------------------------------
@@ -1393,7 +1392,7 @@ SUBROUTINE Display_Mat4_Cmplx64(Val, msg, unitNo, full, advance)
   INTEGER(I4B), INTENT(IN), OPTIONAL :: unitNo
   LOGICAL(LGT), OPTIONAL, INTENT(IN) :: full
   CHARACTER(*), OPTIONAL, INTENT(IN) :: advance
-#include "./Display_Mat4.inc"
+#include "./include/Display_Mat4.F90"
 END SUBROUTINE Display_Mat4_Cmplx64
 
 !----------------------------------------------------------------------------
@@ -1423,7 +1422,7 @@ SUBROUTINE Display_Mat4_Cmplx32(Val, msg, unitNo, full, advance)
   INTEGER(I4B), INTENT(IN), OPTIONAL :: unitNo
   LOGICAL(LGT), OPTIONAL, INTENT(IN) :: full
   CHARACTER(*), OPTIONAL, INTENT(IN) :: advance
-#include "./Display_Mat4.inc"
+#include "./include/Display_Mat4.F90"
 END SUBROUTINE Display_Mat4_Cmplx32
 
 !----------------------------------------------------------------------------
@@ -1453,7 +1452,7 @@ SUBROUTINE Display_Mat4_Int64(Val, msg, unitNo, full, advance)
   INTEGER(I4B), INTENT(IN), OPTIONAL :: unitNo
   LOGICAL(LGT), OPTIONAL, INTENT(IN) :: full
   CHARACTER(*), OPTIONAL, INTENT(IN) :: advance
-#include "./Display_Mat4.inc"
+#include "./include/Display_Mat4.F90"
 END SUBROUTINE Display_Mat4_Int64
 
 !----------------------------------------------------------------------------
@@ -1483,7 +1482,7 @@ SUBROUTINE Display_Mat4_Int32(Val, msg, unitNo, full, advance)
   INTEGER(I4B), INTENT(IN), OPTIONAL :: unitNo
   LOGICAL(LGT), OPTIONAL, INTENT(IN) :: full
   CHARACTER(*), OPTIONAL, INTENT(IN) :: advance
-#include "./Display_Mat4.inc"
+#include "./include/Display_Mat4.F90"
 END SUBROUTINE Display_Mat4_Int32
 
 !----------------------------------------------------------------------------
@@ -1513,7 +1512,7 @@ SUBROUTINE Display_Mat4_Int16(Val, msg, unitNo, full, advance)
   INTEGER(I4B), INTENT(IN), OPTIONAL :: unitNo
   LOGICAL(LGT), OPTIONAL, INTENT(IN) :: full
   CHARACTER(*), OPTIONAL, INTENT(IN) :: advance
-#include "./Display_Mat4.inc"
+#include "./include/Display_Mat4.F90"
 END SUBROUTINE Display_Mat4_Int16
 
 !----------------------------------------------------------------------------
@@ -1543,7 +1542,7 @@ SUBROUTINE Display_Mat4_Int8(Val, msg, unitNo, full, advance)
   INTEGER(I4B), INTENT(IN), OPTIONAL :: unitNo
   LOGICAL(LGT), OPTIONAL, INTENT(IN) :: full
   CHARACTER(*), OPTIONAL, INTENT(IN) :: advance
-#include "./Display_Mat4.inc"
+#include "./include/Display_Mat4.F90"
 END SUBROUTINE Display_Mat4_Int8
 
 !----------------------------------------------------------------------------
@@ -1709,4 +1708,9 @@ SUBROUTINE TIMESTAMP()
     d, TRIM(month(m)), y, h, ':', n, ':', s, '.', mm, TRIM(ampm)
 
 END SUBROUTINE TIMESTAMP
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
 END MODULE Display_Method

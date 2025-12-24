@@ -38,7 +38,7 @@ ELSE
     beta = LOG(a) / (N - 1)
     alpha = (rmax - rmin) / (EXP(beta * N) - 1)
     DO i = 1, N + 1
-      ans(i) = alpha * (exp(beta * (i - 1)) - 1) + rmin
+      ans(i) = alpha * (EXP(beta * (i - 1)) - 1) + rmin
     END DO
   ELSE IF (N .EQ. 1) THEN
     ans(1) = rmin
@@ -54,19 +54,19 @@ END PROCEDURE ExpMesh_Real64
 
 MODULE PROCEDURE ExpMesh_Real32
 INTEGER(I4B) :: i
-REAL(Real32) :: alpha, beta
+REAL(REAL32) :: alpha, beta
   !!
 IF (ABS(a - 1) .LT. TINY(1.0_DFP)) THEN
   alpha = (rmax - rmin) / N
   DO i = 1, N + 1
-    ans(i) = alpha * (i - 1.0_Real32) + rmin
+    ans(i) = alpha * (i - 1.0_REAL32) + rmin
   END DO
 ELSE
   IF (N .GT. 1) THEN
     beta = LOG(a) / (N - 1)
     alpha = (rmax - rmin) / (EXP(beta * N) - 1)
     DO i = 1, N + 1
-      ans(i) = alpha * (exp(beta * (i - 1)) - 1) + rmin
+      ans(i) = alpha * (EXP(beta * (i - 1)) - 1) + rmin
     END DO
   ELSE IF (N .EQ. 1) THEN
     ans(1) = rmin
@@ -82,7 +82,7 @@ END PROCEDURE ExpMesh_Real32
 
 MODULE PROCEDURE LinSpace_Real32
 !   Local vars
-REAL(Real32) :: dx
+REAL(REAL32) :: dx
 INTEGER(I4B) :: i
 INTEGER(I4B) :: nn
   !! main
@@ -91,7 +91,7 @@ IF (nn .EQ. 1) THEN
   ans = [a]
 ELSE
   ALLOCATE (ans(nn))
-  dx = (b - a) / REAL((nn - 1), Real32)
+  dx = (b - a) / REAL((nn - 1), REAL32)
   ans = [(i * dx + a, i=0, nn - 1)]
 END IF
 END PROCEDURE LinSpace_Real32
@@ -102,7 +102,7 @@ END PROCEDURE LinSpace_Real32
 
 MODULE PROCEDURE LinSpace_Real64
 !   Local vars
-REAL(Real64) :: dx
+REAL(REAL64) :: dx
 INTEGER(I4B) :: i
 INTEGER(I4B) :: nn
 !> main
@@ -111,7 +111,7 @@ IF (nn .EQ. 1) THEN
   ans = [a]
 ELSE
   ALLOCATE (ans(nn))
-  dx = (b - a) / REAL((nn - 1), Real64)
+  dx = (b - a) / REAL((nn - 1), REAL64)
   ans = [(i * dx + a, i=0, nn - 1)]
 END IF
 END PROCEDURE LinSpace_Real64
@@ -123,7 +123,7 @@ END PROCEDURE LinSpace_Real64
 MODULE PROCEDURE LogSpace_Real32
 INTEGER(I4B) :: base0, n0
 LOGICAL(LGT) :: endpoint0
-REAL(Real32), ALLOCATABLE :: ans0(:)
+REAL(REAL32), ALLOCATABLE :: ans0(:)
   !!
 endpoint0 = INPUT(option=endPoint, default=.TRUE.)
 base0 = INPUT(option=base, default=10)
@@ -147,7 +147,7 @@ END PROCEDURE LogSpace_Real32
 MODULE PROCEDURE LogSpace_Real64
 INTEGER(I4B) :: base0, n0
 LOGICAL(LGT) :: endpoint0
-REAL(Real64), ALLOCATABLE :: ans0(:)
+REAL(REAL64), ALLOCATABLE :: ans0(:)
   !!
 endpoint0 = INPUT(option=endPoint, default=.TRUE.)
 base0 = INPUT(option=base, default=10)
@@ -175,8 +175,8 @@ INTEGER(I4B) :: ny
 ! Initial setting
 nx = SIZE(xgv, dim=1)
 ny = SIZE(ygv, dim=1)
-CALL Reallocate(x, ny, nx)
-CALL Reallocate(y, ny, nx)
+CALL Reallocate(x, nx, ny)
+CALL Reallocate(y, nx, ny)
 x(:, :) = SPREAD(xgv, dim=2, ncopies=ny)
 y(:, :) = SPREAD(ygv, dim=1, ncopies=nx)
 END PROCEDURE MeshGrid2D_Real64
@@ -192,8 +192,8 @@ INTEGER(I4B) :: ny
 ! Initial setting
 nx = SIZE(xgv, dim=1)
 ny = SIZE(ygv, dim=1)
-CALL Reallocate(x, ny, nx)
-CALL Reallocate(y, ny, nx)
+CALL Reallocate(x, nx, ny)
+CALL Reallocate(y, nx, ny)
 x(:, :) = SPREAD(xgv, dim=2, ncopies=ny)
 y(:, :) = SPREAD(ygv, dim=1, ncopies=nx)
 END PROCEDURE MeshGrid2D_Real32
@@ -203,8 +203,8 @@ END PROCEDURE MeshGrid2D_Real32
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE MeshGrid3D_Real64
-integer :: nx, ny, nz, i
-nx = size(xgv); ny = size(ygv); nz = size(zgv)
+INTEGER :: nx, ny, nz, i
+nx = SIZE(xgv); ny = SIZE(ygv); nz = SIZE(zgv)
 CALL Reallocate(x, nx, ny, nz)
 CALL Reallocate(y, nx, ny, nz)
 CALL Reallocate(z, nx, ny, nz)
@@ -222,8 +222,8 @@ END PROCEDURE MeshGrid3D_Real64
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE MeshGrid3D_Real32
-integer :: nx, ny, nz, i
-nx = size(xgv); ny = size(ygv); nz = size(zgv)
+INTEGER :: nx, ny, nz, i
+nx = SIZE(xgv); ny = SIZE(ygv); nz = SIZE(zgv)
 CALL Reallocate(x, ny, nx, nz)
 CALL Reallocate(y, ny, nx, nz)
 CALL Reallocate(z, ny, nx, nz)

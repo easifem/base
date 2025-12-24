@@ -30,6 +30,11 @@ USE CSRMatrix_SetMethods
 USE ErrorHandling
 USE GlobalData, ONLY: DofToNodes, NodesToDOF, FMT_NODES, FMT_DOF, stderr
 IMPLICIT NONE
+
+#ifdef DEBUG_VER
+CHARACTER(*), PARAMETER :: modName = "CSRMatrix_GetMethods@Methods.F90"
+#endif
+
 CONTAINS
 
 !----------------------------------------------------------------------------
@@ -160,21 +165,37 @@ END PROCEDURE obj_endColumn
 
 MODULE PROCEDURE obj_Get0
 ! Internal variables
-INTEGER(I4B), ALLOCATABLE :: row(:), col(:)
+INTEGER(I4B), ALLOCATABLE :: indx(:)
 INTEGER(I4B) :: ii, jj
 
-row = GetIndex(obj=obj%csr%idof, nodeNum=nodenum)
-col = GetIndex(obj=obj%csr%jdof, nodeNum=nodenum)
-VALUE = 0.0_DFP
-DO ii = 1, SIZE(row)
-  DO jj = 1, SIZE(col)
-    CALL GetValue(obj=obj, VALUE=VALUE(ii, jj), irow=row(ii),  &
-      & icolumn=col(jj))
+nrow = .tdof. (obj%csr%idof)
+nrow = nrow * SIZE(nodenum)
+
+ncol = .tdof. (obj%csr%jdof)
+ncol = ncol * SIZE(nodenum)
+
+ALLOCATE (indx(nrow + ncol))
+
+CALL GetIndex_(obj=obj%csr%idof, nodeNum=nodenum, &
+               ans=indx(1:), tsize=ii)
+
+CALL GetIndex_(obj=obj%csr%jdof, nodeNum=nodenum, &
+               ans=indx(nrow + 1:), tsize=ii)
+
+! row = GetIndex(obj=obj%csr%idof, nodeNum=nodenum)
+! col = GetIndex(obj=obj%csr%jdof, nodeNum=nodenum)
+
+VALUE(1:nrow, 1:ncol) = 0.0_DFP
+
+DO ii = 1, nrow
+  DO jj = 1, ncol
+    CALL GetValue(obj=obj, VALUE=VALUE(ii, jj), irow=indx(ii), &
+                  icolumn=indx(nrow + jj))
   END DO
 END DO
 
-IF (ALLOCATED(row)) DEALLOCATE (row)
-IF (ALLOCATED(col)) DEALLOCATE (col)
+DEALLOCATE (indx)
+
 END PROCEDURE obj_Get0
 
 !----------------------------------------------------------------------------
@@ -185,28 +206,29 @@ MODULE PROCEDURE obj_Get1
 REAL(DFP) :: m2(SIZE(VALUE, 1), SIZE(VALUE, 2))
 INTEGER(I4B) :: tdof, nns, myfmt
 
-CALL GetValue(obj=obj, nodenum=nodenum, VALUE=m2)
+CALL GetValue(obj=obj, nodenum=nodenum, VALUE=m2, nrow=nrow, ncol=ncol)
 
-tdof = .tdof. (obj%csr%idof)
-nns = SIZE(nodenum)
 myfmt = GetStorageFMT(obj, 1)
 
 IF (myfmt .EQ. storageFMT) THEN
-  VALUE = m2
+  VALUE(1:nrow, 1:ncol) = m2(1:nrow, 1:ncol)
   RETURN
 END IF
+
+tdof = .tdof. (obj%csr%idof)
+nns = SIZE(nodenum)
 
 SELECT CASE (storageFMT)
 
 CASE (FMT_NODES)
 
-  CALL ConvertSafe(From=m2, To=VALUE, Conversion=DOFToNodes, nns=nns, &
-    & tDOF=tdof)
+  CALL ConvertSafe(From=m2(1:nrow, 1:ncol), To=VALUE(1:nrow, 1:ncol), &
+                   Conversion=DOFToNodes, nns=nns, tDOF=tdof)
 
 CASE (FMT_DOF)
 
-  CALL ConvertSafe(From=m2, To=VALUE, Conversion=NodesToDOF, nns=nns,  &
-    & tDOF=tdof)
+  CALL ConvertSafe(From=m2(1:nrow, 1:ncol), To=VALUE(1:nrow, 1:ncol), &
+                   Conversion=NodesToDOF, nns=nns, tDOF=tdof)
 
 END SELECT
 
@@ -219,7 +241,7 @@ END PROCEDURE obj_Get1
 MODULE PROCEDURE obj_Get2
 INTEGER(I4B) :: j
 
-VALUE = 0.0_DFP
+! VALUE = 0.0_DFP
 DO j = obj%csr%IA(irow), obj%csr%IA(irow + 1) - 1
   IF (obj%csr%JA(j) .EQ. icolumn) THEN
     VALUE = obj%A(j)
@@ -228,25 +250,6 @@ DO j = obj%csr%IA(irow), obj%csr%IA(irow + 1) - 1
 END DO
 
 END PROCEDURE obj_Get2
-
-!----------------------------------------------------------------------------
-!                                                               GetValue
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE obj_Get10
-INTEGER(I4B) :: ii, jj, m, n
-
-VALUE = 0.0_DFP
-m = SIZE(irow)
-n = SIZE(icolumn)
-DO ii = 1, m
-  DO jj = 1, n
-    CALL GetValue(obj=obj, VALUE=VALUE(ii, jj), irow=irow(ii),  &
-      & icolumn=icolumn(jj))
-  END DO
-END DO
-
-END PROCEDURE obj_Get10
 
 !----------------------------------------------------------------------------
 !                                                                   GetValue
@@ -271,10 +274,13 @@ INTEGER(I4B) :: ii, jj
 row = GetIndex(obj=obj%csr%idof, nodeNum=iNodeNum, ivar=ivar)
 col = GetIndex(obj=obj%csr%jdof, nodeNum=jNodeNum, ivar=jvar)
 
-DO ii = 1, SIZE(row)
-  DO jj = 1, SIZE(col)
-    CALL GetValue(obj=obj, VALUE=VALUE(ii, jj), irow=row(ii),  &
-      & icolumn=col(jj))
+nrow = SIZE(row)
+ncol = SIZE(col)
+
+DO ii = 1, nrow
+  DO jj = 1, ncol
+    CALL GetValue(obj=obj, VALUE=VALUE(ii, jj), irow=row(ii), &
+                  icolumn=col(jj))
   END DO
 END DO
 
@@ -298,20 +304,19 @@ END PROCEDURE obj_Get5
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE obj_Get6
-! Internal variables
 INTEGER(I4B), ALLOCATABLE :: row(:), col(:)
-INTEGER(I4B) :: ii, jj, trow, tcol
+INTEGER(I4B) :: ii, jj
 
 row = GetIndex(obj=obj%csr%idof, nodeNum=iNodeNum, ivar=ivar, idof=idof)
 col = GetIndex(obj=obj%csr%jdof, nodeNum=jNodeNum, ivar=jvar, idof=jdof)
 
-trow = SIZE(row)
-tcol = SIZE(col)
+nrow = SIZE(row)
+ncol = SIZE(col)
 
-DO ii = 1, trow
-  DO jj = 1, tcol
-    CALL GetValue(obj=obj, VALUE=VALUE(ii, jj), irow=row(ii),  &
-      & icolumn=col(jj))
+DO ii = 1, nrow
+  DO jj = 1, ncol
+    CALL GetValue(obj=obj, VALUE=VALUE(ii, jj), irow=row(ii), &
+                  icolumn=col(jj))
   END DO
 END DO
 
@@ -326,59 +331,23 @@ END PROCEDURE obj_Get6
 MODULE PROCEDURE obj_Get7
 INTEGER(I4B) :: irow, icolumn
 
-irow = GetNodeLoc( &
-  & obj=obj%csr%idof, &
-  & nodenum=iNodeNum, &
-  & ivar=ivar, &
-  & spacecompo=ispacecompo, &
-  & timecompo=itimecompo)
-
-icolumn = GetNodeLoc( &
-    & obj=obj%csr%jdof, &
-    & nodenum=jNodeNum, &
-    & ivar=jvar, &
-    & spacecompo=jspacecompo, &
-    & timecompo=jtimecompo)
-
+irow = GetNodeLoc(obj=obj%csr%idof, nodenum=iNodeNum, ivar=ivar, &
+                  spacecompo=ispacecompo, timecompo=itimecompo)
+icolumn = GetNodeLoc(obj=obj%csr%jdof, nodenum=jNodeNum, ivar=jvar, &
+                     spacecompo=jspacecompo, timecompo=jtimecompo)
 CALL GetValue(obj=obj, irow=irow, icolumn=icolumn, VALUE=VALUE)
 END PROCEDURE obj_Get7
-
-!----------------------------------------------------------------------------
-!                                                                   GetValue
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE obj_Get9
-INTEGER(I4B) :: irow(SIZE(iNodeNum)), icolumn(SIZE(jNodeNum))
-
-irow = GetNodeLoc( &
-  & obj=obj%csr%idof, &
-  & nodenum=iNodeNum, &
-  & ivar=ivar, &
-  & spacecompo=ispacecompo, &
-  & timecompo=itimecompo)
-
-icolumn = GetNodeLoc( &
-    & obj=obj%csr%jdof, &
-    & nodenum=jNodeNum, &
-    & ivar=jvar, &
-    & spacecompo=jspacecompo, &
-    & timecompo=jtimecompo)
-
-CALL GetValue(obj=obj, irow=irow, icolumn=icolumn, VALUE=VALUE)
-!! Get10
-END PROCEDURE obj_Get9
 
 !----------------------------------------------------------------------------
 !                                                             GetValue
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE obj_Get8
-CHARACTER(*), PARAMETER :: myName = "CSR2CSR_Get_Master()"
-CHARACTER(*), PARAMETER :: filename = __FILE__
-INTEGER(I4B) :: myindx(6, 2), idof1, jdof1, idof2, jdof2,  &
-  & row1, row2, col1, col2, ierr0
+CHARACTER(*), PARAMETER :: myName = "obj_Get8()"
+INTEGER(I4B) :: myindx(6, 2), idof1, jdof1, idof2, jdof2, &
+                row1, row2, col1, col2
 CLASS(DOF_), POINTER :: dof_obj
-LOGICAL(LGT) :: problem
+LOGICAL(LGT) :: isok
 
 ! 1 ivar
 ! 2 ispacecompo
@@ -387,7 +356,8 @@ LOGICAL(LGT) :: problem
 ! 5 jspacecompo
 ! 6 jtimecompo
 
-IF (PRESENT(ierr)) ierr = 0
+isok = PRESENT(ierr)
+IF (isok) ierr = 0
 
 myindx(1, 1) = Input(default=1, option=ivar1)
 myindx(2, 1) = Input(default=1, option=ispacecompo1)
@@ -406,95 +376,119 @@ myindx(6, 2) = Input(default=1, option=jtimecompo2)
 NULLIFY (dof_obj)
 
 dof_obj => GetDOFPointer(obj1, 1)
-problem = .NOT. ASSOCIATED(dof_obj)
-IF (problem) THEN
-  CALL ErrorMSG( &
-    & "Cannot get idof pointer from obj1",  &
-    & filename, &
-    & myName, &
-    & __LINE__, stderr)
-  ierr0 = -1
-  IF (PRESENT(ierr)) ierr = ierr0
-  RETURN
-END IF
-idof1 = GetIDOF(obj=dof_obj,  &
-  & ivar=myindx(1, 1),  &
-  & spacecompo=myindx(2, 1),  &
-  & timecompo=myindx(3, 1))
+
+#ifdef DEBUG_VER
+isok = ASSOCIATED(dof_obj)
+CALL AssertError1(isok, myName, modName, __LINE__, &
+                  "dof_obj is not associated.")
+#endif
+
+idof1 = GetIDOF(obj=dof_obj, ivar=myindx(1, 1), spacecompo=myindx(2, 1), &
+                timecompo=myindx(3, 1))
 row1 = dof_obj.tNodes.idof1
 
 dof_obj => GetDOFPointer(obj1, 2)
-problem = .NOT. ASSOCIATED(dof_obj)
-IF (problem) THEN
-  CALL ErrorMSG( &
-    & "Cannot get jdof pointer from obj1",  &
-    & filename, &
-    & myName, &
-    & __LINE__, stderr)
-  ierr0 = -2
-  IF (PRESENT(ierr)) ierr = ierr0
-  RETURN
-END IF
-jdof1 = GetIDOF(obj=dof_obj,  &
-  & ivar=myindx(4, 1),  &
-  & spacecompo=myindx(5, 1),  &
-  & timecompo=myindx(6, 1))
+
+#ifdef DEBUG_VER
+isok = ASSOCIATED(dof_obj)
+CALL AssertError1(isok, myName, modName, __LINE__, &
+                  "dof_obj is not associated.")
+#endif
+
+jdof1 = GetIDOF(obj=dof_obj, ivar=myindx(4, 1), spacecompo=myindx(5, 1), &
+                timecompo=myindx(6, 1))
 col1 = dof_obj.tNodes.jdof1
 
 dof_obj => GetDOFPointer(obj2, 1)
-problem = .NOT. ASSOCIATED(dof_obj)
-IF (problem) THEN
-  CALL ErrorMSG( &
-    & "Cannot get idof pointer from obj2",  &
-    & filename, &
-    & myName, &
-    & __LINE__, stderr)
-  ierr0 = -3
-  IF (PRESENT(ierr)) ierr = ierr0
-  RETURN
-END IF
-idof2 = GetIDOF(obj=dof_obj,  &
-  & ivar=myindx(1, 2),  &
-  & spacecompo=myindx(2, 2),  &
-  & timecompo=myindx(3, 2))
+
+#ifdef DEBUG_VER
+isok = ASSOCIATED(dof_obj)
+CALL AssertError1(isok, myName, modName, __LINE__, &
+                  "dof_obj is not associated.")
+#endif
+
+idof2 = GetIDOF(obj=dof_obj, ivar=myindx(1, 2), spacecompo=myindx(2, 2), &
+                timecompo=myindx(3, 2))
 row2 = dof_obj.tNodes.idof2
 
 dof_obj => GetDOFPointer(obj2, 2)
-problem = .NOT. ASSOCIATED(dof_obj)
-IF (problem) THEN
-  CALL ErrorMSG( &
-    & "Cannot get jdof pointer from obj2",  &
-    & filename, &
-    & myName, &
-    & __LINE__, stderr)
-  ierr0 = -4
-  IF (PRESENT(ierr)) ierr = ierr0
-  RETURN
-END IF
-jdof2 = GetIDOF(obj=dof_obj,  &
-  & ivar=myindx(4, 2),  &
-  & spacecompo=myindx(5, 2),  &
-  & timecompo=myindx(6, 2))
+
+#ifdef DEBUG_VER
+isok = ASSOCIATED(dof_obj)
+CALL AssertError1(isok, myName, modName, __LINE__, &
+                  "dof_obj is not associated.")
+#endif
+
+jdof2 = GetIDOF(obj=dof_obj, ivar=myindx(4, 2), spacecompo=myindx(5, 2), &
+                timecompo=myindx(6, 2))
+
 col2 = dof_obj.tNodes.jdof2
 
 NULLIFY (dof_obj)
 
-problem = (row1 .NE. row2) .OR. (col1 .NE. col2)
-IF (problem) THEN
-  CALL ErrorMSG( &
-    & "Some error occured in sizes.", &
-    & filename, &
-    & myName, &
-    & __LINE__, stderr)
-  ierr0 = -5
-  IF (PRESENT(ierr)) ierr = ierr0
-  RETURN
-END IF
+#ifdef DEBUG_VER
+isok = (row1 .EQ. row2) .AND. (col1 .EQ. col2)
+CALL AssertError1(isok, myName, modName, __LINE__, &
+                  "Some error occured in sizes.")
+#endif
 
-CALL CSR2CSR_Get_Master(obj1=obj1, obj2=obj2, idof1=idof1, idof2=idof2,  &
-& jdof1=jdof1, jdof2=jdof2, tNodes1=row1, tNodes2=col1)
-
+CALL CSR2CSR_Get_Master(obj1=obj1, obj2=obj2, idof1=idof1, idof2=idof2, &
+                        jdof1=jdof1, jdof2=jdof2, tNodes1=row1, tNodes2=col1)
 END PROCEDURE obj_Get8
+
+!----------------------------------------------------------------------------
+!                                                                   GetValue
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE obj_Get9
+INTEGER(I4B) :: irow(SIZE(iNodeNum)), icolumn(SIZE(jNodeNum))
+
+irow = GetNodeLoc(obj=obj%csr%idof, nodenum=iNodeNum, ivar=ivar, &
+                  spacecompo=ispacecompo, timecompo=itimecompo)
+
+icolumn = GetNodeLoc(obj=obj%csr%jdof, nodenum=jNodeNum, ivar=jvar, &
+                     spacecompo=jspacecompo, timecompo=jtimecompo)
+
+CALL GetValue(obj=obj, irow=irow, icolumn=icolumn, VALUE=VALUE, &
+              nrow=nrow, ncol=ncol)
+END PROCEDURE obj_Get9
+
+!----------------------------------------------------------------------------
+!                                                               GetValue
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE obj_Get10
+INTEGER(I4B) :: ii, jj
+
+! VALUE = 0.0_DFP
+nrow = SIZE(irow)
+ncol = SIZE(icolumn)
+DO jj = 1, ncol
+  DO ii = 1, nrow
+    CALL GetValue(obj=obj, VALUE=VALUE(ii, jj), irow=irow(ii), &
+                  icolumn=icolumn(jj))
+  END DO
+END DO
+
+END PROCEDURE obj_Get10
+
+!----------------------------------------------------------------------------
+!                                                                    GetValue
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE obj_Get11
+ans = obj%A(indx)
+END PROCEDURE obj_Get11
+
+!----------------------------------------------------------------------------
+!                                                                    GetValue
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE obj_Get12
+INTEGER(I4B) :: ii
+tsize = SIZE(indx)
+DO ii = 1, tsize; ans(ii) = obj%A(indx(ii)); END DO
+END PROCEDURE obj_Get12
 
 !----------------------------------------------------------------------------
 !                                                            CSR2CSRGetValue
@@ -505,22 +499,19 @@ INTEGER(I4B) :: ii, jj
 REAL(DFP) :: VALUE
 DO jj = 1, tNodes2
   DO ii = 1, tNodes1
-    CALL GetValue(obj=obj1,  &
-      & idof=idof1,  &
-      & jdof=jdof1,  &
-      & iNodeNum=ii,  &
-      & jNodeNum=jj, &
-      & VALUE=VALUE)
+    CALL GetValue(obj=obj1, idof=idof1, jdof=jdof1, iNodeNum=ii, &
+                  jNodeNum=jj, VALUE=VALUE)
 
-    CALL Set(obj=obj2,  &
-      & idof=idof2,  &
-      & jdof=jdof2,  &
-      & iNodeNum=ii,  &
-      & jNodeNum=jj, &
-      & VALUE=VALUE)
+    CALL Set(obj=obj2, idof=idof2, jdof=jdof2, iNodeNum=ii, jNodeNum=jj, &
+             VALUE=VALUE)
   END DO
 END DO
-
 END PROCEDURE CSR2CSR_Get_Master
+
+!----------------------------------------------------------------------------
+!                                                               Include error
+!----------------------------------------------------------------------------
+
+#include "../../include/errors.F90"
 
 END SUBMODULE Methods

@@ -30,7 +30,7 @@ REAL(DFP), ALLOCATABLE :: realval(:), SBar(:), cdNdXt(:, :)
 INTEGER(I4B) :: nns1, nns2, nips, nsd, ips, r1, r2, i, j, c1, c2
 
 nns1 = SIZE(test%N, 1); nns2 = SIZE(trial%N, 1)
-nips = SIZE(trial%N, 2); nsd = trial%refElem%nsd
+nips = SIZE(trial%N, 2); nsd = trial%nsd
 !<--- make integration parameters
 realval = trial%Ws * trial%Thickness * trial%Js
 !<--- allocate ans
@@ -74,7 +74,7 @@ REAL(DFP), ALLOCATABLE :: realval(:), SBar(:), cdNdXt(:, :), &
 INTEGER(I4B) :: nns1, nns2, nips, nsd, ips, r1, r2, i, j, c1, c2
 
 nns1 = SIZE(test%N, 1); nns2 = SIZE(trial%N, 1)
-nips = SIZE(trial%N, 2); nsd = trial%refElem%nsd
+nips = SIZE(trial%N, 2); nsd = trial%nsd
 
 SELECT CASE (lambda%VarType)
 CASE (Constant)

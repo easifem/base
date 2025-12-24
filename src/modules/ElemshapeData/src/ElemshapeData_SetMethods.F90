@@ -15,9 +15,11 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 
 MODULE ElemshapeData_SetMethods
-USE BaSetype
-USE GlobalData
+USE BaseType, ONLY: ElemshapeData_, STElemshapeData_, ElemshapeDataPointer_
+USE GlobalData, ONLY: DFP, I4B, LGT
+
 IMPLICIT NONE
+
 PRIVATE
 
 PUBLIC :: Set
@@ -66,6 +68,8 @@ INTERFACE SetThickness
     !! Nodal values of thickness
     REAL(DFP), INTENT(IN) :: N(:, :)
     !! Shape function values at quadrature points
+    !! number of rows in n should be same as size of val
+    !! number of columns in N should be equal to nips in obj
   END SUBROUTINE elemsd_SetThickness
 END INTERFACE SetThickness
 
@@ -89,6 +93,10 @@ INTERFACE SetThickness
     CLASS(STElemshapeData_), INTENT(INOUT) :: obj
     REAL(DFP), INTENT(IN) :: val(:, :)
     !! Space-time nodal values of thickness
+    !! rows represent space
+    !! columns represets time value
+    !! colsize should be same as size of T
+    !! row size should be same as the number of rows in N
     REAL(DFP), INTENT(IN) :: N(:, :)
     !! Shape function at spatial quadrature
     REAL(DFP), INTENT(IN) :: T(:)
@@ -116,8 +124,12 @@ INTERFACE SetBarycentricCoord
     CLASS(ElemshapeData_), INTENT(INOUT) :: obj
     REAL(DFP), INTENT(IN) :: val(:, :)
     !! Nodal coordinates in `xiJ` format
+    !! colsize of N should be nns
+    !! row size should be same as nsd
     REAL(DFP), INTENT(IN) :: N(:, :)
     !! When element is not an isoparametric we can supply N.
+    !! row size should be nns
+    !! col size should be nips
   END SUBROUTINE elemsd_SetBarycentricCoord
 END INTERFACE SetBarycentricCoord
 
@@ -141,6 +153,7 @@ INTERFACE SetBarycentricCoord
     CLASS(STElemshapeData_), INTENT(INOUT) :: obj
     REAL(DFP), INTENT(IN) :: val(:, :, :)
     !! space-time Nodal coordinates in `xiJ` format
+    !!
     REAL(DFP), INTENT(IN) :: N(:, :), T(:)
     !! N and T are required to handle non isoparametric elements
   END SUBROUTINE stsd_SetBarycentricCoord
@@ -199,7 +212,12 @@ INTERFACE SetJacobian
     CLASS(ElemshapeData_), INTENT(INOUT) :: obj
     REAL(DFP), INTENT(IN) :: val(:, :)
     !! nodal coordinates in `xiJ` format
+    !! rowsize is equal to nsd
+    !! colsize equal to nns
     REAL(DFP), INTENT(IN) :: dNdXi(:, :, :)
+    !! dim1 is equal to nns
+    !! dim2 is equal to xidim
+    !! dim3 is equal to nips
   END SUBROUTINE elemsd_SetJacobian
 END INTERFACE SetJacobian
 
@@ -224,6 +242,9 @@ INTERFACE SetJacobian
     CLASS(STElemshapeData_), INTENT(INOUT) :: obj
     REAL(DFP), INTENT(IN) :: val(:, :, :)
     !! Space time nodal values of coordinates
+    !! dim1 = spatial coordinates
+    !! dim2 = space nodes
+    !! dim3 = time nodes
     REAL(DFP), INTENT(IN) :: dNdXi(:, :, :)
     !! Local derivative of shape function for geometry
     REAL(DFP), INTENT(IN) :: T(:)
@@ -256,6 +277,9 @@ INTERFACE SetdNTdt
     CLASS(STElemshapeData_), INTENT(INOUT) :: obj
     REAL(DFP), INTENT(IN) :: val(:, :, :)
     !! Space-time nodal values
+    !! dim1 = nsd
+    !! dim2 = nns
+    !! dim3 = nnt
   END SUBROUTINE stsd_SetdNTdt
 END INTERFACE SetdNTdt
 
@@ -310,7 +334,7 @@ END INTERFACE SetdNTdXt
 ! coordinates of spatial nodes at some time in [tn, tn+1]
 !@endnote
 !
-! The number of cols in val should be same as the number of rows 
+! The number of cols in val should be same as the number of rows
 ! in N and size of first index of dNdXi.
 
 INTERFACE Set
@@ -364,12 +388,17 @@ END INTERFACE Set
 !@endnote
 
 INTERFACE Set
-  MODULE PURE SUBROUTINE elemsd_Set2(facetobj, cellobj, cellval, cellN, &
-    & celldNdXi, facetN, facetdNdXi)
+  MODULE PURE SUBROUTINE elemsd_Set2( &
+    facetobj, cellobj, cellval, facetval, cellN, celldNdXi, facetN, &
+    facetdNdXi)
     CLASS(ElemshapeData_), INTENT(INOUT) :: facetobj
+    !! facet element shape data
     CLASS(ElemshapeData_), INTENT(INOUT) :: cellobj
+    !! cell element shape data
     REAL(DFP), INTENT(IN) :: cellval(:, :)
     !! Spatial nodal coordinates of cell
+    REAL(DFP), INTENT(IN) :: facetval(:, :)
+    !! Spatial nodal coordinates of facet element
     REAL(DFP), INTENT(IN) :: cellN(:, :)
     !! shape function for cell
     REAL(DFP), INTENT(IN) :: facetN(:, :)
@@ -394,20 +423,10 @@ END INTERFACE Set
 
 INTERFACE Set
   MODULE PURE SUBROUTINE elemsd_Set3( &
-    & masterFacetobj, &
-    & masterCellobj, &
-    & masterCellval, &
-    & masterCellN, &
-    & masterCelldNdXi, &
-    & masterFacetN, &
-    & masterFacetdNdXi, &
-    & slaveFacetobj, &
-    & slaveCellobj, &
-    & slaveCellval, &
-    & slaveCellN, &
-    & slaveCelldNdXi, &
-    & slaveFacetN, &
-    & slaveFacetdNdXi)
+    masterFacetobj, masterCellobj, masterCellval, masterCellN, &
+    masterCelldNdXi, masterFacetN, masterFacetdNdXi, masterFacetVal, &
+    slaveFacetobj, slaveCellobj, slaveCellval, slaveCellN, slaveCelldNdXi, &
+    slaveFacetN, slaveFacetdNdXi, slaveFacetVal)
     CLASS(ElemshapeData_), INTENT(INOUT) :: masterFacetobj
     CLASS(ElemshapeData_), INTENT(INOUT) :: masterCellobj
     REAL(DFP), INTENT(IN) :: masterCellval(:, :)
@@ -421,6 +440,8 @@ INTERFACE Set
     REAL(DFP), INTENT(IN) :: masterFacetdNdXi(:, :, :)
     !! Local gradient of shape functions for geometry of
     !! facet element of master cell
+    REAL(DFP), INTENT(IN) :: masterFacetVal(:, :)
+    !! master facet xij
     CLASS(ElemshapeData_), INTENT(INOUT) :: slaveFacetobj
     !! Shape function data for facet element of slave cell
     CLASS(ElemshapeData_), INTENT(INOUT) :: slaveCellobj
@@ -437,6 +458,8 @@ INTERFACE Set
     REAL(DFP), INTENT(IN) :: slaveFacetdNdXi(:, :, :)
     !! Local derivative of shape function for geometry of facet element
     !! of slave
+    REAL(DFP), INTENT(IN) :: slaveFacetVal(:, :)
+    !! slave facet xij
   END SUBROUTINE elemsd_Set3
 END INTERFACE Set
 

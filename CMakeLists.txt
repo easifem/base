@@ -24,8 +24,8 @@ project(${PROJECT_NAME})
 enable_language(C Fortran CXX)
 
 set(VERSION_MAJOR "24")
-set(VERSION_MINOR "4")
-set(VERSION_BugFix "5")
+set(VERSION_MINOR "10")
+set(VERSION_BugFix "3")
 
 set(PROJECT_VERSION ${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_BugFix})
 
@@ -314,6 +314,8 @@ include(${PROJECT_SOURCE_DIR}/cmake/addPLPLOT.cmake)
 include(${PROJECT_SOURCE_DIR}/cmake/addFFTW.cmake)
 include(${PROJECT_SOURCE_DIR}/cmake/addGTKFortran.cmake)
 include(${PROJECT_SOURCE_DIR}/cmake/addLua.cmake)
+include(${PROJECT_SOURCE_DIR}/cmake/addGmsh.cmake)
+include(${PROJECT_SOURCE_DIR}/cmake/addHDF5.cmake)
 
 # Add source files
 include(src/modules/CMakeLists.txt)

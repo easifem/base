@@ -18,29 +18,37 @@
 
 MODULE BaseInterpolation_Method
 USE ErrorHandling, ONLY: Errormsg
-USE GlobalData
+USE GlobalData, ONLY: DFP, I4B, LGT, stdout, stderr
 USE String_Class, ONLY: String
-USE BaseType
-USE Utility, ONLY: UpperCase
+USE StringUtility, ONLY: UpperCase
 USE Display_Method, ONLY: Tostring
+USE BaseType, ONLY: poly => TypePolynomialOpt, &
+                    ip => TypeQuadratureOpt, &
+                    BaseInterpolation_, &
+                    LagrangeInterpolation_, &
+                    SerendipityInterpolation_, &
+                    HermitInterpolation_, &
+                    HierarchyInterpolation_, &
+                    OrthogonalInterpolation_
+
 IMPLICIT NONE
+
 PRIVATE
+
 PUBLIC :: ASSIGNMENT(=)
 PUBLIC :: BaseInterpolation_ToInteger
 PUBLIC :: BaseInterpolation_FromInteger
-PUBLIC :: BaseInterpolation_ToString
 PUBLIC :: BaseInterpolation_FromString
 PUBLIC :: BaseInterpolationPointer_FromString
+PUBLIC :: BaseInterpolation_ToString
+PUBLIC :: BaseInterpolation_ToChar
 
-INTERFACE BaseInterpolation_ToInteger
-  MODULE PROCEDURE BaseInterpolation_ToInteger1
-  MODULE PROCEDURE BaseInterpolation_ToInteger2
-END INTERFACE BaseInterpolation_ToInteger
+PUBLIC :: BaseType_ToChar
+PUBLIC :: BaseType_ToInteger
 
-INTERFACE BaseInterpolation_ToString
-  MODULE PROCEDURE BaseInterpolation_ToString1
-  MODULE PROCEDURE BaseInterpolation_ToString2
-END INTERFACE BaseInterpolation_ToString
+PUBLIC :: InterpolationPoint_ToChar
+PUBLIC :: InterpolationPoint_ToString
+PUBLIC :: InterpolationPoint_ToInteger
 
 INTERFACE ASSIGNMENT(=)
   MODULE PROCEDURE BaseInterpolation_Copy
@@ -59,36 +67,35 @@ CONTAINS
 FUNCTION BaseInterpolationPointer_FromString(name) RESULT(Ans)
   CHARACTER(*), INTENT(IN) :: name
   CLASS(BaseInterpolation_), POINTER :: ans
-  !!
-  TYPE(String) :: astr
-  astr = TRIM(UpperCase(name))
 
-  SELECT CASE (astr%chars())
-  CASE ("LAGRANGEPOLYNOMIAL", "LAGRANGE", "LAGRANGEINTERPOLATION")
+  CHARACTER(LEN=4) :: astr
+
+  astr = UpperCase(name(1:4))
+
+  SELECT CASE (astr)
+
+  CASE ("LAGR")
     ALLOCATE (LagrangeInterpolation_ :: ans)
-  CASE ("SERENDIPITYPOLYNOMIAL", "SERENDIPITY", "SERENDIPITYINTERPOLATION")
+
+  CASE ("SERE")
     ALLOCATE (SerendipityInterpolation_ :: ans)
-  CASE ("HERMITPOLYNOMIAL", "HERMIT", "HERMITINTERPOLATION")
+
+  CASE ("HERM")
     ALLOCATE (HermitInterpolation_ :: ans)
-  CASE ( &
-    & "HIERARCHICALPOLYNOMIAL", &
-    & "HIERARCHY", &
-    & "HEIRARCHICALPOLYNOMIAL", &
-    & "HEIRARCHY", &
-    & "HIERARCHYINTERPOLATION", &
-    & "HEIRARCHYINTERPOLATION")
+
+  CASE ("HIER", "HEIR")
     ALLOCATE (HierarchyInterpolation_ :: ans)
-  CASE ("ORTHOGONALPOLYNOMIAL", "ORTHOGONAL", "ORTHOGONALINTERPOLATION")
+
+  CASE ("ORTH")
     ALLOCATE (OrthogonalInterpolation_ :: ans)
+
   CASE DEFAULT
-    CALL ErrorMsg(&
-    & msg="NO CASE FOUND for type of name="//astr, &
-    & line=__LINE__,  &
-    & unitno=stdout, &
-    & routine="BaseInterpolationPointer_FromString()",  &
-    & file=__FILE__ &
-    & )
+    CALL ErrorMsg(msg="NO CASE FOUND for type of name="//astr, &
+                  routine="BaseInterpolationPointer_FromString()", &
+                  unitno=stdout, line=__LINE__, file=__FILE__)
+    STOP
   END SELECT
+
 END FUNCTION BaseInterpolationPointer_FromString
 
 !----------------------------------------------------------------------------
@@ -107,63 +114,11 @@ SUBROUTINE BaseInterpolation_Copy(obj1, obj2)
     DEALLOCATE (obj1)
   END IF
 
-  SELECT TYPE (obj2)
-  CLASS IS (LagrangeInterpolation_)
-    ALLOCATE (LagrangeInterpolation_ :: obj1)
-  CLASS IS (SerendipityInterpolation_)
-    ALLOCATE (SerendipityInterpolation_ :: obj1)
-  CLASS IS (HermitInterpolation_)
-    ALLOCATE (HermitInterpolation_ :: obj1)
-  CLASS IS (HierarchyInterpolation_)
-    ALLOCATE (HierarchyInterpolation_ :: obj1)
-  CLASS IS (OrthogonalInterpolation_)
-    ALLOCATE (OrthogonalInterpolation_ :: obj1)
-  CLASS DEFAULT
-    CALL ErrorMsg(&
-    & msg="NO CASE FOUND for type of obj2", &
-    & line=__LINE__,  &
-    & unitno=stdout, &
-    & routine="BaseInterpolation_Copy()",  &
-    & file=__FILE__ &
-    & )
+  ALLOCATE (obj1, source=obj2)
 
-  END SELECT
 END SUBROUTINE BaseInterpolation_Copy
 
 !----------------------------------------------------------------------------
-!                                                 BaseInterpolation_toString
-!----------------------------------------------------------------------------
-
-!> author: Vikas Sharma, Ph. D.
-! date:  2023-08-09
-! summary:  Returns a string name of base interpolation type
-
-FUNCTION BaseInterpolation_ToString1(obj) RESULT(ans)
-  CLASS(BaseInterpolation_), INTENT(IN) :: obj
-  TYPE(String) :: ans
-  SELECT TYPE (obj)
-  CLASS IS (LagrangeInterpolation_)
-    ans = "LagrangeInterpolation"
-  CLASS IS (SerendipityInterpolation_)
-    ans = "SerendipityInterpolation"
-  CLASS IS (HermitInterpolation_)
-    ans = "HermitInterpolation"
-  CLASS IS (HierarchyInterpolation_)
-    ans = "HierarchyInterpolation"
-  CLASS IS (OrthogonalInterpolation_)
-    ans = "OrthogonalInterpolation"
-  CLASS DEFAULT
-    CALL ErrorMsg(&
-    & msg="NO CASE FOUND for type of obj2", &
-    & line=__LINE__,  &
-    & unitno=stdout, &
-    & routine="BaseInterpolation_tostring()",  &
-    & file=__FILE__ &
-    & )
-  END SELECT
-END FUNCTION BaseInterpolation_ToString1
-
-!----------------------------------------------------------------------------
 !                                                BaseInterpolation_toInteger
 !----------------------------------------------------------------------------
 
@@ -171,165 +126,183 @@ END FUNCTION BaseInterpolation_ToString1
 ! date:  2023-08-09
 ! summary:  Returns a string name of base interpolation type
 
-FUNCTION BaseInterpolation_ToInteger1(obj) RESULT(ans)
+FUNCTION BaseInterpolation_ToInteger(obj) RESULT(ans)
   CLASS(BaseInterpolation_), INTENT(IN) :: obj
   INTEGER(I4B) :: ans
+
   SELECT TYPE (obj)
   CLASS IS (LagrangeInterpolation_)
-    ans = LagrangePolynomial
+    ans = poly%lagrange
+
   CLASS IS (SerendipityInterpolation_)
-    ans = SerendipityPolynomial
+    ans = poly%serendipity
+
   CLASS IS (HermitInterpolation_)
-    ans = HermitPolynomial
+    ans = poly%hermit
+
   CLASS IS (HierarchyInterpolation_)
-    ans = HeirarchicalPolynomial
+    ans = poly%hierarchical
+
   CLASS IS (OrthogonalInterpolation_)
-    ans = OrthogonalPolynomial
+    ans = poly%orthogonal
+
   CLASS DEFAULT
-    CALL ErrorMsg(&
-    & msg="NO CASE FOUND for type of obj2", &
-    & line=__LINE__,  &
-    & unitno=stdout, &
-    & routine="BaseInterpolation_toInteger()",  &
-    & file=__FILE__ &
-    & )
+    CALL ErrorMsg(msg="NO CASE FOUND for type of obj2", &
+                  routine="BaseInterpolation_ToInteger()", &
+                  line=__LINE__, unitno=stdout, file=__FILE__)
+
+    STOP
+
   END SELECT
-END FUNCTION BaseInterpolation_ToInteger1
+END FUNCTION BaseInterpolation_ToInteger
 
 !----------------------------------------------------------------------------
-!                                                BaseInterpolation_toInteger
+!
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date:  2023-08-09
-! summary:  Returns a string name of base interpolation type
-
-FUNCTION BaseInterpolation_ToInteger2(name) RESULT(ans)
+FUNCTION BaseType_ToInteger(name) RESULT(ans)
   CHARACTER(*), INTENT(IN) :: name
   INTEGER(I4B) :: ans
 
-  SELECT CASE (TRIM(UpperCase(name)))
+  CHARACTER(4) :: astr
+
+  astr = UpperCase(name(1:4))
+
+  SELECT CASE (astr)
+  CASE ("MONO")
+    ans = poly%monomial
+
+  CASE ("LAGR")
+    ans = poly%lagrange
+
+  CASE ("SERE")
+    ans = poly%serendipity
+
+  CASE ("HERM")
+    ans = poly%hermit
+
+  CASE ("HIER", "HEIR")
+    ans = poly%hierarchical
+
+  CASE ("ORTH")
+    ans = poly%orthogonal
+
+  CASE ("LEGE")
+    ans = poly%legendre
+
+  CASE ("JACO")
+    ans = poly%jacobi
+
+  CASE ("ULTR")
+    ans = poly%ultraspherical
+
+  CASE ("CHEB")
+    ans = poly%chebyshev
+
+  CASE DEFAULT
+    CALL ErrorMsg(msg="NO CASE FOUND for name: "//astr, &
+                  routine="BaseType_ToInteger()", &
+                  line=__LINE__, unitno=stdout, file=__FILE__)
+    STOP
+
+  END SELECT
+END FUNCTION BaseType_ToInteger
+
+!----------------------------------------------------------------------------
+!                                                BaseInterpolation_toInteger
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2023-08-09
+! summary:  Returns a string name of base interpolation type
+
+FUNCTION InterpolationPoint_ToInteger(name) RESULT(ans)
+  CHARACTER(*), INTENT(IN) :: name
+  INTEGER(I4B) :: ans
+
+  CHARACTER(:), ALLOCATABLE :: astr
+
+  astr = UpperCase(name)
+
+  SELECT CASE (astr)
+
   CASE ("EQUIDISTANCE")
-    ans = Equidistance
+    ans = ip%equidistance
 
   CASE ("GAUSSLEGENDRE")
-    ans = GaussLegendre
+    ans = ip%GaussLegendre
 
   CASE ("GAUSSLEGENDRELOBATTO")
-    ans = GaussLegendreLobatto
+    ans = ip%GaussLegendreLobatto
 
   CASE ("GAUSSLEGENDRERADAU")
-    ans = GaussLegendreRadau
+    ans = ip%GaussLegendreRadau
 
   CASE ("GAUSSLEGENDRERADAULEFT")
-    ans = GaussLegendreRadauLeft
+    ans = ip%GaussLegendreRadauLeft
 
   CASE ("GAUSSLEGENDRERADAURIGHT")
-    ans = GaussLegendreRadauRight
+    ans = ip%GaussLegendreRadauRight
 
   CASE ("GAUSSCHEBYSHEV")
-    ans = GaussChebyshev
+    ans = ip%GaussChebyshev
 
   CASE ("GAUSSCHEBYSHEVLOBATTO")
-    ans = GaussChebyshevLobatto
+    ans = ip%GaussChebyshevLobatto
 
   CASE ("GAUSSCHEBYSHEVRADAU")
-    ans = GaussChebyshevRadau
+    ans = ip%GaussChebyshevRadau
 
   CASE ("GAUSSCHEBYSHEVRADAULEFT")
-    ans = GaussChebyshevRadauLeft
+    ans = ip%GaussChebyshevRadauLeft
 
   CASE ("GAUSSCHEBYSHEVRADAURIGHT")
-    ans = GaussChebyshevRadauRight
+    ans = ip%GaussChebyshevRadauRight
 
   CASE ("GAUSSJACOBI")
-    ans = GaussJacobi
+    ans = ip%GaussJacobi
 
   CASE ("GAUSSJACOBILOBATTO")
-    ans = GaussJacobiLobatto
+    ans = ip%GaussJacobiLobatto
 
   CASE ("GAUSSJACOBIRADAU")
-    ans = GaussJacobiRadau
+    ans = ip%GaussJacobiRadau
 
   CASE ("GAUSSJACOBIRADAULEFT")
-    ans = GaussJacobiRadauLeft
+    ans = ip%GaussJacobiRadauLeft
 
   CASE ("GAUSSJACOBIRADAURIGHT")
-    ans = GaussJacobiRadauRight
+    ans = ip%GaussJacobiRadauRight
 
   CASE ("GAUSSULTRASPHERICAL")
-    ans = GaussUltraspherical
+    ans = ip%GaussUltraspherical
 
   CASE ("GAUSSULTRASPHERICALLOBATTO")
-    ans = GaussUltrasphericalLobatto
+    ans = ip%GaussUltrasphericalLobatto
 
   CASE ("GAUSSULTRASPHERICALRADAU")
-    ans = GaussUltrasphericalRadau
+    ans = ip%GaussUltrasphericalRadau
 
   CASE ("GAUSSULTRASPHERICALRADAULEFT")
-    ans = GaussUltrasphericalRadauLeft
+    ans = ip%GaussUltrasphericalRadauLeft
 
   CASE ("GAUSSULTRASPHERICALRADAURIGHT")
-    ans = GaussUltrasphericalRadauRight
+    ans = ip%GaussUltrasphericalRadauRight
 
   CASE DEFAULT
+
     ans = -1_I4B
-    CALL Errormsg(&
-      & msg="No case found for given baseInterpolation name", &
-      & file=__FILE__, &
-      & line=__LINE__,&
-      & routine="BaseInterpolation_ToInteger2()", &
-      & unitno=stderr)
-    RETURN
+    ! CALL Errormsg(msg="No case found for baseInterpolation ="//name, &
+    !               routine="BaseInterpolation_ToInteger2()", &
+    !               file=__FILE__, line=__LINE__, unitno=stderr)
+    ! STOP
   END SELECT
-END FUNCTION BaseInterpolation_ToInteger2
+
+  astr = ""
+END FUNCTION InterpolationPoint_ToInteger
 
 !----------------------------------------------------------------------------
-!                                                 BaseInterpolation_fromString
-!----------------------------------------------------------------------------
-
-!> author: Vikas Sharma, Ph. D.
-! date:  2023-08-09
-! summary:  Returns a string name of base interpolation type
-
-SUBROUTINE BaseInterpolation_FromString(obj, name)
-  CLASS(BaseInterpolation_), ALLOCATABLE, INTENT(OUT) :: obj
-  CHARACTER(*), INTENT(IN) :: name
-  TYPE(String) :: ans
-
-  ans = UpperCase(name)
-  IF (ALLOCATED(obj)) DEALLOCATE (obj)
-
-  SELECT CASE (ans%chars())
-  CASE ("LAGRANGEPOLYNOMIAL", "LAGRANGE", "LAGRANGEINTERPOLATION")
-    ALLOCATE (LagrangeInterpolation_ :: obj)
-  CASE ("SERENDIPITYPOLYNOMIAL", "SERENDIPITY", "SERENDIPITYINTERPOLATION")
-    ALLOCATE (SerendipityInterpolation_ :: obj)
-  CASE ("HERMITPOLYNOMIAL", "HERMIT", "HERMITINTERPOLATION")
-    ALLOCATE (HermitInterpolation_ :: obj)
-  CASE ( &
-    & "HIERARCHICALPOLYNOMIAL", &
-    & "HIERARCHY", &
-    & "HEIRARCHICALPOLYNOMIAL", &
-    & "HEIRARCHY", &
-    & "HIERARCHYINTERPOLATION", &
-    & "HEIRARCHYINTERPOLATION")
-    ALLOCATE (HierarchyInterpolation_ :: obj)
-  CASE ("ORTHOGONALPOLYNOMIAL", "ORTHOGONAL", "ORTHOGONALINTERPOLATION")
-    ALLOCATE (OrthogonalInterpolation_ :: obj)
-  CASE DEFAULT
-    CALL ErrorMsg(&
-    & msg="NO CASE FOUND for type of name="//TRIM(name), &
-    & line=__LINE__,  &
-    & unitno=stdout, &
-    & routine="BaseInterpolation_fromString()",  &
-    & file=__FILE__ &
-    & )
-  END SELECT
-END SUBROUTINE BaseInterpolation_FromString
-
-!----------------------------------------------------------------------------
-!                                                BaseInterpolation_fromInteger
+!                                             BaseInterpolation_fromInteger
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -341,109 +314,431 @@ SUBROUTINE BaseInterpolation_FromInteger(obj, name)
   INTEGER(I4B), INTENT(IN) :: name
 
   SELECT CASE (name)
-  CASE (LagrangePolynomial)
+  CASE (poly%lagrange)
     ALLOCATE (LagrangeInterpolation_ :: obj)
-  CASE (SerendipityPolynomial)
+
+  CASE (poly%serendipity)
     ALLOCATE (SerendipityInterpolation_ :: obj)
-  CASE (HermitPolynomial)
+
+  CASE (poly%hermit)
     ALLOCATE (HermitInterpolation_ :: obj)
-  CASE (OrthogonalPolynomial)
+
+  CASE (poly%orthogonal)
     ALLOCATE (OrthogonalInterpolation_ :: obj)
-  CASE (HeirarchicalPolynomial)
+
+  CASE (poly%hierarchical)
     ALLOCATE (HierarchyInterpolation_ :: obj)
+
   CASE DEFAULT
-    CALL ErrorMsg(&
-    & msg="NO CASE FOUND for given name="//tostring(name), &
-    & line=__LINE__,  &
-    & unitno=stdout, &
-    & routine="BaseInterpolation_fromInteger()",  &
-    & file=__FILE__ &
-    & )
+    CALL ErrorMsg(msg="NO CASE FOUND for given name="//tostring(name), &
+                  routine="BaseInterpolation_fromInteger()", &
+                  line=__LINE__, unitno=stdout, file=__FILE__)
+    STOP
   END SELECT
 
 END SUBROUTINE BaseInterpolation_FromInteger
 
 !----------------------------------------------------------------------------
-!                                                  QuadraturePointIDToName
+!                                               BaseInterpolation_fromString
 !----------------------------------------------------------------------------
 
-FUNCTION BaseInterpolation_ToString2(name) RESULT(ans)
-  INTEGER(I4B), INTENT(IN) :: name
-  TYPE(String) :: ans
+!> author: Vikas Sharma, Ph. D.
+! date:  2023-08-09
+! summary:  Returns a string name of base interpolation type
 
-  SELECT CASE (name)
-  CASE (Equidistance)
-    ans = "EQUIDISTANCE"
+SUBROUTINE BaseInterpolation_FromString(obj, name)
+  CLASS(BaseInterpolation_), ALLOCATABLE, INTENT(INOUT) :: obj
+  CHARACTER(*), INTENT(IN) :: name
 
-  CASE (GaussLegendre)
-    ans = "GAUSSLEGENDRE"
+  CHARACTER(4) :: ans
 
-  CASE (GaussLegendreLobatto)
-    ans = "GAUSSLEGENDRELOBATTO"
+  ans = UpperCase(name(1:4))
 
-  CASE (GaussLegendreRadau)
-    ans = "GAUSSLEGENDRERADAU"
+  IF (ALLOCATED(obj)) DEALLOCATE (obj)
 
-  CASE (GaussLegendreRadauLeft)
-    ans = "GAUSSLEGENDRERADAULEFT"
+  SELECT CASE (ans)
 
-  CASE (GaussLegendreRadauRight)
-    ans = "GAUSSLEGENDRERADAURIGHT"
+  CASE ("LAGR")
+    ALLOCATE (LagrangeInterpolation_ :: obj)
 
-  CASE (GaussChebyshev)
-    ans = "GAUSSCHEBYSHEV"
+  CASE ("SERE")
+    ALLOCATE (SerendipityInterpolation_ :: obj)
 
-  CASE (GaussChebyshevLobatto)
-    ans = "GAUSSCHEBYSHEVLOBATTO"
+  CASE ("HERM")
+    ALLOCATE (HermitInterpolation_ :: obj)
 
-  CASE (GaussChebyshevRadau)
-    ans = "GAUSSCHEBYSHEVRADAU"
+  CASE ("HIER", "HEIR")
+    ALLOCATE (HierarchyInterpolation_ :: obj)
 
-  CASE (GaussChebyshevRadauLeft)
-    ans = "GAUSSCHEBYSHEVRADAULEFT"
-
-  CASE (GaussChebyshevRadauRight)
-    ans = "GAUSSCHEBYSHEVRADAURIGHT"
-
-  CASE (GaussJacobi)
-    ans = "GAUSSJACOBI"
-
-  CASE (GaussJacobiLobatto)
-    ans = "GAUSSJACOBILOBATTO"
-
-  CASE (GaussJacobiRadau)
-    ans = "GAUSSJACOBIRADAU"
-
-  CASE (GaussJacobiRadauLeft)
-    ans = "GAUSSJACOBIRADAULEFT"
-
-  CASE (GaussJacobiRadauRight)
-    ans = "GAUSSJACOBIRADAURIGHT"
-
-  CASE (GaussUltraspherical)
-    ans = "GAUSSULTRASPHERICAL"
-
-  CASE (GaussUltrasphericalLobatto)
-    ans = "GAUSSULTRASPHERICALLOBATTO"
-
-  CASE (GaussUltrasphericalRadau)
-    ans = "GAUSSULTRASPHERICALRADAU"
-
-  CASE (GaussUltrasphericalRadauLeft)
-    ans = "GAUSSULTRASPHERICALRADAULEFT"
-
-  CASE (GaussUltrasphericalRadauRight)
-    ans = "GAUSSULTRASPHERICALRADAURIGHT"
+  CASE ("ORTH")
+    ALLOCATE (OrthogonalInterpolation_ :: obj)
 
   CASE DEFAULT
-    CALL Errormsg(&
-      & msg="No case found for given quadratureType name", &
-      & file=__FILE__, &
-      & line=__LINE__,&
-      & routine="QuadraturePointIDToName()", &
-      & unitno=stderr)
-    RETURN
+    CALL ErrorMsg(msg="NO CASE FOUND for type of name="//name, &
+                  routine="BaseInterpolation_fromString()", &
+                  line=__LINE__, unitno=stderr, file=__FILE__)
+    STOP
   END SELECT
-END FUNCTION BaseInterpolation_ToString2
+
+END SUBROUTINE BaseInterpolation_FromString
+
+!----------------------------------------------------------------------------
+!                                                 BaseInterpolation_toString
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2023-08-09
+! summary:  Returns a string name of base interpolation type
+
+FUNCTION BaseInterpolation_ToString(obj, isUpper) RESULT(ans)
+  CLASS(BaseInterpolation_), INTENT(IN) :: obj
+  LOGICAL(LGT), OPTIONAL, INTENT(IN) :: isUpper
+  TYPE(String) :: ans
+  ans = BaseInterpolation_ToChar(obj=obj, isUpper=isUpper)
+END FUNCTION BaseInterpolation_ToString
+
+!----------------------------------------------------------------------------
+!                                                   BaseInterpolation_ToChar
+!----------------------------------------------------------------------------
+
+FUNCTION BaseInterpolation_ToChar(obj, isUpper) RESULT(ans)
+  CLASS(BaseInterpolation_), INTENT(IN) :: obj
+  LOGICAL(LGT), OPTIONAL, INTENT(IN) :: isUpper
+  CHARACTER(:), ALLOCATABLE :: ans
+
+  ! internal variables
+  LOGICAL(LGT) :: isUpper0
+
+  isUpper0 = .FALSE.
+  IF (PRESENT(isUpper)) isUpper0 = isUpper
+
+  SELECT TYPE (obj)
+  CLASS IS (LagrangeInterpolation_)
+    IF (isUpper0) THEN
+      ans = "LAGRANGEINTERPOLATION"
+    ELSE
+      ans = "LagrangeInterpolation"
+    END IF
+
+  CLASS IS (SerendipityInterpolation_)
+    IF (isUpper0) THEN
+      ans = "SERENDIPITYINTERPOLATION"
+    ELSE
+      ans = "SerendipityInterpolation"
+    END IF
+
+  CLASS IS (HermitInterpolation_)
+    IF (isUpper0) THEN
+      ans = "HERMITINTERPOLATION"
+    ELSE
+      ans = "HermitInterpolation"
+    END IF
+
+  CLASS IS (HierarchyInterpolation_)
+    IF (isUpper0) THEN
+      ans = "HIERARCHYINTERPOLATION"
+    ELSE
+      ans = "HierarchyInterpolation"
+    END IF
+
+  CLASS IS (OrthogonalInterpolation_)
+    IF (isUpper0) THEN
+      ans = "ORTHOGONALINTERPOLATION"
+    ELSE
+      ans = "OrthogonalInterpolation"
+    END IF
+
+  CLASS DEFAULT
+    ans = ""
+    CALL ErrorMsg(msg="No Case Found For Type of obj2", &
+                  routine="BaseInterpolation_ToString()", &
+                  line=__LINE__, unitno=stdout, file=__FILE__)
+    STOP
+  END SELECT
+
+END FUNCTION BaseInterpolation_ToChar
+
+!----------------------------------------------------------------------------
+!                                                           BaseType_ToChar
+!----------------------------------------------------------------------------
+
+FUNCTION BaseType_ToChar(name, isUpper) RESULT(ans)
+  INTEGER(I4B), INTENT(IN) :: name
+  LOGICAL(LGT), OPTIONAL, INTENT(IN) :: isUpper
+  CHARACTER(:), ALLOCATABLE :: ans
+
+  ! internal variable
+  LOGICAL(LGT) :: isUpper0
+
+  isUpper0 = .FALSE.
+  IF (PRESENT(isUpper)) isUpper0 = isUpper
+
+  SELECT CASE (name)
+  CASE (poly%monomial)
+    IF (isUpper0) THEN
+      ans = "MONOMIAL"
+    ELSE
+      ans = "Monomial"
+    END IF
+
+  CASE (poly%lagrange)
+    IF (isUpper0) THEN
+      ans = "LAGRANGEINTERPOLATION"
+    ELSE
+      ans = "LagrangeInterpolation"
+    END IF
+
+  CASE (poly%serendipity)
+    IF (isUpper0) THEN
+      ans = "SERENDIPITYINTERPOLATION"
+    ELSE
+      ans = "SerendipityInterpolation"
+    END IF
+
+  CASE (poly%hermit)
+    IF (isUpper0) THEN
+      ans = "HERMITINTERPOLATION"
+    ELSE
+      ans = "HermitInterpolation"
+    END IF
+
+  CASE (poly%hierarchical)
+    IF (isUpper0) THEN
+      ans = "HIERARCHYINTERPOLATION"
+    ELSE
+      ans = "HierarchyInterpolation"
+    END IF
+
+  CASE (poly%orthogonal)
+    IF (isUpper0) THEN
+      ans = "ORTHOGONALINTERPOLATION"
+    ELSE
+      ans = "OrthogonalInterpolation"
+    END IF
+
+  CASE (poly%legendre)
+    IF (isUpper0) THEN
+      ans = "LEGENDREINTERPOLATION"
+    ELSE
+      ans = "LegendreInterpolation"
+    END IF
+
+  CASE (poly%jacobi)
+    IF (isUpper0) THEN
+      ans = "JACOBIINTERPOLATION"
+    ELSE
+      ans = "JacobiInterpolation"
+    END IF
+
+  CASE (poly%ultraspherical)
+    IF (isUpper0) THEN
+      ans = "ULTRASPHERICALINTERPOLATION"
+    ELSE
+      ans = "UltrasphericalInterpolation"
+    END IF
+
+  CASE (poly%chebyshev)
+    IF (isUpper0) THEN
+      ans = "CHEBYSHEVINTERPOLATION"
+    ELSE
+      ans = "ChebyshevInterpolation"
+    END IF
+
+  CASE DEFAULT
+    CALL ErrorMsg(msg="No Case Found For name "//tostring(name), &
+                  routine="BaseType_ToChar()", &
+                  line=__LINE__, unitno=stdout, file=__FILE__)
+    STOP
+  END SELECT
+
+END FUNCTION BaseType_ToChar
+
+!----------------------------------------------------------------------------
+!                                                   QuadraturePointIDToName
+!----------------------------------------------------------------------------
+
+FUNCTION InterpolationPoint_ToString(name, isUpper) RESULT(ans)
+  INTEGER(I4B), INTENT(IN) :: name
+  LOGICAL(LGT), OPTIONAL, INTENT(IN) :: isUpper
+  TYPE(String) :: ans
+  ans = InterpolationPoint_ToChar(name=name, isUpper=isUpper)
+END FUNCTION InterpolationPoint_ToString
+
+!----------------------------------------------------------------------------
+!                                                   BaseInterpolation_ToChar
+!----------------------------------------------------------------------------
+
+FUNCTION InterpolationPoint_ToChar(name, isUpper) RESULT(ans)
+  INTEGER(I4B), INTENT(IN) :: name
+  LOGICAL(LGT), OPTIONAL, INTENT(IN) :: isUpper
+  CHARACTER(:), ALLOCATABLE :: ans
+
+  ! internal varibles
+  LOGICAL(LGT) :: isUpper0
+
+  isUpper0 = .FALSE.
+  IF (PRESENT(isUpper)) isUpper0 = isUpper
+
+  SELECT CASE (name)
+  CASE (ip%equidistance)
+    IF (isUpper0) THEN
+      ans = "EQUIDISTANCE"
+    ELSE
+      ans = "Equidistance"
+    END IF
+
+  CASE (ip%GaussLegendre)
+    IF (isUpper0) THEN
+      ans = "GAUSSLEGENDRE"
+    ELSE
+      ans = "GaussLegendre"
+    END IF
+
+  CASE (ip%GaussLegendreLobatto)
+    IF (isUpper0) THEN
+      ans = "GAUSSLEGENDRELOBATTO"
+    ELSE
+      ans = "GaussLegendreLobatto"
+    END IF
+
+  CASE (ip%GaussLegendreRadau)
+    IF (isUpper0) THEN
+      ans = "GAUSSLEGENDRERADAU"
+    ELSE
+      ans = "GaussLegendreRadau"
+    END IF
+
+  CASE (ip%GaussLegendreRadauLeft)
+    IF (isUpper0) THEN
+      ans = "GAUSSLEGENDRERADAULEFT"
+    ELSE
+      ans = "GaussLegendreRadauLeft"
+    END IF
+
+  CASE (ip%GaussLegendreRadauRight)
+    IF (isUpper0) THEN
+      ans = "GAUSSLEGENDRERADAURIGHT"
+    ELSE
+      ans = "GaussLegendreRadauRight"
+    END IF
+
+  CASE (ip%GaussChebyshev)
+    IF (isUpper0) THEN
+      ans = "GAUSSCHEBYSHEV"
+    ELSE
+      ans = "GaussChebyshev"
+    END IF
+
+  CASE (ip%GaussChebyshevLobatto)
+    IF (isUpper0) THEN
+      ans = "GAUSSCHEBYSHEVLOBATTO"
+    ELSE
+      ans = "GaussChebyshevLobatto"
+    END IF
+
+  CASE (ip%GaussChebyshevRadau)
+    IF (isUpper0) THEN
+      ans = "GAUSSCHEBYSHEVRADAU"
+    ELSE
+      ans = "GaussChebyshevRadau"
+    END IF
+
+  CASE (ip%GaussChebyshevRadauLeft)
+    IF (isUpper0) THEN
+      ans = "GAUSSCHEBYSHEVRADAULEFT"
+    ELSE
+      ans = "GaussChebyshevRadauLeft"
+    END IF
+
+  CASE (ip%GaussChebyshevRadauRight)
+    IF (isUpper0) THEN
+      ans = "GAUSSCHEBYSHEVRADAURIGHT"
+    ELSE
+      ans = "GaussChebyshevRadauRight"
+    END IF
+
+  CASE (ip%GaussJacobi)
+    IF (isUpper0) THEN
+      ans = "GAUSSJACOBI"
+    ELSE
+      ans = "GaussJacobi"
+    END IF
+
+  CASE (ip%GaussJacobiLobatto)
+    IF (isUpper0) THEN
+      ans = "GAUSSJACOBILOBATTO"
+    ELSE
+      ans = "GaussJacobiLobatto"
+    END IF
+
+  CASE (ip%GaussJacobiRadau)
+    IF (isUpper0) THEN
+      ans = "GAUSSJACOBIRADAU"
+    ELSE
+      ans = "GaussJacobiRadau"
+    END IF
+
+  CASE (ip%GaussJacobiRadauLeft)
+    IF (isUpper0) THEN
+      ans = "GAUSSJACOBIRADAULEFT"
+    ELSE
+      ans = "GaussJacobiRadauLeft"
+    END IF
+
+  CASE (ip%GaussJacobiRadauRight)
+    IF (isUpper0) THEN
+      ans = "GAUSSJACOBIRADAURIGHT"
+    ELSE
+      ans = "GaussJacobiRadauRight"
+    END IF
+
+  CASE (ip%GaussUltraspherical)
+    IF (isUpper0) THEN
+      ans = "GAUSSULTRASPHERICAL"
+    ELSE
+      ans = "GaussUltraspherical"
+    END IF
+
+  CASE (ip%GaussUltrasphericalLobatto)
+    IF (isUpper0) THEN
+      ans = "GAUSSULTRASPHERICALLOBATTO"
+    ELSE
+      ans = "GaussUltrasphericalLobatto"
+    END IF
+
+  CASE (ip%GaussUltrasphericalRadau)
+    IF (isUpper0) THEN
+      ans = "GAUSSULTRASPHERICALRADAU"
+    ELSE
+      ans = "GaussUltrasphericalRadau"
+    END IF
+
+  CASE (ip%GaussUltrasphericalRadauLeft)
+    IF (isUpper0) THEN
+      ans = "GAUSSULTRASPHERICALRADAULEFT"
+    ELSE
+      ans = "GaussUltrasphericalRadauLeft"
+    END IF
+
+  CASE (ip%GaussUltrasphericalRadauRight)
+    IF (isUpper0) THEN
+      ans = "GAUSSULTRASPHERICALRADAURIGHT"
+    ELSE
+      ans = "GaussUltrasphericalRadauRight"
+    END IF
+
+  CASE DEFAULT
+    CALL Errormsg(msg="No case found for given quadratureType name", &
+                  routine="BaseInterpolation_ToChar()", &
+                  file=__FILE__, line=__LINE__, unitno=stderr)
+    ans = ""
+    STOP
+  END SELECT
+
+END FUNCTION InterpolationPoint_ToChar
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
 
 END MODULE BaseInterpolation_Method

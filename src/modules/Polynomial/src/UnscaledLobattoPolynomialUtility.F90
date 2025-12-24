@@ -29,9 +29,11 @@ PUBLIC :: UnscaledLobattoLeadingCoeff
 PUBLIC :: UnscaledLobattoZeros
 PUBLIC :: UnscaledLobattoEval
 PUBLIC :: UnscaledLobattoEvalAll
+PUBLIC :: UnscaledLobattoEvalAll_
 PUBLIC :: UnscaledLobattoMonomialExpansionAll
 PUBLIC :: UnscaledLobattoMonomialExpansion
 PUBLIC :: UnscaledLobattoGradientEvalAll
+PUBLIC :: UnscaledLobattoGradientEvalAll_
 PUBLIC :: UnscaledLobattoGradientEval
 PUBLIC :: UnscaledLobattoMassMatrix
 PUBLIC :: UnscaledLobattoStiffnessMatrix
@@ -92,7 +94,7 @@ END INTERFACE
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 6 Sept 2022
-! summary: Evaluate UnscaledLobatto polynomials from order = 0 to n at several points
+! summary: Evaluate UnscaledLobatto polynomials from order = 0 to n
 !
 !# Introduction
 !
@@ -105,17 +107,13 @@ END INTERFACE
 !- ans(M,1:N+1), the values of the first N+1 UnscaledLobatto
 ! polynomials at the point X.
 
-INTERFACE
+INTERFACE UnscaledLobattoEval
   MODULE PURE FUNCTION UnscaledLobattoEval1(n, x) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: n
     REAL(DFP), INTENT(IN) :: x
     REAL(DFP) :: ans
     !! Evaluate UnscaledLobatto polynomial of order n at point x
   END FUNCTION UnscaledLobattoEval1
-END INTERFACE
-
-INTERFACE UnscaledLobattoEval
-  MODULE PROCEDURE UnscaledLobattoEval1
 END INTERFACE UnscaledLobattoEval
 
 !----------------------------------------------------------------------------
@@ -138,17 +136,13 @@ END INTERFACE UnscaledLobattoEval
 !- ans(M,1:N+1), the values of the first N+1 UnscaledLobatto polynomials at
 ! the point X.
 
-INTERFACE
+INTERFACE UnscaledLobattoEval
   MODULE PURE FUNCTION UnscaledLobattoEval2(n, x) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: n
     REAL(DFP), INTENT(IN) :: x(:)
     REAL(DFP) :: ans(SIZE(x))
     !! Evaluate UnscaledLobatto polynomial of order n at point x
   END FUNCTION UnscaledLobattoEval2
-END INTERFACE
-
-INTERFACE UnscaledLobattoEval
-  MODULE PROCEDURE UnscaledLobattoEval2
 END INTERFACE UnscaledLobattoEval
 
 !----------------------------------------------------------------------------
@@ -171,7 +165,7 @@ END INTERFACE UnscaledLobattoEval
 !- ans(M,1:N+1), the values of the first N+1 UnscaledLobatto polynomials at
 ! the point X.
 
-INTERFACE
+INTERFACE UnscaledLobattoEvalAll
   MODULE PURE FUNCTION UnscaledLobattoEvalAll1(n, x) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: n
     REAL(DFP), INTENT(IN) :: x
@@ -179,11 +173,23 @@ INTERFACE
     !! Evaluate UnscaledLobatto polynomial of order = 0 to n (total n+1)
     !! at point x
   END FUNCTION UnscaledLobattoEvalAll1
-END INTERFACE
-
-INTERFACE UnscaledLobattoEvalAll
-  MODULE PROCEDURE UnscaledLobattoEvalAll1
 END INTERFACE UnscaledLobattoEvalAll
+
+!----------------------------------------------------------------------------
+!                                                   UnscaledLobattoEvalAll_
+!----------------------------------------------------------------------------
+
+INTERFACE UnscaledLobattoEvalAll_
+  MODULE PURE SUBROUTINE UnscaledLobattoEvalAll1_(n, x, ans, tsize)
+    INTEGER(I4B), INTENT(IN) :: n
+    REAL(DFP), INTENT(IN) :: x
+    REAL(DFP), INTENT(INOUT) :: ans(:)
+    !! ans(n + 1)
+    !! Evaluate UnscaledLobatto polynomial of order = 0 to n (total n+1)
+    !! at point x
+    INTEGER(I4B), INTENT(OUT) :: tsize
+  END SUBROUTINE UnscaledLobattoEvalAll1_
+END INTERFACE UnscaledLobattoEvalAll_
 
 !----------------------------------------------------------------------------
 !                                                     UnscaledLobattoEvalAll
@@ -205,7 +211,8 @@ END INTERFACE UnscaledLobattoEvalAll
 !- ans(M,1:N+1), the values of the first N+1 UnscaledLobatto polynomials at
 ! the point X.
 
-INTERFACE
+INTERFACE UnscaledLobattoEvalAll
+
   MODULE PURE FUNCTION UnscaledLobattoEvalAll2(n, x) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: n
     REAL(DFP), INTENT(IN) :: x(:)
@@ -213,11 +220,24 @@ INTERFACE
     !! Evaluate UnscaledLobatto polynomial of order = 0 to n (total n+1)
     !! at point x
   END FUNCTION UnscaledLobattoEvalAll2
-END INTERFACE
-
-INTERFACE UnscaledLobattoEvalAll
-  MODULE PROCEDURE UnscaledLobattoEvalAll2
 END INTERFACE UnscaledLobattoEvalAll
+
+!----------------------------------------------------------------------------
+!                                                 UnscaledLobattoEvalAll_
+!----------------------------------------------------------------------------
+
+INTERFACE UnscaledLobattoEvalAll_
+
+  MODULE PURE SUBROUTINE UnscaledLobattoEvalAll2_(n, x, ans, nrow, ncol)
+    INTEGER(I4B), INTENT(IN) :: n
+    REAL(DFP), INTENT(IN) :: x(:)
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    !! ans(SIZE(x), n + 1)
+    !! Evaluate UnscaledLobatto polynomial of order = 0 to n (total n+1)
+    !! at point x
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+  END SUBROUTINE UnscaledLobattoEvalAll2_
+END INTERFACE UnscaledLobattoEvalAll_
 
 !----------------------------------------------------------------------------
 !                                       UnscaledLobattoMonomialExpansionAll
@@ -287,18 +307,27 @@ END INTERFACE
 !
 ! Evaluate gradient of UnscaledLobatto polynomial of order upto n.
 
-INTERFACE
+INTERFACE UnscaledLobattoGradientEvalAll
   MODULE PURE FUNCTION UnscaledLobattoGradientEvalAll1(n, x) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: n
     REAL(DFP), INTENT(IN) :: x
     REAL(DFP) :: ans(1:n + 1)
   END FUNCTION UnscaledLobattoGradientEvalAll1
-END INTERFACE
-!!
-
-INTERFACE UnscaledLobattoGradientEvalAll
-  MODULE PROCEDURE UnscaledLobattoGradientEvalAll1
 END INTERFACE UnscaledLobattoGradientEvalAll
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE UnscaledLobattoGradientEvalAll_
+  MODULE PURE SUBROUTINE UnscaledLobattoGradientEvalAll1_(n, x, ans, tsize)
+    INTEGER(I4B), INTENT(IN) :: n
+    REAL(DFP), INTENT(IN) :: x
+    REAL(DFP), INTENT(INOUT) :: ans(:)
+    INTEGER(I4B), INTENT(OUT) :: tsize
+    !! ans(1:n + 1)
+  END SUBROUTINE UnscaledLobattoGradientEvalAll1_
+END INTERFACE UnscaledLobattoGradientEvalAll_
 
 !----------------------------------------------------------------------------
 !
@@ -312,23 +341,34 @@ END INTERFACE UnscaledLobattoGradientEvalAll
 !
 ! Evaluate gradient of UnscaledLobatto polynomial of order upto n.
 
-INTERFACE
+INTERFACE UnscaledLobattoGradientEvalAll
   MODULE PURE FUNCTION UnscaledLobattoGradientEvalAll2(n, x) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: n
     REAL(DFP), INTENT(IN) :: x(:)
     REAL(DFP) :: ans(1:SIZE(x), 1:n + 1)
   END FUNCTION UnscaledLobattoGradientEvalAll2
-END INTERFACE
-!!
-
-INTERFACE UnscaledLobattoGradientEvalAll
-  MODULE PROCEDURE UnscaledLobattoGradientEvalAll2
 END INTERFACE UnscaledLobattoGradientEvalAll
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
+INTERFACE UnscaledLobattoGradientEvalAll_
+  MODULE PURE SUBROUTINE UnscaledLobattoGradientEvalAll2_(n, x, ans, &
+                                                          nrow, ncol)
+    INTEGER(I4B), INTENT(IN) :: n
+    REAL(DFP), INTENT(IN) :: x(:)
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+    !! nrow = SIZE(x)
+    !! ncol = n + 1
+  END SUBROUTINE UnscaledLobattoGradientEvalAll2_
+END INTERFACE UnscaledLobattoGradientEvalAll_
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
 !> author: Vikas Sharma, Ph. D.
 ! date: 8 Sept 2022
 ! summary: Evaluate gradient of UnscaledLobatto polynomial of order upto n
@@ -337,18 +377,14 @@ END INTERFACE UnscaledLobattoGradientEvalAll
 !
 ! Evaluate gradient of UnscaledLobatto polynomial of order upto n.
 
-INTERFACE
+INTERFACE UnscaledLobattoGradientEval
   MODULE PURE FUNCTION UnscaledLobattoGradientEval1(n, x) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: n
     REAL(DFP), INTENT(IN) :: x
     REAL(DFP) :: ans
   END FUNCTION UnscaledLobattoGradientEval1
-END INTERFACE
-!!
-
-INTERFACE UnscaledLobattoGradientEval
-  MODULE PROCEDURE UnscaledLobattoGradientEval1
 END INTERFACE UnscaledLobattoGradientEval
+!!
 
 !----------------------------------------------------------------------------
 !
@@ -362,16 +398,12 @@ END INTERFACE UnscaledLobattoGradientEval
 !
 ! Evaluate gradient of UnscaledLobatto polynomial of order upto n.
 
-INTERFACE
+INTERFACE UnscaledLobattoGradientEval
   MODULE PURE FUNCTION UnscaledLobattoGradientEval2(n, x) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: n
     REAL(DFP), INTENT(IN) :: x(:)
     REAL(DFP) :: ans(1:SIZE(x))
   END FUNCTION UnscaledLobattoGradientEval2
-END INTERFACE
-
-INTERFACE UnscaledLobattoGradientEval
-  MODULE PROCEDURE UnscaledLobattoGradientEval2
 END INTERFACE UnscaledLobattoGradientEval
 
 !----------------------------------------------------------------------------
