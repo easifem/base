@@ -1709,7 +1709,7 @@ TYPE(OpenMP_) :: OMP
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 4 Sept 2022
-! summary:         Multi-indices object is definedstringclass
+! summary: Multi-indices object is definedstringclass
 
 TYPE :: MultiIndices_
   INTEGER(I4B) :: d
