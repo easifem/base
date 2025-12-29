@@ -15,23 +15,22 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 
 MODULE FEVariable_MultiplicationMethod
-USE BaseType, ONLY: FEVariable_, &
-                    FEVariableScalar_, &
-                    FEVariableVector_, &
-                    FEVariableMatrix_, &
-                    FEVariableConstant_, &
-                    FEVariableSpace_, &
-                    FEVariableTime_, &
-                    FEVariableSpaceTime_, &
-                    TypeFEVariableOpt
-
+USE BaseType, ONLY: FEVariable_
+USE BaseType, ONLY: FEVariableScalar_
+USE BaseType, ONLY: FEVariableVector_
+USE BaseType, ONLY: FEVariableMatrix_
+USE BaseType, ONLY: FEVariableConstant_
+USE BaseType, ONLY: FEVariableSpace_
+USE BaseType, ONLY: FEVariableTime_
+USE BaseType, ONLY: FEVariableSpaceTime_
+USE BaseType, ONLY: TypeFEVariableOpt
 USE GlobalData, ONLY: I4B, DFP, LGT
 
 IMPLICIT NONE
 
 PRIVATE
-
 PUBLIC :: OPERATOR(*)
+PUBLIC :: Multiplication_
 
 !----------------------------------------------------------------------------
 !                                      Multiplication@MultiplicationMethods
@@ -51,6 +50,22 @@ INTERFACE OPERATOR(*)
 END INTERFACE OPERATOR(*)
 
 !----------------------------------------------------------------------------
+!                                      Multiplication_@MultiplicationMethods
+!----------------------------------------------------------------------------
+!> author: Vikas Sharma, Ph. D.
+! date: 2025-12-28
+! summary: Multiplication_ is without extra allocation, user should know
+!          what they are doing
+
+INTERFACE Multiplication_
+  MODULE PURE SUBROUTINE fevar_Multiplication_1(obj1, obj2, ans)
+    CLASS(FEVariable_), INTENT(IN) :: obj1
+    CLASS(FEVariable_), INTENT(IN) :: obj2
+    CLASS(FEVariable_), INTENT(INOUT) :: ans
+  END SUBROUTINE fevar_Multiplication_1
+END INTERFACE Multiplication_
+
+!----------------------------------------------------------------------------
 !                                      Multiplication@MultiplicationMethods
 !----------------------------------------------------------------------------
 
@@ -66,6 +81,22 @@ INTERFACE OPERATOR(*)
     TYPE(FEVariable_) :: ans
   END FUNCTION fevar_Multiplication2
 END INTERFACE OPERATOR(*)
+
+!----------------------------------------------------------------------------
+!                                      Multiplication_@MultiplicationMethods
+!----------------------------------------------------------------------------
+!> author: Vikas Sharma, Ph. D.
+! date: 2025-12-28
+! summary: Multiplication_ is without extra allocation, user should know
+!          what they are doing
+
+INTERFACE Multiplication_
+  MODULE PURE SUBROUTINE fevar_Multiplication_2(obj1, val, ans)
+    CLASS(FEVariable_), INTENT(IN) :: obj1
+    REAL(DFP), INTENT(IN) :: val
+    CLASS(FEVariable_), INTENT(INOUT) :: ans
+  END SUBROUTINE fevar_Multiplication_2
+END INTERFACE Multiplication_
 
 !----------------------------------------------------------------------------
 !                                      Multiplication@MultiplicationMethods
