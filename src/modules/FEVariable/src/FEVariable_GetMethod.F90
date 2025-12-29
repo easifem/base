@@ -47,9 +47,25 @@ PUBLIC :: FEVariable_ToChar
 PUBLIC :: FEVariable_ToInteger
 PUBLIC :: GetLambdaFromYoungsModulus
 PUBLIC :: GetTotalShape
+PUBLIC :: GetRankCase
 
 PUBLIC :: Get
 PUBLIC :: Get_
+
+!----------------------------------------------------------------------------
+!                                                         GetRankCase@Methods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2025-12-29
+! summary: Get the case based on the rank of two variables
+
+INTERFACE
+  MODULE PURE FUNCTION GetRankCase(rank1, rank2) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: rank1, rank2
+    INTEGER(I4B) :: ans
+  END FUNCTION GetRankCase
+END INTERFACE
 
 !----------------------------------------------------------------------------
 !                                 GetLambdaFromYoungsModulus@SpecialMethods

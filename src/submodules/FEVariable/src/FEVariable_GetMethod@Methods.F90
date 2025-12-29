@@ -24,6 +24,37 @@ IMPLICIT NONE
 CONTAINS
 
 !----------------------------------------------------------------------------
+!                                                              GetRankCase
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE GetRankCase
+INTEGER(I4B) :: a, b
+
+a = 0
+b = 0
+
+SELECT CASE (rank1)
+CASE (feopt%scalar)
+  a = 0
+CASE (feopt%vector)
+  a = 1
+CASE (feopt%matrix)
+  a = 2
+END SELECT
+
+SELECT CASE (rank2)
+CASE (feopt%scalar)
+  b = 0
+CASE (feopt%vector)
+  b = 1
+CASE (feopt%matrix)
+  b = 2
+END SELECT
+
+ans = a * 10 + b
+END PROCEDURE GetRankCase
+
+!----------------------------------------------------------------------------
 !                                                                        Len
 !----------------------------------------------------------------------------
 
