@@ -48,6 +48,7 @@ PUBLIC :: FEVariable_ToInteger
 PUBLIC :: GetLambdaFromYoungsModulus
 PUBLIC :: GetTotalShape
 PUBLIC :: GetRankCase
+PUBLIC :: GetVarCase
 
 PUBLIC :: Get
 PUBLIC :: Get_
@@ -65,6 +66,21 @@ INTERFACE
     INTEGER(I4B), INTENT(IN) :: rank1, rank2
     INTEGER(I4B) :: ans
   END FUNCTION GetRankCase
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                         GetRankCase@Methods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2025-12-29
+! summary: Get the case based on the vartype of two variables
+
+INTERFACE
+  MODULE PURE FUNCTION GetVarCase(vartype1, vartype2) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: vartype1, vartype2
+    INTEGER(I4B) :: ans
+  END FUNCTION GetVarCase
 END INTERFACE
 
 !----------------------------------------------------------------------------

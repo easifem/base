@@ -55,6 +55,41 @@ ans = a * 10 + b
 END PROCEDURE GetRankCase
 
 !----------------------------------------------------------------------------
+!                                                                  GetVarCase
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE GetVarCase
+INTEGER(I4B) :: a, b
+
+a = 0
+b = 0
+
+SELECT CASE (vartype1)
+CASE (feopt%constant)
+  a = 0
+CASE (feopt%space)
+  a = 1
+CASE (feopt%time)
+  a = 2
+CASE (feopt%spacetime)
+  a = 3
+END SELECT
+
+SELECT CASE (vartype2)
+CASE (feopt%constant)
+  b = 0
+CASE (feopt%space)
+  b = 1
+CASE (feopt%time)
+  b = 2
+CASE (feopt%spacetime)
+  b = 3
+END SELECT
+
+ans = a * 10 + b
+END PROCEDURE GetVarCase
+
+!----------------------------------------------------------------------------
 !                                                                        Len
 !----------------------------------------------------------------------------
 
