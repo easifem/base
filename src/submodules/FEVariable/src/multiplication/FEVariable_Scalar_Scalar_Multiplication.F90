@@ -14,29 +14,15 @@
 !
 ! You should have received a copy of the GNU General Public License
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
-!
 
-MODULE FEVariable_Scalar_Scalar_Multiplication
-USE BaseType, ONLY: FEVariable_
+#define _MODULE_NAME_ FEVariable_Scalar_Scalar_Multiplication
+#define _OP_ *
 
-IMPLICIT NONE
+! MODULE FEVariable_Scalar_Scalar_Multiplication
 
-PRIVATE
-PUBLIC :: Scalar_Scalar_Master
+#include "../include/scalar/ScalarOperatorScalar.F90"
 
-CONTAINS
+! END MODULE FEVariable_Scalar_Scalar_Multiplication
 
-!----------------------------------------------------------------------------
-!                                                       Scalar_Scalar_Master
-!----------------------------------------------------------------------------
-
-PURE SUBROUTINE Scalar_Scalar_Master(obj1, obj2, ans)
-  TYPE(FEVariable_), INTENT(IN) :: obj1, obj2
-  TYPE(FEVariable_), INTENT(INOUT) :: ans
-END SUBROUTINE Scalar_Scalar_Master
-
-!----------------------------------------------------------------------------
-!
-!----------------------------------------------------------------------------
-
-END MODULE FEVariable_Scalar_Scalar_Multiplication
+#undef _MODULE_NAME_
+#undef _OP_
