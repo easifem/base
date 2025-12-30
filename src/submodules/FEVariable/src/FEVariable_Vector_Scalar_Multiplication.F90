@@ -16,27 +16,10 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-MODULE FEVariable_Vector_Scalar_Multiplication
-USE BaseType, ONLY: FEVariable_
+#define _MODULE_NAME_ FEVariable_Vector_Scalar_Multiplication
+#define _OP_ *
 
-IMPLICIT NONE
+#include "./include/vector_operator_scalar_.F90"
 
-PRIVATE
-PUBLIC :: Vector_Scalar_Master
-
-CONTAINS
-
-!----------------------------------------------------------------------------
-!                                                       Scalar_Scalar_Master
-!----------------------------------------------------------------------------
-
-PURE SUBROUTINE Vector_Scalar_Master(obj1, obj2, ans)
-  TYPE(FEVariable_), INTENT(IN) :: obj1, obj2
-  TYPE(FEVariable_), INTENT(INOUT) :: ans
-END SUBROUTINE Vector_Scalar_Master
-
-!----------------------------------------------------------------------------
-!
-!----------------------------------------------------------------------------
-
-END MODULE FEVariable_Vector_Scalar_Multiplication
+#undef _MODULE_NAME_
+#undef _OP_
