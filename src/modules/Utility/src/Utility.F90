@@ -31,11 +31,10 @@ USE ConvertUtility
 USE DiagUtility
 USE EigenUtility
 USE EyeUtility
-USE HeadUtility
-USE TailUtility
-USE SplitUtility
 USE GridPointUtility
 USE HashingUtility
+USE HeadUtility
+USE IndexUtility
 USE InputUtility
 USE IntegerUtility
 USE InvUtility
@@ -49,11 +48,13 @@ USE PartitionUtility
 USE ProductUtility
 USE PushPopUtility
 USE ReallocateUtility
+USE SafeSizeUtility
 USE SortUtility
+USE SplitUtility
 USE StringUtility
 USE SwapUtility
 USE SymUtility
+USE TailUtility
 USE TriagUtility
 USE ZerosUtility
-USE SafeSizeUtility
 END MODULE Utility

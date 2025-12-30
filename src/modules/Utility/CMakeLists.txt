@@ -18,40 +18,41 @@
 set(src_path "${CMAKE_CURRENT_LIST_DIR}/src/")
 target_sources(
   ${PROJECT_NAME}
-  PRIVATE ${src_path}/MappingUtility.F90
-          ${src_path}/BinomUtility.F90
-          ${src_path}/AppendUtility.F90
+  PRIVATE ${src_path}/AppendUtility.F90
           ${src_path}/ApproxUtility.F90
-          ${src_path}/AssertUtility.F90
-          ${src_path}/HeadUtility.F90
-          ${src_path}/TailUtility.F90
-          ${src_path}/SplitUtility.F90
           ${src_path}/ArangeUtility.F90
-          ${src_path}/GridPointUtility.F90
-          ${src_path}/OnesUtility.F90
-          ${src_path}/ZerosUtility.F90
-          ${src_path}/EyeUtility.F90
-          ${src_path}/DiagUtility.F90
-          ${src_path}/HashingUtility.F90
-          ${src_path}/InputUtility.F90
-          ${src_path}/InvUtility.F90
-          ${src_path}/MatmulUtility.F90
+          ${src_path}/AssertUtility.F90
+          ${src_path}/BinomUtility.F90
           ${src_path}/ContractionUtility.F90
-          ${src_path}/MiscUtility.F90
-          ${src_path}/ProductUtility.F90
-          ${src_path}/ReallocateUtility.F90
-          ${src_path}/PartitionUtility.F90
+          ${src_path}/ConvertUtility.F90
+          ${src_path}/DiagUtility.F90
+          ${src_path}/EigenUtility.F90
+          ${src_path}/EyeUtility.F90
+          ${src_path}/GridPointUtility.F90
+          ${src_path}/HashingUtility.F90
+          ${src_path}/HeadUtility.F90
+          ${src_path}/IndexUtility.F90
+          ${src_path}/InputUtility.F90
+          ${src_path}/IntegerUtility.F90
+          ${src_path}/InvUtility.F90
+          ${src_path}/LinearAlgebraUtility.F90
+          ${src_path}/MatmulUtility.F90
           ${src_path}/MedianUtility.F90
+          ${src_path}/MiscUtility.F90
+          ${src_path}/OnesUtility.F90
+          ${src_path}/PartitionUtility.F90
+          ${src_path}/ProductUtility.F90
+          ${src_path}/PushPopUtility.F90
+          ${src_path}/ReallocateUtility.F90
+          ${src_path}/ReverseUtility.F90
+          ${src_path}/SafeSizeUtility.F90
           ${src_path}/SortUtility.F90
+          ${src_path}/SplitUtility.F90
           ${src_path}/StringUtility.F90
           ${src_path}/SwapUtility.F90
-          ${src_path}/ConvertUtility.F90
-          ${src_path}/IntegerUtility.F90
-          ${src_path}/PushPopUtility.F90
-          ${src_path}/EigenUtility.F90
           ${src_path}/SymUtility.F90
+          ${src_path}/TailUtility.F90
           ${src_path}/TriagUtility.F90
-          ${src_path}/LinearAlgebraUtility.F90
-          ${src_path}/SafeSizeUtility.F90
-          ${src_path}/ReverseUtility.F90
-          ${src_path}/Utility.F90)
+          ${src_path}/Utility.F90
+          ${src_path}/ZerosUtility.F90
+          ${src_path}/MappingUtility.F90)

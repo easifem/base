@@ -17,7 +17,7 @@
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2022-12-21
-! summary:         Module for getting triangular parts of matrix
+! summary: Module for getting triangular parts of matrix
 !
 !# Introduction
 !
