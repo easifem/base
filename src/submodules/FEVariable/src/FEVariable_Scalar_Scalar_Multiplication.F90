@@ -20,7 +20,7 @@
 
 ! MODULE FEVariable_Scalar_Scalar_Multiplication
 
-#include "../include/scalar/ScalarOperatorScalar.F90"
+#include "./include/scalar_operator_scalar_.F90"
 
 ! END MODULE FEVariable_Scalar_Scalar_Multiplication
 

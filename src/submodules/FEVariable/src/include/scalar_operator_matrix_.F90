@@ -15,19 +15,17 @@
 ! You should have received a copy of the GNU General Public License
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 
-#define _OP_ *
-
-MODULE ScalarOperatorScalar
-
-! MODULE _MODULE_NAME_
+MODULE _MODULE_NAME_
 USE BaseType, ONLY: FEVariable_
 USE BaseType, ONLY: varopt => TypeFEVariableOpt
 USE GlobalData, ONLY: I4B, DFP, LGT
 USE FEVariable_Method, ONLY: GetRankCase
 USE FEVariable_Method, ONLY: GetVarCase
+USE IndexUtility, ONLY: FortranIndex
 
 PRIVATE
-PUBLIC :: Scalar_Scalar_Master
+
+PUBLIC :: Scalar_Matrix_Master
 
 CONTAINS
 
@@ -35,7 +33,7 @@ CONTAINS
 !                                                                      master
 !----------------------------------------------------------------------------
 
-PURE SUBROUTINE Scalar_Scalar_Master(obj1, obj2, ans)
+PURE SUBROUTINE Scalar_Matrix_Master(obj1, obj2, ans)
   TYPE(FEVariable_), INTENT(IN) :: obj1, obj2
   TYPE(FEVariable_), INTENT(INOUT) :: ans
 
@@ -77,33 +75,33 @@ PURE SUBROUTINE Scalar_Scalar_Master(obj1, obj2, ans)
   CASE (33)
     CALL spacetime_spacetime(obj1, obj2, ans)
   END SELECT
-END SUBROUTINE Scalar_Scalar_Master
+END SUBROUTINE Scalar_Matrix_Master
 
 !----------------------------------------------------------------------------
 !                                                          constant constant
 !----------------------------------------------------------------------------
 
-! Result will be a constant scalar
+! Result will be a constant matrix
 PURE SUBROUTINE constant_constant(obj1, obj2, ans)
   TYPE(FEVariable_), INTENT(IN) :: obj1, obj2
   TYPE(FEVariable_), INTENT(INOUT) :: ans
 
-  ans%len = 1
-  ans%s(1) = 1
-  ans%val(1) = obj1%val(1) _OP_ obj2%val(1)
+  ans%len = obj2%len
+  ans%s(1:2) = obj2%s(1:2)
+  ans%val(1:ans%len) = obj1%val(1) _OP_ obj2%val(1:ans%len)
 END SUBROUTINE constant_constant
 
 !----------------------------------------------------------------------------
 !                                                              constant space
 !----------------------------------------------------------------------------
 
-! ans will be a space scalar
+! ans will be a space matrix
 PURE SUBROUTINE constant_space(obj1, obj2, ans)
   TYPE(FEVariable_), INTENT(IN) :: obj1, obj2
   TYPE(FEVariable_), INTENT(INOUT) :: ans
 
   ans%len = obj2%len
-  ans%s(1) = obj2%s(1)
+  ans%s(1:3) = obj2%s(1:3)
   ans%val(1:ans%len) = obj1%val(1) _OP_ obj2%val(1:ans%len)
 END SUBROUTINE constant_space
 
@@ -111,13 +109,13 @@ END SUBROUTINE constant_space
 !                                                              constant time
 !----------------------------------------------------------------------------
 
-! ans will be time scalar
+! ans will be a time matrix
 PURE SUBROUTINE constant_time(obj1, obj2, ans)
   TYPE(FEVariable_), INTENT(IN) :: obj1, obj2
   TYPE(FEVariable_), INTENT(INOUT) :: ans
 
   ans%len = obj2%len
-  ans%s(1) = obj2%s(1)
+  ans%s(1:3) = obj2%s(1:3)
   ans%val(1:ans%len) = obj1%val(1) _OP_ obj2%val(1:ans%len)
 END SUBROUTINE constant_time
 
@@ -125,13 +123,13 @@ END SUBROUTINE constant_time
 !                                                          constant spacetime
 !----------------------------------------------------------------------------
 
-! ans will be a spacetime scalar
+! ans will be a spacetime matrix
 PURE SUBROUTINE constant_spacetime(obj1, obj2, ans)
   TYPE(FEVariable_), INTENT(IN) :: obj1, obj2
   TYPE(FEVariable_), INTENT(INOUT) :: ans
 
   ans%len = obj2%len
-  ans%s(1:2) = obj2%s(1:2)
+  ans%s(1:4) = obj2%s(1:4)
   ans%val(1:ans%len) = obj1%val(1) _OP_ obj2%val(1:ans%len)
 END SUBROUTINE constant_spacetime
 
@@ -139,51 +137,82 @@ END SUBROUTINE constant_spacetime
 !                                                              space constant
 !----------------------------------------------------------------------------
 
-! ans will be a space scalar
+! ans will be a space matrix
 PURE SUBROUTINE space_constant(obj1, obj2, ans)
   TYPE(FEVariable_), INTENT(IN) :: obj1, obj2
   TYPE(FEVariable_), INTENT(INOUT) :: ans
 
-  ans%len = obj1%len
-  ans%s(1) = obj1%s(1)
-  ans%val(1:ans%len) = obj1%val(1:ans%len) _OP_ obj2%val(1)
+  INTEGER(I4B) :: ii, jj, kk, nx, ny, np
+
+  nx = obj2%s(1)
+  ny = obj2%s(2)
+  np = obj1%s(1)
+
+  ans%s(1) = nx; ans%s(2) = ny; ans%s(3) = np
+
+  ans%len = nx * ny * np
+
+  DO CONCURRENT(ii=1:nx, jj=1:ny, kk=1:np)
+    ans%val(FortranIndex(ii, jj, kk, nx, ny, np)) = &
+      obj1%val(kk) _OP_ &
+      obj2%val(FortranIndex(ii, jj, nx, ny))
+  END DO
 END SUBROUTINE space_constant
 
 !----------------------------------------------------------------------------
 !                                                                space space
 !----------------------------------------------------------------------------
 
-! ans will be a space scalar
+! ans will be a space matrix
 PURE SUBROUTINE space_space(obj1, obj2, ans)
   TYPE(FEVariable_), INTENT(IN) :: obj1, obj2
   TYPE(FEVariable_), INTENT(INOUT) :: ans
 
-  ans%s(1) = MIN(obj1%s(1), obj2%s(1))
-  ans%len = ans%s(1)
-  ans%val(1:ans%len) = obj1%val(1:ans%len) _OP_ obj2%val(1:ans%len)
+  INTEGER(I4B) :: ii, jj, kk, nx, ny, np
+
+  nx = obj2%s(1)
+  ny = obj2%s(2)
+  np = MIN(obj1%s(1), obj2%s(3))
+
+  ans%s(1) = nx; ans%s(2) = ny; ans%s(3) = np
+  ans%len = nx * ny * np
+
+  DO CONCURRENT(ii=1:nx, jj=1:ny, kk=1:np)
+    ! ans index: nx, ny, np
+    ! obj1 index: np
+    ! obj2 index: nx, ny, np
+    ans%val(FortranIndex(ii, jj, kk, nx, ny, np)) = &
+      obj1%val(kk) _OP_ &
+      obj2%val(FortranIndex(ii, jj, kk, nx, ny, np))
+  END DO
 END SUBROUTINE space_space
 
 !----------------------------------------------------------------------------
-!                                                                space time
+!                                                                  space time
 !----------------------------------------------------------------------------
 
-! ans will be a spacetime scalar
+! ans will be a space-time matrix
 PURE SUBROUTINE space_time(obj1, obj2, ans)
   TYPE(FEVariable_), INTENT(IN) :: obj1, obj2
   TYPE(FEVariable_), INTENT(INOUT) :: ans
 
-  INTEGER(I4B) :: jj, kk, np, nnt
+  INTEGER(I4B) :: ii, jj, kk, ll, nx, ny, np, nnt
 
+  nx = obj2%s(1)
+  ny = obj2%s(2)
+  nnt = obj2%s(3)
   np = obj1%s(1)
-  nnt = obj2%s(1)
 
-  ans%s(1) = np ! take number of points in space from obj1
-  ans%s(2) = nnt ! take number of points  in time from obj2
+  ans%s(1) = nx; ans%s(2) = ny; ans%s(3) = np; ans%s(4) = nnt
 
-  ans%len = np * nnt
+  ans%len = nx * ny * np * nnt
 
-  DO CONCURRENT(jj=1:np, kk=1:nnt)
-    ans%val(jj + (kk - 1) * np) = obj1%val(jj) _OP_ obj2%val(kk)
+  DO CONCURRENT(ii=1:nx, jj=1:ny, kk=1:np, ll=1:nnt)
+    ! ans index: nx, ny, np, nnt
+    ! obj1 index: np
+    ! obj2 index: nx, ny, nnt
+    ans%val(FortranIndex(ii, jj, kk, ll, nx, ny, np, nnt)) = &
+      obj1%val(kk) _OP_ obj2%val(FortranIndex(ii, jj, ll, nx, ny, nnt))
   END DO
 END SUBROUTINE space_time
 
@@ -191,24 +220,28 @@ END SUBROUTINE space_time
 !                                                                space time
 !----------------------------------------------------------------------------
 
-! ans will be a spacetime scalar
+! ans will be a space time matrix
 PURE SUBROUTINE space_spacetime(obj1, obj2, ans)
   TYPE(FEVariable_), INTENT(IN) :: obj1, obj2
   TYPE(FEVariable_), INTENT(INOUT) :: ans
 
-  INTEGER(I4B) :: jj, kk, np, nnt
+  INTEGER(I4B) :: ii, jj, kk, ll, nx, ny, np, nnt
 
-  np = MIN(obj1%s(1), obj2%s(1))
-  nnt = obj2%s(2)
+  nx = obj2%s(1)
+  ny = obj2%s(2)
+  nnt = obj2%s(4)
+  np = MIN(obj1%s(1), obj2%s(3))
 
-  ans%s(1) = np ! take number of points in space from obj1
-  ans%s(2) = nnt ! take number of points  in time from obj2
+  ans%s(1) = nx; ans%s(2) = ny; ans%s(3) = np; ans%s(4) = nnt
+  ans%len = nx * ny * np * nnt
 
-  ans%len = np * nnt
-
-  DO CONCURRENT(jj=1:np, kk=1:nnt)
-    ans%val(jj + (kk - 1) * np) = obj1%val(jj) _OP_ &
-                                  obj2%val(jj + (kk - 1) * np)
+  DO CONCURRENT(ii=1:nx, jj=1:ny, kk=1:np, ll=1:nnt)
+    ! ans index: nx, ny, np, nnt
+    ! obj1 index: np
+    ! obj2 index: nx, ny, np, nnt
+    ans%val(FortranIndex(ii, jj, kk, ll, nx, ny, np, nnt)) = &
+      obj1%val(kk) _OP_ &
+      obj2%val(FortranIndex(ii, jj, kk, ll, nx, ny, np, nnt))
   END DO
 END SUBROUTINE space_spacetime
 
@@ -216,51 +249,84 @@ END SUBROUTINE space_spacetime
 !                                                              time constant
 !----------------------------------------------------------------------------
 
-! ans will be a time scalar
+! ans will be a time matrix
 PURE SUBROUTINE time_constant(obj1, obj2, ans)
   TYPE(FEVariable_), INTENT(IN) :: obj1, obj2
   TYPE(FEVariable_), INTENT(INOUT) :: ans
 
-  ans%len = obj1%len
-  ans%s(1) = obj1%s(1)
-  ans%val(1:ans%len) = obj1%val(1:ans%len) _OP_ obj2%val(1)
+  ! internal variables
+  INTEGER(I4B) :: ii, jj, ll, nx, ny, nnt
+
+  nx = obj2%s(1)
+  ny = obj2%s(2)
+  nnt = obj1%s(1)
+
+  ans%s(1) = nx; ans%s(2) = ny; ans%s(3) = nnt
+  ans%len = nx * ny * nnt
+
+  DO CONCURRENT(ii=1:nx, jj=1:ny, ll=1:nnt)
+    ! ans index: nx, ny, nnt
+    ! obj1 index: nnt
+    ! obj2 index: nx, ny
+    ans%val(FortranIndex(ii, jj, ll, nx, ny, nnt)) = &
+      obj1%val(ll) _OP_ &
+      obj2%val(FortranIndex(ii, jj, nx, ny))
+  END DO
 END SUBROUTINE time_constant
 
 !----------------------------------------------------------------------------
 !                                                                time time
 !----------------------------------------------------------------------------
 
-! ans will be a time scalar
+! ans will be a time matrix
 PURE SUBROUTINE time_time(obj1, obj2, ans)
   TYPE(FEVariable_), INTENT(IN) :: obj1, obj2
   TYPE(FEVariable_), INTENT(INOUT) :: ans
 
-  ans%s(1) = MIN(obj1%s(1), obj2%s(1))
-  ans%len = ans%s(1)
-  ans%val(1:ans%len) = obj1%val(1:ans%len) _OP_ obj2%val(1:ans%len)
+  INTEGER(I4B) :: ii, jj, ll, nx, ny, nnt
+
+  nx = obj2%s(1); ny = obj2%s(2); nnt = MIN(obj1%s(1), obj2%s(3))
+
+  ans%s(1) = nx; ans%s(2) = ny; ans%s(3) = nnt
+  ans%len = nx * ny * nnt
+
+  DO CONCURRENT(ii=1:nx, jj=1:ny, ll=1:nnt)
+    ! ans index: nx, ny, nnt
+    ! obj1 index: nnt
+    ! obj2 index: nx, ny, nnt
+    ans%val(FortranIndex(ii, jj, ll, nx, ny, nnt)) = &
+      obj1%val(ll) _OP_ &
+      obj2%val(FortranIndex(ii, jj, ll, nx, ny, nnt))
+  END DO
 END SUBROUTINE time_time
 
 !----------------------------------------------------------------------------
 !                                                                time space
 !----------------------------------------------------------------------------
 
-! ans will be a spacetime scalar
+! ans will be a space time matrix
 PURE SUBROUTINE time_space(obj1, obj2, ans)
   TYPE(FEVariable_), INTENT(IN) :: obj1, obj2
   TYPE(FEVariable_), INTENT(INOUT) :: ans
 
-  INTEGER(I4B) :: jj, kk, np, nnt
+  INTEGER(I4B) :: ii, jj, kk, ll, nx, ny, np, nnt
 
-  np = obj2%s(2)
+  nx = obj2%s(1)
+  ny = obj2%s(2)
+  np = obj2%s(3)
   nnt = obj1%s(1)
 
-  ans%s(1) = np ! take number of points in space from obj1
-  ans%s(2) = nnt ! take number of points  in time from obj2
+  ans%s(1) = nx; ans%s(2) = ny; ans%s(3) = np; ans%s(4) = nnt
 
-  ans%len = np * nnt
+  ans%len = nx * ny * np * nnt
 
-  DO CONCURRENT(jj=1:np, kk=1:nnt)
-    ans%val(jj + (kk - 1) * np) = obj1%val(kk) _OP_ obj2%val(jj)
+  DO CONCURRENT(ii=1:nx, jj=1:ny, kk=1:np, ll=1:nnt)
+    ! ans index: nx, ny, np, nnt
+    ! obj1 index: nnt
+    ! obj2 index: nx, ny, np
+    ans%val(FortranIndex(ii, jj, kk, ll, nx, ny, np, nnt)) = &
+      obj1%val(ll) _OP_ &
+      obj2%val(FortranIndex(ii, jj, kk, nx, ny, np))
   END DO
 END SUBROUTINE time_space
 
@@ -268,61 +334,88 @@ END SUBROUTINE time_space
 !                                                                time space
 !----------------------------------------------------------------------------
 
-! ans will be a spacetime scalar
+! ans will be a space time matrix
 PURE SUBROUTINE time_spacetime(obj1, obj2, ans)
   TYPE(FEVariable_), INTENT(IN) :: obj1, obj2
   TYPE(FEVariable_), INTENT(INOUT) :: ans
 
-  INTEGER(I4B) :: jj, kk, np, nnt
+  INTEGER(I4B) :: ii, jj, kk, ll, nx, ny, np, nnt
 
-  np = obj2%s(1)
-  nnt = MIN(obj1%s(1), obj2%s(2))
+  nx = obj2%s(1)
+  ny = obj2%s(2)
+  np = obj2%s(3)
+  nnt = MIN(obj1%s(1), obj2%s(4))
 
-  ans%s(1) = np ! take number of points in space from obj1
-  ans%s(2) = nnt ! take number of points  in time from obj2
-  ans%len = np * nnt
+  ans%s(1) = nx; ans%s(2) = ny; ans%s(3) = np; ans%s(4) = nnt
+  ans%len = nx * ny * np * nnt
 
-  DO CONCURRENT(jj=1:np, kk=1:nnt)
-    ans%val(jj + (kk - 1) * np) = obj1%val(kk) _OP_ &
-                                  obj2%val(jj + (kk - 1) * np)
+  DO CONCURRENT(ii=1:nx, jj=1:ny, kk=1:np, ll=1:nnt)
+    ! ans index: nx, ny, np, nnt
+    ! obj1 index: nnt
+    ! obj2 index: nx, ny, np, nnt
+    ans%val(FortranIndex(ii, jj, kk, ll, nx, ny, np, nnt)) = &
+      obj1%val(ll) _OP_ &
+      obj2%val(FortranIndex(ii, jj, kk, ll, nx, ny, np, nnt))
   END DO
+
 END SUBROUTINE time_spacetime
 
 !----------------------------------------------------------------------------
 !                                                          spacetime constant
 !----------------------------------------------------------------------------
 
-! result will be a spacetime scalar
+! result will be a spacetime matrix
 PURE SUBROUTINE spacetime_constant(obj1, obj2, ans)
   TYPE(FEVariable_), INTENT(IN) :: obj1, obj2
   TYPE(FEVariable_), INTENT(INOUT) :: ans
 
-  ans%s(1:2) = obj1%s(1:2)
-  ans%len = obj1%len
-  ans%val(1:ans%len) = obj1%val(1:ans%len) _OP_ obj2%val(1)
+  INTEGER(I4B) :: nx, ny, np, nnt, ii, jj, kk, ll
+
+  nx = obj2%s(1)
+  ny = obj2%s(2)
+  np = obj1%s(1)
+  nnt = obj1%s(2)
+
+  ans%s(1) = nx; ans%s(2) = ny; ans%s(3) = np; ans%s(4) = nnt
+  ans%len = nx * ny * np * nnt
+
+  DO CONCURRENT(ii=1:nx, jj=1:ny, kk=1:np, ll=1:nnt)
+    ! ans index: nx, ny, np, nnt
+    ! obj1 index: np, nnt
+    ! obj2 index: nx, ny
+    ans%val(FortranIndex(ii, jj, kk, ll, nx, ny, np, nnt)) = &
+      obj1%val(FortranIndex(kk, ll, np, nnt)) _OP_ &
+      obj2%val(FortranIndex(ii, jj, nx, ny))
+  END DO
 END SUBROUTINE spacetime_constant
 
 !----------------------------------------------------------------------------
 !                                                          spacetime space
 !----------------------------------------------------------------------------
 
-! result will be a spacetime scalar
+! result will be a spacetime space time matrix
 PURE SUBROUTINE spacetime_space(obj1, obj2, ans)
   TYPE(FEVariable_), INTENT(IN) :: obj1, obj2
   TYPE(FEVariable_), INTENT(INOUT) :: ans
 
-  INTEGER(I4B) :: np, nnt
+  INTEGER(I4B) :: nx, ny, np, nnt, ii, jj, kk, ll
 
-  np = MIN(obj1%s(1), obj2%s(1))
+  nx = obj2%s(1)
+  ny = obj2%s(2)
+  np = MIN(obj1%s(1), obj2%s(3))
   nnt = obj1%s(2)
 
-  ans%s(1) = np
-  ans%s(2) = nnt
-  ans%len = np * nnt
+  ans%s(1) = nx; ans%s(2) = ny; ans%s(3) = np; ans%s(4) = nnt
 
-  DO CONCURRENT(jj=1:np, kk=1:nnt)
-    ans%val(jj + (kk - 1) * np) = obj1%val(jj + (kk - 1) * np) &
-                                  _OP_ obj2%val(jj)
+  ans%len = nx * ny * np * nnt
+
+  DO CONCURRENT(ii=1:nx, jj=1:ny, kk=1:np, ll=1:nnt)
+    ! ans index: nx, ny, np, nnt
+    ! obj1 index: np, nnt
+    ! obj2 index: nx, ny, np
+    ans%val(FortranIndex(ii, jj, kk, ll, nx, ny, np, nnt)) = &
+      obj1%val(FortranIndex(kk, ll, np, nnt)) _OP_ &
+      obj2%val(FortranIndex(ii, jj, kk, nx, ny, np))
   END DO
 END SUBROUTINE spacetime_space
 
@@ -330,50 +423,65 @@ END SUBROUTINE spacetime_space
 !                                                          spacetime time
 !----------------------------------------------------------------------------
 
-! result will be a spacetime scalar
+! result will be a spacetime matrix
 PURE SUBROUTINE spacetime_time(obj1, obj2, ans)
   TYPE(FEVariable_), INTENT(IN) :: obj1, obj2
   TYPE(FEVariable_), INTENT(INOUT) :: ans
 
-  INTEGER(I4B) :: np, nnt
+  INTEGER(I4B) :: nx, ny, np, nnt, ii, jj, kk, ll
 
+  nx = obj2%s(1)
+  ny = obj2%s(2)
   np = obj1%s(1)
-  nnt = MIN(obj1%s(2), obj2%s(1))
+  nnt = MIN(obj1%s(2), obj2%s(3))
 
-  ans%s(1) = np
-  ans%s(2) = nnt
+  ans%s(1) = nx; ans%s(2) = ny; ans%s(3) = np; ans%s(4) = nnt
 
-  ans%len = np * nnt
+  ans%len = nx * ny * np * nnt
 
-  DO CONCURRENT(jj=1:np, kk=1:nnt)
-    ans%val(jj + (kk - 1) * np) = obj1%val(jj + (kk - 1) * np) _OP_ &
-                                  obj2%val(kk)
+  DO CONCURRENT(ii=1:nx, jj=1:ny, kk=1:np, ll=1:nnt)
+    ! ans index: nx, ny, np, nnt
+    ! obj1 index: np, nnt
+    ! obj2 index: nx, ny, nnt
+    ans%val(FortranIndex(ii, jj, kk, ll, nx, ny, np, nnt)) = &
+      obj1%val(FortranIndex(kk, ll, np, nnt)) _OP_ &
+      obj2%val(FortranIndex(ii, jj, ll, nx, ny, nnt))
   END DO
-
 END SUBROUTINE spacetime_time
 
 !----------------------------------------------------------------------------
 !                                                        spacetime spacetime
 !----------------------------------------------------------------------------
 
-! result will be a spacetime scalar
+! result will be a spacetime matrix
 PURE SUBROUTINE spacetime_spacetime(obj1, obj2, ans)
   TYPE(FEVariable_), INTENT(IN) :: obj1, obj2
   TYPE(FEVariable_), INTENT(INOUT) :: ans
 
-  ans%s(1) = MIN(obj1%s(1), obj2%s(2))
-  ans%s(2) = MIN(obj1%s(1), obj2%s(2))
-  ans%len = ans%s(1) * ans%s(2)
+  INTEGER(I4B) :: nx, ny, np, nnt, ii, jj, kk, ll
 
-  ans%val(1:ans%len) = obj1%val(1:ans%len) _OP_ obj2%val(1:ans%len)
+  nx = obj2%s(1)
+  ny = obj2%s(2)
+  np = MIN(obj1%s(1), obj2%s(3))
+  nnt = MIN(obj1%s(2), obj2%s(4))
+
+  ans%s(1) = nx; ans%s(2) = ny; ans%s(3) = np; ans%s(4) = nnt
+
+  ans%len = nx * ny * np * nnt
+
+  DO CONCURRENT(ii=1:nx, jj=1:ny, kk=1:np, ll=1:nnt)
+    ! ans index: nx, ny, np, nnt
+    ! obj1 index: np, nnt
+    ! obj2 index: nx, ny, np, nnt
+    ans%val(FortranIndex(ii, jj, kk, ll, nx, ny, np, nnt)) = &
+      obj1%val(FortranIndex(kk, ll, np, nnt)) _OP_ &
+      obj2%val(FortranIndex(ii, jj, kk, ll, nx, ny, np, nnt))
+  END DO
 END SUBROUTINE spacetime_spacetime
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
-! END MODULE _MODULE_NAME_
+END MODULE _MODULE_NAME_
 
-END MODULE ScalarOperatorScalar
-
-#undef _OP_
