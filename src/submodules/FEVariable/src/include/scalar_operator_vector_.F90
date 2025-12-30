@@ -21,6 +21,7 @@ USE BaseType, ONLY: varopt => TypeFEVariableOpt
 USE GlobalData, ONLY: I4B, DFP, LGT
 USE FEVariable_Method, ONLY: GetRankCase
 USE FEVariable_Method, ONLY: GetVarCase
+USE IndexUtility, ONLY: FortranIndex
 
 PRIVATE
 
@@ -141,15 +142,13 @@ PURE SUBROUTINE space_constant(obj1, obj2, ans)
 
   INTEGER(I4B) :: ii, jj, nsd, np
 
-  nsd = obj2%s(1)
-  np = obj1%s(1)
+  nsd = obj2%s(1); np = obj1%s(1)
 
-  ans%s(1) = nsd ! take space compo from obj2
-  ans%s(2) = np ! take number of points from obj1
+  ans%s(1) = nsd; ans%s(2) = np
   ans%len = nsd * np
 
   DO CONCURRENT(ii=1:nsd, jj=1:np)
-    ans%val(ii + (jj - 1) * nsd) = obj1%val(jj) _OP_ obj2%val(ii)
+    ans%val(FortranIndex(ii, jj, nsd, np)) = obj1%val(jj) _OP_ obj2%val(ii)
   END DO
 END SUBROUTINE space_constant
 
@@ -164,16 +163,15 @@ PURE SUBROUTINE space_space(obj1, obj2, ans)
 
   INTEGER(I4B) :: ii, jj, nsd, np
 
-  nsd = obj2%s(1)
-  np = MIN(obj1%s(1), obj2%s(2))
+  nsd = obj2%s(1); np = MIN(obj1%s(1), obj2%s(2))
 
-  ans%s(1) = nsd ! take space compo from obj2
-  ans%s(2) = np ! take number of points from obj1
+  ans%s(1) = nsd; ans%s(2) = np
   ans%len = nsd * np
 
   DO CONCURRENT(ii=1:nsd, jj=1:np)
-    ans%val(ii + (jj - 1) * nsd) = obj1%val(jj) _OP_ &
-                                   obj2%val(ii + (jj - 1) * nsd)
+    ans%val(FortranIndex(ii, jj, nsd, np)) = &
+      obj1%val(jj) _OP_ &
+      obj2%val(FortranIndex(ii, jj, nsd, np))
   END DO
 END SUBROUTINE space_space
 
@@ -188,19 +186,14 @@ PURE SUBROUTINE space_time(obj1, obj2, ans)
 
   INTEGER(I4B) :: ii, jj, kk, nsd, np, nnt
 
-  nsd = obj2%s(1)
-  nnt = obj2%s(2)
-  np = obj1%s(1)
-
-  ans%s(1) = nsd ! take space compo from obj2
-  ans%s(2) = np ! take number of points in space from obj1
-  ans%s(3) = nnt ! take number of points  in time from obj2
-
+  nsd = obj2%s(1); nnt = obj2%s(2); np = obj1%s(1)
+  ans%s(1) = nsd; ans%s(2) = np; ans%s(3) = nnt
   ans%len = nsd * np * nnt
 
   DO CONCURRENT(ii=1:nsd, jj=1:np, kk=1:nnt)
-    ans%val(ii + (jj - 1) * nsd + (kk - 1) * nsd * np) = &
-      obj1%val(jj) _OP_ obj2%val(ii + (kk - 1) * nsd)
+    ans%val(FortranIndex(ii, jj, kk, nsd, np, nnt)) = &
+      obj1%val(jj) _OP_ &
+      obj2%val(FortranIndex(ii, kk, nsd, nnt))
   END DO
 
 END SUBROUTINE space_time
@@ -216,21 +209,15 @@ PURE SUBROUTINE space_spacetime(obj1, obj2, ans)
 
   INTEGER(I4B) :: ii, jj, kk, nsd, np, nnt
 
-  nsd = obj2%s(1)
-  nnt = obj2%s(3)
-  np = MIN(obj1%s(1), obj2%s(2))
-
-  ans%s(1) = nsd ! take space compo from obj2
-  ans%s(2) = np ! take number of points in space from obj1
-  ans%s(3) = nnt ! take number of points  in time from obj2
-
+  nsd = obj2%s(1); nnt = obj2%s(3); np = MIN(obj1%s(1), obj2%s(2))
+  ans%s(1) = nsd; ans%s(2) = np; ans%s(3) = nnt
   ans%len = nsd * np * nnt
 
   DO CONCURRENT(ii=1:nsd, jj=1:np, kk=1:nnt)
-    ans%val(ii + (jj - 1) * nsd + (kk - 1) * nsd * np) = &
-      obj1%val(jj) _OP_ obj2%val(ii + (jj - 1) * nsd + (kk - 1) * nsd * np)
+    ans%val(FortranIndex(ii, jj, kk, nsd, np, nnt)) = &
+      obj1%val(jj) _OP_ &
+      obj2%val(FortranIndex(ii, jj, kk, nsd, np, nnt))
   END DO
-
 END SUBROUTINE space_spacetime
 
 !----------------------------------------------------------------------------
@@ -243,17 +230,17 @@ PURE SUBROUTINE time_constant(obj1, obj2, ans)
   TYPE(FEVariable_), INTENT(INOUT) :: ans
 
   ! internal variables
-  INTEGER(I4B) :: jj, nsd, np
+  INTEGER(I4B) :: ii, kk, nsd, nnt
 
-  nsd = obj2%s(1)
-  np = obj1%s(1)
+  nsd = obj2%s(1); nnt = obj1%s(1)
+  ans%s(1) = nsd; ans%s(2) = nnt
 
-  ans%s(1) = nsd ! take space compo from obj2
-  ans%s(2) = np ! take number of points from obj1
-  ans%len = nsd * np
+  ans%len = nsd * nnt
 
-  DO CONCURRENT(jj=1:np)
-    ans%val((jj - 1) * nsd + 1:jj * nsd) = obj1%val(jj) _OP_ obj2%val(1:nsd)
+  DO CONCURRENT(ii=1:nsd, kk=1:nnt)
+    ans%val(FortranIndex(ii, kk, nsd, nnt)) = &
+      obj1%val(kk) _OP_ &
+      obj2%val(ii)
   END DO
 END SUBROUTINE time_constant
 
@@ -266,18 +253,16 @@ PURE SUBROUTINE time_time(obj1, obj2, ans)
   TYPE(FEVariable_), INTENT(IN) :: obj1, obj2
   TYPE(FEVariable_), INTENT(INOUT) :: ans
 
-  INTEGER(I4B) :: jj, nsd, np
+  INTEGER(I4B) :: ii, kk, nsd, nnt
 
-  nsd = obj2%s(1)
-  np = MIN(obj1%s(1), obj2%s(2))
+  nsd = obj2%s(1); nnt = MIN(obj1%s(1), obj2%s(2))
+  ans%s(1) = nsd; ans%s(2) = nnt
+  ans%len = nsd * nnt
 
-  ans%s(1) = nsd ! take space compo from obj2
-  ans%s(2) = np ! take number of points from obj1
-  ans%len = nsd * np
-
-  DO CONCURRENT(jj=1:np)
-    ans%val((jj - 1) * nsd + 1:jj * nsd) = obj1%val(jj) _OP_ &
-                                         obj2%val((jj - 1) * nsd + 1:jj * nsd)
+  DO CONCURRENT(ii=1:nsd, kk=1:nnt)
+    ans%val(FortranIndex(ii, kk, nsd, nnt)) = &
+      obj1%val(kk) _OP_ &
+      obj2%val(FortranIndex(ii, kk, nsd, nnt))
   END DO
 END SUBROUTINE time_time
 
@@ -292,24 +277,19 @@ PURE SUBROUTINE time_space(obj1, obj2, ans)
 
   INTEGER(I4B) :: ii, jj, kk, nsd, np, nnt
 
-  nsd = obj2%s(1)
-  np = obj2%s(2)
-  nnt = obj1%s(1)
-
-  ans%s(1) = nsd ! take space compo from obj2
-  ans%s(2) = np ! take number of points in space from obj1
-  ans%s(3) = nnt ! take number of points  in time from obj2
-
+  nsd = obj2%s(1); np = obj2%s(2); nnt = obj1%s(1)
+  ans%s(1) = nsd; ans%s(2) = np; ans%s(3) = nnt
   ans%len = nsd * np * nnt
 
   DO CONCURRENT(ii=1:nsd, jj=1:np, kk=1:nnt)
-    ans%val(ii + (jj - 1) * nsd + (kk - 1) * nsd * np) = &
-      obj1%val(kk) _OP_ obj2%val(ii + (jj - 1) * nsd)
+    ans%val(FortranIndex(ii, jj, kk, nsd, np, nnt)) = &
+      obj1%val(kk) _OP_ &
+      obj2%val(FortranIndex(ii, jj, nsd, np))
   END DO
 END SUBROUTINE time_space
 
 !----------------------------------------------------------------------------
-!                                                                time space
+!                                                             time spacetime
 !----------------------------------------------------------------------------
 
 ! ans will be a space time vector
@@ -319,19 +299,14 @@ PURE SUBROUTINE time_spacetime(obj1, obj2, ans)
 
   INTEGER(I4B) :: ii, jj, kk, nsd, np, nnt
 
-  nsd = obj2%s(1)
-  np = obj2%s(2)
-  nnt = MIN(obj1%s(1), obj2%s(3))
-
-  ans%s(1) = nsd ! take space compo from obj2
-  ans%s(2) = np ! take number of points in space from obj1
-  ans%s(3) = nnt ! take number of points  in time from obj2
-
+  nsd = obj2%s(1); np = obj2%s(2); nnt = MIN(obj1%s(1), obj2%s(3))
+  ans%s(1) = nsd; ans%s(2) = np; ans%s(3) = nnt
   ans%len = nsd * np * nnt
 
   DO CONCURRENT(ii=1:nsd, jj=1:np, kk=1:nnt)
-    ans%val(ii + (jj - 1) * nsd + (kk - 1) * nsd * np) = &
-      obj1%val(kk) _OP_ obj2%val(ii + (jj - 1) * nsd + (kk - 1) * nsd * np)
+    ans%val(FortranIndex(ii, jj, kk, nsd, np, nnt)) = &
+      obj1%val(kk) _OP_ &
+      obj2%val(FortranIndex(ii, jj, kk, nsd, np, nnt))
   END DO
 
 END SUBROUTINE time_spacetime
@@ -347,21 +322,15 @@ PURE SUBROUTINE spacetime_constant(obj1, obj2, ans)
 
   INTEGER(I4B) :: nsd, np, nnt, ii, jj, kk
 
-  nsd = obj2%s(1)
-  np = obj1%s(1)
-  nnt = obj1%s(2)
-
-  ans%s(1) = nsd
-  ans%s(2) = np
-  ans%s(3) = nnt
-
+  nsd = obj2%s(1); np = obj1%s(1); nnt = obj1%s(2)
+  ans%s(1) = nsd; ans%s(2) = np; ans%s(3) = nnt
   ans%len = nsd * np * nnt
 
   DO CONCURRENT(ii=1:nsd, jj=1:np, kk=1:nnt)
-    ans%val(ii + (jj - 1) * nsd + (kk - 1) * nsd * np) = &
-      obj1%val(jj + (kk - 1) * np) _OP_ obj2%val(ii)
+    ans%val(FortranIndex(ii, jj, kk, nsd, np, nnt)) = &
+      obj1%val(FortranIndex(jj, kk, np, nnt)) _OP_ &
+      obj2%val(ii)
   END DO
-
 END SUBROUTINE spacetime_constant
 
 !----------------------------------------------------------------------------
@@ -375,19 +344,14 @@ PURE SUBROUTINE spacetime_space(obj1, obj2, ans)
 
   INTEGER(I4B) :: nsd, np, nnt, ii, jj, kk
 
-  nsd = obj2%s(1)
-  np = MIN(obj1%s(1), obj2%s(2))
-  nnt = obj1%s(2)
-
-  ans%s(1) = nsd
-  ans%s(2) = np
-  ans%s(3) = nnt
-
+  nsd = obj2%s(1); np = MIN(obj1%s(1), obj2%s(2)); nnt = obj1%s(2)
+  ans%s(1) = nsd; ans%s(2) = np; ans%s(3) = nnt
   ans%len = nsd * np * nnt
 
   DO CONCURRENT(ii=1:nsd, jj=1:np, kk=1:nnt)
-    ans%val(ii + (jj - 1) * nsd + (kk - 1) * nsd * np) = &
-      obj1%val(jj + (kk - 1) * np) _OP_ obj2%val(ii + (jj - 1) * nsd)
+    ans%val(FortranIndex(ii, jj, kk, nsd, np, nnt)) = &
+      obj1%val(FortranIndex(jj, kk, np, nnt)) _OP_ &
+      obj2%val(FortranIndex(ii, jj, nsd, np))
   END DO
 
 END SUBROUTINE spacetime_space
@@ -403,19 +367,14 @@ PURE SUBROUTINE spacetime_time(obj1, obj2, ans)
 
   INTEGER(I4B) :: nsd, np, nnt, ii, jj, kk
 
-  nsd = obj2%s(1)
-  np = obj1%s(1)
-  nnt = MIN(obj1%s(2), obj2%s(2))
-
-  ans%s(1) = nsd
-  ans%s(2) = np
-  ans%s(3) = nnt
-
+  nsd = obj2%s(1); np = obj1%s(1); nnt = MIN(obj1%s(2), obj2%s(2))
+  ans%s(1) = nsd; ans%s(2) = np; ans%s(3) = nnt
   ans%len = nsd * np * nnt
 
   DO CONCURRENT(ii=1:nsd, jj=1:np, kk=1:nnt)
-    ans%val(ii + (jj - 1) * nsd + (kk - 1) * nsd * np) = &
-      obj1%val(jj + (kk - 1) * np) _OP_ obj2%val(ii + (kk - 1) * nsd)
+    ans%val(FortranIndex(ii, jj, kk, nsd, np, nnt)) = &
+      obj1%val(FortranIndex(jj, kk, np, nnt)) _OP_ &
+      obj2%val(FortranIndex(ii, kk, nsd, nnt))
   END DO
 
 END SUBROUTINE spacetime_time
@@ -431,22 +390,16 @@ PURE SUBROUTINE spacetime_spacetime(obj1, obj2, ans)
 
   INTEGER(I4B) :: nsd, np, nnt, ii, jj, kk
 
-  nsd = obj2%s(1)
-  np = MIN(obj1%s(1), obj2%s(2))
+  nsd = obj2%s(1); np = MIN(obj1%s(1), obj2%s(2))
   nnt = MIN(obj1%s(2), obj2%s(3))
-
-  ans%s(1) = nsd
-  ans%s(2) = np
-  ans%s(3) = nnt
-
+  ans%s(1) = nsd; ans%s(2) = np; ans%s(3) = nnt
   ans%len = nsd * np * nnt
 
   DO CONCURRENT(ii=1:nsd, jj=1:np, kk=1:nnt)
-    ans%val(ii + (jj - 1) * nsd + (kk - 1) * nsd * np) = &
-      obj1%val(jj + (kk - 1) * np) _OP_ &
-      obj2%val(ii + (jj - 1) * nsd + (kk - 1) * nsd * np)
+    ans%val(FortranIndex(ii, jj, kk, nsd, np, nnt)) = &
+      obj1%val(FortranIndex(jj, kk, np, nnt)) _OP_ &
+      obj2%val(FortranIndex(ii, jj, kk, nsd, np, nnt))
   END DO
-
 END SUBROUTINE spacetime_spacetime
 
 !----------------------------------------------------------------------------
