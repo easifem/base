@@ -91,7 +91,7 @@ PURE SUBROUTINE constant_constant(obj1, obj2, ans)
 
   ans%val(1:ans%len) = &
     obj1%val(1:ans%len) _OP_ &
-    obj2%val(1)
+    obj2%val(1:ans%len)
 END SUBROUTINE constant_constant
 
 !----------------------------------------------------------------------------
