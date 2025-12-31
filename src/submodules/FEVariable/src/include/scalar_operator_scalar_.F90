@@ -24,6 +24,7 @@ USE BaseType, ONLY: varopt => TypeFEVariableOpt
 USE GlobalData, ONLY: I4B, DFP, LGT
 USE FEVariable_Method, ONLY: GetRankCase
 USE FEVariable_Method, ONLY: GetVarCase
+USE IndexUtility, ONLY: FortranIndex
 
 PRIVATE
 PUBLIC :: Scalar_Scalar_Master
@@ -173,21 +174,19 @@ PURE SUBROUTINE space_time(obj1, obj2, ans)
 
   INTEGER(I4B) :: jj, kk, np, nnt
 
-  np = obj1%s(1)
-  nnt = obj2%s(1)
-
-  ans%s(1) = np ! take number of points in space from obj1
-  ans%s(2) = nnt ! take number of points  in time from obj2
-
+  np = obj1%s(1); nnt = obj2%s(1)
+  ans%s(1) = np; ans%s(2) = nnt
   ans%len = np * nnt
 
   DO CONCURRENT(jj=1:np, kk=1:nnt)
-    ans%val(jj + (kk - 1) * np) = obj1%val(jj) _OP_ obj2%val(kk)
+    ans%val(FortranIndex(jj, kk, np, nnt)) = &
+      obj1%val(jj) _OP_ &
+      obj2%val(kk)
   END DO
 END SUBROUTINE space_time
 
 !----------------------------------------------------------------------------
-!                                                                space time
+!                                                            space spacetime
 !----------------------------------------------------------------------------
 
 ! ans will be a spacetime scalar
@@ -197,17 +196,14 @@ PURE SUBROUTINE space_spacetime(obj1, obj2, ans)
 
   INTEGER(I4B) :: jj, kk, np, nnt
 
-  np = MIN(obj1%s(1), obj2%s(1))
-  nnt = obj2%s(2)
-
-  ans%s(1) = np ! take number of points in space from obj1
-  ans%s(2) = nnt ! take number of points  in time from obj2
-
+  np = MIN(obj1%s(1), obj2%s(1)); nnt = obj2%s(2)
+  ans%s(1) = np; ans%s(2) = nnt
   ans%len = np * nnt
 
   DO CONCURRENT(jj=1:np, kk=1:nnt)
-    ans%val(jj + (kk - 1) * np) = obj1%val(jj) _OP_ &
-                                  obj2%val(jj + (kk - 1) * np)
+    ans%val(FortranIndex(jj, kk, np, nnt)) = &
+      obj1%val(jj) _OP_ &
+      obj2%val(FortranIndex(jj, kk, np, nnt))
   END DO
 END SUBROUTINE space_spacetime
 
@@ -226,7 +222,7 @@ PURE SUBROUTINE time_constant(obj1, obj2, ans)
 END SUBROUTINE time_constant
 
 !----------------------------------------------------------------------------
-!                                                                time time
+!                                                                  time time
 !----------------------------------------------------------------------------
 
 ! ans will be a time scalar
@@ -240,7 +236,7 @@ PURE SUBROUTINE time_time(obj1, obj2, ans)
 END SUBROUTINE time_time
 
 !----------------------------------------------------------------------------
-!                                                                time space
+!                                                                  time space
 !----------------------------------------------------------------------------
 
 ! ans will be a spacetime scalar
@@ -250,21 +246,19 @@ PURE SUBROUTINE time_space(obj1, obj2, ans)
 
   INTEGER(I4B) :: jj, kk, np, nnt
 
-  np = obj2%s(2)
-  nnt = obj1%s(1)
-
-  ans%s(1) = np ! take number of points in space from obj1
-  ans%s(2) = nnt ! take number of points  in time from obj2
-
+  np = obj2%s(2); nnt = obj1%s(1)
+  ans%s(1) = np; ans%s(2) = nnt
   ans%len = np * nnt
 
   DO CONCURRENT(jj=1:np, kk=1:nnt)
-    ans%val(jj + (kk - 1) * np) = obj1%val(kk) _OP_ obj2%val(jj)
+    ans%val(FortranIndex(jj, kk, np, nnt)) = &
+      obj1%val(kk) _OP_ &
+      obj2%val(jj)
   END DO
 END SUBROUTINE time_space
 
 !----------------------------------------------------------------------------
-!                                                                time space
+!                                                              time spacetime
 !----------------------------------------------------------------------------
 
 ! ans will be a spacetime scalar
@@ -274,16 +268,15 @@ PURE SUBROUTINE time_spacetime(obj1, obj2, ans)
 
   INTEGER(I4B) :: jj, kk, np, nnt
 
-  np = obj2%s(1)
-  nnt = MIN(obj1%s(1), obj2%s(2))
+  np = obj2%s(1); nnt = MIN(obj1%s(1), obj2%s(2))
 
-  ans%s(1) = np ! take number of points in space from obj1
-  ans%s(2) = nnt ! take number of points  in time from obj2
+  ans%s(1) = np; ans%s(2) = nnt
   ans%len = np * nnt
 
   DO CONCURRENT(jj=1:np, kk=1:nnt)
-    ans%val(jj + (kk - 1) * np) = obj1%val(kk) _OP_ &
-                                  obj2%val(jj + (kk - 1) * np)
+    ans%val(FortranIndex(jj, kk, np, nnt)) = &
+      obj1%val(kk) _OP_ &
+      obj2%val(FortranIndex(jj, kk, np, nnt))
   END DO
 END SUBROUTINE time_spacetime
 
@@ -302,7 +295,7 @@ PURE SUBROUTINE spacetime_constant(obj1, obj2, ans)
 END SUBROUTINE spacetime_constant
 
 !----------------------------------------------------------------------------
-!                                                          spacetime space
+!                                                            spacetime space
 !----------------------------------------------------------------------------
 
 ! result will be a spacetime scalar
@@ -312,21 +305,20 @@ PURE SUBROUTINE spacetime_space(obj1, obj2, ans)
 
   INTEGER(I4B) :: np, nnt, jj, kk
 
-  np = MIN(obj1%s(1), obj2%s(1))
-  nnt = obj1%s(2)
+  np = MIN(obj1%s(1), obj2%s(1)); nnt = obj1%s(2)
 
-  ans%s(1) = np
-  ans%s(2) = nnt
+  ans%s(1) = np; ans%s(2) = nnt
   ans%len = np * nnt
 
   DO CONCURRENT(jj=1:np, kk=1:nnt)
-    ans%val(jj + (kk - 1) * np) = obj1%val(jj + (kk - 1) * np) &
-                                  _OP_ obj2%val(jj)
+    ans%val(FortranIndex(jj, kk, np, nnt)) = &
+      obj1%val(FortranIndex(jj, kk, np, nnt)) _OP_ &
+      obj2%val(jj)
   END DO
 END SUBROUTINE spacetime_space
 
 !----------------------------------------------------------------------------
-!                                                          spacetime time
+!                                                              spacetime time
 !----------------------------------------------------------------------------
 
 ! result will be a spacetime scalar
@@ -336,23 +328,19 @@ PURE SUBROUTINE spacetime_time(obj1, obj2, ans)
 
   INTEGER(I4B) :: np, nnt, jj, kk
 
-  np = obj1%s(1)
-  nnt = MIN(obj1%s(2), obj2%s(1))
-
-  ans%s(1) = np
-  ans%s(2) = nnt
-
+  np = obj1%s(1); nnt = MIN(obj1%s(2), obj2%s(1))
+  ans%s(1) = np; ans%s(2) = nnt
   ans%len = np * nnt
 
   DO CONCURRENT(jj=1:np, kk=1:nnt)
-    ans%val(jj + (kk - 1) * np) = obj1%val(jj + (kk - 1) * np) _OP_ &
-                                  obj2%val(kk)
+    ans%val(FortranIndex(jj, kk, np, nnt)) = &
+      obj1%val(FortranIndex(jj, kk, np, nnt)) _OP_ &
+      obj2%val(kk)
   END DO
-
 END SUBROUTINE spacetime_time
 
 !----------------------------------------------------------------------------
-!                                                        spacetime spacetime
+!                                                         spacetime spacetime
 !----------------------------------------------------------------------------
 
 ! result will be a spacetime scalar
