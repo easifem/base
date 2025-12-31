@@ -98,16 +98,30 @@ END PROCEDURE fevar_Sqrt
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE fevar_IsEqual
-!! Internal variable
-ans = .FALSE.
-IF (obj1%len .NE. obj2%len) RETURN
-IF (obj1%defineon .NE. obj2%defineon) RETURN
-IF (obj1%rank .NE. obj2%rank) RETURN
-IF (obj1%varType .NE. obj2%varType) RETURN
-IF (ANY(obj1%s .NE. obj2%s)) RETURN
+LOGICAL(LGT) :: isok
 
-IF (ALL(obj1%val(1:obj1%len) .APPROXEQ.obj2%val(1:obj2%len))) ans = .TRUE.
-!!
+ans = .FALSE.
+
+isok = obj1%len .NE. obj2%len
+IF (isok) RETURN
+
+isok = obj1%defineon .NE. obj2%defineon
+IF (isok) RETURN
+
+isok = obj1%rank .NE. obj2%rank
+IF (isok) RETURN
+
+isok = obj1%varType .NE. obj2%varType
+IF (isok) RETURN
+
+isok = obj1%tshape .NE. obj2%tshape
+IF (isok) RETURN
+
+isok = ANY(obj1%s(1:obj1%tshape) .NE. obj2%s(1:obj2%tshape))
+IF (isok) RETURN
+
+isok = ALL(obj1%val(1:obj1%len) .APPROXEQ.obj2%val(1:obj2%len))
+IF (isok) ans = .TRUE.
 END PROCEDURE fevar_IsEqual
 
 !----------------------------------------------------------------------------
