@@ -18,8 +18,8 @@
 
 #define _OP_ *
 
-MODULE FEVariable_Matrix_Matrix_Multiplication
-#include "./include/matrix_operator_matrix_.F90"
-END MODULE FEVariable_Matrix_Matrix_Multiplication
+MODULE FEVariable_Scalar_Matrix_Multiplication
+#include "../include/scalar_operator_matrix_.F90"
+END MODULE FEVariable_Scalar_Matrix_Multiplication
 
 #undef _OP_

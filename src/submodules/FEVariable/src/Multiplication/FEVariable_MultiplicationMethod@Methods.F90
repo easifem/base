@@ -18,23 +18,6 @@
 #define _OP_ *
 
 SUBMODULE(FEVariable_MultiplicationMethod) Methods
-! USE GlobalData, ONLY: Constant, Space, Time, SpaceTime, &
-!                       Scalar, Vector, Matrix, Nodal, Quadrature
-!
-! USE BaseType, ONLY: TypeFEVariableScalar
-! USE BaseType, ONLY: TypeFEVariableVector
-! USE BaseType, ONLY: TypeFEVariableMatrix
-! USE BaseType, ONLY: TypeFEVariableConstant
-! USE BaseType, ONLY: TypeFEVariableSpace
-! USE BaseType, ONLY: TypeFEVariableTime
-! USE BaseType, ONLY: TypeFEVariableSpaceTime
-
-! USE ReallocateUtility, ONLY: Reallocate
-!
-! USE FEVariable_Method, ONLY: NodalVariable
-! USE FEVariable_Method, ONLY: QuadratureVariable
-! USE FEVariable_Method, ONLY: Get
-
 USE FEVariable_GetMethod, ONLY: GetRankCase
 USE FEVariable_Scalar_Scalar_Multiplication, ONLY: Scalar_Scalar_Master
 USE FEVariable_Scalar_Vector_Multiplication, ONLY: Scalar_Vector_Master

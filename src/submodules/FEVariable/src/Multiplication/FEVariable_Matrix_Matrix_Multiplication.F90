@@ -14,11 +14,12 @@
 !
 ! You should have received a copy of the GNU General Public License
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
+!
 
 #define _OP_ *
 
-MODULE FEVariable_Scalar_Scalar_Multiplication
-#include "./include/scalar_operator_scalar_.F90"
-END MODULE FEVariable_Scalar_Scalar_Multiplication
+MODULE FEVariable_Matrix_Matrix_Multiplication
+#include "../include/matrix_operator_matrix_.F90"
+END MODULE FEVariable_Matrix_Matrix_Multiplication
 
 #undef _OP_

@@ -16,10 +16,10 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-#define _OP_ *
+#define _OP_ /
 
-MODULE FEVariable_Vector_Scalar_Multiplication
-#include "./include/vector_operator_scalar_.F90"
-END MODULE FEVariable_Vector_Scalar_Multiplication
+MODULE FEVariable_Scalar_Matrix_Division
+#include "../include/scalar_operator_matrix_.F90"
+END MODULE FEVariable_Scalar_Matrix_Division
 
 #undef _OP_

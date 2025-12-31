@@ -22,7 +22,6 @@ target_sources(
           ${src_path}/FEVariable_ConstructorMethod@Methods.F90
           ${src_path}/FEVariable_NodalVariableMethod@Methods.F90
           ${src_path}/FEVariable_QuadratureVariableMethod@Methods.F90
-          ${src_path}/FEVariable_DivisionMethod@Methods.F90
           ${src_path}/FEVariable_DotProductMethod@Methods.F90
           ${src_path}/FEVariable_SubtractionMethod@Methods.F90
           ${src_path}/FEVariable_MeanMethod@Methods.F90
@@ -37,15 +36,31 @@ target_sources(
           ${src_path}/FEVariable_SetMethod@VectorMethods.F90
           ${src_path}/FEVariable_SetMethod@MatrixMethods.F90)
 
+# Multiplication
 target_sources(
   ${PROJECT_NAME}
-  PRIVATE ${src_path}/FEVariable_MultiplicationMethod@Methods.F90
-          ${src_path}/FEVariable_Scalar_Scalar_Multiplication.F90
-          ${src_path}/FEVariable_Vector_Scalar_Multiplication.F90
-          ${src_path}/FEVariable_Vector_Vector_Multiplication.F90
-          ${src_path}/FEVariable_Scalar_Vector_Multiplication.F90
-          ${src_path}/FEVariable_Scalar_Matrix_Multiplication.F90
-          ${src_path}/FEVariable_Vector_Scalar_Multiplication.F90
-          ${src_path}/FEVariable_Vector_Vector_Multiplication.F90
-          ${src_path}/FEVariable_Matrix_Scalar_Multiplication.F90
-          ${src_path}/FEVariable_Matrix_Matrix_Multiplication.F90)
+  PRIVATE ${src_path}/Multiplication/FEVariable_MultiplicationMethod@Methods.F90
+          ${src_path}/Multiplication/FEVariable_Scalar_Scalar_Multiplication.F90
+          ${src_path}/Multiplication/FEVariable_Vector_Scalar_Multiplication.F90
+          ${src_path}/Multiplication/FEVariable_Vector_Vector_Multiplication.F90
+          ${src_path}/Multiplication/FEVariable_Scalar_Vector_Multiplication.F90
+          ${src_path}/Multiplication/FEVariable_Scalar_Matrix_Multiplication.F90
+          ${src_path}/Multiplication/FEVariable_Vector_Scalar_Multiplication.F90
+          ${src_path}/Multiplication/FEVariable_Vector_Vector_Multiplication.F90
+          ${src_path}/Multiplication/FEVariable_Matrix_Scalar_Multiplication.F90
+          ${src_path}/Multiplication/FEVariable_Matrix_Matrix_Multiplication.F90
+)
+
+# Division
+target_sources(
+  ${PROJECT_NAME}
+  PRIVATE ${src_path}/Division/FEVariable_DivisionMethod@Methods.F90
+          ${src_path}/Division/FEVariable_Scalar_Scalar_Division.F90
+          ${src_path}/Division/FEVariable_Vector_Scalar_Division.F90
+          ${src_path}/Division/FEVariable_Vector_Vector_Division.F90
+          ${src_path}/Division/FEVariable_Scalar_Vector_Division.F90
+          ${src_path}/Division/FEVariable_Scalar_Matrix_Division.F90
+          ${src_path}/Division/FEVariable_Vector_Scalar_Division.F90
+          ${src_path}/Division/FEVariable_Vector_Vector_Division.F90
+          ${src_path}/Division/FEVariable_Matrix_Scalar_Division.F90
+          ${src_path}/Division/FEVariable_Matrix_Matrix_Division.F90)
