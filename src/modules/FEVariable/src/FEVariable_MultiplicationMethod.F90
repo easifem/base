@@ -29,7 +29,7 @@ USE GlobalData, ONLY: I4B, DFP, LGT
 IMPLICIT NONE
 
 PRIVATE
-PUBLIC :: OPERATOR(*)
+! PUBLIC :: OPERATOR(*)
 PUBLIC :: Multiplication_
 
 !----------------------------------------------------------------------------
