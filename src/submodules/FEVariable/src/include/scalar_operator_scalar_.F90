@@ -59,9 +59,9 @@ PURE SUBROUTINE Scalar_Scalar_Master(obj1, obj2, ans)
   CASE (20)
     CALL time_constant(obj1, obj2, ans)
   CASE (21)
-    CALL time_time(obj1, obj2, ans)
-  CASE (22)
     CALL time_space(obj1, obj2, ans)
+  CASE (22)
+    CALL time_time(obj1, obj2, ans)
   CASE (23)
     CALL time_spacetime(obj1, obj2, ans)
   CASE (30)
@@ -344,8 +344,8 @@ PURE SUBROUTINE spacetime_spacetime(obj1, obj2, ans)
   TYPE(FEVariable_), INTENT(IN) :: obj1, obj2
   TYPE(FEVariable_), INTENT(INOUT) :: ans
 
-  ans%s(1) = MIN(obj1%s(1), obj2%s(2))
-  ans%s(2) = MIN(obj1%s(1), obj2%s(2))
+  ans%s(1) = MIN(obj1%s(1), obj2%s(1))
+  ans%s(2) = MIN(obj1%s(2), obj2%s(2))
   ans%len = ans%s(1) * ans%s(2)
 
   ans%val(1:ans%len) = obj1%val(1:ans%len) _OP_ obj2%val(1:ans%len)
