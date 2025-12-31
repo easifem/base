@@ -19,11 +19,7 @@
 #define _MODULE_NAME_ FEVariable_Scalar_Vector_Multiplication
 #define _OP_ *
 
-! MODULE FEVariable_Scalar_Vector_Multiplication
-
 #include "./include/scalar_operator_vector_.F90"
-
-! END MODULE FEVariable_Scalar_Vector_Multiplication
 
 #undef _MODULE_NAME_
 #undef _OP_
