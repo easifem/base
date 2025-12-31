@@ -16,27 +16,11 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-MODULE FEVariable_Matrix_Scalar_Multiplication
-USE BaseType, ONLY: FEVariable_
+#define _MODULE_NAME_ FEVariable_Matrix_Scalar_Multiplication
+#define _OP_ *
 
-IMPLICIT NONE
+#include "./include/matrix_operator_scalar_.F90"
 
-PRIVATE
-PUBLIC :: Matrix_Scalar_Master
+#undef _MODULE_NAME_
+#undef _OP_
 
-CONTAINS
-
-!----------------------------------------------------------------------------
-!                                                       Scalar_Scalar_Master
-!----------------------------------------------------------------------------
-
-PURE SUBROUTINE Matrix_Scalar_Master(obj1, obj2, ans)
-  TYPE(FEVariable_), INTENT(IN) :: obj1, obj2
-  TYPE(FEVariable_), INTENT(INOUT) :: ans
-END SUBROUTINE Matrix_Scalar_Master
-
-!----------------------------------------------------------------------------
-!
-!----------------------------------------------------------------------------
-
-END MODULE FEVariable_Matrix_Scalar_Multiplication
