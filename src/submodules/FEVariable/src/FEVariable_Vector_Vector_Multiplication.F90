@@ -16,27 +16,10 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-MODULE FEVariable_Vector_Vector_Multiplication
-USE BaseType, ONLY: FEVariable_
+#define _MODULE_NAME_ FEVariable_Vector_Vector_Multiplication
+#define _OP_ *
 
-IMPLICIT NONE
+#include "./include/vector_operator_vector_.F90"
 
-PRIVATE
-PUBLIC :: Vector_Vector_Master
-
-CONTAINS
-
-!----------------------------------------------------------------------------
-!                                                       Vector_Vector_Master
-!----------------------------------------------------------------------------
-
-PURE SUBROUTINE Vector_Vector_Master(obj1, obj2, ans)
-  TYPE(FEVariable_), INTENT(IN) :: obj1, obj2
-  TYPE(FEVariable_), INTENT(INOUT) :: ans
-END SUBROUTINE Vector_Vector_Master
-
-!----------------------------------------------------------------------------
-!
-!----------------------------------------------------------------------------
-
-END MODULE FEVariable_Vector_Vector_Multiplication
+#undef _MODULE_NAME_
+#undef _OP_
