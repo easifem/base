@@ -294,11 +294,8 @@ PURE SUBROUTINE time_space(obj1, obj2, ans)
   ans%len = nsd * np * nnt
 
   DO CONCURRENT(ii=1:nsd, jj=1:np, kk=1:nnt)
-    ! ans index: nsd, np, nnt
-    ! obj1 index: nsd, nns
-    ! obj2 index: nnt
     ans%val(FortranIndex(ii, jj, kk, nsd, np, nnt)) = &
-      obj1%val(FortranIndex(ii, kk, nsd, np)) _OP_ &
+      obj1%val(FortranIndex(ii, kk, nsd, nnt)) _OP_ &
       obj2%val(jj)
   END DO
 END SUBROUTINE time_space
@@ -386,9 +383,6 @@ PURE SUBROUTINE spacetime_space(obj1, obj2, ans)
   ans%len = nsd * np * nnt
 
   DO CONCURRENT(ii=1:nsd, jj=1:np, kk=1:nnt)
-    ! ans index: nsd, np, nnt
-    ! obj1 index: nsd, np, nnt
-    ! obj2 index: np
     ans%val(FortranIndex(ii, jj, kk, nsd, np, nnt)) = &
       obj1%val(FortranIndex(ii, jj, kk, nsd, np, nnt)) _OP_ &
       obj2%val(jj)
