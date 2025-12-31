@@ -16,10 +16,10 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-#define _MODULE_NAME_ FEVariable_Vector_Vector_Multiplication
 #define _OP_ *
 
+MODULE FEVariable_Vector_Vector_Multiplication
 #include "./include/vector_operator_vector_.F90"
+END MODULE FEVariable_Vector_Vector_Multiplication
 
-#undef _MODULE_NAME_
 #undef _OP_

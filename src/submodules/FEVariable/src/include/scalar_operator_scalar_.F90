@@ -15,10 +15,6 @@
 ! You should have received a copy of the GNU General Public License
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 
-! #define _OP_ *
-! MODULE ScalarOperatorScalar
-
-MODULE _MODULE_NAME_
 USE BaseType, ONLY: FEVariable_
 USE BaseType, ONLY: varopt => TypeFEVariableOpt
 USE GlobalData, ONLY: I4B, DFP, LGT
@@ -358,8 +354,3 @@ END SUBROUTINE spacetime_spacetime
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
-
-END MODULE _MODULE_NAME_
-
-! END MODULE ScalarOperatorScalar
-! #undef _OP_

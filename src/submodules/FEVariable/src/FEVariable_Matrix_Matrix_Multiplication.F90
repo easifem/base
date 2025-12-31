@@ -16,27 +16,10 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
+#define _OP_ *
+
 MODULE FEVariable_Matrix_Matrix_Multiplication
-USE BaseType, ONLY: FEVariable_
-
-IMPLICIT NONE
-
-PRIVATE
-PUBLIC :: Matrix_Matrix_Master
-
-CONTAINS
-
-!----------------------------------------------------------------------------
-!                                                       Matrix_Matrix_Master
-!----------------------------------------------------------------------------
-
-PURE SUBROUTINE Matrix_Matrix_Master(obj1, obj2, ans)
-  TYPE(FEVariable_), INTENT(IN) :: obj1, obj2
-  TYPE(FEVariable_), INTENT(INOUT) :: ans
-END SUBROUTINE Matrix_Matrix_Master
-
-!----------------------------------------------------------------------------
-!
-!----------------------------------------------------------------------------
-
+#include "./include/matrix_operator_matrix_.F90"
 END MODULE FEVariable_Matrix_Matrix_Multiplication
+
+#undef _OP_

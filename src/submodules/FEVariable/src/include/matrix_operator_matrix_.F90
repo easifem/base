@@ -15,7 +15,6 @@
 ! You should have received a copy of the GNU General Public License
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 
-MODULE _MODULE_NAME_
 USE BaseType, ONLY: FEVariable_
 USE BaseType, ONLY: varopt => TypeFEVariableOpt
 USE GlobalData, ONLY: I4B, DFP, LGT
@@ -86,8 +85,10 @@ PURE SUBROUTINE constant_constant(obj1, obj2, ans)
   TYPE(FEVariable_), INTENT(IN) :: obj1, obj2
   TYPE(FEVariable_), INTENT(INOUT) :: ans
 
-  ans%len = obj1%len
-  ans%s(1:2) = obj1%s(1:2)
+  ans%s(1) = MIN(obj1%s(1), obj2%s(1))
+  ans%s(2) = MIN(obj1%s(2), obj2%s(2))
+  ans%len = ans%s(1) * ans%s(2)
+
   ans%val(1:ans%len) = &
     obj1%val(1:ans%len) _OP_ &
     obj2%val(1)
@@ -104,7 +105,9 @@ PURE SUBROUTINE constant_space(obj1, obj2, ans)
 
   INTEGER(I4B) :: ii, jj, kk, nx, ny, np
 
-  nx = obj1%s(1); ny = obj1%s(2); np = obj2%s(1)
+  nx = MIN(obj1%s(1), obj2%s(1))
+  ny = MIN(obj1%s(2), obj2%s(2))
+  np = obj2%s(3)
 
   ans%s(1) = nx; ans%s(2) = ny; ans%s(3) = np
   ans%len = nx * ny * np
@@ -112,7 +115,7 @@ PURE SUBROUTINE constant_space(obj1, obj2, ans)
   DO CONCURRENT(ii=1:nx, jj=1:ny, kk=1:np)
     ans%val(FortranIndex(ii, jj, kk, nx, ny, np)) = &
       obj1%val(FortranIndex(ii, jj, nx, ny)) _OP_ &
-      obj2%val(kk)
+      obj2%val(FortranIndex(ii, jj, kk, nx, ny, np))
   END DO
 END SUBROUTINE constant_space
 
@@ -127,7 +130,9 @@ PURE SUBROUTINE constant_time(obj1, obj2, ans)
 
   INTEGER(I4B) :: ii, jj, ll, nx, ny, nnt
 
-  nx = obj1%s(1); ny = obj1%s(2); nnt = obj2%s(1)
+  nx = MIN(obj1%s(1), obj2%s(1))
+  ny = MIN(obj1%s(2), obj2%s(2))
+  nnt = obj2%s(3)
 
   ans%s(1) = nx; ans%s(2) = ny; ans%s(3) = nnt
   ans%len = nx * ny * nnt
@@ -135,7 +140,7 @@ PURE SUBROUTINE constant_time(obj1, obj2, ans)
   DO CONCURRENT(ii=1:nx, jj=1:ny, ll=1:nnt)
     ans%val(FortranIndex(ii, jj, ll, nx, ny, nnt)) = &
       obj1%val(FortranIndex(ii, jj, nx, ny)) _OP_ &
-      obj2%val(ll)
+      obj2%val(FortranIndex(ii, jj, ll, nx, ny, nnt))
   END DO
 END SUBROUTINE constant_time
 
@@ -150,7 +155,10 @@ PURE SUBROUTINE constant_spacetime(obj1, obj2, ans)
 
   INTEGER(I4B) :: ii, jj, kk, ll, nx, ny, np, nnt
 
-  nx = obj1%s(1); ny = obj1%s(2); np = obj2%s(1); nnt = obj2%s(2)
+  nx = MIN(obj1%s(1), obj2%s(1))
+  ny = MIN(obj1%s(2), obj2%s(2))
+  np = obj2%s(3)
+  nnt = obj2%s(4)
 
   ans%s(1) = nx; ans%s(2) = ny; ans%s(3) = np; ans%s(4) = nnt
   ans%len = nx * ny * np * nnt
@@ -158,7 +166,7 @@ PURE SUBROUTINE constant_spacetime(obj1, obj2, ans)
   DO CONCURRENT(ii=1:nx, jj=1:ny, kk=1:np, ll=1:nnt)
     ans%val(FortranIndex(ii, jj, kk, ll, nx, ny, np, nnt)) = &
       obj1%val(FortranIndex(ii, jj, nx, ny)) _OP_ &
-      obj2%val(FortranIndex(kk, ll, np, nnt))
+      obj2%val(FortranIndex(ii, jj, kk, ll, nx, ny, np, nnt))
   END DO
 END SUBROUTINE constant_spacetime
 
@@ -171,9 +179,20 @@ PURE SUBROUTINE space_constant(obj1, obj2, ans)
   TYPE(FEVariable_), INTENT(IN) :: obj1, obj2
   TYPE(FEVariable_), INTENT(INOUT) :: ans
 
-  ans%s(1:3) = obj1%s(1:3)
-  ans%len = obj1%len
-  ans%val(1:ans%len) = obj1%val(1:ans%len) _OP_ obj2%val(1)
+  INTEGER(I4B) :: ii, jj, kk, nx, ny, np
+
+  nx = MIN(obj1%s(1), obj2%s(1))
+  ny = MIN(obj1%s(2), obj2%s(2))
+  np = obj1%s(3)
+
+  ans%s(1) = nx; ans%s(2) = ny; ans%s(3) = np
+  ans%len = nx * ny * np
+
+  DO CONCURRENT(ii=1:nx, jj=1:ny, kk=1:np)
+    ans%val(FortranIndex(ii, jj, kk, nx, ny, np)) = &
+      obj1%val(FortranIndex(ii, jj, kk, nx, ny, np)) _OP_ &
+      obj2%val(FortranIndex(ii, jj, nx, ny))
+  END DO
 END SUBROUTINE space_constant
 
 !----------------------------------------------------------------------------
@@ -187,14 +206,17 @@ PURE SUBROUTINE space_space(obj1, obj2, ans)
 
   INTEGER(I4B) :: ii, jj, kk, nx, ny, np
 
-  nx = obj1%s(1); ny = obj1%s(2); np = MIN(obj1%s(3), obj2%s(1))
+  nx = MIN(obj1%s(1), obj2%s(1))
+  ny = MIN(obj1%s(2), obj2%s(2))
+  np = MIN(obj1%s(3), obj2%s(3))
+
   ans%s(1) = nx; ans%s(2) = ny; ans%s(3) = np
   ans%len = nx * ny * np
 
   DO CONCURRENT(ii=1:nx, jj=1:ny, kk=1:np)
     ans%val(FortranIndex(ii, jj, kk, nx, ny, np)) = &
       obj1%val(FortranIndex(ii, jj, kk, nx, ny, np)) _OP_ &
-      obj2%val(kk)
+      obj2%val(FortranIndex(ii, jj, kk, nx, ny, np))
   END DO
 END SUBROUTINE space_space
 
@@ -209,15 +231,18 @@ PURE SUBROUTINE space_time(obj1, obj2, ans)
 
   INTEGER(I4B) :: ii, jj, kk, ll, nx, ny, np, nnt
 
-  nx = obj1%s(1); ny = obj1%s(2); np = obj1%s(3); nnt = obj2%s(1)
-  ans%s(1) = nx; ans%s(2) = ny; ans%s(3) = np; ans%s(4) = nnt
+  nx = MIN(obj1%s(1), obj2%s(1))
+  ny = MIN(obj1%s(2), obj2%s(2))
+  np = obj1%s(3)
+  nnt = obj2%s(3)
 
+  ans%s(1) = nx; ans%s(2) = ny; ans%s(3) = np; ans%s(4) = nnt
   ans%len = nx * ny * np * nnt
 
   DO CONCURRENT(ii=1:nx, jj=1:ny, kk=1:np, ll=1:nnt)
     ans%val(FortranIndex(ii, jj, kk, ll, nx, ny, np, nnt)) = &
       obj1%val(FortranIndex(ii, jj, kk, nx, ny, np)) _OP_ &
-      obj2%val(ll)
+      obj2%val(FortranIndex(ii, jj, ll, nx, ny, nnt))
   END DO
 END SUBROUTINE space_time
 
@@ -232,9 +257,10 @@ PURE SUBROUTINE space_spacetime(obj1, obj2, ans)
 
   INTEGER(I4B) :: ii, jj, kk, ll, nx, ny, np, nnt
 
-  nx = obj1%s(1); ny = obj1%s(2)
-  np = MIN(obj1%s(3), obj2%s(1))
-  nnt = obj2%s(2)
+  nx = MIN(obj1%s(1), obj2%s(1))
+  ny = MIN(obj1%s(2), obj2%s(2))
+  np = MIN(obj1%s(3), obj2%s(3))
+  nnt = obj2%s(4)
 
   ans%s(1) = nx; ans%s(2) = ny; ans%s(3) = np; ans%s(4) = nnt
   ans%len = nx * ny * np * nnt
@@ -242,7 +268,7 @@ PURE SUBROUTINE space_spacetime(obj1, obj2, ans)
   DO CONCURRENT(ii=1:nx, jj=1:ny, kk=1:np, ll=1:nnt)
     ans%val(FortranIndex(ii, jj, kk, ll, nx, ny, np, nnt)) = &
       obj1%val(FortranIndex(ii, jj, kk, nx, ny, np)) _OP_ &
-      obj2%val(FortranIndex(kk, ll, np, nnt))
+      obj2%val(FortranIndex(ii, jj, kk, ll, nx, ny, np, nnt))
   END DO
 END SUBROUTINE space_spacetime
 
@@ -255,9 +281,20 @@ PURE SUBROUTINE time_constant(obj1, obj2, ans)
   TYPE(FEVariable_), INTENT(IN) :: obj1, obj2
   TYPE(FEVariable_), INTENT(INOUT) :: ans
 
-  ans%s(1:3) = obj1%s(1:3)
-  ans%len = obj1%len
-  ans%val(1:ans%len) = obj1%val(1:ans%len) _OP_ obj2%val(1)
+  INTEGER(I4B) :: ii, jj, ll, nx, ny, nnt
+
+  nx = MIN(obj1%s(1), obj2%s(1))
+  ny = MIN(obj1%s(2), obj2%s(2))
+  nnt = obj1%s(3)
+
+  ans%s(1) = nx; ans%s(2) = ny; ans%s(3) = nnt
+  ans%len = nx * ny * nnt
+
+  DO CONCURRENT(ii=1:nx, jj=1:ny, ll=1:nnt)
+    ans%val(FortranIndex(ii, jj, ll, nx, ny, nnt)) = &
+      obj1%val(FortranIndex(ii, jj, ll, nx, ny, nnt)) _OP_ &
+      obj2%val(FortranIndex(ii, jj, nx, ny))
+  END DO
 END SUBROUTINE time_constant
 
 !----------------------------------------------------------------------------
@@ -271,8 +308,9 @@ PURE SUBROUTINE time_time(obj1, obj2, ans)
 
   INTEGER(I4B) :: ii, jj, ll, nx, ny, nnt
 
-  nx = obj1%s(1); ny = obj1%s(2)
-  nnt = MIN(obj1%s(3), obj2%s(1))
+  nx = MIN(obj1%s(1), obj2%s(1))
+  ny = MIN(obj1%s(2), obj2%s(2))
+  nnt = MIN(obj1%s(3), obj2%s(3))
 
   ans%s(1) = nx; ans%s(2) = ny; ans%s(3) = nnt
   ans%len = nx * ny * nnt
@@ -280,7 +318,7 @@ PURE SUBROUTINE time_time(obj1, obj2, ans)
   DO CONCURRENT(ii=1:nx, jj=1:ny, ll=1:nnt)
     ans%val(FortranIndex(ii, jj, ll, nx, ny, nnt)) = &
       obj1%val(FortranIndex(ii, jj, ll, nx, ny, nnt)) _OP_ &
-      obj2%val(ll)
+      obj2%val(FortranIndex(ii, jj, ll, nx, ny, nnt))
   END DO
 END SUBROUTINE time_time
 
@@ -295,15 +333,18 @@ PURE SUBROUTINE time_space(obj1, obj2, ans)
 
   INTEGER(I4B) :: ii, jj, kk, ll, nx, ny, np, nnt
 
-  nx = obj1%s(1); ny = obj1%s(2); nnt = obj1%s(3); np = obj2%s(1)
-  ans%s(1) = nx; ans%s(2) = ny; ans%s(3) = np; ans%s(4) = nnt
+  nx = MIN(obj1%s(1), obj2%s(1))
+  ny = MIN(obj1%s(2), obj2%s(2))
+  nnt = obj1%s(3)
+  np = obj2%s(3)
 
+  ans%s(1) = nx; ans%s(2) = ny; ans%s(3) = np; ans%s(4) = nnt
   ans%len = nx * ny * np * nnt
 
   DO CONCURRENT(ii=1:nx, jj=1:ny, kk=1:np, ll=1:nnt)
     ans%val(FortranIndex(ii, jj, kk, ll, nx, ny, np, nnt)) = &
       obj1%val(FortranIndex(ii, jj, ll, nx, ny, nnt)) _OP_ &
-      obj2%val(kk)
+      obj2%val(FortranIndex(ii, jj, kk, nx, ny, np))
   END DO
 END SUBROUTINE time_space
 
@@ -318,17 +359,18 @@ PURE SUBROUTINE time_spacetime(obj1, obj2, ans)
 
   INTEGER(I4B) :: ii, jj, kk, ll, nx, ny, np, nnt
 
-  nx = obj1%s(1); ny = obj1%s(2)
-  np = obj2%s(1)
-  nnt = MIN(obj1%s(3), obj2%s(2))
-  ans%s(1) = nx; ans%s(2) = ny; ans%s(3) = np; ans%s(4) = nnt
+  nx = MIN(obj1%s(1), obj2%s(1))
+  ny = MIN(obj1%s(2), obj2%s(2))
+  nnt = MIN(obj1%s(3), obj2%s(4))
+  np = obj2%s(3)
 
+  ans%s(1) = nx; ans%s(2) = ny; ans%s(3) = np; ans%s(4) = nnt
   ans%len = nx * ny * np * nnt
 
   DO CONCURRENT(ii=1:nx, jj=1:ny, kk=1:np, ll=1:nnt)
     ans%val(FortranIndex(ii, jj, kk, ll, nx, ny, np, nnt)) = &
       obj1%val(FortranIndex(ii, jj, ll, nx, ny, nnt)) _OP_ &
-      obj2%val(FortranIndex(kk, ll, np, nnt))
+      obj2%val(FortranIndex(ii, jj, kk, ll, nx, ny, np, nnt))
   END DO
 END SUBROUTINE time_spacetime
 
@@ -341,9 +383,21 @@ PURE SUBROUTINE spacetime_constant(obj1, obj2, ans)
   TYPE(FEVariable_), INTENT(IN) :: obj1, obj2
   TYPE(FEVariable_), INTENT(INOUT) :: ans
 
-  ans%s(1:4) = obj1%s(1:4)
-  ans%len = obj1%len
-  ans%val(1:ans%len) = obj1%val(1:ans%len) _OP_ obj2%val(1)
+  INTEGER(I4B) :: ii, jj, kk, ll, nx, ny, np, nnt
+
+  nx = MIN(obj1%s(1), obj2%s(1))
+  ny = MIN(obj1%s(2), obj2%s(2))
+  np = obj1%s(3)
+  nnt = obj1%s(4)
+
+  ans%s(1) = nx; ans%s(2) = ny; ans%s(3) = np; ans%s(4) = nnt
+  ans%len = nx * ny * np * nnt
+
+  DO CONCURRENT(ii=1:nx, jj=1:ny, kk=1:np, ll=1:nnt)
+    ans%val(FortranIndex(ii, jj, kk, ll, nx, ny, np, nnt)) = &
+      obj1%val(FortranIndex(ii, jj, kk, ll, nx, ny, np, nnt)) _OP_ &
+      obj2%val(FortranIndex(ii, jj, nx, ny))
+  END DO
 END SUBROUTINE spacetime_constant
 
 !----------------------------------------------------------------------------
@@ -355,18 +409,20 @@ PURE SUBROUTINE spacetime_space(obj1, obj2, ans)
   TYPE(FEVariable_), INTENT(IN) :: obj1, obj2
   TYPE(FEVariable_), INTENT(INOUT) :: ans
 
-  INTEGER(I4B) :: nx, ny, np, nnt, ii, jj, kk, ll
+  INTEGER(I4B) :: ii, jj, kk, ll, nx, ny, np, nnt
 
-  nx = obj1%s(1); ny = obj1%s(2)
-  np = MIN(obj1%s(3), obj2%s(1))
+  nx = MIN(obj1%s(1), obj2%s(1))
+  ny = MIN(obj1%s(2), obj2%s(2))
+  np = MIN(obj1%s(3), obj2%s(3))
   nnt = obj1%s(4)
+
   ans%s(1) = nx; ans%s(2) = ny; ans%s(3) = np; ans%s(4) = nnt
   ans%len = nx * ny * np * nnt
 
   DO CONCURRENT(ii=1:nx, jj=1:ny, kk=1:np, ll=1:nnt)
     ans%val(FortranIndex(ii, jj, kk, ll, nx, ny, np, nnt)) = &
       obj1%val(FortranIndex(ii, jj, kk, ll, nx, ny, np, nnt)) _OP_ &
-      obj2%val(kk)
+      obj2%val(FortranIndex(ii, jj, kk, nx, ny, np))
   END DO
 END SUBROUTINE spacetime_space
 
@@ -379,10 +435,12 @@ PURE SUBROUTINE spacetime_time(obj1, obj2, ans)
   TYPE(FEVariable_), INTENT(IN) :: obj1, obj2
   TYPE(FEVariable_), INTENT(INOUT) :: ans
 
-  INTEGER(I4B) :: nx, ny, np, nnt, ii, jj, kk, ll
+  INTEGER(I4B) :: ii, jj, kk, ll, nx, ny, np, nnt
 
-  nx = obj1%s(1); ny = obj1%s(2); np = obj1%s(3)
-  nnt = MIN(obj1%s(4), obj2%s(1))
+  nx = MIN(obj1%s(1), obj2%s(1))
+  ny = MIN(obj1%s(2), obj2%s(2))
+  np = obj1%s(3)
+  nnt = MIN(obj1%s(4), obj2%s(3))
 
   ans%s(1) = nx; ans%s(2) = ny; ans%s(3) = np; ans%s(4) = nnt
   ans%len = nx * ny * np * nnt
@@ -390,7 +448,7 @@ PURE SUBROUTINE spacetime_time(obj1, obj2, ans)
   DO CONCURRENT(ii=1:nx, jj=1:ny, kk=1:np, ll=1:nnt)
     ans%val(FortranIndex(ii, jj, kk, ll, nx, ny, np, nnt)) = &
       obj1%val(FortranIndex(ii, jj, kk, ll, nx, ny, np, nnt)) _OP_ &
-      obj2%val(ll)
+      obj2%val(FortranIndex(ii, jj, ll, nx, ny, nnt))
   END DO
 END SUBROUTINE spacetime_time
 
@@ -403,11 +461,12 @@ PURE SUBROUTINE spacetime_spacetime(obj1, obj2, ans)
   TYPE(FEVariable_), INTENT(IN) :: obj1, obj2
   TYPE(FEVariable_), INTENT(INOUT) :: ans
 
-  INTEGER(I4B) :: nx, ny, np, nnt, ii, jj, kk, ll
+  INTEGER(I4B) :: ii, jj, kk, ll, nx, ny, np, nnt
 
-  nx = obj1%s(1); ny = obj1%s(2)
-  np = MIN(obj1%s(3), obj2%s(1))
-  nnt = MIN(obj1%s(4), obj2%s(2))
+  nx = MIN(obj1%s(1), obj2%s(1))
+  ny = MIN(obj1%s(2), obj2%s(2))
+  np = MIN(obj1%s(3), obj2%s(3))
+  nnt = MIN(obj1%s(4), obj2%s(4))
 
   ans%s(1) = nx; ans%s(2) = ny; ans%s(3) = np; ans%s(4) = nnt
   ans%len = nx * ny * np * nnt
@@ -415,13 +474,11 @@ PURE SUBROUTINE spacetime_spacetime(obj1, obj2, ans)
   DO CONCURRENT(ii=1:nx, jj=1:ny, kk=1:np, ll=1:nnt)
     ans%val(FortranIndex(ii, jj, kk, ll, nx, ny, np, nnt)) = &
       obj1%val(FortranIndex(ii, jj, kk, ll, nx, ny, np, nnt)) _OP_ &
-      obj2%val(FortranIndex(kk, ll, np, nnt))
+      obj2%val(FortranIndex(ii, jj, kk, ll, nx, ny, np, nnt))
   END DO
 END SUBROUTINE spacetime_spacetime
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
-
-END MODULE _MODULE_NAME_
 

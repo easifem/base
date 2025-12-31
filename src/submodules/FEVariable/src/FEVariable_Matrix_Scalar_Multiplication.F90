@@ -16,11 +16,11 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-#define _MODULE_NAME_ FEVariable_Matrix_Scalar_Multiplication
 #define _OP_ *
 
+MODULE FEVariable_Matrix_Scalar_Multiplication
 #include "./include/matrix_operator_scalar_.F90"
+END MODULE FEVariable_Matrix_Scalar_Multiplication
 
-#undef _MODULE_NAME_
 #undef _OP_
 
