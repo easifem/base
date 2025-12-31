@@ -15,6 +15,8 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
+#define _OP_ *
+
 SUBMODULE(FEVariable_MultiplicationMethod) Methods
 ! USE GlobalData, ONLY: Constant, Space, Time, SpaceTime, &
 !                       Scalar, Vector, Matrix, Nodal, Quadrature
@@ -26,8 +28,7 @@ SUBMODULE(FEVariable_MultiplicationMethod) Methods
 ! USE BaseType, ONLY: TypeFEVariableSpace
 ! USE BaseType, ONLY: TypeFEVariableTime
 ! USE BaseType, ONLY: TypeFEVariableSpaceTime
-! USE BaseType, ONLY: varopt => TypeFEVariableOpt
-!
+
 ! USE ReallocateUtility, ONLY: Reallocate
 !
 ! USE FEVariable_Method, ONLY: NodalVariable
@@ -42,8 +43,7 @@ USE FEVariable_Vector_Scalar_Multiplication, ONLY: Vector_Scalar_Master
 USE FEVariable_Vector_Vector_Multiplication, ONLY: Vector_Vector_Master
 USE FEVariable_Matrix_Scalar_Multiplication, ONLY: Matrix_Scalar_Master
 USE FEVariable_Matrix_Matrix_Multiplication, ONLY: Matrix_Matrix_Master
-
-#define _OP_ *
+USE BaseType, ONLY: varopt => TypeFEVariableOpt
 
 IMPLICIT NONE
 
@@ -97,35 +97,29 @@ END PROCEDURE fevar_Multiplication_1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE fevar_Multiplication2
-! SELECT CASE (obj1%rank)
-! CASE (scalar)
-! #include "./include/ScalarOperatorReal.F90"
-! CASE (vector)
-! #include "./include/VectorOperatorReal.F90"
-! CASE (matrix)
-! #include "./include/MatrixOperatorReal.F90"
-! END SELECT
 END PROCEDURE fevar_Multiplication2
 
 !----------------------------------------------------------------------------
 !                                                             Multiplication
 !----------------------------------------------------------------------------
 
+MODULE PROCEDURE fevar_Multiplication_2
+ans%len = obj%len
+ans%s = obj%s
+ans%val(1:ans%len) = obj%val(1:ans%len) _OP_ val
+END PROCEDURE fevar_Multiplication_2
+
+!----------------------------------------------------------------------------
+!                                                             Multiplication
+!----------------------------------------------------------------------------
+
 MODULE PROCEDURE fevar_Multiplication3
-! SELECT CASE (obj1%rank)
-! CASE (scalar)
-! #include "./include/RealOperatorScalar.F90"
-! CASE (vector)
-! #include "./include/RealOperatorVector.F90"
-! CASE (matrix)
-! #include "./include/RealOperatorMatrix.F90"
-! END SELECT
 END PROCEDURE fevar_Multiplication3
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
-#undef _OP_
-
 END SUBMODULE Methods
+
+#undef _OP_
