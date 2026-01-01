@@ -17,6 +17,7 @@
 
 SUBMODULE(FEVariable_SubtractionMethod) Methods
 USE FEVariable_GetMethod, ONLY: GetRankCase
+USE FEVariable_GetMethod, ONLY: GetVarCase
 USE FEVariable_Scalar_Scalar_Subtraction, ONLY: Scalar_Scalar_Master
 USE FEVariable_Scalar_Vector_Subtraction, ONLY: Scalar_Vector_Master
 USE FEVariable_Scalar_Matrix_Subtraction, ONLY: Scalar_Matrix_Master
@@ -35,35 +36,10 @@ CONTAINS
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE fevar_Subtraction_1
-INTEGER(I4B) :: rankCase
-
+INTEGER(I4B) :: rankCase, varCase
 rankCase = GetRankCase(obj1%rank, obj2%rank)
-
-SELECT CASE (rankCase)
-
-CASE (00)
-  CALL Scalar_Scalar_Master(obj1, obj2, ans)
-
-CASE (01)
-  CALL Scalar_Vector_Master(obj1, obj2, ans)
-
-CASE (02)
-  CALL Scalar_Matrix_master(obj1, obj2, ans)
-
-CASE (10)
-  CALL Vector_Scalar_master(obj1, obj2, ans)
-
-CASE (11)
-  CALL Vector_Vector_master(obj1, obj2, ans)
-
-CASE (20)
-  CALL Matrix_Scalar_master(obj1, obj2, ans)
-
-CASE (22)
-  CALL Matrix_Matrix_master(obj1, obj2, ans)
-
-END SELECT
-
+varCase = GetRankCase(obj1%varType, obj2%varType)
+CALL Subtraction_(obj1, obj2, ans, rankCase, varCase)
 END PROCEDURE fevar_Subtraction_1
 
 !----------------------------------------------------------------------------
@@ -75,6 +51,37 @@ ans%len = obj%len
 ans%s = obj%s
 ans%val(1:ans%len) = obj%val(1:ans%len) + val
 END PROCEDURE fevar_Subtraction_2
+
+!----------------------------------------------------------------------------
+!                                                              Subtraction
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE fevar_Subtraction_3
+SELECT CASE (rankCase)
+
+CASE (00)
+  CALL Scalar_Scalar_Master(obj1, obj2, ans, varCase)
+
+CASE (01)
+  CALL Scalar_Vector_Master(obj1, obj2, ans, varCase)
+
+CASE (02)
+  CALL Scalar_Matrix_master(obj1, obj2, ans, varCase)
+
+CASE (10)
+  CALL Vector_Scalar_master(obj1, obj2, ans, varCase)
+
+CASE (11)
+  CALL Vector_Vector_master(obj1, obj2, ans, varCase)
+
+CASE (20)
+  CALL Matrix_Scalar_master(obj1, obj2, ans, varCase)
+
+CASE (22)
+  CALL Matrix_Matrix_master(obj1, obj2, ans, varCase)
+
+END SELECT
+END PROCEDURE fevar_Subtraction_3
 
 !----------------------------------------------------------------------------
 !                                                             Subtraction

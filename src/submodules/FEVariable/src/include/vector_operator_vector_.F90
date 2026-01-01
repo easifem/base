@@ -32,13 +32,10 @@ CONTAINS
 !                                                                      master
 !----------------------------------------------------------------------------
 
-PURE SUBROUTINE Vector_Vector_Master(obj1, obj2, ans)
+PURE SUBROUTINE Vector_Vector_Master(obj1, obj2, ans, varCase)
   TYPE(FEVariable_), INTENT(IN) :: obj1, obj2
   TYPE(FEVariable_), INTENT(INOUT) :: ans
-
-  INTEGER(I4B) :: varCase
-
-  varCase = GetVarCase(obj1%vartype, obj2%vartype)
+  INTEGER(I4B), INTENT(IN) :: varCase
 
   SELECT CASE (varCase)
   CASE (00)

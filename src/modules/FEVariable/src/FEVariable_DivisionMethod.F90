@@ -27,7 +27,76 @@ PRIVATE
 PUBLIC :: Division_
 
 !----------------------------------------------------------------------------
-!                                      Division@DivisionMethods
+!                                                   Division_@DivisionMethods
+!----------------------------------------------------------------------------
+!> author: Vikas Sharma, Ph. D.
+! date: 2025-12-28
+! summary: Division_ is without extra allocation, user should know
+!          what they are doing
+
+INTERFACE
+  MODULE PURE SUBROUTINE fevar_Division_1(obj1, obj2, ans)
+    CLASS(FEVariable_), INTENT(IN) :: obj1
+    CLASS(FEVariable_), INTENT(IN) :: obj2
+    CLASS(FEVariable_), INTENT(INOUT) :: ans
+  END SUBROUTINE fevar_Division_1
+END INTERFACE
+
+INTERFACE Division_
+  MODULE PROCEDURE fevar_Division_1
+END INTERFACE Division_
+
+!----------------------------------------------------------------------------
+!                                                   Division_@DivisionMethods
+!----------------------------------------------------------------------------
+!> author: Vikas Sharma, Ph. D.
+! date: 2025-12-28
+! summary: Division_ is without extra allocation, user should know
+!          what they are doing
+
+INTERFACE
+  MODULE PURE SUBROUTINE fevar_Division_2(obj, val, ans)
+    CLASS(FEVariable_), INTENT(IN) :: obj
+    REAL(DFP), INTENT(IN) :: val
+    CLASS(FEVariable_), INTENT(INOUT) :: ans
+  END SUBROUTINE fevar_Division_2
+END INTERFACE
+
+INTERFACE Division_
+  MODULE PROCEDURE fevar_Division_2
+END INTERFACE Division_
+
+!----------------------------------------------------------------------------
+!                                                  Division_@DivisionMethods
+!----------------------------------------------------------------------------
+!> author: Vikas Sharma, Ph. D.
+! date: 2025-12-28
+! summary: Division_ is without extra allocation, user should know
+!          what they are doing.
+!
+!# Introduction
+! This method bypasses the additional overhead related to
+! calculating the varCase and rankCase inside the method.
+
+INTERFACE
+  MODULE PURE SUBROUTINE fevar_Division_3( &
+    obj1, obj2, ans, varCase, rankCase)
+    CLASS(FEVariable_), INTENT(IN) :: obj1
+    CLASS(FEVariable_), INTENT(IN) :: obj2
+    CLASS(FEVariable_), INTENT(INOUT) :: ans
+    INTEGER(I4B), INTENT(IN) :: varCase
+    !! varCase can be obtained from GetVarCase function
+    INTEGER(I4B), INTENT(IN) :: rankCase
+    !! rankCase can be obtained from GetRankCase function
+  END SUBROUTINE fevar_Division_3
+END INTERFACE
+
+INTERFACE Division_
+  MODULE PROCEDURE fevar_Division_3
+END INTERFACE Division_
+
+!----------------------------------------------------------------------------
+!                                                   Division@DivisionMethods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -48,27 +117,7 @@ INTERFACE OPERATOR(_OP_)
 END INTERFACE OPERATOR(_OP_)
 
 !----------------------------------------------------------------------------
-!                                      Division_@DivisionMethods
-!----------------------------------------------------------------------------
-!> author: Vikas Sharma, Ph. D.
-! date: 2025-12-28
-! summary: Division_ is without extra allocation, user should know
-!          what they are doing
-
-INTERFACE
-  MODULE PURE SUBROUTINE fevar_Division_1(obj1, obj2, ans)
-    CLASS(FEVariable_), INTENT(IN) :: obj1
-    CLASS(FEVariable_), INTENT(IN) :: obj2
-    CLASS(FEVariable_), INTENT(INOUT) :: ans
-  END SUBROUTINE fevar_Division_1
-END INTERFACE
-
-INTERFACE Division_
-  MODULE PROCEDURE fevar_Division_1
-END INTERFACE Division_
-
-!----------------------------------------------------------------------------
-!                                      Division@DivisionMethods
+!                                                    Division@DivisionMethods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -86,26 +135,6 @@ END INTERFACE
 INTERFACE OPERATOR(_OP_)
   MODULE PROCEDURE fevar_Division2
 END INTERFACE OPERATOR(_OP_)
-
-!----------------------------------------------------------------------------
-!                                      Division_@DivisionMethods
-!----------------------------------------------------------------------------
-!> author: Vikas Sharma, Ph. D.
-! date: 2025-12-28
-! summary: Division_ is without extra allocation, user should know
-!          what they are doing
-
-INTERFACE
-  MODULE PURE SUBROUTINE fevar_Division_2(obj, val, ans)
-    CLASS(FEVariable_), INTENT(IN) :: obj
-    REAL(DFP), INTENT(IN) :: val
-    CLASS(FEVariable_), INTENT(INOUT) :: ans
-  END SUBROUTINE fevar_Division_2
-END INTERFACE
-
-INTERFACE Division_
-  MODULE PROCEDURE fevar_Division_2
-END INTERFACE Division_
 
 !----------------------------------------------------------------------------
 !                                      Division@DivisionMethods

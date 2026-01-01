@@ -27,7 +27,7 @@ PRIVATE
 PUBLIC :: Addition_
 
 !----------------------------------------------------------------------------
-!                                      Addition_@AdditionMethods
+!                                                   Addition_@AdditionMethods
 !----------------------------------------------------------------------------
 !> author: Vikas Sharma, Ph. D.
 ! date: 2025-12-28
@@ -47,7 +47,7 @@ INTERFACE Addition_
 END INTERFACE Addition_
 
 !----------------------------------------------------------------------------
-!                                      Addition_@AdditionMethods
+!                                                   Addition_@AdditionMethods
 !----------------------------------------------------------------------------
 !> author: Vikas Sharma, Ph. D.
 ! date: 2025-12-28
@@ -67,7 +67,36 @@ INTERFACE Addition_
 END INTERFACE Addition_
 
 !----------------------------------------------------------------------------
-!                                      Addition@AdditionMethods
+!                                                  Addition_@AdditionMethods
+!----------------------------------------------------------------------------
+!> author: Vikas Sharma, Ph. D.
+! date: 2025-12-28
+! summary: Addition_ is without extra allocation, user should know
+!          what they are doing.
+!
+!# Introduction
+! This method bypasses the additional overhead related to
+! calculating the varCase and rankCase inside the method.
+
+INTERFACE
+  MODULE PURE SUBROUTINE fevar_Addition_3( &
+    obj1, obj2, ans, varCase, rankCase)
+    CLASS(FEVariable_), INTENT(IN) :: obj1
+    CLASS(FEVariable_), INTENT(IN) :: obj2
+    CLASS(FEVariable_), INTENT(INOUT) :: ans
+    INTEGER(I4B), INTENT(IN) :: varCase
+    !! varCase can be obtained from GetVarCase function
+    INTEGER(I4B), INTENT(IN) :: rankCase
+    !! rankCase can be obtained from GetRankCase function
+  END SUBROUTINE fevar_Addition_3
+END INTERFACE
+
+INTERFACE Addition_
+  MODULE PROCEDURE fevar_Addition_3
+END INTERFACE Addition_
+
+!----------------------------------------------------------------------------
+!                                                    Addition@AdditionMethods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -88,7 +117,7 @@ INTERFACE OPERATOR(_OP_)
 END INTERFACE OPERATOR(_OP_)
 
 !----------------------------------------------------------------------------
-!                                      Addition@AdditionMethods
+!                                                    Addition@AdditionMethods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -108,7 +137,7 @@ INTERFACE OPERATOR(_OP_)
 END INTERFACE OPERATOR(_OP_)
 
 !----------------------------------------------------------------------------
-!                                      Addition@AdditionMethods
+!                                                    Addition@AdditionMethods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
