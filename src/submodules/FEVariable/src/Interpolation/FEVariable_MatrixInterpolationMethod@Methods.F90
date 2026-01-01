@@ -16,8 +16,11 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 
 SUBMODULE(FEVariable_MatrixInterpolationMethod) Methods
-USE BaseType, ONLY: TypeFEVariableConstant, TypeFEVariableSpace, &
-                    TypeFEVariableTime, TypeFEVariableSpaceTime
+USE BaseType, ONLY: TypeFEVariableConstant
+USE BaseType, ONLY: TypeFEVariableSpace
+USE BaseType, ONLY: TypeFEVariableTime
+USE BaseType, ONLY: TypeFEVariableSpaceTime
+
 IMPLICIT NONE
 CONTAINS
 

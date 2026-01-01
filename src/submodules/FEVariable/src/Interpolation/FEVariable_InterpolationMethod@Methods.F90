@@ -16,15 +16,15 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 
 SUBMODULE(FEVariable_InterpolationMethod) Methods
-USE FEVariable_Method, ONLY: FEVariableCopy => Copy, &
-                             FEVariableGetInterpolation_ => GetInterpolation_
-USE BaseType, ONLY: TypeFEVariableScalar, &
-                    TypeFEVariableVector, &
-                    TypeFEVariableMatrix, &
-                    TypeFEVariableConstant, &
-                    TypeFEVariableSpace, &
-                    TypeFEVariableTime, &
-                    TypeFEVariableSpaceTime
+USE FEVariable_Method, ONLY: FEVariableCopy => Copy
+USE FEVariable_Method, ONLY: FEVariableGetInterpolation_ => GetInterpolation_
+USE BaseType, ONLY: TypeFEVariableScalar
+USE BaseType, ONLY: TypeFEVariableVector
+USE BaseType, ONLY: TypeFEVariableMatrix
+USE BaseType, ONLY: TypeFEVariableConstant
+USE BaseType, ONLY: TypeFEVariableSpace
+USE BaseType, ONLY: TypeFEVariableTime
+USE BaseType, ONLY: TypeFEVariableSpaceTime
 
 IMPLICIT NONE
 CONTAINS

@@ -14,74 +14,123 @@
 ! You should have received a copy of the GNU General Public License
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 
-MODULE FEVariable_AdditionMethod
-USE BaseType, ONLY: FEVariable_, &
-                    FEVariableScalar_, &
-                    FEVariableVector_, &
-                    FEVariableMatrix_, &
-                    FEVariableConstant_, &
-                    FEVariableSpace_, &
-                    FEVariableTime_, &
-                    FEVariableSpaceTime_, &
-                    TypeFEVariableOpt
+#define _OP_ +
 
+MODULE FEVariable_AdditionMethod
+USE BaseType, ONLY: FEVariable_
 USE GlobalData, ONLY: I4B, DFP, LGT
 
 IMPLICIT NONE
-PRIVATE
 
-PUBLIC :: OPERATOR(+)
+PRIVATE
+! PUBLIC :: OPERATOR(_OP_)
+PUBLIC :: Addition_
 
 !----------------------------------------------------------------------------
-!                                                   Addition@AdditioMethods
+!                                      Addition_@AdditionMethods
+!----------------------------------------------------------------------------
+!> author: Vikas Sharma, Ph. D.
+! date: 2025-12-28
+! summary: Addition_ is without extra allocation, user should know
+!          what they are doing
+
+INTERFACE
+  MODULE PURE SUBROUTINE fevar_Addition_1(obj1, obj2, ans)
+    CLASS(FEVariable_), INTENT(IN) :: obj1
+    CLASS(FEVariable_), INTENT(IN) :: obj2
+    CLASS(FEVariable_), INTENT(INOUT) :: ans
+  END SUBROUTINE fevar_Addition_1
+END INTERFACE
+
+INTERFACE Addition_
+  MODULE PROCEDURE fevar_Addition_1
+END INTERFACE Addition_
+
+!----------------------------------------------------------------------------
+!                                      Addition_@AdditionMethods
+!----------------------------------------------------------------------------
+!> author: Vikas Sharma, Ph. D.
+! date: 2025-12-28
+! summary: Addition_ is without extra allocation, user should know
+!          what they are doing
+
+INTERFACE
+  MODULE PURE SUBROUTINE fevar_Addition_2(obj, val, ans)
+    CLASS(FEVariable_), INTENT(IN) :: obj
+    REAL(DFP), INTENT(IN) :: val
+    CLASS(FEVariable_), INTENT(INOUT) :: ans
+  END SUBROUTINE fevar_Addition_2
+END INTERFACE
+
+INTERFACE Addition_
+  MODULE PROCEDURE fevar_Addition_2
+END INTERFACE Addition_
+
+!----------------------------------------------------------------------------
+!                                      Addition@AdditionMethods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2021-12-12
-! summary: FEVariable = FEVariable + FEVariable
+! update: 2021-12-1
+! summary: FEVariable = FEVariable * FEVariable
 
-INTERFACE OPERATOR(+)
+INTERFACE
   MODULE PURE FUNCTION fevar_Addition1(obj1, obj2) RESULT(ans)
     CLASS(FEVariable_), INTENT(IN) :: obj1
     CLASS(FEVariable_), INTENT(IN) :: obj2
     TYPE(FEVariable_) :: ans
   END FUNCTION fevar_Addition1
-END INTERFACE OPERATOR(+)
+END INTERFACE
+
+INTERFACE OPERATOR(_OP_)
+  MODULE PROCEDURE fevar_Addition1
+END INTERFACE OPERATOR(_OP_)
 
 !----------------------------------------------------------------------------
-!                                                   Addition@AdditioMethods
+!                                      Addition@AdditionMethods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2021-12-12
-! summary: FEVariable = FEVariable + Real
+! summary: FEVariable = FEVariable * Real
 
-INTERFACE OPERATOR(+)
+INTERFACE
   MODULE PURE FUNCTION fevar_Addition2(obj1, val) RESULT(ans)
     CLASS(FEVariable_), INTENT(IN) :: obj1
     REAL(DFP), INTENT(IN) :: val
     TYPE(FEVariable_) :: ans
   END FUNCTION fevar_Addition2
-END INTERFACE OPERATOR(+)
+END INTERFACE
+
+INTERFACE OPERATOR(_OP_)
+  MODULE PROCEDURE fevar_Addition2
+END INTERFACE OPERATOR(_OP_)
 
 !----------------------------------------------------------------------------
-!                                                   Addition@AdditioMethods
+!                                      Addition@AdditionMethods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2021-12-12
-! summary: FEVariable = Real + FEVariable
+! summary: FEVariable = Real * FEVariable
 
-INTERFACE OPERATOR(+)
+INTERFACE
   MODULE PURE FUNCTION fevar_Addition3(val, obj1) RESULT(ans)
     REAL(DFP), INTENT(IN) :: val
     CLASS(FEVariable_), INTENT(IN) :: obj1
     TYPE(FEVariable_) :: ans
   END FUNCTION fevar_Addition3
-END INTERFACE OPERATOR(+)
+END INTERFACE
+
+INTERFACE OPERATOR(_OP_)
+  MODULE PROCEDURE fevar_Addition3
+END INTERFACE OPERATOR(_OP_)
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
 END MODULE FEVariable_AdditionMethod
+
+#undef _OP_

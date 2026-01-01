@@ -17,8 +17,11 @@
 !
 
 SUBMODULE(FEVariable_VectorInterpolationMethod) Methods
-USE BaseType, ONLY: TypeFEVariableConstant, TypeFEVariableSpace, &
-                    TypeFEVariableTime, TypeFEVariableSpaceTime
+USE BaseType, ONLY: TypeFEVariableConstant
+USE BaseType, ONLY: TypeFEVariableSpace
+USE BaseType, ONLY: TypeFEVariableTime
+USE BaseType, ONLY: TypeFEVariableSpaceTime
+
 IMPLICIT NONE
 CONTAINS
 
@@ -535,9 +538,7 @@ END SELECT
 END PROCEDURE VectorGetInterpolation_3
 
 !----------------------------------------------------------------------------
-!                                                              Include error
+!
 !----------------------------------------------------------------------------
-
-#include "../../include/errors.F90"
 
 END SUBMODULE Methods

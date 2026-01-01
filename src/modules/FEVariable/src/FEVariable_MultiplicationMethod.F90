@@ -14,6 +14,8 @@
 ! You should have received a copy of the GNU General Public License
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 
+#define _OP_ *
+
 MODULE FEVariable_MultiplicationMethod
 USE BaseType, ONLY: FEVariable_
 USE GlobalData, ONLY: I4B, DFP, LGT
@@ -21,29 +23,8 @@ USE GlobalData, ONLY: I4B, DFP, LGT
 IMPLICIT NONE
 
 PRIVATE
-! PUBLIC :: OPERATOR(*)
+! PUBLIC :: OPERATOR(_OP_)
 PUBLIC :: Multiplication_
-
-!----------------------------------------------------------------------------
-!                                      Multiplication@MultiplicationMethods
-!----------------------------------------------------------------------------
-
-!> author: Vikas Sharma, Ph. D.
-! date: 2021-12-12
-! update: 2021-12-1
-! summary: FEVariable = FEVariable * FEVariable
-
-INTERFACE
-  MODULE PURE FUNCTION fevar_Multiplication1(obj1, obj2) RESULT(ans)
-    CLASS(FEVariable_), INTENT(IN) :: obj1
-    CLASS(FEVariable_), INTENT(IN) :: obj2
-    TYPE(FEVariable_) :: ans
-  END FUNCTION fevar_Multiplication1
-END INTERFACE
-
-INTERFACE OPERATOR(*)
-  MODULE PROCEDURE fevar_Multiplication1
-END INTERFACE OPERATOR(*)
 
 !----------------------------------------------------------------------------
 !                                      Multiplication_@MultiplicationMethods
@@ -66,26 +47,6 @@ INTERFACE Multiplication_
 END INTERFACE Multiplication_
 
 !----------------------------------------------------------------------------
-!                                      Multiplication@MultiplicationMethods
-!----------------------------------------------------------------------------
-
-!> author: Vikas Sharma, Ph. D.
-! date: 2021-12-12
-! summary: FEVariable = FEVariable * Real
-
-INTERFACE
-  MODULE PURE FUNCTION fevar_Multiplication2(obj1, val) RESULT(ans)
-    CLASS(FEVariable_), INTENT(IN) :: obj1
-    REAL(DFP), INTENT(IN) :: val
-    TYPE(FEVariable_) :: ans
-  END FUNCTION fevar_Multiplication2
-END INTERFACE
-
-INTERFACE OPERATOR(*)
-  MODULE PROCEDURE fevar_Multiplication2
-END INTERFACE OPERATOR(*)
-
-!----------------------------------------------------------------------------
 !                                      Multiplication_@MultiplicationMethods
 !----------------------------------------------------------------------------
 !> author: Vikas Sharma, Ph. D.
@@ -106,6 +67,76 @@ INTERFACE Multiplication_
 END INTERFACE Multiplication_
 
 !----------------------------------------------------------------------------
+!                                      Multiplication_@MultiplicationMethods
+!----------------------------------------------------------------------------
+!> author: Vikas Sharma, Ph. D.
+! date: 2025-12-28
+! summary: Multiplication_ is without extra allocation, user should know
+!          what they are doing.
+!
+!# Introduction
+! This method bypasses the additional overhead related to
+! calculating the varCase and rankCase inside the method.
+
+INTERFACE
+  MODULE PURE SUBROUTINE fevar_Multiplication_3( &
+    obj1, obj2, ans, varCase, rankCase)
+    CLASS(FEVariable_), INTENT(IN) :: obj1
+    CLASS(FEVariable_), INTENT(IN) :: obj2
+    CLASS(FEVariable_), INTENT(INOUT) :: ans
+    INTEGER(I4B), INTENT(IN) :: varCase
+    !! varCase can be obtained from GetVarCase function
+    INTEGER(I4B), INTENT(IN) :: rankCase
+    !! rankCase can be obtained from GetRankCase function
+  END SUBROUTINE fevar_Multiplication_3
+END INTERFACE
+
+INTERFACE Multiplication_
+  MODULE PROCEDURE fevar_Multiplication_3
+END INTERFACE Multiplication_
+
+!----------------------------------------------------------------------------
+!                                      Multiplication@MultiplicationMethods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2021-12-12
+! update: 2021-12-1
+! summary: FEVariable = FEVariable * FEVariable
+
+INTERFACE
+  MODULE PURE FUNCTION fevar_Multiplication1(obj1, obj2) RESULT(ans)
+    CLASS(FEVariable_), INTENT(IN) :: obj1
+    CLASS(FEVariable_), INTENT(IN) :: obj2
+    TYPE(FEVariable_) :: ans
+  END FUNCTION fevar_Multiplication1
+END INTERFACE
+
+INTERFACE OPERATOR(_OP_)
+  MODULE PROCEDURE fevar_Multiplication1
+END INTERFACE OPERATOR(_OP_)
+
+!----------------------------------------------------------------------------
+!                                      Multiplication@MultiplicationMethods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2021-12-12
+! summary: FEVariable = FEVariable * Real
+
+INTERFACE
+  MODULE PURE FUNCTION fevar_Multiplication2(obj1, val) RESULT(ans)
+    CLASS(FEVariable_), INTENT(IN) :: obj1
+    REAL(DFP), INTENT(IN) :: val
+    TYPE(FEVariable_) :: ans
+  END FUNCTION fevar_Multiplication2
+END INTERFACE
+
+INTERFACE OPERATOR(_OP_)
+  MODULE PROCEDURE fevar_Multiplication2
+END INTERFACE OPERATOR(_OP_)
+
+!----------------------------------------------------------------------------
 !                                      Multiplication@MultiplicationMethods
 !----------------------------------------------------------------------------
 
@@ -121,12 +152,14 @@ INTERFACE
   END FUNCTION fevar_Multiplication3
 END INTERFACE
 
-INTERFACE OPERATOR(*)
+INTERFACE OPERATOR(_OP_)
   MODULE PROCEDURE fevar_Multiplication3
-END INTERFACE OPERATOR(*)
+END INTERFACE OPERATOR(_OP_)
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
 END MODULE FEVariable_MultiplicationMethod
+
+#undef _OP_

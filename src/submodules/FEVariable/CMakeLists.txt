@@ -18,23 +18,26 @@
 set(src_path "${CMAKE_CURRENT_LIST_DIR}/src/")
 target_sources(
   ${PROJECT_NAME}
-  PRIVATE ${src_path}/FEVariable_AdditionMethod@Methods.F90
-          ${src_path}/FEVariable_ConstructorMethod@Methods.F90
+  PRIVATE ${src_path}/FEVariable_ConstructorMethod@Methods.F90
           ${src_path}/FEVariable_NodalVariableMethod@Methods.F90
           ${src_path}/FEVariable_QuadratureVariableMethod@Methods.F90
           ${src_path}/FEVariable_DotProductMethod@Methods.F90
-          ${src_path}/FEVariable_SubtractionMethod@Methods.F90
           ${src_path}/FEVariable_MeanMethod@Methods.F90
           ${src_path}/FEVariable_UnaryMethod@Methods.F90
           ${src_path}/FEVariable_GetMethod@Methods.F90
           ${src_path}/FEVariable_IOMethod@Methods.F90
-          ${src_path}/FEVariable_ScalarInterpolationMethod@Methods.F90
-          ${src_path}/FEVariable_VectorInterpolationMethod@Methods.F90
-          ${src_path}/FEVariable_MatrixInterpolationMethod@Methods.F90
-          ${src_path}/FEVariable_InterpolationMethod@Methods.F90
           ${src_path}/FEVariable_SetMethod@ScalarMethods.F90
           ${src_path}/FEVariable_SetMethod@VectorMethods.F90
           ${src_path}/FEVariable_SetMethod@MatrixMethods.F90)
+
+# Interpolation
+target_sources(
+  ${PROJECT_NAME}
+  PRIVATE
+    ${src_path}/Interpolation/FEVariable_ScalarInterpolationMethod@Methods.F90
+    ${src_path}/Interpolation/FEVariable_VectorInterpolationMethod@Methods.F90
+    ${src_path}/Interpolation/FEVariable_MatrixInterpolationMethod@Methods.F90
+    ${src_path}/Interpolation/FEVariable_InterpolationMethod@Methods.F90)
 
 # Multiplication
 target_sources(
@@ -64,3 +67,31 @@ target_sources(
           ${src_path}/Division/FEVariable_Vector_Vector_Division.F90
           ${src_path}/Division/FEVariable_Matrix_Scalar_Division.F90
           ${src_path}/Division/FEVariable_Matrix_Matrix_Division.F90)
+
+# Addition
+target_sources(
+  ${PROJECT_NAME}
+  PRIVATE ${src_path}/Addition/FEVariable_AdditionMethod@Methods.F90
+          ${src_path}/Addition/FEVariable_Scalar_Scalar_Addition.F90
+          ${src_path}/Addition/FEVariable_Vector_Scalar_Addition.F90
+          ${src_path}/Addition/FEVariable_Vector_Vector_Addition.F90
+          ${src_path}/Addition/FEVariable_Scalar_Vector_Addition.F90
+          ${src_path}/Addition/FEVariable_Scalar_Matrix_Addition.F90
+          ${src_path}/Addition/FEVariable_Vector_Scalar_Addition.F90
+          ${src_path}/Addition/FEVariable_Vector_Vector_Addition.F90
+          ${src_path}/Addition/FEVariable_Matrix_Scalar_Addition.F90
+          ${src_path}/Addition/FEVariable_Matrix_Matrix_Addition.F90)
+
+# Subtraction
+target_sources(
+  ${PROJECT_NAME}
+  PRIVATE ${src_path}/Subtraction/FEVariable_SubtractionMethod@Methods.F90
+          ${src_path}/Subtraction/FEVariable_Scalar_Scalar_Subtraction.F90
+          ${src_path}/Subtraction/FEVariable_Vector_Scalar_Subtraction.F90
+          ${src_path}/Subtraction/FEVariable_Vector_Vector_Subtraction.F90
+          ${src_path}/Subtraction/FEVariable_Scalar_Vector_Subtraction.F90
+          ${src_path}/Subtraction/FEVariable_Scalar_Matrix_Subtraction.F90
+          ${src_path}/Subtraction/FEVariable_Vector_Scalar_Subtraction.F90
+          ${src_path}/Subtraction/FEVariable_Vector_Vector_Subtraction.F90
+          ${src_path}/Subtraction/FEVariable_Matrix_Scalar_Subtraction.F90
+          ${src_path}/Subtraction/FEVariable_Matrix_Matrix_Subtraction.F90)

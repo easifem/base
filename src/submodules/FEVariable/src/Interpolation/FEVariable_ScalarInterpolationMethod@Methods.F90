@@ -17,8 +17,11 @@
 !
 
 SUBMODULE(FEVariable_ScalarInterpolationMethod) Methods
-USE BaseType, ONLY: TypeFEVariableConstant, TypeFEVariableSpace, &
-                    TypeFEVariableSpaceTime, TypeFEVariableTime
+USE BaseType, ONLY: TypeFEVariableConstant
+USE BaseType, ONLY: TypeFEVariableSpace
+USE BaseType, ONLY: TypeFEVariableTime
+USE BaseType, ONLY: TypeFEVariableSpaceTime
+
 IMPLICIT NONE
 CONTAINS
 
