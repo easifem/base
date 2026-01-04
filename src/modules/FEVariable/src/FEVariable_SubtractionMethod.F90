@@ -23,7 +23,8 @@ USE GlobalData, ONLY: I4B, DFP, LGT
 IMPLICIT NONE
 
 PRIVATE
-! PUBLIC :: OPERATOR(_OP_)
+
+PUBLIC :: OPERATOR(_OP_)
 PUBLIC :: Subtraction_
 
 !----------------------------------------------------------------------------
@@ -55,10 +56,13 @@ END INTERFACE Subtraction_
 !          what they are doing
 
 INTERFACE
-  MODULE PURE SUBROUTINE fevar_Subtraction_2(obj, val, ans)
+  MODULE PURE SUBROUTINE fevar_Subtraction_2(obj, val, ans, objOnRHS)
     CLASS(FEVariable_), INTENT(IN) :: obj
     REAL(DFP), INTENT(IN) :: val
     CLASS(FEVariable_), INTENT(INOUT) :: ans
+    LOGICAL(LGT), OPTIONAL, INTENT(IN) :: objOnRHS
+    !! By default obj is on LHS, i.e., ans = obj - val
+    !! If objOnRHS = .TRUE. , then ans = val - obj
   END SUBROUTINE fevar_Subtraction_2
 END INTERFACE
 
@@ -125,8 +129,8 @@ END INTERFACE OPERATOR(_OP_)
 ! summary: FEVariable = FEVariable * Real
 
 INTERFACE
-  MODULE PURE FUNCTION fevar_Subtraction2(obj1, val) RESULT(ans)
-    CLASS(FEVariable_), INTENT(IN) :: obj1
+  MODULE PURE FUNCTION fevar_Subtraction2(obj, val) RESULT(ans)
+    CLASS(FEVariable_), INTENT(IN) :: obj
     REAL(DFP), INTENT(IN) :: val
     TYPE(FEVariable_) :: ans
   END FUNCTION fevar_Subtraction2
@@ -145,9 +149,9 @@ END INTERFACE OPERATOR(_OP_)
 ! summary: FEVariable = Real * FEVariable
 
 INTERFACE
-  MODULE PURE FUNCTION fevar_Subtraction3(val, obj1) RESULT(ans)
+  MODULE PURE FUNCTION fevar_Subtraction3(val, obj) RESULT(ans)
     REAL(DFP), INTENT(IN) :: val
-    CLASS(FEVariable_), INTENT(IN) :: obj1
+    CLASS(FEVariable_), INTENT(IN) :: obj
     TYPE(FEVariable_) :: ans
   END FUNCTION fevar_Subtraction3
 END INTERFACE

@@ -22,6 +22,7 @@ USE FEVariable_GetMethod, ONLY: GetShape
 USE FEVariable_GetMethod, ONLY: GetVarType
 USE FEVariable_GetMethod, ONLY: GetRank
 USE FEVariable_ConstructorMethod, ONLY: Initiate
+USE FEVariable_ConstructorMethod, ONLY: ASSIGNMENT(=)
 USE FEVariable_Scalar_Scalar_Addition, ONLY: Scalar_Scalar_Master
 USE FEVariable_Scalar_Vector_Addition, ONLY: Scalar_Vector_Master
 USE FEVariable_Scalar_Matrix_Addition, ONLY: Scalar_Matrix_Master
@@ -42,8 +43,9 @@ CONTAINS
 MODULE PROCEDURE fevar_Addition_1
 INTEGER(I4B) :: rankCase, varCase
 rankCase = GetRankCase(obj1%rank, obj2%rank)
-varCase = GetRankCase(obj1%varType, obj2%varType)
-CALL Addition_(obj1, obj2, ans, rankCase, varCase)
+varCase = GetVarCase(obj1%varType, obj2%varType)
+CALL Addition_(obj1=obj1, obj2=obj2, ans=ans, rankCase=rankCase, &
+               varCase=varCase)
 END PROCEDURE fevar_Addition_1
 
 !----------------------------------------------------------------------------

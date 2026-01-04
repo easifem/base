@@ -22,6 +22,7 @@ USE FEVariable_GetMethod, ONLY: GetShape
 USE FEVariable_GetMethod, ONLY: GetVarType
 USE FEVariable_GetMethod, ONLY: GetRank
 USE FEVariable_ConstructorMethod, ONLY: Initiate
+USE FEVariable_ConstructorMethod, ONLY: ASSIGNMENT(=)
 USE FEVariable_Scalar_Scalar_Multiplication, ONLY: Scalar_Scalar_Master
 USE FEVariable_Scalar_Vector_Multiplication, ONLY: Scalar_Vector_Master
 USE FEVariable_Scalar_Matrix_Multiplication, ONLY: Scalar_Matrix_Master

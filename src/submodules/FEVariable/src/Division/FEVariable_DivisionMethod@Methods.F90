@@ -21,7 +21,7 @@ USE FEVariable_GetMethod, ONLY: GetVarCase
 USE FEVariable_GetMethod, ONLY: GetShape
 USE FEVariable_GetMethod, ONLY: GetVarType
 USE FEVariable_GetMethod, ONLY: GetRank
-USE FEVariable_ConstructorMethod, ONLY: Initiate
+USE FEVariable_ConstructorMethod, ONLY: Initiate, ASSIGNMENT(=)
 USE FEVariable_Scalar_Scalar_Division, ONLY: Scalar_Scalar_Master
 USE FEVariable_Scalar_Vector_Division, ONLY: Scalar_Vector_Master
 USE FEVariable_Scalar_Matrix_Division, ONLY: Scalar_Matrix_Master
@@ -44,8 +44,9 @@ CONTAINS
 MODULE PROCEDURE fevar_Division_1
 INTEGER(I4B) :: rankCase, varCase
 rankCase = GetRankCase(obj1%rank, obj2%rank)
-varCase = GetRankCase(obj1%varType, obj2%varType)
-CALL Division_(obj1, obj2, ans, rankCase, varCase)
+varCase = GetVarCase(obj1%varType, obj2%varType)
+CALL Division_( &
+  obj1=obj1, obj2=obj2, ans=ans, rankCase=rankCase, varCase=varCase)
 END PROCEDURE fevar_Division_1
 
 !----------------------------------------------------------------------------
@@ -53,13 +54,13 @@ END PROCEDURE fevar_Division_1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE fevar_Division_2
-LOGICAL(LGT) :: isDivideByObj0
+LOGICAL(LGT) :: objOnRHS0
 
-isDivideByObj0 = Input(option=isDivideByObj, default=.FALSE.)
+objOnRHS0 = Input(option=objOnRHS, default=.FALSE.)
 ans%len = obj%len
 ans%s = obj%s
 
-IF (isDivideByObj0) THEN
+IF (objOnRHS0) THEN
   ans%val(1:ans%len) = val / obj%val(1:ans%len)
 ELSE
   ans%val(1:ans%len) = obj%val(1:ans%len) / val
@@ -140,7 +141,7 @@ END PROCEDURE fevar_Division2
 
 MODULE PROCEDURE fevar_Division3
 ans = obj
-CALL Division_(obj=obj, val=val, ans=ans, isDivideByObj=math%yes)
+CALL Division_(obj=obj, val=val, ans=ans, objOnRHS=math%yes)
 END PROCEDURE fevar_Division3
 
 !----------------------------------------------------------------------------

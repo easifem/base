@@ -55,11 +55,13 @@ END INTERFACE Division_
 !          what they are doing
 
 INTERFACE
-  MODULE PURE SUBROUTINE fevar_Division_2(obj, val, ans, isDivideByObj)
+  MODULE PURE SUBROUTINE fevar_Division_2(obj, val, ans, objOnRHS)
     CLASS(FEVariable_), INTENT(IN) :: obj
     REAL(DFP), INTENT(IN) :: val
     CLASS(FEVariable_), INTENT(INOUT) :: ans
-    LOGICAL(LGT), OPTIONAL, INTENT(IN) :: isDivideByObj
+    LOGICAL(LGT), OPTIONAL, INTENT(IN) :: objOnRHS
+    !! By default obj is on LHS, i.e., ans = obj / val
+    !! If objOnRHS = .TRUE. , then ans = val / obj
   END SUBROUTINE fevar_Division_2
 END INTERFACE
 
