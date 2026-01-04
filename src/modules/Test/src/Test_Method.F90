@@ -20,8 +20,9 @@
 !
 
 MODULE Test_Method
-USE Test_Base, ONLY: test_unit, diago_unit, &
-                  & ok, diago, note, PASS, fail, todo
-USE Test_Planning, ONLY: plan, done_testing, skip_all, bail_out
-USE Test_More, ONLY: is, isabs, isrel, isnear, skip
+USE Test_Base
+USE Test_Planning
+USE is_i
+USE is_r
+USE Test_More
 END MODULE Test_Method

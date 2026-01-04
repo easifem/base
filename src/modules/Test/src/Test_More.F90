@@ -20,15 +20,12 @@
 MODULE Test_More
 USE test_base, ONLY: testline, tests, test_unit
 USE test_planning, ONLY: bail_out ! for negative skips
-USE is_i, ONLY: is, is_i8, is_i16, is_i32, is_i64
-USE is_r, ONLY: isabs, isrel, isnear, &
-                  & isabs_r32, isrel_r32, isnear_r32, &
-                  & isabs_r64, isrel_r64, isnear_r64, &
-                  & isabs_r128, isrel_r128, isnear_r128
-
-! Complex numbers cannot be compared, hence no is_c module
-
+USE is_i, ONLY: is
+USE is_r, ONLY: isabs, isrel, isnear
 IMPLICIT NONE
+
+PRIVATE
+PUBLIC :: is, skip
 
 INTERFACE skip
   MODULE PROCEDURE skip_i, skip_s, skip_s_i, skip
@@ -41,7 +38,7 @@ END INTERFACE
 CONTAINS
 
 !----------------------------------------------------------------------------
-!
+!                                                                       Skip
 !----------------------------------------------------------------------------
 
 SUBROUTINE skip_s_i(msg, howmany)
@@ -67,7 +64,7 @@ SUBROUTINE skip_s_i(msg, howmany)
 END SUBROUTINE skip_s_i
 
 !----------------------------------------------------------------------------
-!
+!                                                                       Skip
 !----------------------------------------------------------------------------
 
 SUBROUTINE skip
@@ -75,7 +72,7 @@ SUBROUTINE skip
 END SUBROUTINE skip
 
 !----------------------------------------------------------------------------
-!
+!                                                                       Skip
 !----------------------------------------------------------------------------
 
 SUBROUTINE skip_s(msg)
@@ -84,7 +81,7 @@ SUBROUTINE skip_s(msg)
 END SUBROUTINE skip_s
 
 !----------------------------------------------------------------------------
-!
+!                                                                       Skip
 !----------------------------------------------------------------------------
 
 SUBROUTINE skip_i(howmany)
@@ -93,7 +90,7 @@ SUBROUTINE skip_i(howmany)
 END SUBROUTINE skip_i
 
 !----------------------------------------------------------------------------
-!
+!                                                                         Is
 !----------------------------------------------------------------------------
 
 ! Duplicates of is_i routines in file is_i.inc and ditto is_r
@@ -125,7 +122,7 @@ SUBROUTINE is_s(got, expected, msg)
 END SUBROUTINE is_s
 
 !----------------------------------------------------------------------------
-!
+!                                                                         Is
 !----------------------------------------------------------------------------
 
 SUBROUTINE is_l(got, expected, msg)
@@ -150,5 +147,9 @@ SUBROUTINE is_l(got, expected, msg)
   good = got .EQV. expected
   CALL testline(good, testmsg, idmsg, gotmsg, expectedmsg)
 END SUBROUTINE is_l
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
 
 END MODULE Test_More

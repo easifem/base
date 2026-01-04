@@ -16,15 +16,29 @@
 ! You should have received a copy of the GNU General Public License
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
+! Reference: https://github.com/dennisdjensen/fortran-testanything
 
 MODULE Test_Base
-USE, INTRINSIC :: ISO_FORTRAN_ENV, ONLY: OUTPUT_UNIT, ERROR_UNIT
+USE GlobalData, ONLY: OUTPUT_UNIT => stdout
+USE GlobalData, ONLY: ERROR_UNIT => stderr
 IMPLICIT NONE
+
+PRIVATE
+
+PUBLIC :: test_unit, diago_unit
+PUBLIC :: tests
+PUBLIC :: todo
+PUBLIC :: todomsg
+PUBLIC :: diago
+PUBLIC :: note
+PUBLIC :: testline
+PUBLIC :: ok
+PUBLIC :: PASS
+PUBLIC :: fail
 
 ! Kept as variables instead of aliases,
 ! so that test output or diagonostic output can be redirected
 INTEGER :: test_unit = OUTPUT_UNIT, diago_unit = ERROR_UNIT
-
 INTEGER :: tests = 0, todos = 0
 CHARACTER(120) :: todomsg = ""
 
@@ -35,7 +49,7 @@ END INTERFACE
 CONTAINS
 
 !----------------------------------------------------------------------------
-!
+!                                                                      Diago
 !----------------------------------------------------------------------------
 
 SUBROUTINE diago(msg)
@@ -44,7 +58,7 @@ SUBROUTINE diago(msg)
 END SUBROUTINE diago
 
 !----------------------------------------------------------------------------
-!
+!                                                                       Note
 !----------------------------------------------------------------------------
 
 SUBROUTINE note(msg)
@@ -57,8 +71,8 @@ END SUBROUTINE note
 !----------------------------------------------------------------------------
 
 SUBROUTINE testline(ok, msg, idmsg, gotmsg, expectedmsg)
-  LOGICAL, INTENT(in) :: ok
-  CHARACTER(*), INTENT(in) :: msg, idmsg, gotmsg, expectedmsg
+  LOGICAL, INTENT(IN) :: ok
+  CHARACTER(*), INTENT(IN) :: msg, idmsg, gotmsg, expectedmsg
 
   tests = tests + 1
   IF (.NOT. ok) CALL out("not ")

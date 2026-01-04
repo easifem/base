@@ -21,12 +21,24 @@ MODULE Test_Planning
 USE test_base, ONLY: test_unit, tests
 IMPLICIT NONE
 
+PRIVATE
+
+PUBLIC :: bail_out
+PUBLIC :: plan
+PUBLIC :: done_testing
+PUBLIC :: skip_all
+
 INTEGER, PRIVATE :: planned = 0
 
 CONTAINS
 
+!----------------------------------------------------------------------------
+!                                                                   bail_out
+!----------------------------------------------------------------------------
+
 SUBROUTINE bail_out(msg)
   CHARACTER(*), INTENT(in), OPTIONAL :: msg
+
   IF (PRESENT(msg)) THEN
     WRITE (test_unit, '("Bail out! ",A)') msg
   ELSE
@@ -35,22 +47,33 @@ SUBROUTINE bail_out(msg)
   STOP
 END SUBROUTINE bail_out
 
+!----------------------------------------------------------------------------
+!                                                                       plan
+!----------------------------------------------------------------------------
+
 SUBROUTINE plan(tests)
-  INTEGER, INTENT(in) :: tests
+  INTEGER, INTENT(IN) :: tests
 
   SELECT CASE (tests)
   CASE (:-1)
     CALL bail_out("A plan with a negative number of tests")
+
   CASE (0)
     WRITE (test_unit, '("1..0")')
     STOP ! The same as skip_all without a given reason
+
   CASE (1:)
     IF (planned > 0) &
-       & CALL bail_out("More than one plan in test output")
+      CALL bail_out("More than one plan in test output")
+
     planned = tests
     WRITE (test_unit, '("1..",I0)') planned
   END SELECT
 END SUBROUTINE plan
+
+!----------------------------------------------------------------------------
+!                                                               done_testing
+!----------------------------------------------------------------------------
 
 SUBROUTINE done_testing(howmany)
   INTEGER, INTENT(in), OPTIONAL :: howmany
@@ -64,6 +87,10 @@ SUBROUTINE done_testing(howmany)
   END IF
 END SUBROUTINE done_testing
 
+!----------------------------------------------------------------------------
+!                                                                   skip_all
+!----------------------------------------------------------------------------
+
 SUBROUTINE skip_all(msg)
   CHARACTER(*), INTENT(in), OPTIONAL :: msg
   IF (PRESENT(msg)) THEN
@@ -73,5 +100,9 @@ SUBROUTINE skip_all(msg)
   END IF
   STOP
 END SUBROUTINE skip_all
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
 
 END MODULE Test_Planning
