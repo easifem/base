@@ -19,11 +19,11 @@
 MODULE FEVariable_DivisionMethod
 USE BaseType, ONLY: FEVariable_
 USE GlobalData, ONLY: I4B, DFP, LGT
-
 IMPLICIT NONE
 
 PRIVATE
-! PUBLIC :: OPERATOR(_OP_)
+
+PUBLIC :: OPERATOR(_OP_)
 PUBLIC :: Division_
 
 !----------------------------------------------------------------------------
@@ -55,10 +55,11 @@ END INTERFACE Division_
 !          what they are doing
 
 INTERFACE
-  MODULE PURE SUBROUTINE fevar_Division_2(obj, val, ans)
+  MODULE PURE SUBROUTINE fevar_Division_2(obj, val, ans, isDivideByObj)
     CLASS(FEVariable_), INTENT(IN) :: obj
     REAL(DFP), INTENT(IN) :: val
     CLASS(FEVariable_), INTENT(INOUT) :: ans
+    LOGICAL(LGT), OPTIONAL, INTENT(IN) :: isDivideByObj
   END SUBROUTINE fevar_Division_2
 END INTERFACE
 
@@ -125,8 +126,8 @@ END INTERFACE OPERATOR(_OP_)
 ! summary: FEVariable = FEVariable * Real
 
 INTERFACE
-  MODULE PURE FUNCTION fevar_Division2(obj1, val) RESULT(ans)
-    CLASS(FEVariable_), INTENT(IN) :: obj1
+  MODULE PURE FUNCTION fevar_Division2(obj, val) RESULT(ans)
+    CLASS(FEVariable_), INTENT(IN) :: obj
     REAL(DFP), INTENT(IN) :: val
     TYPE(FEVariable_) :: ans
   END FUNCTION fevar_Division2
@@ -137,7 +138,7 @@ INTERFACE OPERATOR(_OP_)
 END INTERFACE OPERATOR(_OP_)
 
 !----------------------------------------------------------------------------
-!                                      Division@DivisionMethods
+!                                                    Division@DivisionMethods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -145,9 +146,9 @@ END INTERFACE OPERATOR(_OP_)
 ! summary: FEVariable = Real * FEVariable
 
 INTERFACE
-  MODULE PURE FUNCTION fevar_Division3(val, obj1) RESULT(ans)
+  MODULE PURE FUNCTION fevar_Division3(val, obj) RESULT(ans)
     REAL(DFP), INTENT(IN) :: val
-    CLASS(FEVariable_), INTENT(IN) :: obj1
+    CLASS(FEVariable_), INTENT(IN) :: obj
     TYPE(FEVariable_) :: ans
   END FUNCTION fevar_Division3
 END INTERFACE

@@ -18,6 +18,10 @@
 SUBMODULE(FEVariable_DivisionMethod) Methods
 USE FEVariable_GetMethod, ONLY: GetRankCase
 USE FEVariable_GetMethod, ONLY: GetVarCase
+USE FEVariable_GetMethod, ONLY: GetShape
+USE FEVariable_GetMethod, ONLY: GetVarType
+USE FEVariable_GetMethod, ONLY: GetRank
+USE FEVariable_ConstructorMethod, ONLY: Initiate
 USE FEVariable_Scalar_Scalar_Division, ONLY: Scalar_Scalar_Master
 USE FEVariable_Scalar_Vector_Division, ONLY: Scalar_Vector_Master
 USE FEVariable_Scalar_Matrix_Division, ONLY: Scalar_Matrix_Master
@@ -26,6 +30,8 @@ USE FEVariable_Vector_Vector_Division, ONLY: Vector_Vector_Master
 USE FEVariable_Matrix_Scalar_Division, ONLY: Matrix_Scalar_Master
 USE FEVariable_Matrix_Matrix_Division, ONLY: Matrix_Matrix_Master
 USE BaseType, ONLY: varopt => TypeFEVariableOpt
+USE BaseType, ONLY: math => TypeMathOpt
+USE InputUtility, ONLY: Input
 
 IMPLICIT NONE
 
@@ -47,9 +53,17 @@ END PROCEDURE fevar_Division_1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE fevar_Division_2
+LOGICAL(LGT) :: isDivideByObj0
+
+isDivideByObj0 = Input(option=isDivideByObj, default=.FALSE.)
 ans%len = obj%len
 ans%s = obj%s
-ans%val(1:ans%len) = obj%val(1:ans%len) / val
+
+IF (isDivideByObj0) THEN
+  ans%val(1:ans%len) = val / obj%val(1:ans%len)
+ELSE
+  ans%val(1:ans%len) = obj%val(1:ans%len) / val
+END IF
 END PROCEDURE fevar_Division_2
 
 !----------------------------------------------------------------------------
@@ -88,6 +102,27 @@ END PROCEDURE fevar_Division_3
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE fevar_Division1
+INTEGER(I4B) :: rankCase, varCase, s(varopt%maxRank), tshape, &
+                defineOn, vartype, rank, tsize
+
+rankCase = GetRankCase(obj1%rank, obj2%rank)
+varCase = GetVarCase(obj1%varType, obj2%varType)
+
+CALL GetShape( &
+  rankCase=rankCase, varCase=varCase, s1=obj1%s, s2=obj2%s, &
+  tshape1=obj1%tshape, tshape2=obj2%tshape, ans=s, tsize=tshape)
+
+defineOn = obj1%defineOn
+vartype = GetVarType(varCase=varCase)
+rank = GetRank(rankCase=rankCase)
+tsize = PRODUCT(s(1:tshape))
+
+CALL Initiate( &
+  obj=ans, s=s(1:tshape), defineon=defineOn, vartype=vartype, rank=rank, &
+  len=tsize)
+
+CALL Division_(obj1=obj1, obj2=obj2, ans=ans, rankCase=rankCase, &
+               varCase=varCase)
 END PROCEDURE fevar_Division1
 
 !----------------------------------------------------------------------------
@@ -95,6 +130,8 @@ END PROCEDURE fevar_Division1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE fevar_Division2
+ans = obj
+CALL Division_(obj=obj, val=val, ans=ans)
 END PROCEDURE fevar_Division2
 
 !----------------------------------------------------------------------------
@@ -102,6 +139,8 @@ END PROCEDURE fevar_Division2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE fevar_Division3
+ans = obj
+CALL Division_(obj=obj, val=val, ans=ans, isDivideByObj=math%yes)
 END PROCEDURE fevar_Division3
 
 !----------------------------------------------------------------------------

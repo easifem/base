@@ -18,6 +18,10 @@
 SUBMODULE(FEVariable_MultiplicationMethod) Methods
 USE FEVariable_GetMethod, ONLY: GetRankCase
 USE FEVariable_GetMethod, ONLY: GetVarCase
+USE FEVariable_GetMethod, ONLY: GetShape
+USE FEVariable_GetMethod, ONLY: GetVarType
+USE FEVariable_GetMethod, ONLY: GetRank
+USE FEVariable_ConstructorMethod, ONLY: Initiate
 USE FEVariable_Scalar_Scalar_Multiplication, ONLY: Scalar_Scalar_Master
 USE FEVariable_Scalar_Vector_Multiplication, ONLY: Scalar_Vector_Master
 USE FEVariable_Scalar_Matrix_Multiplication, ONLY: Scalar_Matrix_Master
@@ -38,8 +42,9 @@ CONTAINS
 MODULE PROCEDURE fevar_Multiplication_1
 INTEGER(I4B) :: rankCase, varCase
 rankCase = GetRankCase(obj1%rank, obj2%rank)
-varCase = GetRankCase(obj1%varType, obj2%varType)
-CALL Multiplication_(obj1, obj2, ans, rankCase, varCase)
+varCase = GetVarCase(obj1%varType, obj2%varType)
+CALL Multiplication_(obj1=obj1, obj2=obj2, ans=ans, rankCase=rankCase, &
+                     varCase=varCase)
 END PROCEDURE fevar_Multiplication_1
 
 !----------------------------------------------------------------------------
@@ -88,6 +93,27 @@ END PROCEDURE fevar_Multiplication_3
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE fevar_Multiplication1
+INTEGER(I4B) :: rankCase, varCase, s(varopt%maxRank), tshape, &
+                defineOn, vartype, rank, tsize
+
+rankCase = GetRankCase(obj1%rank, obj2%rank)
+varCase = GetVarCase(obj1%varType, obj2%varType)
+
+CALL GetShape( &
+  rankCase=rankCase, varCase=varCase, s1=obj1%s, s2=obj2%s, &
+  tshape1=obj1%tshape, tshape2=obj2%tshape, ans=s, tsize=tshape)
+
+defineOn = obj1%defineOn
+vartype = GetVarType(varCase=varCase)
+rank = GetRank(rankCase=rankCase)
+tsize = PRODUCT(s(1:tshape))
+
+CALL Initiate( &
+  obj=ans, s=s(1:tshape), defineon=defineOn, vartype=vartype, rank=rank, &
+  len=tsize)
+
+CALL Multiplication_(obj1=obj1, obj2=obj2, ans=ans, rankCase=rankCase, &
+                     varCase=varCase)
 END PROCEDURE fevar_Multiplication1
 
 !----------------------------------------------------------------------------
@@ -95,6 +121,8 @@ END PROCEDURE fevar_Multiplication1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE fevar_Multiplication2
+ans = obj
+CALL Multiplication_(obj=obj, val=val, ans=ans)
 END PROCEDURE fevar_Multiplication2
 
 !----------------------------------------------------------------------------
@@ -102,6 +130,8 @@ END PROCEDURE fevar_Multiplication2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE fevar_Multiplication3
+ans = obj
+CALL Multiplication_(obj=obj, val=val, ans=ans)
 END PROCEDURE fevar_Multiplication3
 
 !----------------------------------------------------------------------------

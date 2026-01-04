@@ -54,6 +54,83 @@ PUBLIC :: Get
 PUBLIC :: Get_
 
 !----------------------------------------------------------------------------
+!                                                              GetTotalShape
+!----------------------------------------------------------------------------
+
+INTERFACE
+  MODULE PURE FUNCTION GetTotalShapeFromRankVarCase( &
+    rankCase, varCase, tshape1, tshape2) &
+    RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: rankCase, varCase, tshape1, tshape2
+    INTEGER(I4B) :: ans
+  END FUNCTION GetTotalShapeFromRankVarCase
+END INTERFACE
+
+INTERFACE GetTotalShape
+  MODULE PROCEDURE GetTotalShapeFromRankVarCase
+END INTERFACE GetTotalShape
+
+!----------------------------------------------------------------------------
+!                                                                   GetShape
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2026-01-02
+! summary:  Get shape from rankCase and varCase
+
+INTERFACE
+  MODULE PURE SUBROUTINE GetShapeFromRankVarCase( &
+    rankCase, varCase, s1, s2, tshape1, tshape2, ans, tsize)
+    INTEGER(I4B), INTENT(IN) :: rankCase, varCase, s1(:), s2(:), tshape1, &
+                                tshape2
+    INTEGER(I4B), INTENT(INOUT) :: ans(:)
+    INTEGER(I4B), INTENT(OUT) :: tsize
+  END SUBROUTINE GetShapeFromRankVarCase
+END INTERFACE
+
+INTERFACE GetShape
+  MODULE PROCEDURE GetShapeFromRankVarCase
+END INTERFACE GetShape
+
+!----------------------------------------------------------------------------
+!                                                                  GetVarType
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2026-01-02
+! summary:  Get vartype from varCase
+
+INTERFACE
+  MODULE PURE FUNCTION GetVarTypeFromVarCase(varCase) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: varCase
+    INTEGER(I4B) :: ans
+  END FUNCTION GetVarTypeFromVarCase
+END INTERFACE
+
+INTERFACE GetVarType
+  MODULE PROCEDURE GetVarTypeFromVarCase
+END INTERFACE GetVarType
+
+!----------------------------------------------------------------------------
+!                                                                     GetRank
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2026-01-02
+! summary: Get rank from rankCase
+
+INTERFACE
+  MODULE PURE FUNCTION GetRankFromRankCase(rankCase) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: rankCase
+    INTEGER(I4B) :: ans
+  END FUNCTION GetRankFromRankCase
+END INTERFACE
+
+INTERFACE GetRank
+  MODULE PROCEDURE GetRankFromRankCase
+END INTERFACE GetRank
+
+!----------------------------------------------------------------------------
 !                                                         GetRankCase@Methods
 !----------------------------------------------------------------------------
 

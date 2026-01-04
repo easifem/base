@@ -17,21 +17,21 @@
 
 SUBMODULE(FEVariable_UnaryMethod) Methods
 USE ApproxUtility, ONLY: OPERATOR(.APPROXEQ.)
-USE GlobalData, ONLY: Constant, Space, Time, SpaceTime, &
-                      Scalar, Vector, Matrix, &
-                      Nodal, Quadrature
-
-USE BaseType, ONLY: TypeFEVariableScalar, &
-                    TypeFEVariableVector, &
-                    TypeFEVariableMatrix, &
-                    TypeFEVariableConstant, &
-                    TypeFEVariableSpace, &
-                    TypeFEVariableTime, &
-                    TypeFEVariableSpaceTime
-
-USE FEVariable_Method, ONLY: NodalVariable, QuadratureVariable, Get
+USE BaseType, ONLY: TypeFEVariableScalar
+USE BaseType, ONLY: TypeFEVariableConstant
+USE BaseType, ONLY: TypeFEVariableSpace
+USE BaseType, ONLY: TypeFEVariableTime
+USE BaseType, ONLY: TypeFEVariableSpaceTime
+USE FEVariable_Method, ONLY: Get
 USE IntegerUtility, ONLY: Get1DIndexFortran
 USE ReallocateUtility, ONLY: Reallocate
+
+USE FEVariable_Method, ONLY: ASSIGNMENT(=)
+USE IndexUtility, ONLY: FortranIndex
+USE BaseType, ONLY: math => TypeMathOpt
+USE BaseType, ONLY: varopt => TypeFEVariableOpt
+USE FEVariable_Method, ONLY: NodalVariable
+USE FEVariable_Method, ONLY: QuadratureVariable
 
 IMPLICIT NONE
 
@@ -41,63 +41,182 @@ CONTAINS
 !                                                                         Abs
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE fevar_Abs
-SELECT CASE (obj%rank)
+MODULE PROCEDURE obj_Abs
+ans = obj
+CALL ABS_(obj=obj, ans=ans)
+END PROCEDURE obj_Abs
 
-#define _ELEM_METHOD_ ABS
-CASE (scalar)
-#include "./include/ScalarElemMethod.F90"
+!----------------------------------------------------------------------------
+!                                                                       ABS_
+!----------------------------------------------------------------------------
 
-CASE (vector)
-#include "./include/VectorElemMethod.F90"
-
-CASE (matrix)
-#include "./include/MatrixElemMethod.F90"
-
-END SELECT
-#undef _ELEM_METHOD_
-
-END PROCEDURE fevar_Abs
+MODULE PROCEDURE obj_Abs_
+ans%len = obj%len
+ans%s = obj%s
+ans%val(ans%len) = ABS(obj%val(ans%len))
+END PROCEDURE obj_Abs_
 
 !----------------------------------------------------------------------------
 !                                                                      Power
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE fevar_Power
-SELECT CASE (obj%rank)
-CASE (scalar)
-#include "./include/ScalarPower.F90"
-CASE (vector)
-#include "./include/VectorPower.F90"
-CASE (matrix)
-#include "./include/MatrixPower.F90"
-END SELECT
-END PROCEDURE fevar_Power
+MODULE PROCEDURE obj_Power
+ans = obj
+CALL Power_(obj=obj, n=n, ans=ans)
+END PROCEDURE obj_Power
+
+!----------------------------------------------------------------------------
+!                                                                      Power_
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE obj_Power_
+INTEGER(I4B) :: ii
+ans%len = obj%len
+ans%s = obj%s
+DO CONCURRENT(ii=1:ans%len)
+  ans%val(ii) = (obj%val(ii))**n
+END DO
+END PROCEDURE obj_Power_
 
 !----------------------------------------------------------------------------
 !                                                                       Sqrt
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE fevar_Sqrt
-#define _ELEM_METHOD_ SQRT
+MODULE PROCEDURE obj_Sqrt
+ans = obj
+CALL SQRT_(obj=obj, ans=ans)
+END PROCEDURE obj_Sqrt
 
-SELECT CASE (obj%rank)
-CASE (scalar)
-#include "./include/ScalarElemMethod.F90"
-CASE (vector)
-#include "./include/VectorElemMethod.F90"
-CASE (matrix)
-#include "./include/MatrixElemMethod.F90"
+!----------------------------------------------------------------------------
+!                                                                      Sqrt_
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE obj_Sqrt_
+ans%len = obj%len
+ans%s = obj%s
+ans%val(ans%len) = SQRT(obj%val(ans%len))
+END PROCEDURE obj_Sqrt_
+
+!----------------------------------------------------------------------------
+!                                                             NORM2
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE obj_norm2
+LOGICAL(LGT) :: isNodal
+
+isNodal = obj%defineon .EQ. varopt%nodal
+
+SELECT CASE (obj%vartype)
+CASE (varopt%constant)
+
+  IF (isNodal) THEN
+    ans = NodalVariable( &
+          val=math%zero, rank=TypeFEVariableScalar, &
+          vartype=TypeFEVariableConstant)
+  ELSE
+    ans = QuadratureVariable( &
+          val=math%zero, rank=TypeFEVariableScalar, &
+          vartype=TypeFEVariableConstant)
+  END IF
+
+CASE (varopt%space)
+
+  IF (isNodal) THEN
+    ans = NodalVariable( &
+          tsize=obj%s(2), rank=TypeFEVariableScalar, &
+          vartype=TypeFEVariableSpace)
+  ELSE
+    ans = QuadratureVariable( &
+          tsize=obj%s(2), rank=TypeFEVariableScalar, &
+          vartype=TypeFEVariableSpace)
+  END IF
+
+CASE (varopt%time)
+
+  IF (isNodal) THEN
+    ans = NodalVariable( &
+          tsize=obj%s(2), rank=TypeFEVariableScalar, &
+          vartype=TypeFEVariableTime)
+  ELSE
+    ans = QuadratureVariable( &
+          tsize=obj%s(2), rank=TypeFEVariableScalar, &
+          vartype=TypeFEVariableTime)
+  END IF
+
+CASE (varopt%spacetime)
+
+  IF (isNodal) THEN
+    ans = NodalVariable( &
+          nrow=obj%s(2), ncol=obj%s(3), rank=TypeFEVariableScalar, &
+          vartype=TypeFEVariableSpaceTime)
+  ELSE
+    ans = QuadratureVariable( &
+          nrow=obj%s(2), ncol=obj%s(3), rank=TypeFEVariableScalar, &
+          vartype=TypeFEVariableSpaceTime)
+  END IF
+
 END SELECT
 
-#define _ELEM_METHOD_ SQRT
-END PROCEDURE fevar_Sqrt
+CALL Norm2_(obj=obj, ans=ans)
+END PROCEDURE obj_norm2
+
+!----------------------------------------------------------------------------
+!                                                                      Norm2_
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE obj_norm2_
+INTEGER(I4B) :: ii, jj, a, b
+
+SELECT CASE (obj%vartype)
+
+CASE (varopt%constant)
+
+  ans%len = 1
+  ans%s(1) = 1
+  ans%val(1) = NORM2(obj%val(1:obj%len))
+
+CASE (varopt%space)
+
+  ans%s(1) = obj%s(2)
+  ans%len = ans%s(1)
+
+  DO jj = 1, obj%s(2)
+    a = FortranIndex(1, jj, obj%s(1), obj%s(2))
+    b = FortranIndex(obj%s(1), jj, obj%s(1), obj%s(2))
+    ans%val(jj) = NORM2(obj%val(a:b))
+  END DO
+
+CASE (varopt%time)
+
+  ans%s(1) = obj%s(2)
+  ans%len = ans%s(1)
+
+  DO jj = 1, obj%s(2)
+    a = FortranIndex(1, jj, obj%s(1), obj%s(2))
+    b = FortranIndex(obj%s(1), jj, obj%s(1), obj%s(2))
+    ans%val(jj) = NORM2(obj%val(a:b))
+  END DO
+
+CASE (varopt%spacetime)
+
+  ans%s(1:2) = obj%s(2:3)
+  ans%len = ans%s(1) * ans%s(2)
+
+  DO jj = 1, obj%s(3)
+    DO ii = 1, obj%s(2)
+      a = FortranIndex(1, ii, jj, obj%s(1), obj%s(2), obj%s(3))
+      b = FortranIndex(obj%s(1), ii, jj, obj%s(1), obj%s(2), obj%s(3))
+      ans%val(FortranIndex(ii, jj, ans%s(1), ans%s(2))) = NORM2(obj%val(a:b))
+    END DO
+  END DO
+END SELECT
+END PROCEDURE obj_norm2_
 
 !----------------------------------------------------------------------------
 !                                                                    IsEqual
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE fevar_IsEqual
+MODULE PROCEDURE obj_IsEqual
 LOGICAL(LGT) :: isok
 
 ans = .FALSE.
@@ -122,119 +241,47 @@ IF (isok) RETURN
 
 isok = ALL(obj1%val(1:obj1%len) .APPROXEQ.obj2%val(1:obj2%len))
 IF (isok) ans = .TRUE.
-END PROCEDURE fevar_IsEqual
+END PROCEDURE obj_IsEqual
 
 !----------------------------------------------------------------------------
 !                                                                   NotEqual
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE fevar_NotEqual
+MODULE PROCEDURE obj_NotEqual
+LOGICAL(LGT) :: isok
+
 ans = .FALSE.
-IF (.NOT. ALL(obj1%val.APPROXEQ.obj2%val)) THEN
+
+isok = .NOT. ALL(obj1%val.APPROXEQ.obj2%val)
+IF (isok) THEN
   ans = .TRUE.
   RETURN
 END IF
 
-IF (obj1%defineon .NE. obj2%defineon) THEN
+isok = obj1%defineon .NE. obj2%defineon
+IF (isok) THEN
   ans = .TRUE.
   RETURN
 END IF
 
-IF (obj1%rank .NE. obj2%rank) THEN
+isok = obj1%rank .NE. obj2%rank
+IF (isok) THEN
   ans = .TRUE.
   RETURN
 END IF
 
-IF (obj1%varType .NE. obj2%varType) THEN
+isok = obj1%varType .NE. obj2%varType
+IF (isok) THEN
   ans = .TRUE.
   RETURN
 END IF
 
-IF (ANY(obj1%s .NE. obj2%s)) THEN
+isok = ANY(obj1%s .NE. obj2%s)
+IF (isok) THEN
   ans = .TRUE.
   RETURN
 END IF
-END PROCEDURE fevar_NotEqual
-
-!----------------------------------------------------------------------------
-!                                                             NORM2
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE fevar_norm2
-REAL(DFP), ALLOCATABLE :: r1(:), r2(:, :), m2(:, :), r3(:, :, :), m3(:, :, :)
-
-INTEGER(I4B) :: jj, kk
-
-SELECT CASE (obj%vartype)
-
-CASE (constant)
-
-  IF (obj%defineon .EQ. nodal) THEN
-    ans = NodalVariable(NORM2(obj%val(1:obj%len)), &
-                        typeFEVariableScalar, typeFEVariableConstant)
-  ELSE
-    ans = QuadratureVariable(NORM2(obj%val(1:obj%len)), &
-                             typeFEVariableScalar, typeFEVariableConstant)
-  END IF
-
-CASE (space)
-
-  r2 = GET(obj, TypeFEVariableVector, TypeFEVariableSpace)
-
-  CALL Reallocate(r1, SIZE(r2, 2))
-
-  DO jj = 1, SIZE(r1)
-    r1(jj) = NORM2(r2(:, jj))
-  END DO
-
-  IF (obj%defineon .EQ. nodal) THEN
-    ans = NodalVariable(r1, &
-                        typeFEVariableScalar, typeFEVariableSpace)
-  ELSE
-    ans = QuadratureVariable(r1, &
-                             typeFEVariableScalar, typeFEVariableSpace)
-  END IF
-
-CASE (time)
-
-  r2 = GET(obj, TypeFEVariableVector, TypeFEVariableTime)
-
-  CALL Reallocate(r1, SIZE(r2, 2))
-
-  DO jj = 1, SIZE(r1)
-    r1(jj) = NORM2(r2(:, jj))
-  END DO
-
-  IF (obj%defineon .EQ. nodal) THEN
-    ans = NodalVariable(r1, &
-                        typeFEVariableScalar, typeFEVariableTime)
-  ELSE
-    ans = QuadratureVariable(r1, &
-                             typeFEVariableScalar, typeFEVariableTime)
-  END IF
-
-CASE (spacetime)
-
-  r3 = GET(obj, TypeFEVariableVector, TypeFEVariableSpaceTime)
-
-  CALL Reallocate(r2, SIZE(r3, 2), SIZE(r3, 3))
-
-  DO kk = 1, SIZE(r3, 3)
-    DO jj = 1, SIZE(r3, 2)
-      r2(jj, kk) = NORM2(r3(:, jj, kk))
-    END DO
-  END DO
-
-  IF (obj%defineon .EQ. nodal) THEN
-    ans = NodalVariable(r2, &
-                        typeFEVariableScalar, typeFEVariableSpaceTime)
-  ELSE
-    ans = QuadratureVariable(r2, &
-                             typeFEVariableScalar, typeFEVariableSpaceTime)
-  END IF
-
-END SELECT
-END PROCEDURE fevar_norm2
+END PROCEDURE obj_NotEqual
 
 !----------------------------------------------------------------------------
 !

@@ -38,8 +38,8 @@ PUBLIC :: Initiate
 ! summary: Initiate FEVariable
 
 INTERFACE Initiate
-  MODULE PURE SUBROUTINE obj_Initiate1(obj, s, defineon, vartype, rank, &
-                                       len, val)
+  MODULE PURE SUBROUTINE obj_Initiate1( &
+    obj, s, defineon, vartype, rank, len, val)
     TYPE(FEVariable_), INTENT(INOUT) :: obj
     INTEGER(I4B), INTENT(IN) :: s(:)
     !! shape of data
@@ -65,8 +65,8 @@ END INTERFACE Initiate
 ! summary: Initiate FEVariable
 
 INTERFACE Initiate
-  MODULE PURE SUBROUTINE obj_Initiate2(obj, s, defineon, vartype, rank, &
-                                       len)
+  MODULE PURE SUBROUTINE obj_Initiate2( &
+    obj, s, defineon, vartype, rank, len)
     TYPE(FEVariable_), INTENT(INOUT) :: obj
     INTEGER(I4B), INTENT(IN) :: s(:)
     !! shape of data

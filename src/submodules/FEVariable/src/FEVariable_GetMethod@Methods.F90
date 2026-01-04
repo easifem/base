@@ -24,6 +24,465 @@ IMPLICIT NONE
 CONTAINS
 
 !----------------------------------------------------------------------------
+!                                                              GetTotalShape
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE GetTotalShapeFromRankVarCase
+! scalar 0 vector 1 matrix 2
+! constant 0, space 1, time 2, spacetime 3
+
+SELECT CASE (rankCase)
+! scalar scalar
+CASE (00)
+
+  SELECT CASE (varCase)
+  CASE (00, 11, 22, 33)
+    ans = tshape1 ! tshape1 and tshape2 are same in this case
+
+  CASE (01, 02, 03, 13, 23)
+    ans = tshape2
+
+  CASE (10, 20, 30, 31, 32)
+    ans = tshape1
+
+  CASE (12, 21)
+    ans = 2
+  END SELECT
+
+! vector vector
+CASE (11)
+
+  SELECT CASE (varCase)
+  CASE (00, 11, 22, 33)
+    ans = MAX(tshape1, tshape2)
+
+  CASE (01, 02, 03, 13, 23)
+    ans = tshape2
+
+  CASE (10, 20, 30, 31, 32)
+    ans = tshape1
+
+  CASE (12, 21)
+    ans = 3
+  END SELECT
+
+! matrix matrix
+CASE (22)
+
+  SELECT CASE (varCase)
+  CASE (00, 11, 22, 33)
+    ans = MAX(tshape1, tshape2)
+
+  CASE (01, 02, 03, 13, 23)
+    ans = tshape2
+
+  CASE (10, 20, 30, 31, 32)
+    ans = tshape1
+
+  CASE (12, 21)
+    ans = 4
+  END SELECT
+
+! scalar vector
+CASE (01)
+
+  SELECT CASE (varCase)
+  CASE (00, 11, 22, 33, 01, 02, 03, 13, 23)
+    ans = tshape2
+
+  CASE (10, 20, 30, 31, 32)
+    ans = tshape1 + 1
+
+  CASE (12, 21)
+    ans = 3
+  END SELECT
+
+! scalar matrix
+CASE (02)
+
+  SELECT CASE (varCase)
+  CASE (00, 11, 22, 33, 01, 02, 03, 13, 23)
+    ans = tshape2
+
+  CASE (10, 20, 30, 31, 32)
+    ans = tshape1 + 2
+
+  CASE (12, 21)
+    ans = 4
+  END SELECT
+
+! vector scalar
+CASE (10)
+
+  SELECT CASE (varCase)
+  CASE (00, 11, 22, 33, 10, 20, 30, 31, 32)
+    ans = tshape1
+
+  CASE (01, 02, 03, 13, 23)
+    ans = tshape2 + 1
+
+  CASE (12, 21)
+    ans = 3
+  END SELECT
+
+! vector matrix
+CASE (12)
+
+  SELECT CASE (varCase)
+  CASE (00, 11, 22, 33, 01, 02, 03, 13, 23)
+    ans = tshape2
+
+  CASE (10, 20, 30, 31, 32)
+    ans = tshape1 + 1
+
+  CASE (12, 21)
+    ans = 4
+  END SELECT
+
+! matrix scalar
+CASE (20)
+
+  SELECT CASE (varCase)
+  CASE (00, 11, 22, 33, 10, 20, 30, 31, 32)
+    ans = tshape1
+
+  CASE (01, 02, 03, 13, 23)
+    ans = tshape2 + 2
+
+  CASE (12, 21)
+    ans = 4
+  END SELECT
+
+! matrix vector
+CASE (21)
+
+  SELECT CASE (varCase)
+  CASE (00, 11, 22, 33, 10, 20, 30, 31, 32)
+    ans = tshape1
+
+  CASE (01, 02, 03, 13, 23)
+    ans = tshape2 + 1
+
+  CASE (12, 21)
+    ans = 4
+  END SELECT
+
+END SELECT
+END PROCEDURE GetTotalShapeFromRankVarCase
+
+!----------------------------------------------------------------------------
+!                                                    GetShapeFromRankVarCase
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE GetShapeFromRankVarCase
+INTEGER(I4B) :: ii
+
+! scalar 0 vector 1 matrix 2
+! constant 0, space 1, time 2, spacetime 3
+
+SELECT CASE (rankCase)
+! scalar scalar
+CASE (00)
+
+  SELECT CASE (varCase)
+  CASE (00, 11, 22, 33)
+    tsize = tshape1 ! tshape1 and tshape2 are same in this case
+    ans(1:tsize) = s1(1:tsize)
+    ! This means number of space and time points should be same
+
+  CASE (01, 02, 03, 13, 23)
+    tsize = tshape2
+    ans(1:tsize) = s2(1:tsize)
+    ! Eventhough we should check maximum of space and time
+    ! for 13 and 23 cases, we are skipping it for now
+    ! This means number of space and time points should be same
+
+  CASE (10, 20, 30, 31, 32)
+    tsize = tshape1
+    ans(1:tsize) = s1(1:tsize)
+
+  CASE (12)
+    tsize = 2
+    ans(1) = s1(1)
+    ans(2) = s2(1)
+
+  CASE (21)
+    tsize = 2
+    ans(1) = s2(1)
+    ans(2) = s1(1)
+
+  END SELECT
+
+! vector vector
+CASE (11)
+
+  SELECT CASE (varCase)
+  CASE (00, 11, 22, 33)
+    tsize = tshape1
+    ans(1:tsize) = s1(1:tsize)
+    ! This means number of space and time points should be same
+
+  CASE (01, 02, 03, 13, 23)
+    tsize = tshape2
+    ans(1:tsize) = s2(1:tsize)
+
+  CASE (10, 20, 30, 31, 32)
+    tsize = tshape1
+    ans(1:tsize) = s1(1:tsize)
+
+  CASE (12)
+    tsize = 3
+    ans(1) = s1(1) ! component
+    ans(2) = s1(2) ! space
+    ans(3) = s2(2) ! time
+
+  CASE (21)
+    tsize = 3
+    ans(1) = s1(1) ! component
+    ans(2) = s2(2) ! space
+    ans(3) = s1(2) ! time
+  END SELECT
+
+! matrix matrix
+CASE (22)
+
+  SELECT CASE (varCase)
+  CASE (00, 11, 22, 33)
+    tsize = tshape1
+    ans(1:tsize) = s1(1:tsize)
+    ! This means number of space and time points should be same
+
+  CASE (01, 02, 03, 13, 23)
+    tsize = tshape2
+    ans(1:tsize) = s2(1:tsize)
+
+  CASE (10, 20, 30, 31, 32)
+    tsize = tshape1
+    ans(1:tsize) = s1(1:tsize)
+
+  CASE (12)
+    tsize = 4
+    ans(1:2) = s1(1:2)
+    ans(3) = s1(3)
+    ans(4) = s2(3)
+
+  CASE (21)
+    tsize = 4
+    ans(1:2) = s1(1:2)
+    ans(3) = s2(3)
+    ans(4) = s1(3)
+
+  END SELECT
+
+! scalar vector
+CASE (01)
+
+  SELECT CASE (varCase)
+  CASE (00, 11, 22, 33, 01, 02, 03, 13, 23)
+    tsize = tshape2
+    ans(1:tsize) = s2(1:tsize)
+
+  CASE (10, 20, 30, 31, 32)
+    tsize = tshape1 + 1
+    ans(1) = s2(1)
+    ans(2:tsize) = s1(1:tshape1)
+
+  CASE (12)
+    tsize = 3
+    ans(1) = s2(1)
+    ans(2) = s1(1)
+    ans(3) = s2(2)
+
+  CASE (21)
+    tsize = 3
+    ans(1) = s2(1)
+    ans(2) = s2(2)
+    ans(3) = s1(1)
+  END SELECT
+
+! scalar matrix
+CASE (02)
+
+  SELECT CASE (varCase)
+  CASE (00, 11, 22, 33, 01, 02, 03, 13, 23)
+    tsize = tshape2
+    ans(1:tsize) = s2(1:tsize)
+
+  CASE (10, 20, 30, 31, 32)
+    tsize = tshape1 + 2
+    ans(1:2) = s2(1:2)
+    ans(3:tsize) = s1(1:tshape1)
+
+  CASE (12)
+    tsize = 4
+    ans(1:2) = s2(1:2)
+    ans(3) = s1(1) ! space
+    ans(4) = s2(3) ! time
+
+  CASE (21)
+    tsize = 4
+    ans(1:2) = s2(1:2)
+    ans(3) = s2(3) ! space
+    ans(4) = s1(1) ! time
+
+  END SELECT
+
+! vector scalar
+CASE (10)
+
+  SELECT CASE (varCase)
+  CASE (00, 11, 22, 33, 10, 20, 30, 31, 32)
+    tsize = tshape1
+    ans(1:tsize) = s1(1:tsize)
+
+  CASE (01, 02, 03, 13, 23)
+    tsize = tshape2 + 1
+    ans(1) = s1(1)
+    ans(2:tsize) = s2(1:tshape2)
+
+  CASE (12)
+    tsize = 3
+    ans(1) = s1(1)
+    ans(2) = s1(2)
+    ans(3) = s2(1)
+
+  CASE (21)
+    tsize = 3
+    ans(1) = s1(1)
+    ans(2) = s2(1)
+    ans(3) = s1(2)
+  END SELECT
+
+! vector matrix
+CASE (12)
+
+  SELECT CASE (varCase)
+  CASE (00, 11, 22, 33, 01, 02, 03, 13, 23)
+    tsize = tshape2
+    ans(1:tsize) = s2(1:tsize)
+
+  CASE (10, 20, 30, 31, 32)
+    tsize = tshape1 + 1
+    ans(1:2) = s2(1:2)
+    DO ii = 3, tsize
+      ans(ii) = s1(ii - 1)
+    END DO
+
+  CASE (12)
+    tsize = 4
+    ans(1:2) = s2(1:2)
+    ans(3) = s1(1)
+    ans(4) = s2(3)
+
+  CASE (21)
+    tsize = 4
+    ans(1:2) = s2(1:2)
+    ans(3) = s2(3)
+    ans(4) = s1(1)
+  END SELECT
+
+! matrix scalar
+CASE (20)
+
+  SELECT CASE (varCase)
+  CASE (00, 11, 22, 33, 10, 20, 30, 31, 32)
+    tsize = tshape1
+    ans(1:tsize) = s1(1:tsize)
+
+  CASE (01, 02, 03, 13, 23)
+    tsize = tshape2 + 2
+    ans(1:2) = s1(1:2)
+    DO ii = 3, tsize
+      ans(ii) = s2(ii - 2)
+    END DO
+
+  CASE (12)
+    tsize = 4
+    ans(1:2) = s1(1:2)
+    ans(3) = s1(3)
+    ans(4) = s2(1)
+
+  CASE (21)
+    tsize = 4
+    ans(1:2) = s1(1:2)
+    ans(3) = s2(1)
+    ans(4) = s1(3)
+  END SELECT
+
+! matrix vector
+CASE (21)
+
+  SELECT CASE (varCase)
+  CASE (00, 11, 22, 33, 10, 20, 30, 31, 32)
+    tsize = tshape1
+    ans(1:tsize) = s1(1:tsize)
+
+  CASE (01, 02, 03, 13, 23)
+    tsize = tshape2 + 1
+    ans(1:2) = s1(1:2)
+    DO ii = 3, tsize
+      ans(ii) = s2(ii - 1)
+    END DO
+
+  CASE (12)
+    tsize = 4
+    ans(1:3) = s1(1:3)
+    ans(4) = s2(2)
+
+  CASE (21)
+    tsize = 4
+    ans(1:2) = s1(1:2)
+    ans(4) = s1(3)
+    ans(3) = s2(2)
+
+  END SELECT
+
+END SELECT
+END PROCEDURE GetShapeFromRankVarCase
+
+!----------------------------------------------------------------------------
+!                                                                 GetVarType
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE GetVarTypeFromVarCase
+SELECT CASE (varCase)
+CASE (00)
+  ans = feopt%constant
+
+CASE (01, 10, 11)
+  ans = feopt%space
+
+CASE (02, 20, 22)
+  ans = feopt%time
+
+CASE (03, 13, 23, 30, 31, 32, 33, 12, 21)
+  ans = feopt%spacetime
+
+END SELECT
+END PROCEDURE GetVarTypeFromVarCase
+
+!----------------------------------------------------------------------------
+!                                                                    GetRank
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE GetRankFromRankCase
+SELECT CASE (rankCase)
+! scalar
+CASE (00)
+  ans = feopt%scalar
+
+! vector: scalar vector, vector scalar, vector vector
+CASE (01, 10, 11)
+  ans = feopt%vector
+
+! matrix: scalar matrix, matrix scalar, matrix matrix
+CASE (02, 20, 22)
+  ans = feopt%matrix
+
+END SELECT
+END PROCEDURE GetRankFromRankCase
+
+!----------------------------------------------------------------------------
 !                                                              GetRankCase
 !----------------------------------------------------------------------------
 
