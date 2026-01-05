@@ -274,8 +274,11 @@ INTEGER(I4B), PARAMETER, PUBLIC :: MAX_RANK_FEVARIABLE = 6
 TYPE :: MathOpt_
   REAL(DFP) :: zero = 0.0_DFP
   REAL(DFP) :: half = 0.5_DFP
+  REAL(DFP) :: minus_half = -0.5_DFP
   REAL(DFP) :: one = 1.0_DFP
+  REAL(DFP) :: minus_one = -1.0_DFP
   REAL(DFP) :: two = 2.0_DFP
+  REAL(DFP) :: minus_two = -2.0_DFP
   REAL(DFP) :: pi = 3.14159265359_DFP
   REAL(DFP) :: e = 2.718281828459045_DFP
   REAL(DFP), DIMENSION(3, 3) :: eye3 = RESHAPE([ &
@@ -293,7 +296,9 @@ TYPE :: MathOpt_
   LOGICAL(LGT) :: no = .FALSE.
   INTEGER(I4B) :: zero_i = 0_I4B
   INTEGER(I4B) :: one_i = 1_I4B
+  INTEGER(I4B) :: minus_one_i = -1_I4B
   INTEGER(I4B) :: two_i = 2_I4B
+  INTEGER(I4B) :: minus_two_i = -2_I4B
 END TYPE MathOpt_
 
 TYPE(MathOpt_), PARAMETER :: TypeMathOpt = MathOpt_()
