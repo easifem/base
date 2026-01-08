@@ -112,6 +112,7 @@ PUBLIC :: TypeIndexValue
 PUBLIC :: IndexValuePointer_
 PUBLIC :: DOF_
 PUBLIC :: TypeDOF
+PUBLIC :: TypeDOFOpt
 PUBLIC :: DOFPointer_
 PUBLIC :: SparseMatrixReOrdering_
 PUBLIC :: TypeSparseMatrixReOrdering
@@ -452,6 +453,24 @@ TYPE :: IndexValuePointer_
 END TYPE IndexValuePointer_
 
 !----------------------------------------------------------------------------
+!                                                                     DOFOpt_
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2026-01-08
+! summary: Options for degree of freedom
+
+TYPE :: DOFOpt_
+#ifdef MAX_PHYSICAL_VARS
+  INTEGER(I4B) :: maxPhysicalVars = MAX_PHYSICAL_VARS
+#else
+  INTEGER(I4B) :: maxPhysicalVars = 64_I4B
+#endif
+END TYPE DOFOpt_
+
+TYPE(DOFOpt_), PARAMETER :: TypeDOFOpt = DOFOpt_()
+
+!----------------------------------------------------------------------------
 !                                                                     DOF_
 !----------------------------------------------------------------------------
 
@@ -468,7 +487,7 @@ TYPE :: DOF_
     !! Storage format
 END TYPE DOF_
 
-TYPE(DOF_), PARAMETER :: TypeDOF = DOF_(MAP=NULL(), ValMap=NULL())
+TYPE(DOF_), PARAMETER :: TypeDOF = DOF_(map=NULL(), valMap=NULL())
 
 TYPE :: DOFPointer_
   CLASS(DOF_), POINTER :: ptr => NULL()
@@ -489,7 +508,7 @@ TYPE :: SparseMatrixReOrdering_
 END TYPE SparseMatrixReOrdering_
 
 TYPE(SparseMatrixReOrdering_), PARAMETER :: TypeSparseMatrixReOrdering = &
-  & SparseMatrixReOrdering_(name='', PERM=NULL(), IPERM=NULL())
+                   SparseMatrixReOrdering_(name="", PERM=NULL(), IPERM=NULL())
 
 !----------------------------------------------------------------------------
 !                                                               CSRSparsity_
@@ -520,7 +539,7 @@ TYPE :: CSRSparsity_
 END TYPE CSRSparsity_
 
 TYPE(CSRSparsity_), PARAMETER :: TypeCSRSparsity = &
-  & CSRSparsity_(IA=NULL(), JA=NULL(), Row=NULL())
+                                CSRSparsity_(IA=NULL(), JA=NULL(), Row=NULL())
 
 TYPE :: CSRSparsityPointer_
   CLASS(CSRSparsity_), POINTER :: ptr => NULL()

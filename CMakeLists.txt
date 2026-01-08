@@ -23,9 +23,9 @@ project(${PROJECT_NAME})
 
 enable_language(C Fortran CXX)
 
-set(VERSION_MAJOR "24")
-set(VERSION_MINOR "10")
-set(VERSION_BugFix "3")
+set(VERSION_MAJOR "26")
+set(VERSION_MINOR "4")
+set(VERSION_BugFix "0")
 
 set(PROJECT_VERSION ${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_BugFix})
 
@@ -134,7 +134,6 @@ endif()
 
 if(${CMAKE_Fortran_COMPILER_ID} STREQUAL "GNU" OR Fortran_COMPILER_NAME MATCHES
                                                   "gfortran*")
-
   list(
     APPEND
     FORTRAN_FLAGS
@@ -158,7 +157,6 @@ if(${CMAKE_Fortran_COMPILER_ID} STREQUAL "GNU" OR Fortran_COMPILER_NAME MATCHES
       # "-fprofile-arcs"
       "-ftest-coverage"
       "-Wimplicit-interface")
-
   else()
     list(
       APPEND
@@ -172,7 +170,6 @@ if(${CMAKE_Fortran_COMPILER_ID} STREQUAL "GNU" OR Fortran_COMPILER_NAME MATCHES
       "-ftest-coverage"
       "-Wimplicit-interface")
   endif()
-
 elseif(${CMAKE_Fortran_COMPILER_ID} STREQUAL "Intel" OR Fortran_COMPILER_NAME
                                                         MATCHES "ifort*")
   list(APPEND FORTRAN_FLAGS "-r8" "-W1")
@@ -188,14 +185,11 @@ elseif(${CMAKE_Fortran_COMPILER_ID} STREQUAL "Intel" OR Fortran_COMPILER_NAME
     "-ftrapuv"
     "-warn"
     "nointerfaces")
-
 elseif(${CMAKE_Fortran_COMPILER_ID} STREQUAL "XL" OR Fortran_COMPILER_NAME
                                                      MATCHES "xlf*")
-
   list(APPEND FORTRAN_FLAGS "-q64" "-qrealsize=8" "-qsuffix=f=f90:cpp=f90")
   list(APPEND FORTRAN_FLAGS_RELEASE "-O3" "-qstrict")
   list(APPEND FORTRAN_FLAGS_DEBUG "-O0" "-g" "-qfullpath" "-qkeepparm")
-
 else()
   message(ERROR "[ERROR] :: No optimized Fortran compiler flags are known")
 endif()
@@ -211,10 +205,9 @@ target_compile_options(
           "$<$<CONFIG:Release>:${FORTRAN_FLAGS_RELEASE}>")
 
 target_include_directories(
-  ${PROJECT_NAME}
-  PUBLIC $<BUILD_INTERFACE:${CMAKE_Fortran_MODULE_DIRECTORY}>
-         $<INSTALL_INTERFACE:${INSTALL_INCLUDEDIR}>
-         # "${EASIFEM_EXTPKGS}/include"
+  ${PROJECT_NAME} PUBLIC $<BUILD_INTERFACE:${CMAKE_Fortran_MODULE_DIRECTORY}>
+                         $<INSTALL_INTERFACE:${INSTALL_INCLUDEDIR}>
+  # "${EASIFEM_EXTPKGS}/include"
 )
 
 # target properties
@@ -262,6 +255,14 @@ option(USE_COLORDISP ON)
 if(USE_COLORDISP)
   list(APPEND TARGET_COMPILE_DEF "-DCOLOR_DISP")
 endif()
+
+# MAX_PHYSICAL_VARS are used in DOF and TypeDOFOpt in BaseType.F90 Generally we
+# do not work with a lot of physical variables So I have kept it 64. We can set
+# it to lower value like 8 or 16 too
+set(MAX_PHYSICAL_VARS
+    64
+    CACHE STRING "Maximum number of physical variables allowed")
+list(APPEND TARGET_COMPILE_DEF "MAX_PHYSICAL_VARS=${MAX_PHYSICAL_VARS}")
 
 # include(${PROJECT_SOURCE_DIR}/cmake/install.cmake) Installation
 install(
