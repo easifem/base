@@ -29,7 +29,7 @@ USE GlobalData, ONLY: Monomial, LagrangePolynomial, SerendipityPolynomial, &
 
 USE GlobalData, ONLY: I4B, LGT, DFP, DFPC
 
-USE GlobalData, ONLY: FMT_NODES, FMT_DOF
+USE GlobalData, ONLY: FMT_NODES, FMT_DOF, NodesToDOF, DofToNodes
 
 USE GlobalData, ONLY: RelativeConvergence, ConvergenceInRes, &
                       ConvergenceInSol, ConvergenceInResSol, &
@@ -434,7 +434,7 @@ TYPE :: Vector3DPointer_
 END TYPE Vector3DPointer_
 
 !----------------------------------------------------------------------------
-!                                                              IndexValue_
+!                                                                IndexValue_
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -464,8 +464,25 @@ TYPE :: DOFOpt_
 #ifdef MAX_PHYSICAL_VARS
   INTEGER(I4B) :: maxPhysicalVars = MAX_PHYSICAL_VARS
 #else
-  INTEGER(I4B) :: maxPhysicalVars = 64_I4B
+  INTEGER(I4B) :: maxPhysicalVars = 16_I4B
 #endif
+
+#ifdef MAX_SPACE_COMPO
+  INTEGER(I4B) :: maxSpaceCompo = MAX_SPACE_COMPO
+#else
+  INTEGER(I4B) :: maxSpaceCompo = 3
+#endif
+
+#ifdef MAX_TIME_COMPO
+  INTEGER(I4B) :: maxTimeCompo = MAX_TIME_COMPO
+#else
+  INTEGER(I4B) :: maxTimeCompo = 20
+#endif
+
+  INTEGER(I4B) :: storageFormatDOF = FMT_DOF
+  INTEGER(I4B) :: storageFormatNodes = FMT_NODES
+  INTEGER(I4B) :: conversionNodesToDOF = NodesToDOF
+  INTEGER(I4B) :: conversionDofToNodes = DofToNodes
 END TYPE DOFOpt_
 
 TYPE(DOFOpt_), PARAMETER :: TypeDOFOpt = DOFOpt_()
@@ -481,10 +498,27 @@ TYPE(DOFOpt_), PARAMETER :: TypeDOFOpt = DOFOpt_()
 TYPE :: DOF_
   INTEGER(I4B), ALLOCATABLE :: map(:, :)
     !! Encapsulation of information of DOF
+    !! map contains 6 columns
+    !! Column 1: contains the ASCII code of the physical variable name
+    !! Column 2: contains the space component of the physical variable
+    !! Column 3: contains the time component of the physical variable
+    !! Column 4: contains the total DOF for the physical variable
+    !! Column 5: contains the starting index of dof for the physical variable
+    !!           So first physical variable dof starts from map(1, 5)
+    !!           Second physical variable dof starts from map(2, 5)
+    !! Column 6: contains the number of nodes associated with each variable
+    !! If there a total n Physical variables, then the
+    !!    n+1 th row contains the total DOF information
+    !!    For example, map(n+1, 4) contains the total DOF
   INTEGER(I4B), ALLOCATABLE :: valMap(:)
     !! Val map
   INTEGER(I4B) :: storageFMT = FMT_NODES
     !! Storage format
+  INTEGER(I4B) :: mapRow = 0
+    !! Number of rows in map which contains useful data
+    !! Number of physical variables = mapRow - 1
+  INTEGER(I4B) :: valMapSize = 0
+    !! The size of valMap which contains useful data
 END TYPE DOF_
 
 TYPE(DOF_), PARAMETER :: TypeDOF = DOF_(map=NULL(), valMap=NULL())

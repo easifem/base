@@ -257,12 +257,28 @@ if(USE_COLORDISP)
 endif()
 
 # MAX_PHYSICAL_VARS are used in DOF and TypeDOFOpt in BaseType.F90 Generally we
-# do not work with a lot of physical variables So I have kept it 64. We can set
-# it to lower value like 8 or 16 too
+# do not work with a lot of physical variables So I have kept it 16. We can set
+# it to lower value like 8, 16, 32, 64 too
 set(MAX_PHYSICAL_VARS
-    64
+    16
     CACHE STRING "Maximum number of physical variables allowed")
 list(APPEND TARGET_COMPILE_DEF "MAX_PHYSICAL_VARS=${MAX_PHYSICAL_VARS}")
+
+# MAX_SPACE_COMPO are used in DOF and TypeDOFOpt in BaseType.F90. This variable
+# denotes the maximum number of space components in the simulation I have kept
+# it to 3. You can set it to any valye you want.
+set(MAX_SPACE_COMPO
+    3
+    CACHE STRING "Maximum number of space components in a variables")
+list(APPEND TARGET_COMPILE_DEF "MAX_SPACE_COMPO=${MAX_SPACE_COMPO}")
+
+# MAX_TIME_COMPO are used in DOF and TypeDOFOpt in BaseType.F90. This variable
+# denotes the maximum number of TIME components in the simulation I have kept it
+# to 20. You can set it to any valye you want.
+set(MAX_TIME_COMPO
+    20
+    CACHE STRING "Maximum number of TIME components in a variables")
+list(APPEND TARGET_COMPILE_DEF "MAX_TIME_COMPO=${MAX_TIME_COMPO}")
 
 # include(${PROJECT_SOURCE_DIR}/cmake/install.cmake) Installation
 install(
