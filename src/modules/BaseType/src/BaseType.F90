@@ -76,10 +76,27 @@ USE GlobalData, ONLY: Scalar, Vector, Matrix, Nodal, Quadrature, &
                       Constant, Space, Time, Spacetime, &
                       SolutionDependent, RandomSpace
 
-USE GlobalData, ONLY: Point, Line, Triangle, &
+USE GlobalData, ONLY: Point, Point1, &
+                      Line, Line1, Line2, Line3, Line4, Line5, Line6, &
+                      Line7, Line8, Line9, Line10, Line11, &
+                      Triangle, Triangle3, Triangle6, Triangle9, Triangle10, &
+                      Triangle12, Triangle15, Triangle15a, Triangle15b, &
+                      Triangle18, Triangle21, Triangle21a, Triangle21b, &
+                      Triangle24, Triangle27, Triangle28, Triangle30, &
+                      Triangle36, Triangle45, Triangle55, Triangle66, &
                       Quadrangle, Quadrangle4, Quadrangle8, Quadrangle9, &
-                      Quadrangle16, &
-                      Tetrahedron, Hexahedron, Prism, Pyramid
+                      Quadrangle16, Quadrangle16a, Quadrangle16b, &
+                      Quadrangle20, Quadrangle24, Quadrangle25, &
+                      Quadrangle28, Quadrangle32, Quadrangle36, &
+                      Quadrangle36a, Quadrangle36b, Quadrangle40, &
+                      Quadrangle49, Quadrangle64, Quadrangle81, &
+                      Quadrangle100, Quadrangle121, &
+                      Tetrahedron, Tetrahedron4, Tetrahedron10, &
+                      Tetrahedron20, Tetrahedron35, Tetrahedron56, &
+                      Hexahedron, Hexahedron8, Hexahedron20, Hexahedron27, &
+                      Hexahedron64, Hexahedron125, &
+                      Prism, Prism6, Prism15, Prism18, &
+                      Pyramid, Pyramid5, Pyramid13, Pyramid14
 
 USE String_Class, ONLY: String
 
@@ -153,10 +170,10 @@ PUBLIC :: SmallStrain_
 PUBLIC :: TypeSmallStrain
 PUBLIC :: SmallStrainPointer_
 PUBLIC :: ReferenceTopology_
-! PUBLIC :: TypeReferenceTopology
 PUBLIC :: ReferenceTopologyPointer_
 PUBLIC :: ReferenceElement_
 PUBLIC :: ReferenceElementPointer_
+PUBLIC :: TypeRefelemOpt
 PUBLIC :: ReferencePoint_
 PUBLIC :: TypeReferencePoint
 PUBLIC :: ReferenceLine_
@@ -258,6 +275,14 @@ PUBLIC :: TypePrecondOpt
 PUBLIC :: TypeConvergenceOpt
 PUBLIC :: TypeSolverNameOpt
 PUBLIC :: TypeElemNameOpt
+PUBLIC :: TypePointNameOpt
+PUBLIC :: TypeLineNameOpt
+PUBLIC :: TypeTriangleNameOpt
+PUBLIC :: TypeQuadrangleNameOpt
+PUBLIC :: TypeTetrahedronNameOpt
+PUBLIC :: TypeHexahedronNameOpt
+PUBLIC :: TypePrismNameOpt
+PUBLIC :: TypePyramidNameOpt
 PUBLIC :: TypePolynomialOpt
 PUBLIC :: TypeQuadratureOpt
 PUBLIC :: TypeInterpolationOpt
@@ -918,6 +943,123 @@ END TYPE ReferenceTopology_
 TYPE :: ReferenceTopologyPointer_
   CLASS(ReferenceTopology_), POINTER :: ptr => NULL()
 END TYPE ReferenceTopologyPointer_
+
+!----------------------------------------------------------------------------
+!                                                      ReferenceElementOpt_
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2026-01-08
+! summary: Reference element options
+
+TYPE :: RefelemOpt_
+#ifdef REFELEM_MAX_FACES
+  INTEGER(I4B) :: maxFaces = REFELEM_MAX_FACES
+#else
+  INTEGER(I4B) :: maxFaces = 6
+#endif
+
+#ifdef REFELEM_MAX_EDGES
+  INTEGER(I4B) :: maxEdges = REFELEM_MAX_EDGES
+#else
+  INTEGER(I4B) :: maxEdges = 12
+#endif
+
+#ifdef REFELEM_MAX_POINTS
+  INTEGER(I4B) :: maxPoints = REFELEM_MAX_POINTS
+#else
+  INTEGER(I4B) :: maxPoints = 8
+#endif
+
+  !! The following are order for elements in mesh
+#ifdef REFELEM_MAX_LINE_ORDER
+  INTEGER(I4B) :: maxOrderLine = REFELEM_MAX_LINE_ORDER
+#else
+  INTEGER(I4B) :: maxOrderLine = 2_I4B
+#endif
+
+#ifdef REFELEM_MAX_TRIANGLE_ORDER
+  INTEGER(I4B) :: maxOrderTriangle = REFELEM_MAX_TRIANGLE_ORDER
+#else
+  INTEGER(I4B) :: maxOrderTriangle = 2_I4B
+#endif
+
+#ifdef REFELEM_MAX_QUADRANGLE_ORDER
+  INTEGER(I4B) :: maxOrderQuadrangle = REFELEM_MAX_QUADRANGLE_ORDER
+#else
+  INTEGER(I4B) :: maxOrderQuadrangle = 2_I4B
+#endif
+
+#ifdef REFELEM_MAX_TETRAHEDRON_ORDER
+  INTEGER(I4B) :: maxOrderTetrahedron = REFELEM_MAX_TETRAHEDRON_ORDER
+#else
+  INTEGER(I4B) :: maxOrderTetrahedron = 2_I4B
+#endif
+
+#ifdef REFELEM_MAX_HEXAHEDRON_ORDER
+  INTEGER(I4B) :: maxOrderHexahedron = REFELEM_MAX_HEXAHEDRON_ORDER
+#else
+  INTEGER(I4B) :: maxOrderHexahedron = 2_I4B
+#endif
+
+#ifdef REFELEM_MAX_PRISM_ORDER
+  INTEGER(I4B) :: maxOrderPrism = REFELEM_MAX_PRISM_ORDER
+#else
+  INTEGER(I4B) :: maxOrderPrism = 2_I4B
+#endif
+
+#ifdef REFELEM_MAX_PYRAMID_ORDER
+  INTEGER(I4B) :: maxOrderPyramid = REFELEM_MAX_PYRAMID_ORDER
+#else
+  INTEGER(I4B) :: maxOrderPyramid = 2_I4B
+#endif
+
+  INTEGER(I4B) :: point = 1
+  INTEGER(I4B) :: line = 2
+  INTEGER(I4B) :: triangle = 3
+  INTEGER(I4B) :: quadrangle = 4
+  INTEGER(I4B) :: tetrahedron = 5
+  INTEGER(I4B) :: hexahedron = 6
+  INTEGER(I4B) :: prism = 7
+  INTEGER(I4B) :: pyramid = 8
+  INTEGER(I4B) :: tElemTopologyType_0D = 1
+  INTEGER(I4B) :: tElemTopologyType_1D = 1
+  INTEGER(I4B) :: tElemTopologyType_2D = 2
+  INTEGER(I4B) :: tElemTopologyType_3D = 4
+  INTEGER(I4B) :: tElemTopologyType = 8
+  INTEGER(I4B) :: elemTopologyname(8) = &
+  [Point, Line, Triangle, Quadrangle, Tetrahedron, Hexahedron, Prism, Pyramid]
+  !! Name of the element topology
+
+  INTEGER(I4B) :: tCells(8) = [1, 1, 1, 1, 1, 1, 1, 1]
+  !! Here cell is a topology for which xidim = 3
+  INTEGER(I4B) :: tFaces(8) = [0, 2, 3, 4, 4, 6, 5, 5]
+  !! Here facet is topology entity for which xidim = 2
+  INTEGER(I4B) :: tEdges(8) = [0, 0, 0, 0, 6, 12, 9, 8]
+  !! Here edge is topology entity for which xidim = 1
+  INTEGER(I4B) :: tPoints(8) = [1, 2, 3, 4, 4, 8, 6, 5]
+  !! A point is topology entity for which xidim = 0
+  INTEGER(I4B) :: faceElemTypeLine(2) = Point
+  !! element types of face of Line
+  INTEGER(I4B) :: faceElemTypeTriangle(3) = Line
+  !! element types of faces of triangle
+
+  INTEGER(I4B) :: faceElemTypeQuadrangle(4) = Line
+  !! element types of faces of triangle
+
+  INTEGER(I4B) :: faceElemTypeTetrahedron(4) = Triangle
+  !! element types of faces of triangle
+
+  INTEGER(I4B) :: faceElemTypeHexahedron(6) = Quadrangle
+  !! element types of faces of triangle
+
+  INTEGER(I4B) :: faceElemTypePrism(5) = 0
+  INTEGER(I4B) :: faceElemTypePyramid(5_I4B) = 0
+  !! TODO: Add data to faceElemTypePrism and faceElemTypePyramid
+
+END TYPE RefelemOpt_
+
+TYPE(RefelemOpt_), PARAMETER :: TypeRefelemOpt = RefelemOpt_()
 
 !----------------------------------------------------------------------------
 !                                                          ReferenceElement_
@@ -2003,8 +2145,7 @@ TYPE SolverNameOpt_
   INTEGER(I4B) :: superlu = LIS_SUPERLU
 END TYPE SolverNameOpt_
 
-TYPE(SolverNameOpt_), PARAMETER :: TypeSolverNameOpt = &
-                                   SolverNameOpt_()
+TYPE(SolverNameOpt_), PARAMETER :: TypeSolverNameOpt = SolverNameOpt_()
 
 !----------------------------------------------------------------------------
 !                                                            TypeElemNameOpt
@@ -2015,9 +2156,6 @@ TYPE :: ElemNameOpt_
   INTEGER(I4B) :: line = Line
   INTEGER(I4B) :: triangle = Triangle
   INTEGER(I4B) :: quadrangle = Quadrangle
-  INTEGER(I4B) :: quadrangle8 = Quadrangle8
-  INTEGER(I4B) :: quadrangle9 = Quadrangle9
-  INTEGER(I4B) :: quadrangle16 = Quadrangle16
   INTEGER(I4B) :: tetrahedron = Tetrahedron
   INTEGER(I4B) :: hexahedron = Hexahedron
   INTEGER(I4B) :: prism = Prism
@@ -2025,6 +2163,180 @@ TYPE :: ElemNameOpt_
 END TYPE ElemNameOpt_
 
 TYPE(ElemNameOpt_), PARAMETER :: TypeElemNameOpt = ElemNameOpt_()
+
+!----------------------------------------------------------------------------
+!                                                               PointNameOpt_
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2026-01-08
+! summary: Point element names
+
+TYPE :: PointNameOpt_
+  INTEGER(I4B) :: point = Point
+  INTEGER(I4B) :: point1 = Point1
+END TYPE PointNameOpt_
+
+TYPE(PointNameOpt_), PARAMETER :: TypePointNameOpt = PointNameOpt_()
+
+!----------------------------------------------------------------------------
+!                                                         LineNameOpt_
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2026-01-08
+! summary: Line element names
+
+TYPE :: LineNameOpt_
+  INTEGER(I4B) :: line = Line
+  INTEGER(I4B) :: line2 = Line2
+  INTEGER(I4B) :: line3 = Line3
+  INTEGER(I4B) :: line4 = Line4
+  INTEGER(I4B) :: line5 = Line5
+  INTEGER(I4B) :: line6 = Line6
+  INTEGER(I4B) :: line7 = Line7
+  INTEGER(I4B) :: line8 = Line8
+  INTEGER(I4B) :: line9 = Line9
+  INTEGER(I4B) :: line10 = Line10
+  INTEGER(I4B) :: line11 = Line11
+END TYPE LineNameOpt_
+
+TYPE(LineNameOpt_), PARAMETER :: TypeLineNameOpt = LineNameOpt_()
+
+!----------------------------------------------------------------------------
+!                                                         TriangleNameOpt_
+!----------------------------------------------------------------------------
+
+TYPE :: TriangleNameOpt_
+  INTEGER(I4B) :: triangle = Triangle
+  INTEGER(I4B) :: triangle3 = Triangle3
+  INTEGER(I4B) :: triangle6 = Triangle6
+  INTEGER(I4B) :: triangle9 = Triangle9
+  INTEGER(I4B) :: triangle10 = Triangle10
+  INTEGER(I4B) :: triangle12 = Triangle12
+  INTEGER(I4B) :: triangle15 = Triangle15
+  INTEGER(I4B) :: triangle15a = Triangle15a
+  INTEGER(I4B) :: triangle15b = Triangle15b
+  INTEGER(I4B) :: triangle18 = Triangle18
+  INTEGER(I4B) :: triangle21 = Triangle21
+  INTEGER(I4B) :: triangle21a = Triangle21a
+  INTEGER(I4B) :: triangle21b = Triangle21b
+  INTEGER(I4B) :: triangle24 = Triangle24
+  INTEGER(I4B) :: triangle27 = Triangle27
+  INTEGER(I4B) :: triangle28 = Triangle28
+  INTEGER(I4B) :: triangle30 = Triangle30
+  INTEGER(I4B) :: triangle36 = Triangle36
+  INTEGER(I4B) :: triangle45 = Triangle45
+  INTEGER(I4B) :: triangle55 = Triangle55
+  INTEGER(I4B) :: triangle66 = Triangle66
+END TYPE TriangleNameOpt_
+
+TYPE(TriangleNameOpt_), PARAMETER :: TypeTriangleNameOpt = TriangleNameOpt_()
+
+!----------------------------------------------------------------------------
+!                                                         QuadrangleNameOpt_
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2026-01-08
+! summary: Quadrangle element names
+
+TYPE :: QuadrangleNameOpt_
+  INTEGER(I4B) :: quadrangle = Quadrangle
+  INTEGER(I4B) :: quadrangle4 = Quadrangle4
+  INTEGER(I4B) :: quadrangle8 = Quadrangle8
+  INTEGER(I4B) :: quadrangle9 = Quadrangle9
+  INTEGER(I4B) :: quadrangle16 = Quadrangle16
+  INTEGER(I4B) :: quadrangle16a = Quadrangle16a
+  INTEGER(I4B) :: quadrangle16b = Quadrangle16b
+  INTEGER(I4B) :: quadrangle20 = Quadrangle20
+  INTEGER(I4B) :: quadrangle24 = Quadrangle24
+  INTEGER(I4B) :: quadrangle25 = Quadrangle25
+  INTEGER(I4B) :: quadrangle28 = Quadrangle28
+  INTEGER(I4B) :: quadrangle32 = Quadrangle32
+  INTEGER(I4B) :: quadrangle36 = Quadrangle36
+  INTEGER(I4B) :: quadrangle36a = Quadrangle36a
+  INTEGER(I4B) :: quadrangle36b = Quadrangle36b
+  INTEGER(I4B) :: quadrangle40 = Quadrangle40
+  INTEGER(I4B) :: quadrangle49 = Quadrangle49
+  INTEGER(I4B) :: quadrangle64 = Quadrangle64
+  INTEGER(I4B) :: quadrangle81 = Quadrangle81
+  INTEGER(I4B) :: quadrangle100 = Quadrangle100
+  INTEGER(I4B) :: quadrangle121 = Quadrangle121
+END TYPE QuadrangleNameOpt_
+
+TYPE(QuadrangleNameOpt_), PARAMETER :: TypeQuadrangleNameOpt = &
+                                       QuadrangleNameOpt_()
+
+!----------------------------------------------------------------------------
+!                                                         TetrahedronNameOpt_
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2026-01-08
+! summary: Tetrahedron element names
+
+TYPE :: TetrahedronNameOpt_
+  INTEGER(I4B) :: tetrahedron = Tetrahedron
+  INTEGER(I4B) :: tetrahedron4 = Tetrahedron4
+  INTEGER(I4B) :: tetrahedron10 = Tetrahedron10
+  INTEGER(I4B) :: tetrahedron20 = Tetrahedron20
+  INTEGER(I4B) :: tetrahedron35 = Tetrahedron35
+  INTEGER(I4B) :: tetrahedron56 = Tetrahedron56
+END TYPE TetrahedronNameOpt_
+
+TYPE(TetrahedronNameOpt_), PARAMETER :: TypeTetrahedronNameOpt = &
+                                        TetrahedronNameOpt_()
+
+!----------------------------------------------------------------------------
+!                                                         HexahedronNameOpt_
+!----------------------------------------------------------------------------
+
+TYPE :: HexahedronNameOpt_
+  INTEGER(I4B) :: hexahedron = Hexahedron
+  INTEGER(I4B) :: hexahedron8 = Hexahedron8
+  INTEGER(I4B) :: hexahedron20 = Hexahedron20
+  INTEGER(I4B) :: hexahedron27 = Hexahedron27
+  INTEGER(I4B) :: hexahedron64 = Hexahedron64
+  INTEGER(I4B) :: hexahedron125 = Hexahedron125
+END TYPE HexahedronNameOpt_
+
+TYPE(HexahedronNameOpt_), PARAMETER :: TypeHexahedronNameOpt = &
+                                       HexahedronNameOpt_()
+
+!----------------------------------------------------------------------------
+!                                                         PrismNameOpt_
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2026-01-08
+! summary: Prism element names
+
+TYPE :: PrismNameOpt_
+  INTEGER(I4B) :: prism = Prism
+  INTEGER(I4B) :: prism6 = Prism6
+  INTEGER(I4B) :: prism15 = Prism15
+  INTEGER(I4B) :: prism18 = Prism18
+END TYPE PrismNameOpt_
+
+TYPE(PrismNameOpt_), PARAMETER :: TypePrismNameOpt = PrismNameOpt_()
+
+!----------------------------------------------------------------------------
+!                                                         PyramidNameOpt_
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2026-01-08
+! summary: Pyramid element names
+
+TYPE :: PyramidNameOpt_
+  INTEGER(I4B) :: pyramid = Pyramid
+  INTEGER(I4B) :: pyramid5 = Pyramid5
+  INTEGER(I4B) :: pyramid13 = Pyramid13
+  INTEGER(I4B) :: pyramid14 = Pyramid14
+END TYPE PyramidNameOpt_
+
+TYPE(PyramidNameOpt_), PARAMETER :: TypePyramidNameOpt = PyramidNameOpt_()
 
 !----------------------------------------------------------------------------
 !                                                          TypePolynomialOpt

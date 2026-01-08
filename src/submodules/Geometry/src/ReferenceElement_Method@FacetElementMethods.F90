@@ -20,44 +20,28 @@
 ! summary: This sumodule contains method for geometry
 
 SUBMODULE(ReferenceElement_Method) FacetElementMethods
-USE ReferenceLine_Method, ONLY: DEFAULT_REF_LINE_COORD,  &
-  & FacetElements_Line, &
-  & FacetTopology_Line
-
-USE ReferenceTriangle_Method, ONLY: GetEdgeConnectivity_Triangle,  &
-  & FacetElements_Triangle, &
-  & FacetTopology_Triangle
-
-USE ReferenceQuadrangle_Method, ONLY: GetEdgeConnectivity_Quadrangle,  &
-  & FacetElements_Quadrangle, &
-  & FacetTopology_Quadrangle
-
-USE ReferenceTetrahedron_Method, ONLY: FacetElements_Tetrahedron, &
-  & FacetTopology_Tetrahedron
-
-USE ReferenceTetrahedron_Method, ONLY: FacetElements_Tetrahedron, &
-  & FacetTopology_Tetrahedron
-
-USE ReferenceHexahedron_Method, ONLY: FacetElements_Hexahedron, &
-  & FacetTopology_Hexahedron
-
-USE ReferencePrism_Method, ONLY: FacetElements_Prism, &
-  & FacetTopology_Prism
-
-USE ReferencePyramid_Method, ONLY: FacetElements_Pyramid, &
-  & FacetTopology_Pyramid
-
+USE BaseType, ONLY: TypeElemNameOpt
+USE ErrorHandling, ONLY: Errormsg
 USE LineInterpolationUtility, ONLY: InterpolationPoint_Line
-USE TriangleInterpolationUtility, ONLY: InterpolationPoint_Triangle
 USE QuadrangleInterpolationUtility, ONLY: InterpolationPoint_Quadrangle
-! USE TetrahedronInterpolationUtility
-! USE HexahedronInterpolationUtility
-! USE PrismInterpolationUtility
-! USE PyramidInterpolationUtility
-
-USE ErrorHandling
-
-USE ReallocateUtility
+USE ReferenceHexahedron_Method, ONLY: FacetElements_Hexahedron
+USE ReferenceHexahedron_Method, ONLY: FacetTopology_Hexahedron
+USE ReferenceLine_Method, ONLY: DEFAULT_REF_LINE_COORD
+USE ReferenceLine_Method, ONLY: FacetElements_Line
+USE ReferenceLine_Method, ONLY: FacetTopology_Line
+USE ReferencePrism_Method, ONLY: FacetElements_Prism
+USE ReferencePrism_Method, ONLY: FacetTopology_Prism
+USE ReferencePyramid_Method, ONLY: FacetElements_Pyramid
+USE ReferencePyramid_Method, ONLY: FacetTopology_Pyramid
+USE ReferenceQuadrangle_Method, ONLY: FacetElements_Quadrangle
+USE ReferenceQuadrangle_Method, ONLY: FacetTopology_Quadrangle
+USE ReferenceQuadrangle_Method, ONLY: GetEdgeConnectivity_Quadrangle
+USE ReferenceTetrahedron_Method, ONLY: FacetElements_Tetrahedron
+USE ReferenceTetrahedron_Method, ONLY: FacetTopology_Tetrahedron
+USE ReferenceTriangle_Method, ONLY: FacetElements_Triangle
+USE ReferenceTriangle_Method, ONLY: FacetTopology_Triangle
+USE ReferenceTriangle_Method, ONLY: GetEdgeConnectivity_Triangle
+USE TriangleInterpolationUtility, ONLY: InterpolationPoint_Triangle
 
 IMPLICIT NONE
 CONTAINS
@@ -91,14 +75,15 @@ CASE (1)
     FM(i + 1, 4:(3 + nns)) = refelem%topology(istart + i)%nptrs
   END DO
 
-CASE (2, 3)
+! CASE (2, 3)
+CASE DEFAULT
   tFacet = refelem%entityCounts(xicell)
   istart = T(xicell) + 1
   iend = T(xicell) + tFacet
   max_nns = 0
   DO i = istart, iend
     nns = SIZE(refelem%topology(i)%nptrs)
-    IF (max_nns .LT. nns) max_nns = nns
+    IF (max_nns < nns) max_nns = nns
   END DO
   ALLOCATE (FM(tFacet, max_nns + 3))
   FM = 0
@@ -123,26 +108,28 @@ INTEGER(I4B) :: topo
 topo = ElementTopology(refelem)
 
 SELECT CASE (topo)
-CASE (Line)
+CASE (TypeElemNameOpt%Line)
   CALL FacetElements_Line(refelem=refelem, ans=ans)
 
-CASE (Triangle)
+CASE (TypeElemNameOpt%Triangle)
   CALL FacetElements_Triangle(refelem=refelem, ans=ans)
 
-CASE (Quadrangle)
+CASE (TypeElemNameOpt%Quadrangle)
   CALL FacetElements_Quadrangle(refelem=refelem, ans=ans)
 
-CASE (Tetrahedron)
+CASE (TypeElemNameOpt%Tetrahedron)
   CALL FacetElements_Tetrahedron(refelem=refelem, ans=ans)
 
-CASE (Hexahedron)
+CASE (TypeElemNameOpt%Hexahedron)
   CALL FacetElements_Hexahedron(refelem=refelem, ans=ans)
 
-CASE (Prism)
+CASE (TypeElemNameOpt%Prism)
   CALL FacetElements_Prism(refelem=refelem, ans=ans)
 
-CASE (Pyramid)
+CASE (TypeElemNameOpt%Pyramid)
   CALL FacetElements_Pyramid(refelem=refelem, ans=ans)
+
+CASE DEFAULT
 
 END SELECT
 
@@ -158,26 +145,28 @@ INTEGER(I4B) :: topo
 topo = ElementTopology(elemType)
 
 SELECT CASE (topo)
-CASE (Line)
+CASE (TypeElemNameOpt%Line)
   CALL FacetElements_Line(elemType=elemType, nsd=nsd, ans=ans)
 
-CASE (Triangle)
+CASE (TypeElemNameOpt%Triangle)
   CALL FacetElements_Triangle(elemType=elemType, nsd=nsd, ans=ans)
 
-CASE (Quadrangle)
+CASE (TypeElemNameOpt%Quadrangle)
   CALL FacetElements_Quadrangle(elemType=elemType, nsd=nsd, ans=ans)
 
-CASE (Tetrahedron)
+CASE (TypeElemNameOpt%Tetrahedron)
   CALL FacetElements_Tetrahedron(elemType=elemType, nsd=nsd, ans=ans)
 
-CASE (Hexahedron)
+CASE (TypeElemNameOpt%Hexahedron)
   CALL FacetElements_Hexahedron(elemType=elemType, nsd=nsd, ans=ans)
 
-CASE (Prism)
+CASE (TypeElemNameOpt%Prism)
   CALL FacetElements_Prism(elemType=elemType, nsd=nsd, ans=ans)
 
-CASE (Pyramid)
+CASE (TypeElemNameOpt%Pyramid)
   CALL FacetElements_Pyramid(elemType=elemType, nsd=nsd, ans=ans)
+
+CASE DEFAULT
 
 END SELECT
 
@@ -192,26 +181,28 @@ INTEGER(I4B) :: topo
 topo = ElementTopology(elemType)
 
 SELECT CASE (topo)
-CASE (Line)
+CASE (TypeElemNameOpt%Line)
   CALL FacetTopology_Line(elemType=elemType, nptrs=nptrs, ans=ans)
 
-CASE (Triangle)
+CASE (TypeElemNameOpt%Triangle)
   CALL FacetTopology_Triangle(elemType=elemType, nptrs=nptrs, ans=ans)
 
-CASE (Quadrangle)
+CASE (TypeElemNameOpt%Quadrangle)
   CALL FacetTopology_Quadrangle(elemType=elemType, nptrs=nptrs, ans=ans)
 
-CASE (Tetrahedron)
+CASE (TypeElemNameOpt%Tetrahedron)
   CALL FacetTopology_Tetrahedron(elemType=elemType, nptrs=nptrs, ans=ans)
 
-CASE (Prism)
+CASE (TypeElemNameOpt%Prism)
   CALL FacetTopology_Prism(elemType=elemType, nptrs=nptrs, ans=ans)
 
-CASE (Pyramid)
+CASE (TypeElemNameOpt%Pyramid)
   CALL FacetTopology_Pyramid(elemType=elemType, nptrs=nptrs, ans=ans)
 
-CASE (Hexahedron)
+CASE (TypeElemNameOpt%Hexahedron)
   CALL FacetTopology_Hexahedron(elemType=elemType, nptrs=nptrs, ans=ans)
+
+CASE DEFAULT
 
 END SELECT
 END PROCEDURE refelem_GetFacettopology

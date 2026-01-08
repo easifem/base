@@ -20,10 +20,11 @@
 ! summary: This submodule contains method for [[ReferenceElement_]]
 
 MODULE ReferenceElement_Method
-USE BaseType
+USE BaseType, ONLY: ReferenceElement_
+USE BaseType, ONLY: ReferenceTopology_
+USE GlobalData, ONLY: I4B, DFP, LGT
+USE GlobalData, ONLY: INT8
 USE String_Class, ONLY: String
-USE GlobalData
-
 IMPLICIT NONE
 
 PRIVATE
@@ -73,7 +74,6 @@ PUBLIC :: GetTotalNodes
 PUBLIC :: GetTotalEdges
 PUBLIC :: GetTotalFaces
 PUBLIC :: GetTotalCells
-PUBLIC :: ReferenceElementInfo
 PUBLIC :: RefElemGetGeoParam
 PUBLIC :: GetFaceElemType
 PUBLIC :: GetElementIndex
@@ -81,71 +81,6 @@ PUBLIC :: Reallocate
 PUBLIC :: RefTopoReallocate
 PUBLIC :: RefCoord
 PUBLIC :: RefCoord_
-
-INTEGER(I4B), PARAMETER, PUBLIC :: PARAM_REFELEM_MAX_FACES = 6
-INTEGER(I4B), PARAMETER, PUBLIC :: PARAM_REFELEM_MAX_EDGES = 12
-INTEGER(I4B), PARAMETER, PUBLIC :: PARAM_REFELEM_MAX_POINTS = 8
-
-!----------------------------------------------------------------------------
-!                                                      ReferenceElementInfo_
-!----------------------------------------------------------------------------
-
-TYPE :: ReferenceElementInfo_
-  INTEGER(I4B) :: point = 1
-  INTEGER(I4B) :: line = 2
-  INTEGER(I4B) :: triangle = 3
-  INTEGER(I4B) :: quadrangle = 4
-  INTEGER(I4B) :: tetrahedron = 5
-  INTEGER(I4B) :: hexahedron = 6
-  INTEGER(I4B) :: prism = 7
-  INTEGER(I4B) :: pyramid = 8
-  INTEGER(I4B) :: tElemTopologyType_0D = 1
-  INTEGER(I4B) :: tElemTopologyType_1D = 1
-  INTEGER(I4B) :: tElemTopologyType_2D = 2
-  INTEGER(I4B) :: tElemTopologyType_3D = 4
-  INTEGER(I4B) :: tElemTopologyType = 8
-  INTEGER(I4B) :: elemTopologyname(8) = &
-  [Point, Line, Triangle, Quadrangle, Tetrahedron, Hexahedron, Prism, Pyramid]
-  INTEGER(I4B) :: maxFaces = PARAM_REFELEM_MAX_FACES
-  INTEGER(I4B) :: maxEdges = PARAM_REFELEM_MAX_EDGES
-  INTEGER(I4B) :: maxPoints = PARAM_REFELEM_MAX_POINTS
-  INTEGER(I4B) :: tCells(8) = [1, 1, 1, 1, 1, 1, 1, 1]
-  !! Here cell is a topology for which xidim = 3
-  INTEGER(I4B) :: tFaces(8) = [0, 2, 3, 4, 4, 6, 5, 5]
-  !! Here facet is topology entity for which xidim = 2
-  INTEGER(I4B) :: tEdges(8) = [0, 0, 0, 0, 6, 12, 9, 8]
-  !! Here edge is topology entity for which xidim = 1
-  INTEGER(I4B) :: tPoints(8) = [1, 2, 3, 4, 4, 8, 6, 5]
-  !! A point is topology entity for which xidim = 0
-  !!
-  INTEGER(I4B) :: faceElemTypeLine(2) = Point
-  !! element types of face of Line
-  INTEGER(I4B) :: faceElemTypeTriangle(3) = Line
-  !! element types of faces of triangle
-
-  INTEGER(I4B) :: faceElemTypeQuadrangle(4) = Line
-  !! element types of faces of triangle
-
-  INTEGER(I4B) :: faceElemTypeTetrahedron(4) = Triangle
-  !! element types of faces of triangle
-
-  INTEGER(I4B) :: faceElemTypeHexahedron(6) = Quadrangle
-  !! element types of faces of triangle
-
-  INTEGER(I4B) :: faceElemTypePrism(5) = 0
-  INTEGER(I4B) :: faceElemTypePyramid(5) = 0
-  !! TODO: add faceElemTypePrism and faceElemTypePyramid
-  !! element types of faces of triangle
-
-#ifdef MAX_QUADRANGLE_ORDER
-  INTEGER(I4B) :: maxOrder_Quadrangle = MAX_QUADRANGLE_ORDER
-#else
-  INTEGER(I4B) :: maxOrder_Quadrangle = 2_I4B
-#endif
-END TYPE ReferenceElementInfo_
-
-TYPE(ReferenceElementInfo_), PARAMETER :: ReferenceElementInfo = &
-                                          ReferenceElementInfo_()
 
 !----------------------------------------------------------------------------
 !                                                                 RefCoord

@@ -11,7 +11,9 @@
     diffFilter = delta --color-only
 
 [delta]
+    side-by-side = true
     navigate = true    # use n and N to move between diff sections
+    line-numbers = true
 
     # delta detects terminal colors automatically; set one of these to disable auto-detection
     # dark = true

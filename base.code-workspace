@@ -7,7 +7,7 @@
 	"settings": {
 		"fortran.preferredCase": "uppercase",
 		"fortran.linter.includePaths": [
-			"~/.easifem/easifem/build/base/include/"
+			"/Users/easifem/.easifem/easifem/build/base/include/"
 		],
 		"fortran.linter.extraArgs": [
 			"-fsyntax-only",
@@ -47,17 +47,17 @@
 			"2",
 			"2"
 		],
-		"fortran.linter.modOutput": "~/.easifem/easifem/lint/include/",
+		"fortran.linter.modOutput": "/Users/easifem/.easifem/easifem/lint/include/",
 		"fortran.fortls.notifyInit": true,
 		"fortran.fortls.sortKeywords": true,
 		"fortran.fortls.directories": [
-			"~/Dropbox/easifem/base/src/**",
-			"~/Dropbox/easifem/classes/src/**",
-			"~/Dropbox/easifem/diffusion/src/**",
-			"~/Dropbox/easifem/seepage/src/**",
-			"~/Dropbox/easifem/elasticity/src/**",
-			"~/Dropbox/easifem/acoustic/src/**",
-			"~/.easifem/easifem/src/tomlf/src/**"
+			"/Users/easifem/Dropbox/easifem/base/src/**",
+			"/Users/easifem/Dropbox/easifem/classes/src/**",
+			"/Users/easifem/Dropbox/easifem/diffusion/src/**",
+			"/Users/easifem/Dropbox/easifem/seepage/src/**",
+			"/Users/easifem/Dropbox/easifem/elasticity/src/**",
+			"/Users/easifem/Dropbox/easifem/acoustic/src/**",
+			"/Users/easifem/.easifem/easifem/src/tomlf/src/**"
 		],
 		"fortran.fortls.maxLineLength": 78,
 		"fortran.fortls.maxCommentLineLength": 80,

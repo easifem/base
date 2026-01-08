@@ -17,12 +17,9 @@
 
 SUBMODULE(ReferenceElement_Method) GeometryMethods
 USE ErrorHandling, ONLY: Errormsg
-
-USE Display_Method
-
+USE Display_Method, ONLY: Display
 USE ReferencePoint_Method, ONLY: Measure_Simplex_Point, Point_quality, &
                                  TotalNodesInElement_Point
-
 USE ReferenceLine_Method, ONLY: Measure_Simplex_Line, &
                                 Line_quality, &
                                 TotalNodesInElement_Line, &
@@ -31,7 +28,6 @@ USE ReferenceLine_Method, ONLY: Measure_Simplex_Line, &
                                 GetEdgeConnectivity_Line, &
                                 GetFaceConnectivity_Line, &
                                 RefCoord_Line
-
 USE ReferenceTriangle_Method, ONLY: Measure_Simplex_Triangle, &
                                     Triangle_quality, &
                                     triangle_contains_point, &
@@ -41,7 +37,6 @@ USE ReferenceTriangle_Method, ONLY: Measure_Simplex_Triangle, &
                                     GetFaceConnectivity_Triangle, &
                                     GetFaceElemType_Triangle, &
                                     RefCoord_Triangle
-
 USE ReferenceQuadrangle_Method, ONLY: Measure_Simplex_Quadrangle, &
                                       Quadrangle_quality, &
                                       GetEdgeConnectivity_Quadrangle, &
@@ -50,7 +45,6 @@ USE ReferenceQuadrangle_Method, ONLY: Measure_Simplex_Quadrangle, &
                                       GetFaceConnectivity_Quadrangle, &
                                       GetFaceElemType_Quadrangle, &
                                       RefCoord_Quadrangle
-
 USE ReferenceTetrahedron_Method, ONLY: Measure_Simplex_Tetrahedron, &
                                        Tetrahedron_quality, &
                                        GetEdgeConnectivity_Tetrahedron, &
@@ -59,7 +53,6 @@ USE ReferenceTetrahedron_Method, ONLY: Measure_Simplex_Tetrahedron, &
                                        TotalNodesInElement_Tetrahedron, &
                                        TotalEntities_Tetrahedron, &
                                        RefCoord_Tetrahedron
-
 USE ReferenceHexahedron_Method, ONLY: Measure_Simplex_Hexahedron, &
                                       Hexahedron_quality, &
                                       GetEdgeConnectivity_Hexahedron, &
@@ -68,7 +61,6 @@ USE ReferenceHexahedron_Method, ONLY: Measure_Simplex_Hexahedron, &
                                       TotalNodesInElement_Hexahedron, &
                                       TotalEntities_Hexahedron, &
                                       RefCoord_Hexahedron
-
 USE ReferencePrism_Method, ONLY: Measure_Simplex_Prism, &
                                  Prism_quality, &
                                  GetEdgeConnectivity_Prism, &
@@ -77,7 +69,6 @@ USE ReferencePrism_Method, ONLY: Measure_Simplex_Prism, &
                                  TotalNodesInElement_Prism, &
                                  TotalEntities_Prism, &
                                  RefCoord_Prism
-
 USE ReferencePyramid_Method, ONLY: Measure_Simplex_Pyramid, &
                                    Pyramid_quality, &
                                    GetEdgeConnectivity_Pyramid, &
@@ -86,6 +77,7 @@ USE ReferencePyramid_Method, ONLY: Measure_Simplex_Pyramid, &
                                    TotalNodesInElement_Pyramid, &
                                    TotalEntities_Pyramid, &
                                    RefCoord_Pyramid
+USE BaseType, ONLY: TypeElemNameOpt
 
 IMPLICIT NONE
 CONTAINS
@@ -101,30 +93,32 @@ topo = ElementTopology(elemType)
 
 SELECT CASE (topo)
 
-CASE (Point)
+CASE (TypeElemNameOpt%point)
   ALLOCATE (ans(3, 1))
   ans = 0.0_DFP
 
-CASE (Line)
+CASE (TypeElemNameOpt%line)
   ans = RefCoord_Line(refElem)
 
-CASE (Triangle)
+CASE (TypeElemNameOpt%triangle)
   ans = RefCoord_Triangle(refElem)
 
-CASE (Quadrangle)
+CASE (TypeElemNameOpt%quadrangle)
   ans = RefCoord_Quadrangle(refElem)
 
-CASE (Tetrahedron)
+CASE (TypeElemNameOpt%Tetrahedron)
   ans = RefCoord_Tetrahedron(refElem)
 
-CASE (Hexahedron)
+CASE (TypeElemNameOpt%Hexahedron)
   ans = RefCoord_Hexahedron(refElem)
 
-CASE (Prism)
+CASE (TypeElemNameOpt%Prism)
   ans = RefCoord_Prism(refElem)
 
-CASE (Pyramid)
+CASE (TypeElemNameOpt%Pyramid)
   ans = RefCoord_Pyramid(refElem)
+
+CASE DEFAULT
 END SELECT
 END PROCEDURE RefCoord
 

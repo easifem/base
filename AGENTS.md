@@ -4,8 +4,9 @@ This guide is for AI coding agents working on the easifemBase library.
 
 ## Project Overview
 
-easifemBase is a Fortran library for finite element methods, part of the EASIFEM 
+easifemBase is a Fortran library for finite element methods, part of the EASIFEM
 (Expandable And Scalable Infrastructure for Finite Element Methods) framework.
+
 - Language: Fortran 2018 (Modern Fortran)
 - Build System: CMake 3.28+ with Ninja
 - Compiler: GCC gfortran >=9.0 (tested with 15.2.0)
@@ -24,12 +25,20 @@ src/
 ```
 
 **Key Pattern**: Module interfaces in `modules/`, implementations in `submodules/`
+
 - Example: `modules/QuadraturePoint/src/QuadraturePoint_Method.F90` contains interfaces
 - Example: `submodules/QuadraturePoint/src/QuadraturePoint_Method@ConstructorMethods.F90` contains implementations
 
 ## Build Commands
 
 ### Configure and Build
+
+Always use easifem cli to build the project. For example 
+
+```bash 
+easifem dev base
+```
+
 ```bash
 # Using Python build script (recommended)
 python3 build.py
@@ -46,16 +55,20 @@ cmake --build ${HOME}/temp/easifem/base/build
 ```
 
 ### Build Types
+
 - Debug: `-D CMAKE_BUILD_TYPE:STRING=Debug`
 - Release: `-D CMAKE_BUILD_TYPE:STRING=Release`
 
 ### Install
+
 ```bash
 cmake --install ${HOME}/temp/easifem/base/build
 ```
 
 ### Running Tests
+
 There is no automated test suite setup. Tests are in:
+
 - `src/modules/Test/src/examples/test_examples.F90`
 
 To test changes, rebuild and verify with client code.
@@ -63,7 +76,9 @@ To test changes, rebuild and verify with client code.
 ## Code Style Guidelines
 
 ### File Headers
+
 Every source file must start with the GPL v3 license header:
+
 ```fortran
 ! This program is a part of EASIFEM library
 ! Copyright (C) 2020-2021 Vikas Sharma, Ph.D
@@ -83,6 +98,7 @@ Every source file must start with the GPL v3 license header:
 ```
 
 ### Naming Conventions
+
 - **Types**: End with underscore: `CSRSparsity_`, `QuadraturePoint_`
 - **Modules**: Match filename: `QuadraturePoint_Method` in `QuadraturePoint_Method.F90`
 - **Submodules**: Format: `ParentModule@Category` e.g., `QuadraturePoint_Method@ConstructorMethods`
@@ -90,6 +106,7 @@ Every source file must start with the GPL v3 license header:
 - **Constants**: ALL_CAPS from GlobalData: `I4B`, `DFP`, `LGT`
 
 ### Module Structure
+
 ```fortran
 MODULE ModuleName_Method
 USE GlobalData, ONLY: DFP, I4B, LGT
@@ -113,6 +130,7 @@ END MODULE ModuleName_Method
 ```
 
 ### Submodule Structure
+
 ```fortran
 SUBMODULE(ParentModule_Method) CategoryMethods
 USE BaseMethod
@@ -123,13 +141,14 @@ IMPLICIT NONE
 CONTAINS
 
 MODULE PROCEDURE specific_impl
-  ! Implementation here
+! Implementation here
 END PROCEDURE specific_impl
 
 END SUBMODULE CategoryMethods
 ```
 
 ### Import Rules
+
 1. Always use `ONLY` clause in USE statements
 2. Import order: GlobalData → BaseType → specific modules
 3. Common imports:
@@ -137,28 +156,49 @@ END SUBMODULE CategoryMethods
    - `USE BaseType, ONLY: TypeName_` (user-defined types)
    - `USE String_Class, ONLY: String` (strings)
 
+When we import two or more items from a module, then for each item imported from the module we should write it in its own line.
+For example, If are importing two items foo and bar from XXX module then instead of using
+
+```fortran
+USE XXX, ONLY: foo, bar
+```
+
+We should write it in two lines as shown below:
+
+```fortran
+USE XXX, ONLY: foo
+USE XXX, ONLY: bar
+```
+
 ### Types
+
 - **Real**: `REAL(DFP)` - Double precision floating point
 - **Integer**: `INTEGER(I4B)` - 32-bit integer
 - **Logical**: `LOGICAL(LGT)` - Logical type
 - Always specify kind parameters from GlobalData
 
 ### Intent Keywords
+
 Always specify intent for subroutine/function parameters:
+
 - `INTENT(IN)` - Input only
 - `INTENT(OUT)` - Output only
 - `INTENT(INOUT)` - Modified
 
 ### Line Length
+
 Maximum 78 characters (enforced by fortitude.toml)
 
 ### Implicit None
+
 Always declare `IMPLICIT NONE` after module/submodule declaration
 
 ### Comments
+
 - Use `!>` for author/date/summary documentation
 - Use `!` for inline comments
 - Document interfaces with author, date, and summary
+
 ```fortran
 !> author: Vikas Sharma, Ph. D.
 ! date: 1 March 2021
@@ -166,7 +206,9 @@ Always declare `IMPLICIT NONE` after module/submodule declaration
 ```
 
 ### Error Handling
+
 Use ErrorHandling module for errors:
+
 ```fortran
 USE ErrorHandling, ONLY: ErrorMsg
 USE GlobalData, ONLY: stderr
@@ -175,6 +217,7 @@ USE GlobalData, ONLY: stderr
 ## Common Patterns
 
 ### Creating a New Type
+
 1. Define type in `src/modules/BaseType/src/BaseType.F90`
 2. Create directory `src/modules/TypeName/`
 3. Create `TypeName_Method.F90` with interfaces
@@ -182,6 +225,7 @@ USE GlobalData, ONLY: stderr
 5. Create implementation files: `TypeName_Method@CategoryMethods.F90`
 
 ### Categories of Methods
+
 - `@ConstructorMethods` - Creation, initialization, copying
 - `@IOMethods` - Display, read, write operations  
 - `@GetMethods` - Getter functions
@@ -190,12 +234,14 @@ USE GlobalData, ONLY: stderr
 ## Compiler Flags
 
 ### Common Flags (gfortran)
+
 - `-ffree-form` - Free-form Fortran
 - `-ffree-line-length-none` - No line length limit
 - `-std=f2018` - Fortran 2018 standard
 - `-fimplicit-none` - Require explicit declarations
 
 ### Debug Flags
+
 - `-fbounds-check` - Array bounds checking
 - `-g` - Debug symbols
 - `-fbacktrace` - Backtrace on error
@@ -203,15 +249,19 @@ USE GlobalData, ONLY: stderr
 - `-Wimplicit-interface` - Warn about implicit interfaces
 
 ### Release Flags
+
 - `-O3` - Optimization level 3
 
 ## Environment Variables
+
 - `EASIFEM_BASE` - Installation prefix
 - `EASIFEM_BUILD_DIR` - Build directory (default: `$HOME/temp`)
 - `EASIFEM_EXTPKGS` - External packages location
 
 ## Dependencies
+
 External libraries (configured via CMAKE):
+
 - OpenBLAS, LAPACK95, BLAS95
 - SuperLU, LIS (linear solvers)
 - ARPACK (eigensolvers)

@@ -280,6 +280,117 @@ set(MAX_TIME_COMPO
     CACHE STRING "Maximum number of TIME components in a variables")
 list(APPEND TARGET_COMPILE_DEF "MAX_TIME_COMPO=${MAX_TIME_COMPO}")
 
+# REFELEM_MAX_FACES are used in TypeRefelemOpt in BaseType.F90. This variable
+# denotes the maximum number of FACES the reference element. It is equal to 6
+# for Hexahedral element. You do not need to chagne it. But in case you want to
+# change it, specify the value here.
+set(REFELEM_MAX_FACES
+    6
+    CACHE STRING "Maximum number of FACES in a reference element")
+list(APPEND TARGET_COMPILE_DEF "REFELEM_MAX_FACES=${REFELEM_MAX_FACES}")
+
+# REFELEM_MAX_EDGES are used in TypeRefelemOpt in BaseType.F90. This variable
+# denotes the maximum number of EDGES the reference element. It is equal to 12
+# for Hexahedral element. You do not need to chagne it. But in case you want to
+# change it, specify the value here.
+set(REFELEM_MAX_EDGES
+    12
+    CACHE STRING "Maximum number of EDGES in a reference element")
+list(APPEND TARGET_COMPILE_DEF "REFELEM_MAX_EDGES=${REFELEM_MAX_EDGES}")
+
+# REFELEM_MAX_POINTS are used in TypeRefelemOpt in BaseType.F90. This variable
+# denotes the maximum number of POINTS in the reference element. It is equal to
+# 8 for Hexahedral element. You do not need to chagne it. But in case you want
+# to change it, specify the value here.
+set(REFELEM_MAX_POINTS
+    8
+    CACHE STRING "Maximum number of POINTS in a reference element")
+list(APPEND TARGET_COMPILE_DEF "REFELEM_MAX_POINTS=${REFELEM_MAX_POINTS}")
+
+# REFELEM_MAX_LINE_ORDER are used in TypeRefelemOpt in BaseType.F90. This
+# variable denotes the maximum number of orders for line element used in the
+# mesh. This value depends on the Mesh generator used. I have kept it to 2.
+# Please note that it has nothing to do with the order of interpolation . You
+# can still use any order of interpolation even if the mesh is linear.
+
+set(REFELEM_MAX_LINE_ORDER
+    2
+    CACHE STRING "Maximum order of LINE element in mesh")
+list(APPEND TARGET_COMPILE_DEF
+     "REFELEM_MAX_LINE_ORDER=${REFELEM_MAX_LINE_ORDER}")
+
+# REFELEM_MAX_TRIANGLE_ORDER are used in TypeRefelemOpt in BaseType.F90. This
+# variable denotes the maximum number of orders for TRIANGLE element used in the
+# mesh. This value depends on the Mesh generator used. I have kept it to 2.
+# Please note that it has nothing to do with the order of interpolation . You
+# can still use any order of interpolation even if the mesh is TRIANGLEar.
+
+set(REFELEM_MAX_TRIANGLE_ORDER
+    2
+    CACHE STRING "Maximum order of TRIANGLE element in mesh")
+list(APPEND TARGET_COMPILE_DEF
+     "REFELEM_MAX_TRIANGLE_ORDER=${REFELEM_MAX_TRIANGLE_ORDER}")
+
+# REFELEM_MAX_QUADRANGLE_ORDER are used in TypeRefelemOpt in BaseType.F90. This
+# variable denotes the maximum number of orders for QUADRANGLE element used in
+# the mesh. This value depends on the Mesh generator used. I have kept it to 2.
+# Please note that it has nothing to do with the order of interpolation . You
+# can still use any order of interpolation even if the mesh is QUADRANGLEar.
+
+set(REFELEM_MAX_QUADRANGLE_ORDER
+    2
+    CACHE STRING "Maximum order of QUADRANGLE element in mesh")
+list(APPEND TARGET_COMPILE_DEF
+     "REFELEM_MAX_QUADRANGLE_ORDER=${REFELEM_MAX_QUADRANGLE_ORDER}")
+
+# REFELEM_MAX_TETRAHEDRON_ORDER are used in TypeRefelemOpt in BaseType.F90. This
+# variable denotes the maximum number of orders for TETRAHEDRON element used in
+# the mesh. This value depends on the Mesh generator used. I have kept it to 2.
+# Please note that it has nothing to do with the order of interpolation . You
+# can still use any order of interpolation even if the mesh is TETRAHEDRONar.
+
+set(REFELEM_MAX_TETRAHEDRON_ORDER
+    2
+    CACHE STRING "Maximum order of TETRAHEDRON element in mesh")
+list(APPEND TARGET_COMPILE_DEF
+     "REFELEM_MAX_TETRAHEDRON_ORDER=${REFELEM_MAX_TETRAHEDRON_ORDER}")
+
+# REFELEM_MAX_HEXAHEDRON_ORDER are used in TypeRefelemOpt in BaseType.F90. This
+# variable denotes the maximum number of orders for HEXAHEDRON element used in
+# the mesh. This value depends on the Mesh generator used. I have kept it to 2.
+# Please note that it has nothing to do with the order of interpolation . You
+# can still use any order of interpolation even if the mesh is HEXAHEDRONar.
+
+set(REFELEM_MAX_HEXAHEDRON_ORDER
+    2
+    CACHE STRING "Maximum order of HEXAHEDRON element in mesh")
+list(APPEND TARGET_COMPILE_DEF
+     "REFELEM_MAX_HEXAHEDRON_ORDER=${REFELEM_MAX_HEXAHEDRON_ORDER}")
+
+# REFELEM_MAX_PRISM_ORDER are used in TypeRefelemOpt in BaseType.F90. This
+# variable denotes the maximum number of orders for PRISM element used in the
+# mesh. This value depends on the Mesh generator used. I have kept it to 2.
+# Please note that it has nothing to do with the order of interpolation . You
+# can still use any order of interpolation even if the mesh is PRISMar.
+
+set(REFELEM_MAX_PRISM_ORDER
+    2
+    CACHE STRING "Maximum order of PRISM element in mesh")
+list(APPEND TARGET_COMPILE_DEF
+     "REFELEM_MAX_PRISM_ORDER=${REFELEM_MAX_PRISM_ORDER}")
+
+# REFELEM_MAX_PYRAMID_ORDER are used in TypeRefelemOpt in BaseType.F90. This
+# variable denotes the maximum number of orders for PYRAMID element used in the
+# mesh. This value depends on the Mesh generator used. I have kept it to 2.
+# Please note that it has nothing to do with the order of interpolation . You
+# can still use any order of interpolation even if the mesh is PYRAMIDar.
+
+set(REFELEM_MAX_PYRAMID_ORDER
+    2
+    CACHE STRING "Maximum order of PYRAMID element in mesh")
+list(APPEND TARGET_COMPILE_DEF
+     "REFELEM_MAX_PYRAMID_ORDER=${REFELEM_MAX_PYRAMID_ORDER}")
+
 # include(${PROJECT_SOURCE_DIR}/cmake/install.cmake) Installation
 install(
   DIRECTORY ${CMAKE_Fortran_MODULE_DIRECTORY}

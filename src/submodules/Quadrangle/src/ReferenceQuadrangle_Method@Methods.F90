@@ -20,41 +20,30 @@
 ! summary: This submodule contains method for [[ReferenceQuadrangle_]]
 
 SUBMODULE(ReferenceQuadrangle_Method) Methods
-USE GlobalData, ONLY: INT8
-
-USE ReferenceElement_Method, ONLY: ReferenceTopology, DEALLOCATE, &
-                                   ReferenceElement_Initiate => Initiate
-
-USE LineInterpolationUtility, ONLY: InterpolationPoint_Line
-
-USE ReferenceLine_Method, ONLY: ElementOrder_Line, LineName
-
-USE QuadrangleInterpolationUtility, ONLY: InterpolationPoint_Quadrangle, &
-                                          LagrangeDOF_Quadrangle
-
-USE ReferenceTriangle_Method, ONLY: TRIANGLEAREA2D
-
-USE ReferenceLine_Method, ONLY: Linename, ElementType_Line
-
-USE ApproxUtility, ONLY: OPERATOR(.approxeq.)
-
 USE AppendUtility, ONLY: OPERATOR(.append.)
-
-USE StringUtility, ONLY: UpperCase
-
+USE ApproxUtility, ONLY: OPERATOR(.approxeq.)
 USE ArangeUtility, ONLY: Arange
-
-USE InputUtility, ONLY: Input
-
-USE SortUtility, ONLY: Sort
-
-USE ReallocateUtility, ONLY: Reallocate
-
+USE BaseType, ONLY: TypeElemNameOpt
+USE BaseType, ONLY: TypeQuadrangleNameOpt
+USE BaseType, ONLY: TypeInterpolationOpt
 USE Display_Method, ONLY: ToString
-
+USE GlobalData, ONLY: INT8
+USE InputUtility, ONLY: Input
+USE LineInterpolationUtility, ONLY: InterpolationPoint_Line
 USE MiscUtility, ONLY: Int2Str
-
-USE BaseType, ONLY: TypeElemNameOpt, TypeInterpolationOpt
+USE QuadrangleInterpolationUtility, ONLY: InterpolationPoint_Quadrangle
+USE QuadrangleInterpolationUtility, ONLY: LagrangeDOF_Quadrangle
+USE ReallocateUtility, ONLY: Reallocate
+USE ReferenceElement_Method, ONLY: DEALLOCATE
+USE ReferenceElement_Method, ONLY: ReferenceElement_Initiate => Initiate
+USE ReferenceElement_Method, ONLY: ReferenceTopology
+USE ReferenceLine_Method, ONLY: ElementOrder_Line
+USE ReferenceLine_Method, ONLY: ElementType_Line
+USE ReferenceLine_Method, ONLY: LineName
+USE ReferenceLine_Method, ONLY: Linename
+USE ReferenceTriangle_Method, ONLY: TRIANGLEAREA2D
+USE SortUtility, ONLY: Sort
+USE StringUtility, ONLY: UpperCase
 
 IMPLICIT NONE
 CONTAINS
@@ -65,13 +54,13 @@ CONTAINS
 
 MODULE PROCEDURE ElementName_Quadrangle
 SELECT CASE (elemType)
-CASE (TypeElemNameOpt%Quadrangle)
+CASE (TypeQuadrangleNameOpt%Quadrangle)
   ans = "Quadrangle4"
-CASE (TypeElemNameOpt%Quadrangle8)
+CASE (TypeQuadrangleNameOpt%Quadrangle8)
   ans = "Quadrangle8"
-CASE (TypeElemNameOpt%Quadrangle9)
+CASE (TypeQuadrangleNameOpt%Quadrangle9)
   ans = "Quadrangle9"
-CASE (TypeElemNameOpt%Quadrangle16)
+CASE (TypeQuadrangleNameOpt%Quadrangle16)
   ans = "Quadrangle16"
 CASE DEFAULT
   ans = ""
@@ -117,13 +106,13 @@ END PROCEDURE TotalEntities_Quadrangle
 
 MODULE PROCEDURE TotalNodesInElement_Quadrangle
 SELECT CASE (elemType)
-CASE (TypeElemNameOpt%Quadrangle)
+CASE (TypeQuadrangleNameOpt%Quadrangle)
   ans = 4
-CASE (TypeElemNameOpt%Quadrangle8)
+CASE (TypeQuadrangleNameOpt%Quadrangle8)
   ans = 8
-CASE (TypeElemNameOpt%Quadrangle9)
+CASE (TypeQuadrangleNameOpt%Quadrangle9)
   ans = 9
-CASE (TypeElemNameOpt%Quadrangle16)
+CASE (TypeQuadrangleNameOpt%Quadrangle16)
   ans = 16
 CASE DEFAULT
   ans = 0
@@ -136,14 +125,16 @@ END PROCEDURE TotalNodesInElement_Quadrangle
 
 MODULE PROCEDURE ElementOrder_Quadrangle
 SELECT CASE (elemType)
-CASE (TypeElemNameOpt%Quadrangle)
+CASE (TypeQuadrangleNameOpt%Quadrangle)
   ans = 1
-CASE (TypeElemNameOpt%Quadrangle8)
+CASE (TypeQuadrangleNameOpt%Quadrangle8)
   ans = 2
-CASE (TypeElemNameOpt%Quadrangle9)
+CASE (TypeQuadrangleNameOpt%Quadrangle9)
   ans = 2
-CASE (TypeElemNameOpt%Quadrangle16)
+CASE (TypeQuadrangleNameOpt%Quadrangle16)
   ans = 3
+CASE DEFAULT
+  ans = 0
 END SELECT
 END PROCEDURE ElementOrder_Quadrangle
 
@@ -154,13 +145,13 @@ END PROCEDURE ElementOrder_Quadrangle
 MODULE PROCEDURE ElementType_Quadrangle
 SELECT CASE (elemName)
 CASE ("Quadrangle4", "Quadrangle")
-  ans = TypeElemNameOpt%Quadrangle
+  ans = TypeQuadrangleNameOpt%Quadrangle
 CASE ("Quadrangle8")
-  ans = TypeElemNameOpt%Quadrangle8
+  ans = TypeQuadrangleNameOpt%Quadrangle8
 CASE ("Quadrangle9")
-  ans = TypeElemNameOpt%Quadrangle9
+  ans = TypeQuadrangleNameOpt%Quadrangle9
 CASE ("Quadrangle16")
-  ans = TypeElemNameOpt%Quadrangle16
+  ans = TypeQuadrangleNameOpt%Quadrangle16
 CASE DEFAULT
   ans = 0
 END SELECT
@@ -262,13 +253,15 @@ END PROCEDURE FacetElements_Quadrangle2
 MODULE PROCEDURE Quadranglename1
 SELECT CASE (order)
 CASE (1)
-  ans = TypeElemNameOpt%Quadrangle
+  ans = TypeQuadrangleNameOpt%Quadrangle
 CASE (2)
-  ans = TypeElemNameOpt%Quadrangle9
+  ans = TypeQuadrangleNameOpt%Quadrangle9
 CASE (3)
-  ans = TypeElemNameOpt%Quadrangle16
+  ans = TypeQuadrangleNameOpt%Quadrangle16
 CASE (4:)
-  ans = TypeElemNameOpt%Quadrangle16 + order - 3_I4B
+  ans = TypeQuadrangleNameOpt%Quadrangle16 + order - 3_I4B
+CASE DEFAULT
+  ans = 0
 END SELECT
 END PROCEDURE Quadranglename1
 
@@ -297,7 +290,7 @@ ELSE
 
   IF (PRESENT(domainName)) THEN
     obj%domainName = UpperCase(domainName)
-    IF (obj%domainName .EQ. "UNIT" .OR. obj%domainName .EQ. "BIUNIT") THEN
+    IF ((obj%domainName == "UNIT") .OR. (obj%domainName == "BIUNIT")) THEN
       obj%xij = RefCoord_Quadrangle(obj%domainName)
     END IF
   ELSE
@@ -397,7 +390,7 @@ END PROCEDURE highorderElement_Quadrangle
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Measure_Simplex_Quadrangle
-IF (refelem%nsd .EQ. 2) THEN
+IF (refelem%nsd == 2) THEN
   CALL QuadArea2D(xij(1:2, 1:4), Ans)
 ELSE
   CALL QuadArea3D(xij(1:3, 1:4), Ans)
@@ -453,10 +446,10 @@ END PROCEDURE QuadArea2D
 !
 !----------------------------------------------------------------------------
 
-PURE FUNCTION R8MATDET4D(a)
+PURE FUNCTION R8MATDET4D(a) RESULT(ans)
   REAL(DFP), INTENT(IN) :: a(4, 4)
-  REAL(DFP) :: R8MATDET4D
-  R8MATDET4D = &
+  REAL(DFP) :: ans
+  ans = &
     a(1, 1) * ( &
     a(2, 2) * (a(3, 3) * a(4, 4) - a(3, 4) * a(4, 3)) &
     - a(2, 3) * (a(3, 2) * a(4, 4) - a(3, 4) * a(4, 2)) &
@@ -564,7 +557,7 @@ CASE ("U", "u")
   ans(1, 1:4) = [0.0_DFP, 1.0_DFP, 1.0_DFP, 0.0_DFP]
   ans(2, 1:4) = [0.0_DFP, 0.0_DFP, 1.0_DFP, 1.0_DFP]
 
-CASE ("B", "b")
+CASE DEFAULT
   ans(1, 1:4) = [-1.0_DFP, 1.0_DFP, 1.0_DFP, -1.0_DFP]
   ans(2, 1:4) = [-1.0_DFP, -1.0_DFP, 1.0_DFP, 1.0_DFP]
 END SELECT
@@ -589,7 +582,7 @@ CASE (1_I4B)
   con(1:2, 2) = [4, 3]
   con(1:2, 3) = [1, 4]
   con(1:2, 4) = [2, 3]
-CASE (2_I4B)
+CASE DEFAULT
   !! For Lagrangian polynomial
   con(1:2, 1) = [1, 2]
   con(1:2, 2) = [2, 3]
@@ -624,9 +617,12 @@ MODULE PROCEDURE FaceShapeMetaData_Quadrangle
 INTEGER(I4B) :: a(4), localFaces0(4)
 
 a(1) = MINLOC(face, 1)
-a(2) = HelpFaceData_Quadrangle(1, a(1)) !b
-a(3) = HelpFaceData_Quadrangle(2, a(1)) !c
-a(4) = HelpFaceData_Quadrangle(3, a(1)) !d
+a(2) = HelpFaceData_Quadrangle(1, a(1))
+!b
+a(3) = HelpFaceData_Quadrangle(2, a(1))
+!c
+a(4) = HelpFaceData_Quadrangle(3, a(1))
+!d
 
 localFaces0(1:4) = face(a)
 IF (PRESENT(localFaces)) THEN
@@ -636,7 +632,7 @@ END IF
 sorted_face(1) = localFaces0(1)
 sorted_face(3) = localFaces0(3)
 
-IF (localFaces0(2) .LT. localFaces0(4)) THEN
+IF (localFaces0(2) < localFaces0(4)) THEN
   sorted_face(2) = localFaces0(2)
   sorted_face(4) = localFaces0(4)
 
@@ -683,5 +679,9 @@ order = ElementOrder_Quadrangle(elemType)
 faceElemType = LineName(order)
 tFaceNodes = order + 1
 END PROCEDURE GetFaceElemType_Quadrangle2
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
 
 END SUBMODULE Methods

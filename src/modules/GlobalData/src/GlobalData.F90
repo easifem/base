@@ -353,20 +353,34 @@ INTEGER(I4B), PARAMETER :: GaussJacobiLobattoQP = GaussJacobiLobatto
 INTEGER(I4B), PARAMETER :: GaussUltrasphericalQP = GaussUltraspherical
 INTEGER(I4B), PARAMETER :: GaussUltrasphericalLobattoQP = &
                            GaussUltrasphericalLobatto
-INTEGER(I4B), PARAMETER :: ChenBabuska = 22 !! for triangle nodes
-INTEGER(I4B), PARAMETER :: ChenBabuskaQP = 22 !! for triangle nodes
-INTEGER(I4B), PARAMETER :: Hesthaven = 23 !! for triangle nodes
-INTEGER(I4B), PARAMETER :: HesthavenQP = 23 !! for triangle nodes
-INTEGER(I4B), PARAMETER :: Feket = 24 !! for triangle nodes
-INTEGER(I4B), PARAMETER :: FeketQP = 24 !! for triangle nodes
-INTEGER(I4B), PARAMETER :: BlythPozLegendre = 25 !! for triangle
-INTEGER(I4B), PARAMETER :: BlythPozLegendreQP = 25 !! for triangle
-INTEGER(I4B), PARAMETER :: BlythPozChebyshev = 26 !! for triangle
-INTEGER(I4B), PARAMETER :: BlythPozChebyshevQP = 26 !! for triangle
-INTEGER(I4B), PARAMETER :: IsaacLegendre = 27 !! for triangle
-INTEGER(I4B), PARAMETER :: IsaacLegendreQP = 27 !! for triangle
-INTEGER(I4B), PARAMETER :: IsaacChebyshev = 28 !! for triangle
-INTEGER(I4B), PARAMETER :: IsaacChebyshevQP = 28 !! for triangle
+INTEGER(I4B), PARAMETER :: ChenBabuska = 22
+!! for triangle nodes
+INTEGER(I4B), PARAMETER :: ChenBabuskaQP = 22
+!! for triangle nodes
+INTEGER(I4B), PARAMETER :: Hesthaven = 23
+!! for triangle nodes
+INTEGER(I4B), PARAMETER :: HesthavenQP = 23
+!! for triangle nodes
+INTEGER(I4B), PARAMETER :: Feket = 24
+!! for triangle nodes
+INTEGER(I4B), PARAMETER :: FeketQP = 24
+!! for triangle nodes
+INTEGER(I4B), PARAMETER :: BlythPozLegendre = 25
+!! for triangle
+INTEGER(I4B), PARAMETER :: BlythPozLegendreQP = 25
+!! for triangle
+INTEGER(I4B), PARAMETER :: BlythPozChebyshev = 26
+!! for triangle
+INTEGER(I4B), PARAMETER :: BlythPozChebyshevQP = 26
+!! for triangle
+INTEGER(I4B), PARAMETER :: IsaacLegendre = 27
+!! for triangle
+INTEGER(I4B), PARAMETER :: IsaacLegendreQP = 27
+!! for triangle
+INTEGER(I4B), PARAMETER :: IsaacChebyshev = 28
+!! for triangle
+INTEGER(I4B), PARAMETER :: IsaacChebyshevQP = 28
+!! for triangle
 !!
 !! Type of Lagrange Interpolation Points
 !!
