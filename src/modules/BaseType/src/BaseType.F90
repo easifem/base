@@ -108,6 +108,7 @@ PUBLIC :: Vector3D_
 PUBLIC :: TypeVector3D
 PUBLIC :: Vector3DPointer_
 PUBLIC :: IndexValue_
+PUBLIC :: TypeIndexValue
 PUBLIC :: IndexValuePointer_
 PUBLIC :: DOF_
 PUBLIC :: TypeDOF
@@ -440,12 +441,11 @@ END TYPE Vector3DPointer_
 ! summary: Index value keymap; useful for defining nodal boundary conditions
 
 TYPE :: IndexValue_
-  INTEGER(I4B) :: Indx
-  REAL(DFP) :: Val
-END TYPE
+  INTEGER(I4B) :: indx = 0
+  REAL(DFP) :: val = 0.0_DFP
+END TYPE IndexValue_
 
-TYPE(IndexValue_), PUBLIC, PARAMETER :: TypeIndexValue = &
-  & IndexValue_(Indx=0, Val=0.0_DFP)
+TYPE(IndexValue_), PARAMETER :: TypeIndexValue = IndexValue_()
 
 TYPE :: IndexValuePointer_
   CLASS(IndexValue_), POINTER :: ptr => NULL()
