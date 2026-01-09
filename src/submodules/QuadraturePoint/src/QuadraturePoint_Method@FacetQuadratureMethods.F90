@@ -19,33 +19,26 @@
 SUBMODULE(QuadraturePoint_Method) FacetQuadratureMethods
 USE GlobalData, ONLY: stderr
 USE ErrorHandling, ONLY: ErrorMsg
-USE BaseInterpolation_Method, ONLY: InterpolationPoint_ToChar, &
-                                    InterpolationPoint_ToInteger, &
-                                    InterpolationPoint_ToString
-
+USE BaseInterpolation_Method, ONLY: InterpolationPoint_ToChar
+USE BaseInterpolation_Method, ONLY: InterpolationPoint_ToInteger
+USE BaseInterpolation_Method, ONLY: InterpolationPoint_ToString
 USE ReallocateUtility, ONLY: Reallocate
-
-USE ReferenceElement_Method, ONLY: ElementTopology, &
-                                   XiDimension, ReferenceElementInfo
-
-USE LineInterpolationUtility, ONLY: QuadratureNumber_Line, &
-                                    QuadraturePoint_Line_
-USE TriangleInterpolationUtility, ONLY: QuadraturePoint_Triangle_, &
-                                        QuadratureNumber_Triangle, &
-                                        FacetConnectivity_Triangle
-
-USE QuadrangleInterpolationUtility, ONLY: QuadraturePoint_Quadrangle_, &
-                                          QuadratureNumber_Quadrangle, &
-                                          FacetConnectivity_Quadrangle
-
-USE TetrahedronInterpolationUtility, ONLY: QuadraturePoint_Tetrahedron_, &
-                                           QuadratureNumber_Tetrahedron
-
-USE HexahedronInterpolationUtility, ONLY: QuadraturePoint_Hexahedron_, &
-                                          QuadratureNumber_Hexahedron
-
+USE ReferenceElement_Method, ONLY: ElementTopology
+USE ReferenceElement_Method, ONLY: XiDimension
+USE BaseType, ONLY: ReferenceElementInfo => TypeRefelemOpt
+USE LineInterpolationUtility, ONLY: QuadratureNumber_Line
+USE LineInterpolationUtility, ONLY: QuadraturePoint_Line_
+USE TriangleInterpolationUtility, ONLY: QuadraturePoint_Triangle_
+USE TriangleInterpolationUtility, ONLY: QuadratureNumber_Triangle
+USE TriangleInterpolationUtility, ONLY: FacetConnectivity_Triangle
+USE QuadrangleInterpolationUtility, ONLY: QuadraturePoint_Quadrangle_
+USE QuadrangleInterpolationUtility, ONLY: QuadratureNumber_Quadrangle
+USE QuadrangleInterpolationUtility, ONLY: FacetConnectivity_Quadrangle
+USE TetrahedronInterpolationUtility, ONLY: QuadraturePoint_Tetrahedron_
+USE TetrahedronInterpolationUtility, ONLY: QuadratureNumber_Tetrahedron
+USE HexahedronInterpolationUtility, ONLY: QuadraturePoint_Hexahedron_
+USE HexahedronInterpolationUtility, ONLY: QuadratureNumber_Hexahedron
 USE BaseType, ONLY: elem => TypeElemNameOpt
-
 USE MappingUtility, ONLY: FromBiUnitLine2Segment_
 
 IMPLICIT NONE
@@ -57,18 +50,13 @@ CONTAINS
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE obj_InitiateFacetQuadrature1
-CALL InitiateFacetQuadrature(obj=obj, facetQuad=facetQuad, &
-                             localFaceNumber=localFaceNumber, &
-                             elemType=elemtype, &
-                             domainName=domainname, &
-                             p=order, q=order, r=order, &
-                             quadratureType1=quadratureType, &
-                             quadratureType2=quadratureType, &
-                             quadratureType3=quadratureType, &
-                             alpha1=alpha, beta1=beta, lambda1=lambda, &
-                             alpha2=alpha, beta2=beta, lambda2=lambda, &
-                             alpha3=alpha, beta3=beta, lambda3=lambda, &
-                             xij=xij)
+CALL InitiateFacetQuadrature( &
+  obj=obj, facetQuad=facetQuad, localFaceNumber=localFaceNumber, &
+  elemType=elemtype, domainName=domainname, p=order, q=order, r=order, &
+  quadratureType1=quadratureType, quadratureType2=quadratureType, &
+  quadratureType3=quadratureType, alpha1=alpha, beta1=beta, lambda1=lambda, &
+  alpha2=alpha, beta2=beta, lambda2=lambda, alpha3=alpha, beta3=beta, &
+  lambda3=lambda, xij=xij)
 END PROCEDURE obj_InitiateFacetQuadrature1
 
 !----------------------------------------------------------------------------
@@ -179,8 +167,8 @@ CASE (elem%quadrangle)
                              weights=obj%points(obj%txi + 1, :), &
                              tsize=ncol)
 
-#ifdef DEBUG_VER
 CASE DEFAULT
+#ifdef DEBUG_VER
   CALL Errormsg(msg="No case found for give topo", &
                 file=__FILE__, routine="obj_Initiate11()", &
                 line=__LINE__, unitno=stderr)
@@ -188,7 +176,6 @@ CASE DEFAULT
 #endif
 
 END SELECT
-
 END PROCEDURE obj_InitiateFacetQuadrature3
 
 !----------------------------------------------------------------------------
@@ -198,5 +185,9 @@ END PROCEDURE obj_InitiateFacetQuadrature3
 MODULE PROCEDURE obj_InitiateFacetQuadrature4
 
 END PROCEDURE obj_InitiateFacetQuadrature4
+
+!----------------------------------------------------------------------------
+!                                                            Include Error
+!----------------------------------------------------------------------------
 
 END SUBMODULE FacetQuadratureMethods
