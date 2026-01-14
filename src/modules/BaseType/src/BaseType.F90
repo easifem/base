@@ -174,6 +174,7 @@ PUBLIC :: ReferenceTopologyPointer_
 PUBLIC :: ReferenceElement_
 PUBLIC :: ReferenceElementPointer_
 PUBLIC :: TypeRefelemOpt
+PUBLIC :: TypeMeshOpt
 PUBLIC :: ReferencePoint_
 PUBLIC :: TypeReferencePoint
 PUBLIC :: ReferenceLine_
@@ -287,6 +288,7 @@ PUBLIC :: TypePolynomialOpt
 PUBLIC :: TypeQuadratureOpt
 PUBLIC :: TypeInterpolationOpt
 PUBLIC :: TypeFEVariableOpt
+PUBLIC :: TypeUserFunctionOpt
 
 INTEGER(I4B), PARAMETER, PUBLIC :: MAX_RANK_FEVARIABLE = 6
 
@@ -1060,6 +1062,42 @@ TYPE :: RefelemOpt_
 END TYPE RefelemOpt_
 
 TYPE(RefelemOpt_), PARAMETER :: TypeRefelemOpt = RefelemOpt_()
+
+!----------------------------------------------------------------------------
+!                                                                   MeshOpt_
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2026-01-09
+! summary: options for mesh
+
+TYPE :: MeshOpt_
+#ifdef MESH_MAX_NODE_TO_NODE
+  INTEGER(I4B) :: maxNodeToNode = MESH_MAX_NODE_TO_NODE
+#else
+  INTEGER(I4B) :: maxNodeToNode = 256
+#endif
+
+#ifdef MESH_MAX_NODE_TO_ELEM
+  INTEGER(I4B) :: maxNodeToElem = MESH_MAX_NODE_TO_ELEM
+#else
+  INTEGER(I4B) :: maxNodeToElem = 128
+#endif
+
+#ifdef MESH_MAX_CONNECTIVITY_SIZE
+  INTEGER(I4B) :: maxCon = MESH_MAX_CONNECTIVITY_SIZE
+#else
+  INTEGER(I4B) :: maxCon = 256
+#endif
+
+#ifdef MESH_MAX_NNE
+  INTEGER(I4B) :: maxNNE = MESH_MAX_NNE
+#else
+  INTEGER(I4B) :: maxNNE = 128
+#endif
+END TYPE MeshOpt_
+
+TYPE(MeshOpt_), PARAMETER :: TypeMeshOpt = MeshOpt_()
 
 !----------------------------------------------------------------------------
 !                                                          ReferenceElement_
@@ -2428,5 +2466,23 @@ TYPE :: FEVariableOpt_
 END TYPE FEVariableOpt_
 
 TYPE(FEVariableOpt_), PARAMETER :: TypeFEVariableOpt = FEVariableOpt_()
+
+!----------------------------------------------------------------------------
+!                                                             UserFunctionOpt
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2026-01-14
+! summary: Options for user functions
+
+TYPE :: UserFunctionOpt_
+#ifdef USER_FUNCTION_MAX_LEN
+  INTEGER(I4B) :: maxlen = USER_FUNCTION_MAX_LEN
+#else
+  INTEGER(I4B) :: maxlen = 1024
+#endif
+END TYPE UserFunctionOpt_
+
+TYPE(UserFunctionOpt_), PARAMETER :: TypeUserFunctionOpt = UserFunctionOpt_()
 
 END MODULE BaseType
