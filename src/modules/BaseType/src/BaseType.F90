@@ -270,6 +270,9 @@ PUBLIC :: iface_3DFunction
 PUBLIC :: iface_ScalarFunction
 PUBLIC :: iface_VectorFunction
 PUBLIC :: iface_MatrixFunction
+PUBLIC :: InterfaceScalarSubroutine
+PUBLIC :: InterfaceVectorSubroutine
+PUBLIC :: InterfaceMatrixSubroutine
 PUBLIC :: Range_
 PUBLIC :: Interval1D_
 PUBLIC :: TypePrecondOpt
@@ -2099,6 +2102,47 @@ ABSTRACT INTERFACE
 END INTERFACE
 
 !----------------------------------------------------------------------------
+!                                                         SpaceTime
+!----------------------------------------------------------------------------
+
+ABSTRACT INTERFACE
+  SUBROUTINE InterfaceScalarSubroutine(args, nargs, ans)
+    IMPORT :: DFP, I4B
+    REAL(DFP), INTENT(IN) :: args(:)
+    INTEGER(I4B), INTENT(IN) :: nargs
+    REAL(DFP), INTENT(INOUT) :: ans
+  END SUBROUTINE InterfaceScalarSubroutine
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                         SpaceTime
+!----------------------------------------------------------------------------
+
+ABSTRACT INTERFACE
+  SUBROUTINE InterfaceVectorSubroutine(args, nargs, ans, tsize)
+    IMPORT :: DFP, I4B
+    REAL(DFP), INTENT(IN) :: args(:)
+    INTEGER(I4B), INTENT(IN) :: nargs
+    REAL(DFP), INTENT(INOUT) :: ans(:)
+    INTEGER(I4B), INTENT(OUT) :: tsize
+  END SUBROUTINE InterfaceVectorSubroutine
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                         SpaceTime
+!----------------------------------------------------------------------------
+
+ABSTRACT INTERFACE
+  SUBROUTINE InterfaceMatrixSubroutine(args, nargs, ans, nrow, ncol)
+    IMPORT :: DFP, I4B
+    REAL(DFP), INTENT(IN) :: args(:)
+    INTEGER(I4B), INTENT(IN) :: nargs
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+  END SUBROUTINE InterfaceMatrixSubroutine
+END INTERFACE
+
+!----------------------------------------------------------------------------
 !                                                              TypePreconOpt
 !----------------------------------------------------------------------------
 
@@ -2478,9 +2522,59 @@ TYPE(FEVariableOpt_), PARAMETER :: TypeFEVariableOpt = FEVariableOpt_()
 TYPE :: UserFunctionOpt_
 #ifdef USER_FUNCTION_MAX_LEN
   INTEGER(I4B) :: maxlen = USER_FUNCTION_MAX_LEN
+  !! maximum length of function string
 #else
   INTEGER(I4B) :: maxlen = 1024
 #endif
+
+#ifdef USER_FUNCTION_MAX_VAR_LEN
+  INTEGER(I4B) :: maxVarLen = USER_FUNCTION_MAX_VAR_LEN
+  !! max length of variable name in user function
+#else
+  INTEGER(I4B) :: maxVarLen = 16
+#endif
+
+#ifdef USER_FUNCTION_MAX_VEC_VAL
+  INTEGER(I4B) :: maxVectorValue = USER_FUNCTION_MAX_VEC_VAL
+  !! maximum size of vector returned by user function
+#else
+  INTEGER(I4B) :: maxVectorValue = 16
+#endif
+
+#ifdef USER_FUNCTION_MAX_MAT_VAL
+  INTEGER(I4B) :: maxMatrixValue = USER_FUNCTION_MAX_MAT_VAL
+  !! maximum size of matrix returned by user function
+  !! this denotes both upper bound for rows and columns
+#else
+  INTEGER(I4B) :: maxMatrixValue = 16
+#endif
+
+  INTEGER(I4B) :: constFuncArgs = 0
+  !! default number of arguments for constant functions
+  INTEGER(I4B) :: spaceFuncArgs = 3
+  !! default number of arguments for space functions
+  INTEGER(I4B) :: timeFuncArgs = 1
+  !! default number of arguments for time functions
+  INTEGER(I4B) :: spaceTimeFuncArgs = 4
+  !! default number of arguments for space-time functions
+  INTEGER(I4B) :: scalarFuncNumReturns = 1
+  !! default number of return values for scalar functions
+  INTEGER(I4B) :: vectorFuncNumReturns = 3
+  !! default number of return values for vector functions
+  INTEGER(I4B) :: matrixFuncNumReturns = 9
+  !! default number of return values for matrix functions
+  INTEGER(I4B) :: constEngine = 1
+  !! the user function is constant
+  INTEGER(I4B) :: externalEngine = 2
+  !! the user function is defined by setting procedure pointers
+  INTEGER(I4B) :: specialFuncEngine = 3
+  !! the user function is defined via special functions
+  INTEGER(I4B) :: luaEngine = 4
+  !! the user function is defined via lua script
+  INTEGER(I4B) :: equationParserEngine = 5
+  !! the user function is defined via an equation parser
+  INTEGER(I4B) :: symEngineEngine = 6
+  !! the user function is defined via SymEngine
 END TYPE UserFunctionOpt_
 
 TYPE(UserFunctionOpt_), PARAMETER :: TypeUserFunctionOpt = UserFunctionOpt_()
