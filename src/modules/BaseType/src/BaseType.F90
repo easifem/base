@@ -331,6 +331,10 @@ TYPE :: MathOpt_
   INTEGER(I4B) :: minus_one_i = -1_I4B
   INTEGER(I4B) :: two_i = 2_I4B
   INTEGER(I4B) :: minus_two_i = -2_I4B
+  INTEGER(I4B) :: three_i = 3_I4B
+  INTEGER(I4B) :: minus_three_i = -3_I4B
+  INTEGER(I4B) :: four_i = 4_I4B
+  INTEGER(I4B) :: minus_four_i = -4_I4B
 END TYPE MathOpt_
 
 TYPE(MathOpt_), PARAMETER :: TypeMathOpt = MathOpt_()
