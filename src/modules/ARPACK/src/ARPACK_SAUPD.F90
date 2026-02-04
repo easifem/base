@@ -15,15 +15,29 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
+!> author: Vikas Sharma, Ph. D.
+! date: 2022-12-09
+! summary: Reverse communication interface (RCI) for the Implicitly
+!          Restarted Arnoldi Iteration.
+
 MODULE ARPACK_SAUPD
 USE GlobalData, ONLY: I4B, DFP, LGT
 USE String_Class, ONLY: String
 IMPLICIT NONE
 PRIVATE
 
+PUBLIC :: SAUPD_ErrorMsg
+PUBLIC :: SEUPD_ErrorMsg
+PUBLIC :: SymLargestEigenVal
+PUBLIC :: SymSmallestEigenVal
+
 !----------------------------------------------------------------------------
 !                                                            SAUPD_ErrorMsg
 !----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2022-12-09
+! summary: error message for SAUPD
 
 INTERFACE
   MODULE FUNCTION SAUPD_ErrorMsg(INFO) RESULT(ans)
@@ -32,11 +46,13 @@ INTERFACE
   END FUNCTION SAUPD_ErrorMsg
 END INTERFACE
 
-PUBLIC :: SAUPD_ErrorMsg
-
 !----------------------------------------------------------------------------
 !                                                            SAUPD_ErrorMsg
 !----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2022-12-09
+! summary: error message for SEUPD
 
 INTERFACE
   MODULE FUNCTION SEUPD_ErrorMsg(INFO) RESULT(ans)
@@ -44,8 +60,6 @@ INTERFACE
     TYPE(String) :: ans
   END FUNCTION SEUPD_ErrorMsg
 END INTERFACE
-
-PUBLIC :: SEUPD_ErrorMsg
 
 !----------------------------------------------------------------------------
 !
@@ -59,10 +73,10 @@ PUBLIC :: SEUPD_ErrorMsg
 !
 !- This routine calculates the largest eigenvalue of a real sym dense matrix.
 !- It calls ARPACK SSAUPD or DSAUPD routine
-
-INTERFACE
+!
+INTERFACE SymLargestEigenVal
   MODULE FUNCTION SymLargestEigenVal1(mat, which, NCV, maxIter, tol) &
-    & RESULT(ans)
+    RESULT(ans)
     REAL(DFP), INTENT(IN) :: mat(:, :)
     !! dense matrix
     CHARACTER(*), OPTIONAL, INTENT(IN) :: which
@@ -80,13 +94,7 @@ INTERFACE
     REAL(DFP) :: ans
     !! maximum eigenvalue
   END FUNCTION SymLargestEigenVal1
-END INTERFACE
-
-INTERFACE SymLargestEigenVal
-  MODULE PROCEDURE SymLargestEigenVal1
 END INTERFACE SymLargestEigenVal
-
-PUBLIC :: SymLargestEigenVal
 
 !----------------------------------------------------------------------------
 !
@@ -94,16 +102,16 @@ PUBLIC :: SymLargestEigenVal
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2022-12-10
-! summary: Calculate the `nev` smallest eigenvalue of a real sym dense matrix
+! summary: Calculate the smallest eigenvalue of a real sym dense matrix
 !
 !# Introduction
 !
 !- This routine calculates the smallest eigenvalue of a real sym dense matrix.
 !- It calls ARPACK SSAUPD or DSAUPD routine
-
-INTERFACE
+!
+INTERFACE SymLargestEigenVal
   MODULE FUNCTION SymLargestEigenVal2(mat, nev, which, NCV, maxIter, tol) &
-    & RESULT(ans)
+    RESULT(ans)
     REAL(DFP), INTENT(IN) :: mat(:, :)
     !! dense matrix
     INTEGER(I4B), INTENT(IN) :: nev
@@ -123,10 +131,6 @@ INTERFACE
     REAL(DFP) :: ans(nev)
     !! first k, largest eigenvalue
   END FUNCTION SymLargestEigenVal2
-END INTERFACE
-
-INTERFACE SymLargestEigenVal
-  MODULE PROCEDURE SymLargestEigenVal2
 END INTERFACE SymLargestEigenVal
 
 !----------------------------------------------------------------------------
@@ -156,9 +160,9 @@ END INTERFACE SymLargestEigenVal
 ! decomposition of mat0.
 !@endnote
 
-INTERFACE
+INTERFACE SymSmallestEigenVal
   MODULE FUNCTION SymSmallestEigenVal1(mat, sigma, which, NCV, maxIter, tol) &
-    & RESULT(ans)
+    RESULT(ans)
     REAL(DFP), INTENT(IN) :: mat(:, :)
     !! dense matrix
     REAL(DFP), OPTIONAL, INTENT(IN) :: sigma
@@ -178,13 +182,7 @@ INTERFACE
     REAL(DFP) :: ans
     !! maximum eigenvalue
   END FUNCTION SymSmallestEigenVal1
-END INTERFACE
-
-INTERFACE SymSmallestEigenVal
-  MODULE PROCEDURE SymSmallestEigenVal1
 END INTERFACE SymSmallestEigenVal
-
-PUBLIC :: SymSmallestEigenVal
 
 !----------------------------------------------------------------------------
 !
@@ -205,19 +203,15 @@ PUBLIC :: SymSmallestEigenVal
 !
 !- [ ] TODO use Cholsky factorization instead of LU as mat is
 ! symmetric.
-!
 
-INTERFACE
+INTERFACE SymSmallestEigenVal
   MODULE FUNCTION SymSmallestEigenVal2(mat, isFactor, ipiv, sigma, which, &
-    & NCV, maxIter, tol) &
-    & RESULT(ans)
+                                       NCV, maxIter, tol) RESULT(ans)
     REAL(DFP), INTENT(INOUT) :: mat(:, :)
-    !!
     !! Dense matrix
     !! If isFactor is false, then this matrix will change on return
     !! in this case, it will contain LU decomposition of `A-sigma*I`
     !! If isFactor is true, then this matrix will not change
-    !!
     LOGICAL(LGT), INTENT(INOUT) :: isFactor
     !! if mat is already factorized, the set isFactor to true
     !! if mat is not factorized, then set isFactor to false
@@ -244,10 +238,6 @@ INTERFACE
     REAL(DFP) :: ans
     !! smallest eigenvalue
   END FUNCTION SymSmallestEigenVal2
-END INTERFACE
-
-INTERFACE SymSmallestEigenVal
-  MODULE PROCEDURE SymSmallestEigenVal2
 END INTERFACE SymSmallestEigenVal
 
 END MODULE ARPACK_SAUPD
