@@ -1,31 +1,23 @@
-! This program is a part of EASIFEM library.
-! This program is directly taken from the
-! source: https://github.com/urbanjost/M_system.
+! This module is mainly taken from the source:
+! https://github.com/urbanjost/M_system.
 ! The original name of the program has been changed
 ! from M_SYSTEM to System_Method.
 ! This is to confirm to the coding sytles of easifem.
-!
-! Copyright (C) 2020-2021  Vikas Sharma, Ph.D
-!
-! This program is free software: you can redistribute it and/or modify
-! it under the terms of the GNU General Public License as published by
-! the Free Software Foundation, either version 3 of the License, or
-! (at your option) any later version.
-!
-! This program is distributed in the hope that it will be useful,
-! but WITHOUT ANY WARRANTY; without even the implied warranty of
-! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-! GNU General Public License for more details.
-!
-! You should have received a copy of the GNU General Public License
-! along with this program.  If not, see <https: //www.gnu.org/licenses/>
-!
+! Original program has been re-organized into module and submodule.
+! If you are using easifem for getting methods defined in this
+! module, then please use M_System module by using the above link.
+! We would like to thank the original author Urban Jost for creating
+! This useful module.
 
-!>
-!##NAME
-!    M_system(3fm) - [M_system::INTRO] Fortran interface to C system interface
-!    (LICENSE:PD)
-!##SYNOPSIS
+!> author: Vikas Sharma, Ph. D.
+! date: 2026-02-04
+! summary: Fortran interface to C system interface
+!
+!# System_Method
+!
+!    Fortran interface to C system interface.
+!
+!## Public objects
 !
 !   Public objects:
 !
@@ -63,6 +55,7 @@
 !    use M_system, only : system_cpu_time
 !
 !##DESCRIPTION
+!
 !    M_system(3fm) is a collection of Fortran procedures that call C
 !    or a C wrapper using the ISO_C_BINDING interface to access system calls.
 !    System calls are a special set of functions used by programs to communicate
@@ -76,7 +69,9 @@
 !
 !    One rule-of-thumb that should always be followed when calling a system
 !    call -- Always check the return value.
-!##ENVIRONMENT ACCESS
+!
+!## ENVIRONMENT ACCESS
+!
 !        o  system_putenv(3f):     call putenv(3c)
 !        o  system_getenv(3f):     function call to get_environment_variable(3f)
 !        o  system_unsetenv(3f):   call unsetenv(3c) to remove variable from environment
@@ -85,7 +80,9 @@
 !        o  system_initenv(3f):    initialize environment table for reading
 !        o  system_readenv(3f):    read next entry from environment table
 !        o  system_clearenv(3f):   emulate clearenv(3c) to clear environment
-!##FILE SYSTEM
+!
+!## FILE SYSTEM
+!
 !        o  system_chdir(3f):      call chdir(3c) to change current directory of a process
 !        o  system_getcwd(3f):     call getcwd(3c) to get pathname of current working directory
 !
@@ -120,16 +117,23 @@
 !
 !        o  fileglob(3f): Returns list of files using a file globbing pattern
 !
-!##STREAM IO
+!## STREAM IO
+!
 !        o  system_getc(3f): get a character from stdin
 !        o  system_putc(3f): put a character on stdout
-!##RANDOM NUMBERS
+!
+!## RANDOM NUMBERS
+!
 !        o  system_srand(3f): call srand(3c)
 !        o  system_rand(3f): call rand(3c)
-!##C ERROR INFORMATION
+!
+!## C ERROR INFORMATION
+!
 !        o  system_errno(3f): return errno(3c)
 !        o  system_perror(3f): call perror(3c) to display last C error message
-!##QUERIES
+!
+!## QUERIES
+!
 !        o  system_geteuid(3f): call geteuid(3c)
 !        o  system_getuid(3f): call getuid(3c)
 !        o  system_getegid(3f): call getegid(3c)
@@ -143,7 +147,8 @@
 !        o  system_getgrgid(3f): get group name associated with given GID
 !        o  system_cpu_time(3f) : get processor time in seconds using times(3c)
 !
-!##FUTURE DIRECTIONS
+!## FUTURE DIRECTIONS
+!
 !    A good idea of what system routines are commonly required is to refer
 !    to the POSIX binding standards. (Note: IEEE 1003.9-1992 was withdrawn 6
 !    February 2003.) The IEEE standard covering Fortran 77 POSIX bindings
@@ -152,7 +157,8 @@
 !    many university networks). For those who do have such access, the link
 !    is: POSIX Fortran 77 Language Interfaces (IEEE Std 1003.9-1992) (pdf)
 !
-!##SEE ALSO
+!## SEE ALSO
+!
 !    Some vendors provide their own way to access POSIX functions and make
 !    those available as modules; for instance ...
 !
@@ -166,14 +172,16 @@
 !          o fortranposix.
 
 MODULE System_Method
-USE, INTRINSIC :: ISO_C_BINDING, ONLY: C_FLOAT, C_INT, C_CHAR
-use,intrinsic     :: iso_c_binding,   only : c_ptr, c_f_pointer, c_null_char, c_null_ptr
+USE ISO_C_BINDING, ONLY: C_FLOAT, C_INT, C_CHAR
+USE ISO_C_BINDING, ONLY: C_PTR, c_f_pointer, C_NULL_CHAR, C_NULL_PTR
 USE, INTRINSIC :: ISO_C_BINDING
 USE, INTRINSIC :: ISO_FORTRAN_ENV, ONLY: INT8, INT16, INT32, INT64
 !!, real32, real64, real128, dp=>real128
-
+USE SystemInterface
 IMPLICIT NONE
+
 PRIVATE
+
 ! C types. Might be platform dependent
 INTEGER, PARAMETER, PUBLIC :: mode_t = INT32
 
@@ -183,14 +191,20 @@ PUBLIC :: system_srand
 !-!public :: system_getc
 !-!public :: system_putc
 
-PUBLIC :: system_getpid ! return process ID
-PUBLIC :: system_getppid ! return parent process ID
-PUBLIC :: system_getuid, system_geteuid ! return user ID
-PUBLIC :: system_getgid, system_getegid ! return group ID
+PUBLIC :: system_getpid
+!! return process ID
+PUBLIC :: system_getppid
+!! return parent process ID
+PUBLIC :: system_getuid, system_geteuid
+!! return user ID
+PUBLIC :: system_getgid, system_getegid
+!! return group ID
 PUBLIC :: system_setsid
 PUBLIC :: system_getsid
-PUBLIC :: system_kill ! (pid, signal) kill process (defaults: pid=0, signal=SIGTERM)
-PUBLIC :: system_signal ! (signal,[handler]) install signal handler subroutine
+PUBLIC :: system_kill
+!! (pid, signal) kill process (defaults: pid=0, signal=SIGTERM)
+PUBLIC :: system_signal
+!! (signal,[handler]) install signal handler subroutine
 
 PUBLIC :: system_errno
 PUBLIC :: system_perror
@@ -204,17 +218,28 @@ PUBLIC :: system_initenv
 PUBLIC :: system_readenv
 PUBLIC :: system_clearenv
 
-PUBLIC :: system_stat ! call stat(3c) to determine system information of file by name
-PUBLIC :: system_perm ! create string representing file permission and type
-PUBLIC :: system_access ! determine filename access or existence
-PUBLIC :: system_isdir ! determine if filename is a directory
-PUBLIC :: system_islnk ! determine if filename is a link
-PUBLIC :: system_isreg ! determine if filename is a regular file
-PUBLIC :: system_isblk ! determine if filename is a block device
-PUBLIC :: system_ischr ! determine if filename is a character device
-PUBLIC :: system_isfifo ! determine if filename is a fifo - named pipe
-PUBLIC :: system_issock ! determine if filename is a socket
-PUBLIC :: system_realpath ! resolve pathname
+PUBLIC :: system_stat
+!! call stat(3c) to determine system information of file by name
+PUBLIC :: system_perm
+!! create string representing file permission and type
+PUBLIC :: system_access
+!! determine filename access or existence
+PUBLIC :: system_isdir
+!! determine if filename is a directory
+PUBLIC :: system_islnk
+!! determine if filename is a link
+PUBLIC :: system_isreg
+!! determine if filename is a regular file
+PUBLIC :: system_isblk
+!! determine if filename is a block device
+PUBLIC :: system_ischr
+!! determine if filename is a character device
+PUBLIC :: system_isfifo
+!! determine if filename is a fifo - named pipe
+PUBLIC :: system_issock
+!! determine if filename is a socket
+PUBLIC :: system_realpath
+!! resolve pathname
 
 PUBLIC :: system_chdir
 PUBLIC :: system_rmdir
@@ -263,19 +288,25 @@ PUBLIC :: system_memcpy
 
 PUBLIC :: system_dir
 
-public :: R_GRP,R_OTH,R_USR,RWX_G,RWX_O,RWX_U,W_GRP,W_OTH,W_USR,X_GRP,X_OTH,X_USR,DEFFILEMODE,ACCESSPERMS
-PUBLIC :: R_OK, W_OK, X_OK, F_OK ! for system_access
+PUBLIC :: R_GRP, R_OTH, R_USR, RWX_G, RWX_O, RWX_U, W_GRP, W_OTH, W_USR, X_GRP
+PUBLIC :: X_OTH, X_USR, DEFFILEMODE, ACCESSPERMS
+PUBLIC :: R_OK, W_OK, X_OK, F_OK
+!! for system_access
 
 !----------------------------------------------------------------------------
-!
+!                                                              dirent_SYSTEMA
 !----------------------------------------------------------------------------
 
 TYPE, BIND(C) :: dirent_SYSTEMA
   INTEGER(C_LONG) :: d_ino
-  INTEGER(C_LONG) :: d_off; ! __off_t, check size
+  INTEGER(C_LONG) :: d_off
   INTEGER(C_SHORT) :: d_reclen
   CHARACTER(len=1, kind=C_CHAR) :: d_name(256)
-END TYPE
+END TYPE dirent_SYSTEMA
+
+!----------------------------------------------------------------------------
+!                                                              dirent_CYGWIN
+!----------------------------------------------------------------------------
 
 TYPE, BIND(C) :: dirent_CYGWIN
   INTEGER(C_INT) :: d_version
@@ -284,835 +315,22 @@ TYPE, BIND(C) :: dirent_CYGWIN
   CHARACTER(kind=C_CHAR) :: d_unused1(3)
   INTEGER(C_INT) :: d_internal1
   CHARACTER(len=1, kind=C_CHAR) :: d_name(256)
-END TYPE
+END TYPE dirent_CYGWIN
 
-!===================================================================================================================================
-!()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()!
-!===================================================================================================================================
-!===================================================================================================================================
-!()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()!
-!===================================================================================================================================
-INTERFACE
-  FUNCTION system_alarm(seconds) BIND(c, name="alarm")
-    IMPORT C_INT
-    INTEGER(kind=C_INT), VALUE :: seconds
-    INTEGER(kind=C_INT) system_alarm
-  END FUNCTION system_alarm
-END INTERFACE
-!===================================================================================================================================
-!()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()!
-!===================================================================================================================================
-INTERFACE
-  FUNCTION system_calloc(nelem, elsize) BIND(c, name="calloc")
-    IMPORT C_SIZE_T, C_INTPTR_T
-    INTEGER(C_SIZE_T), VALUE :: nelem, elsize
-    INTEGER(C_INTPTR_T) system_calloc
-  END FUNCTION system_calloc
-END INTERFACE
-!===================================================================================================================================
-!()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()!
-!===================================================================================================================================
-INTERFACE
-  PURE FUNCTION SYSTEM_CLOCK() BIND(c, name="clock")
-    IMPORT C_LONG
-    INTEGER(C_LONG) system_clock
-  END FUNCTION system_clock
-END INTERFACE
-!===================================================================================================================================
-!()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()!
-!===================================================================================================================================
-! Copy N bytes of SRC to DEST, no aliasing or overlapping allowed.
-! extern void *memcpy (void *dest, const void *src, size_t n);
-INTERFACE
-  SUBROUTINE system_memcpy(dest, src, n) BIND(C, name='memcpy')
-    IMPORT C_INTPTR_T, C_SIZE_T
-    INTEGER(C_INTPTR_T), VALUE :: dest
-    INTEGER(C_INTPTR_T), VALUE :: src
-    INTEGER(C_SIZE_T), VALUE :: n
-  END SUBROUTINE system_memcpy
-END INTERFACE
-!===================================================================================================================================
-!()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()!
-!===================================================================================================================================
-INTERFACE
-  SUBROUTINE system_free(ptr) BIND(c, name="free")
-    IMPORT C_INTPTR_T
-    INTEGER(C_INTPTR_T), VALUE :: ptr
-  END SUBROUTINE system_free
-END INTERFACE
-!===================================================================================================================================
-!()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()!
-!===================================================================================================================================
-INTERFACE
-  FUNCTION system_malloc(size) BIND(c, name="malloc")
-    IMPORT C_SIZE_T, C_INTPTR_T
-    INTEGER(C_SIZE_T), VALUE :: size
-    INTEGER(C_INTPTR_T) system_malloc
-  END FUNCTION system_malloc
-END INTERFACE
-!===================================================================================================================================
-!()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()!
-!===================================================================================================================================
-INTERFACE
-  FUNCTION system_realloc(ptr, size) BIND(c, name="realloc")
-    IMPORT C_SIZE_T, C_INTPTR_T
-    INTEGER(C_INTPTR_T), VALUE :: ptr
-    INTEGER(C_SIZE_T), VALUE :: size
-    INTEGER(C_INTPTR_T) system_realloc
-  END FUNCTION system_realloc
-END INTERFACE
-!===================================================================================================================================
-!()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()!
-!===================================================================================================================================
-INTERFACE
-  FUNCTION system_time(tloc) BIND(c, name="time")
-    ! tloc argument should be loaded via C_LOC from iso_c_binding
-    IMPORT C_PTR, C_LONG
-    TYPE(C_PTR), VALUE :: tloc
-    INTEGER(C_LONG) system_time
-  END FUNCTION system_time
-END INTERFACE
-!===================================================================================================================================
-!()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()!
-!===================================================================================================================================
-!  abstract interface
-!    integer(4) function compar_iface(a, b)
-!      import c_int
-!      integer, intent(in) :: a, b
-!-! Until implement TYPE(*)
-!      integer(kind=c_int) :: compar_iface
-!    end function compar_iface
-!  end interface
-!===================================================================================================================================
-!()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()!
-!===================================================================================================================================
-!  interface
-!    subroutine system_qsort(base, nel, width, compar) bind(c, name="qsort")
-!      import C_SIZE_T, compar_iface
-!      integer :: base
-!-! Until implement TYPE(*)
-!      integer(C_SIZE_T), value :: nel, width
-!      procedure(compar_iface) compar
-!    end subroutine system_qsort
-!  end interface
-!===================================================================================================================================
-!()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()!
-!===================================================================================================================================
-!>
-!!##NAME
-!!    system_srand(3f) - [M_system:PSEUDORANDOM] set seed for pseudo-random number generator system_rand(3f)
-!!    (LICENSE:PD)
-!!
-!!##SYNOPSIS
-!!
-!!    subroutine system_srand()
-!!
-!!##DESCRIPTION
-!!    system_srand(3f) calls the C routine srand(3c) The
-!!    srand(3c)/system_srand(3f) function uses its argument as the seed
-!!    for a new sequence of pseudo-random integers to be returned by
-!!    system_rand(3f)/rand(3c). These sequences are repeatable by calling
-!!    system_srand(3f) with the same seed value. If no seed value is
-!!    provided, the system_rand(3f) function is automatically seeded with
-!!    a value of 1.
-!!
-!!##EXAMPLE
-!!
-!!    Sample program:
-!!
-!!       program demo_system_srand
-!!       use M_system, only : system_srand, system_rand
-!!       implicit none
-!!       integer :: i,j
-!!       do j=1,2
-!!          call system_srand(1001)
-!!          do i=1,10
-!!             write(*,*)system_rand()
-!!          enddo
-!!          write(*,*)
-!!       enddo
-!!       end program demo_system_srand
-!!   expected results:
-!!
-!!      1512084687
-!!      1329390995
-!!      1874040748
-!!        60731048
-!!       239808950
-!!      2017891911
-!!        22055588
-!!      1105177318
-!!       347750200
-!!      1729645355
-!!
-!!      1512084687
-!!      1329390995
-!!      1874040748
-!!        60731048
-!!       239808950
-!!      2017891911
-!!        22055588
-!!      1105177318
-!!       347750200
-!!      1729645355
-!!
-!!##SEE ALSO
-!!    drand48(3c), random(3c)
-! void srand_system(int *seed)
-INTERFACE
-  SUBROUTINE system_srand(seed) BIND(c, name='srand')
-    IMPORT C_INT
-    INTEGER(kind=C_INT), INTENT(in) :: seed
-  END SUBROUTINE system_srand
-END INTERFACE
-!===================================================================================================================================
-!()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()!
-!===================================================================================================================================
-!>
-!!##NAME
-!!    system_kill(3f) - [M_system:SIGNALS] send a signal to a process or a group of processes
-!!    (LICENSE:PD)
-!!
-!!##SYNOPSIS
-!!
-!!    integer(kind=c_int) function system_kill(pid,sig)
-!!
-!!       integer,intent(in) :: pid
-!!       integer,intent(in) :: sig
-!!
-!!##DESCRIPTION
-!!
-!!    The kill() function shall send a signal to a process or a group of
-!!    processes specified by pid. The signal to be sent is specified by sig
-!!    and is either one from the list given in <signal.h> or 0. If sig is 0
-!!    (the null signal), error checking is performed but no signal is actually
-!!    sent. The null signal can be used to check the validity of pid.
-!!
-!!    For a process to have permission to send a signal to a process designated
-!!    by pid, unless the sending process has appropriate privileges, the real
-!!    or effective user ID of the sending process shall match the real or
-!!    saved set-user-ID of the receiving process.
-!!
-!!    If pid is greater than 0, sig shall be sent to the process whose process
-!!    ID is equal to pid.
-!!
-!!    If pid is 0, sig shall be sent to all processes (excluding an unspecified
-!!    set of system processes) whose process group ID is equal to the process
-!!    group ID of the sender, and for which the process has permission to send
-!!    a signal.
-!!
-!!    If pid is -1, sig shall be sent to all processes (excluding an unspecified
-!!    set of system processes) for which the process has permission to send
-!!    that signal.
-!!
-!!    If pid is negative, but not -1, sig shall be sent to all processes
-!!    (excluding an unspecified set of system processes) whose process group
-!!    ID is equal to the absolute value of pid, and for which the process has
-!!    permission to send a signal.
-!!
-!!    If the value of pid causes sig to be generated for the sending process,
-!!    and if sig is not blocked for the calling thread and if no other thread
-!!    has sig unblocked or is waiting in a sigwait() function for sig, either
-!!    sig or at least one pending unblocked signal shall be delivered to the
-!!    sending thread before kill() returns.
-!!
-!!    The user ID tests described above shall not be applied when sending
-!!    SIGCONT to a process that is a member of the same session as the sending
-!!    process.
-!!
-!!    An implementation that provides extended security controls may impose
-!!    further implementation-defined restrictions on the sending of signals,
-!!    including the null signal. In particular, the system may deny the
-!!    existence of some or all of the processes specified by pid.
-!!
-!!    The kill() function is successful if the process has permission to send
-!!    sig to any of the processes specified by pid. If kill() fails, no signal
-!!    shall be sent.
-!!
-!!
-!!##RETURN VALUE
-!!
-!!    Upon successful completion, 0 shall be returned. Otherwise, -1 shall be
-!!    returned and errno set to indicate the error.
-!!
-!!##ERRORS
-!!    The kill() function shall fail if:
-!!
-!!    EINVAL  The value of the sig argument is an invalid or unsupported
-!!            signal number.
-!!    EPERM   The process does not have permission to send the signal to
-!!            any receiving process.
-!!    ESRCH   No process or process group can be found corresponding to
-!!            that specified by pid. The following sections are informative.
-!!
-!!##EXAMPLE
-!!
-!!   Sample program:
-!!
-!!    program demo_system_kill
-!!    use M_system, only : system_kill
-!!    use M_system, only : system_perror
-!!    implicit none
-!!    integer           :: i,pid,ios,ierr,signal=9
-!!    character(len=80) :: argument
-!!
-!!       do i=1,command_argument_count()
-!!          ! get arguments from command line
-!!          call get_command_argument(i, argument)
-!!          ! convert arguments to integers assuming they are PID numbers
-!!          read(argument,'(i80)',iostat=ios) pid
-!!          if(ios.ne.0)then
-!!             write(*,*)'bad PID=',trim(argument)
-!!          else
-!!             write(*,*)'kill SIGNAL=',signal,' PID=',pid
-!!          ! send signal SIGNAL to pid PID
-!!             ierr=system_kill(pid,signal)
-!!          ! write message if an error was detected
-!!             if(ierr.ne.0)then
-!!                call system_perror('*demo_system_kill*')
-!!             endif
-!!          endif
-!!       enddo
-!!    end program demo_system_kill
-!!
-!!##SEE ALSO
-!!    getpid(), raise(), setsid(), sigaction(), sigqueue(),
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
 
-! int kill(pid_t pid, int sig);
-INTERFACE
-  FUNCTION system_kill(c_pid, c_signal) BIND(c, name="kill") RESULT(c_ierr)
-    IMPORT C_INT
-    INTEGER(kind=C_INT), VALUE, INTENT(in) :: c_pid
-    INTEGER(kind=C_INT), VALUE, INTENT(in) :: c_signal
-    INTEGER(kind=C_INT) :: c_ierr
-  END FUNCTION
-END INTERFACE
-!===================================================================================================================================
-!()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()!
-!===================================================================================================================================
-!>
-!!##NAME
-!!    system_errno(3f) - [M_system:ERROR_PROCESSING] C error return value
-!!    (LICENSE:PD)
-!!##SYNOPSIS
-!!
-!!    integer(kind=c_int) function system_errno()
-!!
-!!##DESCRIPTION
-!!    Many C routines return an error code which can be queried by errno.
-!!    The M_system(3fm) is primarily composed of Fortran routines that call
-!!    C routines. In the cases where an error code is returned vi system_errno(3f)
-!!    these routines will indicate it.
-!!
-!!##EXAMPLE
-!!
-!!   Sample program:
-!!
-!!    program demo_system_errno
-!!    use M_system, only : system_errno, system_unlink, system_perror
-!!    implicit none
-!!    integer :: stat
-!!    stat=system_unlink('not there/OR/anywhere')
-!!    if(stat.ne.0)then
-!!            write(*,*)'err=',system_errno()
-!!            call system_perror('*demo_system_errno*')
-!!    endif
-!!    end program demo_system_errno
-!!
-!!   Typical Results:
-!!
-!!    err=           2
-!!    *demo_system_errno*: No such file or directory
-
-INTERFACE
-  INTEGER(kind=C_INT) FUNCTION system_errno() BIND(C, name="my_errno")
-    IMPORT C_INT
-  END FUNCTION system_errno
-END INTERFACE
-!-!  if a macro on XLF
-!-!  interface system_errno
-!-!    function ierrno_() bind(c, name="ierrno_")
-!-!      import c_int
-!-!      integer(kind=c_int) :: ierrno_
-!-!    end function system_errno
-!-!  end interface
-!===================================================================================================================================
-!()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()!
-!===================================================================================================================================
-!>
-!!##NAME
-!!    system_geteuid(3f) - [M_system:QUERY] get effective UID of current process from Fortran by calling geteuid(3c)
-!!    (LICENSE:PD)
-!!##SYNOPSIS
-!!
-!!    integer(kind=c_int) function system_geteuid()
-!!
-!!##DESCRIPTION
-!!        The system_geteuid(3f) function shall return the effective user
-!!        ID of the calling process. The geteuid() function shall always be
-!!        successful and no return value is reserved to indicate the error.
-!!##EXAMPLE
-!!
-!!   Get group ID from Fortran:
-!!
-!!    program demo_system_geteuid
-!!    use M_system, only : system_geteuid
-!!    implicit none
-!!       write(*,*)'EFFECTIVE UID=',system_geteuid()
-!!    end program demo_system_geteuid
-INTERFACE
-  INTEGER(kind=C_INT) FUNCTION system_geteuid() BIND(C, name="geteuid")
-    IMPORT C_INT
-  END FUNCTION system_geteuid
-END INTERFACE
-!===================================================================================================================================
-!()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()!
-!===================================================================================================================================
-!>
-!!##NAME
-!!    system_getuid(3f) - [M_system:QUERY] get real UID of current process from Fortran by calling getuid(3c)
-!!    (LICENSE:PD)
-!!##SYNOPSIS
-!!
-!!    integer(kind=c_int) function system_getuid()
-!!
-!!##DESCRIPTION
-!!        The system_getuid(3f) function shall return the real user ID
-!!        of the calling process. The getuid() function shall always be
-!!        successful and no return value is reserved to indicate the error.
-!!##EXAMPLE
-!!
-!!   Get group ID from Fortran:
-!!
-!!    program demo_system_getuid
-!!    use M_system, only : system_getuid
-!!    implicit none
-!!       write(*,*)'UID=',system_getuid()
-!!    end program demo_system_getuid
-!!
-!!   Results:
-!!
-!!    UID=      197609
-INTERFACE
-  INTEGER(kind=C_INT) FUNCTION system_getuid() BIND(C, name="getuid")
-    IMPORT C_INT
-  END FUNCTION system_getuid
-END INTERFACE
-!===================================================================================================================================
-!()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()!
-!===================================================================================================================================
-!>
-!!##NAME
-!!    system_getegid(3f) - [M_system:QUERY] get the effective group ID (GID) of current process from Fortran by calling getegid(3c)
-!!    (LICENSE:PD)
-!!##SYNOPSIS
-!!
-!!    integer(kind=c_int) function system_getegid()
-!!##DESCRIPTION
-!!        The getegid() function returns the effective group ID of the
-!!        calling process.
-!!
-!!##RETURN VALUE
-!!        The getegid() should always be successful and no return value is
-!!        reserved to indicate an error.
-!!
-!!##ERRORS
-!!        No errors are defined.
-!!
-!!##SEE ALSO
-!!        getegid(), system_geteuid(), getuid(), setegid(), seteuid(), setgid(),
-!!        setregid(), setreuid(), setuid()
-!!
-!!##EXAMPLE
-!!
-!!   Get group ID from Fortran
-!!
-!!    program demo_system_getegid
-!!    use M_system, only : system_getegid
-!!    implicit none
-!!       write(*,*)'GID=',system_getegid()
-!!    end program demo_system_getegid
-INTERFACE
-  INTEGER(kind=C_INT) FUNCTION system_getegid() BIND(C, name="getegid")
-    IMPORT C_INT
-  END FUNCTION system_getegid
-END INTERFACE
-!===================================================================================================================================
-!()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()!
-!===================================================================================================================================
-!>
-!!##NAME
-!!    system_getgid(3f) - [M_system:QUERY] get the real group ID (GID) of current process from Fortran by calling getgid(3c)
-!!    (LICENSE:PD)
-!!##SYNOPSIS
-!!
-!!    integer(kind=c_int) function system_getgid()
-!!##DESCRIPTION
-!!        The getgid() function returns the real group ID of the calling process.
-!!
-!!##RETURN VALUE
-!!        The getgid() should always be successful and no return value is
-!!        reserved to indicate an error.
-!!
-!!##ERRORS
-!!        No errors are defined.
-!!
-!!##SEE ALSO
-!!        getegid(), system_geteuid(), getuid(), setegid(), seteuid(), setgid(),
-!!        setregid(), setreuid(), setuid()
-!!
-!!##EXAMPLE
-!!
-!!   Get group ID from Fortran
-!!
-!!    program demo_system_getgid
-!!    use M_system, only : system_getgid
-!!    implicit none
-!!       write(*,*)'GID=',system_getgid()
-!!    end program demo_system_getgid
-INTERFACE
-  INTEGER(kind=C_INT) FUNCTION system_getgid() BIND(C, name="getgid")
-    IMPORT C_INT
-  END FUNCTION system_getgid
-END INTERFACE
-!===================================================================================================================================
-!()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()!
-!===================================================================================================================================
-!>
-!!##NAME
-!!        system_setsid(3f) - [M_system:QUERY] create session and set the process group ID of a session leader
-!!        (LICENSE:PD)
-!!##SYNOPSIS
-!!
-!!        integer(kind=c_int) function system_setsid(pid)
-!!        integer(kind=c_int) :: pid
-!!##DESCRIPTION
-!!        The setsid() function creates a new session, if the calling process is not a process group leader. Upon return the
-!!        calling process shall be the session leader of this new session, shall be the process group leader of a new process
-!!        group, and shall have no controlling terminal. The process group ID of the calling process shall be set equal to the
-!!        process ID of the calling process. The calling process shall be the only process in the new process group and the only
-!!        process in the new session.
-!!
-!!##RETURN VALUE
-!!        Upon successful completion, setsid() shall return the value of the new process group ID of the calling process. Otherwise,
-!!        it shall return �-1 and set errno to indicate the error.
-!!##ERRORS
-!!        The setsid() function shall fail if:
-!!
-!!         o The calling process is already a process group leader
-!!         o the process group ID of a process other than the calling process matches the process ID of the calling process.
-!!##EXAMPLE
-!!
-!!   Set SID from Fortran
-!!
-!!    program demo_system_setsid
-!!    use M_system,      only : system_setsid
-!!    implicit none
-!!       write(*,*)'SID=',system_setsid()
-!!    end program demo_system_setsid
-INTERFACE
-  INTEGER(kind=C_INT) FUNCTION system_setsid() BIND(C, name="setsid")
-    IMPORT C_INT
-  END FUNCTION system_setsid
-END INTERFACE
-!===================================================================================================================================
-!()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()!
-!===================================================================================================================================
-!>
-!!##NAME
-!!        system_getsid(3f) - [M_system:QUERY] get the process group ID of a session leader
-!!        (LICENSE:PD)
-!!##SYNOPSIS
-!!
-!!        integer(kind=c_int) function system_getsid(pid)
-!!        integer(kind=c_int) :: pid
-!!##DESCRIPTION
-!!        The system_getsid() function obtains the process group ID of the
-!!        process that is the session leader of the process specified by pid.
-!!        If pid is 0, it specifies the calling process.
-!!##RETURN VALUE
-!!        Upon successful completion, system_getsid() shall return the process group
-!!        ID of the session leader of the specified process. Otherwise,
-!!        it shall return -1 and set errno to indicate the error.
-!!##EXAMPLE
-!!
-!!   Get SID from Fortran
-!!
-!!    program demo_system_getsid
-!!    use M_system,      only : system_getsid
-!!    use ISO_C_BINDING, only : c_int
-!!    implicit none
-!!       write(*,*)'SID=',system_getsid(0_c_int)
-!!    end program demo_system_getsid
-INTERFACE
-  INTEGER(kind=C_INT) FUNCTION system_getsid(c_pid) BIND(C, name="getsid")
-    IMPORT C_INT
-    INTEGER(kind=C_INT) :: c_pid
-  END FUNCTION system_getsid
-END INTERFACE
-!===================================================================================================================================
-!()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()!
-!===================================================================================================================================
-!>
-!!##NAME
-!!    system_getpid(3f) - [M_system:QUERY] get PID (process ID) of current process from Fortran by calling getpid(3c)
-!!    (LICENSE:PD)
-!!##SYNOPSIS
-!!
-!!    integer function system_getpid()
-!!##DESCRIPTION
-!!        The system_getpid() function returns the process ID of the
-!!        calling process.
-!!##RETURN VALUE
-!!        The value returned is the integer process ID. The system_getpid()
-!!        function shall always be successful and no return value is reserved
-!!        to indicate an error.
-!!##EXAMPLE
-!!
-!!   Get process PID from Fortran
-!!
-!!    program demo_system_getpid
-!!    use M_system, only : system_getpid
-!!    implicit none
-!!       write(*,*)'PID=',system_getpid()
-!!    end program demo_system_getpid
-
-INTERFACE
-  PURE INTEGER(kind=C_INT) FUNCTION system_getpid() BIND(C, name="getpid")
-    IMPORT C_INT
-  END FUNCTION system_getpid
-END INTERFACE
-!===================================================================================================================================
-!()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()!
-!===================================================================================================================================
-!>
-!!##NAME
-!!    system_getppid(3f) - [M_system:QUERY] get parent process ID (PPID) of current process from Fortran by calling getppid(3c)
-!!    (LICENSE:PD)
-!!##SYNOPSIS
-!!
-!!    integer(kind=c_int) function system_getppid()
-!!##DESCRIPTION
-!!        The system_getppid() function returns the parent process ID of
-!!        the calling process.
-!!
-!!##RETURN VALUE
-!!        The system_getppid() function should always be successful and no
-!!        return value is reserved to indicate an error.
-!!
-!!##ERRORS
-!!        No errors are defined.
-!!
-!!##SEE ALSO
-!!        exec, fork(), getpgid(), getpgrp(), getpid(), kill(),
-!!        setpgid(), setsid()
-!!
-!!##EXAMPLE
-!!
-!!   Get parent process PID (PPID) from Fortran
-!!
-!!    program demo_system_getppid
-!!    use M_system, only : system_getppid
-!!    implicit none
-!!       write(*,*)'PPID=',system_getppid()
-!!    end program demo_system_getppid
-INTERFACE
-  INTEGER(kind=C_INT) FUNCTION system_getppid() BIND(C, name="getppid")
-    IMPORT C_INT
-  END FUNCTION system_getppid
-END INTERFACE
-!===================================================================================================================================
-!()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()!
-!===================================================================================================================================
-!>
-!!##NAME
-!!    system_umask(3fp) - [M_system] set and get the file mode creation mask
-!!    (LICENSE:PD)
-!!##SYNOPSIS
-!!
-!!    integer(kind=c_int) function system_umask(umask_value)
-!!
-!!##DESCRIPTION
-!!        The system_umask() function shall set the file mode creation mask of the
-!!        process to cmask and return the previous value of the mask. Only
-!!        the file permission bits of cmask (see <sys/stat.h>) are used;
-!!        the meaning of the other bits is implementation-defined.
-!!
-!!        The file mode creation mask of the process is used to turn off
-!!        permission bits in the mode argument supplied during calls to
-!!        the following functions:
-!!
-!!         *  open(), openat(), creat(), mkdir(), mkdirat(), mkfifo(), and mkfifoat()
-!!         *  mknod(), mknodat()
-!!         *  mq_open()
-!!         *  sem_open()
-!!
-!!        Bit positions that are set in cmask are cleared in the mode of the created file.
-!!
-!!##RETURN VALUE
-!!        The file permission bits in the value returned by umask() shall be
-!!        the previous value of the file mode creation mask. The state of any
-!!        other bits in that value is unspecified, except that a subsequent
-!!        call to umask() with the returned value as cmask shall leave the
-!!        state of the mask the same as its state before the first call,
-!!        including any unspecified use of those bits.
-!!
-!!##EXAMPLE
-!!
-!!   Sample program:
-!!
-!!    program demo_system_umask
-!!    use M_system, only : system_getumask, system_setumask
-!!    implicit none
-!!    integer value
-!!    integer mask
-!!    mask=O'002'
-!!    value=system_setumask(mask)
-!!    write(*,'(a,"octal=",O4.4," decimal=",i0)')'OLD VALUE=',value,value
-!!    value=system_getumask()
-!!    write(*,'(a,"octal=",O4.4," decimal=",i0)')'MASK=',mask,mask
-!!    write(*,'(a,"octal=",O4.4," decimal=",i0)')'NEW VALUE=',value,value
-!!    end program demo_system_umask
-!!
-!!   Expected results:
-!!
-!!    OLD VALUE=octal=0022 decimal=18
-!!    MASK=octal=0002 decimal=2
-!!    NEW VALUE=octal=0002 decimal=2
-INTERFACE
-  INTEGER(kind=C_INT) FUNCTION system_umask(umask_value) BIND(C, name="umask")
-    IMPORT C_INT
-    INTEGER(kind=C_INT), VALUE :: umask_value
-  END FUNCTION system_umask
-END INTERFACE
-!===================================================================================================================================
-!()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()!
-!===================================================================================================================================
-!>
-!!##NAME
-!!    system_rand(3f) - [M_system:PSEUDORANDOM] call pseudo-random number generator rand(3c)
-!!    (LICENSE:PD)
-!!##SYNOPSIS
-!!
-!!    integer(kind=c_int) :: function system_rand()
-!!##DESCRIPTION
-!!    Use rand(3c) to generate pseudo-random numbers.
-!!
-!!##EXAMPLE
-!!
-!!    Sample program:
-!!
-!!       program demo_system_rand
-!!       use M_system, only : system_srand, system_rand
-!!       implicit none
-!!       integer :: i
-!!
-!!       call system_srand(1001)
-!!       do i=1,10
-!!          write(*,*)system_rand()
-!!       enddo
-!!       write(*,*)
-!!
-!!       end program demo_system_rand
-!!   expected results:
-!!
-!!      1512084687
-!!      1329390995
-!!      1874040748
-!!        60731048
-!!       239808950
-!!      2017891911
-!!        22055588
-!!      1105177318
-!!       347750200
-!!      1729645355
-!!
-!!      1512084687
-!!      1329390995
-!!      1874040748
-!!        60731048
-!!       239808950
-!!      2017891911
-!!        22055588
-!!      1105177318
-!!       347750200
-!!      1729645355
-INTERFACE
-  INTEGER(kind=C_INT) FUNCTION system_rand() BIND(C, name="rand")
-    IMPORT C_INT
-  END FUNCTION system_rand
-END INTERFACE
-!===================================================================================================================================
-!()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()!
-!===================================================================================================================================
 INTERFACE
   SUBROUTINE c_flush() BIND(C, name="my_flush")
   END SUBROUTINE c_flush
 END INTERFACE
-!===================================================================================================================================
-!()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()!
-!===================================================================================================================================
-!>
-!!##NAME
-!!    system_initenv(3f) - [M_system:ENVIRONMENT] initialize environment table pointer and size so table can be read by readenv(3f)
-!!    (LICENSE:PD)
-!!##SYNOPSIS
-!!
-!!       subroutine system_initenv()
-!!##DESCRIPTION
-!!    A simple interface allows reading the environment variable table
-!!    of the process. Call system_initenv(3f) to initialize reading the
-!!    environment table, then call system_readenv(3f) until a blank line
-!!    is returned. If more than one thread reads the environment or the
-!!    environment is changed while being read the results are undefined.
-!!
-!!##EXAMPLE
-!!
-!!   Sample program:
-!!
-!!    program demo_system_initenv
-!!    use M_system, only : system_initenv, system_readenv
-!!    character(len=:),allocatable :: string
-!!       call system_initenv()
-!!       do
-!!          string=system_readenv()
-!!          if(string.eq.'')then
-!!             exit
-!!          else
-!!             write(*,'(a)')string
-!!          endif
-!!       enddo
-!!    end program demo_system_initenv
-!!
-!!   Sample results:
-!!
-!!    USERDOMAIN_ROAMINGPROFILE=buzz
-!!    HOMEPATH=\Users\JSU
-!!    APPDATA=C:\Users\JSU\AppData\Roaming
-!!    MANPATH=/home/urbanjs/V600/LIBRARY/libGPF/download/tmp/man:/home/urbanjs/V600/doc/man:::
-!!    DISPLAYNUM=0
-!!    ProgramW6432=C:\Program Files
-!!    HOSTNAME=buzz
-!!    XKEYSYMDB=/usr/share/X11/XKeysymDB
-!!    PUBLISH_CMD=
-!!    OnlineServices=Online Services
-!!         :
-!!         :
-!!         :
 
 integer(kind=c_long),bind(c,name="longest_env_variable") :: longest_env_variable
 
-!===================================================================================================================================
-!()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()!
-!===================================================================================================================================
-INTERFACE
-  SUBROUTINE system_initenv() BIND(C, NAME='my_initenv')
-  END SUBROUTINE system_initenv
-END INTERFACE
-!===================================================================================================================================
-!()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()!
-!===================================================================================================================================
-!-!type(c_ptr),bind(c,name="environ") :: c_environ
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
 
 INTEGER(kind=mode_t), BIND(c, name="FS_IRGRP") :: R_GRP
 INTEGER(kind=mode_t), BIND(c, name="FS_IROTH") :: R_OTH
@@ -1131,9 +349,11 @@ INTEGER(kind=mode_t), BIND(c, name="FACCESSPERMS") :: ACCESSPERMS
 
 ! Host names are limited to {HOST_NAME_MAX} bytes.
 INTEGER(kind=mode_t), BIND(c, name="FHOST_NAME_MAX") :: HOST_NAME_MAX
-!===================================================================================================================================
-!()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()!
-!===================================================================================================================================
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
 ! for system_access(3f)
 !integer(kind=c_int),bind(c,name="F_OK") :: F_OK
 !integer(kind=c_int),bind(c,name="R_OK") :: R_OK
@@ -1144,100 +364,102 @@ INTEGER(kind=C_INT), PARAMETER :: F_OK = 0
 INTEGER(kind=C_INT), PARAMETER :: R_OK = 4
 INTEGER(kind=C_INT), PARAMETER :: W_OK = 2
 INTEGER(kind=C_INT), PARAMETER :: X_OK = 1
-!===================================================================================================================================
-!()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()!
-!===================================================================================================================================
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
 ABSTRACT INTERFACE !  mold for signal handler to be installed by system_signal
   SUBROUTINE handler(signum)
     INTEGER :: signum
   END SUBROUTINE handler
 END INTERFACE
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
 TYPE handler_pointer
   PROCEDURE(handler), POINTER, NOPASS :: sub
 END TYPE handler_pointer
-INTEGER, PARAMETER :: no_of_signals = 64 !  obtained with command: kill -l
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTEGER, PARAMETER :: no_of_signals = 64
+!!  obtained with command: kill -l
+
 TYPE(handler_pointer), DIMENSION(no_of_signals) :: handler_ptr_array
-!===================================================================================================================================
+
+!----------------------------------------------------------------------------
+!                                                                 Contains
+!----------------------------------------------------------------------------
+
 CONTAINS
-!===================================================================================================================================
-!()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()!
-!===================================================================================================================================
-!>
-!!##NAME
-!!     system_signal(3f) - [M_system:SIGNALS] install a signal handler
-!!     (LICENSE:PD)
-!!
-!!##SYNOPSIS
-!!
-!!     subroutine system_signal(sig,handler)
-!!
-!!        integer,intent(in) :: sig
-!!        interface
-!!          subroutine handler(signum)
-!!          integer :: signum
-!!          end subroutine handler
-!!        end interface
-!!        optional :: handler
-!!
-!!##DESCRIPTION
-!!    Calling system_signal(NUMBER, HANDLER) causes user-defined
-!!    subroutine HANDLER to be executed when the signal NUMBER is
-!!    caught. The same subroutine HANDLER maybe installed to handle
-!!    different signals. HANDLER takes only one integer argument which
-!!    is assigned the signal number that is caught. See sample program
-!!    below for illustration.
-!!
-!!    Calling system_signal(NUMBER) installs a do-nothing handler. This
-!!    is not equivalent to ignoring the signal NUMBER though, because
-!!    the signal can still interrupt any sleep or idle-wait.
-!!
-!!    Note that the signals SIGKILL and SIGSTOP cannot be handled
-!!    this way.
-!!
-!!    [Compare signal(2) and the GNU extension signal in gfortran.]
-!!
-!!##EXAMPLE
-!!
-!!    Sample program:
-!!
-!!     program demo_system_signal
-!!     use M_system, only : system_signal
-!!     implicit none
-!!     logical :: loop=.true.
-!!     integer, parameter :: SIGINT=2,SIGQUIT=3
-!!     call system_signal(SIGINT,exitloop)
-!!     call system_signal(SIGQUIT,quit)
-!!     write(*,*)'Starting infinite loop. Press Ctrl+C to exit.'
-!!     do while(loop)
-!!     enddo
-!!     write(*,*)'Reporting from outside the infinite loop.'
-!!     write(*,*)'Starting another loop. Do Ctrl+\ anytime to quit.'
-!!     loop=.true.
-!!     call system_signal(2)
-!!     write(*,*)'Just installed do-nothing handler for SIGINT. Try Ctrl+C to test.'
-!!     do while(loop)
-!!     enddo
-!!     write(*,*)'You should never see this line when running this demo.'
-!!
-!!     contains
-!!
-!!     subroutine exitloop(signum)
-!!       integer :: signum
-!!       write(*,*)'Caught SIGINT. Exiting infinite loop.'
-!!       loop=.false.
-!!     end subroutine exitloop
-!!
-!!     subroutine quit(signum)
-!!       integer :: signum
-!!       STOP 'Caught SIGQUIT. Stopping demo.'
-!!     end subroutine quit
-!!     end program demo_system_signal
-!!
-!!##AUTHOR
-!!    Somajit Dey
-!!
-!!##LICENSE
-!!    Public Domain
+
+!----------------------------------------------------------------------------
+!                                                              system_signal
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2026-02-05
+! summary: Install a signal handler
+!
+!# System_Signal
+!
+! Calling system_signal(NUMBER, HANDLER) causes user-defined
+! subroutine HANDLER to be executed when the signal NUMBER is
+! caught. The same subroutine HANDLER maybe installed to handle
+! different signals. HANDLER takes only one integer argument which
+! is assigned the signal number that is caught. See sample program
+! below for illustration.
+!
+! Calling system_signal(NUMBER) installs a do-nothing handler. This
+! is not equivalent to ignoring the signal NUMBER though, because
+! the signal can still interrupt any sleep or idle-wait.
+!
+! Note that the signals SIGKILL and SIGSTOP cannot be handled
+! this way.
+!
+!
+!## Usage
+!
+!```fortran
+!     program demo_system_signal
+!     use M_system, only : system_signal
+!     implicit none
+!     logical :: loop=.true.
+!     integer, parameter :: SIGINT=2,SIGQUIT=3
+!     call system_signal(SIGINT,exitloop)
+!     call system_signal(SIGQUIT,quit)
+!     write(*,*)'Starting infinite loop. Press Ctrl+C to exit.'
+!     do while(loop)
+!     enddo
+!     write(*,*)'Reporting from outside the infinite loop.'
+!     write(*,*)'Starting another loop. Do Ctrl+\ anytime to quit.'
+!     loop=.true.
+!     call system_signal(2)
+!     write(*,*)'Just installed do-nothing handler for SIGINT. Try Ctrl+C to test.'
+!     do while(loop)
+!     enddo
+!     write(*,*)'You should never see this line when running this demo.'
+!
+!     contains
+!
+!     subroutine exitloop(signum)
+!       integer :: signum
+!       write(*,*)'Caught SIGINT. Exiting infinite loop.'
+!       loop=.false.
+!     end subroutine exitloop
+!
+!     subroutine quit(signum)
+!       integer :: signum
+!       STOP 'Caught SIGQUIT. Stopping demo.'
+!     end subroutine quit
+!     end program demo_system_signal
+! ```
+
 SUBROUTINE system_signal(signum, handler_routine)
   INTEGER, INTENT(in) :: signum
   PROCEDURE(handler), OPTIONAL :: handler_routine
@@ -1258,17 +480,25 @@ SUBROUTINE system_signal(signum, handler_routine)
     !!handler_ptr_array(signum)%sub => null(handler_ptr_array(signum)%sub)
     handler_ptr_array(signum)%sub => NULL()
   END IF
+
   c_handler = C_FUNLOC(f_handler)
   ret = c_signal(signum, c_handler)
 END SUBROUTINE system_signal
 
+!----------------------------------------------------------------------------
+!                                                                  f_handler
+!----------------------------------------------------------------------------
+
 SUBROUTINE f_handler(signum) BIND(c)
   INTEGER(C_INT), INTENT(in), VALUE :: signum
-    if(associated(handler_ptr_array(signum)%sub))call handler_ptr_array(signum)%sub(signum)
+  IF (ASSOCIATED(handler_ptr_array(signum)%sub)) &
+    CALL handler_ptr_array(signum)%sub(signum)
 END SUBROUTINE f_handler
-!===================================================================================================================================
-!()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()!
-!===================================================================================================================================
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
 !>
 !!##NAME
 !!    system_access(3f) - [M_system:QUERY_FILE] checks accessibility or existence of a pathname
@@ -1322,6 +552,7 @@ END SUBROUTINE f_handler
 !!              write(*,*)' is ',trim(names(i)),' executable?   ', system_access(names(i),X_OK)
 !!           enddo
 !!           end program demo_system_access
+
 ELEMENTAL impure FUNCTION system_access(pathname, amode)
   IMPLICIT NONE
 
@@ -1350,9 +581,11 @@ ELEMENTAL impure FUNCTION system_access(pathname, amode)
   END IF
 
 END FUNCTION system_access
-!===================================================================================================================================
-!()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()!
-!===================================================================================================================================
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
 !>
 !!##NAME
 !!        system_utime(3f) - [M_system:FILE_SYSTEM] set file access and modification times
@@ -1451,6 +684,7 @@ END FUNCTION system_access
 !!             endif
 !!          enddo
 !!       end program demo_system_utime
+
 FUNCTION system_utime(pathname, times)
   IMPLICIT NONE
 
@@ -1485,9 +719,11 @@ FUNCTION system_utime(pathname, times)
   END IF
 
 END FUNCTION system_utime
-!===================================================================================================================================
-!()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()!
-!===================================================================================================================================
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
 FUNCTION timestamp() RESULT(epoch)
   USE, INTRINSIC :: ISO_C_BINDING, ONLY: C_LONG
   IMPLICIT NONE
@@ -1502,9 +738,11 @@ FUNCTION timestamp() RESULT(epoch)
   END INTERFACE
   epoch = c_time(INT(0, kind=8))
 END FUNCTION timestamp
-!===================================================================================================================================
-!()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()!
-!===================================================================================================================================
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
 !>
 !!##NAME
 !!       system_realpath(3f) - [M_system:FILE_SYSTEM] call realpath(3c) to resolve a pathname
@@ -1573,13 +811,13 @@ END FUNCTION timestamp
 !!   ..=>/usr/share
 !!   *system_realpath* error for pathname NotThere:: No such file or directory
 !!   NotThere=>NotThere
+
 FUNCTION system_realpath(input) RESULT(string)
-
 ! ident_3="@(#)M_system::system_realpath(3f):call realpath(3c) to get pathname of current working directory"
-
   CHARACTER(len=*), INTENT(in) :: input
   TYPE(C_PTR) :: c_output
   CHARACTER(len=:), ALLOCATABLE :: string
+
   INTERFACE
     FUNCTION c_realpath(c_input) BIND(c, name="my_realpath") RESULT(c_buffer)
       IMPORT C_CHAR, C_SIZE_T, C_PTR, C_INT
@@ -1587,7 +825,7 @@ FUNCTION system_realpath(input) RESULT(string)
       TYPE(C_PTR) :: c_buffer
     END FUNCTION
   END INTERFACE
-!-----------------------------------------------------------------------------------------------------------------------------------
+
   c_output = c_realpath(str2_carr(TRIM(input)))
   IF (.NOT. C_ASSOCIATED(c_output)) THEN
     string = CHAR(0)
@@ -1595,9 +833,11 @@ FUNCTION system_realpath(input) RESULT(string)
     string = C2F_string(c_output)
   END IF
 END FUNCTION system_realpath
-!===================================================================================================================================
-!()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()!
-!===================================================================================================================================
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
 !>
 !!##NAME
 !!    system_issock(3f) - [M_system:QUERY_FILE] checks if argument is a socket
@@ -1645,11 +885,10 @@ END FUNCTION system_realpath
 !!       write(*,*)' is ',trim(names(i)),' a socket? ', system_issock(names(i))
 !!    enddo
 !!    end program demo_system_issock
+
 FUNCTION system_issock(pathname)
   IMPLICIT NONE
-
 ! ident_4="@(#)M_system::system_issock(3f): determine if pathname is a socket"
-
   CHARACTER(len=*), INTENT(in) :: pathname
   LOGICAL :: system_issock
 
@@ -1666,11 +905,12 @@ FUNCTION system_issock(pathname)
   ELSE
     system_issock = .FALSE.
   END IF
-
 END FUNCTION system_issock
-!===================================================================================================================================
-!()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()!
-!===================================================================================================================================
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
 !>
 !!##NAME
 !!    system_isfifo(3f) - [M_system:QUERY_FILE] checks if argument is a fifo - named pipe
@@ -1718,6 +958,7 @@ END FUNCTION system_issock
 !!       write(*,*)' is ',trim(names(i)),' a fifo(named pipe)? ', system_isfifo(names(i))
 !!    enddo
 !!    end program demo_system_isfifo
+
 ELEMENTAL impure FUNCTION system_isfifo(pathname)
   IMPLICIT NONE
 
@@ -1741,9 +982,11 @@ ELEMENTAL impure FUNCTION system_isfifo(pathname)
   END IF
 
 END FUNCTION system_isfifo
-!===================================================================================================================================
-!()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()!
-!===================================================================================================================================
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
 !>
 !!##NAME
 !!    system_ischr(3f) - [M_system:QUERY_FILE] checks if argument is a character device
@@ -1793,6 +1036,7 @@ END FUNCTION system_isfifo
 !!    end program demo_system_ischr
 !!
 !!   Results:
+
 ELEMENTAL impure FUNCTION system_ischr(pathname)
   IMPLICIT NONE
 
@@ -1816,9 +1060,11 @@ ELEMENTAL impure FUNCTION system_ischr(pathname)
   END IF
 
 END FUNCTION system_ischr
-!===================================================================================================================================
-!()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()!
-!===================================================================================================================================
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
 !>
 !!##NAME
 !!    system_isreg(3f) - [M_system:QUERY_FILE] checks if argument is a regular file
@@ -1885,6 +1131,7 @@ END FUNCTION system_ischr
 !!         filenames=pack(filenames,mask=mymask)
 !!         write(*,'(a)')(trim(filenames(i)),i=1,size(filenames))
 !!    end program demo_system_isreg
+
 ELEMENTAL impure FUNCTION system_isreg(pathname)
   IMPLICIT NONE
 
@@ -1908,9 +1155,11 @@ ELEMENTAL impure FUNCTION system_isreg(pathname)
   END IF
 
 END FUNCTION system_isreg
-!===================================================================================================================================
-!()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()!
-!===================================================================================================================================
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
 !>
 !!##NAME
 !!    system_islnk(3f) - [M_system:QUERY_FILE] checks if argument is a link
@@ -1963,6 +1212,7 @@ END FUNCTION system_isreg
 !!    end program demo_system_islnk
 !!
 !!   Results:
+
 ELEMENTAL impure FUNCTION system_islnk(pathname)
   IMPLICIT NONE
 
@@ -1986,9 +1236,10 @@ ELEMENTAL impure FUNCTION system_islnk(pathname)
   END IF
 
 END FUNCTION system_islnk
-!===================================================================================================================================
-!()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()!
-!===================================================================================================================================
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
 !>
 !!##NAME
 !! system_isblk(3f) - [M_system:QUERY_FILE] checks if argument is a block device
@@ -2038,6 +1289,7 @@ END FUNCTION system_islnk
 !!    end program demo_system_isblk
 !!
 !!   Results:
+
 ELEMENTAL impure FUNCTION system_isblk(pathname)
   IMPLICIT NONE
 
@@ -2061,9 +1313,11 @@ ELEMENTAL impure FUNCTION system_isblk(pathname)
   END IF
 
 END FUNCTION system_isblk
-!===================================================================================================================================
-!()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()!
-!===================================================================================================================================
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
 !>
 !!##NAME
 !!    system_isdir(3f) - [M_system:QUERY_FILE] checks if argument is a directory path
@@ -2137,11 +1391,10 @@ END FUNCTION system_isblk
 !!
 !!      TEST is a directory
 !!      EXAMPLE is a directory
+
 ELEMENTAL impure FUNCTION system_isdir(dirname)
   IMPLICIT NONE
-
 ! ident_10="@(#)M_system::system_isdir(3f): determine if DIRNAME is a directory name"
-
   CHARACTER(len=*), INTENT(in) :: dirname
   LOGICAL :: system_isdir
 
@@ -2160,9 +1413,11 @@ ELEMENTAL impure FUNCTION system_isdir(dirname)
   END IF
 
 END FUNCTION system_isdir
-!===================================================================================================================================
-!()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()!
-!===================================================================================================================================
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
 !>
 !!##NAME
 !!    system_chown(3f) - [M_system:FILE_SYSTEM] change file owner and group
@@ -2222,11 +1477,10 @@ END FUNCTION system_isdir
 !!       endif
 !!    enddo
 !!    end program demo_system_chown
+
 ELEMENTAL impure FUNCTION system_chown(dirname, owner, group)
   IMPLICIT NONE
-
 ! ident_11="@(#)M_system::system_chown(3f): change owner and group of a file relative to directory file descriptor"
-
   CHARACTER(len=*), INTENT(in) :: dirname
   INTEGER, INTENT(in) :: owner
   INTEGER, INTENT(in) :: group
@@ -2250,9 +1504,11 @@ ELEMENTAL impure FUNCTION system_chown(dirname, owner, group)
   END IF
 
 END FUNCTION system_chown
-!===================================================================================================================================
-!()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()!
-!===================================================================================================================================
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
 !>
 !!##NAME
 !!        system_cpu_time(3f) - [M_system] get processor time by calling times(3c)
@@ -2316,8 +1572,8 @@ END FUNCTION system_chown
 !-!      real(kind=c_float) :: c_user,c_system,c_total
 !-!   end subroutine system_cpu_time
 !-!end interface
-SUBROUTINE system_cpu_time(total, user, system)
 
+SUBROUTINE system_cpu_time(total, user, system)
   REAL, INTENT(out) :: user, system, total
   REAL(kind=C_FLOAT) :: c_user, c_system, c_total
 
@@ -2333,9 +1589,10 @@ SUBROUTINE system_cpu_time(total, user, system)
   system = c_system
   total = c_total
 END SUBROUTINE system_cpu_time
-!===================================================================================================================================
-!()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()!
-!===================================================================================================================================
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
 !>
 !!##NAME
 !!        system_link(3f) - [M_system:FILE_SYSTEM] link one file to another
@@ -2453,9 +1710,10 @@ ELEMENTAL impure FUNCTION system_link(oldname, newname) RESULT(ierr)
   ierr = c_ierr
 
 END FUNCTION system_link
-!===================================================================================================================================
-!()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()!
-!===================================================================================================================================
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
 !>
 !!##NAME
 !!        system_unlink(3f) - [M_system:FILE_SYSTEM] remove a directory
@@ -2518,6 +1776,7 @@ END FUNCTION system_link
 !!       call system_perror('*demo_system_unlink*')
 !!    endif
 !!    end program demo_system_unlink
+
 ELEMENTAL impure FUNCTION system_unlink(fname) RESULT(ierr)
 
 ! ident_13="@(#)M_system::system_unlink(3f): call unlink(3c) to rm file link"
@@ -2534,9 +1793,10 @@ ELEMENTAL impure FUNCTION system_unlink(fname) RESULT(ierr)
   END INTERFACE
   ierr = c_unlink(str2_carr(TRIM(fname)))
 END FUNCTION system_unlink
-!===================================================================================================================================
-!()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()!
-!===================================================================================================================================
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
 !>
 !!##NAME
 !!    system_setumask(3f) - [M_system:FILE_SYSTEM] set the file mode creation umask
@@ -2607,9 +1867,10 @@ INTEGER FUNCTION system_setumask(umask_value) RESULT(old_umask)
   old_umask = system_umask(umask_c) ! set current umask
 
 END FUNCTION system_setumask
-!===================================================================================================================================
-!()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()!
-!===================================================================================================================================
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
 !>
 !!##NAME
 !!    system_getumask(3f) - [M_system:QUERY_FILE] get current umask
@@ -2648,9 +1909,11 @@ INTEGER FUNCTION system_getumask() RESULT(umask_value)
   idum = system_umask(old_umask) ! set back to original mask
   umask_value = old_umask
 END FUNCTION system_getumask
-!===================================================================================================================================
-!()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()!
-!===================================================================================================================================
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
 !>
 !!##NAME
 !!      perror(3f) - [M_system:ERROR_PROCESSING] print error message for last C error on stderr
@@ -2689,6 +1952,7 @@ END FUNCTION system_getumask
 !!
 !!    *demo_system_perror*:/NOT/THERE/OR/ANYWHERE: No such file or directory
 !!    That is all Folks!
+
 SUBROUTINE system_perror(prefix)
   USE, INTRINSIC :: ISO_FORTRAN_ENV, ONLY: ERROR_UNIT, INPUT_UNIT, OUTPUT_UNIT ! access computing environment
 
@@ -2711,9 +1975,11 @@ SUBROUTINE system_perror(prefix)
   CALL c_flush()
 
 END SUBROUTINE system_perror
-!===================================================================================================================================
-!()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()!
-!===================================================================================================================================
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
 !>
 !!##NAME
 !!    system_chdir(3f) - [M_system_FILE_SYSTEM] call chdir(3c) from Fortran to change working directory
@@ -2778,10 +2044,9 @@ END SUBROUTINE system_perror
 !!      /home/urbanjs/V600
 !!      /tmp
 !!      *CHDIR TEST* IERR=           0
+
 SUBROUTINE system_chdir(path, err)
-
 ! ident_15="@(#)M_system::system_chdir(3f): call chdir(3c)"
-
   CHARACTER(len=*) :: path
   INTEGER, OPTIONAL, INTENT(out) :: err
 
@@ -2798,9 +2063,11 @@ SUBROUTINE system_chdir(path, err)
     err = loc_err
   END IF
 END SUBROUTINE system_chdir
-!===================================================================================================================================
-!()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()!
-!===================================================================================================================================
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
 !>
 !!##NAME
 !!      system_remove(3f) - [M_system_FILE_SYSTEM] call remove(3c) to remove file
@@ -2867,10 +2134,9 @@ END SUBROUTINE system_chdir
 !!    John S. Urban
 !!##LICENSE
 !!    Public Domain
+
 ELEMENTAL impure FUNCTION system_remove(path) RESULT(err)
-
 ! ident_16="@(#)M_system::system_remove(3f): call remove(3c) to remove file"
-
   CHARACTER(*), INTENT(in) :: path
   INTEGER(C_INT) :: err
 
@@ -2884,9 +2150,11 @@ ELEMENTAL impure FUNCTION system_remove(path) RESULT(err)
 !-----------------------------------------------------------------------------------------------------------------------------------
   err = c_remove(str2_carr(TRIM(path)))
 END FUNCTION system_remove
-!===================================================================================================================================
-!()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()!
-!===================================================================================================================================
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
 !>
 !!##NAME
 !!      system_rename(3f) - [M_system_FILE_SYSTEM] call rename(3c) to rename a system file
@@ -2990,9 +2258,11 @@ FUNCTION system_rename(input, output) RESULT(ierr)
 !-----------------------------------------------------------------------------------------------------------------------------------
   ierr = c_rename(str2_carr(TRIM(input)), str2_carr(TRIM(output)))
 END FUNCTION system_rename
-!===================================================================================================================================
-!()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()!
-!===================================================================================================================================
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
 !>
 !!##NAME
 !!       system_chmod(3f) - [M_system_FILE_SYSTEM] call chmod(3c) to change
@@ -3099,6 +2369,7 @@ END FUNCTION system_rename
 !!    John S. Urban
 !!##LICENSE
 !!    Public Domain
+
 FUNCTION system_chmod(filename, mode) RESULT(ierr)
   CHARACTER(len=*), INTENT(in) :: filename
   INTEGER, VALUE, INTENT(in) :: mode
@@ -3114,9 +2385,11 @@ FUNCTION system_chmod(filename, mode) RESULT(ierr)
 !-----------------------------------------------------------------------------------------------------------------------------------
   ierr = c_chmod(str2_carr(TRIM(filename)), INT(mode, KIND(0_C_INT)))
 END FUNCTION system_chmod
-!===================================================================================================================================
-!()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()!
-!===================================================================================================================================
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
 !>
 !!##NAME
 !!       system_getcwd(3f) - [M_system:QUERY_FILE] call getcwd(3c) to get the pathname of the current working directory
@@ -3157,10 +2430,9 @@ END FUNCTION system_chmod
 !!    John S. Urban
 !!##LICENSE
 !!    Public Domain
+
 SUBROUTINE system_getcwd(output, ierr)
-
 ! ident_18="@(#)M_system::system_getcwd(3f):call getcwd(3c) to get pathname of current working directory"
-
   CHARACTER(len=:), ALLOCATABLE, INTENT(out) :: output
   INTEGER, INTENT(out) :: ierr
   INTEGER(kind=C_LONG), PARAMETER :: length = 4097_C_LONG
@@ -3185,9 +2457,11 @@ SUBROUTINE system_getcwd(output, ierr)
     ierr = 0
   END IF
 END SUBROUTINE system_getcwd
-!===================================================================================================================================
-!()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()!
-!===================================================================================================================================
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
 !>
 !!##NAME
 !!       system_rmdir(3f) - [M_system:FILE_SYSTEM] call rmdir(3c) to remove empty directories
@@ -3259,9 +2533,9 @@ FUNCTION system_rmdir(dirname) RESULT(err)
   err = c_rmdir(str2_carr(TRIM(dirname)))
   IF (err .NE. 0) err = system_errno()
 END FUNCTION system_rmdir
-!===================================================================================================================================
+!----------------------------------------------------------------------------
 !()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()!
-!===================================================================================================================================
+!----------------------------------------------------------------------------
 !>
 !!##NAME
 !!        system_mkfifo(3f)  - [M_system:FILE_SYSTEM] make a FIFO special file relative to directory file descriptor
@@ -3399,9 +2673,9 @@ FUNCTION system_mkfifo(pathname, mode) RESULT(err)
   c_mode = mode
   err = c_mkfifo(str2_carr(TRIM(pathname)), c_mode)
 END FUNCTION system_mkfifo
-!===================================================================================================================================
+!----------------------------------------------------------------------------
 !()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()!
-!===================================================================================================================================
+!----------------------------------------------------------------------------
 !>
 !!##NAME
 !!        system_mkdir(3f) - [M_system:FILE_SYSTEM] call mkdir(3c) to create a new directory
@@ -3492,12 +2766,15 @@ FUNCTION system_mkdir(dirname, mode) RESULT(ierr)
   END IF
   ierr = err ! c_int to default integer kind
 END FUNCTION system_mkdir
-!===================================================================================================================================
-!()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()!
-!===================================================================================================================================
-!===================================================================================================================================
-!()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()!
-!===================================================================================================================================
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
 !>
 !!##NAME
 !!    system_opendir(3f) - [M_system:QUERY_FILE] open directory stream by calling opendir(3c)
@@ -3585,6 +2862,7 @@ END FUNCTION system_mkdir
 !!    John S. Urban
 !!##LICENSE
 !!    Public Domain
+
 SUBROUTINE system_opendir(dirname, dir, ierr)
   CHARACTER(len=*), INTENT(in) :: dirname
   TYPE(C_PTR) :: dir
@@ -3606,9 +2884,10 @@ SUBROUTINE system_opendir(dirname, dir, ierr)
   END IF
 
 END SUBROUTINE system_opendir
-!===================================================================================================================================
-!()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()!
-!===================================================================================================================================
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
 !>
 !!##NAME
 !!    system_readdir(3f) - [M_system:QUERY_FILE] read a directory using readdir(3c)
@@ -3710,9 +2989,10 @@ SUBROUTINE system_readdir(dir, filename, ierr)
   ierr = ierr_local
 
 END SUBROUTINE system_readdir
-!===================================================================================================================================
-!()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()!
-!===================================================================================================================================
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
 !>
 !!##NAME
 !!       system_rewinddir(3f) - [M_system:QUERY_FILE] call rewinddir(3c) to rewind directory stream
@@ -3776,9 +3056,10 @@ SUBROUTINE system_rewinddir(dir)
   CALL c_rewinddir(dir)
 
 END SUBROUTINE system_rewinddir
-!===================================================================================================================================
-!()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()!
-!===================================================================================================================================
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
 !>
 !!##NAME
 !!        system_closedir(3f) - [M_system:QUERY_FILE] close a directory stream by calling closedir(3c)
@@ -3854,9 +3135,10 @@ SUBROUTINE system_closedir(dir, ierr)
   END IF
 
 END SUBROUTINE system_closedir
-!===================================================================================================================================
-!()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()!
-!===================================================================================================================================
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
 !>
 !!##NAME
 !!    system_putenv(3f) - [M_system:ENVIRONMENT] set environment variable from Fortran by calling putenv(3c)
@@ -3956,9 +3238,10 @@ SUBROUTINE system_putenv(string, err)
   IF (PRESENT(err)) err = loc_err
 
 END SUBROUTINE system_putenv
-!===================================================================================================================================
-!()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()!
-!===================================================================================================================================
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
 !>
 !!##NAME
 !!    system_getenv(3f) - [M_system:ENVIRONMENT] get environment variable
@@ -4031,9 +3314,10 @@ FUNCTION system_getenv(name, default) RESULT(VALUE)
   IF (VALUE .EQ. '' .AND. PRESENT(default)) VALUE = default
 
 END FUNCTION system_getenv
-!===================================================================================================================================
-!()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()!
-!===================================================================================================================================
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
 !>
 !!##NAME
 !!    set_environment_variable(3f) - [M_system:ENVIRONMENT] call setenv(3c) to set environment variable
@@ -4113,9 +3397,10 @@ SUBROUTINE set_environment_variable(NAME, VALUE, STATUS)
   loc_err = c_setenv(str2_carr(TRIM(NAME)), str2_carr(VALUE))
   IF (PRESENT(STATUS)) STATUS = loc_err
 END SUBROUTINE set_environment_variable
-!===================================================================================================================================
-!()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()!
-!===================================================================================================================================
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
 !>
 !!##NAME
 !!    system_clearenv(3f) - [M_system:ENVIRONMENT] clear environment by calling clearenv(3c)
@@ -4209,9 +3494,11 @@ END SUBROUTINE system_clearenv
 !--   endif
 !--
 !--end subroutine system_clearenv
-!===================================================================================================================================
-!()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()!
-!===================================================================================================================================
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
 !>
 !!##NAME
 !!    system_unsetenv(3f) - [M_system:ENVIRONMENT] delete an environment variable by calling unsetenv(3c)
@@ -4282,9 +3569,11 @@ SUBROUTINE system_unsetenv(name, ierr)
   END IF
 
 END SUBROUTINE system_unsetenv
-!===================================================================================================================================
-!()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()!
-!===================================================================================================================================
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
 !>
 !!##NAME
 !!    system_readenv(3f) - [M_system:ENVIRONMENT] step thru and read environment table
@@ -4339,6 +3628,7 @@ END SUBROUTINE system_unsetenv
 !!    John S. Urban
 !!##LICENSE
 !!    Public Domain
+
 FUNCTION system_readenv() RESULT(string)
 
 ! ident_27="@(#)M_system::system_readenv(3f): read next entry from environment table"
@@ -4359,9 +3649,10 @@ FUNCTION system_readenv() RESULT(string)
   string = TRIM(arr2str(c_buff))
 
 END FUNCTION system_readenv
-!===================================================================================================================================
+
+!----------------------------------------------------------------------------
 !()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()!
-!===================================================================================================================================
+!----------------------------------------------------------------------------
 !>
 !!##NAME
 !!   fileglob(3f) - [M_system:QUERY_FILE] Read output of an ls(1) command from Fortran
@@ -4440,9 +3731,9 @@ SUBROUTINE fileglob(glob, list) ! NON-PORTABLE AT THIS POINT. REQUIRES ls(1) com
   END DO
   CLOSE (iotmp, status='delete', iostat=ios) ! close and delete scratch file
 END SUBROUTINE fileglob
-!===================================================================================================================================
+!----------------------------------------------------------------------------
 !()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()!
-!===================================================================================================================================
+!----------------------------------------------------------------------------
 !>
 !!##NAME
 !!   system_uname(3f) - [M_system] call a C wrapper that calls uname(3c) to get current system information from Fortran
@@ -4511,9 +3802,11 @@ SUBROUTINE system_uname(WHICH, NAMEOUT)
   CALL system_uname_c(WHICH, NAMEOUT, INT(LEN(NAMEOUT), KIND(0_C_INT)))
 
 END SUBROUTINE system_uname
-!===================================================================================================================================
-!()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()!
-!===================================================================================================================================
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
 !>
 !!##NAME
 !!        system_gethostname(3f) - [M_system:QUERY] get name of current host
@@ -4553,6 +3846,7 @@ END SUBROUTINE system_uname
 !!    John S. Urban
 !!##LICENSE
 !!    Public Domain
+
 SUBROUTINE system_gethostname(NAME, IERR)
   IMPLICIT NONE
 
@@ -4579,9 +3873,11 @@ SUBROUTINE system_gethostname(NAME, IERR)
   NAME = TRIM(arr2str(C_BUFF))
 
 END SUBROUTINE system_gethostname
-!===================================================================================================================================
-!()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()!
-!===================================================================================================================================
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
 !>
 !!##NAME
 !!    system_getlogin(3f) - [M_system:QUERY] get login name
@@ -4663,9 +3959,11 @@ FUNCTION system_getlogin() RESULT(fname)
   END IF
 
 END FUNCTION system_getlogin
-!===================================================================================================================================
-!()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()!
-!===================================================================================================================================
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
 !>
 !!##NAME
 !!    system_perm(3f) - [M_system:QUERY_FILE] get file type and permission as a string
@@ -4747,9 +4045,11 @@ FUNCTION system_perm(mode) RESULT(perms)
   END IF
 
 END FUNCTION system_perm
-!===================================================================================================================================
-!()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()!
-!===================================================================================================================================
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
 !>
 !!##NAME
 !!    system_getgrgid(3f) - [M_system:QUERY] get groupd name associated with a GID
@@ -4820,9 +4120,11 @@ FUNCTION system_getgrgid(gid) RESULT(gname)
   END IF
 !-----------------------------------------------------------------------------------------------------------------------------------
 END FUNCTION system_getgrgid
-!===================================================================================================================================
-!()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()!
-!===================================================================================================================================
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
 !>
 !!##NAME
 !!    system_getpwuid(3f) - [M_system:QUERY] get login name associated with a UID
@@ -4892,9 +4194,11 @@ FUNCTION system_getpwuid(uid) RESULT(uname)
   END IF
 !-----------------------------------------------------------------------------------------------------------------------------------
 END FUNCTION system_getpwuid
-!===================================================================================================================================
-!()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()!
-!===================================================================================================================================
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
 PURE FUNCTION arr2str(array) RESULT(string)
 
 ! ident_31="@(#)M_system::arr2str(3fp): function copies null-terminated char array to string"
@@ -4913,9 +4217,11 @@ PURE FUNCTION arr2str(array) RESULT(string)
   END DO
 
 END FUNCTION arr2str
-!===================================================================================================================================
-!()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()!
-!===================================================================================================================================
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
 PURE FUNCTION str2_carr(string) RESULT(array)
 
 ! ident_32="@(#)M_system::str2_carr(3fp): function copies string to null terminated char array"
@@ -4930,9 +4236,11 @@ PURE FUNCTION str2_carr(string) RESULT(array)
   array(i:i) = C_NULL_CHAR
 
 END FUNCTION str2_carr
-!===================================================================================================================================
-!()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()!
-!===================================================================================================================================
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
 FUNCTION C2F_string(c_string_pointer) RESULT(f_string)
 
 ! gets a C string (pointer), and returns the corresponding Fortran string up to 4096(max_len) characters;
@@ -4969,9 +4277,11 @@ FUNCTION C2F_string(c_string_pointer) RESULT(f_string)
   ALLOCATE (CHARACTER(len=length) :: f_string)
   f_string = aux_string(1:length)
 END FUNCTION C2F_string
-!===================================================================================================================================
-!()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()!
-!===================================================================================================================================
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
 !>
 !!##NAME
 !!    SYSTEM_STAT - [M_system:QUERY_FILE] Get file status information
@@ -5106,6 +4416,7 @@ END FUNCTION C2F_string
 !!    John S. Urban
 !!##LICENSE
 !!    Public Domain
+
 SUBROUTINE system_stat(pathname, values, ierr)
   IMPLICIT NONE
 
@@ -5135,12 +4446,11 @@ SUBROUTINE system_stat(pathname, values, ierr)
     ierr = cierr
   END IF
 END SUBROUTINE system_stat
-!===================================================================================================================================
-!()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()!
-!===================================================================================================================================
-!===================================================================================================================================
-!()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()!
-!===================================================================================================================================
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
 !>
 !!##NAME
 !!    system_dir(3f) - [M_io] return filenames in a directory matching specified wildcard string
@@ -5184,6 +4494,7 @@ END SUBROUTINE system_stat
 !!
 !!##LICENSE
 !!    Public Domain
+
 FUNCTION system_dir(directory, pattern)
 !use M_system, only : system_opendir, system_readdir, system_rewinddir, system_closedir
   USE ISO_C_BINDING
@@ -5233,14 +4544,14 @@ FUNCTION system_dir(directory, pattern)
   END IF
   CALL system_closedir(dir, ierr) !--- close directory stream
 END FUNCTION system_dir
-!===================================================================================================================================
-!()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()!
-!===================================================================================================================================
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
 ! copied from M_strings.ff to make stand-alone github version
 FUNCTION matchw(tame, wild)
-
 ! ident_34="@(#)M_strings::matchw(3f): function compares text strings, one of which can have wildcards ('*' or '?')."
-
   LOGICAL :: matchw
   CHARACTER(len=*) :: tame ! A string without wildcards
   CHARACTER(len=*) :: wild ! A (potentially) corresponding string with wildcards
@@ -5328,9 +4639,11 @@ FUNCTION matchw(tame, wild)
     END IF
   END DO
 END FUNCTION matchw
-!===================================================================================================================================
-!()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()!
-!===================================================================================================================================
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
 !>NAME
 !!
 !!   anyinteger_to_64bit(3f) - [M_anything] convert integer any kind to integer(kind=int64)
@@ -5402,7 +4715,7 @@ END FUNCTION matchw
 !!   John S. Urban
 !!LICENSE
 !!   Public Domain
-!@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
 PURE ELEMENTAL FUNCTION anyinteger_to_64bit(intin) RESULT(ii38)
   USE, INTRINSIC :: ISO_FORTRAN_ENV, ONLY: ERROR_UNIT !! ,input_unit,output_unit
   IMPLICIT NONE
@@ -5421,7 +4734,9 @@ PURE ELEMENTAL FUNCTION anyinteger_to_64bit(intin) RESULT(ii38)
     !stop 'ERROR: *anyinteger_to_64* unknown integer type'
   END SELECT
 END FUNCTION anyinteger_to_64bit
-!===================================================================================================================================
-!()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()!
-!===================================================================================================================================
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
 END MODULE System_Method

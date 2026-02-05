@@ -16,8 +16,10 @@
 #
 
 set(src_path "${CMAKE_CURRENT_LIST_DIR}/src/")
-target_sources(${PROJECT_NAME} PRIVATE ${src_path}/System_Method.F90)
-
+target_sources(
+    ${PROJECT_NAME}
+    PRIVATE ${src_path}/SystemInterface.F90 ${src_path}/System_Method.F90
+)
 
 set(subproject_name "easifemSystem")
 
@@ -28,16 +30,17 @@ target_link_libraries(${PROJECT_NAME} PUBLIC ${subproject_name})
 # target properties
 
 set_target_properties(
-  ${subproject_name}
-  PROPERTIES POSITION_INDEPENDENT_CODE 1
-             SOVERSION ${VERSION_MAJOR}
-             # OUTPUT_NAME ${PROJECT_NAME}
-             LIBRARY_OUTPUT_DIRECTORY ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}
-             ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}
-             RUNTIME_OUTPUT_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
-             MACOSX_RPATH ON
-             WINDOWS_EXPORT_ALL_SYMBOLS ON
-             LINKER_LANGUAGE C)
-
+    ${subproject_name}
+    PROPERTIES
+        POSITION_INDEPENDENT_CODE 1
+        SOVERSION ${VERSION_MAJOR}
+        # OUTPUT_NAME ${PROJECT_NAME}
+        LIBRARY_OUTPUT_DIRECTORY ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}
+        ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}
+        RUNTIME_OUTPUT_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
+        MACOSX_RPATH ON
+        WINDOWS_EXPORT_ALL_SYMBOLS ON
+        LINKER_LANGUAGE C
+)
 
 list(APPEND C_PROJECTS ${subproject_name})
