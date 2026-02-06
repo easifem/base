@@ -16,6 +16,8 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 
 SUBMODULE(System_Method) SignalMethods
+USE ISO_C_BINDING, ONLY: C_FUNLOC
+
 IMPLICIT NONE
 CONTAINS
 

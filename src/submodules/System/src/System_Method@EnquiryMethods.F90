@@ -16,6 +16,9 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 
 SUBMODULE(System_Method) EnquiryMethods
+USE ISO_C_BINDING, ONLY: C_SIZE_T
+USE ISO_C_BINDING, ONLY: C_ASSOCIATED
+
 IMPLICIT NONE
 CONTAINS
 

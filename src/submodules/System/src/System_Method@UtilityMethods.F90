@@ -73,15 +73,15 @@ END PROCEDURE Str2_Carr
 !
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE timestamp
+MODULE PROCEDURE Timestamp
 epoch = C_Time(INT(0, kind=8))
-END PROCEDURE timestamp
+END PROCEDURE Timestamp
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE arr2str
+MODULE PROCEDURE Arr2Str
 INTEGER :: i
 
 string = ' '
@@ -92,13 +92,13 @@ DO i = 1, SIZE(array)
     string(i:i) = array(i)
   END IF
 END DO
-END PROCEDURE arr2str
+END PROCEDURE Arr2Str
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE matchw
+MODULE PROCEDURE Matchw
 CHARACTER(len=LEN(tame) + 1) :: tametext
 CHARACTER(len=LEN(wild) + 1) :: wildtext
 CHARACTER(len=1), PARAMETER :: NULL = CHAR(0)
@@ -106,7 +106,8 @@ INTEGER :: wlen, ti, wi, i
 CHARACTER(len=:), ALLOCATABLE :: tbookmark, wbookmark
 
 ! These two values are set when we observe a wildcard character. They
-! represent the locations, in the two strings, from which we start once we've observed it.
+! represent the locations, in the two strings, from which we start once
+! we've observed it.
 tametext = tame//NULL
 wildtext = wild//NULL
 tbookmark = NULL
@@ -114,17 +115,21 @@ wbookmark = NULL
 wlen = LEN(wild)
 wi = 1
 ti = 1
-DO ! Walk the text strings one character at a time.
-  IF (wildtext(wi:wi) == '*') THEN ! How do you match a unique text string?
-    DO i = wi, wlen ! Easy: unique up on it!
+DO
+! Walk the text strings one character at a time.
+  IF (wildtext(wi:wi) == '*') THEN
+    ! How do you match a unique text string?
+    DO i = wi, wlen
+      ! Easy: unique up on it!
       IF (wildtext(wi:wi) .EQ. '*') THEN
         wi = wi + 1
       ELSE
         EXIT
       END IF
     END DO
-    IF (wildtext(wi:wi) .EQ. NULL) THEN ! "x" matches "*"
-      matchw = .TRUE.
+    IF (wildtext(wi:wi) .EQ. NULL) THEN
+      ! "x" matches "*"
+      Matchw = .TRUE.
       RETURN
     END IF
     IF (wildtext(wi:wi) .NE. '?') THEN
@@ -132,18 +137,21 @@ DO ! Walk the text strings one character at a time.
       DO WHILE (tametext(ti:ti) .NE. wildtext(wi:wi))
         ti = ti + 1
         IF (tametext(ti:ti) .EQ. NULL) THEN
-          matchw = .FALSE.
-          RETURN ! "x" doesn't match "*y*"
+          Matchw = .FALSE.
+          RETURN
+          ! "x" doesn't match "*y*"
         END IF
       END DO
     END IF
     wbookmark = wildtext(wi:)
     tbookmark = tametext(ti:)
-      elseif(tametext(ti:ti) .ne. wildtext(wi:wi) .and. wildtext(wi:wi) .ne. '?') then
-    ! Got a non-match. If we've set our bookmarks, back up to one or both of them and retry.
+  ELSEIF ((tametext(ti:ti) .NE. wildtext(wi:wi)) &
+          .AND. (wildtext(wi:wi) .NE. '?')) THEN
+    ! Got a non-match. If we've set our bookmarks,
+    !  back up to one or both of them and retry.
     IF (wbookmark .NE. NULL) THEN
       IF (wildtext(wi:) .NE. wbookmark) THEN
-        wildtext = wbookmark; 
+        wildtext = wbookmark
         wlen = LEN_TRIM(wbookmark)
         wi = 1
         ! Don't go this far back again.
@@ -151,53 +159,65 @@ DO ! Walk the text strings one character at a time.
           tbookmark = tbookmark(2:)
           tametext = tbookmark
           ti = 1
-          CYCLE ! "xy" matches "*y"
+          CYCLE
+          ! "xy" matches "*y"
         ELSE
           wi = wi + 1
         END IF
       END IF
       IF (tametext(ti:ti) .NE. NULL) THEN
         ti = ti + 1
-        CYCLE ! "mississippi" matches "*sip*"
+        CYCLE
+        ! "mississippi" matches "*sip*"
       END IF
     END IF
-    matchw = .FALSE.
-    RETURN ! "xy" doesn't match "x"
+    Matchw = .FALSE.
+    RETURN
+    ! "xy" doesn't match "x"
   END IF
   ti = ti + 1
   wi = wi + 1
-  IF (tametext(ti:ti) .EQ. NULL) THEN ! How do you match a tame text string?
+  IF (tametext(ti:ti) .EQ. NULL) THEN
+    ! How do you match a tame text string?
     IF (wildtext(wi:wi) .NE. NULL) THEN
-      DO WHILE (wildtext(wi:wi) == '*') ! The tame way: unique up on it!
-        wi = wi + 1 ! "x" matches "x*"
+      DO WHILE (wildtext(wi:wi) == '*')
+        ! The tame way: unique up on it!
+        wi = wi + 1
+        ! "x" matches "x*"
         IF (wildtext(wi:wi) .EQ. NULL) EXIT
       END DO
     END IF
     IF (wildtext(wi:wi) .EQ. NULL) THEN
-      matchw = .TRUE.
-      RETURN ! "x" matches "x"
+      Matchw = .TRUE.
+      RETURN
+      ! "x" matches "x"
     END IF
-    matchw = .FALSE.
-    RETURN ! "x" doesn't match "xy"
+    Matchw = .FALSE.
+    RETURN
+    ! "x" doesn't match "xy"
   END IF
 END DO
-END PROCEDURE matchw
+END PROCEDURE Matchw
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE anyinteger_to_64bit
+MODULE PROCEDURE Anyinteger_to_64bit
 SELECT TYPE (intin)
-TYPE is (INTEGER(kind=INT8)); ii38 = INT(intin, kind=INT64)
-TYPE is (INTEGER(kind=INT16)); ii38 = INT(intin, kind=INT64)
-TYPE is (INTEGER(kind=INT32)); ii38 = intin
-TYPE is (INTEGER(kind=INT64)); ii38 = intin
+TYPE IS (INTEGER(kind=INT8))
+  ii38 = INT(intin, kind=INT64)
+TYPE IS (INTEGER(kind=INT16))
+  ii38 = INT(intin, kind=INT64)
+TYPE IS (INTEGER(kind=INT32))
+  ii38 = intin
+TYPE IS (INTEGER(kind=INT64))
+  ii38 = intin
   !class default
   !write(error_unit,*)'ERROR: unknown integer type'
-  !stop 'ERROR: *anyinteger_to_64* unknown integer type'
+  !stop 'ERROR: *Anyinteger_to_64* unknown integer type'
 END SELECT
-END PROCEDURE anyinteger_to_64bit
+END PROCEDURE Anyinteger_to_64bit
 
 !----------------------------------------------------------------------------
 !

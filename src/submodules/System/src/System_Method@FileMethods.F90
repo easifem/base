@@ -17,6 +17,7 @@
 !
 
 SUBMODULE(System_Method) FileMethods
+USE ISO_C_BINDING, ONLY: C_ASSOCIATED
 IMPLICIT NONE
 
 CONTAINS
@@ -407,6 +408,52 @@ IF (ierr .EQ. 0) THEN
 END IF
 CALL system_closedir(dir, ierr) !--- close directory stream
 END PROCEDURE system_dir
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE system_link
+INTEGER(kind=C_INT) :: c_ierr
+
+INTERFACE
+  FUNCTION c_link(c_oldname, c_newname) BIND(C, name="link") RESULT(c_ierr)
+    IMPORT C_CHAR, C_INT
+    CHARACTER(kind=C_CHAR, len=1), INTENT(in) :: c_oldname(*)
+    CHARACTER(kind=C_CHAR, len=1), INTENT(in) :: c_newname(*)
+    INTEGER(kind=C_INT) :: c_ierr
+  END FUNCTION c_link
+END INTERFACE
+
+c_ierr = c_link(str2_carr(TRIM(oldname)), str2_carr(TRIM(newname)))
+ierr = c_ierr
+END PROCEDURE system_link
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE system_unlink
+INTERFACE
+  FUNCTION c_unlink(c_fname) BIND(C, name="unlink") RESULT(c_ierr)
+    IMPORT C_CHAR, C_INT
+    CHARACTER(kind=C_CHAR, len=1) :: c_fname(*)
+    INTEGER(kind=C_INT) :: c_ierr
+  END FUNCTION c_unlink
+END INTERFACE
+ierr = c_unlink(str2_carr(TRIM(fname)))
+END PROCEDURE system_unlink
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE system_setumask
+INTEGER(kind=C_INT) :: umask_c
+umask_c = umask_value
+old_umask = system_umask(umask_c)
+! set current umask
+END PROCEDURE system_setumask
 
 !----------------------------------------------------------------------------
 !                                                               Include Error
