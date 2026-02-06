@@ -19,8 +19,10 @@
 set(src_path "${CMAKE_CURRENT_LIST_DIR}/src/")
 target_sources(
     ${PROJECT_NAME}
-    PRIVATE
-        ${src_path}/System_Method@GetMethods.F90
-        ${src_path}/System_Method@SetMethods.F90
-        ${src_path}/System_Method@EnquiryMethods.F90
+    PRIVATE ${src_path}/System_Method@SignalMethods.F90
+    PRIVATE ${src_path}/System_Method@EnquiryMethods.F90
+    PRIVATE ${src_path}/System_Method@FileMethods.F90
+    PRIVATE ${src_path}/System_Method@GetMethods.F90
+    PRIVATE ${src_path}/System_Method@UtilityMethods.F90
+    PRIVATE ${src_path}/System_Method@EnvironmentMethods.F90
 )

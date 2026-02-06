@@ -9,7 +9,7 @@
 ! We would like to thank the original author Urban Jost for creating
 ! This useful module.
 
-!> author: Vikas Sharma, Ph. D.
+!> author: John S. Urban
 ! date: 2026-02-04
 ! summary: Fortran interface to C system interface
 !
@@ -173,7 +173,7 @@
 
 MODULE System_Method
 USE ISO_C_BINDING, ONLY: C_FLOAT, C_INT, C_CHAR
-USE ISO_C_BINDING, ONLY: C_PTR, c_f_pointer, C_NULL_CHAR, C_NULL_PTR
+USE ISO_C_BINDING, ONLY: C_PTR, C_F_POINTER, C_NULL_CHAR, C_NULL_PTR
 USE, INTRINSIC :: ISO_C_BINDING
 USE, INTRINSIC :: ISO_FORTRAN_ENV, ONLY: INT8, INT16, INT32, INT64
 !!, real32, real64, real128, dp=>real128
@@ -321,11 +321,6 @@ END TYPE dirent_CYGWIN
 !
 !----------------------------------------------------------------------------
 
-INTERFACE
-  SUBROUTINE c_flush() BIND(C, name="my_flush")
-  END SUBROUTINE c_flush
-END INTERFACE
-
 integer(kind=c_long),bind(c,name="longest_env_variable") :: longest_env_variable
 
 !----------------------------------------------------------------------------
@@ -393,12 +388,6 @@ INTEGER, PARAMETER :: no_of_signals = 64
 TYPE(handler_pointer), DIMENSION(no_of_signals) :: handler_ptr_array
 
 !----------------------------------------------------------------------------
-!                                                                 Contains
-!----------------------------------------------------------------------------
-
-CONTAINS
-
-!----------------------------------------------------------------------------
 !                                                              system_signal
 !----------------------------------------------------------------------------
 
@@ -426,318 +415,240 @@ CONTAINS
 !## Usage
 !
 !```fortran
-!     program demo_system_signal
-!     use M_system, only : system_signal
-!     implicit none
-!     logical :: loop=.true.
-!     integer, parameter :: SIGINT=2,SIGQUIT=3
-!     call system_signal(SIGINT,exitloop)
-!     call system_signal(SIGQUIT,quit)
-!     write(*,*)'Starting infinite loop. Press Ctrl+C to exit.'
-!     do while(loop)
-!     enddo
-!     write(*,*)'Reporting from outside the infinite loop.'
-!     write(*,*)'Starting another loop. Do Ctrl+\ anytime to quit.'
-!     loop=.true.
-!     call system_signal(2)
-!     write(*,*)'Just installed do-nothing handler for SIGINT. Try Ctrl+C to test.'
-!     do while(loop)
-!     enddo
-!     write(*,*)'You should never see this line when running this demo.'
+! program demo_system_signal
+! use M_system, only : system_signal
+! implicit none
+! logical :: loop=.true.
+! integer, parameter :: SIGINT=2,SIGQUIT=3
+! call system_signal(SIGINT,exitloop)
+! call system_signal(SIGQUIT,quit)
+! write(*,*)'Starting infinite loop. Press Ctrl+C to exit.'
+! do while(loop)
+! enddo
+! write(*,*)'Reporting from outside the infinite loop.'
+! write(*,*)'Starting another loop. Do Ctrl+\ anytime to quit.'
+! loop=.true.
+! call system_signal(2)
+! write(*,*)'Just installed do-nothing handler for SIGINT. Try Ctrl+C to test.'
+! do while(loop)
+! enddo
+! write(*,*)'You should never see this line when running this demo.'
 !
-!     contains
+! contains
 !
-!     subroutine exitloop(signum)
-!       integer :: signum
-!       write(*,*)'Caught SIGINT. Exiting infinite loop.'
-!       loop=.false.
-!     end subroutine exitloop
+! subroutine exitloop(signum)
+!   integer :: signum
+!   write(*,*)'Caught SIGINT. Exiting infinite loop.'
+!   loop=.false.
+! end subroutine exitloop
 !
-!     subroutine quit(signum)
-!       integer :: signum
-!       STOP 'Caught SIGQUIT. Stopping demo.'
-!     end subroutine quit
-!     end program demo_system_signal
+! subroutine quit(signum)
+!   integer :: signum
+!   STOP 'Caught SIGQUIT. Stopping demo.'
+! end subroutine quit
+! end program demo_system_signal
 ! ```
 
-SUBROUTINE system_signal(signum, handler_routine)
-  INTEGER, INTENT(in) :: signum
-  PROCEDURE(handler), OPTIONAL :: handler_routine
-  TYPE(C_FUNPTR) :: ret, c_handler
-
-  INTERFACE
-    FUNCTION c_signal(signal, sighandler) BIND(c, name='signal')
-      IMPORT :: C_INT, C_FUNPTR
-      INTEGER(C_INT), VALUE, INTENT(in) :: signal
-      TYPE(C_FUNPTR), VALUE, INTENT(in) :: sighandler
-      TYPE(C_FUNPTR) :: c_signal
-    END FUNCTION c_signal
-  END INTERFACE
-
-  IF (PRESENT(handler_routine)) THEN
-    handler_ptr_array(signum)%sub => handler_routine
-  ELSE
-    !!handler_ptr_array(signum)%sub => null(handler_ptr_array(signum)%sub)
-    handler_ptr_array(signum)%sub => NULL()
-  END IF
-
-  c_handler = C_FUNLOC(f_handler)
-  ret = c_signal(signum, c_handler)
-END SUBROUTINE system_signal
+INTERFACE
+  MODULE SUBROUTINE System_Signal(signum, handler_routine)
+    INTEGER, INTENT(in) :: signum
+    PROCEDURE(handler), OPTIONAL :: handler_routine
+    TYPE(C_FUNPTR) :: ret, c_handler
+  END SUBROUTINE System_Signal
+END INTERFACE
 
 !----------------------------------------------------------------------------
-!                                                                  f_handler
+!                                                              System_Access
 !----------------------------------------------------------------------------
 
-SUBROUTINE f_handler(signum) BIND(c)
-  INTEGER(C_INT), INTENT(in), VALUE :: signum
-  IF (ASSOCIATED(handler_ptr_array(signum)%sub)) &
-    CALL handler_ptr_array(signum)%sub(signum)
-END SUBROUTINE f_handler
-
-!----------------------------------------------------------------------------
+!> author: Vikas Sharma, Ph. D.
+! date: 2026-02-05
+! summary: Check accessibility or existence of a pathname
 !
-!----------------------------------------------------------------------------
-
-!>
-!!##NAME
-!!    system_access(3f) - [M_system:QUERY_FILE] checks accessibility or existence of a pathname
-!!    (LICENSE:PD)
-!!
-!!##SYNOPSIS
-!!
-!!   elemental impure logical function system_access(pathname,amode)
-!!
-!!    character(len=*),intent(in) :: pathname
-!!    integer,intent(in)          :: amode
-!!
-!!##DESCRIPTION
-!!
-!!    The system_access(3f) function checks pathname existence and access
-!!    permissions. The function checks the pathname for accessibility
-!!    according to the bit pattern contained in amode, using the real user
-!!    ID in place of the effective user ID and the real group ID in place
-!!    of the effective group ID.
-!!
-!!    The value of amode is either the bitwise-inclusive OR of the access
-!!    permissions to be checked (R_OK, W_OK, X_OK) or the existence test (F_OK).
-!!
-!!##OPTIONS
-!!        pathname   a character string representing a directory pathname. Trailing spaces are ignored.
-!!        amode      bitwise-inclusive OR of the values R_OK, W_OK, X_OK, or F_OK.
-!!
-!!##RETURN VALUE
-!!        If not true an error occurred or the requested access is not granted
-!!
-!!##EXAMPLE
-!!
-!!   check if filename is accessible
-!!
-!!        Sample program:
-!!
-!!           program demo_system_access
-!!           use M_system, only : system_access, F_OK, R_OK, W_OK, X_OK
-!!           implicit none
-!!           integer                     :: i
-!!           character(len=80),parameter :: names(*)=[ &
-!!           '/usr/bin/bash   ', &
-!!           '/tmp/NOTTHERE   ', &
-!!           '/usr/local      ', &
-!!           '.               ', &
-!!           'PROBABLY_NOT    ']
-!!           do i=1,size(names)
-!!              write(*,*)' does ',trim(names(i)),' exist?    ', system_access(names(i),F_OK)
-!!              write(*,*)' is ',trim(names(i)),' readable?     ', system_access(names(i),R_OK)
-!!              write(*,*)' is ',trim(names(i)),' writable?     ', system_access(names(i),W_OK)
-!!              write(*,*)' is ',trim(names(i)),' executable?   ', system_access(names(i),X_OK)
-!!           enddo
-!!           end program demo_system_access
-
-ELEMENTAL impure FUNCTION system_access(pathname, amode)
-  IMPLICIT NONE
-
-! ident_1="@(#)M_system::system_access(3f): checks accessibility or existence of a pathname"
-
-  CHARACTER(len=*), INTENT(in) :: pathname
-  INTEGER, INTENT(in) :: amode
-  LOGICAL :: system_access
-
-  INTERFACE
-  function c_access(c_pathname,c_amode) bind (C,name="my_access") result (c_ierr)
-      IMPORT C_CHAR, C_INT
-      CHARACTER(kind=C_CHAR, len=1), INTENT(in) :: c_pathname(*)
-      INTEGER(kind=C_INT), VALUE :: c_amode
-      INTEGER(kind=C_INT) :: c_ierr
-    END FUNCTION c_access
-  END INTERFACE
-
-  IF (c_access(str2_carr(TRIM(pathname)), INT(amode, kind=C_INT)) .EQ. 0) THEN
-    system_access = .TRUE.
-  ELSE
-    system_access = .FALSE.
-    !!if(system_errno().ne.0)then
-    !!   call perror('*system_access*')
-    !!endif
-  END IF
-
-END FUNCTION system_access
-
-!----------------------------------------------------------------------------
+!# System_Access
 !
-!----------------------------------------------------------------------------
-
-!>
-!!##NAME
-!!        system_utime(3f) - [M_system:FILE_SYSTEM] set file access and modification times
-!!        (LICENSE:PD)
-!!
-!!##SYNOPSIS
-!!
-!!        function utime(pathname,times)
-!!
-!!         character(len=*),intent(in) :: pathname
-!!         integer,intent(in),optional :: times(2)
-!!         logical                     :: utime
-!!
-!!##DESCRIPTION
-!!        The system_utime(3f) function sets the access and modification
-!!        times of the file named by the path argument by calling utime(3c).
-!!
-!!        If times() is not present the access and modification times of
-!!        the file shall be set to the current time.
-!!
-!!        To use system_utime(3f) the effective user ID of the process must
-!!        match the owner of the file, or the process has to have write
-!!        permission to the file or have appropriate privileges,
-!!
-!!##OPTIONS
-!!        times     If present, the values will be interpreted as the access
-!!                  and modification times as Unix Epoch values. That is,
-!!                  they are times measured in seconds since the Unix Epoch.
-!!
-!!        pathname  name of the file whose access and modification times
-!!                  are to be updated.
-!!
-!!##RETURN VALUE
-!!        Upon successful completion .TRUE. is returned. Otherwise,
-!!        .FALSE. is returned and errno shall be set to indicate the error,
-!!        and the file times remain unaffected.
-!!
-!!##ERRORS
-!!        The underlying utime(3c) function fails if:
-!!
-!!        EACCES  Search permission is denied by a component of the path
-!!                prefix; or the times argument is a null pointer and the
-!!                effective user ID of the process does not match the owner
-!!                of the file, the process does not have write permission
-!!                for the file, and the process does not have appropriate
-!!                privileges.
-!!
-!!        ELOOP  A loop exists in symbolic links encountered during
-!!               resolution of the path argument.
-!!
-!!        ENAMETOOLONG   The length of a component of a pathname is longer
-!!                       than {NAME_MAX}.
-!!
-!!        ENOENT   A component of path does not name an existing file
-!!                 or path is an empty string.
-!!
-!!        ENOTDIR  A component of the path prefix names an existing file
-!!                 that is neither a directory nor a symbolic link to a
-!!                 directory, or the path argument contains at least one
-!!                 non-<slash> character and ends with one or more trailing
-!!                 <slash> characters and the last pathname component
-!!                 names an existing file that is neither a directory nor
-!!                 a symbolic link to a directory.
-!!
-!!        EPERM  The times argument is not a null pointer and the effective
-!!               user ID of the calling process does not match the owner
-!!               of the file and the calling process does not have
-!!               appropriate privileges.
-!!
-!!        EROFS  The file system containing the file is read-only.
-!!
-!!   The utime() function may fail if:
-!!
-!!        ELOOP  More than {SYMLOOP_MAX} symbolic links were encountered
-!!               during resolution of the path argument.
-!!
-!!        ENAMETOOLONG  The length of a pathname exceeds {PATH_MAX}, or
-!!                      pathname resolution of a symbolic link produced
-!!                      an intermediate result with a length that exceeds
-!!                      {PATH_MAX}.
-!!
-!!##EXAMPLES
-!!
-!!      Sample program
-!!
-!!       program demo_system_utime
-!!       use M_system, only : system_utime, system_perror
-!!       implicit none
-!!       character(len=4096) :: pathname
-!!       integer             :: times(2)
-!!       integer             :: i
-!!          do i=1,command_argument_count()
-!!             call get_command_argument(i, pathname)
-!!             if(.not.system_utime(pathname,times))then
-!!                call system_perror('*demo_system_utime*')
-!!             endif
-!!          enddo
-!!       end program demo_system_utime
-
-FUNCTION system_utime(pathname, times)
-  IMPLICIT NONE
-
-! ident_2="@(#)M_system::system_utime(3f): set access and modification times of a pathname"
-
-  CHARACTER(len=*), INTENT(in) :: pathname
-  INTEGER, INTENT(in), OPTIONAL :: times(2)
-  INTEGER :: times_local(2)
-  LOGICAL :: system_utime
-
-!-! int my_utime(const char *path, int times[2])
-  INTERFACE
- FUNCTION c_utime(c_pathname, c_times) BIND(C, name="my_utime") RESULT(c_ierr)
-      IMPORT C_CHAR, C_INT
-      CHARACTER(kind=C_CHAR, len=1), INTENT(in) :: c_pathname(*)
-      INTEGER(kind=C_INT), INTENT(in) :: c_times(2)
-      INTEGER(kind=C_INT) :: c_ierr
-    END FUNCTION c_utime
-  END INTERFACE
-  IF (PRESENT(times)) THEN
-    times_local = times
-  ELSE
-    times_local = timestamp()
-  END IF
-  if(c_utime(str2_carr(trim(pathname)),int(times_local,kind=c_int)).eq.0)then
-    system_utime = .TRUE.
-  ELSE
-    system_utime = .FALSE.
-      !!if(system_errno().ne.0)then
-      !!   call perror('*system_utime*')
-      !!endif
-  END IF
-
-END FUNCTION system_utime
-
-!----------------------------------------------------------------------------
 !
+!The system_access(3f) function checks pathname existence and access
+!permissions. The function checks the pathname for accessibility
+!according to the bit pattern contained in amode, using the real user
+!ID in place of the effective user ID and the real group ID in place
+!of the effective group ID.
+!
+!The value of amode is either the bitwise-inclusive OR of the access
+!permissions to be checked (R_OK, W_OK, X_OK) or the existence test (F_OK).
+!
+!- pathname: a character string representing a directory pathname.
+!             Trailing spaces are ignored.
+!- amode: bitwise-inclusive OR of the values R_OK, W_OK, X_OK, or F_OK.
+!- Return value: If not true an error occurred or
+!                the requested access is not granted
+!
+!
+!## Examples
+!
+! Check if filename is accessible
+!
+!```fortran
+! program demo_system_access
+! use M_system, only : system_access, F_OK, R_OK, W_OK, X_OK
+! implicit none
+! integer                     :: i
+! character(len=80),parameter :: names(*)=[ &
+! '/usr/bin/bash   ', &
+! '/tmp/NOTTHERE   ', &
+! '/usr/local      ', &
+! '.               ', &
+! 'PROBABLY_NOT    ']
+! do i=1,size(names)
+!    write(*,*)' does ',trim(names(i)),' exist?    ', &
+!    system_access(names(i),F_OK)
+!
+!    write(*,*)' is ',trim(names(i)),' readable?     ', &
+!    system_access(names(i),R_OK)
+!
+!    write(*,*)' is ',trim(names(i)),' writable?     ', &
+!    system_access(names(i),W_OK)
+!
+!    write(*,*)' is ',trim(names(i)),' executable?   ', &
+!    system_access(names(i),X_OK)
+!
+! enddo
+! end program demo_system_access
+!```
+
+INTERFACE
+  MODULE ELEMENTAL IMPURE FUNCTION System_Access(pathname, amode)
+    CHARACTER(len=*), INTENT(IN) :: pathname
+    INTEGER, INTENT(IN) :: amode
+    LOGICAL :: System_Access
+  END FUNCTION System_Access
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                               System_Utime
 !----------------------------------------------------------------------------
 
-FUNCTION timestamp() RESULT(epoch)
-  USE, INTRINSIC :: ISO_C_BINDING, ONLY: C_LONG
-  IMPLICIT NONE
-  INTEGER(kind=8) :: epoch
-  INTERFACE
-    ! time_t time(time_t *tloc)
-    FUNCTION c_time(tloc) BIND(c, name='time')
-      IMPORT :: C_LONG
-      INTEGER(kind=C_LONG), INTENT(in), VALUE :: tloc
-      INTEGER(kind=C_LONG) :: c_time
-    END FUNCTION c_time
-  END INTERFACE
-  epoch = c_time(INT(0, kind=8))
-END FUNCTION timestamp
+!> author: Vikas Sharma, Ph. D.
+! date: 2026-02-05
+! summary: Set file access and modification times
+!
+!# System_Utime
+!
+! The system_utime(3f) function sets the access and modification
+! times of the file named by the path argument by calling utime(3c).
+!
+! If times() is not present the access and modification times of
+! the file shall be set to the current time.
+!
+! To use system_utime(3f) the effective user ID of the process must
+! match the owner of the file, or the process has to have write
+! permission to the file or have appropriate privileges,
+!
+!## Arguments
+!
+!### times
+!
+!If present, the values will be interpreted as the access
+!and modification times as Unix Epoch values. That is,
+!they are times measured in seconds since the Unix Epoch.
+!
+!### pathname
+!
+!name of the file whose access and modification times are to be updated.
+!
+!## Return values
+!
+!Upon successful completion .TRUE. is returned. Otherwise,
+!.FALSE. is returned and errno shall be set to indicate the error,
+!and the file times remain unaffected.
+!
+!## Errors
+!
+!The underlying utime(3c) function fails if:
+!
+!### EACCES
+!
+! Search permission is denied by a component of the path
+! prefix; or the times argument is a null pointer and the
+! effective user ID of the process does not match the owner
+! of the file, the process does not have write permission
+! for the file, and the process does not have appropriate
+! privileges.
+!
+!### ELOOP
+!
+! A loop exists in symbolic links encountered during
+! resolution of the path argument.
+!
+!### ENAMETOOLONG
+!
+! The length of a component of a pathname is longer than {NAME_MAX}.
+!
+!
+!### ENOENT
+!
+! A component of path does not name an existing file or path is an
+! empty string.
+!
+!### ENOTDIR
+!
+! A component of the path prefix names an existing file
+! that is neither a directory nor a symbolic link to a
+! directory, or the path argument contains at least one
+! non-<slash> character and ends with one or more trailing
+! <slash> characters and the last pathname component
+! names an existing file that is neither a directory nor
+! a symbolic link to a directory.
+!
+!### EPERM
+!
+! The times argument is not a null pointer and the effective
+! user ID of the calling process does not match the owner
+! of the file and the calling process does not have
+! appropriate privileges.
+!
+!### EROFS
+!
+! The file system containing the file is read-only.
+!
+!## Note
+!
+! The utime() function may fail if:
+!
+!- ELOOP  More than {SYMLOOP_MAX} symbolic links were encountered
+!during resolution of the path argument.
+!
+!- ENAMETOOLONG  The length of a pathname exceeds {PATH_MAX}, or
+! pathname resolution of a symbolic link produced
+! an intermediate result with a length that exceeds
+! {PATH_MAX}.
+!
+!
+!## Usage
+!
+!```fortran
+! program demo_system_utime
+! use M_system, only : system_utime, system_perror
+! implicit none
+! character(len=4096) :: pathname
+! integer             :: times(2)
+! integer             :: i
+!    do i=1,command_argument_count()
+!       call get_command_argument(i, pathname)
+!       if(.not.system_utime(pathname,times))then
+!          call system_perror('*demo_system_utime*')
+!       endif
+!    enddo
+! end program demo_system_utime
+!```
+
+INTERFACE
+  MODULE FUNCTION system_utime(pathname, times)
+    CHARACTER(len=*), INTENT(in) :: pathname
+    INTEGER, INTENT(in), OPTIONAL :: times(2)
+    LOGICAL :: system_utime
+  END FUNCTION System_Utime
+END INTERFACE
 
 !----------------------------------------------------------------------------
 !
@@ -812,27 +723,12 @@ END FUNCTION timestamp
 !!   *system_realpath* error for pathname NotThere:: No such file or directory
 !!   NotThere=>NotThere
 
-FUNCTION system_realpath(input) RESULT(string)
-! ident_3="@(#)M_system::system_realpath(3f):call realpath(3c) to get pathname of current working directory"
-  CHARACTER(len=*), INTENT(in) :: input
-  TYPE(C_PTR) :: c_output
-  CHARACTER(len=:), ALLOCATABLE :: string
-
-  INTERFACE
-    FUNCTION c_realpath(c_input) BIND(c, name="my_realpath") RESULT(c_buffer)
-      IMPORT C_CHAR, C_SIZE_T, C_PTR, C_INT
-      CHARACTER(kind=C_CHAR), INTENT(in) :: c_input(*)
-      TYPE(C_PTR) :: c_buffer
-    END FUNCTION
-  END INTERFACE
-
-  c_output = c_realpath(str2_carr(TRIM(input)))
-  IF (.NOT. C_ASSOCIATED(c_output)) THEN
-    string = CHAR(0)
-  ELSE
-    string = C2F_string(c_output)
-  END IF
-END FUNCTION system_realpath
+INTERFACE
+  MODULE FUNCTION system_realpath(input) RESULT(string)
+    CHARACTER(len=*), INTENT(in) :: input
+    CHARACTER(len=:), ALLOCATABLE :: string
+  END FUNCTION system_realpath
+END INTERFACE
 
 !----------------------------------------------------------------------------
 !
@@ -886,26 +782,56 @@ END FUNCTION system_realpath
 !!    enddo
 !!    end program demo_system_issock
 
-FUNCTION system_issock(pathname)
-  IMPLICIT NONE
-! ident_4="@(#)M_system::system_issock(3f): determine if pathname is a socket"
-  CHARACTER(len=*), INTENT(in) :: pathname
-  LOGICAL :: system_issock
+INTERFACE
+  MODULE FUNCTION System_Issock(pathname)
+    CHARACTER(len=*), INTENT(in) :: pathname
+    LOGICAL :: System_Issock
+  END FUNCTION System_Issock
+END INTERFACE
 
-  INTERFACE
-    FUNCTION c_issock(pathname) BIND(C, name="my_issock") RESULT(c_ierr)
-      IMPORT C_CHAR, C_INT
-      CHARACTER(kind=C_CHAR, len=1), INTENT(in) :: pathname(*)
-      INTEGER(kind=C_INT) :: c_ierr
-    END FUNCTION c_issock
-  END INTERFACE
+!----------------------------------------------------------------------------
+!                                                  C2F_String@UtilityMethods
+!----------------------------------------------------------------------------
 
-  IF (c_issock(str2_carr(TRIM(pathname))) .EQ. 1) THEN
-    system_issock = .TRUE.
-  ELSE
-    system_issock = .FALSE.
-  END IF
-END FUNCTION system_issock
+!> author: Vikas Sharma, Ph. D.
+! date: 2026-02-05
+! summary: converts c string to fortran string
+
+INTERFACE
+  MODULE FUNCTION C2F_String(c_string_pointer) RESULT(f_string)
+    TYPE(C_PTR), INTENT(in) :: c_string_pointer
+    CHARACTER(len=:), ALLOCATABLE :: f_string
+  END FUNCTION C2F_String
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2026-02-05
+! summary: Str2_Carr
+
+INTERFACE
+  MODULE PURE FUNCTION str2_carr(string) RESULT(array)
+    CHARACTER(len=*), INTENT(in) :: string
+    CHARACTER(len=1, kind=C_CHAR) :: array(LEN(string) + 1)
+  END FUNCTION str2_carr
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                                  TimeStamp
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2026-02-05
+! summary: Time stamp method
+
+INTERFACE
+  MODULE FUNCTION TimeStamp() RESULT(epoch)
+    INTEGER(kind=8) :: epoch
+  END FUNCTION TimeStamp
+END INTERFACE
 
 !----------------------------------------------------------------------------
 !
@@ -959,29 +885,12 @@ END FUNCTION system_issock
 !!    enddo
 !!    end program demo_system_isfifo
 
-ELEMENTAL impure FUNCTION system_isfifo(pathname)
-  IMPLICIT NONE
-
-! ident_5="@(#)M_system::system_isfifo(3f): determine if pathname is a fifo(named pipe)"
-
-  CHARACTER(len=*), INTENT(in) :: pathname
-  LOGICAL :: system_isfifo
-
-  INTERFACE
-    FUNCTION c_isfifo(pathname) BIND(C, name="my_isfifo") RESULT(c_ierr)
-      IMPORT C_CHAR, C_INT
-      CHARACTER(kind=C_CHAR, len=1), INTENT(in) :: pathname(*)
-      INTEGER(kind=C_INT) :: c_ierr
-    END FUNCTION c_isfifo
-  END INTERFACE
-
-  IF (c_isfifo(str2_carr(TRIM(pathname))) .EQ. 1) THEN
-    system_isfifo = .TRUE.
-  ELSE
-    system_isfifo = .FALSE.
-  END IF
-
-END FUNCTION system_isfifo
+INTERFACE
+  MODULE ELEMENTAL IMPURE FUNCTION System_Isfifo(pathname)
+    CHARACTER(len=*), INTENT(in) :: pathname
+    LOGICAL :: System_Isfifo
+  END FUNCTION System_Isfifo
+END INTERFACE
 
 !----------------------------------------------------------------------------
 !
@@ -1037,29 +946,12 @@ END FUNCTION system_isfifo
 !!
 !!   Results:
 
-ELEMENTAL impure FUNCTION system_ischr(pathname)
-  IMPLICIT NONE
-
-! ident_6="@(#)M_system::system_ischr(3f): determine if pathname is a link"
-
-  CHARACTER(len=*), INTENT(in) :: pathname
-  LOGICAL :: system_ischr
-
-  INTERFACE
-    FUNCTION c_ischr(pathname) BIND(C, name="my_ischr") RESULT(c_ierr)
-      IMPORT C_CHAR, C_INT
-      CHARACTER(kind=C_CHAR, len=1), INTENT(in) :: pathname(*)
-      INTEGER(kind=C_INT) :: c_ierr
-    END FUNCTION c_ischr
-  END INTERFACE
-
-  IF (c_ischr(str2_carr(TRIM(pathname))) .EQ. 1) THEN
-    system_ischr = .TRUE.
-  ELSE
-    system_ischr = .FALSE.
-  END IF
-
-END FUNCTION system_ischr
+INTERFACE
+  MODULE ELEMENTAL impure FUNCTION System_Ischr(pathname)
+    CHARACTER(len=*), INTENT(in) :: pathname
+    LOGICAL :: System_Ischr
+  END FUNCTION System_Ischr
+END INTERFACE
 
 !----------------------------------------------------------------------------
 !
@@ -1132,29 +1024,12 @@ END FUNCTION system_ischr
 !!         write(*,'(a)')(trim(filenames(i)),i=1,size(filenames))
 !!    end program demo_system_isreg
 
-ELEMENTAL impure FUNCTION system_isreg(pathname)
-  IMPLICIT NONE
-
-! ident_7="@(#)M_system::system_isreg(3f): determine if pathname is a regular file"
-
-  CHARACTER(len=*), INTENT(in) :: pathname
-  LOGICAL :: system_isreg
-
-  INTERFACE
-    FUNCTION c_isreg(pathname) BIND(C, name="my_isreg") RESULT(c_ierr)
-      IMPORT C_CHAR, C_INT
-      CHARACTER(kind=C_CHAR, len=1), INTENT(in) :: pathname(*)
-      INTEGER(kind=C_INT) :: c_ierr
-    END FUNCTION c_isreg
-  END INTERFACE
-
-  IF (c_isreg(str2_carr(TRIM(pathname))) .EQ. 1) THEN
-    system_isreg = .TRUE.
-  ELSE
-    system_isreg = .FALSE.
-  END IF
-
-END FUNCTION system_isreg
+INTERFACE
+  MODULE ELEMENTAL impure FUNCTION system_isreg(pathname)
+    CHARACTER(len=*), INTENT(in) :: pathname
+    LOGICAL :: system_isreg
+  END FUNCTION system_isreg
+END INTERFACE
 
 !----------------------------------------------------------------------------
 !
@@ -1213,29 +1088,12 @@ END FUNCTION system_isreg
 !!
 !!   Results:
 
-ELEMENTAL impure FUNCTION system_islnk(pathname)
-  IMPLICIT NONE
-
-! ident_8="@(#)M_system::system_islnk(3f): determine if pathname is a link"
-
-  CHARACTER(len=*), INTENT(in) :: pathname
-  LOGICAL :: system_islnk
-
-  INTERFACE
-    FUNCTION c_islnk(pathname) BIND(C, name="my_islnk") RESULT(c_ierr)
-      IMPORT C_CHAR, C_INT
-      CHARACTER(kind=C_CHAR, len=1), INTENT(in) :: pathname(*)
-      INTEGER(kind=C_INT) :: c_ierr
-    END FUNCTION c_islnk
-  END INTERFACE
-
-  IF (c_islnk(str2_carr(TRIM(pathname))) .EQ. 1) THEN
-    system_islnk = .TRUE.
-  ELSE
-    system_islnk = .FALSE.
-  END IF
-
-END FUNCTION system_islnk
+INTERFACE
+  MODULE ELEMENTAL impure FUNCTION System_Islnk(pathname)
+    CHARACTER(len=*), INTENT(in) :: pathname
+    LOGICAL :: System_Islnk
+  END FUNCTION System_Islnk
+END INTERFACE
 
 !----------------------------------------------------------------------------
 !
@@ -1290,29 +1148,12 @@ END FUNCTION system_islnk
 !!
 !!   Results:
 
-ELEMENTAL impure FUNCTION system_isblk(pathname)
-  IMPLICIT NONE
-
-! ident_9="@(#)M_system::system_isblk(3f): determine if pathname is a block device"
-
-  CHARACTER(len=*), INTENT(in) :: pathname
-  LOGICAL :: system_isblk
-
-  INTERFACE
-    FUNCTION c_isblk(pathname) BIND(C, name="my_isblk") RESULT(c_ierr)
-      IMPORT C_CHAR, C_INT
-      CHARACTER(kind=C_CHAR, len=1), INTENT(in) :: pathname(*)
-      INTEGER(kind=C_INT) :: c_ierr
-    END FUNCTION c_isblk
-  END INTERFACE
-
-  IF (c_isblk(str2_carr(TRIM(pathname))) .EQ. 1) THEN
-    system_isblk = .TRUE.
-  ELSE
-    system_isblk = .FALSE.
-  END IF
-
-END FUNCTION system_isblk
+INTERFACE
+  MODULE ELEMENTAL IMPURE FUNCTION System_Isblk(pathname)
+    CHARACTER(len=*), INTENT(IN) :: pathname
+    LOGICAL :: System_Isblk
+  END FUNCTION System_Isblk
+END INTERFACE
 
 !----------------------------------------------------------------------------
 !
@@ -1392,27 +1233,12 @@ END FUNCTION system_isblk
 !!      TEST is a directory
 !!      EXAMPLE is a directory
 
-ELEMENTAL impure FUNCTION system_isdir(dirname)
-  IMPLICIT NONE
-! ident_10="@(#)M_system::system_isdir(3f): determine if DIRNAME is a directory name"
-  CHARACTER(len=*), INTENT(in) :: dirname
-  LOGICAL :: system_isdir
-
-  INTERFACE
-    FUNCTION c_isdir(dirname) BIND(C, name="my_isdir") RESULT(c_ierr)
-      IMPORT C_CHAR, C_INT
-      CHARACTER(kind=C_CHAR, len=1), INTENT(in) :: dirname(*)
-      INTEGER(kind=C_INT) :: c_ierr
-    END FUNCTION c_isdir
-  END INTERFACE
-
-  IF (c_isdir(str2_carr(TRIM(dirname))) .EQ. 1) THEN
-    system_isdir = .TRUE.
-  ELSE
-    system_isdir = .FALSE.
-  END IF
-
-END FUNCTION system_isdir
+INTERFACE
+  MODULE ELEMENTAL IMPURE FUNCTION System_Isdir(dirname)
+    CHARACTER(len=*), INTENT(in) :: dirname
+    LOGICAL :: System_Isdir
+  END FUNCTION System_Isdir
+END INTERFACE
 
 !----------------------------------------------------------------------------
 !
@@ -1478,32 +1304,14 @@ END FUNCTION system_isdir
 !!    enddo
 !!    end program demo_system_chown
 
-ELEMENTAL impure FUNCTION system_chown(dirname, owner, group)
-  IMPLICIT NONE
-! ident_11="@(#)M_system::system_chown(3f): change owner and group of a file relative to directory file descriptor"
-  CHARACTER(len=*), INTENT(in) :: dirname
-  INTEGER, INTENT(in) :: owner
-  INTEGER, INTENT(in) :: group
-  LOGICAL :: system_chown
-
-! int chown(const char *path, uid_t owner, gid_t group);
-  INTERFACE
-  function c_chown(c_dirname,c_owner,c_group) bind (C,name="my_chown") result (c_ierr)
-      IMPORT C_CHAR, C_INT
-      CHARACTER(kind=C_CHAR, len=1), INTENT(in) :: c_dirname(*)
-      INTEGER(kind=C_INT), INTENT(in), VALUE :: c_owner
-      INTEGER(kind=C_INT), INTENT(in), VALUE :: c_group
-      INTEGER(kind=C_INT) :: c_ierr
-    END FUNCTION c_chown
-  END INTERFACE
-
-   if(c_chown(str2_carr(trim(dirname)),int(owner,kind=c_int),int(group,kind=c_int)).eq.1)then
-    system_chown = .TRUE.
-  ELSE
-    system_chown = .FALSE.
-  END IF
-
-END FUNCTION system_chown
+INTERFACE
+  MODULE ELEMENTAL IMPURE FUNCTION System_Chown(dirname, owner, group)
+    CHARACTER(len=*), INTENT(in) :: dirname
+    INTEGER, INTENT(in) :: owner
+    INTEGER, INTENT(in) :: group
+    LOGICAL :: System_Chown
+  END FUNCTION System_Chown
+END INTERFACE
 
 !----------------------------------------------------------------------------
 !
@@ -1573,22 +1381,11 @@ END FUNCTION system_chown
 !-!   end subroutine system_cpu_time
 !-!end interface
 
-SUBROUTINE system_cpu_time(total, user, system)
-  REAL, INTENT(out) :: user, system, total
-  REAL(kind=C_FLOAT) :: c_user, c_system, c_total
-
-  INTERFACE
-  SUBROUTINE c_cpu_time(c_total, c_user, c_system) BIND(C, NAME='my_cpu_time')
-      IMPORT C_FLOAT
-      REAL(kind=C_FLOAT) :: c_total, c_user, c_system
-    END SUBROUTINE c_cpu_time
-  END INTERFACE
-
-  CALL c_cpu_time(c_total, c_user, c_system)
-  user = c_user
-  system = c_system
-  total = c_total
-END SUBROUTINE system_cpu_time
+INTERFACE
+  MODULE SUBROUTINE system_cpu_time(total, user, system)
+    REAL, INTENT(OUT) :: user, system, total
+  END SUBROUTINE system_cpu_time
+END INTERFACE
 
 !----------------------------------------------------------------------------
 !
@@ -1688,28 +1485,14 @@ END SUBROUTINE system_cpu_time
 !!       call system_perror('*demo_system_link*')
 !!    endif
 !!    end program demo_system_link
-ELEMENTAL impure FUNCTION system_link(oldname, newname) RESULT(ierr)
 
-! ident_12="@(#)M_system::system_link(3f): call link(3c) to create a file link"
-
-  CHARACTER(len=*), INTENT(in) :: oldname
-  CHARACTER(len=*), INTENT(in) :: newname
-  INTEGER :: ierr
-  INTEGER(kind=C_INT) :: c_ierr
-
-  INTERFACE
-    FUNCTION c_link(c_oldname, c_newname) BIND(C, name="link") RESULT(c_ierr)
-      IMPORT C_CHAR, C_INT
-      CHARACTER(kind=C_CHAR, len=1), INTENT(in) :: c_oldname(*)
-      CHARACTER(kind=C_CHAR, len=1), INTENT(in) :: c_newname(*)
-      INTEGER(kind=C_INT) :: c_ierr
-    END FUNCTION c_link
-  END INTERFACE
-
-  c_ierr = c_link(str2_carr(TRIM(oldname)), str2_carr(TRIM(newname)))
-  ierr = c_ierr
-
-END FUNCTION system_link
+INTERFACE
+  MODULE ELEMENTAL IMPURE FUNCTION system_link(oldname, newname) RESULT(ierr)
+    CHARACTER(len=*), INTENT(in) :: oldname
+    CHARACTER(len=*), INTENT(in) :: newname
+    INTEGER :: ierr
+  END FUNCTION system_link
+END INTERFACE
 
 !----------------------------------------------------------------------------
 !
@@ -1777,22 +1560,12 @@ END FUNCTION system_link
 !!    endif
 !!    end program demo_system_unlink
 
-ELEMENTAL impure FUNCTION system_unlink(fname) RESULT(ierr)
-
-! ident_13="@(#)M_system::system_unlink(3f): call unlink(3c) to rm file link"
-
-  CHARACTER(len=*), INTENT(in) :: fname
-  INTEGER :: ierr
-
-  INTERFACE
-    FUNCTION c_unlink(c_fname) BIND(C, name="unlink") RESULT(c_ierr)
-      IMPORT C_CHAR, C_INT
-      CHARACTER(kind=C_CHAR, len=1) :: c_fname(*)
-      INTEGER(kind=C_INT) :: c_ierr
-    END FUNCTION c_unlink
-  END INTERFACE
-  ierr = c_unlink(str2_carr(TRIM(fname)))
-END FUNCTION system_unlink
+INTERFACE
+  MODULE ELEMENTAL IMPURE FUNCTION system_unlink(fname) RESULT(ierr)
+    CHARACTER(len=*), INTENT(in) :: fname
+    INTEGER :: ierr
+  END FUNCTION system_unlink
+END INTERFACE
 
 !----------------------------------------------------------------------------
 !
@@ -1859,14 +1632,13 @@ END FUNCTION system_unlink
 !!     18 O'022' Z"12' B'000010010"
 !!     NEW
 !!     63 O'077' Z"3F' B'000111111"
-INTEGER FUNCTION system_setumask(umask_value) RESULT(old_umask)
-  INTEGER, INTENT(in) :: umask_value
-  INTEGER(kind=C_INT) :: umask_c
 
-  umask_c = umask_value
-  old_umask = system_umask(umask_c) ! set current umask
-
-END FUNCTION system_setumask
+INTERFACE
+  MODULE FUNCTION system_setumask(umask_value) RESULT(old_umask)
+    INTEGER, INTENT(in) :: umask_value
+    INTEGER :: old_umask
+  END FUNCTION system_setumask
+END INTERFACE
 
 !----------------------------------------------------------------------------
 !
@@ -1895,7 +1667,8 @@ END FUNCTION system_setumask
 !!   Expected output
 !!
 !!     18 O'022' Z"12' B'000010010"
-INTEGER FUNCTION system_getumask() RESULT(umask_value)
+INTERFACE
+  MODULE FUNCTION system_getumask() RESULT(umask_value)
 ! The return value from umask() is just the previous value of the file
 ! creation mask, so that this system call can be used both to get and
 ! set the required values. Sadly, however, there is no way to get the old
@@ -1903,12 +1676,9 @@ INTEGER FUNCTION system_getumask() RESULT(umask_value)
 
 ! This means that in order just to see the current value, it is necessary
 ! to execute a piece of code like the following function:
-  INTEGER :: idum
-  INTEGER(kind=C_INT) :: old_umask
-  old_umask = system_umask(0_C_INT) ! get current umask but by setting umask to 0 (a conservative mask so no vulnerability is open)
-  idum = system_umask(old_umask) ! set back to original mask
-  umask_value = old_umask
-END FUNCTION system_getumask
+    INTEGER :: umask_value
+  END FUNCTION system_getumask
+END INTERFACE
 
 !----------------------------------------------------------------------------
 !
@@ -1953,28 +1723,11 @@ END FUNCTION system_getumask
 !!    *demo_system_perror*:/NOT/THERE/OR/ANYWHERE: No such file or directory
 !!    That is all Folks!
 
-SUBROUTINE system_perror(prefix)
-  USE, INTRINSIC :: ISO_FORTRAN_ENV, ONLY: ERROR_UNIT, INPUT_UNIT, OUTPUT_UNIT ! access computing environment
-
-! ident_14="@(#)M_system::system_perror(3f): call perror(3c) to display error message"
-
-  CHARACTER(len=*), INTENT(in) :: prefix
-  INTEGER :: ios
-
-  INTERFACE
-    SUBROUTINE c_perror(c_prefix) BIND(C, name="perror")
-      IMPORT C_CHAR
-      CHARACTER(kind=C_CHAR) :: c_prefix(*)
-    END SUBROUTINE c_perror
-  END INTERFACE
-
-  FLUSH (unit=ERROR_UNIT, iostat=ios)
-  FLUSH (unit=OUTPUT_UNIT, iostat=ios)
-  FLUSH (unit=INPUT_UNIT, iostat=ios)
-  CALL c_perror(str2_carr((TRIM(prefix))))
-  CALL c_flush()
-
-END SUBROUTINE system_perror
+INTERFACE
+  MODULE SUBROUTINE system_perror(prefix)
+    CHARACTER(len=*), INTENT(in) :: prefix
+  END SUBROUTINE system_perror
+END INTERFACE
 
 !----------------------------------------------------------------------------
 !
@@ -2045,24 +1798,12 @@ END SUBROUTINE system_perror
 !!      /tmp
 !!      *CHDIR TEST* IERR=           0
 
-SUBROUTINE system_chdir(path, err)
-! ident_15="@(#)M_system::system_chdir(3f): call chdir(3c)"
-  CHARACTER(len=*) :: path
-  INTEGER, OPTIONAL, INTENT(out) :: err
-
-  INTERFACE
-    INTEGER(kind=C_INT) FUNCTION c_chdir(c_path) BIND(C, name="chdir")
-      IMPORT C_CHAR, C_INT
-      CHARACTER(kind=C_CHAR) :: c_path(*)
-    END FUNCTION
-  END INTERFACE
-  INTEGER :: loc_err
-!-----------------------------------------------------------------------------------------------------------------------------------
-  loc_err = c_chdir(str2_carr(TRIM(path)))
-  IF (PRESENT(err)) THEN
-    err = loc_err
-  END IF
-END SUBROUTINE system_chdir
+INTERFACE
+  MODULE SUBROUTINE system_chdir(path, err)
+    CHARACTER(len=*) :: path
+    INTEGER, OPTIONAL, INTENT(out) :: err
+  END SUBROUTINE system_chdir
+END INTERFACE
 
 !----------------------------------------------------------------------------
 !
@@ -2135,21 +1876,12 @@ END SUBROUTINE system_chdir
 !!##LICENSE
 !!    Public Domain
 
-ELEMENTAL impure FUNCTION system_remove(path) RESULT(err)
-! ident_16="@(#)M_system::system_remove(3f): call remove(3c) to remove file"
-  CHARACTER(*), INTENT(in) :: path
-  INTEGER(C_INT) :: err
-
-  INTERFACE
-    FUNCTION c_remove(c_path) BIND(c, name="remove") RESULT(c_err)
-      IMPORT C_CHAR, C_INT
-      CHARACTER(kind=C_CHAR, len=1), INTENT(in) :: c_path(*)
-      INTEGER(C_INT) :: c_err
-    END FUNCTION
-  END INTERFACE
-!-----------------------------------------------------------------------------------------------------------------------------------
-  err = c_remove(str2_carr(TRIM(path)))
-END FUNCTION system_remove
+INTERFACE
+  MODULE ELEMENTAL IMPURE FUNCTION system_remove(path) RESULT(err)
+    CHARACTER(*), INTENT(in) :: path
+    INTEGER(C_INT) :: err
+  END FUNCTION system_remove
+END INTERFACE
 
 !----------------------------------------------------------------------------
 !
@@ -2241,23 +1973,13 @@ END FUNCTION system_remove
 !!    John S. Urban
 !!##LICENSE
 !!    Public Domain
-FUNCTION system_rename(input, output) RESULT(ierr)
 
-! ident_17="@(#)M_system::system_rename(3f): call rename(3c) to change filename"
-
-  CHARACTER(*), INTENT(in) :: input, output
-  INTEGER :: ierr
-  INTERFACE
-    FUNCTION c_rename(c_input, c_output) BIND(c, name="rename") RESULT(c_err)
-      IMPORT C_CHAR, C_INT
-      CHARACTER(kind=C_CHAR), INTENT(in) :: c_input(*)
-      CHARACTER(kind=C_CHAR), INTENT(in) :: c_output(*)
-      INTEGER(C_INT) :: c_err
-    END FUNCTION
-  END INTERFACE
-!-----------------------------------------------------------------------------------------------------------------------------------
-  ierr = c_rename(str2_carr(TRIM(input)), str2_carr(TRIM(output)))
-END FUNCTION system_rename
+INTERFACE
+  MODULE FUNCTION system_rename(input, output) RESULT(ierr)
+    CHARACTER(*), INTENT(in) :: input, output
+    INTEGER :: ierr
+  END FUNCTION system_rename
+END INTERFACE
 
 !----------------------------------------------------------------------------
 !
@@ -2370,21 +2092,13 @@ END FUNCTION system_rename
 !!##LICENSE
 !!    Public Domain
 
-FUNCTION system_chmod(filename, mode) RESULT(ierr)
-  CHARACTER(len=*), INTENT(in) :: filename
-  INTEGER, VALUE, INTENT(in) :: mode
-  INTEGER :: ierr
-  INTERFACE
-    FUNCTION c_chmod(c_filename, c_mode) BIND(c, name="chmod") RESULT(c_err)
-      IMPORT C_CHAR, C_INT
-      CHARACTER(kind=C_CHAR), INTENT(in) :: c_filename(*)
-      INTEGER(C_INT), VALUE, INTENT(in) :: c_mode
-      INTEGER(C_INT) :: c_err
-    END FUNCTION
-  END INTERFACE
-!-----------------------------------------------------------------------------------------------------------------------------------
-  ierr = c_chmod(str2_carr(TRIM(filename)), INT(mode, KIND(0_C_INT)))
-END FUNCTION system_chmod
+INTERFACE
+  MODULE FUNCTION system_chmod(filename, mode) RESULT(ierr)
+    CHARACTER(len=*), INTENT(in) :: filename
+    INTEGER, VALUE, INTENT(in) :: mode
+    INTEGER :: ierr
+  END FUNCTION system_chmod
+END INTERFACE
 
 !----------------------------------------------------------------------------
 !
@@ -2431,32 +2145,12 @@ END FUNCTION system_chmod
 !!##LICENSE
 !!    Public Domain
 
-SUBROUTINE system_getcwd(output, ierr)
-! ident_18="@(#)M_system::system_getcwd(3f):call getcwd(3c) to get pathname of current working directory"
-  CHARACTER(len=:), ALLOCATABLE, INTENT(out) :: output
-  INTEGER, INTENT(out) :: ierr
-  INTEGER(kind=C_LONG), PARAMETER :: length = 4097_C_LONG
-  CHARACTER(kind=C_CHAR, len=1) :: buffer(length)
-  TYPE(C_PTR) :: buffer2
-  INTERFACE
-  FUNCTION c_getcwd(buffer, size) BIND(c, name="getcwd") RESULT(buffer_result)
-      IMPORT C_CHAR, C_SIZE_T, C_PTR
-      CHARACTER(kind=C_CHAR), INTENT(out) :: buffer(*)
-      INTEGER(C_SIZE_T), VALUE, INTENT(in) :: size
-      TYPE(C_PTR) :: buffer_result
-    END FUNCTION
-  END INTERFACE
-!-----------------------------------------------------------------------------------------------------------------------------------
-  buffer = ' '
-  buffer2 = c_getcwd(buffer, length)
-  IF (.NOT. C_ASSOCIATED(buffer2)) THEN
-    output = ''
-    ierr = -1
-  ELSE
-    output = TRIM(arr2str(buffer))
-    ierr = 0
-  END IF
-END SUBROUTINE system_getcwd
+INTERFACE
+  MODULE SUBROUTINE system_getcwd(output, ierr)
+    CHARACTER(len=:), ALLOCATABLE, INTENT(out) :: output
+    INTEGER, INTENT(out) :: ierr
+  END SUBROUTINE system_getcwd
+END INTERFACE
 
 !----------------------------------------------------------------------------
 !
@@ -2515,26 +2209,16 @@ END SUBROUTINE system_getcwd
 !!    John S. Urban
 !!##LICENSE
 !!    Public Domain
-FUNCTION system_rmdir(dirname) RESULT(err)
 
-! ident_19="@(#)M_system::system_rmdir(3f): call rmdir(3c) to remove empty directory"
+INTERFACE
+  MODULE FUNCTION system_rmdir(dirname) RESULT(err)
+    CHARACTER(*), INTENT(in) :: dirname
+    INTEGER(C_INT) :: err
+  END FUNCTION system_rmdir
+END INTERFACE
 
-  CHARACTER(*), INTENT(in) :: dirname
-  INTEGER(C_INT) :: err
-
-  INTERFACE
-    FUNCTION c_rmdir(c_path) BIND(c, name="rmdir") RESULT(c_err)
-      IMPORT C_CHAR, C_INT
-      CHARACTER(kind=C_CHAR, len=1), INTENT(in) :: c_path(*)
-      INTEGER(C_INT) :: c_err
-    END FUNCTION
-  END INTERFACE
-!-----------------------------------------------------------------------------------------------------------------------------------
-  err = c_rmdir(str2_carr(TRIM(dirname)))
-  IF (err .NE. 0) err = system_errno()
-END FUNCTION system_rmdir
 !----------------------------------------------------------------------------
-!()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()!
+!
 !----------------------------------------------------------------------------
 !>
 !!##NAME
@@ -2652,29 +2336,17 @@ END FUNCTION system_rmdir
 !!    John S. Urban
 !!##LICENSE
 !!    Public Domain
-FUNCTION system_mkfifo(pathname, mode) RESULT(err)
 
-! ident_20="@(#)M_system::system_mkfifo(3f): call mkfifo(3c) to create a new FIFO special file"
+INTERFACE
+  MODULE FUNCTION system_mkfifo(pathname, mode) RESULT(err)
+    CHARACTER(len=*), INTENT(in) :: pathname
+    INTEGER, INTENT(in) :: mode
+    INTEGER :: err
+  END FUNCTION system_mkfifo
+END INTERFACE
 
-  CHARACTER(len=*), INTENT(in) :: pathname
-  INTEGER, INTENT(in) :: mode
-  INTEGER :: c_mode
-  INTEGER :: err
-
-  INTERFACE
-    FUNCTION c_mkfifo(c_path, c_mode) BIND(c, name="mkfifo") RESULT(c_err)
-      IMPORT C_CHAR, C_INT
-      CHARACTER(len=1, kind=C_CHAR), INTENT(in) :: c_path(*)
-      INTEGER(C_INT), INTENT(in), VALUE :: c_mode
-      INTEGER(C_INT) :: c_err
-    END FUNCTION c_mkfifo
-  END INTERFACE
-!-----------------------------------------------------------------------------------------------------------------------------------
-  c_mode = mode
-  err = c_mkfifo(str2_carr(TRIM(pathname)), c_mode)
-END FUNCTION system_mkfifo
 !----------------------------------------------------------------------------
-!()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()!
+!
 !----------------------------------------------------------------------------
 !>
 !!##NAME
@@ -2731,45 +2403,14 @@ END FUNCTION system_mkfifo
 !!    John S. Urban
 !!##LICENSE
 !!    Public Domain
-FUNCTION system_mkdir(dirname, mode) RESULT(ierr)
 
-! ident_21="@(#)M_system::system_mkdir(3f): call mkdir(3c) to create empty directory"
-
-  CHARACTER(len=*), INTENT(in) :: dirname
-  INTEGER, INTENT(in) :: mode
-  INTEGER :: c_mode
-  INTEGER(kind=C_INT) :: err
-  INTEGER :: ierr
-
-  INTERFACE
-    FUNCTION c_mkdir(c_path, c_mode) BIND(c, name="mkdir") RESULT(c_err)
-      IMPORT C_CHAR, C_INT
-      CHARACTER(len=1, kind=C_CHAR), INTENT(in) :: c_path(*)
-      INTEGER(C_INT), INTENT(in), VALUE :: c_mode
-      INTEGER(C_INT) :: c_err
-    END FUNCTION c_mkdir
-  END INTERFACE
-  INTERFACE
-    SUBROUTINE my_mkdir(string, c_mode, c_err) BIND(C, name="my_mkdir")
-      USE ISO_C_BINDING, ONLY: C_CHAR, C_INT
-      CHARACTER(kind=C_CHAR) :: string(*)
-      INTEGER(C_INT), INTENT(in), VALUE :: c_mode
-      INTEGER(C_INT) :: c_err
-    END SUBROUTINE my_mkdir
-  END INTERFACE
-!-----------------------------------------------------------------------------------------------------------------------------------
-  c_mode = mode
-  IF (INDEX(dirname, '/') .NE. 0) THEN
-    CALL my_mkdir(str2_carr(TRIM(dirname)), c_mode, err)
-  ELSE
-    err = c_mkdir(str2_carr(TRIM(dirname)), c_mode)
-  END IF
-  ierr = err ! c_int to default integer kind
-END FUNCTION system_mkdir
-
-!----------------------------------------------------------------------------
-!
-!----------------------------------------------------------------------------
+INTERFACE
+  MODULE FUNCTION system_mkdir(dirname, mode) RESULT(ierr)
+    CHARACTER(len=*), INTENT(in) :: dirname
+    INTEGER, INTENT(in) :: mode
+    INTEGER :: ierr
+  END FUNCTION system_mkdir
+END INTERFACE
 
 !----------------------------------------------------------------------------
 !
@@ -2863,27 +2504,13 @@ END FUNCTION system_mkdir
 !!##LICENSE
 !!    Public Domain
 
-SUBROUTINE system_opendir(dirname, dir, ierr)
-  CHARACTER(len=*), INTENT(in) :: dirname
-  TYPE(C_PTR) :: dir
-  INTEGER, INTENT(out) :: ierr
-
-  INTERFACE
-    FUNCTION c_opendir(c_dirname) BIND(c, name="opendir") RESULT(c_dir)
-      IMPORT C_CHAR, C_INT, C_PTR
-      CHARACTER(kind=C_CHAR), INTENT(in) :: c_dirname(*)
-      TYPE(C_PTR) :: c_dir
-    END FUNCTION c_opendir
-  END INTERFACE
-
-  ierr = 0
-  dir = c_opendir(str2_carr(TRIM(dirname)))
-  IF (.NOT. C_ASSOCIATED(dir)) THEN
-    WRITE (*, '(a)') '*system_opendir* Error opening '//TRIM(dirname)
-    ierr = -1
-  END IF
-
-END SUBROUTINE system_opendir
+INTERFACE
+  MODULE SUBROUTINE system_opendir(dirname, dir, ierr)
+    CHARACTER(len=*), INTENT(in) :: dirname
+    TYPE(C_PTR) :: dir
+    INTEGER, INTENT(out) :: ierr
+  END SUBROUTINE system_opendir
+END INTERFACE
 
 !----------------------------------------------------------------------------
 !
@@ -2965,30 +2592,14 @@ END SUBROUTINE system_opendir
 !!    John S. Urban
 !!##LICENSE
 !!    Public Domain
-SUBROUTINE system_readdir(dir, filename, ierr)
-  TYPE(C_PTR), VALUE :: dir
-  CHARACTER(len=:), INTENT(out), ALLOCATABLE :: filename
-  INTEGER, INTENT(out) :: ierr
-  INTEGER(kind=C_INT) :: ierr_local
 
-  CHARACTER(kind=C_CHAR, len=1) :: buf(4097)
-
-  INTERFACE
-    SUBROUTINE c_readdir(c_dir, c_filename, c_ierr) BIND(C, NAME='my_readdir')
-      IMPORT C_CHAR, C_INT, C_PTR
-      TYPE(C_PTR), VALUE :: c_dir
-      CHARACTER(kind=C_CHAR) :: c_filename(*)
-      INTEGER(kind=C_INT) :: c_ierr
-    END SUBROUTINE c_readdir
-  END INTERFACE
-
-  buf = ' '
-  ierr_local = 0
-  CALL c_readdir(dir, buf, ierr_local)
-  filename = TRIM(arr2str(buf))
-  ierr = ierr_local
-
-END SUBROUTINE system_readdir
+INTERFACE
+  MODULE SUBROUTINE system_readdir(dir, filename, ierr)
+    TYPE(C_PTR), VALUE :: dir
+    CHARACTER(len=:), INTENT(out), ALLOCATABLE :: filename
+    INTEGER, INTENT(out) :: ierr
+  END SUBROUTINE system_readdir
+END INTERFACE
 
 !----------------------------------------------------------------------------
 !
@@ -3043,19 +2654,12 @@ END SUBROUTINE system_readdir
 !!    John S. Urban
 !!##LICENSE
 !!    Public Domain
-SUBROUTINE system_rewinddir(dir)
-  TYPE(C_PTR), VALUE :: dir
 
-  INTERFACE
-    SUBROUTINE c_rewinddir(c_dir) BIND(c, name="rewinddir")
-      IMPORT C_CHAR, C_INT, C_PTR
-      TYPE(C_PTR), VALUE :: c_dir
-    END SUBROUTINE c_rewinddir
-  END INTERFACE
-
-  CALL c_rewinddir(dir)
-
-END SUBROUTINE system_rewinddir
+INTERFACE
+  MODULE SUBROUTINE system_rewinddir(dir)
+    TYPE(C_PTR), VALUE :: dir
+  END SUBROUTINE system_rewinddir
+END INTERFACE
 
 !----------------------------------------------------------------------------
 !
@@ -3110,31 +2714,13 @@ END SUBROUTINE system_rewinddir
 !!    John S. Urban
 !!##LICENSE
 !!    Public Domain
-SUBROUTINE system_closedir(dir, ierr)
-  USE ISO_C_BINDING
-  TYPE(C_PTR), VALUE :: dir
-  INTEGER, INTENT(out), OPTIONAL :: ierr
-  INTEGER :: ierr_local
 
-  INTERFACE
-    FUNCTION c_closedir(c_dir) BIND(c, name="closedir") RESULT(c_err)
-      IMPORT C_CHAR, C_INT, C_PTR
-      TYPE(C_PTR), VALUE :: c_dir
-      INTEGER(kind=C_INT) :: c_err
-    END FUNCTION c_closedir
-  END INTERFACE
-
-  ierr_local = c_closedir(dir)
-  IF (PRESENT(ierr)) THEN
-    ierr = ierr_local
-  ELSE
-    IF (ierr_local /= 0) THEN
-      PRINT *, "*system_closedir* error", ierr_local
-      STOP 3
-    END IF
-  END IF
-
-END SUBROUTINE system_closedir
+INTERFACE
+  MODULE SUBROUTINE system_closedir(dir, ierr)
+    TYPE(C_PTR), VALUE :: dir
+    INTEGER, INTENT(out), OPTIONAL :: ierr
+  END SUBROUTINE system_closedir
+END INTERFACE
 
 !----------------------------------------------------------------------------
 !
@@ -3209,35 +2795,24 @@ END SUBROUTINE system_closedir
 !!    John S. Urban
 !!##LICENSE
 !!    Public Domain
-SUBROUTINE system_putenv(string, err)
 
-! ident_22="@(#)M_system::system_putenv(3f): call putenv(3c)"
+INTERFACE
+  MODULE SUBROUTINE system_putenv(string, err)
+    CHARACTER(len=*), INTENT(in) :: string
+    INTEGER, OPTIONAL, INTENT(out) :: err
+  END SUBROUTINE system_putenv
+END INTERFACE
 
-  INTERFACE
-    INTEGER(kind=C_INT) FUNCTION c_putenv(c_string) BIND(C, name="putenv")
-      IMPORT C_INT, C_CHAR
-      CHARACTER(kind=C_CHAR) :: c_string(*)
-    END FUNCTION
-  END INTERFACE
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
 
-  CHARACTER(len=*), INTENT(in) :: string
-  INTEGER, OPTIONAL, INTENT(out) :: err
-  INTEGER :: loc_err
-  INTEGER :: i
-
-  ! PUTENV actually adds the data to the environment so the string passed should be saved or will vanish on exit
-  CHARACTER(len=1, kind=C_CHAR), SAVE, POINTER :: memleak(:)
-
-  ALLOCATE (memleak(LEN(string) + 1))
-  DO i = 1, LEN(string)
-    memleak(i) = string(i:i)
-  END DO
-  memleak(LEN(string) + 1) = C_NULL_CHAR
-
-  loc_err = c_putenv(memleak)
-  IF (PRESENT(err)) err = loc_err
-
-END SUBROUTINE system_putenv
+INTERFACE
+  MODULE PURE FUNCTION arr2str(array) RESULT(string)
+    CHARACTER(len=1), INTENT(in) :: array(:)
+    CHARACTER(len=SIZE(array)) :: string
+  END FUNCTION arr2str
+END INTERFACE
 
 !----------------------------------------------------------------------------
 !
@@ -3281,39 +2856,16 @@ END SUBROUTINE system_putenv
 !!    John S. Urban
 !!##LICENSE
 !!    Public Domain
-FUNCTION system_getenv(name, default) RESULT(VALUE)
 
-! ident_23="@(#)M_system::system_getenv(3f): call get_environment_variable as a function with a default value(3f)"
-
-  CHARACTER(len=*), INTENT(in) :: name
-  CHARACTER(len=*), INTENT(in), OPTIONAL :: default
-  INTEGER :: howbig
-  INTEGER :: stat
-  CHARACTER(len=:), ALLOCATABLE :: VALUE
-
-  IF (NAME .NE. '') THEN
-      call get_environment_variable(name, length=howbig, status=stat, trim_name=.true.)  ! get length required to hold value
-    IF (howbig .NE. 0) THEN
-      SELECT CASE (stat)
-      CASE (1) ! print *, NAME, " is not defined in the environment. Strange..."
-        VALUE = ''
-      CASE (2) ! print *, "This processor doesn't support environment variables. Boooh!"
-        VALUE = ''
-      CASE default ! make string to hold value of sufficient size and get value
-        IF (ALLOCATED(VALUE)) DEALLOCATE (VALUE)
-        ALLOCATE (CHARACTER(len=MAX(howbig, 1)) :: VALUE)
-     CALL GET_ENVIRONMENT_VARIABLE(name, VALUE, status=stat, trim_name=.TRUE.)
-        IF (stat .NE. 0) VALUE = ''
-      END SELECT
-    ELSE
-      VALUE = ''
-    END IF
-  ELSE
-    VALUE = ''
-  END IF
-  IF (VALUE .EQ. '' .AND. PRESENT(default)) VALUE = default
-
-END FUNCTION system_getenv
+INTERFACE
+  MODULE FUNCTION system_getenv(name, default) RESULT(VALUE)
+    CHARACTER(len=*), INTENT(in) :: name
+    CHARACTER(len=*), INTENT(in), OPTIONAL :: default
+    INTEGER :: howbig
+    INTEGER :: stat
+    CHARACTER(len=:), ALLOCATABLE :: VALUE
+  END FUNCTION system_getenv
+END INTERFACE
 
 !----------------------------------------------------------------------------
 !
@@ -3377,26 +2929,14 @@ END FUNCTION system_getenv
 !!    John S. Urban
 !!##LICENSE
 !!    Public Domain
-SUBROUTINE set_environment_variable(NAME, VALUE, STATUS)
 
-! ident_24="@(#)M_system::set_environment_variable(3f): call setenv(3c) to set environment variable"
-
-  CHARACTER(len=*) :: NAME
-  CHARACTER(len=*) :: VALUE
-  INTEGER, OPTIONAL, INTENT(out) :: STATUS
-  INTEGER :: loc_err
-
-  INTERFACE
- INTEGER(kind=C_INT) FUNCTION c_setenv(c_name, c_VALUE) BIND(C, NAME="setenv")
-      IMPORT C_INT, C_CHAR
-      CHARACTER(kind=C_CHAR) :: c_name(*)
-      CHARACTER(kind=C_CHAR) :: c_VALUE(*)
-    END FUNCTION
-  END INTERFACE
-
-  loc_err = c_setenv(str2_carr(TRIM(NAME)), str2_carr(VALUE))
-  IF (PRESENT(STATUS)) STATUS = loc_err
-END SUBROUTINE set_environment_variable
+INTERFACE
+  MODULE SUBROUTINE set_environment_variable(NAME, VALUE, STATUS)
+    CHARACTER(len=*) :: NAME
+    CHARACTER(len=*) :: VALUE
+    INTEGER, OPTIONAL, INTENT(out) :: STATUS
+  END SUBROUTINE set_environment_variable
+END INTERFACE
 
 !----------------------------------------------------------------------------
 !
@@ -3447,53 +2987,12 @@ END SUBROUTINE set_environment_variable
 !!    John S. Urban
 !!##LICENSE
 !!    Public Domain
-SUBROUTINE system_clearenv(ierr)
-!  emulating because not available on some platforms
 
-! ident_25="@(#)M_system::system_clearenv(3f): emulate clearenv(3c) to clear environment"
-
-  INTEGER, INTENT(out), OPTIONAL :: ierr
-  CHARACTER(len=:), ALLOCATABLE :: string
-  INTEGER :: ierr_local1, ierr_local2
-  ierr_local2 = 0
-  INFINITE: DO
-    CALL system_initenv() ! important -- changing table causes undefined behavior so reset after each unsetenv
-    string = system_readenv() ! get first name=value pair
-    IF (string .EQ. '') EXIT INFINITE
-    CALL system_unsetenv(string(1:INDEX(string, '=') - 1), ierr_local1) ! remove first name=value pair
-    IF (ierr_local1 .NE. 0) ierr_local2 = ierr_local1
-  END DO INFINITE
-  IF (PRESENT(ierr)) THEN
-    ierr = ierr_local2
-  ELSEIF (ierr_local2 .NE. 0) THEN ! if error occurs and not being returned, stop
-    WRITE (*, *) '*system_clearenv* error=', ierr_local2
-    STOP
-  END IF
-END SUBROUTINE system_clearenv
-!--subroutine system_clearenv(ierr)
-!--! clearenv(3c) not available on some systems I tried
-!--! Found reference that if it is unavailable the assignment
-! "environ = NULL;" will probably do but emulating instead
-!--$@ (#)M_system::system_clearenv(3f): call clearenv(3c) to clear
-! "environment"
-!--integer,intent(out),optional :: ierr
-!--   integer                   :: ierr_local
-!--
-!--interface
-!--   integer(kind=c_int) function c_clearenv() bind(C,NAME="clearenv")
-!--   import c_int
-!--   end function
-!--end interface
-!--
-!--   ierr_local = c_clearenv()
-!--   if(present(ierr))then
-!--      ierr=ierr_local
-!--   elseif(ierr_local.ne.0)then ! if error occurs and not being returned, stop
-!--      write(*,*)'*system_clearenv* error=',ierr_local
-!--      stop
-!--   endif
-!--
-!--end subroutine system_clearenv
+INTERFACE
+  MODULE SUBROUTINE system_clearenv(ierr)
+    INTEGER, INTENT(out), OPTIONAL :: ierr
+  END SUBROUTINE system_clearenv
+END INTERFACE
 
 !----------------------------------------------------------------------------
 !
@@ -3543,32 +3042,13 @@ END SUBROUTINE system_clearenv
 !!    John S. Urban
 !!##LICENSE
 !!    Public Domain
-SUBROUTINE system_unsetenv(name, ierr)
 
-! ident_26="@(#)M_system::system_unsetenv(3f): call unsetenv(3c) to remove variable from environment"
-
-  CHARACTER(len=*), INTENT(in) :: name
-  INTEGER, INTENT(out), OPTIONAL :: ierr
-  INTEGER :: ierr_local
-
-! int unsetenv(void)
-  INTERFACE
-    INTEGER(kind=C_INT) FUNCTION c_unsetenv(c_name) BIND(C, NAME="unsetenv")
-      IMPORT C_INT, C_CHAR
-      CHARACTER(len=1, kind=C_CHAR) :: c_name(*)
-    END FUNCTION
-  END INTERFACE
-
-  ierr_local = c_unsetenv(str2_carr(TRIM(NAME)))
-
-  IF (PRESENT(ierr)) THEN
-    ierr = ierr_local
-  ELSEIF (ierr_local .NE. 0) THEN ! if error occurs and not being returned, stop
-    WRITE (*, *) '*system_unsetenv* error=', ierr_local
-    STOP
-  END IF
-
-END SUBROUTINE system_unsetenv
+INTERFACE
+  MODULE SUBROUTINE system_unsetenv(name, ierr)
+    CHARACTER(len=*), INTENT(in) :: name
+    INTEGER, INTENT(out), OPTIONAL :: ierr
+  END SUBROUTINE system_unsetenv
+END INTERFACE
 
 !----------------------------------------------------------------------------
 !
@@ -3629,29 +3109,14 @@ END SUBROUTINE system_unsetenv
 !!##LICENSE
 !!    Public Domain
 
-FUNCTION system_readenv() RESULT(string)
-
-! ident_27="@(#)M_system::system_readenv(3f): read next entry from environment table"
-
-  CHARACTER(len=:), ALLOCATABLE :: string
-  CHARACTER(kind=C_CHAR) :: c_buff(longest_env_variable + 1)
-
-  INTERFACE
-    SUBROUTINE c_readenv(c_string) BIND(C, NAME='my_readenv')
-      IMPORT C_CHAR, C_INT, C_PTR, C_SIZE_T
-      CHARACTER(kind=C_CHAR), INTENT(out) :: c_string(*)
-    END SUBROUTINE c_readenv
-  END INTERFACE
-
-  c_buff = ' '
-  c_buff(longest_env_variable + 1:longest_env_variable + 1) = C_NULL_CHAR
-  CALL c_readenv(c_buff)
-  string = TRIM(arr2str(c_buff))
-
-END FUNCTION system_readenv
+INTERFACE
+  MODULE FUNCTION system_readenv() RESULT(string)
+    CHARACTER(len=:), ALLOCATABLE :: string
+  END FUNCTION system_readenv
+END INTERFACE
 
 !----------------------------------------------------------------------------
-!()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()!
+!
 !----------------------------------------------------------------------------
 !>
 !!##NAME
@@ -3698,41 +3163,18 @@ END FUNCTION system_readenv
 !!    John S. Urban
 !!##LICENSE
 !!    Public Domain
-SUBROUTINE fileglob(glob, list) ! NON-PORTABLE AT THIS POINT. REQUIRES ls(1) command, assumes 1 line per file
-!  The length of the character strings in list() must be long enough for the filenames.
-!  The list can be zero names long, it is still allocated.
-  IMPLICIT NONE
 
-! ident_28="@(#)M_system::fileglob(3f): Returns list of files using a file globbing pattern"
+INTERFACE
+  MODULE SUBROUTINE fileglob(glob, list)
+    CHARACTER(len=*), INTENT(in) :: glob
+    !! Pattern for the filenames (like: *.txt)
+    CHARACTER(len=*), POINTER :: list(:)
+    !! Allocated list of filenames (returned), the caller must deallocate it.
+  END SUBROUTINE fileglob
+END INTERFACE
 
-!-----------------------------------------------------------------------------------------------------------------------------------
-  CHARACTER(len=*), INTENT(in) :: glob ! Pattern for the filenames (like: *.txt)
-  CHARACTER(len=*), POINTER :: list(:) ! Allocated list of filenames (returned), the caller must deallocate it.
-!-----------------------------------------------------------------------------------------------------------------------------------
-  CHARACTER(len=255) :: tmpfile ! scratch filename to hold expanded file list
-  CHARACTER(len=255) :: cmd ! string to build system command in
-  INTEGER :: iotmp ! needed to open unique scratch file for holding file list
-  INTEGER :: i, ios, icount
-  write(tmpfile,'(*(g0))')'/tmp/__filelist_',timestamp(),'_',system_getpid() ! preliminary scratch file name
-  cmd = 'ls -d '//TRIM(glob)//'>'//TRIM(tmpfile)//' ' ! build command string
-  CALL execute_command_line(cmd) ! Execute the command specified by the string.
-  OPEN (newunit=iotmp, file=tmpfile, iostat=ios) ! open unique scratch filename
-  IF (ios .NE. 0) RETURN ! the open failed
-  icount = 0 ! number of filenames in expanded list
-  DO ! count the number of lines (assumed ==files) so know what to allocate
-    READ (iotmp, '(a)', iostat=ios) ! move down a line in the file to count number of lines
-    IF (ios .NE. 0) EXIT ! hopefully, this is because end of file was encountered so done
-    icount = icount + 1 ! increment line count
-  END DO
-  REWIND (iotmp) ! rewind file list so can read and store it
-  ALLOCATE (list(icount)) ! allocate and fill the array
-  DO i = 1, icount
-    READ (iotmp, '(a)') list(i) ! read a filename from a line
-  END DO
-  CLOSE (iotmp, status='delete', iostat=ios) ! close and delete scratch file
-END SUBROUTINE fileglob
 !----------------------------------------------------------------------------
-!()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()!
+!
 !----------------------------------------------------------------------------
 !>
 !!##NAME
@@ -3778,30 +3220,13 @@ END SUBROUTINE fileglob
 !!    John S. Urban
 !!##LICENSE
 !!    Public Domain
-SUBROUTINE system_uname(WHICH, NAMEOUT)
-  IMPLICIT NONE
 
-! ident_29="@(#)M_system::system_uname(3f): call my_uname(3c) which calls uname(3c)"
-
-  CHARACTER(KIND=C_CHAR), INTENT(in) :: WHICH
-  CHARACTER(len=*), INTENT(out) :: NAMEOUT
-
-! describe the C routine to Fortran
-! void system_uname(char *which, char *buf, int *buflen);
-  INTERFACE
-    SUBROUTINE system_uname_c(WHICH, BUF, BUFLEN) BIND(C, NAME='my_uname')
-      IMPORT C_CHAR, C_INT
-      IMPLICIT NONE
-      CHARACTER(KIND=C_CHAR), INTENT(in) :: WHICH
-      CHARACTER(KIND=C_CHAR), INTENT(out) :: BUF(*)
-      INTEGER(kind=C_INT), INTENT(in) :: BUFLEN
-    END SUBROUTINE system_uname_c
-  END INTERFACE
-
-  NAMEOUT = 'unknown'
-  CALL system_uname_c(WHICH, NAMEOUT, INT(LEN(NAMEOUT), KIND(0_C_INT)))
-
-END SUBROUTINE system_uname
+INTERFACE
+  MODULE SUBROUTINE system_uname(WHICH, NAMEOUT)
+    CHARACTER(KIND=C_CHAR), INTENT(in) :: WHICH
+    CHARACTER(len=*), INTENT(out) :: NAMEOUT
+  END SUBROUTINE system_uname
+END INTERFACE
 
 !----------------------------------------------------------------------------
 !
@@ -3847,893 +3272,277 @@ END SUBROUTINE system_uname
 !!##LICENSE
 !!    Public Domain
 
-SUBROUTINE system_gethostname(NAME, IERR)
-  IMPLICIT NONE
-
-! ident_30="@(#)M_system::system_gethostname(3f): get name of current host by calling gethostname(3c)"
-
-  CHARACTER(len=:), ALLOCATABLE, INTENT(out) :: NAME
-  INTEGER, INTENT(out) :: IERR
-  CHARACTER(kind=C_CHAR, len=1) :: C_BUFF(HOST_NAME_MAX + 1)
-
-! describe the C routine to Fortran
-!int gethostname(char *name, size_t namelen);
-  INTERFACE
-    FUNCTION system_gethostname_c(c_buf, c_buflen) BIND(C, NAME='gethostname')
-      IMPORT C_CHAR, C_INT
-      IMPLICIT NONE
-      INTEGER(kind=C_INT) :: system_gethostname_c
-      CHARACTER(KIND=C_CHAR), INTENT(out) :: c_buf(*)
-      INTEGER(kind=C_INT), INTENT(in), VALUE :: c_buflen
-    END FUNCTION system_gethostname_c
-  END INTERFACE
-
-  C_BUFF = ' '
-  ierr = system_gethostname_c(C_BUFF, HOST_NAME_MAX) ! Host names are limited to {HOST_NAME_MAX} bytes.
-  NAME = TRIM(arr2str(C_BUFF))
-
-END SUBROUTINE system_gethostname
+INTERFACE
+  MODULE SUBROUTINE system_gethostname(NAME, IERR)
+    CHARACTER(len=:), ALLOCATABLE, INTENT(out) :: NAME
+    INTEGER, INTENT(out) :: IERR
+  END SUBROUTINE system_gethostname
+END INTERFACE
 
 !----------------------------------------------------------------------------
+!                                                 System_Getlogin@GetMethods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2026-02-06
+! summary: Get login name
 !
-!----------------------------------------------------------------------------
-
-!>
-!!##NAME
-!!    system_getlogin(3f) - [M_system:QUERY] get login name
-!!    (LICENSE:PD)
-!!
-!!##SYNOPSIS
-!!
-!!   function system_getlogin() result (fname)
-!!
-!!    character(len=:),allocatable :: FNAME
-!!
-!!##DESCRIPTION
-!!
-!!    The system_getlogin(3f) function returns a string containing the user
-!!    name associated by the login activity with the controlling terminal
-!!    of the current process. Otherwise, it returns a null string and sets
-!!    errno to indicate the error.
-!!
-!!    Three names associated with the current process can be determined:
-!!
-!!       o system_getpwuid(system_getuid()) returns the name associated with the real user ID of the process.
-!!       o system_getpwuid(system_geteuid()) returns the name associated with the effective user ID of the process
-!!       o system_getlogin() returns the name associated with the current login activity
-!!
-!!##RETURN VALUE
-!!    fname  returns the login name.
-!!
-!!##EXAMPLE
-!!
-!!   Sample program:
-!!
-!!    program demo_system_getlogin
-!!    use M_system, only : system_getlogin
-!!    implicit none
-!!    character(len=:),allocatable :: name
-!!    name=system_getlogin()
-!!    write(*,'("login[",a,"]")')name
-!!    end program demo_system_getlogin
-!!
-!!   Results:
-!!
-!!    login[JSU]
-!!
-!!##AUTHOR
-!!    John S. Urban
-!!##LICENSE
-!!    Public Domain
-!--       The following example calls the getlogin() function to obtain the name of the user associated with the calling process,
-!--       and passes this information to the getpwnam() function to get the associated user database information.
-!--           ...
-!--           char *lgn;
-!--           struct passwd *pw;
-!--           ...
-!--           if ((lgn = getlogin()) == NULL || (pw = getpwnam(lgn)) == NULL) {
-!--               fprintf(stderr, "Get of user information failed.\n"); exit(1);
-!--               }
-!--APPLICATION USAGE
-!--SEE ALSO
-!--       getpwnam(), getpwuid(), system_geteuid(), getuid()
-FUNCTION system_getlogin() RESULT(fname)
-  CHARACTER(len=:), ALLOCATABLE :: fname
-  TYPE(C_PTR) :: username
-
-  INTERFACE
-    FUNCTION c_getlogin() BIND(c, name="getlogin") RESULT(c_username)
-      IMPORT C_INT, C_PTR
-      TYPE(C_PTR) :: c_username
-    END FUNCTION c_getlogin
-  END INTERFACE
-
-  username = c_getlogin()
-  IF (.NOT. C_ASSOCIATED(username)) THEN
-      !! in windows 10 subsystem running Ubunto does not work
-      !!write(*,'(a)')'*system_getlogin* Error getting username. not associated'
-      !!fname=c_null_char
-    fname = system_getpwuid(system_geteuid())
-  ELSE
-    fname = c2f_string(username)
-  END IF
-
-END FUNCTION system_getlogin
-
-!----------------------------------------------------------------------------
+! ## System_Getlogin
 !
-!----------------------------------------------------------------------------
-
-!>
-!!##NAME
-!!    system_perm(3f) - [M_system:QUERY_FILE] get file type and permission as a string
-!!    (LICENSE:PD)
-!!
-!!##SYNOPSIS
-!!
-!!   function system_perm(mode) result (perms)
-!!
-!!    integer(kind=int64),intent(in)   :: MODE
-!!    character(len=:),allocatable :: PERMS
-!!
-!!##DESCRIPTION
-!!
-!!    The system_perm(3f) function returns a string containing the type
-!!    and permission of a file implied by the value of the mode value.
-!!
-!!##RETURN VALUE
-!!    PERMS  returns the permission string in a format similar to that
-!!           used by Unix commands such as ls(1).
-!!
-!!##EXAMPLE
-!!
-!!   Sample program:
-!!
-!!    program demo_system_perm
-!!    use M_system, only : system_perm, system_stat
-!!    use,intrinsic     :: iso_fortran_env, only : int64
-!!    implicit none
-!!    character(len=4096) :: string
-!!    integer(kind=int64)     :: values(13)
-!!    integer             :: ierr
-!!    character(len=:),allocatable :: perms
-!!       values=0
-!!       ! get pathname from command line
-!!       call get_command_argument(1, string)
-!!       ! get pathname information
-!!       call system_stat(string,values,ierr)
-!!       if(ierr.eq.0)then
-!!          ! convert permit mode to a string
-!!          perms=system_perm(values(3))
-!!          ! print permits as a string, decimal value, and octal value
-!!          write(*,'("for ",a," permits[",a,"]",1x,i0,1x,o0)') &
-!!           & trim(string),perms,values(3),values(3)
-!!       endif
-!!    end program demo_system_perm
-!!
-!!   Results:
-!!
-!!    demo_system_perm /tmp
-!!
-!!    for /tmp permits[drwxrwxrwx --S] 17407 41777
-!!
-!!##AUTHOR
-!!    John S. Urban
-!!
-!!##LICENSE
-!!    Public Domain
-FUNCTION system_perm(mode) RESULT(perms)
-  CLASS(*), INTENT(in) :: mode
-  CHARACTER(len=:), ALLOCATABLE :: perms
-  TYPE(C_PTR) :: permissions
-  INTEGER(kind=C_LONG) :: mode_local
-  INTERFACE
-    FUNCTION c_perm(c_mode) BIND(c, name="my_get_perm") RESULT(c_permissions)
-      IMPORT C_INT, C_PTR, C_LONG
-      INTEGER(kind=C_LONG), VALUE :: c_mode
-      TYPE(C_PTR) :: c_permissions
-    END FUNCTION c_perm
-  END INTERFACE
-
-  mode_local = INT(anyinteger_to_64bit(mode), kind=C_LONG)
-  permissions = c_perm(mode_local)
-  IF (.NOT. C_ASSOCIATED(permissions)) THEN
-    WRITE (*, '(a)') '*system_perm* Error getting permissions. not associated'
-    perms = C_NULL_CHAR
-  ELSE
-    perms = c2f_string(permissions)
-  END IF
-
-END FUNCTION system_perm
-
-!----------------------------------------------------------------------------
+! The `system_getlogin(3f)` function returns a string containing the user
+! name associated with the login activity of the controlling terminal of the
+! current process.
 !
-!----------------------------------------------------------------------------
-
-!>
-!!##NAME
-!!    system_getgrgid(3f) - [M_system:QUERY] get groupd name associated with a GID
-!!    (LICENSE:PD)
-!!##SYNOPSIS
-!!
-!!   function system_getgrgid(gid) result (gname)
-!!
-!!    class(*),intent(in)          :: gid   ! any INTEGER type
-!!    character(len=:),allocatable :: gname
-!!
-!!##DESCRIPTION
-!!
-!!    The system_getlogin() function returns a string containing the group
-!!    name associated with the given GID. If no match is found
-!!    it returns a null string and sets errno to indicate the error.
-!!
-!!##OPTION
-!!    gid    GID to try to look up associated group for. Can be of any
-!!           INTEGER type.
-!!
-!!##RETURN VALUE
-!!    gname  returns the group name. Blank if an error occurs
-!!
-!!##EXAMPLE
-!!
-!!   Sample program:
-!!
-!!    program demo_system_getgrgid
-!!    use M_system, only : system_getgrgid
-!!    use M_system, only : system_getgid
-!!    implicit none
-!!    character(len=:),allocatable :: name
-!!    name=system_getgrgid( system_getgid() )
-!!    write(*,'("group[",a,"] for ",i0)')name,system_getgid()
-!!    end program demo_system_getgrgid
-!!
-!!   Results:
-!!
-!!    group[default] for 197121
-!!
-!!##AUTHOR
-!!    John S. Urban
-!!##LICENSE
-!!    Public Domain
-FUNCTION system_getgrgid(gid) RESULT(gname)
-  CLASS(*), INTENT(in) :: gid
-  CHARACTER(len=:), ALLOCATABLE :: gname
-  CHARACTER(kind=C_CHAR, len=1) :: groupname(4097) ! assumed long enough for any groupname
-  INTEGER :: ierr
-  INTEGER(kind=C_LONG_LONG) :: gid_local
-
-  INTERFACE
-   function c_getgrgid(c_gid,c_groupname) bind(c,name="my_getgrgid") result(c_ierr)
-      IMPORT C_INT, C_PTR, C_CHAR, C_LONG_LONG
-      INTEGER(kind=C_LONG_LONG), VALUE, INTENT(in) :: c_gid
-      CHARACTER(kind=C_CHAR), INTENT(out) :: c_groupname(*)
-      INTEGER(kind=C_INT) :: c_ierr
-    END FUNCTION c_getgrgid
-  END INTERFACE
-!-----------------------------------------------------------------------------------------------------------------------------------
-  gid_local = anyinteger_to_64bit(gid)
-  ierr = c_getgrgid(gid_local, groupname)
-  IF (ierr .EQ. 0) THEN
-    gname = TRIM(arr2str(groupname))
-  ELSE
-    gname = ''
-  END IF
-!-----------------------------------------------------------------------------------------------------------------------------------
-END FUNCTION system_getgrgid
-
-!----------------------------------------------------------------------------
+! If the user name cannot be determined, the function returns a null string
+! and sets `errno` to indicate the error.
 !
-!----------------------------------------------------------------------------
-
-!>
-!!##NAME
-!!    system_getpwuid(3f) - [M_system:QUERY] get login name associated with a UID
-!!    (LICENSE:PD)
-!!##SYNOPSIS
-!!
-!!   function system_getpwuid(uid) result (uname)
-!!
-!!    class(*),intent(in)          :: uid    ! any INTEGER type
-!!    character(len=:),allocatable :: uname
-!!
-!!##DESCRIPTION
-!!
-!!    The system_getpwuid() function returns a string containing the user
-!!    name associated with the given UID. If no match is found it returns
-!!    a null string and sets errno to indicate the error.
-!!
-!!##OPTION
-!!    uid    UID to try to look up associated username for. Can be of any
-!!           INTEGER type.
-!!
-!!##RETURN VALUE
-!!    uname  returns the login name.
-!!
-!!##EXAMPLE
-!!
-!!   Sample program:
-!!
-!!    program demo_system_getpwuid
-!!    use M_system, only : system_getpwuid
-!!    use M_system, only : system_getuid
-!!    use,intrinsic     :: iso_fortran_env, only : int64
-!!    implicit none
-!!    character(len=:),allocatable :: name
-!!    integer(kind=int64)              :: uid
-!!       uid=system_getuid()
-!!       name=system_getpwuid(uid)
-!!       write(*,'("login[",a,"] has UID ",i0)')name,uid
-!!    end program demo_system_getpwuid
-!!
-!!##AUTHOR
-!!    John S. Urban
-!!##LICENSE
-!!    Public Domain
-FUNCTION system_getpwuid(uid) RESULT(uname)
-  CLASS(*), INTENT(in) :: uid
-  CHARACTER(len=:), ALLOCATABLE :: uname
-  CHARACTER(kind=C_CHAR, len=1) :: username(4097) ! assumed long enough for any username
-  INTEGER :: ierr
-  INTEGER(kind=C_LONG_LONG) :: uid_local
-
-  INTERFACE
-   function c_getpwuid(c_uid,c_username) bind(c,name="my_getpwuid") result(c_ierr)
-      IMPORT C_INT, C_PTR, C_CHAR, C_LONG_LONG
-      INTEGER(kind=C_LONG_LONG), VALUE, INTENT(in) :: c_uid
-      CHARACTER(kind=C_CHAR), INTENT(out) :: c_username(*)
-      INTEGER(kind=C_INT) :: c_ierr
-    END FUNCTION c_getpwuid
-  END INTERFACE
-!-----------------------------------------------------------------------------------------------------------------------------------
-  uid_local = anyinteger_to_64bit(uid)
-  ierr = c_getpwuid(uid_local, username)
-  IF (ierr .EQ. 0) THEN
-    uname = TRIM(arr2str(username))
-  ELSE
-    uname = ''
-  END IF
-!-----------------------------------------------------------------------------------------------------------------------------------
-END FUNCTION system_getpwuid
-
-!----------------------------------------------------------------------------
+! The following three user names associated with the current process can be
+! determined:
 !
-!----------------------------------------------------------------------------
-
-PURE FUNCTION arr2str(array) RESULT(string)
-
-! ident_31="@(#)M_system::arr2str(3fp): function copies null-terminated char array to string"
-
-  CHARACTER(len=1), INTENT(in) :: array(:)
-  CHARACTER(len=SIZE(array)) :: string
-  INTEGER :: i
-
-  string = ' '
-  DO i = 1, SIZE(array)
-    IF (array(i) .EQ. CHAR(0)) THEN
-      EXIT
-    ELSE
-      string(i:i) = array(i)
-    END IF
-  END DO
-
-END FUNCTION arr2str
-
-!----------------------------------------------------------------------------
+! - `system_getpwuid(system_getuid())`
+!   Returns the name associated with the real user ID of the process.
 !
-!----------------------------------------------------------------------------
-
-PURE FUNCTION str2_carr(string) RESULT(array)
-
-! ident_32="@(#)M_system::str2_carr(3fp): function copies string to null terminated char array"
-
-  CHARACTER(len=*), INTENT(in) :: string
-  CHARACTER(len=1, kind=C_CHAR) :: array(LEN(string) + 1)
-  INTEGER :: i
-
-  DO i = 1, LEN_TRIM(string)
-    array(i) = string(i:i)
-  END DO
-  array(i:i) = C_NULL_CHAR
-
-END FUNCTION str2_carr
-
-!----------------------------------------------------------------------------
+! - `system_getpwuid(system_geteuid())`
+!   Returns the name associated with the effective user ID of the process.
 !
-!----------------------------------------------------------------------------
+! - `system_getlogin()`
+!   Returns the name associated with the current login activity.!!
 
-FUNCTION C2F_string(c_string_pointer) RESULT(f_string)
-
-! gets a C string (pointer), and returns the corresponding Fortran string up to 4096(max_len) characters;
-! If the C string is null, it returns string C "null" character:
-
-  TYPE(C_PTR), INTENT(in) :: c_string_pointer
-  CHARACTER(len=:), ALLOCATABLE :: f_string
- CHARACTER(kind=C_CHAR), DIMENSION(:), POINTER :: char_array_pointer => NULL()
-  INTEGER, PARAMETER :: max_len = 4096
-  CHARACTER(len=max_len) :: aux_string
-  INTEGER :: i
-  INTEGER :: length
-
-  length = 0
-  CALL C_F_POINTER(c_string_pointer, char_array_pointer, [max_len])
-
-  IF (.NOT. ASSOCIATED(char_array_pointer)) THEN
-    IF (ALLOCATED(f_string)) DEALLOCATE (f_string)
-    ALLOCATE (CHARACTER(len=4) :: f_string)
-    f_string = C_NULL_CHAR
-    RETURN
-  END IF
-
-  aux_string = " "
-
-  DO i = 1, max_len
-    IF (char_array_pointer(i) == C_NULL_CHAR) THEN
-      length = i - 1; EXIT
-    END IF
-    aux_string(i:i) = char_array_pointer(i)
-  END DO
-
-  IF (ALLOCATED(f_string)) DEALLOCATE (f_string)
-  ALLOCATE (CHARACTER(len=length) :: f_string)
-  f_string = aux_string(1:length)
-END FUNCTION C2F_string
+INTERFACE
+  MODULE FUNCTION System_Getlogin() RESULT(fname)
+    CHARACTER(:), ALLOCATABLE :: fname
+  END FUNCTION System_Getlogin
+END INTERFACE
 
 !----------------------------------------------------------------------------
+!                                                      System_Perm@GetMethods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2026-02-06
+! summary: Get file type and permission as a string
 !
-!----------------------------------------------------------------------------
-
-!>
-!!##NAME
-!!    SYSTEM_STAT - [M_system:QUERY_FILE] Get file status information
-!!    (LICENSE:PD)
-!!
-!!##SYNTAX
-!!   CALL SYSTEM_STAT(NAME, VALUES [, STATUS],[DEBUG])
-!!
-!!    character(len=*),intent(in)          :: NAME
-!!    integer(kind=int64),intent(out)      :: values(13)
-!!    integer,optional,intent(out)         :: status
-!!    integer,intent(in)                   :: debug
-!!
-!!##DESCRIPTION
-!!
-!!    This function returns information about a file. No permissions are
-!!    required on the file itself, but execute (search) permission is required
-!!    on all of the directories in path that lead to the file. The elements
-!!    that are obtained and stored in the array VALUES:
-!!
-!!       VALUES(1) Device ID
-!!       VALUES(2) Inode number
-!!       VALUES(3) File mode
-!!       VALUES(4) Number of links
-!!       VALUES(5) Owner uid
-!!       VALUES(6) Owner gid
-!!       VALUES(7) ID of device containing directory entry for file (0 if not available)
-!!       VALUES(8) File size (bytes)
-!!       VALUES(9) Last access time as a Unix Epoch time rounded to seconds
-!!       VALUES(10) Last modification time as a Unix Epoch time rounded to seconds
-!!       VALUES(11) Last file status change time as a Unix Epoch time rounded to seconds
-!!       VALUES(12) Preferred I/O block size (-1 if not available)
-!!       VALUES(13) Number of blocks allocated (-1 if not available)
-!!
-!!    Not all these elements are relevant on all systems. If an element is
-!!    not relevant, it is returned as 0.
-!!
-!!##OPTIONS
-!!
-!!    NAME    The type shall be CHARACTER, of the default kind and a valid
-!!            path within the file system.
-!!    VALUES  The type shall be INTEGER(8), DIMENSION(13).
-!!    STATUS  (Optional) status flag of type INTEGER(4). Returns 0 on success
-!!            and a system specific error code otherwise.
-!!    DEBUG   (Optional) print values being returned from C routine being
-!!            called if value of 0 is used
-!!
-!!##EXAMPLE
-!!
-!!   program demo_system_stat
-!!
-!!    use M_system, only : system_stat, system_getpwuid, system_getgrgid
-!!    use M_time, only :   fmtdate, u2d
-!!    use, intrinsic :: iso_fortran_env, only : int32, int64
-!!    implicit none
-!!
-!!    integer(kind=int64)  :: buff(13)
-!!    integer(kind=int32)  :: status
-!!    character(len=*),parameter :: fmt_date='year-month-day hour:minute:second'
-!!
-!!    integer(kind=int64) :: &
-!!     Device_ID, Inode_number,     File_mode, Number_of_links,
-!! Owner_uid,        &
-!!     Owner_gid, Directory_device, File_size, Last_access,
-!! Last_modification,&
-!! Last_status_change,  Preferred_block_size,  Number_of_blocks_allocated
-!!    equivalence                                    &
-!!       ( buff(1)  , Device_ID                  ) , &
-!!       ( buff(2)  , Inode_number               ) , &
-!!       ( buff(3)  , File_mode                  ) , &
-!!       ( buff(4)  , Number_of_links            ) , &
-!!       ( buff(5)  , Owner_uid                  ) , &
-!!       ( buff(6)  , Owner_gid                  ) , &
-!!       ( buff(7)  , Directory_device           ) , &
-!!       ( buff(8)  , File_size                  ) , &
-!!       ( buff(9)  , Last_access                ) , &
-!!       ( buff(10) , Last_modification          ) , &
-!!       ( buff(11) , Last_status_change         ) , &
-!!       ( buff(12) , Preferred_block_size       ) , &
-!!       ( buff(13) , Number_of_blocks_allocated )
-!!
-!!    CALL SYSTEM_STAT("/etc/hosts", buff, status)
-!!
-!!    if (status == 0) then
-!!       write (*, FMT="('Device ID(hex/decimal):',      &
-!!       & T30, Z0,'h/',I0,'d')") buff(1),buff(1)
-!!       write (*, FMT="('Inode number:',                &
-!!       & T30, I0)") buff(2)
-!!       write (*, FMT="('File mode (octal):',           &
-!!       & T30, O19)") buff(3)
-!!       write (*, FMT="('Number of links:',             &
-!!       & T30, I0)") buff(4)
-!!       write (*, FMT="('Owner''s uid/username:',       &
-!!       & T30, I0,1x, A)") buff(5), system_getpwuid(buff(5))
-!!       write (*, FMT="('Owner''s gid/group:',          &
-!!       & T30, I0,1x, A)") buff(6), system_getgrgid(buff(6))
-!!       write (*, FMT="('Device where located:',        &
-!!       & T30, I0)") buff(7)
-!!       write (*, FMT="('File size(bytes):',            &
-!!       & T30, I0)") buff(8)
-!!       write (*, FMT="('Last access time:',            &
-!!       & T30, I0,1x, A)") buff(9), fmtdate(u2d(int(buff(9))),fmt_date)
-!!       write (*, FMT="('Last modification time:',      &
-!!       & T30, I0,1x, A)") buff(10),fmtdate(u2d(int(buff(10))),fmt_date)
-!!       write (*, FMT="('Last status change time:',     &
-!!       & T30, I0,1x, A)") buff(11),fmtdate(u2d(int(buff(11))),fmt_date)
-!!       write (*, FMT="('Preferred block size(bytes):', &
-!!       & T30, I0)") buff(12)
-!!       write (*, FMT="('No. of blocks allocated:',     &
-!!       & T30, I0)") buff(13)
-!!    endif
-!!
-!!    end program demo_system_stat
-!!
-!!   Results:
-!!
-!!    Device ID(hex/decimal):      3E6BE045h/1047257157d
-!!    Inode number:                1407374886070599
-!!    File mode (octal):                        100750
-!!    Number of links:             1
-!!    Owner uid/username:        18 SYSTEM
-!!    Owner gid/group:           18 SYSTEM
-!!    Device where located:        0
-!!    File size(bytes):            824
-!!    Last access time:            1557983191 2019-05-16 01:06:31
-!!    Last modification time:      1557983191 2019-05-16 01:06:31
-!!    Last status change time:     1557983532 2019-05-16 01:12:12
-!!    Preferred block size(bytes): 65536
-!!    No. of blocks allocated:     4
-!!
-!!##AUTHOR
-!!    John S. Urban
-!!##LICENSE
-!!    Public Domain
-
-SUBROUTINE system_stat(pathname, values, ierr)
-  IMPLICIT NONE
-
-! ident_33="@(#)M_system::system_stat(3f): call stat(3c) to get pathname information"
-
-  CHARACTER(len=*), INTENT(in) :: pathname
-
-  INTEGER(kind=INT64), INTENT(out) :: values(13)
-  INTEGER(kind=C_LONG) :: cvalues(13)
-
-  INTEGER, OPTIONAL, INTENT(out) :: ierr
-  INTEGER(kind=C_INT) :: cierr
-
-  INTERFACE
-    SUBROUTINE c_stat(buffer, cvalues, cierr, cdebug) BIND(c, name="my_stat")
-      IMPORT C_CHAR, C_SIZE_T, C_PTR, C_INT, C_LONG
-      CHARACTER(kind=C_CHAR), INTENT(in) :: buffer(*)
-      INTEGER(kind=C_LONG), INTENT(out) :: cvalues(*)
-      INTEGER(kind=C_INT) :: cierr
-      INTEGER(kind=C_INT), INTENT(in) :: cdebug
-    END SUBROUTINE c_stat
-  END INTERFACE
-!-----------------------------------------------------------------------------------------------------------------------------------
-  CALL c_stat(str2_carr(TRIM(pathname)), cvalues, cierr, 0_C_INT)
-  values = cvalues
-  IF (PRESENT(ierr)) THEN
-    ierr = cierr
-  END IF
-END SUBROUTINE system_stat
-
-!----------------------------------------------------------------------------
+!# System_Perm
 !
-!----------------------------------------------------------------------------
-
-!>
-!!##NAME
-!!    system_dir(3f) - [M_io] return filenames in a directory matching specified wildcard string
-!!    (LICENSE:PD)
-!!
-!!##SYNOPSIS
-!!
-!!   function system_dir(directory,pattern)
-!!
-!!    character(len=*),intent(in),optional  :: directory
-!!    character(len=*),intent(in),optional  :: pattern
-!!    character(len=:),allocatable          :: system_dir(:)
-!!
-!!##DESCRIPTION
-!!    returns an array of filenames in the specified directory matching
-!!    the wildcard string (which defaults to "*").
-!!
-!!##OPTIONS
-!!    DIRECTORY  name of directory to match filenames in. Defaults to ".".
-!!    PATTERN    wildcard string matching the rules of the matchw(3f) function. Basically
-!!                o "*" matches anything
-!!                o "?" matches any single character
-!!
-!!##RETURNS
-!!    system_dir   An array right-padded to the length of the longest
-!!               filename. Note that this means filenames actually containing
-!!               trailing spaces in their names may be incorrect.
-!!
-!!##EXAMPLE
-!!
-!!   Sample program:
-!!
-!!    program demo_system_dir
-!!    use M_system, only : system_dir
-!!    implicit none
-!!       write(*, '(a)')system_dir(pattern='*.F90')
-!!    end program demo_system_dir
-!!
-!!##AUTHOR
-!!    John S. Urban
-!!
-!!##LICENSE
-!!    Public Domain
-
-FUNCTION system_dir(directory, pattern)
-!use M_system, only : system_opendir, system_readdir, system_rewinddir, system_closedir
-  USE ISO_C_BINDING
-  IMPLICIT NONE
-  CHARACTER(len=*), INTENT(in), OPTIONAL :: directory
-  CHARACTER(len=*), INTENT(in), OPTIONAL :: pattern
-  CHARACTER(len=:), ALLOCATABLE :: system_dir(:)
-  CHARACTER(len=:), ALLOCATABLE :: wild
-  TYPE(C_PTR) :: dir
-  CHARACTER(len=:), ALLOCATABLE :: filename
-  INTEGER :: i, ierr, icount, longest
-  longest = 0
-  icount = 0
-  IF (PRESENT(pattern)) THEN
-    wild = pattern
-  ELSE
-    wild = '*'
-  END IF
-  IF (PRESENT(directory)) THEN !--- open directory stream to read from
-    CALL system_opendir(directory, dir, ierr)
-  ELSE
-    CALL system_opendir('.', dir, ierr)
-  END IF
-  IF (ierr .EQ. 0) THEN
-    DO i = 1, 2 !--- read directory stream twice, first time to get size
-      DO
-        CALL system_readdir(dir, filename, ierr)
-        IF (filename .EQ. ' ') EXIT
-        IF (wild .NE. '*') THEN
-          IF (.NOT. matchw(filename, wild)) CYCLE ! Call a wildcard matching routine.
-        END IF
-        icount = icount + 1
-        SELECT CASE (i)
-        CASE (1)
-          longest = MAX(longest, LEN(filename))
-        CASE (2)
-          system_dir(icount) = filename
-        END SELECT
-      END DO
-      IF (i .EQ. 1) THEN
-        CALL system_rewinddir(dir)
-        IF (ALLOCATED(system_dir)) DEALLOCATE (system_dir)
-        ALLOCATE (CHARACTER(len=longest) :: system_dir(icount))
-        icount = 0
-      END IF
-    END DO
-  END IF
-  CALL system_closedir(dir, ierr) !--- close directory stream
-END FUNCTION system_dir
-
-!----------------------------------------------------------------------------
+! The system_perm(3f) function returns a string containing the type
+! and permission of a file implied by the value of the mode value.
 !
-!----------------------------------------------------------------------------
-
-! copied from M_strings.ff to make stand-alone github version
-FUNCTION matchw(tame, wild)
-! ident_34="@(#)M_strings::matchw(3f): function compares text strings, one of which can have wildcards ('*' or '?')."
-  LOGICAL :: matchw
-  CHARACTER(len=*) :: tame ! A string without wildcards
-  CHARACTER(len=*) :: wild ! A (potentially) corresponding string with wildcards
-  CHARACTER(len=LEN(tame) + 1) :: tametext
-  CHARACTER(len=LEN(wild) + 1) :: wildtext
-  CHARACTER(len=1), PARAMETER :: NULL = CHAR(0)
-  INTEGER :: wlen
-  INTEGER :: ti, wi
-  INTEGER :: i
-  CHARACTER(len=:), ALLOCATABLE :: tbookmark, wbookmark
-! These two values are set when we observe a wildcard character. They
-! represent the locations, in the two strings, from which we start once we've observed it.
-  tametext = tame//NULL
-  wildtext = wild//NULL
-  tbookmark = NULL
-  wbookmark = NULL
-  wlen = LEN(wild)
-  wi = 1
-  ti = 1
-  DO ! Walk the text strings one character at a time.
-    IF (wildtext(wi:wi) == '*') THEN ! How do you match a unique text string?
-      DO i = wi, wlen ! Easy: unique up on it!
-        IF (wildtext(wi:wi) .EQ. '*') THEN
-          wi = wi + 1
-        ELSE
-          EXIT
-        END IF
-      END DO
-      IF (wildtext(wi:wi) .EQ. NULL) THEN ! "x" matches "*"
-        matchw = .TRUE.
-        RETURN
-      END IF
-      IF (wildtext(wi:wi) .NE. '?') THEN
-        ! Fast-forward to next possible match.
-        DO WHILE (tametext(ti:ti) .NE. wildtext(wi:wi))
-          ti = ti + 1
-          IF (tametext(ti:ti) .EQ. NULL) THEN
-            matchw = .FALSE.
-            RETURN ! "x" doesn't match "*y*"
-          END IF
-        END DO
-      END IF
-      wbookmark = wildtext(wi:)
-      tbookmark = tametext(ti:)
-      elseif(tametext(ti:ti) .ne. wildtext(wi:wi) .and. wildtext(wi:wi) .ne. '?') then
-      ! Got a non-match. If we've set our bookmarks, back up to one or both of them and retry.
-      IF (wbookmark .NE. NULL) THEN
-        IF (wildtext(wi:) .NE. wbookmark) THEN
-          wildtext = wbookmark; 
-          wlen = LEN_TRIM(wbookmark)
-          wi = 1
-          ! Don't go this far back again.
-          IF (tametext(ti:ti) .NE. wildtext(wi:wi)) THEN
-            tbookmark = tbookmark(2:)
-            tametext = tbookmark
-            ti = 1
-            CYCLE ! "xy" matches "*y"
-          ELSE
-            wi = wi + 1
-          END IF
-        END IF
-        IF (tametext(ti:ti) .NE. NULL) THEN
-          ti = ti + 1
-          CYCLE ! "mississippi" matches "*sip*"
-        END IF
-      END IF
-      matchw = .FALSE.
-      RETURN ! "xy" doesn't match "x"
-    END IF
-    ti = ti + 1
-    wi = wi + 1
-    IF (tametext(ti:ti) .EQ. NULL) THEN ! How do you match a tame text string?
-      IF (wildtext(wi:wi) .NE. NULL) THEN
-        DO WHILE (wildtext(wi:wi) == '*') ! The tame way: unique up on it!
-          wi = wi + 1 ! "x" matches "x*"
-          IF (wildtext(wi:wi) .EQ. NULL) EXIT
-        END DO
-      END IF
-      IF (wildtext(wi:wi) .EQ. NULL) THEN
-        matchw = .TRUE.
-        RETURN ! "x" matches "x"
-      END IF
-      matchw = .FALSE.
-      RETURN ! "x" doesn't match "xy"
-    END IF
-  END DO
-END FUNCTION matchw
-
-!----------------------------------------------------------------------------
+!## Examples
 !
+!```fortran
+! {{% fortran-code file="examples/System_Perm_test_1.F90" %}}
+!```
+
+INTERFACE
+  MODULE FUNCTION System_Perm(mode) RESULT(perms)
+    CLASS(*), INTENT(IN) :: mode
+    CHARACTER(len=:), ALLOCATABLE :: perms
+    !! returns the permission string in a format similar to that
+    !! used by Unix commands such as ls(1).
+  END FUNCTION System_Perm
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                 System_Getgrgid@GetMethods
 !----------------------------------------------------------------------------
 
-!>NAME
-!!
-!!   anyinteger_to_64bit(3f) - [M_anything] convert integer any kind to integer(kind=int64)
-!!   (LICENSE:PD)
-!!
-!!SYNOPSIS
-!!
-!!   pure elemental function anyinteger_to_64bit(intin) result(ii38)
-!!
-!!    integer(kind=int64) function anyinteger_to_64bit(value)
-!!    class(*),intent(in)     :: intin
-!!    integer(kind=int8|int16|int32|int64) :: value
-!!
-!!DESCRIPTION
-!!
-!!   This function uses polymorphism to allow arguments of different types
-!!   generically. It is used to create other procedures that can take
-!!   many scalar arguments as input options, equivalent to passing the
-!!   parameter VALUE as int(VALUE,0_int64).
-!!
-!!OPTIONS
-!!
-!!   VALUEIN  input argument of a procedure to convert to type INTEGER(KIND=int64).
-!!            May be of KIND kind=int8, kind=int16, kind=int32, kind=int64.
-!!RESULTS
-!!            The value of VALUIN converted to INTEGER(KIND=INT64).
-!!EXAMPLE
-!!   Sample program
-!!
-!!    program demo_anyinteger_to_64bit
-!!    use, intrinsic :: iso_fortran_env, only : int8, int16, int32, int64
-!!    implicit none
-!!       ! call same function with many scalar input types
-!!       write(*,*)squarei(huge(0_int8)),huge(0_int8) , &
-!!       & '16129'
-!!       write(*,*)squarei(huge(0_int16)),huge(0_int16) , &
-!!       & '1073676289'
-!!       write(*,*)squarei(huge(0_int32)),huge(0_int32) , &
-!!       & '4611686014132420609'
-!!       write(*,*)squarei(huge(0_int64)),huge(0_int64) , &
-!!       & '85070591730234615847396907784232501249'
-!!    contains
-!!    !
-!!    function squarei(invalue)
-!!    use M_anything, only : anyinteger_to_64bit
-!!    class(*),intent(in)  :: invalue
-!!    doubleprecision      :: invalue_local
-!!    doubleprecision      :: squarei
-!!       invalue_local=anyinteger_to_64bit(invalue)
-!!       squarei=invalue_local*invalue_local
-!!    end function squarei
-!!    !
-!!    end program demo_anyinteger_to_64bit
-!!
-!!  Results
-!!
-!!   16129.000000000000       127 \
-!!   16129
-!!   1073676289.0000000       32767 \
-!!   1073676289
-!!   4.6116860141324206E+018  2147483647 \
-!!   4611686014132420609
-!!   8.5070591730234616E+037  9223372036854775807 \
-!!   85070591730234615847396907784232501249
-!!   2.8948022309329049E+076 170141183460469231731687303715884105727 \
-!!   28948022309329048855892746252171976962977213799489202546401021394546514198529
-!!
-!!AUTHOR
-!!   John S. Urban
-!!LICENSE
-!!   Public Domain
+!> author: Vikas Sharma, Ph. D.
+! date: 2026-02-06
+! summary: Get groupd name associated with a GID
+!
+!# System_Getgrgid
+!
+!    The System_Getgrgid() function returns a string containing the group
+!    name associated with the given GID. If no match is found
+!    it returns a null string and sets errno to indicate the error.
+!
+!
+!## Examples
+!
+!```fortran
+! {{% fortran-code file="examples/System_Getgrgid_test_1.F90" %}}
+!```
 
-PURE ELEMENTAL FUNCTION anyinteger_to_64bit(intin) RESULT(ii38)
-  USE, INTRINSIC :: ISO_FORTRAN_ENV, ONLY: ERROR_UNIT !! ,input_unit,output_unit
-  IMPLICIT NONE
+INTERFACE
+  MODULE FUNCTION System_Getgrgid(gid) RESULT(gname)
+    CLASS(*), INTENT(in) :: gid
+    !! GID to try to look up associated group for. Can be of any
+    !! INTEGER type.
+    CHARACTER(len=:), ALLOCATABLE :: gname
+    !! returns the group name. Blank if an error occurs
+  END FUNCTION System_Getgrgid
+END INTERFACE
 
-!!@(#) M_anything::anyinteger_to_64(3f): convert integer parameter of any kind to 64-bit integer
+!----------------------------------------------------------------------------
+!                                                  System_Getpwuid@GetMethods
+!----------------------------------------------------------------------------
 
-  CLASS(*), INTENT(in) :: intin
-  INTEGER(kind=INT64) :: ii38
-  SELECT TYPE (intin)
-  TYPE is (INTEGER(kind=INT8)); ii38 = INT(intin, kind=INT64)
-  TYPE is (INTEGER(kind=INT16)); ii38 = INT(intin, kind=INT64)
-  TYPE is (INTEGER(kind=INT32)); ii38 = intin
-  TYPE is (INTEGER(kind=INT64)); ii38 = intin
-    !class default
-    !write(error_unit,*)'ERROR: unknown integer type'
-    !stop 'ERROR: *anyinteger_to_64* unknown integer type'
-  END SELECT
-END FUNCTION anyinteger_to_64bit
+!> author: Vikas Sharma, Ph. D.
+! date: 2026-02-05
+! summary: Get login name associated with a UID
+!
+!# System_Getpwuid
+!
+! The system_getpwuid() function returns a string containing the user
+! name associated with the given UID. If no match is found it returns
+! a null string and sets errno to indicate the error.
+!
+!
+!## Examples
+!
+!```fortran
+! {{% fortran-code file="examples/System_Getpwuid_test_1.F90" %}}
+!```
+
+INTERFACE
+  MODULE FUNCTION System_Getpwuid(uid) RESULT(uname)
+    CLASS(*), INTENT(in) :: uid
+    !! UID to try to look up associated username for. Can be of any
+    !! INTEGER type.
+    CHARACTER(len=:), ALLOCATABLE :: uname
+    !! returns the login name.
+  END FUNCTION System_Getpwuid
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                               System_Stat
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2026-02-05
+! summary: Get file status information
+!
+!# System_Stat
+!
+! This function returns information about a file. No permissions are
+! required on the file itself, but execute (search) permission is required
+! on all of the directories in path that lead to the file. The elements
+! that are obtained and stored in the array VALUES:
+!
+! | Index | VALUES(n) | Description |
+! |-------|-----------|-------------|
+! | 1  | VALUES(1)  | Device ID |
+! | 2  | VALUES(2)  | Inode number |
+! | 3  | VALUES(3)  | File mode |
+! | 4  | VALUES(4)  | Number of links |
+! | 5  | VALUES(5)  | Owner UID |
+! | 6  | VALUES(6)  | Owner GID |
+! | 7  | VALUES(7)  | ID of device containing dir entry for file  |
+! | 8  | VALUES(8)  | File size (bytes) |
+! | 9  | VALUES(9)  | Last access time as a Unix Epoch time (seconds) |
+! | 10 | VALUES(10) | Last modification time as a Unix Epoch time (seconds) |
+! | 11 | VALUES(11) | Last file status change time as a Unix Epoch time |
+! | 12 | VALUES(12) | Preferred I/O block size (-1 if not available) |
+! | 13 | VALUES(13) | Number of blocks allocated (-1 if not available) |
+!
+! > [!NOTE]
+! > Not all these elements are relevant on all systems.
+! > If an element is not relevant, it is returned as `0`.!!
+!
+!
+!## Examples
+!
+! ```fortran
+! {{% fortran-code file="examples/System_Stat_test_1.F90" %}}
+! ```
+
+INTERFACE
+  MODULE SUBROUTINE System_Stat(pathname, values, ierr)
+    CHARACTER(len=*), INTENT(IN) :: pathname
+    !! The type shall be CHARACTER, of the default kind and a valid
+    !! path within the file system.
+    INTEGER(kind=INT64), INTENT(OUT) :: values(13)
+    !! VALUES  The type shall be INTEGER(8), DIMENSION(13).
+    INTEGER, OPTIONAL, INTENT(OUT) :: ierr
+  END SUBROUTINE System_Stat
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                                  System_Dir
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2026-02-05
+! summary: Return filenames in a directory matching specific wildcard strings
+!
+!# System_Dir
+!
+! returns an array of filenames in the specified directory matching
+! the wildcard string (which defaults to "*").
+!
+!## Examples
+!
+!```fortran
+! {{% fortran-code file="examples/System_Dir_test_1.F90" %}}
+!```
+
+INTERFACE
+  MODULE FUNCTION System_Dir(directory, pattern)
+    CHARACTER(*), INTENT(IN), OPTIONAL :: directory
+    !! name of directory to match filenames in. Defaults to ".".
+    CHARACTER(*), INTENT(IN), OPTIONAL :: pattern
+    !! wildcard string matching the rules of the matchw(3f) function.
+    !! Basically "*" matches anything, "?" matches any single character
+    CHARACTER(:), ALLOCATABLE :: System_Dir(:)
+    !!System_Dir   An array right-padded to the length of the longest
+    !!filename. Note that this means filenames actually containing
+    !!trailing spaces in their names may be incorrect.
+  END FUNCTION System_Dir
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                      Matchw@UtilityMethods
+!----------------------------------------------------------------------------
+
+INTERFACE
+  MODULE FUNCTION Matchw(tame, wild)
+    LOGICAL :: Matchw
+    CHARACTER(len=*) :: tame
+    !! A string without wildcards
+    CHARACTER(len=*) :: wild
+    !! A (potentially) corresponding string with wildcards
+  END FUNCTION Matchw
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                         Anyinteger_to_64bit@UtilityMethods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2026-02-05
+! summary: Convert integer any kind to integer
+!
+!# Anyinteger_to_64bit
+!
+! This function uses polymorphism to allow arguments of different types
+! generically. It is used to create other procedures that can take
+! many scalar arguments as input options, equivalent to passing the
+! parameter VALUE as INT(VALUE,0_int64).
+
+INTERFACE
+  MODULE PURE ELEMENTAL FUNCTION Anyinteger_to_64bit(intin) RESULT(ii38)
+    CLASS(*), INTENT(in) :: intin
+    !! Input argument of a procedure to convert to type
+    !! INTEGER(KIND=int64). May be of KIND kind=int8, kind=int16,
+    !! kind=int32, kind=int64.
+    INTEGER(kind=INT64) :: ii38
+    !! The value of VALUIN converted to INTEGER(KIND=INT64).
+  END FUNCTION Anyinteger_to_64bit
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                    f_handler@UtilityMethods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2026-02-05
+! summary: handler
+
+INTERFACE
+  MODULE SUBROUTINE f_handler(signum) BIND(c)
+    INTEGER(C_INT), INTENT(IN), VALUE :: signum
+  END SUBROUTINE f_handler
+END INTERFACE
 
 !----------------------------------------------------------------------------
 !

@@ -17,7 +17,7 @@
 
 MODULE SystemInterface
 USE ISO_C_BINDING, ONLY: C_INT, C_SIZE_T, C_INTPTR_T, C_LONG
-USE ISO_C_BINDING, ONLY: C_PTR
+USE ISO_C_BINDING, ONLY: C_PTR, C_FUNPTR, C_CHAR, C_LONG
 IMPLICIT NONE
 
 PRIVATE
@@ -42,8 +42,15 @@ PUBLIC :: System_Getpid
 PUBLIC :: System_Getppid
 PUBLIC :: System_Umask
 PUBLIC :: System_Rand
-PUBLIC :: C_Flush
 PUBLIC :: System_Initenv
+
+PUBLIC :: C_Flush
+PUBLIC :: C_Signal
+PUBLIC :: C_Access
+PUBLIC :: C_Utime
+PUBLIC :: C_RealPath
+PUBLIC :: C_Issock
+PUBLIC :: C_Time
 
 !----------------------------------------------------------------------------
 !                                                               System_Alarm
@@ -292,10 +299,10 @@ END INTERFACE
 !```
 
 INTERFACE
-  FUNCTION System_Kill(c_pid, c_signal) BIND(c, name="kill") RESULT(c_ierr)
+  FUNCTION System_Kill(pid, signal) BIND(c, name="kill") RESULT(c_ierr)
     IMPORT C_INT
-    INTEGER(kind=C_INT), VALUE, INTENT(in) :: c_pid
-    INTEGER(kind=C_INT), VALUE, INTENT(in) :: c_signal
+    INTEGER(kind=C_INT), VALUE, INTENT(in) :: pid
+    INTEGER(kind=C_INT), VALUE, INTENT(in) :: signal
     INTEGER(kind=C_INT) :: c_ierr
   END FUNCTION System_Kill
 END INTERFACE
@@ -709,15 +716,6 @@ INTERFACE
 END INTERFACE
 
 !----------------------------------------------------------------------------
-!                                                                    C_Flush
-!----------------------------------------------------------------------------
-
-INTERFACE
-  SUBROUTINE C_Flush() BIND(C, name="my_flush")
-  END SUBROUTINE C_Flush
-END INTERFACE
-
-!----------------------------------------------------------------------------
 !                                                             System_Initenv
 !----------------------------------------------------------------------------
 
@@ -756,6 +754,91 @@ END INTERFACE
 INTERFACE
   SUBROUTINE System_Initenv() BIND(C, NAME='my_initenv')
   END SUBROUTINE System_Initenv
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                                    C_Flush
+!----------------------------------------------------------------------------
+
+INTERFACE
+  SUBROUTINE C_Flush() BIND(C, name="my_flush")
+  END SUBROUTINE C_Flush
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                                   C_Signal
+!----------------------------------------------------------------------------
+
+INTERFACE
+  FUNCTION C_Signal(signal, sighandler) BIND(c, name='signal')
+    IMPORT :: C_INT, C_FUNPTR
+    INTEGER(C_INT), VALUE, INTENT(in) :: signal
+    TYPE(C_FUNPTR), VALUE, INTENT(in) :: sighandler
+    TYPE(C_FUNPTR) :: C_Signal
+  END FUNCTION C_Signal
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                                    C_Access
+!----------------------------------------------------------------------------
+
+INTERFACE
+  FUNCTION C_Access(c_pathname, c_amode) BIND(C, name="my_access") &
+    RESULT(c_ierr)
+    IMPORT :: C_CHAR, C_INT
+    CHARACTER(kind=C_CHAR, len=1), INTENT(in) :: c_pathname(*)
+    INTEGER(kind=C_INT), VALUE :: c_amode
+    INTEGER(kind=C_INT) :: c_ierr
+  END FUNCTION C_Access
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                                    C_Utime
+!----------------------------------------------------------------------------
+
+INTERFACE
+ FUNCTION C_Utime(c_pathname, c_times) BIND(C, name="my_utime") RESULT(c_ierr)
+    IMPORT C_CHAR, C_INT
+    CHARACTER(kind=C_CHAR, len=1), INTENT(in) :: c_pathname(*)
+    INTEGER(kind=C_INT), INTENT(in) :: c_times(2)
+    INTEGER(kind=C_INT) :: c_ierr
+  END FUNCTION C_Utime
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                            System_RealPath
+!----------------------------------------------------------------------------
+
+INTERFACE
+  FUNCTION C_RealPath(c_input) BIND(c, name="my_realpath") RESULT(c_buffer)
+    IMPORT C_CHAR, C_SIZE_T, C_PTR, C_INT
+    CHARACTER(kind=C_CHAR), INTENT(in) :: c_input(*)
+    TYPE(C_PTR) :: c_buffer
+  END FUNCTION C_RealPath
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                                   C_Issock
+!----------------------------------------------------------------------------
+
+INTERFACE
+  FUNCTION C_Issock(pathname) BIND(C, name="my_issock") RESULT(c_ierr)
+    IMPORT :: C_CHAR, C_INT
+    CHARACTER(kind=C_CHAR, len=1), INTENT(in) :: pathname(*)
+    INTEGER(kind=C_INT) :: c_ierr
+  END FUNCTION C_Issock
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                                     C_Time
+!----------------------------------------------------------------------------
+
+INTERFACE
+  FUNCTION C_Time(tloc) BIND(c, name='time')
+    IMPORT :: C_LONG
+    INTEGER(kind=C_LONG), INTENT(in), VALUE :: tloc
+    INTEGER(kind=C_LONG) :: C_Time
+  END FUNCTION C_Time
 END INTERFACE
 
 !----------------------------------------------------------------------------
