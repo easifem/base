@@ -1642,9 +1642,9 @@ SUBROUTINE EqualLine(unitNo)
   INTEGER(I4B), INTENT(IN), OPTIONAL :: unitNo
 
   IF (PRESENT(unitNo)) THEN
-    WRITE (unitNo, "(A)") equal
+    WRITE (unitNo, '(80("="))')
   ELSE
-    WRITE (stdout, "(A)") equal
+    WRITE (stdout, '(80("="))')
   END IF
 
 END SUBROUTINE EqualLine
