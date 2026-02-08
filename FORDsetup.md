@@ -1,8 +1,8 @@
 ---
 project: easifemBase
-summary: easifemBase is part of easifem library, which is a framework for Expandable And Scalable Infrastructure for Finite Element Methods.
-project_download: https://github.com/vickysharma0812/easifem-base
-project_github: https://github.com/vickysharma0812/easifem-base
+summary: easifemBase is part of easifem library, which is a platform for Expandable And Scalable Infrastructure for Finite Element Methods.
+project_download: https://github.com/easifem/base
+project_github: https://github.com/easifem/base
 project_website: https://www.easifem.com
 license: gfdl
 project_dir: ./src/modules/Utility
@@ -41,5 +41,3 @@ preprocesses: true
 ---
 
 {!./README.md!}
-
-<!-- FORD features two macros to make it easier to provide intradocumentation links. These are `|url|` which gets replaced by the project URL, and `|media|`, which gets replaced by the (absolute) path to the media directory in the output. you can also use `favicon:` -->

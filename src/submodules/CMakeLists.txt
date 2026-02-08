@@ -15,6 +15,9 @@
 # this program.  If not, see <https: //www.gnu.org/licenses/>
 #
 
+# System
+include(${CMAKE_CURRENT_LIST_DIR}/System/CMakeLists.txt)
+
 # TriangleInterface
 include(${CMAKE_CURRENT_LIST_DIR}/TriangleInterface/CMakeLists.txt)
 

@@ -29,10 +29,10 @@ PRIVATE
 ! INTEGER, PARAMETER, PUBLIC :: CK = SELECTED_CHAR_KIND('DEFAULT')
 INTEGER, PARAMETER :: CK = SELECTED_CHAR_KIND('DEFAULT')
 ! internal parameters
-CHARACTER(kind=CK, len=26), PARAMETER :: UPPER_ALPHABET =  &
-  & 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
-CHARACTER(kind=CK, len=26), PARAMETER :: LOWER_ALPHABET =  &
-  & 'abcdefghijklmnopqrstuvwxyz'
+CHARACTER(kind=CK, len=26), PARAMETER :: UPPER_ALPHABET = &
+                                         'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+CHARACTER(kind=CK, len=26), PARAMETER :: LOWER_ALPHABET = &
+                                         'abcdefghijklmnopqrstuvwxyz'
 CHARACTER(kind=CK, len=1), PARAMETER :: SPACE = ' '
 CHARACTER(kind=CK, len=1), PARAMETER :: TAB = ACHAR(9)
 CHARACTER(kind=CK, len=1), PARAMETER :: UIX_DIR_SEP = CHAR(47)
@@ -44,7 +44,7 @@ CHARACTER(kind=CK, len=1), PARAMETER :: BACKSLASH = CHAR(92)
 
 INTERFACE strjoin
   MODULE PROCEDURE strjoin_strings, strjoin_characters, &
-    & strjoin_strings_array, strjoin_characters_array
+    strjoin_strings_array, strjoin_characters_array
 END INTERFACE strjoin
 
 PUBLIC :: strjoin
@@ -89,7 +89,7 @@ PUBLIC :: count
 
 INTERFACE index
   MODULE PROCEDURE sindex_string_string, sindex_string_character, &
-    & sindex_character_string
+    sindex_character_string
 END INTERFACE index
 
 !----------------------------------------------------------------------------
@@ -150,7 +150,7 @@ PUBLIC :: trim
 
 INTERFACE verify
   MODULE PROCEDURE sverify_string_string, sverify_string_character, &
-    & sverify_character_string
+    sverify_character_string
 END INTERFACE verify
 
 PUBLIC :: verify
