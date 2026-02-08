@@ -15,9 +15,19 @@
 ! You should have received a copy of the GNU General Public License
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 
-SUBMODULE(System_Method) EnquiryMethods
+SUBMODULE(SystemEnquiry_Method) Methods
 USE ISO_C_BINDING, ONLY: C_SIZE_T
 USE ISO_C_BINDING, ONLY: C_ASSOCIATED
+USE System_Utility, ONLY: Arr2Str
+USE System_Utility, ONLY: Str2_Carr
+USE SystemInterface, ONLY: C_Access
+USE SystemInterface, ONLY: C_Issock
+USE SystemInterface, ONLY: C_Isfifo
+USE SystemInterface, ONLY: C_Ischr
+USE SystemInterface, ONLY: C_Isreg
+USE SystemInterface, ONLY: C_Islnk
+USE SystemInterface, ONLY: C_Isblk
+USE SystemInterface, ONLY: C_Isdir
 
 IMPLICIT NONE
 CONTAINS
@@ -27,7 +37,10 @@ CONTAINS
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE System_Access
-IF (C_Access(str2_carr(TRIM(pathname)), INT(amode, kind=C_INT)) .EQ. 0) THEN
+LOGICAL :: isok
+
+isok = C_Access(str2_carr(TRIM(pathname)), INT(amode, kind=C_INT)) .EQ. 0
+IF (isok) THEN
   system_access = .TRUE.
 ELSE
   system_access = .FALSE.
@@ -39,10 +52,14 @@ END PROCEDURE System_Access
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE System_Issock
-IF (c_issock(str2_carr(TRIM(pathname))) .EQ. 1) THEN
-  system_issock = .TRUE.
+LOGICAL :: isok
+
+isok = C_Issock(Str2_Carr(TRIM(pathname))) .EQ. 1
+
+IF (isok) THEN
+  System_Issock = .TRUE.
 ELSE
-  system_issock = .FALSE.
+  System_Issock = .FALSE.
 END IF
 END PROCEDURE System_Issock
 
@@ -50,38 +67,28 @@ END PROCEDURE System_Issock
 !                                                               System_Isfifo
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE system_isfifo
+MODULE PROCEDURE System_Isfifo
+LOGICAL :: isok
 
-INTERFACE
-  FUNCTION c_isfifo(pathname) BIND(C, name="my_isfifo") RESULT(c_ierr)
-    IMPORT C_CHAR, C_INT
-    CHARACTER(kind=C_CHAR, len=1), INTENT(in) :: pathname(*)
-    INTEGER(kind=C_INT) :: c_ierr
-  END FUNCTION c_isfifo
-END INTERFACE
+isok = C_Isfifo(Str2_Carr(TRIM(pathname))) .EQ. 1
 
-IF (c_isfifo(str2_carr(TRIM(pathname))) .EQ. 1) THEN
-  system_isfifo = .TRUE.
+IF (isok) THEN
+  System_Isfifo = .TRUE.
 ELSE
-  system_isfifo = .FALSE.
+  System_Isfifo = .FALSE.
 END IF
 
-END PROCEDURE system_isfifo
+END PROCEDURE System_Isfifo
 
 !----------------------------------------------------------------------------
 !                                                               System_Ischr
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE System_Ischr
-INTERFACE
-  FUNCTION c_ischr(pathname) BIND(C, name="my_ischr") RESULT(c_ierr)
-    IMPORT C_CHAR, C_INT
-    CHARACTER(kind=C_CHAR, len=1), INTENT(in) :: pathname(*)
-    INTEGER(kind=C_INT) :: c_ierr
-  END FUNCTION c_ischr
-END INTERFACE
+LOGICAL :: isok
 
-IF (c_ischr(str2_carr(TRIM(pathname))) .EQ. 1) THEN
+isok = C_Ischr(Str2_Carr(TRIM(pathname))) .EQ. 1
+IF (isok) THEN
   System_Ischr = .TRUE.
 ELSE
   System_Ischr = .FALSE.
@@ -92,36 +99,26 @@ END PROCEDURE System_Ischr
 !
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE system_isreg
-INTERFACE
-  FUNCTION c_isreg(pathname) BIND(C, name="my_isreg") RESULT(c_ierr)
-    IMPORT C_CHAR, C_INT
-    CHARACTER(kind=C_CHAR, len=1), INTENT(in) :: pathname(*)
-    INTEGER(kind=C_INT) :: c_ierr
-  END FUNCTION c_isreg
-END INTERFACE
+MODULE PROCEDURE System_Isreg
+LOGICAL :: isok
 
-IF (c_isreg(str2_carr(TRIM(pathname))) .EQ. 1) THEN
-  system_isreg = .TRUE.
+isok = C_Isreg(Str2_Carr(TRIM(pathname))) .EQ. 1
+IF (isok) THEN
+  System_Isreg = .TRUE.
 ELSE
-  system_isreg = .FALSE.
+  System_Isreg = .FALSE.
 END IF
-END PROCEDURE system_isreg
+END PROCEDURE System_Isreg
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE System_Islnk
-INTERFACE
-  FUNCTION c_islnk(pathname) BIND(C, name="my_islnk") RESULT(c_ierr)
-    IMPORT C_CHAR, C_INT
-    CHARACTER(kind=C_CHAR, len=1), INTENT(in) :: pathname(*)
-    INTEGER(kind=C_INT) :: c_ierr
-  END FUNCTION c_islnk
-END INTERFACE
+LOGICAL :: isok
 
-IF (c_islnk(str2_carr(TRIM(pathname))) .EQ. 1) THEN
+isok = C_Islnk(Str2_Carr(TRIM(pathname))) .EQ. 1
+IF (isok) THEN
   System_Islnk = .TRUE.
 ELSE
   System_Islnk = .FALSE.
@@ -133,18 +130,13 @@ END PROCEDURE System_Islnk
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE System_Isblk
-INTERFACE
-  FUNCTION c_isblk(pathname) BIND(C, name="my_isblk") RESULT(c_ierr)
-    IMPORT C_CHAR, C_INT
-    CHARACTER(kind=C_CHAR, len=1), INTENT(in) :: pathname(*)
-    INTEGER(kind=C_INT) :: c_ierr
-  END FUNCTION c_isblk
-END INTERFACE
+LOGICAL :: isok
 
-IF (c_isblk(str2_carr(TRIM(pathname))) .EQ. 1) THEN
-  system_isblk = .TRUE.
+isok = C_Isblk(Str2_Carr(TRIM(pathname))) .EQ. 1
+IF (isok) THEN
+  System_Isblk = .TRUE.
 ELSE
-  system_isblk = .FALSE.
+  System_Isblk = .FALSE.
 END IF
 END PROCEDURE System_Isblk
 
@@ -153,15 +145,11 @@ END PROCEDURE System_Isblk
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE System_Isdir
-INTERFACE
-  FUNCTION c_isdir(dirname) BIND(C, name="my_isdir") RESULT(c_ierr)
-    IMPORT C_CHAR, C_INT
-    CHARACTER(kind=C_CHAR, len=1), INTENT(in) :: dirname(*)
-    INTEGER(kind=C_INT) :: c_ierr
-  END FUNCTION c_isdir
-END INTERFACE
+LOGICAL :: isok
 
-IF (c_isdir(str2_carr(TRIM(dirname))) .EQ. 1) THEN
+isok = C_Isdir(Str2_Carr(TRIM(dirname))) .EQ. 1
+
+IF (isok) THEN
   System_Isdir = .TRUE.
 ELSE
   System_Isdir = .FALSE.
@@ -172,32 +160,4 @@ END PROCEDURE System_Isdir
 !
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE system_getcwd
-INTEGER(kind=C_LONG), PARAMETER :: length = 4097_C_LONG
-CHARACTER(kind=C_CHAR, len=1) :: buffer(length)
-TYPE(C_PTR) :: buffer2
-INTERFACE
-  FUNCTION c_getcwd(buffer, size) BIND(c, name="getcwd") RESULT(buffer_result)
-    IMPORT C_CHAR, C_SIZE_T, C_PTR
-    CHARACTER(kind=C_CHAR), INTENT(out) :: buffer(*)
-    INTEGER(C_SIZE_T), VALUE, INTENT(in) :: size
-    TYPE(C_PTR) :: buffer_result
-  END FUNCTION
-END INTERFACE
-
-buffer = ' '
-buffer2 = c_getcwd(buffer, length)
-IF (.NOT. C_ASSOCIATED(buffer2)) THEN
-  output = ''
-  ierr = -1
-ELSE
-  output = TRIM(arr2str(buffer))
-  ierr = 0
-END IF
-END PROCEDURE system_getcwd
-
-!----------------------------------------------------------------------------
-!
-!----------------------------------------------------------------------------
-
-END SUBMODULE EnquiryMethods
+END SUBMODULE Methods

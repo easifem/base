@@ -16,8 +16,30 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-SUBMODULE(System_Method) FileMethods
+SUBMODULE(SystemFile_Method) Methods
 USE ISO_C_BINDING, ONLY: C_ASSOCIATED
+USE ISO_C_BINDING, ONLY: C_SIZE_T
+USE ISO_C_BINDING, ONLY: C_LONG
+USE ISO_C_BINDING, ONLY: C_CHAR
+USE System_Utility, ONLY: Matchw
+USE System_Utility, ONLY: Arr2Str
+USE System_Utility, ONLY: C2F_String
+USE System_Utility, ONLY: Str2_Carr
+USE System_Utility, ONLY: TimeStamp
+
+USE SystemInterface, ONLY: C_Utime
+USE SystemInterface, ONLY: C_RealPath
+USE SystemInterface, ONLY: C_Chown
+USE SystemInterface, ONLY: C_Link
+USE SystemInterface, ONLY: C_Unlink
+USE SystemInterface, ONLY: C_Chdir
+USE SystemInterface, ONLY: C_Remove
+USE SystemInterface, ONLY: C_Rename
+USE SystemInterface, ONLY: C_Chmod
+USE SystemInterface, ONLY: System_Getpid
+USE SystemInterface, ONLY: System_Errno
+USE SystemInterface, ONLY: System_Umask
+
 IMPLICIT NONE
 
 CONTAINS
@@ -37,7 +59,9 @@ ELSE
   times_local = timestamp()
 END IF
 
-isok = c_utime(str2_carr(TRIM(pathname)), INT(times_local, kind=C_INT)) .EQ. 0
+isok = C_Utime(Str2_Carr(TRIM(pathname)), INT(Times_Local, kind=C_INT)) &
+       .EQ. 0
+
 IF (isok) THEN
   system_utime = .TRUE.
 ELSE
@@ -66,18 +90,8 @@ END PROCEDURE System_RealPath
 MODULE PROCEDURE System_Chown
 LOGICAL :: isok
 
-INTERFACE
-  function c_chown(c_dirname,c_owner,c_group) bind (C,name="my_chown") result (c_ierr)
-    IMPORT C_CHAR, C_INT
-    CHARACTER(kind=C_CHAR, len=1), INTENT(in) :: c_dirname(*)
-    INTEGER(kind=C_INT), INTENT(in), VALUE :: c_owner
-    INTEGER(kind=C_INT), INTENT(in), VALUE :: c_group
-    INTEGER(kind=C_INT) :: c_ierr
-  END FUNCTION c_chown
-END INTERFACE
-
-isok = c_chown( &
-       str2_carr(TRIM(dirname)), &
+isok = C_Chown( &
+       Str2_Carr(TRIM(dirname)), &
        INT(owner, kind=C_INT), &
        INT(group, kind=C_INT)) .EQ. 1
 
@@ -90,74 +104,96 @@ END IF
 END PROCEDURE System_Chown
 
 !----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE system_link
+INTEGER(C_INT) :: c_ierr
+C_Ierr = C_Link(Str2_Carr(TRIM(oldname)), Str2_Carr(TRIM(newname)))
+ierr = c_ierr
+END PROCEDURE system_link
+
+!----------------------------------------------------------------------------
+!                                                              System_Unlink
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE System_Unlink
+ierr = C_Unlink(Str2_Carr(TRIM(fname)))
+END PROCEDURE System_Unlink
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE System_Setumask
+INTEGER(C_INT) :: Umask_C
+Umask_C = Umask_Value
+Old_Umask = System_Umask(Umask_C)
+END PROCEDURE System_Setumask
+
+!----------------------------------------------------------------------------
 !                                                               System_Chdir
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE system_chdir
-INTERFACE
-  INTEGER(kind=C_INT) FUNCTION c_chdir(c_path) BIND(C, name="chdir")
-    IMPORT C_CHAR, C_INT
-    CHARACTER(kind=C_CHAR) :: c_path(*)
-  END FUNCTION
-END INTERFACE
-
-INTEGER :: loc_err
-
-loc_err = c_chdir(str2_carr(TRIM(path)))
+MODULE PROCEDURE System_Chdir
+INTEGER :: Loc_Err
+Loc_Err = C_Chdir(Str2_Carr(TRIM(path)))
 IF (PRESENT(err)) THEN
-  err = loc_err
+  err = Loc_Err
 END IF
-END PROCEDURE system_chdir
+END PROCEDURE System_Chdir
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE system_remove
-INTERFACE
-  FUNCTION c_remove(c_path) BIND(c, name="remove") RESULT(c_err)
-    IMPORT C_CHAR, C_INT
-    CHARACTER(kind=C_CHAR, len=1), INTENT(in) :: c_path(*)
-    INTEGER(C_INT) :: c_err
-  END FUNCTION
-END INTERFACE
-
-err = c_remove(str2_carr(TRIM(path)))
-END PROCEDURE system_remove
+MODULE PROCEDURE System_Remove
+err = C_Remove(Str2_Carr(TRIM(path)))
+END PROCEDURE System_Remove
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE system_rename
+MODULE PROCEDURE System_Rename
+ierr = C_Rename(Str2_Carr(TRIM(input)), Str2_Carr(TRIM(output)))
+END PROCEDURE System_Rename
+
+!----------------------------------------------------------------------------
+!                                                               System_Chmod
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE System_Chmod
+ierr = C_Chmod(Str2_Carr(TRIM(filename)), INT(mode, KIND(0_C_INT)))
+END PROCEDURE System_Chmod
+
+!----------------------------------------------------------------------------
+!                                                              System_Getcwd
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE system_getcwd
+INTEGER(kind=C_LONG), PARAMETER :: length = 4097_C_LONG
+CHARACTER(kind=C_CHAR, len=1) :: buffer(length)
+TYPE(C_PTR) :: buffer2
 INTERFACE
-  FUNCTION c_rename(c_input, c_output) BIND(c, name="rename") RESULT(c_err)
-    IMPORT C_CHAR, C_INT
-    CHARACTER(kind=C_CHAR), INTENT(in) :: c_input(*)
-    CHARACTER(kind=C_CHAR), INTENT(in) :: c_output(*)
-    INTEGER(C_INT) :: c_err
+  FUNCTION c_getcwd(buffer, size) BIND(c, name="getcwd") RESULT(buffer_result)
+    IMPORT C_CHAR, C_SIZE_T, C_PTR
+    CHARACTER(kind=C_CHAR), INTENT(out) :: buffer(*)
+    INTEGER(C_SIZE_T), VALUE, INTENT(in) :: size
+    TYPE(C_PTR) :: buffer_result
   END FUNCTION
 END INTERFACE
 
-ierr = c_rename(str2_carr(TRIM(input)), str2_carr(TRIM(output)))
-END PROCEDURE system_rename
-
-!----------------------------------------------------------------------------
-!
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE system_chmod
-INTERFACE
-  FUNCTION c_chmod(c_filename, c_mode) BIND(c, name="chmod") RESULT(c_err)
-    IMPORT C_CHAR, C_INT
-    CHARACTER(kind=C_CHAR), INTENT(in) :: c_filename(*)
-    INTEGER(C_INT), VALUE, INTENT(in) :: c_mode
-    INTEGER(C_INT) :: c_err
-  END FUNCTION
-END INTERFACE
-
-ierr = c_chmod(str2_carr(TRIM(filename)), INT(mode, KIND(0_C_INT)))
-END PROCEDURE system_chmod
+buffer = ' '
+buffer2 = c_getcwd(buffer, length)
+IF (.NOT. C_ASSOCIATED(buffer2)) THEN
+  output = ''
+  ierr = -1
+ELSE
+  output = TRIM(arr2str(buffer))
+  ierr = 0
+END IF
+END PROCEDURE system_getcwd
 
 !----------------------------------------------------------------------------
 !
@@ -410,52 +446,7 @@ CALL system_closedir(dir, ierr) !--- close directory stream
 END PROCEDURE system_dir
 
 !----------------------------------------------------------------------------
-!
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE system_link
-INTEGER(kind=C_INT) :: c_ierr
-
-INTERFACE
-  FUNCTION c_link(c_oldname, c_newname) BIND(C, name="link") RESULT(c_ierr)
-    IMPORT C_CHAR, C_INT
-    CHARACTER(kind=C_CHAR, len=1), INTENT(in) :: c_oldname(*)
-    CHARACTER(kind=C_CHAR, len=1), INTENT(in) :: c_newname(*)
-    INTEGER(kind=C_INT) :: c_ierr
-  END FUNCTION c_link
-END INTERFACE
-
-c_ierr = c_link(str2_carr(TRIM(oldname)), str2_carr(TRIM(newname)))
-ierr = c_ierr
-END PROCEDURE system_link
-
-!----------------------------------------------------------------------------
-!
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE system_unlink
-INTERFACE
-  FUNCTION c_unlink(c_fname) BIND(C, name="unlink") RESULT(c_ierr)
-    IMPORT C_CHAR, C_INT
-    CHARACTER(kind=C_CHAR, len=1) :: c_fname(*)
-    INTEGER(kind=C_INT) :: c_ierr
-  END FUNCTION c_unlink
-END INTERFACE
-ierr = c_unlink(str2_carr(TRIM(fname)))
-END PROCEDURE system_unlink
-
-!----------------------------------------------------------------------------
-!
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE system_setumask
-INTEGER(kind=C_INT) :: umask_c
-umask_c = umask_value
-old_umask = system_umask(umask_c)
-! set current umask
-END PROCEDURE system_setumask
-
-!----------------------------------------------------------------------------
 !                                                               Include Error
 !----------------------------------------------------------------------------
-END SUBMODULE FileMethods
+
+END SUBMODULE Methods

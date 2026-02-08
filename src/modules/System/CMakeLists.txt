@@ -18,7 +18,16 @@
 set(src_path "${CMAKE_CURRENT_LIST_DIR}/src/")
 target_sources(
     ${PROJECT_NAME}
-    PRIVATE ${src_path}/SystemInterface.F90 ${src_path}/System_Method.F90
+    PRIVATE
+        ${src_path}/SystemInterface.F90
+        ${src_path}/SystemOptions.F90
+        ${src_path}/System_Method.F90
+        ${src_path}/SystemSignal_Method.F90
+        ${src_path}/SystemFile_Method.F90
+        ${src_path}/SystemEnvironment_Method.F90
+        ${src_path}/SystemEnquiry_Method.F90
+        ${src_path}/SystemProcess_Method.F90
+        ${src_path}/System_Utility.F90
 )
 
 set(subproject_name "easifemSystem")

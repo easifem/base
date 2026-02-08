@@ -15,8 +15,12 @@
 ! You should have received a copy of the GNU General Public License
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 
-SUBMODULE(System_Method) UtilityMethods
+SUBMODULE(System_Utility) Methods
 USE ISO_FORTRAN_ENV, ONLY: ERROR_UNIT
+USE ISO_C_BINDING, ONLY: C_NULL_CHAR
+USE ISO_C_BINDING, ONLY: C_F_POINTER
+USE SystemInterface, ONLY: C_Time
+USE GlobalData, ONLY: INT8, INT16, INT32
 
 IMPLICIT NONE
 CONTAINS
@@ -25,11 +29,11 @@ CONTAINS
 !                                                                C2F_String
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE C2F_string
-CHARACTER(kind=C_CHAR), DIMENSION(:), POINTER :: &
-  char_array_pointer => NULL()
+MODULE PROCEDURE C2F_String
+CHARACTER(kind=C_CHAR), POINTER :: &
+  char_array_pointer(:) => NULL()
 INTEGER, PARAMETER :: max_len = 4096
-CHARACTER(len=max_len) :: aux_string
+CHARACTER(max_len) :: aux_string
 INTEGER :: i
 INTEGER :: length
 
@@ -47,7 +51,8 @@ aux_string = " "
 
 DO i = 1, max_len
   IF (char_array_pointer(i) == C_NULL_CHAR) THEN
-    length = i - 1; EXIT
+    length = i - 1
+    EXIT
   END IF
   aux_string(i:i) = char_array_pointer(i)
 END DO
@@ -205,14 +210,18 @@ END PROCEDURE Matchw
 
 MODULE PROCEDURE Anyinteger_to_64bit
 SELECT TYPE (intin)
-TYPE IS (INTEGER(kind=INT8))
+TYPE IS (INTEGER(INT8))
   ii38 = INT(intin, kind=INT64)
-TYPE IS (INTEGER(kind=INT16))
+
+TYPE IS (INTEGER(INT16))
   ii38 = INT(intin, kind=INT64)
-TYPE IS (INTEGER(kind=INT32))
+
+TYPE IS (INTEGER(INT32))
+  ii38 = INT(intin, kind=INT64)
+
+TYPE IS (INTEGER(INT64))
   ii38 = intin
-TYPE IS (INTEGER(kind=INT64))
-  ii38 = intin
+
   !class default
   !write(error_unit,*)'ERROR: unknown integer type'
   !stop 'ERROR: *Anyinteger_to_64* unknown integer type'
@@ -220,20 +229,7 @@ END SELECT
 END PROCEDURE Anyinteger_to_64bit
 
 !----------------------------------------------------------------------------
-!
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE f_handler
-LOGICAL :: isok
-
-isok = ASSOCIATED(handler_ptr_array(signum)%sub)
-IF (isok) THEN
-  CALL handler_ptr_array(signum)%sub(signum)
-END IF
-END PROCEDURE f_handler
-
-!----------------------------------------------------------------------------
 !                                                            Include Error
 !----------------------------------------------------------------------------
 
-END SUBMODULE UtilityMethods
+END SUBMODULE Methods

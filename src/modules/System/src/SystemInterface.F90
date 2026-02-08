@@ -16,8 +16,8 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 
 MODULE SystemInterface
-USE ISO_C_BINDING, ONLY: C_INT, C_SIZE_T, C_INTPTR_T, C_LONG
-USE ISO_C_BINDING, ONLY: C_PTR, C_FUNPTR, C_CHAR, C_LONG
+USE ISO_C_BINDING, ONLY: C_INT, C_SIZE_T, C_INTPTR_T, C_LONG, C_FLOAT
+USE ISO_C_BINDING, ONLY: C_LONG_LONG, C_PTR, C_FUNPTR, C_CHAR, C_LONG
 IMPLICIT NONE
 
 PRIVATE
@@ -51,6 +51,32 @@ PUBLIC :: C_Utime
 PUBLIC :: C_RealPath
 PUBLIC :: C_Issock
 PUBLIC :: C_Time
+PUBLIC :: C_Chown
+PUBLIC :: C_Link
+PUBLIC :: C_Unlink
+PUBLIC :: C_Chdir
+PUBLIC :: C_Remove
+PUBLIC :: C_Rename
+PUBLIC :: C_Chmod
+PUBLIC :: C_Setenv
+PUBLIC :: C_Unsetenv
+PUBLIC :: C_Readenv
+PUBLIC :: C_Putenv
+PUBLIC :: C_Isfifo
+PUBLIC :: C_Ischr
+PUBLIC :: C_Isreg
+PUBLIC :: C_Islnk
+PUBLIC :: C_Isblk
+PUBLIC :: C_Isdir
+PUBLIC :: C_CPU_Time
+PUBLIC :: C_Perror
+PUBLIC :: C_Uname
+PUBLIC :: C_Gethostname
+PUBLIC :: C_Getlogin
+PUBLIC :: C_Perm
+PUBLIC :: C_Getgrgid
+PUBLIC :: C_Getpwuid
+PUBLIC :: C_Stat
 
 !----------------------------------------------------------------------------
 !                                                               System_Alarm
@@ -841,6 +867,334 @@ INTERFACE
   END FUNCTION C_Time
 END INTERFACE
 
+!----------------------------------------------------------------------------
+!                                                                     C_Chown
+!----------------------------------------------------------------------------
+
+INTERFACE
+  FUNCTION C_Chown(c_dirname, c_owner, c_group) &
+    BIND(C, name="my_chown") RESULT(c_ierr)
+    IMPORT :: C_CHAR, C_INT
+    CHARACTER(kind=C_CHAR, len=1), INTENT(IN) :: c_dirname(*)
+    INTEGER(kind=C_INT), INTENT(IN), VALUE :: c_owner
+    INTEGER(kind=C_INT), INTENT(IN), VALUE :: c_group
+    INTEGER(kind=C_INT) :: c_ierr
+  END FUNCTION C_Chown
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                                     C_Link
+!----------------------------------------------------------------------------
+
+INTERFACE
+  FUNCTION C_Link(C_Oldname, C_Newname) &
+    BIND(C, name="link") RESULT(c_ierr)
+    IMPORT C_CHAR, C_INT
+    CHARACTER(kind=C_CHAR, len=1), INTENT(in) :: c_oldname(*)
+    CHARACTER(kind=C_CHAR, len=1), INTENT(in) :: c_newname(*)
+    INTEGER(kind=C_INT) :: c_ierr
+  END FUNCTION C_Link
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                                    C_Unlink
+!----------------------------------------------------------------------------
+
+INTERFACE
+  FUNCTION C_Unlink(C_Fname) &
+    BIND(C, name="unlink") RESULT(c_ierr)
+    IMPORT C_CHAR, C_INT
+    CHARACTER(kind=C_CHAR, len=1) :: c_fname(*)
+    INTEGER(kind=C_INT) :: c_ierr
+  END FUNCTION C_Unlink
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                                    C_Chdir
+!----------------------------------------------------------------------------
+
+INTERFACE
+  INTEGER(kind=C_INT) FUNCTION C_Chdir(C_Path) &
+    BIND(C, name="chdir")
+    IMPORT C_CHAR, C_INT
+    CHARACTER(kind=C_CHAR) :: c_path(*)
+  END FUNCTION C_Chdir
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                                   C_Remove
+!----------------------------------------------------------------------------
+
+INTERFACE
+  FUNCTION C_Remove(C_Path) BIND(c, name="remove") RESULT(c_err)
+    IMPORT C_CHAR, C_INT
+    CHARACTER(kind=C_CHAR, len=1), INTENT(in) :: C_Path(*)
+    INTEGER(C_INT) :: c_err
+  END FUNCTION C_Remove
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                                   C_Rename
+!----------------------------------------------------------------------------
+
+INTERFACE
+  FUNCTION C_Rename(C_Input, C_Output) BIND(c, name="rename") RESULT(C_Err)
+    IMPORT C_CHAR, C_INT
+    CHARACTER(kind=C_CHAR), INTENT(in) :: C_Input(*)
+    CHARACTER(kind=C_CHAR), INTENT(in) :: C_Output(*)
+    INTEGER(C_INT) :: C_Err
+  END FUNCTION C_Rename
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                                    C_Chmod
+!----------------------------------------------------------------------------
+
+INTERFACE
+  FUNCTION C_Chmod(filename, mode) BIND(c, name="chmod") RESULT(ierr)
+    IMPORT C_CHAR, C_INT
+    CHARACTER(kind=C_CHAR), INTENT(IN) :: filename(*)
+    INTEGER(C_INT), VALUE, INTENT(IN) :: mode
+    INTEGER(C_INT) :: ierr
+  END FUNCTION C_Chmod
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                                   C_Setenv
+!----------------------------------------------------------------------------
+
+INTERFACE
+  INTEGER(kind=C_INT) FUNCTION C_Setenv(C_Name, C_VALUE) &
+    BIND(C, NAME="setenv")
+    IMPORT C_INT, C_CHAR
+    CHARACTER(kind=C_CHAR) :: C_Name(*)
+    CHARACTER(kind=C_CHAR) :: C_VALUE(*)
+  END FUNCTION C_Setenv
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                                 C_Unsetenv
+!----------------------------------------------------------------------------
+
+INTERFACE
+  INTEGER(kind=C_INT) FUNCTION C_Unsetenv(C_Name) &
+    BIND(C, NAME="unsetenv")
+    IMPORT C_INT, C_CHAR
+    CHARACTER(len=1, kind=C_CHAR) :: C_Name(*)
+  END FUNCTION C_Unsetenv
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                                  C_Readenv
+!----------------------------------------------------------------------------
+
+INTERFACE
+  SUBROUTINE C_Readenv(C_String) &
+    BIND(C, NAME='my_readenv')
+    IMPORT C_CHAR, C_INT, C_PTR, C_SIZE_T
+    CHARACTER(kind=C_CHAR), INTENT(OUT) :: c_string(*)
+  END SUBROUTINE C_Readenv
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                                   C_Putenv
+!----------------------------------------------------------------------------
+
+INTERFACE
+  INTEGER(kind=C_INT) FUNCTION C_Putenv(C_String) &
+    BIND(C, name="putenv")
+    IMPORT C_INT, C_CHAR
+    CHARACTER(kind=C_CHAR) :: C_String(*)
+  END FUNCTION C_Putenv
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                                   C_Isfifo
+!----------------------------------------------------------------------------
+
+INTERFACE
+  FUNCTION C_Isfifo(pathname) &
+    BIND(C, name="my_isfifo") RESULT(c_ierr)
+    IMPORT C_CHAR, C_INT
+    CHARACTER(kind=C_CHAR, len=1), INTENT(in) :: pathname(*)
+    INTEGER(kind=C_INT) :: c_ierr
+  END FUNCTION C_Isfifo
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                        C_Ischr
+!----------------------------------------------------------------------------
+
+INTERFACE
+  FUNCTION C_Ischr(pathname) &
+    BIND(C, name="my_ischr") RESULT(c_ierr)
+    IMPORT C_CHAR, C_INT
+    CHARACTER(kind=C_CHAR, len=1), INTENT(in) :: pathname(*)
+    INTEGER(kind=C_INT) :: c_ierr
+  END FUNCTION C_Ischr
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                                    C_Isreg
+!----------------------------------------------------------------------------
+
+INTERFACE
+  FUNCTION C_Isreg(pathname) &
+    BIND(C, name="my_isreg") RESULT(c_ierr)
+    IMPORT :: C_CHAR, C_INT
+    CHARACTER(kind=C_CHAR, len=1), INTENT(in) :: pathname(*)
+    INTEGER(kind=C_INT) :: c_ierr
+  END FUNCTION C_Isreg
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                                    C_Islnk
+!----------------------------------------------------------------------------
+
+INTERFACE
+  FUNCTION C_Islnk(pathname) &
+    BIND(C, name="my_islnk") RESULT(c_ierr)
+    IMPORT C_CHAR, C_INT
+    CHARACTER(kind=C_CHAR, len=1), INTENT(IN) :: pathname(*)
+    INTEGER(kind=C_INT) :: c_ierr
+  END FUNCTION C_Islnk
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                                    C_Isblk
+!----------------------------------------------------------------------------
+
+INTERFACE
+  FUNCTION C_Isblk(pathname) &
+    BIND(C, name="my_isblk") RESULT(c_ierr)
+    IMPORT :: C_CHAR, C_INT
+    CHARACTER(kind=C_CHAR, len=1), INTENT(IN) :: pathname(*)
+    INTEGER(kind=C_INT) :: c_ierr
+  END FUNCTION C_Isblk
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                                    C_Isdir
+!----------------------------------------------------------------------------
+
+INTERFACE
+  FUNCTION C_Isdir(dirname) &
+    BIND(C, name="my_isdir") RESULT(c_ierr)
+    IMPORT :: C_CHAR, C_INT
+    CHARACTER(kind=C_CHAR, len=1), INTENT(IN) :: dirname(*)
+    INTEGER(kind=C_INT) :: c_ierr
+  END FUNCTION C_Isdir
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                                 C_CPU_Time
+!----------------------------------------------------------------------------
+
+INTERFACE
+  SUBROUTINE C_CPU_Time(total, user, system) &
+    BIND(C, NAME='my_cpu_time')
+    IMPORT :: C_FLOAT
+    REAL(C_FLOAT) :: total, user, system
+  END SUBROUTINE C_CPU_Time
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                                   C_Perror
+!----------------------------------------------------------------------------
+
+INTERFACE
+  SUBROUTINE C_Perror(prefix) BIND(C, name="perror")
+    IMPORT C_CHAR
+    CHARACTER(kind=C_CHAR) :: prefix(*)
+  END SUBROUTINE C_Perror
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                                    C_Uname
+!----------------------------------------------------------------------------
+
+INTERFACE
+  SUBROUTINE C_Uname(WHICH, BUF, BUFLEN) BIND(C, NAME='my_uname')
+    IMPORT :: C_CHAR, C_INT
+    IMPLICIT NONE
+    CHARACTER(KIND=C_CHAR), INTENT(in) :: WHICH
+    CHARACTER(KIND=C_CHAR), INTENT(out) :: BUF(*)
+    INTEGER(C_INT), INTENT(in) :: BUFLEN
+  END SUBROUTINE C_Uname
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                              C_Gethostname
+!----------------------------------------------------------------------------
+
+INTERFACE
+  FUNCTION C_Gethostname(c_buf, c_buflen) BIND(C, NAME='gethostname')
+    IMPORT :: C_CHAR, C_INT
+    INTEGER(kind=C_INT) :: C_Gethostname
+    CHARACTER(KIND=C_CHAR), INTENT(out) :: c_buf(*)
+    INTEGER(C_INT), INTENT(in), VALUE :: c_buflen
+  END FUNCTION C_Gethostname
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                                  C_Getlogin
+!----------------------------------------------------------------------------
+
+INTERFACE
+  FUNCTION C_Getlogin() &
+    BIND(c, name="getlogin") RESULT(c_username)
+    IMPORT C_INT, C_PTR
+    TYPE(C_PTR) :: c_username
+  END FUNCTION C_Getlogin
+END INTERFACE
+
+INTERFACE
+  FUNCTION C_Perm(c_mode) &
+    BIND(c, name="my_get_perm") RESULT(c_permissions)
+    IMPORT C_INT, C_PTR, C_LONG
+    INTEGER(kind=C_LONG), VALUE :: c_mode
+    TYPE(C_PTR) :: c_permissions
+  END FUNCTION C_Perm
+END INTERFACE
+
+INTERFACE
+  FUNCTION C_Getgrgid(C_Gid, C_Groupname) &
+    BIND(c, name="my_getgrgid") RESULT(c_ierr)
+    IMPORT C_INT, C_PTR, C_CHAR, C_LONG_LONG
+    INTEGER(kind=C_LONG_LONG), VALUE, INTENT(in) :: c_gid
+    CHARACTER(kind=C_CHAR), INTENT(out) :: c_groupname(*)
+    INTEGER(kind=C_INT) :: c_ierr
+  END FUNCTION C_Getgrgid
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE
+  FUNCTION C_Getpwuid(C_Uid, C_Username) &
+    BIND(c, name="my_getpwuid") RESULT(c_ierr)
+    IMPORT C_INT, C_PTR, C_CHAR, C_LONG_LONG
+    INTEGER(kind=C_LONG_LONG), VALUE, INTENT(in) :: c_uid
+    CHARACTER(kind=C_CHAR), INTENT(out) :: c_username(*)
+    INTEGER(kind=C_INT) :: c_ierr
+  END FUNCTION C_Getpwuid
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                                     C_Stat
+!----------------------------------------------------------------------------
+
+INTERFACE
+  SUBROUTINE C_Stat(buffer, cvalues, cierr, cdebug) &
+    BIND(c, name="my_stat")
+    IMPORT :: C_CHAR, C_SIZE_T, C_PTR, C_INT, C_LONG
+    CHARACTER(kind=C_CHAR), INTENT(IN) :: buffer(*)
+    INTEGER(C_LONG), INTENT(OUT) :: cvalues(*)
+    INTEGER(C_INT) :: cierr
+    INTEGER(C_INT), INTENT(in) :: cdebug
+  END SUBROUTINE C_Stat
+END INTERFACE
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------

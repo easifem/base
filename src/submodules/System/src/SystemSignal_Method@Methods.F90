@@ -15,11 +15,25 @@
 ! You should have received a copy of the GNU General Public License
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 
-SUBMODULE(System_Method) SignalMethods
+SUBMODULE(SystemSignal_Method) Methods
 USE ISO_C_BINDING, ONLY: C_FUNLOC
-
+USE SystemInterface, ONLY: C_Signal
 IMPLICIT NONE
+
 CONTAINS
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE f_handler
+LOGICAL :: isok
+
+isok = ASSOCIATED(handler_ptr_array(signum)%sub)
+IF (isok) THEN
+  CALL handler_ptr_array(signum)%sub(signum)
+END IF
+END PROCEDURE f_handler
 
 !----------------------------------------------------------------------------
 !                                                               System_Signal
@@ -38,4 +52,4 @@ c_handler = C_FUNLOC(f_handler)
 ret = C_Signal(signum, c_handler)
 END PROCEDURE System_Signal
 
-END SUBMODULE SignalMethods
+END SUBMODULE Methods
