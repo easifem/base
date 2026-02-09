@@ -35,6 +35,26 @@ USE ISO_C_BINDING, ONLY: C_PTR
 IMPLICIT NONE
 
 PRIVATE
+PUBLIC :: System_Utime
+PUBLIC :: System_RealPath
+PUBLIC :: System_Chown
+PUBLIC :: System_Link
+PUBLIC :: System_Unlink
+PUBLIC :: System_Setumask
+PUBLIC :: System_Chdir
+PUBLIC :: System_Remove
+PUBLIC :: System_Rename
+PUBLIC :: System_Chmod
+PUBLIC :: System_Getcwd
+PUBLIC :: System_Rmdir
+PUBLIC :: System_Mkfifo
+PUBLIC :: System_Mkdir
+PUBLIC :: System_Opendir
+PUBLIC :: System_Readdir
+PUBLIC :: System_Rewinddir
+PUBLIC :: System_Closedir
+PUBLIC :: Fileglob
+PUBLIC :: System_Dir
 
 !----------------------------------------------------------------------------
 !                                                   System_Utime@FileMethods

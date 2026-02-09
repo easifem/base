@@ -9,6 +9,3 @@ ignore = [
 file-extensions = ["f90", "F90"]
 line-length = 78
 fix = true
-# output-format =  "full"
-# show-fixes = false
-# unsafe-fixes = true

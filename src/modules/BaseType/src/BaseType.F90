@@ -98,6 +98,8 @@ USE GlobalData, ONLY: Point, Point1, &
                       Prism, Prism6, Prism15, Prism18, &
                       Pyramid, Pyramid5, Pyramid13, Pyramid14
 
+USE GlobalData, ONLY: CHAR_SLASH, CHAR_LF
+
 USE String_Class, ONLY: String
 
 #ifdef USE_SuperLU
@@ -292,6 +294,7 @@ PUBLIC :: TypeQuadratureOpt
 PUBLIC :: TypeInterpolationOpt
 PUBLIC :: TypeFEVariableOpt
 PUBLIC :: TypeUserFunctionOpt
+PUBLIC :: TypeFileOpt
 
 INTEGER(I4B), PARAMETER, PUBLIC :: MAX_RANK_FEVARIABLE = 6
 
@@ -2582,5 +2585,66 @@ TYPE :: UserFunctionOpt_
 END TYPE UserFunctionOpt_
 
 TYPE(UserFunctionOpt_), PARAMETER :: TypeUserFunctionOpt = UserFunctionOpt_()
+
+!----------------------------------------------------------------------------
+!                                                                    FileOpt_
+!----------------------------------------------------------------------------
+
+TYPE :: FileOpt_
+  !! values for status
+  CHARACTER(3) :: new = "NEW"
+  CHARACTER(3) :: old = "OLD"
+  CHARACTER(7) :: replace = "REPLACE"
+  CHARACTER(7) :: scratch = "SCRATCH"
+  CHARACTER(7) :: unknown = "UNKNOWN"
+
+  !! values for access
+  CHARACTER(10) :: sequential = "SEQUENTIAL"
+  CHARACTER(6) :: direct = "DIRECT"
+  CHARACTER(6) :: stream = "STREAM"
+
+  ! form value
+  CHARACTER(9) :: formatted = "FORMATTED"
+  !! file is txt file
+  CHARACTER(11) :: unformatted = "UNFORMATTED"
+  !! file is a binary file
+
+  ! poisition value
+  CHARACTER(6) :: REWIND = "REWIND"
+  CHARACTER(6) :: append = "APPEND"
+  CHARACTER(4) :: asis = "ASIS"
+
+  ! action value
+  CHARACTER(4) :: READ = "READ"
+  !! open file with read access
+  CHARACTER(5) :: WRITE = "WRITE"
+  !! open file with write access
+  CHARACTER(9) :: readwrite = "READWRITE"
+  !! open file with read and write access
+
+  !! pad value
+  CHARACTER(3) :: yes = "YES"
+  CHARACTER(2) :: no = "NO"
+
+  ! misc
+  CHARACTER(4) :: keep = "KEEP"
+  CHARACTER(6) :: delete = "DELETE"
+  INTEGER(I4B) :: maxStrLen = 256
+
+  !! some chars
+  CHARACTER(1) :: slash = CHAR_SLASH
+  CHARACTER(1) :: hash = "#"
+  CHARACTER(1) :: comma = ","
+  CHARACTER(1) :: lf = CHAR_LF
+  CHARACTER(2) :: newline = "\n"
+  CHARACTER(1) :: space = " "
+
+END TYPE FileOpt_
+
+TYPE(FileOpt_), PARAMETER :: TypeFileOpt = FileOpt_()
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
 
 END MODULE BaseType
