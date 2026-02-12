@@ -2630,6 +2630,8 @@ TYPE :: FileOpt_
   CHARACTER(4) :: keep = "KEEP"
   CHARACTER(6) :: delete = "DELETE"
   INTEGER(I4B) :: maxStrLen = 256
+  INTEGER(I4B) :: fortranLineLen = 160
+  !! this used when we generate docs from fortran source code
 
   !! some chars
   CHARACTER(1) :: slash = CHAR_SLASH
