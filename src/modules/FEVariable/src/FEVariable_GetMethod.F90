@@ -49,7 +49,6 @@ PUBLIC :: GetLambdaFromYoungsModulus
 PUBLIC :: GetTotalShape
 PUBLIC :: GetRankCase
 PUBLIC :: GetVarCase
-
 PUBLIC :: Get
 PUBLIC :: Get_
 
@@ -98,17 +97,13 @@ END INTERFACE GetShape
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2026-01-02
-! summary:  Get vartype from varCase
+! summary: Get vartype from varCase
 
-INTERFACE
+INTERFACE GetVarType
   MODULE PURE FUNCTION GetVarTypeFromVarCase(varCase) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: varCase
     INTEGER(I4B) :: ans
   END FUNCTION GetVarTypeFromVarCase
-END INTERFACE
-
-INTERFACE GetVarType
-  MODULE PROCEDURE GetVarTypeFromVarCase
 END INTERFACE GetVarType
 
 !----------------------------------------------------------------------------
@@ -119,15 +114,11 @@ END INTERFACE GetVarType
 ! date: 2026-01-02
 ! summary: Get rank from rankCase
 
-INTERFACE
+INTERFACE GetRank
   MODULE PURE FUNCTION GetRankFromRankCase(rankCase) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: rankCase
     INTEGER(I4B) :: ans
   END FUNCTION GetRankFromRankCase
-END INTERFACE
-
-INTERFACE GetRank
-  MODULE PROCEDURE GetRankFromRankCase
 END INTERFACE GetRank
 
 !----------------------------------------------------------------------------

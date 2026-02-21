@@ -463,7 +463,7 @@ tsize = nns
 ans(1:tsize) = 0.0_DFP
 
 DO ips = 1, nips
-  realval = js(ips) * ws(ips) * thickness(ips) 
+  realval = js(ips) * ws(ips) * thickness(ips)
   ans(1:tsize) = ans(1:tsize) + realval * N(1:tsize, ips)
 END DO
 END PROCEDURE ForceVector_13
