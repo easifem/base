@@ -31,7 +31,6 @@ USE FEVariable_Vector_Vector_Multiplication, ONLY: Vector_Vector_Master
 USE FEVariable_Matrix_Scalar_Multiplication, ONLY: Matrix_Scalar_Master
 USE FEVariable_Matrix_Matrix_Multiplication, ONLY: Matrix_Matrix_Master
 USE BaseType, ONLY: varopt => TypeFEVariableOpt
-
 IMPLICIT NONE
 
 CONTAINS
@@ -86,6 +85,7 @@ CASE (20)
 CASE (22)
   CALL Matrix_Matrix_master(obj1, obj2, ans, varCase)
 
+CASE DEFAULT
 END SELECT
 END PROCEDURE fevar_Multiplication_3
 
