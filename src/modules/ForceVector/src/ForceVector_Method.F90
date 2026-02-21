@@ -27,6 +27,7 @@ PRIVATE
 
 PUBLIC :: ForceVector
 PUBLIC :: ForceVector_
+PUBLIC :: ForceVectorNormal_
 
 !----------------------------------------------------------------------------
 !                                                               ForceVector
@@ -85,9 +86,13 @@ END INTERFACE ForceVector_
 !
 !# ForceVector
 !
+! This method computes the following expression.
+!
 ! $$
 ! F_{I}=\int_{\Omega}\rho N^{I}d\Omega
 ! $$
+!
+! here $\rho$ is c.
 
 INTERFACE ForceVector
   MODULE FUNCTION ForceVector2(test, c, crank) RESULT(ans)
@@ -108,9 +113,13 @@ END INTERFACE ForceVector
 !
 !# ForceVector_
 !
+! This method computes the following expression.
+!
 ! $$
 ! F_{I}=\int_{\Omega} c N^{I} d\Omega
 ! $$
+!
+! here $\rho$ is c.
 
 INTERFACE ForceVector_
   MODULE SUBROUTINE ForceVector_2(test, c, crank, ans, tsize)
@@ -138,6 +147,9 @@ END INTERFACE ForceVector_
 ! $$
 ! F(i,I)=\int_{\Omega}c_{i}N^{I}d\Omega
 ! $$
+!
+! here c is a vector. This method returns the vector forceVector.
+! It is often used in problems where primary unknown is a vector.
 
 INTERFACE ForceVector
   MODULE FUNCTION ForceVector3(test, c, crank) RESULT(ans)
@@ -145,6 +157,8 @@ INTERFACE ForceVector
     TYPE(FEVariable_), INTENT(IN) :: c
     TYPE(FEVariableVector_), INTENT(IN) :: crank
     REAL(DFP), ALLOCATABLE :: ans(:, :)
+    !! ans(i, :) denotes the ith component
+    !! ans(i, J) denotes the value of ith component at Jth node.
   END FUNCTION ForceVector3
 END INTERFACE ForceVector
 
@@ -163,6 +177,9 @@ END INTERFACE ForceVector
 ! $$
 ! F(i,I)=\int_{\Omega}v_{i}N^{I}d\Omega
 ! $$
+!
+! here c is a vector. This method returns the vector forceVector.
+! It is often used in problems where primary unknown is a vector.
 
 INTERFACE ForceVector_
   MODULE SUBROUTINE ForceVector_3(test, c, crank, ans, nrow, ncol)
@@ -189,6 +206,9 @@ END INTERFACE ForceVector_
 ! $$
 ! F(i,j,I)=\int_{\Omega}c_{ij}N^{I}d\Omega
 ! $$
+!
+! here $c$ is matrix variable. The resultant force vector is also a
+! matrix.
 
 INTERFACE ForceVector
   MODULE FUNCTION ForceVector4(test, c, crank) RESULT(ans)
@@ -196,6 +216,8 @@ INTERFACE ForceVector
     TYPE(FEVariable_), INTENT(IN) :: c
     TYPE(FEVariableMatrix_), INTENT(IN) :: crank
     REAL(DFP), ALLOCATABLE :: ans(:, :, :)
+    !! first and second indices denote the component of matrix.
+    !! the thrid index denotes value at a node.
   END FUNCTION ForceVector4
 END INTERFACE ForceVector
 
@@ -212,8 +234,10 @@ END INTERFACE ForceVector
 ! This routine computes the following integral
 !
 ! $$
-! F(i,j,I)=\int_{\Omega}k_{ij}N^{I}d\Omega
+! F(i,j,I)=\int_{\Omega}c_{ij}N^{I}d\Omega
 ! $$
+!
+! Here c is a matrix, and result is also a matrix.
 
 INTERFACE ForceVector_
   MODULE SUBROUTINE ForceVector_4(test, c, crank, ans, dim1, dim2, dim3)
@@ -238,8 +262,10 @@ END INTERFACE ForceVector_
 ! This routine computes the following integral
 !
 ! $$
-! F_{I}=\int_{\Omega}\rho_{1}\rho_{2}N^{I}d\Omega
+! F_{I}=\int_{\Omega}c_{1}c_{2}N^{I}d\Omega
 ! $$
+!
+! here c1 and c2 are scalar FEVariables.
 
 INTERFACE ForceVector
   MODULE FUNCTION ForceVector5(test, c1, c1rank, c2, c2rank) &
@@ -268,6 +294,8 @@ END INTERFACE ForceVector
 ! $$
 ! F_{I}=\int_{\Omega}c_{1}c_{2}N^{I}d\Omega
 ! $$
+!
+! Here c1 and c2 are Scalar FEVariables.
 
 INTERFACE ForceVector_
   MODULE SUBROUTINE ForceVector_5(test, c1, c1rank, c2, c2rank, ans, &
@@ -289,6 +317,18 @@ END INTERFACE ForceVector_
 !> author: Vikas Sharma, Ph. D.
 ! date: 2026-02-21
 ! summary: Force vector
+!
+!# ForceVector
+!
+! This routine computes the following integral
+!
+! $$
+! F_{iI}=\int_{\Omega}c_{1}c_{2i}N^{I}d\Omega
+! $$
+!
+!- here c1 is a scalar FEVariable.
+!- here c2 is a vector FEVariable
+!- The result is a vector ForceVector
 
 INTERFACE ForceVector
   MODULE FUNCTION ForceVector6(test, c1, c1rank, c2, c2rank) &
@@ -299,6 +339,7 @@ INTERFACE ForceVector
     TYPE(FEVariableScalar_), INTENT(IN) :: c1rank
     TYPE(FEVariableVector_), INTENT(IN) :: c2rank
     REAL(DFP), ALLOCATABLE :: ans(:, :)
+    !! ans(i, J) denotes the value of ith component at Jth node.
   END FUNCTION ForceVector6
 END INTERFACE ForceVector
 
@@ -309,6 +350,18 @@ END INTERFACE ForceVector
 !> author: Vikas Sharma, Ph. D.
 ! date: 2026-02-21
 ! summary: Force vector
+!
+!# ForceVector_
+!
+! This routine computes the following integral
+!
+! $$
+! F_{iI}=\int_{\Omega}c_{1}c_{2i}N^{I}d\Omega
+! $$
+!
+!- here c1 is a scalar FEVariable.
+!- here c2 is a vector FEVariable
+!- The result is a vector ForceVector
 
 INTERFACE ForceVector_
   MODULE SUBROUTINE ForceVector_6(test, c1, c1rank, c2, c2rank, ans, &
@@ -319,6 +372,7 @@ INTERFACE ForceVector_
     TYPE(FEVariableScalar_), INTENT(IN) :: c1rank
     TYPE(FEVariableVector_), INTENT(IN) :: c2rank
     REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    !! ans(i, J) denotes the value of ith component at Jth node.
     INTEGER(I4B), INTENT(OUT) :: nrow, ncol
   END SUBROUTINE ForceVector_6
 END INTERFACE ForceVector_
@@ -333,11 +387,15 @@ END INTERFACE ForceVector_
 !
 !# ForceVector
 !
-! This routine computes the following.
+! This routine computes the following integral
 !
 ! $$
-! F(i,j,I)=\int_{\Omega}\rho k_{ij}N^{I}d\Omega
+! F_{ijI}=\int_{\Omega}c_{1}c_{2ij}N^{I}d\Omega
 ! $$
+!
+!- here c1 is a scalar FEVariable.
+!- here c2 is a matrix FEVariable
+!- The result is a matrix ForceVector
 
 INTERFACE ForceVector
   MODULE FUNCTION ForceVector7(test, c1, c1rank, c2, c2rank) &
@@ -348,6 +406,8 @@ INTERFACE ForceVector
     TYPE(FEVariableScalar_), INTENT(IN) :: c1rank
     TYPE(FEVariableMatrix_), INTENT(IN) :: c2rank
     REAL(DFP), ALLOCATABLE :: ans(:, :, :)
+    !! the first two index of ans denotes the components of matrix.
+    !! the third index denotes the value at a node.
   END FUNCTION ForceVector7
 END INTERFACE ForceVector
 
@@ -361,11 +421,15 @@ END INTERFACE ForceVector
 !
 !# ForceVector_
 !
-! This routine computes the following.
+! This routine computes the following integral
 !
 ! $$
-! F(i,j,I)=\int_{\Omega}\rho k_{ij}N^{I}d\Omega
+! F_{ijI}=\int_{\Omega}c_{1}c_{2ij}N^{I}d\Omega
 ! $$
+!
+!- here c1 is a scalar FEVariable.
+!- here c2 is a matrix FEVariable
+!- The result is a matrix ForceVector
 
 INTERFACE ForceVector_
   MODULE SUBROUTINE ForceVector_7(test, c1, c1rank, c2, c2rank, ans, &
@@ -391,7 +455,7 @@ END INTERFACE ForceVector_
 !# ForceVector
 !
 ! $$
-! F_{I}=\int_{\Omega}\rho N^{I}d\Omega
+! F_{I}=\int_{\Omega}c N^{I}d\Omega
 ! $$
 
 INTERFACE ForceVector
@@ -414,7 +478,7 @@ END INTERFACE ForceVector
 !# ForceVector_
 !
 ! $$
-! F_{I}=\int_{\Omega}\rho N^{I}d\Omega
+! F_{I}=\int_{\Omega}c N^{I}d\Omega
 ! $$
 
 INTERFACE ForceVector_
@@ -444,8 +508,12 @@ END INTERFACE ForceVector_
 INTERFACE ForceVector_
   MODULE SUBROUTINE ForceVector_9( &
     N, js, ws, thickness, nns, nips, c, ans, tsize)
-    REAL(DFP), INTENT(IN) :: N(:, :), js(:), ws(:), thickness(:)
-    INTEGER(I4B), INTENT(IN) :: nns, nips
+    REAL(DFP), INTENT(IN) :: N(:, :)
+    REAL(DFP), INTENT(IN) :: js(:)
+    REAL(DFP), INTENT(IN) :: ws(:)
+    REAL(DFP), INTENT(IN) :: thickness(:)
+    INTEGER(I4B), INTENT(IN) :: nns
+    INTEGER(I4B), INTENT(IN) :: nips
     REAL(DFP), INTENT(IN) :: c(:)
     !! defined on quadrature point
     REAL(DFP), INTENT(INOUT) :: ans(:)
@@ -470,12 +538,20 @@ END INTERFACE ForceVector_
 INTERFACE ForceVector_
   MODULE SUBROUTINE ForceVector_10( &
     N, js, ws, thickness, nns, nips, c, skipVertices, tVertices, ans, tsize)
-    REAL(DFP), INTENT(IN) :: N(:, :), js(:), ws(:), thickness(:)
-    INTEGER(I4B), INTENT(IN) :: nns, nips
+    REAL(DFP), INTENT(IN) :: N(:, :)
+    REAL(DFP), INTENT(IN) :: js(:)
+    REAL(DFP), INTENT(IN) :: ws(:)
+    REAL(DFP), INTENT(IN) :: thickness(:)
+    INTEGER(I4B), INTENT(IN) :: nns
+    INTEGER(I4B), INTENT(IN) :: nips
     REAL(DFP), INTENT(IN) :: c(:)
     !! defined on quadrature point
     LOGICAL(LGT), INTENT(IN) :: skipVertices
+    !! if it is true the 1:tVertices are not included in the integral.
+    !! What it means is that we do not include vertex shape function
+    !! while computing the integral.
     INTEGER(I4B), INTENT(IN) :: tVertices
+    !! total number of vertices
     REAL(DFP), INTENT(INOUT) :: ans(:)
     INTEGER(I4B), INTENT(OUT) :: tsize
   END SUBROUTINE ForceVector_10
@@ -557,8 +633,12 @@ END INTERFACE ForceVector_
 INTERFACE ForceVector_
   MODULE SUBROUTINE ForceVector_13( &
     N, js, ws, thickness, nns, nips, ans, tsize)
-    REAL(DFP), INTENT(IN) :: N(:, :), js(:), ws(:), thickness(:)
-    INTEGER(I4B), INTENT(IN) :: nns, nips
+    REAL(DFP), INTENT(IN) :: N(:, :)
+    REAL(DFP), INTENT(IN) :: js(:)
+    REAL(DFP), INTENT(IN) :: ws(:)
+    REAL(DFP), INTENT(IN) :: thickness(:)
+    INTEGER(I4B), INTENT(IN) :: nns
+    INTEGER(I4B), INTENT(IN) :: nips
     REAL(DFP), INTENT(INOUT) :: ans(:)
     INTEGER(I4B), INTENT(OUT) :: tsize
   END SUBROUTINE ForceVector_13
@@ -581,9 +661,15 @@ END INTERFACE ForceVector_
 INTERFACE ForceVector_
   MODULE SUBROUTINE ForceVector_14( &
     N, js, ws, thickness, nns, nips, skipVertices, tVertices, ans, tsize)
-    REAL(DFP), INTENT(IN) :: N(:, :), js(:), ws(:), thickness(:)
-    INTEGER(I4B), INTENT(IN) :: nns, nips
+    REAL(DFP), INTENT(IN) :: N(:, :)
+    REAL(DFP), INTENT(IN) :: js(:)
+    REAL(DFP), INTENT(IN) :: ws(:)
+    REAL(DFP), INTENT(IN) :: thickness(:)
+    INTEGER(I4B), INTENT(IN) :: nns
+    INTEGER(I4B), INTENT(IN) :: nips
     LOGICAL(LGT), INTENT(IN) :: skipVertices
+    !! If it is true then we do not include vertex shape functions while
+    !! computing the integral
     INTEGER(I4B), INTENT(IN) :: tVertices
     REAL(DFP), INTENT(INOUT) :: ans(:)
     INTEGER(I4B), INTENT(OUT) :: tsize
@@ -608,9 +694,18 @@ INTERFACE ForceVector_
   MODULE SUBROUTINE ForceVector_15( &
     spaceN, timeN, js, ws, jt, wt, spaceThickness, timeThickness, nns, nnt, &
     nips, nipt, ans, tsize)
-    REAL(DFP), INTENT(IN) :: spaceN(:, :), js(:), ws(:), spaceThickness(:)
-    REAL(DFP), INTENT(IN) :: timeN(:, :), jt(:), wt(:), timeThickness(:)
-    INTEGER(I4B), INTENT(IN) :: nns, nips, nnt, nipt
+    REAL(DFP), INTENT(IN) :: spaceN(:, :)
+    REAL(DFP), INTENT(IN) :: js(:)
+    REAL(DFP), INTENT(IN) :: ws(:)
+    REAL(DFP), INTENT(IN) :: spaceThickness(:)
+    REAL(DFP), INTENT(IN) :: timeN(:, :)
+    REAL(DFP), INTENT(IN) :: jt(:)
+    REAL(DFP), INTENT(IN) :: wt(:)
+    REAL(DFP), INTENT(IN) :: timeThickness(:)
+    INTEGER(I4B), INTENT(IN) :: nns
+    INTEGER(I4B), INTENT(IN) :: nips
+    INTEGER(I4B), INTENT(IN) :: nnt
+    INTEGER(I4B), INTENT(IN) :: nipt
     REAL(DFP), INTENT(INOUT) :: ans(:)
     !! Force vector is returned in DOF format
     INTEGER(I4B), INTENT(OUT) :: tsize
@@ -635,15 +730,132 @@ INTERFACE ForceVector_
   MODULE SUBROUTINE ForceVector_16( &
     spaceN, timeN, js, ws, jt, wt, spaceThickness, timeThickness, nns, nnt, &
     nips, nipt, skipVertices, tSpaceVertices, tTimeVertices, ans, tsize)
-    REAL(DFP), INTENT(IN) :: spaceN(:, :), js(:), ws(:), spaceThickness(:)
-    REAL(DFP), INTENT(IN) :: timeN(:, :), jt(:), wt(:), timeThickness(:)
-    INTEGER(I4B), INTENT(IN) :: nns, nips, nnt, nipt
+    REAL(DFP), INTENT(IN) :: spaceN(:, :)
+    REAL(DFP), INTENT(IN) :: js(:)
+    REAL(DFP), INTENT(IN) :: ws(:)
+    REAL(DFP), INTENT(IN) :: spaceThickness(:)
+    REAL(DFP), INTENT(IN) :: timeN(:, :)
+    REAL(DFP), INTENT(IN) :: jt(:)
+    REAL(DFP), INTENT(IN) :: wt(:)
+    REAL(DFP), INTENT(IN) :: timeThickness(:)
+    INTEGER(I4B), INTENT(IN) :: nns
+    INTEGER(I4B), INTENT(IN) :: nips
+    INTEGER(I4B), INTENT(IN) :: nnt
+    INTEGER(I4B), INTENT(IN) :: nipt
     LOGICAL(LGT), INTENT(IN) :: skipVertices
-    INTEGER(I4B), INTENT(IN) :: tSpaceVertices, tTimeVertices
+    INTEGER(I4B), INTENT(IN) :: tSpaceVertices
+    INTEGER(I4B), INTENT(IN) :: tTimeVertices
     REAL(DFP), INTENT(INOUT) :: ans(:)
     INTEGER(I4B), INTENT(OUT) :: tsize
   END SUBROUTINE ForceVector_16
 END INTERFACE ForceVector_
+
+!----------------------------------------------------------------------------
+!                                                         ForceVectorNormal_
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2026-02-21
+! summary: Compute normal force vector
+!
+!# ForceVectorNormal_
+!
+! This subroutine computes the following expression:
+!
+! $$
+! F_{I}=\int_{\Omega}N^{I} \mathbf{c} \cdot \mathbf{n} d\Omega
+! $$
+
+INTERFACE ForceVectorNormal_
+  MODULE SUBROUTINE ForceVectorNormal_1(test, c, ans, tsize)
+    CLASS(ElemshapeData_), INTENT(IN) :: test
+    REAL(DFP), INTENT(IN) :: c(:)
+    REAL(DFP), INTENT(INOUT) :: ans(:)
+    INTEGER(I4B), INTENT(OUT) :: tsize
+  END SUBROUTINE ForceVectorNormal_1
+END INTERFACE ForceVectorNormal_
+
+!----------------------------------------------------------------------------
+!                                                         ForceVectorNormal_
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2026-02-21
+! summary: Compute normal force vector
+!
+!# ForceVectorNormal_
+!
+! This subroutine computes the following expression:
+!
+! $$
+! F_{I}=\int_{\Omega}N^{I} \mathbf{c} \cdot \mathbf{n} d\Omega
+! $$
+
+INTERFACE ForceVectorNormal_
+  MODULE SUBROUTINE ForceVectorNormal_2(test, c, crank, ans, tsize)
+    CLASS(ElemshapeData_), INTENT(IN) :: test
+    TYPE(FEVariable_), INTENT(IN) :: c
+    TYPE(FEVariableVector_), INTENT(IN) :: crank
+    REAL(DFP), INTENT(INOUT) :: ans(:)
+    INTEGER(I4B), INTENT(OUT) :: tsize
+  END SUBROUTINE ForceVectorNormal_2
+END INTERFACE ForceVectorNormal_
+
+!----------------------------------------------------------------------------
+!                                                         ForceVectorNormal_
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2026-02-21
+! summary: Compute normal force vector
+!
+!# ForceVectorNormal_
+!
+! This subroutine computes the following expression:
+!
+! $$
+! F_{I}=\int_{\Omega}N^{I} c_{1} \mathbf{c}_{2} \cdot \mathbf{n} d\Omega
+! $$
+
+INTERFACE ForceVectorNormal_
+  MODULE SUBROUTINE ForceVectorNormal_3(test, c1, c1rank, c2, ans, tsize)
+    CLASS(ElemshapeData_), INTENT(IN) :: test
+    TYPE(FEVariable_), INTENT(IN) :: c1
+    TYPE(FEVariableScalar_), INTENT(IN) :: c1rank
+    REAL(DFP), INTENT(IN) :: c2(:)
+    REAL(DFP), INTENT(INOUT) :: ans(:)
+    INTEGER(I4B), INTENT(OUT) :: tsize
+  END SUBROUTINE ForceVectorNormal_3
+END INTERFACE ForceVectorNormal_
+
+!----------------------------------------------------------------------------
+!                                                         ForceVectorNormal_
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2026-02-21
+! summary: Compute normal force vector
+!
+!# ForceVectorNormal_
+!
+! This subroutine computes the following expression:
+!
+! $$
+! F_{I}=\int_{\Omega}N^{I} c_{1} \mathbf{c}_{2} \cdot \mathbf{n} d\Omega
+! $$
+
+INTERFACE ForceVectorNormal_
+  MODULE SUBROUTINE ForceVectorNormal_4(test, c1, c1rank, c2, c2rank, ans, &
+                                        tsize)
+    CLASS(ElemshapeData_), INTENT(IN) :: test
+    TYPE(FEVariable_), INTENT(IN) :: c1
+    TYPE(FEVariableScalar_), INTENT(IN) :: c1rank
+    TYPE(FEVariable_), INTENT(IN) :: c2
+    TYPE(FEVariableVector_), INTENT(IN) :: c2rank
+    REAL(DFP), INTENT(INOUT) :: ans(:)
+    INTEGER(I4B), INTENT(OUT) :: tsize
+  END SUBROUTINE ForceVectorNormal_4
+END INTERFACE ForceVectorNormal_
 
 !----------------------------------------------------------------------------
 !
