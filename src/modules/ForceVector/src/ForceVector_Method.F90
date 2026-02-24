@@ -69,10 +69,14 @@ END INTERFACE ForceVector
 ! $$
 
 INTERFACE ForceVector_
-  MODULE SUBROUTINE ForceVector_1(test, ans, tsize)
+  MODULE SUBROUTINE ForceVector_1(test, ans, tsize, scale, addContribution)
     CLASS(ElemshapeData_), INTENT(IN) :: test
     REAL(DFP), INTENT(INOUT) :: ans(:)
     INTEGER(I4B), INTENT(OUT) :: tsize
+    REAL(DFP), OPTIONAL, INTENT(IN) :: scale
+    !! scale
+    LOGICAL(LGT), OPTIONAL, INTENT(IN) :: addContribution
+    !! add contribution
   END SUBROUTINE ForceVector_1
 END INTERFACE ForceVector_
 
@@ -122,13 +126,16 @@ END INTERFACE ForceVector
 ! here $\rho$ is c.
 
 INTERFACE ForceVector_
-  MODULE SUBROUTINE ForceVector_2(test, c, crank, ans, tsize)
+  MODULE SUBROUTINE ForceVector_2(test, c, crank, ans, tsize, scale, &
+                                  addContribution)
     CLASS(ElemshapeData_), INTENT(IN) :: test
     TYPE(FEVariable_), INTENT(IN) :: c
     !! Scalar variables
     TYPE(FEVariableScalar_), INTENT(IN) :: crank
     REAL(DFP), INTENT(INOUT) :: ans(:)
     INTEGER(I4B), INTENT(OUT) :: tsize
+    REAL(DFP), OPTIONAL, INTENT(IN) :: scale
+    LOGICAL(LGT), OPTIONAL, INTENT(IN) :: addContribution
   END SUBROUTINE ForceVector_2
 END INTERFACE ForceVector_
 
@@ -182,12 +189,15 @@ END INTERFACE ForceVector
 ! It is often used in problems where primary unknown is a vector.
 
 INTERFACE ForceVector_
-  MODULE SUBROUTINE ForceVector_3(test, c, crank, ans, nrow, ncol)
+  MODULE SUBROUTINE ForceVector_3(test, c, crank, ans, nrow, ncol, &
+                                  scale, addContribution)
     CLASS(ElemshapeData_), INTENT(IN) :: test
     TYPE(FEVariable_), INTENT(IN) :: c
     TYPE(FEVariableVector_), INTENT(IN) :: crank
     REAL(DFP), INTENT(INOUT) :: ans(:, :)
     INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+    REAL(DFP), OPTIONAL, INTENT(IN) :: scale
+    LOGICAL(LGT), OPTIONAL, INTENT(IN) :: addContribution
   END SUBROUTINE ForceVector_3
 END INTERFACE ForceVector_
 
@@ -240,12 +250,15 @@ END INTERFACE ForceVector
 ! Here c is a matrix, and result is also a matrix.
 
 INTERFACE ForceVector_
-  MODULE SUBROUTINE ForceVector_4(test, c, crank, ans, dim1, dim2, dim3)
+  MODULE SUBROUTINE ForceVector_4(test, c, crank, ans, dim1, dim2, dim3, &
+                                  scale, addContribution)
     CLASS(ElemshapeData_), INTENT(IN) :: test
     TYPE(FEVariable_), INTENT(IN) :: c
     TYPE(FEVariableMatrix_), INTENT(IN) :: crank
     REAL(DFP), INTENT(INOUT) :: ans(:, :, :)
     INTEGER(I4B), INTENT(OUT) :: dim1, dim2, dim3
+    REAL(DFP), OPTIONAL, INTENT(IN) :: scale
+    LOGICAL(LGT), OPTIONAL, INTENT(IN) :: addContribution
   END SUBROUTINE ForceVector_4
 END INTERFACE ForceVector_
 
@@ -299,7 +312,7 @@ END INTERFACE ForceVector
 
 INTERFACE ForceVector_
   MODULE SUBROUTINE ForceVector_5(test, c1, c1rank, c2, c2rank, ans, &
-                                  tsize)
+                                  tsize, scale, addContribution)
     CLASS(ElemshapeData_), INTENT(IN) :: test
     TYPE(FEVariable_), INTENT(IN) :: c1
     TYPE(FEVariable_), INTENT(IN) :: c2
@@ -307,6 +320,8 @@ INTERFACE ForceVector_
     TYPE(FEVariableScalar_), INTENT(IN) :: c2rank
     REAL(DFP), INTENT(INOUT) :: ans(:)
     INTEGER(I4B), INTENT(OUT) :: tsize
+    REAL(DFP), OPTIONAL, INTENT(IN) :: scale
+    LOGICAL(LGT), OPTIONAL, INTENT(IN) :: addContribution
   END SUBROUTINE ForceVector_5
 END INTERFACE ForceVector_
 
@@ -365,7 +380,7 @@ END INTERFACE ForceVector
 
 INTERFACE ForceVector_
   MODULE SUBROUTINE ForceVector_6(test, c1, c1rank, c2, c2rank, ans, &
-                                  nrow, ncol)
+                                  nrow, ncol, scale, addContribution)
     CLASS(ElemshapeData_), INTENT(IN) :: test
     TYPE(FEVariable_), INTENT(IN) :: c1
     TYPE(FEVariable_), INTENT(IN) :: c2
@@ -374,6 +389,8 @@ INTERFACE ForceVector_
     REAL(DFP), INTENT(INOUT) :: ans(:, :)
     !! ans(i, J) denotes the value of ith component at Jth node.
     INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+    REAL(DFP), OPTIONAL, INTENT(IN) :: scale
+    LOGICAL(LGT), OPTIONAL, INTENT(IN) :: addContribution
   END SUBROUTINE ForceVector_6
 END INTERFACE ForceVector_
 
@@ -433,7 +450,7 @@ END INTERFACE ForceVector
 
 INTERFACE ForceVector_
   MODULE SUBROUTINE ForceVector_7(test, c1, c1rank, c2, c2rank, ans, &
-                                  dim1, dim2, dim3)
+                                  dim1, dim2, dim3, scale, addContribution)
     CLASS(ElemshapeData_), INTENT(IN) :: test
     TYPE(FEVariable_), INTENT(IN) :: c1
     TYPE(FEVariable_), INTENT(IN) :: c2
@@ -441,6 +458,8 @@ INTERFACE ForceVector_
     TYPE(FEVariableMatrix_), INTENT(IN) :: c2rank
     REAL(DFP), INTENT(INOUT) :: ans(:, :, :)
     INTEGER(I4B), INTENT(OUT) :: dim1, dim2, dim3
+    REAL(DFP), OPTIONAL, INTENT(IN) :: scale
+    LOGICAL(LGT), OPTIONAL, INTENT(IN) :: addContribution
   END SUBROUTINE ForceVector_7
 END INTERFACE ForceVector_
 
@@ -482,12 +501,15 @@ END INTERFACE ForceVector
 ! $$
 
 INTERFACE ForceVector_
-  MODULE SUBROUTINE ForceVector_8(test, c, ans, tsize)
+  MODULE SUBROUTINE ForceVector_8(test, c, ans, tsize, scale, &
+                                  addContribution)
     CLASS(ElemshapeData_), INTENT(IN) :: test
     REAL(DFP), INTENT(IN) :: c(:)
     !! defined on quadrature point
     REAL(DFP), INTENT(INOUT) :: ans(:)
     INTEGER(I4B), INTENT(OUT) :: tsize
+    REAL(DFP), OPTIONAL, INTENT(IN) :: scale
+    LOGICAL(LGT), OPTIONAL, INTENT(IN) :: addContribution
   END SUBROUTINE ForceVector_8
 END INTERFACE ForceVector_
 
@@ -767,11 +789,14 @@ END INTERFACE ForceVector_
 ! $$
 
 INTERFACE ForceVectorNormal_
-  MODULE SUBROUTINE ForceVectorNormal_1(test, c, ans, tsize)
+  MODULE SUBROUTINE ForceVectorNormal_1(test, c, ans, tsize, scale, &
+                                        addContribution)
     CLASS(ElemshapeData_), INTENT(IN) :: test
     REAL(DFP), INTENT(IN) :: c(:)
     REAL(DFP), INTENT(INOUT) :: ans(:)
     INTEGER(I4B), INTENT(OUT) :: tsize
+    REAL(DFP), OPTIONAL, INTENT(IN) :: scale
+    LOGICAL(LGT), OPTIONAL, INTENT(IN) :: addContribution
   END SUBROUTINE ForceVectorNormal_1
 END INTERFACE ForceVectorNormal_
 
@@ -792,12 +817,15 @@ END INTERFACE ForceVectorNormal_
 ! $$
 
 INTERFACE ForceVectorNormal_
-  MODULE SUBROUTINE ForceVectorNormal_2(test, c, crank, ans, tsize)
+  MODULE SUBROUTINE ForceVectorNormal_2(test, c, crank, ans, tsize, &
+                                        scale, addContribution)
     CLASS(ElemshapeData_), INTENT(IN) :: test
     TYPE(FEVariable_), INTENT(IN) :: c
     TYPE(FEVariableVector_), INTENT(IN) :: crank
     REAL(DFP), INTENT(INOUT) :: ans(:)
     INTEGER(I4B), INTENT(OUT) :: tsize
+    REAL(DFP), OPTIONAL, INTENT(IN) :: scale
+    LOGICAL(LGT), OPTIONAL, INTENT(IN) :: addContribution
   END SUBROUTINE ForceVectorNormal_2
 END INTERFACE ForceVectorNormal_
 
@@ -818,13 +846,16 @@ END INTERFACE ForceVectorNormal_
 ! $$
 
 INTERFACE ForceVectorNormal_
-  MODULE SUBROUTINE ForceVectorNormal_3(test, c1, c1rank, c2, ans, tsize)
+  MODULE SUBROUTINE ForceVectorNormal_3(test, c1, c1rank, c2, ans, tsize, &
+                                        scale, addContribution)
     CLASS(ElemshapeData_), INTENT(IN) :: test
     TYPE(FEVariable_), INTENT(IN) :: c1
     TYPE(FEVariableScalar_), INTENT(IN) :: c1rank
     REAL(DFP), INTENT(IN) :: c2(:)
     REAL(DFP), INTENT(INOUT) :: ans(:)
     INTEGER(I4B), INTENT(OUT) :: tsize
+    REAL(DFP), OPTIONAL, INTENT(IN) :: scale
+    LOGICAL(LGT), OPTIONAL, INTENT(IN) :: addContribution
   END SUBROUTINE ForceVectorNormal_3
 END INTERFACE ForceVectorNormal_
 
@@ -846,7 +877,7 @@ END INTERFACE ForceVectorNormal_
 
 INTERFACE ForceVectorNormal_
   MODULE SUBROUTINE ForceVectorNormal_4(test, c1, c1rank, c2, c2rank, ans, &
-                                        tsize)
+                                        tsize, scale, addContribution)
     CLASS(ElemshapeData_), INTENT(IN) :: test
     TYPE(FEVariable_), INTENT(IN) :: c1
     TYPE(FEVariableScalar_), INTENT(IN) :: c1rank
@@ -854,6 +885,8 @@ INTERFACE ForceVectorNormal_
     TYPE(FEVariableVector_), INTENT(IN) :: c2rank
     REAL(DFP), INTENT(INOUT) :: ans(:)
     INTEGER(I4B), INTENT(OUT) :: tsize
+    REAL(DFP), OPTIONAL, INTENT(IN) :: scale
+    LOGICAL(LGT), OPTIONAL, INTENT(IN) :: addContribution
   END SUBROUTINE ForceVectorNormal_4
 END INTERFACE ForceVectorNormal_
 
