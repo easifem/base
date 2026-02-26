@@ -15,32 +15,15 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-MODULE Random_Method
+MODULE RandomUtility
 USE GlobalData, ONLY: DFP, I4B, LGT
-USE BaseType, ONLY: Random_
 IMPLICIT NONE
 
 PRIVATE
-PUBLIC :: Initiate
 PUBLIC :: RandomValue
-PUBLIC :: SaveRandom
 PUBLIC :: UniformRandomValue
 PUBLIC :: UniformRandomValueScalar
 PUBLIC :: NormalRandomValue
-
-!----------------------------------------------------------------------------
-!                                                           Initiate@Methods
-!----------------------------------------------------------------------------
-
-!> author: Vikas Sharma, Ph. D.
-! date: 2026-02-26
-! summary: Initiate a random object
-
-INTERFACE Initiate
-  MODULE SUBROUTINE obj_Initiate(obj)
-    CLASS(Random_), INTENT(INOUT) :: obj
-  END SUBROUTINE obj_Initiate
-END INTERFACE Initiate
 
 !----------------------------------------------------------------------------
 !                                                                 getRandom
@@ -58,10 +41,9 @@ END INTERFACE Initiate
 !
 
 INTERFACE RandomValue
-  MODULE FUNCTION obj_RandomValue1(obj, distribution) RESULT(Ans)
-    CLASS(Random_), INTENT(IN) :: obj
+  MODULE FUNCTION obj_RandomValue1(distribution) RESULT(ans)
     CHARACTER(LEN=*), OPTIONAL, INTENT(IN) :: distribution
-    REAL(DFP) :: Ans
+    REAL(DFP) :: ans
   END FUNCTION obj_RandomValue1
 END INTERFACE RandomValue
 
@@ -78,8 +60,7 @@ END INTERFACE RandomValue
 ! Get the uniform random value between from and to.
 
 INTERFACE RandomValue
-  MODULE FUNCTION obj_RandomValue2(obj, from, to) RESULT(ans)
-    CLASS(Random_), INTENT(IN) :: obj
+  MODULE FUNCTION obj_RandomValue2(from, to) RESULT(ans)
     REAL(DFP), INTENT(IN) :: from, to
     REAL(DFP) :: ans
   END FUNCTION obj_RandomValue2
@@ -98,8 +79,7 @@ END INTERFACE RandomValue
 ! Get a random integer between from and to.
 !
 INTERFACE RandomValue
-  MODULE FUNCTION obj_RandomValue3(obj, from, to) RESULT(ans)
-    CLASS(Random_), INTENT(IN) :: obj
+  MODULE FUNCTION obj_RandomValue3(from, to) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: from, to
     INTEGER(I4B) :: ans
   END FUNCTION obj_RandomValue3
@@ -117,8 +97,7 @@ END INTERFACE RandomValue
 !
 ! Select a random integer from a vector.
 INTERFACE RandomValue
-  MODULE FUNCTION obj_RandomValue4(obj, val) RESULT(ans)
-    CLASS(Random_), INTENT(IN) :: obj
+  MODULE FUNCTION obj_RandomValue4(val) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: val(:)
     INTEGER(I4B) :: ans
   END FUNCTION obj_RandomValue4
@@ -137,8 +116,7 @@ END INTERFACE RandomValue
 ! Get a random integer value from an array.
 !
 INTERFACE RandomValue
-  MODULE FUNCTION obj_RandomValue5(obj, val) RESULT(ans)
-    CLASS(Random_), INTENT(IN) :: obj
+  MODULE FUNCTION obj_RandomValue5(val) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: val(:, :)
     INTEGER(I4B) :: ans
   END FUNCTION obj_RandomValue5
@@ -157,8 +135,7 @@ END INTERFACE RandomValue
 ! Get a random real number from a vector.
 !
 INTERFACE RandomValue
-  MODULE FUNCTION obj_RandomValue6(obj, val) RESULT(ans)
-    CLASS(Random_), INTENT(IN) :: obj
+  MODULE FUNCTION obj_RandomValue6(val) RESULT(ans)
     REAL(DFP), INTENT(IN) :: val(:)
     REAL(DFP) :: ans
   END FUNCTION obj_RandomValue6
@@ -177,22 +154,11 @@ END INTERFACE RandomValue
 ! Select a random real number from a array.
 !
 INTERFACE RandomValue
-  MODULE FUNCTION obj_RandomValue7(obj, val) RESULT(ans)
-    CLASS(Random_), INTENT(IN) :: obj
+  MODULE FUNCTION obj_RandomValue7(val) RESULT(ans)
     REAL(DFP), INTENT(IN) :: val(:, :)
     REAL(DFP) :: ans
   END FUNCTION obj_RandomValue7
 END INTERFACE RandomValue
-
-!----------------------------------------------------------------------------
-!                                                                 SaveRandom
-!----------------------------------------------------------------------------
-
-INTERFACE
-  MODULE SUBROUTINE SaveRandom(obj)
-    CLASS(Random_), INTENT(INOUT) :: obj
-  END SUBROUTINE SaveRandom
-END INTERFACE
 
 !----------------------------------------------------------------------------
 !
@@ -344,4 +310,4 @@ END INTERFACE NormalRandomValue
 !
 !----------------------------------------------------------------------------
 
-END MODULE Random_Method
+END MODULE RandomUtility

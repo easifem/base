@@ -15,33 +15,14 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-SUBMODULE(Random_Method) Methods
+SUBMODULE(RandomUtility) Methods
 USE InputUtility, ONLY: Input
 IMPLICIT NONE
 
 CONTAINS
 
 !----------------------------------------------------------------------------
-!                                                                   Initiate
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE obj_Initiate
-INTEGER(I4B) :: seedSize
-LOGICAL(LGT) :: isok
-
-CALL RANDOM_SEED(size=seedSize)
-
-isok = ALLOCATED(obj%random_int_seed)
-
-IF (.NOT. isok) THEN
-  ALLOCATE (obj%random_int_seed(seedSize))
-END IF
-
-CALL RANDOM_SEED(get=obj%random_int_seed)
-END PROCEDURE obj_Initiate
-
-!----------------------------------------------------------------------------
-!                                                                 getRandom
+!                                                                RandomValue
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE obj_RandomValue1
@@ -111,7 +92,7 @@ MODULE PROCEDURE obj_RandomValue4
 INTEGER(I4B) :: posi, from, to
 from = 1
 to = SIZE(val)
-posi = RandomValue(obj=obj, from=from, to=to)
+posi = RandomValue(from=from, to=to)
 ans = val(posi)
 END PROCEDURE obj_RandomValue4
 
@@ -124,10 +105,10 @@ INTEGER(I4B) :: i1, i2, from, to
 
 from = 1
 to = SIZE(val, 1)
-i1 = RandomValue(obj=obj, from=from, to=to)
+i1 = RandomValue(from=from, to=to)
 
 to = SIZE(val, 2)
-i2 = RandomValue(obj=obj, from=from, to=to)
+i2 = RandomValue(from=from, to=to)
 
 ans = Val(i1, i2)
 END PROCEDURE obj_RandomValue5
@@ -141,7 +122,7 @@ INTEGER(I4B) :: posi, from, to
 
 from = 1
 to = SIZE(val)
-posi = RandomValue(obj=obj, from=from, to=to)
+posi = RandomValue(from=from, to=to)
 ans = val(posi)
 END PROCEDURE obj_RandomValue6
 
@@ -154,21 +135,13 @@ INTEGER(I4B) :: i1, i2, from, to
 
 from = 1
 to = SIZE(val, 1)
-i1 = RandomValue(obj=obj, from=from, to=to)
+i1 = RandomValue(from=from, to=to)
 
 to = SIZE(val, 2)
-i2 = RandomValue(obj=obj, from=from, to=to)
+i2 = RandomValue(from=from, to=to)
 
 ans = val(i1, i2)
 END PROCEDURE obj_RandomValue7
-
-!----------------------------------------------------------------------------
-!                                                                 SaveRandom
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE SaveRandom
-CALL RANDOM_SEED(put=obj%random_int_seed)
-END PROCEDURE SaveRandom
 
 !----------------------------------------------------------------------------
 !

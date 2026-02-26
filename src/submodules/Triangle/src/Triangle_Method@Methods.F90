@@ -28,7 +28,7 @@ USE Line_Method, ONLY: segment_point_dist_3d
 USE Line_Method, ONLY: line_exp_point_dist_signed_2d
 USE Line_Method, ONLY: segment_point_near_2d
 USE Plane_Method, ONLY: plane_normal_line_exp_int_3d
-USE Random_Method, ONLY: rvec_uniform_01 => UniformRandomValue
+USE RandomUtility, ONLY: rvec_uniform_01 => UniformRandomValue
 
 IMPLICIT NONE
 CONTAINS

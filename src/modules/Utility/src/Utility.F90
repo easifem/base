@@ -57,4 +57,5 @@ USE SymUtility
 USE TailUtility
 USE TriagUtility
 USE ZerosUtility
+USE RandomUtility
 END MODULE Utility
