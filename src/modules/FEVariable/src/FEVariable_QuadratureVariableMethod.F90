@@ -377,7 +377,6 @@ END INTERFACE QuadratureVariable
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2021-12-10
-! update: 2021-12-10
 ! summary: Create quadrature variable, which is Matrix, Constant
 
 INTERFACE QuadratureVariable
@@ -389,6 +388,27 @@ INTERFACE QuadratureVariable
     TYPE(FEVariableConstant_), INTENT(IN) :: vartype
     INTEGER(I4B), INTENT(IN) :: s(2)
   END FUNCTION Quadrature_Matrix_Constant2
+END INTERFACE QuadratureVariable
+
+!----------------------------------------------------------------------------
+!                                      QuadratureVariable@ConstructorMethods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2021-12-10
+! summary: Create quadrature variable, which is Matrix, Constant
+
+INTERFACE QuadratureVariable
+  MODULE PURE FUNCTION Quadrature_Matrix_Constant3( &
+    nrow, ncol, rank, vartype) RESULT(obj)
+    TYPE(FEVariable_) :: obj
+    INTEGER(I4B), INTENT(IN) :: nrow
+    !! number of rows in matrix
+    INTEGER(I4B), INTENT(IN) :: ncol
+    !! number of cols in matrix
+    TYPE(FEVariableMatrix_), INTENT(IN) :: rank
+    TYPE(FEVariableConstant_), INTENT(IN) :: vartype
+  END FUNCTION Quadrature_Matrix_Constant3
 END INTERFACE QuadratureVariable
 
 !----------------------------------------------------------------------------
@@ -435,6 +455,29 @@ END INTERFACE QuadratureVariable
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2021-12-10
+! summary: Create quadrature variable, which is Matrix, Space
+
+INTERFACE QuadratureVariable
+  MODULE PURE FUNCTION Quadrature_Matrix_Space3( &
+    dim1, dim2, dim3, rank, vartype) RESULT(obj)
+    TYPE(FEVariable_) :: obj
+    INTEGER(I4B), INTENT(IN) :: dim1
+    !! number of rows in matrix
+    INTEGER(I4B), INTENT(IN) :: dim2
+    !! number of cols in matrix
+    INTEGER(I4B), INTENT(IN) :: dim3
+    !! number of quadrature points in space
+    TYPE(FEVariableMatrix_), INTENT(IN) :: rank
+    TYPE(FEVariableSpace_), INTENT(IN) :: vartype
+  END FUNCTION Quadrature_Matrix_Space3
+END INTERFACE QuadratureVariable
+
+!----------------------------------------------------------------------------
+!                                      QuadratureVariable@ConstructorMethods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2021-12-10
 ! summary: Create quadrature variable, which is Matrix, Time
 
 INTERFACE QuadratureVariable
@@ -453,7 +496,6 @@ END INTERFACE QuadratureVariable
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2021-12-10
-! update: 2021-12-10
 ! summary: Create quadrature variable, which is Matrix, Time
 
 INTERFACE QuadratureVariable
@@ -465,6 +507,29 @@ INTERFACE QuadratureVariable
     TYPE(FEVariableTime_), INTENT(IN) :: vartype
     INTEGER(I4B), INTENT(IN) :: s(3)
   END FUNCTION Quadrature_Matrix_Time2
+END INTERFACE QuadratureVariable
+
+!----------------------------------------------------------------------------
+!                                      QuadratureVariable@ConstructorMethods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2021-12-10
+! summary: Create quadrature variable, which is Matrix, Time
+
+INTERFACE QuadratureVariable
+  MODULE PURE FUNCTION Quadrature_Matrix_Time3( &
+    dim1, dim2, dim3, rank, vartype) RESULT(obj)
+    TYPE(FEVariable_) :: obj
+    INTEGER(I4B), INTENT(IN) :: dim1
+    !! number of rows in matrix
+    INTEGER(I4B), INTENT(IN) :: dim2
+    !! number of cols in matrix
+    INTEGER(I4B), INTENT(IN) :: dim3
+    !! number of time quadrature points
+    TYPE(FEVariableMatrix_), INTENT(IN) :: rank
+    TYPE(FEVariableTime_), INTENT(IN) :: vartype
+  END FUNCTION Quadrature_Matrix_Time3
 END INTERFACE QuadratureVariable
 
 !----------------------------------------------------------------------------
@@ -504,5 +569,40 @@ INTERFACE QuadratureVariable
     INTEGER(I4B), INTENT(IN) :: s(4)
   END FUNCTION Quadrature_Matrix_SpaceTime2
 END INTERFACE QuadratureVariable
+
+!----------------------------------------------------------------------------
+!                                      QuadratureVariable@ConstructorMethods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2021-12-10
+! summary: Create quadrature variable, which is Matrix, SpaceTime
+
+!# QuadratureVariable
+!
+! This method initiate a quadrature variable, which is matrix and
+! changes with space and time.
+!
+
+INTERFACE QuadratureVariable
+  MODULE PURE FUNCTION Quadrature_Matrix_SpaceTime3( &
+    dim1, dim2, dim3, dim4, rank, vartype) RESULT(obj)
+    TYPE(FEVariable_) :: obj
+    INTEGER(I4B), INTENT(IN) :: dim1
+    !! number of rows in matrix
+    INTEGER(I4B), INTENT(IN) :: dim2
+    !! number of cols in matrix
+    INTEGER(I4B), INTENT(IN) :: dim3
+    !! number of quadrature points in space
+    INTEGER(I4B), INTENT(IN) :: dim4
+    !! number of quadrature points in time
+    TYPE(FEVariableMatrix_), INTENT(IN) :: rank
+    TYPE(FEVariableSpaceTime_), INTENT(IN) :: vartype
+  END FUNCTION Quadrature_Matrix_SpaceTime3
+END INTERFACE QuadratureVariable
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
 
 END MODULE FEVariable_QuadratureVariableMethod
