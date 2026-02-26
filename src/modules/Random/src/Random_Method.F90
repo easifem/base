@@ -16,49 +16,172 @@
 !
 
 MODULE Random_Method
-USE GlobalData
-USE BaseType
+USE GlobalData, ONLY: DFP, I4B, LGT
+USE BaseType, ONLY: Random_
 IMPLICIT NONE
-PRIVATE
 
+PRIVATE
 PUBLIC :: Initiate
 PUBLIC :: RandomValue
 PUBLIC :: SaveRandom
-PUBLIC :: uniformRandom
-PUBLIC :: rvec_uniform_01
-PUBLIC :: rvec_uniform_ab
-PUBLIC :: rvec_uniform_unit
-PUBLIC :: rvec_normal_01
-PUBLIC :: r8_uniform_01
+PUBLIC :: UniformRandomValue
+PUBLIC :: UniformRandomValueScalar
+PUBLIC :: NormalRandomValue
 
 !----------------------------------------------------------------------------
-!                                                      Initiate@Constructor
+!                                                           Initiate@Methods
 !----------------------------------------------------------------------------
 
-INTERFACE
-  MODULE SUBROUTINE initRandom(obj)
-    CLASS(Random_), INTENT(INOUT) :: obj
-  END SUBROUTINE initRandom
-END INTERFACE
+!> author: Vikas Sharma, Ph. D.
+! date: 2026-02-26
+! summary: Initiate a random object
 
 INTERFACE Initiate
-  MODULE PROCEDURE initRandom
+  MODULE SUBROUTINE obj_Initiate(obj)
+    CLASS(Random_), INTENT(INOUT) :: obj
+  END SUBROUTINE obj_Initiate
 END INTERFACE Initiate
 
 !----------------------------------------------------------------------------
 !                                                                 getRandom
 !----------------------------------------------------------------------------
 
-INTERFACE
-  MODULE FUNCTION getRandom(obj, distribution) RESULT(Ans)
+!> author: Vikas Sharma, Ph. D.
+! date: 2026-02-26
+! summary: GetRandom value
+!
+!# RandomValue
+!
+! Get the random value. `distribution` can be
+!
+! - "Binomial"
+!
+
+INTERFACE RandomValue
+  MODULE FUNCTION obj_RandomValue1(obj, distribution) RESULT(Ans)
     CLASS(Random_), INTENT(IN) :: obj
     CHARACTER(LEN=*), OPTIONAL, INTENT(IN) :: distribution
     REAL(DFP) :: Ans
-  END FUNCTION getRandom
-END INTERFACE
+  END FUNCTION obj_RandomValue1
+END INTERFACE RandomValue
+
+!----------------------------------------------------------------------------
+!                                                             UniformRandom
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2026-02-26
+! summary: Get uniform random value
+!
+!# RandomValue
+!
+! Get the uniform random value between from and to.
 
 INTERFACE RandomValue
-  MODULE PROCEDURE getRandom
+  MODULE FUNCTION obj_RandomValue2(obj, from, to) RESULT(ans)
+    CLASS(Random_), INTENT(IN) :: obj
+    REAL(DFP), INTENT(IN) :: from, to
+    REAL(DFP) :: ans
+  END FUNCTION obj_RandomValue2
+END INTERFACE RandomValue
+
+!----------------------------------------------------------------------------
+!                                                                RandomValue
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2026-02-26
+! summary: Get a random integer between from and to
+!
+!# RandomValue
+!
+! Get a random integer between from and to.
+!
+INTERFACE RandomValue
+  MODULE FUNCTION obj_RandomValue3(obj, from, to) RESULT(ans)
+    CLASS(Random_), INTENT(IN) :: obj
+    INTEGER(I4B), INTENT(IN) :: from, to
+    INTEGER(I4B) :: ans
+  END FUNCTION obj_RandomValue3
+END INTERFACE RandomValue
+
+!----------------------------------------------------------------------------
+!                                                                RandomValue
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2026-02-26
+! summary: select random integer from a vector
+!
+!# RandomValue
+!
+! Select a random integer from a vector.
+INTERFACE RandomValue
+  MODULE FUNCTION obj_RandomValue4(obj, val) RESULT(ans)
+    CLASS(Random_), INTENT(IN) :: obj
+    INTEGER(I4B), INTENT(IN) :: val(:)
+    INTEGER(I4B) :: ans
+  END FUNCTION obj_RandomValue4
+END INTERFACE RandomValue
+
+!----------------------------------------------------------------------------
+!                                                                 RandomValue
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2026-02-26
+! summary: select a random integer from an array.
+!
+!# RandomValue
+!
+! Get a random integer value from an array.
+!
+INTERFACE RandomValue
+  MODULE FUNCTION obj_RandomValue5(obj, val) RESULT(ans)
+    CLASS(Random_), INTENT(IN) :: obj
+    INTEGER(I4B), INTENT(IN) :: val(:, :)
+    INTEGER(I4B) :: ans
+  END FUNCTION obj_RandomValue5
+END INTERFACE RandomValue
+
+!----------------------------------------------------------------------------
+!                                                                RandomValue
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2026-02-26
+! summary: Select a random real number from a vector
+!
+!# RandomValue
+!
+! Get a random real number from a vector.
+!
+INTERFACE RandomValue
+  MODULE FUNCTION obj_RandomValue6(obj, val) RESULT(ans)
+    CLASS(Random_), INTENT(IN) :: obj
+    REAL(DFP), INTENT(IN) :: val(:)
+    REAL(DFP) :: ans
+  END FUNCTION obj_RandomValue6
+END INTERFACE RandomValue
+
+!----------------------------------------------------------------------------
+!                                                                 RandomValue
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2026-02-26
+! summary: Select a random real number from a array.
+!
+!# RandomValue
+!
+! Select a random real number from a array.
+!
+INTERFACE RandomValue
+  MODULE FUNCTION obj_RandomValue7(obj, val) RESULT(ans)
+    CLASS(Random_), INTENT(IN) :: obj
+    REAL(DFP), INTENT(IN) :: val(:, :)
+    REAL(DFP) :: ans
+  END FUNCTION obj_RandomValue7
 END INTERFACE RandomValue
 
 !----------------------------------------------------------------------------
@@ -72,152 +195,90 @@ INTERFACE
 END INTERFACE
 
 !----------------------------------------------------------------------------
-!                                                             UniformRandom
-!----------------------------------------------------------------------------
-
-INTERFACE
-  MODULE FUNCTION uniformRandom(obj, From, To) RESULT(Ans)
-    CLASS(Random_), INTENT(IN) :: obj
-    REAL(DFP), INTENT(IN) :: From, To
-    REAL(DFP) :: Ans
-  END FUNCTION uniformRandom
-END INTERFACE
-
-INTERFACE RandomValue
-  MODULE PROCEDURE uniformRandom
-END INTERFACE RandomValue
-
-!----------------------------------------------------------------------------
-!                                                             RandomInteger
-!----------------------------------------------------------------------------
-
-INTERFACE
-  MODULE FUNCTION getRandomInteger(obj, From, To) RESULT(Ans)
-    CLASS(Random_), INTENT(IN) :: obj
-    INTEGER(I4B), INTENT(IN) :: From, To
-    INTEGER(I4B) :: Ans
-  END FUNCTION getRandomInteger
-END INTERFACE
-
-INTERFACE RandomValue
-  MODULE PROCEDURE getRandomInteger
-END INTERFACE RandomValue
-
-!----------------------------------------------------------------------------
-!                                                                RandomValue
-!----------------------------------------------------------------------------
-
-INTERFACE
-  MODULE FUNCTION select_random_int_from_vec(obj, Val) RESULT(Ans)
-    CLASS(Random_), INTENT(IN) :: obj
-    INTEGER(I4B), INTENT(IN) :: Val(:)
-    INTEGER(I4B) :: Ans
-  END FUNCTION select_random_int_from_vec
-END INTERFACE
-
-INTERFACE
-  MODULE FUNCTION select_random_int_from_array(obj, Val) RESULT(Ans)
-    CLASS(Random_), INTENT(IN) :: obj
-    INTEGER(I4B), INTENT(IN) :: Val(:, :)
-    INTEGER(I4B) :: Ans
-  END FUNCTION select_random_int_from_array
-END INTERFACE
-
-INTERFACE
-  MODULE FUNCTION select_random_real_from_vec(obj, Val) RESULT(Ans)
-    CLASS(Random_), INTENT(IN) :: obj
-    REAL(DFP), INTENT(IN) :: Val(:)
-    REAL(DFP) :: Ans
-  END FUNCTION select_random_real_from_vec
-END INTERFACE
-
-INTERFACE
-  MODULE FUNCTION select_random_real_from_array(obj, Val) RESULT(Ans)
-    CLASS(Random_), INTENT(IN) :: obj
-    REAL(DFP), INTENT(IN) :: Val(:, :)
-    REAL(DFP) :: Ans
-  END FUNCTION select_random_real_from_array
-END INTERFACE
-
-INTERFACE RandomValue
-  MODULE PROCEDURE select_random_int_from_vec, select_random_int_from_array,&
-    & select_random_real_from_vec, select_random_real_from_array
-END INTERFACE RandomValue
-
-!----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date:         28 Aug 2022
+! date: 2026-02-26
 ! summary: a unit pseudorandom real vector
 !
 !# Introduction
 !
 ! This subroutine is taken from rvec_uniform_01 of John Burkardt
-!
-!    An rvec is a vector of real ( kind = 8 ) values.
-!
-!    For now, the input quantity SEED is an integer ( kind = 4 ) variable.
-!
-!  Parameters:
-!
-!    Input, integer ( kind = 4 ) N, the number of entries in the vector.
-!
-!    Input/output, integer ( kind = 4 ) SEED, the "seed" value, which
-!    should NOT be 0.  On output, SEED has been updated.
-!
-!    Output, real ( kind = 8 ) R(N), the vector of pseudorandom values.
 
-INTERFACE
-  MODULE PURE FUNCTION rvec_uniform_01(n, seed) RESULT(r)
+INTERFACE UniformRandomValue
+  MODULE PURE FUNCTION UniformRandomValue1(n, seed) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: n
+    !! the number of entries in the vector
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: seed
-    REAL(DFP) :: r(n)
-  END FUNCTION rvec_uniform_01
-END INTERFACE
+    !! the seed value, which should not be 0. On output seed value is
+    !! updated. The default value of seed is 1
+    REAL(DFP) :: ans(n)
+    !! the vector of pseudorandom values
+  END FUNCTION UniformRandomValue1
+END INTERFACE UniformRandomValue
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date: 29 Aug 2022
-! summary: returns a scaled pseudorandom rvec
+! date: 2026-02-26
+! summary: returns a pseudorandom vector between a and b
 
-INTERFACE
-  MODULE PURE FUNCTION rvec_uniform_ab(n, a, b, seed) RESULT(r)
+INTERFACE UniformRandomValue
+  MODULE PURE FUNCTION UniformRandomValue2(n, a, b, seed) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: n
+    !! the number of pseudorandom numbers to return
     REAL(DFP), INTENT(IN) :: a
     REAL(DFP), INTENT(IN) :: b
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: seed
-    REAL(DFP) :: r(n)
-  END FUNCTION rvec_uniform_ab
-END INTERFACE
+    !! the default value of seed is 1
+    REAL(DFP) :: ans(n)
+  END FUNCTION UniformRandomValue2
+END INTERFACE UniformRandomValue
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date: 29 Aug 2022
-! summary:         returns a uniformly random unit vector
+! date: 2026-02-26
+! summary: returns a unit pseudorandom
 
-INTERFACE
-  MODULE PURE FUNCTION rvec_uniform_unit(m, seed) RESULT(w)
+INTERFACE UniformRandomValueScalar
+  MODULE PURE FUNCTION UniformRandomValueScalar1(seed) RESULT(ans)
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: seed
+    !! "seed" value, which should, NOT be 0.
+    !! On output, SEED has been updated.
+    REAL(DFP) :: ans
+    !! a new pseudorandom variate, strictly between 0 and 1.
+  END FUNCTION UniformRandomValueScalar1
+END INTERFACE UniformRandomValueScalar
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2026-02-26
+! summary: returns a uniformly random unit vector
+
+INTERFACE UniformUnitRandomValue
+  MODULE PURE FUNCTION UniformUnitRandomValue1(m, seed) RESULT(w)
     INTEGER(I4B), INTENT(IN) :: m
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: seed
     REAL(DFP) :: w(m)
-  END FUNCTION rvec_uniform_unit
-END INTERFACE
+  END FUNCTION UniformUnitRandomValue1
+END INTERFACE UniformUnitRandomValue
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date: 29 Aug 2022
-! summary:Samples the unit normal probability distribution.
+! date: 2026-02-26
+! summary: Samples the unit normal probability distribution.
 !
 !# Introduction
 !
@@ -269,59 +330,15 @@ END INTERFACE
 !    Local, real ( kind = 8 ) Y, the value saved from the previous call, if
 !    SAVED is 1.
 
-INTERFACE
-  MODULE PURE FUNCTION rvec_normal_01(n, seed) RESULT(x)
+INTERFACE NormalRandomValue
+  MODULE PURE FUNCTION NormalRandomValue1(n, seed) RESULT(x)
     INTEGER(I4B), INTENT(IN) :: n
+    !! number of random numbers.
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: seed
+    !! seed value
     REAL(DFP) :: x(n)
-  END FUNCTION rvec_normal_01
-END INTERFACE
-
-!----------------------------------------------------------------------------
-!
-!----------------------------------------------------------------------------
-
-!> author: Vikas Sharma, Ph. D.
-! date: 29 Aug 2022
-! summary:  returns a unit pseudorandom
-!
-!# Introduction
-!
-!    An R8 is a real ( kind = 8 ) value.
-!
-!    For now, the input quantity SEED is an integer ( kind = 4 ) variable.
-!
-!    This routine implements the recursion
-!
-!      seed = 16807 * seed mod ( 2^31 - 1 )
-!      r8_uniform_01 = seed / ( 2^31 - 1 )
-!
-!    The integer arithmetic never requires more than 32 bits,
-!    including a sign bit.
-!
-!    If the initial seed is 12345, then the first three computations are
-!
-!      Input     Output      R8_UNIFORM_01
-!      SEED      SEED
-!
-!         12345   207482415  0.096616
-!     207482415  1790989824  0.833995
-!    1790989824  2035175616  0.947702
-!
-!  Parameters:
-!
-!    Input/output, integer ( kind = 4 ) SEED, the "seed" value, which should
-!    NOT be 0. On output, SEED has been updated.
-!
-!    Output, real ( kind = 8 ) R8_UNIFORM_01, a new pseudorandom variate,
-!    strictly between 0 and 1.
-
-INTERFACE
-  MODULE PURE FUNCTION r8_uniform_01(seed) RESULT(ans)
-    INTEGER(I4B), OPTIONAL, INTENT(IN) :: seed
-    REAL(DFP) :: ans
-  END FUNCTION r8_uniform_01
-END INTERFACE
+  END FUNCTION NormalRandomValue1
+END INTERFACE NormalRandomValue
 
 !----------------------------------------------------------------------------
 !

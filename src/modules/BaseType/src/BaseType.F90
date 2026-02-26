@@ -1924,12 +1924,12 @@ TYPE :: Random_
   INTEGER(I4B), ALLOCATABLE :: random_int_vec(:)
   REAL(DFP) :: random_real = 0.0_DFP
   REAL(DFP), ALLOCATABLE :: random_real_vec(:)
-END TYPE
+END TYPE Random_
 
 TYPE(Random_), PARAMETER :: &
-  & TypeRandom = Random_(random_int_seed=NULL(), &
-  & random_int_vec=NULL(), &
-  & random_real_vec=NULL())
+  TypeRandom = Random_(random_int_seed=NULL(), &
+                       random_int_vec=NULL(), &
+                       random_real_vec=NULL())
 
 !----------------------------------------------------------------------------
 !

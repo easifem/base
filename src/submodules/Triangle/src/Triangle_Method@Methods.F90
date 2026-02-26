@@ -16,22 +16,20 @@
 !
 
 SUBMODULE(Triangle_Method) Methods
-! USE BaseMethod
 USE SwapUtility, ONLY: Swap
 USE MiscUtility, ONLY: safe_ACOS
-USE Line_Method, ONLY: line_exp_is_degenerate_nd, &
-                       line_exp2imp_2d, &
-                       lines_imp_int_2d, &
-                       line_exp_perp_2d, &
-                       lines_exp_int_2d, &
-                       segment_point_dist_2d, &
-                       segment_point_dist_3d, &
-                       line_exp_point_dist_signed_2d, &
-                       segment_point_near_2d
-
+USE Line_Method, ONLY: line_exp_is_degenerate_nd
+USE Line_Method, ONLY: line_exp2imp_2d
+USE Line_Method, ONLY: lines_imp_int_2d
+USE Line_Method, ONLY: line_exp_perp_2d
+USE Line_Method, ONLY: lines_exp_int_2d
+USE Line_Method, ONLY: segment_point_dist_2d
+USE Line_Method, ONLY: segment_point_dist_3d
+USE Line_Method, ONLY: line_exp_point_dist_signed_2d
+USE Line_Method, ONLY: segment_point_near_2d
 USE Plane_Method, ONLY: plane_normal_line_exp_int_3d
+USE Random_Method, ONLY: rvec_uniform_01 => UniformRandomValue
 
-USE Random_Method, ONLY: rvec_uniform_01
 IMPLICIT NONE
 CONTAINS
 
