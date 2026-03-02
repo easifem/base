@@ -19,8 +19,9 @@ SUBMODULE(ElemshapeData_ProjectionMethods) Methods
 USE FEVariable_Method, ONLY: GetInterpolation_
 USE ReallocateUtility, ONLY: Reallocate
 USE MatmulUtility, ONLY: Matmul_
-
+USE BaseType, ONLY: math => TypeMathOpt
 IMPLICIT NONE
+
 CONTAINS
 
 !----------------------------------------------------------------------------
@@ -33,7 +34,6 @@ INTEGER(I4B) :: nrow, ncol
 nrow = obj%nns
 ncol = obj%nips
 CALL Reallocate(ans, nrow, ncol)
-
 CALL GetProjectionOfdNdXt_(obj=obj, ans=ans, c=c, nrow=nrow, ncol=ncol)
 END PROCEDURE GetProjectionOfdNdXt_1
 
@@ -44,9 +44,9 @@ END PROCEDURE GetProjectionOfdNdXt_1
 MODULE PROCEDURE GetProjectionOfdNdXt1_
 INTEGER(I4B) :: ii, nsd
 
-nrow = obj%nns !!SIZE(obj%dNdXt, 1)
-ncol = obj%nips !!SIZE(obj%dNdXt, 3)
-nsd = obj%nsd !!SIZE(obj%dNdXt, 2)
+nrow = obj%nns
+ncol = obj%nips
+nsd = obj%nsd
 
 DO ii = 1, ncol
   ans(1:nrow, ii) = MATMUL(obj%dNdXt(1:nrow, 1:nsd, ii), c(1:nsd))
@@ -81,7 +81,6 @@ ncol = obj%nips
 nsd = obj%nsd
 cbar = 0.0_DFP
 
-! USE FEVariable_Method, only: FEVariableGetInterpolation_ => GetInterpolation_
 DO ips = 1, obj%nips
   CALL GetInterpolation_( &
     obj=c, rank=crank, N=obj%N, nns=obj%nns, spaceIndx=ips, timeIndx=0_I4B, &
@@ -120,6 +119,18 @@ DO ips = 1, obj%nips
   ans(1:nrow, ips) = MATMUL(obj%dNdXt(1:nrow, 1:nsd, ips), c(1:nsd, ips))
 END DO
 END PROCEDURE GetProjectionOfdNdXt3_
+
+!----------------------------------------------------------------------------
+!                                                      GetProjectionOfdNdXt_
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE GetProjectionOfdNdXt4_
+INTEGER(I4B) :: nsd
+
+tsize = obj%nns
+nsd = obj%nsd
+ans(1:tsize) = MATMUL(obj%dNdXt(1:tsize, 1:nsd, ips), c(1:nsd))
+END PROCEDURE GetProjectionOfdNdXt4_
 
 !----------------------------------------------------------------------------
 !                                                      GetProjectionOfdNTdXt

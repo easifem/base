@@ -16,22 +16,22 @@
 !
 
 SUBMODULE(MassMatrix_Method) Methods
-USE ReallocateUtility, ONLY: Reallocate
-USE ElemshapeData_Method, ONLY: GetInterpolation
-USE ElemshapeData_Method, ONLY: GetInterpolation_
-USE ProductUtility, ONLY: OuterProd_
-USE ProductUtility, ONLY: OuterProd
-USE ProductUtility, ONLY: OTimesTilda_
-USE ConvertUtility, ONLY: Convert
-USE ConvertUtility, ONLY: Convert_
-USE RealMatrix_Method, ONLY: MakeDiagonalCopies
-USE RealMatrix_Method, ONLY: MakeDiagonalCopies_
-USE EyeUtility, ONLY: Eye
 USE BaseType, ONLY: math => TypeMathOpt
 USE BaseType, ONLY: varopt => TypeFEVariableOpt
-USE InputUtility, ONLY: Input
-USE FEVariable_Method, ONLY: FEVariableSize => Size
+USE ConvertUtility, ONLY: Convert
+USE ConvertUtility, ONLY: Convert_
+USE ElemshapeData_Method, ONLY: GetInterpolation
+USE ElemshapeData_Method, ONLY: GetInterpolation_
+USE EyeUtility, ONLY: Eye
 USE FEVariable_Method, ONLY: FEVariableGetInterpolation_ => GetInterpolation_
+USE FEVariable_Method, ONLY: FEVariableSize => Size
+USE InputUtility, ONLY: Input
+USE ProductUtility, ONLY: OTimesTilda_
+USE ProductUtility, ONLY: OuterProd
+USE ProductUtility, ONLY: OuterProd_
+USE ReallocateUtility, ONLY: Reallocate
+USE RealMatrix_Method, ONLY: MakeDiagonalCopies
+USE RealMatrix_Method, ONLY: MakeDiagonalCopies_
 
 IMPLICIT NONE
 CONTAINS

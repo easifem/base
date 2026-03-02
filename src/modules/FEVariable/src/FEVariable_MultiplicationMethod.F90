@@ -32,8 +32,7 @@ PUBLIC :: Multiplication_
 !----------------------------------------------------------------------------
 !> author: Vikas Sharma, Ph. D.
 ! date: 2025-12-28
-! summary: Multiplication_ is without extra allocation, user should know
-!          what they are doing
+! summary: Multiplication_ is without extra allocation
 
 INTERFACE Multiplication_
   MODULE PURE SUBROUTINE fevar_Multiplication_1(obj1, obj2, ans)
@@ -48,8 +47,7 @@ END INTERFACE Multiplication_
 !----------------------------------------------------------------------------
 !> author: Vikas Sharma, Ph. D.
 ! date: 2025-12-28
-! summary: Multiplication_ is without extra allocation, user should know
-!          what they are doing
+! summary: Multiplication_ is without extra allocation
 
 INTERFACE Multiplication_
   MODULE PURE SUBROUTINE fevar_Multiplication_2(obj, val, ans)
@@ -64,10 +62,10 @@ END INTERFACE Multiplication_
 !----------------------------------------------------------------------------
 !> author: Vikas Sharma, Ph. D.
 ! date: 2025-12-28
-! summary: Multiplication_ is without extra allocation, user should know
-!          what they are doing.
+! summary: Multiplication without allocation.
 !
-!# Introduction
+!# Multiplication_
+!
 ! This method bypasses the additional overhead related to
 ! calculating the varCase and rankCase inside the method.
 
@@ -90,7 +88,6 @@ END INTERFACE Multiplication_
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2021-12-12
-! update: 2021-12-1
 ! summary: FEVariable = FEVariable * FEVariable
 
 INTERFACE OPERATOR(_OP_)
