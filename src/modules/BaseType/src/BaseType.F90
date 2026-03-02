@@ -516,8 +516,8 @@ TYPE :: DOFOpt_
 
   INTEGER(I4B) :: storageFormatDOF = FMT_DOF
   INTEGER(I4B) :: storageFormatNodes = FMT_NODES
-  INTEGER(I4B) :: conversionNodesToDOF = NodesToDOF
-  INTEGER(I4B) :: conversionDofToNodes = DofToNodes
+  INTEGER(I4B) :: conversionNodesToDOF = nodesToDOF
+  INTEGER(I4B) :: conversionDofToNodes = dofToNodes
 END TYPE DOFOpt_
 
 TYPE(DOFOpt_), PARAMETER :: TypeDOFOpt = DOFOpt_()

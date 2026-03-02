@@ -16,7 +16,7 @@
 !
 
 MODULE ConvertUtility
-USE GlobalData
+USE GlobalData, ONLY: DFP, LGT, I4B
 IMPLICIT NONE
 PRIVATE
 
@@ -70,8 +70,8 @@ END INTERFACE Convert
 ! summary: Like Convert_1, but no allocation
 
 INTERFACE Convert_
- MODULE PURE SUBROUTINE obj_Convert_1(from, to, conversion, nns, tdof, nrow, &
-                                       ncol)
+  MODULE PURE SUBROUTINE obj_Convert_1( &
+    from, to, conversion, nns, tdof, nrow, ncol)
     REAL(DFP), INTENT(IN) :: from(:, :)
     !! Matrix in one format
     REAL(DFP), INTENT(INOUT) :: to(:, :)
@@ -93,17 +93,13 @@ END INTERFACE Convert_
 ! date: 6 March 2021
 ! summary: Rearrange the degrees of freedom in a finite element matrix
 !
-!# Introduction
+!# ConvertSafe
 !
 ! This subroutine changes the storage pattern of a two-d matrix
 !  - Usually element matrix in easifem are stored in `FMT_DOF`
 !  - Global matrices/tanmat, however, are stored in `FMT_Nodes`
-!  - This subroutine is, therefore, in settings or adding values in
-! [[SparseMatrix_]].
 !
-! > This subroutine converts changes the storage format of dense matrix.
-! Usually, elemental finite element matrix is stored in `DOF_FMT`, and global
-! matrix/ tanmat, may be stored in `Nodes_FMT`.
+! > This subroutine changes the storage format of dense matrix.
 !
 !@note
 ! All dof should have the same order of interpolation, therefore,
@@ -179,9 +175,9 @@ END INTERFACE Convert_
 INTERFACE Convert
   MODULE PURE SUBROUTINE obj_Convert3(from, to)
     REAL(DFP), INTENT(IN) :: from(:, :, :, :, :, :)
-  !! I, J, ii, jj, a, b
+    !! I, J, ii, jj, a, b
     REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: to(:, :, :, :)
-  !! I, J, a, b
+    !! I, J, a, b
   END SUBROUTINE obj_Convert3
 END INTERFACE Convert
 
