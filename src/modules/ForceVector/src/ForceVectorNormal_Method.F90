@@ -44,8 +44,8 @@ PUBLIC :: ForceVectorNormal_
 ! $$
 
 INTERFACE ForceVectorNormal_
-  MODULE SUBROUTINE ForceVectorNormal_1(test, c, ans, tsize, scale, &
-                                        addContribution)
+  MODULE SUBROUTINE ForceVectorNormal_1( &
+    test, c, ans, tsize, scale, addContribution)
     CLASS(ElemshapeData_), INTENT(IN) :: test
     REAL(DFP), INTENT(IN) :: c(:)
     REAL(DFP), INTENT(INOUT) :: ans(:)
@@ -143,6 +143,69 @@ INTERFACE ForceVectorNormal_
     REAL(DFP), OPTIONAL, INTENT(IN) :: scale
     LOGICAL(LGT), OPTIONAL, INTENT(IN) :: addContribution
   END SUBROUTINE ForceVectorNormal_4
+END INTERFACE ForceVectorNormal_
+
+!----------------------------------------------------------------------------
+!                                                         ForceVectorNormal_
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2026-02-21
+! summary: Compute normal force vector
+!
+!# ForceVectorNormal_
+!
+! This subroutine computes the following expression:
+!
+!$$
+!F_{I}=\int_{\Omega}N^{I} \mathbf{k} \cdot \mathbf{c} \cdot \mathbf{n}
+!d\Omega
+!$$
+
+INTERFACE ForceVectorNormal_
+  MODULE SUBROUTINE ForceVectorNormal_5( &
+    test, c1, c1rank, c2, ans, tsize, scale, addContribution)
+    CLASS(ElemshapeData_), INTENT(IN) :: test
+    TYPE(FEVariable_), INTENT(IN) :: c1
+    TYPE(FEVariableMatrix_), INTENT(IN) :: c1rank
+    REAL(DFP), INTENT(IN) :: c2(:)
+    REAL(DFP), INTENT(INOUT) :: ans(:)
+    INTEGER(I4B), INTENT(OUT) :: tsize
+    REAL(DFP), OPTIONAL, INTENT(IN) :: scale
+    LOGICAL(LGT), OPTIONAL, INTENT(IN) :: addContribution
+  END SUBROUTINE ForceVectorNormal_5
+END INTERFACE ForceVectorNormal_
+
+!----------------------------------------------------------------------------
+!                                                         ForceVectorNormal_
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2026-02-21
+! summary: Compute normal force vector
+!
+!# ForceVectorNormal_
+!
+! This subroutine computes the following expression:
+!
+!$$
+!F_{I}=\int_{\Omega}N^{I} \mathbf{k} \cdot \mathbf{c} \cdot \mathbf{n}
+!d\Omega
+!$$
+
+INTERFACE ForceVectorNormal_
+  MODULE SUBROUTINE ForceVectorNormal_6( &
+    test, c1, c1rank, c2, c2rank, ans, tsize, scale, addContribution)
+    CLASS(ElemshapeData_), INTENT(IN) :: test
+    TYPE(FEVariable_), INTENT(IN) :: c1
+    TYPE(FEVariableMatrix_), INTENT(IN) :: c1rank
+    TYPE(FEVariable_), INTENT(IN) :: c2
+    TYPE(FEVariableVector_), INTENT(IN) :: c2rank
+    REAL(DFP), INTENT(INOUT) :: ans(:)
+    INTEGER(I4B), INTENT(OUT) :: tsize
+    REAL(DFP), OPTIONAL, INTENT(IN) :: scale
+    LOGICAL(LGT), OPTIONAL, INTENT(IN) :: addContribution
+  END SUBROUTINE ForceVectorNormal_6
 END INTERFACE ForceVectorNormal_
 
 !----------------------------------------------------------------------------

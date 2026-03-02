@@ -38,11 +38,11 @@ PUBLIC :: ForceVector_
 !
 !# ForceVector
 !
-! This subroutine computes the following expression:
+!This subroutine computes the following expression:
 !
-! $$
-! F_{I}=\int_{\Omega}N^{I}d\Omega
-! $$
+!$$
+!F_{I}=\int_{\Omega}N^{I}d\Omega
+!$$
 
 INTERFACE ForceVector
   MODULE FUNCTION ForceVector1(test) RESULT(ans)

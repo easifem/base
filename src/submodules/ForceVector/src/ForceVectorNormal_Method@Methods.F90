@@ -164,6 +164,90 @@ END DO
 END PROCEDURE ForceVectorNormal_4
 
 !----------------------------------------------------------------------------
+!                                                         ForceVectorNormal_
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE ForceVectorNormal_5
+! Define internal variable
+REAL(DFP) :: realval, scale0, T(0), &
+             kbar(fevaropt%defaultMatrixSize, fevaropt%defaultMatrixSize), &
+             vbar(fevaropt%defaultVectorSize)
+INTEGER(I4B) :: ips, kbar_nrow, kbar_ncol
+LOGICAL(LGT) :: isadd0
+
+tsize = test%nns
+
+isadd0 = Input(option=addContribution, default=math%no)
+scale0 = Input(option=scale, default=math%one)
+IF (.NOT. isadd0) ans(1:tsize) = math%zero
+
+vbar = math%zero
+kbar = math%zero
+
+DO ips = 1, test%nips
+
+  CALL FEVariableGetInterpolation_( &
+    obj=c1, rank=c1rank, N=test%N, nns=test%nns, spaceIndx=ips, &
+    timeIndx=math%one_i, T=T, nnt=math%zero_i, scale=math%one, &
+    addContribution=math%no, ans=kbar, nrow=kbar_nrow, ncol=kbar_ncol)
+
+  vbar(1:kbar_nrow) = MATMUL(kbar(1:kbar_nrow, 1:kbar_ncol), c2(1:kbar_ncol))
+  realval = DOT_PRODUCT(test%normal(1:kbar_nrow, ips), vbar(1:kbar_nrow))
+  realval = realval * test%js(ips) * test%ws(ips) * test%thickness(ips) &
+    * scale0
+
+  ans(1:tsize) = ans(1:tsize) + realval * test%N(1:tsize, ips)
+END DO
+END PROCEDURE ForceVectorNormal_5
+
+!----------------------------------------------------------------------------
+!                                                         ForceVectorNormal_
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE ForceVectorNormal_6
+! Define internal variable
+REAL(DFP) :: realval, scale0, T(0), &
+             kbar(fevaropt%defaultMatrixSize, fevaropt%defaultMatrixSize), &
+             vbar(fevaropt%defaultVectorSize), &
+             cbar(fevaropt%defaultVectorSize)
+INTEGER(I4B) :: ips, kbar_nrow, kbar_ncol, cbar_size
+LOGICAL(LGT) :: isadd0
+
+tsize = test%nns
+
+isadd0 = Input(option=addContribution, default=math%no)
+scale0 = Input(option=scale, default=math%one)
+IF (.NOT. isadd0) ans(1:tsize) = math%zero
+
+vbar = math%zero
+kbar = math%zero
+
+DO ips = 1, test%nips
+
+  CALL FEVariableGetInterpolation_( &
+    obj=c1, rank=c1rank, N=test%N, nns=test%nns, spaceIndx=ips, &
+    timeIndx=math%one_i, T=T, nnt=math%zero_i, scale=math%one, &
+    addContribution=math%no, ans=kbar, nrow=kbar_nrow, ncol=kbar_ncol)
+
+  CALL FEVariableGetInterpolation_( &
+    obj=c2, rank=c2rank, N=test%N, nns=test%nns, spaceIndx=ips, &
+    timeIndx=math%one_i, T=T, nnt=math%zero_i, scale=math%one, &
+    addContribution=math%no, ans=cbar, tsize=cbar_size)
+
+  vbar(1:kbar_nrow) = MATMUL( &
+                      kbar(1:kbar_nrow, 1:kbar_ncol), &
+                      cbar(1:kbar_ncol))
+
+  realval = DOT_PRODUCT(test%normal(1:test%nsd, ips), vbar(1:test%nsd))
+  realval = realval * test%js(ips) * test%ws(ips) * test%thickness(ips) &
+    * scale0
+
+  ans(1:tsize) = ans(1:tsize) + realval * test%N(1:tsize, ips)
+
+END DO
+END PROCEDURE ForceVectorNormal_6
+
+!----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
