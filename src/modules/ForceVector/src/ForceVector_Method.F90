@@ -27,7 +27,6 @@ PRIVATE
 
 PUBLIC :: ForceVector
 PUBLIC :: ForceVector_
-PUBLIC :: ForceVectorNormal_
 
 !----------------------------------------------------------------------------
 !                                                               ForceVector
@@ -771,124 +770,6 @@ INTERFACE ForceVector_
     INTEGER(I4B), INTENT(OUT) :: tsize
   END SUBROUTINE ForceVector_16
 END INTERFACE ForceVector_
-
-!----------------------------------------------------------------------------
-!                                                         ForceVectorNormal_
-!----------------------------------------------------------------------------
-
-!> author: Vikas Sharma, Ph. D.
-! date: 2026-02-21
-! summary: Compute normal force vector
-!
-!# ForceVectorNormal_
-!
-! This subroutine computes the following expression:
-!
-! $$
-! F_{I}=\int_{\Omega}N^{I} \mathbf{c} \cdot \mathbf{n} d\Omega
-! $$
-
-INTERFACE ForceVectorNormal_
-  MODULE SUBROUTINE ForceVectorNormal_1(test, c, ans, tsize, scale, &
-                                        addContribution)
-    CLASS(ElemshapeData_), INTENT(IN) :: test
-    REAL(DFP), INTENT(IN) :: c(:)
-    REAL(DFP), INTENT(INOUT) :: ans(:)
-    INTEGER(I4B), INTENT(OUT) :: tsize
-    REAL(DFP), OPTIONAL, INTENT(IN) :: scale
-    LOGICAL(LGT), OPTIONAL, INTENT(IN) :: addContribution
-  END SUBROUTINE ForceVectorNormal_1
-END INTERFACE ForceVectorNormal_
-
-!----------------------------------------------------------------------------
-!                                                         ForceVectorNormal_
-!----------------------------------------------------------------------------
-
-!> author: Vikas Sharma, Ph. D.
-! date: 2026-02-21
-! summary: Compute normal force vector
-!
-!# ForceVectorNormal_
-!
-! This subroutine computes the following expression:
-!
-! $$
-! F_{I}=\int_{\Omega}N^{I} \mathbf{c} \cdot \mathbf{n} d\Omega
-! $$
-
-INTERFACE ForceVectorNormal_
-  MODULE SUBROUTINE ForceVectorNormal_2(test, c, crank, ans, tsize, &
-                                        scale, addContribution)
-    CLASS(ElemshapeData_), INTENT(IN) :: test
-    TYPE(FEVariable_), INTENT(IN) :: c
-    TYPE(FEVariableVector_), INTENT(IN) :: crank
-    REAL(DFP), INTENT(INOUT) :: ans(:)
-    INTEGER(I4B), INTENT(OUT) :: tsize
-    REAL(DFP), OPTIONAL, INTENT(IN) :: scale
-    LOGICAL(LGT), OPTIONAL, INTENT(IN) :: addContribution
-  END SUBROUTINE ForceVectorNormal_2
-END INTERFACE ForceVectorNormal_
-
-!----------------------------------------------------------------------------
-!                                                         ForceVectorNormal_
-!----------------------------------------------------------------------------
-
-!> author: Vikas Sharma, Ph. D.
-! date: 2026-02-21
-! summary: Compute normal force vector
-!
-!# ForceVectorNormal_
-!
-! This subroutine computes the following expression:
-!
-! $$
-! F_{I}=\int_{\Omega}N^{I} c_{1} \mathbf{c}_{2} \cdot \mathbf{n} d\Omega
-! $$
-
-INTERFACE ForceVectorNormal_
-  MODULE SUBROUTINE ForceVectorNormal_3(test, c1, c1rank, c2, ans, tsize, &
-                                        scale, addContribution)
-    CLASS(ElemshapeData_), INTENT(IN) :: test
-    TYPE(FEVariable_), INTENT(IN) :: c1
-    TYPE(FEVariableScalar_), INTENT(IN) :: c1rank
-    REAL(DFP), INTENT(IN) :: c2(:)
-    REAL(DFP), INTENT(INOUT) :: ans(:)
-    INTEGER(I4B), INTENT(OUT) :: tsize
-    REAL(DFP), OPTIONAL, INTENT(IN) :: scale
-    LOGICAL(LGT), OPTIONAL, INTENT(IN) :: addContribution
-  END SUBROUTINE ForceVectorNormal_3
-END INTERFACE ForceVectorNormal_
-
-!----------------------------------------------------------------------------
-!                                                         ForceVectorNormal_
-!----------------------------------------------------------------------------
-
-!> author: Vikas Sharma, Ph. D.
-! date: 2026-02-21
-! summary: Compute normal force vector
-!
-!# ForceVectorNormal_
-!
-! This subroutine computes the following expression:
-!
-! $$
-! F_{I}=\int_{\Omega}N^{I} c_{1} \mathbf{c}_{2} \cdot \mathbf{n} d\Omega
-! $$
-
-INTERFACE ForceVectorNormal_
-  MODULE SUBROUTINE ForceVectorNormal_4(test, c1, c1rank, c2, c2rank, ans, &
-                                        tsize, scale, addContribution)
-    CLASS(ElemshapeData_), INTENT(IN) :: test
-    TYPE(FEVariable_), INTENT(IN) :: c1
-    TYPE(FEVariableScalar_), INTENT(IN) :: c1rank
-    TYPE(FEVariable_), INTENT(IN) :: c2
-    TYPE(FEVariableVector_), INTENT(IN) :: c2rank
-    REAL(DFP), INTENT(INOUT) :: ans(:)
-    INTEGER(I4B), INTENT(OUT) :: tsize
-    REAL(DFP), OPTIONAL, INTENT(IN) :: scale
-    LOGICAL(LGT), OPTIONAL, INTENT(IN) :: addContribution
-  END SUBROUTINE ForceVectorNormal_4
-END INTERFACE ForceVectorNormal_
 
 !----------------------------------------------------------------------------
 !
