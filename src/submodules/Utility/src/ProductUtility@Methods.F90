@@ -46,6 +46,26 @@ END DO
 END PROCEDURE OTimesTilda1
 
 !----------------------------------------------------------------------------
+!                                                                OTimesTilda
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE OTimesTilda2
+INTEGER(I4B) :: sa, sb
+INTEGER(I4B) :: ii, jj
+
+sa = SIZE(a)
+sb = SIZE(b)
+
+tsize = sa * sb
+
+DO CONCURRENT(ii=1:sa, jj=1:sb)
+  ans((ii - 1) * sb + jj) = &
+    anscoeff * ans((ii - 1) * sb + jj) + scale * a(ii) * b(jj)
+END DO
+
+END PROCEDURE OTimesTilda2
+
+!----------------------------------------------------------------------------
 !                                                               OTimesTilda
 !----------------------------------------------------------------------------
 
@@ -68,26 +88,6 @@ DO CONCURRENT(ii=1:sa(1), jj=1:sa(2), pp=1:sb(1), qq=1:sb(2))
 END DO
 
 END PROCEDURE OTimesTilda3
-
-!----------------------------------------------------------------------------
-!                                                                OTimesTilda
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE OTimesTilda2
-INTEGER(I4B) :: sa, sb
-INTEGER(I4B) :: ii, jj
-
-sa = SIZE(a)
-sb = SIZE(b)
-
-tsize = sa * sb
-
-DO CONCURRENT(ii=1:sa, jj=1:sb)
-  ans((ii - 1) * sb + jj) = &
-    anscoeff * ans((ii - 1) * sb + jj) + scale * a(ii) * b(jj)
-END DO
-
-END PROCEDURE OTimesTilda2
 
 !----------------------------------------------------------------------------
 !                                                                 VectorProd
