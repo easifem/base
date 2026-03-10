@@ -70,10 +70,13 @@ END INTERFACE STForceVector
 !
 
 INTERFACE STForceVector_
-  MODULE PURE SUBROUTINE obj_STForceVector_1(test, ans, nrow, ncol)
+  MODULE PURE SUBROUTINE obj_STForceVector_1(test, ans, nrow, ncol, &
+                                             scale, addContribution)
     CLASS(STElemshapeData_), INTENT(IN) :: test(:)
     REAL(DFP), INTENT(INOUT) :: ans(:, :)
     INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+    REAL(DFP), OPTIONAL, INTENT(IN) :: scale
+    LOGICAL(LGT), OPTIONAL, INTENT(IN) :: addContribution
   END SUBROUTINE obj_STForceVector_1
 END INTERFACE STForceVector_
 
@@ -128,7 +131,8 @@ END INTERFACE STForceVector
 ! Here $\rho$ is denoted by $c$.
 
 INTERFACE STForceVector_
-  MODULE PURE SUBROUTINE obj_STForceVector_2(test, c, crank, ans, nrow, ncol)
+  MODULE PURE SUBROUTINE obj_STForceVector_2( &
+    test, c, crank, ans, nrow, ncol, scale, addContribution)
     CLASS(STElemshapeData_), INTENT(IN) :: test(:)
     !! vector of space time element shape data
     TYPE(FEVariable_), INTENT(IN) :: c
@@ -139,6 +143,8 @@ INTERFACE STForceVector_
     !! space time force vector
     INTEGER(I4B), INTENT(OUT) :: nrow, ncol
     !! number of rows and cols with ans
+    REAL(DFP), OPTIONAL, INTENT(IN) :: scale
+    LOGICAL(LGT), OPTIONAL, INTENT(IN) :: addContribution
   END SUBROUTINE obj_STForceVector_2
 END INTERFACE STForceVector_
 
@@ -197,12 +203,14 @@ END INTERFACE STForceVector
 
 INTERFACE STForceVector_
   MODULE PURE SUBROUTINE obj_STForceVector_3( &
-    test, c, crank, ans, dim1, dim2, dim3)
+    test, c, crank, ans, dim1, dim2, dim3, scale, addContribution)
     CLASS(STElemshapeData_), INTENT(IN) :: test(:)
     TYPE(FEVariable_), INTENT(IN) :: c
     TYPE(FEVariableVector_), INTENT(IN) :: crank
     REAL(DFP), INTENT(INOUT) :: ans(:, :, :)
     INTEGER(I4B), INTENT(OUT) :: dim1, dim2, dim3
+    REAL(DFP), OPTIONAL, INTENT(IN) :: scale
+    LOGICAL(LGT), OPTIONAL, INTENT(IN) :: addContribution
   END SUBROUTINE obj_STForceVector_3
 END INTERFACE STForceVector_
 
@@ -261,12 +269,14 @@ END INTERFACE STForceVector
 
 INTERFACE STForceVector_
   MODULE PURE SUBROUTINE obj_STForceVector_4( &
-    test, c, crank, ans, dim1, dim2, dim3, dim4)
+    test, c, crank, ans, dim1, dim2, dim3, dim4, scale, addContribution)
     CLASS(STElemshapeData_), INTENT(IN) :: test(:)
     TYPE(FEVariable_), INTENT(IN) :: c
     TYPE(FEVariableMatrix_), INTENT(IN) :: crank
     REAL(DFP), INTENT(INOUT) :: ans(:, :, :, :)
     INTEGER(I4B), INTENT(OUT) :: dim1, dim2, dim3, dim4
+    REAL(DFP), OPTIONAL, INTENT(IN) :: scale
+    LOGICAL(LGT), OPTIONAL, INTENT(IN) :: addContribution
   END SUBROUTINE obj_STForceVector_4
 END INTERFACE STForceVector_
 
@@ -334,7 +344,7 @@ END INTERFACE STForceVector
 
 INTERFACE STForceVector_
   MODULE PURE SUBROUTINE obj_STForceVector_5( &
-    test, c1, c1rank, c2, c2rank, ans, nrow, ncol)
+    test, c1, c1rank, c2, c2rank, ans, nrow, ncol, scale, addContribution)
     CLASS(STElemshapeData_), INTENT(IN) :: test(:)
     TYPE(FEVariable_), INTENT(IN) :: c1
     TYPE(FEVariable_), INTENT(IN) :: c2
@@ -342,6 +352,8 @@ INTERFACE STForceVector_
     TYPE(FEVariableScalar_), INTENT(IN) :: c2rank
     REAL(DFP), INTENT(INOUT) :: ans(:, :)
     INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+    REAL(DFP), OPTIONAL, INTENT(IN) :: scale
+    LOGICAL(LGT), OPTIONAL, INTENT(IN) :: addContribution
   END SUBROUTINE obj_STForceVector_5
 END INTERFACE STForceVector_
 
@@ -411,7 +423,8 @@ END INTERFACE STForceVector
 ! Here $\mathbf{c}$ is denoted by $c2$.
 INTERFACE STForceVector_
   MODULE PURE SUBROUTINE obj_STForceVector_6( &
-    test, c1, c1rank, c2, c2rank, ans, dim1, dim2, dim3)
+    test, c1, c1rank, c2, c2rank, ans, dim1, dim2, dim3, scale, &
+    addContribution)
     CLASS(STElemshapeData_), INTENT(IN) :: test(:)
     !! space-time element shape data
     TYPE(FEVariable_), INTENT(IN) :: c1
@@ -426,6 +439,8 @@ INTERFACE STForceVector_
     !! space-time force vector for vector
     INTEGER(I4B), INTENT(OUT) :: dim1, dim2, dim3
     !! these are dimensions of data written in ans
+    REAL(DFP), OPTIONAL, INTENT(IN) :: scale
+    LOGICAL(LGT), OPTIONAL, INTENT(IN) :: addContribution
   END SUBROUTINE obj_STForceVector_6
 END INTERFACE STForceVector_
 
@@ -495,7 +510,8 @@ END INTERFACE STForceVector
 
 INTERFACE STForceVector_
   MODULE PURE SUBROUTINE obj_STForceVector_7( &
-    test, c1, c1rank, c2, c2rank, ans, dim1, dim2, dim3, dim4)
+    test, c1, c1rank, c2, c2rank, ans, dim1, dim2, dim3, dim4, &
+    scale, addContribution)
     CLASS(STElemshapeData_), INTENT(IN) :: test(:)
     TYPE(FEVariable_), INTENT(IN) :: c1
     TYPE(FEVariable_), INTENT(IN) :: c2
@@ -503,6 +519,8 @@ INTERFACE STForceVector_
     TYPE(FEVariableMatrix_), INTENT(IN) :: c2rank
     REAL(DFP), INTENT(INOUT) :: ans(:, :, :, :)
     INTEGER(I4B), INTENT(OUT) :: dim1, dim2, dim3, dim4
+    REAL(DFP), OPTIONAL, INTENT(IN) :: scale
+    LOGICAL(LGT), OPTIONAL, INTENT(IN) :: addContribution
   END SUBROUTINE obj_STForceVector_7
 END INTERFACE STForceVector_
 
@@ -531,11 +549,14 @@ END INTERFACE STForceVector
 ! summary: space-time force vector for scalar
 
 INTERFACE STForceVector_
-  MODULE PURE SUBROUTINE obj_STForceVector_8(test, term1, ans, nrow, ncol)
+  MODULE PURE SUBROUTINE obj_STForceVector_8(test, term1, ans, nrow, ncol, &
+                                             scale, addContribution)
     CLASS(STElemshapeData_), INTENT(IN) :: test(:)
     INTEGER(I4B), INTENT(IN) :: term1
     REAL(DFP), INTENT(INOUT) :: ans(:, :)
     INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+    REAL(DFP), OPTIONAL, INTENT(IN) :: scale
+    LOGICAL(LGT), OPTIONAL, INTENT(IN) :: addContribution
   END SUBROUTINE obj_STForceVector_8
 END INTERFACE STForceVector_
 
@@ -567,13 +588,15 @@ END INTERFACE STForceVector
 
 INTERFACE STForceVector_
   MODULE PURE SUBROUTINE obj_STForceVector_9( &
-    test, term1, c, crank, ans, nrow, ncol)
+    test, term1, c, crank, ans, nrow, ncol, scale, addContribution)
     CLASS(STElemshapeData_), INTENT(IN) :: test(:)
     INTEGER(I4B), INTENT(IN) :: term1
     TYPE(FEVariable_), INTENT(IN) :: c
     TYPE(FEVariableScalar_), INTENT(IN) :: crank
     REAL(DFP), INTENT(INOUT) :: ans(:, :)
     INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+    REAL(DFP), OPTIONAL, INTENT(IN) :: scale
+    LOGICAL(LGT), OPTIONAL, INTENT(IN) :: addContribution
   END SUBROUTINE obj_STForceVector_9
 END INTERFACE STForceVector_
 
@@ -605,13 +628,15 @@ END INTERFACE STForceVector
 
 INTERFACE STForceVector_
   MODULE PURE SUBROUTINE obj_STForceVector_10( &
-    test, term1, c, crank, ans, dim1, dim2, dim3)
+    test, term1, c, crank, ans, dim1, dim2, dim3, scale, addContribution)
     CLASS(STElemshapeData_), INTENT(IN) :: test(:)
     INTEGER(I4B), INTENT(IN) :: term1
     TYPE(FEVariable_), INTENT(IN) :: c
     TYPE(FEVariableVector_), INTENT(IN) :: crank
     REAL(DFP), INTENT(INOUT) :: ans(:, :, :)
     INTEGER(I4B), INTENT(OUT) :: dim1, dim2, dim3
+    REAL(DFP), OPTIONAL, INTENT(IN) :: scale
+    LOGICAL(LGT), OPTIONAL, INTENT(IN) :: addContribution
   END SUBROUTINE obj_STForceVector_10
 END INTERFACE STForceVector_
 
@@ -643,13 +668,16 @@ END INTERFACE STForceVector
 
 INTERFACE STForceVector_
   MODULE PURE SUBROUTINE obj_STForceVector_11( &
-    test, term1, c, crank, ans, dim1, dim2, dim3, dim4)
+    test, term1, c, crank, ans, dim1, dim2, dim3, dim4, scale, &
+    addContribution)
     CLASS(STElemshapeData_), INTENT(IN) :: test(:)
     INTEGER(I4B), INTENT(IN) :: term1
     TYPE(FEVariable_), INTENT(IN) :: c
     TYPE(FEVariableMatrix_), INTENT(IN) :: crank
     REAL(DFP), INTENT(INOUT) :: ans(:, :, :, :)
     INTEGER(I4B), INTENT(OUT) :: dim1, dim2, dim3, dim4
+    REAL(DFP), OPTIONAL, INTENT(IN) :: scale
+    LOGICAL(LGT), OPTIONAL, INTENT(IN) :: addContribution
   END SUBROUTINE obj_STForceVector_11
 END INTERFACE STForceVector_
 
@@ -684,7 +712,8 @@ END INTERFACE STForceVector
 
 INTERFACE STForceVector_
   MODULE PURE SUBROUTINE obj_STForceVector_12( &
-    test, term1, c1, c1rank, c2, c2rank, ans, nrow, ncol)
+    test, term1, c1, c1rank, c2, c2rank, ans, nrow, ncol, scale, &
+    addContribution)
     CLASS(STElemshapeData_), INTENT(IN) :: test(:)
     INTEGER(I4B), INTENT(IN) :: term1
     TYPE(FEVariable_), INTENT(IN) :: c1
@@ -693,6 +722,8 @@ INTERFACE STForceVector_
     TYPE(FEVariableScalar_), INTENT(IN) :: c2rank
     REAL(DFP), INTENT(INOUT) :: ans(:, :)
     INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+    REAL(DFP), OPTIONAL, INTENT(IN) :: scale
+    LOGICAL(LGT), OPTIONAL, INTENT(IN) :: addContribution
   END SUBROUTINE obj_STForceVector_12
 END INTERFACE STForceVector_
 
@@ -727,7 +758,8 @@ END INTERFACE STForceVector
 
 INTERFACE STForceVector_
   MODULE PURE SUBROUTINE obj_STForceVector_13( &
-    test, term1, c1, c1rank, c2, c2rank, ans, dim1, dim2, dim3)
+    test, term1, c1, c1rank, c2, c2rank, ans, dim1, dim2, dim3, scale, &
+    addContribution)
     CLASS(STElemshapeData_), INTENT(IN) :: test(:)
     INTEGER(I4B), INTENT(IN) :: term1
     TYPE(FEVariable_), INTENT(IN) :: c1
@@ -736,6 +768,8 @@ INTERFACE STForceVector_
     TYPE(FEVariableVector_), INTENT(IN) :: c2rank
     REAL(DFP), INTENT(INOUT) :: ans(:, :, :)
     INTEGER(I4B), INTENT(OUT) :: dim1, dim2, dim3
+    REAL(DFP), OPTIONAL, INTENT(IN) :: scale
+    LOGICAL(LGT), OPTIONAL, INTENT(IN) :: addContribution
   END SUBROUTINE obj_STForceVector_13
 END INTERFACE STForceVector_
 
@@ -770,7 +804,8 @@ END INTERFACE STForceVector
 
 INTERFACE STForceVector_
   MODULE PURE SUBROUTINE obj_STForceVector_14( &
-    test, term1, c1, c1rank, c2, c2rank, ans, dim1, dim2, dim3, dim4)
+    test, term1, c1, c1rank, c2, c2rank, ans, dim1, dim2, dim3, dim4, &
+    scale, addContribution)
     CLASS(STElemshapeData_), INTENT(IN) :: test(:)
     INTEGER(I4B), INTENT(IN) :: term1
     TYPE(FEVariable_), INTENT(IN) :: c1
@@ -779,6 +814,8 @@ INTERFACE STForceVector_
     TYPE(FEVariableMatrix_), INTENT(IN) :: c2rank
     REAL(DFP), INTENT(INOUT) :: ans(:, :, :, :)
     INTEGER(I4B), INTENT(OUT) :: dim1, dim2, dim3, dim4
+    REAL(DFP), OPTIONAL, INTENT(IN) :: scale
+    LOGICAL(LGT), OPTIONAL, INTENT(IN) :: addContribution
   END SUBROUTINE obj_STForceVector_14
 END INTERFACE STForceVector_
 
@@ -811,7 +848,8 @@ END INTERFACE STForceVector
 
 INTERFACE STForceVector_
   MODULE PURE SUBROUTINE obj_STForceVector_15( &
-    test, projection, c, crank, ans, nrow, ncol, temp)
+    test, projection, c, crank, ans, nrow, ncol, temp, scale, &
+    addContribution)
     CLASS(STElemshapeData_), INTENT(IN) :: test(:)
     CHARACTER(LEN=*), INTENT(IN) :: projection
     TYPE(FEVariable_), INTENT(IN) :: c
@@ -821,6 +859,8 @@ INTERFACE STForceVector_
     REAL(DFP), INTENT(INOUT) :: temp(:, :)
     !! temp array to keep projection data at ips and ipt
     !! size should be at least (nns x nnt)
+    REAL(DFP), OPTIONAL, INTENT(IN) :: scale
+    LOGICAL(LGT), OPTIONAL, INTENT(IN) :: addContribution
   END SUBROUTINE obj_STForceVector_15
 END INTERFACE STForceVector_
 
@@ -855,7 +895,8 @@ END INTERFACE STForceVector
 
 INTERFACE STForceVector_
   MODULE PURE SUBROUTINE obj_STForceVector_16( &
-    test, projection, c1, c1rank, c2, c2rank, ans, nrow, ncol, temp)
+    test, projection, c1, c1rank, c2, c2rank, ans, nrow, ncol, temp, &
+    scale, addContribution)
     CLASS(STElemshapeData_), INTENT(IN) :: test(:)
     CHARACTER(LEN=*), INTENT(IN) :: projection
     TYPE(FEVariable_), INTENT(IN) :: c1
@@ -867,6 +908,8 @@ INTERFACE STForceVector_
     REAL(DFP), INTENT(INOUT) :: temp(:, :)
     !! temp array to keep projection data at ips and ipt
     !! size should be at least (nns x nnt)
+    REAL(DFP), OPTIONAL, INTENT(IN) :: scale
+    LOGICAL(LGT), OPTIONAL, INTENT(IN) :: addContribution
   END SUBROUTINE obj_STForceVector_16
 END INTERFACE STForceVector_
 
@@ -903,7 +946,8 @@ END INTERFACE STForceVector
 
 INTERFACE STForceVector_
   MODULE PURE SUBROUTINE obj_STForceVector_17( &
-    test, projection, c1, c1rank, c2, c2rank, ans, dim1, dim2, dim3, temp)
+    test, projection, c1, c1rank, c2, c2rank, ans, dim1, dim2, dim3, temp, &
+    scale, addContribution)
     CLASS(STElemshapeData_), INTENT(IN) :: test(:)
     CHARACTER(LEN=*), INTENT(IN) :: projection
     TYPE(FEVariable_), INTENT(IN) :: c1
@@ -915,6 +959,8 @@ INTERFACE STForceVector_
     REAL(DFP), INTENT(INOUT) :: ans(:, :, :)
     INTEGER(I4B), INTENT(OUT) :: dim1, dim2, dim3
     REAL(DFP), INTENT(INOUT) :: temp(:, :)
+    REAL(DFP), OPTIONAL, INTENT(IN) :: scale
+    LOGICAL(LGT), OPTIONAL, INTENT(IN) :: addContribution
   END SUBROUTINE obj_STForceVector_17
 END INTERFACE STForceVector_
 
@@ -950,7 +996,7 @@ END INTERFACE STForceVector
 INTERFACE STForceVector_
   MODULE PURE SUBROUTINE obj_STForceVector_18( &
     test, projection, c1, c1rank, c2, c2rank, ans, dim1, dim2, dim3, dim4, &
-    temp)
+    temp, scale, addContribution)
     CLASS(STElemshapeData_), INTENT(IN) :: test(:)
     CHARACTER(LEN=*), INTENT(IN) :: projection
     TYPE(FEVariable_), INTENT(IN) :: c1
@@ -961,6 +1007,8 @@ INTERFACE STForceVector_
     REAL(DFP), INTENT(INOUT) :: ans(:, :, :, :)
     INTEGER(I4B), INTENT(OUT) :: dim1, dim2, dim3, dim4
     REAL(DFP), INTENT(INOUT) :: temp(:, :)
+    REAL(DFP), OPTIONAL, INTENT(IN) :: scale
+    LOGICAL(LGT), OPTIONAL, INTENT(IN) :: addContribution
   END SUBROUTINE obj_STForceVector_18
 END INTERFACE STForceVector_
 
@@ -998,7 +1046,7 @@ END INTERFACE STForceVector
 INTERFACE STForceVector_
   MODULE PURE SUBROUTINE obj_STForceVector_19( &
     test, projection, c1, c1rank, c2, c2rank, c3, c3rank, ans, nrow, ncol, &
-    temp)
+    temp, scale, addContribution)
     CLASS(STElemshapeData_), INTENT(IN) :: test(:)
     CHARACTER(LEN=*), INTENT(IN) :: projection
     TYPE(FEVariable_), INTENT(IN) :: c1
@@ -1010,6 +1058,8 @@ INTERFACE STForceVector_
     REAL(DFP), INTENT(INOUT) :: ans(:, :)
     INTEGER(I4B), INTENT(OUT) :: nrow, ncol
     REAL(DFP), INTENT(INOUT) :: temp(:, :)
+    REAL(DFP), OPTIONAL, INTENT(IN) :: scale
+    LOGICAL(LGT), OPTIONAL, INTENT(IN) :: addContribution
   END SUBROUTINE obj_STForceVector_19
 END INTERFACE STForceVector_
 
@@ -1047,7 +1097,7 @@ END INTERFACE STForceVector
 INTERFACE STForceVector_
   MODULE PURE SUBROUTINE obj_STForceVector_20( &
     test, projection, c1, c1rank, c2, c2rank, c3, c3rank, ans, &
-    dim1, dim2, dim3, temp)
+    dim1, dim2, dim3, temp, scale, addContribution)
     CLASS(STElemshapeData_), INTENT(IN) :: test(:)
     CHARACTER(LEN=*), INTENT(IN) :: projection
     TYPE(FEVariable_), INTENT(IN) :: c1
@@ -1060,6 +1110,8 @@ INTERFACE STForceVector_
     REAL(DFP), INTENT(INOUT) :: ans(:, :, :)
     INTEGER(I4B), INTENT(OUT) :: dim1, dim2, dim3
     REAL(DFP), INTENT(INOUT) :: temp(:, :)
+    REAL(DFP), OPTIONAL, INTENT(IN) :: scale
+    LOGICAL(LGT), OPTIONAL, INTENT(IN) :: addContribution
   END SUBROUTINE obj_STForceVector_20
 END INTERFACE STForceVector_
 
@@ -1097,7 +1149,7 @@ END INTERFACE STForceVector
 INTERFACE STForceVector_
   MODULE PURE SUBROUTINE obj_STForceVector_21( &
     test, projection, c1, c1rank, c2, c2rank, c3, c3rank, ans, dim1, dim2, &
-    dim3, dim4, temp)
+    dim3, dim4, temp, scale, addContribution)
     CLASS(STElemshapeData_), INTENT(IN) :: test(:)
     CHARACTER(LEN=*), INTENT(IN) :: projection
     TYPE(FEVariable_), INTENT(IN) :: c1
@@ -1109,6 +1161,8 @@ INTERFACE STForceVector_
     REAL(DFP), INTENT(INOUT) :: ans(:, :, :, :)
     INTEGER(I4B), INTENT(OUT) :: dim1, dim2, dim3, dim4
     REAL(DFP), INTENT(INOUT) :: temp(:, :)
+    REAL(DFP), OPTIONAL, INTENT(IN) :: scale
+    LOGICAL(LGT), OPTIONAL, INTENT(IN) :: addContribution
   END SUBROUTINE obj_STForceVector_21
 END INTERFACE STForceVector_
 
@@ -1132,7 +1186,7 @@ END INTERFACE STForceVector_
 
 INTERFACE STForceVector_
   MODULE PURE SUBROUTINE obj_STForceVector_22( &
-    testSpace, testTime, ans, nrow, ncol)
+    testSpace, testTime, ans, nrow, ncol, scale, addContribution)
     CLASS(ElemshapeData_), INTENT(IN) :: testSpace
     !! test function for space
     CLASS(ElemshapeData_), INTENT(IN) :: testTime
@@ -1141,6 +1195,8 @@ INTERFACE STForceVector_
     !! space time force vector
     INTEGER(I4B), INTENT(OUT) :: nrow, ncol
     !! number of rows and cols written in ans
+    REAL(DFP), OPTIONAL, INTENT(IN) :: scale
+    LOGICAL(LGT), OPTIONAL, INTENT(IN) :: addContribution
   END SUBROUTINE obj_STForceVector_22
 END INTERFACE STForceVector_
 
@@ -1168,7 +1224,7 @@ END INTERFACE STForceVector_
 
 INTERFACE STForceVector_
   MODULE PURE SUBROUTINE obj_STForceVector_23( &
-    testSpace, testTime, c, crank, ans, nrow, ncol)
+    testSpace, testTime, c, crank, ans, nrow, ncol, scale, addContribution)
     CLASS(ElemshapeData_), INTENT(IN) :: testSpace
     !! test function for space
     CLASS(ElemshapeData_), INTENT(IN) :: testTime
@@ -1180,6 +1236,8 @@ INTERFACE STForceVector_
     !! space time force vector
     INTEGER(I4B), INTENT(OUT) :: nrow, ncol
     !! number of rows and cols written in ans
+    REAL(DFP), OPTIONAL, INTENT(IN) :: scale
+    LOGICAL(LGT), OPTIONAL, INTENT(IN) :: addContribution
   END SUBROUTINE obj_STForceVector_23
 END INTERFACE STForceVector_
 
@@ -1206,13 +1264,16 @@ END INTERFACE STForceVector_
 
 INTERFACE STForceVector_
   MODULE PURE SUBROUTINE obj_STForceVector_24( &
-    testSpace, testTime, c, crank, ans, dim1, dim2, dim3)
+    testSpace, testTime, c, crank, ans, dim1, dim2, dim3, scale, &
+    addContribution)
     CLASS(ElemshapeData_), INTENT(IN) :: testSpace
     CLASS(ElemshapeData_), INTENT(IN) :: testTime
     TYPE(FEVariable_), INTENT(IN) :: c
     TYPE(FEVariableVector_), INTENT(IN) :: crank
     REAL(DFP), INTENT(INOUT) :: ans(:, :, :)
     INTEGER(I4B), INTENT(OUT) :: dim1, dim2, dim3
+    REAL(DFP), OPTIONAL, INTENT(IN) :: scale
+    LOGICAL(LGT), OPTIONAL, INTENT(IN) :: addContribution
   END SUBROUTINE obj_STForceVector_24
 END INTERFACE STForceVector_
 
