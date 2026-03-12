@@ -19,7 +19,8 @@
 ! summary: This module contains the methods for data type [[QuadraturePoint_]]
 
 MODULE QuadraturePoint_Method
-USE BaseType, ONLY: QuadraturePoint_, ReferenceElement_
+USE BaseType, ONLY: QuadraturePoint_
+USE BaseType, ONLY: ReferenceElement_
 USE GlobalData, ONLY: DFP, I4B, LGT
 USE String_Class, ONLY: String
 
