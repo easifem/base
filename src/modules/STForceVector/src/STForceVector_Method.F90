@@ -1278,6 +1278,51 @@ INTERFACE STForceVector_
 END INTERFACE STForceVector_
 
 !----------------------------------------------------------------------------
+!                                                             STForceVector_
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2026-03-06
+! summary: space time force vector without allocation
+!
+!# STForceVector_
+!
+! This method computes space time force vector.
+!
+!$$
+!F(I,a)=\int \int N^{I} T_{a} c_{1} c_{2} ds dt
+!$$
+!
+! $N$ is taken from testSpace, and $T$ is taken from testTime.
+!
+! $c_{1}$ and $c_{2}$ are scalar finite variable.
+
+INTERFACE STForceVector_
+  MODULE PURE SUBROUTINE obj_STForceVector_25( &
+    testSpace, testTime, c1, c1rank, c2, c2rank, ans, &
+    nrow, ncol, scale, addContribution)
+    CLASS(ElemshapeData_), INTENT(IN) :: testSpace
+    !! test function in space
+    CLASS(ElemshapeData_), INTENT(IN) :: testTime
+    !! test function in time
+    TYPE(FEVariable_), INTENT(IN) :: c1
+    !! scalar finite element variable
+    TYPE(FEVariableScalar_), INTENT(IN) :: c1rank
+    !! scalar finite element variable
+    TYPE(FEVariable_), INTENT(IN) :: c2
+    !! scalar finite element variable
+    TYPE(FEVariableScalar_), INTENT(IN) :: c2rank
+    !! scalar finite element variable
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    !! space-time force vector
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+    !! upper bound of data written in ans
+    REAL(DFP), OPTIONAL, INTENT(IN) :: scale
+    LOGICAL(LGT), OPTIONAL, INTENT(IN) :: addContribution
+  END SUBROUTINE obj_STForceVector_25
+END INTERFACE STForceVector_
+
+!----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
