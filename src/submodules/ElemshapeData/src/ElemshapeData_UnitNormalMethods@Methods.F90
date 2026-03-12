@@ -30,7 +30,7 @@ REAL(DFP), ALLOCATABLE :: dp(:, :), p(:), pnorm(:)
 INTEGER(I4B) :: ii
 !! main
 CALL GetInterpolation(obj=obj, Val=val, ans=p)
-CALL getSpatialGradient(obj=obj, lg=dp, Val=Val)
+CALL getSpatialGradient(obj=obj, ans=dp, Val=Val)
 CALL Reallocate(R, obj%nsd, obj%nips)
 pnorm = NORM2(dp, DIM=1)
 !!
@@ -62,9 +62,9 @@ REAL(DFP) :: nrm
 INTEGER(I4B) :: i
 !! main
 !! interpolate the vector
-CALL getInterpolation(obj=obj, ans=p, Val=val)
+CALL getInterpolation(obj=obj, ans=p, val=val)
 !! get gradient of nodal values
-CALL getSpatialGradient(obj=obj, lg=dp, Val=val)
+CALL getSpatialGradient(obj=obj, ans=dp, val=val)
 pnorm = NORM2(p, DIM=1)
 CALL Reallocate(R, obj%nsd, obj%nips)
 DO i = 1, SIZE(pnorm)
@@ -108,7 +108,8 @@ PURE SUBROUTINE scalar_getUnitNormal_3(obj, r, val)
   INTEGER(I4B) :: ii
 
   CALL GetInterpolation(obj=obj, Val=val, ans=p)
-  CALL GetSpatialGradient(obj=obj, lg=dp, Val=Val)
+  CALL GetSpatialGradient(obj=obj, ans=dp, val=val, &
+                          valRank=TypeFEVariableScalar)
   CALL Reallocate(R, obj%nsd, obj%nips)
   pnorm = NORM2(dp, DIM=1)
 !!
@@ -139,10 +140,14 @@ PURE SUBROUTINE vector_getUnitNormal_3(obj, r, val)
   REAL(DFP) :: nrm
   INTEGER(I4B) :: i
 !! main
-!! interpolate the vector
-  CALL getInterpolation(obj=obj, ans=p, Val=val)
-!! get gradient of nodal values
-  CALL getSpatialGradient(obj=obj, lg=dp, Val=val)
+
+  !! interpolate the vector
+  CALL GetInterpolation(obj=obj, ans=p, Val=val)
+
+  !! get gradient of nodal values
+  CALL GetSpatialGradient(obj=obj, ans=dp, val=val, &
+                          valRank=TypeFEVariableVector)
+
   pnorm = NORM2(p, DIM=1)
   CALL Reallocate(R, obj%nsd, obj%nips)
   DO i = 1, SIZE(pnorm)
@@ -157,12 +162,13 @@ PURE SUBROUTINE vector_getUnitNormal_3(obj, r, val)
       R(:, i) = mv / nrm
     END IF
   END DO
+
   IF (ALLOCATED(dp)) DEALLOCATE (dp)
   IF (ALLOCATED(p)) DEALLOCATE (p)
   IF (ALLOCATED(mv)) DEALLOCATE (mv)
   IF (ALLOCATED(pnorm)) DEALLOCATE (pnorm)
 END SUBROUTINE vector_getUnitNormal_3
-  !!
+
 END PROCEDURE getUnitNormal_3
 
 END SUBMODULE Methods
