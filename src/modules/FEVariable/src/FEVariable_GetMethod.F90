@@ -15,19 +15,18 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 
 MODULE FEVariable_GetMethod
-USE BaseType, ONLY: FEVariable_, &
-                    FEVariableScalar_, &
-                    FEVariableVector_, &
-                    FEVariableMatrix_, &
-                    FEVariableConstant_, &
-                    FEVariableSpace_, &
-                    FEVariableTime_, &
-                    FEVariableSpaceTime_, &
-                    TypeFEVariableOpt
-
+USE BaseType, ONLY: FEVariable_
+USE BaseType, ONLY: FEVariableScalar_
+USE BaseType, ONLY: FEVariableVector_
+USE BaseType, ONLY: FEVariableMatrix_
+USE BaseType, ONLY: FEVariableConstant_
+USE BaseType, ONLY: FEVariableSpace_
+USE BaseType, ONLY: FEVariableTime_
+USE BaseType, ONLY: FEVariableSpaceTime_
+USE BaseType, ONLY: TypeFEVariableOpt
 USE GlobalData, ONLY: I4B, DFP, LGT
-
 IMPLICIT NONE
+
 PRIVATE
 
 PUBLIC :: SIZE
@@ -719,12 +718,12 @@ END INTERFACE Get
 ! summary:  Returns value which is Matrix, Constant without allocation
 
 INTERFACE Get_
-  MODULE PURE SUBROUTINE Matrix_Constant_(obj, rank, vartype, val, &
-                                          nrow, ncol)
+  MODULE PURE SUBROUTINE Matrix_Constant_( &
+    obj, rank, vartype, val, nrow, ncol)
     CLASS(FEVariable_), INTENT(IN) :: obj
     TYPE(FEVariableMatrix_), INTENT(IN) :: rank
     TYPE(FEVariableConstant_), INTENT(IN) :: vartype
-    REAL(DFP), INTENT(inout) :: val(:, :)
+    REAL(DFP), INTENT(INOUT) :: val(:, :)
     INTEGER(I4B), INTENT(OUT) :: nrow, ncol
   END SUBROUTINE Matrix_Constant_
 END INTERFACE Get_
@@ -755,8 +754,8 @@ END INTERFACE Get
 ! summary:  Returns value which is Matrix, Space without allocation
 
 INTERFACE Get_
-  MODULE PURE SUBROUTINE Matrix_Space_(obj, rank, vartype, val, &
-                                       dim1, dim2, dim3)
+  MODULE PURE SUBROUTINE Matrix_Space_( &
+    obj, rank, vartype, val, dim1, dim2, dim3)
     CLASS(FEVariable_), INTENT(IN) :: obj
     TYPE(FEVariableMatrix_), INTENT(IN) :: rank
     TYPE(FEVariableSpace_), INTENT(IN) :: vartype
