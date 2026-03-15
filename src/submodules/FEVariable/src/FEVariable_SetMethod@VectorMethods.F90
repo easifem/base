@@ -17,6 +17,7 @@
 !
 
 SUBMODULE(FEVariable_SetMethod) VectorMethods
+USE BaseType, ONLY: fevaropt => TypeFEVariableOpt
 IMPLICIT NONE
 CONTAINS
 
@@ -32,6 +33,7 @@ IF (addContribution) THEN
 ELSE
   obj%val(1:obj%len) = scale * val(1:obj%len)
 END IF
+obj%varType = fevaropt%constant
 END PROCEDURE obj_Set4
 
 !----------------------------------------------------------------------------
@@ -61,6 +63,7 @@ ELSE
     END DO
   END DO
 END IF
+obj%varType = fevaropt%space
 END PROCEDURE obj_Set5
 
 !----------------------------------------------------------------------------
@@ -93,6 +96,7 @@ ELSE
     END DO
   END DO
 END IF
+obj%varType = fevaropt%spaceTime
 END PROCEDURE obj_Set6
 
 !----------------------------------------------------------------------------
@@ -122,6 +126,8 @@ ELSE
     END DO
   END DO
 END IF
+
+obj%varType = fevaropt%time
 END PROCEDURE obj_Set11
 
 !----------------------------------------------------------------------------

@@ -17,6 +17,7 @@
 !
 
 SUBMODULE(FEVariable_SetMethod) ScalarMethods
+USE BaseType, ONLY: fevaropt => TypeFEVariableOpt
 IMPLICIT NONE
 CONTAINS
 
@@ -32,6 +33,7 @@ IF (addContribution) THEN
 ELSE
   obj%val(1) = scale * val
 END IF
+obj%varType = fevaropt%constant
 END PROCEDURE obj_Set1
 
 !----------------------------------------------------------------------------
@@ -46,6 +48,7 @@ IF (addContribution) THEN
 ELSE
   obj%val(1:obj%len) = scale * val(1:obj%len)
 END IF
+obj%varType = fevaropt%space
 END PROCEDURE obj_Set2
 
 !----------------------------------------------------------------------------
@@ -59,7 +62,6 @@ obj%s(1:2) = SHAPE(val)
 obj%len = obj%s(1) * obj%s(2)
 
 cnt = 0
-
 IF (addContribution) THEN
   DO jj = 1, obj%s(2)
     DO ii = 1, obj%s(1)
@@ -75,6 +77,8 @@ ELSE
     END DO
   END DO
 END IF
+
+obj%varType = fevaropt%spaceTime
 END PROCEDURE obj_Set3
 
 !----------------------------------------------------------------------------
@@ -89,6 +93,7 @@ IF (addContribution) THEN
 ELSE
   obj%val(1:obj%len) = scale * val(1:obj%len)
 END IF
+obj%varType = fevaropt%time
 END PROCEDURE obj_Set10
 
 !----------------------------------------------------------------------------

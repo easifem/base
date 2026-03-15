@@ -16,6 +16,7 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 
 SUBMODULE(FEVariable_SetMethod) MatrixMethods
+USE BaseType, ONLY: fevaropt => TypeFEVariableOpt
 IMPLICIT NONE
 CONTAINS
 
@@ -46,6 +47,7 @@ ELSE
     END DO
   END DO
 END IF
+obj%varType = fevaropt%constant
 END PROCEDURE obj_Set7
 
 !----------------------------------------------------------------------------
@@ -78,6 +80,7 @@ ELSE
     END DO
   END DO
 END IF
+obj%varType = fevaropt%space
 END PROCEDURE obj_Set8
 
 !----------------------------------------------------------------------------
@@ -114,6 +117,7 @@ ELSE
     END DO
   END DO
 END IF
+obj%varType = fevaropt%SpaceTime
 END PROCEDURE obj_Set9
 
 !----------------------------------------------------------------------------
@@ -146,6 +150,8 @@ ELSE
     END DO
   END DO
 END IF
+
+obj%varType = fevaropt%time
 END PROCEDURE obj_Set12
 
 !----------------------------------------------------------------------------
