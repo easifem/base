@@ -64,9 +64,10 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE CSRMatrixLinSolveInitiate
-  MODULE SUBROUTINE CSRMatrix_LinSolve_Initiate(ipar, fpar, W, n, &
-       & solverName, preConditionOption, convergenceIn, convergenceType, &
-       & maxIter, KrylovSubspaceSize, rtol, atol, relativeToRHS)
+  MODULE SUBROUTINE CSRMatrix_LinSolve_Initiate( &
+    ipar, fpar, W, n, solverName, preConditionOption, convergenceIn, &
+    convergenceType, maxIter, KrylovSubspaceSize, rtol, atol, &
+    relativeToRHS)
     INTEGER(I4B), ALLOCATABLE, INTENT(INOUT) :: ipar(:)
     !! Integer PARAMETER
     REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: fpar(:)
