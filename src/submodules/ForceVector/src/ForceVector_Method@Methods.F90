@@ -606,6 +606,44 @@ CALL ForceVector_( &
 END PROCEDURE ForceVector_16
 
 !----------------------------------------------------------------------------
+!                                                        GravityForceVector_
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE GravityForceVector_1
+REAL(DFP) :: cbar(fevaropt%defaultMatrixSize, fevaropt%defaultMatrixSize), &
+             realval, T(0), myvec(fevaropt%defaultMatrixSize)
+INTEGER(I4B) :: ips, cbar_i, cbar_j, nsd
+LOGICAL(LGT) :: isadd0
+REAL(DFP) :: scale0
+
+tsize = test%nns
+nsd = test%nsd
+isadd0 = Input(option=addContribution, default=math%no)
+scale0 = Input(option=scale, default=math%one)
+
+IF (.NOT. isadd0) ans(1:tsize) = math%zero
+
+DO ips = 1, test%nips
+
+  CALL FEVariableGetInterpolation_( &
+    obj=c, rank=crank, N=test%N, nns=test%nns, spaceIndx=ips, &
+    timeIndx=math%one_i, T=T, nnt=math%zero_i, scale=math%one, &
+    addContribution=math%no, ans=cbar, nrow=cbar_i, ncol=cbar_j)
+
+  myvec(1:cbar_i) = MATMUL(cbar(1:cbar_i, 1:cbar_j), gravity(1:cbar_j))
+
+  realval = test%js(ips) * test%ws(ips) * test%thickness(ips) &
+    * scale0
+
+  ans(1:tsize) = ans(1:tsize) &
+                 + realval * MATMUL( &
+                 test%dNdXt(1:tsize, 1:nsd, ips), &
+                 myvec(1:nsd))
+END DO
+
+END PROCEDURE GravityForceVector_1
+
+!----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 

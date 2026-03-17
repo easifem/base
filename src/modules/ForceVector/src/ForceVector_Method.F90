@@ -27,6 +27,7 @@ PRIVATE
 
 PUBLIC :: ForceVector
 PUBLIC :: ForceVector_
+PUBLIC :: GravityForceVector_
 
 !----------------------------------------------------------------------------
 !                                                               ForceVector
@@ -770,6 +771,39 @@ INTERFACE ForceVector_
     INTEGER(I4B), INTENT(OUT) :: tsize
   END SUBROUTINE ForceVector_16
 END INTERFACE ForceVector_
+
+!----------------------------------------------------------------------------
+!                                                         GravityForceVector
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2026-02-21
+! summary: Gravity force vector
+!
+!# GravityForceVector_
+!
+! This routine computes the following integral which involoves gravity
+!
+! $$
+! F_{I}=\int_{\Omega} \frac{\partial N^{I}{\partial x_{i}}
+! \frac{k_{ij}}{\mu} \rho^{2} g_{j} d\Omega
+! $$
+!
+! here c is k
+
+INTERFACE GravityForceVector_
+  MODULE SUBROUTINE GravityForceVector_1( &
+    test, c, crank, gravity, ans, tsize, scale, addContribution)
+    CLASS(ElemshapeData_), INTENT(IN) :: test
+    TYPE(FEVariable_), INTENT(IN) :: c
+    TYPE(FEVariableMatrix_), INTENT(IN) :: crank
+    REAL(DFP), INTENT(IN) :: gravity(:)
+    REAL(DFP), INTENT(INOUT) :: ans(:)
+    INTEGER(I4B), INTENT(OUT) :: tsize
+    REAL(DFP), OPTIONAL, INTENT(IN) :: scale
+    LOGICAL(LGT), OPTIONAL, INTENT(IN) :: addContribution
+  END SUBROUTINE GravityForceVector_1
+END INTERFACE GravityForceVector_
 
 !----------------------------------------------------------------------------
 !
