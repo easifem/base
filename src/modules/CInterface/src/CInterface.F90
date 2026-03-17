@@ -51,7 +51,6 @@ USE ISO_C_BINDING, ONLY: C_INTPTR_T
 USE ISO_C_BINDING, ONLY: C_ASSOCIATED
 USE ISO_C_BINDING, ONLY: C_NULL_PTR
 USE ISO_C_BINDING, ONLY: C_F_POINTER
-
 USE ISO_C_BINDING, ONLY: C_PTR
 USE ISO_C_BINDING, ONLY: C_CHAR_PTR => C_PTR
 USE ISO_C_BINDING, ONLY: C_CONST_CHAR_PTR => C_PTR
@@ -64,17 +63,18 @@ PUBLIC :: C_CHAR_PTR, C_VOID_PTR, C_CONST_CHAR_PTR, C_CONST_VOID_PTR
 PUBLIC :: CString
 
 INTEGER(I4B), PUBLIC, PARAMETER :: C_ENUM = C_INT
-  !! a C enum may not always be a standard C int
+!! a C enum may not always be a standard C int
+
 CHARACTER(1, KIND=C_CHAR), PUBLIC, PARAMETER :: NUL = C_NULL_CHAR
-  !! C string terminator alais using the 3-letter ASCII name.
-  !! The C_ prefix is not used because it is just an ASCII character.
-  !! In C, "char" is distinct from "signed char", unlike integers.
-  !! The plain "char" type is specific for text/string values, whereas
-  !! "signed char" should indicate 1-byte integer data.
-  !! Most ISO-C systems have wide chars "wchar_t", but Fortran compilers
-  !! have limited support for different character kinds. UTF encoding
-  !! adds more complexity. This should be updated as Fortran compilers
-  !! include support for more character types.
+!! C string terminator alais using the 3-letter ASCII name.
+!! The C_ prefix is not used because it is just an ASCII character.
+!! In C, "char" is distinct from "signed char", unlike integers.
+!! The plain "char" type is specific for text/string values, whereas
+!! "signed char" should indicate 1-byte integer data.
+!! Most ISO-C systems have wide chars "wchar_t", but Fortran compilers
+!! have limited support for different character kinds. UTF encoding
+!! adds more complexity. This should be updated as Fortran compilers
+!! include support for more character types.
 INTEGER(I4B), PUBLIC, PARAMETER :: C_UNSIGNED = C_INT
 INTEGER(I4B), PUBLIC, PARAMETER :: C_UNSIGNED_SHORT = C_SHORT
 INTEGER(I4B), PUBLIC, PARAMETER :: C_UNSIGNED_LONG = C_LONG
@@ -102,83 +102,130 @@ INTEGER(I4B), PUBLIC, PARAMETER :: C_UNSIGNED_SHORT_INT = C_SHORT
 INTEGER(I4B), PUBLIC, PARAMETER :: C_UNSIGNED_LONG_INT = C_LONG
 INTEGER(I4B), PUBLIC, PARAMETER :: C_UNSIGNED_LONG_LONG_INT = C_LONG_LONG
 
-PUBLIC :: C_MEMCPY
-PUBLIC :: C_memmove
-PUBLIC :: C_memset
-PUBLIC :: C_memcmp
-PUBLIC :: C_memchr
-PUBLIC :: C_strcpy
-PUBLIC :: C_strncpy
-PUBLIC :: C_strcat
-PUBLIC :: C_strncat
-PUBLIC :: C_strcmp
-PUBLIC :: C_strncmp
-PUBLIC :: C_strlen
-PUBLIC :: C_calloc
-PUBLIC :: C_malloc
-PUBLIC :: C_free
-PUBLIC :: ASSIGNMENT(=)
-PUBLIC :: C_ASSOCIATED_PURE
-PUBLIC :: C_F_STRING
+PUBLIC :: C_Memcpy
+PUBLIC :: C_Memmove
+PUBLIC :: C_Memset
+PUBLIC :: C_Memcmp
+PUBLIC :: C_Memchr
+PUBLIC :: C_Strcpy
+PUBLIC :: C_Strncpy
+PUBLIC :: C_Strcat
+PUBLIC :: C_Strncat
+PUBLIC :: C_Strcmp
+PUBLIC :: C_Strncmp
+PUBLIC :: C_Strlen
+PUBLIC :: C_Calloc
+PUBLIC :: C_Malloc
+PUBLIC :: C_Free
+PUBLIC :: C_Associated_Pure
+PUBLIC :: C_F_String
+PUBLIC :: C_Strlen_Safe
+PUBLIC :: C_String_Value
+PUBLIC :: C_String_Alloc
+PUBLIC :: C_String_Free
 PUBLIC :: FString
-PUBLIC :: F_C_STRING
-PUBLIC :: C_STRLEN_SAFE
-PUBLIC :: F_C_STRING_DUP
-PUBLIC :: C_STRING_VALUE
-PUBLIC :: C_STRING_ALLOC
-PUBLIC :: C_STRING_FREE
-PUBLIC :: C_PTR_TO_INT_VEC
-PUBLIC :: C_PTR_TO_Real_VEC
+PUBLIC :: F_C_String
+PUBLIC :: F_C_String_Dup
+PUBLIC :: C_Ptr_To_Int_Vec
+PUBLIC :: C_Ptr_To_Real_Vec
 PUBLIC :: C2Fortran
 PUBLIC :: optval_c_int
 PUBLIC :: optval_c_size_t
 PUBLIC :: optval_c_double
 PUBLIC :: optval_c_bool
+PUBLIC :: ASSIGNMENT(=)
 
 !----------------------------------------------------------------------------
-!
+!                                                                 C_F_String
 !----------------------------------------------------------------------------
 
-INTERFACE C_F_STRING
-  MODULE PROCEDURE F_string_assign_C_string
-  MODULE PROCEDURE C_F_STRING_CHARS
-END INTERFACE C_F_STRING
+!> author: Vikas Sharma, Ph. D.
+! date: 2026-03-17
+! summary: convert c string to fortran string
+
+INTERFACE C_F_String
+  MODULE PROCEDURE F_String_Assign_C_String, C_F_String_Chars
+END INTERFACE C_F_String
+
+!----------------------------------------------------------------------------
+!                                                                  Assignment
+!----------------------------------------------------------------------------
 
 INTERFACE ASSIGNMENT(=)
-  MODULE PROCEDURE F_string_assign_C_string
+  MODULE PROCEDURE F_String_Assign_C_String
 END INTERFACE ASSIGNMENT(=)
 
+!----------------------------------------------------------------------------
+!                                                                    FString
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2026-03-17
+! summary:         function for getting fortran string from c string
+
 INTERFACE FString
-  MODULE PROCEDURE Fstring1
+  MODULE PROCEDURE FString1
 END INTERFACE FString
+
+!----------------------------------------------------------------------------
+!                                                                  F_C_String
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2026-03-17
+! summary: convert fortran string to c string
 
 INTERFACE F_C_STRING
   MODULE PROCEDURE F_C_STRING_CHARS, F_C_STRING_PTR
 END INTERFACE F_C_STRING
 
-INTERFACE C_PTR_TO_INT_VEC
-  MODULE PROCEDURE C_PTR_TO_Int8_VEC, C_PTR_TO_Int16_VEC, &
-    & C_PTR_TO_Int32_VEC, C_PTR_TO_Int64_VEC
-END INTERFACE C_PTR_TO_INT_VEC
+!----------------------------------------------------------------------------
+!                                                           C_Ptr_To_Int_Vec
+!----------------------------------------------------------------------------
 
-INTERFACE C_PTR_TO_Real_VEC
-  MODULE PROCEDURE C_PTR_TO_Real32_VEC, C_PTR_TO_Real64_VEC
-END INTERFACE C_PTR_TO_Real_VEC
+INTERFACE C_Ptr_To_Int_Vec
+  MODULE PROCEDURE C_Ptr_To_Int8_Vec, C_Ptr_To_Int16_Vec, &
+    C_Ptr_To_Int32_Vec, C_Ptr_To_Int64_Vec
+END INTERFACE C_Ptr_To_Int_Vec
+
+!----------------------------------------------------------------------------
+!                                                           C_Ptr_To_Int_Vec
+!----------------------------------------------------------------------------
+
+INTERFACE C_Ptr_To_Real_Vec
+  MODULE PROCEDURE C_Ptr_To_Real32_Vec, C_Ptr_To_Real64_Vec
+END INTERFACE C_Ptr_To_Real_Vec
+
+!----------------------------------------------------------------------------
+!                                                           C_Ptr_To_Int_Vec
+!----------------------------------------------------------------------------
 
 INTERFACE C2Fortran
-  MODULE PROCEDURE C_PTR_TO_Int8_VEC, C_PTR_TO_Int16_VEC, &
-    & C_PTR_TO_Int32_VEC, C_PTR_TO_Int64_VEC, C_PTR_TO_Real32_VEC,  &
-    & C_PTR_TO_Real64_VEC, F_string_assign_C_string,  &
-    & C_F_STRING_CHARS
+  MODULE PROCEDURE C_Ptr_To_Int8_Vec, C_Ptr_To_Int16_Vec, &
+    C_Ptr_To_Int32_Vec, C_Ptr_To_Int64_Vec, C_Ptr_To_Real32_Vec, &
+    C_Ptr_To_Real64_Vec, F_String_Assign_C_String, &
+    C_F_String_Chars
 END INTERFACE C2Fortran
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
 
 INTERFACE optval_c_int
   MODULE PROCEDURE optval_c_int_1
 END INTERFACE optval_c_int
 
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
 INTERFACE optval_c_size_t
   MODULE PROCEDURE optval_c_size_t_1, optval_c_size_t_2
 END INTERFACE optval_c_size_t
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
 
 INTERFACE optval_c_double
   MODULE PROCEDURE optval_c_double_1, optval_c_double_2
@@ -192,11 +239,11 @@ END INTERFACE optval_c_double
 ! date: 23 Sept 2021
 ! summary: Copy N bytes of SRC to DEST, no aliasing or overlapping allowed.
 !
-!# Introduction
+!# C_MEMCPY
 !
 ! Copy N bytes of SRC to DEST, no aliasing or overlapping allowed.
 !
-!### CInterface
+! CInterface:
 !
 !```c
 ! extern void *memcpy (void *dest, const void *src, size_t n);
@@ -219,11 +266,12 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date: 23 Sept 2021
+! date: 2026-03-17
 ! summary: Copy N bytes of SRC to DEST, guaranteeing correct behavior
 ! for overlapping strings.
 !
-!# Introduction
+!# C_memmove
+!
 ! Copy N bytes of SRC to DEST, guaranteeing correct behavior for
 ! overlapping strings.
 !
@@ -253,6 +301,7 @@ END INTERFACE
 ! summary: Set N bytes of S to C.
 !
 !# Introduction
+!
 ! Set N bytes of S to C.
 !
 !### CInterface
@@ -549,7 +598,9 @@ END INTERFACE
 ! date: 23 Sept 2021
 ! summary:
 !
-!### CInterface
+!# C_Malloc
+!
+! C interface:
 !
 !```c
 ! void *malloc(size_t size);
@@ -568,9 +619,9 @@ END INTERFACE
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 23 Sept 2021
-! summary:
+! summary: free the c pointer
 !
-!### Usage
+!# C_Free
 !
 !```fortran
 ! void free(void *ptr);
@@ -591,8 +642,9 @@ END INTERFACE
 ! date: 23 Sept 2021
 ! summary:
 !
+!# C_Realloc
 !
-!### CInterface
+! CInterface:
 !
 !```c
 ! void *realloc(void *ptr, size_t size);
@@ -620,11 +672,15 @@ CONTAINS
 ! date: 23 Sept 2021
 ! summary:
 
-PURE LOGICAL FUNCTION C_ASSOCIATED_PURE(ptr) RESULT(associated)
+PURE FUNCTION C_ASSOCIATED_PURE(ptr) RESULT(ans)
   TYPE(C_PTR), INTENT(IN) :: ptr
+  LOGICAL(LGT) :: ans
+
+  ! internal variables
   INTEGER(C_INTPTR_T) :: iptr
+
   iptr = TRANSFER(ptr, iptr)
-  ASSOCIATED = (iptr /= 0)
+  ans = (iptr .NE. 0)
 END FUNCTION C_ASSOCIATED_PURE
 
 !----------------------------------------------------------------------------
@@ -646,7 +702,7 @@ END FUNCTION C_ASSOCIATED_PURE
 ! If C_string is longer, it is truncated. Otherwise, F_string is
 ! blank-padded at the end.
 
-SUBROUTINE F_string_assign_C_string(F_string, C_string)
+SUBROUTINE F_String_Assign_C_String(F_string, C_string)
   CHARACTER(*), INTENT(OUT) :: F_string
   TYPE(C_CHAR_PTR), INTENT(IN) :: C_string
 
@@ -670,17 +726,17 @@ SUBROUTINE F_string_assign_C_string(F_string, C_string)
 
     IF (i .LT. LEN(F_string)) F_string(i:) = ' '
   END IF
-END SUBROUTINE F_string_assign_C_string
+END SUBROUTINE F_String_Assign_C_String
 
 !----------------------------------------------------------------------------
-!
+!                                                            C_F_String_Chars
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date: 23 Sept 2021
+! date: 2026-03-17
 ! summary: Copy a C string
 !
-!# C_F_string_chars
+!# C_F_String_Chars
 !
 ! Copy a C string, passed as a char-array reference,
 ! to a Fortran string.
@@ -691,8 +747,8 @@ END SUBROUTINE F_string_assign_C_string
 ! If C_string is longer, it is truncated. Otherwise, F_string is
 ! blank-padded at the end.
 
-SUBROUTINE C_F_string_chars(C_string, F_string)
-  CHARACTER(1, KIND=C_CHAR), INTENT(IN) :: C_string(*)
+SUBROUTINE C_F_String_Chars(C_string, F_string)
+  CHARACTER(1, KIND=C_CHAR), INTENT(IN) :: C_string(:)
   CHARACTER(*), INTENT(OUT) :: F_string
   !! F_String is fortran string, it should be allocated
   !! before calling the routine
@@ -706,76 +762,41 @@ SUBROUTINE C_F_string_chars(C_string, F_string)
     i = i + 1
   END DO
   IF (i .LT. LEN(F_string)) F_string(i:) = ' '
-END SUBROUTINE C_F_string_chars
+END SUBROUTINE C_F_String_Chars
 
 !----------------------------------------------------------------------------
+!                                                                    Fstring
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2026-03-17
+! summary: convert c string into fortran string
 !
-!----------------------------------------------------------------------------
-
-FUNCTION Fstring1(C_string) RESULT(F_string)
+FUNCTION FString1(C_string) RESULT(ans)
   CHARACTER(1, KIND=C_CHAR), INTENT(IN) :: C_string(:)
-  CHARACTER(:), ALLOCATABLE :: F_string
-  !!
+  CHARACTER(:), ALLOCATABLE :: ans
+
+  ! internal variables
   INTEGER(I4B) :: i, n, m
+  LOGICAL(LGT) :: isok
+
   n = SIZE(C_string)
   m = 0
-  DO i = 1, n - 1
-    IF (C_string(i) .EQ. NUL) THEN
-      EXIT
+  count_loop: DO i = 1, n
+    isok = C_string(i) .EQ. NUL
+
+    IF (isok) THEN
+      EXIT count_loop
     ELSE
       m = m + 1
     END IF
-  END DO
-  ALLOCATE (CHARACTER(m) :: F_string)
+  END DO count_loop
+
+  ALLOCATE (CHARACTER(m) :: ans)
   DO i = 1, m
-    F_string(i:i) = C_string(i)
+    ans(i:i) = C_string(i)
   END DO
-END FUNCTION Fstring1
-
-!----------------------------------------------------------------------------
-!
-!----------------------------------------------------------------------------
-
-! FUNCTION Fstring2(C_string) RESULT(F_string)
-!   TYPE(C_CHAR_PTR), INTENT(IN) :: C_string
-!   !! C pointer
-!   CHARACTER(:), ALLOCATABLE :: F_string
-!   !! Fortran string
-!
-!   ! ! internal variables
-!   ! CHARACTER(1, KIND=C_CHAR), POINTER :: p_chars(:)
-!   ! INTEGER(I4B) :: i, n, m
-!   !
-!   ! !> main
-!   ! IF (.NOT. C_ASSOCIATED(C_string)) THEN
-!   !   F_string = ''
-!   !   RETURN
-!   ! ELSE
-!   !   CALL C_F_POINTER(C_string, p_chars, [HUGE(0)])
-!   !   i = 1
-!   !   DO WHILE (p_chars(i) .NE. NUL .AND. I .LE. LEN(F_string))
-!   !     F_string(i:i) = p_chars(i); i = i + 1
-!   !   END DO
-!   !   IF (i .LT. LEN(F_string)) F_string(i:) = ' '
-!   ! END IF
-!   !
-!   ! n = SIZE(C_string)
-!   ! m = 0
-!   !
-!   ! DO i = 1, n - 1
-!   !   IF (C_string(i) .EQ. NUL) THEN
-!   !     EXIT
-!   !   ELSE
-!   !     m = m + 1
-!   !   END IF
-!   ! END DO
-!   !
-!   ! ALLOCATE (CHARACTER(m) :: F_string)
-!   !
-!   ! DO i = 1, m
-!   !   F_string(i:i) = C_string(i)
-!   ! END DO
-! END FUNCTION Fstring2
+END FUNCTION FString1
 
 !----------------------------------------------------------------------------
 !
@@ -955,15 +976,16 @@ END FUNCTION C_STRING_VALUE
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date: 23 Sept 2021
+! date: 2026-03-17
 ! summary: Allocate memory space and return C string
 
 FUNCTION C_STRING_ALLOC(length) RESULT(C_string)
   INTEGER(C_SIZE_T), INTENT(IN) :: length
   TYPE(C_PTR) :: C_String
-  !> internal variables
+
+  ! internal variables
   CHARACTER(1, KIND=C_CHAR), POINTER :: C_CHARPTR
-  !> main
+
   C_string = C_MALLOC(length + 1)
   IF (C_ASSOCIATED(C_string)) THEN
     CALL C_F_POINTER(C_string, C_charptr)
