@@ -15,11 +15,48 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 
 MODULE CInterface
-USE GlobalData
+USE GlobalData, ONLY: I4B
+USE GlobalData, ONLY: INT8
+USE GlobalData, ONLY: INT16
+USE GlobalData, ONLY: INT32
+USE GlobalData, ONLY: INT64
+USE GlobalData, ONLY: REAL32
+USE GlobalData, ONLY: REAL64
+USE GlobalData, ONLY: DFP
+USE GlobalData, ONLY: LGT
 USE String_Class, ONLY: String
-USE, INTRINSIC :: ISO_C_BINDING, C_PTR => C_PTR, &
-                             C_CHAR_PTR => C_PTR, C_CONST_CHAR_PTR => C_PTR, &
-                                C_void_ptr => C_PTR, C_CONST_VOID_PTR => C_PTR
+USE ISO_C_BINDING, ONLY: C_INT
+USE ISO_C_BINDING, ONLY: C_CHAR
+USE ISO_C_BINDING, ONLY: C_SIGNED_CHAR
+USE ISO_C_BINDING, ONLY: C_NULL_CHAR
+USE ISO_C_BINDING, ONLY: C_SHORT
+USE ISO_C_BINDING, ONLY: C_DOUBLE
+USE ISO_C_BINDING, ONLY: C_LONG
+USE ISO_C_BINDING, ONLY: C_LONG_LONG
+USE ISO_C_BINDING, ONLY: C_SIZE_T
+USE ISO_C_BINDING, ONLY: C_INT8_T
+USE ISO_C_BINDING, ONLY: C_INT16_T
+USE ISO_C_BINDING, ONLY: C_INT32_T
+USE ISO_C_BINDING, ONLY: C_INT64_T
+USE ISO_C_BINDING, ONLY: C_INT_LEAST8_T
+USE ISO_C_BINDING, ONLY: C_INT_LEAST16_T
+USE ISO_C_BINDING, ONLY: C_INT_LEAST32_T
+USE ISO_C_BINDING, ONLY: C_INT_LEAST64_T
+USE ISO_C_BINDING, ONLY: C_INT_FAST8_T
+USE ISO_C_BINDING, ONLY: C_INT_FAST16_T
+USE ISO_C_BINDING, ONLY: C_INT_FAST32_T
+USE ISO_C_BINDING, ONLY: C_INT_FAST64_T
+USE ISO_C_BINDING, ONLY: C_INTMAX_T
+USE ISO_C_BINDING, ONLY: C_INTPTR_T
+USE ISO_C_BINDING, ONLY: C_ASSOCIATED
+USE ISO_C_BINDING, ONLY: C_NULL_PTR
+USE ISO_C_BINDING, ONLY: C_F_POINTER
+
+USE ISO_C_BINDING, ONLY: C_PTR
+USE ISO_C_BINDING, ONLY: C_CHAR_PTR => C_PTR
+USE ISO_C_BINDING, ONLY: C_CONST_CHAR_PTR => C_PTR
+USE ISO_C_BINDING, ONLY: C_void_ptr => C_PTR
+USE ISO_C_BINDING, ONLY: C_CONST_VOID_PTR => C_PTR
 IMPLICIT NONE
 PRIVATE
 
@@ -200,7 +237,8 @@ INTERFACE
   FUNCTION C_memmove(dest, src, n) RESULT(RESULT) BIND(C, name="memmove")
     IMPORT C_void_ptr, C_SIZE_T
     TYPE(C_void_ptr) :: RESULT
-    TYPE(C_void_ptr), VALUE, INTENT(IN) :: dest ! target=intent(out)
+    TYPE(C_void_ptr), VALUE, INTENT(IN) :: dest
+    ! target=intent(out)
     TYPE(C_void_ptr), VALUE, INTENT(IN) :: src
     INTEGER(C_SIZE_T), VALUE, INTENT(IN) :: n
   END FUNCTION C_memmove
@@ -227,7 +265,8 @@ INTERFACE
   FUNCTION C_memset(s, c, n) RESULT(RESULT) BIND(C, name="memset")
     IMPORT :: C_void_ptr, C_INT, C_SIZE_T
     TYPE(C_void_ptr) :: RESULT
-    TYPE(C_void_ptr), VALUE, INTENT(in) :: s ! target=intent(out)
+    TYPE(C_void_ptr), VALUE, INTENT(in) :: s
+    ! target=intent(out)
     INTEGER(C_INT), VALUE, INTENT(in) :: c
     INTEGER(C_SIZE_T), VALUE, INTENT(in) :: n
   END FUNCTION C_memset
@@ -308,7 +347,8 @@ INTERFACE
   FUNCTION C_strcpy(dest, src) RESULT(RESULT) BIND(C, name="strcpy")
     IMPORT :: C_CHAR_PTR, C_SIZE_T
     TYPE(C_CHAR_PTR) :: RESULT
-    TYPE(C_CHAR_PTR), VALUE, INTENT(IN) :: dest ! target=intent(out)
+    TYPE(C_CHAR_PTR), VALUE, INTENT(IN) :: dest
+    ! target=intent(out)
     TYPE(C_CHAR_PTR), VALUE, INTENT(IN) :: src
   END FUNCTION C_strcpy
 END INTERFACE
@@ -335,7 +375,8 @@ INTERFACE
   FUNCTION C_strncpy(dest, src, n) RESULT(RESULT) BIND(C, name="strncpy")
     IMPORT C_CHAR_PTR, C_SIZE_T
     TYPE(C_CHAR_PTR) :: RESULT
-    TYPE(C_CHAR_PTR), VALUE, INTENT(in) :: dest ! target=intent(out)
+    TYPE(C_CHAR_PTR), VALUE, INTENT(in) :: dest
+    ! target=intent(out)
     TYPE(C_CHAR_PTR), VALUE, INTENT(in) :: src
     INTEGER(C_SIZE_T), VALUE, INTENT(in) :: n
   END FUNCTION C_strncpy
@@ -471,7 +512,8 @@ INTERFACE
   PURE FUNCTION C_strlen(s) RESULT(RESULT) BIND(C, name="strlen")
     IMPORT :: C_CHAR_PTR, C_SIZE_T
     INTEGER(C_SIZE_T) :: RESULT
-    TYPE(C_CHAR_PTR), VALUE, INTENT(IN) :: s !character(len=*), intent(in)
+    TYPE(C_CHAR_PTR), VALUE, INTENT(IN) :: s
+    !character(len=*), intent(in)
   END FUNCTION C_strlen
 END INTERFACE
 
@@ -593,28 +635,39 @@ END FUNCTION C_ASSOCIATED_PURE
 ! date: 23 Sept 2021
 ! summary: Set a fixed-length Fortran string to the value of a C string.
 !
-!# Introduction
+!# F_String_Assign_C_String
+!
 ! Copy a C string, passed by pointer, to a Fortran string.
+!
 ! If the C pointer is NULL, the Fortran string is blanked.
+!
 ! C_string must be NUL terminated, or at least as long as F_string.
+!
 ! If C_string is longer, it is truncated. Otherwise, F_string is
 ! blank-padded at the end.
 
 SUBROUTINE F_string_assign_C_string(F_string, C_string)
   CHARACTER(*), INTENT(OUT) :: F_string
   TYPE(C_CHAR_PTR), INTENT(IN) :: C_string
-  !> internal variables
+
+  ! internal variables
   CHARACTER(1, KIND=C_CHAR), POINTER :: p_chars(:)
   INTEGER(I4B) :: i
-  !> main
-  IF (.NOT. C_ASSOCIATED(C_string)) THEN
+  LOGICAL(LGT) :: isok
+
+  isok = C_ASSOCIATED(C_string)
+  IF (.NOT. isok) THEN
     F_string = ''
   ELSE
+
     CALL C_F_POINTER(C_string, p_chars, [HUGE(0)])
     i = 1
-    DO WHILE (p_chars(i) .NE. NUL .AND. I .LE. LEN(F_string))
-      F_string(i:i) = p_chars(i); i = i + 1
+
+    DO WHILE ((p_chars(i) .NE. NUL) .AND. (i .LE. LEN(F_string)))
+      F_string(i:i) = p_chars(i)
+      i = i + 1
     END DO
+
     IF (i .LT. LEN(F_string)) F_string(i:) = ' '
   END IF
 END SUBROUTINE F_string_assign_C_string
@@ -625,9 +678,12 @@ END SUBROUTINE F_string_assign_C_string
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 23 Sept 2021
-! summary: Copy a C string, passed as a char-array reference, to a Fortran string.
+! summary: Copy a C string
 !
-!# Introduction
+!# C_F_string_chars
+!
+! Copy a C string, passed as a char-array reference,
+! to a Fortran string.
 !
 ! Copy a C string, passed by pointer, to a Fortran string.
 ! If the C pointer is NULL, the Fortran string is blanked.
@@ -640,10 +696,10 @@ SUBROUTINE C_F_string_chars(C_string, F_string)
   CHARACTER(*), INTENT(OUT) :: F_string
   !! F_String is fortran string, it should be allocated
   !! before calling the routine
-  !
+
   ! internal variable
-  !
   INTEGER(I4B) :: i
+
   i = 1
   DO WHILE (C_string(i) .NE. NUL .AND. i .LE. LEN(F_string))
     F_string(i:i) = C_string(i)
@@ -732,7 +788,8 @@ END FUNCTION Fstring1
 !# Introduction
 !
 ! Copy a Fortran string to an allocated C string pointer.
-! If the C pointer is NULL, no action is taken. (Maybe auto allocate via libc call?)
+! If the C pointer is NULL, no action is taken.
+! (Maybe auto allocate via libc call?)
 ! If the length is not passed, the C string must be at least: len(F_string)+1
 ! If the length is passed and F_string is too long, it is truncated.
 
@@ -766,12 +823,14 @@ END SUBROUTINE F_C_STRING_PTR
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 23 Sept 2021
-! summary: Copy a Fortran string to a C string passed by char-array reference.
+! summary: Copy a Fortran string to a C string.
 !
-!# Introduction
+!# F_C_STRING_CHARS
 !
 ! Copy a Fortran string to a C string passed by char-array reference.
+!
 ! If the length is not passed, the C string must be at least: len(F_string)+1
+!
 ! If the length is passed and F_string is too long, it is truncated.
 
 SUBROUTINE F_C_STRING_CHARS(F_string, C_string, C_string_len)
@@ -781,23 +840,21 @@ SUBROUTINE F_C_STRING_CHARS(F_string, C_string, C_string_len)
   ! c string
   INTEGER(I4B), INTENT(IN), OPTIONAL :: C_string_len
   ! max string length, optional
-  !
-  ! main
-  !
+
+  ! internal variables
   INTEGER(I4B) :: i, strlen
-  !
+
   strlen = LEN(F_string)
   IF (PRESENT(C_string_len)) THEN
     IF (C_string_len .LE. 0) RETURN
     strlen = MIN(strlen, C_string_len - 1)
   END IF
-  !
+
   DO CONCURRENT(i=1:strlen)
     C_string(i) = F_string(i:i)
   END DO
-  !
+
   C_string(strlen + 1) = NUL
-  !
 END SUBROUTINE F_C_STRING_CHARS
 
 !----------------------------------------------------------------------------
@@ -918,11 +975,12 @@ END FUNCTION C_STRING_ALLOC
 !
 !----------------------------------------------------------------------------
 
-SUBROUTINE C_STRING_FREE(string)
-  TYPE(C_PTR), INTENT(INOUT) :: string
-  IF (C_ASSOCIATED(string)) THEN
-    CALL C_FREE(string)
-    string = C_NULL_PTR
+SUBROUTINE C_STRING_FREE(ptr)
+  TYPE(C_PTR), INTENT(INOUT) :: ptr
+
+  IF (C_ASSOCIATED(ptr)) THEN
+    CALL C_FREE(ptr)
+    ptr = C_NULL_PTR
   END IF
 END SUBROUTINE C_STRING_FREE
 
@@ -941,7 +999,8 @@ SUBROUTINE C_PTR_TO_Int8_VEC(vec, cptr)
   INTEGER(I4B) :: n, ii
   INTEGER(INT8), POINTER :: p(:)
   !> main
-  n = SIZE(vec); vec = 0
+  n = SIZE(vec)
+  vec = 0
   IF (C_ASSOCIATED(cptr)) THEN
     CALL C_F_POINTER(cptr, p, [n])
     DO ii = 1, n
@@ -966,7 +1025,8 @@ SUBROUTINE C_PTR_TO_Int16_VEC(vec, cptr)
   INTEGER(I4B) :: n, ii
   INTEGER(INT16), POINTER :: p(:)
   !> main
-  n = SIZE(vec); vec = 0
+  n = SIZE(vec)
+  vec = 0
   IF (C_ASSOCIATED(cptr)) THEN
     CALL C_F_POINTER(cptr, p, [n])
     DO ii = 1, n
@@ -991,7 +1051,8 @@ SUBROUTINE C_PTR_TO_Int32_VEC(vec, cptr)
   INTEGER(I4B) :: n, ii
   INTEGER(INT32), POINTER :: p(:)
   !> main
-  n = SIZE(vec); vec = 0
+  n = SIZE(vec)
+  vec = 0
   IF (C_ASSOCIATED(cptr)) THEN
     CALL C_F_POINTER(cptr, p, [n])
     DO ii = 1, n
@@ -1016,7 +1077,8 @@ SUBROUTINE C_PTR_TO_Int64_VEC(vec, cptr)
   INTEGER(I4B) :: n, ii
   INTEGER(INT64), POINTER :: p(:)
   !> main
-  n = SIZE(vec); vec = 0
+  n = SIZE(vec)
+  vec = 0
   IF (C_ASSOCIATED(cptr)) THEN
     CALL C_F_POINTER(cptr, p, [n])
     DO ii = 1, n
@@ -1041,7 +1103,8 @@ SUBROUTINE C_PTR_TO_Real32_VEC(vec, cptr)
   INTEGER :: n, ii
   REAL(REAL32), POINTER :: p(:)
   !> main
-  n = SIZE(vec); vec = 0
+  n = SIZE(vec)
+  vec = 0
   IF (C_ASSOCIATED(cptr)) THEN
     CALL C_F_POINTER(cptr, p, [n])
     DO ii = 1, n
@@ -1066,7 +1129,8 @@ SUBROUTINE C_PTR_TO_Real64_VEC(vec, cptr)
   INTEGER :: n, ii
   REAL(REAL64), POINTER :: p(:)
   !> main
-  n = SIZE(vec); vec = 0
+  n = SIZE(vec)
+  vec = 0
   IF (C_ASSOCIATED(cptr)) THEN
     CALL C_F_POINTER(cptr, p, [n])
     DO ii = 1, n
@@ -1161,7 +1225,7 @@ END FUNCTION optval_c_size_t_2
 ! Reference: https://gitlab.onelab.info/gmsh/gmsh/-/blob/master/api/gmsh.f90
 
 PURE FUNCTION optval_c_double_1(default, option) RESULT(res)
-  REAL(C_DOUBLE), INTENT(in) :: default
+  REAL(REAL32), INTENT(in) :: default
   REAL(C_DOUBLE), OPTIONAL, INTENT(in) :: option
   REAL(C_DOUBLE) :: res
   !!
@@ -1182,7 +1246,7 @@ END FUNCTION optval_c_double_1
 ! Reference: https://gitlab.onelab.info/gmsh/gmsh/-/blob/master/api/gmsh.f90
 
 PURE FUNCTION optval_c_double_2(default, option) RESULT(res)
-  REAL, INTENT(in) :: default
+  REAL(REAL64), INTENT(IN) :: default
   REAL(C_DOUBLE), OPTIONAL, INTENT(in) :: option
   REAL(C_DOUBLE) :: res
   !!
@@ -1203,10 +1267,10 @@ END FUNCTION optval_c_double_2
 ! Reference: https://gitlab.onelab.info/gmsh/gmsh/-/blob/master/api/gmsh.f90
 
 PURE FUNCTION optval_c_bool(default, option) RESULT(res)
-  LOGICAL, INTENT(in) :: default
-  LOGICAL, OPTIONAL, INTENT(in) :: option
+  LOGICAL(LGT), INTENT(IN) :: default
+  LOGICAL(LGT), OPTIONAL, INTENT(IN) :: option
   INTEGER(C_INT) :: res
-  !!
+
   res = MERGE(1_C_INT, 0_C_INT, default)
   IF (PRESENT(option)) res = MERGE(1_C_INT, 0_C_INT, option)
 END FUNCTION optval_c_bool
