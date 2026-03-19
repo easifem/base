@@ -31,13 +31,13 @@ CONTAINS
 !
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE obj_shape
+MODULE PROCEDURE obj_Shape
 LOGICAL(LGT) :: isok
 
 ans = 0
 isok = ALLOCATED(obj%val)
 IF (isok) ans(1) = SIZE(obj%val)
-END PROCEDURE obj_shape
+END PROCEDURE obj_Shape
 
 !----------------------------------------------------------------------------
 !
@@ -55,9 +55,9 @@ END PROCEDURE obj_Size
 !                                                         getTotalDimension
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE obj_getTotalDimension
+MODULE PROCEDURE obj_GetTotalDimension
 ans = obj%tDimension
-END PROCEDURE obj_getTotalDimension
+END PROCEDURE obj_GetTotalDimension
 
 !----------------------------------------------------------------------------
 !
@@ -376,5 +376,9 @@ INTEGER(I4B) :: tsize
 tsize = SIZE(y)
 CALL obj_Copy1_(x=x, y=y, x_start=1, y_start=1, y_end=tsize)
 END PROCEDURE obj_Copy2_
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
 
 END SUBMODULE Methods

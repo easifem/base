@@ -20,7 +20,8 @@
 ! summary:         This submodule implements set methods of [[IntVector_]]
 
 SUBMODULE(IntVector_SetMethod) Methods
-USE BaseMethod
+USE IntegerUtility, ONLY: IntRepeat => Repeat
+USE IntegerUtility, ONLY: IntRemoveDuplicates => RemoveDuplicates
 IMPLICIT NONE
 CONTAINS
 
@@ -28,72 +29,94 @@ CONTAINS
 !                                                        setTotalDimension
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE IntVec_setTotalDimension
+MODULE PROCEDURE obj_SetTotalDimension
 obj%tDimension = tDimension
-END PROCEDURE IntVec_setTotalDimension
+END PROCEDURE obj_SetTotalDimension
 
 !----------------------------------------------------------------------------
 !                                                                 setMethod
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE intVec_set1
-IF (ALLOCATED(obj%val)) THEN
-  IF (SIZE(VALUE) .EQ. 1) THEN
-    obj%val(Indx) = VALUE(1)
+MODULE PROCEDURE obj_Set1
+LOGICAL(LGT) :: isok
+
+isok = ALLOCATED(obj%val)
+
+IF (isok) THEN
+  isok = SIZE(VALUE) .EQ. 1
+
+  IF (isok) THEN
+    obj%val(indx) = VALUE(1)
   ELSE
-    obj%val(Indx) = VALUE
+    obj%val(indx) = VALUE
   END IF
+
 END IF
-END PROCEDURE intVec_set1
+END PROCEDURE obj_Set1
 
 !----------------------------------------------------------------------------
 !                                                                 setMethod
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE intVec_set2
-IF (ALLOCATED(obj%val)) THEN
-  obj%val(Indx) = VALUE
+MODULE PROCEDURE obj_Set2
+LOGICAL(LGT) :: isok
+
+isok = ALLOCATED(obj%val)
+
+IF (isok) THEN
+  obj%val(indx) = VALUE
 END IF
-END PROCEDURE intVec_set2
+
+END PROCEDURE obj_Set2
+
+!----------------------------------------------------------------------------
+!                                                                 setMethod
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE obj_Set3
+LOGICAL(LGT) :: isok
+
+isok = ALLOCATED(obj%val)
+
+IF (isok) THEN
+  obj%val = VALUE
+END IF
+END PROCEDURE obj_Set3
+
+!----------------------------------------------------------------------------
+!                                                                 setMethod
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE obj_Set4
+LOGICAL(LGT) :: isok
+INTEGER(I4B) :: ii, tsize
+
+isok = ALLOCATED(obj%val)
+
+tsize = SIZE(VALUE)
+
+IF (isok) THEN
+  DO ii = 1, tsize
+    obj%val(ii) = VALUE(ii)
+  END DO
+END IF
+END PROCEDURE obj_Set4
 
 !----------------------------------------------------------------------------
 !                                                             RemoveDuplicate
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE IntVec_RemoveDuplicates_1
-! Define internal variables
-INTEGER(I4B) :: i, k, j, N
-INTEGER(I4B), ALLOCATABLE :: Res(:)
-LOGICAL(LGT) :: isok
-
-isok = ALLOCATED(obj%val)
-IF (.NOT. isok) RETURN
-
-N = SIZE(obj%val)
-isok = N .GT. 0
-IF (.NOT. isok) RETURN
-
-ALLOCATE (Res(N))
-Res = 0
-Res(1) = obj%val(1)
-k = 1
-DO i = 2, N
-  IF (.NOT. ANY(Res .EQ. obj%val(i))) THEN
-    k = k + 1
-    Res(k) = obj%val(i)
-  END IF
-END DO
-obj%val = Res(1:k)
-DEALLOCATE (Res)
-END PROCEDURE IntVec_RemoveDuplicates_1
+MODULE PROCEDURE obj_RemoveDuplicates1
+CALL IntRemoveDuplicates(obj%val)
+END PROCEDURE obj_RemoveDuplicates1
 
 !----------------------------------------------------------------------------
 !                                                                     Repeat
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE IntVec_Repeat_1
-Ans = REPEAT(obj%val, rtimes)
-END PROCEDURE IntVec_Repeat_1
+MODULE PROCEDURE obj_Repeat1
+ans = IntRepeat(val=obj%val, rtimes=rtimes)
+END PROCEDURE obj_Repeat1
 
 !----------------------------------------------------------------------------
 !

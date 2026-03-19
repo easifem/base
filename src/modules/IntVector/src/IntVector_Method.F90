@@ -35,4 +35,5 @@ USE IntVector_EnquireMethod
 USE IntVector_GetMethod
 USE IntVector_SetMethod
 USE IntVector_AppendMethod
+IMPLICIT NONE
 END MODULE IntVector_Method

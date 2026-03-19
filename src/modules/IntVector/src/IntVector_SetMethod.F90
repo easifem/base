@@ -18,15 +18,16 @@
 MODULE IntVector_SetMethod
 USE GlobalData, ONLY: I4B, DFP, LGT
 USE BaseType, ONLY: IntVector_
-PRIVATE
+IMPLICIT NONE
 
-PUBLIC :: setTotalDimension
-PUBLIC :: set
+PRIVATE
+PUBLIC :: SetTotalDimension
+PUBLIC :: Set
 PUBLIC :: RemoveDuplicates
 PUBLIC :: Repeat
 
 !----------------------------------------------------------------------------
-!                                             setTotalDimension@Constructor
+!                                               SetTotalDimension@SetMethods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -37,65 +38,99 @@ PUBLIC :: Repeat
 !
 ! This subroutine sets the rank(total dimension) of an array
 
-INTERFACE setTotalDimension
-  MODULE PURE SUBROUTINE IntVec_setTotalDimension(obj, tDimension)
+INTERFACE SetTotalDimension
+  MODULE PURE SUBROUTINE obj_setTotalDimension(obj, tDimension)
     CLASS(IntVector_), INTENT(INOUT) :: obj
     INTEGER(I4B), INTENT(IN) :: tDimension
-  END SUBROUTINE IntVec_setTotalDimension
-END INTERFACE setTotalDimension
+  END SUBROUTINE obj_setTotalDimension
+END INTERFACE SetTotalDimension
 
 !----------------------------------------------------------------------------
-!                                                        setValue@SetMethod
+!                                                                Set@Methods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 17 June 2021
 ! summary: set the value in IntVector
 
-INTERFACE set
-  MODULE PURE SUBROUTINE intVec_set1(obj, Indx, VALUE)
+INTERFACE Set
+  MODULE PURE SUBROUTINE obj_Set1(obj, indx, VALUE)
     CLASS(IntVector_), INTENT(INOUT) :: obj
-    INTEGER(I4B), INTENT(IN) :: Indx(:)
+    INTEGER(I4B), INTENT(IN) :: indx(:)
     INTEGER(I4B), INTENT(IN) :: VALUE(:)
-  END SUBROUTINE intVec_set1
-END INTERFACE set
+  END SUBROUTINE obj_Set1
+END INTERFACE Set
 
 !----------------------------------------------------------------------------
-!                                                        setValue@SetMethod
+!                                                                Set@Methods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 17 June 2021
 ! summary: set the value in IntVector
 
-INTERFACE set
-  MODULE PURE SUBROUTINE intVec_set2(obj, Indx, VALUE)
+INTERFACE Set
+  MODULE PURE SUBROUTINE obj_Set2(obj, indx, VALUE)
     CLASS(IntVector_), INTENT(INOUT) :: obj
-    INTEGER(I4B), INTENT(IN) :: Indx
+    INTEGER(I4B), INTENT(IN) :: indx
     INTEGER(I4B), INTENT(IN) :: VALUE
-  END SUBROUTINE intVec_set2
-END INTERFACE set
+  END SUBROUTINE obj_Set2
+END INTERFACE Set
 
 !----------------------------------------------------------------------------
-!                                                 RemoveDuplicates@setMethod
+!                                                                Set@Methods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2026-03-19
+! summary: Set all values IntVector to a constant value
+
+INTERFACE Set
+  MODULE PURE SUBROUTINE obj_Set3(obj, VALUE)
+    CLASS(IntVector_), INTENT(INOUT) :: obj
+    INTEGER(I4B), INTENT(IN) :: VALUE
+  END SUBROUTINE obj_Set3
+END INTERFACE Set
+
+!----------------------------------------------------------------------------
+!                                                                Set@Methods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2026-03-19
+! summary: Set all values IntVector to a constant value
+
+INTERFACE Set
+  MODULE PURE SUBROUTINE obj_Set4(obj, VALUE)
+    CLASS(IntVector_), INTENT(INOUT) :: obj
+    INTEGER(I4B), INTENT(IN) :: VALUE(:)
+  END SUBROUTINE obj_Set4
+END INTERFACE Set
+
+!----------------------------------------------------------------------------
+!                                                   RemoveDuplicates@Methods
 !----------------------------------------------------------------------------
 
 INTERFACE RemoveDuplicates
-  MODULE PURE SUBROUTINE IntVec_RemoveDuplicates_1(obj)
+  MODULE PURE SUBROUTINE obj_RemoveDuplicates1(obj)
     CLASS(IntVector_), INTENT(INOUT) :: obj
-  END SUBROUTINE IntVec_RemoveDuplicates_1
+  END SUBROUTINE obj_RemoveDuplicates1
 END INTERFACE RemoveDuplicates
 
 !----------------------------------------------------------------------------
-!                                                           Repeat@setMethod
+!                                                             Repeat@Methods
 !----------------------------------------------------------------------------
 
 INTERFACE Repeat
-  MODULE PURE FUNCTION IntVec_Repeat_1(obj, rtimes) RESULT(Ans)
+  MODULE PURE FUNCTION obj_Repeat1(obj, rtimes) RESULT(Ans)
     TYPE(IntVector_), INTENT(IN) :: obj
     INTEGER(I4B), INTENT(IN) :: rtimes
-    INTEGER(I4B) :: Ans(SIZE(obj%Val) * rtimes)
-  END FUNCTION IntVec_Repeat_1
+    INTEGER(I4B) :: ans(SIZE(obj%Val) * rtimes)
+  END FUNCTION obj_Repeat1
 END INTERFACE Repeat
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
 
 END MODULE IntVector_SetMethod

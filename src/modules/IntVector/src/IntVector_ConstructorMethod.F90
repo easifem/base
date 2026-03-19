@@ -16,8 +16,16 @@
 
 MODULE IntVector_ConstructorMethod
 USE BaseType, ONLY: IntVector_
-USE GlobalData, ONLY: I4B, DFP, LGT, INT8, INT16, INT32, INT64, &
-                      REAL64, REAL32
+USE GlobalData, ONLY: I4B
+USE GlobalData, ONLY: DFP
+USE GlobalData, ONLY: LGT
+USE GlobalData, ONLY: INT8
+USE GlobalData, ONLY: INT16
+USE GlobalData, ONLY: INT32
+USE GlobalData, ONLY: INT64
+USE GlobalData, ONLY: REAL64
+USE GlobalData, ONLY: REAL32
+IMPLICIT NONE
 PRIVATE
 
 PUBLIC :: Shape
@@ -43,10 +51,10 @@ PUBLIC :: Copy_
 ! summary: Returns shape of the vector
 
 INTERFACE Shape
-  MODULE PURE FUNCTION obj_shape(obj) RESULT(ans)
+  MODULE PURE FUNCTION obj_Shape(obj) RESULT(ans)
     TYPE(IntVector_), INTENT(IN) :: obj
     INTEGER(I4B) :: ans(1)
-  END FUNCTION obj_shape
+  END FUNCTION obj_Shape
 END INTERFACE Shape
 
 !----------------------------------------------------------------------------
