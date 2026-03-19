@@ -146,25 +146,42 @@ INTERFACE OPERATOR(.in.)
     INTEGER(INT8), INTENT(IN) :: b(:)
     LOGICAL(LGT) :: ans
   END FUNCTION in_1a
+END INTERFACE OPERATOR(.in.)
 
+!----------------------------------------------------------------------------
+!                                             Operator(.in.)@IntegerMethods
+!----------------------------------------------------------------------------
+
+INTERFACE OPERATOR(.in.)
   MODULE PURE FUNCTION in_1b(a, b) RESULT(Ans)
     INTEGER(INT16), INTENT(IN) :: a(:)
     INTEGER(INT16), INTENT(IN) :: b(:)
     LOGICAL(LGT) :: ans
   END FUNCTION in_1b
+END INTERFACE OPERATOR(.in.)
 
+!----------------------------------------------------------------------------
+!                                             Operator(.in.)@IntegerMethods
+!----------------------------------------------------------------------------
+
+INTERFACE OPERATOR(.in.)
   MODULE PURE FUNCTION in_1c(a, b) RESULT(Ans)
     INTEGER(INT32), INTENT(IN) :: a(:)
     INTEGER(INT32), INTENT(IN) :: b(:)
     LOGICAL(LGT) :: ans
   END FUNCTION in_1c
+END INTERFACE OPERATOR(.in.)
 
+!----------------------------------------------------------------------------
+!                                             Operator(.in.)@IntegerMethods
+!----------------------------------------------------------------------------
+
+INTERFACE OPERATOR(.in.)
   MODULE PURE FUNCTION in_1d(a, b) RESULT(Ans)
     INTEGER(INT64), INTENT(IN) :: a(:)
     INTEGER(INT64), INTENT(IN) :: b(:)
     LOGICAL(LGT) :: ans
   END FUNCTION in_1d
-
 END INTERFACE OPERATOR(.in.)
 
 !----------------------------------------------------------------------------
@@ -187,19 +204,37 @@ INTERFACE OPERATOR(.isin.)
     INTEGER(INT8), INTENT(IN) :: b(:)
     LOGICAL(LGT) :: ans(SIZE(a))
   END FUNCTION isin_1a
+END INTERFACE OPERATOR(.isin.)
 
+!----------------------------------------------------------------------------
+!                                             Operator(.in.)@IntegerMethods
+!----------------------------------------------------------------------------
+
+INTERFACE OPERATOR(.isin.)
   MODULE PURE FUNCTION isin_1b(a, b) RESULT(Ans)
     INTEGER(INT16), INTENT(IN) :: a(:)
     INTEGER(INT16), INTENT(IN) :: b(:)
     LOGICAL(LGT) :: ans(SIZE(a))
   END FUNCTION isin_1b
+END INTERFACE OPERATOR(.isin.)
 
+!----------------------------------------------------------------------------
+!                                             Operator(.in.)@IntegerMethods
+!----------------------------------------------------------------------------
+
+INTERFACE OPERATOR(.isin.)
   MODULE PURE FUNCTION isin_1c(a, b) RESULT(Ans)
     INTEGER(INT32), INTENT(IN) :: a(:)
     INTEGER(INT32), INTENT(IN) :: b(:)
     LOGICAL(LGT) :: ans(SIZE(a))
   END FUNCTION isin_1c
+END INTERFACE OPERATOR(.isin.)
 
+!----------------------------------------------------------------------------
+!                                             Operator(.in.)@IntegerMethods
+!----------------------------------------------------------------------------
+
+INTERFACE OPERATOR(.isin.)
   MODULE PURE FUNCTION isin_1d(a, b) RESULT(Ans)
     INTEGER(INT64), INTENT(IN) :: a(:)
     INTEGER(INT64), INTENT(IN) :: b(:)
@@ -217,39 +252,59 @@ END INTERFACE OPERATOR(.isin.)
 ! summary: Returns true if a integer set is inside another
 
 INTERFACE OPERATOR(.in.)
-
   MODULE PURE FUNCTION in_2a(a, b) RESULT(Ans)
     INTEGER(INT8), INTENT(IN) :: a
     INTEGER(INT8), INTENT(IN) :: b(:)
     LOGICAL(LGT) :: ans
   END FUNCTION in_2a
+END INTERFACE OPERATOR(.in.)
 
+!----------------------------------------------------------------------------
+!                                             Operator(.in.)@IntegerMethods
+!----------------------------------------------------------------------------
+
+INTERFACE OPERATOR(.in.)
   MODULE PURE FUNCTION in_2b(a, b) RESULT(Ans)
     INTEGER(INT16), INTENT(IN) :: a
     INTEGER(INT16), INTENT(IN) :: b(:)
     LOGICAL(LGT) :: ans
   END FUNCTION in_2b
+END INTERFACE OPERATOR(.in.)
 
+!----------------------------------------------------------------------------
+!                                             Operator(.in.)@IntegerMethods
+!----------------------------------------------------------------------------
+
+INTERFACE OPERATOR(.in.)
   MODULE PURE FUNCTION in_2c(a, b) RESULT(Ans)
     INTEGER(INT32), INTENT(IN) :: a
     INTEGER(INT32), INTENT(IN) :: b(:)
     LOGICAL(LGT) :: ans
   END FUNCTION in_2c
+END INTERFACE OPERATOR(.in.)
 
+!----------------------------------------------------------------------------
+!                                             Operator(.in.)@IntegerMethods
+!----------------------------------------------------------------------------
+
+INTERFACE OPERATOR(.in.)
   MODULE PURE FUNCTION in_2d(a, b) RESULT(Ans)
     INTEGER(INT64), INTENT(IN) :: a
     INTEGER(INT64), INTENT(IN) :: b(:)
     LOGICAL(LGT) :: ans
   END FUNCTION in_2d
-
 END INTERFACE OPERATOR(.in.)
+
+!----------------------------------------------------------------------------
+!                                             Operator(.in.)@IntegerMethods
+!----------------------------------------------------------------------------
 
 INTERFACE OPERATOR(.isin.)
   MODULE PROCEDURE in_2a, in_2b, in_2c, in_2d
 END INTERFACE OPERATOR(.isin.)
 
 !----------------------------------------------------------------------------
-!
+!                                                           RemoveDuplicates
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -260,19 +315,40 @@ INTERFACE RemoveDuplicates
   MODULE PURE SUBROUTINE RemoveDuplicates_1a(obj)
     INTEGER(INT8), ALLOCATABLE, INTENT(INOUT) :: obj(:)
   END SUBROUTINE RemoveDuplicates_1a
+END INTERFACE RemoveDuplicates
+
+!----------------------------------------------------------------------------
+!                                                           RemoveDuplicates
+!----------------------------------------------------------------------------
+
+INTERFACE RemoveDuplicates
   MODULE PURE SUBROUTINE RemoveDuplicates_1b(obj)
     INTEGER(INT16), ALLOCATABLE, INTENT(INOUT) :: obj(:)
   END SUBROUTINE RemoveDuplicates_1b
+END INTERFACE RemoveDuplicates
+
+!----------------------------------------------------------------------------
+!                                                           RemoveDuplicates
+!----------------------------------------------------------------------------
+
+INTERFACE RemoveDuplicates
   MODULE PURE SUBROUTINE RemoveDuplicates_1c(obj)
     INTEGER(INT32), ALLOCATABLE, INTENT(INOUT) :: obj(:)
   END SUBROUTINE RemoveDuplicates_1c
+END INTERFACE RemoveDuplicates
+
+!----------------------------------------------------------------------------
+!                                                           RemoveDuplicates
+!----------------------------------------------------------------------------
+
+INTERFACE RemoveDuplicates
   MODULE PURE SUBROUTINE RemoveDuplicates_1d(obj)
     INTEGER(INT64), ALLOCATABLE, INTENT(INOUT) :: obj(:)
   END SUBROUTINE RemoveDuplicates_1d
 END INTERFACE RemoveDuplicates
 
 !----------------------------------------------------------------------------
-!
+!                                                           RemoveDuplicate_
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -288,7 +364,13 @@ INTERFACE RemoveDuplicates_
     INTEGER(I4B), INTENT(OUT) :: tsize
     !! number of unique entries found
   END SUBROUTINE RemoveDuplicates_1a_
+END INTERFACE RemoveDuplicates_
 
+!----------------------------------------------------------------------------
+!                                                           RemoveDuplicate_
+!----------------------------------------------------------------------------
+
+INTERFACE RemoveDuplicates_
   MODULE PURE SUBROUTINE RemoveDuplicates_1b_(obj, tsize, isSorted)
     INTEGER(INT16), INTENT(INOUT) :: obj(:)
     !! obj(1:tsize) will have unique entries
@@ -297,7 +379,13 @@ INTERFACE RemoveDuplicates_
     INTEGER(I4B), INTENT(OUT) :: tsize
     !! number of unique entries found
   END SUBROUTINE RemoveDuplicates_1b_
+END INTERFACE RemoveDuplicates_
 
+!----------------------------------------------------------------------------
+!                                                           RemoveDuplicate_
+!----------------------------------------------------------------------------
+
+INTERFACE RemoveDuplicates_
   MODULE PURE SUBROUTINE RemoveDuplicates_1c_(obj, tsize, isSorted)
     INTEGER(INT32), INTENT(INOUT) :: obj(:)
     !! obj(1:tsize) will have unique entries
@@ -306,7 +394,13 @@ INTERFACE RemoveDuplicates_
     INTEGER(I4B), INTENT(OUT) :: tsize
     !! number of unique entries found
   END SUBROUTINE RemoveDuplicates_1c_
+END INTERFACE RemoveDuplicates_
 
+!----------------------------------------------------------------------------
+!                                                           RemoveDuplicate_
+!----------------------------------------------------------------------------
+
+INTERFACE RemoveDuplicates_
   MODULE PURE SUBROUTINE RemoveDuplicates_1d_(obj, tsize, isSorted)
     INTEGER(INT64), INTENT(INOUT) :: obj(:)
     !! obj(1:tsize) will have unique entries
@@ -315,7 +409,6 @@ INTERFACE RemoveDuplicates_
     INTEGER(I4B), INTENT(OUT) :: tsize
     !! number of unique entries found
   END SUBROUTINE RemoveDuplicates_1d_
-
 END INTERFACE RemoveDuplicates_
 
 !----------------------------------------------------------------------------
@@ -323,31 +416,66 @@ END INTERFACE RemoveDuplicates_
 !----------------------------------------------------------------------------
 
 INTERFACE Repeat
-  MODULE PURE FUNCTION Repeat_1a(Val, rtimes) RESULT(Ans)
-    INTEGER(INT8), INTENT(IN) :: Val(:)
+  MODULE PURE FUNCTION Repeat_1a(val, rtimes) RESULT(ans)
+    INTEGER(INT8), INTENT(IN) :: val(:)
     INTEGER(I4B), INTENT(IN) :: rtimes
-    INTEGER(INT8) :: Ans(SIZE(Val) * rtimes)
+    INTEGER(INT8) :: ans(SIZE(Val) * rtimes)
   END FUNCTION Repeat_1a
+END INTERFACE Repeat
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE Repeat
   MODULE PURE FUNCTION Repeat_1b(Val, rtimes) RESULT(Ans)
     INTEGER(INT16), INTENT(IN) :: Val(:)
     INTEGER(I4B), INTENT(IN) :: rtimes
     INTEGER(INT16) :: Ans(SIZE(Val) * rtimes)
   END FUNCTION Repeat_1b
+END INTERFACE Repeat
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE Repeat
   MODULE PURE FUNCTION Repeat_1c(Val, rtimes) RESULT(Ans)
     INTEGER(INT32), INTENT(IN) :: Val(:)
     INTEGER(I4B), INTENT(IN) :: rtimes
     INTEGER(INT32) :: Ans(SIZE(Val) * rtimes)
   END FUNCTION Repeat_1c
+END INTERFACE Repeat
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE Repeat
   MODULE PURE FUNCTION Repeat_1d(Val, rtimes) RESULT(Ans)
     INTEGER(INT64), INTENT(IN) :: Val(:)
     INTEGER(I4B), INTENT(IN) :: rtimes
     INTEGER(INT64) :: Ans(SIZE(Val) * rtimes)
   END FUNCTION Repeat_1d
+END INTERFACE Repeat
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE Repeat
   MODULE PURE FUNCTION Repeat_1e(Val, rtimes) RESULT(Ans)
     REAL(REAL32), INTENT(IN) :: Val(:)
     INTEGER(I4B), INTENT(IN) :: rtimes
     REAL(REAL32) :: Ans(SIZE(Val) * rtimes)
   END FUNCTION Repeat_1e
+END INTERFACE Repeat
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE Repeat
   MODULE PURE FUNCTION Repeat_1f(Val, rtimes) RESULT(Ans)
     REAL(REAL64), INTENT(IN) :: Val(:)
     INTEGER(I4B), INTENT(IN) :: rtimes
@@ -380,7 +508,7 @@ INTERFACE GetIndex
 END INTERFACE GetIndex
 
 !----------------------------------------------------------------------------
-!                                                           Get
+!                                                                       Get
 !----------------------------------------------------------------------------
 
 INTERFACE Get
@@ -389,19 +517,37 @@ INTERFACE Get
     INTEGER(I4B), INTENT(IN) :: indx
     INTEGER(INT8) :: ans
   END FUNCTION Get1_Int8
+END INTERFACE Get
 
+!----------------------------------------------------------------------------
+!                                                                       Get
+!----------------------------------------------------------------------------
+
+INTERFACE Get
   MODULE PURE FUNCTION Get1_Int16(val, indx) RESULT(ans)
     INTEGER(INT16), INTENT(IN) :: val(:)
     INTEGER(I4B), INTENT(IN) :: indx
     INTEGER(INT16) :: ans
   END FUNCTION Get1_Int16
+END INTERFACE Get
 
+!----------------------------------------------------------------------------
+!                                                                       Get
+!----------------------------------------------------------------------------
+
+INTERFACE Get
   MODULE PURE FUNCTION Get1_Int32(val, indx) RESULT(ans)
     INTEGER(INT32), INTENT(IN) :: val(:)
     INTEGER(I4B), INTENT(IN) :: indx
     INTEGER(INT32) :: ans
   END FUNCTION Get1_Int32
+END INTERFACE Get
 
+!----------------------------------------------------------------------------
+!                                                                       Get
+!----------------------------------------------------------------------------
+
+INTERFACE Get
   MODULE PURE FUNCTION Get1_Int64(val, indx) RESULT(ans)
     INTEGER(INT64), INTENT(IN) :: val(:)
     INTEGER(I4B), INTENT(IN) :: indx
@@ -410,7 +556,7 @@ INTERFACE Get
 END INTERFACE Get
 
 !----------------------------------------------------------------------------
-!                                                           Get
+!                                                                        Get
 !----------------------------------------------------------------------------
 
 INTERFACE Get
@@ -419,19 +565,37 @@ INTERFACE Get
     INTEGER(I4B), INTENT(IN) :: indx(:)
     INTEGER(INT8) :: ans(SIZE(indx))
   END FUNCTION Get2_Int8
+END INTERFACE Get
 
+!----------------------------------------------------------------------------
+!                                                                        Get
+!----------------------------------------------------------------------------
+
+INTERFACE Get
   MODULE PURE FUNCTION Get2_Int16(val, indx) RESULT(ans)
     INTEGER(INT16), INTENT(IN) :: val(:)
     INTEGER(I4B), INTENT(IN) :: indx(:)
     INTEGER(INT16) :: ans(SIZE(indx))
   END FUNCTION Get2_Int16
+END INTERFACE Get
 
+!----------------------------------------------------------------------------
+!                                                                        Get
+!----------------------------------------------------------------------------
+
+INTERFACE Get
   MODULE PURE FUNCTION Get2_Int32(val, indx) RESULT(ans)
     INTEGER(INT32), INTENT(IN) :: val(:)
     INTEGER(I4B), INTENT(IN) :: indx(:)
     INTEGER(INT32) :: ans(SIZE(indx))
   END FUNCTION Get2_Int32
+END INTERFACE Get
 
+!----------------------------------------------------------------------------
+!                                                                        Get
+!----------------------------------------------------------------------------
+
+INTERFACE Get
   MODULE PURE FUNCTION Get2_Int64(val, indx) RESULT(ans)
     INTEGER(INT64), INTENT(IN) :: val(:)
     INTEGER(I4B), INTENT(IN) :: indx(:)
@@ -440,7 +604,7 @@ INTERFACE Get
 END INTERFACE Get
 
 !----------------------------------------------------------------------------
-!                                                           Get
+!                                                                        Get
 !----------------------------------------------------------------------------
 
 INTERFACE Get
@@ -449,19 +613,37 @@ INTERFACE Get
     INTEGER(I4B), INTENT(IN) :: istart, iend, stride
     INTEGER(INT8) :: ans(INT((iend - istart) / stride) + 1)
   END FUNCTION Get3_Int8
+END INTERFACE Get
 
+!----------------------------------------------------------------------------
+!                                                                        Get
+!----------------------------------------------------------------------------
+
+INTERFACE Get
   MODULE PURE FUNCTION Get3_Int16(val, istart, iend, stride) RESULT(ans)
     INTEGER(INT16), INTENT(IN) :: val(:)
     INTEGER(I4B), INTENT(IN) :: istart, iend, stride
     INTEGER(INT16) :: ans(INT((iend - istart) / stride) + 1)
   END FUNCTION Get3_Int16
+END INTERFACE Get
 
+!----------------------------------------------------------------------------
+!                                                                        Get
+!----------------------------------------------------------------------------
+
+INTERFACE Get
   MODULE PURE FUNCTION Get3_Int32(val, istart, iend, stride) RESULT(ans)
     INTEGER(INT32), INTENT(IN) :: val(:)
     INTEGER(I4B), INTENT(IN) :: istart, iend, stride
     INTEGER(INT32) :: ans(INT((iend - istart) / stride) + 1)
   END FUNCTION Get3_Int32
+END INTERFACE Get
 
+!----------------------------------------------------------------------------
+!                                                                        Get
+!----------------------------------------------------------------------------
+
+INTERFACE Get
   MODULE PURE FUNCTION Get3_Int64(val, istart, iend, stride) RESULT(ans)
     INTEGER(INT64), INTENT(IN) :: val(:)
     INTEGER(I4B), INTENT(IN) :: istart, iend, stride
@@ -483,19 +665,37 @@ INTERFACE GetIntersection
     INTEGER(INT8), INTENT(INOUT) :: c(:)
     INTEGER(I4B), INTENT(OUT) :: tsize
   END SUBROUTINE GetIntersection1
+END INTERFACE GetIntersection
 
+!----------------------------------------------------------------------------
+!                                                           GetIntersection
+!----------------------------------------------------------------------------
+
+INTERFACE GetIntersection
   MODULE PURE SUBROUTINE GetIntersection2(a, b, c, tsize)
     INTEGER(INT16), INTENT(IN) :: a(:), b(:)
     INTEGER(INT16), INTENT(INOUT) :: c(:)
     INTEGER(I4B), INTENT(OUT) :: tsize
   END SUBROUTINE GetIntersection2
+END INTERFACE GetIntersection
 
+!----------------------------------------------------------------------------
+!                                                           GetIntersection
+!----------------------------------------------------------------------------
+
+INTERFACE GetIntersection
   MODULE PURE SUBROUTINE GetIntersection3(a, b, c, tsize)
     INTEGER(INT32), INTENT(IN) :: a(:), b(:)
     INTEGER(INT32), INTENT(INOUT) :: c(:)
     INTEGER(I4B), INTENT(OUT) :: tsize
   END SUBROUTINE GetIntersection3
+END INTERFACE GetIntersection
 
+!----------------------------------------------------------------------------
+!                                                           GetIntersection
+!----------------------------------------------------------------------------
+
+INTERFACE GetIntersection
   MODULE PURE SUBROUTINE GetIntersection4(a, b, c, tsize)
     INTEGER(INT64), INTENT(IN) :: a(:), b(:)
     INTEGER(INT64), INTENT(INOUT) :: c(:)
