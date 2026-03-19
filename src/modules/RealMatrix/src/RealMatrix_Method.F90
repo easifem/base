@@ -21,7 +21,7 @@
 
 MODULE RealMatrix_Method
 USE GlobalData
-USE BaSetype
+USE BaseType
 IMPLICIT NONE
 PRIVATE
 
@@ -703,14 +703,14 @@ END INTERFACE
 ! date: 6 March 2021
 ! summary: Returns the values of [[RealMatrix_]] obj in 2D array
 !
-!# Introduction
+!# Get
 !
 ! This function returns the value stored in `obj%l` in a 2D fortran array
 !
 !### Usage
 !
 !```fortran
-!        Val = Get( obj, 1.0_dfp )
+! val = Get(obj, 1.0_DFP)
 !```
 
 INTERFACE Get
