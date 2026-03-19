@@ -313,6 +313,9 @@ TYPE :: MathOpt_
   REAL(DFP) :: two = 2.0_DFP
   REAL(DFP) :: minus_two = -2.0_DFP
   REAL(DFP) :: pi = 3.14159265359_DFP
+  REAL(DFP) :: two_pi = 2.0_DFP * 3.14159265359_DFP
+  REAL(DFP) :: pi_by_two = 0.5_DFP * 3.14159265359_DFP
+  REAL(DFP) :: pi_by_four = 0.25_DFP * 3.14159265359_DFP
   REAL(DFP) :: e = 2.718281828459045_DFP
   REAL(DFP), DIMENSION(3, 3) :: eye3 = RESHAPE([ &
                                                1.0_DFP, 0.0_DFP, 0.0_DFP, &
