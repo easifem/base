@@ -15,8 +15,7 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-SUBMODULE(RealMatrix_Method) LAPACKMethods
-USE BaseMethod
-IMPLICIT NONE
-CONTAINS
-END SUBMODULE LAPACKMethods
+! SUBMODULE(RealMatrix_Method) LAPACKMethods
+! IMPLICIT NONE
+! CONTAINS
+! END SUBMODULE LAPACKMethods

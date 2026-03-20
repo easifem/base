@@ -16,40 +16,41 @@
 !
 
 !> author: Vikas Sharma, Ph. D.
-! date: 	7 March 2021
+! date:         7 March 2021
 ! summary: This module contains IO methods for [[RealMatrix_]]
 
 SUBMODULE(RealMatrix_Method) IOMethods
-USE BaseMethod
+USE Display_Method, ONLY: UtilDisplay => Display
+USE Display_Method, ONLY: ToString
+
 IMPLICIT NONE
+
 CONTAINS
 
 !----------------------------------------------------------------------------
 !                                                                   Display
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE realmat_Display1
-  CALL Display( obj%Val, msg, UnitNo=UnitNo )
-END PROCEDURE realmat_Display1
+MODULE PROCEDURE obj_Display1
+CALL UtilDisplay(obj%val, msg, unitno=unitno)
+END PROCEDURE obj_Display1
 
 !----------------------------------------------------------------------------
 !                                                                   Display
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE realmat_Display2
-  INTEGER( I4B ) :: j
-  !!
-  DO j = 1, SIZE( obj )
-    !!
-    CALL Display( &
-      & obj( j )%Val, &
-      & trim(msg)// ' (' // tostring(j) // '): ', &
-      & UnitNo=UnitNo )
-    !!
-    CALL Blanklines( UnitNo = UnitNo, NOL = 2 )
-    !!
-  END DO
-  !!
-END PROCEDURE realmat_Display2
+MODULE PROCEDURE obj_Display2
+INTEGER(I4B) :: j
+
+DO j = 1, SIZE(obj)
+  CALL UtilDisplay(obj(j)%val, &
+                   TRIM(msg)//' ('//ToString(j)//'): ', &
+                   unitno=unitno)
+END DO
+END PROCEDURE obj_Display2
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
 
 END SUBMODULE IOMethods

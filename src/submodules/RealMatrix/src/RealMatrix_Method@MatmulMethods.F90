@@ -16,7 +16,8 @@
 !
 
 SUBMODULE(RealMatrix_Method) MatmulMethods
-USE BaseMethod
+USE BaseType, ONLY: math => TypeMathOpt
+USE RealVector_Method, ONLY: RealVector
 IMPLICIT NONE
 
 CONTAINS
@@ -25,25 +26,25 @@ CONTAINS
 !                                                                    MATMUL
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE realmat_MatMul1
-  Ans%Val = MATMUL( obj1%Val, obj2%Val )
-  CALL SetTotalDimension( Ans, 2_I4B )
-END PROCEDURE realmat_MatMul1
+MODULE PROCEDURE obj_MatMul1
+ans%val = MATMUL(obj1%val, obj2%val)
+CALL SetTotalDimension(ans, math%two_i)
+END PROCEDURE obj_MatMul1
 
 !----------------------------------------------------------------------------
 !                                                                     MATMUL
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE realmat_MatMul2
-  Ans = MATMUL( obj%Val, Vec )
-END PROCEDURE realmat_MatMul2
+MODULE PROCEDURE obj_MatMul2
+ans = MATMUL(obj%val, vec)
+END PROCEDURE obj_MatMul2
 
 !----------------------------------------------------------------------------
 !                                                                     MATMUL
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE realmat_MatMul3
-  Ans = RealVector( MATMUL( obj%Val, Vec%Val ) )
-END PROCEDURE realmat_MatMul3
+MODULE PROCEDURE obj_MatMul3
+ans = RealVector(MATMUL(obj%val, vec%val))
+END PROCEDURE obj_MatMul3
 
 END SUBMODULE MatmulMethods

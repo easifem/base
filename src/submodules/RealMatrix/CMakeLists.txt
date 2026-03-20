@@ -15,14 +15,16 @@
 # along with this program.  If not, see <https: //www.gnu.org/licenses/>
 #
 
-SET(src_path "${CMAKE_CURRENT_LIST_DIR}/src/")
-TARGET_SOURCES(
-  ${PROJECT_NAME} PRIVATE
-  ${src_path}/RealMatrix_Method@IOMethods.F90
-  ${src_path}/RealMatrix_Method@ConstructorMethods.F90
-  ${src_path}/RealMatrix_Method@GetValuesMethods.F90
-  ${src_path}/RealMatrix_Method@SetValuesMethods.F90
-  ${src_path}/RealMatrix_Method@MatmulMethods.F90
-  ${src_path}/RealMatrix_Method@LAPACKMethods.F90
-  ${src_path}/RealMatrix_Method@IterativeSolverMethods.F90
+set(src_path "${CMAKE_CURRENT_LIST_DIR}/src/")
+target_sources(
+    ${PROJECT_NAME}
+    PRIVATE
+        ${src_path}/RealMatrix_Method@IOMethods.F90
+        ${src_path}/RealMatrix_Method@ConstructorMethods.F90
+        ${src_path}/RealMatrix_Method@GetMethods.F90
+        ${src_path}/RealMatrix_Method@SetMethods.F90
+        ${src_path}/RealMatrix_Method@AddMethods.F90
+        ${src_path}/RealMatrix_Method@MatmulMethods.F90
+        ${src_path}/RealMatrix_Method@LAPACKMethods.F90
+        ${src_path}/RealMatrix_Method@IterativeSolverMethods.F90
 )

@@ -15,106 +15,160 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-SUBMODULE(RealMatrix_Method) GetvaluesMethods
-USE BaseMethod
+SUBMODULE(RealMatrix_Method) GetMethods
+USE ReallocateUtility, ONLY: Reallocate
+USE BaseType, ONLY: math => TypeMathOpt
+
 IMPLICIT NONE
 CONTAINS
 
 !----------------------------------------------------------------------------
-!                                                                Get
+!                                                                        Get
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE realmat_Get1
-IF (ALLOCATED(obj%val)) THEN
-  CALL reallocate(ans, SIZE(obj, 1), SIZE(obj, 2))
+MODULE PROCEDURE obj_Get1
+LOGICAL(LGT) :: isok
+
+isok = ALLOCATED(obj%val)
+
+IF (isok) THEN
+  CALL Reallocate(ans, SIZE(obj, 1), SIZE(obj, 2))
   ans = obj%val
 ELSE
-  CALL reallocate(ans, 0, 0)
+  CALL Reallocate(ans, 0, 0)
 END IF
-END PROCEDURE realmat_Get1
+END PROCEDURE obj_Get1
 
 !----------------------------------------------------------------------------
-!                                                                Get
+!                                                                       Get_
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE realmat_Get1b
-ans = realmat_get1(obj=obj, datatype=1.0_DFP)
-END PROCEDURE realmat_Get1b
+MODULE PROCEDURE obj_Get_1
+LOGICAL(LGT) :: isok
 
-!----------------------------------------------------------------------------
-!                                                                Get
-!----------------------------------------------------------------------------
+isok = ALLOCATED(obj%val)
+nrow = 0
+ncol = 0
 
-MODULE PROCEDURE realmat_Get2
-ans = obj%val(RIndx, CIndx)
-END PROCEDURE realmat_Get2
-
-!----------------------------------------------------------------------------
-!                                                                Get
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE realmat_Get3
-#define Indx iStart:iEnd:Stride
-ans = obj%val(Indx, Indx)
-#undef Indx
-END PROCEDURE realmat_Get3
+IF (isok) THEN
+  nrow = SIZE(obj, 1)
+  ncol = SIZE(obj, 2)
+  ans(1:nrow, 1:ncol) = obj%val(1:nrow, 1:ncol)
+END IF
+END PROCEDURE obj_Get_1
 
 !----------------------------------------------------------------------------
 !                                                                       Get
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE realmat_Get4
+MODULE PROCEDURE obj_Get1b
+ans = Get(obj=obj, datatype=math%one)
+END PROCEDURE obj_Get1b
+
+!----------------------------------------------------------------------------
+!                                                                        Get
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE obj_Get2
+ans = obj%val(rindx, cindx)
+END PROCEDURE obj_Get2
+
+!----------------------------------------------------------------------------
+!                                                                       Get_
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE obj_Get_2
+LOGICAL(LGT) :: isok
+
+isok = ALLOCATED(obj%val)
+nrow = 0
+ncol = 0
+IF (isok) THEN
+  nrow = SIZE(rindx)
+  ncol = SIZE(cindx)
+  ans(1:nrow, 1:ncol) = obj%val(rindx, cindx)
+END IF
+END PROCEDURE obj_Get_2
+
+!----------------------------------------------------------------------------
+!                                                                        Get
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE obj_Get3
+ans = obj%val(istart:iend:stride, istart:iend:stride)
+END PROCEDURE obj_Get3
+
+!----------------------------------------------------------------------------
+!                                                                        Get
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE obj_Get_3
+LOGICAL(LGT) :: isok
+isok = ALLOCATED(obj%val)
+nrow = 0
+ncol = 0
+IF (isok) THEN
+  nrow = (iend - istart) / stride
+  ncol = nrow
+  ans(1:nrow, 1:ncol) = obj%val(istart:iend:stride, istart:iend:stride)
+END IF
+END PROCEDURE obj_Get_3
+
+!----------------------------------------------------------------------------
+!                                                                       Get
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE obj_Get4
 ans%val = obj%val
-CALL SetTotalDimension(ans, 2_I4B)
-END PROCEDURE realmat_Get4
+CALL SetTotalDimension(ans, math%two_i)
+END PROCEDURE obj_Get4
 
 !----------------------------------------------------------------------------
 !                                                                        Get
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE realmat_Get5
+MODULE PROCEDURE obj_Get5
 ans%val = obj%val(RIndx, CIndx)
-CALL SetTotalDimension(ans, 2_I4B)
-END PROCEDURE realmat_Get5
+CALL SetTotalDimension(ans, math%two_i)
+END PROCEDURE obj_Get5
 
 !----------------------------------------------------------------------------
 !                                                                        Get
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE realmat_Get6
+MODULE PROCEDURE obj_Get6
 #define Indx iStart:iEnd:Stride
 ans%val = obj%val(Indx, Indx)
 #undef Indx
-CALL SetTotalDimension(ans, 2_I4B)
-END PROCEDURE realmat_Get6
+CALL SetTotalDimension(ans, math%two_i)
+END PROCEDURE obj_Get6
 
 !----------------------------------------------------------------------------
-!                                                                      Get
+!                                                                       Get
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE realmat_Get7
+MODULE PROCEDURE obj_Get7
 INTEGER(I4B) :: s(2), i, j, r1, r2, c1, c2
 INTEGER(I4B), ALLOCATABLE :: rc(:, :)
-  !!
-  !! main
-  !!
+
 s = SHAPE(obj)
 ALLOCATE (rc(0:2, 0:(s(1) * s(2))))
 rc = 0
-  !!
+
 DO j = 1, s(2)
   DO i = 1, s(1)
     rc(1:2, i + (j - 1) * s(1)) = SHAPE(obj(i, j))
   END DO
 END DO
-  !!
+
 i = MAXVAL(SUM(RESHAPE(rc(1, 1:), SHAPE(obj)), 1))
 j = MAXVAL(SUM(RESHAPE(rc(2, 1:), SHAPE(obj)), 2))
-  !!
+
 ALLOCATE (ans(i, j)); ans = 0.0_DFP
-  !!
-c1 = 0; c2 = 0
-  !!
+
+c1 = 0
+c2 = 0
+
 DO j = 1, s(2)
   c1 = 1 + c2
   c2 = c1 + rc(2, j) - 1
@@ -125,50 +179,64 @@ DO j = 1, s(2)
     ans(r1:r2, c1:c2) = obj(i, j)%val
   END DO
 END DO
-  !!
-END PROCEDURE realmat_Get7
+
+END PROCEDURE obj_Get7
 
 !----------------------------------------------------------------------------
 !                                                                        Get
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE realmat_Get8
-ans%val = Get(obj, TypeDFP)
-CALL SetTotalDimension(ans, 2_I4B)
-END PROCEDURE realmat_Get8
+MODULE PROCEDURE obj_Get8
+ans%val = Get(obj, math%one)
+CALL SetTotalDimension(ans, math%two_i)
+END PROCEDURE obj_Get8
 
 !----------------------------------------------------------------------------
 !                                                                       Copy
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE realmat_Copy1
-To = from%val
-END PROCEDURE realmat_Copy1
+MODULE PROCEDURE obj_Copy1
+to = from%val
+END PROCEDURE obj_Copy1
 
 !----------------------------------------------------------------------------
 !                                                                       Copy
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE realmat_Copy2
+MODULE PROCEDURE obj_Copy2
 to%val = from%val
-CALL SetTotalDimension(To, 2_I4B)
-END PROCEDURE realmat_Copy2
+CALL SetTotalDimension(to, math%two_i)
+END PROCEDURE obj_Copy2
 
 !----------------------------------------------------------------------------
 !                                                                       Copy
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE realmat_Copy3
+MODULE PROCEDURE obj_Copy3
 to%val = from
-CALL SetTotalDimension(To, 2_I4B)
-END PROCEDURE realmat_Copy3
+CALL SetTotalDimension(to, math%two_i)
+END PROCEDURE obj_Copy3
 
 !----------------------------------------------------------------------------
-!                                                               ArrayPointer
+!                                                                 GetPointer
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE realmat_GetPointer
+MODULE PROCEDURE obj_GetPointer
 ans => obj%val
-END PROCEDURE realmat_GetPointer
+END PROCEDURE obj_GetPointer
 
-END SUBMODULE GetvaluesMethods
+!----------------------------------------------------------------------------
+!                                                                  GetColumn
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE obj_GetColumn_1
+LOGICAL(LGT) :: isok
+isok = ALLOCATED(obj%val)
+tsize = 0
+IF (isok) THEN
+  tsize = SIZE(obj%val, 1)
+  ans(1:tsize) = obj%val(1:tsize, col)
+END IF
+END PROCEDURE obj_GetColumn_1
+
+END SUBMODULE GetMethods

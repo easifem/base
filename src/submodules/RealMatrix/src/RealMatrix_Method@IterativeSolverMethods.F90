@@ -15,7 +15,11 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 SUBMODULE(RealMatrix_Method) IterativeSolverMethods
-USE BaseMethod
+USE BaseType, ONLY: convOpt => TypeConvergenceOpt
+USE BaseType, ONLY: math => TypeMathOpt
+USE InputUtility, ONLY: Input
+USE GlobalData, ONLY: maxI4B
+
 IMPLICIT NONE
 CONTAINS
 
@@ -23,118 +27,152 @@ CONTAINS
 !                                                                        CG
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE realmat_CG_1
-REAL(DFP) :: alpha, beta, tol, pap, error0, error, rr1, rr2
+MODULE PROCEDURE obj_LinearSolver_CG1
 REAL(DFP) :: w(SIZE(rhs), 3)
-REAL(DFP), PARAMETER :: default_atol = 0.0_DFP
+CALL LinearSolver_CG(mat=mat, rhs=rhs, sol=sol, w=w, maxIter=maxIter, &
+                     rtol=rtol, atol=atol, convergenceIn=convergenceIn, &
+                     relativeToRHS=relativeToRHS, restartAfter=restartAfter)
+END PROCEDURE obj_LinearSolver_CG1
+
+!----------------------------------------------------------------------------
+!                                                            LinearSolver_CG
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE obj_LinearSolver_CG2
+REAL(DFP), PARAMETER :: default_atol = math%zero
 REAL(DFP), PARAMETER :: default_rtol = 1.0E-6
 INTEGER(I4B), PARAMETER :: default_maxiter = 10
-! 1=r 2=p 3=Ap
-INTEGER(I4B) :: maxiter0
-INTEGER(I4B) :: ii
-INTEGER(I4B) :: convIn
-LOGICAL(LGT) :: recomputeRes
 
-! temp storage of Ax0
-w(:, 2) = MATMUL(mat, sol) ! BLAS
+REAL(DFP) :: alpha, beta, tol, pap, error0, error, rr1, rr2, &
+             rtol0, atol0
+INTEGER(I4B) :: maxiter0, ii, convIn, tsize
+LOGICAL(LGT) :: isok, relativeToRHS0, recomputeRes
 
-! r0=b-Ax0
-w(:, 1) = rhs - w(:, 2) ! BLAS
+tsize = SIZE(rhs)
 
-! p0=r0
-w(:, 2) = w(:, 1) ! BLAS
+! temp storage of Ax0 @blas
+w(1:tsize, 2) = MATMUL(mat(1:tsize, 1:tsize), sol(1:tsize))
 
-convIn = INPUT(option=convergenceIn, default=convergenceInRes)
+! r0=b-Ax0 @blas
+w(1:tsize, 1) = rhs(1:tsize) - w(1:tsize, 2)
+
+! p0=r0 @blas
+w(1:tsize, 2) = w(1:tsize, 1)
+
+convIn = INPUT(option=convergenceIn, default=convOpt%res)
+
+relativeToRHS0 = INPUT(option=relativeToRHS, default=math%no)
 
 ! tol
-IF (INPUT(option=relativeToRHS, default=.FALSE.)) THEN
-
+IF (relativeToRHS0) THEN
   ! rto*||b||+atol
-  tol = NORM2(rhs) ! BLAS
+  ! @blas
+  tol = NORM2(rhs(1:tsize))
 
 ELSE
-  IF (convIn .EQ. convergenceInRes) THEN
 
+  isok = convIn .EQ. convOpt%res
+
+  IF (isok) THEN
     ! rtol*r0+atol
-    tol = NORM2(w(:, 1)) ! BLAS
+    ! @blas
+    tol = NORM2(w(1:tsize, 1))
     error0 = tol
 
   ELSE
 
     ! rtol*dx0+atol
-    rr1 = DOT_PRODUCT(w(:, 1), w(:, 1)) ! BLAS
-    w(:, 3) = MATMUL(mat, w(:, 1)) ! BLAS
-    pap = DOT_PRODUCT(w(:, 1), w(:, 3)) ! BLAS
+    ! @blas
+    rr1 = DOT_PRODUCT(w(1:tsize, 1), w(1:tsize, 1))
+
+    ! @blas
+    w(1:tsize, 3) = MATMUL(mat(1:tsize, 1:tsize), w(1:tsize, 1))
+
+    ! @blas
+    pap = DOT_PRODUCT(w(1:tsize, 1), w(1:tsize, 3))
+
     alpha = rr1 / pap
+
     ! dx0=alpha||p0||
     error0 = SQRT(rr1)
+
     tol = ABS(alpha) * error0
   END IF
 END IF
 
-tol = INPUT(default=default_rtol, option=rtol) * tol &
-    & + INPUT(default=default_atol, option=atol)
+rtol0 = INPUT(default=default_rtol, option=rtol)
+atol0 = INPUT(default=default_atol, option=atol)
+tol = rtol0 * tol + atol0
 
 ! Check convergence
-IF (convIn .EQ. convergenceInRes) THEN
+isok = convIn .EQ. convOpt%res
+IF (isok) THEN
   IF (error0 .LE. tol) THEN
     RETURN
   END IF
 END IF
 
 ! maxiter0
-IF (PRESENT(maxiter)) THEN
-
-  IF (maxiter .LT. 0) THEN
-    maxiter0 = maxI4B
-  ELSE
-    maxiter0 = maxiter
-  END IF
-
-ELSE
-  maxiter0 = MIN(SIZE(rhs), default_maxiter)
+isok = PRESENT(maxiter)
+maxiter0 = MIN(tsize, default_maxiter)
+IF (isok) THEN
+  maxiter0 = maxiter
+  IF (maxiter .LT. 0) maxiter0 = maxI4B
 END IF
 
 ! recomputeRes
-IF (PRESENT(restartAfter)) THEN
-  recomputeRes = .TRUE.
-ELSE
-  recomputeRes = .FALSE.
-END IF
+isok = PRESENT(restartAfter)
+recomputeRes = math%no
+IF (isok) recomputeRes = math%yes
 
 ii = 0
 
 ! Start iteration
 DO
-  rr1 = DOT_PRODUCT(w(:, 1), w(:, 1)) ! BLAS
-  w(:, 3) = MATMUL(mat, w(:, 2)) ! BLAS
-  pap = DOT_PRODUCT(w(:, 2), w(:, 3)) ! BLAS
+  !@blas
+  rr1 = DOT_PRODUCT(w(1:tsize, 1), w(1:tsize, 1))
+
+  !@blas
+  w(1:tsize, 3) = MATMUL(mat(1:tsize, 1:tsize), w(1:tsize, 2))
+
+  !@blas
+  pap = DOT_PRODUCT(w(1:tsize, 2), w(1:tsize, 3))
   alpha = rr1 / pap
 
   ! increse the iteration
   ii = ii + 1
 
   ! update solution
-  sol = sol + alpha * w(:, 2) ! BLAS
+  ! @blas
+  sol(1:tsize) = sol(1:tsize) + alpha * w(1:tsize, 2)
 
   IF (recomputeRes) THEN
-    IF (MOD(ii, restartAfter) .EQ. 0) THEN
-      ! temp storage of Ax
-      w(:, 3) = MATMUL(mat, sol) ! BLAS
-      w(:, 1) = rhs - w(:, 3) ! BLAS
+
+    isok = MOD(ii, restartAfter) .EQ. 0
+
+    IF (isok) THEN
+      ! temp storage of Ax @blas
+      w(1:tsize, 3) = MATMUL(mat(1:tsize, 1:tsize), sol(1:tsize))
+      w(1:tsize, 1) = rhs(1:tsize) - w(1:tsize, 3)
     END IF
+
   ELSE
-    w(:, 1) = w(:, 1) - alpha * w(:, 3) ! BLAS
+
+    !@blas
+    w(1:tsize, 1) = w(1:tsize, 1) - alpha * w(1:tsize, 3)
+
   END IF
 
-  rr2 = DOT_PRODUCT(w(:, 1), w(:, 1)) ! BLAS
+  !@blas
+  rr2 = DOT_PRODUCT(w(1:tsize, 1), w(1:tsize, 1))
 
   ! check convergence
-  IF (convIn .EQ. convergenceInRes) THEN
+  isok = convIn .EQ. convOpt%res
+  IF (isok) THEN
     error = SQRT(rr2)
     IF ((error .LE. tol) .OR. (ii .GT. maxiter0)) EXIT
   ELSE
-    error = alpha * NORM2(w(:, 2))
+    error = alpha * NORM2(w(1:tsize, 2))
     ! BLAS
     IF ((error .LE. tol) .OR. (ii .GT. maxiter0)) EXIT
   END IF
@@ -143,9 +181,14 @@ DO
   beta = rr2 / rr1
 
   ! update p
-  w(:, 2) = w(:, 1) + beta * w(:, 2) ! BLAS
+  ! @blas
+  w(1:tsize, 2) = w(1:tsize, 1) + beta * w(1:tsize, 2)
 END DO
 
-END PROCEDURE realmat_CG_1
+END PROCEDURE obj_LinearSolver_CG2
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
 
 END SUBMODULE IterativeSolverMethods
