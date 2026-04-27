@@ -754,7 +754,7 @@ END TYPE IterationData_
 !----------------------------------------------------------------------------
 
 TYPE(IterationData_), PARAMETER :: TypeIterationData = &
-  & IterationData_(header=NULL())
+                                   IterationData_(header=NULL())
 
 !----------------------------------------------------------------------------
 !
