@@ -21,7 +21,9 @@ IMPLICIT NONE
 PRIVATE
 
 PUBLIC :: DET
+PUBLIC :: DET_
 PUBLIC :: INV
+PUBLIC :: INV_
 
 !----------------------------------------------------------------------------
 !                                                         Det@InverseMethods
@@ -37,6 +39,22 @@ END INTERFACE
 INTERFACE Det
   MODULE PROCEDURE det_2D
 END INTERFACE Det
+
+!----------------------------------------------------------------------------
+!                                                         Det@InverseMethods
+!----------------------------------------------------------------------------
+
+INTERFACE
+  MODULE PURE FUNCTION det_2D_(A, n) RESULT(Ans)
+    INTEGER(I4B), INTENT(IN) :: n
+    REAL(DFP), INTENT(IN) :: A(1:n, 1:n)
+    REAL(DFP) :: Ans
+  END FUNCTION det_2D_
+END INTERFACE
+
+INTERFACE Det_
+  MODULE PROCEDURE det_2D_
+END INTERFACE Det_
 
 !----------------------------------------------------------------------------
 !                                                        Det@InverseMethods
@@ -71,6 +89,26 @@ END INTERFACE
 INTERFACE Inv
   MODULE PROCEDURE Inv_2D
 END INTERFACE Inv
+
+!----------------------------------------------------------------------------
+!                                                        INV@InverseMethods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 18 Oct 2022
+! summary: Inverse of small matrix upto size 4
+
+INTERFACE
+  MODULE PURE SUBROUTINE Inv_2D_(invA, A, n)
+    INTEGER(I4B), INTENT(IN) :: n
+    REAL(DFP), INTENT(INOUT) :: invA(1:n, 1:n)
+    REAL(DFP), INTENT(IN) :: A(1:n, 1:n)
+  END SUBROUTINE Inv_2D_
+END INTERFACE
+
+INTERFACE Inv_
+  MODULE PROCEDURE Inv_2D_
+END INTERFACE Inv_
 
 !----------------------------------------------------------------------------
 !                                                         INV@InverseMethods

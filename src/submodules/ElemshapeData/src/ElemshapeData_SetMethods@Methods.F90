@@ -17,7 +17,7 @@
 
 SUBMODULE(ElemshapeData_SetMethods) Methods
 USE ProductUtility, ONLY: VectorProduct, OuterProd
-USE InvUtility, ONLY: Det, Inv
+USE InvUtility, ONLY: Det_, Inv_
 USE ReallocateUtility, ONLY: Reallocate
 USE MatmulUtility
 
@@ -101,8 +101,10 @@ CASE (2)
 CASE (3)
 
   DO ips = 1, obj%nips
-    obj%js(ips) = Det(obj%jacobian(1:obj%nsd, 1:obj%xidim, ips))
+    obj%js(ips) = Det_(obj%jacobian(1:obj%nsd, 1:obj%xidim, ips), obj%nsd)
   END DO
+
+CASE DEFAULT
 
 END SELECT
 
@@ -126,7 +128,8 @@ IF (abool) THEN
 END IF
 
 DO ips = 1, obj%nips
-  CALL Inv(InvA=invJacobian, A=obj%jacobian(1:obj%nsd, 1:obj%nsd, ips))
+  CALL Inv_(InvA=invJacobian, A=obj%jacobian(1:obj%nsd, 1:obj%nsd, ips), &
+            n=obj%nsd)
 
   obj%dNdXt(1:obj%nns, 1:obj%nsd, ips) = &
     MATMUL(obj%dNdXi(1:obj%nns, 1:obj%nsd, ips), &
@@ -145,9 +148,9 @@ valNNS = SIZE(val, 2)
 minNNS = MIN(valNNS, obj%nns)
 
 DO ips = 1, obj%nips
-  obj%jacobian(1:obj%nsd, 1:obj%xidim, ips) = MATMUL( &
-                                              val(1:obj%nsd, 1:minNNS), &
-                                            dNdXi(1:minNNS, 1:obj%xidim, ips))
+  obj%jacobian(1:obj%nsd, 1:obj%xidim, ips) = &
+    MATMUL(val(1:obj%nsd, 1:minNNS), &
+           dNdXi(1:minNNS, 1:obj%xidim, ips))
 END DO
 END PROCEDURE elemsd_SetJacobian
 
@@ -185,11 +188,13 @@ v(1:obj%nsd, 1:obj%nips) = MATMUL(v(1:obj%nsd, 1:obj%nns), &
                                   obj%N(1:obj%nns, 1:obj%nips))
 
 DO ip = 1, obj%nips
-  mat2(1:obj%nns, 1:obj%nnt) = OUTERPROD(obj%N(1:obj%nns, ip), obj%dTdTheta(1:obj%nnt))
+  mat2(1:obj%nns, 1:obj%nnt) = OUTERPROD( &
+                               obj%N(1:obj%nns, ip), obj%dTdTheta(1:obj%nnt))
   mat2 = mat2 * areal
 
-  obj%dNTdt(1:obj%nns, 1:obj%nnt, ip) = mat2 - &
-     MATMUL(obj%dNTdXt(1:obj%nns, 1:obj%nnt, 1:obj%nsd, ip), v(1:obj%nsd, ip))
+  obj%dNTdt(1:obj%nns, 1:obj%nnt, ip) = &
+    mat2 - MATMUL(obj%dNTdXt(1:obj%nns, 1:obj%nnt, 1:obj%nsd, ip), &
+                  v(1:obj%nsd, ip))
 
 END DO
 
@@ -213,8 +218,8 @@ END IF
 
 DO ip = 1, obj%nips
 
-  CALL INV(A=obj%jacobian(1:obj%nsd, 1:obj%xidim, ip), &
-           INVA=Q(1:obj%nsd, 1:obj%nsd))
+  CALL INV_(A=obj%jacobian(1:obj%nsd, 1:obj%xidim, ip), &
+            INVA=Q(1:obj%nsd, 1:obj%nsd), n=obj%nsd)
 
   temp = MATMUL(obj%dNdXi(1:obj%nns, 1:obj%xidim, ip), &
                 Q(1:obj%nsd, 1:obj%nsd))
