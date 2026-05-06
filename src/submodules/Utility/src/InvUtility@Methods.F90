@@ -116,15 +116,15 @@ SELECT CASE (SIZE(A, 1))
 CASE (1)
   d = det(A)
   IF (ABS(d) .LT. ZERO) THEN
-    invA = 0.0_DFP
+    invA(1, 1) = 0.0_DFP
   ELSE
-    invA = 1.0 / d
+    invA(1, 1) = 1.0_DFP / d
   END IF
 
 CASE (2)
   d = det(A)
   IF (ABS(d) .LT. ZERO) THEN
-    invA = 0.0_DFP
+    invA(1:2, 1:2) = 0.0_DFP
   ELSE
     invA(1, 1) = A(2, 2) / d
     invA(1, 2) = -A(1, 2) / d
@@ -134,7 +134,7 @@ CASE (2)
 CASE (3)
   d = det(A)
   IF (ABS(d) .LT. ZERO) THEN
-    invA = 0.0_DFP
+    invA(1:3, 1:3) = 0.0_DFP
   ELSE
     co(1, 1) = (A(2, 2) * A(3, 3) - A(2, 3) * A(3, 2))
     co(1, 2) = -(A(2, 1) * A(3, 3) - A(2, 3) * A(3, 1))
@@ -145,14 +145,14 @@ CASE (3)
     co(3, 1) = +(A(1, 2) * A(2, 3) - A(1, 3) * A(2, 2))
     co(3, 2) = -(A(1, 1) * A(2, 3) - A(1, 3) * A(2, 1))
     co(3, 3) = +(A(1, 1) * A(2, 2) - A(1, 2) * A(2, 1))
-    invA = TRANSPOSE(co(1:3, 1:3)) / d
+    invA(1:3, 1:3) = TRANSPOSE(co(1:3, 1:3)) / d
   END IF
 
 CASE (4)
 
   d = det(A)
   IF (ABS(d) .LT. ZERO) THEN
-    invA = 0.0_DFP
+    invA(1:4, 1:4) = 0.0_DFP
   ELSE
     co(1, 1) = A(2, 2) * (A(3, 3) * A(4, 4) - A(3, 4) * A(4, 3)) + &
                A(2, 3) * (A(3, 4) * A(4, 2) - A(3, 2) * A(4, 4)) + &
@@ -202,8 +202,10 @@ CASE (4)
     co(4, 4) = A(1, 1) * (A(2, 2) * A(3, 3) - A(2, 3) * A(3, 2)) + &
                A(1, 2) * (A(2, 3) * A(3, 1) - A(2, 1) * A(3, 3)) + &
                A(1, 3) * (A(2, 1) * A(3, 2) - A(2, 2) * A(3, 1))
-    invA = TRANSPOSE(co) / d
+    invA(1:4, 1:4) = TRANSPOSE(co) / d
   END IF
+
+CASE DEFAULT
 
 END SELECT
 

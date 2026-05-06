@@ -244,7 +244,7 @@ END PROCEDURE elemsd_Set1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE elemsd_Set2
-call elemsd_Set1(obj=cellobj, val=cellval, N=cellN, dNdXi=celldNdXi)
+CALL elemsd_Set1(obj=cellobj, val=cellval, N=cellN, dNdXi=celldNdXi)
 
 CALL SetJacobian(obj=facetobj, val=facetval, dNdXi=facetdNdXi)
 CALL SetJs(obj=facetobj)
