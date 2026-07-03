@@ -1368,4 +1368,8 @@ INTERFACE GetVTKElementType_
   END SUBROUTINE GetVTKElementType1_
 END INTERFACE GetVTKElementType_
 
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
 END MODULE ReferenceElement_Method
