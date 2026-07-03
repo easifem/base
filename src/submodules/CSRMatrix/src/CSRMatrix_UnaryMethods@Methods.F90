@@ -342,7 +342,7 @@ SUBROUTINE obj_GetSymU1(obj, symobj, A, symA)
     & JA_csc(:), idiag(:)
   REAL(DFP), ALLOCATABLE :: A_csr(:), A_csc(:)
   !
-  nnz_parts = GetNNZ(obj, [""])
+  nnz_parts = GetNNZ(obj, [" "])
   nrow = obj%nrow
   ncol = obj%ncol
   nnzU = nnz_parts(1)
@@ -457,7 +457,7 @@ SUBROUTINE obj_GetSymU2(obj, A)
     & JA_csc(:), idiag(:)
   REAL(DFP), ALLOCATABLE :: A_csr(:), A_csc(:), A_diag(:)
   !
-  nnz_parts = GetNNZ(obj, [""])
+  nnz_parts = GetNNZ(obj, [" "])
   nrow = obj%nrow
   ncol = obj%ncol
   nnzU = nnz_parts(1)
@@ -570,7 +570,7 @@ SUBROUTINE obj_GetSymL1(obj, symobj, A, symA)
     & JA_csc(:), idiag(:)
   REAL(DFP), ALLOCATABLE :: A_csr(:), A_csc(:), A_diag(:)
   !
-  nnz_parts = GetNNZ(obj, [""])
+  nnz_parts = GetNNZ(obj, [" "])
   nrow = obj%nrow
   ncol = obj%ncol
   nnzL = nnz_parts(2)
@@ -683,7 +683,7 @@ SUBROUTINE obj_GetSymL2(obj, A)
     & JA_csc(:), idiag(:)
   REAL(DFP), ALLOCATABLE :: A_csr(:), A_csc(:), A_diag(:)
   !
-  nnz_parts = GetNNZ(obj, [""])
+  nnz_parts = GetNNZ(obj, [" "])
   nrow = obj%nrow
   ncol = obj%ncol
   nnzL = nnz_parts(2)

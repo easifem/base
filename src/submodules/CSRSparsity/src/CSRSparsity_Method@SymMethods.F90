@@ -38,7 +38,7 @@ SUBROUTINE obj_GetSymU1(obj, symobj)
     & JA_csc(:), idiag(:)
   REAL(DFP) :: real_dummy(1)
   !
-  nnz_parts = GetNNZ(obj, [""])
+  nnz_parts = GetNNZ(obj, [" "])
   nrow = obj%nrow
   ncol = obj%ncol
   nnzU = nnz_parts(1)
@@ -142,7 +142,7 @@ SUBROUTINE obj_GetSymL1(obj, symobj)
     & JA_csc(:), idiag(:)
   REAL(DFP) :: real_dummy(1)
   !
-  nnz_parts = GetNNZ(obj, [""])
+  nnz_parts = GetNNZ(obj, [" "])
   nrow = obj%nrow
   ncol = obj%ncol
   nnzL = nnz_parts(2)
