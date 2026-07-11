@@ -16,17 +16,18 @@
 
 SUBMODULE(TriangleInterpolationUtility) Methods
 USE BaseType, ONLY: ipopt => TypeInterpolationOpt
+USE BaseType, ONLY: math => TypeMathOpt
 USE StringUtility, ONLY: UpperCase
 USE MappingUtility, ONLY: FromUnitTriangle2Triangle_
 USE RecursiveNodesUtility, ONLY: RecursiveNode2D_
 USE Display_Method, ONLY: ToString
 USE IntegerUtility, ONLY: NumberOfTuples => SIZE
-USE LineInterpolationUtility, ONLY: EquidistanceInPoint_Line_, &
-                                    InterpolationPoint_Line_
-
+USE LineInterpolationUtility, ONLY: EquidistanceInPoint_Line_
+USE LineInterpolationUtility, ONLY: InterpolationPoint_Line_
 IMPLICIT NONE
 
-CHARACTER(*), PARAMETER :: modName = "TriangleInterpolationUtility%Methods"
+CHARACTER(*), PARAMETER :: modName = &
+                           "TriangleInterpolationUtility@Methods.F90"
 
 CONTAINS
 
@@ -79,20 +80,24 @@ CASE ("H1")
   CASE ("O")
     ans = "BIUNIT"
 
-#ifdef DEBUG_VER
   CASE DEFAULT
-    CALL AssertError1(.FALSE., myName, modName, __LINE__, &
-                  "No case found for given baseInterpol="//TRIM(baseInterpol))
+
+#ifdef DEBUG_VER
+    CALL AssertError1(math%no, myName, modName, &
+                      __LINE__, &
+                      "No case found for given baseInterpol="// &
+                      TRIM(baseInterpol))
 #endif
 
   END SELECT
 
-#ifdef DEBUG_VER
 CASE DEFAULT
-  CALL AssertError1(.FALSE., myName, modName, __LINE__, &
-              "No case found for given baseContinuity="//TRIM(baseContinuity))
+#ifdef DEBUG_VER
+  CALL AssertError1(math%no, myName, modName, &
+                    __LINE__, &
+                    "No case found for given baseContinuity="// &
+                    TRIM(baseContinuity))
 #endif
-
 END SELECT
 
 END PROCEDURE RefElemDomain_Triangle
@@ -102,29 +107,9 @@ END PROCEDURE RefElemDomain_Triangle
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE FacetConnectivity_Triangle
-! CHARACTER(1) :: bi
-! LOGICAL(LGT) :: isok
-
 ans(1:2, 1) = [1, 2]
 ans(1:2, 2) = [2, 3]
 ans(1:2, 3) = [3, 1]
-
-! isok = PRESENT(baseInterpol)
-! bi = "L"
-! IF (isok) bi = UpperCase(baseInterpol(1:1))
-!
-! SELECT CASE (bi)
-! CASE ("H", "O")
-!   ans(1:2, 1) = [1, 2]
-!   ans(1:2, 2) = [1, 3]
-!   ans(1:2, 3) = [2, 3]
-!
-! CASE DEFAULT
-!   ans(1:2, 1) = [1, 2]
-!   ans(1:2, 2) = [2, 3]
-!   ans(1:2, 3) = [3, 1]
-!
-! END SELECT
 END PROCEDURE FacetConnectivity_Triangle
 
 !----------------------------------------------------------------------------
@@ -155,7 +140,10 @@ INTEGER(I4B) :: i1, i2, aint, bint
 REAL(DFP) :: x(3, 3), xin(3, 3), e1(3), e2(3), lam, avar, mu
 LOGICAL(LGT) :: isok
 
-x = 0.0_DFP; xin = 0.0_DFP; e1 = 0.0_DFP; e2 = 0.0_DFP
+x = 0.0_DFP
+xin = 0.0_DFP
+e1 = 0.0_DFP
+e2 = 0.0_DFP
 
 isok = PRESENT(xij)
 
@@ -164,9 +152,9 @@ IF (isok) THEN
   x(1:nrow, 1:3) = xij(1:nrow, 1:3)
 ELSE
   nrow = 2_I4B
-  x(1:nrow, 1) = [0.0, 0.0]
-  x(1:nrow, 2) = [1.0, 0.0]
-  x(1:nrow, 3) = [0.0, 1.0]
+  x(1:nrow, 1) = [math%zero, math%zero]
+  x(1:nrow, 2) = [math%one, math%zero]
+  x(1:nrow, 3) = [math%zero, math%one]
 END IF
 
 ncol = LagrangeDOF_Triangle(order=order)
@@ -235,8 +223,10 @@ mu = avar / order
 xin(1:nrow, 3) = x(1:nrow, 3) + lam * e1(1:nrow) + mu * e2(1:nrow)
 
 i1 = i2 + 1
-CALL EquidistancePoint_Triangle_(order=order - 3, xij=xin(1:nrow, 1:3), &
-                                 ans=ans(1:nrow, i1:), nrow=aint, ncol=bint)
+CALL EquidistancePoint_Triangle_(order=order - 3, &
+                                 xij=xin(1:nrow, 1:3), &
+                                 ans=ans(1:nrow, i1:), &
+                                 nrow=aint, ncol=bint)
 END PROCEDURE EquidistancePoint_Triangle_
 
 !----------------------------------------------------------------------------
@@ -254,7 +244,8 @@ IF (isok) THEN
 END IF
 
 isok = PRESENT(xij)
-nrow = 2_I4B; IF (isok) nrow = SIZE(xij, 1)
+nrow = 2_I4B
+IF (isok) nrow = SIZE(xij, 1)
 ncol = LagrangeInDOF_Triangle(order=order)
 
 CALL EquidistanceInPoint_Triangle_(order=order, ans=ans, nrow=nrow, &
@@ -270,18 +261,23 @@ REAL(DFP) :: x(3, 3), xin(3, 3), e1(3), e2(3), lam, avar, mu
 INTEGER(I4B) :: aint, bint
 LOGICAL(LGT) :: isok
 
-nrow = 0; ncol = 0
+nrow = 0
+ncol = 0
 
 isok = order .LT. 3_I4B
 IF (isok) RETURN
 
-x = 0.0_DFP; xin = 0.0_DFP; e1 = 0.0_DFP; e2 = 0.0_DFP
+x = 0.0_DFP
+xin = 0.0_DFP
+e1 = 0.0_DFP
+e2 = 0.0_DFP
 
 isok = PRESENT(xij)
 nrow = 2_I4B
-x(1:nrow, 1) = [0.0, 0.0]
-x(1:nrow, 2) = [1.0, 0.0]
-x(1:nrow, 3) = [0.0, 1.0]
+x(1:nrow, 1) = [math%zero, math%zero]
+x(1:nrow, 2) = [math%one, math%zero]
+x(1:nrow, 3) = [math%zero, math%one]
+
 IF (isok) THEN
   nrow = SIZE(xij, 1)
   x(1:nrow, 1:3) = xij(1:nrow, 1:3)
@@ -341,11 +337,12 @@ LOGICAL(LGT) :: isok
 
 isok = PRESENT(xij)
 ncol = LagrangeDOF_Triangle(order=order)
-nrow = 2; IF (isok) nrow = SIZE(xij, 1)
+nrow = 2
+IF (isok) nrow = SIZE(xij, 1)
 ALLOCATE (ans(nrow, ncol))
 CALL BlythPozrikidis_Triangle_( &
-  order=order, ipType=ipType, ans=ans, nrow=nrow, ncol=ncol, layout=layout, &
-  xij=xij, alpha=alpha, beta=beta, lambda=lambda)
+  order=order, ipType=ipType, ans=ans, nrow=nrow, ncol=ncol, &
+  layout=layout, xij=xij, alpha=alpha, beta=beta, lambda=lambda)
 END PROCEDURE BlythPozrikidis_Triangle
 
 !----------------------------------------------------------------------------
@@ -374,17 +371,18 @@ CALL InterpolationPoint_Line_(order=order, ipType=ipType, xij=x, &
 ncol = LagrangeDOF_Triangle(order=order)
 nrow = 2
 
-isx = .FALSE.; IF (PRESENT(xij)) isx = .TRUE.
+isx = math%no
+IF (PRESENT(xij)) isx = math%yes
 IF (isx) nrow = SIZE(xij, 1)
 
-xi(1:order + 1, 1:order + 1) = 0.0_DFP
-eta(1:order + 1, 1:order + 1) = 0.0_DFP
+xi(1:order + 1, 1:order + 1) = math%zero
+eta(1:order + 1, 1:order + 1) = math%zero
 
 DO ii = 1, order + 1
   DO jj = 1, order + 2 - ii
     kk = order + 3 - ii - jj
-    xi(ii, jj) = (1.0 + 2.0 * v(ii) - v(jj) - v(kk)) / 3.0_DFP
-    eta(ii, jj) = (1.0 + 2.0 * v(jj) - v(ii) - v(kk)) / 3.0_DFP
+    xi(ii, jj) = (math%one + math%two * v(ii) - v(jj) - v(kk)) / math%three
+    eta(ii, jj) = (math%one + math%two * v(jj) - v(ii) - v(kk)) / math%three
   END DO
 END DO
 
@@ -403,14 +401,15 @@ CASE ("VEFC")
 
   ans(1:2, 1:ncol) = temp(1:2, 1:ncol)
 
-#ifdef DEBUG_VER
 CASE DEFAULT
-  CALL AssertError1(.FALSE., myName, modName, __LINE__, &
+
+#ifdef DEBUG_VER
+  CALL AssertError1(math%yes, myName, modName, &
+                    __LINE__, &
                     "layout=VEFC is allowed, found layout is "//TRIM(layout))
 #endif
 
 END SELECT
-
 END PROCEDURE BlythPozrikidis_Triangle_
 
 !----------------------------------------------------------------------------
@@ -421,14 +420,14 @@ MODULE PROCEDURE Isaac_Triangle
 INTEGER(I4B) :: nrow, ncol
 
 ncol = NumberOfTuples(n=order, d=2)
-nrow = 2; IF (PRESENT(xij)) nrow = SIZE(xij, 1)
+nrow = 2
+IF (PRESENT(xij)) nrow = SIZE(xij, 1)
 
 ALLOCATE (ans(nrow, ncol))
 
 CALL Isaac_Triangle_(order=order, ipType=ipType, ans=ans, nrow=nrow, &
                      ncol=ncol, layout=layout, xij=xij, alpha=alpha, &
                      beta=beta, lambda=lambda)
-
 END PROCEDURE Isaac_Triangle
 
 !----------------------------------------------------------------------------
@@ -445,8 +444,6 @@ LOGICAL(LGT) :: isok
 REAL(DFP) :: xi(max_order + 1, max_order + 1), &
              eta(max_order + 1, max_order + 1), &
              temp(2, 512)
-
-! REAL(DFP), ALLOCATABLE :: temp(:, :), rPoints(:, :)
 INTEGER(I4B) :: cnt, ii, jj
 INTEGER(I4B) :: nn
 
@@ -461,8 +458,8 @@ IF (isok) nrow = SIZE(xij, 1)
 
 !! convert from rPoints to xi and eta
 cnt = 0
-xi(1:nn, 1:nn) = 0.0_DFP
-eta(1:nn, 1:nn) = 0.0_DFP
+xi(1:nn, 1:nn) = math%zero
+eta(1:nn, 1:nn) = math%zero
 
 DO ii = 1, nn
   DO jj = 1, nn + 1 - ii
@@ -488,7 +485,7 @@ IF (isok) THEN
 END IF
 
 #ifdef DEBUG_VER
-CALL AssertError1(.FALSE., myName, modName, __LINE__, &
+CALL AssertError1(math%no, myName, modName, __LINE__, &
                   "Only layout=VEFC is allowed, found layout is "//layout)
 #endif
 END PROCEDURE Isaac_Triangle_
@@ -512,17 +509,20 @@ llr = MOD(m - 1, 3)
 DO ll = 0, llt
   !! v1
   cnt = cnt + 1
-  ii = 1 + ll; jj = 1 + ll
+  ii = 1 + ll
+  jj = 1 + ll
   temp(1, cnt) = xi(ii, jj)
   temp(2, cnt) = eta(ii, jj)
   !! v2
   cnt = cnt + 1
-  ii = m + 1 - 2 * ll; jj = 1 + ll
+  ii = m + 1 - 2 * ll
+  jj = 1 + ll
   temp(1, cnt) = xi(ii, jj)
   temp(2, cnt) = eta(ii, jj)
   !! v3
   cnt = cnt + 1
-  ii = 1 + ll; jj = m + 1 - 2 * ll
+  ii = 1 + ll
+  jj = m + 1 - 2 * ll
   temp(1, cnt) = xi(ii, jj)
   temp(2, cnt) = eta(ii, jj)
   !! nodes on edge 12
@@ -554,7 +554,8 @@ IF (isok) THEN
   !! a internal point
   cnt = cnt + 1
   ll = llt + 1
-  ii = 1 + ll; jj = 1 + ll
+  ii = 1 + ll
+  jj = 1 + ll
   temp(1, cnt) = xi(ii, jj)
   temp(2, cnt) = eta(ii, jj)
 END IF
@@ -589,13 +590,19 @@ CASE (ipopt%IsaacLegendre, ipopt%IsaacChebyshev, &
       ipopt%GaussLegendreLobatto, ipopt%GaussChebyshevLobatto)
   ncol = NumberOfTuples(n=order, d=2)
 
+CASE (ipopt%Center)
+  ncol = 1_DFP
+
+CASE DEFAULT
+
 END SELECT
 
 ALLOCATE (ans(nrow, ncol))
 
-CALL InterpolationPoint_Triangle_(order=order, ipType=ipType, ans=ans, &
-                                 nrow=nrow, ncol=ncol, xij=xij, alpha=alpha, &
-                                  beta=beta, lambda=lambda, layout=layout)
+CALL InterpolationPoint_Triangle_( &
+  order=order, ipType=ipType, ans=ans, &
+  nrow=nrow, ncol=ncol, xij=xij, alpha=alpha, &
+  beta=beta, lambda=lambda, layout=layout)
 
 END PROCEDURE InterpolationPoint_Triangle
 
@@ -609,6 +616,19 @@ CHARACTER(*), PARAMETER :: myName = "InterpolationPoint_Triangle_()"
 #endif
 
 SELECT CASE (ipType)
+CASE (ipopt%Center)
+  IF (PRESENT(xij)) THEN
+    nrow = SIZE(xij, 1)
+    ncol = 1
+    ans(1:nrow, ncol) = (xij(1:nrow, 1) + xij(1:nrow, 2) &
+                         + xij(1:nrow, 3)) / math%three
+  ELSE
+    nrow = 2
+    ncol = 1
+    ans(1, 1) = math%one / math%three
+    ans(2, 1) = math%one / math%three
+  END IF
+
 CASE (ipopt%Equidistance)
   CALL EquidistancePoint_Triangle_(xij=xij, order=order, ans=ans, &
                                    nrow=nrow, ncol=ncol)
@@ -640,7 +660,7 @@ CASE (ipopt%IsaacChebyshev, ipopt%GaussChebyshevLobatto)
 CASE (ipopt%Feket, ipopt%Hesthaven, ipopt%ChenBabuska)
 
 #ifdef DEBUG_VER
-  CALL AssertError1(.FALSE., myName, modName, __LINE__, &
+  CALL AssertError1(math%no, myName, modName, __LINE__, &
                     "Feket, Hesthaven, ChenBabuska nodes not available")
 #endif
 
