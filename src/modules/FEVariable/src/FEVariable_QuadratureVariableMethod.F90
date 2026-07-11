@@ -201,6 +201,25 @@ INTERFACE QuadratureVariable
 END INTERFACE QuadratureVariable
 
 !----------------------------------------------------------------------------
+!                                           NodalVariable@ConstructorMethods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2021-12-10
+! update: 2021-12-10
+! summary: Create quadrature variable, which is Vector, Constant
+
+INTERFACE QuadratureVariable
+  MODULE PURE FUNCTION Quadrature_Vector_Constant2(tsize, rank, vartype) &
+    RESULT(obj)
+    TYPE(FEVariable_) :: obj
+    INTEGER(I4B), INTENT(IN) :: tsize
+    TYPE(FEVariableVector_), INTENT(IN) :: rank
+    TYPE(FEVariableConstant_), INTENT(IN) :: vartype
+  END FUNCTION Quadrature_Vector_Constant2
+END INTERFACE QuadratureVariable
+
+!----------------------------------------------------------------------------
 !                                      QuadratureVariable@ConstructorMethods
 !----------------------------------------------------------------------------
 

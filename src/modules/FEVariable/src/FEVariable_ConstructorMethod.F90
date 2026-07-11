@@ -18,7 +18,6 @@ MODULE FEVariable_ConstructorMethod
 USE BaseType, ONLY: FEVariable_
 USE BaseType, ONLY: TypeFEVariableOpt
 USE GlobalData, ONLY: I4B, DFP, LGT
-
 IMPLICIT NONE
 
 PRIVATE
