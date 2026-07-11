@@ -15,9 +15,8 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 
 MODULE FEVariable_ConstructorMethod
-USE BaseType, ONLY: FEVariable_, &
-                    TypeFEVariableOpt
-
+USE BaseType, ONLY: FEVariable_
+USE BaseType, ONLY: TypeFEVariableOpt
 USE GlobalData, ONLY: I4B, DFP, LGT
 
 IMPLICIT NONE
