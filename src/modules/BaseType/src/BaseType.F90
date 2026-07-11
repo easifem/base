@@ -36,7 +36,7 @@ USE GlobalData, ONLY: RelativeConvergence, ConvergenceInRes, &
                       AbsoluteConvergence, NormL2, &
                       StressTypeVoigt, OMP_THREADS_JOINED
 
-USE GlobalData, ONLY: Equidistance, EquidistanceQP, GaussQP, &
+USE GlobalData, ONLY: Equidistance, CenterQP, EquidistanceQP, GaussQP, &
                       GaussLegendreQP, GaussLegendreLobattoQP, &
                       GaussLegendreRadau, GaussLegendreRadauLeft, &
                       GaussLegendreRadauRight, GaussRadauQP, &
@@ -312,6 +312,8 @@ TYPE :: MathOpt_
   REAL(DFP) :: minus_one = -1.0_DFP
   REAL(DFP) :: two = 2.0_DFP
   REAL(DFP) :: minus_two = -2.0_DFP
+  REAL(DFP) :: three = 3.0_DFP
+  REAL(DFP) :: minus_three = -3.0_DFP
   REAL(DFP) :: pi = 3.14159265359_DFP
   REAL(DFP) :: two_pi = 2.0_DFP * 3.14159265359_DFP
   REAL(DFP) :: pi_by_two = 0.5_DFP * 3.14159265359_DFP
@@ -439,7 +441,7 @@ END TYPE IntVectorPointer_
 
 TYPE :: RealVector_
   INTEGER(I4B) :: tDimension = 1_I4B
-  REAL(DFP), ALLOCATABLE :: Val(:)
+  REAL(DFP), ALLOCATABLE :: val(:)
 END TYPE RealVector_
 
 TYPE(RealVector_), PARAMETER :: TypeRealVector = RealVector_(Val=NULL())
@@ -534,6 +536,13 @@ TYPE(DOFOpt_), PARAMETER :: TypeDOFOpt = DOFOpt_()
 ! summary: Degree of freedom object type
 
 TYPE :: DOF_
+  INTEGER(I4B) :: storageFMT = FMT_NODES
+    !! Storage format
+  INTEGER(I4B) :: mapRow = 0
+    !! Number of rows in map which contains useful data
+    !! Number of physical variables = mapRow - 1
+  INTEGER(I4B) :: valMapSize = 0
+    !! The size of valMap which contains useful data
   INTEGER(I4B), ALLOCATABLE :: map(:, :)
     !! Encapsulation of information of DOF
     !! map contains 6 columns
@@ -550,13 +559,6 @@ TYPE :: DOF_
     !!    For example, map(n+1, 4) contains the total DOF
   INTEGER(I4B), ALLOCATABLE :: valMap(:)
     !! Val map
-  INTEGER(I4B) :: storageFMT = FMT_NODES
-    !! Storage format
-  INTEGER(I4B) :: mapRow = 0
-    !! Number of rows in map which contains useful data
-    !! Number of physical variables = mapRow - 1
-  INTEGER(I4B) :: valMapSize = 0
-    !! The size of valMap which contains useful data
 END TYPE DOF_
 
 TYPE(DOF_), PARAMETER :: TypeDOF = DOF_(map=NULL(), valMap=NULL())
@@ -2472,6 +2474,7 @@ TYPE :: QuadratureOpt_
   INTEGER(I4B) :: BlythPozChebyshev = BlythPozChebyshevQP
   INTEGER(I4B) :: IsaacLegendre = IsaacLegendreQP
   INTEGER(I4B) :: IsaacChebyshev = IsaacChebyshevQP
+  INTEGER(I4B) :: Center = CenterQP
   INTEGER(I4B) :: default = GaussLegendreQP
 END TYPE QuadratureOpt_
 
