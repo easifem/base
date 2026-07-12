@@ -15,7 +15,7 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 !
-! This file contains the interpolation methods interfaces\
+! This file contains the interpolation methods interfaces
 
 MODULE ElemshapeData_InterpolMethods
 USE GlobalData, ONLY: DFP, I4B, LGT
