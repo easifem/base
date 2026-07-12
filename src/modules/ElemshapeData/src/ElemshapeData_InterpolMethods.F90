@@ -37,7 +37,7 @@ PUBLIC :: Interpolation
 ! date: 4 March 2021
 ! summary: returns the interpolation of a FEVariable
 !
-!# Introduction
+!# GetInterpolation
 !
 ! If ans is not initiated then it will be initiated
 ! If ans is initiated then we will just call GetInterpolation_
@@ -61,16 +61,12 @@ PUBLIC :: Interpolation
 !                                we do not have time shape function for
 !                                all quadrature points in time in obj)
 
-INTERFACE
+INTERFACE GetInterpolation
   MODULE PURE SUBROUTINE GetInterpolation1(obj, ans, val)
     CLASS(ElemshapeData_), INTENT(IN) :: obj
     TYPE(FEVariable_), INTENT(INOUT) :: ans
     TYPE(FEVariable_), INTENT(IN) :: val
   END SUBROUTINE GetInterpolation1
-END INTERFACE
-
-INTERFACE GetInterpolation
-  MODULE PROCEDURE GetInterpolation1
 END INTERFACE GetInterpolation
 
 !----------------------------------------------------------------------------
@@ -81,7 +77,7 @@ END INTERFACE GetInterpolation
 ! date: 4 March 2021
 ! summary: returns the interpolation of a FEVariable
 !
-!# Introduction
+!# GetInterpolation_
 !
 ! - Returns the interpolation of a FEVariable_
 ! - The result is returned in ans
@@ -93,16 +89,12 @@ END INTERFACE GetInterpolation
 ! - the val can be defined on quadrature (do nothing) or nodal (interpol)
 ! - The `vartype` of val can be constant, space, time, spacetime
 
-INTERFACE
+INTERFACE GetInterpolation_
   MODULE PURE SUBROUTINE GetInterpolation_1(obj, ans, val)
     CLASS(ElemshapeData_), INTENT(IN) :: obj
     TYPE(FEVariable_), INTENT(INOUT) :: ans
     TYPE(FEVariable_), INTENT(IN) :: val
   END SUBROUTINE GetInterpolation_1
-END INTERFACE
-
-INTERFACE GetInterpolation_
-  MODULE PROCEDURE GetInterpolation_1
 END INTERFACE GetInterpolation_
 
 !----------------------------------------------------------------------------
@@ -113,7 +105,7 @@ END INTERFACE GetInterpolation_
 ! date: 4 March 2021
 ! summary: returns the interpolation of a FEVariable
 !
-!# Introduction
+!# GetInterpolation_
 !
 ! - Returns the interpolation of a FEVariable_
 ! - The result is returned in ans
@@ -125,7 +117,7 @@ END INTERFACE GetInterpolation_
 ! - the val can be defined on quadrature (do nothing) or nodal (interpol)
 ! - The `vartype` of val can be constant, space, time, spacetime
 !
-INTERFACE
+INTERFACE GetInterpolation_
   MODULE PURE SUBROUTINE GetInterpolation_1a(obj, ans, val, scale, &
                                              addContribution)
     CLASS(ElemshapeData_), INTENT(IN) :: obj
@@ -134,10 +126,6 @@ INTERFACE
     REAL(DFP), INTENT(IN) :: scale
     LOGICAL, INTENT(IN) :: addContribution
   END SUBROUTINE GetInterpolation_1a
-END INTERFACE
-
-INTERFACE GetInterpolation_
-  MODULE PROCEDURE GetInterpolation_1a
 END INTERFACE GetInterpolation_
 
 !----------------------------------------------------------------------------
@@ -148,7 +136,7 @@ END INTERFACE GetInterpolation_
 ! date: 4 March 2021
 ! summary: returns the interpolation of a FEVariable
 !
-!# Introduction
+!# GetInterpolation
 !
 ! If ans is not initiated then it will be initiated. If
 ! ans is initiated then its properties will not be altered.
@@ -164,16 +152,12 @@ END INTERFACE GetInterpolation_
 !
 ! - ans will Quadrature and SpaceTime
 
-INTERFACE
+INTERFACE GetInterpolation
   MODULE PURE SUBROUTINE GetInterpolation2(obj, ans, val)
     CLASS(STElemshapeData_), INTENT(IN) :: obj(:)
     TYPE(FEVariable_), INTENT(INOUT) :: ans
     TYPE(FEVariable_), INTENT(IN) :: val
   END SUBROUTINE GetInterpolation2
-END INTERFACE
-
-INTERFACE GetInterpolation
-  MODULE PROCEDURE GetInterpolation2
 END INTERFACE GetInterpolation
 
 !----------------------------------------------------------------------------
@@ -195,17 +179,13 @@ END INTERFACE GetInterpolation
 ! - The val can have following ranks; scalar, vector, matrix
 ! - the val can be defined on quadrature (do nothing) or nodal (interpol)
 ! - The `vartype` of val can be constant, space, time, spacetime
-!
-INTERFACE
+
+INTERFACE GetInterpolation_
   MODULE PURE SUBROUTINE GetInterpolation_2(obj, ans, val)
     CLASS(STElemshapeData_), INTENT(IN) :: obj(:)
     TYPE(FEVariable_), INTENT(INOUT) :: ans
     TYPE(FEVariable_), INTENT(IN) :: val
   END SUBROUTINE GetInterpolation_2
-END INTERFACE
-
-INTERFACE GetInterpolation_
-  MODULE PROCEDURE GetInterpolation_2
 END INTERFACE GetInterpolation_
 
 !----------------------------------------------------------------------------
@@ -228,7 +208,7 @@ END INTERFACE GetInterpolation_
 ! - the val can be defined on quadrature (do nothing) or nodal (interpol)
 ! - The `vartype` of val can be constant, space, time, spacetime
 
-INTERFACE
+INTERFACE GetInterpolation_
   MODULE PURE SUBROUTINE GetInterpolation_2a(obj, ans, val, scale, &
                                              addContribution)
     CLASS(STElemshapeData_), INTENT(IN) :: obj(:)
@@ -237,10 +217,6 @@ INTERFACE
     REAL(DFP), INTENT(IN) :: scale
     LOGICAL, INTENT(IN) :: addContribution
   END SUBROUTINE GetInterpolation_2a
-END INTERFACE
-
-INTERFACE GetInterpolation_
-  MODULE PROCEDURE GetInterpolation_2a
 END INTERFACE GetInterpolation_
 
 !----------------------------------------------------------------------------
@@ -252,16 +228,16 @@ END INTERFACE GetInterpolation_
 ! update: 2021-12-13
 ! summary: Interpolation of FEVariable
 
-INTERFACE
+INTERFACE Interpolation
   MODULE PURE FUNCTION Interpolation1(obj, val) RESULT(ans)
     CLASS(ElemshapeData_), INTENT(IN) :: obj
     TYPE(FEVariable_), INTENT(IN) :: val
     TYPE(FEVariable_) :: ans
   END FUNCTION Interpolation1
-END INTERFACE
-
-INTERFACE Interpolation
-  MODULE PROCEDURE Interpolation1
 END INTERFACE Interpolation
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
 
 END MODULE ElemshapeData_InterpolMethods
