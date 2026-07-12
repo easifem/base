@@ -19,7 +19,9 @@
 
 MODULE ElemshapeData_InterpolMethods
 USE GlobalData, ONLY: DFP, I4B, LGT
-USE BaseType, ONLY: ElemShapeData_, STElemShapeData_, FEVariable_
+USE BaseType, ONLY: ElemShapeData_
+USE BaseType, ONLY: STElemShapeData_
+USE BaseType, ONLY: FEVariable_
 IMPLICIT NONE
 PRIVATE
 
