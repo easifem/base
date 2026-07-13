@@ -17,12 +17,12 @@
 
 SUBMODULE(ElemshapeData_InterpolMethods) Methods
 USE BaseType, ONLY: TypeFEVariableOpt
-USE FEVariable_Method, ONLY: FEVariableGetInterpolation_ => GetInterpolation_,&
-                             FEVariableInitiate => Initiate, &
-                             FEVariableGetRank => GetRank, &
-                             FEVariableGetTotalShape => GetTotalShape, &
-                             FEVariableSize => Size
-
+USE BaseType, ONLY: math => TypeMathOpt
+USE FEVariable_Method, ONLY: FEVariableGetInterpolation_ => GetInterpolation_
+USE FEVariable_Method, ONLY: FEVariableInitiate => Initiate
+USE FEVariable_Method, ONLY: FEVariableGetRank => GetRank
+USE FEVariable_Method, ONLY: FEVariableGetTotalShape => GetTotalShape
+USE FEVariable_Method, ONLY: FEVariableSize => Size
 IMPLICIT NONE
 CONTAINS
 
@@ -59,6 +59,8 @@ ELSE
     s(3) = obj%nips
     mylen = s(1) * s(2) * s(3)
 
+  CASE DEFAULT
+
   END SELECT
 
   CALL FEVariableInitiate(obj=ans, &
@@ -77,11 +79,9 @@ END PROCEDURE GetInterpolation1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE GetInterpolation_1
-REAL(DFP), PARAMETER :: one = 1.0_DFP
-LOGICAL, PARAMETER :: no = .FALSE.
-
 CALL FEVariableGetInterpolation_(obj=val, ans=ans, N=obj%N, nns=obj%nns, &
-                                 nips=obj%nips, scale=one, addContribution=no)
+                                 nips=obj%nips, scale=math%one, &
+                                 addContribution=math%no)
 END PROCEDURE GetInterpolation_1
 
 !----------------------------------------------------------------------------
@@ -144,6 +144,8 @@ ELSE
     s(4) = nipt
     mylen = s(1) * s(2) * s(3) * s(4)
 
+  CASE DEFAULT
+
   END SELECT
 
   CALL FEVariableInitiate(obj=ans, &
@@ -158,15 +160,12 @@ END IF
 END PROCEDURE GetInterpolation2
 
 !----------------------------------------------------------------------------
-!                                                         GetInterpolation_
+!                                                           GetInterpolation_
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE GetInterpolation_2
-REAL(DFP), PARAMETER :: one = 1.0_DFP
-LOGICAL, PARAMETER :: no = .FALSE.
-
-CALL GetInterpolation_(obj=obj, ans=ans, val=val, scale=one, &
-                       addContribution=no)
+CALL GetInterpolation_(obj=obj, ans=ans, val=val, scale=math%one, &
+                       addContribution=math%no)
 END PROCEDURE GetInterpolation_2
 
 !----------------------------------------------------------------------------
@@ -188,11 +187,14 @@ END DO
 END PROCEDURE GetInterpolation_2a
 
 !----------------------------------------------------------------------------
-!                                                      interpolationOfVector
+!                                                              Interpolation
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Interpolation1
 CALL GetInterpolation(obj=obj, val=val, ans=ans)
 END PROCEDURE Interpolation1
 
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
 END SUBMODULE Methods
