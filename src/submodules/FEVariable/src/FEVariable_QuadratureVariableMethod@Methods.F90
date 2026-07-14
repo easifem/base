@@ -28,7 +28,6 @@ CONTAINS
 
 MODULE PROCEDURE Quadrature_Scalar_Constant
 INTEGER(I4B) :: s(1)
-
 s(1) = 1
 CALL FEVariableInitiate(obj=obj, s=s, &
                         defineon=TypeFEVariableOpt%quadrature, &
@@ -165,6 +164,21 @@ CALL FEVariableInitiate( &
   rank=TypeFEVariableOpt%vector, len=tsize, &
   val=val)
 END PROCEDURE Quadrature_Vector_Constant
+
+!----------------------------------------------------------------------------
+!                                                          QuadratureVariable
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE Quadrature_Vector_Constant2
+INTEGER(I4B) :: s(1)
+
+s(1) = tsize
+
+CALL FEVariableInitiate( &
+  obj=obj, s=s, defineon=TypeFEVariableOpt%Quadrature, &
+  vartype=TypeFEVariableOpt%constant, &
+  rank=TypeFEVariableOpt%vector, len=tsize)
+END PROCEDURE Quadrature_Vector_Constant2
 
 !----------------------------------------------------------------------------
 !                                                          QuadratureVariable

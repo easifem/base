@@ -27,33 +27,30 @@ PUBLIC :: GetInvMat
 !                                                                ConditionNo
 !----------------------------------------------------------------------------
 
-INTERFACE
+INTERFACE ConditionNo
   MODULE FUNCTION ge_ConditionNo_1(A, NORM) RESULT(ans)
     REAL(DFP), INTENT(IN) :: A(:, :)
     !! General matrix
     CHARACTER(1), INTENT(IN) :: NORM
     !! "1", "0"
     REAL(DFP) :: ans
-    !!
+    !! condition number
   END FUNCTION ge_ConditionNo_1
-END INTERFACE
-
-INTERFACE ConditionNo
-  MODULE PROCEDURE ge_ConditionNo_1
 END INTERFACE ConditionNo
 
 !----------------------------------------------------------------------------
-!                                                                    GetInvMat
+!                                                                  GetInvMat
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 18 Oct 2022
-! summary:         Inverse of matrix
+! summary: Inverse of matrix
 !
-!# Introduction
+!# GetInvMat
 !
 ! This routine calls `DGETRI` routine from Lapack.
-! A copy of matrix A is made into invA, then LU decomposition is performed and
+! A copy of matrix A is made into invA,
+! then LU decomposition is performed and
 ! `DGETRI` is called from lapack
 
 INTERFACE
@@ -70,14 +67,14 @@ INTERFACE GetInvMat
 END INTERFACE GetInvMat
 
 !----------------------------------------------------------------------------
-!                                                                    GetInvMat
+!                                                                  GetInvMat
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 18 Oct 2022
-! summary:         Inverse of matrix
+! summary: Inverse of matrix
 !
-!# Introduction
+!# GetInvMat
 !
 !- This routine calls `DGETRI` routine from Lapack.
 !- A and IPIV are obtained from LU decomposition
@@ -85,7 +82,7 @@ END INTERFACE GetInvMat
 !- A copy of matrix A is made into invA, then
 ! `DGETRI` is called from lapack
 
-INTERFACE
+INTERFACE GetInvMat
   MODULE SUBROUTINE ge_GetInvMat2(A, IPIV, invA)
     REAL(DFP), INTENT(IN) :: A(:, :)
     !! General matrix
@@ -94,21 +91,17 @@ INTERFACE
     REAL(DFP), INTENT(INOUT) :: invA(:, :)
     !!
   END SUBROUTINE ge_GetInvMat2
-END INTERFACE
-
-INTERFACE GetInvMat
-  MODULE PROCEDURE ge_GetInvMat2
 END INTERFACE GetInvMat
 
 !----------------------------------------------------------------------------
-!                                                                    GetInvMat
+!                                                                  GetInvMat
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 18 Oct 2022
-! summary:         Inverse of matrix
+! summary: Inverse of matrix
 !
-!# Introduction
+!# GetInvMat
 !
 !- This routine calls `DGETRI` routine from Lapack.
 !- A and IPIV are obtained from LU decomposition
@@ -116,7 +109,7 @@ END INTERFACE GetInvMat
 !- At output invese of A is stored inside A
 !- No copy is made.
 
-INTERFACE
+INTERFACE GetInvMat
   MODULE SUBROUTINE ge_GetInvMat3(A, IPIV)
     REAL(DFP), INTENT(INOUT) :: A(:, :)
     !! LU Decompose at input
@@ -124,10 +117,6 @@ INTERFACE
     INTEGER(I4B), INTENT(IN) :: IPIV(:)
     !!
   END SUBROUTINE ge_GetInvMat3
-END INTERFACE
-
-INTERFACE GetInvMat
-  MODULE PROCEDURE ge_GetInvMat3
 END INTERFACE GetInvMat
 
 !----------------------------------------------------------------------------
@@ -136,7 +125,7 @@ END INTERFACE GetInvMat
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 18 Oct 2022
-! summary:         Inverse of matrix
+! summary: Inverse of matrix
 !
 !# Introduction
 !
@@ -145,14 +134,10 @@ END INTERFACE GetInvMat
 !- Then `DGETRI` is called from lapack
 !- At output A contains the inverse.
 
-INTERFACE
+INTERFACE GetInvMat
   MODULE SUBROUTINE ge_GetInvMat4(A)
     REAL(DFP), INTENT(INOUT) :: A(:, :)
   END SUBROUTINE ge_GetInvMat4
-END INTERFACE
-
-INTERFACE GetInvMat
-  MODULE PROCEDURE ge_GetInvMat4
 END INTERFACE GetInvMat
 
 END MODULE GE_CompRoutineMethods

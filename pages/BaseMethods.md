@@ -1,6 +1,6 @@
 # BaseMethods
 
-`BaseMethods` library contains the modules which defines and implements methods  (routines) for data types defined in BaseType.
+`BaseMethods` library contains the modules which defines and implements methods (routines) for data types defined in BaseType.
 
 At present BaseMethods contains following modules.
 

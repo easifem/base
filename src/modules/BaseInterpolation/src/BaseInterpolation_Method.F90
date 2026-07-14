@@ -22,17 +22,15 @@ USE GlobalData, ONLY: DFP, I4B, LGT, stdout, stderr
 USE String_Class, ONLY: String
 USE StringUtility, ONLY: UpperCase
 USE Display_Method, ONLY: Tostring
-USE BaseType, ONLY: poly => TypePolynomialOpt, &
-                    ip => TypeQuadratureOpt, &
-                    BaseInterpolation_, &
-                    LagrangeInterpolation_, &
-                    SerendipityInterpolation_, &
-                    HermitInterpolation_, &
-                    HierarchyInterpolation_, &
-                    OrthogonalInterpolation_
-
+USE BaseType, ONLY: poly => TypePolynomialOpt
+USE BaseType, ONLY: ip => TypeQuadratureOpt
+USE BaseType, ONLY: BaseInterpolation_
+USE BaseType, ONLY: LagrangeInterpolation_
+USE BaseType, ONLY: SerendipityInterpolation_
+USE BaseType, ONLY: HermitInterpolation_
+USE BaseType, ONLY: HierarchyInterpolation_
+USE BaseType, ONLY: OrthogonalInterpolation_
 IMPLICIT NONE
-
 PRIVATE
 
 PUBLIC :: ASSIGNMENT(=)
@@ -226,8 +224,11 @@ FUNCTION InterpolationPoint_ToInteger(name) RESULT(ans)
 
   SELECT CASE (astr)
 
+  CASE ("CENTER")
+    ans = ip%Center
+
   CASE ("EQUIDISTANCE")
-    ans = ip%equidistance
+    ans = ip%Equidistance
 
   CASE ("GAUSSLEGENDRE")
     ans = ip%GaussLegendre
@@ -580,6 +581,13 @@ FUNCTION InterpolationPoint_ToChar(name, isUpper) RESULT(ans)
   IF (PRESENT(isUpper)) isUpper0 = isUpper
 
   SELECT CASE (name)
+  CASE (ip%Center)
+    IF (isUpper0) THEN
+      ans = "CENTER"
+    ELSE
+      ans = "Center"
+    END IF
+
   CASE (ip%equidistance)
     IF (isUpper0) THEN
       ans = "EQUIDISTANCE"

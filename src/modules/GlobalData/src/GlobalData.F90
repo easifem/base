@@ -339,6 +339,7 @@ INTEGER(I4B), PARAMETER :: GaussUltrasphericalLobatto = 26
 !!
 !! Type of quadrature points
 !!
+INTEGER(I4B), PARAMETER :: CenterQP = 0
 INTEGER(I4B), PARAMETER :: EquidistanceQP = Equidistance
 INTEGER(I4B), PARAMETER :: GaussQP = Gauss
 INTEGER(I4B), PARAMETER :: GaussLegendreQP = GaussLegendre

@@ -140,9 +140,6 @@ include(${CMAKE_CURRENT_LIST_DIR}/IntVector/CMakeLists.txt)
 # IndexValue
 include(${CMAKE_CURRENT_LIST_DIR}/IndexValue/CMakeLists.txt)
 
-# IndexValue
-include(${CMAKE_CURRENT_LIST_DIR}/IterationData/CMakeLists.txt)
-
 # KeyValue
 include(${CMAKE_CURRENT_LIST_DIR}/KeyValue/CMakeLists.txt)
 
@@ -226,6 +223,9 @@ include(${CMAKE_CURRENT_LIST_DIR}/CSRSparsity/CMakeLists.txt)
 
 # CSRMatrix
 include(${CMAKE_CURRENT_LIST_DIR}/CSRMatrix/CMakeLists.txt)
+
+# ConvergenceOpt
+include(${CMAKE_CURRENT_LIST_DIR}/ConvergenceOpt/CMakeLists.txt)
 
 # BaseMethod
 include(${CMAKE_CURRENT_LIST_DIR}/BaseMethod/CMakeLists.txt)
