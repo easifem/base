@@ -99,7 +99,6 @@ USE BoundingBox_Method
 USE IntVector_Method
 USE IndexValue_Method
 USE KeyValue_Method
-USE IterationData_Method
 USE Vector3D_Method
 USE RealVector_Method
 USE DOF_Method

@@ -33,7 +33,7 @@ USE GlobalData, ONLY: FMT_NODES, FMT_DOF, NodesToDOF, DofToNodes
 
 USE GlobalData, ONLY: RelativeConvergence, ConvergenceInRes, &
                       ConvergenceInSol, ConvergenceInResSol, &
-                      AbsoluteConvergence, NormL2, &
+                      AbsoluteConvergence, NormL1, NormL2, NormInfinity, &
                       StressTypeVoigt, OMP_THREADS_JOINED
 
 USE GlobalData, ONLY: Equidistance, CenterQP, EquidistanceQP, GaussQP, &
@@ -141,9 +141,6 @@ PUBLIC :: CSRSparsityPointer_
 PUBLIC :: CSRMatrix_
 PUBLIC :: TypeCSRMatrix
 PUBLIC :: CSRMatrixPointer_
-PUBLIC :: IterationData_
-PUBLIC :: TypeIterationData
-PUBLIC :: IterationDataPointer_
 PUBLIC :: VoigtRank2Tensor_
 PUBLIC :: TypeVoigtRank2Tensor
 PUBLIC :: VoigtRank2TensorPointer
@@ -706,65 +703,6 @@ TYPE(CSRMatrix_), PARAMETER :: TypeCSRMatrix = CSRMatrix_( &
 TYPE :: CSRMatrixPointer_
   CLASS(CSRMatrix_), POINTER :: ptr => NULL()
 END TYPE CSRMatrixPointer_
-
-!----------------------------------------------------------------------------
-!                                                            IterationData_
-!----------------------------------------------------------------------------
-
-!> author: Vikas Sharma, Ph. D.
-! date: 14 June 2022
-! summary: Iteration data
-
-TYPE :: IterationData_
-  INTEGER(I4B) :: maxIter = 100
-    !! Maximum number of iterations allowed
-  INTEGER(I4B) :: iterationNumber = 1
-    !! Iteration number
-  REAL(DFP) :: residualError0 = 0.0
-    !! Initial Residual error
-  REAL(DFP) :: residualError = 0.0
-    !! Current residual error
-  REAL(DFP) :: residualTolerance = 1.0E-5
-    !! Tolerance for checking convergence in residual
-  REAL(DFP) :: solutionError0 = 0.0
-    !! Initial solution error
-  REAL(DFP) :: solutionError = 0.0
-    !! Current solution error
-  REAL(DFP) :: solutionTolerance = 1.0E-5
-    !! Tolerance for checking convergence in solution
-  INTEGER(I4B) :: convergenceType = RelativeConvergence
-    !! Type of convergence
-  INTEGER(I4B) :: convergenceIn = ConvergenceInRes
-    !! Check Convergence in solution and/or residual
-  INTEGER(I4B) :: normType = NormL2
-    !! Error norm type
-  LOGICAL(LGT) :: converged = .FALSE.
-    !! Status of convergence
-  REAL(DFP) :: timeAtStart = 0.0
-    !! Starting time
-  REAL(DFP) :: timeAtEnd = 0.0
-    !! Present time
-  REAL(DFP), ALLOCATABLE :: convergenceData(:, :)
-    !! history of convergence data
-    !! each column corresponding to a iteration
-  TYPE(String), ALLOCATABLE :: header(:)
-    !! header for convergenceData
-END TYPE IterationData_
-
-!----------------------------------------------------------------------------
-!
-!----------------------------------------------------------------------------
-
-TYPE(IterationData_), PARAMETER :: TypeIterationData = &
-                                   IterationData_(header=NULL())
-
-!----------------------------------------------------------------------------
-!
-!----------------------------------------------------------------------------
-
-TYPE :: IterationDataPointer_
-  CLASS(IterationData_), POINTER :: ptr => NULL()
-END TYPE IterationDataPointer_
 
 !----------------------------------------------------------------------------
 !                                                       VoigtRank2Tensor_
@@ -2173,6 +2111,9 @@ TYPE :: ConvergenceOpt_
   INTEGER(I4B) :: both = convergenceInResSol
   INTEGER(I4B) :: relative = relativeConvergence
   INTEGER(I4B) :: absolute = absoluteConvergence
+  INTEGER(I4B) :: normL1 = NormL1
+  INTEGER(I4B) :: normL2 = NormL2
+  INTEGER(I4B) :: normInfinity = NormInfinity
 END TYPE ConvergenceOpt_
 
 TYPE(ConvergenceOpt_), PARAMETER :: TypeConvergenceOpt = ConvergenceOpt_()
