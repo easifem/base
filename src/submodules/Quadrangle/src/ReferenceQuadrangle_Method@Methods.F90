@@ -62,6 +62,20 @@ CASE (TypeQuadrangleNameOpt%Quadrangle9)
   ans = "Quadrangle9"
 CASE (TypeQuadrangleNameOpt%Quadrangle16)
   ans = "Quadrangle16"
+CASE (TypeQuadrangleNameOpt%Quadrangle25)
+  ans = "Quadrangle25"
+CASE (TypeQuadrangleNameOpt%Quadrangle36)
+  ans = "Quadrangle36"
+CASE (TypeQuadrangleNameOpt%Quadrangle49)
+  ans = "Quadrangle49"
+CASE (TypeQuadrangleNameOpt%Quadrangle64)
+  ans = "Quadrangle64"
+CASE (TypeQuadrangleNameOpt%Quadrangle81)
+  ans = "Quadrangle81"
+CASE (TypeQuadrangleNameOpt%Quadrangle100)
+  ans = "Quadrangle100"
+CASE (TypeQuadrangleNameOpt%Quadrangle121)
+  ans = "Quadrangle121"
 CASE DEFAULT
   ans = ""
 END SELECT
@@ -114,6 +128,20 @@ CASE (TypeQuadrangleNameOpt%Quadrangle9)
   ans = 9
 CASE (TypeQuadrangleNameOpt%Quadrangle16)
   ans = 16
+CASE (TypeQuadrangleNameOpt%Quadrangle25)
+  ans = 25
+CASE (TypeQuadrangleNameOpt%Quadrangle36)
+  ans = 36
+CASE (TypeQuadrangleNameOpt%Quadrangle49)
+  ans = 49
+CASE (TypeQuadrangleNameOpt%Quadrangle64)
+  ans = 64
+CASE (TypeQuadrangleNameOpt%Quadrangle81)
+  ans = 81
+CASE (TypeQuadrangleNameOpt%Quadrangle100)
+  ans = 100
+CASE (TypeQuadrangleNameOpt%Quadrangle121)
+  ans = 121
 CASE DEFAULT
   ans = 0
 END SELECT
@@ -133,6 +161,20 @@ CASE (TypeQuadrangleNameOpt%Quadrangle9)
   ans = 2
 CASE (TypeQuadrangleNameOpt%Quadrangle16)
   ans = 3
+CASE (TypeQuadrangleNameOpt%Quadrangle25)
+  ans = 4
+CASE (TypeQuadrangleNameOpt%Quadrangle36)
+  ans = 5
+CASE (TypeQuadrangleNameOpt%Quadrangle49)
+  ans = 6
+CASE (TypeQuadrangleNameOpt%Quadrangle64)
+  ans = 7
+CASE (TypeQuadrangleNameOpt%Quadrangle81)
+  ans = 8
+CASE (TypeQuadrangleNameOpt%Quadrangle100)
+  ans = 9
+CASE (TypeQuadrangleNameOpt%Quadrangle121)
+  ans = 10
 CASE DEFAULT
   ans = 0
 END SELECT
@@ -152,6 +194,20 @@ CASE ("Quadrangle9")
   ans = TypeQuadrangleNameOpt%Quadrangle9
 CASE ("Quadrangle16")
   ans = TypeQuadrangleNameOpt%Quadrangle16
+CASE ("Quadrangle25")
+  ans = TypeQuadrangleNameOpt%Quadrangle25
+CASE ("Quadrangle36")
+  ans = TypeQuadrangleNameOpt%Quadrangle36
+CASE ("Quadrangle49")
+  ans = TypeQuadrangleNameOpt%Quadrangle49
+CASE ("Quadrangle64")
+  ans = TypeQuadrangleNameOpt%Quadrangle64
+CASE ("Quadrangle81")
+  ans = TypeQuadrangleNameOpt%Quadrangle81
+CASE ("Quadrangle100")
+  ans = TypeQuadrangleNameOpt%Quadrangle100
+CASE ("Quadrangle121")
+  ans = TypeQuadrangleNameOpt%Quadrangle121
 CASE DEFAULT
   ans = 0
 END SELECT
@@ -258,8 +314,20 @@ CASE (2)
   ans = TypeQuadrangleNameOpt%Quadrangle9
 CASE (3)
   ans = TypeQuadrangleNameOpt%Quadrangle16
-CASE (4:)
-  ans = TypeQuadrangleNameOpt%Quadrangle16 + order - 3_I4B
+CASE (4)
+  ans = TypeQuadrangleNameOpt%Quadrangle25
+CASE (5)
+  ans = TypeQuadrangleNameOpt%Quadrangle36
+CASE (6)
+  ans = TypeQuadrangleNameOpt%Quadrangle49
+CASE (7)
+  ans = TypeQuadrangleNameOpt%Quadrangle64
+CASE (8)
+  ans = TypeQuadrangleNameOpt%Quadrangle81
+CASE (9)
+  ans = TypeQuadrangleNameOpt%Quadrangle100
+CASE (10)
+  ans = TypeQuadrangleNameOpt%Quadrangle121
 CASE DEFAULT
   ans = 0
 END SELECT

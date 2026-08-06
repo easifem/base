@@ -24,6 +24,8 @@ SUBMODULE(ReferenceLine_Method) Methods
 USE GlobalData, ONLY: Line, Line1, Line2, Line3, Line4, Line5, &
                       Line6, Point1, Equidistance
 
+USE BaseType, ONLY: TypeLineNameOpt
+
 USE ReallocateUtility, ONLY: Reallocate
 
 USE ReferenceElement_Method, ONLY: ReferenceTopology, &
@@ -53,16 +55,26 @@ MODULE PROCEDURE ElementName_Line
 SELECT CASE (elemType)
 CASE (Point1)
   ans = "Point1"
-CASE (Line2)
+CASE (TypeLineNameOpt%Line2)
   ans = "Line2"
-CASE (Line3)
+CASE (TypeLineNameOpt%Line3)
   ans = "Line3"
-CASE (Line4)
+CASE (TypeLineNameOpt%Line4)
   ans = "Line4"
-CASE (Line5)
+CASE (TypeLineNameOpt%Line5)
   ans = "Line5"
-CASE (Line6)
+CASE (TypeLineNameOpt%Line6)
   ans = "Line6"
+CASE (TypeLineNameOpt%Line7)
+  ans = "Line7"
+CASE (TypeLineNameOpt%Line8)
+  ans = "Line8"
+CASE (TypeLineNameOpt%Line9)
+  ans = "Line9"
+CASE (TypeLineNameOpt%Line10)
+  ans = "Line10"
+CASE (TypeLineNameOpt%Line11)
+  ans = "Line11"
 CASE DEFAULT
   ans = "NONE"
 END SELECT
@@ -98,18 +110,28 @@ END PROCEDURE TotalEntities_Line
 
 MODULE PROCEDURE TotalNodesInElement_Line
 SELECT CASE (elemType)
-CASE (Line1)
+CASE (Point1)
   ans = 1
-CASE (Line2)
+CASE (TypeLineNameOpt%Line2)
   ans = 2
-CASE (Line3)
+CASE (TypeLineNameOpt%Line3)
   ans = 3
-CASE (Line4)
+CASE (TypeLineNameOpt%Line4)
   ans = 4
-CASE (Line5)
+CASE (TypeLineNameOpt%Line5)
   ans = 5
-CASE (Line6)
+CASE (TypeLineNameOpt%Line6)
   ans = 6
+CASE (TypeLineNameOpt%Line7)
+  ans = 7
+CASE (TypeLineNameOpt%Line8)
+  ans = 8
+CASE (TypeLineNameOpt%Line9)
+  ans = 9
+CASE (TypeLineNameOpt%Line10)
+  ans = 10
+CASE (TypeLineNameOpt%Line11)
+  ans = 11
 CASE DEFAULT
   ans = 0
 END SELECT
@@ -121,16 +143,26 @@ END PROCEDURE TotalNodesInElement_Line
 
 MODULE PROCEDURE ElementOrder_Line
 SELECT CASE (elemType)
-CASE (Line2)
+CASE (TypeLineNameOpt%Line2)
   ans = 1
-CASE (Line3)
+CASE (TypeLineNameOpt%Line3)
   ans = 2
-CASE (Line4)
+CASE (TypeLineNameOpt%Line4)
   ans = 3
-CASE (Line5)
+CASE (TypeLineNameOpt%Line5)
   ans = 4
-CASE (Line6)
+CASE (TypeLineNameOpt%Line6)
   ans = 5
+CASE (TypeLineNameOpt%Line7)
+  ans = 6
+CASE (TypeLineNameOpt%Line8)
+  ans = 7
+CASE (TypeLineNameOpt%Line9)
+  ans = 8
+CASE (TypeLineNameOpt%Line10)
+  ans = 9
+CASE (TypeLineNameOpt%Line11)
+  ans = 10
 CASE DEFAULT
   ans = 0
 END SELECT
@@ -145,15 +177,25 @@ SELECT CASE (elemName)
 CASE ("Line1", "Point", "Point1")
   ans = Point1
 CASE ("Line2", "Line")
-  ans = Line2
+  ans = TypeLineNameOpt%Line2
 CASE ("Line3")
-  ans = Line3
+  ans = TypeLineNameOpt%Line3
 CASE ("Line4")
-  ans = Line4
+  ans = TypeLineNameOpt%Line4
 CASE ("Line5")
-  ans = Line5
+  ans = TypeLineNameOpt%Line5
 CASE ("Line6")
-  ans = Line6
+  ans = TypeLineNameOpt%Line6
+CASE ("Line7")
+  ans = TypeLineNameOpt%Line7
+CASE ("Line8")
+  ans = TypeLineNameOpt%Line8
+CASE ("Line9")
+  ans = TypeLineNameOpt%Line9
+CASE ("Line10")
+  ans = TypeLineNameOpt%Line10
+CASE ("Line11")
+  ans = TypeLineNameOpt%Line11
 CASE DEFAULT
   ans = 0
 END SELECT
@@ -212,17 +254,27 @@ END PROCEDURE FacetElements_Line2
 MODULE PROCEDURE LineName1
 SELECT CASE (order)
 CASE (1)
-  ans = Line2
+  ans = TypeLineNameOpt%Line2
 CASE (2)
-  ans = Line3
+  ans = TypeLineNameOpt%Line3
 CASE (3)
-  ans = Line4
+  ans = TypeLineNameOpt%Line4
 CASE (4)
-  ans = Line5
+  ans = TypeLineNameOpt%Line5
 CASE (5)
-  ans = Line6
-CASE (6:)
-  ans = Line6 * 100 + order - 5
+  ans = TypeLineNameOpt%Line6
+CASE (6)
+  ans = TypeLineNameOpt%Line7
+CASE (7)
+  ans = TypeLineNameOpt%Line8
+CASE (8)
+  ans = TypeLineNameOpt%Line9
+CASE (9)
+  ans = TypeLineNameOpt%Line10
+CASE (10)
+  ans = TypeLineNameOpt%Line11
+CASE default
+  ans = 0
 END SELECT
 END PROCEDURE LineName1
 
