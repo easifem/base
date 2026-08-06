@@ -16,7 +16,7 @@
 
 MODULE CSRMatrix_SetMethods
 USE GlobalData, ONLY: I4B, DFP, LGT
-USE BaSetype, ONLY: CSRMatrix_
+USE BaseType, ONLY: CSRMatrix_
 IMPLICIT NONE
 
 PRIVATE

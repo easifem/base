@@ -20,7 +20,8 @@
 ! summary: Input output related methods
 
 SUBMODULE(CSRSparsity_Method) SymMethods
-USE BaseMethod
+USE ReallocateUtility, ONLY: Reallocate
+USE ErrorHandling, ONLY: Errormsg
 IMPLICIT NONE
 CONTAINS
 
@@ -37,18 +38,19 @@ SUBROUTINE obj_GetSymU1(obj, symobj)
   INTEGER(I4B), ALLOCATABLE :: IA_csr(:), IA_csc(:), JA_csr(:), &
     & JA_csc(:), idiag(:)
   REAL(DFP) :: real_dummy(1)
-  !
-  nnz_parts = GetNNZ(obj, [""])
+  CHARACTER(1), PARAMETER :: from(1) = [" "]
+
+  nnz_parts = GetNNZ(obj=obj, from=from)
   nrow = obj%nrow
   ncol = obj%ncol
   nnzU = nnz_parts(1)
   nnzD = nnz_parts(3)
-  !
+
   CALL Reallocate(JA_csr, nnzU, IA_csr, nrow + 1)
   CALL Reallocate(idiag, nrow)
-  !
+
   indx = 0
-  !
+
   DO ii = 1, nrow
     IA_csr(ii) = indx + 1
     IA_csr(ii + 1) = IA_csr(ii)
@@ -63,9 +65,9 @@ SUBROUTINE obj_GetSymU1(obj, symobj)
       END IF
     END DO
   END DO
-  !
+
   CALL Reallocate(IA_csc, ncol + 1, JA_csc, nnzU)
-  !
+
   CALL csrcsc( &
     & nrow, &
     & 0, &
@@ -76,7 +78,7 @@ SUBROUTINE obj_GetSymU1(obj, symobj)
     & real_dummy, &
     & JA_csc, &
     & IA_csc)
-  !
+
   symobj%nnz = nnz_parts(1) * 2 + nnz_parts(3)
   symobj%ncol = ncol
   symobj%nrow = nrow
@@ -86,12 +88,12 @@ SUBROUTINE obj_GetSymU1(obj, symobj)
   symobj%isDiagStored = .TRUE.
   symobj%idof = obj%idof
   symobj%jdof = obj%jdof
-  !
+
   CALL Reallocate(symobj%IA, nrow + 1, symobj%idiag, nrow)
   CALL Reallocate(symobj%JA, symobj%nnz)
-  !
+
   indx = 0
-  !
+
   DO ii = 1, symobj%nrow
     ar = IA_csr(ii + 1) - IA_csr(ii)
     al = IA_csc(ii + 1) - IA_csr(ii)
@@ -100,32 +102,30 @@ SUBROUTINE obj_GetSymU1(obj, symobj)
     ELSE
       ad = 0
     END IF
-    !
+
     symobj%IA(ii) = indx + 1
     symobj%IA(ii + 1) = symobj%IA(ii) + ar + al + ad
-    !
+
     DO rindx = IA_csc(ii), IA_csc(ii + 1) - 1
       indx = indx + 1
       symobj%JA(indx) = JA_csc(rindx)
     END DO
-    !
+
     IF (idiag(ii) .NE. 0) THEN
       indx = indx + 1
       symobj%JA(indx) = obj%JA(idiag(ii))
       symobj%idiag(ii) = indx
     END IF
-    !
+
     DO rindx = IA_csr(ii), IA_csr(ii + 1) - 1
       indx = indx + 1
       symobj%JA(indx) = JA_csr(rindx)
     END DO
-    !
+
   END DO
-  !
+
   ! Clean up
-  !
   DEALLOCATE (IA_csr, IA_csc, JA_csr, JA_csc, idiag)
-  !
 END SUBROUTINE obj_GetSymU1
 
 !----------------------------------------------------------------------------
@@ -135,24 +135,25 @@ END SUBROUTINE obj_GetSymU1
 SUBROUTINE obj_GetSymL1(obj, symobj)
   TYPE(CSRSparsity_), INTENT(IN) :: obj
   TYPE(CSRSparsity_), INTENT(INOUT) :: symobj
-  !
+
   INTEGER(I4B) :: nnz_parts(3), ii, jj, rindx, indx, nrow, nnzL, ncol, &
     & nnzD, al, ar, ad
   INTEGER(I4B), ALLOCATABLE :: IA_csr(:), IA_csc(:), JA_csr(:), &
     & JA_csc(:), idiag(:)
   REAL(DFP) :: real_dummy(1)
-  !
-  nnz_parts = GetNNZ(obj, [""])
+  CHARACTER(1), PARAMETER :: from(1) = [" "]
+
+  nnz_parts = GetNNZ(obj=obj, from=from)
   nrow = obj%nrow
   ncol = obj%ncol
   nnzL = nnz_parts(2)
   nnzD = nnz_parts(3)
-  !
+
   CALL Reallocate(JA_csr, nnzL, IA_csr, nrow + 1)
   CALL Reallocate(idiag, nrow)
-  !
+
   indx = 0
-  !
+
   DO ii = 1, nrow
     IA_csr(ii) = indx + 1
     IA_csr(ii + 1) = IA_csr(ii)
@@ -167,9 +168,9 @@ SUBROUTINE obj_GetSymL1(obj, symobj)
       END IF
     END DO
   END DO
-  !
+
   CALL Reallocate(IA_csc, ncol + 1, JA_csc, nnzL)
-  !
+
   CALL csrcsc( &
     & nrow, &
     & 0, &
@@ -180,7 +181,7 @@ SUBROUTINE obj_GetSymL1(obj, symobj)
     & real_dummy, &
     & JA_csc, &
     & IA_csc)
-  !
+
   symobj%nnz = nnzL * 2 + nnzD
   symobj%ncol = ncol
   symobj%nrow = nrow
@@ -190,12 +191,12 @@ SUBROUTINE obj_GetSymL1(obj, symobj)
   symobj%isDiagStored = .TRUE.
   symobj%idof = obj%idof
   symobj%jdof = obj%jdof
-  !
+
   CALL Reallocate(symobj%IA, nrow + 1, symobj%idiag, nrow)
   CALL Reallocate(symobj%JA, symobj%nnz)
-  !
+
   indx = 0
-  !
+
   DO ii = 1, symobj%nrow
     al = IA_csr(ii + 1) - IA_csr(ii)
     ar = IA_csc(ii + 1) - IA_csc(ii)
@@ -204,32 +205,30 @@ SUBROUTINE obj_GetSymL1(obj, symobj)
     ELSE
       ad = 0
     END IF
-    !
+
     symobj%IA(ii) = indx + 1
     symobj%IA(ii + 1) = symobj%IA(ii) + ar + al + ad
-    !
+
     DO rindx = IA_csr(ii), IA_csr(ii + 1) - 1
       indx = indx + 1
       symobj%JA(indx) = JA_csr(rindx)
     END DO
-    !
+
     IF (idiag(ii) .NE. 0) THEN
       indx = indx + 1
       symobj%JA(indx) = obj%JA(idiag(ii))
       symobj%idiag(ii) = indx
     END IF
-    !
+
     DO rindx = IA_csc(ii), IA_csc(ii + 1) - 1
       indx = indx + 1
       symobj%JA(indx) = JA_csc(rindx)
     END DO
-    !
+
   END DO
-  !
+
   ! Clean up
-  !
   DEALLOCATE (IA_csr, IA_csc, JA_csr, JA_csc, idiag)
-  !
 END SUBROUTINE obj_GetSymL1
 
 !----------------------------------------------------------------------------
@@ -242,7 +241,7 @@ CASE ("U", "u")
   CALL obj_GetSymU1(obj=obj, symobj=symobj)
 CASE ("L", "l")
   CALL obj_GetSymL1(obj=obj, symobj=symobj)
-CASE default
+CASE DEFAULT
   CALL Errormsg( &
     & msg="No case found for given from = "//from, &
     & file=__FILE__, &
@@ -257,7 +256,6 @@ END PROCEDURE obj_GetSym1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE obj_GetSym2
-
 END PROCEDURE obj_GetSym2
 
 END SUBMODULE SymMethods
