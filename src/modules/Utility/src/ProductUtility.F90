@@ -257,7 +257,7 @@ END INTERFACE OuterProd
 INTERFACE OuterProd_
   MODULE PURE SUBROUTINE OuterProd_r1r1_( &
     a, b, anscoeff, scale, ans, nrow, ncol)
-    REAL(DFP), DIMENSION(:), INTENT(IN) :: a(:), b(:)
+    REAL(DFP), INTENT(IN) :: a(:), b(:)
     !! Size of a and b will be used to determine nrow and ncol
     REAL(DFP), INTENT(IN) :: anscoeff
     !! coefficient of ans
@@ -268,6 +268,77 @@ INTERFACE OuterProd_
     INTEGER(I4B), INTENT(OUT) :: nrow, ncol
     !! number of data written in ans
   END SUBROUTINE OuterProd_r1r1_
+END INTERFACE OuterProd_
+
+!----------------------------------------------------------------------------
+!                                                                 OuterProd_
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2026-03-09
+! summary: Outer product
+!
+!# OuterProd_
+!
+! This method computes the following outer product.
+!
+!```fortran
+! ans(i,j) = anscoeff * ans(i,j) + scale * a(i)*b(j)
+!```
+
+INTERFACE OuterProd_
+  MODULE PURE SUBROUTINE SafeOuterProd_r1r1_( &
+    a, b, sizeA, sizeB, anscoeff, scale, ans, nrow, ncol)
+    REAL(DFP), INTENT(IN) :: a(:), b(:)
+    !! Size of a and b will be used to determine nrow and ncol
+    INTEGER(I4B), INTENT(IN) :: sizeA, sizeB
+    !! size of a and b
+    REAL(DFP), INTENT(IN) :: anscoeff
+    !! coefficient of ans
+    REAL(DFP), INTENT(IN) :: scale
+    !! coefficient of a \otimes b
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    !! outerprod
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+    !! number of data written in ans
+  END SUBROUTINE SafeOuterProd_r1r1_
+END INTERFACE OuterProd_
+
+!----------------------------------------------------------------------------
+!                                                                 OuterProd_
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2026-03-09
+! summary: Outer product
+!
+!# OuterProd_
+!
+! This method computes the following outer product.
+!
+!```fortran
+! ans(i,j) = anscoeff * ans(i,j) + scale * a(i)*b(j)
+!```
+
+INTERFACE OuterProd_
+  MODULE PURE SUBROUTINE SafeOuterProd_r1r1b_( &
+    a, b, rowA, rowB, iColA, iColB, anscoeff, scale, ans, nrow, ncol)
+    REAL(DFP), INTENT(IN) :: a(:, :), b(:, :)
+    !! Size of a and b will be used to determine nrow and ncol
+    INTEGER(I4B), INTENT(IN) :: rowA, rowB, iColA, iColB
+    !! rowA number of columns in a
+    !! rowB number of columns in b
+    !! iColA, column index for a
+    !! iColB, column index for b
+    REAL(DFP), INTENT(IN) :: anscoeff
+    !! coefficient of ans
+    REAL(DFP), INTENT(IN) :: scale
+    !! coefficient of a \otimes b
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    !! outerprod
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+    !! number of data written in ans
+  END SUBROUTINE SafeOuterProd_r1r1b_
 END INTERFACE OuterProd_
 
 !----------------------------------------------------------------------------
