@@ -18,7 +18,6 @@
 MODULE RealVector_SetMethods
 USE GlobalData, ONLY: DFP, I4B
 USE BaseType, ONLY: RealVector_, DOF_
-
 IMPLICIT NONE
 PRIVATE
 
@@ -119,12 +118,13 @@ INTERFACE Set
     INTEGER(I4B), INTENT(IN) :: nodenum(:)
     !! node number to set the value
     REAL(DFP), INTENT(IN) :: VALUE(:)
-    !! vector value, the size of value should be equal to tdof * size(nodenum)
+    !! vector value, the size of value should be equal to
+    !! tdof * size(nodenum)
   END SUBROUTINE obj_Set5
 END INTERFACE Set
 
 !----------------------------------------------------------------------------
-!                                                                          Set
+!                                                                        Set
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -142,7 +142,7 @@ INTERFACE Set
 END INTERFACE Set
 
 !----------------------------------------------------------------------------
-!                                                                         Set
+!                                                                        Set
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -161,7 +161,7 @@ INTERFACE Set
 END INTERFACE Set
 
 !----------------------------------------------------------------------------
-!                                                                         Set
+!                                                                        Set
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -184,7 +184,7 @@ INTERFACE Set
 END INTERFACE Set
 
 !----------------------------------------------------------------------------
-!                                                                         Set
+!                                                                        Set
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -205,7 +205,7 @@ INTERFACE Set
 END INTERFACE Set
 
 !----------------------------------------------------------------------------
-!                                                                         Set
+!                                                                        Set
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.

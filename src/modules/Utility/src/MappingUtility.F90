@@ -18,19 +18,22 @@
 !> author: Vikas Sharma, Ph. D.
 ! date:  19 Oct 2022
 ! summary: Some methods related to standard mapping are defined
-!
-!{!pages/MappingUtility_.md!}
 
 MODULE MappingUtility
-USE GlobalData
+USE GlobalData, ONLY: DFP, I4B, LGT
 IMPLICIT NONE
 PRIVATE
 
 PUBLIC :: FromBiunitLine2Segment
 PUBLIC :: FromBiunitLine2Segment_
 PUBLIC :: FromBiUnitLine2UnitLine
+
+PUBLIC :: FromSegment2BiunitLine
+PUBLIC :: FromSegment2BiunitLine_
+
 PUBLIC :: FromUnitLine2BiUnitLine
 PUBLIC :: FromUnitLine2BiUnitLine_
+
 PUBLIC :: FromLine2Line_
 
 PUBLIC :: FromBiUnitQuadrangle2Quadrangle
@@ -132,6 +135,27 @@ INTERFACE FromBiunitLine2Segment
 END INTERFACE FromBiunitLine2Segment
 
 !----------------------------------------------------------------------------
+!                                                     FromSegment2BiunitLine
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 19 Oct 2022
+! summary: Mapping from segment to biunit
+
+INTERFACE FromSegment2BiunitLine
+  MODULE PURE FUNCTION FromSegment2BiunitLine1(xin, x1, x2) RESULT(ans)
+    REAL(DFP), INTENT(IN) :: xin(:)
+    !! coordinates in [x1,x2]
+    REAL(DFP), INTENT(IN) :: x1
+    !! x1 of physical domain
+    REAL(DFP), INTENT(IN) :: x2
+    !! x2 of physical  domain
+    REAL(DFP) :: ans(SIZE(xin))
+    !! mapped coordinates of xin in physical domain
+  END FUNCTION FromSegment2BiunitLine1
+END INTERFACE FromSegment2BiunitLine
+
+!----------------------------------------------------------------------------
 !                                                    FromBiunitLine2Segment_
 !----------------------------------------------------------------------------
 
@@ -148,6 +172,24 @@ INTERFACE FromBiunitLine2Segment_
     INTEGER(I4B), INTENT(OUT) :: tsize
   END SUBROUTINE FromBiunitLine2Segment1_
 END INTERFACE FromBiunitLine2Segment_
+
+!----------------------------------------------------------------------------
+!                                                    FromSegment2BiunitLine_
+!----------------------------------------------------------------------------
+
+INTERFACE FromSegment2BiunitLine_
+  MODULE PURE SUBROUTINE FromSegment2BiunitLine1_(xin, x1, x2, ans, tsize)
+    REAL(DFP), INTENT(IN) :: xin(:)
+    !! coordinates between [x1,x2]
+    REAL(DFP), INTENT(IN) :: x1
+    !! x1 of physical domain
+    REAL(DFP), INTENT(IN) :: x2
+    !! x2 of physical  domain
+    REAL(DFP), INTENT(INOUT) :: ans(:)
+    !! mapped coordinates of xin in biunit domain
+    INTEGER(I4B), INTENT(OUT) :: tsize
+  END SUBROUTINE FromSegment2BiunitLine1_
+END INTERFACE FromSegment2BiunitLine_
 
 !----------------------------------------------------------------------------
 !                                                     FromBiunitLine2Segment
