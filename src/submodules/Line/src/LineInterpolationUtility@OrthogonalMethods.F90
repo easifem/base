@@ -17,6 +17,7 @@
 
 SUBMODULE(LineInterpolationUtility) OrthogonalMethods
 USE BaseType, ONLY: polyopt => TypePolynomialOpt
+USE BaseType, ONLY: math => TypeMathOpt
 USE StringUtility, ONLY: UpperCase
 USE MappingUtility, ONLY: FromUnitLine2BiUnitLine_
 USE OrthogonalPolynomialUtility, ONLY: GradientEvalAllOrthopol_, &
@@ -88,9 +89,9 @@ CASE ("B")
                         alpha=alpha, beta=beta, lambda=lambda, ans=ans, &
                         nrow=nrow, ncol=ncol)
 
-#ifdef DEBUG_VER
 CASE DEFAULT
-  CALL AssertError1(.FALSE., myName, modName, __LINE__, &
+#ifdef DEBUG_VER
+  CALL AssertError1(math%no, myName, modName, __LINE__, &
                     "No case found for refLine.")
 #endif
 END SELECT
