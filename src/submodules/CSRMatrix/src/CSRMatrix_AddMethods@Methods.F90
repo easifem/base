@@ -145,6 +145,9 @@ CASE (FMT_DOF)
     CALL Convert(From=VALUE, To=m2, Conversion=DofToNodes, &
                  nns=SIZE(nodenum), tDOF=tdof)
   END IF
+
+CASE DEFAULT
+
 END SELECT
 
 CALL Add(obj=obj, nodenum=nodenum, VALUE=m2, scale=scale)

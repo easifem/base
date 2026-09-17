@@ -46,7 +46,6 @@ DO i = 1, n
     y(ja(k)) = y(ja(k)) + x(i) * a(k)
   END DO
 END DO
-
 END PROCEDURE CSRMatrixATMUX1
 
 !----------------------------------------------------------------------------
@@ -63,7 +62,6 @@ DO i = 1, n
     y(ja(k)) = y(ja(k)) + x(i) * a(k) * s
   END DO
 END DO
-
 END PROCEDURE CSRMatrixATMUX2
 
 !----------------------------------------------------------------------------
@@ -78,7 +76,6 @@ DO i = 1, n
     y(ja(k)) = y(ja(k)) + x(i) * a(k) * s
   END DO
 END DO
-
 END PROCEDURE CSRMatrixATMUX_Add_1
 
 !----------------------------------------------------------------------------
@@ -152,14 +149,12 @@ scale0 = Input(default=1.0_DFP, option=scale)
 tsize = SIZE(y)
 
 IF (add0) THEN
-  CALL CSRMatrixAMUX_Add(n=tsize, x=x, y=y, a=obj%A,  &
-    & ja=obj%csr%JA, ia=obj%csr%IA, s=scale0)
-  RETURN
+  CALL CSRMatrixAMUX_Add(n=tsize, x=x, y=y, a=obj%A, &
+                         ja=obj%csr%JA, ia=obj%csr%IA, s=scale0)
+ELSE
+  CALL CSRMatrixAMUX(n=tsize, x=x, y=y, a=obj%A, &
+                     ja=obj%csr%JA, ia=obj%csr%IA, s=scale0)
 END IF
-
-CALL CSRMatrixAMUX(n=tsize, x=x, y=y, a=obj%A, &
-                   ja=obj%csr%JA, ia=obj%csr%IA, s=scale0)
-
 END PROCEDURE csrMat_AMatvec1
 
 !----------------------------------------------------------------------------
@@ -252,12 +247,11 @@ trans = Input(option=isTranspose, default=.FALSE.)
 
 IF (trans) THEN
   CALL AtMatvec(obj=obj, x=x, y=y, addContribution=addContribution, &
-    & scale=scale)
-  RETURN
+                scale=scale)
+ELSE
+  CALL AMatvec(obj=obj, x=x, y=y, addContribution=addContribution, &
+               scale=scale)
 END IF
-
-CALL AMatvec(obj=obj, x=x, y=y, addContribution=addContribution, &
-  & scale=scale)
 END PROCEDURE csrMat_MatVec1
 
 !----------------------------------------------------------------------------
@@ -277,7 +271,8 @@ MODULE PROCEDURE csrMat_MatVec3
 INTEGER(I4B) :: n
 n = RealVector_Size(x)
 CALL csrMat_MatVec1(obj=obj, x=x%val(1:n), y=y%val(1:n), &
-        isTranspose=isTranspose, addContribution=addContribution, scale=scale)
+                    isTranspose=isTranspose, &
+                    addContribution=addContribution, scale=scale)
 END PROCEDURE csrMat_MatVec3
 
 END SUBMODULE Methods
