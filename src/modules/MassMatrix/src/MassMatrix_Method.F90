@@ -43,7 +43,7 @@ PUBLIC :: ViscousBoundaryMassMatrix
 ! date: 6 March 2021
 ! summary: This subroutine makes mass matrix in space domain (see below)
 
-INTERFACE
+INTERFACE MassMatrix
   MODULE PURE FUNCTION MassMatrix_1(test, trial, opt) RESULT(ans)
     CLASS(ElemshapeData_), INTENT(IN) :: test
     !! Shapedata for test function
@@ -53,10 +53,6 @@ INTERFACE
     !! ncopy
     REAL(DFP), ALLOCATABLE :: ans(:, :)
   END FUNCTION MassMatrix_1
-END INTERFACE
-
-INTERFACE MassMatrix
-  MODULE PROCEDURE MassMatrix_1
 END INTERFACE MassMatrix
 
 !----------------------------------------------------------------------------
@@ -74,7 +70,7 @@ END INTERFACE MassMatrix
 !
 ! $$\int_{\Omega } N^{I} N^{J}d\Omega$$
 
-INTERFACE
+INTERFACE MassMatrix_
   MODULE PURE SUBROUTINE MassMatrix1_(test, trial, ans, nrow, ncol, opt)
     CLASS(ElemshapeData_), INTENT(IN) :: test
     !! Shape function data for test function
@@ -87,10 +83,6 @@ INTERFACE
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: opt
     !! option for ncopy
   END SUBROUTINE MassMatrix1_
-END INTERFACE
-
-INTERFACE MassMatrix_
-  MODULE PROCEDURE MassMatrix1_
 END INTERFACE MassMatrix_
 
 !----------------------------------------------------------------------------
@@ -101,7 +93,7 @@ END INTERFACE MassMatrix_
 ! date: 6 March 2021
 ! summary: This subroutine makes mass matrix in space domain (see below)
 
-INTERFACE
+INTERFACE MassMatrix
   MODULE PURE FUNCTION MassMatrix_2(test, trial, rho, rhorank, opt) &
     RESULT(ans)
     CLASS(ElemshapeData_), INTENT(IN) :: test
@@ -115,10 +107,6 @@ INTERFACE
     !! ncopy
     REAL(DFP), ALLOCATABLE :: ans(:, :)
   END FUNCTION MassMatrix_2
-END INTERFACE
-
-INTERFACE MassMatrix
-  MODULE PROCEDURE MassMatrix_2
 END INTERFACE MassMatrix
 
 !----------------------------------------------------------------------------
@@ -136,7 +124,7 @@ END INTERFACE MassMatrix
 !
 ! ans(I,J)=\int N^{I}\rho N^{J}d\Omega
 
-INTERFACE
+INTERFACE MassMatrix_
   MODULE PURE SUBROUTINE MassMatrix2_(test, trial, rho, rhorank, &
                                       ans, nrow, ncol, opt)
     CLASS(ElemshapeData_), INTENT(IN) :: test
@@ -147,10 +135,6 @@ INTERFACE
     INTEGER(I4B), INTENT(OUT) :: nrow, ncol
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: opt
   END SUBROUTINE MassMatrix2_
-END INTERFACE
-
-INTERFACE MassMatrix_
-  MODULE PROCEDURE MassMatrix2_
 END INTERFACE MassMatrix_
 
 !----------------------------------------------------------------------------
@@ -161,7 +145,7 @@ END INTERFACE MassMatrix_
 ! date: 6 March 2021
 ! summary: This subroutine makes mass matrix in space domain (see below)
 
-INTERFACE
+INTERFACE MassMatrix
   MODULE PURE FUNCTION MassMatrix_3(test, trial, rho, rhorank, opt) &
     RESULT(ans)
     CLASS(ElemshapeData_), INTENT(IN) :: test
@@ -176,10 +160,6 @@ INTERFACE
     !! ncopy
     REAL(DFP), ALLOCATABLE :: ans(:, :)
   END FUNCTION MassMatrix_3
-END INTERFACE
-
-INTERFACE MassMatrix
-  MODULE PROCEDURE MassMatrix_3
 END INTERFACE MassMatrix
 
 !----------------------------------------------------------------------------
@@ -201,7 +181,7 @@ END INTERFACE MassMatrix
 ! opt=3: M_{ii}(I,J)=\int N^{I}v_{i}N^{J}d\Omega
 ! opt=4: M_{ij}(I,J)=\int N^{I}v_{i}v_{j}N^{J}d\Omega
 
-INTERFACE
+INTERFACE MassMatrix_
   MODULE PURE SUBROUTINE MassMatrix3_(test, trial, rho, rhorank, opt, &
                                       nrow, ncol, ans)
     CLASS(ElemshapeData_), INTENT(IN) :: test
@@ -212,10 +192,6 @@ INTERFACE
     INTEGER(I4B), INTENT(OUT) :: nrow, ncol
     REAL(DFP), INTENT(INOUT) :: ans(:, :)
   END SUBROUTINE MassMatrix3_
-END INTERFACE
-
-INTERFACE MassMatrix_
-  MODULE PROCEDURE MassMatrix3_
 END INTERFACE MassMatrix_
 
 !----------------------------------------------------------------------------
@@ -226,7 +202,7 @@ END INTERFACE MassMatrix_
 ! date: 6 March 2021
 ! summary: This subroutine makes mass matrix in space domain
 
-INTERFACE
+INTERFACE MassMatrix
   MODULE PURE FUNCTION MassMatrix_4(test, trial, rho, rhorank) &
     RESULT(ans)
     CLASS(ElemshapeData_), INTENT(IN) :: test
@@ -239,10 +215,6 @@ INTERFACE
     !! coefficient is a matrix
     REAL(DFP), ALLOCATABLE :: ans(:, :)
   END FUNCTION MassMatrix_4
-END INTERFACE
-
-INTERFACE MassMatrix
-  MODULE PROCEDURE MassMatrix_4
 END INTERFACE MassMatrix
 
 !----------------------------------------------------------------------------
@@ -254,7 +226,7 @@ END INTERFACE MassMatrix
 ! summary:  mass matrix in space
 ! notice: not implemented yet
 
-INTERFACE
+INTERFACE MassMatrix_
   MODULE PURE SUBROUTINE MassMatrix4_( &
     test, trial, rho, rhorank, m4, ans, nrow, ncol)
     CLASS(ElemshapeData_), INTENT(IN) :: test
@@ -271,10 +243,6 @@ INTERFACE
     INTEGER(I4B), INTENT(OUT) :: nrow, ncol
     !! Data written in ans
   END SUBROUTINE MassMatrix4_
-END INTERFACE
-
-INTERFACE MassMatrix_
-  MODULE PROCEDURE MassMatrix4_
 END INTERFACE MassMatrix_
 
 !----------------------------------------------------------------------------
@@ -285,7 +253,7 @@ END INTERFACE MassMatrix_
 ! date: 2024-01-15
 ! summary: This subroutine makes mass matrix used for viscous boundary
 
-INTERFACE
+INTERFACE MassMatrix
   MODULE PURE FUNCTION MassMatrix_5(test, trial, lambda, mu, rho, &
                                     lambdaRank, muRank, rhoRank) &
     RESULT(ans)
@@ -302,10 +270,6 @@ INTERFACE
     TYPE(FEVariableScalar_), INTENT(IN) :: lambdaRank, muRank, rhoRank
     REAL(DFP), ALLOCATABLE :: ans(:, :)
   END FUNCTION MassMatrix_5
-END INTERFACE
-
-INTERFACE MassMatrix
-  MODULE PROCEDURE MassMatrix_5
 END INTERFACE MassMatrix
 
 INTERFACE ViscousBoundaryMassMatrix
@@ -320,7 +284,7 @@ END INTERFACE ViscousBoundaryMassMatrix
 ! date: 2024-01-15
 ! summary: This subroutine makes mass matrix used for viscous boundary
 
-INTERFACE
+INTERFACE MassMatrix_
   MODULE PURE SUBROUTINE MassMatrix5_( &
     test, trial, lambda, mu, rho, lambdaRank, muRank, rhoRank, ans, &
     nrow, ncol)
@@ -338,10 +302,6 @@ INTERFACE
     REAL(DFP), INTENT(INOUT) :: ans(:, :)
     INTEGER(I4B), INTENT(OUT) :: nrow, ncol
   END SUBROUTINE MassMatrix5_
-END INTERFACE
-
-INTERFACE MassMatrix_
-  MODULE PROCEDURE MassMatrix5_
 END INTERFACE MassMatrix_
 
 !----------------------------------------------------------------------------
@@ -352,7 +312,7 @@ END INTERFACE MassMatrix_
 ! date: 2024-01-15
 ! summary: This subroutine makes mass matrix mass routine
 
-INTERFACE
+INTERFACE MassMatrix_
   MODULE PURE SUBROUTINE MassMatrix6_( &
     N, M, js, ws, thickness, nips, nns1, nns2, ans, nrow, ncol)
     REAL(DFP), INTENT(IN) :: N(:, :)
@@ -372,10 +332,6 @@ INTERFACE
     REAL(DFP), INTENT(INOUT) :: ans(:, :)
     INTEGER(I4B), INTENT(OUT) :: nrow, ncol
   END SUBROUTINE MassMatrix6_
-END INTERFACE
-
-INTERFACE MassMatrix_
-  MODULE PROCEDURE MassMatrix6_
 END INTERFACE MassMatrix_
 
 !----------------------------------------------------------------------------
@@ -386,7 +342,7 @@ END INTERFACE MassMatrix_
 ! date: 2024-01-15
 ! summary: This subroutine makes mass matrix mass routine
 
-INTERFACE
+INTERFACE MassMatrix_
   MODULE PURE SUBROUTINE MassMatrix7_( &
     N, M, js, ws, thickness, nips, nns1, nns2, skipVertices, tVertices, &
     ans, nrow, ncol)
@@ -412,10 +368,6 @@ INTERFACE
     REAL(DFP), INTENT(INOUT) :: ans(:, :)
     INTEGER(I4B), INTENT(OUT) :: nrow, ncol
   END SUBROUTINE MassMatrix7_
-END INTERFACE
-
-INTERFACE MassMatrix_
-  MODULE PROCEDURE MassMatrix7_
 END INTERFACE MassMatrix_
 
 !----------------------------------------------------------------------------
@@ -426,7 +378,7 @@ END INTERFACE MassMatrix_
 ! date: 2024-01-15
 ! summary: This subroutine makes space time mass matrix in DOF format
 
-INTERFACE
+INTERFACE MassMatrix_
   MODULE PURE SUBROUTINE MassMatrix8_( &
     spaceN, spaceM, timeN, timeM, js, ws, jt, wt, spaceThickness, &
     timeThickness, nips, nns1, nns2, nipt, nnt1, nnt2, ans, nrow, ncol)
@@ -447,10 +399,6 @@ INTERFACE
     REAL(DFP), INTENT(INOUT) :: ans(:, :)
     INTEGER(I4B), INTENT(OUT) :: nrow, ncol
   END SUBROUTINE MassMatrix8_
-END INTERFACE
-
-INTERFACE MassMatrix_
-  MODULE PROCEDURE MassMatrix8_
 END INTERFACE MassMatrix_
 
 !----------------------------------------------------------------------------
@@ -461,7 +409,7 @@ END INTERFACE MassMatrix_
 ! date: 2024-01-15
 ! summary: This subroutine makes space time mass matrix in DOF format
 
-INTERFACE
+INTERFACE MassMatrix_
   MODULE PURE SUBROUTINE MassMatrix9_( &
     spaceN, spaceM, timeN, timeM, js, ws, jt, wt, spaceThickness, &
     timeThickness, nips, nns1, nns2, nipt, nnt1, nnt2, &
@@ -487,10 +435,38 @@ INTERFACE
     REAL(DFP), INTENT(INOUT) :: ans(:, :)
     INTEGER(I4B), INTENT(OUT) :: nrow, ncol
   END SUBROUTINE MassMatrix9_
-END INTERFACE
+END INTERFACE MassMatrix_
+
+!----------------------------------------------------------------------------
+!                                              MassMatrix@MassMatrixMethods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2024-01-15
+! summary: This subroutine makes mass matrix mass routine
 
 INTERFACE MassMatrix_
-  MODULE PROCEDURE MassMatrix9_
+  MODULE PURE SUBROUTINE MassMatrix10_( &
+    N, M, js, ws, thickness, nips, nns1, nns2, ans, nrow, ncol, &
+    ansCoeff, scale)
+    REAL(DFP), INTENT(IN) :: N(:, :)
+    !! test function data
+    REAL(DFP), INTENT(IN) :: M(:, :)
+    !! trial function data
+    REAL(DFP), INTENT(IN) :: js(:)
+    !! Jacobian determinant at integration points
+    REAL(DFP), INTENT(IN) :: ws(:)
+    !! Weights at integration points
+    REAL(DFP), INTENT(IN) :: thickness(:)
+    !! thickness at integration points
+    INTEGER(I4B), INTENT(IN) :: nips, nns1, nns2
+    !! number of integration points
+    !! number of shape functions for test function
+    !! number of shape functions for trial function
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+    REAL(DFP), INTENT(IN) :: ansCoeff, scale
+  END SUBROUTINE MassMatrix10_
 END INTERFACE MassMatrix_
 
 !----------------------------------------------------------------------------
