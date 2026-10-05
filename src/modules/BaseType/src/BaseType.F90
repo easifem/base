@@ -1779,6 +1779,9 @@ TYPE :: ElemShapeData_
   REAL(DFP), ALLOCATABLE :: dNdXt(:, :, :)
   !! Spatial derivative of shape function
   !! shape = nns, nsd, nips
+  REAL(DFP), ALLOCATABLE :: NLaplacian(:, :)
+  !! Laplacian of shape function
+  !! shape = nns, nips
   REAL(DFP), ALLOCATABLE :: thickness(:)
   !! Thickness of element
   !! nips
