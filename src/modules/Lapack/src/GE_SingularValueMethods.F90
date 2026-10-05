@@ -19,4 +19,22 @@ MODULE GE_SingularValueMethods
 USE GlobalData, ONLY: DFP, I4B, LGT
 IMPLICIT NONE
 PRIVATE
+
+PUBLIC :: GetSVD
+
+!----------------------------------------------------------------------------
+!                                                                ConditionNo
+!----------------------------------------------------------------------------
+
+INTERFACE GetSVD
+  MODULE SUBROUTINE GE_GetSVD1(A, S, U, VT, WW, JOB, INFO)
+    REAL(DFP), INTENT(INOUT) :: A(:, :)
+    REAL(DFP), INTENT(OUT) :: S(:)
+    CHARACTER(LEN=1), OPTIONAL, INTENT(IN) :: JOB
+    INTEGER, INTENT(OUT), OPTIONAL :: INFO
+    REAL(DFP), INTENT(OUT), OPTIONAL, TARGET :: WW(:)
+    REAL(DFP), INTENT(OUT), OPTIONAL, TARGET :: U(:, :), VT(:, :)
+  END SUBROUTINE GE_GetSVD1
+END INTERFACE GetSVD
+
 END MODULE GE_SingularValueMethods

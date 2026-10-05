@@ -15,27 +15,28 @@
 # along with this program.  If not, see <https: //www.gnu.org/licenses/>
 #
 
-IF( USE_LAPACK95 )
-  SET(src_path "${CMAKE_CURRENT_LIST_DIR}/src/")
-  TARGET_SOURCES(
-    ${PROJECT_NAME} PRIVATE
-    ${src_path}/GE_CompRoutineMethods@Methods.F90
-    ${src_path}/GE_EigenValueMethods@Methods.F90
-    ${src_path}/GE_LUMethods@Methods.F90
-    ${src_path}/GE_LinearSolveMethods@Methods.F90
-    ${src_path}/GE_SingularValueMethods@Methods.F90
-  )
-ENDIF(  )
+if(USE_LAPACK95)
+    set(src_path "${CMAKE_CURRENT_LIST_DIR}/src/")
+    target_sources(
+        ${PROJECT_NAME}
+        PRIVATE
+            ${src_path}/GE_CompRoutineMethods@Methods.F90
+            ${src_path}/GE_EigenValueMethods@Methods.F90
+            ${src_path}/GE_LUMethods@Methods.F90
+            ${src_path}/GE_LinearSolveMethods@Methods.F90
+            ${src_path}/GE_SingularValueMethods@Methods.F90
+    )
+endif()
 
-IF( USE_LAPACK95 )
-  SET(src_path "${CMAKE_CURRENT_LIST_DIR}/src/")
-  TARGET_SOURCES(
-    ${PROJECT_NAME} PRIVATE
-    ${src_path}/Sym_CompRoutineMethods@Methods.F90
-    ${src_path}/Sym_EigenValueMethods@Methods.F90
-    ${src_path}/Sym_LUMethods@Methods.F90
-    ${src_path}/Sym_LinearSolveMethods@Methods.F90
-    ${src_path}/Sym_SingularValueMethods@Methods.F90
-  )
-ENDIF(  )
-
+if(USE_LAPACK95)
+    set(src_path "${CMAKE_CURRENT_LIST_DIR}/src/")
+    target_sources(
+        ${PROJECT_NAME}
+        PRIVATE
+            ${src_path}/Sym_CompRoutineMethods@Methods.F90
+            ${src_path}/Sym_EigenValueMethods@Methods.F90
+            ${src_path}/Sym_LUMethods@Methods.F90
+            ${src_path}/Sym_LinearSolveMethods@Methods.F90
+            ${src_path}/Sym_SingularValueMethods@Methods.F90
+    )
+endif()
