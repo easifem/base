@@ -22,7 +22,7 @@
 !{!pages/UnscaledLobattoPolynomialUtility.md!}
 
 MODULE UnscaledLobattoPolynomialUtility
-USE GlobalData
+USE GlobalData, ONLY: DFP, I4B, LGT
 IMPLICIT NONE
 PRIVATE
 PUBLIC :: UnscaledLobattoLeadingCoeff
@@ -35,6 +35,9 @@ PUBLIC :: UnscaledLobattoMonomialExpansion
 PUBLIC :: UnscaledLobattoGradientEvalAll
 PUBLIC :: UnscaledLobattoGradientEvalAll_
 PUBLIC :: UnscaledLobattoGradientEval
+PUBLIC :: UnscaledLobattoLaplacianEvalAll
+PUBLIC :: UnscaledLobattoLaplacianEvalAll_
+PUBLIC :: UnscaledLobattoLaplacianEval
 PUBLIC :: UnscaledLobattoMassMatrix
 PUBLIC :: UnscaledLobattoStiffnessMatrix
 
@@ -435,6 +438,117 @@ INTERFACE
     REAL(DFP) :: ans(n + 1, n + 1)
   END FUNCTION UnscaledLobattoStiffnessMatrix
 END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                            UnscaledLobattoLaplacianEvalAll
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 8 Sept 2022
+! summary: Evaluate Laplacian of UnscaledLobatto polynomial of order upto n
+!
+!# UnscaledLobattoLaplacianEvalAll
+!
+! Evaluate Laplacian of UnscaledLobatto polynomial of order upto n.
+
+INTERFACE UnscaledLobattoLaplacianEvalAll
+  MODULE PURE FUNCTION UnscaledLobattoLaplacianEvalAll1(n, x) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: n
+    REAL(DFP), INTENT(IN) :: x
+    REAL(DFP) :: ans(1:n + 1)
+  END FUNCTION UnscaledLobattoLaplacianEvalAll1
+END INTERFACE UnscaledLobattoLaplacianEvalAll
+
+!----------------------------------------------------------------------------
+!                                          UnscaledLobattoLaplacianEvalAll_
+!----------------------------------------------------------------------------
+
+INTERFACE UnscaledLobattoLaplacianEvalAll_
+  MODULE PURE SUBROUTINE UnscaledLobattoLaplacianEvalAll1_(n, x, ans, tsize)
+    INTEGER(I4B), INTENT(IN) :: n
+    REAL(DFP), INTENT(IN) :: x
+    REAL(DFP), INTENT(INOUT) :: ans(:)
+    INTEGER(I4B), INTENT(OUT) :: tsize
+    !! ans(1:n + 1)
+  END SUBROUTINE UnscaledLobattoLaplacianEvalAll1_
+END INTERFACE UnscaledLobattoLaplacianEvalAll_
+
+!----------------------------------------------------------------------------
+!                                            UnscaledLobattoLaplacianEvalAll
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 8 Sept 2022
+! summary: Evaluate Laplacian of UnscaledLobatto polynomial of order upto n
+!
+!# UnscaledLobattoLaplacianEvalAll
+!
+! Evaluate Laplacian of UnscaledLobatto polynomial of order upto n.
+
+INTERFACE UnscaledLobattoLaplacianEvalAll
+  MODULE PURE FUNCTION UnscaledLobattoLaplacianEvalAll2(n, x) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: n
+    REAL(DFP), INTENT(IN) :: x(:)
+    REAL(DFP) :: ans(1:SIZE(x), 1:n + 1)
+  END FUNCTION UnscaledLobattoLaplacianEvalAll2
+END INTERFACE UnscaledLobattoLaplacianEvalAll
+
+!----------------------------------------------------------------------------
+!                                           UnscaledLobattoLaplacianEvalAll_
+!----------------------------------------------------------------------------
+
+INTERFACE UnscaledLobattoLaplacianEvalAll_
+  MODULE PURE SUBROUTINE UnscaledLobattoLaplacianEvalAll2_(n, x, ans, &
+                                                           nrow, ncol)
+    INTEGER(I4B), INTENT(IN) :: n
+    REAL(DFP), INTENT(IN) :: x(:)
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+    !! nrow = SIZE(x)
+    !! ncol = n + 1
+  END SUBROUTINE UnscaledLobattoLaplacianEvalAll2_
+END INTERFACE UnscaledLobattoLaplacianEvalAll_
+
+!----------------------------------------------------------------------------
+!                                               UnscaledLobattoLaplacianEval
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 8 Sept 2022
+! summary: Evaluate Laplacian of UnscaledLobatto polynomial of order upto n
+!
+!# UnscaledLobattoLaplacianEval
+!
+! Evaluate Laplacian of UnscaledLobatto polynomial of order upto n.
+
+INTERFACE UnscaledLobattoLaplacianEval
+  MODULE PURE FUNCTION UnscaledLobattoLaplacianEval1(n, x) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: n
+    REAL(DFP), INTENT(IN) :: x
+    REAL(DFP) :: ans
+  END FUNCTION UnscaledLobattoLaplacianEval1
+END INTERFACE UnscaledLobattoLaplacianEval
+!!
+
+!----------------------------------------------------------------------------
+!                                               UnscaledLobattoLaplacianEval
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 8 Sept 2022
+! summary: Evaluate Laplacian of UnscaledLobatto polynomial of order upto n
+!
+!# UnscaledLobattoLaplacianEval
+!
+! Evaluate Laplacian of UnscaledLobatto polynomial of order upto n.
+
+INTERFACE UnscaledLobattoLaplacianEval
+  MODULE PURE FUNCTION UnscaledLobattoLaplacianEval2(n, x) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: n
+    REAL(DFP), INTENT(IN) :: x(:)
+    REAL(DFP) :: ans(1:SIZE(x))
+  END FUNCTION UnscaledLobattoLaplacianEval2
+END INTERFACE UnscaledLobattoLaplacianEval
 
 !----------------------------------------------------------------------------
 !

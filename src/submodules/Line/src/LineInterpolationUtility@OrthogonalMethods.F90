@@ -20,8 +20,9 @@ USE BaseType, ONLY: polyopt => TypePolynomialOpt
 USE BaseType, ONLY: math => TypeMathOpt
 USE StringUtility, ONLY: UpperCase
 USE MappingUtility, ONLY: FromUnitLine2BiUnitLine_
-USE OrthogonalPolynomialUtility, ONLY: GradientEvalAllOrthopol_, &
-                                       EvalAllOrthopol_
+USE OrthogonalPolynomialUtility, ONLY: GradientEvalAllOrthopol_
+USE OrthogonalPolynomialUtility, ONLY: LaplacianEvalAllOrthopol_
+USE OrthogonalPolynomialUtility, ONLY: EvalAllOrthopol_
 IMPLICIT NONE
 
 #ifdef DEBUG_VER
@@ -140,13 +141,63 @@ CASE ("B")
   CALL GradientEvalAllOrthopol_(n=order, x=xij(1, :), orthopol=basisType, &
                                 ans=ans(:, :, 1), nrow=dim1, ncol=dim2)
 
-#ifdef DEBUG_VER
 CASE DEFAULT
+#ifdef DEBUG_VER
   CALL AssertError1(.FALSE., myName, modName, __LINE__, &
                     "No case found for refline")
 #endif
 END SELECT
 END PROCEDURE OrthogonalBasisGradient_Line1_
+
+!----------------------------------------------------------------------------
+!                                            OrthogonalBasisLaplacian_Line1
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE OrthogonalBasisLaplacian_Line1
+INTEGER(I4B) :: nrow, ncol
+CALL OrthogonalBasisLaplacian_Line1_( &
+  order=order, xij=xij, refline=refline, basisType=basisType, ans=ans, &
+  nrow=nrow, ncol=ncol, alpha=alpha, beta=beta, lambda=lambda)
+END PROCEDURE OrthogonalBasisLaplacian_Line1
+
+!----------------------------------------------------------------------------
+!                                                OrthogonalBasisLaplacian_Line
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE OrthogonalBasisLaplacian_Line1_
+#ifdef DEBUG_VER
+CHARACTER(*), PARAMETER :: myName = "OrthogonalBasisLaplacian_Line1_()"
+#endif
+
+CHARACTER(1) :: astr
+REAL(DFP) :: x(SIZE(xij, 2))
+INTEGER(I4B) :: ii, jj
+
+astr = UpperCase(refline(1:1))
+nrow = SIZE(xij, 2)
+ncol = order + 1
+
+SELECT CASE (astr)
+CASE ("U")
+  CALL FromUnitLine2BiUnitLine_(xin=xij(1, :), ans=x, tsize=nrow)
+  CALL LaplacianEvalAllOrthopol_(n=order, x=x, orthopol=basisType, &
+                                 ans=ans, nrow=nrow, ncol=ncol)
+
+  DO CONCURRENT(ii=1:nrow, jj=1:ncol)
+    ans(ii, jj) = ans(ii, jj) * 2.0_DFP
+  END DO
+
+CASE ("B")
+  CALL LaplacianEvalAllOrthopol_(n=order, x=xij(1, :), orthopol=basisType, &
+                                 ans=ans, nrow=nrow, ncol=ncol)
+
+CASE DEFAULT
+#ifdef DEBUG_VER
+  CALL AssertError1(math%no, myName, modName, __LINE__, &
+                    "No case found for refline")
+#endif
+END SELECT
+END PROCEDURE OrthogonalBasisLaplacian_Line1_
 
 !----------------------------------------------------------------------------
 !

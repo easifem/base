@@ -17,20 +17,16 @@
 
 SUBMODULE(LobattoPolynomialUtility) Methods
 USE Sym_LinearSolveMethods, ONLY: SymLinSolve
-
 USE LegendrePolynomialUtility, ONLY: LegendreLeadingCoeff, &
                                      LegendreNormSqr, &
                                      LegendreEval, &
                                      LegendreEvalAll_, &
                                      LegendreMonomialExpansionAll, &
                                      LegendreQuadrature
-
 USE JacobiPolynomialUtility, ONLY: JacobiZeros
-
 USE UltrasphericalPolynomialUtility, ONLY: UltrasphericalEvalAll_, &
                                            UltrasphericalGradientEvalAll_, &
                                            UltrasphericalGradientEvalAll
-
 IMPLICIT NONE
 CONTAINS
 
@@ -419,7 +415,7 @@ CASE DEFAULT
 
   DO ii = 1, n - 1
     m = REAL(ii - 1, DFP)
-    avar = SQRT((2.0_DFP * m + 3.0) / 2.0)
+    avar = SQRT((2.0_DFP * m + 3.0_DFP) / 2.0_DFP)
     ans(ii + 2) = avar * p(ii + 1)
 
   END DO
@@ -463,7 +459,7 @@ CASE DEFAULT
 
   DO ii = 1, n - 1
     m = REAL(ii - 1, DFP)
-    avar = SQRT((2.0_DFP * m + 3.0) / 2.0)
+    avar = SQRT((2.0_DFP * m + 3.0_DFP) / 2.0_DFP)
     ans(1:nrow, ii + 2) = avar * p(1:nrow, ii + 1)
     ! ans(3:) = p(2:)
   END DO
@@ -488,7 +484,7 @@ CASE DEFAULT
   !!
   p = LegendreEval(n=n - 1_I4B, x=x)
   m = REAL(n - 2, DFP)
-  avar = SQRT((2.0_DFP * m + 3.0) / 2.0)
+  avar = SQRT((2.0_DFP * m + 3.0_DFP) / 2.0_DFP)
   ans = avar * p
 END SELECT
 END PROCEDURE LobattoGradientEval1
@@ -509,7 +505,7 @@ CASE DEFAULT
   !!
   p = LegendreEval(n=n - 1_I4B, x=x)
   m = REAL(n - 2, DFP)
-  avar = SQRT((2.0_DFP * m + 3.0) / 2.0)
+  avar = SQRT((2.0_DFP * m + 3.0_DFP) / 2.0_DFP)
   ans = avar * p
 END SELECT
 END PROCEDURE LobattoGradientEval2
@@ -595,39 +591,72 @@ MODULE PROCEDURE Lobatto0
 ans = 0.5_DFP * (1.0_DFP - x)
 END PROCEDURE Lobatto0
 
+!----------------------------------------------------------------------------
+!                                                                 Lobatto0
+!----------------------------------------------------------------------------
+
 MODULE PROCEDURE Lobatto1
 ans = 0.5_DFP * (1.0_DFP + x)
 END PROCEDURE Lobatto1
+
+!----------------------------------------------------------------------------
+!                                                                 Lobatto0
+!----------------------------------------------------------------------------
 
 MODULE PROCEDURE Lobatto2
 REAL(DFP), PARAMETER :: coeff = 0.5_DFP * SQRT(3.0_DFP) / SQRT(2.0_DFP)
 ans = coeff * (x**2 - 1.0_DFP)
 END PROCEDURE Lobatto2
 
+!----------------------------------------------------------------------------
+!                                                                 Lobatto0
+!----------------------------------------------------------------------------
+
 MODULE PROCEDURE Lobatto3
 REAL(DFP), PARAMETER :: coeff = 0.5_DFP * SQRT(5.0_DFP) / SQRT(2.0_DFP)
 ans = coeff * (x**2 - 1.0_DFP) * x
 END PROCEDURE Lobatto3
+
+!----------------------------------------------------------------------------
+!                                                                 Lobatto0
+!----------------------------------------------------------------------------
 
 MODULE PROCEDURE Lobatto4
 REAL(DFP), PARAMETER :: coeff = SQRT(7.0_DFP) / SQRT(2.0_DFP) / 8.0_DFP
 ans = coeff * (x**2 - 1.0_DFP) * (5.0_DFP * x**2 - 1.0_DFP)
 END PROCEDURE Lobatto4
 
+!----------------------------------------------------------------------------
+!                                                                 Lobatto0
+!----------------------------------------------------------------------------
+
 MODULE PROCEDURE Lobatto5
 REAL(DFP), PARAMETER :: coeff = SQRT(9.0_DFP) / SQRT(2.0_DFP) / 8.0_DFP
 ans = coeff * (x**2 - 1.0_DFP) * (7.0_DFP * x**2 - 3.0_DFP) * x
 END PROCEDURE Lobatto5
+
+!----------------------------------------------------------------------------
+!                                                                 Lobatto0
+!----------------------------------------------------------------------------
 
 MODULE PROCEDURE Lobatto6
 REAL(DFP), PARAMETER :: coeff = SQRT(11.0_DFP) / SQRT(2.0_DFP) / 16.0_DFP
 ans = coeff * (x**2 - 1.0_DFP) * (21.0_DFP * x**4 - 14.0_DFP * x**2 + 1.0_DFP)
 END PROCEDURE Lobatto6
 
+!----------------------------------------------------------------------------
+!                                                                 Lobatto0
+!----------------------------------------------------------------------------
+
 MODULE PROCEDURE Lobatto7
 REAL(DFP), PARAMETER :: coeff = SQRT(13.0_DFP) / SQRT(2.0_DFP) / 16.0_DFP
-ans = coeff * (x**2 - 1.0_DFP) * (33.0_DFP * x**4 - 30.0_DFP * x**2 + 5.0_DFP) * x
+ans = coeff * (x**2 - 1.0_DFP) &
+      * (33.0_DFP * x**4 - 30.0_DFP * x**2 + 5.0_DFP) * x
 END PROCEDURE Lobatto7
+
+!----------------------------------------------------------------------------
+!                                                                 Lobatto0
+!----------------------------------------------------------------------------
 
 MODULE PROCEDURE Lobatto8
 REAL(DFP), PARAMETER :: coeff = SQRT(15.0_DFP) / SQRT(2.0_DFP) / 128.0_DFP
@@ -635,20 +664,156 @@ ans = coeff * (x**2 - 1.0_DFP) * (429.0_DFP * x**6 - 495.0_DFP * x**4 &
                                   + 135.0_DFP * x**2 - 5.0_DFP)
 END PROCEDURE Lobatto8
 
+!----------------------------------------------------------------------------
+!                                                                 Lobatto0
+!----------------------------------------------------------------------------
+
 MODULE PROCEDURE Lobatto9
 REAL(DFP), PARAMETER :: coeff = SQRT(17.0_DFP) / SQRT(2.0_DFP) / 128.0_DFP
 ans = coeff * (x**2 - 1.0_DFP) * (715.0_DFP * x**6 - 1001.0_DFP * x**4 &
                                   + 385.0_DFP * x**2 - 35.0_DFP) * x
 END PROCEDURE Lobatto9
 
+!----------------------------------------------------------------------------
+!                                                                 Lobatto0
+!----------------------------------------------------------------------------
+
 MODULE PROCEDURE Lobatto10
 REAL(DFP), PARAMETER :: coeff = SQRT(19.0_DFP) / SQRT(2.0_DFP) / 256.0_DFP
-ans = coeff * (x**2 - 1.0_DFP) * (2431.0_DFP * x**8 - 4004.0_DFP * x**6 &
-                             + 2002.0_DFP * x**4 - 308.0_DFP * x**2 + 7.0_DFP)
+ans = coeff * (x**2 - 1.0_DFP) &
+      * (2431.0_DFP * x**8 - 4004.0_DFP * x**6 &
+         + 2002.0_DFP * x**4 - 308.0_DFP * x**2 + 7.0_DFP)
 END PROCEDURE Lobatto10
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
+
+MODULE PROCEDURE LobattoLaplacianEvalAll1
+INTEGER(I4B) :: tsize
+CALL LobattoLaplacianEvalAll1_(n=n, x=x, ans=ans, tsize=tsize)
+END PROCEDURE LobattoLaplacianEvalAll1
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE LobattoLaplacianEvalAll1_
+! REAL(DFP) :: p(n), avar, m
+! INTEGER(I4B) :: ii
+
+! tsize = n + 1
+
+! SELECT CASE (n)
+
+! CASE (0)
+!   ans(1) = -0.5_DFP
+
+! CASE (1)
+!   ans(1) = -0.5_DFP
+!   ans(2) = 0.5_DFP
+
+! CASE DEFAULT
+!   ans(1) = -0.5_DFP
+!   ans(2) = 0.5_DFP
+
+!   CALL LegendreEvalAll_(n=n - 1_I4B, x=x, ans=p, tsize=ii)
+
+!   DO ii = 1, n - 1
+!     m = REAL(ii - 1, DFP)
+!     avar = SQRT((2.0_DFP * m + 3.0) / 2.0)
+!     ans(ii + 2) = avar * p(ii + 1)
+
+!   END DO
+
+! END SELECT
+END PROCEDURE LobattoLaplacianEvalAll1_
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE LobattoLaplacianEvalAll2
+INTEGER(I4B) :: nrow, ncol
+CALL LobattoLaplacianEvalAll2_(n=n, x=x, ans=ans, nrow=nrow, ncol=ncol)
+END PROCEDURE LobattoLaplacianEvalAll2
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE LobattoLaplacianEvalAll2_
+! REAL(DFP) :: p(SIZE(x), n), avar, m
+! INTEGER(I4B) :: ii
+
+! nrow = SIZE(x)
+! ncol = n + 1
+
+! SELECT CASE (n)
+! CASE (0)
+!   ans(1:nrow, 1) = -0.5_DFP
+
+! CASE (1)
+!   ans(1:nrow, 1) = -0.5_DFP
+!   ans(1:nrow, 2) = 0.5_DFP
+
+! CASE DEFAULT
+!   ans(1:nrow, 1) = -0.5_DFP
+!   ans(1:nrow, 2) = 0.5_DFP
+
+!   CALL LegendreEvalAll_(n=n - 1_I4B, x=x, ans=p, nrow=nrow, ncol=ii)
+
+!   DO ii = 1, n - 1
+!     m = REAL(ii - 1, DFP)
+!     avar = SQRT((2.0_DFP * m + 3.0) / 2.0)
+!     ans(1:nrow, ii + 2) = avar * p(1:nrow, ii + 1)
+!     ! ans(3:) = p(2:)
+!   END DO
+
+! END SELECT
+
+END PROCEDURE LobattoLaplacianEvalAll2_
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE LobattoLaplacianEval1
+! REAL(DFP) :: p, avar, m
+!   !!
+! SELECT CASE (n)
+! CASE (0)
+!   ans = -0.5_DFP
+! CASE (1)
+!   ans = 0.5_DFP
+! CASE DEFAULT
+!   !!
+!   p = LegendreEval(n=n - 1_I4B, x=x)
+!   m = REAL(n - 2, DFP)
+!   avar = SQRT((2.0_DFP * m + 3.0) / 2.0)
+!   ans = avar * p
+! END SELECT
+END PROCEDURE LobattoLaplacianEval1
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE LobattoLaplacianEval2
+! REAL(DFP) :: p(SIZE(x)), avar, m
+!   !!
+! SELECT CASE (n)
+! CASE (0)
+!   ans = -0.5_DFP
+! CASE (1)
+!   ans = 0.5_DFP
+! CASE DEFAULT
+!   !!
+!   p = LegendreEval(n=n - 1_I4B, x=x)
+!   m = REAL(n - 2, DFP)
+!   avar = SQRT((2.0_DFP * m + 3.0) / 2.0)
+!   ans = avar * p
+! END SELECT
+END PROCEDURE LobattoLaplacianEval2
 
 END SUBMODULE Methods

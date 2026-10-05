@@ -17,10 +17,9 @@
 
 MODULE Chebyshev1PolynomialUtility
 USE GlobalData, ONLY: DFP, I4B, LGT
-
 USE BaseType, ONLY: iface_1DFunction
-
 IMPLICIT NONE
+PRIVATE
 
 PUBLIC :: Chebyshev1Alpha
 PUBLIC :: Chebyshev1Beta
@@ -41,11 +40,15 @@ PUBLIC :: Chebyshev1Zeros
 PUBLIC :: Chebyshev1Quadrature
 PUBLIC :: Chebyshev1Eval
 PUBLIC :: Chebyshev1EvalAll
+PUBLIC :: Chebyshev1EvalAll_
 PUBLIC :: Chebyshev1MonomialExpansionAll
 PUBLIC :: Chebyshev1MonomialExpansion
 PUBLIC :: Chebyshev1GradientEvalAll
 PUBLIC :: Chebyshev1GradientEvalAll_
 PUBLIC :: Chebyshev1GradientEval
+PUBLIC :: Chebyshev1LaplacianEvalAll
+PUBLIC :: Chebyshev1LaplacianEvalAll_
+PUBLIC :: Chebyshev1LaplacianEval
 PUBLIC :: Chebyshev1EvalSum
 PUBLIC :: Chebyshev1GradientEvalSum
 PUBLIC :: Chebyshev1Transform
@@ -1156,5 +1159,117 @@ INTERFACE Chebyshev1DMatEvenOdd
       !! odd decomposition, 0:n/2, 0:n/2
   END SUBROUTINE Chebyshev1DMatEvenOdd1
 END INTERFACE Chebyshev1DMatEvenOdd
+
+!----------------------------------------------------------------------------
+!                                                 Chebyshev1LaplacianEvalAll
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 8 Sept 2022
+! summary: Evaluate Laplacian of Chebyshev1 polynomial of order upto n
+!
+!# Chebyshev1LaplacianEvalAll
+!
+! Evaluate Laplacian of Chebyshev1 polynomial of order upto n.
+
+INTERFACE Chebyshev1LaplacianEvalAll
+  MODULE PURE FUNCTION Chebyshev1LaplacianEvalAll1(n, x) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: n
+    REAL(DFP), INTENT(IN) :: x
+    REAL(DFP) :: ans(1:n + 1)
+  END FUNCTION Chebyshev1LaplacianEvalAll1
+END INTERFACE Chebyshev1LaplacianEvalAll
+
+!----------------------------------------------------------------------------
+!                                                 Chebyshev1LaplacianEvalAll_
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2026-09-17
+! summary: Laplacian of Chebyshev1 polynomials
+
+INTERFACE Chebyshev1LaplacianEvalAll_
+  MODULE PURE SUBROUTINE Chebyshev1LaplacianEvalAll1_(n, x, ans, tsize)
+    INTEGER(I4B), INTENT(IN) :: n
+    REAL(DFP), INTENT(IN) :: x
+    REAL(DFP), INTENT(INOUT) :: ans(:)
+    INTEGER(I4B), INTENT(OUT) :: tsize
+    !! ans(1:n + 1)
+  END SUBROUTINE Chebyshev1LaplacianEvalAll1_
+END INTERFACE Chebyshev1LaplacianEvalAll_
+
+!----------------------------------------------------------------------------
+!                                                 Chebyshev1LaplacianEvalAll
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 8 Sept 2022
+! summary: Evaluate Laplacian of Chebyshev1 polynomial of order upto n
+!
+!# Chebyshev1LaplacianEvalAll
+!
+! Evaluate Laplacian of Chebyshev1 polynomial of order upto n.
+
+INTERFACE Chebyshev1LaplacianEvalAll
+  MODULE PURE FUNCTION Chebyshev1LaplacianEvalAll2(n, x) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: n
+    REAL(DFP), INTENT(IN) :: x(:)
+    REAL(DFP) :: ans(1:SIZE(x), 1:n + 1)
+  END FUNCTION Chebyshev1LaplacianEvalAll2
+END INTERFACE Chebyshev1LaplacianEvalAll
+
+!----------------------------------------------------------------------------
+!                                                Chebyshev1LaplacianEvalAll_
+!----------------------------------------------------------------------------
+
+INTERFACE Chebyshev1LaplacianEvalAll_
+  MODULE PURE SUBROUTINE Chebyshev1LaplacianEvalAll2_(n, x, ans, nrow, ncol)
+    INTEGER(I4B), INTENT(IN) :: n
+    REAL(DFP), INTENT(IN) :: x(:)
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    !! ans(1:SIZE(x), 1:n + 1)
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+  END SUBROUTINE Chebyshev1LaplacianEvalAll2_
+END INTERFACE Chebyshev1LaplacianEvalAll_
+
+!----------------------------------------------------------------------------
+!                                                    Chebyshev1LaplacianEval
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 8 Sept 2022
+! summary:         Evaluate Laplacian of Chebyshev1 polynomial of order upto n
+!
+!# Chebyshev1LaplacianEval
+!
+! Evaluate Laplacian of Chebyshev1 polynomial of order upto n.
+
+INTERFACE Chebyshev1LaplacianEval
+  MODULE PURE FUNCTION Chebyshev1LaplacianEval1(n, x) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: n
+    REAL(DFP), INTENT(IN) :: x
+    REAL(DFP) :: ans
+  END FUNCTION Chebyshev1LaplacianEval1
+END INTERFACE Chebyshev1LaplacianEval
+
+!----------------------------------------------------------------------------
+!                                                     Chebyshev1LaplacianEval
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 8 Sept 2022
+! summary: Evaluate Laplacian of Chebyshev1 polynomial of order upto n
+!
+!# Chebyshev1LaplacianEval
+!
+! Evaluate Laplacian of Chebyshev1 polynomial of order upto n.
+
+INTERFACE Chebyshev1LaplacianEval
+  MODULE PURE FUNCTION Chebyshev1LaplacianEval2(n, x) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: n
+    REAL(DFP), INTENT(IN) :: x(:)
+    REAL(DFP) :: ans(1:SIZE(x))
+  END FUNCTION Chebyshev1LaplacianEval2
+END INTERFACE Chebyshev1LaplacianEval
 
 END MODULE Chebyshev1PolynomialUtility

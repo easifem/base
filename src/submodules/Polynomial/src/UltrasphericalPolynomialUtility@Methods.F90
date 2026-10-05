@@ -16,20 +16,15 @@
 !
 
 SUBMODULE(UltrasphericalPolynomialUtility) Methods
+USE BaseType, ONLY: qp => TypeQuadratureOpt
+USE BaseType, ONLY: math => TypeMathOpt
+USE GlobalData, ONLY: pi
 USE OrthogonalPolynomialUtility, ONLY: JacobiMatrix
-
 #ifdef USE_LAPACK95
 USE F95_Lapack, ONLY: STEV
 #endif
-
 USE ErrorHandling, ONLY: ErrorMsg
-
 USE MiscUtility, ONLY: Factorial
-
-USE BaseType, ONLY: qp => TypeQuadratureOpt
-
-USE GlobalData, ONLY: pi
-
 USE JacobiPolynomialUtility, ONLY: JacobiGaussQuadrature, &
                                    JacobiGaussRadauQuadrature, &
                                    JacobiGaussLobattoQuadrature, &
@@ -113,8 +108,8 @@ B = 0.0_DFP
 !!
 DO ii = 1, n
   j = REAL(ii, KIND=DFP)
-  A(ii - 1) = 2 * (j + lambda - 1) / j; 
-  C(ii - 1) = (j + 2 * lambda - 2) / j; 
+  A(ii - 1) = 2 * (j + lambda - 1) / j
+  C(ii - 1) = (j + 2 * lambda - 2) / j
 END DO
 !!
 END PROCEDURE GetUltrasphericalRecurrenceCoeff2
@@ -287,7 +282,8 @@ CASE (qp%GaussRadau, qp%GaussRadauLeft)
     ALLOCATE (p(n + 1), w(n + 1))
     CALL UltrasphericalGaussRadauQuadrature(a=left, lambda=lambda, &
       & n=order, pt=p, wt=w)
-    pt = p(2:); wt = w(2:)
+    pt = p(2:)
+    wt = w(2:)
     DEALLOCATE (p, w)
   ELSE
     order = n - 1
@@ -302,7 +298,8 @@ CASE (qp%GaussRadauRight)
     ALLOCATE (p(n + 1), w(n + 1))
     CALL UltrasphericalGaussRadauQuadrature(a=right, lambda=lambda, &
       & n=order, pt=p, wt=w)
-    pt = p(1:n); wt = w(1:n)
+    pt = p(1:n)
+    wt = w(1:n)
   ELSE
     order = n - 1
     CALL UltrasphericalGaussRadauQuadrature(a=right, lambda=lambda, &
@@ -316,12 +313,15 @@ CASE (qp%GaussLobatto)
     ALLOCATE (p(n + 2), w(n + 2))
     CALL UltrasphericalGaussLobattoQuadrature(n=order, lambda=lambda, &
       & pt=p, wt=w)
-    pt = p(2:n + 1); wt = w(2:n + 1)
+    pt = p(2:n + 1)
+    wt = w(2:n + 1)
   ELSE
     order = n - 2
     CALL UltrasphericalGaussLobattoQuadrature(n=order, lambda=lambda, &
       & pt=pt, wt=wt)
   END IF
+
+CASE DEFAULT
 END SELECT
 END PROCEDURE UltrasphericalQuadrature
 
@@ -455,7 +455,8 @@ MODULE PROCEDURE UltrasphericalEvalAll2_
 INTEGER(I4B) :: ii, jj
 REAL(DFP) :: c1, c2, c3, r_ii
 
-nrow = 0; ncol = 0
+nrow = 0
+ncol = 0
 IF (n < 0) RETURN
 
 ! FIXME: What is this?
@@ -549,7 +550,8 @@ INTEGER(I4B) :: ii
 REAL(DFP) :: r_ii
 REAL(DFP) :: p(1:SIZE(x), 1:n + 1)
 
-nrow = 0; ncol = 0
+nrow = 0
+ncol = 0
 IF (n < 0) RETURN
 
 nrow = SIZE(x)
@@ -692,7 +694,7 @@ b1 = 0.0_DFP
 b2 = 0.0_DFP
 
 DO j = n, 0, -1
-  t = (A(j) * x) * b1 - C(j + 1) * b2 + coeff(j); 
+  t = (A(j) * x) * b1 - C(j + 1) * b2 + coeff(j)
   b2 = b1
   b1 = t
 END DO
@@ -720,7 +722,7 @@ b1 = 0.0_DFP
 b2 = 0.0_DFP
 
 DO j = n, 0, -1
-  t = (A(j) * x) * b1 - C(j + 1) * b2 + coeff(j); 
+  t = (A(j) * x) * b1 - C(j + 1) * b2 + coeff(j)
   b2 = b1
   b1 = t
 END DO
@@ -744,7 +746,7 @@ REAL(DFP) :: c
 ! IF (lambda .LE. -0.5_DFP) RETURN
 ! IF (lambda .EQ. 0.0_DFP) RETURN
 
-c = 2 * lambda; 
+c = 2 * lambda
 b1 = 0
 b2 = 0
 
@@ -774,7 +776,7 @@ REAL(DFP) :: c
 ! IF (lambda .LE. -0.5_DFP) RETURN
 ! IF (lambda .EQ. 0.0_DFP) RETURN
 
-c = 2 * lambda; 
+c = 2 * lambda
 b1 = 0
 b2 = 0
 
@@ -805,7 +807,7 @@ REAL(DFP) :: j
 
 s = 1.0_DFP
 DO i = 1, k
-  s = 2 * s * (lambda + i - 1); 
+  s = 2 * s * (lambda + i - 1)
 END DO
 
 b1 = 0
@@ -813,11 +815,11 @@ b2 = 0
 
 DO i = n - k, 0, -1
   j = REAL(i, KIND=DFP)
-  A1 = 2 * (j + k + lambda) * x / (j + 1); 
-  A2 = -(j + 2 * lambda + 2 * k) / (j + 2); 
-  t = A1 * b1 + A2 * b2 + coeff(i + k); 
-  b2 = b1; 
-  b1 = t; 
+  A1 = 2 * (j + k + lambda) * x / (j + 1)
+  A2 = -(j + 2 * lambda + 2 * k) / (j + 2)
+  t = A1 * b1 + A2 * b2 + coeff(i + k)
+  b2 = b1
+  b1 = t
 END DO
 ans = s * b1
 END PROCEDURE UltrasphericalGradientEvalSum3
@@ -838,7 +840,7 @@ REAL(DFP) :: j
 
 s = 1.0_DFP
 DO i = 1, k
-  s = 2 * s * (lambda + i - 1); 
+  s = 2 * s * (lambda + i - 1)
 END DO
 
 b1 = 0
@@ -846,11 +848,11 @@ b2 = 0
 
 DO i = n - k, 0, -1
   j = REAL(i, KIND=DFP)
-  A1 = 2 * (j + k + lambda) * x / (j + 1); 
-  A2 = -(j + 2 * lambda + 2 * k) / (j + 2); 
-  t = A1 * b1 + A2 * b2 + coeff(i + k); 
-  b2 = b1; 
-  b1 = t; 
+  A1 = 2 * (j + k + lambda) * x / (j + 1)
+  A2 = -(j + 2 * lambda + 2 * k) / (j + 2)
+  t = A1 * b1 + A2 * b2 + coeff(i + k)
+  b2 = b1
+  b1 = t
 END DO
 ans = s * b1
 END PROCEDURE UltrasphericalGradientEvalSum4
@@ -1013,17 +1015,17 @@ REAL(DFP) :: a, b, c
 INTEGER(I4B) :: ii
 REAL(DFP) :: jj
 !!
-ans(n) = 0.0_DFP
+ans(n) = math%zero
 IF (n .EQ. 0) RETURN
 !!
-ans(n - 1) = 2.0 * (n + lambda - 1.0_DFP) * coeff(n)
+ans(n - 1) = math%two * (n + lambda - math%one) * coeff(n)
 !!
 DO ii = n - 1, 1, -1
   jj = REAL(ii, KIND=DFP)
-  a = jj + lambda - 1.0_DFP
-  b = jj + lambda + 1.0_DFP
+  a = jj + lambda - math%one
+  b = jj + lambda + math%one
   c = a / b
-  ans(ii - 1) = 2.0_DFP * a * coeff(ii) + c * ans(ii + 1)
+  ans(ii - 1) = math%two * a * coeff(ii) + c * ans(ii + 1)
 END DO
 !!
 END PROCEDURE UltrasphericalGradientCoeff1
@@ -1038,6 +1040,7 @@ CASE (qp%GaussLobatto)
   CALL UltrasphericalDMatrixGL2(n=n, lambda=lambda, x=x, D=ans)
 CASE (qp%Gauss)
   CALL UltrasphericalDMatrixG2(n=n, lambda=lambda, x=x, D=ans)
+CASE DEFAULT
 END SELECT
 END PROCEDURE UltrasphericalDMatrix1
 
@@ -1068,16 +1071,16 @@ PURE SUBROUTINE UltrasphericalDMatrixGL(n, lambda, x, D)
   !!
   !! first col
   !!
-  D(0, 0) = (lambda - 0.5_DFP - rn * (rn + 2.0 * lambda)) / &
-    & (2.0 * lambda + 3.0)
+  D(0, 0) = (lambda - 0.5_DFP - rn * (rn + math%two * lambda)) / &
+    & (2.0_DFP * lambda + 3.0_DFP)
   DO ii = 1, n
-    D(ii, 0) = (lambda + 0.5) * J(ii) / (x(ii) + 1.0) / J(0)
+    D(ii, 0) = (lambda + 0.5_DFP) * J(ii) / (x(ii) + 1.0_DFP) / J(0)
   END DO
   !!
   !! last col
   !!
   DO ii = 0, n - 1
-    D(ii, n) = (lambda + 0.5) * J(ii) / (x(ii) - 1.0) / J(n)
+    D(ii, n) = (lambda + 0.5_DFP) * J(ii) / (x(ii) - 1.0_DFP) / J(n)
   END DO
   D(n, n) = -D(0, 0)
   !!
@@ -1086,7 +1089,7 @@ PURE SUBROUTINE UltrasphericalDMatrixGL(n, lambda, x, D)
   DO jj = 1, n - 1
     DO ii = 0, n
       IF (ii .EQ. jj) THEN
-        D(ii, ii) = (lambda - 0.5) * x(ii) / (1.0 - x(ii)**2)
+        D(ii, ii) = (lambda - 0.5_DFP) * x(ii) / (1.0_DFP - x(ii)**2)
       ELSE
         D(ii, jj) = J(ii) / J(jj) / (x(ii) - x(jj))
       END IF
@@ -1126,24 +1129,22 @@ PURE SUBROUTINE UltrasphericalDMatrixGL2(n, lambda, x, D)
   !D(0, 0) = (lambda - 0.5_DFP - rn * (rn + 2.0 * lambda)) / &
   !  & (2.0 * lambda + 3.0)
   DO ii = 1, nb2
-    D(ii, 0) = (lambda + 0.5) * J(ii) / (x(ii) + 1.0) / J(0)
+    D(ii, 0) = (lambda + 0.5_DFP) * J(ii) / (x(ii) + 1.0_DFP) / J(0)
   END DO
   !!
   !! last col
   !!
   DO ii = 0, nb2
-    D(ii, n) = (lambda + 0.5) * J(ii) / (x(ii) - 1.0) / J(n)
+    D(ii, n) = (lambda + 0.5_DFP) * J(ii) / (x(ii) - 1.0_DFP) / J(n)
   END DO
   !!
   !! internal column
   !!
   DO jj = 1, n - 1
     DO ii = 0, nb2
-      IF (ii .NE. jj) & !THEN
-        & D(ii, jj) = J(ii) / J(jj) / (x(ii) - x(jj))
-      ! ELSE
-      ! D(ii, ii) = (lambda - 0.5) * x(ii) / (1.0 - x(ii)**2)
-      !END IF
+      IF (ii .NE. jj) THEN
+        D(ii, jj) = J(ii) / J(jj) / (x(ii) - x(jj))
+      END IF
     END DO
   END DO
   !!
@@ -1189,7 +1190,7 @@ PURE SUBROUTINE UltrasphericalDMatrixG(n, lambda, x, D)
   DO jj = 0, n
     DO ii = 0, n
       IF (ii .EQ. jj) THEN
-        D(ii, ii) = (lambda + 0.5_DFP) * x(ii) / (1.0 - x(ii)**2)
+        D(ii, ii) = (lambda + 0.5_DFP) * x(ii) / (1.0_DFP - x(ii)**2)
       ELSE
         D(ii, jj) = J(ii) / J(jj) / (x(ii) - x(jj))
       END IF
@@ -1225,8 +1226,9 @@ PURE SUBROUTINE UltrasphericalDMatrixG2(n, lambda, x, D)
   !!
   DO jj = 0, n
     DO ii = 0, nb2
-      IF (ii .NE. jj) &
-        & D(ii, jj) = J(ii) / J(jj) / (x(ii) - x(jj))
+      IF (ii .NE. jj) THEN
+        D(ii, jj) = J(ii) / J(jj) / (x(ii) - x(jj))
+      END IF
     END DO
   END DO
   !!
@@ -1283,6 +1285,193 @@ ELSE
     !!
 END IF
 END PROCEDURE UltrasphericalDMatEvenOdd1
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE UltrasphericalLaplacianEvalAll1
+INTEGER(I4B) :: tsize
+CALL UltrasphericalLaplacianEvalAll1_(n=n, lambda=lambda, x=x, ans=ans, &
+                                      tsize=tsize)
+END PROCEDURE UltrasphericalLaplacianEvalAll1
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE UltrasphericalLaplacianEvalAll2
+INTEGER(I4B) :: nrow, ncol
+CALL UltrasphericalLaplacianEvalAll2_(n=n, lambda=lambda, x=x, ans=ans, &
+                                      nrow=nrow, ncol=ncol)
+END PROCEDURE UltrasphericalLaplacianEvalAll2
+
+!----------------------------------------------------------------------------
+!                                            UltrasphericalLaplacianEvalAll_
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE UltrasphericalLaplacianEvalAll1_
+! INTEGER(I4B) :: ii
+! REAL(DFP) :: r_ii
+! REAL(DFP) :: p(1:n + 1)
+
+! tsize = 0
+! IF (n < 0) RETURN
+
+! tsize = n + 1
+! p(1) = 1.0_DFP
+! ans(1) = 0.0_DFP
+
+! IF (n < 1) RETURN
+
+! p(2) = 2.0_DFP * lambda * x
+! ans(2) = 2.0_DFP * lambda
+
+! DO ii = 2, n
+
+!   r_ii = REAL(ii, KIND=DFP)
+
+!   p(ii + 1) = ((r_ii + lambda - 1.0_DFP) * 2.0_DFP * x * p(ii) &
+!               & - (2.0_DFP * lambda + r_ii - 2.0_DFP) * p(ii - 1)) &
+!               & / r_ii
+
+!   ans(ii + 1) = 2.0_DFP * (r_ii + lambda - 1.0_DFP) * p(ii) + ans(ii - 1)
+
+! END DO
+
+END PROCEDURE UltrasphericalLaplacianEvalAll1_
+
+!----------------------------------------------------------------------------
+!                                            UltrasphericalLaplacianEvalAll_
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE UltrasphericalLaplacianEvalAll2_
+! INTEGER(I4B) :: ii
+! REAL(DFP) :: r_ii
+! REAL(DFP) :: p(1:SIZE(x), 1:n + 1)
+
+! nrow = 0; ncol = 0
+! IF (n < 0) RETURN
+
+! nrow = SIZE(x)
+! ncol = n + 1
+
+! p(1:nrow, 1) = 1.0_DFP
+! ans(1:nrow, 1) = 0.0_DFP
+
+! IF (n < 1) RETURN
+
+! p(1:nrow, 2) = 2.0_DFP * lambda * x
+! ans(1:nrow, 2) = 2.0_DFP * lambda
+
+! DO ii = 2, n
+
+!   r_ii = REAL(ii, KIND=DFP)
+
+! p(1:nrow, ii + 1) = ((r_ii + lambda - 1.0_DFP) * 2.0_DFP * x * p(1:nrow, ii) &
+!                 & - (2.0_DFP * lambda + r_ii - 2.0_DFP) * p(1:nrow, ii - 1)) &
+!                                                                       & / r_ii
+
+!   ans(1:nrow, ii + 1) = 2.0_DFP * (r_ii + lambda - 1.0_DFP) * p(1:nrow, ii) &
+!                   & + ans(1:nrow, ii - 1)
+
+! END DO
+
+END PROCEDURE UltrasphericalLaplacianEvalAll2_
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE UltrasphericalLaplacianEval1
+
+! INTEGER(I4B) :: ii
+! REAL(DFP) :: r_ii
+! REAL(DFP) :: p, p_1, p_2
+! REAL(DFP) :: ans_1, ans_2
+
+! ans = 0.0_DFP
+
+! IF (n < 0) THEN
+!   RETURN
+! END IF
+
+! p = 1.0_DFP
+! p_2 = p
+! ans_2 = ans
+
+! IF (n < 1) THEN
+!   RETURN
+! END IF
+
+! p = 2.0_DFP * lambda * x
+! ans = 2.0_DFP * lambda
+
+! DO ii = 2, n
+
+!   r_ii = REAL(ii, KIND=DFP)
+
+!   p_1 = p
+
+!   p = ((r_ii + lambda - 1.0_DFP) * 2.0_DFP * x * p &
+!               & - (2.0_DFP * lambda + r_ii - 2.0_DFP) * p_2) &
+!               & / r_ii
+
+!   p_2 = p_1
+
+!   ans_1 = ans
+!   ans = 2.0_DFP * (r_ii + lambda - 1.0_DFP) * p_1 + ans_2
+!   ans_2 = ans_1
+
+! END DO
+END PROCEDURE UltrasphericalLaplacianEval1
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE UltrasphericalLaplacianEval2
+! !!
+! INTEGER(I4B) :: ii
+! REAL(DFP) :: r_ii
+! REAL(DFP), DIMENSION(SIZE(x)) :: p, p_1, p_2
+! REAL(DFP), DIMENSION(SIZE(x)) :: ans_1, ans_2
+! !!
+! IF (n < 0) THEN
+!   RETURN
+! END IF
+! !!
+! p = 1.0_DFP
+! ans = 0.0_DFP
+! p_2 = p
+! ans_2 = ans
+! !!
+! IF (n < 1) THEN
+!   RETURN
+! END IF
+! !!
+! p = 2.0_DFP * lambda * x
+! ans = 2.0_DFP * lambda
+! !!
+! DO ii = 2, n
+!   !!
+!   r_ii = REAL(ii, KIND=DFP)
+!   !!
+!   p_1 = p
+!   !!
+!   p = ((r_ii + lambda - 1.0_DFP) * 2.0_DFP * x * p &
+!               & - (2.0_DFP * lambda + r_ii - 2.0_DFP) * p_2) &
+!               & / r_ii
+!   !!
+!   p_2 = p_1
+!   !!
+!   ans_1 = ans
+!   ans = 2.0_DFP * (r_ii + lambda - 1.0_DFP) * p_1 + ans_2
+!   ans_2 = ans_1
+!   !!
+! END DO
+! !!
+END PROCEDURE UltrasphericalLaplacianEval2
 
 !----------------------------------------------------------------------------
 !

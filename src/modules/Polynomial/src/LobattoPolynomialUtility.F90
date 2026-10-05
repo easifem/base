@@ -23,11 +23,8 @@
 
 MODULE LobattoPolynomialUtility
 USE GlobalData, ONLY: I4B, DFP, LGT
-
 USE BaseType, ONLY: iface_1DFunction
-
 IMPLICIT NONE
-
 PRIVATE
 
 PUBLIC :: LobattoLeadingCoeff
@@ -44,8 +41,12 @@ PUBLIC :: LobattoMonomialExpansion
 
 PUBLIC :: LobattoGradientEvalAll
 PUBLIC :: LobattoGradientEvalAll_
-
 PUBLIC :: LobattoGradientEval
+
+PUBLIC :: LobattoLaplacianEvalAll
+PUBLIC :: LobattoLaplacianEvalAll_
+PUBLIC :: LobattoLaplacianEval
+
 PUBLIC :: LobattoMassMatrix
 PUBLIC :: LobattoStiffnessMatrix
 
@@ -757,6 +758,115 @@ INTERFACE
     REAL(DFP) :: ans
   END FUNCTION Lobatto10
 END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                    LobattoLaplacianEvalAll
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 8 Sept 2022
+! summary: Evaluate Laplacian of Lobatto polynomial of order upto n
+!
+!# LobattoLaplacianEvalAll
+!
+! Evaluate Laplacian of Lobatto polynomial of order upto n.
+
+INTERFACE LobattoLaplacianEvalAll
+  MODULE PURE FUNCTION LobattoLaplacianEvalAll1(n, x) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: n
+    REAL(DFP), INTENT(IN) :: x
+    REAL(DFP) :: ans(1:n + 1)
+  END FUNCTION LobattoLaplacianEvalAll1
+END INTERFACE LobattoLaplacianEvalAll
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE LobattoLaplacianEvalAll_
+  MODULE PURE SUBROUTINE LobattoLaplacianEvalAll1_(n, x, ans, tsize)
+    INTEGER(I4B), INTENT(IN) :: n
+    REAL(DFP), INTENT(IN) :: x
+    REAL(DFP), INTENT(INOUT) :: ans(:)
+    !! ans(1:n + 1)
+    INTEGER(I4B), INTENT(OUT) :: tsize
+  END SUBROUTINE LobattoLaplacianEvalAll1_
+END INTERFACE LobattoLaplacianEvalAll_
+
+!----------------------------------------------------------------------------
+!                                                    LobattoLaplacianEvalAll
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 8 Sept 2022
+! summary:         Evaluate Laplacian of Lobatto polynomial of order upto n
+!
+!# LobattoLaplacianEvalAll
+!
+! Evaluate Laplacian of Lobatto polynomial of order upto n.
+
+INTERFACE LobattoLaplacianEvalAll
+  MODULE PURE FUNCTION LobattoLaplacianEvalAll2(n, x) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: n
+    REAL(DFP), INTENT(IN) :: x(:)
+    REAL(DFP) :: ans(1:SIZE(x), 1:n + 1)
+  END FUNCTION LobattoLaplacianEvalAll2
+END INTERFACE LobattoLaplacianEvalAll
+
+!----------------------------------------------------------------------------
+!                                                    LobattoLaplacianEvalAll_
+!----------------------------------------------------------------------------
+
+INTERFACE LobattoLaplacianEvalAll_
+  MODULE PURE SUBROUTINE LobattoLaplacianEvalAll2_(n, x, ans, nrow, ncol)
+    INTEGER(I4B), INTENT(IN) :: n
+    REAL(DFP), INTENT(IN) :: x(:)
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+    ! ans(1:SIZE(x), 1:n + 1)
+  END SUBROUTINE LobattoLaplacianEvalAll2_
+END INTERFACE LobattoLaplacianEvalAll_
+
+!----------------------------------------------------------------------------
+!                                                       LobattoLaplacianEval
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 8 Sept 2022
+! summary:         Evaluate Laplacian of Lobatto polynomial of order upto n
+!
+!# Introduction
+!
+! Evaluate Laplacian of Lobatto polynomial of order upto n.
+
+INTERFACE LobattoLaplacianEval
+  MODULE PURE FUNCTION LobattoLaplacianEval1(n, x) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: n
+    REAL(DFP), INTENT(IN) :: x
+    REAL(DFP) :: ans
+  END FUNCTION LobattoLaplacianEval1
+END INTERFACE LobattoLaplacianEval
+!!
+
+!----------------------------------------------------------------------------
+!                                                       LobattoLaplacianEval
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 8 Sept 2022
+! summary:         Evaluate Laplacian of Lobatto polynomial of order upto n
+!
+!# LobattoLaplacianEval
+!
+! Evaluate Laplacian of Lobatto polynomial of order upto n.
+
+INTERFACE LobattoLaplacianEval
+  MODULE PURE FUNCTION LobattoLaplacianEval2(n, x) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: n
+    REAL(DFP), INTENT(IN) :: x(:)
+    REAL(DFP) :: ans(1:SIZE(x))
+  END FUNCTION LobattoLaplacianEval2
+END INTERFACE LobattoLaplacianEval
 
 !----------------------------------------------------------------------------
 !

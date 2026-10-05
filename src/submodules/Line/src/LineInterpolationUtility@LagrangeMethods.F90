@@ -16,13 +16,19 @@
 !
 
 SUBMODULE(LineInterpolationUtility) LagrangeMethods
-USE BaseType, ONLY: polyopt => TypePolynomialOpt, elmopt => TypeElemNameOpt
-USE Display_Method, ONLY: ToString, Display
+USE BaseType, ONLY: polyopt => TypePolynomialOpt
+USE BaseType, ONLY: elmopt => TypeElemNameOpt
+USE BaseType, ONLY: math => TypeMathOpt
+USE Display_Method, ONLY: ToString
+USE Display_Method, ONLY: Display
 USE InputUtility, ONLY: Input
-USE Lapack_Method, ONLY: GetLU, LUSolve, GetInvMat
+USE Lapack_Method, ONLY: GetLU
+USE Lapack_Method, ONLY: LUSolve
+USE Lapack_Method, ONLY: GetInvMat
 USE F95_BLAS, ONLY: GEMM
-USE OrthogonalPolynomialUtility, ONLY: GradientEvalAllOrthopol_, &
-                                       EvalAllOrthopol_
+USE OrthogonalPolynomialUtility, ONLY: GradientEvalAllOrthopol_
+USE OrthogonalPolynomialUtility, ONLY: LaplacianEvalAllOrthopol_
+USE OrthogonalPolynomialUtility, ONLY: EvalAllOrthopol_
 USE LagrangePolynomialUtility, ONLY: LagrangeVandermonde_
 
 IMPLICIT NONE
@@ -384,7 +390,7 @@ CALL LagrangeGradientEvalAll_Line_( &
 END PROCEDURE LagrangeGradientEvalAll_Line1
 
 !----------------------------------------------------------------------------
-!
+!                                              LagrangeGradientEvalAll_Line_
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE LagrangeGradientEvalAll_Line1_
@@ -414,7 +420,7 @@ END IF
 END PROCEDURE LagrangeGradientEvalAll_Line1_
 
 !----------------------------------------------------------------------------
-!
+!                                              LagrangeGradientEvalAll_Line_
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE LagrangeGradientEvalAll_Line2_
@@ -447,6 +453,74 @@ CALL GradientEvalAllOrthopol_( &
 CALL GEMM(C=ans(1:dim1, 1:dim2, 1), alpha=1.0_DFP, A=xx(1:dim1, 1:dim2), &
           B=coeff(1:indx(1), 1:indx(2)))
 END PROCEDURE LagrangeGradientEvalAll_Line2_
+
+!----------------------------------------------------------------------------
+!                                              LagrangeLaplacianEvalAll_Line
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE LagrangeLaplacianEvalAll_Line1
+INTEGER(I4B) :: nrow, ncol
+CALL LagrangeLaplacianEvalAll_Line_( &
+  order=order, x=x, xij=xij, ans=ans, nrow=nrow, ncol=ncol, &
+  coeff=coeff, firstCall=firstCall, basisType=basisType, alpha=alpha, &
+  beta=beta, lambda=lambda)
+END PROCEDURE LagrangeLaplacianEvalAll_Line1
+
+!----------------------------------------------------------------------------
+!                                             LagrangeLaplacianEvalAll_Line_
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE LagrangeLaplacianEvalAll_Line1_
+LOGICAL(LGT) :: firstCall0, iscoeff
+REAL(DFP) :: coeff0(order + 1, order + 1), xx(SIZE(x, 2), order + 1)
+INTEGER(I4B) :: basisType0
+
+firstCall0 = Input(default=math%yes, option=firstCall)
+basisType0 = Input(default=polyopt%Monomial, option=basisType)
+iscoeff = PRESENT(coeff)
+
+IF (iscoeff) THEN
+  CALL LagrangeLaplacianEvalAll_Line_( &
+    order=order, x=x, xij=xij, ans=ans, nrow=nrow, ncol=ncol, &
+    coeff=coeff, xx=xx, firstCall=firstCall0, basisType=basisType0, &
+    alpha=alpha, beta=beta, lambda=lambda)
+
+ELSE
+  CALL LagrangeLaplacianEvalAll_Line_( &
+    order=order, x=x, xij=xij, ans=ans, nrow=nrow, ncol=ncol, &
+    coeff=coeff0, xx=xx, firstCall=firstCall0, basisType=basisType0, &
+    alpha=alpha, beta=beta, lambda=lambda)
+END IF
+END PROCEDURE LagrangeLaplacianEvalAll_Line1_
+
+!----------------------------------------------------------------------------
+!                                              LagrangeLaplacianEvalAll_Line_
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE LagrangeLaplacianEvalAll_Line2_
+INTEGER(I4B) :: indx(2), ii, jj
+
+nrow = SIZE(x, 2)
+!! nips
+ncol = SIZE(xij, 2)
+!! tdof
+
+indx(1) = ncol
+indx(2) = ncol
+
+IF (firstCall) THEN
+  CALL LagrangeCoeff_Line_( &
+    order=order, xij=xij, basisType=basisType, alpha=alpha, beta=beta, &
+    lambda=lambda, ans=coeff, nrow=indx(1), ncol=indx(2))
+END IF
+
+CALL LaplacianEvalAllOrthopol_( &
+  n=order, x=x(1, 1:nrow), orthopol=basisType, alpha=alpha, beta=beta, &
+  lambda=lambda, ans=xx, nrow=ii, ncol=jj)
+
+CALL GEMM(C=ans(1:nrow, 1:ncol), alpha=math%one, A=xx(1:nrow, 1:ncol), &
+          B=coeff(1:indx(1), 1:indx(2)))
+END PROCEDURE LagrangeLaplacianEvalAll_Line2_
 
 !----------------------------------------------------------------------------
 !                                                              Include error

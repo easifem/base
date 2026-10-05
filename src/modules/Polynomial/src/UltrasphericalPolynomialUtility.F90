@@ -23,9 +23,7 @@
 
 MODULE UltrasphericalPolynomialUtility
 USE GlobalData, ONLY: DFP, I4B, LGT
-
 USE BaseType, ONLY: iface_1DFunction
-
 IMPLICIT NONE
 
 PRIVATE
@@ -52,6 +50,9 @@ PUBLIC :: UltrasphericalEvalAll_
 PUBLIC :: UltrasphericalGradientEvalAll
 PUBLIC :: UltrasphericalGradientEvalAll_
 PUBLIC :: UltrasphericalGradientEval
+PUBLIC :: UltrasphericalLaplacianEvalAll
+PUBLIC :: UltrasphericalLaplacianEvalAll_
+PUBLIC :: UltrasphericalLaplacianEval
 PUBLIC :: UltrasphericalEvalSum
 PUBLIC :: UltrasphericalGradientEvalSum
 PUBLIC :: UltrasphericalTransform
@@ -257,9 +258,11 @@ INTERFACE
     REAL(DFP), INTENT(OUT) :: E(:)
     !! the size should be 1:n-1
     REAL(DFP), OPTIONAL, INTENT(OUT) :: alphaCoeff(0:)
-    !! recurrence coefficient of monic Ultraspherical polynomial, from 0 to n-1
+    !! recurrence coefficient of monic Ultraspherical polynomial,
+    !! from 0 to n-1
     REAL(DFP), OPTIONAL, INTENT(OUT) :: betaCoeff(0:)
-    !! recurrence coefficient of monic Ultraspherical polynomial, from 0 to n-1
+    !! recurrence coefficient of monic Ultraspherical polynomial,
+    !! from 0 to n-1
   END SUBROUTINE UltrasphericalJacobiMatrix
 END INTERFACE
 
@@ -1261,5 +1264,156 @@ END INTERFACE
 INTERFACE UltrasphericalDMatEvenOdd
   MODULE PROCEDURE UltrasphericalDMatEvenOdd1
 END INTERFACE UltrasphericalDMatEvenOdd
+
+!----------------------------------------------------------------------------
+!                                             UltrasphericalLaplacianEvalAll
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 8 Sept 2022
+! summary: Evaluate Laplacian of Ultraspherical polynomial of order upto n
+!
+!# UltrasphericalLaplacianEvalAll
+!
+! Evaluate Laplacian of Ultraspherical polynomial of order upto n.
+
+INTERFACE UltrasphericalLaplacianEvalAll
+  MODULE PURE FUNCTION UltrasphericalLaplacianEvalAll1(n, lambda, x) &
+    RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: n
+    !! order of polynomial
+    REAL(DFP), INTENT(IN) :: lambda
+    !! lambda should be greater than -0.5
+    REAL(DFP), INTENT(IN) :: x
+    REAL(DFP) :: ans(1:n + 1)
+  END FUNCTION UltrasphericalLaplacianEvalAll1
+END INTERFACE UltrasphericalLaplacianEvalAll
+
+!----------------------------------------------------------------------------
+!                                           UltrashphericalLaplacianEvalAll_
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 8 Sept 2022
+! summary: Evaluate Laplacian of Ultraspherical polynomial of order upto n
+!
+!# UltrashphericalLaplacianEvalAll_
+!
+! Evaluate Laplacian of Ultraspherical polynomial of order upto n.
+
+INTERFACE UltrasphericalLaplacianEvalAll_
+  MODULE PURE SUBROUTINE UltrasphericalLaplacianEvalAll1_(n, lambda, x, ans, &
+                                                          tsize)
+    INTEGER(I4B), INTENT(IN) :: n
+    !! order of polynomial
+    REAL(DFP), INTENT(IN) :: lambda
+    !! lambda should be greater than -0.5
+    REAL(DFP), INTENT(IN) :: x
+    REAL(DFP), INTENT(INOUT) :: ans(:)
+    !! 1:n+1
+    INTEGER(I4B), INTENT(OUT) :: tsize
+  END SUBROUTINE UltrasphericalLaplacianEvalAll1_
+END INTERFACE UltrasphericalLaplacianEvalAll_
+
+!----------------------------------------------------------------------------
+!                                             UltrasphericalLaplacianEvalAll
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 8 Sept 2022
+! summary: Evaluate Laplacian of Ultraspherical polynomial of order upto n
+!
+!# UltrasphericalLaplacianEvalAll
+!
+! Evaluate Laplacian of Ultraspherical polynomial of order upto n.
+
+INTERFACE UltrasphericalLaplacianEvalAll
+  MODULE PURE FUNCTION UltrasphericalLaplacianEvalAll2(n, lambda, x) &
+    RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: n
+    !! order of polynomial
+    REAL(DFP), INTENT(IN) :: lambda
+    !! lambda should be greater than -0.5
+    REAL(DFP), INTENT(IN) :: x(:)
+    REAL(DFP) :: ans(1:SIZE(x), 1:n + 1)
+  END FUNCTION UltrasphericalLaplacianEvalAll2
+END INTERFACE UltrasphericalLaplacianEvalAll
+
+!----------------------------------------------------------------------------
+!                                             UltraSphericalLaplacianEvalAll_
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 8 Sept 2022
+! summary: Evaluate Laplacian of Ultraspherical polynomial of order upto n
+!
+!# UltraSphericalLaplacianEvalAll_
+!
+! Evaluate Laplacian of Ultraspherical polynomial of order upto n.
+
+INTERFACE UltrasphericalLaplacianEvalAll_
+  MODULE PURE SUBROUTINE UltrasphericalLaplacianEvalAll2_(n, lambda, x, ans, &
+                                                          nrow, ncol)
+    INTEGER(I4B), INTENT(IN) :: n
+    !! order of polynomial
+    REAL(DFP), INTENT(IN) :: lambda
+    !! lambda should be greater than -0.5
+    REAL(DFP), INTENT(IN) :: x(:)
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    ! ans(1:SIZE(x), 1:n + 1)
+    INTEGER(I4B), INTENT(OUT) :: nrow
+    INTEGER(I4B), INTENT(OUT) :: ncol
+  END SUBROUTINE UltrasphericalLaplacianEvalAll2_
+END INTERFACE UltrasphericalLaplacianEvalAll_
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 8 Sept 2022
+! summary: Evaluate Laplacian of Ultraspherical polynomial of order upto n
+!
+!# UltrasphericalLaplacianEval
+!
+! Evaluate Laplacian of Ultraspherical polynomial of order upto n.
+
+INTERFACE UltrasphericalLaplacianEval
+  MODULE PURE FUNCTION UltrasphericalLaplacianEval1(n, lambda, x) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: n
+    !! order of polynomial
+    REAL(DFP), INTENT(IN) :: lambda
+    !! lambda should be greater than -0.5
+    REAL(DFP), INTENT(IN) :: x
+    REAL(DFP) :: ans
+  END FUNCTION UltrasphericalLaplacianEval1
+END INTERFACE UltrasphericalLaplacianEval
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 8 Sept 2022
+! summary: Evaluate Laplacian of Ultraspherical polynomial of order upto n
+!
+!# UltrasphericalLaplacianEval
+!
+! Evaluate Laplacian of Ultraspherical polynomial of order upto n.
+
+INTERFACE UltrasphericalLaplacianEval
+  MODULE PURE FUNCTION UltrasphericalLaplacianEval2(n, lambda, x) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: n
+    !! order of polynomial
+    REAL(DFP), INTENT(IN) :: lambda
+    !! lambda should be greater than -0.5
+    REAL(DFP), INTENT(IN) :: x(:)
+    REAL(DFP) :: ans(1:SIZE(x))
+  END FUNCTION UltrasphericalLaplacianEval2
+END INTERFACE UltrasphericalLaplacianEval
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
 
 END MODULE UltrasphericalPolynomialUtility

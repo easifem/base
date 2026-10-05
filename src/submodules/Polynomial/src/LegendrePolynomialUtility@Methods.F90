@@ -18,23 +18,15 @@
 SUBMODULE(LegendrePolynomialUtility) Methods
 USE UltrasphericalPolynomialUtility, ONLY: UltrasphericalDMatEvenOdd, &
                                            UltrasphericalGradientCoeff
-
 USE OrthogonalPolynomialUtility, ONLY: JacobiMatrix
-
 #ifdef USE_LAPACK95
 USE F95_Lapack, ONLY: STEV
 #endif
-
 USE JacobiPolynomialUtility, ONLY: JacobiZeros
-
 USE ErrorHandling, ONLY: ErrorMsg
-
 USE MiscUtility, ONLY: Factorial
-
 USE BaseType, ONLY: qp => TypeQuadratureOpt
-
 USE GlobalData, ONLY: stderr
-
 IMPLICIT NONE
 
 CONTAINS
@@ -120,7 +112,7 @@ END PROCEDURE LegendreLeadingCoeff
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE LegendreLeadingCoeffRatio
-ans = (2.0 * n + 1) / (n + 1.0_DFP)
+ans = (2.0_DFP * n + 1) / (n + 1.0_DFP)
 END PROCEDURE LegendreLeadingCoeffRatio
 
 !----------------------------------------------------------------------------
@@ -354,7 +346,8 @@ CASE (qp%GaussRadau, qp%GaussRadauLeft)
     order = n
     ALLOCATE (p(n + 1), w(n + 1))
     CALL LegendreGaussRadauQuadrature(a=left, n=order, pt=p, wt=w)
-    pt = p(2:); wt = w(2:)
+    pt = p(2:)
+    wt = w(2:)
     DEALLOCATE (p, w)
   ELSE
     order = n - 1
@@ -367,7 +360,8 @@ CASE (qp%GaussRadauRight)
     order = n
     ALLOCATE (p(n + 1), w(n + 1))
     CALL LegendreGaussRadauQuadrature(a=right, n=order, pt=p, wt=w)
-    pt = p(1:n); wt = w(1:n)
+    pt = p(1:n)
+    wt = w(1:n)
   ELSE
     order = n - 1
     CALL LegendreGaussRadauQuadrature(a=right, n=order, pt=pt, wt=wt)
@@ -379,11 +373,14 @@ CASE (qp%GaussLobatto)
     order = n
     ALLOCATE (p(n + 2), w(n + 2))
     CALL LegendreGaussLobattoQuadrature(n=order, pt=p, wt=w)
-    pt = p(2:n + 1); wt = w(2:n + 1)
+    pt = p(2:n + 1)
+    wt = w(2:n + 1)
   ELSE
     order = n - 2
     CALL LegendreGaussLobattoQuadrature(n=order, pt=pt, wt=wt)
   END IF
+
+CASE DEFAULT
 END SELECT
 END PROCEDURE LegendreQuadrature
 
@@ -523,7 +520,8 @@ MODULE PROCEDURE LegendreEvalAll2_
 INTEGER(I4B) :: i
 REAL(DFP) :: c1, c2, c3, r_i
 
-nrow = 0; ncol = 0
+nrow = 0
+ncol = 0
 IF (n < 0) RETURN
 
 nrow = SIZE(x)
@@ -575,10 +573,10 @@ DO ii = 2, n
   r_i = REAL(ii, KIND=DFP)
 
   ans(1:ii - 1, ii + 1) = &
-    & (-r_i + 1.0) * ans(1:ii - 1, ii - 1) / r_i
+    & (-r_i + 1.0_DFP) * ans(1:ii - 1, ii - 1) / r_i
 
   ans(2:ii + 1, ii + 1) = ans(2:ii + 1, ii + 1) &
-    & + (2.0 * r_i - 1.0) * ans(1:ii, ii) / r_i
+                          + (2.0_DFP * r_i - 1.0_DFP) * ans(1:ii, ii) / r_i
 
 END DO
 END PROCEDURE LegendreMonomialExpansionAll
@@ -655,7 +653,8 @@ INTEGER(I4B) :: ii
 REAL(DFP) :: r_ii
 REAL(DFP) :: p(1:SIZE(x), 1:n + 1)
 
-nrow = 0; ncol = 0
+nrow = 0
+ncol = 0
 
 IF (n < 0) RETURN
 
@@ -845,9 +844,9 @@ b2 = 0
 
 DO j = n - 1, 0, -1
   i = REAL(j, KIND=DFP)
-  t = (2 * i + 3) / (i + 1) * x * b1 - (i + 3) / (i + 2) * b2 + coeff(j + 1); 
-  b2 = b1; 
-  b1 = t; 
+  t = (2 * i + 3) / (i + 1) * x * b1 - (i + 3) / (i + 2) * b2 + coeff(j + 1)
+  b2 = b1
+  b1 = t
 END DO
 ans = b1
 END PROCEDURE LegendreGradientEvalSum1
@@ -868,9 +867,9 @@ b2 = 0
 
 DO j = n - 1, 0, -1
   i = REAL(j, KIND=DFP)
-  t = (2 * i + 3) / (i + 1) * x * b1 - (i + 3) / (i + 2) * b2 + coeff(j + 1); 
-  b2 = b1; 
-  b1 = t; 
+  t = (2 * i + 3) / (i + 1) * x * b1 - (i + 3) / (i + 2) * b2 + coeff(j + 1)
+  b2 = b1
+  b1 = t
 END DO
 ans = b1
 END PROCEDURE LegendreGradientEvalSum2
@@ -897,11 +896,11 @@ END DO
 
 DO j = n - k, 0, -1
   i = REAL(j, KIND=DFP)
-  A1 = (2 * i + 2 * k + 1) / (i + 1) * x; 
-  A2 = -(i + 2 * k + 1) / (i + 2); 
-  t = A1 * b1 + A2 * b2 + coeff(j + k); 
-  b2 = b1; 
-  b1 = t; 
+  A1 = (2 * i + 2 * k + 1) / (i + 1) * x
+  A2 = -(i + 2 * k + 1) / (i + 2)
+  t = A1 * b1 + A2 * b2 + coeff(j + k)
+  b2 = b1
+  b1 = t
 END DO
 ans = s * b1
 END PROCEDURE LegendreGradientEvalSum3
@@ -1065,6 +1064,7 @@ CASE (qp%GaussLobatto)
   CALL LegendreDMatrixGL2(n=n, x=x, D=ans)
 CASE (qp%Gauss)
   CALL LegendreDMatrixG2(n=n, x=x, D=ans)
+CASE DEFAULT
 END SELECT
 END PROCEDURE LegendreDMatrix1
 
@@ -1095,8 +1095,9 @@ PURE SUBROUTINE LegendreDMatrixGL(n, x, D)
 
   DO jj = 0, n
     DO ii = 0, n
-      IF (ii .NE. jj) &
-        & D(ii, jj) = J(ii) / J(jj) / (x(ii) - x(jj))
+      IF (ii .NE. jj) THEN
+        D(ii, jj) = J(ii) / J(jj) / (x(ii) - x(jj))
+      END IF
     END DO
   END DO
 
@@ -1128,8 +1129,9 @@ PURE SUBROUTINE LegendreDMatrixGL2(n, x, D)
 
   DO jj = 0, n
     DO ii = 0, nb2
-      IF (ii .NE. jj) &
-        & D(ii, jj) = J(ii) / J(jj) / (x(ii) - x(jj))
+      IF (ii .NE. jj) THEN
+        D(ii, jj) = J(ii) / J(jj) / (x(ii) - x(jj))
+      END IF
     END DO
   END DO
 
@@ -1173,7 +1175,7 @@ PURE SUBROUTINE LegendreDMatrixG(n, x, D)
   DO jj = 0, n
     DO ii = 0, n
       IF (ii .EQ. jj) THEN
-        D(ii, ii) = x(ii) / (1.0 - x(ii)**2)
+        D(ii, ii) = x(ii) / (1.0_DFP - x(ii)**2)
       ELSE
         D(ii, jj) = J(ii) / J(jj) / (x(ii) - x(jj))
       END IF
@@ -1206,8 +1208,9 @@ PURE SUBROUTINE LegendreDMatrixG2(n, x, D)
 
   DO jj = 0, n
     DO ii = 0, nb2
-      IF (ii .NE. jj) &
-      & D(ii, jj) = J(ii) / J(jj) / (x(ii) - x(jj))
+      IF (ii .NE. jj) THEN
+        D(ii, jj) = J(ii) / J(jj) / (x(ii) - x(jj))
+      END IF
     END DO
   END DO
 
@@ -1231,6 +1234,190 @@ END SUBROUTINE LegendreDMatrixG2
 MODULE PROCEDURE LegendreDMatEvenOdd1
 CALL UltrasphericalDMatEvenOdd(n=n, D=D, o=o, e=e)
 END PROCEDURE LegendreDMatEvenOdd1
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE LegendreLaplacianEvalAll1
+INTEGER(I4B) :: tsize
+CALL LegendreLaplacianEvalAll1_(n=n, x=x, ans=ans, tsize=tsize)
+END PROCEDURE LegendreLaplacianEvalAll1
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE LegendreLaplacianEvalAll1_
+! INTEGER(I4B) :: ii
+! REAL(DFP) :: r_ii
+! REAL(DFP) :: p(1:n + 1)
+
+! tsize = 0
+
+! IF (n < 0) RETURN
+
+! tsize = n + 1
+! p(1) = 1.0_DFP
+! ans(1) = 0.0_DFP
+
+! IF (n < 1) RETURN
+
+! p(2) = x
+! ans(2) = 1.0_DFP
+
+! DO ii = 2, n
+!   r_ii = REAL(ii, KIND=DFP)
+
+!   p(ii + 1) = ((2.0_DFP * r_ii - 1) * x * p(ii) &
+!               & - (r_ii - 1.0_DFP) * p(ii - 1)) &
+!               & / r_ii
+
+!   ans(ii + 1) = (2.0_DFP * r_ii - 1.0_DFP) * p(ii) + ans(ii - 1)
+
+! END DO
+
+END PROCEDURE LegendreLaplacianEvalAll1_
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE LegendreLaplacianEvalAll2
+INTEGER(I4B) :: nrow, ncol
+CALL LegendreLaplacianEvalAll2_(n=n, x=x, ans=ans, nrow=nrow, ncol=ncol)
+END PROCEDURE LegendreLaplacianEvalAll2
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE LegendreLaplacianEvalAll2_
+! INTEGER(I4B) :: ii
+! REAL(DFP) :: r_ii
+! REAL(DFP) :: p(1:SIZE(x), 1:n + 1)
+
+! nrow = 0; ncol = 0
+
+! IF (n < 0) RETURN
+
+! nrow = SIZE(x)
+! ncol = n + 1
+
+! p(1:nrow, 1) = 1.0_DFP
+! ans(1:nrow, 1) = 0.0_DFP
+
+! IF (n < 1) RETURN
+
+! p(1:nrow, 2) = x
+! ans(1:nrow, 2) = 1.0_DFP
+
+! DO ii = 2, n
+
+!   r_ii = REAL(ii, KIND=DFP)
+
+!   p(1:nrow, ii + 1) = ((2.0_DFP * r_ii - 1) * x * p(1:nrow, ii) &
+!                        - (r_ii - 1.0_DFP) * p(1:nrow, ii - 1)) &
+!                       / r_ii
+
+!   ans(1:nrow, ii + 1) = (2.0_DFP * r_ii - 1.0_DFP) * p(1:nrow, ii) &
+!                         + ans(1:nrow, ii - 1)
+
+! END DO
+
+END PROCEDURE LegendreLaplacianEvalAll2_
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE LegendreLaplacianEval1
+
+! INTEGER(I4B) :: ii
+! REAL(DFP) :: r_ii
+! REAL(DFP) :: p, p_1, p_2
+! REAL(DFP) :: ans_1, ans_2
+
+! IF (n < 0) THEN
+!   RETURN
+! END IF
+
+! p = 1.0_DFP
+! ans = 0.0_DFP
+! p_2 = p
+! ans_2 = ans
+
+! IF (n < 1) THEN
+!   RETURN
+! END IF
+
+! p = x
+! ans = 1.0_DFP
+
+! DO ii = 2, n
+
+!   r_ii = REAL(ii, KIND=DFP)
+
+!   p_1 = p
+
+!   p = ((2.0_DFP * r_ii - 1) * x * p &
+!               & - (r_ii - 1.0_DFP) * p_2) &
+!               & / r_ii
+
+!   p_2 = p_1
+
+!   ans_1 = ans
+!   ans = (2.0_DFP * r_ii - 1.0_DFP) * p_1 + ans_2
+!   ans_2 = ans_1
+
+! END DO
+END PROCEDURE LegendreLaplacianEval1
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE LegendreLaplacianEval2
+
+! INTEGER(I4B) :: ii
+! REAL(DFP) :: r_ii
+! REAL(DFP), DIMENSION(SIZE(x)) :: p, p_1, p_2
+! REAL(DFP), DIMENSION(SIZE(x)) :: ans_1, ans_2
+
+! IF (n < 0) THEN
+!   RETURN
+! END IF
+
+! p = 1.0_DFP
+! ans = 0.0_DFP
+! p_2 = p
+! ans_2 = ans
+
+! IF (n < 1) THEN
+!   RETURN
+! END IF
+
+! p = x
+! ans = 1.0_DFP
+
+! DO ii = 2, n
+
+!   r_ii = REAL(ii, KIND=DFP)
+
+!   p_1 = p
+
+!   p = ((2.0_DFP * r_ii - 1) * x * p &
+!               & - (r_ii - 1.0_DFP) * p_2) &
+!               & / r_ii
+
+!   p_2 = p_1
+
+!   ans_1 = ans
+!   ans = (2.0_DFP * r_ii - 1.0_DFP) * p_1 + ans_2
+!   ans_2 = ans_1
+
+! END DO
+END PROCEDURE LegendreLaplacianEval2
 
 !----------------------------------------------------------------------------
 !

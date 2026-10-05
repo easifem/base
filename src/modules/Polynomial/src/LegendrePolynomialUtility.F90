@@ -23,11 +23,8 @@
 
 MODULE LegendrePolynomialUtility
 USE GlobalData, ONLY: DFP, I4B, LGT
-
 USE BaseType, ONLY: iface_1DFunction
-
 IMPLICIT NONE
-
 PRIVATE
 
 PUBLIC :: LegendreAlpha
@@ -55,6 +52,9 @@ PUBLIC :: LegendreMonomialExpansion
 PUBLIC :: LegendreGradientEvalAll
 PUBLIC :: LegendreGradientEvalAll_
 PUBLIC :: LegendreGradientEval
+PUBLIC :: LegendreLaplacianEvalAll
+PUBLIC :: LegendreLaplacianEvalAll_
+PUBLIC :: LegendreLaplacianEval
 PUBLIC :: LegendreEvalSum
 PUBLIC :: LegendreGradientEvalSum
 PUBLIC :: LegendreTransform
@@ -1223,6 +1223,113 @@ INTERFACE LegendreDMatEvenOdd
       !! odd decomposition, 0:n/2, 0:n/2
   END SUBROUTINE LegendreDMatEvenOdd1
 END INTERFACE LegendreDMatEvenOdd
+
+!----------------------------------------------------------------------------
+!                                                    LegendreLaplacianEvalAll
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 8 Sept 2022
+! summary: Evaluate Laplacian of legendre polynomial of order upto n
+
+INTERFACE LegendreLaplacianEvalAll
+  MODULE PURE FUNCTION LegendreLaplacianEvalAll1(n, x) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: n
+    REAL(DFP), INTENT(IN) :: x
+    REAL(DFP) :: ans(1:n + 1)
+  END FUNCTION LegendreLaplacianEvalAll1
+END INTERFACE LegendreLaplacianEvalAll
+
+!----------------------------------------------------------------------------
+!                                                   LegendreLaplacianEvalAll_
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 8 Sept 2022
+! summary: Evaluate Laplacian of legendre polynomial of order upto n
+
+INTERFACE LegendreLaplacianEvalAll_
+  MODULE PURE SUBROUTINE LegendreLaplacianEvalAll1_(n, x, ans, tsize)
+    INTEGER(I4B), INTENT(IN) :: n
+    REAL(DFP), INTENT(IN) :: x
+    REAL(DFP), INTENT(INOUT) :: ans(:)
+    !! ans(1:n + 1)
+    INTEGER(I4B), INTENT(OUT) :: tsize
+    !! total size
+  END SUBROUTINE LegendreLaplacianEvalAll1_
+END INTERFACE LegendreLaplacianEvalAll_
+
+!----------------------------------------------------------------------------
+!                                                    LegendreLaplacianEvalAll
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 8 Sept 2022
+! summary: Evaluate Laplacian of legendre polynomial of order upto n
+
+INTERFACE LegendreLaplacianEvalAll
+  MODULE PURE FUNCTION LegendreLaplacianEvalAll2(n, x) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: n
+    REAL(DFP), INTENT(IN) :: x(:)
+    REAL(DFP) :: ans(1:SIZE(x), 1:n + 1)
+  END FUNCTION LegendreLaplacianEvalAll2
+END INTERFACE LegendreLaplacianEvalAll
+
+!----------------------------------------------------------------------------
+!                                                   LegendreLaplacianEvalAll_
+!----------------------------------------------------------------------------
+
+INTERFACE LegendreLaplacianEvalAll_
+  MODULE PURE SUBROUTINE LegendreLaplacianEvalAll2_(n, x, ans, nrow, ncol)
+    INTEGER(I4B), INTENT(IN) :: n
+    REAL(DFP), INTENT(IN) :: x(:)
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    !! ans(1:SIZE(x), 1:n + 1)
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+    !! nrow = SIZE(x)
+    !! ncol = n + 1
+  END SUBROUTINE LegendreLaplacianEvalAll2_
+END INTERFACE LegendreLaplacianEvalAll_
+
+!----------------------------------------------------------------------------
+!                                                      LegendreLaplacianEval
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 8 Sept 2022
+! summary: Evaluate Laplacian of legendre polynomial of order upto n
+!
+!# LegendreLaplacianEval
+!
+! Evaluate Laplacian of legendre polynomial of order upto n.
+
+INTERFACE LegendreLaplacianEval
+  MODULE PURE FUNCTION LegendreLaplacianEval1(n, x) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: n
+    REAL(DFP), INTENT(IN) :: x
+    REAL(DFP) :: ans
+  END FUNCTION LegendreLaplacianEval1
+END INTERFACE LegendreLaplacianEval
+
+!----------------------------------------------------------------------------
+!                                                      LegendreLaplacianEval
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 8 Sept 2022
+! summary: Evaluate Laplacian of legendre polynomial of order upto n
+!
+!# LegendreLaplacianEval
+!
+! Evaluate Laplacian of legendre polynomial of order upto n.
+
+INTERFACE LegendreLaplacianEval
+  MODULE PURE FUNCTION LegendreLaplacianEval2(n, x) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: n
+    REAL(DFP), INTENT(IN) :: x(:)
+    REAL(DFP) :: ans(1:SIZE(x))
+  END FUNCTION LegendreLaplacianEval2
+END INTERFACE LegendreLaplacianEval
 
 !----------------------------------------------------------------------------
 !

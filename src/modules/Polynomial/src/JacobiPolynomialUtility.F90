@@ -23,7 +23,6 @@
 
 MODULE JacobiPolynomialUtility
 USE GlobalData, ONLY: DFP, I4B, LGT
-
 USE BaseType, ONLY: iface_1DFunction
 
 IMPLICIT NONE
@@ -55,6 +54,9 @@ PUBLIC :: JacobiGradientEval
 PUBLIC :: JacobiGradientEvalAll
 PUBLIC :: JacobiGradientEvalAll_
 PUBLIC :: JacobiGradientEvalSum
+PUBLIC :: JacobiLaplacianEval
+PUBLIC :: JacobiLaplacianEvalAll
+PUBLIC :: JacobiLaplacianEvalAll_
 PUBLIC :: JacobiTransform
 PUBLIC :: JacobiTransform_
 PUBLIC :: JacobiInvTransform
@@ -1236,5 +1238,129 @@ INTERFACE JacobiDMatrix
       !! D matrix
   END FUNCTION JacobiDMatrix1
 END INTERFACE JacobiDMatrix
+
+!----------------------------------------------------------------------------
+!                                                         JacobiLaplacianEval
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 14 Oct 2022
+! summary: Evaluate Laplacian of Jacobi polynomial
+
+INTERFACE JacobiLaplacianEval
+  MODULE PURE FUNCTION JacobiLaplacianEval1(n, alpha, beta, x) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: n
+    !! order of Jacobi polynomial
+    REAL(DFP), INTENT(IN) :: alpha
+    !! alpha > -1.0
+    REAL(DFP), INTENT(IN) :: beta
+    !! beta > -1.0
+    REAL(DFP), INTENT(IN) :: x
+    !! point
+    REAL(DFP) :: ans
+    !! Derivative of Jacobi polynomial of order n at point x
+  END FUNCTION JacobiLaplacianEval1
+END INTERFACE JacobiLaplacianEval
+
+!----------------------------------------------------------------------------
+!                                                        JacobiLaplacianEval
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 14 Oct 2022
+! summary: Evaluate Laplacian of Jacobi polynomial
+
+INTERFACE JacobiLaplacianEval
+  MODULE PURE FUNCTION JacobiLaplacianEval2(n, alpha, beta, x) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: n
+    REAL(DFP), INTENT(IN) :: alpha
+    REAL(DFP), INTENT(IN) :: beta
+    REAL(DFP), INTENT(IN) :: x(:)
+    REAL(DFP) :: ans(SIZE(x))
+    !! Derivative of Jacobi polynomial of order n at x
+  END FUNCTION JacobiLaplacianEval2
+END INTERFACE JacobiLaplacianEval
+
+!----------------------------------------------------------------------------
+!                                                      JacobiLaplacianEvalAll
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 14 Oct 2022
+! summary: Evaluate Laplacian of Jacobi polynomial
+
+INTERFACE JacobiLaplacianEvalAll
+  MODULE PURE FUNCTION JacobiLaplacianEvalAll1(n, alpha, beta, x) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: n
+    !! order of Jacobi polynomial
+    REAL(DFP), INTENT(IN) :: alpha
+    !! alpha > -1.0
+    REAL(DFP), INTENT(IN) :: beta
+    !! beta > -1.0
+    REAL(DFP), INTENT(IN) :: x
+    !! point
+    REAL(DFP) :: ans(n + 1)
+    !! Derivative of Jacobi polynomial of order n at point x
+  END FUNCTION JacobiLaplacianEvalAll1
+END INTERFACE JacobiLaplacianEvalAll
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE JacobiLaplacianEvalAll_
+  MODULE PURE SUBROUTINE JacobiLaplacianEvalAll1_(n, alpha, beta, x, &
+                                                  ans, tsize)
+    INTEGER(I4B), INTENT(IN) :: n
+    !! order of Jacobi polynomial
+    REAL(DFP), INTENT(IN) :: alpha
+    !! alpha > -1.0
+    REAL(DFP), INTENT(IN) :: beta
+    !! beta > -1.0
+    REAL(DFP), INTENT(IN) :: x
+    !! point
+    REAL(DFP), INTENT(INOUT) :: ans(:)
+    !! ans(n + 1)
+    !! Derivative of Jacobi polynomial of order n at point x
+    INTEGER(I4B), INTENT(OUT) :: tsize
+  END SUBROUTINE JacobiLaplacianEvalAll1_
+END INTERFACE JacobiLaplacianEvalAll_
+
+!----------------------------------------------------------------------------
+!                                                     JacobiLaplacianEvalAll
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 14 Oct 2022
+! summary: Evaluate Laplacian of Jacobi polynomial
+
+INTERFACE JacobiLaplacianEvalAll
+  MODULE PURE FUNCTION JacobiLaplacianEvalAll2(n, alpha, beta, x) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: n
+    REAL(DFP), INTENT(IN) :: alpha
+    REAL(DFP), INTENT(IN) :: beta
+    REAL(DFP), INTENT(IN) :: x(:)
+    REAL(DFP) :: ans(SIZE(x), n + 1)
+    !! Derivative of Jacobi polynomial of order n at x
+  END FUNCTION JacobiLaplacianEvalAll2
+END INTERFACE JacobiLaplacianEvalAll
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE JacobiLaplacianEvalAll_
+  MODULE PURE SUBROUTINE JacobiLaplacianEvalAll2_(n, alpha, beta, x, &
+                                                  ans, nrow, ncol)
+    INTEGER(I4B), INTENT(IN) :: n
+    REAL(DFP), INTENT(IN) :: alpha
+    REAL(DFP), INTENT(IN) :: beta
+    REAL(DFP), INTENT(IN) :: x(:)
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    !! ans(SIZE(x), n + 1)
+    !! Derivative of Jacobi polynomial of order n at x
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+  END SUBROUTINE JacobiLaplacianEvalAll2_
+END INTERFACE JacobiLaplacianEvalAll_
 
 END MODULE JacobiPolynomialUtility
