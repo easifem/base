@@ -16,7 +16,15 @@
 !
 
 SUBMODULE(StiffnessMatrix_Method) Methods
-USE BaseMethod
+USE ReallocateUtility, ONLY: Reallocate
+USE ElemShapeData_Method, ONLY: GetInterpolation
+USE ElemShapeData_Method, ONLY: GetInterpolation_
+USE BaseType, ONLY: math => TypeMathOpt
+USE InputUtility, ONLY: Input
+USE FEVariable_Method, ONLY: GetLambdaFromYoungsModulus
+USE FEVariable_Method, ONLY: FEVariableDeallocate => DEALLOCATE
+USE ProductUtility, ONLY: OuterProd_
+
 IMPLICIT NONE
 CONTAINS
 
@@ -25,61 +33,13 @@ CONTAINS
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE obj_StiffnessMatrix1
-REAL(DFP), ALLOCATABLE :: realval(:), CBar(:, :, :), &
-  & Ce(:, :), BMat1(:, :), BMat2(:, :)
-INTEGER(I4B) :: nips, nns1, nns2, i, j, ips, nsd
-INTEGER(I4B), ALLOCATABLE :: indx(:, :)
+INTEGER(I4B) :: nrow, ncol
 
-nns1 = SIZE(test%N, 1)
-nns2 = SIZE(trial%N, 1)
-nips = SIZE(trial%N, 2)
-nsd = SIZE(trial%dNdXt, 2)
-
-CALL Reallocate(ans, nns1 * nsd, nns2 * nsd)
-CALL GetInterpolation(obj=test, ans=CBar, val=Cijkl)
-
-SELECT CASE (nsd)
-CASE (1)
-  ALLOCATE (indx(1, 1))
-  indx = 1
-CASE (2)
-  ALLOCATE (indx(2, 2))
-  indx = RESHAPE([1, 3, 3, 2], [2, 2])
-CASE (3)
-  ALLOCATE (indx(3, 3))
-  indx = RESHAPE([1, 4, 6, 4, 2, 5, 6, 5, 3], [3, 3])
-END SELECT
-
-ALLOCATE (Ce(nsd * nsd, nsd * nsd), BMat1(nsd * nns1, nsd * nsd), &
-  & BMat2(nsd * nns2, nsd * nsd))
-
-BMat1 = 0.0_DFP
-BMat2 = 0.0_DFP
-
-CALL Reallocate(realval, nips)
-realval = trial%ws * trial%js * trial%thickness
-
-DO ips = 1, nips
-
-  DO j = 1, nsd
-    DO i = 1, nsd
-      Ce((i - 1) * nsd + 1:i * nsd, (j - 1) * nsd + 1:j * nsd) &
-        & = CBar(indx(:, i), indx(:, j), ips)
-    END DO
-  END DO
-
-  DO i = 1, nsd
-    BMat1((i - 1) * nns1 + 1:i * nns1, (i - 1) * nsd + 1:i * nsd) = &
-      & test%dNdXt(:, :, ips)
-    BMat2((i - 1) * nns2 + 1:i * nns2, (i - 1) * nsd + 1:i * nsd) = &
-      & trial%dNdXt(:, :, ips)
-  END DO
-
-  ans = ans + realval(ips) * MATMUL(MATMUL(BMat1, Ce), TRANSPOSE(BMat2))
-
-END DO
-
-DEALLOCATE (BMat1, BMat2, indx, Ce, CBar, realval)
+nrow = test%nns * test%nsd
+ncol = trial%nns * trial%nsd
+CALL Reallocate(ans, nrow, ncol)
+CALL StiffnessMatrix_(test=test, trial=trial, Cijkl=Cijkl, &
+                      ans=ans, nrow=nrow, ncol=ncol)
 
 END PROCEDURE obj_StiffnessMatrix1
 
@@ -116,6 +76,7 @@ CASE (2)
   indx(1:2, 1:2) = RESHAPE([1, 3, 3, 2], [2, 2])
 CASE (3)
   indx(1:3, 1:3) = RESHAPE([1, 4, 6, 4, 2, 5, 6, 5, 3], [3, 3])
+CASE DEFAULT
 END SELECT
 
 BMat1 = 0.0_DFP
@@ -127,15 +88,15 @@ DO ips = 1, nips
   DO jj = 1, nsd
     DO ii = 1, nsd
       Ce((ii - 1) * nsd + 1:ii * nsd, (jj - 1) * nsd + 1:jj * nsd) &
-        & = CBar(indx(1:nsd, ii), indx(1:nsd, jj), ips)
+        = CBar(indx(1:nsd, ii), indx(1:nsd, jj), ips)
     END DO
   END DO
 
   DO ii = 1, nsd
     BMat1((ii - 1) * nns1 + 1:ii * nns1, (ii - 1) * nsd + 1:ii * nsd) = &
-      & test%dNdXt(1:nns1, 1:nsd, ips)
+      test%dNdXt(1:nns1, 1:nsd, ips)
     BMat2((ii - 1) * nns2 + 1:ii * nns2, (ii - 1) * nsd + 1:ii * nsd) = &
-      & trial%dNdXt(1:nns2, 1:nsd, ips)
+      trial%dNdXt(1:nns2, 1:nsd, ips)
   END DO
 
   ans(1:nrow, 1:ncol) = ans(1:nrow, 1:ncol) + &
@@ -150,79 +111,15 @@ END PROCEDURE obj_StiffnessMatrix1_
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE obj_StiffnessMatrix2
-! Define internal variable
-REAL(DFP), ALLOCATABLE :: lambdaBar(:), muBar(:), &
-  & realval(:), Ke11(:, :)
-REAL(DFP) :: real1, real2, real3
-INTEGER(I4B) :: nns1, nns2, nips, nsd, c1, c2, i, j, r1, r2, ips
-LOGICAL(LGT) :: case1
-TYPE(FEVariable_) :: lambda0
+INTEGER(I4B) :: nrow, ncol
 
-IF (PRESENT(isLambdaYoungsModulus)) THEN
-  case1 = isLambdaYoungsModulus
-ELSE
-  case1 = .FALSE.
-END IF
+nrow = test%nns * test%nsd
+ncol = trial%nns * trial%nsd
+CALL Reallocate(ans, nrow, ncol)
 
-IF (case1) THEN
-  CALL GetLambdaFromYoungsModulus(lambda=lambda0,  &
-    & youngsModulus=lambda, shearModulus=mu)
-ELSE
-  lambda0 = lambda
-END IF
-
-nns1 = SIZE(test%N, 1)
-nns2 = SIZE(trial%N, 1)
-nips = SIZE(trial%N, 2)
-nsd = SIZE(trial%dNdXt, 2)
-
-ALLOCATE (ans(nns1 * nsd, nns2 * nsd))
-ans = 0.0_DFP
-
-CALL GetInterpolation(obj=test, ans=lambdaBar, val=lambda0)
-CALL GetInterpolation(obj=test, ans=muBar, val=mu)
-
-CALL Reallocate(realval, nips)
-realval = trial%ws * trial%js * trial%thickness
-
-DO ips = 1, nips
-  real1 = muBar(ips) * realval(ips)
-  real2 = (lambdaBar(ips) + muBar(ips)) * realval(ips)
-  real3 = lambdaBar(ips) * realval(ips)
-  c1 = 0
-  c2 = 0
-  DO j = 1, nsd
-    c1 = c2 + 1
-    c2 = j * nns2
-    r1 = 0
-    r2 = 0
-    DO i = 1, nsd
-      r1 = r2 + 1
-      r2 = i * nns1
-      IF (i .EQ. j) THEN
-        Ke11 = real1 * MATMUL( &
-          & test%dNdXt(:, :, ips), &
-          & TRANSPOSE(trial%dNdXt(:, :, ips))) &
-          & + real2 * OUTERPROD( &
-          & test%dNdXt(:, i, ips), &
-          & trial%dNdXt(:, i, ips))
-      ELSE
-        Ke11 = real3 * OUTERPROD( &
-          & test%dNdXt(:, i, ips), &
-          & trial%dNdXt(:, j, ips)) &
-          + real1 * &
-          & OUTERPROD( &
-          & test%dNdXt(:, j, ips), &
-          & trial%dNdXt(:, i, ips))
-      END IF
-      ans(r1:r2, c1:c2) = ans(r1:r2, c1:c2) + Ke11
-    END DO
-  END DO
-END DO
-
-DEALLOCATE (realval, Ke11, lambdaBar, muBar)
-CALL DEALLOCATE (lambda0)
-
+CALL StiffnessMatrix_(test=test, trial=trial, lambda=lambda, mu=mu, &
+                      isLambdaYoungsModulus=isLambdaYoungsModulus, &
+                      ans=ans, nrow=nrow, ncol=ncol)
 END PROCEDURE obj_StiffnessMatrix2
 
 !----------------------------------------------------------------------------
@@ -238,12 +135,11 @@ INTEGER(I4B) :: nns1, nns2, nips, nsd, c1, c2, ii, jj, &
                 r1, r2, ips, kk, ll
 LOGICAL(LGT) :: abool
 TYPE(FEVariable_) :: lambda0
-REAL(DFP), PARAMETER :: one = 1.0_DFP, zero = 0.0_DFP
 
-abool = Input(default=.FALSE., option=isLambdaYoungsModulus)
+abool = Input(default=math%yes, option=isLambdaYoungsModulus)
 IF (abool) THEN
-  CALL GetLambdaFromYoungsModulus(lambda=lambda0,  &
-    & youngsModulus=lambda, shearModulus=mu)
+  CALL GetLambdaFromYoungsModulus(lambda=lambda0, &
+                                  youngsModulus=lambda, shearModulus=mu)
 ELSE
   lambda0 = lambda
 END IF
@@ -254,7 +150,7 @@ nips = trial%nips
 nsd = trial%nsd
 nrow = nns1 * nsd
 ncol = nns2 * nsd
-ans(1:nrow, 1:ncol) = zero
+ans(1:nrow, 1:ncol) = math%zero
 
 CALL GetInterpolation_(obj=test, ans=lambdaBar, val=lambda0, tsize=ii)
 CALL GetInterpolation_(obj=test, ans=muBar, val=mu, tsize=ii)
@@ -278,28 +174,28 @@ DO ips = 1, nips
       r2 = ii * nns1
       IF (ii .EQ. jj) THEN
         Ke11(1:nns1, 1:nns2) = real1 * MATMUL(test%dNdXt(:, :, ips), &
-          & TRANSPOSE(trial%dNdXt(:, :, ips)))
+                                            TRANSPOSE(trial%dNdXt(:, :, ips)))
+
         CALL OuterProd_(a=test%dNdXt(1:nns1, ii, ips), &
                         b=trial%dNdXt(1:nns2, ii, ips), &
                         nrow=kk, ncol=ll, ans=Ke11, &
-                        scale=real2, anscoeff=one)
+                        scale=real2, anscoeff=math%one)
       ELSE
         CALL OuterProd_(a=test%dNdXt(1:nns1, ii, ips), &
                         b=trial%dNdXt(1:nns2, jj, ips), &
                         nrow=kk, ncol=ll, ans=Ke11, &
-                        scale=real3, anscoeff=zero)
+                        scale=real3, anscoeff=math%zero)
         CALL OuterProd_(a=test%dNdXt(1:nns1, jj, ips), &
                         b=trial%dNdXt(1:nns2, ii, ips), &
                         nrow=kk, ncol=ll, ans=Ke11, &
-                        scale=real1, anscoeff=one)
+                        scale=real1, anscoeff=math%one)
       END IF
       ans(r1:r2, c1:c2) = ans(r1:r2, c1:c2) + Ke11
     END DO
   END DO
 END DO
 
-CALL DEALLOCATE (lambda0)
-
+CALL FEVariableDeallocate(lambda0)
 END PROCEDURE obj_StiffnessMatrix2_
 
 !----------------------------------------------------------------------------
@@ -307,45 +203,14 @@ END PROCEDURE obj_StiffnessMatrix2_
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE obj_StiffnessMatrix3
-INTEGER(I4B) :: nns1, nns2, nips, ips, nsd, c1, c2, r1, r2, i, j
-REAL(DFP), ALLOCATABLE :: realval(:), Ke11(:, :)
-REAL(DFP) :: real1, real2, real3
-nns1 = SIZE(test%N, 1)
-nns2 = SIZE(trial%N, 1)
-nips = SIZE(trial%N, 2)
-nsd = SIZE(trial%dNdXt, 2)
+INTEGER(I4B) :: nrow, ncol
 
-CALL Reallocate(ans, nns1 * nsd, nns2 * nsd)
-CALL Reallocate(realval, nips)
-realval = trial%ws * trial%thickness * trial%js
+nrow = test%nns * test%nsd
+ncol = trial%nns * trial%nsd
+CALL Reallocate(ans, nrow, ncol)
 
-DO ips = 1, nips
-  real1 = mu * realval(ips)
-  real2 = (lambda + mu) * realval(ips)
-  real3 = lambda * realval(ips)
-  c1 = 0; c2 = 0; 
-  DO j = 1, nsd
-    c1 = c2 + 1; c2 = j * nns2; r1 = 0; r2 = 0
-    DO i = 1, nsd
-      r1 = r2 + 1; r2 = i * nns1
-      IF (i .EQ. j) THEN
-        Ke11 = real1 * MATMUL(test%dNdXt(:, :, ips), &
-          & TRANSPOSE(trial%dNdXt(:, :, ips))) &
-          & + real2 * OUTERPROD(test%dNdXt(:, i, ips), &
-          & trial%dNdXt(:, i, ips))
-      ELSE
-        Ke11 = real3 * OUTERPROD(test%dNdXt(:, i, ips), &
-          & trial%dNdXt(:, j, ips)) &
-          + real1 * &
-          & OUTERPROD(test%dNdXt(:, j, ips), &
-            & trial%dNdXt(:, i, ips))
-      END IF
-      ans(r1:r2, c1:c2) = ans(r1:r2, c1:c2) + Ke11
-    END DO
-  END DO
-END DO
-
-DEALLOCATE (realval, Ke11)
+CALL StiffnessMatrix_(test=test, trial=trial, lambda=lambda, &
+                      mu=mu, ans=ans, nrow=nrow, ncol=ncol)
 END PROCEDURE obj_StiffnessMatrix3
 
 !----------------------------------------------------------------------------
@@ -357,7 +222,6 @@ INTEGER(I4B) :: nns1, nns2, nips, ips, nsd, c1, c2, &
                 r1, r2, ii, jj, kk, ll
 REAL(DFP) :: realval, Ke11(test%nns, trial%nns)
 REAL(DFP) :: real1, real2, real3
-REAL(DFP), PARAMETER :: one = 1.0_DFP, zero = 0.0_DFP
 
 nns1 = test%nns
 nns2 = trial%nns
@@ -365,40 +229,47 @@ nips = trial%nips
 nsd = trial%nsd
 nrow = nns1 * nsd
 ncol = nns2 * nsd
-ans(1:nrow, 1:ncol) = zero
+ans(1:nrow, 1:ncol) = math%zero
 
 DO ips = 1, nips
   realval = trial%ws(ips) * trial%thickness(ips) * trial%js(ips)
   real1 = mu * realval
   real2 = (lambda + mu) * realval
   real3 = lambda * realval
-  c1 = 0; c2 = 0; 
+  c1 = 0
+  c2 = 0
   DO jj = 1, nsd
-    c1 = c2 + 1; c2 = jj * nns2; r1 = 0; r2 = 0
+    c1 = c2 + 1
+    c2 = jj * nns2
+    r1 = 0
+    r2 = 0
+
     DO ii = 1, nsd
-      r1 = r2 + 1; r2 = ii * nns1
+      r1 = r2 + 1
+      r2 = ii * nns1
+
       IF (ii .EQ. jj) THEN
         Ke11 = real1 * MATMUL(test%dNdXt(:, :, ips), &
                               TRANSPOSE(trial%dNdXt(:, :, ips)))
         CALL OuterProd_(a=test%dNdXt(1:nns1, ii, ips), &
                         b=trial%dNdXt(1:nns2, ii, ips), &
                         nrow=kk, ncol=ll, ans=Ke11, &
-                        scale=real2, anscoeff=one)
+                        scale=real2, anscoeff=math%one)
       ELSE
         CALL OuterProd_(a=test%dNdXt(1:nns1, ii, ips), &
                         b=trial%dNdXt(1:nns2, jj, ips), &
                         nrow=kk, ncol=ll, ans=Ke11, &
-                        scale=real3, anscoeff=zero)
+                        scale=real3, anscoeff=math%zero)
+
         CALL OuterProd_(a=test%dNdXt(1:nns1, jj, ips), &
                         b=trial%dNdXt(1:nns2, ii, ips), &
                         nrow=kk, ncol=ll, ans=Ke11, &
-                        scale=real1, anscoeff=one)
+                        scale=real1, anscoeff=math%one)
       END IF
       ans(r1:r2, c1:c2) = ans(r1:r2, c1:c2) + Ke11(1:nns1, 1:nns2)
     END DO
   END DO
 END DO
-
 END PROCEDURE obj_StiffnessMatrix3_
 
 !----------------------------------------------------------------------------
@@ -406,61 +277,13 @@ END PROCEDURE obj_StiffnessMatrix3_
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE obj_StiffnessMatrix4
-REAL(DFP), ALLOCATABLE :: realval(:), Ce(:, :), BMat1(:, :), BMat2(:, :)
-INTEGER(I4B) :: nips, nns1, nns2, i, j, ips, nsd
-INTEGER(I4B), ALLOCATABLE :: indx(:, :)
+INTEGER(I4B) :: nrow, ncol
 
-nns1 = SIZE(test%N, 1)
-nns2 = SIZE(trial%N, 1)
-nips = SIZE(trial%N, 2)
-nsd = SIZE(trial%dNdXt, 2)
-
-CALL Reallocate(ans, nns1 * nsd, nns2 * nsd)
-
-SELECT CASE (nsd)
-CASE (1)
-  ALLOCATE (indx(1, 1))
-  indx = 1
-CASE (2)
-  ALLOCATE (indx(2, 2))
-  indx = RESHAPE([1, 3, 3, 2], [2, 2])
-CASE (3)
-  ALLOCATE (indx(3, 3))
-  indx = RESHAPE([1, 4, 6, 4, 2, 5, 6, 5, 3], [3, 3])
-END SELECT
-
-ALLOCATE (Ce(nsd * nsd, nsd * nsd), &
-  & BMat1(nsd * nns1, nsd * nsd), &
-  & BMat2(nsd * nns2, nsd * nsd))
-
-BMat1 = 0.0_DFP
-BMat2 = 0.0_DFP
-
-CALL Reallocate(realval, nips)
-realval = trial%ws * trial%js * trial%thickness
-
-DO ips = 1, nips
-
-  DO j = 1, nsd
-    DO i = 1, nsd
-      Ce((i - 1) * nsd + 1:i * nsd, (j - 1) * nsd + 1:j * nsd) &
-        & = Cijkl(indx(:, i), indx(:, j))
-    END DO
-  END DO
-
-  DO i = 1, nsd
-    BMat1((i - 1) * nns1 + 1:i * nns1, (i - 1) * nsd + 1:i * nsd) = &
-      & test%dNdXt(:, :, ips)
-    BMat2((i - 1) * nns2 + 1:i * nns2, (i - 1) * nsd + 1:i * nsd) = &
-      & trial%dNdXt(:, :, ips)
-  END DO
-
-  ans = ans + realval(ips) * MATMUL(MATMUL(BMat1, Ce), TRANSPOSE(BMat2))
-
-END DO
-
-DEALLOCATE (BMat1, BMat2, indx, Ce, realval)
-
+nrow = test%nns * test%nsd
+ncol = trial%nns * trial%nsd
+CALL Reallocate(ans, nrow, ncol)
+CALL StiffnessMatrix_(test=test, trial=trial, Cijkl=Cijkl, &
+                      ans=ans, nrow=nrow, ncol=ncol)
 END PROCEDURE obj_StiffnessMatrix4
 
 !----------------------------------------------------------------------------
@@ -490,6 +313,7 @@ CASE (2)
   indx(1:2, 1:2) = RESHAPE([1, 3, 3, 2], [2, 2])
 CASE (3)
   indx(1:3, 1:3) = RESHAPE([1, 4, 6, 4, 2, 5, 6, 5, 3], [3, 3])
+CASE DEFAULT
 END SELECT
 
 BMat1 = 0.0_DFP
@@ -507,16 +331,15 @@ DO ips = 1, nips
 
   DO ii = 1, nsd
     BMat1((ii - 1) * nns1 + 1:ii * nns1, (ii - 1) * nsd + 1:ii * nsd) = &
-      & test%dNdXt(:, :, ips)
+      test%dNdXt(:, :, ips)
     BMat2((ii - 1) * nns2 + 1:ii * nns2, (ii - 1) * nsd + 1:ii * nsd) = &
-      & trial%dNdXt(:, :, ips)
+      trial%dNdXt(:, :, ips)
   END DO
 
   ans(1:nrow, 1:ncol) = ans(1:nrow, 1:ncol) + &
                         realval * MATMUL(MATMUL(BMat1, Ce), TRANSPOSE(BMat2))
 
 END DO
-
 END PROCEDURE obj_StiffnessMatrix4_
 
 !----------------------------------------------------------------------------
@@ -524,59 +347,14 @@ END PROCEDURE obj_StiffnessMatrix4_
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE obj_StiffnessMatrix5
-! Define internal variable
-REAL(DFP), ALLOCATABLE :: realval(:), Ke11(:, :)
-REAL(DFP) :: real1, real2, real3
-INTEGER(I4B) :: nns1, nns2, nips, nsd, c1, c2, i, j, r1, r2, ips
+INTEGER(I4B) :: nrow, ncol
 
-nns1 = SIZE(test%N, 1)
-nns2 = SIZE(trial%N, 1)
-nips = SIZE(trial%N, 2)
-nsd = SIZE(trial%dNdXt, 2)
+nrow = test%nns * test%nsd
+ncol = trial%nns * trial%nsd
+CALL Reallocate(ans, nrow, ncol)
 
-CALL Reallocate(ans, nns1 * nsd, nns2 * nsd)
-ans = 0.0_DFP
-
-CALL Reallocate(realval, nips)
-realval = trial%ws * trial%js * trial%thickness
-
-DO ips = 1, nips
-  real1 = mu(ips) * realval(ips)
-  real2 = (lambda(ips) + mu(ips)) * realval(ips)
-  real3 = lambda(ips) * realval(ips)
-  c1 = 0
-  c2 = 0
-  DO j = 1, nsd
-    c1 = c2 + 1
-    c2 = j * nns2
-    r1 = 0
-    r2 = 0
-    DO i = 1, nsd
-      r1 = r2 + 1
-      r2 = i * nns1
-      IF (i .EQ. j) THEN
-        Ke11 = real1 * MATMUL( &
-          & test%dNdXt(:, :, ips), &
-          & TRANSPOSE(trial%dNdXt(:, :, ips))) &
-          & + real2 * OUTERPROD( &
-          & test%dNdXt(:, i, ips), &
-          & trial%dNdXt(:, i, ips))
-      ELSE
-        Ke11 = real3 * OUTERPROD( &
-          & test%dNdXt(:, i, ips), &
-          & trial%dNdXt(:, j, ips)) &
-          + real1 * &
-          & OUTERPROD( &
-          & test%dNdXt(:, j, ips), &
-          & trial%dNdXt(:, i, ips))
-      END IF
-      ans(r1:r2, c1:c2) = ans(r1:r2, c1:c2) + Ke11
-    END DO
-  END DO
-END DO
-
-DEALLOCATE (realval, Ke11)
-
+CALL StiffnessMatrix_(test=test, trial=trial, lambda=lambda, &
+                      mu=mu, ans=ans, nrow=nrow, ncol=ncol)
 END PROCEDURE obj_StiffnessMatrix5
 
 !----------------------------------------------------------------------------
@@ -584,59 +362,67 @@ END PROCEDURE obj_StiffnessMatrix5
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE obj_StiffnessMatrix5_
-REAL(DFP) :: realval, Ke11(test%nns, trial%nns)
-REAL(DFP) :: real1, real2, real3
-INTEGER(I4B) :: nns1, nns2, nips, nsd, c1, c2, ii, jj, &
+REAL(DFP), ALLOCATABLE :: tempMat(:, :)
+
+CALL Reallocate(tempMat, test%nns, trial%nns)
+CALL StiffnessMatrix_(test=test, trial=trial, lambda=lambda, mu=mu, &
+                      tempMat=tempMat, ans=ans, nrow=nrow, ncol=ncol)
+END PROCEDURE obj_StiffnessMatrix5_
+
+!----------------------------------------------------------------------------
+!                                                           StiffnessMatrix_
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE obj_StiffnessMatrix6_
+REAL(DFP) :: real1, real2, real3, realval
+INTEGER(I4B) :: c1, c2, ii, jj, &
                 r1, r2, ips, kk, ll
-REAL(DFP), PARAMETER :: one = 1.0_DFP, zero = 0.0_DFP
 
-nns1 = SIZE(test%N, 1)
-nns2 = SIZE(trial%N, 1)
-nips = SIZE(trial%N, 2)
-nsd = SIZE(trial%dNdXt, 2)
-nrow = nns1 * nsd
-ncol = nns2 * nsd
-ans(1:nrow, 1:ncol) = zero
+nrow = test%nns * test%nsd
+ncol = trial%nns * trial%nsd
+ans(1:nrow, 1:ncol) = math%zero
 
-DO ips = 1, nips
+DO ips = 1, trial%nips
   realval = trial%ws(ips) * trial%js(ips) * trial%thickness(ips)
   real1 = mu(ips) * realval
   real2 = (lambda(ips) + mu(ips)) * realval
   real3 = lambda(ips) * realval
   c1 = 0
   c2 = 0
-  DO jj = 1, nsd
+  DO jj = 1, trial%nsd
     c1 = c2 + 1
-    c2 = jj * nns2
+    c2 = jj * trial%nns
     r1 = 0
     r2 = 0
-    DO ii = 1, nsd
+    DO ii = 1, test%nsd
       r1 = r2 + 1
-      r2 = ii * nns1
+      r2 = ii * test%nns
       IF (ii .EQ. jj) THEN
-        Ke11 = real1 * MATMUL( &
-               test%dNdXt(:, :, ips), &
-               TRANSPOSE(trial%dNdXt(:, :, ips)))
-        CALL OuterProd_(a=test%dNdXt(1:nns1, ii, ips), &
-                        b=trial%dNdXt(1:nns2, ii, ips), &
-                        nrow=kk, ncol=ll, ans=Ke11, &
-                        scale=real2, anscoeff=one)
+        tempMat = real1 * MATMUL( &
+                  test%dNdXt(1:test%nns, 1:test%nsd, ips), &
+                  TRANSPOSE(trial%dNdXt(1:trial%nns, 1:trial%nsd, ips)))
+
+        CALL OuterProd_(a=test%dNdXt(1:test%nns, ii, ips), &
+                        b=trial%dNdXt(1:trial%nns, ii, ips), &
+                        nrow=kk, ncol=ll, ans=tempMat, &
+                        scale=real2, anscoeff=math%one)
       ELSE
-        CALL OuterProd_(a=test%dNdXt(1:nns1, ii, ips), &
-                        b=trial%dNdXt(1:nns2, jj, ips), &
-                        nrow=kk, ncol=ll, ans=Ke11, &
-                        scale=real3, anscoeff=zero)
-        CALL OuterProd_(a=test%dNdXt(1:nns1, jj, ips), &
-                        b=trial%dNdXt(1:nns2, ii, ips), &
-                        nrow=kk, ncol=ll, ans=Ke11, &
-                        scale=real1, anscoeff=one)
+        CALL OuterProd_(a=test%dNdXt(1:test%nns, ii, ips), &
+                        b=trial%dNdXt(1:trial%nns, jj, ips), &
+                        nrow=kk, ncol=ll, ans=tempMat, &
+                        scale=real3, anscoeff=math%zero)
+
+        CALL OuterProd_(a=test%dNdXt(1:test%nns, jj, ips), &
+                        b=trial%dNdXt(1:trial%nns, ii, ips), &
+                        nrow=kk, ncol=ll, ans=tempMat, &
+                        scale=real1, anscoeff=math%one)
       END IF
-      ans(r1:r2, c1:c2) = ans(r1:r2, c1:c2) + Ke11(1:nns1, 1:nns2)
+      ans(r1:r2, c1:c2) = ans(r1:r2, c1:c2) &
+                          + tempMat(1:test%nns, 1:trial%nns)
     END DO
   END DO
 END DO
-
-END PROCEDURE obj_StiffnessMatrix5_
+END PROCEDURE obj_StiffnessMatrix6_
 
 !----------------------------------------------------------------------------
 !

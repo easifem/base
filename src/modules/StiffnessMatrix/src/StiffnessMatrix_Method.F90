@@ -20,8 +20,9 @@
 ! summary: This module contains method to construct finite element matrices
 
 MODULE StiffnessMatrix_Method
-USE BaseType
-USE GlobalData
+USE BaseType, ONLY: ElemshapeData_
+USE BaseType, ONLY: FEVariable_
+USE GlobalData, ONLY: DFP, LGT, I4B
 IMPLICIT NONE
 PRIVATE
 
@@ -34,7 +35,7 @@ PUBLIC :: StiffnessMatrix_
 
 INTERFACE StiffnessMatrix
   MODULE PURE FUNCTION obj_StiffnessMatrix1(test, trial, Cijkl) &
-    & RESULT(ans)
+    RESULT(ans)
     CLASS(ElemshapeData_), INTENT(IN) :: test, trial
     CLASS(FEVariable_), INTENT(IN) :: Cijkl
     REAL(DFP), ALLOCATABLE :: ans(:, :)
@@ -50,7 +51,8 @@ END INTERFACE StiffnessMatrix
 ! summary: subroutine to calculate stiffness matrix
 
 INTERFACE StiffnessMatrix_
-  MODULE PURE SUBROUTINE obj_StiffnessMatrix1_(test, trial, Cijkl, nrow,ncol, ans)
+  MODULE PURE SUBROUTINE obj_StiffnessMatrix1_(test, trial, Cijkl, &
+                                               nrow, ncol, ans)
     CLASS(ElemshapeData_), INTENT(IN) :: test, trial
     CLASS(FEVariable_), INTENT(IN) :: Cijkl
     INTEGER(I4B), INTENT(OUT) :: nrow, ncol
@@ -63,8 +65,8 @@ END INTERFACE StiffnessMatrix_
 !----------------------------------------------------------------------------
 
 INTERFACE StiffnessMatrix
-  MODULE PURE FUNCTION obj_StiffnessMatrix2(test, trial, lambda, mu,  &
-    & isLambdaYoungsModulus) RESULT(ans)
+  MODULE PURE FUNCTION obj_StiffnessMatrix2( &
+    test, trial, lambda, mu, isLambdaYoungsModulus) RESULT(ans)
     CLASS(ElemshapeData_), INTENT(IN) :: test, trial
     !! Shape function data
     CLASS(FEVariable_), INTENT(IN) :: lambda, mu
@@ -80,8 +82,8 @@ END INTERFACE StiffnessMatrix
 !----------------------------------------------------------------------------
 
 INTERFACE StiffnessMatrix_
-  MODULE PURE SUBROUTINE obj_StiffnessMatrix2_(test, trial, lambda, mu, &
-                                       isLambdaYoungsModulus, ans, nrow, ncol)
+  MODULE PURE SUBROUTINE obj_StiffnessMatrix2_( &
+    test, trial, lambda, mu, isLambdaYoungsModulus, ans, nrow, ncol)
     CLASS(ElemshapeData_), INTENT(IN) :: test, trial
     CLASS(FEVariable_), INTENT(IN) :: lambda, mu
     LOGICAL(LGT), OPTIONAL, INTENT(IN) :: isLambdaYoungsModulus
@@ -95,8 +97,8 @@ END INTERFACE StiffnessMatrix_
 !----------------------------------------------------------------------------
 
 INTERFACE StiffnessMatrix
-  MODULE PURE FUNCTION obj_StiffnessMatrix3(test, trial, lambda,  &
-    & mu) RESULT(ans)
+  MODULE PURE FUNCTION obj_StiffnessMatrix3(test, trial, lambda, &
+                                            mu) RESULT(ans)
     CLASS(ElemshapeData_), INTENT(IN) :: test, trial
     REAL(DFP), INTENT(IN) :: lambda, mu
     REAL(DFP), ALLOCATABLE :: ans(:, :)
@@ -123,9 +125,10 @@ END INTERFACE StiffnessMatrix_
 
 INTERFACE StiffnessMatrix
   MODULE PURE FUNCTION obj_StiffnessMatrix4(test, trial, Cijkl) &
-    & RESULT(ans)
+    RESULT(ans)
     CLASS(ElemshapeData_), INTENT(IN) :: test, trial
     REAL(DFP), INTENT(IN) :: Cijkl(:, :)
+    ! Constant Cijkl
     REAL(DFP), ALLOCATABLE :: ans(:, :)
   END FUNCTION obj_StiffnessMatrix4
 END INTERFACE StiffnessMatrix
@@ -145,15 +148,17 @@ INTERFACE StiffnessMatrix_
 END INTERFACE StiffnessMatrix_
 
 !----------------------------------------------------------------------------
-!                                     StiffnessMatrix@StiffnessMatrixMethods
+!                                                    StiffnessMatrix@Methods
 !----------------------------------------------------------------------------
 
 INTERFACE StiffnessMatrix
   MODULE PURE FUNCTION obj_StiffnessMatrix5(test, trial, lambda, mu) &
-    & RESULT(ans)
+    RESULT(ans)
     CLASS(ElemshapeData_), INTENT(IN) :: test, trial
     REAL(DFP), INTENT(IN) :: lambda(:)
+    ! These are quadrature values
     REAL(DFP), INTENT(IN) :: mu(:)
+    ! These are quadrature values
     REAL(DFP), ALLOCATABLE :: ans(:, :)
   END FUNCTION obj_StiffnessMatrix5
 END INTERFACE StiffnessMatrix
@@ -167,10 +172,31 @@ INTERFACE StiffnessMatrix_
                                                ans, nrow, ncol)
     CLASS(ElemshapeData_), INTENT(IN) :: test, trial
     REAL(DFP), INTENT(IN) :: lambda(:)
+    ! These are quadrature values
     REAL(DFP), INTENT(IN) :: mu(:)
+    ! These are quadrature values
     REAL(DFP), INTENT(INOUT) :: ans(:, :)
     INTEGER(I4B), INTENT(OUT) :: nrow, ncol
   END SUBROUTINE obj_StiffnessMatrix5_
+END INTERFACE StiffnessMatrix_
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE StiffnessMatrix_
+  MODULE PURE SUBROUTINE obj_StiffnessMatrix6_(test, trial, lambda, mu, &
+                                               tempMat, ans, nrow, ncol)
+    CLASS(ElemshapeData_), INTENT(IN) :: test, trial
+    REAL(DFP), INTENT(IN) :: lambda(:)
+    ! These are quadrature values
+    REAL(DFP), INTENT(IN) :: mu(:)
+    ! These are quadrature values
+    REAL(DFP), INTENT(INOUT) :: tempMat(:, :)
+    !! temperory matrix, size should be atleast nns x nns
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+  END SUBROUTINE obj_StiffnessMatrix6_
 END INTERFACE StiffnessMatrix_
 
 !----------------------------------------------------------------------------
