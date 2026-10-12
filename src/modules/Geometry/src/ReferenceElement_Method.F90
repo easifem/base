@@ -68,6 +68,7 @@ PUBLIC :: TotalEntities
 PUBLIC :: GetFacetTopology
 PUBLIC :: GetVTKElementType
 PUBLIC :: GetVTKElementType_
+PUBLIC :: GetVTKElementTypeFromTopology_
 PUBLIC :: GetEdgeConnectivity
 PUBLIC :: GetFaceConnectivity
 PUBLIC :: GetTotalNodes
@@ -1367,6 +1368,21 @@ INTERFACE GetVTKElementType_
     INTEGER(I4B), INTENT(OUT) :: tsize
   END SUBROUTINE GetVTKElementType1_
 END INTERFACE GetVTKElementType_
+
+!----------------------------------------------------------------------------
+!                                               GetVTKElementType@VTKMethods
+!----------------------------------------------------------------------------
+
+INTERFACE
+  MODULE PURE SUBROUTINE GetVTKElementTypeFromTopology_( &
+    topoType, order, vtk_type, nptrs, tsize)
+    INTEGER(I4B), INTENT(IN) :: topoType
+    INTEGER(I4B), INTENT(IN) :: order
+    INTEGER(INT8), INTENT(OUT) :: vtk_type
+    INTEGER(I4B), INTENT(INOUT) :: nptrs(:)
+    INTEGER(I4B), INTENT(OUT) :: tsize
+  END SUBROUTINE GetVTKElementTypeFromTopology_
+END INTERFACE
 
 !----------------------------------------------------------------------------
 !
