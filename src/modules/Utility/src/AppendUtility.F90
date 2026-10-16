@@ -16,14 +16,15 @@
 !
 
 !> author: Vikas Sharma, Ph. D.
-! date:  2024-04-11
+! date: 2024-04-11
 ! summary:  This module contains method for appending to vectors and martrix
 !
 !{!|page|/AppendUtility/index.md!}
 !
 MODULE AppendUtility
-
-USE GlobalData
+USE GlobalData, ONLY: I4B, LGT, DFP
+USE GlobalData, ONLY: INT8, INT16, INT32, INT64
+USE GlobalData, ONLY: REAL32, REAL64
 IMPLICIT NONE
 PRIVATE
 
@@ -41,16 +42,46 @@ PUBLIC :: Expand
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 23 July 2022
-! summary: Expand the vector
+! summary: Expand the vector of INT8 if needed
 !
-!# Introduction
 ! Expand the vector and add an element.
 !
-! reference
+! reference:
 ! https://github.com/jacobwilliams/fortran-csv-module/blob/master/src/
 ! csv_utilities.f90
 !
-!{!|page|/AppendUtility/Expand.md!}
+! Calling example:
+!
+! ```fortran
+! CALL Expand(vec, n=0, chunk_size)
+! CALL Expand(vec, n, chunk_size, finished=.TRUE.)
+! ```
+!
+! Example
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP, I4B, LGT
+! USE Display_Method, ONLY: Display
+! USE AppendUtility, ONLY: Expand
+! IMPLICIT NONE
+! INTEGER(I4B), ALLOCATABLE :: aintvec(:)
+! INTEGER(I4B) :: n, val
+! ! First CALL
+! ! We set n = 0, as aintvec is not allocated.
+! val = 1
+! n = 0
+! CALL Expand(vec=aintvec, n=n, chunk_size=10_I4B, val=val, finished=.FALSE.)
+! CALL Display(aintvec, "test1: aintvec = ", full=.TRUE.)
+! CALL Display(n, "n = ")
+! CALL Display(SIZE(aintvec), "test1: size of aintvec = ")
+! val = 2
+! CALL Expand(vec=aintvec, n=n, chunk_size=10_I4B, val=val, finished=.TRUE.)
+! CALL Display(aintvec, "test2: aintvec= ", full=.TRUE.)
+! CALL Display(n, "n = ")
+! CALL Display(SIZE(aintvec), "test2: size of aintvec = ")
+! END PROGRAM main
+!```
 
 INTERFACE Expand
   MODULE PURE SUBROUTINE expand_int8(vec, n, chunk_size, val, finished)
@@ -67,7 +98,17 @@ INTERFACE Expand
     !! set to true to return `vec`
     !! as its correct size (`n`)
   END SUBROUTINE expand_int8
+END INTERFACE Expand
 
+!----------------------------------------------------------------------------
+!                                                            Expand@Methods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2026-10-16
+! summary: Expand the vector of INT16 if needed
+
+INTERFACE Expand
   MODULE PURE SUBROUTINE expand_int16(vec, n, chunk_size, val, finished)
     INTEGER(INT16), ALLOCATABLE, INTENT(INOUT) :: vec(:)
     INTEGER(I4B), INTENT(INOUT) :: n
@@ -82,7 +123,17 @@ INTERFACE Expand
     !! set to true to return `vec`
     !! as its correct size (`n`)
   END SUBROUTINE expand_int16
+END INTERFACE Expand
 
+!----------------------------------------------------------------------------
+!                                                            Expand@Methods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2026-10-16
+! summary: Expand the vector of INT32 if needed
+
+INTERFACE Expand
   MODULE PURE SUBROUTINE expand_int32(vec, n, chunk_size, val, finished)
     INTEGER(INT32), ALLOCATABLE, INTENT(INOUT) :: vec(:)
     INTEGER(I4B), INTENT(INOUT) :: n
@@ -97,7 +148,17 @@ INTERFACE Expand
     !! set to true to return `vec`
     !! as its correct size (`n`)
   END SUBROUTINE expand_int32
+END INTERFACE Expand
 
+!----------------------------------------------------------------------------
+!                                                            Expand@Methods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2026-10-16
+! summary: Expand the vector of INT64 if needed
+
+INTERFACE Expand
   MODULE PURE SUBROUTINE expand_int64(vec, n, chunk_size, val, finished)
     INTEGER(INT64), ALLOCATABLE, INTENT(INOUT) :: vec(:)
     INTEGER(I4B), INTENT(INOUT) :: n
@@ -115,12 +176,12 @@ INTERFACE Expand
 END INTERFACE Expand
 
 !----------------------------------------------------------------------------
-!                                                      Expand@Methods
+!                                                             Expand@Methods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date: 22 July 2022
-! summary: Expand the real vector
+! date: 2026-10-16
+! summary: Expand the real vector (REAL32) if needed
 
 INTERFACE Expand
   MODULE PURE SUBROUTINE expand_real32(vec, n, chunk_size, val, finished)
@@ -137,7 +198,17 @@ INTERFACE Expand
     !! set to true to return `vec`
     !! as its correct size (`n`)
   END SUBROUTINE expand_real32
+END INTERFACE Expand
 
+!----------------------------------------------------------------------------
+!                                                             Expand@Methods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2026-10-16
+! summary: Expand the real vector (REAL64) if needed
+
+INTERFACE Expand
   MODULE PURE SUBROUTINE expand_real64(vec, n, chunk_size, val, finished)
     REAL(REAL64), ALLOCATABLE, INTENT(INOUT) :: vec(:)
     INTEGER(I4B), INTENT(INOUT) :: n
@@ -155,41 +226,85 @@ INTERFACE Expand
 END INTERFACE Expand
 
 !----------------------------------------------------------------------------
-!                                                      Append@Methods
+!                                                            Append@Methods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date:  22 March 2021
-! summary: Append a scalar or vector to vector
+! date: 2026-10-16
+! summary: Append a scalar INT or a vector of INT
 !
-!# Introduction
+! Append a scalar int to a vector of int
 !
-!- Append a scalar integer to an integer vector
-!- Append a integer vector and scalar to an integer vector
-!- Append a scalar real to an real vector
-!- Append a real vector to a real vector
+!@note
+! While calling Append the initial vector can be unallocated in the begining.
+!@endnote
 
 INTERFACE Append
-  ! Append a scalar int to a vector of int
   MODULE PURE SUBROUTINE Append_1a(A, ENTRY)
     INTEGER(I4B), ALLOCATABLE, INTENT(INOUT) :: A(:)
     INTEGER(I4B), INTENT(IN) :: ENTRY
   END SUBROUTINE Append_1a
+END INTERFACE Append
 
-  ! Append a scalar real to a vector of real
+!----------------------------------------------------------------------------
+!                                                            Append@Methods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2026-10-16
+! summary: Append a scalar (REAL) to a vector of real
+!
+! Append is a scalar real to a vector of real.
+!
+!@note
+! While calling Append the initial vector can be unallocated in the begining.
+!@endnote
+!
+
+INTERFACE Append
   MODULE PURE SUBROUTINE Append_1b(A, ENTRY)
     REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: A(:)
     REAL(DFP), INTENT(IN) :: ENTRY
   END SUBROUTINE Append_1b
+END INTERFACE Append
 
-  ! Append a scalar and vector int to a vector of int
+!----------------------------------------------------------------------------
+!                                                            Append@Methods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2026-10-16
+! summary: Append a scalar or vector to vector
+!
+! Append a scalar INT and a vector of INT to a vector of INT.
+!
+!@note
+! While calling Append the initial vector can be unallocated in the begining.
+!@endnote
+
+INTERFACE Append
   MODULE PURE SUBROUTINE Append_1c(C, A, B)
     INTEGER(I4B), ALLOCATABLE, INTENT(INOUT) :: C(:)
     INTEGER(I4B), INTENT(IN) :: A(:)
     INTEGER(I4B), INTENT(IN) :: B
   END SUBROUTINE Append_1c
+END INTERFACE Append
 
-  ! Append a scalar and vector real to a vector of real
+!----------------------------------------------------------------------------
+!                                                            Append@Methods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2026-10-16
+! summary: Append a scalar and vector of real to a vector of real
+!
+! Append a scalar and vector real to a vector of real
+!
+!@note
+! While calling Append the initial vector can be unallocated in the begining.
+!@endnote
+
+INTERFACE Append
   MODULE PURE SUBROUTINE Append_1d(C, A, B)
     REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: C(:)
     REAL(DFP), INTENT(IN) :: A(:)
@@ -202,69 +317,142 @@ END INTERFACE Append
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date:  22 March 2021
-! summary: Append two vectors of real or int
+! date: 2026-10-16
+! summary: Append a vector of INT to a vector of INT.
 !
-!# Introduction
+! Append a vector of INT to a vector of INT.
 !
-!- Append a vector of int to another vector of int
-!- Append a vector of real to another vector of real
-!- Append two vectors of int to another vector of int
-!- Append two vector of real to another vector of real
+!@note
+! While calling Append the initial vector can be unallocated in the begining.
+!@endnote
 
 INTERFACE Append
   MODULE PURE SUBROUTINE Append_2a(A, ENTRY)
     INTEGER(I4B), ALLOCATABLE, INTENT(INOUT) :: A(:)
     INTEGER(I4B), INTENT(IN) :: ENTRY(:)
   END SUBROUTINE Append_2a
+END INTERFACE Append
 
+!----------------------------------------------------------------------------
+!                                                            Append@Methods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2026-10-16
+! summary: Append a vector of REAL to a vector of REAL.
+!
+! Append a vector of REAL to a vector of REAL.
+!
+!@note
+! While calling Append the initial vector can be unallocated in the begining.
+!@endnote
+
+INTERFACE Append
   MODULE PURE SUBROUTINE Append_2b(A, ENTRY)
     REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: A(:)
     REAL(DFP), INTENT(IN) :: ENTRY(:)
   END SUBROUTINE Append_2b
+END INTERFACE Append
 
+!----------------------------------------------------------------------------
+!                                                            Append@Methods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2026-10-16
+! summary: Append two vectors of INT to a vector of INT.
+!
+! Append two vectors of INT to a vector of INT.
+!
+!@note
+! While calling Append the initial vector can be unallocated in the begining.
+!@endnote
+
+INTERFACE Append
   MODULE PURE SUBROUTINE Append_2c(C, A, B)
     INTEGER(I4B), ALLOCATABLE, INTENT(INOUT) :: C(:)
     INTEGER(I4B), INTENT(IN) :: A(:)
     INTEGER(I4B), INTENT(IN) :: B(:)
   END SUBROUTINE Append_2c
+END INTERFACE Append
 
+!----------------------------------------------------------------------------
+!                                                            Append@Methods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2026-10-16
+! summary: Append two vectors of REAL to a vector of REAL.
+!
+! Append two vectors of REAL to a vector of REAL.
+!
+!@note
+! While calling Append the initial vector can be unallocated in the begining.
+!@endnote
+
+INTERFACE Append
   MODULE PURE SUBROUTINE Append_2d(C, A, B)
     REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: C(:)
     REAL(DFP), INTENT(IN) :: A(:)
     REAL(DFP), INTENT(IN) :: B(:)
   END SUBROUTINE Append_2d
+END INTERFACE Append
 
+!----------------------------------------------------------------------------
+!                                                            Append@Methods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2026-10-16
+! summary: Append three vectors of INT to a vector of INT.
+!
+! Append three vectors of INT to a vector of INT.
+!
+!@note
+! While calling Append the initial vector can be unallocated in the begining.
+!@endnote
+
+INTERFACE Append
   MODULE PURE SUBROUTINE Append_2e(D, C, A, B)
     INTEGER(I4B), ALLOCATABLE, INTENT(INOUT) :: D(:)
     INTEGER(I4B), INTENT(IN) :: A(:)
     INTEGER(I4B), INTENT(IN) :: B(:)
     INTEGER(I4B), INTENT(IN) :: C(:)
   END SUBROUTINE Append_2e
+END INTERFACE Append
 
+!----------------------------------------------------------------------------
+!                                                            Append@Methods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2026-10-16
+! summary: Append three vectors of REAL to a vector of REAL.
+!
+! Append three vectors of REAL to a vector of REAL.
+!
+!@note
+! While calling Append the initial vector can be unallocated in the begining.
+!@endnote
+
+INTERFACE Append
   MODULE PURE SUBROUTINE Append_2f(D, C, A, B)
     REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: D(:)
     REAL(DFP), INTENT(IN) :: A(:)
     REAL(DFP), INTENT(IN) :: B(:)
     REAL(DFP), INTENT(IN) :: C(:)
   END SUBROUTINE Append_2f
-
 END INTERFACE Append
 
 !----------------------------------------------------------------------------
-!                                                      Append@Methods
+!                                                             Append@Methods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date:  22 March 2021
-! summary: Masked append
+! date: 2026-10-16
+! summary: If mask is TRUE then append the scalar (INT) to a vector of INT.
 !
-!# Introduction
-!
-!- Append a scalar integer to a vector of int
-!- Append a scalar real to a vector of reals
-!- Append a scalar and vector of int to another vector of int
-!- Append a scalar and vector real to another vector of real
+! If mask is TRUE then append the scalar (INT) to a vector of INT.
 
 INTERFACE Append
   MODULE PURE SUBROUTINE Append_3a(A, ENTRY, mask)
@@ -272,20 +460,58 @@ INTERFACE Append
     INTEGER(I4B), INTENT(IN) :: ENTRY
     LOGICAL(LGT), INTENT(IN) :: mask
   END SUBROUTINE Append_3a
+END INTERFACE Append
 
+!----------------------------------------------------------------------------
+!                                                             Append@Methods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2026-10-16
+! summary: If mask is TRUE then append the scalar (REAL) to a vector of REAL.
+!
+! If mask is TRUE then append the scalar (REAL) to a vector of REAL.
+
+INTERFACE Append
   MODULE PURE SUBROUTINE Append_3b(A, ENTRY, mask)
     REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: A(:)
     REAL(DFP), INTENT(IN) :: ENTRY
     LOGICAL(LGT), INTENT(IN) :: mask
   END SUBROUTINE Append_3b
+END INTERFACE Append
 
+!----------------------------------------------------------------------------
+!                                                             Append@Methods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2026-10-16
+! summary: Masked append
+!
+! If mask is TRUE then append a scalar (INT) and a vector of INT
+! to a vector of INT.
+
+INTERFACE Append
   MODULE PURE SUBROUTINE Append_3c(C, A, B, mask)
     INTEGER(I4B), ALLOCATABLE, INTENT(INOUT) :: C(:)
     INTEGER(I4B), INTENT(IN) :: A(:)
     INTEGER(I4B), INTENT(IN) :: B
     LOGICAL(LGT), INTENT(IN) :: mask
   END SUBROUTINE Append_3c
+END INTERFACE Append
 
+!----------------------------------------------------------------------------
+!                                                             Append@Methods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2026-10-16
+! summary: Masked append
+!
+! If mask is TRUE then append a scalar (REAL) and a vector of REAL
+! to a vector of REAL.
+
+INTERFACE Append
   MODULE PURE SUBROUTINE Append_3d(C, A, B, mask)
     REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: C(:)
     REAL(DFP), INTENT(IN) :: A(:)
@@ -295,17 +521,14 @@ INTERFACE Append
 END INTERFACE Append
 
 !----------------------------------------------------------------------------
-!                                                      Append@Methods
+!                                                             Append@Methods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date:  22 March 2021
-! summary: Masked append two vectors to another vector of int/real
+! date:  2026-10-16
+! summary: Masked append
 !
-!# Introduction
-!
-!- Append a vector of int to another vector of int
-!- Append a vector of real to another vector of real
+! If mask(i) is true then append entry(i) to A.
 
 INTERFACE Append
   MODULE PURE SUBROUTINE Append_4a(A, ENTRY, mask)
@@ -313,20 +536,56 @@ INTERFACE Append
     INTEGER(I4B), INTENT(IN) :: ENTRY(:)
     LOGICAL(LGT), INTENT(IN) :: mask(:)
   END SUBROUTINE Append_4a
+END INTERFACE Append
 
+!----------------------------------------------------------------------------
+!                                                             Append@Methods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2026-10-16
+! summary: Masked append
+!
+! If mask(i) is true then append entry(i) to A.
+
+INTERFACE Append
   MODULE PURE SUBROUTINE Append_4b(A, ENTRY, mask)
     REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: A(:)
     REAL(DFP), INTENT(IN) :: ENTRY(:)
     LOGICAL(LGT), INTENT(IN) :: mask(:)
   END SUBROUTINE Append_4b
+END INTERFACE Append
 
+!----------------------------------------------------------------------------
+!                                                            Append@Methods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2026-10-16
+! summary: Masked append
+!
+! If mask(i) is true then append A(i) and B(i) to C.
+
+INTERFACE Append
   MODULE PURE SUBROUTINE Append_4c(C, A, B, mask)
     INTEGER(I4B), ALLOCATABLE, INTENT(INOUT) :: C(:)
     INTEGER(I4B), INTENT(IN) :: A(:)
     INTEGER(I4B), INTENT(IN) :: B(:)
     LOGICAL(LGT), INTENT(IN) :: mask(:)
   END SUBROUTINE Append_4c
+END INTERFACE Append
 
+!----------------------------------------------------------------------------
+!                                                             Append@Methods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2026-10-16
+! summary: Masked append
+!
+! If mask(i) is true then append A(i) and B(i) to C.
+
+INTERFACE Append
   MODULE PURE SUBROUTINE Append_4d(C, A, B, mask)
     REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: C(:)
     REAL(DFP), INTENT(IN) :: A(:)
@@ -336,20 +595,30 @@ INTERFACE Append
 END INTERFACE Append
 
 !----------------------------------------------------------------------------
-!                                                      Append@Methods
+!                                                             Append@Methods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date:  22 March 2021
-! summary: Append a scalar INTEGER  to  INTEGER  vec tor
+! date: 2026-10-16
+! summary: Append a scalar INT  to a vector of INT.
 
-INTERFACE OPERATOR(.Append.)
+INTERFACE OPERATOR(.APPEND.)
   MODULE PURE FUNCTION func_Append_1a(A, ENTRY) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: A(:)
     INTEGER(I4B), INTENT(IN) :: ENTRY
     INTEGER(I4B), ALLOCATABLE :: ans(:)
   END FUNCTION func_Append_1a
+END INTERFACE
 
+!----------------------------------------------------------------------------
+!                                                             Append@Methods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2026-10-16
+! summary: Append a scalar REAL to a vector of REAL.
+
+INTERFACE OPERATOR(.APPEND.)
   MODULE PURE FUNCTION func_Append_1b(A, ENTRY) RESULT(ans)
     REAL(DFP), INTENT(IN) :: A(:)
     REAL(DFP), INTENT(IN) :: ENTRY
@@ -358,7 +627,7 @@ INTERFACE OPERATOR(.Append.)
 END INTERFACE
 
 !----------------------------------------------------------------------------
-!                                                      Append@Methods
+!                                                             Append@Methods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -371,22 +640,30 @@ INTERFACE OPERATOR(.APPEND.)
     INTEGER(I4B), INTENT(IN) :: ENTRY(:)
     INTEGER(I4B), ALLOCATABLE :: ans(:)
   END FUNCTION func_Append_2a
+END INTERFACE OPERATOR(.APPEND.)
 
+!----------------------------------------------------------------------------
+!                                                             Append@Methods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  22 March 2021
+! summary: Append two vectors of REAL
+
+INTERFACE OPERATOR(.APPEND.)
   MODULE PURE FUNCTION func_Append_2b(A, ENTRY) RESULT(ans)
     REAL(DFP), INTENT(IN) :: A(:)
     REAL(DFP), INTENT(IN) :: ENTRY(:)
     REAL(DFP), ALLOCATABLE :: ans(:)
   END FUNCTION func_Append_2b
-
 END INTERFACE
 
 !----------------------------------------------------------------------------
-!                                                    ColConcat@Methods
+!                                                          ColConcat@Methods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-24
-! update: 2021-11-24
 ! summary: Concat columns of two vectors
 
 INTERFACE ColConcat
@@ -395,37 +672,95 @@ INTERFACE ColConcat
     REAL(REAL32), INTENT(IN) :: b(:)
     REAL(REAL32), ALLOCATABLE :: ans(:, :)
   END FUNCTION colConcat_1a
+END INTERFACE ColConcat
 
+!----------------------------------------------------------------------------
+!                                                          ColConcat@Methods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2021-11-24
+! summary: Concat columns of two vectors
+
+INTERFACE ColConcat
   MODULE PURE FUNCTION colConcat_1b(a, b) RESULT(ans)
     REAL(REAL64), INTENT(IN) :: a(:)
     REAL(REAL64), INTENT(IN) :: b(:)
     REAL(REAL64), ALLOCATABLE :: ans(:, :)
   END FUNCTION colConcat_1b
+END INTERFACE ColConcat
 
+!----------------------------------------------------------------------------
+!                                                          ColConcat@Methods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2021-11-24
+! summary: Concat columns of two vectors
+
+INTERFACE ColConcat
   MODULE PURE FUNCTION colConcat_1c(a, b) RESULT(ans)
     INTEGER(INT64), INTENT(IN) :: a(:)
     INTEGER(INT64), INTENT(IN) :: b(:)
     INTEGER(INT64), ALLOCATABLE :: ans(:, :)
   END FUNCTION colConcat_1c
+END INTERFACE ColConcat
 
+!----------------------------------------------------------------------------
+!                                                          ColConcat@Methods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2021-11-24
+! summary: Concat columns of two vectors
+
+INTERFACE ColConcat
   MODULE PURE FUNCTION colConcat_1d(a, b) RESULT(ans)
     INTEGER(INT32), INTENT(IN) :: a(:)
     INTEGER(INT32), INTENT(IN) :: b(:)
     INTEGER(INT32), ALLOCATABLE :: ans(:, :)
   END FUNCTION colConcat_1d
+END INTERFACE ColConcat
 
+!----------------------------------------------------------------------------
+!                                                          ColConcat@Methods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2021-11-24
+! summary: Concat columns of two vectors
+
+INTERFACE ColConcat
   MODULE PURE FUNCTION colConcat_1e(a, b) RESULT(ans)
     INTEGER(INT16), INTENT(IN) :: a(:)
     INTEGER(INT16), INTENT(IN) :: b(:)
     INTEGER(INT16), ALLOCATABLE :: ans(:, :)
   END FUNCTION colConcat_1e
+END INTERFACE ColConcat
 
+!----------------------------------------------------------------------------
+!                                                          ColConcat@Methods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2021-11-24
+! summary: Concat columns of two vectors
+
+INTERFACE ColConcat
   MODULE PURE FUNCTION colConcat_1f(a, b) RESULT(ans)
     INTEGER(INT8), INTENT(IN) :: a(:)
     INTEGER(INT8), INTENT(IN) :: b(:)
     INTEGER(INT8), ALLOCATABLE :: ans(:, :)
   END FUNCTION colConcat_1f
 END INTERFACE ColConcat
+
+!----------------------------------------------------------------------------
+!                                                          ColConcat@Methods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2021-11-24
+! summary: Concat columns of two vectors
 
 INTERFACE OPERATOR(.ColConcat.)
   MODULE PROCEDURE colConcat_1a, colConcat_1b, colConcat_1c, &
