@@ -12,8 +12,7 @@ output_dir: ${HOME}/temp/ford
 exclude_dir:  ../src/submodules/
               ../src/modules/BLAS95/
 author: Vikas Sharma
-author_description: Graduate School of Agriculture, Kyoto University,
-	Kyoto, Japan
+author_description: Graduate School of Agriculture, Kyoto University, Kyoto, Japan
 email: vickysharma0812@gmail.com
 github: https://vickysharma0812.github.io/
 author_pic: ./media/vikas.png
