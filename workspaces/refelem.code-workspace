@@ -1,0 +1,25 @@
+{
+	"folders": [
+		{
+			"path": "../src/modules/ElemshapeData"
+		},
+		{
+			"path": "../src/modules/Geometry"
+		},
+		{
+			"path": "../src/modules/QuadraturePoint"
+		},
+		{
+			"path": "../src/modules/ReferenceElement"
+		},
+		{
+			"path": "../src/submodules/ElemshapeData"
+		},
+		{
+			"path": "../src/submodules/QuadraturePoint"
+		},
+		{
+			"path": "../src/submodules/ReferenceElement"
+		}
+	]
+}

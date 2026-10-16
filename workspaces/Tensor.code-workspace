@@ -1,0 +1,10 @@
+{
+	"folders": [
+		{
+			"path": "../src/modules/Rank2Tensor"
+		},
+		{
+			"path": "../src/submodules/Rank2Tensor"
+		}
+	]
+}
