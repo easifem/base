@@ -1,5 +1,4 @@
-# 𑗕 easifemBase
-
+# easifemBase
 
 ![](./figures/what-is-easifem.svg)
 
@@ -48,7 +47,6 @@ EASIFEM requires following software packages to be installed on the system.
 | **Doxygen** | >=1.9.1 | 1.9.1 | documentation generation |
 | **GTK-4** |  | | n |
 
-
 ## External packages
 
 EASIFEM depends upon the following external packages (extpkgs) that are not shipped with the source-code.
@@ -66,7 +64,6 @@ EASIFEM depends upon the following external packages (extpkgs) that are not ship
 | [LAPACK95](https://github.com/vickysharma0812/LAPACK95.git) | Fortran 95 interface for Lapack library | easifem install lapack95 |
 | [Sparsekit](https://github.com/vickysharma0812/Sparsekit.git) | Fortran library for sparse matrices | easifem install sparsekit |
 | [Gmsh](https://gmsh.info/) | Finite element mesh generator| easifem install gmsh |
-
 
 ## Installation
 
@@ -98,7 +95,6 @@ Let us understand the structure of the Base library by an example of `CSRSparsit
 
 1. First, we define `CSRSparsity_` in `BaseType.F90` as
 
-
 ```fortran
 TYPE :: CSRSparsity_
   INTEGER(I4B) :: nnz = 0
@@ -119,14 +115,12 @@ TYPE :: CSRSparsity_
 END TYPE CSRSparsity_
 ```
 
-
 2. Then we create a directory called `CSRSparsity` in both `modules` and `submodules` directory.
 3. In `modules/CSRSparsity` we create `CSRSparsity_Method.F90` file.
 4. In `modules/CSRSparsity/CSRSparsity_Method.F90` we define a module `CSRSparsity_Method` (same name as file).
 5. In `CSRSparsity_Method` module, we only define interface of methods. In this way, this file can be considered as header file. See, the example given below:
 6. In `submodules/CSRSparsity`, we create `CSRSparsity_Method@ConstructorMethods.F90`, which contains the contruction related routines.
 7. Also, we create `CSRSparsity_Method@IOMethods.F90`, which include methods related to input and output.
-
 
 ```fortran
 MODULE CSRSparsity_Method
