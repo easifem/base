@@ -306,7 +306,7 @@ END INTERFACE SOFTEQR
 !```
 !
 !$$
-!a \le b + tol\
+!a \le b + tol
 !$$
 
 INTERFACE SOFTLE

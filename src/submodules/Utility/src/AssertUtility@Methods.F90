@@ -15,12 +15,9 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-!> author: Vikas Sharma, Ph. D.
-! date:         3 April 2021
-! summary:         Assert functions
-
 SUBMODULE(AssertUtility) Methods
-USE BaseMethod, ONLY: ErrorMsg
+USE ErrorHandling, ONLY: ErrorMsg
+USE Display_Method, ONLY: ToString
 IMPLICIT NONE
 CONTAINS
 
@@ -30,14 +27,14 @@ CONTAINS
 
 MODULE PROCEDURE assert_eq2
 IF (n1 .EQ. n2) THEN
-  assert_eq2 = n1
+  ans = n1
 ELSE
+#ifdef DEBUG_VER
   CALL ErrorMsg( &
-    & File=__FILE__, &
-    & Routine="Assert_Eq()", &
-    & Line=__LINE__, &
-    & MSG=" Sizes of Matrices are not the same; Program Stopped ")
+    file=__FILE__, routine="Assert_Eq2()", line=__LINE__, &
+    msg="n1 and n2 are not same; n1= "//ToString(n1)//" n2= "//ToString(n2))
   STOP
+#endif
 END IF
 END PROCEDURE assert_eq2
 
@@ -47,14 +44,15 @@ END PROCEDURE assert_eq2
 
 MODULE PROCEDURE assert_eq3
 IF (n1 == n2 .AND. n2 == n3) THEN
-  assert_eq3 = n1
+  ans = n1
 ELSE
+#ifdef DEBUG_VER
   CALL ErrorMsg( &
-    & File=__FILE__, &
-    & Routine="Assert_Eq()", &
-    & Line=__LINE__, &
-    & MSG=" Sizes of Matrices are not the same; Program Stopped ")
+    file=__FILE__, routine="Assert_Eq2()", line=__LINE__, &
+    msg="n1, n2, n3 are not same; n1= "//ToString(n1)// &
+    " n2= "//ToString(n2)//" n3= "//ToString(n3))
   STOP
+#endif
 END IF
 END PROCEDURE assert_eq3
 
@@ -64,14 +62,17 @@ END PROCEDURE assert_eq3
 
 MODULE PROCEDURE assert_eq4
 IF (n1 == n2 .AND. n2 == n3 .AND. n3 == n4) THEN
-  assert_eq4 = n1
+  ans = n1
 ELSE
+#ifdef DEBUG_VER
   CALL ErrorMsg( &
-    & File=__FILE__, &
-    & Routine="Assert_Eq()", &
-    & Line=__LINE__, &
-    & MSG=" Sizes of Matrices are not the same; Program Stopped ")
+    file=__FILE__, routine="Assert_Eq2()", line=__LINE__, &
+    msg="n1, n2, n3, n4 are not same; n1= "//ToString(n1)// &
+    " n2= "//ToString(n2)// &
+    " n3= "//ToString(n3)// &
+    " n4= "//ToString(n4))
   STOP
+#endif
 END IF
 END PROCEDURE assert_eq4
 
@@ -81,14 +82,14 @@ END PROCEDURE assert_eq4
 
 MODULE PROCEDURE assert_eqn
 IF (ALL(nn(2:) == nn(1))) THEN
-  assert_eqn = nn(1)
+  ans = nn(1)
 ELSE
+#ifdef DEBUG_VER
   CALL ErrorMsg( &
-    & File=__FILE__, &
-    & Routine="Assert_Eq()", &
-    & Line=__LINE__, &
-    & MSG=" Sizes of Matrices are not the same; Program Stopped ")
+    file=__FILE__, routine="Assert_Eq2()", line=__LINE__, &
+    msg="n1, n2, n3, n4 are not same")
   STOP
+#endif
 END IF
 END PROCEDURE assert_eqn
 
@@ -97,18 +98,14 @@ END PROCEDURE assert_eqn
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE assert_shape_2
+#ifdef DEBUG_VER
 INTEGER(I4B) :: shape_mat(2)
 shape_mat = SHAPE(Mat)
-IF (ALL(shape_mat == s)) THEN
-  RETURN
-ELSE
-  CALL ErrorMsg( &
-    & File=file, &
-    & Routine=routine, &
-    & Line=line, &
-    & MSG=msg)
+IF (.NOT. ALL(shape_mat == s)) THEN
+  CALL ErrorMsg(file=file, routine=routine, line=line, msg=msg)
   STOP
 END IF
+#endif
 END PROCEDURE assert_shape_2
 
 !----------------------------------------------------------------------------
@@ -116,15 +113,14 @@ END PROCEDURE assert_shape_2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE assert_shape_3
+#ifdef DEBUG_VER
 INTEGER(I4B) :: shape_mat(3)
 shape_mat = SHAPE(Mat)
-IF (ALL(shape_mat == s)) THEN
-  RETURN
-ELSE
-  CALL ErrorMsg(File=file, Routine=routine, Line=line, &
-    & MSG=msg)
+IF (.NOT. ALL(shape_mat == s)) THEN
+  CALL ErrorMsg(file=file, routine=routine, line=line, msg=msg)
   STOP
 END IF
+#endif
 END PROCEDURE assert_shape_3
 
 !----------------------------------------------------------------------------
@@ -132,15 +128,14 @@ END PROCEDURE assert_shape_3
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE assert_shape_4
+#ifdef DEBUG_VER
 INTEGER(I4B) :: shape_mat(4)
 shape_mat = SHAPE(Mat)
-IF (ALL(shape_mat == s)) THEN
-  RETURN
-ELSE
-  CALL ErrorMsg(File=file, Routine=routine, Line=line, &
-    & MSG=msg)
+IF (.NOT. ALL(shape_mat == s)) THEN
+  CALL ErrorMsg(file=file, routine=routine, line=line, msg=msg)
   STOP
 END IF
+#endif
 END PROCEDURE assert_shape_4
 
 !----------------------------------------------------------------------------
@@ -148,16 +143,12 @@ END PROCEDURE assert_shape_4
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE assert_2
-IF (n1 .EQ. n2) THEN
-  RETURN
-ELSE
-  CALL ErrorMsg( &
-    & File=file, &
-    & Routine=routine, &
-    & Line=line, &
-    & MSG=msg)
+#ifdef DEBUG_VER
+IF (n1 .NE. n2) THEN
+  CALL ErrorMsg(file=file, routine=routine, line=line, msg=msg)
   STOP
 END IF
+#endif
 END PROCEDURE assert_2
 
 !----------------------------------------------------------------------------
@@ -165,16 +156,12 @@ END PROCEDURE assert_2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE assert_3
-IF (n1 == n2 .AND. n2 == n3) THEN
-  RETURN
-ELSE
-  CALL ErrorMsg( &
-    & File=file, &
-    & Routine=routine, &
-    & Line=line, &
-    & MSG=msg)
+#ifdef DEBUG_VER
+IF (n1 .NE. n2 .OR. n2 .NE. n3) THEN
+  CALL ErrorMsg(file=file, routine=routine, line=line, msg=msg)
   STOP
 END IF
+#endif
 END PROCEDURE assert_3
 
 !----------------------------------------------------------------------------
@@ -182,16 +169,12 @@ END PROCEDURE assert_3
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE assert_4
-IF (n1 == n2 .AND. n2 == n3 .AND. n3 == n4) THEN
-  RETURN
-ELSE
-  CALL ErrorMsg( &
-    & File=file, &
-    & Routine=routine, &
-    & Line=line, &
-    & MSG=msg)
+#ifdef DEBUG_VER
+IF (n1 .NE. n2 .OR. n2 .NE. n3 .OR. n3 .NE. n4) THEN
+  CALL ErrorMsg(file=file, routine=routine, line=line, msg=msg)
   STOP
 END IF
+#endif
 END PROCEDURE assert_4
 
 !----------------------------------------------------------------------------
@@ -199,16 +182,16 @@ END PROCEDURE assert_4
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE assert_n
-IF (ALL(nn(2:) == nn(1))) THEN
-  RETURN
-ELSE
-  CALL ErrorMsg( &
-    & File=file, &
-    & Routine=routine, &
-    & Line=line, &
-    & MSG=msg)
+#ifdef DEBUG_VER
+IF (.NOT. ALL(nn(2:) == nn(1))) THEN
+  CALL ErrorMsg(file=file, routine=routine, line=line, msg=msg)
   STOP
 END IF
+#endif
 END PROCEDURE assert_n
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
 
 END SUBMODULE Methods

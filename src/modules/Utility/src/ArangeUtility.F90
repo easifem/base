@@ -20,6 +20,7 @@ USE GlobalData, ONLY: DFP, I4B, LGT
 USE GlobalData, ONLY: INT8, INT16, INT32, INT64
 USE GlobalData, ONLY: REAL32, REAL64
 IMPLICIT NONE
+PRIVATE
 PUBLIC :: Arange
 
 !----------------------------------------------------------------------------
