@@ -33,9 +33,9 @@ src/
 
 ### Configure and Build
 
-Always use easifem cli to build the project. For example 
+Always use easifem cli to build the project. For example
 
-```bash 
+```bash
 easifem dev base
 ```
 
@@ -193,17 +193,48 @@ Maximum 78 characters (enforced by fortitude.toml)
 
 Always declare `IMPLICIT NONE` after module/submodule declaration
 
-### Comments
+### Comments and FORD docblock style
 
-- Use `!>` for author/date/summary documentation
-- Use `!` for inline comments
-- Document interfaces with author, date, and summary
+- Use `!>` only for the *first line* of a FORD-style documentation block (the block header).
+- Use a plain `!` for all subsequent lines (continuation lines) in the same docblock.
+- Use `!` for ordinary inline comments and short notes.
+- Prefer LaTeX math for formulas in docblocks. Use display math `$$ ... $$` for full formulas.
+- Keep docblock lines wrapped to the project's 78-character line length when possible.
+- Document public interfaces and module-level summaries with a FORD-style block that includes author, date, summary, arguments, returns, and a Formula section.
+
+Example FORD docblock (preferred style):
 
 ```fortran
-!> author: Vikas Sharma, Ph. D.
-! date: 1 March 2021
-! summary: This routine does X
+!> Module: SomeModule
+! author: Your Name, Ph.D.
+! date: 2024-01-01
+! summary: Short summary of the module.
+!
+! Description:
+!   Longer description here. Wrap lines to <=78 characters.
+!
+! Function: SomeFunction
+! author: Your Name
+! date: 2024-01-01
+! summary: Short summary for the function.
+!
+! Arguments:
+!   x : REAL(DFP) - input value
+!
+! Returns:
+!   y : REAL(DFP) - result
+!
+! Formula:
+!   $$\mathrm{y} = \sum_{i} x_i\, w_i$$
 ```
+
+Notes for AI agents and maintainers:
+
+- When generating FORD docblocks, emit `!>` only on the first line of the block. Do not use `!>` on continuation lines.
+- Use `!` continuation lines for all content after the first `!>` line so the files remain consistent with existing project examples (e.g., `ApproxUtility.F90`).
+- Prefer clear, short lines and reflow text to avoid exceeding 78 characters.
+- Use LaTeX only inside the Formula section; avoid complex LaTeX packages or commands that the documentation renderer may not support.
+- Keep docblocks factual: include who authored the change, the date, a concise summary, argument/return shapes (using `SIZE(...)` where relevant), and a simple LaTeX formula for the mathematical relation.
 
 ### Error Handling
 
@@ -227,7 +258,7 @@ USE GlobalData, ONLY: stderr
 ### Categories of Methods
 
 - `@ConstructorMethods` - Creation, initialization, copying
-- `@IOMethods` - Display, read, write operations  
+- `@IOMethods` - Display, read, write operations
 - `@GetMethods` - Getter functions
 - `@SetMethods` - Setter subroutines
 

@@ -37,15 +37,16 @@ END PROCEDURE matmul_r4_r1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE matmul_r4_r1_
-INTEGER(I4B) :: ii, jj, kk, ll
+INTEGER(I4B) :: ii, jj, kk, ll, dim4
 
 dim1 = SIZE(a1, 1)
 dim2 = SIZE(a1, 2)
 dim3 = SIZE(a1, 3)
+dim4 = SIZE(a1, 4)
 
 ans(1:dim1, 1:dim2, 1:dim3) = 0.0_DFP
 
-DO ll = 2, SIZE(a2)
+DO ll = 1, dim4
   DO kk = 1, dim3
     DO jj = 1, dim2
       DO ii = 1, dim1
