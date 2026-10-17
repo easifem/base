@@ -15,8 +15,16 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
+!> author: Vikas Sharma, Ph. D.
+! date: 2021-04-03
+! summary: This module provides methods for contraction operation between
+! tensors.
+!
+! This module provides methods for contraction operation between
+! tensors.
+!
 MODULE ContractionUtility
-USE GlobalData
+USE GlobalData, ONLY: DFP, I4B, LGT
 IMPLICIT NONE
 PRIVATE
 
@@ -27,23 +35,17 @@ PUBLIC :: Contraction
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date:         3 April 2021
-! summary:         Contraction for rank4 and rank1 array
-!
-!# Introduction
+! date: 2021-04-03
+! summary: Contraction for rank4 and rank1 array
 !
 ! `ans(i,j,k) = a1(i,j,k,l)*a2(l)`
 
-INTERFACE
+INTERFACE Contraction
   MODULE PURE FUNCTION Contraction_r4_r1(a1, a2) RESULT(ans)
     REAL(DFP), INTENT(IN) :: a1(:, :, :, :)
     REAL(DFP), INTENT(IN) :: a2(:)
     REAL(DFP) :: ans(SIZE(a1, 1), SIZE(a1, 2), SIZE(a1, 3))
-  END FUNCTION
-END INTERFACE
-
-INTERFACE Contraction
-  MODULE PROCEDURE Contraction_r4_r1
+  END FUNCTION Contraction_r4_r1
 END INTERFACE Contraction
 
 !----------------------------------------------------------------------------
@@ -51,23 +53,19 @@ END INTERFACE Contraction
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date:         3 April 2021
-! summary:         Contraction for rank4 and rank1 array
+! date: 2021-04-03
+! summary: Contraction for rank4 and rank2 array
 !
-!# Introduction
+! Contraction for rank4 and rank2 array
 !
 ! `ans(i,j) = a1(i,j,k,l)*a2(k,l)`
 
-INTERFACE
+INTERFACE Contraction
   MODULE PURE FUNCTION Contraction_r4_r2(a1, a2) RESULT(ans)
     REAL(DFP), INTENT(IN) :: a1(:, :, :, :)
     REAL(DFP), INTENT(IN) :: a2(:, :)
     REAL(DFP) :: ans(SIZE(a1, 1), SIZE(a1, 2))
-  END FUNCTION
-END INTERFACE
-
-INTERFACE Contraction
-  MODULE PROCEDURE Contraction_r4_r2
+  END FUNCTION Contraction_r4_r2
 END INTERFACE Contraction
 
 !----------------------------------------------------------------------------
@@ -75,10 +73,10 @@ END INTERFACE Contraction
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date:         3 April 2021
-! summary:         Contraction for rank4 and rank1 array
+! date: 2021-04-03
+! summary: Contraction for rank4 and rank3 array
 !
-!# Introduction
+! Contraction for rank4 and rank3 array
 !
 ! `ans(i) = a1(i,j,k,l)*a2(j,k,l)`
 
