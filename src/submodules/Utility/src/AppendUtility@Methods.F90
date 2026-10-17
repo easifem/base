@@ -16,7 +16,7 @@
 !
 
 SUBMODULE(AppendUtility) Methods
-USE BaseMethod
+USE ReallocateUtility, ONLY: Reallocate
 IMPLICIT NONE
 CONTAINS
 

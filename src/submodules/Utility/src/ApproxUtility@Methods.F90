@@ -15,6 +15,7 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 
 SUBMODULE(ApproxUtility) Methods
+USE BaseType, ONLY: math => TypeMathOpt
 IMPLICIT NONE
 CONTAINS
 
@@ -23,8 +24,7 @@ CONTAINS
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE approxeq_1
-REAL(REAL64), PARAMETER :: my_zero = 1.0E-10
-ans = (ABS(a - b) .LE. my_zero)
+ans = (ABS(a - b) .LE. math%zero)
 END PROCEDURE approxeq_1
 
 !----------------------------------------------------------------------------
@@ -32,8 +32,7 @@ END PROCEDURE approxeq_1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE approxeq_2
-REAL(REAL64), PARAMETER :: my_zero = 1.0E-10
-ans = (ABS(a - b) .LE. my_zero)
+ans = (ABS(a - b) .LE. math%zero)
 END PROCEDURE approxeq_2
 
 !----------------------------------------------------------------------------
@@ -42,8 +41,7 @@ END PROCEDURE approxeq_2
 
 MODULE PROCEDURE approxeqr_1
 REAL(REAL32) :: eps
-REAL(REAL32), PARAMETER :: my_zero = REAL(Zero, REAL32)
-eps = my_zero + MAX(ABS(a), ABS(b)) * my_zero
+eps = REAL(math%zero, REAL32) + MAX(ABS(a), ABS(b)) * REAL(math%zero, REAL32)
 ans = (ABS(a - b) .LE. eps)
 END PROCEDURE approxeqr_1
 
@@ -53,8 +51,7 @@ END PROCEDURE approxeqr_1
 
 MODULE PROCEDURE approxeqr_2
 REAL(REAL64) :: eps
-REAL(REAL64), PARAMETER :: my_zero = REAL(Zero, REAL64)
-eps = my_zero + MAX(ABS(a), ABS(b)) * my_zero
+eps = math%zero + MAX(ABS(a), ABS(b)) * math%zero
 ans = (ABS(a - b) .LE. eps)
 END PROCEDURE approxeqr_2
 
@@ -62,25 +59,40 @@ END PROCEDURE approxeqr_2
 !                                                                 APPROXEQF
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE approxeq_ulp_real
+MODULE PROCEDURE approxeqf_1
 LOGICAL(LGT) :: isok
 
 isok = (a > 0._DFP .AND. b < 0._DFP) .OR. (a < 0._DFP .AND. b > 0._DFP)
 
 IF (isok) THEN
-  ans = approxeq_1(a, b)
+  ans = a.APPROXEQ.b
 ELSE
   ans = (ABS(TRANSFER(a, 1_I4B) - TRANSFER(b, 1_I4B)) <= 10_I4B)
 END IF
-END PROCEDURE approxeq_ulp_real
+END PROCEDURE approxeqf_1
+
+!----------------------------------------------------------------------------
+!                                                                 APPROXEQF
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE approxeqf_2
+LOGICAL(LGT) :: isok
+
+isok = (a > 0._DFP .AND. b < 0._DFP) .OR. (a < 0._DFP .AND. b > 0._DFP)
+
+IF (isok) THEN
+  ans = a.APPROXEQ.b
+ELSE
+  ans = (ABS(TRANSFER(a, 1_I4B) - TRANSFER(b, 1_I4B)) <= 10_I4B)
+END IF
+END PROCEDURE approxeqf_2
 
 !----------------------------------------------------------------------------
 !                                                                 APPROXLE
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE approxle_1
-REAL(DFP), PARAMETER :: my_zero = 1.0E-10
-ans = (r1 - r2 .LE. my_zero)
+ans = (r1 - r2 .LE. math%zero)
 END PROCEDURE approxle_1
 
 !----------------------------------------------------------------------------
@@ -88,8 +100,7 @@ END PROCEDURE approxle_1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE approxle_2
-REAL(DFP), PARAMETER :: my_zero = 1.0E-10
-ans = (r1 - r2 .LE. my_zero)
+ans = (r1 - r2 .LE. math%zero)
 END PROCEDURE approxle_2
 
 !----------------------------------------------------------------------------
@@ -97,8 +108,7 @@ END PROCEDURE approxle_2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE approxge_1
-REAL(DFP), PARAMETER :: my_zero = 1.0E-10
-ans = (my_zero .GE. r2 - r1)
+ans = (math%zero .GE. r2 - r1)
 END PROCEDURE approxge_1
 
 !----------------------------------------------------------------------------
@@ -106,8 +116,7 @@ END PROCEDURE approxge_1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE approxge_2
-REAL(DFP), PARAMETER :: my_zero = 1.0E-10
-ans = (my_zero .GE. r2 - r1)
+ans = (math%zero .GE. (r2 - r1))
 END PROCEDURE approxge_2
 
 !----------------------------------------------------------------------------
@@ -132,7 +141,7 @@ END PROCEDURE softeq_2
 
 MODULE PROCEDURE softeqr_1
 REAL(REAL32) :: eps
-eps = REAL(Zero, REAL32) + MAX(ABS(r1), ABS(r2)) * tol
+eps = REAL(math%zero, REAL32) + MAX(ABS(r1), ABS(r2)) * tol
 ans = (ABS(r1 - r2) .LE. eps)
 END PROCEDURE softeqr_1
 
@@ -142,7 +151,7 @@ END PROCEDURE softeqr_1
 
 MODULE PROCEDURE softeqr_2
 REAL(REAL64) :: eps
-eps = REAL(Zero, REAL64) + MAX(ABS(r1), ABS(r2)) * tol
+eps = REAL(math%zero, REAL64) + MAX(ABS(r1), ABS(r2)) * tol
 ans = (ABS(r1 - r2) .LE. eps)
 END PROCEDURE softeqr_2
 
@@ -216,7 +225,7 @@ END PROCEDURE softgt_2
 
 MODULE PROCEDURE equalto_logical
 ans = (l1 .EQV. l2)
-END PROCEDURE
+END PROCEDURE equalto_logical
 
 !----------------------------------------------------------------------------
 !
@@ -224,7 +233,7 @@ END PROCEDURE
 
 MODULE PROCEDURE notequalto_logical
 ans = (l1 .NEQV. l2)
-END PROCEDURE
+END PROCEDURE notequalto_logical
 
 !----------------------------------------------------------------------------
 !
@@ -234,31 +243,47 @@ MODULE PROCEDURE assign_char_to_Int8
 INTEGER(I4B) :: tmpInt
 CHARACTER(4) :: fmt
 tmpInt = LEN(c)
-WRITE (fmt, '(i4)') tmpInt; fmt = ADJUSTL(fmt)
+WRITE (fmt, '(i4)') tmpInt
+fmt = ADJUSTL(fmt)
 READ (c, '(I'//TRIM(fmt)//')') i
 END PROCEDURE assign_char_to_Int8
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
 
 MODULE PROCEDURE assign_char_to_Int16
 INTEGER(I4B) :: tmpInt
 CHARACTER(4) :: fmt
 tmpInt = LEN(c)
-WRITE (fmt, '(i4)') tmpInt; fmt = ADJUSTL(fmt)
+WRITE (fmt, '(i4)') tmpInt
+fmt = ADJUSTL(fmt)
 READ (c, '(I'//TRIM(fmt)//')') i
 END PROCEDURE assign_char_to_Int16
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
 
 MODULE PROCEDURE assign_char_to_Int32
 INTEGER(I4B) :: tmpInt
 CHARACTER(4) :: fmt
 tmpInt = LEN(c)
-WRITE (fmt, '(i4)') tmpInt; fmt = ADJUSTL(fmt)
+WRITE (fmt, '(i4)') tmpInt
+fmt = ADJUSTL(fmt)
 READ (c, '(I'//TRIM(fmt)//')') i
 END PROCEDURE assign_char_to_Int32
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
 
 MODULE PROCEDURE assign_char_to_Int64
 INTEGER(I4B) :: tmpInt
 CHARACTER(4) :: fmt
 tmpInt = LEN(c)
-WRITE (fmt, '(i4)') tmpInt; fmt = ADJUSTL(fmt)
+WRITE (fmt, '(i4)') tmpInt
+fmt = ADJUSTL(fmt)
 READ (c, '(I'//TRIM(fmt)//')') i
 END PROCEDURE assign_char_to_Int64
 
@@ -267,11 +292,7 @@ END PROCEDURE assign_char_to_Int64
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE assign_char_to_bool
-IF (c == 'true') THEN
-  b = .TRUE.
-ELSE
-  b = .FALSE.
-END IF
+b = (c == 'true')
 END PROCEDURE assign_char_to_bool
 
 !----------------------------------------------------------------------------
@@ -282,7 +303,8 @@ MODULE PROCEDURE assign_char_to_real32
 INTEGER(I4B) :: tmpInt
 CHARACTER(4) :: fmt
 tmpInt = LEN(c)
-WRITE (fmt, '(i4)') tmpInt; fmt = ADJUSTL(fmt)
+WRITE (fmt, '(i4)') tmpInt
+fmt = ADJUSTL(fmt)
 READ (c, '(f'//TRIM(fmt)//'.0)') s
 END PROCEDURE assign_char_to_real32
 
@@ -294,7 +316,8 @@ MODULE PROCEDURE assign_char_to_real64
 INTEGER(I4B) :: tmpInt
 CHARACTER(4) :: fmt
 tmpInt = LEN(c)
-WRITE (fmt, '(i4)') tmpInt; fmt = ADJUSTL(fmt)
+WRITE (fmt, '(i4)') tmpInt
+fmt = ADJUSTL(fmt)
 READ (c, '(f'//TRIM(fmt)//'.0)') s
 END PROCEDURE assign_char_to_real64
 
@@ -303,21 +326,29 @@ END PROCEDURE assign_char_to_real64
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE isNumeric
-INTEGER(I4B) :: i, val
-bool = .FALSE.
-IF (LEN(char_str) < 1) THEN
+INTEGER(I4B) :: i, val, tsize
+
+tsize = LEN(char_str)
+
+IF (tsize < 1) THEN
+  bool = math%no
   RETURN
-ELSE
-  DO i = 1, LEN(char_str)
-    ! 0-9 are represented by ASCII codes 48-57
-    val = IACHAR(char_str(i:i))
-    IF (.NOT. (val > 47 .AND. val < 58)) THEN
-      ! If any character isn't between those codes, it isn't an integer
-      RETURN
-    END IF
-  END DO
 END IF
-bool = .TRUE.
-END PROCEDURE
+
+bool = .FALSE.
+char_loop: DO i = 1, tsize
+  ! 0-9 are represented by ASCII codes 48-57
+  val = IACHAR(char_str(i:i))
+  bool = (val > 47 .AND. val < 58)
+  IF (.NOT. bool) THEN
+    ! If any character isn't between those codes, it isn't an integer
+    EXIT char_loop
+  END IF
+END DO char_loop
+END PROCEDURE isNumeric
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
 
 END SUBMODULE Methods
