@@ -14,3 +14,6 @@ CALL OK(aint .EQ. 12_I4B, "test 1: ")
 CALL CharToNumber(areal, "12.23")
 CALL OK(areal.APPROXEQ.12.23_DFP, "test 2: ")
 END PROGRAM main
+
+! ok 1 - test 1: 
+! ok 2 - test 2: 

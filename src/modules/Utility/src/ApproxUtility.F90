@@ -476,7 +476,7 @@ INTERFACE OPERATOR(/=)
 END INTERFACE OPERATOR(/=)
 
 !----------------------------------------------------------------------------
-!                                                       ASSIGN@ApproxMethods
+!                                                 CharToNumber@ApproxMethods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
