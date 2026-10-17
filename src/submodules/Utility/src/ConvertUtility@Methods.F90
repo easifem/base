@@ -15,10 +15,6 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-!> author: Vikas Sharma, Ph. D.
-! date:         22 March 2021
-! summary:         This submodule contains method for swaping
-
 SUBMODULE(ConvertUtility) Methods
 USE ReallocateUtility, ONLY: Reallocate
 USE EyeUtility, ONLY: eye

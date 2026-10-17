@@ -196,6 +196,7 @@ Always declare `IMPLICIT NONE` after module/submodule declaration
 ### Comments and FORD docblock style
 
 - Use `!>` only for the *first line* of a FORD-style documentation block (the block header).
+- The first line of a block must be `!> author: ...`. Do not add title lines such as `!> Module: Name`, `!> Subroutine: name` or `!> Function: name`; the name is already given by the declaration that follows the block.
 - Use a plain `!` for all subsequent lines (continuation lines) in the same docblock.
 - Use `!` for ordinary inline comments and short notes.
 - Prefer LaTeX math for formulas in docblocks. Use display math `$$ ... $$` for full formulas.
@@ -205,16 +206,17 @@ Always declare `IMPLICIT NONE` after module/submodule declaration
 Example FORD docblock (preferred style):
 
 ```fortran
-!> Module: SomeModule
-! author: Your Name, Ph.D.
+!> author: Your Name, Ph.D.
 ! date: 2024-01-01
 ! summary: Short summary of the module.
 !
 ! Description:
 !   Longer description here. Wrap lines to <=78 characters.
-!
-! Function: SomeFunction
-! author: Your Name
+
+MODULE SomeModule
+...
+
+!> author: Your Name
 ! date: 2024-01-01
 ! summary: Short summary for the function.
 !
@@ -226,6 +228,10 @@ Example FORD docblock (preferred style):
 !
 ! Formula:
 !   $$\mathrm{y} = \sum_{i} x_i\, w_i$$
+
+INTERFACE SomeFunction
+  ...
+END INTERFACE SomeFunction
 ```
 
 Notes for AI agents and maintainers:

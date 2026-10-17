@@ -15,8 +15,7 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-!> Module: ContractionUtility
-! author: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-04-03
 ! summary: Tensor contraction utilities (ranks 1..4).
 !
@@ -102,8 +101,7 @@ PUBLIC :: Contraction
 !                                                    Contraction@Contraction
 !----------------------------------------------------------------------------
 
-!> Function: Contraction_r4_r1
-! author: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-04-03
 ! summary: Contract rank-4 tensor with rank-1 vector -> rank-3 tensor.
 !
@@ -164,8 +162,7 @@ END INTERFACE Contraction
 !                                                    Contraction@Contraction
 !----------------------------------------------------------------------------
 
-!> Function: Contraction_r4_r2
-! author: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-04-03
 ! summary: Contract rank-4 tensor with rank-2 tensor -> rank-2 tensor.
 !
@@ -225,8 +222,7 @@ END INTERFACE Contraction
 !                                                    Contraction@Contraction
 !----------------------------------------------------------------------------
 
-!> Function: Contraction_r4_r3
-! author: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-04-03
 ! summary: Contract rank-4 tensor with rank-3 tensor -> rank-1 vector.
 !
@@ -286,8 +282,7 @@ END INTERFACE Contraction
 !                                                    Contraction@Contraction
 !----------------------------------------------------------------------------
 
-!> Function: Contraction_r4_r4
-! author: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-04-03
 ! summary: Inner product of two rank-4 tensors -> scalar.
 !
@@ -344,8 +339,7 @@ END INTERFACE Contraction
 !                                                   Contraction@Contraction
 !----------------------------------------------------------------------------
 
-!> Function: Contraction_r3_r1
-! author: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-04-03
 ! summary: Contract rank-3 tensor with rank-1 vector -> rank-2 tensor.
 !
@@ -407,8 +401,7 @@ END INTERFACE Contraction
 !                                                    Contraction@Contraction
 !----------------------------------------------------------------------------
 
-!> Function: Contraction_r3_r2
-! author: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-04-03
 ! summary: Contract rank-3 tensor with rank-2 tensor -> rank-1 vector.
 !
@@ -464,8 +457,7 @@ END INTERFACE Contraction
 !                                                    Contraction@Contraction
 !----------------------------------------------------------------------------
 
-!> Function: Contraction_r3_r3
-! author: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-04-03
 ! summary: Inner product of two rank-3 tensors -> scalar.
 !
@@ -521,8 +513,7 @@ END INTERFACE Contraction
 !                                                    Contraction@Contraction
 !----------------------------------------------------------------------------
 
-!> Function: Contraction_r3_r4
-! author: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-04-03
 ! summary: Contract rank-3 tensor with rank-4 tensor -> rank-1 vector.
 !
@@ -581,8 +572,7 @@ END INTERFACE Contraction
 !                                                   Contraction@Contraction
 !----------------------------------------------------------------------------
 
-!> Function: Contraction_r2_r1
-! author: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-04-03
 ! summary: Contract rank-2 matrix with vector -> rank-1 vector.
 !
@@ -642,8 +632,7 @@ END INTERFACE Contraction
 !                                                    Contraction@Contraction
 !----------------------------------------------------------------------------
 
-!> Function: Contraction_r2_r2
-! author: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-04-03
 ! summary: Frobenius inner product of two matrices -> scalar.
 !
@@ -701,8 +690,7 @@ END INTERFACE Contraction
 !                                                    Contraction@Contraction
 !----------------------------------------------------------------------------
 
-!> Function: Contraction_r2_r3
-! author: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-04-03
 ! summary: Contract rank-2 matrix with rank-3 tensor -> rank-1 vector.
 !
@@ -758,8 +746,7 @@ END INTERFACE Contraction
 !                                                    Contraction@Contraction
 !----------------------------------------------------------------------------
 
-!> Function: Contraction_r2_r4
-! author: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-04-03
 ! summary: Contract rank-2 matrix with rank-4 tensor -> rank-2 tensor.
 !
@@ -818,8 +805,7 @@ END INTERFACE Contraction
 !                                                   Contraction@Contraction
 !----------------------------------------------------------------------------
 
-!> Function: Contraction_r1_r1
-! author: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-04-03
 ! summary: Dot product of two vectors -> scalar.
 !
@@ -871,8 +857,7 @@ END INTERFACE Contraction
 !                                                    Contraction@Contraction
 !----------------------------------------------------------------------------
 
-!> Function: Contraction_r1_r2
-! author: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-04-03
 ! summary: Multiply vector into matrix -> rank-1 vector.
 !
@@ -925,8 +910,7 @@ END INTERFACE Contraction
 !                                                    Contraction@Contraction
 !----------------------------------------------------------------------------
 
-!> Function: Contraction_r1_r3
-! author: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-04-03
 ! summary: Contract vector with rank-3 tensor -> rank-2 tensor.
 !
@@ -981,8 +965,7 @@ END INTERFACE Contraction
 !                                                    Contraction@Contraction
 !----------------------------------------------------------------------------
 
-!> Function: Contraction_r1_r4
-! author: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-04-03
 ! summary: Contract vector with rank-4 tensor -> rank-3 tensor.
 !
