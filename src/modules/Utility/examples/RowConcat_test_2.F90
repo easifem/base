@@ -1,83 +1,45 @@
-```fortran
 PROGRAM main
-    USE easifemBase
-    IMPLICIT NONE
-```
+USE GlobalData, ONLY: I4B, LGT, DFP, CHAR_LF
+USE AppendUtility, ONLY: RowConcat
+USE Display_Method, ONLY: Display
+IMPLICIT NONE
 
-Concat columns of a rank2 array and rank 1 array.
+! Concat columns of a rank2 array and rank 1 array.
+CALL Display(RowConcat(a=RESHAPE([1, 2, 4, 5], [2, 2]), &
+                       b=[3, 6]), "RowConcat=")
 
-```fortran
-call display( RowConcat(a=reshape([1,2,4,5], [2,2]), &
-    & b=[3,6]), "RowConcat=" )
-```
+! RowConcat=
+! ----------
+!    1  4
+!    2  5
+!    3  6
 
-<details>
-<summary>See results</summary>
-<div>
+! RowConcat works fine even when number of columns in rank-2 array
+! is not the same as the size of rank-1 array.
 
-```txt title="results"
-RowConcat=
-----------
-   1  4   
-   2  5   
-   3  6
-```
+CALL Display(RowConcat(a=RESHAPE([1, 2, 4, 5], [2, 2]), &
+                       b=[3, 6, 7]), "RowConcat=")
 
-</div>
-</details>
+! RowConcat=
+! ----------
+!  1  4  0
+!  2  5  0
+!  3  6  7
 
-RowConcat works fine even when number of columns in rank-2 array is not the same as the size of rank-1 array.
+! We can also concat the columns of a vector and a matrix.
+CALL Display(RowConcat(b=RESHAPE([1, 2, 4, 5], [2, 2]), &
+                       a=[3, 6]), "RowConcat=")
+! RowConcat=
+! ----------
+!    3  6
+!    1  4
+!    2  5
 
-```fortran
-call display( RowConcat(a=reshape([1,2,4,5], [2,2]), &
-    & b=[3,6, 7]), "RowConcat=" )
-```
-
-<details>
-<summary>See results</summary>
-<div>
-
-```txt title="results"
-RowConcat=
-----------
- 1  4  0  
- 2  5  0  
- 3  6  7
-```
-
-</div>
-</details>
-
-We can also concat the columns of a vector and a matrix.
-
-```fortran
-call display( RowConcat(b=reshape([1,2,4,5], [2,2]), &
-    & a=[3,6]), "RowConcat=" )
-call display( RowConcat(b=reshape([1,2,4,5], [2,2]), &
-    & a=[3,6,7]), "RowConcat=" )
-```
-
-<details>
-<summary>See results</summary>
-<div>
-
-```txt title="results"
-RowConcat=
-----------
-   3  6   
-   1  4   
-   2  5   
-
-RowConcat=
-----------
- 3  6  7  
- 1  4  0  
- 2  5  0
-```
-
-</div>
-</details>
-
-```fortran
+CALL Display(RowConcat(b=RESHAPE([1, 2, 4, 5], [2, 2]), &
+                       a=[3, 6, 7]), "RowConcat=")
+! RowConcat=
+! ----------
+!  3  6  7
+!  1  4  0
+!  2  5  0
 END PROGRAM main
-```

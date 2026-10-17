@@ -8,7 +8,7 @@ license: gfdl
 src_dir: ../src/modules/Utility
 media_dir: ./media
 page_dir: ./pages
-output_dir: ${HOME}/temp/ford
+output_dir: /tmp/ford/base
 exclude_dir:  ../src/submodules/
               ../src/modules/BLAS95/
 author: Vikas Sharma
