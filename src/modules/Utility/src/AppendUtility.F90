@@ -19,8 +19,6 @@
 ! date: 2024-04-11
 ! summary:  This module contains method for appending to vectors and martrix
 !
-!{!|page|/AppendUtility/index.md!}
-!
 MODULE AppendUtility
 USE GlobalData, ONLY: I4B, LGT, DFP
 USE GlobalData, ONLY: INT8, INT16, INT32, INT64
@@ -238,11 +236,36 @@ END INTERFACE Expand
 !@note
 ! While calling Append the initial vector can be unallocated in the begining.
 !@endnote
+!
+! Example:
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: I4B, LGT, DFP
+! USE AppendUtility, ONLY: Append
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+!
+! INTEGER(I4B), ALLOCATABLE :: avec(:)
+!
+! ! Append scalar to a vector
+! CALL Append(avec, 1)
+! CALL OK(ALL(avec .EQ. [1]), "Append single ENTRY")
+!
+! ! Append a vector to a vector
+! CALL Append(avec, [2, 3])
+! CALL OK(ALL(avec .EQ. [1, 2, 3]), "Append a vector")
+!
+! DEALLOCATE (avec)
+! END PROGRAM main
+!```
 
 INTERFACE Append
   MODULE PURE SUBROUTINE Append_1a(A, ENTRY)
     INTEGER(I4B), ALLOCATABLE, INTENT(INOUT) :: A(:)
+    !! On Return it will be [A, Entry]
     INTEGER(I4B), INTENT(IN) :: ENTRY
+    !! Append Entry to A
   END SUBROUTINE Append_1a
 END INTERFACE Append
 
@@ -264,7 +287,9 @@ END INTERFACE Append
 INTERFACE Append
   MODULE PURE SUBROUTINE Append_1b(A, ENTRY)
     REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: A(:)
+    !! On return it will be [A, Entry]
     REAL(DFP), INTENT(IN) :: ENTRY
+    !! Append Entry to A
   END SUBROUTINE Append_1b
 END INTERFACE Append
 

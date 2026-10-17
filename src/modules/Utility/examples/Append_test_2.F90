@@ -1,42 +1,33 @@
-```fortran
 PROGRAM main
-    USE easifemBase
-    IMPLICIT NONE
-    INTEGER(I4B), ALLOCATABLE :: intvec1(:)
-    REAL( DFP ), ALLOCATABLE :: realvec1(:)
-```
+USE GlobalData, ONLY: I4B, LGT, DFP
+USE AppendUtility, ONLY: Append
+USE Test_Method, ONLY: OK
+IMPLICIT NONE
 
-Now lets us append a single ENTRY to a vector of integers.
+INTEGER(I4B), ALLOCATABLE :: intvec1(:)
+REAL(DFP), ALLOCATABLE :: realvec1(:)
 
-```fortran
-intvec1 = [1] .append. 2
-CALL OK( ALL(intvec1 .EQ. [1, 2]), "Append single ENTRY"  )
-```
+! Now lets us append a single ENTRY to a vector of integers.
 
-Appending a vector to a vector.
+intvec1 = [1] .append.2
+CALL OK(ALL(intvec1 .EQ. [1, 2]), "Append single ENTRY")
 
-```fortran
-intvec1 = intvec1 .append. [3]
-CALL OK( ALL(intvec1 .EQ. [1,2,3]), "Append a vector"  )
-```
+! Appending a vector to a vector.
 
-Now lets us append a single real value to realvec.
+intvec1 = intvec1.append. [3]
+CALL OK(ALL(intvec1 .EQ. [1, 2, 3]), "Append a vector")
 
-```fortran
-realvec1 = [1.0_DFP] .append. 2.0_DFP
-CALL OK( ALL(realvec1 .EQ. [1.0_DFP, 2.0_DFP]), "Append single ENTRY"  )
-```
+! Now lets us append a single real value to realvec.
 
-Appending vector to a vector.
+realvec1 = [1.0_DFP] .append.2.0_DFP
+CALL OK(ALL(realvec1 .EQ. [1.0_DFP, 2.0_DFP]), "Append single ENTRY")
 
-```fortran
-realvec1 = realvec1 .append. [3.0_DFP]
-CALL OK( ALL(realvec1 .EQ. [1.0_DFP,2.0_DFP,3.0_DFP]), "Append a vector"  )
-```
+! Appending vector to a vector.
 
-Cleanup
+realvec1 = realvec1.append. [3.0_DFP]
+CALL OK(ALL(realvec1 .EQ. [1.0_DFP, 2.0_DFP, 3.0_DFP]), "Append a vector")
 
-```fortran
-    DEALLOCATE(intvec1, realvec1)
+! Cleanup
+
+DEALLOCATE (intvec1, realvec1)
 END PROGRAM main
-```

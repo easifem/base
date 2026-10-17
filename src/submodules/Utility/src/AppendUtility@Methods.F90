@@ -26,22 +26,22 @@ CONTAINS
 
 MODULE PROCEDURE expand_int8
 INTEGER(INT8), ALLOCATABLE :: tmp(:)
-#include "./Expand/Expand.inc"
+#include "./Expand/Expand.F90"
 END PROCEDURE expand_int8
 
 MODULE PROCEDURE expand_int16
 INTEGER(INT16), ALLOCATABLE :: tmp(:)
-#include "./Expand/Expand.inc"
+#include "./Expand/Expand.F90"
 END PROCEDURE expand_int16
 
 MODULE PROCEDURE expand_int32
 INTEGER(INT32), ALLOCATABLE :: tmp(:)
-#include "./Expand/Expand.inc"
+#include "./Expand/Expand.F90"
 END PROCEDURE expand_int32
 
 MODULE PROCEDURE expand_int64
 INTEGER(INT64), ALLOCATABLE :: tmp(:)
-#include "./Expand/Expand.inc"
+#include "./Expand/Expand.F90"
 END PROCEDURE expand_int64
 
 !----------------------------------------------------------------------------
@@ -50,7 +50,7 @@ END PROCEDURE expand_int64
 
 MODULE PROCEDURE expand_real32
 REAL(REAL32), ALLOCATABLE :: tmp(:)
-#include "./Expand/Expand.inc"
+#include "./Expand/Expand.F90"
 END PROCEDURE expand_real32
 
 !----------------------------------------------------------------------------
@@ -59,7 +59,7 @@ END PROCEDURE expand_real32
 
 MODULE PROCEDURE expand_real64
 REAL(REAL64), ALLOCATABLE :: tmp(:)
-#include "./Expand/Expand.inc"
+#include "./Expand/Expand.F90"
 END PROCEDURE expand_real64
 
 !----------------------------------------------------------------------------
@@ -69,7 +69,7 @@ END PROCEDURE expand_real64
 MODULE PROCEDURE Append_1a
 INTEGER(I4B), ALLOCATABLE :: Dummy(:)
 INTEGER(I4B) :: n
-#include "./Append/Append_1.inc"
+#include "./Append/Append_1.F90"
 END PROCEDURE Append_1a
 
 !----------------------------------------------------------------------------
@@ -79,7 +79,7 @@ END PROCEDURE Append_1a
 MODULE PROCEDURE Append_1b
 REAL(DFP), ALLOCATABLE :: Dummy(:)
 INTEGER(I4B) :: n
-#include "./Append/Append_1.inc"
+#include "./Append/Append_1.F90"
 END PROCEDURE Append_1b
 
 !----------------------------------------------------------------------------
@@ -87,7 +87,7 @@ END PROCEDURE Append_1b
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Append_1c
-#include "./Append/Append_1cd.inc"
+#include "./Append/Append_1cd.F90"
 END PROCEDURE Append_1c
 
 !----------------------------------------------------------------------------
@@ -95,7 +95,7 @@ END PROCEDURE Append_1c
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Append_1d
-#include "./Append/Append_1cd.inc"
+#include "./Append/Append_1cd.F90"
 END PROCEDURE Append_1d
 
 !----------------------------------------------------------------------------
@@ -105,7 +105,7 @@ END PROCEDURE Append_1d
 MODULE PROCEDURE Append_2a
 INTEGER(I4B), ALLOCATABLE :: Dummy(:)
 INTEGER(I4B) :: n, m
-#include "./Append/Append_2.inc"
+#include "./Append/Append_2.F90"
 END PROCEDURE Append_2a
 
 !----------------------------------------------------------------------------
@@ -115,7 +115,7 @@ END PROCEDURE Append_2a
 MODULE PROCEDURE Append_2b
 REAL(DFP), ALLOCATABLE :: Dummy(:)
 INTEGER(I4B) :: n, m
-#include "./Append/Append_2.inc"
+#include "./Append/Append_2.F90"
 END PROCEDURE Append_2b
 
 !----------------------------------------------------------------------------
@@ -123,7 +123,7 @@ END PROCEDURE Append_2b
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Append_2c
-#include "./Append/Append_2cd.inc"
+#include "./Append/Append_2cd.F90"
 END PROCEDURE Append_2c
 
 !----------------------------------------------------------------------------
@@ -131,7 +131,7 @@ END PROCEDURE Append_2c
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Append_2d
-#include "./Append/Append_2cd.inc"
+#include "./Append/Append_2cd.F90"
 END PROCEDURE Append_2d
 
 !----------------------------------------------------------------------------
@@ -139,7 +139,7 @@ END PROCEDURE Append_2d
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Append_2e
-#include "./Append/Append_2abcd.inc"
+#include "./Append/Append_2abcd.F90"
 END PROCEDURE Append_2e
 
 !----------------------------------------------------------------------------
@@ -147,7 +147,7 @@ END PROCEDURE Append_2e
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Append_2f
-#include "./Append/Append_2abcd.inc"
+#include "./Append/Append_2abcd.F90"
 END PROCEDURE Append_2f
 
 !----------------------------------------------------------------------------
@@ -157,7 +157,7 @@ END PROCEDURE Append_2f
 MODULE PROCEDURE Append_3a
 INTEGER(I4B), ALLOCATABLE :: Dummy(:)
 INTEGER(I4B) :: n
-#include "./Append/Append_3.inc"
+#include "./Append/Append_3.F90"
 END PROCEDURE Append_3a
 
 !----------------------------------------------------------------------------
@@ -167,7 +167,7 @@ END PROCEDURE Append_3a
 MODULE PROCEDURE Append_3b
 REAL(DFP), ALLOCATABLE :: Dummy(:)
 INTEGER(I4B) :: n
-#include "./Append/Append_3.inc"
+#include "./Append/Append_3.F90"
 END PROCEDURE Append_3b
 
 !----------------------------------------------------------------------------
@@ -175,7 +175,7 @@ END PROCEDURE Append_3b
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Append_3c
-#include "./Append/Append_3cd.inc"
+#include "./Append/Append_3cd.F90"
 END PROCEDURE Append_3c
 
 !----------------------------------------------------------------------------
@@ -183,7 +183,7 @@ END PROCEDURE Append_3c
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Append_3d
-#include "./Append/Append_3cd.inc"
+#include "./Append/Append_3cd.F90"
 END PROCEDURE Append_3d
 
 !----------------------------------------------------------------------------
@@ -193,7 +193,7 @@ END PROCEDURE Append_3d
 MODULE PROCEDURE Append_4a
 INTEGER(I4B), ALLOCATABLE :: Dummy(:)
 INTEGER(I4B) :: n, m
-#include "./Append/Append_4.inc"
+#include "./Append/Append_4.F90"
 END PROCEDURE Append_4a
 
 !----------------------------------------------------------------------------
@@ -203,7 +203,7 @@ END PROCEDURE Append_4a
 MODULE PROCEDURE Append_4b
 REAL(DFP), ALLOCATABLE :: Dummy(:)
 INTEGER(I4B) :: n, m
-#include "./Append/Append_4.inc"
+#include "./Append/Append_4.F90"
 END PROCEDURE Append_4b
 
 !----------------------------------------------------------------------------
@@ -211,7 +211,7 @@ END PROCEDURE Append_4b
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Append_4c
-#include "./Append/Append_4cd.inc"
+#include "./Append/Append_4cd.F90"
 END PROCEDURE Append_4c
 
 !----------------------------------------------------------------------------
@@ -219,7 +219,7 @@ END PROCEDURE Append_4c
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Append_4d
-#include "./Append/Append_4cd.inc"
+#include "./Append/Append_4cd.F90"
 END PROCEDURE Append_4d
 
 !----------------------------------------------------------------------------
@@ -259,27 +259,27 @@ END PROCEDURE func_Append_2b
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE colconcat_1a
-#include "./ColConcat/ColConcat_1.inc"
+#include "./ColConcat/ColConcat_1.F90"
 END PROCEDURE colconcat_1a
 
 MODULE PROCEDURE colconcat_1b
-#include "./ColConcat/ColConcat_1.inc"
+#include "./ColConcat/ColConcat_1.F90"
 END PROCEDURE colconcat_1b
 
 MODULE PROCEDURE colconcat_1c
-#include "./ColConcat/ColConcat_1.inc"
+#include "./ColConcat/ColConcat_1.F90"
 END PROCEDURE colconcat_1c
 
 MODULE PROCEDURE colconcat_1d
-#include "./ColConcat/ColConcat_1.inc"
+#include "./ColConcat/ColConcat_1.F90"
 END PROCEDURE colconcat_1d
 
 MODULE PROCEDURE colconcat_1e
-#include "./ColConcat/ColConcat_1.inc"
+#include "./ColConcat/ColConcat_1.F90"
 END PROCEDURE colconcat_1e
 
 MODULE PROCEDURE colconcat_1f
-#include "./ColConcat/ColConcat_1.inc"
+#include "./ColConcat/ColConcat_1.F90"
 END PROCEDURE colconcat_1f
 
 !----------------------------------------------------------------------------
@@ -287,27 +287,27 @@ END PROCEDURE colconcat_1f
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE colconcat_2a
-#include "./ColConcat/ColConcat_2.inc"
+#include "./ColConcat/ColConcat_2.F90"
 END PROCEDURE colconcat_2a
 
 MODULE PROCEDURE colconcat_2b
-#include "./ColConcat/ColConcat_2.inc"
+#include "./ColConcat/ColConcat_2.F90"
 END PROCEDURE colconcat_2b
 
 MODULE PROCEDURE colconcat_2c
-#include "./ColConcat/ColConcat_2.inc"
+#include "./ColConcat/ColConcat_2.F90"
 END PROCEDURE colconcat_2c
 
 MODULE PROCEDURE colconcat_2d
-#include "./ColConcat/ColConcat_2.inc"
+#include "./ColConcat/ColConcat_2.F90"
 END PROCEDURE colconcat_2d
 
 MODULE PROCEDURE colconcat_2e
-#include "./ColConcat/ColConcat_2.inc"
+#include "./ColConcat/ColConcat_2.F90"
 END PROCEDURE colconcat_2e
 
 MODULE PROCEDURE colconcat_2f
-#include "./ColConcat/ColConcat_2.inc"
+#include "./ColConcat/ColConcat_2.F90"
 END PROCEDURE colconcat_2f
 
 !----------------------------------------------------------------------------
@@ -315,27 +315,27 @@ END PROCEDURE colconcat_2f
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE colconcat_3a
-#include "./ColConcat/ColConcat_3.inc"
+#include "./ColConcat/ColConcat_3.F90"
 END PROCEDURE colconcat_3a
 
 MODULE PROCEDURE colconcat_3b
-#include "./ColConcat/ColConcat_3.inc"
+#include "./ColConcat/ColConcat_3.F90"
 END PROCEDURE colconcat_3b
 
 MODULE PROCEDURE colconcat_3c
-#include "./ColConcat/ColConcat_3.inc"
+#include "./ColConcat/ColConcat_3.F90"
 END PROCEDURE colconcat_3c
 
 MODULE PROCEDURE colconcat_3d
-#include "./ColConcat/ColConcat_3.inc"
+#include "./ColConcat/ColConcat_3.F90"
 END PROCEDURE colconcat_3d
 
 MODULE PROCEDURE colconcat_3e
-#include "./ColConcat/ColConcat_3.inc"
+#include "./ColConcat/ColConcat_3.F90"
 END PROCEDURE colconcat_3e
 
 MODULE PROCEDURE colconcat_3f
-#include "./ColConcat/ColConcat_3.inc"
+#include "./ColConcat/ColConcat_3.F90"
 END PROCEDURE colconcat_3f
 
 !----------------------------------------------------------------------------
@@ -343,27 +343,27 @@ END PROCEDURE colconcat_3f
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE colconcat_4a
-#include "./ColConcat/ColConcat_4.inc"
+#include "./ColConcat/ColConcat_4.F90"
 END PROCEDURE colconcat_4a
 
 MODULE PROCEDURE colconcat_4b
-#include "./ColConcat/ColConcat_4.inc"
+#include "./ColConcat/ColConcat_4.F90"
 END PROCEDURE colconcat_4b
 
 MODULE PROCEDURE colconcat_4c
-#include "./ColConcat/ColConcat_4.inc"
+#include "./ColConcat/ColConcat_4.F90"
 END PROCEDURE colconcat_4c
 
 MODULE PROCEDURE colconcat_4d
-#include "./ColConcat/ColConcat_4.inc"
+#include "./ColConcat/ColConcat_4.F90"
 END PROCEDURE colconcat_4d
 
 MODULE PROCEDURE colconcat_4e
-#include "./ColConcat/ColConcat_4.inc"
+#include "./ColConcat/ColConcat_4.F90"
 END PROCEDURE colconcat_4e
 
 MODULE PROCEDURE colconcat_4f
-#include "./ColConcat/ColConcat_4.inc"
+#include "./ColConcat/ColConcat_4.F90"
 END PROCEDURE colconcat_4f
 
 !----------------------------------------------------------------------------
@@ -371,27 +371,27 @@ END PROCEDURE colconcat_4f
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Rowconcat_1a
-#include "./RowConcat/RowConcat_1.inc"
+#include "./RowConcat/RowConcat_1.F90"
 END PROCEDURE Rowconcat_1a
 
 MODULE PROCEDURE Rowconcat_1b
-#include "./RowConcat/RowConcat_1.inc"
+#include "./RowConcat/RowConcat_1.F90"
 END PROCEDURE Rowconcat_1b
 
 MODULE PROCEDURE Rowconcat_1c
-#include "./RowConcat/RowConcat_1.inc"
+#include "./RowConcat/RowConcat_1.F90"
 END PROCEDURE Rowconcat_1c
 
 MODULE PROCEDURE Rowconcat_1d
-#include "./RowConcat/RowConcat_1.inc"
+#include "./RowConcat/RowConcat_1.F90"
 END PROCEDURE Rowconcat_1d
 
 MODULE PROCEDURE Rowconcat_1e
-#include "./RowConcat/RowConcat_1.inc"
+#include "./RowConcat/RowConcat_1.F90"
 END PROCEDURE Rowconcat_1e
 
 MODULE PROCEDURE Rowconcat_1f
-#include "./RowConcat/RowConcat_1.inc"
+#include "./RowConcat/RowConcat_1.F90"
 END PROCEDURE Rowconcat_1f
 
 !----------------------------------------------------------------------------
@@ -399,27 +399,27 @@ END PROCEDURE Rowconcat_1f
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Rowconcat_2a
-#include "./RowConcat/RowConcat_2.inc"
+#include "./RowConcat/RowConcat_2.F90"
 END PROCEDURE Rowconcat_2a
 
 MODULE PROCEDURE Rowconcat_2b
-#include "./RowConcat/RowConcat_2.inc"
+#include "./RowConcat/RowConcat_2.F90"
 END PROCEDURE Rowconcat_2b
 
 MODULE PROCEDURE Rowconcat_2c
-#include "./RowConcat/RowConcat_2.inc"
+#include "./RowConcat/RowConcat_2.F90"
 END PROCEDURE Rowconcat_2c
 
 MODULE PROCEDURE Rowconcat_2d
-#include "./RowConcat/RowConcat_2.inc"
+#include "./RowConcat/RowConcat_2.F90"
 END PROCEDURE Rowconcat_2d
 
 MODULE PROCEDURE Rowconcat_2e
-#include "./RowConcat/RowConcat_2.inc"
+#include "./RowConcat/RowConcat_2.F90"
 END PROCEDURE Rowconcat_2e
 
 MODULE PROCEDURE Rowconcat_2f
-#include "./RowConcat/RowConcat_2.inc"
+#include "./RowConcat/RowConcat_2.F90"
 END PROCEDURE Rowconcat_2f
 
 !----------------------------------------------------------------------------
@@ -427,27 +427,27 @@ END PROCEDURE Rowconcat_2f
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Rowconcat_3a
-#include "./RowConcat/RowConcat_3.inc"
+#include "./RowConcat/RowConcat_3.F90"
 END PROCEDURE Rowconcat_3a
 
 MODULE PROCEDURE Rowconcat_3b
-#include "./RowConcat/RowConcat_3.inc"
+#include "./RowConcat/RowConcat_3.F90"
 END PROCEDURE Rowconcat_3b
 
 MODULE PROCEDURE Rowconcat_3c
-#include "./RowConcat/RowConcat_3.inc"
+#include "./RowConcat/RowConcat_3.F90"
 END PROCEDURE Rowconcat_3c
 
 MODULE PROCEDURE Rowconcat_3d
-#include "./RowConcat/RowConcat_3.inc"
+#include "./RowConcat/RowConcat_3.F90"
 END PROCEDURE Rowconcat_3d
 
 MODULE PROCEDURE Rowconcat_3e
-#include "./RowConcat/RowConcat_3.inc"
+#include "./RowConcat/RowConcat_3.F90"
 END PROCEDURE Rowconcat_3e
 
 MODULE PROCEDURE Rowconcat_3f
-#include "./RowConcat/RowConcat_3.inc"
+#include "./RowConcat/RowConcat_3.F90"
 END PROCEDURE Rowconcat_3f
 
 !----------------------------------------------------------------------------
@@ -455,27 +455,27 @@ END PROCEDURE Rowconcat_3f
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Rowconcat_4a
-#include "./RowConcat/RowConcat_4.inc"
+#include "./RowConcat/RowConcat_4.F90"
 END PROCEDURE Rowconcat_4a
 
 MODULE PROCEDURE Rowconcat_4b
-#include "./RowConcat/RowConcat_4.inc"
+#include "./RowConcat/RowConcat_4.F90"
 END PROCEDURE Rowconcat_4b
 
 MODULE PROCEDURE Rowconcat_4c
-#include "./RowConcat/RowConcat_4.inc"
+#include "./RowConcat/RowConcat_4.F90"
 END PROCEDURE Rowconcat_4c
 
 MODULE PROCEDURE Rowconcat_4d
-#include "./RowConcat/RowConcat_4.inc"
+#include "./RowConcat/RowConcat_4.F90"
 END PROCEDURE Rowconcat_4d
 
 MODULE PROCEDURE Rowconcat_4e
-#include "./RowConcat/RowConcat_4.inc"
+#include "./RowConcat/RowConcat_4.F90"
 END PROCEDURE Rowconcat_4e
 
 MODULE PROCEDURE Rowconcat_4f
-#include "./RowConcat/RowConcat_4.inc"
+#include "./RowConcat/RowConcat_4.F90"
 END PROCEDURE Rowconcat_4f
 
 !----------------------------------------------------------------------------
