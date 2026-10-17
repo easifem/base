@@ -15,6 +15,14 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
+!> author: Vikas Sharma, Ph. D.
+! date: 2021-03-06
+! summary:  This module provides methods for converting
+!
+! - 4D array to 2D array
+! - 6D array to 4D array
+! - change the storage format of dense matrices.
+!
 MODULE ConvertUtility
 USE GlobalData, ONLY: DFP, LGT, I4B
 IMPLICIT NONE
@@ -29,10 +37,8 @@ PUBLIC :: ConvertSafe
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date: 6 March 2021
+! date: 2021-03-06
 ! summary: Rearrange the degrees of freedom in a finite element matrix
-!
-!# Introduction
 !
 ! This subroutine changes the storage pattern of a two-d matrix
 !  - Usually element matrix in easifem are stored in `FMT_DOF`
@@ -44,10 +50,8 @@ PUBLIC :: ConvertSafe
 ! Usually, elemental finite element matrix is stored in `DOF_FMT`, and global
 ! matrix/ tanmat, may be stored in `Nodes_FMT`.
 !
-!@note
 ! All dof should have the same order of interpolation, therefore,
 ! this routine works when matrix is square.
-!@endnote
 
 INTERFACE Convert
   MODULE PURE SUBROUTINE obj_Convert1(from, to, conversion, nns, tdof)
@@ -126,9 +130,7 @@ END INTERFACE ConvertSafe
 ! date: 6 March 2021
 ! summary: This subroutine converts rank4  matrix to rank2 matrix
 !
-!# Introduction
-!
-!  This subroutine converts rank4 matrix to rank2 matrix
+! This subroutine converts rank4 matrix to rank2 matrix
 ! This routine can be used in Space-Time FEM
 !
 ! - The first and second dimension of from is spatial nodes
