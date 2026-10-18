@@ -51,6 +51,11 @@
 !   where `L` is the size of the contracted index, `P` is the product
 !   of the other extents of `a1`, and `Q` is the product of the other
 !   extents of `a2`.
+!
+!   The contracted sizes `n = SIZE(a1, RANK(a1))` and `m = SIZE(a2, 1)`
+!   should be equal. This is not checked: every combination sums over
+!   the first `MIN(n, m)` indices only, so a mismatch gives a shorter
+!   sum and no error.
 
 MODULE MatmulUtility
 USE GlobalData, ONLY: DFP
@@ -74,7 +79,9 @@ PUBLIC :: Matmul_
 !   The result has rank 3.
 !
 !   - The sizes of the contracted indices should be equal. This is
-!     not checked, so a mismatch gives an undefined result.
+!     not checked: if they differ, only the first `MIN(n, m)` terms
+!     are summed, with `n = SIZE(a1, RANK(a1))` and
+!     `m = SIZE(a2, 1)`, and no error is raised.
 !
 ! Arguments:
 !   a1 : REAL(DFP), rank(4) - first array, the last index is contracted
@@ -155,7 +162,9 @@ END INTERFACE Matmul
 !   - Only `ans(1:dim1, 1:dim2, 1:dim3)` is written.
 !     The rest of `ans` is not changed.
 !   - The sizes of the contracted indices should be equal. This is
-!     not checked, so a mismatch gives an undefined result.
+!     not checked: if they differ, only the first `MIN(n, m)` terms
+!     are summed, with `n = SIZE(a1, RANK(a1))` and
+!     `m = SIZE(a2, 1)`, and no error is raised.
 !
 ! Arguments:
 !   a1 : REAL(DFP), rank(4) - first array, the last index is contracted
@@ -242,7 +251,9 @@ END INTERFACE Matmul_
 !   The result has rank 4.
 !
 !   - The sizes of the contracted indices should be equal. This is
-!     not checked, so a mismatch gives an undefined result.
+!     not checked: if they differ, only the first `MIN(n, m)` terms
+!     are summed, with `n = SIZE(a1, RANK(a1))` and
+!     `m = SIZE(a2, 1)`, and no error is raised.
 !
 ! Arguments:
 !   a1 : REAL(DFP), rank(4) - first array, the last index is contracted
@@ -324,7 +335,9 @@ END INTERFACE Matmul
 !   - Only `ans(1:dim1, 1:dim2, 1:dim3, 1:dim4)` is written.
 !     The rest of `ans` is not changed.
 !   - The sizes of the contracted indices should be equal. This is
-!     not checked, so a mismatch gives an undefined result.
+!     not checked: if they differ, only the first `MIN(n, m)` terms
+!     are summed, with `n = SIZE(a1, RANK(a1))` and
+!     `m = SIZE(a2, 1)`, and no error is raised.
 !
 ! Arguments:
 !   a1 : REAL(DFP), rank(4) - first array, the last index is contracted
@@ -413,7 +426,9 @@ END INTERFACE Matmul_
 !   The result has rank 5.
 !
 !   - The sizes of the contracted indices should be equal. This is
-!     not checked, so a mismatch gives an undefined result.
+!     not checked: if they differ, only the first `MIN(n, m)` terms
+!     are summed, with `n = SIZE(a1, RANK(a1))` and
+!     `m = SIZE(a2, 1)`, and no error is raised.
 !
 ! Arguments:
 !   a1 : REAL(DFP), rank(4) - first array, the last index is contracted
@@ -497,7 +512,9 @@ END INTERFACE Matmul
 !   - Only `ans(1:dim1, 1:dim2, 1:dim3, 1:dim4, 1:dim5)` is written.
 !     The rest of `ans` is not changed.
 !   - The sizes of the contracted indices should be equal. This is
-!     not checked, so a mismatch gives an undefined result.
+!     not checked: if they differ, only the first `MIN(n, m)` terms
+!     are summed, with `n = SIZE(a1, RANK(a1))` and
+!     `m = SIZE(a2, 1)`, and no error is raised.
 !
 ! Arguments:
 !   a1 : REAL(DFP), rank(4) - first array, the last index is contracted
@@ -588,7 +605,9 @@ END INTERFACE Matmul_
 !   The result has rank 6.
 !
 !   - The sizes of the contracted indices should be equal. This is
-!     not checked, so a mismatch gives an undefined result.
+!     not checked: if they differ, only the first `MIN(n, m)` terms
+!     are summed, with `n = SIZE(a1, RANK(a1))` and
+!     `m = SIZE(a2, 1)`, and no error is raised.
 !
 ! Arguments:
 !   a1 : REAL(DFP), rank(4) - first array, the last index is contracted
@@ -673,7 +692,9 @@ END INTERFACE Matmul
 !   - Only `ans(1:dim1, 1:dim2, 1:dim3, 1:dim4, 1:dim5, 1:dim6)` is written.
 !     The rest of `ans` is not changed.
 !   - The sizes of the contracted indices should be equal. This is
-!     not checked, so a mismatch gives an undefined result.
+!     not checked: if they differ, only the first `MIN(n, m)` terms
+!     are summed, with `n = SIZE(a1, RANK(a1))` and
+!     `m = SIZE(a2, 1)`, and no error is raised.
 !
 ! Arguments:
 !   a1 : REAL(DFP), rank(4) - first array, the last index is contracted
@@ -764,9 +785,10 @@ END INTERFACE Matmul_
 !   Contracts the last index of `a1` with the first index of `a2`.
 !   The result has rank 2.
 !
-!   - The sizes of the contracted indices are not checked. If they
-!     differ, only the first `MIN(SIZE(a1, 3), SIZE(a2, 1))` terms
-!     are summed.
+!   - The sizes of the contracted indices should be equal. This is
+!     not checked: if they differ, only the first `MIN(n, m)` terms
+!     are summed, with `n = SIZE(a1, RANK(a1))` and
+!     `m = SIZE(a2, 1)`, and no error is raised.
 !
 ! Arguments:
 !   a1 : REAL(DFP), rank(3) - first array, the last index is contracted
@@ -846,9 +868,10 @@ END INTERFACE Matmul
 !     than the result.
 !   - Only `ans(1:nrow, 1:ncol)` is written.
 !     The rest of `ans` is not changed.
-!   - The sizes of the contracted indices are not checked. If they
-!     differ, only the first `MIN(SIZE(a1, 3), SIZE(a2, 1))` terms
-!     are summed.
+!   - The sizes of the contracted indices should be equal. This is
+!     not checked: if they differ, only the first `MIN(n, m)` terms
+!     are summed, with `n = SIZE(a1, RANK(a1))` and
+!     `m = SIZE(a2, 1)`, and no error is raised.
 !
 ! Arguments:
 !   a1 : REAL(DFP), rank(3) - first array, the last index is contracted
@@ -933,9 +956,10 @@ END INTERFACE Matmul_
 !   Contracts the last index of `a1` with the first index of `a2`.
 !   The result has rank 3.
 !
-!   - The sizes of the contracted indices are not checked. If they
-!     differ, only the first `MIN(SIZE(a1, 3), SIZE(a2, 1))` terms
-!     are summed.
+!   - The sizes of the contracted indices should be equal. This is
+!     not checked: if they differ, only the first `MIN(n, m)` terms
+!     are summed, with `n = SIZE(a1, RANK(a1))` and
+!     `m = SIZE(a2, 1)`, and no error is raised.
 !
 ! Arguments:
 !   a1 : REAL(DFP), rank(3) - first array, the last index is contracted
@@ -1017,9 +1041,10 @@ END INTERFACE Matmul
 !     than the result.
 !   - Only `ans(1:dim1, 1:dim2, 1:dim3)` is written.
 !     The rest of `ans` is not changed.
-!   - The sizes of the contracted indices are not checked. If they
-!     differ, only the first `MIN(SIZE(a1, 3), SIZE(a2, 1))` terms
-!     are summed.
+!   - The sizes of the contracted indices should be equal. This is
+!     not checked: if they differ, only the first `MIN(n, m)` terms
+!     are summed, with `n = SIZE(a1, RANK(a1))` and
+!     `m = SIZE(a2, 1)`, and no error is raised.
 !
 ! Arguments:
 !   a1 : REAL(DFP), rank(3) - first array, the last index is contracted
@@ -1106,9 +1131,10 @@ END INTERFACE Matmul_
 !   Contracts the last index of `a1` with the first index of `a2`.
 !   The result has rank 4.
 !
-!   - The sizes of the contracted indices are not checked. If they
-!     differ, only the first `MIN(SIZE(a1, 3), SIZE(a2, 1))` terms
-!     are summed.
+!   - The sizes of the contracted indices should be equal. This is
+!     not checked: if they differ, only the first `MIN(n, m)` terms
+!     are summed, with `n = SIZE(a1, RANK(a1))` and
+!     `m = SIZE(a2, 1)`, and no error is raised.
 !
 ! Arguments:
 !   a1 : REAL(DFP), rank(3) - first array, the last index is contracted
@@ -1191,9 +1217,10 @@ END INTERFACE Matmul
 !     than the result.
 !   - Only `ans(1:dim1, 1:dim2, 1:dim3, 1:dim4)` is written.
 !     The rest of `ans` is not changed.
-!   - The sizes of the contracted indices are not checked. If they
-!     differ, only the first `MIN(SIZE(a1, 3), SIZE(a2, 1))` terms
-!     are summed.
+!   - The sizes of the contracted indices should be equal. This is
+!     not checked: if they differ, only the first `MIN(n, m)` terms
+!     are summed, with `n = SIZE(a1, RANK(a1))` and
+!     `m = SIZE(a2, 1)`, and no error is raised.
 !
 ! Arguments:
 !   a1 : REAL(DFP), rank(3) - first array, the last index is contracted
@@ -1282,9 +1309,10 @@ END INTERFACE Matmul_
 !   Contracts the last index of `a1` with the first index of `a2`.
 !   The result has rank 5.
 !
-!   - The sizes of the contracted indices are not checked. If they
-!     differ, only the first `MIN(SIZE(a1, 3), SIZE(a2, 1))` terms
-!     are summed.
+!   - The sizes of the contracted indices should be equal. This is
+!     not checked: if they differ, only the first `MIN(n, m)` terms
+!     are summed, with `n = SIZE(a1, RANK(a1))` and
+!     `m = SIZE(a2, 1)`, and no error is raised.
 !
 ! Arguments:
 !   a1 : REAL(DFP), rank(3) - first array, the last index is contracted
@@ -1367,9 +1395,10 @@ END INTERFACE Matmul
 !     than the result.
 !   - Only `ans(1:dim1, 1:dim2, 1:dim3, 1:dim4, 1:dim5)` is written.
 !     The rest of `ans` is not changed.
-!   - The sizes of the contracted indices are not checked. If they
-!     differ, only the first `MIN(SIZE(a1, 3), SIZE(a2, 1))` terms
-!     are summed.
+!   - The sizes of the contracted indices should be equal. This is
+!     not checked: if they differ, only the first `MIN(n, m)` terms
+!     are summed, with `n = SIZE(a1, RANK(a1))` and
+!     `m = SIZE(a2, 1)`, and no error is raised.
 !
 ! Arguments:
 !   a1 : REAL(DFP), rank(3) - first array, the last index is contracted
@@ -1460,7 +1489,9 @@ END INTERFACE Matmul_
 !   The result has rank 3.
 !
 !   - The sizes of the contracted indices should be equal. This is
-!     not checked, so a mismatch gives an undefined result.
+!     not checked: if they differ, only the first `MIN(n, m)` terms
+!     are summed, with `n = SIZE(a1, RANK(a1))` and
+!     `m = SIZE(a2, 1)`, and no error is raised.
 !
 ! Arguments:
 !   a1 : REAL(DFP), rank(2) - first array, the last index is contracted
@@ -1542,7 +1573,9 @@ END INTERFACE Matmul
 !   - Only `ans(1:dim1, 1:dim2, 1:dim3)` is written.
 !     The rest of `ans` is not changed.
 !   - The sizes of the contracted indices should be equal. This is
-!     not checked, so a mismatch gives an undefined result.
+!     not checked: if they differ, only the first `MIN(n, m)` terms
+!     are summed, with `n = SIZE(a1, RANK(a1))` and
+!     `m = SIZE(a2, 1)`, and no error is raised.
 !
 ! Arguments:
 !   a1 : REAL(DFP), rank(2) - first array, the last index is contracted
@@ -1630,7 +1663,9 @@ END INTERFACE Matmul_
 !   The result has rank 4.
 !
 !   - The sizes of the contracted indices should be equal. This is
-!     not checked, so a mismatch gives an undefined result.
+!     not checked: if they differ, only the first `MIN(n, m)` terms
+!     are summed, with `n = SIZE(a1, RANK(a1))` and
+!     `m = SIZE(a2, 1)`, and no error is raised.
 !
 ! Arguments:
 !   a1 : REAL(DFP), rank(2) - first array, the last index is contracted
@@ -1713,7 +1748,9 @@ END INTERFACE Matmul
 !   - Only `ans(1:dim1, 1:dim2, 1:dim3, 1:dim4)` is written.
 !     The rest of `ans` is not changed.
 !   - The sizes of the contracted indices should be equal. This is
-!     not checked, so a mismatch gives an undefined result.
+!     not checked: if they differ, only the first `MIN(n, m)` terms
+!     are summed, with `n = SIZE(a1, RANK(a1))` and
+!     `m = SIZE(a2, 1)`, and no error is raised.
 !
 ! Arguments:
 !   a1 : REAL(DFP), rank(2) - first array, the last index is contracted
@@ -1802,7 +1839,9 @@ END INTERFACE Matmul_
 !   The result is a scalar, the dot product of `a1` and `a2`.
 !
 !   - The sizes of the contracted indices should be equal. This is
-!     not checked, so a mismatch gives an undefined result.
+!     not checked: if they differ, only the first `MIN(n, m)` terms
+!     are summed, with `n = SIZE(a1, RANK(a1))` and
+!     `m = SIZE(a2, 1)`, and no error is raised.
 !
 ! Arguments:
 !   a1 : REAL(DFP), rank(1) - first array, the last index is contracted
@@ -1866,7 +1905,9 @@ END INTERFACE Matmul
 !   but the result is written into `ans`.
 !
 !   - The sizes of the contracted indices should be equal. This is
-!     not checked, so a mismatch gives an undefined result.
+!     not checked: if they differ, only the first `MIN(n, m)` terms
+!     are summed, with `n = SIZE(a1, RANK(a1))` and
+!     `m = SIZE(a2, 1)`, and no error is raised.
 !
 ! Arguments:
 !   a1 : REAL(DFP), rank(1) - first array, the last index is contracted
@@ -1929,7 +1970,9 @@ END INTERFACE Matmul_
 !   The result has rank 2.
 !
 !   - The sizes of the contracted indices should be equal. This is
-!     not checked, so a mismatch gives an undefined result.
+!     not checked: if they differ, only the first `MIN(n, m)` terms
+!     are summed, with `n = SIZE(a1, RANK(a1))` and
+!     `m = SIZE(a2, 1)`, and no error is raised.
 !
 ! Arguments:
 !   a1 : REAL(DFP), rank(1) - first array, the last index is contracted
@@ -2010,7 +2053,9 @@ END INTERFACE Matmul
 !   - Only `ans(1:nrow, 1:ncol)` is written.
 !     The rest of `ans` is not changed.
 !   - The sizes of the contracted indices should be equal. This is
-!     not checked, so a mismatch gives an undefined result.
+!     not checked: if they differ, only the first `MIN(n, m)` terms
+!     are summed, with `n = SIZE(a1, RANK(a1))` and
+!     `m = SIZE(a2, 1)`, and no error is raised.
 !
 ! Arguments:
 !   a1 : REAL(DFP), rank(1) - first array, the last index is contracted
@@ -2096,7 +2141,9 @@ END INTERFACE Matmul_
 !   The result has rank 3.
 !
 !   - The sizes of the contracted indices should be equal. This is
-!     not checked, so a mismatch gives an undefined result.
+!     not checked: if they differ, only the first `MIN(n, m)` terms
+!     are summed, with `n = SIZE(a1, RANK(a1))` and
+!     `m = SIZE(a2, 1)`, and no error is raised.
 !
 ! Arguments:
 !   a1 : REAL(DFP), rank(1) - first array, the last index is contracted
@@ -2177,7 +2224,9 @@ END INTERFACE Matmul
 !   - Only `ans(1:dim1, 1:dim2, 1:dim3)` is written.
 !     The rest of `ans` is not changed.
 !   - The sizes of the contracted indices should be equal. This is
-!     not checked, so a mismatch gives an undefined result.
+!     not checked: if they differ, only the first `MIN(n, m)` terms
+!     are summed, with `n = SIZE(a1, RANK(a1))` and
+!     `m = SIZE(a2, 1)`, and no error is raised.
 !
 ! Arguments:
 !   a1 : REAL(DFP), rank(1) - first array, the last index is contracted

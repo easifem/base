@@ -42,7 +42,8 @@ INTEGER(I4B) :: ii, jj, kk, ll, dim4
 dim1 = SIZE(a1, 1)
 dim2 = SIZE(a1, 2)
 dim3 = SIZE(a1, 3)
-dim4 = SIZE(a1, 4)
+! sum over the indices that exist in both a1 and a2
+dim4 = MIN(SIZE(a1, 4), SIZE(a2))
 
 ans(1:dim1, 1:dim2, 1:dim3) = 0.0_DFP
 
@@ -74,11 +75,15 @@ END PROCEDURE matmul_r4_r2
 MODULE PROCEDURE matmul_r4_r2_
 INTEGER(I4B) :: ii
 
+! set the sizes here too, in case SIZE(a2, 2) is zero
+dim1 = SIZE(a1, 1)
+dim2 = SIZE(a1, 2)
+dim3 = SIZE(a1, 3)
 dim4 = SIZE(a2, 2)
 
 DO ii = 1, dim4
-  call Matmul_(a1=a1, a2=a2(:, ii), ans=ans(:,:,:,ii), dim1=dim1, dim2=dim2, &
-               dim3=dim3)
+  CALL Matmul_(a1=a1, a2=a2(:, ii), ans=ans(:, :, :, ii), dim1=dim1, &
+               dim2=dim2, dim3=dim3)
 END DO
 END PROCEDURE matmul_r4_r2_
 
@@ -99,6 +104,11 @@ END PROCEDURE matmul_r4_r3
 MODULE PROCEDURE matmul_r4_r3_
 INTEGER(I4B) :: ii
 
+! set the sizes here too, in case SIZE(a2, 3) is zero
+dim1 = SIZE(a1, 1)
+dim2 = SIZE(a1, 2)
+dim3 = SIZE(a1, 3)
+dim4 = SIZE(a2, 2)
 dim5 = SIZE(a2, 3)
 
 DO ii = 1, dim5
@@ -124,6 +134,12 @@ END PROCEDURE matmul_r4_r4
 MODULE PROCEDURE matmul_r4_r4_
 INTEGER(I4B) :: ii
 
+! set the sizes here too, in case SIZE(a2, 4) is zero
+dim1 = SIZE(a1, 1)
+dim2 = SIZE(a1, 2)
+dim3 = SIZE(a1, 3)
+dim4 = SIZE(a2, 2)
+dim5 = SIZE(a2, 3)
 dim6 = SIZE(a2, 4)
 
 DO ii = 1, dim6
@@ -150,6 +166,7 @@ INTEGER(I4B) :: ii, jj, kk, tsize
 
 nrow = SIZE(a1, 1)
 ncol = SIZE(a1, 2)
+! sum over the indices that exist in both a1 and a2
 tsize = MIN(SIZE(a2), SIZE(a1, 3))
 
 ans(1:nrow, 1:ncol) = 0.0_DFP
@@ -179,6 +196,9 @@ END PROCEDURE matmul_r3_r2
 MODULE PROCEDURE matmul_r3_r2_
 INTEGER(I4B) :: ii
 
+! set the sizes here too, in case SIZE(a2, 2) is zero
+dim1 = SIZE(a1, 1)
+dim2 = SIZE(a1, 2)
 dim3 = SIZE(a2, 2)
 
 DO ii = 1, dim3
@@ -203,6 +223,10 @@ END PROCEDURE matmul_r3_r3
 MODULE PROCEDURE matmul_r3_r3_
 INTEGER(I4B) :: ii
 
+! set the sizes here too, in case SIZE(a2, 3) is zero
+dim1 = SIZE(a1, 1)
+dim2 = SIZE(a1, 2)
+dim3 = SIZE(a2, 2)
 dim4 = SIZE(a2, 3)
 
 DO ii = 1, dim4
@@ -228,6 +252,11 @@ END PROCEDURE matmul_r3_r4
 MODULE PROCEDURE matmul_r3_r4_
 INTEGER(I4B) :: ii
 
+! set the sizes here too, in case SIZE(a2, 4) is zero
+dim1 = SIZE(a1, 1)
+dim2 = SIZE(a1, 2)
+dim3 = SIZE(a2, 2)
+dim4 = SIZE(a2, 3)
 dim5 = SIZE(a2, 4)
 
 DO ii = 1, dim5
@@ -250,14 +279,16 @@ END PROCEDURE matmul_r2_r3
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE matmul_r2_r3_
-INTEGER(I4B) :: ii
+INTEGER(I4B) :: ii, tsize
 
 dim1 = SIZE(a1, 1)
 dim2 = SIZE(a2, 2)
 dim3 = SIZE(a2, 3)
+! sum over the indices that exist in both a1 and a2
+tsize = MIN(SIZE(a1, 2), SIZE(a2, 1))
 
 DO ii = 1, dim3
-  ans(1:dim1, 1:dim2, ii) = MATMUL(a1, a2(:, :, ii))
+  ans(1:dim1, 1:dim2, ii) = MATMUL(a1(:, 1:tsize), a2(1:tsize, :, ii))
 END DO
 END PROCEDURE matmul_r2_r3_
 
@@ -278,6 +309,10 @@ END PROCEDURE matmul_r2_r4
 MODULE PROCEDURE matmul_r2_r4_
 INTEGER(I4B) :: ii
 
+! set the sizes here too, in case SIZE(a2, 4) is zero
+dim1 = SIZE(a1, 1)
+dim2 = SIZE(a2, 2)
+dim3 = SIZE(a2, 3)
 dim4 = SIZE(a2, 4)
 DO ii = 1, dim4
   CALL Matmul_(a1=a1, a2=a2(:, :, :, ii), ans=ans(:, :, :, ii), &
@@ -290,7 +325,10 @@ END PROCEDURE matmul_r2_r4_
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE matmul_r1_r1
-ans = DOT_PRODUCT(a1, a2)
+INTEGER(I4B) :: tsize
+! sum over the indices that exist in both a1 and a2
+tsize = MIN(SIZE(a1), SIZE(a2))
+ans = DOT_PRODUCT(a1(1:tsize), a2(1:tsize))
 END PROCEDURE matmul_r1_r1
 
 !----------------------------------------------------------------------------
@@ -298,7 +336,10 @@ END PROCEDURE matmul_r1_r1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE matmul_r1_r1_
-ans = DOT_PRODUCT(a1, a2)
+INTEGER(I4B) :: tsize
+! sum over the indices that exist in both a1 and a2
+tsize = MIN(SIZE(a1), SIZE(a2))
+ans = DOT_PRODUCT(a1(1:tsize), a2(1:tsize))
 END PROCEDURE matmul_r1_r1_
 
 !----------------------------------------------------------------------------
@@ -319,7 +360,8 @@ INTEGER(I4B) :: ii, jj, kk, tsize
 
 nrow = SIZE(a2, 2)
 ncol = SIZE(a2, 3)
-tsize = SIZE(a1)
+! sum over the indices that exist in both a1 and a2
+tsize = MIN(SIZE(a1), SIZE(a2, 1))
 
 ans(1:nrow, 1:ncol) = 0.0_DFP
 
@@ -338,8 +380,10 @@ END PROCEDURE matmul_r1_r3_
 
 MODULE PROCEDURE matmul_r1_r4
 INTEGER(I4B) :: ii
-ans = a1(1) * a2(1, :, :, :)
-DO ii = 2, SIZE(a1)
+! start from zero, so that an empty a1 gives zero; sum over the
+! indices that exist in both a1 and a2
+ans = 0.0_DFP
+DO ii = 1, MIN(SIZE(a1), SIZE(a2, 1))
   ans = ans + a1(ii) * a2(ii, :, :, :)
 END DO
 END PROCEDURE matmul_r1_r4
@@ -354,7 +398,8 @@ INTEGER(I4B) :: ii, jj, kk, ll, tsize
 dim1 = SIZE(a2, 2)
 dim2 = SIZE(a2, 3)
 dim3 = SIZE(a2, 4)
-tsize = SIZE(a1)
+! sum over the indices that exist in both a1 and a2
+tsize = MIN(SIZE(a1), SIZE(a2, 1))
 
 ans(1:dim1, 1:dim2, 1:dim3) = 0.0_DFP
 
