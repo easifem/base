@@ -53,6 +53,11 @@
 !   None of the routines is stable, except `InsertionSort` and
 !   `ArgInsertionSort`.
 !
+!   No routine checks sizes or ranges. `low` and `high` must lie
+!   inside the arrays, `arg` must have the size given in each routine
+!   and hold valid indices of `array`. Otherwise an array is accessed
+!   out of bounds. `Sort` and `ArgSort` always pass consistent sizes.
+!
 ! Reference:
 !
 ! https://github.com/leonfoks/coretran/blob/master/src/sorting/m_sort.f90
@@ -200,7 +205,9 @@ END INTERFACE IntroSort
 !   - `arg` is not initialised by the routine. On entry it must hold
 !     the indices to sort, normally `arg = [1, 2, ..., SIZE(array)]`.
 !   - `SIZE(arg)` should be at least `SIZE(array)`; only
-!     `arg(1:SIZE(array))` is used.
+!     `arg(1:SIZE(array))` is used. This is not checked: a shorter
+!     `arg` is written out of bounds, and an index outside
+!     `1..SIZE(array)` makes the routine read `array` out of bounds.
 !   - Parts with fewer than 16 entries are sorted by
 !     `ArgInsertionSort`. Larger parts are split by `ArgMedian` and
 !     `ArgPartition`. The pivot is the median of `array(arg(left))`,
@@ -627,7 +634,9 @@ END INTERFACE HeapSort
 !   - The dummy argument is declared `arg(0:)`, but the values stored
 !     in it are the usual 1-based indices of `array`.
 !   - Only `array(1:SIZE(arg))` is sorted, so `SIZE(arg)` should be
-!     equal to `SIZE(array)`.
+!     equal to `SIZE(array)`. This is not checked: a longer `arg`
+!     makes the routine read `array` out of bounds, and a shorter one
+!     sorts only the first `SIZE(arg)` entries.
 !   - The sort is not stable.
 !
 ! Arguments:
@@ -726,6 +735,9 @@ END INTERFACE ArgHeapSort
 !   outside `low:high` are not changed. If `low >= high`, nothing is
 !   done, so an empty vector can be passed with `low = 1, high = 0`.
 !
+!   - `low` and `high` are not checked: they must satisfy
+!     `1 <= low` and `high <= SIZE(vect1)`, otherwise `vect1` is
+!     accessed out of bounds.
 !   - It calls `IntroSort` on `vect1(low:high)`, so the cost is
 !     $O(n \log n)$ and the recursion depth is $O(\log n)$ for every
 !     input, including sorted, reverse sorted and constant vectors.
@@ -829,7 +841,9 @@ END INTERFACE QuickSort
 !     then applied to every vector, so the cost is $O(n \log n)$ for
 !     every input. A temporary index vector of size
 !     `high - low + 1` is used.
-!   - `SIZE(vect2)` should be at least `high`. This is not checked.
+!   - `low` and `high` are not checked: `1 <= low` and `high` must
+!     not exceed the size of either vector, otherwise the vectors are
+!     accessed out of bounds.
 !
 ! Arguments:
 !   vect1 : INTEGER(I4B) or REAL(DFP), rank(1), INTENT(INOUT) - key
@@ -934,6 +948,9 @@ END INTERFACE QuickSort
 !
 !   - Only `vect1` is compared. Ties in `vect1` are not broken by the
 !     other vectors, and their order is not defined.
+!   - `low` and `high` are not checked: `1 <= low` and `high` must
+!     not exceed the size of any vector, otherwise the vectors are
+!     accessed out of bounds.
 !   - Each vector can be `INTEGER(I4B)` or `REAL(DFP)`, which gives
 !     eight combinations (III, IIR, IRR, IRI, RRR, RRI, RIR, RII).
 !   - The order is found by `ArgIntroSort` on `vect1(low:high)` and
@@ -1074,6 +1091,9 @@ END INTERFACE QuickSort
 !
 !   - Only `vect1` is compared. Ties in `vect1` are not broken by the
 !     other vectors, and their order is not defined.
+!   - `low` and `high` are not checked: `1 <= low` and `high` must
+!     not exceed the size of any vector, otherwise the vectors are
+!     accessed out of bounds.
 !   - Each vector can be `INTEGER(I4B)` or `REAL(DFP)`, which gives
 !     all sixteen combinations (IIII, IIIR, ..., RIII).
 !   - The order is found by `ArgIntroSort` on `vect1(low:high)` and
