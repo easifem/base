@@ -201,7 +201,7 @@ Always declare `IMPLICIT NONE` after module/submodule declaration
 - Use `!` for ordinary inline comments and short notes.
 - Prefer LaTeX math for formulas in docblocks. Use display math `$$ ... $$` for full formulas.
 - Keep docblock lines wrapped to the project's 78-character line length when possible.
-- Document public interfaces and module-level summaries with a FORD-style block that includes author, date, summary, arguments, returns, and a Formula section.
+- Document public interfaces and module-level summaries with a FORD-style block that includes author, date, summary, arguments, returns, a Formula section, and an Examples section.
 
 Example FORD docblock (preferred style):
 
@@ -228,6 +228,25 @@ MODULE SomeModule
 !
 ! Formula:
 !   $$\mathrm{y} = \sum_{i} x_i\, w_i$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE SomeModule, ONLY: SomeFunction
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+!
+! REAL(DFP) :: x(3), y
+!
+! x = [1.0_DFP, 2.0_DFP, 3.0_DFP]
+! y = SomeFunction(x)
+! CALL OK(y .GT. 0.0_DFP, "SomeFunction is positive")
+!
+! END PROGRAM main
+!```
 
 INTERFACE SomeFunction
   ...
@@ -241,6 +260,24 @@ Notes for AI agents and maintainers:
 - Prefer clear, short lines and reflow text to avoid exceeding 78 characters.
 - Use LaTeX only inside the Formula section; avoid complex LaTeX packages or commands that the documentation renderer may not support.
 - Keep docblocks factual: include who authored the change, the date, a concise summary, argument/return shapes (using `SIZE(...)` where relevant), and a simple LaTeX formula for the mathematical relation.
+
+#### Examples section in docblocks
+
+- Every FORD docblock for a public routine must contain one example. Name the section `Examples` (not `Example`), written as `! Examples` on its own line.
+- The example is a complete, runnable program, not a short snippet. It starts with `PROGRAM main` and ends with `END PROGRAM main`, and contains all `USE ..., ONLY:` lines, `IMPLICIT NONE`, declarations, the calls, and `CALL OK(...)` checks (from `Test_Method`) so that the result can be verified.
+- Put the program inside a fenced code block. The fence is written as `` !```fortran `` and `` !``` `` on their own comment lines. All lines in the block use a plain `!` followed by one space. Do not use `!>`.
+- The program is normally the same as the matching test in `src/modules/<Module>/examples/`, without the GPL header and without the `!> Test:` docblock.
+- If a helper procedure is needed, put it after `CONTAINS` inside the example program.
+- Keep the lines within 78 characters.
+- Use only one `Examples` section per docblock. Do not keep a separate short `Example:` section next to it.
+
+### Examples and tests
+
+- Tests are standalone programs named `<Name>_test_<N>.F90` in `src/modules/<Module>/examples/`.
+- For routines that are overloaded over several kinds, do not write tests for all the kinds.
+  - For reals (`Real32`, `Real64`) use only `REAL(DFP)`.
+  - For integers (`Int8`, `Int16`, `Int32`, `Int64`) use only `INTEGER(I4B)`.
+- The same applies to the programs in the `Examples` section of the docblocks.
 
 ### Error Handling
 

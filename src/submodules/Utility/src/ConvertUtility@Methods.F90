@@ -94,24 +94,14 @@ END PROCEDURE obj_ConvertSafe1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE obj_Convert2
-INTEGER(I4B) :: a, b, I(4), r1, r2, c1, c2
+INTEGER(I4B) :: n1, n2, n3, n4
 
-I = SHAPE(from)
-CALL Reallocate(to, I(1) * I(3), I(2) * I(4))
-c1 = 0
-c2 = 0
-DO b = 1, I(4)
-  c1 = c2 + 1
-  c2 = b * I(2)
-  r1 = 0
-  r2 = 0
-
-  DO a = 1, I(3)
-    r1 = r2 + 1
-    r2 = a * I(1)
-    to(r1:r2, c1:c2) = from(:, :, a, b)
-  END DO
-END DO
+n1 = SIZE(from, 1)
+n2 = SIZE(from, 2)
+n3 = SIZE(from, 3)
+n4 = SIZE(from, 4)
+CALL Reallocate(to, n1 * n3, n2 * n4)
+CALL Convert_(from=from, to=to, nrow=n1, ncol=n2)
 END PROCEDURE obj_Convert2
 
 !----------------------------------------------------------------------------
@@ -152,19 +142,15 @@ END PROCEDURE obj_Convert_2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE obj_Convert3
-INTEGER(I4B) :: a, b, s(6)
-REAL(DFP), ALLOCATABLE :: m2(:, :)
-
-s = SHAPE(from)
-CALL Reallocate(to, s(1) * s(3), s(2) * s(4), s(5), s(6))
-
-DO b = 1, s(6)
-  DO a = 1, s(5)
-    CALL Convert(from=from(:, :, :, :, a, b), to=m2)
-    to(:, :, a, b) = m2
-  END DO
-END DO
-DEALLOCATE (m2)
+INTEGER(I4B) :: n1, n2, n3, n4, n5, n6
+n1 = SIZE(from, 1)
+n2 = SIZE(from, 2)
+n3 = SIZE(from, 3)
+n4 = SIZE(from, 4)
+n5 = SIZE(from, 5)
+n6 = SIZE(from, 6)
+CALL Reallocate(to, n1 * n3, n2 * n4, n5, n6)
+CALL Convert_(from=from, to=to, dim1=n1, dim2=n2, dim3=n3, dim4=n4)
 END PROCEDURE obj_Convert3
 
 !----------------------------------------------------------------------------

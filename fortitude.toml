@@ -6,6 +6,7 @@ ignore = [
   "implicit-external-procedures",
   "interface-implicit-typing",
   "bad-quote-string",
+  "trailing-backslash",
 ]
 file-extensions = ["f90", "F90"]
 line-length = 78
