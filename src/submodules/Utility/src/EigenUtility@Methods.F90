@@ -296,27 +296,27 @@ END FUNCTION get_diag
 
 PURE SUBROUTINE unit_matrix(mat)
   REAL(DFP), DIMENSION(:, :), INTENT(OUT) :: mat
-  INTEGER(I4B) :: ii, nn
-  nn = MIN(SIZE(mat, 1), SIZE(mat, 2))
+  INTEGER(I4B) :: my_i, my_n
+  my_n = MIN(SIZE(mat, 1), SIZE(mat, 2))
   mat(:, :) = 0.0_DFP
-  DO ii = 1, nn
-    mat(ii, ii) = 1.0_DFP
+  DO my_i = 1, my_n
+    mat(my_i, my_i) = 1.0_DFP
   END DO
 END SUBROUTINE unit_matrix
 
 PURE SUBROUTINE SortEigenValues(EigenValues, EigenVectors)
   REAL(DFP), DIMENSION(:), INTENT(INOUT) :: EigenValues
   REAL(DFP), DIMENSION(:, :), INTENT(INOUT) :: EigenVectors
-  INTEGER(I4B) :: ii, j, nn
+  INTEGER(I4B) :: my_i, j, my_n
 
-  nn = SIZE(EigenValues)
+  my_n = SIZE(EigenValues)
 
-  DO ii = 1, nn - 1
-    j = ImaxLoc(EigenValues(ii:nn))
-    j = j + ii - 1
-    IF (j .NE. ii) THEN
-      CALL SWAP(EigenValues(ii), EigenValues(j))
-      CALL SWAP(EigenVectors(:, ii), EigenVectors(:, j))
+  DO my_i = 1, my_n - 1
+    j = ImaxLoc(EigenValues(my_i:my_n))
+    j = j + my_i - 1
+    IF (j .NE. my_i) THEN
+      CALL SWAP(EigenValues(my_i), EigenValues(j))
+      CALL SWAP(EigenVectors(:, my_i), EigenVectors(:, j))
     END IF
   END DO
 END SUBROUTINE SortEigenValues
@@ -325,10 +325,10 @@ PURE FUNCTION upper_triangle(j, k, extra) RESULT(ans)
   INTEGER(I4B), INTENT(IN) :: j, k
   INTEGER(I4B), OPTIONAL, INTENT(IN) :: extra
   LOGICAL(LGT), DIMENSION(j, k) :: ans
-  INTEGER(I4B) :: nn
-  nn = 0
-  IF (PRESENT(extra)) nn = extra
-  ans = (OuterDiff(Arth(1, 1, j), Arth(1, 1, k)) < nn)
+  INTEGER(I4B) :: my_n
+  my_n = 0
+  IF (PRESENT(extra)) my_n = extra
+  ans = (OuterDiff(Arth(1, 1, j), Arth(1, 1, k)) < my_n)
 END FUNCTION upper_triangle
 
 ! PURE FUNCTION lower_triangle(j,k,extra)

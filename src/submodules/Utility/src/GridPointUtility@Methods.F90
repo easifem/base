@@ -16,7 +16,9 @@
 !
 
 SUBMODULE(GridPointUtility) Methods
-USE BaseMethod
+USE BaseType, ONLY: math => TypeMathOpt
+USE InputUtility, ONLY: Input
+USE ReallocateUtility, ONLY: Reallocate
 IMPLICIT NONE
 CONTAINS
 
@@ -86,7 +88,7 @@ REAL(REAL32) :: dx
 INTEGER(I4B) :: i
 INTEGER(I4B) :: nn
   !! main
-nn = INPUT(option=n, default=100)
+nn = Input(option=n, default=100)
 IF (nn .EQ. 1) THEN
   ans = [a]
 ELSE
@@ -106,7 +108,7 @@ REAL(REAL64) :: dx
 INTEGER(I4B) :: i
 INTEGER(I4B) :: nn
 !> main
-nn = INPUT(option=n, default=100)
+nn = Input(option=n, default=100)
 IF (nn .EQ. 1) THEN
   ans = [a]
 ELSE
@@ -125,9 +127,9 @@ INTEGER(I4B) :: base0, n0
 LOGICAL(LGT) :: endpoint0
 REAL(REAL32), ALLOCATABLE :: ans0(:)
   !!
-endpoint0 = INPUT(option=endPoint, default=.TRUE.)
-base0 = INPUT(option=base, default=10)
-n0 = INPUT(option=n, default=100_I4B)
+endpoint0 = Input(option=endPoint, default=.TRUE.)
+base0 = Input(option=base, default=10)
+n0 = Input(option=n, default=100_I4B)
   !!
 IF (endpoint0) THEN
   ans0 = Linspace(a=a, b=b, n=n0)
@@ -149,9 +151,9 @@ INTEGER(I4B) :: base0, n0
 LOGICAL(LGT) :: endpoint0
 REAL(REAL64), ALLOCATABLE :: ans0(:)
   !!
-endpoint0 = INPUT(option=endPoint, default=.TRUE.)
-base0 = INPUT(option=base, default=10)
-n0 = INPUT(option=n, default=100_I4B)
+endpoint0 = Input(option=endPoint, default=.TRUE.)
+base0 = Input(option=base, default=10)
+n0 = Input(option=n, default=100_I4B)
   !!
 IF (endpoint0) THEN
   ans0 = Linspace(a=a, b=b, n=n0)
@@ -204,7 +206,9 @@ END PROCEDURE MeshGrid2D_Real32
 
 MODULE PROCEDURE MeshGrid3D_Real64
 INTEGER :: nx, ny, nz, i
-nx = SIZE(xgv); ny = SIZE(ygv); nz = SIZE(zgv)
+nx = SIZE(xgv)
+ny = SIZE(ygv)
+nz = SIZE(zgv)
 CALL Reallocate(x, nx, ny, nz)
 CALL Reallocate(y, nx, ny, nz)
 CALL Reallocate(z, nx, ny, nz)
@@ -223,7 +227,9 @@ END PROCEDURE MeshGrid3D_Real64
 
 MODULE PROCEDURE MeshGrid3D_Real32
 INTEGER :: nx, ny, nz, i
-nx = SIZE(xgv); ny = SIZE(ygv); nz = SIZE(zgv)
+nx = SIZE(xgv)
+ny = SIZE(ygv)
+nz = SIZE(zgv)
 CALL Reallocate(x, ny, nx, nz)
 CALL Reallocate(y, ny, nx, nz)
 CALL Reallocate(z, ny, nx, nz)

@@ -77,7 +77,10 @@ To test changes, rebuild and verify with client code.
 
 ### File Headers
 
-Every source file must start with the GPL v3 license header:
+Every library source file in `src/` must start with the GPL v3 license
+header. Exception: test and example programs in
+`src/modules/<Module>/examples/` must NOT contain the GPL header (see
+"Examples and tests"). The header for library files is:
 
 ```fortran
 ! This program is a part of EASIFEM library
@@ -278,6 +281,7 @@ Notes for AI agents and maintainers:
   - For reals (`Real32`, `Real64`) use only `REAL(DFP)`.
   - For integers (`Int8`, `Int16`, `Int32`, `Int64`) use only `INTEGER(I4B)`.
 - The same applies to the programs in the `Examples` section of the docblocks.
+- Do not add the GPL license header to test programs. A test file starts directly with its `!> author:` docblock (or with `PROGRAM main` if there is none).
 
 ### Error Handling
 
@@ -364,14 +368,14 @@ External libraries (configured via CMAKE):
 
 5. **Version**: Current version 24.10.3 (in CMakeLists.txt)
 
-6. **License**: GPL v3 - always include header in new files
+6. **License**: GPL v3 - include the header in new library source files (not in tests/examples)
 
 ## When Making Changes
 
 1. Read existing code in the same module for patterns
 2. Follow the module/submodule split architecture
 3. Use `ONLY` clauses in all USE statements
-4. Add proper GPL header to new files
+4. Add proper GPL header to new library source files (not to tests/examples)
 5. Maintain 78 character line length
 6. Use MODULE PROCEDURE in submodules
 7. Rebuild with `python3 build.py` to verify

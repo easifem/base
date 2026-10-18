@@ -54,4 +54,3 @@ END IF
 DO CONCURRENT(ii=1:row, jj=1:col)
   mat(ii, jj) = ZEROVALUE
 END DO
-
