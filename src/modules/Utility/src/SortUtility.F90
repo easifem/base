@@ -719,18 +719,17 @@ END INTERFACE ArgHeapSort
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2022-08-05
-! summary: Sorts a part of a vector in place by quick sort.
+! summary: Sorts a part of a vector in place.
 !
 ! Description:
 !   Sorts `vect1(low:high)` in ascending order in place. Entries
 !   outside `low:high` are not changed. If `low >= high`, nothing is
 !   done, so an empty vector can be passed with `low = 1, high = 0`.
 !
-!   - The pivot is the last entry `vect1(high)`.
+!   - It calls `IntroSort` on `vect1(low:high)`, so the cost is
+!     $O(n \log n)$ and the recursion depth is $O(\log n)$ for every
+!     input, including sorted, reverse sorted and constant vectors.
 !   - The sort is not stable.
-!   - The cost is $O(n \log n)$ on average, but $O(n^2)$ with a
-!     recursion depth of $n$ for already sorted or reverse sorted
-!     input. Use `IntroSort` or `HeapSort` for large vectors.
 !   - It is available for `INT8`, `INT16`, `INT32`, `INT64`, `REAL32`
 !     and `REAL64`.
 !
@@ -818,7 +817,7 @@ END INTERFACE QuickSort
 ! summary: Sorts two vectors by the entries of the first one.
 !
 ! Description:
-!   Sorts `vect1(low:high)` in ascending order by quick sort and
+!   Sorts `vect1(low:high)` in ascending order and
 !   applies the same permutation to `vect2(low:high)`, so that the
 !   pairs `(vect1(i), vect2(i))` stay together.
 !
@@ -826,8 +825,10 @@ END INTERFACE QuickSort
 !     `vect2`, and their order is not defined (the sort is not stable).
 !   - `vect1` and `vect2` can each be `INTEGER(I4B)` or `REAL(DFP)`,
 !     which gives four combinations.
-!   - The pivot is `vect1(high)`; see the single-vector `QuickSort`
-!     for the cost.
+!   - The order is found by `ArgIntroSort` on `vect1(low:high)` and
+!     then applied to every vector, so the cost is $O(n \log n)$ for
+!     every input. A temporary index vector of size
+!     `high - low + 1` is used.
 !   - `SIZE(vect2)` should be at least `high`. This is not checked.
 !
 ! Arguments:
@@ -926,7 +927,7 @@ END INTERFACE QuickSort
 ! summary: Sorts three vectors by the entries of the first one.
 !
 ! Description:
-!   Sorts `vect1(low:high)` in ascending order by quick sort and
+!   Sorts `vect1(low:high)` in ascending order and
 !   applies the same permutation to `vect2(low:high)` and
 !   `vect3(low:high)`, so that the rows
 !   `(vect1(i), vect2(i), vect3(i))` stay together.
@@ -935,8 +936,10 @@ END INTERFACE QuickSort
 !     other vectors, and their order is not defined.
 !   - Each vector can be `INTEGER(I4B)` or `REAL(DFP)`, which gives
 !     eight combinations (III, IIR, IRR, IRI, RRR, RRI, RIR, RII).
-!   - The pivot is `vect1(high)`; see the single-vector `QuickSort`
-!     for the cost.
+!   - The order is found by `ArgIntroSort` on `vect1(low:high)` and
+!     then applied to every vector, so the cost is $O(n \log n)$ for
+!     every input. A temporary index vector of size
+!     `high - low + 1` is used.
 !
 ! Arguments:
 !   vect1 : INTEGER(I4B) or REAL(DFP), rank(1), INTENT(INOUT) - key
@@ -1064,7 +1067,7 @@ END INTERFACE QuickSort
 ! summary: Sorts four vectors by the entries of the first one.
 !
 ! Description:
-!   Sorts `vect1(low:high)` in ascending order by quick sort and
+!   Sorts `vect1(low:high)` in ascending order and
 !   applies the same permutation to `vect2`, `vect3` and `vect4`
 !   (entries `low:high`), so that the rows
 !   `(vect1(i), vect2(i), vect3(i), vect4(i))` stay together.
@@ -1073,8 +1076,10 @@ END INTERFACE QuickSort
 !     other vectors, and their order is not defined.
 !   - Each vector can be `INTEGER(I4B)` or `REAL(DFP)`, which gives
 !     all sixteen combinations (IIII, IIIR, ..., RIII).
-!   - The pivot is `vect1(high)`; see the single-vector `QuickSort`
-!     for the cost.
+!   - The order is found by `ArgIntroSort` on `vect1(low:high)` and
+!     then applied to every vector, so the cost is $O(n \log n)$ for
+!     every input. A temporary index vector of size
+!     `high - low + 1` is used.
 !
 ! Arguments:
 !   vect1 : INTEGER(I4B) or REAL(DFP), rank(1), INTENT(INOUT) - key

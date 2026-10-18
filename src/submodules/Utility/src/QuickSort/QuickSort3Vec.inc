@@ -15,24 +15,18 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-INTEGER(I4B) i, iPivot
+! Find the order of vect1(low:high) with ArgIntroSort and apply it
+! to every vector: O(n log n) time and O(log n) recursion depth for
+! every input. The old version used the last entry as pivot and
+! was O(n**2), n levels deep, for sorted or constant input.
+INTEGER(I4B) :: arg(MAX(high - low + 1, 0)), ii
 
-iPivot = high
-i = low
-DO WHILE (iPivot > i)
-  IF (vect1(i) > vect1(iPivot)) THEN
-    CALL Swap(vect1(i), vect1(iPivot - 1))
-    CALL Swap(vect2(i), vect2(iPivot - 1))
-    CALL Swap(vect3(i), vect3(iPivot - 1))
-    CALL Swap(vect1(iPivot - 1), vect1(iPivot))
-    CALL Swap(vect2(iPivot - 1), vect2(iPivot))
-    CALL Swap(vect3(iPivot - 1), vect3(iPivot))
-    iPivot = iPivot - 1
-  ELSE
-    i = i + 1
-  END IF
-END DO
-IF (low < high) THEN
-  CALL QuickSort(vect1, vect2, vect3, low, iPivot - 1)
-  CALL QuickSort(vect1, vect2, vect3, iPivot + 1, high)
-END IF
+IF (high - low + 1 .LE. 1) RETURN
+
+arg = [(ii, ii=1, high - low + 1)]
+CALL ArgIntroSort(vect1(low:high), arg)
+arg = arg + (low - 1)
+
+vect1(low:high) = vect1(arg)
+vect2(low:high) = vect2(arg)
+vect3(low:high) = vect3(arg)
