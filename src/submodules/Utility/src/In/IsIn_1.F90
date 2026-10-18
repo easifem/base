@@ -19,5 +19,5 @@
 INTEGER(I4B) :: ii
 !!
 DO ii = 1, SIZE(a)
-  ans( ii ) = ANY(a(ii) .EQ. b)
+  ans(ii) = ANY(a(ii) .EQ. b)
 END DO
