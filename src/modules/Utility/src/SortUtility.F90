@@ -103,9 +103,7 @@ PUBLIC :: ArgIntroSort
 !   The sort is not stable. It is available for `INT8`, `INT16`,
 !   `INT32`, `INT64`, `REAL32` and `REAL64`.
 !
-!   For `SIZE(array) = 0` the routine evaluates `LOG(0.0)` to get
-!   `maxDepth`. The array is not changed, but the floating point
-!   exception may be reported. Avoid calling it on an empty vector.
+!   If `SIZE(array) <= 1` the routine returns at once.
 !
 ! Arguments:
 !   array : INTEGER or REAL, rank(1), INTENT(INOUT) - vector to sort
@@ -126,7 +124,7 @@ PUBLIC :: ArgIntroSort
 ! USE Test_Method, ONLY: OK
 ! IMPLICIT NONE
 !
-! INTEGER(I4B) :: a(10), b(40), c(1), d(8)
+! INTEGER(I4B) :: a(10), b(40), c(1), d(8), e(0)
 ! INTEGER(I4B) :: ii
 !
 ! ! short vector (insertion sort is used)
@@ -158,6 +156,10 @@ PUBLIC :: ArgIntroSort
 ! c = [42_I4B]
 ! CALL IntroSort(c)
 ! CALL OK(c(1) .EQ. 42_I4B, "size 1")
+!
+! ! empty vector
+! CALL IntroSort(e)
+! CALL OK(SIZE(e) .EQ. 0_I4B, "empty vector")
 !
 ! END PROGRAM main
 !```
@@ -208,8 +210,8 @@ END INTERFACE IntroSort
 !     `ArgHeapSort`.
 !   - The sort is not stable.
 !
-!   For `SIZE(array) = 0` the routine evaluates `LOG(0.0)`. Avoid
-!   calling it on an empty vector.
+!   If `SIZE(array) <= 1` the routine returns at once and `arg` is
+!   not changed.
 !
 ! Arguments:
 !   array : INTEGER or REAL, rank(1), INTENT(IN) - vector to sort
@@ -234,6 +236,7 @@ END INTERFACE IntroSort
 !
 ! INTEGER(I4B) :: a(10), a0(10), arg(10)
 ! INTEGER(I4B) :: b(40), b0(40), argb(40)
+! INTEGER(I4B) :: e(0), arge(0), c(1), argc(1)
 ! INTEGER(I4B) :: ii
 !
 ! ! arg must contain 1..n on entry
@@ -264,6 +267,14 @@ END INTERFACE IntroSort
 ! CALL OK(ALL(b(argb(1:39)) .LE. b(argb(2:40))), "duplicates")
 ! CALL OK(ALL([(COUNT(argb .EQ. ii) .EQ. 1, ii=1, 40)]), &
 !         "arg is a permutation with duplicates")
+!
+! ! vector of size 1 and empty vector
+! c = [42_I4B]
+! argc = [1_I4B]
+! CALL ArgIntroSort(c, argc)
+! CALL OK(argc(1) .EQ. 1_I4B, "size 1")
+! CALL ArgIntroSort(e, arge)
+! CALL OK(SIZE(arge) .EQ. 0_I4B, "empty vector")
 !
 ! END PROGRAM main
 !```
@@ -1262,9 +1273,6 @@ END INTERFACE QuickSort
 !   Any other name (for example `"INSERTION"`, which `ArgSort`
 !   accepts) is silently ignored and `x` is returned unsorted.
 !
-!   With the default algorithm, `SIZE(x) = 0` evaluates `LOG(0.0)`
-!   (see `IntroSort`).
-!
 ! Arguments:
 !   x : INTEGER or REAL, rank(1) - vector to sort
 !   name : CHARACTER(*), OPTIONAL - name of the algorithm
@@ -1372,8 +1380,7 @@ END INTERFACE Sort
 !   accepts) is silently ignored and `ans = [1, 2, ..., SIZE(x)]` is
 !   returned.
 !
-!   The default and `"QUICKSORT"` use `ArgIntroSort`. With these two
-!   names, `SIZE(x) = 0` evaluates `LOG(0.0)`.
+!   The default and `"QUICKSORT"` use `ArgIntroSort`.
 !
 ! Arguments:
 !   x : INTEGER or REAL, rank(1) - vector to sort
