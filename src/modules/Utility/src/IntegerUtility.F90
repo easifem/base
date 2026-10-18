@@ -1108,25 +1108,24 @@ END INTERFACE Repeat
 ! summary: Index of a value in an integer vector.
 !
 ! Description:
-!   Returns the index of the first entry of `obj` which is closest to
-!   `val`. It is available only for `INTEGER(I4B)`.
-!
-!   - If `val` is in `obj`, the result is the first index of `val`.
-!   - If `val` is not in `obj`, the result is the index of the
-!     nearest entry, not zero. Check `obj(ans) .EQ. val` if needed.
-!   - The vector version `GetIndex(obj, val(:))` returns zero for a
-!     value which is not found.
+!   Returns the index of the first entry of `obj` that is equal to
+!   `val`, or zero if `val` is not in `obj`. It is available only for
+!   `INTEGER(I4B)`. The result is the same as that of the vector
+!   version `GetIndex(obj, val(:))` for one value.
 !
 ! Arguments:
-!   obj : INTEGER(I4B), rank(1) - vector to search, `SIZE(obj) >= 1`
+!   obj : INTEGER(I4B), rank(1) - vector to search
 !   val : INTEGER(I4B) - value to find
 !
 ! Returns:
-!   ans : INTEGER(I4B) - index in `obj`
+!   ans : INTEGER(I4B) - index in `obj`, or zero if not found
 !
 ! Formula:
-!   $$\mathrm{ans} = \min \left\{ i : |\mathrm{obj}_i - \mathrm{val}|
-!     = \min_j |\mathrm{obj}_j - \mathrm{val}| \right\}$$
+!   $$\mathrm{ans} = \begin{cases}
+!     \min \{ i : \mathrm{obj}_i = \mathrm{val} \},
+!       & \text{if val is in obj} \\
+!     0, & \text{otherwise}
+!   \end{cases}$$
 !
 ! Examples
 !
@@ -1148,6 +1147,15 @@ END INTERFACE Repeat
 ! ! the first index is returned for a repeated value
 ! obj2 = [5_I4B, 7_I4B, 5_I4B]
 ! CALL OK(GetIndex(obj2, 5_I4B) .EQ. 1_I4B, "first index of 5")
+!
+! ! a value that is not in obj gives zero
+! CALL OK(GetIndex(obj, 31_I4B) .EQ. 0_I4B, "31 is not found")
+! CALL OK(GetIndex(obj, 0_I4B) .EQ. 0_I4B, "0 is not found")
+! CALL OK(GetIndex(obj, 99_I4B) .EQ. 0_I4B, "99 is not found")
+!
+! ! the same result as the vector version
+! CALL OK(ALL(GetIndex(obj, [30_I4B, 31_I4B]) .EQ. [3_I4B, 0_I4B]), &
+!         "same as GetIndex(obj, val(:))")
 !
 ! END PROGRAM main
 !```

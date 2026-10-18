@@ -267,7 +267,8 @@ END PROCEDURE Repeat_1f
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE GetIndex1
-Ans = MINLOC(ABS(obj - val), 1)
+! first index of val in obj, zero if val is not found
+Ans = FINDLOC(obj, val, 1)
 END PROCEDURE GetIndex1
 
 !----------------------------------------------------------------------------
