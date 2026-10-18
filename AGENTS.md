@@ -33,14 +33,19 @@ src/
 
 ### Configure and Build
 
-Always use easifem cli to build the project. For example
+Always use the easifem cli to compile the base library:
 
 ```bash
-easifem dev base
+easifem install base --no-download
 ```
 
+This compiles and installs the library from the local source tree
+without downloading it again.
+
+The commands below are kept only for reference:
+
 ```bash
-# Using Python build script (recommended)
+# Using Python build script
 python3 build.py
 
 # Or manually with CMake
@@ -67,11 +72,20 @@ cmake --install ${HOME}/temp/easifem/base/build
 
 ### Running Tests
 
-There is no automated test suite setup. Tests are in:
+There is no automated test suite setup. Tests are standalone programs in
+`src/modules/<Module>/examples/` (for example
+`src/modules/Utility/examples/Input_test_1.F90`).
 
-- `src/modules/Test/src/examples/test_examples.F90`
+To run a test, go to the directory that contains it and run it with the
+easifem cli:
 
-To test changes, rebuild and verify with client code.
+```bash
+cd src/modules/Utility/examples
+easifem run Input_test_1.F90
+```
+
+Compile the library first (`easifem install base --no-download`) so
+that the test uses the latest changes.
 
 ## Code Style Guidelines
 
@@ -378,5 +392,5 @@ External libraries (configured via CMAKE):
 4. Add proper GPL header to new library source files (not to tests/examples)
 5. Maintain 78 character line length
 6. Use MODULE PROCEDURE in submodules
-7. Rebuild with `python3 build.py` to verify
+7. Rebuild with `easifem install base --no-download` to verify
 8. Check fortitude linting if available
