@@ -17,15 +17,12 @@
 
 INTEGER(I4B) :: ii
 
+! a may have repeated entries, so SIZE(a) > SIZE(b) is allowed
 ans = .TRUE.
-IF (SIZE(a) .GT. SIZE(b)) THEN
-  ans = .FALSE.
-  RETURN
-END IF
 
-DO ii = 1, SIZE(a)
+mainloop: DO ii = 1, SIZE(a)
   IF (.NOT. ANY(a(ii) .EQ. b)) THEN
     ans = .FALSE.
-    EXIT
+    EXIT mainloop
   END IF
-END DO
+END DO mainloop

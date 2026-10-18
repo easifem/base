@@ -489,8 +489,8 @@ END INTERFACE GetMultiIndices_
 !   Returns `.TRUE.` if every entry of `a` is also an entry of `b`.
 !
 !   - The order of the entries does not matter.
-!   - If `SIZE(a) > SIZE(b)` the result is `.FALSE.`, even when `a`
-!     has repeated entries which are all in `b`.
+!   - `a` may have repeated entries, so `SIZE(a)` may be larger than
+!     `SIZE(b)`.
 !   - Defined binary operators have the lowest precedence, so write
 !     `.NOT. (a .in. b)` with parentheses.
 !
@@ -532,6 +532,12 @@ END INTERFACE GetMultiIndices_
 !
 ! ! a set is a subset of itself
 ! CALL OK(b .in. b, "b is a subset of b")
+!
+! ! a may have more entries than b if some entries are repeated
+! CALL OK([9_I4B, 9_I4B, 12_I4B, 9_I4B, 12_I4B] .in. [9_I4B, 12_I4B], &
+!         "repeated entries, SIZE(a) > SIZE(b)")
+! CALL OK(.NOT. ([9_I4B, 9_I4B, 13_I4B] .in. [9_I4B, 12_I4B]), &
+!         "repeated entries with one missing")
 !
 ! END PROGRAM main
 !```
