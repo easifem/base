@@ -40,7 +40,8 @@ IF (acase) THEN
   RETURN
 END IF
 
-ALLOCATE (mat(row * fac))
+! not allocated: allocate exactly row entries, as for rank 2 and 3
+ALLOCATE (mat(row))
 DO CONCURRENT(ii=1:row)
   mat(ii) = ZEROVALUE
 END DO

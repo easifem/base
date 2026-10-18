@@ -35,10 +35,16 @@
 !   - a real vector with one or two integer vectors (sparse storage).
 !
 !   The shape is given either as separate sizes or as a vector `s`.
-!   For vectors and for arrays of rank 2 and 3, the optional
-!   `isExpand` keeps an array that is already large enough, and
-!   `expandFactor` makes a new allocation larger than needed. For
-!   the other overloads these two arguments are not used.
+!   All overloads accept the optional `isExpand` and `expandFactor`
+!   and follow the same rule for each array:
+!
+!   - not allocated: allocate exactly the requested size or shape;
+!   - `isExpand` false or absent: reallocate when the size or shape
+!     differs;
+!   - `isExpand` true: keep every extent that is large enough, and
+!     grow an extent that is too small to `n * expandFactor`.
+!
+!   Only the requested leading part is set to zero.
 
 MODULE ReallocateUtility
 USE GlobalData, ONLY: LGT
@@ -68,9 +74,8 @@ PUBLIC :: Reallocate
 !   Makes `mat` ready to hold `row` entries and sets `mat(1:row)` to
 !   `.FALSE.`. The old values are not kept.
 !
-!   - If `mat` is not allocated, it is allocated with size
-!     `row * expandFactor`. `expandFactor` is used here even when
-!     `isExpand` is absent.
+!   - If `mat` is not allocated, it is allocated with size `row`.
+!     `expandFactor` is not used in this case.
 !   - If `mat` is allocated and `isExpand` is `.FALSE.` (default), it
 !     is reallocated only when `SIZE(mat) /= row`, so that
 !     `SIZE(mat) = row`.
@@ -165,9 +170,8 @@ END INTERFACE Reallocate
 !   Makes `mat` ready to hold `row` entries and sets `mat(1:row)` to
 !   zero. The old values are not kept.
 !
-!   - If `mat` is not allocated, it is allocated with size
-!     `row * expandFactor`. `expandFactor` is used here even when
-!     `isExpand` is absent.
+!   - If `mat` is not allocated, it is allocated with size `row`.
+!     `expandFactor` is not used in this case.
 !   - If `mat` is allocated and `isExpand` is `.FALSE.` (default), it
 !     is reallocated only when `SIZE(mat) /= row`, so that
 !     `SIZE(mat) = row`.
@@ -587,14 +591,21 @@ END INTERFACE Reallocate
 ! summary: Allocates or reallocates a real rank-4 array.
 !
 ! Description:
-!   Makes `mat` an array of shape (i1, i2, i3, i4)
-!   and sets all entries to zero. The old values are not kept.
+!   Makes `mat` ready to hold an array of shape (i1, i2, i3, i4)
+!   and sets the leading block `mat(1:i1, ...)` to zero. The old
+!   values are not kept.
 !
-!   - If `mat` is not allocated, it is allocated.
-!   - If `mat` is allocated, it is reallocated only when its shape
-!     differs.
-!   - `isExpand` and `expandFactor` are accepted for a uniform
-!     interface, but they are not used for this rank.
+!   - If `mat` is not allocated, it is allocated with that shape.
+!     `expandFactor` is not used in this case.
+!   - If `mat` is allocated and `isExpand` is `.FALSE.` (default),
+!     it is reallocated only when its shape differs.
+!   - If `mat` is allocated and `isExpand` is `.TRUE.`, every
+!     dimension that is too small grows to `n_k * expandFactor`,
+!     and the other dimensions keep their size. If any dimension
+!     grows, `mat` is reallocated.
+!   - Only the leading block is set. Other entries keep their old
+!     value when `mat` is kept, and are undefined when it is newly
+!     allocated.
 !
 !   The shape can also be given as a vector `s`; then the first 4
 !   entries of `s` are used.
@@ -627,7 +638,7 @@ END INTERFACE Reallocate
 ! INTEGER(I4B) :: s1(4), s2(4)
 !
 ! s1 = [2_I4B, 2_I4B, 2_I4B, 2_I4B]
-! s2 = [1_I4B, 1_I4B, 1_I4B, 3_I4B]
+! s2 = [2_I4B, 2_I4B, 2_I4B, 3_I4B]
 !
 ! ! not allocated: allocate and set to zero
 ! CALL Reallocate(a, 2_I4B, 2_I4B, 2_I4B, 2_I4B)
@@ -639,10 +650,18 @@ END INTERFACE Reallocate
 ! CALL Reallocate(a, 2_I4B, 2_I4B, 2_I4B, 2_I4B)
 ! CALL OK(ALL(a .EQ. 0.0_DFP), "old values are reset")
 !
-! ! isExpand is ignored for this rank, so the array shrinks
+! ! isExpand: dimensions that are large enough are kept, a
+! ! dimension that is too small grows to the requested size
 ! CALL Reallocate(a, 1_I4B, 1_I4B, 1_I4B, 3_I4B, &
 !                 isExpand=.TRUE.)
-! CALL OK(ALL(SHAPE(a) .EQ. s2), "shape is (1, 1, 1, 3)")
+! CALL OK(ALL(SHAPE(a) .EQ. s2), "isExpand: shape is (2, 2, 2, 3)")
+!
+! ! expandFactor: a dimension that is too small grows to
+! ! n * expandFactor, the others are kept
+! CALL Reallocate(a, 1_I4B, 1_I4B, 1_I4B, 4_I4B, &
+!                 isExpand=.TRUE., expandFactor=2_I4B)
+! CALL OK(SIZE(a, 4) .EQ. 8_I4B, "expandFactor: last extent is 8")
+! CALL OK(ALL(SHAPE(a) .GE. 2_I4B), "expandFactor: others are kept")
 !
 ! ! the shape can also be given as a vector
 ! CALL Reallocate(a, s1)
@@ -705,14 +724,21 @@ END INTERFACE Reallocate
 ! summary: Allocates or reallocates a real rank-5 array.
 !
 ! Description:
-!   Makes `mat` an array of shape (i1, i2, i3, i4, i5)
-!   and sets all entries to zero. The old values are not kept.
+!   Makes `mat` ready to hold an array of shape (i1, i2, i3, i4, i5)
+!   and sets the leading block `mat(1:i1, ...)` to zero. The old
+!   values are not kept.
 !
-!   - If `mat` is not allocated, it is allocated.
-!   - If `mat` is allocated, it is reallocated only when its shape
-!     differs.
-!   - `isExpand` and `expandFactor` are accepted for a uniform
-!     interface, but they are not used for this rank.
+!   - If `mat` is not allocated, it is allocated with that shape.
+!     `expandFactor` is not used in this case.
+!   - If `mat` is allocated and `isExpand` is `.FALSE.` (default),
+!     it is reallocated only when its shape differs.
+!   - If `mat` is allocated and `isExpand` is `.TRUE.`, every
+!     dimension that is too small grows to `n_k * expandFactor`,
+!     and the other dimensions keep their size. If any dimension
+!     grows, `mat` is reallocated.
+!   - Only the leading block is set. Other entries keep their old
+!     value when `mat` is kept, and are undefined when it is newly
+!     allocated.
 !
 !   The shape can also be given as a vector `s`; then the first 5
 !   entries of `s` are used.
@@ -745,7 +771,7 @@ END INTERFACE Reallocate
 ! INTEGER(I4B) :: s1(5), s2(5)
 !
 ! s1 = [2_I4B, 2_I4B, 2_I4B, 2_I4B, 2_I4B]
-! s2 = [1_I4B, 1_I4B, 1_I4B, 1_I4B, 3_I4B]
+! s2 = [2_I4B, 2_I4B, 2_I4B, 2_I4B, 3_I4B]
 !
 ! ! not allocated: allocate and set to zero
 ! CALL Reallocate(a, 2_I4B, 2_I4B, 2_I4B, 2_I4B, 2_I4B)
@@ -757,10 +783,18 @@ END INTERFACE Reallocate
 ! CALL Reallocate(a, 2_I4B, 2_I4B, 2_I4B, 2_I4B, 2_I4B)
 ! CALL OK(ALL(a .EQ. 0.0_DFP), "old values are reset")
 !
-! ! isExpand is ignored for this rank, so the array shrinks
+! ! isExpand: dimensions that are large enough are kept, a
+! ! dimension that is too small grows to the requested size
 ! CALL Reallocate(a, 1_I4B, 1_I4B, 1_I4B, 1_I4B, 3_I4B, &
 !                 isExpand=.TRUE.)
-! CALL OK(ALL(SHAPE(a) .EQ. s2), "shape is (1, 1, 1, 1, 3)")
+! CALL OK(ALL(SHAPE(a) .EQ. s2), "isExpand: shape is (2, 2, 2, 2, 3)")
+!
+! ! expandFactor: a dimension that is too small grows to
+! ! n * expandFactor, the others are kept
+! CALL Reallocate(a, 1_I4B, 1_I4B, 1_I4B, 1_I4B, 4_I4B, &
+!                 isExpand=.TRUE., expandFactor=2_I4B)
+! CALL OK(SIZE(a, 5) .EQ. 8_I4B, "expandFactor: last extent is 8")
+! CALL OK(ALL(SHAPE(a) .GE. 2_I4B), "expandFactor: others are kept")
 !
 ! ! the shape can also be given as a vector
 ! CALL Reallocate(a, s1)
@@ -823,14 +857,21 @@ END INTERFACE Reallocate
 ! summary: Allocates or reallocates a real rank-6 array.
 !
 ! Description:
-!   Makes `mat` an array of shape (i1, i2, i3, i4, i5, i6)
-!   and sets all entries to zero. The old values are not kept.
+!   Makes `mat` ready to hold an array of shape (i1, i2, i3, i4, i5, i6)
+!   and sets the leading block `mat(1:i1, ...)` to zero. The old
+!   values are not kept.
 !
-!   - If `mat` is not allocated, it is allocated.
-!   - If `mat` is allocated, it is reallocated only when its shape
-!     differs.
-!   - `isExpand` and `expandFactor` are accepted for a uniform
-!     interface, but they are not used for this rank.
+!   - If `mat` is not allocated, it is allocated with that shape.
+!     `expandFactor` is not used in this case.
+!   - If `mat` is allocated and `isExpand` is `.FALSE.` (default),
+!     it is reallocated only when its shape differs.
+!   - If `mat` is allocated and `isExpand` is `.TRUE.`, every
+!     dimension that is too small grows to `n_k * expandFactor`,
+!     and the other dimensions keep their size. If any dimension
+!     grows, `mat` is reallocated.
+!   - Only the leading block is set. Other entries keep their old
+!     value when `mat` is kept, and are undefined when it is newly
+!     allocated.
 !
 !   The shape can also be given as a vector `s`; then the first 6
 !   entries of `s` are used.
@@ -863,7 +904,7 @@ END INTERFACE Reallocate
 ! INTEGER(I4B) :: s1(6), s2(6)
 !
 ! s1 = [2_I4B, 2_I4B, 2_I4B, 2_I4B, 2_I4B, 2_I4B]
-! s2 = [1_I4B, 1_I4B, 1_I4B, 1_I4B, 1_I4B, 3_I4B]
+! s2 = [2_I4B, 2_I4B, 2_I4B, 2_I4B, 2_I4B, 3_I4B]
 !
 ! ! not allocated: allocate and set to zero
 ! CALL Reallocate(a, 2_I4B, 2_I4B, 2_I4B, 2_I4B, 2_I4B, 2_I4B)
@@ -875,10 +916,18 @@ END INTERFACE Reallocate
 ! CALL Reallocate(a, 2_I4B, 2_I4B, 2_I4B, 2_I4B, 2_I4B, 2_I4B)
 ! CALL OK(ALL(a .EQ. 0.0_DFP), "old values are reset")
 !
-! ! isExpand is ignored for this rank, so the array shrinks
+! ! isExpand: dimensions that are large enough are kept, a
+! ! dimension that is too small grows to the requested size
 ! CALL Reallocate(a, 1_I4B, 1_I4B, 1_I4B, 1_I4B, 1_I4B, 3_I4B, &
 !                 isExpand=.TRUE.)
-! CALL OK(ALL(SHAPE(a) .EQ. s2), "shape is (1, 1, 1, 1, 1, 3)")
+! CALL OK(ALL(SHAPE(a) .EQ. s2), "isExpand: shape is (2, 2, 2, 2, 2, 3)")
+!
+! ! expandFactor: a dimension that is too small grows to
+! ! n * expandFactor, the others are kept
+! CALL Reallocate(a, 1_I4B, 1_I4B, 1_I4B, 1_I4B, 1_I4B, 4_I4B, &
+!                 isExpand=.TRUE., expandFactor=2_I4B)
+! CALL OK(SIZE(a, 6) .EQ. 8_I4B, "expandFactor: last extent is 8")
+! CALL OK(ALL(SHAPE(a) .GE. 2_I4B), "expandFactor: others are kept")
 !
 ! ! the shape can also be given as a vector
 ! CALL Reallocate(a, s1)
@@ -941,14 +990,21 @@ END INTERFACE Reallocate
 ! summary: Allocates or reallocates a real rank-7 array.
 !
 ! Description:
-!   Makes `mat` an array of shape (i1, i2, i3, i4, i5, i6, i7)
-!   and sets all entries to zero. The old values are not kept.
+!   Makes `mat` ready to hold an array of shape (i1, i2, i3, i4, i5, i6, i7)
+!   and sets the leading block `mat(1:i1, ...)` to zero. The old
+!   values are not kept.
 !
-!   - If `mat` is not allocated, it is allocated.
-!   - If `mat` is allocated, it is reallocated only when its shape
-!     differs.
-!   - `isExpand` and `expandFactor` are accepted for a uniform
-!     interface, but they are not used for this rank.
+!   - If `mat` is not allocated, it is allocated with that shape.
+!     `expandFactor` is not used in this case.
+!   - If `mat` is allocated and `isExpand` is `.FALSE.` (default),
+!     it is reallocated only when its shape differs.
+!   - If `mat` is allocated and `isExpand` is `.TRUE.`, every
+!     dimension that is too small grows to `n_k * expandFactor`,
+!     and the other dimensions keep their size. If any dimension
+!     grows, `mat` is reallocated.
+!   - Only the leading block is set. Other entries keep their old
+!     value when `mat` is kept, and are undefined when it is newly
+!     allocated.
 !
 !   The shape can also be given as a vector `s`; then the first 7
 !   entries of `s` are used.
@@ -981,7 +1037,7 @@ END INTERFACE Reallocate
 ! INTEGER(I4B) :: s1(7), s2(7)
 !
 ! s1 = [2_I4B, 2_I4B, 2_I4B, 2_I4B, 2_I4B, 2_I4B, 2_I4B]
-! s2 = [1_I4B, 1_I4B, 1_I4B, 1_I4B, 1_I4B, 1_I4B, 3_I4B]
+! s2 = [2_I4B, 2_I4B, 2_I4B, 2_I4B, 2_I4B, 2_I4B, 3_I4B]
 !
 ! ! not allocated: allocate and set to zero
 ! CALL Reallocate(a, 2_I4B, 2_I4B, 2_I4B, 2_I4B, 2_I4B, 2_I4B, 2_I4B)
@@ -993,10 +1049,18 @@ END INTERFACE Reallocate
 ! CALL Reallocate(a, 2_I4B, 2_I4B, 2_I4B, 2_I4B, 2_I4B, 2_I4B, 2_I4B)
 ! CALL OK(ALL(a .EQ. 0.0_DFP), "old values are reset")
 !
-! ! isExpand is ignored for this rank, so the array shrinks
+! ! isExpand: dimensions that are large enough are kept, a
+! ! dimension that is too small grows to the requested size
 ! CALL Reallocate(a, 1_I4B, 1_I4B, 1_I4B, 1_I4B, 1_I4B, 1_I4B, 3_I4B, &
 !                 isExpand=.TRUE.)
-! CALL OK(ALL(SHAPE(a) .EQ. s2), "shape is (1, 1, 1, 1, 1, 1, 3)")
+! CALL OK(ALL(SHAPE(a) .EQ. s2), "isExpand: shape is (2, 2, 2, 2, 2, 2, 3)")
+!
+! ! expandFactor: a dimension that is too small grows to
+! ! n * expandFactor, the others are kept
+! CALL Reallocate(a, 1_I4B, 1_I4B, 1_I4B, 1_I4B, 1_I4B, 1_I4B, 4_I4B, &
+!                 isExpand=.TRUE., expandFactor=2_I4B)
+! CALL OK(SIZE(a, 7) .EQ. 8_I4B, "expandFactor: last extent is 8")
+! CALL OK(ALL(SHAPE(a) .GE. 2_I4B), "expandFactor: others are kept")
 !
 ! ! the shape can also be given as a vector
 ! CALL Reallocate(a, s1)
@@ -1062,9 +1126,8 @@ END INTERFACE Reallocate
 !   Makes `mat` ready to hold `row` entries and sets `mat(1:row)` to
 !   zero. The old values are not kept.
 !
-!   - If `mat` is not allocated, it is allocated with size
-!     `row * expandFactor`. `expandFactor` is used here even when
-!     `isExpand` is absent.
+!   - If `mat` is not allocated, it is allocated with size `row`.
+!     `expandFactor` is not used in this case.
 !   - If `mat` is allocated and `isExpand` is `.FALSE.` (default), it
 !     is reallocated only when `SIZE(mat) /= row`, so that
 !     `SIZE(mat) = row`.
@@ -1123,11 +1186,18 @@ END INTERFACE Reallocate
 ! CALL OK(SIZE(a) .EQ. 2_I4B, "size is 2")
 ! CALL OK(ALL(a .EQ. 0_I4B), "entries are zero")
 !
-! ! not allocated with isExpand and expandFactor
+! ! not allocated: expandFactor is not used, as for rank 2 and 3
 ! DEALLOCATE (a)
 ! CALL Reallocate(a, 3_I4B, isExpand=.TRUE., expandFactor=2_I4B)
-! CALL OK(SIZE(a) .EQ. 6_I4B, "size is 3 * 2")
-! CALL OK(ALL(a(1:3) .EQ. 0_I4B), "a(1:3) is zero")
+! CALL OK(SIZE(a) .EQ. 3_I4B, "new vector has size 3")
+! CALL OK(ALL(a .EQ. 0_I4B), "new vector is zero")
+! DEALLOCATE (a)
+! CALL Reallocate(a, 3_I4B, expandFactor=2_I4B)
+! CALL OK(SIZE(a) .EQ. 3_I4B, "expandFactor alone: size 3")
+!
+! ! allocated and too small: the new size is row * expandFactor
+! CALL Reallocate(a, 4_I4B, isExpand=.TRUE., expandFactor=2_I4B)
+! CALL OK(SIZE(a) .EQ. 8_I4B, "grows to 4 * 2")
 !
 ! ! the size can also be given as a vector
 ! CALL Reallocate(a, [5_I4B])
@@ -1526,14 +1596,21 @@ END INTERFACE Reallocate
 ! summary: Allocates or reallocates an integer rank-4 array.
 !
 ! Description:
-!   Makes `mat` an array of shape (i1, i2, i3, i4)
-!   and sets all entries to zero. The old values are not kept.
+!   Makes `mat` ready to hold an array of shape (i1, i2, i3, i4)
+!   and sets the leading block `mat(1:i1, ...)` to zero. The old
+!   values are not kept.
 !
-!   - If `mat` is not allocated, it is allocated.
-!   - If `mat` is allocated, it is reallocated only when its shape
-!     differs.
-!   - `isExpand` and `expandFactor` are accepted for a uniform
-!     interface, but they are not used for this rank.
+!   - If `mat` is not allocated, it is allocated with that shape.
+!     `expandFactor` is not used in this case.
+!   - If `mat` is allocated and `isExpand` is `.FALSE.` (default),
+!     it is reallocated only when its shape differs.
+!   - If `mat` is allocated and `isExpand` is `.TRUE.`, every
+!     dimension that is too small grows to `n_k * expandFactor`,
+!     and the other dimensions keep their size. If any dimension
+!     grows, `mat` is reallocated.
+!   - Only the leading block is set. Other entries keep their old
+!     value when `mat` is kept, and are undefined when it is newly
+!     allocated.
 !
 !   The shape can also be given as a vector `s`; then the first 4
 !   entries of `s` are used.
@@ -1565,7 +1642,7 @@ END INTERFACE Reallocate
 ! INTEGER(I4B) :: s1(4), s2(4)
 !
 ! s1 = [2_I4B, 2_I4B, 2_I4B, 2_I4B]
-! s2 = [1_I4B, 1_I4B, 1_I4B, 3_I4B]
+! s2 = [2_I4B, 2_I4B, 2_I4B, 3_I4B]
 !
 ! ! not allocated: allocate and set to zero
 ! CALL Reallocate(a, 2_I4B, 2_I4B, 2_I4B, 2_I4B)
@@ -1577,10 +1654,18 @@ END INTERFACE Reallocate
 ! CALL Reallocate(a, 2_I4B, 2_I4B, 2_I4B, 2_I4B)
 ! CALL OK(ALL(a .EQ. 0_I4B), "old values are reset")
 !
-! ! isExpand is ignored for this rank, so the array shrinks
+! ! isExpand: dimensions that are large enough are kept, a
+! ! dimension that is too small grows to the requested size
 ! CALL Reallocate(a, 1_I4B, 1_I4B, 1_I4B, 3_I4B, &
 !                 isExpand=.TRUE.)
-! CALL OK(ALL(SHAPE(a) .EQ. s2), "shape is (1, 1, 1, 3)")
+! CALL OK(ALL(SHAPE(a) .EQ. s2), "isExpand: shape is (2, 2, 2, 3)")
+!
+! ! expandFactor: a dimension that is too small grows to
+! ! n * expandFactor, the others are kept
+! CALL Reallocate(a, 1_I4B, 1_I4B, 1_I4B, 4_I4B, &
+!                 isExpand=.TRUE., expandFactor=2_I4B)
+! CALL OK(SIZE(a, 4) .EQ. 8_I4B, "expandFactor: last extent is 8")
+! CALL OK(ALL(SHAPE(a) .GE. 2_I4B), "expandFactor: others are kept")
 !
 ! ! the shape can also be given as a vector
 ! CALL Reallocate(a, s1)
@@ -1643,14 +1728,21 @@ END INTERFACE Reallocate
 ! summary: Allocates or reallocates an integer rank-5 array.
 !
 ! Description:
-!   Makes `mat` an array of shape (i1, i2, i3, i4, i5)
-!   and sets all entries to zero. The old values are not kept.
+!   Makes `mat` ready to hold an array of shape (i1, i2, i3, i4, i5)
+!   and sets the leading block `mat(1:i1, ...)` to zero. The old
+!   values are not kept.
 !
-!   - If `mat` is not allocated, it is allocated.
-!   - If `mat` is allocated, it is reallocated only when its shape
-!     differs.
-!   - `isExpand` and `expandFactor` are accepted for a uniform
-!     interface, but they are not used for this rank.
+!   - If `mat` is not allocated, it is allocated with that shape.
+!     `expandFactor` is not used in this case.
+!   - If `mat` is allocated and `isExpand` is `.FALSE.` (default),
+!     it is reallocated only when its shape differs.
+!   - If `mat` is allocated and `isExpand` is `.TRUE.`, every
+!     dimension that is too small grows to `n_k * expandFactor`,
+!     and the other dimensions keep their size. If any dimension
+!     grows, `mat` is reallocated.
+!   - Only the leading block is set. Other entries keep their old
+!     value when `mat` is kept, and are undefined when it is newly
+!     allocated.
 !
 !   The shape can also be given as a vector `s`; then the first 5
 !   entries of `s` are used.
@@ -1682,7 +1774,7 @@ END INTERFACE Reallocate
 ! INTEGER(I4B) :: s1(5), s2(5)
 !
 ! s1 = [2_I4B, 2_I4B, 2_I4B, 2_I4B, 2_I4B]
-! s2 = [1_I4B, 1_I4B, 1_I4B, 1_I4B, 3_I4B]
+! s2 = [2_I4B, 2_I4B, 2_I4B, 2_I4B, 3_I4B]
 !
 ! ! not allocated: allocate and set to zero
 ! CALL Reallocate(a, 2_I4B, 2_I4B, 2_I4B, 2_I4B, 2_I4B)
@@ -1694,10 +1786,18 @@ END INTERFACE Reallocate
 ! CALL Reallocate(a, 2_I4B, 2_I4B, 2_I4B, 2_I4B, 2_I4B)
 ! CALL OK(ALL(a .EQ. 0_I4B), "old values are reset")
 !
-! ! isExpand is ignored for this rank, so the array shrinks
+! ! isExpand: dimensions that are large enough are kept, a
+! ! dimension that is too small grows to the requested size
 ! CALL Reallocate(a, 1_I4B, 1_I4B, 1_I4B, 1_I4B, 3_I4B, &
 !                 isExpand=.TRUE.)
-! CALL OK(ALL(SHAPE(a) .EQ. s2), "shape is (1, 1, 1, 1, 3)")
+! CALL OK(ALL(SHAPE(a) .EQ. s2), "isExpand: shape is (2, 2, 2, 2, 3)")
+!
+! ! expandFactor: a dimension that is too small grows to
+! ! n * expandFactor, the others are kept
+! CALL Reallocate(a, 1_I4B, 1_I4B, 1_I4B, 1_I4B, 4_I4B, &
+!                 isExpand=.TRUE., expandFactor=2_I4B)
+! CALL OK(SIZE(a, 5) .EQ. 8_I4B, "expandFactor: last extent is 8")
+! CALL OK(ALL(SHAPE(a) .GE. 2_I4B), "expandFactor: others are kept")
 !
 ! ! the shape can also be given as a vector
 ! CALL Reallocate(a, s1)
@@ -1760,14 +1860,21 @@ END INTERFACE Reallocate
 ! summary: Allocates or reallocates an integer rank-6 array.
 !
 ! Description:
-!   Makes `mat` an array of shape (i1, i2, i3, i4, i5, i6)
-!   and sets all entries to zero. The old values are not kept.
+!   Makes `mat` ready to hold an array of shape (i1, i2, i3, i4, i5, i6)
+!   and sets the leading block `mat(1:i1, ...)` to zero. The old
+!   values are not kept.
 !
-!   - If `mat` is not allocated, it is allocated.
-!   - If `mat` is allocated, it is reallocated only when its shape
-!     differs.
-!   - `isExpand` and `expandFactor` are accepted for a uniform
-!     interface, but they are not used for this rank.
+!   - If `mat` is not allocated, it is allocated with that shape.
+!     `expandFactor` is not used in this case.
+!   - If `mat` is allocated and `isExpand` is `.FALSE.` (default),
+!     it is reallocated only when its shape differs.
+!   - If `mat` is allocated and `isExpand` is `.TRUE.`, every
+!     dimension that is too small grows to `n_k * expandFactor`,
+!     and the other dimensions keep their size. If any dimension
+!     grows, `mat` is reallocated.
+!   - Only the leading block is set. Other entries keep their old
+!     value when `mat` is kept, and are undefined when it is newly
+!     allocated.
 !
 !   The shape can also be given as a vector `s`; then the first 6
 !   entries of `s` are used.
@@ -1799,7 +1906,7 @@ END INTERFACE Reallocate
 ! INTEGER(I4B) :: s1(6), s2(6)
 !
 ! s1 = [2_I4B, 2_I4B, 2_I4B, 2_I4B, 2_I4B, 2_I4B]
-! s2 = [1_I4B, 1_I4B, 1_I4B, 1_I4B, 1_I4B, 3_I4B]
+! s2 = [2_I4B, 2_I4B, 2_I4B, 2_I4B, 2_I4B, 3_I4B]
 !
 ! ! not allocated: allocate and set to zero
 ! CALL Reallocate(a, 2_I4B, 2_I4B, 2_I4B, 2_I4B, 2_I4B, 2_I4B)
@@ -1811,10 +1918,18 @@ END INTERFACE Reallocate
 ! CALL Reallocate(a, 2_I4B, 2_I4B, 2_I4B, 2_I4B, 2_I4B, 2_I4B)
 ! CALL OK(ALL(a .EQ. 0_I4B), "old values are reset")
 !
-! ! isExpand is ignored for this rank, so the array shrinks
+! ! isExpand: dimensions that are large enough are kept, a
+! ! dimension that is too small grows to the requested size
 ! CALL Reallocate(a, 1_I4B, 1_I4B, 1_I4B, 1_I4B, 1_I4B, 3_I4B, &
 !                 isExpand=.TRUE.)
-! CALL OK(ALL(SHAPE(a) .EQ. s2), "shape is (1, 1, 1, 1, 1, 3)")
+! CALL OK(ALL(SHAPE(a) .EQ. s2), "isExpand: shape is (2, 2, 2, 2, 2, 3)")
+!
+! ! expandFactor: a dimension that is too small grows to
+! ! n * expandFactor, the others are kept
+! CALL Reallocate(a, 1_I4B, 1_I4B, 1_I4B, 1_I4B, 1_I4B, 4_I4B, &
+!                 isExpand=.TRUE., expandFactor=2_I4B)
+! CALL OK(SIZE(a, 6) .EQ. 8_I4B, "expandFactor: last extent is 8")
+! CALL OK(ALL(SHAPE(a) .GE. 2_I4B), "expandFactor: others are kept")
 !
 ! ! the shape can also be given as a vector
 ! CALL Reallocate(a, s1)
@@ -1877,14 +1992,21 @@ END INTERFACE Reallocate
 ! summary: Allocates or reallocates an integer rank-7 array.
 !
 ! Description:
-!   Makes `mat` an array of shape (i1, i2, i3, i4, i5, i6, i7)
-!   and sets all entries to zero. The old values are not kept.
+!   Makes `mat` ready to hold an array of shape (i1, i2, i3, i4, i5, i6, i7)
+!   and sets the leading block `mat(1:i1, ...)` to zero. The old
+!   values are not kept.
 !
-!   - If `mat` is not allocated, it is allocated.
-!   - If `mat` is allocated, it is reallocated only when its shape
-!     differs.
-!   - `isExpand` and `expandFactor` are accepted for a uniform
-!     interface, but they are not used for this rank.
+!   - If `mat` is not allocated, it is allocated with that shape.
+!     `expandFactor` is not used in this case.
+!   - If `mat` is allocated and `isExpand` is `.FALSE.` (default),
+!     it is reallocated only when its shape differs.
+!   - If `mat` is allocated and `isExpand` is `.TRUE.`, every
+!     dimension that is too small grows to `n_k * expandFactor`,
+!     and the other dimensions keep their size. If any dimension
+!     grows, `mat` is reallocated.
+!   - Only the leading block is set. Other entries keep their old
+!     value when `mat` is kept, and are undefined when it is newly
+!     allocated.
 !
 !   The shape can also be given as a vector `s`; then the first 7
 !   entries of `s` are used.
@@ -1916,7 +2038,7 @@ END INTERFACE Reallocate
 ! INTEGER(I4B) :: s1(7), s2(7)
 !
 ! s1 = [2_I4B, 2_I4B, 2_I4B, 2_I4B, 2_I4B, 2_I4B, 2_I4B]
-! s2 = [1_I4B, 1_I4B, 1_I4B, 1_I4B, 1_I4B, 1_I4B, 3_I4B]
+! s2 = [2_I4B, 2_I4B, 2_I4B, 2_I4B, 2_I4B, 2_I4B, 3_I4B]
 !
 ! ! not allocated: allocate and set to zero
 ! CALL Reallocate(a, 2_I4B, 2_I4B, 2_I4B, 2_I4B, 2_I4B, 2_I4B, 2_I4B)
@@ -1928,10 +2050,18 @@ END INTERFACE Reallocate
 ! CALL Reallocate(a, 2_I4B, 2_I4B, 2_I4B, 2_I4B, 2_I4B, 2_I4B, 2_I4B)
 ! CALL OK(ALL(a .EQ. 0_I4B), "old values are reset")
 !
-! ! isExpand is ignored for this rank, so the array shrinks
+! ! isExpand: dimensions that are large enough are kept, a
+! ! dimension that is too small grows to the requested size
 ! CALL Reallocate(a, 1_I4B, 1_I4B, 1_I4B, 1_I4B, 1_I4B, 1_I4B, 3_I4B, &
 !                 isExpand=.TRUE.)
-! CALL OK(ALL(SHAPE(a) .EQ. s2), "shape is (1, 1, 1, 1, 1, 1, 3)")
+! CALL OK(ALL(SHAPE(a) .EQ. s2), "isExpand: shape is (2, 2, 2, 2, 2, 2, 3)")
+!
+! ! expandFactor: a dimension that is too small grows to
+! ! n * expandFactor, the others are kept
+! CALL Reallocate(a, 1_I4B, 1_I4B, 1_I4B, 1_I4B, 1_I4B, 1_I4B, 4_I4B, &
+!                 isExpand=.TRUE., expandFactor=2_I4B)
+! CALL OK(SIZE(a, 7) .EQ. 8_I4B, "expandFactor: last extent is 8")
+! CALL OK(ALL(SHAPE(a) .GE. 2_I4B), "expandFactor: others are kept")
 !
 ! ! the shape can also be given as a vector
 ! CALL Reallocate(a, s1)
@@ -1998,12 +2128,16 @@ END INTERFACE Reallocate
 !   are present, in one call. Each `vec_k` is set to zero and has
 !   size `n_k` on return. The old values are not kept.
 !
-!   - A vector is allocated when it is not allocated, and
+!   - A vector that is not allocated is allocated with exactly `n_k`
+!     entries. `expandFactor` is not used in this case.
+!   - If `isExpand` is `.FALSE.` (default), an allocated vector is
 !     reallocated only when `SIZE(vec_k) /= n_k`.
+!   - If `isExpand` is `.TRUE.`, an allocated vector is kept when it
+!     has at least `n_k` entries, and reallocated with
+!     `n_k * expandFactor` entries otherwise.
+!   - Only `vec_k(1:n_k)` is set to zero.
 !   - When `vec_k` is present, `n_k` must be present too. This is
 !     not checked.
-!   - `isExpand` and `expandFactor` are accepted for a uniform
-!     interface, but they are not used.
 !
 ! Arguments:
 !   vec1, vec2 : INTEGER(I4B), ALLOCATABLE, rank(1) - vectors
@@ -2088,12 +2222,16 @@ END INTERFACE Reallocate
 !   are present, in one call. Each `vec_k` is set to zero and has
 !   size `n_k` on return. The old values are not kept.
 !
-!   - A vector is allocated when it is not allocated, and
+!   - A vector that is not allocated is allocated with exactly `n_k`
+!     entries. `expandFactor` is not used in this case.
+!   - If `isExpand` is `.FALSE.` (default), an allocated vector is
 !     reallocated only when `SIZE(vec_k) /= n_k`.
+!   - If `isExpand` is `.TRUE.`, an allocated vector is kept when it
+!     has at least `n_k` entries, and reallocated with
+!     `n_k * expandFactor` entries otherwise.
+!   - Only `vec_k(1:n_k)` is set to zero.
 !   - When `vec_k` is present, `n_k` must be present too. This is
 !     not checked.
-!   - `isExpand` and `expandFactor` are accepted for a uniform
-!     interface, but they are not used.
 !
 ! Arguments:
 !   vec1, vec2 : REAL (REAL32 or REAL64), ALLOCATABLE, rank(1) - vectors
@@ -2186,13 +2324,18 @@ END INTERFACE Reallocate
 !   Reallocates the real vector `A` and the integer vectors `IA` and
 !   `JA` in one call, for example the value, row-pointer and column
 !   index vectors of a CSR matrix. On return `SIZE(A) = nA`,
-!   `SIZE(IA) = nIA` and `SIZE(JA) = nJA`, and all entries are zero.
+!   `SIZE(IA) = nIA` and `SIZE(JA) = nJA` unless `isExpand` keeps a
+!   larger vector, and the first entries are zero.
 !   The old values are not kept.
 !
-!   - A vector is allocated when it is not allocated, and
+!   - A vector that is not allocated is allocated with exactly the
+!     requested size. `expandFactor` is not used in this case.
+!   - If `isExpand` is `.FALSE.` (default), an allocated vector is
 !     reallocated only when its size differs.
-!   - `isExpand` and `expandFactor` are accepted for a uniform
-!     interface, but they are not used.
+!   - If `isExpand` is `.TRUE.`, an allocated vector is kept when it
+!     is large enough, and reallocated with `n * expandFactor`
+!     entries otherwise.
+!   - Only the first `n` entries of each vector are set to zero.
 !
 ! Arguments:
 !   A : REAL (REAL32 or REAL64), ALLOCATABLE, rank(1) - values
@@ -2279,13 +2422,18 @@ END INTERFACE Reallocate
 !
 ! Description:
 !   Reallocates the real vector `A` and the integer vector `IA` in one
-!   call. On return `SIZE(A) = nA` and `SIZE(IA) = nIA`, and all
-!   entries are zero. The old values are not kept.
+!   call. On return `SIZE(A) = nA` and `SIZE(IA) = nIA` unless
+!   `isExpand` keeps a larger vector, and the first entries are zero.
+!   The old values are not kept.
 !
-!   - A vector is allocated when it is not allocated, and
+!   - A vector that is not allocated is allocated with exactly the
+!     requested size. `expandFactor` is not used in this case.
+!   - If `isExpand` is `.FALSE.` (default), an allocated vector is
 !     reallocated only when its size differs.
-!   - `isExpand` and `expandFactor` are accepted for a uniform
-!     interface, but they are not used.
+!   - If `isExpand` is `.TRUE.`, an allocated vector is kept when it
+!     is large enough, and reallocated with `n * expandFactor`
+!     entries otherwise.
+!   - Only the first `n` entries of each vector are set to zero.
 !
 ! Arguments:
 !   A : REAL (REAL32 or REAL64), ALLOCATABLE, rank(1) - values

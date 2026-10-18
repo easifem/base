@@ -21,11 +21,18 @@ CALL Reallocate(a, 2_I4B)
 CALL OK(SIZE(a) .EQ. 2_I4B, "size is 2")
 CALL OK(ALL(a .EQ. 0_I4B), "entries are zero")
 
-! not allocated with isExpand and expandFactor
+! not allocated: expandFactor is not used, as for rank 2 and 3
 DEALLOCATE (a)
 CALL Reallocate(a, 3_I4B, isExpand=.TRUE., expandFactor=2_I4B)
-CALL OK(SIZE(a) .EQ. 6_I4B, "size is 3 * 2")
-CALL OK(ALL(a(1:3) .EQ. 0_I4B), "a(1:3) is zero")
+CALL OK(SIZE(a) .EQ. 3_I4B, "new vector has size 3")
+CALL OK(ALL(a .EQ. 0_I4B), "new vector is zero")
+DEALLOCATE (a)
+CALL Reallocate(a, 3_I4B, expandFactor=2_I4B)
+CALL OK(SIZE(a) .EQ. 3_I4B, "expandFactor alone: size 3")
+
+! allocated and too small: the new size is row * expandFactor
+CALL Reallocate(a, 4_I4B, isExpand=.TRUE., expandFactor=2_I4B)
+CALL OK(SIZE(a) .EQ. 8_I4B, "grows to 4 * 2")
 
 ! the size can also be given as a vector
 CALL Reallocate(a, [5_I4B])
