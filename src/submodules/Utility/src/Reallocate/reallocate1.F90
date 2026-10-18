@@ -32,6 +32,9 @@ IF (acase) THEN
   IF (abool) THEN
     DEALLOCATE (mat)
     ALLOCATE (mat(row * fac))
+    ! a new allocation can be larger than the request: zero all of it
+    mat = ZEROVALUE
+    RETURN
   END IF
 
   DO CONCURRENT(ii=1:row)

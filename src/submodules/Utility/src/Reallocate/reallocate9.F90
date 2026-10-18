@@ -27,6 +27,8 @@ IF (ALLOCATED(A)) THEN
   IF (abool) THEN
     DEALLOCATE (A)
     ALLOCATE (A(tsize))
+    ! a new allocation can be larger than the request: zero all of it
+    A = 0.0
   END IF
 ELSE
   ALLOCATE (A(nA))
@@ -47,6 +49,8 @@ IF (ALLOCATED(IA)) THEN
   IF (abool) THEN
     DEALLOCATE (IA)
     ALLOCATE (IA(tsize))
+    ! a new allocation can be larger than the request: zero all of it
+    IA = 0
   END IF
 ELSE
   ALLOCATE (IA(nIA))
@@ -67,6 +71,8 @@ IF (ALLOCATED(JA)) THEN
   IF (abool) THEN
     DEALLOCATE (JA)
     ALLOCATE (JA(tsize))
+    ! a new allocation can be larger than the request: zero all of it
+    JA = 0
   END IF
 ELSE
   ALLOCATE (JA(nJA))

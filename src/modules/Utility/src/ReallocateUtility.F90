@@ -44,7 +44,9 @@
 !   - `isExpand` true: keep every extent that is large enough, and
 !     grow an extent that is too small to `n * expandFactor`.
 !
-!   Only the requested leading part is set to zero.
+!   A newly allocated array is set to zero everywhere. When `isExpand`
+!   keeps a larger existing array, only the requested leading part is
+!   set to zero and the other entries keep their values.
 
 MODULE ReallocateUtility
 USE GlobalData, ONLY: LGT
@@ -83,7 +85,7 @@ PUBLIC :: Reallocate
 !     `SIZE(mat) >= row`, and reallocated with size
 !     `row * expandFactor` otherwise.
 !   - Only `mat(1:row)` is set. Entries after `row` keep their old
-!     value when `mat` is kept, and are undefined when it is newly
+!     value when `mat` is kept, and are zero when it is newly
 !     allocated.
 !
 ! Arguments:
@@ -179,7 +181,7 @@ END INTERFACE Reallocate
 !     `SIZE(mat) >= row`, and reallocated with size
 !     `row * expandFactor` otherwise.
 !   - Only `mat(1:row)` is set. Entries after `row` keep their old
-!     value when `mat` is kept, and are undefined when it is newly
+!     value when `mat` is kept, and are zero when it is newly
 !     allocated.
 !
 !   The size can also be given as a vector `s`; then `row = s(1)`
@@ -326,7 +328,7 @@ END INTERFACE Reallocate
 !     the other dimensions keep their size. If any dimension grows,
 !     `mat` is reallocated.
 !   - Only the leading block is set. Other entries keep their old
-!     value when `mat` is kept, and are undefined when it is newly
+!     value when `mat` is kept, and are zero when it is newly
 !     allocated.
 !
 !   The shape can also be given as a vector `s`; then the first 2
@@ -468,7 +470,7 @@ END INTERFACE Reallocate
 !     the other dimensions keep their size. If any dimension grows,
 !     `mat` is reallocated.
 !   - Only the leading block is set. Other entries keep their old
-!     value when `mat` is kept, and are undefined when it is newly
+!     value when `mat` is kept, and are zero when it is newly
 !     allocated.
 !
 !   The shape can also be given as a vector `s`; then the first 3
@@ -604,7 +606,7 @@ END INTERFACE Reallocate
 !     and the other dimensions keep their size. If any dimension
 !     grows, `mat` is reallocated.
 !   - Only the leading block is set. Other entries keep their old
-!     value when `mat` is kept, and are undefined when it is newly
+!     value when `mat` is kept, and are zero when it is newly
 !     allocated.
 !
 !   The shape can also be given as a vector `s`; then the first 4
@@ -737,7 +739,7 @@ END INTERFACE Reallocate
 !     and the other dimensions keep their size. If any dimension
 !     grows, `mat` is reallocated.
 !   - Only the leading block is set. Other entries keep their old
-!     value when `mat` is kept, and are undefined when it is newly
+!     value when `mat` is kept, and are zero when it is newly
 !     allocated.
 !
 !   The shape can also be given as a vector `s`; then the first 5
@@ -870,7 +872,7 @@ END INTERFACE Reallocate
 !     and the other dimensions keep their size. If any dimension
 !     grows, `mat` is reallocated.
 !   - Only the leading block is set. Other entries keep their old
-!     value when `mat` is kept, and are undefined when it is newly
+!     value when `mat` is kept, and are zero when it is newly
 !     allocated.
 !
 !   The shape can also be given as a vector `s`; then the first 6
@@ -1003,7 +1005,7 @@ END INTERFACE Reallocate
 !     and the other dimensions keep their size. If any dimension
 !     grows, `mat` is reallocated.
 !   - Only the leading block is set. Other entries keep their old
-!     value when `mat` is kept, and are undefined when it is newly
+!     value when `mat` is kept, and are zero when it is newly
 !     allocated.
 !
 !   The shape can also be given as a vector `s`; then the first 7
@@ -1135,7 +1137,7 @@ END INTERFACE Reallocate
 !     `SIZE(mat) >= row`, and reallocated with size
 !     `row * expandFactor` otherwise.
 !   - Only `mat(1:row)` is set. Entries after `row` keep their old
-!     value when `mat` is kept, and are undefined when it is newly
+!     value when `mat` is kept, and are zero when it is newly
 !     allocated.
 !
 !   The size can also be given as a vector `s`; then `row = s(1)`
@@ -1311,7 +1313,7 @@ END INTERFACE Reallocate
 !     the other dimensions keep their size. If any dimension grows,
 !     `mat` is reallocated.
 !   - Only the leading block is set. Other entries keep their old
-!     value when `mat` is kept, and are undefined when it is newly
+!     value when `mat` is kept, and are zero when it is newly
 !     allocated.
 !
 !   The shape can also be given as a vector `s`; then the first 2
@@ -1481,7 +1483,7 @@ END INTERFACE Reallocate
 !     the other dimensions keep their size. If any dimension grows,
 !     `mat` is reallocated.
 !   - Only the leading block is set. Other entries keep their old
-!     value when `mat` is kept, and are undefined when it is newly
+!     value when `mat` is kept, and are zero when it is newly
 !     allocated.
 !
 !   The shape can also be given as a vector `s`; then the first 3
@@ -1609,7 +1611,7 @@ END INTERFACE Reallocate
 !     and the other dimensions keep their size. If any dimension
 !     grows, `mat` is reallocated.
 !   - Only the leading block is set. Other entries keep their old
-!     value when `mat` is kept, and are undefined when it is newly
+!     value when `mat` is kept, and are zero when it is newly
 !     allocated.
 !
 !   The shape can also be given as a vector `s`; then the first 4
@@ -1741,7 +1743,7 @@ END INTERFACE Reallocate
 !     and the other dimensions keep their size. If any dimension
 !     grows, `mat` is reallocated.
 !   - Only the leading block is set. Other entries keep their old
-!     value when `mat` is kept, and are undefined when it is newly
+!     value when `mat` is kept, and are zero when it is newly
 !     allocated.
 !
 !   The shape can also be given as a vector `s`; then the first 5
@@ -1873,7 +1875,7 @@ END INTERFACE Reallocate
 !     and the other dimensions keep their size. If any dimension
 !     grows, `mat` is reallocated.
 !   - Only the leading block is set. Other entries keep their old
-!     value when `mat` is kept, and are undefined when it is newly
+!     value when `mat` is kept, and are zero when it is newly
 !     allocated.
 !
 !   The shape can also be given as a vector `s`; then the first 6
@@ -2005,7 +2007,7 @@ END INTERFACE Reallocate
 !     and the other dimensions keep their size. If any dimension
 !     grows, `mat` is reallocated.
 !   - Only the leading block is set. Other entries keep their old
-!     value when `mat` is kept, and are undefined when it is newly
+!     value when `mat` is kept, and are zero when it is newly
 !     allocated.
 !
 !   The shape can also be given as a vector `s`; then the first 7
@@ -2135,7 +2137,8 @@ END INTERFACE Reallocate
 !   - If `isExpand` is `.TRUE.`, an allocated vector is kept when it
 !     has at least `n_k` entries, and reallocated with
 !     `n_k * expandFactor` entries otherwise.
-!   - Only `vec_k(1:n_k)` is set to zero.
+!   - `vec_k(1:n_k)` is set to zero. A newly allocated vector is zero
+!     everywhere; a kept, larger vector keeps its other entries.
 !   - When `vec_k` is present, `n_k` must be present too. This is
 !     not checked.
 !
@@ -2229,7 +2232,8 @@ END INTERFACE Reallocate
 !   - If `isExpand` is `.TRUE.`, an allocated vector is kept when it
 !     has at least `n_k` entries, and reallocated with
 !     `n_k * expandFactor` entries otherwise.
-!   - Only `vec_k(1:n_k)` is set to zero.
+!   - `vec_k(1:n_k)` is set to zero. A newly allocated vector is zero
+!     everywhere; a kept, larger vector keeps its other entries.
 !   - When `vec_k` is present, `n_k` must be present too. This is
 !     not checked.
 !
@@ -2335,7 +2339,9 @@ END INTERFACE Reallocate
 !   - If `isExpand` is `.TRUE.`, an allocated vector is kept when it
 !     is large enough, and reallocated with `n * expandFactor`
 !     entries otherwise.
-!   - Only the first `n` entries of each vector are set to zero.
+!   - The first `n` entries of each vector are set to zero. A newly
+!     allocated vector is zero everywhere; a kept, larger vector keeps
+!     its other entries.
 !
 ! Arguments:
 !   A : REAL (REAL32 or REAL64), ALLOCATABLE, rank(1) - values
@@ -2433,7 +2439,9 @@ END INTERFACE Reallocate
 !   - If `isExpand` is `.TRUE.`, an allocated vector is kept when it
 !     is large enough, and reallocated with `n * expandFactor`
 !     entries otherwise.
-!   - Only the first `n` entries of each vector are set to zero.
+!   - The first `n` entries of each vector are set to zero. A newly
+!     allocated vector is zero everywhere; a kept, larger vector keeps
+!     its other entries.
 !
 ! Arguments:
 !   A : REAL (REAL32 or REAL64), ALLOCATABLE, rank(1) - values

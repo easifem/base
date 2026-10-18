@@ -1,4 +1,4 @@
-LOGICAL :: isalloc, abool(3), ex, acase
+LOGICAL :: isalloc, abool(2), ex, acase
 INTEGER(I4B) :: s(2), ii, jj, fac
 
 isalloc = ALLOCATED(mat)
@@ -49,6 +49,9 @@ IF (abool(2)) s(2) = col * fac
 IF (ANY(abool)) THEN
   DEALLOCATE (mat)
   ALLOCATE (mat(s(1), s(2)))
+  ! a new allocation can be larger than the request: zero all of it
+  mat = ZEROVALUE
+  RETURN
 END IF
 
 DO CONCURRENT(ii=1:row, jj=1:col)

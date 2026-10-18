@@ -52,6 +52,9 @@ IF (abool(3)) s(3) = i3 * fac
 IF (ANY(abool)) THEN
   DEALLOCATE (mat)
   ALLOCATE (mat(s(1), s(2), s(3)))
+  ! a new allocation can be larger than the request: zero all of it
+  mat = ZEROVALUE
+  RETURN
 END IF
 
 DO CONCURRENT(ii=1:i1, jj=1:i2, kk=1:i3)

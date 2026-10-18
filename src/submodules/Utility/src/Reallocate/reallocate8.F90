@@ -27,6 +27,8 @@ IF (ALLOCATED(vec1)) THEN
   IF (abool) THEN
     DEALLOCATE (vec1)
     ALLOCATE (vec1(tsize))
+    ! a new allocation can be larger than the request: zero all of it
+    vec1 = ZERO1
   END IF
 ELSE
   ALLOCATE (vec1(n1))
@@ -47,6 +49,8 @@ IF (ALLOCATED(vec2)) THEN
   IF (abool) THEN
     DEALLOCATE (vec2)
     ALLOCATE (vec2(tsize))
+    ! a new allocation can be larger than the request: zero all of it
+    vec2 = ZERO2
   END IF
 ELSE
   ALLOCATE (vec2(n2))
@@ -68,6 +72,8 @@ IF (PRESENT(vec3)) THEN
     IF (abool) THEN
       DEALLOCATE (vec3)
       ALLOCATE (vec3(tsize))
+      ! a new allocation can be larger than the request: zero all of it
+      vec3 = ZERO3
     END IF
   ELSE
     ALLOCATE (vec3(n3))
@@ -90,6 +96,8 @@ IF (PRESENT(vec4)) THEN
     IF (abool) THEN
       DEALLOCATE (vec4)
       ALLOCATE (vec4(tsize))
+      ! a new allocation can be larger than the request: zero all of it
+      vec4 = ZERO4
     END IF
   ELSE
     ALLOCATE (vec4(n4))
@@ -112,6 +120,8 @@ IF (PRESENT(vec5)) THEN
     IF (abool) THEN
       DEALLOCATE (vec5)
       ALLOCATE (vec5(tsize))
+      ! a new allocation can be larger than the request: zero all of it
+      vec5 = ZERO5
     END IF
   ELSE
     ALLOCATE (vec5(n5))
@@ -134,6 +144,8 @@ IF (PRESENT(vec6)) THEN
     IF (abool) THEN
       DEALLOCATE (vec6)
       ALLOCATE (vec6(tsize))
+      ! a new allocation can be larger than the request: zero all of it
+      vec6 = ZERO6
     END IF
   ELSE
     ALLOCATE (vec6(n6))
