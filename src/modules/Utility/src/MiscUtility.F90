@@ -204,16 +204,13 @@ END INTERFACE Degrees
 !   - If several columns have the same distance, the first is returned.
 !   - `SIZE(Array, 1)` must equal `SIZE(x)`, otherwise an error is
 !     printed and the program stops.
-!   - At most three coordinates per point are supported.
-!   - The distances are stored as `INTEGER(I4B)`, so they are truncated
-!     before they are compared. Two points whose distances differ by
-!     less than one may not be told apart; the first one is returned.
+!   - Points can have any number of coordinates.
 !
 !   `SearchNearestCoord` is another name for the same function.
 !
 ! Arguments:
 !   Array : REAL(DFP), rank(2) - points in xij format,
-!     `SIZE(Array, 1) = SIZE(x) <= 3`
+!     `SIZE(Array, 1) = SIZE(x)`
 !   x : REAL(DFP), rank(1) - the point
 !
 ! Returns:
@@ -286,7 +283,7 @@ END INTERFACE Loc_NearestPoint
 !
 ! Arguments:
 !   Array : REAL(DFP), rank(2) - points in xij format,
-!     `SIZE(Array, 1) = SIZE(x) <= 3`
+!     `SIZE(Array, 1) = SIZE(x)`
 !   x : REAL(DFP), rank(1) - the point
 !
 ! Returns:

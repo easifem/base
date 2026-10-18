@@ -56,8 +56,8 @@ END PROCEDURE
 
 MODULE PROCEDURE Loc_Nearest_Point
 ! Define internal variables
-REAL(DFP) :: xr(3)
-INTEGER(I4B) :: i, n, m, norm, tr_norm
+INTEGER(I4B) :: i, n, m
+REAL(DFP) :: norm, tr_norm
 
 n = SIZE(Array, 1)
 m = SIZE(Array, 2)
@@ -71,8 +71,7 @@ IF (n .NE. SIZE(x)) THEN
 END IF
 !
 DO i = 1, m
-  xr(1:n) = Array(1:n, i)
-  tr_norm = NORM2(xr(1:n) - x(1:n))
+  tr_norm = NORM2(Array(1:n, i) - x(1:n))
   IF (i .EQ. 1) THEN
     norm = tr_norm
     id = i
