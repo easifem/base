@@ -393,28 +393,31 @@ END PROCEDURE strFind_chars
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE FindReplace_chars
-CHARACTER(LEN(chars)) :: string2
-INTEGER(I4B), ALLOCATABLE :: indices(:)
-INTEGER(I4B) :: i, n, stt, stp, dlen, slen, rlen, flen, tlen
-!>
+CHARACTER(:), ALLOCATABLE :: res
+INTEGER(I4B) :: ii, slen, flen
+
 slen = LEN(chars)
-tlen = LEN_TRIM(chars)
-rlen = LEN(repp)
 flen = LEN(findp)
-dlen = rlen - flen
-string2 = chars
-n = numMatchStr(chars, findp)
-CALL strfind(chars, findp, indices)
-IF (slen >= tlen + n * dlen) THEN
-  DO i = 1, n
-    stt = indices(i)
-    stp = stt + rlen - 1
-    chars(stt:stp) = repp
-    chars(stp + 1:slen) = string2(stt + flen - (i - 1) * dlen:slen)
-    IF (i < n) indices(i + 1) = indices(i + 1) + dlen * i
-  END DO
-END IF
-DEALLOCATE (indices)
+IF (flen .EQ. 0) RETURN
+
+! scan from left to right; after a match continue after it, so
+! overlapping matches such as "aa" in "aaa" are replaced once
+res = ''
+ii = 1
+DO WHILE (ii .LE. slen)
+  IF (ii + flen - 1 .LE. slen) THEN
+    IF (chars(ii:ii + flen - 1) .EQ. findp) THEN
+      res = res//repp
+      ii = ii + flen
+      CYCLE
+    END IF
+  END IF
+  res = res//chars(ii:ii)
+  ii = ii + 1
+END DO
+
+! if the result does not fit, chars is not changed
+IF (LEN_TRIM(res) .LE. slen) chars = res
 END PROCEDURE FindReplace_chars
 
 !----------------------------------------------------------------------------

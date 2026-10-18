@@ -1076,9 +1076,13 @@ END INTERFACE strFind
 !     the strings.
 !   - If the new string does not fit in `LEN(chars)`, that is if
 !     `LEN_TRIM(chars) + n*(LEN(repp) - LEN(findp)) > LEN(chars)` for
-!     `n` matches, `chars` is left unchanged and no error is raised.
-!   - Matches should not overlap. With overlapping matches, such as
-!     `"aa"` in `"aaa"`, the result is not well defined.
+!     `n` replacements, `chars` is left unchanged and no error is
+!     raised.
+!   - Matches are found from left to right, and the search goes on
+!     after the end of each match, so `"aa"` in `"aaa"` is replaced
+!     once. This differs from `NumMatchStr` and `StrFind`, which
+!     also count overlapping matches.
+!   - An empty `findp` changes nothing.
 !
 !@note
 ! `repp` can be longer than `findp` as long as `chars` can hold the
@@ -1138,6 +1142,24 @@ END INTERFACE strFind
 ! cstr = "abcde"
 ! CALL FindReplace(cstr, "a", "aa")
 ! CALL OK(cstr .EQ. "abcde", "no room: string is unchanged")
+!
+! ! overlapping matches: scan from the left, skip each match
+! bstr = "aaa"
+! CALL FindReplace(bstr, "aa", "b")
+! CALL OK(bstr .EQ. "ba", "aa -> b in aaa gives ba")
+!
+! bstr = "aaaa"
+! CALL FindReplace(bstr, "aa", "b")
+! CALL OK(bstr .EQ. "bb", "aa -> b in aaaa gives bb")
+!
+! bstr = "abababa"
+! CALL FindReplace(bstr, "aba", "x")
+! CALL OK(bstr .EQ. "xbx", "aba -> x in abababa gives xbx")
+!
+! ! an empty pattern changes nothing
+! bstr = "aaa"
+! CALL FindReplace(bstr, "", "b")
+! CALL OK(bstr .EQ. "aaa", "empty pattern")
 !
 ! END PROGRAM main
 !```

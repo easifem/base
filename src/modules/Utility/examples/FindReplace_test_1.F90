@@ -1,6 +1,11 @@
 !> author: Vikas Sharma, Ph. D.
 ! date: 2026-10-18
 ! summary: FindReplace replaces every match of a pattern in place
+!
+! Description:
+!   Includes the regression test for bug H-10 in
+!   bug-reports/Utility_bug_report.md: overlapping matches such as
+!   "aa" in "aaa" corrupted the result.
 
 PROGRAM main
 USE StringUtility, ONLY: FindReplace
@@ -39,5 +44,23 @@ CALL OK(bstr .EQ. "abc", "no match")
 cstr = "abcde"
 CALL FindReplace(cstr, "a", "aa")
 CALL OK(cstr .EQ. "abcde", "no room: string is unchanged")
+
+! overlapping matches: scan from the left, skip each match
+bstr = "aaa"
+CALL FindReplace(bstr, "aa", "b")
+CALL OK(bstr .EQ. "ba", "aa -> b in aaa gives ba")
+
+bstr = "aaaa"
+CALL FindReplace(bstr, "aa", "b")
+CALL OK(bstr .EQ. "bb", "aa -> b in aaaa gives bb")
+
+bstr = "abababa"
+CALL FindReplace(bstr, "aba", "x")
+CALL OK(bstr .EQ. "xbx", "aba -> x in abababa gives xbx")
+
+! an empty pattern changes nothing
+bstr = "aaa"
+CALL FindReplace(bstr, "", "b")
+CALL OK(bstr .EQ. "aaa", "empty pattern")
 
 END PROGRAM main
