@@ -1,6 +1,11 @@
 !> author: Vikas Sharma, Ph. D.
 ! date: 2026-10-18
 ! summary: GetMultiIndices(n, d, upto), multi-indices of order <= n
+!
+! Description:
+!   Includes the regression test for bug H-09 in
+!   bug-reports/Utility_bug_report.md: the value of upto was not
+!   used, so upto = .FALSE. gave the result for .TRUE.
 
 PROGRAM main
 USE GlobalData, ONLY: I4B
@@ -31,5 +36,11 @@ CALL OK(ALL(SUM(ans, 1) .EQ. [0_I4B, 1_I4B, 1_I4B, 1_I4B, 2_I4B, &
 ! the last columns are the multi-indices of order n
 CALL OK(ALL(ans(:, 5:10) .EQ. GetMultiIndices(2_I4B, 2_I4B)), &
         "last columns have order n")
+
+! upto = .FALSE. gives only the multi-indices of order n
+ans = GetMultiIndices(2_I4B, 2_I4B, upto=.FALSE.)
+CALL OK(ALL(SHAPE(ans) .EQ. [3_I4B, 6_I4B]), "upto = .FALSE.: shape")
+CALL OK(ALL(ans .EQ. GetMultiIndices(2_I4B, 2_I4B)), &
+        "upto = .FALSE.: same as GetMultiIndices(n, d)")
 
 END PROGRAM main

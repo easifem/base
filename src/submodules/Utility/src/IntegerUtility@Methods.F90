@@ -40,6 +40,10 @@ END PROCEDURE obj_Size1
 
 MODULE PROCEDURE obj_Size2
 INTEGER(I4B) :: ii
+IF (.NOT. upto) THEN
+  ans = SIZE(n=n, d=d)
+  RETURN
+END IF
 ans = 0_I4B
 DO ii = 0, n
   ans = ans + SIZE(n=ii, d=d)
@@ -102,6 +106,11 @@ END PROCEDURE obj_GetMultiIndices1_
 
 MODULE PROCEDURE obj_GetMultiIndices2_
 INTEGER(I4B) :: ii, aint, bint, indx
+
+IF (.NOT. upto) THEN
+  CALL GetMultiIndices_(n=n, d=d, ans=ans, nrow=nrow, ncol=ncol)
+  RETURN
+END IF
 
 nrow = d + 1
 ncol = SIZE(n, d, .TRUE.)

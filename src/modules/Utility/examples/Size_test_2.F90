@@ -1,6 +1,11 @@
 !> author: Vikas Sharma, Ph. D.
 ! date: 2026-10-18
 ! summary: Size(n, d, upto), number of multi-indices of order <= n
+!
+! Description:
+!   Includes the regression test for bug H-09 in
+!   bug-reports/Utility_bug_report.md: the value of upto was not
+!   used, so upto = .FALSE. gave the result for .TRUE.
 
 PROGRAM main
 USE GlobalData, ONLY: I4B
@@ -27,5 +32,11 @@ DO ii = 0, 3
 END DO
 CALL OK(SIZE(3_I4B, 2_I4B, .TRUE.) .EQ. total, "sum of Size(ii, d)")
 CALL OK(total .EQ. 20_I4B, "Size(3, 2, .TRUE.) is 20")
+
+! upto = .FALSE. counts only the tuples of order n
+CALL OK(SIZE(3_I4B, 1_I4B, .FALSE.) .EQ. SIZE(3_I4B, 1_I4B), &
+        "Size(3, 1, .FALSE.) = Size(3, 1)")
+CALL OK(SIZE(2_I4B, 2_I4B, upto=.FALSE.) .EQ. 6_I4B, &
+        "Size(2, 2, .FALSE.) is 6")
 
 END PROGRAM main

@@ -140,13 +140,13 @@ END INTERFACE Size
 !   sum is at most `n`. This is the number of columns of
 !   `GetMultiIndices(n, d, upto)`.
 !
-!   The value of `upto` is not used; it only selects this routine.
-!   `SIZE(n, d, .FALSE.)` also returns the count up to order `n`.
+!   If `upto` is `.FALSE.`, the result is `SIZE(n, d)`, the number of
+!   tuples whose sum is exactly `n`.
 !
 ! Arguments:
 !   n : INTEGER(I4B) - highest order, `n >= 0`
 !   d : INTEGER(I4B) - the tuples have `d+1` entries, `d >= 1`
-!   upto : LOGICAL(LGT) - selects this routine (value is not used)
+!   upto : LOGICAL(LGT) - `.TRUE.`: orders `0..n`, `.FALSE.`: order `n`
 !
 ! Returns:
 !   ans : INTEGER(I4B) - number of tuples
@@ -183,6 +183,12 @@ END INTERFACE Size
 ! END DO
 ! CALL OK(SIZE(3_I4B, 2_I4B, .TRUE.) .EQ. total, "sum of Size(ii, d)")
 ! CALL OK(total .EQ. 20_I4B, "Size(3, 2, .TRUE.) is 20")
+!
+! ! upto = .FALSE. counts only the tuples of order n
+! CALL OK(SIZE(3_I4B, 1_I4B, .FALSE.) .EQ. SIZE(3_I4B, 1_I4B), &
+!         "Size(3, 1, .FALSE.) = Size(3, 1)")
+! CALL OK(SIZE(2_I4B, 2_I4B, upto=.FALSE.) .EQ. 6_I4B, &
+!         "Size(2, 2, .FALSE.) is 6")
 !
 ! END PROGRAM main
 !```
@@ -350,13 +356,14 @@ END INTERFACE GetMultiIndices_
 !   - The columns of order 0 come first, then order 1, and so on up
 !     to order `n`. Inside each order the columns are the same as in
 !     `GetMultiIndices(i, d)`.
-!   - The value of `upto` is not used; it only selects this routine.
+!   - If `upto` is `.FALSE.`, the result is `GetMultiIndices(n, d)`,
+!     the tuples whose sum is exactly `n`.
 !   - `d` should be at least one. This is not checked.
 !
 ! Arguments:
 !   n : INTEGER(I4B) - highest order, `n >= 0`
 !   d : INTEGER(I4B) - the tuples have `d+1` entries, `d >= 1`
-!   upto : LOGICAL(LGT) - selects this routine (value is not used)
+!   upto : LOGICAL(LGT) - `.TRUE.`: orders `0..n`, `.FALSE.`: order `n`
 !
 ! Returns:
 !   ans : INTEGER(I4B), ALLOCATABLE, rank(2) - multi-indices,
@@ -399,6 +406,12 @@ END INTERFACE GetMultiIndices_
 ! CALL OK(ALL(ans(:, 5:10) .EQ. GetMultiIndices(2_I4B, 2_I4B)), &
 !         "last columns have order n")
 !
+! ! upto = .FALSE. gives only the multi-indices of order n
+! ans = GetMultiIndices(2_I4B, 2_I4B, upto=.FALSE.)
+! CALL OK(ALL(SHAPE(ans) .EQ. [3_I4B, 6_I4B]), "upto = .FALSE.: shape")
+! CALL OK(ALL(ans .EQ. GetMultiIndices(2_I4B, 2_I4B)), &
+!         "upto = .FALSE.: same as GetMultiIndices(n, d)")
+!
 ! END PROGRAM main
 !```
 
@@ -424,12 +437,13 @@ END INTERFACE GetMultiIndices
 !
 !   - `ans` should have at least `d+1` rows and `SIZE(n, d, .TRUE.)`
 !     columns. This is not checked.
-!   - The value of `upto` is not used; it only selects this routine.
+!   - If `upto` is `.FALSE.`, the result is `GetMultiIndices(n, d)`,
+!     the tuples whose sum is exactly `n`.
 !
 ! Arguments:
 !   n : INTEGER(I4B) - highest order, `n >= 0`
 !   d : INTEGER(I4B) - the tuples have `d+1` entries, `d >= 1`
-!   upto : LOGICAL(LGT) - selects this routine (value is not used)
+!   upto : LOGICAL(LGT) - `.TRUE.`: orders `0..n`, `.FALSE.`: order `n`
 !   ans : INTEGER(I4B), rank(2) - multi-indices in `ans(1:nrow, 1:ncol)`
 !   nrow : INTEGER(I4B) - number of rows written, `nrow = d+1`
 !   ncol : INTEGER(I4B) - number of columns written,
@@ -463,6 +477,15 @@ END INTERFACE GetMultiIndices
 !
 ! ! the first column is the multi-index of order zero
 ! CALL OK(ALL(ans(:, 1) .EQ. 0_I4B), "first column is zero")
+!
+! ! upto = .FALSE. gives only the multi-indices of order n
+! ans = -1_I4B
+! CALL GetMultiIndices_(2_I4B, 2_I4B, .FALSE., ans, nrow, ncol)
+! CALL OK(nrow .EQ. 3_I4B .AND. ncol .EQ. 6_I4B, &
+!         "upto = .FALSE.: nrow = 3, ncol = 6")
+! CALL OK(ALL(ans(:, 1:6) .EQ. GetMultiIndices(2_I4B, 2_I4B)), &
+!         "upto = .FALSE.: same as GetMultiIndices(n, d)")
+! CALL OK(ALL(ans(:, 7:10) .EQ. -1_I4B), "upto = .FALSE.: rest unchanged")
 !
 ! END PROGRAM main
 !```
