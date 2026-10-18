@@ -34,6 +34,11 @@
 !   one, and `from = "L"` (or `"l"`) copies the lower triangle into the
 !   upper one. The diagonal is kept.
 !
+!   Neither routine checks its input: `mat` must be square, and `from`
+!   must be one of `"U"`, `"u"`, `"L"` or `"l"`. A rectangular `mat` is
+!   accessed out of bounds. For any other `from`, `Sym` returns an
+!   undefined result and `GetSym` leaves `mat` unchanged.
+!
 !   Both routines are available for integers (`INT8`, `INT16`, `INT32`,
 !   `INT64`) and reals (`REAL32`, `REAL64`).
 
