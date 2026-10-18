@@ -910,24 +910,21 @@ END INTERFACE IMINLOC
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2022-03-05
-! summary: Meant to return the imaginary part of a complex number.
+! summary: Returns the imaginary part of a complex number.
 !
 ! Description:
-!   `IMG` is meant to return the imaginary part of `x`. It is elemental
-!   and available for `COMPLEX(REAL32)` and `COMPLEX(REAL64)`.
-!
-!   Note: the current implementation returns `REAL(x * i)`, which is
-!   the negative of the imaginary part, `-AIMAG(x)`. Use the intrinsic
-!   `AIMAG(x)` if the imaginary part itself is needed.
+!   `IMG` returns the imaginary part of `x`, the same as the intrinsic
+!   `AIMAG(x)`. It is elemental and available for `COMPLEX(REAL32)`
+!   and `COMPLEX(REAL64)`.
 !
 ! Arguments:
 !   x : COMPLEX(REAL32) or COMPLEX(REAL64) - complex number
 !
 ! Returns:
-!   ans : REAL, same kind as `x` - currently `-AIMAG(x)`
+!   ans : REAL, same kind as `x` - imaginary part of `x`
 !
 ! Formula:
-!   $$\mathrm{ans} = \operatorname{Re}(x\,i) = -\operatorname{Im}(x)$$
+!   $$x = a + b\,i \quad\Rightarrow\quad \mathrm{ans} = b$$
 !
 ! Examples
 !
@@ -942,15 +939,15 @@ END INTERFACE IMINLOC
 ! REAL(DFP), PARAMETER :: tol = 1.0E-12_DFP
 ! COMPLEX(DFPC) :: z(3)
 !
-! ! NOTE: IMG currently returns REAL(x * i) = -AIMAG(x),
-! ! the negative of the imaginary part (see the docblock of IMG).
-! CALL OK(ABS(IMG((1.0_DFP, 2.0_DFP)) + 2.0_DFP) .LT. tol, &
-!         "IMG((1,2)) = -2")
+! CALL OK(ABS(IMG((1.0_DFP, 2.0_DFP)) - 2.0_DFP) .LT. tol, &
+!         "IMG((1,2)) = 2")
+! CALL OK(ABS(IMG((0.0_DFP, -4.0_DFP)) + 4.0_DFP) .LT. tol, &
+!         "IMG((0,-4)) = -4")
 ! CALL OK(ABS(IMG((3.0_DFP, 0.0_DFP))) .LT. tol, "real number gives 0")
 !
-! ! IMG is elemental
+! ! IMG is elemental and equals the intrinsic AIMAG
 ! z = [(1.0_DFP, 1.0_DFP), (0.0_DFP, -4.0_DFP), (2.0_DFP, 0.5_DFP)]
-! CALL OK(ALL(ABS(IMG(z) + AIMAG(z)) .LT. tol), "IMG(z) = -AIMAG(z)")
+! CALL OK(ALL(ABS(IMG(z) - AIMAG(z)) .LT. tol), "IMG(z) = AIMAG(z)")
 !
 ! END PROGRAM main
 !```
