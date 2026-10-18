@@ -208,9 +208,6 @@ END INTERFACE IntroSort
 !     `ArgHeapSort`.
 !   - The sort is not stable.
 !
-!   For vectors with many equal values `ArgPartition` may read one
-!   entry past `right` (see `Partition`).
-!
 !   For `SIZE(array) = 0` the routine evaluates `LOG(0.0)`. Avoid
 !   calling it on an empty vector.
 !

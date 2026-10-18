@@ -76,9 +76,7 @@ PUBLIC :: argPartition
 !   pivot, call `Median(this, left, mid, right)` and swap `this(mid)`
 !   with `this(left)` before calling `Partition`.
 !
-!   Note: `1 <= left <= right <= SIZE(this)` is not checked. When the
-!   pivot is the largest value of the range, the scan can evaluate
-!   `this(right+1)` in a non short-circuit `.AND.`.
+!   Note: `1 <= left <= right <= SIZE(this)` is not checked.
 !
 ! Arguments:
 !   this : INTEGER or REAL, rank(1), INTENT(INOUT) - vector to be
@@ -236,8 +234,7 @@ END INTERFACE
 !   - The value of `i` on entry is not used.
 !
 !   As in `Partition`, the pivot is not chosen by this routine, and the
-!   ranges are not checked. When the pivot is the largest value, the
-!   scan can evaluate `idx(right+1)` in a non short-circuit `.AND.`.
+!   ranges are not checked.
 !
 ! Arguments:
 !   this : INTEGER or REAL, rank(1), INTENT(IN) - values
