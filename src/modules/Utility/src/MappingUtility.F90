@@ -4166,8 +4166,7 @@ END INTERFACE
 !     absent, the result is 1.
 !   - In 2D the area is signed, so the result is negative when the
 !     vertices of `xij` are in clockwise order.
-!   - `from` and `to` should not both be "TRIANGLE" (the result is
-!     then the area of `xij`, not 1).
+!   - If `from` and `to` are the same, the result is 1.
 !   - For any other value the result is not meaningful.
 !
 ! Arguments:
@@ -4221,6 +4220,12 @@ END INTERFACE
 ! CALL OK(ABS(JacobianTriangle("UNIT", "TRIANGLE", xij3) - 6.0_DFP) &
 !         .LT. tol, "UNIT to TRIANGLE in 3D")
 !
+! ! a map from a triangle to itself has Jacobian 1
+! CALL OK(ABS(JacobianTriangle("TRIANGLE", "TRIANGLE", xij) - 1.0_DFP) &
+!         .LT. tol, "TRIANGLE to TRIANGLE")
+! CALL OK(ABS(JacobianTriangle("TRIANGLE", "TRIANGLE", xij3) - 1.0_DFP) &
+!         .LT. tol, "TRIANGLE to TRIANGLE in 3D")
+!
 ! END PROGRAM main
 !```
 
@@ -4266,8 +4271,7 @@ END INTERFACE
 !
 !   - `xij` is needed when `from` or `to` is "QUADRANGLE". If it is
 !     absent, the result is 1.
-!   - `from` and `to` should not both be "QUADRANGLE" (the result is
-!     then the area of `xij`, not 1).
+!   - If `from` and `to` are the same, the result is 1.
 !   - For any other value the result is not meaningful.
 !
 ! Arguments:
@@ -4315,6 +4319,10 @@ END INTERFACE
 !             4.0_DFP / 6.0_DFP) .LT. tol, "QUADRANGLE to BIUNIT")
 ! CALL OK(ABS(JacobianQuadrangle("QUADRANGLE", "UNIT", xij) - &
 !             1.0_DFP / 6.0_DFP) .LT. tol, "QUADRANGLE to UNIT")
+!
+! ! a map from a quadrangle to itself has Jacobian 1
+! CALL OK(ABS(JacobianQuadrangle("QUADRANGLE", "QUADRANGLE", xij) &
+!             - 1.0_DFP) .LT. tol, "QUADRANGLE to QUADRANGLE")
 !
 ! END PROGRAM main
 !```

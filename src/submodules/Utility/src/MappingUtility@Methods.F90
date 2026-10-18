@@ -936,6 +936,7 @@ END PROCEDURE JacobianLine
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE JacobianTriangle
+REAL(DFP) :: area0
 ans = math%one
 SELECT CASE (TRIM(from))
 CASE ("BIUNIT")
@@ -979,11 +980,13 @@ CASE ("UNIT")
 
 CASE ("TRIANGLE")
 
+  ! the area goes to area0, so that TRIANGLE to TRIANGLE keeps ans = 1
+  area0 = math%one
   IF (PRESENT(xij)) THEN
     IF (SIZE(xij, 1) .EQ. 2_I4B) THEN
-      CALL TriangleArea2D(xij(1:2, 1:3), ans)
+      CALL TriangleArea2D(xij(1:2, 1:3), area0)
     ELSE IF (SIZE(xij, 1) .EQ. 3_I4B) THEN
-      CALL TriangleArea3D(xij(1:3, 1:3), ans)
+      CALL TriangleArea3D(xij(1:3, 1:3), area0)
     END IF
   ELSE
     RETURN
@@ -991,9 +994,9 @@ CASE ("TRIANGLE")
 
   SELECT CASE (TRIM(to))
   CASE ("BIUNIT")
-    ans = math%two / ans
+    ans = math%two / area0
   CASE ("UNIT")
-    ans = math%half / ans
+    ans = math%half / area0
   CASE DEFAULT
   END SELECT
 
@@ -1006,6 +1009,7 @@ END PROCEDURE JacobianTriangle
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE JacobianQuadrangle
+REAL(DFP) :: area0
 ans = math%one
 SELECT CASE (TRIM(from))
 CASE ("BIUNIT")
@@ -1047,11 +1051,13 @@ CASE ("UNIT")
 
 CASE ("QUADRANGLE")
 
+  ! the area goes to area0, so that QUADRANGLE to QUADRANGLE keeps
+  ! ans = 1
   IF (PRESENT(xij)) THEN
     IF (SIZE(xij, 1) .EQ. 2_I4B) THEN
-      CALL QuadrangleArea2D(xij(1:2, 1:4), ans)
+      CALL QuadrangleArea2D(xij(1:2, 1:4), area0)
     ELSE
-      CALL QuadrangleArea3D(xij(1:3, 1:4), ans)
+      CALL QuadrangleArea3D(xij(1:3, 1:4), area0)
     END IF
   ELSE
     RETURN
@@ -1059,9 +1065,9 @@ CASE ("QUADRANGLE")
 
   SELECT CASE (TRIM(to))
   CASE ("BIUNIT")
-    ans = 4.0_DFP / ans
+    ans = 4.0_DFP / area0
   CASE ("UNIT")
-    ans = math%one / ans
+    ans = math%one / area0
   CASE DEFAULT
   END SELECT
 
