@@ -16,7 +16,19 @@
 !
 
 SUBMODULE(EigenUtility) Methods
-USE BaseMethod
+USE GlobalData, ONLY: stderr
+USE BaseType, ONLY: math => TypeMathOpt
+USE ErrorHandling, ONLY: Errormsg
+USE SwapUtility, ONLY: SWAP
+USE MiscUtility, ONLY: ImaxLoc
+USE MiscUtility, ONLY: Arth
+USE MiscUtility, ONLY: Outerdiff
+USE ApproxUtility, ONLY: SOFTEQ
+
+#ifdef USE_LAPACK95
+USE F95_Lapack, ONLY: SYEV
+#endif
+
 IMPLICIT NONE
 CONTAINS
 
@@ -41,35 +53,35 @@ END PROCEDURE SymEigenValues2by2
 
 MODULE PROCEDURE SymEigenValues3by3
 REAL(DFP) :: q, p, r
-REAL(DFP), PARAMETER :: twothirdpi = 2.0_DFP * pi / 3.0_DFP
-!!
+REAL(DFP), PARAMETER :: twothirdpi = 2.0_DFP * math%pi / 3.0_DFP
+
 r = mat(1, 2) * mat(1, 2) + mat(1, 3) * mat(1, 3) + mat(2, 3) * mat(2, 3)
 q = (mat(1, 1) + mat(2, 2) + mat(3, 3)) / 3.0_DFP
-!!
+
 ans(1) = mat(1, 1) - q
 ans(2) = mat(2, 2) - q
 ans(3) = mat(3, 3) - q
-!!
+
 p = SQRT((ans(1) * ans(1) + ans(2) * ans(2) + ans(3) * ans(3) + 2 * r) &
-  & / 6.0_DFP)
-!!
+         / 6.0_DFP)
+
 r = (ans(1) * (ans(2) * ans(3) - mat(2, 3) * mat(2, 3)) &
-  & - mat(1, 2) * (mat(1, 2) * ans(3) - mat(2, 3) * mat(1, 3)) &
-  & + mat(1, 3) * (mat(1, 2) * mat(2, 3) - ans(2) * mat(1, 3))) &
-  & / (p * p * p) * 0.5_DFP
-!!
+     - mat(1, 2) * (mat(1, 2) * ans(3) - mat(2, 3) * mat(1, 3)) &
+     + mat(1, 3) * (mat(1, 2) * mat(2, 3) - ans(2) * mat(1, 3))) &
+    / (p * p * p) * 0.5_DFP
+
 IF (r <= -1.0_DFP) THEN
   r = 0.5_DFP * twothirdpi
 ELSE IF (r >= 1.0_DFP) THEN
   r = 0.0_DFP
 ELSE
-  r = acos(r) / 3.0_DFP
+  r = ACOS(r) / 3.0_DFP
 END IF
-!!
-ans(3) = q + 2 * p * cos(r)
-ans(1) = q + 2 * p * cos(r + twothirdpi)
+
+ans(3) = q + 2 * p * COS(r)
+ans(1) = q + 2 * p * COS(r + twothirdpi)
 ans(2) = 3 * q - ans(1) - ans(3)
-!!
+
 END PROCEDURE SymEigenValues3by3
 
 !----------------------------------------------------------------------------
@@ -77,7 +89,6 @@ END PROCEDURE SymEigenValues3by3
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE SymEigenValuesUpto3
-!!
 SELECT CASE (SIZE(mat, 1))
 CASE (1)
   ans(1) = mat(1, 1)
@@ -85,6 +96,7 @@ CASE (2)
   ans = SymEigenValues2by2(mat=mat)
 CASE (3)
   ans = SymEigenValues3by3(mat=mat)
+CASE DEFAULT
 END SELECT
 END PROCEDURE SymEigenValuesUpto3
 
@@ -94,10 +106,12 @@ END PROCEDURE SymEigenValuesUpto3
 
 MODULE PROCEDURE SymEigenValues
 INTEGER(I4B) :: n
+#ifdef USE_LAPACK95
 REAL(DFP), DIMENSION(SIZE(mat, 1), SIZE(mat, 2)) :: temp
-!!
+#endif
+
 n = SIZE(mat, 1)
-!!
+
 SELECT CASE (n)
 CASE (1)
   ans(1) = mat(1, 1)
@@ -111,13 +125,12 @@ CASE DEFAULT
   CALL SYEV(A=temp, W=ans, JOBZ="N")
 #else
   CALL ErrorMsg( &
-    & msg="This routine requires Lapack95 interface", &
-    & file=__FILE__, &
-    & line=__LINE__, &
-    & routine="SymEigenValues()", &
-    & unitno=stderr)
+    msg="This routine requires Lapack95 interface", &
+    file=__FILE__, &
+    line=__LINE__, &
+    routine="SymEigenValues()", &
+    unitno=stderr)
 #endif
-    !!
 END SELECT
 END PROCEDURE SymEigenValues
 
@@ -127,9 +140,7 @@ END PROCEDURE SymEigenValues
 
 MODULE PROCEDURE GetSymEigenValues_
 INTEGER(I4B) :: n
-!!
 n = SIZE(mat, 1)
-!!
 SELECT CASE (n)
 CASE (1)
   eigenValues(1) = mat(1, 1)
@@ -142,13 +153,12 @@ CASE DEFAULT
   CALL SYEV(A=mat, W=eigenValues, JOBZ="N")
 #else
   CALL ErrorMsg( &
-    & msg="This routine requires Lapack95 interface", &
-    & file=__FILE__, &
-    & line=__LINE__, &
-    & routine="SymEigenValues_()", &
-    & unitno=stderr)
+    msg="This routine requires Lapack95 interface", &
+    file=__FILE__, &
+    line=__LINE__, &
+    routine="SymEigenValues_()", &
+    unitno=stderr)
 #endif
-  !!
 END SELECT
 END PROCEDURE GetSymEigenValues_
 
@@ -171,18 +181,18 @@ INTEGER(I4B) :: i, ip, iq, n, ii, jj, tRot
 REAL(DFP) :: c, g, h, s, sm, t, tau, theta, tresh
 REAL(DFP), DIMENSION(SIZE(EigenValues)) :: b, z
 REAL(DFP), DIMENSION(SIZE(mat, 1), SIZE(mat, 2)) :: tempMat
-REAL(DFP), PARAMETER :: tol = 1.0E-10
+REAL(DFP), PARAMETER :: tol = 1.0E-10_DFP
 
 tempMat = mat
 
 n = SIZE(mat, 1)
 
-!---- Initialize v to the identity matrix.
+! Initialize v to the identity matrix.
 CALL unit_matrix(EigenVectors(:, :))
 
-!---- Initialize b and d to the diagonal of A
-!---- This vector will accumulate terms of the
-!---- form tapq as in eq. (11.1.14).
+! Initialize b and d to the diagonal of A
+! This vector will accumulate terms of the
+! form tapq as in eq. (11.1.14).
 b(:) = get_diag(tempMat(:, :))
 EigenValues(:) = b(:)
 z(:) = 0.0_DFP
@@ -190,34 +200,34 @@ tRot = 0
 
 DO i = 1, MaxIter
 
-  !---- SUM off-diagonal elements.
+  ! SUM off-diagonal elements.
   sm = SUM(ABS(tempMat), mask=upper_triangle(n, n))
   IF (SOFTEQ(sm, 0.0_DFP, tol)) THEN
 
-    !---- Restore the upper diagonal  part
+    ! Restore the upper diagonal  part
     DO jj = 1, n
       DO ii = 1, jj - 1
         tempMat(ii, jj) = tempMat(jj, ii)
       END DO
     END DO
 
-    !---- Sort the Eigen vector and Eigen values in decreasing order
+    ! Sort the Eigen vector and Eigen values in decreasing order
     CALL SortEigenValues(EigenValues=EigenValues, &
-      & EigenVectors=EigenVectors)
+                         EigenVectors=EigenVectors)
     RETURN
 
   END IF
 
-  !---- The normal return, which relies on quadratic convergence
-  !---- to machine underflow.
+  ! The normal return, which relies on quadratic convergence
+  ! to machine underflow.
   tresh = MERGE(0.2_DFP * sm / n**2, 0.0_DFP, i < 4)
 
-  !---- On the first three sweeps, we will rotate only IF tresh exceeded.
+  ! On the first three sweeps, we will rotate only IF tresh exceeded.
   DO ip = 1, n - 1
     DO iq = ip + 1, n
       g = 100.0_DFP * ABS(tempMat(ip, iq))
-      !---- After four sweeps, skip the rotation IF the off-diagonal
-      !---- element is small.
+      ! After four sweeps, skip the rotation IF the off-diagonal
+      ! element is small.
       IF ((i > 4) .AND. (ABS(EigenValues(ip)) + g .EQ. &
         & ABS(EigenValues(ip))) .AND. (ABS(EigenValues(iq)) &
         & + g .EQ. ABS(EigenValues(iq)))) THEN
@@ -274,51 +284,51 @@ PURE SUBROUTINE jrotate(a1, a2)
   a2(:) = a2(:) + s * (wk1(:) - a2(:) * tau)
 END SUBROUTINE jrotate
 
-PURE FUNCTION get_diag(mat)
+PURE FUNCTION get_diag(mat) RESULT(ans)
   REAL(DFP), DIMENSION(:, :), INTENT(IN) :: mat
-  REAL(DFP), DIMENSION(SIZE(mat, 1)) :: get_diag
+  REAL(DFP), DIMENSION(SIZE(mat, 1)) :: ans
   INTEGER(I4B) :: j
-  j = size(mat, 1)
-  DO j = 1, size(mat, 1)
-    get_diag(j) = mat(j, j)
+  j = SIZE(mat, 1)
+  DO j = 1, SIZE(mat, 1)
+    ans(j) = mat(j, j)
   END DO
 END FUNCTION get_diag
 
 PURE SUBROUTINE unit_matrix(mat)
   REAL(DFP), DIMENSION(:, :), INTENT(OUT) :: mat
-  INTEGER(I4B) :: i, n
-  n = min(size(mat, 1), size(mat, 2))
-  mat(:, :) = 0.0_sp
-  DO i = 1, n
-    mat(i, i) = 1.0_sp
+  INTEGER(I4B) :: ii, nn
+  nn = MIN(SIZE(mat, 1), SIZE(mat, 2))
+  mat(:, :) = 0.0_DFP
+  DO ii = 1, nn
+    mat(ii, ii) = 1.0_DFP
   END DO
 END SUBROUTINE unit_matrix
 
 PURE SUBROUTINE SortEigenValues(EigenValues, EigenVectors)
   REAL(DFP), DIMENSION(:), INTENT(INOUT) :: EigenValues
   REAL(DFP), DIMENSION(:, :), INTENT(INOUT) :: EigenVectors
-  INTEGER(I4B) :: i, j, n
+  INTEGER(I4B) :: ii, j, nn
 
-  n = SIZE(EigenValues)
+  nn = SIZE(EigenValues)
 
-  DO i = 1, n - 1
-    j = ImaxLoc(EigenValues(i:n))
-    j = j + i - 1
-    IF (j .NE. i) THEN
-      CALL SWAP(EigenValues(i), EigenValues(j))
-      CALL SWAP(EigenVectors(:, i), EigenVectors(:, j))
+  DO ii = 1, nn - 1
+    j = ImaxLoc(EigenValues(ii:nn))
+    j = j + ii - 1
+    IF (j .NE. ii) THEN
+      CALL SWAP(EigenValues(ii), EigenValues(j))
+      CALL SWAP(EigenVectors(:, ii), EigenVectors(:, j))
     END IF
   END DO
 END SUBROUTINE SortEigenValues
 
-PURE FUNCTION upper_triangle(j, k, extra)
+PURE FUNCTION upper_triangle(j, k, extra) RESULT(ans)
   INTEGER(I4B), INTENT(IN) :: j, k
   INTEGER(I4B), OPTIONAL, INTENT(IN) :: extra
-  LOGICAL(LGT), DIMENSION(j, k) :: upper_triangle
-  INTEGER(I4B) :: n
-  n = 0
-  IF (PRESENT(extra)) n = extra
-  upper_triangle = (outerDiff(arth(1, 1, j), arth(1, 1, k)) < n)
+  LOGICAL(LGT), DIMENSION(j, k) :: ans
+  INTEGER(I4B) :: nn
+  nn = 0
+  IF (PRESENT(extra)) nn = extra
+  ans = (OuterDiff(Arth(1, 1, j), Arth(1, 1, k)) < nn)
 END FUNCTION upper_triangle
 
 ! PURE FUNCTION lower_triangle(j,k,extra)

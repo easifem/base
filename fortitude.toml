@@ -7,6 +7,8 @@ ignore = [
   "interface-implicit-typing",
   "bad-quote-string",
   "trailing-backslash",
+  "magic-number-in-array-size",
+  "mixed-scalar-array-declaration",
 ]
 file-extensions = ["f90", "F90"]
 line-length = 78

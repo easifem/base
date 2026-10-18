@@ -35,15 +35,15 @@ LOGICAL :: ok_size, ok_values
 ok_size = .TRUE.
 ok_values = .TRUE.
 
-DO ishape = 1, SIZE(shapes, 2)
+out_loop: DO ishape = 1, SIZE(shapes, 2)
   m = shapes(1, ishape)
   n = shapes(2, ishape)
-  DO k = -m - 2, n + 2
+  in_loop: DO k = -m - 2, n + 2
     ind = DiagIndx(m, n, k)
 
     IF (SIZE(ind, 1) .NE. DiagSize(m, n, k) .OR. SIZE(ind, 2) .NE. 2) THEN
       ok_size = .FALSE.
-      CYCLE
+      CYCLE in_loop
     END IF
 
     ! scan the matrix row by row; entries of a diagonal appear
@@ -62,8 +62,8 @@ DO ishape = 1, SIZE(shapes, 2)
       END DO
     END DO
     IF (cnt .NE. SIZE(ind, 1)) ok_values = .FALSE.
-  END DO
-END DO
+  END DO in_loop
+END DO out_loop
 
 CALL OK(ok_size, "DiagIndx shape equals (DiagSize, 2)")
 CALL OK(ok_values, "DiagIndx lists all entries with j - i = k")

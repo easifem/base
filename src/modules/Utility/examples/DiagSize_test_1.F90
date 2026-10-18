@@ -38,9 +38,9 @@ CALL OK(DiagSize(4, -3) .EQ. 1, "DiagSize(4, -3)")
 CALL OK(DiagSize(4, -5) .EQ. 0, "DiagSize(4, -5) out of bound")
 
 ! the (n, diagNo) form agrees with the (m, n, diagNo) form
-DO k = -6, 6
-  IF (DiagSize(4, k) .NE. DiagSize(4, 4, k)) EXIT
-END DO
+aloop: DO k = -6, 6
+  IF (DiagSize(4, k) .NE. DiagSize(4, 4, k)) EXIT aloop
+END DO aloop
 CALL OK(k .EQ. 7, "DiagSize(n, k) == DiagSize(n, n, k)")
 
 ! rectangle (4,7), super-diagonals 0..7
