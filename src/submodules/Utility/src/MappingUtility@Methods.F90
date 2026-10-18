@@ -874,12 +874,19 @@ END PROCEDURE FromBiUnitHexahedron2UnitTetrahedron
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE FromBiUnitHexahedron2UnitTetrahedron_
+INTEGER(I4B) :: ii, jj
+REAL(DFP), PARAMETER :: half = math%half, one = math%one
 
 CALL FromBiUnitHexahedron2BiUnitTetrahedron_(xin=xin, ans=ans, &
                                              nrow=nrow, ncol=ncol)
 
-CALL FromBiUnitTetrahedron2UnitTetrahedron_(xin=ans, ans=ans, nrow=nrow, &
-                                            ncol=ncol)
+! biunit to unit tetrahedron, in place and only in the block written
+! above; passing ans as both xin and ans of
+! FromBiUnitTetrahedron2UnitTetrahedron_ would alias the arguments
+! and reset nrow, ncol to the size of ans
+DO CONCURRENT(ii=1:nrow, jj=1:ncol)
+  ans(ii, jj) = half * (one + ans(ii, jj))
+END DO
 
 END PROCEDURE FromBiUnitHexahedron2UnitTetrahedron_
 

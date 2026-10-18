@@ -3990,15 +3990,14 @@ END INTERFACE
 !   Same as `FromBiUnitHexahedron2UnitTetrahedron`, but the result is
 !   written to `ans`.
 !
-!   `ans` must have exactly 3 rows and `SIZE(xin, 2)` columns. The
-!   second step is called with `ans` as both input and output, and it
-!   sets `nrow = SIZE(ans, 1)` and `ncol = SIZE(ans, 2)`. So with a
-!   larger `ans`, `nrow` and `ncol` are not 3 and `SIZE(xin, 2)`.
+!   `ans` should have at least 3 rows and `SIZE(xin, 2)` columns.
+!   Only `ans(1:3, 1:SIZE(xin, 2))` is written.
 !
 ! Arguments:
 !   xin : REAL(DFP), rank(2) - points in the biunit hexahedron,
 !     `SHAPE(xin) = [3, N]`
-!   ans : REAL(DFP), rank(2) - output, `SHAPE(ans) = [3, N]`
+!   ans : REAL(DFP), rank(2) - output,
+!     `SIZE(ans, 1) >= 3`, `SIZE(ans, 2) >= N`
 !   nrow : INTEGER(I4B) - number of rows written, 3
 !   ncol : INTEGER(I4B) - number of columns written, `SIZE(xin, 2)`
 !
