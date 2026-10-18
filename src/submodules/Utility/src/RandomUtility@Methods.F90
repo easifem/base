@@ -316,7 +316,7 @@ ELSE IF (MOD(x_hi_index - x_lo_index + 1, 2) == 0) THEN
 
   m = (x_hi_index - x_lo_index + 1) / 2
 
-  r = UniformRandomValue(2 * m, seed)
+  r(1:2 * m) = UniformRandomValue(2 * m, seed)
 
   x(x_lo_index:x_hi_index - 1:2) = &
     SQRT(-2.0D+00 * LOG(r(1:2 * m - 1:2))) &
@@ -338,7 +338,7 @@ ELSE
 
   m = (x_hi_index - x_lo_index + 1) / 2 + 1
 
-  r = UniformRandomValue(2 * m, seed)
+  r(1:2 * m) = UniformRandomValue(2 * m, seed)
 
   x(x_lo_index:x_hi_index - 1:2) = &
     SQRT(-2.0D+00 * LOG(r(1:2 * m - 3:2))) &

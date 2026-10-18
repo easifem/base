@@ -892,10 +892,6 @@ END INTERFACE UniformUnitRandomValue
 !     odd, the second value of the last pair is discarded. Nothing is
 !     kept between calls.
 !   - If `n <= 0`, the result is an empty vector.
-!   - Use an odd `n`, or `n = 1`. For an even `n >= 2`, an internal
-!     array of size `n + 1` is assigned a vector of size `n`. This
-!     works in a release build but stops with a bounds error when
-!     bounds checking is enabled.
 !   - For `n = 1`, both uniform values are the same number, so the
 !     result is not a true normal sample.
 !
@@ -921,7 +917,7 @@ END INTERFACE UniformUnitRandomValue
 ! USE Test_Method, ONLY: OK
 ! IMPLICIT NONE
 !
-! ! n is odd, see the docs of NormalRandomValue
+! ! odd n: the second value of the last pair is discarded
 ! INTEGER(I4B), PARAMETER :: n = 10001
 ! REAL(DFP) :: x(n), y(n), mu, sd
 !

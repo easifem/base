@@ -9,7 +9,7 @@ USE RandomUtility, ONLY: NormalRandomValue
 USE Test_Method, ONLY: OK
 IMPLICIT NONE
 
-! n is odd, see the docs of NormalRandomValue
+! odd n: the second value of the last pair is discarded
 INTEGER(I4B), PARAMETER :: n = 10001
 REAL(DFP) :: x(n), y(n), mu, sd
 
