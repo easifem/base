@@ -67,21 +67,18 @@ END PROCEDURE obj_RandomValue2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE obj_RandomValue3
-REAL(DFP) :: xr, a, diff, val(2)
+REAL(DFP) :: a
+INTEGER(I4B) :: lo, hi
 
-val(1) = from
-val(2) = to
-diff = ABS(DBLE(from) - DBLE(to))
+lo = MIN(from, to)
+hi = MAX(from, to)
 
+! each of the hi - lo + 1 integers gets an interval of the same
+! length in [0, 1); the difference is computed in REAL(DFP) so the
+! full INTEGER(I4B) range does not overflow
 CALL RANDOM_NUMBER(a)
-xr = a * diff + MINVAL(val)
-ans = NINT(xr)
-IF (ans == from - 1) THEN
-  ans = from
-END IF
-IF (ans == to + 1) THEN
-  ans = to
-END IF
+ans = lo + FLOOR(a * (REAL(hi, DFP) - REAL(lo, DFP) + 1.0_DFP))
+IF (ans .GT. hi) ans = hi
 END PROCEDURE obj_RandomValue3
 
 !----------------------------------------------------------------------------

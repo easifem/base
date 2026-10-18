@@ -225,14 +225,10 @@ END INTERFACE RandomValue
 !   It calls the intrinsic `RANDOM_NUMBER`, so the result changes from
 !   call to call.
 !
-!   - A uniform real number in `[MIN(from, to), MAX(from, to))` is
-!     rounded to the nearest integer with `NINT`.
-!   - The values are not equally likely: the two end points are
-!     selected half as often as the inner values.
+!   - All `MAX(from, to) - MIN(from, to) + 1` integers are equally
+!     likely, including both end points.
+!   - The order of `from` and `to` does not matter.
 !   - If `from = to`, the result is `from`.
-!   - If `from > to`, the value `from - 1` is replaced by `from`, so
-!     some values are never returned. For example,
-!     `RandomValue(3, 1)` returns only 1 or 3.
 !
 ! Arguments:
 !   from : INTEGER(I4B) - one end of the interval
@@ -242,8 +238,9 @@ END INTERFACE RandomValue
 !   ans : INTEGER(I4B) - random integer between `from` and `to`
 !
 ! Formula:
-!   $$\mathrm{ans} = \mathrm{NINT}\left(\min(\mathrm{from}, \mathrm{to})
-!     + |\mathrm{to} - \mathrm{from}|\, u\right), \quad u \in [0, 1)$$
+!   $$\mathrm{ans} = l + \left\lfloor (h - l + 1)\, u \right\rfloor,
+!     \quad l = \min(\mathrm{from}, \mathrm{to}),\;
+!     h = \max(\mathrm{from}, \mathrm{to}),\; u \in [0, 1)$$
 !
 ! Examples
 !
@@ -308,8 +305,7 @@ END INTERFACE RandomValue
 !   integer `RandomValue(from, to)` and returns `val(p)`. It calls the
 !   intrinsic `RANDOM_NUMBER`, so the result changes from call to call.
 !
-!   - The first and the last entries are selected half as often as
-!     the other entries (see the integer `RandomValue`).
+!   - All entries are equally likely.
 !   - `val` should not be empty. This is not checked.
 !
 ! Arguments:
@@ -451,8 +447,7 @@ END INTERFACE RandomValue
 !   integer `RandomValue(from, to)` and returns `val(p)`. It calls the
 !   intrinsic `RANDOM_NUMBER`, so the result changes from call to call.
 !
-!   - The first and the last entries are selected half as often as
-!     the other entries (see the integer `RandomValue`).
+!   - All entries are equally likely.
 !   - `val` should not be empty. This is not checked.
 !
 ! Arguments:
