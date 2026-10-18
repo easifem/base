@@ -963,7 +963,10 @@ END INTERFACE Swap_
 !     of `b`.
 !   - Repeated indices are not checked. They give a result with the
 !     wrong values, so `(i1, i2, i3)` should be a permutation of
-!     `(1, 2, 3)`.
+!     `(1, 2, 3)`. For example, `(1, 1, 2)` gives `a` the shape
+!     `(s(1), s(1), s(2))` and writes `a(i, i, j) = b(i, j, k)`:
+!     every `k` writes the same entry, and entries with unequal
+!     first two indices are not set.
 !
 !   It is available for `REAL32` and `REAL64`. Use `Swap_` if `a` is
 !   already allocated.
@@ -1202,7 +1205,8 @@ END INTERFACE Swap_
 !     not changed.
 !   - Unlike rank 2 and 3, the indices are not checked at all, so
 !     `(i1, i2, i3, i4)` must be a permutation of `(1, 2, 3, 4)`.
-!     An index outside `1..4` gives an out-of-bounds access.
+!     An index outside `1..4` gives an out-of-bounds access, and a
+!     repeated index gives wrong values, as described for rank 3.
 !
 !   It is available for `REAL32` and `REAL64`. Use `Swap_` if `a` is
 !   already allocated.
@@ -1330,18 +1334,15 @@ END INTERFACE Swap
 !   Only the leading block `a(1:s(i1), ..., 1:s(i4))` is written,
 !   where `s = SHAPE(b)`; the other entries of `a` are not changed.
 !
-!   - Unlike the rank-2 and rank-3 versions of `Swap_`, here `a` is
-!     declared `ALLOCATABLE`. The actual argument must therefore be
-!     an allocatable array, and it must be allocated before the call.
 !   - `a` must be large enough: `SIZE(a, k) >= s(ik)`.
 !   - `(i1, i2, i3, i4)` must be a permutation of `(1, 2, 3, 4)`.
-!     Nothing is checked.
+!     Nothing is checked, so other values give a wrong result or an
+!     out-of-bounds access.
 !
 !   It is available for `REAL32` and `REAL64`.
 !
 ! Arguments:
-!   a : REAL, rank(4), ALLOCATABLE, INTENT(INOUT) - the result,
-!     allocated by the caller
+!   a : REAL, rank(4), INTENT(INOUT) - the result
 !   b : REAL, rank(4), INTENT(IN) - the input array
 !   i1, i2, i3, i4 : INTEGER(I4B), INTENT(IN) - dimensions of `b` for
 !     dimensions 1, 2, 3 and 4 of `a`
@@ -1364,8 +1365,8 @@ END INTERFACE Swap
 ! USE Test_Method, ONLY: OK
 ! IMPLICIT NONE
 !
-! REAL(DFP) :: b(2, 3, 4, 5)
-! REAL(DFP), ALLOCATABLE :: a(:, :, :, :), c(:, :, :, :)
+! REAL(DFP) :: b(2, 3, 4, 5), a(5, 4, 3, 2)
+! REAL(DFP), ALLOCATABLE :: c(:, :, :, :)
 ! INTEGER(I4B) :: i, j, k, l
 ! REAL(DFP), PARAMETER :: tol = 1.0E-12_DFP
 !
@@ -1381,7 +1382,7 @@ END INTERFACE Swap
 ! END DO
 !
 ! ! (4, 3, 2, 1): a(l, k, j, i) = b(i, j, k, l)
-! ALLOCATE (a(5, 4, 3, 2))
+! ! a does not have to be allocatable
 ! CALL Swap_(a, b, 4, 3, 2, 1)
 ! CALL OK(ALL(SHAPE(a) .EQ. [5, 4, 3, 2]), "shape is not changed")
 ! CALL OK(ABS(a(5, 4, 3, 2) - 2345.0_DFP) .LT. tol, "a(5,4,3,2)")
@@ -1396,7 +1397,7 @@ END INTERFACE Swap
 
 INTERFACE Swap_
   MODULE PURE SUBROUTINE Swap_index_5(a, b, i1, i2, i3, i4)
-    REAL(REAL32), ALLOCATABLE, INTENT(INOUT) :: a(:, :, :, :)
+    REAL(REAL32), INTENT(INOUT) :: a(:, :, :, :)
     !! the returned array
     REAL(REAL32), INTENT(IN) :: b(:, :, :, :)
     !! input array, it will be untouched
@@ -1415,7 +1416,7 @@ INTERFACE Swap_
   END SUBROUTINE Swap_index_5
 
   MODULE PURE SUBROUTINE Swap_index_6(a, b, i1, i2, i3, i4)
-    REAL(REAL64), ALLOCATABLE, INTENT(INOUT) :: a(:, :, :, :)
+    REAL(REAL64), INTENT(INOUT) :: a(:, :, :, :)
     !! the returned array
     REAL(REAL64), INTENT(IN) :: b(:, :, :, :)
     !! input array, it will be untouched

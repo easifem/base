@@ -14,8 +14,8 @@ USE SwapUtility, ONLY: Swap_
 USE Test_Method, ONLY: OK
 IMPLICIT NONE
 
-REAL(DFP) :: b(2, 3, 4, 5)
-REAL(DFP), ALLOCATABLE :: a(:, :, :, :), c(:, :, :, :)
+REAL(DFP) :: b(2, 3, 4, 5), a(5, 4, 3, 2)
+REAL(DFP), ALLOCATABLE :: c(:, :, :, :)
 INTEGER(I4B) :: i, j, k, l
 REAL(DFP), PARAMETER :: tol = 1.0E-12_DFP
 
@@ -31,7 +31,7 @@ DO l = 1, 5
 END DO
 
 ! (4, 3, 2, 1): a(l, k, j, i) = b(i, j, k, l)
-ALLOCATE (a(5, 4, 3, 2))
+! a does not have to be allocatable
 CALL Swap_(a, b, 4, 3, 2, 1)
 CALL OK(ALL(SHAPE(a) .EQ. [5, 4, 3, 2]), "shape is not changed")
 CALL OK(ABS(a(5, 4, 3, 2) - 2345.0_DFP) .LT. tol, "a(5,4,3,2)")
