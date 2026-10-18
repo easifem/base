@@ -847,7 +847,10 @@ END INTERFACE OuterProd_
 !
 !   - With `sym = .FALSE.` the result is the same as `OuterProd(a, b)`.
 !   - With `sym = .TRUE.`, `SIZE(a)` must be equal to `SIZE(b)`. This is not
-!     checked.
+!     checked. If the sizes differ, the two terms have the shapes
+!     `[SIZE(a), SIZE(b)]` and `[SIZE(b), SIZE(a)]` and cannot be added;
+!     with bounds checking the program stops, otherwise the result is
+!     undefined.
 !
 ! Arguments:
 !   a : REAL(DFP), rank(1) - first vector
@@ -923,7 +926,8 @@ END INTERFACE OuterProd
 !   - Only `ans(1:nrow, 1:ncol)` is written. `ans` must be at least that
 !     large. This is not checked.
 !   - With `sym = .TRUE.`, `SIZE(a)` must be equal to `SIZE(b)`. This is not
-!     checked.
+!     checked. If the sizes differ, `b(ii)` or `a(jj)` is read out of
+!     bounds.
 !
 ! Arguments:
 !   a : REAL(DFP), rank(1) - first vector
