@@ -15,8 +15,36 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
+!> author: Vikas Sharma, Ph. D.
+! date: 2021-09-05
+! summary: Routines for character strings and file paths.
+!
+! Description:
+!   This module contains routines that work on `CHARACTER(*)` strings.
+!
+!   - Case conversion: `UpperCase`, `ToUpperCase`, `LowerCase`,
+!     `ToLowerCase`. Only the ASCII letters `a-z` and `A-Z` change.
+!   - Tests: `IsWhiteChar`, `IsBlank`, `IsPresent`.
+!   - Search and replace: `NumMatchStr`, `StrFind`, `FindReplace`.
+!   - Fields: `NumStrings`, `GetField` (blank separated words).
+!   - File names: `GetPath`, `GetFileName`, `GetFileNameExt`,
+!     `GetFileParts`, `GetExtension`, `SlashRep`.
+!   - Paths: `PathJoin`, `PathBase`, `PathDir`.
+!   - `DEALLOCATE` for an allocatable vector of `String`.
+!
+!   The file separator is `CHAR_SLASH` from `GlobalData`. It is `/`
+!   on macOS and Linux, and a backslash when `WIN32` is defined.
+!
+!   Unless stated otherwise, the routines work on the full length of
+!   the actual argument, including its trailing blanks. Pass
+!   `TRIM(chars)` when the trailing blanks should be ignored.
+!
+!   Several routines are adopted from the `IO_Strings` module of
+!   Futility (https://github.com/CASL/Futility).
+
 MODULE StringUtility
-USE GlobalData, ONLY: I4B, LGT
+USE GlobalData, ONLY: I4B
+USE GlobalData, ONLY: LGT
 USE String_Class, ONLY: String
 
 IMPLICIT NONE
@@ -53,7 +81,47 @@ PUBLIC :: DEALLOCATE
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2025-12-24
-! summary: Deallocate a vector string
+! summary: Deallocate a vector of String.
+!
+! Description:
+!   Sets every entry of `obj` to an empty string and then deallocates
+!   `obj`. If `obj` is not allocated, nothing is done, so it is safe to
+!   call this routine more than once.
+!
+! Arguments:
+!   obj : TYPE(String), ALLOCATABLE, rank(1) - vector to deallocate
+!
+! Returns:
+!   obj is not allocated on return.
+!
+! Formula:
+!   $$\mathrm{ALLOCATED}(\mathrm{obj}) = \mathrm{.FALSE.}$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE String_Class, ONLY: String
+! USE StringUtility, ONLY: DEALLOCATE
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+!
+! TYPE(String), ALLOCATABLE :: obj(:)
+!
+! ALLOCATE (obj(3))
+! obj(1) = "a"
+! obj(2) = "bb"
+! obj(3) = "ccc"
+!
+! CALL DEALLOCATE(obj)
+! CALL OK(.NOT. ALLOCATED(obj), "obj is deallocated")
+!
+! ! calling it again on an unallocated vector is safe
+! CALL DEALLOCATE(obj)
+! CALL OK(.NOT. ALLOCATED(obj), "unallocated obj is left alone")
+!
+! END PROGRAM main
+!```
 
 INTERFACE
   MODULE PURE SUBROUTINE StringVectorDeallocate(obj)
@@ -71,28 +139,60 @@ END INTERFACE DEALLOCATE
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2024-06-17
-! summary: Returns the base of the path
+! summary: Returns the last element of a path.
 !
-!# Introduction
+! Description:
+!   Returns the last element of `path`, like `path.Base` in Go.
 !
-! Base returns the last element of path.
-! Trailing slashes are removed before extracting the
-! last element.
-! If the path is empty, Base returns ".".
-! If the path consists entirely of slashes, Base returns "/".
+!   - Trailing blanks of `path` are ignored.
+!   - Trailing slashes are removed before the last element is found.
+!   - An empty (blank) path gives `"."`.
+!   - A path made only of slashes gives `"/"`.
+!   - A path without a slash is returned unchanged.
 !
-! func main() {
-!         fmt.Println(path.Base("/a/b"))
-!         fmt.Println(path.Base("/"))
-!         fmt.Println(path.Base(""))
-! }
-! b
-! /
-! .
+!   The separator is `CHAR_SLASH` (`/` on macOS and Linux).
+!
+! Arguments:
+!   path : CHARACTER(*) - the path
+!
+! Returns:
+!   ans : CHARACTER(:), ALLOCATABLE - the last element of `path`
+!
+! Formula:
+!   For `path = "d1/d2/name"` (and `"d1/d2/name/"`):
+!   $$\mathrm{ans} = \mathrm{name}$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE StringUtility, ONLY: PathBase
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+!
+! CHARACTER(LEN=100) :: astr
+!
+! astr = " "
+! CALL OK(PathBase(astr) .EQ. ".", "empty path gives .")
+!
+! CALL OK(PathBase("/") .EQ. "/", "root")
+! CALL OK(PathBase("////") .EQ. "/", "only slashes")
+! CALL OK(PathBase("/a/b/c") .EQ. "c", "/a/b/c")
+! CALL OK(PathBase("/a/b/c/") .EQ. "c", "trailing slash is removed")
+! CALL OK(PathBase("a/b") .EQ. "b", "relative path")
+! CALL OK(PathBase("abc") .EQ. "abc", "no slash")
+! CALL OK(PathBase("x") .EQ. "x", "single character")
+!
+! ! trailing blanks of the argument are ignored
+! astr = "/home/user/file.txt"
+! CALL OK(PathBase(astr) .EQ. "file.txt", "padded argument")
+!
+! END PROGRAM main
+!```
 
 INTERFACE
   MODULE PURE FUNCTION PathBase(path) RESULT(ans)
-    CHARACTER(*), INTENT(in) :: path
+    CHARACTER(*), INTENT(IN) :: path
     CHARACTER(LEN=:), ALLOCATABLE :: ans
   END FUNCTION PathBase
 END INTERFACE
@@ -103,12 +203,59 @@ END INTERFACE
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2024-06-17
-! summary: Join two paths
+! summary: Join two paths with the file separator.
+!
+! Description:
+!   Returns `TRIM(path1)`, the separator `CHAR_SLASH` and `TRIM(path2)`.
+!
+!   - Trailing blanks of both arguments are removed.
+!   - The separator is always added. Existing slashes are not removed,
+!     so `PathJoin("a/", "b")` gives `"a//b"`.
+!   - An empty `path1` gives a path that starts with the separator.
+!
+! Arguments:
+!   path1 : CHARACTER(*) - the first path
+!   path2 : CHARACTER(*) - the second path
+!
+! Returns:
+!   ans : CHARACTER(:), ALLOCATABLE - the joined path
+!
+! Formula:
+!   $$\mathrm{ans} = \mathrm{TRIM}(\mathrm{path1}) \,//\, \mathrm{/}
+!     \,//\, \mathrm{TRIM}(\mathrm{path2})$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: I4B
+! USE StringUtility, ONLY: PathJoin
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+!
+! CHARACTER(:), ALLOCATABLE :: ans
+!
+! ans = PathJoin("a", "b")
+! CALL OK(ans .EQ. "a/b", "a + b")
+! CALL OK(LEN(ans) .EQ. 3_I4B, "length of a/b")
+!
+! CALL OK(PathJoin("/usr/local", "bin") .EQ. "/usr/local/bin", &
+!         "absolute path")
+!
+! ! trailing blanks of both arguments are removed
+! CALL OK(PathJoin("a  ", "b  ") .EQ. "a/b", "trailing blanks")
+!
+! ! a separator is always added, even if one is already there
+! CALL OK(PathJoin("a/", "b") .EQ. "a//b", "no slash cleaning")
+! CALL OK(PathJoin("", "b") .EQ. "/b", "empty first path")
+!
+! END PROGRAM main
+!```
 
 INTERFACE PathJoin
   MODULE PURE FUNCTION PathJoin1(path1, path2) RESULT(ans)
-    CHARACTER(*), INTENT(in) :: path1
-    CHARACTER(*), INTENT(in) :: path2
+    CHARACTER(*), INTENT(IN) :: path1
+    CHARACTER(*), INTENT(IN) :: path2
     CHARACTER(LEN=:), ALLOCATABLE :: ans
   END FUNCTION PathJoin1
 END INTERFACE PathJoin
@@ -119,7 +266,57 @@ END INTERFACE PathJoin
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2024-06-17
-! summary: Join two paths
+! summary: Join a vector of String with the file separator.
+!
+! Description:
+!   Returns the parts in `paths`, each one preceded by the separator
+!   `CHAR_SLASH`.
+!
+!   - The result always starts with the separator, so `["a", "b"]`
+!     gives `"/a/b"`. This differs from `PathJoin(path1, path2)`, which
+!     gives `"a/b"`.
+!   - The parts are not trimmed or cleaned.
+!   - A vector of size 0 gives an empty string.
+!
+! Arguments:
+!   paths : TYPE(String), rank(1) - the parts of the path
+!
+! Returns:
+!   ans : CHARACTER(:), ALLOCATABLE - the joined path
+!
+! Formula:
+!   $$\mathrm{ans} = \mathrm{/}\,p_1\,\mathrm{/}\,p_2 \cdots
+!     \mathrm{/}\,p_n, \quad n = \mathrm{SIZE}(\mathrm{paths})$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: I4B
+! USE String_Class, ONLY: String
+! USE StringUtility, ONLY: PathJoin
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+!
+! TYPE(String) :: paths(3), one(1), empty(0)
+! CHARACTER(:), ALLOCATABLE :: ans
+!
+! paths(1) = "usr"
+! paths(2) = "local"
+! paths(3) = "bin"
+!
+! ! every part is preceded by a separator
+! ans = PathJoin(paths)
+! CALL OK(ans .EQ. "/usr/local/bin", "three parts")
+!
+! one(1) = "a"
+! CALL OK(PathJoin(one) .EQ. "/a", "one part")
+!
+! ans = PathJoin(empty)
+! CALL OK(LEN(ans) .EQ. 0_I4B, "no parts gives an empty string")
+!
+! END PROGRAM main
+!```
 
 INTERFACE PathJoin
   MODULE PURE FUNCTION PathJoin2(paths) RESULT(ans)
@@ -129,23 +326,61 @@ INTERFACE PathJoin
 END INTERFACE PathJoin
 
 !----------------------------------------------------------------------------
-!                                                GetPath@StringMethods
+!                                                                   PathDir
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2024-06-17
-! summary: Returns the parent directory
+! summary: Returns all but the last element of a path.
 !
-!# Introduction
+! Description:
+!   Returns the directory part of `path`, like `path.Dir` in Go.
 !
-! Dir returns all but the last element of path,
-! typically the path's directory.
-! After dropping the final element using Split,
-! the path is Cleaned and trailing slashes are removed.
-! If the path is empty, Dir returns ".".
-! If the path consists entirely of slashes followed by non-slash bytes,
-! Dir returns a single slash.
-! In any other case, the returned path does not end in a slash.
+!   - Trailing blanks of `path` are ignored.
+!   - Trailing slashes are removed first, then the last element is
+!     dropped, then the trailing slashes of the rest are removed.
+!   - An empty (blank) path, or a path without a slash, gives `"."`.
+!   - A path made only of slashes, or of the form `"/name"`, gives
+!     `"/"`.
+!   - In any other case, the result does not end with a slash.
+!
+!   The separator is `CHAR_SLASH` (`/` on macOS and Linux).
+!
+! Arguments:
+!   path : CHARACTER(*) - the path
+!
+! Returns:
+!   ans : CHARACTER(:), ALLOCATABLE - the directory part of `path`
+!
+! Formula:
+!   For `path = "d1/d2/name"` (and `"d1/d2/name/"`):
+!   $$\mathrm{ans} = \mathrm{d1/d2}$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE StringUtility, ONLY: PathDir
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+!
+! CHARACTER(LEN=100) :: astr
+!
+! astr = " "
+! CALL OK(PathDir(astr) .EQ. ".", "empty path gives .")
+!
+! CALL OK(PathDir("/") .EQ. "/", "root")
+! CALL OK(PathDir("////") .EQ. "/", "only slashes")
+! CALL OK(PathDir("/a/b/c") .EQ. "/a/b", "/a/b/c")
+! CALL OK(PathDir("/a/b/c/") .EQ. "/a/b", "trailing slash")
+! CALL OK(PathDir("/abc") .EQ. "/", "file in root")
+! CALL OK(PathDir("a/b") .EQ. "a", "relative path")
+! CALL OK(PathDir("a//b") .EQ. "a", "repeated slashes")
+! CALL OK(PathDir("abc") .EQ. ".", "no slash gives .")
+! CALL OK(PathDir("x") .EQ. ".", "single character gives .")
+!
+! END PROGRAM main
+!```
 
 INTERFACE
   MODULE PURE FUNCTION PathDir(path) RESULT(ans)
@@ -155,8 +390,59 @@ INTERFACE
 END INTERFACE
 
 !----------------------------------------------------------------------------
-!                                                GetPath@StringMethods
+!                                                                   GetPath
 !----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2021-11-24
+! summary: Returns the directory part of a file name.
+!
+! Description:
+!   Returns the part of `chars` up to and including the last
+!   separator. Backslashes are first replaced by `CHAR_SLASH` (see
+!   `SlashRep`).
+!
+!   - If `chars` has no separator, `path` is blank.
+!   - Unlike `PathDir`, the result keeps the trailing slash.
+!   - `path` is blank padded. If it is shorter than the result, the
+!     result is truncated.
+!
+! Arguments:
+!   chars : CHARACTER(*) - the file name
+!   path : CHARACTER(*), INTENT(OUT) - the directory part
+!
+! Returns:
+!   path : directory part of `chars`, ending with the separator
+!
+! Formula:
+!   $$\mathrm{path} = \mathrm{chars}(1:k), \quad
+!     k = \text{position of the last separator}$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: I4B
+! USE StringUtility, ONLY: GetPath
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+!
+! CHARACTER(LEN=100) :: path
+!
+! CALL GetPath("/dir1/dir2/HelloWorld.txt", path)
+! CALL OK(TRIM(path) .EQ. "/dir1/dir2/", "absolute file name")
+!
+! CALL GetPath("./HelloWorld.txt", path)
+! CALL OK(TRIM(path) .EQ. "./", "relative file name")
+!
+! CALL GetPath("dir/", path)
+! CALL OK(TRIM(path) .EQ. "dir/", "path ending with slash")
+!
+! CALL GetPath("HelloWorld.txt", path)
+! CALL OK(LEN_TRIM(path) .EQ. 0_I4B, "no directory gives blank")
+!
+! END PROGRAM main
+!```
 
 INTERFACE GetPath
   MODULE PURE SUBROUTINE GetPath_chars(chars, path)
@@ -166,12 +452,56 @@ INTERFACE GetPath
 END INTERFACE GetPath
 
 !----------------------------------------------------------------------------
-!                                                    UpperCase@StringMethods
+!                                                                 UpperCase
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date: 5 Sept 2021
-! summary:         Returns the upperCase version of chars
+! date: 2021-09-05
+! summary: Returns an upper case copy of a string.
+!
+! Description:
+!   Returns a copy of `chars` in which the letters `a-z` are replaced
+!   by `A-Z`. All other characters are unchanged, and the result has
+!   the same length as `chars`. See `ToUpperCase` for the in-place
+!   version.
+!
+! Arguments:
+!   chars : CHARACTER(*) - input string
+!
+! Returns:
+!   ans : CHARACTER(:), ALLOCATABLE - upper case copy,
+!     `LEN(ans) = LEN(chars)`
+!
+! Formula:
+!   $$\mathrm{ans}_i = \begin{cases}
+!     \mathrm{chars}_i - 32, & \mathrm{chars}_i \in [a, z] \\
+!     \mathrm{chars}_i, & \text{otherwise}
+!   \end{cases}$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: I4B
+! USE StringUtility, ONLY: UpperCase
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+!
+! CHARACTER(LEN=*), PARAMETER :: astr = "Hello World 123!"
+! CHARACTER(:), ALLOCATABLE :: ans
+!
+! ans = UpperCase(astr)
+! CALL OK(ans .EQ. "HELLO WORLD 123!", "mixed case")
+! CALL OK(LEN(ans) .EQ. LEN(astr), "length is kept")
+!
+! CALL OK(UpperCase("abc_xyz") .EQ. "ABC_XYZ", "only a-z change")
+! CALL OK(UpperCase("ABC") .EQ. "ABC", "already upper case")
+!
+! ans = UpperCase("")
+! CALL OK(LEN(ans) .EQ. 0_I4B, "empty string")
+!
+! END PROGRAM main
+!```
 
 INTERFACE UpperCase
   MODULE PURE FUNCTION UpperCase_char(chars) RESULT(Ans)
@@ -181,12 +511,52 @@ INTERFACE UpperCase
 END INTERFACE UpperCase
 
 !----------------------------------------------------------------------------
-!                                                  ToUpperCase@StringMethods
+!                                                               ToUpperCase
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date: 5 Sept 2021
-! summary:         Returns the upperCase version of chars
+! date: 2021-09-05
+! summary: Converts a string to upper case in place.
+!
+! Description:
+!   Replaces the letters `a-z` in `chars` by `A-Z`. All other
+!   characters are unchanged. See `UpperCase` for a version that
+!   returns a copy.
+!
+! Arguments:
+!   chars : CHARACTER(*), INTENT(INOUT) - string to convert
+!
+! Returns:
+!   chars : the upper case string
+!
+! Formula:
+!   $$\mathrm{chars}_i \leftarrow \mathrm{chars}_i - 32
+!     \quad \text{if } \mathrm{chars}_i \in [a, z]$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE StringUtility, ONLY: ToUpperCase
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+!
+! CHARACTER(LEN=20) :: astr
+!
+! astr = "Hello, World"
+! CALL ToUpperCase(astr)
+! CALL OK(astr .EQ. "HELLO, WORLD", "mixed case")
+!
+! astr = "a1_b2"
+! CALL ToUpperCase(astr)
+! CALL OK(astr .EQ. "A1_B2", "digits and _ are unchanged")
+!
+! astr = "ABC"
+! CALL ToUpperCase(astr)
+! CALL OK(astr .EQ. "ABC", "already upper case")
+!
+! END PROGRAM main
+!```
 
 INTERFACE ToUpperCase
   MODULE PURE SUBROUTINE ToUpperCase_Char(chars)
@@ -195,12 +565,56 @@ INTERFACE ToUpperCase
 END INTERFACE ToUpperCase
 
 !----------------------------------------------------------------------------
-!                                                    LowerCase@StringMethods
+!                                                                 LowerCase
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date: 5 Sept 2021
-! summary:         Returns the LowerCase version of chars
+! date: 2021-09-05
+! summary: Returns a lower case copy of a string.
+!
+! Description:
+!   Returns a copy of `chars` in which the letters `A-Z` are replaced
+!   by `a-z`. All other characters are unchanged, and the result has
+!   the same length as `chars`. See `ToLowerCase` for the in-place
+!   version.
+!
+! Arguments:
+!   chars : CHARACTER(*) - input string
+!
+! Returns:
+!   ans : CHARACTER(:), ALLOCATABLE - lower case copy,
+!     `LEN(ans) = LEN(chars)`
+!
+! Formula:
+!   $$\mathrm{ans}_i = \begin{cases}
+!     \mathrm{chars}_i + 32, & \mathrm{chars}_i \in [A, Z] \\
+!     \mathrm{chars}_i, & \text{otherwise}
+!   \end{cases}$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: I4B
+! USE StringUtility, ONLY: LowerCase
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+!
+! CHARACTER(LEN=*), PARAMETER :: astr = "Hello World 123!"
+! CHARACTER(:), ALLOCATABLE :: ans
+!
+! ans = LowerCase(astr)
+! CALL OK(ans .EQ. "hello world 123!", "mixed case")
+! CALL OK(LEN(ans) .EQ. LEN(astr), "length is kept")
+!
+! CALL OK(LowerCase("ABC_XYZ") .EQ. "abc_xyz", "only A-Z change")
+! CALL OK(LowerCase("abc") .EQ. "abc", "already lower case")
+!
+! ans = LowerCase("")
+! CALL OK(LEN(ans) .EQ. 0_I4B, "empty string")
+!
+! END PROGRAM main
+!```
 
 INTERFACE LowerCase
   MODULE PURE FUNCTION LowerCase_char(chars) RESULT(Ans)
@@ -210,12 +624,52 @@ INTERFACE LowerCase
 END INTERFACE LowerCase
 
 !----------------------------------------------------------------------------
-!                                                  ToLowerCase@StringMethods
+!                                                               ToLowerCase
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date: 5 Sept 2021
-! summary:         Returns the LowerCase version of chars
+! date: 2021-09-05
+! summary: Converts a string to lower case in place.
+!
+! Description:
+!   Replaces the letters `A-Z` in `chars` by `a-z`. All other
+!   characters are unchanged. See `LowerCase` for a version that
+!   returns a copy.
+!
+! Arguments:
+!   chars : CHARACTER(*), INTENT(INOUT) - string to convert
+!
+! Returns:
+!   chars : the lower case string
+!
+! Formula:
+!   $$\mathrm{chars}_i \leftarrow \mathrm{chars}_i + 32
+!     \quad \text{if } \mathrm{chars}_i \in [A, Z]$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE StringUtility, ONLY: ToLowerCase
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+!
+! CHARACTER(LEN=20) :: astr
+!
+! astr = "Hello, World"
+! CALL ToLowerCase(astr)
+! CALL OK(astr .EQ. "hello, world", "mixed case")
+!
+! astr = "A1_B2"
+! CALL ToLowerCase(astr)
+! CALL OK(astr .EQ. "a1_b2", "digits and _ are unchanged")
+!
+! astr = "abc"
+! CALL ToLowerCase(astr)
+! CALL OK(astr .EQ. "abc", "already lower case")
+!
+! END PROGRAM main
+!```
 
 INTERFACE ToLowerCase
   MODULE PURE SUBROUTINE ToLowerCase_Char(chars)
@@ -224,12 +678,45 @@ INTERFACE ToLowerCase
 END INTERFACE ToLowerCase
 
 !----------------------------------------------------------------------------
-!                                                  IsWhiteChar@StringMethods
+!                                                               IsWhiteChar
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date: 5 Sept 2021
-! summary:         Returns true if the char is a space(32) or a tab(9).
+! date: 2021-09-05
+! summary: Returns true if a character is a blank or a tab.
+!
+! Description:
+!   Returns `.TRUE.` if `char` is a blank (ASCII 32) or a horizontal tab
+!   (ASCII 9). Other control characters, such as a new line, are not
+!   white characters.
+!
+! Arguments:
+!   char : CHARACTER(1) - the character
+!
+! Returns:
+!   ans : LOGICAL(LGT) - `.TRUE.` for a blank or a tab
+!
+! Formula:
+!   $$\mathrm{ans} = (\mathrm{IACHAR}(c) = 32) \lor
+!     (\mathrm{IACHAR}(c) = 9)$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE StringUtility, ONLY: IsWhiteChar
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+!
+! CALL OK(IsWhiteChar(" "), "blank")
+! CALL OK(IsWhiteChar(ACHAR(9)), "tab")
+! CALL OK(.NOT. IsWhiteChar("a"), "letter")
+! CALL OK(.NOT. IsWhiteChar("_"), "underscore")
+! CALL OK(.NOT. IsWhiteChar(ACHAR(10)), "new line is not white")
+! CALL OK(.NOT. IsWhiteChar(ACHAR(13)), "carriage return is not white")
+!
+! END PROGRAM main
+!```
 
 INTERFACE IsWhiteChar
   MODULE PURE FUNCTION IsWhiteChar_char(char) RESULT(Ans)
@@ -239,12 +726,51 @@ INTERFACE IsWhiteChar
 END INTERFACE IsWhiteChar
 
 !----------------------------------------------------------------------------
-!                                                  IsBlank@StringMethods
+!                                                                   IsBlank
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date: 5 Sept 2021
-! summary:         Returns true of the entire string is blank
+! date: 2021-09-05
+! summary: Returns true if a string has only blanks and tabs.
+!
+! Description:
+!   Returns `.TRUE.` if every character of `chars` is a white character
+!   (see `IsWhiteChar`). An empty string is blank.
+!
+! Arguments:
+!   chars : CHARACTER(*) - the string
+!
+! Returns:
+!   ans : LOGICAL(LGT) - `.TRUE.` if `chars` is blank
+!
+! Formula:
+!   $$\mathrm{ans} = \bigwedge_{i=1}^{\mathrm{LEN}(\mathrm{chars})}
+!     \mathrm{IsWhiteChar}(\mathrm{chars}_i)$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE StringUtility, ONLY: IsBlank
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+!
+! CHARACTER(LEN=10) :: astr
+!
+! CALL OK(IsBlank("   "), "blanks")
+! CALL OK(IsBlank(""), "empty string")
+! CALL OK(IsBlank(" "//ACHAR(9)//" "), "blanks and a tab")
+! CALL OK(.NOT. IsBlank(" a "), "a letter")
+! CALL OK(.NOT. IsBlank(ACHAR(10)), "new line")
+!
+! astr = " "
+! CALL OK(IsBlank(astr), "blank variable")
+!
+! astr = "x"
+! CALL OK(.NOT. IsBlank(astr), "padded variable with a letter")
+!
+! END PROGRAM main
+!```
 
 INTERFACE IsBlank
   MODULE PURE FUNCTION IsBlank_chars(chars) RESULT(Ans)
@@ -254,21 +780,79 @@ INTERFACE IsBlank
 END INTERFACE IsBlank
 
 !----------------------------------------------------------------------------
-!                                                    numString@StringMethods
+!                                                                NumStrings
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date: 5 Sept 2021
-! summary: Returns number of substrings contained in input string 'chars'
-! delimited by white space.
+! date: 2021-09-05
+! summary: Returns the number of blank separated words in a string.
 !
-!# Introduction
-! Returns number of substrings contained in input string 'chars' delimited by
-! white space.
-! This routien has been adopted from
-! [https://github.com/CASL/Futility/blob/master/src/IO_Strings.F90]
-! (https://github.com/CASL/Futility/blob/master/src/IO_Strings.F90)
+! Description:
+!   Returns the number of substrings of `chars` that are separated by
+!   blanks or tabs. Trailing blanks are ignored. This routine has been
+!   adopted from `IO_Strings` of Futility
+!   (https://github.com/CASL/Futility/blob/master/src/IO_Strings.F90).
 !
+!   - A comma is not a separator, so `"a, b"` has two words.
+!   - A quoted substring (`'...'` or `"..."`) counts as one word,
+!     even if it has blanks.
+!   - A list-directed repeat count `r*value` counts as `r` words, for
+!     example `"a 2*b c"` has 4 words. A repeat count at the very start
+!     of the string is not expanded.
+!   - If the number of `'` quotes is odd, the result is -1. If the
+!     number of `"` quotes is odd, the result is -2.
+!
+! Arguments:
+!   chars : CHARACTER(*) - the string
+!
+! Returns:
+!   ans : INTEGER(I4B) - number of words, or -1 / -2 for an
+!     unmatched quote
+!
+! Formula:
+!   For `chars = "w1 w2 ... wn"`: $$\mathrm{ans} = n$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: I4B
+! USE StringUtility, ONLY: NumStrings
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+!
+! CHARACTER(LEN=40) :: astr
+!
+! astr = "Hello world how are you!"
+! CALL OK(NumStrings(astr) .EQ. 5_I4B, "five words")
+!
+! astr = "Hello world, how are you"
+! CALL OK(NumStrings(astr) .EQ. 5_I4B, "a comma is part of a word")
+!
+! astr = "  a  b   c  "
+! CALL OK(NumStrings(astr) .EQ. 3_I4B, "many blanks")
+!
+! astr = "a"//ACHAR(9)//"b"
+! CALL OK(NumStrings(astr) .EQ. 2_I4B, "tab is a separator")
+!
+! astr = "'a b' c"
+! CALL OK(NumStrings(astr) .EQ. 2_I4B, "quoted words count once")
+!
+! astr = "a 2*b c"
+! CALL OK(NumStrings(astr) .EQ. 4_I4B, "repeat count 2*b")
+!
+! astr = " "
+! CALL OK(NumStrings(astr) .EQ. 0_I4B, "blank string")
+!
+! ! an unmatched quote is an error
+! astr = "a 'b"
+! CALL OK(NumStrings(astr) .EQ. -1_I4B, "odd number of ' quotes")
+!
+! astr = 'a "b'
+! CALL OK(NumStrings(astr) .EQ. -2_I4B, 'odd number of " quotes')
+!
+! END PROGRAM main
+!```
 
 INTERFACE NumStrings
   MODULE PURE FUNCTION NumStrings_chars(chars) RESULT(Ans)
@@ -278,13 +862,61 @@ INTERFACE NumStrings
 END INTERFACE NumStrings
 
 !----------------------------------------------------------------------------
-!                                                   nmatchstr@StringMethods
+!                                                               NumMatchStr
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date: 5 sept 2021
-! summary: Returns the total number of times the substring pattern is
-! found in the main string
+! date: 2021-09-05
+! summary: Returns the number of times a pattern occurs in a string.
+!
+! Description:
+!   Counts every position `i` where `chars(i:i+LEN(pattern)-1)` equals
+!   `pattern`.
+!
+!   - Overlapping matches are counted, so `"aaaa"` has 3 matches of
+!     `"aa"`.
+!   - The trailing blanks of `chars` and `pattern` are part of the
+!     search. Use `TRIM` to ignore them.
+!   - The search is case sensitive.
+!   - An empty `pattern` matches at every position, so the result is
+!     `LEN(chars)`.
+!
+! Arguments:
+!   chars : CHARACTER(*) - the string to search
+!   pattern : CHARACTER(*) - the pattern to find
+!
+! Returns:
+!   ans : INTEGER(I4B) - number of matches
+!
+! Formula:
+!   $$\mathrm{ans} = \#\{\, i : \mathrm{chars}(i:i+m-1) =
+!     \mathrm{pattern} \,\}, \quad m = \mathrm{LEN}(\mathrm{pattern})$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: I4B
+! USE StringUtility, ONLY: NumMatchStr
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+!
+! CHARACTER(LEN=10) :: astr
+!
+! CALL OK(NumMatchStr("hello world", "o") .EQ. 2_I4B, "two matches")
+! CALL OK(NumMatchStr("hello world", "xyz") .EQ. 0_I4B, "no match")
+! CALL OK(NumMatchStr("ab", "abc") .EQ. 0_I4B, "pattern too long")
+!
+! ! overlapping matches are counted
+! CALL OK(NumMatchStr("aaaa", "aa") .EQ. 3_I4B, "overlapping matches")
+!
+! ! trailing blanks of the string are searched too
+! astr = "a b"
+! CALL OK(NumMatchStr(astr, " ") .EQ. 8_I4B, "padded string")
+! CALL OK(NumMatchStr(TRIM(astr), " ") .EQ. 1_I4B, "trimmed string")
+!
+! END PROGRAM main
+!```
 
 INTERFACE numMatchStr
   MODULE PURE FUNCTION numMatchStr_chars(chars, pattern) RESULT(Ans)
@@ -295,20 +927,57 @@ INTERFACE numMatchStr
 END INTERFACE numMatchStr
 
 !----------------------------------------------------------------------------
-!                                                  isPresent@StringMethods
+!                                                                 IsPresent
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date: 5 sept 2021
-! summary: Returns whether or not a substring pattern is found within string
+! date: 2021-09-05
+! summary: Returns true if a pattern is found in a string.
 !
-!# Introduction
-! Returns whether or not a substring pattern is found within string
+! Description:
+!   Returns `.TRUE.` if `pattern` is a substring of `chars`. The search
+!   is case sensitive. If `chars` or `pattern` is empty, the result is
+!   `.FALSE.`.
 !
 !@note
-! Does not handle trailing spaces that can be eliminated by TRIM() so
-! strings should be trimmed when passing into function.
+! Trailing blanks are part of both strings. Pass trimmed strings if
+! trailing blanks should be ignored.
 !@endnote
+!
+! Arguments:
+!   chars : CHARACTER(*) - the string to search
+!   pattern : CHARACTER(*) - the pattern to find
+!
+! Returns:
+!   ans : LOGICAL(LGT) - `.TRUE.` if `pattern` is found
+!
+! Formula:
+!   $$\mathrm{ans} = \mathrm{INDEX}(\mathrm{chars}, \mathrm{pattern})
+!     > 0$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE StringUtility, ONLY: IsPresent
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+!
+! CHARACTER(LEN=20) :: astr
+!
+! CALL OK(IsPresent("Hello world", "world"), "pattern found")
+! CALL OK(.NOT. IsPresent("Hello world", "World"), "case matters")
+! CALL OK(.NOT. IsPresent("abc", "abcd"), "pattern too long")
+! CALL OK(.NOT. IsPresent("abc", ""), "empty pattern")
+! CALL OK(.NOT. IsPresent("", "a"), "empty string")
+!
+! ! trailing blanks are part of the string
+! astr = "abc"
+! CALL OK(IsPresent(astr, "c "), "blank after c in padded string")
+! CALL OK(.NOT. IsPresent(TRIM(astr), "c "), "trimmed string")
+!
+! END PROGRAM main
+!```
 
 INTERFACE isPresent
   MODULE PURE FUNCTION isPresent_chars(chars, pattern) RESULT(Ans)
@@ -319,12 +988,68 @@ INTERFACE isPresent
 END INTERFACE isPresent
 
 !----------------------------------------------------------------------------
-!                                                       StrFind@StringMethods
+!                                                                   StrFind
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date: 5 sept 2021
-! summary: Function returns the indices in a string where substring pattern
+! date: 2021-09-05
+! summary: Returns the indices where a pattern starts in a string.
+!
+! Description:
+!   Returns, in increasing order, every index `i` where `pattern`
+!   starts in `chars`. The matches are the same as in `NumMatchStr`,
+!   so overlapping matches are included and trailing blanks are part
+!   of the search.
+!
+!   `indices` is always allocated on return. If there is no match, it
+!   has size 0.
+!
+! Arguments:
+!   chars : CHARACTER(*) - the string to search
+!   pattern : CHARACTER(*) - the pattern to find
+!   indices : INTEGER(I4B), ALLOCATABLE, rank(1), INTENT(OUT) - start
+!     indices, `SIZE(indices) = NumMatchStr(chars, pattern)`
+!
+! Returns:
+!   indices : start index of each match
+!
+! Formula:
+!   $$\mathrm{indices} = \{\, i : \mathrm{chars}(i:i+m-1) =
+!     \mathrm{pattern} \,\}, \quad m = \mathrm{LEN}(\mathrm{pattern})$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: I4B
+! USE StringUtility, ONLY: StrFind
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+!
+! CHARACTER(LEN=100) :: astr
+! INTEGER(I4B), ALLOCATABLE :: indices(:)
+!
+! astr = "/a/b/c"
+! CALL StrFind(astr, "/", indices)
+! CALL OK(ALL(indices .EQ. [1_I4B, 3_I4B, 5_I4B]), "/a/b/c")
+!
+! astr = "/a/b/c/"
+! CALL StrFind(astr, "/", indices)
+! CALL OK(SIZE(indices) .EQ. 4_I4B, "/a/b/c/ has four slashes")
+! CALL OK(indices(4) .EQ. 7_I4B, "last slash at 7")
+!
+! ! overlapping matches
+! CALL StrFind("aaaa", "aa", indices)
+! CALL OK(ALL(indices .EQ. [1_I4B, 2_I4B, 3_I4B]), "overlapping")
+!
+! ! no match gives an allocated vector of size 0
+! astr = "abc"
+! CALL StrFind(astr, "/", indices)
+! CALL OK(ALLOCATED(indices), "allocated when there is no match")
+! CALL OK(SIZE(indices) .EQ. 0_I4B, "size 0 when there is no match")
+!
+! END PROGRAM main
+!```
 
 INTERFACE StrFind
   MODULE PURE SUBROUTINE strFind_chars(chars, pattern, indices)
@@ -335,24 +1060,87 @@ INTERFACE StrFind
 END INTERFACE strFind
 
 !----------------------------------------------------------------------------
-!                                                 FindReplace@StringMethods
+!                                                               FindReplace
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date: 5 sept 2021
-! summary: Replaces a substring pattern with a different substring in a string
+! date: 2021-09-05
+! summary: Replaces every match of a pattern in a string.
 !
-!# Introduction
-! Replaces a substring pattern with a different substring in a string.
-! - chars the string which will have substrings replaced.
-! - findp the substring pattern to find and replace
-! - repp the new substring that will be replace parts of string
+! Description:
+!   Replaces every occurrence of `findp` in `chars` by `repp`, in
+!   place.
+!
+!   - `repp` may be longer or shorter than `findp`, or empty.
+!   - Trailing and leading blanks of `findp` and `repp` are part of
+!     the strings.
+!   - If the new string does not fit in `LEN(chars)`, that is if
+!     `LEN_TRIM(chars) + n*(LEN(repp) - LEN(findp)) > LEN(chars)` for
+!     `n` matches, `chars` is left unchanged and no error is raised.
+!   - Matches should not overlap. With overlapping matches, such as
+!     `"aa"` in `"aaa"`, the result is not well defined.
 !
 !@note
-! repp can be larger than findp and as long as the size of string can
-! accomodate the increased length of all replacements. Trailing and preceding
-! spaces are counted in all strings.
+! `repp` can be longer than `findp` as long as `chars` can hold the
+! longer string after all replacements.
 !@endnote
+!
+! Arguments:
+!   chars : CHARACTER(*), INTENT(INOUT) - string to change
+!   findp : CHARACTER(*) - the pattern to find
+!   repp : CHARACTER(*) - the new substring
+!
+! Returns:
+!   chars : the string with every `findp` replaced by `repp`
+!
+! Formula:
+!   $$\mathrm{LEN\_TRIM}(\mathrm{chars}_{new}) =
+!     \mathrm{LEN\_TRIM}(\mathrm{chars}) +
+!     n\,(\mathrm{LEN}(\mathrm{repp}) - \mathrm{LEN}(\mathrm{findp}))$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE StringUtility, ONLY: FindReplace
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+!
+! CHARACTER(LEN=40) :: astr
+! CHARACTER(LEN=10) :: bstr
+! CHARACTER(LEN=5) :: cstr
+!
+! astr = "Hello world, how are you"
+! CALL FindReplace(astr, "you", "you!")
+! CALL OK(astr .EQ. "Hello world, how are you!", "longer replacement")
+!
+! bstr = "cat cat"
+! CALL FindReplace(bstr, "cat", "dog")
+! CALL OK(bstr .EQ. "dog dog", "same length, two matches")
+!
+! bstr = "a-b-c"
+! CALL FindReplace(bstr, "-", "--")
+! CALL OK(bstr .EQ. "a--b--c", "string grows")
+!
+! bstr = "a--b--c"
+! CALL FindReplace(bstr, "--", "-")
+! CALL OK(bstr .EQ. "a-b-c", "string shrinks")
+!
+! bstr = "a-b-c"
+! CALL FindReplace(bstr, "-", "")
+! CALL OK(bstr .EQ. "abc", "empty replacement")
+!
+! bstr = "abc"
+! CALL FindReplace(bstr, "xyz", "123")
+! CALL OK(bstr .EQ. "abc", "no match")
+!
+! ! the result does not fit in LEN(cstr), so nothing is changed
+! cstr = "abcde"
+! CALL FindReplace(cstr, "a", "aa")
+! CALL OK(cstr .EQ. "abcde", "no room: string is unchanged")
+!
+! END PROGRAM main
+!```
 
 INTERFACE FindReplace
   MODULE PURE SUBROUTINE FindReplace_chars(chars, findp, repp)
@@ -363,12 +1151,73 @@ INTERFACE FindReplace
 END INTERFACE FindReplace
 
 !----------------------------------------------------------------------------
-!                                                    GetField@StringMethods
+!                                                                  GetField
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date: 8 sept 2021
-! summary: Replaces a substring pattern with a different substring in a string
+! date: 2021-09-08
+! summary: Returns the i-th field of a string.
+!
+! Description:
+!   Returns the `i`-th field of `chars`. Fields are read with a
+!   list-directed `READ`, so they are separated by blanks or commas,
+!   and quotes around a quoted field are removed. The fields are
+!   counted with `NumStrings`.
+!
+!   - A slash `/` does not end a field (a list-directed `READ` would
+!     normally stop at it).
+!   - If `1 <= i <= NumStrings(chars)`, `field` is allocated and
+!     `ierr` is the `IOSTAT` of the `READ` (0 on success).
+!   - Otherwise `field` is not allocated and `ierr` is `IOSTAT_END`.
+!
+! Arguments:
+!   i : INTEGER(I4B) - field number, starting at 1
+!   chars : CHARACTER(*) - the string
+!   field : CHARACTER(:), ALLOCATABLE, INTENT(OUT) - the field
+!   ierr : INTEGER(I4B), OPTIONAL, INTENT(OUT) - error code
+!
+! Returns:
+!   field : the `i`-th field without trailing blanks
+!   ierr : 0, the `IOSTAT` of the `READ`, or `IOSTAT_END` if `i` is
+!     out of range
+!
+! Formula:
+!   For `chars = "w1 w2 ... wn"`: $$\mathrm{field} = w_i$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE ISO_FORTRAN_ENV, ONLY: IOSTAT_END
+! USE GlobalData, ONLY: I4B
+! USE StringUtility, ONLY: GetField
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+!
+! CHARACTER(LEN=100) :: astr
+! CHARACTER(:), ALLOCATABLE :: field
+! CHARACTER(LEN=5) :: want(5)
+! INTEGER(I4B) :: ierr, ii
+!
+! astr = "Hello world, how are you"
+! want = [CHARACTER(LEN=5) :: "Hello", "world", "how", "are", "you"]
+!
+! DO ii = 1, 5
+!   CALL GetField(i=ii, chars=astr, field=field, ierr=ierr)
+!   CALL OK(field .EQ. TRIM(want(ii)), "field "//want(ii))
+!   CALL OK(ierr .EQ. 0_I4B, "ierr is 0 for field "//want(ii))
+! END DO
+!
+! ! i out of range: ierr is IOSTAT_END and field is not allocated
+! CALL GetField(i=6, chars=astr, field=field, ierr=ierr)
+! CALL OK(ierr .EQ. IOSTAT_END, "i > number of fields")
+! CALL OK(.NOT. ALLOCATED(field), "field is not allocated")
+!
+! CALL GetField(i=0, chars=astr, field=field, ierr=ierr)
+! CALL OK(ierr .EQ. IOSTAT_END, "i = 0")
+!
+! END PROGRAM main
+!```
 
 INTERFACE GetField
   MODULE PURE SUBROUTINE GetField_chars(i, chars, field, ierr)
@@ -380,16 +1229,57 @@ INTERFACE GetField
 END INTERFACE GetField
 
 !----------------------------------------------------------------------------
-!                                                    SlashRep@StringMethods
+!                                                                  SlashRep
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date: 8 sept 2021
-! summary: routine replaces slash character in file path names with
-! the system appropriate file separator slash.
+! date: 2021-09-08
+! summary: Replaces slashes by the file separator of the system.
 !
-!# Introduction
-! This routine returns the path, filename, and extension.
+! Description:
+!   Replaces, in place, the slashes in a file path by `CHAR_SLASH`, the
+!   file separator of the system. Only the first `LEN_TRIM(chars)`
+!   characters are changed.
+!
+!   - On macOS and Linux every backslash is replaced by `/`.
+!   - When `WIN32` is defined, every `/` is replaced by a backslash.
+!
+! Arguments:
+!   chars : CHARACTER(*), INTENT(INOUT) - the file path
+!
+! Returns:
+!   chars : the path with the separator of the system
+!
+! Formula:
+!   $$\mathrm{chars}_i \leftarrow \mathrm{CHAR\_SLASH}
+!     \quad \text{if } \mathrm{chars}_i \text{ is the other slash}$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE StringUtility, ONLY: SlashRep
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+!
+! CHARACTER(LEN=20) :: astr
+! CHARACTER(LEN=1), PARAMETER :: bslash = ACHAR(92)
+!
+! ! on macOS and Linux a backslash is replaced by /
+! astr = "a"//bslash//"b"//bslash//"c.txt"
+! CALL SlashRep(astr)
+! CALL OK(astr .EQ. "a/b/c.txt", "backslashes are replaced")
+!
+! astr = "a/b/c.txt"
+! CALL SlashRep(astr)
+! CALL OK(astr .EQ. "a/b/c.txt", "forward slashes are kept")
+!
+! astr = "file.txt"
+! CALL SlashRep(astr)
+! CALL OK(astr .EQ. "file.txt", "no slash")
+!
+! END PROGRAM main
+!```
 
 INTERFACE SlashRep
   MODULE PURE SUBROUTINE SlashRep_chars(chars)
@@ -398,15 +1288,72 @@ INTERFACE SlashRep
 END INTERFACE SlashRep
 
 !----------------------------------------------------------------------------
-!                                                GetFileParts@StringMethods
+!                                                              GetFileParts
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date: 8 sept 2021
-! summary: Returns the path,filename, and extension
+! date: 2021-09-08
+! summary: Returns the path, name and extension of a file name.
 !
-!# Introduction
-! This routine returns the path, filename, and extension.
+! Description:
+!   Splits the file name `chars` into three parts.
+!
+!   - `path` is the result of `GetPath`: everything up to and
+!     including the last separator, or blank.
+!   - `fname` is the result of `GetFileName` without the extension:
+!     everything after the last separator, up to the last dot.
+!   - `ext` is the result of `GetFileNameExt`: the extension with its
+!     dot, or blank.
+!
+!   For `"archive.tar.gz"` the parts are `""`, `"archive.tar"` and
+!   `".gz"`. The output arguments are blank padded.
+!
+! Arguments:
+!   chars : CHARACTER(*) - the file name
+!   path : CHARACTER(*), INTENT(OUT) - directory part
+!   fname : CHARACTER(*), INTENT(OUT) - name without extension
+!   ext : CHARACTER(*), INTENT(OUT) - extension with the dot
+!
+! Returns:
+!   path, fname, ext : the three parts of `chars`
+!
+! Formula:
+!   $$\mathrm{chars} = \mathrm{path} \,//\, \mathrm{fname} \,//\,
+!     \mathrm{ext}$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: I4B
+! USE StringUtility, ONLY: GetFileParts
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+!
+! CHARACTER(LEN=100) :: path, fname, ext
+!
+! CALL GetFileParts("./HelloWorld.txt", path, fname, ext)
+! CALL OK(TRIM(path) .EQ. "./", "path of ./HelloWorld.txt")
+! CALL OK(TRIM(fname) .EQ. "HelloWorld", "name of ./HelloWorld.txt")
+! CALL OK(TRIM(ext) .EQ. ".txt", "extension of ./HelloWorld.txt")
+!
+! CALL GetFileParts("/dir1/dir2/HelloWorld.txt", path, fname, ext)
+! CALL OK(TRIM(path) .EQ. "/dir1/dir2/", "absolute path")
+! CALL OK(TRIM(fname) .EQ. "HelloWorld", "absolute name")
+! CALL OK(TRIM(ext) .EQ. ".txt", "absolute extension")
+!
+! ! only the last extension is split off
+! CALL GetFileParts("archive.tar.gz", path, fname, ext)
+! CALL OK(LEN_TRIM(path) .EQ. 0_I4B, "no path")
+! CALL OK(TRIM(fname) .EQ. "archive.tar", "name keeps .tar")
+! CALL OK(TRIM(ext) .EQ. ".gz", "extension .gz")
+!
+! CALL GetFileParts("README", path, fname, ext)
+! CALL OK(TRIM(fname) .EQ. "README", "name without extension")
+! CALL OK(LEN_TRIM(ext) .EQ. 0_I4B, "no extension")
+!
+! END PROGRAM main
+!```
 
 INTERFACE GetFileParts
   MODULE PURE SUBROUTINE GetFileParts_chars(chars, path, fname, ext)
@@ -418,8 +1365,58 @@ INTERFACE GetFileParts
 END INTERFACE GetFileParts
 
 !----------------------------------------------------------------------------
-!                                                GetFileName@StringMethods
+!                                                               GetFileName
 !----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2021-11-24
+! summary: Returns the file name with its extension.
+!
+! Description:
+!   Returns the part of `chars` after the last separator, extension
+!   included. Backslashes are first replaced by `CHAR_SLASH` (see
+!   `SlashRep`).
+!
+!   - If `chars` has no separator, `fname` is `chars`.
+!   - If `chars` ends with a separator, `fname` is blank.
+!   - `fname` is blank padded.
+!
+! Arguments:
+!   chars : CHARACTER(*) - the file name
+!   fname : CHARACTER(*), INTENT(OUT) - name with extension
+!
+! Returns:
+!   fname : the part of `chars` after the last separator
+!
+! Formula:
+!   $$\mathrm{fname} = \mathrm{chars}(k+1:\mathrm{LEN\_TRIM}), \quad
+!     k = \text{position of the last separator}$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: I4B
+! USE StringUtility, ONLY: GetFileName
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+!
+! CHARACTER(LEN=100) :: fname
+!
+! CALL GetFileName("/dir1/dir2/HelloWorld.txt", fname)
+! CALL OK(TRIM(fname) .EQ. "HelloWorld.txt", "absolute file name")
+!
+! CALL GetFileName("./a.txt", fname)
+! CALL OK(TRIM(fname) .EQ. "a.txt", "relative file name")
+!
+! CALL GetFileName("HelloWorld.txt", fname)
+! CALL OK(TRIM(fname) .EQ. "HelloWorld.txt", "no directory")
+!
+! CALL GetFileName("dir/", fname)
+! CALL OK(LEN_TRIM(fname) .EQ. 0_I4B, "path ending with slash")
+!
+! END PROGRAM main
+!```
 
 INTERFACE GetFileName
   MODULE PURE SUBROUTINE GetFileName_chars(chars, fname)
@@ -429,8 +1426,65 @@ INTERFACE GetFileName
 END INTERFACE GetFileName
 
 !----------------------------------------------------------------------------
-!                                           GetFileNameExt@StringMethods
+!                                                            GetFileNameExt
 !----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2021-11-24
+! summary: Returns the extension of a file name, with the dot.
+!
+! Description:
+!   Returns the part of the file name from the last dot to the end,
+!   dot included, for example `".txt"`. Backslashes are first replaced
+!   by `CHAR_SLASH`.
+!
+!   - Only the last extension is returned: `"a.tar.gz"` gives `".gz"`.
+!   - A dot before the last separator is not an extension, so
+!     `"dir.d/file"` gives a blank `ext`.
+!   - If there is no extension, `ext` is blank.
+!   - `ext` is blank padded. See `GetExtension` for a function that
+!     returns the extension without the dot.
+!
+! Arguments:
+!   chars : CHARACTER(*) - the file name
+!   ext : CHARACTER(*), INTENT(OUT) - the extension with the dot
+!
+! Returns:
+!   ext : the extension of `chars`
+!
+! Formula:
+!   $$\mathrm{ext} = \mathrm{chars}(d:\mathrm{LEN\_TRIM}), \quad
+!     d = \text{position of the last dot after the last separator}$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: I4B
+! USE StringUtility, ONLY: GetFileNameExt
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+!
+! CHARACTER(LEN=100) :: ext
+!
+! CALL GetFileNameExt("./HelloWorld.txt", ext)
+! CALL OK(TRIM(ext) .EQ. ".txt", "relative file name")
+!
+! CALL GetFileNameExt("/dir1/dir2/HelloWorld.txt", ext)
+! CALL OK(TRIM(ext) .EQ. ".txt", "absolute file name")
+!
+! CALL GetFileNameExt("a.tar.gz", ext)
+! CALL OK(TRIM(ext) .EQ. ".gz", "only the last extension")
+!
+! ! a dot in a directory name is not an extension
+! CALL GetFileNameExt("dir.d/file", ext)
+! CALL OK(LEN_TRIM(ext) .EQ. 0_I4B, "dot in directory")
+!
+! CALL GetFileNameExt("README", ext)
+! CALL OK(LEN_TRIM(ext) .EQ. 0_I4B, "no extension")
+!
+! END PROGRAM main
+!```
 
 INTERFACE GetFileNameExt
   MODULE PURE SUBROUTINE GetFileNameExt_chars(chars, ext)
@@ -440,24 +1494,64 @@ INTERFACE GetFileNameExt
 END INTERFACE GetFileNameExt
 
 !----------------------------------------------------------------------------
-!                                                GetExtension@StringMethods
+!                                                              GetExtension
 !----------------------------------------------------------------------------
 
-!> author: Dr. Vikas Sharma
+!> author: Vikas Sharma, Ph. D.
+! date: 2021-11-24
+! summary: Returns the text after the last dot of a file name.
 !
-! This function Get the extension from a file
+! Description:
+!   Returns everything after the last dot in `char`, without the dot.
+!   For example `GetExtension("helloworld.F90")` gives `"F90"`.
 !
-! ## Usage
-! ```fortran
-! call display( GetExtension("helloworld.F90") .EQ. "f90", &
-! & msg="test1:: ")
-! ```
+!   - The case is kept; the result is not converted to lower case.
+!   - If `char` has no dot, or ends with a dot, the result is empty.
+!   - Separators are not taken into account, so a dot in a directory
+!     name is found too (`"dir.d/file"` gives `"d/file"`). Use
+!     `GetFileNameExt` for file paths.
+!   - Trailing blanks of `char` are part of the result.
+!
+! Arguments:
+!   char : CHARACTER(*) - the file name
+!
+! Returns:
+!   ext : CHARACTER(:), ALLOCATABLE - text after the last dot
+!
+! Formula:
+!   $$\mathrm{ext} = \mathrm{char}(d+1:\mathrm{LEN}(\mathrm{char})),
+!     \quad d = \mathrm{INDEX}(\mathrm{char}, ".", \mathrm{back})$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: I4B
+! USE StringUtility, ONLY: GetExtension
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+!
+! CHARACTER(:), ALLOCATABLE :: ext
+!
+! ! the dot is not included and the case is kept
+! CALL OK(GetExtension("helloworld.F90") .EQ. "F90", "F90 is kept")
+! CALL OK(GetExtension("mesh.h5") .EQ. "h5", "h5")
+! CALL OK(GetExtension("a.tar.gz") .EQ. "gz", "only the last extension")
+!
+! ext = GetExtension("README")
+! CALL OK(LEN(ext) .EQ. 0_I4B, "no dot gives an empty string")
+!
+! ext = GetExtension("file.")
+! CALL OK(LEN(ext) .EQ. 0_I4B, "dot at the end")
+!
+! END PROGRAM main
+!```
 
 INTERFACE GetExtension
   MODULE FUNCTION GetExtension_chars(char) RESULT(ext)
     CHARACTER(*), INTENT(IN) :: char
     CHARACTER(:), ALLOCATABLE :: ext
-  END FUNCTION
+  END FUNCTION GetExtension_chars
 END INTERFACE GetExtension
 
 !----------------------------------------------------------------------------

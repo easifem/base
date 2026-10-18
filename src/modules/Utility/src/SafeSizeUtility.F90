@@ -17,8 +17,27 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
+!> author: Vikas Sharma, Ph. D.
+! date: 2024-04-08
+! summary: Size of an allocatable vector that may not be allocated.
+!
+! Description:
+!   This module contains the generic function `SafeSize`. It works like
+!   the intrinsic `SIZE` for an allocatable vector, but returns 0 when the
+!   vector is not allocated, instead of being an error.
+!
+!   `SafeSize` is available for allocatable vectors of
+!
+!   - integers (`INT8`, `INT16`, `INT32`),
+!   - reals (`REAL32`, `REAL64`).
+
 MODULE SafeSizeUtility
-USE GlobalData, ONLY: INT8, INT16, INT32, REAL32, REAL64, I4B
+USE GlobalData, ONLY: INT8
+USE GlobalData, ONLY: INT16
+USE GlobalData, ONLY: INT32
+USE GlobalData, ONLY: REAL32
+USE GlobalData, ONLY: REAL64
+USE GlobalData, ONLY: I4B
 IMPLICIT NONE
 
 PRIVATE
@@ -30,8 +49,60 @@ PUBLIC :: SafeSize
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date:  2024-04-08
-! summary:  Like size but safe for unallocatable
+! date: 2024-04-08
+! summary: Size of an allocatable integer vector, or 0 if not allocated.
+!
+! Description:
+!   Returns `SIZE(value)` if `value` is allocated, and 0 otherwise. It is
+!   available for `INT8`, `INT16` and `INT32`. There is no `INT64`
+!   version.
+!
+!   An allocated vector of size 0 also gives 0.
+!
+! Arguments:
+!   value : INTEGER, ALLOCATABLE, rank(1) - input vector, may be
+!     unallocated
+!
+! Returns:
+!   ans : INTEGER(I4B) - `SIZE(value)` if allocated, otherwise 0
+!
+! Formula:
+!   $$\mathrm{ans} = \begin{cases}
+!     \mathrm{SIZE}(\mathrm{value}), & \text{if value is allocated} \\
+!     0, & \text{otherwise}
+!   \end{cases}$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: I4B
+! USE SafeSizeUtility, ONLY: SafeSize
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+!
+! INTEGER(I4B), ALLOCATABLE :: a(:)
+!
+! ! not allocated
+! CALL OK(SafeSize(a) .EQ. 0_I4B, "not allocated")
+!
+! ! allocated with size 0
+! ALLOCATE (a(0))
+! CALL OK(SafeSize(a) .EQ. 0_I4B, "allocated with size 0")
+! DEALLOCATE (a)
+!
+! ! allocated with size 5
+! ALLOCATE (a(5))
+! a = 1_I4B
+! CALL OK(SafeSize(a) .EQ. 5_I4B, "allocated with size 5")
+! CALL OK(SafeSize(a) .EQ. SIZE(a), "same as SIZE when allocated")
+!
+! ! after deallocation
+! DEALLOCATE (a)
+! CALL OK(SafeSize(a) .EQ. 0_I4B, "after deallocation")
+!
+! END PROGRAM main
+!```
 
 INTERFACE SafeSize
   MODULE PURE FUNCTION SafeSize1(VALUE) RESULT(ans)
@@ -48,7 +119,72 @@ INTERFACE SafeSize
     INTEGER(INT32), ALLOCATABLE, INTENT(IN) :: VALUE(:)
     INTEGER(I4B) :: ans
   END FUNCTION SafeSize3
+END INTERFACE SafeSize
 
+!----------------------------------------------------------------------------
+!                                                                 SafeSize
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2024-04-08
+! summary: Size of an allocatable real vector, or 0 if not allocated.
+!
+! Description:
+!   Returns `SIZE(value)` if `value` is allocated, and 0 otherwise. It is
+!   available for `REAL32` and `REAL64`.
+!
+!   An allocated vector of size 0 also gives 0. The lower bound of
+!   `value` does not matter.
+!
+! Arguments:
+!   value : REAL, ALLOCATABLE, rank(1) - input vector, may be
+!     unallocated
+!
+! Returns:
+!   ans : INTEGER(I4B) - `SIZE(value)` if allocated, otherwise 0
+!
+! Formula:
+!   $$\mathrm{ans} = \begin{cases}
+!     \mathrm{SIZE}(\mathrm{value}), & \text{if value is allocated} \\
+!     0, & \text{otherwise}
+!   \end{cases}$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE SafeSizeUtility, ONLY: SafeSize
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+!
+! REAL(DFP), ALLOCATABLE :: a(:)
+!
+! ! not allocated
+! CALL OK(SafeSize(a) .EQ. 0_I4B, "not allocated")
+!
+! ! allocated with size 0
+! ALLOCATE (a(0))
+! CALL OK(SafeSize(a) .EQ. 0_I4B, "allocated with size 0")
+! DEALLOCATE (a)
+!
+! ! allocated with size 3, lower bound is not 1
+! ALLOCATE (a(-1:1))
+! a = 0.5_DFP
+! CALL OK(SafeSize(a) .EQ. 3_I4B, "allocated with size 3")
+!
+! ! automatic reallocation on assignment
+! a = [1.0_DFP, 2.0_DFP, 3.0_DFP, 4.0_DFP]
+! CALL OK(SafeSize(a) .EQ. 4_I4B, "size after reallocation")
+!
+! DEALLOCATE (a)
+! CALL OK(SafeSize(a) .EQ. 0_I4B, "after deallocation")
+!
+! END PROGRAM main
+!```
+
+INTERFACE SafeSize
   MODULE PURE FUNCTION SafeSize4(VALUE) RESULT(ans)
     REAL(REAL32), ALLOCATABLE, INTENT(IN) :: VALUE(:)
     INTEGER(I4B) :: ans
@@ -58,7 +194,6 @@ INTERFACE SafeSize
     REAL(REAL64), ALLOCATABLE, INTENT(IN) :: VALUE(:)
     INTEGER(I4B) :: ans
   END FUNCTION SafeSize5
-
 END INTERFACE SafeSize
 
 END MODULE SafeSizeUtility
