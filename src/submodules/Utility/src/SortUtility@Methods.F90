@@ -15,10 +15,6 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-!> author: Vikas Sharma, Ph. D.
-! date:         22 March 2021
-! summary:         This submodule contains the sorting routine
-
 SUBMODULE(SortUtility) Methods
 USE SwapUtility, ONLY: Swap
 
@@ -181,6 +177,8 @@ RECURSIVE PURE SUBROUTINE _Recursive_ArgIntroSort_(this, idx, &
   INTEGER(I4B), INTENT(INOUT) :: idx(:)
   INTEGER(I4B), INTENT(IN) :: left, right, maxDepth
   INTEGER(I4B) :: imid, iPivot, N
+  INTEGER(I4B) :: tmp(right - left + 1)
+  INTEGER(I4B) :: perm(right - left + 1)
 #include "./IntroSort/Recursive_ArgIntroSort.inc"
 END SUBROUTINE _Recursive_ArgIntroSort_
 #undef _Recursive_ArgIntroSort_
@@ -204,6 +202,8 @@ RECURSIVE PURE SUBROUTINE _Recursive_ArgIntroSort_(this, idx, &
   INTEGER(I4B), INTENT(INOUT) :: idx(:)
   INTEGER(I4B), INTENT(IN) :: left, right, maxDepth
   INTEGER(I4B) :: imid, iPivot, N
+  INTEGER(I4B) :: tmp(right - left + 1)
+  INTEGER(I4B) :: perm(right - left + 1)
 #include "./IntroSort/Recursive_ArgIntroSort.inc"
 END SUBROUTINE _Recursive_ArgIntroSort_
 #undef _Recursive_ArgIntroSort_
@@ -227,6 +227,8 @@ RECURSIVE PURE SUBROUTINE _Recursive_ArgIntroSort_(this, idx, &
   INTEGER(I4B), INTENT(INOUT) :: idx(:)
   INTEGER(I4B), INTENT(IN) :: left, right, maxDepth
   INTEGER(I4B) :: imid, iPivot, N
+  INTEGER(I4B) :: tmp(right - left + 1)
+  INTEGER(I4B) :: perm(right - left + 1)
 #include "./IntroSort/Recursive_ArgIntroSort.inc"
 END SUBROUTINE _Recursive_ArgIntroSort_
 #undef _Recursive_ArgIntroSort_
@@ -250,6 +252,8 @@ RECURSIVE PURE SUBROUTINE _Recursive_ArgIntroSort_(this, idx, &
   INTEGER(I4B), INTENT(INOUT) :: idx(:)
   INTEGER(I4B), INTENT(IN) :: left, right, maxDepth
   INTEGER(I4B) :: imid, iPivot, N
+  INTEGER(I4B) :: tmp(right - left + 1)
+  INTEGER(I4B) :: perm(right - left + 1)
 #include "./IntroSort/Recursive_ArgIntroSort.inc"
 END SUBROUTINE _Recursive_ArgIntroSort_
 #undef _Recursive_ArgIntroSort_
@@ -273,6 +277,8 @@ RECURSIVE PURE SUBROUTINE _Recursive_ArgIntroSort_(this, idx, &
   INTEGER(I4B), INTENT(INOUT) :: idx(:)
   INTEGER(I4B), INTENT(IN) :: left, right, maxDepth
   INTEGER(I4B) :: imid, iPivot, N
+  INTEGER(I4B) :: tmp(right - left + 1)
+  INTEGER(I4B) :: perm(right - left + 1)
 #include "./IntroSort/Recursive_ArgIntroSort.inc"
 END SUBROUTINE _Recursive_ArgIntroSort_
 #undef _Recursive_ArgIntroSort_
@@ -296,6 +302,8 @@ RECURSIVE PURE SUBROUTINE _Recursive_ArgIntroSort_(this, idx, &
   INTEGER(I4B), INTENT(INOUT) :: idx(:)
   INTEGER(I4B), INTENT(IN) :: left, right, maxDepth
   INTEGER(I4B) :: imid, iPivot, N
+  INTEGER(I4B) :: tmp(right - left + 1)
+  INTEGER(I4B) :: perm(right - left + 1)
 #include "./IntroSort/Recursive_ArgIntroSort.inc"
 END SUBROUTINE _Recursive_ArgIntroSort_
 #undef _Recursive_ArgIntroSort_
