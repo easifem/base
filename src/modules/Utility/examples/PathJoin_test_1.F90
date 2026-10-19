@@ -20,8 +20,13 @@ CALL OK(PathJoin("/usr/local", "bin") .EQ. "/usr/local/bin", &
 ! trailing blanks of both arguments are removed
 CALL OK(PathJoin("a  ", "b  ") .EQ. "a/b", "trailing blanks")
 
-! a separator is always added, even if one is already there
-CALL OK(PathJoin("a/", "b") .EQ. "a//b", "no slash cleaning")
-CALL OK(PathJoin("", "b") .EQ. "/b", "empty first path")
+! exactly one separator is put between the paths
+CALL OK(PathJoin("a/", "b") .EQ. "a/b", "a/ + b")
+CALL OK(PathJoin("a//", "/b") .EQ. "a/b", "a// + /b")
+CALL OK(PathJoin("/", "b") .EQ. "/b", "root + b")
+
+! an empty path is skipped
+CALL OK(PathJoin("", "b") .EQ. "b", "empty first path")
+CALL OK(PathJoin("a", "") .EQ. "a", "empty second path")
 
 END PROGRAM main

@@ -150,7 +150,8 @@ END INTERFACE DEALLOCATE
 !   - A path made only of slashes gives `"/"`.
 !   - A path without a slash is returned unchanged.
 !
-!   The separator is `CHAR_SLASH` (`/` on macOS and Linux).
+!   The separator is `/`. On Windows `CHAR_SLASH` (`\`) is a
+!   separator as well.
 !
 ! Arguments:
 !   path : CHARACTER(*) - the path
@@ -206,12 +207,14 @@ END INTERFACE
 ! summary: Join two paths with the file separator.
 !
 ! Description:
-!   Returns `TRIM(path1)`, the separator `CHAR_SLASH` and `TRIM(path2)`.
+!   Returns `TRIM(path1)` and `TRIM(path2)` joined by exactly one
+!   separator `CHAR_SLASH`.
 !
 !   - Trailing blanks of both arguments are removed.
-!   - The separator is always added. Existing slashes are not removed,
-!     so `PathJoin("a/", "b")` gives `"a//b"`.
-!   - An empty `path1` gives a path that starts with the separator.
+!   - Separators at the end of `path1` and at the start of `path2` are
+!     merged into one, so `PathJoin("a/", "/b")` gives `"a/b"`. A root
+!     `"/"` is kept, so `PathJoin("/", "b")` gives `"/b"`.
+!   - An empty argument is skipped, so `PathJoin("", "b")` gives `"b"`.
 !
 ! Arguments:
 !   path1 : CHARACTER(*) - the first path
@@ -221,8 +224,8 @@ END INTERFACE
 !   ans : CHARACTER(:), ALLOCATABLE - the joined path
 !
 ! Formula:
-!   $$\mathrm{ans} = \mathrm{TRIM}(\mathrm{path1}) \,//\, \mathrm{/}
-!     \,//\, \mathrm{TRIM}(\mathrm{path2})$$
+!   For `path1 = "d1"` and `path2 = "d2"`:
+!   $$\mathrm{ans} = \mathrm{d1/d2}$$
 !
 ! Examples
 !
@@ -245,9 +248,14 @@ END INTERFACE
 ! ! trailing blanks of both arguments are removed
 ! CALL OK(PathJoin("a  ", "b  ") .EQ. "a/b", "trailing blanks")
 !
-! ! a separator is always added, even if one is already there
-! CALL OK(PathJoin("a/", "b") .EQ. "a//b", "no slash cleaning")
-! CALL OK(PathJoin("", "b") .EQ. "/b", "empty first path")
+! ! exactly one separator is put between the paths
+! CALL OK(PathJoin("a/", "b") .EQ. "a/b", "a/ + b")
+! CALL OK(PathJoin("a//", "/b") .EQ. "a/b", "a// + /b")
+! CALL OK(PathJoin("/", "b") .EQ. "/b", "root + b")
+!
+! ! an empty path is skipped
+! CALL OK(PathJoin("", "b") .EQ. "b", "empty first path")
+! CALL OK(PathJoin("a", "") .EQ. "a", "empty second path")
 !
 ! END PROGRAM main
 !```
@@ -269,13 +277,13 @@ END INTERFACE PathJoin
 ! summary: Join a vector of String with the file separator.
 !
 ! Description:
-!   Returns the parts in `paths`, each one preceded by the separator
-!   `CHAR_SLASH`.
+!   Joins the parts in `paths` from left to right, in the same way as
+!   `PathJoin(path1, path2)`.
 !
-!   - The result always starts with the separator, so `["a", "b"]`
-!     gives `"/a/b"`. This differs from `PathJoin(path1, path2)`, which
-!     gives `"a/b"`.
-!   - The parts are not trimmed or cleaned.
+!   - `["a", "b"]` gives `"a/b"`. For an absolute path, start the first
+!     part with the separator, for example `["/a", "b"]`.
+!   - Separators between two parts are merged into one, and empty
+!     parts are skipped. The parts are not trimmed.
 !   - A vector of size 0 gives an empty string.
 !
 ! Arguments:
@@ -285,7 +293,7 @@ END INTERFACE PathJoin
 !   ans : CHARACTER(:), ALLOCATABLE - the joined path
 !
 ! Formula:
-!   $$\mathrm{ans} = \mathrm{/}\,p_1\,\mathrm{/}\,p_2 \cdots
+!   $$\mathrm{ans} = p_1\,\mathrm{/}\,p_2 \cdots
 !     \mathrm{/}\,p_n, \quad n = \mathrm{SIZE}(\mathrm{paths})$$
 !
 ! Examples
@@ -305,12 +313,16 @@ END INTERFACE PathJoin
 ! paths(2) = "local"
 ! paths(3) = "bin"
 !
-! ! every part is preceded by a separator
+! ! the parts are joined like PathJoin(path1, path2)
 ! ans = PathJoin(paths)
-! CALL OK(ans .EQ. "/usr/local/bin", "three parts")
+! CALL OK(ans .EQ. "usr/local/bin", "three parts")
+!
+! ! an absolute path starts with a separator in the first part
+! paths(1) = "/usr/"
+! CALL OK(PathJoin(paths) .EQ. "/usr/local/bin", "absolute path")
 !
 ! one(1) = "a"
-! CALL OK(PathJoin(one) .EQ. "/a", "one part")
+! CALL OK(PathJoin(one) .EQ. "a", "one part")
 !
 ! ans = PathJoin(empty)
 ! CALL OK(LEN(ans) .EQ. 0_I4B, "no parts gives an empty string")
@@ -338,13 +350,15 @@ END INTERFACE PathJoin
 !
 !   - Trailing blanks of `path` are ignored.
 !   - Trailing slashes are removed first, then the last element is
-!     dropped, then the trailing slashes of the rest are removed.
+!     dropped, then the trailing slashes of the rest are removed. This
+!     is the same as `dirname` in POSIX, so `"a/"` gives `"."`.
 !   - An empty (blank) path, or a path without a slash, gives `"."`.
 !   - A path made only of slashes, or of the form `"/name"`, gives
 !     `"/"`.
 !   - In any other case, the result does not end with a slash.
 !
-!   The separator is `CHAR_SLASH` (`/` on macOS and Linux).
+!   The separator is `/`. On Windows `CHAR_SLASH` (`\`) is a
+!   separator as well.
 !
 ! Arguments:
 !   path : CHARACTER(*) - the path
@@ -797,8 +811,7 @@ END INTERFACE IsBlank
 !   - A quoted substring (`'...'` or `"..."`) counts as one word,
 !     even if it has blanks.
 !   - A list-directed repeat count `r*value` counts as `r` words, for
-!     example `"a 2*b c"` has 4 words. A repeat count at the very start
-!     of the string is not expanded.
+!     example `"a 2*b c"` has 4 words, and so has `"3*a b"`.
 !   - If the number of `'` quotes is odd, the result is -1. If the
 !     number of `"` quotes is odd, the result is -2.
 !
@@ -878,8 +891,7 @@ END INTERFACE NumStrings
 !   - The trailing blanks of `chars` and `pattern` are part of the
 !     search. Use `TRIM` to ignore them.
 !   - The search is case sensitive.
-!   - An empty `pattern` matches at every position, so the result is
-!     `LEN(chars)`.
+!   - An empty `pattern` has no match, so the result is 0.
 !
 ! Arguments:
 !   chars : CHARACTER(*) - the string to search
@@ -1001,8 +1013,8 @@ END INTERFACE isPresent
 !   so overlapping matches are included and trailing blanks are part
 !   of the search.
 !
-!   `indices` is always allocated on return. If there is no match, it
-!   has size 0.
+!   `indices` is always allocated on return. If there is no match, or
+!   `pattern` is empty, it has size 0.
 !
 ! Arguments:
 !   chars : CHARACTER(*) - the string to search
@@ -1076,8 +1088,8 @@ END INTERFACE strFind
 !     the strings.
 !   - If the new string does not fit in `LEN(chars)`, that is if
 !     `LEN_TRIM(chars) + n*(LEN(repp) - LEN(findp)) > LEN(chars)` for
-!     `n` replacements, `chars` is left unchanged and no error is
-!     raised.
+!     `n` replacements, `chars` is left unchanged and `isok` is
+!     `.FALSE.`. In every other case `isok` is `.TRUE.`.
 !   - Matches are found from left to right, and the search goes on
 !     after the end of each match, so `"aa"` in `"aaa"` is replaced
 !     once. This differs from `NumMatchStr` and `StrFind`, which
@@ -1093,9 +1105,12 @@ END INTERFACE strFind
 !   chars : CHARACTER(*), INTENT(INOUT) - string to change
 !   findp : CHARACTER(*) - the pattern to find
 !   repp : CHARACTER(*) - the new substring
+!   isok : LOGICAL(LGT), OPTIONAL, INTENT(OUT) - `.FALSE.` if the new
+!     string does not fit in `chars`
 !
 ! Returns:
 !   chars : the string with every `findp` replaced by `repp`
+!   isok : `.TRUE.` unless the new string does not fit
 !
 ! Formula:
 !   $$\mathrm{LEN\_TRIM}(\mathrm{chars}_{new}) =
@@ -1165,10 +1180,11 @@ END INTERFACE strFind
 !```
 
 INTERFACE FindReplace
-  MODULE PURE SUBROUTINE FindReplace_chars(chars, findp, repp)
+  MODULE PURE SUBROUTINE FindReplace_chars(chars, findp, repp, isok)
     CHARACTER(*), INTENT(INOUT) :: chars
     CHARACTER(*), INTENT(IN) :: findp
     CHARACTER(*), INTENT(IN) :: repp
+    LOGICAL(LGT), OPTIONAL, INTENT(OUT) :: isok
   END SUBROUTINE FindReplace_chars
 END INTERFACE FindReplace
 
@@ -1190,7 +1206,8 @@ END INTERFACE FindReplace
 !     normally stop at it).
 !   - If `1 <= i <= NumStrings(chars)`, `field` is allocated and
 !     `ierr` is the `IOSTAT` of the `READ` (0 on success).
-!   - Otherwise `field` is not allocated and `ierr` is `IOSTAT_END`.
+!   - Otherwise `field` is an empty string and `ierr` is
+!     `IOSTAT_END`.
 !
 ! Arguments:
 !   i : INTEGER(I4B) - field number, starting at 1
@@ -1230,10 +1247,10 @@ END INTERFACE FindReplace
 !   CALL OK(ierr .EQ. 0_I4B, "ierr is 0 for field "//want(ii))
 ! END DO
 !
-! ! i out of range: ierr is IOSTAT_END and field is not allocated
+! ! i out of range: ierr is IOSTAT_END and field is empty
 ! CALL GetField(i=6, chars=astr, field=field, ierr=ierr)
 ! CALL OK(ierr .EQ. IOSTAT_END, "i > number of fields")
-! CALL OK(.NOT. ALLOCATED(field), "field is not allocated")
+! CALL OK(LEN(field) .EQ. 0_I4B, "field is empty")
 !
 ! CALL GetField(i=0, chars=astr, field=field, ierr=ierr)
 ! CALL OK(ierr .EQ. IOSTAT_END, "i = 0")
@@ -1524,15 +1541,15 @@ END INTERFACE GetFileNameExt
 ! summary: Returns the text after the last dot of a file name.
 !
 ! Description:
-!   Returns everything after the last dot in `char`, without the dot.
-!   For example `GetExtension("helloworld.F90")` gives `"F90"`.
+!   Returns everything after the last dot in the last element of the
+!   path `char`, without the dot. For example
+!   `GetExtension("helloworld.F90")` gives `"F90"`.
 !
 !   - The case is kept; the result is not converted to lower case.
-!   - If `char` has no dot, or ends with a dot, the result is empty.
-!   - Separators are not taken into account, so a dot in a directory
-!     name is found too (`"dir.d/file"` gives `"d/file"`). Use
-!     `GetFileNameExt` for file paths.
-!   - Trailing blanks of `char` are part of the result.
+!   - If the last element has no dot, or ends with a dot, the result
+!     is empty. A dot in a directory name is not used, so
+!     `"dir.d/file"` gives `""`.
+!   - Trailing blanks of `char` are ignored.
 !
 ! Arguments:
 !   char : CHARACTER(*) - the file name
@@ -1541,8 +1558,7 @@ END INTERFACE GetFileNameExt
 !   ext : CHARACTER(:), ALLOCATABLE - text after the last dot
 !
 ! Formula:
-!   $$\mathrm{ext} = \mathrm{char}(d+1:\mathrm{LEN}(\mathrm{char})),
-!     \quad d = \mathrm{INDEX}(\mathrm{char}, ".", \mathrm{back})$$
+!   For `char = "d1/name.ext"`: $$\mathrm{ext} = \mathrm{ext}$$
 !
 ! Examples
 !
@@ -1570,7 +1586,7 @@ END INTERFACE GetFileNameExt
 !```
 
 INTERFACE GetExtension
-  MODULE FUNCTION GetExtension_chars(char) RESULT(ext)
+  MODULE PURE FUNCTION GetExtension_chars(char) RESULT(ext)
     CHARACTER(*), INTENT(IN) :: char
     CHARACTER(:), ALLOCATABLE :: ext
   END FUNCTION GetExtension_chars

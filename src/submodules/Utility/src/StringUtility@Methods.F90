@@ -21,6 +21,9 @@ USE ISO_FORTRAN_ENV, ONLY: IOSTAT_END
 
 IMPLICIT NONE
 
+! the file separators; on macOS and Linux both are /
+CHARACTER(*), PARAMETER :: SEPS = CHAR_SLASH//CHAR_FSLASH
+
 CONTAINS
 
 !----------------------------------------------------------------------------
@@ -47,71 +50,46 @@ END PROCEDURE StringVectorDeallocate
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE PathDir
-INTEGER(I4B) :: tsize, last
-INTEGER(I4B), ALLOCATABLE :: indices(:)
+INTEGER(I4B) :: n, k
 
-ans = TRIM(path)
-tsize = LEN(ans)
-IF (tsize .EQ. 0) THEN
+n = LEN_TRIM(path)
+IF (n .EQ. 0) THEN
   ans = "."
   RETURN
 END IF
 
-IF ((tsize .EQ. 1)) THEN
-  IF (ans(1:1) .NE. CHAR_SLASH) THEN
-    ans = "."
-  END IF
-  RETURN
-END IF
-
-last = tsize
-DO
-  IF (ans(last:last) .EQ. CHAR_SLASH) THEN
-    last = last - 1
-    ans = ans(1:last)
-  ELSE
-    EXIT
-  END IF
-
-  IF (last .EQ. 1) EXIT
+! remove trailing separators, but keep a root separator
+DO WHILE (n .GT. 1)
+  IF (.NOT. IsSep(path(n:n))) EXIT
+  n = n - 1
 END DO
 
-IF (last .EQ. 1) RETURN
-
-tsize = LEN(ans)
-
-CALL StrFind(chars=ans, pattern=CHAR_SLASH, indices=indices)
-
-! It means no / found in the path
-IF (SIZE(indices) .EQ. 0) THEN
-  ans = "."
-  DEALLOCATE (indices)
+IF (n .EQ. 1 .AND. IsSep(path(1:1))) THEN
+  ans = path(1:1)
   RETURN
 END IF
 
-last = indices(SIZE(indices)) - 1
+k = SCAN(path(1:n), SEPS, back=.TRUE.)
+
+! no separator in the path
+IF (k .EQ. 0) THEN
+  ans = "."
+  RETURN
+END IF
+
+! remove the separators before the last element
+DO WHILE (k .GT. 1)
+  IF (.NOT. IsSep(path(k - 1:k - 1))) EXIT
+  k = k - 1
+END DO
 
 ! /abc type pattern
-IF (last .EQ. 0) THEN
-  ans = "/"
-  DEALLOCATE (indices)
+IF (k .EQ. 1) THEN
+  ans = path(1:1)
   RETURN
 END IF
 
-ans = ans(1:last)
-DEALLOCATE (indices)
-
-DO
-  IF (last .EQ. 1) EXIT
-  IF (ans(last:last) .EQ. CHAR_SLASH) THEN
-    last = last - 1
-    ans = ans(1:last)
-  ELSE
-    EXIT
-  END IF
-
-END DO
-
+ans = path(1:k - 1)
 END PROCEDURE PathDir
 
 !----------------------------------------------------------------------------
@@ -119,45 +97,23 @@ END PROCEDURE PathDir
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE PathBase
-INTEGER(I4B) :: tsize, last
-INTEGER(I4B), ALLOCATABLE :: indices(:)
+INTEGER(I4B) :: n, k
 
-ans = TRIM(path)
-
-tsize = LEN(ans)
-
-IF (tsize .EQ. 0) THEN
+n = LEN_TRIM(path)
+IF (n .EQ. 0) THEN
   ans = "."
   RETURN
 END IF
 
-IF ((tsize .EQ. 1)) RETURN
-
-last = tsize
-DO
-  IF (ans(last:last) .EQ. CHAR_SLASH) THEN
-    last = last - 1
-    ans = ans(1:last)
-  ELSE
-    EXIT
-  END IF
-
-  IF (last .EQ. 1) EXIT
+! remove trailing separators, but keep a root separator
+DO WHILE (n .GT. 1)
+  IF (.NOT. IsSep(path(n:n))) EXIT
+  n = n - 1
 END DO
 
-IF (last .EQ. 1) RETURN
-
-tsize = LEN(ans)
-
-CALL StrFind(chars=ans, pattern=CHAR_SLASH, indices=indices)
-IF (SIZE(indices) .EQ. 0) THEN
-  last = 1
-ELSE
-  last = indices(SIZE(indices)) + 1
-END IF
-
-ans = ans(last:tsize)
-IF (ALLOCATED(indices)) DEALLOCATE (indices)
+k = 0
+IF (n .GT. 1) k = SCAN(path(1:n), SEPS, back=.TRUE.)
+ans = path(k + 1:n)
 END PROCEDURE PathBase
 
 !----------------------------------------------------------------------------
@@ -165,7 +121,7 @@ END PROCEDURE PathBase
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE PathJoin1
-ans = TRIM(path1)//CHAR_SLASH//TRIM(path2)
+ans = JoinTwo(TRIM(path1), TRIM(path2))
 END PROCEDURE PathJoin1
 
 !----------------------------------------------------------------------------
@@ -173,15 +129,12 @@ END PROCEDURE PathJoin1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE PathJoin2
-INTEGER(I4B) :: tsize, ii
+INTEGER(I4B) :: ii
 
-tsize = SIZE(paths)
 ans = ""
-
-DO ii = 1, tsize
-  ans = ans//CHAR_SLASH//paths(ii)%chars()
+DO ii = 1, SIZE(paths)
+  ans = JoinTwo(ans, paths(ii)%chars())
 END DO
-
 END PROCEDURE PathJoin2
 
 !----------------------------------------------------------------------------
@@ -273,6 +226,7 @@ END PROCEDURE isBlank_chars
 MODULE PROCEDURE numMatchStr_chars
 INTEGER(I4B) :: i
 ans = 0
+IF (LEN(pattern) .EQ. 0) RETURN
 DO i = 1, LEN(chars)
   IF (i + LEN(pattern) - 1 > LEN(chars)) EXIT
   IF (chars(i:i + LEN(pattern) - 1) == pattern) ans = ans + 1
@@ -318,9 +272,9 @@ DO i = ncol, 1, -1
       inQuotes = .FALSE.
       n = n + 2
       CYCLE
-    ELSE
-      inQuotes = .TRUE.
     END IF
+
+    inQuotes = .TRUE.
   END IF
   !Process the spaces and multiplier characters if not in a quoted string
   IF (.NOT. inQuotes) THEN
@@ -346,8 +300,9 @@ DO i = ncol, 1, -1
       !If we are multiplying a quoted string need to subtract 1.
       IF (multidcol < ncol) THEN
         IF (chars(multidcol + 1:multidcol + 1) == '"' .OR. &
-            chars(multidcol + 1:multidcol + 1) == "'") &
+            chars(multidcol + 1:multidcol + 1) == "'") THEN
           n = n - 1
+        END IF
       END IF
 
       multidata = .FALSE.
@@ -355,6 +310,24 @@ DO i = ncol, 1, -1
     nonblankd = nonblank
   END IF
 END DO
+
+! the string starts with a word: treat position 0 as a blank, so that a
+! repeat count at the start is expanded as well
+IF (nonblankd .AND. .NOT. inQuotes) THEN
+  n = n + 1
+  IF (multidata) THEN
+    READ (chars(1:multidcol - 1), *, IOSTAT=ioerr) nmult
+    IF (ioerr /= 0) nmult = 1
+    n = n + (nmult - 1) * 2
+    IF (multidcol < ncol) THEN
+      IF (chars(multidcol + 1:multidcol + 1) == '"' .OR. &
+          chars(multidcol + 1:multidcol + 1) == "'") THEN
+        n = n - 1
+      END IF
+    END IF
+  END IF
+END IF
+
 IF (MOD(n, 2) /= 0) THEN
   ans = n / 2 + 1
 ELSE
@@ -379,6 +352,7 @@ MODULE PROCEDURE strFind_chars
 INTEGER(I4B) :: i, n
 n = 0
 ALLOCATE (indices(numMatchStr(chars, pattern)))
+IF (LEN(pattern) .EQ. 0) RETURN
 DO i = 1, LEN(chars)
   IF (i + LEN(pattern) - 1 > LEN(chars)) EXIT
   IF (chars(i:i + LEN(pattern) - 1) == pattern) THEN
@@ -398,6 +372,7 @@ INTEGER(I4B) :: ii, slen, flen
 
 slen = LEN(chars)
 flen = LEN(findp)
+IF (PRESENT(isok)) isok = .TRUE.
 IF (flen .EQ. 0) RETURN
 
 ! scan from left to right; after a match continue after it, so
@@ -417,7 +392,11 @@ DO WHILE (ii .LE. slen)
 END DO
 
 ! if the result does not fit, chars is not changed
-IF (LEN_TRIM(res) .LE. slen) chars = res
+IF (LEN_TRIM(res) .LE. slen) THEN
+  chars = res
+ELSE
+  IF (PRESENT(isok)) isok = .FALSE.
+END IF
 END PROCEDURE FindReplace_chars
 
 !----------------------------------------------------------------------------
@@ -449,6 +428,7 @@ IF (0 < i .AND. i <= nf) THEN
   field = TRIM(temp2)
   IF (PRESENT(ierr)) ierr = ioerr
 ELSE
+  field = ""
   IF (PRESENT(ierr)) ierr = IOSTAT_END
 END IF
 END PROCEDURE getField_chars
@@ -509,15 +489,16 @@ END PROCEDURE getPath_chars
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE getExtension_chars
-! Define internal variables
-INTEGER(I4B) :: n, m
-n = 0
-n = INDEX(char, ".", back=.TRUE.)
-IF (n .EQ. 0) THEN
+INTEGER(I4B) :: n, k, d
+
+! only the last element of the path is searched for a dot
+n = LEN_TRIM(char)
+k = SCAN(char(1:n), SEPS, back=.TRUE.)
+d = INDEX(char(k + 1:n), CHAR_DOT, back=.TRUE.)
+IF (d .EQ. 0) THEN
   ext = ""
 ELSE
-  m = LEN(char)
-  ext = CHAR(n + 1:m)
+  ext = char(k + d + 1:n)
 END IF
 END PROCEDURE getExtension_chars
 
@@ -564,5 +545,58 @@ DO i = LEN_TRIM(chars2), SLASHloc, -1
   END IF
 END DO
 END PROCEDURE getFileNameExt_chars
+
+!----------------------------------------------------------------------------
+!                                                                     IsSep
+!----------------------------------------------------------------------------
+
+! true if c is a file separator; on Windows both / and \ are separators
+PURE FUNCTION IsSep(c) RESULT(ans)
+  CHARACTER(*), INTENT(IN) :: c
+  LOGICAL(LGT) :: ans
+  ans = (c .EQ. CHAR_SLASH) .OR. (c .EQ. CHAR_FSLASH)
+END FUNCTION IsSep
+
+!----------------------------------------------------------------------------
+!                                                                   JoinTwo
+!----------------------------------------------------------------------------
+
+! join a and b with exactly one separator; an empty part is skipped
+PURE FUNCTION JoinTwo(a, b) RESULT(ans)
+  CHARACTER(*), INTENT(IN) :: a
+  CHARACTER(*), INTENT(IN) :: b
+  CHARACTER(:), ALLOCATABLE :: ans
+  INTEGER(I4B) :: na, ib
+
+  IF (LEN(a) .EQ. 0) THEN
+    ans = b
+    RETURN
+  END IF
+
+  IF (LEN(b) .EQ. 0) THEN
+    ans = a
+    RETURN
+  END IF
+
+  ! separators at the end of a, but keep a root separator
+  na = LEN(a)
+  DO WHILE (na .GT. 1)
+    IF (.NOT. IsSep(a(na:na))) EXIT
+    na = na - 1
+  END DO
+
+  ! separators at the start of b
+  ib = VERIFY(b, SEPS)
+  IF (ib .EQ. 0) THEN
+    ans = a(1:na)
+    RETURN
+  END IF
+
+  IF (IsSep(a(na:na))) THEN
+    ans = a(1:na)//b(ib:)
+  ELSE
+    ans = a(1:na)//CHAR_SLASH//b(ib:)
+  END IF
+END FUNCTION JoinTwo
 
 END SUBMODULE Methods

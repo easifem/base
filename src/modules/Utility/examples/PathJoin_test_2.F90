@@ -16,12 +16,16 @@ paths(1) = "usr"
 paths(2) = "local"
 paths(3) = "bin"
 
-! every part is preceded by a separator
+! the parts are joined like PathJoin(path1, path2)
 ans = PathJoin(paths)
-CALL OK(ans .EQ. "/usr/local/bin", "three parts")
+CALL OK(ans .EQ. "usr/local/bin", "three parts")
+
+! an absolute path starts with a separator in the first part
+paths(1) = "/usr/"
+CALL OK(PathJoin(paths) .EQ. "/usr/local/bin", "absolute path")
 
 one(1) = "a"
-CALL OK(PathJoin(one) .EQ. "/a", "one part")
+CALL OK(PathJoin(one) .EQ. "a", "one part")
 
 ans = PathJoin(empty)
 CALL OK(LEN(ans) .EQ. 0_I4B, "no parts gives an empty string")

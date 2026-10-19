@@ -23,10 +23,10 @@ DO ii = 1, 5
   CALL OK(ierr .EQ. 0_I4B, "ierr is 0 for field "//want(ii))
 END DO
 
-! i out of range: ierr is IOSTAT_END and field is not allocated
+! i out of range: ierr is IOSTAT_END and field is empty
 CALL GetField(i=6, chars=astr, field=field, ierr=ierr)
 CALL OK(ierr .EQ. IOSTAT_END, "i > number of fields")
-CALL OK(.NOT. ALLOCATED(field), "field is not allocated")
+CALL OK(LEN(field) .EQ. 0_I4B, "field is empty")
 
 CALL GetField(i=0, chars=astr, field=field, ierr=ierr)
 CALL OK(ierr .EQ. IOSTAT_END, "i = 0")
