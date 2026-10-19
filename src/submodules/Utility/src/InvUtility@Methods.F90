@@ -52,6 +52,9 @@ CASE (4)
     & + A(2, 3) * (A(3, 1) * A(4, 2) - A(3, 2) * A(4, 1)))
 CASE (5)
   Ans = det_2d_5(a)
+CASE DEFAULT
+  ! size 0 or larger than 5: Gaussian elimination
+  Ans = det_general(A)
 END SELECT
 END PROCEDURE det_2D
 
@@ -118,7 +121,7 @@ CASE (1)
   IF (ABS(d) .LT. ZERO) THEN
     invA = 0.0_DFP
   ELSE
-    invA = 1.0 / d
+    invA = 1.0_DFP / d
   END IF
 
 CASE (2)
@@ -205,6 +208,10 @@ CASE (4)
     invA = TRANSPOSE(co) / d
   END IF
 
+CASE DEFAULT
+  ! larger than 4: Gauss-Jordan elimination
+  CALL inv_general(A, invA)
+
 END SELECT
 
 END PROCEDURE Inv_2D
@@ -221,5 +228,85 @@ DO i = 1, n
   CALL Inv(invA=invA(:, :, i), A=A(:, :, i))
 END DO
 END PROCEDURE Inv_3D
+
+!----------------------------------------------------------------------------
+!                                                               det_general
+!----------------------------------------------------------------------------
+
+! Determinant of the n x n matrix a(1:n, 1:n), n = SIZE(a, 1), by
+! Gaussian elimination with partial pivoting. For n = 0 it is 1.
+
+PURE FUNCTION det_general(a) RESULT(ans)
+  REAL(DFP), INTENT(IN) :: a(:, :)
+  REAL(DFP) :: ans
+  REAL(DFP) :: lu(SIZE(a, 1), SIZE(a, 1)), tmp(SIZE(a, 1)), f
+  INTEGER(I4B) :: n, i, j, p
+
+  n = SIZE(a, 1)
+  lu = a(1:n, 1:n)
+  ans = 1.0_DFP
+
+  DO j = 1, n
+    p = j - 1 + MAXLOC(ABS(lu(j:n, j)), 1)
+    IF (lu(p, j) .EQ. 0.0_DFP) THEN
+      ans = 0.0_DFP
+      RETURN
+    END IF
+    IF (p .NE. j) THEN
+      tmp = lu(j, :)
+      lu(j, :) = lu(p, :)
+      lu(p, :) = tmp
+      ans = -ans
+    END IF
+    ans = ans * lu(j, j)
+    DO i = j + 1, n
+      f = lu(i, j) / lu(j, j)
+      lu(i, j:n) = lu(i, j:n) - f * lu(j, j:n)
+    END DO
+  END DO
+END FUNCTION det_general
+
+!----------------------------------------------------------------------------
+!                                                               inv_general
+!----------------------------------------------------------------------------
+
+! Inverse of the n x n matrix a(1:n, 1:n) by Gauss-Jordan elimination
+! with partial pivoting. As for the small sizes, the matrix is treated
+! as singular when ABS(det) < Zero, and then invA(1:n, 1:n) is zero.
+
+PURE SUBROUTINE inv_general(a, invA)
+  REAL(DFP), INTENT(IN) :: a(:, :)
+  REAL(DFP), INTENT(INOUT) :: invA(:, :)
+  REAL(DFP) :: w(SIZE(a, 1), 2 * SIZE(a, 1)), tmp(2 * SIZE(a, 1))
+  INTEGER(I4B) :: n, i, j, p
+
+  n = SIZE(a, 1)
+
+  IF (ABS(det_general(a)) .LT. ZERO) THEN
+    invA(1:n, 1:n) = 0.0_DFP
+    RETURN
+  END IF
+
+  w = 0.0_DFP
+  w(:, 1:n) = a(1:n, 1:n)
+  DO i = 1, n
+    w(i, n + i) = 1.0_DFP
+  END DO
+
+  DO j = 1, n
+    p = j - 1 + MAXLOC(ABS(w(j:n, j)), 1)
+    IF (p .NE. j) THEN
+      tmp = w(j, :)
+      w(j, :) = w(p, :)
+      w(p, :) = tmp
+    END IF
+    w(j, :) = w(j, :) / w(j, j)
+    DO i = 1, n
+      IF (i .NE. j) w(i, :) = w(i, :) - w(i, j) * w(j, :)
+    END DO
+  END DO
+
+  invA(1:n, 1:n) = w(:, n + 1:2 * n)
+END SUBROUTINE inv_general
 
 END SUBMODULE Methods

@@ -25,13 +25,15 @@
 !   they are meant for small matrices, such as Jacobians in finite
 !   element computations.
 !
-!   - `DET` works for matrices of size 1 to 5.
-!   - `INV` works for matrices of size 1 to 4.
+!   - `DET` uses closed-form formulas for sizes 1 to 5, and Gaussian
+!     elimination with partial pivoting for larger sizes.
+!   - `INV` uses the adjugate for sizes 1 to 4, and Gauss-Jordan
+!     elimination with partial pivoting for larger sizes.
 !   - Both accept a single matrix `A(:, :)` or a batch of matrices
 !     `A(:, :, :)`, where the last index is the batch index.
 !
-!   For larger matrices use an LU decomposition, for example from
-!   the LAPACK interface of easifem.
+!   For large matrices an LU decomposition from the LAPACK interface
+!   of easifem is faster.
 
 MODULE InvUtility
 USE GlobalData, ONLY: DFP
@@ -52,15 +54,15 @@ PUBLIC :: INV
 ! Description:
 !   Returns the determinant of the square matrix `A`. Closed-form
 !   formulas are used for sizes 1 to 4, and the expansion along the
-!   first row is used for size 5.
+!   first row is used for size 5. Larger matrices use Gaussian
+!   elimination with partial pivoting.
 !
 !   - Only `SIZE(A, 1)` is used to select the formula. `A` should be
 !     square; this is not checked.
-!   - For `SIZE(A, 1) > 5` the result is undefined.
 !
 ! Arguments:
 !   A : REAL(DFP), rank(2) - square matrix,
-!     `SIZE(A, 1) = SIZE(A, 2)`, `1 <= SIZE(A, 1) <= 5`
+!     `SIZE(A, 1) = SIZE(A, 2)`
 !
 ! Returns:
 !   ans : REAL(DFP) - determinant of `A`
@@ -153,11 +155,11 @@ END INTERFACE DET
 !   by the rank-2 version of `DET`, so the same size limits apply.
 !
 !   - The result is allocated to `SIZE(A, 3)`.
-!   - Each matrix should be square with `1 <= SIZE(A, 1) <= 5`.
+!   - Each matrix should be square.
 !
 ! Arguments:
 !   A : REAL(DFP), rank(3) - batch of square matrices,
-!     `SIZE(A, 1) = SIZE(A, 2)`, `1 <= SIZE(A, 1) <= 5`
+!     `SIZE(A, 1) = SIZE(A, 2)`
 !
 ! Returns:
 !   ans : REAL(DFP), ALLOCATABLE, rank(1) - determinants,
@@ -232,8 +234,8 @@ END INTERFACE DET
 !   `invA`, by using the adjugate (transpose of the cofactor matrix)
 !   divided by the determinant.
 !
-!   - It works for `SIZE(A, 1)` from 1 to 4. For larger sizes `invA`
-!     is not changed.
+!   - The adjugate is used for `SIZE(A, 1)` from 1 to 4. Larger
+!     matrices use Gauss-Jordan elimination with partial pivoting.
 !   - `invA` should be allocated with the same shape as `A` before
 !     the call.
 !   - If `ABS(DET(A)) < Zero` (`Zero` from `GlobalData`, about the
@@ -245,7 +247,7 @@ END INTERFACE DET
 !   invA : REAL(DFP), rank(2), INOUT - inverse of `A`,
 !     `SHAPE(invA) = SHAPE(A)`
 !   A : REAL(DFP), rank(2) - square matrix,
-!     `SIZE(A, 1) = SIZE(A, 2)`, `1 <= SIZE(A, 1) <= 4`
+!     `SIZE(A, 1) = SIZE(A, 2)`
 !
 ! Formula:
 !   $$A^{-1} = \frac{1}{\det(A)}\, C^{T}, \quad
@@ -320,8 +322,7 @@ END INTERFACE INV
 !   Computes the inverse of each matrix `A(:, :, k)` and stores it in
 !   `invA(:, :, k)`, where the last index `k` is the batch index.
 !   Each inverse is computed by the rank-2 version of `INV`, so the
-!   same rules apply: sizes 1 to 4 only, and a singular matrix gives
-!   a zero slice.
+!   same rules apply, and a singular matrix gives a zero slice.
 !
 !   - `invA` should be allocated with the same shape as `A` before
 !     the call.
@@ -330,7 +331,7 @@ END INTERFACE INV
 !   invA : REAL(DFP), rank(3), INOUT - inverses,
 !     `SHAPE(invA) = SHAPE(A)`
 !   A : REAL(DFP), rank(3) - batch of square matrices,
-!     `SIZE(A, 1) = SIZE(A, 2)`, `1 <= SIZE(A, 1) <= 4`
+!     `SIZE(A, 1) = SIZE(A, 2)`
 !
 ! Formula:
 !   $$\mathrm{invA}_{:,:,k} = \left(A_{:,:,k}\right)^{-1},
