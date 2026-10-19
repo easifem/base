@@ -69,6 +69,14 @@ END PROCEDURE obj_GetMultiIndices1
 MODULE PROCEDURE obj_GetMultiIndices1_
 INTEGER(I4B) :: ii, aint, bint, tsize
 
+! one entry: the only tuple is [n]
+IF (d .EQ. 0) THEN
+  nrow = 1
+  ncol = 1
+  ans(1, 1) = n
+  RETURN
+END IF
+
 IF (d .EQ. 1) THEN
 
   nrow = 2

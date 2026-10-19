@@ -1,6 +1,11 @@
 !> author: Vikas Sharma, Ph. D.
 ! date: 2026-10-18
 ! summary: GetMultiIndices_(n, d, ans, nrow, ncol), no allocation
+!
+! Description:
+!   Includes the regression test for bug M-16 in
+!   bug-reports/Utility_bug_report.md: d = 0 with n >= 1 recursed
+!   with negative d; the only tuple of one entry is [n].
 
 PROGRAM main
 USE GlobalData, ONLY: I4B
@@ -25,5 +30,12 @@ CALL GetMultiIndices_(n=2_I4B, d=2_I4B, ans=big, nrow=nrow, ncol=ncol)
 CALL OK(ALL(big(1:nrow, 1:ncol) .EQ. GetMultiIndices(2_I4B, 2_I4B)), &
         "larger ans")
 CALL OK(ALL(big(4, :) .EQ. -1_I4B), "extra row is not changed")
+
+! d = 0: the only tuple of one entry is [n]
+big = -1_I4B
+CALL GetMultiIndices_(n=3_I4B, d=0_I4B, ans=big, nrow=nrow, ncol=ncol)
+CALL OK(nrow .EQ. 1_I4B .AND. ncol .EQ. 1_I4B, "d = 0: nrow, ncol")
+CALL OK(big(1, 1) .EQ. 3_I4B, "d = 0: the tuple is [n]")
+CALL OK(big(2, 1) .EQ. -1_I4B, "d = 0: rest is not changed")
 
 END PROGRAM main

@@ -81,7 +81,7 @@ PUBLIC :: Get1DIndexFortran
 !
 ! Arguments:
 !   n : INTEGER(I4B) - order (sum of the entries), `n >= 0`
-!   d : INTEGER(I4B) - the tuples have `d+1` entries, `d >= 1`
+!   d : INTEGER(I4B) - the tuples have `d+1` entries, `d >= 0`
 !
 ! Returns:
 !   ans : INTEGER(I4B) - number of tuples
@@ -112,6 +112,10 @@ PUBLIC :: Get1DIndexFortran
 !
 ! ! order zero has only one tuple
 ! CALL OK(SIZE(0_I4B, 2_I4B) .EQ. 1_I4B, "Size(0, 2)")
+!
+! ! d = 0: the only tuple of one entry is [n]
+! CALL OK(SIZE(3_I4B, 0_I4B) .EQ. 1_I4B, "Size(3, 0)")
+! CALL OK(SIZE(3_I4B, 0_I4B, .TRUE.) .EQ. 4_I4B, "Size(3, 0, .TRUE.)")
 !
 ! ! the intrinsic SIZE is still available
 ! x = 0_I4B
@@ -145,7 +149,7 @@ END INTERFACE Size
 !
 ! Arguments:
 !   n : INTEGER(I4B) - highest order, `n >= 0`
-!   d : INTEGER(I4B) - the tuples have `d+1` entries, `d >= 1`
+!   d : INTEGER(I4B) - the tuples have `d+1` entries, `d >= 0`
 !   upto : LOGICAL(LGT) - `.TRUE.`: orders `0..n`, `.FALSE.`: order `n`
 !
 ! Returns:
@@ -215,11 +219,12 @@ END INTERFACE Size
 !
 !   - The columns are in increasing lexicographic order. For `n = 2`
 !     and `d = 1` the columns are `(0, 2)`, `(1, 1)`, `(2, 0)`.
-!   - `d` should be at least one. This is not checked.
+!   - `d` should be at least zero; negative `d` is not checked. For
+!     `d = 0` the only tuple of one entry is `[n]`.
 !
 ! Arguments:
 !   n : INTEGER(I4B) - order (sum of the entries), `n >= 0`
-!   d : INTEGER(I4B) - the tuples have `d+1` entries, `d >= 1`
+!   d : INTEGER(I4B) - the tuples have `d+1` entries, `d >= 0`
 !
 ! Returns:
 !   ans : INTEGER(I4B), ALLOCATABLE, rank(2) - multi-indices,
@@ -263,6 +268,15 @@ END INTERFACE Size
 ! CALL OK(SIZE(ans, 2) .EQ. SIZE(4_I4B, 3_I4B), "number of columns")
 ! CALL OK(ALL(SUM(ans, 1) .EQ. 4_I4B), "each column sums to n")
 !
+! ! d = 0: the only tuple of one entry is [n]
+! ans = GetMultiIndices(3_I4B, 0_I4B)
+! CALL OK(ALL(SHAPE(ans) .EQ. [1_I4B, 1_I4B]), "shape for d = 0")
+! CALL OK(ans(1, 1) .EQ. 3_I4B, "index for d = 0")
+! ans = GetMultiIndices(2_I4B, 0_I4B, .TRUE.)
+! CALL OK(ALL(SHAPE(ans) .EQ. [1_I4B, 3_I4B]), "shape for d = 0, upto")
+! CALL OK(ALL(ans(1, :) .EQ. [0_I4B, 1_I4B, 2_I4B]), &
+!         "indices for d = 0, upto")
+!
 ! END PROGRAM main
 !```
 
@@ -291,7 +305,7 @@ END INTERFACE GetMultiIndices
 !
 ! Arguments:
 !   n : INTEGER(I4B) - order (sum of the entries), `n >= 0`
-!   d : INTEGER(I4B) - the tuples have `d+1` entries, `d >= 1`
+!   d : INTEGER(I4B) - the tuples have `d+1` entries, `d >= 0`
 !   ans : INTEGER(I4B), rank(2) - multi-indices in `ans(1:nrow, 1:ncol)`
 !   nrow : INTEGER(I4B) - number of rows written, `nrow = d+1`
 !   ncol : INTEGER(I4B) - number of columns written,
@@ -329,6 +343,13 @@ END INTERFACE GetMultiIndices
 !         "larger ans")
 ! CALL OK(ALL(big(4, :) .EQ. -1_I4B), "extra row is not changed")
 !
+! ! d = 0: the only tuple of one entry is [n]
+! big = -1_I4B
+! CALL GetMultiIndices_(n=3_I4B, d=0_I4B, ans=big, nrow=nrow, ncol=ncol)
+! CALL OK(nrow .EQ. 1_I4B .AND. ncol .EQ. 1_I4B, "d = 0: nrow, ncol")
+! CALL OK(big(1, 1) .EQ. 3_I4B, "d = 0: the tuple is [n]")
+! CALL OK(big(2, 1) .EQ. -1_I4B, "d = 0: rest is not changed")
+!
 ! END PROGRAM main
 !```
 
@@ -358,11 +379,12 @@ END INTERFACE GetMultiIndices_
 !     `GetMultiIndices(i, d)`.
 !   - If `upto` is `.FALSE.`, the result is `GetMultiIndices(n, d)`,
 !     the tuples whose sum is exactly `n`.
-!   - `d` should be at least one. This is not checked.
+!   - `d` should be at least zero; negative `d` is not checked. For
+!     `d = 0` the only tuple of one entry is `[n]`.
 !
 ! Arguments:
 !   n : INTEGER(I4B) - highest order, `n >= 0`
-!   d : INTEGER(I4B) - the tuples have `d+1` entries, `d >= 1`
+!   d : INTEGER(I4B) - the tuples have `d+1` entries, `d >= 0`
 !   upto : LOGICAL(LGT) - `.TRUE.`: orders `0..n`, `.FALSE.`: order `n`
 !
 ! Returns:
@@ -442,7 +464,7 @@ END INTERFACE GetMultiIndices
 !
 ! Arguments:
 !   n : INTEGER(I4B) - highest order, `n >= 0`
-!   d : INTEGER(I4B) - the tuples have `d+1` entries, `d >= 1`
+!   d : INTEGER(I4B) - the tuples have `d+1` entries, `d >= 0`
 !   upto : LOGICAL(LGT) - `.TRUE.`: orders `0..n`, `.FALSE.`: order `n`
 !   ans : INTEGER(I4B), rank(2) - multi-indices in `ans(1:nrow, 1:ncol)`
 !   nrow : INTEGER(I4B) - number of rows written, `nrow = d+1`
