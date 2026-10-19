@@ -24,6 +24,8 @@ INTEGER(I4B), PARAMETER :: NPAR_CUMSUM = 16
 INTEGER(I4B), PARAMETER :: NPAR_CUMPROD = 8
 INTEGER(I4B), PARAMETER :: NPAR_POLY = 8
 INTEGER(I4B), PARAMETER :: NPAR_POLYTERM = 8
+! pi to the full precision of DFP
+REAL(DFP), PARAMETER :: PI_DFP = ACOS(-1.0_DFP)
 CONTAINS
 
 !----------------------------------------------------------------------------
@@ -31,7 +33,7 @@ CONTAINS
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE radian_dfp
-Ans = deg / 180.0_DFP * 3.1415926535_DFP
+Ans = deg / 180.0_DFP * PI_DFP
 END PROCEDURE
 
 !----------------------------------------------------------------------------
@@ -39,7 +41,7 @@ END PROCEDURE
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE radian_int
-Ans = REAL(deg, KIND=DFP) / 180.0_DFP * 3.1415926535_DFP
+Ans = REAL(deg, KIND=DFP) / 180.0_DFP * PI_DFP
 END PROCEDURE
 
 !----------------------------------------------------------------------------
@@ -47,7 +49,7 @@ END PROCEDURE
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE degrees_dfp
-Ans = rad / 3.1415926535_DFP * 180.0_DFP
+Ans = rad / PI_DFP * 180.0_DFP
 END PROCEDURE
 
 !----------------------------------------------------------------------------
@@ -92,30 +94,40 @@ END PROCEDURE
 
 MODULE PROCEDURE exe_cmd
 ! Define internal variables
-INTEGER(I4B) :: CMDSTAT, EXITSTAT
-LOGICAL(LGT) :: WAIT = .TRUE.
-CHARACTER(LEN=300) :: CMDMSG = ""
+INTEGER(I4B) :: CMDSTAT, EXITSTAT0
+CHARACTER(LEN=300) :: CMDMSG
 
-CALL EXECUTE_COMMAND_LINE(TRIM(CMD), CMDSTAT=CMDSTAT, &
-  & EXITSTAT=EXITSTAT, WAIT=WAIT, CMDMSG=CMDMSG)
+CMDMSG = ""
+EXITSTAT0 = 0
+
+CALL EXECUTE_COMMAND_LINE(TRIM(CMD), WAIT=.TRUE., CMDSTAT=CMDSTAT, &
+                          EXITSTAT=EXITSTAT0, CMDMSG=CMDMSG)
 
 IF (CMDSTAT .NE. 0) THEN
-  IF (CMDSTAT .EQ. -1) THEN
-    CALL ErrorMsg( &
-      & File=__FILE__, &
-      & Routine="exe_cmd()", &
-      & Line=__LINE__, &
-      & MSG="following command failed "//TRIM(CMDMSG))
-  END IF
-
   CALL ErrorMsg( &
     & File=__FILE__, &
-    & Routine="exe_cmd()", &
+    & Routine="ExecuteCommand()", &
     & Line=__LINE__, &
-    & MSG="following command failed "//TRIM(CMDMSG))
+    & MSG="the command could not be run: "//TRIM(CMD)//" "// &
+    & TRIM(CMDMSG)//" "//TRIM(Str))
   STOP
 END IF
-END PROCEDURE
+
+IF (PRESENT(exitStat)) THEN
+  exitStat = EXITSTAT0
+  RETURN
+END IF
+
+IF (EXITSTAT0 .NE. 0) THEN
+  CALL ErrorMsg( &
+    & File=__FILE__, &
+    & Routine="ExecuteCommand()", &
+    & Line=__LINE__, &
+    & MSG="the command failed with exit status "// &
+    & TRIM(Int2Str(EXITSTAT0))//": "//TRIM(CMD)//" "//TRIM(Str))
+  STOP
+END IF
+END PROCEDURE exe_cmd
 
 !----------------------------------------------------------------------------
 !                                                                 getUnitNo
@@ -149,12 +161,18 @@ END PROCEDURE getUnitNo_1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Factorial
-IF (N .EQ. 0) THEN
-  Ans = 1
-ELSE
-  Ans = N * Factorial(N - 1)
+INTEGER(I4B) :: k
+
+IF (N .LT. 0) THEN
+  Ans = 0
+  RETURN
 END IF
-END PROCEDURE
+
+Ans = 1
+DO k = 2, N
+  Ans = Ans * k
+END DO
+END PROCEDURE Factorial
 
 !----------------------------------------------------------------------------
 !                                                                    Int2Str
@@ -319,6 +337,16 @@ iminloc_r = imin(1)
 END PROCEDURE iminloc_r
 
 !----------------------------------------------------------------------------
+!                                                                    IMINLOC
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE iminloc_i
+INTEGER(I4B), DIMENSION(1) :: imin
+imin = MINLOC(iarr(:))
+iminloc_i = imin(1)
+END PROCEDURE iminloc_i
+
+!----------------------------------------------------------------------------
 !                                                                       IMG
 !----------------------------------------------------------------------------
 
@@ -355,8 +383,8 @@ END PROCEDURE safe_ACOS
 MODULE PROCEDURE safe_ASIN
 REAL(DFP) :: s2
 s2 = s
-s2 = MAX(s2, -1.0D+00)
-s2 = MIN(s2, +1.0D+00)
+s2 = MAX(s2, -1.0_DFP)
+s2 = MIN(s2, +1.0_DFP)
 ans = asin(s2)
 END PROCEDURE safe_ASIN
 

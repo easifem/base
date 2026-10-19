@@ -71,8 +71,8 @@ PUBLIC :: Safe_ASIN
 !   Returns `deg` in radians. The argument can be `REAL(DFP)` or
 !   `INTEGER(I4B)`; the result is always `REAL(DFP)`.
 !
-!   The value of pi used is `3.1415926535`, so the result differs from
-!   the exact value by a relative error of about 3e-11.
+!   pi is computed as `ACOS(-1.0_DFP)`, so it has the full precision
+!   of `DFP`.
 !
 ! Arguments:
 !   deg : REAL(DFP) or INTEGER(I4B) - angle in degrees
@@ -93,27 +93,24 @@ PUBLIC :: Safe_ASIN
 ! USE Test_Method, ONLY: OK
 ! IMPLICIT NONE
 !
-! REAL(DFP), PARAMETER :: tol = 1.0E-12_DFP
-! REAL(DFP), PARAMETER :: piTol = 1.0E-8_DFP
+! REAL(DFP), PARAMETER :: tol = 1.0E-14_DFP
 ! REAL(DFP) :: pi
 !
 ! pi = ACOS(-1.0_DFP)
 !
 ! ! real argument
 ! CALL OK(ABS(Radian(0.0_DFP)) .LT. tol, "Radian(0)")
-! CALL OK(ABS(Radian(180.0_DFP) - 3.1415926535_DFP) .LT. tol, &
-!         "Radian(180) uses pi = 3.1415926535")
-! CALL OK(ABS(Radian(180.0_DFP) - pi) .LT. piTol, "Radian(180) ~ pi")
-! CALL OK(ABS(Radian(90.0_DFP) - 0.5_DFP * pi) .LT. piTol, &
-!         "Radian(90) ~ pi/2")
-! CALL OK(ABS(Radian(-45.0_DFP) + 0.25_DFP * pi) .LT. piTol, &
-!         "Radian(-45) ~ -pi/4")
+! CALL OK(ABS(Radian(180.0_DFP) - pi) .LT. tol, "Radian(180) = pi")
+! CALL OK(ABS(Radian(90.0_DFP) - 0.5_DFP * pi) .LT. tol, &
+!         "Radian(90) = pi/2")
+! CALL OK(ABS(Radian(-45.0_DFP) + 0.25_DFP * pi) .LT. tol, &
+!         "Radian(-45) = -pi/4")
 !
 ! ! integer argument gives the same value as the real one
 ! CALL OK(ABS(Radian(90_I4B) - Radian(90.0_DFP)) .LT. tol, &
 !         "Radian(90) integer = real")
-! CALL OK(ABS(Radian(360_I4B) - 2.0_DFP * pi) .LT. piTol, &
-!         "Radian(360) ~ 2 pi")
+! CALL OK(ABS(Radian(360_I4B) - 2.0_DFP * pi) .LT. tol, &
+!         "Radian(360) = 2 pi")
 !
 ! END PROGRAM main
 !```
@@ -140,7 +137,7 @@ END INTERFACE Radian
 !
 ! Description:
 !   Returns `rad` in degrees. It uses the same value of pi as `Radian`
-!   (`3.1415926535`), so `Degrees(Radian(x))` gives back `x`.
+!   (`ACOS(-1.0_DFP)`), so `Degrees(Radian(x))` gives back `x`.
 !
 ! Arguments:
 !   rad : REAL(DFP) - angle in radians
@@ -161,18 +158,15 @@ END INTERFACE Radian
 ! USE Test_Method, ONLY: OK
 ! IMPLICIT NONE
 !
-! REAL(DFP), PARAMETER :: tol = 1.0E-10_DFP
-! REAL(DFP), PARAMETER :: piTol = 1.0E-6_DFP
+! REAL(DFP), PARAMETER :: tol = 1.0E-12_DFP
 ! REAL(DFP) :: pi
 !
 ! pi = ACOS(-1.0_DFP)
 !
 ! CALL OK(ABS(Degrees(0.0_DFP)) .LT. tol, "Degrees(0)")
-! CALL OK(ABS(Degrees(3.1415926535_DFP) - 180.0_DFP) .LT. tol, &
-!         "Degrees(3.1415926535) = 180")
-! CALL OK(ABS(Degrees(pi) - 180.0_DFP) .LT. piTol, "Degrees(pi) ~ 180")
-! CALL OK(ABS(Degrees(-0.5_DFP * pi) + 90.0_DFP) .LT. piTol, &
-!         "Degrees(-pi/2) ~ -90")
+! CALL OK(ABS(Degrees(pi) - 180.0_DFP) .LT. tol, "Degrees(pi) = 180")
+! CALL OK(ABS(Degrees(-0.5_DFP * pi) + 90.0_DFP) .LT. tol, &
+!         "Degrees(-pi/2) = -90")
 !
 ! ! Degrees is the inverse of Radian
 ! CALL OK(ABS(Degrees(Radian(37.5_DFP)) - 37.5_DFP) .LT. tol, &
@@ -343,16 +337,22 @@ END INTERFACE SearchNearestCoord
 !
 !   - If the command cannot be run (`CMDSTAT /= 0`), an error message is
 !     printed and the program stops.
-!   - The exit status of the command is not checked, so a command that
-!     runs but fails (for example `false`) does not stop the program.
-!   - `Str` is not used.
+!   - If `exitStat` is present, it returns the exit status of the
+!     command, and a failing command does not stop the program.
+!   - If `exitStat` is absent and the command fails (exit status not
+!     0, for example `false`), an error message is printed and the
+!     program stops.
+!   - `Str` is added to the error messages, for example the name of the
+!     calling routine.
 !
 ! Arguments:
 !   CMD : CHARACTER(*) - the command to run
-!   Str : CHARACTER(*) - not used
+!   Str : CHARACTER(*) - extra text for the error messages
+!   exitStat : INTEGER(I4B), OPTIONAL, INTENT(OUT) - exit status of
+!     the command
 !
 ! Returns:
-!   None. The command is run as a side effect.
+!   exitStat : the exit status of the command, if present
 !
 ! Formula:
 !   None.
@@ -361,9 +361,12 @@ END INTERFACE SearchNearestCoord
 !
 !```fortran
 ! PROGRAM main
+! USE GlobalData, ONLY: I4B
 ! USE MiscUtility, ONLY: ExecuteCommand
 ! USE Test_Method, ONLY: OK
 ! IMPLICIT NONE
+!
+! INTEGER(I4B) :: exitStat
 !
 ! ! a command that succeeds
 ! CALL ExecuteCommand("true", "")
@@ -373,16 +376,21 @@ END INTERFACE SearchNearestCoord
 ! CALL ExecuteCommand("echo ExecuteCommand works", "")
 ! CALL OK(.TRUE., "ExecuteCommand('echo ...') returns")
 !
-! ! the exit status of the command is not checked
-! CALL ExecuteCommand("false", "")
-! CALL OK(.TRUE., "ExecuteCommand('false') also returns")
+! ! with exitStat, a failing command returns its exit status; without
+! ! exitStat, a failing command stops the program
+! CALL ExecuteCommand("true", "", exitStat)
+! CALL OK(exitStat .EQ. 0_I4B, "exit status of true is 0")
+! CALL ExecuteCommand("false", "", exitStat)
+! CALL OK(exitStat .NE. 0_I4B, "exit status of false is not 0")
 !
 ! END PROGRAM main
 !```
 
 INTERFACE ExecuteCommand
-  MODULE SUBROUTINE exe_cmd(CMD, Str)
-    CHARACTER(LEN=*), INTENT(IN) :: CMD, Str
+  MODULE SUBROUTINE exe_cmd(CMD, Str, exitStat)
+    CHARACTER(LEN=*), INTENT(IN) :: CMD
+    CHARACTER(LEN=*), INTENT(IN) :: Str
+    INTEGER(I4B), OPTIONAL, INTENT(OUT) :: exitStat
   END SUBROUTINE exe_cmd
 END INTERFACE ExecuteCommand
 
@@ -457,15 +465,14 @@ END INTERFACE GetUnitNo
 ! summary: Returns the factorial of an integer.
 !
 ! Description:
-!   Returns `N!`, computed by recursion, with `0! = 1`.
+!   Returns `N!`, computed by a loop, with `0! = 1`.
 !
-!   - `N` must not be negative. A negative `N` never reaches the base
-!     case `N = 0`, so the recursion does not end.
+!   - For a negative `N` the result is 0.
 !   - The result is `INTEGER(I4B)`, so `N` must be at most 12; `13!`
-!     overflows.
+!     overflows. Use `GAMMA(REAL(N + 1, DFP))` for larger `N`.
 !
 ! Arguments:
-!   N : INTEGER(I4B) - non-negative integer, `0 <= N <= 12`
+!   N : INTEGER(I4B) - integer, `N <= 12`
 !
 ! Returns:
 !   Ans : INTEGER(I4B) - `N!`
@@ -500,7 +507,7 @@ END INTERFACE GetUnitNo
 !```
 
 INTERFACE
-  MODULE PURE RECURSIVE FUNCTION Factorial(N) RESULT(Ans)
+  MODULE PURE FUNCTION Factorial(N) RESULT(Ans)
     INTEGER(I4B), INTENT(IN) :: N
     INTEGER(I4B) :: Ans
   END FUNCTION Factorial
@@ -629,12 +636,12 @@ END INTERFACE
 !```
 
 INTERFACE Real2Str
-  MODULE FUNCTION SP2Str(I)
+  MODULE PURE FUNCTION SP2Str(I)
     REAL(SP), INTENT(IN) :: I
     CHARACTER(LEN=20) :: SP2Str
   END FUNCTION SP2Str
 
-  MODULE FUNCTION DP2Str(I)
+  MODULE PURE FUNCTION DP2Str(I)
     REAL(DP), INTENT(IN) :: I
     CHARACTER(LEN=20) :: DP2Str
   END FUNCTION DP2Str
@@ -856,18 +863,18 @@ END INTERFACE IMAXLOC
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2022-08-05
-! summary: Returns the index of the smallest entry of a real vector.
+! summary: Returns the index of the smallest entry of a vector.
 !
 ! Description:
 !   Returns `MINLOC(arr)` as a scalar. It is available for `REAL(DFP)`
-!   vectors only.
+!   and `INTEGER(I4B)` vectors.
 !
 !   - If the smallest value occurs more than once, the first index is
 !     returned.
 !   - For an empty vector the result is 0.
 !
 ! Arguments:
-!   arr : REAL(DFP), rank(1) - the vector
+!   arr : REAL(DFP) or INTEGER(I4B), rank(1) - the vector
 !
 ! Returns:
 !   ans : INTEGER(I4B) - index of the smallest entry
@@ -895,10 +902,15 @@ END INTERFACE IMAXLOC
 !```
 
 INTERFACE IMINLOC
-  MODULE FUNCTION iminloc_r(arr)
+  MODULE PURE FUNCTION iminloc_r(arr)
     REAL(DFP), INTENT(IN) :: arr(:)
     INTEGER(I4B) :: iminloc_r
   END FUNCTION iminloc_r
+
+  MODULE PURE FUNCTION iminloc_i(iarr)
+    INTEGER(I4B), INTENT(IN) :: iarr(:)
+    INTEGER(I4B) :: iminloc_i
+  END FUNCTION iminloc_i
 END INTERFACE IMINLOC
 
 !----------------------------------------------------------------------------
