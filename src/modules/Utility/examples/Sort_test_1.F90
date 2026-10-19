@@ -25,9 +25,12 @@ CALL OK(ALL(Sort(x, "INSERTIONSORT") .EQ. y), "INSERTIONSORT")
 ! the name is not case sensitive
 CALL OK(ALL(Sort(x, "HeapSort") .EQ. y), "HeapSort")
 
-! an unknown name returns x unchanged
-CALL OK(ALL(Sort(x, "BUBBLESORT") .EQ. x), "unknown name")
-CALL OK(ALL(Sort(x, "INSERTION") .EQ. x), "INSERTION is unknown")
+! only the first four letters are used
+CALL OK(ALL(Sort(x, "INSERTION") .EQ. y), "INSERTION")
+CALL OK(ALL(Sort(x, "Quick") .EQ. y), "Quick")
+
+! an unknown name falls back to the default, INTROSORT
+CALL OK(ALL(Sort(x, "BUBBLESORT") .EQ. y), "unknown name")
 
 ! x itself is not changed
 CALL OK(x(1) .EQ. 5_I4B, "x is not changed")

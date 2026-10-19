@@ -15,23 +15,25 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-CHARACTER(LEN=120) :: name0
+CHARACTER(LEN=4) :: name0
 
 IF (PRESENT(name)) THEN
-  name0 = UpperCase(name)
+  name0 = UpperCase(name(1:4))
 ELSE
-  name0 = "INTROSORT"
+  name0 = "INTR"
 END IF
 
 ans = x
 
-SELECT CASE (TRIM(name0))
-CASE ("QUICKSORT")
+SELECT CASE (name0)
+CASE ("QUIC")
   CALL QuickSort(vect1=ans, low=1_I4B, high=SIZE(ans, kind=I4B))
-CASE ("HEAPSORT")
+CASE ("HEAP")
   CALL HeapSort(array=ans)
-CASE ("INTROSORT")
+CASE ("INTR")
   CALL IntroSort(array=ans)
-CASE ("INSERTIONSORT")
+CASE ("INSE")
   CALL InsertionSort(array=ans, low=1_I4B, high=SIZE(ans, kind=I4B))
+CASE DEFAULT
+  CALL IntroSort(array=ans)
 END SELECT

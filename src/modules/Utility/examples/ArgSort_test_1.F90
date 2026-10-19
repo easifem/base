@@ -28,10 +28,12 @@ CALL OK(ALL(ArgSort(x, "INSERTION") .EQ. arg), "INSERTION")
 ! the name is not case sensitive
 CALL OK(ALL(ArgSort(x, "heapsort") .EQ. arg), "heapsort")
 
-! an unknown name returns 1..n
-CALL OK(ALL(ArgSort(x, "BUBBLESORT") .EQ. id), "unknown name")
-CALL OK(ALL(ArgSort(x, "INSERTIONSORT") .EQ. id), &
-        "INSERTIONSORT is unknown")
+! only the first four letters are used
+CALL OK(ALL(ArgSort(x, "INSERTIONSORT") .EQ. arg), "INSERTIONSORT")
+CALL OK(ALL(ArgSort(x, "Quick") .EQ. arg), "Quick")
+
+! an unknown name falls back to the default, INTROSORT
+CALL OK(ALL(ArgSort(x, "BUBBLESORT") .EQ. arg), "unknown name")
 
 ! a permutation of 1..40
 b = [(MOD(37_I4B * ii, 41_I4B), ii=1, 40)]

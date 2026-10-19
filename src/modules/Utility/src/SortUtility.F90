@@ -1287,16 +1287,21 @@ END INTERFACE QuickSort
 !
 ! Description:
 !   Returns the entries of `x` in ascending order. `x` is not changed.
-!   The optional `name` selects the algorithm. It is converted to
-!   upper case, so it is not case sensitive:
+!   The optional `name` selects the algorithm. Only its first four
+!   letters are used, and they are converted to upper case, so the
+!   name is not case sensitive:
 !
-!   - `"INTROSORT"` (default): `IntroSort`
-!   - `"QUICKSORT"`: `QuickSort`
-!   - `"HEAPSORT"`: `HeapSort`
-!   - `"INSERTIONSORT"`: `InsertionSort`
+!   - `"INTR..."`, for example `"INTROSORT"` (default): `IntroSort`
+!   - `"QUIC..."`, for example `"QUICKSORT"`: `QuickSort`
+!   - `"HEAP..."`, for example `"HEAPSORT"`: `HeapSort`
+!   - `"INSE..."`, for example `"INSERTION"` or `"INSERTIONSORT"`:
+!     `InsertionSort`
 !
-!   Any other name (for example `"INSERTION"`, which `ArgSort`
-!   accepts) is silently ignored and `x` is returned unsorted.
+!   Any other name falls back to the default, `IntroSort`, so the
+!   result is always sorted.
+!
+!   `name` should have at least four characters. A shorter name is
+!   read past its end; with bounds checking the program stops.
 !
 ! Arguments:
 !   x : INTEGER or REAL, rank(1) - vector to sort
@@ -1336,9 +1341,12 @@ END INTERFACE QuickSort
 ! ! the name is not case sensitive
 ! CALL OK(ALL(Sort(x, "HeapSort") .EQ. y), "HeapSort")
 !
-! ! an unknown name returns x unchanged
-! CALL OK(ALL(Sort(x, "BUBBLESORT") .EQ. x), "unknown name")
-! CALL OK(ALL(Sort(x, "INSERTION") .EQ. x), "INSERTION is unknown")
+! ! only the first four letters are used
+! CALL OK(ALL(Sort(x, "INSERTION") .EQ. y), "INSERTION")
+! CALL OK(ALL(Sort(x, "Quick") .EQ. y), "Quick")
+!
+! ! an unknown name falls back to the default, INTROSORT
+! CALL OK(ALL(Sort(x, "BUBBLESORT") .EQ. y), "unknown name")
 !
 ! ! x itself is not changed
 ! CALL OK(x(1) .EQ. 5_I4B, "x is not changed")
@@ -1393,19 +1401,21 @@ END INTERFACE Sort
 !
 ! Description:
 !   Returns `ans` such that `x(ans)` is in ascending order. `x` is not
-!   changed. The optional `name` selects the algorithm. It is
-!   converted to upper case, so it is not case sensitive:
+!   changed. The optional `name` selects the algorithm. Only its first
+!   four letters are used, and they are converted to upper case, so
+!   the name is not case sensitive:
 !
-!   - `"INTROSORT"` (default): `ArgIntroSort`
-!   - `"QUICKSORT"`: also `ArgIntroSort`
-!   - `"HEAPSORT"`: `ArgHeapSort`
-!   - `"INSERTION"`: `ArgInsertionSort`
+!   - `"INTR..."`, for example `"INTROSORT"` (default): `ArgIntroSort`
+!   - `"QUIC..."`, for example `"QUICKSORT"`: also `ArgIntroSort`
+!   - `"HEAP..."`, for example `"HEAPSORT"`: `ArgHeapSort`
+!   - `"INSE..."`, for example `"INSERTION"` or `"INSERTIONSORT"`:
+!     `ArgInsertionSort`
 !
-!   Any other name (for example `"INSERTIONSORT"`, which `Sort`
-!   accepts) is silently ignored and `ans = [1, 2, ..., SIZE(x)]` is
-!   returned.
+!   Any other name falls back to the default, `ArgIntroSort`, so
+!   `x(ans)` is always sorted.
 !
-!   The default and `"QUICKSORT"` use `ArgIntroSort`.
+!   `name` should have at least four characters. A shorter name is
+!   read past its end; with bounds checking the program stops.
 !
 ! Arguments:
 !   x : INTEGER or REAL, rank(1) - vector to sort
@@ -1448,10 +1458,12 @@ END INTERFACE Sort
 ! ! the name is not case sensitive
 ! CALL OK(ALL(ArgSort(x, "heapsort") .EQ. arg), "heapsort")
 !
-! ! an unknown name returns 1..n
-! CALL OK(ALL(ArgSort(x, "BUBBLESORT") .EQ. id), "unknown name")
-! CALL OK(ALL(ArgSort(x, "INSERTIONSORT") .EQ. id), &
-!         "INSERTIONSORT is unknown")
+! ! only the first four letters are used
+! CALL OK(ALL(ArgSort(x, "INSERTIONSORT") .EQ. arg), "INSERTIONSORT")
+! CALL OK(ALL(ArgSort(x, "Quick") .EQ. arg), "Quick")
+!
+! ! an unknown name falls back to the default, INTROSORT
+! CALL OK(ALL(ArgSort(x, "BUBBLESORT") .EQ. arg), "unknown name")
 !
 ! ! a permutation of 1..40
 ! b = [(MOD(37_I4B * ii, 41_I4B), ii=1, 40)]
