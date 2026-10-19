@@ -916,7 +916,10 @@ END INTERFACE RemoveDuplicates
 !   - If `isSorted` is `.FALSE.`, `obj` is sorted first.
 !   - If `isSorted` is `.TRUE.`, `obj` is not sorted, and only
 !     consecutive repeated entries are removed. So `obj` must really
-!     be sorted in this case.
+!     be sorted in this case. This is not checked: for unsorted input
+!     equal entries that are not next to each other are kept, and the
+!     result is not in increasing order. For example `[3, 3, 1, 3]`
+!     gives `obj(1:tsize) = [3, 1, 3]`.
 !   - The entries `obj(tsize+1:)` are set to zero.
 !   - If `SIZE(obj) <= 1`, `obj` is not changed and
 !     `tsize = SIZE(obj)`.
