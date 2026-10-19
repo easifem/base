@@ -1277,13 +1277,12 @@ END INTERFACE GetIndex
 ! summary: Returns one entry of an integer vector.
 !
 ! Description:
-!   Returns `val(indx)`. If `indx > SIZE(val)` the result is zero.
-!
-!   `indx` should be at least one. This is not checked.
+!   Returns `val(indx)`. If `indx` is outside `1..SIZE(val)` the
+!   result is zero.
 !
 ! Arguments:
 !   val : INTEGER, rank(1) - input vector
-!   indx : INTEGER(I4B) - index of the entry, `indx >= 1`
+!   indx : INTEGER(I4B) - index of the entry
 !
 ! Returns:
 !   ans : INTEGER - the entry, same kind as `val`
@@ -1291,7 +1290,7 @@ END INTERFACE GetIndex
 ! Formula:
 !   $$\mathrm{ans} = \begin{cases}
 !     \mathrm{val}_{\mathrm{indx}}, &
-!       \text{if } \mathrm{indx} \le \mathrm{SIZE}(\mathrm{val}) \\
+!       \text{if } 1 \le \mathrm{indx} \le \mathrm{SIZE}(\mathrm{val}) \\
 !     0, & \text{otherwise}
 !   \end{cases}$$
 !
@@ -1311,8 +1310,10 @@ END INTERFACE GetIndex
 ! CALL OK(Get(val, 1_I4B) .EQ. 10_I4B, "first entry")
 ! CALL OK(Get(val=val, indx=3_I4B) .EQ. 30_I4B, "last entry")
 !
-! ! indx larger than SIZE(val) returns zero
+! ! indx outside 1..SIZE(val) returns zero
 ! CALL OK(Get(val, 4_I4B) .EQ. 0_I4B, "indx out of range")
+! CALL OK(Get(val, 0_I4B) .EQ. 0_I4B, "indx = 0")
+! CALL OK(Get(val, -1_I4B) .EQ. 0_I4B, "indx < 0")
 !
 ! END PROGRAM main
 !```

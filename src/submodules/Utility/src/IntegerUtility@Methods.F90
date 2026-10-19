@@ -311,22 +311,22 @@ END PROCEDURE GetIndex2
 
 MODULE PROCEDURE Get1_Int8
 ans = 0
-IF (indx .LE. SIZE(val)) ans = val(indx)
+IF (indx .GE. 1 .AND. indx .LE. SIZE(val)) ans = val(indx)
 END PROCEDURE Get1_Int8
 
 MODULE PROCEDURE Get1_Int16
 ans = 0
-IF (indx .LE. SIZE(val)) ans = val(indx)
+IF (indx .GE. 1 .AND. indx .LE. SIZE(val)) ans = val(indx)
 END PROCEDURE Get1_Int16
 
 MODULE PROCEDURE Get1_Int32
 ans = 0
-IF (indx .LE. SIZE(val)) ans = val(indx)
+IF (indx .GE. 1 .AND. indx .LE. SIZE(val)) ans = val(indx)
 END PROCEDURE Get1_Int32
 
 MODULE PROCEDURE Get1_Int64
 ans = 0
-IF (indx .LE. SIZE(val)) ans = val(indx)
+IF (indx .GE. 1 .AND. indx .LE. SIZE(val)) ans = val(indx)
 END PROCEDURE Get1_Int64
 
 !----------------------------------------------------------------------------
