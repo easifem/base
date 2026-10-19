@@ -15,6 +15,7 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 
 SUBMODULE(MappingUtility) Methods
+USE GlobalData, ONLY: LGT
 USE StringUtility, ONLY: UpperCase
 USE ApproxUtility, ONLY: SOFTLE
 USE ReferenceTetrahedron_Method, ONLY: RefCoord_Tetrahedron
@@ -122,24 +123,25 @@ MODULE PROCEDURE FromLine2Line_
 CHARACTER(2) :: acase
 INTEGER(I4B) :: ii, n
 
-acase = from(1:1)//to(1:1)
+acase(1:1) = UpperCase(from(1:1))
+acase(2:2) = UpperCase(to(1:1))
 n = SIZE(xin)
 
 SELECT CASE (acase)
 
-CASE ("BU", "bu", "bU", "Bu")
+CASE ("BU")
 
   DO CONCURRENT(ii=1:n)
     ans(ii) = math%half * (math%one + xin(ii))
   END DO
 
-CASE ("BB", "UU", "bb", "uu")
+CASE ("BB", "UU")
 
   DO CONCURRENT(ii=1:n)
     ans(ii) = xin(ii)
   END DO
 
-CASE ("UB", "ub", "uB", "Ub")
+CASE ("UB")
 
   DO CONCURRENT(ii=1:n)
     ans(ii) = math%two * xin(ii) - math%one
@@ -374,21 +376,41 @@ END PROCEDURE FromUnitHexahedron2BiUnitHexahedron1_
 
 MODULE PROCEDURE FromTriangle2Square_
 CHARACTER(2) :: acase
-acase = from(1:1)//to(1:1)
+INTEGER(I4B) :: jj
+REAL(DFP) :: x, y
 
+acase(1:1) = UpperCase(from(1:1))
+acase(2:2) = UpperCase(to(1:1))
+
+! the top vertex of the triangle is collapsed onto the edge y = 1 of
+! the square; there the formula divides by zero, so x = -1 is used
 SELECT CASE (acase)
 
-CASE ("BB", "bb")
+CASE ("BB")
 
-  ans(1, :) = (math%one + math%zero + math%two * xin(1, :) + xin(2, :)) &
-              / (math%one + math%zero - xin(2, :))
-  ans(2, :) = xin(2, :)
+  DO jj = 1, SIZE(xin, 2)
+    x = xin(1, jj)
+    y = xin(2, jj)
+    IF (y .LT. math%one) THEN
+      ans(1, jj) = (math%one + math%two * x + y) / (math%one - y)
+    ELSE
+      ans(1, jj) = -math%one
+    END IF
+    ans(2, jj) = y
+  END DO
 
-CASE ("UB", "ub")
+CASE ("UB")
 
-  ans(1, :) = (math%two * xin(1, :) + xin(2, :) - math%one + math%zero) &
-              / (math%one + math%zero - xin(2, :))
-  ans(2, :) = math%two * xin(2, :) - math%one
+  DO jj = 1, SIZE(xin, 2)
+    x = xin(1, jj)
+    y = xin(2, jj)
+    IF (y .LT. math%one) THEN
+      ans(1, jj) = (math%two * x + y - math%one) / (math%one - y)
+    ELSE
+      ans(1, jj) = -math%one
+    END IF
+    ans(2, jj) = math%two * y - math%one
+  END DO
 
 CASE DEFAULT
 
@@ -511,16 +533,20 @@ END PROCEDURE BarycentricCoordTriangle
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE BarycentricCoordTriangle_
-SELECT CASE (refTriangle(1:1))
-CASE ("B", "b")
-  ans(1, :) = -math%half * (xin(1, :) + xin(2, :))
-  ans(2, :) = math%half * (math%one + xin(1, :))
-  ans(3, :) = math%half * (math%one + xin(2, :))
+INTEGER(I4B) :: n
 
-CASE ("U", "u")
-  ans(1, :) = math%one - xin(1, :) - xin(2, :)
-  ans(2, :) = xin(1, :)
-  ans(3, :) = xin(2, :)
+n = SIZE(xin, 2)
+
+SELECT CASE (UpperCase(refTriangle(1:1)))
+CASE ("B")
+  ans(1, 1:n) = -math%half * (xin(1, :) + xin(2, :))
+  ans(2, 1:n) = math%half * (math%one + xin(1, :))
+  ans(3, 1:n) = math%half * (math%one + xin(2, :))
+
+CASE ("U")
+  ans(1, 1:n) = math%one - xin(1, :) - xin(2, :)
+  ans(2, 1:n) = xin(1, :)
+  ans(3, 1:n) = xin(2, :)
 
 CASE DEFAULT
 END SELECT
@@ -533,18 +559,19 @@ END PROCEDURE BarycentricCoordTriangle_
 MODULE PROCEDURE FromTriangle2Triangle_
 CHARACTER(2) :: acase
 INTEGER(I4B) :: ii, jj
-REAL(DFP) :: x21(3), x31(3)
+LOGICAL(LGT) :: isok
 
 ncol = SIZE(xin, 2)
+nrow = SIZE(xin, 1)
 
 acase(1:1) = Uppercase(from(1:1))
 acase(2:2) = Uppercase(to(1:1))
 
+isok = PRESENT(x1) .AND. PRESENT(x2) .AND. PRESENT(x3)
+
 SELECT CASE (acase)
 
 CASE ("BU")
-
-  nrow = SIZE(xin, 1)
 
   DO CONCURRENT(ii=1:nrow, jj=1:ncol)
     ans(ii, jj) = math%half * (math%one + xin(ii, jj))
@@ -552,24 +579,53 @@ CASE ("BU")
 
 CASE ("UB")
 
-  nrow = SIZE(xin, 1)
-
   DO CONCURRENT(ii=1:nrow, jj=1:ncol)
     ans(ii, jj) = -math%one + math%two * xin(ii, jj)
   END DO
 
+CASE ("BB", "UU")
+
+  DO CONCURRENT(ii=1:nrow, jj=1:ncol)
+    ans(ii, jj) = xin(ii, jj)
+  END DO
+
 CASE ("UT")
+
+  IF (.NOT. isok) THEN
+    nrow = 0
+    ncol = 0
+    RETURN
+  END IF
 
   nrow = SIZE(x1)
 
-  x21(1:nrow) = x2(1:nrow) - x1(1:nrow)
-  x31(1:nrow) = x3(1:nrow) - x1(1:nrow)
-
   DO CONCURRENT(ii=1:nrow, jj=1:ncol)
-    ans(ii, jj) = x1(ii) + x21(ii) * xin(1, jj) + x31(ii) * xin(2, jj)
+    ans(ii, jj) = x1(ii) + (x2(ii) - x1(ii)) * xin(1, jj) &
+                  + (x3(ii) - x1(ii)) * xin(2, jj)
+  END DO
+
+CASE ("BT")
+
+  IF (.NOT. isok) THEN
+    nrow = 0
+    ncol = 0
+    RETURN
+  END IF
+
+  nrow = SIZE(x1)
+
+  ! the unit coordinates are (1 + xin) / 2
+  DO CONCURRENT(ii=1:nrow, jj=1:ncol)
+    ans(ii, jj) = x1(ii) &
+                  + (x2(ii) - x1(ii)) * math%half * (math%one + xin(1, jj)) &
+                  + (x3(ii) - x1(ii)) * math%half * (math%one + xin(2, jj))
   END DO
 
 CASE DEFAULT
+
+  ! unsupported names: nothing is written
+  nrow = 0
+  ncol = 0
 
 END SELECT
 END PROCEDURE FromTriangle2Triangle_
@@ -895,9 +951,16 @@ END PROCEDURE FromBiUnitHexahedron2UnitTetrahedron_
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE JacobianLine
-SELECT CASE (TRIM(from))
+! default for unknown names, and for LINE without xij
+ans = math%one
+IF (.NOT. PRESENT(xij)) THEN
+  IF (UpperCase(TRIM(from)) .EQ. "LINE" .OR. &
+      UpperCase(TRIM(to)) .EQ. "LINE") RETURN
+END IF
+
+SELECT CASE (UpperCase(TRIM(from)))
 CASE ("BIUNIT")
-  SELECT CASE (TRIM(to))
+  SELECT CASE (UpperCase(TRIM(to)))
   CASE ("BIUNIT")
     ans = math%one
   CASE ("UNIT")
@@ -907,7 +970,7 @@ CASE ("BIUNIT")
   CASE DEFAULT
   END SELECT
 CASE ("UNIT")
-  SELECT CASE (TRIM(to))
+  SELECT CASE (UpperCase(TRIM(to)))
   CASE ("BIUNIT")
     ans = math%two
   CASE ("UNIT")
@@ -917,7 +980,7 @@ CASE ("UNIT")
   CASE DEFAULT
   END SELECT
 CASE ("LINE")
-  SELECT CASE (TRIM(to))
+  SELECT CASE (UpperCase(TRIM(to)))
   CASE ("BIUNIT")
     ans = math%two / NORM2(xij(:, 2) - xij(:, 1))
   CASE ("UNIT")
@@ -938,9 +1001,9 @@ END PROCEDURE JacobianLine
 MODULE PROCEDURE JacobianTriangle
 REAL(DFP) :: area0
 ans = math%one
-SELECT CASE (TRIM(from))
+SELECT CASE (UpperCase(TRIM(from)))
 CASE ("BIUNIT")
-  SELECT CASE (TRIM(to))
+  SELECT CASE (UpperCase(TRIM(to)))
   CASE ("BIUNIT")
     ans = math%one
   CASE ("UNIT")
@@ -950,6 +1013,7 @@ CASE ("BIUNIT")
 
       IF (SIZE(xij, 1) .EQ. 2_I4B) THEN
         CALL TriangleArea2D(xij(1:2, 1:3), ans)
+        ans = ABS(ans)
       ELSE
         CALL TriangleArea3D(xij(1:3, 1:3), ans)
       END IF
@@ -960,7 +1024,7 @@ CASE ("BIUNIT")
   CASE DEFAULT
   END SELECT
 CASE ("UNIT")
-  SELECT CASE (TRIM(to))
+  SELECT CASE (UpperCase(TRIM(to)))
   CASE ("BIUNIT")
     ans = 4.0_DFP
   CASE ("UNIT")
@@ -970,6 +1034,7 @@ CASE ("UNIT")
     IF (PRESENT(xij)) THEN
       IF (SIZE(xij, 1) .EQ. 2_I4B) THEN
         CALL TriangleArea2D(xij(1:2, 1:3), ans)
+        ans = ABS(ans)
       ELSE
         CALL TriangleArea3D(xij(1:3, 1:3), ans)
       END IF
@@ -985,6 +1050,7 @@ CASE ("TRIANGLE")
   IF (PRESENT(xij)) THEN
     IF (SIZE(xij, 1) .EQ. 2_I4B) THEN
       CALL TriangleArea2D(xij(1:2, 1:3), area0)
+      area0 = ABS(area0)
     ELSE IF (SIZE(xij, 1) .EQ. 3_I4B) THEN
       CALL TriangleArea3D(xij(1:3, 1:3), area0)
     END IF
@@ -992,7 +1058,7 @@ CASE ("TRIANGLE")
     RETURN
   END IF
 
-  SELECT CASE (TRIM(to))
+  SELECT CASE (UpperCase(TRIM(to)))
   CASE ("BIUNIT")
     ans = math%two / area0
   CASE ("UNIT")
@@ -1011,9 +1077,9 @@ END PROCEDURE JacobianTriangle
 MODULE PROCEDURE JacobianQuadrangle
 REAL(DFP) :: area0
 ans = math%one
-SELECT CASE (TRIM(from))
+SELECT CASE (UpperCase(TRIM(from)))
 CASE ("BIUNIT")
-  SELECT CASE (TRIM(to))
+  SELECT CASE (UpperCase(TRIM(to)))
   CASE ("BIUNIT")
     ans = math%one
   CASE ("UNIT")
@@ -1023,6 +1089,7 @@ CASE ("BIUNIT")
     IF (PRESENT(xij)) THEN
       IF (SIZE(xij, 1) .EQ. 2_I4B) THEN
         CALL QuadrangleArea2D(xij(1:2, 1:4), ans)
+        ans = ABS(ans)
       ELSE
         CALL QuadrangleArea3D(xij(1:3, 1:4), ans)
       END IF
@@ -1032,7 +1099,7 @@ CASE ("BIUNIT")
   END SELECT
 
 CASE ("UNIT")
-  SELECT CASE (TRIM(to))
+  SELECT CASE (UpperCase(TRIM(to)))
   CASE ("BIUNIT")
     ans = 4.0_DFP
   CASE ("UNIT")
@@ -1042,6 +1109,7 @@ CASE ("UNIT")
     IF (PRESENT(xij)) THEN
       IF (SIZE(xij, 1) .EQ. 2_I4B) THEN
         CALL QuadrangleArea2D(xij(1:2, 1:4), ans)
+        ans = ABS(ans)
       ELSE
         CALL QuadrangleArea3D(xij(1:3, 1:4), ans)
       END IF
@@ -1056,6 +1124,7 @@ CASE ("QUADRANGLE")
   IF (PRESENT(xij)) THEN
     IF (SIZE(xij, 1) .EQ. 2_I4B) THEN
       CALL QuadrangleArea2D(xij(1:2, 1:4), area0)
+      area0 = ABS(area0)
     ELSE
       CALL QuadrangleArea3D(xij(1:3, 1:4), area0)
     END IF
@@ -1063,7 +1132,7 @@ CASE ("QUADRANGLE")
     RETURN
   END IF
 
-  SELECT CASE (TRIM(to))
+  SELECT CASE (UpperCase(TRIM(to)))
   CASE ("BIUNIT")
     ans = 4.0_DFP / area0
   CASE ("UNIT")
@@ -1082,9 +1151,9 @@ END PROCEDURE JacobianQuadrangle
 MODULE PROCEDURE JacobianHexahedron
 REAL(DFP) :: ans0
 ans = math%one
-SELECT CASE (TRIM(from))
+SELECT CASE (UpperCase(TRIM(from)))
 CASE ("BIUNIT")
-  SELECT CASE (TRIM(to))
+  SELECT CASE (UpperCase(TRIM(to)))
   CASE ("BIUNIT")
     ans = math%one
   CASE ("UNIT")
@@ -1099,7 +1168,7 @@ CASE ("BIUNIT")
   END SELECT
 
 CASE ("UNIT")
-  SELECT CASE (TRIM(to))
+  SELECT CASE (UpperCase(TRIM(to)))
   CASE ("BIUNIT")
     ans = 8.0_DFP
   CASE ("UNIT")
@@ -1120,7 +1189,7 @@ CASE ("HEXAHEDRON")
     RETURN
   END IF
 
-  SELECT CASE (TRIM(to))
+  SELECT CASE (UpperCase(TRIM(to)))
   CASE ("BIUNIT", "UNIT")
     CALL HexahedronVolume3D(RefCoord_Hexahedron(to), ans)
     ans = ans / ans0
@@ -1138,9 +1207,9 @@ END PROCEDURE JacobianHexahedron
 MODULE PROCEDURE JacobianTetrahedron
 REAL(DFP) :: ans0
 ans = math%one
-SELECT CASE (TRIM(from))
+SELECT CASE (UpperCase(TRIM(from)))
 CASE ("BIUNIT")
-  SELECT CASE (TRIM(to))
+  SELECT CASE (UpperCase(TRIM(to)))
   CASE ("BIUNIT")
     ans = math%one
   CASE ("UNIT")
@@ -1155,7 +1224,7 @@ CASE ("BIUNIT")
   END SELECT
 
 CASE ("UNIT")
-  SELECT CASE (TRIM(to))
+  SELECT CASE (UpperCase(TRIM(to)))
   CASE ("BIUNIT")
     ans = 8.0_DFP
   CASE ("UNIT")
@@ -1176,7 +1245,7 @@ CASE ("TETRAHEDRON")
     RETURN
   END IF
 
-  SELECT CASE (TRIM(to))
+  SELECT CASE (UpperCase(TRIM(to)))
   CASE ("BIUNIT", "UNIT")
     CALL TetrahedronVolume3D(RefCoord_Tetrahedron(to), ans)
     ans = ans / ans0

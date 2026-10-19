@@ -116,6 +116,7 @@ PUBLIC :: FromUnitTetrahedron2BiUnitTetrahedron
 PUBLIC :: FromUnitTetrahedron2BiUnitTetrahedron_
 
 PUBLIC :: FromBiUnitTetrahedron2UnitTetrahedron
+PUBLIC :: FromBiUnitTetrahedron2UnitTetrahedron_
 PUBLIC :: FromUnitTetrahedron2Tetrahedron
 PUBLIC :: FromUnitTetrahedron2Tetrahedron_
 PUBLIC :: FromBiUnitTetrahedron2Tetrahedron
@@ -1727,14 +1728,14 @@ END INTERFACE
 !   Maps the points `xin` from the reference line `from` to the
 !   reference line `to`, and writes them to `ans(1:SIZE(xin))`.
 !
-!   Only the first letter of `from` and `to` is used:
+!   Only the first letter of `from` and `to` is used, and the case does
+!   not matter:
 !
-!   - "B" (or "b") is the biunit line [-1, 1],
-!   - "U" (or "u") is the unit line [0, 1].
+!   - "B" is the biunit line [-1, 1],
+!   - "U" is the unit line [0, 1].
 !
-!   If `from` and `to` are the same line, `xin` is copied to `ans`; in
-!   this case both letters must have the same case ("BB" or "bb", but
-!   not "Bb"). For any other value, `ans` is not changed.
+!   If `from` and `to` are the same line, `xin` is copied to `ans`. For
+!   any other value, `ans` is not changed.
 !
 ! Arguments:
 !   xin : REAL(DFP), rank(1) - coordinates in the `from` line
@@ -1806,8 +1807,8 @@ END INTERFACE
 !   `FromBiUnitTriangle2BiUnitQuadrangle`.
 !
 !   - Vertex 1 goes to (-1,-1) and vertex 2 goes to (1,-1).
-!   - Vertex 3, (-1,1), is the collapsed point. There `1 - y = 0`, so
-!     the first coordinate is not defined (division by zero).
+!   - Vertex 3, (-1,1), is the collapsed point. There `1 - y = 0`; the
+!     first coordinate is set to -1, so vertex 3 goes to (-1,1).
 !
 !   It is the inverse of `FromBiUnitQuadrangle2BiUnitTriangle` away
 !   from vertex 3.
@@ -1955,8 +1956,8 @@ END INTERFACE FromBiUnitQuadrangle2BiUnitTriangle
 !   The generic name is `FromUnitTriangle2BiUnitQuadrangle`.
 !
 !   - Vertex 1 goes to (-1,-1) and vertex 2 goes to (1,-1).
-!   - Vertex 3, (0,1), is the collapsed point. There `1 - y = 0`, so
-!     the first coordinate is not defined (division by zero).
+!   - Vertex 3, (0,1), is the collapsed point. There `1 - y = 0`; the
+!     first coordinate is set to -1, so vertex 3 goes to (-1,1).
 !
 ! Arguments:
 !   xin : REAL(DFP), rank(2) - points in the unit triangle,
@@ -2095,11 +2096,14 @@ END INTERFACE FromBiUnitQuadrangle2UnitTriangle
 !
 !   - "BIUNIT" to "UNIT": `nrow = SIZE(xin, 1)`,
 !   - "UNIT" to "BIUNIT": `nrow = SIZE(xin, 1)`,
-!   - "UNIT" to "TRIANGLE": the triangle with vertices `x1`, `x2`,
-!     `x3`, which must be present; `nrow = SIZE(x1)` and `nrow <= 3`.
+!   - "BIUNIT" to "BIUNIT" and "UNIT" to "UNIT": `xin` is copied,
+!     `nrow = SIZE(xin, 1)`,
+!   - "UNIT" or "BIUNIT" to "TRIANGLE": the triangle with vertices
+!     `x1`, `x2`, `x3`; `nrow = SIZE(x1)`, any number of coordinates.
 !
-!   In all cases `ncol = SIZE(xin, 2)`. For any other case `ans` and
-!   `nrow` are not set.
+!   In these cases `ncol = SIZE(xin, 2)`. For any other case, or when
+!   "TRIANGLE" is requested without `x1`, `x2` and `x3`, nothing is
+!   written and `nrow = ncol = 0`.
 !
 ! Arguments:
 !   xin : REAL(DFP), rank(2) - points, `SHAPE(xin) = [2, N]`
@@ -2199,15 +2203,14 @@ END INTERFACE
 ! Description:
 !   Maps the points `xin` of the reference triangle `from` to the
 !   biunit square [-1,1]^2 by the collapsed (Duffy) coordinates. Only
-!   the first letter of `from` and `to` is used. The supported cases
-!   are "B" to "B" (biunit triangle) and "U" to "B" (unit triangle).
-!   Both letters must have the same case ("BB", "bb", "UB", "ub"). For
-!   any other case `ans` is not changed.
+!   the first letter of `from` and `to` is used, and the case does not
+!   matter. The supported cases are "B" to "B" (biunit triangle) and
+!   "U" to "B" (unit triangle). For any other case `ans` is not
+!   changed.
 !
-!   - The whole rows `ans(1, :)` and `ans(2, :)` are assigned, so
-!     `SIZE(ans, 2)` must be equal to `SIZE(xin, 2)`.
+!   - Only `ans(1:2, 1:SIZE(xin, 2))` is written; `ans` may be larger.
 !   - Vertex 3 of the triangle is the collapsed point. There the first
-!     coordinate is not defined (division by zero).
+!     coordinate is set to -1.
 !
 ! Arguments:
 !   xin : REAL(DFP), rank(2) - points in the triangle,
@@ -2562,8 +2565,8 @@ END INTERFACE
 !
 ! Description:
 !   Same as `BarycentricCoordTriangle`, but the result is written to
-!   `ans`. The whole rows `ans(1, :)`, `ans(2, :)` and `ans(3, :)` are
-!   assigned, so `SIZE(ans, 2)` must be equal to `SIZE(xin, 2)`. For a
+!   `ans(1:3, 1:SIZE(xin, 2))`; `ans` may be larger. Only the first
+!   letter of `refTriangle` is used, and the case does not matter. For a
 !   value of `refTriangle` other than "UNIT" or "BIUNIT", `ans` is not
 !   changed.
 !
@@ -2809,8 +2812,6 @@ END INTERFACE
 !   written to `ans(1:nrow, 1:ncol)`, where `nrow = SIZE(xin, 1)` and
 !   `ncol = SIZE(xin, 2)`.
 !
-!   This routine is not public; it is used inside the module.
-!
 ! Arguments:
 !   xin : REAL(DFP), rank(2) - points in the biunit tetrahedron,
 !     `SHAPE(xin) = [3, N]`
@@ -2821,6 +2822,34 @@ END INTERFACE
 !
 ! Formula:
 !   $$\mathrm{ans}_{ij} = \frac{1 + x_{ij}}{2}$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE MappingUtility, ONLY: FromBiUnitTetrahedron2UnitTetrahedron_
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+!
+! REAL(DFP), PARAMETER :: tol = 1.0E-10_DFP
+! REAL(DFP) :: xb(3, 2), ans(3, 4)
+! INTEGER(I4B) :: nrow, ncol
+!
+! ! vertex 2 and the centroid of the biunit tetrahedron
+! xb(:, 1) = [1.0_DFP, -1.0_DFP, -1.0_DFP]
+! xb(:, 2) = -0.5_DFP
+!
+! ! ans may be larger than xin
+! CALL FromBiUnitTetrahedron2UnitTetrahedron_(xb, ans, nrow, ncol)
+! CALL OK(nrow .EQ. 3_I4B .AND. ncol .EQ. 2_I4B, "nrow and ncol")
+! CALL OK(ALL(ABS(ans(:, 1) - [1.0_DFP, 0.0_DFP, 0.0_DFP]) .LT. tol), &
+!         "vertex 2")
+! CALL OK(ALL(ABS(ans(:, 2) - 0.25_DFP) .LT. tol), "centroid")
+!
+! END PROGRAM main
+!```
 
 INTERFACE
   MODULE PURE SUBROUTINE FromBiUnitTetrahedron2UnitTetrahedron_(xin, &
@@ -4061,17 +4090,17 @@ END INTERFACE
 ! Description:
 !   Returns the Jacobian of the affine map from the line `from` to the
 !   line `to`, that is the length of `to` divided by the length of
-!   `from`. The values of `from` and `to` are (upper case only,
-!   trailing blanks are ignored):
+!   `from`. The values of `from` and `to` are (the case does not
+!   matter, trailing blanks are ignored):
 !
 !   - "BIUNIT": the biunit line [-1, 1], length 2,
 !   - "UNIT": the unit line [0, 1], length 1,
 !   - "LINE": the segment from `xij(:, 1)` to `xij(:, 2)`.
 !
-!   - `xij` must be present when `from` or `to` is "LINE"; this is not
-!     checked.
-!   - `from` and `to` should not both be "LINE" (the result is 1).
-!   - For any other value the result is not defined.
+!   - `xij` is needed when `from` or `to` is "LINE". If it is absent,
+!     the result is 1.
+!   - If `from` and `to` are the same, the result is 1.
+!   - For any other value the result is 1.
 !
 ! Arguments:
 !   from : CHARACTER(*) - "BIUNIT", "UNIT" or "LINE"
@@ -4154,8 +4183,8 @@ END INTERFACE
 ! Description:
 !   Returns the Jacobian of the affine map from the triangle `from` to
 !   the triangle `to`, that is the area of `to` divided by the area of
-!   `from`. The values of `from` and `to` are (upper case only,
-!   trailing blanks are ignored):
+!   `from`. The values of `from` and `to` are (the case does not
+!   matter, trailing blanks are ignored):
 !
 !   - "BIUNIT": the biunit triangle, area 2,
 !   - "UNIT": the unit triangle, area 1/2,
@@ -4164,10 +4193,10 @@ END INTERFACE
 !
 !   - `xij` is needed when `from` or `to` is "TRIANGLE". If it is
 !     absent, the result is 1.
-!   - In 2D the area is signed, so the result is negative when the
-!     vertices of `xij` are in clockwise order.
+!   - The area is unsigned, so the order of the vertices of `xij`
+!     (clockwise or not) does not matter.
 !   - If `from` and `to` are the same, the result is 1.
-!   - For any other value the result is not meaningful.
+!   - For any other value the result is 1.
 !
 ! Arguments:
 !   from : CHARACTER(*) - "BIUNIT", "UNIT" or "TRIANGLE"
@@ -4261,8 +4290,8 @@ END INTERFACE
 !   Returns the area of the quadrangle `to` divided by the area of the
 !   quadrangle `from`. For a parallelogram this is the Jacobian of the
 !   bilinear map; for a general quadrangle it is the mean value of the
-!   Jacobian. The values of `from` and `to` are (upper case only,
-!   trailing blanks are ignored):
+!   Jacobian. The values of `from` and `to` are (the case does not
+!   matter, trailing blanks are ignored):
 !
 !   - "BIUNIT": the biunit quadrangle, area 4,
 !   - "UNIT": the unit quadrangle, area 1,
@@ -4271,8 +4300,10 @@ END INTERFACE
 !
 !   - `xij` is needed when `from` or `to` is "QUADRANGLE". If it is
 !     absent, the result is 1.
+!   - The area is unsigned, so the order of the vertices of `xij`
+!     (clockwise or not) does not matter.
 !   - If `from` and `to` are the same, the result is 1.
-!   - For any other value the result is not meaningful.
+!   - For any other value the result is 1.
 !
 ! Arguments:
 !   from : CHARACTER(*) - "BIUNIT", "UNIT" or "QUADRANGLE"
@@ -4358,8 +4389,8 @@ END INTERFACE
 ! Description:
 !   Returns the Jacobian of the affine map from the tetrahedron `from`
 !   to the tetrahedron `to`, that is the volume of `to` divided by the
-!   volume of `from`. The values of `from` and `to` are (upper case
-!   only, trailing blanks are ignored):
+!   volume of `from`. The values of `from` and `to` are (the case does
+!   not matter, trailing blanks are ignored):
 !
 !   - "BIUNIT": the biunit tetrahedron, volume 4/3,
 !   - "UNIT": the unit tetrahedron, volume 1/6,
@@ -4451,8 +4482,8 @@ END INTERFACE
 !   Returns the volume of the hexahedron `to` divided by the volume of
 !   the hexahedron `from`. For a parallelepiped this is the Jacobian of
 !   the trilinear map; for a general hexahedron it is the mean value
-!   of the Jacobian. The values of `from` and `to` are (upper case
-!   only, trailing blanks are ignored):
+!   of the Jacobian. The values of `from` and `to` are (the case does
+!   not matter, trailing blanks are ignored):
 !
 !   - "BIUNIT": the biunit hexahedron, volume 8,
 !   - "UNIT": the unit hexahedron, volume 1,
