@@ -87,6 +87,12 @@ END PROCEDURE obj_RandomValue3
 
 MODULE PROCEDURE obj_RandomValue4
 INTEGER(I4B) :: posi, from, to
+! an empty val has no entry to select
+IF (SIZE(val) .EQ. 0) THEN
+  ans = 0
+  RETURN
+END IF
+
 from = 1
 to = SIZE(val)
 posi = RandomValue(from=from, to=to)
@@ -99,6 +105,12 @@ END PROCEDURE obj_RandomValue4
 
 MODULE PROCEDURE obj_RandomValue5
 INTEGER(I4B) :: i1, i2, from, to
+
+! an empty val has no entry to select
+IF (SIZE(val) .EQ. 0) THEN
+  ans = 0
+  RETURN
+END IF
 
 from = 1
 to = SIZE(val, 1)
@@ -117,6 +129,12 @@ END PROCEDURE obj_RandomValue5
 MODULE PROCEDURE obj_RandomValue6
 INTEGER(I4B) :: posi, from, to
 
+! an empty val has no entry to select
+IF (SIZE(val) .EQ. 0) THEN
+  ans = 0.0_DFP
+  RETURN
+END IF
+
 from = 1
 to = SIZE(val)
 posi = RandomValue(from=from, to=to)
@@ -129,6 +147,12 @@ END PROCEDURE obj_RandomValue6
 
 MODULE PROCEDURE obj_RandomValue7
 INTEGER(I4B) :: i1, i2, from, to
+
+! an empty val has no entry to select
+IF (SIZE(val) .EQ. 0) THEN
+  ans = 0.0_DFP
+  RETURN
+END IF
 
 from = 1
 to = SIZE(val, 1)
@@ -147,12 +171,7 @@ END PROCEDURE obj_RandomValue7
 MODULE PROCEDURE UniformRandomValue1
 INTEGER(I4B) :: i, k, seed0
 
-seed0 = INPUT(option=seed, default=1_I4B)
-
-IF (seed0 == 0) THEN
-  ans(1:n) = 0.0
-  RETURN
-END IF
+seed0 = ValidSeed(seed)
 
 DO i = 1, n
   k = seed0 / 127773
@@ -171,12 +190,7 @@ END PROCEDURE UniformRandomValue1
 MODULE PROCEDURE UniformRandomValue2
 INTEGER(I4B) :: i, k, seed0
 
-seed0 = INPUT(option=seed, default=1_I4B)
-
-IF (seed0 == 0) THEN
-  ans(1:n) = 0.0
-  RETURN
-END IF
+seed0 = ValidSeed(seed)
 
 DO i = 1, n
   k = seed0 / 127773
@@ -214,12 +228,7 @@ MODULE PROCEDURE UniformRandomValueScalar1
 INTEGER(i4b) :: seed0
 INTEGER(i4b) :: k
 
-seed0 = INPUT(option=seed, default=1_I4B)
-
-IF (seed0 == 0) THEN
-  ans = 0.0
-  RETURN
-END IF
+seed0 = ValidSeed(seed)
 
 k = seed0 / 127773
 
@@ -239,127 +248,44 @@ END PROCEDURE UniformRandomValueScalar1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE NormalRandomValue1
-INTEGER(I4B) :: m
+INTEGER(I4B) :: k, m
 REAL(DFP) :: r(n + 1)
-REAL(DFP), PARAMETER :: r8_pi = 3.141592653589793D+00
-INTEGER(I4B) :: x_hi_index
-INTEGER(I4B) :: x_lo_index
-! integer(i4b), save :: made = 0
-! real(dfp), save :: y = 0.0D+00
-! integer(i4b), save :: saved = 0
-INTEGER(I4B) :: saved
-INTEGER(I4B) :: made
-REAL(DFP) :: y
+REAL(DFP), PARAMETER :: twopi = 2.0_DFP * 3.141592653589793_DFP
 
-made = 0
-y = 0.0_DFP
-saved = 0
+IF (n .LE. 0) RETURN
 
-!  I'd like to allow the user to reset the internal data.
-!  But this won't work properly if we have a saved value Y.
-!  I'm making a crock option that allows the user to signal
-!  explicitly that any internal memory should be flushed,
-!  by passing in a negative value for N.
+! Box-Muller: each pair of uniform values gives two normal values.
+! For odd n one more pair is drawn, and its second value is not used.
+m = (n + 1) / 2
+r(1:2 * m) = UniformRandomValue(2 * m, seed)
 
-IF (n < 0) THEN
-  ! n = made
-  made = 0
-  saved = 0
-  y = 0.0D+00
-  RETURN
-ELSE IF (n == 0) THEN
-  RETURN
-END IF
+DO k = 1, n / 2
+  x(2 * k - 1) = SQRT(-2.0_DFP * LOG(r(2 * k - 1))) * COS(twopi * r(2 * k))
+  x(2 * k) = SQRT(-2.0_DFP * LOG(r(2 * k - 1))) * SIN(twopi * r(2 * k))
+END DO
 
-!  Record the range of X we need to fill in.
-x_lo_index = 1
-x_hi_index = n
-
-!  Use up the old value, if we have it.
-IF (saved == 1) THEN
-  x(1) = y
-  saved = 0
-  x_lo_index = 2
-END IF
-
-!  Maybe we don't need any more values.
-IF (x_hi_index - x_lo_index + 1 == 0) THEN
-
-!  If we need just one new value, do that here to avoid null arrays.
-ELSE IF (x_hi_index - x_lo_index + 1 == 1) THEN
-
-  r(1) = UniformRandomValueScalar(seed)
-
-  IF (r(1) == 0.0D+00) THEN
-    ! write (*, '(a)') ' '
-    ! write (*, '(a)') 'rvec_NORMAL_01 - Fatal error!'
-    ! write (*, '(a)') '  R8_UNIFORM_01 returned a value of 0.'
-    ! stop 1
-    RETURN
-  END IF
-
-  r(2) = UniformRandomValueScalar(seed)
-
-  x(x_hi_index) = &
-    SQRT(-2.0D+00 * LOG(r(1))) * COS(2.0D+00 * r8_pi * r(2))
-  y = SQRT(-2.0D+00 * LOG(r(1))) * SIN(2.0D+00 * r8_pi * r(2))
-
-  saved = 1
-
-  made = made + 2
-
-!  If we require an even number of values, that's easy.
-ELSE IF (MOD(x_hi_index - x_lo_index + 1, 2) == 0) THEN
-
-  m = (x_hi_index - x_lo_index + 1) / 2
-
-  r(1:2 * m) = UniformRandomValue(2 * m, seed)
-
-  x(x_lo_index:x_hi_index - 1:2) = &
-    SQRT(-2.0D+00 * LOG(r(1:2 * m - 1:2))) &
-    * COS(2.0D+00 * r8_pi * r(2:2 * m:2))
-
-  x(x_lo_index + 1:x_hi_index:2) = &
-    SQRT(-2.0D+00 * LOG(r(1:2 * m - 1:2))) &
-    * SIN(2.0D+00 * r8_pi * r(2:2 * m:2))
-
-  made = made + x_hi_index - x_lo_index + 1
-
-!  If we require an odd number of values, we generate an even number,
-!  and handle the last pair specially, storing one in X(N), and
-!  saving the other for later.
-
-ELSE
-
-  x_hi_index = x_hi_index - 1
-
-  m = (x_hi_index - x_lo_index + 1) / 2 + 1
-
-  r(1:2 * m) = UniformRandomValue(2 * m, seed)
-
-  x(x_lo_index:x_hi_index - 1:2) = &
-    SQRT(-2.0D+00 * LOG(r(1:2 * m - 3:2))) &
-    * COS(2.0D+00 * r8_pi * r(2:2 * m - 2:2))
-
-  x(x_lo_index + 1:x_hi_index:2) = &
-    SQRT(-2.0D+00 * LOG(r(1:2 * m - 3:2))) &
-    * SIN(2.0D+00 * r8_pi * r(2:2 * m - 2:2))
-
-  x(n) = SQRT(-2.0E+00 * LOG(r(2 * m - 1))) &
-         * COS(2.0D+00 * r8_pi * r(2 * m))
-
-  y = SQRT(-2.0D+00 * LOG(r(2 * m - 1))) &
-      * SIN(2.0D+00 * r8_pi * r(2 * m))
-
-  saved = 1
-
-  made = made + x_hi_index - x_lo_index + 2
-
+IF (MOD(n, 2) .EQ. 1) THEN
+  x(n) = SQRT(-2.0_DFP * LOG(r(2 * m - 1))) * COS(twopi * r(2 * m))
 END IF
 END PROCEDURE NormalRandomValue1
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
+
+!----------------------------------------------------------------------------
+!                                                                 ValidSeed
+!----------------------------------------------------------------------------
+
+! Maps seed (default 1) into 1..2147483646, the valid range of the
+! Park-Miller generator, so that seed = 0 or a negative seed cannot
+! give zero (and LOG(0) in NormalRandomValue).
+
+PURE FUNCTION ValidSeed(seed) RESULT(ans)
+  INTEGER(I4B), OPTIONAL, INTENT(IN) :: seed
+  INTEGER(I4B) :: ans
+  ans = MODULO(INPUT(option=seed, default=1_I4B), 2147483647_I4B)
+  IF (ans .EQ. 0) ans = 1
+END FUNCTION ValidSeed
 
 END SUBMODULE Methods

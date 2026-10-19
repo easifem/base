@@ -30,7 +30,8 @@ CALL OK(u .EQ. v(1), "same as UniformRandomValue(1, seed)")
 CALL OK(UniformRandomValueScalar(5_I4B) .EQ. &
         UniformRandomValueScalar(5_I4B), "seed is not updated")
 
-! seed = 0 gives zero
-CALL OK(UniformRandomValueScalar(0_I4B) .EQ. 0.0_DFP, "seed 0 gives 0")
+! seed = 0 is replaced by seed = 1
+CALL OK(UniformRandomValueScalar(0_I4B) .EQ. &
+        UniformRandomValueScalar(1_I4B), "seed 0 is the same as seed 1")
 
 END PROGRAM main

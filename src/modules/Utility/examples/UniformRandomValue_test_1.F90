@@ -39,8 +39,13 @@ CALL OK(ALL(w .EQ. UniformRandomValue(3_I4B, seed=1_I4B)), &
 CALL OK(ABS(w(1) - 7.826369259012501E-6_DFP) .LT. tol, &
         "first value for seed 1")
 
-! seed = 0 gives zeros
+! seed = 0 is replaced by seed = 1
 w = UniformRandomValue(3_I4B, seed=0_I4B)
-CALL OK(ALL(w .EQ. 0.0_DFP), "seed 0 gives zeros")
+CALL OK(ALL(w .EQ. UniformRandomValue(3_I4B, seed=1_I4B)), &
+        "seed 0 is the same as seed 1")
+
+! a negative seed also gives values in (0, 1)
+w = UniformRandomValue(3_I4B, seed=-5_I4B)
+CALL OK(ALL(w .GT. 0.0_DFP .AND. w .LT. 1.0_DFP), "negative seed")
 
 END PROGRAM main

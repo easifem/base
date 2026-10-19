@@ -33,7 +33,8 @@
 !     "minimal standard" generator with an integer `seed`. The seed
 !     is `INTENT(IN)` and is not updated, so the same seed always
 !     gives the same result. The default seed is 1. The seed should
-!     be a positive integer; `seed = 0` gives zeros.
+!     is mapped into `1..2147483646`, so `seed = 0` acts like `seed = 1`
+!     and a negative seed is also allowed.
 
 MODULE RandomUtility
 USE GlobalData, ONLY: DFP
@@ -45,6 +46,7 @@ PUBLIC :: RandomValue
 PUBLIC :: UniformRandomValue
 PUBLIC :: UniformRandomValueScalar
 PUBLIC :: NormalRandomValue
+PUBLIC :: UniformUnitRandomValue
 
 !----------------------------------------------------------------------------
 !                                                                 getRandom
@@ -306,10 +308,10 @@ END INTERFACE RandomValue
 !   intrinsic `RANDOM_NUMBER`, so the result changes from call to call.
 !
 !   - All entries are equally likely.
-!   - `val` should not be empty. This is not checked.
+!   - If `val` is empty, the result is zero.
 !
 ! Arguments:
-!   val : INTEGER(I4B), rank(1) - vector, `SIZE(val) >= 1`
+!   val : INTEGER(I4B), rank(1) - vector
 !
 ! Returns:
 !   ans : INTEGER(I4B) - an entry of `val`
@@ -376,10 +378,10 @@ END INTERFACE RandomValue
 !
 !   - The first and the last rows and columns are selected half as
 !     often as the others (see the integer `RandomValue`).
-!   - `val` should not be empty. This is not checked.
+!   - If `val` is empty, the result is zero.
 !
 ! Arguments:
-!   val : INTEGER(I4B), rank(2) - matrix, `SIZE(val) >= 1`
+!   val : INTEGER(I4B), rank(2) - matrix
 !
 ! Returns:
 !   ans : INTEGER(I4B) - an entry of `val`
@@ -448,10 +450,10 @@ END INTERFACE RandomValue
 !   intrinsic `RANDOM_NUMBER`, so the result changes from call to call.
 !
 !   - All entries are equally likely.
-!   - `val` should not be empty. This is not checked.
+!   - If `val` is empty, the result is zero.
 !
 ! Arguments:
-!   val : REAL(DFP), rank(1) - vector, `SIZE(val) >= 1`
+!   val : REAL(DFP), rank(1) - vector
 !
 ! Returns:
 !   ans : REAL(DFP) - an entry of `val`
@@ -520,10 +522,10 @@ END INTERFACE RandomValue
 !
 !   - The first and the last rows and columns are selected half as
 !     often as the others (see the integer `RandomValue`).
-!   - `val` should not be empty. This is not checked.
+!   - If `val` is empty, the result is zero.
 !
 ! Arguments:
-!   val : REAL(DFP), rank(2) - matrix, `SIZE(val) >= 1`
+!   val : REAL(DFP), rank(2) - matrix
 !
 ! Returns:
 !   ans : REAL(DFP) - an entry of `val`
@@ -596,8 +598,8 @@ END INTERFACE RandomValue
 !   - The function is `PURE` and `seed` is not updated, so the same
 !     `seed` always gives the same vector.
 !   - The default value of `seed` is 1.
-!   - `seed` should be a positive integer. If `seed = 0`, the result
-!     is a vector of zeros.
+!   - Any `seed` is allowed. It is mapped into `1..2147483646`, so
+!     `seed = 0` gives the same result as `seed = 1`.
 !
 ! Arguments:
 !   n : INTEGER(I4B) - number of values
@@ -651,9 +653,14 @@ END INTERFACE RandomValue
 ! CALL OK(ABS(w(1) - 7.826369259012501E-6_DFP) .LT. tol, &
 !         "first value for seed 1")
 !
-! ! seed = 0 gives zeros
+! ! seed = 0 is replaced by seed = 1
 ! w = UniformRandomValue(3_I4B, seed=0_I4B)
-! CALL OK(ALL(w .EQ. 0.0_DFP), "seed 0 gives zeros")
+! CALL OK(ALL(w .EQ. UniformRandomValue(3_I4B, seed=1_I4B)), &
+!         "seed 0 is the same as seed 1")
+!
+! ! a negative seed also gives values in (0, 1)
+! w = UniformRandomValue(3_I4B, seed=-5_I4B)
+! CALL OK(ALL(w .GT. 0.0_DFP .AND. w .LT. 1.0_DFP), "negative seed")
 !
 ! END PROGRAM main
 !```
@@ -663,7 +670,7 @@ INTERFACE UniformRandomValue
     INTEGER(I4B), INTENT(IN) :: n
     !! the number of entries in the vector
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: seed
-    !! the seed value, which should not be 0. It is not updated.
+    !! the seed value; 0 acts like 1. It is not updated.
     !! The default value of seed is 1
     REAL(DFP) :: ans(n)
     !! the vector of pseudorandom values
@@ -686,7 +693,7 @@ END INTERFACE UniformRandomValue
 !     `seed` always gives the same vector.
 !   - The default value of `seed` is 1.
 !   - If `a > b`, the values are in `(b, a)`.
-!   - If `seed = 0`, the result is a vector of zeros, not of `a`.
+!   - `seed = 0` gives the same result as `seed = 1`.
 !
 ! Arguments:
 !   n : INTEGER(I4B) - number of values
@@ -770,7 +777,7 @@ END INTERFACE UniformRandomValue
 !   - The function is `PURE` and `seed` is not updated, so repeated
 !     calls with the same `seed` return the same value.
 !   - The default value of `seed` is 1.
-!   - If `seed = 0`, the result is 0.
+!   - `seed = 0` gives the same result as `seed = 1`.
 !
 ! Arguments:
 !   seed : INTEGER(I4B), OPTIONAL - seed of the generator, default 1
@@ -813,8 +820,9 @@ END INTERFACE UniformRandomValue
 ! CALL OK(UniformRandomValueScalar(5_I4B) .EQ. &
 !         UniformRandomValueScalar(5_I4B), "seed is not updated")
 !
-! ! seed = 0 gives zero
-! CALL OK(UniformRandomValueScalar(0_I4B) .EQ. 0.0_DFP, "seed 0 gives 0")
+! ! seed = 0 is replaced by seed = 1
+! CALL OK(UniformRandomValueScalar(0_I4B) .EQ. &
+!         UniformRandomValueScalar(1_I4B), "seed 0 is the same as seed 1")
 !
 ! END PROGRAM main
 !```
@@ -822,7 +830,7 @@ END INTERFACE UniformRandomValue
 INTERFACE UniformRandomValueScalar
   MODULE PURE FUNCTION UniformRandomValueScalar1(seed) RESULT(ans)
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: seed
-    !! "seed" value, which should NOT be 0. It is not updated.
+    !! "seed" value; 0 acts like 1. It is not updated.
     REAL(DFP) :: ans
     !! a new pseudorandom variate, strictly between 0 and 1.
   END FUNCTION UniformRandomValueScalar1
@@ -842,8 +850,6 @@ END INTERFACE UniformRandomValueScalar
 !   Euclidean norm, so the direction is uniformly distributed on the
 !   unit sphere.
 !
-!   - This function is not `PUBLIC`, so it can only be used inside
-!     `RandomUtility`.
 !   - The same `seed` always gives the same vector.
 !   - The limits of `NormalRandomValue` also apply here.
 !
@@ -857,6 +863,37 @@ END INTERFACE UniformRandomValueScalar
 ! Formula:
 !   $$w = \frac{z}{\|z\|_2}, \quad z = \mathrm{NormalRandomValue}(m,
 !     \mathrm{seed})$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE RandomUtility, ONLY: UniformUnitRandomValue
+! USE RandomUtility, ONLY: NormalRandomValue
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+!
+! REAL(DFP), PARAMETER :: tol = 1.0E-12_DFP
+! REAL(DFP) :: w(3), z(3), w4(4)
+!
+! ! the vector has length one
+! w = UniformUnitRandomValue(3_I4B, seed=7_I4B)
+! CALL OK(ABS(NORM2(w) - 1.0_DFP) .LT. tol, "norm is 1")
+!
+! ! it is the normalized output of NormalRandomValue
+! z = NormalRandomValue(3_I4B, seed=7_I4B)
+! CALL OK(ALL(ABS(w - z / NORM2(z)) .LT. tol), "w = z / |z|")
+!
+! ! the same seed gives the same vector, also for an even size
+! w4 = UniformUnitRandomValue(4_I4B, seed=3_I4B)
+! CALL OK(ALL(w4 .EQ. UniformUnitRandomValue(4_I4B, seed=3_I4B)), &
+!         "same seed, same vector")
+! CALL OK(ABS(NORM2(w4) - 1.0_DFP) .LT. tol, "norm is 1 for m = 4")
+!
+! END PROGRAM main
+!```
 
 INTERFACE UniformUnitRandomValue
   MODULE PURE FUNCTION UniformUnitRandomValue1(m, seed) RESULT(w)
@@ -882,13 +919,13 @@ END INTERFACE UniformUnitRandomValue
 !
 !   - The function is `PURE` and `seed` is not updated, so the same
 !     `seed` always gives the same vector.
-!   - The default value of `seed` is 1. `seed` should not be 0.
+!   - The default value of `seed` is 1. `seed = 0` acts like `seed = 1`.
 !   - Each pair of uniform values gives two normal values. If `n` is
 !     odd, the second value of the last pair is discarded. Nothing is
 !     kept between calls.
 !   - If `n <= 0`, the result is an empty vector.
-!   - For `n = 1`, both uniform values are the same number, so the
-!     result is not a true normal sample.
+!   - For `n = 1` the result is the first value of `n = 2` with the
+!     same `seed`.
 !
 ! Arguments:
 !   n : INTEGER(I4B) - number of samples
