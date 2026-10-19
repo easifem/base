@@ -1549,8 +1549,8 @@ END INTERFACE Get
 !     otherwise `b`. `c` keeps the order of the scanned vector, and a
 !     repeated entry of the scanned vector is repeated in `c`.
 !   - The vectors need not be sorted.
-!   - `c` should have at least `MIN(SIZE(a), SIZE(b))` entries. This
-!     is not checked.
+!   - `c` should have at least `MIN(SIZE(a), SIZE(b))` entries. If it
+!     is smaller, only the first `SIZE(c)` common entries are stored.
 !
 ! Arguments:
 !   a : INTEGER, rank(1) - first vector
@@ -1592,6 +1592,12 @@ END INTERFACE Get
 ! ! no common entry
 ! CALL GetIntersection([1_I4B, 2_I4B], [3_I4B, 4_I4B], c, tsize)
 ! CALL OK(tsize .EQ. 0_I4B, "empty intersection")
+!
+! ! c has room for one entry only: the first common entry is kept
+! CALL GetIntersection(a=[1_I4B, 2_I4B, 3_I4B], b=[3_I4B, 2_I4B, 1_I4B], &
+!                      c=c(1:1), tsize=tsize)
+! CALL OK(tsize .EQ. 1_I4B, "c too small: tsize = SIZE(c)")
+! CALL OK(c(1) .EQ. 1_I4B, "c too small: first common entry")
 !
 ! END PROGRAM main
 !```
