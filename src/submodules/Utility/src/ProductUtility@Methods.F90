@@ -320,6 +320,9 @@ END PROCEDURE OuterProd_r2r2
 MODULE PROCEDURE OuterProd_r2r2_
 INTEGER(I4B) :: ii
 
+dim1 = SIZE(a, 1)
+dim2 = SIZE(a, 2)
+dim3 = SIZE(b, 1)
 dim4 = SIZE(b, 2)
 
 DO ii = 1, dim4
@@ -460,6 +463,9 @@ END PROCEDURE OuterProd_r1r1r2
 MODULE PROCEDURE OuterProd_r1r1r2_
 INTEGER(I4B) :: ii
 
+dim1 = SIZE(a)
+dim2 = SIZE(b)
+dim3 = SIZE(c, 1)
 dim4 = SIZE(c, 2)
 
 DO ii = 1, dim4

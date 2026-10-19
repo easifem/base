@@ -16,7 +16,6 @@
 !
 
 SUBMODULE(SplitUtility) Methods
-USE BaseMethod
 IMPLICIT NONE
 CONTAINS
 
@@ -29,6 +28,8 @@ IF (section == 1) THEN
   Ans = x(1:SIZE(x) / 2)
 ELSEIF (section == 2) THEN
   Ans = x(SIZE(x) / 2 + 1:)
+ELSE
+  ALLOCATE (Ans(0))
 END IF
 END PROCEDURE split_Int8
 
@@ -37,6 +38,8 @@ IF (section == 1) THEN
   Ans = x(1:SIZE(x) / 2)
 ELSEIF (section == 2) THEN
   Ans = x(SIZE(x) / 2 + 1:)
+ELSE
+  ALLOCATE (Ans(0))
 END IF
 END PROCEDURE split_Int16
 
@@ -45,6 +48,8 @@ IF (section == 1) THEN
   Ans = x(1:SIZE(x) / 2)
 ELSEIF (section == 2) THEN
   Ans = x(SIZE(x) / 2 + 1:)
+ELSE
+  ALLOCATE (Ans(0))
 END IF
 END PROCEDURE split_Int32
 
@@ -53,6 +58,8 @@ IF (section == 1) THEN
   Ans = x(1:SIZE(x) / 2)
 ELSEIF (section == 2) THEN
   Ans = x(SIZE(x) / 2 + 1:)
+ELSE
+  ALLOCATE (Ans(0))
 END IF
 END PROCEDURE split_Int64
 
@@ -65,6 +72,8 @@ IF (section == 1) THEN
   Ans = x(1:SIZE(x) / 2)
 ELSEIF (section == 2) THEN
   Ans = x(SIZE(x) / 2 + 1:)
+ELSE
+  ALLOCATE (Ans(0))
 END IF
 END PROCEDURE split_Real32
 
@@ -73,6 +82,8 @@ IF (section == 1) THEN
   Ans = x(1:SIZE(x) / 2)
 ELSEIF (section == 2) THEN
   Ans = x(SIZE(x) / 2 + 1:)
+ELSE
+  ALLOCATE (Ans(0))
 END IF
 END PROCEDURE split_Real64
 

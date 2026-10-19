@@ -259,11 +259,10 @@ END INTERFACE TAIL
 !   Returns `x(SIZE(x))`, where `x` is a vector of `INT8`, `INT16`,
 !   `INT32` or `INT64`. The result has the same kind as `x`.
 !
-!   The size of `x` should be at least one. This is not checked, so
-!   an empty vector gives an undefined result.
+!   An empty vector gives 0.
 !
 ! Arguments:
-!   x : INTEGER, rank(1) - input vector, `SIZE(x) >= 1`
+!   x : INTEGER, rank(1) - input vector
 !
 ! Returns:
 !   ans : INTEGER - the last element of `x`, same kind as `x`
@@ -333,11 +332,10 @@ END INTERFACE LAST
 !   Returns `x(SIZE(x))`, where `x` is a vector of `REAL32` or
 !   `REAL64`. The result has the same kind as `x`.
 !
-!   The size of `x` should be at least one. This is not checked, so
-!   an empty vector gives an undefined result.
+!   An empty vector gives 0.
 !
 ! Arguments:
-!   x : REAL, rank(1) - input vector, `SIZE(x) >= 1`
+!   x : REAL, rank(1) - input vector
 !
 ! Returns:
 !   ans : REAL - the last element of `x`, same kind as `x`
@@ -397,11 +395,10 @@ END INTERFACE LAST
 !
 !   - Trailing blanks count: for a padded variable the result is a
 !     blank. Use `LAST(TRIM(x))` to get the last non-blank character.
-!   - The length of `x` should be at least one. This is not checked,
-!     so an empty string gives an undefined result.
+!   - An empty string gives a blank.
 !
 ! Arguments:
-!   x : CHARACTER(*) - input string, `LEN(x) >= 1`
+!   x : CHARACTER(*) - input string
 !
 ! Returns:
 !   ans : CHARACTER(1) - the last character of `x`

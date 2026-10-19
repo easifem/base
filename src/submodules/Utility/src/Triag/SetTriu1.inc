@@ -19,7 +19,9 @@ INTEGER(I4B), ALLOCATABLE :: indx(:, :)
 INTEGER(I4B) :: ii
 !
 indx = TriuIndx(A, diagNo)
-DO CONCURRENT(ii=1:SIZE(indx, 1))
+! entries outside lu are not changed
+DO CONCURRENT(ii=1:SIZE(indx, 1), indx(ii, 1) .LE. SIZE(lu, 1) &
+              .AND. indx(ii, 2) .LE. SIZE(lu, 2))
   A(indx(ii, 1), indx(ii, 2)) = lu(indx(ii, 1), indx(ii, 2))
 END DO
 DEALLOCATE (indx)

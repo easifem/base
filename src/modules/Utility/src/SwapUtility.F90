@@ -186,9 +186,8 @@ END INTERFACE Swap
 !   for integer (`INT8`, `INT16`, `INT32`, `INT64`), real (`REAL32`,
 !   `REAL64`) and complex (`DFPC`) vectors.
 !
-!   - `a` and `b` should have the same size. This is not checked.
-!     The integer and complex versions loop over `SIZE(a)`; the real
-!     version uses whole-array assignment.
+!   - `a` and `b` should have the same size. If they differ, only the
+!     first `MIN(SIZE(a), SIZE(b))` entries are exchanged.
 !   - With `USE_BLAS95` the real and complex versions of this module
 !     are not compiled, and `SWAP` of `F95_BLAS` is called instead.
 !     The result is the same.
@@ -197,7 +196,7 @@ END INTERFACE Swap
 !   a : INTEGER | REAL | COMPLEX, rank(1), INTENT(INOUT) - on return,
 !     the old `b`
 !   b : INTEGER | REAL | COMPLEX, rank(1), INTENT(INOUT) - on return,
-!     the old `a`, `SIZE(b) = SIZE(a)`
+!     the old `a`, normally `SIZE(b) = SIZE(a)`
 !
 ! Returns:
 !   The entries of `a` and `b` are exchanged in place.
@@ -304,14 +303,15 @@ END INTERFACE Swap
 !   for integer (`INT8`, `INT16`, `INT32`, `INT64`), real (`REAL32`,
 !   `REAL64`) and complex (`DFPC`) matrices.
 !
-!   `a` and `b` should have the same shape. This is not checked; the
-!   loops run over `SIZE(a, 1)` and `SIZE(a, 2)`.
+!   `a` and `b` should have the same shape. If they differ, only the
+!   common block, `MIN(SIZE(a, k), SIZE(b, k))` for `k = 1, 2`, is
+!   exchanged.
 !
 ! Arguments:
 !   a : INTEGER | REAL | COMPLEX, rank(2), INTENT(INOUT) - on return,
 !     the old `b`
 !   b : INTEGER | REAL | COMPLEX, rank(2), INTENT(INOUT) - on return,
-!     the old `a`, `SHAPE(b) = SHAPE(a)`
+!     the old `a`, normally `SHAPE(b) = SHAPE(a)`
 !
 ! Returns:
 !   The entries of `a` and `b` are exchanged in place.

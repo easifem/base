@@ -63,8 +63,7 @@ PUBLIC :: SPLIT
 !
 !   - For an odd `n` the middle entry goes to the second half.
 !   - If `n == 1`, `SPLIT(x, 1)` is empty and `SPLIT(x, 2)` is `[x(1)]`.
-!   - For any other `section` the result is not allocated. Do not use
-!     the result in that case.
+!   - For any other `section` the result is an empty vector.
 !
 ! Arguments:
 !   x : INTEGER, rank(1) - input vector, `n = SIZE(x)`
@@ -173,8 +172,7 @@ END INTERFACE SPLIT
 !
 !   - For an odd `n` the middle entry goes to the second half.
 !   - If `n == 1`, `SPLIT(x, 1)` is empty and `SPLIT(x, 2)` is `[x(1)]`.
-!   - For any other `section` the result is not allocated. Do not use
-!     the result in that case.
+!   - For any other `section` the result is an empty vector.
 !
 ! Arguments:
 !   x : REAL, rank(1) - input vector, `n = SIZE(x)`

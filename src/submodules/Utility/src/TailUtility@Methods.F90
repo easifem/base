@@ -16,7 +16,6 @@
 !
 
 SUBMODULE(TailUtility) Methods
-USE BaseMethod
 IMPLICIT NONE
 CONTAINS
 
@@ -65,18 +64,34 @@ END PROCEDURE tail_char
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE last_Int8
+IF (SIZE(x) .EQ. 0) THEN
+  ans = 0_INT8
+  RETURN
+END IF
 ans = x(SIZE(x))
 END PROCEDURE last_Int8
 
 MODULE PROCEDURE last_Int16
+IF (SIZE(x) .EQ. 0) THEN
+  ans = 0_INT16
+  RETURN
+END IF
 ans = x(SIZE(x))
 END PROCEDURE last_Int16
 
 MODULE PROCEDURE last_Int32
+IF (SIZE(x) .EQ. 0) THEN
+  ans = 0_INT32
+  RETURN
+END IF
 ans = x(SIZE(x))
 END PROCEDURE last_Int32
 
 MODULE PROCEDURE last_Int64
+IF (SIZE(x) .EQ. 0) THEN
+  ans = 0_INT64
+  RETURN
+END IF
 ans = x(SIZE(x))
 END PROCEDURE last_Int64
 
@@ -85,10 +100,18 @@ END PROCEDURE last_Int64
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE last_Real32
+IF (SIZE(x) .EQ. 0) THEN
+  ans = 0.0_REAL32
+  RETURN
+END IF
 ans = x(SIZE(x))
 END PROCEDURE last_Real32
 
 MODULE PROCEDURE last_Real64
+IF (SIZE(x) .EQ. 0) THEN
+  ans = 0.0_REAL64
+  RETURN
+END IF
 ans = x(SIZE(x))
 END PROCEDURE last_Real64
 
@@ -97,6 +120,10 @@ END PROCEDURE last_Real64
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE last_char
+IF (LEN(x) .EQ. 0) THEN
+  ans = " "
+  RETURN
+END IF
 ans = x(LEN(x):LEN(x))
 END PROCEDURE last_char
 

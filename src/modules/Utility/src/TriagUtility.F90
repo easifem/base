@@ -1555,8 +1555,9 @@ END INTERFACE GetTril
 !   `j - i >= diagNo`. The other entries of `A` are not changed.
 !   It is available for REAL32, REAL64, INT8, INT16, INT32 and INT64.
 !
-!   - Only the entries of `lu` at the triangle positions of `A` are read,
-!     so `lu` must be at least as large as `A`. This is not checked.
+!   - Only the entries of `lu` at the triangle positions of `A` are read.
+!     If `lu` is smaller than `A`, the triangle entries outside `lu`
+!     are not changed.
 !
 ! Arguments:
 !   A : REAL or INTEGER, rank(2), INTENT(INOUT) - matrix to modify
@@ -1676,8 +1677,9 @@ END INTERFACE SetTriu
 !   It is available for REAL32, REAL64, INT8, INT16, INT32 and INT64.
 !
 !   - `flate` only selects this version; its value is not used.
-!   - `SIZE(lu)` must be at least the number of entries in the triangle.
-!     This is not checked; extra entries of `lu` are ignored.
+!   - `SIZE(lu)` should be the number of entries in the triangle. If
+!     `lu` is shorter, only the first `SIZE(lu)` triangle entries are
+!     set; extra entries of `lu` are ignored.
 !
 ! Arguments:
 !   A : REAL or INTEGER, rank(2), INTENT(INOUT) - matrix to modify
@@ -1905,8 +1907,9 @@ END INTERFACE SetTriu
 !   `j - i <= diagNo`. The other entries of `A` are not changed.
 !   It is available for REAL32, REAL64, INT8, INT16, INT32 and INT64.
 !
-!   - Only the entries of `lu` at the triangle positions of `A` are read,
-!     so `lu` must be at least as large as `A`. This is not checked.
+!   - Only the entries of `lu` at the triangle positions of `A` are read.
+!     If `lu` is smaller than `A`, the triangle entries outside `lu`
+!     are not changed.
 !
 ! Arguments:
 !   A : REAL or INTEGER, rank(2), INTENT(INOUT) - matrix to modify
@@ -2026,8 +2029,9 @@ END INTERFACE SetTril
 !   It is available for REAL32, REAL64, INT8, INT16, INT32 and INT64.
 !
 !   - `flate` only selects this version; its value is not used.
-!   - `SIZE(lu)` must be at least the number of entries in the triangle.
-!     This is not checked; extra entries of `lu` are ignored.
+!   - `SIZE(lu)` should be the number of entries in the triangle. If
+!     `lu` is shorter, only the first `SIZE(lu)` triangle entries are
+!     set; extra entries of `lu` are ignored.
 !
 ! Arguments:
 !   A : REAL or INTEGER, rank(2), INTENT(INOUT) - matrix to modify
