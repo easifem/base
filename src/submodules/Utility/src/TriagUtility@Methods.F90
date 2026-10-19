@@ -24,14 +24,13 @@ CONTAINS
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE TriuIndx_1
-INTEGER(I4B) :: m0, n0, diagNo0, tsize, tdiag, idiag, i1, i2
+INTEGER(I4B) :: m0, n0, diagNo0, tsize, idiag, i1, i2
 !
 m0 = m
 n0 = INPUT(default=m, option=n)
 diagNo0 = INPUT(default=0_I4B, option=diagNo)
 !
 tsize = 0
-tdiag = 0
 idiag = diagNo0
 !
 DO

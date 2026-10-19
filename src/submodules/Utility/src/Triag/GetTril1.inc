@@ -18,7 +18,7 @@
 INTEGER(I4B), ALLOCATABLE :: indx(:, :)
 INTEGER(I4B) :: ii
 !
-lu = 0.0_DFP
+lu = 0
 indx = TrilIndx(A, diagNo)
 DO CONCURRENT(ii=1:SIZE(indx, 1))
   lu(indx(ii, 1), indx(ii, 2)) = A(indx(ii, 1), indx(ii, 2))

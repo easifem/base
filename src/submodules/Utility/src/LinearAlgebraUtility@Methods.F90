@@ -20,7 +20,7 @@ IMPLICIT NONE
 CONTAINS
 
 !----------------------------------------------------------------------------
-!                                                           IntHilbertMatrix
+!                                                           InvHilbertMatrix
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE InvHilbertMatrix
@@ -34,14 +34,16 @@ p = REAL(n, kind=DFP)
 
 mainloop: DO i = 1, n
   IF (i .NE. 1) THEN
-   p = (REAL(n - i + 1, DFP) * p * REAL(n + i - 1, DFP)) / REAL(i - 1, DFP)**2
+    p = (REAL(n - i + 1, DFP) * p * REAL(n + i - 1, DFP)) &
+        / REAL(i - 1, DFP)**2
   END IF
   r = p * p
   ans(i, i) = r / REAL(2 * i - 1, DFP)
   IF (i .EQ. n) CYCLE mainloop
   ip1 = i + 1
   DO j = ip1, n
-    r = (-1) * (REAL(n - j + 1, DFP) * r * (n + j - 1)) / REAL(j - 1, DFP)**2
+    r = -(REAL(n - j + 1, DFP) * r * REAL(n + j - 1, DFP)) &
+        / REAL(j - 1, DFP)**2
     ans(i, j) = r / REAL(i + j - 1, DFP)
     ans(j, i) = ans(i, j)
   END DO

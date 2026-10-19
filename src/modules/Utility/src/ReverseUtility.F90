@@ -34,7 +34,8 @@
 !
 !   - integer and real vectors (`ans(n1:n2)`),
 !   - integer and real matrices (`ans(r1:r2, c1:c2)` along `dim`),
-!   - `REAL64` rank-3 arrays (`ans(r1:r2, c1:c2, d1:d2)` along `dim`).
+!   - `REAL32` and `REAL64` rank-3 arrays (`ans(r1:r2, c1:c2, d1:d2)`
+!     along `dim`).
 
 MODULE ReverseUtility
 USE GlobalData, ONLY: I4B
@@ -118,28 +119,28 @@ PUBLIC :: Reverse
 !```
 
 INTERFACE Reverse
-  MODULE SUBROUTINE Reverse_Int8_R1(ans, n1, n2)
+  MODULE PURE SUBROUTINE Reverse_Int8_R1(ans, n1, n2)
     INTEGER(INT8), INTENT(INOUT) :: ans(:)
     !! vector, ans(n1:n2) is reversed in place
     INTEGER(I4B), INTENT(IN) :: n1, n2
     !! range of entries to reverse
   END SUBROUTINE Reverse_Int8_R1
 
-  MODULE SUBROUTINE Reverse_Int16_R1(ans, n1, n2)
+  MODULE PURE SUBROUTINE Reverse_Int16_R1(ans, n1, n2)
     INTEGER(INT16), INTENT(INOUT) :: ans(:)
     !! vector, ans(n1:n2) is reversed in place
     INTEGER(I4B), INTENT(IN) :: n1, n2
     !! range of entries to reverse
   END SUBROUTINE Reverse_Int16_R1
 
-  MODULE SUBROUTINE Reverse_Int32_R1(ans, n1, n2)
+  MODULE PURE SUBROUTINE Reverse_Int32_R1(ans, n1, n2)
     INTEGER(INT32), INTENT(INOUT) :: ans(:)
     !! vector, ans(n1:n2) is reversed in place
     INTEGER(I4B), INTENT(IN) :: n1, n2
     !! range of entries to reverse
   END SUBROUTINE Reverse_Int32_R1
 
-  MODULE SUBROUTINE Reverse_Int64_R1(ans, n1, n2)
+  MODULE PURE SUBROUTINE Reverse_Int64_R1(ans, n1, n2)
     INTEGER(INT64), INTENT(INOUT) :: ans(:)
     !! vector, ans(n1:n2) is reversed in place
     INTEGER(I4B), INTENT(IN) :: n1, n2
@@ -211,14 +212,14 @@ END INTERFACE Reverse
 !```
 
 INTERFACE Reverse
-  MODULE SUBROUTINE Reverse_Real32_R1(ans, n1, n2)
+  MODULE PURE SUBROUTINE Reverse_Real32_R1(ans, n1, n2)
     REAL(REAL32), INTENT(INOUT) :: ans(:)
     !! vector, ans(n1:n2) is reversed in place
     INTEGER(I4B), INTENT(IN) :: n1, n2
     !! range of entries to reverse
   END SUBROUTINE Reverse_Real32_R1
 
-  MODULE SUBROUTINE Reverse_Real64_R1(ans, n1, n2)
+  MODULE PURE SUBROUTINE Reverse_Real64_R1(ans, n1, n2)
     REAL(REAL64), INTENT(INOUT) :: ans(:)
     !! vector, ans(n1:n2) is reversed in place
     INTEGER(I4B), INTENT(IN) :: n1, n2
@@ -301,7 +302,7 @@ END INTERFACE Reverse
 !```
 
 INTERFACE Reverse
-  MODULE SUBROUTINE Reverse_Int8_R2(ans, r1, r2, c1, c2, dim)
+  MODULE PURE SUBROUTINE Reverse_Int8_R2(ans, r1, r2, c1, c2, dim)
     INTEGER(INT8), INTENT(INOUT) :: ans(:, :)
     INTEGER(I4B), INTENT(IN) :: r1, r2, c1, c2
     !! Extent of ans(r1:r2, c1:c2)
@@ -310,7 +311,7 @@ INTERFACE Reverse
     !! dim=2, reverse the columns
   END SUBROUTINE Reverse_Int8_R2
 
-  MODULE SUBROUTINE Reverse_Int16_R2(ans, r1, r2, c1, c2, dim)
+  MODULE PURE SUBROUTINE Reverse_Int16_R2(ans, r1, r2, c1, c2, dim)
     INTEGER(INT16), INTENT(INOUT) :: ans(:, :)
     INTEGER(I4B), INTENT(IN) :: r1, r2, c1, c2
     !! Extent of ans(r1:r2, c1:c2)
@@ -319,7 +320,7 @@ INTERFACE Reverse
     !! dim=2, reverse the columns
   END SUBROUTINE Reverse_Int16_R2
 
-  MODULE SUBROUTINE Reverse_Int32_R2(ans, r1, r2, c1, c2, dim)
+  MODULE PURE SUBROUTINE Reverse_Int32_R2(ans, r1, r2, c1, c2, dim)
     INTEGER(INT32), INTENT(INOUT) :: ans(:, :)
     INTEGER(I4B), INTENT(IN) :: r1, r2, c1, c2
     !! Extent of ans(r1:r2, c1:c2)
@@ -328,7 +329,7 @@ INTERFACE Reverse
     !! dim=2, reverse the columns
   END SUBROUTINE Reverse_Int32_R2
 
-  MODULE SUBROUTINE Reverse_Int64_R2(ans, r1, r2, c1, c2, dim)
+  MODULE PURE SUBROUTINE Reverse_Int64_R2(ans, r1, r2, c1, c2, dim)
     INTEGER(INT64), INTENT(INOUT) :: ans(:, :)
     INTEGER(I4B), INTENT(IN) :: r1, r2, c1, c2
     !! Extent of ans(r1:r2, c1:c2)
@@ -412,7 +413,7 @@ END INTERFACE Reverse
 !```
 
 INTERFACE Reverse
-  MODULE SUBROUTINE Reverse_Real32_R2(ans, r1, r2, c1, c2, dim)
+  MODULE PURE SUBROUTINE Reverse_Real32_R2(ans, r1, r2, c1, c2, dim)
     REAL(REAL32), INTENT(INOUT) :: ans(:, :)
     INTEGER(I4B), INTENT(IN) :: r1, r2, c1, c2
     !! Extent of ans(r1:r2, c1:c2)
@@ -421,7 +422,7 @@ INTERFACE Reverse
     !! dim=2, reverse the columns
   END SUBROUTINE Reverse_Real32_R2
 
-  MODULE SUBROUTINE Reverse_Real64_R2(ans, r1, r2, c1, c2, dim)
+  MODULE PURE SUBROUTINE Reverse_Real64_R2(ans, r1, r2, c1, c2, dim)
     REAL(REAL64), INTENT(INOUT) :: ans(:, :)
     INTEGER(I4B), INTENT(IN) :: r1, r2, c1, c2
     !! Extent of ans(r1:r2, c1:c2)
@@ -442,7 +443,7 @@ END INTERFACE Reverse
 ! Description:
 !   Works on the block `ans(r1:r2, c1:c2, d1:d2)` in place. The
 !   entries outside the block are not changed. It is available for
-!   `REAL64` only.
+!   `REAL32` and `REAL64`.
 !
 !   - `dim=1`, `dim=2` or `dim=3` reverses the order of the entries
 !     along the first, second or third index of the block.
@@ -450,14 +451,14 @@ END INTERFACE Reverse
 !   - The bounds are not checked against the shape of `ans`.
 !
 ! Arguments:
-!   ans : REAL(REAL64), rank(3) - array, modified in place
+!   ans : REAL, rank(3) - array, modified in place
 !   r1, r2 : INTEGER(I4B) - range of the first index
 !   c1, c2 : INTEGER(I4B) - range of the second index
 !   d1, d2 : INTEGER(I4B) - range of the third index
 !   dim : INTEGER(I4B) - dimension to reverse, 1, 2 or 3
 !
 ! Returns:
-!   ans : REAL(REAL64), rank(3) - the block reversed along `dim`
+!   ans : REAL, rank(3) - the block reversed along `dim`
 !
 ! Formula:
 !   For `dim=3`, and similarly for `dim=1` and `dim=2`:
@@ -509,7 +510,8 @@ END INTERFACE Reverse
 !```
 
 INTERFACE Reverse
-  MODULE SUBROUTINE Reverse_Real64_R3(ans, r1, r2, c1, c2, d1, d2, dim)
+  MODULE PURE SUBROUTINE Reverse_Real64_R3(ans, r1, r2, c1, c2, d1, d2, &
+                                           dim)
     REAL(REAL64), INTENT(INOUT) :: ans(:, :, :)
     INTEGER(I4B), INTENT(IN) :: r1, r2, c1, c2, d1, d2
     !! Extent of ans(r1:r2, c1:c2, d1:d2)
@@ -518,6 +520,17 @@ INTERFACE Reverse
     !! dim=2, reverse the dim2
     !! dim=3, reverse the dim3
   END SUBROUTINE Reverse_Real64_R3
+
+  MODULE PURE SUBROUTINE Reverse_Real32_R3(ans, r1, r2, c1, c2, d1, d2, &
+                                           dim)
+    REAL(REAL32), INTENT(INOUT) :: ans(:, :, :)
+    INTEGER(I4B), INTENT(IN) :: r1, r2, c1, c2, d1, d2
+    !! Extent of ans(r1:r2, c1:c2, d1:d2)
+    INTEGER(I4B), INTENT(IN) :: dim
+    !! dim=1, reverse the dim1
+    !! dim=2, reverse the dim2
+    !! dim=3, reverse the dim3
+  END SUBROUTINE Reverse_Real32_R3
 END INTERFACE Reverse
 
 END MODULE ReverseUtility

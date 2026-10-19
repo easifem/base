@@ -190,6 +190,68 @@ END SELECT
 END PROCEDURE Reverse_Real64_R3
 
 !----------------------------------------------------------------------------
+!                                                                    Reverse
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE Reverse_Real32_R3
+REAL(REAL32) :: temp
+INTEGER(I4B) :: tsize, halfSize, indx, indx1, indx2, ii, jj
+
+SELECT CASE (dim)
+CASE (1)
+  !! dim = 1
+  tsize = r2 - r1 + 1
+  halfSize = tsize / 2
+
+  DO jj = d1, d2
+    DO ii = c1, c2
+      DO indx = 1, halfSize
+        indx1 = r1 + indx - 1
+        indx2 = r2 - indx + 1
+        temp = ans(indx2, ii, jj)
+        ans(indx2, ii, jj) = ans(indx1, ii, jj)
+        ans(indx1, ii, jj) = temp
+      END DO
+    END DO
+  END DO
+
+CASE (2)
+  !! dim = 2
+  tsize = c2 - c1 + 1
+  halfSize = tsize / 2
+
+  DO jj = d1, d2
+    DO indx = 1, halfSize
+      indx1 = c1 + indx - 1
+      indx2 = c2 - indx + 1
+      DO ii = r1, r2
+        temp = ans(ii, indx2, jj)
+        ans(ii, indx2, jj) = ans(ii, indx1, jj)
+        ans(ii, indx1, jj) = temp
+      END DO
+    END DO
+  END DO
+
+CASE (3)
+  !! dim = 3
+  tsize = d2 - d1 + 1
+  halfSize = tsize / 2
+
+  DO indx = 1, halfSize
+    indx1 = d1 + indx - 1
+    indx2 = d2 - indx + 1
+    DO jj = c1, c2
+      DO ii = r1, r2
+        temp = ans(ii, jj, indx2)
+        ans(ii, jj, indx2) = ans(ii, jj, indx1)
+        ans(ii, jj, indx1) = temp
+      END DO
+    END DO
+  END DO
+END SELECT
+END PROCEDURE Reverse_Real32_R3
+
+!----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 

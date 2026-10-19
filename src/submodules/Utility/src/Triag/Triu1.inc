@@ -18,7 +18,7 @@
 INTEGER(I4B), ALLOCATABLE :: indx(:, :)
 INTEGER(I4B) :: ii
 !
-ans = 0.0_DFP
+ans = 0
 indx = TriuIndx(A, diagNo)
 DO CONCURRENT(ii=1:SIZE(indx, 1))
   ans(indx(ii, 1), indx(ii, 2)) = A(indx(ii, 1), indx(ii, 2))

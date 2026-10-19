@@ -28,13 +28,16 @@
 !
 !   `SafeSize` is available for allocatable vectors of
 !
-!   - integers (`INT8`, `INT16`, `INT32`),
-!   - reals (`REAL32`, `REAL64`).
+!   - integers (`INT8`, `INT16`, `INT32`, `INT64`),
+!   - reals (`REAL32`, `REAL64`),
+!   - logicals (`LGT`).
 
 MODULE SafeSizeUtility
 USE GlobalData, ONLY: INT8
 USE GlobalData, ONLY: INT16
 USE GlobalData, ONLY: INT32
+USE GlobalData, ONLY: INT64
+USE GlobalData, ONLY: LGT
 USE GlobalData, ONLY: REAL32
 USE GlobalData, ONLY: REAL64
 USE GlobalData, ONLY: I4B
@@ -54,8 +57,7 @@ PUBLIC :: SafeSize
 !
 ! Description:
 !   Returns `SIZE(value)` if `value` is allocated, and 0 otherwise. It is
-!   available for `INT8`, `INT16` and `INT32`. There is no `INT64`
-!   version.
+!   available for `INT8`, `INT16`, `INT32` and `INT64`.
 !
 !   An allocated vector of size 0 also gives 0.
 !
@@ -119,6 +121,11 @@ INTERFACE SafeSize
     INTEGER(INT32), ALLOCATABLE, INTENT(IN) :: VALUE(:)
     INTEGER(I4B) :: ans
   END FUNCTION SafeSize3
+
+  MODULE PURE FUNCTION SafeSize6(VALUE) RESULT(ans)
+    INTEGER(INT64), ALLOCATABLE, INTENT(IN) :: VALUE(:)
+    INTEGER(I4B) :: ans
+  END FUNCTION SafeSize6
 END INTERFACE SafeSize
 
 !----------------------------------------------------------------------------
@@ -194,6 +201,60 @@ INTERFACE SafeSize
     REAL(REAL64), ALLOCATABLE, INTENT(IN) :: VALUE(:)
     INTEGER(I4B) :: ans
   END FUNCTION SafeSize5
+END INTERFACE SafeSize
+
+!----------------------------------------------------------------------------
+!                                                                 SafeSize
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2026-10-19
+! summary: Size of an allocatable logical vector, or 0 if not allocated.
+!
+! Description:
+!   Returns `SIZE(value)` if `value` is allocated, and 0 otherwise.
+!
+! Arguments:
+!   value : LOGICAL(LGT), ALLOCATABLE, rank(1) - input vector, may be
+!     unallocated
+!
+! Returns:
+!   ans : INTEGER(I4B) - `SIZE(value)` if allocated, otherwise 0
+!
+! Formula:
+!   $$\mathrm{ans} = \begin{cases}
+!     \mathrm{SIZE}(\mathrm{value}), & \text{if value is allocated} \\
+!     0, & \text{otherwise}
+!   \end{cases}$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: I4B
+! USE GlobalData, ONLY: LGT
+! USE SafeSizeUtility, ONLY: SafeSize
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+!
+! LOGICAL(LGT), ALLOCATABLE :: a(:)
+!
+! ! not allocated
+! CALL OK(SafeSize(a) .EQ. 0_I4B, "not allocated")
+!
+! ! allocated with size 3
+! ALLOCATE (a(3))
+! a = .TRUE.
+! CALL OK(SafeSize(a) .EQ. 3_I4B, "allocated with size 3")
+!
+! END PROGRAM main
+!```
+
+INTERFACE SafeSize
+  MODULE PURE FUNCTION SafeSize7(VALUE) RESULT(ans)
+    LOGICAL(LGT), ALLOCATABLE, INTENT(IN) :: VALUE(:)
+    INTEGER(I4B) :: ans
+  END FUNCTION SafeSize7
 END INTERFACE SafeSize
 
 END MODULE SafeSizeUtility

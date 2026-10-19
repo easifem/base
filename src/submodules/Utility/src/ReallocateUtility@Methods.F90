@@ -550,7 +550,7 @@ END PROCEDURE Reallocate_Int32_R5b
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Reallocate_Int64_R6
-#define ZEROVALUE 0.0_Int64
+#define ZEROVALUE 0_Int64
 #include "./Reallocate/reallocate6.F90"
 #undef ZEROVALUE
 END PROCEDURE Reallocate_Int64_R6
@@ -569,7 +569,7 @@ END PROCEDURE Reallocate_Int64_R6b
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Reallocate_Int32_R6
-#define ZEROVALUE 0.0_Int32
+#define ZEROVALUE 0_Int32
 #include "./Reallocate/reallocate6.F90"
 #undef ZEROVALUE
 END PROCEDURE Reallocate_Int32_R6
@@ -588,7 +588,7 @@ END PROCEDURE Reallocate_Int32_R6b
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Reallocate_Int64_R7
-#define ZEROVALUE 0.0_Int64
+#define ZEROVALUE 0_Int64
 #include "./Reallocate/reallocate7.F90"
 #undef ZEROVALUE
 END PROCEDURE Reallocate_Int64_R7
@@ -607,7 +607,7 @@ END PROCEDURE Reallocate_Int64_R7b
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Reallocate_Int32_R7
-#define ZEROVALUE 0.0_Int32
+#define ZEROVALUE 0_Int32
 #include "./Reallocate/reallocate7.F90"
 #undef ZEROVALUE
 END PROCEDURE Reallocate_Int32_R7

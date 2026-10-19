@@ -83,7 +83,7 @@ PUBLIC :: argPartition
 !     partitioned, only `this(left:right)` is changed
 !   left : INTEGER(I4B) - first index of the range, also the pivot
 !   right : INTEGER(I4B) - last index of the range
-!   iPivot : INTEGER(I4B), INTENT(INOUT) - final index of the pivot
+!   iPivot : INTEGER(I4B), INTENT(OUT) - final index of the pivot
 !
 ! Returns:
 !   this : partitioned vector
@@ -152,7 +152,7 @@ INTERFACE partition
     !! Left index
     INTEGER(I4B), INTENT(IN) :: right
     !! Right index
-    INTEGER(I4B), INTENT(INOUT) :: iPivot
+    INTEGER(I4B), INTENT(OUT) :: iPivot
     !! Pivoting index
   END SUBROUTINE partition_Real32
 
@@ -163,7 +163,7 @@ INTERFACE partition
     !! Left index
     INTEGER(I4B), INTENT(IN) :: right
     !! Right index
-    INTEGER(I4B), INTENT(INOUT) :: iPivot
+    INTEGER(I4B), INTENT(OUT) :: iPivot
     !! Pivoting index
   END SUBROUTINE partition_Real64
 
@@ -174,7 +174,7 @@ INTERFACE partition
     !! Left index
     INTEGER(I4B), INTENT(IN) :: right
     !! Right index
-    INTEGER(I4B), INTENT(INOUT) :: iPivot
+    INTEGER(I4B), INTENT(OUT) :: iPivot
     !! Pivoting index
   END SUBROUTINE partition_Int8
 
@@ -185,7 +185,7 @@ INTERFACE partition
     !! Left index
     INTEGER(I4B), INTENT(IN) :: right
     !! Right index
-    INTEGER(I4B), INTENT(INOUT) :: iPivot
+    INTEGER(I4B), INTENT(OUT) :: iPivot
     !! Pivoting index
   END SUBROUTINE partition_Int16
 
@@ -196,7 +196,7 @@ INTERFACE partition
     !! Left index
     INTEGER(I4B), INTENT(IN) :: right
     !! Right index
-    INTEGER(I4B), INTENT(INOUT) :: iPivot
+    INTEGER(I4B), INTENT(OUT) :: iPivot
     !! Pivoting index
   END SUBROUTINE partition_Int32
 
@@ -207,7 +207,7 @@ INTERFACE partition
     !! Left index
     INTEGER(I4B), INTENT(IN) :: right
     !! Right index
-    INTEGER(I4B), INTENT(INOUT) :: iPivot
+    INTEGER(I4B), INTENT(OUT) :: iPivot
     !! Pivoting index
   END SUBROUTINE partition_int64
 
@@ -242,7 +242,7 @@ END INTERFACE
 !     only `idx(left:right)` is changed
 !   left : INTEGER(I4B) - first position in `idx`, also the pivot
 !   right : INTEGER(I4B) - last position in `idx`
-!   i : INTEGER(I4B), INTENT(INOUT) - final position of the pivot
+!   i : INTEGER(I4B), INTENT(OUT) - final position of the pivot
 !
 ! Returns:
 !   idx : permuted indices
@@ -298,7 +298,7 @@ INTERFACE argPartition
     INTEGER(I4B), INTENT(INOUT) :: idx(:)
     INTEGER(I4B), INTENT(IN) :: left
     INTEGER(I4B), INTENT(IN) :: right
-    INTEGER(I4B), INTENT(INOUT) :: i
+    INTEGER(I4B), INTENT(OUT) :: i
   END SUBROUTINE argPartition_Real32
 
   MODULE PURE SUBROUTINE argPartition_Real64(this, idx, left, right, i)
@@ -306,7 +306,7 @@ INTERFACE argPartition
     INTEGER(I4B), INTENT(INOUT) :: idx(:)
     INTEGER(I4B), INTENT(IN) :: left
     INTEGER(I4B), INTENT(IN) :: right
-    INTEGER(I4B), INTENT(INOUT) :: i
+    INTEGER(I4B), INTENT(OUT) :: i
   END SUBROUTINE argPartition_Real64
 
   MODULE PURE SUBROUTINE argPartition_Int8(this, idx, left, right, i)
@@ -314,7 +314,7 @@ INTERFACE argPartition
     INTEGER(I4B), INTENT(INOUT) :: idx(:)
     INTEGER(I4B), INTENT(IN) :: left
     INTEGER(I4B), INTENT(IN) :: right
-    INTEGER(I4B), INTENT(INOUT) :: i
+    INTEGER(I4B), INTENT(OUT) :: i
   END SUBROUTINE argPartition_Int8
 
   MODULE PURE SUBROUTINE argPartition_Int16(this, idx, left, right, i)
@@ -322,7 +322,7 @@ INTERFACE argPartition
     INTEGER(I4B), INTENT(INOUT) :: idx(:)
     INTEGER(I4B), INTENT(IN) :: left
     INTEGER(I4B), INTENT(IN) :: right
-    INTEGER(I4B), INTENT(INOUT) :: i
+    INTEGER(I4B), INTENT(OUT) :: i
   END SUBROUTINE argPartition_Int16
 
   MODULE PURE SUBROUTINE argPartition_Int32(this, idx, left, right, i)
@@ -330,7 +330,7 @@ INTERFACE argPartition
     INTEGER(I4B), INTENT(INOUT) :: idx(:)
     INTEGER(I4B), INTENT(IN) :: left
     INTEGER(I4B), INTENT(IN) :: right
-    INTEGER(I4B), INTENT(INOUT) :: i
+    INTEGER(I4B), INTENT(OUT) :: i
   END SUBROUTINE argPartition_Int32
 
   MODULE PURE SUBROUTINE argPartition_Int64(this, idx, left, right, i)
@@ -338,7 +338,7 @@ INTERFACE argPartition
     INTEGER(I4B), INTENT(INOUT) :: idx(:)
     INTEGER(I4B), INTENT(IN) :: left
     INTEGER(I4B), INTENT(IN) :: right
-    INTEGER(I4B), INTENT(INOUT) :: i
+    INTEGER(I4B), INTENT(OUT) :: i
   END SUBROUTINE argPartition_Int64
 
 END INTERFACE argPartition

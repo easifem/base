@@ -15,6 +15,6 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-if (this(right) < this(left)) call swap(this(left), this(right))
-if (this(mid) < this(left)) call swap(this(mid), this(left))
-if (this(right) < this(mid)) call swap(this(right), this(mid))
+IF (this(right) < this(left)) CALL swap(this(left), this(right))
+IF (this(mid) < this(left)) CALL swap(this(mid), this(left))
+IF (this(right) < this(mid)) CALL swap(this(right), this(mid))
