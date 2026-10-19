@@ -991,17 +991,18 @@ END INTERFACE RemoveDuplicates_
 !   Returns `[val, val, ..., val]`, where `val` appears `rtimes`
 !   times. The result has the same kind as `val`.
 !
-!   - `rtimes` should be at least one. This is not checked.
+!   - If `rtimes <= 0` the result is an empty vector.
 !   - This generic extends the intrinsic `REPEAT`, so
 !     `REPEAT(string, ncopies)` still works when this module is used.
 !
 ! Arguments:
 !   val : INTEGER, rank(1) - vector to repeat
-!   rtimes : INTEGER(I4B) - number of copies, `rtimes >= 1`
+!   rtimes : INTEGER(I4B) - number of copies; `rtimes <= 0` gives an
+!     empty vector
 !
 ! Returns:
 !   ans : INTEGER, rank(1) - repeated vector,
-!     `SIZE(ans) = SIZE(val) * rtimes`
+!     `SIZE(ans) = SIZE(val) * MAX(rtimes, 0)`
 !
 ! Formula:
 !   $$\mathrm{ans}_{(r-1)m + i} = \mathrm{val}_i, \quad
@@ -1030,6 +1031,10 @@ END INTERFACE RemoveDuplicates_
 !
 ! ! repeat once
 ! CALL OK(ALL(Repeat(val=val, rtimes=1_I4B) .EQ. val), "repeat once")
+!
+! ! rtimes <= 0 gives an empty vector
+! CALL OK(SIZE(Repeat(val, 0_I4B)) .EQ. 0_I4B, "rtimes = 0")
+! CALL OK(SIZE(Repeat(val, -2_I4B)) .EQ. 0_I4B, "rtimes < 0")
 !
 ! ! the intrinsic REPEAT for strings is still available
 ! CALL OK(REPEAT("ab", 2) .EQ. "abab", "intrinsic REPEAT")
@@ -1076,15 +1081,16 @@ END INTERFACE Repeat
 !   times. It is available for `REAL32` and `REAL64`. The result has
 !   the same kind as `val`.
 !
-!   `rtimes` should be at least one. This is not checked.
+!   If `rtimes <= 0` the result is an empty vector.
 !
 ! Arguments:
 !   val : REAL, rank(1) - vector to repeat
-!   rtimes : INTEGER(I4B) - number of copies, `rtimes >= 1`
+!   rtimes : INTEGER(I4B) - number of copies; `rtimes <= 0` gives an
+!     empty vector
 !
 ! Returns:
 !   ans : REAL, rank(1) - repeated vector,
-!     `SIZE(ans) = SIZE(val) * rtimes`
+!     `SIZE(ans) = SIZE(val) * MAX(rtimes, 0)`
 !
 ! Formula:
 !   $$\mathrm{ans}_{(r-1)m + i} = \mathrm{val}_i, \quad
@@ -1110,6 +1116,9 @@ END INTERFACE Repeat
 ! CALL OK(ALL(ABS(ans - [val, val, val]) .LT. tol), "repeat 3 times")
 ! CALL OK(ABS(ans(5) - 1.5_DFP) .LT. tol, "fifth entry")
 ! CALL OK(SIZE(Repeat(val, 4_I4B)) .EQ. 8_I4B, "size of the result")
+!
+! ! rtimes <= 0 gives an empty vector
+! CALL OK(SIZE(Repeat(val, 0_I4B)) .EQ. 0_I4B, "rtimes = 0")
 !
 ! END PROGRAM main
 !```

@@ -1,6 +1,11 @@
 !> author: Vikas Sharma, Ph. D.
 ! date: 2026-10-18
 ! summary: Repeat for an integer vector
+!
+! Description:
+!   Includes the regression test for bug M-14 in
+!   bug-reports/Utility_bug_report.md: rtimes <= 0 wrote val into
+!   the empty result.
 
 PROGRAM main
 USE GlobalData, ONLY: I4B
@@ -21,6 +26,10 @@ CALL OK(ALL(Repeat(val, 2_I4B) .EQ. &
 
 ! repeat once
 CALL OK(ALL(Repeat(val=val, rtimes=1_I4B) .EQ. val), "repeat once")
+
+! rtimes <= 0 gives an empty vector
+CALL OK(SIZE(Repeat(val, 0_I4B)) .EQ. 0_I4B, "rtimes = 0")
+CALL OK(SIZE(Repeat(val, -2_I4B)) .EQ. 0_I4B, "rtimes < 0")
 
 ! the intrinsic REPEAT for strings is still available
 CALL OK(REPEAT("ab", 2) .EQ. "abab", "intrinsic REPEAT")
