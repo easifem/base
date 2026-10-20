@@ -33,12 +33,8 @@
 !   - safe inverse trigonometric functions: `Safe_ACOS`, `Safe_ASIN`
 
 MODULE MiscUtility
-USE GlobalData, ONLY: DFP
-USE GlobalData, ONLY: I4B
-USE GlobalData, ONLY: SP
-USE GlobalData, ONLY: DP
-USE GlobalData, ONLY: REAL32
-USE GlobalData, ONLY: REAL64
+USE GlobalData, ONLY: DFP, I4B, LGT
+USE GlobalData, ONLY: REAL32, REAL64
 IMPLICIT NONE
 PRIVATE
 
@@ -564,9 +560,9 @@ END INTERFACE
 !```
 
 INTERFACE
-  MODULE PURE FUNCTION Int2Str(I)
+  MODULE PURE FUNCTION Int2Str(I) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: I
-    CHARACTER(LEN=15) :: Int2Str
+    CHARACTER(LEN=15) :: ans
   END FUNCTION Int2Str
 END INTERFACE
 
@@ -580,7 +576,7 @@ END INTERFACE
 !
 ! Description:
 !   Writes `I` with the format `(G17.7)` and left adjusts the result.
-!   It is available for `REAL(SP)` and `REAL(DP)`.
+!   It is available for `REAL(Real32)` and `REAL(Real64)`.
 !
 !   - The value is written with 7 significant digits, e.g. `1.5` gives
 !     `"1.500000"`.
@@ -589,7 +585,7 @@ END INTERFACE
 !   - The result has length 20 and is padded with trailing blanks.
 !
 ! Arguments:
-!   I : REAL(SP) or REAL(DP) - the real number
+!   I : REAL(Real32) or REAL(Real64) - the real number
 !
 ! Returns:
 !   ans : CHARACTER(LEN=20) - `I` written as text, left adjusted
@@ -636,14 +632,14 @@ END INTERFACE
 !```
 
 INTERFACE Real2Str
-  MODULE PURE FUNCTION SP2Str(I)
-    REAL(SP), INTENT(IN) :: I
-    CHARACTER(LEN=20) :: SP2Str
+  MODULE PURE FUNCTION SP2Str(I) RESULT(ans)
+    REAL(REAL32), INTENT(IN) :: I
+    CHARACTER(LEN=20) :: ans
   END FUNCTION SP2Str
 
-  MODULE PURE FUNCTION DP2Str(I)
-    REAL(DP), INTENT(IN) :: I
-    CHARACTER(LEN=20) :: DP2Str
+  MODULE PURE FUNCTION DP2Str(I) RESULT(ans)
+    REAL(REAL64), INTENT(IN) :: I
+    CHARACTER(LEN=20) :: ans
   END FUNCTION DP2Str
 END INTERFACE Real2Str
 
@@ -657,7 +653,7 @@ END INTERFACE Real2Str
 !
 ! Description:
 !   Returns the `n` terms `first, first + increment, ...`. It is
-!   available for `REAL(SP)`, `REAL(DP)` and `INTEGER(I4B)`. For
+!   available for `REAL(Real32)`, `REAL(Real64)` and `INTEGER(I4B)`. For
 !   `n <= 0` the result is empty.
 !
 !   For `n > 16` the terms are computed by doubling blocks, so for
@@ -665,7 +661,7 @@ END INTERFACE Real2Str
 !   `first + (k-1) * increment`.
 !
 ! Arguments:
-!   first : REAL(SP), REAL(DP) or INTEGER(I4B) - first term
+!   first : REAL(Real32), REAL(Real64) or INTEGER(I4B) - first term
 !   increment : same type as `first` - difference between two terms
 !   n : INTEGER(I4B) - number of terms
 !
@@ -703,21 +699,21 @@ END INTERFACE Real2Str
 !```
 
 INTERFACE ARTH
-  MODULE PURE FUNCTION arth_r(first, increment, n)
-    REAL(SP), INTENT(IN) :: first, increment
+  MODULE PURE FUNCTION arth_r(first, increment, n) RESULT(ans)
+    REAL(REAL32), INTENT(IN) :: first, increment
     INTEGER(I4B), INTENT(IN) :: n
-    REAL(SP) :: arth_r(n)
+    REAL(REAL32) :: ans(n)
   END FUNCTION arth_r
 
-  MODULE PURE FUNCTION arth_d(first, increment, n)
-    REAL(DP), INTENT(IN) :: first, increment
+  MODULE PURE FUNCTION arth_d(first, increment, n) RESULT(ans)
+    REAL(REAL64), INTENT(IN) :: first, increment
     INTEGER(I4B), INTENT(IN) :: n
-    REAL(DP) :: arth_d(n)
+    REAL(REAL64) :: ans(n)
   END FUNCTION arth_d
 
-  MODULE PURE FUNCTION arth_i(first, increment, n)
+  MODULE PURE FUNCTION arth_i(first, increment, n) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: first, increment, n
-    INTEGER(I4B) :: arth_i(n)
+    INTEGER(I4B) :: ans(n)
   END FUNCTION arth_i
 END INTERFACE ARTH
 
@@ -731,7 +727,7 @@ END INTERFACE ARTH
 !
 ! Description:
 !   Returns the matrix of all differences `a(i) - b(j)`. It is available
-!   for `REAL(SP)`, `REAL(DP)` and `INTEGER(I4B)` vectors; `a` and `b`
+!   for `REAL(Real32)`, `REAL(Real64)` and `INTEGER(I4B)` vectors; `a` and `b`
 !   must have the same type.
 !
 ! Arguments:
@@ -778,20 +774,20 @@ END INTERFACE ARTH
 !```
 
 INTERFACE OuterDiff
-  MODULE PURE FUNCTION outerdiff_r(a, b)
-    REAL(SP), DIMENSION(:), INTENT(IN) :: a, b
-    REAL(SP), DIMENSION(SIZE(a), SIZE(b)) :: outerdiff_r
-  END FUNCTION outerdiff_r
+  MODULE PURE FUNCTION OUTERDIFF_R(a, b) RESULT(ans)
+    REAL(REAL32), DIMENSION(:), INTENT(IN) :: a, b
+    REAL(REAL32), DIMENSION(SIZE(a), SIZE(b)) :: ans
+  END FUNCTION OUTERDIFF_R
 
-  MODULE PURE FUNCTION outerdiff_d(a, b)
-    REAL(DP), DIMENSION(:), INTENT(IN) :: a, b
-    REAL(DP), DIMENSION(SIZE(a), SIZE(b)) :: outerdiff_d
-  END FUNCTION outerdiff_d
+  MODULE PURE FUNCTION OUTERDIFF_D(a, b) RESULT(ans)
+    REAL(REAL64), DIMENSION(:), INTENT(IN) :: a, b
+    REAL(REAL64), DIMENSION(SIZE(a), SIZE(b)) :: ans
+  END FUNCTION OUTERDIFF_D
 
-  MODULE PURE FUNCTION outerdiff_i(a, b)
+  MODULE PURE FUNCTION OUTERDIFF_I(a, b) RESULT(ans)
     INTEGER(I4B), DIMENSION(:), INTENT(IN) :: a, b
-    INTEGER(I4B), DIMENSION(SIZE(a), SIZE(b)) :: outerdiff_i
-  END FUNCTION outerdiff_i
+    INTEGER(I4B), DIMENSION(SIZE(a), SIZE(b)) :: ans
+  END FUNCTION OUTERDIFF_I
 END INTERFACE OuterDiff
 
 !----------------------------------------------------------------------------
@@ -846,15 +842,15 @@ END INTERFACE OuterDiff
 !```
 
 INTERFACE IMAXLOC
-  MODULE PURE FUNCTION imaxloc_r(arr)
+  MODULE PURE FUNCTION IMAXLOC_R(arr) RESULT(ans)
     REAL(DFP), INTENT(IN) :: arr(:)
-    INTEGER(I4B) :: imaxloc_r
-  END FUNCTION imaxloc_r
+    INTEGER(I4B) :: ans
+  END FUNCTION IMAXLOC_R
 
-  MODULE PURE FUNCTION imaxloc_i(iarr)
+  MODULE PURE FUNCTION IMAXLOC_I(iarr) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: iarr(:)
-    INTEGER(I4B) :: imaxloc_i
-  END FUNCTION imaxloc_i
+    INTEGER(I4B) :: ans
+  END FUNCTION IMAXLOC_I
 END INTERFACE IMAXLOC
 
 !----------------------------------------------------------------------------
@@ -902,15 +898,15 @@ END INTERFACE IMAXLOC
 !```
 
 INTERFACE IMINLOC
-  MODULE PURE FUNCTION iminloc_r(arr)
+  MODULE PURE FUNCTION IMINLOC_R(arr) RESULT(ans)
     REAL(DFP), INTENT(IN) :: arr(:)
-    INTEGER(I4B) :: iminloc_r
-  END FUNCTION iminloc_r
+    INTEGER(I4B) :: ans
+  END FUNCTION IMINLOC_R
 
-  MODULE PURE FUNCTION iminloc_i(iarr)
+  MODULE PURE FUNCTION IMINLOC_I(iarr) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: iarr(:)
-    INTEGER(I4B) :: iminloc_i
-  END FUNCTION iminloc_i
+    INTEGER(I4B) :: ans
+  END FUNCTION IMINLOC_I
 END INTERFACE IMINLOC
 
 !----------------------------------------------------------------------------
@@ -1028,10 +1024,10 @@ END INTERFACE IMG
 !```
 
 INTERFACE
-  MODULE ELEMENTAL FUNCTION safe_ACOS(c) RESULT(ans)
+  MODULE ELEMENTAL FUNCTION SAFE_ACOS(c) RESULT(ans)
     REAL(DFP), INTENT(IN) :: c
     REAL(DFP) :: ans
-  END FUNCTION safe_ACOS
+  END FUNCTION SAFE_ACOS
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -1088,10 +1084,10 @@ END INTERFACE
 !```
 
 INTERFACE
-  MODULE ELEMENTAL FUNCTION safe_ASIN(s) RESULT(ans)
+  MODULE ELEMENTAL FUNCTION SAFE_ASIN(s) RESULT(ans)
     REAL(DFP), INTENT(IN) :: s
     REAL(DFP) :: ans
-  END FUNCTION safe_ASIN
+  END FUNCTION SAFE_ASIN
 END INTERFACE
 
 !----------------------------------------------------------------------------
