@@ -25,41 +25,53 @@ CONTAINS
 
 MODULE PROCEDURE split_Int8
 IF (section == 1) THEN
-  Ans = x(1:SIZE(x) / 2)
-ELSEIF (section == 2) THEN
-  Ans = x(SIZE(x) / 2 + 1:)
+  ans = x(1:SIZE(x) / 2)
+ELSE IF (section == 2) THEN
+  ans = x(SIZE(x) / 2 + 1:)
 ELSE
-  ALLOCATE (Ans(0))
+  ALLOCATE (ans(0))
 END IF
 END PROCEDURE split_Int8
 
+!----------------------------------------------------------------------------
+!                                                                      SPLIT
+!----------------------------------------------------------------------------
+
 MODULE PROCEDURE split_Int16
 IF (section == 1) THEN
-  Ans = x(1:SIZE(x) / 2)
-ELSEIF (section == 2) THEN
-  Ans = x(SIZE(x) / 2 + 1:)
+  ans = x(1:SIZE(x) / 2)
+ELSE IF (section == 2) THEN
+  ans = x(SIZE(x) / 2 + 1:)
 ELSE
-  ALLOCATE (Ans(0))
+  ALLOCATE (ans(0))
 END IF
 END PROCEDURE split_Int16
 
+!----------------------------------------------------------------------------
+!                                                                      SPLIT
+!----------------------------------------------------------------------------
+
 MODULE PROCEDURE split_Int32
 IF (section == 1) THEN
-  Ans = x(1:SIZE(x) / 2)
-ELSEIF (section == 2) THEN
-  Ans = x(SIZE(x) / 2 + 1:)
+  ans = x(1:SIZE(x) / 2)
+ELSE IF (section == 2) THEN
+  ans = x(SIZE(x) / 2 + 1:)
 ELSE
-  ALLOCATE (Ans(0))
+  ALLOCATE (ans(0))
 END IF
 END PROCEDURE split_Int32
 
+!----------------------------------------------------------------------------
+!                                                                      SPLIT
+!----------------------------------------------------------------------------
+
 MODULE PROCEDURE split_Int64
 IF (section == 1) THEN
-  Ans = x(1:SIZE(x) / 2)
-ELSEIF (section == 2) THEN
-  Ans = x(SIZE(x) / 2 + 1:)
+  ans = x(1:SIZE(x) / 2)
+ELSE IF (section == 2) THEN
+  ans = x(SIZE(x) / 2 + 1:)
 ELSE
-  ALLOCATE (Ans(0))
+  ALLOCATE (ans(0))
 END IF
 END PROCEDURE split_Int64
 
@@ -69,21 +81,25 @@ END PROCEDURE split_Int64
 
 MODULE PROCEDURE split_Real32
 IF (section == 1) THEN
-  Ans = x(1:SIZE(x) / 2)
-ELSEIF (section == 2) THEN
-  Ans = x(SIZE(x) / 2 + 1:)
+  ans = x(1:SIZE(x) / 2)
+ELSE IF (section == 2) THEN
+  ans = x(SIZE(x) / 2 + 1:)
 ELSE
-  ALLOCATE (Ans(0))
+  ALLOCATE (ans(0))
 END IF
 END PROCEDURE split_Real32
 
+!----------------------------------------------------------------------------
+!                                                                      SPLIT
+!----------------------------------------------------------------------------
+
 MODULE PROCEDURE split_Real64
 IF (section == 1) THEN
-  Ans = x(1:SIZE(x) / 2)
-ELSEIF (section == 2) THEN
-  Ans = x(SIZE(x) / 2 + 1:)
+  ans = x(1:SIZE(x) / 2)
+ELSE IF (section == 2) THEN
+  ans = x(SIZE(x) / 2 + 1:)
 ELSE
-  ALLOCATE (Ans(0))
+  ALLOCATE (ans(0))
 END IF
 END PROCEDURE split_Real64
 
@@ -93,11 +109,11 @@ END PROCEDURE split_Real64
 
 MODULE PROCEDURE split_char
 IF (section == 1) THEN
-  Ans = x(1:LEN(x) / 2)
+  ans = x(1:LEN(x) / 2)
 ELSE IF (section == 2) THEN
-  Ans = x(LEN(x) / 2 + 1:)
+  ans = x(LEN(x) / 2 + 1:)
 ELSE
-  Ans = ''
+  ans = ''
 END IF
 END PROCEDURE split_char
 

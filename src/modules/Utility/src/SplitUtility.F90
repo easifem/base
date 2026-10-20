@@ -124,36 +124,36 @@ PUBLIC :: SPLIT
 !```
 
 INTERFACE SPLIT
-  MODULE PURE FUNCTION split_Int8(x, section) RESULT(Ans)
+  MODULE PURE FUNCTION split_Int8(x, section) RESULT(ans)
     INTEGER(INT8), INTENT(IN) :: x(:)
     !! Input array
     INTEGER(I4B), INTENT(IN) :: section
     !! Array section to return
-    INTEGER(INT8), ALLOCATABLE :: Ans(:)
+    INTEGER(INT8), ALLOCATABLE :: ans(:)
   END FUNCTION split_Int8
 
-  MODULE PURE FUNCTION split_Int16(x, section) RESULT(Ans)
+  MODULE PURE FUNCTION split_Int16(x, section) RESULT(ans)
     INTEGER(INT16), INTENT(IN) :: x(:)
     !! Input array
     INTEGER(I4B), INTENT(IN) :: section
     !! Array section to return
-    INTEGER(INT16), ALLOCATABLE :: Ans(:)
+    INTEGER(INT16), ALLOCATABLE :: ans(:)
   END FUNCTION split_Int16
 
-  MODULE PURE FUNCTION split_Int32(x, section) RESULT(Ans)
+  MODULE PURE FUNCTION split_Int32(x, section) RESULT(ans)
     INTEGER(INT32), INTENT(IN) :: x(:)
     !! Input array
     INTEGER(I4B), INTENT(IN) :: section
     !! Array section to return
-    INTEGER(INT32), ALLOCATABLE :: Ans(:)
+    INTEGER(INT32), ALLOCATABLE :: ans(:)
   END FUNCTION split_Int32
 
-  MODULE PURE FUNCTION split_Int64(x, section) RESULT(Ans)
+  MODULE PURE FUNCTION split_Int64(x, section) RESULT(ans)
     INTEGER(INT64), INTENT(IN) :: x(:)
     !! Input array
     INTEGER(I4B), INTENT(IN) :: section
     !! Array section to return
-    INTEGER(INT64), ALLOCATABLE :: Ans(:)
+    INTEGER(INT64), ALLOCATABLE :: ans(:)
   END FUNCTION split_Int64
 END INTERFACE SPLIT
 
@@ -234,20 +234,20 @@ END INTERFACE SPLIT
 !```
 
 INTERFACE SPLIT
-  MODULE PURE FUNCTION split_Real32(x, section) RESULT(Ans)
+  MODULE PURE FUNCTION split_Real32(x, section) RESULT(ans)
     REAL(REAL32), DIMENSION(:), INTENT(IN) :: x
     !! Input array
     INTEGER(I4B), INTENT(IN) :: section
     !! Array section to return
-    REAL(REAL32), DIMENSION(:), ALLOCATABLE :: Ans
+    REAL(REAL32), DIMENSION(:), ALLOCATABLE :: ans
   END FUNCTION split_Real32
 
-  MODULE PURE FUNCTION split_Real64(x, section) RESULT(Ans)
+  MODULE PURE FUNCTION split_Real64(x, section) RESULT(ans)
     REAL(REAL64), DIMENSION(:), INTENT(IN) :: x
     !! Input array
     INTEGER(I4B), INTENT(IN) :: section
     !! Array section to return
-    REAL(REAL64), DIMENSION(:), ALLOCATABLE :: Ans
+    REAL(REAL64), DIMENSION(:), ALLOCATABLE :: ans
   END FUNCTION split_Real64
 END INTERFACE SPLIT
 
@@ -326,12 +326,12 @@ END INTERFACE SPLIT
 !```
 
 INTERFACE SPLIT
-  MODULE PURE FUNCTION split_char(x, section) RESULT(Ans)
+  MODULE PURE FUNCTION split_char(x, section) RESULT(ans)
     CHARACTER(*), INTENT(IN) :: x
     !! Input array
     INTEGER(I4B), INTENT(IN) :: section
     !! Array section to return
-    CHARACTER(:), ALLOCATABLE :: Ans
+    CHARACTER(:), ALLOCATABLE :: ans
   END FUNCTION split_char
 END INTERFACE SPLIT
 
