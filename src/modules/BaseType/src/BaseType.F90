@@ -21,82 +21,82 @@
 
 MODULE BaseType
 USE GlobalData, ONLY: Monomial, LagrangePolynomial, SerendipityPolynomial, &
-                      HierarchicalPolynomial, OrthogonalPolynomial, &
-                      JacobiPolynomial, LegendrePolynomial, &
-                      ChebyshevPolynomial, LobattoPolynomial, &
-                      UnscaledLobattoPolynomial, HermitPolynomial, &
-                      UltrasphericalPolynomial
+  HierarchicalPolynomial, OrthogonalPolynomial, &
+  JacobiPolynomial, LegendrePolynomial, &
+  ChebyshevPolynomial, LobattoPolynomial, &
+  UnscaledLobattoPolynomial, HermitPolynomial, &
+  UltrasphericalPolynomial
 
 USE GlobalData, ONLY: I4B, LGT, DFP, DFPC
 
 USE GlobalData, ONLY: FMT_NODES, FMT_DOF, NodesToDOF, DofToNodes
 
 USE GlobalData, ONLY: RelativeConvergence, ConvergenceInRes, &
-                      ConvergenceInSol, ConvergenceInResSol, &
-                      AbsoluteConvergence, NormL1, NormL2, NormInfinity, &
-                      StressTypeVoigt, OMP_THREADS_JOINED
+  ConvergenceInSol, ConvergenceInResSol, &
+  AbsoluteConvergence, NormL1, NormL2, NormInfinity, &
+  StressTypeVoigt, OMP_THREADS_JOINED
 
 USE GlobalData, ONLY: Equidistance, CenterQP, EquidistanceQP, GaussQP, &
-                      GaussLegendreQP, GaussLegendreLobattoQP, &
-                      GaussLegendreRadau, GaussLegendreRadauLeft, &
-                      GaussLegendreRadauRight, GaussRadauQP, &
-                      GaussRadauLeftQP, GaussRadauRightQP, &
-                      GaussLobattoQP, GaussChebyshevQP, &
-                      GaussChebyshevLobattoQP, GaussChebyshevRadau, &
-                      GaussChebyshevRadauLeft, GaussChebyshevRadauRight, &
-                      GaussJacobiQP, GaussJacobiLobattoQP, &
-                      GaussJacobiRadau, GaussJacobiRadauLeft, &
-                      GaussJacobiRadauRight, GaussUltraSphericalQP, &
-                      GaussUltraSphericalLobattoQP, &
-                      GaussUltraSphericalRadau, &
-                      GaussUltraSphericalRadauLeft, &
-                      GaussUltraSphericalRadauRight, &
-                      ChenBabuskaQP, HesthavenQP, &
-                      FeketQP, BlythPozLegendreQP, &
-                      BlythPozChebyshevQP, IsaacLegendreQP, IsaacChebyshevQP
+  GaussLegendreQP, GaussLegendreLobattoQP, &
+  GaussLegendreRadau, GaussLegendreRadauLeft, &
+  GaussLegendreRadauRight, GaussRadauQP, &
+  GaussRadauLeftQP, GaussRadauRightQP, &
+  GaussLobattoQP, GaussChebyshevQP, &
+  GaussChebyshevLobattoQP, GaussChebyshevRadau, &
+  GaussChebyshevRadauLeft, GaussChebyshevRadauRight, &
+  GaussJacobiQP, GaussJacobiLobattoQP, &
+  GaussJacobiRadau, GaussJacobiRadauLeft, &
+  GaussJacobiRadauRight, GaussUltraSphericalQP, &
+  GaussUltraSphericalLobattoQP, &
+  GaussUltraSphericalRadau, &
+  GaussUltraSphericalRadauLeft, &
+  GaussUltraSphericalRadauRight, &
+  ChenBabuskaQP, HesthavenQP, &
+  FeketQP, BlythPozLegendreQP, &
+  BlythPozChebyshevQP, IsaacLegendreQP, IsaacChebyshevQP
 
 USE GlobalData, ONLY: NO_PRECONDITION, LEFT_PRECONDITION, &
-                      RIGHT_PRECONDITION, LEFT_RIGHT_PRECONDITION, &
-                      PRECOND_JACOBI, PRECOND_ILU, PRECOND_SSOR, &
-                      PRECOND_HYBRID, PRECOND_IS, PRECOND_SAINV, &
-                      PRECOND_SAAMG, PRECOND_ILUC, PRECOND_ADDS, &
-                      PRECOND_ILUTP, PRECOND_ILUD, PRECOND_ILUDP, &
-                      PRECOND_ILU0, PRECOND_ILUK, PRECOND_ILUT
+  RIGHT_PRECONDITION, LEFT_RIGHT_PRECONDITION, &
+  PRECOND_JACOBI, PRECOND_ILU, PRECOND_SSOR, &
+  PRECOND_HYBRID, PRECOND_IS, PRECOND_SAINV, &
+  PRECOND_SAAMG, PRECOND_ILUC, PRECOND_ADDS, &
+  PRECOND_ILUTP, PRECOND_ILUD, PRECOND_ILUDP, &
+  PRECOND_ILU0, PRECOND_ILUK, PRECOND_ILUT
 
 USE GlobalData, ONLY: LIS_CG, LIS_BCG, LIS_BICG, LIS_CGS, LIS_BCGSTAB, &
-                      LIS_BICGSTAB, LIS_BICGSTABL, LIS_GPBICG, LIS_TFQMR, &
-                      LIS_OMN, LIS_FOM, LIS_ORTHOMIN, LIS_GMRES, LIS_GMR, &
-                      LIS_JACOBI, LIS_GS, LIS_SOR, LIS_BICGSAFE, LIS_CR, &
-                      LIS_BICR, LIS_CRS, LIS_BICRSTAB, LIS_GPBICR, &
-                      LIS_BICRSAFE, LIS_FGMRES, LIS_IDRS, LIS_IDR1, &
-                      LIS_MINRES, LIS_COCG, LIS_COCR, LIS_CGNR, LIS_CGN, &
-                      LIS_DBCG, LIS_DBICG, LIS_DQGMRES, LIS_SUPERLU
+  LIS_BICGSTAB, LIS_BICGSTABL, LIS_GPBICG, LIS_TFQMR, &
+  LIS_OMN, LIS_FOM, LIS_ORTHOMIN, LIS_GMRES, LIS_GMR, &
+  LIS_JACOBI, LIS_GS, LIS_SOR, LIS_BICGSAFE, LIS_CR, &
+  LIS_BICR, LIS_CRS, LIS_BICRSTAB, LIS_GPBICR, &
+  LIS_BICRSAFE, LIS_FGMRES, LIS_IDRS, LIS_IDR1, &
+  LIS_MINRES, LIS_COCG, LIS_COCR, LIS_CGNR, LIS_CGN, &
+  LIS_DBCG, LIS_DBICG, LIS_DQGMRES, LIS_SUPERLU
 
 USE GlobalData, ONLY: Scalar, Vector, Matrix, Nodal, Quadrature, &
-                      Constant, Space, Time, Spacetime, &
-                      SolutionDependent, RandomSpace
+  Constant, Space, Time, Spacetime, &
+  SolutionDependent, RandomSpace
 
 USE GlobalData, ONLY: Point, Point1, &
-                      Line, Line1, Line2, Line3, Line4, Line5, Line6, &
-                      Line7, Line8, Line9, Line10, Line11, &
-                      Triangle, Triangle3, Triangle6, Triangle9, Triangle10, &
-                      Triangle12, Triangle15, Triangle15a, Triangle15b, &
-                      Triangle18, Triangle21, Triangle21a, Triangle21b, &
-                      Triangle24, Triangle27, Triangle28, Triangle30, &
-                      Triangle36, Triangle45, Triangle55, Triangle66, &
-                      Quadrangle, Quadrangle4, Quadrangle8, Quadrangle9, &
-                      Quadrangle16, Quadrangle16a, Quadrangle16b, &
-                      Quadrangle20, Quadrangle24, Quadrangle25, &
-                      Quadrangle28, Quadrangle32, Quadrangle36, &
-                      Quadrangle36a, Quadrangle36b, Quadrangle40, &
-                      Quadrangle49, Quadrangle64, Quadrangle81, &
-                      Quadrangle100, Quadrangle121, &
-                      Tetrahedron, Tetrahedron4, Tetrahedron10, &
-                      Tetrahedron20, Tetrahedron35, Tetrahedron56, &
-                      Hexahedron, Hexahedron8, Hexahedron20, Hexahedron27, &
-                      Hexahedron64, Hexahedron125, &
-                      Prism, Prism6, Prism15, Prism18, &
-                      Pyramid, Pyramid5, Pyramid13, Pyramid14
+  Line, Line1, Line2, Line3, Line4, Line5, Line6, &
+  Line7, Line8, Line9, Line10, Line11, &
+  Triangle, Triangle3, Triangle6, Triangle9, Triangle10, &
+  Triangle12, Triangle15, Triangle15a, Triangle15b, &
+  Triangle18, Triangle21, Triangle21a, Triangle21b, &
+  Triangle24, Triangle27, Triangle28, Triangle30, &
+  Triangle36, Triangle45, Triangle55, Triangle66, &
+  Quadrangle, Quadrangle4, Quadrangle8, Quadrangle9, &
+  Quadrangle16, Quadrangle16a, Quadrangle16b, &
+  Quadrangle20, Quadrangle24, Quadrangle25, &
+  Quadrangle28, Quadrangle32, Quadrangle36, &
+  Quadrangle36a, Quadrangle36b, Quadrangle40, &
+  Quadrangle49, Quadrangle64, Quadrangle81, &
+  Quadrangle100, Quadrangle121, &
+  Tetrahedron, Tetrahedron4, Tetrahedron10, &
+  Tetrahedron20, Tetrahedron35, Tetrahedron56, &
+  Hexahedron, Hexahedron8, Hexahedron20, Hexahedron27, &
+  Hexahedron64, Hexahedron125, &
+  Prism, Prism6, Prism15, Prism18, &
+  Pyramid, Pyramid5, Pyramid13, Pyramid14
 
 USE GlobalData, ONLY: CHAR_SLASH, CHAR_LF
 
@@ -317,14 +317,14 @@ TYPE :: MathOpt_
   REAL(DFP) :: pi_by_four = 0.25_DFP * 3.14159265359_DFP
   REAL(DFP) :: e = 2.718281828459045_DFP
   REAL(DFP), DIMENSION(3, 3) :: eye3 = RESHAPE([ &
-                                               1.0_DFP, 0.0_DFP, 0.0_DFP, &
-                                               0.0_DFP, 1.0_DFP, 0.0_DFP, &
-                                               0.0_DFP, 0.0_DFP, 1.0_DFP], &
-                                               [3, 3])
+                                                 1.0_DFP, 0.0_DFP, 0.0_DFP, &
+                                                 0.0_DFP, 1.0_DFP, 0.0_DFP, &
+                                                 0.0_DFP, 0.0_DFP, 1.0_DFP], &
+                                              [3, 3])
   REAL(DFP), DIMENSION(2, 2) :: eye2 = RESHAPE([ &
-                                               1.0_DFP, 0.0_DFP, &
-                                               0.0_DFP, 1.0_DFP], &
-                                               [2, 2])
+                                                 1.0_DFP, 0.0_DFP, &
+                                                 0.0_DFP, 1.0_DFP], &
+                                              [2, 2])
   COMPLEX(DFPC) :: i = (0.0_DFP, 1.0_DFP)
   COMPLEX(DFPC) :: j = (0.0_DFP, 1.0_DFP)
   LOGICAL(LGT) :: yes = .TRUE.
@@ -354,18 +354,18 @@ TYPE(MathOpt_), PARAMETER :: TypeMathOpt = MathOpt_()
 
 TYPE :: BoundingBox_
   INTEGER(I4B) :: nsd = 0
-    !! Number of spatial dimension
-    !! NSD = 1, 2, 3 for 1D, 2D, 3D box
+  !! Number of spatial dimension
+  !! NSD = 1, 2, 3 for 1D, 2D, 3D box
   REAL(DFP) :: box(2, 3) = 0.0
-    !! Box contains the xmin, ymin, ...
-    !! `Box(1:2, 1:3)`  an array containing box coordinates.
-    !!- `Box(1:2, 1:3)`  an array containing box coordinates.
-    !!- `Box(1, 1)` is x_min
-    !!- `Box(2, 1)` is x_max
-    !!- `Box(1, 2)` is y_min
-    !!- `Box(2, 2)` is y_max
-    !!- `Box(1, 3)` is z_min
-    !!- `Box(2, 3)` is z_max
+  !! Box contains the xmin, ymin, ...
+  !! `Box(1:2, 1:3)`  an array containing box coordinates.
+  !!- `Box(1:2, 1:3)`  an array containing box coordinates.
+  !!- `Box(1, 1)` is x_min
+  !!- `Box(2, 1)` is x_max
+  !!- `Box(1, 2)` is y_min
+  !!- `Box(2, 2)` is y_max
+  !!- `Box(1, 3)` is z_min
+  !!- `Box(2, 3)` is z_max
   REAL(DFP) :: l(3) = 0.0_DFP
   !! l(1) length in x
   !! l(2) length in y
@@ -534,28 +534,28 @@ TYPE(DOFOpt_), PARAMETER :: TypeDOFOpt = DOFOpt_()
 
 TYPE :: DOF_
   INTEGER(I4B) :: storageFMT = FMT_NODES
-    !! Storage format
+  !! Storage format
   INTEGER(I4B) :: mapRow = 0
-    !! Number of rows in map which contains useful data
-    !! Number of physical variables = mapRow - 1
+  !! Number of rows in map which contains useful data
+  !! Number of physical variables = mapRow - 1
   INTEGER(I4B) :: valMapSize = 0
-    !! The size of valMap which contains useful data
+  !! The size of valMap which contains useful data
   INTEGER(I4B), ALLOCATABLE :: map(:, :)
-    !! Encapsulation of information of DOF
-    !! map contains 6 columns
-    !! Column 1: contains the ASCII code of the physical variable name
-    !! Column 2: contains the space component of the physical variable
-    !! Column 3: contains the time component of the physical variable
-    !! Column 4: contains the total DOF for the physical variable
-    !! Column 5: contains the starting index of dof for the physical variable
-    !!           So first physical variable dof starts from map(1, 5)
-    !!           Second physical variable dof starts from map(2, 5)
-    !! Column 6: contains the number of nodes associated with each variable
-    !! If there a total n Physical variables, then the
-    !!    n+1 th row contains the total DOF information
-    !!    For example, map(n+1, 4) contains the total DOF
+  !! Encapsulation of information of DOF
+  !! map contains 6 columns
+  !! Column 1: contains the ASCII code of the physical variable name
+  !! Column 2: contains the space component of the physical variable
+  !! Column 3: contains the time component of the physical variable
+  !! Column 4: contains the total DOF for the physical variable
+  !! Column 5: contains the starting index of dof for the physical variable
+  !!           So first physical variable dof starts from map(1, 5)
+  !!           Second physical variable dof starts from map(2, 5)
+  !! Column 6: contains the number of nodes associated with each variable
+  !! If there a total n Physical variables, then the
+  !!    n+1 th row contains the total DOF information
+  !!    For example, map(n+1, 4) contains the total DOF
   INTEGER(I4B), ALLOCATABLE :: valMap(:)
-    !! Val map
+  !! Val map
 END TYPE DOF_
 
 TYPE(DOF_), PARAMETER :: TypeDOF = DOF_(map=NULL(), valMap=NULL())
@@ -579,7 +579,7 @@ TYPE :: SparseMatrixReOrdering_
 END TYPE SparseMatrixReOrdering_
 
 TYPE(SparseMatrixReOrdering_), PARAMETER :: TypeSparseMatrixReOrdering = &
-                   SparseMatrixReOrdering_(name="", PERM=NULL(), IPERM=NULL())
+  SparseMatrixReOrdering_(NAME="", PERM=NULL(), IPERM=NULL())
 
 !----------------------------------------------------------------------------
 !                                                               CSRSparsity_
@@ -610,7 +610,7 @@ TYPE :: CSRSparsity_
 END TYPE CSRSparsity_
 
 TYPE(CSRSparsity_), PARAMETER :: TypeCSRSparsity = &
-                                CSRSparsity_(IA=NULL(), JA=NULL(), Row=NULL())
+  CSRSparsity_(IA=NULL(), JA=NULL(), Row=NULL())
 
 TYPE :: CSRSparsityPointer_
   CLASS(CSRSparsity_), POINTER :: ptr => NULL()
@@ -662,7 +662,7 @@ TYPE :: SuperLU_
   !! size(nrhs)
   REAL(DFP), ALLOCATABLE :: berr(:)
   !! size(nrhs)
-  CHARACTER(1, kind=C_CHAR) :: equed(2)
+  CHARACTER(1, KIND=C_CHAR) :: equed(2)
   INTEGER(C_SIZE_T) :: lwork = 0
   INTEGER(C_SIZE_T) :: info = 0
   REAL(DFP) :: recip_pivot_growth = 0.0_DFP
@@ -697,8 +697,8 @@ TYPE :: CSRMatrix_
 #endif
 END TYPE CSRMatrix_
 
-TYPE(CSRMatrix_), PARAMETER :: TypeCSRMatrix = CSRMatrix_( &
-                               A=NULL(), slu=NULL())
+TYPE(CSRMatrix_), PARAMETER :: TypeCSRMatrix = &
+  CSRMatrix_(A=NULL(), slu=NULL())
 
 TYPE :: CSRMatrixPointer_
   CLASS(CSRMatrix_), POINTER :: ptr => NULL()
@@ -718,8 +718,8 @@ TYPE :: VoigtRank2Tensor_
   INTEGER(I4B) :: VoigtType = StressTypeVoigt
 END TYPE VoigtRank2Tensor_
 
-TYPE(VoigtRank2Tensor_), PARAMETER :: TypeVoigtRank2Tensor  &
-  & = VoigtRank2Tensor_()
+TYPE(VoigtRank2Tensor_), PARAMETER :: TypeVoigtRank2Tensor &
+  = VoigtRank2Tensor_()
 
 TYPE :: VoigtRank2TensorPointer
   CLASS(VoigtRank2Tensor_), POINTER :: ptr => NULL()
@@ -766,8 +766,8 @@ END TYPE Rank2TensorPointer_
 TYPE, EXTENDS(Rank2Tensor_) :: DeformationGradient_
 END TYPE DeformationGradient_
 
-TYPE(DeformationGradient_), PARAMETER :: TypeDeformationGradient  &
-  & = DeformationGradient_()
+TYPE(DeformationGradient_), PARAMETER :: TypeDeformationGradient &
+  = DeformationGradient_()
 
 TYPE :: DeformationGradientPointer_
   CLASS(DeformationGradient_), POINTER :: ptr => NULL()
@@ -792,8 +792,8 @@ END TYPE DeformationGradientPointer_
 TYPE, EXTENDS(Rank2Tensor_) :: LeftCauchyGreen_
 END TYPE LeftCauchyGreen_
 
-TYPE(LeftCauchyGreen_), PARAMETER :: TypeLeftCauchyGreen  &
-  & = LeftCauchyGreen_()
+TYPE(LeftCauchyGreen_), PARAMETER :: TypeLeftCauchyGreen &
+  = LeftCauchyGreen_()
 
 TYPE :: LeftCauchyGreenPointer_
   CLASS(LeftCauchyGreen_), POINTER :: ptr => NULL()
@@ -818,8 +818,8 @@ END TYPE LeftCauchyGreenPointer_
 TYPE, EXTENDS(Rank2Tensor_) :: RightCauchyGreen_
 END TYPE RightCauchyGreen_
 
-TYPE(RightCauchyGreen_), PARAMETER :: TypeRightCauchyGreen  &
-  & = RightCauchyGreen_()
+TYPE(RightCauchyGreen_), PARAMETER :: TypeRightCauchyGreen &
+  = RightCauchyGreen_()
 
 TYPE :: RightCauchyGreenPointer_
   CLASS(RightCauchyGreen_), POINTER :: ptr => NULL()
@@ -980,8 +980,9 @@ TYPE :: RefelemOpt_
   INTEGER(I4B) :: tElemTopologyType_2D = 2
   INTEGER(I4B) :: tElemTopologyType_3D = 4
   INTEGER(I4B) :: tElemTopologyType = 8
-  INTEGER(I4B) :: elemTopologyname(8) = &
-  [Point, Line, Triangle, Quadrangle, Tetrahedron, Hexahedron, Prism, Pyramid]
+  INTEGER(I4B) :: elemTopologyname(8) = [Point, Line, Triangle, Quadrangle, &
+                                         Tetrahedron, Hexahedron, Prism, &
+                                         Pyramid]
   !! Name of the element topology
 
   INTEGER(I4B) :: tCells(8) = [1, 1, 1, 1, 1, 1, 1, 1]
@@ -1062,36 +1063,36 @@ TYPE(MeshOpt_), PARAMETER :: TypeMeshOpt = MeshOpt_()
 
 TYPE :: ReferenceElement_
   CHARACTER(10) :: domainName = "GENERAL"
-    !! UNIT, BIUNIT, GENERAL
+  !! UNIT, BIUNIT, GENERAL
   INTEGER(I4B) :: entityCounts(4) = 0
-    !! Number of 0D, 1D, 2D, 3D entities
-    !! entityCounts(1) = total number of points
-    !! entityCounts(2) = total number of edges
-    !! entityCounts(3) = total number of faces
-    !! entityCounts(4) = total number of cells
+  !! Number of 0D, 1D, 2D, 3D entities
+  !! entityCounts(1) = total number of points
+  !! entityCounts(2) = total number of edges
+  !! entityCounts(3) = total number of faces
+  !! entityCounts(4) = total number of cells
   INTEGER(I4B) :: xiDimension = 0
-    !! Xidimension
+  !! Xidimension
   INTEGER(I4B) :: name = 0
-    !! name of the element
+  !! name of the element
   INTEGER(I4B) :: order = 0
-    !! Order of element
+  !! Order of element
   INTEGER(I4B) :: nsd = 0
-    !! Number of spatial dimensions
+  !! Number of spatial dimensions
   INTEGER(I4B) :: interpolationPointType = Equidistance
-    !! Interpolation point
-    !! Equidistance
-    !! GaussLegendre
-    !! GaussLobatto
-    !! Chebyshev
+  !! Interpolation point
+  !! Equidistance
+  !! GaussLegendre
+  !! GaussLobatto
+  !! Chebyshev
   TYPE(ReferenceTopology_), ALLOCATABLE :: topology(:)
-    !! Topology information of 0D, 1, 2, 3D entities
+  !! Topology information of 0D, 1, 2, 3D entities
   REAL(DFP), ALLOCATABLE :: xiJ(:, :)
-    !! Node coord
-    !! Rows represents the spatial components
-    !! Columns represents the node number
-  PROCEDURE(highorder_refelem), POINTER, PASS(obj) ::  &
-    & highOrderElement => NULL()
-    !! Routine to generate hgher order LagrangeElement
+  !! Node coord
+  !! Rows represents the spatial components
+  !! Columns represents the node number
+  PROCEDURE(highorder_refelem), POINTER, PASS(obj) :: &
+    highOrderElement => NULL()
+  !! Routine to generate hgher order LagrangeElement
 END TYPE ReferenceElement_
 
 TYPE :: ReferenceElementPointer_
@@ -1122,10 +1123,10 @@ TYPE, EXTENDS(ReferenceElement_) :: ReferencePoint_
 END TYPE ReferencePoint_
 
 TYPE(ReferencePoint_), PARAMETER :: &
-  & TypeReferencePoint = ReferencePoint_( &
-  & XiJ=NULL(), EntityCounts=[0, 0, 0, 0],  &
-  & xiDimension=0, name=0, &
-  & Topology=NULL(), Order=0, NSD=0)
+  TypeReferencePoint = ReferencePoint_(XiJ=NULL(), &
+                                       EntityCounts=[0, 0, 0, 0], &
+                                       xiDimension=0, NAME=0, &
+                                       Topology=NULL(), Order=0, NSD=0)
 
 !----------------------------------------------------------------------------
 !                                                          ReferenceLine_
@@ -1141,10 +1142,10 @@ TYPE, EXTENDS(ReferenceElement_) :: ReferenceLine_
 END TYPE ReferenceLine_
 
 TYPE(ReferenceLine_), PARAMETER :: &
-  & TypeReferenceLine = ReferenceLine_( &
-  & XiJ=NULL(), EntityCounts=[0, 0, 0, 0],  &
-  & xiDimension=0, name=0, &
-  & Topology=NULL(), Order=0, NSD=0)
+  TypeReferenceLine = ReferenceLine_( &
+                                      XiJ=NULL(), EntityCounts=[0, 0, 0, 0], &
+                                      xiDimension=0, NAME=0, &
+                                      Topology=NULL(), Order=0, NSD=0)
 
 !----------------------------------------------------------------------------
 !                                                      ReferenceTriangle_
@@ -1159,10 +1160,10 @@ TYPE, EXTENDS(ReferenceElement_) :: ReferenceTriangle_
 END TYPE ReferenceTriangle_
 
 TYPE(ReferenceTriangle_), PARAMETER :: &
-  & TypeReferenceTriangle = ReferenceTriangle_( &
-  & XiJ=NULL(), EntityCounts=[0, 0, 0, 0],  &
-  & xiDimension=0, name=0, &
-  & Topology=NULL(), Order=0, NSD=0)
+  TypeReferenceTriangle = ReferenceTriangle_(XiJ=NULL(), &
+                                             EntityCounts=[0, 0, 0, 0], &
+                                             xiDimension=0, NAME=0, &
+                                             Topology=NULL(), Order=0, NSD=0)
 
 !----------------------------------------------------------------------------
 !                                                       ReferenceQuadrangle_
@@ -1178,11 +1179,11 @@ TYPE, EXTENDS(ReferenceElement_) :: ReferenceQuadrangle_
 END TYPE ReferenceQuadrangle_
 
 TYPE(ReferenceQuadrangle_), PARAMETER :: &
-  & TypeReferenceQuadrangle &
-  & = ReferenceQuadrangle_( &
-  & XiJ=NULL(), EntityCounts=[0, 0, 0, 0],  &
-  & xiDimension=0, name=0, &
-  & Topology=NULL(), Order=0, NSD=0)
+  TypeReferenceQuadrangle &
+  = ReferenceQuadrangle_( &
+                          XiJ=NULL(), EntityCounts=[0, 0, 0, 0], &
+                          xiDimension=0, NAME=0, &
+                          Topology=NULL(), Order=0, NSD=0)
 
 !----------------------------------------------------------------------------
 !                                                    ReferenceTetrahedron_
@@ -1198,10 +1199,12 @@ TYPE, EXTENDS(ReferenceElement_) :: ReferenceTetrahedron_
 END TYPE ReferenceTetrahedron_
 
 TYPE(ReferenceTetrahedron_), PARAMETER :: &
-  & TypeReferenceTetrahedron &
-  & = ReferenceTetrahedron_( &
-  & XiJ=NULL(), EntityCounts=[0, 0, 0, 0], xiDimension=0, name=0, &
-  & Topology=NULL(), Order=0, NSD=0)
+  TypeReferenceTetrahedron = ReferenceTetrahedron_(XiJ=NULL(), &
+                                                   EntityCounts=[0, 0, 0, &
+                                                                 0], &
+                                                   xiDimension=0, NAME=0, &
+                                                   Topology=NULL(), Order=0, &
+                                                   NSD=0)
 
 !----------------------------------------------------------------------------
 !                                                     ReferenceHexahedron_
@@ -1217,15 +1220,15 @@ TYPE, EXTENDS(ReferenceElement_) :: ReferenceHexahedron_
 END TYPE ReferenceHexahedron_
 
 TYPE(ReferenceHexahedron_), PARAMETER :: &
-  & TypeReferenceHexahedron &
-  & = ReferenceHexahedron_( &
-  & XiJ=NULL(), &
-  & EntityCounts=[0, 0, 0, 0], &
-  & xiDimension=0, &
-  & name=0, &
-  & Topology=NULL(), &
-  & Order=0, &
-  & NSD=0)
+  TypeReferenceHexahedron &
+  = ReferenceHexahedron_( &
+                          XiJ=NULL(), &
+                          EntityCounts=[0, 0, 0, 0], &
+                          xiDimension=0, &
+                          NAME=0, &
+                          Topology=NULL(), &
+                          Order=0, &
+                          NSD=0)
 
 !----------------------------------------------------------------------------
 !                                                            ReferencePrism_
@@ -1241,14 +1244,14 @@ TYPE, EXTENDS(ReferenceElement_) :: ReferencePrism_
 END TYPE ReferencePrism_
 
 TYPE(ReferencePrism_), PARAMETER :: TypeReferencePrism &
-  & = ReferencePrism_( &
-  & XiJ=NULL(), &
-  & EntityCounts=[0, 0, 0, 0], &
-  & xiDimension=0, &
-  & name=0, &
-  & Topology=NULL(), &
-  & Order=0, &
-  & NSD=0)
+  = ReferencePrism_( &
+                     XiJ=NULL(), &
+                     EntityCounts=[0, 0, 0, 0], &
+                     xiDimension=0, &
+                     NAME=0, &
+                     Topology=NULL(), &
+                     Order=0, &
+                     NSD=0)
 
 !----------------------------------------------------------------------------
 !                                                          ReferencePyramid_
@@ -1264,14 +1267,14 @@ TYPE, EXTENDS(ReferenceElement_) :: ReferencePyramid_
 END TYPE ReferencePyramid_
 
 TYPE(ReferencePyramid_), PARAMETER :: TypeReferencePyramid &
-  & = ReferencePyramid_( &
-  & XiJ=NULL(), &
-  & EntityCounts=[0, 0, 0, 0], &
-  & xiDimension=0, &
-  & name=0, &
-  & Topology=NULL(), &
-  & Order=0, &
-  & NSD=0)
+  = ReferencePyramid_( &
+                       XiJ=NULL(), &
+                       EntityCounts=[0, 0, 0, 0], &
+                       xiDimension=0, &
+                       NAME=0, &
+                       Topology=NULL(), &
+                       Order=0, &
+                       NSD=0)
 
 !----------------------------------------------------------------------------
 !                                                                 KeyValue_
@@ -1350,10 +1353,10 @@ TYPE :: FEVariableConstant_
 END TYPE FEVariableConstant_
 
 TYPE(FEVariableConstant_), PARAMETER :: TypeFEVariableConstant = &
-  & FEVariableConstant_()
+  FEVariableConstant_()
 
 TYPE(FEVariableConstant_), PARAMETER :: TypeVariableConstant = &
-  & FEVariableConstant_()
+  FEVariableConstant_()
 
 !----------------------------------------------------------------------------
 !                                                           FEVariableSpace_
@@ -1384,10 +1387,10 @@ TYPE :: FEVariableSpaceTime_
 !! INTEGER(I4B):: Val = 3
 END TYPE FEVariableSpaceTime_
 
-TYPE(FEVariableSpaceTime_), PARAMETER :: TypeFEVariableSpaceTime  &
-  & = FEVariableSpaceTime_()
-TYPE(FEVariableSpaceTime_), PARAMETER :: TypeVariableSpaceTime  &
-  & = FEVariableSpaceTime_()
+TYPE(FEVariableSpaceTime_), PARAMETER :: TypeFEVariableSpaceTime &
+  = FEVariableSpaceTime_()
+TYPE(FEVariableSpaceTime_), PARAMETER :: TypeVariableSpaceTime &
+  = FEVariableSpaceTime_()
 
 !----------------------------------------------------------------------------
 !                                                            FEVariableTime_
@@ -1418,11 +1421,11 @@ TYPE :: FEVariableScalar_
 !!  INTEGER(I4B):: Val = 0
 END TYPE FEVariableScalar_
 
-TYPE(FEVariableScalar_), PARAMETER :: TypeFEVariableScalar  &
-  & = FEVariableScalar_()
+TYPE(FEVariableScalar_), PARAMETER :: TypeFEVariableScalar &
+  = FEVariableScalar_()
 
-TYPE(FEVariableScalar_), PARAMETER :: TypeVariableScalar  &
-  & = FEVariableScalar_()
+TYPE(FEVariableScalar_), PARAMETER :: TypeVariableScalar &
+  = FEVariableScalar_()
 
 !----------------------------------------------------------------------------
 !                                                          FEVariableVector_
@@ -1437,11 +1440,11 @@ TYPE :: FEVariableVector_
 !!  INTEGER(I4B):: Val = 1
 END TYPE FEVariableVector_
 
-TYPE(FEVariableVector_), PARAMETER :: TypeFEVariableVector  &
-  & = FEVariableVector_()
+TYPE(FEVariableVector_), PARAMETER :: TypeFEVariableVector &
+  = FEVariableVector_()
 
-TYPE(FEVariableVector_), PARAMETER :: TypeVariableVector  &
-  & = FEVariableVector_()
+TYPE(FEVariableVector_), PARAMETER :: TypeVariableVector &
+  = FEVariableVector_()
 
 !----------------------------------------------------------------------------
 !                                                          FEVariableMatrix_
@@ -1456,10 +1459,10 @@ TYPE :: FEVariableMatrix_
 !!  INTEGER(I4B):: Val = 2
 END TYPE FEVariableMatrix_
 
-TYPE(FEVariableMatrix_), PARAMETER :: TypeFEVariableMatrix  &
-  & = FEVariableMatrix_()
-TYPE(FEVariableMatrix_), PARAMETER :: TypeVariableMatrix  &
-  & = FEVariableMatrix_()
+TYPE(FEVariableMatrix_), PARAMETER :: TypeFEVariableMatrix &
+  = FEVariableMatrix_()
+TYPE(FEVariableMatrix_), PARAMETER :: TypeVariableMatrix &
+  = FEVariableMatrix_()
 
 !----------------------------------------------------------------------------
 !                                                           QuadraturePoint_
@@ -1478,7 +1481,7 @@ TYPE :: QuadraturePoint_
 END TYPE QuadraturePoint_
 
 TYPE(QuadraturePoint_), PARAMETER :: TypeQuadraturePoint = &
-                                     QuadraturePoint_(points=NULL())
+  QuadraturePoint_(points=NULL())
 
 TYPE :: QuadraturePointPointer_
   CLASS(QuadraturePoint_), POINTER :: ptr => NULL()
@@ -1502,8 +1505,8 @@ END TYPE BaseInterpolation_
 TYPE, EXTENDS(BaseInterpolation_) :: LagrangeInterpolation_
 END TYPE LagrangeInterpolation_
 
-TYPE(LagrangeInterpolation_), PARAMETER :: TypeLagrangeInterpolation  &
-  & = LagrangeInterpolation_()
+TYPE(LagrangeInterpolation_), PARAMETER :: TypeLagrangeInterpolation &
+  = LagrangeInterpolation_()
 
 !----------------------------------------------------------------------------
 !                                                       HermitInterpolation_
@@ -1516,8 +1519,8 @@ TYPE(LagrangeInterpolation_), PARAMETER :: TypeLagrangeInterpolation  &
 TYPE, EXTENDS(BaseInterpolation_) :: HermitInterpolation_
 END TYPE HermitInterpolation_
 
-TYPE(HermitInterpolation_), PARAMETER :: TypeHermitInterpolation  &
-  & = HermitInterpolation_()
+TYPE(HermitInterpolation_), PARAMETER :: TypeHermitInterpolation &
+  = HermitInterpolation_()
 
 !----------------------------------------------------------------------------
 !                                                  SerendipityInterpolation_
@@ -1530,8 +1533,8 @@ TYPE(HermitInterpolation_), PARAMETER :: TypeHermitInterpolation  &
 TYPE, EXTENDS(BaseInterpolation_) :: SerendipityInterpolation_
 END TYPE SerendipityInterpolation_
 
-TYPE(SerendipityInterpolation_), PARAMETER :: TypeSerendipityInterpolation  &
-  & = SerendipityInterpolation_()
+TYPE(SerendipityInterpolation_), PARAMETER :: TypeSerendipityInterpolation &
+  = SerendipityInterpolation_()
 
 !----------------------------------------------------------------------------
 !                                                    HierarchyInterpolation_
@@ -1544,8 +1547,8 @@ TYPE(SerendipityInterpolation_), PARAMETER :: TypeSerendipityInterpolation  &
 TYPE, EXTENDS(BaseInterpolation_) :: HierarchyInterpolation_
 END TYPE HierarchyInterpolation_
 
-TYPE(HierarchyInterpolation_), PARAMETER :: TypeHierarchyInterpolation  &
-  & = HierarchyInterpolation_()
+TYPE(HierarchyInterpolation_), PARAMETER :: TypeHierarchyInterpolation &
+  = HierarchyInterpolation_()
 
 !----------------------------------------------------------------------------
 !                                                    OrthogonalInterpolation_
@@ -1558,8 +1561,8 @@ TYPE(HierarchyInterpolation_), PARAMETER :: TypeHierarchyInterpolation  &
 TYPE, EXTENDS(BaseInterpolation_) :: OrthogonalInterpolation_
 END TYPE OrthogonalInterpolation_
 
-TYPE(OrthogonalInterpolation_), PARAMETER :: TypeOrthogonalInterpolation  &
-  & = OrthogonalInterpolation_()
+TYPE(OrthogonalInterpolation_), PARAMETER :: TypeOrthogonalInterpolation &
+  = OrthogonalInterpolation_()
 
 !----------------------------------------------------------------------------
 !                                                          BaseContinuity_
@@ -1698,11 +1701,11 @@ TYPE :: ShapeData_
 END TYPE ShapeData_
 
 TYPE(ShapeData_), PARAMETER :: &
-  & TypeShapeData = ShapeData_( &
-    & N=NULL(), &
-    & dNdXi=NULL(), &
-    & dNdXt=NULL(), &
-    & Jacobian=NULL())
+  TypeShapeData = ShapeData_( &
+                              N=NULL(), &
+                              dNdXi=NULL(), &
+                              dNdXt=NULL(), &
+                              Jacobian=NULL())
 
 TYPE :: ShapeDataPointer_
   CLASS(ShapeData_), POINTER :: ptr => NULL()
@@ -1723,13 +1726,13 @@ TYPE, EXTENDS(ShapeData_) :: STShapeData_
   INTEGER(I4B) :: SpaceElemTopo = 0
   INTEGER(I4B) :: TimeElemTopo = 0
   REAL(DFP), ALLOCATABLE :: T(:)
-    !! values of shape function at different time nodes
+  !! values of shape function at different time nodes
   REAL(DFP), ALLOCATABLE :: dTdTheta(:)
-    !! Value of local time derivative of T at time gauss point
+  !! Value of local time derivative of T at time gauss point
   REAL(DFP), ALLOCATABLE :: dNTdt(:, :)
-    !! Value of global time derivative of T at time gauss points
+  !! Value of global time derivative of T at time gauss points
   REAL(DFP), ALLOCATABLE :: dNTdXt(:, :, :)
-    !! Spatial gradient of the shape functions at space-time gauss points
+  !! Spatial gradient of the shape functions at space-time gauss points
 END TYPE STShapeData_
 
 TYPE :: STShapeDataPointer_
@@ -1792,9 +1795,11 @@ TYPE :: ElemShapeData_
   !! Normal in case of facet element
 END TYPE ElemShapeData_
 
-TYPE(ElemShapeData_), PARAMETER :: TypeElemShapeData = &
-          ElemShapeData_(N=NULL(), dNdXi=NULL(), Jacobian=NULL(), Js=NULL(), &
-       Ws=NULL(), dNdXt=NULL(), Thickness=NULL(), Coord=NULL(), Normal=NULL())
+TYPE(ElemShapeData_), PARAMETER :: &
+  TypeElemShapeData = ElemShapeData_(N=NULL(), dNdXi=NULL(), &
+                                     Jacobian=NULL(), Js=NULL(), Ws=NULL(), &
+                                     dNdXt=NULL(), Thickness=NULL(), &
+                                     Coord=NULL(), Normal=NULL())
 
 TYPE :: ElemShapeDataPointer_
   CLASS(ElemShapeData_), POINTER :: ptr => NULL()
@@ -1835,10 +1840,14 @@ TYPE, EXTENDS(ElemShapeData_) :: STElemShapeData_
   !! dim4 = nips
 END TYPE STElemShapeData_
 
-TYPE(STElemShapeData_), PARAMETER :: TypeSTElemShapeData = &
-        STElemShapeData_(N=NULL(), dNdXi=NULL(), Jacobian=NULL(), Js=NULL(), &
-     Ws=NULL(), dNdXt=NULL(), Thickness=NULL(), Coord=NULL(), Normal=NULL(), &
-                       T=NULL(), dTdTheta=NULL(), dNTdt=NULL(), dNTdXt=NULL())
+TYPE(STElemShapeData_), PARAMETER :: &
+  TypeSTElemShapeData = STElemShapeData_(N=NULL(), dNdXi=NULL(), &
+                                         Jacobian=NULL(), Js=NULL(), &
+                                         Ws=NULL(), dNdXt=NULL(), &
+                                         Thickness=NULL(), Coord=NULL(), &
+                                         Normal=NULL(), T=NULL(), &
+                                         dTdTheta=NULL(), dNTdt=NULL(), &
+                                         dNTdXt=NULL())
 
 !----------------------------------------------------------------------------
 !                                                              Meshquality_
@@ -2006,7 +2015,7 @@ END INTERFACE
 ABSTRACT INTERFACE
   PURE FUNCTION iface_ScalarFunction(x) RESULT(ans)
     IMPORT :: DFP
-    REAL(DFP), OPTIONAL, INTENT(IN) :: x(:)
+    REAL(DFP), INTENT(IN), OPTIONAL :: x(:)
     REAL(DFP) :: ans
   END FUNCTION iface_ScalarFunction
 END INTERFACE
@@ -2018,7 +2027,7 @@ END INTERFACE
 ABSTRACT INTERFACE
   PURE FUNCTION iface_VectorFunction(x) RESULT(ans)
     IMPORT :: DFP
-    REAL(DFP), OPTIONAL, INTENT(IN) :: x(:)
+    REAL(DFP), INTENT(IN), OPTIONAL :: x(:)
     REAL(DFP), ALLOCATABLE :: ans(:)
   END FUNCTION iface_VectorFunction
 END INTERFACE
@@ -2030,7 +2039,7 @@ END INTERFACE
 ABSTRACT INTERFACE
   PURE FUNCTION iface_MatrixFunction(x) RESULT(ans)
     IMPORT :: DFP
-    REAL(DFP), OPTIONAL, INTENT(IN) :: x(:)
+    REAL(DFP), INTENT(IN), OPTIONAL :: x(:)
     REAL(DFP), ALLOCATABLE :: ans(:, :)
   END FUNCTION iface_MatrixFunction
 END INTERFACE
@@ -2285,7 +2294,7 @@ TYPE :: QuadrangleNameOpt_
 END TYPE QuadrangleNameOpt_
 
 TYPE(QuadrangleNameOpt_), PARAMETER :: TypeQuadrangleNameOpt = &
-                                       QuadrangleNameOpt_()
+  QuadrangleNameOpt_()
 
 !----------------------------------------------------------------------------
 !                                                         TetrahedronNameOpt_
@@ -2305,7 +2314,7 @@ TYPE :: TetrahedronNameOpt_
 END TYPE TetrahedronNameOpt_
 
 TYPE(TetrahedronNameOpt_), PARAMETER :: TypeTetrahedronNameOpt = &
-                                        TetrahedronNameOpt_()
+  TetrahedronNameOpt_()
 
 !----------------------------------------------------------------------------
 !                                                         HexahedronNameOpt_
@@ -2321,7 +2330,7 @@ TYPE :: HexahedronNameOpt_
 END TYPE HexahedronNameOpt_
 
 TYPE(HexahedronNameOpt_), PARAMETER :: TypeHexahedronNameOpt = &
-                                       HexahedronNameOpt_()
+  HexahedronNameOpt_()
 
 !----------------------------------------------------------------------------
 !                                                         PrismNameOpt_
@@ -2410,7 +2419,7 @@ TYPE :: QuadratureOpt_
   INTEGER(I4B) :: GaussUltraSphericalRadau = GaussUltraSphericalRadau
   INTEGER(I4B) :: GaussUltraSphericalRadauLeft = GaussUltraSphericalRadauLeft
   INTEGER(I4B) :: GaussUltraSphericalRadauRight = &
-                  GaussUltraSphericalRadauRight
+    GaussUltraSphericalRadauRight
   INTEGER(I4B) :: ChenBabuska = ChenBabuskaQP
   INTEGER(I4B) :: Hesthaven = HesthavenQP
   INTEGER(I4B) :: Feket = FeketQP
