@@ -22,7 +22,7 @@
 MODULE ReferenceElement_Method
 USE BaseType, ONLY: ReferenceElement_
 USE BaseType, ONLY: ReferenceTopology_
-USE GlobalData, ONLY: I4B, DFP, LGT
+USE GlobalData, ONLY: DFP, I4B, LGT
 USE GlobalData, ONLY: INT8
 USE String_Class, ONLY: String
 IMPLICIT NONE
@@ -313,6 +313,89 @@ INTERFACE GetTotalNodes
     INTEGER(I4B), INTENT(IN) :: elemType
     INTEGER(I4B) :: ans
   END FUNCTION GetTotalNodes1
+END INTERFACE GetTotalNodes
+
+!----------------------------------------------------------------------------
+!                                             GetTotalNodes@GeometryMethods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2026-10-27
+! summary: Returns number of nodes from topology name and order
+!
+! Description:
+!   Returns the total number of nodes of a Lagrange element with the
+!   given topology and order. The topology is one of the values in
+!   TypeElemNameOpt (point, line, triangle, quadrangle, tetrahedron,
+!   hexahedron, prism, pyramid). A point always has 1 node. For an
+!   unknown topology the result is 0.
+!
+! Arguments:
+!   topoName : INTEGER(I4B) - topology, for example
+!              TypeElemNameOpt%triangle
+!   order : INTEGER(I4B) - order of the element
+!
+! Returns:
+!   ans : INTEGER(I4B) - total number of nodes
+!
+! Formula:
+!   With $p$ the order:
+!   $$N_{line} = p+1, \quad N_{tri} = \frac{(p+1)(p+2)}{2},
+!   \quad N_{quad} = (p+1)^2$$
+!   $$N_{tet} = \frac{(p+1)(p+2)(p+3)}{6}, \quad N_{hex} = (p+1)^3$$
+!   $$N_{prism} = \frac{(p+1)^2(p+2)}{2}, \quad
+!   N_{pyr} = \frac{(p+1)(p+2)(2p+3)}{6}$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: I4B
+! USE GlobalData, ONLY: Triangle3
+! USE GlobalData, ONLY: Hexahedron8
+! USE BaseType, ONLY: TypeElemNameOpt
+! USE ReferenceElement_Method, ONLY: GetTotalNodes
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+!
+! CALL OK(GetTotalNodes(TypeElemNameOpt%point, 1_I4B) .EQ. 1_I4B, &
+!         "point")
+! CALL OK(GetTotalNodes(TypeElemNameOpt%line, 3_I4B) .EQ. 4_I4B, &
+!         "line, order 3")
+! CALL OK(GetTotalNodes(TypeElemNameOpt%triangle, 2_I4B) .EQ. 6_I4B, &
+!         "triangle, order 2")
+! CALL OK(GetTotalNodes(TypeElemNameOpt%quadrangle, 2_I4B) .EQ. 9_I4B, &
+!         "quadrangle, order 2")
+! CALL OK(GetTotalNodes(TypeElemNameOpt%tetrahedron, 2_I4B) .EQ. 10_I4B, &
+!         "tetrahedron, order 2")
+! CALL OK(GetTotalNodes(TypeElemNameOpt%hexahedron, 2_I4B) .EQ. 27_I4B, &
+!         "hexahedron, order 2")
+! CALL OK(GetTotalNodes(TypeElemNameOpt%prism, 2_I4B) .EQ. 18_I4B, &
+!         "prism, order 2")
+! CALL OK(GetTotalNodes(TypeElemNameOpt%pyramid, 2_I4B) .EQ. 14_I4B, &
+!         "pyramid, order 2")
+!
+! ! order 1 gives the same as the linear element type
+! CALL OK(GetTotalNodes(TypeElemNameOpt%triangle, 1_I4B) .EQ. &
+!         GetTotalNodes(Triangle3), "triangle, order 1 = Triangle3")
+! CALL OK(GetTotalNodes(TypeElemNameOpt%hexahedron, 1_I4B) .EQ. &
+!         GetTotalNodes(Hexahedron8), "hexahedron, order 1 = Hexahedron8")
+!
+! ! unknown topology
+! CALL OK(GetTotalNodes(-1_I4B, 2_I4B) .EQ. 0_I4B, "unknown topology")
+!
+! END PROGRAM main
+!```
+
+INTERFACE GetTotalNodes
+  MODULE PURE FUNCTION GetTotalNodes2(topoName, order) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: topoName
+    !! Topology, for example TypeElemNameOpt%triangle
+    INTEGER(I4B), INTENT(IN) :: order
+    !! Order of the element
+    INTEGER(I4B) :: ans
+    !! Total number of nodes; 0 for an unknown topology
+  END FUNCTION GetTotalNodes2
 END INTERFACE GetTotalNodes
 
 !----------------------------------------------------------------------------

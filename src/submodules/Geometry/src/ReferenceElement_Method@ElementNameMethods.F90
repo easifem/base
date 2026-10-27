@@ -29,27 +29,15 @@ USE BaseType, ONLY: TypeHexahedronNameOpt
 USE BaseType, ONLY: TypePrismNameOpt
 USE BaseType, ONLY: TypePyramidNameOpt
 USE BaseType, ONLY: TypeElemNameOpt
-USE ReferencePoint_Method, ONLY: TotalNodesInElement_Point
-USE ReferenceLine_Method, ONLY: ElementType_Line
-USE ReferenceLine_Method, ONLY: TotalNodesInElement_Line
-USE ReferenceLine_Method, ONLY: ElementName_Line
-USE ReferenceLine_Method, ONLY: ElementOrder_Line
-USE ReferenceTriangle_Method, ONLY: ElementType_Triangle
-USE ReferenceTriangle_Method, ONLY: TotalNodesInElement_Triangle
-USE ReferenceTriangle_Method, ONLY: ElementName_Triangle
-USE ReferenceTriangle_Method, ONLY: ElementOrder_Triangle
-USE ReferenceQuadrangle_Method, ONLY: ElementType_Quadrangle
-USE ReferenceQuadrangle_Method, ONLY: TotalNodesInElement_Quadrangle
-USE ReferenceQuadrangle_Method, ONLY: ElementName_Quadrangle
-USE ReferenceQuadrangle_Method, ONLY: ElementOrder_Quadrangle
-USE ReferenceTetrahedron_Method, ONLY: ElementType_Tetrahedron
-USE ReferenceTetrahedron_Method, ONLY: TotalNodesInElement_Tetrahedron
-USE ReferenceTetrahedron_Method, ONLY: ElementName_Tetrahedron
-USE ReferenceTetrahedron_Method, ONLY: ElementOrder_Tetrahedron
 USE ReferenceHexahedron_Method, ONLY: ElementName_Hexahedron
 USE ReferenceHexahedron_Method, ONLY: ElementType_Hexahedron
 USE ReferenceHexahedron_Method, ONLY: ElementOrder_Hexahedron
 USE ReferenceHexahedron_Method, ONLY: TotalNodesInElement_Hexahedron
+USE ReferenceLine_Method, ONLY: ElementType_Line
+USE ReferenceLine_Method, ONLY: TotalNodesInElement_Line
+USE ReferenceLine_Method, ONLY: ElementName_Line
+USE ReferenceLine_Method, ONLY: ElementOrder_Line
+USE ReferencePoint_Method, ONLY: TotalNodesInElement_Point
 USE ReferencePrism_Method, ONLY: ElementName_Prism
 USE ReferencePrism_Method, ONLY: ElementType_Prism
 USE ReferencePrism_Method, ONLY: ElementOrder_Prism
@@ -58,6 +46,18 @@ USE ReferencePyramid_Method, ONLY: ElementName_Pyramid
 USE ReferencePyramid_Method, ONLY: ElementType_Pyramid
 USE ReferencePyramid_Method, ONLY: ElementOrder_Pyramid
 USE ReferencePyramid_Method, ONLY: TotalNodesInElement_Pyramid
+USE ReferenceQuadrangle_Method, ONLY: ElementType_Quadrangle
+USE ReferenceQuadrangle_Method, ONLY: TotalNodesInElement_Quadrangle
+USE ReferenceQuadrangle_Method, ONLY: ElementName_Quadrangle
+USE ReferenceQuadrangle_Method, ONLY: ElementOrder_Quadrangle
+USE ReferenceTetrahedron_Method, ONLY: ElementType_Tetrahedron
+USE ReferenceTetrahedron_Method, ONLY: TotalNodesInElement_Tetrahedron
+USE ReferenceTetrahedron_Method, ONLY: ElementName_Tetrahedron
+USE ReferenceTetrahedron_Method, ONLY: ElementOrder_Tetrahedron
+USE ReferenceTriangle_Method, ONLY: ElementType_Triangle
+USE ReferenceTriangle_Method, ONLY: TotalNodesInElement_Triangle
+USE ReferenceTriangle_Method, ONLY: ElementName_Triangle
+USE ReferenceTriangle_Method, ONLY: ElementOrder_Triangle
 
 IMPLICIT NONE
 CONTAINS
@@ -67,96 +67,96 @@ CONTAINS
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE refelem_ElementTopology1
-  SELECT CASE (elemType)
-  CASE (TypePointNameOpt%point)
-    ans = TypeElemNameOpt%point
+SELECT CASE (elemType)
+CASE (TypePointNameOpt%point)
+  ans = TypeElemNameOpt%point
 
-  CASE (TypeLineNameOpt%line, &
-        TypeLineNameOpt%line3, &
-        TypeLineNameOpt%line4, &
-        TypeLineNameOpt%line5, &
-        TypeLineNameOpt%line6, &
-        TypeLineNameOpt%line7, &
-        TypeLineNameOpt%line8, &
-        TypeLineNameOpt%line9, &
-        TypeLineNameOpt%line10, &
-        TypeLineNameOpt%line11)
+CASE (TypeLineNameOpt%line, &
+      TypeLineNameOpt%line3, &
+      TypeLineNameOpt%line4, &
+      TypeLineNameOpt%line5, &
+      TypeLineNameOpt%line6, &
+      TypeLineNameOpt%line7, &
+      TypeLineNameOpt%line8, &
+      TypeLineNameOpt%line9, &
+      TypeLineNameOpt%line10, &
+      TypeLineNameOpt%line11)
 
-    ans = TypeElemNameOpt%line
+  ans = TypeElemNameOpt%line
 
-  CASE (TypeTriangleNameOpt%triangle, &
-        TypeTriangleNameOpt%triangle6, &
-        TypeTriangleNameOpt%triangle9, &
-        TypeTriangleNameOpt%triangle10, &
-        TypeTriangleNameOpt%triangle12, &
-        TypeTriangleNameOpt%triangle15a, &
-        TypeTriangleNameOpt%triangle15b, &
-        TypeTriangleNameOpt%triangle18, &
-        TypeTriangleNameOpt%triangle21a, &
-        TypeTriangleNameOpt%triangle21b, &
-        TypeTriangleNameOpt%triangle24, &
-        TypeTriangleNameOpt%triangle27, &
-        TypeTriangleNameOpt%triangle28, &
-        TypeTriangleNameOpt%triangle30, &
-        TypeTriangleNameOpt%triangle36, &
-        TypeTriangleNameOpt%triangle45, &
-        TypeTriangleNameOpt%triangle55, &
-        TypeTriangleNameOpt%triangle66)
+CASE (TypeTriangleNameOpt%triangle, &
+      TypeTriangleNameOpt%triangle6, &
+      TypeTriangleNameOpt%triangle9, &
+      TypeTriangleNameOpt%triangle10, &
+      TypeTriangleNameOpt%triangle12, &
+      TypeTriangleNameOpt%triangle15a, &
+      TypeTriangleNameOpt%triangle15b, &
+      TypeTriangleNameOpt%triangle18, &
+      TypeTriangleNameOpt%triangle21a, &
+      TypeTriangleNameOpt%triangle21b, &
+      TypeTriangleNameOpt%triangle24, &
+      TypeTriangleNameOpt%triangle27, &
+      TypeTriangleNameOpt%triangle28, &
+      TypeTriangleNameOpt%triangle30, &
+      TypeTriangleNameOpt%triangle36, &
+      TypeTriangleNameOpt%triangle45, &
+      TypeTriangleNameOpt%triangle55, &
+      TypeTriangleNameOpt%triangle66)
 
-    ans = TypeElemNameOpt%triangle
+  ans = TypeElemNameOpt%triangle
 
-  CASE (TypeQuadrangleNameOpt%quadrangle, &
-        TypeQuadrangleNameOpt%quadrangle8, &
-        TypeQuadrangleNameOpt%quadrangle9, &
-        TypeQuadrangleNameOpt%quadrangle16a, &
-        TypeQuadrangleNameOpt%quadrangle16b, &
-        TypeQuadrangleNameOpt%quadrangle20, &
-        TypeQuadrangleNameOpt%quadrangle24, &
-        TypeQuadrangleNameOpt%quadrangle25, &
-        TypeQuadrangleNameOpt%quadrangle28, &
-        TypeQuadrangleNameOpt%quadrangle32, &
-        TypeQuadrangleNameOpt%quadrangle36a, &
-        TypeQuadrangleNameOpt%quadrangle36b, &
-        TypeQuadrangleNameOpt%quadrangle40, &
-        TypeQuadrangleNameOpt%quadrangle49, &
-        TypeQuadrangleNameOpt%quadrangle64, &
-        TypeQuadrangleNameOpt%quadrangle81, &
-        TypeQuadrangleNameOpt%quadrangle100, &
-        TypeQuadrangleNameOpt%quadrangle121)
+CASE (TypeQuadrangleNameOpt%quadrangle, &
+      TypeQuadrangleNameOpt%quadrangle8, &
+      TypeQuadrangleNameOpt%quadrangle9, &
+      TypeQuadrangleNameOpt%quadrangle16a, &
+      TypeQuadrangleNameOpt%quadrangle16b, &
+      TypeQuadrangleNameOpt%quadrangle20, &
+      TypeQuadrangleNameOpt%quadrangle24, &
+      TypeQuadrangleNameOpt%quadrangle25, &
+      TypeQuadrangleNameOpt%quadrangle28, &
+      TypeQuadrangleNameOpt%quadrangle32, &
+      TypeQuadrangleNameOpt%quadrangle36a, &
+      TypeQuadrangleNameOpt%quadrangle36b, &
+      TypeQuadrangleNameOpt%quadrangle40, &
+      TypeQuadrangleNameOpt%quadrangle49, &
+      TypeQuadrangleNameOpt%quadrangle64, &
+      TypeQuadrangleNameOpt%quadrangle81, &
+      TypeQuadrangleNameOpt%quadrangle100, &
+      TypeQuadrangleNameOpt%quadrangle121)
 
-    ans = TypeElemNameOpt%quadrangle
+  ans = TypeElemNameOpt%quadrangle
 
-  CASE (TypeTetrahedronNameOpt%tetrahedron, &
-        TypeTetrahedronNameOpt%tetrahedron10, &
-        TypeTetrahedronNameOpt%tetrahedron20, &
-        TypeTetrahedronNameOpt%tetrahedron35, &
-        TypeTetrahedronNameOpt%tetrahedron56)
+CASE (TypeTetrahedronNameOpt%tetrahedron, &
+      TypeTetrahedronNameOpt%tetrahedron10, &
+      TypeTetrahedronNameOpt%tetrahedron20, &
+      TypeTetrahedronNameOpt%tetrahedron35, &
+      TypeTetrahedronNameOpt%tetrahedron56)
 
-    ans = TypeElemNameOpt%tetrahedron
+  ans = TypeElemNameOpt%tetrahedron
 
-  CASE (TypeHexahedronNameOpt%hexahedron8, &
-        TypeHexahedronNameOpt%hexahedron27, &
-        TypeHexahedronNameOpt%hexahedron20, &
-        TypeHexahedronNameOpt%hexahedron64, &
-        TypeHexahedronNameOpt%hexahedron125)
+CASE (TypeHexahedronNameOpt%hexahedron8, &
+      TypeHexahedronNameOpt%hexahedron27, &
+      TypeHexahedronNameOpt%hexahedron20, &
+      TypeHexahedronNameOpt%hexahedron64, &
+      TypeHexahedronNameOpt%hexahedron125)
 
-    ans = TypeElemNameOpt%hexahedron
+  ans = TypeElemNameOpt%hexahedron
 
-  CASE (TypePrismNameOpt%prism6, &
-        TypePrismNameOpt%prism18, &
-        TypePrismNameOpt%prism15)
+CASE (TypePrismNameOpt%prism6, &
+      TypePrismNameOpt%prism18, &
+      TypePrismNameOpt%prism15)
 
-    ans = TypeElemNameOpt%prism
+  ans = TypeElemNameOpt%prism
 
-  CASE (TypePyramidNameOpt%pyramid5, &
-        TypePyramidNameOpt%pyramid13, &
-        TypePyramidNameOpt%pyramid14)
+CASE (TypePyramidNameOpt%pyramid5, &
+      TypePyramidNameOpt%pyramid13, &
+      TypePyramidNameOpt%pyramid14)
 
-    ans = TypeElemNameOpt%pyramid
+  ans = TypeElemNameOpt%pyramid
 
-  CASE DEFAULT
-    ans = 0
-  END SELECT
+CASE DEFAULT
+  ans = 0
+END SELECT
 END PROCEDURE refelem_ElementTopology1
 
 !----------------------------------------------------------------------------
@@ -164,7 +164,7 @@ END PROCEDURE refelem_ElementTopology1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE refelem_ElementTopology2
-  ans = refelem_ElementTopology1(obj%name)
+ans = refelem_ElementTopology1(obj%name)
 END PROCEDURE refelem_ElementTopology2
 
 !----------------------------------------------------------------------------
@@ -172,48 +172,48 @@ END PROCEDURE refelem_ElementTopology2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Element_Name
-  INTEGER(I4B) :: topo
+INTEGER(I4B) :: topo
 
-  topo = refelem_ElementTopology1(elemType)
+topo = refelem_ElementTopology1(elemType)
 
-  SELECT CASE (topo)
+SELECT CASE (topo)
 
-  CASE (TypeElemNameOpt%point)
-    ans = "Point"
+CASE (TypeElemNameOpt%point)
+  ans = "Point"
 
-  CASE (TypeElemNameOpt%line)
+CASE (TypeElemNameOpt%line)
 
-    ans = ElementName_Line(elemType)
+  ans = ElementName_Line(elemType)
 
-  CASE (TypeElemNameOpt%triangle)
+CASE (TypeElemNameOpt%triangle)
 
-    ans = ElementName_Triangle(elemType)
+  ans = ElementName_Triangle(elemType)
 
-  CASE (TypeElemNameOpt%quadrangle)
+CASE (TypeElemNameOpt%quadrangle)
 
-    ans = ElementName_Quadrangle(elemType)
+  ans = ElementName_Quadrangle(elemType)
 
-  CASE (TypeElemNameOpt%tetrahedron)
+CASE (TypeElemNameOpt%tetrahedron)
 
-    ans = ElementName_Tetrahedron(elemType)
+  ans = ElementName_Tetrahedron(elemType)
 
-  CASE (TypeElemNameOpt%hexahedron)
+CASE (TypeElemNameOpt%hexahedron)
 
-    ans = ElementName_Hexahedron(elemType)
+  ans = ElementName_Hexahedron(elemType)
 
-  CASE (TypeElemNameOpt%prism)
+CASE (TypeElemNameOpt%prism)
 
-    ans = ElementName_Prism(elemType)
+  ans = ElementName_Prism(elemType)
 
-  CASE (TypeElemNameOpt%pyramid)
+CASE (TypeElemNameOpt%pyramid)
 
-    ans = ElementName_Pyramid(elemType)
+  ans = ElementName_Pyramid(elemType)
 
-  CASE DEFAULT
+CASE DEFAULT
 
-    ans = "NONE"
+  ans = "NONE"
 
-  END SELECT
+END SELECT
 
 END PROCEDURE Element_Name
 
@@ -222,41 +222,41 @@ END PROCEDURE Element_Name
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Element_Name_obj
-  ans = Element_Name(obj%name)
+ans = Element_Name(obj%name)
 END PROCEDURE Element_Name_obj
 
 !----------------------------------------------------------------------------
 !                                                               ElementType
 !----------------------------------------------------------------------------
 MODULE PROCEDURE Element_Type
-  CHARACTER(2) :: name
-  name = elemName(1:2)
+CHARACTER(2) :: name
+name = elemName(1:2)
 
-  SELECT CASE (name)
-  CASE ("Li", "Po")
-    ans = ElementType_Line(elemName)
+SELECT CASE (name)
+CASE ("Li", "Po")
+  ans = ElementType_Line(elemName)
 
-  CASE ("Tr")
-    ans = ElementType_Triangle(elemName)
+CASE ("Tr")
+  ans = ElementType_Triangle(elemName)
 
-  CASE ("Qu")
-    ans = ElementType_Quadrangle(elemName)
+CASE ("Qu")
+  ans = ElementType_Quadrangle(elemName)
 
-  CASE ("Te")
-    ans = ElementType_Tetrahedron(elemName)
+CASE ("Te")
+  ans = ElementType_Tetrahedron(elemName)
 
-  CASE ("He")
-    ans = ElementType_Hexahedron(elemName)
+CASE ("He")
+  ans = ElementType_Hexahedron(elemName)
 
-  CASE ("Pr")
-    ans = ElementType_Prism(elemName)
+CASE ("Pr")
+  ans = ElementType_Prism(elemName)
 
-  CASE ("Py")
-    ans = ElementType_Pyramid(elemName)
+CASE ("Py")
+  ans = ElementType_Pyramid(elemName)
 
-  CASE DEFAULT
-    ans = 0
-  END SELECT
+CASE DEFAULT
+  ans = 0
+END SELECT
 
 END PROCEDURE Element_Type
 
@@ -265,7 +265,7 @@ END PROCEDURE Element_Type
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Element_Type_obj
-  ans = obj%name
+ans = obj%name
 END PROCEDURE Element_Type_obj
 
 !----------------------------------------------------------------------------
@@ -273,45 +273,45 @@ END PROCEDURE Element_Type_obj
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Element_Order
-  INTEGER(I4B) :: topo
+INTEGER(I4B) :: topo
 
-  topo = refelem_ElementTopology1(elemType)
+topo = refelem_ElementTopology1(elemType)
 
-  SELECT CASE (topo)
+SELECT CASE (topo)
 
-  CASE (TypeElemNameOpt%line)
+CASE (TypeElemNameOpt%line)
 
-    ans = ElementOrder_Line(elemType)
+  ans = ElementOrder_Line(elemType)
 
-  CASE (TypeElemNameOpt%triangle)
+CASE (TypeElemNameOpt%triangle)
 
-    ans = ElementOrder_Triangle(elemType)
+  ans = ElementOrder_Triangle(elemType)
 
-  CASE (TypeElemNameOpt%quadrangle)
+CASE (TypeElemNameOpt%quadrangle)
 
-    ans = ElementOrder_Quadrangle(elemType)
+  ans = ElementOrder_Quadrangle(elemType)
 
-  CASE (TypeElemNameOpt%tetrahedron)
+CASE (TypeElemNameOpt%tetrahedron)
 
-    ans = ElementOrder_Tetrahedron(elemType)
+  ans = ElementOrder_Tetrahedron(elemType)
 
-  CASE (TypeElemNameOpt%hexahedron)
+CASE (TypeElemNameOpt%hexahedron)
 
-    ans = ElementOrder_Hexahedron(elemType)
+  ans = ElementOrder_Hexahedron(elemType)
 
-  CASE (TypeElemNameOpt%prism)
+CASE (TypeElemNameOpt%prism)
 
-    ans = ElementOrder_Prism(elemType)
+  ans = ElementOrder_Prism(elemType)
 
-  CASE (TypeElemNameOpt%pyramid)
+CASE (TypeElemNameOpt%pyramid)
 
-    ans = ElementOrder_Pyramid(elemType)
+  ans = ElementOrder_Pyramid(elemType)
 
-  CASE DEFAULT
+CASE DEFAULT
 
-    ans = 0
+  ans = 0
 
-  END SELECT
+END SELECT
 END PROCEDURE Element_Order
 
 !----------------------------------------------------------------------------
@@ -319,7 +319,7 @@ END PROCEDURE Element_Order
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Element_Order_refelem
-  ans = refelem%Order
+ans = refelem%Order
 END PROCEDURE Element_Order_refelem
 
 !----------------------------------------------------------------------------
@@ -327,29 +327,29 @@ END PROCEDURE Element_Order_refelem
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Elem_XiDimension1
-  INTEGER(I4B) :: topo
-  topo = refelem_ElementTopology1(elemType)
+INTEGER(I4B) :: topo
+topo = refelem_ElementTopology1(elemType)
 
-  SELECT CASE (topo)
-  CASE (TypeElemNameOpt%tetrahedron, &
-        TypeElemNameOpt%hexahedron, &
-        TypeElemNameOpt%prism, &
-        TypeElemNameOpt%pyramid)
+SELECT CASE (topo)
+CASE (TypeElemNameOpt%tetrahedron, &
+      TypeElemNameOpt%hexahedron, &
+      TypeElemNameOpt%prism, &
+      TypeElemNameOpt%pyramid)
 
-    ans = 3
+  ans = 3
 
-  CASE (TypeElemNameOpt%triangle, &
-        TypeElemNameOpt%quadrangle)
+CASE (TypeElemNameOpt%triangle, &
+      TypeElemNameOpt%quadrangle)
 
-    ans = 2
+  ans = 2
 
-  CASE (TypeElemNameOpt%line)
+CASE (TypeElemNameOpt%line)
 
-    ans = 1
+  ans = 1
 
-  CASE DEFAULT
-    ans = 0
-  END SELECT
+CASE DEFAULT
+  ans = 0
+END SELECT
 END PROCEDURE Elem_XiDimension1
 
 !----------------------------------------------------------------------------
@@ -357,7 +357,7 @@ END PROCEDURE Elem_XiDimension1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Elem_Xidimension2
-  ans = obj%xidimension
+ans = obj%xidimension
 END PROCEDURE Elem_Xidimension2
 
 !----------------------------------------------------------------------------
@@ -365,48 +365,48 @@ END PROCEDURE Elem_Xidimension2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Total_Nodes_In_Element
-  INTEGER(I4B) :: topo
+INTEGER(I4B) :: topo
 
-  topo = refelem_ElementTopology1(elemType)
+topo = refelem_ElementTopology1(elemType)
 
-  SELECT CASE (topo)
+SELECT CASE (topo)
 
-  CASE (TypeElemNameOpt%point)
+CASE (TypeElemNameOpt%point)
 
-    ans = TotalNodesInElement_Point(elemType)
+  ans = TotalNodesInElement_Point(elemType)
 
-  CASE (TypeElemNameOpt%line)
+CASE (TypeElemNameOpt%line)
 
-    ans = TotalNodesInElement_Line(elemType)
+  ans = TotalNodesInElement_Line(elemType)
 
-  CASE (TypeElemNameOpt%triangle)
+CASE (TypeElemNameOpt%triangle)
 
-    ans = TotalNodesInElement_Triangle(elemType)
+  ans = TotalNodesInElement_Triangle(elemType)
 
-  CASE (TypeElemNameOpt%quadrangle)
+CASE (TypeElemNameOpt%quadrangle)
 
-    ans = TotalNodesInElement_Quadrangle(elemType)
+  ans = TotalNodesInElement_Quadrangle(elemType)
 
-  CASE (TypeElemNameOpt%tetrahedron)
+CASE (TypeElemNameOpt%tetrahedron)
 
-    ans = TotalNodesInElement_Tetrahedron(elemType)
+  ans = TotalNodesInElement_Tetrahedron(elemType)
 
-  CASE (TypeElemNameOpt%hexahedron)
+CASE (TypeElemNameOpt%hexahedron)
 
-    ans = TotalNodesInElement_Hexahedron(elemType)
+  ans = TotalNodesInElement_Hexahedron(elemType)
 
-  CASE (TypeElemNameOpt%prism)
+CASE (TypeElemNameOpt%prism)
 
-    ans = TotalNodesInElement_Prism(elemType)
+  ans = TotalNodesInElement_Prism(elemType)
 
-  CASE (TypeElemNameOpt%pyramid)
+CASE (TypeElemNameOpt%pyramid)
 
-    ans = TotalNodesInElement_Pyramid(elemType)
+  ans = TotalNodesInElement_Pyramid(elemType)
 
-  CASE DEFAULT
-    ans = 0
+CASE DEFAULT
+  ans = 0
 
-  END SELECT
+END SELECT
 
 END PROCEDURE Total_Nodes_In_Element
 
