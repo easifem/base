@@ -153,21 +153,22 @@ END INTERFACE
 ! summary:  Returns the geometry parameters
 
 INTERFACE RefElemGetGeoParam
-  MODULE PURE SUBROUTINE RefElemGetGeoParam1(elemType, tNodes, tEdges,  &
-    & tFaces, tCells, edgeCon, faceCon, edgeOpt, faceOpt, faceElemType,  &
-    & tFaceNodes, order)
+  MODULE PURE SUBROUTINE RefElemGetGeoParam1(elemType, tNodes, tEdges, &
+                                             tFaces, tCells, edgeCon, &
+                                             faceCon, edgeOpt, faceOpt, &
+                                             faceElemType, tFaceNodes, order)
     INTEGER(I4B), INTENT(IN) :: elemType
-    INTEGER(I4B), OPTIONAL, INTENT(INOUT) :: tNodes
-    INTEGER(I4B), OPTIONAL, INTENT(INOUT) :: tEdges
-    INTEGER(I4B), OPTIONAL, INTENT(INOUT) :: tFaces
-    INTEGER(I4B), OPTIONAL, INTENT(INOUT) :: tCells
-    INTEGER(I4B), OPTIONAL, INTENT(INOUT) :: edgeCon(:, :)
-    INTEGER(I4B), OPTIONAL, INTENT(INOUT) :: faceCon(:, :)
-    INTEGER(I4B), OPTIONAL, INTENT(IN) :: edgeOpt
-    INTEGER(I4B), OPTIONAL, INTENT(IN) :: faceOpt
-    INTEGER(I4B), OPTIONAL, INTENT(INOUT) :: faceElemType(:)
-    INTEGER(I4B), OPTIONAL, INTENT(INOUT) :: tFaceNodes(:)
-    INTEGER(I4B), OPTIONAL, INTENT(IN) :: order
+    INTEGER(I4B), INTENT(INOUT), OPTIONAL :: tNodes
+    INTEGER(I4B), INTENT(INOUT), OPTIONAL :: tEdges
+    INTEGER(I4B), INTENT(INOUT), OPTIONAL :: tFaces
+    INTEGER(I4B), INTENT(INOUT), OPTIONAL :: tCells
+    INTEGER(I4B), INTENT(INOUT), OPTIONAL :: edgeCon(:, :)
+    INTEGER(I4B), INTENT(INOUT), OPTIONAL :: faceCon(:, :)
+    INTEGER(I4B), INTENT(IN), OPTIONAL :: edgeOpt
+    INTEGER(I4B), INTENT(IN), OPTIONAL :: faceOpt
+    INTEGER(I4B), INTENT(INOUT), OPTIONAL :: faceElemType(:)
+    INTEGER(I4B), INTENT(INOUT), OPTIONAL :: tFaceNodes(:)
+    INTEGER(I4B), INTENT(IN), OPTIONAL :: order
     !! Order of element
   END SUBROUTINE RefElemGetGeoParam1
 END INTERFACE RefElemGetGeoParam
@@ -205,15 +206,15 @@ INTERFACE GetEdgeConnectivity
     !! The columns represents the edge number
     !! The row represents the connectivity of edge
     !! con should be allocated by the user
-    INTEGER(I4B), OPTIONAL, INTENT(IN) :: opt
+    INTEGER(I4B), INTENT(IN), OPTIONAL :: opt
     !! If opt = 1, then edge connectivity for hierarchial approximation
     !! If opt =2, then edge connectivity for Lagrangian approximation
     !! opt=1 is default
-    INTEGER(I4B), OPTIONAL, INTENT(IN) :: order
+    INTEGER(I4B), INTENT(IN), OPTIONAL :: order
     !! Order of element
-    INTEGER(I4B), OPTIONAL, INTENT(OUT) :: nrow
+    INTEGER(I4B), INTENT(OUT), OPTIONAL :: nrow
     !! Number of rows written to con
-    INTEGER(I4B), OPTIONAL, INTENT(OUT) :: ncol
+    INTEGER(I4B), INTENT(OUT), OPTIONAL :: ncol
     !! number of columns written to con
   END SUBROUTINE GetEdgeConnectivity1
 END INTERFACE GetEdgeConnectivity
@@ -236,15 +237,15 @@ INTERFACE GetFaceConnectivity
     !! The columns represents the face number
     !! The row represents a face
     !! con should be allocated by the user
-    INTEGER(I4B), OPTIONAL, INTENT(IN) :: opt
+    INTEGER(I4B), INTENT(IN), OPTIONAL :: opt
     !! If opt = 1, then edge connectivity for hierarchial approximation
     !! If opt = 2, then edge connectivity for Lagrangian approximation
     !! opt = 1 is default
-    INTEGER(I4B), OPTIONAL, INTENT(IN) :: order
+    INTEGER(I4B), INTENT(IN), OPTIONAL :: order
     !! order  of element
-    INTEGER(I4B), OPTIONAL, INTENT(OUT) :: nrow
+    INTEGER(I4B), INTENT(OUT), OPTIONAL :: nrow
     !! Number of rows written to con
-    INTEGER(I4B), OPTIONAL, INTENT(OUT) :: ncol
+    INTEGER(I4B), INTENT(OUT), OPTIONAL :: ncol
     !! number of columns written to con
   END SUBROUTINE GetFaceConnectivity1
 END INTERFACE GetFaceConnectivity
@@ -264,9 +265,9 @@ INTERFACE GetFaceElemType
     !! name of element
     INTEGER(I4B), INTENT(INOUT) :: faceElemType(:)
     !! Element names of faces
-    INTEGER(I4B), OPTIONAL, INTENT(INOUT) :: tFaceNodes(:)
+    INTEGER(I4B), INTENT(INOUT), OPTIONAL :: tFaceNodes(:)
     !! Total number of nodes in each face
-    INTEGER(I4B), OPTIONAL, INTENT(IN) :: opt
+    INTEGER(I4B), INTENT(IN), OPTIONAL :: opt
     !! If opt = 1, then edge connectivity for hierarchial approximation
     !! If opt = 2, then edge connectivity for Lagrangian approximation
     !! opt = 1 is default
@@ -292,7 +293,7 @@ INTERFACE GetFaceElemType
     !! Element names of faces
     INTEGER(I4B), INTENT(OUT) :: tFaceNodes
     !! Total number of nodes in each face
-    INTEGER(I4B), OPTIONAL, INTENT(IN) :: opt
+    INTEGER(I4B), INTENT(IN), OPTIONAL :: opt
     !! If opt = 1, then edge connectivity for hierarchial approximation
     !! If opt = 2, then edge connectivity for Lagrangian approximation
     !! opt = 1 is default
@@ -612,17 +613,17 @@ END INTERFACE
 
 INTERFACE ReferenceElement_Pointer
   MODULE FUNCTION refelem_Constructor_1(xidim, nsd, elemType, &
-    & ipType) RESULT(ans)
+                                        ipType) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: xidim
-      !! xidimension
+    !! xidimension
     INTEGER(I4B), INTENT(IN) :: nsd
-      !! spatial dimenstion
+    !! spatial dimenstion
     INTEGER(I4B), INTENT(IN) :: elemType
-      !! element type
+    !! element type
     INTEGER(I4B), INTENT(IN) :: ipType
-      !! interpolationType
+    !! interpolationType
     CLASS(ReferenceElement_), POINTER :: ans
-      !! reference element
+    !! reference element
   END FUNCTION refelem_Constructor_1
 END INTERFACE ReferenceElement_Pointer
 
@@ -779,7 +780,7 @@ INTERFACE XiDimension
     INTEGER(I4B) :: ans
     INTEGER(I4B), INTENT(IN) :: elemType
   END FUNCTION Elem_XiDimension1
-END INTERFACE Xidimension
+END INTERFACE XiDimension
 
 !----------------------------------------------------------------------------
 !                                             Xidimension@ElementNameMethods
@@ -795,7 +796,7 @@ INTERFACE Xidimension
     CLASS(ReferenceElement_), INTENT(IN) :: obj
     INTEGER(I4B) :: ans
   END FUNCTION Elem_Xidimension2
-END INTERFACE XiDimension
+END INTERFACE Xidimension
 
 !----------------------------------------------------------------------------
 !                                                   isVolume@EnquireMethods
@@ -1374,8 +1375,9 @@ END INTERFACE GetVTKElementType_
 !----------------------------------------------------------------------------
 
 INTERFACE
-  MODULE PURE SUBROUTINE GetVTKElementTypeFromTopology_( &
-    topoType, order, vtk_type, nptrs, tsize)
+  MODULE PURE SUBROUTINE GetVTKElementTypeFromTopology_(topoType, order, &
+                                                        vtk_type, nptrs, &
+                                                        tsize)
     INTEGER(I4B), INTENT(IN) :: topoType
     INTEGER(I4B), INTENT(IN) :: order
     INTEGER(INT8), INTENT(OUT) :: vtk_type
