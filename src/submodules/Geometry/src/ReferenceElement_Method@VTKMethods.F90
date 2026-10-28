@@ -299,7 +299,23 @@ PURE SUBROUTINE GetVTKElementType_Triangle_(elemType, nptrs, vtk_type, tsize)
     CALL GetVTKElementType_Triangle3_(nptrs, vtk_type, tsize)
   CASE (TypeTriangleNameOpt%triangle6)
     CALL GetVTKElementType_Triangle6_(nptrs, vtk_type, tsize)
-  CASE default
+  CASE (TypeTriangleNameOpt%triangle10)
+    CALL GetVTKElementType_Triangle10_(nptrs, vtk_type, tsize)
+  CASE (TypeTriangleNameOpt%triangle15)
+    CALL GetVTKElementType_Triangle15_(nptrs, vtk_type, tsize)
+  CASE (TypeTriangleNameOpt%triangle21)
+    CALL GetVTKElementType_Triangle21_(nptrs, vtk_type, tsize)
+  CASE (TypeTriangleNameOpt%triangle28)
+    CALL GetVTKElementType_Triangle28_(nptrs, vtk_type, tsize)
+  CASE (TypeTriangleNameOpt%triangle36)
+    CALL GetVTKElementType_Triangle36_(nptrs, vtk_type, tsize)
+  CASE (TypeTriangleNameOpt%triangle45)
+    CALL GetVTKElementType_Triangle45_(nptrs, vtk_type, tsize)
+  CASE (TypeTriangleNameOpt%triangle55)
+    CALL GetVTKElementType_Triangle55_(nptrs, vtk_type, tsize)
+  CASE (TypeTriangleNameOpt%triangle66)
+    CALL GetVTKElementType_Triangle66_(nptrs, vtk_type, tsize)
+  CASE DEFAULT
     vtk_type = -1
     tsize = 0
   END SELECT
@@ -321,6 +337,22 @@ PURE SUBROUTINE GetVTKElementTypeFromTopology_Triangle_(order, nptrs, &
     CALL GetVTKElementType_Triangle3_(nptrs, vtk_type, tsize)
   CASE (2)
     CALL GetVTKElementType_Triangle6_(nptrs, vtk_type, tsize)
+  CASE (3)
+    CALL GetVTKElementType_Triangle10_(nptrs, vtk_type, tsize)
+  CASE (4)
+    CALL GetVTKElementType_Triangle15_(nptrs, vtk_type, tsize)
+  CASE (5)
+    CALL GetVTKElementType_Triangle21_(nptrs, vtk_type, tsize)
+  CASE (6)
+    CALL GetVTKElementType_Triangle28_(nptrs, vtk_type, tsize)
+  CASE (7)
+    CALL GetVTKElementType_Triangle36_(nptrs, vtk_type, tsize)
+  CASE (8)
+    CALL GetVTKElementType_Triangle45_(nptrs, vtk_type, tsize)
+  CASE (9)
+    CALL GetVTKElementType_Triangle55_(nptrs, vtk_type, tsize)
+  CASE (10)
+    CALL GetVTKElementType_Triangle66_(nptrs, vtk_type, tsize)
   CASE DEFAULT
     vtk_type = -1
     tsize = 0
@@ -356,6 +388,166 @@ PURE SUBROUTINE GetVTKElementType_Triangle6_(nptrs, vtk_type, tsize)
   vtk_type = vtk_triangle6
   nptrs(1:tsize) = [1, 2, 3, 4, 5, 6]
 END SUBROUTINE GetVTKElementType_Triangle6_
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+! triangle, order = 3, nns = 10
+! The gmsh and VTK (VTK_LAGRANGE_TRIANGLE) orderings are the same:
+! vertices, edge nodes (1-2, 2-3, 3-1) and then the interior nodes as a
+! triangle of order 3 - 3, numbered in the same way.
+PURE SUBROUTINE GetVTKElementType_Triangle10_(nptrs, vtk_type, tsize)
+  INTEGER(I4B), INTENT(INOUT) :: nptrs(:)
+  INTEGER(INT8), INTENT(OUT) :: vtk_type
+  INTEGER(I4B), INTENT(OUT) :: tsize
+  INTEGER(I4B) :: ii
+  tsize = 10
+  vtk_type = vtk_LagrangeTriangle
+  DO ii = 1, tsize
+    nptrs(ii) = ii
+  END DO
+END SUBROUTINE GetVTKElementType_Triangle10_
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+! triangle, order = 4, nns = 15
+! The gmsh and VTK (VTK_LAGRANGE_TRIANGLE) orderings are the same:
+! vertices, edge nodes (1-2, 2-3, 3-1) and then the interior nodes as a
+! triangle of order 4 - 3, numbered in the same way.
+PURE SUBROUTINE GetVTKElementType_Triangle15_(nptrs, vtk_type, tsize)
+  INTEGER(I4B), INTENT(INOUT) :: nptrs(:)
+  INTEGER(INT8), INTENT(OUT) :: vtk_type
+  INTEGER(I4B), INTENT(OUT) :: tsize
+  INTEGER(I4B) :: ii
+  tsize = 15
+  vtk_type = vtk_LagrangeTriangle
+  DO ii = 1, tsize
+    nptrs(ii) = ii
+  END DO
+END SUBROUTINE GetVTKElementType_Triangle15_
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+! triangle, order = 5, nns = 21
+! The gmsh and VTK (VTK_LAGRANGE_TRIANGLE) orderings are the same:
+! vertices, edge nodes (1-2, 2-3, 3-1) and then the interior nodes as a
+! triangle of order 5 - 3, numbered in the same way.
+PURE SUBROUTINE GetVTKElementType_Triangle21_(nptrs, vtk_type, tsize)
+  INTEGER(I4B), INTENT(INOUT) :: nptrs(:)
+  INTEGER(INT8), INTENT(OUT) :: vtk_type
+  INTEGER(I4B), INTENT(OUT) :: tsize
+  INTEGER(I4B) :: ii
+  tsize = 21
+  vtk_type = vtk_LagrangeTriangle
+  DO ii = 1, tsize
+    nptrs(ii) = ii
+  END DO
+END SUBROUTINE GetVTKElementType_Triangle21_
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+! triangle, order = 6, nns = 28
+! The gmsh and VTK (VTK_LAGRANGE_TRIANGLE) orderings are the same:
+! vertices, edge nodes (1-2, 2-3, 3-1) and then the interior nodes as a
+! triangle of order 6 - 3, numbered in the same way.
+PURE SUBROUTINE GetVTKElementType_Triangle28_(nptrs, vtk_type, tsize)
+  INTEGER(I4B), INTENT(INOUT) :: nptrs(:)
+  INTEGER(INT8), INTENT(OUT) :: vtk_type
+  INTEGER(I4B), INTENT(OUT) :: tsize
+  INTEGER(I4B) :: ii
+  tsize = 28
+  vtk_type = vtk_LagrangeTriangle
+  DO ii = 1, tsize
+    nptrs(ii) = ii
+  END DO
+END SUBROUTINE GetVTKElementType_Triangle28_
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+! triangle, order = 7, nns = 36
+! The gmsh and VTK (VTK_LAGRANGE_TRIANGLE) orderings are the same:
+! vertices, edge nodes (1-2, 2-3, 3-1) and then the interior nodes as a
+! triangle of order 7 - 3, numbered in the same way.
+PURE SUBROUTINE GetVTKElementType_Triangle36_(nptrs, vtk_type, tsize)
+  INTEGER(I4B), INTENT(INOUT) :: nptrs(:)
+  INTEGER(INT8), INTENT(OUT) :: vtk_type
+  INTEGER(I4B), INTENT(OUT) :: tsize
+  INTEGER(I4B) :: ii
+  tsize = 36
+  vtk_type = vtk_LagrangeTriangle
+  DO ii = 1, tsize
+    nptrs(ii) = ii
+  END DO
+END SUBROUTINE GetVTKElementType_Triangle36_
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+! triangle, order = 8, nns = 45
+! The gmsh and VTK (VTK_LAGRANGE_TRIANGLE) orderings are the same:
+! vertices, edge nodes (1-2, 2-3, 3-1) and then the interior nodes as a
+! triangle of order 8 - 3, numbered in the same way.
+PURE SUBROUTINE GetVTKElementType_Triangle45_(nptrs, vtk_type, tsize)
+  INTEGER(I4B), INTENT(INOUT) :: nptrs(:)
+  INTEGER(INT8), INTENT(OUT) :: vtk_type
+  INTEGER(I4B), INTENT(OUT) :: tsize
+  INTEGER(I4B) :: ii
+  tsize = 45
+  vtk_type = vtk_LagrangeTriangle
+  DO ii = 1, tsize
+    nptrs(ii) = ii
+  END DO
+END SUBROUTINE GetVTKElementType_Triangle45_
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+! triangle, order = 9, nns = 55
+! The gmsh and VTK (VTK_LAGRANGE_TRIANGLE) orderings are the same:
+! vertices, edge nodes (1-2, 2-3, 3-1) and then the interior nodes as a
+! triangle of order 9 - 3, numbered in the same way.
+PURE SUBROUTINE GetVTKElementType_Triangle55_(nptrs, vtk_type, tsize)
+  INTEGER(I4B), INTENT(INOUT) :: nptrs(:)
+  INTEGER(INT8), INTENT(OUT) :: vtk_type
+  INTEGER(I4B), INTENT(OUT) :: tsize
+  INTEGER(I4B) :: ii
+  tsize = 55
+  vtk_type = vtk_LagrangeTriangle
+  DO ii = 1, tsize
+    nptrs(ii) = ii
+  END DO
+END SUBROUTINE GetVTKElementType_Triangle55_
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+! triangle, order = 10, nns = 66
+! The gmsh and VTK (VTK_LAGRANGE_TRIANGLE) orderings are the same:
+! vertices, edge nodes (1-2, 2-3, 3-1) and then the interior nodes as a
+! triangle of order 10 - 3, numbered in the same way.
+PURE SUBROUTINE GetVTKElementType_Triangle66_(nptrs, vtk_type, tsize)
+  INTEGER(I4B), INTENT(INOUT) :: nptrs(:)
+  INTEGER(INT8), INTENT(OUT) :: vtk_type
+  INTEGER(I4B), INTENT(OUT) :: tsize
+  INTEGER(I4B) :: ii
+  tsize = 66
+  vtk_type = vtk_LagrangeTriangle
+  DO ii = 1, tsize
+    nptrs(ii) = ii
+  END DO
+END SUBROUTINE GetVTKElementType_Triangle66_
 
 !----------------------------------------------------------------------------
 !
