@@ -27,6 +27,11 @@ USE BaseType, ONLY: ReferenceTriangle_
 USE BaseType, ONLY: TypeElemNameOpt
 USE Display_Method, ONLY: UtilityDisplay => Display
 USE ErrorHandling, ONLY: Errormsg
+USE HexahedronInterpolationUtility, ONLY: LagrangeDOF_Hexahedron
+USE LineInterpolationUtility, ONLY: LagrangeDOF_Line
+USE PrismInterpolationUtility, ONLY: LagrangeDOF_Prism
+USE PyramidInterpolationUtility, ONLY: LagrangeDOF_Pyramid
+USE QuadrangleInterpolationUtility, ONLY: LagrangeDOF_Quadrangle
 USE ReferenceHexahedron_Method, ONLY: GetEdgeConnectivity_Hexahedron
 USE ReferenceHexahedron_Method, ONLY: GetFaceConnectivity_Hexahedron
 USE ReferenceHexahedron_Method, ONLY: GetFaceElemType_Hexahedron
@@ -87,6 +92,8 @@ USE ReferenceTriangle_Method, ONLY: TotalEntities_Triangle
 USE ReferenceTriangle_Method, ONLY: TotalNodesInElement_Triangle
 USE ReferenceTriangle_Method, ONLY: Triangle_quality
 USE ReferenceTriangle_Method, ONLY: triangle_contains_point
+USE TetrahedronInterpolationUtility, ONLY: LagrangeDOF_Tetrahedron
+USE TriangleInterpolationUtility, ONLY: LagrangeDOF_Triangle
 
 IMPLICIT NONE
 CONTAINS
@@ -96,39 +103,39 @@ CONTAINS
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE RefCoord
-INTEGER(I4B) :: topo
+  INTEGER(I4B) :: topo
 
-topo = ElementTopology(elemType)
+  topo = ElementTopology(elemType)
 
-SELECT CASE (topo)
+  SELECT CASE (topo)
 
-CASE (TypeElemNameOpt%point)
-  ALLOCATE (ans(3, 1))
-  ans = 0.0_DFP
+  CASE (TypeElemNameOpt%point)
+    ALLOCATE(ans(3, 1))
+    ans = 0.0_DFP
 
-CASE (TypeElemNameOpt%line)
-  ans = RefCoord_Line(refElem)
+  CASE (TypeElemNameOpt%line)
+    ans = RefCoord_Line(refElem)
 
-CASE (TypeElemNameOpt%triangle)
-  ans = RefCoord_Triangle(refElem)
+  CASE (TypeElemNameOpt%triangle)
+    ans = RefCoord_Triangle(refElem)
 
-CASE (TypeElemNameOpt%quadrangle)
-  ans = RefCoord_Quadrangle(refElem)
+  CASE (TypeElemNameOpt%quadrangle)
+    ans = RefCoord_Quadrangle(refElem)
 
-CASE (TypeElemNameOpt%Tetrahedron)
-  ans = RefCoord_Tetrahedron(refElem)
+  CASE (TypeElemNameOpt%Tetrahedron)
+    ans = RefCoord_Tetrahedron(refElem)
 
-CASE (TypeElemNameOpt%Hexahedron)
-  ans = RefCoord_Hexahedron(refElem)
+  CASE (TypeElemNameOpt%Hexahedron)
+    ans = RefCoord_Hexahedron(refElem)
 
-CASE (TypeElemNameOpt%Prism)
-  ans = RefCoord_Prism(refElem)
+  CASE (TypeElemNameOpt%Prism)
+    ans = RefCoord_Prism(refElem)
 
-CASE (TypeElemNameOpt%Pyramid)
-  ans = RefCoord_Pyramid(refElem)
+  CASE (TypeElemNameOpt%Pyramid)
+    ans = RefCoord_Pyramid(refElem)
 
-CASE DEFAULT
-END SELECT
+  CASE DEFAULT
+  END SELECT
 END PROCEDURE RefCoord
 
 !----------------------------------------------------------------------------
@@ -136,57 +143,57 @@ END PROCEDURE RefCoord
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE RefCoord_
-INTEGER(I4B) :: topo
+  INTEGER(I4B) :: topo
 
-topo = ElementTopology(elemType)
+  topo = ElementTopology(elemType)
 
-SELECT CASE (topo)
+  SELECT CASE (topo)
 
-CASE (TypeElemNameOpt%point)
-  nrow = 3
-  ncol = 1
-  ans(1:nrow, 1:ncol) = 0.0_DFP
+  CASE (TypeElemNameOpt%point)
+    nrow = 3
+    ncol = 1
+    ans(1:nrow, 1:ncol) = 0.0_DFP
 
-CASE (TypeElemNameOpt%line)
-  nrow = 1
-  ncol = 2
-  ans(1:nrow, 1:ncol) = RefCoord_Line(refElem)
+  CASE (TypeElemNameOpt%line)
+    nrow = 1
+    ncol = 2
+    ans(1:nrow, 1:ncol) = RefCoord_Line(refElem)
 
-CASE (TypeElemNameOpt%triangle)
-  nrow = 2
-  ncol = 3
-  ans(1:nrow, 1:ncol) = RefCoord_Triangle(refElem)
+  CASE (TypeElemNameOpt%triangle)
+    nrow = 2
+    ncol = 3
+    ans(1:nrow, 1:ncol) = RefCoord_Triangle(refElem)
 
-CASE (TypeElemNameOpt%quadrangle)
-  nrow = 2
-  ncol = 4
-  ans(1:nrow, 1:ncol) = RefCoord_Quadrangle(refElem)
+  CASE (TypeElemNameOpt%quadrangle)
+    nrow = 2
+    ncol = 4
+    ans(1:nrow, 1:ncol) = RefCoord_Quadrangle(refElem)
 
-CASE (TypeElemNameOpt%tetrahedron)
-  nrow = 3
-  ncol = 4
-  ans(1:nrow, 1:ncol) = RefCoord_Tetrahedron(refElem)
+  CASE (TypeElemNameOpt%tetrahedron)
+    nrow = 3
+    ncol = 4
+    ans(1:nrow, 1:ncol) = RefCoord_Tetrahedron(refElem)
 
-CASE (TypeElemNameOpt%hexahedron)
-  nrow = 3
-  ncol = 8
-  ans(1:nrow, 1:ncol) = RefCoord_Hexahedron(refElem)
+  CASE (TypeElemNameOpt%hexahedron)
+    nrow = 3
+    ncol = 8
+    ans(1:nrow, 1:ncol) = RefCoord_Hexahedron(refElem)
 
-CASE (TypeElemNameOpt%prism)
-  nrow = 3
-  ncol = 6
-  ans(1:nrow, 1:ncol) = RefCoord_Prism(refElem)
+  CASE (TypeElemNameOpt%prism)
+    nrow = 3
+    ncol = 6
+    ans(1:nrow, 1:ncol) = RefCoord_Prism(refElem)
 
-CASE (TypeElemNameOpt%pyramid)
-  nrow = 3
-  ncol = 5
-  ans(1:nrow, 1:ncol) = RefCoord_Pyramid(refElem)
+  CASE (TypeElemNameOpt%pyramid)
+    nrow = 3
+    ncol = 5
+    ans(1:nrow, 1:ncol) = RefCoord_Pyramid(refElem)
 
-CASE DEFAULT
-  nrow = 0
-  ncol = 0
+  CASE DEFAULT
+    nrow = 0
+    ncol = 0
 
-END SELECT
+  END SELECT
 END PROCEDURE RefCoord_
 
 !----------------------------------------------------------------------------
@@ -194,39 +201,39 @@ END PROCEDURE RefCoord_
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE GetElementIndex
-INTEGER(I4B) :: topo
+  INTEGER(I4B) :: topo
 
-topo = refelem_ElementTopology1(elemType)
+  topo = refelem_ElementTopology1(elemType)
 
-SELECT CASE (topo)
-CASE (TypeElemNameOpt%point)
-  ans = 1
+  SELECT CASE (topo)
+  CASE (TypeElemNameOpt%point)
+    ans = 1
 
-CASE (TypeElemNameOpt%line)
-  ans = 2
+  CASE (TypeElemNameOpt%line)
+    ans = 2
 
-CASE (TypeElemNameOpt%triangle)
-  ans = 3
+  CASE (TypeElemNameOpt%triangle)
+    ans = 3
 
-CASE (TypeElemNameOpt%quadrangle)
-  ans = 4
+  CASE (TypeElemNameOpt%quadrangle)
+    ans = 4
 
-CASE (TypeElemNameOpt%tetrahedron)
-  ans = 5
+  CASE (TypeElemNameOpt%tetrahedron)
+    ans = 5
 
-CASE (TypeElemNameOpt%hexahedron)
-  ans = 6
+  CASE (TypeElemNameOpt%hexahedron)
+    ans = 6
 
-CASE (TypeElemNameOpt%prism)
-  ans = 7
+  CASE (TypeElemNameOpt%prism)
+    ans = 7
 
-CASE (TypeElemNameOpt%pyramid)
-  ans = 8
+  CASE (TypeElemNameOpt%pyramid)
+    ans = 8
 
-CASE DEFAULT
-  ans = 0
+  CASE DEFAULT
+    ans = 0
 
-END SELECT
+  END SELECT
 END PROCEDURE GetElementIndex
 
 !----------------------------------------------------------------------------
@@ -234,192 +241,192 @@ END PROCEDURE GetElementIndex
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE RefElemGetGeoParam1
-INTEGER(I4B) :: topo
-LOGICAL(LGT) :: isok
+  INTEGER(I4B) :: topo
+  LOGICAL(LGT) :: isok
 
-topo = refelem_ElementTopology1(elemType)
+  topo = refelem_ElementTopology1(elemType)
 
-isok = PRESENT(tCells)
-IF (isok) tCells = 1_I4B
+  isok = PRESENT(tCells)
+  IF (isok) tCells = 1_I4B
 
-SELECT CASE (topo)
+  SELECT CASE (topo)
 
-CASE (TypeElemNameOpt%point, TypeElemNameOpt%line)
+  CASE (TypeElemNameOpt%point, TypeElemNameOpt%line)
 
-  isok = PRESENT(tNodes)
-  IF (isok) tNodes = TotalNodesInElement_Line(elemType)
+    isok = PRESENT(tNodes)
+    IF (isok) tNodes = TotalNodesInElement_Line(elemType)
 
-  isok = PRESENT(tEdges)
-  IF (isok) tEdges = 0_I4B
+    isok = PRESENT(tEdges)
+    IF (isok) tEdges = 0_I4B
 
-  isok = PRESENT(tFaces)
-  IF (isok) tFaces = 2_I4B
+    isok = PRESENT(tFaces)
+    IF (isok) tFaces = 2_I4B
 
-  isok = PRESENT(edgeCon)
-  IF (isok) CALL GetEdgeConnectivity_Line( &
-    con=edgeCon, opt=edgeOpt, order=order)
+    isok = PRESENT(edgeCon)
+    IF (isok) CALL GetEdgeConnectivity_Line(con=edgeCon, opt=edgeOpt, &
+                                            order=order)
 
-  isok = PRESENT(faceCon)
-  IF (isok) CALL GetFaceConnectivity_Line( &
-    con=faceCon, opt=faceOpt, order=order)
+    isok = PRESENT(faceCon)
+    IF (isok) CALL GetFaceConnectivity_Line(con=faceCon, opt=faceOpt, &
+                                            order=order)
 
-  CALL GetFaceElemType_Line( &
-    faceElemType=faceElemType, tFaceNodes=tFaceNodes, elemType=elemType)
+    CALL GetFaceElemType_Line(faceElemType=faceElemType, &
+                              tFaceNodes=tFaceNodes, elemType=elemType)
 
-CASE (TypeElemNameOpt%triangle)
+  CASE (TypeElemNameOpt%triangle)
 
-  isok = PRESENT(tNodes)
-  IF (isok) tNodes = TotalNodesInElement_Triangle(elemType)
+    isok = PRESENT(tNodes)
+    IF (isok) tNodes = TotalNodesInElement_Triangle(elemType)
 
-  isok = PRESENT(tEdges)
-  IF (isok) tEdges = 3_I4B
+    isok = PRESENT(tEdges)
+    IF (isok) tEdges = 3_I4B
 
-  isok = PRESENT(tFaces)
-  IF (isok) tFaces = 3_I4B
+    isok = PRESENT(tFaces)
+    IF (isok) tFaces = 3_I4B
 
-  isok = PRESENT(edgeCon)
-  IF (isok) CALL GetEdgeConnectivity_Triangle( &
-    con=edgeCon, opt=edgeOpt, order=order)
+    isok = PRESENT(edgeCon)
+    IF (isok) CALL GetEdgeConnectivity_Triangle(con=edgeCon, opt=edgeOpt, &
+                                                order=order)
 
-  isok = PRESENT(faceCon)
-  IF (isok) CALL GetFaceConnectivity_Triangle( &
-    con=faceCon, opt=faceOpt, order=order)
+    isok = PRESENT(faceCon)
+    IF (isok) CALL GetFaceConnectivity_Triangle(con=faceCon, opt=faceOpt, &
+                                                order=order)
 
-  CALL GetFaceElemType_Triangle( &
-    faceElemType=faceElemType, tFaceNodes=tFaceNodes, elemType=elemType)
+    CALL GetFaceElemType_Triangle(faceElemType=faceElemType, &
+                                  tFaceNodes=tFaceNodes, elemType=elemType)
 
-CASE (TypeElemNameOpt%quadrangle)
+  CASE (TypeElemNameOpt%quadrangle)
 
-  isok = PRESENT(tNodes)
-  IF (isok) tNodes = TotalNodesInElement_Quadrangle(elemType)
+    isok = PRESENT(tNodes)
+    IF (isok) tNodes = TotalNodesInElement_Quadrangle(elemType)
 
-  isok = PRESENT(tEdges)
-  IF (isok) tEdges = 4_I4B
+    isok = PRESENT(tEdges)
+    IF (isok) tEdges = 4_I4B
 
-  isok = PRESENT(tFaces)
-  IF (isok) tFaces = 4_I4B
+    isok = PRESENT(tFaces)
+    IF (isok) tFaces = 4_I4B
 
-  isok = PRESENT(edgeCon)
-  IF (isok) CALL GetEdgeConnectivity_Quadrangle( &
-    con=edgeCon, opt=edgeOpt, order=order)
+    isok = PRESENT(edgeCon)
+    IF (isok) CALL GetEdgeConnectivity_Quadrangle(con=edgeCon, opt=edgeOpt, &
+                                                  order=order)
 
-  isok = PRESENT(faceCon)
-  IF (isok) CALL GetFaceConnectivity_Quadrangle( &
-    con=faceCon, opt=faceOpt, order=order)
+    isok = PRESENT(faceCon)
+    IF (isok) CALL GetFaceConnectivity_Quadrangle(con=faceCon, opt=faceOpt, &
+                                                  order=order)
 
-  CALL GetFaceElemType_Quadrangle( &
-    faceElemType=faceElemType, tFaceNodes=tFaceNodes, elemType=elemType)
+    CALL GetFaceElemType_Quadrangle(faceElemType=faceElemType, &
+                                    tFaceNodes=tFaceNodes, elemType=elemType)
 
-CASE (TypeElemNameOpt%tetrahedron)
+  CASE (TypeElemNameOpt%tetrahedron)
 
-  isok = PRESENT(tNodes)
-  IF (isok) tNodes = TotalNodesInElement_Tetrahedron(elemType)
+    isok = PRESENT(tNodes)
+    IF (isok) tNodes = TotalNodesInElement_Tetrahedron(elemType)
 
-  isok = PRESENT(tEdges)
-  IF (isok) tEdges = 6_I4B
+    isok = PRESENT(tEdges)
+    IF (isok) tEdges = 6_I4B
 
-  isok = PRESENT(tFaces)
-  IF (isok) tFaces = 4_I4B
+    isok = PRESENT(tFaces)
+    IF (isok) tFaces = 4_I4B
 
-  isok = PRESENT(edgeCon)
-  IF (isok) CALL GetEdgeConnectivity_Tetrahedron( &
-    con=edgeCon, opt=edgeOpt, order=order)
+    isok = PRESENT(edgeCon)
+    IF (isok) CALL GetEdgeConnectivity_Tetrahedron(con=edgeCon, opt=edgeOpt, &
+                                                   order=order)
 
-  isok = PRESENT(faceCon)
-  IF (isok) CALL GetFaceConnectivity_Tetrahedron( &
-    con=faceCon, opt=faceOpt, order=order)
+    isok = PRESENT(faceCon)
+    IF (isok) CALL GetFaceConnectivity_Tetrahedron(con=faceCon, opt=faceOpt, &
+                                                   order=order)
 
-  CALL GetFaceElemType_Tetrahedron( &
-    faceElemType=faceElemType, tFaceNodes=tFaceNodes, elemType=elemType)
+    CALL GetFaceElemType_Tetrahedron(faceElemType=faceElemType, &
+                                     tFaceNodes=tFaceNodes, elemType=elemType)
 
-CASE (TypeElemNameOpt%hexahedron)
+  CASE (TypeElemNameOpt%hexahedron)
 
-  isok = PRESENT(tNodes)
-  IF (isok) tNodes = TotalNodesInElement_Hexahedron(elemType)
+    isok = PRESENT(tNodes)
+    IF (isok) tNodes = TotalNodesInElement_Hexahedron(elemType)
 
-  isok = PRESENT(tEdges)
-  IF (isok) tEdges = 12_I4B
+    isok = PRESENT(tEdges)
+    IF (isok) tEdges = 12_I4B
 
-  isok = PRESENT(tFaces)
-  IF (isok) tFaces = 6_I4B
+    isok = PRESENT(tFaces)
+    IF (isok) tFaces = 6_I4B
 
-  isok = PRESENT(edgeCon)
-  IF (isok) CALL GetEdgeConnectivity_Hexahedron( &
-    con=edgeCon, opt=edgeOpt, order=order)
+    isok = PRESENT(edgeCon)
+    IF (isok) CALL GetEdgeConnectivity_Hexahedron(con=edgeCon, opt=edgeOpt, &
+                                                  order=order)
 
-  isok = PRESENT(faceCon)
-  IF (isok) CALL GetFaceConnectivity_Hexahedron( &
-    con=faceCon, opt=faceOpt, order=order)
+    isok = PRESENT(faceCon)
+    IF (isok) CALL GetFaceConnectivity_Hexahedron(con=faceCon, opt=faceOpt, &
+                                                  order=order)
 
-  CALL GetFaceElemType_Hexahedron( &
-    faceElemType=faceElemType, tFaceNodes=tFaceNodes, elemType=elemType)
+    CALL GetFaceElemType_Hexahedron(faceElemType=faceElemType, &
+                                    tFaceNodes=tFaceNodes, elemType=elemType)
 
-CASE (TypeElemNameOpt%prism)
+  CASE (TypeElemNameOpt%prism)
 
-  isok = PRESENT(tNodes)
-  IF (isok) tNodes = TotalNodesInElement_Prism(elemType)
+    isok = PRESENT(tNodes)
+    IF (isok) tNodes = TotalNodesInElement_Prism(elemType)
 
-  isok = PRESENT(tEdges)
-  IF (isok) tEdges = 9_I4B
+    isok = PRESENT(tEdges)
+    IF (isok) tEdges = 9_I4B
 
-  isok = PRESENT(tFaces)
-  IF (isok) tFaces = 5_I4B
+    isok = PRESENT(tFaces)
+    IF (isok) tFaces = 5_I4B
 
-  isok = PRESENT(edgeCon)
-  IF (isok) CALL GetEdgeConnectivity_Prism( &
-    con=edgeCon, opt=edgeOpt, order=order)
+    isok = PRESENT(edgeCon)
+    IF (isok) CALL GetEdgeConnectivity_Prism(con=edgeCon, opt=edgeOpt, &
+                                             order=order)
 
-  isok = PRESENT(faceCon)
-  IF (isok) CALL GetFaceConnectivity_Prism( &
-    con=faceCon, opt=faceOpt, order=order)
+    isok = PRESENT(faceCon)
+    IF (isok) CALL GetFaceConnectivity_Prism(con=faceCon, opt=faceOpt, &
+                                             order=order)
 
-  CALL GetFaceElemType_Prism( &
-    faceElemType=faceElemType, tFaceNodes=tFaceNodes, elemType=elemType)
+    CALL GetFaceElemType_Prism(faceElemType=faceElemType, &
+                               tFaceNodes=tFaceNodes, elemType=elemType)
 
-CASE (TypeElemNameOpt%pyramid)
+  CASE (TypeElemNameOpt%pyramid)
 
-  isok = PRESENT(tNodes)
-  IF (isok) tNodes = TotalNodesInElement_Pyramid(elemType)
+    isok = PRESENT(tNodes)
+    IF (isok) tNodes = TotalNodesInElement_Pyramid(elemType)
 
-  isok = PRESENT(tEdges)
-  IF (isok) tEdges = 8_I4B
+    isok = PRESENT(tEdges)
+    IF (isok) tEdges = 8_I4B
 
-  isok = PRESENT(tFaces)
-  IF (isok) tFaces = 5_I4B
+    isok = PRESENT(tFaces)
+    IF (isok) tFaces = 5_I4B
 
-  isok = PRESENT(edgeCon)
-  IF (isok) CALL GetEdgeConnectivity_Pyramid( &
-    con=edgeCon, opt=edgeOpt, order=order)
+    isok = PRESENT(edgeCon)
+    IF (isok) CALL GetEdgeConnectivity_Pyramid(con=edgeCon, opt=edgeOpt, &
+                                               order=order)
 
-  isok = PRESENT(faceCon)
-  IF (isok) CALL GetFaceConnectivity_Pyramid( &
-    con=faceCon, opt=faceOpt, order=order)
+    isok = PRESENT(faceCon)
+    IF (isok) CALL GetFaceConnectivity_Pyramid(con=faceCon, opt=faceOpt, &
+                                               order=order)
 
-  CALL GetFaceElemType_Pyramid( &
-    faceElemType=faceElemType, tFaceNodes=tFaceNodes, elemType=elemType)
+    CALL GetFaceElemType_Pyramid(faceElemType=faceElemType, &
+                                 tFaceNodes=tFaceNodes, elemType=elemType)
 
-CASE DEFAULT
-  isok = PRESENT(tNodes)
-  IF (isok) tNodes = 0_I4B
+  CASE DEFAULT
+    isok = PRESENT(tNodes)
+    IF (isok) tNodes = 0_I4B
 
-  isok = PRESENT(tEdges)
-  IF (isok) tEdges = 0_I4B
+    isok = PRESENT(tEdges)
+    IF (isok) tEdges = 0_I4B
 
-  isok = PRESENT(tFaces)
-  IF (isok) tFaces = 0_I4B
+    isok = PRESENT(tFaces)
+    IF (isok) tFaces = 0_I4B
 
-  isok = PRESENT(edgeCon)
-  IF (isok) edgeCon = 0_I4B
+    isok = PRESENT(edgeCon)
+    IF (isok) edgeCon = 0_I4B
 
-  isok = PRESENT(faceCon)
-  IF (isok) faceCon = 0_I4B
+    isok = PRESENT(faceCon)
+    IF (isok) faceCon = 0_I4B
 
-  isok = PRESENT(faceElemType)
-  IF (isok) faceElemType = 0_I4B
+    isok = PRESENT(faceElemType)
+    IF (isok) faceElemType = 0_I4B
 
-  isok = PRESENT(tFaceNodes)
-  IF (isok) tFaceNodes = 0_I4B
-END SELECT
+    isok = PRESENT(tFaceNodes)
+    IF (isok) tFaceNodes = 0_I4B
+  END SELECT
 END PROCEDURE RefElemGetGeoParam1
 
 !----------------------------------------------------------------------------
@@ -427,15 +434,50 @@ END PROCEDURE RefElemGetGeoParam1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE GetTotalNodes1
-CALL RefElemGetGeoParam(tNodes=ans, elemType=elemType)
+  CALL RefElemGetGeoParam(tNodes=ans, elemType=elemType)
 END PROCEDURE GetTotalNodes1
+
+!----------------------------------------------------------------------------
+!                                                             GetTotalNodes
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE GetTotalNodes2
+  SELECT CASE (topoName)
+  CASE (TypeElemNameOpt%point)
+    ans = 1_I4B
+
+  CASE (TypeElemNameOpt%line)
+    ans = LagrangeDOF_Line(order=order)
+
+  CASE (TypeElemNameOpt%triangle)
+    ans = LagrangeDOF_Triangle(order=order)
+
+  CASE (TypeElemNameOpt%quadrangle)
+    ans = LagrangeDOF_Quadrangle(order=order)
+
+  CASE (TypeElemNameOpt%tetrahedron)
+    ans = LagrangeDOF_Tetrahedron(order=order)
+
+  CASE (TypeElemNameOpt%hexahedron)
+    ans = LagrangeDOF_Hexahedron(order=order)
+
+  CASE (TypeElemNameOpt%prism)
+    ans = LagrangeDOF_Prism(order=order)
+
+  CASE (TypeElemNameOpt%pyramid)
+    ans = LagrangeDOF_Pyramid(order=order)
+
+  CASE DEFAULT
+    ans = 0_I4B
+  END SELECT
+END PROCEDURE GetTotalNodes2
 
 !----------------------------------------------------------------------------
 !                                                          GetTotalEdges
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE GetTotalEdges1
-CALL RefElemGetGeoParam(tEdges=ans, elemType=elemType)
+  CALL RefElemGetGeoParam(tEdges=ans, elemType=elemType)
 END PROCEDURE GetTotalEdges1
 
 !----------------------------------------------------------------------------
@@ -443,7 +485,7 @@ END PROCEDURE GetTotalEdges1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE GetTotalFaces1
-CALL RefElemGetGeoParam(tFaces=ans, elemType=elemType)
+  CALL RefElemGetGeoParam(tFaces=ans, elemType=elemType)
 END PROCEDURE GetTotalFaces1
 
 !----------------------------------------------------------------------------
@@ -451,7 +493,7 @@ END PROCEDURE GetTotalFaces1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE GetTotalCells1
-CALL RefElemGetGeoParam(tCells=ans, elemType=elemType)
+  CALL RefElemGetGeoParam(tCells=ans, elemType=elemType)
 END PROCEDURE GetTotalCells1
 
 !----------------------------------------------------------------------------
@@ -459,51 +501,51 @@ END PROCEDURE GetTotalCells1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE GetEdgeConnectivity1
-INTEGER(I4B) :: topo
+  INTEGER(I4B) :: topo
 
-topo = refelem_ElementTopology1(elemType)
+  topo = refelem_ElementTopology1(elemType)
 
-SELECT CASE (topo)
+  SELECT CASE (topo)
 
-CASE (TypeElemNameOpt%line)
-  CALL GetEdgeConnectivity_Line( &
-    con=con, opt=opt, order=order, nrow=nrow, ncol=ncol)
+  CASE (TypeElemNameOpt%line)
+    CALL GetEdgeConnectivity_Line(con=con, opt=opt, order=order, nrow=nrow, &
+                                  ncol=ncol)
 
-CASE (TypeElemNameOpt%triangle)
+  CASE (TypeElemNameOpt%triangle)
 
-  CALL GetEdgeConnectivity_Triangle( &
-    con=con, opt=opt, order=order, nrow=nrow, ncol=ncol)
+    CALL GetEdgeConnectivity_Triangle(con=con, opt=opt, order=order, &
+                                      nrow=nrow, ncol=ncol)
 
-CASE (TypeElemNameOpt%quadrangle)
+  CASE (TypeElemNameOpt%quadrangle)
 
-  CALL GetEdgeConnectivity_Quadrangle( &
-    con=con, opt=opt, order=order, nrow=nrow, ncol=ncol)
+    CALL GetEdgeConnectivity_Quadrangle(con=con, opt=opt, order=order, &
+                                        nrow=nrow, ncol=ncol)
 
-CASE (TypeElemNameOpt%tetrahedron)
+  CASE (TypeElemNameOpt%tetrahedron)
 
-  CALL GetEdgeConnectivity_Tetrahedron( &
-    con=con, opt=opt, order=order, nrow=nrow, ncol=ncol)
+    CALL GetEdgeConnectivity_Tetrahedron(con=con, opt=opt, order=order, &
+                                         nrow=nrow, ncol=ncol)
 
-CASE (TypeElemNameOpt%hexahedron)
+  CASE (TypeElemNameOpt%hexahedron)
 
-  CALL GetEdgeConnectivity_Hexahedron( &
-    con=con, opt=opt, order=order, nrow=nrow, ncol=ncol)
+    CALL GetEdgeConnectivity_Hexahedron(con=con, opt=opt, order=order, &
+                                        nrow=nrow, ncol=ncol)
 
-CASE (TypeElemNameOpt%prism)
+  CASE (TypeElemNameOpt%prism)
 
-  CALL GetEdgeConnectivity_Prism( &
-    con=con, opt=opt, order=order, nrow=nrow, ncol=ncol)
+    CALL GetEdgeConnectivity_Prism(con=con, opt=opt, order=order, nrow=nrow, &
+                                   ncol=ncol)
 
-CASE (TypeElemNameOpt%pyramid)
+  CASE (TypeElemNameOpt%pyramid)
 
-  CALL GetEdgeConnectivity_Pyramid( &
-    con=con, opt=opt, order=order, nrow=nrow, ncol=ncol)
+    CALL GetEdgeConnectivity_Pyramid(con=con, opt=opt, order=order, &
+                                     nrow=nrow, ncol=ncol)
 
-CASE DEFAULT
-  nrow = 0
-  ncol = 0
+  CASE DEFAULT
+    nrow = 0
+    ncol = 0
 
-END SELECT
+  END SELECT
 END PROCEDURE GetEdgeConnectivity1
 
 !----------------------------------------------------------------------------
@@ -511,51 +553,51 @@ END PROCEDURE GetEdgeConnectivity1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE GetFaceConnectivity1
-INTEGER(I4B) :: topo
+  INTEGER(I4B) :: topo
 
-topo = refelem_ElementTopology1(elemType)
+  topo = refelem_ElementTopology1(elemType)
 
-SELECT CASE (topo)
+  SELECT CASE (topo)
 
-CASE (TypeElemNameOpt%line)
-  CALL GetFaceConnectivity_Line(con=con, opt=opt, order=order, &
-                                nrow=nrow, ncol=ncol)
+  CASE (TypeElemNameOpt%line)
+    CALL GetFaceConnectivity_Line(con=con, opt=opt, order=order, &
+                                  nrow=nrow, ncol=ncol)
 
-CASE (TypeElemNameOpt%triangle)
+  CASE (TypeElemNameOpt%triangle)
 
-  CALL GetFaceConnectivity_Triangle(con=con, opt=opt, order=order, &
-                                    nrow=nrow, ncol=ncol)
-
-CASE (TypeElemNameOpt%quadrangle)
-
-  CALL GetFaceConnectivity_Quadrangle(con=con, opt=opt, order=order, &
+    CALL GetFaceConnectivity_Triangle(con=con, opt=opt, order=order, &
                                       nrow=nrow, ncol=ncol)
 
-CASE (TypeElemNameOpt%tetrahedron)
+  CASE (TypeElemNameOpt%quadrangle)
 
-  CALL GetFaceConnectivity_Tetrahedron(con=con, opt=opt, order=order, &
-                                       nrow=nrow, ncol=ncol)
+    CALL GetFaceConnectivity_Quadrangle(con=con, opt=opt, order=order, &
+                                        nrow=nrow, ncol=ncol)
 
-CASE (TypeElemNameOpt%hexahedron)
+  CASE (TypeElemNameOpt%tetrahedron)
 
-  CALL GetFaceConnectivity_Hexahedron(con=con, opt=opt, order=order, &
-                                      nrow=nrow, ncol=ncol)
+    CALL GetFaceConnectivity_Tetrahedron(con=con, opt=opt, order=order, &
+                                         nrow=nrow, ncol=ncol)
 
-CASE (TypeElemNameOpt%prism)
+  CASE (TypeElemNameOpt%hexahedron)
 
-  CALL GetFaceConnectivity_Prism(con=con, opt=opt, order=order, &
-                                 nrow=nrow, ncol=ncol)
+    CALL GetFaceConnectivity_Hexahedron(con=con, opt=opt, order=order, &
+                                        nrow=nrow, ncol=ncol)
 
-CASE (TypeElemNameOpt%pyramid)
+  CASE (TypeElemNameOpt%prism)
 
-  CALL GetFaceConnectivity_Pyramid(con=con, opt=opt, order=order, &
+    CALL GetFaceConnectivity_Prism(con=con, opt=opt, order=order, &
                                    nrow=nrow, ncol=ncol)
 
-CASE DEFAULT
-  nrow = 0
-  ncol = 0
+  CASE (TypeElemNameOpt%pyramid)
 
-END SELECT
+    CALL GetFaceConnectivity_Pyramid(con=con, opt=opt, order=order, &
+                                     nrow=nrow, ncol=ncol)
+
+  CASE DEFAULT
+    nrow = 0
+    ncol = 0
+
+  END SELECT
 END PROCEDURE GetFaceConnectivity1
 
 !----------------------------------------------------------------------------
@@ -563,44 +605,44 @@ END PROCEDURE GetFaceConnectivity1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE GetFaceElemType1
-INTEGER(I4B) :: topo
+  INTEGER(I4B) :: topo
 
-topo = refelem_ElementTopology1(elemType)
+  topo = refelem_ElementTopology1(elemType)
 
-SELECT CASE (topo)
+  SELECT CASE (topo)
 
-CASE (TypeElemNameOpt%line)
-  CALL GetFaceElemType_Line(faceElemType=faceElemType, opt=opt, &
-                            tFaceNodes=tFaceNodes, elemType=elemType)
+  CASE (TypeElemNameOpt%line)
+    CALL GetFaceElemType_Line(faceElemType=faceElemType, opt=opt, &
+                              tFaceNodes=tFaceNodes, elemType=elemType)
 
-CASE (TypeElemNameOpt%triangle)
-  CALL GetFaceElemType_Triangle(faceElemType=faceElemType, opt=opt, &
-                                tFaceNodes=tFaceNodes, elemType=elemType)
-
-CASE (TypeElemNameOpt%quadrangle)
-  CALL GetFaceElemType_Quadrangle(faceElemType=faceElemType, opt=opt, &
+  CASE (TypeElemNameOpt%triangle)
+    CALL GetFaceElemType_Triangle(faceElemType=faceElemType, opt=opt, &
                                   tFaceNodes=tFaceNodes, elemType=elemType)
 
-CASE (TypeElemNameOpt%tetrahedron)
-  CALL GetFaceElemType_Tetrahedron(faceElemType=faceElemType, opt=opt, &
-                                   tFaceNodes=tFaceNodes, elemType=elemType)
+  CASE (TypeElemNameOpt%quadrangle)
+    CALL GetFaceElemType_Quadrangle(faceElemType=faceElemType, opt=opt, &
+                                    tFaceNodes=tFaceNodes, elemType=elemType)
 
-CASE (TypeElemNameOpt%hexahedron)
-  CALL GetFaceElemType_Hexahedron(faceElemType=faceElemType, opt=opt, &
-                                  tFaceNodes=tFaceNodes, elemType=elemType)
+  CASE (TypeElemNameOpt%tetrahedron)
+    CALL GetFaceElemType_Tetrahedron(faceElemType=faceElemType, opt=opt, &
+                                     tFaceNodes=tFaceNodes, elemType=elemType)
 
-CASE (TypeElemNameOpt%prism)
-  CALL GetFaceElemType_Prism(faceElemType=faceElemType, opt=opt, &
-                             tFaceNodes=tFaceNodes, elemType=elemType)
+  CASE (TypeElemNameOpt%hexahedron)
+    CALL GetFaceElemType_Hexahedron(faceElemType=faceElemType, opt=opt, &
+                                    tFaceNodes=tFaceNodes, elemType=elemType)
 
-CASE (TypeElemNameOpt%pyramid)
-  CALL GetFaceElemType_Pyramid(faceElemType=faceElemType, opt=opt, &
+  CASE (TypeElemNameOpt%prism)
+    CALL GetFaceElemType_Prism(faceElemType=faceElemType, opt=opt, &
                                tFaceNodes=tFaceNodes, elemType=elemType)
 
-CASE DEFAULT
-  ! Do nothing - arrays are already passed by caller
+  CASE (TypeElemNameOpt%pyramid)
+    CALL GetFaceElemType_Pyramid(faceElemType=faceElemType, opt=opt, &
+                                 tFaceNodes=tFaceNodes, elemType=elemType)
 
-END SELECT
+  CASE DEFAULT
+    ! Do nothing - arrays are already passed by caller
+
+  END SELECT
 END PROCEDURE GetFaceElemType1
 
 !----------------------------------------------------------------------------
@@ -608,52 +650,55 @@ END PROCEDURE GetFaceElemType1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE GetFaceElemType2
-INTEGER(I4B) :: topo
+  INTEGER(I4B) :: topo
 
-topo = ElementTopology(elemType)
+  topo = ElementTopology(elemType)
 
-SELECT CASE (topo)
+  SELECT CASE (topo)
 
-CASE (TypeElemNameOpt%line)
-  CALL GetFaceElemType_Line(faceElemType=faceElemType, opt=opt, &
-                            tFaceNodes=tFaceNodes, elemType=elemType, &
-                            localFaceNumber=localFaceNumber)
+  CASE (TypeElemNameOpt%line)
+    CALL GetFaceElemType_Line(faceElemType=faceElemType, opt=opt, &
+                              tFaceNodes=tFaceNodes, elemType=elemType, &
+                              localFaceNumber=localFaceNumber)
 
-CASE (TypeElemNameOpt%triangle)
-  CALL GetFaceElemType_Triangle(faceElemType=faceElemType, opt=opt, &
-                                tFaceNodes=tFaceNodes, elemType=elemType, &
-                                localFaceNumber=localFaceNumber)
-
-CASE (TypeElemNameOpt%quadrangle)
-  CALL GetFaceElemType_Quadrangle(faceElemType=faceElemType, opt=opt, &
+  CASE (TypeElemNameOpt%triangle)
+    CALL GetFaceElemType_Triangle(faceElemType=faceElemType, opt=opt, &
                                   tFaceNodes=tFaceNodes, elemType=elemType, &
                                   localFaceNumber=localFaceNumber)
 
-CASE (TypeElemNameOpt%tetrahedron)
-  CALL GetFaceElemType_Tetrahedron(faceElemType=faceElemType, opt=opt, &
-                                   tFaceNodes=tFaceNodes, elemType=elemType, &
-                                   localFaceNumber=localFaceNumber)
+  CASE (TypeElemNameOpt%quadrangle)
+    CALL GetFaceElemType_Quadrangle(faceElemType=faceElemType, opt=opt, &
+                                    tFaceNodes=tFaceNodes, &
+                                    elemType=elemType, &
+                                    localFaceNumber=localFaceNumber)
 
-CASE (TypeElemNameOpt%hexahedron)
-  CALL GetFaceElemType_Hexahedron(faceElemType=faceElemType, opt=opt, &
-                                  tFaceNodes=tFaceNodes, elemType=elemType, &
-                                  localFaceNumber=localFaceNumber)
+  CASE (TypeElemNameOpt%tetrahedron)
+    CALL GetFaceElemType_Tetrahedron(faceElemType=faceElemType, opt=opt, &
+                                     tFaceNodes=tFaceNodes, &
+                                     elemType=elemType, &
+                                     localFaceNumber=localFaceNumber)
 
-CASE (TypeElemNameOpt%prism)
-  CALL GetFaceElemType_Prism(faceElemType=faceElemType, opt=opt, &
-                             tFaceNodes=tFaceNodes, elemType=elemType, &
-                             localFaceNumber=localFaceNumber)
+  CASE (TypeElemNameOpt%hexahedron)
+    CALL GetFaceElemType_Hexahedron(faceElemType=faceElemType, opt=opt, &
+                                    tFaceNodes=tFaceNodes, &
+                                    elemType=elemType, &
+                                    localFaceNumber=localFaceNumber)
 
-CASE (TypeElemNameOpt%pyramid)
-  CALL GetFaceElemType_Pyramid(faceElemType=faceElemType, opt=opt, &
+  CASE (TypeElemNameOpt%prism)
+    CALL GetFaceElemType_Prism(faceElemType=faceElemType, opt=opt, &
                                tFaceNodes=tFaceNodes, elemType=elemType, &
                                localFaceNumber=localFaceNumber)
 
-CASE DEFAULT
-  faceElemType = 0_I4B
-  tFaceNodes = 0_I4B
+  CASE (TypeElemNameOpt%pyramid)
+    CALL GetFaceElemType_Pyramid(faceElemType=faceElemType, opt=opt, &
+                                 tFaceNodes=tFaceNodes, elemType=elemType, &
+                                 localFaceNumber=localFaceNumber)
 
-END SELECT
+  CASE DEFAULT
+    faceElemType = 0_I4B
+    tFaceNodes = 0_I4B
+
+  END SELECT
 END PROCEDURE GetFaceElemType2
 
 !----------------------------------------------------------------------------
@@ -661,45 +706,45 @@ END PROCEDURE GetFaceElemType2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Measure_Simplex
-INTEGER(I4B) :: elemType
-ans = 0.0_DFP
-SELECT TYPE (refelem)
-TYPE IS (ReferencePoint_)
-  ans = Measure_Simplex_Point(refelem, xij)
-TYPE IS (ReferenceLine_)
-  ans = Measure_Simplex_Line(refelem, xij)
-TYPE IS (ReferenceTriangle_)
-  ans = Measure_Simplex_Triangle(refelem, xij)
-TYPE IS (ReferenceQuadrangle_)
-  ans = Measure_Simplex_Quadrangle(refelem, xij)
-TYPE IS (ReferenceTetrahedron_)
-  ans = Measure_Simplex_Tetrahedron(refelem, xij)
-TYPE IS (ReferenceHexahedron_)
-  ans = Measure_Simplex_Hexahedron(refelem, xij)
-TYPE IS (ReferencePrism_)
-  ans = Measure_Simplex_Prism(refelem, xij)
-TYPE IS (ReferencePyramid_)
-  ans = Measure_Simplex_Pyramid(refelem, xij)
-CLASS DEFAULT
-  elemType = refelem%name
-  IF (isPoint(elemType)) THEN
+  INTEGER(I4B) :: elemType
+  ans = 0.0_DFP
+  SELECT TYPE (refelem)
+  TYPE IS (ReferencePoint_)
     ans = Measure_Simplex_Point(refelem, xij)
-  ELSEIF (isLine(elemType)) THEN
+  TYPE IS (ReferenceLine_)
     ans = Measure_Simplex_Line(refelem, xij)
-  ELSEIF (isTriangle(elemType)) THEN
+  TYPE IS (ReferenceTriangle_)
     ans = Measure_Simplex_Triangle(refelem, xij)
-  ELSEIF (isQuadrangle(elemType)) THEN
+  TYPE IS (ReferenceQuadrangle_)
     ans = Measure_Simplex_Quadrangle(refelem, xij)
-  ELSEIF (isTetrahedron(elemType)) THEN
+  TYPE IS (ReferenceTetrahedron_)
     ans = Measure_Simplex_Tetrahedron(refelem, xij)
-  ELSEIF (isHexahedron(elemType)) THEN
+  TYPE IS (ReferenceHexahedron_)
     ans = Measure_Simplex_Hexahedron(refelem, xij)
-  ELSEIF (isPrism(elemType)) THEN
+  TYPE IS (ReferencePrism_)
     ans = Measure_Simplex_Prism(refelem, xij)
-  ELSEIF (isPyramid(elemType)) THEN
+  TYPE IS (ReferencePyramid_)
     ans = Measure_Simplex_Pyramid(refelem, xij)
-  END IF
-END SELECT
+  CLASS DEFAULT
+    elemType = refelem%name
+    IF (isPoint(elemType)) THEN
+      ans = Measure_Simplex_Point(refelem, xij)
+    ELSE IF (isLine(elemType)) THEN
+      ans = Measure_Simplex_Line(refelem, xij)
+    ELSE IF (isTriangle(elemType)) THEN
+      ans = Measure_Simplex_Triangle(refelem, xij)
+    ELSE IF (isQuadrangle(elemType)) THEN
+      ans = Measure_Simplex_Quadrangle(refelem, xij)
+    ELSE IF (isTetrahedron(elemType)) THEN
+      ans = Measure_Simplex_Tetrahedron(refelem, xij)
+    ELSE IF (isHexahedron(elemType)) THEN
+      ans = Measure_Simplex_Hexahedron(refelem, xij)
+    ELSE IF (isPrism(elemType)) THEN
+      ans = Measure_Simplex_Prism(refelem, xij)
+    ELSE IF (isPyramid(elemType)) THEN
+      ans = Measure_Simplex_Pyramid(refelem, xij)
+    END IF
+  END SELECT
 END PROCEDURE Measure_Simplex
 
 !----------------------------------------------------------------------------
@@ -707,24 +752,24 @@ END PROCEDURE Measure_Simplex
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Element_Quality
-SELECT TYPE (refelem)
-CLASS IS (ReferencePoint_)
-  ans = Point_quality(refelem, xij, measure)
-CLASS IS (ReferenceLine_)
-  ans = Line_quality(refelem, xij, measure)
-CLASS IS (ReferenceTriangle_)
-  ans = Triangle_quality(refelem, xij, measure)
-CLASS IS (ReferenceQuadrangle_)
-  ans = Quadrangle_quality(refelem, xij, measure)
-CLASS IS (ReferenceTetrahedron_)
-  ans = Tetrahedron_quality(refelem, xij, measure)
-CLASS IS (ReferencePrism_)
-  ans = Prism_quality(refelem, xij, measure)
-CLASS IS (ReferenceHexahedron_)
-  ans = Hexahedron_quality(refelem, xij, measure)
-CLASS IS (ReferencePyramid_)
-  ans = Pyramid_quality(refelem, xij, measure)
-END SELECT
+  SELECT TYPE (refelem)
+  CLASS IS (ReferencePoint_)
+    ans = Point_quality(refelem, xij, measure)
+  CLASS IS (ReferenceLine_)
+    ans = Line_quality(refelem, xij, measure)
+  CLASS IS (ReferenceTriangle_)
+    ans = Triangle_quality(refelem, xij, measure)
+  CLASS IS (ReferenceQuadrangle_)
+    ans = Quadrangle_quality(refelem, xij, measure)
+  CLASS IS (ReferenceTetrahedron_)
+    ans = Tetrahedron_quality(refelem, xij, measure)
+  CLASS IS (ReferencePrism_)
+    ans = Prism_quality(refelem, xij, measure)
+  CLASS IS (ReferenceHexahedron_)
+    ans = Hexahedron_quality(refelem, xij, measure)
+  CLASS IS (ReferencePyramid_)
+    ans = Pyramid_quality(refelem, xij, measure)
+  END SELECT
 END PROCEDURE Element_Quality
 
 !----------------------------------------------------------------------------
@@ -732,28 +777,28 @@ END PROCEDURE Element_Quality
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE contains_point
-SELECT TYPE (refelem)
-CLASS IS (ReferenceLine_)
-  CALL UtilityDisplay("ERROR:: ReferenceElement_Method@Geometry.F90")
-  CALL UtilityDisplay("          Contains_point()")
-  CALL UtilityDisplay("            No case found for ReferenceLine_")
-  CALL UtilityDisplay("            Program stopped!!")
-  STOP
-CLASS IS (ReferenceTriangle_)
-  ans = triangle_contains_point(refelem, xij, x)
-CLASS IS (ReferenceQuadrangle_)
-  CALL UtilityDisplay("ERROR:: ReferenceElement_Method@Geometry.F90")
-  CALL UtilityDisplay("          Contains_point()")
-  CALL UtilityDisplay("            No case found for Quadrangle_")
-  CALL UtilityDisplay("            Program stopped!!")
-  STOP
-CLASS DEFAULT
-  CALL UtilityDisplay("ERROR:: ReferenceElement_Method@Geometry.F90")
-  CALL UtilityDisplay("          Contains_point()")
-  CALL UtilityDisplay("            No case found")
-  CALL UtilityDisplay("            Program stopped!!")
-  STOP
-END SELECT
+  SELECT TYPE (refelem)
+  CLASS IS (ReferenceLine_)
+    CALL UtilityDisplay("ERROR:: ReferenceElement_Method@Geometry.F90")
+    CALL UtilityDisplay("          Contains_point()")
+    CALL UtilityDisplay("            No case found for ReferenceLine_")
+    CALL UtilityDisplay("            Program stopped!!")
+    STOP
+  CLASS IS (ReferenceTriangle_)
+    ans = triangle_contains_point(refelem, xij, x)
+  CLASS IS (ReferenceQuadrangle_)
+    CALL UtilityDisplay("ERROR:: ReferenceElement_Method@Geometry.F90")
+    CALL UtilityDisplay("          Contains_point()")
+    CALL UtilityDisplay("            No case found for Quadrangle_")
+    CALL UtilityDisplay("            Program stopped!!")
+    STOP
+  CLASS DEFAULT
+    CALL UtilityDisplay("ERROR:: ReferenceElement_Method@Geometry.F90")
+    CALL UtilityDisplay("          Contains_point()")
+    CALL UtilityDisplay("            No case found")
+    CALL UtilityDisplay("            Program stopped!!")
+    STOP
+  END SELECT
 END PROCEDURE contains_point
 
 !----------------------------------------------------------------------------
@@ -761,38 +806,38 @@ END PROCEDURE contains_point
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE refelem_TotalEntities
-INTEGER(I4B) :: topo
+  INTEGER(I4B) :: topo
 
-topo = refelem_ElementTopology1(elemType)
+  topo = refelem_ElementTopology1(elemType)
 
-SELECT CASE (topo)
-CASE (TypeElemNameOpt%point, TypeElemNameOpt%line)
+  SELECT CASE (topo)
+  CASE (TypeElemNameOpt%point, TypeElemNameOpt%line)
 
-  ans = TotalEntities_Line(elemType)
+    ans = TotalEntities_Line(elemType)
 
-CASE (TypeElemNameOpt%triangle)
+  CASE (TypeElemNameOpt%triangle)
 
-  ans = TotalEntities_Triangle(elemType)
+    ans = TotalEntities_Triangle(elemType)
 
-CASE (TypeElemNameOpt%quadrangle)
-  ans = TotalEntities_Quadrangle(elemType)
+  CASE (TypeElemNameOpt%quadrangle)
+    ans = TotalEntities_Quadrangle(elemType)
 
-CASE (TypeElemNameOpt%tetrahedron)
-  ans = TotalEntities_Tetrahedron(elemType)
+  CASE (TypeElemNameOpt%tetrahedron)
+    ans = TotalEntities_Tetrahedron(elemType)
 
-CASE (TypeElemNameOpt%hexahedron)
-  ans = TotalEntities_Hexahedron(elemType)
+  CASE (TypeElemNameOpt%hexahedron)
+    ans = TotalEntities_Hexahedron(elemType)
 
-CASE (TypeElemNameOpt%prism)
-  ans = TotalEntities_Prism(elemType)
+  CASE (TypeElemNameOpt%prism)
+    ans = TotalEntities_Prism(elemType)
 
-CASE (TypeElemNameOpt%pyramid)
-  ans = TotalEntities_Pyramid(elemType)
+  CASE (TypeElemNameOpt%pyramid)
+    ans = TotalEntities_Pyramid(elemType)
 
-CASE DEFAULT
-  ans = 0_I4B
+  CASE DEFAULT
+    ans = 0_I4B
 
-END SELECT
+  END SELECT
 END PROCEDURE refelem_TotalEntities
 
 !----------------------------------------------------------------------------

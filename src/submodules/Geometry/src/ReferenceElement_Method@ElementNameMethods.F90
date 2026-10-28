@@ -29,27 +29,15 @@ USE BaseType, ONLY: TypeHexahedronNameOpt
 USE BaseType, ONLY: TypePrismNameOpt
 USE BaseType, ONLY: TypePyramidNameOpt
 USE BaseType, ONLY: TypeElemNameOpt
-USE ReferencePoint_Method, ONLY: TotalNodesInElement_Point
-USE ReferenceLine_Method, ONLY: ElementType_Line
-USE ReferenceLine_Method, ONLY: TotalNodesInElement_Line
-USE ReferenceLine_Method, ONLY: ElementName_Line
-USE ReferenceLine_Method, ONLY: ElementOrder_Line
-USE ReferenceTriangle_Method, ONLY: ElementType_Triangle
-USE ReferenceTriangle_Method, ONLY: TotalNodesInElement_Triangle
-USE ReferenceTriangle_Method, ONLY: ElementName_Triangle
-USE ReferenceTriangle_Method, ONLY: ElementOrder_Triangle
-USE ReferenceQuadrangle_Method, ONLY: ElementType_Quadrangle
-USE ReferenceQuadrangle_Method, ONLY: TotalNodesInElement_Quadrangle
-USE ReferenceQuadrangle_Method, ONLY: ElementName_Quadrangle
-USE ReferenceQuadrangle_Method, ONLY: ElementOrder_Quadrangle
-USE ReferenceTetrahedron_Method, ONLY: ElementType_Tetrahedron
-USE ReferenceTetrahedron_Method, ONLY: TotalNodesInElement_Tetrahedron
-USE ReferenceTetrahedron_Method, ONLY: ElementName_Tetrahedron
-USE ReferenceTetrahedron_Method, ONLY: ElementOrder_Tetrahedron
 USE ReferenceHexahedron_Method, ONLY: ElementName_Hexahedron
 USE ReferenceHexahedron_Method, ONLY: ElementType_Hexahedron
 USE ReferenceHexahedron_Method, ONLY: ElementOrder_Hexahedron
 USE ReferenceHexahedron_Method, ONLY: TotalNodesInElement_Hexahedron
+USE ReferenceLine_Method, ONLY: ElementType_Line
+USE ReferenceLine_Method, ONLY: TotalNodesInElement_Line
+USE ReferenceLine_Method, ONLY: ElementName_Line
+USE ReferenceLine_Method, ONLY: ElementOrder_Line
+USE ReferencePoint_Method, ONLY: TotalNodesInElement_Point
 USE ReferencePrism_Method, ONLY: ElementName_Prism
 USE ReferencePrism_Method, ONLY: ElementType_Prism
 USE ReferencePrism_Method, ONLY: ElementOrder_Prism
@@ -58,6 +46,18 @@ USE ReferencePyramid_Method, ONLY: ElementName_Pyramid
 USE ReferencePyramid_Method, ONLY: ElementType_Pyramid
 USE ReferencePyramid_Method, ONLY: ElementOrder_Pyramid
 USE ReferencePyramid_Method, ONLY: TotalNodesInElement_Pyramid
+USE ReferenceQuadrangle_Method, ONLY: ElementType_Quadrangle
+USE ReferenceQuadrangle_Method, ONLY: TotalNodesInElement_Quadrangle
+USE ReferenceQuadrangle_Method, ONLY: ElementName_Quadrangle
+USE ReferenceQuadrangle_Method, ONLY: ElementOrder_Quadrangle
+USE ReferenceTetrahedron_Method, ONLY: ElementType_Tetrahedron
+USE ReferenceTetrahedron_Method, ONLY: TotalNodesInElement_Tetrahedron
+USE ReferenceTetrahedron_Method, ONLY: ElementName_Tetrahedron
+USE ReferenceTetrahedron_Method, ONLY: ElementOrder_Tetrahedron
+USE ReferenceTriangle_Method, ONLY: ElementType_Triangle
+USE ReferenceTriangle_Method, ONLY: TotalNodesInElement_Triangle
+USE ReferenceTriangle_Method, ONLY: ElementName_Triangle
+USE ReferenceTriangle_Method, ONLY: ElementOrder_Triangle
 
 IMPLICIT NONE
 CONTAINS
@@ -174,7 +174,7 @@ END PROCEDURE refelem_ElementTopology2
 MODULE PROCEDURE Element_Name
 INTEGER(I4B) :: topo
 
-topo = refelem_elementtopology1(elemType)
+topo = refelem_ElementTopology1(elemType)
 
 SELECT CASE (topo)
 
@@ -275,7 +275,7 @@ END PROCEDURE Element_Type_obj
 MODULE PROCEDURE Element_Order
 INTEGER(I4B) :: topo
 
-topo = refelem_elementtopology1(elemType)
+topo = refelem_ElementTopology1(elemType)
 
 SELECT CASE (topo)
 
@@ -328,7 +328,7 @@ END PROCEDURE Element_Order_refelem
 
 MODULE PROCEDURE Elem_XiDimension1
 INTEGER(I4B) :: topo
-topo = refelem_elementtopology1(elemType)
+topo = refelem_ElementTopology1(elemType)
 
 SELECT CASE (topo)
 CASE (TypeElemNameOpt%tetrahedron, &
@@ -367,7 +367,7 @@ END PROCEDURE Elem_Xidimension2
 MODULE PROCEDURE Total_Nodes_In_Element
 INTEGER(I4B) :: topo
 
-topo = refelem_elementtopology1(elemType)
+topo = refelem_ElementTopology1(elemType)
 
 SELECT CASE (topo)
 
