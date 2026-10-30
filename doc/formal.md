@@ -7,6 +7,8 @@ project_website: https://www.easifem.com
 license: gfdl
 src_dir: ../src/modules/Utility
          ../src/modules/Polynomial/
+         ../src/modules/Line/
+         ../src/modules/Triangle/
 media_dir: ./media
 page_dir: ./pages
 output_dir: /tmp/ford/base
