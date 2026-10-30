@@ -1,5 +1,5 @@
 ! This program is a part of EASIFEM library
-! Copyright (C) 2020-2021  Vikas Sharma, Ph.D
+! Copyright (C) 2020-2021 Vikas Sharma, Ph.D
 !
 ! This program is free software: you can redistribute it and/or modify
 ! it under the terms of the GNU General Public License as published by
@@ -12,24 +12,54 @@
 ! GNU General Public License for more details.
 !
 ! You should have received a copy of the GNU General Public License
-! along with this program.  If not, see <https: //www.gnu.org/licenses/>
+! along with this program.  If not, see <https://www.gnu.org/licenses/>
 !
 
-!> author: Vikas Sharma, Ph. D.
-! date: 28 Aug 2022
-! summary: Triangle geometry MODULE
+!> author: OpenAI Codex (documentation)
+! date: 2026-10-30
+! summary: Triangle geometry and interpolation utilities.
 !
-!# Introduction
+! Geometry kernels were adapted by Vikas Sharma from John Burkardt; the
+! original source attribution names assets/geometry_burkardt_triangle.inc.
+! Vertex coordinates are columns. Planar area is signed; spatial area is
+! nonnegative. Distance routines measure distance to triangle edges, not the
+! filled face. See the diameter and area-vector caveats in their public
+! documentation.
 !
-! This MODULE is just a carbon copy of the MODULE written by
-! professor John Burkardt. The original code is kept in the directory
-! named "./assets/geometry_burkardt_triangle.inc".
+! Arguments:
+!   None at module scope; see individual public interfaces.
 !
-! I have just restructured the code according to the code style of
-! easifem.
+! Returns:
+!   Geometry, reference element and interpolation procedures.
+!
+! Formula:
+! $$A=\tfrac12\|(v_2-v_1)\times(v_3-v_1)\|$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE Triangle_Method, ONLY: triangle_area_2d
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: t2(2, 3), t3(3, 3)
+! REAL(DFP) :: y
+!
+! t2 = RESHAPE([0.0_DFP, 0.0_DFP, 2.0_DFP, &
+!   0.0_DFP, 0.0_DFP, 1.0_DFP], [2, 3])
+! t3 = 0.0_DFP
+! t3(1:2, :) = t2
+! y = triangle_area_2d(t2)
+! CALL OK(ABS(y-1.0_DFP) < 1.0E-11_DFP, "Right triangle area")
+! END PROGRAM main
+!```
 
 MODULE Triangle_Method
-USE GlobalData, ONLY: I4B, LGT, DFP
+USE GlobalData, ONLY: I4B
+USE GlobalData, ONLY: LGT
+USE GlobalData, ONLY: DFP
 IMPLICIT NONE
 PRIVATE
 PUBLIC :: triangle_angles_2d
@@ -71,19 +101,43 @@ PUBLIC :: triangle_sample
 !
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 28 Aug 2022
+!> author: OpenAI Codex (documentation)
+! date: 2026-10-30
 ! summary: Computes the angles of a triangle in 2D.
 !
-!# Introduction
+! Vertex coordinates are columns of t. Use a nondegenerate triangle.
 !
-!    The law of cosines is used:
+! Arguments:
+!   t : REAL(DFP), INTENT(IN)(:, :). Triangle vertex coordinates, one vertex
+! per column.
 !
-!$$
-! C^2 = A^2 + B^2 - 2 * A * B * COS ( GAMMA )
-!$$
+! Returns:
+!   angle : REAL(DFP)(3).
 !
-!    where GAMMA is the angle opposite side C.
+! Formula:
+! $$\theta_1+\theta_2+\theta_3=\pi$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE Triangle_Method, ONLY: triangle_angles_2d
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: t2(2, 3), t3(3, 3)
+! REAL(DFP) :: y(3)
+!
+! t2 = RESHAPE([0.0_DFP, 0.0_DFP, 2.0_DFP, &
+!   0.0_DFP, 0.0_DFP, 1.0_DFP], [2, 3])
+! t3 = 0.0_DFP
+! t3(1:2, :) = t2
+! y = triangle_angles_2d(t2)
+! CALL OK(ABS(SUM(y)-ACOS(-1.0_DFP)) < 1.0E-11_DFP, &
+!   "Interior angles sum to pi radians")
+! END PROGRAM main
+!```
 
 INTERFACE
   MODULE PURE FUNCTION triangle_angles_2d(t) RESULT(angle)
@@ -98,19 +152,43 @@ END INTERFACE
 !
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 28 Aug 2022
+!> author: OpenAI Codex (documentation)
+! date: 2026-10-30
 ! summary: Computes the angles of a triangle in 3D.
 !
-!# Introduction
+! Vertex coordinates are columns of t. Use a nondegenerate triangle.
 !
-!    The law of cosines is used:
+! Arguments:
+!   t : REAL(DFP), INTENT(IN)(:, :). Triangle vertex coordinates, one vertex
+! per column.
 !
-!$$
-!  C * C = A * A + B * B - 2 * A * B * COS ( GAMMA )
-!$$
+! Returns:
+!   angle : REAL(DFP)(3).
 !
-!    where GAMMA is the angle opposite side C.
+! Formula:
+! $$\theta_1+\theta_2+\theta_3=\pi$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE Triangle_Method, ONLY: triangle_angles_3d
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: t2(2, 3), t3(3, 3)
+! REAL(DFP) :: y(3)
+!
+! t2 = RESHAPE([0.0_DFP, 0.0_DFP, 2.0_DFP, &
+!   0.0_DFP, 0.0_DFP, 1.0_DFP], [2, 3])
+! t3 = 0.0_DFP
+! t3(1:2, :) = t2
+! y = triangle_angles_3d(t3)
+! CALL OK(ABS(SUM(y)-ACOS(-1.0_DFP)) < 1.0E-11_DFP, &
+!   "Interior angles sum to pi radians")
+! END PROGRAM main
+!```
 
 INTERFACE
   MODULE PURE FUNCTION triangle_angles_3d(t) RESULT(angle)
@@ -125,23 +203,43 @@ END INTERFACE
 !
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 28 Aug 2022
-! summary: compute area of the triangle
+!> author: OpenAI Codex (documentation)
+! date: 2026-10-30
+! summary: Compute area of the triangle.
 !
-!# Introduction
+! Vertex coordinates are columns of t. Use a nondegenerate triangle. The 2D
+! area is signed and changes sign on vertex reversal.
 !
-!    If the triangle's vertices are given in counter clockwise order,
-!    the area will be positive.  If the triangle's vertices are given
-!    in clockwise order, the area will be negative!
+! Arguments:
+!   t : REAL(DFP), INTENT(IN)(:, :). Triangle vertex coordinates, one vertex
+! per column.
 !
-!    An earlier version of this routine always returned the absolute
-!    value of the computed area.  I am convinced now that that is
-!    a less useful RESULT!  For instance, by returning the signed
-!    area of a triangle, it is possible to easily compute the area
-!    of a nonconvex polygon as the sum of the (possibly negative)
-!    areas of triangles formed by node 1 and successive pairs of vertices.
+! Returns:
+!   area : REAL(DFP).
 !
+! Formula:
+! $$A=\tfrac12\|(v_2-v_1)\times(v_3-v_1)\|$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE Triangle_Method, ONLY: triangle_area_2d
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: t2(2, 3), t3(3, 3)
+! REAL(DFP) :: y
+!
+! t2 = RESHAPE([0.0_DFP, 0.0_DFP, 2.0_DFP, &
+!   0.0_DFP, 0.0_DFP, 1.0_DFP], [2, 3])
+! t3 = 0.0_DFP
+! t3(1:2, :) = t2
+! y = triangle_area_2d(t2)
+! CALL OK(ABS(y-1.0_DFP) < 1.0E-11_DFP, "Right triangle area")
+! END PROGRAM main
+!```
 
 INTERFACE
   MODULE PURE FUNCTION triangle_area_2d(t) RESULT(area)
@@ -154,16 +252,42 @@ END INTERFACE
 !
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 28 Aug 2022
-! summary:         compute area of triangle in 3D
+!> author: OpenAI Codex (documentation)
+! date: 2026-10-30
+! summary: Compute area of triangle in 3D.
 !
-!# Introduction
+! Vertex coordinates are columns of t. Use a nondegenerate triangle.
 !
-!    This routine uses the fact that the norm of the cross product
-!    of two vectors is the area of the parallelogram they form.
+! Arguments:
+!   t : REAL(DFP), INTENT(IN)(:, :). Triangle vertex coordinates, one vertex
+! per column.
 !
-!    Therefore, the area of the triangle is half of that value.
+! Returns:
+!   area : REAL(DFP).
+!
+! Formula:
+! $$A=\tfrac12\|(v_2-v_1)\times(v_3-v_1)\|$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE Triangle_Method, ONLY: triangle_area_3d
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: t2(2, 3), t3(3, 3)
+! REAL(DFP) :: y
+!
+! t2 = RESHAPE([0.0_DFP, 0.0_DFP, 2.0_DFP, &
+!   0.0_DFP, 0.0_DFP, 1.0_DFP], [2, 3])
+! t3 = 0.0_DFP
+! t3(1:2, :) = t2
+! y = triangle_area_3d(t3)
+! CALL OK(ABS(y-1.0_DFP) < 1.0E-11_DFP, "Right triangle area")
+! END PROGRAM main
+!```
 
 INTERFACE
   MODULE PURE FUNCTION triangle_area_3d(t) RESULT(area)
@@ -176,13 +300,42 @@ END INTERFACE
 !
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 28 Aug 2022
-! summary: area of triangle in 3D
+!> author: OpenAI Codex (documentation)
+! date: 2026-10-30
+! summary: Area of triangle in 3D.
 !
-!# Introduction
+! Vertex coordinates are columns of t. Use a nondegenerate triangle.
 !
-!    This routine computes the area "the hard way".
+! Arguments:
+!   t : REAL(DFP), INTENT(IN)(:, :). Triangle vertex coordinates, one vertex
+! per column.
+!
+! Returns:
+!   area : REAL(DFP).
+!
+! Formula:
+! $$A=\tfrac12\|(v_2-v_1)\times(v_3-v_1)\|$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE Triangle_Method, ONLY: triangle_area_3d_2
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: t2(2, 3), t3(3, 3)
+! REAL(DFP) :: y
+!
+! t2 = RESHAPE([0.0_DFP, 0.0_DFP, 2.0_DFP, &
+!   0.0_DFP, 0.0_DFP, 1.0_DFP], [2, 3])
+! t3 = 0.0_DFP
+! t3(1:2, :) = t2
+! y = triangle_area_3d_2(t3)
+! CALL OK(ABS(y-1.0_DFP) < 1.0E-11_DFP, "Right triangle area")
+! END PROGRAM main
+!```
 
 INTERFACE
   MODULE PURE FUNCTION triangle_area_3d_2(t) RESULT(area)
@@ -195,9 +348,42 @@ END INTERFACE
 !
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 28 Aug 2022
-! summary: area of triangle using Heron's formula
+!> author: OpenAI Codex (documentation)
+! date: 2026-10-30
+! summary: Area of triangle using Heron's formula.
+!
+! Vertex coordinates are columns of t. Use a nondegenerate triangle.
+!
+! Arguments:
+!   t : REAL(DFP), INTENT(IN)(:, :). Triangle vertex coordinates, one vertex
+! per column.
+!
+! Returns:
+!   area : REAL(DFP).
+!
+! Formula:
+! $$A=\tfrac12\|(v_2-v_1)\times(v_3-v_1)\|$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE Triangle_Method, ONLY: triangle_area_3d_3
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: t2(2, 3), t3(3, 3)
+! REAL(DFP) :: y
+!
+! t2 = RESHAPE([0.0_DFP, 0.0_DFP, 2.0_DFP, &
+!   0.0_DFP, 0.0_DFP, 1.0_DFP], [2, 3])
+! t3 = 0.0_DFP
+! t3(1:2, :) = t2
+! y = triangle_area_3d_3(t3)
+! CALL OK(ABS(y-1.0_DFP) < 1.0E-11_DFP, "Right triangle area")
+! END PROGRAM main
+!```
 
 INTERFACE
   MODULE PURE FUNCTION triangle_area_3d_3(t) RESULT(area)
@@ -210,14 +396,42 @@ END INTERFACE
 !
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 28 Aug 2022
-! summary: Area of triangle using Herons formula
+!> author: OpenAI Codex (documentation)
+! date: 2026-10-30
+! summary: Area of triangle using Herons formula.
 !
-!# Introduction
+! Vertex coordinates are columns of t. Use a nondegenerate triangle.
 !
-!    The formula is valid for any spatial dimension, depENDing only
-!    on the lengths of the sides, and not the coordinates of the vertices.
+! Arguments:
+!   s : REAL(DFP), INTENT(IN)(3). Use the declaration and description for this
+! overload.
+!
+! Returns:
+!   area : REAL(DFP).
+!
+! Formula:
+! $$A=\tfrac12\|(v_2-v_1)\times(v_3-v_1)\|$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE Triangle_Method, ONLY: triangle_area_heron
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: t2(2, 3), t3(3, 3)
+! REAL(DFP) :: y
+!
+! t2 = RESHAPE([0.0_DFP, 0.0_DFP, 2.0_DFP, &
+!   0.0_DFP, 0.0_DFP, 1.0_DFP], [2, 3])
+! t3 = 0.0_DFP
+! t3(1:2, :) = t2
+! y = triangle_area_heron([2.0_DFP, 1.0_DFP, SQRT(5.0_DFP)])
+! CALL OK(ABS(y-1.0_DFP) < 1.0E-11_DFP, "Right triangle area")
+! END PROGRAM main
+!```
 
 INTERFACE
   MODULE PURE FUNCTION triangle_area_heron(s) RESULT(area)
@@ -230,30 +444,44 @@ END INTERFACE
 !
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 28 Aug 2022
-! summary:  compute the area vector of a tri in 3D
+!> author: OpenAI Codex (documentation)
+! date: 2026-10-30
+! summary: Compute the area vector of a tri in 3D.
 !
-!# Introduction
+! Vertex coordinates are columns of t. Use a nondegenerate triangle. The
+! returned vector is the full cross product, not half of it.
 !
-!    The "area vector" of a triangle is simply a cross product of,
-!    for instance, the vectors (V2-V1) and (V3-V1), where V1, V2
-!    and V3 are the vertices of the triangle.
+! Arguments:
+!   t : REAL(DFP), INTENT(IN)(:, :). Triangle vertex coordinates, one vertex
+! per column.
 !
-!    The norm of the cross product vector of two vectors is the area
-!    of the parallelogram they form.
+! Returns:
+!   area_vector : REAL(DFP)(3).
 !
-!    Therefore, the area of the triangle is half of the norm of the
-!    area vector:
+! Formula:
+! $$a=(v_2-v_1)\times(v_3-v_1),\quad \|a\|=2A$$
 !
-!      area = 0.5 * sqrt ( sum ( area_vector(1:3)^2 ) )
+! Examples
 !
-!    The reason for looking at the area vector rather than the area
-!    is that this makes it possible to compute the area of a flat
-!    polygon in 3D by summing the areas of the triangles that form
-!    a decomposition of the polygon, while allowing for both positive
-!    and negative areas.  (Sum the vectors, THEN take the norm and
-!    multiply by 1/2).
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE Triangle_Method, ONLY: triangle_area_vector_3d
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: t2(2, 3), t3(3, 3)
+! REAL(DFP) :: y(3)
+!
+! t2 = RESHAPE([0.0_DFP, 0.0_DFP, 2.0_DFP, &
+!   0.0_DFP, 0.0_DFP, 1.0_DFP], [2, 3])
+! t3 = 0.0_DFP
+! t3(1:2, :) = t2
+! y = triangle_area_vector_3d(t3)
+! CALL OK(MAXVAL(ABS(y-[0.0_DFP, 0.0_DFP, 2.0_DFP])) &
+!   < 1.0E-11_DFP, "Cross product is twice the oriented area")
+! END PROGRAM main
+!```
 
 INTERFACE
   MODULE PURE FUNCTION triangle_area_vector_3d(t) RESULT(area_vector)
@@ -264,19 +492,46 @@ END INTERFACE
 
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 28 Aug 2022
-! summary:         Find the barycentric coordinates of a point in 2D
+!> author: OpenAI Codex (documentation)
+! date: 2026-10-30
+! summary: Find the barycentric coordinates of a point in 2D.
 !
-!# Introduction
+! Vertex coordinates are columns of t. Use a nondegenerate triangle.
 !
-!    The barycentric coordinate of point P related to vertex A can be
-!    interpreted as the ratio of the area of the triangle with
-!    vertex A replaced by vertex P to the area of the original
-!    triangle.
+! Arguments:
+!   t : REAL(DFP), INTENT(IN)(:, :). Triangle vertex coordinates, one vertex
+! per column.
+!   p : REAL(DFP), INTENT(IN)(2). Query point or output point as indicated by
+! INTENT.
 !
-!    This routine assumes that the triangle vertices are given in
-!    counter clockwise order.
+! Returns:
+!   xsi : REAL(DFP)(3).
+!
+! Formula:
+! $$p=\sum_i\lambda_i v_i,\quad\sum_i\lambda_i=1$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE Triangle_Method, ONLY: triangle_barycentric_2d
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: t2(2, 3), t3(3, 3)
+! REAL(DFP) :: y(3)
+!
+! t2 = RESHAPE([0.0_DFP, 0.0_DFP, 2.0_DFP, &
+!   0.0_DFP, 0.0_DFP, 1.0_DFP], [2, 3])
+! t3 = 0.0_DFP
+! t3(1:2, :) = t2
+! y = triangle_barycentric_2d(t2, [0.5_DFP, 0.25_DFP])
+! CALL OK(ABS(SUM(y)-1.0_DFP) < 1.0E-11_DFP, "Barycentric sum")
+! CALL OK(MAXVAL(ABS(MATMUL(t2, y)- &
+!   [0.5_DFP, 0.25_DFP])) < 1.0E-11_DFP, "Reconstruct point")
+! END PROGRAM main
+!```
 
 INTERFACE
   MODULE PURE FUNCTION triangle_barycentric_2d(t, p) RESULT(xsi)
@@ -293,26 +548,43 @@ END INTERFACE
 !
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 28 Aug 2022
-! summary:         compute the centroid of a triangle in 2D
+!> author: OpenAI Codex (documentation)
+! date: 2026-10-30
+! summary: Compute the centroid of a triangle in 2D.
 !
-!# Introduction
+! Vertex coordinates are columns of t. Use a nondegenerate triangle.
 !
-!    The centroid of a triangle can also be considered the
-!    center of gravity, or center of mass, assuming that the triangle
-!    is made of a thin uniform sheet of massy material.
+! Arguments:
+!   t : REAL(DFP), INTENT(IN)(:, :). Triangle vertex coordinates, one vertex
+! per column.
 !
-!    The centroid of a triangle is the intersection of the medians.
+! Returns:
+!   centroid : REAL(DFP)(2).
 !
-!    A median of a triangle is a line connecting a vertex to the
-!    midpoint of the opposite side.
+! Formula:
+! $$c=(v_1+v_2+v_3)/3$$
 !
-!    In barycentric coordinates, in which the vertices of the triangle
-!    have the coordinates (1,0,0), (0,1,0) and (0,0,1), the centroid
-!    has coordinates (1/3,1/3,1/3).
+! Examples
 !
-!    In geometry, the centroid of a triangle is often symbolized by "G".
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE Triangle_Method, ONLY: triangle_centroid_2d
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: t2(2, 3), t3(3, 3)
+! REAL(DFP) :: y(2)
+!
+! t2 = RESHAPE([0.0_DFP, 0.0_DFP, 2.0_DFP, &
+!   0.0_DFP, 0.0_DFP, 1.0_DFP], [2, 3])
+! t3 = 0.0_DFP
+! t3(1:2, :) = t2
+! y = triangle_centroid_2d(t2)
+! CALL OK(MAXVAL(ABS(y-SUM(t2, DIM=2)/3.0_DFP)) &
+!   < 1.0E-11_DFP, "Centroid is vertex mean")
+! END PROGRAM main
+!```
 
 INTERFACE
   MODULE PURE FUNCTION triangle_centroid_2d(t) RESULT(centroid)
@@ -325,19 +597,43 @@ END INTERFACE
 !
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 28 Aug 2022
-! summary: computes the centroid of a triangle in 3D
+!> author: OpenAI Codex (documentation)
+! date: 2026-10-30
+! summary: Computes the centroid of a triangle in 3D.
 !
-!# Introduction
+! Vertex coordinates are columns of t. Use a nondegenerate triangle.
 !
-!    The centroid of a triangle can also be considered the
-!    center of gravity or center of mass, assuming that the triangle
-!    is made of a thin uniform sheet of massy material.
+! Arguments:
+!   t : REAL(DFP), INTENT(IN)(:, :). Triangle vertex coordinates, one vertex
+! per column.
 !
-!    The centroid of a triangle is the intersection of the medians.
-!    A median of a triangle is a line connecting any vertex to the
-!    midpoint of the opposite side.
+! Returns:
+!   centroid : REAL(DFP)(3).
+!
+! Formula:
+! $$c=(v_1+v_2+v_3)/3$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE Triangle_Method, ONLY: triangle_centroid_3d
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: t2(2, 3), t3(3, 3)
+! REAL(DFP) :: y(3)
+!
+! t2 = RESHAPE([0.0_DFP, 0.0_DFP, 2.0_DFP, &
+!   0.0_DFP, 0.0_DFP, 1.0_DFP], [2, 3])
+! t3 = 0.0_DFP
+! t3(1:2, :) = t2
+! y = triangle_centroid_3d(t3)
+! CALL OK(MAXVAL(ABS(y-SUM(t3, DIM=2)/3.0_DFP)) &
+!   < 1.0E-11_DFP, "Centroid is vertex mean")
+! END PROGRAM main
+!```
 
 INTERFACE
   MODULE PURE FUNCTION triangle_centroid_3d(t) RESULT(centroid)
@@ -350,26 +646,43 @@ END INTERFACE
 !
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 28 Aug 2022
-! summary:         cirumcenter of a triangle in 2D
+!> author: OpenAI Codex (documentation)
+! date: 2026-10-30
+! summary: Cirumcenter of a triangle in 2D.
 !
-!# Introduction
+! Vertex coordinates are columns of t. Use a nondegenerate triangle.
 !
-!    The circumcenter of a triangle is the center of the circumcircle, the
-!    circle that passes through the three vertices of the triangle.
+! Arguments:
+!   t : REAL(DFP), INTENT(IN)(:, :). Triangle vertex coordinates, one vertex
+! per column.
 !
-!    The circumcircle contains the triangle, but it is not necessarily the
-!    smallest triangle to do so.
+! Returns:
+!   pc : REAL(DFP)(2).
 !
-!    If all angles of the triangle are no greater than 90 degrees, then
-!    the center of the circumscribed circle will lie inside the triangle.
-!    Otherwise, the center will lie outside the triangle.
+! Formula:
+! $$\|c-v_1\|=\|c-v_2\|=\|c-v_3\|=R$$
 !
-!    The circumcenter is the intersection of the perpENDicular bisectors
-!    of the sides of the triangle.
+! Examples
 !
-!    In geometry, the circumcenter of a triangle is often symbolized by "O".
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE Triangle_Method, ONLY: triangle_circumcenter_2d
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: t2(2, 3), t3(3, 3)
+! REAL(DFP) :: y(2)
+!
+! t2 = RESHAPE([0.0_DFP, 0.0_DFP, 2.0_DFP, &
+!   0.0_DFP, 0.0_DFP, 1.0_DFP], [2, 3])
+! t3 = 0.0_DFP
+! t3(1:2, :) = t2
+! y = triangle_circumcenter_2d(t2)
+! CALL OK(MAXVAL(ABS(y-[1.0_DFP, 0.5_DFP])) < 1.0E-11_DFP, &
+!   "Circumcenter is hypotenuse midpoint")
+! END PROGRAM main
+!```
 
 INTERFACE
   MODULE PURE FUNCTION triangle_circumcenter_2d(t) RESULT(pc)
@@ -382,37 +695,43 @@ END INTERFACE
 !
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 28 Aug 2022
-! summary: circum center in 2d
+!> author: OpenAI Codex (documentation)
+! date: 2026-10-30
+! summary: Circum center in 2d.
 !
-!# Introduction
+! Vertex coordinates are columns of t. Use a nondegenerate triangle.
 !
-!    The circumcenter of a triangle is the center of the circumcircle, the
-!    circle that passes through the three vertices of the triangle.
+! Arguments:
+!   t : REAL(DFP), INTENT(IN)(:, :). Triangle vertex coordinates, one vertex
+! per column.
 !
-!    The circumcircle contains the triangle, but it is not necessarily the
-!    smallest triangle to do so.
+! Returns:
+!   pc : REAL(DFP)(2).
 !
-!    If all angles of the triangle are no greater than 90 degrees, then
-!    the center of the circumscribed circle will lie inside the triangle.
-!    Otherwise, the center will lie outside the triangle.
+! Formula:
+! $$\|c-v_1\|=\|c-v_2\|=\|c-v_3\|=R$$
 !
-!    The circumcenter is the intersection of the perpENDicular bisectors
-!    of the sides of the triangle.
+! Examples
 !
-!    Surprisingly, the diameter of the circle can be found by solving
-!    a 2 by 2 linear system.  If we label the vertices of the triangle
-!    P1, P2 and P3, then the vectors P2 - P1 and P3 - P1 are secants of
-!    the circle, and each forms a right triangle with the diameter
-!    vector through P1.
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE Triangle_Method, ONLY: triangle_circumcenter_2d_2
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: t2(2, 3), t3(3, 3)
+! REAL(DFP) :: y(2)
 !
-!    Hence, the dot product of P2 - P1 with the diameter vector is equal
-!    to the square of the length of P2 - P1, and similarly for P3 - P1.
-!    This determines the diameter vector originating at P1.
-!
-!    In geometry, the circumcenter of a triangle is often symbolized by "O".
-!
+! t2 = RESHAPE([0.0_DFP, 0.0_DFP, 2.0_DFP, &
+!   0.0_DFP, 0.0_DFP, 1.0_DFP], [2, 3])
+! t3 = 0.0_DFP
+! t3(1:2, :) = t2
+! y = triangle_circumcenter_2d_2(t2)
+! CALL OK(MAXVAL(ABS(y-[1.0_DFP, 0.5_DFP])) < 1.0E-11_DFP, &
+!   "Circumcenter is hypotenuse midpoint")
+! END PROGRAM main
+!```
 
 INTERFACE
   MODULE PURE FUNCTION triangle_circumcenter_2d_2(t) RESULT(pc)
@@ -425,21 +744,45 @@ END INTERFACE
 !
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 28 Aug 2022
-! summary: computes the circumcenter of a triangle in ND.
+!> author: OpenAI Codex (documentation)
+! date: 2026-10-30
+! summary: Computes the circumcenter of a triangle in ND.
 !
-!# Introduction
+! Vertex coordinates are columns of t. Use a nondegenerate triangle.
 !
-!    Three ND points A, B and C lie on a circle.
+! Arguments:
+!   n : INTEGER(I4B), INTENT(IN). Number of samples, coordinate dimension or
+! grid count as specified by the routine.
+!   t : REAL(DFP), INTENT(IN)(:, :). Triangle vertex coordinates, one vertex
+! per column.
 !
-!    The circumcenter P has the formula
+! Returns:
+!   p : REAL(DFP)(n).
 !
-!      P = ( Area ( PBC ) * A + Area ( APC) * B + Area ( ABP ) * C )
-!        / ( Area ( PBC )     + Area ( APC )    + Area ( ABP ) )
+! Formula:
+! $$\|c-v_1\|=\|c-v_2\|=\|c-v_3\|=R$$
 !
-!    The details of the formula rely on information supplied
-!    by Oscar Lanzi III.
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE Triangle_Method, ONLY: triangle_circumcenter
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: t2(2, 3), t3(3, 3)
+! REAL(DFP) :: y(2)
+!
+! t2 = RESHAPE([0.0_DFP, 0.0_DFP, 2.0_DFP, &
+!   0.0_DFP, 0.0_DFP, 1.0_DFP], [2, 3])
+! t3 = 0.0_DFP
+! t3(1:2, :) = t2
+! y = triangle_circumcenter(2_I4B, t2)
+! CALL OK(MAXVAL(ABS(y-[1.0_DFP, 0.5_DFP])) < 1.0E-11_DFP, &
+!   "Circumcenter is hypotenuse midpoint")
+! END PROGRAM main
+!```
 
 INTERFACE
   MODULE PURE FUNCTION triangle_circumcenter(n, t) RESULT(p)
@@ -454,26 +797,47 @@ END INTERFACE
 !
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 28  Aug 2022
-! summary: computes the circumcircle of a triangle in 2D
+!> author: OpenAI Codex (documentation)
+! date: 2026-10-30
+! summary: Computes the circumcircle of a triangle in 2D.
 !
-!# Introduction
+! Vertex coordinates are columns of t. Use a nondegenerate triangle.
 !
-!    The circumcenter of a triangle is the center of the circumcircle, the
-!    circle that passes through the three vertices of the triangle.
+! Arguments:
+!   t : REAL(DFP), INTENT(IN)(:, :). Triangle vertex coordinates, one vertex
+! per column.
+!   pc : REAL(DFP), INTENT(OUT)(2). Circle center or orthocenter.
+!   r : REAL(DFP), INTENT(OUT). Circle radius.
 !
-!    The circumcircle contains the triangle, but it is not necessarily the
-!    smallest triangle to do so.
+! Returns:
+!   Updates pc(2), r.
 !
-!    If all angles of the triangle are no greater than 90 degrees, then
-!    the center of the circumscribed circle will lie inside the triangle.
-!    Otherwise, the center will lie outside the triangle.
+! Formula:
+! $$R=abc/(4A)$$
 !
-!    The circumcenter is the intersection of the perpENDicular bisectors
-!    of the sides of the triangle.
+! Examples
 !
-!    In geometry, the circumcenter of a triangle is often symbolized by "O".
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE Triangle_Method, ONLY: triangle_circumcircle_2d
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: t2(2, 3), t3(3, 3)
+! REAL(DFP) :: y, center(2)
+!
+! t2 = RESHAPE([0.0_DFP, 0.0_DFP, 2.0_DFP, &
+!   0.0_DFP, 0.0_DFP, 1.0_DFP], [2, 3])
+! t3 = 0.0_DFP
+! t3(1:2, :) = t2
+! CALL triangle_circumcircle_2d(t2, y, center)
+! CALL OK(ABS(y-SQRT(5.0_DFP)/2.0_DFP) < 1.0E-11_DFP, &
+!   "Circumradius of right triangle")
+! CALL OK(MAXVAL(ABS(center-[1.0_DFP, 0.5_DFP])) &
+!   < 1.0E-11_DFP, "Circumcenter")
+! END PROGRAM main
+!```
 
 INTERFACE
   MODULE PURE SUBROUTINE triangle_circumcircle_2d(t, r, pc)
@@ -489,27 +853,47 @@ END INTERFACE
 !
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 28 Aug 2022
-! summary:         circumcircle
+!> author: OpenAI Codex (documentation)
+! date: 2026-10-30
+! summary: Circumcircle.
 !
-!# Introduction
+! Vertex coordinates are columns of t. Use a nondegenerate triangle.
 !
-!    The circumscribed circle of a triangle is the circle that passes through
-!    the three vertices of the triangle.  The circumscribed circle contains
-!    the triangle, but it is not necessarily the smallest triangle to do so.
+! Arguments:
+!   t : REAL(DFP), INTENT(IN)(:, :). Triangle vertex coordinates, one vertex
+! per column.
+!   pc : REAL(DFP), INTENT(OUT)(2). Circle center or orthocenter.
+!   r : REAL(DFP), INTENT(OUT). Circle radius.
 !
-!    Surprisingly, the diameter of the circle can be found by solving
-!    a 2 by 2 linear system.  This is because the vectors P2 - P1
-!    and P3 - P1 are secants of the circle, and each forms a right
-!    triangle with the diameter.  Hence, the dot product of
-!    P2 - P1 with the diameter is equal to the square of the length
-!    of P2 - P1, and similarly for P3 - P1.  This determines the
-!    diameter vector originating at P1.
+! Returns:
+!   Updates pc(2), r.
 !
-!    If all angles of the triangle are no greater than 90 degrees, then
-!    the center of the circumscribed circle will lie inside the triangle.
-!    Otherwise, the center will lie outside the triangle.
+! Formula:
+! $$R=abc/(4A)$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE Triangle_Method, ONLY: triangle_circumcircle_2d_2
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: t2(2, 3), t3(3, 3)
+! REAL(DFP) :: y, center(2)
+!
+! t2 = RESHAPE([0.0_DFP, 0.0_DFP, 2.0_DFP, &
+!   0.0_DFP, 0.0_DFP, 1.0_DFP], [2, 3])
+! t3 = 0.0_DFP
+! t3(1:2, :) = t2
+! CALL triangle_circumcircle_2d_2(t2, y, center)
+! CALL OK(ABS(y-SQRT(5.0_DFP)/2.0_DFP) < 1.0E-11_DFP, &
+!   "Circumradius of right triangle")
+! CALL OK(MAXVAL(ABS(center-[1.0_DFP, 0.5_DFP])) &
+!   < 1.0E-11_DFP, "Circumcenter")
+! END PROGRAM main
+!```
 
 INTERFACE
   MODULE PURE SUBROUTINE triangle_circumcircle_2d_2(t, r, pc)
@@ -525,18 +909,43 @@ END INTERFACE
 !
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 28 Aug 2022
-! summary: triangle circumradius in 2d
+!> author: OpenAI Codex (documentation)
+! date: 2026-10-30
+! summary: Triangle circumradius in 2d.
 !
-!# Introduction
+! Vertex coordinates are columns of t. Use a nondegenerate triangle.
 !
-!    The circumscribed circle of a triangle is the circle that passes through
-!    the three vertices of the triangle.  The circumscribed circle contains
-!    the triangle, but it is not necessarily the smallest triangle to do so.
+! Arguments:
+!   t : REAL(DFP), INTENT(IN)(:, :). Triangle vertex coordinates, one vertex
+! per column.
 !
-!    The circumradius of a triangle is the radius of the circumscribed
-!    circle.
+! Returns:
+!   r : REAL(DFP).
+!
+! Formula:
+! $$R=abc/(4A)$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE Triangle_Method, ONLY: triangle_circumradius_2d
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: t2(2, 3), t3(3, 3)
+! REAL(DFP) :: y
+!
+! t2 = RESHAPE([0.0_DFP, 0.0_DFP, 2.0_DFP, &
+!   0.0_DFP, 0.0_DFP, 1.0_DFP], [2, 3])
+! t3 = 0.0_DFP
+! t3(1:2, :) = t2
+! y = triangle_circumradius_2d(t2)
+! CALL OK(ABS(y-SQRT(5.0_DFP)/2.0_DFP) < 1.0E-11_DFP, &
+!   "Circumradius")
+! END PROGRAM main
+!```
 
 INTERFACE
   MODULE PURE FUNCTION triangle_circumradius_2d(t) RESULT(r)
@@ -549,43 +958,52 @@ END INTERFACE
 !
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 28 Aug 2022
-! summary:         is a line inside the triangle in 3D
+!> author: OpenAI Codex (documentation)
+! date: 2026-10-30
+! summary: Is a line inside the triangle in 3D.
 !
-!# Introduction
+! Vertex coordinates are columns of t. Use a nondegenerate triangle.
 !
-!    A line will "intersect" the plane of a triangle in 3D if
-!    * the line does not lie in the plane of the triangle
-!      (there would be infinitely many intersections), AND
-!    * the line does not lie parallel to the plane of the triangle
-!      (there are no intersections at all).
+! Arguments:
+!   t : REAL(DFP), INTENT(IN)(:, :). Triangle vertex coordinates, one vertex
+! per column.
+!   p1 : REAL(DFP), INTENT(IN)(3). First explicit line endpoint.
+!   p2 : REAL(DFP), INTENT(IN)(3). Second explicit line endpoint.
+!   inside : LOGICAL(LGT), INTENT(OUT). Whether the point or line intersection
+! is contained.
+!   pint : REAL(DFP), INTENT(OUT)(3). Use the declaration and description for
+! this overload.
 !
-!    Therefore, if a line intersects the plane of a triangle, it does so
-!    at a single point.  We say the line is "inside" the triangle if,
-!    regarded as 2D objects, the intersection point of the line and the plane
-!    is inside the triangle.
+! Returns:
+!   Updates inside, pint(3).
 !
-!    A triangle in 3D is determined by three points:
+! Formula:
+! $$p=p_0+s d,\quad p\in\mathrm{triangle}$$
 !
-!      T(1:3,1), T(1:3,2) and T(1:3,3).
+! Examples
 !
-!    The explicit form of a line in 3D is:
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE GlobalData, ONLY: LGT
+! USE Triangle_Method, ONLY: triangle_contains_line_exp_3d
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: t2(2, 3), t3(3, 3)
+! REAL(DFP) :: p(3)
+! LOGICAL(LGT) :: inside
 !
-!      the line through the points P1(1:3), P2(1:3).
-!
-!  Parameters:
-!
-!    Input, REAL ( kind = 8 ) T(3,3), the triangle vertices.
-!
-!    Input, REAL ( kind = 8 ) P1(3), P2(3), two points on the line.
-!
-!    Output, logical ( kind = 4 ) INSIDE, is TRUE if
-! (the intersection point of)
-!    the line is inside the triangle.
-!
-!    Output, REAL ( kind = 8 ) PINT(3), the point where the line
-!    intersects the plane of the triangle.
+! t2 = RESHAPE([0.0_DFP, 0.0_DFP, 2.0_DFP, &
+!   0.0_DFP, 0.0_DFP, 1.0_DFP], [2, 3])
+! t3 = 0.0_DFP
+! t3(1:2, :) = t2
+! CALL triangle_contains_line_exp_3d(t3, &
+!   [0.5_DFP, 0.25_DFP, -1.0_DFP], [0.5_DFP, 0.25_DFP, 1.0_DFP], inside, p)
+! CALL OK(inside, "Line crosses triangle interior")
+! CALL OK(ABS(p(3)) < 1.0E-11_DFP, "Intersection lies in plane")
+! END PROGRAM main
+!```
 
 INTERFACE
   MODULE PURE SUBROUTINE triangle_contains_line_exp_3d(t, p1, p2, &
@@ -602,48 +1020,54 @@ END INTERFACE
 !
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 28 Aug 2022
-! summary:         finds if a line is inside a triangle in 3D.
+!> author: OpenAI Codex (documentation)
+! date: 2026-10-30
+! summary: Finds if a line is inside a triangle in 3D.
 !
-!# Introduction
+! Vertex coordinates are columns of t. Use a nondegenerate triangle.
 !
-!    A line will "intersect" the plane of a triangle in 3D if
-!    * the line does not lie in the plane of the triangle
-!      (there would be infinitely many intersections), AND
-!    * the line does not lie parallel to the plane of the triangle
-!      (there are no intersections at all).
+! Arguments:
+!   t : REAL(DFP), INTENT(IN)(:, :). Triangle vertex coordinates, one vertex
+! per column.
+!   p0 : REAL(DFP), INTENT(IN)(3). Use the declaration and description for
+! this overload.
+!   pd : REAL(DFP), INTENT(IN)(3). Use the declaration and description for
+! this overload.
+!   p : REAL(DFP), INTENT(OUT)(3). Query point or output point as indicated by
+! INTENT.
+!   inside : LOGICAL(LGT), INTENT(OUT). Whether the point or line intersection
+! is contained.
 !
-!    Therefore, if a line intersects the plane of a triangle, it does so
-!    at a single point.  We say the line is "inside" the triangle if,
-!    regarded as 2D objects, the intersection point of the line and the plane
-!    is inside the triangle.
+! Returns:
+!   Updates p(3), inside.
 !
-!    A triangle in 3D is determined by three points:
+! Formula:
+! $$p=p_0+s d,\quad p\in\mathrm{triangle}$$
 !
-!      T(1:3,1), T(1:3,2) and T(1:3,3).
+! Examples
 !
-!    The parametric form of a line in 3D is:
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE GlobalData, ONLY: LGT
+! USE Triangle_Method, ONLY: triangle_contains_line_par_3d
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: t2(2, 3), t3(3, 3)
+! REAL(DFP) :: p(3)
+! LOGICAL(LGT) :: inside
 !
-!      P(1:3) = P0(1:3) + PD(1:3) * T
-!
-!    We can normalize by requiring PD to have euclidean norm 1,
-!    and the first nonzero entry positive.
-!
-!  Parameters:
-!
-!    Input, REAL ( kind = 8 ) T(3,3), the three points that define
-!    the triangle.
-!
-!    Input, REAL ( kind = 8 ) P0(3), PD(3), parameters that define the
-!    parametric line.
-!
-!    Output, logical ( kind = 4 ) INSIDE, is TRUE if
-!     (the intersection point of)
-!    the line is inside the triangle.
-!
-!    Output, REAL ( kind = 8 ) P(3), is the point of intersection of the line
-!    and the plane of the triangle, unless they are parallel.
+! t2 = RESHAPE([0.0_DFP, 0.0_DFP, 2.0_DFP, &
+!   0.0_DFP, 0.0_DFP, 1.0_DFP], [2, 3])
+! t3 = 0.0_DFP
+! t3(1:2, :) = t2
+! CALL triangle_contains_line_par_3d(t3, &
+!   [0.5_DFP, 0.25_DFP, -1.0_DFP], [0.0_DFP, 0.0_DFP, 1.0_DFP], inside, p)
+! CALL OK(inside, "Line crosses triangle interior")
+! CALL OK(ABS(p(3)) < 1.0E-11_DFP, "Intersection lies in plane")
+! END PROGRAM main
+!```
 
 INTERFACE
   MODULE PURE SUBROUTINE triangle_contains_line_par_3d(t, p0, pd, inside, p)
@@ -659,24 +1083,48 @@ END INTERFACE
 !
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 28 Aug 2022
-! summary:         finds if a point is inside the triangle in 2D
+!> author: OpenAI Codex (documentation)
+! date: 2026-10-30
+! summary: Finds if a point is inside the triangle in 2D.
 !
-!# Introduction
+! Vertex coordinates are columns of t. Use a nondegenerate triangle. Variant 1
+! requires counterclockwise vertex ordering; the example uses that ordering.
 !
-!    It is conventional to list the triangle vertices in counter clockwise
-!    order.  However, this routine does not require a particular order
-!    for the vertices.
+! Arguments:
+!   t : REAL(DFP), INTENT(IN)(:, :). Triangle vertex coordinates, one vertex
+! per column.
+!   p : REAL(DFP), INTENT(IN)(2). Query point or output point as indicated by
+! INTENT.
 !
-!  Parameters:
+! Returns:
+!   inside : LOGICAL(LGT).
 !
-!    Input, REAL ( kind = 8 ) T(2,3), the triangle vertices.
+! Formula:
+! $$p\in T\iff\lambda_i(p)\ge0\quad(i=1,2,3)$$
 !
-!    Input, REAL ( kind = 8 ) P(2), the point to be checked.
+! Examples
 !
-!    Output, logical ( kind = 4 ) INSIDE, is TRUE if the point is inside
-!    the triangle.
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE GlobalData, ONLY: LGT
+! USE Triangle_Method, ONLY: triangle_contains_point_2d_1
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: t2(2, 3), t3(3, 3)
+! LOGICAL(LGT) :: inside
+!
+! t2 = RESHAPE([0.0_DFP, 0.0_DFP, 2.0_DFP, &
+!   0.0_DFP, 0.0_DFP, 1.0_DFP], [2, 3])
+! t3 = 0.0_DFP
+! t3(1:2, :) = t2
+! inside = triangle_contains_point_2d_1(t2, [0.5_DFP, 0.25_DFP])
+! CALL OK(inside, "Interior point is contained")
+! CALL OK(.NOT. triangle_contains_point_2d_1(t2, [3.0_DFP, 2.0_DFP]), &
+!   "Exterior point is rejected")
+! END PROGRAM main
+!```
 
 INTERFACE
   MODULE PURE FUNCTION triangle_contains_point_2d_1(t, p) RESULT(inside)
@@ -690,31 +1138,48 @@ END INTERFACE
 !
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 28 Aug 2022
-! summary:         finds if a poiint is inside a triangle in 2D
+!> author: OpenAI Codex (documentation)
+! date: 2026-10-30
+! summary: Finds if a poiint is inside a triangle in 2D.
 !
-!# Introduction
+! Vertex coordinates are columns of t. Use a nondegenerate triangle. Variant 1
+! requires counterclockwise vertex ordering; the example uses that ordering.
 !
-!    The routine assumes that the vertices are given in counter clockwise
-!    order.  If the triangle vertices are actually given in clockwise
-!    order, this routine will behave as though the triangle contains
-!    no points whatsoever!
+! Arguments:
+!   t : REAL(DFP), INTENT(IN)(:, :). Triangle vertex coordinates, one vertex
+! per column.
+!   p : REAL(DFP), INTENT(IN)(2). Query point or output point as indicated by
+! INTENT.
 !
-!    The routine determines if a point P is "to the right of" each of the
-! lines
-!    that bound the triangle.  It does this by computing the cross product
-!    of vectors from a vertex to its next vertex, and to P.
+! Returns:
+!   inside : LOGICAL(LGT).
 !
-!# Parameters:
+! Formula:
+! $$p\in T\iff\lambda_i(p)\ge0\quad(i=1,2,3)$$
 !
-!    Input, REAL ( kind = 8 ) T(2,3), the triangle vertices.
-!    The vertices should be given in counter clockwise order.
+! Examples
 !
-!    Input, REAL ( kind = 8 ) P(2), the point to be checked.
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE GlobalData, ONLY: LGT
+! USE Triangle_Method, ONLY: triangle_contains_point_2d_2
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: t2(2, 3), t3(3, 3)
+! LOGICAL(LGT) :: inside
 !
-!    Output, logical ( kind = 4 ) INSIDE, is TRUE if the point is
-!    inside the triangle.
+! t2 = RESHAPE([0.0_DFP, 0.0_DFP, 2.0_DFP, &
+!   0.0_DFP, 0.0_DFP, 1.0_DFP], [2, 3])
+! t3 = 0.0_DFP
+! t3(1:2, :) = t2
+! inside = triangle_contains_point_2d_2(t2, [0.5_DFP, 0.25_DFP])
+! CALL OK(inside, "Interior point is contained")
+! CALL OK(.NOT. triangle_contains_point_2d_2(t2, [3.0_DFP, 2.0_DFP]), &
+!   "Exterior point is rejected")
+! END PROGRAM main
+!```
 
 INTERFACE
   MODULE PURE FUNCTION triangle_contains_point_2d_2(t, p) RESULT(inside)
@@ -728,35 +1193,48 @@ END INTERFACE
 !
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 28 Aug 2022
-! summary:         returns true if the point is contained inside the triangle
+!> author: OpenAI Codex (documentation)
+! date: 2026-10-30
+! summary: Returns true if the point is contained inside the triangle.
 !
-!# Introduction
+! Vertex coordinates are columns of t. Use a nondegenerate triangle. Variant 1
+! requires counterclockwise vertex ordering; the example uses that ordering.
 !
-!    This routine is the same as TRIANGLE_CONTAINS_POINT_2D_2, except
-!    that it does not assume an ordering of the points.  It should
-!    work correctly whether the vertices of the triangle are listed
-!    in clockwise or counter clockwise order.
+! Arguments:
+!   t : REAL(DFP), INTENT(IN)(:, :). Triangle vertex coordinates, one vertex
+! per column.
+!   p : REAL(DFP), INTENT(IN)(2). Query point or output point as indicated by
+! INTENT.
 !
-!    The routine determines if a point P is "to the right of" each of the
-! lines
-!    that bound the triangle.  It does this by computing the cross product
-!    of vectors from a vertex to its next vertex, and to P.
+! Returns:
+!   inside : LOGICAL(LGT).
 !
-!    The point is inside the triangle if it is to the right of all
-!    the lines, or to the left of all the lines.
+! Formula:
+! $$p\in T\iff\lambda_i(p)\ge0\quad(i=1,2,3)$$
 !
-!    This version was suggested by Paulo Ernesto of Maptek Brasil.
+! Examples
 !
-!  Parameters:
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE GlobalData, ONLY: LGT
+! USE Triangle_Method, ONLY: triangle_contains_point_2d_3
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: t2(2, 3), t3(3, 3)
+! LOGICAL(LGT) :: inside
 !
-!    Input, REAL ( kind = 8 ) T(2,3), the triangle vertices.
-!
-!    Input, REAL ( kind = 8 ) P(2), the point to be checked.
-!
-!    Output, logical ( kind = 4 ) INSIDE, is TRUE if the point is
-!    inside the triangle.
+! t2 = RESHAPE([0.0_DFP, 0.0_DFP, 2.0_DFP, &
+!   0.0_DFP, 0.0_DFP, 1.0_DFP], [2, 3])
+! t3 = 0.0_DFP
+! t3(1:2, :) = t2
+! inside = triangle_contains_point_2d_3(t2, [0.5_DFP, 0.25_DFP])
+! CALL OK(inside, "Interior point is contained")
+! CALL OK(.NOT. triangle_contains_point_2d_3(t2, [3.0_DFP, 2.0_DFP]), &
+!   "Exterior point is rejected")
+! END PROGRAM main
+!```
 
 INTERFACE
   MODULE PURE FUNCTION triangle_contains_point_2d_3(t, p) RESULT(inside)
@@ -770,22 +1248,46 @@ END INTERFACE
 !
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 28 Aug 2022
-! summary:         returns the triangle diameter in 2d
+!> author: OpenAI Codex (documentation)
+! date: 2026-10-30
+! summary: Compute diameter 2d.
 !
-!# Introduction
+! Vertex coordinates are columns of t. Use a nondegenerate triangle. The
+! implementation squares sums of coordinate differences instead of summing
+! their squares. Its result here is 2 rather than the geometric diameter
+! sqrt(5). This example records current behavior, not geometric correctness.
 !
-!    The diameter of a triangle is the diameter of the smallest circle
-!    that can be drawn around the triangle.  At least two of the vertices
-!    of the triangle will intersect the circle, but not necessarily
-!    all three!
+! Arguments:
+!   t : REAL(DFP), INTENT(IN)(:, :). Triangle vertex coordinates, one vertex
+! per column.
 !
-!# Parameters:
+! Returns:
+!   diameter : REAL(DFP).
 !
-!    Input, REAL ( kind = 8 ) T(2,3), the triangle vertices.
+! Formula:
+! $$D_{\mathrm{intended}}=\text{diameter of the smallest enclosing circle}$$
 !
-!    Output, REAL ( kind = 8 ) DIAMETER, the diameter of the triangle.
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE Triangle_Method, ONLY: triangle_diameter_2d
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: t2(2, 3), t3(3, 3)
+! REAL(DFP) :: y
+!
+! t2 = RESHAPE([0.0_DFP, 0.0_DFP, 2.0_DFP, &
+!   0.0_DFP, 0.0_DFP, 1.0_DFP], [2, 3])
+! t3 = 0.0_DFP
+! t3(1:2, :) = t2
+! y = triangle_diameter_2d(t2)
+! CALL OK(ABS(y-2.0_DFP) < 1.0E-11_DFP, &
+!   "Current implementation result for this triangle")
+! END PROGRAM main
+!```
 
 INTERFACE
   MODULE PURE FUNCTION triangle_diameter_2d(t) RESULT(diameter)
@@ -798,17 +1300,43 @@ END INTERFACE
 !
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 28 Aug 2022
-! summary:         returns edge lengths of a triangle in 2D
+!> author: OpenAI Codex (documentation)
+! date: 2026-10-30
+! summary: Returns edge lengths of a triangle in 2D.
 !
-!# Introduction
+! Vertex coordinates are columns of t. Use a nondegenerate triangle.
 !
-!  Parameters:
+! Arguments:
+!   t : REAL(DFP), INTENT(IN)(:, :). Triangle vertex coordinates, one vertex
+! per column.
 !
-!    Input, REAL ( kind = 8 ) T(2,3), the triangle vertices.
+! Returns:
+!   edge_length : REAL(DFP)(3).
 !
-!    Output, REAL ( kind = 8 ) EDGE_LENGTH(3), the length of the edges.
+! Formula:
+! $$\ell_i=\|v_{i+1}-v_i\|$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE Triangle_Method, ONLY: triangle_edge_length_2d
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: t2(2, 3), t3(3, 3)
+! REAL(DFP) :: y(3)
+!
+! t2 = RESHAPE([0.0_DFP, 0.0_DFP, 2.0_DFP, &
+!   0.0_DFP, 0.0_DFP, 1.0_DFP], [2, 3])
+! t3 = 0.0_DFP
+! t3(1:2, :) = t2
+! y = triangle_edge_length_2d(t2)
+! CALL OK(ABS(SUM(y)-(3.0_DFP+SQRT(5.0_DFP))) &
+!   < 1.0E-11_DFP, "Perimeter from edge lengths")
+! END PROGRAM main
+!```
 
 INTERFACE
   MODULE PURE FUNCTION triangle_edge_length_2d(t) RESULT(edge_length)
@@ -872,29 +1400,43 @@ END INTERFACE
 !
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 28 Aug 2022
-! summary: computes the incenter of a triangle in 2D.
+!> author: OpenAI Codex (documentation)
+! date: 2026-10-30
+! summary: Computes the incenter of a triangle in 2D.
 !
-!# Introduction
+! Vertex coordinates are columns of t. Use a nondegenerate triangle.
 !
-!    The incenter of a triangle is the center of the inscribed circle.
+! Arguments:
+!   t : REAL(DFP), INTENT(IN)(:, :). Triangle vertex coordinates, one vertex
+! per column.
 !
-!    The inscribed circle of a triangle is the largest circle that can
-!    be drawn inside the triangle.
+! Returns:
+!   pc : REAL(DFP)(2).
 !
-!    The inscribed circle is tangent to all three sides of the triangle.
+! Formula:
+! $$r=2A/(a+b+c),\quad c=(a v_1+b v_2+c v_3)/(a+b+c)$$
 !
-!    The angle bisectors of the triangle intersect at the center of the
-!    inscribed circle.
+! Examples
 !
-!    In geometry, the incenter is often represented by "I".
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE Triangle_Method, ONLY: triangle_incenter_2d
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: t2(2, 3), t3(3, 3)
+! REAL(DFP) :: y(2)
 !
-!  Parameters:
-!
-!    Input, REAL ( kind = 8 ) T(2,3), the triangle vertices.
-!
-!    Output, REAL ( kind = 8 ) PC(2), the incenter.
+! t2 = RESHAPE([0.0_DFP, 0.0_DFP, 2.0_DFP, &
+!   0.0_DFP, 0.0_DFP, 1.0_DFP], [2, 3])
+! t3 = 0.0_DFP
+! t3(1:2, :) = t2
+! y = triangle_incenter_2d(t2)
+! CALL OK(MAXVAL(ABS(y-(3.0_DFP-SQRT(5.0_DFP))/2.0_DFP)) < 1.0E-11_DFP, &
+!   "Incenter coordinates of right triangle")
+! END PROGRAM main
+!```
 
 INTERFACE
   MODULE PURE FUNCTION triangle_incenter_2d(t) RESULT(pc)
@@ -907,23 +1449,45 @@ END INTERFACE
 !
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 28 Aug 2022
-! summary:         computes the inscribed circle of a triangle in 2D.
+!> author: OpenAI Codex (documentation)
+! date: 2026-10-30
+! summary: Computes the inscribed circle of a triangle in 2D.
 !
-!# Introduction
+! Vertex coordinates are columns of t. Use a nondegenerate triangle.
 !
-!    The inscribed circle of a triangle is the largest circle that can
-!    be drawn inside the triangle.  It is tangent to all three sides,
-!    and the lines from its center to the vertices bisect the angles
-!    made by each vertex.
+! Arguments:
+!   t : REAL(DFP), INTENT(IN)(:, :). Triangle vertex coordinates, one vertex
+! per column.
+!   pc : REAL(DFP), INTENT(OUT)(2). Circle center or orthocenter.
+!   r : REAL(DFP), INTENT(OUT). Circle radius.
 !
-!# Parameters:
+! Returns:
+!   Updates pc(2), r.
 !
-!    Input, REAL ( kind = 8 ) T(2,3), the triangle vertices.
+! Formula:
+! $$r=2A/(a+b+c),\quad c=(a v_1+b v_2+c v_3)/(a+b+c)$$
 !
-!    Output, REAL ( kind = 8 ) R, PC(2), the radius and center of the
-!    inscribed circle.
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE Triangle_Method, ONLY: triangle_incircle_2d
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: t2(2, 3), t3(3, 3)
+! REAL(DFP) :: y, center(2)
+!
+! t2 = RESHAPE([0.0_DFP, 0.0_DFP, 2.0_DFP, &
+!   0.0_DFP, 0.0_DFP, 1.0_DFP], [2, 3])
+! t3 = 0.0_DFP
+! t3(1:2, :) = t2
+! CALL triangle_incircle_2d(t2, y, center)
+! CALL OK(ABS(y-(3.0_DFP-SQRT(5.0_DFP))/2.0_DFP) < 1.0E-11_DFP, "Inradius")
+! CALL OK(MAXVAL(ABS(center-y)) < 1.0E-11_DFP, "Incenter")
+! END PROGRAM main
+!```
 
 INTERFACE
   MODULE PURE SUBROUTINE triangle_incircle_2d(t, r, pc)
@@ -937,21 +1501,42 @@ END INTERFACE
 !
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 28 Aug 2022
-! summary: Radius of the inscribed circle of a triangle in 2D
+!> author: OpenAI Codex (documentation)
+! date: 2026-10-30
+! summary: Radius of the inscribed circle of a triangle in 2D.
 !
-!# Introduction
+! Vertex coordinates are columns of t. Use a nondegenerate triangle.
 !
-!    The inscribed circle of a triangle is the largest circle that can
-!    be drawn inside the triangle.  It is tangent to all three sides,
-!    and the lines from its center to the vertices bisect the angles
-!    made by each vertex.
+! Arguments:
+!   t : REAL(DFP), INTENT(IN)(:, :). Triangle vertex coordinates, one vertex
+! per column.
 !
-!  Parameters:
+! Returns:
+!   r : REAL(DFP).
 !
-!    Input, REAL ( kind = 8 ) T(2,3), the triangle vertices.
-!    Output, REAL ( kind = 8 ) R, the radius of the inscribed circle.
+! Formula:
+! $$r=2A/(a+b+c),\quad c=(a v_1+b v_2+c v_3)/(a+b+c)$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE Triangle_Method, ONLY: triangle_inradius_2d
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: t2(2, 3), t3(3, 3)
+! REAL(DFP) :: y
+!
+! t2 = RESHAPE([0.0_DFP, 0.0_DFP, 2.0_DFP, &
+!   0.0_DFP, 0.0_DFP, 1.0_DFP], [2, 3])
+! t3 = 0.0_DFP
+! t3(1:2, :) = t2
+! y = triangle_inradius_2d(t2)
+! CALL OK(ABS(y-(3.0_DFP-SQRT(5.0_DFP))/2.0_DFP) < 1.0E-11_DFP, "Inradius")
+! END PROGRAM main
+!```
 
 INTERFACE
   MODULE PURE FUNCTION triangle_inradius_2d(t) RESULT(r)
@@ -1167,28 +1752,43 @@ END INTERFACE
 !
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 28 Aug 2022
-! summary:         computes the orthocenter of a triangle in 2D.
+!> author: OpenAI Codex (documentation)
+! date: 2026-10-30
+! summary: Computes the orthocenter of a triangle in 2D.
 !
-!# Introduction
+! Vertex coordinates are columns of t. Use a nondegenerate triangle.
 !
-!    The orthocenter is defined as the intersection of the three altitudes
-!    of a triangle.
+! Arguments:
+!   t : REAL(DFP), INTENT(IN)(:, :). Triangle vertex coordinates, one vertex
+! per column.
 !
-!    An altitude of a triangle is the line through a vertex of the triangle
-!    and perpENDicular to the opposite side.
+! Returns:
+!   pc : REAL(DFP)(2).
 !
-!    In geometry, the orthocenter of a triangle is often symbolized by "H".
+! Formula:
+! $$h=c_{\mathrm{centroid}}\,3-2c_{\mathrm{circumcenter}}$$
 !
-!# Parameters:
+! Examples
 !
-!    Input, REAL ( kind = 8 ) T(2,3), the triangle vertices.
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE Triangle_Method, ONLY: triangle_orthocenter_2d
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: t2(2, 3), t3(3, 3)
+! REAL(DFP) :: y(2)
 !
-!    Output, REAL ( kind = 8 ) PC(2), the orthocenter of the triangle.
-!
-!    Output, logical ( kind = 4 ) FLAG, is TRUE if the value could not
-!    be computed.
+! t2 = RESHAPE([0.0_DFP, 0.0_DFP, 2.0_DFP, &
+!   0.0_DFP, 0.0_DFP, 1.0_DFP], [2, 3])
+! t3 = 0.0_DFP
+! t3(1:2, :) = t2
+! y = triangle_orthocenter_2d(t2)
+! CALL OK(MAXVAL(ABS(y)) < 1.0E-11_DFP, &
+!   "Altitudes of right triangle meet at the origin")
+! END PROGRAM main
+!```
 
 INTERFACE
   MODULE PURE FUNCTION triangle_orthocenter_2d(t) RESULT(pc)
@@ -1201,20 +1801,47 @@ END INTERFACE
 !
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 28 Aug 2022
-! summary:         distance ( triangle, point ) in 2D
+!> author: OpenAI Codex (documentation)
+! date: 2026-10-30
+! summary: Distance ( triangle, point ) in 2D.
 !
-!# Introduction
+! Vertex coordinates are columns of t. Use a nondegenerate triangle. Distance
+! is to the boundary edges, including for interior points; signed 2D distance
+! is negative inside a counterclockwise triangle.
 !
-!  Parameters:
+! Arguments:
+!   t : REAL(DFP), INTENT(IN)(:, :). Triangle vertex coordinates, one vertex
+! per column.
+!   p : REAL(DFP), INTENT(IN)(:). Query point or output point as indicated by
+! INTENT.
 !
-!    Input, REAL ( kind = 8 ) T(2,3), the triangle vertices.
+! Returns:
+!   dist : REAL(DFP).
 !
-!    Input, REAL ( kind = 8 ) P(2), the point to be checked.
+! Formula:
+! $$d=\min_{q\in\partial T}\|p-q\|$$
 !
-!    Output, REAL ( kind = 8 ) DIST, the distance from the point to the
-!    triangle.
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE Triangle_Method, ONLY: triangle_point_dist_2d
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: t2(2, 3), t3(3, 3)
+! REAL(DFP) :: y
+!
+! t2 = RESHAPE([0.0_DFP, 0.0_DFP, 2.0_DFP, &
+!   0.0_DFP, 0.0_DFP, 1.0_DFP], [2, 3])
+! t3 = 0.0_DFP
+! t3(1:2, :) = t2
+! y = triangle_point_dist_2d(t2, [-1.0_DFP, 0.0_DFP])
+! CALL OK(ABS(y-1.0_DFP) < 1.0E-11_DFP, &
+!   "Distance of an exterior point from the boundary")
+! END PROGRAM main
+!```
 
 INTERFACE
   MODULE PURE FUNCTION triangle_point_dist_2d(t, p) RESULT(dist)
@@ -1228,20 +1855,47 @@ END INTERFACE
 !
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 28 Aug 2022
-! summary:         distance ( triangle, point ) in 3D.
+!> author: OpenAI Codex (documentation)
+! date: 2026-10-30
+! summary: Distance ( triangle, point ) in 3D.
 !
-!# Introduction
+! Vertex coordinates are columns of t. Use a nondegenerate triangle. Distance
+! is to the boundary edges, including for interior points; signed 2D distance
+! is negative inside a counterclockwise triangle.
 !
-!  Parameters:
+! Arguments:
+!   t : REAL(DFP), INTENT(IN)(:, :). Triangle vertex coordinates, one vertex
+! per column.
+!   p : REAL(DFP), INTENT(IN)(:). Query point or output point as indicated by
+! INTENT.
 !
-!    Input, REAL ( kind = 8 ) T(3,3), the triangle vertices.
+! Returns:
+!   dist : REAL(DFP).
 !
-!    Input, REAL ( kind = 8 ) P(3), the point which is to be checked.
+! Formula:
+! $$d=\min_{q\in\partial T}\|p-q\|$$
 !
-!    Output, REAL ( kind = 8 ) DIST, the distance from the point to the
-!    triangle.  DIST is zero if the point lies exactly on the triangle.
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE Triangle_Method, ONLY: triangle_point_dist_3d
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: t2(2, 3), t3(3, 3)
+! REAL(DFP) :: y
+!
+! t2 = RESHAPE([0.0_DFP, 0.0_DFP, 2.0_DFP, &
+!   0.0_DFP, 0.0_DFP, 1.0_DFP], [2, 3])
+! t3 = 0.0_DFP
+! t3(1:2, :) = t2
+! y = triangle_point_dist_3d(t3, [-1.0_DFP, 0.0_DFP, 0.0_DFP])
+! CALL OK(ABS(y-1.0_DFP) < 1.0E-11_DFP, &
+!   "Distance of an exterior point from the boundary")
+! END PROGRAM main
+!```
 
 INTERFACE
   MODULE PURE FUNCTION triangle_point_dist_3d(t, p) RESULT(dist)
@@ -1255,26 +1909,47 @@ END INTERFACE
 !
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 28 Aug 2022
-! summary:         signed distance in 2D
+!> author: OpenAI Codex (documentation)
+! date: 2026-10-30
+! summary: Signed distance in 2D.
 !
-!# Introduction
+! Vertex coordinates are columns of t. Use a nondegenerate triangle. Distance
+! is to the boundary edges, including for interior points; signed 2D distance
+! is negative inside a counterclockwise triangle.
 !
-!    If the signed distance is:
-!    0, the point is on the boundary of the triangle;
-!    negative, the point is in the triangle;
-!    positive, the point is outside the triangle.
+! Arguments:
+!   t : REAL(DFP), INTENT(IN)(:, :). Triangle vertex coordinates, one vertex
+! per column.
+!   p : REAL(DFP), INTENT(IN)(2). Query point or output point as indicated by
+! INTENT.
 !
-!# Parameters:
+! Returns:
+!   dist_signed : REAL(DFP).
 !
-!    Input, REAL ( kind = 8 ) T(2,3), the triangle vertices.
-!    These should be given in counter clockwise order.
+! Formula:
+! $$d=\min_{q\in\partial T}\|p-q\|$$
 !
-!    Input, REAL ( kind = 8 ) P(2), the point which is to be checked.
+! Examples
 !
-!    Output, REAL ( kind = 8 ) DIST_SIGNED, the signed distance from the
-!    point to the triangle.
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE Triangle_Method, ONLY: triangle_point_dist_signed_2d
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: t2(2, 3), t3(3, 3)
+! REAL(DFP) :: y
+!
+! t2 = RESHAPE([0.0_DFP, 0.0_DFP, 2.0_DFP, &
+!   0.0_DFP, 0.0_DFP, 1.0_DFP], [2, 3])
+! t3 = 0.0_DFP
+! t3(1:2, :) = t2
+! y = triangle_point_dist_signed_2d(t2, [-1.0_DFP, 0.0_DFP])
+! CALL OK(ABS(y-1.0_DFP) < 1.0E-11_DFP, &
+!   "Distance of an exterior point from the boundary")
+! END PROGRAM main
+!```
 
 INTERFACE
   MODULE PURE FUNCTION triangle_point_dist_signed_2d(t, p) RESULT(dist_signed)
@@ -1288,23 +1963,48 @@ END INTERFACE
 !
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 28 Aug 2022
-! summary:         computes the nearest point on a triangle in 2D.
+!> author: OpenAI Codex (documentation)
+! date: 2026-10-30
+! summary: Computes the nearest point on a triangle in 2D.
 !
-!# Introduction
+! Vertex coordinates are columns of t. Use a nondegenerate triangle.
 !
-!  Parameters:
+! Arguments:
+!   t : REAL(DFP), INTENT(IN)(:, :). Triangle vertex coordinates, one vertex
+! per column.
+!   p : REAL(DFP), INTENT(IN)(2). Query point or output point as indicated by
+! INTENT.
+!   pn : REAL(DFP), INTENT(OUT)(2). Nearest point on the segment.
+!   dist : REAL(DFP), INTENT(OUT). Distance from the query point to the
+! segment or triangle boundary.
 !
-!    Input, REAL ( kind = 8 ) T(2,3), the triangle vertices.
+! Returns:
+!   Updates pn(2), dist.
 !
-!    Input, REAL ( kind = 8 ) P(2), the point whose nearest triangle point
-!    is to be determined.
+! Formula:
+! $$q=\mathop{\mathrm{argmin}}_{q\in\partial T}\|p-q\|$$
 !
-!    Output, REAL ( kind = 8 ) PN(2), the nearest point to P.
+! Examples
 !
-!    Output, REAL ( kind = 8 ) DIST, the distance from the point to the
-!    triangle.
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE Triangle_Method, ONLY: triangle_point_near_2d
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: t2(2, 3), t3(3, 3)
+! REAL(DFP) :: y, nearest(2)
+!
+! t2 = RESHAPE([0.0_DFP, 0.0_DFP, 2.0_DFP, &
+!   0.0_DFP, 0.0_DFP, 1.0_DFP], [2, 3])
+! t3 = 0.0_DFP
+! t3(1:2, :) = t2
+! CALL triangle_point_near_2d(t2, [-1.0_DFP, 0.0_DFP], nearest, y)
+! CALL OK(ABS(y-1.0_DFP) < 1.0E-11_DFP, "Boundary distance")
+! CALL OK(MAXVAL(ABS(nearest)) < 1.0E-11_DFP, "Nearest vertex")
+! END PROGRAM main
+!```
 
 INTERFACE
   MODULE PURE SUBROUTINE triangle_point_near_2d(t, p, pn, dist)
@@ -1319,20 +2019,43 @@ END INTERFACE
 !
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 28 Aug 2022
-! summary:         "quality" of a triangle in 2D.
+!> author: OpenAI Codex (documentation)
+! date: 2026-10-30
+! summary: "quality" of a triangle in 2D.
 !
-!# Introduction
+! Vertex coordinates are columns of t. Use a nondegenerate triangle.
 !
-!    The quality of a triangle is 2.0 times the ratio of the radius of
-!    the inscribed circle divided by that of the circumscribed circle.
-!    An equilateral triangle achieves the maximum possible quality of 1.
+! Arguments:
+!   t : REAL(DFP), INTENT(IN)(:, :). Triangle vertex coordinates, one vertex
+! per column.
 !
-!  Parameters:
+! Returns:
+!   quality : REAL(DFP).
 !
-!    Input, REAL ( kind = 8 ) T(2,3), the triangle vertices.
-!    Output, REAL ( kind = 8 ) QUALITY, the quality of the triangle.
+! Formula:
+! $$Q=2r/R$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE Triangle_Method, ONLY: triangle_quality_2d
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: t2(2, 3), t3(3, 3)
+! REAL(DFP) :: y
+!
+! t2 = RESHAPE([0.0_DFP, 0.0_DFP, 2.0_DFP, &
+!   0.0_DFP, 0.0_DFP, 1.0_DFP], [2, 3])
+! t3 = 0.0_DFP
+! t3(1:2, :) = t2
+! y = triangle_quality_2d(t2)
+! CALL OK(y > 0.0_DFP .AND. y <= 1.0_DFP, &
+!   "Nondegenerate triangle quality is in (0,1]")
+! END PROGRAM main
+!```
 
 INTERFACE
   MODULE PURE FUNCTION triangle_quality_2d(t) RESULT(quality)
@@ -1380,22 +2103,50 @@ END INTERFACE
 !
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 28 Aug 2022
-! summary:         returns random points in a triangle.
+!> author: OpenAI Codex (documentation)
+! date: 2026-10-30
+! summary: Returns random points in a triangle.
 !
-!# Introduction
+! Vertex coordinates are columns of t. Use a nondegenerate triangle. The
+! public seed argument is INTENT(IN), so a caller cannot advance it through
+! this interface.
 !
-!  Parameters:
+! Arguments:
+!   t : REAL(DFP), INTENT(IN)(:, :). Triangle vertex coordinates, one vertex
+! per column.
+!   n : INTEGER(I4B), INTENT(IN). Number of samples, coordinate dimension or
+! grid count as specified by the routine.
+!   seed : INTEGER(I4B), INTENT(IN). Random generator seed; this interface
+! does not return an advanced seed.
 !
-!    Input, REAL ( kind = 8 ) T(2,3), the triangle vertices.
+! Returns:
+!   p : REAL(DFP)(2, n).
 !
-!    Input, integer ( kind = 4 ) N, the number of points to generate.
+! Formula:
+! $$p=\lambda_1v_1+\lambda_2v_2+\lambda_3v_3,\quad\lambda_i\ge0$$
 !
-!    Input/output, integer ( kind = 4 ) SEED, a seed for the random
-!    number generator.
+! Examples
 !
-!    Output, REAL ( kind = 8 ) P(2,N), random points in the triangle.
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE Triangle_Method, ONLY: triangle_sample
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: t2(2, 3), t3(3, 3)
+! REAL(DFP) :: y(2, 8)
+!
+! t2 = RESHAPE([0.0_DFP, 0.0_DFP, 2.0_DFP, &
+!   0.0_DFP, 0.0_DFP, 1.0_DFP], [2, 3])
+! t3 = 0.0_DFP
+! t3(1:2, :) = t2
+! y = triangle_sample(t2, n=8_I4B, seed=12345_I4B)
+! CALL OK(MINVAL(y) >= 0.0_DFP, "Samples have nonnegative coordinates")
+! CALL OK(MAXVAL(y(1, :)/2.0_DFP+y(2, :)) <= 1.0_DFP, &
+!   "Samples lie inside the right triangle")
+! END PROGRAM main
+!```
 
 INTERFACE
   MODULE PURE FUNCTION triangle_sample(t, n, seed) RESULT(p)
