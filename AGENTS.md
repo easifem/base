@@ -14,7 +14,7 @@ easifemBase is a Fortran library for finite element methods, part of the EASIFEM
 
 ## Directory Structure
 
-```
+```text
 src/
 ├── modules/          # Module headers and interfaces
 │   ├── BaseType/     # User-defined data types (BaseType.F90)
@@ -29,63 +29,47 @@ src/
 - Example: `modules/QuadraturePoint/src/QuadraturePoint_Method.F90` contains interfaces
 - Example: `submodules/QuadraturePoint/src/QuadraturePoint_Method@ConstructorMethods.F90` contains implementations
 
+
 ## Build Commands
 
-### Configure and Build
+Use the `easifem` command line tool to build, install, and clean the
+library. Building and installing need explicit permission from the
+user. Cleaning needs explicit permission every time.
 
-Always use the easifem cli to compile the base library:
+### Build
+
+```bash
+easifem dev base
+```
+
+### Install
 
 ```bash
 easifem install base --no-download
 ```
 
-This compiles and installs the library from the local source tree
-without downloading it again.
+### Clean
 
-The commands below are kept only for reference:
-
-```bash
-# Using Python build script
-python3 build.py
-
-# Or manually with CMake
-cmake -G "Ninja" \
-  -D CMAKE_BUILD_TYPE:STRING=Debug \
-  -D CMAKE_INSTALL_PREFIX:PATH=${EASIFEM_BASE} \
-  -D BUILD_SHARED_LIBS:BOOL=ON \
-  -S ./ -B ${HOME}/temp/easifem/base/build
-
-# Build
-cmake --build ${HOME}/temp/easifem/base/build
-```
-
-### Build Types
-
-- Debug: `-D CMAKE_BUILD_TYPE:STRING=Debug`
-- Release: `-D CMAKE_BUILD_TYPE:STRING=Release`
-
-### Install
+Do not clean the library without explicit permission from the user.
 
 ```bash
-cmake --install ${HOME}/temp/easifem/base/build
+easifem clean base
 ```
 
-### Running Tests
+### Run an example
 
-There is no automated test suite setup. Tests are standalone programs in
-`src/modules/<Module>/examples/` (for example
-`src/modules/Utility/examples/Input_test_1.F90`).
-
-To run a test, go to the directory that contains it and run it with the
-easifem cli:
+Run a test program from its examples folder (only with permission,
+see "Examples and tests"):
 
 ```bash
-cd src/modules/Utility/examples
-easifem run Input_test_1.F90
+easifem run Initiate_test_1.F90
 ```
 
-Compile the library first (`easifem install base --no-download`) so
-that the test uses the latest changes.
+### Documentation Generation
+
+```bash
+formal generate --project doc/formal.md --mirror-sources
+```
 
 ## Code Style Guidelines
 
