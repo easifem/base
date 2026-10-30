@@ -1894,6 +1894,72 @@ END INTERFACE HeirarchicalBasisGradient_Triangle_
 !
 !----------------------------------------------------------------------------
 
+!> author: Vikas Sharma, Ph. D.
+! date: 2026-10-30
+! summary: Evaluate oriented hierarchical triangle basis gradients
+!
+! Evaluate gradients on UNIT or BIUNIT reference triangles. Each edge
+! mode uses the same orientation factor for both product-rule terms.
+! The example checks vertex and edge modes against finite differences for
+! all eight combinations of edge directions; cell modes are excluded.
+!
+! Changes:
+!   - 2026-10-30: Use one orientation factor for both derivative terms.
+!
+! Formula:
+!   $$ \nabla(o^{m+1}f)=o^{m+1}\nabla f, \qquad o=\pm1. $$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: I4B
+! USE GlobalData, ONLY: DFP
+! USE TriangleInterpolationUtility, ONLY: HeirarchicalBasis_Triangle_
+! USE TriangleInterpolationUtility, ONLY: HeirarchicalBasisGradient_Triangle_
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP), PARAMETER :: h = 1.0E-6_DFP
+! REAL(DFP) :: x(2, 3), xp(2, 3), xm(2, 3)
+! REAL(DFP) :: plus(3, 15), minus(3, 15), gradient(3, 15, 2)
+! INTEGER(I4B) :: p, mask, o(3), edge, dim, nr, nc, nd, last
+! x(:, 1) = [-0.7_DFP, -0.8_DFP]
+! x(:, 2) = [-0.4_DFP, -0.7_DFP]
+! x(:, 3) = [-0.6_DFP, -0.3_DFP]
+! DO p = 1, 4
+!   last = 3*p
+!   DO mask = 0, 7
+!     DO edge = 1, 3
+!       o(edge) = 1
+!       IF (BTEST(mask, edge-1)) o(edge) = -1
+!     END DO
+!     CALL HeirarchicalBasisGradient_Triangle_(order=p, &
+!       pe1=p, pe2=p, pe3=p, xij=x, refTriangle="BIUNIT", &
+!       edgeOrient1=o(1), edgeOrient2=o(2), edgeOrient3=o(3), &
+!       faceOrient=[0_I4B, 1_I4B], ans=gradient, &
+!       tsize1=nr, tsize2=nc, tsize3=nd)
+!     DO dim = 1, 2
+!       xp = x
+!       xm = x
+!       xp(dim, :) = xp(dim, :) + h
+!       xm(dim, :) = xm(dim, :) - h
+!       CALL HeirarchicalBasis_Triangle_(order=p, pe1=p, pe2=p, pe3=p, &
+!         xij=xp, refTriangle="BIUNIT", ans=plus, nrow=nr, ncol=nc, &
+!         edgeOrient1=o(1), edgeOrient2=o(2), edgeOrient3=o(3), &
+!         faceOrient=[0_I4B, 1_I4B])
+!       CALL HeirarchicalBasis_Triangle_(order=p, pe1=p, pe2=p, pe3=p, &
+!         xij=xm, refTriangle="BIUNIT", ans=minus, nrow=nr, ncol=nc, &
+!         edgeOrient1=o(1), edgeOrient2=o(2), edgeOrient3=o(3), &
+!         faceOrient=[0_I4B, 1_I4B])
+!       CALL OK(MAXVAL(ABS(gradient(:, 1:last, dim) - &
+!         (plus(:, 1:last)-minus(:, 1:last))/(2*h))) &
+!         .LT. 1.0E-7_DFP, "Oriented vertex/edge gradients match differences")
+!     END DO
+!   END DO
+! END DO
+! END PROGRAM main
+!```
+
 INTERFACE HeirarchicalBasisGradient_Triangle_
   MODULE SUBROUTINE HeirarchicalBasisGradient_Triangle2_( &
     order, pe1, pe2, pe3, xij, edgeOrient1, edgeOrient2, edgeOrient3, &

@@ -781,12 +781,14 @@ PURE SUBROUTINE BarycentricEdgeBasisGradient_Triangle2(pe1, pe2, pe3, &
   o2 = REAL(edgeOrient2, kind=DFP)
   o3 = REAL(edgeOrient3, kind=DFP)
 
+  ! The kernel argument is un-oriented, so both derivative terms
+  ! carry the same orientation factor as the basis value.
   a = 0
   ! edge(1) = 1 -> 2
 
   DO ii = 1, pe1 - 1
     rr(1) = o1**(ii + 1)
-    rr(2) = o1**(ii)
+    rr(2) = rr(1)
 
     DO jj = 1, dim1
       rr(3) = lambda(1, jj) * lambda(2, jj)
@@ -814,7 +816,7 @@ PURE SUBROUTINE BarycentricEdgeBasisGradient_Triangle2(pe1, pe2, pe3, &
 
   DO ii = 1, pe2 - 1
     rr(1) = o2**(ii + 1)
-    rr(2) = o2**(ii)
+    rr(2) = rr(1)
 
     DO jj = 1, dim1
       rr(3) = lambda(2, jj) * lambda(3, jj)
@@ -840,7 +842,7 @@ PURE SUBROUTINE BarycentricEdgeBasisGradient_Triangle2(pe1, pe2, pe3, &
 
   DO ii = 1, pe3 - 1
     rr(1) = o3**(ii + 1)
-    rr(2) = o3**(ii)
+    rr(2) = rr(1)
 
     DO jj = 1, dim1
       rr(3) = lambda(3, jj) * lambda(1, jj)
