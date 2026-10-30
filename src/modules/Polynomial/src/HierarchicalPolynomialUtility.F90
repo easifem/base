@@ -14,7 +14,7 @@
 ! You should have received a copy of the GNU General Public License
 ! along with this program.  If not, see <https://www.gnu.org/licenses/>
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Hierarchical entity DOF counts and oriented basis evaluation.
 !
@@ -79,7 +79,7 @@ PUBLIC :: HierarchicalGradientEvalAll
 !
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Count hierarchical total degrees of freedom.
 !
@@ -139,7 +139,7 @@ END INTERFACE
 !
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Count hierarchical vertex degrees of freedom.
 !
@@ -186,7 +186,7 @@ END INTERFACE
 !
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Count hierarchical edge interior degrees of freedom.
 !
@@ -240,7 +240,7 @@ END INTERFACE
 !
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Count hierarchical face interior degrees of freedom.
 !
@@ -292,7 +292,7 @@ END INTERFACE
 !                                                                 j
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Count hierarchical cell interior degrees of freedom.
 !
@@ -345,7 +345,7 @@ END INTERFACE
 !
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate hierarchical element basis functions.
 !
@@ -435,7 +435,7 @@ END INTERFACE
 !
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate hierarchical element basis functions.
 !
@@ -536,7 +536,7 @@ END INTERFACE
 !
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate gradients of hierarchical element basis functions.
 !
@@ -626,7 +626,7 @@ END INTERFACE
 !
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate gradients of hierarchical element basis functions.
 !

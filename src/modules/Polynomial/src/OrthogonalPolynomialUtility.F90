@@ -14,7 +14,7 @@
 ! You should have received a copy of the GNU General Public License
 ! along with this program.  If not, see <https://www.gnu.org/licenses/>
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Clenshaw series evaluation and polynomial family dispatch.
 !
@@ -80,7 +80,7 @@ PUBLIC :: OrthogonalLaplacianEvalAll
 !
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate a series using backward Clenshaw recurrence.
 !
@@ -144,7 +144,7 @@ END INTERFACE Clenshaw
 !
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate a series using backward Clenshaw recurrence.
 !
@@ -208,7 +208,7 @@ END INTERFACE Clenshaw
 !
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate a series using backward Clenshaw recurrence.
 !
@@ -260,7 +260,7 @@ END INTERFACE Clenshaw
 !
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate a series using backward Clenshaw recurrence.
 !
@@ -308,7 +308,7 @@ INTERFACE Clenshaw
   END FUNCTION ChebClenshaw_2
 END INTERFACE Clenshaw
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate a Chebyshev series with a halved constant term.
 !
@@ -351,7 +351,7 @@ END INTERFACE ChebClenshaw
 !                                                             JacobiMatrix
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Build a Jacobi matrix from monic recurrence coefficients.
 !
@@ -411,7 +411,7 @@ END INTERFACE JacobiMatrix
 !                                                           EvalAllOrthopol
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Dispatch basis values by polynomial family.
 !
@@ -483,7 +483,7 @@ END INTERFACE
 !                                                           EvalAllOrthopol_
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Dispatch basis values by polynomial family.
 !
@@ -563,7 +563,7 @@ END INTERFACE
 !                                                           EvalAllOrthopol
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Dispatch basis gradients by polynomial family.
 !
@@ -635,7 +635,7 @@ END INTERFACE
 !
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Dispatch basis gradients by polynomial family.
 !
@@ -715,7 +715,7 @@ END INTERFACE
 !                                                          OrthogonalEvalAll
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Dispatch basis values on a reference element.
 !
@@ -799,7 +799,7 @@ END INTERFACE
 !                                                 OrthogonalGradientEvalAll
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Dispatch basis values on a reference element.
 !
@@ -891,7 +891,7 @@ END INTERFACE
 !                                                   OrthogonalGradientEvalAll
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Dispatch basis gradients on a reference element.
 !
@@ -975,7 +975,7 @@ END INTERFACE
 !                                                 OrthogonalGradientEvalAll
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Dispatch basis gradients on a reference element.
 !
@@ -1071,7 +1071,7 @@ END INTERFACE
 !                                                    LaplacianEvalAllOrthopol
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Dispatch basis Laplacians by polynomial family.
 !
@@ -1147,7 +1147,7 @@ END INTERFACE
 !
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Dispatch basis Laplacians by polynomial family.
 !
@@ -1231,7 +1231,7 @@ END INTERFACE
 !                                                 OrthogonalLaplacianEvalAll
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Dispatch basis Laplacians on a reference element.
 !
@@ -1319,7 +1319,7 @@ END INTERFACE
 !                                                 OrthogonalLaplacianEvalAll
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Dispatch basis Laplacians on a reference element.
 !

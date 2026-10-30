@@ -14,7 +14,7 @@
 ! You should have received a copy of the GNU General Public License
 ! along with this program.  If not, see <https://www.gnu.org/licenses/>
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Legendre evaluation, recurrence, quadrature and transforms.
 !
@@ -100,7 +100,7 @@ PUBLIC :: LegendreDMatEvenOdd
 !                                                             LegendreAlpha
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Return a monic recurrence diagonal coefficient.
 !
@@ -143,7 +143,7 @@ END INTERFACE
 !                                                              LegendreBeta
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Return a monic recurrence beta coefficient.
 !
@@ -190,7 +190,7 @@ END INTERFACE
 !                                                  GetLegendreRecurrenceCoeff
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Return monic three term recurrence coefficients.
 !
@@ -242,7 +242,7 @@ END INTERFACE
 !                                              GetLegendreRecurrenceCoeff2
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Return standard three term recurrence coefficients.
 !
@@ -301,7 +301,7 @@ END INTERFACE
 !                                                         LegendreLeadingCoeff
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Return the coefficient of the highest power.
 !
@@ -344,7 +344,7 @@ END INTERFACE
 !                                                 LegendreLeadingCoeffRatio
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Return the ratio of consecutive leading coefficients.
 !
@@ -387,7 +387,7 @@ END INTERFACE
 !                                                            LegendreNormSQR
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Return the weighted squared norm.
 !
@@ -428,7 +428,7 @@ END INTERFACE
 !                                                            LegendreNormSQR2
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Return weighted squared norms from degree zero through n.
 !
@@ -469,7 +469,7 @@ END INTERFACE
 !                                                      LegendreNormSQRRatio
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Return the ratio of consecutive squared norms.
 !
@@ -510,7 +510,7 @@ END INTERFACE
 !                                                      LegendreJacobiMatrix
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Build the symmetric tridiagonal Gauss Jacobi matrix.
 !
@@ -571,7 +571,7 @@ END INTERFACE
 !                                                     LegendreGaussQuadrature
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Compute Gauss quadrature nodes and weights.
 !
@@ -626,7 +626,7 @@ END INTERFACE
 !                                               LegendreJacobiRadauMatrix
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Build the symmetric tridiagonal Radau Jacobi matrix.
 !
@@ -689,7 +689,7 @@ END INTERFACE
 !                                                LegendreGaussRadauQuadrature
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Compute Gauss Radau quadrature nodes and weights.
 !
@@ -751,7 +751,7 @@ END INTERFACE
 !                                             LegendreLegendreLobattoMatrix
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Build the symmetric tridiagonal Lobatto Jacobi matrix.
 !
@@ -812,7 +812,7 @@ END INTERFACE
 !                                              LegendreGaussLobattoQuadrature
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Compute Gauss Lobatto quadrature nodes and weights.
 !
@@ -869,7 +869,7 @@ END INTERFACE
 !                                                              LegendreZeros
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Return the n roots of a degree n polynomial.
 !
@@ -914,7 +914,7 @@ END INTERFACE
 !                                                          LegendreQuadrature
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Compute a selected quadrature nodes and weights.
 !
@@ -987,7 +987,7 @@ END INTERFACE
 !                                                             LegendreEval
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate one polynomial.
 !
@@ -1033,7 +1033,7 @@ INTERFACE
   END FUNCTION LegendreEval1
 END INTERFACE
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate one polynomial.
 !
@@ -1075,7 +1075,7 @@ END INTERFACE LegendreEval
 !                                                          LegendreEval
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate one polynomial.
 !
@@ -1121,7 +1121,7 @@ INTERFACE
   END FUNCTION LegendreEval2
 END INTERFACE
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate one polynomial.
 !
@@ -1163,7 +1163,7 @@ END INTERFACE LegendreEval
 !                                                            LegendreEvalAll
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate polynomials through degree n.
 !
@@ -1215,7 +1215,7 @@ END INTERFACE LegendreEvalAll
 !                                                         LegendreEvalAll_
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate polynomials through degree n.
 !
@@ -1275,7 +1275,7 @@ END INTERFACE LegendreEvalAll_
 !                                                           LegendreEvalAll
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate polynomials through degree n.
 !
@@ -1326,7 +1326,7 @@ END INTERFACE LegendreEvalAll
 !                                                          LegendreEvalAll_
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate polynomials through degree n.
 !
@@ -1388,7 +1388,7 @@ END INTERFACE LegendreEvalAll_
 !                                             LegendreMonomialExpansionAll
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Expand all polynomials through degree n in monomials.
 !
@@ -1432,7 +1432,7 @@ END INTERFACE
 !                                             LegendreMonomialExpansion
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Expand one polynomial in monomials.
 !
@@ -1474,7 +1474,7 @@ END INTERFACE
 !
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate first derivatives through degree n.
 !
@@ -1521,7 +1521,7 @@ END INTERFACE LegendreGradientEvalAll
 !
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate first derivatives through degree n.
 !
@@ -1577,7 +1577,7 @@ END INTERFACE LegendreGradientEvalAll_
 !
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate first derivatives through degree n.
 !
@@ -1624,7 +1624,7 @@ END INTERFACE LegendreGradientEvalAll
 !
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate first derivatives through degree n.
 !
@@ -1682,7 +1682,7 @@ END INTERFACE LegendreGradientEvalAll_
 !
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate the first derivative.
 !
@@ -1729,7 +1729,7 @@ END INTERFACE LegendreGradientEval
 !
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate the first derivative.
 !
@@ -1776,7 +1776,7 @@ END INTERFACE LegendreGradientEval
 !                                                     LegendreEvalSum
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate a polynomial expansion.
 !
@@ -1831,7 +1831,7 @@ END INTERFACE LegendreEvalSum
 !                                                          LegendreEvalSum
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate a polynomial expansion.
 !
@@ -1885,7 +1885,7 @@ END INTERFACE LegendreEvalSum
 !                                             LegendreGradientEvalSum
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate the derivative of a polynomial expansion.
 !
@@ -1940,7 +1940,7 @@ END INTERFACE LegendreGradientEvalSum
 !                                              LegendreGradientEvalSum
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate the derivative of a polynomial expansion.
 !
@@ -1995,7 +1995,7 @@ END INTERFACE LegendreGradientEvalSum
 !                                              LegendreGradientEvalSum
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate the derivative of a polynomial expansion.
 !
@@ -2053,7 +2053,7 @@ END INTERFACE LegendreGradientEvalSum
 !                                             LegendreGradientEvalSum
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate the derivative of a polynomial expansion.
 !
@@ -2111,7 +2111,7 @@ END INTERFACE LegendreGradientEvalSum
 !                                                         LegendreTransform
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Project sampled values onto the polynomial basis.
 !
@@ -2190,7 +2190,7 @@ END INTERFACE LegendreTransform
 !                                                 LegendreTransform@Methods
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Project sampled values onto the polynomial basis.
 !
@@ -2273,7 +2273,7 @@ END INTERFACE LegendreTransform_
 !                                                          LegendreTransform
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Project sampled values onto the polynomial basis.
 !
@@ -2360,7 +2360,7 @@ END INTERFACE LegendreTransform_
 !                                                          LegendreTransform
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Project sampled values onto the polynomial basis.
 !
@@ -2428,7 +2428,7 @@ END INTERFACE LegendreTransform
 !                                                 LegendreTransform@Methods
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Project sampled values onto the polynomial basis.
 !
@@ -2504,7 +2504,7 @@ END INTERFACE LegendreTransform_
 !                                                       LegendreInvTransform
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate a polynomial expansion.
 !
@@ -2559,7 +2559,7 @@ END INTERFACE LegendreInvTransform
 !                                                      LegendreInvTransform
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate a polynomial expansion.
 !
@@ -2614,7 +2614,7 @@ END INTERFACE LegendreInvTransform
 !                                                     LegendreGradientCoeff
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Differentiate modal coefficients in the same family.
 !
@@ -2665,7 +2665,7 @@ END INTERFACE LegendreGradientCoeff
 !                                                           LegendreDMatrix
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Build the nodal first derivative matrix.
 !
@@ -2722,7 +2722,7 @@ END INTERFACE LegendreDMatrix
 !                                                       LegendreDMatEvenOdd
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Form even and odd blocks by pairing mirrored columns.
 !
@@ -2785,7 +2785,7 @@ END INTERFACE LegendreDMatEvenOdd
 !                                                    LegendreLaplacianEvalAll
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Reserved second derivative interface; currently unimplemented.
 !
@@ -2839,7 +2839,7 @@ END INTERFACE LegendreLaplacianEvalAll
 !                                                   LegendreLaplacianEvalAll_
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Reserved second derivative interface; currently unimplemented.
 !
@@ -2899,7 +2899,7 @@ END INTERFACE LegendreLaplacianEvalAll_
 !                                                    LegendreLaplacianEvalAll
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Reserved second derivative interface; currently unimplemented.
 !
@@ -2953,7 +2953,7 @@ END INTERFACE LegendreLaplacianEvalAll
 !                                                   LegendreLaplacianEvalAll_
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Reserved second derivative interface; currently unimplemented.
 !
@@ -3015,7 +3015,7 @@ END INTERFACE LegendreLaplacianEvalAll_
 !                                                      LegendreLaplacianEval
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Reserved second derivative interface; currently unimplemented.
 !
@@ -3069,7 +3069,7 @@ END INTERFACE LegendreLaplacianEval
 !                                                      LegendreLaplacianEval
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Reserved second derivative interface; currently unimplemented.
 !

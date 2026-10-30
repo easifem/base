@@ -14,7 +14,7 @@
 ! You should have received a copy of the GNU General Public License
 ! along with this program.  If not, see <https://www.gnu.org/licenses/>
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Jacobi polynomial evaluation, quadrature and transforms.
 !
@@ -100,7 +100,7 @@ PUBLIC :: JacobiDMatrix
 !                                                  GetJacobiRecurrenceCoeff
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Return monic three term recurrence coefficients.
 !
@@ -158,7 +158,7 @@ END INTERFACE
 !                                                GetJacobiRecurrenceCoeff2
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Return standard three term recurrence coefficients.
 !
@@ -220,7 +220,7 @@ END INTERFACE
 !                                                               JacobiAlpha
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Return a monic recurrence diagonal coefficient.
 !
@@ -269,7 +269,7 @@ END INTERFACE
 !                                                                JacobiBeta
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Return a monic recurrence beta coefficient.
 !
@@ -322,7 +322,7 @@ END INTERFACE
 !                                                         JacobiLeadingCoeff
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Return the coefficient of the highest power.
 !
@@ -371,7 +371,7 @@ END INTERFACE
 !                                                    JacobiLeadingCoeffRatio
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Return the ratio of consecutive leading coefficients.
 !
@@ -420,7 +420,7 @@ END INTERFACE
 !                                                             JacobiNormSQR
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Return the weighted squared norm.
 !
@@ -465,7 +465,7 @@ END INTERFACE
 !                                                            JacobiNormSQR2
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Return weighted squared norms from degree zero through n.
 !
@@ -510,7 +510,7 @@ END INTERFACE
 !                                                         JacobiNormSQRRatio
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Return the ratio of consecutive squared norms.
 !
@@ -555,7 +555,7 @@ END INTERFACE
 !                                                      JacobiJacobiMatrix
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Build the symmetric tridiagonal Gauss Jacobi matrix.
 !
@@ -622,7 +622,7 @@ END INTERFACE
 !                                                     JacobiGaussQuadrature
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Compute Gauss quadrature nodes and weights.
 !
@@ -682,7 +682,7 @@ END INTERFACE
 !                                                   JacobiJacobiRadauMatrix
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Build the symmetric tridiagonal Radau Jacobi matrix.
 !
@@ -752,7 +752,7 @@ END INTERFACE
 !                                                JacobiGaussRadauQuadrature
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Compute Gauss Radau quadrature nodes and weights.
 !
@@ -821,7 +821,7 @@ END INTERFACE
 !                                                 JacobiJacobiLobattoMatrix
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Build the symmetric tridiagonal Lobatto Jacobi matrix.
 !
@@ -889,7 +889,7 @@ END INTERFACE
 !                                              JacobiGaussLobattoQuadrature
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Compute Gauss Lobatto quadrature nodes and weights.
 !
@@ -951,7 +951,7 @@ END INTERFACE
 !                                                              JacobiZeros
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Return the n roots of a degree n polynomial.
 !
@@ -1000,7 +1000,7 @@ END INTERFACE
 !                                                          JacobiQuadrature
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Compute a selected quadrature nodes and weights.
 !
@@ -1077,7 +1077,7 @@ END INTERFACE
 !                                                             JacobiEvalAll
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate polynomials through degree n.
 !
@@ -1130,7 +1130,7 @@ END INTERFACE JacobiEvalAll
 !                                                       JacobiEvalAll
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate polynomials through degree n.
 !
@@ -1192,7 +1192,7 @@ END INTERFACE JacobiEvalAll_
 !                                                             JacobiEvalUpto
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate polynomials through degree n.
 !
@@ -1245,7 +1245,7 @@ END INTERFACE JacobiEvalAll
 !                                                              JacobiEvalAll
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate polynomials through degree n.
 !
@@ -1308,7 +1308,7 @@ END INTERFACE JacobiEvalAll_
 !                                                             JacobiEval
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate one polynomial.
 !
@@ -1360,7 +1360,7 @@ END INTERFACE JacobiEval
 !                                                             JacobiEvalUpto
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate one polynomial.
 !
@@ -1412,7 +1412,7 @@ END INTERFACE JacobiEval
 !                                                             JacobiEvalSum
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate a polynomial expansion.
 !
@@ -1473,7 +1473,7 @@ END INTERFACE JacobiEvalSum
 !                                                             JacobiEvalSum
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate a polynomial expansion.
 !
@@ -1534,7 +1534,7 @@ END INTERFACE JacobiEvalSum
 !                                                         JacobiGradientEval
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate the first derivative.
 !
@@ -1591,7 +1591,7 @@ END INTERFACE JacobiGradientEval
 !                                                        JacobiGradientEval
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate the first derivative.
 !
@@ -1644,7 +1644,7 @@ END INTERFACE JacobiGradientEval
 !                                                      JacobiGradientEvalAll
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate first derivatives through degree n.
 !
@@ -1701,7 +1701,7 @@ END INTERFACE JacobiGradientEvalAll
 !
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate first derivatives through degree n.
 !
@@ -1767,7 +1767,7 @@ END INTERFACE JacobiGradientEvalAll_
 !                                                     JacobiGradientEvalAll
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate first derivatives through degree n.
 !
@@ -1820,7 +1820,7 @@ END INTERFACE JacobiGradientEvalAll
 !
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate first derivatives through degree n.
 !
@@ -1883,7 +1883,7 @@ END INTERFACE JacobiGradientEvalAll_
 !                                                      JacobiGradientEvalSum
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate the derivative of a polynomial expansion.
 !
@@ -1946,7 +1946,7 @@ END INTERFACE JacobiGradientEvalSum
 !                                                     JacobiGradientEvalSum
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate the derivative of a polynomial expansion.
 !
@@ -2009,7 +2009,7 @@ END INTERFACE JacobiGradientEvalSum
 !                                                      JacobiGradientEvalSum
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate the derivative of a polynomial expansion.
 !
@@ -2075,7 +2075,7 @@ END INTERFACE JacobiGradientEvalSum
 !                                                     JacobiGradientEvalSum
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate the derivative of a polynomial expansion.
 !
@@ -2141,7 +2141,7 @@ END INTERFACE JacobiGradientEvalSum
 !                                                           JacobiTransform
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Project sampled values onto the polynomial basis.
 !
@@ -2221,7 +2221,7 @@ END INTERFACE JacobiTransform
 !                                                         JacobiTransform_
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Project sampled values onto the polynomial basis.
 !
@@ -2310,7 +2310,7 @@ END INTERFACE JacobiTransform_
 !                                                           JacobiTransform
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Project sampled values onto the polynomial basis.
 !
@@ -2401,7 +2401,7 @@ END INTERFACE JacobiTransform_
 !                                                           JacobiTransform
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Project sampled values onto the polynomial basis.
 !
@@ -2480,7 +2480,7 @@ END INTERFACE JacobiTransform
 !                                                         JacobiTransform_
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Project sampled values onto the polynomial basis.
 !
@@ -2566,7 +2566,7 @@ END INTERFACE JacobiTransform_
 !                                                        JacobiInvTransform
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate a polynomial expansion.
 !
@@ -2628,7 +2628,7 @@ END INTERFACE JacobiInvTransform
 !                                                        JacobiInvTransform
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate a polynomial expansion.
 !
@@ -2690,7 +2690,7 @@ END INTERFACE JacobiInvTransform
 !                                                      JacobiGradientCoeff
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Differentiate modal coefficients in the same family.
 !
@@ -2747,7 +2747,7 @@ END INTERFACE JacobiGradientCoeff
 !                                                              JacobiDMatrix
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Build the nodal first derivative matrix.
 !
@@ -2811,7 +2811,7 @@ END INTERFACE JacobiDMatrix
 !                                                         JacobiLaplacianEval
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Reserved second derivative interface; currently unimplemented.
 !
@@ -2874,7 +2874,7 @@ END INTERFACE JacobiLaplacianEval
 !                                                        JacobiLaplacianEval
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Reserved second derivative interface; currently unimplemented.
 !
@@ -2933,7 +2933,7 @@ END INTERFACE JacobiLaplacianEval
 !                                                      JacobiLaplacianEvalAll
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Reserved second derivative interface; currently unimplemented.
 !
@@ -2996,7 +2996,7 @@ END INTERFACE JacobiLaplacianEvalAll
 !
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Reserved second derivative interface; currently unimplemented.
 !
@@ -3065,7 +3065,7 @@ END INTERFACE JacobiLaplacianEvalAll_
 !                                                     JacobiLaplacianEvalAll
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Reserved second derivative interface; currently unimplemented.
 !
@@ -3124,7 +3124,7 @@ END INTERFACE JacobiLaplacianEvalAll
 !
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Reserved second derivative interface; currently unimplemented.
 !

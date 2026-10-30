@@ -14,7 +14,7 @@
 ! You should have received a copy of the GNU General Public License
 ! along with this program.  If not, see <https://www.gnu.org/licenses/>
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Unscaled integrated Legendre basis utilities.
 !
@@ -79,7 +79,7 @@ PUBLIC :: UnscaledLobattoStiffnessMatrix
 !                                               UnscaledLobattoLeadingCoeff
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Return the coefficient of the highest power.
 !
@@ -142,7 +142,7 @@ END INTERFACE
 !                                                       UnscaledLobattoZeros
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Return Lobatto interpolation nodes.
 !
@@ -191,7 +191,7 @@ END INTERFACE
 !                                                        UnscaledLobattoEval
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate one polynomial.
 !
@@ -239,7 +239,7 @@ END INTERFACE UnscaledLobattoEval
 !                                                          UnscaledLobattoEval
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate one polynomial.
 !
@@ -287,7 +287,7 @@ END INTERFACE UnscaledLobattoEval
 !                                                    UnscaledLobattoEvalAll
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate polynomials through degree n.
 !
@@ -336,7 +336,7 @@ END INTERFACE UnscaledLobattoEvalAll
 !                                                   UnscaledLobattoEvalAll_
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate polynomials through degree n.
 !
@@ -393,7 +393,7 @@ END INTERFACE UnscaledLobattoEvalAll_
 !                                                     UnscaledLobattoEvalAll
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate polynomials through degree n.
 !
@@ -443,7 +443,7 @@ END INTERFACE UnscaledLobattoEvalAll
 !                                                 UnscaledLobattoEvalAll_
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate polynomials through degree n.
 !
@@ -502,7 +502,7 @@ END INTERFACE UnscaledLobattoEvalAll_
 !                                       UnscaledLobattoMonomialExpansionAll
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Expand all polynomials through degree n in monomials.
 !
@@ -547,7 +547,7 @@ END INTERFACE
 !                                           UnscaledLobattoMonomialExpansion
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Expand one polynomial in monomials.
 !
@@ -589,7 +589,7 @@ END INTERFACE
 !
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate first derivatives through degree n.
 !
@@ -636,7 +636,7 @@ END INTERFACE UnscaledLobattoGradientEvalAll
 !
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate first derivatives through degree n.
 !
@@ -692,7 +692,7 @@ END INTERFACE UnscaledLobattoGradientEvalAll_
 !
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate first derivatives through degree n.
 !
@@ -739,7 +739,7 @@ END INTERFACE UnscaledLobattoGradientEvalAll
 !
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate first derivatives through degree n.
 !
@@ -798,7 +798,7 @@ END INTERFACE UnscaledLobattoGradientEvalAll_
 !
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate the first derivative.
 !
@@ -846,7 +846,7 @@ END INTERFACE UnscaledLobattoGradientEval
 !
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate the first derivative.
 !
@@ -893,7 +893,7 @@ END INTERFACE UnscaledLobattoGradientEval
 !
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Return the mass matrix on the biunit interval.
 !
@@ -939,7 +939,7 @@ END INTERFACE
 !
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Return the stiffness matrix on the biunit interval.
 !
@@ -985,7 +985,7 @@ END INTERFACE
 !                                            UnscaledLobattoLaplacianEvalAll
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Reserved second derivative interface; currently unimplemented.
 !
@@ -1039,7 +1039,7 @@ END INTERFACE UnscaledLobattoLaplacianEvalAll
 !                                          UnscaledLobattoLaplacianEvalAll_
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Reserved second derivative interface; currently unimplemented.
 !
@@ -1098,7 +1098,7 @@ END INTERFACE UnscaledLobattoLaplacianEvalAll_
 !                                            UnscaledLobattoLaplacianEvalAll
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Reserved second derivative interface; currently unimplemented.
 !
@@ -1152,7 +1152,7 @@ END INTERFACE UnscaledLobattoLaplacianEvalAll
 !                                           UnscaledLobattoLaplacianEvalAll_
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Reserved second derivative interface; currently unimplemented.
 !
@@ -1214,7 +1214,7 @@ END INTERFACE UnscaledLobattoLaplacianEvalAll_
 !                                               UnscaledLobattoLaplacianEval
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Reserved second derivative interface; currently unimplemented.
 !
@@ -1269,7 +1269,7 @@ END INTERFACE UnscaledLobattoLaplacianEval
 !                                               UnscaledLobattoLaplacianEval
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Reserved second derivative interface; currently unimplemented.
 !

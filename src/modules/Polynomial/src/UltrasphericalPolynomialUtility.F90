@@ -14,7 +14,7 @@
 ! You should have received a copy of the GNU General Public License
 ! along with this program.  If not, see <https://www.gnu.org/licenses/>
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Gegenbauer polynomial evaluation, quadrature and transforms.
 !
@@ -101,7 +101,7 @@ PUBLIC :: UltrasphericalDMatEvenOdd
 !                                                        UltrasphericalAlpha
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Return a monic recurrence diagonal coefficient.
 !
@@ -147,7 +147,7 @@ END INTERFACE
 !                                                        UltrasphericalBeta
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Return a monic recurrence beta coefficient.
 !
@@ -197,7 +197,7 @@ END INTERFACE
 !                                           GetUltrasphericalRecurrenceCoeff
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Return monic three term recurrence coefficients.
 !
@@ -255,7 +255,7 @@ END INTERFACE
 !                                          GetUltrasphericalRecurrenceCoeff2
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Return standard three term recurrence coefficients.
 !
@@ -320,7 +320,7 @@ END INTERFACE
 !                                                 UltrasphericalLeadingCoeff
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Return the coefficient of the highest power.
 !
@@ -366,7 +366,7 @@ END INTERFACE
 !                                           UltrasphericalLeadingCoeffRatio
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Return the ratio of consecutive leading coefficients.
 !
@@ -412,7 +412,7 @@ END INTERFACE
 !                                                     UltrasphericalNormSQR
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Return the weighted squared norm.
 !
@@ -457,7 +457,7 @@ END INTERFACE
 !                                                     UltrasphericalNormSQR2
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Return weighted squared norms from degree zero through n.
 !
@@ -502,7 +502,7 @@ END INTERFACE
 !
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Return the ratio of consecutive squared norms.
 !
@@ -547,7 +547,7 @@ END INTERFACE
 !                                                 UltrasphericalJacobiMatrix
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Build the symmetric tridiagonal Gauss Jacobi matrix.
 !
@@ -614,7 +614,7 @@ END INTERFACE
 !                                             UltrasphericalGaussQuadrature
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Compute Gauss quadrature nodes and weights.
 !
@@ -673,7 +673,7 @@ END INTERFACE
 !                                            UltrasphericalJacobiRadauMatrix
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Build the symmetric tridiagonal Radau Jacobi matrix.
 !
@@ -740,7 +740,7 @@ END INTERFACE
 !                                         UltrasphericalGaussRadauQuadrature
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Compute Gauss Radau quadrature nodes and weights.
 !
@@ -807,7 +807,7 @@ END INTERFACE
 !                                  UltrasphericalUltrasphericalLobattoMatrix
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Build the symmetric tridiagonal Lobatto Jacobi matrix.
 !
@@ -872,7 +872,7 @@ END INTERFACE
 !                                      UltrasphericalGaussLobattoQuadrature
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Compute Gauss Lobatto quadrature nodes and weights.
 !
@@ -934,7 +934,7 @@ END INTERFACE
 !                                                        UltrasphericalZeros
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Return the n roots of a degree n polynomial.
 !
@@ -982,7 +982,7 @@ END INTERFACE
 !                                                  UltrasphericalQuadrature
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Compute a selected quadrature nodes and weights.
 !
@@ -1060,7 +1060,7 @@ END INTERFACE
 !                                                        UltrasphericalEval
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate one polynomial.
 !
@@ -1112,7 +1112,7 @@ END INTERFACE UltrasphericalEval
 !                                                          UltrasphericalEval
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate one polynomial.
 !
@@ -1164,7 +1164,7 @@ END INTERFACE UltrasphericalEval
 !                                                      UltrasphericalEvalAll
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate polynomials through degree n.
 !
@@ -1217,7 +1217,7 @@ END INTERFACE UltrasphericalEvalAll
 !                                                      UltrasphericalEvalAll
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate polynomials through degree n.
 !
@@ -1279,7 +1279,7 @@ END INTERFACE UltrasphericalEvalAll_
 !                                                      UltrasphericalEvalAll
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate polynomials through degree n.
 !
@@ -1332,7 +1332,7 @@ END INTERFACE UltrasphericalEvalAll
 !                                                      UltrasphericalEvalAll
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate polynomials through degree n.
 !
@@ -1396,7 +1396,7 @@ END INTERFACE UltrasphericalEvalAll_
 !
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate first derivatives through degree n.
 !
@@ -1448,7 +1448,7 @@ END INTERFACE UltrasphericalGradientEvalAll
 !
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate first derivatives through degree n.
 !
@@ -1509,7 +1509,7 @@ END INTERFACE UltrasphericalGradientEvalAll_
 !
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate first derivatives through degree n.
 !
@@ -1561,7 +1561,7 @@ END INTERFACE UltrasphericalGradientEvalAll
 !                                             UltraSphericalGradientEvalAll
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate first derivatives through degree n.
 !
@@ -1624,7 +1624,7 @@ END INTERFACE UltrasphericalGradientEvalAll_
 !
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate the first derivative.
 !
@@ -1675,7 +1675,7 @@ END INTERFACE UltrasphericalGradientEval
 !
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate the first derivative.
 !
@@ -1726,7 +1726,7 @@ END INTERFACE UltrasphericalGradientEval
 !                                                     UltrasphericalEvalSum
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate a polynomial expansion.
 !
@@ -1784,7 +1784,7 @@ END INTERFACE UltrasphericalEvalSum
 !                                                      UltrasphericalEvalSum
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate a polynomial expansion.
 !
@@ -1841,7 +1841,7 @@ END INTERFACE UltrasphericalEvalSum
 !                                             UltrasphericalGradientEvalSum
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate the derivative of a polynomial expansion.
 !
@@ -1901,7 +1901,7 @@ END INTERFACE UltrasphericalGradientEvalSum
 !                                              UltrasphericalGradientEvalSum
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate the derivative of a polynomial expansion.
 !
@@ -1961,7 +1961,7 @@ END INTERFACE UltrasphericalGradientEvalSum
 !                                              UltrasphericalGradientEvalSum
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate the derivative of a polynomial expansion.
 !
@@ -2024,7 +2024,7 @@ END INTERFACE UltrasphericalGradientEvalSum
 !                                             UltrasphericalGradientEvalSum
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate the derivative of a polynomial expansion.
 !
@@ -2087,7 +2087,7 @@ END INTERFACE UltrasphericalGradientEvalSum
 !                                                  UltrasphericalTransform
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Project sampled values onto the polynomial basis.
 !
@@ -2161,7 +2161,7 @@ END INTERFACE UltrasphericalTransform
 !                                                   UltrasphericalTransform
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Project sampled values onto the polynomial basis.
 !
@@ -2246,7 +2246,7 @@ END INTERFACE UltrasphericalTransform_
 !                                                   UltrasphericalTransform
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Project sampled values onto the polynomial basis.
 !
@@ -2336,7 +2336,7 @@ END INTERFACE UltrasphericalTransform_
 !                                                   UltrasphericalTransform
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Project sampled values onto the polynomial basis.
 !
@@ -2408,7 +2408,7 @@ END INTERFACE UltrasphericalTransform
 !                                                    UltrasphericalTransform
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Project sampled values onto the polynomial basis.
 !
@@ -2490,7 +2490,7 @@ END INTERFACE UltrasphericalTransform_
 !                                                 UltrasphericalInvTransform
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate a polynomial expansion.
 !
@@ -2545,7 +2545,7 @@ INTERFACE
   END FUNCTION UltrasphericalInvTransform1
 END INTERFACE
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate a polynomial expansion.
 !
@@ -2588,7 +2588,7 @@ END INTERFACE UltrasphericalInvTransform
 !                                                 UltrasphericalInvTransform
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate a polynomial expansion.
 !
@@ -2643,7 +2643,7 @@ INTERFACE
   END FUNCTION UltrasphericalInvTransform2
 END INTERFACE
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate a polynomial expansion.
 !
@@ -2686,7 +2686,7 @@ END INTERFACE UltrasphericalInvTransform
 !                                               UltrasphericalGradientCoeff
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Differentiate modal coefficients in the same family.
 !
@@ -2736,7 +2736,7 @@ INTERFACE
   END FUNCTION UltrasphericalGradientCoeff1
 END INTERFACE
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Differentiate modal coefficients in the same family.
 !
@@ -2777,7 +2777,7 @@ END INTERFACE UltrasphericalGradientCoeff
 !                                                     UltrasphericalDMatrix
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Build the nodal first derivative matrix.
 !
@@ -2835,7 +2835,7 @@ INTERFACE
   END FUNCTION UltrasphericalDMatrix1
 END INTERFACE
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Build the nodal first derivative matrix.
 !
@@ -2881,7 +2881,7 @@ END INTERFACE UltrasphericalDMatrix
 !                                                 UltrasphericalDMatEvenOdd
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Form even and odd blocks by pairing mirrored columns.
 !
@@ -2940,7 +2940,7 @@ INTERFACE
   END SUBROUTINE UltrasphericalDMatEvenOdd1
 END INTERFACE
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Form even and odd blocks by pairing mirrored columns.
 !
@@ -2988,7 +2988,7 @@ END INTERFACE UltrasphericalDMatEvenOdd
 !                                             UltrasphericalLaplacianEvalAll
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Reserved second derivative interface; currently unimplemented.
 !
@@ -3047,7 +3047,7 @@ END INTERFACE UltrasphericalLaplacianEvalAll
 !                                           UltrashphericalLaplacianEvalAll_
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Reserved second derivative interface; currently unimplemented.
 !
@@ -3111,7 +3111,7 @@ END INTERFACE UltrasphericalLaplacianEvalAll_
 !                                             UltrasphericalLaplacianEvalAll
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Reserved second derivative interface; currently unimplemented.
 !
@@ -3170,7 +3170,7 @@ END INTERFACE UltrasphericalLaplacianEvalAll
 !                                             UltraSphericalLaplacianEvalAll_
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Reserved second derivative interface; currently unimplemented.
 !
@@ -3236,7 +3236,7 @@ END INTERFACE UltrasphericalLaplacianEvalAll_
 !
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Reserved second derivative interface; currently unimplemented.
 !
@@ -3294,7 +3294,7 @@ END INTERFACE UltrasphericalLaplacianEval
 !
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Reserved second derivative interface; currently unimplemented.
 !

@@ -1,4 +1,4 @@
-!> author: OpenAI Codex
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Return weighted squared norms from degree zero through n.
 

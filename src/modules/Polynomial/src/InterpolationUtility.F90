@@ -14,7 +14,7 @@
 ! You should have received a copy of the GNU General Public License
 ! along with this program.  If not, see <https://www.gnu.org/licenses/>
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Vandermonde matrices and element interpolation metadata.
 !
@@ -70,7 +70,7 @@ PUBLIC :: RefElemDomain
 !
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Build a one dimensional monomial Vandermonde matrix.
 !
@@ -129,7 +129,7 @@ END INTERFACE VandermondeMatrix
 !                                                             GetTotalDOF
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Return total interpolation DOFs for an element.
 !
@@ -189,7 +189,7 @@ END INTERFACE GetTotalDOF
 !                                                             GetTotalInDOF
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Return interior interpolation DOFs for an element.
 !
@@ -249,7 +249,7 @@ END INTERFACE GetTotalInDOF
 !                                                           RefElemDomain
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Return the reference domain name for an interpolation family.
 !

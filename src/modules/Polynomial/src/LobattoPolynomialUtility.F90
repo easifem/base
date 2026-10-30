@@ -14,7 +14,7 @@
 ! You should have received a copy of the GNU General Public License
 ! along with this program.  If not, see <https://www.gnu.org/licenses/>
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Scaled integrated Legendre basis and Lobatto kernel utilities.
 !
@@ -94,7 +94,7 @@ PUBLIC :: Lobatto6, Lobatto7, Lobatto8, Lobatto9, Lobatto10
 !                                                         LobattoTransform_
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Project sampled values onto the polynomial basis.
 !
@@ -182,7 +182,7 @@ END INTERFACE LobattoTransform_
 !                                                          LobattoTransform_
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Project sampled values onto the polynomial basis.
 !
@@ -265,7 +265,7 @@ END INTERFACE LobattoTransform_
 !                                                       LobattoTransform_
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Project sampled values onto the polynomial basis.
 !
@@ -342,7 +342,7 @@ END INTERFACE LobattoTransform_
 !                                                         LobattoLeadingCoeff
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Return the coefficient of the highest power.
 !
@@ -405,7 +405,7 @@ END INTERFACE
 !                                                              LobattoZeros
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Return Lobatto interpolation nodes.
 !
@@ -454,7 +454,7 @@ END INTERFACE
 !                                                             LobattoEval
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate one polynomial.
 !
@@ -502,7 +502,7 @@ END INTERFACE LobattoEval
 !                                                          LobattoEval
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate one polynomial.
 !
@@ -550,7 +550,7 @@ END INTERFACE LobattoEval
 !                                                             LobattoEvalAll
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate polynomials through degree n.
 !
@@ -599,7 +599,7 @@ END INTERFACE LobattoEvalAll
 !                                                            LobattoEvalAll_
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate polynomials through degree n.
 !
@@ -656,7 +656,7 @@ END INTERFACE LobattoEvalAll_
 !                                                           LobattoEvalAll
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate polynomials through degree n.
 !
@@ -705,7 +705,7 @@ END INTERFACE LobattoEvalAll
 !                                                            LobattoEvalAll_
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate polynomials through degree n.
 !
@@ -763,7 +763,7 @@ END INTERFACE LobattoEvalAll_
 !                                                      LobattoKernelEvalAll
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate Lobatto kernel modes.
 !
@@ -812,7 +812,7 @@ END INTERFACE LobattoKernelEvalAll
 !                                                      LobattoKernelEvalAll
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate Lobatto kernel modes.
 !
@@ -868,7 +868,7 @@ END INTERFACE LobattoKernelEvalAll_
 !                                               LobattoKernelGradientEvalAll
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate derivatives of Lobatto kernel modes.
 !
@@ -917,7 +917,7 @@ END INTERFACE LobattoKernelGradientEvalAll
 !                                               LobattoKernelGradientEvalAll
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate derivatives of Lobatto kernel modes.
 !
@@ -974,7 +974,7 @@ END INTERFACE LobattoKernelGradientEvalAll_
 !                                             LobattoMonomialExpansionAll
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Expand all polynomials through degree n in monomials.
 !
@@ -1018,7 +1018,7 @@ END INTERFACE
 !                                             LobattoMonomialExpansion
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Expand one polynomial in monomials.
 !
@@ -1060,7 +1060,7 @@ END INTERFACE
 !
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate first derivatives through degree n.
 !
@@ -1107,7 +1107,7 @@ END INTERFACE LobattoGradientEvalAll
 !
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate first derivatives through degree n.
 !
@@ -1162,7 +1162,7 @@ END INTERFACE LobattoGradientEvalAll_
 !
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate first derivatives through degree n.
 !
@@ -1209,7 +1209,7 @@ END INTERFACE LobattoGradientEvalAll
 !
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate first derivatives through degree n.
 !
@@ -1265,7 +1265,7 @@ END INTERFACE LobattoGradientEvalAll_
 !
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate the first derivative.
 !
@@ -1313,7 +1313,7 @@ END INTERFACE LobattoGradientEval
 !
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate the first derivative.
 !
@@ -1360,7 +1360,7 @@ END INTERFACE LobattoGradientEval
 !
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Return the mass matrix on the biunit interval.
 !
@@ -1406,7 +1406,7 @@ END INTERFACE
 !
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Return the stiffness matrix on the biunit interval.
 !
@@ -1452,7 +1452,7 @@ END INTERFACE
 !                                                                 Lobatto0
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate the fixed degree 0 Lobatto polynomial.
 !
@@ -1494,7 +1494,7 @@ END INTERFACE
 !                                                               Lobatto1
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate the fixed degree 1 Lobatto polynomial.
 !
@@ -1536,7 +1536,7 @@ END INTERFACE
 !                                                               Lobatto2
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate the fixed degree 2 Lobatto polynomial.
 !
@@ -1578,7 +1578,7 @@ END INTERFACE
 !                                                               Lobatto3
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate the fixed degree 3 Lobatto polynomial.
 !
@@ -1620,7 +1620,7 @@ END INTERFACE
 !                                                               Lobatto4
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate the fixed degree 4 Lobatto polynomial.
 !
@@ -1662,7 +1662,7 @@ END INTERFACE
 !                                                               Lobatto5
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate the fixed degree 5 Lobatto polynomial.
 !
@@ -1704,7 +1704,7 @@ END INTERFACE
 !                                                               Lobatto6
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate the fixed degree 6 Lobatto polynomial.
 !
@@ -1746,7 +1746,7 @@ END INTERFACE
 !                                                               Lobatto7
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate the fixed degree 7 Lobatto polynomial.
 !
@@ -1788,7 +1788,7 @@ END INTERFACE
 !                                                               Lobatto8
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate the fixed degree 8 Lobatto polynomial.
 !
@@ -1830,7 +1830,7 @@ END INTERFACE
 !                                                               Lobatto9
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate the fixed degree 9 Lobatto polynomial.
 !
@@ -1872,7 +1872,7 @@ END INTERFACE
 !                                                               Lobatto10
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate the fixed degree 10 Lobatto polynomial.
 !
@@ -1914,7 +1914,7 @@ END INTERFACE
 !                                                    LobattoLaplacianEvalAll
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Reserved second derivative interface; currently unimplemented.
 !
@@ -1968,7 +1968,7 @@ END INTERFACE LobattoLaplacianEvalAll
 !
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Reserved second derivative interface; currently unimplemented.
 !
@@ -2027,7 +2027,7 @@ END INTERFACE LobattoLaplacianEvalAll_
 !                                                    LobattoLaplacianEvalAll
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Reserved second derivative interface; currently unimplemented.
 !
@@ -2081,7 +2081,7 @@ END INTERFACE LobattoLaplacianEvalAll
 !                                                    LobattoLaplacianEvalAll_
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Reserved second derivative interface; currently unimplemented.
 !
@@ -2141,7 +2141,7 @@ END INTERFACE LobattoLaplacianEvalAll_
 !                                                       LobattoLaplacianEval
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Reserved second derivative interface; currently unimplemented.
 !
@@ -2196,7 +2196,7 @@ END INTERFACE LobattoLaplacianEval
 !                                                       LobattoLaplacianEval
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Reserved second derivative interface; currently unimplemented.
 !

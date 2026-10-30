@@ -1,4 +1,4 @@
-!> author: OpenAI Codex
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Expand all polynomials through degree n in monomials.
 

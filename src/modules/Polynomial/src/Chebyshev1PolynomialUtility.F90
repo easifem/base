@@ -14,7 +14,7 @@
 ! You should have received a copy of the GNU General Public License
 ! along with this program.  If not, see <https://www.gnu.org/licenses/>
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: First kind Chebyshev polynomial utilities.
 !
@@ -101,7 +101,7 @@ PUBLIC :: Chebyshev1DMatEvenOdd
 !                                                        Chebyshev1Alpha
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Return a monic recurrence diagonal coefficient.
 !
@@ -144,7 +144,7 @@ END INTERFACE
 !                                                        Chebyshev1Beta
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Return a monic recurrence beta coefficient.
 !
@@ -191,7 +191,7 @@ END INTERFACE
 !                                              GetChebyshev1RecurrenceCoeff
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Return monic three term recurrence coefficients.
 !
@@ -244,7 +244,7 @@ END INTERFACE
 !                                              GetChebyshev1RecurrenceCoeff2
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Return standard three term recurrence coefficients.
 !
@@ -302,7 +302,7 @@ END INTERFACE
 !                                                    Chebyshev1LeadingCoeff
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Return the coefficient of the highest power.
 !
@@ -345,7 +345,7 @@ END INTERFACE
 !                                               Chebyshev1LeadingCoeffRatio
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Return the ratio of consecutive leading coefficients.
 !
@@ -388,7 +388,7 @@ END INTERFACE
 !                                                         Chebyshev1NormSQR
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Return the weighted squared norm.
 !
@@ -429,7 +429,7 @@ END INTERFACE
 !                                                        Chebyshev1NormSQR2
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Return weighted squared norms from degree zero through n.
 !
@@ -470,7 +470,7 @@ END INTERFACE
 !                                                    Chebyshev1NormSQRRatio
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Return the ratio of consecutive squared norms.
 !
@@ -515,7 +515,7 @@ END INTERFACE
 !                                                     Chebyshev1JacobiMatrix
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Build the symmetric tridiagonal Gauss Jacobi matrix.
 !
@@ -577,7 +577,7 @@ END INTERFACE
 !                                                 Chebyshev1GaussQuadrature
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Compute Gauss quadrature nodes and weights.
 !
@@ -632,7 +632,7 @@ END INTERFACE
 !                                               Chebyshev1JacobiRadauMatrix
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Build the symmetric tridiagonal Radau Jacobi matrix.
 !
@@ -696,7 +696,7 @@ END INTERFACE
 !                                            Chebyshev1GaussRadauQuadrature
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Compute Gauss Radau quadrature nodes and weights.
 !
@@ -757,7 +757,7 @@ END INTERFACE
 !                                             Chebyshev1JacobiLobattoMatrix
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Build the symmetric tridiagonal Lobatto Jacobi matrix.
 !
@@ -818,7 +818,7 @@ END INTERFACE
 !                                            Chebyshev1GaussLobattoQuadrature
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Compute Gauss Lobatto quadrature nodes and weights.
 !
@@ -875,7 +875,7 @@ END INTERFACE
 !                                                            Chebyshev1Zeros
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Return the n roots of a degree n polynomial.
 !
@@ -920,7 +920,7 @@ END INTERFACE
 !                                                        Chebyshev1Quadrature
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Compute a selected quadrature nodes and weights.
 !
@@ -994,7 +994,7 @@ END INTERFACE
 !                                                             Chebyshev1Eval
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate one polynomial.
 !
@@ -1044,7 +1044,7 @@ END INTERFACE Chebyshev1Eval
 !                                                          Chebyshev1Eval
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate one polynomial.
 !
@@ -1094,7 +1094,7 @@ END INTERFACE Chebyshev1Eval
 !                                                         Chebyshev1EvalAll
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate polynomials through degree n.
 !
@@ -1145,7 +1145,7 @@ END INTERFACE Chebyshev1EvalAll
 !                                                       Chebyshev1EvalAll
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate polynomials through degree n.
 !
@@ -1204,7 +1204,7 @@ END INTERFACE Chebyshev1EvalAll_
 !                                                           Chebyshev1EvalAll
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate polynomials through degree n.
 !
@@ -1255,7 +1255,7 @@ END INTERFACE Chebyshev1EvalAll
 !                                                         ChebyshevEvalAll2_
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate polynomials through degree n.
 !
@@ -1315,7 +1315,7 @@ END INTERFACE Chebyshev1EvalAll_
 !                                             Chebyshev1MonomialExpansionAll
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Expand all polynomials through degree n in monomials.
 !
@@ -1359,7 +1359,7 @@ END INTERFACE
 !                                             Chebyshev1MonomialExpansion
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Expand one polynomial in monomials.
 !
@@ -1401,7 +1401,7 @@ END INTERFACE
 !
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate first derivatives through degree n.
 !
@@ -1448,7 +1448,7 @@ END INTERFACE Chebyshev1GradientEvalAll
 !
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate first derivatives through degree n.
 !
@@ -1504,7 +1504,7 @@ END INTERFACE Chebyshev1GradientEvalAll_
 !
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate first derivatives through degree n.
 !
@@ -1551,7 +1551,7 @@ END INTERFACE Chebyshev1GradientEvalAll
 !
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate first derivatives through degree n.
 !
@@ -1608,7 +1608,7 @@ END INTERFACE Chebyshev1GradientEvalAll_
 !
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate the first derivative.
 !
@@ -1655,7 +1655,7 @@ END INTERFACE Chebyshev1GradientEval
 !
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate the first derivative.
 !
@@ -1702,7 +1702,7 @@ END INTERFACE Chebyshev1GradientEval
 !                                                         Chebyshev1EvalSum
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate a polynomial expansion.
 !
@@ -1757,7 +1757,7 @@ END INTERFACE Chebyshev1EvalSum
 !                                                         Chebyshev1EvalSum
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate a polynomial expansion.
 !
@@ -1811,7 +1811,7 @@ END INTERFACE Chebyshev1EvalSum
 !                                                   Chebyshev1GradientEvalSum
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate the derivative of a polynomial expansion.
 !
@@ -1866,7 +1866,7 @@ END INTERFACE Chebyshev1GradientEvalSum
 !                                                  Chebyshev1GradientEvalSum
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate the derivative of a polynomial expansion.
 !
@@ -1922,7 +1922,7 @@ END INTERFACE Chebyshev1GradientEvalSum
 !                                                   Chebyshev1GradientEvalSum
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate the derivative of a polynomial expansion.
 !
@@ -1980,7 +1980,7 @@ END INTERFACE Chebyshev1GradientEvalSum
 !                                                   Chebyshev1GradientEvalSum
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate the derivative of a polynomial expansion.
 !
@@ -2038,7 +2038,7 @@ END INTERFACE Chebyshev1GradientEvalSum
 !                                                         Chebyshev1Transform
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Project sampled values onto the polynomial basis.
 !
@@ -2108,7 +2108,7 @@ END INTERFACE Chebyshev1Transform
 !                                                     Chebyshev1Transform
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Project sampled values onto the polynomial basis.
 !
@@ -2186,7 +2186,7 @@ END INTERFACE Chebyshev1Transform_
 !                                                     Chebyshev1Transform
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Project sampled values onto the polynomial basis.
 !
@@ -2265,7 +2265,7 @@ END INTERFACE Chebyshev1Transform_
 !                                                   Chebyshev1Transform
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Project sampled values onto the polynomial basis.
 !
@@ -2333,7 +2333,7 @@ END INTERFACE Chebyshev1Transform
 !                                                       Chebyshev1Transform
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Project sampled values onto the polynomial basis.
 !
@@ -2408,7 +2408,7 @@ END INTERFACE Chebyshev1Transform_
 !                                                         Chebyshev1Transform
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Project sampled values onto the polynomial basis.
 !
@@ -2471,7 +2471,7 @@ END INTERFACE Chebyshev1Transform
 !                                                       Chebyshev1Transform
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Project sampled values onto the polynomial basis.
 !
@@ -2541,7 +2541,7 @@ END INTERFACE Chebyshev1Transform_
 !                                                 Chebyshev1InvTransform
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate a polynomial expansion.
 !
@@ -2596,7 +2596,7 @@ END INTERFACE Chebyshev1InvTransform
 !                                                 Chebyshev1InvTransform
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate a polynomial expansion.
 !
@@ -2651,7 +2651,7 @@ END INTERFACE Chebyshev1InvTransform
 !                                               Chebyshev1GradientCoeff
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Differentiate modal coefficients in the same family.
 !
@@ -2702,7 +2702,7 @@ END INTERFACE Chebyshev1GradientCoeff
 !                                                           Chebyshev1DMatrix
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Build the nodal first derivative matrix.
 !
@@ -2759,7 +2759,7 @@ END INTERFACE Chebyshev1DMatrix
 !                                                 Chebyshev1DMatEvenOdd
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Form even and odd blocks by pairing mirrored columns.
 !
@@ -2822,7 +2822,7 @@ END INTERFACE Chebyshev1DMatEvenOdd
 !                                                 Chebyshev1LaplacianEvalAll
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Reserved second derivative interface; currently unimplemented.
 !
@@ -2876,7 +2876,7 @@ END INTERFACE Chebyshev1LaplacianEvalAll
 !                                                 Chebyshev1LaplacianEvalAll_
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Reserved second derivative interface; currently unimplemented.
 !
@@ -2935,7 +2935,7 @@ END INTERFACE Chebyshev1LaplacianEvalAll_
 !                                                 Chebyshev1LaplacianEvalAll
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Reserved second derivative interface; currently unimplemented.
 !
@@ -2989,7 +2989,7 @@ END INTERFACE Chebyshev1LaplacianEvalAll
 !                                                Chebyshev1LaplacianEvalAll_
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Reserved second derivative interface; currently unimplemented.
 !
@@ -3049,7 +3049,7 @@ END INTERFACE Chebyshev1LaplacianEvalAll_
 !                                                    Chebyshev1LaplacianEval
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Reserved second derivative interface; currently unimplemented.
 !
@@ -3103,7 +3103,7 @@ END INTERFACE Chebyshev1LaplacianEval
 !                                                     Chebyshev1LaplacianEval
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Reserved second derivative interface; currently unimplemented.
 !

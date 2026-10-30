@@ -14,7 +14,7 @@
 ! You should have received a copy of the GNU General Public License
 ! along with this program.  If not, see <https://www.gnu.org/licenses/>
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Recursive interpolation nodes on lines, triangles and tetrahedra.
 !
@@ -73,7 +73,7 @@ PUBLIC :: RecursiveNode3D_
 !                                                           RecursiveNode1D
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Construct recursive nodes on a 1D simplex.
 !
@@ -155,7 +155,7 @@ END INTERFACE
 !                                                           RecursiveNode1D_
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Construct recursive nodes on a 1D simplex.
 !
@@ -244,7 +244,7 @@ END INTERFACE
 !                                                            RecursiveNode2D
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Construct recursive nodes on a 2D simplex.
 !
@@ -326,7 +326,7 @@ END INTERFACE
 !                                                          RecursiveNode2D_
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Construct recursive nodes on a 2D simplex.
 !
@@ -415,7 +415,7 @@ END INTERFACE
 !                                                            RecursiveNode3D
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Construct recursive nodes on a 3D simplex.
 !
@@ -497,7 +497,7 @@ END INTERFACE
 !                                                          RecursiveNode3D_
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Construct recursive nodes on a 3D simplex.
 !

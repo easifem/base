@@ -14,7 +14,7 @@
 ! You should have received a copy of the GNU General Public License
 ! along with this program.  If not, see <https://www.gnu.org/licenses/>
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Nodal polynomial construction and evaluation on reference elements.
 !
@@ -97,7 +97,7 @@ PUBLIC :: LagrangeGradientEvalAll_
 !                                                   LagrangeDOF@BasisMethods
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Count total Lagrange interpolation DOFs.
 !
@@ -146,7 +146,7 @@ END INTERFACE LagrangeDOF
 !
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Count total Lagrange interpolation DOFs.
 !
@@ -198,7 +198,7 @@ END INTERFACE LagrangeDOF
 !                                                 LagrangeInDOF@BasisMethods
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Count interior Lagrange interpolation DOFs.
 !
@@ -247,7 +247,7 @@ END INTERFACE
 !                                                           LagrangeDegree
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Return the monomial exponent table for an element.
 !
@@ -296,7 +296,7 @@ END INTERFACE
 !                                                       LagrangeVandermonde
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Build the monomial Vandermonde matrix for an element.
 !
@@ -356,7 +356,7 @@ END INTERFACE
 !                                                       LagrangeVandermonde
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Build the monomial Vandermonde matrix for an element.
 !
@@ -423,7 +423,7 @@ END INTERFACE LagrangeVandermonde_
 !                                                       LagrangeVandermonde
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Build the monomial Vandermonde matrix for an element.
 !
@@ -488,7 +488,7 @@ END INTERFACE LagrangeVandermonde_
 !                                                          EquidistancePoint
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Construct equally spaced interpolation points.
 !
@@ -554,7 +554,7 @@ END INTERFACE
 !
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Construct equally spaced interpolation points.
 !
@@ -628,7 +628,7 @@ END INTERFACE
 !                                                         InterpolationPoint
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Construct interpolation nodes for a selected node family.
 !
@@ -717,7 +717,7 @@ END INTERFACE
 !                                                         InterpolationPoint
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Construct interpolation nodes for a selected node family.
 !
@@ -814,7 +814,7 @@ END INTERFACE
 !                                                           LagrangeCoeff
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Compute monomial coefficients of the nodal basis.
 !
@@ -882,7 +882,7 @@ END INTERFACE LagrangeCoeff
 !                                                           LagrangeCoeff_
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Compute monomial coefficients of the nodal basis.
 !
@@ -957,7 +957,7 @@ END INTERFACE LagrangeCoeff_
 !                                                           LagrangeCoeff
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Compute monomial coefficients of the nodal basis.
 !
@@ -1021,7 +1021,7 @@ END INTERFACE LagrangeCoeff
 !                                                           LagrangeCoeff
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Compute monomial coefficients of the nodal basis.
 !
@@ -1093,7 +1093,7 @@ END INTERFACE LagrangeCoeff_
 !                                                             LagrangeCoeff
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Compute monomial coefficients of the nodal basis.
 !
@@ -1166,7 +1166,7 @@ END INTERFACE LagrangeCoeff
 !
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Compute monomial coefficients of the nodal basis.
 !
@@ -1246,7 +1246,7 @@ END INTERFACE LagrangeCoeff_
 !                                                              LagrangeCoeff
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Compute monomial coefficients of the nodal basis.
 !
@@ -1318,7 +1318,7 @@ END INTERFACE LagrangeCoeff
 !                                                              LagrangeCoeff
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Compute monomial coefficients of the nodal basis.
 !
@@ -1397,7 +1397,7 @@ END INTERFACE LagrangeCoeff_
 !                                                           LagrangeEvalAll
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate the nodal Lagrange basis.
 !
@@ -1502,7 +1502,7 @@ END INTERFACE LagrangeEvalAll
 !
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate the nodal Lagrange basis.
 !
@@ -1616,7 +1616,7 @@ END INTERFACE LagrangeEvalAll_
 !                                                           LagrangeEvalAll
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate gradients of the nodal Lagrange basis.
 !
@@ -1719,7 +1719,7 @@ END INTERFACE LagrangeGradientEvalAll
 !
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate gradients of the nodal Lagrange basis.
 !
