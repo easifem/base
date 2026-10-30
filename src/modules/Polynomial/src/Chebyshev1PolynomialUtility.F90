@@ -1,5 +1,5 @@
 ! This program is a part of EASIFEM library
-! Copyright (C) 2020-2021  Vikas Sharma, Ph.D
+! Copyright (C) 2020-2021 Vikas Sharma, Ph.D
 !
 ! This program is free software: you can redistribute it and/or modify
 ! it under the terms of the GNU General Public License as published by
@@ -12,11 +12,50 @@
 ! GNU General Public License for more details.
 !
 ! You should have received a copy of the GNU General Public License
-! along with this program.  If not, see <https: //www.gnu.org/licenses/>
+! along with this program.  If not, see <https://www.gnu.org/licenses/>
+
+!> author: OpenAI Codex (documentation)
+! date: 2026-10-30
+! summary: First kind Chebyshev polynomial utilities.
 !
+! Quadrature weights include the singular Chebyshev weight. Use
+! Chebyshev1EvalSum for full modal coefficients; ChebClenshaw halves its
+! constant coefficient.
+!
+! Arguments:
+!   None at module scope; see the public interfaces.
+!
+! Returns:
+!   Public polynomial and interpolation procedures.
+!
+! Formula:
+! $$T_n(\cos\theta)=\cos(n\theta),\quad w(x)=(1-x^2)^{-1/2}$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE Chebyshev1PolynomialUtility, ONLY: Chebyshev1Eval
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: x(3), y(3)
+! REAL(DFP), PARAMETER :: tol = 1.0E-11_DFP
+!
+! x = [-0.5_DFP, 0.0_DFP, 0.5_DFP]
+! y = Chebyshev1Eval(n=2_I4B, x=x)
+! CALL OK(MAXVAL(ABS(y-(2.0_DFP*x*x-1.0_DFP))) < tol, &
+!   "Degree two agrees with its analytic formula")
+! CALL OK(ABS(Chebyshev1Eval(n=2_I4B, x=0.0_DFP) &
+!   -y(2)) < tol, "Scalar and vector calls agree")
+! END PROGRAM main
+!```
 
 MODULE Chebyshev1PolynomialUtility
-USE GlobalData, ONLY: DFP, I4B, LGT
+USE GlobalData, ONLY: DFP
+USE GlobalData, ONLY: I4B
+USE GlobalData, ONLY: LGT
 USE BaseType, ONLY: iface_1DFunction
 IMPLICIT NONE
 PRIVATE
@@ -62,9 +101,35 @@ PUBLIC :: Chebyshev1DMatEvenOdd
 !                                                        Chebyshev1Alpha
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 8 Sept 2022
-! summary: Recurrence coefficient, beta, of Chebyshev1 polynomial
+!> author: OpenAI Codex (documentation)
+! date: 2026-10-30
+! summary: Return a monic recurrence diagonal coefficient.
+!
+! Arguments:
+!   n : INTEGER(I4B), INTENT(IN). Maximum polynomial degree; use n>=0.
+!
+! Returns:
+!   ans : REAL(DFP).
+!
+! Formula:
+! $$\pi_{n+1}=(x-\alpha_n)\pi_n-\beta_n\pi_{n-1}$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE Chebyshev1PolynomialUtility, ONLY: Chebyshev1Alpha
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: y
+!
+! y = Chebyshev1Alpha(n=2_I4B)
+! CALL OK(ABS(y-(0.0_DFP)) < 1.0E-11_DFP, &
+!   "Degree two coefficient or norm")
+! END PROGRAM main
+!```
 
 INTERFACE
   MODULE PURE FUNCTION Chebyshev1Alpha(n) RESULT(ans)
@@ -79,9 +144,39 @@ END INTERFACE
 !                                                        Chebyshev1Beta
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 8 Sept 2022
-! summary: Recurrence coefficient, beta, of Chebyshev1 polynomial
+!> author: OpenAI Codex (documentation)
+! date: 2026-10-30
+! summary: Return a monic recurrence beta coefficient.
+!
+! For beta, n=0 denotes the weight integral; the displayed norm ratio uses
+! monic squared norms.
+!
+! Arguments:
+!   n : INTEGER(I4B), INTENT(IN). Maximum polynomial degree; use n>=0.
+!
+! Returns:
+!   ans : REAL(DFP).
+!
+! Formula:
+! $$\beta_0=\int_{-1}^{1}w(x)\,dx,\quad \beta_n=\widehat h_n/\widehat
+! h_{n-1}$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE Chebyshev1PolynomialUtility, ONLY: Chebyshev1Beta
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: y
+!
+! y = Chebyshev1Beta(n=2_I4B)
+! CALL OK(ABS(y-(0.25_DFP)) < 1.0E-11_DFP, &
+!   "Degree two coefficient or norm")
+! END PROGRAM main
+!```
 
 INTERFACE
   MODULE PURE FUNCTION Chebyshev1Beta(n) RESULT(ans)
@@ -96,15 +191,45 @@ END INTERFACE
 !                                              GetChebyshev1RecurrenceCoeff
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 2 Aug 2022
-! summary: Return the recurrence coefficient for nth order Chebyshev1
-! polynomial
+!> author: OpenAI Codex (documentation)
+! date: 2026-10-30
+! summary: Return monic three term recurrence coefficients.
 !
+! Arrays are indexed from zero and contain n coefficients. Use n>=1.
+! betaCoeff(0) stores the weight integral.
 !
-!# Introduction
+! Arguments:
+!   n : INTEGER(I4B), INTENT(IN). Recurrence length or matrix size; use n>=1.
+!   alphaCoeff : REAL(DFP), INTENT(OUT)(0:n - 1). Monic recurrence diagonal
+! coefficients, indexed from zero.
+!   betaCoeff : REAL(DFP), INTENT(OUT)(0:n - 1). Monic recurrence beta values;
+! index zero is the weight integral.
 !
-! These recurrence coefficients are for monic jacobi polynomials.
+! Returns:
+!   Writes alphaCoeff(0:n - 1), betaCoeff(0:n - 1).
+!
+! Formula:
+! $$\pi_{j+1}=(x-\alpha_j)\pi_j-\beta_j\pi_{j-1}$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE Chebyshev1PolynomialUtility, ONLY: GetChebyshev1RecurrenceCoeff
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: a(0:2), b(0:2)
+!
+! CALL GetChebyshev1RecurrenceCoeff( &
+!   n=3_I4B, alphaCoeff=a, betaCoeff=b)
+! CALL OK(MAXVAL(ABS(a)) < 1.0E-11_DFP, &
+!   "Symmetric family has zero diagonal")
+! CALL OK(ABS(b(2)-0.25_DFP) &
+!   < 1.0E-11_DFP, "Monic beta coefficient")
+! END PROGRAM main
+!```
 
 INTERFACE
   MODULE PURE SUBROUTINE GetChebyshev1RecurrenceCoeff(n, alphaCoeff, &
@@ -119,15 +244,47 @@ END INTERFACE
 !                                              GetChebyshev1RecurrenceCoeff2
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 2 Aug 2022
-! summary: Return the recurrence coefficient for nth order Chebyshev1
-! polynomial
+!> author: OpenAI Codex (documentation)
+! date: 2026-10-30
+! summary: Return standard three term recurrence coefficients.
 !
+! Arrays are indexed from zero and contain n coefficients. Use n>=1.
+! Initialize the family specific degree zero and degree one polynomials before
+! advancing the recurrence.
 !
-!# Introduction
+! Arguments:
+!   n : INTEGER(I4B), INTENT(IN). Recurrence length or matrix size; use n>=1.
+!   A : REAL(DFP), INTENT(OUT)(0:n - 1). Multiplier of x in the standard three
+! term recurrence.
+!   B : REAL(DFP), INTENT(OUT)(0:n - 1). Constant term in the standard three
+! term recurrence.
+!   C : REAL(DFP), INTENT(OUT)(0:n - 1). Multiplier of the previous
+! polynomial, subtracted in the recurrence.
 !
-! These recurrence coefficients are for monic jacobi polynomials.
+! Returns:
+!   Writes A(0:n - 1), B(0:n - 1), C(0:n - 1).
+!
+! Formula:
+! $$p_{j+1}=(A_j x+B_j)p_j-C_j p_{j-1}$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE Chebyshev1PolynomialUtility, ONLY: GetChebyshev1RecurrenceCoeff2
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: a(0:2), b(0:2), c(0:2)
+!
+! CALL GetChebyshev1RecurrenceCoeff2(n=3_I4B, A=a, B=b, C=c)
+! CALL OK(MAXVAL(ABS(b)) < 1.0E-11_DFP, &
+!   "Symmetric family has no constant recurrence term")
+! CALL OK(ABS(a(1)-2.0_DFP) < 1.0E-11_DFP, &
+!   "Degree two recurrence multiplier")
+! END PROGRAM main
+!```
 
 INTERFACE
   MODULE PURE SUBROUTINE GetChebyshev1RecurrenceCoeff2(n, A, B, C)
@@ -145,9 +302,35 @@ END INTERFACE
 !                                                    Chebyshev1LeadingCoeff
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 2 Aug 2022
-! summary: Leading coefficient of Chebyshev1 polynomial
+!> author: OpenAI Codex (documentation)
+! date: 2026-10-30
+! summary: Return the coefficient of the highest power.
+!
+! Arguments:
+!   n : INTEGER(I4B), INTENT(IN). Maximum polynomial degree; use n>=0.
+!
+! Returns:
+!   ans : REAL(DFP).
+!
+! Formula:
+! $$p_n(x)=k_n x^n+\cdots$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE Chebyshev1PolynomialUtility, ONLY: Chebyshev1LeadingCoeff
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: y
+!
+! y = Chebyshev1LeadingCoeff(n=2_I4B)
+! CALL OK(ABS(y-(2.0_DFP)) < 1.0E-11_DFP, &
+!   "Degree two coefficient or norm")
+! END PROGRAM main
+!```
 
 INTERFACE
   MODULE PURE FUNCTION Chebyshev1LeadingCoeff(n) RESULT(ans)
@@ -162,9 +345,35 @@ END INTERFACE
 !                                               Chebyshev1LeadingCoeffRatio
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 10 Oct 2022
-! summary:         Ratio of leading coefficients, kn+1/kn
+!> author: OpenAI Codex (documentation)
+! date: 2026-10-30
+! summary: Return the ratio of consecutive leading coefficients.
+!
+! Arguments:
+!   n : INTEGER(I4B), INTENT(IN). Maximum polynomial degree; use n>=0.
+!
+! Returns:
+!   ans : REAL(DFP).
+!
+! Formula:
+! $$r_n=k_{n+1}/k_n$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE Chebyshev1PolynomialUtility, ONLY: Chebyshev1LeadingCoeffRatio
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: y
+!
+! y = Chebyshev1LeadingCoeffRatio(n=2_I4B)
+! CALL OK(ABS(y-(2.0_DFP)) < 1.0E-11_DFP, &
+!   "Degree two coefficient or norm")
+! END PROGRAM main
+!```
 
 INTERFACE
   MODULE PURE FUNCTION Chebyshev1LeadingCoeffRatio(n) RESULT(ans)
@@ -179,9 +388,35 @@ END INTERFACE
 !                                                         Chebyshev1NormSQR
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 2 Aug 2022
-! summary: Square norm of Chebyshev1 polynomial
+!> author: OpenAI Codex (documentation)
+! date: 2026-10-30
+! summary: Return the weighted squared norm.
+!
+! Arguments:
+!   n : INTEGER(I4B), INTENT(IN). Maximum polynomial degree; use n>=0.
+!
+! Returns:
+!   ans : REAL(DFP).
+!
+! Formula:
+! $$h_n=\int_{-1}^{1}p_n(x)^2w(x)\,dx$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE Chebyshev1PolynomialUtility, ONLY: Chebyshev1NormSQR
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: y
+!
+! y = Chebyshev1NormSQR(n=2_I4B)
+! CALL OK(ABS(y-(ACOS(-1.0_DFP)/2.0_DFP)) < 1.0E-11_DFP, &
+!   "Degree two coefficient or norm")
+! END PROGRAM main
+!```
 
 INTERFACE
   MODULE PURE FUNCTION Chebyshev1NormSQR(n) RESULT(ans)
@@ -194,9 +429,35 @@ END INTERFACE
 !                                                        Chebyshev1NormSQR2
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 2 Aug 2022
-! summary: Square norm of Chebyshev1 polynomial
+!> author: OpenAI Codex (documentation)
+! date: 2026-10-30
+! summary: Return weighted squared norms from degree zero through n.
+!
+! Arguments:
+!   n : INTEGER(I4B), INTENT(IN). Maximum polynomial degree; use n>=0.
+!
+! Returns:
+!   ans : REAL(DFP)(0:n).
+!
+! Formula:
+! $$h_j=\int_{-1}^{1}p_j(x)^2w(x)\,dx,\quad 0\le j\le n$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE Chebyshev1PolynomialUtility, ONLY: Chebyshev1NormSQR2
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: y(0:2)
+!
+! y = Chebyshev1NormSQR2(n=2_I4B)
+! CALL OK(ABS(y(2)-(ACOS(-1.0_DFP)/2.0_DFP)) < 1.0E-11_DFP, &
+!   "Norm array includes degree two")
+! END PROGRAM main
+!```
 
 INTERFACE
   MODULE PURE FUNCTION Chebyshev1NormSQR2(n) RESULT(ans)
@@ -209,9 +470,39 @@ END INTERFACE
 !                                                    Chebyshev1NormSQRRatio
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 2 Aug 2022
-! summary: Ratio of Square norm of Chebyshev1 polynomial, n+1/n
+!> author: OpenAI Codex (documentation)
+! date: 2026-10-30
+! summary: Return the ratio of consecutive squared norms.
+!
+!  The implementation returns 1 for every n. This is the correct norm ratio
+! for n>=1; at n=0 the mathematical ratio is 1/2. Use NormSQR or NormSQR2 when
+! that distinction matters.
+!
+! Arguments:
+!   n : INTEGER(I4B), INTENT(IN). Maximum polynomial degree; use n>=0.
+!
+! Returns:
+!   ans : REAL(DFP).
+!
+! Formula:
+! $$r_n=h_{n+1}/h_n$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE Chebyshev1PolynomialUtility, ONLY: Chebyshev1NormSQRRatio
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: y
+!
+! y = Chebyshev1NormSQRRatio(n=2_I4B)
+! CALL OK(ABS(y-(1.0_DFP)) < 1.0E-11_DFP, &
+!   "Degree two coefficient or norm")
+! END PROGRAM main
+!```
 
 INTERFACE
   MODULE PURE FUNCTION Chebyshev1NormSQRRatio(n) RESULT(ans)
@@ -224,9 +515,47 @@ END INTERFACE
 !                                                     Chebyshev1JacobiMatrix
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 10 Oct 2022
-! summary: Return the Jacobi matrix for Chebyshev polynomial
+!> author: OpenAI Codex (documentation)
+! date: 2026-10-30
+! summary: Build the symmetric tridiagonal Gauss Jacobi matrix.
+!
+! Allocate D with n entries and E with one fewer. Optional recurrence outputs
+! use zero based indexing.
+!
+! Arguments:
+!   n : INTEGER(I4B), INTENT(IN). Recurrence length or matrix size; use n>=1.
+!   D : REAL(DFP), INTENT(OUT)(:). Jacobi matrix diagonal, or nodal derivative
+! matrix in the block splitter.
+!   E : REAL(DFP), INTENT(OUT)(:). Jacobi matrix off diagonal, or even block
+! in the block splitter.
+!   alphaCoeff : REAL(DFP), OPTIONAL, INTENT(OUT)(0:). Monic recurrence
+! diagonal coefficients, indexed from zero.
+!   betaCoeff : REAL(DFP), OPTIONAL, INTENT(OUT)(0:). Monic recurrence beta
+! values; index zero is the weight integral.
+!
+! Returns:
+!   Writes D(:), E(:), alphaCoeff(0:), betaCoeff(0:).
+!
+! Formula:
+! $$J_{i,i}=\alpha_{i-1},\quad J_{i,i+1}=\sqrt{\beta_i}$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE Chebyshev1PolynomialUtility, ONLY: Chebyshev1JacobiMatrix
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: d(2), e(1)
+!
+! CALL Chebyshev1JacobiMatrix(n=2_I4B, D=d, E=e)
+! CALL OK(ALL(e > 0.0_DFP), "Positive off diagonal")
+! CALL OK(MAXVAL(ABS(d)) < 1.0E-11_DFP, &
+!   "Symmetric weight has a zero diagonal")
+! END PROGRAM main
+!```
 
 INTERFACE
   MODULE PURE SUBROUTINE Chebyshev1JacobiMatrix(n, D, E, &
@@ -248,9 +577,45 @@ END INTERFACE
 !                                                 Chebyshev1GaussQuadrature
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 10 Oct 2022
-! summary: Return the Jacobi matrix for Chebyshev polynomial
+!> author: OpenAI Codex (documentation)
+! date: 2026-10-30
+! summary: Compute Gauss quadrature nodes and weights.
+!
+! This low level routine returns n nodes.  Weights include the family weight.
+! Nodes and weights must be paired in the returned order.
+!
+! Arguments:
+!   n : INTEGER(I4B), INTENT(IN). Number of returned nodes; use n>=1 and
+! enough nodes for the rule.
+!   pt : REAL(DFP), INTENT(OUT)(:). Quadrature nodes; allocate the point count
+! specified above.
+!   wt : REAL(DFP), OPTIONAL, INTENT(OUT)(:). Quadrature weights paired with
+! pt; includes the family weight.
+!
+! Returns:
+!   Writes pt(:), wt(:).
+!
+! Formula:
+! $$\int_{-1}^{1} f(x)w(x)\,dx\simeq\sum_i w_i f(x_i)$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE Chebyshev1PolynomialUtility, ONLY: Chebyshev1GaussQuadrature
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: x(2), w(2)
+!
+! CALL Chebyshev1GaussQuadrature(n=2_I4B, pt=x, wt=w)
+! CALL OK(ABS(SUM(w)-(ACOS(-1.0_DFP))) < 1.0E-10_DFP, &
+!   "Weights integrate a constant")
+! CALL OK(ABS(SUM(w*x*x)-(ACOS(-1.0_DFP)/2.0_DFP)) < 1.0E-10_DFP, &
+!   "Weights integrate the weighted second moment")
+! END PROGRAM main
+!```
 
 INTERFACE
   MODULE SUBROUTINE Chebyshev1GaussQuadrature(n, pt, wt)
@@ -267,9 +632,48 @@ END INTERFACE
 !                                               Chebyshev1JacobiRadauMatrix
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 10 Oct 2022
-! summary: Return the Jacobi-Radau matrix for Chebyshev polynomial
+!> author: OpenAI Codex (documentation)
+! date: 2026-10-30
+! summary: Build the symmetric tridiagonal Radau Jacobi matrix.
+!
+! Allocate D with n+1 entries and E with one fewer. The final recurrence
+! entries are modified to include the prescribed endpoint(s).
+!
+! Arguments:
+!   a : REAL(DFP), INTENT(IN). Recurrence multiplier array, or prescribed
+! endpoint -1/+1 for Radau.
+!   n : INTEGER(I4B), INTENT(IN). Number of free nodes; output has n+1 points
+! or matrix rows.
+!   D : REAL(DFP), INTENT(OUT)(:). Jacobi matrix diagonal, or nodal derivative
+! matrix in the block splitter.
+!   E : REAL(DFP), INTENT(OUT)(:). Jacobi matrix off diagonal, or even block
+! in the block splitter.
+!   alphaCoeff : REAL(DFP), OPTIONAL, INTENT(OUT)(0:). Monic recurrence
+! diagonal coefficients, indexed from zero.
+!   betaCoeff : REAL(DFP), OPTIONAL, INTENT(OUT)(0:). Monic recurrence beta
+! values; index zero is the weight integral.
+!
+! Returns:
+!   Writes D(:), E(:), alphaCoeff(0:), betaCoeff(0:).
+!
+! Formula:
+! $$J_{i,i}=\alpha_{i-1},\quad J_{i,i+1}=\sqrt{\beta_i}$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE Chebyshev1PolynomialUtility, ONLY: Chebyshev1JacobiRadauMatrix
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: d(3), e(2)
+!
+! CALL Chebyshev1JacobiRadauMatrix(a=-1.0_DFP, n=2_I4B, D=d, E=e)
+! CALL OK(ALL(e > 0.0_DFP), "Positive off diagonal")
+! END PROGRAM main
+!```
 
 INTERFACE
   MODULE PURE SUBROUTINE Chebyshev1JacobiRadauMatrix(a, n, D, E, alphaCoeff, &
@@ -292,9 +696,49 @@ END INTERFACE
 !                                            Chebyshev1GaussRadauQuadrature
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 3 Aug 2022
-! summary: Returns the GaussRadau quadrature points for Chebyshev1 Polynomial
+!> author: OpenAI Codex (documentation)
+! date: 2026-10-30
+! summary: Compute Gauss Radau quadrature nodes and weights.
+!
+! This low level routine returns n+1 nodes. Set a to -1 or +1. Weights include
+! the family weight. Nodes and weights must be paired in the returned order.
+!
+! Arguments:
+!   a : REAL(DFP), INTENT(IN). Recurrence multiplier array, or prescribed
+! endpoint -1/+1 for Radau.
+!   n : INTEGER(I4B), INTENT(IN). Number of free nodes; output has n+1 points
+! or matrix rows.
+!   pt : REAL(DFP), INTENT(OUT)(:). Quadrature nodes; allocate the point count
+! specified above.
+!   wt : REAL(DFP), OPTIONAL, INTENT(OUT)(:). Quadrature weights paired with
+! pt; includes the family weight.
+!
+! Returns:
+!   Writes pt(:), wt(:).
+!
+! Formula:
+! $$\int_{-1}^{1} f(x)w(x)\,dx\simeq\sum_i w_i f(x_i)$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE Chebyshev1PolynomialUtility, ONLY: Chebyshev1GaussRadauQuadrature
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: x(3), w(3)
+!
+! CALL Chebyshev1GaussRadauQuadrature(a=-1.0_DFP, n=2_I4B, pt=x, wt=w)
+! CALL OK(ABS(SUM(w)-(ACOS(-1.0_DFP))) < 1.0E-10_DFP, &
+!   "Weights integrate a constant")
+! CALL OK(ABS(SUM(w*x*x)-(ACOS(-1.0_DFP)/2.0_DFP)) < 1.0E-10_DFP, &
+!   "Weights integrate the weighted second moment")
+! CALL OK(MINVAL(ABS(x+1.0_DFP)) < 1.0E-11_DFP, &
+!   "Prescribed endpoint is present")
+! END PROGRAM main
+!```
 
 INTERFACE
   MODULE SUBROUTINE Chebyshev1GaussRadauQuadrature(a, n, pt, wt)
@@ -313,9 +757,48 @@ END INTERFACE
 !                                             Chebyshev1JacobiLobattoMatrix
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 10 Oct 2022
-! summary: Return the Jacobi-Lobatto matrix for Chebyshev polynomial
+!> author: OpenAI Codex (documentation)
+! date: 2026-10-30
+! summary: Build the symmetric tridiagonal Lobatto Jacobi matrix.
+!
+! Allocate D with n+2 entries and E with one fewer. The final recurrence
+! entries are modified to include the prescribed endpoint(s).
+!
+! Arguments:
+!   n : INTEGER(I4B), INTENT(IN). Number of free nodes; output has n+2 points
+! or matrix rows.
+!   D : REAL(DFP), INTENT(OUT)(:). Jacobi matrix diagonal, or nodal derivative
+! matrix in the block splitter.
+!   E : REAL(DFP), INTENT(OUT)(:). Jacobi matrix off diagonal, or even block
+! in the block splitter.
+!   alphaCoeff : REAL(DFP), OPTIONAL, INTENT(OUT)(0:). Monic recurrence
+! diagonal coefficients, indexed from zero.
+!   betaCoeff : REAL(DFP), OPTIONAL, INTENT(OUT)(0:). Monic recurrence beta
+! values; index zero is the weight integral.
+!
+! Returns:
+!   Writes D(:), E(:), alphaCoeff(0:), betaCoeff(0:).
+!
+! Formula:
+! $$J_{i,i}=\alpha_{i-1},\quad J_{i,i+1}=\sqrt{\beta_i}$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE Chebyshev1PolynomialUtility, ONLY: Chebyshev1JacobiLobattoMatrix
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: d(4), e(3)
+!
+! CALL Chebyshev1JacobiLobattoMatrix(n=2_I4B, D=d, E=e)
+! CALL OK(ALL(e > 0.0_DFP), "Positive off diagonal")
+! CALL OK(MAXVAL(ABS(d)) < 1.0E-11_DFP, &
+!   "Symmetric weight has a zero diagonal")
+! END PROGRAM main
+!```
 
 INTERFACE
   MODULE PURE SUBROUTINE Chebyshev1JacobiLobattoMatrix(n, D, E, alphaCoeff, &
@@ -335,9 +818,47 @@ END INTERFACE
 !                                            Chebyshev1GaussLobattoQuadrature
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 3 Aug 2022
-! summary:Returns the GaussLobatto quadrature points for Chebyshev1 Polynomial
+!> author: OpenAI Codex (documentation)
+! date: 2026-10-30
+! summary: Compute Gauss Lobatto quadrature nodes and weights.
+!
+! This low level routine returns n+2 nodes.  Weights include the family
+! weight. Nodes and weights must be paired in the returned order.
+!
+! Arguments:
+!   n : INTEGER(I4B), INTENT(IN). Number of free nodes; output has n+2 points
+! or matrix rows.
+!   pt : REAL(DFP), INTENT(OUT)(:). Quadrature nodes; allocate the point count
+! specified above.
+!   wt : REAL(DFP), OPTIONAL, INTENT(OUT)(:). Quadrature weights paired with
+! pt; includes the family weight.
+!
+! Returns:
+!   Writes pt(:), wt(:).
+!
+! Formula:
+! $$\int_{-1}^{1} f(x)w(x)\,dx\simeq\sum_i w_i f(x_i)$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE Chebyshev1PolynomialUtility, ONLY: Chebyshev1GaussLobattoQuadrature
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: x(4), w(4)
+!
+! CALL Chebyshev1GaussLobattoQuadrature(n=2_I4B, pt=x, wt=w)
+! CALL OK(ABS(SUM(w)-(ACOS(-1.0_DFP))) < 1.0E-10_DFP, &
+!   "Weights integrate a constant")
+! CALL OK(ABS(SUM(w*x*x)-(ACOS(-1.0_DFP)/2.0_DFP)) < 1.0E-10_DFP, &
+!   "Weights integrate the weighted second moment")
+! CALL OK(ABS(MINVAL(x)+1.0_DFP) < 1.0E-11_DFP .AND. &
+!   ABS(MAXVAL(x)-1.0_DFP) < 1.0E-11_DFP, "Both endpoints")
+! END PROGRAM main
+!```
 
 INTERFACE
   MODULE SUBROUTINE Chebyshev1GaussLobattoQuadrature(n, pt, wt)
@@ -354,6 +875,39 @@ END INTERFACE
 !                                                            Chebyshev1Zeros
 !----------------------------------------------------------------------------
 
+!> author: OpenAI Codex (documentation)
+! date: 2026-10-30
+! summary: Return the n roots of a degree n polynomial.
+!
+! Use n>=1. Root order is family dependent; do not assume increasing order.
+!
+! Arguments:
+!   n : INTEGER(I4B), INTENT(IN). Number of returned nodes; use n>=1 and
+! enough nodes for the rule.
+!
+! Returns:
+!   ans : REAL(DFP)(n).
+!
+! Formula:
+! $$p_n(z_i)=0,\quad 1\le i\le n$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE Chebyshev1PolynomialUtility, ONLY: Chebyshev1Zeros
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: z(2)
+!
+! z = Chebyshev1Zeros(n=2_I4B)
+! CALL OK(MAXVAL(ABS(z*z-0.5_DFP)) &
+!   < 1.0E-11_DFP, "Roots satisfy the quadratic")
+! END PROGRAM main
+!```
+
 INTERFACE
   MODULE FUNCTION Chebyshev1Zeros(n) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: n
@@ -366,25 +920,54 @@ END INTERFACE
 !                                                        Chebyshev1Quadrature
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 6 Sept 2022
-! summary: This routine can return Chebyshev-Gauss, Chebyshev-Radau,
-! Chebyshev-Lobatto
+!> author: OpenAI Codex (documentation)
+! date: 2026-10-30
+! summary: Compute a selected quadrature nodes and weights.
 !
-!# Introduction
+! n is the total number of requested points. Select Gauss, GaussRadauLeft,
+! GaussRadauRight, or GaussLobatto from GlobalData. Weights include the family
+! weight. Nodes and weights must be paired in the returned order.
 !
-! This routine returns the Quadrature point of Chebyshev polynomial
+! Arguments:
+!   n : INTEGER(I4B), INTENT(IN). Number of returned nodes; use n>=1 and
+! enough nodes for the rule.
+!   pt : REAL(DFP), INTENT(OUT)(n). Quadrature nodes; allocate the point count
+! specified above.
+!   wt : REAL(DFP), OPTIONAL, INTENT(OUT)(n). Quadrature weights paired with
+! pt; includes the family weight.
+!   quadType : INTEGER(I4B), INTENT(IN). Quadrature selector from GlobalData;
+! must match the supplied nodes.
+!   onlyInside : LOGICAL(LGT), OPTIONAL, INTENT(IN). Optional endpoint
+! exclusion flag for the quadrature dispatcher.
 !
-!@note
-! Here n is the number of quadrature points. Please note it is not
-! the order of Chebyshev polynomial. The order is decided internally
-! depending upon the quadType
-!@endnote
+! Returns:
+!   Writes pt(n), wt(n).
 !
-!@note
-! pt and wt should be allocated outside, and length should be n.
-!@endnote
+! Formula:
+! $$\int_{-1}^{1} f(x)w(x)\,dx\simeq\sum_i w_i f(x_i)$$
 !
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE GlobalData, ONLY: GaussLobatto
+! USE Chebyshev1PolynomialUtility, ONLY: Chebyshev1Quadrature
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: x(4), w(4)
+!
+! CALL Chebyshev1Quadrature( &
+!   n=4_I4B, pt=x, wt=w, quadType=GaussLobatto)
+! CALL OK(ABS(SUM(w)-(ACOS(-1.0_DFP))) < 1.0E-10_DFP, &
+!   "Weights integrate a constant")
+! CALL OK(ABS(SUM(w*x*x)-(ACOS(-1.0_DFP)/2.0_DFP)) < 1.0E-10_DFP, &
+!   "Weights integrate the weighted second moment")
+! CALL OK(ABS(MINVAL(x)+1.0_DFP) < 1.0E-11_DFP .AND. &
+!   ABS(MAXVAL(x)-1.0_DFP) < 1.0E-11_DFP, "Both endpoints")
+! END PROGRAM main
+!```
 
 INTERFACE
   MODULE SUBROUTINE Chebyshev1Quadrature(n, pt, wt, quadType, onlyInside)
@@ -411,9 +994,40 @@ END INTERFACE
 !                                                             Chebyshev1Eval
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 6 Sept 2022
-! summary: Evaluate Chebyshev1 polynomials of order = n at single x
+!> author: OpenAI Codex (documentation)
+! date: 2026-10-30
+! summary: Evaluate one polynomial.
+!
+! Arguments:
+!   n : INTEGER(I4B), INTENT(IN). Maximum polynomial degree; use n>=0.
+!   x : REAL(DFP), INTENT(IN). Evaluation coordinate(s).
+!
+! Returns:
+!   ans : REAL(DFP).
+!
+! Formula:
+! $$y_i=p_n(x_i)$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE Chebyshev1PolynomialUtility, ONLY: Chebyshev1Eval
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: x(3), y(3)
+! REAL(DFP), PARAMETER :: tol = 1.0E-11_DFP
+!
+! x = [-0.5_DFP, 0.0_DFP, 0.5_DFP]
+! y = Chebyshev1Eval(n=2_I4B, x=x)
+! CALL OK(MAXVAL(ABS(y-(2.0_DFP*x*x-1.0_DFP))) < tol, &
+!   "Degree two agrees with its analytic formula")
+! CALL OK(ABS(Chebyshev1Eval(n=2_I4B, x=0.0_DFP) &
+!   -y(2)) < tol, "Scalar and vector calls agree")
+! END PROGRAM main
+!```
 
 INTERFACE Chebyshev1Eval
   MODULE PURE FUNCTION Chebyshev1Eval1(n, x) RESULT(ans)
@@ -430,9 +1044,40 @@ END INTERFACE Chebyshev1Eval
 !                                                          Chebyshev1Eval
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 6 Sept 2022
-! summary: Evaluate Chebyshev1 polynomials of order n at several points
+!> author: OpenAI Codex (documentation)
+! date: 2026-10-30
+! summary: Evaluate one polynomial.
+!
+! Arguments:
+!   n : INTEGER(I4B), INTENT(IN). Maximum polynomial degree; use n>=0.
+!   x : REAL(DFP), INTENT(IN)(:). Evaluation coordinate(s).
+!
+! Returns:
+!   ans : REAL(DFP)(SIZE(x)).
+!
+! Formula:
+! $$y_i=p_n(x_i)$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE Chebyshev1PolynomialUtility, ONLY: Chebyshev1Eval
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: x(3), y(3)
+! REAL(DFP), PARAMETER :: tol = 1.0E-11_DFP
+!
+! x = [-0.5_DFP, 0.0_DFP, 0.5_DFP]
+! y = Chebyshev1Eval(n=2_I4B, x=x)
+! CALL OK(MAXVAL(ABS(y-(2.0_DFP*x*x-1.0_DFP))) < tol, &
+!   "Degree two agrees with its analytic formula")
+! CALL OK(ABS(Chebyshev1Eval(n=2_I4B, x=0.0_DFP) &
+!   -y(2)) < tol, "Scalar and vector calls agree")
+! END PROGRAM main
+!```
 
 INTERFACE Chebyshev1Eval
   MODULE PURE FUNCTION Chebyshev1Eval2(n, x) RESULT(ans)
@@ -449,19 +1094,40 @@ END INTERFACE Chebyshev1Eval
 !                                                         Chebyshev1EvalAll
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 6 Sept 2022
-! summary: Evaluate Chebyshev1 polynomials from order = 0 to n at single point
+!> author: OpenAI Codex (documentation)
+! date: 2026-10-30
+! summary: Evaluate polynomials through degree n.
 !
-!# Introduction
+! Scalar x returns n+1 entries; vector x uses rows for points.
 !
-! Evaluate Chebyshev1 polynomials from order = 0 to n at single point
+! Arguments:
+!   n : INTEGER(I4B), INTENT(IN). Maximum polynomial degree; use n>=0.
+!   x : REAL(DFP), INTENT(IN). Evaluation coordinate(s).
 !
-!- N, the highest order polynomial to compute. Note that polynomials 0
-! through N will be computed.
-!- x: the point at which the polynomials are to be evaluated.
-!- ans(1:N+1), the values of the first N+1 Chebyshev1 polynomials at the
-! point
+! Returns:
+!   ans : REAL(DFP)(n + 1).
+!
+! Formula:
+! $$Y_{i,j+1}=p_j(x_i),\quad 0\le j\le n$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE Chebyshev1PolynomialUtility, ONLY: Chebyshev1EvalAll
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: x(3), y(3, 3)
+! REAL(DFP), PARAMETER :: tol = 1.0E-11_DFP
+!
+! x = [-0.5_DFP, 0.0_DFP, 0.5_DFP]
+! y = Chebyshev1EvalAll(n=2_I4B, x=x)
+! CALL OK(MAXVAL(ABS(y(:, 3)-(2.0_DFP*x*x-1.0_DFP))) < tol, &
+!   "Third column contains degree two")
+! END PROGRAM main
+!```
 
 INTERFACE Chebyshev1EvalAll
   MODULE PURE FUNCTION Chebyshev1EvalAll1(n, x) RESULT(ans)
@@ -478,6 +1144,47 @@ END INTERFACE Chebyshev1EvalAll
 !----------------------------------------------------------------------------
 !                                                       Chebyshev1EvalAll
 !----------------------------------------------------------------------------
+
+!> author: OpenAI Codex (documentation)
+! date: 2026-10-30
+! summary: Evaluate polynomials through degree n.
+!
+! Scalar x returns n+1 entries; vector x uses rows for points. Supply enough
+! storage for the active output; trailing entries are not part of the result.
+!
+! Arguments:
+!   n : INTEGER(I4B), INTENT(IN). Maximum polynomial degree; use n>=0.
+!   x : REAL(DFP), INTENT(IN). Evaluation coordinate(s).
+!   ans : REAL(DFP), INTENT(INOUT)(:). Result storage; allocate enough space
+! for all active dimensions.
+!   tsize : INTEGER(I4B), INTENT(OUT). Number of active vector output entries.
+!
+! Returns:
+!   Writes ans(:), tsize.
+!
+! Formula:
+! $$Y_{i,j+1}=p_j(x_i),\quad 0\le j\le n$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE Chebyshev1PolynomialUtility, ONLY: Chebyshev1EvalAll_
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: x(3), y(3, 3)
+! REAL(DFP), PARAMETER :: tol = 1.0E-11_DFP
+! INTEGER(I4B) :: nr, nc
+!
+! x = [-0.5_DFP, 0.0_DFP, 0.5_DFP]
+! CALL Chebyshev1EvalAll_(n=2_I4B, x=x, ans=y, nrow=nr, ncol=nc)
+! CALL OK(nr == 3 .AND. nc == 3, "Active dimensions")
+! CALL OK(MAXVAL(ABS(y(:, 3)-(2.0_DFP*x*x-1.0_DFP))) < tol, &
+!   "Third column contains degree two")
+! END PROGRAM main
+!```
 
 INTERFACE Chebyshev1EvalAll_
   MODULE PURE SUBROUTINE Chebyshev1EvalAll1_(n, x, ans, tsize)
@@ -497,20 +1204,40 @@ END INTERFACE Chebyshev1EvalAll_
 !                                                           Chebyshev1EvalAll
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 6 Sept 2022
-! summary: Evaluate Chebyshev1 polynomials from order = 0 to n at several
-! points
+!> author: OpenAI Codex (documentation)
+! date: 2026-10-30
+! summary: Evaluate polynomials through degree n.
 !
-!# Introduction
+! Scalar x returns n+1 entries; vector x uses rows for points.
 !
-! Evaluate Chebyshev1 polynomials from order = 0 to n at several points
+! Arguments:
+!   n : INTEGER(I4B), INTENT(IN). Maximum polynomial degree; use n>=0.
+!   x : REAL(DFP), INTENT(IN)(:). Evaluation coordinate(s).
 !
-!- N, the highest order polynomial to compute. Note that polynomials 0
-! through N will be computed.
-!- x: the points at which the polynomials are to be evaluated.
-!- ans(M,1:N+1), the values of the first N+1 Chebyshev1 polynomials at the
-! points x(1:m)
+! Returns:
+!   ans : REAL(DFP)(SIZE(x), n + 1).
+!
+! Formula:
+! $$Y_{i,j+1}=p_j(x_i),\quad 0\le j\le n$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE Chebyshev1PolynomialUtility, ONLY: Chebyshev1EvalAll
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: x(3), y(3, 3)
+! REAL(DFP), PARAMETER :: tol = 1.0E-11_DFP
+!
+! x = [-0.5_DFP, 0.0_DFP, 0.5_DFP]
+! y = Chebyshev1EvalAll(n=2_I4B, x=x)
+! CALL OK(MAXVAL(ABS(y(:, 3)-(2.0_DFP*x*x-1.0_DFP))) < tol, &
+!   "Third column contains degree two")
+! END PROGRAM main
+!```
 
 INTERFACE Chebyshev1EvalAll
   MODULE PURE FUNCTION Chebyshev1EvalAll2(n, x) RESULT(ans)
@@ -527,6 +1254,48 @@ END INTERFACE Chebyshev1EvalAll
 !----------------------------------------------------------------------------
 !                                                         ChebyshevEvalAll2_
 !----------------------------------------------------------------------------
+
+!> author: OpenAI Codex (documentation)
+! date: 2026-10-30
+! summary: Evaluate polynomials through degree n.
+!
+! Scalar x returns n+1 entries; vector x uses rows for points. Supply enough
+! storage for the active output; trailing entries are not part of the result.
+!
+! Arguments:
+!   n : INTEGER(I4B), INTENT(IN). Maximum polynomial degree; use n>=0.
+!   x : REAL(DFP), INTENT(IN)(:). Evaluation coordinate(s).
+!   ans : REAL(DFP), INTENT(INOUT)(:, :). Result storage; allocate enough
+! space for all active dimensions.
+!   nrow : INTEGER(I4B), INTENT(OUT). Number of active output rows.
+!   ncol : INTEGER(I4B), INTENT(OUT). Number of active output columns.
+!
+! Returns:
+!   Writes ans(:, :), nrow, ncol.
+!
+! Formula:
+! $$Y_{i,j+1}=p_j(x_i),\quad 0\le j\le n$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE Chebyshev1PolynomialUtility, ONLY: Chebyshev1EvalAll_
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: x(3), y(3, 3)
+! REAL(DFP), PARAMETER :: tol = 1.0E-11_DFP
+! INTEGER(I4B) :: nr, nc
+!
+! x = [-0.5_DFP, 0.0_DFP, 0.5_DFP]
+! CALL Chebyshev1EvalAll_(n=2_I4B, x=x, ans=y, nrow=nr, ncol=nc)
+! CALL OK(nr == 3 .AND. nc == 3, "Active dimensions")
+! CALL OK(MAXVAL(ABS(y(:, 3)-(2.0_DFP*x*x-1.0_DFP))) < tol, &
+!   "Third column contains degree two")
+! END PROGRAM main
+!```
 
 INTERFACE Chebyshev1EvalAll_
   MODULE PURE SUBROUTINE Chebyshev1EvalAll2_(n, x, ans, nrow, ncol)
@@ -546,27 +1315,38 @@ END INTERFACE Chebyshev1EvalAll_
 !                                             Chebyshev1MonomialExpansionAll
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 8 Sept 2022
-! summary: Returns the monomial expansion of all Chebyshev1 polynomials
+!> author: OpenAI Codex (documentation)
+! date: 2026-10-30
+! summary: Expand all polynomials through degree n in monomials.
 !
-!# Introduction
+! Rows correspond to powers and columns to polynomial degrees.
 !
-! Returns all the monomial expansion of all Chebyshev1 polynomials
+! Arguments:
+!   n : INTEGER(I4B), INTENT(IN). Maximum polynomial degree; use n>=0.
 !
-!- n : is the order of the polynomial
-!- ans(:,i) contains the coefficient of monomials for polynomial order=i-1
+! Returns:
+!   ans : REAL(DFP)(1:n + 1, 1:n + 1).
 !
-! for example, n=5, we have following structure of ans
+! Formula:
+! $$p_j(x)=\sum_{k=0}^{j} C_{k+1,j+1}x^k$$
 !
-! | P0 | P1 | P2 | P3 | P4 | P5  |
-! |----|----|----|----|----|-----|
-! | 1  | 0  | -1 | -0 | 1  | 0   |
-! | 0  | 1  | 0  | -3 | -0 | 5   |
-! | 0  | 0  | 2  | 0  | -8 | -0  |
-! | 0  | 0  | 0  | 4  | 0  | -20 |
-! | 0  | 0  | 0  | 0  | 8  | 0   |
-! | 0  | 0  | 0  | 0  | 0  | 16  |
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE Chebyshev1PolynomialUtility, ONLY: Chebyshev1MonomialExpansionAll
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: c(3, 3)
+!
+! c = Chebyshev1MonomialExpansionAll(n=2_I4B)
+! CALL OK(MAXVAL(ABS(c(:, 3)- &
+!   ([-1.0_DFP, 0.0_DFP, 2.0_DFP]))) < 1.0E-11_DFP, &
+!   "Coefficients are ordered by increasing power")
+! END PROGRAM main
+!```
 
 INTERFACE
   MODULE PURE FUNCTION Chebyshev1MonomialExpansionAll(n) RESULT(ans)
@@ -579,17 +1359,36 @@ END INTERFACE
 !                                             Chebyshev1MonomialExpansion
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 8 Sept 2022
-! summary: Returns the monomial expansion of a Chebyshev1 polynomials
+!> author: OpenAI Codex (documentation)
+! date: 2026-10-30
+! summary: Expand one polynomial in monomials.
 !
-!# Introduction
+! Arguments:
+!   n : INTEGER(I4B), INTENT(IN). Maximum polynomial degree; use n>=0.
 !
-! Returns all the monomial expansion of a Chebyshev1 polynomials
+! Returns:
+!   ans : REAL(DFP)(1:n + 1).
 !
-!- n : is the order of the polynomial
-!- ans(:) contains the coefficient of monomials for polynomial order=n
+! Formula:
+! $$p_n(x)=\sum_{k=0}^{n} c_{k+1}x^k$$
 !
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE Chebyshev1PolynomialUtility, ONLY: Chebyshev1MonomialExpansion
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: c(3)
+!
+! c = Chebyshev1MonomialExpansion(n=2_I4B)
+! CALL OK(MAXVAL(ABS(c- &
+!   ([-1.0_DFP, 0.0_DFP, 2.0_DFP]))) < 1.0E-11_DFP, &
+!   "Coefficients are ordered by increasing power")
+! END PROGRAM main
+!```
 
 INTERFACE
   MODULE PURE FUNCTION Chebyshev1MonomialExpansion(n) RESULT(ans)
@@ -602,13 +1401,40 @@ END INTERFACE
 !
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 8 Sept 2022
-! summary: Evaluate gradient of Chebyshev1 polynomial of order upto n
+!> author: OpenAI Codex (documentation)
+! date: 2026-10-30
+! summary: Evaluate first derivatives through degree n.
 !
-!# Introduction
+! Scalar x returns n+1 entries; vector x uses rows for points.
 !
-! Evaluate gradient of Chebyshev1 polynomial of order upto n.
+! Arguments:
+!   n : INTEGER(I4B), INTENT(IN). Maximum polynomial degree; use n>=0.
+!   x : REAL(DFP), INTENT(IN). Evaluation coordinate(s).
+!
+! Returns:
+!   ans : REAL(DFP)(1:n + 1).
+!
+! Formula:
+! $$Y_{i,j+1}=p_j'(x_i),\quad 0\le j\le n$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE Chebyshev1PolynomialUtility, ONLY: Chebyshev1GradientEvalAll
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: x(3), y(3, 3)
+! REAL(DFP), PARAMETER :: tol = 1.0E-11_DFP
+!
+! x = [-0.5_DFP, 0.0_DFP, 0.5_DFP]
+! y = Chebyshev1GradientEvalAll(n=2_I4B, x=x)
+! CALL OK(MAXVAL(ABS(y(:, 3)-(4.0_DFP*x))) < tol, &
+!   "Third column contains degree two")
+! END PROGRAM main
+!```
 
 INTERFACE Chebyshev1GradientEvalAll
   MODULE PURE FUNCTION Chebyshev1GradientEvalAll1(n, x) RESULT(ans)
@@ -621,6 +1447,48 @@ END INTERFACE Chebyshev1GradientEvalAll
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
+
+!> author: OpenAI Codex (documentation)
+! date: 2026-10-30
+! summary: Evaluate first derivatives through degree n.
+!
+! Scalar x returns n+1 entries; vector x uses rows for points. Supply enough
+! storage for the active output; trailing entries are not part of the result.
+!
+! Arguments:
+!   n : INTEGER(I4B), INTENT(IN). Maximum polynomial degree; use n>=0.
+!   x : REAL(DFP), INTENT(IN). Evaluation coordinate(s).
+!   ans : REAL(DFP), INTENT(INOUT)(:). Result storage; allocate enough space
+! for all active dimensions.
+!   tsize : INTEGER(I4B), INTENT(OUT). Number of active vector output entries.
+!
+! Returns:
+!   Writes ans(:), tsize.
+!
+! Formula:
+! $$Y_{i,j+1}=p_j'(x_i),\quad 0\le j\le n$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE Chebyshev1PolynomialUtility, ONLY: Chebyshev1GradientEvalAll_
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: x(3), y(3, 3)
+! REAL(DFP), PARAMETER :: tol = 1.0E-11_DFP
+! INTEGER(I4B) :: nr, nc
+!
+! x = [-0.5_DFP, 0.0_DFP, 0.5_DFP]
+! CALL Chebyshev1GradientEvalAll_( &
+!   n=2_I4B, x=x, ans=y, nrow=nr, ncol=nc)
+! CALL OK(nr == 3 .AND. nc == 3, "Active dimensions")
+! CALL OK(MAXVAL(ABS(y(:, 3)-(4.0_DFP*x))) < tol, &
+!   "Third column contains degree two")
+! END PROGRAM main
+!```
 
 INTERFACE Chebyshev1GradientEvalAll_
   MODULE PURE SUBROUTINE Chebyshev1GradientEvalAll1_(n, x, ans, tsize)
@@ -636,13 +1504,40 @@ END INTERFACE Chebyshev1GradientEvalAll_
 !
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 8 Sept 2022
-! summary:         Evaluate gradient of Chebyshev1 polynomial of order upto n
+!> author: OpenAI Codex (documentation)
+! date: 2026-10-30
+! summary: Evaluate first derivatives through degree n.
 !
-!# Introduction
+! Scalar x returns n+1 entries; vector x uses rows for points.
 !
-! Evaluate gradient of Chebyshev1 polynomial of order upto n.
+! Arguments:
+!   n : INTEGER(I4B), INTENT(IN). Maximum polynomial degree; use n>=0.
+!   x : REAL(DFP), INTENT(IN)(:). Evaluation coordinate(s).
+!
+! Returns:
+!   ans : REAL(DFP)(1:SIZE(x), 1:n + 1).
+!
+! Formula:
+! $$Y_{i,j+1}=p_j'(x_i),\quad 0\le j\le n$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE Chebyshev1PolynomialUtility, ONLY: Chebyshev1GradientEvalAll
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: x(3), y(3, 3)
+! REAL(DFP), PARAMETER :: tol = 1.0E-11_DFP
+!
+! x = [-0.5_DFP, 0.0_DFP, 0.5_DFP]
+! y = Chebyshev1GradientEvalAll(n=2_I4B, x=x)
+! CALL OK(MAXVAL(ABS(y(:, 3)-(4.0_DFP*x))) < tol, &
+!   "Third column contains degree two")
+! END PROGRAM main
+!```
 
 INTERFACE Chebyshev1GradientEvalAll
   MODULE PURE FUNCTION Chebyshev1GradientEvalAll2(n, x) RESULT(ans)
@@ -655,6 +1550,49 @@ END INTERFACE Chebyshev1GradientEvalAll
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
+
+!> author: OpenAI Codex (documentation)
+! date: 2026-10-30
+! summary: Evaluate first derivatives through degree n.
+!
+! Scalar x returns n+1 entries; vector x uses rows for points. Supply enough
+! storage for the active output; trailing entries are not part of the result.
+!
+! Arguments:
+!   n : INTEGER(I4B), INTENT(IN). Maximum polynomial degree; use n>=0.
+!   x : REAL(DFP), INTENT(IN)(:). Evaluation coordinate(s).
+!   ans : REAL(DFP), INTENT(INOUT)(:, :). Result storage; allocate enough
+! space for all active dimensions.
+!   nrow : INTEGER(I4B), INTENT(OUT). Number of active output rows.
+!   ncol : INTEGER(I4B), INTENT(OUT). Number of active output columns.
+!
+! Returns:
+!   Writes ans(:, :), nrow, ncol.
+!
+! Formula:
+! $$Y_{i,j+1}=p_j'(x_i),\quad 0\le j\le n$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE Chebyshev1PolynomialUtility, ONLY: Chebyshev1GradientEvalAll_
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: x(3), y(3, 3)
+! REAL(DFP), PARAMETER :: tol = 1.0E-11_DFP
+! INTEGER(I4B) :: nr, nc
+!
+! x = [-0.5_DFP, 0.0_DFP, 0.5_DFP]
+! CALL Chebyshev1GradientEvalAll_( &
+!   n=2_I4B, x=x, ans=y, nrow=nr, ncol=nc)
+! CALL OK(nr == 3 .AND. nc == 3, "Active dimensions")
+! CALL OK(MAXVAL(ABS(y(:, 3)-(4.0_DFP*x))) < tol, &
+!   "Third column contains degree two")
+! END PROGRAM main
+!```
 
 INTERFACE Chebyshev1GradientEvalAll_
   MODULE PURE SUBROUTINE Chebyshev1GradientEvalAll2_(n, x, ans, nrow, ncol)
@@ -670,13 +1608,40 @@ END INTERFACE Chebyshev1GradientEvalAll_
 !
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 8 Sept 2022
-! summary:         Evaluate gradient of Chebyshev1 polynomial of order upto n
+!> author: OpenAI Codex (documentation)
+! date: 2026-10-30
+! summary: Evaluate the first derivative.
 !
-!# Introduction
+! Arguments:
+!   n : INTEGER(I4B), INTENT(IN). Maximum polynomial degree; use n>=0.
+!   x : REAL(DFP), INTENT(IN). Evaluation coordinate(s).
 !
-! Evaluate gradient of Chebyshev1 polynomial of order upto n.
+! Returns:
+!   ans : REAL(DFP).
+!
+! Formula:
+! $$y_i=p_n'(x_i)$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE Chebyshev1PolynomialUtility, ONLY: Chebyshev1GradientEval
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: x(3), y(3)
+! REAL(DFP), PARAMETER :: tol = 1.0E-11_DFP
+!
+! x = [-0.5_DFP, 0.0_DFP, 0.5_DFP]
+! y = Chebyshev1GradientEval(n=2_I4B, x=x)
+! CALL OK(MAXVAL(ABS(y-(4.0_DFP*x))) < tol, &
+!   "Degree two agrees with its analytic formula")
+! CALL OK(ABS(Chebyshev1GradientEval(n=2_I4B, x=0.0_DFP) &
+!   -y(2)) < tol, "Scalar and vector calls agree")
+! END PROGRAM main
+!```
 
 INTERFACE Chebyshev1GradientEval
   MODULE PURE FUNCTION Chebyshev1GradientEval1(n, x) RESULT(ans)
@@ -690,13 +1655,40 @@ END INTERFACE Chebyshev1GradientEval
 !
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 8 Sept 2022
-! summary: Evaluate gradient of Chebyshev1 polynomial of order upto n
+!> author: OpenAI Codex (documentation)
+! date: 2026-10-30
+! summary: Evaluate the first derivative.
 !
-!# Introduction
+! Arguments:
+!   n : INTEGER(I4B), INTENT(IN). Maximum polynomial degree; use n>=0.
+!   x : REAL(DFP), INTENT(IN)(:). Evaluation coordinate(s).
 !
-! Evaluate gradient of Chebyshev1 polynomial of order upto n.
+! Returns:
+!   ans : REAL(DFP)(1:SIZE(x)).
+!
+! Formula:
+! $$y_i=p_n'(x_i)$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE Chebyshev1PolynomialUtility, ONLY: Chebyshev1GradientEval
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: x(3), y(3)
+! REAL(DFP), PARAMETER :: tol = 1.0E-11_DFP
+!
+! x = [-0.5_DFP, 0.0_DFP, 0.5_DFP]
+! y = Chebyshev1GradientEval(n=2_I4B, x=x)
+! CALL OK(MAXVAL(ABS(y-(4.0_DFP*x))) < tol, &
+!   "Degree two agrees with its analytic formula")
+! CALL OK(ABS(Chebyshev1GradientEval(n=2_I4B, x=0.0_DFP) &
+!   -y(2)) < tol, "Scalar and vector calls agree")
+! END PROGRAM main
+!```
 
 INTERFACE Chebyshev1GradientEval
   MODULE PURE FUNCTION Chebyshev1GradientEval2(n, x) RESULT(ans)
@@ -710,9 +1702,42 @@ END INTERFACE Chebyshev1GradientEval
 !                                                         Chebyshev1EvalSum
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 6 Sept 2022
-! summary: Evaluate finite sum of Chebyshev1 polynomials at point x
+!> author: OpenAI Codex (documentation)
+! date: 2026-10-30
+! summary: Evaluate a polynomial expansion.
+!
+! Coefficients are modal values indexed from zero.
+!
+! Arguments:
+!   n : INTEGER(I4B), INTENT(IN). Maximum polynomial degree; use n>=0.
+!   x : REAL(DFP), INTENT(IN). Evaluation coordinate(s).
+!   coeff : REAL(DFP), INTENT(IN)(0:n). Modal expansion coefficients, indexed
+! from zero.
+!
+! Returns:
+!   ans : REAL(DFP).
+!
+! Formula:
+! $$y(x)=\sum_{j=0}^{n}c_j p_j(x)$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE Chebyshev1PolynomialUtility, ONLY: Chebyshev1EvalSum
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: x(3), y(3), c(0:2)
+!
+! x = [-0.5_DFP, 0.0_DFP, 0.5_DFP]
+! c = [0.0_DFP, 0.0_DFP, 1.0_DFP]
+! y = Chebyshev1EvalSum(n=2_I4B, x=x, coeff=c)
+! CALL OK(MAXVAL(ABS(y-(2.0_DFP*x*x-1.0_DFP))) < 1.0E-11_DFP, &
+!   "A single modal coefficient recovers degree two")
+! END PROGRAM main
+!```
 
 INTERFACE Chebyshev1EvalSum
   MODULE PURE FUNCTION Chebyshev1EvalSum1(n, x, coeff) &
@@ -732,9 +1757,42 @@ END INTERFACE Chebyshev1EvalSum
 !                                                         Chebyshev1EvalSum
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 6 Sept 2022
-! summary: Evaluate finite sum of Chebyshev1 polynomials at several x
+!> author: OpenAI Codex (documentation)
+! date: 2026-10-30
+! summary: Evaluate a polynomial expansion.
+!
+! Coefficients are modal values indexed from zero.
+!
+! Arguments:
+!   n : INTEGER(I4B), INTENT(IN). Maximum polynomial degree; use n>=0.
+!   x : REAL(DFP), INTENT(IN)(:). Evaluation coordinate(s).
+!   coeff : REAL(DFP), INTENT(IN)(0:n). Modal expansion coefficients, indexed
+! from zero.
+!
+! Returns:
+!   ans : REAL(DFP)(SIZE(x)).
+!
+! Formula:
+! $$y(x)=\sum_{j=0}^{n}c_j p_j(x)$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE Chebyshev1PolynomialUtility, ONLY: Chebyshev1EvalSum
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: x(3), y(3), c(0:2)
+!
+! x = [-0.5_DFP, 0.0_DFP, 0.5_DFP]
+! c = [0.0_DFP, 0.0_DFP, 1.0_DFP]
+! y = Chebyshev1EvalSum(n=2_I4B, x=x, coeff=c)
+! CALL OK(MAXVAL(ABS(y-(2.0_DFP*x*x-1.0_DFP))) < 1.0E-11_DFP, &
+!   "A single modal coefficient recovers degree two")
+! END PROGRAM main
+!```
 
 INTERFACE Chebyshev1EvalSum
   MODULE PURE FUNCTION Chebyshev1EvalSum2(n, x, coeff) RESULT(ans)
@@ -753,10 +1811,43 @@ END INTERFACE Chebyshev1EvalSum
 !                                                   Chebyshev1GradientEvalSum
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 6 Sept 2022
-! summary: Evaluate the gradient of finite sum of Chebyshev1 polynomials
-! at point x
+!> author: OpenAI Codex (documentation)
+! date: 2026-10-30
+! summary: Evaluate the derivative of a polynomial expansion.
+!
+! Coefficients are modal values indexed from zero. Overloads with k request
+! the kth derivative.
+!
+! Arguments:
+!   n : INTEGER(I4B), INTENT(IN). Maximum polynomial degree; use n>=0.
+!   x : REAL(DFP), INTENT(IN). Evaluation coordinate(s).
+!   coeff : REAL(DFP), INTENT(IN)(0:n). Modal expansion coefficients, indexed
+! from zero.
+!
+! Returns:
+!   ans : REAL(DFP).
+!
+! Formula:
+! $$y(x)=\sum_{j=0}^{n}c_j p_j'(x)$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE Chebyshev1PolynomialUtility, ONLY: Chebyshev1GradientEvalSum
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: x(3), y(3), c(0:2)
+!
+! x = [-0.5_DFP, 0.0_DFP, 0.5_DFP]
+! c = [0.0_DFP, 0.0_DFP, 1.0_DFP]
+! y = Chebyshev1GradientEvalSum(n=2_I4B, x=x, coeff=c)
+! CALL OK(MAXVAL(ABS(y-(4.0_DFP*x))) < 1.0E-11_DFP, &
+!   "A single modal coefficient recovers degree two")
+! END PROGRAM main
+!```
 
 INTERFACE Chebyshev1GradientEvalSum
   MODULE PURE FUNCTION Chebyshev1GradientEvalSum1(n, x, coeff) RESULT(ans)
@@ -775,10 +1866,43 @@ END INTERFACE Chebyshev1GradientEvalSum
 !                                                  Chebyshev1GradientEvalSum
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 6 Sept 2022
-! summary: Evaluate the gradient of finite sum of Chebyshev1 polynomials
-! at several x
+!> author: OpenAI Codex (documentation)
+! date: 2026-10-30
+! summary: Evaluate the derivative of a polynomial expansion.
+!
+! Coefficients are modal values indexed from zero. Overloads with k request
+! the kth derivative.
+!
+! Arguments:
+!   n : INTEGER(I4B), INTENT(IN). Maximum polynomial degree; use n>=0.
+!   x : REAL(DFP), INTENT(IN)(:). Evaluation coordinate(s).
+!   coeff : REAL(DFP), INTENT(IN)(0:n). Modal expansion coefficients, indexed
+! from zero.
+!
+! Returns:
+!   ans : REAL(DFP)(SIZE(x)).
+!
+! Formula:
+! $$y(x)=\sum_{j=0}^{n}c_j p_j'(x)$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE Chebyshev1PolynomialUtility, ONLY: Chebyshev1GradientEvalSum
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: x(3), y(3), c(0:2)
+!
+! x = [-0.5_DFP, 0.0_DFP, 0.5_DFP]
+! c = [0.0_DFP, 0.0_DFP, 1.0_DFP]
+! y = Chebyshev1GradientEvalSum(n=2_I4B, x=x, coeff=c)
+! CALL OK(MAXVAL(ABS(y-(4.0_DFP*x))) < 1.0E-11_DFP, &
+!   "A single modal coefficient recovers degree two")
+! END PROGRAM main
+!```
 
 INTERFACE Chebyshev1GradientEvalSum
   MODULE PURE FUNCTION Chebyshev1GradientEvalSum2(n, x, coeff) &
@@ -798,10 +1922,44 @@ END INTERFACE Chebyshev1GradientEvalSum
 !                                                   Chebyshev1GradientEvalSum
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 6 Sept 2022
-! summary: Evaluate the kth derivative of finite sum of Chebyshev1
-! polynomials at point x
+!> author: OpenAI Codex (documentation)
+! date: 2026-10-30
+! summary: Evaluate the derivative of a polynomial expansion.
+!
+! Coefficients are modal values indexed from zero. Overloads with k request
+! the kth derivative.
+!
+! Arguments:
+!   n : INTEGER(I4B), INTENT(IN). Maximum polynomial degree; use n>=0.
+!   x : REAL(DFP), INTENT(IN). Evaluation coordinate(s).
+!   coeff : REAL(DFP), INTENT(IN)(0:n). Modal expansion coefficients, indexed
+! from zero.
+!   k : INTEGER(I4B), INTENT(IN). Derivative order.
+!
+! Returns:
+!   ans : REAL(DFP).
+!
+! Formula:
+! $$y(x)=\sum_{j=0}^{n}c_j p_j'(x)$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE Chebyshev1PolynomialUtility, ONLY: Chebyshev1GradientEvalSum
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: x(3), y(3), c(0:2)
+!
+! x = [-0.5_DFP, 0.0_DFP, 0.5_DFP]
+! c = [0.0_DFP, 0.0_DFP, 1.0_DFP]
+! y = Chebyshev1GradientEvalSum(n=2_I4B, x=x, coeff=c)
+! CALL OK(MAXVAL(ABS(y-(4.0_DFP*x))) < 1.0E-11_DFP, &
+!   "A single modal coefficient recovers degree two")
+! END PROGRAM main
+!```
 
 INTERFACE Chebyshev1GradientEvalSum
   MODULE PURE FUNCTION Chebyshev1GradientEvalSum3(n, x, coeff, k) RESULT(ans)
@@ -822,10 +1980,44 @@ END INTERFACE Chebyshev1GradientEvalSum
 !                                                   Chebyshev1GradientEvalSum
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 6 Sept 2022
-! summary: Evaluate the kth gradient of finite sum of Chebyshev1
-!  polynomials at several x
+!> author: OpenAI Codex (documentation)
+! date: 2026-10-30
+! summary: Evaluate the derivative of a polynomial expansion.
+!
+! Coefficients are modal values indexed from zero. Overloads with k request
+! the kth derivative.
+!
+! Arguments:
+!   n : INTEGER(I4B), INTENT(IN). Maximum polynomial degree; use n>=0.
+!   x : REAL(DFP), INTENT(IN)(:). Evaluation coordinate(s).
+!   coeff : REAL(DFP), INTENT(IN)(0:n). Modal expansion coefficients, indexed
+! from zero.
+!   k : INTEGER(I4B), INTENT(IN). Derivative order.
+!
+! Returns:
+!   ans : REAL(DFP)(SIZE(x)).
+!
+! Formula:
+! $$y(x)=\sum_{j=0}^{n}c_j p_j'(x)$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE Chebyshev1PolynomialUtility, ONLY: Chebyshev1GradientEvalSum
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: x(3), y(3), c(0:2)
+!
+! x = [-0.5_DFP, 0.0_DFP, 0.5_DFP]
+! c = [0.0_DFP, 0.0_DFP, 1.0_DFP]
+! y = Chebyshev1GradientEvalSum(n=2_I4B, x=x, coeff=c)
+! CALL OK(MAXVAL(ABS(y-(4.0_DFP*x))) < 1.0E-11_DFP, &
+!   "A single modal coefficient recovers degree two")
+! END PROGRAM main
+!```
 
 INTERFACE Chebyshev1GradientEvalSum
   MODULE PURE FUNCTION Chebyshev1GradientEvalSum4(n, x, coeff, k) RESULT(ans)
@@ -846,9 +2038,52 @@ END INTERFACE Chebyshev1GradientEvalSum
 !                                                         Chebyshev1Transform
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 13 Oct 2022
-! summary: Discrete Chebyshev1 Transform
+!> author: OpenAI Codex (documentation)
+! date: 2026-10-30
+! summary: Project sampled values onto the polynomial basis.
+!
+! coeff contains sampled function values on input, not modal coefficients.
+! Output entries are modal coefficients. Callback overloads map reference
+! nodes to [x1,x2]. Precomputed PP uses rows for points and columns for
+! degrees.
+!
+! Arguments:
+!   n : INTEGER(I4B), INTENT(IN). Maximum polynomial degree; use n>=0.
+!   coeff : REAL(DFP), INTENT(IN)(0:n). Sampled function values at quadrature
+! nodes.
+!   x : REAL(DFP), INTENT(IN)(0:n). Evaluation coordinate(s).
+!   w : REAL(DFP), INTENT(IN)(0:n). Quadrature weights paired with x or PP
+! rows.
+!   quadType : INTEGER(I4B), INTENT(IN). Quadrature selector from GlobalData;
+! must match the supplied nodes.
+!
+! Returns:
+!   ans : REAL(DFP)(0:n).
+!
+! Formula:
+! $$M c=b,\quad M_{ij}=\int p_i p_j w\,dx,\quad b_j=\sum_k w_k f_k p_j(x_k)$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE GlobalData, ONLY: Gauss
+! USE Chebyshev1PolynomialUtility, ONLY: Chebyshev1Transform
+! USE Chebyshev1PolynomialUtility, ONLY: Chebyshev1GaussQuadrature
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: x(3), w(3), f(3), c(0:2)
+!
+! CALL Chebyshev1GaussQuadrature(n=3_I4B, pt=x, wt=w)
+! f = 2.0_DFP*x*x-1.0_DFP
+! c = Chebyshev1Transform(n=2_I4B, coeff=f, x=x, w=w, quadType=Gauss)
+! CALL OK(MAXVAL(ABS(c- &
+!   [0.0_DFP, 0.0_DFP, 1.0_DFP])) < 1.0E-10_DFP, &
+!   "Recover the single degree two modal coefficient")
+! END PROGRAM main
+!```
 
 INTERFACE Chebyshev1Transform
   MODULE PURE FUNCTION Chebyshev1Transform1(n, coeff, x, w, &
@@ -873,9 +2108,57 @@ END INTERFACE Chebyshev1Transform
 !                                                     Chebyshev1Transform
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date:  2024-08-19
-! summary:  Discrete Chebyshev1 Transform
+!> author: OpenAI Codex (documentation)
+! date: 2026-10-30
+! summary: Project sampled values onto the polynomial basis.
+!
+! coeff contains sampled function values on input, not modal coefficients.
+! Output entries are modal coefficients. Callback overloads map reference
+! nodes to [x1,x2]. Precomputed PP uses rows for points and columns for
+! degrees.
+!
+! Arguments:
+!   n : INTEGER(I4B), INTENT(IN). Maximum polynomial degree; use n>=0.
+!   coeff : REAL(DFP), INTENT(IN)(0:). Sampled function values at quadrature
+! nodes.
+!   x : REAL(DFP), INTENT(IN)(0:). Evaluation coordinate(s).
+!   w : REAL(DFP), INTENT(IN)(0:). Quadrature weights paired with x or PP
+! rows.
+!   quadType : INTEGER(I4B), INTENT(IN). Quadrature selector from GlobalData;
+! must match the supplied nodes.
+!   ans : REAL(DFP), INTENT(INOUT)(0:). Result storage; allocate enough space
+! for all active dimensions.
+!   tsize : INTEGER(I4B), INTENT(OUT). Number of active vector output entries.
+!
+! Returns:
+!   Writes ans(0:), tsize.
+!
+! Formula:
+! $$M c=b,\quad M_{ij}=\int p_i p_j w\,dx,\quad b_j=\sum_k w_k f_k p_j(x_k)$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE GlobalData, ONLY: Gauss
+! USE Chebyshev1PolynomialUtility, ONLY: Chebyshev1Transform_
+! USE Chebyshev1PolynomialUtility, ONLY: Chebyshev1GaussQuadrature
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: x(3), w(3), f(3), c(0:2)
+! INTEGER(I4B) :: ns
+!
+! CALL Chebyshev1GaussQuadrature(n=3_I4B, pt=x, wt=w)
+! f = 2.0_DFP*x*x-1.0_DFP
+! CALL Chebyshev1Transform_( &
+!   n=2_I4B, coeff=f, x=x, w=w, quadType=Gauss, ans=c, tsize=ns)
+! CALL OK(MAXVAL(ABS(c- &
+!   [0.0_DFP, 0.0_DFP, 1.0_DFP])) < 1.0E-10_DFP, &
+!   "Recover the single degree two modal coefficient")
+! END PROGRAM main
+!```
 
 INTERFACE Chebyshev1Transform_
   MODULE PURE SUBROUTINE Chebyshev1Transform1_(n, coeff, x, w, &
@@ -903,6 +2186,59 @@ END INTERFACE Chebyshev1Transform_
 !                                                     Chebyshev1Transform
 !----------------------------------------------------------------------------
 
+!> author: OpenAI Codex (documentation)
+! date: 2026-10-30
+! summary: Project sampled values onto the polynomial basis.
+!
+! coeff contains sampled function values on input, not modal coefficients.
+! Output entries are modal coefficients. Callback overloads map reference
+! nodes to [x1,x2]. Precomputed PP uses rows for points and columns for
+! degrees.
+!
+! Arguments:
+!   n : INTEGER(I4B), INTENT(IN). Maximum polynomial degree; use n>=0.
+!   coeff : REAL(DFP), INTENT(IN)(0:). Sampled function values at quadrature
+! nodes.
+!   PP : REAL(DFP), INTENT(IN)(0:, 0:). Precomputed polynomial values, with
+! point rows and degree columns.
+!   w : REAL(DFP), INTENT(IN)(0:). Quadrature weights paired with x or PP
+! rows.
+!   quadType : INTEGER(I4B), INTENT(IN). Quadrature selector from GlobalData;
+! must match the supplied nodes.
+!   ans : REAL(DFP), INTENT(INOUT)(0:). Result storage; allocate enough space
+! for all active dimensions.
+!   tsize : INTEGER(I4B), INTENT(OUT). Number of active vector output entries.
+!
+! Returns:
+!   Writes ans(0:), tsize.
+!
+! Formula:
+! $$M c=b,\quad M_{ij}=\int p_i p_j w\,dx,\quad b_j=\sum_k w_k f_k p_j(x_k)$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE GlobalData, ONLY: Gauss
+! USE Chebyshev1PolynomialUtility, ONLY: Chebyshev1Transform_
+! USE Chebyshev1PolynomialUtility, ONLY: Chebyshev1GaussQuadrature
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: x(3), w(3), f(3), c(0:2)
+! INTEGER(I4B) :: ns
+!
+! CALL Chebyshev1GaussQuadrature(n=3_I4B, pt=x, wt=w)
+! f = 2.0_DFP*x*x-1.0_DFP
+! CALL Chebyshev1Transform_( &
+!   n=2_I4B, coeff=f, x=x, w=w, quadType=Gauss, ans=c, tsize=ns)
+! CALL OK(MAXVAL(ABS(c- &
+!   [0.0_DFP, 0.0_DFP, 1.0_DFP])) < 1.0E-10_DFP, &
+!   "Recover the single degree two modal coefficient")
+! END PROGRAM main
+!```
+
 INTERFACE Chebyshev1Transform_
   MODULE PURE SUBROUTINE Chebyshev1Transform4_(n, coeff, PP, w, &
                                                quadType, ans, tsize)
@@ -929,29 +2265,53 @@ END INTERFACE Chebyshev1Transform_
 !                                                   Chebyshev1Transform
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 13 Oct 2022
-! summary: Chebyshev1 Transform of a function on [-1,1]
+!> author: OpenAI Codex (documentation)
+! date: 2026-10-30
+! summary: Project sampled values onto the polynomial basis.
 !
-!# Introduction
+! coeff contains sampled function values on input, not modal coefficients.
+! Output entries are modal coefficients. Callback overloads map reference
+! nodes to [x1,x2]. Precomputed PP uses rows for points and columns for
+! degrees.
 !
-! This function performs the Chebyshev1 transformation of f defined
-! on -1 to 1. The interface of the function is give below:
+! Arguments:
+!   n : INTEGER(I4B), INTENT(IN). Maximum polynomial degree; use n>=0.
+!   f : PROCEDURE(iface_1DFunction), POINTER, INTENT(IN). Procedure pointer to
+! an iface_1DFunction callback.
+!   quadType : INTEGER(I4B), INTENT(IN). Quadrature selector from GlobalData;
+! must match the supplied nodes.
+!   x1 : REAL(DFP), INTENT(IN). Left endpoint of the callback evaluation
+! interval.
+!   x2 : REAL(DFP), INTENT(IN). Right endpoint of the callback evaluation
+! interval.
+!
+! Returns:
+!   ans : REAL(DFP)(0:n).
+!
+! Formula:
+! $$M c=b,\quad M_{ij}=\int p_i p_j w\,dx,\quad b_j=\sum_k w_k f_k p_j(x_k)$$
+!
+! Examples
 !
 !```fortran
-! ABSTRACT INTERFACE
-!   ELEMENTAL FUNCTION iface_1DFunction(x) RESULT(ans)
-!     IMPORT :: DFP
-!     REAL(DFP), INTENT(IN) :: x
-!     REAL(DFP) :: ans
-!   END FUNCTION iface_1DFunction
-! END INTERFACE
-!```
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE GlobalData, ONLY: Gauss
+! USE Chebyshev1PolynomialUtility, ONLY: Chebyshev1Transform
+! USE Chebyshev1PolynomialUtility, ONLY: Chebyshev1GaussQuadrature
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: x(3), w(3), f(3), c(0:2)
 !
-!@note
-! This routine is not pure, because this subroutine calls
-!  `Chebyshev1Quadrature` which is not pure due to Lapack call.
-!@endnote
+! CALL Chebyshev1GaussQuadrature(n=3_I4B, pt=x, wt=w)
+! f = 2.0_DFP*x*x-1.0_DFP
+! c = Chebyshev1Transform(n=2_I4B, coeff=f, x=x, w=w, quadType=Gauss)
+! CALL OK(MAXVAL(ABS(c- &
+!   [0.0_DFP, 0.0_DFP, 1.0_DFP])) < 1.0E-10_DFP, &
+!   "Recover the single degree two modal coefficient")
+! END PROGRAM main
+!```
 
 INTERFACE Chebyshev1Transform
   MODULE FUNCTION Chebyshev1Transform3(n, f, quadType, x1, x2) RESULT(ans)
@@ -973,9 +2333,58 @@ END INTERFACE Chebyshev1Transform
 !                                                       Chebyshev1Transform
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date:  2024-08-19
-! summary:  Chebyshev1 Transform of a function on [-1,1]
+!> author: OpenAI Codex (documentation)
+! date: 2026-10-30
+! summary: Project sampled values onto the polynomial basis.
+!
+! coeff contains sampled function values on input, not modal coefficients.
+! Output entries are modal coefficients. Callback overloads map reference
+! nodes to [x1,x2]. Precomputed PP uses rows for points and columns for
+! degrees.
+!
+! Arguments:
+!   n : INTEGER(I4B), INTENT(IN). Maximum polynomial degree; use n>=0.
+!   f : PROCEDURE(iface_1DFunction), POINTER, INTENT(IN). Procedure pointer to
+! an iface_1DFunction callback.
+!   quadType : INTEGER(I4B), INTENT(IN). Quadrature selector from GlobalData;
+! must match the supplied nodes.
+!   x1 : REAL(DFP), INTENT(IN). Left endpoint of the callback evaluation
+! interval.
+!   x2 : REAL(DFP), INTENT(IN). Right endpoint of the callback evaluation
+! interval.
+!   ans : REAL(DFP)(0:). Result storage; allocate enough space for all active
+! dimensions.
+!   tsize : INTEGER(I4B), INTENT(OUT). Number of active vector output entries.
+!
+! Returns:
+!   Writes tsize.
+!
+! Formula:
+! $$M c=b,\quad M_{ij}=\int p_i p_j w\,dx,\quad b_j=\sum_k w_k f_k p_j(x_k)$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE GlobalData, ONLY: Gauss
+! USE Chebyshev1PolynomialUtility, ONLY: Chebyshev1Transform_
+! USE Chebyshev1PolynomialUtility, ONLY: Chebyshev1GaussQuadrature
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: x(3), w(3), f(3), c(0:2)
+! INTEGER(I4B) :: ns
+!
+! CALL Chebyshev1GaussQuadrature(n=3_I4B, pt=x, wt=w)
+! f = 2.0_DFP*x*x-1.0_DFP
+! CALL Chebyshev1Transform_( &
+!   n=2_I4B, coeff=f, x=x, w=w, quadType=Gauss, ans=c, tsize=ns)
+! CALL OK(MAXVAL(ABS(c- &
+!   [0.0_DFP, 0.0_DFP, 1.0_DFP])) < 1.0E-10_DFP, &
+!   "Recover the single degree two modal coefficient")
+! END PROGRAM main
+!```
 
 INTERFACE Chebyshev1Transform_
   MODULE SUBROUTINE Chebyshev1Transform3_(n, f, quadType, x1, x2, ans, tsize)
@@ -999,13 +2408,49 @@ END INTERFACE Chebyshev1Transform_
 !                                                         Chebyshev1Transform
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 13 Oct 2022
-! summary: Discrete Chebyshev1 Transform
+!> author: OpenAI Codex (documentation)
+! date: 2026-10-30
+! summary: Project sampled values onto the polynomial basis.
 !
-!# Introduction
-! Discrete Chebyshev transform. We calculate weights and quadrature points
-! internally.
+! coeff contains sampled function values on input, not modal coefficients.
+! Output entries are modal coefficients. Callback overloads map reference
+! nodes to [x1,x2]. Precomputed PP uses rows for points and columns for
+! degrees.
+!
+! Arguments:
+!   n : INTEGER(I4B), INTENT(IN). Maximum polynomial degree; use n>=0.
+!   coeff : REAL(DFP), INTENT(IN)(0:). Sampled function values at quadrature
+! nodes.
+!   quadType : INTEGER(I4B), INTENT(IN). Quadrature selector from GlobalData;
+! must match the supplied nodes.
+!
+! Returns:
+!   ans : REAL(DFP)(0:n).
+!
+! Formula:
+! $$M c=b,\quad M_{ij}=\int p_i p_j w\,dx,\quad b_j=\sum_k w_k f_k p_j(x_k)$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE GlobalData, ONLY: Gauss
+! USE Chebyshev1PolynomialUtility, ONLY: Chebyshev1Transform
+! USE Chebyshev1PolynomialUtility, ONLY: Chebyshev1GaussQuadrature
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: x(3), w(3), f(3), c(0:2)
+!
+! CALL Chebyshev1GaussQuadrature(n=3_I4B, pt=x, wt=w)
+! f = 2.0_DFP*x*x-1.0_DFP
+! c = Chebyshev1Transform(n=2_I4B, coeff=f, x=x, w=w, quadType=Gauss)
+! CALL OK(MAXVAL(ABS(c- &
+!   [0.0_DFP, 0.0_DFP, 1.0_DFP])) < 1.0E-10_DFP, &
+!   "Recover the single degree two modal coefficient")
+! END PROGRAM main
+!```
 
 INTERFACE Chebyshev1Transform
   MODULE PURE FUNCTION Chebyshev1Transform2(n, coeff, quadType) RESULT(ans)
@@ -1026,9 +2471,54 @@ END INTERFACE Chebyshev1Transform
 !                                                       Chebyshev1Transform
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date:
-! summary:  Discrete Chebyshev1 Transform
+!> author: OpenAI Codex (documentation)
+! date: 2026-10-30
+! summary: Project sampled values onto the polynomial basis.
+!
+! coeff contains sampled function values on input, not modal coefficients.
+! Output entries are modal coefficients. Callback overloads map reference
+! nodes to [x1,x2]. Precomputed PP uses rows for points and columns for
+! degrees.
+!
+! Arguments:
+!   n : INTEGER(I4B), INTENT(IN). Maximum polynomial degree; use n>=0.
+!   coeff : REAL(DFP), INTENT(IN)(0:). Sampled function values at quadrature
+! nodes.
+!   quadType : INTEGER(I4B), INTENT(IN). Quadrature selector from GlobalData;
+! must match the supplied nodes.
+!   ans : REAL(DFP), INTENT(INOUT)(0:). Result storage; allocate enough space
+! for all active dimensions.
+!   tsize : INTEGER(I4B), INTENT(OUT). Number of active vector output entries.
+!
+! Returns:
+!   Writes ans(0:), tsize.
+!
+! Formula:
+! $$M c=b,\quad M_{ij}=\int p_i p_j w\,dx,\quad b_j=\sum_k w_k f_k p_j(x_k)$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE GlobalData, ONLY: Gauss
+! USE Chebyshev1PolynomialUtility, ONLY: Chebyshev1Transform_
+! USE Chebyshev1PolynomialUtility, ONLY: Chebyshev1GaussQuadrature
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: x(3), w(3), f(3), c(0:2)
+! INTEGER(I4B) :: ns
+!
+! CALL Chebyshev1GaussQuadrature(n=3_I4B, pt=x, wt=w)
+! f = 2.0_DFP*x*x-1.0_DFP
+! CALL Chebyshev1Transform_( &
+!   n=2_I4B, coeff=f, x=x, w=w, quadType=Gauss, ans=c, tsize=ns)
+! CALL OK(MAXVAL(ABS(c- &
+!   [0.0_DFP, 0.0_DFP, 1.0_DFP])) < 1.0E-10_DFP, &
+!   "Recover the single degree two modal coefficient")
+! END PROGRAM main
+!```
 
 INTERFACE Chebyshev1Transform_
   MODULE PURE SUBROUTINE Chebyshev1Transform2_(n, coeff, quadType, ans, tsize)
@@ -1051,9 +2541,42 @@ END INTERFACE Chebyshev1Transform_
 !                                                 Chebyshev1InvTransform
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 13 Oct 2022
-! summary: Inverse Chebyshev1 Transform
+!> author: OpenAI Codex (documentation)
+! date: 2026-10-30
+! summary: Evaluate a polynomial expansion.
+!
+! Coefficients are modal values indexed from zero.
+!
+! Arguments:
+!   n : INTEGER(I4B), INTENT(IN). Maximum polynomial degree; use n>=0.
+!   coeff : REAL(DFP), INTENT(IN)(0:n). Modal expansion coefficients, indexed
+! from zero.
+!   x : REAL(DFP), INTENT(IN). Evaluation coordinate(s).
+!
+! Returns:
+!   ans : REAL(DFP).
+!
+! Formula:
+! $$y(x)=\sum_{j=0}^{n}c_j p_j(x)$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE Chebyshev1PolynomialUtility, ONLY: Chebyshev1InvTransform
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: x(3), y(3), c(0:2)
+!
+! x = [-0.5_DFP, 0.0_DFP, 0.5_DFP]
+! c = [0.0_DFP, 0.0_DFP, 1.0_DFP]
+! y = Chebyshev1InvTransform(n=2_I4B, x=x, coeff=c)
+! CALL OK(MAXVAL(ABS(y-(2.0_DFP*x*x-1.0_DFP))) < 1.0E-11_DFP, &
+!   "A single modal coefficient recovers degree two")
+! END PROGRAM main
+!```
 
 INTERFACE Chebyshev1InvTransform
   MODULE PURE FUNCTION Chebyshev1InvTransform1(n, coeff, x) &
@@ -1073,9 +2596,42 @@ END INTERFACE Chebyshev1InvTransform
 !                                                 Chebyshev1InvTransform
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 13 Oct 2022
-! summary: Inverse Chebyshev1 Transform
+!> author: OpenAI Codex (documentation)
+! date: 2026-10-30
+! summary: Evaluate a polynomial expansion.
+!
+! Coefficients are modal values indexed from zero.
+!
+! Arguments:
+!   n : INTEGER(I4B), INTENT(IN). Maximum polynomial degree; use n>=0.
+!   coeff : REAL(DFP), INTENT(IN)(0:n). Modal expansion coefficients, indexed
+! from zero.
+!   x : REAL(DFP), INTENT(IN)(:). Evaluation coordinate(s).
+!
+! Returns:
+!   ans : REAL(DFP)(SIZE(x)).
+!
+! Formula:
+! $$y(x)=\sum_{j=0}^{n}c_j p_j(x)$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE Chebyshev1PolynomialUtility, ONLY: Chebyshev1InvTransform
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: x(3), y(3), c(0:2)
+!
+! x = [-0.5_DFP, 0.0_DFP, 0.5_DFP]
+! c = [0.0_DFP, 0.0_DFP, 1.0_DFP]
+! y = Chebyshev1InvTransform(n=2_I4B, x=x, coeff=c)
+! CALL OK(MAXVAL(ABS(y-(2.0_DFP*x*x-1.0_DFP))) < 1.0E-11_DFP, &
+!   "A single modal coefficient recovers degree two")
+! END PROGRAM main
+!```
 
 INTERFACE Chebyshev1InvTransform
   MODULE PURE FUNCTION Chebyshev1InvTransform2(n, coeff, x) &
@@ -1095,15 +2651,40 @@ END INTERFACE Chebyshev1InvTransform
 !                                               Chebyshev1GradientCoeff
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 13 Oct 2022
-! summary: Returns coefficients for gradient of Chebyshev1 expansion
+!> author: OpenAI Codex (documentation)
+! date: 2026-10-30
+! summary: Differentiate modal coefficients in the same family.
 !
-!# Introduction
+! The output retains n+1 entries; the final coefficient is zero.
 !
-!- This routine returns the coefficients of gradient of Jacobi expansion.
-!- Input is coefficient of Chebyshev1 expansion (modal values)
-!- Output is coefficient of derivative of Chebyshev1 expansion (modal values)
+! Arguments:
+!   n : INTEGER(I4B), INTENT(IN). Maximum polynomial degree; use n>=0.
+!   coeff : REAL(DFP), INTENT(IN)(0:n). Modal expansion coefficients, indexed
+! from zero.
+!
+! Returns:
+!   ans : REAL(DFP)(0:n).
+!
+! Formula:
+! $$\sum_{j=0}^{n}d_j p_j(x)=\sum_{j=0}^{n}c_j p_j'(x)$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE Chebyshev1PolynomialUtility, ONLY: Chebyshev1GradientCoeff
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: c(0:2), dc(0:2)
+!
+! c = [0.0_DFP, 0.0_DFP, 1.0_DFP]
+! dc = Chebyshev1GradientCoeff(n=2_I4B, coeff=c)
+! CALL OK(MAXVAL(ABS(dc-[0.0_DFP, 4.0_DFP, 0.0_DFP])) &
+!   < 1.0E-11_DFP, "Derivative coefficients in the same basis")
+! END PROGRAM main
+!```
 
 INTERFACE Chebyshev1GradientCoeff
   MODULE PURE FUNCTION Chebyshev1GradientCoeff1(n, coeff) &
@@ -1121,9 +2702,44 @@ END INTERFACE Chebyshev1GradientCoeff
 !                                                           Chebyshev1DMatrix
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 15 Oct 2022
-! summary: Returns differentiation matrix for Chebyshev1 expansion
+!> author: OpenAI Codex (documentation)
+! date: 2026-10-30
+! summary: Build the nodal first derivative matrix.
+!
+! n is the interpolation degree; pass n+1 nodes from the selected quadrature
+! rule in their returned order.
+!
+! Arguments:
+!   n : INTEGER(I4B), INTENT(IN). Interpolation degree; x contains n+1 nodes.
+!   x : REAL(DFP), INTENT(IN)(0:n). Evaluation coordinate(s).
+!   quadType : INTEGER(I4B), INTENT(IN). Quadrature selector from GlobalData;
+! must match the supplied nodes.
+!
+! Returns:
+!   ans : REAL(DFP)(0:n, 0:n).
+!
+! Formula:
+! $$f'(x_i)=\sum_{j=0}^{n}D_{ij} f(x_j)$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE GlobalData, ONLY: Gauss
+! USE Chebyshev1PolynomialUtility, ONLY: Chebyshev1DMatrix
+! USE Chebyshev1PolynomialUtility, ONLY: Chebyshev1Quadrature
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: x(0:2), w(0:2), d(0:2, 0:2)
+!
+! CALL Chebyshev1Quadrature(n=3_I4B, pt=x, wt=w, quadType=Gauss)
+! d = Chebyshev1DMatrix(n=2_I4B, x=x, quadType=Gauss)
+! CALL OK(MAXVAL(ABS(MATMUL(d, x*x)-2.0_DFP*x)) &
+!   < 1.0E-10_DFP, "Differentiate a nodal quadratic")
+! END PROGRAM main
+!```
 
 INTERFACE Chebyshev1DMatrix
   MODULE PURE FUNCTION Chebyshev1DMatrix1(n, x, quadType) &
@@ -1143,9 +2759,51 @@ END INTERFACE Chebyshev1DMatrix
 !                                                 Chebyshev1DMatEvenOdd
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 15 Oct 2022
-! summary: Performs even and odd decomposition of Differential matrix
+!> author: OpenAI Codex (documentation)
+! date: 2026-10-30
+! summary: Form even and odd blocks by pairing mirrored columns.
+!
+! The example uses odd n, where both blocks are fully assigned. The even n
+! branch does not assign every output entry; initialize buffers and inspect
+! that branch before use.
+!
+! Arguments:
+!   n : INTEGER(I4B), INTENT(IN). Maximum polynomial degree; use n>=0.
+!   D : REAL(DFP), INTENT(IN)(0:n, 0:n). Jacobi matrix diagonal, or nodal
+! derivative matrix in the block splitter.
+!   e : REAL(DFP), INTENT(OUT)(0:, 0:). Jacobi matrix off diagonal, or even
+! block in the block splitter.
+!   o : REAL(DFP), INTENT(OUT)(0:, 0:). Odd block formed by mirrored column
+! subtraction.
+!
+! Returns:
+!   Writes e(0:, 0:), o(0:, 0:).
+!
+! Formula:
+! $$E_{ij}=D_{ij}+D_{i,n-j},\quad O_{ij}=D_{ij}-D_{i,n-j}$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE Chebyshev1PolynomialUtility, ONLY: Chebyshev1DMatEvenOdd
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: d(0:3, 0:3), e(0:1, 0:1), o(0:1, 0:1)
+! INTEGER(I4B) :: j
+!
+! DO j = 0, 3
+!   d(:, j) = REAL(j, DFP)
+! END DO
+! CALL Chebyshev1DMatEvenOdd(n=3_I4B, D=d, e=e, o=o)
+! CALL OK(MAXVAL(ABS(e-3.0_DFP)) < 1.0E-11_DFP, &
+!   "Even block combines mirrored columns")
+! CALL OK(MAXVAL(ABS(o(:, 0)+3.0_DFP)) < 1.0E-11_DFP, &
+!   "Odd block subtracts mirrored columns")
+! END PROGRAM main
+!```
 
 INTERFACE Chebyshev1DMatEvenOdd
   MODULE PURE SUBROUTINE Chebyshev1DMatEvenOdd1(n, D, e, o)
@@ -1164,13 +2822,47 @@ END INTERFACE Chebyshev1DMatEvenOdd
 !                                                 Chebyshev1LaplacianEvalAll
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 8 Sept 2022
-! summary: Evaluate Laplacian of Chebyshev1 polynomial of order upto n
+!> author: OpenAI Codex (documentation)
+! date: 2026-10-30
+! summary: Reserved second derivative interface; currently unimplemented.
 !
-!# Chebyshev1LaplacianEvalAll
+! Do not call this interface: its implementation is empty or forwards to an
+! empty body. Function results and output dimensions are undefined. The
+! example deliberately calls GradientEval instead and demonstrates a numerical
+! workaround; it is not validation of this Laplacian interface.
 !
-! Evaluate Laplacian of Chebyshev1 polynomial of order upto n.
+! Arguments:
+!   n : INTEGER(I4B), INTENT(IN). Maximum polynomial degree; use n>=0.
+!   x : REAL(DFP), INTENT(IN). Evaluation coordinate(s).
+!
+! Returns:
+!   No defined result: the implementation body is empty.
+!
+! Formula:
+! $$p_n''(x)\simeq\frac{p_n'(x+h)-p_n'(x-h)}{2h}$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE Chebyshev1PolynomialUtility, ONLY: Chebyshev1GradientEval
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: x(3), gp(3), gm(3), d2(3)
+! REAL(DFP), PARAMETER :: h = 1.0E-5_DFP
+!
+! ! The declared Laplacian routine has no implementation.
+! ! Approximate the second derivative using the working gradient API.
+! x = [-0.5_DFP, 0.0_DFP, 0.5_DFP]
+! gp = Chebyshev1GradientEval(n=2_I4B, x=x+h)
+! gm = Chebyshev1GradientEval(n=2_I4B, x=x-h)
+! d2 = (gp-gm)/(2.0_DFP*h)
+! CALL OK(MAXVAL(ABS(d2-(4.0_DFP))) < 1.0E-8_DFP, &
+!   "Gradient based second derivative workaround")
+! END PROGRAM main
+!```
 
 INTERFACE Chebyshev1LaplacianEvalAll
   MODULE PURE FUNCTION Chebyshev1LaplacianEvalAll1(n, x) RESULT(ans)
@@ -1184,9 +2876,50 @@ END INTERFACE Chebyshev1LaplacianEvalAll
 !                                                 Chebyshev1LaplacianEvalAll_
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 2026-09-17
-! summary: Laplacian of Chebyshev1 polynomials
+!> author: OpenAI Codex (documentation)
+! date: 2026-10-30
+! summary: Reserved second derivative interface; currently unimplemented.
+!
+! Do not call this interface: its implementation is empty or forwards to an
+! empty body. Function results and output dimensions are undefined. The
+! example deliberately calls GradientEval instead and demonstrates a numerical
+! workaround; it is not validation of this Laplacian interface.
+!
+! Arguments:
+!   n : INTEGER(I4B), INTENT(IN). Maximum polynomial degree; use n>=0.
+!   x : REAL(DFP), INTENT(IN). Evaluation coordinate(s).
+!   ans : REAL(DFP), INTENT(INOUT)(:). Result storage; allocate enough space
+! for all active dimensions.
+!   tsize : INTEGER(I4B), INTENT(OUT). Number of active vector output entries.
+!
+! Returns:
+!   No defined result: the implementation body is empty.
+!
+! Formula:
+! $$p_n''(x)\simeq\frac{p_n'(x+h)-p_n'(x-h)}{2h}$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE Chebyshev1PolynomialUtility, ONLY: Chebyshev1GradientEval
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: x(3), gp(3), gm(3), d2(3)
+! REAL(DFP), PARAMETER :: h = 1.0E-5_DFP
+!
+! ! The declared Laplacian routine has no implementation.
+! ! Approximate the second derivative using the working gradient API.
+! x = [-0.5_DFP, 0.0_DFP, 0.5_DFP]
+! gp = Chebyshev1GradientEval(n=2_I4B, x=x+h)
+! gm = Chebyshev1GradientEval(n=2_I4B, x=x-h)
+! d2 = (gp-gm)/(2.0_DFP*h)
+! CALL OK(MAXVAL(ABS(d2-(4.0_DFP))) < 1.0E-8_DFP, &
+!   "Gradient based second derivative workaround")
+! END PROGRAM main
+!```
 
 INTERFACE Chebyshev1LaplacianEvalAll_
   MODULE PURE SUBROUTINE Chebyshev1LaplacianEvalAll1_(n, x, ans, tsize)
@@ -1202,13 +2935,47 @@ END INTERFACE Chebyshev1LaplacianEvalAll_
 !                                                 Chebyshev1LaplacianEvalAll
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 8 Sept 2022
-! summary: Evaluate Laplacian of Chebyshev1 polynomial of order upto n
+!> author: OpenAI Codex (documentation)
+! date: 2026-10-30
+! summary: Reserved second derivative interface; currently unimplemented.
 !
-!# Chebyshev1LaplacianEvalAll
+! Do not call this interface: its implementation is empty or forwards to an
+! empty body. Function results and output dimensions are undefined. The
+! example deliberately calls GradientEval instead and demonstrates a numerical
+! workaround; it is not validation of this Laplacian interface.
 !
-! Evaluate Laplacian of Chebyshev1 polynomial of order upto n.
+! Arguments:
+!   n : INTEGER(I4B), INTENT(IN). Maximum polynomial degree; use n>=0.
+!   x : REAL(DFP), INTENT(IN)(:). Evaluation coordinate(s).
+!
+! Returns:
+!   No defined result: the implementation body is empty.
+!
+! Formula:
+! $$p_n''(x)\simeq\frac{p_n'(x+h)-p_n'(x-h)}{2h}$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE Chebyshev1PolynomialUtility, ONLY: Chebyshev1GradientEval
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: x(3), gp(3), gm(3), d2(3)
+! REAL(DFP), PARAMETER :: h = 1.0E-5_DFP
+!
+! ! The declared Laplacian routine has no implementation.
+! ! Approximate the second derivative using the working gradient API.
+! x = [-0.5_DFP, 0.0_DFP, 0.5_DFP]
+! gp = Chebyshev1GradientEval(n=2_I4B, x=x+h)
+! gm = Chebyshev1GradientEval(n=2_I4B, x=x-h)
+! d2 = (gp-gm)/(2.0_DFP*h)
+! CALL OK(MAXVAL(ABS(d2-(4.0_DFP))) < 1.0E-8_DFP, &
+!   "Gradient based second derivative workaround")
+! END PROGRAM main
+!```
 
 INTERFACE Chebyshev1LaplacianEvalAll
   MODULE PURE FUNCTION Chebyshev1LaplacianEvalAll2(n, x) RESULT(ans)
@@ -1221,6 +2988,52 @@ END INTERFACE Chebyshev1LaplacianEvalAll
 !----------------------------------------------------------------------------
 !                                                Chebyshev1LaplacianEvalAll_
 !----------------------------------------------------------------------------
+
+!> author: OpenAI Codex (documentation)
+! date: 2026-10-30
+! summary: Reserved second derivative interface; currently unimplemented.
+!
+! Do not call this interface: its implementation is empty or forwards to an
+! empty body. Function results and output dimensions are undefined. The
+! example deliberately calls GradientEval instead and demonstrates a numerical
+! workaround; it is not validation of this Laplacian interface.
+!
+! Arguments:
+!   n : INTEGER(I4B), INTENT(IN). Maximum polynomial degree; use n>=0.
+!   x : REAL(DFP), INTENT(IN)(:). Evaluation coordinate(s).
+!   ans : REAL(DFP), INTENT(INOUT)(:, :). Result storage; allocate enough
+! space for all active dimensions.
+!   nrow : INTEGER(I4B), INTENT(OUT). Number of active output rows.
+!   ncol : INTEGER(I4B), INTENT(OUT). Number of active output columns.
+!
+! Returns:
+!   No defined result: the implementation body is empty.
+!
+! Formula:
+! $$p_n''(x)\simeq\frac{p_n'(x+h)-p_n'(x-h)}{2h}$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE Chebyshev1PolynomialUtility, ONLY: Chebyshev1GradientEval
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: x(3), gp(3), gm(3), d2(3)
+! REAL(DFP), PARAMETER :: h = 1.0E-5_DFP
+!
+! ! The declared Laplacian routine has no implementation.
+! ! Approximate the second derivative using the working gradient API.
+! x = [-0.5_DFP, 0.0_DFP, 0.5_DFP]
+! gp = Chebyshev1GradientEval(n=2_I4B, x=x+h)
+! gm = Chebyshev1GradientEval(n=2_I4B, x=x-h)
+! d2 = (gp-gm)/(2.0_DFP*h)
+! CALL OK(MAXVAL(ABS(d2-(4.0_DFP))) < 1.0E-8_DFP, &
+!   "Gradient based second derivative workaround")
+! END PROGRAM main
+!```
 
 INTERFACE Chebyshev1LaplacianEvalAll_
   MODULE PURE SUBROUTINE Chebyshev1LaplacianEvalAll2_(n, x, ans, nrow, ncol)
@@ -1236,13 +3049,47 @@ END INTERFACE Chebyshev1LaplacianEvalAll_
 !                                                    Chebyshev1LaplacianEval
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 8 Sept 2022
-! summary:         Evaluate Laplacian of Chebyshev1 polynomial of order upto n
+!> author: OpenAI Codex (documentation)
+! date: 2026-10-30
+! summary: Reserved second derivative interface; currently unimplemented.
 !
-!# Chebyshev1LaplacianEval
+! Do not call this interface: its implementation is empty or forwards to an
+! empty body. Function results and output dimensions are undefined. The
+! example deliberately calls GradientEval instead and demonstrates a numerical
+! workaround; it is not validation of this Laplacian interface.
 !
-! Evaluate Laplacian of Chebyshev1 polynomial of order upto n.
+! Arguments:
+!   n : INTEGER(I4B), INTENT(IN). Maximum polynomial degree; use n>=0.
+!   x : REAL(DFP), INTENT(IN). Evaluation coordinate(s).
+!
+! Returns:
+!   No defined result: the implementation body is empty.
+!
+! Formula:
+! $$p_n''(x)\simeq\frac{p_n'(x+h)-p_n'(x-h)}{2h}$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE Chebyshev1PolynomialUtility, ONLY: Chebyshev1GradientEval
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: x(3), gp(3), gm(3), d2(3)
+! REAL(DFP), PARAMETER :: h = 1.0E-5_DFP
+!
+! ! The declared Laplacian routine has no implementation.
+! ! Approximate the second derivative using the working gradient API.
+! x = [-0.5_DFP, 0.0_DFP, 0.5_DFP]
+! gp = Chebyshev1GradientEval(n=2_I4B, x=x+h)
+! gm = Chebyshev1GradientEval(n=2_I4B, x=x-h)
+! d2 = (gp-gm)/(2.0_DFP*h)
+! CALL OK(MAXVAL(ABS(d2-(4.0_DFP))) < 1.0E-8_DFP, &
+!   "Gradient based second derivative workaround")
+! END PROGRAM main
+!```
 
 INTERFACE Chebyshev1LaplacianEval
   MODULE PURE FUNCTION Chebyshev1LaplacianEval1(n, x) RESULT(ans)
@@ -1256,13 +3103,47 @@ END INTERFACE Chebyshev1LaplacianEval
 !                                                     Chebyshev1LaplacianEval
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 8 Sept 2022
-! summary: Evaluate Laplacian of Chebyshev1 polynomial of order upto n
+!> author: OpenAI Codex (documentation)
+! date: 2026-10-30
+! summary: Reserved second derivative interface; currently unimplemented.
 !
-!# Chebyshev1LaplacianEval
+! Do not call this interface: its implementation is empty or forwards to an
+! empty body. Function results and output dimensions are undefined. The
+! example deliberately calls GradientEval instead and demonstrates a numerical
+! workaround; it is not validation of this Laplacian interface.
 !
-! Evaluate Laplacian of Chebyshev1 polynomial of order upto n.
+! Arguments:
+!   n : INTEGER(I4B), INTENT(IN). Maximum polynomial degree; use n>=0.
+!   x : REAL(DFP), INTENT(IN)(:). Evaluation coordinate(s).
+!
+! Returns:
+!   No defined result: the implementation body is empty.
+!
+! Formula:
+! $$p_n''(x)\simeq\frac{p_n'(x+h)-p_n'(x-h)}{2h}$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE Chebyshev1PolynomialUtility, ONLY: Chebyshev1GradientEval
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: x(3), gp(3), gm(3), d2(3)
+! REAL(DFP), PARAMETER :: h = 1.0E-5_DFP
+!
+! ! The declared Laplacian routine has no implementation.
+! ! Approximate the second derivative using the working gradient API.
+! x = [-0.5_DFP, 0.0_DFP, 0.5_DFP]
+! gp = Chebyshev1GradientEval(n=2_I4B, x=x+h)
+! gm = Chebyshev1GradientEval(n=2_I4B, x=x-h)
+! d2 = (gp-gm)/(2.0_DFP*h)
+! CALL OK(MAXVAL(ABS(d2-(4.0_DFP))) < 1.0E-8_DFP, &
+!   "Gradient based second derivative workaround")
+! END PROGRAM main
+!```
 
 INTERFACE Chebyshev1LaplacianEval
   MODULE PURE FUNCTION Chebyshev1LaplacianEval2(n, x) RESULT(ans)
