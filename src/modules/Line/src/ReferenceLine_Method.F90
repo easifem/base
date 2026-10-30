@@ -15,7 +15,7 @@
 ! along with this program.  If not, see <https://www.gnu.org/licenses/>
 !
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: ReferenceLine geometry and interpolation utilities.
 !
@@ -118,7 +118,7 @@ REAL(DFP), PARAMETER :: DEFAULT_Ref_LINE_COORD(3, 2) = &
 !                                                              ElementName
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Query reference element identifiers, orders and topology metadata.
 !
@@ -178,7 +178,7 @@ END INTERFACE
 !                                                         FacetTopology_Line
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Construct facet connectivity and reference topology.
 !
@@ -251,7 +251,7 @@ END INTERFACE
 !                                                    TotalEntities_Line
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Query reference element identifiers, orders and topology metadata.
 !
@@ -311,7 +311,7 @@ END INTERFACE
 !                                                   TotalNodesInElement_Line
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Query reference element identifiers, orders and topology metadata.
 !
@@ -371,7 +371,7 @@ END INTERFACE
 !                                                       ElementOrder_Line
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Query reference element identifiers, orders and topology metadata.
 !
@@ -431,7 +431,7 @@ END INTERFACE
 !                                                       ElementType_Line
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Query reference element identifiers, orders and topology metadata.
 !
@@ -490,7 +490,7 @@ END INTERFACE
 !                                                       FacetElements_Line
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Construct facet connectivity and reference topology.
 !
@@ -560,7 +560,7 @@ END INTERFACE FacetElements_Line
 !                                                       FacetElements_Line
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Construct facet connectivity and reference topology.
 !
@@ -633,7 +633,7 @@ END INTERFACE FacetElements_Line
 !                                                                 LineName
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Query reference element identifiers, orders and topology metadata.
 !
@@ -693,7 +693,7 @@ END INTERFACE LineName
 !                                                           Initiate@Methods
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Construct a linear reference element or obtain reference
 ! coordinates.
@@ -771,7 +771,7 @@ END INTERFACE Initiate
 !                                                     ReferenceLine@Methods
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Construct a linear reference element or obtain reference
 ! coordinates.
@@ -844,7 +844,7 @@ END INTERFACE ReferenceLine
 !                                              ReferenceLine_Pointer@Methods
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Construct a linear reference element or obtain reference
 ! coordinates.
@@ -917,7 +917,7 @@ END INTERFACE ReferenceLine_Pointer
 !                                                   LagrangeElement@Methods
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Construct higher order lines and query line measure.
 !
@@ -989,7 +989,7 @@ END INTERFACE
 !                                                    MeasureSimplex@Methods
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Construct higher order lines and query line measure.
 !
@@ -1054,7 +1054,7 @@ END INTERFACE
 !                                                      line_quality@Methods
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Construct higher order lines and query line measure.
 !
@@ -1122,7 +1122,7 @@ END INTERFACE Quality_Line
 !                                                           RefLineCoord
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Construct a linear reference element or obtain reference
 ! coordinates.
@@ -1187,7 +1187,7 @@ END INTERFACE RefCoord_Line
 !                                                        GetEdgeConnectivity
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Construct facet connectivity and reference topology.
 !
@@ -1274,7 +1274,7 @@ END INTERFACE
 !                                           GetEdgeElemType@GeometryMethods
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Construct facet connectivity and reference topology.
 !
@@ -1365,7 +1365,7 @@ END INTERFACE
 !                                           GetFaceElemType@GeometryMethods
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Construct facet connectivity and reference topology.
 !
@@ -1448,7 +1448,7 @@ END INTERFACE GetFaceElemType_Line
 !                                           GetFaceElemType@GeometryMethods
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Construct facet connectivity and reference topology.
 !

@@ -15,7 +15,7 @@
 ! along with this program.  If not, see <https://www.gnu.org/licenses/>
 !
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: LineInterpolationUtility geometry and interpolation utilities.
 !
@@ -137,7 +137,7 @@ PUBLIC :: OrthogonalBasisLaplacian_Line_
 !                                                       RefElemDomain_Line
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Query interpolation dimensions, exponent tables and reference
 ! domains.
@@ -211,7 +211,7 @@ END INTERFACE
 !                                                      QuadratureNumber_Line
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Select a rule and construct quadrature coordinates and weights.
 !
@@ -275,7 +275,7 @@ END INTERFACE
 !                                                            ToVEFC_Line
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Reorder an increasing line point list into endpoint first layout.
 !
@@ -318,7 +318,7 @@ END INTERFACE
 !                                                       LagrangeDegree_Line
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Query interpolation dimensions, exponent tables and reference
 ! domains.
@@ -384,7 +384,7 @@ END INTERFACE
 !                                                          LagrangeDOF_Point
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Query interpolation dimensions, exponent tables and reference
 ! domains.
@@ -450,7 +450,7 @@ END INTERFACE
 !                                                              GetDOF_Line
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Query interpolation dimensions, exponent tables and reference
 ! domains.
@@ -516,7 +516,7 @@ END INTERFACE
 !                                                        LagrangeInDOF_Line
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Query interpolation dimensions, exponent tables and reference
 ! domains.
@@ -582,7 +582,7 @@ END INTERFACE
 !                                                         GetTotalDOF_Line
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Query interpolation dimensions, exponent tables and reference
 ! domains.
@@ -657,7 +657,7 @@ END INTERFACE
 !                                                        LagrangeInDOF_Line
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Query interpolation dimensions, exponent tables and reference
 ! domains.
@@ -730,7 +730,7 @@ END INTERFACE
 !                                                   EquidistanceInPoint_Line
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Generate interior line interpolation coordinates.
 !
@@ -783,7 +783,7 @@ END INTERFACE EquidistanceInPoint_Line
 !
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Generate interior line interpolation coordinates.
 !
@@ -841,7 +841,7 @@ END INTERFACE EquidistanceInPoint_Line_
 !                                                   EquidistanceInPoint_Line
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Generate interior line interpolation coordinates.
 !
@@ -899,7 +899,7 @@ END INTERFACE EquidistanceInPoint_Line
 !
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Generate interior line interpolation coordinates.
 !
@@ -964,7 +964,7 @@ END INTERFACE EquidistanceInPoint_Line_
 !                                                    EquidistancePoint_Line
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Generate line interpolation coordinates.
 !
@@ -1018,7 +1018,7 @@ END INTERFACE EquidistancePoint_Line
 !                                                   EquidistancePoint_Line_
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Generate line interpolation coordinates.
 !
@@ -1076,7 +1076,7 @@ END INTERFACE EquidistancePoint_Line_
 !                                                    EquidistancePoint_Line
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Generate line interpolation coordinates.
 !
@@ -1135,7 +1135,7 @@ END INTERFACE EquidistancePoint_Line
 !                                                   EquidistancePoint_Line_
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Generate line interpolation coordinates.
 !
@@ -1199,7 +1199,7 @@ END INTERFACE EquidistancePoint_Line_
 !                                                   InterpolationPoint_Line
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Generate line interpolation coordinates.
 !
@@ -1275,7 +1275,7 @@ END INTERFACE InterpolationPoint_Line
 !                                                   InterpolationPoint_Line_
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Generate line interpolation coordinates.
 !
@@ -1355,7 +1355,7 @@ END INTERFACE InterpolationPoint_Line_
 !                                                   InterpolationPoint_Line
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Generate line interpolation coordinates.
 !
@@ -1426,7 +1426,7 @@ END INTERFACE InterpolationPoint_Line
 !                                                   InterpolationPoint_Line_
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Generate line interpolation coordinates.
 !
@@ -1504,7 +1504,7 @@ END INTERFACE InterpolationPoint_Line_
 !                                                         LagrangeCoeff_Line
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Construct coefficients of the nodal interpolation basis.
 !
@@ -1574,7 +1574,7 @@ END INTERFACE LagrangeCoeff_Line
 !                                                         LagrangeCoeff_Line
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Construct coefficients of the nodal interpolation basis.
 !
@@ -1650,7 +1650,7 @@ END INTERFACE LagrangeCoeff_Line_
 !                                                         LagrangeCoeff_Line
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Construct coefficients of the nodal interpolation basis.
 !
@@ -1723,7 +1723,7 @@ END INTERFACE LagrangeCoeff_Line
 !                                                         LagrangeCoeff_Line
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Construct coefficients of the nodal interpolation basis.
 !
@@ -1803,7 +1803,7 @@ END INTERFACE LagrangeCoeff_Line_
 !                                                         LagrangeCoeff_Line
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Construct coefficients of the nodal interpolation basis.
 !
@@ -1877,7 +1877,7 @@ END INTERFACE LagrangeCoeff_Line
 !                                                         LagrangeCoeff_Line
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Construct coefficients of the nodal interpolation basis.
 !
@@ -1957,7 +1957,7 @@ END INTERFACE LagrangeCoeff_Line_
 !                                                         LagrangeCoeff_Line
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Construct coefficients of the nodal interpolation basis.
 !
@@ -2026,7 +2026,7 @@ END INTERFACE LagrangeCoeff_Line
 !                                                         LagrangeCoeff_Line
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Construct coefficients of the nodal interpolation basis.
 !
@@ -2102,7 +2102,7 @@ END INTERFACE LagrangeCoeff_Line_
 !                                                       LagrangeCoeff_Line
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Construct coefficients of the nodal interpolation basis.
 !
@@ -2185,7 +2185,7 @@ END INTERFACE LagrangeCoeff_Line
 !                                                       LagrangeCoeff_Line
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Construct coefficients of the nodal interpolation basis.
 !
@@ -2275,7 +2275,7 @@ END INTERFACE LagrangeCoeff_Line_
 !                                                       LagrangeEvalAll_Line
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate the nodal line basis.
 !
@@ -2364,7 +2364,7 @@ END INTERFACE LagrangeEvalAll_Line
 !                                               LagrangeEvalAll_Line_
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate the nodal line basis.
 !
@@ -2461,7 +2461,7 @@ END INTERFACE LagrangeEvalAll_Line_
 !                                                       LagrangeEvalAll_Line
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate the nodal line basis.
 !
@@ -2563,7 +2563,7 @@ END INTERFACE LagrangeEvalAll_Line
 !                                       LagrangeEvalAll_Line_@LagrangeMethods
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate the nodal line basis.
 !
@@ -2669,7 +2669,7 @@ END INTERFACE LagrangeEvalAll_Line_
 !                                       LagrangeEvalAll_Line_@LagrangeMethods
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate the nodal line basis.
 !
@@ -2784,7 +2784,7 @@ END INTERFACE LagrangeEvalAll_Line_
 !                                               LagrangeGradientEvalAll_Line
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate gradients of the nodal line basis.
 !
@@ -2879,7 +2879,7 @@ END INTERFACE LagrangeGradientEvalAll_Line
 !                               LagrangeGradientEvalAll_Line_@LagrangeMethods
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate gradients of the nodal line basis.
 !
@@ -2983,7 +2983,7 @@ END INTERFACE LagrangeGradientEvalAll_Line_
 !                               LagrangeGradientEvalAll_Line_@LagrangeMethods
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate gradients of the nodal line basis.
 !
@@ -3093,7 +3093,7 @@ END INTERFACE LagrangeGradientEvalAll_Line_
 !                                              LagrangeLaplacianEvalAll_Line
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate second derivatives of nodal line basis functions.
 !
@@ -3183,7 +3183,7 @@ END INTERFACE LagrangeLaplacianEvalAll_Line
 !                             LagrangeLaplacianEvalAll_Line_@LagrangeMethods
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate second derivatives of nodal line basis functions.
 !
@@ -3283,7 +3283,7 @@ END INTERFACE LagrangeLaplacianEvalAll_Line_
 !                             LagrangeLaplacianEvalAll_Line_@LagrangeMethods
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate second derivatives of nodal line basis functions.
 !
@@ -3389,7 +3389,7 @@ END INTERFACE LagrangeLaplacianEvalAll_Line_
 !                                              OrthogonalBasisLaplacian_Line
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate line OrthogonalBasis laplacian.
 !
@@ -3466,7 +3466,7 @@ END INTERFACE OrthogonalBasisLaplacian_Line
 !                                               OrthgonalBasisLaplacian_Line
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate line OrthogonalBasis laplacian.
 !
@@ -3552,7 +3552,7 @@ END INTERFACE OrthogonalBasisLaplacian_Line_
 !                                                          BasisEvalAll_Line
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate line Basis values.
 !
@@ -3624,7 +3624,7 @@ END INTERFACE BasisEvalAll_Line
 !
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate line Basis values.
 !
@@ -3702,7 +3702,7 @@ END INTERFACE BasisEvalAll_Line_
 !                                                         BasisEvalAll_Line
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate line Basis values.
 !
@@ -3776,7 +3776,7 @@ END INTERFACE BasisEvalAll_Line
 !
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate line Basis values.
 !
@@ -3858,7 +3858,7 @@ END INTERFACE BasisEvalAll_Line_
 !                                                         BasisEvalAll_Line
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate line OrthogonalBasis values.
 !
@@ -3934,7 +3934,7 @@ END INTERFACE OrthogonalBasis_Line
 !                                                     OrthogonalBasis_Line_
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate line OrthogonalBasis values.
 !
@@ -4019,7 +4019,7 @@ END INTERFACE OrthogonalBasis_Line_
 !                                               OrthogonalBasisGradient_Line
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate line OrthogonalBasis gradient.
 !
@@ -4094,7 +4094,7 @@ END INTERFACE OrthogonalBasisGradient_Line
 !                                               OrthgonalBasisGradient_Line
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate line OrthogonalBasis gradient.
 !
@@ -4179,7 +4179,7 @@ END INTERFACE OrthogonalBasisGradient_Line_
 !                                                     HeirarchicalBasis_Line
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate line HeirarchicalBasis values.
 !
@@ -4241,7 +4241,7 @@ END INTERFACE HeirarchicalBasis_Line
 !                                                     HeirarchicalBasis_Line
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate line HeirarchicalBasis values.
 !
@@ -4312,7 +4312,7 @@ END INTERFACE HeirarchicalBasis_Line_
 !
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate line HeirarchicalBasis values.
 !
@@ -4387,7 +4387,7 @@ END INTERFACE HeirarchicalBasis_Line_
 !                                              HeirarchicalBasisGradient_Line
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate line HeirarchicalBasis gradient.
 !
@@ -4450,7 +4450,7 @@ END INTERFACE HeirarchicalBasisGradient_Line
 !
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate line HeirarchicalBasis gradient.
 !
@@ -4522,7 +4522,7 @@ END INTERFACE HeirarchicalBasisGradient_Line_
 !
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate line HeirarchicalBasis gradient.
 !
@@ -4590,7 +4590,7 @@ END INTERFACE HeirarchicalBasisGradient_Line
 !
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate line HeirarchicalBasis gradient.
 !
@@ -4666,7 +4666,7 @@ END INTERFACE HeirarchicalBasisGradient_Line_
 !                                                 BasisGradientEvalAll_Line
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate line Basis gradient.
 !
@@ -4739,7 +4739,7 @@ END INTERFACE BasisGradientEvalAll_Line
 !
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate line Basis gradient.
 !
@@ -4819,7 +4819,7 @@ END INTERFACE BasisGradientEvalAll_Line_
 !                                                         BasisEvalAll_Line
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate line Basis gradient.
 !
@@ -4894,7 +4894,7 @@ END INTERFACE BasisGradientEvalAll_Line
 !
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate line Basis gradient.
 !
@@ -4977,7 +4977,7 @@ END INTERFACE BasisGradientEvalAll_Line_
 !                                                      QuadraturePoint_Line
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Select a rule and construct quadrature coordinates and weights.
 !
@@ -5071,7 +5071,7 @@ END INTERFACE QuadraturePoint_Line
 !                                                   QuadraturePoint_Line
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Select a rule and construct quadrature coordinates and weights.
 !
@@ -5159,7 +5159,7 @@ END INTERFACE QuadraturePoint_Line
 !                                                   QuadraturePoint_Line
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Select a rule and construct quadrature coordinates and weights.
 !
@@ -5247,7 +5247,7 @@ END INTERFACE QuadraturePoint_Line
 !                                                      QuadraturePoint_Line
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Select a rule and construct quadrature coordinates and weights.
 !
@@ -5346,7 +5346,7 @@ END INTERFACE QuadraturePoint_Line
 !
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Select a rule and construct quadrature coordinates and weights.
 !
@@ -5446,7 +5446,7 @@ END INTERFACE QuadraturePoint_Line_
 !                                            HeirarchicalBasisLaplacian_Line
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Declared hierarchical Laplacian interface (unimplemented backend).
 !
@@ -5517,7 +5517,7 @@ END INTERFACE HeirarchicalBasisLaplacian_Line
 !
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Declared hierarchical Laplacian interface (unimplemented backend).
 !
@@ -5594,7 +5594,7 @@ END INTERFACE HeirarchicalBasisLaplacian_Line_
 !
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Declared hierarchical Laplacian interface (unimplemented backend).
 !
@@ -5670,7 +5670,7 @@ END INTERFACE HeirarchicalBasisLaplacian_Line
 !
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Declared hierarchical Laplacian interface (unimplemented backend).
 !
@@ -5751,7 +5751,7 @@ END INTERFACE HeirarchicalBasisLaplacian_Line_
 !                                                 BasisLaplacianEvalAll_Line
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate line Basis laplacian.
 !
@@ -5826,7 +5826,7 @@ END INTERFACE BasisLaplacianEvalAll_Line
 !
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate line Basis laplacian.
 !
@@ -5908,7 +5908,7 @@ END INTERFACE BasisLaplacianEvalAll_Line_
 !                                                         BasisEvalAll_Line
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate line Basis laplacian.
 !
@@ -5985,7 +5985,7 @@ END INTERFACE BasisLaplacianEvalAll_Line
 !
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate line Basis laplacian.
 !

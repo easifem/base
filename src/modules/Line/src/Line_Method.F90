@@ -15,7 +15,7 @@
 ! along with this program.  If not, see <https://www.gnu.org/licenses/>
 !
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Line geometry and interpolation utilities.
 !
@@ -77,7 +77,7 @@ PUBLIC :: line_exp_is_degenerate_nd, &
 !
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Finds if an explicit line is degenerate in ND.
 !
@@ -127,7 +127,7 @@ END INTERFACE
 !
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Converts an explicit line to implicit form in 2D.
 !
@@ -178,7 +178,7 @@ END INTERFACE
 !
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Finds if an implicit point is degenerate in 2D.
 !
@@ -226,7 +226,7 @@ END INTERFACE
 !
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Determines where two implicit lines intersect in 2D.
 !
@@ -291,7 +291,7 @@ END INTERFACE
 !
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Computes a line perpendicular to a line and through a point.
 !
@@ -349,7 +349,7 @@ END INTERFACE
 !
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Determines where two explicit lines intersect in 2D.
 !
@@ -410,7 +410,7 @@ END INTERFACE
 !
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Distance ( line segment, point ) in 2D.
 !
@@ -459,7 +459,7 @@ END INTERFACE
 !
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Distance ( line segment, point ) in 3D.
 !
@@ -509,7 +509,7 @@ END INTERFACE
 !
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Signed distance ( exp line, point ) in 2D.
 !
@@ -560,7 +560,7 @@ END INTERFACE
 !
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Nearest point on line segment to point in 2D.
 !
