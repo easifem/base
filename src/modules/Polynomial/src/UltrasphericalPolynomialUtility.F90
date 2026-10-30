@@ -617,21 +617,48 @@ END INTERFACE UltrasphericalEvalAll
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date: 6 Sept 2022
-! summary: Evaluate Ultraspherical polynomials from order = 0 to n at several
-! points
+! date: 2022-09-06
+! summary: Evaluate Ultraspherical polynomials at independent sample points
 !
-!# Introduction
+! Evaluate orders zero through n for every x entry. Row i of ans depends
+! only on x(i), so reordering samples only reorders output rows.
 !
-! Evaluate Ultraspherical polynomials from order = 0 to n at several points
+! Changes:
+!   - 2026-10-30: Update one sample row at a time.
 !
-!- N, the highest order polynomial to compute. Note that polynomials 0
-! through N will be computed.
-!- alpha, beta are parameters
-!- x: the point at which the polynomials are to be evaluated.
-!- ans(M,1:N+1), the values of the first N+1 Ultraspherical polynomials at
-! the point
-! X.
+! Formula:
+!   $$ C_0^\lambda(x)=1, \qquad C_1^\lambda(x)=2\lambda x. $$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: I4B
+! USE GlobalData, ONLY: DFP
+! USE UltrasphericalPolynomialUtility, ONLY: UltrasphericalEvalAll
+! USE UltrasphericalPolynomialUtility, ONLY: UltrasphericalEvalAll_
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP), PARAMETER :: x(5) = &
+!   [-0.9_DFP, -0.3_DFP, 0.0_DFP, 0.4_DFP, 0.8_DFP]
+! REAL(DFP) :: values(5, 5), reversed(5, 5), scalar(5)
+! INTEGER(I4B) :: n, ii, nr, nc
+! DO n = 0, 4
+!   CALL UltrasphericalEvalAll_(n=n, lambda=1.5_DFP, x=x, &
+!     ans=values, nrow=nr, ncol=nc)
+!   CALL UltrasphericalEvalAll_(n=n, lambda=1.5_DFP, x=x(5:1:-1), &
+!     ans=reversed, nrow=nr, ncol=nc)
+!   DO ii = 1, SIZE(x)
+!     scalar(1:n+1) = UltrasphericalEvalAll( &
+!       n=n, lambda=1.5_DFP, x=x(ii))
+!     CALL OK(MAXVAL(ABS(values(ii, 1:n+1)-scalar(1:n+1))) &
+!       .LT. 1.0E-12_DFP, "Vector and scalar recurrence agree")
+!   END DO
+!   CALL OK(MAXVAL(ABS(values(:, 1:n+1)-reversed(5:1:-1, 1:n+1))) &
+!     .LT. 1.0E-12_DFP, "Sample order does not affect values")
+! END DO
+! END PROGRAM main
+!```
 
 INTERFACE UltrasphericalEvalAll_
  MODULE PURE SUBROUTINE UltrasphericalEvalAll2_(n, lambda, x, ans, nrow, ncol)
@@ -640,11 +667,11 @@ INTERFACE UltrasphericalEvalAll_
     REAL(DFP), INTENT(IN) :: lambda
     !! lambda should be greater than -0.5
     REAL(DFP), INTENT(IN) :: x(:)
+    !! Independent sample coordinates.
     REAL(DFP), INTENT(INOUT) :: ans(:, :)
-    ! REAL(DFP) :: ans(SIZE(x), n + 1)
-    !! Evaluate Ultraspherical polynomial of order = 0 to n (total n+1)
-    !! at point x
+    !! Values in (1:SIZE(x), 1:n+1); capacity must cover that range.
     INTEGER(I4B), OPTIONAL, INTENT(OUT) :: nrow, ncol
+    !! Active row count SIZE(x), and active column count n+1.
   END SUBROUTINE UltrasphericalEvalAll2_
 END INTERFACE UltrasphericalEvalAll_
 

@@ -479,7 +479,8 @@ DO CONCURRENT(jj=1:nrow)
     c2 = 2.0_DFP * (r_ii + lambda - 1.0_DFP) * c1 * x(jj)
     c3 = -(2.0_DFP * lambda + r_ii - 2.0_DFP) * c1
 
-    ans(1:jj, ii + 1) = c2 * ans(1:jj, ii) + c3 * ans(1:jj, ii - 1)
+    ! Each sample owns one row; other concurrent rows must be untouched.
+    ans(jj, ii + 1) = c2 * ans(jj, ii) + c3 * ans(jj, ii - 1)
 
   END DO
 END DO
