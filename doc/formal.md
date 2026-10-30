@@ -6,6 +6,7 @@ project_github: https://github.com/easifem/base
 project_website: https://www.easifem.com
 license: gfdl
 src_dir: ../src/modules/Utility
+         ../src/modules/Polynomial/
 media_dir: ./media
 page_dir: ./pages
 output_dir: /tmp/ford/base
@@ -18,8 +19,8 @@ github: https://vickysharma0812.github.io/
 author_pic: ./media/vikas.png
 twitter: https://twitter.com/vickysharma0812
 website: http://vikas.easifem.com
-graph: false 
-source: false 
+graph: false
+source: false
 display: public
          protected
          private
