@@ -1,5 +1,5 @@
 ! This program is a part of EASIFEM library
-! Copyright (C) 2020-2021  Vikas Sharma, Ph.D
+! Copyright (C) 2020-2021 Vikas Sharma, Ph.D
 !
 ! This program is free software: you can redistribute it and/or modify
 ! it under the terms of the GNU General Public License as published by
@@ -12,8 +12,50 @@
 ! GNU General Public License for more details.
 !
 ! You should have received a copy of the GNU General Public License
-! along with this program.  If not, see <https: //www.gnu.org/licenses/>
+! along with this program.  If not, see <https://www.gnu.org/licenses/>
 !
+
+!> author: OpenAI Codex (documentation)
+! date: 2026-10-30
+! summary: Line geometry and interpolation utilities.
+!
+! Explicit infinite lines, implicit line equations, and finite segments are
+! distinct inputs. Signed line distance is negative to the left of the
+! oriented line. Intersection status codes are -1/-2 for degenerate implicit
+! inputs, 0 for no unique intersection, 1 for a unique point, and 2 for
+! coincident lines.
+!
+! Arguments:
+!   None at module scope; see individual public interfaces.
+!
+! Returns:
+!   Geometry, reference element and interpolation procedures.
+!
+! Formula:
+! $$q=p_1+t(p_2-p_1),\quad0\le t\le1$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE Line_Method, ONLY: segment_point_near_2d
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: p1(2), p2(2)
+! REAL(DFP) :: nearest(2), d, parameter
+!
+! p1 = [0.0_DFP, 0.0_DFP]
+! p2 = [2.0_DFP, 0.0_DFP]
+! CALL segment_point_near_2d(p1, p2, [3.0_DFP, 1.0_DFP], &
+!   nearest, d, parameter)
+! CALL OK(ABS(parameter-1.0_DFP) < 1.0E-12_DFP, "Parameter clamped")
+! CALL OK(MAXVAL(ABS(nearest-p2)) < 1.0E-12_DFP, &
+!   "Nearest point is the right endpoint")
+! CALL OK(ABS(d-SQRT(2.0_DFP)) < 1.0E-12_DFP, "Euclidean distance")
+! END PROGRAM main
+!```
 
 MODULE Line_Method
 USE GlobalData
@@ -35,28 +77,42 @@ PUBLIC :: line_exp_is_degenerate_nd, &
 !
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 28 Aug 2022
-! summary: finds if an explicit line is degenerate in ND.
+!> author: OpenAI Codex (documentation)
+! date: 2026-10-30
+! summary: Finds if an explicit line is degenerate in ND.
 !
-!# Introduction
 !
-!    The explicit form of a line in ND is:
+! Arguments:
+!   dim_num : INTEGER(I4B), INTENT(IN). Use the declaration and description
+! for this overload.
+!   p1 : REAL(dfp), INTENT(IN)(dim_num). First explicit line endpoint.
+!   p2 : REAL(dfp), INTENT(IN)(dim_num). Second explicit line endpoint.
 !
-!    the line through the points P1 and P2.
+! Returns:
+!   ans : LOGICAL(lgt).
 !
-!    An explicit line is degenerate if the two defining points are equal.
+! Formula:
+! $$\mathrm{degenerate}\iff p_1=p_2$$
 !
-!# Parameters:
+! Examples
 !
-!    Input, integer ( kind = 4 ) DIM_NUM, the spatial dimension.
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE GlobalData, ONLY: LGT
+! USE Line_Method, ONLY: line_exp_is_degenerate_nd
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: p1(2), p2(2)
+! LOGICAL(LGT) :: deg
 !
-!    Input, real ( kind = 8 ) P1(DIM_NUM), P2(DIM_NUM), two points on the
-! line.
-!
-!    Output, logical ( kind = 4 ) LINE_EXP_IS_DEGENERATE_ND, is TRUE if the
-! line is degenerate.
-!
+! p1 = [0.0_DFP, 0.0_DFP]
+! p2 = [2.0_DFP, 0.0_DFP]
+! deg = line_exp_is_degenerate_nd(2_I4B, p1, p1)
+! CALL OK(deg, "Coincident endpoints are degenerate")
+! END PROGRAM main
+!```
 
 INTERFACE
   MODULE PURE FUNCTION line_exp_is_degenerate_nd(dim_num, p1, p2) RESULT(ans)
@@ -71,26 +127,44 @@ END INTERFACE
 !
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 28 Aug 2022
-! summary:         converts an explicit line to implicit form in 2D.
+!> author: OpenAI Codex (documentation)
+! date: 2026-10-30
+! summary: Converts an explicit line to implicit form in 2D.
 !
-!# Introduction
 !
-!    The explicit form of a line in 2D is:
+! Arguments:
+!   a : REAL(kind=8), INTENT(out). Implicit line coefficient of x, or scalar
+! output as declared.
+!   b : REAL(kind=8), INTENT(out). Implicit line coefficient of y.
+!   c : REAL(kind=8), INTENT(out). Implicit line constant coefficient.
+!   p1 : REAL(kind=8), INTENT(in)(:). First explicit line endpoint.
+!   p2 : REAL(kind=8), INTENT(in)(:). Second explicit line endpoint.
 !
-!      the line through the points P1 and P2.
+! Returns:
+!   Updates a, b, c.
 !
-!    The implicit form of a line in 2D is:
+! Formula:
+! $$ax+by+c=0$$
 !
-!      A * X + B * Y + C = 0
+! Examples
 !
-!  Parameters:
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE Line_Method, ONLY: line_exp2imp_2d
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: p1(2), p2(2)
+! REAL(DFP) :: a, b, c
 !
-!    Input, real ( kind = 8 ) P1(2), P2(2), two points on the line.
-!
-!    Output, real ( kind = 8 ) A, B, C, the implicit form of the line.
-!
+! p1 = [0.0_DFP, 0.0_DFP]
+! p2 = [2.0_DFP, 0.0_DFP]
+! CALL line_exp2imp_2d(p1, p2, a, b, c)
+! CALL OK(ABS(a*p1(1)+b*p1(2)+c) < 1.0E-12_DFP .AND. &
+!   ABS(a*p2(1)+b*p2(2)+c) < 1.0E-12_DFP, "Both endpoints lie on line")
+! END PROGRAM main
+!```
 
 INTERFACE
   MODULE PURE SUBROUTINE line_exp2imp_2d(p1, p2, a, b, c)
@@ -104,23 +178,42 @@ END INTERFACE
 !
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 29 Aug 2022
-! summary:         finds if an implicit point is degenerate in 2D.
+!> author: OpenAI Codex (documentation)
+! date: 2026-10-30
+! summary: Finds if an implicit point is degenerate in 2D.
 !
-!# Introduction
 !
-!    The implicit form of a line in 2D is:
+! Arguments:
+!   a : REAL(dfp), INTENT(in). Implicit line coefficient of x, or scalar
+! output as declared.
+!   b : REAL(dfp), INTENT(in). Implicit line coefficient of y.
+!   c : REAL(dfp), INTENT(in). Implicit line constant coefficient.
 !
-!      A * X + B * Y + C = 0
+! Returns:
+!   ans : LOGICAL(lgt).
 !
-!  Parameters:
+! Formula:
+! $$\mathrm{degenerate}\iff a=b=0$$
 !
-!    Input, real ( kind = 8 ) A, B, C, the implicit line parameters.
+! Examples
 !
-!    Output, logical ( kind = 4 ) LINE_IMP_IS_DEGENERATE_2D, is true if the
-!    line is degenerate.
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE GlobalData, ONLY: LGT
+! USE Line_Method, ONLY: line_imp_is_degenerate_2d
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: p1(2), p2(2)
+! LOGICAL(LGT) :: deg
 !
+! p1 = [0.0_DFP, 0.0_DFP]
+! p2 = [2.0_DFP, 0.0_DFP]
+! deg = line_imp_is_degenerate_2d(0.0_DFP, 0.0_DFP, 1.0_DFP)
+! CALL OK(deg, "Zero normal is degenerate")
+! END PROGRAM main
+!```
 
 INTERFACE
   MODULE PURE FUNCTION line_imp_is_degenerate_2d(a, b, c) RESULT(ans)
@@ -133,35 +226,57 @@ END INTERFACE
 !
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 29 Aug 2022
-! summary:         determines where two implicit lines intersect in 2D.
+!> author: OpenAI Codex (documentation)
+! date: 2026-10-30
+! summary: Determines where two implicit lines intersect in 2D.
 !
-!# Introduction
 !
-!    The implicit form of a line in 2D is:
+! Arguments:
+!   a1 : REAL(dfp), INTENT(in). Use the declaration and description for this
+! overload.
+!   b1 : REAL(dfp), INTENT(in). Use the declaration and description for this
+! overload.
+!   c1 : REAL(dfp), INTENT(in). Use the declaration and description for this
+! overload.
+!   a2 : REAL(dfp), INTENT(in). Use the declaration and description for this
+! overload.
+!   b2 : REAL(dfp), INTENT(in). Use the declaration and description for this
+! overload.
+!   c2 : REAL(dfp), INTENT(in). Use the declaration and description for this
+! overload.
+!   p : REAL(dfp), INTENT(out)(2). Query point or output point as indicated by
+! INTENT.
+!   ival : INTEGER(i4b), INTENT(out). Intersection status: see the line
+! intersection convention.
 !
-!      A * X + B * Y + C = 0
+! Returns:
+!   Updates p(2), ival.
 !
-!  Parameters:
+! Formula:
+! $$a_i x+b_i y+c_i=0,\quad i=1,2$$
 !
-!    Input, real ( kind = 8 ) A1, B1, C1, define the first line.
-!    At least one of A1 and B1 must be nonzero.
+! Examples
 !
-!    Input, real ( kind = 8 ) A2, B2, C2, define the second line.
-!    At least one of A2 and B2 must be nonzero.
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE Line_Method, ONLY: lines_imp_int_2d
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: p1(2), p2(2)
+! REAL(DFP) :: p(2)
+! INTEGER(I4B) :: status
 !
-!    Output, integer ( kind = 4 ) IVAL, reports on the intersection.
-!
-!    -1, both A1 and B1 were zero.
-!    -2, both A2 and B2 were zero.
-!     0, no intersection, the lines are parallel.
-!     1, one intersection point, returned in P.
-!     2, infinitely many intersections, the lines are identical.
-!
-!    Output, real ( kind = 8 ) P(2), if IVAL = 1, then P is
-!    the intersection point.  Otherwise, P = 0.
-!
+! p1 = [0.0_DFP, 0.0_DFP]
+! p2 = [2.0_DFP, 0.0_DFP]
+! CALL lines_imp_int_2d(1.0_DFP, 0.0_DFP, -1.0_DFP, &
+!   0.0_DFP, 1.0_DFP, -2.0_DFP, status, p)
+! CALL OK(status == 1, "Unique intersection")
+! CALL OK(MAXVAL(ABS(p-[1.0_DFP, 2.0_DFP])) < 1.0E-12_DFP, &
+!   "Intersection solves both line equations")
+! END PROGRAM main
+!```
 
 INTERFACE
   MODULE PURE SUBROUTINE lines_imp_int_2d(a1, b1, c1, a2, b2, c2, ival, p)
@@ -176,38 +291,49 @@ END INTERFACE
 !
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 29 Aug 2022
-! summary: computes a line perpendicular to a line and through a point.
+!> author: OpenAI Codex (documentation)
+! date: 2026-10-30
+! summary: Computes a line perpendicular to a line and through a point.
 !
-!# Introduction
 !
-!    The explicit form of a line in 2D is:
+! Arguments:
+!   p1 : REAL(dfp), INTENT(in)(2). First explicit line endpoint.
+!   p2 : REAL(dfp), INTENT(in)(2). Second explicit line endpoint.
+!   p3 : REAL(dfp), INTENT(in)(2). Use the declaration and description for
+! this overload.
+!   p4 : REAL(dfp), INTENT(out)(2). Use the declaration and description for
+! this overload.
+!   flag : LOGICAL(lgt), INTENT(out). Failure flag; .TRUE. indicates a
+! degenerate line.
 !
-!      the line through the points P1 and P2.
+! Returns:
+!   Updates p4(2), flag.
 !
-!    The input point P3 should NOT lie on the line (P1,P2).  If it
-!    does, then the output value P4 will equal P3.
+! Formula:
+! $$q=p_1+\frac{(p-p_1)\cdot d}{d\cdot d}d$$
 !
-!    P1-----P4-----------P2
-!            |
-!            |
-!           P3
+! Examples
 !
-!    P4 is also the nearest point on the line (P1,P2) to the point P3.
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE GlobalData, ONLY: LGT
+! USE Line_Method, ONLY: line_exp_perp_2d
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: p1(2), p2(2)
+! REAL(DFP) :: foot(2)
+! LOGICAL(LGT) :: failed
 !
-!  Parameters:
-!
-!    Input, real ( kind = 8 ) P1(2), P2(2), two points on the line.
-!
-!    Input, real ( kind = 8 ) P3(2), a point (presumably not on the
-!    line (P1,P2)), through which the perpendicular must pass.
-!
-!    Output, real ( kind = 8 ) P4(2), a point on the line (P1,P2),
-!    such that the line (P3,P4) is perpendicular to the line (P1,P2).
-!
-!    Output, logical ( kind = 4 ) FLAG, is TRUE if the value could
-!    not be computed.
+! p1 = [0.0_DFP, 0.0_DFP]
+! p2 = [2.0_DFP, 0.0_DFP]
+! CALL line_exp_perp_2d(p1, p2, [1.0_DFP, 1.0_DFP], foot, failed)
+! CALL OK(.NOT. failed, "Projection succeeds")
+! CALL OK(MAXVAL(ABS(foot-[1.0_DFP, 0.0_DFP])) < 1.0E-12_DFP, &
+!   "Orthogonal projection onto infinite line")
+! END PROGRAM main
+!```
 
 INTERFACE
   MODULE PURE SUBROUTINE line_exp_perp_2d(p1, p2, p3, p4, flag)
@@ -223,31 +349,51 @@ END INTERFACE
 !
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 29 Aug 2022
-! summary: determines where two explicit lines intersect in 2D.
+!> author: OpenAI Codex (documentation)
+! date: 2026-10-30
+! summary: Determines where two explicit lines intersect in 2D.
 !
-!# Introduction
 !
-!  Discussion:
+! Arguments:
+!   p1 : REAL(kind=8), INTENT(in)(2). First explicit line endpoint.
+!   p2 : REAL(kind=8), INTENT(in)(2). Second explicit line endpoint.
+!   q1 : REAL(kind=8), INTENT(in)(2). Use the declaration and description for
+! this overload.
+!   q2 : REAL(kind=8), INTENT(in)(2). Use the declaration and description for
+! this overload.
+!   p : REAL(kind=8), INTENT(out)(2). Query point or output point as indicated
+! by INTENT.
+!   ival : INTEGER(i4b), INTENT(out). Intersection status: see the line
+! intersection convention.
 !
-!    The explicit form of a line in 2D is:
+! Returns:
+!   Updates p(2), ival.
 !
-!      the line through the points P1 and P2.
+! Formula:
+! $$p=p_1+s(p_2-p_1)=q_1+t(q_2-q_1)$$
 !
-!  Parameters:
+! Examples
 !
-!    Input, real ( kind = 8 ) P1(2), P2(2), two points on the first line.
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE Line_Method, ONLY: lines_exp_int_2d
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: p1(2), p2(2)
+! REAL(DFP) :: p(2)
+! INTEGER(I4B) :: status
 !
-!    Input, real ( kind = 8 ) Q1(2), Q2(2), two points on the second line.
-!
-!    Output, integer ( kind = 4 ) IVAL, reports on the intersection:
-!    0, no intersection, the lines may be parallel or degenerate.
-!    1, one intersection point, returned in P.
-!    2, infinitely many intersections, the lines are identical.
-!
-!    Output, real ( kind = 8 ) P(2), if IVAl = 1, P is
-!    the intersection point.  Otherwise, P = 0.
+! p1 = [0.0_DFP, 0.0_DFP]
+! p2 = [2.0_DFP, 0.0_DFP]
+! CALL lines_exp_int_2d(p1, p2, [1.0_DFP, -1.0_DFP], &
+!   [1.0_DFP, 1.0_DFP], status, p)
+! CALL OK(status == 1, "Unique intersection")
+! CALL OK(MAXVAL(ABS(p-[1.0_DFP, 0.0_DFP])) < 1.0E-12_DFP, &
+!   "Horizontal and vertical lines intersect")
+! END PROGRAM main
+!```
 
 INTERFACE
   MODULE PURE SUBROUTINE lines_exp_int_2d(p1, p2, q1, q2, ival, p)
@@ -264,31 +410,41 @@ END INTERFACE
 !
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 29 Aug 2022
-! summary: distance ( line segment, point ) in 2D.
+!> author: OpenAI Codex (documentation)
+! date: 2026-10-30
+! summary: Distance ( line segment, point ) in 2D.
 !
-!# Introduction
 !
-!    A line segment is the finite portion of a line that lies between
-!    two points P1 and P2.
+! Arguments:
+!   p1 : REAL(dfp), INTENT(in)(2). First explicit line endpoint.
+!   p2 : REAL(dfp), INTENT(in)(2). Second explicit line endpoint.
+!   p : REAL(dfp), INTENT(in)(2). Query point or output point as indicated by
+! INTENT.
 !
-!    The nearest point will satisfy the condition
+! Returns:
+!   dist : REAL(dfp).
 !
-!      PN = (1-T) * P1 + T * P2.
+! Formula:
+! $$d=\min_{0\le t\le1}\|p-p_1-t(p_2-p_1)\|$$
 !
-!    T will always be between 0 and 1.
+! Examples
 !
-!  Parameters:
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE Line_Method, ONLY: segment_point_dist_2d
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: p1(2), p2(2)
+! REAL(DFP) :: d
 !
-!    Input, real ( kind = 8 ) P1(2), P2(2), the endpoints of the line segment.
-!
-!    Input, real ( kind = 8 ) P(2),
-! the point whose nearest neighbor on the line
-!    segment is to be determined.
-!
-!    Output, real ( kind = 8 ) DIST, the distance from the point to the
-!    line segment.
+! p1 = [0.0_DFP, 0.0_DFP]
+! p2 = [2.0_DFP, 0.0_DFP]
+! d = segment_point_dist_2d(p1, p2, [3.0_DFP, 0.0_DFP])
+! CALL OK(ABS(d-1.0_DFP) < 1.0E-12_DFP, "Nearest endpoint distance")
+! END PROGRAM main
+!```
 
 INTERFACE
   MODULE PURE FUNCTION segment_point_dist_2d(p1, p2, p) RESULT(dist)
@@ -303,33 +459,42 @@ END INTERFACE
 !
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 28 Aug 2022
-! summary: distance ( line segment, point ) in 3D.
+!> author: OpenAI Codex (documentation)
+! date: 2026-10-30
+! summary: Distance ( line segment, point ) in 3D.
 !
-!# Introduction
 !
-!  Discussion:
+! Arguments:
+!   p1 : REAL(dfp), INTENT(in)(3). First explicit line endpoint.
+!   p2 : REAL(dfp), INTENT(in)(3). Second explicit line endpoint.
+!   p : REAL(dfp), INTENT(in)(3). Query point or output point as indicated by
+! INTENT.
 !
-!    A line segment is the finite portion of a line that lies between
-!    two points P1 and P2.
+! Returns:
+!   dist : REAL(dfp).
 !
-!    The nearest point will satisfy the condition
+! Formula:
+! $$d=\min_{0\le t\le1}\|p-p_1-t(p_2-p_1)\|$$
 !
-!      PN = (1-T) * P1 + T * P2.
+! Examples
 !
-!    T will always be between 0 and 1.
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE Line_Method, ONLY: segment_point_dist_3d
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: p1(2), p2(2)
+! REAL(DFP) :: d
 !
-!  Parameters:
-!
-!    Input, real ( kind = 8 ) P1(3), P2(3), the endpoints of the segment.
-!
-!    Input, real ( kind = 8 ) P(3), the point whose nearest neighbor on
-!    the line segment is to be determined.
-!
-!    Output, real ( kind = 8 ) DIST, the distance from the point to the
-!    line segment.
-!
+! p1 = [0.0_DFP, 0.0_DFP]
+! p2 = [2.0_DFP, 0.0_DFP]
+! d = segment_point_dist_3d([0.0_DFP, 0.0_DFP, 0.0_DFP], &
+!   [2.0_DFP, 0.0_DFP, 0.0_DFP], [1.0_DFP, 0.0_DFP, 1.0_DFP])
+! CALL OK(ABS(d-1.0_DFP) < 1.0E-12_DFP, "Spatial segment distance")
+! END PROGRAM main
+!```
 
 INTERFACE
   MODULE PURE FUNCTION segment_point_dist_3d(p1, p2, p) RESULT(dist)
@@ -344,43 +509,42 @@ END INTERFACE
 !
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 29 Aug 2022
-! summary:         signed distance ( exp line, point ) in 2D.
+!> author: OpenAI Codex (documentation)
+! date: 2026-10-30
+! summary: Signed distance ( exp line, point ) in 2D.
 !
-!# Introduction
 !
-!  Discussion:
+! Arguments:
+!   p : REAL(dfp), INTENT(in)(2). Query point or output point as indicated by
+! INTENT.
+!   p1 : REAL(dfp), INTENT(in)(2). First explicit line endpoint.
+!   p2 : REAL(dfp), INTENT(in)(2). Second explicit line endpoint.
 !
-!    The explicit form of a line in 2D is:
+! Returns:
+!   dist_signed : REAL(dfp).
 !
-!      the line through the points P1 and P2.
+! Formula:
+! $$d=\frac{ax+by+c}{\sqrt{a^2+b^2}}$$
 !
-!    The signed distance has two interesting properties:
+! Examples
 !
-!    *  The absolute value of the signed distance is the
-!        usual (Euclidean) distance.
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE Line_Method, ONLY: line_exp_point_dist_signed_2d
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: p1(2), p2(2)
+! REAL(DFP) :: d
 !
-!    *  Points with signed distance 0 lie on the line,
-!       points with a negative signed distance lie on one side
-!         of the line,
-!       points with a positive signed distance lie on the
-!         other side of the line.
-!
-!    Assuming that C is nonnegative, then if a point is a positive
-!    distance away from the line, it is on the same side of the
-!    line as the point (0,0), and if it is a negative distance
-!    from the line, it is on the opposite side from (0,0).
-!
-!  Parameters:
-!
-!    Input, real ( kind = 8 ) P1(2), P2(2), two points on the line.
-!
-!    Input, real ( kind = 8 ) P(2), the point whose signed distance is
-! desired.
-!
-!    Output, real ( kind = 8 ) DIST_SIGNED, the signed distance from the
-!    point to the line.
+! p1 = [0.0_DFP, 0.0_DFP]
+! p2 = [2.0_DFP, 0.0_DFP]
+! d = line_exp_point_dist_signed_2d(p1, p2, [1.0_DFP, 1.0_DFP])
+! CALL OK(ABS(d+1.0_DFP) < 1.0E-12_DFP, &
+!   "Left side of the oriented horizontal line is negative")
+! END PROGRAM main
+!```
 
 INTERFACE
   MODULE PURE FUNCTION line_exp_point_dist_signed_2d(p1, p2, p) &
@@ -396,38 +560,50 @@ END INTERFACE
 !
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 29 Aug 2022
-! summary: nearest point on line segment to point in 2D.
-!
-!# Introduction
+!> author: OpenAI Codex (documentation)
+! date: 2026-10-30
+! summary: Nearest point on line segment to point in 2D.
 !
 !
-!    A line segment is the finite portion of a line that lies between
-!    two points P1 and P2.
+! Arguments:
+!   p1 : REAL(dfp), INTENT(in)(2). First explicit line endpoint.
+!   p2 : REAL(dfp), INTENT(in)(2). Second explicit line endpoint.
+!   p : REAL(dfp), INTENT(in)(2). Query point or output point as indicated by
+! INTENT.
+!   pn : REAL(dfp), INTENT(out)(2). Nearest point on the segment.
+!   dist : REAL(dfp), INTENT(out). Distance from the query point to the
+! segment or triangle boundary.
+!   t : REAL(dfp), INTENT(out). Clamped segment interpolation parameter in
+! [0,1].
 !
-!    The nearest point will satisfy the condition
+! Returns:
+!   Updates pn(2), dist, t.
 !
-!      PN = (1-T) * P1 + T * P2.
+! Formula:
+! $$q=p_1+t(p_2-p_1),\quad0\le t\le1,\quad d=\|p-q\|$$
 !
-!    T will always be between 0 and 1.
+! Examples
 !
-!  Parameters:
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE Line_Method, ONLY: segment_point_near_2d
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: p1(2), p2(2)
+! REAL(DFP) :: nearest(2), d, parameter
 !
-!    Input, real ( kind = 8 ) P1(2), P2(2), the endpoints of the line segment.
-!
-!    Input, real ( kind = 8 ) P(2), the point whose nearest neighbor
-!    on the line segment is to be determined.
-!
-!    Output, real ( kind = 8 ) PN(2), the point on the line segment which is
-!    nearest the point P.
-!
-!    Output, real ( kind = 8 ) DIST, the distance from the point to the
-!    nearest point on the line segment.
-!
-!    Output, real ( kind = 8 ) T, the relative position of the point PN
-!    to the points P1 and P2.
-!
+! p1 = [0.0_DFP, 0.0_DFP]
+! p2 = [2.0_DFP, 0.0_DFP]
+! CALL segment_point_near_2d(p1, p2, [3.0_DFP, 1.0_DFP], &
+!   nearest, d, parameter)
+! CALL OK(ABS(parameter-1.0_DFP) < 1.0E-12_DFP, "Parameter clamped")
+! CALL OK(MAXVAL(ABS(nearest-p2)) < 1.0E-12_DFP, &
+!   "Nearest point is the right endpoint")
+! CALL OK(ABS(d-SQRT(2.0_DFP)) < 1.0E-12_DFP, "Euclidean distance")
+! END PROGRAM main
+!```
 
 INTERFACE
   MODULE PURE SUBROUTINE segment_point_near_2d(p1, p2, p, pn, dist, t)

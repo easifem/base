@@ -1,5 +1,5 @@
 ! This program is a part of EASIFEM library
-! Copyright (C) 2020-2021  Vikas Sharma, Ph.D
+! Copyright (C) 2020-2021 Vikas Sharma, Ph.D
 !
 ! This program is free software: you can redistribute it and/or modify
 ! it under the terms of the GNU General Public License as published by
@@ -12,19 +12,66 @@
 ! GNU General Public License for more details.
 !
 ! You should have received a copy of the GNU General Public License
-! along with this program.  If not, see <https: //www.gnu.org/licenses/>
+! along with this program.  If not, see <https://www.gnu.org/licenses/>
 !
 
-!> author: Vikas Sharma, Ph. D.
-! date: 5 March 2021
-! summary: This submodule contains method for [[ReferenceLine_]]
+!> author: OpenAI Codex (documentation)
+! date: 2026-10-30
+! summary: ReferenceLine geometry and interpolation utilities.
+!
+! ReferenceLine_ stores one intrinsic coordinate row even when nsd is larger.
+! Constructors default to BIUNIT; specify domainName explicitly. Line_Quality
+! is a placeholder returning zero. Metadata identifiers distinguish element
+! order from node count.
+!
+! Arguments:
+!   None at module scope; see individual public interfaces.
+!
+! Returns:
+!   Geometry, reference element and interpolation procedures.
+!
+! Formula:
+! $$N=p+1$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE BaseType, ONLY: ReferenceLine_
+! USE ReferenceLine_Method, ONLY: Initiate
+! USE ReferenceLine_Method, ONLY: ReferenceLine
+! USE ReferenceLine_Method, ONLY: ReferenceLine_Pointer
+! USE ReferenceLine_Method, ONLY: RefLineCoord
+! USE ReferenceLine_Method, ONLY: RefCoord_Line
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! TYPE(ReferenceLine_) :: a, b
+! CLASS(ReferenceLine_), POINTER :: p
+! REAL(DFP) :: x(1, 2)
+!
+! CALL Initiate(obj=a, nsd=1_I4B, domainName="UNIT")
+! b = ReferenceLine(nsd=1_I4B, domainName="UNIT")
+! p => ReferenceLine_Pointer(nsd=1_I4B, domainName="UNIT")
+! CALL OK(a%order == 1 .AND. b%order == 1, "Linear reference objects")
+! CALL OK(ASSOCIATED(p), "Pointer constructor allocates its result")
+! x = RefLineCoord("UNIT")
+! CALL OK(MAXVAL(ABS(x-RefCoord_Line("UNIT"))) < 1.0E-12_DFP, &
+!   "Coordinate aliases agree")
+! CALL OK(MAXVAL(ABS(a%xij-x)) < 1.0E-12_DFP, "Stored reference coordinates")
+! DEALLOCATE(p)
+! END PROGRAM main
+!```
 
 MODULE ReferenceLine_Method
-USE BaseType, ONLY: ReferenceTopology_, &
-                    ReferenceElement_, &
-                    ReferenceLine_
+USE BaseType, ONLY: ReferenceTopology_
+USE BaseType, ONLY: ReferenceElement_
+USE BaseType, ONLY: ReferenceLine_
 
-USE GlobalData, ONLY: I4B, DFP, LGT
+USE GlobalData, ONLY: I4B
+USE GlobalData, ONLY: DFP
+USE GlobalData, ONLY: LGT
 
 IMPLICIT NONE
 
@@ -71,9 +118,54 @@ REAL(DFP), PARAMETER :: DEFAULT_Ref_LINE_COORD(3, 2) = &
 !                                                              ElementName
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 2024-03-25
-! summary: Returns element name in character from element number/type
+!> author: OpenAI Codex (documentation)
+! date: 2026-10-30
+! summary: Query reference element identifiers, orders and topology metadata.
+!
+! Element name strings are case sensitive. TotalEntities stores node, edge,
+! face and cell counts; the node count includes higher order nodes. MaxOrder
+! is a build time limit, not the extent of every metadata lookup table.
+!
+! Arguments:
+!   elemType : INTEGER(I4B), INTENT(IN). Element identifier from GlobalData or
+! the element type lookup.
+!
+! Returns:
+!   ans : CHARACTER(:), ALLOCATABLE.
+!
+! Formula:
+! $$N_{\mathrm{line}}=p+1,\quad N_{\mathrm{triangle}}=(p+1)(p+2)/2$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE ReferenceLine_Method, ONLY: ElementName_Line
+! USE ReferenceLine_Method, ONLY: ElementType_Line
+! USE ReferenceLine_Method, ONLY: ElementOrder_Line
+! USE ReferenceLine_Method, ONLY: TotalNodesInElement_Line
+! USE ReferenceLine_Method, ONLY: TotalEntities_Line
+! USE ReferenceLine_Method, ONLY: MaxOrder_Line
+! USE ReferenceLine_Method, ONLY: LineName
+! USE ReferenceLine_Method, ONLY: DEFAULT_Ref_LINE_COORD
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! INTEGER(I4B) :: kind, entities(4)
+!
+! kind = ElementType_Line("Line2")
+! CALL OK(ElementName_Line(kind) == "Line2", "Name round trip")
+! CALL OK(ElementOrder_Line(kind) == 1, "Linear element order")
+! CALL OK(TotalNodesInElement_Line(kind) == 2, "Vertex count")
+! entities = TotalEntities_Line(kind)
+! CALL OK(entities(1) == 2, "Entity counts start with node count")
+! CALL OK(MaxOrder_Line >= 1, "Configured maximum order")
+! CALL OK(LineName(1_I4B) == kind, "Order to element identifier")
+! CALL OK(ALL(SHAPE(DEFAULT_Ref_LINE_COORD) == [3, 2]), &
+!   "Compile time default coordinate storage")
+! END PROGRAM main
+!```
 
 INTERFACE
   MODULE PURE FUNCTION ElementName_Line(elemType) RESULT(ans)
@@ -86,9 +178,66 @@ END INTERFACE
 !                                                         FacetTopology_Line
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 2024-03-22
-! summary: Returns the facet topology of the given element type
+!> author: OpenAI Codex (documentation)
+! date: 2026-10-30
+! summary: Construct facet connectivity and reference topology.
+!
+! Use caller allocated output arrays. Line facets are points. Triangle face
+! connectivity always uses [1,2], [2,3], [3,1]; GetFaceConnectivity_Triangle
+! ignores opt and forces option 2. Edge connectivity option 1 uses [1,2],
+! [1,3], [2,3]. The example uses linear elements to avoid higher order
+! indexing assumptions.
+!
+! Arguments:
+!   elemType : INTEGER(I4B), INTENT(IN). Element identifier from GlobalData or
+! the element type lookup.
+!   nptrs : INTEGER(I4B), INTENT(IN)(:). Element node identifiers to select
+! into facet topology.
+!   ans : TYPE(ReferenceTopology_), INTENT(INOUT)(:). Result buffer; allocate
+! the full active shape before the call.
+!
+! Returns:
+!   Updates ans(:).
+!
+! Formula:
+! $$\partial[a,b]=\{a,b\}$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE GlobalData, ONLY: Line2
+! USE BaseType, ONLY: ReferenceTopology_
+! USE BaseType, ONLY: ReferenceElement_
+! USE ReferenceLine_Method, ONLY: GetEdgeConnectivity_Line
+! USE ReferenceLine_Method, ONLY: GetFaceConnectivity_Line
+! USE ReferenceLine_Method, ONLY: GetFaceElemType_Line
+! USE ReferenceLine_Method, ONLY: FacetTopology_Line
+! USE ReferenceLine_Method, ONLY: FacetElements_Line
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! INTEGER(I4B), PARAMETER :: kind = Line2
+! INTEGER(I4B) :: edge(1, 2), face(1, 2)
+! INTEGER(I4B) :: faceTypes(2), nodeCounts(2), nr, nc
+! TYPE(ReferenceTopology_) :: topology(2)
+! TYPE(ReferenceElement_) :: facets(2)
+!
+! CALL GetEdgeConnectivity_Line(con=edge, order=1_I4B, &
+!   nrow=nr, ncol=nc)
+! CALL OK(nr == 1 .AND. nc == 2, "Connectivity dimensions")
+! CALL GetFaceConnectivity_Line(con=face, order=1_I4B)
+! CALL GetFaceElemType_Line(elemType=kind, &
+!   faceElemType=faceTypes, tFaceNodes=nodeCounts)
+! CALL OK(ALL(nodeCounts == 1), "Linear facet node count")
+! CALL FacetTopology_Line(elemType=kind, &
+!   nptrs=[1_I4B, 2_I4B], ans=topology)
+! CALL OK(ALL(topology(1)%nptrs == face(:, 1)), "Facet pointers")
+! CALL FacetElements_Line(elemType=kind, nsd=1_I4B, ans=facets)
+! CALL OK(ALL(facets%order == 0), "Facet polynomial order")
+! END PROGRAM main
+!```
 
 INTERFACE
   MODULE PURE SUBROUTINE FacetTopology_Line(elemType, nptrs, ans)
@@ -102,9 +251,54 @@ END INTERFACE
 !                                                    TotalEntities_Line
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date:  2024-03-22
-! summary:  Returns total entities
+!> author: OpenAI Codex (documentation)
+! date: 2026-10-30
+! summary: Query reference element identifiers, orders and topology metadata.
+!
+! Element name strings are case sensitive. TotalEntities stores node, edge,
+! face and cell counts; the node count includes higher order nodes. MaxOrder
+! is a build time limit, not the extent of every metadata lookup table.
+!
+! Arguments:
+!   elemType : INTEGER(I4B), INTENT(IN). Element identifier from GlobalData or
+! the element type lookup.
+!
+! Returns:
+!   ans : INTEGER(I4B)(4).
+!
+! Formula:
+! $$N_{\mathrm{line}}=p+1,\quad N_{\mathrm{triangle}}=(p+1)(p+2)/2$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE ReferenceLine_Method, ONLY: ElementName_Line
+! USE ReferenceLine_Method, ONLY: ElementType_Line
+! USE ReferenceLine_Method, ONLY: ElementOrder_Line
+! USE ReferenceLine_Method, ONLY: TotalNodesInElement_Line
+! USE ReferenceLine_Method, ONLY: TotalEntities_Line
+! USE ReferenceLine_Method, ONLY: MaxOrder_Line
+! USE ReferenceLine_Method, ONLY: LineName
+! USE ReferenceLine_Method, ONLY: DEFAULT_Ref_LINE_COORD
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! INTEGER(I4B) :: kind, entities(4)
+!
+! kind = ElementType_Line("Line2")
+! CALL OK(ElementName_Line(kind) == "Line2", "Name round trip")
+! CALL OK(ElementOrder_Line(kind) == 1, "Linear element order")
+! CALL OK(TotalNodesInElement_Line(kind) == 2, "Vertex count")
+! entities = TotalEntities_Line(kind)
+! CALL OK(entities(1) == 2, "Entity counts start with node count")
+! CALL OK(MaxOrder_Line >= 1, "Configured maximum order")
+! CALL OK(LineName(1_I4B) == kind, "Order to element identifier")
+! CALL OK(ALL(SHAPE(DEFAULT_Ref_LINE_COORD) == [3, 2]), &
+!   "Compile time default coordinate storage")
+! END PROGRAM main
+!```
 
 INTERFACE
   MODULE PURE FUNCTION TotalEntities_Line(elemType) RESULT(ans)
@@ -117,9 +311,54 @@ END INTERFACE
 !                                                   TotalNodesInElement_Line
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date:  2024-03-22
-! summary:  Returns total nodes in element
+!> author: OpenAI Codex (documentation)
+! date: 2026-10-30
+! summary: Query reference element identifiers, orders and topology metadata.
+!
+! Element name strings are case sensitive. TotalEntities stores node, edge,
+! face and cell counts; the node count includes higher order nodes. MaxOrder
+! is a build time limit, not the extent of every metadata lookup table.
+!
+! Arguments:
+!   elemType : INTEGER(I4B), INTENT(IN). Element identifier from GlobalData or
+! the element type lookup.
+!
+! Returns:
+!   ans : INTEGER(I4B).
+!
+! Formula:
+! $$N_{\mathrm{line}}=p+1,\quad N_{\mathrm{triangle}}=(p+1)(p+2)/2$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE ReferenceLine_Method, ONLY: ElementName_Line
+! USE ReferenceLine_Method, ONLY: ElementType_Line
+! USE ReferenceLine_Method, ONLY: ElementOrder_Line
+! USE ReferenceLine_Method, ONLY: TotalNodesInElement_Line
+! USE ReferenceLine_Method, ONLY: TotalEntities_Line
+! USE ReferenceLine_Method, ONLY: MaxOrder_Line
+! USE ReferenceLine_Method, ONLY: LineName
+! USE ReferenceLine_Method, ONLY: DEFAULT_Ref_LINE_COORD
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! INTEGER(I4B) :: kind, entities(4)
+!
+! kind = ElementType_Line("Line2")
+! CALL OK(ElementName_Line(kind) == "Line2", "Name round trip")
+! CALL OK(ElementOrder_Line(kind) == 1, "Linear element order")
+! CALL OK(TotalNodesInElement_Line(kind) == 2, "Vertex count")
+! entities = TotalEntities_Line(kind)
+! CALL OK(entities(1) == 2, "Entity counts start with node count")
+! CALL OK(MaxOrder_Line >= 1, "Configured maximum order")
+! CALL OK(LineName(1_I4B) == kind, "Order to element identifier")
+! CALL OK(ALL(SHAPE(DEFAULT_Ref_LINE_COORD) == [3, 2]), &
+!   "Compile time default coordinate storage")
+! END PROGRAM main
+!```
 
 INTERFACE
   MODULE PURE FUNCTION TotalNodesInElement_Line(elemType) RESULT(ans)
@@ -132,9 +371,54 @@ END INTERFACE
 !                                                       ElementOrder_Line
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date:  2024-03-22
-! summary:  Returns order of element
+!> author: OpenAI Codex (documentation)
+! date: 2026-10-30
+! summary: Query reference element identifiers, orders and topology metadata.
+!
+! Element name strings are case sensitive. TotalEntities stores node, edge,
+! face and cell counts; the node count includes higher order nodes. MaxOrder
+! is a build time limit, not the extent of every metadata lookup table.
+!
+! Arguments:
+!   elemType : INTEGER(I4B), INTENT(IN). Element identifier from GlobalData or
+! the element type lookup.
+!
+! Returns:
+!   ans : INTEGER(I4B).
+!
+! Formula:
+! $$N_{\mathrm{line}}=p+1,\quad N_{\mathrm{triangle}}=(p+1)(p+2)/2$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE ReferenceLine_Method, ONLY: ElementName_Line
+! USE ReferenceLine_Method, ONLY: ElementType_Line
+! USE ReferenceLine_Method, ONLY: ElementOrder_Line
+! USE ReferenceLine_Method, ONLY: TotalNodesInElement_Line
+! USE ReferenceLine_Method, ONLY: TotalEntities_Line
+! USE ReferenceLine_Method, ONLY: MaxOrder_Line
+! USE ReferenceLine_Method, ONLY: LineName
+! USE ReferenceLine_Method, ONLY: DEFAULT_Ref_LINE_COORD
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! INTEGER(I4B) :: kind, entities(4)
+!
+! kind = ElementType_Line("Line2")
+! CALL OK(ElementName_Line(kind) == "Line2", "Name round trip")
+! CALL OK(ElementOrder_Line(kind) == 1, "Linear element order")
+! CALL OK(TotalNodesInElement_Line(kind) == 2, "Vertex count")
+! entities = TotalEntities_Line(kind)
+! CALL OK(entities(1) == 2, "Entity counts start with node count")
+! CALL OK(MaxOrder_Line >= 1, "Configured maximum order")
+! CALL OK(LineName(1_I4B) == kind, "Order to element identifier")
+! CALL OK(ALL(SHAPE(DEFAULT_Ref_LINE_COORD) == [3, 2]), &
+!   "Compile time default coordinate storage")
+! END PROGRAM main
+!```
 
 INTERFACE
   MODULE PURE FUNCTION ElementOrder_Line(elemType) RESULT(ans)
@@ -147,9 +431,53 @@ END INTERFACE
 !                                                       ElementType_Line
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date:  2024-03-22
-! summary:  Returns ElementType for line from char
+!> author: OpenAI Codex (documentation)
+! date: 2026-10-30
+! summary: Query reference element identifiers, orders and topology metadata.
+!
+! Element name strings are case sensitive. TotalEntities stores node, edge,
+! face and cell counts; the node count includes higher order nodes. MaxOrder
+! is a build time limit, not the extent of every metadata lookup table.
+!
+! Arguments:
+!   elemName : CHARACTER(*), INTENT(IN). Case sensitive element name string.
+!
+! Returns:
+!   ans : INTEGER(I4B).
+!
+! Formula:
+! $$N_{\mathrm{line}}=p+1,\quad N_{\mathrm{triangle}}=(p+1)(p+2)/2$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE ReferenceLine_Method, ONLY: ElementName_Line
+! USE ReferenceLine_Method, ONLY: ElementType_Line
+! USE ReferenceLine_Method, ONLY: ElementOrder_Line
+! USE ReferenceLine_Method, ONLY: TotalNodesInElement_Line
+! USE ReferenceLine_Method, ONLY: TotalEntities_Line
+! USE ReferenceLine_Method, ONLY: MaxOrder_Line
+! USE ReferenceLine_Method, ONLY: LineName
+! USE ReferenceLine_Method, ONLY: DEFAULT_Ref_LINE_COORD
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! INTEGER(I4B) :: kind, entities(4)
+!
+! kind = ElementType_Line("Line2")
+! CALL OK(ElementName_Line(kind) == "Line2", "Name round trip")
+! CALL OK(ElementOrder_Line(kind) == 1, "Linear element order")
+! CALL OK(TotalNodesInElement_Line(kind) == 2, "Vertex count")
+! entities = TotalEntities_Line(kind)
+! CALL OK(entities(1) == 2, "Entity counts start with node count")
+! CALL OK(MaxOrder_Line >= 1, "Configured maximum order")
+! CALL OK(LineName(1_I4B) == kind, "Order to element identifier")
+! CALL OK(ALL(SHAPE(DEFAULT_Ref_LINE_COORD) == [3, 2]), &
+!   "Compile time default coordinate storage")
+! END PROGRAM main
+!```
 
 INTERFACE
   MODULE PURE FUNCTION ElementType_Line(elemName) RESULT(ans)
@@ -162,9 +490,64 @@ END INTERFACE
 !                                                       FacetElements_Line
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date:  2024-03-21
-! summary:  Get FacetElements
+!> author: OpenAI Codex (documentation)
+! date: 2026-10-30
+! summary: Construct facet connectivity and reference topology.
+!
+! Use caller allocated output arrays. Line facets are points. Triangle face
+! connectivity always uses [1,2], [2,3], [3,1]; GetFaceConnectivity_Triangle
+! ignores opt and forces option 2. Edge connectivity option 1 uses [1,2],
+! [1,3], [2,3]. The example uses linear elements to avoid higher order
+! indexing assumptions.
+!
+! Arguments:
+!   refelem : CLASS(ReferenceElement_), INTENT(IN). Reference element carrying
+! topology and embedding dimension.
+!   ans : TYPE(ReferenceElement_), INTENT(INOUT)(:). Result buffer; allocate
+! the full active shape before the call.
+!
+! Returns:
+!   Updates ans(:).
+!
+! Formula:
+! $$\partial[a,b]=\{a,b\}$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE GlobalData, ONLY: Line2
+! USE BaseType, ONLY: ReferenceTopology_
+! USE BaseType, ONLY: ReferenceElement_
+! USE ReferenceLine_Method, ONLY: GetEdgeConnectivity_Line
+! USE ReferenceLine_Method, ONLY: GetFaceConnectivity_Line
+! USE ReferenceLine_Method, ONLY: GetFaceElemType_Line
+! USE ReferenceLine_Method, ONLY: FacetTopology_Line
+! USE ReferenceLine_Method, ONLY: FacetElements_Line
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! INTEGER(I4B), PARAMETER :: kind = Line2
+! INTEGER(I4B) :: edge(1, 2), face(1, 2)
+! INTEGER(I4B) :: faceTypes(2), nodeCounts(2), nr, nc
+! TYPE(ReferenceTopology_) :: topology(2)
+! TYPE(ReferenceElement_) :: facets(2)
+!
+! CALL GetEdgeConnectivity_Line(con=edge, order=1_I4B, &
+!   nrow=nr, ncol=nc)
+! CALL OK(nr == 1 .AND. nc == 2, "Connectivity dimensions")
+! CALL GetFaceConnectivity_Line(con=face, order=1_I4B)
+! CALL GetFaceElemType_Line(elemType=kind, &
+!   faceElemType=faceTypes, tFaceNodes=nodeCounts)
+! CALL OK(ALL(nodeCounts == 1), "Linear facet node count")
+! CALL FacetTopology_Line(elemType=kind, &
+!   nptrs=[1_I4B, 2_I4B], ans=topology)
+! CALL OK(ALL(topology(1)%nptrs == face(:, 1)), "Facet pointers")
+! CALL FacetElements_Line(elemType=kind, nsd=1_I4B, ans=facets)
+! CALL OK(ALL(facets%order == 0), "Facet polynomial order")
+! END PROGRAM main
+!```
 
 INTERFACE FacetElements_Line
   MODULE SUBROUTINE FacetElements_Line1(refelem, ans)
@@ -177,9 +560,66 @@ END INTERFACE FacetElements_Line
 !                                                       FacetElements_Line
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date:  2024-03-21
-! summary:  Get FacetElements
+!> author: OpenAI Codex (documentation)
+! date: 2026-10-30
+! summary: Construct facet connectivity and reference topology.
+!
+! Use caller allocated output arrays. Line facets are points. Triangle face
+! connectivity always uses [1,2], [2,3], [3,1]; GetFaceConnectivity_Triangle
+! ignores opt and forces option 2. Edge connectivity option 1 uses [1,2],
+! [1,3], [2,3]. The example uses linear elements to avoid higher order
+! indexing assumptions.
+!
+! Arguments:
+!   elemType : INTEGER(I4B), INTENT(IN). Element identifier from GlobalData or
+! the element type lookup.
+!   nsd : INTEGER(I4B), INTENT(IN). Physical embedding dimension; does not
+! change intrinsic coordinate row count.
+!   ans : TYPE(ReferenceElement_), INTENT(INOUT)(:). Result buffer; allocate
+! the full active shape before the call.
+!
+! Returns:
+!   Updates ans(:).
+!
+! Formula:
+! $$\partial[a,b]=\{a,b\}$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE GlobalData, ONLY: Line2
+! USE BaseType, ONLY: ReferenceTopology_
+! USE BaseType, ONLY: ReferenceElement_
+! USE ReferenceLine_Method, ONLY: GetEdgeConnectivity_Line
+! USE ReferenceLine_Method, ONLY: GetFaceConnectivity_Line
+! USE ReferenceLine_Method, ONLY: GetFaceElemType_Line
+! USE ReferenceLine_Method, ONLY: FacetTopology_Line
+! USE ReferenceLine_Method, ONLY: FacetElements_Line
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! INTEGER(I4B), PARAMETER :: kind = Line2
+! INTEGER(I4B) :: edge(1, 2), face(1, 2)
+! INTEGER(I4B) :: faceTypes(2), nodeCounts(2), nr, nc
+! TYPE(ReferenceTopology_) :: topology(2)
+! TYPE(ReferenceElement_) :: facets(2)
+!
+! CALL GetEdgeConnectivity_Line(con=edge, order=1_I4B, &
+!   nrow=nr, ncol=nc)
+! CALL OK(nr == 1 .AND. nc == 2, "Connectivity dimensions")
+! CALL GetFaceConnectivity_Line(con=face, order=1_I4B)
+! CALL GetFaceElemType_Line(elemType=kind, &
+!   faceElemType=faceTypes, tFaceNodes=nodeCounts)
+! CALL OK(ALL(nodeCounts == 1), "Linear facet node count")
+! CALL FacetTopology_Line(elemType=kind, &
+!   nptrs=[1_I4B, 2_I4B], ans=topology)
+! CALL OK(ALL(topology(1)%nptrs == face(:, 1)), "Facet pointers")
+! CALL FacetElements_Line(elemType=kind, nsd=1_I4B, ans=facets)
+! CALL OK(ALL(facets%order == 0), "Facet polynomial order")
+! END PROGRAM main
+!```
 
 INTERFACE FacetElements_Line
   MODULE SUBROUTINE FacetElements_Line2(elemType, nsd, ans)
@@ -193,9 +633,54 @@ END INTERFACE FacetElements_Line
 !                                                                 LineName
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date:  2023-07-17
-! summary:  Returns the integer name of reference line for given order
+!> author: OpenAI Codex (documentation)
+! date: 2026-10-30
+! summary: Query reference element identifiers, orders and topology metadata.
+!
+! Element name strings are case sensitive. TotalEntities stores node, edge,
+! face and cell counts; the node count includes higher order nodes. MaxOrder
+! is a build time limit, not the extent of every metadata lookup table.
+!
+! Arguments:
+!   order : INTEGER(I4B), INTENT(IN). Polynomial degree, except quadrature
+! where it is requested exactness degree.
+!
+! Returns:
+!   ans : INTEGER(I4B).
+!
+! Formula:
+! $$N_{\mathrm{line}}=p+1,\quad N_{\mathrm{triangle}}=(p+1)(p+2)/2$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE ReferenceLine_Method, ONLY: ElementName_Line
+! USE ReferenceLine_Method, ONLY: ElementType_Line
+! USE ReferenceLine_Method, ONLY: ElementOrder_Line
+! USE ReferenceLine_Method, ONLY: TotalNodesInElement_Line
+! USE ReferenceLine_Method, ONLY: TotalEntities_Line
+! USE ReferenceLine_Method, ONLY: MaxOrder_Line
+! USE ReferenceLine_Method, ONLY: LineName
+! USE ReferenceLine_Method, ONLY: DEFAULT_Ref_LINE_COORD
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! INTEGER(I4B) :: kind, entities(4)
+!
+! kind = ElementType_Line("Line2")
+! CALL OK(ElementName_Line(kind) == "Line2", "Name round trip")
+! CALL OK(ElementOrder_Line(kind) == 1, "Linear element order")
+! CALL OK(TotalNodesInElement_Line(kind) == 2, "Vertex count")
+! entities = TotalEntities_Line(kind)
+! CALL OK(entities(1) == 2, "Entity counts start with node count")
+! CALL OK(MaxOrder_Line >= 1, "Configured maximum order")
+! CALL OK(LineName(1_I4B) == kind, "Order to element identifier")
+! CALL OK(ALL(SHAPE(DEFAULT_Ref_LINE_COORD) == [3, 2]), &
+!   "Compile time default coordinate storage")
+! END PROGRAM main
+!```
 
 INTERFACE LineName
   MODULE PURE FUNCTION LineName1(order) RESULT(ans)
@@ -208,30 +693,62 @@ END INTERFACE LineName
 !                                                           Initiate@Methods
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date:         1 March 2021
-! summary: This subroutine constructs an instance of line reference element
+!> author: OpenAI Codex (documentation)
+! date: 2026-10-30
+! summary: Construct a linear reference element or obtain reference
+! coordinates.
 !
-!# Introduction
-! This routine constructs an instance of [[ReferenceLine_]]
-! element of order equal to 1.
+! Pass UNIT or BIUNIT explicitly for reproducibility. Constructors retain only
+! intrinsic coordinate rows (one for Line and two for Triangle); nsd records
+! the embedding dimension. The pointer constructor allocates a new target
+! which the caller owns.
 !
-! - `xij` denotes the nodal coordinate, if it is not present than RESHAPE(
-! [-1.0_DFP, 0.0_DFP, 0.0_DFP, 1.0_DFP, 0.0_DFP, 0.0_DFP], [3, 2] ) is used.
+! Arguments:
+!   obj : CLASS(ReferenceLine_), INTENT(INOUT). Reference element result;
+! pointer constructors allocate a new target.
+!   nsd : INTEGER(I4B), INTENT(IN). Physical embedding dimension; does not
+! change intrinsic coordinate row count.
+!   xij : REAL(DFP), INTENT(IN), OPTIONAL(:, :). Point columns; vertices or
+! interpolation nodes according to the interface.
+!   domainName : CHARACTER(*), INTENT(IN), OPTIONAL. Reference domain name;
+! use UNIT or BIUNIT explicitly.
 !
-!@note
-! Note that SIZE(xij,1) should be equal to 3, i.e., x,y,z coord. Also note
-! that this routine creats a linear element.
-!@endnote
+! Returns:
+!   Updates obj.
 !
-!### Usage
+! Formula:
+! $$\widehat K_{\mathrm{line}}=[0,1],\quad\widehat T=\{(x,y):x,y\ge0,\
+! x+y\le1\}$$
+!
+! Examples
 !
 !```fortran
-! type( ReferenceLine_ ) :: obj1
-! real( dfp ) :: xij( 3, 2 )
-! call random_number( xij )
-! call initiate( obj=obj1, nsd=3, xij )
-! call display( obj1, "obj1 : " )
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE BaseType, ONLY: ReferenceLine_
+! USE ReferenceLine_Method, ONLY: Initiate
+! USE ReferenceLine_Method, ONLY: ReferenceLine
+! USE ReferenceLine_Method, ONLY: ReferenceLine_Pointer
+! USE ReferenceLine_Method, ONLY: RefLineCoord
+! USE ReferenceLine_Method, ONLY: RefCoord_Line
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! TYPE(ReferenceLine_) :: a, b
+! CLASS(ReferenceLine_), POINTER :: p
+! REAL(DFP) :: x(1, 2)
+!
+! CALL Initiate(obj=a, nsd=1_I4B, domainName="UNIT")
+! b = ReferenceLine(nsd=1_I4B, domainName="UNIT")
+! p => ReferenceLine_Pointer(nsd=1_I4B, domainName="UNIT")
+! CALL OK(a%order == 1 .AND. b%order == 1, "Linear reference objects")
+! CALL OK(ASSOCIATED(p), "Pointer constructor allocates its result")
+! x = RefLineCoord("UNIT")
+! CALL OK(MAXVAL(ABS(x-RefCoord_Line("UNIT"))) < 1.0E-12_DFP, &
+!   "Coordinate aliases agree")
+! CALL OK(MAXVAL(ABS(a%xij-x)) < 1.0E-12_DFP, "Stored reference coordinates")
+! DEALLOCATE(p)
+! END PROGRAM main
 !```
 
 INTERFACE Initiate
@@ -254,28 +771,60 @@ END INTERFACE Initiate
 !                                                     ReferenceLine@Methods
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date:         3 March 2021
-! summary: This routine constructs an instance of line reference element
+!> author: OpenAI Codex (documentation)
+! date: 2026-10-30
+! summary: Construct a linear reference element or obtain reference
+! coordinates.
 !
-!# Introduction
-! This routine constructs an instance of [[ReferenceLine_]] element of order
-! equal to 1.
+! Pass UNIT or BIUNIT explicitly for reproducibility. Constructors retain only
+! intrinsic coordinate rows (one for Line and two for Triangle); nsd records
+! the embedding dimension. The pointer constructor allocates a new target
+! which the caller owns.
 !
-! - `xij` denotes the nodal coordinate, if it is not present than RESHAPE(
-! [-1.0_DFP, 0.0_DFP, 0.0_DFP, 1.0_DFP, 0.0_DFP, 0.0_DFP], [3, 2] ) is used.
+! Arguments:
+!   nsd : INTEGER(I4B), INTENT(IN). Physical embedding dimension; does not
+! change intrinsic coordinate row count.
+!   xij : REAL(DFP), INTENT(IN), OPTIONAL(:, :). Point columns; vertices or
+! interpolation nodes according to the interface.
+!   domainName : CHARACTER(*), INTENT(IN), OPTIONAL. Reference domain name;
+! use UNIT or BIUNIT explicitly.
 !
-!@note
-! Note that SIZE(xij,1) should be equal to 3, i.e., x,y,z coord. Also note
-! that this routine creats a linear element.
-!@endnote
+! Returns:
+!   obj : TYPE(ReferenceLine_).
 !
-!### Usage
+! Formula:
+! $$\widehat K_{\mathrm{line}}=[0,1],\quad\widehat T=\{(x,y):x,y\ge0,\
+! x+y\le1\}$$
+!
+! Examples
 !
 !```fortran
-! type( ReferenceLine_ ) :: obj
-! obj = ReferenceLine(nsd=3)
-! call display( obj, 'obj : ' )
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE BaseType, ONLY: ReferenceLine_
+! USE ReferenceLine_Method, ONLY: Initiate
+! USE ReferenceLine_Method, ONLY: ReferenceLine
+! USE ReferenceLine_Method, ONLY: ReferenceLine_Pointer
+! USE ReferenceLine_Method, ONLY: RefLineCoord
+! USE ReferenceLine_Method, ONLY: RefCoord_Line
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! TYPE(ReferenceLine_) :: a, b
+! CLASS(ReferenceLine_), POINTER :: p
+! REAL(DFP) :: x(1, 2)
+!
+! CALL Initiate(obj=a, nsd=1_I4B, domainName="UNIT")
+! b = ReferenceLine(nsd=1_I4B, domainName="UNIT")
+! p => ReferenceLine_Pointer(nsd=1_I4B, domainName="UNIT")
+! CALL OK(a%order == 1 .AND. b%order == 1, "Linear reference objects")
+! CALL OK(ASSOCIATED(p), "Pointer constructor allocates its result")
+! x = RefLineCoord("UNIT")
+! CALL OK(MAXVAL(ABS(x-RefCoord_Line("UNIT"))) < 1.0E-12_DFP, &
+!   "Coordinate aliases agree")
+! CALL OK(MAXVAL(ABS(a%xij-x)) < 1.0E-12_DFP, "Stored reference coordinates")
+! DEALLOCATE(p)
+! END PROGRAM main
 !```
 
 INTERFACE ReferenceLine
@@ -295,28 +844,60 @@ END INTERFACE ReferenceLine
 !                                              ReferenceLine_Pointer@Methods
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date:         3 March 2021
-! summary: This routine constructs an instance of line reference element
+!> author: OpenAI Codex (documentation)
+! date: 2026-10-30
+! summary: Construct a linear reference element or obtain reference
+! coordinates.
 !
-!# Introduction
-! This routine constructs an instance of [[ReferenceLine_]] element of order
-! equal to 1.
+! Pass UNIT or BIUNIT explicitly for reproducibility. Constructors retain only
+! intrinsic coordinate rows (one for Line and two for Triangle); nsd records
+! the embedding dimension. The pointer constructor allocates a new target
+! which the caller owns.
 !
-! - `xij` denotes the nodal coordinate, if it is not present than RESHAPE(
-! [-1.0_DFP, 0.0_DFP, 0.0_DFP, 1.0_DFP, 0.0_DFP, 0.0_DFP], [3, 2] ) is used.
+! Arguments:
+!   nsd : INTEGER(I4B), INTENT(IN). Physical embedding dimension; does not
+! change intrinsic coordinate row count.
+!   xij : REAL(DFP), INTENT(IN), OPTIONAL(:, :). Point columns; vertices or
+! interpolation nodes according to the interface.
+!   domainName : CHARACTER(*), INTENT(IN), OPTIONAL. Reference domain name;
+! use UNIT or BIUNIT explicitly.
 !
-!@note
-! Note that SIZE(xij,1) should be equal to 3, i.e., x,y,z coord. Also note
-! that this routine creats a linear element.
-!@endnote
+! Returns:
+!   obj : CLASS(ReferenceLine_), POINTER.
 !
-!### Usage
+! Formula:
+! $$\widehat K_{\mathrm{line}}=[0,1],\quad\widehat T=\{(x,y):x,y\ge0,\
+! x+y\le1\}$$
+!
+! Examples
 !
 !```fortran
-! class( ReferenceElement_ ), Pointer :: obj => NULL()
-! obj => ReferenceLine_Pointer( nsd = 3 )
-! call display( obj, "obj : ")
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE BaseType, ONLY: ReferenceLine_
+! USE ReferenceLine_Method, ONLY: Initiate
+! USE ReferenceLine_Method, ONLY: ReferenceLine
+! USE ReferenceLine_Method, ONLY: ReferenceLine_Pointer
+! USE ReferenceLine_Method, ONLY: RefLineCoord
+! USE ReferenceLine_Method, ONLY: RefCoord_Line
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! TYPE(ReferenceLine_) :: a, b
+! CLASS(ReferenceLine_), POINTER :: p
+! REAL(DFP) :: x(1, 2)
+!
+! CALL Initiate(obj=a, nsd=1_I4B, domainName="UNIT")
+! b = ReferenceLine(nsd=1_I4B, domainName="UNIT")
+! p => ReferenceLine_Pointer(nsd=1_I4B, domainName="UNIT")
+! CALL OK(a%order == 1 .AND. b%order == 1, "Linear reference objects")
+! CALL OK(ASSOCIATED(p), "Pointer constructor allocates its result")
+! x = RefLineCoord("UNIT")
+! CALL OK(MAXVAL(ABS(x-RefCoord_Line("UNIT"))) < 1.0E-12_DFP, &
+!   "Coordinate aliases agree")
+! CALL OK(MAXVAL(ABS(a%xij-x)) < 1.0E-12_DFP, "Stored reference coordinates")
+! DEALLOCATE(p)
+! END PROGRAM main
 !```
 
 INTERFACE ReferenceLine_Pointer
@@ -336,24 +917,60 @@ END INTERFACE ReferenceLine_Pointer
 !                                                   LagrangeElement@Methods
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 1 March 2021
-! summary: This function returns lagrange element on line
+!> author: OpenAI Codex (documentation)
+! date: 2026-10-30
+! summary: Construct higher order lines and query line measure.
 !
-!# Introduction
-! Returns lagrange line element of Higher order. By lagrange element we means
-! standard finite elements, with equi-distance lagrange interpolation points.
+! Line_Quality and Quality_Line are aliases of a placeholder which always
+! returns zero; they do not compute a quality metric. Use a fresh output
+! object for HighOrderElement_Line.
 !
-!### Usage
+! Arguments:
+!   refelem : CLASS(ReferenceElement_), INTENT(IN). Reference element carrying
+! topology and embedding dimension.
+!   order : INTEGER(I4B), INTENT(IN). Polynomial degree, except quadrature
+! where it is requested exactness degree.
+!   obj : CLASS(ReferenceElement_), INTENT(INOUT). Reference element result;
+! pointer constructors allocate a new target.
+!   ipType : INTEGER(I4B), INTENT(IN). Interpolation node family selector.
+!
+! Returns:
+!   Updates obj.
+!
+! Formula:
+! $$L=\|x_2-x_1\|$$
+!
+! Examples
 !
 !```fortran
-! type( ReferenceLine_ ) :: obj1, obj3
-! real( dfp ) :: xij( 3, 2 )
-! call random_number( xij )
-! call initiate( obj=obj1, nsd=3, xij=xij )
-! call display( obj1, "obj1 : " )
-! call obj1%HighOrderElement( order=2, HighOrderobj=obj3 ) <---
-! call display( obj3, "Second order Lagrange Element : ")
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE GlobalData, ONLY: Equidistance
+! USE BaseType, ONLY: ReferenceLine_
+! USE BaseType, ONLY: ReferenceElement_
+! USE ReferenceLine_Method, ONLY: HighOrderElement_Line
+! USE ReferenceLine_Method, ONLY: Measure_Simplex_Line
+! USE ReferenceLine_Method, ONLY: Line_Quality
+! USE ReferenceLine_Method, ONLY: Quality_Line
+! USE ReferenceLine_Method, ONLY: ReferenceLine
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! TYPE(ReferenceLine_) :: ref
+! TYPE(ReferenceElement_) :: high
+! REAL(DFP) :: x(1, 2), q
+!
+! ref = ReferenceLine(nsd=1_I4B, domainName="BIUNIT")
+! x(1, :) = [-1.0_DFP, 1.0_DFP]
+! CALL HighOrderElement_Line(refelem=ref, order=2_I4B, &
+!   obj=high, ipType=Equidistance)
+! CALL OK(SIZE(high%xij, 2) == 3, "Quadratic line has three nodes")
+! CALL OK(ABS(Measure_Simplex_Line(ref, x)-2.0_DFP) < 1.0E-12_DFP, &
+!   "Segment length")
+! q = Line_Quality(ref, x, measure=1_I4B)
+! CALL OK(q == 0.0_DFP .AND. Quality_Line(ref, x, 1_I4B) == q, &
+!   "Quality routine currently returns its placeholder value")
+! END PROGRAM main
 !```
 
 INTERFACE
@@ -372,24 +989,57 @@ END INTERFACE
 !                                                    MeasureSimplex@Methods
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 3 March 2021
-! summary: This function returns the measure of linear line element
+!> author: OpenAI Codex (documentation)
+! date: 2026-10-30
+! summary: Construct higher order lines and query line measure.
 !
-!# Introduction
+! Line_Quality and Quality_Line are aliases of a placeholder which always
+! returns zero; they do not compute a quality metric. Use a fresh output
+! object for HighOrderElement_Line.
 !
-! This function returns the measure of linear line element. Its generic form
-! is given by [[ReferenceElement_Method:MeasureSimplex]]
+! Arguments:
+!   refelem : CLASS(ReferenceElement_), INTENT(IN). Reference element carrying
+! topology and embedding dimension.
+!   xij : REAL(DFP), INTENT(IN)(:, :). Point columns; vertices or
+! interpolation nodes according to the interface.
 !
+! Returns:
+!   Ans : REAL(DFP).
 !
-!### Usage
+! Formula:
+! $$L=\|x_2-x_1\|$$
+!
+! Examples
 !
 !```fortran
-! type( ReferenceLine_ ) :: obj
-! real( dfp ) :: xij( 3, 2 )
-! call random_number( xij )
-! call initiate( obj=obj, nsd=3, xij=xij )
-! call display( MeasureSimplex(obj, obj%xij), "Measure :: ")
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE GlobalData, ONLY: Equidistance
+! USE BaseType, ONLY: ReferenceLine_
+! USE BaseType, ONLY: ReferenceElement_
+! USE ReferenceLine_Method, ONLY: HighOrderElement_Line
+! USE ReferenceLine_Method, ONLY: Measure_Simplex_Line
+! USE ReferenceLine_Method, ONLY: Line_Quality
+! USE ReferenceLine_Method, ONLY: Quality_Line
+! USE ReferenceLine_Method, ONLY: ReferenceLine
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! TYPE(ReferenceLine_) :: ref
+! TYPE(ReferenceElement_) :: high
+! REAL(DFP) :: x(1, 2), q
+!
+! ref = ReferenceLine(nsd=1_I4B, domainName="BIUNIT")
+! x(1, :) = [-1.0_DFP, 1.0_DFP]
+! CALL HighOrderElement_Line(refelem=ref, order=2_I4B, &
+!   obj=high, ipType=Equidistance)
+! CALL OK(SIZE(high%xij, 2) == 3, "Quadratic line has three nodes")
+! CALL OK(ABS(Measure_Simplex_Line(ref, x)-2.0_DFP) < 1.0E-12_DFP, &
+!   "Segment length")
+! q = Line_Quality(ref, x, measure=1_I4B)
+! CALL OK(q == 0.0_DFP .AND. Quality_Line(ref, x, 1_I4B) == q, &
+!   "Quality routine currently returns its placeholder value")
+! END PROGRAM main
 !```
 
 INTERFACE
@@ -404,6 +1054,61 @@ END INTERFACE
 !                                                      line_quality@Methods
 !----------------------------------------------------------------------------
 
+!> author: OpenAI Codex (documentation)
+! date: 2026-10-30
+! summary: Construct higher order lines and query line measure.
+!
+! Line_Quality and Quality_Line are aliases of a placeholder which always
+! returns zero; they do not compute a quality metric. Use a fresh output
+! object for HighOrderElement_Line.
+!
+! Arguments:
+!   refelem : CLASS(ReferenceElement_), INTENT(IN). Reference element carrying
+! topology and embedding dimension.
+!   xij : REAL(DFP), INTENT(IN)(:, :). Point columns; vertices or
+! interpolation nodes according to the interface.
+!   measure : INTEGER(I4B), INTENT(IN). Quality measure selector; Line quality
+! currently returns a placeholder zero.
+!
+! Returns:
+!   Ans : REAL(DFP).
+!
+! Formula:
+! $$L=\|x_2-x_1\|$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE GlobalData, ONLY: Equidistance
+! USE BaseType, ONLY: ReferenceLine_
+! USE BaseType, ONLY: ReferenceElement_
+! USE ReferenceLine_Method, ONLY: HighOrderElement_Line
+! USE ReferenceLine_Method, ONLY: Measure_Simplex_Line
+! USE ReferenceLine_Method, ONLY: Line_Quality
+! USE ReferenceLine_Method, ONLY: Quality_Line
+! USE ReferenceLine_Method, ONLY: ReferenceLine
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! TYPE(ReferenceLine_) :: ref
+! TYPE(ReferenceElement_) :: high
+! REAL(DFP) :: x(1, 2), q
+!
+! ref = ReferenceLine(nsd=1_I4B, domainName="BIUNIT")
+! x(1, :) = [-1.0_DFP, 1.0_DFP]
+! CALL HighOrderElement_Line(refelem=ref, order=2_I4B, &
+!   obj=high, ipType=Equidistance)
+! CALL OK(SIZE(high%xij, 2) == 3, "Quadratic line has three nodes")
+! CALL OK(ABS(Measure_Simplex_Line(ref, x)-2.0_DFP) < 1.0E-12_DFP, &
+!   "Segment length")
+! q = Line_Quality(ref, x, measure=1_I4B)
+! CALL OK(q == 0.0_DFP .AND. Quality_Line(ref, x, 1_I4B) == q, &
+!   "Quality routine currently returns its placeholder value")
+! END PROGRAM main
+!```
+
 INTERFACE Quality_Line
   MODULE FUNCTION Line_Quality(refelem, xij, measure) RESULT(Ans)
     CLASS(ReferenceElement_), INTENT(IN) :: refelem
@@ -417,9 +1122,57 @@ END INTERFACE Quality_Line
 !                                                           RefLineCoord
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date:  2023-07-03
-! summary:  Returns the coordinate of reference triangle
+!> author: OpenAI Codex (documentation)
+! date: 2026-10-30
+! summary: Construct a linear reference element or obtain reference
+! coordinates.
+!
+! Pass UNIT or BIUNIT explicitly for reproducibility. Constructors retain only
+! intrinsic coordinate rows (one for Line and two for Triangle); nsd records
+! the embedding dimension. The pointer constructor allocates a new target
+! which the caller owns.
+!
+! Arguments:
+!   refLine : CHARACTER(*), INTENT(IN). Reference interval name, UNIT or
+! BIUNIT.
+!
+! Returns:
+!   ans : REAL(DFP)(1, 2).
+!
+! Formula:
+! $$\widehat K_{\mathrm{line}}=[0,1],\quad\widehat T=\{(x,y):x,y\ge0,\
+! x+y\le1\}$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE BaseType, ONLY: ReferenceLine_
+! USE ReferenceLine_Method, ONLY: Initiate
+! USE ReferenceLine_Method, ONLY: ReferenceLine
+! USE ReferenceLine_Method, ONLY: ReferenceLine_Pointer
+! USE ReferenceLine_Method, ONLY: RefLineCoord
+! USE ReferenceLine_Method, ONLY: RefCoord_Line
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! TYPE(ReferenceLine_) :: a, b
+! CLASS(ReferenceLine_), POINTER :: p
+! REAL(DFP) :: x(1, 2)
+!
+! CALL Initiate(obj=a, nsd=1_I4B, domainName="UNIT")
+! b = ReferenceLine(nsd=1_I4B, domainName="UNIT")
+! p => ReferenceLine_Pointer(nsd=1_I4B, domainName="UNIT")
+! CALL OK(a%order == 1 .AND. b%order == 1, "Linear reference objects")
+! CALL OK(ASSOCIATED(p), "Pointer constructor allocates its result")
+! x = RefLineCoord("UNIT")
+! CALL OK(MAXVAL(ABS(x-RefCoord_Line("UNIT"))) < 1.0E-12_DFP, &
+!   "Coordinate aliases agree")
+! CALL OK(MAXVAL(ABS(a%xij-x)) < 1.0E-12_DFP, "Stored reference coordinates")
+! DEALLOCATE(p)
+! END PROGRAM main
+!```
 
 INTERFACE RefCoord_Line
   MODULE PURE FUNCTION RefLineCoord(refLine) RESULT(ans)
@@ -434,13 +1187,69 @@ END INTERFACE RefCoord_Line
 !                                                        GetEdgeConnectivity
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 2024-04-19
-! summary: Get the face connectivity of Line
+!> author: OpenAI Codex (documentation)
+! date: 2026-10-30
+! summary: Construct facet connectivity and reference topology.
 !
-!# Introduction
+! Use caller allocated output arrays. Line facets are points. Triangle face
+! connectivity always uses [1,2], [2,3], [3,1]; GetFaceConnectivity_Triangle
+! ignores opt and forces option 2. Edge connectivity option 1 uses [1,2],
+! [1,3], [2,3]. The example uses linear elements to avoid higher order
+! indexing assumptions.
 !
-! This routine calls [[GetEdgeConnectivity_Line]] with opt=2
+! Arguments:
+!   con : INTEGER(I4B), INTENT(INOUT)(:, :). Caller supplied connectivity
+! storage, with entities in columns.
+!   opt : INTEGER(I4B), OPTIONAL, INTENT(IN). Connectivity or entity selector;
+! see the routine description.
+!   order : INTEGER(I4B), OPTIONAL, INTENT(IN). Polynomial degree, except
+! quadrature where it is requested exactness degree.
+!   nrow : INTEGER(I4B), OPTIONAL, INTENT(OUT). Number of active output rows.
+!   ncol : INTEGER(I4B), OPTIONAL, INTENT(OUT). Number of active output
+! columns.
+!
+! Returns:
+!   Updates con(:, :), nrow, ncol.
+!
+! Formula:
+! $$\partial[a,b]=\{a,b\}$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE GlobalData, ONLY: Line2
+! USE BaseType, ONLY: ReferenceTopology_
+! USE BaseType, ONLY: ReferenceElement_
+! USE ReferenceLine_Method, ONLY: GetEdgeConnectivity_Line
+! USE ReferenceLine_Method, ONLY: GetFaceConnectivity_Line
+! USE ReferenceLine_Method, ONLY: GetFaceElemType_Line
+! USE ReferenceLine_Method, ONLY: FacetTopology_Line
+! USE ReferenceLine_Method, ONLY: FacetElements_Line
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! INTEGER(I4B), PARAMETER :: kind = Line2
+! INTEGER(I4B) :: edge(1, 2), face(1, 2)
+! INTEGER(I4B) :: faceTypes(2), nodeCounts(2), nr, nc
+! TYPE(ReferenceTopology_) :: topology(2)
+! TYPE(ReferenceElement_) :: facets(2)
+!
+! CALL GetEdgeConnectivity_Line(con=edge, order=1_I4B, &
+!   nrow=nr, ncol=nc)
+! CALL OK(nr == 1 .AND. nc == 2, "Connectivity dimensions")
+! CALL GetFaceConnectivity_Line(con=face, order=1_I4B)
+! CALL GetFaceElemType_Line(elemType=kind, &
+!   faceElemType=faceTypes, tFaceNodes=nodeCounts)
+! CALL OK(ALL(nodeCounts == 1), "Linear facet node count")
+! CALL FacetTopology_Line(elemType=kind, &
+!   nptrs=[1_I4B, 2_I4B], ans=topology)
+! CALL OK(ALL(topology(1)%nptrs == face(:, 1)), "Facet pointers")
+! CALL FacetElements_Line(elemType=kind, nsd=1_I4B, ans=facets)
+! CALL OK(ALL(facets%order == 0), "Facet polynomial order")
+! END PROGRAM main
+!```
 
 INTERFACE
   MODULE PURE SUBROUTINE GetFaceConnectivity_Line(con, opt, order, nrow, ncol)
@@ -465,9 +1274,69 @@ END INTERFACE
 !                                           GetEdgeElemType@GeometryMethods
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 2024-04-19
-! summary:  Returns the element type of each face
+!> author: OpenAI Codex (documentation)
+! date: 2026-10-30
+! summary: Construct facet connectivity and reference topology.
+!
+! Use caller allocated output arrays. Line facets are points. Triangle face
+! connectivity always uses [1,2], [2,3], [3,1]; GetFaceConnectivity_Triangle
+! ignores opt and forces option 2. Edge connectivity option 1 uses [1,2],
+! [1,3], [2,3]. The example uses linear elements to avoid higher order
+! indexing assumptions.
+!
+! Arguments:
+!   con : INTEGER(I4B), INTENT(INOUT)(:, :). Caller supplied connectivity
+! storage, with entities in columns.
+!   opt : INTEGER(I4B), OPTIONAL, INTENT(IN). Connectivity or entity selector;
+! see the routine description.
+!   order : INTEGER(I4B), OPTIONAL, INTENT(IN). Polynomial degree, except
+! quadrature where it is requested exactness degree.
+!   nrow : INTEGER(I4B), OPTIONAL, INTENT(OUT). Number of active output rows.
+!   ncol : INTEGER(I4B), OPTIONAL, INTENT(OUT). Number of active output
+! columns.
+!
+! Returns:
+!   Updates con(:, :), nrow, ncol.
+!
+! Formula:
+! $$\partial[a,b]=\{a,b\}$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE GlobalData, ONLY: Line2
+! USE BaseType, ONLY: ReferenceTopology_
+! USE BaseType, ONLY: ReferenceElement_
+! USE ReferenceLine_Method, ONLY: GetEdgeConnectivity_Line
+! USE ReferenceLine_Method, ONLY: GetFaceConnectivity_Line
+! USE ReferenceLine_Method, ONLY: GetFaceElemType_Line
+! USE ReferenceLine_Method, ONLY: FacetTopology_Line
+! USE ReferenceLine_Method, ONLY: FacetElements_Line
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! INTEGER(I4B), PARAMETER :: kind = Line2
+! INTEGER(I4B) :: edge(1, 2), face(1, 2)
+! INTEGER(I4B) :: faceTypes(2), nodeCounts(2), nr, nc
+! TYPE(ReferenceTopology_) :: topology(2)
+! TYPE(ReferenceElement_) :: facets(2)
+!
+! CALL GetEdgeConnectivity_Line(con=edge, order=1_I4B, &
+!   nrow=nr, ncol=nc)
+! CALL OK(nr == 1 .AND. nc == 2, "Connectivity dimensions")
+! CALL GetFaceConnectivity_Line(con=face, order=1_I4B)
+! CALL GetFaceElemType_Line(elemType=kind, &
+!   faceElemType=faceTypes, tFaceNodes=nodeCounts)
+! CALL OK(ALL(nodeCounts == 1), "Linear facet node count")
+! CALL FacetTopology_Line(elemType=kind, &
+!   nptrs=[1_I4B, 2_I4B], ans=topology)
+! CALL OK(ALL(topology(1)%nptrs == face(:, 1)), "Facet pointers")
+! CALL FacetElements_Line(elemType=kind, nsd=1_I4B, ans=facets)
+! CALL OK(ALL(facets%order == 0), "Facet polynomial order")
+! END PROGRAM main
+!```
 
 INTERFACE
   MODULE PURE SUBROUTINE GetEdgeConnectivity_Line(con, opt, order, nrow, ncol)
@@ -496,9 +1365,68 @@ END INTERFACE
 !                                           GetFaceElemType@GeometryMethods
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 2024-04-19
-! summary:  Returns the element type of each face
+!> author: OpenAI Codex (documentation)
+! date: 2026-10-30
+! summary: Construct facet connectivity and reference topology.
+!
+! Use caller allocated output arrays. Line facets are points. Triangle face
+! connectivity always uses [1,2], [2,3], [3,1]; GetFaceConnectivity_Triangle
+! ignores opt and forces option 2. Edge connectivity option 1 uses [1,2],
+! [1,3], [2,3]. The example uses linear elements to avoid higher order
+! indexing assumptions.
+!
+! Arguments:
+!   elemType : INTEGER(I4B), OPTIONAL, INTENT(IN). Element identifier from
+! GlobalData or the element type lookup.
+!   faceElemType : INTEGER(I4B), OPTIONAL, INTENT(INOUT)(:). Output facet
+! element identifier(s).
+!   tFaceNodes : INTEGER(I4B), OPTIONAL, INTENT(INOUT)(:). Output facet node
+! count(s).
+!   opt : INTEGER(I4B), OPTIONAL, INTENT(IN). Connectivity or entity selector;
+! see the routine description.
+!
+! Returns:
+!   Updates faceElemType(:), tFaceNodes(:).
+!
+! Formula:
+! $$\partial[a,b]=\{a,b\}$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE GlobalData, ONLY: Line2
+! USE BaseType, ONLY: ReferenceTopology_
+! USE BaseType, ONLY: ReferenceElement_
+! USE ReferenceLine_Method, ONLY: GetEdgeConnectivity_Line
+! USE ReferenceLine_Method, ONLY: GetFaceConnectivity_Line
+! USE ReferenceLine_Method, ONLY: GetFaceElemType_Line
+! USE ReferenceLine_Method, ONLY: FacetTopology_Line
+! USE ReferenceLine_Method, ONLY: FacetElements_Line
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! INTEGER(I4B), PARAMETER :: kind = Line2
+! INTEGER(I4B) :: edge(1, 2), face(1, 2)
+! INTEGER(I4B) :: faceTypes(2), nodeCounts(2), nr, nc
+! TYPE(ReferenceTopology_) :: topology(2)
+! TYPE(ReferenceElement_) :: facets(2)
+!
+! CALL GetEdgeConnectivity_Line(con=edge, order=1_I4B, &
+!   nrow=nr, ncol=nc)
+! CALL OK(nr == 1 .AND. nc == 2, "Connectivity dimensions")
+! CALL GetFaceConnectivity_Line(con=face, order=1_I4B)
+! CALL GetFaceElemType_Line(elemType=kind, &
+!   faceElemType=faceTypes, tFaceNodes=nodeCounts)
+! CALL OK(ALL(nodeCounts == 1), "Linear facet node count")
+! CALL FacetTopology_Line(elemType=kind, &
+!   nptrs=[1_I4B, 2_I4B], ans=topology)
+! CALL OK(ALL(topology(1)%nptrs == face(:, 1)), "Facet pointers")
+! CALL FacetElements_Line(elemType=kind, nsd=1_I4B, ans=facets)
+! CALL OK(ALL(facets%order == 0), "Facet polynomial order")
+! END PROGRAM main
+!```
 
 INTERFACE GetFaceElemType_Line
   MODULE PURE SUBROUTINE GetFaceElemType_Line1(elemType, faceElemType, opt, &
@@ -520,9 +1448,68 @@ END INTERFACE GetFaceElemType_Line
 !                                           GetFaceElemType@GeometryMethods
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 2024-04-19
-! summary:  Returns the element type of each face
+!> author: OpenAI Codex (documentation)
+! date: 2026-10-30
+! summary: Construct facet connectivity and reference topology.
+!
+! Use caller allocated output arrays. Line facets are points. Triangle face
+! connectivity always uses [1,2], [2,3], [3,1]; GetFaceConnectivity_Triangle
+! ignores opt and forces option 2. Edge connectivity option 1 uses [1,2],
+! [1,3], [2,3]. The example uses linear elements to avoid higher order
+! indexing assumptions.
+!
+! Arguments:
+!   elemType : INTEGER(I4B), INTENT(IN). Element identifier from GlobalData or
+! the element type lookup.
+!   localFaceNumber : INTEGER(I4B), INTENT(IN). One based local facet index.
+!   faceElemType : INTEGER(I4B), INTENT(INOUT). Output facet element
+! identifier(s).
+!   tFaceNodes : INTEGER(I4B), INTENT(INOUT). Output facet node count(s).
+!   opt : INTEGER(I4B), OPTIONAL, INTENT(IN). Connectivity or entity selector;
+! see the routine description.
+!
+! Returns:
+!   Updates faceElemType, tFaceNodes.
+!
+! Formula:
+! $$\partial[a,b]=\{a,b\}$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE GlobalData, ONLY: Line2
+! USE BaseType, ONLY: ReferenceTopology_
+! USE BaseType, ONLY: ReferenceElement_
+! USE ReferenceLine_Method, ONLY: GetEdgeConnectivity_Line
+! USE ReferenceLine_Method, ONLY: GetFaceConnectivity_Line
+! USE ReferenceLine_Method, ONLY: GetFaceElemType_Line
+! USE ReferenceLine_Method, ONLY: FacetTopology_Line
+! USE ReferenceLine_Method, ONLY: FacetElements_Line
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! INTEGER(I4B), PARAMETER :: kind = Line2
+! INTEGER(I4B) :: edge(1, 2), face(1, 2)
+! INTEGER(I4B) :: faceTypes(2), nodeCounts(2), nr, nc
+! TYPE(ReferenceTopology_) :: topology(2)
+! TYPE(ReferenceElement_) :: facets(2)
+!
+! CALL GetEdgeConnectivity_Line(con=edge, order=1_I4B, &
+!   nrow=nr, ncol=nc)
+! CALL OK(nr == 1 .AND. nc == 2, "Connectivity dimensions")
+! CALL GetFaceConnectivity_Line(con=face, order=1_I4B)
+! CALL GetFaceElemType_Line(elemType=kind, &
+!   faceElemType=faceTypes, tFaceNodes=nodeCounts)
+! CALL OK(ALL(nodeCounts == 1), "Linear facet node count")
+! CALL FacetTopology_Line(elemType=kind, &
+!   nptrs=[1_I4B, 2_I4B], ans=topology)
+! CALL OK(ALL(topology(1)%nptrs == face(:, 1)), "Facet pointers")
+! CALL FacetElements_Line(elemType=kind, nsd=1_I4B, ans=facets)
+! CALL OK(ALL(facets%order == 0), "Facet polynomial order")
+! END PROGRAM main
+!```
 
 INTERFACE GetFaceElemType_Line
   MODULE PURE SUBROUTINE GetFaceElemType_Line2(elemType, localFaceNumber, &
