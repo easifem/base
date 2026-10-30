@@ -15,7 +15,7 @@
 ! along with this program.  If not, see <https://www.gnu.org/licenses/>
 !
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: TriangleInterpolationUtility geometry and interpolation utilities.
 !
@@ -129,7 +129,7 @@ PUBLIC :: GetHierarchicalDOF_Triangle
 !                                               GetHierarchicalDOF_Triangle
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Count vertex, edge, cell or total hierarchical triangle modes.
 !
@@ -189,7 +189,7 @@ END INTERFACE
 !                                                      GetTotalDOF_Triangle
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Query interpolation dimensions, exponent tables and reference
 ! domains.
@@ -260,7 +260,7 @@ END INTERFACE
 ! LagrangeInDOF_Triangle
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Query interpolation dimensions, exponent tables and reference
 ! domains.
@@ -331,7 +331,7 @@ END INTERFACE
 !                                                   RefElemDomain_Triangle
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Query interpolation dimensions, exponent tables and reference
 ! domains.
@@ -404,7 +404,7 @@ END INTERFACE
 !                                               FacetConnectivity_Triangle
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Return vertex connectivity for triangular boundary edges.
 !
@@ -456,7 +456,7 @@ END INTERFACE
 !                                                         IJ2VEFC_Triangle
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Reorder triangular grid coordinates into entity ordering.
 !
@@ -515,7 +515,7 @@ END INTERFACE
 !                                                   LagrangeDegree_Triangle
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Query interpolation dimensions, exponent tables and reference
 ! domains.
@@ -599,7 +599,7 @@ END INTERFACE
 !                                                       LagrangeDOF_Triangle
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Query interpolation dimensions, exponent tables and reference
 ! domains.
@@ -663,7 +663,7 @@ END INTERFACE
 !                                                     LagrangeInDOF_Triangle
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Query interpolation dimensions, exponent tables and reference
 ! domains.
@@ -727,7 +727,7 @@ END INTERFACE
 !                                              EquidistanceInPoint_Triangle
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Generate interior triangle interpolation coordinates.
 !
@@ -815,7 +815,7 @@ END INTERFACE
 !                                              EquidistancePoint_Triangle
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Generate triangle interpolation coordinates.
 !
@@ -871,7 +871,7 @@ END INTERFACE
 !
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Generate triangle interpolation coordinates.
 !
@@ -1068,7 +1068,7 @@ END INTERFACE
 !                                                InterpolationPoint_Triangle
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Generate triangle interpolation coordinates.
 !
@@ -1141,7 +1141,7 @@ END INTERFACE
 !                                               InterpolationPoint_Triangle_
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Generate triangle interpolation coordinates.
 !
@@ -1220,7 +1220,7 @@ END INTERFACE
 !                                                    LagrangeCoeff_Triangle
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Construct coefficients of the nodal interpolation basis.
 !
@@ -1292,7 +1292,7 @@ END INTERFACE LagrangeCoeff_Triangle
 !                                                   LagrangeCoeff_Triangle_
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Construct coefficients of the nodal interpolation basis.
 !
@@ -1369,7 +1369,7 @@ END INTERFACE LagrangeCoeff_Triangle_
 !                                                   LagrangeCoeff_Triangle
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Construct coefficients of the nodal interpolation basis.
 !
@@ -1446,7 +1446,7 @@ END INTERFACE LagrangeCoeff_Triangle
 !                                                     LagrangeCoeff_Triangle_
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Construct coefficients of the nodal interpolation basis.
 !
@@ -1527,7 +1527,7 @@ END INTERFACE LagrangeCoeff_Triangle_
 !                                                     LagrangeCoeff_Triangle
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Construct coefficients of the nodal interpolation basis.
 !
@@ -1603,7 +1603,7 @@ END INTERFACE LagrangeCoeff_Triangle
 !
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Construct coefficients of the nodal interpolation basis.
 !
@@ -1683,7 +1683,7 @@ END INTERFACE LagrangeCoeff_Triangle_
 !                                                    LagrangeCoeff_Triangle
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Construct coefficients of the nodal interpolation basis.
 !
@@ -1761,7 +1761,7 @@ END INTERFACE LagrangeCoeff_Triangle
 !                                                    LagrangeCoeff_Triangle
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Construct coefficients of the nodal interpolation basis.
 !
@@ -1845,7 +1845,7 @@ END INTERFACE LagrangeCoeff_Triangle_
 !                                                    LagrangeCoeff_Triangle
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Construct coefficients of the nodal interpolation basis.
 !
@@ -1956,7 +1956,7 @@ END INTERFACE LagrangeVandermonde_Triangle_
 !                                                       DubinerPolynomial
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate Dubiner on a reference triangle.
 !
@@ -2019,7 +2019,7 @@ INTERFACE Dubiner_Triangle
   END FUNCTION Dubiner_Triangle1
 END INTERFACE Dubiner_Triangle
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate OrthogonalBasis on a reference triangle.
 !
@@ -2067,7 +2067,7 @@ END INTERFACE OrthogonalBasis_Triangle
 !                                                       DubinerPolynomial
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate Dubiner on a reference triangle.
 !
@@ -2139,7 +2139,7 @@ INTERFACE Dubiner_Triangle_
   END SUBROUTINE Dubiner_Triangle1_
 END INTERFACE Dubiner_Triangle_
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate OrthogonalBasis on a reference triangle.
 !
@@ -2189,7 +2189,7 @@ END INTERFACE OrthogonalBasis_Triangle_
 !                                                       DubinerPolynomial
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate Dubiner on a reference triangle.
 !
@@ -2255,7 +2255,7 @@ INTERFACE Dubiner_Triangle
   END FUNCTION Dubiner_Triangle2
 END INTERFACE Dubiner_Triangle
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate OrthogonalBasis on a reference triangle.
 !
@@ -2303,7 +2303,7 @@ END INTERFACE OrthogonalBasis_Triangle
 !                                                       DubinerPolynomial
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate Dubiner on a reference triangle.
 !
@@ -2378,7 +2378,7 @@ INTERFACE Dubiner_Triangle_
   END SUBROUTINE Dubiner_Triangle2_
 END INTERFACE Dubiner_Triangle_
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate OrthogonalBasis on a reference triangle.
 !
@@ -2428,7 +2428,7 @@ END INTERFACE OrthogonalBasis_Triangle_
 !                                                    VertexBasis_Triangle
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate VertexBasis triangle modes.
 !
@@ -2484,7 +2484,7 @@ END INTERFACE
 !                                                        EdgeBasis_Triangle
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate EdgeBasis triangle modes.
 !
@@ -2550,7 +2550,7 @@ END INTERFACE
 !                                                      CellBasis_Triangle
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate CellBasis triangle modes.
 !
@@ -2609,7 +2609,7 @@ END INTERFACE
 !                                              HeirarchicalBasis_Triangle
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate HeirarchicalBasis on a reference triangle.
 !
@@ -2691,7 +2691,7 @@ END INTERFACE HeirarchicalBasis_Triangle
 !                                              HeirarchicalBasis_Triangle
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate HeirarchicalBasis on a reference triangle.
 !
@@ -2760,7 +2760,7 @@ END INTERFACE HeirarchicalBasis_Triangle
 !                                              HeirarchicalBasis_Triangle
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate HeirarchicalBasis on a reference triangle.
 !
@@ -2849,7 +2849,7 @@ END INTERFACE HeirarchicalBasis_Triangle_
 !                                              HeirarchicalBasis_Triangle
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate HeirarchicalBasis on a reference triangle.
 !
@@ -2926,7 +2926,7 @@ END INTERFACE HeirarchicalBasis_Triangle_
 !                                              HeirarchicalBasis_Triangle
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate HeirarchicalBasis on a reference triangle.
 !
@@ -3024,7 +3024,7 @@ END INTERFACE HeirarchicalBasis_Triangle_
 !                                                   LagrangeEvalAll_Triangle
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate the nodal triangle basis.
 !
@@ -3113,7 +3113,7 @@ END INTERFACE LagrangeEvalAll_Triangle
 !
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate the nodal triangle basis.
 !
@@ -3210,7 +3210,7 @@ END INTERFACE LagrangeEvalAll_Triangle_
 !                                                   LagrangeEvalAll_Triangle
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate the nodal triangle basis.
 !
@@ -3306,7 +3306,7 @@ END INTERFACE LagrangeEvalAll_Triangle
 !                             LagrangeEvalAll_Triangle_@LagrnageBasisMethods
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate the nodal triangle basis.
 !
@@ -3411,7 +3411,7 @@ END INTERFACE LagrangeEvalAll_Triangle_
 !                                   LagrangeEvalAll_Triangle_@LagrangeMethods
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate the nodal triangle basis.
 !
@@ -3516,7 +3516,7 @@ END INTERFACE LagrangeEvalAll_Triangle_
 !
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Select a rule and construct quadrature coordinates and weights.
 !
@@ -3584,7 +3584,7 @@ END INTERFACE
 !                                                 QuadraturePoints_Triangle
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Select a rule and construct quadrature coordinates and weights.
 !
@@ -3665,7 +3665,7 @@ END INTERFACE QuadraturePoint_Triangle
 !
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Select a rule and construct quadrature coordinates and weights.
 !
@@ -3751,7 +3751,7 @@ END INTERFACE QuadraturePoint_Triangle_
 !                                            QuadraturePoints_Triangle
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Select a rule and construct quadrature coordinates and weights.
 !
@@ -3834,7 +3834,7 @@ END INTERFACE QuadraturePoint_Triangle
 !
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Select a rule and construct quadrature coordinates and weights.
 !
@@ -4036,7 +4036,7 @@ END INTERFACE TensorQuadraturePoint_Triangle_
 !
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate gradients of the nodal triangle basis.
 !
@@ -4149,7 +4149,7 @@ END INTERFACE LagrangeGradientEvalAll_Triangle
 !                                          LagrangeGradientEvalAll_Triangle
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate gradients of the nodal triangle basis.
 !
@@ -4261,7 +4261,7 @@ END INTERFACE LagrangeGradientEvalAll_Triangle_
 !                                        HeirarchicalBasisGradient_Triangle
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate HeirarchicalBasisGradient on a reference triangle.
 !
@@ -4342,7 +4342,7 @@ END INTERFACE HeirarchicalBasisGradient_Triangle
 !                                       HeirarchicalBasisGradient_Triangle_
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate HeirarchicalBasisGradient on a reference triangle.
 !
@@ -4431,7 +4431,7 @@ END INTERFACE HeirarchicalBasisGradient_Triangle_
 !
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate HeirarchicalBasisGradient on a reference triangle.
 !
@@ -4534,7 +4534,7 @@ END INTERFACE HeirarchicalBasisGradient_Triangle_
 !                                         OrthogonalBasisGradient_Triangle
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate OrthogonalBasisGradient on a reference triangle.
 !
@@ -4604,7 +4604,7 @@ END INTERFACE OrthogonalBasisGradient_Triangle
 !                                         OrthogonalBasisGradient_Triangle
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate OrthogonalBasisGradient on a reference triangle.
 !

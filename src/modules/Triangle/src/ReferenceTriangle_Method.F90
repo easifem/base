@@ -15,7 +15,7 @@
 ! along with this program.  If not, see <https://www.gnu.org/licenses/>
 !
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: ReferenceTriangle geometry and interpolation utilities.
 !
@@ -136,7 +136,7 @@ INTEGER(I4B), PARAMETER :: DEFAULT_OPT_TRIANGLE_EDGE_CON = 2_I4B
 !                                                               ElementName
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Query reference element identifiers, orders and topology metadata.
 !
@@ -194,7 +194,7 @@ END INTERFACE
 !                                             FacetTopology@GeometryMethods
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Construct facet connectivity and reference topology.
 !
@@ -267,7 +267,7 @@ END INTERFACE
 !                                                    TotalEntities_Triangle
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Query reference element identifiers, orders and topology metadata.
 !
@@ -325,7 +325,7 @@ END INTERFACE
 !                                               TotalNodesInElement_Triangle
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Query reference element identifiers, orders and topology metadata.
 !
@@ -383,7 +383,7 @@ END INTERFACE
 !                                                     ElementType_Triangle
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Query reference element identifiers, orders and topology metadata.
 !
@@ -440,7 +440,7 @@ END INTERFACE
 !                                                      ElementOrder_Triangle
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Query reference element identifiers, orders and topology metadata.
 !
@@ -498,7 +498,7 @@ END INTERFACE
 !                                                     FacetElements_Triangle
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Construct facet connectivity and reference topology.
 !
@@ -568,7 +568,7 @@ END INTERFACE FacetElements_Triangle
 !                                                    FacetElements_Triangle
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Construct facet connectivity and reference topology.
 !
@@ -641,7 +641,7 @@ END INTERFACE FacetElements_Triangle
 !                                                         Initiate@Triangle
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Construct a linear reference element or obtain reference
 ! coordinates.
@@ -712,7 +712,7 @@ END INTERFACE Initiate
 !                                                 ReferenceTriangle@Triangle
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Construct a linear reference element or obtain reference
 ! coordinates.
@@ -781,7 +781,7 @@ END INTERFACE ReferenceTriangle
 !                                         ReferenceTriangle_Pointer@Triangle
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Construct a linear reference element or obtain reference
 ! coordinates.
@@ -851,7 +851,7 @@ END INTERFACE ReferenceTriangle_Pointer
 !                                                   LagrangeElement@Triangle
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Construct higher order triangle metadata (currently unsafe).
 !
@@ -909,7 +909,7 @@ END INTERFACE
 !                                                 MeasureSimplex@Triangle
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate triangle Measure_Simplex_Triangle through a reference
 ! element.
@@ -967,7 +967,7 @@ END INTERFACE
 !                                                            Angles@Triangle
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate triangle Angles through a reference element.
 !
@@ -1024,7 +1024,7 @@ END INTERFACE Angles
 !                                                             Area@Triangle
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate triangle Area through a reference element.
 !
@@ -1081,7 +1081,7 @@ END INTERFACE Area
 !                                                        ArealVector@Triangle
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate triangle ArealVector through a reference element.
 !
@@ -1140,7 +1140,7 @@ END INTERFACE ArealVector
 !                                                      Barycentric@Triangle
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate triangle Barycentric through a reference element.
 !
@@ -1201,7 +1201,7 @@ END INTERFACE Barycentric
 !                                                          Centroid@Triangle
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate triangle Centroid through a reference element.
 !
@@ -1259,7 +1259,7 @@ END INTERFACE Centroid
 !                                                      CircumCenter@Triangle
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate triangle CircumCenter through a reference element.
 !
@@ -1317,7 +1317,7 @@ END INTERFACE CircumCenter
 !                                                      CircumCircle@Triangle
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate triangle CircumCircle through a reference element.
 !
@@ -1376,7 +1376,7 @@ END INTERFACE CircumCircle
 !                                                      CircumRadius@Triangle
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate triangle CircumRadius through a reference element.
 !
@@ -1433,7 +1433,7 @@ END INTERFACE CircumRadius
 !                                                     ContainsLine@Triangle
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Intersect a parametric or explicit spatial line with a triangle.
 !
@@ -1506,7 +1506,7 @@ END INTERFACE ContainsLine
 !                                                    ContainsPoint@Triangle
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate triangle containment or a selected quality measure.
 !
@@ -1567,7 +1567,7 @@ END INTERFACE Contains_Point_Triangle
 !                                                         Diameter@Triangle
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate triangle Diameter through a reference element.
 !
@@ -1627,7 +1627,7 @@ END INTERFACE Diameter
 !                                                       EdgeLength@Triangle
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate triangle EdgeLength through a reference element.
 !
@@ -1685,7 +1685,7 @@ END INTERFACE EdgeLength
 !                                                         Incenter@Triangle
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate triangle Incenter through a reference element.
 !
@@ -1743,7 +1743,7 @@ END INTERFACE Incenter
 !                                                         Incircle@Triangle
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate triangle Incircle through a reference element.
 !
@@ -1801,7 +1801,7 @@ END INTERFACE Incircle
 !                                                         Inradius@Triangle
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate triangle Inradius through a reference element.
 !
@@ -1859,7 +1859,7 @@ END INTERFACE Inradius
 !                                                      Orthocenter@Triangle
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate triangle Orthocenter through a reference element.
 !
@@ -1916,7 +1916,7 @@ END INTERFACE Orthocenter
 !                                                DistanceFromPoint@Triangle
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate triangle DistanceFromPoint through a reference element.
 !
@@ -1976,7 +1976,7 @@ END INTERFACE DistanceFromPoint
 !                                                      NearestPoint@Triangle
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate triangle NearestPoint through a reference element.
 !
@@ -2041,7 +2041,7 @@ END INTERFACE NearestPoint
 !                                                       RandomPoint@Triangle
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate triangle RandomPoint through a reference element.
 !
@@ -2106,7 +2106,7 @@ END INTERFACE RandomPoint
 !                                                          Quality@Triangle
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Evaluate triangle containment or a selected quality measure.
 !
@@ -2169,7 +2169,7 @@ END INTERFACE Quality_Triangle
 !                                                            TriangleArea3D
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Compute triangle area from vertex columns.
 !
@@ -2219,7 +2219,7 @@ END INTERFACE
 !
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Compute triangle area from vertex columns.
 !
@@ -2269,7 +2269,7 @@ END INTERFACE
 !                                                        GetEdgeConnectivity
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Construct facet connectivity and reference topology.
 !
@@ -2361,7 +2361,7 @@ END INTERFACE
 !                                                        GetEdgeConnectivity
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Construct facet connectivity and reference topology.
 !
@@ -2449,7 +2449,7 @@ END INTERFACE
 !                                                           RefTriangleCoord
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Construct a linear reference element or obtain reference
 ! coordinates.
@@ -2512,7 +2512,7 @@ END INTERFACE RefCoord_Triangle
 !                                           FaceShapeMetaData_Triangle
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Canonicalize triangular face vertices and return orientation
 ! metadata.
@@ -2568,7 +2568,7 @@ END INTERFACE
 !                                           GetFaceElemType@GeometryMethods
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Construct facet connectivity and reference topology.
 !
@@ -2652,7 +2652,7 @@ END INTERFACE GetFaceElemType_Triangle
 !                                           GetFaceElemType@GeometryMethods
 !----------------------------------------------------------------------------
 
-!> author: OpenAI Codex (documentation)
+!> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
 ! summary: Construct facet connectivity and reference topology.
 !
