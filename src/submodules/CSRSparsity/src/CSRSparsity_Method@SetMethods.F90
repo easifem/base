@@ -29,9 +29,9 @@ CONTAINS
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE obj_SetSparsity1
-INTEGER(I4B) :: ii !n, a, b, m, tdof
+INTEGER(I4B) :: ii
 INTEGER(I4B), ALLOCATABLE :: n2ntemp(:), rowIndex(:)
-!
+
 #ifdef DEBUG_VER
 IF (.NOT. obj%isInitiated) THEN
   CALL ErrorMSG( &
