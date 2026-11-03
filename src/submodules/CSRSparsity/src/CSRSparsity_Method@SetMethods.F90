@@ -304,26 +304,35 @@ END PROCEDURE obj_SetSparsity4
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE obj_SetSparsity5
-INTEGER(I4B), ALLOCATABLE :: row(:), graphT(:, :)
+INTEGER(I4B), ALLOCATABLE :: row(:), cnt(:)
 TYPE(IntVector_), ALLOCATABLE :: col(:)
-INTEGER(I4B) :: ii, jj, kk, nn, nrow, ncol
+INTEGER(I4B) :: ii, jj, nrow, ncol
 
 nrow = SIZE(graph, 1)
 ncol = SIZE(graph, 2)
-graphT = TRANSPOSE(graph)
+
+! graph is column major: loop over columns outside, rows inside
+CALL Reallocate(cnt, nrow)
+DO jj = 1, ncol
+  DO ii = 1, nrow
+    IF (graph(ii, jj) .NE. 0) cnt(ii) = cnt(ii) + 1
+  END DO
+END DO
 
 CALL Reallocate(row, nrow)
 ALLOCATE (col(nrow))
-
 DO ii = 1, nrow
   row(ii) = ii
-  nn = COUNT(graphT(:, ii) .NE. 0)
-  CALL ALLOCATE (col(ii), nn)
-  kk = 0
-  DO jj = 1, ncol
-    IF (graphT(jj, ii) .NE. 0) THEN
-      kk = kk + 1
-      CALL Set(col(ii), indx=kk, VALUE=jj)
+  CALL ALLOCATE (col(ii), cnt(ii))
+END DO
+
+! cnt is reused as the fill position of each row
+cnt = 0
+DO jj = 1, ncol
+  DO ii = 1, nrow
+    IF (graph(ii, jj) .NE. 0) THEN
+      cnt(ii) = cnt(ii) + 1
+      col(ii)%val(cnt(ii)) = jj
     END IF
   END DO
 END DO
@@ -332,7 +341,7 @@ CALL SetSparsity(obj=obj, row=row, col=col)
 
 IF (ALLOCATED(row)) DEALLOCATE (row)
 IF (ALLOCATED(col)) DEALLOCATE (col)
-IF (ALLOCATED(graphT)) DEALLOCATE (graphT)
+IF (ALLOCATED(cnt)) DEALLOCATE (cnt)
 
 END PROCEDURE obj_SetSparsity5
 
@@ -341,37 +350,45 @@ END PROCEDURE obj_SetSparsity5
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE obj_SetSparsity6
-INTEGER(I4B), ALLOCATABLE :: row(:)
-LOGICAL(LGT), ALLOCATABLE :: graphT(:, :)
+INTEGER(I4B), ALLOCATABLE :: row(:), cnt(:)
 TYPE(IntVector_), ALLOCATABLE :: col(:)
-INTEGER(I4B) :: ii, jj, kk, nn, nrow, ncol
-!
+INTEGER(I4B) :: ii, jj, nrow, ncol
+
 nrow = SIZE(graph, 1)
 ncol = SIZE(graph, 2)
-graphT = TRANSPOSE(graph)
-!
+
+! graph is column major: loop over columns outside, rows inside
+CALL Reallocate(cnt, nrow)
+DO jj = 1, ncol
+  DO ii = 1, nrow
+    IF (graph(ii, jj)) cnt(ii) = cnt(ii) + 1
+  END DO
+END DO
+
 CALL Reallocate(row, nrow)
 ALLOCATE (col(nrow))
-!
 DO ii = 1, nrow
   row(ii) = ii
-  nn = COUNT(graphT(:, ii))
-  CALL ALLOCATE (col(ii), nn)
-  kk = 0
-  DO jj = 1, ncol
-    IF (graphT(jj, ii)) THEN
-      kk = kk + 1
-      CALL Set(col(ii), indx=kk, VALUE=jj)
+  CALL ALLOCATE (col(ii), cnt(ii))
+END DO
+
+! cnt is reused as the fill position of each row
+cnt = 0
+DO jj = 1, ncol
+  DO ii = 1, nrow
+    IF (graph(ii, jj)) THEN
+      cnt(ii) = cnt(ii) + 1
+      col(ii)%val(cnt(ii)) = jj
     END IF
   END DO
 END DO
-!
-CALL setSparsity(obj=obj, row=row, col=col)
-!
+
+CALL SetSparsity(obj=obj, row=row, col=col)
+
 IF (ALLOCATED(row)) DEALLOCATE (row)
 IF (ALLOCATED(col)) DEALLOCATE (col)
-IF (ALLOCATED(graphT)) DEALLOCATE (graphT)
-!
+IF (ALLOCATED(cnt)) DEALLOCATE (cnt)
+
 END PROCEDURE obj_SetSparsity6
 
 !----------------------------------------------------------------------------
