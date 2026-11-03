@@ -16,8 +16,8 @@
 !
 
 MODULE DOF_GetMethods
-USE GlobalData, ONLY: DFP, I4B, LGT
 USE BaseType, ONLY: DOF_
+USE GlobalData, ONLY: DFP, I4B, LGT
 IMPLICIT NONE
 PRIVATE
 
@@ -882,7 +882,8 @@ END INTERFACE GetNodeLoc
 ! summary: This routine returns the location of node
 
 INTERFACE GetNodeLoc_
- MODULE PURE SUBROUTINE obj_GetNodeLoc_6(obj, nodenum, ivar, idof, ans, tsize)
+  MODULE PURE SUBROUTINE obj_GetNodeLoc_6(obj, nodenum, ivar, idof, &
+                                          ans, tsize)
     TYPE(DOF_), INTENT(IN) :: obj
     INTEGER(I4B), INTENT(IN) :: nodenum(:)
     !! node number
@@ -1005,7 +1006,8 @@ END INTERFACE GetNodeLoc
 ! summary: This routine returns the location of node
 
 INTERFACE GetNodeLoc_
- MODULE PURE SUBROUTINE obj_GetNodeLoc_9(obj, nodenum, ivar, idof, ans, tsize)
+  MODULE PURE SUBROUTINE obj_GetNodeLoc_9(obj, nodenum, ivar, idof, &
+                                          ans, tsize)
     TYPE(DOF_), INTENT(IN) :: obj
     INTEGER(I4B), INTENT(IN) :: nodenum
     !! node number
