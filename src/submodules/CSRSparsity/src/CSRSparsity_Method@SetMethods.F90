@@ -120,23 +120,22 @@ IF (SIZE(col) .GT. 0) THEN
   END IF
 #endif
 
-  tColIndx = 0
+  ! largest column list, to allocate the buffers only once
   jj = 0
   DO ii = 1, SIZE(col)
     kk = SIZE(col(ii))
-    tColIndx = tColIndx + kk
     jj = MAX(jj, kk)
   END DO
 
   CALL Reallocate(colIndx, jj * (.tdof. obj%jdof))
   CALL Reallocate(rowIndx, (.tdof. obj%idof))
 
-  obj%nnz = obj%nnz + tColIndx * SIZE(rowIndx) * SIZE(row)
-
   DO ii = 1, SIZE(row)
     CALL GetIndex_(obj=obj%jdof, nodeNum=col(ii)%val, ans=colIndx, &
                    tsize=tColIndx)
     CALL GetIndex_(obj=obj%idof, nodeNum=row(ii), ans=rowIndx, tsize=tRowIndx)
+
+    obj%nnz = obj%nnz + tColIndx * tRowIndx
 
     DO jj = 1, tRowIndx
       CALL APPEND(obj%row(rowIndx(jj)), colIndx(1:tColIndx))
@@ -216,10 +215,88 @@ END PROCEDURE obj_SetSparsity3
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE obj_SetSparsity4
-INTEGER(I4B) :: i
-DO i = 1, SIZE(row)
-  CALL SetSparsity(obj, row(i), col(i)%val, ivar, jvar)
-END DO
+INTEGER(I4B) :: ii, jj, kk, tColIndx, tRowIndx
+INTEGER(I4B), ALLOCATABLE :: colIndx(:), rowIndx(:)
+
+#ifdef DEBUG_VER
+IF (.NOT. obj%isInitiated) THEN
+  CALL ErrorMSG( &
+    "Instance of CSRSparsity is not initiated!", &
+    "CSRSparsity_Method@SetMethods.F90", &
+    "obj_SetSparsity4()", &
+    __LINE__, stderr)
+  STOP
+END IF
+
+IF (obj%isSparsityLock) THEN
+  CALL ErrorMSG( &
+    "Instance of CSRSparsity is locked for setting sparsity pattern!", &
+    "CSRSparsity_Method@SetMethods.F90", &
+    "obj_SetSparsity4()", &
+    __LINE__, stderr)
+  STOP
+END IF
+
+IF (obj%idof%StorageFMT .EQ. NODES_FMT) THEN
+  CALL ErrorMSG( &
+    "This subroutine works for storage format FMT_DOF, only", &
+    "CSRSparsity_Method@SetMethods.F90", &
+    "obj_SetSparsity4()", &
+    __LINE__, stderr)
+  STOP
+END IF
+
+IF (obj%jdof%StorageFMT .EQ. NODES_FMT) THEN
+  CALL ErrorMSG( &
+    "This subroutine works for storage format FMT_DOF, only", &
+    "CSRSparsity_Method@SetMethods.F90", &
+    "obj_SetSparsity4()", &
+    __LINE__, stderr)
+  STOP
+END IF
+
+IF (SIZE(row) .NE. SIZE(col)) THEN
+  CALL ErrorMSG( &
+    "size of row not same as the size of col!", &
+    "CSRSparsity_Method@SetMethods.F90", &
+    "obj_SetSparsity4()", &
+    __LINE__, stderr)
+  STOP
+END IF
+#endif
+
+IF (.NOT. ALLOCATED(obj%row)) ALLOCATE (obj%row(obj%nrow))
+
+IF (SIZE(col) .GT. 0) THEN
+
+  ! largest column list, to allocate the buffers only once
+  jj = 0
+  DO ii = 1, SIZE(col)
+    kk = SIZE(col(ii))
+    jj = MAX(jj, kk)
+  END DO
+
+  CALL Reallocate(colIndx, jj * (obj%jdof .tdof. jvar))
+  CALL Reallocate(rowIndx, (obj%idof .tdof. ivar))
+
+  ! No sorting here: SetSparsity_final sorts and removes duplicates
+  DO ii = 1, SIZE(row)
+    CALL GetIndex_(obj=obj%jdof, nodeNum=col(ii)%val, ivar=jvar, &
+                   ans=colIndx, tsize=tColIndx)
+    CALL GetIndex_(obj=obj%idof, nodeNum=row(ii), ivar=ivar, &
+                   ans=rowIndx, tsize=tRowIndx)
+
+    obj%nnz = obj%nnz + tColIndx * tRowIndx
+
+    DO jj = 1, tRowIndx
+      CALL APPEND(obj%row(rowIndx(jj)), colIndx(1:tColIndx))
+    END DO
+  END DO
+
+END IF
+
+IF (ALLOCATED(colIndx)) DEALLOCATE (colIndx)
+IF (ALLOCATED(rowIndx)) DEALLOCATE (rowIndx)
 END PROCEDURE obj_SetSparsity4
 
 !----------------------------------------------------------------------------
@@ -230,14 +307,14 @@ MODULE PROCEDURE obj_SetSparsity5
 INTEGER(I4B), ALLOCATABLE :: row(:), graphT(:, :)
 TYPE(IntVector_), ALLOCATABLE :: col(:)
 INTEGER(I4B) :: ii, jj, kk, nn, nrow, ncol
-!
+
 nrow = SIZE(graph, 1)
 ncol = SIZE(graph, 2)
 graphT = TRANSPOSE(graph)
-!
+
 CALL Reallocate(row, nrow)
 ALLOCATE (col(nrow))
-!
+
 DO ii = 1, nrow
   row(ii) = ii
   nn = COUNT(graphT(:, ii) .NE. 0)
@@ -250,13 +327,13 @@ DO ii = 1, nrow
     END IF
   END DO
 END DO
-!
-CALL setSparsity(obj=obj, row=row, col=col)
-!
+
+CALL SetSparsity(obj=obj, row=row, col=col)
+
 IF (ALLOCATED(row)) DEALLOCATE (row)
 IF (ALLOCATED(col)) DEALLOCATE (col)
 IF (ALLOCATED(graphT)) DEALLOCATE (graphT)
-!
+
 END PROCEDURE obj_SetSparsity5
 
 !----------------------------------------------------------------------------
