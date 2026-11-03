@@ -595,14 +595,14 @@ END INTERFACE OPERATOR(.endColumn.)
 ! PROGRAM main
 ! USE BaseType, ONLY: CSRSparsity_
 ! USE BaseType, ONLY: DOF_
-! USE GlobalData, ONLY: I4B
-! USE GlobalData, ONLY: FMT_NODES
-! USE GlobalData, ONLY: FMT_DOF
-! USE DOF_Method, ONLY: Initiate
-! USE DOF_Method, ONLY: DEALLOCATE
 ! USE CSRSparsity_Method, ONLY: Initiate
 ! USE CSRSparsity_Method, ONLY: SetSparsity
 ! USE CSRSparsity_Method, ONLY: DEALLOCATE
+! USE DOF_Method, ONLY: Initiate
+! USE DOF_Method, ONLY: DEALLOCATE
+! USE GlobalData, ONLY: I4B
+! USE GlobalData, ONLY: FMT_NODES
+! USE GlobalData, ONLY: FMT_DOF
 ! USE Test_Method, ONLY: OK
 ! IMPLICIT NONE
 !
@@ -687,20 +687,53 @@ END INTERFACE SetSparsity
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date:         22 March 2021
-! summary:          This subroutine Sets the sparsity pattern of several rows
+! date: 22 March 2021
+! summary: Add the column nodes of several row nodes to the sparsity
+!   pattern
 !
-!# Introduction
-! This routine is similar to [[CSRSparsity_Method:obj_SetSparsity1]].
-! However, in this routine several rows can be given.
+! This routine adds the coupling between each row node `row(i)` and the
+! column nodes `col(i)%val` to the sparsity pattern that is being built.
+! It calls [[CSRSparsity_Method:obj_SetSparsity1]] once for every `i`, so
+! the conversion of node numbers to matrix indices through `obj%idof` and
+! `obj%jdof` is the same as in that routine.
+!
+! Rows may appear more than once in `row` and in any order, and each
+! `col(i)%val` may be unsorted, contain repeats, or have size zero. Call
+! `SetSparsity(obj)` after the last call to sort the rows, remove the
+! duplicates, and build `obj%IA`, `obj%JA` and `obj%nnz`.
+!
+! The sizes of `row` and `col` are not checked against each other, and
+! every `col(i)%val` must be allocated.
+!
+! Examples
+!
+!```fortran
+! TYPE(CSRSparsity_) :: csr
+! TYPE(IntVector_) :: col(3)
+!
+! col(1)%val = [2_I4B, 1_I4B]
+! col(2)%val = [3_I4B]
+! col(3)%val = [1_I4B, 3_I4B]
+! CALL Initiate(obj=csr, ncol=3_I4B, nrow=3_I4B)
+! CALL SetSparsity(obj=csr, row=[1_I4B, 3_I4B, 1_I4B], col=col)
+! CALL SetSparsity(csr)
+! ! csr%IA = [1, 4, 4, 5], csr%JA = [1, 2, 3, 3]
+!```
+!
+! Full example: src/modules/CSRSparsity/examples/CSRSparsity_test_3.F90
+!
+! See also: [[CSRSparsity_Method:obj_SetSparsity1]],
+! [[CSRSparsity_Method:obj_SetSparsity_final]]
 
 INTERFACE SetSparsity
   MODULE SUBROUTINE obj_SetSparsity2(obj, row, col)
     TYPE(CSRSparsity_), INTENT(INOUT) :: obj
+    !! sparsity pattern, initiated and not locked
     INTEGER(I4B), INTENT(IN) :: row(:)
-    !! row number
+    !! row node numbers, in the node numbering of obj%idof
     TYPE(IntVector_), INTENT(IN) :: col(:)
-    !! column number
+    !! col(i)%val are the column node numbers connected to row(i), in
+    !! the node numbering of obj%jdof; SIZE(col) = SIZE(row)
   END SUBROUTINE obj_SetSparsity2
 END INTERFACE SetSparsity
 

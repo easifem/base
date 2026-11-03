@@ -30,7 +30,7 @@ CONTAINS
 
 MODULE PROCEDURE obj_SetSparsity1
 INTEGER(I4B) :: ii
-INTEGER(I4B), ALLOCATABLE :: n2ntemp(:), rowIndex(:)
+INTEGER(I4B), ALLOCATABLE :: colIndx(:), rowIndx(:)
 
 #ifdef DEBUG_VER
 IF (.NOT. obj%isInitiated) THEN
@@ -56,18 +56,20 @@ IF (.NOT. ALLOCATED(obj%row)) ALLOCATE (obj%row(obj%nrow))
 
 IF (SIZE(col) .GT. 0) THEN
   ! No sorting here: SetSparsity_final sorts and removes duplicates
-  n2ntemp = GetIndex(obj=obj%jdof, nodeNum=col)
-  rowIndex = GetIndex(obj=obj%idof, nodeNum=row)
-  obj%nnz = obj%nnz + SIZE(col) * (.tdof. obj%jdof) * SIZE(rowIndex)
+  colIndx = GetIndex(obj=obj%jdof, nodeNum=col)
+  ! Size of colIndx is size(col)*.tdof. obj%jdof
+  rowIndx = GetIndex(obj=obj%idof, nodeNum=row)
+  ! Size of rowIndx is .tdof. obj%idof
+  obj%nnz = obj%nnz + SIZE(col) * (.tdof. obj%jdof) * SIZE(rowIndx)
 
-  DO ii = 1, SIZE(rowIndex)
-    CALL APPEND(obj%row(rowIndex(ii)), n2ntemp)
+  DO ii = 1, SIZE(rowIndx)
+    CALL APPEND(obj%row(rowIndx(ii)), colIndx)
   END DO
 
 END IF
 
-IF (ALLOCATED(n2ntemp)) DEALLOCATE (n2ntemp)
-IF (ALLOCATED(rowIndex)) DEALLOCATE (rowIndex)
+IF (ALLOCATED(colIndx)) DEALLOCATE (colIndx)
+IF (ALLOCATED(rowIndx)) DEALLOCATE (rowIndx)
 END PROCEDURE obj_SetSparsity1
 
 !----------------------------------------------------------------------------
@@ -75,10 +77,77 @@ END PROCEDURE obj_SetSparsity1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE obj_SetSparsity2
-INTEGER(I4B) :: i
-DO i = 1, SIZE(row)
-  CALL SetSparsity(obj, row(i), col(i)%val)
-END DO
+! INTEGER(I4B) :: i
+! DO i = 1, SIZE(row)
+!   CALL SetSparsity(obj, row(i), col(i)%val)
+! END DO
+
+INTEGER(I4B) :: ii, jj, kk, tColIndx, tRowIndx
+INTEGER(I4B), ALLOCATABLE :: colIndx(:), rowIndx(:)
+
+#ifdef DEBUG_VER
+IF (.NOT. obj%isInitiated) THEN
+  CALL ErrorMSG( &
+    "Instance of CSRSparsity is not initiated!", &
+    "CSRSparsity_Method@SetMethods.F90", &
+    "obj_SetSparsity2()", &
+    __LINE__, stderr)
+  STOP
+END IF
+
+IF (obj%isSparsityLock) THEN
+  CALL ErrorMSG( &
+    "Instance of CSRSparsity is locked for setting sparsity pattern!", &
+    "CSRSparsity_Method@SetMethods.F90", &
+    "obj_SetSparsity2()", &
+    __LINE__, stderr)
+  STOP
+END IF
+#endif
+
+IF (.NOT. ALLOCATED(obj%row)) ALLOCATE (obj%row(obj%nrow))
+
+IF (SIZE(col) .GT. 0) THEN
+
+#ifdef DEBUG_VER
+  IF (SIZE(row) .NE. SIZE(col)) THEN
+    CALL ErrorMSG( &
+      "size of row not same as the size of col!", &
+      "CSRSparsity_Method@SetMethods.F90", &
+      "obj_SetSparsity2()", &
+      __LINE__, stderr)
+    STOP
+  END IF
+#endif
+
+  tColIndx = 0
+  jj = 0
+  DO ii = 1, SIZE(col)
+    kk = SIZE(col(ii))
+    tColIndx = tColIndx + kk
+    jj = MAX(jj, kk)
+  END DO
+
+  CALL Reallocate(colIndx, jj * (.tdof. obj%jdof))
+  CALL Reallocate(rowIndx, (.tdof. obj%idof))
+
+  obj%nnz = obj%nnz + tColIndx * SIZE(rowIndx) * SIZE(row)
+
+  DO ii = 1, SIZE(row)
+    CALL GetIndex_(obj=obj%jdof, nodeNum=col(ii)%val, ans=colIndx, &
+                   tsize=tColIndx)
+    CALL GetIndex_(obj=obj%idof, nodeNum=row(ii), ans=rowIndx, tsize=tRowIndx)
+
+    DO jj = 1, tRowIndx
+      CALL APPEND(obj%row(rowIndx(jj)), colIndx(1:tColIndx))
+    END DO
+
+  END DO
+
+END IF
+
+IF (ALLOCATED(colIndx)) DEALLOCATE (colIndx)
+IF (ALLOCATED(rowIndx)) DEALLOCATE (rowIndx)
 END PROCEDURE obj_SetSparsity2
 
 !----------------------------------------------------------------------------
@@ -87,7 +156,7 @@ END PROCEDURE obj_SetSparsity2
 
 MODULE PROCEDURE obj_SetSparsity3
 INTEGER(I4B) :: ii
-INTEGER(I4B), ALLOCATABLE :: n2ntemp(:), rowIndex(:)
+INTEGER(I4B), ALLOCATABLE :: colIndx(:), rowIndx(:)
 !
 #ifdef DEBUG_VER
 IF (.NOT. obj%isInitiated) THEN
@@ -130,16 +199,16 @@ END IF
 IF (.NOT. ALLOCATED(obj%row)) ALLOCATE (obj%row(obj%nrow))
 
 IF (SIZE(col) .GT. 0) THEN
-  n2ntemp = SORT(getIndex(obj=obj%jdof, nodeNum=col, iVar=jvar))
-  rowIndex = SORT(getIndex(obj=obj%idof, nodeNum=row, iVar=ivar))
-  obj%nnz = obj%nnz + SIZE(col) * (obj%jdof .tdof. jvar) * SIZE(rowIndex)
-  DO ii = 1, SIZE(rowIndex)
-    CALL APPEND(obj%row(rowIndex(ii)), n2ntemp)
+  colIndx = GetIndex(obj=obj%jdof, nodeNum=col, ivar=jvar)
+  rowIndx = GetIndex(obj=obj%idof, nodeNum=row, ivar=ivar)
+  obj%nnz = obj%nnz + SIZE(col) * (obj%jdof .tdof. jvar) * SIZE(rowIndx)
+  DO ii = 1, SIZE(rowIndx)
+    CALL APPEND(obj%row(rowIndx(ii)), colIndx)
   END DO
 END IF
 
-IF (ALLOCATED(n2ntemp)) DEALLOCATE (n2ntemp)
-IF (ALLOCATED(rowIndex)) DEALLOCATE (rowIndex)
+IF (ALLOCATED(colIndx)) DEALLOCATE (colIndx)
+IF (ALLOCATED(rowIndx)) DEALLOCATE (rowIndx)
 END PROCEDURE obj_SetSparsity3
 
 !----------------------------------------------------------------------------
@@ -149,7 +218,7 @@ END PROCEDURE obj_SetSparsity3
 MODULE PROCEDURE obj_SetSparsity4
 INTEGER(I4B) :: i
 DO i = 1, SIZE(row)
-  CALL setSparsity(obj, row(i), col(i)%Val, ivar, jvar)
+  CALL SetSparsity(obj, row(i), col(i)%val, ivar, jvar)
 END DO
 END PROCEDURE obj_SetSparsity4
 
