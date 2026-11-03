@@ -562,21 +562,123 @@ END INTERFACE OPERATOR(.endColumn.)
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 22 March 2021
-! summary: This subroutine Set the sparsity pattern of a given row
+! summary: Add the column nodes of one row node to the sparsity pattern
 !
-! This subroutine Sets the sparsity pattern of a given row
-! - If `obj%tdof` is equal to 1, then `Col` is sorted in increasing order,
-! and appended to `obj%Row(Row)`
-! - If `obj%tdof` is not equal to 1, then based on the storage format and
-! `Col` connectivity information is generated.
+! This routine adds the coupling between the row node `row` and the
+! column nodes `col` to the sparsity pattern that is being built.
+!
+! The node numbers are first converted to matrix indices. Every degree of
+! freedom of `row` in `obj%idof` gives one matrix row, and every degree of
+! freedom of each entry of `col` in `obj%jdof` gives one matrix column.
+! Both conversions follow the storage format (`FMT_NODES` or `FMT_DOF`)
+! of the DOF objects. The list of column indices is then appended to
+! `obj%row(i)` for each of these matrix rows.
+!
+! The appended indices are neither sorted nor made unique, and repeated
+! calls for the same row only append more entries. `obj%nnz` grows by
+! the number of appended entries, so it is an upper bound at this
+! stage. Call `SetSparsity(obj)` after the last call. It sorts each row,
+! removes the duplicates, and builds `obj%IA`, `obj%JA` and the exact
+! `obj%nnz`.
+!
+! If `col` is empty, only the row storage is allocated. In debug builds
+! the routine stops when `obj` is not initiated or the sparsity pattern
+! is locked.
+!
+! Changes:
+!   - 2026-11-03: Row and column indices are no longer sorted here, since
+!     SetSparsity(obj) sorts each row anyway.
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE BaseType, ONLY: CSRSparsity_
+! USE BaseType, ONLY: DOF_
+! USE GlobalData, ONLY: I4B
+! USE GlobalData, ONLY: FMT_NODES
+! USE GlobalData, ONLY: FMT_DOF
+! USE DOF_Method, ONLY: Initiate
+! USE DOF_Method, ONLY: DEALLOCATE
+! USE CSRSparsity_Method, ONLY: Initiate
+! USE CSRSparsity_Method, ONLY: SetSparsity
+! USE CSRSparsity_Method, ONLY: DEALLOCATE
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+!
+! INTEGER(I4B) :: empty(0)
+!
+! ! Test 1: scalar DOF, unsorted and repeated col, one empty row
+! BLOCK
+!   TYPE(CSRSparsity_) :: csr
+!   CALL Initiate(obj=csr, ncol=4_I4B, nrow=4_I4B)
+!   CALL SetSparsity(obj=csr, row=1_I4B, col=[3_I4B, 1_I4B, 1_I4B])
+!   CALL SetSparsity(obj=csr, row=2_I4B, col=[2_I4B, 4_I4B])
+!   CALL SetSparsity(obj=csr, row=1_I4B, col=[2_I4B, 3_I4B])
+!   CALL SetSparsity(obj=csr, row=3_I4B, col=empty)
+!   CALL SetSparsity(obj=csr, row=4_I4B, col=[4_I4B, 1_I4B, 4_I4B])
+!   CALL SetSparsity(csr)
+!   CALL OK(csr%nnz .EQ. 7_I4B, "scalar: nnz")
+!   CALL OK(ALL(csr%IA .EQ. [1, 4, 6, 6, 8]), "scalar: IA")
+!   CALL OK(ALL(csr%JA .EQ. [1, 2, 3, 2, 4, 1, 4]), "scalar: JA")
+!   CALL DEALLOCATE (csr)
+! END BLOCK
+!
+! ! Test 2: 3 nodes, 2 components, FMT_NODES
+! BLOCK
+!   TYPE(CSRSparsity_) :: csr
+!   TYPE(DOF_) :: dof
+!   CALL Initiate(obj=dof, tNodes=[3_I4B], names=["U"], &
+!                 spacecompo=[2_I4B], timecompo=[1_I4B], &
+!                 storagefmt=FMT_NODES)
+!   CALL Initiate(obj=csr, ncol=6_I4B, nrow=6_I4B, idof=dof, jdof=dof)
+!   CALL SetSparsity(obj=csr, row=1_I4B, col=[2_I4B, 1_I4B])
+!   CALL SetSparsity(obj=csr, row=3_I4B, col=[3_I4B])
+!   CALL SetSparsity(obj=csr, row=1_I4B, col=[1_I4B, 3_I4B])
+!   CALL SetSparsity(csr)
+!   CALL OK(csr%nnz .EQ. 16_I4B, "FMT_NODES: nnz")
+!   CALL OK(ALL(csr%IA .EQ. [1, 7, 13, 13, 13, 15, 17]), "FMT_NODES: IA")
+!   CALL OK(ALL(csr%JA .EQ. [1, 2, 3, 4, 5, 6, 1, 2, 3, 4, 5, 6, &
+!                            5, 6, 5, 6]), "FMT_NODES: JA")
+!   CALL DEALLOCATE (csr)
+!   CALL DEALLOCATE (dof)
+! END BLOCK
+!
+! ! Test 3: 3 nodes, 2 components, FMT_DOF
+! BLOCK
+!   TYPE(CSRSparsity_) :: csr
+!   TYPE(DOF_) :: dof
+!   CALL Initiate(obj=dof, tNodes=[3_I4B], names=["U"], &
+!                 spacecompo=[2_I4B], timecompo=[1_I4B], &
+!                 storagefmt=FMT_DOF)
+!   CALL Initiate(obj=csr, ncol=6_I4B, nrow=6_I4B, idof=dof, jdof=dof)
+!   CALL SetSparsity(obj=csr, row=1_I4B, col=[2_I4B, 1_I4B])
+!   CALL SetSparsity(obj=csr, row=3_I4B, col=[3_I4B])
+!   CALL SetSparsity(obj=csr, row=1_I4B, col=[1_I4B, 3_I4B])
+!   CALL SetSparsity(csr)
+!   CALL OK(csr%nnz .EQ. 16_I4B, "FMT_DOF: nnz")
+!   CALL OK(ALL(csr%IA .EQ. [1, 7, 7, 9, 15, 15, 17]), "FMT_DOF: IA")
+!   CALL OK(ALL(csr%JA .EQ. [1, 2, 3, 4, 5, 6, 3, 6, &
+!                            1, 2, 3, 4, 5, 6, 3, 6]), "FMT_DOF: JA")
+!   CALL DEALLOCATE (csr)
+!   CALL DEALLOCATE (dof)
+! END BLOCK
+!
+! END PROGRAM main
+!```
+!
+! See also: [[CSRSparsity_Method:obj_SetSparsity2]],
+! [[CSRSparsity_Method:obj_SetSparsity_final]]
 
 INTERFACE SetSparsity
   MODULE SUBROUTINE obj_SetSparsity1(obj, row, col)
     TYPE(CSRSparsity_), INTENT(INOUT) :: obj
+    !! sparsity pattern, initiated and not locked
     INTEGER(I4B), INTENT(IN) :: row
-  !! row number
+    !! row node number, in the node numbering of obj%idof
     INTEGER(I4B), INTENT(IN) :: col(:)
-  !! column number
+    !! column node numbers connected to row, in the node numbering of
+    !! obj%jdof; may be unsorted, contain repeats, or be empty
   END SUBROUTINE obj_SetSparsity1
 END INTERFACE SetSparsity
 

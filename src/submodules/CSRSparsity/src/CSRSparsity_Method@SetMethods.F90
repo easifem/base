@@ -55,8 +55,9 @@ END IF
 IF (.NOT. ALLOCATED(obj%row)) ALLOCATE (obj%row(obj%nrow))
 
 IF (SIZE(col) .GT. 0) THEN
-  n2ntemp = SORT(GetIndex(obj=obj%jdof, nodeNum=col))
-  rowIndex = SORT(GetIndex(obj=obj%idof, nodeNum=row))
+  ! No sorting here: SetSparsity_final sorts and removes duplicates
+  n2ntemp = GetIndex(obj=obj%jdof, nodeNum=col)
+  rowIndex = GetIndex(obj=obj%idof, nodeNum=row)
   obj%nnz = obj%nnz + SIZE(col) * (.tdof. obj%jdof) * SIZE(rowIndex)
 
   DO ii = 1, SIZE(rowIndex)
