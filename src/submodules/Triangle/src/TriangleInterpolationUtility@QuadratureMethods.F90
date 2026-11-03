@@ -15,16 +15,14 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 
 SUBMODULE(TriangleInterpolationUtility) QuadratureMethods
-USE Triangle_QuadraturePoint_Solin, ONLY: QuadraturePointTriangleSolin, &
-                                          QuadraturePointTriangleSolin_, &
-                                          QuadratureNumberTriangleSolin
 USE BaseType, ONLY: TypeQuadratureOpt
-USE StringUtility, ONLY: UpperCase
+USE MappingUtility, ONLY: FromSquare2Triangle_, FromTriangle2Triangle_, &
+                          FromUnitTriangle2Triangle_, JacobianTriangle
 USE QuadrangleInterpolationUtility, ONLY: QuadraturePoint_Quadrangle_
-USE MappingUtility, ONLY: FromSquare2Triangle_, &
-                          FromUnitTriangle2Triangle_, &
-                          JacobianTriangle, &
-                          FromTriangle2Triangle_
+USE StringUtility, ONLY: UpperCase
+USE Triangle_QuadraturePoint_Solin, ONLY: QuadratureNumberTriangleSolin, &
+                                          QuadraturePointTriangleSolin, &
+                                          QuadraturePointTriangleSolin_
 
 IMPLICIT NONE
 
@@ -295,7 +293,7 @@ IF (isok) THEN
 END IF
 
 astr = UpperCase(reftriangle(1:1))
-isok = astr == "B"
+isok = astr .EQ. "B"
 
 IF (isok) THEN
   CALL FromTriangle2Triangle_(xin=ans(1:2, 1:ncol), ans=ans, &

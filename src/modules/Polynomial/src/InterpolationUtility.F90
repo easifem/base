@@ -56,9 +56,7 @@ USE GlobalData, ONLY: DFP
 USE GlobalData, ONLY: REAL32
 USE GlobalData, ONLY: REAL64
 USE String_Class, ONLY: String
-
 IMPLICIT NONE
-
 PRIVATE
 
 PUBLIC :: VandermondeMatrix
@@ -178,8 +176,10 @@ INTERFACE GetTotalDOF
     !! order of interpolation
     CHARACTER(LEN=*), INTENT(IN) :: baseContinuity
     !! continuity of basis, H1, HDiv, HCurl
+    !! We just need two letters to make a decision
     CHARACTER(LEN=*), INTENT(IN) :: baseInterpolation
     !! interpolation of basis, Lagrange, Heirarchical
+    !! We just need four letters to make a decision
     INTEGER(I4B) :: ans
     !! total number of degrees of freedom
   END FUNCTION GetTotalDOF1

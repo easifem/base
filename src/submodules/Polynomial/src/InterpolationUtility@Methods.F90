@@ -16,39 +16,37 @@
 !
 
 SUBMODULE(InterpolationUtility) Methods
-USE GlobalData, ONLY: Point, Line, Triangle, Quadrangle, &
-                      Tetrahedron, Hexahedron, Prism, Pyramid
-
+USE BaseType, ONLY: math => TypeMathOpt
+USE GlobalData, ONLY: Hexahedron
+USE GlobalData, ONLY: Line
+USE GlobalData, ONLY: Point
+USE GlobalData, ONLY: Prism
+USE GlobalData, ONLY: Pyramid
+USE GlobalData, ONLY: Quadrangle
+USE GlobalData, ONLY: Tetrahedron
+USE GlobalData, ONLY: Triangle
+USE HexahedronInterpolationUtility, ONLY: GetTotalDOF_Hexahedron
+USE HexahedronInterpolationUtility, ONLY: GetTotalInDOF_Hexahedron
+USE HexahedronInterpolationUtility, ONLY: RefElemDomain_Hexahedron
+USE LineInterpolationUtility, ONLY: GetTotalDOF_Line
+USE LineInterpolationUtility, ONLY: GetTotalInDOF_Line
+USE LineInterpolationUtility, ONLY: RefElemDomain_Line
+USE PrismInterpolationUtility, ONLY: GetTotalDOF_Prism
+USE PrismInterpolationUtility, ONLY: GetTotalInDOF_Prism
+USE PrismInterpolationUtility, ONLY: RefElemDomain_Prism
+USE PyramidInterpolationUtility, ONLY: GetTotalDOF_Pyramid
+USE PyramidInterpolationUtility, ONLY: GetTotalInDOF_Pyramid
+USE PyramidInterpolationUtility, ONLY: RefElemDomain_Pyramid
+USE QuadrangleInterpolationUtility, ONLY: GetTotalDOF_Quadrangle
+USE QuadrangleInterpolationUtility, ONLY: GetTotalInDOF_Quadrangle
+USE QuadrangleInterpolationUtility, ONLY: RefElemDomain_Quadrangle
 USE ReferenceElement_Method, ONLY: ElementTopology
-
-USE LineInterpolationUtility, ONLY: GetTotalDOF_Line, &
-                                    GetTotalInDOF_Line, &
-                                    RefElemDomain_Line
-
-USE TriangleInterpolationUtility, ONLY: GetTotalDOF_Triangle, &
-                                        GetTotalInDOF_Triangle, &
-                                        RefElemDomain_Triangle
-
-USE QuadrangleInterpolationUtility, ONLY: GetTotalDOF_Quadrangle, &
-                                          GetTotalInDOF_Quadrangle, &
-                                          RefElemDomain_Quadrangle
-
-USE TetrahedronInterpolationUtility, ONLY: GetTotalDOF_Tetrahedron, &
-                                           GetTotalInDOF_Tetrahedron, &
-                                           RefElemDomain_Tetrahedron
-
-USE HexahedronInterpolationUtility, ONLY: GetTotalDOF_Hexahedron, &
-                                          GetTotalInDOF_Hexahedron, &
-                                          RefElemDomain_Hexahedron
-
-USE PrismInterpolationUtility, ONLY: GetTotalDOF_Prism, &
-                                     GetTotalInDOF_Prism, &
-                                     RefElemDomain_Prism
-
-USE PyramidInterpolationUtility, ONLY: GetTotalDOF_Pyramid, &
-                                       GetTotalInDOF_Pyramid, &
-                                       RefElemDomain_Pyramid
-
+USE TetrahedronInterpolationUtility, ONLY: GetTotalDOF_Tetrahedron
+USE TetrahedronInterpolationUtility, ONLY: GetTotalInDOF_Tetrahedron
+USE TetrahedronInterpolationUtility, ONLY: RefElemDomain_Tetrahedron
+USE TriangleInterpolationUtility, ONLY: GetTotalDOF_Triangle
+USE TriangleInterpolationUtility, ONLY: GetTotalInDOF_Triangle
+USE TriangleInterpolationUtility, ONLY: RefElemDomain_Triangle
 IMPLICIT NONE
 CONTAINS
 
@@ -114,6 +112,8 @@ CASE (Prism)
 CASE (Pyramid)
   ans = GetTotalDOF_Pyramid(order=order, baseContinuity=baseContinuity, &
                             baseInterpolation=baseInterpolation)
+CASE DEFAULT
+  ans = math%minus_one
 END SELECT
 
 END PROCEDURE GetTotalDOF1
@@ -143,7 +143,8 @@ CASE (Quadrangle)
                                  baseInterpolation=baseInterpolation)
 
 CASE (Tetrahedron)
- ans = GetTotalInDOF_Tetrahedron(order=order, baseContinuity=baseContinuity, &
+  ans = GetTotalInDOF_Tetrahedron(order=order, &
+                                  baseContinuity=baseContinuity, &
                                   baseInterpolation=baseInterpolation)
 CASE (Hexahedron)
   ans = GetTotalInDOF_Hexahedron(order=order, baseContinuity=baseContinuity, &

@@ -17,13 +17,13 @@
 SUBMODULE(TriangleInterpolationUtility) Methods
 USE BaseType, ONLY: ipopt => TypeInterpolationOpt
 USE BaseType, ONLY: math => TypeMathOpt
-USE StringUtility, ONLY: UpperCase
-USE MappingUtility, ONLY: FromUnitTriangle2Triangle_
-USE RecursiveNodesUtility, ONLY: RecursiveNode2D_
 USE Display_Method, ONLY: ToString
 USE IntegerUtility, ONLY: NumberOfTuples => SIZE
 USE LineInterpolationUtility, ONLY: EquidistanceInPoint_Line_
 USE LineInterpolationUtility, ONLY: InterpolationPoint_Line_
+USE MappingUtility, ONLY: FromUnitTriangle2Triangle_
+USE RecursiveNodesUtility, ONLY: RecursiveNode2D_
+USE StringUtility, ONLY: UpperCase
 IMPLICIT NONE
 
 CHARACTER(*), PARAMETER :: modName = &
