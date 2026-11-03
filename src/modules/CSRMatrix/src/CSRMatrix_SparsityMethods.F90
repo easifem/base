@@ -16,8 +16,11 @@
 !
 
 MODULE CSRMatrix_SparsityMethods
-USE GlobalData, ONLY: I4B, DFP, LGT
-USE BaseType, ONLY: CSRMatrix_, IntVector_
+USE BaseType, ONLY: CSRMatrix_
+USE BaseType, ONLY: IntVector_
+USE GlobalData, ONLY: DFP
+USE GlobalData, ONLY: I4B
+USE GlobalData, ONLY: LGT
 IMPLICIT NONE
 PRIVATE
 PUBLIC :: SetSparsity
@@ -39,13 +42,13 @@ PUBLIC :: SetSparsity
 ! `Col` connectivity information is generated.
 
 INTERFACE SetSparsity
-  MODULE SUBROUTINE obj_setSparsity1(obj, row, col)
+  MODULE SUBROUTINE obj_SetSparsity1(obj, row, col)
     TYPE(CSRMatrix_), INTENT(INOUT) :: obj
     INTEGER(I4B), INTENT(IN) :: row
     !! row number
     INTEGER(I4B), INTENT(IN) :: col(:)
     !! column indices (only node number is required)
-  END SUBROUTINE obj_setSparsity1
+  END SUBROUTINE obj_SetSparsity1
 END INTERFACE SetSparsity
 
 !----------------------------------------------------------------------------
@@ -61,13 +64,13 @@ END INTERFACE SetSparsity
 ! This subroutine sets the sparsity pattern of many rows
 
 INTERFACE SetSparsity
-  MODULE SUBROUTINE obj_setSparsity2(obj, row, col)
+  MODULE SUBROUTINE obj_SetSparsity2(obj, row, col)
     TYPE(CSRMatrix_), INTENT(INOUT) :: obj
     INTEGER(I4B), INTENT(IN) :: row(:)
     !! row indices
     TYPE(IntVector_), INTENT(IN) :: col(:)
     !! each intVector, col(i), contains col indices of row(i)
-  END SUBROUTINE obj_setSparsity2
+  END SUBROUTINE obj_SetSparsity2
 END INTERFACE SetSparsity
 
 !----------------------------------------------------------------------------
@@ -87,7 +90,7 @@ END INTERFACE SetSparsity
 ! `Col` connectivity information is generated.
 
 INTERFACE SetSparsity
-  MODULE SUBROUTINE obj_setSparsity3(obj, row, col, ivar, jvar)
+  MODULE SUBROUTINE obj_SetSparsity3(obj, row, col, ivar, jvar)
     TYPE(CSRMatrix_), INTENT(INOUT) :: obj
     INTEGER(I4B), INTENT(IN) :: row
     !! row index
@@ -97,7 +100,7 @@ INTERFACE SetSparsity
     !! physical variable i
     INTEGER(I4B), INTENT(IN) :: jvar
     !! physical variable j
-  END SUBROUTINE obj_setSparsity3
+  END SUBROUTINE obj_SetSparsity3
 END INTERFACE SetSparsity
 
 !----------------------------------------------------------------------------
@@ -111,16 +114,16 @@ END INTERFACE SetSparsity
 !# Introduction
 !
 ! This subroutine sets the sparsity pattern of a given row
-! This subroutine calls `obj_setSparsity1`
+! This subroutine calls `obj_SetSparsity1`
 
 INTERFACE SetSparsity
-  MODULE SUBROUTINE obj_setSparsity4(obj, row, col, ivar, jvar)
+  MODULE SUBROUTINE obj_SetSparsity4(obj, row, col, ivar, jvar)
     TYPE(CSRMatrix_), INTENT(INOUT) :: obj
     INTEGER(I4B), INTENT(IN) :: row(:)
     TYPE(IntVector_), INTENT(IN) :: col(:)
     INTEGER(I4B), INTENT(IN) :: ivar
     INTEGER(I4B), INTENT(IN) :: jvar
-  END SUBROUTINE obj_setSparsity4
+  END SUBROUTINE obj_SetSparsity4
 END INTERFACE SetSparsity
 
 !----------------------------------------------------------------------------
@@ -145,9 +148,9 @@ END INTERFACE SetSparsity
 ! `obj%RowSize(:) `, and `obj%DiagIndx(:)`
 
 INTERFACE SetSparsity
-  MODULE SUBROUTINE obj_setSparsity_final(obj)
+  MODULE SUBROUTINE obj_SetSparsity5(obj)
     TYPE(CSRMatrix_), INTENT(INOUT) :: obj
-  END SUBROUTINE obj_setSparsity_final
+  END SUBROUTINE obj_SetSparsity5
 END INTERFACE SetSparsity
 
 END MODULE CSRMatrix_SparsityMethods
