@@ -17,6 +17,7 @@
 vscode-settings
 docs/
 media/
+**/examples/**/CMakeLists.txt
 */build/
 build/
 src/build/
