@@ -30,4 +30,6 @@ neovim.json
 selected
 TODO.md
 tui-journal/
-bug-reports/
+bugs-report/
+claude-assets/
+
