@@ -28,152 +28,135 @@ CONTAINS
 !                                                                   Display
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE obj_setSparsity1
+MODULE PROCEDURE obj_SetSparsity1
 INTEGER(I4B) :: ii !n, a, b, m, tdof
 INTEGER(I4B), ALLOCATABLE :: n2ntemp(:), rowIndex(:)
 !
 #ifdef DEBUG_VER
-!
-! check
-!
 IF (.NOT. obj%isInitiated) THEN
   CALL ErrorMSG( &
-    & "Instance of CSRSparsity is not initiated!", &
-    & "CSRSparsity_Method@SetMethods.F90", &
-    & "obj_setSparsity1()", &
-    & __LINE__, stderr)
+    "Instance of CSRSparsity is not initiated!", &
+    "CSRSparsity_Method@SetMethods.F90", &
+    "obj_SetSparsity1()", &
+    __LINE__, stderr)
   STOP
 END IF
-!
-! check
-!
+
 IF (obj%isSparsityLock) THEN
   CALL ErrorMSG( &
-    & "Instance of CSRSparsity is locked for setting sparsity pattern!", &
-    & "CSRSparsity_Method@SetMethods.F90", &
-    & "obj_setSparsity1()", &
-    & __LINE__, stderr)
+    "Instance of CSRSparsity is locked for setting sparsity pattern!", &
+    "CSRSparsity_Method@SetMethods.F90", &
+    "obj_SetSparsity1()", &
+    __LINE__, stderr)
   STOP
 END IF
 #endif
-!
+
 IF (.NOT. ALLOCATED(obj%row)) ALLOCATE (obj%row(obj%nrow))
-!
-IF (SIZE(Col) .GT. 0) THEN
-  n2ntemp = SORT(getIndex(obj=obj%jdof, nodeNum=Col))
-  rowIndex = SORT(getIndex(obj=obj%idof, nodeNum=Row))
-  obj%nnz = obj%nnz + SIZE(Col) * (.tdof.obj%jdof) * SIZE(rowIndex)
-  !
+
+IF (SIZE(col) .GT. 0) THEN
+  n2ntemp = SORT(GetIndex(obj=obj%jdof, nodeNum=col))
+  rowIndex = SORT(GetIndex(obj=obj%idof, nodeNum=row))
+  obj%nnz = obj%nnz + SIZE(col) * (.tdof. obj%jdof) * SIZE(rowIndex)
+
   DO ii = 1, SIZE(rowIndex)
-    CALL APPEND(obj%Row(rowIndex(ii)), n2ntemp)
+    CALL APPEND(obj%row(rowIndex(ii)), n2ntemp)
   END DO
-  !
+
 END IF
-!
+
 IF (ALLOCATED(n2ntemp)) DEALLOCATE (n2ntemp)
 IF (ALLOCATED(rowIndex)) DEALLOCATE (rowIndex)
-!
-END PROCEDURE obj_setSparsity1
+END PROCEDURE obj_SetSparsity1
 
 !----------------------------------------------------------------------------
 !                                                                setSparsity
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE obj_setSparsity2
+MODULE PROCEDURE obj_SetSparsity2
 INTEGER(I4B) :: i
-DO i = 1, SIZE(Row)
-  CALL setSparsity(obj, Row(i), Col(i)%Val)
+DO i = 1, SIZE(row)
+  CALL SetSparsity(obj, row(i), col(i)%val)
 END DO
-END PROCEDURE obj_setSparsity2
+END PROCEDURE obj_SetSparsity2
 
 !----------------------------------------------------------------------------
 !                                                                setSparsity
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE obj_setSparsity3
+MODULE PROCEDURE obj_SetSparsity3
 INTEGER(I4B) :: ii
 INTEGER(I4B), ALLOCATABLE :: n2ntemp(:), rowIndex(:)
 !
 #ifdef DEBUG_VER
-!
-! check
-!
 IF (.NOT. obj%isInitiated) THEN
   CALL ErrorMSG( &
-    & "Instance of CSRSparsity is not initiated!", &
-    & "CSRSparsity_Method@SetMethods.F90", &
-    & "obj_setSparsity3()", &
-    & __LINE__, stderr)
+    "Instance of CSRSparsity is not initiated!", &
+    "CSRSparsity_Method@SetMethods.F90", &
+    "obj_SetSparsity3()", &
+    __LINE__, stderr)
   STOP
 END IF
-!
-! check
-!
+
 IF (obj%isSparsityLock) THEN
   CALL ErrorMSG( &
-    & "Instance of CSRSparsity is locked for setting sparsity pattern!", &
-    & "CSRSparsity_Method@SetMethods.F90", &
-    & "obj_setSparsity3()", &
-    & __LINE__, stderr)
+    "Instance of CSRSparsity is locked for setting sparsity pattern!", &
+    "CSRSparsity_Method@SetMethods.F90", &
+    "obj_SetSparsity3()", &
+    __LINE__, stderr)
   STOP
 END IF
-!
-! check
-!
+
 IF (obj%idof%StorageFMT .EQ. NODES_FMT) THEN
   CALL ErrorMSG( &
-    & "This subroutine works for storage format FMT_DOF, only", &
-    & "CSRSparsity_Method@SetMethods.F90", &
-    & "obj_setSparsity3()", &
-    & __LINE__, stderr)
+    "This subroutine works for storage format FMT_DOF, only", &
+    "CSRSparsity_Method@SetMethods.F90", &
+    "obj_SetSparsity3()", &
+    __LINE__, stderr)
   STOP
 END IF
 
 IF (obj%jdof%StorageFMT .EQ. NODES_FMT) THEN
   CALL ErrorMSG( &
-    & "This subroutine works for storage format FMT_DOF, only", &
-    & "CSRSparsity_Method@SetMethods.F90", &
-    & "obj_setSparsity3()", &
-    & __LINE__, stderr)
+    "This subroutine works for storage format FMT_DOF, only", &
+    "CSRSparsity_Method@SetMethods.F90", &
+    "obj_SetSparsity3()", &
+    __LINE__, stderr)
   STOP
 END IF
 #endif
-!
-! cleaning
-!
+
 IF (.NOT. ALLOCATED(obj%row)) ALLOCATE (obj%row(obj%nrow))
-!
+
 IF (SIZE(col) .GT. 0) THEN
-  !
-  n2ntemp = SORT(getIndex(obj=obj%jdof, nodeNum=Col, iVar=jvar))
-  rowIndex = SORT(getIndex(obj=obj%idof, nodeNum=Row, iVar=ivar))
-  obj%nnz = obj%nnz + SIZE(Col) * (obj%jdof.tdof.jvar) * SIZE(rowIndex)
+  n2ntemp = SORT(getIndex(obj=obj%jdof, nodeNum=col, iVar=jvar))
+  rowIndex = SORT(getIndex(obj=obj%idof, nodeNum=row, iVar=ivar))
+  obj%nnz = obj%nnz + SIZE(col) * (obj%jdof .tdof. jvar) * SIZE(rowIndex)
   DO ii = 1, SIZE(rowIndex)
-    CALL APPEND(obj%Row(rowIndex(ii)), n2ntemp)
+    CALL APPEND(obj%row(rowIndex(ii)), n2ntemp)
   END DO
-  !
 END IF
-!
+
 IF (ALLOCATED(n2ntemp)) DEALLOCATE (n2ntemp)
 IF (ALLOCATED(rowIndex)) DEALLOCATE (rowIndex)
-END PROCEDURE obj_setSparsity3
+END PROCEDURE obj_SetSparsity3
 
 !----------------------------------------------------------------------------
 !                                                                setSparsity
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE obj_setSparsity4
+MODULE PROCEDURE obj_SetSparsity4
 INTEGER(I4B) :: i
-DO i = 1, SIZE(Row)
-  CALL setSparsity(obj, Row(i), Col(i)%Val, ivar, jvar)
+DO i = 1, SIZE(row)
+  CALL setSparsity(obj, row(i), col(i)%Val, ivar, jvar)
 END DO
-END PROCEDURE obj_setSparsity4
+END PROCEDURE obj_SetSparsity4
 
 !----------------------------------------------------------------------------
 !                                                                 setSparsity
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE obj_setSparsity5
+MODULE PROCEDURE obj_SetSparsity5
 INTEGER(I4B), ALLOCATABLE :: row(:), graphT(:, :)
 TYPE(IntVector_), ALLOCATABLE :: col(:)
 INTEGER(I4B) :: ii, jj, kk, nn, nrow, ncol
@@ -204,13 +187,13 @@ IF (ALLOCATED(row)) DEALLOCATE (row)
 IF (ALLOCATED(col)) DEALLOCATE (col)
 IF (ALLOCATED(graphT)) DEALLOCATE (graphT)
 !
-END PROCEDURE obj_setSparsity5
+END PROCEDURE obj_SetSparsity5
 
 !----------------------------------------------------------------------------
 !                                                                 setSparsity
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE obj_setSparsity6
+MODULE PROCEDURE obj_SetSparsity6
 INTEGER(I4B), ALLOCATABLE :: row(:)
 LOGICAL(LGT), ALLOCATABLE :: graphT(:, :)
 TYPE(IntVector_), ALLOCATABLE :: col(:)
@@ -242,13 +225,13 @@ IF (ALLOCATED(row)) DEALLOCATE (row)
 IF (ALLOCATED(col)) DEALLOCATE (col)
 IF (ALLOCATED(graphT)) DEALLOCATE (graphT)
 !
-END PROCEDURE obj_setSparsity6
+END PROCEDURE obj_SetSparsity6
 
 !----------------------------------------------------------------------------
 !                                                                setSparsity
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE obj_setSparsity_final
+MODULE PROCEDURE obj_SetSparsity_final
 INTEGER(I4B) :: i, j, k
 INTEGER(I4B), ALLOCATABLE :: intvec(:)
 !
@@ -256,7 +239,7 @@ IF (.NOT. obj%isInitiated) THEN
   CALL ErrorMSG( &
     & "Instance of CSRSparsity is not initiated!", &
     & "CSRSparsity_Method@SetMethods.F90", &
-    & "obj_setSparsity_final()", &
+    & "obj_SetSparsity_final()", &
     & __LINE__, stderr)
   STOP
 END IF
@@ -265,20 +248,20 @@ IF (obj%isSparsityLock) THEN
   CALL WarningMSG( &
     & "Instance of CSRSparsity is locked for setting sparsity pattern!", &
     & "CSRSparsity_Method@SetMethods.F90", &
-    & "obj_setSparsity_final()", &
+    & "obj_SetSparsity_final()", &
     & __LINE__, stderr)
   RETURN
 ELSE
   obj%isSparsityLock = .TRUE.
 END IF
 !
-! Remove duplicate entries in obj%Row( irow )%Col
+! Remove duplicate entries in obj%row( irow )%col
 !
-IF (ALLOCATED(obj%Row)) THEN
+IF (ALLOCATED(obj%row)) THEN
   k = 0
   DO i = 1, obj%nrow
-    CALL RemoveDuplicates(obj%Row(i))
-    k = k + SIZE(obj%Row(i))
+    CALL RemoveDuplicates(obj%row(i))
+    k = k + SIZE(obj%row(i))
   END DO
   !
   ! update nnz: number of non zeros
@@ -294,14 +277,14 @@ IF (ALLOCATED(obj%Row)) THEN
   obj%IA(1) = 1
   !
   DO i = 1, obj%nrow
-    ! obj%RowSize( i ) = SIZE( obj%Row( i ) )
-    k = SIZE(obj%Row(i))
+    ! obj%rowSize( i ) = SIZE( obj%row( i ) )
+    k = SIZE(obj%row(i))
     obj%IA(i + 1) = obj%IA(i) + k
     IF (k .NE. 0) &
-      & obj%JA(obj%IA(i):obj%IA(i + 1) - 1) = obj%Row(i)%Val
+      & obj%JA(obj%IA(i):obj%IA(i + 1) - 1) = obj%row(i)%Val
   END DO
   !
-  DEALLOCATE (obj%Row)
+  DEALLOCATE (obj%row)
   !
 END IF
 !
@@ -316,7 +299,7 @@ IF (j .GT. obj%nnz) THEN
   !
 END IF
 !
-END PROCEDURE obj_setSparsity_final
+END PROCEDURE obj_SetSparsity_final
 
 !----------------------------------------------------------------------------
 !                                                                   SetIA

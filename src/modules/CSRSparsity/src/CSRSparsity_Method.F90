@@ -20,8 +20,8 @@
 ! summary:         This module contains methods for [[CSRSparsity_]]
 
 MODULE CSRSparsity_Method
-USE GlobalData
 USE Basetype
+USE GlobalData
 IMPLICIT NONE
 PRIVATE
 
@@ -561,10 +561,8 @@ END INTERFACE OPERATOR(.endColumn.)
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date:         22 March 2021
-! summary:          This subroutine Set the sparsity pattern of a given row
-!
-!# Introduction
+! date: 22 March 2021
+! summary: This subroutine Set the sparsity pattern of a given row
 !
 ! This subroutine Sets the sparsity pattern of a given row
 ! - If `obj%tdof` is equal to 1, then `Col` is sorted in increasing order,
@@ -573,11 +571,11 @@ END INTERFACE OPERATOR(.endColumn.)
 ! `Col` connectivity information is generated.
 
 INTERFACE SetSparsity
-  MODULE SUBROUTINE obj_SetSparsity1(obj, Row, Col)
+  MODULE SUBROUTINE obj_SetSparsity1(obj, row, col)
     TYPE(CSRSparsity_), INTENT(INOUT) :: obj
-    INTEGER(I4B), INTENT(IN) :: Row
+    INTEGER(I4B), INTENT(IN) :: row
   !! row number
-    INTEGER(I4B), INTENT(IN) :: Col(:)
+    INTEGER(I4B), INTENT(IN) :: col(:)
   !! column number
   END SUBROUTINE obj_SetSparsity1
 END INTERFACE SetSparsity
@@ -595,11 +593,11 @@ END INTERFACE SetSparsity
 ! However, in this routine several rows can be given.
 
 INTERFACE SetSparsity
-  MODULE SUBROUTINE obj_SetSparsity2(obj, Row, Col)
+  MODULE SUBROUTINE obj_SetSparsity2(obj, row, col)
     TYPE(CSRSparsity_), INTENT(INOUT) :: obj
-    INTEGER(I4B), INTENT(IN) :: Row(:)
+    INTEGER(I4B), INTENT(IN) :: row(:)
     !! row number
-    TYPE(IntVector_), INTENT(IN) :: Col(:)
+    TYPE(IntVector_), INTENT(IN) :: col(:)
     !! column number
   END SUBROUTINE obj_SetSparsity2
 END INTERFACE SetSparsity
@@ -640,15 +638,15 @@ END INTERFACE SetSparsity
 ! column indices.
 
 INTERFACE SetSparsity
-  MODULE SUBROUTINE obj_SetSparsity4(obj, Row, Col, iVar, jVar)
+  MODULE SUBROUTINE obj_SetSparsity4(obj, row, col, ivar, jvar)
     TYPE(CSRSparsity_), INTENT(INOUT) :: obj
-    INTEGER(I4B), INTENT(IN) :: Row(:)
+    INTEGER(I4B), INTENT(IN) :: row(:)
     !! several row numbers
-    TYPE(IntVector_), INTENT(IN) :: Col(:)
+    TYPE(IntVector_), INTENT(IN) :: col(:)
     !! column index for each row number
-    INTEGER(I4B), INTENT(IN) :: iVar
+    INTEGER(I4B), INTENT(IN) :: ivar
     !! block address (row index)
-    INTEGER(I4B), INTENT(IN) :: jVar
+    INTEGER(I4B), INTENT(IN) :: jvar
     !! block address (col index)
   END SUBROUTINE obj_SetSparsity4
 END INTERFACE SetSparsity
