@@ -11,6 +11,7 @@ src_dir: ../src/modules/Utility
          ../src/modules/Triangle/
          ../src/modules/Quadrangle/
          ../src/modules/Tetrahedron/
+         ../src/modules/IntVector/
 media_dir: ./media
 page_dir: ./pages
 output_dir: /tmp/ford/base
