@@ -17,7 +17,7 @@ Before searching for code, read `architecture.md`.
 - Build: `easifem dev base`
 - Install: `easifem install base --no-download`
 - Lint: `fortitude check --no-fix <changed files>`
-- Docs: `formal generate --project doc/formal.md --mirror-sources`
+- Docs: `formal generate --project doc/formal.md`
   (add the module to `src_dir` in `doc/formal.md` first)
 
 ## Paths
