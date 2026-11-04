@@ -15,12 +15,10 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-!> author: Vikas Sharma, Ph. D.
-! date:         28 Feb 2021
-! summary:  This contains Input/Output methods for [[IntVector_]]
-
 SUBMODULE(IntVector_IOMethod) Methods
-USE BaseMethod
+USE Display_Method, ONLY: ToString
+USE Display_Method, ONLY: Display0 => Display
+USE IntVector_EnquireMethod, ONLY: IsAllocated
 IMPLICIT NONE
 CONTAINS
 
@@ -28,28 +26,29 @@ CONTAINS
 !                                                                    Display
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE intVec_Display1
+MODULE PROCEDURE obj_Display1
 INTEGER(I4B) :: j
-CALL Display(msg="# "//TRIM(msg), unitNo=unitNo)
-CALL Display(msg="# size : ", val=SIZE(obj), unitNo=unitNo)
+CALL Display0(msg=msg, unitno=unitno)
+CALL Display0(val=SIZE(obj), msg="size: ", unitno=unitno)
 DO j = 1, SIZE(obj)
-  CALL Display(obj(j),  &
-    & msg="# "//TRIM(msg)//"( "   &
-    & //TOSTRING(j)//" ) ", &
-    & unitNo=UnitNo, orient=orient)
+  CALL Display(obj(j), msg= "("//ToString(j)//")", &
+               unitno=unitno, orient=orient)
 END DO
-END PROCEDURE intVec_Display1
+END PROCEDURE obj_Display1
 
 !----------------------------------------------------------------------------
 !                                                                    Display
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE intVec_Display2
-IF (isAllocated(obj)) THEN
-  CALL Display(msg="# "//TRIM(msg), unitNo=unitNo)
-  CALL Display(msg="# size : ", val=SIZE(obj), unitNo=unitNo)
-  CALL Display(Val=obj%Val, msg='', unitNo=unitNo, orient=orient)
+MODULE PROCEDURE obj_Display2
+CALL Display0(msg, unitno=unitno)
+CALL Display0(IsAllocated(obj), "ALLOCATED: ", unitno=unitno)
+IF (IsAllocated(obj)) THEN
+  CALL Display0(val=obj%tsize, msg="tsize: ", unitno=unitno)
+  CALL Display0(val=obj%capacity, msg="capacity: ", unitno=unitno)
+  CALL Display0(val=obj%tDimension, msg="tDimension: ", unitno=unitno)
+  CALL Display0(val=obj%val, msg='', unitno=unitno, orient=orient)
 END IF
-END PROCEDURE intVec_Display2
+END PROCEDURE obj_Display2
 
 END SUBMODULE Methods
