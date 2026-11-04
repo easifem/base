@@ -264,7 +264,8 @@ END INTERFACE Reallocate
 !```
 
 INTERFACE Reallocate
- MODULE PURE SUBROUTINE Reallocate_Real64_R1(mat, row, isExpand, expandFactor)
+  MODULE PURE SUBROUTINE Reallocate_Real64_R1(mat, row, isExpand, &
+                                              expandFactor)
     REAL(REAL64), ALLOCATABLE, INTENT(INOUT) :: mat(:)
     INTEGER(I4B), INTENT(IN) :: row
     LOGICAL(LGT), OPTIONAL, INTENT(IN) :: isExpand
@@ -284,7 +285,8 @@ INTERFACE Reallocate
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: expandFactor
   END SUBROUTINE Reallocate_Real64_R1b
 
- MODULE PURE SUBROUTINE Reallocate_Real32_R1(mat, row, isExpand, expandFactor)
+  MODULE PURE SUBROUTINE Reallocate_Real32_R1(mat, row, isExpand, &
+                                              expandFactor)
     REAL(REAL32), ALLOCATABLE, INTENT(INOUT) :: mat(:)
     INTEGER(I4B), INTENT(IN) :: row
     LOGICAL(LGT), OPTIONAL, INTENT(IN) :: isExpand
@@ -2201,7 +2203,8 @@ INTERFACE Reallocate
                                                n6, isExpand, expandFactor)
     INTEGER(I4B), ALLOCATABLE, INTENT(INOUT) :: vec1(:), vec2(:)
     INTEGER(I4B), ALLOCATABLE, OPTIONAL, INTENT(INOUT) :: vec3(:), &
-                                                     vec4(:), vec5(:), vec6(:)
+                                                          vec4(:), &
+                                                          vec5(:), vec6(:)
     INTEGER(I4B), INTENT(IN) :: n1, n2
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: n3, n4, n5, n6
     LOGICAL(LGT), OPTIONAL, INTENT(IN) :: isExpand
@@ -2289,7 +2292,8 @@ INTERFACE Reallocate
                                                 isExpand, expandFactor)
     REAL(REAL64), ALLOCATABLE, INTENT(INOUT) :: vec1(:), vec2(:)
     REAL(REAL64), ALLOCATABLE, OPTIONAL, INTENT(INOUT) :: vec3(:), &
-                                                     vec4(:), vec5(:), vec6(:)
+                                                          vec4(:), &
+                                                          vec5(:), vec6(:)
     INTEGER(I4B), INTENT(IN) :: n1, n2
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: n3, n4, n5, n6
     LOGICAL(LGT), OPTIONAL, INTENT(IN) :: isExpand
@@ -2305,7 +2309,8 @@ INTERFACE Reallocate
                                                 n6, isExpand, expandFactor)
     REAL(REAL32), ALLOCATABLE, INTENT(INOUT) :: vec1(:), vec2(:)
     REAL(REAL32), ALLOCATABLE, OPTIONAL, INTENT(INOUT) :: vec3(:), &
-                                                     vec4(:), vec5(:), vec6(:)
+                                                          vec4(:), &
+                                                          vec5(:), vec6(:)
     INTEGER(I4B), INTENT(IN) :: n1, n2
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: n3, n4, n5, n6
     LOGICAL(LGT), OPTIONAL, INTENT(IN) :: isExpand
