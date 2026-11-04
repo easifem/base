@@ -532,14 +532,18 @@ END TYPE RealMatrixPointer_
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date:         24 Feb 2021
-! summary:         A data type to contain fortran vector of integer numbers
-!
-!{!pages/IntVector_.md!}
+! date: 24 Feb 2021
+! summary: A data type to contain fortran vector of integer numbers
 
 TYPE :: IntVector_
   INTEGER(I4B) :: tDimension = 1_I4B
+  !! Dimension of integer vector
+  INTEGER(I4B) :: tsize = 0_I4B
+  !! size of data written in val
+  INTEGER(I4B) :: capacity = 0_I4B
+  !! current capacity of integer vector
   INTEGER(I4B), ALLOCATABLE :: val(:)
+  !! integer data
 END TYPE IntVector_
 
 TYPE(IntVector_), PARAMETER :: TypeIntVector = IntVector_(val=NULL())
@@ -549,14 +553,12 @@ TYPE :: IntVectorPointer_
 END TYPE IntVectorPointer_
 
 !----------------------------------------------------------------------------
-!                                                             RealVector_
+!                                                                RealVector_
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 24 Feb 2021
 ! summary: A data type to contain fortran vector of real numbers
-!
-!{!pages/RealVector_.md!}
 
 TYPE :: RealVector_
   INTEGER(I4B) :: tDimension = 1_I4B
