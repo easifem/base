@@ -89,3 +89,4 @@ END PROGRAM main
 ! ok 7 - FMT_DOF: nnz
 ! ok 8 - FMT_DOF: IA
 ! ok 9 - FMT_DOF: JA
+
