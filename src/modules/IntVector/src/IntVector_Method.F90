@@ -17,23 +17,19 @@
 !
 
 !> author: Vikas Sharma, Ph. D.
-! date:         24 Feb 2021
-! summary:         This module contains methods of [[IntVector_]] data type.
-!
-!###Introduction
+! date: 24 Feb 2021
+! summary: This module contains methods of [[IntVector_]] data type.
 !
 ! This module contains methods of [[IntVector_]] data type.
 ! This module only contains the definition of the interfaces of these
 ! methods. The actual implementation is given inside the submodules. This
 ! modules has following submodules:
 !
-
 MODULE IntVector_Method
+USE IntVector_AppendMethod
 USE IntVector_ConstructorMethod
-USE IntVector_IOMethod
 USE IntVector_EnquireMethod
 USE IntVector_GetMethod
+USE IntVector_IOMethod
 USE IntVector_SetMethod
-USE IntVector_AppendMethod
-IMPLICIT NONE
 END MODULE IntVector_Method
