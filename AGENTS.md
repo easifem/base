@@ -8,7 +8,7 @@ the kernels depend on it.
 Conventions, build rules, docblock and test rules are in the
 `easifem-dev` Claude plugin (skill `easifem-conventions`). Agents without
 the plugin: read
-`~/Dropbox/easifem/easifem-claude-plugins/easifem-dev/skills/`.
+`https://github.com/easifem/claude-plugins/tree/main/easifem-dev/skills`.
 
 Before searching for code, read `architecture.md`.
 
