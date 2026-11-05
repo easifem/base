@@ -41,10 +41,11 @@ IMPLICIT NONE
 PRIVATE
 
 PUBLIC :: Get
+PUBLIC :: Get_
 PUBLIC :: GetIndex
 
 !----------------------------------------------------------------------------
-!                                                             Get@GetMethods
+!                                                             Get@Methods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -125,7 +126,28 @@ INTERFACE Get
 END INTERFACE Get
 
 !----------------------------------------------------------------------------
-!                                                             Get@GetMethods
+!                                                               Get_@Methods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2026-11-05
+! summary: Like [[obj_Get1]] but without allocation.
+!
+! This method returns the val without allocation. This method
+! is similar to [[obj_Get1]]
+!
+
+INTERFACE Get_
+  MODULE PURE SUBROUTINE obj_Get_1(obj, ans)
+    TYPE(IntVector_), INTENT(IN) :: obj
+    !! integer vector, only obj%val(1:obj%tsize) is read
+    TYPE(IntVector_), INTENT(INOUT) :: ans
+    !! returned entries
+  END SUBROUTINE obj_Get_1
+END INTERFACE Get_
+
+!----------------------------------------------------------------------------
+!                                                             Get@Methods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -207,7 +229,29 @@ INTERFACE Get
 END INTERFACE Get
 
 !----------------------------------------------------------------------------
-!                                                             Get@GetMethods
+!                                                               Get_@Methods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2026-11-05
+! summary: Get the values from IntVector in the form of IntVector using indx
+!
+! This method is similar to [[obj_Get2]], but it will reallocates
+! only if it is necessary.
+!
+INTERFACE Get_
+  MODULE PURE SUBROUTINE obj_Get_2(obj, indx, ans)
+    TYPE(IntVector_), INTENT(IN) :: obj
+    !! integer vector, only obj%val(1:obj%tsize) is read
+    INTEGER(I4B), INTENT(IN) :: indx(:)
+    !! positions to read, 1 <= indx(i) <= Size(obj)
+    TYPE(IntVector_), INTENT(INOUT) :: ans
+    !! returned entries
+  END SUBROUTINE obj_Get_2
+END INTERFACE Get_
+
+!----------------------------------------------------------------------------
+!                                                             Get@Methods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -303,7 +347,31 @@ INTERFACE Get
 END INTERFACE Get
 
 !----------------------------------------------------------------------------
-!                                                             Get@GetMethods
+!                                                               Get_@Methods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2026-11-05
+! summary: Get values from IntVector_ in another IntVector_ using triplets
+!
+! This method works like [[obj_Get3]] but it will reallocates only when
+! necessary.
+
+INTERFACE Get_
+  MODULE PURE SUBROUTINE obj_Get_3(obj, istart, iend, stride, ans)
+    TYPE(IntVector_), INTENT(IN) :: obj
+    !! integer vector, only obj%val(1:obj%tsize) is read
+    INTEGER(I4B), INTENT(IN) :: istart
+    !! first index
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: iend, stride
+    !! last index, default Size(obj); step, default 1, nonzero
+    TYPE(IntVector_), INTENT(INOUT) :: ans
+    !! returned entries
+  END SUBROUTINE obj_Get_3
+END INTERFACE Get_
+
+!----------------------------------------------------------------------------
+!                                                             Get@Methods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -378,7 +446,27 @@ INTERFACE Get
 END INTERFACE Get
 
 !----------------------------------------------------------------------------
-!                                                             Get@GetMethods
+!                                                            Get_@Methods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2026-11-05
+! summary: Get IntVector from a vector of IntVector.
+!
+! This method works same as [[obj_Get4]], but it will reallocate only
+! when it is necessary.
+!
+INTERFACE Get_
+  MODULE PURE SUBROUTINE obj_Get_4(obj, ans)
+    TYPE(IntVector_), INTENT(IN) :: obj(:)
+    !! vector of integer vectors, read in order
+    TYPE(IntVector_), INTENT(INOUT) :: ans
+    !! returned entries
+  END SUBROUTINE obj_Get_4
+END INTERFACE Get_
+
+!----------------------------------------------------------------------------
+!                                                             Get@Methods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -450,7 +538,29 @@ INTERFACE Get
 END INTERFACE Get
 
 !----------------------------------------------------------------------------
-!                                                             Get@GetMethod
+!                                                               Get_@Methods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2026-11-05
+! summary: Get IntVector from vector of IntVector using indx.
+!
+! This method is like [[obj_Get5]] but it will reallocate only if it is
+! necessary.
+!
+INTERFACE Get_
+  MODULE PURE SUBROUTINE obj_Get_5(obj, indx, ans)
+    TYPE(IntVector_), INTENT(IN) :: obj(:)
+    !! vector of integer vectors, read in order
+    INTEGER(I4B), INTENT(IN) :: indx(:)
+    !! positions read from each obj(i)
+    TYPE(IntVector_), INTENT(INOUT) :: ans
+    !! returned entries
+  END SUBROUTINE obj_Get_5
+END INTERFACE Get_
+
+!----------------------------------------------------------------------------
+!                                                             Get@Methods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -529,7 +639,29 @@ INTERFACE Get
 END INTERFACE Get
 
 !----------------------------------------------------------------------------
-!                                                             Get@GetMethod
+!                                                               Get_@Methods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2026-11-05
+! summary: Get IntVector from a vector of IntVector using triples
+!
+! This method is like [[obj_Get6]], but it will reallocate only if it
+! is necessary.
+
+INTERFACE Get_
+  MODULE PURE SUBROUTINE obj_Get_6(obj, istart, iend, stride, ans)
+    TYPE(IntVector_), INTENT(IN) :: obj(:)
+    !! vector of integer vectors, read in order
+    INTEGER(I4B), INTENT(IN) :: istart, iend, stride
+    !! first index, last index, nonzero step
+    TYPE(IntVector_), INTENT(INOUT) :: ans
+    !! returned entries
+  END SUBROUTINE obj_Get_6
+END INTERFACE Get_
+
+!----------------------------------------------------------------------------
+!                                                             Get@Methods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -581,7 +713,56 @@ INTERFACE Get
 END INTERFACE Get
 
 !----------------------------------------------------------------------------
-!                                                             Get@GetMethod
+!                                                               Get_@Methods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2026-11-05
+! summary: Get integer vector from IntVector
+!
+! These methods are similar to [[obj_Get7a]], [[obj_Get7b]], [[obj_Get7c]],
+! [[obj_Get7d]]. But this method will not allocate ans.
+!
+! `SIZE(ans)` must be at least `Size(obj)`. Only `ans(1:tsize)` is written.
+!
+
+INTERFACE Get_
+  MODULE PURE SUBROUTINE obj_Get_7a(obj, ans, tsize)
+    TYPE(IntVector_), INTENT(IN) :: obj
+    !! integer vector, only obj%val(1:obj%tsize) is read
+    INTEGER(INT8), INTENT(INOUT) :: ans(:)
+    !! returned entries
+    INTEGER(I4B), INTENT(OUT) :: tsize
+    !! the size of data written to ans
+  END SUBROUTINE obj_Get_7a
+  MODULE PURE SUBROUTINE obj_Get_7b(obj, ans, tsize)
+    TYPE(IntVector_), INTENT(IN) :: obj
+    !! integer vector, only obj%val(1:obj%tsize) is read
+    INTEGER(INT16), INTENT(INOUT) ::  ans(:)
+    !! returned entries
+    INTEGER(I4B), INTENT(OUT) :: tsize
+    !! the size of data written to ans
+  END SUBROUTINE obj_Get_7b
+  MODULE PURE SUBROUTINE obj_Get_7c(obj, ans, tsize)
+    TYPE(IntVector_), INTENT(IN) :: obj
+    !! integer vector, only obj%val(1:obj%tsize) is read
+    INTEGER(INT32), INTENT(INOUT) :: ans(:)
+    !! returned entries
+    INTEGER(I4B), INTENT(OUT) :: tsize
+    !! size of data written to ans.
+  END SUBROUTINE obj_Get_7c
+  MODULE PURE SUBROUTINE obj_Get_7d(obj, ans, tsize)
+    TYPE(IntVector_), INTENT(IN) :: obj
+    !! integer vector, only obj%val(1:obj%tsize) is read
+    INTEGER(INT64), INTENT(INOUT) :: ans(:)
+    !! returned entries
+    INTEGER(I4B), INTENT(OUT) :: tsize
+    !! size of data written to ans.
+  END SUBROUTINE obj_Get_7d
+END INTERFACE Get_
+
+!----------------------------------------------------------------------------
+!                                                             Get@Methods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -641,7 +822,64 @@ INTERFACE Get
 END INTERFACE Get
 
 !----------------------------------------------------------------------------
-!                                                             Get@GetMethod
+!                                                               Get_@Methods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2026-11-05
+! summary: Get integer vector from IntVector using indx
+!
+! These methods are similar to [[obj_Get8a]], [[obj_Get8b]], [[obj_Get8c]],
+! [[obj_Get8d]]. But this method will not allocate ans.
+!
+! `SIZE(ans)` must be at least `SIZE(indx)`. Only `ans(1:tsize)` is written.
+!
+
+INTERFACE Get_
+  MODULE PURE SUBROUTINE obj_Get_8a(obj, indx, ans, tsize)
+    TYPE(IntVector_), INTENT(IN) :: obj
+    !! integer vector, only obj%val(1:obj%tsize) is read
+    INTEGER(I4B), INTENT(IN) :: indx(:)
+    !! positions to read, 1 <= indx(i) <= Size(obj)
+    INTEGER(INT8), INTENT(INOUT) :: ans(:)
+    !! returned entries
+    INTEGER(I4B), INTENT(OUT) :: tsize
+    !! size of data written to ans
+  END SUBROUTINE obj_Get_8a
+  MODULE PURE SUBROUTINE obj_Get_8b(obj, indx, ans, tsize)
+    TYPE(IntVector_), INTENT(IN) :: obj
+    !! integer vector, only obj%val(1:obj%tsize) is read
+    INTEGER(I4B), INTENT(IN) :: indx(:)
+    !! positions to read, 1 <= indx(i) <= Size(obj)
+    INTEGER(INT16), INTENT(INOUT) :: ans(:)
+    !! returned entries
+    INTEGER(I4B), INTENT(OUT) :: tsize
+    !! size of data written to ans
+  END SUBROUTINE obj_Get_8b
+  MODULE PURE SUBROUTINE obj_Get_8c(obj, indx, ans, tsize)
+    TYPE(IntVector_), INTENT(IN) :: obj
+    !! integer vector, only obj%val(1:obj%tsize) is read
+    INTEGER(I4B), INTENT(IN) :: indx(:)
+    !! positions to read, 1 <= indx(i) <= Size(obj)
+    INTEGER(INT32), INTENT(INOUT) :: ans(:)
+    !! returned entries
+    INTEGER(I4B), INTENT(OUT) :: tsize
+    !! size of data written to ans
+  END SUBROUTINE obj_Get_8c
+  MODULE PURE SUBROUTINE obj_Get_8d(obj, indx, ans, tsize)
+    TYPE(IntVector_), INTENT(IN) :: obj
+    !! integer vector, only obj%val(1:obj%tsize) is read
+    INTEGER(I4B), INTENT(IN) :: indx(:)
+    !! positions to read, 1 <= indx(i) <= Size(obj)
+    INTEGER(INT64), INTENT(INOUT) :: ans(:)
+    !! returned entries
+    INTEGER(I4B), INTENT(OUT) :: tsize
+    !! size of data written to ans
+  END SUBROUTINE obj_Get_8d
+END INTERFACE Get_
+
+!----------------------------------------------------------------------------
+!                                                             Get@Methods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -714,7 +952,65 @@ INTERFACE Get
 END INTERFACE Get
 
 !----------------------------------------------------------------------------
-!                                                             Get@GetMethod
+!                                                               Get_@Methods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2026-11-05
+! summary: Get integer vector from IntVector using triplets
+!
+! These methods are similar to [[obj_Get9a]], [[obj_Get9b]],
+! [[obj_Get9c]], [[obj_Get9d]]. But this method will not allocate ans.
+!
+! `SIZE(ans)` must be at least the number of entries selected by the
+! triplet. Only `ans(1:tsize)` is written.
+!
+
+INTERFACE Get_
+  MODULE PURE SUBROUTINE obj_Get_9a(obj, istart, iend, stride, ans, tsize)
+    TYPE(IntVector_), INTENT(IN) :: obj
+    !! integer vector, only obj%val(1:obj%tsize) is read
+    INTEGER(I4B), INTENT(IN) :: istart, iend, stride
+    !! first index, last index, nonzero step
+    INTEGER(INT8), INTENT(INOUT) :: ans(:)
+    !! returned entries
+    INTEGER(I4B), INTENT(OUT) :: tsize
+    !! size of data written to ans
+  END SUBROUTINE obj_Get_9a
+  MODULE PURE SUBROUTINE obj_Get_9b(obj, istart, iend, stride, ans, tsize)
+    TYPE(IntVector_), INTENT(IN) :: obj
+    !! integer vector, only obj%val(1:obj%tsize) is read
+    INTEGER(I4B), INTENT(IN) :: istart, iend, stride
+    !! first index, last index, nonzero step
+    INTEGER(INT16), INTENT(INOUT) :: ans(:)
+    !! returned entries
+    INTEGER(I4B), INTENT(OUT) :: tsize
+    !! size of data written to ans
+  END SUBROUTINE obj_Get_9b
+  MODULE PURE SUBROUTINE obj_Get_9c(obj, istart, iend, stride, ans, tsize)
+    TYPE(IntVector_), INTENT(IN) :: obj
+    !! integer vector, only obj%val(1:obj%tsize) is read
+    INTEGER(I4B), INTENT(IN) :: istart, iend, stride
+    !! first index, last index, nonzero step
+    INTEGER(INT32), INTENT(INOUT) :: ans(:)
+    !! returned entries
+    INTEGER(I4B), INTENT(OUT) :: tsize
+    !! size of data written to ans
+  END SUBROUTINE obj_Get_9c
+  MODULE PURE SUBROUTINE obj_Get_9d(obj, istart, iend, stride, ans, tsize)
+    TYPE(IntVector_), INTENT(IN) :: obj
+    !! integer vector, only obj%val(1:obj%tsize) is read
+    INTEGER(I4B), INTENT(IN) :: istart, iend, stride
+    !! first index, last index, nonzero step
+    INTEGER(INT64), INTENT(INOUT) :: ans(:)
+    !! returned entries
+    INTEGER(I4B), INTENT(OUT) :: tsize
+    !! size of data written to ans
+  END SUBROUTINE obj_Get_9d
+END INTERFACE Get_
+
+!----------------------------------------------------------------------------
+!                                                             Get@Methods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -765,7 +1061,57 @@ INTERFACE Get
 END INTERFACE Get
 
 !----------------------------------------------------------------------------
-!                                                             Get@GetMethod
+!                                                               Get_@Methods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2026-11-05
+! summary: Get integer vector from a vector of IntVector
+!
+! These methods are similar to [[obj_Get10a]], [[obj_Get10b]],
+! [[obj_Get10c]], [[obj_Get10d]]. But this method will not allocate ans.
+!
+! `SIZE(ans)` must be at least the sum of `Size(obj(i))`. Only
+! `ans(1:tsize)` is written.
+!
+
+INTERFACE Get_
+  MODULE PURE SUBROUTINE obj_Get_10a(obj, ans, tsize)
+    TYPE(IntVector_), INTENT(IN) :: obj(:)
+    !! vector of integer vectors, read in order
+    INTEGER(INT8), INTENT(INOUT) :: ans(:)
+    !! returned entries
+    INTEGER(I4B), INTENT(OUT) :: tsize
+    !! size of data written to ans
+  END SUBROUTINE obj_Get_10a
+  MODULE PURE SUBROUTINE obj_Get_10b(obj, ans, tsize)
+    TYPE(IntVector_), INTENT(IN) :: obj(:)
+    !! vector of integer vectors, read in order
+    INTEGER(INT16), INTENT(INOUT) :: ans(:)
+    !! returned entries
+    INTEGER(I4B), INTENT(OUT) :: tsize
+    !! size of data written to ans
+  END SUBROUTINE obj_Get_10b
+  MODULE PURE SUBROUTINE obj_Get_10c(obj, ans, tsize)
+    TYPE(IntVector_), INTENT(IN) :: obj(:)
+    !! vector of integer vectors, read in order
+    INTEGER(INT32), INTENT(INOUT) :: ans(:)
+    !! returned entries
+    INTEGER(I4B), INTENT(OUT) :: tsize
+    !! size of data written to ans
+  END SUBROUTINE obj_Get_10c
+  MODULE PURE SUBROUTINE obj_Get_10d(obj, ans, tsize)
+    TYPE(IntVector_), INTENT(IN) :: obj(:)
+    !! vector of integer vectors, read in order
+    INTEGER(INT64), INTENT(INOUT) :: ans(:)
+    !! returned entries
+    INTEGER(I4B), INTENT(OUT) :: tsize
+    !! size of data written to ans
+  END SUBROUTINE obj_Get_10d
+END INTERFACE Get_
+
+!----------------------------------------------------------------------------
+!                                                             Get@Methods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -832,7 +1178,65 @@ INTERFACE Get
 END INTERFACE Get
 
 !----------------------------------------------------------------------------
-!                                                             Get@GetMethod
+!                                                               Get_@Methods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2026-11-05
+! summary: Get integer vector from a vector of IntVector using indx
+!
+! These methods are similar to [[obj_Get11a]], [[obj_Get11b]],
+! [[obj_Get11c]], [[obj_Get11d]]. But this method will not allocate ans.
+!
+! `SIZE(ans)` must be at least `SIZE(obj) * SIZE(indx)`. Only
+! `ans(1:tsize)` is written.
+!
+
+INTERFACE Get_
+  MODULE PURE SUBROUTINE obj_Get_11a(obj, indx, ans, tsize)
+    TYPE(IntVector_), INTENT(IN) :: obj(:)
+    !! vector of integer vectors, read in order
+    INTEGER(I4B), INTENT(IN) :: indx(:)
+    !! positions read from each obj(i)
+    INTEGER(INT8), INTENT(INOUT) :: ans(:)
+    !! returned entries
+    INTEGER(I4B), INTENT(OUT) :: tsize
+    !! size of data written to ans
+  END SUBROUTINE obj_Get_11a
+  MODULE PURE SUBROUTINE obj_Get_11b(obj, indx, ans, tsize)
+    TYPE(IntVector_), INTENT(IN) :: obj(:)
+    !! vector of integer vectors, read in order
+    INTEGER(I4B), INTENT(IN) :: indx(:)
+    !! positions read from each obj(i)
+    INTEGER(INT16), INTENT(INOUT) :: ans(:)
+    !! returned entries
+    INTEGER(I4B), INTENT(OUT) :: tsize
+    !! size of data written to ans
+  END SUBROUTINE obj_Get_11b
+  MODULE PURE SUBROUTINE obj_Get_11c(obj, indx, ans, tsize)
+    TYPE(IntVector_), INTENT(IN) :: obj(:)
+    !! vector of integer vectors, read in order
+    INTEGER(I4B), INTENT(IN) :: indx(:)
+    !! positions read from each obj(i)
+    INTEGER(INT32), INTENT(INOUT) :: ans(:)
+    !! returned entries
+    INTEGER(I4B), INTENT(OUT) :: tsize
+    !! size of data written to ans
+  END SUBROUTINE obj_Get_11c
+  MODULE PURE SUBROUTINE obj_Get_11d(obj, indx, ans, tsize)
+    TYPE(IntVector_), INTENT(IN) :: obj(:)
+    !! vector of integer vectors, read in order
+    INTEGER(I4B), INTENT(IN) :: indx(:)
+    !! positions read from each obj(i)
+    INTEGER(INT64), INTENT(INOUT) :: ans(:)
+    !! returned entries
+    INTEGER(I4B), INTENT(OUT) :: tsize
+    !! size of data written to ans
+  END SUBROUTINE obj_Get_11d
+END INTERFACE Get_
+
+!----------------------------------------------------------------------------
+!                                                             Get@Methods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -906,7 +1310,65 @@ INTERFACE Get
 END INTERFACE Get
 
 !----------------------------------------------------------------------------
-!                                                             Get@GetMethod
+!                                                               Get_@Methods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2026-11-05
+! summary: Get integer vector from a vector of IntVector using triplets
+!
+! These methods are similar to [[obj_Get12a]], [[obj_Get12b]],
+! [[obj_Get12c]], [[obj_Get12d]]. But this method will not allocate ans.
+!
+! `SIZE(ans)` must be at least `SIZE(obj)` times the number of entries
+! selected by the triplet. Only `ans(1:tsize)` is written.
+!
+
+INTERFACE Get_
+  MODULE PURE SUBROUTINE obj_Get_12a(obj, istart, iend, stride, ans, tsize)
+    TYPE(IntVector_), INTENT(IN) :: obj(:)
+    !! vector of integer vectors, read in order
+    INTEGER(I4B), INTENT(IN) :: istart, iend, stride
+    !! first index, last index, nonzero step
+    INTEGER(INT8), INTENT(INOUT) :: ans(:)
+    !! returned entries
+    INTEGER(I4B), INTENT(OUT) :: tsize
+    !! size of data written to ans
+  END SUBROUTINE obj_Get_12a
+  MODULE PURE SUBROUTINE obj_Get_12b(obj, istart, iend, stride, ans, tsize)
+    TYPE(IntVector_), INTENT(IN) :: obj(:)
+    !! vector of integer vectors, read in order
+    INTEGER(I4B), INTENT(IN) :: istart, iend, stride
+    !! first index, last index, nonzero step
+    INTEGER(INT16), INTENT(INOUT) :: ans(:)
+    !! returned entries
+    INTEGER(I4B), INTENT(OUT) :: tsize
+    !! size of data written to ans
+  END SUBROUTINE obj_Get_12b
+  MODULE PURE SUBROUTINE obj_Get_12c(obj, istart, iend, stride, ans, tsize)
+    TYPE(IntVector_), INTENT(IN) :: obj(:)
+    !! vector of integer vectors, read in order
+    INTEGER(I4B), INTENT(IN) :: istart, iend, stride
+    !! first index, last index, nonzero step
+    INTEGER(INT32), INTENT(INOUT) :: ans(:)
+    !! returned entries
+    INTEGER(I4B), INTENT(OUT) :: tsize
+    !! size of data written to ans
+  END SUBROUTINE obj_Get_12c
+  MODULE PURE SUBROUTINE obj_Get_12d(obj, istart, iend, stride, ans, tsize)
+    TYPE(IntVector_), INTENT(IN) :: obj(:)
+    !! vector of integer vectors, read in order
+    INTEGER(I4B), INTENT(IN) :: istart, iend, stride
+    !! first index, last index, nonzero step
+    INTEGER(INT64), INTENT(INOUT) :: ans(:)
+    !! returned entries
+    INTEGER(I4B), INTENT(OUT) :: tsize
+    !! size of data written to ans
+  END SUBROUTINE obj_Get_12d
+END INTERFACE Get_
+
+!----------------------------------------------------------------------------
+!                                                             Get@Methods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -965,7 +1427,7 @@ INTERFACE Get
 END INTERFACE Get
 
 !----------------------------------------------------------------------------
-!                                                         GetIndex@GetMethod
+!                                                         GetIndex@Methods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -1038,7 +1500,7 @@ INTERFACE GetIndex
 END INTERFACE GetIndex
 
 !----------------------------------------------------------------------------
-!                                                         GetIndex@GetMethod
+!                                                         GetIndex@Methods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
