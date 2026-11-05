@@ -15,9 +15,10 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 
 IF (.NOT. ALLOCATED(A)) THEN
-  A = [Entry]
+  A = [ENTRY]
 ELSE
-  n = SIZE(A); ALLOCATE (Dummy(n + 1))
-  Dummy(1:n) = A; Dummy(1 + n) = Entry
+  n = SIZE(A)
+  ALLOCATE (Dummy(n + 1))
+  Dummy(1:n) = A; Dummy(1 + n) = ENTRY
   CALL MOVE_ALLOC(From=Dummy, TO=A)
 END IF

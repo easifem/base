@@ -16,14 +16,14 @@
 !
 
 SUBMODULE(IntegerUtility) Methods
-USE AppendUtility, ONLY: OPERATOR(.ROWCONCAT.), &
-                         OPERATOR(.COLCONCAT.), &
-                         Expand
-USE SortUtility, ONLY: QuickSort
+USE AppendUtility, ONLY: Expand
+USE AppendUtility, ONLY: OPERATOR(.COLCONCAT.)
+USE AppendUtility, ONLY: OPERATOR(.ROWCONCAT.)
 USE BinomUtility, ONLY: Binom
-USE OnesUtility, ONLY: ones
-
+USE OnesUtility, ONLY: Ones
+USE SortUtility, ONLY: QuickSort
 IMPLICIT NONE
+
 CONTAINS
 
 !----------------------------------------------------------------------------
