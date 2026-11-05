@@ -4,7 +4,6 @@
 
 PROGRAM main
 USE BaseType, ONLY: IntVector_
-USE BaseType, ONLY: TypeIntVector
 USE GlobalData, ONLY: I4B
 USE IntVector_Method, ONLY: ASSIGNMENT(=)
 USE IntVector_Method, ONLY: Capacity
@@ -13,34 +12,41 @@ USE IntVector_Method, ONLY: Size
 USE Test_Method, ONLY: OK
 IMPLICIT NONE
 
-TYPE(IntVector_) :: obj, empty, ans
-INTEGER(I4B), ALLOCATABLE :: arr(:)
+TYPE(IntVector_) :: obj, small, empty, ans, tiny, fresh
 
 obj = [10_I4B, 20_I4B, 30_I4B, 40_I4B]
+small = [1_I4B, 2_I4B]
+tiny = [7_I4B]
 
-! Test 1: the result is an IntVector_ copy
+! Test 1: ans is allocated when needed
 CALL Get_(obj=obj, ans=ans)
-CALL OK(SIZE(ans) .EQ. 4, "Get_: ans was not allocated, size(ans).")
+CALL OK(Size(ans) .EQ. 4, "Get_: ans not allocated, Size")
 CALL OK(ALL(ans%val(1:4) .EQ. [10, 20, 30, 40]), &
-        "Get: ans was not allocated, value :")
+        "Get_: ans not allocated, values")
 
-! Test 2: the result is an integer array
-arr = Get(obj, 1_I4B)
-CALL OK(SIZE(arr) .EQ. 4, "Get: array result, SIZE")
-CALL OK(ALL(arr .EQ. [10, 20, 30, 40]), "Get: array result, values")
+! Test 2: a larger ans keeps its capacity
+CALL Get_(obj=small, ans=ans)
+CALL OK(Size(ans) .EQ. 2, "Get_: larger ans, Size")
+CALL OK(Capacity(ans) .EQ. 4, "Get_: larger ans, capacity is kept")
+CALL OK(ALL(ans%val(1:2) .EQ. [1, 2]), "Get_: larger ans, values")
 
-! Test 3: an empty obj gives an empty result
-ans = Get(empty, TypeIntVector)
-CALL OK(SIZE(ans) .EQ. 0, "Get: empty obj, IntVector_ result")
-arr = Get(empty, 1_I4B)
-CALL OK(SIZE(arr) .EQ. 0, "Get: empty obj, array result")
+! Test 3: a smaller ans grows
+CALL Get_(obj=obj, ans=tiny)
+CALL OK(Size(tiny) .EQ. 4, "Get_: smaller ans, Size")
+CALL OK(Capacity(tiny) .EQ. 4, "Get_: smaller ans, capacity grows")
+CALL OK(ALL(tiny%val(1:4) .EQ. [10, 20, 30, 40]), &
+        "Get_: smaller ans, values")
 
-! Test 4: entries beyond tsize are not returned
+! Test 4: an empty obj gives an empty result
+CALL Get_(obj=empty, ans=ans)
+CALL OK(Size(ans) .EQ. 0, "Get_: empty obj, Size")
+CALL OK(Capacity(ans) .EQ. 4, "Get_: empty obj, capacity is kept")
+
+! Test 5: entries beyond tsize are not returned
 obj%tsize = 2
-ans = Get(obj, TypeIntVector)
-CALL OK(SIZE(ans) .EQ. 2, "Get: spare capacity, Size")
-CALL OK(Capacity(ans) .EQ. 2, "Get: result capacity = tsize")
-arr = Get(obj, 1_I4B)
-CALL OK(ALL(arr .EQ. [10, 20]), "Get: spare capacity, array result")
+CALL Get_(obj=obj, ans=fresh)
+CALL OK(Size(fresh) .EQ. 2, "Get_: spare capacity, Size")
+CALL OK(Capacity(fresh) .EQ. 2, "Get_: result capacity = tsize")
+CALL OK(ALL(fresh%val(1:2) .EQ. [10, 20]), "Get_: spare capacity, values")
 
 END PROGRAM main
