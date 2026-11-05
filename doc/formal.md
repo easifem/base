@@ -5,15 +5,15 @@ project_download: https://github.com/easifem/base
 project_github: https://github.com/easifem/base
 project_website: https://www.easifem.com
 license: gfdl
-src_dir: ../src/modules/Utility
-         ../src/modules/Polynomial/
-         ../src/modules/Line/
-         ../src/modules/Triangle/
-         ../src/modules/Quadrangle/
-         ../src/modules/Tetrahedron/
-         ../src/modules/IntVector/
-media_dir: ./media
-page_dir: ./pages
+src_dir: ../src/modules/Utility/src/
+         ../src/modules/Polynomial/src/
+         ../src/modules/Line/src/
+         ../src/modules/Triangle/src/
+         ../src/modules/Quadrangle/src/
+         ../src/modules/Tetrahedron/src/
+         ../src/modules/IntVector/src/
+media_dir: ../docs/media
+page_dir: ../docs/pages
 output_dir: /tmp/ford/base
 exclude_dir:  ../src/submodules/
               ../src/modules/BLAS95/
