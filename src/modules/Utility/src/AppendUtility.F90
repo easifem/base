@@ -20,9 +20,15 @@
 ! summary:  This module contains method for appending to vectors and martrix
 !
 MODULE AppendUtility
-USE GlobalData, ONLY: I4B, LGT, DFP
-USE GlobalData, ONLY: INT8, INT16, INT32, INT64
-USE GlobalData, ONLY: REAL32, REAL64
+USE GlobalData, ONLY: I4B
+USE GlobalData, ONLY: LGT
+USE GlobalData, ONLY: DFP
+USE GlobalData, ONLY: INT8
+USE GlobalData, ONLY: INT16
+USE GlobalData, ONLY: INT32
+USE GlobalData, ONLY: INT64
+USE GlobalData, ONLY: REAL32
+USE GlobalData, ONLY: REAL64
 IMPLICIT NONE
 PRIVATE
 
@@ -96,17 +102,7 @@ INTERFACE Expand
     !! set to true to return `vec`
     !! as its correct size (`n`)
   END SUBROUTINE expand_int8
-END INTERFACE Expand
 
-!----------------------------------------------------------------------------
-!                                                            Expand@Methods
-!----------------------------------------------------------------------------
-
-!> author: Vikas Sharma, Ph. D.
-! date: 2026-10-16
-! summary: Expand the vector of INT16 if needed
-
-INTERFACE Expand
   MODULE PURE SUBROUTINE expand_int16(vec, n, chunk_size, val, finished)
     INTEGER(INT16), ALLOCATABLE, INTENT(INOUT) :: vec(:)
     INTEGER(I4B), INTENT(INOUT) :: n
@@ -121,17 +117,7 @@ INTERFACE Expand
     !! set to true to return `vec`
     !! as its correct size (`n`)
   END SUBROUTINE expand_int16
-END INTERFACE Expand
 
-!----------------------------------------------------------------------------
-!                                                            Expand@Methods
-!----------------------------------------------------------------------------
-
-!> author: Vikas Sharma, Ph. D.
-! date: 2026-10-16
-! summary: Expand the vector of INT32 if needed
-
-INTERFACE Expand
   MODULE PURE SUBROUTINE expand_int32(vec, n, chunk_size, val, finished)
     INTEGER(INT32), ALLOCATABLE, INTENT(INOUT) :: vec(:)
     INTEGER(I4B), INTENT(INOUT) :: n
@@ -146,17 +132,7 @@ INTERFACE Expand
     !! set to true to return `vec`
     !! as its correct size (`n`)
   END SUBROUTINE expand_int32
-END INTERFACE Expand
 
-!----------------------------------------------------------------------------
-!                                                            Expand@Methods
-!----------------------------------------------------------------------------
-
-!> author: Vikas Sharma, Ph. D.
-! date: 2026-10-16
-! summary: Expand the vector of INT64 if needed
-
-INTERFACE Expand
   MODULE PURE SUBROUTINE expand_int64(vec, n, chunk_size, val, finished)
     INTEGER(INT64), ALLOCATABLE, INTENT(INOUT) :: vec(:)
     INTEGER(I4B), INTENT(INOUT) :: n
@@ -171,17 +147,7 @@ INTERFACE Expand
     !! set to true to return `vec`
     !! as its correct size (`n`)
   END SUBROUTINE expand_int64
-END INTERFACE Expand
 
-!----------------------------------------------------------------------------
-!                                                             Expand@Methods
-!----------------------------------------------------------------------------
-
-!> author: Vikas Sharma, Ph. D.
-! date: 2026-10-16
-! summary: Expand the real vector (REAL32) if needed
-
-INTERFACE Expand
   MODULE PURE SUBROUTINE expand_real32(vec, n, chunk_size, val, finished)
     REAL(REAL32), ALLOCATABLE, INTENT(INOUT) :: vec(:)
     INTEGER(I4B), INTENT(INOUT) :: n
@@ -196,17 +162,7 @@ INTERFACE Expand
     !! set to true to return `vec`
     !! as its correct size (`n`)
   END SUBROUTINE expand_real32
-END INTERFACE Expand
 
-!----------------------------------------------------------------------------
-!                                                             Expand@Methods
-!----------------------------------------------------------------------------
-
-!> author: Vikas Sharma, Ph. D.
-! date: 2026-10-16
-! summary: Expand the real vector (REAL64) if needed
-
-INTERFACE Expand
   MODULE PURE SUBROUTINE expand_real64(vec, n, chunk_size, val, finished)
     REAL(REAL64), ALLOCATABLE, INTENT(INOUT) :: vec(:)
     INTEGER(I4B), INTENT(INOUT) :: n
