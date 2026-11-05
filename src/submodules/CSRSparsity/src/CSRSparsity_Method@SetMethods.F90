@@ -20,7 +20,19 @@
 ! summary: Input output related methods
 
 SUBMODULE(CSRSparsity_Method) SetMethods
-USE BaseMethod
+USE BaseType, ONLY: TypeDOFOpt
+USE DOF_Method, ONLY: OPERATOR(.tdof.)
+USE DOF_Method, ONLY: GetIndex_
+USE DOF_Method, ONLY: GetIndex
+USE ErrorHandling, ONLY: Warningmsg
+USE ErrorHandling, ONLY: Errormsg
+USE GlobalData, ONLY: stderr
+USE IntegerUtility, ONLY: RemoveDuplicates_
+USE IntVector_Method, ONLY: IntVectorInitiate => Initiate
+USE IntVector_Method, ONLY: IntVectorSize => Size
+USE IntVector_Method, ONLY: IntVectorRemoveDuplicates => RemoveDuplicates
+USE IntVector_Method, ONLY: IntVectorAppend => Append
+USE ReallocateUtility, ONLY: Reallocate
 IMPLICIT NONE
 CONTAINS
 
@@ -34,7 +46,7 @@ INTEGER(I4B), ALLOCATABLE :: colIndx(:), rowIndx(:)
 
 #ifdef DEBUG_VER
 IF (.NOT. obj%isInitiated) THEN
-  CALL ErrorMSG( &
+  CALL Errormsg( &
     "Instance of CSRSparsity is not initiated!", &
     "CSRSparsity_Method@SetMethods.F90", &
     "obj_SetSparsity1()", &
@@ -43,7 +55,7 @@ IF (.NOT. obj%isInitiated) THEN
 END IF
 
 IF (obj%isSparsityLock) THEN
-  CALL ErrorMSG( &
+  CALL Errormsg( &
     "Instance of CSRSparsity is locked for setting sparsity pattern!", &
     "CSRSparsity_Method@SetMethods.F90", &
     "obj_SetSparsity1()", &
@@ -63,7 +75,7 @@ IF (SIZE(col) .GT. 0) THEN
   obj%nnz = obj%nnz + SIZE(col) * (.tdof. obj%jdof) * SIZE(rowIndx)
 
   DO ii = 1, SIZE(rowIndx)
-    CALL APPEND(obj%row(rowIndx(ii)), colIndx)
+    CALL IntVectorAppend(obj%row(rowIndx(ii)), colIndx)
   END DO
 
 END IF
@@ -77,17 +89,12 @@ END PROCEDURE obj_SetSparsity1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE obj_SetSparsity2
-! INTEGER(I4B) :: i
-! DO i = 1, SIZE(row)
-!   CALL SetSparsity(obj, row(i), col(i)%val)
-! END DO
-
 INTEGER(I4B) :: ii, jj, kk, tColIndx, tRowIndx
 INTEGER(I4B), ALLOCATABLE :: colIndx(:), rowIndx(:)
 
 #ifdef DEBUG_VER
 IF (.NOT. obj%isInitiated) THEN
-  CALL ErrorMSG( &
+  CALL Errormsg( &
     "Instance of CSRSparsity is not initiated!", &
     "CSRSparsity_Method@SetMethods.F90", &
     "obj_SetSparsity2()", &
@@ -96,7 +103,7 @@ IF (.NOT. obj%isInitiated) THEN
 END IF
 
 IF (obj%isSparsityLock) THEN
-  CALL ErrorMSG( &
+  CALL Errormsg( &
     "Instance of CSRSparsity is locked for setting sparsity pattern!", &
     "CSRSparsity_Method@SetMethods.F90", &
     "obj_SetSparsity2()", &
@@ -111,7 +118,7 @@ IF (SIZE(col) .GT. 0) THEN
 
 #ifdef DEBUG_VER
   IF (SIZE(row) .NE. SIZE(col)) THEN
-    CALL ErrorMSG( &
+    CALL Errormsg( &
       "size of row not same as the size of col!", &
       "CSRSparsity_Method@SetMethods.F90", &
       "obj_SetSparsity2()", &
@@ -123,7 +130,7 @@ IF (SIZE(col) .GT. 0) THEN
   ! largest column list, to allocate the buffers only once
   jj = 0
   DO ii = 1, SIZE(col)
-    kk = SIZE(col(ii))
+    kk = IntVectorSize(col(ii))
     jj = MAX(jj, kk)
   END DO
 
@@ -131,14 +138,14 @@ IF (SIZE(col) .GT. 0) THEN
   CALL Reallocate(rowIndx, (.tdof. obj%idof))
 
   DO ii = 1, SIZE(row)
-    CALL GetIndex_(obj=obj%jdof, nodeNum=col(ii)%val, ans=colIndx, &
-                   tsize=tColIndx)
+    CALL GetIndex_(obj=obj%jdof, nodeNum=col(ii)%val(1:col(ii)%tsize), &
+                   ans=colIndx, tsize=tColIndx)
     CALL GetIndex_(obj=obj%idof, nodeNum=row(ii), ans=rowIndx, tsize=tRowIndx)
 
     obj%nnz = obj%nnz + tColIndx * tRowIndx
 
     DO jj = 1, tRowIndx
-      CALL APPEND(obj%row(rowIndx(jj)), colIndx(1:tColIndx))
+      CALL IntVectorAppend(obj%row(rowIndx(jj)), colIndx(1:tColIndx))
     END DO
 
   END DO
@@ -150,16 +157,16 @@ IF (ALLOCATED(rowIndx)) DEALLOCATE (rowIndx)
 END PROCEDURE obj_SetSparsity2
 
 !----------------------------------------------------------------------------
-!                                                                setSparsity
+!                                                                SetSparsity
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE obj_SetSparsity3
 INTEGER(I4B) :: ii
 INTEGER(I4B), ALLOCATABLE :: colIndx(:), rowIndx(:)
-!
+
 #ifdef DEBUG_VER
 IF (.NOT. obj%isInitiated) THEN
-  CALL ErrorMSG( &
+  CALL Errormsg( &
     "Instance of CSRSparsity is not initiated!", &
     "CSRSparsity_Method@SetMethods.F90", &
     "obj_SetSparsity3()", &
@@ -168,7 +175,7 @@ IF (.NOT. obj%isInitiated) THEN
 END IF
 
 IF (obj%isSparsityLock) THEN
-  CALL ErrorMSG( &
+  CALL Errormsg( &
     "Instance of CSRSparsity is locked for setting sparsity pattern!", &
     "CSRSparsity_Method@SetMethods.F90", &
     "obj_SetSparsity3()", &
@@ -176,8 +183,8 @@ IF (obj%isSparsityLock) THEN
   STOP
 END IF
 
-IF (obj%idof%StorageFMT .EQ. NODES_FMT) THEN
-  CALL ErrorMSG( &
+IF (obj%idof%StorageFMT .EQ. TypeDOFOpt%storageFormatNodes) THEN
+  CALL Errormsg( &
     "This subroutine works for storage format FMT_DOF, only", &
     "CSRSparsity_Method@SetMethods.F90", &
     "obj_SetSparsity3()", &
@@ -185,8 +192,8 @@ IF (obj%idof%StorageFMT .EQ. NODES_FMT) THEN
   STOP
 END IF
 
-IF (obj%jdof%StorageFMT .EQ. NODES_FMT) THEN
-  CALL ErrorMSG( &
+IF (obj%jdof%StorageFMT .EQ. TypeDOFOpt%storageFormatNodes) THEN
+  CALL Errormsg( &
     "This subroutine works for storage format FMT_DOF, only", &
     "CSRSparsity_Method@SetMethods.F90", &
     "obj_SetSparsity3()", &
@@ -202,7 +209,7 @@ IF (SIZE(col) .GT. 0) THEN
   rowIndx = GetIndex(obj=obj%idof, nodeNum=row, ivar=ivar)
   obj%nnz = obj%nnz + SIZE(col) * (obj%jdof .tdof. jvar) * SIZE(rowIndx)
   DO ii = 1, SIZE(rowIndx)
-    CALL APPEND(obj%row(rowIndx(ii)), colIndx)
+    CALL IntVectorAppend(obj%row(rowIndx(ii)), colIndx)
   END DO
 END IF
 
@@ -220,7 +227,7 @@ INTEGER(I4B), ALLOCATABLE :: colIndx(:), rowIndx(:)
 
 #ifdef DEBUG_VER
 IF (.NOT. obj%isInitiated) THEN
-  CALL ErrorMSG( &
+  CALL Errormsg( &
     "Instance of CSRSparsity is not initiated!", &
     "CSRSparsity_Method@SetMethods.F90", &
     "obj_SetSparsity4()", &
@@ -229,7 +236,7 @@ IF (.NOT. obj%isInitiated) THEN
 END IF
 
 IF (obj%isSparsityLock) THEN
-  CALL ErrorMSG( &
+  CALL Errormsg( &
     "Instance of CSRSparsity is locked for setting sparsity pattern!", &
     "CSRSparsity_Method@SetMethods.F90", &
     "obj_SetSparsity4()", &
@@ -237,8 +244,8 @@ IF (obj%isSparsityLock) THEN
   STOP
 END IF
 
-IF (obj%idof%StorageFMT .EQ. NODES_FMT) THEN
-  CALL ErrorMSG( &
+IF (obj%idof%StorageFMT .EQ. TypeDOFOpt%storageFormatNodes) THEN
+  CALL Errormsg( &
     "This subroutine works for storage format FMT_DOF, only", &
     "CSRSparsity_Method@SetMethods.F90", &
     "obj_SetSparsity4()", &
@@ -246,8 +253,8 @@ IF (obj%idof%StorageFMT .EQ. NODES_FMT) THEN
   STOP
 END IF
 
-IF (obj%jdof%StorageFMT .EQ. NODES_FMT) THEN
-  CALL ErrorMSG( &
+IF (obj%jdof%StorageFMT .EQ. TypeDOFOpt%storageFormatNodes) THEN
+  CALL Errormsg( &
     "This subroutine works for storage format FMT_DOF, only", &
     "CSRSparsity_Method@SetMethods.F90", &
     "obj_SetSparsity4()", &
@@ -256,7 +263,7 @@ IF (obj%jdof%StorageFMT .EQ. NODES_FMT) THEN
 END IF
 
 IF (SIZE(row) .NE. SIZE(col)) THEN
-  CALL ErrorMSG( &
+  CALL Errormsg( &
     "size of row not same as the size of col!", &
     "CSRSparsity_Method@SetMethods.F90", &
     "obj_SetSparsity4()", &
@@ -272,7 +279,7 @@ IF (SIZE(col) .GT. 0) THEN
   ! largest column list, to allocate the buffers only once
   jj = 0
   DO ii = 1, SIZE(col)
-    kk = SIZE(col(ii))
+    kk = IntVectorSize(col(ii))
     jj = MAX(jj, kk)
   END DO
 
@@ -281,15 +288,15 @@ IF (SIZE(col) .GT. 0) THEN
 
   ! No sorting here: SetSparsity_final sorts and removes duplicates
   DO ii = 1, SIZE(row)
-    CALL GetIndex_(obj=obj%jdof, nodeNum=col(ii)%val, ivar=jvar, &
-                   ans=colIndx, tsize=tColIndx)
+    CALL GetIndex_(obj=obj%jdof, nodeNum=col(ii)%val(1:col(ii)%tsize), &
+                   ivar=jvar, ans=colIndx, tsize=tColIndx)
     CALL GetIndex_(obj=obj%idof, nodeNum=row(ii), ivar=ivar, &
                    ans=rowIndx, tsize=tRowIndx)
 
     obj%nnz = obj%nnz + tColIndx * tRowIndx
 
     DO jj = 1, tRowIndx
-      CALL APPEND(obj%row(rowIndx(jj)), colIndx(1:tColIndx))
+      CALL IntVectorAppend(obj%row(rowIndx(jj)), colIndx(1:tColIndx))
     END DO
   END DO
 
@@ -323,7 +330,7 @@ CALL Reallocate(row, nrow)
 ALLOCATE (col(nrow))
 DO ii = 1, nrow
   row(ii) = ii
-  CALL ALLOCATE (col(ii), cnt(ii))
+  CALL IntVectorInitiate(col(ii), cnt(ii))
 END DO
 
 ! cnt is reused as the fill position of each row
@@ -342,7 +349,6 @@ CALL SetSparsity(obj=obj, row=row, col=col)
 IF (ALLOCATED(row)) DEALLOCATE (row)
 IF (ALLOCATED(col)) DEALLOCATE (col)
 IF (ALLOCATED(cnt)) DEALLOCATE (cnt)
-
 END PROCEDURE obj_SetSparsity5
 
 !----------------------------------------------------------------------------
@@ -369,7 +375,7 @@ CALL Reallocate(row, nrow)
 ALLOCATE (col(nrow))
 DO ii = 1, nrow
   row(ii) = ii
-  CALL ALLOCATE (col(ii), cnt(ii))
+  CALL IntVectorInitiate(col(ii), cnt(ii))
 END DO
 
 ! cnt is reused as the fill position of each row
@@ -388,7 +394,6 @@ CALL SetSparsity(obj=obj, row=row, col=col)
 IF (ALLOCATED(row)) DEALLOCATE (row)
 IF (ALLOCATED(col)) DEALLOCATE (col)
 IF (ALLOCATED(cnt)) DEALLOCATE (cnt)
-
 END PROCEDURE obj_SetSparsity6
 
 !----------------------------------------------------------------------------
@@ -398,71 +403,71 @@ END PROCEDURE obj_SetSparsity6
 MODULE PROCEDURE obj_SetSparsity_final
 INTEGER(I4B) :: i, j, k
 INTEGER(I4B), ALLOCATABLE :: intvec(:)
-!
+
+#ifdef DEBUG_VER
 IF (.NOT. obj%isInitiated) THEN
-  CALL ErrorMSG( &
-    & "Instance of CSRSparsity is not initiated!", &
-    & "CSRSparsity_Method@SetMethods.F90", &
-    & "obj_SetSparsity_final()", &
-    & __LINE__, stderr)
+  CALL Errormsg( &
+    "Instance of CSRSparsity is not initiated!", &
+    "CSRSparsity_Method@SetMethods.F90", &
+    "obj_SetSparsity_final()", &
+    __LINE__, stderr)
   STOP
 END IF
-!
+#endif
+
+#ifdef DEBUG_VER
 IF (obj%isSparsityLock) THEN
-  CALL WarningMSG( &
-    & "Instance of CSRSparsity is locked for setting sparsity pattern!", &
-    & "CSRSparsity_Method@SetMethods.F90", &
-    & "obj_SetSparsity_final()", &
-    & __LINE__, stderr)
+  CALL Warningmsg( &
+    "Instance of CSRSparsity is locked for setting sparsity pattern!", &
+    "CSRSparsity_Method@SetMethods.F90", &
+    "obj_SetSparsity_final()", &
+    __LINE__, stderr)
   RETURN
-ELSE
-  obj%isSparsityLock = .TRUE.
 END IF
-!
+#endif
+
+IF (obj%isSparsityLock) THEN
+  RETURN
+END IF
+
+obj%isSparsityLock = .TRUE.
+
 ! Remove duplicate entries in obj%row( irow )%col
-!
 IF (ALLOCATED(obj%row)) THEN
   k = 0
   DO i = 1, obj%nrow
-    CALL RemoveDuplicates(obj%row(i))
-    k = k + SIZE(obj%row(i))
+    CALL IntVectorRemoveDuplicates(obj%row(i))
+    k = k + IntVectorSize(obj%row(i))
   END DO
-  !
+
   ! update nnz: number of non zeros
-  !
   obj%nnz = k
-  !
+
   ! allocate obj%JA and obj%A
-  !
   CALL Reallocate(obj%JA, obj%nnz)
-  !
+
   ! convert data into IA, JA
-  !
   obj%IA(1) = 1
-  !
+
   DO i = 1, obj%nrow
-    ! obj%rowSize( i ) = SIZE( obj%row( i ) )
-    k = SIZE(obj%row(i))
+    k = IntVectorSize(obj%row(i))
     obj%IA(i + 1) = obj%IA(i) + k
-    IF (k .NE. 0) &
-      & obj%JA(obj%IA(i):obj%IA(i + 1) - 1) = obj%row(i)%Val
+    IF (k .NE. 0) THEN
+      obj%JA(obj%IA(i):obj%IA(i + 1) - 1) = obj%row(i)%Val
+    END IF
   END DO
-  !
+
   DEALLOCATE (obj%row)
-  !
+
 END IF
-!
+
 j = SIZE(obj%JA)
-!
 IF (j .GT. obj%nnz) THEN
-  !
   intvec = obj%JA(1:obj%nnz)
   CALL Reallocate(obj%JA, obj%nnz)
   obj%JA = intvec
   CALL Reallocate(intvec, obj%ncol)
-  !
 END IF
-!
 END PROCEDURE obj_SetSparsity_final
 
 !----------------------------------------------------------------------------

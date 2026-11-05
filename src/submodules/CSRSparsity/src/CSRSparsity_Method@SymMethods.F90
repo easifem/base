@@ -20,8 +20,9 @@
 ! summary: Input output related methods
 
 SUBMODULE(CSRSparsity_Method) SymMethods
-USE ReallocateUtility, ONLY: Reallocate
 USE ErrorHandling, ONLY: Errormsg
+USE GlobalData, ONLY: stderr
+USE ReallocateUtility, ONLY: Reallocate
 IMPLICIT NONE
 CONTAINS
 
@@ -32,11 +33,11 @@ CONTAINS
 SUBROUTINE obj_GetSymU1(obj, symobj)
   TYPE(CSRSparsity_), INTENT(IN) :: obj
   TYPE(CSRSparsity_), INTENT(INOUT) :: symobj
-  !
+
   INTEGER(I4B) :: nnz_parts(3), ii, jj, rindx, indx, nrow, nnzU, ncol, &
-    & nnzD, al, ar, ad
+                  nnzD, al, ar, ad
   INTEGER(I4B), ALLOCATABLE :: IA_csr(:), IA_csc(:), JA_csr(:), &
-    & JA_csc(:), idiag(:)
+                               JA_csc(:), idiag(:)
   REAL(DFP) :: real_dummy(1)
   CHARACTER(1), PARAMETER :: from(1) = [" "]
 
@@ -96,7 +97,7 @@ SUBROUTINE obj_GetSymU1(obj, symobj)
 
   DO ii = 1, symobj%nrow
     ar = IA_csr(ii + 1) - IA_csr(ii)
-    al = IA_csc(ii + 1) - IA_csr(ii)
+    al = IA_csc(ii + 1) - IA_csc(ii)
     IF (idiag(ii) .NE. 0) THEN
       ad = 1
     ELSE
@@ -242,12 +243,14 @@ CASE ("U", "u")
 CASE ("L", "l")
   CALL obj_GetSymL1(obj=obj, symobj=symobj)
 CASE DEFAULT
+#ifdef DEBUG_VER
   CALL Errormsg( &
-    & msg="No case found for given from = "//from, &
-    & file=__FILE__, &
-    & routine="obj_GetSym1()", &
-    & line=__LINE__, &
-    & unitno=stderr)
+    msg= "No case found for given from = "//from, &
+    file=__FILE__, &
+    routine= "obj_GetSym1()", &
+    line=__LINE__, &
+    unitno=stderr)
+#endif
 END SELECT
 END PROCEDURE obj_GetSym1
 

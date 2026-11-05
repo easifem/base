@@ -23,6 +23,7 @@ USE DOF_Method, ONLY: Initiate
 USE DOF_Method, ONLY: DEALLOCATE
 USE GlobalData, ONLY: I4B
 USE GlobalData, ONLY: FMT_DOF
+USE IntVector_Method, ONLY: ASSIGNMENT(=)
 USE Test_Method, ONLY: OK
 IMPLICIT NONE
 
@@ -36,16 +37,16 @@ CALL Initiate(obj=dof, tNodes=[3_I4B, 2_I4B], names=["V", "P"], &
 
 ! block (V,P): V nodes 1, 3, 1 with P nodes
 rowVP = [1_I4B, 3_I4B, 1_I4B]
-colVP(1)%val = [2_I4B]
-colVP(2)%val = [1_I4B, 2_I4B]
-colVP(3)%val = [1_I4B]
+colVP(1) = [2_I4B]
+colVP(2) = [1_I4B, 2_I4B]
+colVP(3) = [1_I4B]
 ! block (P,V): P node 2 (twice) with V nodes
 rowPV = [2_I4B, 2_I4B]
-colPV(1)%val = [3_I4B]
-colPV(2)%val = [3_I4B, 1_I4B]
+colPV(1) = [3_I4B]
+colPV(2) = [3_I4B, 1_I4B]
 ! block (V,V): V node 1 with itself
 rowVV = [1_I4B]
-colVV(1)%val = [1_I4B]
+colVV(1) = [1_I4B]
 ! block (P,P): P node 1 with no columns
 rowPP = [1_I4B]
 ALLOCATE (colPP(1)%val(0))

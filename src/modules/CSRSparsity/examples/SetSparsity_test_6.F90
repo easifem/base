@@ -22,6 +22,7 @@ USE DOF_Method, ONLY: DEALLOCATE
 USE GlobalData, ONLY: I4B
 USE GlobalData, ONLY: FMT_NODES
 USE GlobalData, ONLY: FMT_DOF
+USE IntVector_Method, ONLY: ASSIGNMENT(=)
 USE Test_Method, ONLY: OK
 IMPLICIT NONE
 
@@ -29,11 +30,11 @@ IMPLICIT NONE
 BLOCK
   TYPE(CSRSparsity_) :: csr
   TYPE(IntVector_) :: col(5)
-  col(1)%val = [3_I4B, 1_I4B, 1_I4B]
-  col(2)%val = [2_I4B, 4_I4B]
-  col(3)%val = [2_I4B, 3_I4B]
+  col(1) = [3_I4B, 1_I4B, 1_I4B]
+  col(2) = [2_I4B, 4_I4B]
+  col(3) = [2_I4B, 3_I4B]
   ALLOCATE (col(4)%val(0))
-  col(5)%val = [4_I4B, 1_I4B, 4_I4B]
+  col(5) = [4_I4B, 1_I4B, 4_I4B]
   CALL Initiate(obj=csr, ncol=4_I4B, nrow=4_I4B)
   CALL SetSparsity(obj=csr, row=[1_I4B, 2_I4B, 1_I4B, 3_I4B, 4_I4B], &
                    col=col)
@@ -48,11 +49,11 @@ END BLOCK
 BLOCK
   TYPE(CSRSparsity_) :: csr
   TYPE(IntVector_) :: col(5)
-  col(5)%val = [3_I4B, 1_I4B, 1_I4B]
-  col(4)%val = [2_I4B, 4_I4B]
-  col(3)%val = [2_I4B, 3_I4B]
+  col(5) = [3_I4B, 1_I4B, 1_I4B]
+  col(4) = [2_I4B, 4_I4B]
+  col(3) = [2_I4B, 3_I4B]
   ALLOCATE (col(2)%val(0))
-  col(1)%val = [4_I4B, 1_I4B, 4_I4B]
+  col(1) = [4_I4B, 1_I4B, 4_I4B]
   CALL Initiate(obj=csr, ncol=4_I4B, nrow=4_I4B)
   CALL SetSparsity(obj=csr, row=[4_I4B, 3_I4B, 1_I4B, 2_I4B, 1_I4B], &
                    col=col)
@@ -67,9 +68,9 @@ BLOCK
   TYPE(CSRSparsity_) :: csr
   TYPE(DOF_) :: dof
   TYPE(IntVector_) :: col(3)
-  col(1)%val = [2_I4B, 1_I4B]
-  col(2)%val = [3_I4B]
-  col(3)%val = [1_I4B, 3_I4B]
+  col(1) = [2_I4B, 1_I4B]
+  col(2) = [3_I4B]
+  col(3) = [1_I4B, 3_I4B]
   CALL Initiate(obj=dof, tNodes=[3_I4B], names=["U"], &
                 spacecompo=[2_I4B], timecompo=[1_I4B], &
                 storagefmt=FMT_NODES)
@@ -91,9 +92,9 @@ BLOCK
   TYPE(IntVector_) :: col(3)
   INTEGER(I4B) :: row(3), ii
   row = [1_I4B, 3_I4B, 1_I4B]
-  col(1)%val = [2_I4B, 1_I4B]
-  col(2)%val = [3_I4B]
-  col(3)%val = [1_I4B, 3_I4B]
+  col(1) = [2_I4B, 1_I4B]
+  col(2) = [3_I4B]
+  col(3) = [1_I4B, 3_I4B]
   CALL Initiate(obj=dof, tNodes=[3_I4B], names=["U"], &
                 spacecompo=[2_I4B], timecompo=[1_I4B], &
                 storagefmt=FMT_DOF)

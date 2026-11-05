@@ -266,13 +266,36 @@ END PROCEDURE obj_GetDiagonal1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE obj_GetDiagonal2
-INTEGER(I4B) :: ii
+INTEGER(I4B) :: ii, offSet0
+INTEGER(I4B), ALLOCATABLE :: idiag0(:)
 
-IF (obj%isDiagStored) THEN
+offSet0 = INPUT(option=offSet, default=0)
+
+! obj%idiag holds the main diagonal only
+IF (offSet0 .NE. 0) THEN
+  CALL Reallocate(diag, obj%nrow, idiag0, obj%nrow)
+  CALL GetDIA( &
+    & obj%nrow,&
+    & obj%ncol,&
+    & 0,&
+    & A,&
+    & obj%JA,&
+    & obj%IA,&
+    & ii,&
+    & diag,&
+    & idiag0,&
+    & offSet0)
+  DEALLOCATE (idiag0)
+
+ELSE IF (obj%isDiagStored) THEN
 
   CALL Reallocate(diag, obj%nrow)
   DO ii = 1, SIZE(diag)
-    diag(ii) = A(obj%idiag(ii))
+    IF (obj%idiag(ii) .NE. 0) THEN
+      diag(ii) = A(obj%idiag(ii))
+    ELSE
+      diag(ii) = 0.0_DFP
+    END IF
   END DO
 
 ELSE
@@ -287,7 +310,7 @@ ELSE
     & ii,&
     & diag,&
     & obj%idiag,&
-    & INPUT(option=offSet, default=0))
+    & offSet0)
   obj%isDiagStored = .TRUE.
 END IF
 
