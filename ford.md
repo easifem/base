@@ -5,12 +5,18 @@ project_download: https://github.com/easifem/base
 project_github: https://github.com/easifem/base
 project_website: https://www.easifem.com
 license: gfdl
-src_dir: ../src/modules/Utility
-media_dir: ./media
-page_dir: ./pages
+src_dir: ./src/modules/Utility/src/
+         ./src/modules/Polynomial/src/
+         ./src/modules/Line/src/
+         ./src/modules/Triangle/src/
+         ./src/modules/Quadrangle/src/
+         ./src/modules/Tetrahedron/src/
+         ./src/modules/IntVector/src/
+media_dir: ./docs/media
+page_dir: ./docs/pages
 output_dir: /tmp/ford/base
-exclude_dir:  ../src/submodules/
-              ../src/modules/BLAS95/
+exclude_dir:  ./src/submodules/
+              ./src/modules/BLAS95/
 author: Vikas Sharma
 author_description: Graduate School of Agriculture, Kyoto University, Kyoto, Japan
 email: vickysharma0812@gmail.com
@@ -29,12 +35,12 @@ coloured_edges: true
 extra_filetypes:  inc !
 print_creation_date: true
 creation_date: %Y-%m-%d %H:%M %z
-md_extensions: markdown.extensions.toc
-               markdown.extensions.smarty
+md_extensions: Markdown.extensions.toc
+               Markdown.extensions.smarty
 predocmark_alt: >
 predocmark: <
-docmark: !
 docmark_alt: *
+docmark: !
 fpp_extensions: F90
 preprocesses: true
 ---
