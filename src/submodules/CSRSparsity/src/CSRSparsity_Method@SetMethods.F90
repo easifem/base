@@ -32,6 +32,7 @@ USE IntVector_Method, ONLY: IntVectorInitiate => Initiate
 USE IntVector_Method, ONLY: IntVectorSize => Size
 USE IntVector_Method, ONLY: IntVectorRemoveDuplicates => RemoveDuplicates
 USE IntVector_Method, ONLY: IntVectorAppend => Append
+USE IntVector_Method, ONLY: IntVectorGet_ => Get_
 USE ReallocateUtility, ONLY: Reallocate
 IMPLICIT NONE
 CONTAINS
@@ -453,7 +454,8 @@ IF (ALLOCATED(obj%row)) THEN
     k = IntVectorSize(obj%row(i))
     obj%IA(i + 1) = obj%IA(i) + k
     IF (k .NE. 0) THEN
-      obj%JA(obj%IA(i):obj%IA(i + 1) - 1) = obj%row(i)%Val
+      ! obj%JA(obj%IA(i):obj%IA(i + 1) - 1) = obj%row(i)%val
+      CALL IntVectorGet_(obj=obj%row(i), ans=obj%JA(obj%IA(i):), tsize=k)
     END IF
   END DO
 
