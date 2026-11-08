@@ -1,6 +1,3 @@
-# ignore following extesions
-# added by vikas
-# 2-Dec-2018
 *.a
 *.mod
 *.smod
@@ -32,4 +29,5 @@ TODO.md
 tui-journal/
 bugs-report/
 claude-assets/
-
+.rumdl_cache
+.helix

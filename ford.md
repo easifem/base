@@ -5,38 +5,36 @@ project_download: https://github.com/easifem/base
 project_github: https://github.com/easifem/base
 project_website: https://www.easifem.com
 license: gfdl
-src_dir: ./src/modules/Utility/src/
-         ./src/modules/Polynomial/src/
-         ./src/modules/Line/src/
-         ./src/modules/Triangle/src/
-         ./src/modules/Quadrangle/src/
-         ./src/modules/Tetrahedron/src/
-         ./src/modules/IntVector/src/
-media_dir: ./docs/media
-page_dir: ./docs/pages
-output_dir: /tmp/ford/base
-exclude_dir:  ./src/submodules/
-              ./src/modules/BLAS95/
+src_dir: src/modules/Utility/src/
+         src/modules/Polynomial/src/
+         src/modules/Line/src/
+         src/modules/Triangle/src/
+         src/modules/Quadrangle/src/
+         src/modules/Tetrahedron/src/
+         src/modules/IntVector/src/
+media_dir: docs/media
+page_dir: docs/pages
+output_dir: /tmp/formal/base
+exclude_dir: src/submodules/
+             src/modules/BLAS95/
 author: Vikas Sharma
 author_description: Graduate School of Agriculture, Kyoto University, Kyoto, Japan
-email: vickysharma0812@gmail.com
-github: https://vickysharma0812.github.io/
-author_pic: ./media/vikas.png
-twitter: https://twitter.com/vickysharma0812
-website: http://vikas.easifem.com
+email: easifem@gmail.com
+github: https://github.com/easifem
+author_pic: docs/media/vikas.png
+website: http://www.easifem.com
 graph: false
-source: false
+source: true
 display: public
          protected
          private
-page: false
+page: true
 sort: alpha
 coloured_edges: true
-extra_filetypes:  inc !
+extra_filetypes: inc !
 print_creation_date: true
-creation_date: %Y-%m-%d %H:%M %z
-md_extensions: Markdown.extensions.toc
-               Markdown.extensions.smarty
+creation_date: %Y-%m-%d
+md_extensions: Markdown.extensions.smarty
 predocmark_alt: >
 predocmark: <
 docmark_alt: *
