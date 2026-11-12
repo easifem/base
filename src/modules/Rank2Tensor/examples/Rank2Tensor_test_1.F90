@@ -1,86 +1,87 @@
-! This program is a part of EASIFEM library
-! Copyright (C) 2020-2021  Vikas Sharma, Ph.D
-!
-! This program is free software: you can redistribute it and/or modify
-! it under the terms of the GNU General Public License as published by
-! the Free Software Foundation, either version 3 of the License, or
-! (at your option) any later version.
-!
-! This program is distributed in the hope that it will be useful,
-! but WITHOUT ANY WARRANTY; without even the implied warranty of
-! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-! GNU General Public License for more details.
-!
-! You should have received a copy of the GNU General Public License
-! along with this program.  If not, see <https://www.gnu.org/licenses/>
-
-
-!> Test: Rank2Tensor constructors, assignment and Voigt conversion
-! summary: Initiate, Rank2Tensor, =, Sym, SkewSym, Inv, isDeviatoric
+!> author: Vikas Sharma, Ph. D.
+! date: 2026-10-21
+! summary: Construct a Rank2Tensor from a matrix or a Voigt tensor, as a
+!   value or a pointer, and assign it to a matrix or a Voigt tensor
 
 PROGRAM main
-USE GlobalData, ONLY: DFP
-USE GlobalData, ONLY: Eye3
-USE GlobalData, ONLY: StressTypeVoigt
-USE GlobalData, ONLY: StrainTypeVoigt
 USE BaseType, ONLY: Rank2Tensor_
 USE BaseType, ONLY: VoigtRank2Tensor_
-USE Rank2Tensor_Method, ONLY: Rank2Tensor
-USE Rank2Tensor_Method, ONLY: Initiate
+USE GlobalData, ONLY: DFP
+USE GlobalData, ONLY: StrainTypeVoigt
+USE GlobalData, ONLY: StressTypeVoigt
 USE Rank2Tensor_Method, ONLY: ASSIGNMENT(=)
-USE Rank2Tensor_Method, ONLY: Sym
-USE Rank2Tensor_Method, ONLY: SkewSym
-USE Rank2Tensor_Method, ONLY: Inv
-USE Rank2Tensor_Method, ONLY: isDeviatoric
-USE Rank2Tensor_Method, ONLY: Dev
 USE Rank2Tensor_Method, ONLY: Display
-USE VoigtRank2Tensor_Method, ONLY: VoigtRank2Tensor
+USE Rank2Tensor_Method, ONLY: Rank2Tensor
+USE Rank2Tensor_Method, ONLY: Rank2Tensor_Pointer
 USE Test_Method, ONLY: OK
+USE VoigtRank2Tensor_Method, ONLY: VoigtRank2Tensor
 IMPLICIT NONE
 
 REAL(DFP), PARAMETER :: tol = 1.0E-12_DFP
-TYPE(Rank2Tensor_) :: A, B, C
-TYPE(VoigtRank2Tensor_) :: v
-REAL(DFP) :: mat(3, 3), mat2(3, 3)
+REAL(DFP), PARAMETER :: S0(3, 3) = RESHAPE([1.0_DFP, 4.0_DFP, 6.0_DFP, &
+                                            4.0_DFP, 2.0_DFP, 5.0_DFP, &
+                                            6.0_DFP, 5.0_DFP, 3.0_DFP], &
+                                           [3, 3])
 
-mat = RESHAPE([2.0_DFP, 1.0_DFP, 0.5_DFP, &
-               -1.0_DFP, 3.0_DFP, 0.25_DFP, &
-               0.0_DFP, 1.5_DFP, 4.0_DFP], [3, 3])
+! Test 1: from a matrix, with and without the symmetry flag
+BLOCK
+  TYPE(Rank2Tensor_) :: obj
 
-A = mat
-CALL Display(A, "A: ")
-CALL OK(.NOT. A%isSym, "A = mat is not symmetric")
-mat2 = A
-CALL OK(MAXVAL(ABS(mat2 - mat)) .LT. tol, "mat = A")
+  obj = Rank2Tensor(S0)
+  CALL OK(MAXVAL(ABS(obj%T - S0)) .LT. tol, "matrix: T")
+  CALL OK(.NOT. obj%isSym, "matrix: isSym defaults to false")
+  obj = Rank2Tensor(S0, .TRUE.)
+  CALL OK(obj%isSym, "matrix: isSym is true")
+  CALL Display(obj, "obj: ")
+END BLOCK
 
-B = Sym(A)
-C = SkewSym(A)
-CALL OK(B%isSym .AND. .NOT. C%isSym, "Sym/SkewSym flags")
-CALL OK(MAXVAL(ABS(B%T + C%T - mat)) .LT. tol, "Sym + SkewSym = A")
-CALL OK(MAXVAL(ABS(B%T - TRANSPOSE(B%T))) .LT. tol, "Sym is symmetric")
-CALL OK(MAXVAL(ABS(C%T + TRANSPOSE(C%T))) .LT. tol, "SkewSym is skew")
+! Test 2: from a stress-like and a strain-like Voigt tensor
+BLOCK
+  TYPE(Rank2Tensor_) :: obj
 
-CALL Inv(A, B)
-CALL OK(MAXVAL(ABS(MATMUL(B%T, A%T) - Eye3)) .LT. tol, "Inv")
+  obj = Rank2Tensor(VoigtRank2Tensor(S0, StressTypeVoigt))
+  CALL OK(MAXVAL(ABS(obj%T - S0)) .LT. tol, "Voigt stress-like: T")
+  CALL OK(obj%isSym, "Voigt stress-like: isSym")
+  obj = Rank2Tensor(VoigtRank2Tensor(S0, StrainTypeVoigt))
+  CALL OK(MAXVAL(ABS(obj%T - S0)) .LT. tol, "Voigt strain-like: T")
+  CALL OK(obj%isSym, "Voigt strain-like: isSym")
+END BLOCK
 
-CALL OK(.NOT. isDeviatoric(A), "A is not deviatoric")
-CALL OK(isDeviatoric(Dev(A)), "Dev(A) is deviatoric")
-C = Dev(A)
-CALL OK(isDeviatoric(Rank2Tensor(1.0E+6_DFP * C%T)), &
-        "isDeviatoric is scale independent")
-C = Sym(A)
+! Test 3: pointer from a matrix and from a Voigt tensor
+BLOCK
+  CLASS(Rank2Tensor_), POINTER :: ptr
 
-! Rank2Tensor -> Voigt (stress) -> Rank2Tensor gives Sym(A)
-v = A
-B = v
-CALL OK(B%isSym, "Rank2Tensor = Voigt is symmetric")
-CALL OK(MAXVAL(ABS(B%T - C%T)) .LT. tol, "stress Voigt round trip")
+  ptr => Rank2Tensor_Pointer(S0, .TRUE.)
+  CALL OK(MAXVAL(ABS(ptr%T - S0)) .LT. tol, "pointer, matrix: T")
+  CALL OK(ptr%isSym, "pointer, matrix: isSym")
+  DEALLOCATE (ptr)
+  ptr => Rank2Tensor_Pointer(VoigtRank2Tensor(S0, StrainTypeVoigt))
+  CALL OK(MAXVAL(ABS(ptr%T - S0)) .LT. tol, "pointer, Voigt: T")
+  CALL OK(ptr%isSym, "pointer, Voigt: isSym")
+  DEALLOCATE (ptr)
+END BLOCK
 
-CALL Initiate(v, A, StrainTypeVoigt)
-B = Rank2Tensor(v)
-CALL OK(MAXVAL(ABS(B%T - C%T)) .LT. tol, "strain Voigt round trip")
+! Test 4: obj = mat and mat = obj
+BLOCK
+  TYPE(Rank2Tensor_) :: obj
+  REAL(DFP) :: mat(3, 3)
 
-B = Rank2Tensor(VoigtRank2Tensor(C%T, StressTypeVoigt))
-CALL OK(MAXVAL(ABS(B%T - C%T)) .LT. tol, "Rank2Tensor(Voigt)")
+  obj = S0
+  CALL OK(MAXVAL(ABS(obj%T - S0)) .LT. tol, "obj = mat: T")
+  CALL OK(.NOT. obj%isSym, "obj = mat: not symmetric")
+  mat = 0.0_DFP
+  mat = obj
+  CALL OK(MAXVAL(ABS(mat - S0)) .LT. tol, "mat = obj")
+END BLOCK
+
+! Test 5: VoigtRank2Tensor_ = obj is stress-like
+BLOCK
+  TYPE(VoigtRank2Tensor_) :: v
+
+  v = Rank2Tensor(S0, .TRUE.)
+  CALL OK(MAXVAL(ABS(v%V - [1.0_DFP, 2.0_DFP, 3.0_DFP, 4.0_DFP, &
+                            5.0_DFP, 6.0_DFP])) .LT. tol, "Voigt = obj: V")
+  CALL OK(v%voigtType .EQ. StressTypeVoigt, "Voigt = obj: voigtType")
+END BLOCK
 
 END PROGRAM main
