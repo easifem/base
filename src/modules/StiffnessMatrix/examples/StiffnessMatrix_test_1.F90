@@ -1,113 +1,133 @@
 !> author: Shion Shimizu
 ! date: 2026-11-02
-! summary: Test of StiffnessMatrix_ with tangent at quadrature points and
-! InternalForceVector_
+! summary: StiffnessMatrix_ with a Voigt tangent at quadrature points
 !
-! The element data of a box shaped linear element (Q4 in 2D, H8 in 3D) is
-! constructed by hand, with 2 Gauss points in each direction.
-!
-! Checks:
-! 1. StiffnessMatrix_(Cijkl(:,:,:)) equals StiffnessMatrix_(lambda, mu)
-!    when Cijkl is the isotropic tangent at every quadrature point.
-!    The 2D tangent is obtained by ReduceVoigtTangent_ (plane strain).
-! 2. InternalForceVector_ with stress = C B u equals K u.
+! The element is a box shaped linear element (Q4 in 2D, H8 in 3D) built
+! by hand with 2 Gauss points in each direction.
 
 PROGRAM main
-USE GlobalData, ONLY: DFP, I4B, LGT, VoigtFormPlaneStrain, VoigtForm3D
 USE BaseType, ONLY: ElemShapeData_
+USE GlobalData, ONLY: DFP
+USE GlobalData, ONLY: I4B
+USE GlobalData, ONLY: VoigtForm3D
+USE GlobalData, ONLY: VoigtFormPlaneStrain
+USE MaterialJacobian_Method, ONLY: IsotropicTangent
+USE MaterialJacobian_Method, ONLY: ReduceVoigtTangent_
 USE StiffnessMatrix_Method, ONLY: StiffnessMatrix_
-USE ForceVector_Method, ONLY: InternalForceVector_
-USE MaterialJacobian_Method, ONLY: IsotropicTangent, ReduceVoigtTangent_
+USE Test_Method, ONLY: OK
 IMPLICIT NONE
 
-CALL RunTest(nsd=2)
-CALL RunTest(nsd=3)
+REAL(DFP), PARAMETER :: lambda = 1.3_DFP
+REAL(DFP), PARAMETER :: mu = 0.7_DFP
+REAL(DFP), PARAMETER :: hbox(3) = [2.0_DFP, 1.0_DFP, 0.5_DFP]
+REAL(DFP), PARAMETER :: tol = 1.0E-12_DFP
 
-CONTAINS
-
-SUBROUTINE RunTest(nsd)
-  INTEGER(I4B), INTENT(IN) :: nsd
+! Test 1: 2D, isotropic plane strain tangent gives K(lambda, mu)
+BLOCK
   TYPE(ElemShapeData_) :: elemsd
-  REAL(DFP), PARAMETER :: lambda = 1.3_DFP, mu = 0.7_DFP
-  REAL(DFP), PARAMETER :: hbox(3) = [2.0_DFP, 1.0_DFP, 0.5_DFP]
-  REAL(DFP) :: C6(6, 6), Cv(6, 6), err
-  REAL(DFP), ALLOCATABLE :: Cq(:, :, :), K1(:, :), K2(:, :), &
-                            u(:, :), uvec(:), stress(:, :), fint(:, :), &
-                            grad(:, :), eps(:)
-  INTEGER(I4B) :: nns, nips, nv, nrow, ncol, ips, ii, jj, ia, voigtForm
+  REAL(DFP) :: Cv(6, 6), Cq(3, 3, 4), K1(8, 8), K2(8, 8)
+  INTEGER(I4B) :: nrow, ncol, ips
 
-  CALL BoxElement(nsd, hbox(1:nsd), elemsd)
-  nns = elemsd%nns
-  nips = elemsd%nips
-  nv = nsd * (nsd + 1) / 2
-
-  voigtForm = VoigtForm3D
-  IF (nsd .EQ. 2) voigtForm = VoigtFormPlaneStrain
-
-  C6 = IsotropicTangent(lambda=lambda, mu=mu)
-  CALL ReduceVoigtTangent_(C=C6, voigtForm=voigtForm, ans=Cv, nrow=nrow, &
-                           ncol=ncol)
-  IF (nrow .NE. nv) STOP "ReduceVoigtTangent_ wrong size"
-
-  ALLOCATE (Cq(nv, nv, nips), K1(nns * nsd, nns * nsd), &
-            K2(nns * nsd, nns * nsd))
-  DO ips = 1, nips
-    Cq(:, :, ips) = Cv(1:nv, 1:nv)
+  CALL BoxElement(2, hbox(1:2), elemsd)
+  CALL ReduceVoigtTangent_(C=IsotropicTangent(lambda=lambda, mu=mu), &
+                           voigtForm=VoigtFormPlaneStrain, ans=Cv, &
+                           nrow=nrow, ncol=ncol)
+  DO ips = 1, 4
+    Cq(:, :, ips) = Cv(1:3, 1:3)
   END DO
 
   CALL StiffnessMatrix_(test=elemsd, trial=elemsd, Cijkl=Cq, ans=K1, &
                         nrow=nrow, ncol=ncol)
-  CALL StiffnessMatrix_(test=elemsd, trial=elemsd, lambda=lambda, mu=mu, &
-                        ans=K2, nrow=nrow, ncol=ncol)
-  err = MAXVAL(ABS(K1 - K2)) / MAXVAL(ABS(K2))
-  WRITE (*, "(A,I1,A,ES12.4)") "nsd=", nsd, &
-    " | K(Cijkl qp) - K(lambda,mu) | / |K| = ", err
-  IF (err .GT. 1.0E-12) STOP "FAILED: StiffnessMatrix_ with Cijkl(:,:,:)"
+  CALL OK(nrow .EQ. 8 .AND. ncol .EQ. 8, "2D: size of K is 8x8")
 
-  ! internal force
-  ALLOCATE (u(nns, nsd), uvec(nns * nsd), stress(nv, nips), &
-            fint(nns, nsd), grad(nsd, nsd), eps(nv))
-  DO jj = 1, nsd
-    DO ia = 1, nns
-      u(ia, jj) = SIN(REAL(ia + 3 * jj, DFP))
-    END DO
+  CALL StiffnessMatrix_(test=elemsd, trial=elemsd, lambda=lambda, &
+                        mu=mu, ans=K2, nrow=nrow, ncol=ncol)
+  CALL OK(MAXVAL(ABS(K1 - K2)) .LE. tol * MAXVAL(ABS(K2)), &
+          "2D: K(Cijkl) equals K(lambda, mu)")
+END BLOCK
+
+! Test 2: 3D, isotropic tangent gives K(lambda, mu)
+BLOCK
+  TYPE(ElemShapeData_) :: elemsd
+  REAL(DFP) :: Cv(6, 6), Cq(6, 6, 8), K1(24, 24), K2(24, 24)
+  INTEGER(I4B) :: nrow, ncol, ips
+
+  CALL BoxElement(3, hbox(1:3), elemsd)
+  CALL ReduceVoigtTangent_(C=IsotropicTangent(lambda=lambda, mu=mu), &
+                           voigtForm=VoigtForm3D, ans=Cv, nrow=nrow, &
+                           ncol=ncol)
+  DO ips = 1, 8
+    Cq(:, :, ips) = Cv
   END DO
-  uvec = RESHAPE(u, [nns * nsd])
 
-  DO ips = 1, nips
-    ! grad(i, j) = du_i / dx_j
-    DO jj = 1, nsd
-      DO ii = 1, nsd
-        grad(ii, jj) = DOT_PRODUCT(u(:, ii), elemsd%dNdXt(:, jj, ips))
+  CALL StiffnessMatrix_(test=elemsd, trial=elemsd, Cijkl=Cq, ans=K1, &
+                        nrow=nrow, ncol=ncol)
+  CALL OK(nrow .EQ. 24 .AND. ncol .EQ. 24, "3D: size of K is 24x24")
+
+  CALL StiffnessMatrix_(test=elemsd, trial=elemsd, lambda=lambda, &
+                        mu=mu, ans=K2, nrow=nrow, ncol=ncol)
+  CALL OK(MAXVAL(ABS(K1 - K2)) .LE. tol * MAXVAL(ABS(K2)), &
+          "3D: K(Cijkl) equals K(lambda, mu)")
+END BLOCK
+
+! Test 3: 2D, non-symmetric tangent that changes per quadrature point
+BLOCK
+  TYPE(ElemShapeData_) :: elemsd
+  REAL(DFP) :: Cq(3, 3, 4), K1(8, 8), K2(8, 8)
+  INTEGER(I4B) :: nrow, ncol, ips, ii, jj
+
+  CALL BoxElement(2, hbox(1:2), elemsd)
+  DO ips = 1, 4
+    DO jj = 1, 3
+      DO ii = 1, 3
+        Cq(ii, jj, ips) = COS(REAL(ii + 2 * jj + 5 * ips, DFP))
       END DO
     END DO
-    IF (nsd .EQ. 2) THEN
-      eps = [grad(1, 1), grad(2, 2), grad(1, 2) + grad(2, 1)]
-    ELSE
-      eps = [grad(1, 1), grad(2, 2), grad(3, 3), grad(1, 2) + grad(2, 1), &
-             grad(2, 3) + grad(3, 2), grad(1, 3) + grad(3, 1)]
-    END IF
-    stress(:, ips) = MATMUL(Cv(1:nv, 1:nv), eps)
   END DO
 
-  CALL InternalForceVector_(test=elemsd, stress=stress, ans=fint, &
-                            nrow=nrow, ncol=ncol)
-  IF (nrow .NE. nns .OR. ncol .NE. nsd) STOP "InternalForceVector_ size"
+  CALL StiffnessMatrix_(test=elemsd, trial=elemsd, Cijkl=Cq, ans=K1, &
+                        nrow=nrow, ncol=ncol)
+  CALL ReferenceStiffness(elemsd, Cq, K2)
+  CALL OK(MAXVAL(ABS(K1 - K2)) .LE. tol * MAXVAL(ABS(K2)), &
+          "2D: non-symmetric K(Cijkl) equals the reference K")
+  CALL OK(MAXVAL(ABS(K1 - TRANSPOSE(K1))) .GT. 1.0E-3_DFP, &
+          "2D: K of a non-symmetric tangent is non-symmetric")
+END BLOCK
 
-  err = MAXVAL(ABS(RESHAPE(fint, [nns * nsd]) - MATMUL(K2, uvec))) / &
-        MAXVAL(ABS(MATMUL(K2, uvec)))
-  WRITE (*, "(A,I1,A,ES12.4)") "nsd=", nsd, &
-    " | fint - K u | / |K u| = ", err
-  IF (err .GT. 1.0E-12) STOP "FAILED: InternalForceVector_"
+CONTAINS
 
-  ! addContribution and scale
-  CALL InternalForceVector_(test=elemsd, stress=stress, ans=fint, &
-                            nrow=nrow, ncol=ncol, scale=-1.0_DFP, &
-                            addContribution=.TRUE.)
-  IF (MAXVAL(ABS(fint)) .GT. 1.0E-12) STOP "FAILED: addContribution"
+! Reference K by the index formula
+! K((i-1)*nns+I, (j-1)*nns+J) = sum w dN^I/dx_k C_ikjl dN^J/dx_l
+SUBROUTINE ReferenceStiffness(elemsd, Cq, K)
+  TYPE(ElemShapeData_), INTENT(IN) :: elemsd
+  REAL(DFP), INTENT(IN) :: Cq(:, :, :)
+  REAL(DFP), INTENT(OUT) :: K(:, :)
+  INTEGER(I4B) :: indx(2, 2), nns, ips, ii, jj, kk, ll, ia, ib
+  REAL(DFP) :: wt
 
-  WRITE (*, "(A,I1,A)") "nsd=", nsd, " PASSED"
-END SUBROUTINE RunTest
+  indx = RESHAPE([1, 3, 3, 2], [2, 2])
+  nns = elemsd%nns
+  K = 0.0_DFP
+  DO ips = 1, elemsd%nips
+    wt = elemsd%ws(ips) * elemsd%js(ips) * elemsd%thickness(ips)
+    DO ii = 1, 2
+    DO jj = 1, 2
+    DO kk = 1, 2
+    DO ll = 1, 2
+    DO ia = 1, nns
+    DO ib = 1, nns
+      K((ii - 1) * nns + ia, (jj - 1) * nns + ib) = &
+        K((ii - 1) * nns + ia, (jj - 1) * nns + ib) &
+        + wt * elemsd%dNdXt(ia, kk, ips) &
+        * Cq(indx(ii, kk), indx(jj, ll), ips) * elemsd%dNdXt(ib, ll, ips)
+    END DO
+    END DO
+    END DO
+    END DO
+    END DO
+    END DO
+  END DO
+END SUBROUTINE ReferenceStiffness
 
 ! Linear box element [0,h1]x[0,h2](x[0,h3]) with 2-point Gauss rule
 SUBROUTINE BoxElement(nsd, h, elemsd)
@@ -115,7 +135,7 @@ SUBROUTINE BoxElement(nsd, h, elemsd)
   REAL(DFP), INTENT(IN) :: h(:)
   TYPE(ElemShapeData_), INTENT(INOUT) :: elemsd
   REAL(DFP) :: gp(2), xi(3), sgn(3), dN(3), N0(3)
-  INTEGER(I4B) :: nns, nips, ia, ips, ig(3), node(3), kk, ii
+  INTEGER(I4B) :: nns, nips, ia, ips, node(3), kk, ii
 
   gp = [-1.0_DFP, 1.0_DFP] / SQRT(3.0_DFP)
   nns = 2**nsd
@@ -131,10 +151,8 @@ SUBROUTINE BoxElement(nsd, h, elemsd)
   elemsd%js = PRODUCT(h(1:nsd) / 2.0_DFP)
 
   DO ips = 1, nips
-    ig = 1
     DO kk = 1, nsd
-      ig(kk) = MOD((ips - 1) / 2**(kk - 1), 2) + 1
-      xi(kk) = gp(ig(kk))
+      xi(kk) = gp(MOD((ips - 1) / 2**(kk - 1), 2) + 1)
     END DO
     DO ia = 1, nns
       DO kk = 1, nsd
@@ -147,8 +165,9 @@ SUBROUTINE BoxElement(nsd, h, elemsd)
       DO kk = 1, nsd
         elemsd%dNdXt(ia, kk, ips) = dN(kk) * 2.0_DFP / h(kk)
         DO ii = 1, nsd
-          IF (ii .NE. kk) elemsd%dNdXt(ia, kk, ips) = &
-            elemsd%dNdXt(ia, kk, ips) * N0(ii)
+          IF (ii .NE. kk) THEN
+            elemsd%dNdXt(ia, kk, ips) = elemsd%dNdXt(ia, kk, ips) * N0(ii)
+          END IF
         END DO
       END DO
     END DO
