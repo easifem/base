@@ -343,6 +343,64 @@ END DO
 END PROCEDURE obj_StiffnessMatrix4_
 
 !----------------------------------------------------------------------------
+!                                                           StiffnessMatrix_
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE obj_StiffnessMatrix7_
+REAL(DFP) :: realval
+REAL(DFP) :: Ce(test%nsd * test%nsd, trial%nsd * trial%nsd), &
+             BMat1(test%nsd * test%nns, test%nsd * test%nsd), &
+             BMat2(trial%nsd * trial%nns, trial%nsd * trial%nsd)
+INTEGER(I4B) :: nips, nns1, nns2, ii, jj, ips, nsd
+INTEGER(I4B) :: indx(3, 3)
+
+nns1 = test%nns
+nns2 = trial%nns
+nips = trial%nips
+nsd = trial%nsd
+
+nrow = nns1 * nsd
+ncol = nns2 * nsd
+ans(1:nrow, 1:ncol) = 0.0_DFP
+
+SELECT CASE (nsd)
+CASE (1)
+  indx(1, 1) = 1
+CASE (2)
+  indx(1:2, 1:2) = RESHAPE([1, 3, 3, 2], [2, 2])
+CASE (3)
+  indx(1:3, 1:3) = RESHAPE([1, 4, 6, 4, 2, 5, 6, 5, 3], [3, 3])
+CASE DEFAULT
+END SELECT
+
+BMat1 = 0.0_DFP
+BMat2 = 0.0_DFP
+
+DO ips = 1, nips
+
+  realval = trial%ws(ips) * trial%js(ips) * trial%thickness(ips)
+
+  DO jj = 1, nsd
+    DO ii = 1, nsd
+      Ce((ii - 1) * nsd + 1:ii * nsd, (jj - 1) * nsd + 1:jj * nsd) &
+        = Cijkl(indx(1:nsd, ii), indx(1:nsd, jj), ips)
+    END DO
+  END DO
+
+  DO ii = 1, nsd
+    BMat1((ii - 1) * nns1 + 1:ii * nns1, (ii - 1) * nsd + 1:ii * nsd) = &
+      test%dNdXt(1:nns1, 1:nsd, ips)
+    BMat2((ii - 1) * nns2 + 1:ii * nns2, (ii - 1) * nsd + 1:ii * nsd) = &
+      trial%dNdXt(1:nns2, 1:nsd, ips)
+  END DO
+
+  ans(1:nrow, 1:ncol) = ans(1:nrow, 1:ncol) + &
+                        realval * MATMUL(MATMUL(BMat1, Ce), TRANSPOSE(BMat2))
+
+END DO
+END PROCEDURE obj_StiffnessMatrix7_
+
+!----------------------------------------------------------------------------
 !                                                           StiffnessMatrix
 !----------------------------------------------------------------------------
 

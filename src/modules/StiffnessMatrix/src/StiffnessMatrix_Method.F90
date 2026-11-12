@@ -200,6 +200,46 @@ INTERFACE StiffnessMatrix_
 END INTERFACE StiffnessMatrix_
 
 !----------------------------------------------------------------------------
+!                                                    StiffnessMatrix_@Methods
+!----------------------------------------------------------------------------
+
+!> author: Shion Shimizu
+! date: 2026-11-02
+! summary: Stiffness matrix with tangent given at each quadrature point
+!
+!# Introduction
+!
+! This routine computes the element stiffness matrix when the material
+! tangent is given as a raw array at each quadrature point, for example
+! the consistent tangent of an elastoplastic model.
+!
+! $$
+! K_{iI,jJ} = \int_{\Omega} \frac{\partial N^I}{\partial x_k}
+! C_{ikjl} \frac{\partial N^J}{\partial x_l} d\Omega
+! $$
+!
+! - Cijkl(:, :, ips) is the Voigt tangent at quadrature point ips.
+!   The Voigt order is [11] in 1D, [11, 22, 12] in 2D, and
+!   [11, 22, 33, 12, 23, 13] in 3D. Cijkl maps the engineering strain
+!   vector to the stress vector.
+! - Cijkl need not be symmetric (non-associative plasticity).
+! - The size of Cijkl should be at least nsd*(nsd+1)/2 x nsd*(nsd+1)/2
+!   x nips.
+! - The row and column ordering of ans is same as other methods
+!   (component major, (i-1)*nns + I).
+
+INTERFACE StiffnessMatrix_
+  MODULE PURE SUBROUTINE obj_StiffnessMatrix7_(test, trial, Cijkl, ans, &
+                                               nrow, ncol)
+    CLASS(ElemshapeData_), INTENT(IN) :: test, trial
+    REAL(DFP), INTENT(IN) :: Cijkl(:, :, :)
+    !! Voigt tangent at quadrature points
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+  END SUBROUTINE obj_StiffnessMatrix7_
+END INTERFACE StiffnessMatrix_
+
+!----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
