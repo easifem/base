@@ -18,9 +18,8 @@
 ! date: 2021-03-17
 ! summary: Double contraction of rank-2 and Voigt rank-2 tensors
 !
-! Description:
-!   For a Voigt tensor the tensor shear component is `Scale * V(k)`,
-!   with `k = 4, 5, 6` for the `12, 23, 13` pairs.
+! For a Voigt tensor the tensor shear component is `Scale * V(k)`,
+! with `k = 4, 5, 6` for the `12, 23, 13` pairs.
 
 SUBMODULE(Rank2Tensor_Method) ContractionMethods
 IMPLICIT NONE

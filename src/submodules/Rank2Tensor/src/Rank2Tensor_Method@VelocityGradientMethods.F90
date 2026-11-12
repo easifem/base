@@ -14,14 +14,12 @@
 ! You should have received a copy of the GNU General Public License
 ! along with this program.  If not, see <https://www.gnu.org/licenses/>
 
-
 !> author: Vikas Sharma, Ph. D.
 ! date: 2026-10-21
 ! summary: Velocity gradient, strain rate and spin
 !
-! Description:
-!   Ported from the old `VelocityGradient_Class`, `StrainRate_Class`
-!   and `ContinuumSpin_Class`.
+! Ported from the old `VelocityGradient_Class`, `StrainRate_Class`
+! and `ContinuumSpin_Class`.
 
 SUBMODULE(Rank2Tensor_Method) VelocityGradientMethods
 IMPLICIT NONE

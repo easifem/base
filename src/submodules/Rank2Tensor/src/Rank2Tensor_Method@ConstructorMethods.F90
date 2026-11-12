@@ -14,6 +14,10 @@
 ! You should have received a copy of the GNU General Public License
 ! along with this program.  If not, see <https://www.gnu.org/licenses/>
 
+!> author: Vikas Sharma, Ph. D.
+! date: 2021-03-17
+! summary: Constructors and assignment of [[Rank2Tensor_]]
+
 SUBMODULE(Rank2Tensor_Method) ConstructorMethods
 USE GlobalData, ONLY: Eye3
 USE GlobalData, ONLY: StressTypeVoigt

@@ -14,15 +14,13 @@
 ! You should have received a copy of the GNU General Public License
 ! along with this program.  If not, see <https://www.gnu.org/licenses/>
 
-
 !> author: Vikas Sharma, Ph. D.
 ! date: 2026-10-21
 ! summary: General tensor utilities for [[Rank2Tensor_]]
 !
-! Description:
-!   Ported from the old `Tensor_Class` (`OperatorOverloading/Otimes`,
-!   `Tensor_PrincipalValue`, `Tensor_SpectralRadius`, `RotationPart`,
-!   `Tensor_Exp`).
+! Ported from the old `Tensor_Class` (`OperatorOverloading/Otimes`,
+! `Tensor_PrincipalValue`, `Tensor_SpectralRadius`, `RotationPart`,
+! `Tensor_Exp`).
 
 SUBMODULE(Rank2Tensor_Method) UtilityMethods
 USE GlobalData, ONLY: Eye3
@@ -155,6 +153,7 @@ END PROCEDURE Rank2Tensor_Exp
 
 PURE SUBROUTINE SortDescending(v)
   REAL(DFP), INTENT(INOUT) :: v(3)
+  !! values, sorted in descending order on return
 
   IF (v(1) .LT. v(2)) CALL Swap(v(1), v(2))
   IF (v(2) .LT. v(3)) CALL Swap(v(2), v(3))
@@ -165,9 +164,13 @@ END SUBROUTINE SortDescending
 !                                                                       Swap
 !----------------------------------------------------------------------------
 
+! Swaps two values
+
 PURE SUBROUTINE Swap(a, b)
   REAL(DFP), INTENT(INOUT) :: a
+  !! first value, b on return
   REAL(DFP), INTENT(INOUT) :: b
+  !! second value, a on return
 
   REAL(DFP) :: tmp
 

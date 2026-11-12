@@ -14,15 +14,19 @@
 ! You should have received a copy of the GNU General Public License
 ! along with this program.  If not, see <https://www.gnu.org/licenses/>
 
+!> author: Vikas Sharma, Ph. D.
+! date: 2021-03-17
+! summary: Display of [[Rank2Tensor_]]
+
 SUBMODULE(Rank2Tensor_Method) IOMethods
+USE Display_Method, ONLY: Util_Display => Display
 USE GlobalData, ONLY: stdout
 USE GlobalData, ONLY: StressMeasureCauchy
 USE GlobalData, ONLY: StressMeasureKirchhoff
+USE GlobalData, ONLY: StressMeasureMandel
 USE GlobalData, ONLY: StressMeasurePK1
 USE GlobalData, ONLY: StressMeasurePK2
-USE GlobalData, ONLY: StressMeasureMandel
 USE InputUtility, ONLY: Input
-USE Display_Method, ONLY: Util_Display => Display
 IMPLICIT NONE
 
 CONTAINS
@@ -52,7 +56,9 @@ END PROCEDURE Rank2Tensor_Display
 
 PURE FUNCTION StressMeasureName(stressType) RESULT(ans)
   INTEGER(I4B), INTENT(IN) :: stressType
+  !! one of the StressMeasure* constants
   CHARACTER(:), ALLOCATABLE :: ans
+  !! name of the stress measure
 
   SELECT CASE (stressType)
   CASE (StressMeasureCauchy)

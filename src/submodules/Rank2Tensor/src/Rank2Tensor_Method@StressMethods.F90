@@ -14,27 +14,25 @@
 ! You should have received a copy of the GNU General Public License
 ! along with this program.  If not, see <https://www.gnu.org/licenses/>
 
-
 !> author: Vikas Sharma, Ph. D.
 ! date: 2026-10-21
 ! summary: Constructors and measure conversions for [[Stress_]]
 !
-! Description:
-!   Ported from the old `Stress_Class` (`Constructor`, `StressType`,
-!   `getStress`, `CauchyStress`, `Pk1Stress`, `Pk2Stress`,
-!   `KirchhoffStress` and `EshelbyStress`). The old class stored a
-!   symmetric Voigt vector, which lost the non-symmetric PK1 and Mandel
-!   stresses. Here the full 3x3 components are kept.
+! Ported from the old `Stress_Class` (`Constructor`, `StressType`,
+! `getStress`, `CauchyStress`, `Pk1Stress`, `Pk2Stress`,
+! `KirchhoffStress` and `EshelbyStress`). The old class stored a
+! symmetric Voigt vector, which lost the non-symmetric PK1 and Mandel
+! stresses. Here the full 3x3 components are kept.
 
 SUBMODULE(Rank2Tensor_Method) StressMethods
+USE ErrorHandling, ONLY: Errormsg
 USE GlobalData, ONLY: stdout
 USE GlobalData, ONLY: StressMeasureCauchy
 USE GlobalData, ONLY: StressMeasureKirchhoff
+USE GlobalData, ONLY: StressMeasureMandel
 USE GlobalData, ONLY: StressMeasurePK1
 USE GlobalData, ONLY: StressMeasurePK2
-USE GlobalData, ONLY: StressMeasureMandel
 USE InvUtility, ONLY: Util_Inv => Inv
-USE ErrorHandling, ONLY: Errormsg
 IMPLICIT NONE
 
 ! Relative tolerance used to detect a symmetric matrix
@@ -126,7 +124,9 @@ END PROCEDURE Rank2Tensor_SetStressType
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Rank2Tensor_ConvertStress
+#ifdef DEBUG_VER
 CHARACTER(*), PARAMETER :: myName = "Rank2Tensor_ConvertStress()"
+#endif
 REAL(DFP) :: tau(3, 3), invF(3, 3), J
 
 J = Det(F)
@@ -145,10 +145,12 @@ CASE (StressMeasurePK2)
 CASE (StressMeasureMandel)
   tau = MATMUL(TRANSPOSE(invF), MATMUL(obj%T, TRANSPOSE(F%T)))
 CASE DEFAULT
+#ifdef DEBUG_VER
   CALL Errormsg(msg="[ARG ERROR] :: unknown stress measure of obj", &
                 file=__FILE__, routine=myName, line=__LINE__, &
                 unitno=stdout)
   STOP
+#endif
 END SELECT
 
 ! Target measure from the Kirchhoff stress
@@ -164,10 +166,12 @@ CASE (StressMeasurePK2)
 CASE (StressMeasureMandel)
   ans%T = MATMUL(TRANSPOSE(F%T), MATMUL(tau, TRANSPOSE(invF)))
 CASE DEFAULT
+#ifdef DEBUG_VER
   CALL Errormsg(msg="[ARG ERROR] :: unknown target stress measure", &
                 file=__FILE__, routine=myName, line=__LINE__, &
                 unitno=stdout)
   STOP
+#endif
 END SELECT
 
 ans%stressType = stressType
@@ -228,7 +232,9 @@ END PROCEDURE Rank2Tensor_MandelStress
 
 PURE FUNCTION IsSymmetricMat(mat) RESULT(ans)
   REAL(DFP), INTENT(IN) :: mat(3, 3)
+  !! matrix to check
   LOGICAL(LGT) :: ans
+  !! true if mat is symmetric within the tolerance symTol
 
   ans = MAXVAL(ABS(mat - TRANSPOSE(mat))) .LE. symTol * MAXVAL(ABS(mat))
 END FUNCTION IsSymmetricMat

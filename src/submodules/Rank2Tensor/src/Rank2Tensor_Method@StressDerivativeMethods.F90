@@ -14,16 +14,14 @@
 ! You should have received a copy of the GNU General Public License
 ! along with this program.  If not, see <https://www.gnu.org/licenses/>
 
-
 !> author: Vikas Sharma, Ph. D.
 ! date: 2026-10-21
 ! summary: Derivatives of stress invariants with respect to stress
 !
-! Description:
-!   Ported from the old `Stress_Old/StressDerivatives.part` and
-!   `Stress_Old/getHillTensor.part`. The results are symmetric tensors.
-!   The old optional `Voigt` flag doubled the shear entries, which is
-!   `VoigtRank2Tensor(ans%T, StrainTypeVoigt)`.
+! Ported from the old `Stress_Old/StressDerivatives.part` and
+! `Stress_Old/getHillTensor.part`. The results are symmetric tensors.
+! The old optional `Voigt` flag doubled the shear entries, which is
+! `VoigtRank2Tensor(ans%T, StrainTypeVoigt)`.
 
 SUBMODULE(Rank2Tensor_Method) StressDerivativeMethods
 USE GlobalData, ONLY: Eye3

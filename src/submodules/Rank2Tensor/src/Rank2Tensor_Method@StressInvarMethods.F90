@@ -14,16 +14,14 @@
 ! You should have received a copy of the GNU General Public License
 ! along with this program.  If not, see <https://www.gnu.org/licenses/>
 
-
 !> author: Vikas Sharma, Ph. D.
 ! date: 2026-10-21
 ! summary: Stress invariants
 !
-! Description:
-!   Ported from the old `Stress/OperatorOverloading/Invariant.part` and
-!   `Stress_Old/Invariants.part`. The old Haigh-Westergaard coordinate
-!   `z` was computed as $\sigma_m/\sqrt{3}$; the correct value is
-!   $I_1/\sqrt{3} = \sqrt{3}\sigma_m$.
+! Ported from the old `Stress/OperatorOverloading/Invariant.part` and
+! `Stress_Old/Invariants.part`. The old Haigh-Westergaard coordinate
+! `z` was computed as $\sigma_m/\sqrt{3}$; the correct value is
+! $I_1/\sqrt{3} = \sqrt{3}\sigma_m$.
 
 SUBMODULE(Rank2Tensor_Method) StressInvarMethods
 USE GlobalData, ONLY: CosineLode

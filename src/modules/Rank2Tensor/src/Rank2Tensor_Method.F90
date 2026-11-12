@@ -2758,8 +2758,13 @@ END INTERFACE SetStressType
 ! summary: Converts a stress to another stress measure
 !
 ! Description:
-!   The conversion goes through the Kirchhoff stress $\tau$. An unknown
-!   stress measure (of obj or of the target) stops the program.
+!   The conversion goes through the Kirchhoff stress $\tau$. In debug
+!   mode an unknown stress measure (of obj or of the target) stops the
+!   program; in release mode it is not checked.
+!
+! Changes:
+!   - 2026-11-13: the check of the stress measure is done only in debug
+!     mode
 !
 !   | measure   | to $\tau$             | from $\tau$            |
 !   | --------- | --------------------- | ---------------------- |

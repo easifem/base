@@ -14,15 +14,13 @@
 ! You should have received a copy of the GNU General Public License
 ! along with this program.  If not, see <https://www.gnu.org/licenses/>
 
-
 !> author: Vikas Sharma, Ph. D.
 ! date: 2026-10-21
 ! summary: Strain measures
 !
-! Description:
-!   Ported from the old `Strain` classes (Green, Almansi, Small),
-!   `DeformationGradient/StrainTensor.part` and
-!   `Old_StrainMeasures.part`.
+! Ported from the old `Strain` classes (Green, Almansi, Small),
+! `DeformationGradient/StrainTensor.part` and
+! `Old_StrainMeasures.part`.
 
 SUBMODULE(Rank2Tensor_Method) StrainMethods
 USE GlobalData, ONLY: Eye3

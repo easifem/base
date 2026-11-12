@@ -18,9 +18,8 @@
 ! date: 2021-03-17
 ! summary: Algebraic operators for [[Rank2Tensor_]]
 !
-! Description:
-!   `*` and `/` between two tensors are element-wise. `MATMUL` is the
-!   single contraction.
+! `*` and `/` between two tensors are element-wise. `MATMUL` is the
+! single contraction.
 
 SUBMODULE(Rank2Tensor_Method) OperatorMethods
 IMPLICIT NONE

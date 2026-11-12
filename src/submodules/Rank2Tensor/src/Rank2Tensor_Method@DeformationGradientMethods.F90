@@ -14,14 +14,12 @@
 ! You should have received a copy of the GNU General Public License
 ! along with this program.  If not, see <https://www.gnu.org/licenses/>
 
-
 !> author: Vikas Sharma, Ph. D.
 ! date: 2026-10-21
 ! summary: Methods for [[DeformationGradient_]]
 !
-! Description:
-!   Ported from the old `DeformationGradient_Class` (`Constructor`,
-!   `Components`: `.J.`, `.U.`, `.V.`, `.R.`, `.EigenValues.`).
+! Ported from the old `DeformationGradient_Class` (`Constructor`,
+! `Components`: `.J.`, `.U.`, `.V.`, `.R.`, `.EigenValues.`).
 
 SUBMODULE(Rank2Tensor_Method) DeformationGradientMethods
 USE EigenUtility, ONLY: GetSymEigenJacobi

@@ -14,16 +14,14 @@
 ! You should have received a copy of the GNU General Public License
 ! along with this program.  If not, see <https://www.gnu.org/licenses/>
 
-
 !> author: Vikas Sharma, Ph. D.
 ! date: 2021-03-17
 ! summary: Push forward of tensors and vectors
 !
-! Description:
-!   Each index is mapped by a matrix M that depends on its variance:
-!   `"CONTRAVAR"` uses $F$, `"COVAR"` uses $F^{-T}$ and `"NA"` (or any
-!   other value) uses $I$. Then the push forward of a tensor is
-!   $M_1 T M_2^{T}$ and of a vector is $M_1 v$.
+! Each index is mapped by a matrix M that depends on its variance:
+! `"CONTRAVAR"` uses $F$, `"COVAR"` uses $F^{-T}$ and `"NA"` (or any
+! other value) uses $I$. Then the push forward of a tensor is
+! $M_1 T M_2^{T}$ and of a vector is $M_1 v$.
 
 SUBMODULE(Rank2Tensor_Method) PushForwardMethods
 USE GlobalData, ONLY: Eye3
@@ -61,8 +59,11 @@ END PROCEDURE Rank2Tensor_PushForward2
 
 PURE FUNCTION PushForwardMap(F, indx) RESULT(ans)
   REAL(DFP), INTENT(IN) :: F(3, 3)
+  !! deformation gradient
   CHARACTER(*), INTENT(IN) :: indx
+  !! index type, "CONTRAVAR", "COVAR" or other (identity)
   REAL(DFP) :: ans(3, 3)
+  !! map of the index, F, TRANSPOSE(inv(F)) or the identity
 
   REAL(DFP) :: invF(3, 3)
 

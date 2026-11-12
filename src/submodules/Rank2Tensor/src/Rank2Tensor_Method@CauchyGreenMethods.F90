@@ -14,14 +14,12 @@
 ! You should have received a copy of the GNU General Public License
 ! along with this program.  If not, see <https://www.gnu.org/licenses/>
 
-
 !> author: Vikas Sharma, Ph. D.
 ! date: 2021-03-22
 ! summary: Methods for [[LeftCauchyGreen_]] and [[RightCauchyGreen_]]
 !
-! Description:
-!   Ported from the old `LeftCauchyGreen_Class`, `RightCauchyGreen_Class`
-!   and `DeformationGradient/DeformationTensor.part`.
+! Ported from the old `LeftCauchyGreen_Class`, `RightCauchyGreen_Class`
+! and `DeformationGradient/DeformationTensor.part`.
 
 SUBMODULE(Rank2Tensor_Method) CauchyGreenMethods
 USE GlobalData, ONLY: Eye3

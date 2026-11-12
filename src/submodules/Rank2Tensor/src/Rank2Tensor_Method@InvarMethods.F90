@@ -14,16 +14,21 @@
 ! You should have received a copy of the GNU General Public License
 ! along with this program.  If not, see <https://www.gnu.org/licenses/>
 
+!> author: Vikas Sharma, Ph. D.
+! date: 2021-03-17
+! summary: Invariants, eigenvalues and polar decomposition of
+!   [[Rank2Tensor_]]
+
 SUBMODULE(Rank2Tensor_Method) InvarMethods
-USE GlobalData, ONLY: Eye3
-USE GlobalData, ONLY: SineLode
-USE GlobalData, ONLY: stdout
-USE InputUtility, ONLY: Input
 USE EigenUtility, ONLY: GetSymEigenJacobi
 USE ErrorHandling, ONLY: Errormsg
 #ifdef USE_LAPACK95
 USE F95_LAPACK, ONLY: GEEV
 #endif
+USE GlobalData, ONLY: Eye3
+USE GlobalData, ONLY: SineLode
+USE GlobalData, ONLY: stdout
+USE InputUtility, ONLY: Input
 IMPLICIT NONE
 
 INTEGER(I4B), PARAMETER :: maxJacobiIter = 100
@@ -206,28 +211,29 @@ END PROCEDURE Rank2Tensor_Eigen
 ! date: 2021-03-17
 ! summary: Eigenvalues and eigenvectors of a general 3x3 matrix
 !
-! Description:
-!   Wraps LAPACK GEEV. For a complex conjugate pair GEEV returns the real
-!   and imaginary parts of the eigenvector in two consecutive columns
-!   `j` and `j+1`. This routine expands them into `QR` and `QI` so that
-!   column `k` holds eigenvector `k`.
-!
-! Arguments:
-!   T : REAL(DFP), SHAPE(3,3) - matrix
-!   QR, QI : REAL(DFP), SHAPE(3,3) - real and imaginary eigenvectors
-!   WR, WI : REAL(DFP), SIZE(3) - real and imaginary eigenvalues
+! Wraps LAPACK GEEV. For a complex conjugate pair GEEV returns the real
+! and imaginary parts of the eigenvector in two consecutive columns
+! `j` and `j+1`. This routine expands them into `QR` and `QI` so that
+! column `k` holds eigenvector `k`.
 !
 ! Formula:
 !   $$T (q_R + i q_I) = (w_R + i w_I)(q_R + i q_I)$$
 
 SUBROUTINE GeneralEigen(T, QR, WR, QI, WI)
   REAL(DFP), INTENT(IN) :: T(3, 3)
+  !! general (non-symmetric) matrix
   REAL(DFP), INTENT(INOUT) :: QR(3, 3)
+  !! real part of the eigenvectors, column k is eigenvector k
   REAL(DFP), INTENT(INOUT) :: WR(3)
+  !! real part of the eigenvalues
   REAL(DFP), INTENT(INOUT) :: QI(3, 3)
+  !! imaginary part of the eigenvectors
   REAL(DFP), INTENT(INOUT) :: WI(3)
+  !! imaginary part of the eigenvalues
 
+#if defined(DEBUG_VER) || !defined(USE_LAPACK95)
   CHARACTER(*), PARAMETER :: myName = "GeneralEigen()"
+#endif
 #ifdef USE_LAPACK95
   REAL(DFP) :: mat(3, 3), vr(3, 3)
   INTEGER(I4B) :: info, jj
@@ -235,12 +241,14 @@ SUBROUTINE GeneralEigen(T, QR, WR, QI, WI)
   mat = T
   CALL GEEV(A=mat, WR=WR, WI=WI, VR=vr, INFO=info)
 
+#ifdef DEBUG_VER
   IF (info .NE. 0) THEN
     CALL Errormsg(msg="[INTERNAL ERROR] :: GEEV failed", &
                   file=__FILE__, routine=myName, line=__LINE__, &
                   unitno=stdout)
     RETURN
   END IF
+#endif
 
   QR = vr
   QI = 0.0_DFP
@@ -288,27 +296,24 @@ END PROCEDURE Rank2Tensor_PolarDecomp
 ! date: 2021-03-17
 ! summary: Polar decomposition of a 3x3 matrix
 !
-! Description:
-!   Algorithm 3.1 of Higham and Noferini (2015), "An algorithm to
-!   compute the polar decomposition of a 3x3 matrix", Numer. Algor.
-!   The rotation is obtained from the unit quaternion `q` that is the
-!   eigenvector of the symmetric 4x4 matrix `B` for its largest
-!   eigenvalue. The input must have a positive determinant.
-!
-! Arguments:
-!   mat : REAL(DFP), SHAPE(3,3) - matrix A
-!   R : REAL(DFP), SHAPE(3,3) - rotation (output)
-!   U : REAL(DFP), SHAPE(3,3) - right stretch (output)
-!   V : REAL(DFP), SHAPE(3,3) - left stretch (output)
+! Algorithm 3.1 of Higham and Noferini (2015), "An algorithm to
+! compute the polar decomposition of a 3x3 matrix", Numer. Algor.
+! The rotation is obtained from the unit quaternion `q` that is the
+! eigenvector of the symmetric 4x4 matrix `B` for its largest
+! eigenvalue. The input must have a positive determinant.
 !
 ! Formula:
 !   $$A = R U = V R,\quad U = R^{T} A,\quad V = A R^{T}$$
 
 PURE SUBROUTINE PD(mat, R, U, V)
   REAL(DFP), INTENT(IN) :: mat(3, 3)
+  !! matrix A with a positive determinant
   REAL(DFP), INTENT(INOUT) :: R(3, 3)
+  !! rotation
   REAL(DFP), INTENT(INOUT) :: U(3, 3)
+  !! right stretch
   REAL(DFP), INTENT(INOUT) :: V(3, 3)
+  !! left stretch
 
   REAL(DFP) :: B(4, 4), eigVecs(4, 4), eigVals(4), q(4)
   INTEGER(I4B) :: imax
@@ -358,7 +363,9 @@ END SUBROUTINE PD
 
 PURE FUNCTION QuaternionToRotation(q) RESULT(R)
   REAL(DFP), INTENT(IN) :: q(4)
+  !! unit quaternion [w, x, y, z]
   REAL(DFP) :: R(3, 3)
+  !! rotation matrix
 
   ASSOCIATE (w => q(1), x => q(2), y => q(3), z => q(4))
     R(1, 1) = 1.0_DFP - 2.0_DFP * (y * y + z * z)
