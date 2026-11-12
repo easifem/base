@@ -49,6 +49,8 @@ CASE ("ABSOLUTE")
 CASE ("BOTH")
   ans = TypeConvergenceOpt%both
 CASE DEFAULT
+  ! default value, so that the result is defined in release mode
+  ans = TypeConvergenceOpt%relative
 #ifdef DEBUG_VER
   CALL AssertError1(math%no, myName, modName, __LINE__, &
                     "no case found for name="//acase)
@@ -133,6 +135,8 @@ CASE ("SOLUTION")
 CASE ("BOTH")
   ans = TypeConvergenceOpt%both
 CASE DEFAULT
+  ! default value, so that the result is defined in release mode
+  ans = TypeConvergenceOpt%res
 #ifdef DEBUG_VER
   CALL AssertError1(math%no, myName, modName, __LINE__, &
                     "no case found for name="//acase)
@@ -218,6 +222,8 @@ CASE ("INFINITY")
   ans = TypeConvergenceOpt%normInfinity
 
 CASE DEFAULT
+  ! default value, so that the result is defined in release mode
+  ans = TypeConvergenceOpt%normL2
 #ifdef DEBUG_VER
   CALL AssertError1(math%no, myName, modName, __LINE__, &
                     "no case found for name="//acase)
