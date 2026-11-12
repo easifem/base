@@ -147,6 +147,9 @@ include(${CMAKE_CURRENT_LIST_DIR}/VoigtRank2Tensor/CMakeLists.txt)
 # Rank2Tensor
 include(${CMAKE_CURRENT_LIST_DIR}/Rank2Tensor/CMakeLists.txt)
 
+# MaterialJacobian
+include(${CMAKE_CURRENT_LIST_DIR}/MaterialJacobian/CMakeLists.txt)
+
 # CSRSparsity
 include(${CMAKE_CURRENT_LIST_DIR}/CSRSparsity/CMakeLists.txt)
 
