@@ -524,6 +524,28 @@ INTEGER(I4B), PARAMETER, PUBLIC :: WithSpectral = 1
 INTEGER(I4B), PARAMETER, PUBLIC :: WithoutSpectral = -1
 INTEGER(I4B), PARAMETER, PUBLIC :: SineLode = 1
 INTEGER(I4B), PARAMETER, PUBLIC :: CosineLode = 0
+! Stress measures, see [[Stress_]]
+INTEGER(I4B), PARAMETER, PUBLIC :: StressMeasureCauchy = 1
+INTEGER(I4B), PARAMETER, PUBLIC :: StressMeasureKirchhoff = 2
+INTEGER(I4B), PARAMETER, PUBLIC :: StressMeasurePK1 = 3
+INTEGER(I4B), PARAMETER, PUBLIC :: StressMeasurePK2 = 4
+INTEGER(I4B), PARAMETER, PUBLIC :: StressMeasureMandel = 5
+! Strain measures, see [[MaterialJacobian_]]
+INTEGER(I4B), PARAMETER, PUBLIC :: StrainMeasureSmall = 1
+INTEGER(I4B), PARAMETER, PUBLIC :: StrainMeasureGreen = 2
+INTEGER(I4B), PARAMETER, PUBLIC :: StrainMeasureAlmansi = 3
+INTEGER(I4B), PARAMETER, PUBLIC :: StrainMeasureRateOfDeformation = 4
+! Objective stress rates, see [[MaterialJacobian_]]
+INTEGER(I4B), PARAMETER, PUBLIC :: StressRateNone = 0
+INTEGER(I4B), PARAMETER, PUBLIC :: StressRateJaumann = 1
+INTEGER(I4B), PARAMETER, PUBLIC :: StressRateTruesdell = 2
+INTEGER(I4B), PARAMETER, PUBLIC :: StressRateGreenNaghdi = 3
+! Voigt forms: 3D [11,22,33,12,23,13], plane strain and plane stress
+! [11,22,12], axisymmetric [11,22,12,33]
+INTEGER(I4B), PARAMETER, PUBLIC :: VoigtForm3D = 0
+INTEGER(I4B), PARAMETER, PUBLIC :: VoigtFormPlaneStrain = 1
+INTEGER(I4B), PARAMETER, PUBLIC :: VoigtFormPlaneStress = 2
+INTEGER(I4B), PARAMETER, PUBLIC :: VoigtFormAxisymmetric = 3
 ! Related to vectors, matrices, and linear solver
 INTEGER(I4B), PARAMETER, PUBLIC :: LIS_CG = 1
 INTEGER(I4B), PARAMETER, PUBLIC :: LIS_BCG = 2

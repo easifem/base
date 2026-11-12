@@ -222,6 +222,9 @@ USE GlobalData, ONLY: Triangle6
 USE GlobalData, ONLY: Triangle66
 USE GlobalData, ONLY: Triangle9
 USE GlobalData, ONLY: CHAR_LF, CHAR_SLASH
+USE GlobalData, ONLY: StressMeasureCauchy
+USE GlobalData, ONLY: StrainMeasureSmall
+USE GlobalData, ONLY: StressRateNone
 USE String_Class, ONLY: String
 #ifdef USE_SuperLU
 USE ISO_C_BINDING, ONLY: C_CHAR
@@ -290,6 +293,21 @@ PUBLIC :: GreenStrainPointer_
 PUBLIC :: SmallStrain_
 PUBLIC :: TypeSmallStrain
 PUBLIC :: SmallStrainPointer_
+PUBLIC :: VelocityGradient_
+PUBLIC :: TypeVelocityGradient
+PUBLIC :: VelocityGradientPointer_
+PUBLIC :: StrainRate_
+PUBLIC :: TypeStrainRate
+PUBLIC :: StrainRatePointer_
+PUBLIC :: ContinuumSpin_
+PUBLIC :: TypeContinuumSpin
+PUBLIC :: ContinuumSpinPointer_
+PUBLIC :: Stress_
+PUBLIC :: TypeStress
+PUBLIC :: StressPointer_
+PUBLIC :: MaterialJacobian_
+PUBLIC :: TypeMaterialJacobian
+PUBLIC :: MaterialJacobianPointer_
 PUBLIC :: ReferenceTopology_
 PUBLIC :: ReferenceTopologyPointer_
 PUBLIC :: ReferenceElement_
@@ -1002,6 +1020,133 @@ TYPE(SmallStrain_), PARAMETER :: TypeSmallStrain = SmallStrain_()
 TYPE :: SmallStrainPointer_
   CLASS(SmallStrain_), POINTER :: ptr => NULL()
 END TYPE SmallStrainPointer_
+
+!----------------------------------------------------------------------------
+!                                                         VelocityGradient_
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2026-10-21
+! summary: Spatial velocity gradient tensor
+!
+! Description:
+!   The velocity gradient is given by
+!
+!   $$L = \frac{\partial v}{\partial x} = \dot{F} F^{-1}$$
+
+TYPE, EXTENDS(Rank2Tensor_) :: VelocityGradient_
+END TYPE VelocityGradient_
+
+TYPE(VelocityGradient_), PARAMETER :: TypeVelocityGradient &
+  = VelocityGradient_()
+
+TYPE :: VelocityGradientPointer_
+  CLASS(VelocityGradient_), POINTER :: ptr => NULL()
+END TYPE VelocityGradientPointer_
+
+!----------------------------------------------------------------------------
+!                                                               StrainRate_
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2026-10-21
+! summary: Rate of deformation tensor
+!
+! Description:
+!   The strain rate is the symmetric part of the velocity gradient
+!
+!   $$D = \frac{1}{2}\left(L + L^{T}\right)$$
+
+TYPE, EXTENDS(Rank2Tensor_) :: StrainRate_
+END TYPE StrainRate_
+
+TYPE(StrainRate_), PARAMETER :: TypeStrainRate = StrainRate_()
+
+TYPE :: StrainRatePointer_
+  CLASS(StrainRate_), POINTER :: ptr => NULL()
+END TYPE StrainRatePointer_
+
+!----------------------------------------------------------------------------
+!                                                            ContinuumSpin_
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2026-10-21
+! summary: Continuum spin tensor
+!
+! Description:
+!   The spin is the skew-symmetric part of the velocity gradient
+!
+!   $$W = \frac{1}{2}\left(L - L^{T}\right)$$
+
+TYPE, EXTENDS(Rank2Tensor_) :: ContinuumSpin_
+END TYPE ContinuumSpin_
+
+TYPE(ContinuumSpin_), PARAMETER :: TypeContinuumSpin = ContinuumSpin_()
+
+TYPE :: ContinuumSpinPointer_
+  CLASS(ContinuumSpin_), POINTER :: ptr => NULL()
+END TYPE ContinuumSpinPointer_
+
+!----------------------------------------------------------------------------
+!                                                                   Stress_
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2026-10-21
+! summary: Stress tensor with its stress measure
+!
+! Description:
+!   The full 3x3 components are stored in `T`, so non-symmetric measures
+!   (first Piola-Kirchhoff and Mandel) are represented exactly.
+!   `stressType` is one of `StressMeasureCauchy`,
+!   `StressMeasureKirchhoff`, `StressMeasurePK1`, `StressMeasurePK2` or
+!   `StressMeasureMandel` defined in GlobalData.
+!
+!   $$\tau = J\sigma = P F^{T} = F S F^{T},\quad M = F^{T} P = C S$$
+
+TYPE, EXTENDS(Rank2Tensor_) :: Stress_
+  INTEGER(I4B) :: stressType = StressMeasureCauchy
+END TYPE Stress_
+
+TYPE(Stress_), PARAMETER :: TypeStress = Stress_()
+
+TYPE :: StressPointer_
+  CLASS(Stress_), POINTER :: ptr => NULL()
+END TYPE StressPointer_
+
+!----------------------------------------------------------------------------
+!                                                         MaterialJacobian_
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2026-10-21
+! summary: Material tangent (rank-4 tensor with minor symmetry)
+!
+! Description:
+!   The tangent $\mathbb{C}$ in $d\sigma = \mathbb{C} : d\varepsilon$ is
+!   stored as a 3D Voigt matrix `C(6, 6)` with the order
+!   `[11, 22, 33, 12, 23, 13]`. It maps the engineering strain vector
+!   (shear $\gamma = 2\varepsilon$) to the stress vector, so
+!   `C(I, J)` equals $\mathbb{C}_{ijkl}$.
+!
+!   `stressType`, `strainType` and `rateType` label the stress measure
+!   (`StressMeasure*`), strain measure (`StrainMeasure*`) and objective
+!   stress rate (`StressRate*`) that the tangent pairs.
+
+TYPE :: MaterialJacobian_
+  REAL(DFP) :: C(6, 6) = 0.0_DFP
+  INTEGER(I4B) :: stressType = StressMeasureCauchy
+  INTEGER(I4B) :: strainType = StrainMeasureSmall
+  INTEGER(I4B) :: rateType = StressRateNone
+END TYPE MaterialJacobian_
+
+TYPE(MaterialJacobian_), PARAMETER :: TypeMaterialJacobian = &
+  MaterialJacobian_()
+
+TYPE :: MaterialJacobianPointer_
+  CLASS(MaterialJacobian_), POINTER :: ptr => NULL()
+END TYPE MaterialJacobianPointer_
 
 !----------------------------------------------------------------------------
 !                                                       ReferenceTopology_
