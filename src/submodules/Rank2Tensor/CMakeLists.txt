@@ -16,4 +16,12 @@ TARGET_SOURCES(
   ${src_path}/Rank2Tensor_Method@OperatorMethods.F90
   ${src_path}/Rank2Tensor_Method@PullbackMethods.F90
   ${src_path}/Rank2Tensor_Method@PushForwardMethods.F90
+  ${src_path}/Rank2Tensor_Method@UtilityMethods.F90
+  ${src_path}/Rank2Tensor_Method@DeformationGradientMethods.F90
+  ${src_path}/Rank2Tensor_Method@CauchyGreenMethods.F90
+  ${src_path}/Rank2Tensor_Method@StrainMethods.F90
+  ${src_path}/Rank2Tensor_Method@VelocityGradientMethods.F90
+  ${src_path}/Rank2Tensor_Method@StressMethods.F90
+  ${src_path}/Rank2Tensor_Method@StressInvarMethods.F90
+  ${src_path}/Rank2Tensor_Method@StressDerivativeMethods.F90
 )

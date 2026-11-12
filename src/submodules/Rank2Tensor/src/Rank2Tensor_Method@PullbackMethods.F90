@@ -12,79 +12,66 @@
 ! GNU General Public License for more details.
 !
 ! You should have received a copy of the GNU General Public License
-! along with this program.  If not, see <https: //www.gnu.org/licenses/>
-!
+! along with this program.  If not, see <https://www.gnu.org/licenses/>
+
 
 !> author: Vikas Sharma, Ph. D.
-! date: 	17 March 2021
-! summary: Methods for pull back of rank2 tensor
+! date: 2021-03-17
+! summary: Pull back of tensors and vectors
+!
+! Description:
+!   Each index is mapped by a matrix M that depends on its variance:
+!   `"CONTRAVAR"` uses $F^{-1}$, `"COVAR"` uses $F^{T}$ and `"NA"`
+!   (or any other value) uses $I$. Then the pull back of a tensor is
+!   $M_1 T M_2^{T}$ and of a vector is $M_1 v$.
 
-SUBMODULE(Rank2Tensor_Method) PullBackMethods
-USE BaseMethod
+SUBMODULE(Rank2Tensor_Method) PullbackMethods
+USE GlobalData, ONLY: Eye3
+USE InvUtility, ONLY: Util_Inv => Inv
 IMPLICIT NONE
+
 CONTAINS
 
 !----------------------------------------------------------------------------
-!
+!                                                                   Pullback
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE pullback_rank2
-  TYPE( Rank2Tensor_ ) :: InvF
+MODULE PROCEDURE Rank2Tensor_Pullback1
+REAL(DFP) :: M1(3, 3), M2(3, 3)
 
-  SELECT CASE ( TRIM( indx1 ) )
-  CASE( "NA" )
-    SELECT CASE( TRIM( indx2 ) )
-    CASE( "CONTRAVAR" )
-      CALL INV( F, InvF )
-      Ans = MATMUL ( T, TRANSPOSE(InvF) )
-    CASE( "COVAR" )
-      Ans = MATMUL ( T, F )
-    CASE( "NA" )
-      Ans = T
-    END SELECT
+M1 = PullbackMap(F%T, indx1)
+M2 = PullbackMap(F%T, indx2)
+ans%T = MATMUL(M1, MATMUL(T%T, TRANSPOSE(M2)))
+ans%isSym = .FALSE.
+END PROCEDURE Rank2Tensor_Pullback1
 
-  CASE( "CONTRAVAR" )
-    SELECT CASE( TRIM( indx2 ) )
-    CASE( "CONTRAVAR" )
-      CALL INV( F, InvF )
-      Ans = MATMUL( InvF, MATMUL (T, TRANSPOSE(InvF)) )
-    CASE( "COVAR" )
-      CALL INV( F, InvF )
-      Ans = MATMUL( InvF, MATMUL ( T, F ) )
-    CASE( "NA" )
-      CALL INV( F, InvF )
-      Ans = MATMUL( InvF, T )
-    END SELECT
+!----------------------------------------------------------------------------
+!                                                                   Pullback
+!----------------------------------------------------------------------------
 
-  CASE( "COVAR" )
-    SELECT CASE( TRIM( indx2 ) )
-    CASE( "CONTRAVAR" )
-      CALL INV( F, InvF )
-      Ans = MATMUL( TRANSPOSE(F), MATMUL(T, TRANSPOSE(InvF)) )
-    CASE( "COVAR" )
-      Ans = MATMUL( TRANSPOSE(F), MATMUL(T, F) )
-    CASE( "NA" )
-      Ans = MATMUL( TRANSPOSE(F), T )
-    END SELECT
+MODULE PROCEDURE Rank2Tensor_Pullback2
+ans = MATMUL(PullbackMap(F%T, indx1), vec)
+END PROCEDURE Rank2Tensor_Pullback2
+
+!----------------------------------------------------------------------------
+!                                                                PullbackMap
+!----------------------------------------------------------------------------
+
+! Returns the map of one index for the pull back
+
+PURE FUNCTION PullbackMap(F, indx) RESULT(ans)
+  REAL(DFP), INTENT(IN) :: F(3, 3)
+  CHARACTER(*), INTENT(IN) :: indx
+  REAL(DFP) :: ans(3, 3)
+
+  SELECT CASE (TRIM(ADJUSTL(indx)))
+  CASE ("CONTRAVAR")
+    CALL Util_Inv(invA=ans, A=F)
+  CASE ("COVAR")
+    ans = TRANSPOSE(F)
+  CASE DEFAULT
+    ans = Eye3
   END SELECT
+END FUNCTION PullbackMap
 
-END PROCEDURE pullback_rank2
-
-!----------------------------------------------------------------------------
-!
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE pullback_vec
-  TYPE( Rank2Tensor_ ) :: InvF
-  SELECT CASE ( TRIM( indx1 ) )
-  CASE( "NA" )
-    Ans = Vec
-  CASE( "CONTRAVAR" )
-    CALL INV( F, InvF )
-    Ans = MATMUL( InvF, Vec )
-  CASE( "COVAR" )
-    Ans = MATMUL( TRANSPOSE(F), Vec )
-  END SELECT
-END PROCEDURE pullback_vec
-
-END SUBMODULE PullBackMethods
+END SUBMODULE PullbackMethods
