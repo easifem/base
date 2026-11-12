@@ -14,18 +14,16 @@
 ! You should have received a copy of the GNU General Public License
 ! along with this program.  If not, see <https://www.gnu.org/licenses/>
 
-
 !> author: Vikas Sharma, Ph. D.
 ! date: 2026-10-21
 ! summary: Isotropic rank-4 tensors in Voigt form
 !
-! Description:
-!   Ported from the old `Old_Rank4Tensors.part` (`ISO4`, `TraceISO4`,
-!   `SymISO4` and the `VoigtMat*ISO4` functions). The non-minor-symmetric
-!   tensors of the old file (`IdentityISO4`, `TransposeISO4`,
-!   `AntiSymISO4`) cannot be stored in a Voigt 6x6 and are not ported.
-!   All matrices follow the engineering-strain convention of
-!   [[MaterialJacobian_]].
+! Ported from the old `Old_Rank4Tensors.part` (`ISO4`, `TraceISO4`,
+! `SymISO4` and the `VoigtMat*ISO4` functions). The non-minor-symmetric
+! tensors of the old file (`IdentityISO4`, `TransposeISO4`,
+! `AntiSymISO4`) cannot be stored in a Voigt 6x6 and are not ported.
+! All matrices follow the engineering-strain convention of
+! [[MaterialJacobian_]].
 
 SUBMODULE(MaterialJacobian_Method) Rank4Methods
 IMPLICIT NONE

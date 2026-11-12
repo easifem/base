@@ -11,6 +11,7 @@ TARGET_SOURCES(
   ${PROJECT_NAME} PRIVATE
   ${src_path}/MaterialJacobian_Method@ConstructorMethods.F90
   ${src_path}/MaterialJacobian_Method@GetMethods.F90
+  ${src_path}/MaterialJacobian_Method@SetMethods.F90
   ${src_path}/MaterialJacobian_Method@VoigtFormMethods.F90
   ${src_path}/MaterialJacobian_Method@ContractionMethods.F90
   ${src_path}/MaterialJacobian_Method@Rank4Methods.F90

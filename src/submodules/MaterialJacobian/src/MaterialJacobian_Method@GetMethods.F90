@@ -14,14 +14,12 @@
 ! You should have received a copy of the GNU General Public License
 ! along with this program.  If not, see <https://www.gnu.org/licenses/>
 
-
 !> author: Vikas Sharma, Ph. D.
 ! date: 2026-10-21
-! summary: Getters of [[MaterialJacobian_]]
+! summary: Getters of [[MaterialJacobian_]] (tags, components)
 !
-! Description:
-!   Ported from the old `MaterialJacobian/getCijkl.part` and
-!   `OperatorOverloading/Cijkl.part` (`.Cijkl.` and `.Shape.`).
+! Ported from the old `MaterialJacobian/getCijkl.part` and
+! `OperatorOverloading/Cijkl.part` (`.Cijkl.` and `.Shape.`).
 
 SUBMODULE(MaterialJacobian_Method) GetMethods
 USE GlobalData, ONLY: VoigtForm3D
@@ -33,6 +31,30 @@ INTEGER(I4B), PARAMETER :: voigtIndex(3, 3) = RESHAPE( &
                            [1, 4, 6, 4, 2, 5, 6, 5, 3], [3, 3])
 
 CONTAINS
+
+!----------------------------------------------------------------------------
+!                                                              GetStressType
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE MaterialJacobian_GetStressType
+ans = obj%stressType
+END PROCEDURE MaterialJacobian_GetStressType
+
+!----------------------------------------------------------------------------
+!                                                              GetStrainType
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE MaterialJacobian_GetStrainType
+ans = obj%strainType
+END PROCEDURE MaterialJacobian_GetStrainType
+
+!----------------------------------------------------------------------------
+!                                                                GetRateType
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE MaterialJacobian_GetRateType
+ans = obj%rateType
+END PROCEDURE MaterialJacobian_GetRateType
 
 !----------------------------------------------------------------------------
 !                                                                      Cijkl

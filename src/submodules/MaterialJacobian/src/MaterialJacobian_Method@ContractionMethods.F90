@@ -14,16 +14,14 @@
 ! You should have received a copy of the GNU General Public License
 ! along with this program.  If not, see <https://www.gnu.org/licenses/>
 
-
 !> author: Vikas Sharma, Ph. D.
 ! date: 2026-10-21
 ! summary: Contraction of [[MaterialJacobian_]] with a strain
 !
-! Description:
-!   Ported from the old `MaterialJacobian/OperatorOverloading/
-!   Contraction.part`. The strain is converted to the engineering
-!   Voigt vector $[\varepsilon_{11}, \varepsilon_{22}, \varepsilon_{33},
-!   \gamma_{12}, \gamma_{23}, \gamma_{13}]$ and multiplied by `C`.
+! Ported from the old `MaterialJacobian/OperatorOverloading/
+! Contraction.part`. The strain is converted to the engineering
+! Voigt vector $[\varepsilon_{11}, \varepsilon_{22}, \varepsilon_{33},
+! \gamma_{12}, \gamma_{23}, \gamma_{13}]$ and multiplied by `C`.
 
 SUBMODULE(MaterialJacobian_Method) ContractionMethods
 USE GlobalData, ONLY: StressTypeVoigt

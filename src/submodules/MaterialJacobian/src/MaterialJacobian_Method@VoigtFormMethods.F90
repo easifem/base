@@ -14,20 +14,18 @@
 ! You should have received a copy of the GNU General Public License
 ! along with this program.  If not, see <https://www.gnu.org/licenses/>
 
-
 !> author: Vikas Sharma, Ph. D.
 ! date: 2026-10-21
 ! summary: Reduction of a 3D Voigt tangent to 2D Voigt forms
 !
-! Description:
-!   Replaces the `Mat*_From_Mat*` functions of the old `Voigt` module,
-!   which is no longer available. A plain sub-matrix is only correct for
-!   plane strain and axisymmetry; plane stress uses static condensation.
+! Replaces the `Mat*_From_Mat*` functions of the old `Voigt` module,
+! which is no longer available. A plain sub-matrix is only correct for
+! plane strain and axisymmetry; plane stress uses static condensation.
 
 SUBMODULE(MaterialJacobian_Method) VoigtFormMethods
+USE GlobalData, ONLY: VoigtFormAxisymmetric
 USE GlobalData, ONLY: VoigtFormPlaneStrain
 USE GlobalData, ONLY: VoigtFormPlaneStress
-USE GlobalData, ONLY: VoigtFormAxisymmetric
 USE InvUtility, ONLY: Util_Inv => Inv
 IMPLICIT NONE
 
@@ -73,15 +71,18 @@ REAL(DFP) :: Coo(3, 3), invCoo(3, 3)
 
 SELECT CASE (voigtForm)
 CASE (VoigtFormPlaneStrain)
-  nrow = 3; ncol = 3
+  nrow = 3
+  ncol = 3
   ans(1:3, 1:3) = C(inPlane, inPlane)
 
 CASE (VoigtFormAxisymmetric)
-  nrow = 4; ncol = 4
+  nrow = 4
+  ncol = 4
   ans(1:4, 1:4) = C(axisym, axisym)
 
 CASE (VoigtFormPlaneStress)
-  nrow = 3; ncol = 3
+  nrow = 3
+  ncol = 3
   Coo = C(outPlane, outPlane)
   CALL Util_Inv(invA=invCoo, A=Coo)
   ans(1:3, 1:3) = C(inPlane, inPlane) &
@@ -89,7 +90,8 @@ CASE (VoigtFormPlaneStress)
                            MATMUL(invCoo, C(outPlane, inPlane)))
 
 CASE DEFAULT
-  nrow = 6; ncol = 6
+  nrow = 6
+  ncol = 6
   ans(1:6, 1:6) = C
 END SELECT
 END PROCEDURE MaterialJacobian_ReduceVoigtTangent_

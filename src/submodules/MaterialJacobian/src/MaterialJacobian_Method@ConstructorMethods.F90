@@ -14,20 +14,18 @@
 ! You should have received a copy of the GNU General Public License
 ! along with this program.  If not, see <https://www.gnu.org/licenses/>
 
-
 !> author: Vikas Sharma, Ph. D.
 ! date: 2026-10-21
-! summary: Constructors and measure tags of [[MaterialJacobian_]]
+! summary: Constructors of [[MaterialJacobian_]]
 !
-! Description:
-!   Ported from the old `MaterialJacobian/Initiate.part`,
-!   `MaterialJacobian.part`, `MaterialJacobian_Pointer.part` and
-!   `Names.part`. The old free-form string tags are replaced by the
-!   `StressMeasure*`, `StrainMeasure*` and `StressRate*` constants.
+! Ported from the old `MaterialJacobian/Initiate.part`,
+! `MaterialJacobian.part`, `MaterialJacobian_Pointer.part` and
+! `Names.part`. The old free-form string tags are replaced by the
+! `StressMeasure*`, `StrainMeasure*` and `StressRate*` constants.
 
 SUBMODULE(MaterialJacobian_Method) ConstructorMethods
-USE GlobalData, ONLY: StressMeasureCauchy
 USE GlobalData, ONLY: StrainMeasureSmall
+USE GlobalData, ONLY: StressMeasureCauchy
 USE GlobalData, ONLY: StressRateNone
 USE InputUtility, ONLY: Input
 IMPLICIT NONE
@@ -117,39 +115,5 @@ END PROCEDURE MaterialJacobian_Pointer2
 MODULE PROCEDURE MaterialJacobian_MatEqObj
 C = obj%C
 END PROCEDURE MaterialJacobian_MatEqObj
-
-!----------------------------------------------------------------------------
-!                                                              GetStressType
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE MaterialJacobian_GetStressType
-ans = obj%stressType
-END PROCEDURE MaterialJacobian_GetStressType
-
-!----------------------------------------------------------------------------
-!                                                              GetStrainType
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE MaterialJacobian_GetStrainType
-ans = obj%strainType
-END PROCEDURE MaterialJacobian_GetStrainType
-
-!----------------------------------------------------------------------------
-!                                                                GetRateType
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE MaterialJacobian_GetRateType
-ans = obj%rateType
-END PROCEDURE MaterialJacobian_GetRateType
-
-!----------------------------------------------------------------------------
-!                                                            SetMeasureTypes
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE MaterialJacobian_SetMeasureTypes
-IF (PRESENT(stressType)) obj%stressType = stressType
-IF (PRESENT(strainType)) obj%strainType = strainType
-IF (PRESENT(rateType)) obj%rateType = rateType
-END PROCEDURE MaterialJacobian_SetMeasureTypes
 
 END SUBMODULE ConstructorMethods

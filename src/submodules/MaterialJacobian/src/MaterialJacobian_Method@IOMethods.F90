@@ -14,31 +14,29 @@
 ! You should have received a copy of the GNU General Public License
 ! along with this program.  If not, see <https://www.gnu.org/licenses/>
 
-
 !> author: Vikas Sharma, Ph. D.
 ! date: 2026-10-21
 ! summary: Display of [[MaterialJacobian_]]
 !
-! Description:
-!   Ported from the old `MaterialJacobian/Display.part`.
+! Ported from the old `MaterialJacobian/Display.part`.
 
 SUBMODULE(MaterialJacobian_Method) IOMethods
+USE Display_Method, ONLY: Util_Display => Display
 USE GlobalData, ONLY: stdout
+USE GlobalData, ONLY: StrainMeasureAlmansi
+USE GlobalData, ONLY: StrainMeasureGreen
+USE GlobalData, ONLY: StrainMeasureRateOfDeformation
+USE GlobalData, ONLY: StrainMeasureSmall
 USE GlobalData, ONLY: StressMeasureCauchy
 USE GlobalData, ONLY: StressMeasureKirchhoff
+USE GlobalData, ONLY: StressMeasureMandel
 USE GlobalData, ONLY: StressMeasurePK1
 USE GlobalData, ONLY: StressMeasurePK2
-USE GlobalData, ONLY: StressMeasureMandel
-USE GlobalData, ONLY: StrainMeasureSmall
-USE GlobalData, ONLY: StrainMeasureGreen
-USE GlobalData, ONLY: StrainMeasureAlmansi
-USE GlobalData, ONLY: StrainMeasureRateOfDeformation
-USE GlobalData, ONLY: StressRateNone
-USE GlobalData, ONLY: StressRateJaumann
-USE GlobalData, ONLY: StressRateTruesdell
 USE GlobalData, ONLY: StressRateGreenNaghdi
+USE GlobalData, ONLY: StressRateJaumann
+USE GlobalData, ONLY: StressRateNone
+USE GlobalData, ONLY: StressRateTruesdell
 USE InputUtility, ONLY: Input
-USE Display_Method, ONLY: Util_Display => Display
 IMPLICIT NONE
 
 CONTAINS
