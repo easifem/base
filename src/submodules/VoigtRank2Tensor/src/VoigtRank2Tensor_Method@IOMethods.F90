@@ -14,12 +14,16 @@
 ! You should have received a copy of the GNU General Public License
 ! along with this program.  If not, see <https://www.gnu.org/licenses/>
 
+!> author: Vikas Sharma, Ph. D.
+! date: 2021-03-13
+! summary: Input and output methods of [[VoigtRank2Tensor_]]
+
 SUBMODULE(VoigtRank2Tensor_Method) IOMethods
-USE GlobalData, ONLY: stdout
-USE GlobalData, ONLY: StressTypeVoigt
-USE GlobalData, ONLY: StrainTypeVoigt
-USE InputUtility, ONLY: Input
 USE Display_Method, ONLY: Util_Display => Display
+USE GlobalData, ONLY: stdout
+USE GlobalData, ONLY: StrainTypeVoigt
+USE GlobalData, ONLY: StressTypeVoigt
+USE InputUtility, ONLY: Input
 IMPLICIT NONE
 
 CONTAINS

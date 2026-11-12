@@ -14,19 +14,17 @@
 ! You should have received a copy of the GNU General Public License
 ! along with this program.  If not, see <https://www.gnu.org/licenses/>
 
-
 !> author: Vikas Sharma, Ph. D.
 ! date: 2026-10-21
 ! summary: Reduced (2D) Voigt forms of [[VoigtRank2Tensor_]]
 !
-! Description:
-!   Ported from the old `Stress/OperatorOverloading/Shape.part` and the
-!   NSD logic of the old `Stress_Class` constructor.
+! Ported from the old `Stress/OperatorOverloading/Shape.part` and the
+! NSD logic of the old `Stress_Class` constructor.
 
 SUBMODULE(VoigtRank2Tensor_Method) VoigtFormMethods
+USE GlobalData, ONLY: VoigtFormAxisymmetric
 USE GlobalData, ONLY: VoigtFormPlaneStrain
 USE GlobalData, ONLY: VoigtFormPlaneStress
-USE GlobalData, ONLY: VoigtFormAxisymmetric
 IMPLICIT NONE
 
 CONTAINS
