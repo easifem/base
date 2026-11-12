@@ -28,6 +28,7 @@ PRIVATE
 PUBLIC :: ForceVector
 PUBLIC :: ForceVector_
 PUBLIC :: GravityForceVector_
+PUBLIC :: InternalForceVector_
 
 !----------------------------------------------------------------------------
 !                                                               ForceVector
@@ -804,6 +805,49 @@ INTERFACE GravityForceVector_
     LOGICAL(LGT), OPTIONAL, INTENT(IN) :: addContribution
   END SUBROUTINE GravityForceVector_1
 END INTERFACE GravityForceVector_
+
+!----------------------------------------------------------------------------
+!                                                InternalForceVector_@Methods
+!----------------------------------------------------------------------------
+
+!> author: Shion Shimizu
+! date: 2026-11-02
+! summary: Internal force vector of solid mechanics
+!
+!# InternalForceVector_
+!
+! This routine computes the internal (nodal) force vector of an element
+! from the stress at quadrature points.
+!
+! $$
+! F_{Ii} = \int_{\Omega} \frac{\partial N^I}{\partial x_j}
+! \sigma_{ij} d\Omega
+! $$
+!
+! - stress(:, ips) is the Voigt stress vector (tensor components) at
+!   quadrature point ips. The Voigt order is [11] in 1D, [11, 22, 12] in
+!   2D, and [11, 22, 33, 12, 23, 13] in 3D, same as StiffnessMatrix_.
+! - The number of rows of stress should be at least nsd*(nsd+1)/2.
+! - ans(I, i) is the force of node I in direction i, so nrow = nns and
+!   ncol = nsd. This is the layout of storageFormatDOF in VectorField_.
+! - If addContribution is true then the result is added to ans,
+!   otherwise ans is overwritten.
+
+INTERFACE InternalForceVector_
+  MODULE PURE SUBROUTINE InternalForceVector_1(test, stress, ans, nrow, &
+                                               ncol, scale, addContribution)
+    CLASS(ElemshapeData_), INTENT(IN) :: test
+    REAL(DFP), INTENT(IN) :: stress(:, :)
+    !! Voigt stress at quadrature points, (nvoigt, nips)
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    !! internal force, (nns, nsd)
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+    REAL(DFP), OPTIONAL, INTENT(IN) :: scale
+    !! scale, default is 1
+    LOGICAL(LGT), OPTIONAL, INTENT(IN) :: addContribution
+    !! default is false
+  END SUBROUTINE InternalForceVector_1
+END INTERFACE InternalForceVector_
 
 !----------------------------------------------------------------------------
 !
