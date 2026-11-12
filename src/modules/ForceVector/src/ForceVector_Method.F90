@@ -807,45 +807,78 @@ INTERFACE GravityForceVector_
 END INTERFACE GravityForceVector_
 
 !----------------------------------------------------------------------------
-!                                                InternalForceVector_@Methods
+!                                                       InternalForceVector_
 !----------------------------------------------------------------------------
 
 !> author: Shion Shimizu
 ! date: 2026-11-02
 ! summary: Internal force vector of solid mechanics
 !
-!# InternalForceVector_
-!
 ! This routine computes the internal (nodal) force vector of an element
 ! from the stress at quadrature points.
 !
+! stress(:, ips) is the Voigt stress vector (tensor components, no
+! factor 2 on the shear) at quadrature point ips. The Voigt order is
+! [11] in 1D, [11, 22, 12] in 2D and [11, 22, 33, 12, 23, 13] in 3D, the
+! same as in StiffnessMatrix_. In 2D a 3D stress vector must be reduced
+! to [11, 22, 12] first; the axisymmetric form is not supported.
+!
+! ans(I, i) is the force of node I in direction i, so nrow = nns and
+! ncol = nsd. This is the layout of storageFormatDOF in VectorField_.
+! If addContribution is true then the result is added to ans,
+! otherwise ans is overwritten.
+!
+! Formula:
+!
 ! $$
-! F_{Ii} = \int_{\Omega} \frac{\partial N^I}{\partial x_j}
+! F_{Ii} = s \int_{\Omega} \frac{\partial N^I}{\partial x_j}
 ! \sigma_{ij} d\Omega
 ! $$
 !
-! - stress(:, ips) is the Voigt stress vector (tensor components) at
-!   quadrature point ips. The Voigt order is [11] in 1D, [11, 22, 12] in
-!   2D, and [11, 22, 33, 12, 23, 13] in 3D, same as StiffnessMatrix_.
-! - The number of rows of stress should be at least nsd*(nsd+1)/2.
-! - ans(I, i) is the force of node I in direction i, so nrow = nns and
-!   ncol = nsd. This is the layout of storageFormatDOF in VectorField_.
-! - If addContribution is true then the result is added to ans,
-!   otherwise ans is overwritten.
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE BaseType, ONLY: ElemShapeData_
+! USE ForceVector_Method, ONLY: InternalForceVector_
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! IMPLICIT NONE
+!
+! TYPE(ElemShapeData_) :: elemsd
+! REAL(DFP) :: stress(3, 4), fint(4, 2)
+! INTEGER(I4B) :: nrow, ncol
+!
+! ! elemsd: Q4 element with 4 quadrature points (not shown)
+! ! stress(:, ips) = [s11, s22, s12] at each quadrature point
+! CALL InternalForceVector_(test=elemsd, stress=stress, ans=fint, &
+!                           nrow=nrow, ncol=ncol)
+! END PROGRAM main
+!```
+!
+! Full example:
+! src/modules/ForceVector/examples/InternalForceVector_test_1.F90
+!
+! See also: [[StiffnessMatrix_]]
 
 INTERFACE InternalForceVector_
   MODULE PURE SUBROUTINE InternalForceVector_1(test, stress, ans, nrow, &
                                                ncol, scale, addContribution)
     CLASS(ElemshapeData_), INTENT(IN) :: test
+    !! shape data of the test function, nns nodes, nips points
     REAL(DFP), INTENT(IN) :: stress(:, :)
-    !! Voigt stress at quadrature points, (nvoigt, nips)
+    !! Voigt stress at quadrature points, SHAPE (nv, nips) with
+    !! nv = nsd*(nsd+1)/2 (at least)
     REAL(DFP), INTENT(INOUT) :: ans(:, :)
-    !! internal force, (nns, nsd)
-    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+    !! internal force, SIZE at least (nns, nsd)
+    INTEGER(I4B), INTENT(OUT) :: nrow
+    !! number of rows written in ans, nns
+    INTEGER(I4B), INTENT(OUT) :: ncol
+    !! number of columns written in ans, nsd
     REAL(DFP), OPTIONAL, INTENT(IN) :: scale
-    !! scale, default is 1
+    !! scale s, default is 1
     LOGICAL(LGT), OPTIONAL, INTENT(IN) :: addContribution
-    !! default is false
+    !! if true then add to ans, default is false
   END SUBROUTINE InternalForceVector_1
 END INTERFACE InternalForceVector_
 
