@@ -25,7 +25,7 @@ Before searching for code, read `architecture.md`.
 - All types: `src/modules/BaseType/src/BaseType.F90`
 - Interface: `src/modules/<Name>/src/<Name>_Method.F90`
 - Implementation: `src/submodules/<Name>/src/<Name>_Method@<Category>.F90`
-- Tests: `src/modules/<Name>/examples/<Name>_test_<N>.F90`
+- Tests: `src/modules/<Name>/examples/<MethodName>_test_<N>.F90`
 - Errors: `ErrorHandling` (`ErrorMsg`), output unit `stderr` from
   `GlobalData`
 - Docs output: `docs/api/`; `docs/pages/` are old website docs (read only)
