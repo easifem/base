@@ -27,7 +27,7 @@
 !
 !   `Reallocate` is available for
 !
-!   - logical vectors,
+!   - logical arrays of rank 1 to 3,
 !   - real (`REAL32`, `REAL64`) arrays of rank 1 to 7,
 !   - integer arrays of rank 1 to 7 (`INT8` to `INT64` for rank 1 and
 !     2, `INT32` and `INT64` for rank 3 to 7),
@@ -47,6 +47,10 @@
 !   A newly allocated array is set to zero everywhere. When `isExpand`
 !   keeps a larger existing array, only the requested leading part is
 !   set to zero and the other entries keep their values.
+!
+! Changes:
+!   - 2026-11-13: logical arrays of rank 2 and 3, and the `s` form for
+!     logical vectors
 
 MODULE ReallocateUtility
 USE GlobalData, ONLY: LGT
@@ -72,40 +76,34 @@ PUBLIC :: Reallocate
 ! date: 2022-08-05
 ! summary: Allocates or reallocates a logical vector.
 !
-! Description:
-!   Makes `mat` ready to hold `row` entries and sets `mat(1:row)` to
-!   `.FALSE.`. The old values are not kept.
+! Makes `mat` ready to hold `row` entries and sets `mat(1:row)` to
+! `.FALSE.`. The old values are not kept.
 !
-!   - If `mat` is not allocated, it is allocated with size `row`.
-!     `expandFactor` is not used in this case.
-!   - If `mat` is allocated and `isExpand` is `.FALSE.` (default), it
-!     is reallocated only when `SIZE(mat) /= row`, so that
-!     `SIZE(mat) = row`.
-!   - If `mat` is allocated and `isExpand` is `.TRUE.`, it is kept when
-!     `SIZE(mat) >= row`, and reallocated with size
-!     `row * expandFactor` otherwise.
-!   - Only `mat(1:row)` is set. Entries after `row` keep their old
-!     value when `mat` is kept, and are zero when it is newly
-!     allocated.
+! - If `mat` is not allocated, it is allocated with size `row`.
+!   `expandFactor` is not used in this case.
+! - If `mat` is allocated and `isExpand` is `.FALSE.` (default), it
+!   is reallocated only when `SIZE(mat) /= row`, so that
+!   `SIZE(mat) = row`.
+! - If `mat` is allocated and `isExpand` is `.TRUE.`, it is kept when
+!   `SIZE(mat) >= row`, and reallocated with size
+!   `row * expandFactor` otherwise. A new vector is `.FALSE.`
+!   everywhere.
+! - Only `mat(1:row)` is set. Entries after `row` keep their old
+!   value when `mat` is kept.
 !
-! Arguments:
-!   mat : LOGICAL(LGT), ALLOCATABLE, rank(1) - vector to reallocate
-!   row : INTEGER(I4B) - required size, `row >= 0`
-!   isExpand : LOGICAL(LGT), OPTIONAL - default `.FALSE.`
-!   expandFactor : INTEGER(I4B), OPTIONAL - default 1
+! The size can also be given as a vector `s`; then `row = s(1)` and
+! the other entries of `s` are not used.
 !
-! Returns:
-!   mat : `SIZE(mat) >= row`, with `mat(1:row) = .FALSE.`
+! Changes:
+!   - 2026-11-13: added the `s` form (Reallocate_Logical_R1b)
 !
 ! Formula:
 !   $$n = \begin{cases}
-!     \mathrm{row} \cdot f, & \text{mat is not allocated} \\
+!     \mathrm{row}, & \text{mat is not allocated} \\
 !     \mathrm{row}, & \text{isExpand is false} \\
 !     n_{old}, & \text{isExpand}, n_{old} \ge \mathrm{row} \\
 !     \mathrm{row} \cdot f, & \text{isExpand}, n_{old} < \mathrm{row}
 !   \end{cases}$$
-!
-!   $$\mathrm{mat}_i = \text{false}, \; i = 1, \dots, \mathrm{row}$$
 !
 !   where $n = \mathrm{SIZE(mat)}$ and $f$ is `expandFactor`.
 !
@@ -113,51 +111,343 @@ PUBLIC :: Reallocate
 !
 !```fortran
 ! PROGRAM main
-! USE GlobalData, ONLY: LGT
 ! USE GlobalData, ONLY: I4B
+! USE GlobalData, ONLY: LGT
 ! USE ReallocateUtility, ONLY: Reallocate
 ! USE Test_Method, ONLY: OK
 ! IMPLICIT NONE
 !
-! LOGICAL(LGT), ALLOCATABLE :: a(:)
+! ! Test 1: not allocated, the size is s(1)
+! BLOCK
+!   LOGICAL(LGT), ALLOCATABLE :: a(:)
 !
-! ! not allocated: allocate and set to .FALSE.
-! CALL Reallocate(a, 4_I4B)
-! CALL OK(ALLOCATED(a), "allocated")
-! CALL OK(SIZE(a) .EQ. 4_I4B, "size is 4")
-! CALL OK(.NOT. ANY(a), "all entries are .FALSE.")
+!   CALL Reallocate(a, [5_I4B])
+!   CALL OK(SIZE(a) .EQ. 5_I4B, "size is s(1)")
+!   CALL OK(.NOT. ANY(a), "all entries are .FALSE.")
+! END BLOCK
 !
-! ! same size: the old values are not kept
-! a = .TRUE.
-! CALL Reallocate(a, 4_I4B)
-! CALL OK(SIZE(a) .EQ. 4_I4B, "same size is kept")
-! CALL OK(.NOT. ANY(a), "old values are reset")
+! ! Test 2: same size, the old values are reset
+! BLOCK
+!   LOGICAL(LGT), ALLOCATABLE :: a(:)
 !
-! ! isExpand: a larger vector is kept, only a(1:row) is reset
-! a = .TRUE.
-! CALL Reallocate(a, 2_I4B, isExpand=.TRUE.)
-! CALL OK(SIZE(a) .EQ. 4_I4B, "isExpand keeps the larger size")
-! CALL OK(.NOT. ANY(a(1:2)), "a(1:2) is reset")
-! CALL OK(ALL(a(3:4)), "a(3:4) is not touched")
+!   CALL Reallocate(a, [5_I4B])
+!   a = .TRUE.
+!   CALL Reallocate(a, [5_I4B])
+!   CALL OK(.NOT. ANY(a), "old values are reset")
+! END BLOCK
 !
-! ! without isExpand the size is changed to row
-! CALL Reallocate(a, 6_I4B)
-! CALL OK(SIZE(a) .EQ. 6_I4B, "size is 6")
+! ! Test 3: isExpand keeps a larger vector, only a(1:s(1)) is reset
+! BLOCK
+!   LOGICAL(LGT), ALLOCATABLE :: a(:)
+!
+!   CALL Reallocate(a, [6_I4B])
+!   a = .TRUE.
+!   CALL Reallocate(a, [2_I4B], isExpand=.TRUE.)
+!   CALL OK(SIZE(a) .EQ. 6_I4B, "isExpand keeps the larger size")
+!   CALL OK(.NOT. ANY(a(1:2)), "a(1:2) is reset")
+!   CALL OK(ALL(a(3:6)), "a(3:6) is not touched")
+! END BLOCK
+!
+! ! Test 4: isExpand grows to s(1) * expandFactor, all .FALSE.
+! BLOCK
+!   LOGICAL(LGT), ALLOCATABLE :: a(:)
+!
+!   CALL Reallocate(a, [2_I4B])
+!   CALL Reallocate(a, [4_I4B], isExpand=.TRUE., expandFactor=3_I4B)
+!   CALL OK(SIZE(a) .EQ. 12_I4B, "size is 4 * 3")
+!   CALL OK(.NOT. ANY(a), "new vector is .FALSE. everywhere")
+! END BLOCK
 !
 ! END PROGRAM main
 !```
+!
+! See also: [[Reallocate_Logical_R2]], [[Reallocate_Logical_R3]]
 
 INTERFACE Reallocate
-  MODULE PURE SUBROUTINE Reallocate_logical(mat, row, isExpand, expandFactor)
+  MODULE PURE SUBROUTINE Reallocate_Logical_R1(mat, row, isExpand, &
+                                               expandFactor)
     LOGICAL(LGT), ALLOCATABLE, INTENT(INOUT) :: mat(:)
+    !! vector to reallocate, SIZE(mat) >= row on return
     INTEGER(I4B), INTENT(IN) :: row
+    !! required size, row >= 0
     LOGICAL(LGT), OPTIONAL, INTENT(IN) :: isExpand
-    !! if true then we do not allocate if current size is more than required
-    !! in this case if the size is not enough then the new size
-    !! is expandFactor times row
+    !! if true then keep a larger vector, default is false
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: expandFactor
-    !! expand factor, used when isExpand is true.
-  END SUBROUTINE Reallocate_logical
+    !! growth factor used when isExpand is true, default is 1
+  END SUBROUTINE Reallocate_Logical_R1
+
+  MODULE PURE SUBROUTINE Reallocate_Logical_R1b(mat, s, isExpand, &
+                                                expandFactor)
+    LOGICAL(LGT), ALLOCATABLE, INTENT(INOUT) :: mat(:)
+    !! vector to reallocate, SIZE(mat) >= s(1) on return
+    INTEGER(I4B), INTENT(IN) :: s(:)
+    !! required size in s(1), SIZE(s) >= 1
+    LOGICAL(LGT), OPTIONAL, INTENT(IN) :: isExpand
+    !! if true then keep a larger vector, default is false
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: expandFactor
+    !! growth factor used when isExpand is true, default is 1
+  END SUBROUTINE Reallocate_Logical_R1b
+END INTERFACE Reallocate
+
+!----------------------------------------------------------------------------
+!                                                                  Reallocate
+!----------------------------------------------------------------------------
+
+!> author: Shion Shimizu
+! date: 2026-11-13
+! summary: Allocates or reallocates a logical rank-2 array.
+!
+! Makes `mat` ready to hold an array of shape (row, col) and sets the
+! block `mat(1:row, 1:col)` to `.FALSE.`. The old values are not kept.
+!
+! - If `mat` is not allocated, it is allocated with shape (row, col).
+! - If `isExpand` is `.FALSE.` (default), `mat` is reallocated when
+!   its shape differs from (row, col).
+! - If `isExpand` is `.TRUE.`, every extent that is large enough is
+!   kept, and an extent that is too small grows to
+!   `n * expandFactor`. A newly allocated array is `.FALSE.`
+!   everywhere; a kept array changes only in the leading block.
+!
+! The shape can also be given as a vector `s = [row, col]`.
+!
+! Formula:
+!   $$n_k = \begin{cases}
+!     r_k, & \text{isExpand is false} \\
+!     n_k^{old}, & \text{isExpand}, n_k^{old} \ge r_k \\
+!     r_k \cdot f, & \text{isExpand}, n_k^{old} < r_k
+!   \end{cases}$$
+!
+!   where $n_k$ is the k-th extent of mat, $r = (\mathrm{row},
+!   \mathrm{col})$ and $f$ is `expandFactor`.
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: I4B
+! USE GlobalData, ONLY: LGT
+! USE ReallocateUtility, ONLY: Reallocate
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+!
+! ! Test 1: not allocated, allocate (row, col) and set to .FALSE.
+! BLOCK
+!   LOGICAL(LGT), ALLOCATABLE :: m(:, :)
+!
+!   CALL Reallocate(m, 3_I4B, 2_I4B)
+!   CALL OK(ALL(SHAPE(m) .EQ. [3_I4B, 2_I4B]), "shape is (3, 2)")
+!   CALL OK(.NOT. ANY(m), "all entries are .FALSE.")
+! END BLOCK
+!
+! ! Test 2: same shape resets, another shape reallocates
+! BLOCK
+!   LOGICAL(LGT), ALLOCATABLE :: m(:, :)
+!
+!   CALL Reallocate(m, 3_I4B, 2_I4B)
+!   m = .TRUE.
+!   CALL Reallocate(m, 3_I4B, 2_I4B)
+!   CALL OK(.NOT. ANY(m), "same shape: old values are reset")
+!   CALL Reallocate(m, 1_I4B, 4_I4B)
+!   CALL OK(ALL(SHAPE(m) .EQ. [1_I4B, 4_I4B]), "new shape is (1, 4)")
+! END BLOCK
+!
+! ! Test 3: isExpand keeps a larger array, only the block is reset
+! BLOCK
+!   LOGICAL(LGT), ALLOCATABLE :: m(:, :)
+!
+!   CALL Reallocate(m, 4_I4B, 3_I4B)
+!   m = .TRUE.
+!   CALL Reallocate(m, 2_I4B, 2_I4B, isExpand=.TRUE.)
+!   CALL OK(ALL(SHAPE(m) .EQ. [4_I4B, 3_I4B]), "isExpand keeps (4, 3)")
+!   CALL OK(.NOT. ANY(m(1:2, 1:2)), "m(1:2, 1:2) is reset")
+!   CALL OK(ALL(m(3:4, :)) .AND. ALL(m(:, 3)), "other entries kept")
+! END BLOCK
+!
+! ! Test 4: isExpand grows a too small extent by expandFactor
+! BLOCK
+!   LOGICAL(LGT), ALLOCATABLE :: m(:, :)
+!
+!   CALL Reallocate(m, 2_I4B, 5_I4B)
+!   CALL Reallocate(m, 3_I4B, 2_I4B, isExpand=.TRUE., expandFactor=2_I4B)
+!   CALL OK(ALL(SHAPE(m) .EQ. [6_I4B, 5_I4B]), "shape is (3 * 2, 5)")
+!   CALL OK(.NOT. ANY(m), "new array is .FALSE. everywhere")
+! END BLOCK
+!
+! ! Test 5: shape given as a vector, and a zero extent
+! BLOCK
+!   LOGICAL(LGT), ALLOCATABLE :: m(:, :)
+!
+!   CALL Reallocate(m, [2_I4B, 3_I4B])
+!   CALL OK(ALL(SHAPE(m) .EQ. [2_I4B, 3_I4B]), "shape from s")
+!   CALL Reallocate(m, 0_I4B, 3_I4B)
+!   CALL OK(SIZE(m) .EQ. 0_I4B, "size is 0")
+! END BLOCK
+!
+! END PROGRAM main
+!```
+!
+! See also: [[Reallocate_Logical_R1]], [[Reallocate_Logical_R3]]
+
+INTERFACE Reallocate
+  MODULE PURE SUBROUTINE Reallocate_Logical_R2(mat, row, col, isExpand, &
+                                               expandFactor)
+    LOGICAL(LGT), ALLOCATABLE, INTENT(INOUT) :: mat(:, :)
+    !! array to reallocate, SHAPE(mat) >= [row, col] on return
+    INTEGER(I4B), INTENT(IN) :: row
+    !! required number of rows, row >= 0
+    INTEGER(I4B), INTENT(IN) :: col
+    !! required number of columns, col >= 0
+    LOGICAL(LGT), OPTIONAL, INTENT(IN) :: isExpand
+    !! if true then keep extents that are large enough, default is false
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: expandFactor
+    !! growth factor used when isExpand is true, default is 1
+  END SUBROUTINE Reallocate_Logical_R2
+
+  MODULE PURE SUBROUTINE Reallocate_Logical_R2b(mat, s, isExpand, &
+                                                expandFactor)
+    LOGICAL(LGT), ALLOCATABLE, INTENT(INOUT) :: mat(:, :)
+    !! array to reallocate, SHAPE(mat) >= s(1:2) on return
+    INTEGER(I4B), INTENT(IN) :: s(:)
+    !! required shape [row, col], SIZE(s) >= 2
+    LOGICAL(LGT), OPTIONAL, INTENT(IN) :: isExpand
+    !! if true then keep extents that are large enough, default is false
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: expandFactor
+    !! growth factor used when isExpand is true, default is 1
+  END SUBROUTINE Reallocate_Logical_R2b
+END INTERFACE Reallocate
+
+!----------------------------------------------------------------------------
+!                                                                  Reallocate
+!----------------------------------------------------------------------------
+
+!> author: Shion Shimizu
+! date: 2026-11-13
+! summary: Allocates or reallocates a logical rank-3 array.
+!
+! Makes `mat` ready to hold an array of shape (i1, i2, i3) and sets
+! the block `mat(1:i1, 1:i2, 1:i3)` to `.FALSE.`. The old values are
+! not kept.
+!
+! - If `mat` is not allocated, it is allocated with shape (i1, i2, i3).
+! - If `isExpand` is `.FALSE.` (default), `mat` is reallocated when
+!   its shape differs from (i1, i2, i3).
+! - If `isExpand` is `.TRUE.`, every extent that is large enough is
+!   kept, and an extent that is too small grows to
+!   `n * expandFactor`. A newly allocated array is `.FALSE.`
+!   everywhere; a kept array changes only in the leading block.
+!
+! The shape can also be given as a vector `s = [i1, i2, i3]`.
+!
+! Formula:
+!   $$n_k = \begin{cases}
+!     r_k, & \text{isExpand is false} \\
+!     n_k^{old}, & \text{isExpand}, n_k^{old} \ge r_k \\
+!     r_k \cdot f, & \text{isExpand}, n_k^{old} < r_k
+!   \end{cases}$$
+!
+!   where $n_k$ is the k-th extent of mat, $r = (i_1, i_2, i_3)$ and
+!   $f$ is `expandFactor`.
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: I4B
+! USE GlobalData, ONLY: LGT
+! USE ReallocateUtility, ONLY: Reallocate
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+!
+! ! Test 1: not allocated, allocate (i1, i2, i3) and set to .FALSE.
+! BLOCK
+!   LOGICAL(LGT), ALLOCATABLE :: m(:, :, :)
+!
+!   CALL Reallocate(m, 2_I4B, 3_I4B, 4_I4B)
+!   CALL OK(ALL(SHAPE(m) .EQ. [2_I4B, 3_I4B, 4_I4B]), &
+!           "shape is (2, 3, 4)")
+!   CALL OK(.NOT. ANY(m), "all entries are .FALSE.")
+! END BLOCK
+!
+! ! Test 2: same shape resets, another shape reallocates
+! BLOCK
+!   LOGICAL(LGT), ALLOCATABLE :: m(:, :, :)
+!
+!   CALL Reallocate(m, 2_I4B, 3_I4B, 4_I4B)
+!   m = .TRUE.
+!   CALL Reallocate(m, 2_I4B, 3_I4B, 4_I4B)
+!   CALL OK(.NOT. ANY(m), "same shape: old values are reset")
+!   CALL Reallocate(m, 1_I4B, 1_I4B, 2_I4B)
+!   CALL OK(ALL(SHAPE(m) .EQ. [1_I4B, 1_I4B, 2_I4B]), &
+!           "new shape is (1, 1, 2)")
+! END BLOCK
+!
+! ! Test 3: isExpand keeps a larger array, only the block is reset
+! BLOCK
+!   LOGICAL(LGT), ALLOCATABLE :: m(:, :, :)
+!
+!   CALL Reallocate(m, 3_I4B, 3_I4B, 3_I4B)
+!   m = .TRUE.
+!   CALL Reallocate(m, 2_I4B, 2_I4B, 2_I4B, isExpand=.TRUE.)
+!   CALL OK(ALL(SHAPE(m) .EQ. [3_I4B, 3_I4B, 3_I4B]), &
+!           "isExpand keeps (3, 3, 3)")
+!   CALL OK(.NOT. ANY(m(1:2, 1:2, 1:2)), "m(1:2, 1:2, 1:2) is reset")
+!   CALL OK(ALL(m(3, :, :)) .AND. ALL(m(:, :, 3)), "other entries kept")
+! END BLOCK
+!
+! ! Test 4: isExpand grows a too small extent by expandFactor
+! BLOCK
+!   LOGICAL(LGT), ALLOCATABLE :: m(:, :, :)
+!
+!   CALL Reallocate(m, 2_I4B, 2_I4B, 2_I4B)
+!   CALL Reallocate(m, 2_I4B, 3_I4B, 1_I4B, isExpand=.TRUE., &
+!                   expandFactor=2_I4B)
+!   CALL OK(ALL(SHAPE(m) .EQ. [2_I4B, 6_I4B, 2_I4B]), &
+!           "shape is (2, 3 * 2, 2)")
+!   CALL OK(.NOT. ANY(m), "new array is .FALSE. everywhere")
+! END BLOCK
+!
+! ! Test 5: shape given as a vector
+! BLOCK
+!   LOGICAL(LGT), ALLOCATABLE :: m(:, :, :)
+!
+!   CALL Reallocate(m, [4_I4B, 1_I4B, 2_I4B])
+!   CALL OK(ALL(SHAPE(m) .EQ. [4_I4B, 1_I4B, 2_I4B]), "shape from s")
+!   CALL OK(.NOT. ANY(m), "shape from s: all .FALSE.")
+! END BLOCK
+!
+! END PROGRAM main
+!```
+!
+! See also: [[Reallocate_Logical_R1]], [[Reallocate_Logical_R2]]
+
+INTERFACE Reallocate
+  MODULE PURE SUBROUTINE Reallocate_Logical_R3(mat, i1, i2, i3, isExpand, &
+                                               expandFactor)
+    LOGICAL(LGT), ALLOCATABLE, INTENT(INOUT) :: mat(:, :, :)
+    !! array to reallocate, SHAPE(mat) >= [i1, i2, i3] on return
+    INTEGER(I4B), INTENT(IN) :: i1
+    !! required first extent, i1 >= 0
+    INTEGER(I4B), INTENT(IN) :: i2
+    !! required second extent, i2 >= 0
+    INTEGER(I4B), INTENT(IN) :: i3
+    !! required third extent, i3 >= 0
+    LOGICAL(LGT), OPTIONAL, INTENT(IN) :: isExpand
+    !! if true then keep extents that are large enough, default is false
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: expandFactor
+    !! growth factor used when isExpand is true, default is 1
+  END SUBROUTINE Reallocate_Logical_R3
+
+  MODULE PURE SUBROUTINE Reallocate_Logical_R3b(mat, s, isExpand, &
+                                                expandFactor)
+    LOGICAL(LGT), ALLOCATABLE, INTENT(INOUT) :: mat(:, :, :)
+    !! array to reallocate, SHAPE(mat) >= s(1:3) on return
+    INTEGER(I4B), INTENT(IN) :: s(:)
+    !! required shape [i1, i2, i3], SIZE(s) >= 3
+    LOGICAL(LGT), OPTIONAL, INTENT(IN) :: isExpand
+    !! if true then keep extents that are large enough, default is false
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: expandFactor
+    !! growth factor used when isExpand is true, default is 1
+  END SUBROUTINE Reallocate_Logical_R3b
 END INTERFACE Reallocate
 
 !----------------------------------------------------------------------------
