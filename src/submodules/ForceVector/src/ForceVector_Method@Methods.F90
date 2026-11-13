@@ -643,7 +643,47 @@ END DO
 END PROCEDURE GravityForceVector_1
 
 !----------------------------------------------------------------------------
-!
+!                                                       InternalForceVector_
 !----------------------------------------------------------------------------
+
+MODULE PROCEDURE InternalForceVector_1
+INTEGER(I4B) :: ips, ii, jj, nsd, nns
+INTEGER(I4B) :: indx(3, 3)
+REAL(DFP) :: realval, scale0
+LOGICAL(LGT) :: isAdd
+
+nsd = test%nsd
+nns = test%nns
+nrow = nns
+ncol = nsd
+
+isAdd = .FALSE.
+IF (PRESENT(addContribution)) isAdd = addContribution
+scale0 = 1.0_DFP
+IF (PRESENT(scale)) scale0 = scale
+
+IF (.NOT. isAdd) ans(1:nrow, 1:ncol) = 0.0_DFP
+
+SELECT CASE (nsd)
+CASE (1)
+  indx(1, 1) = 1
+CASE (2)
+  indx(1:2, 1:2) = RESHAPE([1, 3, 3, 2], [2, 2])
+CASE (3)
+  indx(1:3, 1:3) = RESHAPE([1, 4, 6, 4, 2, 5, 6, 5, 3], [3, 3])
+CASE DEFAULT
+END SELECT
+
+DO ips = 1, test%nips
+  realval = scale0 * test%ws(ips) * test%js(ips) * test%thickness(ips)
+  DO ii = 1, nsd
+    DO jj = 1, nsd
+      ans(1:nns, ii) = ans(1:nns, ii) + realval * &
+                       stress(indx(ii, jj), ips) * test%dNdXt(1:nns, jj, ips)
+    END DO
+  END DO
+END DO
+
+END PROCEDURE InternalForceVector_1
 
 END SUBMODULE Methods

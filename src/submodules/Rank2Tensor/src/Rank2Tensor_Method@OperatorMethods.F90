@@ -12,152 +12,151 @@
 ! GNU General Public License for more details.
 !
 ! You should have received a copy of the GNU General Public License
-! along with this program.  If not, see <https: //www.gnu.org/licenses/>
-!
+! along with this program.  If not, see <https://www.gnu.org/licenses/>
 
 !> author: Vikas Sharma, Ph. D.
-! date: 	17 March 2021
-! summary: 	This subroutine contains algebraic operator
+! date: 2021-03-17
+! summary: Algebraic operators for [[Rank2Tensor_]]
+!
+! `*` and `/` between two tensors are element-wise. `MATMUL` is the
+! single contraction.
 
 SUBMODULE(Rank2Tensor_Method) OperatorMethods
-USE BaseMethod
 IMPLICIT NONE
+
 CONTAINS
 
-
 !----------------------------------------------------------------------------
-!
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE obj_add_obj
-  Ans%T = obj1%T + obj2%T
-  IF( obj1%isSym .AND. obj2%isSym ) Ans%isSym = .TRUE.
-END PROCEDURE
-
-!----------------------------------------------------------------------------
-!
+!                                                                          +
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE obj_add_Scalar
-  Ans%T = obj1%T + obj2
-  Ans%isSym = obj1%isSym
-END PROCEDURE
+MODULE PROCEDURE Rank2Tensor_AddObjObj
+ans%T = obj1%T + obj2%T
+ans%isSym = obj1%isSym .AND. obj2%isSym
+END PROCEDURE Rank2Tensor_AddObjObj
 
 !----------------------------------------------------------------------------
-!
+!                                                                          +
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE Scalar_add_obj
-  Ans%T = obj1 + obj2%T
-  Ans%isSym = obj2%isSym
-END PROCEDURE
+MODULE PROCEDURE Rank2Tensor_AddObjScalar
+ans%T = obj1%T + obj2
+ans%isSym = obj1%isSym
+END PROCEDURE Rank2Tensor_AddObjScalar
 
 !----------------------------------------------------------------------------
-!
+!                                                                          +
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE obj_minus_obj
-  Ans%T = obj1%T - obj2%T
-  IF( obj1%isSym .AND. obj2%isSym ) Ans%isSym = .TRUE.
-
-END PROCEDURE
-
-!----------------------------------------------------------------------------
-!
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE obj_minus_Scalar
-  Ans%T = obj1%T - obj2
-  Ans%isSym = obj1%isSym
-END PROCEDURE
+MODULE PROCEDURE Rank2Tensor_AddScalarObj
+ans%T = obj1 + obj2%T
+ans%isSym = obj2%isSym
+END PROCEDURE Rank2Tensor_AddScalarObj
 
 !----------------------------------------------------------------------------
-!
+!                                                                          -
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE Scalar_minus_obj
-  Ans%T = obj1 - obj2%T
-  Ans%isSym = obj2%isSym
-END PROCEDURE
+MODULE PROCEDURE Rank2Tensor_MinusObjObj
+ans%T = obj1%T - obj2%T
+ans%isSym = obj1%isSym .AND. obj2%isSym
+END PROCEDURE Rank2Tensor_MinusObjObj
 
 !----------------------------------------------------------------------------
-!
+!                                                                          -
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE obj_times_obj
-  Ans%T = obj1%T * obj2%T
-END PROCEDURE obj_times_obj
+MODULE PROCEDURE Rank2Tensor_MinusObjScalar
+ans%T = obj1%T - obj2
+ans%isSym = obj1%isSym
+END PROCEDURE Rank2Tensor_MinusObjScalar
 
 !----------------------------------------------------------------------------
-!
+!                                                                          -
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE obj_times_scalar
-  Ans%T = obj1%T * obj2
-  Ans%isSym = obj1%isSym
-END PROCEDURE obj_times_scalar
+MODULE PROCEDURE Rank2Tensor_MinusScalarObj
+ans%T = obj1 - obj2%T
+ans%isSym = obj2%isSym
+END PROCEDURE Rank2Tensor_MinusScalarObj
 
 !----------------------------------------------------------------------------
-!
+!                                                                          *
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE scalar_times_obj
-  Ans%T = obj1 * obj2%T
-  Ans%isSym = obj2%isSym
-END PROCEDURE scalar_times_obj
+MODULE PROCEDURE Rank2Tensor_TimesObjObj
+ans%T = obj1%T * obj2%T
+ans%isSym = obj1%isSym .AND. obj2%isSym
+END PROCEDURE Rank2Tensor_TimesObjObj
 
 !----------------------------------------------------------------------------
-!
+!                                                                          *
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE obj_div_obj
-  Ans%T = obj1%T / obj2%T
-END PROCEDURE obj_div_obj
+MODULE PROCEDURE Rank2Tensor_TimesObjScalar
+ans%T = obj1%T * obj2
+ans%isSym = obj1%isSym
+END PROCEDURE Rank2Tensor_TimesObjScalar
 
 !----------------------------------------------------------------------------
-!
+!                                                                          *
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE obj_div_scalar
-  Ans%T = obj1%T / obj2
-  Ans%isSym = obj1%isSym
-END PROCEDURE obj_div_scalar
+MODULE PROCEDURE Rank2Tensor_TimesScalarObj
+ans%T = obj1 * obj2%T
+ans%isSym = obj2%isSym
+END PROCEDURE Rank2Tensor_TimesScalarObj
 
 !----------------------------------------------------------------------------
-!
+!                                                                          /
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE scalar_div_obj
-  Ans%T = obj1 / obj2%T
-  Ans%isSym = obj2%isSym
-END PROCEDURE scalar_div_obj
+MODULE PROCEDURE Rank2Tensor_DivObjObj
+ans%T = obj1%T / obj2%T
+ans%isSym = obj1%isSym .AND. obj2%isSym
+END PROCEDURE Rank2Tensor_DivObjObj
 
 !----------------------------------------------------------------------------
-!
+!                                                                          /
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE obj_matmul_obj
-  Ans%T = MATMUL( obj1%T, obj2%T )
-END PROCEDURE obj_matmul_obj
+MODULE PROCEDURE Rank2Tensor_DivObjScalar
+ans%T = obj1%T / obj2
+ans%isSym = obj1%isSym
+END PROCEDURE Rank2Tensor_DivObjScalar
 
 !----------------------------------------------------------------------------
-!
+!                                                                          /
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE obj_matmul_vec
-  Ans = MATMUL( obj1%T, obj2 )
-END PROCEDURE obj_matmul_vec
+MODULE PROCEDURE Rank2Tensor_DivScalarObj
+ans%T = obj1 / obj2%T
+ans%isSym = obj2%isSym
+END PROCEDURE Rank2Tensor_DivScalarObj
 
 !----------------------------------------------------------------------------
-!
+!                                                                     MATMUL
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE vec_matmul_obj
-  Ans = MATMUL( obj1, obj2%T )
-END PROCEDURE vec_matmul_obj
+MODULE PROCEDURE Rank2Tensor_MatmulObjObj
+ans%T = MATMUL(obj1%T, obj2%T)
+ans%isSym = .FALSE.
+END PROCEDURE Rank2Tensor_MatmulObjObj
 
 !----------------------------------------------------------------------------
-!
+!                                                                     MATMUL
 !----------------------------------------------------------------------------
+
+MODULE PROCEDURE Rank2Tensor_MatmulObjVec
+ans = MATMUL(obj1%T, obj2)
+END PROCEDURE Rank2Tensor_MatmulObjVec
+
+!----------------------------------------------------------------------------
+!                                                                     MATMUL
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE Rank2Tensor_MatmulVecObj
+ans = MATMUL(obj1, obj2%T)
+END PROCEDURE Rank2Tensor_MatmulVecObj
 
 END SUBMODULE OperatorMethods

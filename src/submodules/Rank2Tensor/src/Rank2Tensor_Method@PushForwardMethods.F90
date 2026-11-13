@@ -12,79 +12,70 @@
 ! GNU General Public License for more details.
 !
 ! You should have received a copy of the GNU General Public License
-! along with this program.  If not, see <https: //www.gnu.org/licenses/>
-!
+! along with this program.  If not, see <https://www.gnu.org/licenses/>
 
 !> author: Vikas Sharma, Ph. D.
-! date: 	17 March 2021
-! summary: Methods for pull back of rank2 tensor
+! date: 2021-03-17
+! summary: Push forward of tensors and vectors
+!
+! Each index is mapped by a matrix M that depends on its variance:
+! `"CONTRAVAR"` uses $F$, `"COVAR"` uses $F^{-T}$ and `"NA"` (or any
+! other value) uses $I$. Then the push forward of a tensor is
+! $M_1 T M_2^{T}$ and of a vector is $M_1 v$.
 
 SUBMODULE(Rank2Tensor_Method) PushForwardMethods
-USE BaseMethod
+USE GlobalData, ONLY: Eye3
+USE InvUtility, ONLY: Util_Inv => Inv
 IMPLICIT NONE
+
 CONTAINS
 
 !----------------------------------------------------------------------------
-!
+!                                                                PushForward
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE PushForward_rank2
-  TYPE( Rank2Tensor_ ) :: InvF
+MODULE PROCEDURE Rank2Tensor_PushForward1
+REAL(DFP) :: M1(3, 3), M2(3, 3)
 
-  SELECT CASE ( TRIM( indx1 ) )
-  CASE( "NA" )
-    SELECT CASE( TRIM( indx2 ) )
-    CASE( "CONTRAVAR" )
-      Ans = MATMUL( T, TRANSPOSE(F) )
-    CASE( "COVAR" )
-      CALL INV( F, InvF )
-      Ans = MATMUL( T, InvF )
-    CASE( "NA" )
-      Ans = T
-    END SELECT
+M1 = PushForwardMap(F%T, indx1)
+M2 = PushForwardMap(F%T, indx2)
+ans%T = MATMUL(M1, MATMUL(T%T, TRANSPOSE(M2)))
+ans%isSym = .FALSE.
+END PROCEDURE Rank2Tensor_PushForward1
 
-  CASE( "CONTRAVAR" )
-    SELECT CASE( TRIM( indx2 ) )
-    CASE( "CONTRAVAR" )
-      Ans = MATMUL( F, MATMUL(T, TRANSPOSE(F)) )
-    CASE( "COVAR" )
-      CALL INV( F, InvF )
-      Ans = MATMUL( F, MATMUL ( T, InvF ) )
-    CASE( "NA" )
-      Ans = MATMUL( F, T )
-    END SELECT
+!----------------------------------------------------------------------------
+!                                                                PushForward
+!----------------------------------------------------------------------------
 
-  CASE( "COVAR" )
-    SELECT CASE( TRIM( indx2 ) )
-    CASE( "CONTRAVAR" )
-      CALL INV( F, InvF )
-      Ans = MATMUL( TRANSPOSE(InvF), MATMUL(T, TRANSPOSE(F)) )
-    CASE( "COVAR" )
-      CALL INV( F, InvF )
-      Ans = MATMUL( TRANSPOSE(InvF), MATMUL(T, InvF) )
-    CASE( "NA" )
-      CALL INV( F, InvF )
-      Ans = MATMUL( TRANSPOSE( InvF ), T )
-    END SELECT
+MODULE PROCEDURE Rank2Tensor_PushForward2
+ans = MATMUL(PushForwardMap(F%T, indx1), vec)
+END PROCEDURE Rank2Tensor_PushForward2
+
+!----------------------------------------------------------------------------
+!                                                             PushForwardMap
+!----------------------------------------------------------------------------
+
+! Returns the map of one index for the push forward
+
+PURE FUNCTION PushForwardMap(F, indx) RESULT(ans)
+  REAL(DFP), INTENT(IN) :: F(3, 3)
+  !! deformation gradient
+  CHARACTER(*), INTENT(IN) :: indx
+  !! index type, "CONTRAVAR", "COVAR" or other (identity)
+  REAL(DFP) :: ans(3, 3)
+  !! map of the index, F, TRANSPOSE(inv(F)) or the identity
+
+  REAL(DFP) :: invF(3, 3)
+
+  SELECT CASE (TRIM(ADJUSTL(indx)))
+  CASE ("CONTRAVAR")
+    ans = F
+  CASE ("COVAR")
+    CALL Util_Inv(invA=invF, A=F)
+    ans = TRANSPOSE(invF)
+  CASE DEFAULT
+    ans = Eye3
   END SELECT
-
-END PROCEDURE PushForward_rank2
-
-!----------------------------------------------------------------------------
-!
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE PushForward_vec
-  TYPE( Rank2Tensor_ ) :: InvF
-  SELECT CASE ( TRIM( indx1 ) )
-  CASE( "NA" )
-    Ans = Vec
-  CASE( "CONTRAVAR" )
-    Ans = MATMUL( F, Vec )
-  CASE( "COVAR" )
-    CALL INV( F, InvF )
-    Ans = MATMUL( TRANSPOSE(InvF), Vec )
-  END SELECT
-END PROCEDURE PushForward_vec
+END FUNCTION PushForwardMap
 
 END SUBMODULE PushForwardMethods

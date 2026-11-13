@@ -200,6 +200,93 @@ INTERFACE StiffnessMatrix_
 END INTERFACE StiffnessMatrix_
 
 !----------------------------------------------------------------------------
+!                                                           StiffnessMatrix_
+!----------------------------------------------------------------------------
+
+!> author: Shion Shimizu
+! date: 2026-11-02
+! summary: Stiffness matrix with a Voigt tangent at each quadrature point
+!
+! This routine computes the element stiffness matrix when the material
+! tangent is given as a raw array at each quadrature point, for example
+! the consistent tangent of an elastoplastic model.
+!
+! Cijkl(:, :, ips) is the Voigt tangent at quadrature point ips. The
+! Voigt order is [11] in 1D, [11, 22, 12] in 2D and
+! [11, 22, 33, 12, 23, 13] in 3D. Cijkl maps the engineering strain
+! vector (shear $\gamma = 2\varepsilon$) to the stress vector, so
+! Cijkl(I, J) equals $C_{ijkl}$. Cijkl need not be symmetric (for
+! example non-associative plasticity).
+!
+! In 2D the tangent must be in the reduced order [11, 22, 12]. A 3D
+! tangent such as the C of MaterialJacobian_ is reduced first with
+! ReduceVoigtTangent_ and VoigtFormPlaneStrain or VoigtFormPlaneStress.
+! The axisymmetric form (4 components) is not supported.
+!
+! The row and column ordering of ans is the same as in the other
+! methods: component major, row (i-1)*nns + I.
+!
+! Formula:
+!
+! $$
+! K_{iI,jJ} = \int_{\Omega} \frac{\partial N^I}{\partial x_k}
+! C_{ikjl} \frac{\partial N^J}{\partial x_l} d\Omega
+! $$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE BaseType, ONLY: ElemShapeData_
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE GlobalData, ONLY: VoigtFormPlaneStrain
+! USE MaterialJacobian_Method, ONLY: IsotropicTangent
+! USE MaterialJacobian_Method, ONLY: ReduceVoigtTangent_
+! USE StiffnessMatrix_Method, ONLY: StiffnessMatrix_
+! IMPLICIT NONE
+!
+! TYPE(ElemShapeData_) :: elemsd
+! REAL(DFP) :: Cv(6, 6), Cq(3, 3, 4), K(8, 8)
+! INTEGER(I4B) :: nrow, ncol, ips
+!
+! ! elemsd: Q4 element with 4 quadrature points (not shown)
+! CALL ReduceVoigtTangent_(C=IsotropicTangent(lambda=1.3_DFP, &
+!                          mu=0.7_DFP), voigtForm=VoigtFormPlaneStrain, &
+!                          ans=Cv, nrow=nrow, ncol=ncol)
+! DO ips = 1, 4
+!   Cq(:, :, ips) = Cv(1:3, 1:3)
+! END DO
+! CALL StiffnessMatrix_(test=elemsd, trial=elemsd, Cijkl=Cq, ans=K, &
+!                       nrow=nrow, ncol=ncol)
+! END PROGRAM main
+!```
+!
+! Full example:
+! src/modules/StiffnessMatrix/examples/StiffnessMatrix_test_1.F90
+!
+! See also: [[InternalForceVector_]], [[ReduceVoigtTangent_]]
+
+INTERFACE StiffnessMatrix_
+  MODULE PURE SUBROUTINE obj_StiffnessMatrix7_(test, trial, Cijkl, ans, &
+                                               nrow, ncol)
+    CLASS(ElemshapeData_), INTENT(IN) :: test
+    !! shape data of the test function, nns1 nodes
+    CLASS(ElemshapeData_), INTENT(IN) :: trial
+    !! shape data of the trial function, nns2 nodes, same nsd and nips
+    REAL(DFP), INTENT(IN) :: Cijkl(:, :, :)
+    !! Voigt tangent at quadrature points, SHAPE (nv, nv, nips) with
+    !! nv = nsd*(nsd+1)/2 (at least)
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    !! stiffness matrix, SIZE at least (nns1*nsd, nns2*nsd)
+    INTEGER(I4B), INTENT(OUT) :: nrow
+    !! number of rows written in ans, nns1*nsd
+    INTEGER(I4B), INTENT(OUT) :: ncol
+    !! number of columns written in ans, nns2*nsd
+  END SUBROUTINE obj_StiffnessMatrix7_
+END INTERFACE StiffnessMatrix_
+
+!----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
