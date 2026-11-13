@@ -15,20 +15,7 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-INTEGER(I4B) i, iPivot
-
-iPivot = high
-i = low
-DO WHILE (iPivot > i)
-  IF (vect1(i) > vect1(iPivot)) THEN
-    CALL Swap(vect1(i), vect1(iPivot - 1))
-    CALL Swap(vect1(iPivot - 1), vect1(iPivot))
-    iPivot = iPivot - 1
-  ELSE
-    i = i + 1
-  END IF
-END DO
-IF (low < high) THEN
-  CALL QuickSort(vect1, low, iPivot - 1)
-  CALL QuickSort(vect1, iPivot + 1, high)
-END IF
+! Sort vect1(low:high) with IntroSort: O(n log n) time and O(log n)
+! recursion depth for every input. The old version used the last
+! entry as pivot and was O(n**2), n levels deep, for sorted input.
+CALL IntroSort(vect1(low:high))

@@ -174,6 +174,22 @@ INTERFACE SetJs
 END INTERFACE SetJs
 
 !----------------------------------------------------------------------------
+!                                                            SetJs@SetMethod
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 4 March 2021
+! summary: This subroutine Set the determinent of jacobian
+
+INTERFACE SetJs
+  MODULE PURE SUBROUTINE elemsd_SetJs2(jacobian, js, nsd, xidim, nips)
+    REAL(DFP), INTENT(IN) :: jacobian(:, :, :)
+    REAL(DFP), INTENT(INOUT) :: js(:)
+    INTEGER(I4B), INTENT(IN) :: nsd, xidim, nips
+  END SUBROUTINE elemsd_SetJs2
+END INTERFACE SetJs
+
+!----------------------------------------------------------------------------
 !                                                          SetdNdXt@SetMethod
 !----------------------------------------------------------------------------
 
@@ -191,6 +207,30 @@ INTERFACE SetdNdXt
   MODULE PURE SUBROUTINE elemsd_SetdNdXt(obj)
     CLASS(ElemshapeData_), INTENT(INOUT) :: obj
   END SUBROUTINE elemsd_SetdNdXt
+END INTERFACE SetdNdXt
+
+!----------------------------------------------------------------------------
+!                                                          SetdNdXt@SetMethod
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 4 March 2021
+! summary: This subroutine Set $\frac{d N}{d X_t}$ internally
+!
+!# Introduction
+!
+! This subroutine will internally Set `dNdXt`.
+! It use the inverse of jacobian stored internally, so make sure jacobian is
+! Set before calling this  subroutine.
+
+INTERFACE SetdNdXt
+  MODULE PURE SUBROUTINE elemsd_SetdNdXt2(dNdXt, dNdXi, jacobian, &
+                                          xidim, nsd, nips, nns)
+    REAL(DFP), INTENT(INOUT) :: dNdXt(:, :, :)
+    REAL(DFP), INTENT(IN) :: dNdXi(:, :, :)
+    REAL(DFP), INTENT(IN) :: jacobian(:, :, :)
+    INTEGER(I4B), INTENT(IN) :: xidim, nsd, nips, nns
+  END SUBROUTINE elemsd_SetdNdXt2
 END INTERFACE SetdNdXt
 
 !----------------------------------------------------------------------------

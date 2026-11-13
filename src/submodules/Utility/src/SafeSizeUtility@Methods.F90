@@ -61,4 +61,20 @@ MODULE PROCEDURE SafeSize5
 ans = 0; IF (ALLOCATED(VALUE)) ans = SIZE(VALUE)
 END PROCEDURE SafeSize5
 
+!----------------------------------------------------------------------------
+!                                                                 SafeSize
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE SafeSize6
+ans = 0; IF (ALLOCATED(VALUE)) ans = SIZE(VALUE)
+END PROCEDURE SafeSize6
+
+!----------------------------------------------------------------------------
+!                                                                 SafeSize
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE SafeSize7
+ans = 0; IF (ALLOCATED(VALUE)) ans = SIZE(VALUE)
+END PROCEDURE SafeSize7
+
 END SUBMODULE Methods

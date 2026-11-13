@@ -16,7 +16,8 @@
 !
 
 SUBMODULE(DiagUtility) Methods
-USE BaseMethod, ONLY: Reallocate, Input
+USE ReallocateUtility, ONLY: Reallocate
+USE InputUtility, ONLY: Input
 IMPLICIT NONE
 CONTAINS
 
@@ -114,30 +115,29 @@ MODULE PROCEDURE Diag_8
 INTEGER(I4B) :: n, m, ii
 n = SIZE(mat, 1)
 IF (diagNo .EQ. 0) THEN
-  !!
+
   CALL Reallocate(ans, n)
   DO CONCURRENT(ii=1:n)
     ans(ii) = mat(ii, ii)
   END DO
-  !!
-ELSEIF (diagNo .GT. 0) THEN
-  !!
+
+ELSE IF (diagNo .GT. 0) THEN
+
   m = n - diagNo
   CALL Reallocate(ans, m)
   DO CONCURRENT(ii=1:m)
     ans(ii) = mat(ii, ii + diagNo)
   END DO
-  !!
+
 ELSE
-  !!
+
   m = n + diagNo
   CALL Reallocate(ans, m)
   DO CONCURRENT(ii=1:m)
     ans(ii) = mat(ii - diagNo, ii)
   END DO
-  !!
+
 END IF
-  !!
 END PROCEDURE Diag_8
 
 !----------------------------------------------------------------------------
@@ -224,11 +224,11 @@ END PROCEDURE DiagSize2
 
 MODULE PROCEDURE DiagIndx
 INTEGER(I4B) :: tsize, ii
-!
+
 tsize = DiagSize(m, n, diagNo)
-!
+
 ALLOCATE (ans(tsize, 2))
-!
+
 IF (diagNo .GE. 0 .AND. diagNo .LE. n) THEN
   DO CONCURRENT(ii=1:tsize)
     ans(ii, 1) = ii

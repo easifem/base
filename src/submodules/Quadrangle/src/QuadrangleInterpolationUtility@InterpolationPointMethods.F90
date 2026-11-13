@@ -59,7 +59,8 @@ END PROCEDURE EquidistancePoint_Quadrangle1_
 
 MODULE PROCEDURE EquidistancePoint_Quadrangle2
 INTEGER(I4B) :: nrow, ncol
-nrow = 2; IF (PRESENT(xij)) nrow = SIZE(xij, 1)
+nrow = 2
+IF (PRESENT(xij)) nrow = SIZE(xij, 1)
 ncol = (p + 1) * (q + 1)
 ALLOCATE (ans(nrow, ncol))
 CALL EquidistancePoint_Quadrangle2_(p=p, q=q, ans=ans, nrow=nrow, ncol=ncol, &
@@ -337,7 +338,8 @@ N = (p + 1) * (q + 1)
 cnt = 0
 ll = -1
 
-CALL GetEdgeConnectivityHelpAntiClock(edgeConnectivity, pointsOrder, startNode)
+CALL GetEdgeConnectivityHelpAntiClock(edgeConnectivity, pointsOrder, &
+                                      startNode)
 
 isok = (p .EQ. 0) .AND. (q .EQ. 0)
 IF (isok) THEN
@@ -490,7 +492,8 @@ END PROCEDURE InterpolationPoint_Quadrangle1_
 MODULE PROCEDURE InterpolationPoint_Quadrangle2
 INTEGER(I4B) :: nrow, ncol
 
-nrow = 2; IF (PRESENT(xij)) nrow = SIZE(xij, 1)
+nrow = 2
+IF (PRESENT(xij)) nrow = SIZE(xij, 1)
 ncol = (p + 1) * (q + 1)
 ALLOCATE (ans(nrow, ncol))
 

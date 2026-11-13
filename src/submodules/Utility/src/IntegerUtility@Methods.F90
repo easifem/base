@@ -16,14 +16,14 @@
 !
 
 SUBMODULE(IntegerUtility) Methods
-USE AppendUtility, ONLY: OPERATOR(.ROWCONCAT.), &
-                         OPERATOR(.COLCONCAT.), &
-                         Expand
-USE SortUtility, ONLY: QuickSort
+USE AppendUtility, ONLY: Expand
+USE AppendUtility, ONLY: OPERATOR(.COLCONCAT.)
+USE AppendUtility, ONLY: OPERATOR(.ROWCONCAT.)
 USE BinomUtility, ONLY: Binom
-USE OnesUtility, ONLY: ones
-
+USE OnesUtility, ONLY: Ones
+USE SortUtility, ONLY: QuickSort
 IMPLICIT NONE
+
 CONTAINS
 
 !----------------------------------------------------------------------------
@@ -40,6 +40,10 @@ END PROCEDURE obj_Size1
 
 MODULE PROCEDURE obj_Size2
 INTEGER(I4B) :: ii
+IF (.NOT. upto) THEN
+  ans = SIZE(n=n, d=d)
+  RETURN
+END IF
 ans = 0_I4B
 DO ii = 0, n
   ans = ans + SIZE(n=ii, d=d)
@@ -64,6 +68,14 @@ END PROCEDURE obj_GetMultiIndices1
 
 MODULE PROCEDURE obj_GetMultiIndices1_
 INTEGER(I4B) :: ii, aint, bint, tsize
+
+! one entry: the only tuple is [n]
+IF (d .EQ. 0) THEN
+  nrow = 1
+  ncol = 1
+  ans(1, 1) = n
+  RETURN
+END IF
 
 IF (d .EQ. 1) THEN
 
@@ -102,6 +114,11 @@ END PROCEDURE obj_GetMultiIndices1_
 
 MODULE PROCEDURE obj_GetMultiIndices2_
 INTEGER(I4B) :: ii, aint, bint, indx
+
+IF (.NOT. upto) THEN
+  CALL GetMultiIndices_(n=n, d=d, ans=ans, nrow=nrow, ncol=ncol)
+  RETURN
+END IF
 
 nrow = d + 1
 ncol = SIZE(n, d, .TRUE.)
@@ -267,7 +284,8 @@ END PROCEDURE Repeat_1f
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE GetIndex1
-Ans = MINLOC(ABS(obj - val), 1)
+! first index of val in obj, zero if val is not found
+Ans = FINDLOC(obj, val, 1)
 END PROCEDURE GetIndex1
 
 !----------------------------------------------------------------------------
@@ -301,22 +319,22 @@ END PROCEDURE GetIndex2
 
 MODULE PROCEDURE Get1_Int8
 ans = 0
-IF (indx .LE. SIZE(val)) ans = val(indx)
+IF (indx .GE. 1 .AND. indx .LE. SIZE(val)) ans = val(indx)
 END PROCEDURE Get1_Int8
 
 MODULE PROCEDURE Get1_Int16
 ans = 0
-IF (indx .LE. SIZE(val)) ans = val(indx)
+IF (indx .GE. 1 .AND. indx .LE. SIZE(val)) ans = val(indx)
 END PROCEDURE Get1_Int16
 
 MODULE PROCEDURE Get1_Int32
 ans = 0
-IF (indx .LE. SIZE(val)) ans = val(indx)
+IF (indx .GE. 1 .AND. indx .LE. SIZE(val)) ans = val(indx)
 END PROCEDURE Get1_Int32
 
 MODULE PROCEDURE Get1_Int64
 ans = 0
-IF (indx .LE. SIZE(val)) ans = val(indx)
+IF (indx .GE. 1 .AND. indx .LE. SIZE(val)) ans = val(indx)
 END PROCEDURE Get1_Int64
 
 !----------------------------------------------------------------------------

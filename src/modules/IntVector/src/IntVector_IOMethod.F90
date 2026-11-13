@@ -15,8 +15,10 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 
 MODULE IntVector_IOMethod
-USE GlobalData, ONLY: DFP, I4B, LGT
 USE BaseType, ONLY: IntVector_
+USE GlobalData, ONLY: DFP
+USE GlobalData, ONLY: I4B
+USE GlobalData, ONLY: LGT
 PRIVATE
 PUBLIC :: Display
 
@@ -29,12 +31,12 @@ PUBLIC :: Display
 ! summary: Display the content of [[IntVector_]]
 
 INTERFACE Display
-  MODULE SUBROUTINE intVec_Display1(obj, msg, UnitNo, orient)
-    CLASS(IntVector_), INTENT(IN) :: obj(:)
+  MODULE SUBROUTINE obj_Display1(obj, msg, UnitNo, orient)
+    TYPE(IntVector_), INTENT(IN) :: obj(:)
     CHARACTER(*), INTENT(IN) :: msg
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: UnitNo
     CHARACTER(*), OPTIONAL, INTENT(IN) :: orient
-  END SUBROUTINE intVec_Display1
+  END SUBROUTINE obj_Display1
 END INTERFACE Display
 
 !----------------------------------------------------------------------------
@@ -46,12 +48,12 @@ END INTERFACE Display
 ! summary: Display the content of [[IntVector_]]
 
 INTERFACE Display
-  MODULE SUBROUTINE intVec_Display2(obj, msg, UnitNo, orient)
-    CLASS(IntVector_), INTENT(IN) :: obj
+  MODULE SUBROUTINE obj_Display2(obj, msg, unitno, orient)
+    TYPE(IntVector_), INTENT(IN) :: obj
     CHARACTER(*), INTENT(IN) :: msg
-    INTEGER(I4B), OPTIONAL, INTENT(IN) :: UnitNo
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: unitno
     CHARACTER(*), OPTIONAL, INTENT(IN) :: orient
-  END SUBROUTINE intVec_Display2
+  END SUBROUTINE obj_Display2
 END INTERFACE Display
 
 END MODULE IntVector_IOMethod

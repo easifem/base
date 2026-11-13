@@ -22,10 +22,10 @@
 !{!pages/docs-api/DOF/DOF_.md!}
 
 MODULE DOF_Method
+USE DOF_AddMethods
 USE DOF_ConstructorMethods
-USE DOF_IOMethods
 USE DOF_GetMethods
 USE DOF_GetValueMethods
+USE DOF_IOMethods
 USE DOF_SetMethods
-USE DOF_AddMethods
 END MODULE DOF_Method

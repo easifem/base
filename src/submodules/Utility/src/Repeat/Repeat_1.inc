@@ -16,6 +16,8 @@
 !
 
 INTEGER(I4B) :: n, i
+! rtimes <= 0 gives an empty result, so there is nothing to write
+IF (rtimes .LE. 0) RETURN
 n = SIZE(Val)
 Ans(1:n) = Val
 DO i = 1, rtimes - 1

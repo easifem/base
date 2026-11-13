@@ -27,11 +27,55 @@ CONTAINS
 !                                                                 Reallocate2
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE Reallocate_logical
+MODULE PROCEDURE Reallocate_Logical_R1
 #define ZEROVALUE .FALSE.
 #include "./Reallocate/reallocate1.F90"
 #undef ZEROVALUE
-END PROCEDURE Reallocate_logical
+END PROCEDURE Reallocate_Logical_R1
+
+!----------------------------------------------------------------------------
+!                                                                 Reallocate
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE Reallocate_Logical_R1b
+CALL Reallocate_Logical_R1(mat, s(1), isExpand, expandFactor)
+END PROCEDURE Reallocate_Logical_R1b
+
+!----------------------------------------------------------------------------
+!                                                                 Reallocate
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE Reallocate_Logical_R2
+#define ZEROVALUE .FALSE.
+#include "./Reallocate/reallocate2.F90"
+#undef ZEROVALUE
+END PROCEDURE Reallocate_Logical_R2
+
+!----------------------------------------------------------------------------
+!                                                                 Reallocate
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE Reallocate_Logical_R2b
+CALL Reallocate_Logical_R2(mat, s(1), s(2), isExpand, expandFactor)
+END PROCEDURE Reallocate_Logical_R2b
+
+!----------------------------------------------------------------------------
+!                                                                 Reallocate
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE Reallocate_Logical_R3
+#define ZEROVALUE .FALSE.
+#include "./Reallocate/reallocate3.F90"
+#undef ZEROVALUE
+END PROCEDURE Reallocate_Logical_R3
+
+!----------------------------------------------------------------------------
+!                                                                 Reallocate
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE Reallocate_Logical_R3b
+CALL Reallocate_Logical_R3(mat, s(1), s(2), s(3), isExpand, expandFactor)
+END PROCEDURE Reallocate_Logical_R3b
 
 !----------------------------------------------------------------------------
 !                                                                 Reallocate2
@@ -550,7 +594,7 @@ END PROCEDURE Reallocate_Int32_R5b
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Reallocate_Int64_R6
-#define ZEROVALUE 0.0_Int64
+#define ZEROVALUE 0_Int64
 #include "./Reallocate/reallocate6.F90"
 #undef ZEROVALUE
 END PROCEDURE Reallocate_Int64_R6
@@ -569,7 +613,7 @@ END PROCEDURE Reallocate_Int64_R6b
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Reallocate_Int32_R6
-#define ZEROVALUE 0.0_Int32
+#define ZEROVALUE 0_Int32
 #include "./Reallocate/reallocate6.F90"
 #undef ZEROVALUE
 END PROCEDURE Reallocate_Int32_R6
@@ -588,7 +632,7 @@ END PROCEDURE Reallocate_Int32_R6b
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Reallocate_Int64_R7
-#define ZEROVALUE 0.0_Int64
+#define ZEROVALUE 0_Int64
 #include "./Reallocate/reallocate7.F90"
 #undef ZEROVALUE
 END PROCEDURE Reallocate_Int64_R7
@@ -607,7 +651,7 @@ END PROCEDURE Reallocate_Int64_R7b
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Reallocate_Int32_R7
-#define ZEROVALUE 0.0_Int32
+#define ZEROVALUE 0_Int32
 #include "./Reallocate/reallocate7.F90"
 #undef ZEROVALUE
 END PROCEDURE Reallocate_Int32_R7

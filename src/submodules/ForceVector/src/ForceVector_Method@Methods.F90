@@ -383,8 +383,7 @@ tsize = test%nns
 
 isadd0 = Input(option=addContribution, default=math%no)
 scale0 = Input(option=scale, default=math%one)
-IF (.NOT. isadd0) &
-  ans(1:tsize) = math%zero
+IF (.NOT. isadd0) ans(1:tsize) = math%zero
 
 DO ips = 1, test%nips
   realval = test%js(ips) * test%ws(ips) * test%thickness(ips) * c(ips) * &

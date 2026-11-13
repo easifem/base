@@ -29,17 +29,23 @@ CONTAINS
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE obj_Display
-INTEGER(I4B) :: I
-I = INPUT(Option=UnitNo, Default=stdout)
-CALL Display(msg, unitNo=I)
-CALL Display(obj%csrOwnership, "CSR OWNERSHIP : ")
-CALL Display(obj%tDimension, "TOTAL DIMENSION : ")
-CALL Display(obj%MatrixProp, "MATRIX PROPERTY : ")
-CALL Display(obj=obj%csr, msg="CSR SPARSITY : ", unitNo=I)
-IF (ALLOCATED(obj%A)) THEN
-  CALL DUMP(1, obj%csr%nrow, .TRUE., obj%A, obj%csr%JA, obj%csr%IA, I)
+INTEGER(I4B) :: i
+
+IF (PRESENT(unitNo)) THEN
+  i = unitNo
 ELSE
-  CALL DUMP(1, obj%csr%nrow, .FALSE., obj%A, obj%csr%JA, obj%csr%IA, I)
+  i = stdout
+END IF
+
+CALL Display(msg, unitNo=unitNo)
+CALL Display(obj%csrOwnership, "CSR OWNERSHIP : ", unitNo=unitNo)
+CALL Display(obj%tDimension, "TOTAL DIMENSION : ", unitNo=unitNo)
+CALL Display(obj%MatrixProp, "MATRIX PROPERTY : ", unitNo=unitNo)
+CALL Display(obj=obj%csr, msg="CSR SPARSITY : ", unitNo=unitNo)
+IF (ALLOCATED(obj%A)) THEN
+  CALL DUMP(1, obj%csr%nrow, .TRUE., obj%A, obj%csr%JA, obj%csr%IA, i)
+ELSE
+  CALL DUMP(1, obj%csr%nrow, .FALSE., obj%A, obj%csr%JA, obj%csr%IA, i)
 END IF
 END PROCEDURE obj_Display
 

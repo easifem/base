@@ -15,56 +15,54 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-!> author: Vikas Sharma, Ph. D.
-! date:         22 March 2021
-! summary: It contains method for setting values in [[CSRMatrix_]]
-
 SUBMODULE(CSRMatrix_SparsityMethods) Methods
-USE BaseMethod
+USE CSRSparsity_Method, ONLY: CSRSetSparsity => SetSparsity
+USE ReallocateUtility, ONLY: Reallocate
 IMPLICIT NONE
 CONTAINS
 
 !----------------------------------------------------------------------------
-!                                                                setSparsity
+!                                                                SetSparsity
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE obj_setSparsity1
-CALL setSparsity(obj=obj%csr, row=row, col=col)
-END PROCEDURE obj_setSparsity1
+MODULE PROCEDURE obj_SetSparsity1
+CALL CSRSetSparsity(obj=obj%csr, row=row, col=col)
+END PROCEDURE obj_SetSparsity1
 
 !----------------------------------------------------------------------------
-!                                                                setSparsity
+!                                                                SetSparsity
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE obj_setSparsity2
-CALL setSparsity(obj=obj%csr, row=row, col=col)
-END PROCEDURE obj_setSparsity2
+MODULE PROCEDURE obj_SetSparsity2
+CALL CSRSetSparsity(obj=obj%csr, row=row, col=col)
+END PROCEDURE obj_SetSparsity2
 
 !----------------------------------------------------------------------------
-!                                                                setSparsity
+!                                                                SetSparsity
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE obj_setSparsity3
-CALL setSparsity(obj=obj%csr, row=row, col=col, ivar=ivar, jvar=jvar)
-END PROCEDURE obj_setSparsity3
+MODULE PROCEDURE obj_SetSparsity3
+CALL CSRSetSparsity(obj=obj%csr, row=row, col=col, ivar=ivar, jvar=jvar)
+END PROCEDURE obj_SetSparsity3
 
 !----------------------------------------------------------------------------
-!                                                                setSparsity
+!                                                                SetSparsity
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE obj_setSparsity4
-CALL setSparsity(obj=obj%csr, row=row, col=col, ivar=ivar, jvar=jvar)
-END PROCEDURE obj_setSparsity4
+MODULE PROCEDURE obj_SetSparsity4
+CALL CSRSetSparsity(obj=obj%csr, row=row, col=col, ivar=ivar, jvar=jvar)
+END PROCEDURE obj_SetSparsity4
 
 !----------------------------------------------------------------------------
-!                                                                setSparsity
+!                                                                SetSparsity
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE obj_setSparsity_final
+MODULE PROCEDURE obj_SetSparsity5
 REAL(DFP), ALLOCATABLE :: tempA(:)
 INTEGER(I4B) :: m
-!
-IF (.NOT. obj%csr%isSparsityLock) CALL setSparsity(obj%csr)
+
+IF (.NOT. obj%csr%isSparsityLock) CALL CSRSetSparsity(obj%csr)
+
 IF (ALLOCATED(obj%A)) THEN
   m = SIZE(obj%A)
   IF (m .EQ. 0) THEN
@@ -83,11 +81,13 @@ ELSE
   CALL Reallocate(obj%A, obj%csr%nnz)
 END IF
 !> Sort entries according to their column index
+! Following method belongs to Sparsekit
 CALL CSORT(obj%csr%nrow, obj%A, obj%csr%JA, obj%csr%IA, .TRUE.)
+
 obj%csr%isSorted = .TRUE.
 obj%csr%isSparsityLock = .FALSE.
-CALL setSparsity(obj%csr)
-END PROCEDURE obj_setSparsity_final
+CALL CSRSetSparsity(obj%csr)
+END PROCEDURE obj_SetSparsity5
 
 !----------------------------------------------------------------------------
 !

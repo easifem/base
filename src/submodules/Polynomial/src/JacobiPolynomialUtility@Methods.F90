@@ -16,16 +16,13 @@
 !
 
 SUBMODULE(JacobiPolynomialUtility) Methods
+USE GlobalData, ONLY: stdout
 USE OrthogonalPolynomialUtility, ONLY: JacobiMatrix
-
 #ifdef USE_LAPACK95
 USE F95_Lapack, ONLY: STEV
 #endif
-
 USE ErrorHandling, ONLY: ErrorMsg
-
 USE MiscUtility, ONLY: Factorial
-
 USE BaseType, ONLY: qp => TypeQuadratureOpt
 
 IMPLICIT NONE
@@ -53,7 +50,7 @@ IF (n .EQ. 0) THEN
   ans = 2.0_DFP**(alpha + beta + 1.0_DFP) * GAMMA(alpha + 1.0_DFP) &
   & * GAMMA(beta + 1.0_DFP) &
   & / GAMMA(alpha + beta + 2.0_DFP)
-ELSEIF (n .EQ. 1) THEN
+ELSE IF (n .EQ. 1) THEN
   ans = 4.0_DFP * (1.0_DFP + alpha) * (1.0_DFP + beta) / &
     & (alpha + beta + 2.0_DFP)**2 / (alpha + beta + 3.0_DFP)
 ELSE
@@ -1515,5 +1512,47 @@ PURE SUBROUTINE JacobiDMatrixG(n, alpha, beta, x, quadType, D)
   END DO
 !!
 END SUBROUTINE JacobiDMatrixG
+
+!----------------------------------------------------------------------------
+!                                                        JacobiLaplacianEval
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE JacobiLaplacianEval1
+END PROCEDURE JacobiLaplacianEval1
+
+!----------------------------------------------------------------------------
+!                                                         JacobiLaplacianEval
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE JacobiLaplacianEval2
+END PROCEDURE JacobiLaplacianEval2
+
+!----------------------------------------------------------------------------
+!                                                     JacobiLaplacianEvalAll
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE JacobiLaplacianEvalAll1
+END PROCEDURE JacobiLaplacianEvalAll1
+
+!----------------------------------------------------------------------------
+!                                                     JacobiLaplacianEvalAll
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE JacobiLaplacianEvalAll2
+END PROCEDURE JacobiLaplacianEvalAll2
+
+!----------------------------------------------------------------------------
+!                                                     JacobiLaplacianEvalAll
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE JacobiLaplacianEvalAll1_
+END PROCEDURE JacobiLaplacianEvalAll1_
+
+!----------------------------------------------------------------------------
+!                                                     JacobiLaplacianEvalAll
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE JacobiLaplacianEvalAll2_
+END PROCEDURE JacobiLaplacianEvalAll2_
 
 END SUBMODULE Methods

@@ -57,7 +57,7 @@
 			"/Users/easifem/Dropbox/easifem/seepage/src/**",
 			"/Users/easifem/Dropbox/easifem/elasticity/src/**",
 			"/Users/easifem/Dropbox/easifem/acoustic/src/**",
-			"/Users/easifem/.easifem/easifem/src/tomlf/src/**"
+			"/Users/easifem/Dropbox/easifem/toml-f/src/**"
 		],
 		"fortran.fortls.maxLineLength": 78,
 		"fortran.fortls.maxCommentLineLength": 80,

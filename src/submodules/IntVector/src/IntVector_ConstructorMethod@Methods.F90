@@ -20,10 +20,14 @@
 ! summary: This submodule contains the contructor methods for [[IntVector_]]
 
 SUBMODULE(IntVector_ConstructorMethod) Methods
+USE BaseType, ONLY: math => TypeMathOpt
 USE IntVector_SetMethod, ONLY: SetTotalDimension
 USE ReallocateUtility, ONLY: Util_Reallocate => Reallocate
-
 IMPLICIT NONE
+
+#ifdef DEBUG_VER
+CHARACTER(*), PARAMETER :: modName = "IntVector_ConstructorMethod@Methods.F90"
+#endif
 
 CONTAINS
 
@@ -32,27 +36,27 @@ CONTAINS
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE obj_Shape
-LOGICAL(LGT) :: isok
-
-ans = 0
-isok = ALLOCATED(obj%val)
-IF (isok) ans(1) = SIZE(obj%val)
+ans(1) = obj%tsize
 END PROCEDURE obj_Shape
 
 !----------------------------------------------------------------------------
-!
+!                                                                      Size
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE obj_Size
-LOGICAL(LGT) :: isok
-
-ans = 0
-isok = ALLOCATED(obj%val)
-IF (isok) ans = SIZE(obj%val)
+ans = obj%tsize
 END PROCEDURE obj_Size
 
 !----------------------------------------------------------------------------
-!                                                         getTotalDimension
+!                                                                   Capacity
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE obj_Capacity
+ans = obj%capacity
+END PROCEDURE obj_Capacity
+
+!----------------------------------------------------------------------------
+!                                                         GetTotalDimension
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE obj_GetTotalDimension
@@ -65,6 +69,8 @@ END PROCEDURE obj_GetTotalDimension
 
 MODULE PROCEDURE obj_AllocateData
 CALL Util_Reallocate(obj%val, dims)
+obj%tsize = dims
+obj%capacity = dims
 CALL SetTotalDimension(obj, 1_I4B)
 END PROCEDURE obj_AllocateData
 
@@ -97,6 +103,8 @@ END PROCEDURE obj_Reallocate
 MODULE PROCEDURE obj_Deallocate
 LOGICAL(LGT) :: isok
 obj%tDimension = 0_I4B
+obj%tsize = 0_I4B
+obj%capacity = 0_I4B
 isok = ALLOCATED(obj%val)
 IF (isok) DEALLOCATE (obj%val)
 END PROCEDURE obj_Deallocate
@@ -105,15 +113,15 @@ END PROCEDURE obj_Deallocate
 !                                                                  Initiate
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE obj_initiate1
+MODULE PROCEDURE obj_Initiate1
 CALL obj_AllocateData(obj=obj, dims=tSize)
-END PROCEDURE obj_initiate1
+END PROCEDURE obj_Initiate1
 
 !----------------------------------------------------------------------------
 !                                                                  Initiate
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE obj_initiate2
+MODULE PROCEDURE obj_Initiate2
 INTEGER(I4B) :: n, i
 LOGICAL(LGT) :: isok
 
@@ -138,69 +146,55 @@ END IF
 DO i = 1, n
   CALL obj_AllocateData(obj=obj(i), dims=tSize(i))
 END DO
-END PROCEDURE obj_initiate2
+END PROCEDURE obj_Initiate2
 
 !----------------------------------------------------------------------------
 !                                                                 Initiate
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE obj_initiate3
-LOGICAL(LGT) :: isok
-
-isok = ALLOCATED(obj%val)
-IF (isok) DEALLOCATE (obj%val)
-ALLOCATE (obj%val(a:b))
-obj%val(a:b) = 0
-CALL SetTotalDimension(obj, 1_I4B)
-END PROCEDURE obj_initiate3
-
-!----------------------------------------------------------------------------
-!                                                                 Initiate
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE obj_initiate4a
+MODULE PROCEDURE obj_Initiate4a
 #include "./include/Initiate4.F90"
-END PROCEDURE obj_initiate4a
+END PROCEDURE obj_Initiate4a
 
 !----------------------------------------------------------------------------
 !                                                                  Initiate
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE obj_initiate4b
+MODULE PROCEDURE obj_Initiate4b
 #include "./include/Initiate4.F90"
-END PROCEDURE obj_initiate4b
+END PROCEDURE obj_Initiate4b
 
 !----------------------------------------------------------------------------
 !                                                                  Initiate
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE obj_initiate4c
+MODULE PROCEDURE obj_Initiate4c
 #include "./include/Initiate4.F90"
-END PROCEDURE obj_initiate4c
+END PROCEDURE obj_Initiate4c
 
 !----------------------------------------------------------------------------
 !                                                                  Initiate
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE obj_initiate4d
+MODULE PROCEDURE obj_Initiate4d
 #include "./include/Initiate4.F90"
-END PROCEDURE obj_initiate4d
+END PROCEDURE obj_Initiate4d
 
 !----------------------------------------------------------------------------
 !                                                                    Initiate
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE obj_initiate5a
+MODULE PROCEDURE obj_Initiate5a
 #include "./include/Initiate4.F90"
-END PROCEDURE obj_initiate5a
+END PROCEDURE obj_Initiate5a
 
 !----------------------------------------------------------------------------
 !                                                                    Initiate
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE obj_initiate5b
+MODULE PROCEDURE obj_Initiate5b
 #include "./include/Initiate4.F90"
-END PROCEDURE obj_initiate5b
+END PROCEDURE obj_Initiate5b
 
 !----------------------------------------------------------------------------
 !                                                                    Initiate
@@ -208,16 +202,25 @@ END PROCEDURE obj_initiate5b
 
 MODULE PROCEDURE obj_Initiate6
 LOGICAL(LGT) :: isok
-INTEGER(I4B) :: tsize
 
 obj%tDimension = obj2%tDimension
+
 isok = ALLOCATED(obj2%val)
-IF (isok) THEN
-  tsize = SIZE(obj2%val)
-  CALL Util_Reallocate(obj%val, tsize)
-  CALL Copy_(x=obj%val, y=obj2%val)
+IF (.NOT. isok) THEN
+  IF (ALLOCATED(obj%val)) DEALLOCATE (obj%val)
+  obj%tsize = math%zero_i
+  obj%capacity = math%zero_i
+  RETURN
 END IF
 
+obj%tsize = obj2%tsize
+CALL Util_Reallocate(obj%val, obj%tsize)
+obj%capacity = obj%tsize
+
+IF (obj%tsize .GT. math%zero_i) THEN
+  CALL obj_Copy1_(x=obj%val, x_start=1_I4B, y=obj2%val, y_start=1_I4B, &
+                  y_end=obj%tsize)
+END IF
 END PROCEDURE obj_Initiate6
 
 !----------------------------------------------------------------------------
@@ -275,85 +278,78 @@ END PROCEDURE obj_Constructor_3
 !                                                                 Assignment
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE obj_assign_a
-LOGICAL(LGT) :: isok
-INTEGER(I4B) :: tsize
+MODULE PROCEDURE obj_Assign1
+IF (.NOT. ALLOCATED(obj%val)) THEN
+  CALL Util_Reallocate(val, math%zero_i)
+  RETURN
+END IF
 
-isok = ALLOCATED(obj%val)
-IF (.NOT. isok) RETURN
+CALL Util_Reallocate(val, obj%tsize)
 
-tsize = SIZE(obj%val)
-CALL Util_Reallocate(val, tsize)
-CALL Copy_(x=val, y=obj%val)
-END PROCEDURE obj_assign_a
+IF (obj%tsize .GT. math%zero_i) THEN
+  CALL Copy_(x=val(1:obj%tsize), y=obj%val(1:obj%tsize))
+END IF
+END PROCEDURE obj_Assign1
 
 !----------------------------------------------------------------------------
 !                                                                    Convert
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE obj_convert_int
-CALL obj_assign_a(val=to, obj=from)
-END PROCEDURE obj_convert_int
+MODULE PROCEDURE obj_Convert1
+to = from
+END PROCEDURE obj_Convert1
 
 !----------------------------------------------------------------------------
 !                                                                     Copy
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE obj_Copy_Int8
+MODULE PROCEDURE obj_Copy1
 INTEGER(I4B) :: tsize, ii
-
 tsize = SIZE(y)
 CALL Util_Reallocate(x, tsize)
-
 DO CONCURRENT(ii=1:tsize)
   x(ii) = y(ii)
 END DO
-END PROCEDURE obj_Copy_Int8
+END PROCEDURE obj_Copy1
 
 !----------------------------------------------------------------------------
 !                                                                     Copy
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE obj_Copy_Int16
+MODULE PROCEDURE obj_Copy2
 INTEGER(I4B) :: tsize, ii
-
 tsize = SIZE(y)
 CALL Util_Reallocate(x, tsize)
-
 DO CONCURRENT(ii=1:tsize)
   x(ii) = y(ii)
 END DO
-END PROCEDURE obj_Copy_Int16
+END PROCEDURE obj_Copy2
 
 !----------------------------------------------------------------------------
 !                                                                     Copy
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE obj_Copy_Int32
+MODULE PROCEDURE obj_Copy3
 INTEGER(I4B) :: tsize, ii
-
 tsize = SIZE(y)
 CALL Util_Reallocate(x, tsize)
-
 DO CONCURRENT(ii=1:tsize)
   x(ii) = y(ii)
 END DO
-END PROCEDURE obj_Copy_Int32
+END PROCEDURE obj_Copy3
 
 !----------------------------------------------------------------------------
 !                                                                     Copy
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE obj_Copy_Int64
+MODULE PROCEDURE obj_Copy4
 INTEGER(I4B) :: tsize, ii
-
 tsize = SIZE(y)
 CALL Util_Reallocate(x, tsize)
-
 DO CONCURRENT(ii=1:tsize)
   x(ii) = y(ii)
 END DO
-END PROCEDURE obj_Copy_Int64
+END PROCEDURE obj_Copy4
 
 !----------------------------------------------------------------------------
 !                                                                     Copy
@@ -361,7 +357,6 @@ END PROCEDURE obj_Copy_Int64
 
 MODULE PROCEDURE obj_Copy1_
 INTEGER(I4B) :: yy
-
 DO CONCURRENT(yy=y_start:y_end)
   x(x_start + yy - y_start) = y(yy)
 END DO

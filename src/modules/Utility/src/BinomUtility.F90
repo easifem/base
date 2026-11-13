@@ -15,8 +15,22 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
+!> author: Vikas Sharma, Ph. D.
+! date: 2022-01-01
+! summary: This module provides a method called `Binom` for calculating the
+! binomial coefficients
+!
+! This module provides a method called `Binom` for calculating the
+! binomial coefficients
+!
+! $$
+! C_{k}^{n}
+! $$
+!
 MODULE BinomUtility
-USE GlobalData
+USE GlobalData, ONLY: DFP, LGT, I4B
+USE GlobalData, ONLY: INT8, INT16, INT32, INT64
+USE GlobalData, ONLY: REAL32, REAL64
 IMPLICIT NONE
 PRIVATE
 PUBLIC :: Binom
@@ -26,23 +40,42 @@ PUBLIC :: Binom
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date:         2 Aug 2022
-! summary:         Compute the Binomial coefficient
-!
-!# Introduction
+! date: 2022-01-01
+! summary: Compute the Binomial coefficient
 !
 ! This routine calculates the bionomial coefficient $C_{k}^{n}$
 !
 ! Usages is given below
 !
-!
-!## Usage
-!
 !```fortran
 ! ans = Binom( n=10, k=2 )
 !```
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE BinomUtility, ONLY: Binom
+! USE Display_Method, ONLY: Display
+! IMPLICIT NONE
+! ! Here we are calculating ${}^{4}C_{m}$, for $m=0,1,2,3,4$
+! CALL Display(Binom(4, 0, kind=1.0_DFP), "(4, 0) = ")
+! CALL Display(Binom(4, 1, kind=1.0_DFP), "(4, 1) = ")
+! CALL Display(Binom(4, 2, kind=1.0_DFP), "(4, 2) = ")
+! CALL Display(Binom(4, 3, kind=1.0_DFP), "(4, 3) = ")
+! CALL Display(Binom(4, 4, kind=1.0_DFP), "(4, 4) = ")
+! ! ```txt title="Results"
+! ! (4, 0) = 1.00000
+! ! (4, 1) = 4.00000
+! ! (4, 2) = 6.00000
+! ! (4, 3) = 4.00000
+! ! (4, 4) = 1.00000
+! ! ```
+! END PROGRAM main
+!```
 
-INTERFACE
+INTERFACE Binom
   MODULE RECURSIVE PURE FUNCTION Real32_Binom_Int8(n, k, kind) RESULT(ans)
     INTEGER(INT8), INTENT(IN) :: n
     !! n is integer, should be a positive number and greater or equal to k
@@ -50,83 +83,59 @@ INTERFACE
     REAL(REAL32), INTENT(IN) :: kind
     REAL(REAL32) :: ans
   END FUNCTION Real32_Binom_Int8
-END INTERFACE
 
-!----------------------------------------------------------------------------
-!                                                                Binom
-!----------------------------------------------------------------------------
-
-INTERFACE
   MODULE RECURSIVE PURE FUNCTION Real32_Binom_Int16(n, k, kind) RESULT(ans)
     INTEGER(INT16), INTENT(IN) :: n
     INTEGER(INT16), INTENT(IN) :: k
     REAL(REAL32), INTENT(IN) :: kind
     REAL(REAL32) :: ans
   END FUNCTION Real32_Binom_Int16
-END INTERFACE
 
-!----------------------------------------------------------------------------
-!                                                                 Binom
-!----------------------------------------------------------------------------
-
-INTERFACE
   MODULE RECURSIVE PURE FUNCTION Real32_Binom_Int32(n, k, kind) RESULT(ans)
     INTEGER(INT32), INTENT(IN) :: n
     INTEGER(INT32), INTENT(IN) :: k
     REAL(REAL32), INTENT(IN) :: kind
     REAL(REAL32) :: ans
   END FUNCTION Real32_Binom_Int32
-  !!
+
   MODULE RECURSIVE PURE FUNCTION Real32_Binom_Int64(n, k, kind) RESULT(ans)
     INTEGER(INT64), INTENT(IN) :: n
     INTEGER(INT64), INTENT(IN) :: k
     REAL(REAL32), INTENT(IN) :: kind
     REAL(REAL32) :: ans
   END FUNCTION Real32_Binom_Int64
-END INTERFACE
 
-INTERFACE Binom
-  MODULE PROCEDURE Real32_Binom_Int8, Real32_Binom_Int16, &
-    & Real32_Binom_Int32, Real32_Binom_Int64
-END INTERFACE Binom
-
-!----------------------------------------------------------------------------
-!                                                                Binom
-!----------------------------------------------------------------------------
-
-INTERFACE
   MODULE RECURSIVE PURE FUNCTION Real64_Binom_Int8(n, k, kind) RESULT(ans)
     INTEGER(INT8), INTENT(IN) :: n
     INTEGER(INT8), INTENT(IN) :: k
     REAL(REAL64), INTENT(IN) :: kind
     REAL(REAL64) :: ans
   END FUNCTION Real64_Binom_Int8
-  !!
+
   MODULE RECURSIVE PURE FUNCTION Real64_Binom_Int16(n, k, kind) RESULT(ans)
     INTEGER(INT16), INTENT(IN) :: n
     INTEGER(INT16), INTENT(IN) :: k
     REAL(REAL64), INTENT(IN) :: kind
     REAL(REAL64) :: ans
   END FUNCTION Real64_Binom_Int16
-  !!
+
   MODULE RECURSIVE PURE FUNCTION Real64_Binom_Int32(n, k, kind) RESULT(ans)
     INTEGER(INT32), INTENT(IN) :: n
     INTEGER(INT32), INTENT(IN) :: k
     REAL(REAL64), INTENT(IN) :: kind
     REAL(REAL64) :: ans
   END FUNCTION Real64_Binom_Int32
-  !!
+
   MODULE RECURSIVE PURE FUNCTION Real64_Binom_Int64(n, k, kind) RESULT(ans)
     INTEGER(INT64), INTENT(IN) :: n
     INTEGER(INT64), INTENT(IN) :: k
     REAL(REAL64), INTENT(IN) :: kind
     REAL(REAL64) :: ans
   END FUNCTION Real64_Binom_Int64
-END INTERFACE
-
-INTERFACE Binom
-  MODULE PROCEDURE Real64_Binom_Int8, Real64_Binom_Int16, &
-    & Real64_Binom_Int32, Real64_Binom_Int64
 END INTERFACE Binom
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
 
 END MODULE BinomUtility

@@ -2552,6 +2552,43 @@ END DO
 END PROCEDURE obj_STForceVector_25
 
 !----------------------------------------------------------------------------
+!                                                              STForceVector
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE obj_STForceVector_26
+REAL(DFP) :: realval, realval_space, realval_time
+INTEGER(I4B) :: ips, ipt, nipt, nips, i1, i2
+REAL(DFP) :: scale0
+LOGICAL(LGT) :: isadd0
+
+nrow = testSpace%nns
+ncol = testTime%nns
+nips = testSpace%nips
+nipt = testTime%nips
+
+isadd0 = Input(option=addContribution, default=math%no)
+scale0 = Input(option=scale, default=math%one)
+IF (.NOT. isadd0) ans(1:nrow, 1:ncol) = math%zero
+
+DO ipt = 1, nipt
+  realval_time = scale * testTime%ws(ipt) * testTime%js(ipt)
+
+  DO ips = 1, nips
+
+    realval_space = testSpace%js(ips) &
+      * testSpace%ws(ips) &
+      * testSpace%thickness(ips)
+
+    realval = realval_space * realval_time * c(ips, ipt)
+
+    CALL OuterProd_( &
+      a=testSpace%N(1:nrow, ips), b=testTime%N(1:ncol, ipt), &
+      anscoeff=math%one, scale=realval, ans=ans, nrow=i1, ncol=i2)
+  END DO
+END DO
+END PROCEDURE obj_STForceVector_26
+
+!----------------------------------------------------------------------------
 !                                                              Include error
 !----------------------------------------------------------------------------
 

@@ -16,7 +16,11 @@
 !
 
 SUBMODULE(UnscaledLobattoPolynomialUtility) Methods
-USE BaseMethod
+USE LegendrePolynomialUtility, ONLY: LegendreEval
+USE LegendrePolynomialUtility, ONLY: LegendreEvalAll_
+USE LegendrePolynomialUtility, ONLY: LegendreMonomialExpansionAll
+USE LegendrePolynomialUtility, ONLY: LegendreLeadingCoeff
+USE JacobiPolynomialUtility, ONLY: JacobiZeros
 IMPLICIT NONE
 CONTAINS
 
@@ -438,6 +442,125 @@ DO ii = 3, n + 1
   ans(ii, ii) = 2.0_DFP / (2.0_DFP * m + 3.0_DFP)
 END DO
 END PROCEDURE UnscaledLobattoStiffnessMatrix
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE UnscaledLobattoLaplacianEvalAll1
+INTEGER(I4B) :: tsize
+CALL UnscaledLobattoLaplacianEvalAll1_(n=n, x=x, ans=ans, tsize=tsize)
+END PROCEDURE UnscaledLobattoLaplacianEvalAll1
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE UnscaledLobattoLaplacianEvalAll1_
+! REAL(DFP) :: p(n)
+! INTEGER(I4B) :: ii
+
+! tsize = n + 1
+
+! SELECT CASE (n)
+! CASE (0)
+!   ans(1) = -0.5_DFP
+
+! CASE (1)
+!   ans(1) = -0.5_DFP
+!   ans(2) = 0.5_DFP
+
+! CASE DEFAULT
+!   ans(1) = -0.5_DFP
+!   ans(2) = 0.5_DFP
+
+!   ! p = LegendreEvalAll(n=n - 1_I4B, x=x)
+!   CALL LegendreEvalAll_(n=n - 1_I4B, x=x, ans=p, tsize=ii)
+
+!   DO ii = 1, n - 1
+!     ans(ii + 2) = p(ii + 1)
+!     ! ans(3:) = p(2:)
+!   END DO
+
+! END SELECT
+
+END PROCEDURE UnscaledLobattoLaplacianEvalAll1_
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE UnscaledLobattoLaplacianEvalAll2
+INTEGER(I4B) :: nrow, ncol
+CALL UnscaledLobattoLaplacianEvalAll2_(n=n, x=x, ans=ans, nrow=nrow, &
+                                       ncol=ncol)
+
+END PROCEDURE UnscaledLobattoLaplacianEvalAll2
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE UnscaledLobattoLaplacianEvalAll2_
+! REAL(DFP) :: p(SIZE(x), n)
+! INTEGER(I4B) :: ii
+
+! nrow = SIZE(x)
+! ncol = n + 1
+
+! SELECT CASE (n)
+! CASE (0)
+!   ans(1:nrow, 1) = -0.5_DFP
+
+! CASE (1)
+!   ans(1:nrow, 1) = -0.5_DFP
+!   ans(1:nrow, 2) = 0.5_DFP
+
+! CASE DEFAULT
+!   ans(1:nrow, 1) = -0.5_DFP
+!   ans(1:nrow, 2) = 0.5_DFP
+
+!   ! p = LegendreEvalAll(n=n - 1_I4B, x=x)
+!   CALL LegendreEvalAll_(n=n - 1_I4B, x=x, ans=p, nrow=nrow, ncol=ii)
+
+!   DO ii = 1, n - 1
+!     ans(1:nrow, ii + 2) = p(1:nrow, ii + 1)
+!     ! ans(3:) = p(2:)
+!   END DO
+!   !!
+! END SELECT
+END PROCEDURE UnscaledLobattoLaplacianEvalAll2_
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE UnscaledLobattoLaplacianEval1
+!   !!
+! SELECT CASE (n)
+! CASE (0)
+!   ans = -0.5_DFP
+! CASE (1)
+!   ans = 0.5_DFP
+! CASE DEFAULT
+!   ans = LegendreEval(n=n - 1_I4B, x=x)
+! END SELECT
+END PROCEDURE UnscaledLobattoLaplacianEval1
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE UnscaledLobattoLaplacianEval2
+! SELECT CASE (n)
+! CASE (0)
+!   ans = -0.5_DFP
+! CASE (1)
+!   ans = 0.5_DFP
+! CASE DEFAULT
+!   ans = LegendreEval(n=n - 1_I4B, x=x)
+! END SELECT
+END PROCEDURE UnscaledLobattoLaplacianEval2
 
 !----------------------------------------------------------------------------
 !

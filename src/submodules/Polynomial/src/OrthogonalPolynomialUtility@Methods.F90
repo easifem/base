@@ -17,68 +17,51 @@
 
 SUBMODULE(OrthogonalPolynomialUtility) Methods
 USE GlobalData, ONLY: stderr
-
 USE ReferenceElement_Method, ONLY: XiDimension
-
 USE InputUtility, ONLY: Input
-
 USE ErrorHandling, ONLY: ErrorMsg
-
-USE BaseType, ONLY: poly => TypePolynomialOpt, &
-                    elem => TypeElemNameOpt
-
+USE BaseType, ONLY: poly => TypePolynomialOpt
+USE BaseType, ONLY: elem => TypeElemNameOpt
+USE BaseType, ONLY: math => TypeMathOpt
 USE LagrangePolynomialUtility, ONLY: LagrangeDOF
-
-USE JacobiPolynomialUtility, ONLY: JacobiEvalAll, &
-                                   JacobiEvalAll_, &
-                                   JacobiGradientEvalAll, &
-                                   JacobiGradientEvalAll_
-
-USE UltrasphericalPolynomialUtility, ONLY: UltraSphericalEvalAll, &
-                                           UltraSphericalEvalAll_, &
-                                           UltraSphericalGradientEvalAll, &
-                                           UltraSphericalGradientEvalAll_
-
-USE Chebyshev1PolynomialUtility, ONLY: Chebyshev1EvalAll, &
-                                       Chebyshev1EvalAll_, &
-                                       Chebyshev1GradientEvalAll, &
-                                       Chebyshev1GradientEvalAll_
-
-USE LegendrePolynomialUtility, ONLY: LegendreEvalAll, &
-                                     LegendreEvalAll_, &
-                                     LegendreGradientEvalAll, &
-                                     LegendreGradientEvalAll_
-
-USE LobattoPolynomialUtility, ONLY: LobattoEvalAll, &
-                                    LobattoEvalAll_, &
-                                    LobattoGradientEvalAll, &
-                                    LobattoGradientEvalAll_
-
-USE UnscaledLobattoPolynomialUtility, ONLY: UnscaledLobattoEvalAll, &
-                                            UnscaledLobattoEvalAll_, &
-                                            UnscaledLobattoGradientEvalAll, &
-                                            UnscaledLobattoGradientEvalAll_
-
-USE LineInterpolationUtility, ONLY: OrthogonalBasis_Line_, &
-                                    OrthogonalBasisGradient_Line_
-
-USE TriangleInterpolationUtility, ONLY: OrthogonalBasis_Triangle_, &
-                                        OrthogonalBasisGradient_Triangle_
-
-USE QuadrangleInterpolationUtility, ONLY: OrthogonalBasis_Quadrangle_, &
-                                          OrthogonalBasisGradient_Quadrangle_
-
-USE TetrahedronInterpolationUtility, ONLY: OrthogonalBasis_Tetrahedron_, &
-                                          OrthogonalBasisGradient_Tetrahedron_
-
-USE HexahedronInterpolationUtility, ONLY: OrthogonalBasis_Hexahedron_, &
-                                          OrthogonalBasisGradient_Hexahedron_
-
+USE JacobiPolynomialUtility, ONLY: JacobiEvalAll_
+USE JacobiPolynomialUtility, ONLY: JacobiGradientEvalAll_
+USE JacobiPolynomialUtility, ONLY: JacobiLaplacianEvalAll_
+USE UltrasphericalPolynomialUtility, ONLY: UltraSphericalEvalAll_
+USE UltrasphericalPolynomialUtility, ONLY: UltraSphericalGradientEvalAll_
+USE UltrasphericalPolynomialUtility, ONLY: UltraSphericalLaplacianEvalAll_
+USE Chebyshev1PolynomialUtility, ONLY: Chebyshev1EvalAll_
+USE Chebyshev1PolynomialUtility, ONLY: Chebyshev1GradientEvalAll_
+USE Chebyshev1PolynomialUtility, ONLY: Chebyshev1LaplacianEvalAll_
+USE LegendrePolynomialUtility, ONLY: LegendreEvalAll_
+USE LegendrePolynomialUtility, ONLY: LegendreGradientEvalAll_
+USE LegendrePolynomialUtility, ONLY: LegendreLaplacianEvalAll_
+USE LobattoPolynomialUtility, ONLY: LobattoEvalAll_
+USE LobattoPolynomialUtility, ONLY: LobattoGradientEvalAll_
+USE LobattoPolynomialUtility, ONLY: LobattoLaplacianEvalAll_
+USE UnscaledLobattoPolynomialUtility, ONLY: UnscaledLobattoEvalAll_
+USE UnscaledLobattoPolynomialUtility, ONLY: UnscaledLobattoGradientEvalAll_
+USE UnscaledLobattoPolynomialUtility, ONLY: UnscaledLobattoLaplacianEvalAll_
+USE LineInterpolationUtility, ONLY: OrthogonalBasis_Line_
+USE LineInterpolationUtility, ONLY: OrthogonalBasisGradient_Line_
+USE LineInterpolationUtility, ONLY: OrthogonalBasisLaplacian_Line_
+USE TriangleInterpolationUtility, ONLY: OrthogonalBasis_Triangle_
+USE TriangleInterpolationUtility, ONLY: OrthogonalBasisGradient_Triangle_
+USE QuadrangleInterpolationUtility, ONLY: OrthogonalBasis_Quadrangle_
+USE QuadrangleInterpolationUtility, ONLY: OrthogonalBasisGradient_Quadrangle_
+USE TetrahedronInterpolationUtility, ONLY: OrthogonalBasis_Tetrahedron_
+USE TetrahedronInterpolationUtility, ONLY: &
+  OrthogonalBasisGradient_Tetrahedron_
+USE HexahedronInterpolationUtility, ONLY: OrthogonalBasis_Hexahedron_
+USE HexahedronInterpolationUtility, ONLY: OrthogonalBasisGradient_Hexahedron_
 ! USE PrismInterpolationUtility, ONLY: OrthogonalBasis_Prism_
-
 ! USE PyramidInterpolationUtility, ONLY: OrthogonalBasis_Pyramid_
-
 IMPLICIT NONE
+
+#ifdef DEBUG_VER
+CHARACTER(*), PARAMETER :: modName = "OrthogonalPolynomialUtility@Methods.F90"
+#endif
+
 CONTAINS
 
 !----------------------------------------------------------------------------
@@ -180,24 +163,13 @@ END PROCEDURE JacobiMatrix_1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE EvalAllOrthopol
-SELECT CASE (orthopol)
-CASE (poly%Jacobi)
-  ans = JacobiEvalAll(n=n, alpha=alpha, beta=beta, x=x)
-CASE (poly%Ultraspherical)
-  ans = UltraSphericalEvalAll(n=n, lambda=lambda, x=x)
-CASE (poly%Legendre)
-  ans = LegendreEvalAll(n=n, x=x)
-CASE (poly%Chebyshev)
-  ans = Chebyshev1EvalAll(n=n, x=x)
-CASE (poly%Lobatto)
-  ans = LobattoEvalAll(n=n, x=x)
-CASE (poly%UnscaledLobatto)
-  ans = UnscaledLobattoEvalAll(n=n, x=x)
-END SELECT
+INTEGER(I4B) :: nrow, ncol
+CALL EvalAllOrthopol_(n=n, x=x, orthopol=orthopol, alpha=alpha, beta=beta, &
+                      lambda=lambda, ans=ans, nrow=nrow, ncol=ncol)
 END PROCEDURE EvalAllOrthopol
 
 !----------------------------------------------------------------------------
-!                                                            EvalAllOrthopol
+!                                                            EvalAllOrthopol_
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE EvalAllOrthopol_
@@ -224,14 +196,17 @@ CASE (poly%UnscaledLobatto)
 
 CASE (poly%Monomial)
 
-  nrow = SIZE(x) !! Number of points of evaluation
-  ncol = n + 1 !! Number of basis functions
+  nrow = SIZE(x)
+  !! Number of points of evaluation
+  ncol = n + 1
+  !! Number of basis functions
 
   ans(1:nrow, 1) = 1.0_DFP
   DO ii = 1, n
     ans(1:nrow, ii + 1) = ans(1:nrow, ii) * x(1:nrow)
   END DO
 
+CASE DEFAULT
 END SELECT
 END PROCEDURE EvalAllOrthopol_
 
@@ -242,7 +217,8 @@ END PROCEDURE EvalAllOrthopol_
 MODULE PROCEDURE GradientEvalAllOrthopol
 INTEGER(I4B) :: nrow, ncol
 CALL GradientEvalAllOrthopol_(n=n, x=x, orthopol=orthopol, ans=ans, &
-                  nrow=nrow, ncol=ncol, alpha=alpha, beta=beta, lambda=lambda)
+                              nrow=nrow, ncol=ncol, alpha=alpha, &
+                              beta=beta, lambda=lambda)
 END PROCEDURE GradientEvalAllOrthopol
 
 !----------------------------------------------------------------------------
@@ -255,12 +231,14 @@ REAL(DFP) :: areal
 
 SELECT CASE (orthopol)
 CASE (poly%Jacobi)
-  ! ans(1:nrow, 1:ncol) = JacobiGradientEvalAll(n=n, alpha=alpha, beta=beta, x=x)
+  ! ans(1:nrow, 1:ncol) = JacobiGradientEvalAll(n=n, &
+  ! alpha=alpha, beta=beta, x=x)
   CALL JacobiGradientEvalAll_(n=n, alpha=alpha, beta=beta, x=x, ans=ans, &
                               nrow=nrow, ncol=ncol)
 
 CASE (poly%Ultraspherical)
-  ! ans(1:nrow, 1:ncol) = UltraSphericalGradientEvalAll(n=n, lambda=lambda, x=x)
+  ! ans(1:nrow, 1:ncol) = UltraSphericalGradientEvalAll(n=n, &
+  ! lambda=lambda, x=x)
   CALL UltraSphericalGradientEvalAll_(n=n, lambda=lambda, x=x, ans=ans, &
                                       nrow=nrow, ncol=ncol)
 
@@ -282,8 +260,10 @@ CASE (poly%UnscaledLobatto)
                                        nrow=nrow, ncol=ncol)
 
 CASE (poly%Monomial)
-  nrow = SIZE(x) !! Number of points of evaluation
-  ncol = n + 1 !! Number of basis functions
+  nrow = SIZE(x)
+  !! Number of points of evaluation
+  ncol = n + 1
+  !! Number of basis functions
 
   DO jj = 0, n
     indx = MAX(jj - 1_I4B, 0_I4B)
@@ -293,6 +273,7 @@ CASE (poly%Monomial)
     END DO
   END DO
 
+CASE DEFAULT
 END SELECT
 END PROCEDURE GradientEvalAllOrthopol_
 
@@ -428,7 +409,109 @@ END SELECT
 END PROCEDURE OrthogonalGradientEvalAll_
 
 !----------------------------------------------------------------------------
+!                                                   LaplacianEvalAllOrthopol
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE LaplacianEvalAllOrthopol
+INTEGER(I4B) :: nrow, ncol
+CALL LaplacianEvalAllOrthopol_(n=n, x=x, orthopol=orthopol, ans=ans, &
+                               nrow=nrow, ncol=ncol, alpha=alpha, beta=beta, &
+                               lambda=lambda)
+END PROCEDURE LaplacianEvalAllOrthopol
+
+!----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
+
+MODULE PROCEDURE LaplacianEvalAllOrthopol_
+INTEGER(I4B) :: ii, jj
+
+SELECT CASE (orthopol)
+CASE (poly%Jacobi)
+  CALL JacobiLaplacianEvalAll_(n=n, alpha=alpha, beta=beta, x=x, ans=ans, &
+                               nrow=nrow, ncol=ncol)
+
+CASE (poly%Ultraspherical)
+  CALL UltraSphericalLaplacianEvalAll_(n=n, lambda=lambda, x=x, ans=ans, &
+                                       nrow=nrow, ncol=ncol)
+
+CASE (poly%Legendre)
+  CALL LegendreLaplacianEvalAll_(n=n, x=x, ans=ans, nrow=nrow, ncol=ncol)
+
+CASE (poly%Chebyshev)
+  CALL Chebyshev1LaplacianEvalAll_(n=n, x=x, ans=ans, nrow=nrow, ncol=ncol)
+
+CASE (poly%Lobatto)
+  CALL LobattoLaplacianEvalAll_(n=n, x=x, ans=ans, nrow=nrow, ncol=ncol)
+
+CASE (poly%UnscaledLobatto)
+  CALL UnscaledLobattoLaplacianEvalAll_(n=n, x=x, ans=ans, &
+                                        nrow=nrow, ncol=ncol)
+
+CASE (poly%Monomial)
+  nrow = SIZE(x)
+  !! Number of points of evaluation
+  ncol = n + 1
+  !! Number of basis functions
+
+  ans(1:nrow, 1:ncol) = math%zero
+
+  DO jj = 2, n
+    DO ii = 1, nrow
+      ans(ii, jj + 1) = jj * (jj - 1) * (x(ii)**(jj - 2))
+    END DO
+  END DO
+
+CASE DEFAULT
+
+END SELECT
+END PROCEDURE LaplacianEvalAllOrthopol_
+
+!----------------------------------------------------------------------------
+!                                                 OrthogonalLaplacianEvalAll
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE OrthogonalLaplacianEvalAll
+INTEGER(I4B) :: nrow, ncol
+
+nrow = SIZE(xij, 2)
+ncol = LagrangeDOF(order=order, elemType=elemType)
+ALLOCATE (ans(nrow, ncol))
+CALL OrthogonalLaplacianEvalAll_(order=order, elemType=elemType, xij=xij, &
+                                 domainName=domainName, basisType=basisType, &
+                                 ans=ans, nrow=nrow, ncol=ncol, alpha=alpha, &
+                                 beta=beta, lambda=lambda)
+END PROCEDURE OrthogonalLaplacianEvalAll
+
+!----------------------------------------------------------------------------
+!                                                 OrthogonalLaplacianEvalAll_
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE OrthogonalLaplacianEvalAll_
+#ifdef DEBUG_VER
+CHARACTER(*), PARAMETER :: myName = "OrthogonalLaplacianEvalAll_()"
+#endif
+
+SELECT CASE (elemType)
+CASE (elem%Line)
+
+  CALL OrthogonalBasisLaplacian_Line_( &
+    order=order, xij=xij, refLine=domainName, basisType=basisType, &
+    alpha=alpha, beta=beta, lambda=lambda, ans=ans, &
+    nrow=nrow, ncol=ncol)
+
+CASE DEFAULT
+#ifdef DEBUG_VER
+  CALL AssertError1(math%no, myName, modName, __LINE__, &
+                    "no case found for elemType")
+#endif
+END SELECT
+END PROCEDURE OrthogonalLaplacianEvalAll_
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+#include "../../include/errors.F90"
 
 END SUBMODULE Methods

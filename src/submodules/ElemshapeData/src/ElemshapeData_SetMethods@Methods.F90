@@ -16,6 +16,7 @@
 !
 
 SUBMODULE(ElemshapeData_SetMethods) Methods
+USE BaseType, ONLY: math => TypeMathOpt
 USE ProductUtility, ONLY: VectorProduct, OuterProd
 USE InvUtility, ONLY: Det, Inv
 USE ReallocateUtility, ONLY: Reallocate
@@ -68,71 +69,88 @@ END PROCEDURE stsd_SetBarycentricCoord
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE elemsd_SetJs
+CALL SetJs(js=obj%js, jacobian=obj%jacobian, nsd=obj%nsd, xidim=obj%xidim, &
+           nips=obj%nips)
+END PROCEDURE elemsd_SetJs
+
+!----------------------------------------------------------------------------
+!                                                             elemsd_SetJs2
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE elemsd_SetJs2
 ! Define internal variable
 INTEGER(I4B) :: ips, caseid
 
 REAL(DFP) :: aa, bb, ab
 
-caseid = obj%xidim
+caseid = xidim
 
-IF (obj%nsd .EQ. obj%xidim) THEN
+IF (nsd .EQ. xidim) THEN
   caseid = 3
 END IF
 
 SELECT CASE (caseid)
 
 CASE (1)
-  DO ips = 1, obj%nips
-    obj%js(ips) = NORM2(obj%jacobian(1:obj%nsd, 1, ips))
+  DO ips = 1, nips
+    js(ips) = NORM2(jacobian(1:nsd, 1, ips))
   END DO
 
 CASE (2)
 
-  DO ips = 1, obj%nips
-    aa = DOT_PRODUCT(obj%jacobian(1:obj%nsd, 1, ips), &
-                     obj%jacobian(1:obj%nsd, 1, ips))
-    bb = DOT_PRODUCT(obj%jacobian(1:obj%nsd, 2, ips), &
-                     obj%jacobian(1:obj%nsd, 2, ips))
-    ab = DOT_PRODUCT(obj%jacobian(1:obj%nsd, 1, ips), &
-                     obj%jacobian(1:obj%nsd, 2, ips))
-    obj%js(ips) = SQRT(aa * bb - ab * ab)
+  DO ips = 1, nips
+    aa = DOT_PRODUCT(jacobian(1:nsd, 1, ips), &
+                     jacobian(1:nsd, 1, ips))
+    bb = DOT_PRODUCT(jacobian(1:nsd, 2, ips), &
+                     jacobian(1:nsd, 2, ips))
+    ab = DOT_PRODUCT(jacobian(1:nsd, 1, ips), &
+                     jacobian(1:nsd, 2, ips))
+    js(ips) = SQRT(aa * bb - ab * ab)
   END DO
 
 CASE (3)
 
-  DO ips = 1, obj%nips
-    obj%js(ips) = Det(obj%jacobian(1:obj%nsd, 1:obj%xidim, ips))
+  DO ips = 1, nips
+    js(ips) = Det(jacobian(1:nsd, 1:xidim, ips))
   END DO
 
-END SELECT
+CASE DEFAULT
 
-END PROCEDURE elemsd_SetJs
+END SELECT
+END PROCEDURE elemsd_SetJs2
 
 !----------------------------------------------------------------------------
 !                                                                  SetdNdXt
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE elemsd_SetdNdXt
-! Define internal variables
+CALL SetdNdXt(obj%dNdXt, obj%dNdXi, obj%jacobian, obj%xidim, obj%nsd, &
+              obj%nips, obj%nns)
+END PROCEDURE elemsd_SetdNdXt
+
+!----------------------------------------------------------------------------
+!                                                                  SetdNdXt2
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE elemsd_SetdNdXt2
 INTEGER(I4B) :: ips
 REAL(DFP) :: invJacobian(3, 3)
 LOGICAL(LGT) :: abool
 
-abool = obj%nsd .NE. obj%xidim
+abool = nsd .NE. xidim
 
 IF (abool) THEN
-  obj%dNdXt(1:obj%nns, 1:obj%nsd, 1:obj%nips) = 0.0_DFP
+  dNdXt(1:nns, 1:nsd, 1:nips) = math%zero
   RETURN
 END IF
 
-DO ips = 1, obj%nips
-  CALL Inv(InvA=invJacobian, A=obj%jacobian(1:obj%nsd, 1:obj%nsd, ips))
+DO ips = 1, nips
+  CALL Inv(InvA=invJacobian, A=jacobian(1:nsd, 1:nsd, ips))
 
-  obj%dNdXt(1:obj%nns, 1:obj%nsd, ips) = &
-    MATMUL(obj%dNdXi(1:obj%nns, 1:obj%nsd, ips), &
-           invJacobian(1:obj%nsd, 1:obj%nsd))
+  dNdXt(1:nns, 1:nsd, ips) = MATMUL(dNdXi(1:nns, 1:nsd, ips), &
+                                    invJacobian(1:nsd, 1:nsd))
 END DO
-END PROCEDURE elemsd_SetdNdXt
+END PROCEDURE elemsd_SetdNdXt2
 
 !----------------------------------------------------------------------------
 !                                                               SetJacobian
@@ -244,7 +262,7 @@ END PROCEDURE elemsd_Set1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE elemsd_Set2
-call elemsd_Set1(obj=cellobj, val=cellval, N=cellN, dNdXi=celldNdXi)
+CALL elemsd_Set1(obj=cellobj, val=cellval, N=cellN, dNdXi=celldNdXi)
 
 CALL SetJacobian(obj=facetobj, val=facetval, dNdXi=facetdNdXi)
 CALL SetJs(obj=facetobj)

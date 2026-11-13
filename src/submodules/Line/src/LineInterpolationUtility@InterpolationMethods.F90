@@ -17,6 +17,7 @@
 
 SUBMODULE(LineInterpolationUtility) InterpolationMethods
 USE BaseType, ONLY: ipopt => TypeInterpolationOpt
+USE BaseType, ONLY: math => TypeMathOpt
 USE MappingUtility, ONLY: FromBiunitLine2Segment_
 USE LegendrePolynomialUtility, ONLY: LegendreQuadrature
 USE Chebyshev1PolynomialUtility, ONLY: Chebyshev1Quadrature
@@ -302,7 +303,7 @@ CHARACTER(*), PARAMETER :: myName = "InterpolationPoint_Line1_()"
 
 REAL(DFP) :: temp(64)
 
-IF (order .EQ. 0_I4B) THEN
+IF (order .EQ. math%zero_i) THEN
   CALL EquidistancePoint_Line_(xij=xij, order=order, ans=ans, nrow=nrow, &
                                ncol=ncol)
   RETURN
@@ -363,10 +364,10 @@ CASE (ipopt%GaussUltrasphericalLobatto)
   CALL handle_vefc
   CALL handle_non_equidistance
 
-#ifdef DEBUG_VER
 CASE DEFAULT
+#ifdef DEBUG_VER
   ! AssertError1(a, myName, modName, lineNo, msg)
-  CALL AssertError1(.FALSE., myName, modName, __LINE__, &
+  CALL AssertError1(math%no, myName, modName, __LINE__, &
                     "Unknown iptype")
 #endif
 
@@ -394,7 +395,7 @@ SUBROUTINE handle_increasing
       CALL HeapSort(ans(ii, 1:ncol))
     END DO
   END IF
-END SUBROUTINE
+END SUBROUTINE handle_increasing
 
 SUBROUTINE handle_non_equidistance
   IF (PRESENT(xij)) THEN
@@ -420,6 +421,7 @@ SUBROUTINE handle_error
     isok = PRESENT(lambda)
     CALL AssertError1(isok, myName, modName, __LINE__, &
                     "lambda should be present for ipType=GaussUltraSpherical")
+  CASE DEFAULT
   END SELECT
 #endif
 

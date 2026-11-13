@@ -19,7 +19,8 @@ INTEGER(I4B), ALLOCATABLE :: indx(:, :)
 INTEGER(I4B) :: tsize, ii, jj
 !
 indx = TrilIndx(A, diagNo)
-tsize = SIZE(indx, 1)
+! only the first SIZE(lu) entries of the triangle are set
+tsize = MIN(SIZE(indx, 1), SIZE(lu))
 !
 jj = 0
 !

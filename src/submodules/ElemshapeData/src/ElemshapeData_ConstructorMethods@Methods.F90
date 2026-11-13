@@ -36,6 +36,7 @@ MODULE PROCEDURE obj_Allocate
 LOGICAL(LGT) :: isok
 
 CALL Reallocate(obj%N, nns, nips)
+CALL Reallocate(obj%NLaplacian, nns, nips)
 CALL Reallocate(obj%dNdXi, nns, xidim, nips)
 CALL Reallocate(obj%normal, 3, nips)
 CALL Reallocate(obj%dNdXt, nns, nsd, nips)
@@ -53,7 +54,8 @@ obj%nns = nns
 isok = PRESENT(nnt)
 IF (.NOT. isok) RETURN
 
-SELECT TYPE (obj); TYPE is (STElemShapeData_)
+SELECT TYPE (obj)
+TYPE is (STElemShapeData_)
   obj%nnt = nnt
   CALL Reallocate(obj%T, nnt)
   CALL Reallocate(obj%dTdTheta, nnt)
@@ -78,34 +80,40 @@ END PROCEDURE obj_Initiate1
 
 MODULE PROCEDURE obj_Initiate2
 INTEGER(I4B) :: ii, jj, kk, nns, nsd, xidim, nips, nnt, ll, nnt
+LOGICAL(LGT) :: isok
 
 nns = obj2%nns
 nsd = obj2%nsd
 xidim = obj2%xidim
 nips = obj2%nips
 
-SELECT TYPE (obj2); TYPE is (STElemShapeData_)
+SELECT TYPE (obj2)
+TYPE is (STElemShapeData_)
   nnt = obj2%nnt
 END SELECT
 
 CALL obj_Allocate(obj=obj1, nsd=nsd, xidim=xidim, nns=nns, &
                   nips=nips, nnt=nnt)
 
-DO CONCURRENT(jj=1:nips, ii=1:nns)
-  obj1%N(ii, jj) = obj2%N(ii, jj)
-END DO
+isok = ALLOCATED(obj2%N)
+IF (isok) THEN
+  obj1%N(1:nns, 1:nips) = obj2%N(1:nns, 1:nips)
+END IF
 
-DO CONCURRENT(kk=1:nips, jj=1:xidim, ii=1:nns)
-  obj1%dNdXi(ii, jj, kk) = obj2%dNdXi(ii, jj, kk)
-END DO
+isok = ALLOCATED(obj2%dNdXi)
+IF (isok) THEN
+  obj1%dNdXi(1:nns, 1:xidim, 1:nips) = obj2%dNdXi(1:nns, 1:xidim, 1:nips)
+END IF
 
-DO CONCURRENT(kk=1:nips, jj=1:nsd, ii=1:nns)
-  obj1%dNdXt(ii, jj, kk) = obj2%dNdXt(ii, jj, kk)
-END DO
+isok = ALLOCATED(obj2%dNdXt)
+IF (isok) THEN
+  obj1%dNdXt(1:nns, 1:nsd, 1:nips) = obj2%dNdXt(1:nns, 1:nsd, 1:nips)
+END IF
 
-DO CONCURRENT(ii=1:nsd, jj=1:xidim, kk=1:nips)
-  obj1%jacobian(ii, jj, kk) = obj2%jacobian(ii, jj, kk)
-END DO
+isok = ALLOCATED(obj2%jacobian)
+IF (isok) THEN
+ obj1%jacobian(1:nsd, 1:xidim, 1:nips) = obj2%jacobian(1:nsd, 1:xidim, 1:nips)
+END IF
 
 DO CONCURRENT(ii=1:nips)
   obj1%js(ii) = obj2%js(ii)
@@ -115,8 +123,10 @@ DO CONCURRENT(ii=1:nips)
   obj1%normal(1:3, ii) = obj2%normal(1:3, ii)
 END DO
 
-SELECT TYPE (obj1); TYPE is (STElemShapeData_)
-  SELECT TYPE (obj2); TYPE is (STElemShapeData_)
+SELECT TYPE (obj1)
+TYPE is (STElemShapeData_)
+  SELECT TYPE (obj2)
+  TYPE is (STElemShapeData_)
     obj1%wt = obj2%wt
     ! obj1%theta = obj2%theta
     obj1%jt = obj2%jt
@@ -138,7 +148,6 @@ SELECT TYPE (obj1); TYPE is (STElemShapeData_)
 
   END SELECT
 END SELECT
-
 END PROCEDURE obj_Initiate2
 
 !----------------------------------------------------------------------------
@@ -187,6 +196,7 @@ END PROCEDURE obj_Initiate3
 MODULE PROCEDURE obj_Deallocate
 IF (ALLOCATED(obj%normal)) DEALLOCATE (obj%normal)
 IF (ALLOCATED(obj%N)) DEALLOCATE (obj%N)
+IF (ALLOCATED(obj%NLaplacian)) DEALLOCATE (obj%NLaplacian)
 IF (ALLOCATED(obj%dNdXi)) DEALLOCATE (obj%dNdXi)
 IF (ALLOCATED(obj%dNdXt)) DEALLOCATE (obj%dNdXt)
 IF (ALLOCATED(obj%jacobian)) DEALLOCATE (obj%jacobian)

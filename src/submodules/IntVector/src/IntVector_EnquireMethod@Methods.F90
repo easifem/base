@@ -16,7 +16,7 @@
 !
 
 SUBMODULE(IntVector_EnquireMethod) Methods
-USE BaseMethod
+USE IntegerUtility, ONLY: OPERATOR(.IN.)
 IMPLICIT NONE
 CONTAINS
 
@@ -24,93 +24,93 @@ CONTAINS
 !                                                       intVec_isAllocated
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE intVec_isAllocated
-IF (ALLOCATED(obj%Val)) THEN
+MODULE PROCEDURE obj_IsAllocated
+IF (ALLOCATED(obj%val)) THEN
   ans = .TRUE.
 ELSE
   ans = .FALSE.
 END IF
-END PROCEDURE intVec_isAllocated
+END PROCEDURE obj_IsAllocated
 
 !----------------------------------------------------------------------------
 !                                                                       IN
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE intVec_in1
-ans = obj1%val.in.obj2%val
-END PROCEDURE intVec_in1
+MODULE PROCEDURE obj_In1
+ans = obj1%val(1:obj1%tsize) .IN. obj2%val(1:obj2%tsize)
+END PROCEDURE obj_In1
 
 !----------------------------------------------------------------------------
 !                                                                       IN
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE intVec_in2a
-ans = ANY(a .EQ. obj%val)
-END PROCEDURE intVec_in2a
+MODULE PROCEDURE obj_In2a
+ans = ANY(a .EQ. obj%val(1:obj%tsize))
+END PROCEDURE obj_In2a
 
 !----------------------------------------------------------------------------
 !                                                                       IN
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE intVec_in2b
-ans = ANY(a .EQ. obj%val)
-END PROCEDURE intVec_in2b
+MODULE PROCEDURE obj_In2b
+ans = ANY(a .EQ. obj%val(1:obj%tsize))
+END PROCEDURE obj_In2b
 
 !----------------------------------------------------------------------------
 !                                                                       IN
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE intVec_in2c
-ans = ANY(a .EQ. obj%val)
-END PROCEDURE intVec_in2c
+MODULE PROCEDURE obj_In2c
+ans = ANY(a .EQ. obj%val(1:obj%tsize))
+END PROCEDURE obj_In2c
 
 !----------------------------------------------------------------------------
 !                                                                       IN
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE intVec_in2d
-ans = ANY(a .EQ. obj%val)
-END PROCEDURE intVec_in2d
+MODULE PROCEDURE obj_In2d
+ans = ANY(a .EQ. obj%val(1:obj%tsize))
+END PROCEDURE obj_In2d
 
 !----------------------------------------------------------------------------
 !                                                                  isPresent
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE intVec_isPresent1
+MODULE PROCEDURE obj_IsPresent1
 INTEGER(I4B) :: i
-Ans = .FALSE.
-DO i = 1, SIZE(obj%Val)
-  IF (obj%Val(i) .EQ. VALUE) THEN
-    Ans = .TRUE.
+ans = .FALSE.
+DO i = 1, obj%tsize
+  !SIZE(obj%val)
+  IF (obj%val(i) .EQ. VALUE) THEN
+    ans = .TRUE.
     EXIT
   END IF
 END DO
-END PROCEDURE intVec_isPresent1
+END PROCEDURE obj_IsPresent1
 
 !----------------------------------------------------------------------------
 !                                                                  isPresent
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE intVec_isPresent2
+MODULE PROCEDURE obj_IsPresent2
 INTEGER(I4B) :: i, m, j
-LOGICAL(LGT), ALLOCATABLE :: Search(:)
+LOGICAL(LGT), ALLOCATABLE :: search(:)
 m = SIZE(VALUE)
-ALLOCATE (Ans(m), Search(m))
-Search = .TRUE.
-Ans = .FALSE.
-  !!
-DO i = 1, SIZE(obj%Val)
+ALLOCATE (ans(m), search(m))
+search = .TRUE.
+ans = .FALSE.
+DO i = 1, obj%tsize
+  !SIZE(obj%val)
   DO j = 1, m
-    IF (Search(j)) THEN
-      IF (VALUE(j) .EQ. obj%Val(i)) THEN
-        Search(j) = .FALSE.
-        Ans(j) = .TRUE.
+    IF (search(j)) THEN
+      IF (VALUE(j) .EQ. obj%val(i)) THEN
+        search(j) = .FALSE.
+        ans(j) = .TRUE.
       END IF
     END IF
   END DO
 END DO
-  !!
-END PROCEDURE intVec_isPresent2
+END PROCEDURE obj_IsPresent2
 
 !----------------------------------------------------------------------------
 !

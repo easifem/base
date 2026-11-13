@@ -96,10 +96,16 @@ END PROCEDURE swap_r64
 
 #ifndef USE_BLAS95
 MODULE PROCEDURE swap_r32v
-REAL(REAL32), DIMENSION(SIZE(a)) :: dum
-dum = a
-a = b
-b = dum
+REAL(REAL32) :: dum
+INTEGER(I4B) :: ii, n
+
+n = MIN(SIZE(a), SIZE(b))
+
+DO ii = 1, n
+  dum = a(ii)
+  a(ii) = b(ii)
+  b(ii) = dum
+END DO
 END PROCEDURE swap_r32v
 #endif
 
@@ -109,10 +115,16 @@ END PROCEDURE swap_r32v
 
 #ifndef USE_BLAS95
 MODULE PROCEDURE swap_r64v
-REAL(REAL64), DIMENSION(SIZE(a)) :: dum
-dum = a
-a = b
-b = dum
+REAL(REAL64) :: dum
+INTEGER(I4B) :: ii, n
+
+n = MIN(SIZE(a), SIZE(b))
+
+DO ii = 1, n
+  dum = a(ii)
+  a(ii) = b(ii)
+  b(ii) = dum
+END DO
 END PROCEDURE swap_r64v
 #endif
 
@@ -124,7 +136,7 @@ MODULE PROCEDURE swap_Int8v
 INTEGER(INT8) :: dum
 INTEGER(I4B) :: ii, n
 
-n = SIZE(a)
+n = MIN(SIZE(a), SIZE(b))
 
 DO ii = 1, n
   dum = a(ii)
@@ -141,7 +153,7 @@ MODULE PROCEDURE swap_Int16v
 INTEGER(INT16) :: dum
 INTEGER(I4B) :: ii, n
 
-n = SIZE(a)
+n = MIN(SIZE(a), SIZE(b))
 
 DO ii = 1, n
   dum = a(ii)
@@ -158,7 +170,7 @@ MODULE PROCEDURE swap_Int32v
 INTEGER(INT32) :: dum
 INTEGER(I4B) :: ii, n
 
-n = SIZE(a)
+n = MIN(SIZE(a), SIZE(b))
 
 DO ii = 1, n
   dum = a(ii)
@@ -175,7 +187,7 @@ MODULE PROCEDURE swap_Int64v
 INTEGER(INT64) :: dum
 INTEGER(I4B) :: ii, n
 
-n = SIZE(a)
+n = MIN(SIZE(a), SIZE(b))
 
 DO ii = 1, n
   dum = a(ii)
@@ -193,7 +205,7 @@ MODULE PROCEDURE swap_Int128v
 INTEGER(Int128) :: dum
 INTEGER(I4B) :: ii, n
 
-n = SIZE(a)
+n = MIN(SIZE(a), SIZE(b))
 
 DO ii = 1, n
   dum = a(ii)
@@ -223,7 +235,7 @@ MODULE PROCEDURE swap_cv
 COMPLEX(DFPC) :: dum
 INTEGER(I4B) :: ii, n
 
-n = SIZE(a)
+n = MIN(SIZE(a), SIZE(b))
 
 DO ii = 1, n
   dum = a(ii)
@@ -241,8 +253,8 @@ MODULE PROCEDURE swap_cm
 COMPLEX(DFPC) :: dum
 INTEGER(I4B) :: ii, jj, nrow, ncol
 
-nrow = SIZE(a, 1)
-ncol = SIZE(a, 2)
+nrow = MIN(SIZE(a, 1), SIZE(b, 1))
+ncol = MIN(SIZE(a, 2), SIZE(b, 2))
 
 DO jj = 1, ncol
   DO ii = 1, nrow
@@ -262,8 +274,8 @@ MODULE PROCEDURE swap_r32m
 REAL(REAL32) :: dum
 INTEGER(I4B) :: ii, jj, nrow, ncol
 
-nrow = SIZE(a, 1)
-ncol = SIZE(a, 2)
+nrow = MIN(SIZE(a, 1), SIZE(b, 1))
+ncol = MIN(SIZE(a, 2), SIZE(b, 2))
 
 DO jj = 1, ncol
   DO ii = 1, nrow
@@ -282,8 +294,8 @@ MODULE PROCEDURE swap_r64m
 REAL(REAL64) :: dum
 INTEGER(I4B) :: ii, jj, nrow, ncol
 
-nrow = SIZE(a, 1)
-ncol = SIZE(a, 2)
+nrow = MIN(SIZE(a, 1), SIZE(b, 1))
+ncol = MIN(SIZE(a, 2), SIZE(b, 2))
 
 DO jj = 1, ncol
   DO ii = 1, nrow
@@ -302,8 +314,8 @@ MODULE PROCEDURE swap_Int8m
 INTEGER(INT8) :: dum
 INTEGER(I4B) :: ii, jj, nrow, ncol
 
-nrow = SIZE(a, 1)
-ncol = SIZE(a, 2)
+nrow = MIN(SIZE(a, 1), SIZE(b, 1))
+ncol = MIN(SIZE(a, 2), SIZE(b, 2))
 
 DO jj = 1, ncol
   DO ii = 1, nrow
@@ -322,8 +334,8 @@ MODULE PROCEDURE swap_Int16m
 INTEGER(INT16) :: dum
 INTEGER(I4B) :: ii, jj, nrow, ncol
 
-nrow = SIZE(a, 1)
-ncol = SIZE(a, 2)
+nrow = MIN(SIZE(a, 1), SIZE(b, 1))
+ncol = MIN(SIZE(a, 2), SIZE(b, 2))
 
 DO jj = 1, ncol
   DO ii = 1, nrow
@@ -342,8 +354,8 @@ MODULE PROCEDURE swap_Int32m
 INTEGER(INT32) :: dum
 INTEGER(I4B) :: ii, jj, nrow, ncol
 
-nrow = SIZE(a, 1)
-ncol = SIZE(a, 2)
+nrow = MIN(SIZE(a, 1), SIZE(b, 1))
+ncol = MIN(SIZE(a, 2), SIZE(b, 2))
 
 DO jj = 1, ncol
   DO ii = 1, nrow
@@ -362,8 +374,8 @@ MODULE PROCEDURE swap_Int64m
 INTEGER(INT64) :: dum
 INTEGER(I4B) :: ii, jj, nrow, ncol
 
-nrow = SIZE(a, 1)
-ncol = SIZE(a, 2)
+nrow = MIN(SIZE(a, 1), SIZE(b, 1))
+ncol = MIN(SIZE(a, 2), SIZE(b, 2))
 
 DO jj = 1, ncol
   DO ii = 1, nrow
@@ -383,8 +395,8 @@ MODULE PROCEDURE swap_Int128m
 INTEGER(INT128) :: dum
 INTEGER(I4B) :: ii, jj, nrow, ncol
 
-nrow = SIZE(a, 1)
-ncol = SIZE(a, 2)
+nrow = MIN(SIZE(a, 1), SIZE(b, 1))
+ncol = MIN(SIZE(a, 2), SIZE(b, 2))
 
 DO jj = 1, ncol
   DO ii = 1, nrow

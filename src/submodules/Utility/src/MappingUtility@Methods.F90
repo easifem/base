@@ -15,51 +15,69 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 
 SUBMODULE(MappingUtility) Methods
-USE BaseMethod, ONLY: UpperCase, &
-                      SOFTLE, &
-                      RefCoord_Tetrahedron, &
-                      RefCoord_Hexahedron, &
-                      TriangleArea2D, &
-                      TriangleArea3D, &
-                      QuadrangleArea2D, &
-                      QuadrangleArea3D, &
-                      TetrahedronVolume3D, &
-                      HexahedronVolume3D
-
+USE GlobalData, ONLY: LGT
+USE StringUtility, ONLY: UpperCase
+USE ApproxUtility, ONLY: SOFTLE
+USE ReferenceTetrahedron_Method, ONLY: RefCoord_Tetrahedron
+USE ReferenceTetrahedron_Method, ONLY: TetrahedronVolume3D
+USE ReferenceHexahedron_Method, ONLY: RefCoord_Hexahedron
+USE ReferenceHexahedron_Method, ONLY: HexahedronVolume3D
+USE ReferenceTriangle_Method, ONLY: TriangleArea2D
+USE ReferenceTriangle_Method, ONLY: TriangleArea3D
+USE ReferenceQuadrangle_Method, ONLY: QuadrangleArea2D
+USE ReferenceQuadrangle_Method, ONLY: QuadrangleArea3D
+USE BaseType, ONLY: math => TypeMathOpt
 IMPLICIT NONE
 
 CONTAINS
 
 !----------------------------------------------------------------------------
-!                                                       FromBiunitLine2Segment
+!                                                     FromSegment2BiunitLine
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE FromSegment2BiunitLine1
+ans = (math%two * xin - (x1 + x2)) / (x2 - x1)
+END PROCEDURE FromSegment2BiunitLine1
+
+!----------------------------------------------------------------------------
+!                                                      FromBiunitLine2Segment
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE FromSegment2BiunitLine1_
+tsize = SIZE(xin)
+ans(1:tsize) = (math%two * xin(1:tsize) - (x1 + x2)) / (x2 - x1)
+END PROCEDURE FromSegment2BiunitLine1_
+
+!----------------------------------------------------------------------------
+!                                                     FromBiunitLine2Segment
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE FromBiunitLine2Segment1
-ans = 0.5_DFP * (x1 + x2) + 0.5_DFP * (x2 - x1) * xin
+ans = math%half * (x1 + x2) + math%half * (x2 - x1) * xin
 END PROCEDURE FromBiunitLine2Segment1
 
 !----------------------------------------------------------------------------
-!                                                       FromBiunitLine2Segment
+!                                                      FromBiunitLine2Segment
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE FromBiunitLine2Segment1_
 tsize = SIZE(xin)
-ans(1:tsize) = 0.5_DFP * (x1 + x2) + 0.5_DFP * (x2 - x1) * xin
+ans(1:tsize) = math%half * (x1 + x2) + math%half * (x2 - x1) * xin
 END PROCEDURE FromBiunitLine2Segment1_
 
 !----------------------------------------------------------------------------
-!                                                       FromBiunitLine2Segment
+!                                                     FromBiunitLine2Segment
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE FromBiunitLine2Segment2
 INTEGER(I4B) :: ii
 DO ii = 1, SIZE(xin)
-  ans(:, ii) = 0.5_DFP * (x1 + x2) + 0.5_DFP * (x2 - x1) * xin(ii)
+  ans(:, ii) = math%half * (x1 + x2) + math%half * (x2 - x1) * xin(ii)
 END DO
 END PROCEDURE FromBiunitLine2Segment2
 
 !----------------------------------------------------------------------------
-!                                                       FromBiunitLine2Segment
+!                                                      FromBiunitLine2Segment
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE FromBiunitLine2Segment2_
@@ -67,7 +85,7 @@ INTEGER(I4B) :: ii
 nrow = SIZE(x1)
 ncol = SIZE(xin)
 DO ii = 1, ncol
-  ans(1:nrow, ii) = 0.5_DFP * (x1 + x2) + 0.5_DFP * (x2 - x1) * xin(ii)
+  ans(1:nrow, ii) = math%half * (x1 + x2) + math%half * (x2 - x1) * xin(ii)
 END DO
 END PROCEDURE FromBiunitLine2Segment2_
 
@@ -76,7 +94,7 @@ END PROCEDURE FromBiunitLine2Segment2_
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE FromBiUnitLine2UnitLine
-ans = 0.5_DFP * (1.0_DFP + xin)
+ans = math%half * (math%one + xin)
 END PROCEDURE FromBiUnitLine2UnitLine
 
 !----------------------------------------------------------------------------
@@ -94,7 +112,7 @@ END PROCEDURE FromUnitLine2BiUnitLine
 
 MODULE PROCEDURE FromUnitLine2BiUnitLine_
 tsize = SIZE(xin)
-ans(1:tsize) = 2.0_DFP * xin(1:tsize) - 1.0_DFP
+ans(1:tsize) = math%two * xin(1:tsize) - math%one
 END PROCEDURE FromUnitLine2BiUnitLine_
 
 !----------------------------------------------------------------------------
@@ -105,28 +123,31 @@ MODULE PROCEDURE FromLine2Line_
 CHARACTER(2) :: acase
 INTEGER(I4B) :: ii, n
 
-acase = from(1:1)//to(1:1)
+acase(1:1) = UpperCase(from(1:1))
+acase(2:2) = UpperCase(to(1:1))
 n = SIZE(xin)
 
 SELECT CASE (acase)
 
-CASE ("BU", "bu", "bU", "Bu")
+CASE ("BU")
 
   DO CONCURRENT(ii=1:n)
-    ans(ii) = 0.5_DFP * (1.0_DFP + xin(ii))
+    ans(ii) = math%half * (math%one + xin(ii))
   END DO
 
-CASE ("BB", "UU", "bb", "uu")
+CASE ("BB", "UU")
 
   DO CONCURRENT(ii=1:n)
     ans(ii) = xin(ii)
   END DO
 
-CASE ("UB", "ub", "uB", "Ub")
+CASE ("UB")
 
   DO CONCURRENT(ii=1:n)
-    ans(ii) = 2.0_DFP * xin(ii) - 1.0_DFP
+    ans(ii) = math%two * xin(ii) - math%one
   END DO
+
+CASE DEFAULT
 
 END SELECT
 END PROCEDURE FromLine2Line_
@@ -173,7 +194,7 @@ END PROCEDURE FromBiUnitQuadrangle2UnitQuadrangle1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE FromBiUnitQuadrangle2UnitQuadrangle1_
-REAL(DFP), PARAMETER :: azero = 0.0_DFP, aone = 1.0_DFP
+REAL(DFP), PARAMETER :: azero = 0.0_DFP, aone = math%one
 REAL(DFP), PARAMETER :: x1(2) = [azero, azero], x2(2) = [aone, azero], &
                         x3(2) = [aone, aone], x4(2) = [azero, aone]
 CALL FromBiUnitQuadrangle2Quadrangle_(xin=xin, x1=x1, x2=x2, x3=x3, x4=x4, &
@@ -191,15 +212,15 @@ REAL(DFP) :: xi, eta, p1, p2, p3, p4
 DO ii = 1, SIZE(ans, 2)
   xi = xin(1, ii)
   eta = xin(2, ii)
-  p1 = (1.0 - xi) * (1.0 - eta)
-  p2 = xi * (1.0 - eta)
+  p1 = (math%one - xi) * (math%one - eta)
+  p2 = xi * (math%one - eta)
   p3 = xi * eta
-  p4 = (1.0 - xi) * eta
+  p4 = (math%one - xi) * eta
   ans(1:2, ii) =  &
-    &   [-1.0_DFP, -1.0_DFP] * p1  &
-    & + [1.0_DFP, -1.0_DFP] * p2  &
-    & + [1.0_DFP, 1.0_DFP] * p3  &
-    & + [-1.0_DFP, 1.0_DFP] * p4
+    &   [-math%one, -math%one] * p1  &
+    & + [math%one, -math%one] * p2  &
+    & + [math%one, math%one] * p3  &
+    & + [-math%one, math%one] * p4
 END DO
 END PROCEDURE FromUnitQuadrangle2BiUnitQuadrangle1
 
@@ -228,10 +249,10 @@ ncol = SIZE(xin, 2)
 DO ii = 1, ncol
   xi = xin(1, ii)
   eta = xin(2, ii)
-  p1 = 0.25 * (1.0 - xi) * (1.0 - eta)
-  p2 = 0.25 * (1.0 + xi) * (1.0 - eta)
-  p3 = 0.25 * (1.0 + xi) * (1.0 + eta)
-  p4 = 0.25 * (1.0 - xi) * (1.0 + eta)
+  p1 = 0.25_DFP * (math%one - xi) * (math%one - eta)
+  p2 = 0.25_DFP * (math%one + xi) * (math%one - eta)
+  p3 = 0.25_DFP * (math%one + xi) * (math%one + eta)
+  p4 = 0.25_DFP * (math%one - xi) * (math%one + eta)
   ans(1:nrow, ii) = x1 * p1 + x2 * p2 + x3 * p3 + x4 * p4
 END DO
 END PROCEDURE FromBiUnitQuadrangle2Quadrangle1_
@@ -254,7 +275,7 @@ END PROCEDURE FromBiUnitHexahedron2Hexahedron1
 MODULE PROCEDURE FromBiUnitHexahedron2Hexahedron1_
 INTEGER(I4B) :: ii
 REAL(DFP) :: xi, eta, p1, p2, p3, p4, p5, p6, p7, p8, zeta
-REAL(DFP), PARAMETER :: one = 1.0_DFP, p125 = 0.125_DFP
+REAL(DFP), PARAMETER :: one = math%one, p125 = 0.125_DFP
 
 nrow = SIZE(x1)
 ncol = SIZE(xin, 2)
@@ -290,13 +311,15 @@ END PROCEDURE FromBiUnitHexahedron2UnitHexahedron1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE FromBiUnitHexahedron2UnitHexahedron1_
-REAL(DFP) :: xij(3, 8)
+INTEGER(I4B), PARAMETER :: three = 3, eight = 8
+REAL(DFP) :: xij(three, eight)
 
 xij = RefCoord_Hexahedron(refHexahedron="UNIT")
 
-CALL FromBiUnitHexahedron2Hexahedron_(xin=xin, x1=xij(:, 1), x2=xij(:, 2), &
-       x3=xij(:, 3), x4=xij(:, 4), x5=xij(:, 5), x6=xij(:, 6), x7=xij(:, 7), &
-                                  x8=xij(:, 8), ans=ans, nrow=nrow, ncol=ncol)
+CALL FromBiUnitHexahedron2Hexahedron_( &
+  xin=xin, x1=xij(:, 1), x2=xij(:, 2), &
+  x3=xij(:, 3), x4=xij(:, 4), x5=xij(:, 5), x6=xij(:, 6), x7=xij(:, 7), &
+  x8=xij(:, 8), ans=ans, nrow=nrow, ncol=ncol)
 END PROCEDURE FromBiUnitHexahedron2UnitHexahedron1_
 
 !----------------------------------------------------------------------------
@@ -313,10 +336,11 @@ END PROCEDURE FromUnitHexahedron2BiUnitHexahedron1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE FromUnitHexahedron2BiUnitHexahedron1_
+INTEGER(I4B), PARAMETER :: three = 3, eight = 8
 INTEGER(I4B) :: ii
 REAL(DFP) :: xi, eta, p1, p2, p3, p4, p5, p6, p7, p8, zeta
-REAL(DFP), PARAMETER :: one = 1.0_DFP, p125 = 0.125_DFP
-REAL(DFP) :: x(3, 8)
+REAL(DFP), PARAMETER :: one = math%one, p125 = 0.125_DFP
+REAL(DFP) :: x(three, eight)
 
 x = RefCoord_Hexahedron(refHexahedron="BIUNIT")
 
@@ -335,9 +359,14 @@ DO ii = 1, ncol
   p6 = (xi) * (one - eta) * (zeta)
   p7 = (xi) * (eta) * (zeta)
   p8 = (one - xi) * (eta) * (zeta)
- ans(1:nrow, ii) = x(1:nrow, 1) * p1 + x(1:nrow, 2) * p2 + x(1:nrow, 3) * p3 &
-                 + x(1:nrow, 4) * p4 + x(1:nrow, 5) * p5 + x(1:nrow, 6) * p6 &
-                    + x(1:nrow, 7) * p7 + x(1:nrow, 8) * p8
+  ans(1:nrow, ii) = x(1:nrow, 1) * p1 &
+                    + x(1:nrow, 2) * p2 &
+                    + x(1:nrow, 3) * p3 &
+                    + x(1:nrow, 4) * p4 &
+                    + x(1:nrow, 5) * p5 &
+                    + x(1:nrow, 6) * p6 &
+                    + x(1:nrow, 7) * p7 &
+                    + x(1:nrow, 8) * p8
 END DO
 END PROCEDURE FromUnitHexahedron2BiUnitHexahedron1_
 
@@ -347,21 +376,43 @@ END PROCEDURE FromUnitHexahedron2BiUnitHexahedron1_
 
 MODULE PROCEDURE FromTriangle2Square_
 CHARACTER(2) :: acase
-acase = from(1:1)//to(1:1)
+INTEGER(I4B) :: jj
+REAL(DFP) :: x, y
 
+acase(1:1) = UpperCase(from(1:1))
+acase(2:2) = UpperCase(to(1:1))
+
+! the top vertex of the triangle is collapsed onto the edge y = 1 of
+! the square; there the formula divides by zero, so x = -1 is used
 SELECT CASE (acase)
 
-CASE ("BB", "bb")
+CASE ("BB")
 
-  ans(1, :) = (1.0_DFP + zero + 2.0_DFP * xin(1, :) + xin(2, :)) &
-              / (1.0_DFP + zero - xin(2, :))
-  ans(2, :) = xin(2, :)
+  DO jj = 1, SIZE(xin, 2)
+    x = xin(1, jj)
+    y = xin(2, jj)
+    IF (y .LT. math%one) THEN
+      ans(1, jj) = (math%one + math%two * x + y) / (math%one - y)
+    ELSE
+      ans(1, jj) = -math%one
+    END IF
+    ans(2, jj) = y
+  END DO
 
-CASE ("UB", "ub")
+CASE ("UB")
 
-  ans(1, :) = (2.0_DFP * xin(1, :) + xin(2, :) - 1.0_DFP + zero) &
-              / (1.0_DFP + zero - xin(2, :))
-  ans(2, :) = 2.0_DFP * xin(2, :) - 1.0_DFP
+  DO jj = 1, SIZE(xin, 2)
+    x = xin(1, jj)
+    y = xin(2, jj)
+    IF (y .LT. math%one) THEN
+      ans(1, jj) = (math%two * x + y - math%one) / (math%one - y)
+    ELSE
+      ans(1, jj) = -math%one
+    END IF
+    ans(2, jj) = math%two * y - math%one
+  END DO
+
+CASE DEFAULT
 
 END SELECT
 END PROCEDURE FromTriangle2Square_
@@ -379,7 +430,6 @@ END PROCEDURE FromBiUnitTriangle2BiUnitSqr
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE FromUnitTriangle2BiUnitSqr
-INTEGER(I4B) :: nrow, ncol
 CALL FromTriangle2Square_(xin=xin, ans=ans, from="U", to="B")
 END PROCEDURE FromUnitTriangle2BiUnitSqr
 
@@ -406,9 +456,9 @@ CASE ("BB")
 
     rr(1) = xin(2, ii)
     rr(2) = xin(1, ii)
-    rr(3) = 0.5_DFP * (1.0_DFP + rr(2))
-    rr(4) = 1.0_DFP - rr(1)
-    rr(2) = rr(3) * rr(4) - 1.0_DFP
+    rr(3) = math%half * (math%one + rr(2))
+    rr(4) = math%one - rr(1)
+    rr(2) = rr(3) * rr(4) - math%one
 
     ans(1, ii) = rr(2)
     ans(2, ii) = rr(1)
@@ -420,14 +470,16 @@ CASE ("BU")
   DO ii = 1, ncol
     rr(1) = xin(1, ii)
     rr(2) = xin(2, ii)
-    rr(3) = 0.25_DFP * (1.0_DFP + rr(1))
-    rr(4) = 1.0_DFP - rr(2)
+    rr(3) = 0.25_DFP * (math%one + rr(1))
+    rr(4) = math%one - rr(2)
     rr(1) = rr(3) * rr(4)
-    rr(3) = 0.5_DFP * (rr(2) + 1.0_DFP)
+    rr(3) = math%half * (rr(2) + math%one)
 
     ans(1, ii) = rr(1)
     ans(2, ii) = rr(3)
   END DO
+
+CASE DEFAULT
 
 END SELECT
 END PROCEDURE FromSquare2Triangle_
@@ -481,16 +533,22 @@ END PROCEDURE BarycentricCoordTriangle
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE BarycentricCoordTriangle_
-SELECT CASE (refTriangle(1:1))
-CASE ("B", "b")
-  ans(1, :) = -0.5_DFP * (xin(1, :) + xin(2, :))
-  ans(2, :) = 0.5_DFP * (1.0_DFP + xin(1, :))
-  ans(3, :) = 0.5_DFP * (1.0_DFP + xin(2, :))
+INTEGER(I4B) :: n
 
-CASE ("U", "u")
-  ans(1, :) = 1.0_DFP - xin(1, :) - xin(2, :)
-  ans(2, :) = xin(1, :)
-  ans(3, :) = xin(2, :)
+n = SIZE(xin, 2)
+
+SELECT CASE (UpperCase(refTriangle(1:1)))
+CASE ("B")
+  ans(1, 1:n) = -math%half * (xin(1, :) + xin(2, :))
+  ans(2, 1:n) = math%half * (math%one + xin(1, :))
+  ans(3, 1:n) = math%half * (math%one + xin(2, :))
+
+CASE ("U")
+  ans(1, 1:n) = math%one - xin(1, :) - xin(2, :)
+  ans(2, 1:n) = xin(1, :)
+  ans(3, 1:n) = xin(2, :)
+
+CASE DEFAULT
 END SELECT
 END PROCEDURE BarycentricCoordTriangle_
 
@@ -501,41 +559,73 @@ END PROCEDURE BarycentricCoordTriangle_
 MODULE PROCEDURE FromTriangle2Triangle_
 CHARACTER(2) :: acase
 INTEGER(I4B) :: ii, jj
-REAL(DFP) :: x21(3), x31(3)
+LOGICAL(LGT) :: isok
 
 ncol = SIZE(xin, 2)
+nrow = SIZE(xin, 1)
 
 acase(1:1) = Uppercase(from(1:1))
 acase(2:2) = Uppercase(to(1:1))
+
+isok = PRESENT(x1) .AND. PRESENT(x2) .AND. PRESENT(x3)
 
 SELECT CASE (acase)
 
 CASE ("BU")
 
-  nrow = SIZE(xin, 1)
-
   DO CONCURRENT(ii=1:nrow, jj=1:ncol)
-    ans(ii, jj) = 0.5_DFP * (1.0_DFP + xin(ii, jj))
+    ans(ii, jj) = math%half * (math%one + xin(ii, jj))
   END DO
 
 CASE ("UB")
 
-  nrow = SIZE(xin, 1)
+  DO CONCURRENT(ii=1:nrow, jj=1:ncol)
+    ans(ii, jj) = -math%one + math%two * xin(ii, jj)
+  END DO
+
+CASE ("BB", "UU")
 
   DO CONCURRENT(ii=1:nrow, jj=1:ncol)
-    ans(ii, jj) = -1.0_DFP + 2.0_DFP * xin(ii, jj)
+    ans(ii, jj) = xin(ii, jj)
   END DO
 
 CASE ("UT")
 
+  IF (.NOT. isok) THEN
+    nrow = 0
+    ncol = 0
+    RETURN
+  END IF
+
   nrow = SIZE(x1)
 
-  x21(1:nrow) = x2(1:nrow) - x1(1:nrow)
-  x31(1:nrow) = x3(1:nrow) - x1(1:nrow)
-
   DO CONCURRENT(ii=1:nrow, jj=1:ncol)
-    ans(ii, jj) = x1(ii) + x21(ii) * xin(1, jj) + x31(ii) * xin(2, jj)
+    ans(ii, jj) = x1(ii) + (x2(ii) - x1(ii)) * xin(1, jj) &
+                  + (x3(ii) - x1(ii)) * xin(2, jj)
   END DO
+
+CASE ("BT")
+
+  IF (.NOT. isok) THEN
+    nrow = 0
+    ncol = 0
+    RETURN
+  END IF
+
+  nrow = SIZE(x1)
+
+  ! the unit coordinates are (1 + xin) / 2
+  DO CONCURRENT(ii=1:nrow, jj=1:ncol)
+    ans(ii, jj) = x1(ii) &
+                  + (x2(ii) - x1(ii)) * math%half * (math%one + xin(1, jj)) &
+                  + (x3(ii) - x1(ii)) * math%half * (math%one + xin(2, jj))
+  END DO
+
+CASE DEFAULT
+
+  ! unsupported names: nothing is written
+  nrow = 0
+  ncol = 0
 
 END SELECT
 END PROCEDURE FromTriangle2Triangle_
@@ -575,7 +665,7 @@ END PROCEDURE FromBiUnitTetrahedron2UnitTetrahedron
 
 MODULE PROCEDURE FromBiUnitTetrahedron2UnitTetrahedron_
 INTEGER(I4B) :: ii, jj
-REAL(DFP), PARAMETER :: half = 0.5_DFP, one = 1.0_DFP
+REAL(DFP), PARAMETER :: half = math%half, one = math%one
 
 nrow = SIZE(xin, 1)
 ncol = SIZE(xin, 2)
@@ -600,7 +690,7 @@ END PROCEDURE FromUnitTetrahedron2BiUnitTetrahedron
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE FromUnitTetrahedron2BiUnitTetrahedron_
-REAL(DFP), PARAMETER :: minus_one = -1.0_DFP, two = 2.0_DFP
+REAL(DFP), PARAMETER :: minus_one = -math%one, two = math%two
 INTEGER(I4B) :: ii, jj
 
 nrow = SIZE(xin, 1)
@@ -620,10 +710,10 @@ MODULE PROCEDURE FromBiUnitTetrahedron2Tetrahedron
 INTEGER(I4B) :: ii
 DO ii = 1, SIZE(xin, 2)
   ans(:, ii) = &
-    -0.5_DFP * (1.0_DFP + xin(1, ii) + xin(2, ii) + xin(3, ii)) * x1(:) &
-    + 0.5_DFP * (1.0_DFP + xin(1, ii)) * x2(:) &
-    + 0.5_DFP * (1.0_DFP + xin(2, ii)) * x3(:) &
-    + 0.5_DFP * (1.0_DFP + xin(3, ii)) * x4(:)
+    -math%half * (math%one + xin(1, ii) + xin(2, ii) + xin(3, ii)) * x1(:) &
+    + math%half * (math%one + xin(1, ii)) * x2(:) &
+    + math%half * (math%one + xin(2, ii)) * x3(:) &
+    + math%half * (math%one + xin(3, ii)) * x4(:)
 END DO
 END PROCEDURE FromBiUnitTetrahedron2Tetrahedron
 
@@ -642,9 +732,10 @@ END PROCEDURE FromUnitTetrahedron2Tetrahedron
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE FromUnitTetrahedron2Tetrahedron_
+INTEGER(I4B), PARAMETER :: ten = 10
 INTEGER(I4B) :: ii
-REAL(DFP), PARAMETER :: one = 1.0_DFP
-REAL(DFP) :: rr(10)
+REAL(DFP), PARAMETER :: one = math%one
+REAL(DFP) :: rr(ten)
 
 nrow = SIZE(x1)
 ncol = SIZE(xin, 2)
@@ -654,7 +745,9 @@ DO ii = 1, ncol
   rr(1:3) = xin(1:3, ii)
   rr(4) = one - rr(1) - rr(2) - rr(3)
 
-  ans(1:nrow, ii) = rr(4) * x1(1:nrow) + rr(1) * x2(1:nrow) + rr(2) * x3(1:nrow) &
+  ans(1:nrow, ii) = rr(4) * x1(1:nrow) &
+                    + rr(1) * x2(1:nrow) &
+                    + rr(2) * x3(1:nrow) &
                     + rr(3) * x4(1:nrow)
 END DO
 END PROCEDURE FromUnitTetrahedron2Tetrahedron_
@@ -679,7 +772,7 @@ nrow = 4
 ncol = SIZE(xin, 2)
 
 DO CONCURRENT(ii=1:ncol)
-  ans(1, ii) = 1.0_DFP - xin(1, ii) - xin(2, ii) - xin(3, ii)
+  ans(1, ii) = math%one - xin(1, ii) - xin(2, ii) - xin(3, ii)
   ans(2, ii) = xin(1, ii)
   ans(3, ii) = xin(2, ii)
   ans(4, ii) = xin(3, ii)
@@ -707,10 +800,10 @@ nrow = 4
 ncol = SIZE(xin, 2)
 
 DO CONCURRENT(ii=1:ncol)
-  ans(1, ii) = -0.5_DFP * (1.0_DFP + xin(1, ii) + xin(2, ii) + xin(3, ii))
-  ans(2, ii) = 0.5_DFP * (1.0_DFP + xin(1, ii))
-  ans(3, ii) = 0.5_DFP * (1.0_DFP + xin(2, ii))
-  ans(4, ii) = 0.5_DFP * (1.0_DFP + xin(3, ii))
+  ans(1, ii) = -math%half * (math%one + xin(1, ii) + xin(2, ii) + xin(3, ii))
+  ans(2, ii) = math%half * (math%one + xin(1, ii))
+  ans(3, ii) = math%half * (math%one + xin(2, ii))
+  ans(4, ii) = math%half * (math%one + xin(3, ii))
 END DO
 
 END PROCEDURE BarycentricCoordBiUnitTetrahedron_
@@ -737,6 +830,8 @@ CASE ("B", "b")
 CASE ("U", "u")
   CALL BarycentricCoordUnitTetrahedron_(xin=xin, ans=ans, nrow=nrow, &
                                         ncol=ncol)
+
+CASE DEFAULT
 END SELECT
 END PROCEDURE BarycentricCoordTetrahedron_
 
@@ -748,22 +843,22 @@ MODULE PROCEDURE FromBiUnitTetrahedron2BiUnitHexahedron
 INTEGER(I4B) :: ii
 REAL(DFP) :: tol, alpha, beta
 
-tol = 1.0E-12
+tol = 1.0E-12_DFP
 
 DO ii = 1, SIZE(xin, 2)
   alpha = xin(2, ii) + xin(3, ii)
-  beta = 1.0_DFP - xin(3, ii)
+  beta = math%one - xin(3, ii)
 
-  IF (SOFTLE(ABS(alpha), zero, tol)) THEN
-    ans(1, ii) = -1.0_DFP
+  IF (SOFTLE(ABS(alpha), math%zero, tol)) THEN
+    ans(1, ii) = -math%one
   ELSE
-    ans(1, ii) = -(2.0_DFP + 2.0_DFP * xin(1, ii) + alpha) / alpha
+    ans(1, ii) = -(math%two + math%two * xin(1, ii) + alpha) / alpha
   END IF
 
-  IF (SOFTLE(ABS(beta), zero, tol)) THEN
-    ans(2, ii) = -1.0_DFP
+  IF (SOFTLE(ABS(beta), math%zero, tol)) THEN
+    ans(2, ii) = -math%one
   ELSE
-    ans(2, ii) = (1.0_DFP + 2.0_DFP * xin(2, ii) + xin(3, ii)) / beta
+    ans(2, ii) = (math%one + math%two * xin(2, ii) + xin(3, ii)) / beta
   END IF
 
   ans(3, ii) = xin(3, ii)
@@ -785,10 +880,10 @@ END PROCEDURE FromBiUnitHexahedron2BiUnitTetrahedron
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE FromBiUnitHexahedron2BiUnitTetrahedron_
-
+INTEGER(I4B), PARAMETER :: ten = 10
 INTEGER(I4B) :: ii
-REAL(DFP) :: rr(10)
-REAL(DFP), PARAMETER :: one = 1.0_DFP
+REAL(DFP) :: rr(ten)
+REAL(DFP), PARAMETER :: one = math%one
 
 nrow = 3
 ncol = SIZE(xin, 2)
@@ -802,7 +897,7 @@ DO ii = 1, ncol
   rr(6) = one - rr(3)
   rr(7) = 0.25_DFP * rr(4) * rr(5) * rr(6)
   rr(8) = one + rr(2)
-  rr(9) = 0.5_DFP * rr(8) * rr(6)
+  rr(9) = math%half * rr(8) * rr(6)
 
   ans(1, ii) = rr(7) - one
   ans(2, ii) = rr(9) - one
@@ -835,12 +930,19 @@ END PROCEDURE FromBiUnitHexahedron2UnitTetrahedron
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE FromBiUnitHexahedron2UnitTetrahedron_
+INTEGER(I4B) :: ii, jj
+REAL(DFP), PARAMETER :: half = math%half, one = math%one
 
 CALL FromBiUnitHexahedron2BiUnitTetrahedron_(xin=xin, ans=ans, &
                                              nrow=nrow, ncol=ncol)
 
-CALL FromBiUnitTetrahedron2UnitTetrahedron_(xin=ans, ans=ans, nrow=nrow, &
-                                            ncol=ncol)
+! biunit to unit tetrahedron, in place and only in the block written
+! above; passing ans as both xin and ans of
+! FromBiUnitTetrahedron2UnitTetrahedron_ would alias the arguments
+! and reset nrow, ncol to the size of ans
+DO CONCURRENT(ii=1:nrow, jj=1:ncol)
+  ans(ii, jj) = half * (one + ans(ii, jj))
+END DO
 
 END PROCEDURE FromBiUnitHexahedron2UnitTetrahedron_
 
@@ -849,34 +951,46 @@ END PROCEDURE FromBiUnitHexahedron2UnitTetrahedron_
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE JacobianLine
-SELECT CASE (TRIM(from))
+! default for unknown names, and for LINE without xij
+ans = math%one
+IF (.NOT. PRESENT(xij)) THEN
+  IF (UpperCase(TRIM(from)) .EQ. "LINE" .OR. &
+      UpperCase(TRIM(to)) .EQ. "LINE") RETURN
+END IF
+
+SELECT CASE (UpperCase(TRIM(from)))
 CASE ("BIUNIT")
-  SELECT CASE (TRIM(to))
+  SELECT CASE (UpperCase(TRIM(to)))
   CASE ("BIUNIT")
-    ans = 1.0_DFP
+    ans = math%one
   CASE ("UNIT")
-    ans = 0.5_DFP
+    ans = math%half
   CASE ("LINE")
-    ans = NORM2(xij(:, 2) - xij(:, 1)) / 2.0_DFP
+    ans = NORM2(xij(:, 2) - xij(:, 1)) / math%two
+  CASE DEFAULT
   END SELECT
 CASE ("UNIT")
-  SELECT CASE (TRIM(to))
+  SELECT CASE (UpperCase(TRIM(to)))
   CASE ("BIUNIT")
-    ans = 2.0_DFP
+    ans = math%two
   CASE ("UNIT")
-    ans = 1.0_DFP
+    ans = math%one
   CASE ("LINE")
     ans = NORM2(xij(:, 2) - xij(:, 1))
+  CASE DEFAULT
   END SELECT
 CASE ("LINE")
-  SELECT CASE (TRIM(to))
+  SELECT CASE (UpperCase(TRIM(to)))
   CASE ("BIUNIT")
-    ans = 2.0_DFP / NORM2(xij(:, 2) - xij(:, 1))
+    ans = math%two / NORM2(xij(:, 2) - xij(:, 1))
   CASE ("UNIT")
-    ans = 1.0_DFP / NORM2(xij(:, 2) - xij(:, 1))
+    ans = math%one / NORM2(xij(:, 2) - xij(:, 1))
   CASE ("LINE")
-    ans = 1.0_DFP
+    ans = math%one
+  CASE DEFAULT
   END SELECT
+
+CASE DEFAULT
 END SELECT
 END PROCEDURE JacobianLine
 
@@ -885,12 +999,13 @@ END PROCEDURE JacobianLine
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE JacobianTriangle
-ans = 1.0_DFP
-SELECT CASE (TRIM(from))
+REAL(DFP) :: area0
+ans = math%one
+SELECT CASE (UpperCase(TRIM(from)))
 CASE ("BIUNIT")
-  SELECT CASE (TRIM(to))
+  SELECT CASE (UpperCase(TRIM(to)))
   CASE ("BIUNIT")
-    ans = 1.0_DFP
+    ans = math%one
   CASE ("UNIT")
     ans = 0.25_DFP
   CASE ("TRIANGLE")
@@ -898,51 +1013,60 @@ CASE ("BIUNIT")
 
       IF (SIZE(xij, 1) .EQ. 2_I4B) THEN
         CALL TriangleArea2D(xij(1:2, 1:3), ans)
+        ans = ABS(ans)
       ELSE
         CALL TriangleArea3D(xij(1:3, 1:3), ans)
       END IF
 
-      ans = ans / 2.0_DFP
+      ans = ans / math%two
 
     END IF
+  CASE DEFAULT
   END SELECT
 CASE ("UNIT")
-  SELECT CASE (TRIM(to))
+  SELECT CASE (UpperCase(TRIM(to)))
   CASE ("BIUNIT")
     ans = 4.0_DFP
   CASE ("UNIT")
-    ans = 1.0_DFP
+    ans = math%one
 
   CASE ("TRIANGLE")
     IF (PRESENT(xij)) THEN
       IF (SIZE(xij, 1) .EQ. 2_I4B) THEN
         CALL TriangleArea2D(xij(1:2, 1:3), ans)
+        ans = ABS(ans)
       ELSE
         CALL TriangleArea3D(xij(1:3, 1:3), ans)
       END IF
-      ans = ans / 0.5_DFP
+      ans = ans / math%half
     END IF
+  CASE DEFAULT
   END SELECT
 
 CASE ("TRIANGLE")
 
+  ! the area goes to area0, so that TRIANGLE to TRIANGLE keeps ans = 1
+  area0 = math%one
   IF (PRESENT(xij)) THEN
     IF (SIZE(xij, 1) .EQ. 2_I4B) THEN
-      CALL TriangleArea2D(xij(1:2, 1:3), ans)
+      CALL TriangleArea2D(xij(1:2, 1:3), area0)
+      area0 = ABS(area0)
     ELSE IF (SIZE(xij, 1) .EQ. 3_I4B) THEN
-      CALL TriangleArea3D(xij(1:3, 1:3), ans)
+      CALL TriangleArea3D(xij(1:3, 1:3), area0)
     END IF
   ELSE
     RETURN
   END IF
 
-  SELECT CASE (TRIM(to))
+  SELECT CASE (UpperCase(TRIM(to)))
   CASE ("BIUNIT")
-    ans = 2.0_DFP / ans
+    ans = math%two / area0
   CASE ("UNIT")
-    ans = 0.5_DFP / ans
+    ans = math%half / area0
+  CASE DEFAULT
   END SELECT
 
+CASE DEFAULT
 END SELECT
 END PROCEDURE JacobianTriangle
 
@@ -951,12 +1075,13 @@ END PROCEDURE JacobianTriangle
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE JacobianQuadrangle
-ans = 1.0_DFP
-SELECT CASE (TRIM(from))
+REAL(DFP) :: area0
+ans = math%one
+SELECT CASE (UpperCase(TRIM(from)))
 CASE ("BIUNIT")
-  SELECT CASE (TRIM(to))
+  SELECT CASE (UpperCase(TRIM(to)))
   CASE ("BIUNIT")
-    ans = 1.0_DFP
+    ans = math%one
   CASE ("UNIT")
     ans = 0.25_DFP
 
@@ -964,49 +1089,58 @@ CASE ("BIUNIT")
     IF (PRESENT(xij)) THEN
       IF (SIZE(xij, 1) .EQ. 2_I4B) THEN
         CALL QuadrangleArea2D(xij(1:2, 1:4), ans)
+        ans = ABS(ans)
       ELSE
         CALL QuadrangleArea3D(xij(1:3, 1:4), ans)
       END IF
       ans = ans / 4.0_DFP
     END IF
+  CASE DEFAULT
   END SELECT
 
 CASE ("UNIT")
-  SELECT CASE (TRIM(to))
+  SELECT CASE (UpperCase(TRIM(to)))
   CASE ("BIUNIT")
     ans = 4.0_DFP
   CASE ("UNIT")
-    ans = 1.0_DFP
+    ans = math%one
 
   CASE ("QUADRANGLE")
     IF (PRESENT(xij)) THEN
       IF (SIZE(xij, 1) .EQ. 2_I4B) THEN
         CALL QuadrangleArea2D(xij(1:2, 1:4), ans)
+        ans = ABS(ans)
       ELSE
         CALL QuadrangleArea3D(xij(1:3, 1:4), ans)
       END IF
     END IF
+  CASE DEFAULT
   END SELECT
 
 CASE ("QUADRANGLE")
 
+  ! the area goes to area0, so that QUADRANGLE to QUADRANGLE keeps
+  ! ans = 1
   IF (PRESENT(xij)) THEN
     IF (SIZE(xij, 1) .EQ. 2_I4B) THEN
-      CALL QuadrangleArea2D(xij(1:2, 1:4), ans)
+      CALL QuadrangleArea2D(xij(1:2, 1:4), area0)
+      area0 = ABS(area0)
     ELSE
-      CALL QuadrangleArea3D(xij(1:3, 1:4), ans)
+      CALL QuadrangleArea3D(xij(1:3, 1:4), area0)
     END IF
   ELSE
     RETURN
   END IF
 
-  SELECT CASE (TRIM(to))
+  SELECT CASE (UpperCase(TRIM(to)))
   CASE ("BIUNIT")
-    ans = 4.0_DFP / ans
+    ans = 4.0_DFP / area0
   CASE ("UNIT")
-    ans = 1.0_DFP / ans
+    ans = math%one / area0
+  CASE DEFAULT
   END SELECT
 
+CASE DEFAULT
 END SELECT
 END PROCEDURE JacobianQuadrangle
 
@@ -1016,12 +1150,12 @@ END PROCEDURE JacobianQuadrangle
 
 MODULE PROCEDURE JacobianHexahedron
 REAL(DFP) :: ans0
-ans = 1.0_DFP
-SELECT CASE (TRIM(from))
+ans = math%one
+SELECT CASE (UpperCase(TRIM(from)))
 CASE ("BIUNIT")
-  SELECT CASE (TRIM(to))
+  SELECT CASE (UpperCase(TRIM(to)))
   CASE ("BIUNIT")
-    ans = 1.0_DFP
+    ans = math%one
   CASE ("UNIT")
     ans = 0.125_DFP
   CASE ("HEXAHEDRON")
@@ -1030,20 +1164,22 @@ CASE ("BIUNIT")
       CALL HexahedronVolume3D(RefCoord_Hexahedron(from), ans0)
       ans = ans / ans0
     END IF
+  CASE DEFAULT
   END SELECT
 
 CASE ("UNIT")
-  SELECT CASE (TRIM(to))
+  SELECT CASE (UpperCase(TRIM(to)))
   CASE ("BIUNIT")
     ans = 8.0_DFP
   CASE ("UNIT")
-    ans = 1.0_DFP
+    ans = math%one
   CASE ("HEXAHEDRON")
     IF (PRESENT(xij)) THEN
       CALL HexahedronVolume3D(xij(1:3, 1:8), ans)
       CALL HexahedronVolume3D(RefCoord_Hexahedron(from), ans0)
       ans = ans / ans0
     END IF
+  CASE DEFAULT
   END SELECT
 
 CASE ("HEXAHEDRON")
@@ -1053,12 +1189,14 @@ CASE ("HEXAHEDRON")
     RETURN
   END IF
 
-  SELECT CASE (TRIM(to))
+  SELECT CASE (UpperCase(TRIM(to)))
   CASE ("BIUNIT", "UNIT")
     CALL HexahedronVolume3D(RefCoord_Hexahedron(to), ans)
     ans = ans / ans0
+  CASE DEFAULT
   END SELECT
 
+CASE DEFAULT
 END SELECT
 END PROCEDURE JacobianHexahedron
 
@@ -1068,12 +1206,12 @@ END PROCEDURE JacobianHexahedron
 
 MODULE PROCEDURE JacobianTetrahedron
 REAL(DFP) :: ans0
-ans = 1.0_DFP
-SELECT CASE (TRIM(from))
+ans = math%one
+SELECT CASE (UpperCase(TRIM(from)))
 CASE ("BIUNIT")
-  SELECT CASE (TRIM(to))
+  SELECT CASE (UpperCase(TRIM(to)))
   CASE ("BIUNIT")
-    ans = 1.0_DFP
+    ans = math%one
   CASE ("UNIT")
     ans = 0.125_DFP
   CASE ("TETRAHEDRON")
@@ -1082,20 +1220,22 @@ CASE ("BIUNIT")
       CALL TetrahedronVolume3D(RefCoord_Tetrahedron(from), ans0)
       ans = ans / ans0
     END IF
+  CASE DEFAULT
   END SELECT
 
 CASE ("UNIT")
-  SELECT CASE (TRIM(to))
+  SELECT CASE (UpperCase(TRIM(to)))
   CASE ("BIUNIT")
     ans = 8.0_DFP
   CASE ("UNIT")
-    ans = 1.0_DFP
+    ans = math%one
   CASE ("TETRAHEDRON")
     IF (PRESENT(xij)) THEN
       CALL TetrahedronVolume3D(xij(1:3, 1:4), ans)
       CALL TetrahedronVolume3D(RefCoord_Tetrahedron(from), ans0)
       ans = ans / ans0
     END IF
+  CASE DEFAULT
   END SELECT
 
 CASE ("TETRAHEDRON")
@@ -1105,13 +1245,18 @@ CASE ("TETRAHEDRON")
     RETURN
   END IF
 
-  SELECT CASE (TRIM(to))
+  SELECT CASE (UpperCase(TRIM(to)))
   CASE ("BIUNIT", "UNIT")
     CALL TetrahedronVolume3D(RefCoord_Tetrahedron(to), ans)
     ans = ans / ans0
+  CASE DEFAULT
   END SELECT
 
+CASE DEFAULT
 END SELECT
 END PROCEDURE JacobianTetrahedron
 
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
 END SUBMODULE Methods

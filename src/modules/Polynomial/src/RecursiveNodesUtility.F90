@@ -1,5 +1,5 @@
 ! This program is a part of EASIFEM library
-! Copyright (C) 2020-2021  Vikas Sharma, Ph.D
+! Copyright (C) 2020-2021 Vikas Sharma, Ph.D
 !
 ! This program is free software: you can redistribute it and/or modify
 ! it under the terms of the GNU General Public License as published by
@@ -12,11 +12,50 @@
 ! GNU General Public License for more details.
 !
 ! You should have received a copy of the GNU General Public License
-! along with this program.  If not, see <https: //www.gnu.org/licenses/>
+! along with this program.  If not, see <https://www.gnu.org/licenses/>
+
+!> author: Vikas Sharma, Ph.D.
+! date: 2026-10-30
+! summary: Recursive interpolation nodes on lines, triangles and tetrahedra.
 !
+! Nodes are columns. Default barycentric output has d+1 rows; Cartesian
+! domains have d rows. Coordinate mapping helpers declared in this module are
+! private. Use positive orders up to 99 with the fixed internal work arrays.
+!
+! Arguments:
+!   None at module scope; see the public interfaces.
+!
+! Returns:
+!   Public polynomial and interpolation procedures.
+!
+! Formula:
+! $$N=\binom{p+d}{d},\quad\sum_{i=1}^{d+1}\lambda_i=1$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE GlobalData, ONLY: Equidistance
+! USE RecursiveNodesUtility, ONLY: RecursiveNode2D
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP), ALLOCATABLE :: nodes(:, :)
+!
+! nodes = RecursiveNode2D(order=2_I4B, ipType=Equidistance, &
+!   domain="BARYCENTRIC")
+! CALL OK(ALL(SHAPE(nodes) == [3, 6]), "Node dimensions")
+! CALL OK(MAXVAL(ABS(SUM(nodes, DIM=1)-1.0_DFP)) &
+!   < 1.0E-11_DFP, "Barycentric coordinates sum to one")
+! CALL OK(MINVAL(nodes) >= -1.0E-11_DFP, "Nodes lie in simplex")
+! END PROGRAM main
+!```
 
 MODULE RecursiveNodesUtility
-USE GlobalData, ONLY: DFP, I4B, LGT
+USE GlobalData, ONLY: DFP
+USE GlobalData, ONLY: I4B
+USE GlobalData, ONLY: LGT
 
 IMPLICIT NONE
 
@@ -34,9 +73,52 @@ PUBLIC :: RecursiveNode3D_
 !                                                           RecursiveNode1D
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 4 Sept 2022
-! summary: RecursiveNodes in 1D
+!> author: Vikas Sharma, Ph.D.
+! date: 2026-10-30
+! summary: Construct recursive nodes on a 1D simplex.
+!
+! The default domain is BARYCENTRIC with d+1 coordinate rows; UNIT, BIUNIT and
+! EQUILATERAL use d rows. Use positive order no larger than 99 because
+! internal work arrays have fixed capacity. ipType selects the underlying line
+! node family.
+!
+! Arguments:
+!   order : INTEGER(I4B), INTENT(IN). Interpolation degree; use a nonnegative
+! value unless noted above.
+!   ipType : INTEGER(I4B), INTENT(IN). Interpolation node selector from
+! GlobalData.
+!   domain : CHARACTER(*), OPTIONAL, INTENT(IN). Output coordinate domain;
+! BARYCENTRIC is the default.
+!   alpha : REAL(DFP), OPTIONAL, INTENT(IN). Jacobi weight exponent at +1.
+!   beta : REAL(DFP), OPTIONAL, INTENT(IN). Jacobi weight exponent at -1.
+!   lambda : REAL(DFP), OPTIONAL, INTENT(IN). Gegenbauer family parameter.
+!
+! Returns:
+!   ans : REAL(DFP), ALLOCATABLE(:, :).
+!
+! Formula:
+! $$N=\binom{p+d}{d},\quad \sum_{i=1}^{d+1}\lambda_i=1$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE GlobalData, ONLY: Equidistance
+! USE RecursiveNodesUtility, ONLY: RecursiveNode1D
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP), ALLOCATABLE :: nodes(:, :)
+!
+! nodes = RecursiveNode1D(order=2_I4B, ipType=Equidistance, &
+!   domain="BARYCENTRIC")
+! CALL OK(ALL(SHAPE(nodes) == [2, 3]), "Node dimensions")
+! CALL OK(MAXVAL(ABS(SUM(nodes, DIM=1)-1.0_DFP)) &
+!   < 1.0E-11_DFP, "Barycentric coordinates sum to one")
+! CALL OK(MINVAL(nodes) >= -1.0E-11_DFP, "Nodes lie in simplex")
+! END PROGRAM main
+!```
 
 INTERFACE
   MODULE FUNCTION RecursiveNode1D(order, ipType, domain, alpha, beta, &
@@ -72,6 +154,58 @@ END INTERFACE
 !----------------------------------------------------------------------------
 !                                                           RecursiveNode1D_
 !----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph.D.
+! date: 2026-10-30
+! summary: Construct recursive nodes on a 1D simplex.
+!
+! The default domain is BARYCENTRIC with d+1 coordinate rows; UNIT, BIUNIT and
+! EQUILATERAL use d rows. Use positive order no larger than 99 because
+! internal work arrays have fixed capacity. ipType selects the underlying line
+! node family.
+!
+! Arguments:
+!   order : INTEGER(I4B), INTENT(IN). Interpolation degree; use a nonnegative
+! value unless noted above.
+!   ipType : INTEGER(I4B), INTENT(IN). Interpolation node selector from
+! GlobalData.
+!   ans : REAL(DFP), INTENT(INOUT)(:, :). Result storage; allocate enough
+! space for all active dimensions.
+!   nrow : INTEGER(I4B), INTENT(OUT). Number of active output rows.
+!   ncol : INTEGER(I4B), INTENT(OUT). Number of active output columns.
+!   domain : CHARACTER(*), OPTIONAL, INTENT(IN). Output coordinate domain;
+! BARYCENTRIC is the default.
+!   alpha : REAL(DFP), OPTIONAL, INTENT(IN). Jacobi weight exponent at +1.
+!   beta : REAL(DFP), OPTIONAL, INTENT(IN). Jacobi weight exponent at -1.
+!   lambda : REAL(DFP), OPTIONAL, INTENT(IN). Gegenbauer family parameter.
+!
+! Returns:
+!   Writes ans(:, :), nrow, ncol.
+!
+! Formula:
+! $$N=\binom{p+d}{d},\quad \sum_{i=1}^{d+1}\lambda_i=1$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE GlobalData, ONLY: Equidistance
+! USE RecursiveNodesUtility, ONLY: RecursiveNode1D_
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: nodes(2, 3)
+! INTEGER(I4B) :: nr, nc
+!
+! CALL RecursiveNode1D_(order=2_I4B, ipType=Equidistance, &
+!   domain="BARYCENTRIC", ans=nodes, nrow=nr, ncol=nc)
+! CALL OK(nr == 2 .AND. nc == 3, "Active node dimensions")
+! CALL OK(MAXVAL(ABS(SUM(nodes, DIM=1)-1.0_DFP)) &
+!   < 1.0E-11_DFP, "Barycentric coordinates sum to one")
+! CALL OK(MINVAL(nodes) >= -1.0E-11_DFP, "Nodes lie in simplex")
+! END PROGRAM main
+!```
 
 INTERFACE
   MODULE SUBROUTINE RecursiveNode1D_(order, ipType, domain, alpha, beta, &
@@ -110,9 +244,52 @@ END INTERFACE
 !                                                            RecursiveNode2D
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 4 Sept 2022
-! summary: RecursiveNodes in 2D
+!> author: Vikas Sharma, Ph.D.
+! date: 2026-10-30
+! summary: Construct recursive nodes on a 2D simplex.
+!
+! The default domain is BARYCENTRIC with d+1 coordinate rows; UNIT, BIUNIT and
+! EQUILATERAL use d rows. Use positive order no larger than 99 because
+! internal work arrays have fixed capacity. ipType selects the underlying line
+! node family.
+!
+! Arguments:
+!   order : INTEGER(I4B), INTENT(IN). Interpolation degree; use a nonnegative
+! value unless noted above.
+!   ipType : INTEGER(I4B), INTENT(IN). Interpolation node selector from
+! GlobalData.
+!   domain : CHARACTER(*), OPTIONAL, INTENT(IN). Output coordinate domain;
+! BARYCENTRIC is the default.
+!   alpha : REAL(DFP), OPTIONAL, INTENT(IN). Jacobi weight exponent at +1.
+!   beta : REAL(DFP), OPTIONAL, INTENT(IN). Jacobi weight exponent at -1.
+!   lambda : REAL(DFP), OPTIONAL, INTENT(IN). Gegenbauer family parameter.
+!
+! Returns:
+!   ans : REAL(DFP), ALLOCATABLE(:, :).
+!
+! Formula:
+! $$N=\binom{p+d}{d},\quad \sum_{i=1}^{d+1}\lambda_i=1$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE GlobalData, ONLY: Equidistance
+! USE RecursiveNodesUtility, ONLY: RecursiveNode2D
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP), ALLOCATABLE :: nodes(:, :)
+!
+! nodes = RecursiveNode2D(order=2_I4B, ipType=Equidistance, &
+!   domain="BARYCENTRIC")
+! CALL OK(ALL(SHAPE(nodes) == [3, 6]), "Node dimensions")
+! CALL OK(MAXVAL(ABS(SUM(nodes, DIM=1)-1.0_DFP)) &
+!   < 1.0E-11_DFP, "Barycentric coordinates sum to one")
+! CALL OK(MINVAL(nodes) >= -1.0E-11_DFP, "Nodes lie in simplex")
+! END PROGRAM main
+!```
 
 INTERFACE
   MODULE FUNCTION RecursiveNode2D(order, ipType, domain, alpha, beta, &
@@ -148,6 +325,58 @@ END INTERFACE
 !----------------------------------------------------------------------------
 !                                                          RecursiveNode2D_
 !----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph.D.
+! date: 2026-10-30
+! summary: Construct recursive nodes on a 2D simplex.
+!
+! The default domain is BARYCENTRIC with d+1 coordinate rows; UNIT, BIUNIT and
+! EQUILATERAL use d rows. Use positive order no larger than 99 because
+! internal work arrays have fixed capacity. ipType selects the underlying line
+! node family.
+!
+! Arguments:
+!   order : INTEGER(I4B), INTENT(IN). Interpolation degree; use a nonnegative
+! value unless noted above.
+!   ipType : INTEGER(I4B), INTENT(IN). Interpolation node selector from
+! GlobalData.
+!   ans : REAL(DFP), INTENT(INOUT)(:, :). Result storage; allocate enough
+! space for all active dimensions.
+!   nrow : INTEGER(I4B), INTENT(OUT). Number of active output rows.
+!   ncol : INTEGER(I4B), INTENT(OUT). Number of active output columns.
+!   domain : CHARACTER(*), OPTIONAL, INTENT(IN). Output coordinate domain;
+! BARYCENTRIC is the default.
+!   alpha : REAL(DFP), OPTIONAL, INTENT(IN). Jacobi weight exponent at +1.
+!   beta : REAL(DFP), OPTIONAL, INTENT(IN). Jacobi weight exponent at -1.
+!   lambda : REAL(DFP), OPTIONAL, INTENT(IN). Gegenbauer family parameter.
+!
+! Returns:
+!   Writes ans(:, :), nrow, ncol.
+!
+! Formula:
+! $$N=\binom{p+d}{d},\quad \sum_{i=1}^{d+1}\lambda_i=1$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE GlobalData, ONLY: Equidistance
+! USE RecursiveNodesUtility, ONLY: RecursiveNode2D_
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: nodes(3, 6)
+! INTEGER(I4B) :: nr, nc
+!
+! CALL RecursiveNode2D_(order=2_I4B, ipType=Equidistance, &
+!   domain="BARYCENTRIC", ans=nodes, nrow=nr, ncol=nc)
+! CALL OK(nr == 3 .AND. nc == 6, "Active node dimensions")
+! CALL OK(MAXVAL(ABS(SUM(nodes, DIM=1)-1.0_DFP)) &
+!   < 1.0E-11_DFP, "Barycentric coordinates sum to one")
+! CALL OK(MINVAL(nodes) >= -1.0E-11_DFP, "Nodes lie in simplex")
+! END PROGRAM main
+!```
 
 INTERFACE
   MODULE SUBROUTINE RecursiveNode2D_(order, ipType, ans, nrow, ncol, &
@@ -186,9 +415,52 @@ END INTERFACE
 !                                                            RecursiveNode3D
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 4 Sept 2022
-! summary: Recursive nodes in 3D
+!> author: Vikas Sharma, Ph.D.
+! date: 2026-10-30
+! summary: Construct recursive nodes on a 3D simplex.
+!
+! The default domain is BARYCENTRIC with d+1 coordinate rows; UNIT, BIUNIT and
+! EQUILATERAL use d rows. Use positive order no larger than 99 because
+! internal work arrays have fixed capacity. ipType selects the underlying line
+! node family.
+!
+! Arguments:
+!   order : INTEGER(I4B), INTENT(IN). Interpolation degree; use a nonnegative
+! value unless noted above.
+!   ipType : INTEGER(I4B), INTENT(IN). Interpolation node selector from
+! GlobalData.
+!   domain : CHARACTER(*), OPTIONAL, INTENT(IN). Output coordinate domain;
+! BARYCENTRIC is the default.
+!   alpha : REAL(DFP), OPTIONAL, INTENT(IN). Jacobi weight exponent at +1.
+!   beta : REAL(DFP), OPTIONAL, INTENT(IN). Jacobi weight exponent at -1.
+!   lambda : REAL(DFP), OPTIONAL, INTENT(IN). Gegenbauer family parameter.
+!
+! Returns:
+!   ans : REAL(DFP), ALLOCATABLE(:, :).
+!
+! Formula:
+! $$N=\binom{p+d}{d},\quad \sum_{i=1}^{d+1}\lambda_i=1$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE GlobalData, ONLY: Equidistance
+! USE RecursiveNodesUtility, ONLY: RecursiveNode3D
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP), ALLOCATABLE :: nodes(:, :)
+!
+! nodes = RecursiveNode3D(order=2_I4B, ipType=Equidistance, &
+!   domain="BARYCENTRIC")
+! CALL OK(ALL(SHAPE(nodes) == [4, 10]), "Node dimensions")
+! CALL OK(MAXVAL(ABS(SUM(nodes, DIM=1)-1.0_DFP)) &
+!   < 1.0E-11_DFP, "Barycentric coordinates sum to one")
+! CALL OK(MINVAL(nodes) >= -1.0E-11_DFP, "Nodes lie in simplex")
+! END PROGRAM main
+!```
 
 INTERFACE
   MODULE FUNCTION RecursiveNode3D(order, ipType, domain, alpha, beta, &
@@ -225,9 +497,57 @@ END INTERFACE
 !                                                          RecursiveNode3D_
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date:  2024-06-26
-! summary:  Recursive node 3D without allocation
+!> author: Vikas Sharma, Ph.D.
+! date: 2026-10-30
+! summary: Construct recursive nodes on a 3D simplex.
+!
+! The default domain is BARYCENTRIC with d+1 coordinate rows; UNIT, BIUNIT and
+! EQUILATERAL use d rows. Use positive order no larger than 99 because
+! internal work arrays have fixed capacity. ipType selects the underlying line
+! node family.
+!
+! Arguments:
+!   order : INTEGER(I4B), INTENT(IN). Interpolation degree; use a nonnegative
+! value unless noted above.
+!   ipType : INTEGER(I4B), INTENT(IN). Interpolation node selector from
+! GlobalData.
+!   ans : REAL(DFP), INTENT(INOUT)(:, :). Result storage; allocate enough
+! space for all active dimensions.
+!   nrow : INTEGER(I4B), INTENT(OUT). Number of active output rows.
+!   ncol : INTEGER(I4B), INTENT(OUT). Number of active output columns.
+!   domain : CHARACTER(*), OPTIONAL, INTENT(IN). Output coordinate domain;
+! BARYCENTRIC is the default.
+!   alpha : REAL(DFP), OPTIONAL, INTENT(IN). Jacobi weight exponent at +1.
+!   beta : REAL(DFP), OPTIONAL, INTENT(IN). Jacobi weight exponent at -1.
+!   lambda : REAL(DFP), OPTIONAL, INTENT(IN). Gegenbauer family parameter.
+!
+! Returns:
+!   Writes ans(:, :), nrow, ncol.
+!
+! Formula:
+! $$N=\binom{p+d}{d},\quad \sum_{i=1}^{d+1}\lambda_i=1$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE GlobalData, ONLY: Equidistance
+! USE RecursiveNodesUtility, ONLY: RecursiveNode3D_
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: nodes(4, 10)
+! INTEGER(I4B) :: nr, nc
+!
+! CALL RecursiveNode3D_(order=2_I4B, ipType=Equidistance, &
+!   domain="BARYCENTRIC", ans=nodes, nrow=nr, ncol=nc)
+! CALL OK(nr == 4 .AND. nc == 10, "Active node dimensions")
+! CALL OK(MAXVAL(ABS(SUM(nodes, DIM=1)-1.0_DFP)) &
+!   < 1.0E-11_DFP, "Barycentric coordinates sum to one")
+! CALL OK(MINVAL(nodes) >= -1.0E-11_DFP, "Nodes lie in simplex")
+! END PROGRAM main
+!```
 
 INTERFACE
   MODULE SUBROUTINE RecursiveNode3D_(order, ipType, ans, nrow, ncol, &

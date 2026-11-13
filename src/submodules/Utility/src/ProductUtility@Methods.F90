@@ -128,10 +128,49 @@ INTEGER(I4B) :: ii, jj
 
 nrow = SIZE(a)
 ncol = SIZE(b)
-DO CONCURRENT(ii=1:nrow, jj=1:ncol)
-  ans(ii, jj) = anscoeff * ans(ii, jj) + scale * a(ii) * b(jj)
+! DO CONCURRENT(ii=1:nrow, jj=1:ncol)
+!   ans(ii, jj) = anscoeff * ans(ii, jj) + scale * a(ii) * b(jj)
+! END DO
+DO jj = 1, ncol
+  DO ii = 1, nrow
+    ans(ii, jj) = anscoeff * ans(ii, jj) + scale * a(ii) * b(jj)
+  END DO
 END DO
 END PROCEDURE OuterProd_r1r1_
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE SafeOuterProd_r1r1_
+INTEGER(I4B) :: ii, jj
+
+nrow = sizeA
+ncol = sizeB
+
+DO jj = 1, sizeB
+  DO ii = 1, sizeA
+    ans(ii, jj) = anscoeff * ans(ii, jj) + scale * a(ii) * b(jj)
+  END DO
+END DO
+END PROCEDURE SafeOuterProd_r1r1_
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE SafeOuterProd_r1r1b_
+INTEGER(I4B) :: ii, jj
+
+nrow = rowA
+ncol = rowB
+
+DO jj = 1, rowB
+  DO ii = 1, rowA
+    ans(ii, jj) = anscoeff * ans(ii, jj) + scale * a(ii, iColA) * b(jj, iColB)
+  END DO
+END DO
+END PROCEDURE SafeOuterProd_r1r1b_
 
 !----------------------------------------------------------------------------
 !
@@ -281,6 +320,9 @@ END PROCEDURE OuterProd_r2r2
 MODULE PROCEDURE OuterProd_r2r2_
 INTEGER(I4B) :: ii
 
+dim1 = SIZE(a, 1)
+dim2 = SIZE(a, 2)
+dim3 = SIZE(b, 1)
 dim4 = SIZE(b, 2)
 
 DO ii = 1, dim4
@@ -421,6 +463,9 @@ END PROCEDURE OuterProd_r1r1r2
 MODULE PROCEDURE OuterProd_r1r1r2_
 INTEGER(I4B) :: ii
 
+dim1 = SIZE(a)
+dim2 = SIZE(b)
+dim3 = SIZE(c, 1)
 dim4 = SIZE(c, 2)
 
 DO ii = 1, dim4

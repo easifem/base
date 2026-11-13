@@ -15,12 +15,10 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-!> author: Vikas Sharma, Ph. D.
-! date:         3 April 2021
-! summary:         Methods for matrix multiplication
-
 SUBMODULE(ContractionUtility) Methods
-USE BaseMethod
+USE BaseType, ONLY: math => TypeMathOpt
+USE MatmulUtility, ONLY: Matmul
+! USE BaseMethod
 IMPLICIT NONE
 CONTAINS
 
@@ -38,8 +36,7 @@ END PROCEDURE contraction_r4_r1
 
 MODULE PROCEDURE contraction_r4_r2
 INTEGER(I4B) :: ii
-!!
-ans = 0.0_DFP
+ans = math%zero
 DO ii = 1, SIZE(a2, 2)
   ans = ans + MATMUL(a1(:, :, :, ii), a2(:, ii))
 END DO
@@ -51,8 +48,7 @@ END PROCEDURE contraction_r4_r2
 
 MODULE PROCEDURE contraction_r4_r3
 INTEGER(I4B) :: ii, jj
-!!
-ans = 0.0_DFP
+ans = math%zero
 DO jj = 1, SIZE(a2, 3)
   DO ii = 1, SIZE(a2, 2)
     ans = ans + MATMUL(a1(:, :, ii, jj), a2(:, ii, jj))
@@ -82,8 +78,7 @@ END PROCEDURE contraction_r3_r1
 
 MODULE PROCEDURE contraction_r3_r2
 INTEGER(I4B) :: ii
-!!
-ans = 0.0_DFP
+ans = math%zero
 DO ii = 1, SIZE(a2, 2)
   ans = ans + MATMUL(a1(:, :, ii), a2(:, ii))
 END DO
@@ -113,7 +108,7 @@ END PROCEDURE contraction_r3_r4
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE contraction_r2_r1
-  ans = matmul(a1, a2)
+ans = MATMUL(a1, a2)
 END PROCEDURE contraction_r2_r1
 
 !----------------------------------------------------------------------------
@@ -121,7 +116,7 @@ END PROCEDURE contraction_r2_r1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE contraction_r2_r2
-  ans = sum(a1*a2)
+ans = SUM(a1 * a2)
 END PROCEDURE contraction_r2_r2
 
 !----------------------------------------------------------------------------
@@ -169,7 +164,7 @@ END PROCEDURE contraction_r1_r2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE contraction_r1_r3
-ans = matmul(a1, a2)
+ans = MATMUL(a1, a2)
 END PROCEDURE contraction_r1_r3
 
 !----------------------------------------------------------------------------
@@ -177,7 +172,7 @@ END PROCEDURE contraction_r1_r3
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE contraction_r1_r4
-ans = matmul(a1,a2)
+ans = MATMUL(a1, a2)
 END PROCEDURE contraction_r1_r4
 
 END SUBMODULE Methods

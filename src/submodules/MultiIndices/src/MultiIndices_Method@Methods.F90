@@ -70,11 +70,7 @@ END PROCEDURE obj_Size1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE obj_Size2
-INTEGER(I4B) :: ii
-ans = 0_I4B
-DO ii = 0, obj%n
-  ans = ans + Size(n=ii, d=obj%d)
-END DO
+ans = Size(n=obj%n, d=obj%d, upto=upto)
 END PROCEDURE obj_Size2
 
 !----------------------------------------------------------------------------
@@ -90,7 +86,7 @@ END PROCEDURE obj_GetMultiIndices1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE obj_GetMultiIndices2
-ans = GetMultiIndices(n=obj%n, d=obj%d, upto=.true.)
+ans = GetMultiIndices(n=obj%n, d=obj%d, upto=upto)
 END PROCEDURE obj_GetMultiIndices2
 
 END SUBMODULE Methods

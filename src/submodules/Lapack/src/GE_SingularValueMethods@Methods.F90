@@ -15,15 +15,21 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-! SUBMODULE(GE_SingularValueMethods) Methods
-! USE BaseMethod
-! IMPLICIT NONE
-! CONTAINS
-!
-! !----------------------------------------------------------------------------
-! !                                                                      DGEES
-! !----------------------------------------------------------------------------
-!
-! ! MODULE PROCEDURE dgees_1
-! ! END PROCEDURE dgees_1
-! END SUBMODULE Methods
+ SUBMODULE(GE_SingularValueMethods) Methods
+ USE F95_LAPACK, ONLY: GESVD
+ IMPLICIT NONE
+ CONTAINS
+
+ !----------------------------------------------------------------------------
+ !                                                                     DGEES
+ !----------------------------------------------------------------------------
+
+ MODULE PROCEDURE GE_GetSVD1
+ CALL GESVD(A=A, S=S, U=U, VT=VT, WW=WW, JOB=JOB, INFO=INFO)
+ END PROCEDURE GE_GetSVD1
+
+ !----------------------------------------------------------------------------
+ !                                                             Include error
+ !----------------------------------------------------------------------------
+
+ END SUBMODULE Methods

@@ -1323,6 +1323,46 @@ INTERFACE STForceVector_
 END INTERFACE STForceVector_
 
 !----------------------------------------------------------------------------
+!                                                             STForceVector_
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2026-03-06
+! summary: space time force vector without allocation
+!
+!# STForceVector_
+!
+! This method computes space time force vector.
+!
+!$$
+!F(I,a)=\int \int N^{I} T_{a} c  ds dt
+!$$
+!
+! $N$ is taken from testSpace, and $T$ is taken from testTime.
+!
+! Here c is scalar force defined at space-time quadrature points
+! The row denotes space quad values,
+! and column denotes time quadrature points
+
+INTERFACE STForceVector_
+  MODULE PURE SUBROUTINE obj_STForceVector_26( &
+    testSpace, testTime, c, ans, nrow, ncol, scale, addContribution)
+    CLASS(ElemshapeData_), INTENT(IN) :: testSpace
+    !! test function for space
+    CLASS(ElemshapeData_), INTENT(IN) :: testTime
+    !! test function for time
+    REAL(DFP), INTENT(IN) :: c(:, :)
+    !! force vector defined at quadrature points
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    !! space time force vector
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+    !! number of rows and cols written in ans
+    REAL(DFP), OPTIONAL, INTENT(IN) :: scale
+    LOGICAL(LGT), OPTIONAL, INTENT(IN) :: addContribution
+  END SUBROUTINE obj_STForceVector_26
+END INTERFACE STForceVector_
+
+!----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 

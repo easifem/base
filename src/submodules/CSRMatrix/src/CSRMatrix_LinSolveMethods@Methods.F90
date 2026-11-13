@@ -288,14 +288,14 @@ SUBROUTINE PERFORM_TASK(Amat, y, x, ierr)
   CASE (1)
     ! MatVec, y=Ax
 #ifdef DEBUG_VER
-    CALL Display("Calling Matvec (tranposed FALSE)...")
+    ! CALL Display("Calling Matvec (tranposed FALSE)...")
 #endif
     CALL Matvec(obj=Amat, y=y, x=x, isTranspose=math%no)
 
   CASE (2)
     ! Transposed MatVec
 #ifdef DEBUG_VER
-    CALL Display("Calling Matvec (tranposed TRUE)...")
+    ! CALL Display("Calling Matvec (tranposed TRUE)...")
 #endif
     CALL Matvec(obj=Amat, y=y, x=x, isTranspose=math%no)
 
@@ -499,8 +499,6 @@ END PROCEDURE CSRMatrix_LinSolve_Initiate
 
 MODULE PROCEDURE CSRMatrix_GMRES
 INTEGER(I4B) :: n
-! REAL(DFP) :: error0, error, tol, normRes
-! INTEGER(I4B) :: ierr, iter
 
 IPAR(1) = 0
 FPAR(11) = 0.0_DFP
@@ -509,16 +507,24 @@ IPAR(7) = 1
 
 DO
 #ifdef DEBUG_VER
-  CALL Display("Calling GMRES...")
+  ! CALL Display("Calling GMRES...")
 #endif
 
   CALL GMRES(n, rhs, sol, ipar, fpar, W)
-  ! obj%RES(ipar(7)) = fpar(6)
+
+! #ifdef DEBUG_VER
+!   CALL Display(ipar(7), "iterationNumber: ")
+!   CALL Display(fpar(3), "Initial residual/error norm: ")
+!   CALL Display(fpar(4), "Target residual/error norm: ")
+!   CALL Display(fpar(6), "Current residual/error norm: ")
+!   CALL Display(fpar(5), "Current residual norm: ")
+!   CALL Display(fpar(7), "Convergence rate: ")
+! #endif
 
   IF (ipar(1) .GT. 0) THEN
 
 #ifdef DEBUG_VER
-    CALL Display("Calling PERFORM_TASK...")
+    ! CALL Display("Calling PERFORM_TASK...")
 #endif
 
     CALL PERFORM_TASK(obj, y=W(_y1:_y2), x=W(_x1:_x2), &
@@ -527,7 +533,7 @@ DO
   ELSE IF (ipar(1) .LT. 0) THEN
 
 #ifdef DEBUG_VER
-    CALL Display("Calling CHECKERROR...")
+    ! CALL Display("Calling CHECKERROR...")
 #endif
 
     CALL CHECKERROR(IPAR=ipar, FPAR=fpar)

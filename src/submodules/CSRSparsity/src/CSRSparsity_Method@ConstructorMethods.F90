@@ -28,48 +28,47 @@ CONTAINS
 !                                                              Initiate
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE obj_initiate1
+MODULE PROCEDURE obj_Initiate1
 #ifdef DEBUG_VER
 INTEGER(I4B) :: tNodes1, tNodes2
 LOGICAL(LGT) :: isok, problem
 #endif
 
 #ifdef DEBUG_VER
-
 problem = PRESENT(idof) .AND. (.NOT. PRESENT(jdof))
 IF (problem) THEN
-  CALL ErrorMSG( &
-    & "When idof is present, jdof should be present too.", &
-    & "CSRSparsity_Method@Constructor.F90", &
-    & "obj_initiate1()", &
-    & __LINE__, stderr)
+  CALL Errormsg( &
+    "When idof is present, jdof should be present too.", &
+    "CSRSparsity_Method@Constructor.F90", &
+    "obj_Initiate1()", &
+    __LINE__, stderr)
   STOP
 END IF
 
 problem = PRESENT(jdof) .AND. (.NOT. PRESENT(idof))
 IF (problem) THEN
-  CALL ErrorMSG( &
+  CALL Errormsg( &
     & "When jdof is present, idof should be present too.", &
     & "CSRSparsity_Method@Constructor.F90", &
-    & "obj_initiate1()", &
+    & "obj_Initiate1()", &
     & __LINE__, stderr)
   STOP
 END IF
 
 isok = PRESENT(idof)
 IF (isok) THEN
-  tnodes1 = .tNodes.idof
-  tnodes2 = .tNodes.jdof
+  tnodes1 = .tNodes. idof
+  tnodes2 = .tNodes. jdof
   problem = tnodes1 .NE. nrow .OR. tnodes2 .NE. ncol
   IF (problem) THEN
-    CALL ErrorMSG( &
+    CALL Errormsg( &
       msg="Size of the matrix does not conform with the dof data! "// &
-      "tNodes in idof = "//tostring(tnodes1)// &
-      " it should be "//tostring(nrow)// &
-      " tnodes in jdof ="//tostring(tNodes2)// &
-      " it should be "//tostring(ncol), &
+      "tNodes in idof = "//ToString(tnodes1)// &
+      " it should be "//ToString(nrow)// &
+      " tnodes in jdof ="//ToString(tNodes2)// &
+      " it should be "//ToString(ncol), &
       file="CSRSparsity_Method@Constructor.F90", &
-      routine="obj_initiate1()", &
+      routine="obj_Initiate1()", &
       line=__LINE__, unitno=stderr)
     STOP
   END IF
@@ -88,14 +87,14 @@ IF (PRESENT(idof)) THEN
   obj%idof = idof
 ELSE
   CALL Initiate(obj=obj%idof, tNodes=[nrow], names=['K'], &
-    & spacecompo=[1], timecompo=[1], storageFMT=NODES_FMT)
+    & spacecompo = [1], timecompo = [1], storageFMT = NODES_FMT)
 END IF
 
 IF (PRESENT(jdof)) THEN
   obj%jdof = jdof
 ELSE
   CALL Initiate(obj=obj%jdof, tNodes=[ncol], names=['K'], &
-    & spacecompo=[1], timecompo=[1], storageFMT=NODES_FMT)
+    & spacecompo = [1], timecompo = [1], storageFMT = NODES_FMT)
 END IF
 
 CALL Reallocate(obj%IA, nrow + 1)
@@ -105,13 +104,13 @@ IF (obj%nnz .GT. 0) THEN
   CALL Reallocate(obj%JA, obj%nnz)
 END IF
 
-END PROCEDURE obj_initiate1
+END PROCEDURE obj_Initiate1
 
 !----------------------------------------------------------------------------
 !                                                                 Initiate
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE obj_initiate2
+MODULE PROCEDURE obj_Initiate2
 INTEGER(I4B) :: ii, n
 
 CALL DEALLOCATE (obj)
@@ -125,15 +124,16 @@ obj%isDiagStored = obj2%isDiagStored
 IF (ALLOCATED(obj2%IA)) obj%IA = obj2%IA
 IF (ALLOCATED(obj2%JA)) obj%JA = obj2%JA
 IF (ALLOCATED(obj2%idiag)) obj%idiag = obj2%idiag
-IF (ALLOCATED(obj%row)) THEN
-  n = SIZE(obj%row)
+IF (ALLOCATED(obj2%row)) THEN
+  n = SIZE(obj2%row)
+  ALLOCATE (obj%row(n))
   DO ii = 1, n
     obj%row(ii) = obj2%row(ii)
   END DO
 END IF
 obj%idof = obj2%idof
 obj%jdof = obj2%jdof
-END PROCEDURE obj_initiate2
+END PROCEDURE obj_Initiate2
 
 !----------------------------------------------------------------------------
 !                                                                   Initiate
@@ -189,10 +189,16 @@ END PROCEDURE obj_constructor_2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE obj_Deallocate
+INTEGER(I4B) :: ii
 IF (ALLOCATED(obj%IA)) DEALLOCATE (obj%IA)
 IF (ALLOCATED(obj%JA)) DEALLOCATE (obj%JA)
 IF (ALLOCATED(obj%idiag)) DEALLOCATE (obj%idiag)
-IF (ALLOCATED(obj%Row)) DEALLOCATE (obj%Row)
+IF (ALLOCATED(obj%row)) THEN
+  DO ii = 1, SIZE(obj%row)
+    CALL DEALLOCATE (obj%row(ii))
+  END DO
+  DEALLOCATE (obj%row)
+END IF
 CALL DEALLOCATE (obj%idof)
 CALL DEALLOCATE (obj%jdof)
 obj%nnz = 0

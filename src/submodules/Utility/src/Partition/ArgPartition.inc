@@ -22,7 +22,9 @@ DO WHILE (lo <= hi)
   DO WHILE (this(idx(hi)) > pivot)
     hi = hi - 1
   END DO
-  DO WHILE (lo <= hi .AND. this(idx(lo)) <= pivot)
+  ! test lo <= hi first: Fortran may evaluate both sides of .AND.
+  DO WHILE (lo <= hi)
+    IF (this(idx(lo)) > pivot) EXIT
     lo = lo + 1
   END DO
   IF (lo <= hi) THEN

@@ -15,13 +15,10 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-!> author: Vikas Sharma, Ph. D.
-! date:         25 Feb 2021
-! summary:         This submodule implements set methods of [[IntVector_]]
-
 SUBMODULE(IntVector_SetMethod) Methods
+USE BaseType, ONLY: math => TypeMathOpt
 USE IntegerUtility, ONLY: IntRepeat => Repeat
-USE IntegerUtility, ONLY: IntRemoveDuplicates => RemoveDuplicates
+USE IntegerUtility, ONLY: IntRemoveDuplicates_ => RemoveDuplicates_
 IMPLICIT NONE
 CONTAINS
 
@@ -38,20 +35,27 @@ END PROCEDURE obj_SetTotalDimension
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE obj_Set1
+#ifdef DEBUG_VER
 LOGICAL(LGT) :: isok
+#endif
 
-isok = ALLOCATED(obj%val)
+#ifdef DEBUG_VER
+isok = ALLOCATED(obj%val) .AND. ALL(indx .LE. obj%tsize)
+IF (.NOT. isok) RETURN
+#endif
 
-IF (isok) THEN
-  isok = SIZE(VALUE) .EQ. 1
+! check the size of indx and value in debug mode
 
-  IF (isok) THEN
-    obj%val(indx) = VALUE(1)
-  ELSE
-    obj%val(indx) = VALUE
-  END IF
-
+IF (SIZE(VALUE) .EQ. 1) THEN
+  obj%val(indx) = VALUE(1)
+ELSE
+#ifdef DEBUG_VER
+  isok = SIZE(indx) .EQ. SIZE(VALUE)
+  IF (.NOT. isok) RETURN
+#endif
+  obj%val(indx) = VALUE
 END IF
+
 END PROCEDURE obj_Set1
 
 !----------------------------------------------------------------------------
@@ -59,14 +63,16 @@ END PROCEDURE obj_Set1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE obj_Set2
+#ifdef DEBUG_VER
 LOGICAL(LGT) :: isok
+#endif
 
-isok = ALLOCATED(obj%val)
+#ifdef DEBUG_VER
+isok = ALLOCATED(obj%val) .AND. (indx .LE. obj%tsize)
+IF (.NOT. isok) RETURN
+#endif
 
-IF (isok) THEN
-  obj%val(indx) = VALUE
-END IF
-
+obj%val(indx) = VALUE
 END PROCEDURE obj_Set2
 
 !----------------------------------------------------------------------------
@@ -74,12 +80,17 @@ END PROCEDURE obj_Set2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE obj_Set3
+#ifdef DEBUG_VER
 LOGICAL(LGT) :: isok
+#endif
 
+#ifdef DEBUG_VER
 isok = ALLOCATED(obj%val)
+IF (.NOT. isok) RETURN
+#endif
 
-IF (isok) THEN
-  obj%val = VALUE
+IF (obj%tsize .GT. 0) THEN
+  obj%val(1:obj%tsize) = VALUE
 END IF
 END PROCEDURE obj_Set3
 
@@ -88,18 +99,20 @@ END PROCEDURE obj_Set3
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE obj_Set4
+#ifdef DEBUG_VER
 LOGICAL(LGT) :: isok
+#endif
 INTEGER(I4B) :: ii, tsize
 
+#ifdef DEBUG_VER
 isok = ALLOCATED(obj%val)
+IF (.NOT. isok) RETURN
+#endif
 
-tsize = SIZE(VALUE)
-
-IF (isok) THEN
-  DO ii = 1, tsize
-    obj%val(ii) = VALUE(ii)
-  END DO
-END IF
+tsize = MIN(SIZE(VALUE), obj%tsize)
+DO ii = 1, tsize
+  obj%val(ii) = VALUE(ii)
+END DO
 END PROCEDURE obj_Set4
 
 !----------------------------------------------------------------------------
@@ -107,16 +120,13 @@ END PROCEDURE obj_Set4
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE obj_RemoveDuplicates1
-CALL IntRemoveDuplicates(obj%val)
+INTEGER(I4B) :: tsize
+IF (ALLOCATED(obj%val)) THEN
+  CALL IntRemoveDuplicates_(obj%val(1:obj%tsize), tsize=tsize, &
+                            isSorted=math%no)
+  obj%tsize = tsize
+END IF
 END PROCEDURE obj_RemoveDuplicates1
-
-!----------------------------------------------------------------------------
-!                                                                     Repeat
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE obj_Repeat1
-ans = IntRepeat(val=obj%val, rtimes=rtimes)
-END PROCEDURE obj_Repeat1
 
 !----------------------------------------------------------------------------
 !

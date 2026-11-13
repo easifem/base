@@ -17,11 +17,13 @@
 
 SUBMODULE(LineInterpolationUtility) BasisMethods
 USE BaseType, ONLY: polyopt => TypePolynomialOpt
+USE BaseType, ONLY: math => TypeMathOpt
 USE Display_Method, ONLY: ToString
 USE StringUtility, ONLY: UpperCase
 USE InputUtility, ONLY: Input
-USE OrthogonalPolynomialUtility, ONLY: GradientEvalAllOrthopol_, &
-                                       EvalAllOrthopol_
+USE OrthogonalPolynomialUtility, ONLY: GradientEvalAllOrthopol_
+USE OrthogonalPolynomialUtility, ONLY: LaplacianEvalAllOrthopol_
+USE OrthogonalPolynomialUtility, ONLY: EvalAllOrthopol_
 
 IMPLICIT NONE
 
@@ -318,6 +320,149 @@ CASE DEFAULT
                         ncol=ncol)
 END SELECT
 END PROCEDURE BasisEvalAll_Line2_
+
+!----------------------------------------------------------------------------
+!                                                 BasisLaplacianEvalAll_Line
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE BasisLaplacianEvalAll_Line1
+INTEGER(I4B) :: tsize
+CALL BasisLaplacianEvalAll_Line1_( &
+  order=order, x=x, refLine=refLine, basisType=basisType, alpha=alpha, &
+  beta=beta, lambda=lambda, ans=ans, tsize=tsize)
+END PROCEDURE BasisLaplacianEvalAll_Line1
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE BasisLaplacianEvalAll_Line1_
+#ifdef DEBUG_VER
+CHARACTER(*), PARAMETER :: myName = "BasisLaplacianEvalAll_Line1_()"
+LOGICAL(LGT) :: isok
+#endif
+
+INTEGER(I4B) :: ii, basisType0
+CHARACTER(1) :: astr
+REAL(DFP) :: areal, x1(1), temp(1, order + 1)
+
+tsize = order + 1
+
+astr = UpperCase(refline(1:1))
+
+#ifdef DEBUG_VER
+isok = astr .EQ. "B"
+CALL AssertError1(isok, myName, modName, __LINE__, &
+                  "refline should be BIUNIT")
+#endif
+
+basisType0 = Input(default=polyopt%Monomial, option=basisType)
+
+SELECT CASE (basisType0)
+
+CASE (polyopt%Monomial)
+  ans(1:tsize) = math%zero
+  DO ii = 2, order
+    areal = x**(ii - 2)
+    ans(ii + 1) = ii * (ii - 1) * areal
+  END DO
+
+CASE DEFAULT
+
+#ifdef DEBUG_VER
+  IF (basisType0 .EQ. polyopt%Jacobi) THEN
+    isok = PRESENT(alpha) .AND. PRESENT(beta)
+    CALL AssertError1(isok, myName, modName, __LINE__, &
+                      "alpha and beta should be present for basisType=Jacobi")
+  END IF
+
+  IF (basisType0 .EQ. polyopt%Ultraspherical) THEN
+    isok = PRESENT(lambda)
+    CALL AssertError1(isok, myName, modName, __LINE__, &
+                      "lambda should be present for basisType=Ultraspherical")
+  END IF
+#endif
+
+  x1(1) = x
+  CALL LaplacianEvalAllOrthopol_(n=order, x=x1, orthopol=basisType0, &
+                                 alpha=alpha, beta=beta, lambda=lambda, &
+                                 ans=temp, nrow=ii, ncol=tsize)
+
+  ans(1:tsize) = temp(1, 1:tsize)
+END SELECT
+END PROCEDURE BasisLaplacianEvalAll_Line1_
+
+!----------------------------------------------------------------------------
+!                                                 BasisLaplacianEvalAll_Line_
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE BasisLaplacianEvalAll_Line2
+INTEGER(I4B) :: nrow, ncol
+CALL BasisLaplacianEvalAll_Line2_( &
+  order=order, x=x, ans=ans, nrow=nrow, ncol=ncol, refLine=refLine, &
+  basisType=basisType, alpha=alpha, beta=beta, lambda=lambda)
+END PROCEDURE BasisLaplacianEvalAll_Line2
+
+!----------------------------------------------------------------------------
+!                                                 BasisLaplacianEvalAll_Line_
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE BasisLaplacianEvalAll_Line2_
+#ifdef DEBUG_VER
+CHARACTER(*), PARAMETER :: myName = "BasisLaplacianEvalAll_Line2_()"
+LOGICAL(LGT) :: isok
+#endif
+
+INTEGER(I4B) :: ii, basisType0, jj
+REAL(DFP) :: areal
+CHARACTER(1) :: astr
+
+nrow = SIZE(x)
+ncol = 1 + order
+
+astr = UpperCase(refLine(1:1))
+
+#ifdef DEBUG_VER
+isok = astr .EQ. "B"
+CALL AssertError1(isok, myName, modName, __LINE__, &
+                  "refLine should be Biunit")
+#endif
+
+basisType0 = Input(default=polyopt%Monomial, option=basisType)
+
+SELECT CASE (basisType0)
+
+CASE (polyopt%Monomial)
+  ans(1:nrow, 1:ncol) = math%zero
+  DO ii = 2, order
+    DO jj = 1, nrow
+      areal = x(jj)**(ii - 2)
+      ans(jj, ii + 1) = ii * (ii - 1) * areal
+    END DO
+  END DO
+
+CASE DEFAULT
+
+#ifdef DEBUG_VER
+  IF (basisType0 .EQ. polyopt%Jacobi) THEN
+    isok = PRESENT(alpha) .AND. PRESENT(beta)
+    CALL AssertError1(isok, myName, modName, __LINE__, &
+                      "alpha and beta should be present for basisType=Jacobi")
+  END IF
+
+  IF (basisType0 .EQ. polyopt%Ultraspherical) THEN
+    isok = PRESENT(lambda)
+    CALL AssertError1(isok, myName, modName, __LINE__, &
+                      "lambda should be present for basisType=Ultraspherical")
+  END IF
+#endif
+
+  CALL LaplacianEvalAllOrthopol_(n=order, x=x, orthopol=basisType0, &
+                                 alpha=alpha, beta=beta, lambda=lambda, &
+                                 ans=ans, nrow=nrow, ncol=ncol)
+
+END SELECT
+END PROCEDURE BasisLaplacianEvalAll_Line2_
 
 !----------------------------------------------------------------------------
 !                                                              Include error

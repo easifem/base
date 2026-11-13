@@ -17,21 +17,14 @@
 
 SUBMODULE(Chebyshev1PolynomialUtility) Methods
 USE OrthogonalPolynomialUtility, ONLY: JacobiMatrix
-
 #ifdef USE_LAPACK95
 USE F95_Lapack, ONLY: STEV
 #endif
-
 USE ErrorHandling, ONLY: ErrorMsg
-
 USE MiscUtility, ONLY: Factorial
-
 USE BaseType, ONLY: qp => TypeQuadratureOpt
-
 USE GlobalData, ONLY: pi
-
 USE UltrasphericalPolynomialUtility, ONLY: UltrasphericalDMatEvenOdd
-
 USE JacobiPolynomialUtility, ONLY: JacobiJacobiMatrix, &
                                    JacobiJacobiRadauMatrix, &
                                    JacobiJacobiLobattoMatrix
@@ -1231,6 +1224,202 @@ END SUBROUTINE Chebyshev1DMatrixG2
 MODULE PROCEDURE Chebyshev1DMatEvenOdd1
 CALL UltrasphericalDMatEvenOdd(n=n, D=D, o=o, e=e)
 END PROCEDURE Chebyshev1DMatEvenOdd1
+
+!----------------------------------------------------------------------------
+!                                                 Chebyshev1LaplacianEvalAll1
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE Chebyshev1LaplacianEvalAll1
+INTEGER(I4B) :: tsize
+CALL Chebyshev1LaplacianEvalAll1_(n=n, x=x, ans=ans, tsize=tsize)
+END PROCEDURE Chebyshev1LaplacianEvalAll1
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE Chebyshev1LaplacianEvalAll1_
+! INTEGER(I4B) :: ii
+! REAL(DFP) :: p(1:n + 1), r_ii
+
+! tsize = 0
+! IF (n < 0) RETURN
+
+! tsize = n + 1
+! p(1) = 1.0_DFP
+! ans(1) = 0.0_DFP
+
+! IF (n < 1) RETURN
+
+! p(2) = x
+! ans(2) = 1.0_DFP
+
+! IF (n .EQ. 1_I4B) RETURN
+
+! p(3) = 2.0_DFP * x**2 - 1.0_DFP
+! ans(3) = 4.0_DFP * x
+
+! DO ii = 3, n
+
+!   r_ii = REAL(ii, KIND=DFP)
+!   p(ii + 1) = (2.0_DFP * x) * p(ii) - p(ii - 1)
+
+!   ans(ii + 1) = 2.0_DFP * r_ii * p(ii) &
+!                 + r_ii * ans(ii - 1) / (r_ii - 2.0_DFP)
+
+! END DO
+END PROCEDURE Chebyshev1LaplacianEvalAll1_
+
+!----------------------------------------------------------------------------
+!                                             Chebyshev1LaplacianEvalAll2
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE Chebyshev1LaplacianEvalAll2
+INTEGER(I4B) :: nrow, ncol
+CALL Chebyshev1LaplacianEvalAll2_(n=n, x=x, ans=ans, nrow=nrow, ncol=ncol)
+END PROCEDURE Chebyshev1LaplacianEvalAll2
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE Chebyshev1LaplacianEvalAll2_
+! !!
+! INTEGER(I4B) :: ii
+! REAL(DFP) :: p(1:SIZE(x), 1:n + 1), r_ii
+
+! nrow = 0
+! ncol = 0
+
+! IF (n < 0) RETURN
+
+! nrow = SIZE(x)
+! ncol = n + 1
+
+! p(1:nrow, 1) = 1.0_DFP
+! ans(1:nrow, 1) = 0.0_DFP
+
+! IF (n < 1) RETURN
+
+! p(1:nrow, 2) = x
+! ans(1:nrow, 2) = 1.0_DFP
+
+! IF (n .EQ. 1_I4B) RETURN
+
+! p(1:nrow, 3) = 2.0_DFP * x**2 - 1.0_DFP
+! ans(1:nrow, 3) = 4.0_DFP * x
+
+! DO ii = 3, n
+
+!   r_ii = REAL(ii, KIND=DFP)
+!   p(1:nrow, ii + 1) = (2.0_DFP * x) * p(1:nrow, ii) - p(1:nrow, ii - 1)
+
+!   ans(1:nrow, ii + 1) = 2.0_DFP * r_ii * p(1:nrow, ii) &
+!                         + r_ii * ans(1:nrow, ii - 1) / (r_ii - 2.0_DFP)
+
+! END DO
+END PROCEDURE Chebyshev1LaplacianEvalAll2_
+
+!----------------------------------------------------------------------------
+!                                             Chebyshev1LaplacianEval1
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE Chebyshev1LaplacianEval1
+! !
+! INTEGER(I4B) :: ii
+! REAL(DFP) :: r_ii, p, p_1, p_2, ans_1, ans_2
+! !!
+! IF (n < 0) THEN
+!   RETURN
+! END IF
+! !!
+! p = 1.0_DFP
+! ans = 0.0_DFP
+! p_2 = p
+! ans_2 = ans
+! !!
+! IF (n < 1) THEN
+!   RETURN
+! END IF
+! !!
+! IF (n .EQ. 0_I4B) RETURN
+! !!
+! p = x
+! ans = 1.0_DFP
+! p_2 = p
+! ans_2 = ans
+! !!
+! IF (n .EQ. 1_I4B) RETURN
+! !!
+! p = 2.0_DFP * x**2 - 1.0_DFP
+! ans = 4.0_DFP * x
+! !!
+! DO ii = 3, n
+!   !!
+!   r_ii = REAL(ii, KIND=DFP)
+!   p_1 = p
+!   p = (2.0_DFP * x) * p - p_2
+!   p_2 = p_1
+!   !!
+!   ans_1 = ans
+!   ans = 2.0_DFP * r_ii * p_1 &
+!       & + r_ii * ans_2 / (r_ii - 2.0_DFP)
+!   ans_2 = ans_1
+!   !!
+! END DO
+! !!
+END PROCEDURE Chebyshev1LaplacianEval1
+
+!----------------------------------------------------------------------------
+!                                             Chebyshev1LaplacianEval2
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE Chebyshev1LaplacianEval2
+! !!
+! INTEGER(I4B) :: ii
+! REAL(DFP) :: r_ii
+! REAL(DFP), DIMENSION(SIZE(x)) :: p, p_1, p_2, ans_1, ans_2
+! !!
+! IF (n < 0) THEN
+!   RETURN
+! END IF
+! !!
+! p = 1.0_DFP
+! ans = 0.0_DFP
+! p_2 = p
+! ans_2 = ans
+! !!
+! IF (n < 1) THEN
+!   RETURN
+! END IF
+! !!
+! IF (n .EQ. 0_I4B) RETURN
+! !!
+! p = x
+! ans = 1.0_DFP
+! p_2 = p
+! ans_2 = ans
+! !!
+! IF (n .EQ. 1_I4B) RETURN
+! !!
+! p = 2.0_DFP * x**2 - 1.0_DFP
+! ans = 4.0_DFP * x
+! !!
+! DO ii = 3, n
+!   !!
+!   r_ii = REAL(ii, KIND=DFP)
+!   p_1 = p
+!   p = (2.0_DFP * x) * p - p_2
+!   p_2 = p_1
+!   !!
+!   ans_1 = ans
+!   ans = 2.0_DFP * r_ii * p_1 &
+!       & + r_ii * ans_2 / (r_ii - 2.0_DFP)
+!   ans_2 = ans_1
+!   !!
+! END DO
+! !!
+END PROCEDURE Chebyshev1LaplacianEval2
 
 !----------------------------------------------------------------------------
 !

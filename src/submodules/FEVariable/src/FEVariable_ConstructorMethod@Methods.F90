@@ -17,9 +17,41 @@
 
 SUBMODULE(FEVariable_ConstructorMethod) Methods
 USE ReallocateUtility, ONLY: Reallocate
+USE BaseType, ONLY: math => TypeMathOpt
 
 IMPLICIT NONE
 CONTAINS
+
+!----------------------------------------------------------------------------
+!                                                                     SetLen
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE obj_SetLen1
+LOGICAL(LGT) :: isok
+INTEGER(I4B) :: mysize
+
+IF (.NOT. obj%isInit) THEN
+  RETURN
+END IF
+
+obj%len = tsize
+
+isok = ALLOCATED(obj%val)
+IF (.NOT. isok) THEN
+  obj%capacity = obj%len
+  CALL Reallocate(obj%val, obj%capacity)
+  RETURN
+END IF
+
+mysize = SIZE(obj%val)
+IF (mysize .GE. obj%len) THEN
+  obj%capacity = mysize
+  obj%val(1:obj%capacity) = math%zero
+ELSE
+  obj%capacity = obj%len
+  CALL Reallocate(obj%val, obj%len)
+END IF
+END PROCEDURE obj_SetLen1
 
 !----------------------------------------------------------------------------
 !                                                                   Initiate

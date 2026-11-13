@@ -26,6 +26,26 @@ PUBLIC :: DEALLOCATE
 PUBLIC :: ASSIGNMENT(=)
 PUBLIC :: Copy
 PUBLIC :: Initiate
+PUBLIC :: SetLen
+
+!----------------------------------------------------------------------------
+!                                                                     SetLen
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2026-10-11
+! summary: Set the length of FEVariable_
+!
+!# SetLen
+!
+! Set the length of FEVariable_
+
+INTERFACE SetLen
+  MODULE PURE SUBROUTINE obj_SetLen1(obj, tsize)
+    TYPE(FEVariable_), INTENT(INOUT) :: obj
+    INTEGER(I4B), INTENT(IN) :: tsize
+  END SUBROUTINE obj_SetLen1
+END INTERFACE SetLen
 
 !----------------------------------------------------------------------------
 !                                                 Initiate@ConstructorMethods

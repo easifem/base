@@ -16,7 +16,7 @@
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 1 March 2021
-! summary: This module contains the methods for data type [[QuadraturePoint_]]
+! summary: This module contains the methods for QuadraturePoint
 
 MODULE QuadraturePoint_Method
 USE BaseType, ONLY: QuadraturePoint_

@@ -1,5 +1,5 @@
 ! This program is a part of EASIFEM library
-! Copyright (C) 2020-2021  Vikas Sharma, Ph.D
+! Copyright (C) 2020-2021 Vikas Sharma, Ph.D
 !
 ! This program is free software: you can redistribute it and/or modify
 ! it under the terms of the GNU General Public License as published by
@@ -12,18 +12,50 @@
 ! GNU General Public License for more details.
 !
 ! You should have received a copy of the GNU General Public License
-! along with this program.  If not, see <https: //www.gnu.org/licenses/>
-!
+! along with this program.  If not, see <https://www.gnu.org/licenses/>
 
-!> author: Vikas Sharma, Ph. D.
-! date: 3 Aug 2022
-! summary: Utility related to Jacobi Polynomials is defined.
+!> author: Vikas Sharma, Ph.D.
+! date: 2026-10-30
+! summary: Jacobi polynomial evaluation, quadrature and transforms.
 !
-!{!pages/JacobiPolynomialUtility.md!}
+! The standard Jacobi normalization is used, not unit norm or monic
+! normalization. alpha and beta are family parameters; alphaCoeff and
+! betaCoeff are monic recurrence arrays.
+!
+! Arguments:
+!   None at module scope; see the public interfaces.
+!
+! Returns:
+!   Public polynomial and interpolation procedures.
+!
+! Formula:
+! $$w(x)=(1-x)^\alpha(1+x)^\beta,\quad \alpha,\beta>-1$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE JacobiPolynomialUtility, ONLY: JacobiEval
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: x(3), y(3)
+! REAL(DFP), PARAMETER :: tol = 1.0E-11_DFP
+!
+! x = [-0.5_DFP, 0.0_DFP, 0.5_DFP]
+! y = JacobiEval(alpha=0.0_DFP, beta=0.0_DFP, n=2_I4B, x=x)
+! CALL OK(MAXVAL(ABS(y-(0.5_DFP*(3.0_DFP*x*x-1.0_DFP)))) < tol, &
+!   "Degree two agrees with its analytic formula")
+! CALL OK(ABS(JacobiEval(alpha=0.0_DFP, beta=0.0_DFP, n=2_I4B, x=0.0_DFP) &
+!   -y(2)) < tol, "Scalar and vector calls agree")
+! END PROGRAM main
+!```
 
 MODULE JacobiPolynomialUtility
-USE GlobalData, ONLY: DFP, I4B, LGT
-
+USE GlobalData, ONLY: DFP
+USE GlobalData, ONLY: I4B
+USE GlobalData, ONLY: LGT
 USE BaseType, ONLY: iface_1DFunction
 
 IMPLICIT NONE
@@ -55,6 +87,9 @@ PUBLIC :: JacobiGradientEval
 PUBLIC :: JacobiGradientEvalAll
 PUBLIC :: JacobiGradientEvalAll_
 PUBLIC :: JacobiGradientEvalSum
+PUBLIC :: JacobiLaplacianEval
+PUBLIC :: JacobiLaplacianEvalAll
+PUBLIC :: JacobiLaplacianEvalAll_
 PUBLIC :: JacobiTransform
 PUBLIC :: JacobiTransform_
 PUBLIC :: JacobiInvTransform
@@ -65,13 +100,47 @@ PUBLIC :: JacobiDMatrix
 !                                                  GetJacobiRecurrenceCoeff
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 2 Aug 2022
-! summary: Return the recurrence coefficient for nth order monic polynomial
+!> author: Vikas Sharma, Ph.D.
+! date: 2026-10-30
+! summary: Return monic three term recurrence coefficients.
 !
-!# Introduction
+! Arrays are indexed from zero and contain n coefficients. Use n>=1.
+! betaCoeff(0) stores the weight integral.
 !
-! These recurrence coefficients are for monic jacobi polynomials.
+! Arguments:
+!   n : INTEGER(I4B), INTENT(IN). Recurrence length or matrix size; use n>=1.
+!   alpha : REAL(DFP), INTENT(IN). Jacobi weight exponent at +1.
+!   beta : REAL(DFP), INTENT(IN). Jacobi weight exponent at -1.
+!   alphaCoeff : REAL(DFP), INTENT(OUT)(0:n - 1). Monic recurrence diagonal
+! coefficients, indexed from zero.
+!   betaCoeff : REAL(DFP), INTENT(OUT)(0:n - 1). Monic recurrence beta values;
+! index zero is the weight integral.
+!
+! Returns:
+!   Writes alphaCoeff(0:n - 1), betaCoeff(0:n - 1).
+!
+! Formula:
+! $$\pi_{j+1}=(x-\alpha_j)\pi_j-\beta_j\pi_{j-1}$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE JacobiPolynomialUtility, ONLY: GetJacobiRecurrenceCoeff
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: a(0:2), b(0:2)
+!
+! CALL GetJacobiRecurrenceCoeff( &
+!   alpha=0.0_DFP, beta=0.0_DFP, n=3_I4B, alphaCoeff=a, betaCoeff=b)
+! CALL OK(MAXVAL(ABS(a)) < 1.0E-11_DFP, &
+!   "Symmetric family has zero diagonal")
+! CALL OK(ABS(b(2)-4.0_DFP/15.0_DFP) &
+!   < 1.0E-11_DFP, "Monic beta coefficient")
+! END PROGRAM main
+!```
 
 INTERFACE
   MODULE PURE SUBROUTINE GetJacobiRecurrenceCoeff(n, alpha, beta, &
@@ -89,18 +158,50 @@ END INTERFACE
 !                                                GetJacobiRecurrenceCoeff2
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 2 Aug 2022
-! summary: Return the recurrence coefficient for nth order polynomial
+!> author: Vikas Sharma, Ph.D.
+! date: 2026-10-30
+! summary: Return standard three term recurrence coefficients.
 !
-!# Introduction
+! Arrays are indexed from zero and contain n coefficients. Use n>=1.
+! Initialize the family specific degree zero and degree one polynomials before
+! advancing the recurrence.
 !
-! These recurrence coefficients are for non-monic jacobi polynomials.
+! Arguments:
+!   n : INTEGER(I4B), INTENT(IN). Recurrence length or matrix size; use n>=1.
+!   alpha : REAL(DFP), INTENT(IN). Jacobi weight exponent at +1.
+!   beta : REAL(DFP), INTENT(IN). Jacobi weight exponent at -1.
+!   A : REAL(DFP), INTENT(OUT)(0:n - 1). Multiplier of x in the standard three
+! term recurrence.
+!   B : REAL(DFP), INTENT(OUT)(0:n - 1). Constant term in the standard three
+! term recurrence.
+!   C : REAL(DFP), INTENT(OUT)(0:n - 1). Multiplier of the previous
+! polynomial, subtracted in the recurrence.
 !
-!$$
-! P_{n+1}^{(\alpha,\beta)}=\left(a_{n}x+b_{n}\right)P_{n}^{(\alpha,\beta)}
-! -c_{n}P_{n-1}^{(\alpha,\beta)},\quad n=1,2,\cdots
-!$$
+! Returns:
+!   Writes A(0:n - 1), B(0:n - 1), C(0:n - 1).
+!
+! Formula:
+! $$p_{j+1}=(A_j x+B_j)p_j-C_j p_{j-1}$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE JacobiPolynomialUtility, ONLY: GetJacobiRecurrenceCoeff2
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: a(0:2), b(0:2), c(0:2)
+!
+! CALL GetJacobiRecurrenceCoeff2( &
+!   alpha=0.0_DFP, beta=0.0_DFP, n=3_I4B, A=a, B=b, C=c)
+! CALL OK(MAXVAL(ABS(b)) < 1.0E-11_DFP, &
+!   "Symmetric family has no constant recurrence term")
+! CALL OK(ABS(a(1)-1.5_DFP) < 1.0E-11_DFP, &
+!   "Degree two recurrence multiplier")
+! END PROGRAM main
+!```
 
 INTERFACE
   MODULE PURE SUBROUTINE GetJacobiRecurrenceCoeff2(n, alpha, beta, &
@@ -119,9 +220,37 @@ END INTERFACE
 !                                                               JacobiAlpha
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 2 Aug 2022
-! summary: Returns reccurence coeff alpha
+!> author: Vikas Sharma, Ph.D.
+! date: 2026-10-30
+! summary: Return a monic recurrence diagonal coefficient.
+!
+! Arguments:
+!   n : INTEGER(I4B), INTENT(IN). Maximum polynomial degree; use n>=0.
+!   alpha : REAL(DFP), INTENT(IN). Jacobi weight exponent at +1.
+!   beta : REAL(DFP), INTENT(IN). Jacobi weight exponent at -1.
+!
+! Returns:
+!   ans : REAL(DFP).
+!
+! Formula:
+! $$\pi_{n+1}=(x-\alpha_n)\pi_n-\beta_n\pi_{n-1}$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE JacobiPolynomialUtility, ONLY: JacobiAlpha
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: y
+!
+! y = JacobiAlpha(alpha=0.0_DFP, beta=0.0_DFP, n=2_I4B)
+! CALL OK(ABS(y-(0.0_DFP)) < 1.0E-11_DFP, &
+!   "Degree two coefficient or norm")
+! END PROGRAM main
+!```
 
 INTERFACE
   MODULE ELEMENTAL PURE FUNCTION JacobiAlpha(n, alpha, beta) RESULT(ans)
@@ -140,9 +269,41 @@ END INTERFACE
 !                                                                JacobiBeta
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 2 Aug 2022
-! summary: Returns reccurence coeff beta
+!> author: Vikas Sharma, Ph.D.
+! date: 2026-10-30
+! summary: Return a monic recurrence beta coefficient.
+!
+! For beta, n=0 denotes the weight integral; the displayed norm ratio uses
+! monic squared norms.
+!
+! Arguments:
+!   n : INTEGER(I4B), INTENT(IN). Maximum polynomial degree; use n>=0.
+!   alpha : REAL(DFP), INTENT(IN). Jacobi weight exponent at +1.
+!   beta : REAL(DFP), INTENT(IN). Jacobi weight exponent at -1.
+!
+! Returns:
+!   ans : REAL(DFP).
+!
+! Formula:
+! $$\beta_0=\int_{-1}^{1}w(x)\,dx,\quad \beta_n=\widehat h_n/\widehat
+! h_{n-1}$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE JacobiPolynomialUtility, ONLY: JacobiBeta
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: y
+!
+! y = JacobiBeta(alpha=0.0_DFP, beta=0.0_DFP, n=2_I4B)
+! CALL OK(ABS(y-(4.0_DFP/15.0_DFP)) < 1.0E-11_DFP, &
+!   "Degree two coefficient or norm")
+! END PROGRAM main
+!```
 
 INTERFACE
   MODULE ELEMENTAL PURE FUNCTION JacobiBeta(n, alpha, beta) RESULT(ans)
@@ -161,9 +322,37 @@ END INTERFACE
 !                                                         JacobiLeadingCoeff
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 2 Aug 2022
-! summary: Leading coefficient of Jacobi polynomial
+!> author: Vikas Sharma, Ph.D.
+! date: 2026-10-30
+! summary: Return the coefficient of the highest power.
+!
+! Arguments:
+!   n : INTEGER(I4B), INTENT(IN). Maximum polynomial degree; use n>=0.
+!   alpha : REAL(DFP), INTENT(IN). Jacobi weight exponent at +1.
+!   beta : REAL(DFP), INTENT(IN). Jacobi weight exponent at -1.
+!
+! Returns:
+!   ans : REAL(DFP).
+!
+! Formula:
+! $$p_n(x)=k_n x^n+\cdots$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE JacobiPolynomialUtility, ONLY: JacobiLeadingCoeff
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: y
+!
+! y = JacobiLeadingCoeff(alpha=0.0_DFP, beta=0.0_DFP, n=2_I4B)
+! CALL OK(ABS(y-(1.5_DFP)) < 1.0E-11_DFP, &
+!   "Degree two coefficient or norm")
+! END PROGRAM main
+!```
 
 INTERFACE
   MODULE PURE FUNCTION JacobiLeadingCoeff(n, alpha, beta) RESULT(ans)
@@ -182,9 +371,37 @@ END INTERFACE
 !                                                    JacobiLeadingCoeffRatio
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 2 Aug 2022
-! summary: Leading coefficient ratio of Jacobi polynomial, n+1/n
+!> author: Vikas Sharma, Ph.D.
+! date: 2026-10-30
+! summary: Return the ratio of consecutive leading coefficients.
+!
+! Arguments:
+!   n : INTEGER(I4B), INTENT(IN). Maximum polynomial degree; use n>=0.
+!   alpha : REAL(DFP), INTENT(IN). Jacobi weight exponent at +1.
+!   beta : REAL(DFP), INTENT(IN). Jacobi weight exponent at -1.
+!
+! Returns:
+!   ans : REAL(DFP).
+!
+! Formula:
+! $$r_n=k_{n+1}/k_n$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE JacobiPolynomialUtility, ONLY: JacobiLeadingCoeffRatio
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: y
+!
+! y = JacobiLeadingCoeffRatio(alpha=0.0_DFP, beta=0.0_DFP, n=2_I4B)
+! CALL OK(ABS(y-(5.0_DFP/3.0_DFP)) < 1.0E-11_DFP, &
+!   "Degree two coefficient or norm")
+! END PROGRAM main
+!```
 
 INTERFACE
   MODULE PURE FUNCTION JacobiLeadingCoeffRatio(n, alpha, beta) RESULT(ans)
@@ -203,18 +420,37 @@ END INTERFACE
 !                                                             JacobiNormSQR
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 2 Aug 2022
-! summary: Square norm of Jacobi polynomial
+!> author: Vikas Sharma, Ph.D.
+! date: 2026-10-30
+! summary: Return the weighted squared norm.
 !
-!# Introduction
+! Arguments:
+!   n : INTEGER(I4B), INTENT(IN). Maximum polynomial degree; use n>=0.
+!   alpha : REAL(DFP), INTENT(IN). Jacobi weight exponent at +1.
+!   beta : REAL(DFP), INTENT(IN). Jacobi weight exponent at -1.
 !
-! This function returns the following
+! Returns:
+!   ans : REAL(DFP).
 !
-!$$
-!\Vert P_{n}^{\alpha,\beta}\Vert_{d\lambda}^{2}=\int_{-1}^{+1}P_{n}^
-!{\alpha,\beta}P_{n}^{\alpha,\beta}(1-x)^{\alpha}(1+x)^{\beta}dx
-!$$
+! Formula:
+! $$h_n=\int_{-1}^{1}p_n(x)^2w(x)\,dx$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE JacobiPolynomialUtility, ONLY: JacobiNormSQR
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: y
+!
+! y = JacobiNormSQR(alpha=0.0_DFP, beta=0.0_DFP, n=2_I4B)
+! CALL OK(ABS(y-(2.0_DFP/5.0_DFP)) < 1.0E-11_DFP, &
+!   "Degree two coefficient or norm")
+! END PROGRAM main
+!```
 
 INTERFACE
   MODULE PURE FUNCTION JacobiNormSQR(n, alpha, beta) RESULT(ans)
@@ -229,18 +465,37 @@ END INTERFACE
 !                                                            JacobiNormSQR2
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 2 Aug 2022
-! summary: Square norm of Jacobi polynomial
+!> author: Vikas Sharma, Ph.D.
+! date: 2026-10-30
+! summary: Return weighted squared norms from degree zero through n.
 !
-!# Introduction
+! Arguments:
+!   n : INTEGER(I4B), INTENT(IN). Maximum polynomial degree; use n>=0.
+!   alpha : REAL(DFP), INTENT(IN). Jacobi weight exponent at +1.
+!   beta : REAL(DFP), INTENT(IN). Jacobi weight exponent at -1.
 !
-! This function returns the following
+! Returns:
+!   ans : REAL(DFP)(0:n).
 !
-!$$
-!\Vert P_{n}^{\alpha,\beta}\Vert_{d\lambda}^{2}=\int_{-1}^{+1}P_{n}^
-!{\alpha,\beta}P_{n}^{\alpha,\beta}(1-x)^{\alpha}(1+x)^{\beta}dx
-!$$
+! Formula:
+! $$h_j=\int_{-1}^{1}p_j(x)^2w(x)\,dx,\quad 0\le j\le n$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE JacobiPolynomialUtility, ONLY: JacobiNormSQR2
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: y(0:2)
+!
+! y = JacobiNormSQR2(alpha=0.0_DFP, beta=0.0_DFP, n=2_I4B)
+! CALL OK(ABS(y(2)-(2.0_DFP/5.0_DFP)) < 1.0E-11_DFP, &
+!   "Norm array includes degree two")
+! END PROGRAM main
+!```
 
 INTERFACE
   MODULE PURE FUNCTION JacobiNormSQR2(n, alpha, beta) RESULT(ans)
@@ -255,9 +510,37 @@ END INTERFACE
 !                                                         JacobiNormSQRRatio
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 2 Aug 2022
-! summary: Ratio of Square norm of Jacobi polynomial n+1/n
+!> author: Vikas Sharma, Ph.D.
+! date: 2026-10-30
+! summary: Return the ratio of consecutive squared norms.
+!
+! Arguments:
+!   n : INTEGER(I4B), INTENT(IN). Maximum polynomial degree; use n>=0.
+!   alpha : REAL(DFP), INTENT(IN). Jacobi weight exponent at +1.
+!   beta : REAL(DFP), INTENT(IN). Jacobi weight exponent at -1.
+!
+! Returns:
+!   ans : REAL(DFP).
+!
+! Formula:
+! $$r_n=h_{n+1}/h_n$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE JacobiPolynomialUtility, ONLY: JacobiNormSQRRatio
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: y
+!
+! y = JacobiNormSQRRatio(alpha=0.0_DFP, beta=0.0_DFP, n=2_I4B)
+! CALL OK(ABS(y-(5.0_DFP/7.0_DFP)) < 1.0E-11_DFP, &
+!   "Degree two coefficient or norm")
+! END PROGRAM main
+!```
 
 INTERFACE
   MODULE PURE FUNCTION JacobiNormSQRRatio(n, alpha, beta) RESULT(ans)
@@ -271,6 +554,51 @@ END INTERFACE
 !----------------------------------------------------------------------------
 !                                                      JacobiJacobiMatrix
 !----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph.D.
+! date: 2026-10-30
+! summary: Build the symmetric tridiagonal Gauss Jacobi matrix.
+!
+! Allocate D with n entries and E with one fewer. Optional recurrence outputs
+! use zero based indexing.
+!
+! Arguments:
+!   n : INTEGER(I4B), INTENT(IN). Recurrence length or matrix size; use n>=1.
+!   alpha : REAL(DFP), INTENT(IN). Jacobi weight exponent at +1.
+!   beta : REAL(DFP), INTENT(IN). Jacobi weight exponent at -1.
+!   D : REAL(DFP), INTENT(OUT)(:). Jacobi matrix diagonal, or nodal derivative
+! matrix in the block splitter.
+!   E : REAL(DFP), INTENT(OUT)(:). Jacobi matrix off diagonal, or even block
+! in the block splitter.
+!   alphaCoeff : REAL(DFP), OPTIONAL, INTENT(OUT)(0:). Monic recurrence
+! diagonal coefficients, indexed from zero.
+!   betaCoeff : REAL(DFP), OPTIONAL, INTENT(OUT)(0:). Monic recurrence beta
+! values; index zero is the weight integral.
+!
+! Returns:
+!   Writes D(:), E(:), alphaCoeff(0:), betaCoeff(0:).
+!
+! Formula:
+! $$J_{i,i}=\alpha_{i-1},\quad J_{i,i+1}=\sqrt{\beta_i}$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE JacobiPolynomialUtility, ONLY: JacobiJacobiMatrix
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: d(2), e(1)
+!
+! CALL JacobiJacobiMatrix( &
+!   alpha=0.0_DFP, beta=0.0_DFP, n=2_I4B, D=d, E=e)
+! CALL OK(ALL(e > 0.0_DFP), "Positive off diagonal")
+! CALL OK(MAXVAL(ABS(d)) < 1.0E-11_DFP, &
+!   "Symmetric weight has a zero diagonal")
+! END PROGRAM main
+!```
 
 INTERFACE
   MODULE PURE SUBROUTINE JacobiJacobiMatrix(n, alpha, beta, D, E, &
@@ -294,17 +622,48 @@ END INTERFACE
 !                                                     JacobiGaussQuadrature
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 3 Aug 2022
-! summary:         Returns the Gauss quadrature points for Jacobi Polynomial
+!> author: Vikas Sharma, Ph.D.
+! date: 2026-10-30
+! summary: Compute Gauss quadrature nodes and weights.
 !
-!# Introduction
+! This low level routine returns n nodes.  Weights include the family weight.
+! Nodes and weights must be paired in the returned order.
 !
-! This routine computes the n Gauss-Quadrature points. Which,
-! are n zeros of a jacobi polynomial defined with respect to the
-! weight $(1-x)^{\alpha} (1+x)^{\beta}$.
+! Arguments:
+!   n : INTEGER(I4B), INTENT(IN). Number of returned nodes; use n>=1 and
+! enough nodes for the rule.
+!   alpha : REAL(DFP), INTENT(IN). Jacobi weight exponent at +1.
+!   beta : REAL(DFP), INTENT(IN). Jacobi weight exponent at -1.
+!   pt : REAL(DFP), INTENT(OUT)(:). Quadrature nodes; allocate the point count
+! specified above.
+!   wt : REAL(DFP), OPTIONAL, INTENT(OUT)(:). Quadrature weights paired with
+! pt; includes the family weight.
 !
-! All Gauss-Quadrature points are inside $(-1, 1)$
+! Returns:
+!   Writes pt(:), wt(:).
+!
+! Formula:
+! $$\int_{-1}^{1} f(x)w(x)\,dx\simeq\sum_i w_i f(x_i)$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE JacobiPolynomialUtility, ONLY: JacobiGaussQuadrature
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: x(2), w(2)
+!
+! CALL JacobiGaussQuadrature( &
+!   alpha=0.0_DFP, beta=0.0_DFP, n=2_I4B, pt=x, wt=w)
+! CALL OK(ABS(SUM(w)-(2.0_DFP)) < 1.0E-10_DFP, &
+!   "Weights integrate a constant")
+! CALL OK(ABS(SUM(w*x*x)-(2.0_DFP/3.0_DFP)) < 1.0E-10_DFP, &
+!   "Weights integrate the weighted second moment")
+! END PROGRAM main
+!```
 
 INTERFACE
   MODULE SUBROUTINE JacobiGaussQuadrature(n, alpha, beta, pt, wt)
@@ -322,6 +681,52 @@ END INTERFACE
 !----------------------------------------------------------------------------
 !                                                   JacobiJacobiRadauMatrix
 !----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph.D.
+! date: 2026-10-30
+! summary: Build the symmetric tridiagonal Radau Jacobi matrix.
+!
+! Allocate D with n+1 entries and E with one fewer. The final recurrence
+! entries are modified to include the prescribed endpoint(s).
+!
+! Arguments:
+!   a : REAL(DFP), INTENT(IN). Recurrence multiplier array, or prescribed
+! endpoint -1/+1 for Radau.
+!   n : INTEGER(I4B), INTENT(IN). Number of free nodes; output has n+1 points
+! or matrix rows.
+!   alpha : REAL(DFP), INTENT(IN). Jacobi weight exponent at +1.
+!   beta : REAL(DFP), INTENT(IN). Jacobi weight exponent at -1.
+!   D : REAL(DFP), INTENT(OUT)(:). Jacobi matrix diagonal, or nodal derivative
+! matrix in the block splitter.
+!   E : REAL(DFP), INTENT(OUT)(:). Jacobi matrix off diagonal, or even block
+! in the block splitter.
+!   alphaCoeff : REAL(DFP), OPTIONAL, INTENT(OUT)(0:). Monic recurrence
+! diagonal coefficients, indexed from zero.
+!   betaCoeff : REAL(DFP), OPTIONAL, INTENT(OUT)(0:). Monic recurrence beta
+! values; index zero is the weight integral.
+!
+! Returns:
+!   Writes D(:), E(:), alphaCoeff(0:), betaCoeff(0:).
+!
+! Formula:
+! $$J_{i,i}=\alpha_{i-1},\quad J_{i,i+1}=\sqrt{\beta_i}$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE JacobiPolynomialUtility, ONLY: JacobiJacobiRadauMatrix
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: d(3), e(2)
+!
+! CALL JacobiJacobiRadauMatrix( &
+!   alpha=0.0_DFP, beta=0.0_DFP, a=-1.0_DFP, n=2_I4B, D=d, E=e)
+! CALL OK(ALL(e > 0.0_DFP), "Positive off diagonal")
+! END PROGRAM main
+!```
 
 INTERFACE
   MODULE PURE SUBROUTINE JacobiJacobiRadauMatrix(a, n, alpha, beta, D, &
@@ -347,26 +752,52 @@ END INTERFACE
 !                                                JacobiGaussRadauQuadrature
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 3 Aug 2022
-! summary: Returns the Gauss-Radau quadrature points for Jacobi Polynomial
+!> author: Vikas Sharma, Ph.D.
+! date: 2026-10-30
+! summary: Compute Gauss Radau quadrature nodes and weights.
 !
-!# Introduction
+! This low level routine returns n+1 nodes. Set a to -1 or +1. Weights include
+! the family weight. Nodes and weights must be paired in the returned order.
 !
-! This routine returns the $n+1$ Quadrature points and weights.
+! Arguments:
+!   a : REAL(DFP), INTENT(IN). Recurrence multiplier array, or prescribed
+! endpoint -1/+1 for Radau.
+!   n : INTEGER(I4B), INTENT(IN). Number of free nodes; output has n+1 points
+! or matrix rows.
+!   alpha : REAL(DFP), INTENT(IN). Jacobi weight exponent at +1.
+!   beta : REAL(DFP), INTENT(IN). Jacobi weight exponent at -1.
+!   pt : REAL(DFP), INTENT(OUT)(:). Quadrature nodes; allocate the point count
+! specified above.
+!   wt : REAL(DFP), OPTIONAL, INTENT(OUT)(:). Quadrature weights paired with
+! pt; includes the family weight.
 !
-! The Gauss-Radau quadrature points consists one of the end points denoted
-! by $a$. So $a$ can be $\pm 1$. The remaining $n$ points are internal to
-! to $(-1, +1)$, and they are n-zeros of Jacobi  polynomial of order n with
-! respect to the following weight.
+! Returns:
+!   Writes pt(:), wt(:).
 !
-!- $(1-x)^{\alpha} (1+x)^{\beta} (x+1)$ if $a=-1$.
-!- $(1-x)^{\alpha} (1+x)^{\beta} (1-x)$ if $a=+1$.
+! Formula:
+! $$\int_{-1}^{1} f(x)w(x)\,dx\simeq\sum_i w_i f(x_i)$$
 !
-! Here n is the order of Jacobi polynomial.
+! Examples
 !
-! If $a=1$ then n+1 quadrature point will be +1
-! If $a=-1$ then 1st quadrature point will be -1
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE JacobiPolynomialUtility, ONLY: JacobiGaussRadauQuadrature
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: x(3), w(3)
+!
+! CALL JacobiGaussRadauQuadrature( &
+!   alpha=0.0_DFP, beta=0.0_DFP, a=-1.0_DFP, n=2_I4B, pt=x, wt=w)
+! CALL OK(ABS(SUM(w)-(2.0_DFP)) < 1.0E-10_DFP, &
+!   "Weights integrate a constant")
+! CALL OK(ABS(SUM(w*x*x)-(2.0_DFP/3.0_DFP)) < 1.0E-10_DFP, &
+!   "Weights integrate the weighted second moment")
+! CALL OK(MINVAL(ABS(x+1.0_DFP)) < 1.0E-11_DFP, &
+!   "Prescribed endpoint is present")
+! END PROGRAM main
+!```
 
 INTERFACE
   MODULE SUBROUTINE JacobiGaussRadauQuadrature(a, n, alpha, beta, pt, wt)
@@ -390,6 +821,52 @@ END INTERFACE
 !                                                 JacobiJacobiLobattoMatrix
 !----------------------------------------------------------------------------
 
+!> author: Vikas Sharma, Ph.D.
+! date: 2026-10-30
+! summary: Build the symmetric tridiagonal Lobatto Jacobi matrix.
+!
+! Allocate D with n+2 entries and E with one fewer. The final recurrence
+! entries are modified to include the prescribed endpoint(s).
+!
+! Arguments:
+!   n : INTEGER(I4B), INTENT(IN). Number of free nodes; output has n+2 points
+! or matrix rows.
+!   alpha : REAL(DFP), INTENT(IN). Jacobi weight exponent at +1.
+!   beta : REAL(DFP), INTENT(IN). Jacobi weight exponent at -1.
+!   D : REAL(DFP), INTENT(OUT)(:). Jacobi matrix diagonal, or nodal derivative
+! matrix in the block splitter.
+!   E : REAL(DFP), INTENT(OUT)(:). Jacobi matrix off diagonal, or even block
+! in the block splitter.
+!   alphaCoeff : REAL(DFP), OPTIONAL, INTENT(OUT)(0:). Monic recurrence
+! diagonal coefficients, indexed from zero.
+!   betaCoeff : REAL(DFP), OPTIONAL, INTENT(OUT)(0:). Monic recurrence beta
+! values; index zero is the weight integral.
+!
+! Returns:
+!   Writes D(:), E(:), alphaCoeff(0:), betaCoeff(0:).
+!
+! Formula:
+! $$J_{i,i}=\alpha_{i-1},\quad J_{i,i+1}=\sqrt{\beta_i}$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE JacobiPolynomialUtility, ONLY: JacobiJacobiLobattoMatrix
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: d(4), e(3)
+!
+! CALL JacobiJacobiLobattoMatrix( &
+!   alpha=0.0_DFP, beta=0.0_DFP, n=2_I4B, D=d, E=e)
+! CALL OK(ALL(e > 0.0_DFP), "Positive off diagonal")
+! CALL OK(MAXVAL(ABS(d)) < 1.0E-11_DFP, &
+!   "Symmetric weight has a zero diagonal")
+! END PROGRAM main
+!```
+
 INTERFACE
   MODULE PURE SUBROUTINE JacobiJacobiLobattoMatrix(n, alpha, beta, D, &
                                                    E, alphaCoeff, betaCoeff)
@@ -412,27 +889,50 @@ END INTERFACE
 !                                              JacobiGaussLobattoQuadrature
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 3 Aug 2022
-! summary: Returns the Gauss-Lobatto quadrature points for Jacobi Polynomial
+!> author: Vikas Sharma, Ph.D.
+! date: 2026-10-30
+! summary: Compute Gauss Lobatto quadrature nodes and weights.
 !
-!# Introduction
+! This low level routine returns n+2 nodes.  Weights include the family
+! weight. Nodes and weights must be paired in the returned order.
 !
-! This routine returns the $n+2$ Quadrature points and weights.
+! Arguments:
+!   n : INTEGER(I4B), INTENT(IN). Number of free nodes; output has n+2 points
+! or matrix rows.
+!   alpha : REAL(DFP), INTENT(IN). Jacobi weight exponent at +1.
+!   beta : REAL(DFP), INTENT(IN). Jacobi weight exponent at -1.
+!   pt : REAL(DFP), INTENT(OUT)(:). Quadrature nodes; allocate the point count
+! specified above.
+!   wt : REAL(DFP), OPTIONAL, INTENT(OUT)(:). Quadrature weights paired with
+! pt; includes the family weight.
 !
-! The Gauss-Lobatto quadrature points consists both $\pm 1$ as
-! quadrature points.
+! Returns:
+!   Writes pt(:), wt(:).
 !
-!- The first quadrature point is $-1$
-!- The second quadrature point is $+1$
+! Formula:
+! $$\int_{-1}^{1} f(x)w(x)\,dx\simeq\sum_i w_i f(x_i)$$
 !
-! The remaining $n$ points are internal to
-! to $(-1, +1)$, and they are n-zeros of Jacobi  polynomial of order n with
-! respect to the following weight.
+! Examples
 !
-!$$(1-x)^{\alpha} (1+x)^{\beta} (x+1)(1-x)$$
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE JacobiPolynomialUtility, ONLY: JacobiGaussLobattoQuadrature
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: x(4), w(4)
 !
-! Here n is the order of Jacobi polynomial.
+! CALL JacobiGaussLobattoQuadrature( &
+!   alpha=0.0_DFP, beta=0.0_DFP, n=2_I4B, pt=x, wt=w)
+! CALL OK(ABS(SUM(w)-(2.0_DFP)) < 1.0E-10_DFP, &
+!   "Weights integrate a constant")
+! CALL OK(ABS(SUM(w*x*x)-(2.0_DFP/3.0_DFP)) < 1.0E-10_DFP, &
+!   "Weights integrate the weighted second moment")
+! CALL OK(ABS(MINVAL(x)+1.0_DFP) < 1.0E-11_DFP .AND. &
+!   ABS(MAXVAL(x)-1.0_DFP) < 1.0E-11_DFP, "Both endpoints")
+! END PROGRAM main
+!```
 
 INTERFACE
   MODULE SUBROUTINE JacobiGaussLobattoQuadrature(n, alpha, beta, pt, wt)
@@ -451,9 +951,40 @@ END INTERFACE
 !                                                              JacobiZeros
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 6 Sept 2022
-! summary:         Returns zeros of Jacobi polynomials
+!> author: Vikas Sharma, Ph.D.
+! date: 2026-10-30
+! summary: Return the n roots of a degree n polynomial.
+!
+! Use n>=1. Root order is family dependent; do not assume increasing order.
+!
+! Arguments:
+!   n : INTEGER(I4B), INTENT(IN). Number of returned nodes; use n>=1 and
+! enough nodes for the rule.
+!   alpha : REAL(DFP), INTENT(IN). Jacobi weight exponent at +1.
+!   beta : REAL(DFP), INTENT(IN). Jacobi weight exponent at -1.
+!
+! Returns:
+!   ans : REAL(DFP)(n).
+!
+! Formula:
+! $$p_n(z_i)=0,\quad 1\le i\le n$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE JacobiPolynomialUtility, ONLY: JacobiZeros
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: z(2)
+!
+! z = JacobiZeros(alpha=0.0_DFP, beta=0.0_DFP, n=2_I4B)
+! CALL OK(MAXVAL(ABS(z*z-1.0_DFP/3.0_DFP)) &
+!   < 1.0E-11_DFP, "Roots satisfy the quadratic")
+! END PROGRAM main
+!```
 
 INTERFACE
   MODULE FUNCTION JacobiZeros(n, alpha, beta) RESULT(ans)
@@ -469,24 +1000,55 @@ END INTERFACE
 !                                                          JacobiQuadrature
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 6 Sept 2022
-! summary: This routine can return Jacobi-Gauss, Jacobi-Radau, Jacobi-Lobatto
+!> author: Vikas Sharma, Ph.D.
+! date: 2026-10-30
+! summary: Compute a selected quadrature nodes and weights.
 !
-!# Introduction
+! n is the total number of requested points. Select Gauss, GaussRadauLeft,
+! GaussRadauRight, or GaussLobatto from GlobalData. Weights include the family
+! weight. Nodes and weights must be paired in the returned order.
 !
-! This routine returns the Quadrature point of Jacobi polynomial
+! Arguments:
+!   n : INTEGER(I4B), INTENT(IN). Number of returned nodes; use n>=1 and
+! enough nodes for the rule.
+!   alpha : REAL(DFP), INTENT(IN). Jacobi weight exponent at +1.
+!   beta : REAL(DFP), INTENT(IN). Jacobi weight exponent at -1.
+!   pt : REAL(DFP), INTENT(OUT)(n). Quadrature nodes; allocate the point count
+! specified above.
+!   wt : REAL(DFP), OPTIONAL, INTENT(OUT)(n). Quadrature weights paired with
+! pt; includes the family weight.
+!   quadType : INTEGER(I4B), INTENT(IN). Quadrature selector from GlobalData;
+! must match the supplied nodes.
 !
-!@note
-! Here n is the number of quadrature points. Please note it is not
-! the order of jacobi polynomial. The order is decided internally
-! depending upon the quadType
-!@endnote
+! Returns:
+!   Writes pt(n), wt(n).
 !
-!@note
-! pt and wt should be allocated outside, and length should be n.
-!@endnote
+! Formula:
+! $$\int_{-1}^{1} f(x)w(x)\,dx\simeq\sum_i w_i f(x_i)$$
 !
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE GlobalData, ONLY: GaussLobatto
+! USE JacobiPolynomialUtility, ONLY: JacobiQuadrature
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: x(4), w(4)
+!
+! CALL JacobiQuadrature( &
+!   alpha=0.0_DFP, beta=0.0_DFP, n=4_I4B, pt=x, wt=w, &
+!   quadType=GaussLobatto)
+! CALL OK(ABS(SUM(w)-(2.0_DFP)) < 1.0E-10_DFP, &
+!   "Weights integrate a constant")
+! CALL OK(ABS(SUM(w*x*x)-(2.0_DFP/3.0_DFP)) < 1.0E-10_DFP, &
+!   "Weights integrate the weighted second moment")
+! CALL OK(ABS(MINVAL(x)+1.0_DFP) < 1.0E-11_DFP .AND. &
+!   ABS(MAXVAL(x)-1.0_DFP) < 1.0E-11_DFP, "Both endpoints")
+! END PROGRAM main
+!```
 
 INTERFACE
   MODULE SUBROUTINE JacobiQuadrature(n, alpha, beta, pt, wt, quadType)
@@ -515,19 +1077,42 @@ END INTERFACE
 !                                                             JacobiEvalAll
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 6 Sept 2022
-! summary: Evaluate Jacobi polynomials from order = 0 to n at single points
+!> author: Vikas Sharma, Ph.D.
+! date: 2026-10-30
+! summary: Evaluate polynomials through degree n.
 !
-!# Introduction
+! Scalar x returns n+1 entries; vector x uses rows for points.
 !
-! Evaluate Jacobi polynomials from order = 0 to n at single points
+! Arguments:
+!   n : INTEGER(I4B), INTENT(IN). Maximum polynomial degree; use n>=0.
+!   alpha : REAL(DFP), INTENT(IN). Jacobi weight exponent at +1.
+!   beta : REAL(DFP), INTENT(IN). Jacobi weight exponent at -1.
+!   x : REAL(DFP), INTENT(IN). Evaluation coordinate(s).
 !
-!- N, the highest order polynomial to compute. Note that polynomials 0
-! through N will be computed.
-!- alpha, beta are parameters
-!- x: the point at which the polynomials are to be evaluated.
-!- ans(1:N+1), the values of the first N+1 Jacobi polynomials at x
+! Returns:
+!   ans : REAL(DFP)(n + 1).
+!
+! Formula:
+! $$Y_{i,j+1}=p_j(x_i),\quad 0\le j\le n$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE JacobiPolynomialUtility, ONLY: JacobiEvalAll
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: x(3), y(3, 3)
+! REAL(DFP), PARAMETER :: tol = 1.0E-11_DFP
+!
+! x = [-0.5_DFP, 0.0_DFP, 0.5_DFP]
+! y = JacobiEvalAll(alpha=0.0_DFP, beta=0.0_DFP, n=2_I4B, x=x)
+! CALL OK(MAXVAL(ABS(y(:, 3)-(0.5_DFP*(3.0_DFP*x*x-1.0_DFP)))) < tol, &
+!   "Third column contains degree two")
+! END PROGRAM main
+!```
 
 INTERFACE JacobiEvalAll
   MODULE PURE FUNCTION JacobiEvalAll1(n, alpha, beta, x) RESULT(ans)
@@ -544,6 +1129,50 @@ END INTERFACE JacobiEvalAll
 !----------------------------------------------------------------------------
 !                                                       JacobiEvalAll
 !----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph.D.
+! date: 2026-10-30
+! summary: Evaluate polynomials through degree n.
+!
+! Scalar x returns n+1 entries; vector x uses rows for points. Supply enough
+! storage for the active output; trailing entries are not part of the result.
+!
+! Arguments:
+!   n : INTEGER(I4B), INTENT(IN). Maximum polynomial degree; use n>=0.
+!   alpha : REAL(DFP), INTENT(IN). Jacobi weight exponent at +1.
+!   beta : REAL(DFP), INTENT(IN). Jacobi weight exponent at -1.
+!   x : REAL(DFP), INTENT(IN). Evaluation coordinate(s).
+!   ans : REAL(DFP), INTENT(INOUT)(:). Result storage; allocate enough space
+! for all active dimensions.
+!   tsize : INTEGER(I4B), INTENT(OUT). Number of active vector output entries.
+!
+! Returns:
+!   Writes ans(:), tsize.
+!
+! Formula:
+! $$Y_{i,j+1}=p_j(x_i),\quad 0\le j\le n$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE JacobiPolynomialUtility, ONLY: JacobiEvalAll_
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: x(3), y(3, 3)
+! REAL(DFP), PARAMETER :: tol = 1.0E-11_DFP
+! INTEGER(I4B) :: nr, nc
+!
+! x = [-0.5_DFP, 0.0_DFP, 0.5_DFP]
+! CALL JacobiEvalAll_( &
+!   alpha=0.0_DFP, beta=0.0_DFP, n=2_I4B, x=x, ans=y, nrow=nr, ncol=nc)
+! CALL OK(nr == 3 .AND. nc == 3, "Active dimensions")
+! CALL OK(MAXVAL(ABS(y(:, 3)-(0.5_DFP*(3.0_DFP*x*x-1.0_DFP)))) < tol, &
+!   "Third column contains degree two")
+! END PROGRAM main
+!```
 
 INTERFACE JacobiEvalAll_
   MODULE PURE SUBROUTINE JacobiEvalAll1_(n, alpha, beta, x, ans, tsize)
@@ -563,20 +1192,42 @@ END INTERFACE JacobiEvalAll_
 !                                                             JacobiEvalUpto
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 6 Sept 2022
-! summary: Evaluate Jacobi polynomial of order = 0 to n at several points
+!> author: Vikas Sharma, Ph.D.
+! date: 2026-10-30
+! summary: Evaluate polynomials through degree n.
 !
-!# Introduction
+! Scalar x returns n+1 entries; vector x uses rows for points.
 !
-! Evaluate Jacobi polynomials from order = 0 to n at several points
+! Arguments:
+!   n : INTEGER(I4B), INTENT(IN). Maximum polynomial degree; use n>=0.
+!   alpha : REAL(DFP), INTENT(IN). Jacobi weight exponent at +1.
+!   beta : REAL(DFP), INTENT(IN). Jacobi weight exponent at -1.
+!   x : REAL(DFP), INTENT(IN)(:). Evaluation coordinate(s).
 !
-!- N, the highest order polynomial to compute. Note that polynomials 0
-! through N will be computed.
-!- alpha, beta are parameters
-!- x: the point at which the polynomials are to be evaluated.
-!- ans(M,1:N+1), the values of the first N+1 Jacobi polynomials at the point
-! X.
+! Returns:
+!   ans : REAL(DFP)(SIZE(x), n + 1).
+!
+! Formula:
+! $$Y_{i,j+1}=p_j(x_i),\quad 0\le j\le n$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE JacobiPolynomialUtility, ONLY: JacobiEvalAll
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: x(3), y(3, 3)
+! REAL(DFP), PARAMETER :: tol = 1.0E-11_DFP
+!
+! x = [-0.5_DFP, 0.0_DFP, 0.5_DFP]
+! y = JacobiEvalAll(alpha=0.0_DFP, beta=0.0_DFP, n=2_I4B, x=x)
+! CALL OK(MAXVAL(ABS(y(:, 3)-(0.5_DFP*(3.0_DFP*x*x-1.0_DFP)))) < tol, &
+!   "Third column contains degree two")
+! END PROGRAM main
+!```
 
 INTERFACE JacobiEvalAll
   MODULE PURE FUNCTION JacobiEvalAll2(n, alpha, beta, x) RESULT(ans)
@@ -593,6 +1244,51 @@ END INTERFACE JacobiEvalAll
 !----------------------------------------------------------------------------
 !                                                              JacobiEvalAll
 !----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph.D.
+! date: 2026-10-30
+! summary: Evaluate polynomials through degree n.
+!
+! Scalar x returns n+1 entries; vector x uses rows for points. Supply enough
+! storage for the active output; trailing entries are not part of the result.
+!
+! Arguments:
+!   n : INTEGER(I4B), INTENT(IN). Maximum polynomial degree; use n>=0.
+!   alpha : REAL(DFP), INTENT(IN). Jacobi weight exponent at +1.
+!   beta : REAL(DFP), INTENT(IN). Jacobi weight exponent at -1.
+!   x : REAL(DFP), INTENT(IN)(:). Evaluation coordinate(s).
+!   ans : REAL(DFP), INTENT(INOUT)(:, :). Result storage; allocate enough
+! space for all active dimensions.
+!   nrow : INTEGER(I4B), INTENT(OUT). Number of active output rows.
+!   ncol : INTEGER(I4B), INTENT(OUT). Number of active output columns.
+!
+! Returns:
+!   Writes ans(:, :), nrow, ncol.
+!
+! Formula:
+! $$Y_{i,j+1}=p_j(x_i),\quad 0\le j\le n$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE JacobiPolynomialUtility, ONLY: JacobiEvalAll_
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: x(3), y(3, 3)
+! REAL(DFP), PARAMETER :: tol = 1.0E-11_DFP
+! INTEGER(I4B) :: nr, nc
+!
+! x = [-0.5_DFP, 0.0_DFP, 0.5_DFP]
+! CALL JacobiEvalAll_( &
+!   alpha=0.0_DFP, beta=0.0_DFP, n=2_I4B, x=x, ans=y, nrow=nr, ncol=nc)
+! CALL OK(nr == 3 .AND. nc == 3, "Active dimensions")
+! CALL OK(MAXVAL(ABS(y(:, 3)-(0.5_DFP*(3.0_DFP*x*x-1.0_DFP)))) < tol, &
+!   "Third column contains degree two")
+! END PROGRAM main
+!```
 
 INTERFACE JacobiEvalAll_
   MODULE PURE SUBROUTINE JacobiEvalAll2_(n, alpha, beta, x, ans, nrow, ncol)
@@ -612,17 +1308,42 @@ END INTERFACE JacobiEvalAll_
 !                                                             JacobiEval
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 6 Sept 2022
-! summary: Evaluate Jacobi polynomials of order n at single points.
+!> author: Vikas Sharma, Ph.D.
+! date: 2026-10-30
+! summary: Evaluate one polynomial.
 !
-!# Introduction
+! Arguments:
+!   n : INTEGER(I4B), INTENT(IN). Maximum polynomial degree; use n>=0.
+!   alpha : REAL(DFP), INTENT(IN). Jacobi weight exponent at +1.
+!   beta : REAL(DFP), INTENT(IN). Jacobi weight exponent at -1.
+!   x : REAL(DFP), INTENT(IN). Evaluation coordinate(s).
 !
-! Evaluate Jacobi polynomials of order n at single points.
+! Returns:
+!   ans : REAL(DFP).
 !
-!- N, the order of polynomial to compute.
-!- alpha, beta are parameters
-!- x: the point at which the polynomials are to be evaluated.
+! Formula:
+! $$y_i=p_n(x_i)$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE JacobiPolynomialUtility, ONLY: JacobiEval
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: x(3), y(3)
+! REAL(DFP), PARAMETER :: tol = 1.0E-11_DFP
+!
+! x = [-0.5_DFP, 0.0_DFP, 0.5_DFP]
+! y = JacobiEval(alpha=0.0_DFP, beta=0.0_DFP, n=2_I4B, x=x)
+! CALL OK(MAXVAL(ABS(y-(0.5_DFP*(3.0_DFP*x*x-1.0_DFP)))) < tol, &
+!   "Degree two agrees with its analytic formula")
+! CALL OK(ABS(JacobiEval(alpha=0.0_DFP, beta=0.0_DFP, n=2_I4B, x=0.0_DFP) &
+!   -y(2)) < tol, "Scalar and vector calls agree")
+! END PROGRAM main
+!```
 
 INTERFACE JacobiEval
   MODULE PURE FUNCTION JacobiEval1(n, alpha, beta, x) RESULT(ans)
@@ -639,17 +1360,42 @@ END INTERFACE JacobiEval
 !                                                             JacobiEvalUpto
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 6 Sept 2022
-! summary: Evaluate Jacobi polynomials of order n at several points
+!> author: Vikas Sharma, Ph.D.
+! date: 2026-10-30
+! summary: Evaluate one polynomial.
 !
-!# Introduction
+! Arguments:
+!   n : INTEGER(I4B), INTENT(IN). Maximum polynomial degree; use n>=0.
+!   alpha : REAL(DFP), INTENT(IN). Jacobi weight exponent at +1.
+!   beta : REAL(DFP), INTENT(IN). Jacobi weight exponent at -1.
+!   x : REAL(DFP), INTENT(IN)(:). Evaluation coordinate(s).
 !
-! Evaluate Jacobi polynomials of order n at several points
+! Returns:
+!   ans : REAL(DFP)(SIZE(x)).
 !
-!- N, the order of polynomial to compute.
-!- alpha, beta are parameters
-!- x: the point at which the polynomials are to be evaluated.
+! Formula:
+! $$y_i=p_n(x_i)$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE JacobiPolynomialUtility, ONLY: JacobiEval
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: x(3), y(3)
+! REAL(DFP), PARAMETER :: tol = 1.0E-11_DFP
+!
+! x = [-0.5_DFP, 0.0_DFP, 0.5_DFP]
+! y = JacobiEval(alpha=0.0_DFP, beta=0.0_DFP, n=2_I4B, x=x)
+! CALL OK(MAXVAL(ABS(y-(0.5_DFP*(3.0_DFP*x*x-1.0_DFP)))) < tol, &
+!   "Degree two agrees with its analytic formula")
+! CALL OK(ABS(JacobiEval(alpha=0.0_DFP, beta=0.0_DFP, n=2_I4B, x=0.0_DFP) &
+!   -y(2)) < tol, "Scalar and vector calls agree")
+! END PROGRAM main
+!```
 
 INTERFACE JacobiEval
   MODULE PURE FUNCTION JacobiEval2(n, alpha, beta, x) RESULT(ans)
@@ -666,9 +1412,45 @@ END INTERFACE JacobiEval
 !                                                             JacobiEvalSum
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 6 Sept 2022
-! summary: Evaluate finite sum of Jacobi polynomials at point x
+!> author: Vikas Sharma, Ph.D.
+! date: 2026-10-30
+! summary: Evaluate a polynomial expansion.
+!
+! Coefficients are modal values indexed from zero.
+!
+! Arguments:
+!   n : INTEGER(I4B), INTENT(IN). Maximum polynomial degree; use n>=0.
+!   alpha : REAL(DFP), INTENT(IN). Jacobi weight exponent at +1.
+!   beta : REAL(DFP), INTENT(IN). Jacobi weight exponent at -1.
+!   x : REAL(DFP), INTENT(IN). Evaluation coordinate(s).
+!   coeff : REAL(DFP), INTENT(IN)(0:n). Modal expansion coefficients, indexed
+! from zero.
+!
+! Returns:
+!   ans : REAL(DFP).
+!
+! Formula:
+! $$y(x)=\sum_{j=0}^{n}c_j p_j(x)$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE JacobiPolynomialUtility, ONLY: JacobiEvalSum
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: x(3), y(3), c(0:2)
+!
+! x = [-0.5_DFP, 0.0_DFP, 0.5_DFP]
+! c = [0.0_DFP, 0.0_DFP, 1.0_DFP]
+! y = JacobiEvalSum( &
+!   alpha=0.0_DFP, beta=0.0_DFP, n=2_I4B, x=x, coeff=c)
+! CALL OK(MAXVAL(ABS(y-(0.5_DFP*(3.0_DFP*x*x-1.0_DFP)))) < 1.0E-11_DFP, &
+!   "A single modal coefficient recovers degree two")
+! END PROGRAM main
+!```
 
 INTERFACE JacobiEvalSum
   MODULE PURE FUNCTION JacobiEvalSum1(n, alpha, beta, x, coeff) RESULT(ans)
@@ -691,9 +1473,45 @@ END INTERFACE JacobiEvalSum
 !                                                             JacobiEvalSum
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 6 Sept 2022
-! summary: Evaluate finite sum of Jacobi polynomials at several x
+!> author: Vikas Sharma, Ph.D.
+! date: 2026-10-30
+! summary: Evaluate a polynomial expansion.
+!
+! Coefficients are modal values indexed from zero.
+!
+! Arguments:
+!   n : INTEGER(I4B), INTENT(IN). Maximum polynomial degree; use n>=0.
+!   alpha : REAL(DFP), INTENT(IN). Jacobi weight exponent at +1.
+!   beta : REAL(DFP), INTENT(IN). Jacobi weight exponent at -1.
+!   x : REAL(DFP), INTENT(IN)(:). Evaluation coordinate(s).
+!   coeff : REAL(DFP), INTENT(IN)(0:n). Modal expansion coefficients, indexed
+! from zero.
+!
+! Returns:
+!   ans : REAL(DFP)(SIZE(x)).
+!
+! Formula:
+! $$y(x)=\sum_{j=0}^{n}c_j p_j(x)$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE JacobiPolynomialUtility, ONLY: JacobiEvalSum
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: x(3), y(3), c(0:2)
+!
+! x = [-0.5_DFP, 0.0_DFP, 0.5_DFP]
+! c = [0.0_DFP, 0.0_DFP, 1.0_DFP]
+! y = JacobiEvalSum( &
+!   alpha=0.0_DFP, beta=0.0_DFP, n=2_I4B, x=x, coeff=c)
+! CALL OK(MAXVAL(ABS(y-(0.5_DFP*(3.0_DFP*x*x-1.0_DFP)))) < 1.0E-11_DFP, &
+!   "A single modal coefficient recovers degree two")
+! END PROGRAM main
+!```
 
 INTERFACE JacobiEvalSum
   MODULE PURE FUNCTION JacobiEvalSum2(n, alpha, beta, x, coeff) RESULT(ans)
@@ -716,9 +1534,43 @@ END INTERFACE JacobiEvalSum
 !                                                         JacobiGradientEval
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 14 Oct 2022
-! summary: Evaluate Gradient of Jacobi polynomial
+!> author: Vikas Sharma, Ph.D.
+! date: 2026-10-30
+! summary: Evaluate the first derivative.
+!
+! Arguments:
+!   n : INTEGER(I4B), INTENT(IN). Maximum polynomial degree; use n>=0.
+!   alpha : REAL(DFP), INTENT(IN). Jacobi weight exponent at +1.
+!   beta : REAL(DFP), INTENT(IN). Jacobi weight exponent at -1.
+!   x : REAL(DFP), INTENT(IN). Evaluation coordinate(s).
+!
+! Returns:
+!   ans : REAL(DFP).
+!
+! Formula:
+! $$y_i=p_n'(x_i)$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE JacobiPolynomialUtility, ONLY: JacobiGradientEval
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: x(3), y(3)
+! REAL(DFP), PARAMETER :: tol = 1.0E-11_DFP
+!
+! x = [-0.5_DFP, 0.0_DFP, 0.5_DFP]
+! y = JacobiGradientEval(alpha=0.0_DFP, beta=0.0_DFP, n=2_I4B, x=x)
+! CALL OK(MAXVAL(ABS(y-(3.0_DFP*x))) < tol, &
+!   "Degree two agrees with its analytic formula")
+! CALL OK(ABS(JacobiGradientEval( &
+!   alpha=0.0_DFP, beta=0.0_DFP, n=2_I4B, x=0.0_DFP) &
+!   -y(2)) < tol, "Scalar and vector calls agree")
+! END PROGRAM main
+!```
 
 INTERFACE JacobiGradientEval
   MODULE PURE FUNCTION JacobiGradientEval1(n, alpha, beta, x) RESULT(ans)
@@ -739,9 +1591,43 @@ END INTERFACE JacobiGradientEval
 !                                                        JacobiGradientEval
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 14 Oct 2022
-! summary: Evaluate Gradient of Jacobi polynomial
+!> author: Vikas Sharma, Ph.D.
+! date: 2026-10-30
+! summary: Evaluate the first derivative.
+!
+! Arguments:
+!   n : INTEGER(I4B), INTENT(IN). Maximum polynomial degree; use n>=0.
+!   alpha : REAL(DFP), INTENT(IN). Jacobi weight exponent at +1.
+!   beta : REAL(DFP), INTENT(IN). Jacobi weight exponent at -1.
+!   x : REAL(DFP), INTENT(IN)(:). Evaluation coordinate(s).
+!
+! Returns:
+!   ans : REAL(DFP)(SIZE(x)).
+!
+! Formula:
+! $$y_i=p_n'(x_i)$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE JacobiPolynomialUtility, ONLY: JacobiGradientEval
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: x(3), y(3)
+! REAL(DFP), PARAMETER :: tol = 1.0E-11_DFP
+!
+! x = [-0.5_DFP, 0.0_DFP, 0.5_DFP]
+! y = JacobiGradientEval(alpha=0.0_DFP, beta=0.0_DFP, n=2_I4B, x=x)
+! CALL OK(MAXVAL(ABS(y-(3.0_DFP*x))) < tol, &
+!   "Degree two agrees with its analytic formula")
+! CALL OK(ABS(JacobiGradientEval( &
+!   alpha=0.0_DFP, beta=0.0_DFP, n=2_I4B, x=0.0_DFP) &
+!   -y(2)) < tol, "Scalar and vector calls agree")
+! END PROGRAM main
+!```
 
 INTERFACE JacobiGradientEval
   MODULE PURE FUNCTION JacobiGradientEval2(n, alpha, beta, x) RESULT(ans)
@@ -758,9 +1644,43 @@ END INTERFACE JacobiGradientEval
 !                                                      JacobiGradientEvalAll
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 14 Oct 2022
-! summary: Evaluate Gradient of Jacobi polynomial
+!> author: Vikas Sharma, Ph.D.
+! date: 2026-10-30
+! summary: Evaluate first derivatives through degree n.
+!
+! Scalar x returns n+1 entries; vector x uses rows for points.
+!
+! Arguments:
+!   n : INTEGER(I4B), INTENT(IN). Maximum polynomial degree; use n>=0.
+!   alpha : REAL(DFP), INTENT(IN). Jacobi weight exponent at +1.
+!   beta : REAL(DFP), INTENT(IN). Jacobi weight exponent at -1.
+!   x : REAL(DFP), INTENT(IN). Evaluation coordinate(s).
+!
+! Returns:
+!   ans : REAL(DFP)(n + 1).
+!
+! Formula:
+! $$Y_{i,j+1}=p_j'(x_i),\quad 0\le j\le n$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE JacobiPolynomialUtility, ONLY: JacobiGradientEvalAll
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: x(3), y(3, 3)
+! REAL(DFP), PARAMETER :: tol = 1.0E-11_DFP
+!
+! x = [-0.5_DFP, 0.0_DFP, 0.5_DFP]
+! y = JacobiGradientEvalAll( &
+!   alpha=0.0_DFP, beta=0.0_DFP, n=2_I4B, x=x)
+! CALL OK(MAXVAL(ABS(y(:, 3)-(3.0_DFP*x))) < tol, &
+!   "Third column contains degree two")
+! END PROGRAM main
+!```
 
 INTERFACE JacobiGradientEvalAll
   MODULE PURE FUNCTION JacobiGradientEvalAll1(n, alpha, beta, x) RESULT(ans)
@@ -780,6 +1700,50 @@ END INTERFACE JacobiGradientEvalAll
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph.D.
+! date: 2026-10-30
+! summary: Evaluate first derivatives through degree n.
+!
+! Scalar x returns n+1 entries; vector x uses rows for points. Supply enough
+! storage for the active output; trailing entries are not part of the result.
+!
+! Arguments:
+!   n : INTEGER(I4B), INTENT(IN). Maximum polynomial degree; use n>=0.
+!   alpha : REAL(DFP), INTENT(IN). Jacobi weight exponent at +1.
+!   beta : REAL(DFP), INTENT(IN). Jacobi weight exponent at -1.
+!   x : REAL(DFP), INTENT(IN). Evaluation coordinate(s).
+!   ans : REAL(DFP), INTENT(INOUT)(:). Result storage; allocate enough space
+! for all active dimensions.
+!   tsize : INTEGER(I4B), INTENT(OUT). Number of active vector output entries.
+!
+! Returns:
+!   Writes ans(:), tsize.
+!
+! Formula:
+! $$Y_{i,j+1}=p_j'(x_i),\quad 0\le j\le n$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE JacobiPolynomialUtility, ONLY: JacobiGradientEvalAll_
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: x(3), y(3, 3)
+! REAL(DFP), PARAMETER :: tol = 1.0E-11_DFP
+! INTEGER(I4B) :: nr, nc
+!
+! x = [-0.5_DFP, 0.0_DFP, 0.5_DFP]
+! CALL JacobiGradientEvalAll_( &
+!   alpha=0.0_DFP, beta=0.0_DFP, n=2_I4B, x=x, ans=y, nrow=nr, ncol=nc)
+! CALL OK(nr == 3 .AND. nc == 3, "Active dimensions")
+! CALL OK(MAXVAL(ABS(y(:, 3)-(3.0_DFP*x))) < tol, &
+!   "Third column contains degree two")
+! END PROGRAM main
+!```
 
 INTERFACE JacobiGradientEvalAll_
   MODULE PURE SUBROUTINE JacobiGradientEvalAll1_(n, alpha, beta, x, &
@@ -803,9 +1767,43 @@ END INTERFACE JacobiGradientEvalAll_
 !                                                     JacobiGradientEvalAll
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 14 Oct 2022
-! summary: Evaluate Gradient of Jacobi polynomial
+!> author: Vikas Sharma, Ph.D.
+! date: 2026-10-30
+! summary: Evaluate first derivatives through degree n.
+!
+! Scalar x returns n+1 entries; vector x uses rows for points.
+!
+! Arguments:
+!   n : INTEGER(I4B), INTENT(IN). Maximum polynomial degree; use n>=0.
+!   alpha : REAL(DFP), INTENT(IN). Jacobi weight exponent at +1.
+!   beta : REAL(DFP), INTENT(IN). Jacobi weight exponent at -1.
+!   x : REAL(DFP), INTENT(IN)(:). Evaluation coordinate(s).
+!
+! Returns:
+!   ans : REAL(DFP)(SIZE(x), n + 1).
+!
+! Formula:
+! $$Y_{i,j+1}=p_j'(x_i),\quad 0\le j\le n$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE JacobiPolynomialUtility, ONLY: JacobiGradientEvalAll
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: x(3), y(3, 3)
+! REAL(DFP), PARAMETER :: tol = 1.0E-11_DFP
+!
+! x = [-0.5_DFP, 0.0_DFP, 0.5_DFP]
+! y = JacobiGradientEvalAll( &
+!   alpha=0.0_DFP, beta=0.0_DFP, n=2_I4B, x=x)
+! CALL OK(MAXVAL(ABS(y(:, 3)-(3.0_DFP*x))) < tol, &
+!   "Third column contains degree two")
+! END PROGRAM main
+!```
 
 INTERFACE JacobiGradientEvalAll
   MODULE PURE FUNCTION JacobiGradientEvalAll2(n, alpha, beta, x) RESULT(ans)
@@ -821,6 +1819,51 @@ END INTERFACE JacobiGradientEvalAll
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph.D.
+! date: 2026-10-30
+! summary: Evaluate first derivatives through degree n.
+!
+! Scalar x returns n+1 entries; vector x uses rows for points. Supply enough
+! storage for the active output; trailing entries are not part of the result.
+!
+! Arguments:
+!   n : INTEGER(I4B), INTENT(IN). Maximum polynomial degree; use n>=0.
+!   alpha : REAL(DFP), INTENT(IN). Jacobi weight exponent at +1.
+!   beta : REAL(DFP), INTENT(IN). Jacobi weight exponent at -1.
+!   x : REAL(DFP), INTENT(IN)(:). Evaluation coordinate(s).
+!   ans : REAL(DFP), INTENT(INOUT)(:, :). Result storage; allocate enough
+! space for all active dimensions.
+!   nrow : INTEGER(I4B), INTENT(OUT). Number of active output rows.
+!   ncol : INTEGER(I4B), INTENT(OUT). Number of active output columns.
+!
+! Returns:
+!   Writes ans(:, :), nrow, ncol.
+!
+! Formula:
+! $$Y_{i,j+1}=p_j'(x_i),\quad 0\le j\le n$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE JacobiPolynomialUtility, ONLY: JacobiGradientEvalAll_
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: x(3), y(3, 3)
+! REAL(DFP), PARAMETER :: tol = 1.0E-11_DFP
+! INTEGER(I4B) :: nr, nc
+!
+! x = [-0.5_DFP, 0.0_DFP, 0.5_DFP]
+! CALL JacobiGradientEvalAll_( &
+!   alpha=0.0_DFP, beta=0.0_DFP, n=2_I4B, x=x, ans=y, nrow=nr, ncol=nc)
+! CALL OK(nr == 3 .AND. nc == 3, "Active dimensions")
+! CALL OK(MAXVAL(ABS(y(:, 3)-(3.0_DFP*x))) < tol, &
+!   "Third column contains degree two")
+! END PROGRAM main
+!```
 
 INTERFACE JacobiGradientEvalAll_
   MODULE PURE SUBROUTINE JacobiGradientEvalAll2_(n, alpha, beta, x, &
@@ -840,10 +1883,46 @@ END INTERFACE JacobiGradientEvalAll_
 !                                                      JacobiGradientEvalSum
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 6 Sept 2022
-! summary: Evaluate the gradient of finite sum of Jacobi polynomials at
-! point x
+!> author: Vikas Sharma, Ph.D.
+! date: 2026-10-30
+! summary: Evaluate the derivative of a polynomial expansion.
+!
+! Coefficients are modal values indexed from zero. Overloads with k request
+! the kth derivative.
+!
+! Arguments:
+!   n : INTEGER(I4B), INTENT(IN). Maximum polynomial degree; use n>=0.
+!   alpha : REAL(DFP), INTENT(IN). Jacobi weight exponent at +1.
+!   beta : REAL(DFP), INTENT(IN). Jacobi weight exponent at -1.
+!   x : REAL(DFP), INTENT(IN). Evaluation coordinate(s).
+!   coeff : REAL(DFP), INTENT(IN)(0:n). Modal expansion coefficients, indexed
+! from zero.
+!
+! Returns:
+!   ans : REAL(DFP).
+!
+! Formula:
+! $$y(x)=\sum_{j=0}^{n}c_j p_j'(x)$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE JacobiPolynomialUtility, ONLY: JacobiGradientEvalSum
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: x(3), y(3), c(0:2)
+!
+! x = [-0.5_DFP, 0.0_DFP, 0.5_DFP]
+! c = [0.0_DFP, 0.0_DFP, 1.0_DFP]
+! y = JacobiGradientEvalSum( &
+!   alpha=0.0_DFP, beta=0.0_DFP, n=2_I4B, x=x, coeff=c)
+! CALL OK(MAXVAL(ABS(y-(3.0_DFP*x))) < 1.0E-11_DFP, &
+!   "A single modal coefficient recovers degree two")
+! END PROGRAM main
+!```
 
 INTERFACE JacobiGradientEvalSum
   MODULE PURE FUNCTION JacobiGradientEvalSum1(n, alpha, beta, x, coeff) &
@@ -867,10 +1946,46 @@ END INTERFACE JacobiGradientEvalSum
 !                                                     JacobiGradientEvalSum
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 6 Sept 2022
-! summary: Evaluate the gradient of finite sum of Jacobi polynomials at
-! several x
+!> author: Vikas Sharma, Ph.D.
+! date: 2026-10-30
+! summary: Evaluate the derivative of a polynomial expansion.
+!
+! Coefficients are modal values indexed from zero. Overloads with k request
+! the kth derivative.
+!
+! Arguments:
+!   n : INTEGER(I4B), INTENT(IN). Maximum polynomial degree; use n>=0.
+!   alpha : REAL(DFP), INTENT(IN). Jacobi weight exponent at +1.
+!   beta : REAL(DFP), INTENT(IN). Jacobi weight exponent at -1.
+!   x : REAL(DFP), INTENT(IN)(:). Evaluation coordinate(s).
+!   coeff : REAL(DFP), INTENT(IN)(0:n). Modal expansion coefficients, indexed
+! from zero.
+!
+! Returns:
+!   ans : REAL(DFP)(SIZE(x)).
+!
+! Formula:
+! $$y(x)=\sum_{j=0}^{n}c_j p_j'(x)$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE JacobiPolynomialUtility, ONLY: JacobiGradientEvalSum
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: x(3), y(3), c(0:2)
+!
+! x = [-0.5_DFP, 0.0_DFP, 0.5_DFP]
+! c = [0.0_DFP, 0.0_DFP, 1.0_DFP]
+! y = JacobiGradientEvalSum( &
+!   alpha=0.0_DFP, beta=0.0_DFP, n=2_I4B, x=x, coeff=c)
+! CALL OK(MAXVAL(ABS(y-(3.0_DFP*x))) < 1.0E-11_DFP, &
+!   "A single modal coefficient recovers degree two")
+! END PROGRAM main
+!```
 
 INTERFACE JacobiGradientEvalSum
   MODULE PURE FUNCTION JacobiGradientEvalSum2(n, alpha, beta, x, coeff) &
@@ -894,10 +2009,47 @@ END INTERFACE JacobiGradientEvalSum
 !                                                      JacobiGradientEvalSum
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 6 Sept 2022
-! summary: Evaluate the kth derivative of finite sum of Jacobi polynomials at
-! point x
+!> author: Vikas Sharma, Ph.D.
+! date: 2026-10-30
+! summary: Evaluate the derivative of a polynomial expansion.
+!
+! Coefficients are modal values indexed from zero. Overloads with k request
+! the kth derivative.
+!
+! Arguments:
+!   n : INTEGER(I4B), INTENT(IN). Maximum polynomial degree; use n>=0.
+!   alpha : REAL(DFP), INTENT(IN). Jacobi weight exponent at +1.
+!   beta : REAL(DFP), INTENT(IN). Jacobi weight exponent at -1.
+!   x : REAL(DFP), INTENT(IN). Evaluation coordinate(s).
+!   coeff : REAL(DFP), INTENT(IN)(0:n). Modal expansion coefficients, indexed
+! from zero.
+!   k : INTEGER(I4B), INTENT(IN). Derivative order.
+!
+! Returns:
+!   ans : REAL(DFP).
+!
+! Formula:
+! $$y(x)=\sum_{j=0}^{n}c_j p_j'(x)$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE JacobiPolynomialUtility, ONLY: JacobiGradientEvalSum
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: x(3), y(3), c(0:2)
+!
+! x = [-0.5_DFP, 0.0_DFP, 0.5_DFP]
+! c = [0.0_DFP, 0.0_DFP, 1.0_DFP]
+! y = JacobiGradientEvalSum( &
+!   alpha=0.0_DFP, beta=0.0_DFP, n=2_I4B, x=x, coeff=c)
+! CALL OK(MAXVAL(ABS(y-(3.0_DFP*x))) < 1.0E-11_DFP, &
+!   "A single modal coefficient recovers degree two")
+! END PROGRAM main
+!```
 
 INTERFACE JacobiGradientEvalSum
   MODULE PURE FUNCTION JacobiGradientEvalSum3(n, alpha, beta, x, coeff, k) &
@@ -923,10 +2075,47 @@ END INTERFACE JacobiGradientEvalSum
 !                                                     JacobiGradientEvalSum
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 6 Sept 2022
-! summary: Evaluate the kth gradient of finite sum of Jacobi polynomials at
-! several x
+!> author: Vikas Sharma, Ph.D.
+! date: 2026-10-30
+! summary: Evaluate the derivative of a polynomial expansion.
+!
+! Coefficients are modal values indexed from zero. Overloads with k request
+! the kth derivative.
+!
+! Arguments:
+!   n : INTEGER(I4B), INTENT(IN). Maximum polynomial degree; use n>=0.
+!   alpha : REAL(DFP), INTENT(IN). Jacobi weight exponent at +1.
+!   beta : REAL(DFP), INTENT(IN). Jacobi weight exponent at -1.
+!   x : REAL(DFP), INTENT(IN)(:). Evaluation coordinate(s).
+!   coeff : REAL(DFP), INTENT(IN)(0:n). Modal expansion coefficients, indexed
+! from zero.
+!   k : INTEGER(I4B), INTENT(IN). Derivative order.
+!
+! Returns:
+!   ans : REAL(DFP)(SIZE(x)).
+!
+! Formula:
+! $$y(x)=\sum_{j=0}^{n}c_j p_j'(x)$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE JacobiPolynomialUtility, ONLY: JacobiGradientEvalSum
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: x(3), y(3), c(0:2)
+!
+! x = [-0.5_DFP, 0.0_DFP, 0.5_DFP]
+! c = [0.0_DFP, 0.0_DFP, 1.0_DFP]
+! y = JacobiGradientEvalSum( &
+!   alpha=0.0_DFP, beta=0.0_DFP, n=2_I4B, x=x, coeff=c)
+! CALL OK(MAXVAL(ABS(y-(3.0_DFP*x))) < 1.0E-11_DFP, &
+!   "A single modal coefficient recovers degree two")
+! END PROGRAM main
+!```
 
 INTERFACE JacobiGradientEvalSum
   MODULE PURE FUNCTION JacobiGradientEvalSum4(n, alpha, beta, x, coeff, k) &
@@ -952,9 +2141,58 @@ END INTERFACE JacobiGradientEvalSum
 !                                                           JacobiTransform
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 13 Oct 2022
-! summary:         Discrete Jacobi Transform
+!> author: Vikas Sharma, Ph.D.
+! date: 2026-10-30
+! summary: Project sampled values onto the polynomial basis.
+!
+! coeff contains sampled function values on input, not modal coefficients.
+! Output entries are modal coefficients. Callback overloads map reference
+! nodes to [x1,x2]. Precomputed PP uses rows for points and columns for
+! degrees.
+!
+! Arguments:
+!   n : INTEGER(I4B), INTENT(IN). Maximum polynomial degree; use n>=0.
+!   alpha : REAL(DFP), INTENT(IN). Jacobi weight exponent at +1.
+!   beta : REAL(DFP), INTENT(IN). Jacobi weight exponent at -1.
+!   coeff : REAL(DFP), INTENT(IN)(0:n). Sampled function values at quadrature
+! nodes.
+!   x : REAL(DFP), INTENT(IN)(0:n). Evaluation coordinate(s).
+!   w : REAL(DFP), INTENT(IN)(0:n). Quadrature weights paired with x or PP
+! rows.
+!   quadType : INTEGER(I4B), INTENT(IN). Quadrature selector from GlobalData;
+! must match the supplied nodes.
+!
+! Returns:
+!   ans : REAL(DFP)(0:n).
+!
+! Formula:
+! $$M c=b,\quad M_{ij}=\int p_i p_j w\,dx,\quad b_j=\sum_k w_k f_k p_j(x_k)$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE GlobalData, ONLY: Gauss
+! USE JacobiPolynomialUtility, ONLY: JacobiTransform
+! USE JacobiPolynomialUtility, ONLY: JacobiGaussQuadrature
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: x(3), w(3), f(3), c(0:2)
+!
+! CALL JacobiGaussQuadrature(alpha=0.0_DFP, beta=0.0_DFP, n=3_I4B, pt=x, wt=w)
+! f = 0.5_DFP*(3.0_DFP*x*x-1.0_DFP)
+! c = JacobiTransform( &
+!   alpha=0.0_DFP, beta=0.0_DFP, n=2_I4B, &
+!   coeff=f, &
+!   x=x, w=w, &
+!   quadType=Gauss)
+! CALL OK(MAXVAL(ABS(c- &
+!   [0.0_DFP, 0.0_DFP, 1.0_DFP])) < 1.0E-10_DFP, &
+!   "Recover the single degree two modal coefficient")
+! END PROGRAM main
+!```
 
 INTERFACE JacobiTransform
   MODULE PURE FUNCTION JacobiTransform1(n, alpha, beta, coeff, x, w, &
@@ -982,6 +2220,63 @@ END INTERFACE JacobiTransform
 !----------------------------------------------------------------------------
 !                                                         JacobiTransform_
 !----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph.D.
+! date: 2026-10-30
+! summary: Project sampled values onto the polynomial basis.
+!
+! coeff contains sampled function values on input, not modal coefficients.
+! Output entries are modal coefficients. Callback overloads map reference
+! nodes to [x1,x2]. Precomputed PP uses rows for points and columns for
+! degrees.
+!
+! Arguments:
+!   n : INTEGER(I4B), INTENT(IN). Maximum polynomial degree; use n>=0.
+!   alpha : REAL(DFP), INTENT(IN). Jacobi weight exponent at +1.
+!   beta : REAL(DFP), INTENT(IN). Jacobi weight exponent at -1.
+!   coeff : REAL(DFP), INTENT(IN)(0:). Sampled function values at quadrature
+! nodes.
+!   x : REAL(DFP), INTENT(IN)(0:). Evaluation coordinate(s).
+!   w : REAL(DFP), INTENT(IN)(0:). Quadrature weights paired with x or PP
+! rows.
+!   quadType : INTEGER(I4B), INTENT(IN). Quadrature selector from GlobalData;
+! must match the supplied nodes.
+!   ans : REAL(DFP), INTENT(INOUT)(0:). Result storage; allocate enough space
+! for all active dimensions.
+!   tsize : INTEGER(I4B), INTENT(OUT). Number of active vector output entries.
+!
+! Returns:
+!   Writes ans(0:), tsize.
+!
+! Formula:
+! $$M c=b,\quad M_{ij}=\int p_i p_j w\,dx,\quad b_j=\sum_k w_k f_k p_j(x_k)$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE GlobalData, ONLY: Gauss
+! USE JacobiPolynomialUtility, ONLY: JacobiTransform_
+! USE JacobiPolynomialUtility, ONLY: JacobiGaussQuadrature
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: x(3), w(3), f(3), c(0:2)
+! INTEGER(I4B) :: ns
+!
+! CALL JacobiGaussQuadrature(alpha=0.0_DFP, beta=0.0_DFP, n=3_I4B, pt=x, wt=w)
+! f = 0.5_DFP*(3.0_DFP*x*x-1.0_DFP)
+! CALL JacobiTransform_( &
+!   alpha=0.0_DFP, beta=0.0_DFP, n=2_I4B, &
+!   coeff=f, &
+!   x=x, w=w, &
+!   quadType=Gauss, ans=c, tsize=ns)
+! CALL OK(MAXVAL(ABS(c- &
+!   [0.0_DFP, 0.0_DFP, 1.0_DFP])) < 1.0E-10_DFP, &
+!   "Recover the single degree two modal coefficient")
+! END PROGRAM main
+!```
 
 INTERFACE JacobiTransform_
   MODULE PURE SUBROUTINE JacobiTransform1_(n, alpha, beta, coeff, x, w, &
@@ -1014,6 +2309,64 @@ END INTERFACE JacobiTransform_
 !----------------------------------------------------------------------------
 !                                                           JacobiTransform
 !----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph.D.
+! date: 2026-10-30
+! summary: Project sampled values onto the polynomial basis.
+!
+! coeff contains sampled function values on input, not modal coefficients.
+! Output entries are modal coefficients. Callback overloads map reference
+! nodes to [x1,x2]. Precomputed PP uses rows for points and columns for
+! degrees.
+!
+! Arguments:
+!   n : INTEGER(I4B), INTENT(IN). Maximum polynomial degree; use n>=0.
+!   alpha : REAL(DFP), INTENT(IN). Jacobi weight exponent at +1.
+!   beta : REAL(DFP), INTENT(IN). Jacobi weight exponent at -1.
+!   coeff : REAL(DFP), INTENT(IN)(0:). Sampled function values at quadrature
+! nodes.
+!   PP : REAL(DFP), INTENT(IN)(0:, 0:). Precomputed polynomial values, with
+! point rows and degree columns.
+!   w : REAL(DFP), INTENT(IN)(0:). Quadrature weights paired with x or PP
+! rows.
+!   quadType : INTEGER(I4B), INTENT(IN). Quadrature selector from GlobalData;
+! must match the supplied nodes.
+!   ans : REAL(DFP), INTENT(INOUT)(0:). Result storage; allocate enough space
+! for all active dimensions.
+!   tsize : INTEGER(I4B), INTENT(OUT). Number of active vector output entries.
+!
+! Returns:
+!   Writes ans(0:), tsize.
+!
+! Formula:
+! $$M c=b,\quad M_{ij}=\int p_i p_j w\,dx,\quad b_j=\sum_k w_k f_k p_j(x_k)$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE GlobalData, ONLY: Gauss
+! USE JacobiPolynomialUtility, ONLY: JacobiTransform_
+! USE JacobiPolynomialUtility, ONLY: JacobiGaussQuadrature
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: x(3), w(3), f(3), c(0:2)
+! INTEGER(I4B) :: ns
+!
+! CALL JacobiGaussQuadrature(alpha=0.0_DFP, beta=0.0_DFP, n=3_I4B, pt=x, wt=w)
+! f = 0.5_DFP*(3.0_DFP*x*x-1.0_DFP)
+! CALL JacobiTransform_( &
+!   alpha=0.0_DFP, beta=0.0_DFP, n=2_I4B, &
+!   coeff=f, &
+!   x=x, w=w, &
+!   quadType=Gauss, ans=c, tsize=ns)
+! CALL OK(MAXVAL(ABS(c- &
+!   [0.0_DFP, 0.0_DFP, 1.0_DFP])) < 1.0E-10_DFP, &
+!   "Recover the single degree two modal coefficient")
+! END PROGRAM main
+!```
 
 INTERFACE JacobiTransform_
   MODULE PURE SUBROUTINE JacobiTransform4_(n, alpha, beta, coeff, PP, w, &
@@ -1048,29 +2401,59 @@ END INTERFACE JacobiTransform_
 !                                                           JacobiTransform
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 13 Oct 2022
-! summary: Discrete Jacobi Transform of a function on [-1,1]
-
-!# Introduction
+!> author: Vikas Sharma, Ph.D.
+! date: 2026-10-30
+! summary: Project sampled values onto the polynomial basis.
 !
-! This function performs the jacobi transformation of a function defined
-! on -1 to 1. The interface of the function is give below:
+! coeff contains sampled function values on input, not modal coefficients.
+! Output entries are modal coefficients. Callback overloads map reference
+! nodes to [x1,x2]. Precomputed PP uses rows for points and columns for
+! degrees.
+!
+! Arguments:
+!   n : INTEGER(I4B), INTENT(IN). Maximum polynomial degree; use n>=0.
+!   alpha : REAL(DFP), INTENT(IN). Jacobi weight exponent at +1.
+!   beta : REAL(DFP), INTENT(IN). Jacobi weight exponent at -1.
+!   f : PROCEDURE(iface_1DFunction), POINTER, INTENT(IN). Procedure pointer to
+! an iface_1DFunction callback.
+!   quadType : INTEGER(I4B), INTENT(IN). Quadrature selector from GlobalData;
+! must match the supplied nodes.
+!   x1 : REAL(DFP), INTENT(IN). Left endpoint of the callback evaluation
+! interval.
+!   x2 : REAL(DFP), INTENT(IN). Right endpoint of the callback evaluation
+! interval.
+!
+! Returns:
+!   ans : REAL(DFP)(0:n).
+!
+! Formula:
+! $$M c=b,\quad M_{ij}=\int p_i p_j w\,dx,\quad b_j=\sum_k w_k f_k p_j(x_k)$$
+!
+! Examples
 !
 !```fortran
-! ABSTRACT INTERFACE
-!   ELEMENTAL FUNCTION iface_1DFunction(x) RESULT(ans)
-!     IMPORT :: DFP
-!     REAL(DFP), INTENT(IN) :: x
-!     REAL(DFP) :: ans
-!   END FUNCTION iface_1DFunction
-! END INTERFACE
-!```
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE GlobalData, ONLY: Gauss
+! USE JacobiPolynomialUtility, ONLY: JacobiTransform
+! USE JacobiPolynomialUtility, ONLY: JacobiGaussQuadrature
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: x(3), w(3), f(3), c(0:2)
 !
-!@note
-! This routine is not pure, because this subroutine calls `JacobiQuadrature`
-! which is not pure due to Lapack call.
-!@endnote
+! CALL JacobiGaussQuadrature(alpha=0.0_DFP, beta=0.0_DFP, n=3_I4B, pt=x, wt=w)
+! f = 0.5_DFP*(3.0_DFP*x*x-1.0_DFP)
+! c = JacobiTransform( &
+!   alpha=0.0_DFP, beta=0.0_DFP, n=2_I4B, &
+!   coeff=f, &
+!   x=x, w=w, &
+!   quadType=Gauss)
+! CALL OK(MAXVAL(ABS(c- &
+!   [0.0_DFP, 0.0_DFP, 1.0_DFP])) < 1.0E-10_DFP, &
+!   "Recover the single degree two modal coefficient")
+! END PROGRAM main
+!```
 
 INTERFACE JacobiTransform
   MODULE FUNCTION JacobiTransform3(n, alpha, beta, f, quadType, x1, x2) &
@@ -1097,9 +2480,63 @@ END INTERFACE JacobiTransform
 !                                                         JacobiTransform_
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date:  2024-08-19
-! summary:  Jacobi transform
+!> author: Vikas Sharma, Ph.D.
+! date: 2026-10-30
+! summary: Project sampled values onto the polynomial basis.
+!
+! coeff contains sampled function values on input, not modal coefficients.
+! Output entries are modal coefficients. Callback overloads map reference
+! nodes to [x1,x2]. Precomputed PP uses rows for points and columns for
+! degrees.
+!
+! Arguments:
+!   n : INTEGER(I4B), INTENT(IN). Maximum polynomial degree; use n>=0.
+!   alpha : REAL(DFP), INTENT(IN). Jacobi weight exponent at +1.
+!   beta : REAL(DFP), INTENT(IN). Jacobi weight exponent at -1.
+!   f : PROCEDURE(iface_1DFunction), POINTER, INTENT(IN). Procedure pointer to
+! an iface_1DFunction callback.
+!   quadType : INTEGER(I4B), INTENT(IN). Quadrature selector from GlobalData;
+! must match the supplied nodes.
+!   x1 : REAL(DFP), INTENT(IN). Left endpoint of the callback evaluation
+! interval.
+!   x2 : REAL(DFP), INTENT(IN). Right endpoint of the callback evaluation
+! interval.
+!   ans : REAL(DFP), INTENT(INOUT)(0:). Result storage; allocate enough space
+! for all active dimensions.
+!   tsize : INTEGER(I4B), INTENT(OUT). Number of active vector output entries.
+!
+! Returns:
+!   Writes ans(0:), tsize.
+!
+! Formula:
+! $$M c=b,\quad M_{ij}=\int p_i p_j w\,dx,\quad b_j=\sum_k w_k f_k p_j(x_k)$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE GlobalData, ONLY: Gauss
+! USE JacobiPolynomialUtility, ONLY: JacobiTransform_
+! USE JacobiPolynomialUtility, ONLY: JacobiGaussQuadrature
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: x(3), w(3), f(3), c(0:2)
+! INTEGER(I4B) :: ns
+!
+! CALL JacobiGaussQuadrature(alpha=0.0_DFP, beta=0.0_DFP, n=3_I4B, pt=x, wt=w)
+! f = 0.5_DFP*(3.0_DFP*x*x-1.0_DFP)
+! CALL JacobiTransform_( &
+!   alpha=0.0_DFP, beta=0.0_DFP, n=2_I4B, &
+!   coeff=f, &
+!   x=x, w=w, &
+!   quadType=Gauss, ans=c, tsize=ns)
+! CALL OK(MAXVAL(ABS(c- &
+!   [0.0_DFP, 0.0_DFP, 1.0_DFP])) < 1.0E-10_DFP, &
+!   "Recover the single degree two modal coefficient")
+! END PROGRAM main
+!```
 
 INTERFACE JacobiTransform_
   MODULE SUBROUTINE JacobiTransform3_(n, alpha, beta, f, quadType, x1, x2, &
@@ -1129,9 +2566,45 @@ END INTERFACE JacobiTransform_
 !                                                        JacobiInvTransform
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 13 Oct 2022
-! summary:         Discrete Jacobi Transform
+!> author: Vikas Sharma, Ph.D.
+! date: 2026-10-30
+! summary: Evaluate a polynomial expansion.
+!
+! Coefficients are modal values indexed from zero.
+!
+! Arguments:
+!   n : INTEGER(I4B), INTENT(IN). Maximum polynomial degree; use n>=0.
+!   alpha : REAL(DFP), INTENT(IN). Jacobi weight exponent at +1.
+!   beta : REAL(DFP), INTENT(IN). Jacobi weight exponent at -1.
+!   coeff : REAL(DFP), INTENT(IN)(0:n). Modal expansion coefficients, indexed
+! from zero.
+!   x : REAL(DFP), INTENT(IN). Evaluation coordinate(s).
+!
+! Returns:
+!   ans : REAL(DFP).
+!
+! Formula:
+! $$y(x)=\sum_{j=0}^{n}c_j p_j(x)$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE JacobiPolynomialUtility, ONLY: JacobiInvTransform
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: x(3), y(3), c(0:2)
+!
+! x = [-0.5_DFP, 0.0_DFP, 0.5_DFP]
+! c = [0.0_DFP, 0.0_DFP, 1.0_DFP]
+! y = JacobiInvTransform( &
+!   alpha=0.0_DFP, beta=0.0_DFP, n=2_I4B, x=x, coeff=c)
+! CALL OK(MAXVAL(ABS(y-(0.5_DFP*(3.0_DFP*x*x-1.0_DFP)))) < 1.0E-11_DFP, &
+!   "A single modal coefficient recovers degree two")
+! END PROGRAM main
+!```
 
 INTERFACE JacobiInvTransform
   MODULE PURE FUNCTION JacobiInvTransform1(n, alpha, beta, coeff, x) &
@@ -1155,9 +2628,45 @@ END INTERFACE JacobiInvTransform
 !                                                        JacobiInvTransform
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 13 Oct 2022
-! summary:         Discrete Jacobi Transform
+!> author: Vikas Sharma, Ph.D.
+! date: 2026-10-30
+! summary: Evaluate a polynomial expansion.
+!
+! Coefficients are modal values indexed from zero.
+!
+! Arguments:
+!   n : INTEGER(I4B), INTENT(IN). Maximum polynomial degree; use n>=0.
+!   alpha : REAL(DFP), INTENT(IN). Jacobi weight exponent at +1.
+!   beta : REAL(DFP), INTENT(IN). Jacobi weight exponent at -1.
+!   coeff : REAL(DFP), INTENT(IN)(0:n). Modal expansion coefficients, indexed
+! from zero.
+!   x : REAL(DFP), INTENT(IN)(:). Evaluation coordinate(s).
+!
+! Returns:
+!   ans : REAL(DFP)(SIZE(x)).
+!
+! Formula:
+! $$y(x)=\sum_{j=0}^{n}c_j p_j(x)$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE JacobiPolynomialUtility, ONLY: JacobiInvTransform
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: x(3), y(3), c(0:2)
+!
+! x = [-0.5_DFP, 0.0_DFP, 0.5_DFP]
+! c = [0.0_DFP, 0.0_DFP, 1.0_DFP]
+! y = JacobiInvTransform( &
+!   alpha=0.0_DFP, beta=0.0_DFP, n=2_I4B, x=x, coeff=c)
+! CALL OK(MAXVAL(ABS(y-(0.5_DFP*(3.0_DFP*x*x-1.0_DFP)))) < 1.0E-11_DFP, &
+!   "A single modal coefficient recovers degree two")
+! END PROGRAM main
+!```
 
 INTERFACE JacobiInvTransform
   MODULE PURE FUNCTION JacobiInvTransform2(n, alpha, beta, coeff, x) &
@@ -1181,15 +2690,43 @@ END INTERFACE JacobiInvTransform
 !                                                      JacobiGradientCoeff
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 13 Oct 2022
-! summary:         Returns coefficient for gradient of Jacobi expansion
+!> author: Vikas Sharma, Ph.D.
+! date: 2026-10-30
+! summary: Differentiate modal coefficients in the same family.
 !
-!# Introduction
+! The output retains n+1 entries; the final coefficient is zero.
 !
-! This routine returns the coefficients of gradient of Jacobi expansion.
-! Input is cofficients of Jacobipolynomials (modal values).
+! Arguments:
+!   n : INTEGER(I4B), INTENT(IN). Maximum polynomial degree; use n>=0.
+!   alpha : REAL(DFP), INTENT(IN). Jacobi weight exponent at +1.
+!   beta : REAL(DFP), INTENT(IN). Jacobi weight exponent at -1.
+!   coeff : REAL(DFP), INTENT(IN)(0:n). Modal expansion coefficients, indexed
+! from zero.
 !
+! Returns:
+!   ans : REAL(DFP)(0:n).
+!
+! Formula:
+! $$\sum_{j=0}^{n}d_j p_j(x)=\sum_{j=0}^{n}c_j p_j'(x)$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE JacobiPolynomialUtility, ONLY: JacobiGradientCoeff
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: c(0:2), dc(0:2)
+!
+! c = [0.0_DFP, 0.0_DFP, 1.0_DFP]
+! dc = JacobiGradientCoeff( &
+!   alpha=0.0_DFP, beta=0.0_DFP, n=2_I4B, coeff=c)
+! CALL OK(MAXVAL(ABS(dc-[0.0_DFP, 3.0_DFP, 0.0_DFP])) &
+!   < 1.0E-11_DFP, "Derivative coefficients in the same basis")
+! END PROGRAM main
+!```
 
 INTERFACE JacobiGradientCoeff
   MODULE PURE FUNCTION JacobiGradientCoeff1(n, alpha, beta, coeff) RESULT(ans)
@@ -1210,15 +2747,48 @@ END INTERFACE JacobiGradientCoeff
 !                                                              JacobiDMatrix
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 13 Oct 2022
-! summary:         Returns coefficient for gradient of Jacobi expansion
+!> author: Vikas Sharma, Ph.D.
+! date: 2026-10-30
+! summary: Build the nodal first derivative matrix.
 !
-!# Introduction
+! n is the interpolation degree; pass n+1 nodes from the selected quadrature
+! rule in their returned order.
 !
-! This routine returns the coefficients of gradient of Jacobi expansion.
-! Input is cofficients of Jacobipolynomials (modal values).
+! Arguments:
+!   n : INTEGER(I4B), INTENT(IN). Interpolation degree; x contains n+1 nodes.
+!   alpha : REAL(DFP), INTENT(IN). Jacobi weight exponent at +1.
+!   beta : REAL(DFP), INTENT(IN). Jacobi weight exponent at -1.
+!   x : REAL(DFP), INTENT(IN)(0:n). Evaluation coordinate(s).
+!   quadType : INTEGER(I4B), INTENT(IN). Quadrature selector from GlobalData;
+! must match the supplied nodes.
 !
+! Returns:
+!   ans : REAL(DFP)(0:n, 0:n).
+!
+! Formula:
+! $$f'(x_i)=\sum_{j=0}^{n}D_{ij} f(x_j)$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE GlobalData, ONLY: Gauss
+! USE JacobiPolynomialUtility, ONLY: JacobiDMatrix
+! USE JacobiPolynomialUtility, ONLY: JacobiQuadrature
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: x(0:2), w(0:2), d(0:2, 0:2)
+!
+! CALL JacobiQuadrature( &
+!   alpha=0.0_DFP, beta=0.0_DFP, n=3_I4B, pt=x, wt=w, quadType=Gauss)
+! d = JacobiDMatrix( &
+!   alpha=0.0_DFP, beta=0.0_DFP, n=2_I4B, x=x, quadType=Gauss)
+! CALL OK(MAXVAL(ABS(MATMUL(d, x*x)-2.0_DFP*x)) &
+!   < 1.0E-10_DFP, "Differentiate a nodal quadratic")
+! END PROGRAM main
+!```
 
 INTERFACE JacobiDMatrix
   MODULE PURE FUNCTION JacobiDMatrix1(n, alpha, beta, x, quadType) RESULT(ans)
@@ -1236,5 +2806,384 @@ INTERFACE JacobiDMatrix
       !! D matrix
   END FUNCTION JacobiDMatrix1
 END INTERFACE JacobiDMatrix
+
+!----------------------------------------------------------------------------
+!                                                         JacobiLaplacianEval
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph.D.
+! date: 2026-10-30
+! summary: Reserved second derivative interface; currently unimplemented.
+!
+! Do not call this interface: its implementation is empty or forwards to an
+! empty body. Function results and output dimensions are undefined. The
+! example deliberately calls GradientEval instead and demonstrates a numerical
+! workaround; it is not validation of this Laplacian interface.
+!
+! Arguments:
+!   n : INTEGER(I4B), INTENT(IN). Maximum polynomial degree; use n>=0.
+!   alpha : REAL(DFP), INTENT(IN). Jacobi weight exponent at +1.
+!   beta : REAL(DFP), INTENT(IN). Jacobi weight exponent at -1.
+!   x : REAL(DFP), INTENT(IN). Evaluation coordinate(s).
+!
+! Returns:
+!   No defined result: the implementation body is empty.
+!
+! Formula:
+! $$p_n''(x)\simeq\frac{p_n'(x+h)-p_n'(x-h)}{2h}$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE JacobiPolynomialUtility, ONLY: JacobiGradientEval
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: x(3), gp(3), gm(3), d2(3)
+! REAL(DFP), PARAMETER :: h = 1.0E-5_DFP
+!
+! ! The declared Laplacian routine has no implementation.
+! ! Approximate the second derivative using the working gradient API.
+! x = [-0.5_DFP, 0.0_DFP, 0.5_DFP]
+! gp = JacobiGradientEval(alpha=0.0_DFP, beta=0.0_DFP, n=2_I4B, x=x+h)
+! gm = JacobiGradientEval(alpha=0.0_DFP, beta=0.0_DFP, n=2_I4B, x=x-h)
+! d2 = (gp-gm)/(2.0_DFP*h)
+! CALL OK(MAXVAL(ABS(d2-(3.0_DFP))) < 1.0E-8_DFP, &
+!   "Gradient based second derivative workaround")
+! END PROGRAM main
+!```
+
+INTERFACE JacobiLaplacianEval
+  MODULE PURE FUNCTION JacobiLaplacianEval1(n, alpha, beta, x) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: n
+    !! order of Jacobi polynomial
+    REAL(DFP), INTENT(IN) :: alpha
+    !! alpha > -1.0
+    REAL(DFP), INTENT(IN) :: beta
+    !! beta > -1.0
+    REAL(DFP), INTENT(IN) :: x
+    !! point
+    REAL(DFP) :: ans
+    !! Derivative of Jacobi polynomial of order n at point x
+  END FUNCTION JacobiLaplacianEval1
+END INTERFACE JacobiLaplacianEval
+
+!----------------------------------------------------------------------------
+!                                                        JacobiLaplacianEval
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph.D.
+! date: 2026-10-30
+! summary: Reserved second derivative interface; currently unimplemented.
+!
+! Do not call this interface: its implementation is empty or forwards to an
+! empty body. Function results and output dimensions are undefined. The
+! example deliberately calls GradientEval instead and demonstrates a numerical
+! workaround; it is not validation of this Laplacian interface.
+!
+! Arguments:
+!   n : INTEGER(I4B), INTENT(IN). Maximum polynomial degree; use n>=0.
+!   alpha : REAL(DFP), INTENT(IN). Jacobi weight exponent at +1.
+!   beta : REAL(DFP), INTENT(IN). Jacobi weight exponent at -1.
+!   x : REAL(DFP), INTENT(IN)(:). Evaluation coordinate(s).
+!
+! Returns:
+!   No defined result: the implementation body is empty.
+!
+! Formula:
+! $$p_n''(x)\simeq\frac{p_n'(x+h)-p_n'(x-h)}{2h}$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE JacobiPolynomialUtility, ONLY: JacobiGradientEval
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: x(3), gp(3), gm(3), d2(3)
+! REAL(DFP), PARAMETER :: h = 1.0E-5_DFP
+!
+! ! The declared Laplacian routine has no implementation.
+! ! Approximate the second derivative using the working gradient API.
+! x = [-0.5_DFP, 0.0_DFP, 0.5_DFP]
+! gp = JacobiGradientEval(alpha=0.0_DFP, beta=0.0_DFP, n=2_I4B, x=x+h)
+! gm = JacobiGradientEval(alpha=0.0_DFP, beta=0.0_DFP, n=2_I4B, x=x-h)
+! d2 = (gp-gm)/(2.0_DFP*h)
+! CALL OK(MAXVAL(ABS(d2-(3.0_DFP))) < 1.0E-8_DFP, &
+!   "Gradient based second derivative workaround")
+! END PROGRAM main
+!```
+
+INTERFACE JacobiLaplacianEval
+  MODULE PURE FUNCTION JacobiLaplacianEval2(n, alpha, beta, x) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: n
+    REAL(DFP), INTENT(IN) :: alpha
+    REAL(DFP), INTENT(IN) :: beta
+    REAL(DFP), INTENT(IN) :: x(:)
+    REAL(DFP) :: ans(SIZE(x))
+    !! Derivative of Jacobi polynomial of order n at x
+  END FUNCTION JacobiLaplacianEval2
+END INTERFACE JacobiLaplacianEval
+
+!----------------------------------------------------------------------------
+!                                                      JacobiLaplacianEvalAll
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph.D.
+! date: 2026-10-30
+! summary: Reserved second derivative interface; currently unimplemented.
+!
+! Do not call this interface: its implementation is empty or forwards to an
+! empty body. Function results and output dimensions are undefined. The
+! example deliberately calls GradientEval instead and demonstrates a numerical
+! workaround; it is not validation of this Laplacian interface.
+!
+! Arguments:
+!   n : INTEGER(I4B), INTENT(IN). Maximum polynomial degree; use n>=0.
+!   alpha : REAL(DFP), INTENT(IN). Jacobi weight exponent at +1.
+!   beta : REAL(DFP), INTENT(IN). Jacobi weight exponent at -1.
+!   x : REAL(DFP), INTENT(IN). Evaluation coordinate(s).
+!
+! Returns:
+!   No defined result: the implementation body is empty.
+!
+! Formula:
+! $$p_n''(x)\simeq\frac{p_n'(x+h)-p_n'(x-h)}{2h}$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE JacobiPolynomialUtility, ONLY: JacobiGradientEval
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: x(3), gp(3), gm(3), d2(3)
+! REAL(DFP), PARAMETER :: h = 1.0E-5_DFP
+!
+! ! The declared Laplacian routine has no implementation.
+! ! Approximate the second derivative using the working gradient API.
+! x = [-0.5_DFP, 0.0_DFP, 0.5_DFP]
+! gp = JacobiGradientEval(alpha=0.0_DFP, beta=0.0_DFP, n=2_I4B, x=x+h)
+! gm = JacobiGradientEval(alpha=0.0_DFP, beta=0.0_DFP, n=2_I4B, x=x-h)
+! d2 = (gp-gm)/(2.0_DFP*h)
+! CALL OK(MAXVAL(ABS(d2-(3.0_DFP))) < 1.0E-8_DFP, &
+!   "Gradient based second derivative workaround")
+! END PROGRAM main
+!```
+
+INTERFACE JacobiLaplacianEvalAll
+  MODULE PURE FUNCTION JacobiLaplacianEvalAll1(n, alpha, beta, x) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: n
+    !! order of Jacobi polynomial
+    REAL(DFP), INTENT(IN) :: alpha
+    !! alpha > -1.0
+    REAL(DFP), INTENT(IN) :: beta
+    !! beta > -1.0
+    REAL(DFP), INTENT(IN) :: x
+    !! point
+    REAL(DFP) :: ans(n + 1)
+    !! Derivative of Jacobi polynomial of order n at point x
+  END FUNCTION JacobiLaplacianEvalAll1
+END INTERFACE JacobiLaplacianEvalAll
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph.D.
+! date: 2026-10-30
+! summary: Reserved second derivative interface; currently unimplemented.
+!
+! Do not call this interface: its implementation is empty or forwards to an
+! empty body. Function results and output dimensions are undefined. The
+! example deliberately calls GradientEval instead and demonstrates a numerical
+! workaround; it is not validation of this Laplacian interface.
+!
+! Arguments:
+!   n : INTEGER(I4B), INTENT(IN). Maximum polynomial degree; use n>=0.
+!   alpha : REAL(DFP), INTENT(IN). Jacobi weight exponent at +1.
+!   beta : REAL(DFP), INTENT(IN). Jacobi weight exponent at -1.
+!   x : REAL(DFP), INTENT(IN). Evaluation coordinate(s).
+!   ans : REAL(DFP), INTENT(INOUT)(:). Result storage; allocate enough space
+! for all active dimensions.
+!   tsize : INTEGER(I4B), INTENT(OUT). Number of active vector output entries.
+!
+! Returns:
+!   No defined result: the implementation body is empty.
+!
+! Formula:
+! $$p_n''(x)\simeq\frac{p_n'(x+h)-p_n'(x-h)}{2h}$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE JacobiPolynomialUtility, ONLY: JacobiGradientEval
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: x(3), gp(3), gm(3), d2(3)
+! REAL(DFP), PARAMETER :: h = 1.0E-5_DFP
+!
+! ! The declared Laplacian routine has no implementation.
+! ! Approximate the second derivative using the working gradient API.
+! x = [-0.5_DFP, 0.0_DFP, 0.5_DFP]
+! gp = JacobiGradientEval(alpha=0.0_DFP, beta=0.0_DFP, n=2_I4B, x=x+h)
+! gm = JacobiGradientEval(alpha=0.0_DFP, beta=0.0_DFP, n=2_I4B, x=x-h)
+! d2 = (gp-gm)/(2.0_DFP*h)
+! CALL OK(MAXVAL(ABS(d2-(3.0_DFP))) < 1.0E-8_DFP, &
+!   "Gradient based second derivative workaround")
+! END PROGRAM main
+!```
+
+INTERFACE JacobiLaplacianEvalAll_
+  MODULE PURE SUBROUTINE JacobiLaplacianEvalAll1_(n, alpha, beta, x, &
+                                                  ans, tsize)
+    INTEGER(I4B), INTENT(IN) :: n
+    !! order of Jacobi polynomial
+    REAL(DFP), INTENT(IN) :: alpha
+    !! alpha > -1.0
+    REAL(DFP), INTENT(IN) :: beta
+    !! beta > -1.0
+    REAL(DFP), INTENT(IN) :: x
+    !! point
+    REAL(DFP), INTENT(INOUT) :: ans(:)
+    !! ans(n + 1)
+    !! Derivative of Jacobi polynomial of order n at point x
+    INTEGER(I4B), INTENT(OUT) :: tsize
+  END SUBROUTINE JacobiLaplacianEvalAll1_
+END INTERFACE JacobiLaplacianEvalAll_
+
+!----------------------------------------------------------------------------
+!                                                     JacobiLaplacianEvalAll
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph.D.
+! date: 2026-10-30
+! summary: Reserved second derivative interface; currently unimplemented.
+!
+! Do not call this interface: its implementation is empty or forwards to an
+! empty body. Function results and output dimensions are undefined. The
+! example deliberately calls GradientEval instead and demonstrates a numerical
+! workaround; it is not validation of this Laplacian interface.
+!
+! Arguments:
+!   n : INTEGER(I4B), INTENT(IN). Maximum polynomial degree; use n>=0.
+!   alpha : REAL(DFP), INTENT(IN). Jacobi weight exponent at +1.
+!   beta : REAL(DFP), INTENT(IN). Jacobi weight exponent at -1.
+!   x : REAL(DFP), INTENT(IN)(:). Evaluation coordinate(s).
+!
+! Returns:
+!   No defined result: the implementation body is empty.
+!
+! Formula:
+! $$p_n''(x)\simeq\frac{p_n'(x+h)-p_n'(x-h)}{2h}$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE JacobiPolynomialUtility, ONLY: JacobiGradientEval
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: x(3), gp(3), gm(3), d2(3)
+! REAL(DFP), PARAMETER :: h = 1.0E-5_DFP
+!
+! ! The declared Laplacian routine has no implementation.
+! ! Approximate the second derivative using the working gradient API.
+! x = [-0.5_DFP, 0.0_DFP, 0.5_DFP]
+! gp = JacobiGradientEval(alpha=0.0_DFP, beta=0.0_DFP, n=2_I4B, x=x+h)
+! gm = JacobiGradientEval(alpha=0.0_DFP, beta=0.0_DFP, n=2_I4B, x=x-h)
+! d2 = (gp-gm)/(2.0_DFP*h)
+! CALL OK(MAXVAL(ABS(d2-(3.0_DFP))) < 1.0E-8_DFP, &
+!   "Gradient based second derivative workaround")
+! END PROGRAM main
+!```
+
+INTERFACE JacobiLaplacianEvalAll
+  MODULE PURE FUNCTION JacobiLaplacianEvalAll2(n, alpha, beta, x) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: n
+    REAL(DFP), INTENT(IN) :: alpha
+    REAL(DFP), INTENT(IN) :: beta
+    REAL(DFP), INTENT(IN) :: x(:)
+    REAL(DFP) :: ans(SIZE(x), n + 1)
+    !! Derivative of Jacobi polynomial of order n at x
+  END FUNCTION JacobiLaplacianEvalAll2
+END INTERFACE JacobiLaplacianEvalAll
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph.D.
+! date: 2026-10-30
+! summary: Reserved second derivative interface; currently unimplemented.
+!
+! Do not call this interface: its implementation is empty or forwards to an
+! empty body. Function results and output dimensions are undefined. The
+! example deliberately calls GradientEval instead and demonstrates a numerical
+! workaround; it is not validation of this Laplacian interface.
+!
+! Arguments:
+!   n : INTEGER(I4B), INTENT(IN). Maximum polynomial degree; use n>=0.
+!   alpha : REAL(DFP), INTENT(IN). Jacobi weight exponent at +1.
+!   beta : REAL(DFP), INTENT(IN). Jacobi weight exponent at -1.
+!   x : REAL(DFP), INTENT(IN)(:). Evaluation coordinate(s).
+!   ans : REAL(DFP), INTENT(INOUT)(:, :). Result storage; allocate enough
+! space for all active dimensions.
+!   nrow : INTEGER(I4B), INTENT(OUT). Number of active output rows.
+!   ncol : INTEGER(I4B), INTENT(OUT). Number of active output columns.
+!
+! Returns:
+!   No defined result: the implementation body is empty.
+!
+! Formula:
+! $$p_n''(x)\simeq\frac{p_n'(x+h)-p_n'(x-h)}{2h}$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE JacobiPolynomialUtility, ONLY: JacobiGradientEval
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: x(3), gp(3), gm(3), d2(3)
+! REAL(DFP), PARAMETER :: h = 1.0E-5_DFP
+!
+! ! The declared Laplacian routine has no implementation.
+! ! Approximate the second derivative using the working gradient API.
+! x = [-0.5_DFP, 0.0_DFP, 0.5_DFP]
+! gp = JacobiGradientEval(alpha=0.0_DFP, beta=0.0_DFP, n=2_I4B, x=x+h)
+! gm = JacobiGradientEval(alpha=0.0_DFP, beta=0.0_DFP, n=2_I4B, x=x-h)
+! d2 = (gp-gm)/(2.0_DFP*h)
+! CALL OK(MAXVAL(ABS(d2-(3.0_DFP))) < 1.0E-8_DFP, &
+!   "Gradient based second derivative workaround")
+! END PROGRAM main
+!```
+
+INTERFACE JacobiLaplacianEvalAll_
+  MODULE PURE SUBROUTINE JacobiLaplacianEvalAll2_(n, alpha, beta, x, &
+                                                  ans, nrow, ncol)
+    INTEGER(I4B), INTENT(IN) :: n
+    REAL(DFP), INTENT(IN) :: alpha
+    REAL(DFP), INTENT(IN) :: beta
+    REAL(DFP), INTENT(IN) :: x(:)
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    !! ans(SIZE(x), n + 1)
+    !! Derivative of Jacobi polynomial of order n at x
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+  END SUBROUTINE JacobiLaplacianEvalAll2_
+END INTERFACE JacobiLaplacianEvalAll_
 
 END MODULE JacobiPolynomialUtility

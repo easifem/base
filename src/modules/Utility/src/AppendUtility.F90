@@ -16,14 +16,19 @@
 !
 
 !> author: Vikas Sharma, Ph. D.
-! date:  2024-04-11
+! date: 2024-04-11
 ! summary:  This module contains method for appending to vectors and martrix
 !
-!{!|page|/AppendUtility/index.md!}
-!
 MODULE AppendUtility
-
-USE GlobalData
+USE GlobalData, ONLY: I4B
+USE GlobalData, ONLY: LGT
+USE GlobalData, ONLY: DFP
+USE GlobalData, ONLY: INT8
+USE GlobalData, ONLY: INT16
+USE GlobalData, ONLY: INT32
+USE GlobalData, ONLY: INT64
+USE GlobalData, ONLY: REAL32
+USE GlobalData, ONLY: REAL64
 IMPLICIT NONE
 PRIVATE
 
@@ -41,16 +46,46 @@ PUBLIC :: Expand
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 23 July 2022
-! summary: Expand the vector
+! summary: Expand the vector of INT8 if needed
 !
-!# Introduction
 ! Expand the vector and add an element.
 !
-! reference
+! reference:
 ! https://github.com/jacobwilliams/fortran-csv-module/blob/master/src/
 ! csv_utilities.f90
 !
-!{!|page|/AppendUtility/Expand.md!}
+! Calling example:
+!
+! ```fortran
+! CALL Expand(vec, n=0, chunk_size)
+! CALL Expand(vec, n, chunk_size, finished=.TRUE.)
+! ```
+!
+! Example
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP, I4B, LGT
+! USE Display_Method, ONLY: Display
+! USE AppendUtility, ONLY: Expand
+! IMPLICIT NONE
+! INTEGER(I4B), ALLOCATABLE :: aintvec(:)
+! INTEGER(I4B) :: n, val
+! ! First CALL
+! ! We set n = 0, as aintvec is not allocated.
+! val = 1
+! n = 0
+! CALL Expand(vec=aintvec, n=n, chunk_size=10_I4B, val=val, finished=.FALSE.)
+! CALL Display(aintvec, "test1: aintvec = ", full=.TRUE.)
+! CALL Display(n, "n = ")
+! CALL Display(SIZE(aintvec), "test1: size of aintvec = ")
+! val = 2
+! CALL Expand(vec=aintvec, n=n, chunk_size=10_I4B, val=val, finished=.TRUE.)
+! CALL Display(aintvec, "test2: aintvec= ", full=.TRUE.)
+! CALL Display(n, "n = ")
+! CALL Display(SIZE(aintvec), "test2: size of aintvec = ")
+! END PROGRAM main
+!```
 
 INTERFACE Expand
   MODULE PURE SUBROUTINE expand_int8(vec, n, chunk_size, val, finished)
@@ -112,17 +147,7 @@ INTERFACE Expand
     !! set to true to return `vec`
     !! as its correct size (`n`)
   END SUBROUTINE expand_int64
-END INTERFACE Expand
 
-!----------------------------------------------------------------------------
-!                                                      Expand@Methods
-!----------------------------------------------------------------------------
-
-!> author: Vikas Sharma, Ph. D.
-! date: 22 July 2022
-! summary: Expand the real vector
-
-INTERFACE Expand
   MODULE PURE SUBROUTINE expand_real32(vec, n, chunk_size, val, finished)
     REAL(REAL32), ALLOCATABLE, INTENT(INOUT) :: vec(:)
     INTEGER(I4B), INTENT(INOUT) :: n
@@ -155,41 +180,180 @@ INTERFACE Expand
 END INTERFACE Expand
 
 !----------------------------------------------------------------------------
-!                                                      Append@Methods
+!                                                            Append@Methods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date:  22 March 2021
-! summary: Append a scalar or vector to vector
+! date: 2026-10-16
+! summary: Append a scalar INT or a vector of INT
 !
-!# Introduction
+! Append a scalar int to a vector of int
 !
-!- Append a scalar integer to an integer vector
-!- Append a integer vector and scalar to an integer vector
-!- Append a scalar real to an real vector
-!- Append a real vector to a real vector
+!@note
+! While calling Append the initial vector can be unallocated in the begining.
+!@endnote
+!
+! Example:
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: I4B, LGT, DFP
+! USE AppendUtility, ONLY: Append
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+!
+! INTEGER(I4B), ALLOCATABLE :: avec(:)
+!
+! ! Append scalar to a vector
+! CALL Append(avec, 1)
+! CALL OK(ALL(avec .EQ. [1]), "Append single ENTRY")
+!
+! ! Append a vector to a vector
+! CALL Append(avec, [2, 3])
+! CALL OK(ALL(avec .EQ. [1, 2, 3]), "Append a vector")
+!
+! DEALLOCATE (avec)
+! END PROGRAM main
+!```
 
 INTERFACE Append
-  ! Append a scalar int to a vector of int
   MODULE PURE SUBROUTINE Append_1a(A, ENTRY)
     INTEGER(I4B), ALLOCATABLE, INTENT(INOUT) :: A(:)
+    !! On Return it will be [A, Entry]
     INTEGER(I4B), INTENT(IN) :: ENTRY
+    !! Append Entry to A
   END SUBROUTINE Append_1a
+END INTERFACE Append
 
-  ! Append a scalar real to a vector of real
+!----------------------------------------------------------------------------
+!                                                            Append@Methods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2026-10-16
+! summary: Append a scalar (REAL) to a vector of real
+!
+! Append is a scalar real to a vector of real.
+!
+!@note
+! While calling Append the initial vector can be unallocated in the begining.
+!@endnote
+!
+! Example:
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: I4B, LGT, DFP
+! USE AppendUtility, ONLY: Append
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+!
+! INTEGER(I4B), ALLOCATABLE :: avec(:)
+!
+! ! Append scalar to a vector
+! CALL Append(avec, 1)
+! CALL OK(ALL(avec .EQ. [1]), "Append single ENTRY")
+!
+! ! Append a vector to a vector
+! CALL Append(avec, [2, 3])
+! CALL OK(ALL(avec .EQ. [1, 2, 3]), "Append a vector")
+!
+! DEALLOCATE (avec)
+! END PROGRAM main
+!```
+
+INTERFACE Append
   MODULE PURE SUBROUTINE Append_1b(A, ENTRY)
     REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: A(:)
+    !! On return it will be [A, Entry]
     REAL(DFP), INTENT(IN) :: ENTRY
+    !! Append Entry to A
   END SUBROUTINE Append_1b
+END INTERFACE Append
 
-  ! Append a scalar and vector int to a vector of int
+!----------------------------------------------------------------------------
+!                                                            Append@Methods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2026-10-16
+! summary: Append a scalar or vector to vector
+!
+! Append a scalar INT and a vector of INT to a vector of INT.
+!
+!@note
+! While calling Append the initial vector can be unallocated in the begining.
+!@endnote
+!
+! Example:
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: I4B, LGT, DFP
+! USE AppendUtility, ONLY: Append
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! INTEGER(I4B), ALLOCATABLE :: C(:), B(:), A(:)
+! ! Append A and B vectors to C vector"
+! ! Note that C is not allocated here, but this is not a problem.
+! A = [1]
+! B = [2]
+! CALL Append(C, A, B)
+! CALL OK(ALL(C .EQ. [1, 2]), "tests(1):")
+! ! A is vector B is scalar"
+! ! Append A (Vector) and B (Scalar) to C vector"
+! A = [1]
+! CALL Append(C, A, 2)
+! CALL OK(ALL(C .EQ. [1, 2]), "tests(2):")
+! END PROGRAM main
+!```
+
+INTERFACE Append
   MODULE PURE SUBROUTINE Append_1c(C, A, B)
     INTEGER(I4B), ALLOCATABLE, INTENT(INOUT) :: C(:)
     INTEGER(I4B), INTENT(IN) :: A(:)
     INTEGER(I4B), INTENT(IN) :: B
   END SUBROUTINE Append_1c
+END INTERFACE Append
 
-  ! Append a scalar and vector real to a vector of real
+!----------------------------------------------------------------------------
+!                                                            Append@Methods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2026-10-16
+! summary: Append a scalar and vector of real to a vector of real
+!
+! Append a scalar and vector real to a vector of real
+!
+!@note
+! While calling Append the initial vector can be unallocated in the begining.
+!@endnote
+!
+! Example:
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: I4B, LGT, DFP
+! USE AppendUtility, ONLY: Append
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! INTEGER(I4B), ALLOCATABLE :: C(:), B(:), A(:)
+! ! Append A and B vectors to C vector"
+! ! Note that C is not allocated here, but this is not a problem.
+! A = [1]
+! B = [2]
+! CALL Append(C, A, B)
+! CALL OK(ALL(C .EQ. [1, 2]), "tests(1):")
+! ! A is vector B is scalar"
+! ! Append A (Vector) and B (Scalar) to C vector"
+! A = [1]
+! CALL Append(C, A, 2)
+! CALL OK(ALL(C .EQ. [1, 2]), "tests(2):")
+! END PROGRAM main
+!```
+
+INTERFACE Append
   MODULE PURE SUBROUTINE Append_1d(C, A, B)
     REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: C(:)
     REAL(DFP), INTENT(IN) :: A(:)
@@ -202,69 +366,251 @@ END INTERFACE Append
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date:  22 March 2021
-! summary: Append two vectors of real or int
+! date: 2026-10-16
+! summary: Append a vector of INT to a vector of INT.
 !
-!# Introduction
+! Append a vector of INT to a vector of INT.
 !
-!- Append a vector of int to another vector of int
-!- Append a vector of real to another vector of real
-!- Append two vectors of int to another vector of int
-!- Append two vector of real to another vector of real
+!@note
+! While calling Append the initial vector can be unallocated in the begining.
+!@endnote
+!
+! Example:
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: I4B, LGT, DFP
+! USE AppendUtility, ONLY: Append
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+!
+! INTEGER(I4B), ALLOCATABLE :: avec(:)
+!
+! ! Append scalar to a vector
+! CALL Append(avec, 1)
+! CALL OK(ALL(avec .EQ. [1]), "Append single ENTRY")
+!
+! ! Append a vector to a vector
+! CALL Append(avec, [2, 3])
+! CALL OK(ALL(avec .EQ. [1, 2, 3]), "Append a vector")
+!
+! DEALLOCATE (avec)
+! END PROGRAM main
+!```
 
 INTERFACE Append
   MODULE PURE SUBROUTINE Append_2a(A, ENTRY)
     INTEGER(I4B), ALLOCATABLE, INTENT(INOUT) :: A(:)
     INTEGER(I4B), INTENT(IN) :: ENTRY(:)
   END SUBROUTINE Append_2a
+END INTERFACE Append
 
+!----------------------------------------------------------------------------
+!                                                            Append@Methods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2026-10-16
+! summary: Append a vector of REAL to a vector of REAL.
+!
+! Append a vector of REAL to a vector of REAL.
+!
+!@note
+! While calling Append the initial vector can be unallocated in the begining.
+!@endnote
+!
+! Example:
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: I4B, LGT, DFP
+! USE AppendUtility, ONLY: Append
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+!
+! INTEGER(I4B), ALLOCATABLE :: avec(:)
+!
+! ! Append scalar to a vector
+! CALL Append(avec, 1)
+! CALL OK(ALL(avec .EQ. [1]), "Append single ENTRY")
+!
+! ! Append a vector to a vector
+! CALL Append(avec, [2, 3])
+! CALL OK(ALL(avec .EQ. [1, 2, 3]), "Append a vector")
+!
+! DEALLOCATE (avec)
+! END PROGRAM main
+!```
+
+INTERFACE Append
   MODULE PURE SUBROUTINE Append_2b(A, ENTRY)
     REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: A(:)
     REAL(DFP), INTENT(IN) :: ENTRY(:)
   END SUBROUTINE Append_2b
+END INTERFACE Append
 
+!----------------------------------------------------------------------------
+!                                                            Append@Methods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2026-10-16
+! summary: Append two vectors of INT to a vector of INT.
+!
+! Append two vectors of INT to a vector of INT.
+!
+!@note
+! While calling Append the initial vector can be unallocated in the begining.
+!@endnote
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: I4B, LGT, DFP
+! USE AppendUtility, ONLY: Append
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! INTEGER(I4B), ALLOCATABLE :: C(:), B(:), A(:)
+! ! Append A and B vectors to C vector"
+! ! Note that C is not allocated here, but this is not a problem.
+! A = [1]
+! B = [2]
+! CALL Append(C, A, B)
+! CALL OK(ALL(C .EQ. [1, 2]), "tests(1):")
+! ! A is vector B is scalar"
+! ! Append A (Vector) and B (Scalar) to C vector"
+! A = [1]
+! CALL Append(C, A, 2)
+! CALL OK(ALL(C .EQ. [1, 2]), "tests(2):")
+! END PROGRAM main
+!```
+
+INTERFACE Append
   MODULE PURE SUBROUTINE Append_2c(C, A, B)
     INTEGER(I4B), ALLOCATABLE, INTENT(INOUT) :: C(:)
     INTEGER(I4B), INTENT(IN) :: A(:)
     INTEGER(I4B), INTENT(IN) :: B(:)
   END SUBROUTINE Append_2c
+END INTERFACE Append
 
+!----------------------------------------------------------------------------
+!                                                            Append@Methods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2026-10-16
+! summary: Append two vectors of REAL to a vector of REAL.
+!
+! Append two vectors of REAL to a vector of REAL.
+!
+!@note
+! While calling Append the initial vector can be unallocated in the begining.
+!@endnote
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: I4B, LGT, DFP
+! USE AppendUtility, ONLY: Append
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! INTEGER(I4B), ALLOCATABLE :: C(:), B(:), A(:)
+! ! Append A and B vectors to C vector"
+! ! Note that C is not allocated here, but this is not a problem.
+! A = [1]
+! B = [2]
+! CALL Append(C, A, B)
+! CALL OK(ALL(C .EQ. [1, 2]), "tests(1):")
+! ! A is vector B is scalar"
+! ! Append A (Vector) and B (Scalar) to C vector"
+! A = [1]
+! CALL Append(C, A, 2)
+! CALL OK(ALL(C .EQ. [1, 2]), "tests(2):")
+! END PROGRAM main
+!```
+
+INTERFACE Append
   MODULE PURE SUBROUTINE Append_2d(C, A, B)
     REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: C(:)
     REAL(DFP), INTENT(IN) :: A(:)
     REAL(DFP), INTENT(IN) :: B(:)
   END SUBROUTINE Append_2d
+END INTERFACE Append
 
+!----------------------------------------------------------------------------
+!                                                            Append@Methods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2026-10-16
+! summary: Append three vectors of INT to a vector of INT.
+!
+! Append three vectors of INT to a vector of INT.
+!
+!@note
+! While calling Append the initial vector can be unallocated in the begining.
+!@endnote
+
+INTERFACE Append
   MODULE PURE SUBROUTINE Append_2e(D, C, A, B)
     INTEGER(I4B), ALLOCATABLE, INTENT(INOUT) :: D(:)
     INTEGER(I4B), INTENT(IN) :: A(:)
     INTEGER(I4B), INTENT(IN) :: B(:)
     INTEGER(I4B), INTENT(IN) :: C(:)
   END SUBROUTINE Append_2e
+END INTERFACE Append
 
+!----------------------------------------------------------------------------
+!                                                            Append@Methods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2026-10-16
+! summary: Append three vectors of REAL to a vector of REAL.
+!
+! Append three vectors of REAL to a vector of REAL.
+!
+!@note
+! While calling Append the initial vector can be unallocated in the begining.
+!@endnote
+
+INTERFACE Append
   MODULE PURE SUBROUTINE Append_2f(D, C, A, B)
     REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: D(:)
     REAL(DFP), INTENT(IN) :: A(:)
     REAL(DFP), INTENT(IN) :: B(:)
     REAL(DFP), INTENT(IN) :: C(:)
   END SUBROUTINE Append_2f
-
 END INTERFACE Append
 
 !----------------------------------------------------------------------------
-!                                                      Append@Methods
+!                                                             Append@Methods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date:  22 March 2021
-! summary: Masked append
+! date: 2026-10-16
+! summary: If mask is TRUE then append the scalar (INT) to a vector of INT.
 !
-!# Introduction
+! If mask is TRUE then append the scalar (INT) to a vector of INT.
 !
-!- Append a scalar integer to a vector of int
-!- Append a scalar real to a vector of reals
-!- Append a scalar and vector of int to another vector of int
-!- Append a scalar and vector real to another vector of real
+! Examples
+!
+!```fortran
+!
+! PROGRAM main
+! USE GlobalData, ONLY: I4B, LGT, DFP
+! USE AppendUtility, ONLY: Append
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! INTEGER(I4B), ALLOCATABLE :: avec(:)
+! ! Now lets us append a single ENTRY to a vector.
+! CALL Append(avec, 1, mask=.TRUE.)
+! CALL Append(avec, 1, mask=.FALSE.)
+! CALL OK(ALL(avec .EQ. [1]), "Append single ENTRY")
+! END PROGRAM main
+!```
 
 INTERFACE Append
   MODULE PURE SUBROUTINE Append_3a(A, ENTRY, mask)
@@ -272,20 +618,138 @@ INTERFACE Append
     INTEGER(I4B), INTENT(IN) :: ENTRY
     LOGICAL(LGT), INTENT(IN) :: mask
   END SUBROUTINE Append_3a
+END INTERFACE Append
 
+!----------------------------------------------------------------------------
+!                                                             Append@Methods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2026-10-16
+! summary: If mask is TRUE then append the scalar (REAL) to a vector of REAL.
+!
+! If mask is TRUE then append the scalar (REAL) to a vector of REAL.
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: I4B, LGT, DFP
+! USE AppendUtility, ONLY: Append
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! INTEGER(I4B), ALLOCATABLE :: avec(:)
+! ! Now lets us append a single ENTRY to a vector.
+! CALL Append(avec, 1, mask=.TRUE.)
+! CALL Append(avec, 1, mask=.FALSE.)
+! CALL OK(ALL(avec .EQ. [1]), "Append single ENTRY")
+! END PROGRAM main
+!```
+
+INTERFACE Append
   MODULE PURE SUBROUTINE Append_3b(A, ENTRY, mask)
     REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: A(:)
     REAL(DFP), INTENT(IN) :: ENTRY
     LOGICAL(LGT), INTENT(IN) :: mask
   END SUBROUTINE Append_3b
+END INTERFACE Append
 
+!----------------------------------------------------------------------------
+!                                                             Append@Methods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2026-10-16
+! summary: Masked append
+!
+! If mask is TRUE then append a scalar (INT) and a vector of INT
+! to a vector of INT.
+!
+!
+! Example
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: I4B, LGT, DFP
+! USE AppendUtility, ONLY: Append
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! INTEGER(I4B), ALLOCATABLE :: C(:), B(:), A(:)
+! ! A and B are vectors"
+! A = [1, 2]
+! B = [3, 4]
+! ! Append B(1) and B(2) to A and assign to C.
+! CALL Append(C, A, B, mask=[.TRUE., .TRUE.])
+! CALL OK(ALL(C .EQ. [1, 2, 3, 4]), "Append:")
+! ! Append B(1) to A and assign to C.
+! CALL Append(C, A, B, mask=[.TRUE., .FALSE.])
+! CALL OK(ALL(C .EQ. [1, 2, 3]), "Append:")
+! ! Do not append B to A, just assign A to C.
+! CALL Append(C, A, B, mask=[.FALSE., .FALSE.])
+! CALL OK(ALL(C .EQ. [1, 2]), "Append:")
+! ! A is vector B is scalar
+! ! Append 3 to A and then assign result to C
+! CALL Append(C, A, 3, mask=.TRUE.)
+! CALL OK(ALL(C .EQ. [1, 2, 3]), "Append:")
+! ! Do not append 3 to A, assign result to C, that is C =A
+! CALL Append(C, A, 3, mask=.FALSE.)
+! CALL OK(ALL(C .EQ. [1, 2]), "Append:")
+! END PROGRAM main
+!```
+
+INTERFACE Append
   MODULE PURE SUBROUTINE Append_3c(C, A, B, mask)
     INTEGER(I4B), ALLOCATABLE, INTENT(INOUT) :: C(:)
     INTEGER(I4B), INTENT(IN) :: A(:)
     INTEGER(I4B), INTENT(IN) :: B
     LOGICAL(LGT), INTENT(IN) :: mask
   END SUBROUTINE Append_3c
+END INTERFACE Append
 
+!----------------------------------------------------------------------------
+!                                                             Append@Methods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2026-10-16
+! summary: Masked append
+!
+! If mask is TRUE then append a scalar (REAL) and a vector of REAL
+! to a vector of REAL.
+!
+!
+! Example
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: I4B, LGT, DFP
+! USE AppendUtility, ONLY: Append
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! INTEGER(I4B), ALLOCATABLE :: C(:), B(:), A(:)
+! ! A and B are vectors"
+! A = [1, 2]
+! B = [3, 4]
+! ! Append B(1) and B(2) to A and assign to C.
+! CALL Append(C, A, B, mask=[.TRUE., .TRUE.])
+! CALL OK(ALL(C .EQ. [1, 2, 3, 4]), "Append:")
+! ! Append B(1) to A and assign to C.
+! CALL Append(C, A, B, mask=[.TRUE., .FALSE.])
+! CALL OK(ALL(C .EQ. [1, 2, 3]), "Append:")
+! ! Do not append B to A, just assign A to C.
+! CALL Append(C, A, B, mask=[.FALSE., .FALSE.])
+! CALL OK(ALL(C .EQ. [1, 2]), "Append:")
+! ! A is vector B is scalar
+! ! Append 3 to A and then assign result to C
+! CALL Append(C, A, 3, mask=.TRUE.)
+! CALL OK(ALL(C .EQ. [1, 2, 3]), "Append:")
+! ! Do not append 3 to A, assign result to C, that is C =A
+! CALL Append(C, A, 3, mask=.FALSE.)
+! CALL OK(ALL(C .EQ. [1, 2]), "Append:")
+! END PROGRAM main
+!```
+
+INTERFACE Append
   MODULE PURE SUBROUTINE Append_3d(C, A, B, mask)
     REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: C(:)
     REAL(DFP), INTENT(IN) :: A(:)
@@ -295,17 +759,35 @@ INTERFACE Append
 END INTERFACE Append
 
 !----------------------------------------------------------------------------
-!                                                      Append@Methods
+!                                                             Append@Methods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date:  22 March 2021
-! summary: Masked append two vectors to another vector of int/real
+! date:  2026-10-16
+! summary: Masked append
 !
-!# Introduction
+! If mask(i) is true then append entry(i) to A.
 !
-!- Append a vector of int to another vector of int
-!- Append a vector of real to another vector of real
+! Examples
+!
+!```fortran
+!
+! PROGRAM main
+! USE GlobalData, ONLY: I4B, LGT, DFP
+! USE AppendUtility, ONLY: Append
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! INTEGER(I4B), ALLOCATABLE :: avec(:)
+! ! Now lets us append a single ENTRY to a vector.
+! CALL Append(avec, 1, mask=.TRUE.)
+! CALL Append(avec, 1, mask=.FALSE.)
+! CALL OK(ALL(avec .EQ. [1]), "Append single ENTRY")
+! ! Appending a vector to a vector.
+! CALL Append(avec, [2, 3], mask=[.TRUE., .TRUE.])
+! CALL Append(avec, [4, 5], mask=[.TRUE., .FALSE.])
+! CALL OK(ALL(avec .EQ. [1, 2, 3, 4]), "Append a vector")
+! END PROGRAM main
+!```
 
 INTERFACE Append
   MODULE PURE SUBROUTINE Append_4a(A, ENTRY, mask)
@@ -313,20 +795,138 @@ INTERFACE Append
     INTEGER(I4B), INTENT(IN) :: ENTRY(:)
     LOGICAL(LGT), INTENT(IN) :: mask(:)
   END SUBROUTINE Append_4a
+END INTERFACE Append
 
+!----------------------------------------------------------------------------
+!                                                             Append@Methods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2026-10-16
+! summary: Masked append
+!
+! If mask(i) is true then append entry(i) to A.
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: I4B, LGT, DFP
+! USE AppendUtility, ONLY: Append
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! INTEGER(I4B), ALLOCATABLE :: avec(:)
+! ! Now lets us append a single ENTRY to a vector.
+! CALL Append(avec, 1, mask=.TRUE.)
+! CALL Append(avec, 1, mask=.FALSE.)
+! CALL OK(ALL(avec .EQ. [1]), "Append single ENTRY")
+! ! Appending a vector to a vector.
+! CALL Append(avec, [2, 3], mask=[.TRUE., .TRUE.])
+! CALL Append(avec, [4, 5], mask=[.TRUE., .FALSE.])
+! CALL OK(ALL(avec .EQ. [1, 2, 3, 4]), "Append a vector")
+! END PROGRAM main
+!```
+
+INTERFACE Append
   MODULE PURE SUBROUTINE Append_4b(A, ENTRY, mask)
     REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: A(:)
     REAL(DFP), INTENT(IN) :: ENTRY(:)
     LOGICAL(LGT), INTENT(IN) :: mask(:)
   END SUBROUTINE Append_4b
+END INTERFACE Append
 
+!----------------------------------------------------------------------------
+!                                                            Append@Methods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2026-10-16
+! summary: Masked append
+!
+! If mask(i) is true then append A(i) and B(i) to C.
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: I4B, LGT, DFP
+! USE AppendUtility, ONLY: Append
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! INTEGER(I4B), ALLOCATABLE :: C(:), B(:), A(:)
+! ! A and B are vectors"
+! A = [1, 2]
+! B = [3, 4]
+! ! Append B(1) and B(2) to A and assign to C.
+! CALL Append(C, A, B, mask=[.TRUE., .TRUE.])
+! CALL OK(ALL(C .EQ. [1, 2, 3, 4]), "Append:")
+! ! Append B(1) to A and assign to C.
+! CALL Append(C, A, B, mask=[.TRUE., .FALSE.])
+! CALL OK(ALL(C .EQ. [1, 2, 3]), "Append:")
+! ! Do not append B to A, just assign A to C.
+! CALL Append(C, A, B, mask=[.FALSE., .FALSE.])
+! CALL OK(ALL(C .EQ. [1, 2]), "Append:")
+! ! A is vector B is scalar
+! ! Append 3 to A and then assign result to C
+! CALL Append(C, A, 3, mask=.TRUE.)
+! CALL OK(ALL(C .EQ. [1, 2, 3]), "Append:")
+! ! Do not append 3 to A, assign result to C, that is C =A
+! CALL Append(C, A, 3, mask=.FALSE.)
+! CALL OK(ALL(C .EQ. [1, 2]), "Append:")
+! END PROGRAM main
+!```
+
+INTERFACE Append
   MODULE PURE SUBROUTINE Append_4c(C, A, B, mask)
     INTEGER(I4B), ALLOCATABLE, INTENT(INOUT) :: C(:)
     INTEGER(I4B), INTENT(IN) :: A(:)
     INTEGER(I4B), INTENT(IN) :: B(:)
     LOGICAL(LGT), INTENT(IN) :: mask(:)
   END SUBROUTINE Append_4c
+END INTERFACE Append
 
+!----------------------------------------------------------------------------
+!                                                             Append@Methods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2026-10-16
+! summary: Masked append
+!
+! If mask(i) is true then append A(i) and B(i) to C.
+!
+! Example
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: I4B, LGT, DFP
+! USE AppendUtility, ONLY: Append
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! INTEGER(I4B), ALLOCATABLE :: C(:), B(:), A(:)
+! ! A and B are vectors"
+! A = [1, 2]
+! B = [3, 4]
+! ! Append B(1) and B(2) to A and assign to C.
+! CALL Append(C, A, B, mask=[.TRUE., .TRUE.])
+! CALL OK(ALL(C .EQ. [1, 2, 3, 4]), "Append:")
+! ! Append B(1) to A and assign to C.
+! CALL Append(C, A, B, mask=[.TRUE., .FALSE.])
+! CALL OK(ALL(C .EQ. [1, 2, 3]), "Append:")
+! ! Do not append B to A, just assign A to C.
+! CALL Append(C, A, B, mask=[.FALSE., .FALSE.])
+! CALL OK(ALL(C .EQ. [1, 2]), "Append:")
+! ! A is vector B is scalar
+! ! Append 3 to A and then assign result to C
+! CALL Append(C, A, 3, mask=.TRUE.)
+! CALL OK(ALL(C .EQ. [1, 2, 3]), "Append:")
+! ! Do not append 3 to A, assign result to C, that is C =A
+! CALL Append(C, A, 3, mask=.FALSE.)
+! CALL OK(ALL(C .EQ. [1, 2]), "Append:")
+! END PROGRAM main
+!```
+
+INTERFACE Append
   MODULE PURE SUBROUTINE Append_4d(C, A, B, mask)
     REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: C(:)
     REAL(DFP), INTENT(IN) :: A(:)
@@ -336,20 +936,57 @@ INTERFACE Append
 END INTERFACE Append
 
 !----------------------------------------------------------------------------
-!                                                      Append@Methods
+!                                                             Append@Methods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date:  22 March 2021
-! summary: Append a scalar INTEGER  to  INTEGER  vec tor
+! date: 2026-10-16
+! summary: Append a scalar INT  to a vector of INT.
+!
+! Append a scalar integer to a vector of INT.
+!
+! Example:
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: I4B, LGT, DFP
+! USE AppendUtility, ONLY: Append
+! USE AppendUtility, ONLY: OPERATOR(.APPEND.)
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+!
+! INTEGER(I4B), ALLOCATABLE :: avec(:)
+!
+! ! lets us append a single ENTRY to a vector of integers.
+! avec = [1] .APPEND.2
+! CALL OK(ALL(avec .EQ. [1, 2]), "Append single ENTRY")
+!
+! ! Appending a vector to a vector.
+! avec = avec.APPEND. [3]
+! CALL OK(ALL(avec .EQ. [1, 2, 3]), "Append a vector")
+!
+! ! Cleanup
+! DEALLOCATE (avec)
+! END PROGRAM main
+!```
 
-INTERFACE OPERATOR(.Append.)
+INTERFACE OPERATOR(.APPEND.)
   MODULE PURE FUNCTION func_Append_1a(A, ENTRY) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: A(:)
     INTEGER(I4B), INTENT(IN) :: ENTRY
     INTEGER(I4B), ALLOCATABLE :: ans(:)
   END FUNCTION func_Append_1a
+END INTERFACE
 
+!----------------------------------------------------------------------------
+!                                                             Append@Methods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2026-10-16
+! summary: Append a scalar REAL to a vector of REAL.
+
+INTERFACE OPERATOR(.APPEND.)
   MODULE PURE FUNCTION func_Append_1b(A, ENTRY) RESULT(ans)
     REAL(DFP), INTENT(IN) :: A(:)
     REAL(DFP), INTENT(IN) :: ENTRY
@@ -358,11 +995,11 @@ INTERFACE OPERATOR(.Append.)
 END INTERFACE
 
 !----------------------------------------------------------------------------
-!                                                      Append@Methods
+!                                                             Append@Methods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date:  22 March 2021
+! date: 2026-10-16
 ! summary: Append two vectors of INTEGER
 
 INTERFACE OPERATOR(.APPEND.)
@@ -371,23 +1008,61 @@ INTERFACE OPERATOR(.APPEND.)
     INTEGER(I4B), INTENT(IN) :: ENTRY(:)
     INTEGER(I4B), ALLOCATABLE :: ans(:)
   END FUNCTION func_Append_2a
+END INTERFACE OPERATOR(.APPEND.)
 
+!----------------------------------------------------------------------------
+!                                                             Append@Methods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2021-11-24
+! summary: Append two vectors of REAL
+
+INTERFACE OPERATOR(.APPEND.)
   MODULE PURE FUNCTION func_Append_2b(A, ENTRY) RESULT(ans)
     REAL(DFP), INTENT(IN) :: A(:)
     REAL(DFP), INTENT(IN) :: ENTRY(:)
     REAL(DFP), ALLOCATABLE :: ans(:)
   END FUNCTION func_Append_2b
-
 END INTERFACE
 
 !----------------------------------------------------------------------------
-!                                                    ColConcat@Methods
+!                                                          ColConcat@Methods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-24
-! update: 2021-11-24
 ! summary: Concat columns of two vectors
+!
+! Concat columns of two vectors, a and b and return a matrix with two columns.
+!
+! Examples
+!
+!```fortran
+!
+! PROGRAM main
+! USE GlobalData, ONLY: I4B, LGT, DFP, CHAR_LF
+! USE AppendUtility, ONLY: ColConcat
+! USE MdEncode_Method, ONLY: MdEnCode
+! ! USE Display_Method, ONLY: Display
+! USE String_Class, ONLY: Display
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! ! Concat two integer vectors
+! CALL Display(MdEnCode(ColConcat(a=[1, 2], b=[3, 4])), &
+!              "colconcat="//CHAR_LF//CHAR_LF)
+! CALL OK(ALL(ColConcat(a=[1, 2], b=[3, 4]) &
+!             .EQ. RESHAPE([1, 2, 3, 4], [2, 2])), "colconcat")
+! ! Concat two integer vectors of different length
+! CALL Display(MdEnCode(ColConcat(a=[1, 2], b=[3, 4, 5])), &
+!              "colconcat="//CHAR_LF//CHAR_LF)
+! CALL OK(ALL(ColConcat(a=[1, 2], b=[3, 4, 5]) &
+!             .EQ. RESHAPE([1, 2, 0, 3, 4, 5], [3, 2])), "colconcat")
+! ! Concat two integer vectors of different length.
+! CALL Display(MdEnCode(ColConcat(a=[3, 4, 5], b=[1, 2])), &
+!              "colconcat="//CHAR_LF//CHAR_LF)
+! END PROGRAM main
+!```
 
 INTERFACE ColConcat
   MODULE PURE FUNCTION colConcat_1a(a, b) RESULT(ans)
@@ -395,31 +1070,231 @@ INTERFACE ColConcat
     REAL(REAL32), INTENT(IN) :: b(:)
     REAL(REAL32), ALLOCATABLE :: ans(:, :)
   END FUNCTION colConcat_1a
+END INTERFACE ColConcat
 
+!----------------------------------------------------------------------------
+!                                                          ColConcat@Methods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2021-11-24
+! summary: Concat columns of two vectors
+!
+! Concat columns of two vectors, a and b and return a matrix with two columns.
+!
+! Examples
+!
+!```fortran
+!
+! PROGRAM main
+! USE GlobalData, ONLY: I4B, LGT, DFP, CHAR_LF
+! USE AppendUtility, ONLY: ColConcat
+! USE MdEncode_Method, ONLY: MdEnCode
+! ! USE Display_Method, ONLY: Display
+! USE String_Class, ONLY: Display
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! ! Concat two integer vectors
+! CALL Display(MdEnCode(ColConcat(a=[1, 2], b=[3, 4])), &
+!              "colconcat="//CHAR_LF//CHAR_LF)
+! CALL OK(ALL(ColConcat(a=[1, 2], b=[3, 4]) &
+!             .EQ. RESHAPE([1, 2, 3, 4], [2, 2])), "colconcat")
+! ! Concat two integer vectors of different length
+! CALL Display(MdEnCode(ColConcat(a=[1, 2], b=[3, 4, 5])), &
+!              "colconcat="//CHAR_LF//CHAR_LF)
+! CALL OK(ALL(ColConcat(a=[1, 2], b=[3, 4, 5]) &
+!             .EQ. RESHAPE([1, 2, 0, 3, 4, 5], [3, 2])), "colconcat")
+! ! Concat two integer vectors of different length.
+! CALL Display(MdEnCode(ColConcat(a=[3, 4, 5], b=[1, 2])), &
+!              "colconcat="//CHAR_LF//CHAR_LF)
+! END PROGRAM main
+!```
+
+INTERFACE ColConcat
   MODULE PURE FUNCTION colConcat_1b(a, b) RESULT(ans)
     REAL(REAL64), INTENT(IN) :: a(:)
     REAL(REAL64), INTENT(IN) :: b(:)
     REAL(REAL64), ALLOCATABLE :: ans(:, :)
   END FUNCTION colConcat_1b
+END INTERFACE ColConcat
 
+!----------------------------------------------------------------------------
+!                                                          ColConcat@Methods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2021-11-24
+! summary: Concat columns of two vectors
+!
+! Concat columns of two vectors, a and b and return a matrix with two columns.
+!
+! Examples
+!
+!```fortran
+!
+! PROGRAM main
+! USE GlobalData, ONLY: I4B, LGT, DFP, CHAR_LF
+! USE AppendUtility, ONLY: ColConcat
+! USE MdEncode_Method, ONLY: MdEnCode
+! ! USE Display_Method, ONLY: Display
+! USE String_Class, ONLY: Display
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! ! Concat two integer vectors
+! CALL Display(MdEnCode(ColConcat(a=[1, 2], b=[3, 4])), &
+!              "colconcat="//CHAR_LF//CHAR_LF)
+! CALL OK(ALL(ColConcat(a=[1, 2], b=[3, 4]) &
+!             .EQ. RESHAPE([1, 2, 3, 4], [2, 2])), "colconcat")
+! ! Concat two integer vectors of different length
+! CALL Display(MdEnCode(ColConcat(a=[1, 2], b=[3, 4, 5])), &
+!              "colconcat="//CHAR_LF//CHAR_LF)
+! CALL OK(ALL(ColConcat(a=[1, 2], b=[3, 4, 5]) &
+!             .EQ. RESHAPE([1, 2, 0, 3, 4, 5], [3, 2])), "colconcat")
+! ! Concat two integer vectors of different length.
+! CALL Display(MdEnCode(ColConcat(a=[3, 4, 5], b=[1, 2])), &
+!              "colconcat="//CHAR_LF//CHAR_LF)
+! END PROGRAM main
+!```
+
+INTERFACE ColConcat
   MODULE PURE FUNCTION colConcat_1c(a, b) RESULT(ans)
     INTEGER(INT64), INTENT(IN) :: a(:)
     INTEGER(INT64), INTENT(IN) :: b(:)
     INTEGER(INT64), ALLOCATABLE :: ans(:, :)
   END FUNCTION colConcat_1c
+END INTERFACE ColConcat
 
+!----------------------------------------------------------------------------
+!                                                          ColConcat@Methods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2021-11-24
+! summary: Concat columns of two vectors
+!
+! Concat columns of two vectors, a and b and return a matrix with two columns.
+!
+! Examples
+!
+!```fortran
+!
+! PROGRAM main
+! USE GlobalData, ONLY: I4B, LGT, DFP, CHAR_LF
+! USE AppendUtility, ONLY: ColConcat
+! USE MdEncode_Method, ONLY: MdEnCode
+! ! USE Display_Method, ONLY: Display
+! USE String_Class, ONLY: Display
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! ! Concat two integer vectors
+! CALL Display(MdEnCode(ColConcat(a=[1, 2], b=[3, 4])), &
+!              "colconcat="//CHAR_LF//CHAR_LF)
+! CALL OK(ALL(ColConcat(a=[1, 2], b=[3, 4]) &
+!             .EQ. RESHAPE([1, 2, 3, 4], [2, 2])), "colconcat")
+! ! Concat two integer vectors of different length
+! CALL Display(MdEnCode(ColConcat(a=[1, 2], b=[3, 4, 5])), &
+!              "colconcat="//CHAR_LF//CHAR_LF)
+! CALL OK(ALL(ColConcat(a=[1, 2], b=[3, 4, 5]) &
+!             .EQ. RESHAPE([1, 2, 0, 3, 4, 5], [3, 2])), "colconcat")
+! ! Concat two integer vectors of different length.
+! CALL Display(MdEnCode(ColConcat(a=[3, 4, 5], b=[1, 2])), &
+!              "colconcat="//CHAR_LF//CHAR_LF)
+! END PROGRAM main
+!```
+
+INTERFACE ColConcat
   MODULE PURE FUNCTION colConcat_1d(a, b) RESULT(ans)
     INTEGER(INT32), INTENT(IN) :: a(:)
     INTEGER(INT32), INTENT(IN) :: b(:)
     INTEGER(INT32), ALLOCATABLE :: ans(:, :)
   END FUNCTION colConcat_1d
+END INTERFACE ColConcat
 
+!----------------------------------------------------------------------------
+!                                                          ColConcat@Methods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2021-11-24
+! summary: Concat columns of two vectors
+!
+! Concat columns of two vectors, a and b and return a matrix with two columns.
+!
+! Examples
+!
+!```fortran
+!
+! PROGRAM main
+! USE GlobalData, ONLY: I4B, LGT, DFP, CHAR_LF
+! USE AppendUtility, ONLY: ColConcat
+! USE MdEncode_Method, ONLY: MdEnCode
+! ! USE Display_Method, ONLY: Display
+! USE String_Class, ONLY: Display
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! ! Concat two integer vectors
+! CALL Display(MdEnCode(ColConcat(a=[1, 2], b=[3, 4])), &
+!              "colconcat="//CHAR_LF//CHAR_LF)
+! CALL OK(ALL(ColConcat(a=[1, 2], b=[3, 4]) &
+!             .EQ. RESHAPE([1, 2, 3, 4], [2, 2])), "colconcat")
+! ! Concat two integer vectors of different length
+! CALL Display(MdEnCode(ColConcat(a=[1, 2], b=[3, 4, 5])), &
+!              "colconcat="//CHAR_LF//CHAR_LF)
+! CALL OK(ALL(ColConcat(a=[1, 2], b=[3, 4, 5]) &
+!             .EQ. RESHAPE([1, 2, 0, 3, 4, 5], [3, 2])), "colconcat")
+! ! Concat two integer vectors of different length.
+! CALL Display(MdEnCode(ColConcat(a=[3, 4, 5], b=[1, 2])), &
+!              "colconcat="//CHAR_LF//CHAR_LF)
+! END PROGRAM main
+!```
+
+INTERFACE ColConcat
   MODULE PURE FUNCTION colConcat_1e(a, b) RESULT(ans)
     INTEGER(INT16), INTENT(IN) :: a(:)
     INTEGER(INT16), INTENT(IN) :: b(:)
     INTEGER(INT16), ALLOCATABLE :: ans(:, :)
   END FUNCTION colConcat_1e
+END INTERFACE ColConcat
 
+!----------------------------------------------------------------------------
+!                                                          ColConcat@Methods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2021-11-24
+! summary: Concat columns of two vectors
+!
+! Concat columns of two vectors, a and b and return a matrix with two columns.
+!
+! Examples
+!
+!```fortran
+!
+! PROGRAM main
+! USE GlobalData, ONLY: I4B, LGT, DFP, CHAR_LF
+! USE AppendUtility, ONLY: ColConcat
+! USE MdEncode_Method, ONLY: MdEnCode
+! ! USE Display_Method, ONLY: Display
+! USE String_Class, ONLY: Display
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! ! Concat two integer vectors
+! CALL Display(MdEnCode(ColConcat(a=[1, 2], b=[3, 4])), &
+!              "colconcat="//CHAR_LF//CHAR_LF)
+! CALL OK(ALL(ColConcat(a=[1, 2], b=[3, 4]) &
+!             .EQ. RESHAPE([1, 2, 3, 4], [2, 2])), "colconcat")
+! ! Concat two integer vectors of different length
+! CALL Display(MdEnCode(ColConcat(a=[1, 2], b=[3, 4, 5])), &
+!              "colconcat="//CHAR_LF//CHAR_LF)
+! CALL OK(ALL(ColConcat(a=[1, 2], b=[3, 4, 5]) &
+!             .EQ. RESHAPE([1, 2, 0, 3, 4, 5], [3, 2])), "colconcat")
+! ! Concat two integer vectors of different length.
+! CALL Display(MdEnCode(ColConcat(a=[3, 4, 5], b=[1, 2])), &
+!              "colconcat="//CHAR_LF//CHAR_LF)
+! END PROGRAM main
+!```
+
+INTERFACE ColConcat
   MODULE PURE FUNCTION colConcat_1f(a, b) RESULT(ans)
     INTEGER(INT8), INTENT(IN) :: a(:)
     INTEGER(INT8), INTENT(IN) :: b(:)
@@ -427,9 +1302,17 @@ INTERFACE ColConcat
   END FUNCTION colConcat_1f
 END INTERFACE ColConcat
 
+!----------------------------------------------------------------------------
+!                                                          ColConcat@Methods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2021-11-24
+! summary: Concat columns of two vectors
+
 INTERFACE OPERATOR(.ColConcat.)
   MODULE PROCEDURE colConcat_1a, colConcat_1b, colConcat_1c, &
-    & colConcat_1d, colConcat_1e, colConcat_1f
+    colConcat_1d, colConcat_1e, colConcat_1f
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -438,8 +1321,61 @@ END INTERFACE
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-24
-! update: 2021-11-24
 ! summary: Concat columns of a matrix and a vector
+!
+! Concat columns of a matrix and a vector, a and b, and return a matrix with
+! columns of a and vector b.
+!
+! Examples
+!
+!```fortran
+!
+! PROGRAM main
+! USE GlobalData, ONLY: I4B, LGT, DFP, CHAR_LF
+! USE AppendUtility, ONLY: ColConcat
+! USE MdEncode_Method, ONLY: MdEnCode
+! USE Display_Method, ONLY: Display
+! IMPLICIT NONE
+!
+! ! Concat columns of a rank2 array and rank 1 array.
+! CALL Display(ColConcat(a=RESHAPE([1, 2, 3, 4], [2, 2]), &
+!                        b=[5, 6]), "colconcat=")
+!
+! ! ColConcat works fine even when number of rows in rank-2
+! ! array is not the same as the size of rank-1 array.
+!
+! CALL Display(ColConcat(a=RESHAPE([1, 2, 3, 4], [2, 2]), &
+!                        b=[5, 6, 7]), "colconcat=")
+!
+! ! Results
+! !
+! ! colconcat=
+! ! ----------
+! !  1  3  5
+! !  2  4  6
+! !  0  0  7
+!
+! ! Concat columns of a rank2 array and rank 1 array.
+! CALL Display(ColConcat(b=RESHAPE([1, 2, 3, 4], [2, 2]), &
+!                        a=[5, 6]), "colconcat=")
+!
+! ! colconcat=
+! ! ----------
+! !  5  1  3
+! !  6  2  4
+!
+! ! ColConcat works fine even when number of rows in rank-2 array is not the
+! ! same as the size of rank-1 array.
+! CALL Display(ColConcat(b=RESHAPE([1, 2, 3, 4], [2, 2]), &
+!                        a=[5, 6, 7]), "colconcat=")
+!
+! ! colconcat=
+! ! ----------
+! !  5  1  3
+! !  6  2  4
+! !  7  0  0
+! END PROGRAM main
+!```
 
 INTERFACE ColConcat
   MODULE PURE FUNCTION colConcat_2a(a, b) RESULT(ans)
@@ -481,7 +1417,7 @@ END INTERFACE ColConcat
 
 INTERFACE OPERATOR(.ColConcat.)
   MODULE PROCEDURE colConcat_2a, colConcat_2b, colConcat_2c, &
-    & colConcat_2d, colConcat_2e, colConcat_2f
+    colConcat_2d, colConcat_2e, colConcat_2f
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -490,8 +1426,58 @@ END INTERFACE
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-24
-! update: 2021-11-24
 ! summary: Concat columns of rank1 and rank2 array
+!
+! Examples
+!
+!```fortran
+!
+! PROGRAM main
+! USE GlobalData, ONLY: I4B, LGT, DFP, CHAR_LF
+! USE AppendUtility, ONLY: ColConcat
+! USE MdEncode_Method, ONLY: MdEnCode
+! USE Display_Method, ONLY: Display
+! IMPLICIT NONE
+!
+! ! Concat columns of a rank2 array and rank 1 array.
+! CALL Display(ColConcat(a=RESHAPE([1, 2, 3, 4], [2, 2]), &
+!                        b=[5, 6]), "colconcat=")
+!
+! ! ColConcat works fine even when number of rows in rank-2
+! ! array is not the same as the size of rank-1 array.
+!
+! CALL Display(ColConcat(a=RESHAPE([1, 2, 3, 4], [2, 2]), &
+!                        b=[5, 6, 7]), "colconcat=")
+!
+! ! Results
+! !
+! ! colconcat=
+! ! ----------
+! !  1  3  5
+! !  2  4  6
+! !  0  0  7
+!
+! ! Concat columns of a rank2 array and rank 1 array.
+! CALL Display(ColConcat(b=RESHAPE([1, 2, 3, 4], [2, 2]), &
+!                        a=[5, 6]), "colconcat=")
+!
+! ! colconcat=
+! ! ----------
+! !  5  1  3
+! !  6  2  4
+!
+! ! ColConcat works fine even when number of rows in rank-2 array is not the
+! ! same as the size of rank-1 array.
+! CALL Display(ColConcat(b=RESHAPE([1, 2, 3, 4], [2, 2]), &
+!                        a=[5, 6, 7]), "colconcat=")
+!
+! ! colconcat=
+! ! ----------
+! !  5  1  3
+! !  6  2  4
+! !  7  0  0
+! END PROGRAM main
+!```
 
 INTERFACE ColConcat
   MODULE PURE FUNCTION colConcat_3a(a, b) RESULT(ans)
@@ -542,8 +1528,49 @@ END INTERFACE
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-24
-! update: 2021-11-24
 ! summary: Concat columns of rank2 and rank2 array
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: I4B, LGT, DFP, CHAR_LF
+! USE AppendUtility, ONLY: ColConcat
+! USE Display_Method, ONLY: Display
+! USE ArangeUtility, ONLY: Arange
+! IMPLICIT NONE
+!
+! CALL Display(ColConcat(a=RESHAPE([1, 2, 3, 4], [2, 2]), &
+!                        b=RESHAPE([5, 6, 7, 8], [2, 2])), "colconcat=")
+!
+! ! colconcat=
+! ! ----------
+! ! 1  3  5  7
+! ! 2  4  6  8
+!
+! CALL Display(ColConcat(a=RESHAPE(arange(1, 9), [3, 3]), &
+!                        b=RESHAPE(arange(10, 13), [2, 2])), "colconcat=")
+!
+! ! ```txt title="results"
+! !     colconcat=
+! ! ------------------
+! !  1   4   7  10  12
+! !  2   5   8  11  13
+! !  3   6   9   0   0
+!
+! CALL Display(ColConcat(a=RESHAPE(arange(1, 4), [2, 2]), &
+!                        b=RESHAPE(arange(5, 13), [3, 3])), "colconcat=")
+!
+! ! ```txt title="results"
+! !     colconcat=
+! ! ------------------
+! !  1   3   5   8  11
+! !  2   4   6   9  12
+! !  0   0   7  10  13
+! ! ```
+!
+! END PROGRAM main
+!```
 
 INTERFACE ColConcat
   MODULE PURE FUNCTION colConcat_4a(a, b) RESULT(ans)
@@ -585,7 +1612,7 @@ END INTERFACE ColConcat
 
 INTERFACE OPERATOR(.ColConcat.)
   MODULE PROCEDURE colConcat_4a, colConcat_4b, colConcat_4c, &
-    & colConcat_4d, colConcat_4e, colConcat_4f
+    colConcat_4d, colConcat_4e, colConcat_4f
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -594,8 +1621,42 @@ END INTERFACE
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-24
-! update: 2021-11-24
 ! summary: Concat rows of two vectors
+!
+! Concat rows of two vectors, a and b and return a matrix with two rows.
+!
+! Examples
+!
+!```fortran
+!
+! PROGRAM main
+! USE GlobalData, ONLY: I4B, LGT, DFP, CHAR_LF
+! USE AppendUtility, ONLY: RowConcat
+! USE Display_Method, ONLY: Display
+! USE Test_Method, ONLY: ok
+! IMPLICIT NONE
+!
+! ! Concat two integer vectors
+! CALL Display(RowConcat(a=[1, 2], b=[3, 4]), "RowConcat=")
+! CALL OK(ALL(RowConcat(a=[1, 2], b=[3, 4]) &
+!             .EQ. RESHAPE([1, 3, 2, 4], [2, 2])), "RowConcat")
+!
+! ! RowConcat=
+! ! ----------
+! !    1  2
+! !    3  4
+!
+! ! Concat two integer vectors of different length
+! CALL Display(RowConcat(a=[1, 2], b=[3, 4, 5]), "RowConcat=")
+! CALL OK(ALL(RowConcat(a=[1, 2], b=[3, 4, 5]) &
+!             .EQ. RESHAPE([1, 3, 2, 4, 0, 5], [2, 3])), "RowConcat")
+!
+! ! RowConcat=
+! ! ----------
+! !  1  2  0
+! !  3  4  5
+! END PROGRAM main
+!```
 
 INTERFACE RowConcat
   MODULE PURE FUNCTION rowConcat_1a(a, b) RESULT(ans)
@@ -637,7 +1698,7 @@ END INTERFACE RowConcat
 
 INTERFACE OPERATOR(.rowConcat.)
   MODULE PROCEDURE rowConcat_1a, rowConcat_1b, rowConcat_1c, &
-    & rowConcat_1d, rowConcat_1e, rowConcat_1f
+    rowConcat_1d, rowConcat_1e, rowConcat_1f
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -646,8 +1707,60 @@ END INTERFACE
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-24
-! update: 2021-11-24
 ! summary: Concat rows of a matrix and a vector
+!
+! Cocat rows of a matrix and a vector, a and b, and return a matrix with rows
+! of a and vector b.
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: I4B, LGT, DFP, CHAR_LF
+! USE AppendUtility, ONLY: RowConcat
+! USE Display_Method, ONLY: Display
+! IMPLICIT NONE
+!
+! ! Concat columns of a rank2 array and rank 1 array.
+! CALL Display(RowConcat(a=RESHAPE([1, 2, 4, 5], [2, 2]), &
+!                        b=[3, 6]), "RowConcat=")
+!
+! ! RowConcat=
+! ! ----------
+! !    1  4
+! !    2  5
+! !    3  6
+!
+! ! RowConcat works fine even when number of columns in rank-2 array
+! ! is not the same as the size of rank-1 array.
+!
+! CALL Display(RowConcat(a=RESHAPE([1, 2, 4, 5], [2, 2]), &
+!                        b=[3, 6, 7]), "RowConcat=")
+!
+! ! RowConcat=
+! ! ----------
+! !  1  4  0
+! !  2  5  0
+! !  3  6  7
+!
+! ! We can also concat the columns of a vector and a matrix.
+! CALL Display(RowConcat(b=RESHAPE([1, 2, 4, 5], [2, 2]), &
+!                        a=[3, 6]), "RowConcat=")
+! ! RowConcat=
+! ! ----------
+! !    3  6
+! !    1  4
+! !    2  5
+!
+! CALL Display(RowConcat(b=RESHAPE([1, 2, 4, 5], [2, 2]), &
+!                        a=[3, 6, 7]), "RowConcat=")
+! ! RowConcat=
+! ! ----------
+! !  3  6  7
+! !  1  4  0
+! !  2  5  0
+! END PROGRAM main
+!```
 
 INTERFACE RowConcat
   MODULE PURE FUNCTION rowConcat_2a(a, b) RESULT(ans)
@@ -689,7 +1802,7 @@ END INTERFACE RowConcat
 
 INTERFACE OPERATOR(.rowConcat.)
   MODULE PROCEDURE rowConcat_2a, rowConcat_2b, rowConcat_2c, &
-    & rowConcat_2d, rowConcat_2e, rowConcat_2f
+    rowConcat_2d, rowConcat_2e, rowConcat_2f
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -698,8 +1811,60 @@ END INTERFACE
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-24
-! update: 2021-11-24
 ! summary: Concat rows of rank1 and rank2 array
+!
+! Concat rows of a vector and a matrix, a and b, and return
+! a matrix with rows of a and matrix b.
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: I4B, LGT, DFP, CHAR_LF
+! USE AppendUtility, ONLY: RowConcat
+! USE Display_Method, ONLY: Display
+! IMPLICIT NONE
+!
+! ! Concat columns of a rank2 array and rank 1 array.
+! CALL Display(RowConcat(a=RESHAPE([1, 2, 4, 5], [2, 2]), &
+!                        b=[3, 6]), "RowConcat=")
+!
+! ! RowConcat=
+! ! ----------
+! !    1  4
+! !    2  5
+! !    3  6
+!
+! ! RowConcat works fine even when number of columns in rank-2 array
+! ! is not the same as the size of rank-1 array.
+!
+! CALL Display(RowConcat(a=RESHAPE([1, 2, 4, 5], [2, 2]), &
+!                        b=[3, 6, 7]), "RowConcat=")
+!
+! ! RowConcat=
+! ! ----------
+! !  1  4  0
+! !  2  5  0
+! !  3  6  7
+!
+! ! We can also concat the columns of a vector and a matrix.
+! CALL Display(RowConcat(b=RESHAPE([1, 2, 4, 5], [2, 2]), &
+!                        a=[3, 6]), "RowConcat=")
+! ! RowConcat=
+! ! ----------
+! !    3  6
+! !    1  4
+! !    2  5
+!
+! CALL Display(RowConcat(b=RESHAPE([1, 2, 4, 5], [2, 2]), &
+!                        a=[3, 6, 7]), "RowConcat=")
+! ! RowConcat=
+! ! ----------
+! !  3  6  7
+! !  1  4  0
+! !  2  5  0
+! END PROGRAM main
+!```
 
 INTERFACE RowConcat
   MODULE PURE FUNCTION rowConcat_3a(a, b) RESULT(ans)
@@ -745,13 +1910,59 @@ INTERFACE OPERATOR(.rowConcat.)
 END INTERFACE
 
 !----------------------------------------------------------------------------
-!                                                    rowConcat@Methods
+!                                                          rowConcat@Methods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-24
-! update: 2021-11-24
 ! summary: Concat rows of rank2 and rank2 array
+!
+! Concat rows of rank2 and rank2 array.
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: I4B, LGT, DFP, CHAR_LF
+! USE AppendUtility, ONLY: RowConcat
+! USE Display_Method, ONLY: Display
+! USE ArangeUtility, ONLY: Arange
+! IMPLICIT NONE
+! !
+! ! We can also concat the columns of two matrices.
+! CALL Display(RowConcat(a=RESHAPE([1, 2, 3, 4], [2, 2]), &
+!                        b=RESHAPE([5, 6, 7, 8], [2, 2])), "RowConcat=")
+! !
+! ! RowConcat=
+! ! ----------
+! !    1  3
+! !    2  4
+! !    5  7
+! !    6  8
+! !
+! CALL Display(RowConcat(a=RESHAPE(Arange(1, 9), [3, 3]), &
+!                        b=RESHAPE(Arange(10, 13), [2, 2])), "RowConcat=")
+! !
+! ! RowConcat=
+! ! ----------
+! !  1   4   7
+! !  2   5   8
+! !  3   6   9
+! ! 10  12   0
+! ! 11  13   0
+! !
+! CALL Display(RowConcat(a=RESHAPE(Arange(1, 4), [2, 2]), &
+!                        b=RESHAPE(Arange(5, 13), [3, 3])), "RowConcat=")
+! !
+! ! RowConcat=
+! ! ----------
+! !  1   3   0
+! !  2   4   0
+! !  5   8  11
+! !  6   9  12
+! !  7  10  13
+! END PROGRAM main
+!```
 
 INTERFACE RowConcat
   MODULE PURE FUNCTION rowConcat_4a(a, b) RESULT(ans)
@@ -791,9 +2002,13 @@ INTERFACE RowConcat
   END FUNCTION rowConcat_4f
 END INTERFACE RowConcat
 
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
 INTERFACE OPERATOR(.rowConcat.)
   MODULE PROCEDURE rowConcat_4a, rowConcat_4b, rowConcat_4c, &
-    & rowConcat_4d, rowConcat_4e, rowConcat_4f
+    rowConcat_4d, rowConcat_4e, rowConcat_4f
 END INTERFACE
 
 END MODULE AppendUtility

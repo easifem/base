@@ -15,10 +15,6 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-!> author: Vikas Sharma, Ph. D.
-! date:         22 March 2021
-! summary:         This submodule contains the sorting routine
-
 SUBMODULE(SortUtility) Methods
 USE SwapUtility, ONLY: Swap
 
@@ -46,6 +42,8 @@ INTEGER(I4B) :: low, high
 INTEGER(I4B) :: maxDepth
 low = 1
 high = SIZE(array)
+! 0 or 1 entries are already sorted; this also avoids LOG(0)
+IF (high .LE. 1) RETURN
 maxDepth = 2 * idnint(LOG(DBLE(high)))
 CALL _Recursive_IntroSort_(array, low, high, maxDepth)
 END PROCEDURE IntroSort_Int8
@@ -67,6 +65,8 @@ INTEGER(I4B) :: low, high
 INTEGER(I4B) :: maxDepth
 low = 1
 high = SIZE(array)
+! 0 or 1 entries are already sorted; this also avoids LOG(0)
+IF (high .LE. 1) RETURN
 maxDepth = 2 * idnint(LOG(DBLE(high)))
 CALL _Recursive_IntroSort_(array, low, high, maxDepth)
 END PROCEDURE IntroSort_Int16
@@ -88,6 +88,8 @@ INTEGER(I4B) :: low, high
 INTEGER(I4B) :: maxDepth
 low = 1
 high = SIZE(array)
+! 0 or 1 entries are already sorted; this also avoids LOG(0)
+IF (high .LE. 1) RETURN
 maxDepth = 2 * idnint(LOG(DBLE(high)))
 CALL _Recursive_IntroSort_(array, low, high, maxDepth)
 END PROCEDURE IntroSort_Int32
@@ -109,6 +111,8 @@ INTEGER(I4B) :: low, high
 INTEGER(I4B) :: maxDepth
 low = 1
 high = SIZE(array)
+! 0 or 1 entries are already sorted; this also avoids LOG(0)
+IF (high .LE. 1) RETURN
 maxDepth = 2 * idnint(LOG(DBLE(high)))
 CALL _Recursive_IntroSort_(array, low, high, maxDepth)
 END PROCEDURE IntroSort_Int64
@@ -130,6 +134,8 @@ INTEGER(I4B) :: low, high
 INTEGER(I4B) :: maxDepth
 low = 1
 high = SIZE(array)
+! 0 or 1 entries are already sorted; this also avoids LOG(0)
+IF (high .LE. 1) RETURN
 maxDepth = 2 * idnint(LOG(DBLE(high)))
 CALL _Recursive_IntroSort_(array, low, high, maxDepth)
 END PROCEDURE IntroSort_Real32
@@ -151,6 +157,8 @@ INTEGER(I4B) :: low, high
 INTEGER(I4B) :: maxDepth
 low = 1
 high = SIZE(array)
+! 0 or 1 entries are already sorted; this also avoids LOG(0)
+IF (high .LE. 1) RETURN
 maxDepth = 2 * idnint(LOG(DBLE(high)))
 CALL _Recursive_IntroSort_(array, low, high, maxDepth)
 END PROCEDURE IntroSort_Real64
@@ -172,6 +180,8 @@ INTEGER(I4B) :: low, high
 INTEGER(I4B) :: maxDepth
 low = 1
 high = SIZE(array)
+! 0 or 1 entries are already sorted; this also avoids LOG(0)
+IF (high .LE. 1) RETURN
 maxDepth = 2 * idnint(LOG(DBLE(high)))
 CALL _Recursive_ArgIntroSort_(array, arg, low, high, maxDepth)
 END PROCEDURE ArgIntroSort_Int8
@@ -181,6 +191,8 @@ RECURSIVE PURE SUBROUTINE _Recursive_ArgIntroSort_(this, idx, &
   INTEGER(I4B), INTENT(INOUT) :: idx(:)
   INTEGER(I4B), INTENT(IN) :: left, right, maxDepth
   INTEGER(I4B) :: imid, iPivot, N
+  INTEGER(I4B) :: tmp(right - left + 1)
+  INTEGER(I4B) :: perm(right - left + 1)
 #include "./IntroSort/Recursive_ArgIntroSort.inc"
 END SUBROUTINE _Recursive_ArgIntroSort_
 #undef _Recursive_ArgIntroSort_
@@ -195,6 +207,8 @@ INTEGER(I4B) :: low, high
 INTEGER(I4B) :: maxDepth
 low = 1
 high = SIZE(array)
+! 0 or 1 entries are already sorted; this also avoids LOG(0)
+IF (high .LE. 1) RETURN
 maxDepth = 2 * idnint(LOG(DBLE(high)))
 CALL _Recursive_ArgIntroSort_(array, arg, low, high, maxDepth)
 END PROCEDURE ArgIntroSort_Int16
@@ -204,6 +218,8 @@ RECURSIVE PURE SUBROUTINE _Recursive_ArgIntroSort_(this, idx, &
   INTEGER(I4B), INTENT(INOUT) :: idx(:)
   INTEGER(I4B), INTENT(IN) :: left, right, maxDepth
   INTEGER(I4B) :: imid, iPivot, N
+  INTEGER(I4B) :: tmp(right - left + 1)
+  INTEGER(I4B) :: perm(right - left + 1)
 #include "./IntroSort/Recursive_ArgIntroSort.inc"
 END SUBROUTINE _Recursive_ArgIntroSort_
 #undef _Recursive_ArgIntroSort_
@@ -218,6 +234,8 @@ INTEGER(I4B) :: low, high
 INTEGER(I4B) :: maxDepth
 low = 1
 high = SIZE(array)
+! 0 or 1 entries are already sorted; this also avoids LOG(0)
+IF (high .LE. 1) RETURN
 maxDepth = 2 * idnint(LOG(DBLE(high)))
 CALL _Recursive_ArgIntroSort_(array, arg, low, high, maxDepth)
 END PROCEDURE ArgIntroSort_Int32
@@ -227,6 +245,8 @@ RECURSIVE PURE SUBROUTINE _Recursive_ArgIntroSort_(this, idx, &
   INTEGER(I4B), INTENT(INOUT) :: idx(:)
   INTEGER(I4B), INTENT(IN) :: left, right, maxDepth
   INTEGER(I4B) :: imid, iPivot, N
+  INTEGER(I4B) :: tmp(right - left + 1)
+  INTEGER(I4B) :: perm(right - left + 1)
 #include "./IntroSort/Recursive_ArgIntroSort.inc"
 END SUBROUTINE _Recursive_ArgIntroSort_
 #undef _Recursive_ArgIntroSort_
@@ -241,6 +261,8 @@ INTEGER(I4B) :: low, high
 INTEGER(I4B) :: maxDepth
 low = 1
 high = SIZE(array)
+! 0 or 1 entries are already sorted; this also avoids LOG(0)
+IF (high .LE. 1) RETURN
 maxDepth = 2 * idnint(LOG(DBLE(high)))
 CALL _Recursive_ArgIntroSort_(array, arg, low, high, maxDepth)
 END PROCEDURE ArgIntroSort_Int64
@@ -250,6 +272,8 @@ RECURSIVE PURE SUBROUTINE _Recursive_ArgIntroSort_(this, idx, &
   INTEGER(I4B), INTENT(INOUT) :: idx(:)
   INTEGER(I4B), INTENT(IN) :: left, right, maxDepth
   INTEGER(I4B) :: imid, iPivot, N
+  INTEGER(I4B) :: tmp(right - left + 1)
+  INTEGER(I4B) :: perm(right - left + 1)
 #include "./IntroSort/Recursive_ArgIntroSort.inc"
 END SUBROUTINE _Recursive_ArgIntroSort_
 #undef _Recursive_ArgIntroSort_
@@ -264,6 +288,8 @@ INTEGER(I4B) :: low, high
 INTEGER(I4B) :: maxDepth
 low = 1
 high = SIZE(array)
+! 0 or 1 entries are already sorted; this also avoids LOG(0)
+IF (high .LE. 1) RETURN
 maxDepth = 2 * idnint(LOG(DBLE(high)))
 CALL _Recursive_ArgIntroSort_(array, arg, low, high, maxDepth)
 END PROCEDURE ArgIntroSort_Real32
@@ -273,6 +299,8 @@ RECURSIVE PURE SUBROUTINE _Recursive_ArgIntroSort_(this, idx, &
   INTEGER(I4B), INTENT(INOUT) :: idx(:)
   INTEGER(I4B), INTENT(IN) :: left, right, maxDepth
   INTEGER(I4B) :: imid, iPivot, N
+  INTEGER(I4B) :: tmp(right - left + 1)
+  INTEGER(I4B) :: perm(right - left + 1)
 #include "./IntroSort/Recursive_ArgIntroSort.inc"
 END SUBROUTINE _Recursive_ArgIntroSort_
 #undef _Recursive_ArgIntroSort_
@@ -287,6 +315,8 @@ INTEGER(I4B) :: low, high
 INTEGER(I4B) :: maxDepth
 low = 1
 high = SIZE(array)
+! 0 or 1 entries are already sorted; this also avoids LOG(0)
+IF (high .LE. 1) RETURN
 maxDepth = 2 * idnint(LOG(DBLE(high)))
 CALL _Recursive_ArgIntroSort_(array, arg, low, high, maxDepth)
 END PROCEDURE ArgIntroSort_Real64
@@ -296,6 +326,8 @@ RECURSIVE PURE SUBROUTINE _Recursive_ArgIntroSort_(this, idx, &
   INTEGER(I4B), INTENT(INOUT) :: idx(:)
   INTEGER(I4B), INTENT(IN) :: left, right, maxDepth
   INTEGER(I4B) :: imid, iPivot, N
+  INTEGER(I4B) :: tmp(right - left + 1)
+  INTEGER(I4B) :: perm(right - left + 1)
 #include "./IntroSort/Recursive_ArgIntroSort.inc"
 END SUBROUTINE _Recursive_ArgIntroSort_
 #undef _Recursive_ArgIntroSort_

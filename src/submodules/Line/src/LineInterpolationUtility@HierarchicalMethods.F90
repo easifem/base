@@ -19,8 +19,9 @@ SUBMODULE(LineInterpolationUtility) HierarchicalMethods
 USE BaseType, ONLY: polyopt => TypePolynomialOpt
 USE StringUtility, ONLY: UpperCase
 USE MappingUtility, ONLY: FromUnitLine2BiUnitLine_
-USE OrthogonalPolynomialUtility, ONLY: GradientEvalAllOrthopol_, &
-                                       EvalAllOrthopol_
+USE OrthogonalPolynomialUtility, ONLY: GradientEvalAllOrthopol_
+USE OrthogonalPolynomialUtility, ONLY: LaplacianEvalAllOrthopol_
+USE OrthogonalPolynomialUtility, ONLY: EvalAllOrthopol_
 IMPLICIT NONE
 
 #ifdef DEBUG_VER
@@ -151,7 +152,9 @@ CASE ("B")
                                 nrow=dim1, ncol=dim2)
 
 CASE DEFAULT
-  dim1 = 0; dim2 = 0; dim3 = 0
+  dim1 = 0
+  dim2 = 0
+  dim3 = 0
   RETURN
 END SELECT
 
@@ -160,6 +163,79 @@ DO CONCURRENT(k=2:order, ii=1:dim1)
 END DO
 
 END PROCEDURE HeirarchicalGradientBasis_Line2_
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE HeirarchicalLaplacianBasis_Line1
+INTEGER(I4B) :: nrow, ncol
+CALL HeirarchicalLaplacianBasis_Line1_( &
+  order=order, xij=xij, refLine=refLine, ans=ans, nrow=nrow, ncol=ncol)
+END PROCEDURE HeirarchicalLaplacianBasis_Line1
+
+!----------------------------------------------------------------------------
+!                                            HeirarchicalLaplacianBasis_Line
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE HeirarchicalLaplacianBasis_Line1_
+INTEGER(I4B), PARAMETER :: orient = 1
+CALL HeirarchicalLaplacianBasis_Line2_( &
+  order=order, xij=xij, refLine=refLine, orient=orient, ans=ans, &
+  nrow=nrow, ncol=ncol)
+END PROCEDURE HeirarchicalLaplacianBasis_Line1_
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE HeirarchicalLaplacianBasis_Line2
+INTEGER(I4B) :: nrow, ncol
+nrow = SIZE(xij, 2)
+ncol = order + 1
+ALLOCATE (ans(nrow, ncol))
+CALL HeirarchicalLaplacianBasis_Line2_( &
+  order=order, xij=xij, refLine=refLine, orient=orient, ans=ans, &
+  nrow=nrow, ncol=ncol)
+END PROCEDURE HeirarchicalLaplacianBasis_Line2
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE HeirarchicalLaplacianBasis_Line2_
+CHARACTER(1) :: astr
+REAL(DFP) :: temp(SIZE(xij, 2)), o1
+INTEGER(I4B) :: ii, jj, k
+
+o1 = REAL(orient, kind=DFP)
+astr = UpperCase(refLine(1:1))
+
+SELECT CASE (astr)
+
+CASE ("U")
+  CALL FromUnitLine2BiUnitLine_(xin=xij(1, :), ans=temp, tsize=nrow)
+  CALL LaplacianEvalAllOrthopol_(n=order, x=temp, orthopol=polyopt%Lobatto, &
+                                 ans=ans, nrow=nrow, ncol=ncol)
+
+  DO CONCURRENT(ii=1:nrow, jj=1:ncol)
+    ans(ii, jj) = ans(ii, jj) * 2.0_DFP
+  END DO
+
+CASE ("B")
+  CALL LaplacianEvalAllOrthopol_(n=order, x=xij(1, :), &
+                                 orthopol=polyopt%Lobatto, ans=ans, &
+                                 nrow=nrow, ncol=ncol)
+
+CASE DEFAULT
+  nrow = 0
+  ncol = 0
+END SELECT
+
+DO CONCURRENT(k=2:order, ii=1:nrow)
+  ans(ii, k + 1) = (o1**(k - 1)) * ans(ii, k + 1)
+END DO
+END PROCEDURE HeirarchicalLaplacianBasis_Line2_
 
 !----------------------------------------------------------------------------
 !

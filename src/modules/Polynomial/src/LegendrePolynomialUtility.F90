@@ -1,5 +1,5 @@
 ! This program is a part of EASIFEM library
-! Copyright (C) 2020-2021  Vikas Sharma, Ph.D
+! Copyright (C) 2020-2021 Vikas Sharma, Ph.D
 !
 ! This program is free software: you can redistribute it and/or modify
 ! it under the terms of the GNU General Public License as published by
@@ -12,22 +12,51 @@
 ! GNU General Public License for more details.
 !
 ! You should have received a copy of the GNU General Public License
-! along with this program.  If not, see <https: //www.gnu.org/licenses/>
-!
+! along with this program.  If not, see <https://www.gnu.org/licenses/>
 
-!> author: Vikas Sharma, Ph. D.
-! date: 3 Aug 2022
-! summary: Utility related to Legendre Polynomials is defined.
+!> author: Vikas Sharma, Ph.D.
+! date: 2026-10-30
+! summary: Legendre evaluation, recurrence, quadrature and transforms.
 !
-!{!pages/LegendrePolynomialUtility.md!}
+! Standard Legendre normalization has P_n(1)=1. Evaluation degree n and
+! quadrature point count n are distinct concepts.
+!
+! Arguments:
+!   None at module scope; see the public interfaces.
+!
+! Returns:
+!   Public polynomial and interpolation procedures.
+!
+! Formula:
+! $$P_0=1,\quad P_1=x,\quad w(x)=1$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE LegendrePolynomialUtility, ONLY: LegendreEval
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: x(3), y(3)
+! REAL(DFP), PARAMETER :: tol = 1.0E-11_DFP
+!
+! x = [-0.5_DFP, 0.0_DFP, 0.5_DFP]
+! y = LegendreEval(n=2_I4B, x=x)
+! CALL OK(MAXVAL(ABS(y-(0.5_DFP*(3.0_DFP*x*x-1.0_DFP)))) < tol, &
+!   "Degree two agrees with its analytic formula")
+! CALL OK(ABS(LegendreEval(n=2_I4B, x=0.0_DFP) &
+!   -y(2)) < tol, "Scalar and vector calls agree")
+! END PROGRAM main
+!```
 
 MODULE LegendrePolynomialUtility
-USE GlobalData, ONLY: DFP, I4B, LGT
-
+USE GlobalData, ONLY: DFP
+USE GlobalData, ONLY: I4B
+USE GlobalData, ONLY: LGT
 USE BaseType, ONLY: iface_1DFunction
-
 IMPLICIT NONE
-
 PRIVATE
 
 PUBLIC :: LegendreAlpha
@@ -55,6 +84,9 @@ PUBLIC :: LegendreMonomialExpansion
 PUBLIC :: LegendreGradientEvalAll
 PUBLIC :: LegendreGradientEvalAll_
 PUBLIC :: LegendreGradientEval
+PUBLIC :: LegendreLaplacianEvalAll
+PUBLIC :: LegendreLaplacianEvalAll_
+PUBLIC :: LegendreLaplacianEval
 PUBLIC :: LegendreEvalSum
 PUBLIC :: LegendreGradientEvalSum
 PUBLIC :: LegendreTransform
@@ -68,9 +100,35 @@ PUBLIC :: LegendreDMatEvenOdd
 !                                                             LegendreAlpha
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 8 Sept 2022
-! summary: Recurrence coefficient, alpha, of Legendre polynomial
+!> author: Vikas Sharma, Ph.D.
+! date: 2026-10-30
+! summary: Return a monic recurrence diagonal coefficient.
+!
+! Arguments:
+!   n : INTEGER(I4B), INTENT(IN). Maximum polynomial degree; use n>=0.
+!
+! Returns:
+!   ans : REAL(DFP).
+!
+! Formula:
+! $$\pi_{n+1}=(x-\alpha_n)\pi_n-\beta_n\pi_{n-1}$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE LegendrePolynomialUtility, ONLY: LegendreAlpha
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: y
+!
+! y = LegendreAlpha(n=2_I4B)
+! CALL OK(ABS(y-(0.0_DFP)) < 1.0E-11_DFP, &
+!   "Degree two coefficient or norm")
+! END PROGRAM main
+!```
 
 INTERFACE
   MODULE PURE FUNCTION LegendreAlpha(n) RESULT(ans)
@@ -85,9 +143,39 @@ END INTERFACE
 !                                                              LegendreBeta
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 8 Sept 2022
-! summary: Recurrence coefficient, beta, of Legendre polynomial
+!> author: Vikas Sharma, Ph.D.
+! date: 2026-10-30
+! summary: Return a monic recurrence beta coefficient.
+!
+! For beta, n=0 denotes the weight integral; the displayed norm ratio uses
+! monic squared norms.
+!
+! Arguments:
+!   n : INTEGER(I4B), INTENT(IN). Maximum polynomial degree; use n>=0.
+!
+! Returns:
+!   ans : REAL(DFP).
+!
+! Formula:
+! $$\beta_0=\int_{-1}^{1}w(x)\,dx,\quad \beta_n=\widehat h_n/\widehat
+! h_{n-1}$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE LegendrePolynomialUtility, ONLY: LegendreBeta
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: y
+!
+! y = LegendreBeta(n=2_I4B)
+! CALL OK(ABS(y-(4.0_DFP/15.0_DFP)) < 1.0E-11_DFP, &
+!   "Degree two coefficient or norm")
+! END PROGRAM main
+!```
 
 INTERFACE
   MODULE PURE FUNCTION LegendreBeta(n) RESULT(ans)
@@ -102,29 +190,44 @@ END INTERFACE
 !                                                  GetLegendreRecurrenceCoeff
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 8 Sept 2022
-! summary: Return the recurrence coefficient for monic Legendre polynomial
+!> author: Vikas Sharma, Ph.D.
+! date: 2026-10-30
+! summary: Return monic three term recurrence coefficients.
 !
-!# Introduction
+! Arrays are indexed from zero and contain n coefficients. Use n>=1.
+! betaCoeff(0) stores the weight integral.
 !
-! These recurrence coefficients are for monic Legendre polynomials.
+! Arguments:
+!   n : INTEGER(I4B), INTENT(IN). Recurrence length or matrix size; use n>=1.
+!   alphaCoeff : REAL(DFP), INTENT(OUT)(0:n - 1). Monic recurrence diagonal
+! coefficients, indexed from zero.
+!   betaCoeff : REAL(DFP), INTENT(OUT)(0:n - 1). Monic recurrence beta values;
+! index zero is the weight integral.
 !
-!$$
-! \pi_{n+1}=\left(x-\alpha_{n}\right)\pi_{n}-\beta_{n}\pi_{n-1},\quad n=0,1,2
-!$$
+! Returns:
+!   Writes alphaCoeff(0:n - 1), betaCoeff(0:n - 1).
 !
-!$$
-! \alpha_{n}=0,n\ge0
-!$$
+! Formula:
+! $$\pi_{j+1}=(x-\alpha_j)\pi_j-\beta_j\pi_{j-1}$$
 !
-!$$
-! \beta_{0}=2
-!$$
+! Examples
 !
-!$$
-! \beta_{n\ge1}=\frac{n^{2}}{4n^{2}-1}
-!$$
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE LegendrePolynomialUtility, ONLY: GetLegendreRecurrenceCoeff
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: a(0:2), b(0:2)
+!
+! CALL GetLegendreRecurrenceCoeff(n=3_I4B, alphaCoeff=a, betaCoeff=b)
+! CALL OK(MAXVAL(ABS(a)) < 1.0E-11_DFP, &
+!   "Symmetric family has zero diagonal")
+! CALL OK(ABS(b(2)-4.0_DFP/15.0_DFP) &
+!   < 1.0E-11_DFP, "Monic beta coefficient")
+! END PROGRAM main
+!```
 
 INTERFACE
   MODULE PURE SUBROUTINE GetLegendreRecurrenceCoeff(n, alphaCoeff, betaCoeff)
@@ -139,9 +242,47 @@ END INTERFACE
 !                                              GetLegendreRecurrenceCoeff2
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 8 Sept 2022
-! summary: Return the recurrence coefficient for Legendre polynomial
+!> author: Vikas Sharma, Ph.D.
+! date: 2026-10-30
+! summary: Return standard three term recurrence coefficients.
+!
+! Arrays are indexed from zero and contain n coefficients. Use n>=1.
+! Initialize the family specific degree zero and degree one polynomials before
+! advancing the recurrence.
+!
+! Arguments:
+!   n : INTEGER(I4B), INTENT(IN). Recurrence length or matrix size; use n>=1.
+!   A : REAL(DFP), INTENT(OUT)(0:n - 1). Multiplier of x in the standard three
+! term recurrence.
+!   B : REAL(DFP), INTENT(OUT)(0:n - 1). Constant term in the standard three
+! term recurrence.
+!   C : REAL(DFP), INTENT(OUT)(0:n - 1). Multiplier of the previous
+! polynomial, subtracted in the recurrence.
+!
+! Returns:
+!   Writes A(0:n - 1), B(0:n - 1), C(0:n - 1).
+!
+! Formula:
+! $$p_{j+1}=(A_j x+B_j)p_j-C_j p_{j-1}$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE LegendrePolynomialUtility, ONLY: GetLegendreRecurrenceCoeff2
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: a(0:2), b(0:2), c(0:2)
+!
+! CALL GetLegendreRecurrenceCoeff2(n=3_I4B, A=a, B=b, C=c)
+! CALL OK(MAXVAL(ABS(b)) < 1.0E-11_DFP, &
+!   "Symmetric family has no constant recurrence term")
+! CALL OK(ABS(a(1)-1.5_DFP) < 1.0E-11_DFP, &
+!   "Degree two recurrence multiplier")
+! END PROGRAM main
+!```
 
 INTERFACE
   MODULE PURE SUBROUTINE GetLegendreRecurrenceCoeff2(n, A, B, C)
@@ -160,18 +301,35 @@ END INTERFACE
 !                                                         LegendreLeadingCoeff
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 8 Sept 2022
-! summary: Leading coefficient of Legendre polynomial
+!> author: Vikas Sharma, Ph.D.
+! date: 2026-10-30
+! summary: Return the coefficient of the highest power.
 !
-!# Introduction
+! Arguments:
+!   n : INTEGER(I4B), INTENT(IN). Maximum polynomial degree; use n>=0.
 !
-! Leading coefficient of legendre polynomial
+! Returns:
+!   ans : REAL(DFP).
 !
-!$$
-! k_{n}=\frac{\left(2n\right)!}{2^{n}\left(n!\right)^{2}}
-!$$
+! Formula:
+! $$p_n(x)=k_n x^n+\cdots$$
 !
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE LegendrePolynomialUtility, ONLY: LegendreLeadingCoeff
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: y
+!
+! y = LegendreLeadingCoeff(n=2_I4B)
+! CALL OK(ABS(y-(1.5_DFP)) < 1.0E-11_DFP, &
+!   "Degree two coefficient or norm")
+! END PROGRAM main
+!```
 
 INTERFACE
   MODULE PURE FUNCTION LegendreLeadingCoeff(n) RESULT(ans)
@@ -186,9 +344,35 @@ END INTERFACE
 !                                                 LegendreLeadingCoeffRatio
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 8 Sept 2022
-! summary: Ration of Leading coefficient of Legendre polynomial n+1/n
+!> author: Vikas Sharma, Ph.D.
+! date: 2026-10-30
+! summary: Return the ratio of consecutive leading coefficients.
+!
+! Arguments:
+!   n : INTEGER(I4B), INTENT(IN). Maximum polynomial degree; use n>=0.
+!
+! Returns:
+!   ans : REAL(DFP).
+!
+! Formula:
+! $$r_n=k_{n+1}/k_n$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE LegendrePolynomialUtility, ONLY: LegendreLeadingCoeffRatio
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: y
+!
+! y = LegendreLeadingCoeffRatio(n=2_I4B)
+! CALL OK(ABS(y-(5.0_DFP/3.0_DFP)) < 1.0E-11_DFP, &
+!   "Degree two coefficient or norm")
+! END PROGRAM main
+!```
 
 INTERFACE
   MODULE PURE FUNCTION LegendreLeadingCoeffRatio(n) RESULT(ans)
@@ -203,17 +387,35 @@ END INTERFACE
 !                                                            LegendreNormSQR
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 8 Sept 2022
-! summary: Square norm of Legendre polynomial
+!> author: Vikas Sharma, Ph.D.
+! date: 2026-10-30
+! summary: Return the weighted squared norm.
 !
-!# Introduction
+! Arguments:
+!   n : INTEGER(I4B), INTENT(IN). Maximum polynomial degree; use n>=0.
 !
-! This function returns the square norm of legendre polynomial
+! Returns:
+!   ans : REAL(DFP).
 !
-!$$
-! \Vert P_{n}\Vert^{2}=:h_{n}=\frac{2}{2n+1}
-!$$
+! Formula:
+! $$h_n=\int_{-1}^{1}p_n(x)^2w(x)\,dx$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE LegendrePolynomialUtility, ONLY: LegendreNormSQR
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: y
+!
+! y = LegendreNormSQR(n=2_I4B)
+! CALL OK(ABS(y-(2.0_DFP/5.0_DFP)) < 1.0E-11_DFP, &
+!   "Degree two coefficient or norm")
+! END PROGRAM main
+!```
 
 INTERFACE
   MODULE PURE FUNCTION LegendreNormSQR(n) RESULT(ans)
@@ -226,17 +428,35 @@ END INTERFACE
 !                                                            LegendreNormSQR2
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 8 Sept 2022
-! summary: Square norm of Legendre polynomial
+!> author: Vikas Sharma, Ph.D.
+! date: 2026-10-30
+! summary: Return weighted squared norms from degree zero through n.
 !
-!# Introduction
+! Arguments:
+!   n : INTEGER(I4B), INTENT(IN). Maximum polynomial degree; use n>=0.
 !
-! This function returns the square norm of legendre polynomial
+! Returns:
+!   ans : REAL(DFP)(0:n).
 !
-!$$
-! \Vert P_{n}\Vert^{2}=:h_{n}=\frac{2}{2n+1}
-!$$
+! Formula:
+! $$h_j=\int_{-1}^{1}p_j(x)^2w(x)\,dx,\quad 0\le j\le n$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE LegendrePolynomialUtility, ONLY: LegendreNormSQR2
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: y(0:2)
+!
+! y = LegendreNormSQR2(n=2_I4B)
+! CALL OK(ABS(y(2)-(2.0_DFP/5.0_DFP)) < 1.0E-11_DFP, &
+!   "Norm array includes degree two")
+! END PROGRAM main
+!```
 
 INTERFACE
   MODULE PURE FUNCTION LegendreNormSQR2(n) RESULT(ans)
@@ -249,9 +469,35 @@ END INTERFACE
 !                                                      LegendreNormSQRRatio
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 8 Sept 2022
-! summary: Ratio of Square norm of Legendre polynomial n+1/n
+!> author: Vikas Sharma, Ph.D.
+! date: 2026-10-30
+! summary: Return the ratio of consecutive squared norms.
+!
+! Arguments:
+!   n : INTEGER(I4B), INTENT(IN). Maximum polynomial degree; use n>=0.
+!
+! Returns:
+!   ans : REAL(DFP).
+!
+! Formula:
+! $$r_n=h_{n+1}/h_n$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE LegendrePolynomialUtility, ONLY: LegendreNormSqrRatio
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: y
+!
+! y = LegendreNormSqrRatio(n=2_I4B)
+! CALL OK(ABS(y-(5.0_DFP/7.0_DFP)) < 1.0E-11_DFP, &
+!   "Degree two coefficient or norm")
+! END PROGRAM main
+!```
 
 INTERFACE
   MODULE PURE FUNCTION LegendreNormSQRRatio(n) RESULT(ans)
@@ -264,9 +510,47 @@ END INTERFACE
 !                                                      LegendreJacobiMatrix
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 8 Sept 2022
-! summary:         Return the Jacobi matrix for Legendre polynomial
+!> author: Vikas Sharma, Ph.D.
+! date: 2026-10-30
+! summary: Build the symmetric tridiagonal Gauss Jacobi matrix.
+!
+! Allocate D with n entries and E with one fewer. Optional recurrence outputs
+! use zero based indexing.
+!
+! Arguments:
+!   n : INTEGER(I4B), INTENT(IN). Recurrence length or matrix size; use n>=1.
+!   D : REAL(DFP), INTENT(OUT)(:). Jacobi matrix diagonal, or nodal derivative
+! matrix in the block splitter.
+!   E : REAL(DFP), INTENT(OUT)(:). Jacobi matrix off diagonal, or even block
+! in the block splitter.
+!   alphaCoeff : REAL(DFP), OPTIONAL, INTENT(OUT)(0:). Monic recurrence
+! diagonal coefficients, indexed from zero.
+!   betaCoeff : REAL(DFP), OPTIONAL, INTENT(OUT)(0:). Monic recurrence beta
+! values; index zero is the weight integral.
+!
+! Returns:
+!   Writes D(:), E(:), alphaCoeff(0:), betaCoeff(0:).
+!
+! Formula:
+! $$J_{i,i}=\alpha_{i-1},\quad J_{i,i+1}=\sqrt{\beta_i}$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE LegendrePolynomialUtility, ONLY: LegendreJacobiMatrix
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: d(2), e(1)
+!
+! CALL LegendreJacobiMatrix(n=2_I4B, D=d, E=e)
+! CALL OK(ALL(e > 0.0_DFP), "Positive off diagonal")
+! CALL OK(MAXVAL(ABS(d)) < 1.0E-11_DFP, &
+!   "Symmetric weight has a zero diagonal")
+! END PROGRAM main
+!```
 
 INTERFACE
   MODULE PURE SUBROUTINE LegendreJacobiMatrix(n, D, E, alphaCoeff, betaCoeff)
@@ -287,17 +571,45 @@ END INTERFACE
 !                                                     LegendreGaussQuadrature
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 3 Aug 2022
-! summary: Returns the Gauss quadrature points for Legendre Polynomial
+!> author: Vikas Sharma, Ph.D.
+! date: 2026-10-30
+! summary: Compute Gauss quadrature nodes and weights.
 !
-!# Introduction
+! This low level routine returns n nodes.  Weights include the family weight.
+! Nodes and weights must be paired in the returned order.
 !
-! This routine computes the n Gauss-Quadrature points. Which,
-! are n zeros of a Legendre polynomial defined with respect to the
-! weight $(1-x)^{\alpha} (1+x)^{\beta}$.
+! Arguments:
+!   n : INTEGER(I4B), INTENT(IN). Number of returned nodes; use n>=1 and
+! enough nodes for the rule.
+!   pt : REAL(DFP), INTENT(OUT)(:). Quadrature nodes; allocate the point count
+! specified above.
+!   wt : REAL(DFP), OPTIONAL, INTENT(OUT)(:). Quadrature weights paired with
+! pt; includes the family weight.
 !
-! All Gauss-Quadrature points are inside $(-1, 1)$
+! Returns:
+!   Writes pt(:), wt(:).
+!
+! Formula:
+! $$\int_{-1}^{1} f(x)w(x)\,dx\simeq\sum_i w_i f(x_i)$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE LegendrePolynomialUtility, ONLY: LegendreGaussQuadrature
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: x(2), w(2)
+!
+! CALL LegendreGaussQuadrature(n=2_I4B, pt=x, wt=w)
+! CALL OK(ABS(SUM(w)-(2.0_DFP)) < 1.0E-10_DFP, &
+!   "Weights integrate a constant")
+! CALL OK(ABS(SUM(w*x*x)-(2.0_DFP/3.0_DFP)) < 1.0E-10_DFP, &
+!   "Weights integrate the weighted second moment")
+! END PROGRAM main
+!```
 
 INTERFACE
   MODULE SUBROUTINE LegendreGaussQuadrature(n, pt, wt)
@@ -313,6 +625,49 @@ END INTERFACE
 !----------------------------------------------------------------------------
 !                                               LegendreJacobiRadauMatrix
 !----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph.D.
+! date: 2026-10-30
+! summary: Build the symmetric tridiagonal Radau Jacobi matrix.
+!
+! Allocate D with n+1 entries and E with one fewer. The final recurrence
+! entries are modified to include the prescribed endpoint(s).
+!
+! Arguments:
+!   a : REAL(DFP), INTENT(IN). Recurrence multiplier array, or prescribed
+! endpoint -1/+1 for Radau.
+!   n : INTEGER(I4B), INTENT(IN). Number of free nodes; output has n+1 points
+! or matrix rows.
+!   D : REAL(DFP), INTENT(OUT)(:). Jacobi matrix diagonal, or nodal derivative
+! matrix in the block splitter.
+!   E : REAL(DFP), INTENT(OUT)(:). Jacobi matrix off diagonal, or even block
+! in the block splitter.
+!   alphaCoeff : REAL(DFP), OPTIONAL, INTENT(OUT)(0:). Monic recurrence
+! diagonal coefficients, indexed from zero.
+!   betaCoeff : REAL(DFP), OPTIONAL, INTENT(OUT)(0:). Monic recurrence beta
+! values; index zero is the weight integral.
+!
+! Returns:
+!   Writes D(:), E(:), alphaCoeff(0:), betaCoeff(0:).
+!
+! Formula:
+! $$J_{i,i}=\alpha_{i-1},\quad J_{i,i+1}=\sqrt{\beta_i}$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE LegendrePolynomialUtility, ONLY: LegendreJacobiRadauMatrix
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: d(3), e(2)
+!
+! CALL LegendreJacobiRadauMatrix(a=-1.0_DFP, n=2_I4B, D=d, E=e)
+! CALL OK(ALL(e > 0.0_DFP), "Positive off diagonal")
+! END PROGRAM main
+!```
 
 INTERFACE
   MODULE PURE SUBROUTINE LegendreJacobiRadauMatrix(a, n, D, E, alphaCoeff, &
@@ -334,26 +689,49 @@ END INTERFACE
 !                                                LegendreGaussRadauQuadrature
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 3 Aug 2022
-! summary: Returns the Gauss-Radau quadrature points for Legendre Polynomial
+!> author: Vikas Sharma, Ph.D.
+! date: 2026-10-30
+! summary: Compute Gauss Radau quadrature nodes and weights.
 !
-!# Introduction
+! This low level routine returns n+1 nodes. Set a to -1 or +1. Weights include
+! the family weight. Nodes and weights must be paired in the returned order.
 !
-! This routine returns the $n+1$ Quadrature points and weights.
+! Arguments:
+!   a : REAL(DFP), INTENT(IN). Recurrence multiplier array, or prescribed
+! endpoint -1/+1 for Radau.
+!   n : INTEGER(I4B), INTENT(IN). Number of free nodes; output has n+1 points
+! or matrix rows.
+!   pt : REAL(DFP), INTENT(OUT)(:). Quadrature nodes; allocate the point count
+! specified above.
+!   wt : REAL(DFP), OPTIONAL, INTENT(OUT)(:). Quadrature weights paired with
+! pt; includes the family weight.
 !
-! The Gauss-Radau quadrature points consists one of the end points denoted
-! by $a$. So $a$ can be $\pm 1$. The remaining $n$ points are internal to
-! to $(-1, +1)$, and they are n-zeros of Legendre  polynomial of order n with
-! respect to the following weight.
+! Returns:
+!   Writes pt(:), wt(:).
 !
-!- $(1-x)^{\alpha} (1+x)^{\beta} (x+1)$ if $a=-1$.
-!- $(1-x)^{\alpha} (1+x)^{\beta} (1-x)$ if $a=+1$.
+! Formula:
+! $$\int_{-1}^{1} f(x)w(x)\,dx\simeq\sum_i w_i f(x_i)$$
 !
-! Here n is the order of Legendre polynomial.
+! Examples
 !
-! If $a=1$ then n+1 quadrature point will be +1
-! If $a=-1$ then 1st quadrature point will be -1
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE LegendrePolynomialUtility, ONLY: LegendreGaussRadauQuadrature
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: x(3), w(3)
+!
+! CALL LegendreGaussRadauQuadrature(a=-1.0_DFP, n=2_I4B, pt=x, wt=w)
+! CALL OK(ABS(SUM(w)-(2.0_DFP)) < 1.0E-10_DFP, &
+!   "Weights integrate a constant")
+! CALL OK(ABS(SUM(w*x*x)-(2.0_DFP/3.0_DFP)) < 1.0E-10_DFP, &
+!   "Weights integrate the weighted second moment")
+! CALL OK(MINVAL(ABS(x+1.0_DFP)) < 1.0E-11_DFP, &
+!   "Prescribed endpoint is present")
+! END PROGRAM main
+!```
 
 INTERFACE
   MODULE SUBROUTINE LegendreGaussRadauQuadrature(a, n, pt, wt)
@@ -373,6 +751,49 @@ END INTERFACE
 !                                             LegendreLegendreLobattoMatrix
 !----------------------------------------------------------------------------
 
+!> author: Vikas Sharma, Ph.D.
+! date: 2026-10-30
+! summary: Build the symmetric tridiagonal Lobatto Jacobi matrix.
+!
+! Allocate D with n+2 entries and E with one fewer. The final recurrence
+! entries are modified to include the prescribed endpoint(s).
+!
+! Arguments:
+!   n : INTEGER(I4B), INTENT(IN). Number of free nodes; output has n+2 points
+! or matrix rows.
+!   D : REAL(DFP), INTENT(OUT)(:). Jacobi matrix diagonal, or nodal derivative
+! matrix in the block splitter.
+!   E : REAL(DFP), INTENT(OUT)(:). Jacobi matrix off diagonal, or even block
+! in the block splitter.
+!   alphaCoeff : REAL(DFP), OPTIONAL, INTENT(OUT)(0:). Monic recurrence
+! diagonal coefficients, indexed from zero.
+!   betaCoeff : REAL(DFP), OPTIONAL, INTENT(OUT)(0:). Monic recurrence beta
+! values; index zero is the weight integral.
+!
+! Returns:
+!   Writes D(:), E(:), alphaCoeff(0:), betaCoeff(0:).
+!
+! Formula:
+! $$J_{i,i}=\alpha_{i-1},\quad J_{i,i+1}=\sqrt{\beta_i}$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE LegendrePolynomialUtility, ONLY: LegendreJacobiLobattoMatrix
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: d(4), e(3)
+!
+! CALL LegendreJacobiLobattoMatrix(n=2_I4B, D=d, E=e)
+! CALL OK(ALL(e > 0.0_DFP), "Positive off diagonal")
+! CALL OK(MAXVAL(ABS(d)) < 1.0E-11_DFP, &
+!   "Symmetric weight has a zero diagonal")
+! END PROGRAM main
+!```
+
 INTERFACE
   MODULE PURE SUBROUTINE LegendreJacobiLobattoMatrix(n, D, E, alphaCoeff, &
     & betaCoeff)
@@ -391,27 +812,47 @@ END INTERFACE
 !                                              LegendreGaussLobattoQuadrature
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 3 Aug 2022
-! summary: Returns the Gauss-Lobatto quadrature points for Legendre Polynomial
+!> author: Vikas Sharma, Ph.D.
+! date: 2026-10-30
+! summary: Compute Gauss Lobatto quadrature nodes and weights.
 !
-!# Introduction
+! This low level routine returns n+2 nodes.  Weights include the family
+! weight. Nodes and weights must be paired in the returned order.
 !
-! This routine returns the $n+2$ Quadrature points and weights.
+! Arguments:
+!   n : INTEGER(I4B), INTENT(IN). Number of free nodes; output has n+2 points
+! or matrix rows.
+!   pt : REAL(DFP), INTENT(OUT)(:). Quadrature nodes; allocate the point count
+! specified above.
+!   wt : REAL(DFP), OPTIONAL, INTENT(OUT)(:). Quadrature weights paired with
+! pt; includes the family weight.
 !
-! The Gauss-Lobatto quadrature points consists both $\pm 1$ as
-! quadrature points.
+! Returns:
+!   Writes pt(:), wt(:).
 !
-!- The first quadrature point is $-1$
-!- The second quadrature point is $+1$
+! Formula:
+! $$\int_{-1}^{1} f(x)w(x)\,dx\simeq\sum_i w_i f(x_i)$$
 !
-! The remaining $n$ points are internal to
-! to $(-1, +1)$, and they are n-zeros of Legendre  polynomial of order n with
-! respect to the following weight.
+! Examples
 !
-!$$(1-x)^{\alpha} (1+x)^{\beta} (x+1)(1-x)$$
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE LegendrePolynomialUtility, ONLY: LegendreGaussLobattoQuadrature
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: x(4), w(4)
 !
-! Here n is the order of Legendre polynomial.
+! CALL LegendreGaussLobattoQuadrature(n=2_I4B, pt=x, wt=w)
+! CALL OK(ABS(SUM(w)-(2.0_DFP)) < 1.0E-10_DFP, &
+!   "Weights integrate a constant")
+! CALL OK(ABS(SUM(w*x*x)-(2.0_DFP/3.0_DFP)) < 1.0E-10_DFP, &
+!   "Weights integrate the weighted second moment")
+! CALL OK(ABS(MINVAL(x)+1.0_DFP) < 1.0E-11_DFP .AND. &
+!   ABS(MAXVAL(x)-1.0_DFP) < 1.0E-11_DFP, "Both endpoints")
+! END PROGRAM main
+!```
 
 INTERFACE
   MODULE SUBROUTINE LegendreGaussLobattoQuadrature(n, pt, wt)
@@ -428,9 +869,38 @@ END INTERFACE
 !                                                              LegendreZeros
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 6 Sept 2022
-! summary:         Returns zeros of Legendre polynomials
+!> author: Vikas Sharma, Ph.D.
+! date: 2026-10-30
+! summary: Return the n roots of a degree n polynomial.
+!
+! Use n>=1. Root order is family dependent; do not assume increasing order.
+!
+! Arguments:
+!   n : INTEGER(I4B), INTENT(IN). Number of returned nodes; use n>=1 and
+! enough nodes for the rule.
+!
+! Returns:
+!   ans : REAL(DFP)(n).
+!
+! Formula:
+! $$p_n(z_i)=0,\quad 1\le i\le n$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE LegendrePolynomialUtility, ONLY: LegendreZeros
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: z(2)
+!
+! z = LegendreZeros(n=2_I4B)
+! CALL OK(MAXVAL(ABS(z*z-1.0_DFP/3.0_DFP)) &
+!   < 1.0E-11_DFP, "Roots satisfy the quadratic")
+! END PROGRAM main
+!```
 
 INTERFACE
   MODULE FUNCTION LegendreZeros(n) RESULT(ans)
@@ -444,25 +914,53 @@ END INTERFACE
 !                                                          LegendreQuadrature
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 6 Sept 2022
-! summary: This routine can return Legendre-Gauss, Legendre-Radau,
-! Legendre-Lobatto
+!> author: Vikas Sharma, Ph.D.
+! date: 2026-10-30
+! summary: Compute a selected quadrature nodes and weights.
 !
-!# Introduction
+! n is the total number of requested points. Select Gauss, GaussRadauLeft,
+! GaussRadauRight, or GaussLobatto from GlobalData. Weights include the family
+! weight. Nodes and weights must be paired in the returned order.
 !
-! This routine returns the Quadrature point of Legendre polynomial
+! Arguments:
+!   n : INTEGER(I4B), INTENT(IN). Number of returned nodes; use n>=1 and
+! enough nodes for the rule.
+!   pt : REAL(DFP), INTENT(OUT)(n). Quadrature nodes; allocate the point count
+! specified above.
+!   wt : REAL(DFP), OPTIONAL, INTENT(OUT)(n). Quadrature weights paired with
+! pt; includes the family weight.
+!   quadType : INTEGER(I4B), INTENT(IN). Quadrature selector from GlobalData;
+! must match the supplied nodes.
+!   onlyInside : LOGICAL(LGT), OPTIONAL, INTENT(IN). Optional endpoint
+! exclusion flag for the quadrature dispatcher.
 !
-!@note
-! Here n is the number of quadrature points. Please note it is not
-! the order of Legendre polynomial. The order is decided internally
-! depending upon the quadType
-!@endnote
+! Returns:
+!   Writes pt(n), wt(n).
 !
-!@note
-! pt and wt should be allocated outside, and length should be n.
-!@endnote
+! Formula:
+! $$\int_{-1}^{1} f(x)w(x)\,dx\simeq\sum_i w_i f(x_i)$$
 !
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE GlobalData, ONLY: GaussLobatto
+! USE LegendrePolynomialUtility, ONLY: LegendreQuadrature
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: x(4), w(4)
+!
+! CALL LegendreQuadrature(n=4_I4B, pt=x, wt=w, quadType=GaussLobatto)
+! CALL OK(ABS(SUM(w)-(2.0_DFP)) < 1.0E-10_DFP, &
+!   "Weights integrate a constant")
+! CALL OK(ABS(SUM(w*x*x)-(2.0_DFP/3.0_DFP)) < 1.0E-10_DFP, &
+!   "Weights integrate the weighted second moment")
+! CALL OK(ABS(MINVAL(x)+1.0_DFP) < 1.0E-11_DFP .AND. &
+!   ABS(MAXVAL(x)-1.0_DFP) < 1.0E-11_DFP, "Both endpoints")
+! END PROGRAM main
+!```
 
 INTERFACE
   MODULE SUBROUTINE LegendreQuadrature(n, pt, wt, quadType, onlyInside)
@@ -489,13 +987,40 @@ END INTERFACE
 !                                                             LegendreEval
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 6 Sept 2022
-! summary: Evaluate Legendre polynomial of order n at single points
+!> author: Vikas Sharma, Ph.D.
+! date: 2026-10-30
+! summary: Evaluate one polynomial.
 !
-!# Introduction
+! Arguments:
+!   n : INTEGER(I4B), INTENT(IN). Maximum polynomial degree; use n>=0.
+!   x : REAL(DFP), INTENT(IN). Evaluation coordinate(s).
 !
-! Evaluate Legendre polynomial of order n at single points
+! Returns:
+!   ans : REAL(DFP).
+!
+! Formula:
+! $$y_i=p_n(x_i)$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE LegendrePolynomialUtility, ONLY: LegendreEval
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: x(3), y(3)
+! REAL(DFP), PARAMETER :: tol = 1.0E-11_DFP
+!
+! x = [-0.5_DFP, 0.0_DFP, 0.5_DFP]
+! y = LegendreEval(n=2_I4B, x=x)
+! CALL OK(MAXVAL(ABS(y-(0.5_DFP*(3.0_DFP*x*x-1.0_DFP)))) < tol, &
+!   "Degree two agrees with its analytic formula")
+! CALL OK(ABS(LegendreEval(n=2_I4B, x=0.0_DFP) &
+!   -y(2)) < tol, "Scalar and vector calls agree")
+! END PROGRAM main
+!```
 
 INTERFACE
   MODULE PURE FUNCTION LegendreEval1(n, x) RESULT(ans)
@@ -508,6 +1033,40 @@ INTERFACE
   END FUNCTION LegendreEval1
 END INTERFACE
 
+!> author: Vikas Sharma, Ph.D.
+! date: 2026-10-30
+! summary: Evaluate one polynomial.
+!
+! Arguments:
+!   See the specific overload declarations for arguments.
+!
+! Returns:
+!   The selected overload returns or writes the documented result.
+!
+! Formula:
+! $$y_i=p_n(x_i)$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE LegendrePolynomialUtility, ONLY: LegendreEval
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: x(3), y(3)
+! REAL(DFP), PARAMETER :: tol = 1.0E-11_DFP
+!
+! x = [-0.5_DFP, 0.0_DFP, 0.5_DFP]
+! y = LegendreEval(n=2_I4B, x=x)
+! CALL OK(MAXVAL(ABS(y-(0.5_DFP*(3.0_DFP*x*x-1.0_DFP)))) < tol, &
+!   "Degree two agrees with its analytic formula")
+! CALL OK(ABS(LegendreEval(n=2_I4B, x=0.0_DFP) &
+!   -y(2)) < tol, "Scalar and vector calls agree")
+! END PROGRAM main
+!```
+
 INTERFACE LegendreEval
   MODULE PROCEDURE LegendreEval1
 END INTERFACE LegendreEval
@@ -516,13 +1075,40 @@ END INTERFACE LegendreEval
 !                                                          LegendreEval
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 6 Sept 2022
-! summary: Evaluate Legendre polynomials of order n at several points
+!> author: Vikas Sharma, Ph.D.
+! date: 2026-10-30
+! summary: Evaluate one polynomial.
 !
-!# Introduction
+! Arguments:
+!   n : INTEGER(I4B), INTENT(IN). Maximum polynomial degree; use n>=0.
+!   x : REAL(DFP), INTENT(IN)(:). Evaluation coordinate(s).
 !
-! Evaluate Legendre polynomials of order n at several points
+! Returns:
+!   ans : REAL(DFP)(SIZE(x)).
+!
+! Formula:
+! $$y_i=p_n(x_i)$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE LegendrePolynomialUtility, ONLY: LegendreEval
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: x(3), y(3)
+! REAL(DFP), PARAMETER :: tol = 1.0E-11_DFP
+!
+! x = [-0.5_DFP, 0.0_DFP, 0.5_DFP]
+! y = LegendreEval(n=2_I4B, x=x)
+! CALL OK(MAXVAL(ABS(y-(0.5_DFP*(3.0_DFP*x*x-1.0_DFP)))) < tol, &
+!   "Degree two agrees with its analytic formula")
+! CALL OK(ABS(LegendreEval(n=2_I4B, x=0.0_DFP) &
+!   -y(2)) < tol, "Scalar and vector calls agree")
+! END PROGRAM main
+!```
 
 INTERFACE
   MODULE PURE FUNCTION LegendreEval2(n, x) RESULT(ans)
@@ -535,6 +1121,40 @@ INTERFACE
   END FUNCTION LegendreEval2
 END INTERFACE
 
+!> author: Vikas Sharma, Ph.D.
+! date: 2026-10-30
+! summary: Evaluate one polynomial.
+!
+! Arguments:
+!   See the specific overload declarations for arguments.
+!
+! Returns:
+!   The selected overload returns or writes the documented result.
+!
+! Formula:
+! $$y_i=p_n(x_i)$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE LegendrePolynomialUtility, ONLY: LegendreEval
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: x(3), y(3)
+! REAL(DFP), PARAMETER :: tol = 1.0E-11_DFP
+!
+! x = [-0.5_DFP, 0.0_DFP, 0.5_DFP]
+! y = LegendreEval(n=2_I4B, x=x)
+! CALL OK(MAXVAL(ABS(y-(0.5_DFP*(3.0_DFP*x*x-1.0_DFP)))) < tol, &
+!   "Degree two agrees with its analytic formula")
+! CALL OK(ABS(LegendreEval(n=2_I4B, x=0.0_DFP) &
+!   -y(2)) < tol, "Scalar and vector calls agree")
+! END PROGRAM main
+!```
+
 INTERFACE LegendreEval
   MODULE PROCEDURE LegendreEval2
 END INTERFACE LegendreEval
@@ -543,15 +1163,40 @@ END INTERFACE LegendreEval
 !                                                            LegendreEvalAll
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 6 Sept 2022
-! summary: Evaluate Legendre polynomials from order = 0 to n at single point
+!> author: Vikas Sharma, Ph.D.
+! date: 2026-10-30
+! summary: Evaluate polynomials through degree n.
 !
-!# Introduction
+! Scalar x returns n+1 entries; vector x uses rows for points.
 !
-! Evaluate Legendre polynomials from order = 0 to n at single points
+! Arguments:
+!   n : INTEGER(I4B), INTENT(IN). Maximum polynomial degree; use n>=0.
+!   x : REAL(DFP), INTENT(IN). Evaluation coordinate(s).
 !
-!- x: the point at which the polynomials are to be evaluated.
+! Returns:
+!   ans : REAL(DFP)(n + 1).
+!
+! Formula:
+! $$Y_{i,j+1}=p_j(x_i),\quad 0\le j\le n$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE LegendrePolynomialUtility, ONLY: LegendreEvalAll
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: x(3), y(3, 3)
+! REAL(DFP), PARAMETER :: tol = 1.0E-11_DFP
+!
+! x = [-0.5_DFP, 0.0_DFP, 0.5_DFP]
+! y = LegendreEvalAll(n=2_I4B, x=x)
+! CALL OK(MAXVAL(ABS(y(:, 3)-(0.5_DFP*(3.0_DFP*x*x-1.0_DFP)))) < tol, &
+!   "Third column contains degree two")
+! END PROGRAM main
+!```
 
 INTERFACE LegendreEvalAll
   MODULE PURE FUNCTION LegendreEvalAll1(n, x) RESULT(ans)
@@ -569,6 +1214,47 @@ END INTERFACE LegendreEvalAll
 !----------------------------------------------------------------------------
 !                                                         LegendreEvalAll_
 !----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph.D.
+! date: 2026-10-30
+! summary: Evaluate polynomials through degree n.
+!
+! Scalar x returns n+1 entries; vector x uses rows for points. Supply enough
+! storage for the active output; trailing entries are not part of the result.
+!
+! Arguments:
+!   n : INTEGER(I4B), INTENT(IN). Maximum polynomial degree; use n>=0.
+!   x : REAL(DFP), INTENT(IN). Evaluation coordinate(s).
+!   ans : REAL(DFP), INTENT(INOUT)(:). Result storage; allocate enough space
+! for all active dimensions.
+!   tsize : INTEGER(I4B), INTENT(OUT). Number of active vector output entries.
+!
+! Returns:
+!   Writes ans(:), tsize.
+!
+! Formula:
+! $$Y_{i,j+1}=p_j(x_i),\quad 0\le j\le n$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE LegendrePolynomialUtility, ONLY: LegendreEvalAll_
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: x(3), y(3, 3)
+! REAL(DFP), PARAMETER :: tol = 1.0E-11_DFP
+! INTEGER(I4B) :: nr, nc
+!
+! x = [-0.5_DFP, 0.0_DFP, 0.5_DFP]
+! CALL LegendreEvalAll_(n=2_I4B, x=x, ans=y, nrow=nr, ncol=nc)
+! CALL OK(nr == 3 .AND. nc == 3, "Active dimensions")
+! CALL OK(MAXVAL(ABS(y(:, 3)-(0.5_DFP*(3.0_DFP*x*x-1.0_DFP)))) < tol, &
+!   "Third column contains degree two")
+! END PROGRAM main
+!```
 
 INTERFACE LegendreEvalAll_
   MODULE PURE SUBROUTINE LegendreEvalAll1_(n, x, ans, tsize)
@@ -589,25 +1275,40 @@ END INTERFACE LegendreEvalAll_
 !                                                           LegendreEvalAll
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 6 Sept 2022
-! summary: Evaluate Legendre polynomials from order = 0 to n at several points
+!> author: Vikas Sharma, Ph.D.
+! date: 2026-10-30
+! summary: Evaluate polynomials through degree n.
 !
-!# Introduction
+! Scalar x returns n+1 entries; vector x uses rows for points.
 !
-! Evaluate Legendre polynomials from order = 0 to n at several points
+! Arguments:
+!   n : INTEGER(I4B), INTENT(IN). Maximum polynomial degree; use n>=0.
+!   x : REAL(DFP), INTENT(IN)(:). Evaluation coordinate(s).
 !
-!- N, the highest order polynomial to compute. Note that polynomials 0
-! through N will be computed.
-!- alpha, beta are parameters
-!- x: the point at which the polynomials are to be evaluated.
-!- ans(M,1:N+1), the values of the first N+1 Legendre polynomials at the point
-! X.
+! Returns:
+!   ans : REAL(DFP)(SIZE(x), n + 1).
 !
-!- the ith row of ans denotes the values of all polynomials at
-! ith point. In this case shape of ans is (M,1:N+1), where M is number of
-! points, N+1 number of polynomials. So ans(j, :) denotes value of all
-! polynomials at jth point, and ans(:, n) denotes value of Pn at all nodes
+! Formula:
+! $$Y_{i,j+1}=p_j(x_i),\quad 0\le j\le n$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE LegendrePolynomialUtility, ONLY: LegendreEvalAll
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: x(3), y(3, 3)
+! REAL(DFP), PARAMETER :: tol = 1.0E-11_DFP
+!
+! x = [-0.5_DFP, 0.0_DFP, 0.5_DFP]
+! y = LegendreEvalAll(n=2_I4B, x=x)
+! CALL OK(MAXVAL(ABS(y(:, 3)-(0.5_DFP*(3.0_DFP*x*x-1.0_DFP)))) < tol, &
+!   "Third column contains degree two")
+! END PROGRAM main
+!```
 
 INTERFACE LegendreEvalAll
   MODULE PURE FUNCTION LegendreEvalAll2(n, x) RESULT(ans)
@@ -625,9 +1326,47 @@ END INTERFACE LegendreEvalAll
 !                                                          LegendreEvalAll_
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date:  2024-08-19
-! summary: Evaluate Legendre polynomials from 0 to n at several points
+!> author: Vikas Sharma, Ph.D.
+! date: 2026-10-30
+! summary: Evaluate polynomials through degree n.
+!
+! Scalar x returns n+1 entries; vector x uses rows for points. Supply enough
+! storage for the active output; trailing entries are not part of the result.
+!
+! Arguments:
+!   n : INTEGER(I4B), INTENT(IN). Maximum polynomial degree; use n>=0.
+!   x : REAL(DFP), INTENT(IN)(:). Evaluation coordinate(s).
+!   ans : REAL(DFP), INTENT(INOUT)(:, :). Result storage; allocate enough
+! space for all active dimensions.
+!   nrow : INTEGER(I4B), INTENT(OUT). Number of active output rows.
+!   ncol : INTEGER(I4B), INTENT(OUT). Number of active output columns.
+!
+! Returns:
+!   Writes ans(:, :), nrow, ncol.
+!
+! Formula:
+! $$Y_{i,j+1}=p_j(x_i),\quad 0\le j\le n$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE LegendrePolynomialUtility, ONLY: LegendreEvalAll_
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: x(3), y(3, 3)
+! REAL(DFP), PARAMETER :: tol = 1.0E-11_DFP
+! INTEGER(I4B) :: nr, nc
+!
+! x = [-0.5_DFP, 0.0_DFP, 0.5_DFP]
+! CALL LegendreEvalAll_(n=2_I4B, x=x, ans=y, nrow=nr, ncol=nc)
+! CALL OK(nr == 3 .AND. nc == 3, "Active dimensions")
+! CALL OK(MAXVAL(ABS(y(:, 3)-(0.5_DFP*(3.0_DFP*x*x-1.0_DFP)))) < tol, &
+!   "Third column contains degree two")
+! END PROGRAM main
+!```
 
 INTERFACE LegendreEvalAll_
   MODULE PURE SUBROUTINE LegendreEvalAll2_(n, x, ans, nrow, ncol)
@@ -649,27 +1388,38 @@ END INTERFACE LegendreEvalAll_
 !                                             LegendreMonomialExpansionAll
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 8 Sept 2022
-! summary:         Returns the monomial expansion of all legendre polynomials
+!> author: Vikas Sharma, Ph.D.
+! date: 2026-10-30
+! summary: Expand all polynomials through degree n in monomials.
 !
-!# Introduction
+! Rows correspond to powers and columns to polynomial degrees.
 !
-! Returns all the monomial expansion of all legendre polynomials
+! Arguments:
+!   n : INTEGER(I4B), INTENT(IN). Maximum polynomial degree; use n>=0.
 !
-!- n : is the order of the polynomial
-!- ans(:,i) contains the coefficient of monomials for polynomial order=i-1
+! Returns:
+!   ans : REAL(DFP)(1:n + 1, 1:n + 1).
 !
-! for example, n=5, we have following structure of ans
+! Formula:
+! $$p_j(x)=\sum_{k=0}^{j} C_{k+1,j+1}x^k$$
 !
-! | P0 | P1 | P2   | P3   | P4    | P5    |
-! |----|----|------|------|-------|-------|
-! | 1  | 0  | -0.5 | -0   | 0.375 | 0     |
-! | 0  | 1  | 0    | -1.5 | -0    | 1.875 |
-! | 0  | 0  | 1.5  | 0    | -3.75 | -0    |
-! | 0  | 0  | 0    | 2.5  | 0     | -8.75 |
-! | 0  | 0  | 0    | 0    | 4.375 | 0     |
-! | 0  | 0  | 0    | 0    | 0     | 7.875 |
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE LegendrePolynomialUtility, ONLY: LegendreMonomialExpansionAll
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: c(3, 3)
+!
+! c = LegendreMonomialExpansionAll(n=2_I4B)
+! CALL OK(MAXVAL(ABS(c(:, 3)- &
+!   ([-0.5_DFP, 0.0_DFP, 1.5_DFP]))) < 1.0E-11_DFP, &
+!   "Coefficients are ordered by increasing power")
+! END PROGRAM main
+!```
 
 INTERFACE
   MODULE PURE FUNCTION LegendreMonomialExpansionAll(n) RESULT(ans)
@@ -682,17 +1432,36 @@ END INTERFACE
 !                                             LegendreMonomialExpansion
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 8 Sept 2022
-! summary: Returns the monomial expansion of a legendre polynomials
+!> author: Vikas Sharma, Ph.D.
+! date: 2026-10-30
+! summary: Expand one polynomial in monomials.
 !
-!# Introduction
+! Arguments:
+!   n : INTEGER(I4B), INTENT(IN). Maximum polynomial degree; use n>=0.
 !
-! Returns all the monomial expansion of a legendre polynomials
+! Returns:
+!   ans : REAL(DFP)(1:n + 1).
 !
-!- n : is the order of the polynomial
-!- ans(:) contains the coefficient of monomials for polynomial order=n
+! Formula:
+! $$p_n(x)=\sum_{k=0}^{n} c_{k+1}x^k$$
 !
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE LegendrePolynomialUtility, ONLY: LegendreMonomialExpansion
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: c(3)
+!
+! c = LegendreMonomialExpansion(n=2_I4B)
+! CALL OK(MAXVAL(ABS(c- &
+!   ([-0.5_DFP, 0.0_DFP, 1.5_DFP]))) < 1.0E-11_DFP, &
+!   "Coefficients are ordered by increasing power")
+! END PROGRAM main
+!```
 
 INTERFACE
   MODULE PURE FUNCTION LegendreMonomialExpansion(n) RESULT(ans)
@@ -705,9 +1474,40 @@ END INTERFACE
 !
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 8 Sept 2022
-! summary:         Evaluate gradient of legendre polynomial of order upto n
+!> author: Vikas Sharma, Ph.D.
+! date: 2026-10-30
+! summary: Evaluate first derivatives through degree n.
+!
+! Scalar x returns n+1 entries; vector x uses rows for points.
+!
+! Arguments:
+!   n : INTEGER(I4B), INTENT(IN). Maximum polynomial degree; use n>=0.
+!   x : REAL(DFP), INTENT(IN). Evaluation coordinate(s).
+!
+! Returns:
+!   ans : REAL(DFP)(1:n + 1).
+!
+! Formula:
+! $$Y_{i,j+1}=p_j'(x_i),\quad 0\le j\le n$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE LegendrePolynomialUtility, ONLY: LegendreGradientEvalAll
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: x(3), y(3, 3)
+! REAL(DFP), PARAMETER :: tol = 1.0E-11_DFP
+!
+! x = [-0.5_DFP, 0.0_DFP, 0.5_DFP]
+! y = LegendreGradientEvalAll(n=2_I4B, x=x)
+! CALL OK(MAXVAL(ABS(y(:, 3)-(3.0_DFP*x))) < tol, &
+!   "Third column contains degree two")
+! END PROGRAM main
+!```
 
 INTERFACE LegendreGradientEvalAll
   MODULE PURE FUNCTION LegendreGradientEvalAll1(n, x) RESULT(ans)
@@ -721,9 +1521,46 @@ END INTERFACE LegendreGradientEvalAll
 !
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 8 Sept 2022
-! summary:         Evaluate gradient of legendre polynomial of order upto n
+!> author: Vikas Sharma, Ph.D.
+! date: 2026-10-30
+! summary: Evaluate first derivatives through degree n.
+!
+! Scalar x returns n+1 entries; vector x uses rows for points. Supply enough
+! storage for the active output; trailing entries are not part of the result.
+!
+! Arguments:
+!   n : INTEGER(I4B), INTENT(IN). Maximum polynomial degree; use n>=0.
+!   x : REAL(DFP), INTENT(IN). Evaluation coordinate(s).
+!   ans : REAL(DFP), INTENT(INOUT)(:). Result storage; allocate enough space
+! for all active dimensions.
+!   tsize : INTEGER(I4B), INTENT(OUT). Number of active vector output entries.
+!
+! Returns:
+!   Writes ans(:), tsize.
+!
+! Formula:
+! $$Y_{i,j+1}=p_j'(x_i),\quad 0\le j\le n$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE LegendrePolynomialUtility, ONLY: LegendreGradientEvalAll_
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: x(3), y(3, 3)
+! REAL(DFP), PARAMETER :: tol = 1.0E-11_DFP
+! INTEGER(I4B) :: nr, nc
+!
+! x = [-0.5_DFP, 0.0_DFP, 0.5_DFP]
+! CALL LegendreGradientEvalAll_(n=2_I4B, x=x, ans=y, nrow=nr, ncol=nc)
+! CALL OK(nr == 3 .AND. nc == 3, "Active dimensions")
+! CALL OK(MAXVAL(ABS(y(:, 3)-(3.0_DFP*x))) < tol, &
+!   "Third column contains degree two")
+! END PROGRAM main
+!```
 
 INTERFACE LegendreGradientEvalAll_
   MODULE PURE SUBROUTINE LegendreGradientEvalAll1_(n, x, ans, tsize)
@@ -740,9 +1577,40 @@ END INTERFACE LegendreGradientEvalAll_
 !
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 8 Sept 2022
-! summary: Evaluate gradient of legendre polynomial of order upto n
+!> author: Vikas Sharma, Ph.D.
+! date: 2026-10-30
+! summary: Evaluate first derivatives through degree n.
+!
+! Scalar x returns n+1 entries; vector x uses rows for points.
+!
+! Arguments:
+!   n : INTEGER(I4B), INTENT(IN). Maximum polynomial degree; use n>=0.
+!   x : REAL(DFP), INTENT(IN)(:). Evaluation coordinate(s).
+!
+! Returns:
+!   ans : REAL(DFP)(1:SIZE(x), 1:n + 1).
+!
+! Formula:
+! $$Y_{i,j+1}=p_j'(x_i),\quad 0\le j\le n$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE LegendrePolynomialUtility, ONLY: LegendreGradientEvalAll
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: x(3), y(3, 3)
+! REAL(DFP), PARAMETER :: tol = 1.0E-11_DFP
+!
+! x = [-0.5_DFP, 0.0_DFP, 0.5_DFP]
+! y = LegendreGradientEvalAll(n=2_I4B, x=x)
+! CALL OK(MAXVAL(ABS(y(:, 3)-(3.0_DFP*x))) < tol, &
+!   "Third column contains degree two")
+! END PROGRAM main
+!```
 
 INTERFACE LegendreGradientEvalAll
   MODULE PURE FUNCTION LegendreGradientEvalAll2(n, x) RESULT(ans)
@@ -755,6 +1623,48 @@ END INTERFACE LegendreGradientEvalAll
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph.D.
+! date: 2026-10-30
+! summary: Evaluate first derivatives through degree n.
+!
+! Scalar x returns n+1 entries; vector x uses rows for points. Supply enough
+! storage for the active output; trailing entries are not part of the result.
+!
+! Arguments:
+!   n : INTEGER(I4B), INTENT(IN). Maximum polynomial degree; use n>=0.
+!   x : REAL(DFP), INTENT(IN)(:). Evaluation coordinate(s).
+!   ans : REAL(DFP), INTENT(INOUT)(:, :). Result storage; allocate enough
+! space for all active dimensions.
+!   nrow : INTEGER(I4B), INTENT(OUT). Number of active output rows.
+!   ncol : INTEGER(I4B), INTENT(OUT). Number of active output columns.
+!
+! Returns:
+!   Writes ans(:, :), nrow, ncol.
+!
+! Formula:
+! $$Y_{i,j+1}=p_j'(x_i),\quad 0\le j\le n$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE LegendrePolynomialUtility, ONLY: LegendreGradientEvalAll_
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: x(3), y(3, 3)
+! REAL(DFP), PARAMETER :: tol = 1.0E-11_DFP
+! INTEGER(I4B) :: nr, nc
+!
+! x = [-0.5_DFP, 0.0_DFP, 0.5_DFP]
+! CALL LegendreGradientEvalAll_(n=2_I4B, x=x, ans=y, nrow=nr, ncol=nc)
+! CALL OK(nr == 3 .AND. nc == 3, "Active dimensions")
+! CALL OK(MAXVAL(ABS(y(:, 3)-(3.0_DFP*x))) < tol, &
+!   "Third column contains degree two")
+! END PROGRAM main
+!```
 
 INTERFACE LegendreGradientEvalAll_
   MODULE PURE SUBROUTINE LegendreGradientEvalAll2_(n, x, ans, nrow, ncol)
@@ -772,13 +1682,40 @@ END INTERFACE LegendreGradientEvalAll_
 !
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 8 Sept 2022
-! summary:         Evaluate gradient of legendre polynomial of order upto n
+!> author: Vikas Sharma, Ph.D.
+! date: 2026-10-30
+! summary: Evaluate the first derivative.
 !
-!# Introduction
+! Arguments:
+!   n : INTEGER(I4B), INTENT(IN). Maximum polynomial degree; use n>=0.
+!   x : REAL(DFP), INTENT(IN). Evaluation coordinate(s).
 !
-! Evaluate gradient of legendre polynomial of order upto n.
+! Returns:
+!   ans : REAL(DFP).
+!
+! Formula:
+! $$y_i=p_n'(x_i)$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE LegendrePolynomialUtility, ONLY: LegendreGradientEval
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: x(3), y(3)
+! REAL(DFP), PARAMETER :: tol = 1.0E-11_DFP
+!
+! x = [-0.5_DFP, 0.0_DFP, 0.5_DFP]
+! y = LegendreGradientEval(n=2_I4B, x=x)
+! CALL OK(MAXVAL(ABS(y-(3.0_DFP*x))) < tol, &
+!   "Degree two agrees with its analytic formula")
+! CALL OK(ABS(LegendreGradientEval(n=2_I4B, x=0.0_DFP) &
+!   -y(2)) < tol, "Scalar and vector calls agree")
+! END PROGRAM main
+!```
 
 INTERFACE LegendreGradientEval
   MODULE PURE FUNCTION LegendreGradientEval1(n, x) RESULT(ans)
@@ -792,13 +1729,40 @@ END INTERFACE LegendreGradientEval
 !
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 8 Sept 2022
-! summary:         Evaluate gradient of legendre polynomial of order upto n
+!> author: Vikas Sharma, Ph.D.
+! date: 2026-10-30
+! summary: Evaluate the first derivative.
 !
-!# Introduction
+! Arguments:
+!   n : INTEGER(I4B), INTENT(IN). Maximum polynomial degree; use n>=0.
+!   x : REAL(DFP), INTENT(IN)(:). Evaluation coordinate(s).
 !
-! Evaluate gradient of legendre polynomial of order upto n.
+! Returns:
+!   ans : REAL(DFP)(1:SIZE(x)).
+!
+! Formula:
+! $$y_i=p_n'(x_i)$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE LegendrePolynomialUtility, ONLY: LegendreGradientEval
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: x(3), y(3)
+! REAL(DFP), PARAMETER :: tol = 1.0E-11_DFP
+!
+! x = [-0.5_DFP, 0.0_DFP, 0.5_DFP]
+! y = LegendreGradientEval(n=2_I4B, x=x)
+! CALL OK(MAXVAL(ABS(y-(3.0_DFP*x))) < tol, &
+!   "Degree two agrees with its analytic formula")
+! CALL OK(ABS(LegendreGradientEval(n=2_I4B, x=0.0_DFP) &
+!   -y(2)) < tol, "Scalar and vector calls agree")
+! END PROGRAM main
+!```
 
 INTERFACE LegendreGradientEval
   MODULE PURE FUNCTION LegendreGradientEval2(n, x) RESULT(ans)
@@ -812,9 +1776,42 @@ END INTERFACE LegendreGradientEval
 !                                                     LegendreEvalSum
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 6 Sept 2022
-! summary: Evaluate finite sum of Legendre polynomials at point x
+!> author: Vikas Sharma, Ph.D.
+! date: 2026-10-30
+! summary: Evaluate a polynomial expansion.
+!
+! Coefficients are modal values indexed from zero.
+!
+! Arguments:
+!   n : INTEGER(I4B), INTENT(IN). Maximum polynomial degree; use n>=0.
+!   x : REAL(DFP), INTENT(IN). Evaluation coordinate(s).
+!   coeff : REAL(DFP), INTENT(IN)(0:n). Modal expansion coefficients, indexed
+! from zero.
+!
+! Returns:
+!   ans : REAL(DFP).
+!
+! Formula:
+! $$y(x)=\sum_{j=0}^{n}c_j p_j(x)$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE LegendrePolynomialUtility, ONLY: LegendreEvalSum
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: x(3), y(3), c(0:2)
+!
+! x = [-0.5_DFP, 0.0_DFP, 0.5_DFP]
+! c = [0.0_DFP, 0.0_DFP, 1.0_DFP]
+! y = LegendreEvalSum(n=2_I4B, x=x, coeff=c)
+! CALL OK(MAXVAL(ABS(y-(0.5_DFP*(3.0_DFP*x*x-1.0_DFP)))) < 1.0E-11_DFP, &
+!   "A single modal coefficient recovers degree two")
+! END PROGRAM main
+!```
 
 INTERFACE LegendreEvalSum
   MODULE PURE FUNCTION LegendreEvalSum1(n, x, coeff) &
@@ -834,9 +1831,42 @@ END INTERFACE LegendreEvalSum
 !                                                          LegendreEvalSum
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 6 Sept 2022
-! summary: Evaluate finite sum of Legendre polynomials at several x
+!> author: Vikas Sharma, Ph.D.
+! date: 2026-10-30
+! summary: Evaluate a polynomial expansion.
+!
+! Coefficients are modal values indexed from zero.
+!
+! Arguments:
+!   n : INTEGER(I4B), INTENT(IN). Maximum polynomial degree; use n>=0.
+!   x : REAL(DFP), INTENT(IN)(:). Evaluation coordinate(s).
+!   coeff : REAL(DFP), INTENT(IN)(0:n). Modal expansion coefficients, indexed
+! from zero.
+!
+! Returns:
+!   ans : REAL(DFP)(SIZE(x)).
+!
+! Formula:
+! $$y(x)=\sum_{j=0}^{n}c_j p_j(x)$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE LegendrePolynomialUtility, ONLY: LegendreEvalSum
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: x(3), y(3), c(0:2)
+!
+! x = [-0.5_DFP, 0.0_DFP, 0.5_DFP]
+! c = [0.0_DFP, 0.0_DFP, 1.0_DFP]
+! y = LegendreEvalSum(n=2_I4B, x=x, coeff=c)
+! CALL OK(MAXVAL(ABS(y-(0.5_DFP*(3.0_DFP*x*x-1.0_DFP)))) < 1.0E-11_DFP, &
+!   "A single modal coefficient recovers degree two")
+! END PROGRAM main
+!```
 
 INTERFACE LegendreEvalSum
   MODULE PURE FUNCTION LegendreEvalSum2(n, x, coeff) RESULT(ans)
@@ -855,10 +1885,43 @@ END INTERFACE LegendreEvalSum
 !                                             LegendreGradientEvalSum
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 6 Sept 2022
-! summary: Evaluate the gradient of finite sum of Legendre polynomials
-! at point x
+!> author: Vikas Sharma, Ph.D.
+! date: 2026-10-30
+! summary: Evaluate the derivative of a polynomial expansion.
+!
+! Coefficients are modal values indexed from zero. Overloads with k request
+! the kth derivative.
+!
+! Arguments:
+!   n : INTEGER(I4B), INTENT(IN). Maximum polynomial degree; use n>=0.
+!   x : REAL(DFP), INTENT(IN). Evaluation coordinate(s).
+!   coeff : REAL(DFP), INTENT(IN)(0:n). Modal expansion coefficients, indexed
+! from zero.
+!
+! Returns:
+!   ans : REAL(DFP).
+!
+! Formula:
+! $$y(x)=\sum_{j=0}^{n}c_j p_j'(x)$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE LegendrePolynomialUtility, ONLY: LegendreGradientEvalSum
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: x(3), y(3), c(0:2)
+!
+! x = [-0.5_DFP, 0.0_DFP, 0.5_DFP]
+! c = [0.0_DFP, 0.0_DFP, 1.0_DFP]
+! y = LegendreGradientEvalSum(n=2_I4B, x=x, coeff=c)
+! CALL OK(MAXVAL(ABS(y-(3.0_DFP*x))) < 1.0E-11_DFP, &
+!   "A single modal coefficient recovers degree two")
+! END PROGRAM main
+!```
 
 INTERFACE LegendreGradientEvalSum
   MODULE PURE FUNCTION LegendreGradientEvalSum1(n, x, coeff) RESULT(ans)
@@ -877,10 +1940,43 @@ END INTERFACE LegendreGradientEvalSum
 !                                              LegendreGradientEvalSum
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 6 Sept 2022
-! summary: Evaluate the gradient of finite sum of Legendre polynomials
-! at several x
+!> author: Vikas Sharma, Ph.D.
+! date: 2026-10-30
+! summary: Evaluate the derivative of a polynomial expansion.
+!
+! Coefficients are modal values indexed from zero. Overloads with k request
+! the kth derivative.
+!
+! Arguments:
+!   n : INTEGER(I4B), INTENT(IN). Maximum polynomial degree; use n>=0.
+!   x : REAL(DFP), INTENT(IN)(:). Evaluation coordinate(s).
+!   coeff : REAL(DFP), INTENT(IN)(0:n). Modal expansion coefficients, indexed
+! from zero.
+!
+! Returns:
+!   ans : REAL(DFP)(SIZE(x)).
+!
+! Formula:
+! $$y(x)=\sum_{j=0}^{n}c_j p_j'(x)$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE LegendrePolynomialUtility, ONLY: LegendreGradientEvalSum
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: x(3), y(3), c(0:2)
+!
+! x = [-0.5_DFP, 0.0_DFP, 0.5_DFP]
+! c = [0.0_DFP, 0.0_DFP, 1.0_DFP]
+! y = LegendreGradientEvalSum(n=2_I4B, x=x, coeff=c)
+! CALL OK(MAXVAL(ABS(y-(3.0_DFP*x))) < 1.0E-11_DFP, &
+!   "A single modal coefficient recovers degree two")
+! END PROGRAM main
+!```
 
 INTERFACE LegendreGradientEvalSum
   MODULE PURE FUNCTION LegendreGradientEvalSum2(n, x, coeff) RESULT(ans)
@@ -899,10 +1995,44 @@ END INTERFACE LegendreGradientEvalSum
 !                                              LegendreGradientEvalSum
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 6 Sept 2022
-! summary: Evaluate the kth derivative of finite sum of Legendre
-! polynomials at point x
+!> author: Vikas Sharma, Ph.D.
+! date: 2026-10-30
+! summary: Evaluate the derivative of a polynomial expansion.
+!
+! Coefficients are modal values indexed from zero. Overloads with k request
+! the kth derivative.
+!
+! Arguments:
+!   n : INTEGER(I4B), INTENT(IN). Maximum polynomial degree; use n>=0.
+!   x : REAL(DFP), INTENT(IN). Evaluation coordinate(s).
+!   coeff : REAL(DFP), INTENT(IN)(0:n). Modal expansion coefficients, indexed
+! from zero.
+!   k : INTEGER(I4B), INTENT(IN). Derivative order.
+!
+! Returns:
+!   ans : REAL(DFP).
+!
+! Formula:
+! $$y(x)=\sum_{j=0}^{n}c_j p_j'(x)$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE LegendrePolynomialUtility, ONLY: LegendreGradientEvalSum
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: x(3), y(3), c(0:2)
+!
+! x = [-0.5_DFP, 0.0_DFP, 0.5_DFP]
+! c = [0.0_DFP, 0.0_DFP, 1.0_DFP]
+! y = LegendreGradientEvalSum(n=2_I4B, x=x, coeff=c)
+! CALL OK(MAXVAL(ABS(y-(3.0_DFP*x))) < 1.0E-11_DFP, &
+!   "A single modal coefficient recovers degree two")
+! END PROGRAM main
+!```
 
 INTERFACE LegendreGradientEvalSum
   MODULE PURE FUNCTION LegendreGradientEvalSum3(n, x, coeff, k) RESULT(ans)
@@ -923,10 +2053,44 @@ END INTERFACE LegendreGradientEvalSum
 !                                             LegendreGradientEvalSum
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 6 Sept 2022
-! summary: Evaluate the kth gradient of finite sum of Legendre
-!  polynomials at several x
+!> author: Vikas Sharma, Ph.D.
+! date: 2026-10-30
+! summary: Evaluate the derivative of a polynomial expansion.
+!
+! Coefficients are modal values indexed from zero. Overloads with k request
+! the kth derivative.
+!
+! Arguments:
+!   n : INTEGER(I4B), INTENT(IN). Maximum polynomial degree; use n>=0.
+!   x : REAL(DFP), INTENT(IN)(:). Evaluation coordinate(s).
+!   coeff : REAL(DFP), INTENT(IN)(0:n). Modal expansion coefficients, indexed
+! from zero.
+!   k : INTEGER(I4B), INTENT(IN). Derivative order.
+!
+! Returns:
+!   ans : REAL(DFP)(SIZE(x)).
+!
+! Formula:
+! $$y(x)=\sum_{j=0}^{n}c_j p_j'(x)$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE LegendrePolynomialUtility, ONLY: LegendreGradientEvalSum
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: x(3), y(3), c(0:2)
+!
+! x = [-0.5_DFP, 0.0_DFP, 0.5_DFP]
+! c = [0.0_DFP, 0.0_DFP, 1.0_DFP]
+! y = LegendreGradientEvalSum(n=2_I4B, x=x, coeff=c)
+! CALL OK(MAXVAL(ABS(y-(3.0_DFP*x))) < 1.0E-11_DFP, &
+!   "A single modal coefficient recovers degree two")
+! END PROGRAM main
+!```
 
 INTERFACE LegendreGradientEvalSum
   MODULE PURE FUNCTION LegendreGradientEvalSum4(n, x, coeff, k) RESULT(ans)
@@ -947,9 +2111,52 @@ END INTERFACE LegendreGradientEvalSum
 !                                                         LegendreTransform
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 13 Oct 2022
-! summary: Discrete Legendre Transform
+!> author: Vikas Sharma, Ph.D.
+! date: 2026-10-30
+! summary: Project sampled values onto the polynomial basis.
+!
+! coeff contains sampled function values on input, not modal coefficients.
+! Output entries are modal coefficients. Callback overloads map reference
+! nodes to [x1,x2]. Precomputed PP uses rows for points and columns for
+! degrees.
+!
+! Arguments:
+!   n : INTEGER(I4B), INTENT(IN). Maximum polynomial degree; use n>=0.
+!   coeff : REAL(DFP), INTENT(IN)(0:). Sampled function values at quadrature
+! nodes.
+!   x : REAL(DFP), INTENT(IN)(0:). Evaluation coordinate(s).
+!   w : REAL(DFP), INTENT(IN)(0:). Quadrature weights paired with x or PP
+! rows.
+!   quadType : INTEGER(I4B), INTENT(IN). Quadrature selector from GlobalData;
+! must match the supplied nodes.
+!
+! Returns:
+!   ans : REAL(DFP)(0:n).
+!
+! Formula:
+! $$M c=b,\quad M_{ij}=\int p_i p_j w\,dx,\quad b_j=\sum_k w_k f_k p_j(x_k)$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE GlobalData, ONLY: Gauss
+! USE LegendrePolynomialUtility, ONLY: LegendreTransform
+! USE LegendrePolynomialUtility, ONLY: LegendreGaussQuadrature
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: x(3), w(3), f(3), c(0:2)
+!
+! CALL LegendreGaussQuadrature(n=3_I4B, pt=x, wt=w)
+! f = 0.5_DFP*(3.0_DFP*x*x-1.0_DFP)
+! c = LegendreTransform(n=2_I4B, coeff=f, x=x, w=w, quadType=Gauss)
+! CALL OK(MAXVAL(ABS(c- &
+!   [0.0_DFP, 0.0_DFP, 1.0_DFP])) < 1.0E-10_DFP, &
+!   "Recover the single degree two modal coefficient")
+! END PROGRAM main
+!```
 
 INTERFACE LegendreTransform
   MODULE PURE FUNCTION LegendreTransform1(n, coeff, x, w, &
@@ -983,6 +2190,58 @@ END INTERFACE LegendreTransform
 !                                                 LegendreTransform@Methods
 !----------------------------------------------------------------------------
 
+!> author: Vikas Sharma, Ph.D.
+! date: 2026-10-30
+! summary: Project sampled values onto the polynomial basis.
+!
+! coeff contains sampled function values on input, not modal coefficients.
+! Output entries are modal coefficients. Callback overloads map reference
+! nodes to [x1,x2]. Precomputed PP uses rows for points and columns for
+! degrees.
+!
+! Arguments:
+!   n : INTEGER(I4B), INTENT(IN). Maximum polynomial degree; use n>=0.
+!   coeff : REAL(DFP), INTENT(IN)(0:). Sampled function values at quadrature
+! nodes.
+!   x : REAL(DFP), INTENT(IN)(0:). Evaluation coordinate(s).
+!   w : REAL(DFP), INTENT(IN)(0:). Quadrature weights paired with x or PP
+! rows.
+!   quadType : INTEGER(I4B), INTENT(IN). Quadrature selector from GlobalData;
+! must match the supplied nodes.
+!   ans : REAL(DFP), INTENT(INOUT)(0:). Result storage; allocate enough space
+! for all active dimensions.
+!   tsize : INTEGER(I4B), INTENT(OUT). Number of active vector output entries.
+!
+! Returns:
+!   Writes ans(0:), tsize.
+!
+! Formula:
+! $$M c=b,\quad M_{ij}=\int p_i p_j w\,dx,\quad b_j=\sum_k w_k f_k p_j(x_k)$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE GlobalData, ONLY: Gauss
+! USE LegendrePolynomialUtility, ONLY: LegendreTransform_
+! USE LegendrePolynomialUtility, ONLY: LegendreGaussQuadrature
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: x(3), w(3), f(3), c(0:2)
+! INTEGER(I4B) :: ns
+!
+! CALL LegendreGaussQuadrature(n=3_I4B, pt=x, wt=w)
+! f = 0.5_DFP*(3.0_DFP*x*x-1.0_DFP)
+! CALL LegendreTransform_( &
+!   n=2_I4B, coeff=f, x=x, w=w, quadType=Gauss, ans=c, tsize=ns)
+! CALL OK(MAXVAL(ABS(c- &
+!   [0.0_DFP, 0.0_DFP, 1.0_DFP])) < 1.0E-10_DFP, &
+!   "Recover the single degree two modal coefficient")
+! END PROGRAM main
+!```
+
 INTERFACE LegendreTransform_
   MODULE PURE SUBROUTINE LegendreTransform1_(n, coeff, x, w, quadType, ans, &
                                              tsize)
@@ -1013,6 +2272,59 @@ END INTERFACE LegendreTransform_
 !----------------------------------------------------------------------------
 !                                                          LegendreTransform
 !----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph.D.
+! date: 2026-10-30
+! summary: Project sampled values onto the polynomial basis.
+!
+! coeff contains sampled function values on input, not modal coefficients.
+! Output entries are modal coefficients. Callback overloads map reference
+! nodes to [x1,x2]. Precomputed PP uses rows for points and columns for
+! degrees.
+!
+! Arguments:
+!   n : INTEGER(I4B), INTENT(IN). Maximum polynomial degree; use n>=0.
+!   coeff : REAL(DFP), INTENT(IN)(0:). Sampled function values at quadrature
+! nodes.
+!   PP : REAL(DFP), INTENT(IN)(0:, 0:). Precomputed polynomial values, with
+! point rows and degree columns.
+!   w : REAL(DFP), INTENT(IN)(0:). Quadrature weights paired with x or PP
+! rows.
+!   quadType : INTEGER(I4B), INTENT(IN). Quadrature selector from GlobalData;
+! must match the supplied nodes.
+!   ans : REAL(DFP), INTENT(INOUT)(0:). Result storage; allocate enough space
+! for all active dimensions.
+!   tsize : INTEGER(I4B), INTENT(OUT). Number of active vector output entries.
+!
+! Returns:
+!   Writes ans(0:), tsize.
+!
+! Formula:
+! $$M c=b,\quad M_{ij}=\int p_i p_j w\,dx,\quad b_j=\sum_k w_k f_k p_j(x_k)$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE GlobalData, ONLY: Gauss
+! USE LegendrePolynomialUtility, ONLY: LegendreTransform_
+! USE LegendrePolynomialUtility, ONLY: LegendreGaussQuadrature
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: x(3), w(3), f(3), c(0:2)
+! INTEGER(I4B) :: ns
+!
+! CALL LegendreGaussQuadrature(n=3_I4B, pt=x, wt=w)
+! f = 0.5_DFP*(3.0_DFP*x*x-1.0_DFP)
+! CALL LegendreTransform_( &
+!   n=2_I4B, coeff=f, x=x, w=w, quadType=Gauss, ans=c, tsize=ns)
+! CALL OK(MAXVAL(ABS(c- &
+!   [0.0_DFP, 0.0_DFP, 1.0_DFP])) < 1.0E-10_DFP, &
+!   "Recover the single degree two modal coefficient")
+! END PROGRAM main
+!```
 
 INTERFACE LegendreTransform_
   MODULE PURE SUBROUTINE LegendreTransform4_(n, coeff, PP, w, quadType, ans, &
@@ -1048,29 +2360,53 @@ END INTERFACE LegendreTransform_
 !                                                          LegendreTransform
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 13 Oct 2022
-! summary: Legendre Transform of a function on [-1,1]
+!> author: Vikas Sharma, Ph.D.
+! date: 2026-10-30
+! summary: Project sampled values onto the polynomial basis.
 !
-!# Introduction
+! coeff contains sampled function values on input, not modal coefficients.
+! Output entries are modal coefficients. Callback overloads map reference
+! nodes to [x1,x2]. Precomputed PP uses rows for points and columns for
+! degrees.
 !
-! This function performs the Legendre transformation of f defined
-! on -1 to 1. The interface of the function is give below:
+! Arguments:
+!   n : INTEGER(I4B), INTENT(IN). Maximum polynomial degree; use n>=0.
+!   f : PROCEDURE(iface_1DFunction), POINTER, INTENT(IN). Procedure pointer to
+! an iface_1DFunction callback.
+!   quadType : INTEGER(I4B), INTENT(IN). Quadrature selector from GlobalData;
+! must match the supplied nodes.
+!   x1 : REAL(DFP), INTENT(IN). Left endpoint of the callback evaluation
+! interval.
+!   x2 : REAL(DFP), INTENT(IN). Right endpoint of the callback evaluation
+! interval.
+!
+! Returns:
+!   ans : REAL(DFP)(0:n).
+!
+! Formula:
+! $$M c=b,\quad M_{ij}=\int p_i p_j w\,dx,\quad b_j=\sum_k w_k f_k p_j(x_k)$$
+!
+! Examples
 !
 !```fortran
-! ABSTRACT INTERFACE
-!   ELEMENTAL FUNCTION iface_1DFunction(x) RESULT(ans)
-!     IMPORT :: DFP
-!     REAL(DFP), INTENT(IN) :: x
-!     REAL(DFP) :: ans
-!   END FUNCTION iface_1DFunction
-! END INTERFACE
-!```
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE GlobalData, ONLY: Gauss
+! USE LegendrePolynomialUtility, ONLY: LegendreTransform
+! USE LegendrePolynomialUtility, ONLY: LegendreGaussQuadrature
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: x(3), w(3), f(3), c(0:2)
 !
-!@note
-! This routine is not pure, because this subroutine calls
-!  `LegendreQuadrature` which is not pure due to Lapack call.
-!@endnote
+! CALL LegendreGaussQuadrature(n=3_I4B, pt=x, wt=w)
+! f = 0.5_DFP*(3.0_DFP*x*x-1.0_DFP)
+! c = LegendreTransform(n=2_I4B, coeff=f, x=x, w=w, quadType=Gauss)
+! CALL OK(MAXVAL(ABS(c- &
+!   [0.0_DFP, 0.0_DFP, 1.0_DFP])) < 1.0E-10_DFP, &
+!   "Recover the single degree two modal coefficient")
+! END PROGRAM main
+!```
 
 INTERFACE LegendreTransform
   MODULE FUNCTION LegendreTransform3(n, f, quadType, x1, x2) RESULT(ans)
@@ -1091,6 +2427,59 @@ END INTERFACE LegendreTransform
 !----------------------------------------------------------------------------
 !                                                 LegendreTransform@Methods
 !----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph.D.
+! date: 2026-10-30
+! summary: Project sampled values onto the polynomial basis.
+!
+! coeff contains sampled function values on input, not modal coefficients.
+! Output entries are modal coefficients. Callback overloads map reference
+! nodes to [x1,x2]. Precomputed PP uses rows for points and columns for
+! degrees.
+!
+! Arguments:
+!   n : INTEGER(I4B), INTENT(IN). Maximum polynomial degree; use n>=0.
+!   f : PROCEDURE(iface_1DFunction), POINTER, INTENT(IN). Procedure pointer to
+! an iface_1DFunction callback.
+!   quadType : INTEGER(I4B), INTENT(IN). Quadrature selector from GlobalData;
+! must match the supplied nodes.
+!   x1 : REAL(DFP), INTENT(IN). Left endpoint of the callback evaluation
+! interval.
+!   x2 : REAL(DFP), INTENT(IN). Right endpoint of the callback evaluation
+! interval.
+!   ans : REAL(DFP), INTENT(INOUT)(0:). Result storage; allocate enough space
+! for all active dimensions.
+!   tsize : INTEGER(I4B), INTENT(OUT). Number of active vector output entries.
+!
+! Returns:
+!   Writes ans(0:), tsize.
+!
+! Formula:
+! $$M c=b,\quad M_{ij}=\int p_i p_j w\,dx,\quad b_j=\sum_k w_k f_k p_j(x_k)$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE GlobalData, ONLY: Gauss
+! USE LegendrePolynomialUtility, ONLY: LegendreTransform_
+! USE LegendrePolynomialUtility, ONLY: LegendreGaussQuadrature
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: x(3), w(3), f(3), c(0:2)
+! INTEGER(I4B) :: ns
+!
+! CALL LegendreGaussQuadrature(n=3_I4B, pt=x, wt=w)
+! f = 0.5_DFP*(3.0_DFP*x*x-1.0_DFP)
+! CALL LegendreTransform_( &
+!   n=2_I4B, coeff=f, x=x, w=w, quadType=Gauss, ans=c, tsize=ns)
+! CALL OK(MAXVAL(ABS(c- &
+!   [0.0_DFP, 0.0_DFP, 1.0_DFP])) < 1.0E-10_DFP, &
+!   "Recover the single degree two modal coefficient")
+! END PROGRAM main
+!```
 
 INTERFACE LegendreTransform_
   MODULE SUBROUTINE LegendreTransform3_(n, f, quadType, x1, x2, ans, tsize)
@@ -1115,9 +2504,42 @@ END INTERFACE LegendreTransform_
 !                                                       LegendreInvTransform
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 13 Oct 2022
-! summary: Inverse Legendre Transform
+!> author: Vikas Sharma, Ph.D.
+! date: 2026-10-30
+! summary: Evaluate a polynomial expansion.
+!
+! Coefficients are modal values indexed from zero.
+!
+! Arguments:
+!   n : INTEGER(I4B), INTENT(IN). Maximum polynomial degree; use n>=0.
+!   coeff : REAL(DFP), INTENT(IN)(0:n). Modal expansion coefficients, indexed
+! from zero.
+!   x : REAL(DFP), INTENT(IN). Evaluation coordinate(s).
+!
+! Returns:
+!   ans : REAL(DFP).
+!
+! Formula:
+! $$y(x)=\sum_{j=0}^{n}c_j p_j(x)$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE LegendrePolynomialUtility, ONLY: LegendreInvTransform
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: x(3), y(3), c(0:2)
+!
+! x = [-0.5_DFP, 0.0_DFP, 0.5_DFP]
+! c = [0.0_DFP, 0.0_DFP, 1.0_DFP]
+! y = LegendreInvTransform(n=2_I4B, x=x, coeff=c)
+! CALL OK(MAXVAL(ABS(y-(0.5_DFP*(3.0_DFP*x*x-1.0_DFP)))) < 1.0E-11_DFP, &
+!   "A single modal coefficient recovers degree two")
+! END PROGRAM main
+!```
 
 INTERFACE LegendreInvTransform
   MODULE PURE FUNCTION LegendreInvTransform1(n, coeff, x) &
@@ -1137,9 +2559,42 @@ END INTERFACE LegendreInvTransform
 !                                                      LegendreInvTransform
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 13 Oct 2022
-! summary: Inverse Legendre Transform
+!> author: Vikas Sharma, Ph.D.
+! date: 2026-10-30
+! summary: Evaluate a polynomial expansion.
+!
+! Coefficients are modal values indexed from zero.
+!
+! Arguments:
+!   n : INTEGER(I4B), INTENT(IN). Maximum polynomial degree; use n>=0.
+!   coeff : REAL(DFP), INTENT(IN)(0:n). Modal expansion coefficients, indexed
+! from zero.
+!   x : REAL(DFP), INTENT(IN)(:). Evaluation coordinate(s).
+!
+! Returns:
+!   ans : REAL(DFP)(SIZE(x)).
+!
+! Formula:
+! $$y(x)=\sum_{j=0}^{n}c_j p_j(x)$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE LegendrePolynomialUtility, ONLY: LegendreInvTransform
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: x(3), y(3), c(0:2)
+!
+! x = [-0.5_DFP, 0.0_DFP, 0.5_DFP]
+! c = [0.0_DFP, 0.0_DFP, 1.0_DFP]
+! y = LegendreInvTransform(n=2_I4B, x=x, coeff=c)
+! CALL OK(MAXVAL(ABS(y-(0.5_DFP*(3.0_DFP*x*x-1.0_DFP)))) < 1.0E-11_DFP, &
+!   "A single modal coefficient recovers degree two")
+! END PROGRAM main
+!```
 
 INTERFACE LegendreInvTransform
   MODULE PURE FUNCTION LegendreInvTransform2(n, coeff, x) &
@@ -1159,15 +2614,40 @@ END INTERFACE LegendreInvTransform
 !                                                     LegendreGradientCoeff
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 13 Oct 2022
-! summary: Returns coefficients for gradient of Legendre expansion
+!> author: Vikas Sharma, Ph.D.
+! date: 2026-10-30
+! summary: Differentiate modal coefficients in the same family.
 !
-!# Introduction
+! The output retains n+1 entries; the final coefficient is zero.
 !
-!- This routine returns the coefficients of gradient of Jacobi expansion.
-!- Input is coefficient of Legendre expansion (modal values)
-!- Output is coefficient of derivative of legendre expansion (modal values)
+! Arguments:
+!   n : INTEGER(I4B), INTENT(IN). Maximum polynomial degree; use n>=0.
+!   coeff : REAL(DFP), INTENT(IN)(0:n). Modal expansion coefficients, indexed
+! from zero.
+!
+! Returns:
+!   ans : REAL(DFP)(0:n).
+!
+! Formula:
+! $$\sum_{j=0}^{n}d_j p_j(x)=\sum_{j=0}^{n}c_j p_j'(x)$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE LegendrePolynomialUtility, ONLY: LegendreGradientCoeff
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: c(0:2), dc(0:2)
+!
+! c = [0.0_DFP, 0.0_DFP, 1.0_DFP]
+! dc = LegendreGradientCoeff(n=2_I4B, coeff=c)
+! CALL OK(MAXVAL(ABS(dc-[0.0_DFP, 3.0_DFP, 0.0_DFP])) &
+!   < 1.0E-11_DFP, "Derivative coefficients in the same basis")
+! END PROGRAM main
+!```
 
 INTERFACE LegendreGradientCoeff
   MODULE PURE FUNCTION LegendreGradientCoeff1(n, coeff) &
@@ -1185,9 +2665,44 @@ END INTERFACE LegendreGradientCoeff
 !                                                           LegendreDMatrix
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 15 Oct 2022
-! summary: Returns differentiation matrix for Legendre expansion
+!> author: Vikas Sharma, Ph.D.
+! date: 2026-10-30
+! summary: Build the nodal first derivative matrix.
+!
+! n is the interpolation degree; pass n+1 nodes from the selected quadrature
+! rule in their returned order.
+!
+! Arguments:
+!   n : INTEGER(I4B), INTENT(IN). Interpolation degree; x contains n+1 nodes.
+!   x : REAL(DFP), INTENT(IN)(0:n). Evaluation coordinate(s).
+!   quadType : INTEGER(I4B), INTENT(IN). Quadrature selector from GlobalData;
+! must match the supplied nodes.
+!
+! Returns:
+!   ans : REAL(DFP)(0:n, 0:n).
+!
+! Formula:
+! $$f'(x_i)=\sum_{j=0}^{n}D_{ij} f(x_j)$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE GlobalData, ONLY: Gauss
+! USE LegendrePolynomialUtility, ONLY: LegendreDMatrix
+! USE LegendrePolynomialUtility, ONLY: LegendreQuadrature
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: x(0:2), w(0:2), d(0:2, 0:2)
+!
+! CALL LegendreQuadrature(n=3_I4B, pt=x, wt=w, quadType=Gauss)
+! d = LegendreDMatrix(n=2_I4B, x=x, quadType=Gauss)
+! CALL OK(MAXVAL(ABS(MATMUL(d, x*x)-2.0_DFP*x)) &
+!   < 1.0E-10_DFP, "Differentiate a nodal quadratic")
+! END PROGRAM main
+!```
 
 INTERFACE LegendreDMatrix
   MODULE PURE FUNCTION LegendreDMatrix1(n, x, quadType) &
@@ -1207,9 +2722,51 @@ END INTERFACE LegendreDMatrix
 !                                                       LegendreDMatEvenOdd
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 15 Oct 2022
-! summary: Performs even and odd decomposition of Differential matrix
+!> author: Vikas Sharma, Ph.D.
+! date: 2026-10-30
+! summary: Form even and odd blocks by pairing mirrored columns.
+!
+! The example uses odd n, where both blocks are fully assigned. The even n
+! branch does not assign every output entry; initialize buffers and inspect
+! that branch before use.
+!
+! Arguments:
+!   n : INTEGER(I4B), INTENT(IN). Maximum polynomial degree; use n>=0.
+!   D : REAL(DFP), INTENT(IN)(0:n, 0:n). Jacobi matrix diagonal, or nodal
+! derivative matrix in the block splitter.
+!   e : REAL(DFP), INTENT(OUT)(0:, 0:). Jacobi matrix off diagonal, or even
+! block in the block splitter.
+!   o : REAL(DFP), INTENT(OUT)(0:, 0:). Odd block formed by mirrored column
+! subtraction.
+!
+! Returns:
+!   Writes e(0:, 0:), o(0:, 0:).
+!
+! Formula:
+! $$E_{ij}=D_{ij}+D_{i,n-j},\quad O_{ij}=D_{ij}-D_{i,n-j}$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE LegendrePolynomialUtility, ONLY: LegendreDMatEvenOdd
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: d(0:3, 0:3), e(0:1, 0:1), o(0:1, 0:1)
+! INTEGER(I4B) :: j
+!
+! DO j = 0, 3
+!   d(:, j) = REAL(j, DFP)
+! END DO
+! CALL LegendreDMatEvenOdd(n=3_I4B, D=d, e=e, o=o)
+! CALL OK(MAXVAL(ABS(e-3.0_DFP)) < 1.0E-11_DFP, &
+!   "Even block combines mirrored columns")
+! CALL OK(MAXVAL(ABS(o(:, 0)+3.0_DFP)) < 1.0E-11_DFP, &
+!   "Odd block subtracts mirrored columns")
+! END PROGRAM main
+!```
 
 INTERFACE LegendreDMatEvenOdd
   MODULE PURE SUBROUTINE LegendreDMatEvenOdd1(n, D, e, o)
@@ -1223,6 +2780,344 @@ INTERFACE LegendreDMatEvenOdd
       !! odd decomposition, 0:n/2, 0:n/2
   END SUBROUTINE LegendreDMatEvenOdd1
 END INTERFACE LegendreDMatEvenOdd
+
+!----------------------------------------------------------------------------
+!                                                    LegendreLaplacianEvalAll
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph.D.
+! date: 2026-10-30
+! summary: Reserved second derivative interface; currently unimplemented.
+!
+! Do not call this interface: its implementation is empty or forwards to an
+! empty body. Function results and output dimensions are undefined. The
+! example deliberately calls GradientEval instead and demonstrates a numerical
+! workaround; it is not validation of this Laplacian interface.
+!
+! Arguments:
+!   n : INTEGER(I4B), INTENT(IN). Maximum polynomial degree; use n>=0.
+!   x : REAL(DFP), INTENT(IN). Evaluation coordinate(s).
+!
+! Returns:
+!   No defined result: the implementation body is empty.
+!
+! Formula:
+! $$p_n''(x)\simeq\frac{p_n'(x+h)-p_n'(x-h)}{2h}$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE LegendrePolynomialUtility, ONLY: LegendreGradientEval
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: x(3), gp(3), gm(3), d2(3)
+! REAL(DFP), PARAMETER :: h = 1.0E-5_DFP
+!
+! ! The declared Laplacian routine has no implementation.
+! ! Approximate the second derivative using the working gradient API.
+! x = [-0.5_DFP, 0.0_DFP, 0.5_DFP]
+! gp = LegendreGradientEval(n=2_I4B, x=x+h)
+! gm = LegendreGradientEval(n=2_I4B, x=x-h)
+! d2 = (gp-gm)/(2.0_DFP*h)
+! CALL OK(MAXVAL(ABS(d2-(3.0_DFP))) < 1.0E-8_DFP, &
+!   "Gradient based second derivative workaround")
+! END PROGRAM main
+!```
+
+INTERFACE LegendreLaplacianEvalAll
+  MODULE PURE FUNCTION LegendreLaplacianEvalAll1(n, x) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: n
+    REAL(DFP), INTENT(IN) :: x
+    REAL(DFP) :: ans(1:n + 1)
+  END FUNCTION LegendreLaplacianEvalAll1
+END INTERFACE LegendreLaplacianEvalAll
+
+!----------------------------------------------------------------------------
+!                                                   LegendreLaplacianEvalAll_
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph.D.
+! date: 2026-10-30
+! summary: Reserved second derivative interface; currently unimplemented.
+!
+! Do not call this interface: its implementation is empty or forwards to an
+! empty body. Function results and output dimensions are undefined. The
+! example deliberately calls GradientEval instead and demonstrates a numerical
+! workaround; it is not validation of this Laplacian interface.
+!
+! Arguments:
+!   n : INTEGER(I4B), INTENT(IN). Maximum polynomial degree; use n>=0.
+!   x : REAL(DFP), INTENT(IN). Evaluation coordinate(s).
+!   ans : REAL(DFP), INTENT(INOUT)(:). Result storage; allocate enough space
+! for all active dimensions.
+!   tsize : INTEGER(I4B), INTENT(OUT). Number of active vector output entries.
+!
+! Returns:
+!   No defined result: the implementation body is empty.
+!
+! Formula:
+! $$p_n''(x)\simeq\frac{p_n'(x+h)-p_n'(x-h)}{2h}$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE LegendrePolynomialUtility, ONLY: LegendreGradientEval
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: x(3), gp(3), gm(3), d2(3)
+! REAL(DFP), PARAMETER :: h = 1.0E-5_DFP
+!
+! ! The declared Laplacian routine has no implementation.
+! ! Approximate the second derivative using the working gradient API.
+! x = [-0.5_DFP, 0.0_DFP, 0.5_DFP]
+! gp = LegendreGradientEval(n=2_I4B, x=x+h)
+! gm = LegendreGradientEval(n=2_I4B, x=x-h)
+! d2 = (gp-gm)/(2.0_DFP*h)
+! CALL OK(MAXVAL(ABS(d2-(3.0_DFP))) < 1.0E-8_DFP, &
+!   "Gradient based second derivative workaround")
+! END PROGRAM main
+!```
+
+INTERFACE LegendreLaplacianEvalAll_
+  MODULE PURE SUBROUTINE LegendreLaplacianEvalAll1_(n, x, ans, tsize)
+    INTEGER(I4B), INTENT(IN) :: n
+    REAL(DFP), INTENT(IN) :: x
+    REAL(DFP), INTENT(INOUT) :: ans(:)
+    !! ans(1:n + 1)
+    INTEGER(I4B), INTENT(OUT) :: tsize
+    !! total size
+  END SUBROUTINE LegendreLaplacianEvalAll1_
+END INTERFACE LegendreLaplacianEvalAll_
+
+!----------------------------------------------------------------------------
+!                                                    LegendreLaplacianEvalAll
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph.D.
+! date: 2026-10-30
+! summary: Reserved second derivative interface; currently unimplemented.
+!
+! Do not call this interface: its implementation is empty or forwards to an
+! empty body. Function results and output dimensions are undefined. The
+! example deliberately calls GradientEval instead and demonstrates a numerical
+! workaround; it is not validation of this Laplacian interface.
+!
+! Arguments:
+!   n : INTEGER(I4B), INTENT(IN). Maximum polynomial degree; use n>=0.
+!   x : REAL(DFP), INTENT(IN)(:). Evaluation coordinate(s).
+!
+! Returns:
+!   No defined result: the implementation body is empty.
+!
+! Formula:
+! $$p_n''(x)\simeq\frac{p_n'(x+h)-p_n'(x-h)}{2h}$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE LegendrePolynomialUtility, ONLY: LegendreGradientEval
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: x(3), gp(3), gm(3), d2(3)
+! REAL(DFP), PARAMETER :: h = 1.0E-5_DFP
+!
+! ! The declared Laplacian routine has no implementation.
+! ! Approximate the second derivative using the working gradient API.
+! x = [-0.5_DFP, 0.0_DFP, 0.5_DFP]
+! gp = LegendreGradientEval(n=2_I4B, x=x+h)
+! gm = LegendreGradientEval(n=2_I4B, x=x-h)
+! d2 = (gp-gm)/(2.0_DFP*h)
+! CALL OK(MAXVAL(ABS(d2-(3.0_DFP))) < 1.0E-8_DFP, &
+!   "Gradient based second derivative workaround")
+! END PROGRAM main
+!```
+
+INTERFACE LegendreLaplacianEvalAll
+  MODULE PURE FUNCTION LegendreLaplacianEvalAll2(n, x) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: n
+    REAL(DFP), INTENT(IN) :: x(:)
+    REAL(DFP) :: ans(1:SIZE(x), 1:n + 1)
+  END FUNCTION LegendreLaplacianEvalAll2
+END INTERFACE LegendreLaplacianEvalAll
+
+!----------------------------------------------------------------------------
+!                                                   LegendreLaplacianEvalAll_
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph.D.
+! date: 2026-10-30
+! summary: Reserved second derivative interface; currently unimplemented.
+!
+! Do not call this interface: its implementation is empty or forwards to an
+! empty body. Function results and output dimensions are undefined. The
+! example deliberately calls GradientEval instead and demonstrates a numerical
+! workaround; it is not validation of this Laplacian interface.
+!
+! Arguments:
+!   n : INTEGER(I4B), INTENT(IN). Maximum polynomial degree; use n>=0.
+!   x : REAL(DFP), INTENT(IN)(:). Evaluation coordinate(s).
+!   ans : REAL(DFP), INTENT(INOUT)(:, :). Result storage; allocate enough
+! space for all active dimensions.
+!   nrow : INTEGER(I4B), INTENT(OUT). Number of active output rows.
+!   ncol : INTEGER(I4B), INTENT(OUT). Number of active output columns.
+!
+! Returns:
+!   No defined result: the implementation body is empty.
+!
+! Formula:
+! $$p_n''(x)\simeq\frac{p_n'(x+h)-p_n'(x-h)}{2h}$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE LegendrePolynomialUtility, ONLY: LegendreGradientEval
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: x(3), gp(3), gm(3), d2(3)
+! REAL(DFP), PARAMETER :: h = 1.0E-5_DFP
+!
+! ! The declared Laplacian routine has no implementation.
+! ! Approximate the second derivative using the working gradient API.
+! x = [-0.5_DFP, 0.0_DFP, 0.5_DFP]
+! gp = LegendreGradientEval(n=2_I4B, x=x+h)
+! gm = LegendreGradientEval(n=2_I4B, x=x-h)
+! d2 = (gp-gm)/(2.0_DFP*h)
+! CALL OK(MAXVAL(ABS(d2-(3.0_DFP))) < 1.0E-8_DFP, &
+!   "Gradient based second derivative workaround")
+! END PROGRAM main
+!```
+
+INTERFACE LegendreLaplacianEvalAll_
+  MODULE PURE SUBROUTINE LegendreLaplacianEvalAll2_(n, x, ans, nrow, ncol)
+    INTEGER(I4B), INTENT(IN) :: n
+    REAL(DFP), INTENT(IN) :: x(:)
+    REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    !! ans(1:SIZE(x), 1:n + 1)
+    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+    !! nrow = SIZE(x)
+    !! ncol = n + 1
+  END SUBROUTINE LegendreLaplacianEvalAll2_
+END INTERFACE LegendreLaplacianEvalAll_
+
+!----------------------------------------------------------------------------
+!                                                      LegendreLaplacianEval
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph.D.
+! date: 2026-10-30
+! summary: Reserved second derivative interface; currently unimplemented.
+!
+! Do not call this interface: its implementation is empty or forwards to an
+! empty body. Function results and output dimensions are undefined. The
+! example deliberately calls GradientEval instead and demonstrates a numerical
+! workaround; it is not validation of this Laplacian interface.
+!
+! Arguments:
+!   n : INTEGER(I4B), INTENT(IN). Maximum polynomial degree; use n>=0.
+!   x : REAL(DFP), INTENT(IN). Evaluation coordinate(s).
+!
+! Returns:
+!   No defined result: the implementation body is empty.
+!
+! Formula:
+! $$p_n''(x)\simeq\frac{p_n'(x+h)-p_n'(x-h)}{2h}$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE LegendrePolynomialUtility, ONLY: LegendreGradientEval
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: x(3), gp(3), gm(3), d2(3)
+! REAL(DFP), PARAMETER :: h = 1.0E-5_DFP
+!
+! ! The declared Laplacian routine has no implementation.
+! ! Approximate the second derivative using the working gradient API.
+! x = [-0.5_DFP, 0.0_DFP, 0.5_DFP]
+! gp = LegendreGradientEval(n=2_I4B, x=x+h)
+! gm = LegendreGradientEval(n=2_I4B, x=x-h)
+! d2 = (gp-gm)/(2.0_DFP*h)
+! CALL OK(MAXVAL(ABS(d2-(3.0_DFP))) < 1.0E-8_DFP, &
+!   "Gradient based second derivative workaround")
+! END PROGRAM main
+!```
+
+INTERFACE LegendreLaplacianEval
+  MODULE PURE FUNCTION LegendreLaplacianEval1(n, x) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: n
+    REAL(DFP), INTENT(IN) :: x
+    REAL(DFP) :: ans
+  END FUNCTION LegendreLaplacianEval1
+END INTERFACE LegendreLaplacianEval
+
+!----------------------------------------------------------------------------
+!                                                      LegendreLaplacianEval
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph.D.
+! date: 2026-10-30
+! summary: Reserved second derivative interface; currently unimplemented.
+!
+! Do not call this interface: its implementation is empty or forwards to an
+! empty body. Function results and output dimensions are undefined. The
+! example deliberately calls GradientEval instead and demonstrates a numerical
+! workaround; it is not validation of this Laplacian interface.
+!
+! Arguments:
+!   n : INTEGER(I4B), INTENT(IN). Maximum polynomial degree; use n>=0.
+!   x : REAL(DFP), INTENT(IN)(:). Evaluation coordinate(s).
+!
+! Returns:
+!   No defined result: the implementation body is empty.
+!
+! Formula:
+! $$p_n''(x)\simeq\frac{p_n'(x+h)-p_n'(x-h)}{2h}$$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE LegendrePolynomialUtility, ONLY: LegendreGradientEval
+! USE Test_Method, ONLY: OK
+! IMPLICIT NONE
+! REAL(DFP) :: x(3), gp(3), gm(3), d2(3)
+! REAL(DFP), PARAMETER :: h = 1.0E-5_DFP
+!
+! ! The declared Laplacian routine has no implementation.
+! ! Approximate the second derivative using the working gradient API.
+! x = [-0.5_DFP, 0.0_DFP, 0.5_DFP]
+! gp = LegendreGradientEval(n=2_I4B, x=x+h)
+! gm = LegendreGradientEval(n=2_I4B, x=x-h)
+! d2 = (gp-gm)/(2.0_DFP*h)
+! CALL OK(MAXVAL(ABS(d2-(3.0_DFP))) < 1.0E-8_DFP, &
+!   "Gradient based second derivative workaround")
+! END PROGRAM main
+!```
+
+INTERFACE LegendreLaplacianEval
+  MODULE PURE FUNCTION LegendreLaplacianEval2(n, x) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: n
+    REAL(DFP), INTENT(IN) :: x(:)
+    REAL(DFP) :: ans(1:SIZE(x))
+  END FUNCTION LegendreLaplacianEval2
+END INTERFACE LegendreLaplacianEval
 
 !----------------------------------------------------------------------------
 !

@@ -1,0 +1,23 @@
+!> author: Vikas Sharma, Ph.D.
+! date: 2026-10-30
+! summary: Compute a selected quadrature nodes and weights.
+
+PROGRAM main
+USE GlobalData, ONLY: DFP
+USE GlobalData, ONLY: I4B
+USE GlobalData, ONLY: GaussLobatto
+USE JacobiPolynomialUtility, ONLY: JacobiQuadrature
+USE Test_Method, ONLY: OK
+IMPLICIT NONE
+REAL(DFP) :: x(4), w(4)
+
+CALL JacobiQuadrature( &
+  alpha=0.0_DFP, beta=0.0_DFP, n=4_I4B, pt=x, wt=w, &
+  quadType=GaussLobatto)
+CALL OK(ABS(SUM(w)-(2.0_DFP)) < 1.0E-10_DFP, &
+  "Weights integrate a constant")
+CALL OK(ABS(SUM(w*x*x)-(2.0_DFP/3.0_DFP)) < 1.0E-10_DFP, &
+  "Weights integrate the weighted second moment")
+CALL OK(ABS(MINVAL(x)+1.0_DFP) < 1.0E-11_DFP .AND. &
+  ABS(MAXVAL(x)-1.0_DFP) < 1.0E-11_DFP, "Both endpoints")
+END PROGRAM main
