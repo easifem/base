@@ -27,11 +27,55 @@ CONTAINS
 !                                                                 Reallocate2
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE Reallocate_logical
+MODULE PROCEDURE Reallocate_Logical_R1
 #define ZEROVALUE .FALSE.
 #include "./Reallocate/reallocate1.F90"
 #undef ZEROVALUE
-END PROCEDURE Reallocate_logical
+END PROCEDURE Reallocate_Logical_R1
+
+!----------------------------------------------------------------------------
+!                                                                 Reallocate
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE Reallocate_Logical_R1b
+CALL Reallocate_Logical_R1(mat, s(1), isExpand, expandFactor)
+END PROCEDURE Reallocate_Logical_R1b
+
+!----------------------------------------------------------------------------
+!                                                                 Reallocate
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE Reallocate_Logical_R2
+#define ZEROVALUE .FALSE.
+#include "./Reallocate/reallocate2.F90"
+#undef ZEROVALUE
+END PROCEDURE Reallocate_Logical_R2
+
+!----------------------------------------------------------------------------
+!                                                                 Reallocate
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE Reallocate_Logical_R2b
+CALL Reallocate_Logical_R2(mat, s(1), s(2), isExpand, expandFactor)
+END PROCEDURE Reallocate_Logical_R2b
+
+!----------------------------------------------------------------------------
+!                                                                 Reallocate
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE Reallocate_Logical_R3
+#define ZEROVALUE .FALSE.
+#include "./Reallocate/reallocate3.F90"
+#undef ZEROVALUE
+END PROCEDURE Reallocate_Logical_R3
+
+!----------------------------------------------------------------------------
+!                                                                 Reallocate
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE Reallocate_Logical_R3b
+CALL Reallocate_Logical_R3(mat, s(1), s(2), s(3), isExpand, expandFactor)
+END PROCEDURE Reallocate_Logical_R3b
 
 !----------------------------------------------------------------------------
 !                                                                 Reallocate2
