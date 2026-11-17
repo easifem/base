@@ -44,6 +44,9 @@ CALL InPlace()
 ! Test 4: the factors are freed after the solve (isFreeFactors)
 CALL FreeFactors()
 
+! Test 5: two right-hand sides, solutions returned in B (LinSolve4)
+CALL InPlaceTwoRhs()
+
 CONTAINS
 
 ! Test 1: one right-hand side (LinSolve1)
@@ -138,6 +141,34 @@ SUBROUTINE InPlace()
 
   CALL DEALLOCATE(mat)
 END SUBROUTINE InPlace
+
+! Test 5: two right-hand sides, solutions returned in B (LinSolve4)
+SUBROUTINE InPlaceTwoRhs()
+  TYPE(CSRMatrix_) :: mat
+  REAL(DFP) :: b(n, 2), b0(n, 2)
+  INTEGER(I4B) :: info
+
+  CALL InitiateCSR(mat, Ad)
+
+  b0(:, 1) = [1.0_DFP, 2.0_DFP, 3.0_DFP, 4.0_DFP, 5.0_DFP, 6.0_DFP]
+  b0(:, 2) = [0.0_DFP, 1.0_DFP, 0.0_DFP, 1.0_DFP, 0.0_DFP, 1.0_DFP]
+  b = b0
+  CALL LinSolve(A=mat, B=b, isFactored=.FALSE._LGT, info=info)
+  CALL OK(info .EQ. 0, "in place two rhs, first solve: info")
+  CALL OK(MAX(Residual(Ad, b(:, 1), b0(:, 1)), &
+              Residual(Ad, b(:, 2), b0(:, 2))) .LT. tol, &
+          "in place two rhs, first solve")
+
+  b0 = 3.0_DFP * b0 - 1.0_DFP
+  b = b0
+  CALL LinSolve(A=mat, B=b, isFactored=.TRUE._LGT, info=info)
+  CALL OK(info .EQ. 0, "in place two rhs, stored factors: info")
+  CALL OK(MAX(Residual(Ad, b(:, 1), b0(:, 1)), &
+              Residual(Ad, b(:, 2), b0(:, 2))) .LT. tol, &
+          "in place two rhs, stored factors")
+
+  CALL DEALLOCATE(mat)
+END SUBROUTINE InPlaceTwoRhs
 
 ! Test 4: the factors are freed after the solve (isFreeFactors)
 SUBROUTINE FreeFactors()
