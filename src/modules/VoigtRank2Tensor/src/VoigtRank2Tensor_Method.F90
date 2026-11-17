@@ -31,11 +31,12 @@
 ! $T_{ij} = \mathrm{scale}\, V_k$ for the shear entries. An unknown
 ! `voigtType` is treated as stress-like.
 !
-! Reduced 2D forms (`VoigtForm*` constants in GlobalData) are available
-! through [[VoigtSize]], [[GetVoigtVector]], [[GetVoigtVector_]] and the
-! 4-argument [[Initiate]] and 3-argument [[VoigtRank2Tensor]]. Their
-! orderings are plane strain and plane stress `[11,22,12]` and
-! axisymmetric `[11,22,12,33]`.
+! Reduced forms (`VoigtForm*` constants in GlobalData) are available
+! through [[GetVoigtSize]], [[GetVoigtVector]], [[GetVoigtVector_]] and
+! the 4-argument [[Initiate]] and 3-argument [[VoigtRank2Tensor]]. The
+! orderings are given by GetVoigtIndex_ of VoigtUtility, for example
+! plane strain `[11,22,12]` and plane strain full `[11,22,12,33]`.
+! [[VoigtSize]] is in VoigtUtility.
 !
 ! Tensor operations on [[VoigtRank2Tensor_]] have the same generic names
 ! as for Rank2Tensor_: [[Trace]], [[Dev]], [[FrobeniusNorm]], [[Eigen]]
@@ -58,6 +59,9 @@
 !     reordered, Display rewritten (array version, orient)
 !   - 2026-11-17: added the tensor operations (TensorMethods),
 !     easifem/base#355
+!   - 2026-11-17: Voigt forms through VoigtUtility (VoigtSize moved
+!     there and is no longer exported here), added GetVoigtSize and the
+!     Full forms, easifem/base#356
 
 MODULE VoigtRank2Tensor_Method
 USE BaseType, ONLY: VoigtRank2Tensor_
@@ -71,7 +75,7 @@ PUBLIC :: VoigtRank2Tensor
 PUBLIC :: VoigtRank2Tensor_Pointer
 PUBLIC :: ASSIGNMENT(=)
 PUBLIC :: Display
-PUBLIC :: VoigtSize
+PUBLIC :: GetVoigtSize
 PUBLIC :: GetVoigtVector
 PUBLIC :: GetVoigtVector_
 PUBLIC :: Trace
@@ -216,14 +220,16 @@ END INTERFACE Initiate
 ! summary: Initiate [[VoigtRank2Tensor_]] from a reduced Voigt vector
 !
 ! Only the first `VoigtSize(voigtForm)` entries of `vec` are read.
-! Components that are not part of the reduced form are set to zero.
-! This includes the out-of-plane normal component in plane strain and
-! plane stress, so the 3x3 tensor from `T = obj` has `T33 = 0` even when
-! the physical value is not zero (for example $\sigma_{33}$ in plane
-! strain or $\varepsilon_{33}$ in plane stress).
+! Components that are not part of the reduced form are set to zero (see
+! VoigtFromForm of VoigtUtility). For VoigtFormPlaneStrain and
+! VoigtFormPlaneStress this includes the out-of-plane normal component,
+! so the 3x3 tensor from `T = obj` has `T33 = 0` even when the physical
+! value is not zero (for example $\sigma_{33}$ in plane strain). Use
+! VoigtFormPlaneStrainFull or VoigtFormPlaneStressFull to keep it.
 !
 ! Formula:
-!   $$\text{plane strain}: V = [v_1, v_2, 0, v_3, 0, 0]$$
+!   $$\text{plane strain}: V = [v_1, v_2, 0, v_3, 0, 0],\quad
+!   \text{plane strain full}: V = [v_1, v_2, v_4, v_3, 0, 0]$$
 !
 ! Examples
 !
@@ -233,6 +239,7 @@ END INTERFACE Initiate
 ! USE GlobalData, ONLY: DFP
 ! USE GlobalData, ONLY: StressTypeVoigt
 ! USE GlobalData, ONLY: VoigtFormPlaneStrain
+! USE GlobalData, ONLY: VoigtFormPlaneStrainFull
 ! USE Test_Method, ONLY: OK
 ! USE VoigtRank2Tensor_Method, ONLY: Initiate
 ! IMPLICIT NONE
@@ -248,6 +255,17 @@ END INTERFACE Initiate
 !   CALL OK(MAXVAL(ABS(obj%V - [1.0_DFP, 2.0_DFP, 0.0_DFP, 4.0_DFP, &
 !                               0.0_DFP, 0.0_DFP])) .LT. tol, &
 !           "plane strain: V")
+! END BLOCK
+!
+! ! Test 6: from a plane strain full vector [11,22,12,33], T33 is kept
+! BLOCK
+!   TYPE(VoigtRank2Tensor_) :: obj
+!
+!   CALL Initiate(obj, [1.0_DFP, 2.0_DFP, 4.0_DFP, 3.0_DFP], &
+!                 StressTypeVoigt, VoigtFormPlaneStrainFull)
+!   CALL OK(MAXVAL(ABS(obj%V - [1.0_DFP, 2.0_DFP, 3.0_DFP, 4.0_DFP, &
+!                               0.0_DFP, 0.0_DFP])) .LT. tol, &
+!           "plane strain full: V")
 ! END BLOCK
 !
 ! END PROGRAM main
@@ -868,51 +886,66 @@ INTERFACE Display
 END INTERFACE Display
 
 !----------------------------------------------------------------------------
-!                                                VoigtSize@VoigtFormMethods
+!                                               GetVoigtSize@VoigtFormMethods
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 2026-10-21
-! summary: Length of the Voigt vector of a Voigt form
+!> author: Shion Shimizu
+! date: 2026-11-17
+! summary: Length of the vector of a [[VoigtRank2Tensor_]] in a Voigt form
 !
-! The length is 6 for VoigtForm3D, 3 for VoigtFormPlaneStrain and
-! VoigtFormPlaneStress, and 4 for VoigtFormAxisymmetric. Unknown forms
-! give 6.
+! Description:
+!   Returns the size of [[GetVoigtVector]] of `obj` for `voigtForm`. The
+!   tensor itself always stores the 6 components of the 3D form, so the
+!   result is `VoigtSize(voigtForm)` of VoigtUtility.
 !
 ! Returns:
-!   ans : INTEGER(I4B) - length of the Voigt vector
+!   ans : INTEGER(I4B) - length of the vector of the form
 !
 ! Examples
 !
 !```fortran
 ! PROGRAM main
+! USE BaseType, ONLY: VoigtRank2Tensor_
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: StressTypeVoigt
 ! USE GlobalData, ONLY: VoigtForm3D
-! USE GlobalData, ONLY: VoigtFormAxisymmetric
 ! USE GlobalData, ONLY: VoigtFormPlaneStrain
-! USE GlobalData, ONLY: VoigtFormPlaneStress
+! USE GlobalData, ONLY: VoigtFormPlaneStrainFull
 ! USE Test_Method, ONLY: OK
-! USE VoigtRank2Tensor_Method, ONLY: VoigtSize
+! USE VoigtRank2Tensor_Method, ONLY: GetVoigtSize
+! USE VoigtRank2Tensor_Method, ONLY: GetVoigtVector
+! USE VoigtRank2Tensor_Method, ONLY: VoigtRank2Tensor
 ! IMPLICIT NONE
 !
-! ! Test 1: size of each Voigt form
+! ! Test 1: size of the vector of obj in a Voigt form
 ! BLOCK
-!   CALL OK(VoigtSize(VoigtForm3D) .EQ. 6, "3D: 6")
-!   CALL OK(VoigtSize(VoigtFormPlaneStrain) .EQ. 3, "plane strain: 3")
-!   CALL OK(VoigtSize(VoigtFormPlaneStress) .EQ. 3, "plane stress: 3")
-!   CALL OK(VoigtSize(VoigtFormAxisymmetric) .EQ. 4, "axisymmetric: 4")
+!   TYPE(VoigtRank2Tensor_) :: obj
+!
+!   obj = VoigtRank2Tensor([1.0_DFP, 2.0_DFP, 3.0_DFP, 4.0_DFP, 5.0_DFP, &
+!                           6.0_DFP], StressTypeVoigt)
+!   CALL OK(GetVoigtSize(obj, VoigtForm3D) .EQ. 6, "3D: 6")
+!   CALL OK(GetVoigtSize(obj, VoigtFormPlaneStrain) .EQ. 3, &
+!           "plane strain: 3")
+!   CALL OK(GetVoigtSize(obj, VoigtFormPlaneStrainFull) .EQ. &
+!           SIZE(GetVoigtVector(obj, VoigtFormPlaneStrainFull)), &
+!           "plane strain full: same as SIZE(GetVoigtVector)")
 ! END BLOCK
 !
 ! END PROGRAM main
 !```
+!
+! See also: [[GetVoigtVector]], [[VoigtSize]]
 
-INTERFACE VoigtSize
-  MODULE PURE FUNCTION obj_VoigtSize(voigtForm) RESULT(ans)
+INTERFACE GetVoigtSize
+  MODULE PURE FUNCTION obj_GetVoigtSize(obj, voigtForm) RESULT(ans)
+    CLASS(VoigtRank2Tensor_), INTENT(IN) :: obj
+    !! Voigt tensor
     INTEGER(I4B), INTENT(IN) :: voigtForm
     !! one of the VoigtForm* constants
     INTEGER(I4B) :: ans
-    !! length of the Voigt vector
-  END FUNCTION obj_VoigtSize
-END INTERFACE VoigtSize
+    !! length of the vector of the form
+  END FUNCTION obj_GetVoigtSize
+END INTERFACE GetVoigtSize
 
 !----------------------------------------------------------------------------
 !                                           GetVoigtVector@VoigtFormMethods
@@ -922,11 +955,12 @@ END INTERFACE VoigtSize
 ! date: 2026-10-21
 ! summary: Reduced Voigt vector of a [[VoigtRank2Tensor_]]
 !
-! The orderings are 3D `[11,22,33,12,23,13]`, plane strain and plane
-! stress `[11,22,12]` and axisymmetric `[11,22,12,33]`. For plane
-! strain and plane stress the out-of-plane normal component is not
-! returned (for example $\sigma_{33}$ in plane strain). Unknown forms
-! give the 3D vector.
+! The orderings are given by GetVoigtIndex_ of VoigtUtility, for
+! example 3D `[11,22,33,12,23,13]`, plane strain and plane stress
+! `[11,22,12]`, axisymmetric and plane strain full `[11,22,12,33]`. For
+! VoigtFormPlaneStrain and VoigtFormPlaneStress the out-of-plane normal
+! component is not returned (for example $\sigma_{33}$ in plane strain);
+! the Full forms keep it. Unknown forms give the 3D vector.
 !
 ! Returns:
 !   ans : REAL(DFP), ALLOCATABLE - SIZE(ans) = VoigtSize(voigtForm)
@@ -945,6 +979,7 @@ END INTERFACE VoigtSize
 ! USE GlobalData, ONLY: VoigtForm3D
 ! USE GlobalData, ONLY: VoigtFormAxisymmetric
 ! USE GlobalData, ONLY: VoigtFormPlaneStrain
+! USE GlobalData, ONLY: VoigtFormPlaneStrainFull
 ! USE GlobalData, ONLY: VoigtFormPlaneStress
 ! USE Test_Method, ONLY: OK
 ! USE VoigtRank2Tensor_Method, ONLY: GetVoigtVector
@@ -988,6 +1023,16 @@ END INTERFACE VoigtSize
 !   CALL OK(SIZE(v) .EQ. 4, "axisymmetric: size")
 !   CALL OK(MAXVAL(ABS(v - [1.0_DFP, 2.0_DFP, 4.0_DFP, 3.0_DFP])) &
 !           .LT. tol, "axisymmetric: values")
+! END BLOCK
+!
+! ! Test 4: plane strain full keeps the 33 component, [11,22,12,33]
+! BLOCK
+!   REAL(DFP), ALLOCATABLE :: v(:)
+!
+!   v = GetVoigtVector(obj, VoigtFormPlaneStrainFull)
+!   CALL OK(SIZE(v) .EQ. 4, "plane strain full: size")
+!   CALL OK(MAXVAL(ABS(v - [1.0_DFP, 2.0_DFP, 4.0_DFP, 3.0_DFP])) &
+!           .LT. tol, "plane strain full: values")
 ! END BLOCK
 !
 ! END PROGRAM main
@@ -1035,6 +1080,7 @@ END INTERFACE GetVoigtVector
 ! USE GlobalData, ONLY: VoigtForm3D
 ! USE GlobalData, ONLY: VoigtFormAxisymmetric
 ! USE GlobalData, ONLY: VoigtFormPlaneStrain
+! USE GlobalData, ONLY: VoigtFormUniaxialStrainFull
 ! USE Test_Method, ONLY: OK
 ! USE VoigtRank2Tensor_Method, ONLY: GetVoigtVector_
 ! USE VoigtRank2Tensor_Method, ONLY: VoigtRank2Tensor
@@ -1079,6 +1125,17 @@ END INTERFACE GetVoigtVector
 !   CALL OK(tsize .EQ. 4, "axisymmetric: tsize")
 !   CALL OK(MAXVAL(ABS(ans - [1.0_DFP, 2.0_DFP, 4.0_DFP, 3.0_DFP])) &
 !           .LT. tol, "axisymmetric: values")
+! END BLOCK
+!
+! ! Test 4: uniaxial strain full writes the normal components [11,22,33]
+! BLOCK
+!   REAL(DFP) :: ans(3)
+!   INTEGER(I4B) :: tsize
+!
+!   CALL GetVoigtVector_(obj, VoigtFormUniaxialStrainFull, ans, tsize)
+!   CALL OK(tsize .EQ. 3, "uniaxial strain full: tsize")
+!   CALL OK(MAXVAL(ABS(ans - [1.0_DFP, 2.0_DFP, 3.0_DFP])) .LT. tol, &
+!           "uniaxial strain full: values")
 ! END BLOCK
 !
 ! END PROGRAM main

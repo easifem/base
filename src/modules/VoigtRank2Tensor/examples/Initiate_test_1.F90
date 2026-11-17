@@ -9,6 +9,7 @@ USE GlobalData, ONLY: DFP
 USE GlobalData, ONLY: StrainTypeVoigt
 USE GlobalData, ONLY: StressTypeVoigt
 USE GlobalData, ONLY: VoigtFormPlaneStrain
+USE GlobalData, ONLY: VoigtFormPlaneStrainFull
 USE Test_Method, ONLY: OK
 USE VoigtRank2Tensor_Method, ONLY: Initiate
 IMPLICIT NONE
@@ -70,6 +71,17 @@ BLOCK
   CALL OK(MAXVAL(ABS(obj%V - [1.0_DFP, 2.0_DFP, 0.0_DFP, 4.0_DFP, &
                               0.0_DFP, 0.0_DFP])) .LT. tol, &
           "plane strain: V")
+END BLOCK
+
+! Test 6: from a plane strain full vector [11,22,12,33], T33 is kept
+BLOCK
+  TYPE(VoigtRank2Tensor_) :: obj
+
+  CALL Initiate(obj, [1.0_DFP, 2.0_DFP, 4.0_DFP, 3.0_DFP], &
+                StressTypeVoigt, VoigtFormPlaneStrainFull)
+  CALL OK(MAXVAL(ABS(obj%V - [1.0_DFP, 2.0_DFP, 3.0_DFP, 4.0_DFP, &
+                              0.0_DFP, 0.0_DFP])) .LT. tol, &
+          "plane strain full: V")
 END BLOCK
 
 END PROGRAM main

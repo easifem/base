@@ -19,20 +19,22 @@
 ! summary: Reduction of a 3D Voigt tangent to 2D Voigt forms
 !
 ! Replaces the `Mat*_From_Mat*` functions of the old `Voigt` module,
-! which is no longer available. A plain sub-matrix is only correct for
-! plane strain and axisymmetry; plane stress uses static condensation.
+! which is no longer available. Every form is a sub-matrix with the
+! indices of GetVoigtIndex_ (VoigtUtility), except plane stress, which
+! uses static condensation.
+!
+! Changes:
+!   - 2026-11-17: indices from VoigtUtility, new forms (easifem/base#356)
 
 SUBMODULE(MaterialJacobian_Method) VoigtFormMethods
-USE GlobalData, ONLY: VoigtFormAxisymmetric
-USE GlobalData, ONLY: VoigtFormPlaneStrain
 USE GlobalData, ONLY: VoigtFormPlaneStress
 USE InvUtility, ONLY: Util_Inv => Inv
+USE VoigtUtility, ONLY: GetVoigtIndex_
 IMPLICIT NONE
 
-! In-plane and out-of-plane Voigt indices of the 2D forms
+! In-plane and out-of-plane Voigt indices of plane stress
 INTEGER(I4B), PARAMETER :: inPlane(3) = [1, 2, 4]
 INTEGER(I4B), PARAMETER :: outPlane(3) = [3, 5, 6]
-INTEGER(I4B), PARAMETER :: axisym(4) = [1, 2, 4, 3]
 
 CONTAINS
 
@@ -41,24 +43,15 @@ CONTAINS
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE MaterialJacobian_ReduceVoigtTangent
-REAL(DFP) :: Coo(3, 3), invCoo(3, 3)
+INTEGER(I4B) :: indx(6), tsize
 
 SELECT CASE (voigtForm)
-CASE (VoigtFormPlaneStrain)
-  ans = C(inPlane, inPlane)
-
-CASE (VoigtFormAxisymmetric)
-  ans = C(axisym, axisym)
-
 CASE (VoigtFormPlaneStress)
-  Coo = C(outPlane, outPlane)
-  CALL Util_Inv(invA=invCoo, A=Coo)
-  ans = C(inPlane, inPlane) &
-        - MATMUL(C(inPlane, outPlane), &
-                 MATMUL(invCoo, C(outPlane, inPlane)))
+  ans = PlaneStressTangent(C)
 
 CASE DEFAULT
-  ans = C
+  CALL GetVoigtIndex_(voigtForm=voigtForm, ans=indx, tsize=tsize)
+  ans = C(indx(1:tsize), indx(1:tsize))
 END SELECT
 END PROCEDURE MaterialJacobian_ReduceVoigtTangent
 
@@ -67,33 +60,46 @@ END PROCEDURE MaterialJacobian_ReduceVoigtTangent
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE MaterialJacobian_ReduceVoigtTangent_
-REAL(DFP) :: Coo(3, 3), invCoo(3, 3)
+INTEGER(I4B) :: indx(6), tsize
 
 SELECT CASE (voigtForm)
-CASE (VoigtFormPlaneStrain)
-  nrow = 3
-  ncol = 3
-  ans(1:3, 1:3) = C(inPlane, inPlane)
-
-CASE (VoigtFormAxisymmetric)
-  nrow = 4
-  ncol = 4
-  ans(1:4, 1:4) = C(axisym, axisym)
-
 CASE (VoigtFormPlaneStress)
   nrow = 3
   ncol = 3
-  Coo = C(outPlane, outPlane)
-  CALL Util_Inv(invA=invCoo, A=Coo)
-  ans(1:3, 1:3) = C(inPlane, inPlane) &
-                  - MATMUL(C(inPlane, outPlane), &
-                           MATMUL(invCoo, C(outPlane, inPlane)))
+  ans(1:3, 1:3) = PlaneStressTangent(C)
 
 CASE DEFAULT
-  nrow = 6
-  ncol = 6
-  ans(1:6, 1:6) = C
+  CALL GetVoigtIndex_(voigtForm=voigtForm, ans=indx, tsize=tsize)
+  nrow = tsize
+  ncol = tsize
+  ans(1:tsize, 1:tsize) = C(indx(1:tsize), indx(1:tsize))
 END SELECT
 END PROCEDURE MaterialJacobian_ReduceVoigtTangent_
+
+!----------------------------------------------------------------------------
+!                                                         PlaneStressTangent
+!----------------------------------------------------------------------------
+
+!> author: Shion Shimizu
+! date: 2026-11-17
+! summary: Plane stress tangent by static condensation
+!
+! $C^{ps} = C_{ii} - C_{io} C_{oo}^{-1} C_{oi}$ with the in-plane set
+! $i = [1, 2, 4]$ and the out-of-plane set $o = [3, 5, 6]$.
+
+PURE FUNCTION PlaneStressTangent(C) RESULT(ans)
+  REAL(DFP), INTENT(IN) :: C(6, 6)
+  !! 3D Voigt tangent
+  REAL(DFP) :: ans(3, 3)
+  !! condensed tangent
+
+  REAL(DFP) :: Coo(3, 3), invCoo(3, 3)
+
+  Coo = C(outPlane, outPlane)
+  CALL Util_Inv(invA=invCoo, A=Coo)
+  ans = C(inPlane, inPlane) &
+        - MATMUL(C(inPlane, outPlane), &
+                 MATMUL(invCoo, C(outPlane, inPlane)))
+END FUNCTION PlaneStressTangent
 
 END SUBMODULE VoigtFormMethods

@@ -547,11 +547,18 @@ INTEGER(I4B), PARAMETER, PUBLIC :: StressRateJaumann = 1
 INTEGER(I4B), PARAMETER, PUBLIC :: StressRateTruesdell = 2
 INTEGER(I4B), PARAMETER, PUBLIC :: StressRateGreenNaghdi = 3
 ! Voigt forms: 3D [11,22,33,12,23,13], plane strain and plane stress
-! [11,22,12], axisymmetric [11,22,12,33]
+! [11,22,12], axisymmetric [11,22,12,33], uniaxial strain [11].
+! The Full forms keep the out-of-plane components (of stress or strain):
+! plane strain and plane stress [11,22,12,33], uniaxial strain [11,22,33].
+! See GetVoigtIndex_ and VoigtSize of VoigtUtility.
 INTEGER(I4B), PARAMETER, PUBLIC :: VoigtForm3D = 0
 INTEGER(I4B), PARAMETER, PUBLIC :: VoigtFormPlaneStrain = 1
 INTEGER(I4B), PARAMETER, PUBLIC :: VoigtFormPlaneStress = 2
 INTEGER(I4B), PARAMETER, PUBLIC :: VoigtFormAxisymmetric = 3
+INTEGER(I4B), PARAMETER, PUBLIC :: VoigtFormUniaxialStrain = 4
+INTEGER(I4B), PARAMETER, PUBLIC :: VoigtFormPlaneStrainFull = 5
+INTEGER(I4B), PARAMETER, PUBLIC :: VoigtFormUniaxialStrainFull = 6
+INTEGER(I4B), PARAMETER, PUBLIC :: VoigtFormPlaneStressFull = 7
 ! Related to vectors, matrices, and linear solver
 INTEGER(I4B), PARAMETER, PUBLIC :: LIS_CG = 1
 INTEGER(I4B), PARAMETER, PUBLIC :: LIS_BCG = 2

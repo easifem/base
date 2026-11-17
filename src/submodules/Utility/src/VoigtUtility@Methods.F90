@@ -19,10 +19,18 @@
 ! date: 2026-11-17
 ! summary: PURE routines on plain 3D Voigt arrays
 !
-! Moved from SmallStrainVoigtUtility of the elastoplasticity kernel
-! (easifem/base#355). The arithmetic is unchanged.
+! The tensor routines were moved from SmallStrainVoigtUtility of the
+! elastoplasticity kernel (easifem/base#355) with unchanged arithmetic.
+! The Voigt form routines were added for easifem/base#356.
 
 SUBMODULE(VoigtUtility) Methods
+USE GlobalData, ONLY: VoigtFormAxisymmetric
+USE GlobalData, ONLY: VoigtFormPlaneStrain
+USE GlobalData, ONLY: VoigtFormPlaneStrainFull
+USE GlobalData, ONLY: VoigtFormPlaneStress
+USE GlobalData, ONLY: VoigtFormPlaneStressFull
+USE GlobalData, ONLY: VoigtFormUniaxialStrain
+USE GlobalData, ONLY: VoigtFormUniaxialStrainFull
 IMPLICIT NONE
 
 CONTAINS
@@ -138,6 +146,75 @@ CASE DEFAULT
   ans(6) = grad(1, 3) + grad(3, 1)
 END SELECT
 END PROCEDURE VoigtStrainFromGradient
+
+!----------------------------------------------------------------------------
+!                                                             GetVoigtIndex_
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE GetVoigtIndex_
+SELECT CASE (voigtForm)
+CASE (VoigtFormPlaneStrain, VoigtFormPlaneStress)
+  tsize = 3
+  ans(1:3) = [1, 2, 4]
+CASE (VoigtFormAxisymmetric, VoigtFormPlaneStrainFull, &
+      VoigtFormPlaneStressFull)
+  tsize = 4
+  ans(1:4) = [1, 2, 4, 3]
+CASE (VoigtFormUniaxialStrain)
+  tsize = 1
+  ans(1) = 1
+CASE (VoigtFormUniaxialStrainFull)
+  tsize = 3
+  ans(1:3) = [1, 2, 3]
+CASE DEFAULT
+  tsize = 6
+  ans(1:6) = [1, 2, 3, 4, 5, 6]
+END SELECT
+END PROCEDURE GetVoigtIndex_
+
+!----------------------------------------------------------------------------
+!                                                                  VoigtSize
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE VoigtSize
+INTEGER(I4B) :: indx(6)
+
+CALL GetVoigtIndex_(voigtForm=voigtForm, ans=indx, tsize=ans)
+END PROCEDURE VoigtSize
+
+!----------------------------------------------------------------------------
+!                                                             GetVoigtVector
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE Array_GetVoigtVector
+INTEGER(I4B) :: indx(6), tsize
+
+CALL GetVoigtIndex_(voigtForm=voigtForm, ans=indx, tsize=tsize)
+ans = v(indx(1:tsize))
+END PROCEDURE Array_GetVoigtVector
+
+!----------------------------------------------------------------------------
+!                                                            GetVoigtVector_
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE Array_GetVoigtVector_
+INTEGER(I4B) :: indx(6)
+
+CALL GetVoigtIndex_(voigtForm=voigtForm, ans=indx, tsize=tsize)
+ans(1:tsize) = v(indx(1:tsize))
+END PROCEDURE Array_GetVoigtVector_
+
+!----------------------------------------------------------------------------
+!                                                              VoigtFromForm
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE VoigtFromForm
+INTEGER(I4B) :: indx(6), tsize
+
+CALL GetVoigtIndex_(voigtForm=voigtForm, ans=indx, tsize=tsize)
+ans = 0.0_DFP
+ans(indx(1:tsize)) = vec(1:tsize)
+END PROCEDURE VoigtFromForm
 
 !----------------------------------------------------------------------------
 !                                                              JacobiRotate3

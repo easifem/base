@@ -41,6 +41,10 @@
 !   - [[VoigtSymEigen]]: eigenvalues and eigenvectors
 !   - [[VoigtStrainFromGradient]]: small strain from a displacement
 !     gradient
+!   - [[GetVoigtIndex_]], [[VoigtSize]]: components of a Voigt form
+!     (VoigtForm* constants of GlobalData, for example the 2D forms)
+!   - [[GetVoigtVector]], [[GetVoigtVector_]]: vector of a Voigt form
+!     from a 3D Voigt array, and [[VoigtFromForm]] for the inverse
 !
 !   The rank 4 constants in Voigt form are in MaterialJacobian_Method
 !   (Rank4IdentityOtimesIdentity, Rank4DeviatoricProjector,
@@ -49,6 +53,8 @@
 ! Changes:
 !   - 2026-11-17: moved from the elastoplasticity kernel
 !     (easifem/base#355)
+!   - 2026-11-17: Voigt forms (GetVoigtIndex_, VoigtSize, GetVoigtVector,
+!     GetVoigtVector_, VoigtFromForm), easifem/base#356
 
 MODULE VoigtUtility
 USE GlobalData, ONLY: DFP
@@ -63,6 +69,11 @@ PUBLIC :: VoigtStressNorm
 PUBLIC :: VoigtOuter
 PUBLIC :: VoigtSymEigen
 PUBLIC :: VoigtStrainFromGradient
+PUBLIC :: GetVoigtIndex_
+PUBLIC :: VoigtSize
+PUBLIC :: GetVoigtVector
+PUBLIC :: GetVoigtVector_
+PUBLIC :: VoigtFromForm
 
 !----------------------------------------------------------------------------
 !                                                       VoigtIdentity@Methods
@@ -471,6 +482,456 @@ INTERFACE
     REAL(DFP), INTENT(OUT) :: ans(6)
     !! engineering strain [11, 22, 33, 12, 23, 13]
   END SUBROUTINE VoigtStrainFromGradient
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                      GetVoigtIndex_@Methods
+!----------------------------------------------------------------------------
+
+!> author: Shion Shimizu
+! date: 2026-11-17
+! summary: 3D Voigt indices of the components of a Voigt form
+!
+! Description:
+!   Writes in `ans(1:tsize)` the indices in the 3D Voigt order
+!   [11, 22, 33, 12, 23, 13] of the components of `voigtForm`, in the
+!   order of the form. This is the only table of the Voigt forms; the
+!   other routines of this module and ReduceVoigtTangent use it.
+!
+!   | voigtForm | components |
+!   |---|---|
+!   | VoigtForm3D | [11, 22, 33, 12, 23, 13] |
+!   | VoigtFormPlaneStrain, VoigtFormPlaneStress | [11, 22, 12] |
+!   | VoigtFormAxisymmetric | [11, 22, 12, 33] |
+!   | VoigtFormUniaxialStrain | [11] |
+!   | VoigtFormPlaneStrainFull | [11, 22, 12, 33] |
+!   | VoigtFormPlaneStressFull | [11, 22, 12, 33] |
+!   | VoigtFormUniaxialStrainFull | [11, 22, 33] |
+!
+!   Any other value is treated as VoigtForm3D.
+!
+!   The Full forms keep the out-of-plane components, for example
+!   sigma_33 in plane strain or eps_33 in plane stress. The same form is
+!   used for stress and strain; a component that is zero for one of them
+!   (eps_33 in plane strain) is kept as zero.
+!
+! Arguments:
+!   voigtForm : INTEGER(I4B) - one of the VoigtForm* constants
+!   ans : INTEGER(I4B), rank(1) - indices, SIZE(ans) >= 6 is enough
+!   tsize : INTEGER(I4B) - number of components of the form
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: I4B
+! USE GlobalData, ONLY: VoigtForm3D
+! USE GlobalData, ONLY: VoigtFormAxisymmetric
+! USE GlobalData, ONLY: VoigtFormPlaneStrain
+! USE GlobalData, ONLY: VoigtFormPlaneStrainFull
+! USE GlobalData, ONLY: VoigtFormPlaneStress
+! USE GlobalData, ONLY: VoigtFormPlaneStressFull
+! USE GlobalData, ONLY: VoigtFormUniaxialStrain
+! USE GlobalData, ONLY: VoigtFormUniaxialStrainFull
+! USE Test_Method, ONLY: OK
+! USE VoigtUtility, ONLY: GetVoigtIndex_
+! IMPLICIT NONE
+!
+! ! Test 1: 3D Voigt indices of each form
+! CALL Check(VoigtForm3D, [1, 2, 3, 4, 5, 6], "3D")
+! CALL Check(VoigtFormPlaneStrain, [1, 2, 4], "plane strain")
+! CALL Check(VoigtFormPlaneStress, [1, 2, 4], "plane stress")
+! CALL Check(VoigtFormAxisymmetric, [1, 2, 4, 3], "axisymmetric")
+! CALL Check(VoigtFormUniaxialStrain, [1], "uniaxial strain")
+! CALL Check(VoigtFormPlaneStrainFull, [1, 2, 4, 3], "plane strain full")
+! CALL Check(VoigtFormPlaneStressFull, [1, 2, 4, 3], "plane stress full")
+! CALL Check(VoigtFormUniaxialStrainFull, [1, 2, 3], &
+!            "uniaxial strain full")
+!
+! ! Test 2: an unknown form is treated as 3D
+! CALL Check(-1_I4B, [1, 2, 3, 4, 5, 6], "unknown form")
+!
+! CONTAINS
+!
+! ! Compares the indices of a form with the expected ones
+! SUBROUTINE Check(voigtForm, expected, name)
+!   INTEGER(I4B), INTENT(IN) :: voigtForm
+!   INTEGER(I4B), INTENT(IN) :: expected(:)
+!   CHARACTER(*), INTENT(IN) :: name
+!
+!   INTEGER(I4B) :: ans(6), tsize
+!
+!   ans = 0
+!   CALL GetVoigtIndex_(voigtForm=voigtForm, ans=ans, tsize=tsize)
+!   CALL OK(tsize .EQ. SIZE(expected), name//": tsize")
+!   CALL OK(ALL(ans(1:SIZE(expected)) .EQ. expected), name//": index")
+! END SUBROUTINE Check
+!
+! END PROGRAM main
+!```
+!
+! See also: [[VoigtSize]], [[GetVoigtVector_]], [[VoigtFromForm]]
+
+INTERFACE
+  MODULE PURE SUBROUTINE GetVoigtIndex_(voigtForm, ans, tsize)
+    INTEGER(I4B), INTENT(IN) :: voigtForm
+    !! one of the VoigtForm* constants
+    INTEGER(I4B), INTENT(INOUT) :: ans(:)
+    !! 3D Voigt indices, only ans(1:tsize) is written
+    INTEGER(I4B), INTENT(OUT) :: tsize
+    !! number of components of the form
+  END SUBROUTINE GetVoigtIndex_
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                           VoigtSize@Methods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2026-10-21
+! summary: Number of components of a Voigt form
+!
+! Description:
+!   Returns the length of the vector of `voigtForm`; see
+!   [[GetVoigtIndex_]] for the forms. Unknown forms give 6.
+!
+! Returns:
+!   ans : INTEGER(I4B) - length of the vector of the form
+!
+! Changes:
+!   - 2026-11-17: moved from VoigtRank2Tensor_Method; added the Full and
+!     uniaxial strain forms
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: VoigtForm3D
+! USE GlobalData, ONLY: VoigtFormAxisymmetric
+! USE GlobalData, ONLY: VoigtFormPlaneStrain
+! USE GlobalData, ONLY: VoigtFormPlaneStrainFull
+! USE GlobalData, ONLY: VoigtFormPlaneStress
+! USE GlobalData, ONLY: VoigtFormPlaneStressFull
+! USE GlobalData, ONLY: VoigtFormUniaxialStrain
+! USE GlobalData, ONLY: VoigtFormUniaxialStrainFull
+! USE Test_Method, ONLY: OK
+! USE VoigtUtility, ONLY: VoigtSize
+! IMPLICIT NONE
+!
+! ! Test 1: size of each Voigt form
+! BLOCK
+!   CALL OK(VoigtSize(VoigtForm3D) .EQ. 6, "3D: 6")
+!   CALL OK(VoigtSize(VoigtFormPlaneStrain) .EQ. 3, "plane strain: 3")
+!   CALL OK(VoigtSize(VoigtFormPlaneStress) .EQ. 3, "plane stress: 3")
+!   CALL OK(VoigtSize(VoigtFormAxisymmetric) .EQ. 4, "axisymmetric: 4")
+!   CALL OK(VoigtSize(VoigtFormUniaxialStrain) .EQ. 1, "uniaxial strain: 1")
+! END BLOCK
+!
+! ! Test 2: size of the Full forms
+! BLOCK
+!   CALL OK(VoigtSize(VoigtFormPlaneStrainFull) .EQ. 4, &
+!           "plane strain full: 4")
+!   CALL OK(VoigtSize(VoigtFormPlaneStressFull) .EQ. 4, &
+!           "plane stress full: 4")
+!   CALL OK(VoigtSize(VoigtFormUniaxialStrainFull) .EQ. 3, &
+!           "uniaxial strain full: 3")
+! END BLOCK
+!
+! END PROGRAM main
+!```
+
+INTERFACE
+  MODULE PURE FUNCTION VoigtSize(voigtForm) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: voigtForm
+    !! one of the VoigtForm* constants
+    INTEGER(I4B) :: ans
+    !! length of the vector of the form
+  END FUNCTION VoigtSize
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                      GetVoigtVector@Methods
+!----------------------------------------------------------------------------
+
+!> author: Shion Shimizu
+! date: 2026-11-17
+! summary: Vector of a Voigt form from a 3D Voigt array
+!
+! Description:
+!   Returns the components of the 3D Voigt array `v` that belong to
+!   `voigtForm`, in the order of the form (see [[GetVoigtIndex_]]). The
+!   entries are copied, so the Voigt type of `v` (stress-like or
+!   strain-like) is kept. The same generic name is used for
+!   [[VoigtRank2Tensor_]].
+!
+! Returns:
+!   ans : REAL(DFP), ALLOCATABLE - SIZE(ans) = VoigtSize(voigtForm)
+!
+! Formula:
+!   $$ \mathrm{ans}_i = v_{k_i}, \quad i = 1, \dots, \mathrm{tsize} $$
+!   where $k$ are the indices of [[GetVoigtIndex_]].
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: VoigtForm3D
+! USE GlobalData, ONLY: VoigtFormPlaneStressFull
+! USE GlobalData, ONLY: VoigtFormUniaxialStrainFull
+! USE Test_Method, ONLY: OK
+! USE VoigtUtility, ONLY: GetVoigtVector
+! IMPLICIT NONE
+!
+! REAL(DFP), PARAMETER :: tol = 1.0E-14_DFP
+! REAL(DFP), PARAMETER :: v(6) = [1.0_DFP, 2.0_DFP, 3.0_DFP, &
+!                                 4.0_DFP, 5.0_DFP, 6.0_DFP]
+!
+! ! Test 1: 3D form returns all 6 entries
+! BLOCK
+!   REAL(DFP), ALLOCATABLE :: ans(:)
+!
+!   ans = GetVoigtVector(v=v, voigtForm=VoigtForm3D)
+!   CALL OK(SIZE(ans) .EQ. 6, "3D: size")
+!   CALL OK(MAXVAL(ABS(ans - v)) .LT. tol, "3D: values")
+! END BLOCK
+!
+! ! Test 2: plane stress full keeps the 33 component, [11, 22, 12, 33]
+! BLOCK
+!   REAL(DFP), ALLOCATABLE :: ans(:)
+!
+!   ans = GetVoigtVector(v=v, voigtForm=VoigtFormPlaneStressFull)
+!   CALL OK(SIZE(ans) .EQ. 4, "plane stress full: size")
+!   CALL OK(MAXVAL(ABS(ans - [1.0_DFP, 2.0_DFP, 4.0_DFP, 3.0_DFP])) &
+!           .LT. tol, "plane stress full: values")
+! END BLOCK
+!
+! ! Test 3: uniaxial strain full returns the normal components
+! BLOCK
+!   REAL(DFP), ALLOCATABLE :: ans(:)
+!
+!   ans = GetVoigtVector(v=v, voigtForm=VoigtFormUniaxialStrainFull)
+!   CALL OK(SIZE(ans) .EQ. 3, "uniaxial strain full: size")
+!   CALL OK(MAXVAL(ABS(ans - [1.0_DFP, 2.0_DFP, 3.0_DFP])) .LT. tol, &
+!           "uniaxial strain full: values")
+! END BLOCK
+!
+! END PROGRAM main
+!```
+!
+! See also: [[GetVoigtVector_]], [[VoigtFromForm]]
+
+INTERFACE GetVoigtVector
+  MODULE PURE FUNCTION Array_GetVoigtVector(v, voigtForm) RESULT(ans)
+    REAL(DFP), INTENT(IN) :: v(6)
+    !! 3D Voigt vector [11, 22, 33, 12, 23, 13]
+    INTEGER(I4B), INTENT(IN) :: voigtForm
+    !! one of the VoigtForm* constants
+    REAL(DFP), ALLOCATABLE :: ans(:)
+    !! vector of the form, SIZE VoigtSize(voigtForm)
+  END FUNCTION Array_GetVoigtVector
+END INTERFACE GetVoigtVector
+
+!----------------------------------------------------------------------------
+!                                                     GetVoigtVector_@Methods
+!----------------------------------------------------------------------------
+
+!> author: Shion Shimizu
+! date: 2026-11-17
+! summary: Vector of a Voigt form from a 3D Voigt array (no allocation)
+!
+! Description:
+!   Same as [[GetVoigtVector]] but the result is written in `ans`, which
+!   is allocated by the caller. Only `ans(1:tsize)` is written. It is
+!   meant for the quadrature point loops of finite element kernels, for
+!   example to store a stress in plane strain with
+!   VoigtFormPlaneStrainFull.
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE GlobalData, ONLY: VoigtForm3D
+! USE GlobalData, ONLY: VoigtFormPlaneStrain
+! USE GlobalData, ONLY: VoigtFormPlaneStrainFull
+! USE GlobalData, ONLY: VoigtFormUniaxialStrain
+! USE GlobalData, ONLY: VoigtFormUniaxialStrainFull
+! USE Test_Method, ONLY: OK
+! USE VoigtUtility, ONLY: GetVoigtVector_
+! IMPLICIT NONE
+!
+! REAL(DFP), PARAMETER :: tol = 1.0E-14_DFP
+! REAL(DFP), PARAMETER :: v(6) = [1.0_DFP, 2.0_DFP, 3.0_DFP, &
+!                                 4.0_DFP, 5.0_DFP, 6.0_DFP]
+!
+! ! Test 1: 3D form writes all 6 entries
+! BLOCK
+!   REAL(DFP) :: ans(6)
+!   INTEGER(I4B) :: tsize
+!
+!   CALL GetVoigtVector_(v=v, voigtForm=VoigtForm3D, ans=ans, tsize=tsize)
+!   CALL OK(tsize .EQ. 6, "3D: tsize")
+!   CALL OK(MAXVAL(ABS(ans - v)) .LT. tol, "3D: values")
+! END BLOCK
+!
+! ! Test 2: plane strain writes [11, 22, 12], the rest is untouched
+! BLOCK
+!   REAL(DFP) :: ans(6)
+!   INTEGER(I4B) :: tsize
+!
+!   ans = -1.0_DFP
+!   CALL GetVoigtVector_(v=v, voigtForm=VoigtFormPlaneStrain, ans=ans, &
+!                        tsize=tsize)
+!   CALL OK(tsize .EQ. 3, "plane strain: tsize")
+!   CALL OK(MAXVAL(ABS(ans(1:3) - [1.0_DFP, 2.0_DFP, 4.0_DFP])) .LT. tol, &
+!           "plane strain: values")
+!   CALL OK(ALL(ans(4:6) .EQ. -1.0_DFP), "plane strain: rest untouched")
+! END BLOCK
+!
+! ! Test 3: plane strain full keeps the 33 component, [11, 22, 12, 33]
+! BLOCK
+!   REAL(DFP) :: ans(4)
+!   INTEGER(I4B) :: tsize
+!
+!   CALL GetVoigtVector_(v=v, voigtForm=VoigtFormPlaneStrainFull, ans=ans, &
+!                        tsize=tsize)
+!   CALL OK(tsize .EQ. 4, "plane strain full: tsize")
+!   CALL OK(MAXVAL(ABS(ans - [1.0_DFP, 2.0_DFP, 4.0_DFP, 3.0_DFP])) &
+!           .LT. tol, "plane strain full: values")
+! END BLOCK
+!
+! ! Test 4: uniaxial strain [11] and uniaxial strain full [11, 22, 33]
+! BLOCK
+!   REAL(DFP) :: ans(3)
+!   INTEGER(I4B) :: tsize
+!
+!   CALL GetVoigtVector_(v=v, voigtForm=VoigtFormUniaxialStrain, ans=ans, &
+!                        tsize=tsize)
+!   CALL OK(tsize .EQ. 1, "uniaxial strain: tsize")
+!   CALL OK(ABS(ans(1) - 1.0_DFP) .LT. tol, "uniaxial strain: values")
+!   CALL GetVoigtVector_(v=v, voigtForm=VoigtFormUniaxialStrainFull, &
+!                        ans=ans, tsize=tsize)
+!   CALL OK(tsize .EQ. 3, "uniaxial strain full: tsize")
+!   CALL OK(MAXVAL(ABS(ans - [1.0_DFP, 2.0_DFP, 3.0_DFP])) .LT. tol, &
+!           "uniaxial strain full: values")
+! END BLOCK
+!
+! END PROGRAM main
+!```
+!
+! See also: [[GetVoigtVector]], [[VoigtFromForm]]
+
+INTERFACE GetVoigtVector_
+  MODULE PURE SUBROUTINE Array_GetVoigtVector_(v, voigtForm, ans, tsize)
+    REAL(DFP), INTENT(IN) :: v(6)
+    !! 3D Voigt vector [11, 22, 33, 12, 23, 13]
+    INTEGER(I4B), INTENT(IN) :: voigtForm
+    !! one of the VoigtForm* constants
+    REAL(DFP), INTENT(INOUT) :: ans(:)
+    !! vector of the form, SIZE(ans) >= VoigtSize(voigtForm)
+    INTEGER(I4B), INTENT(OUT) :: tsize
+    !! number of entries written in ans, VoigtSize(voigtForm)
+  END SUBROUTINE Array_GetVoigtVector_
+END INTERFACE GetVoigtVector_
+
+!----------------------------------------------------------------------------
+!                                                       VoigtFromForm@Methods
+!----------------------------------------------------------------------------
+
+!> author: Shion Shimizu
+! date: 2026-11-17
+! summary: 3D Voigt array from the vector of a Voigt form
+!
+! Description:
+!   Inverse of [[GetVoigtVector_]]. The entries of `vec` are put at
+!   their 3D Voigt positions (see [[GetVoigtIndex_]]). The components
+!   that are not in the form are zero, for example sigma_33 for
+!   VoigtFormPlaneStrain, or the out-of-plane shear components for every
+!   2D form.
+!
+! Formula:
+!   $$ \mathrm{ans}_{k_i} = \mathrm{vec}_i, \quad
+!   \text{other entries are zero} $$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE GlobalData, ONLY: VoigtForm3D
+! USE GlobalData, ONLY: VoigtFormPlaneStrain
+! USE GlobalData, ONLY: VoigtFormPlaneStrainFull
+! USE GlobalData, ONLY: VoigtFormUniaxialStrain
+! USE GlobalData, ONLY: VoigtFormUniaxialStrainFull
+! USE Test_Method, ONLY: OK
+! USE VoigtUtility, ONLY: GetVoigtVector_
+! USE VoigtUtility, ONLY: VoigtFromForm
+! IMPLICIT NONE
+!
+! REAL(DFP), PARAMETER :: tol = 1.0E-14_DFP
+!
+! ! Test 1: plane strain full [11, 22, 12, 33] to 3D
+! BLOCK
+!   REAL(DFP) :: ans(6), expected(6)
+!
+!   CALL VoigtFromForm(vec=[1.0_DFP, 2.0_DFP, 4.0_DFP, 3.0_DFP], &
+!                      voigtForm=VoigtFormPlaneStrainFull, ans=ans)
+!   expected = [1.0_DFP, 2.0_DFP, 3.0_DFP, 4.0_DFP, 0.0_DFP, 0.0_DFP]
+!   CALL OK(MAXVAL(ABS(ans - expected)) .LT. tol, "plane strain full")
+! END BLOCK
+!
+! ! Test 2: plane strain [11, 22, 12], the 33 component is zero
+! BLOCK
+!   REAL(DFP) :: ans(6), expected(6)
+!
+!   CALL VoigtFromForm(vec=[1.0_DFP, 2.0_DFP, 4.0_DFP], &
+!                      voigtForm=VoigtFormPlaneStrain, ans=ans)
+!   expected = [1.0_DFP, 2.0_DFP, 0.0_DFP, 4.0_DFP, 0.0_DFP, 0.0_DFP]
+!   CALL OK(MAXVAL(ABS(ans - expected)) .LT. tol, "plane strain")
+! END BLOCK
+!
+! ! Test 3: uniaxial strain [11] and uniaxial strain full [11, 22, 33]
+! BLOCK
+!   REAL(DFP) :: ans(6), expected(6)
+!
+!   CALL VoigtFromForm(vec=[1.0_DFP], voigtForm=VoigtFormUniaxialStrain, &
+!                      ans=ans)
+!   expected = [1.0_DFP, 0.0_DFP, 0.0_DFP, 0.0_DFP, 0.0_DFP, 0.0_DFP]
+!   CALL OK(MAXVAL(ABS(ans - expected)) .LT. tol, "uniaxial strain")
+!   CALL VoigtFromForm(vec=[1.0_DFP, 2.0_DFP, 3.0_DFP], &
+!                      voigtForm=VoigtFormUniaxialStrainFull, ans=ans)
+!   expected = [1.0_DFP, 2.0_DFP, 3.0_DFP, 0.0_DFP, 0.0_DFP, 0.0_DFP]
+!   CALL OK(MAXVAL(ABS(ans - expected)) .LT. tol, "uniaxial strain full")
+! END BLOCK
+!
+! ! Test 4: round trip through GetVoigtVector_ in 3D
+! BLOCK
+!   REAL(DFP) :: v(6), vec(6), ans(6)
+!   INTEGER(I4B) :: tsize
+!
+!   v = [1.0_DFP, 2.0_DFP, 3.0_DFP, 4.0_DFP, 5.0_DFP, 6.0_DFP]
+!   CALL GetVoigtVector_(v=v, voigtForm=VoigtForm3D, ans=vec, tsize=tsize)
+!   CALL VoigtFromForm(vec=vec(1:tsize), voigtForm=VoigtForm3D, ans=ans)
+!   CALL OK(MAXVAL(ABS(ans - v)) .LT. tol, "3D: round trip")
+! END BLOCK
+!
+! END PROGRAM main
+!```
+!
+! See also: [[GetVoigtVector_]], [[GetVoigtIndex_]]
+
+INTERFACE
+  MODULE PURE SUBROUTINE VoigtFromForm(vec, voigtForm, ans)
+    REAL(DFP), INTENT(IN) :: vec(:)
+    !! vector of the form, SIZE(vec) >= VoigtSize(voigtForm)
+    INTEGER(I4B), INTENT(IN) :: voigtForm
+    !! one of the VoigtForm* constants
+    REAL(DFP), INTENT(OUT) :: ans(6)
+    !! 3D Voigt vector [11, 22, 33, 12, 23, 13]
+  END SUBROUTINE VoigtFromForm
 END INTERFACE
 
 END MODULE VoigtUtility

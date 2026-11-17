@@ -10,7 +10,11 @@ USE GlobalData, ONLY: I4B
 USE GlobalData, ONLY: VoigtForm3D
 USE GlobalData, ONLY: VoigtFormAxisymmetric
 USE GlobalData, ONLY: VoigtFormPlaneStrain
+USE GlobalData, ONLY: VoigtFormPlaneStrainFull
 USE GlobalData, ONLY: VoigtFormPlaneStress
+USE GlobalData, ONLY: VoigtFormPlaneStressFull
+USE GlobalData, ONLY: VoigtFormUniaxialStrain
+USE GlobalData, ONLY: VoigtFormUniaxialStrainFull
 USE MaterialJacobian_Method, ONLY: IsotropicTangent
 USE MaterialJacobian_Method, ONLY: ReduceVoigtTangent
 USE MaterialJacobian_Method, ONLY: ReduceVoigtTangent_
@@ -18,14 +22,22 @@ USE Test_Method, ONLY: OK
 IMPLICIT NONE
 
 REAL(DFP), PARAMETER :: tol = 1.0E-14_DFP
-INTEGER(I4B), PARAMETER :: forms(4) = [VoigtForm3D, &
+INTEGER(I4B), PARAMETER :: forms(8) = [VoigtForm3D, &
                                        VoigtFormPlaneStrain, &
                                        VoigtFormPlaneStress, &
-                                       VoigtFormAxisymmetric]
-CHARACTER(*), PARAMETER :: names(4) = ["3D          ", &
-                                       "plane strain", &
-                                       "plane stress", &
-                                       "axisymmetric"]
+                                       VoigtFormAxisymmetric, &
+                                       VoigtFormUniaxialStrain, &
+                                       VoigtFormPlaneStrainFull, &
+                                       VoigtFormUniaxialStrainFull, &
+                                       VoigtFormPlaneStressFull]
+CHARACTER(*), PARAMETER :: names(8) = ["3D                  ", &
+                                       "plane strain        ", &
+                                       "plane stress        ", &
+                                       "axisymmetric        ", &
+                                       "uniaxial strain     ", &
+                                       "plane strain full   ", &
+                                       "uniaxial strain full", &
+                                       "plane stress full   "]
 REAL(DFP) :: C(6, 6)
 
 C = IsotropicTangent(lambda=1.5_DFP, mu=0.5_DFP)
@@ -38,7 +50,7 @@ BLOCK
   REAL(DFP), ALLOCATABLE :: Cref(:, :)
   INTEGER(I4B) :: ii, nrow, ncol
 
-  DO ii = 1, 4
+  DO ii = 1, SIZE(forms)
     Cref = ReduceVoigtTangent(C, forms(ii))
     CALL ReduceVoigtTangent_(C, forms(ii), Cr, nrow, ncol)
     CALL OK(nrow .EQ. SIZE(Cref, 1) .AND. ncol .EQ. SIZE(Cref, 2), &
