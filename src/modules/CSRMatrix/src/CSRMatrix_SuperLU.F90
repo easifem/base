@@ -275,11 +275,29 @@ END INTERFACE
 !# Introduction
 !
 ! This routine solves `A*X=B`
+!
+! SuperLU is used. The first call factors `A`. A later call with
+! `isFactored = .TRUE.` uses the stored factors (`Fact = FACTORED`), so
+! only a new right-hand side is solved; new values of `A` are then
+! ignored. With `isFactored = .FALSE.` (default) the matrix is factored
+! again with the same sparsity pattern (`Fact = SamePattern`).
+!
+! The factors are kept after the solve. With `isFreeFactors = .TRUE.`
+! they are freed at the end to save memory; the next call must then use
+! `isFactored = .FALSE.` (a call with `isFactored = .TRUE.` stops with an
+! error).
+!
+! Changes:
+!   - 2026-11-17: the L and U factors are kept after a solve, so that
+!     `isFactored = .TRUE.` works (it crashed before); new argument
+!     `isFreeFactors`, easifem/base#358
+!
+! Example: src/modules/CSRMatrix/examples/LinSolve_test_1.F90
 
 INTERFACE LinSolve
   MODULE SUBROUTINE LinSolve1(X, A, B, isTranspose, isFactored, &
     & ColPerm, Equil, IterRefine, PivotGrowth, DiagPivotThresh, &
-    & ConditionNumber, SymmetricMode, PrintStat, info)
+    & ConditionNumber, SymmetricMode, PrintStat, info, isFreeFactors)
     REAL(DFP), INTENT(INOUT) :: X(:)
     !! Solution
     TYPE(CSRMatrix_), INTENT(INOUT) :: A
@@ -289,7 +307,7 @@ INTERFACE LinSolve
     LOGICAL(LGT), OPTIONAL, INTENT(IN) :: isTranspose
     !! Should we solve `A*X=B` or `transpose(A)*X=B`
     LOGICAL(LGT), OPTIONAL, INTENT(IN) :: isFactored
-    !! is A already factored
+    !! use the stored factors of the last factorization, default false
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: ColPerm
     !! Colperm_t%NATURAL
     !! Colperm_t%MMD_ATA
@@ -320,6 +338,8 @@ INTERFACE LinSolve
     !! yes_no_t%NO
     INTEGER(I4B), OPTIONAL, INTENT(OUT) :: info
     !! if info equal  to zero then success, else failure
+    LOGICAL(LGT), OPTIONAL, INTENT(IN) :: isFreeFactors
+    !! free the L and U factors after the solve, default false
   END SUBROUTINE LinSolve1
 END INTERFACE LinSolve
 
@@ -334,11 +354,29 @@ END INTERFACE LinSolve
 !# Introduction
 !
 ! This routine solves `A*X=B`
+!
+! SuperLU is used. The first call factors `A`. A later call with
+! `isFactored = .TRUE.` uses the stored factors (`Fact = FACTORED`), so
+! only a new right-hand side is solved; new values of `A` are then
+! ignored. With `isFactored = .FALSE.` (default) the matrix is factored
+! again with the same sparsity pattern (`Fact = SamePattern`).
+!
+! The factors are kept after the solve. With `isFreeFactors = .TRUE.`
+! they are freed at the end to save memory; the next call must then use
+! `isFactored = .FALSE.` (a call with `isFactored = .TRUE.` stops with an
+! error).
+!
+! Changes:
+!   - 2026-11-17: the L and U factors are kept after a solve, so that
+!     `isFactored = .TRUE.` works (it crashed before); new argument
+!     `isFreeFactors`, easifem/base#358
+!
+! Example: src/modules/CSRMatrix/examples/LinSolve_test_1.F90
 
 INTERFACE LinSolve
   MODULE SUBROUTINE LinSolve2(X, A, B, isTranspose, isFactored, &
     & ColPerm, Equil, IterRefine, PivotGrowth, DiagPivotThresh, &
-    & ConditionNumber, SymmetricMode, PrintStat, info)
+    & ConditionNumber, SymmetricMode, PrintStat, info, isFreeFactors)
     REAL(DFP), INTENT(INOUT) :: X(:, :)
     !! Solution
     TYPE(CSRMatrix_), INTENT(INOUT) :: A
@@ -348,7 +386,7 @@ INTERFACE LinSolve
     LOGICAL(LGT), OPTIONAL, INTENT(IN) :: isTranspose
     !! Should we solve `A*X=B` or `transpose(A)*X=B`
     LOGICAL(LGT), OPTIONAL, INTENT(IN) :: isFactored
-    !! is A already factored
+    !! use the stored factors of the last factorization, default false
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: ColPerm
     !! Colperm_t%NATURAL
     !! Colperm_t%MMD_ATA
@@ -379,6 +417,8 @@ INTERFACE LinSolve
     !! yes_no_t%NO
     INTEGER(I4B), OPTIONAL, INTENT(OUT) :: info
     !! if info equal  to zero then success, else failure
+    LOGICAL(LGT), OPTIONAL, INTENT(IN) :: isFreeFactors
+    !! free the L and U factors after the solve, default false
   END SUBROUTINE LinSolve2
 END INTERFACE LinSolve
 
@@ -393,12 +433,30 @@ END INTERFACE LinSolve
 !# Introduction
 !
 ! This routine solves `A*X=B`
-! Solution is returned in B
+! Solution is returned in B.
+!
+! SuperLU is used. The first call factors `A`. A later call with
+! `isFactored = .TRUE.` uses the stored factors (`Fact = FACTORED`), so
+! only a new right-hand side is solved; new values of `A` are then
+! ignored. With `isFactored = .FALSE.` (default) the matrix is factored
+! again with the same sparsity pattern (`Fact = SamePattern`).
+!
+! The factors are kept after the solve. With `isFreeFactors = .TRUE.`
+! they are freed at the end to save memory; the next call must then use
+! `isFactored = .FALSE.` (a call with `isFactored = .TRUE.` stops with an
+! error).
+!
+! Changes:
+!   - 2026-11-17: the L and U factors are kept after a solve, so that
+!     `isFactored = .TRUE.` works (it crashed before); new argument
+!     `isFreeFactors`, easifem/base#358
+!
+! Example: src/modules/CSRMatrix/examples/LinSolve_test_1.F90
 
 INTERFACE LinSolve
   MODULE SUBROUTINE LinSolve3(A, B, isTranspose, isFactored, &
     & ColPerm, Equil, IterRefine, PivotGrowth, DiagPivotThresh, &
-    & ConditionNumber, SymmetricMode, PrintStat, info)
+    & ConditionNumber, SymmetricMode, PrintStat, info, isFreeFactors)
     TYPE(CSRMatrix_), INTENT(INOUT) :: A
     !! CSRMatrix
     REAL(DFP), INTENT(INOUT) :: B(:)
@@ -406,7 +464,7 @@ INTERFACE LinSolve
     LOGICAL(LGT), OPTIONAL, INTENT(IN) :: isTranspose
     !! Should we solve `A*X=B` or `transpose(A)*X=B`
     LOGICAL(LGT), OPTIONAL, INTENT(IN) :: isFactored
-    !! is A already factored
+    !! use the stored factors of the last factorization, default false
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: ColPerm
     !! Colperm_t%NATURAL
     !! Colperm_t%MMD_ATA
@@ -437,6 +495,8 @@ INTERFACE LinSolve
     !! yes_no_t%NO
     INTEGER(I4B), OPTIONAL, INTENT(OUT) :: info
     !! if info equal  to zero then success, else failure
+    LOGICAL(LGT), OPTIONAL, INTENT(IN) :: isFreeFactors
+    !! free the L and U factors after the solve, default false
   END SUBROUTINE LinSolve3
 END INTERFACE LinSolve
 
@@ -451,11 +511,30 @@ END INTERFACE LinSolve
 !# Introduction
 !
 ! This routine solves `A*X=B`
+! Solution is returned in B.
+!
+! SuperLU is used. The first call factors `A`. A later call with
+! `isFactored = .TRUE.` uses the stored factors (`Fact = FACTORED`), so
+! only a new right-hand side is solved; new values of `A` are then
+! ignored. With `isFactored = .FALSE.` (default) the matrix is factored
+! again with the same sparsity pattern (`Fact = SamePattern`).
+!
+! The factors are kept after the solve. With `isFreeFactors = .TRUE.`
+! they are freed at the end to save memory; the next call must then use
+! `isFactored = .FALSE.` (a call with `isFactored = .TRUE.` stops with an
+! error).
+!
+! Changes:
+!   - 2026-11-17: the L and U factors are kept after a solve, so that
+!     `isFactored = .TRUE.` works (it crashed before); new argument
+!     `isFreeFactors`, easifem/base#358
+!
+! Example: src/modules/CSRMatrix/examples/LinSolve_test_1.F90
 
 INTERFACE LinSolve
   MODULE SUBROUTINE LinSolve4(A, B, isTranspose, isFactored, &
     & ColPerm, Equil, IterRefine, PivotGrowth, DiagPivotThresh, &
-    & ConditionNumber, SymmetricMode, PrintStat, info)
+    & ConditionNumber, SymmetricMode, PrintStat, info, isFreeFactors)
     TYPE(CSRMatrix_), INTENT(INOUT) :: A
     !! CSRMatrix
     REAL(DFP), INTENT(INOUT) :: B(:, :)
@@ -463,7 +542,7 @@ INTERFACE LinSolve
     LOGICAL(LGT), OPTIONAL, INTENT(IN) :: isTranspose
     !! Should we solve `A*X=B` or `transpose(A)*X=B`
     LOGICAL(LGT), OPTIONAL, INTENT(IN) :: isFactored
-    !! is A already factored
+    !! use the stored factors of the last factorization, default false
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: ColPerm
     !! Colperm_t%NATURAL
     !! Colperm_t%MMD_ATA
@@ -494,6 +573,8 @@ INTERFACE LinSolve
     !! yes_no_t%NO
     INTEGER(I4B), OPTIONAL, INTENT(OUT) :: info
     !! if info equal  to zero then success, else failure
+    LOGICAL(LGT), OPTIONAL, INTENT(IN) :: isFreeFactors
+    !! free the L and U factors after the solve, default false
   END SUBROUTINE LinSolve4
 END INTERFACE LinSolve
 

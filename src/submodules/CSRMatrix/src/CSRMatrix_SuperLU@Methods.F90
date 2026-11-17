@@ -32,38 +32,99 @@ SUBROUTINE CheckErrorCSRMatrix(obj, lineNo, routine)
   !
   IF (.NOT. ALLOCATED(obj%A)) THEN
     CALL ErrorMsg(&
-      & msg="CSRMatrix_::obj%A is not allocated", &
-      & file=__FILE__, &
-      & routine=routine, &
-      & line=lineNo, &
-      & unitno=stderr &
+      & msg = "CSRMatrix_::obj%A is not allocated", &
+      & file = __FILE__, &
+      & routine = routine, &
+      & line = lineNo, &
+      & unitno = stderr &
       & )
     STOP
   END IF
 
   IF (.NOT. obj%csr%isInitiated) THEN
     CALL ErrorMsg(&
-      & msg="CSRMatrix_::obj%csr is not initiated", &
-      & file=__FILE__, &
-      & routine=routine, &
-      & line=lineNo, &
-      & unitno=stderr &
+      & msg = "CSRMatrix_::obj%csr is not initiated", &
+      & file = __FILE__, &
+      & routine = routine, &
+      & line = lineNo, &
+      & unitno = stderr &
       & )
     STOP
   END IF
 
   IF (.NOT. obj%csr%isSparsityLock) THEN
     CALL ErrorMsg(&
-      & msg="CSRMatrix_::obj%csr%isSparsityLock is not True", &
-      & file=__FILE__, &
-      & routine=routine, &
-      & line=lineNo, &
-      & unitno=stderr &
+      & msg = "CSRMatrix_::obj%csr%isSparsityLock is not True", &
+      & file = __FILE__, &
+      & routine = routine, &
+      & line = lineNo, &
+      & unitno = stderr &
       & )
     STOP
   END IF
 
 END SUBROUTINE CheckErrorCSRMatrix
+
+!----------------------------------------------------------------------------
+!                                                          DestroySuperluLU
+!----------------------------------------------------------------------------
+
+!> author: Shion Shimizu
+! date: 2026-11-17
+! summary: Free the L and U factors before a new factorization
+!
+! LinSolve keeps L and U after a solve, so that the next call with
+! isFactored = .TRUE. can use them (Fact = FACTORED). Before the matrix is
+! factored again (Fact = SamePattern) the old factors are freed here,
+! otherwise dgssvx allocates new ones and the old ones leak. When the
+! user supplies the work array (lwork /= 0), L and U live in it and are
+! not freed. Changes: easifem/base#358.
+
+#ifdef USE_SuperLU
+SUBROUTINE DestroySuperluLU(obj)
+  TYPE(CSRMatrix_), INTENT(INOUT) :: obj
+  !! matrix with SuperLU data, obj%slu is associated
+
+  IF (obj%slu%lwork .NE. 0) RETURN
+
+  IF (obj%slu%isLInitiated) THEN
+    CALL Destroy_SuperNode_Matrix(obj%slu%L)
+    obj%slu%isLInitiated = .FALSE.
+  END IF
+
+  IF (obj%slu%isUInitiated) THEN
+    CALL Destroy_CompCol_Matrix(obj%slu%U)
+    obj%slu%isUInitiated = .FALSE.
+  END IF
+END SUBROUTINE DestroySuperluLU
+
+!----------------------------------------------------------------------------
+!                                                       CheckSuperluFactors
+!----------------------------------------------------------------------------
+
+!> author: Shion Shimizu
+! date: 2026-11-17
+! summary: Stop if the factors are not available for isFactored = .TRUE.
+!
+! The factors are missing when a previous call used isFreeFactors =
+! .TRUE.; reading them would crash in dgssvx (easifem/base#358).
+
+SUBROUTINE CheckSuperluFactors(obj, routine)
+  TYPE(CSRMatrix_), INTENT(IN) :: obj
+  !! matrix with SuperLU data, obj%slu is associated
+  CHARACTER(*), INTENT(IN) :: routine
+  !! name of the calling routine
+
+  IF (obj%slu%isLInitiated .AND. obj%slu%isUInitiated) RETURN
+
+  CALL ErrorMsg(msg="isFactored = .TRUE. but the L and U factors are "// &
+                "not available (freed by isFreeFactors = .TRUE.); "// &
+                "call LinSolve with isFactored = .FALSE.", &
+                file=__FILE__, routine=routine, line=__LINE__, &
+                unitno=stderr)
+  STOP
+END SUBROUTINE CheckSuperluFactors
+#endif
 
 !----------------------------------------------------------------------------
 !                                                           InitiateSuperluA
@@ -77,28 +138,28 @@ MODULE PROCEDURE InitiateSuperluA
 INTEGER(I4B) :: nnz, m, n, ii
 !
 CALL CheckErrorCSRMatrix(obj=obj, lineNo=__LINE__, &
-& routine="InitiateSuperluA()")
+& routine = "InitiateSuperluA()")
 !
 IF (ALLOCATED(obj%slu%nzval) &
   & .OR. ALLOCATED(obj%slu%ia) &
   & .OR. ALLOCATED(obj%slu%ja)) THEN
   CALL ErrorMsg(&
-    & msg="Superlu_::obj%slu nzval, ia, ja are already allocated", &
-    & file=__FILE__, &
-    & routine="InitiateSuperluA()", &
-    & line=__LINE__, &
-    & unitno=stderr &
+    & msg = "Superlu_::obj%slu nzval, ia, ja are already allocated", &
+    & file = __FILE__, &
+    & routine = "InitiateSuperluA()", &
+    & line = __LINE__, &
+    & unitno = stderr &
     & )
   STOP
 END IF
 
 IF (obj%slu%isAInitiated) THEN
   CALL ErrorMsg(&
-    & msg="Superlu_::obj%slu%A is already Initiated", &
-    & file=__FILE__, &
-    & routine="InitiateSuperluA()", &
-    & line=__LINE__, &
-    & unitno=stderr &
+    & msg = "Superlu_::obj%slu%A is already Initiated", &
+    & file = __FILE__, &
+    & routine = "InitiateSuperluA()", &
+    & line = __LINE__, &
+    & unitno = stderr &
     & )
   STOP
 END IF
@@ -124,25 +185,25 @@ DO CONCURRENT(ii=1:nnz)
 END DO
 
 CALL dCreate_CompCol_Matrix( &
-  & A=obj%slu%A, &
-  & m=m,  &
-  & n=n, &
-  & nnz=nnz, &
-  & nzval=obj%slu%nzval, &
-  & rowind=obj%slu%ja, &
-  & colptr=obj%slu%ia, &
-  & stype=stype_t%SLU_NC, &
-  & dtype=dtype_t%SLU_D, &
-  & mtype=mtype_t%SLU_GE)
+  & A = obj%slu%A, &
+  & m = m,  &
+  & n = n, &
+  & nnz = nnz, &
+  & nzval = obj%slu%nzval, &
+  & rowind = obj%slu%ja, &
+  & colptr = obj%slu%ia, &
+  & stype = stype_t%SLU_NC, &
+  & dtype = dtype_t%SLU_D, &
+  & mtype = mtype_t%SLU_GE)
 
 #else
 CALL ErrorMsg(&
-  & msg="This routine requires Superlu library, and &
+  & msg = "This routine requires Superlu library, and &
   & it seems this library is not linked with the easifemBase", &
-  & file=__FILE__, &
-  & routine="InitiateSuperluA()", &
-  & line=__LINE__, &
-  & unitno=stderr &
+  & file = __FILE__, &
+  & routine = "InitiateSuperluA()", &
+  & line = __LINE__, &
+  & unitno = stderr &
   & )
 STOP
 #endif
@@ -161,28 +222,28 @@ MODULE PROCEDURE SetSuperluA
 INTEGER(I4B) :: nnz, m, n
 !
 CALL CheckErrorCSRMatrix(obj=obj, lineNo=__LINE__, &
-& routine="SetSuperluA()")
+& routine = "SetSuperluA()")
 !
 IF (.NOT. ALLOCATED(obj%slu%nzval) &
   & .OR. .NOT. ALLOCATED(obj%slu%ia) &
   & .OR. .NOT. ALLOCATED(obj%slu%ja)) THEN
   CALL ErrorMsg(&
-    & msg="Superlu_::obj%slu nzval, ia, ja are not allocated", &
-    & file=__FILE__, &
-    & routine="SetSuperluA()", &
-    & line=__LINE__, &
-    & unitno=stderr &
+    & msg = "Superlu_::obj%slu nzval, ia, ja are not allocated", &
+    & file = __FILE__, &
+    & routine = "SetSuperluA()", &
+    & line = __LINE__, &
+    & unitno = stderr &
     & )
   STOP
 END IF
 
 IF (.NOT. obj%slu%isAInitiated) THEN
   CALL ErrorMsg(&
-    & msg="Superlu_::obj%slu%A is not Initiated", &
-    & file=__FILE__, &
-    & routine="SetSuperluA()", &
-    & line=__LINE__, &
-    & unitno=stderr &
+    & msg = "Superlu_::obj%slu%A is not Initiated", &
+    & file = __FILE__, &
+    & routine = "SetSuperluA()", &
+    & line = __LINE__, &
+    & unitno = stderr &
     & )
   STOP
 END IF
@@ -195,12 +256,12 @@ IF (SIZE(obj%slu%nzval) .NE. nnz &
   & .OR. SIZE(obj%slu%ia) .NE. m + 1 &
   & .OR. SIZE(obj%slu%ja) .NE. nnz) THEN
   CALL ErrorMsg(&
-    & msg="Superlu_::obj%slu nzval, ia, ja are allocated &
+    & msg = "Superlu_::obj%slu nzval, ia, ja are allocated &
     & but there is some issue with size and shape", &
-    & file=__FILE__, &
-    & routine="SetSuperluA()", &
-    & line=__LINE__, &
-    & unitno=stderr &
+    & file = __FILE__, &
+    & routine = "SetSuperluA()", &
+    & line = __LINE__, &
+    & unitno = stderr &
     & )
   STOP
 END IF
@@ -209,12 +270,12 @@ CALL Copy(x=obj%A, y=obj%slu%nzval)
 
 #else
 CALL ErrorMsg(&
-  & msg="This routine requires Superlu library, and &
+  & msg = "This routine requires Superlu library, and &
   & it seems this library is not linked with the easifemBase", &
-  & file=__FILE__, &
-  & routine="SetSuperluA()", &
-  & line=__LINE__, &
-  & unitno=stderr &
+  & file = __FILE__, &
+  & routine = "SetSuperluA()", &
+  & line = __LINE__, &
+  & unitno = stderr &
   & )
 STOP
 #endif
@@ -231,11 +292,11 @@ INTEGER(I4B) :: nrhs, m, ii
 
 IF (obj%slu%isBInitiated .OR. obj%slu%isXInitiated) THEN
   CALL ErrorMsg(&
-    & msg="Superlu_::obj%slu%B or obj%slu%x is already Initiated", &
-    & file=__FILE__, &
-    & routine="InitiateSuperluRHS1()", &
-    & line=__LINE__, &
-    & unitno=stderr &
+    & msg = "Superlu_::obj%slu%B or obj%slu%x is already Initiated", &
+    & file = __FILE__, &
+    & routine = "InitiateSuperluRHS1()", &
+    & line = __LINE__, &
+    & unitno = stderr &
     & )
   STOP
 END IF
@@ -245,17 +306,17 @@ obj%slu%isXInitiated = .TRUE.
 
 IF (ALLOCATED(obj%slu%rhs) .OR. ALLOCATED(obj%slu%sol)) THEN
   CALL ErrorMsg(&
-    & msg="Superlu_::obj%slu%rhs or obj%slu%sol is already Allocated", &
-    & file=__FILE__, &
-    & routine="InitiateSuperluRHS1()", &
-    & line=__LINE__, &
-    & unitno=stderr &
+    & msg = "Superlu_::obj%slu%rhs or obj%slu%sol is already Allocated", &
+    & file = __FILE__, &
+    & routine = "InitiateSuperluRHS1()", &
+    & line = __LINE__, &
+    & unitno = stderr &
     & )
   STOP
 END IF
 
 CALL CheckErrorCSRMatrix(obj=obj, lineNo=__LINE__, &
-  & routine="InitiateSuperluRHS1()")
+  & routine = "InitiateSuperluRHS1()")
 
 nrhs = 1
 m = SIZE(rhs, 1)
@@ -268,33 +329,33 @@ DO CONCURRENT(ii=1:m)
 END DO
 
 CALL dCreate_Dense_Matrix( &
-  & A=obj%slu%B, &
-  & m=m, &
-  & n=nrhs, &
-  & x=obj%slu%rhs, &
-  & ldx=m, &
-  & stype=stype_t%SLU_DN, &
-  & dtype=dtype_t%SLU_D, &
-  & mtype=mtype_t%SLU_GE)
+  & A = obj%slu%B, &
+  & m = m, &
+  & n = nrhs, &
+  & x = obj%slu%rhs, &
+  & ldx = m, &
+  & stype = stype_t%SLU_DN, &
+  & dtype = dtype_t%SLU_D, &
+  & mtype = mtype_t%SLU_GE)
 
 CALL dCreate_Dense_Matrix( &
-  & A=obj%slu%X, &
-  & m=m, &
-  & n=nrhs, &
-  & x=obj%slu%sol, &
-  & ldx=m, &
-  & stype=stype_t%SLU_DN, &
-  & dtype=dtype_t%SLU_D, &
-  & mtype=mtype_t%SLU_GE)
+  & A = obj%slu%X, &
+  & m = m, &
+  & n = nrhs, &
+  & x = obj%slu%sol, &
+  & ldx = m, &
+  & stype = stype_t%SLU_DN, &
+  & dtype = dtype_t%SLU_D, &
+  & mtype = mtype_t%SLU_GE)
 
 #else
 CALL ErrorMsg(&
-  & msg="This routine requires Superlu library, and &
+  & msg = "This routine requires Superlu library, and &
   & it seems this library is not linked with the easifemBase", &
-  & file=__FILE__, &
-  & routine="InitiateSuperlu()", &
-  & line=__LINE__, &
-  & unitno=stderr &
+  & file = __FILE__, &
+  & routine = "InitiateSuperlu()", &
+  & line = __LINE__, &
+  & unitno = stderr &
   & )
 STOP
 #endif
@@ -310,11 +371,11 @@ INTEGER(I4B) :: nrhs, m, ii, jj
 
 IF (obj%slu%isBInitiated .OR. obj%slu%isXInitiated) THEN
   CALL ErrorMsg(&
-    & msg="Superlu_::obj%slu%B is already Initiated", &
-    & file=__FILE__, &
-    & routine="InitiateSuperluRHS2()", &
-    & line=__LINE__, &
-    & unitno=stderr &
+    & msg = "Superlu_::obj%slu%B is already Initiated", &
+    & file = __FILE__, &
+    & routine = "InitiateSuperluRHS2()", &
+    & line = __LINE__, &
+    & unitno = stderr &
     & )
   STOP
 END IF
@@ -324,17 +385,17 @@ obj%slu%isXInitiated = .TRUE.
 
 IF (ALLOCATED(obj%slu%rhs) .OR. ALLOCATED(obj%slu%sol)) THEN
   CALL ErrorMsg(&
-    & msg="Superlu_::obj%slu%rhs obj%slu%sol is already Allocated", &
-    & file=__FILE__, &
-    & routine="InitiateSuperluRHS1()", &
-    & line=__LINE__, &
-    & unitno=stderr &
+    & msg = "Superlu_::obj%slu%rhs obj%slu%sol is already Allocated", &
+    & file = __FILE__, &
+    & routine = "InitiateSuperluRHS1()", &
+    & line = __LINE__, &
+    & unitno = stderr &
     & )
   STOP
 END IF
 
 CALL CheckErrorCSRMatrix(obj=obj, lineNo=__LINE__, &
-  & routine="InitiateSuperluRHS2()")
+  & routine = "InitiateSuperluRHS2()")
 
 nrhs = SIZE(rhs, 2)
 m = SIZE(rhs, 1)
@@ -347,33 +408,33 @@ DO CONCURRENT(ii=1:m, jj=1:nrhs)
 END DO
 
 CALL dCreate_Dense_Matrix( &
-  & A=obj%slu%B, &
-  & m=m, &
-  & n=nrhs, &
-  & x=obj%slu%rhs, &
-  & ldx=m, &
-  & stype=stype_t%SLU_DN, &
-  & dtype=dtype_t%SLU_D, &
-  & mtype=mtype_t%SLU_GE)
+  & A = obj%slu%B, &
+  & m = m, &
+  & n = nrhs, &
+  & x = obj%slu%rhs, &
+  & ldx = m, &
+  & stype = stype_t%SLU_DN, &
+  & dtype = dtype_t%SLU_D, &
+  & mtype = mtype_t%SLU_GE)
 
 CALL dCreate_Dense_Matrix( &
-  & A=obj%slu%X, &
-  & m=m, &
-  & n=nrhs, &
-  & x=obj%slu%sol, &
-  & ldx=m, &
-  & stype=stype_t%SLU_DN, &
-  & dtype=dtype_t%SLU_D, &
-  & mtype=mtype_t%SLU_GE)
+  & A = obj%slu%X, &
+  & m = m, &
+  & n = nrhs, &
+  & x = obj%slu%sol, &
+  & ldx = m, &
+  & stype = stype_t%SLU_DN, &
+  & dtype = dtype_t%SLU_D, &
+  & mtype = mtype_t%SLU_GE)
 
 #else
 CALL ErrorMsg(&
-  & msg="This routine requires Superlu library, and &
+  & msg = "This routine requires Superlu library, and &
   & it seems this library is not linked with the easifemBase", &
-  & file=__FILE__, &
-  & routine="InitiateSuperlu()", &
-  & line=__LINE__, &
-  & unitno=stderr &
+  & file = __FILE__, &
+  & routine = "InitiateSuperlu()", &
+  & line = __LINE__, &
+  & unitno = stderr &
   & )
 STOP
 #endif
@@ -390,41 +451,41 @@ INTEGER(I4B) :: nrhs, m, ii
 
 IF (.NOT. obj%slu%isBInitiated) THEN
   CALL ErrorMsg(&
-    & msg="Superlu_::obj%slu%B is not Initiated", &
-    & file=__FILE__, &
-    & routine="SetSuperluRHS1()", &
-    & line=__LINE__, &
-    & unitno=stderr &
+    & msg = "Superlu_::obj%slu%B is not Initiated", &
+    & file = __FILE__, &
+    & routine = "SetSuperluRHS1()", &
+    & line = __LINE__, &
+    & unitno = stderr &
     & )
   STOP
 END IF
 
 IF (.NOT. ALLOCATED(obj%slu%rhs)) THEN
   CALL ErrorMsg(&
-    & msg="Superlu_::obj%slu%rhs is not Allocated", &
-    & file=__FILE__, &
-    & routine="SetSuperluRHS1()", &
-    & line=__LINE__, &
-    & unitno=stderr &
+    & msg = "Superlu_::obj%slu%rhs is not Allocated", &
+    & file = __FILE__, &
+    & routine = "SetSuperluRHS1()", &
+    & line = __LINE__, &
+    & unitno = stderr &
     & )
   STOP
 END IF
 
 CALL CheckErrorCSRMatrix(&
-  & obj=obj, &
-  & lineNo=__LINE__, &
-  & routine="SetSuperluRHS1()")
+  & obj = obj, &
+  & lineNo = __LINE__, &
+  & routine = "SetSuperluRHS1()")
 
 nrhs = 1
 m = SIZE(rhs, 1)
 
 IF (SIZE(obj%slu%rhs, 1) .NE. m .OR. SIZE(obj%slu%rhs, 2) .NE. nrhs) THEN
   CALL ErrorMsg(&
-    & msg="Superlu_::obj%slu%rhs Allocated but shape does not match", &
-    & file=__FILE__, &
-    & routine="SetSuperluRHS1()", &
-    & line=__LINE__, &
-    & unitno=stderr &
+    & msg = "Superlu_::obj%slu%rhs Allocated but shape does not match", &
+    & file = __FILE__, &
+    & routine = "SetSuperluRHS1()", &
+    & line = __LINE__, &
+    & unitno = stderr &
     & )
   STOP
 END IF
@@ -435,12 +496,12 @@ END DO
 
 #else
 CALL ErrorMsg(&
-  & msg="This routine requires Superlu library, and &
+  & msg = "This routine requires Superlu library, and &
   & it seems this library is not linked with the easifemBase", &
-  & file=__FILE__, &
-  & routine="InitiateSuperlu()", &
-  & line=__LINE__, &
-  & unitno=stderr &
+  & file = __FILE__, &
+  & routine = "InitiateSuperlu()", &
+  & line = __LINE__, &
+  & unitno = stderr &
   & )
 STOP
 #endif
@@ -456,39 +517,39 @@ INTEGER(I4B) :: nrhs, m, ii, jj
 
 IF (.NOT. obj%slu%isBInitiated) THEN
   CALL ErrorMsg(&
-    & msg="Superlu_::obj%slu%B is not Initiated", &
-    & file=__FILE__, &
-    & routine="SetSuperluRHS2()", &
-    & line=__LINE__, &
-    & unitno=stderr &
+    & msg = "Superlu_::obj%slu%B is not Initiated", &
+    & file = __FILE__, &
+    & routine = "SetSuperluRHS2()", &
+    & line = __LINE__, &
+    & unitno = stderr &
     & )
   STOP
 END IF
 
 IF (.NOT. ALLOCATED(obj%slu%rhs)) THEN
   CALL ErrorMsg(&
-    & msg="Superlu_::obj%slu%rhs is not Allocated", &
-    & file=__FILE__, &
-    & routine="InitiateSuperluRHS1()", &
-    & line=__LINE__, &
-    & unitno=stderr &
+    & msg = "Superlu_::obj%slu%rhs is not Allocated", &
+    & file = __FILE__, &
+    & routine = "InitiateSuperluRHS1()", &
+    & line = __LINE__, &
+    & unitno = stderr &
     & )
   STOP
 END IF
 
 CALL CheckErrorCSRMatrix(obj=obj, lineNo=__LINE__, &
-  & routine="SetSuperluRHS2()")
+  & routine = "SetSuperluRHS2()")
 
 nrhs = SIZE(rhs, 2)
 m = SIZE(rhs, 1)
 
 IF (SIZE(obj%slu%rhs, 1) .NE. m .OR. SIZE(obj%slu%rhs, 2) .NE. nrhs) THEN
   CALL ErrorMsg(&
-    & msg="Superlu_::obj%slu%rhs Allocated but shape does not match", &
-    & file=__FILE__, &
-    & routine="SetSuperluRHS2()", &
-    & line=__LINE__, &
-    & unitno=stderr &
+    & msg = "Superlu_::obj%slu%rhs Allocated but shape does not match", &
+    & file = __FILE__, &
+    & routine = "SetSuperluRHS2()", &
+    & line = __LINE__, &
+    & unitno = stderr &
     & )
   STOP
 END IF
@@ -499,12 +560,12 @@ END DO
 
 #else
 CALL ErrorMsg(&
-  & msg="This routine requires Superlu library, and &
+  & msg = "This routine requires Superlu library, and &
   & it seems this library is not linked with the easifemBase", &
-  & file=__FILE__, &
-  & routine="InitiateSuperlu()", &
-  & line=__LINE__, &
-  & unitno=stderr &
+  & file = __FILE__, &
+  & routine = "InitiateSuperlu()", &
+  & line = __LINE__, &
+  & unitno = stderr &
   & )
 STOP
 #endif
@@ -521,40 +582,40 @@ INTEGER(I4B) :: nrhs, m, ii
 
 IF (.NOT. obj%slu%isXInitiated) THEN
   CALL ErrorMsg(&
-    & msg="Superlu_::obj%slu%X is NOT Initiated", &
-    & file=__FILE__, &
-    & routine="GetSuperluX1()", &
-    & line=__LINE__, &
-    & unitno=stderr &
+    & msg = "Superlu_::obj%slu%X is NOT Initiated", &
+    & file = __FILE__, &
+    & routine = "GetSuperluX1()", &
+    & line = __LINE__, &
+    & unitno = stderr &
     & )
   STOP
 END IF
 
 IF (.NOT. ALLOCATED(obj%slu%sol)) THEN
   CALL ErrorMsg(&
-    & msg="Superlu_::obj%slu%sol is not Allocated", &
-    & file=__FILE__, &
-    & routine="GetSuperluX1()", &
-    & line=__LINE__, &
-    & unitno=stderr &
+    & msg = "Superlu_::obj%slu%sol is not Allocated", &
+    & file = __FILE__, &
+    & routine = "GetSuperluX1()", &
+    & line = __LINE__, &
+    & unitno = stderr &
     & )
   STOP
 END IF
 
 CALL CheckErrorCSRMatrix( &
-  & obj=obj, lineNo=__LINE__, &
-  & routine="GetSuperluX1()")
+  & obj = obj, lineNo = __LINE__, &
+  & routine = "GetSuperluX1()")
 
 nrhs = 1
 m = SIZE(x, 1)
 
 IF (SIZE(obj%slu%sol, 1) .NE. m .OR. SIZE(obj%slu%sol, 2) .NE. nrhs) THEN
   CALL ErrorMsg(&
-    & msg="Superlu_::obj%slu%rhs Allocated but shape does not match", &
-    & file=__FILE__, &
-    & routine="GetSuperluX1()", &
-    & line=__LINE__, &
-    & unitno=stderr &
+    & msg = "Superlu_::obj%slu%rhs Allocated but shape does not match", &
+    & file = __FILE__, &
+    & routine = "GetSuperluX1()", &
+    & line = __LINE__, &
+    & unitno = stderr &
     & )
   STOP
 END IF
@@ -565,12 +626,12 @@ END DO
 
 #else
 CALL ErrorMsg(&
-  & msg="This routine requires Superlu library, and &
+  & msg = "This routine requires Superlu library, and &
   & it seems this library is not linked with the easifemBase", &
-  & file=__FILE__, &
-  & routine="GetSuperluX1()", &
-  & line=__LINE__, &
-  & unitno=stderr &
+  & file = __FILE__, &
+  & routine = "GetSuperluX1()", &
+  & line = __LINE__, &
+  & unitno = stderr &
   & )
 STOP
 #endif
@@ -586,40 +647,40 @@ INTEGER(I4B) :: nrhs, m, ii, jj
 
 IF (.NOT. obj%slu%isXInitiated) THEN
   CALL ErrorMsg(&
-    & msg="Superlu_::obj%slu%X is not Initiated", &
-    & file=__FILE__, &
-    & routine="GetSuperluX2()", &
-    & line=__LINE__, &
-    & unitno=stderr &
+    & msg = "Superlu_::obj%slu%X is not Initiated", &
+    & file = __FILE__, &
+    & routine = "GetSuperluX2()", &
+    & line = __LINE__, &
+    & unitno = stderr &
     & )
   STOP
 END IF
 
 IF (.NOT. ALLOCATED(obj%slu%sol)) THEN
   CALL ErrorMsg(&
-    & msg="Superlu_::obj%slu%sol is not Allocated", &
-    & file=__FILE__, &
-    & routine="GetSuperluX2()", &
-    & line=__LINE__, &
-    & unitno=stderr &
+    & msg = "Superlu_::obj%slu%sol is not Allocated", &
+    & file = __FILE__, &
+    & routine = "GetSuperluX2()", &
+    & line = __LINE__, &
+    & unitno = stderr &
     & )
   STOP
 END IF
 
 CALL CheckErrorCSRMatrix( &
-  & obj=obj, lineNo=__LINE__, &
-  & routine="GetSuperluX2()")
+  & obj = obj, lineNo = __LINE__, &
+  & routine = "GetSuperluX2()")
 
 m = SIZE(x, 1)
 nrhs = SIZE(x, 2)
 
 IF (SIZE(obj%slu%sol, 1) .NE. m .OR. SIZE(obj%slu%sol, 2) .NE. nrhs) THEN
   CALL ErrorMsg(&
-    & msg="Superlu_::obj%slu%sol Allocated but shape does not match", &
-    & file=__FILE__, &
-    & routine="GetSuperluX2()", &
-    & line=__LINE__, &
-    & unitno=stderr &
+    & msg = "Superlu_::obj%slu%sol Allocated but shape does not match", &
+    & file = __FILE__, &
+    & routine = "GetSuperluX2()", &
+    & line = __LINE__, &
+    & unitno = stderr &
     & )
   STOP
 END IF
@@ -630,12 +691,12 @@ END DO
 
 #else
 CALL ErrorMsg(&
-  & msg="This routine requires Superlu library, and &
+  & msg = "This routine requires Superlu library, and &
   & it seems this library is not linked with the easifemBase", &
-  & file=__FILE__, &
-  & routine="GetSuperluX2()", &
-  & line=__LINE__, &
-  & unitno=stderr &
+  & file = __FILE__, &
+  & routine = "GetSuperluX2()", &
+  & line = __LINE__, &
+  & unitno = stderr &
   & )
 STOP
 #endif
@@ -659,12 +720,12 @@ obj%slu%options%DiagPivotThresh = 1.0
 obj%slu%options%ConditionNumber = yes_no_t%YES
 #else
 CALL ErrorMsg(&
-  & msg="This routine requires Superlu library, and &
+  & msg = "This routine requires Superlu library, and &
   & it seems this library is not linked with the easifemBase", &
-  & file=__FILE__, &
-  & routine="InitiateSuperLuOptions()", &
-  & line=__LINE__, &
-  & unitno=stderr &
+  & file = __FILE__, &
+  & routine = "InitiateSuperLuOptions()", &
+  & line = __LINE__, &
+  & unitno = stderr &
   & )
 STOP
 #endif
@@ -740,12 +801,12 @@ END IF
 #else
 
 CALL ErrorMsg(&
-  & msg="This routine requires Superlu library, and &
+  & msg = "This routine requires Superlu library, and &
   & it seems this library is not linked with the easifemBase", &
-  & file=__FILE__, &
-  & routine="SetSuperluOptions()", &
-  & line=__LINE__, &
-  & unitno=stderr &
+  & file = __FILE__, &
+  & routine = "SetSuperluOptions()", &
+  & line = __LINE__, &
+  & unitno = stderr &
   & )
 STOP
 
@@ -766,104 +827,104 @@ MODULE PROCEDURE SuperluDGSSVX
 
 IF (.NOT. ALLOCATED(obj%slu%perm_c)) THEN
   CALL ErrorMsg(&
-    & msg="Superlu_::obj%slu%perm_c is not allocated", &
-    & file=__FILE__, &
-    & routine="SuperluDGSSVX()", &
-    & line=__LINE__, &
-    & unitno=stderr &
+    & msg = "Superlu_::obj%slu%perm_c is not allocated", &
+    & file = __FILE__, &
+    & routine = "SuperluDGSSVX()", &
+    & line = __LINE__, &
+    & unitno = stderr &
     & )
   STOP
 END IF
 
 IF (.NOT. ALLOCATED(obj%slu%perm_r)) THEN
   CALL ErrorMsg(&
-    & msg="Superlu_::obj%slu%perm_r is not allocated", &
-    & file=__FILE__, &
-    & routine="SuperluDGSSVX()", &
-    & line=__LINE__, &
-    & unitno=stderr &
+    & msg = "Superlu_::obj%slu%perm_r is not allocated", &
+    & file = __FILE__, &
+    & routine = "SuperluDGSSVX()", &
+    & line = __LINE__, &
+    & unitno = stderr &
     & )
   STOP
 END IF
 
 IF (.NOT. ALLOCATED(obj%slu%etree)) THEN
   CALL ErrorMsg(&
-    & msg="Superlu_::obj%slu%etree is not allocated", &
-    & file=__FILE__, &
-    & routine="SuperluDGSSVX()", &
-    & line=__LINE__, &
-    & unitno=stderr &
+    & msg = "Superlu_::obj%slu%etree is not allocated", &
+    & file = __FILE__, &
+    & routine = "SuperluDGSSVX()", &
+    & line = __LINE__, &
+    & unitno = stderr &
     & )
   STOP
 END IF
 
 IF (.NOT. ALLOCATED(obj%slu%R)) THEN
   CALL ErrorMsg(&
-    & msg="Superlu_::obj%slu%R is not allocated", &
-    & file=__FILE__, &
-    & routine="SuperluDGSSVX()", &
-    & line=__LINE__, &
-    & unitno=stderr &
+    & msg = "Superlu_::obj%slu%R is not allocated", &
+    & file = __FILE__, &
+    & routine = "SuperluDGSSVX()", &
+    & line = __LINE__, &
+    & unitno = stderr &
     & )
   STOP
 END IF
 
 IF (.NOT. ALLOCATED(obj%slu%C)) THEN
   CALL ErrorMsg(&
-    & msg="Superlu_::obj%slu%C is not allocated", &
-    & file=__FILE__, &
-    & routine="SuperluDGSSVX()", &
-    & line=__LINE__, &
-    & unitno=stderr &
+    & msg = "Superlu_::obj%slu%C is not allocated", &
+    & file = __FILE__, &
+    & routine = "SuperluDGSSVX()", &
+    & line = __LINE__, &
+    & unitno = stderr &
     & )
   STOP
 END IF
 
 IF (.NOT. ALLOCATED(obj%slu%ferr)) THEN
   CALL ErrorMsg(&
-    & msg="Superlu_::obj%slu%ferr is not allocated", &
-    & file=__FILE__, &
-    & routine="SuperluDGSSVX()", &
-    & line=__LINE__, &
-    & unitno=stderr &
+    & msg = "Superlu_::obj%slu%ferr is not allocated", &
+    & file = __FILE__, &
+    & routine = "SuperluDGSSVX()", &
+    & line = __LINE__, &
+    & unitno = stderr &
     & )
   STOP
 END IF
 
 IF (.NOT. ALLOCATED(obj%slu%berr)) THEN
   CALL ErrorMsg(&
-    & msg="Superlu_::obj%slu%berr is not allocated", &
-    & file=__FILE__, &
-    & routine="SuperluDGSSVX()", &
-    & line=__LINE__, &
-    & unitno=stderr &
+    & msg = "Superlu_::obj%slu%berr is not allocated", &
+    & file = __FILE__, &
+    & routine = "SuperluDGSSVX()", &
+    & line = __LINE__, &
+    & unitno = stderr &
     & )
   STOP
 END IF
 
 CALL dgssvx(&
-  & options=obj%slu%options, &
-  & A=obj%slu%A, &
-  & perm_c=obj%slu%perm_c, &
-  & perm_r=obj%slu%perm_r, &
-  & etree=obj%slu%etree, &
-  & equed=obj%slu%equed, &
-  & R=obj%slu%R, &
-  & C=obj%slu%C, &
-  & L=obj%slu%L, &
-  & U=obj%slu%U, &
-  & Work=obj%slu%Work, &
-  & B=obj%slu%B, &
-  & X=obj%slu%X, &
-  & recip_pivot_growth=obj%slu%recip_pivot_growth, &
-  & rcond=obj%slu%rcond, &
-  & ferr=obj%slu%ferr, &
-  & berr=obj%slu%berr, &
-  & Glu=obj%slu%Glu, &
-  & mem_usage=obj%slu%mem_usage, &
-  & stat=obj%slu%stat, &
-  & lwork=obj%slu%lwork, &
-  & info=obj%slu%info)
+  & options = obj%slu%options, &
+  & A = obj%slu%A, &
+  & perm_c = obj%slu%perm_c, &
+  & perm_r = obj%slu%perm_r, &
+  & etree = obj%slu%etree, &
+  & equed = obj%slu%equed, &
+  & R = obj%slu%R, &
+  & C = obj%slu%C, &
+  & L = obj%slu%L, &
+  & U = obj%slu%U, &
+  & Work = obj%slu%Work, &
+  & B = obj%slu%B, &
+  & X = obj%slu%X, &
+  & recip_pivot_growth = obj%slu%recip_pivot_growth, &
+  & rcond = obj%slu%rcond, &
+  & ferr = obj%slu%ferr, &
+  & berr = obj%slu%berr, &
+  & Glu = obj%slu%Glu, &
+  & mem_usage = obj%slu%mem_usage, &
+  & STAT = obj%slu%STAT, &
+  & lwork = obj%slu%lwork, &
+  & info = obj%slu%info)
 
 obj%slu%isLInitiated = .TRUE.
 obj%slu%isUInitiated = .TRUE.
@@ -872,12 +933,12 @@ obj%slu%isGluInitiated = .TRUE.
 #else
 
 CALL ErrorMsg(&
-  & msg="This routine requires Superlu library, and &
+  & msg = "This routine requires Superlu library, and &
   & it seems this library is not linked with the easifemBase", &
-  & file=__FILE__, &
-  & routine="SuperluDGSSVX()", &
-  & line=__LINE__, &
-  & unitno=stderr &
+  & file = __FILE__, &
+  & routine = "SuperluDGSSVX()", &
+  & line = __LINE__, &
+  & unitno = stderr &
   & )
 STOP
 
@@ -912,12 +973,12 @@ CALL Reallocate(obj%slu%berr, nrhs)
 #else
 
 CALL ErrorMsg(&
-  & msg="This routine requires Superlu library, and &
+  & msg = "This routine requires Superlu library, and &
   & it seems this library is not linked with the easifemBase", &
-  & file=__FILE__, &
-  & routine="InitiateSuperluDGSSVXParam()", &
-  & line=__LINE__, &
-  & unitno=stderr &
+  & file = __FILE__, &
+  & routine = "InitiateSuperluDGSSVXParam()", &
+  & line = __LINE__, &
+  & unitno = stderr &
   & )
 STOP
 
@@ -948,26 +1009,27 @@ IF (obj%slu%options%PrintStat .EQ. yes_no_t%YES) THEN
       CALL Display(&
       & [&
       & REAL(ii, kind=DFP), &
-      & REAL(obj%slu%stat%RefineSteps, kind=DFP), &
+      & REAL(obj%slu%STAT%RefineSteps, kind=DFP), &
       & obj%slu%Ferr(ii), &
       & obj%slu%Berr(ii) &
-      & ], "", orient="row")
+      & ], "", orient = "row")
     END DO
   END IF
-  CALL StatPrint(obj%slu%stat)
- CALL Display(obj%slu%mem_usage%total_needed / 1.0E+6, "total size needed = ")
+  CALL StatPrint(obj%slu%STAT)
+  CALL Display(obj%slu%mem_usage%total_needed / 1.0E+6, &
+               "total size needed = ")
   ! WRITE (*, *) "total needed = ", A%slu%mem_usage%total_needed
 END IF
 
 #else
 
 CALL ErrorMsg(&
-  & msg="This routine requires Superlu library, and &
+  & msg = "This routine requires Superlu library, and &
   & it seems this library is not linked with the easifemBase", &
-  & file=__FILE__, &
-  & routine="SuperluDisplayStat()", &
-  & line=__LINE__, &
-  & unitno=stderr &
+  & file = __FILE__, &
+  & routine = "SuperluDisplayStat()", &
+  & line = __LINE__, &
+  & unitno = stderr &
   & )
 STOP
 
@@ -1013,7 +1075,7 @@ IF (ASSOCIATED(obj%slu)) THEN
     CALL Superlu_Free(obj%slu%work)
   END IF
   IF (obj%slu%isStatInitiated) THEN
-    CALL StatFree(obj%slu%stat)
+    CALL StatFree(obj%slu%STAT)
   END IF
   obj%slu%lwork = 0
   obj%slu%info = 0
@@ -1031,12 +1093,12 @@ IF (ASSOCIATED(obj%slu)) THEN
 END IF
 #else
 CALL ErrorMsg(&
-  & msg="This routine requires Superlu library, and &
+  & msg = "This routine requires Superlu library, and &
   & it seems this library is not linked with the easifemBase", &
-  & file=__FILE__, &
-  & routine="SuperluDeallocate()", &
-  & line=__LINE__, &
-  & unitno=stderr &
+  & file = __FILE__, &
+  & routine = "SuperluDeallocate()", &
+  & line = __LINE__, &
+  & unitno = stderr &
   & )
 STOP
 #endif
@@ -1048,7 +1110,7 @@ END PROCEDURE SuperluDeallocate
 
 MODULE PROCEDURE LinSolve1
 #ifdef USE_SuperLU
-LOGICAL(LGT) :: isFactored0, isTranspose0
+LOGICAL(LGT) :: isFactored0, isTranspose0, isFreeFactors0
 INTEGER(I4B) :: Trans0
 REAL(DFP) :: DiagPivotThresh0
 INTEGER(I4B) :: ColPerm0
@@ -1060,9 +1122,9 @@ INTEGER(I4B) :: SymmetricMode0
 INTEGER(I4B) :: PrintStat0
 
 CALL CheckErrorCSRMatrix( &
-  & obj=A, &
-  & lineNo=__LINE__, &
-  & routine="LinSolve1()")
+  & obj = A, &
+  & lineNo = __LINE__, &
+  & routine = "LinSolve1()")
 
 isTranspose0 = input(option=isTranspose, default=.FALSE.)
 
@@ -1093,20 +1155,20 @@ IF (.NOT. A%slu%isAInitiated) THEN
   CALL InitiateSuperluRHS(obj=A, rhs=B)
   CALL InitiateSuperLuOptions(obj=A)
   CALL SetSuperluOptions( &
-    & obj=A, &
-    & Equil=Equil0, &
-    & Trans=Trans0, &
-    & ColPerm=ColPerm0, &
-    & Fact=Fact_t%DOFACT, &
-    & IterRefine=IterRefine0, &
-    & PivotGrowth=PivotGrowth0, &
-    & DiagPivotThresh=DiagPivotThresh0, &
-    & SymmetricMode=SymmetricMode0, &
-    & PrintStat=PrintStat0, &
-    & ConditionNumber=ConditionNumber0 &
+    & obj = A, &
+    & Equil = Equil0, &
+    & Trans = Trans0, &
+    & ColPerm = ColPerm0, &
+    & Fact = Fact_t%DOFACT, &
+    & IterRefine = IterRefine0, &
+    & PivotGrowth = PivotGrowth0, &
+    & DiagPivotThresh = DiagPivotThresh0, &
+    & SymmetricMode = SymmetricMode0, &
+    & PrintStat = PrintStat0, &
+    & ConditionNumber = ConditionNumber0 &
     & )
   CALL InitiateSuperluDGSSVXParam(obj=A)
-  CALL StatInit(A%slu%stat)
+  CALL StatInit(A%slu%STAT)
   A%slu%isStatInitiated = .TRUE.
 
 ELSE
@@ -1115,21 +1177,22 @@ ELSE
     !
     ! WE dont perform factorization
     !
+    CALL CheckSuperluFactors(obj=A, routine="LinSolve1()")
     CALL SetSuperluRHS(obj=A, rhs=B)
     ! CALL SetSuperluOptions(obj=A, Fact=Fact_t%FACTORED, &
     !   & Trans=Trans0)
     CALL SetSuperluOptions( &
-      & obj=A, &
-      & Equil=Equil0, &
-      & Trans=Trans0, &
-      & ColPerm=ColPerm0, &
-      & Fact=Fact_t%FACTORED, &
-      & IterRefine=IterRefine0, &
-      & PivotGrowth=PivotGrowth0, &
-      & DiagPivotThresh=DiagPivotThresh0, &
-      & SymmetricMode=SymmetricMode0, &
-      & PrintStat=PrintStat0, &
-      & ConditionNumber=ConditionNumber0 &
+      & obj = A, &
+      & Equil = Equil0, &
+      & Trans = Trans0, &
+      & ColPerm = ColPerm0, &
+      & Fact = Fact_t%FACTORED, &
+      & IterRefine = IterRefine0, &
+      & PivotGrowth = PivotGrowth0, &
+      & DiagPivotThresh = DiagPivotThresh0, &
+      & SymmetricMode = SymmetricMode0, &
+      & PrintStat = PrintStat0, &
+      & ConditionNumber = ConditionNumber0 &
       & )
   ELSE
     !
@@ -1138,6 +1201,7 @@ ELSE
     ! Because sparsity is the same we do not
     ! call InitiateSuperluDGSSVXParam
     !
+    CALL DestroySuperluLU(obj=A)
     CALL SetSuperluA(obj=A)
     CALL SetSuperluRHS(obj=A, rhs=B)
     ! CALL SetSuperluOptions(&
@@ -1146,17 +1210,17 @@ ELSE
     !   & Trans=Trans0)
     !
     CALL SetSuperluOptions( &
-      & obj=A, &
-      & Equil=Equil0, &
-      & Trans=Trans0, &
-      & ColPerm=ColPerm0, &
-      & Fact=Fact_t%SamePattern, &
-      & IterRefine=IterRefine0, &
-      & PivotGrowth=PivotGrowth0, &
-      & DiagPivotThresh=DiagPivotThresh0, &
-      & SymmetricMode=SymmetricMode0, &
-      & PrintStat=PrintStat0, &
-      & ConditionNumber=ConditionNumber0 &
+      & obj = A, &
+      & Equil = Equil0, &
+      & Trans = Trans0, &
+      & ColPerm = ColPerm0, &
+      & Fact = Fact_t%SamePattern, &
+      & IterRefine = IterRefine0, &
+      & PivotGrowth = PivotGrowth0, &
+      & DiagPivotThresh = DiagPivotThresh0, &
+      & SymmetricMode = SymmetricMode0, &
+      & PrintStat = PrintStat0, &
+      & ConditionNumber = ConditionNumber0 &
       & )
   END IF
 
@@ -1167,26 +1231,20 @@ CALL Copy(x=A%slu%sol(:, 1), y=x)
 IF (PRESENT(info)) info = A%slu%info
 CALL SuperluDisplayStat(obj=A)
 
-IF (A%slu%lwork .EQ. 0) THEN
-  IF (A%slu%isLInitiated) THEN
-    CALL Destroy_SuperNode_Matrix(A%slu%L)
-    A%slu%isLInitiated = .FALSE.
-  END IF
-  IF (A%slu%isUInitiated) THEN
-    CALL Destroy_CompCol_Matrix(A%slu%U)
-    A%slu%isUInitiated = .FALSE.
-  END IF
-END IF
+isFreeFactors0 = input(option=isFreeFactors, default=.FALSE.)
+IF (isFreeFactors0) CALL DestroySuperluLU(obj=A)
+
+! L and U are kept for the next call with isFactored (easifem/base#358)
 
 #else
 
 CALL ErrorMsg(&
-  & msg="This routine requires Superlu library, and &
+  & msg = "This routine requires Superlu library, and &
   & it seems this library is not linked with the easifemBase", &
-  & file=__FILE__, &
-  & routine="LinSolve1()", &
-  & line=__LINE__, &
-  & unitno=stderr &
+  & file = __FILE__, &
+  & routine = "LinSolve1()", &
+  & line = __LINE__, &
+  & unitno = stderr &
   & )
 STOP
 
@@ -1199,7 +1257,7 @@ END PROCEDURE LinSolve1
 
 MODULE PROCEDURE LinSolve2
 #ifdef USE_SuperLU
-LOGICAL(LGT) :: isFactored0, isTranspose0
+LOGICAL(LGT) :: isFactored0, isTranspose0, isFreeFactors0
 INTEGER(I4B) :: Trans0
 REAL(DFP) :: DiagPivotThresh0
 INTEGER(I4B) :: ColPerm0
@@ -1212,9 +1270,9 @@ INTEGER(I4B) :: PrintStat0
 INTEGER(I4B) :: ii, nrhs
 
 CALL CheckErrorCSRMatrix( &
-  & obj=A, &
-  & lineNo=__LINE__, &
-  & routine="LinSolve2()")
+  & obj = A, &
+  & lineNo = __LINE__, &
+  & routine = "LinSolve2()")
 
 isTranspose0 = input(option=isTranspose, default=.FALSE.)
 
@@ -1245,20 +1303,20 @@ IF (.NOT. A%slu%isAInitiated) THEN
   CALL InitiateSuperluRHS(obj=A, rhs=B)
   CALL InitiateSuperLuOptions(obj=A)
   CALL SetSuperluOptions( &
-    & obj=A, &
-    & Equil=Equil0, &
-    & Trans=Trans0, &
-    & ColPerm=ColPerm0, &
-    & Fact=Fact_t%DOFACT, &
-    & IterRefine=IterRefine0, &
-    & PivotGrowth=PivotGrowth0, &
-    & DiagPivotThresh=DiagPivotThresh0, &
-    & SymmetricMode=SymmetricMode0, &
-    & PrintStat=PrintStat0, &
-    & ConditionNumber=ConditionNumber0 &
+    & obj = A, &
+    & Equil = Equil0, &
+    & Trans = Trans0, &
+    & ColPerm = ColPerm0, &
+    & Fact = Fact_t%DOFACT, &
+    & IterRefine = IterRefine0, &
+    & PivotGrowth = PivotGrowth0, &
+    & DiagPivotThresh = DiagPivotThresh0, &
+    & SymmetricMode = SymmetricMode0, &
+    & PrintStat = PrintStat0, &
+    & ConditionNumber = ConditionNumber0 &
     & )
   CALL InitiateSuperluDGSSVXParam(obj=A)
-  CALL StatInit(A%slu%stat)
+  CALL StatInit(A%slu%STAT)
   A%slu%isStatInitiated = .TRUE.
 ELSE
   isFactored0 = input(option=isFactored, default=.FALSE.)
@@ -1266,9 +1324,10 @@ ELSE
     !
     ! WE dont perform factorization
     !
+    CALL CheckSuperluFactors(obj=A, routine="LinSolve2()")
     CALL SetSuperluRHS(obj=A, rhs=B)
     CALL SetSuperluOptions(obj=A, Fact=Fact_t%FACTORED, &
-      & Trans=Trans0)
+      & Trans = Trans0)
   ELSE
     !
     ! perform factorization
@@ -1276,12 +1335,13 @@ ELSE
     ! Because sparsity is the same we do not
     ! call InitiateSuperluDGSSVXParam
     !
+    CALL DestroySuperluLU(obj=A)
     CALL SetSuperluA(obj=A)
     CALL SetSuperluRHS(obj=A, rhs=B)
     CALL SetSuperluOptions(&
-      & obj=A, &
-      & Fact=Fact_t%SamePattern, &
-      & Trans=Trans0)
+      & obj = A, &
+      & Fact = Fact_t%SamePattern, &
+      & Trans = Trans0)
     !
   END IF
 
@@ -1295,26 +1355,20 @@ END DO
 IF (PRESENT(info)) info = A%slu%info
 CALL SuperluDisplayStat(obj=A)
 
-IF (A%slu%lwork .EQ. 0) THEN
-  IF (A%slu%isLInitiated) THEN
-    CALL Destroy_SuperNode_Matrix(A%slu%L)
-    A%slu%isLInitiated = .FALSE.
-  END IF
-  IF (A%slu%isUInitiated) THEN
-    CALL Destroy_CompCol_Matrix(A%slu%U)
-    A%slu%isUInitiated = .FALSE.
-  END IF
-END IF
+isFreeFactors0 = input(option=isFreeFactors, default=.FALSE.)
+IF (isFreeFactors0) CALL DestroySuperluLU(obj=A)
+
+! L and U are kept for the next call with isFactored (easifem/base#358)
 
 #else
 
 CALL ErrorMsg(&
-  & msg="This routine requires Superlu library, and &
+  & msg = "This routine requires Superlu library, and &
   & it seems this library is not linked with the easifemBase", &
-  & file=__FILE__, &
-  & routine="LinSolve2()", &
-  & line=__LINE__, &
-  & unitno=stderr &
+  & file = __FILE__, &
+  & routine = "LinSolve2()", &
+  & line = __LINE__, &
+  & unitno = stderr &
   & )
 STOP
 
@@ -1327,7 +1381,7 @@ END PROCEDURE LinSolve2
 
 MODULE PROCEDURE LinSolve3
 #ifdef USE_SuperLU
-LOGICAL(LGT) :: isFactored0, isTranspose0
+LOGICAL(LGT) :: isFactored0, isTranspose0, isFreeFactors0
 INTEGER(I4B) :: Trans0
 REAL(DFP) :: DiagPivotThresh0
 INTEGER(I4B) :: ColPerm0
@@ -1339,9 +1393,9 @@ INTEGER(I4B) :: SymmetricMode0
 INTEGER(I4B) :: PrintStat0
 
 CALL CheckErrorCSRMatrix( &
-  & obj=A, &
-  & lineNo=__LINE__, &
-  & routine="LinSolve3()")
+  & obj = A, &
+  & lineNo = __LINE__, &
+  & routine = "LinSolve3()")
 
 isTranspose0 = input(option=isTranspose, default=.FALSE.)
 
@@ -1372,20 +1426,20 @@ IF (.NOT. A%slu%isAInitiated) THEN
   CALL InitiateSuperluRHS(obj=A, rhs=B)
   CALL InitiateSuperLuOptions(obj=A)
   CALL SetSuperluOptions( &
-    & obj=A, &
-    & Equil=Equil0, &
-    & Trans=Trans0, &
-    & ColPerm=ColPerm0, &
-    & Fact=Fact_t%DOFACT, &
-    & IterRefine=IterRefine0, &
-    & PivotGrowth=PivotGrowth0, &
-    & DiagPivotThresh=DiagPivotThresh0, &
-    & SymmetricMode=SymmetricMode0, &
-    & PrintStat=PrintStat0, &
-    & ConditionNumber=ConditionNumber0 &
+    & obj = A, &
+    & Equil = Equil0, &
+    & Trans = Trans0, &
+    & ColPerm = ColPerm0, &
+    & Fact = Fact_t%DOFACT, &
+    & IterRefine = IterRefine0, &
+    & PivotGrowth = PivotGrowth0, &
+    & DiagPivotThresh = DiagPivotThresh0, &
+    & SymmetricMode = SymmetricMode0, &
+    & PrintStat = PrintStat0, &
+    & ConditionNumber = ConditionNumber0 &
     & )
   CALL InitiateSuperluDGSSVXParam(obj=A)
-  CALL StatInit(A%slu%stat)
+  CALL StatInit(A%slu%STAT)
   A%slu%isStatInitiated = .TRUE.
 ELSE
   isFactored0 = input(option=isFactored, default=.FALSE.)
@@ -1393,9 +1447,10 @@ ELSE
     !
     ! WE dont perform factorization
     !
+    CALL CheckSuperluFactors(obj=A, routine="LinSolve3()")
     CALL SetSuperluRHS(obj=A, rhs=B)
     CALL SetSuperluOptions(obj=A, Fact=Fact_t%FACTORED, &
-      & Trans=Trans0)
+      & Trans = Trans0)
   ELSE
     !
     ! perform factorization
@@ -1403,12 +1458,13 @@ ELSE
     ! Because sparsity is the same we do not
     ! call InitiateSuperluDGSSVXParam
     !
+    CALL DestroySuperluLU(obj=A)
     CALL SetSuperluA(obj=A)
     CALL SetSuperluRHS(obj=A, rhs=B)
     CALL SetSuperluOptions(&
-      & obj=A, &
-      & Fact=Fact_t%SamePattern, &
-      & Trans=Trans0)
+      & obj = A, &
+      & Fact = Fact_t%SamePattern, &
+      & Trans = Trans0)
     !
   END IF
 
@@ -1418,25 +1474,19 @@ CALL SuperluDGSSVX(obj=A)
 CALL Copy(x=A%slu%sol(:, 1), y=B)
 IF (PRESENT(info)) info = A%slu%info
 CALL SuperluDisplayStat(obj=A)
-IF (A%slu%lwork .EQ. 0) THEN
-  IF (A%slu%isLInitiated) THEN
-    CALL Destroy_SuperNode_Matrix(A%slu%L)
-    A%slu%isLInitiated = .FALSE.
-  END IF
-  IF (A%slu%isUInitiated) THEN
-    CALL Destroy_CompCol_Matrix(A%slu%U)
-    A%slu%isUInitiated = .FALSE.
-  END IF
-END IF
+
+isFreeFactors0 = input(option=isFreeFactors, default=.FALSE.)
+IF (isFreeFactors0) CALL DestroySuperluLU(obj=A)
+! L and U are kept for the next call with isFactored (easifem/base#358)
 #else
 
 CALL ErrorMsg(&
-  & msg="This routine requires Superlu library, and &
+  & msg = "This routine requires Superlu library, and &
   & it seems this library is not linked with the easifemBase", &
-  & file=__FILE__, &
-  & routine="LinSolve3()", &
-  & line=__LINE__, &
-  & unitno=stderr &
+  & file = __FILE__, &
+  & routine = "LinSolve3()", &
+  & line = __LINE__, &
+  & unitno = stderr &
   & )
 STOP
 
@@ -1449,7 +1499,7 @@ END PROCEDURE LinSolve3
 
 MODULE PROCEDURE LinSolve4
 #ifdef USE_SuperLU
-LOGICAL(LGT) :: isFactored0, isTranspose0
+LOGICAL(LGT) :: isFactored0, isTranspose0, isFreeFactors0
 INTEGER(I4B) :: Trans0
 REAL(DFP) :: DiagPivotThresh0
 INTEGER(I4B) :: ColPerm0
@@ -1462,9 +1512,9 @@ INTEGER(I4B) :: PrintStat0
 INTEGER(I4B) :: ii, nrhs
 
 CALL CheckErrorCSRMatrix( &
-  & obj=A, &
-  & lineNo=__LINE__, &
-  & routine="LinSolve4()")
+  & obj = A, &
+  & lineNo = __LINE__, &
+  & routine = "LinSolve4()")
 
 isTranspose0 = input(option=isTranspose, default=.FALSE.)
 
@@ -1495,20 +1545,20 @@ IF (.NOT. A%slu%isAInitiated) THEN
   CALL InitiateSuperluRHS(obj=A, rhs=B)
   CALL InitiateSuperLuOptions(obj=A)
   CALL SetSuperluOptions( &
-    & obj=A, &
-    & Equil=Equil0, &
-    & Trans=Trans0, &
-    & ColPerm=ColPerm0, &
-    & Fact=Fact_t%DOFACT, &
-    & IterRefine=IterRefine0, &
-    & PivotGrowth=PivotGrowth0, &
-    & DiagPivotThresh=DiagPivotThresh0, &
-    & SymmetricMode=SymmetricMode0, &
-    & PrintStat=PrintStat0, &
-    & ConditionNumber=ConditionNumber0 &
+    & obj = A, &
+    & Equil = Equil0, &
+    & Trans = Trans0, &
+    & ColPerm = ColPerm0, &
+    & Fact = Fact_t%DOFACT, &
+    & IterRefine = IterRefine0, &
+    & PivotGrowth = PivotGrowth0, &
+    & DiagPivotThresh = DiagPivotThresh0, &
+    & SymmetricMode = SymmetricMode0, &
+    & PrintStat = PrintStat0, &
+    & ConditionNumber = ConditionNumber0 &
     & )
   CALL InitiateSuperluDGSSVXParam(obj=A)
-  CALL StatInit(A%slu%stat)
+  CALL StatInit(A%slu%STAT)
   A%slu%isStatInitiated = .TRUE.
 
   ! new thing here
@@ -1524,9 +1574,10 @@ ELSE
     !
     ! WE dont perform factorization
     !
+    CALL CheckSuperluFactors(obj=A, routine="LinSolve4()")
     CALL SetSuperluRHS(obj=A, rhs=B)
     CALL SetSuperluOptions(obj=A, Fact=Fact_t%FACTORED, &
-      & Trans=Trans0)
+      & Trans = Trans0)
   ELSE
     !
     ! perform factorization
@@ -1534,12 +1585,13 @@ ELSE
     ! Because sparsity is the same we do not
     ! call InitiateSuperluDGSSVXParam
     !
+    CALL DestroySuperluLU(obj=A)
     CALL SetSuperluA(obj=A)
     CALL SetSuperluRHS(obj=A, rhs=B)
     CALL SetSuperluOptions(&
-      & obj=A, &
-      & Fact=Fact_t%SamePattern, &
-      & Trans=Trans0)
+      & obj = A, &
+      & Fact = Fact_t%SamePattern, &
+      & Trans = Trans0)
     !
   END IF
 
@@ -1552,25 +1604,19 @@ DO ii = 1, nrhs
 END DO
 IF (PRESENT(info)) info = A%slu%info
 CALL SuperluDisplayStat(obj=A)
-IF (A%slu%lwork .EQ. 0) THEN
-  IF (A%slu%isLInitiated) THEN
-    CALL Destroy_SuperNode_Matrix(A%slu%L)
-    A%slu%isLInitiated = .FALSE.
-  END IF
-  IF (A%slu%isUInitiated) THEN
-    CALL Destroy_CompCol_Matrix(A%slu%U)
-    A%slu%isUInitiated = .FALSE.
-  END IF
-END IF
+
+isFreeFactors0 = input(option=isFreeFactors, default=.FALSE.)
+IF (isFreeFactors0) CALL DestroySuperluLU(obj=A)
+! L and U are kept for the next call with isFactored (easifem/base#358)
 #else
 
 CALL ErrorMsg(&
-  & msg="This routine requires Superlu library, and &
+  & msg = "This routine requires Superlu library, and &
   & it seems this library is not linked with the easifemBase", &
-  & file=__FILE__, &
-  & routine="LinSolve4()", &
-  & line=__LINE__, &
-  & unitno=stderr &
+  & file = __FILE__, &
+  & routine = "LinSolve4()", &
+  & line = __LINE__, &
+  & unitno = stderr &
   & )
 STOP
 
