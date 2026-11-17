@@ -37,12 +37,27 @@
 ! orderings are plane strain and plane stress `[11,22,12]` and
 ! axisymmetric `[11,22,12,33]`.
 !
+! Tensor operations on [[VoigtRank2Tensor_]] have the same generic names
+! as for Rank2Tensor_: [[Trace]], [[Dev]], [[FrobeniusNorm]], [[Eigen]]
+! and [[Otimes]] (TensorMethods). They use the Voigt type of the tensor,
+! so a stress-like tensor and the same tensor written as an engineering
+! strain give the same result.
+!
+! Each of them calls a PURE routine of VoigtUtility, which works on a
+! plain 3D Voigt array `REAL(DFP) :: v(6)` in the same order:
+! [[VoigtTrace]], [[VoigtDev]], [[VoigtStressNorm]], [[VoigtSymEigen]]
+! and [[VoigtOuter]]. Use those routines directly in code that keeps its
+! tensors in arrays, for example the stress update of a constitutive
+! model.
+!
 ! Changes:
 !   - 2026-10-21: renamed the specific procedures, an unknown voigtType
 !     is treated as stress-like, added the reduced 2D Voigt forms
 !   - 2026-11-02: added GetVoigtVector_
 !   - 2026-11-17: specific procedures renamed to obj_, interfaces
 !     reordered, Display rewritten (array version, orient)
+!   - 2026-11-17: added the tensor operations (TensorMethods),
+!     easifem/base#355
 
 MODULE VoigtRank2Tensor_Method
 USE BaseType, ONLY: VoigtRank2Tensor_
@@ -59,6 +74,11 @@ PUBLIC :: Display
 PUBLIC :: VoigtSize
 PUBLIC :: GetVoigtVector
 PUBLIC :: GetVoigtVector_
+PUBLIC :: Trace
+PUBLIC :: Dev
+PUBLIC :: FrobeniusNorm
+PUBLIC :: Eigen
+PUBLIC :: Otimes
 
 !----------------------------------------------------------------------------
 !                                                Initiate@ConstructorMethods
@@ -1078,5 +1098,342 @@ INTERFACE GetVoigtVector_
     !! number of entries written in ans, VoigtSize(voigtForm)
   END SUBROUTINE obj_GetVoigtVector_
 END INTERFACE GetVoigtVector_
+
+!----------------------------------------------------------------------------
+!                                                         Trace@TensorMethods
+!----------------------------------------------------------------------------
+
+!> author: Shion Shimizu
+! date: 2026-11-17
+! summary: Trace of a [[VoigtRank2Tensor_]]
+!
+! Same value for stress-like and strain-like tensors (VoigtTrace of V).
+!
+! Returns:
+!   ans : REAL(DFP) - trace
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE BaseType, ONLY: VoigtRank2Tensor_
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: StrainTypeVoigt
+! USE GlobalData, ONLY: StressTypeVoigt
+! USE Test_Method, ONLY: OK
+! USE VoigtRank2Tensor_Method, ONLY: Trace
+! USE VoigtRank2Tensor_Method, ONLY: VoigtRank2Tensor
+! IMPLICIT NONE
+!
+! REAL(DFP), PARAMETER :: tol = 1.0E-14_DFP
+! REAL(DFP), PARAMETER :: v(6) = [1.0_DFP, 2.0_DFP, 3.0_DFP, 4.0_DFP, &
+!                                 5.0_DFP, 6.0_DFP]
+!
+! ! Test 1: stress-like and strain-like tensors have the same trace
+! BLOCK
+!   TYPE(VoigtRank2Tensor_) :: sig, eps
+!
+!   sig = VoigtRank2Tensor(v, StressTypeVoigt)
+!   eps = VoigtRank2Tensor(v, StrainTypeVoigt)
+!   CALL OK(ABS(Trace(sig) - 6.0_DFP) .LT. tol, "Trace: stress")
+!   CALL OK(ABS(Trace(eps) - 6.0_DFP) .LT. tol, "Trace: strain")
+! END BLOCK
+!
+! END PROGRAM main
+!```
+!
+! See also: [[VoigtTrace]]
+
+INTERFACE Trace
+  MODULE PURE FUNCTION obj_Trace(obj) RESULT(ans)
+    TYPE(VoigtRank2Tensor_), INTENT(IN) :: obj
+    !! Voigt tensor
+    REAL(DFP) :: ans
+    !! trace
+  END FUNCTION obj_Trace
+END INTERFACE Trace
+
+!----------------------------------------------------------------------------
+!                                                           Dev@TensorMethods
+!----------------------------------------------------------------------------
+
+!> author: Shion Shimizu
+! date: 2026-11-17
+! summary: Deviatoric part of a [[VoigtRank2Tensor_]]
+!
+! The mean of the normal components is removed (VoigtDev of V). The shear
+! entries, the Voigt type and the scale are kept, so the deviator of an
+! engineering strain is again an engineering strain.
+!
+! Returns:
+!   ans : TYPE(VoigtRank2Tensor_) - deviatoric part
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE BaseType, ONLY: VoigtRank2Tensor_
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: StrainTypeVoigt
+! USE Test_Method, ONLY: OK
+! USE VoigtRank2Tensor_Method, ONLY: Dev
+! USE VoigtRank2Tensor_Method, ONLY: Trace
+! USE VoigtRank2Tensor_Method, ONLY: VoigtRank2Tensor
+! IMPLICIT NONE
+!
+! REAL(DFP), PARAMETER :: tol = 1.0E-14_DFP
+!
+! ! Test 1: the mean is removed, the shear entries and the Voigt type are
+! ! kept (an engineering strain stays an engineering strain)
+! BLOCK
+!   TYPE(VoigtRank2Tensor_) :: eps, e
+!   REAL(DFP) :: expected(6)
+!
+!   eps = VoigtRank2Tensor([1.0_DFP, 2.0_DFP, 6.0_DFP, 4.0_DFP, 5.0_DFP, &
+!                           7.0_DFP], StrainTypeVoigt)
+!   e = Dev(eps)
+!   expected = [-2.0_DFP, -1.0_DFP, 3.0_DFP, 4.0_DFP, 5.0_DFP, 7.0_DFP]
+!   CALL OK(MAXVAL(ABS(e%V - expected)) .LT. tol, "Dev: values")
+!   CALL OK(ABS(Trace(e)) .LT. tol, "Dev: trace is zero")
+!   CALL OK(e%VoigtType .EQ. StrainTypeVoigt, "Dev: Voigt type is kept")
+! END BLOCK
+!
+! END PROGRAM main
+!```
+!
+! See also: [[VoigtDev]], [[Trace]]
+
+INTERFACE Dev
+  MODULE PURE FUNCTION obj_Dev(obj) RESULT(ans)
+    TYPE(VoigtRank2Tensor_), INTENT(IN) :: obj
+    !! Voigt tensor
+    TYPE(VoigtRank2Tensor_) :: ans
+    !! deviatoric part, same Voigt type
+  END FUNCTION obj_Dev
+END INTERFACE Dev
+
+!----------------------------------------------------------------------------
+!                                                 FrobeniusNorm@TensorMethods
+!----------------------------------------------------------------------------
+
+!> author: Shion Shimizu
+! date: 2026-11-17
+! summary: Frobenius norm of a [[VoigtRank2Tensor_]]
+!
+! The shear entries are converted to tensor components with the scale of
+! the tensor (1 for stress, 1/2 for an engineering strain), then
+! VoigtStressNorm is used. So a stress and the same tensor written as an
+! engineering strain have the same norm.
+!
+! Returns:
+!   ans : REAL(DFP) - norm of the tensor
+!
+! Formula:
+!   $$ \| T \| = \sqrt{T_{ij} T_{ij}} $$
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE BaseType, ONLY: VoigtRank2Tensor_
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: StrainTypeVoigt
+! USE GlobalData, ONLY: StressTypeVoigt
+! USE Test_Method, ONLY: OK
+! USE VoigtRank2Tensor_Method, ONLY: FrobeniusNorm
+! USE VoigtRank2Tensor_Method, ONLY: VoigtRank2Tensor
+! IMPLICIT NONE
+!
+! REAL(DFP), PARAMETER :: tol = 1.0E-13_DFP
+!
+! ! Test 1: stress-like tensor, shear entries are tensor components
+! BLOCK
+!   TYPE(VoigtRank2Tensor_) :: sig
+!
+!   sig = VoigtRank2Tensor([1.0_DFP, 2.0_DFP, 3.0_DFP, 4.0_DFP, 5.0_DFP, &
+!                           6.0_DFP], StressTypeVoigt)
+!   CALL OK(ABS(FrobeniusNorm(sig) - SQRT(168.0_DFP)) .LT. tol, &
+!           "FrobeniusNorm: stress")
+! END BLOCK
+!
+! ! Test 2: the same tensor as an engineering strain gives the same norm
+! BLOCK
+!   TYPE(VoigtRank2Tensor_) :: eps
+!
+!   eps = VoigtRank2Tensor([1.0_DFP, 2.0_DFP, 3.0_DFP, 8.0_DFP, 10.0_DFP, &
+!                           12.0_DFP], StrainTypeVoigt)
+!   CALL OK(ABS(FrobeniusNorm(eps) - SQRT(168.0_DFP)) .LT. tol, &
+!           "FrobeniusNorm: engineering strain")
+! END BLOCK
+!
+! END PROGRAM main
+!```
+!
+! See also: [[VoigtStressNorm]]
+
+INTERFACE FrobeniusNorm
+  MODULE PURE FUNCTION obj_FrobeniusNorm(obj) RESULT(ans)
+    TYPE(VoigtRank2Tensor_), INTENT(IN) :: obj
+    !! Voigt tensor
+    REAL(DFP) :: ans
+    !! Frobenius norm
+  END FUNCTION obj_FrobeniusNorm
+END INTERFACE FrobeniusNorm
+
+!----------------------------------------------------------------------------
+!                                                         Eigen@TensorMethods
+!----------------------------------------------------------------------------
+
+!> author: Shion Shimizu
+! date: 2026-11-17
+! summary: Eigenvalues and eigenvectors of a [[VoigtRank2Tensor_]]
+!
+! The shear entries are converted to tensor components with the scale of
+! the tensor, then VoigtSymEigen is used (cyclic Jacobi, PURE, relative
+! tolerance). The eigenvalues are in descending order. The argument names
+! follow Eigen of Rank2Tensor_.
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE BaseType, ONLY: VoigtRank2Tensor_
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: I4B
+! USE GlobalData, ONLY: StrainTypeVoigt
+! USE GlobalData, ONLY: StressTypeVoigt
+! USE Test_Method, ONLY: OK
+! USE VoigtRank2Tensor_Method, ONLY: Eigen
+! USE VoigtRank2Tensor_Method, ONLY: VoigtRank2Tensor
+! IMPLICIT NONE
+!
+! REAL(DFP), PARAMETER :: tol = 1.0E-12_DFP
+!
+! ! Test 1: diagonal stress, eigenvalues in descending order
+! BLOCK
+!   TYPE(VoigtRank2Tensor_) :: sig
+!   REAL(DFP) :: QR(3, 3), WR(3)
+!
+!   sig = VoigtRank2Tensor([1.0_DFP, 3.0_DFP, 2.0_DFP, 0.0_DFP, 0.0_DFP, &
+!                           0.0_DFP], StressTypeVoigt)
+!   CALL Eigen(obj=sig, QR=QR, WR=WR)
+!   CALL OK(MAXVAL(ABS(WR - [3.0_DFP, 2.0_DFP, 1.0_DFP])) .LT. tol, &
+!           "Eigen: values")
+!   CALL OK(ABS(ABS(QR(2, 1)) - 1.0_DFP) .LT. tol, &
+!           "Eigen: first vector is e2")
+! END BLOCK
+!
+! ! Test 2: an engineering strain has the eigenvalues of the strain tensor
+! BLOCK
+!   TYPE(VoigtRank2Tensor_) :: sig, eps
+!   REAL(DFP) :: QR1(3, 3), WR1(3), QR2(3, 3), WR2(3)
+!   INTEGER(I4B) :: ii
+!
+!   sig = VoigtRank2Tensor([4.0_DFP, 1.0_DFP, 2.0_DFP, 0.5_DFP, 0.3_DFP, &
+!                           0.2_DFP], StressTypeVoigt)
+!   eps = VoigtRank2Tensor([4.0_DFP, 1.0_DFP, 2.0_DFP, 1.0_DFP, 0.6_DFP, &
+!                           0.4_DFP], StrainTypeVoigt)
+!   CALL Eigen(obj=sig, QR=QR1, WR=WR1)
+!   CALL Eigen(obj=eps, QR=QR2, WR=WR2)
+!   CALL OK(MAXVAL(ABS(WR1 - WR2)) .LT. tol, "Eigen: strain, values")
+!   DO ii = 1, 3
+!     CALL OK(ABS(ABS(DOT_PRODUCT(QR1(:, ii), QR2(:, ii))) - 1.0_DFP) &
+!             .LT. tol, "Eigen: strain, vectors")
+!   END DO
+! END BLOCK
+!
+! END PROGRAM main
+!```
+!
+! See also: [[VoigtSymEigen]]
+
+INTERFACE Eigen
+  MODULE PURE SUBROUTINE obj_Eigen(obj, QR, WR)
+    TYPE(VoigtRank2Tensor_), INTENT(IN) :: obj
+    !! Voigt tensor
+    REAL(DFP), INTENT(INOUT) :: QR(3, 3)
+    !! unit eigenvectors in columns, QR(:, i) belongs to WR(i)
+    REAL(DFP), INTENT(INOUT) :: WR(3)
+    !! eigenvalues in descending order
+  END SUBROUTINE obj_Eigen
+END INTERFACE Eigen
+
+!----------------------------------------------------------------------------
+!                                                        Otimes@TensorMethods
+!----------------------------------------------------------------------------
+
+!> author: Shion Shimizu
+! date: 2026-11-17
+! summary: Dyadic product of two [[VoigtRank2Tensor_]] in Voigt form
+!
+! Both tensors are converted to tensor shear components with their
+! scale, then VoigtOuter is used. The result C(6, 6) is the rank 4 tensor
+! A otimes B in the convention of MaterialJacobian_: it maps an
+! engineering strain to a stress, C eps = A (B : eps).
+!
+! Returns:
+!   ans : REAL(DFP), SHAPE(6, 6) - A otimes B in Voigt form
+!
+! Examples
+!
+!```fortran
+! PROGRAM main
+! USE BaseType, ONLY: VoigtRank2Tensor_
+! USE GlobalData, ONLY: DFP
+! USE GlobalData, ONLY: StrainTypeVoigt
+! USE GlobalData, ONLY: StressTypeVoigt
+! USE MaterialJacobian_Method, ONLY: Rank4IdentityOtimesIdentity
+! USE Test_Method, ONLY: OK
+! USE VoigtRank2Tensor_Method, ONLY: Otimes
+! USE VoigtRank2Tensor_Method, ONLY: VoigtRank2Tensor
+! USE VoigtUtility, ONLY: VoigtIdentity
+! IMPLICIT NONE
+!
+! REAL(DFP), PARAMETER :: tol = 1.0E-14_DFP
+!
+! ! Test 1: I otimes I
+! BLOCK
+!   TYPE(VoigtRank2Tensor_) :: eye
+!
+!   eye = VoigtRank2Tensor(VoigtIdentity(), StressTypeVoigt)
+!   CALL OK(MAXVAL(ABS(Otimes(eye, eye) - Rank4IdentityOtimesIdentity())) &
+!           .LT. tol, "Otimes: I otimes I")
+! END BLOCK
+!
+! ! Test 2: (a otimes b) : eps = a (b : eps) for an engineering strain eps,
+! ! also when b is given as an engineering strain
+! BLOCK
+!   TYPE(VoigtRank2Tensor_) :: a, b, bEng
+!   REAL(DFP) :: eps(6), bDotEps
+!
+!   a = VoigtRank2Tensor([1.0_DFP, 2.0_DFP, 3.0_DFP, 4.0_DFP, 5.0_DFP, &
+!                         6.0_DFP], StressTypeVoigt)
+!   b = VoigtRank2Tensor([6.0_DFP, 5.0_DFP, 4.0_DFP, 3.0_DFP, 2.0_DFP, &
+!                         1.0_DFP], StressTypeVoigt)
+!   bEng = VoigtRank2Tensor([6.0_DFP, 5.0_DFP, 4.0_DFP, 6.0_DFP, 4.0_DFP, &
+!                            2.0_DFP], StrainTypeVoigt)
+!   eps = [0.1_DFP, 0.2_DFP, 0.3_DFP, 0.4_DFP, 0.5_DFP, 0.6_DFP]
+!   bDotEps = DOT_PRODUCT(b%V, eps)
+!   CALL OK(MAXVAL(ABS(MATMUL(Otimes(a, b), eps) - a%V * bDotEps)) &
+!           .LT. tol, "Otimes: (a otimes b) : eps")
+!   CALL OK(MAXVAL(ABS(Otimes(a, bEng) - Otimes(a, b))) .LT. tol, &
+!           "Otimes: b as an engineering strain")
+! END BLOCK
+!
+! END PROGRAM main
+!```
+!
+! See also: [[VoigtOuter]]
+
+INTERFACE Otimes
+  MODULE PURE FUNCTION obj_Otimes(obj1, obj2) RESULT(ans)
+    TYPE(VoigtRank2Tensor_), INTENT(IN) :: obj1
+    !! tensor A
+    TYPE(VoigtRank2Tensor_), INTENT(IN) :: obj2
+    !! tensor B
+    REAL(DFP) :: ans(6, 6)
+    !! A otimes B in Voigt form
+  END FUNCTION obj_Otimes
+END INTERFACE Otimes
 
 END MODULE VoigtRank2Tensor_Method
