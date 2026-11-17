@@ -33,7 +33,7 @@ CONTAINS
 !                                                                  VoigtSize
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE VoigtRank2Tensor_VoigtSize
+MODULE PROCEDURE obj_VoigtSize
 SELECT CASE (voigtForm)
 CASE (VoigtFormPlaneStrain, VoigtFormPlaneStress)
   ans = 3
@@ -42,13 +42,13 @@ CASE (VoigtFormAxisymmetric)
 CASE DEFAULT
   ans = 6
 END SELECT
-END PROCEDURE VoigtRank2Tensor_VoigtSize
+END PROCEDURE obj_VoigtSize
 
 !----------------------------------------------------------------------------
 !                                                             GetVoigtVector
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE VoigtRank2Tensor_GetVoigtVector
+MODULE PROCEDURE obj_GetVoigtVector
 SELECT CASE (voigtForm)
 CASE (VoigtFormPlaneStrain, VoigtFormPlaneStress)
   ans = [obj%V(1), obj%V(2), obj%V(4)]
@@ -57,13 +57,13 @@ CASE (VoigtFormAxisymmetric)
 CASE DEFAULT
   ans = obj%V
 END SELECT
-END PROCEDURE VoigtRank2Tensor_GetVoigtVector
+END PROCEDURE obj_GetVoigtVector
 
 !----------------------------------------------------------------------------
 !                                                            GetVoigtVector_
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE VoigtRank2Tensor_GetVoigtVector_
+MODULE PROCEDURE obj_GetVoigtVector_
 SELECT CASE (voigtForm)
 CASE (VoigtFormPlaneStrain, VoigtFormPlaneStress)
   tsize = 3
@@ -80,13 +80,13 @@ CASE DEFAULT
   tsize = 6
   ans(1:6) = obj%V
 END SELECT
-END PROCEDURE VoigtRank2Tensor_GetVoigtVector_
+END PROCEDURE obj_GetVoigtVector_
 
 !----------------------------------------------------------------------------
 !                                                                   Initiate
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE VoigtRank2Tensor_Initiate3
+MODULE PROCEDURE obj_Initiate3
 REAL(DFP) :: v6(6)
 
 v6 = 0.0_DFP
@@ -106,14 +106,14 @@ CASE DEFAULT
 END SELECT
 
 CALL Initiate(obj=obj, vec=v6, voigtType=voigtType)
-END PROCEDURE VoigtRank2Tensor_Initiate3
+END PROCEDURE obj_Initiate3
 
 !----------------------------------------------------------------------------
 !                                                           VoigtRank2Tensor
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE VoigtRank2Tensor_Constructor3
+MODULE PROCEDURE obj_VoigtRank2Tensor3
 CALL Initiate(obj=ans, vec=vec, voigtType=voigtType, voigtForm=voigtForm)
-END PROCEDURE VoigtRank2Tensor_Constructor3
+END PROCEDURE obj_VoigtRank2Tensor3
 
 END SUBMODULE VoigtFormMethods
