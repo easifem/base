@@ -235,51 +235,55 @@ END INTERFACE InitiateSuperluOptions
 ! date: 2023-01-26
 ! summary: Set SuperLU options
 !
-! Description:
-!   Only the options that are present are changed in
-!   `obj%slu%options`.
+! Only the options that are present are changed in
+! `obj%slu%options`.
+!
+! Changes:
+!   - 2026-11-18: argument names in camelCase; ILU_DropRule,
+!     ILU_DropTol, ILU_FillFactor and ILU_MILU are renamed iluDropRule,
+!     iluDropTol, iluFillFactor and iluMilu
 
 INTERFACE SetSuperluOptions
-  MODULE SUBROUTINE obj_SetSuperluOptions(obj, Fact, Equil, ColPerm, Trans, &
-                                          IterRefine, DiagPivotThresh, &
-                                          SymmetricMode, PivotGrowth, &
-                                          ConditionNumber, RowPerm, &
-                                          ILU_DropRule, ILU_DropTol, &
-                                          ILU_FillFactor, ILU_MILU, &
-                                          PrintStat)
+  MODULE SUBROUTINE obj_SetSuperluOptions(obj, fact, equil, colPerm, trans, &
+                                          iterRefine, diagPivotThresh, &
+                                          symmetricMode, pivotGrowth, &
+                                          conditionNumber, rowPerm, &
+                                          iluDropRule, iluDropTol, &
+                                          iluFillFactor, iluMilu, &
+                                          printStat)
     TYPE(CSRMatrix_), INTENT(INOUT) :: obj
     !! matrix, obj%slu holds the SuperLU data
-    INTEGER(I4B), OPTIONAL, INTENT(IN) :: Fact
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: fact
     !! Fact_t%DOFACT, SamePattern, SamePattern_SameRowPerm or FACTORED
-    INTEGER(I4B), OPTIONAL, INTENT(IN) :: Equil
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: equil
     !! equilibrate the matrix, yes_no_t%YES or NO
-    INTEGER(I4B), OPTIONAL, INTENT(IN) :: ColPerm
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: colPerm
     !! column ordering, Colperm_t%NATURAL, MMD_ATA, MMD_AT_PLUS_A, COLAMD or
     !! MY_PERMC
-    INTEGER(I4B), OPTIONAL, INTENT(IN) :: Trans
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: trans
     !! Trans_t%NOTRANS, TRANS or CONJ
-    INTEGER(I4B), OPTIONAL, INTENT(IN) :: IterRefine
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: iterRefine
     !! iterative refinement, IterRefine_t%NOREFINE, SLU_SINGLE, SLU_DOUBLE or
     !! SLU_EXTRA
-    REAL(DFP), OPTIONAL, INTENT(IN) :: DiagPivotThresh
+    REAL(DFP), OPTIONAL, INTENT(IN) :: diagPivotThresh
     !! threshold of partial pivoting, between 0 and 1
-    INTEGER(I4B), OPTIONAL, INTENT(IN) :: SymmetricMode
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: symmetricMode
     !! symmetric mode, yes_no_t%YES or NO
-    INTEGER(I4B), OPTIONAL, INTENT(IN) :: PivotGrowth
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: pivotGrowth
     !! compute the reciprocal pivot growth, yes_no_t%YES or NO
-    INTEGER(I4B), OPTIONAL, INTENT(IN) :: ConditionNumber
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: conditionNumber
     !! estimate the condition number, yes_no_t%YES or NO
-    INTEGER(I4B), OPTIONAL, INTENT(IN) :: RowPerm
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: rowPerm
     !! row permutation, rowperm_t
-    INTEGER(I4B), OPTIONAL, INTENT(IN) :: ILU_DropRule
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: iluDropRule
     !! drop rule of ILU
-    REAL(DFP), OPTIONAL, INTENT(IN) :: ILU_DropTol
+    REAL(DFP), OPTIONAL, INTENT(IN) :: iluDropTol
     !! drop tolerance of ILU
-    REAL(DFP), OPTIONAL, INTENT(IN) :: ILU_FillFactor
+    REAL(DFP), OPTIONAL, INTENT(IN) :: iluFillFactor
     !! fill factor of ILU
-    INTEGER(I4B), OPTIONAL, INTENT(IN) :: ILU_MILU
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: iluMilu
     !! modified ILU, milu_t
-    INTEGER(I4B), OPTIONAL, INTENT(IN) :: PrintStat
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: printStat
     !! print the statistics, yes_no_t%YES or NO
   END SUBROUTINE obj_SetSuperluOptions
 END INTERFACE SetSuperluOptions
@@ -371,12 +375,12 @@ END INTERFACE SuperluDeallocate
 ! summary: Solve A X = B with SuperLU, one right-hand side
 !
 ! Description:
-!   Solves `A X = B` with SuperLU (`dgssvx`).
+!   Solves `a x = b` with SuperLU (`dgssvx`).
 !
-!   - The first call sets up the SuperLU data of `A` and factors `A`.
+!   - The first call sets up the SuperLU data of `a` and factors `a`.
 !   - A later call with `isFactored = .TRUE.` uses the stored factors
 !     (`Fact = FACTORED`), so only the new right-hand side is solved; new
-!     values of `A` are ignored.
+!     values of `a` are ignored.
 !   - With `isFactored = .FALSE.` (default) the matrix is factored again
 !     with the same sparsity pattern (`Fact = SamePattern`).
 !   - The factors are kept after the solve. With `isFreeFactors = .TRUE.`
@@ -384,50 +388,52 @@ END INTERFACE SuperluDeallocate
 !     `isFactored = .FALSE.`, a call with `isFactored = .TRUE.` stops with
 !     an error.
 !
-!   The options (ColPerm to PrintStat) are applied at every call.
+!   The options (colPerm to printStat) are applied at every call.
 !
 ! Changes:
 !   - 2026-11-17: the L and U factors are kept after a solve, so that
 !     `isFactored = .TRUE.` works (it crashed before); new argument
 !     `isFreeFactors`, easifem/base#358
+!   - 2026-11-18: argument names in camelCase (x, a, b and the
+!     options)
 !
 ! Examples
 !
 ! Full example: src/modules/CSRMatrix/examples/LinSolve_test_1.F90
 
 INTERFACE LinSolve
-  MODULE SUBROUTINE obj_LinSolve1(X, A, B, isTranspose, isFactored, ColPerm, &
-                                  Equil, IterRefine, PivotGrowth, &
-                                  DiagPivotThresh, ConditionNumber, &
-                                  SymmetricMode, PrintStat, info, &
+  MODULE SUBROUTINE obj_LinSolve1(x, a, b, isTranspose, isFactored, colPerm, &
+                                  equil, iterRefine, pivotGrowth, &
+                                  diagPivotThresh, conditionNumber, &
+                                  symmetricMode, printStat, info, &
                                   isFreeFactors)
-    REAL(DFP), INTENT(INOUT) :: X(:)
+    REAL(DFP), INTENT(INOUT) :: x(:)
     !! solution
-    TYPE(CSRMatrix_), INTENT(INOUT) :: A
-    !! matrix, A%slu holds the SuperLU data
-    REAL(DFP), INTENT(IN) :: B(:)
+    TYPE(CSRMatrix_), INTENT(INOUT) :: a
+    !! matrix, a%slu holds the SuperLU data
+    REAL(DFP), INTENT(IN) :: b(:)
     !! right-hand side, not changed
     LOGICAL(LGT), OPTIONAL, INTENT(IN) :: isTranspose
-    !! solve transpose(A) X = B instead, default false
+    !! solve transpose(a) x = b instead, default false
     LOGICAL(LGT), OPTIONAL, INTENT(IN) :: isFactored
     !! use the stored factors of the last factorization, default false
-    INTEGER(I4B), OPTIONAL, INTENT(IN) :: ColPerm
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: colPerm
     !! column ordering, Colperm_t%NATURAL, MMD_ATA, MMD_AT_PLUS_A, COLAMD or
     !! MY_PERMC, default COLAMD
-    INTEGER(I4B), OPTIONAL, INTENT(IN) :: Equil
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: equil
     !! equilibrate the matrix, yes_no_t%YES or NO, default YES
-    INTEGER(I4B), OPTIONAL, INTENT(IN) :: IterRefine
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: iterRefine
     !! iterative refinement, IterRefine_t%NOREFINE, SLU_SINGLE, SLU_DOUBLE or
     !! SLU_EXTRA, default SLU_DOUBLE
-    INTEGER(I4B), OPTIONAL, INTENT(IN) :: PivotGrowth
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: pivotGrowth
     !! compute the reciprocal pivot growth, yes_no_t%YES or NO, default NO
-    REAL(DFP), OPTIONAL, INTENT(IN) :: DiagPivotThresh
+    REAL(DFP), OPTIONAL, INTENT(IN) :: diagPivotThresh
     !! threshold of partial pivoting, between 0 and 1, default 1
-    INTEGER(I4B), OPTIONAL, INTENT(IN) :: ConditionNumber
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: conditionNumber
     !! estimate the condition number, yes_no_t%YES or NO, default NO
-    INTEGER(I4B), OPTIONAL, INTENT(IN) :: SymmetricMode
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: symmetricMode
     !! symmetric mode, yes_no_t%YES or NO, default NO
-    INTEGER(I4B), OPTIONAL, INTENT(IN) :: PrintStat
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: printStat
     !! print the statistics, yes_no_t%YES or NO, default NO
     INTEGER(I4B), OPTIONAL, INTENT(OUT) :: info
     !! info of dgssvx, zero on success
@@ -445,12 +451,12 @@ END INTERFACE LinSolve
 ! summary: Solve A X = B with SuperLU, several right-hand sides
 !
 ! Description:
-!   Solves `A X = B` with SuperLU (`dgssvx`).
+!   Solves `a x = b` with SuperLU (`dgssvx`).
 !
-!   - The first call sets up the SuperLU data of `A` and factors `A`.
+!   - The first call sets up the SuperLU data of `a` and factors `a`.
 !   - A later call with `isFactored = .TRUE.` uses the stored factors
 !     (`Fact = FACTORED`), so only the new right-hand side is solved; new
-!     values of `A` are ignored.
+!     values of `a` are ignored.
 !   - With `isFactored = .FALSE.` (default) the matrix is factored again
 !     with the same sparsity pattern (`Fact = SamePattern`).
 !   - The factors are kept after the solve. With `isFreeFactors = .TRUE.`
@@ -458,51 +464,53 @@ END INTERFACE LinSolve
 !     `isFactored = .FALSE.`, a call with `isFactored = .TRUE.` stops with
 !     an error.
 !
-!   The options (ColPerm to PrintStat) are applied at the first call only;
+!   The options (colPerm to printStat) are applied at the first call only;
 !   later calls change only Fact and Trans.
 !
 ! Changes:
 !   - 2026-11-17: the L and U factors are kept after a solve, so that
 !     `isFactored = .TRUE.` works (it crashed before); new argument
 !     `isFreeFactors`, easifem/base#358
+!   - 2026-11-18: argument names in camelCase (x, a, b and the
+!     options)
 !
 ! Examples
 !
 ! Full example: src/modules/CSRMatrix/examples/LinSolve_test_1.F90
 
 INTERFACE LinSolve
-  MODULE SUBROUTINE obj_LinSolve2(X, A, B, isTranspose, isFactored, ColPerm, &
-                                  Equil, IterRefine, PivotGrowth, &
-                                  DiagPivotThresh, ConditionNumber, &
-                                  SymmetricMode, PrintStat, info, &
+  MODULE SUBROUTINE obj_LinSolve2(x, a, b, isTranspose, isFactored, colPerm, &
+                                  equil, iterRefine, pivotGrowth, &
+                                  diagPivotThresh, conditionNumber, &
+                                  symmetricMode, printStat, info, &
                                   isFreeFactors)
-    REAL(DFP), INTENT(INOUT) :: X(:, :)
+    REAL(DFP), INTENT(INOUT) :: x(:, :)
     !! solutions, one per column
-    TYPE(CSRMatrix_), INTENT(INOUT) :: A
-    !! matrix, A%slu holds the SuperLU data
-    REAL(DFP), INTENT(IN) :: B(:, :)
+    TYPE(CSRMatrix_), INTENT(INOUT) :: a
+    !! matrix, a%slu holds the SuperLU data
+    REAL(DFP), INTENT(IN) :: b(:, :)
     !! right-hand sides, one per column, not changed
     LOGICAL(LGT), OPTIONAL, INTENT(IN) :: isTranspose
-    !! solve transpose(A) X = B instead, default false
+    !! solve transpose(a) x = b instead, default false
     LOGICAL(LGT), OPTIONAL, INTENT(IN) :: isFactored
     !! use the stored factors of the last factorization, default false
-    INTEGER(I4B), OPTIONAL, INTENT(IN) :: ColPerm
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: colPerm
     !! column ordering, Colperm_t%NATURAL, MMD_ATA, MMD_AT_PLUS_A, COLAMD or
     !! MY_PERMC, default COLAMD
-    INTEGER(I4B), OPTIONAL, INTENT(IN) :: Equil
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: equil
     !! equilibrate the matrix, yes_no_t%YES or NO, default YES
-    INTEGER(I4B), OPTIONAL, INTENT(IN) :: IterRefine
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: iterRefine
     !! iterative refinement, IterRefine_t%NOREFINE, SLU_SINGLE, SLU_DOUBLE or
     !! SLU_EXTRA, default SLU_DOUBLE
-    INTEGER(I4B), OPTIONAL, INTENT(IN) :: PivotGrowth
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: pivotGrowth
     !! compute the reciprocal pivot growth, yes_no_t%YES or NO, default NO
-    REAL(DFP), OPTIONAL, INTENT(IN) :: DiagPivotThresh
+    REAL(DFP), OPTIONAL, INTENT(IN) :: diagPivotThresh
     !! threshold of partial pivoting, between 0 and 1, default 1
-    INTEGER(I4B), OPTIONAL, INTENT(IN) :: ConditionNumber
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: conditionNumber
     !! estimate the condition number, yes_no_t%YES or NO, default NO
-    INTEGER(I4B), OPTIONAL, INTENT(IN) :: SymmetricMode
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: symmetricMode
     !! symmetric mode, yes_no_t%YES or NO, default NO
-    INTEGER(I4B), OPTIONAL, INTENT(IN) :: PrintStat
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: printStat
     !! print the statistics, yes_no_t%YES or NO, default NO
     INTEGER(I4B), OPTIONAL, INTENT(OUT) :: info
     !! info of dgssvx, zero on success
@@ -520,12 +528,12 @@ END INTERFACE LinSolve
 ! summary: Solve A X = B with SuperLU, solution returned in B
 !
 ! Description:
-!   Solves `A X = B` with SuperLU (`dgssvx`).
+!   Solves `a x = b` with SuperLU (`dgssvx`).
 !
-!   - The first call sets up the SuperLU data of `A` and factors `A`.
+!   - The first call sets up the SuperLU data of `a` and factors `a`.
 !   - A later call with `isFactored = .TRUE.` uses the stored factors
 !     (`Fact = FACTORED`), so only the new right-hand side is solved; new
-!     values of `A` are ignored.
+!     values of `a` are ignored.
 !   - With `isFactored = .FALSE.` (default) the matrix is factored again
 !     with the same sparsity pattern (`Fact = SamePattern`).
 !   - The factors are kept after the solve. With `isFreeFactors = .TRUE.`
@@ -533,49 +541,51 @@ END INTERFACE LinSolve
 !     `isFactored = .FALSE.`, a call with `isFactored = .TRUE.` stops with
 !     an error.
 !
-!   The options (ColPerm to PrintStat) are applied at the first call only;
+!   The options (colPerm to printStat) are applied at the first call only;
 !   later calls change only Fact and Trans.
 !
 ! Changes:
 !   - 2026-11-17: the L and U factors are kept after a solve, so that
 !     `isFactored = .TRUE.` works (it crashed before); new argument
 !     `isFreeFactors`, easifem/base#358
+!   - 2026-11-18: argument names in camelCase (a, b and the
+!     options)
 !
 ! Examples
 !
 ! Full example: src/modules/CSRMatrix/examples/LinSolve_test_1.F90
 
 INTERFACE LinSolve
-  MODULE SUBROUTINE obj_LinSolve3(A, B, isTranspose, isFactored, ColPerm, &
-                                  Equil, IterRefine, PivotGrowth, &
-                                  DiagPivotThresh, ConditionNumber, &
-                                  SymmetricMode, PrintStat, info, &
+  MODULE SUBROUTINE obj_LinSolve3(a, b, isTranspose, isFactored, colPerm, &
+                                  equil, iterRefine, pivotGrowth, &
+                                  diagPivotThresh, conditionNumber, &
+                                  symmetricMode, printStat, info, &
                                   isFreeFactors)
-    TYPE(CSRMatrix_), INTENT(INOUT) :: A
-    !! matrix, A%slu holds the SuperLU data
-    REAL(DFP), INTENT(INOUT) :: B(:)
+    TYPE(CSRMatrix_), INTENT(INOUT) :: a
+    !! matrix, a%slu holds the SuperLU data
+    REAL(DFP), INTENT(INOUT) :: b(:)
     !! right-hand side on entry, solution on return
     LOGICAL(LGT), OPTIONAL, INTENT(IN) :: isTranspose
-    !! solve transpose(A) X = B instead, default false
+    !! solve transpose(a) x = b instead, default false
     LOGICAL(LGT), OPTIONAL, INTENT(IN) :: isFactored
     !! use the stored factors of the last factorization, default false
-    INTEGER(I4B), OPTIONAL, INTENT(IN) :: ColPerm
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: colPerm
     !! column ordering, Colperm_t%NATURAL, MMD_ATA, MMD_AT_PLUS_A, COLAMD or
     !! MY_PERMC, default COLAMD
-    INTEGER(I4B), OPTIONAL, INTENT(IN) :: Equil
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: equil
     !! equilibrate the matrix, yes_no_t%YES or NO, default YES
-    INTEGER(I4B), OPTIONAL, INTENT(IN) :: IterRefine
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: iterRefine
     !! iterative refinement, IterRefine_t%NOREFINE, SLU_SINGLE, SLU_DOUBLE or
     !! SLU_EXTRA, default SLU_DOUBLE
-    INTEGER(I4B), OPTIONAL, INTENT(IN) :: PivotGrowth
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: pivotGrowth
     !! compute the reciprocal pivot growth, yes_no_t%YES or NO, default NO
-    REAL(DFP), OPTIONAL, INTENT(IN) :: DiagPivotThresh
+    REAL(DFP), OPTIONAL, INTENT(IN) :: diagPivotThresh
     !! threshold of partial pivoting, between 0 and 1, default 1
-    INTEGER(I4B), OPTIONAL, INTENT(IN) :: ConditionNumber
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: conditionNumber
     !! estimate the condition number, yes_no_t%YES or NO, default NO
-    INTEGER(I4B), OPTIONAL, INTENT(IN) :: SymmetricMode
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: symmetricMode
     !! symmetric mode, yes_no_t%YES or NO, default NO
-    INTEGER(I4B), OPTIONAL, INTENT(IN) :: PrintStat
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: printStat
     !! print the statistics, yes_no_t%YES or NO, default NO
     INTEGER(I4B), OPTIONAL, INTENT(OUT) :: info
     !! info of dgssvx, zero on success
@@ -593,12 +603,12 @@ END INTERFACE LinSolve
 ! summary: Solve A X = B with SuperLU, solutions returned in B
 !
 ! Description:
-!   Solves `A X = B` with SuperLU (`dgssvx`).
+!   Solves `a x = b` with SuperLU (`dgssvx`).
 !
-!   - The first call sets up the SuperLU data of `A` and factors `A`.
+!   - The first call sets up the SuperLU data of `a` and factors `a`.
 !   - A later call with `isFactored = .TRUE.` uses the stored factors
 !     (`Fact = FACTORED`), so only the new right-hand side is solved; new
-!     values of `A` are ignored.
+!     values of `a` are ignored.
 !   - With `isFactored = .FALSE.` (default) the matrix is factored again
 !     with the same sparsity pattern (`Fact = SamePattern`).
 !   - The factors are kept after the solve. With `isFreeFactors = .TRUE.`
@@ -606,49 +616,51 @@ END INTERFACE LinSolve
 !     `isFactored = .FALSE.`, a call with `isFactored = .TRUE.` stops with
 !     an error.
 !
-!   The options (ColPerm to PrintStat) are applied at the first call only;
+!   The options (colPerm to printStat) are applied at the first call only;
 !   later calls change only Fact and Trans.
 !
 ! Changes:
 !   - 2026-11-17: the L and U factors are kept after a solve, so that
 !     `isFactored = .TRUE.` works (it crashed before); new argument
 !     `isFreeFactors`, easifem/base#358
+!   - 2026-11-18: argument names in camelCase (a, b and the
+!     options)
 !
 ! Examples
 !
 ! Full example: src/modules/CSRMatrix/examples/LinSolve_test_1.F90
 
 INTERFACE LinSolve
-  MODULE SUBROUTINE obj_LinSolve4(A, B, isTranspose, isFactored, ColPerm, &
-                                  Equil, IterRefine, PivotGrowth, &
-                                  DiagPivotThresh, ConditionNumber, &
-                                  SymmetricMode, PrintStat, info, &
+  MODULE SUBROUTINE obj_LinSolve4(a, b, isTranspose, isFactored, colPerm, &
+                                  equil, iterRefine, pivotGrowth, &
+                                  diagPivotThresh, conditionNumber, &
+                                  symmetricMode, printStat, info, &
                                   isFreeFactors)
-    TYPE(CSRMatrix_), INTENT(INOUT) :: A
-    !! matrix, A%slu holds the SuperLU data
-    REAL(DFP), INTENT(INOUT) :: B(:, :)
+    TYPE(CSRMatrix_), INTENT(INOUT) :: a
+    !! matrix, a%slu holds the SuperLU data
+    REAL(DFP), INTENT(INOUT) :: b(:, :)
     !! right-hand sides on entry, solutions on return, one per column
     LOGICAL(LGT), OPTIONAL, INTENT(IN) :: isTranspose
-    !! solve transpose(A) X = B instead, default false
+    !! solve transpose(a) x = b instead, default false
     LOGICAL(LGT), OPTIONAL, INTENT(IN) :: isFactored
     !! use the stored factors of the last factorization, default false
-    INTEGER(I4B), OPTIONAL, INTENT(IN) :: ColPerm
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: colPerm
     !! column ordering, Colperm_t%NATURAL, MMD_ATA, MMD_AT_PLUS_A, COLAMD or
     !! MY_PERMC, default COLAMD
-    INTEGER(I4B), OPTIONAL, INTENT(IN) :: Equil
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: equil
     !! equilibrate the matrix, yes_no_t%YES or NO, default YES
-    INTEGER(I4B), OPTIONAL, INTENT(IN) :: IterRefine
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: iterRefine
     !! iterative refinement, IterRefine_t%NOREFINE, SLU_SINGLE, SLU_DOUBLE or
     !! SLU_EXTRA, default SLU_DOUBLE
-    INTEGER(I4B), OPTIONAL, INTENT(IN) :: PivotGrowth
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: pivotGrowth
     !! compute the reciprocal pivot growth, yes_no_t%YES or NO, default NO
-    REAL(DFP), OPTIONAL, INTENT(IN) :: DiagPivotThresh
+    REAL(DFP), OPTIONAL, INTENT(IN) :: diagPivotThresh
     !! threshold of partial pivoting, between 0 and 1, default 1
-    INTEGER(I4B), OPTIONAL, INTENT(IN) :: ConditionNumber
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: conditionNumber
     !! estimate the condition number, yes_no_t%YES or NO, default NO
-    INTEGER(I4B), OPTIONAL, INTENT(IN) :: SymmetricMode
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: symmetricMode
     !! symmetric mode, yes_no_t%YES or NO, default NO
-    INTEGER(I4B), OPTIONAL, INTENT(IN) :: PrintStat
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: printStat
     !! print the statistics, yes_no_t%YES or NO, default NO
     INTEGER(I4B), OPTIONAL, INTENT(OUT) :: info
     !! info of dgssvx, zero on success
