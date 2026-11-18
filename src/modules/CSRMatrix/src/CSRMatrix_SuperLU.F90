@@ -13,491 +13,648 @@
 !
 ! You should have received a copy of the GNU General Public License
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2023-01-26
+! summary: Direct solver SuperLU for [[CSRMatrix_]]
 !
+! [[LinSolve]] solves `A X = B` with the SuperLU routine `dgssvx`. The
+! SuperLU data (a copy of the matrix in compressed column form, the
+! right-hand sides, the options, the permutations, the scalings and the
+! L and U factors) are kept in `A%slu`, so that later calls can factor
+! a matrix with the same sparsity pattern again, or reuse the factors
+! for a new right-hand side (`isFactored`). [[SuperluDeallocate]] frees
+! them.
+!
+! The other routines are the steps of [[LinSolve]]. All of them need
+! the SuperLU library (`USE_SuperLU`); without it they stop with an
+! error.
+!
+! Changes:
+!   - 2026-11-17: the factors are kept for isFactored, new argument
+!     isFreeFactors (easifem/base#358); reformatted with obj_ names and
+!     docblocks
 
 MODULE CSRMatrix_Superlu
 USE BaseType, ONLY: CSRMatrix_
-USE GlobalData, ONLY: DFP, I4B, LGT
+USE GlobalData, ONLY: DFP
+USE GlobalData, ONLY: I4B
+USE GlobalData, ONLY: LGT
 IMPLICIT NONE
 PRIVATE
 
-! PUBLIC :: GetLU
-! PUBLIC :: LUSolve
-! PUBLIC :: ! Solve
-PUBLIC :: InitiateSuperluRHS
 PUBLIC :: InitiateSuperluA
+PUBLIC :: InitiateSuperluRHS
 PUBLIC :: LinSolve
 PUBLIC :: SuperluDeallocate
 
 !----------------------------------------------------------------------------
+!                                                    InitiateSuperluA@Methods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2023-01-26
+! summary: Copy the matrix to the SuperLU matrix A
 !
+! Description:
+!   Allocates the compressed column copy of `obj%A` in `obj%slu` and
+!   creates the SuperLU matrix `obj%slu%A`. The CSR storage of row-major
+!   `obj` is the CSC storage of its transpose, which is why LinSolve
+!   solves with `Trans = TRANS`. Stops if it was already initiated.
+
+INTERFACE InitiateSuperluA
+  MODULE SUBROUTINE obj_InitiateSuperluA(obj)
+    TYPE(CSRMatrix_), INTENT(INOUT) :: obj
+    !! matrix, obj%slu holds the SuperLU data
+  END SUBROUTINE obj_InitiateSuperluA
+END INTERFACE InitiateSuperluA
+
+!----------------------------------------------------------------------------
+!                                                         SetSuperluA@Methods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date:  23-01-26
-! summary: Initiate Superlu data structure inside csrmatrix
-
-INTERFACE
-  MODULE SUBROUTINE InitiateSuperluA(obj)
-    TYPE(CSRMatrix_), INTENT(INOUT) :: obj
-  END SUBROUTINE InitiateSuperluA
-END INTERFACE
-
-!----------------------------------------------------------------------------
+! date: 2023-01-26
+! summary: Copy new values of the matrix to the SuperLU matrix A
 !
-!----------------------------------------------------------------------------
+! Description:
+!   The sparsity pattern must be the one of [[InitiateSuperluA]]; only
+!   the values are copied.
 
-!> author: Vikas Sharma, Ph. D.
-! date:  23-01-26
-! summary: Initiate Superlu data structure inside csrmatrix
-
-INTERFACE
-  MODULE SUBROUTINE SetSuperluA(obj)
+INTERFACE SetSuperluA
+  MODULE SUBROUTINE obj_SetSuperluA(obj)
     TYPE(CSRMatrix_), INTENT(INOUT) :: obj
-  END SUBROUTINE SetSuperluA
-END INTERFACE
+    !! matrix, obj%slu holds the SuperLU data
+  END SUBROUTINE obj_SetSuperluA
+END INTERFACE SetSuperluA
 
 !----------------------------------------------------------------------------
-!                                                      InitiateSuperluRHS
+!                                                  InitiateSuperluRHS@Methods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date:  2023-01-26
-! summary: Set RHS
+! date: 2023-01-26
+! summary: Allocate the right-hand sides and the solutions
+!
+! Description:
+!   Copies `rhs` (one right-hand side) to `obj%slu%rhs` and creates the
+!   SuperLU dense matrices `B` and `X`. Stops if they were already
+!   initiated.
 
 INTERFACE InitiateSuperluRHS
-  MODULE SUBROUTINE InitiateSuperluRHS1(obj, rhs)
+  MODULE SUBROUTINE obj_InitiateSuperluRHS1(obj, rhs)
     TYPE(CSRMatrix_), INTENT(INOUT) :: obj
+    !! matrix, obj%slu holds the SuperLU data
     REAL(DFP), INTENT(IN) :: rhs(:)
-  END SUBROUTINE InitiateSuperluRHS1
+    !! right-hand side
+  END SUBROUTINE obj_InitiateSuperluRHS1
 END INTERFACE InitiateSuperluRHS
 
 !----------------------------------------------------------------------------
-!                                                      InitiateSuperluRHS
+!                                                  InitiateSuperluRHS@Methods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date:  2023-01-26
-! summary: Set RHS
+! date: 2023-01-26
+! summary: Allocate the right-hand sides and the solutions
+!
+! Description:
+!   Copies `rhs` (one right-hand side per column) to `obj%slu%rhs` and
+!   creates the SuperLU dense matrices `B` and `X`. Stops if they were
+!   already initiated.
 
 INTERFACE InitiateSuperluRHS
-  MODULE SUBROUTINE InitiateSuperluRHS2(obj, rhs)
+  MODULE SUBROUTINE obj_InitiateSuperluRHS2(obj, rhs)
     TYPE(CSRMatrix_), INTENT(INOUT) :: obj
+    !! matrix, obj%slu holds the SuperLU data
     REAL(DFP), INTENT(IN) :: rhs(:, :)
-  END SUBROUTINE InitiateSuperluRHS2
+    !! right-hand sides, one per column
+  END SUBROUTINE obj_InitiateSuperluRHS2
 END INTERFACE InitiateSuperluRHS
 
 !----------------------------------------------------------------------------
-!                                                             SetSuperluRHS
+!                                                       SetSuperluRHS@Methods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date:  2023-01-26
-! summary: Set RHS
+! date: 2023-01-26
+! summary: Copy new right-hand sides
+!
+! Description:
+!   The size must be the one of [[InitiateSuperluRHS]].
 
 INTERFACE SetSuperluRHS
-  MODULE SUBROUTINE SetSuperluRHS1(obj, rhs)
+  MODULE SUBROUTINE obj_SetSuperluRHS1(obj, rhs)
     TYPE(CSRMatrix_), INTENT(INOUT) :: obj
+    !! matrix, obj%slu holds the SuperLU data
     REAL(DFP), INTENT(IN) :: rhs(:)
-  END SUBROUTINE SetSuperluRHS1
+    !! right-hand side
+  END SUBROUTINE obj_SetSuperluRHS1
 END INTERFACE SetSuperluRHS
 
 !----------------------------------------------------------------------------
-!                                                              SetSuperluRHS
+!                                                       SetSuperluRHS@Methods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date:  2023-01-26
-! summary: Set RHS
+! date: 2023-01-26
+! summary: Copy new right-hand sides
+!
+! Description:
+!   The size must be the one of [[InitiateSuperluRHS]].
 
 INTERFACE SetSuperluRHS
-  MODULE SUBROUTINE SetSuperluRHS2(obj, rhs)
+  MODULE SUBROUTINE obj_SetSuperluRHS2(obj, rhs)
     TYPE(CSRMatrix_), INTENT(INOUT) :: obj
+    !! matrix, obj%slu holds the SuperLU data
     REAL(DFP), INTENT(IN) :: rhs(:, :)
-  END SUBROUTINE SetSuperluRHS2
+    !! right-hand sides, one per column
+  END SUBROUTINE obj_SetSuperluRHS2
 END INTERFACE SetSuperluRHS
 
 !----------------------------------------------------------------------------
-!                                                               GetSuperlux
+!                                                         GetSuperluX@Methods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date:  2023-01-26
-! summary: Get solutions
+! date: 2023-01-26
+! summary: Copy the solutions
 
-INTERFACE GetSuperlux
-  MODULE SUBROUTINE GetSuperluX1(obj, x)
+INTERFACE GetSuperluX
+  MODULE SUBROUTINE obj_GetSuperluX1(obj, x)
     TYPE(CSRMatrix_), INTENT(INOUT) :: obj
+    !! matrix, obj%slu holds the SuperLU data
     REAL(DFP), INTENT(INOUT) :: x(:)
-  END SUBROUTINE GetSuperluX1
-END INTERFACE GetSuperlux
+    !! solution
+  END SUBROUTINE obj_GetSuperluX1
+END INTERFACE GetSuperluX
 
 !----------------------------------------------------------------------------
-!                                                               GetSuperlux
+!                                                         GetSuperluX@Methods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date:  2023-01-26
-! summary: Get solutions
+! date: 2023-01-26
+! summary: Copy the solutions
 
-INTERFACE GetSuperlux
-  MODULE SUBROUTINE GetSuperluX2(obj, x)
+INTERFACE GetSuperluX
+  MODULE SUBROUTINE obj_GetSuperluX2(obj, x)
     TYPE(CSRMatrix_), INTENT(INOUT) :: obj
+    !! matrix, obj%slu holds the SuperLU data
     REAL(DFP), INTENT(INOUT) :: x(:, :)
-  END SUBROUTINE GetSuperluX2
-END INTERFACE GetSuperlux
+    !! solutions, one per column
+  END SUBROUTINE obj_GetSuperluX2
+END INTERFACE GetSuperluX
 
 !----------------------------------------------------------------------------
-!                                                    InitiateSuperLuOptions
-!----------------------------------------------------------------------------
-
-!> author: Vikas Sharma, Ph. D.
-! date:  2023-01-26
-! summary: Initiate Superlu Options
-
-INTERFACE
-  MODULE SUBROUTINE InitiateSuperLuOptions(obj)
-    TYPE(CSRMatrix_), INTENT(INOUT) :: obj
-  END SUBROUTINE InitiateSuperLuOptions
-END INTERFACE
-
-!----------------------------------------------------------------------------
-!                                                       SetSuperluOptions
+!                                              InitiateSuperluOptions@Methods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date:  2023-01-26
-! summary: Set options for superlu
+! date: 2023-01-26
+! summary: Set the default SuperLU options
+!
+! Description:
+!   `set_default_options` of SuperLU, then equilibration, transposed
+!   solve (`Trans = TRANS`), COLAMD ordering, new factorization, double
+!   precision iterative refinement, pivot growth, partial pivoting
+!   (threshold 1) and condition number.
 
-INTERFACE
-  MODULE SUBROUTINE SetSuperluOptions(obj, Fact, Equil, ColPerm, &
-      & Trans, IterRefine, DiagPivotThresh, SymmetricMode, &
-      & PivotGrowth, ConditionNumber, RowPerm, ILU_DropRule, &
-      & ILU_DropTol, ILU_FillFactor, ILU_MILU, PrintStat)
+INTERFACE InitiateSuperluOptions
+  MODULE SUBROUTINE obj_InitiateSuperluOptions(obj)
     TYPE(CSRMatrix_), INTENT(INOUT) :: obj
+    !! matrix, obj%slu holds the SuperLU data
+  END SUBROUTINE obj_InitiateSuperluOptions
+END INTERFACE InitiateSuperluOptions
+
+!----------------------------------------------------------------------------
+!                                                   SetSuperluOptions@Methods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2023-01-26
+! summary: Set SuperLU options
+!
+! Description:
+!   Only the options that are present are changed in
+!   `obj%slu%options`.
+
+INTERFACE SetSuperluOptions
+  MODULE SUBROUTINE obj_SetSuperluOptions(obj, Fact, Equil, ColPerm, Trans, &
+                                          IterRefine, DiagPivotThresh, &
+                                          SymmetricMode, PivotGrowth, &
+                                          ConditionNumber, RowPerm, &
+                                          ILU_DropRule, ILU_DropTol, &
+                                          ILU_FillFactor, ILU_MILU, &
+                                          PrintStat)
+    TYPE(CSRMatrix_), INTENT(INOUT) :: obj
+    !! matrix, obj%slu holds the SuperLU data
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: Fact
-    !! Fact_t
+    !! Fact_t%DOFACT, SamePattern, SamePattern_SameRowPerm or FACTORED
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: Equil
-    !! yes_no_t%YES, yes_no_t%NO
+    !! equilibrate the matrix, yes_no_t%YES or NO
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: ColPerm
-    !! Colperm_t%COLAMD
+    !! column ordering, Colperm_t%NATURAL, MMD_ATA, MMD_AT_PLUS_A, COLAMD or
+    !! MY_PERMC
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: Trans
-    !! Trans_t%TRANS, Trans_t%
+    !! Trans_t%NOTRANS, TRANS or CONJ
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: IterRefine
-    !! IterRefine_t
+    !! iterative refinement, IterRefine_t%NOREFINE, SLU_SINGLE, SLU_DOUBLE or
+    !! SLU_EXTRA
     REAL(DFP), OPTIONAL, INTENT(IN) :: DiagPivotThresh
-    !! From 0 to 1
+    !! threshold of partial pivoting, between 0 and 1
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: SymmetricMode
-    !!
+    !! symmetric mode, yes_no_t%YES or NO
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: PivotGrowth
-    !! yes_no_t%YES, yes_no_t%NO
+    !! compute the reciprocal pivot growth, yes_no_t%YES or NO
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: ConditionNumber
-    !! yes_no_t%YES, yes_no_t%NO
+    !! estimate the condition number, yes_no_t%YES or NO
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: RowPerm
-    !!
+    !! row permutation, rowperm_t
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: ILU_DropRule
-    !!
+    !! drop rule of ILU
     REAL(DFP), OPTIONAL, INTENT(IN) :: ILU_DropTol
-    !!
+    !! drop tolerance of ILU
     REAL(DFP), OPTIONAL, INTENT(IN) :: ILU_FillFactor
-    !!
+    !! fill factor of ILU
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: ILU_MILU
-    !!
+    !! modified ILU, milu_t
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: PrintStat
-    !!
-  END SUBROUTINE SetSuperluOptions
-END INTERFACE
+    !! print the statistics, yes_no_t%YES or NO
+  END SUBROUTINE obj_SetSuperluOptions
+END INTERFACE SetSuperluOptions
 
 !----------------------------------------------------------------------------
-!                                                             SuperluDGSSVX
-!----------------------------------------------------------------------------
-
-!> author: Vikas Sharma, Ph. D.
-! date:  2023-01-27
-! summary: Call Superlu DGSSVX to solve Ax=b
-
-INTERFACE
-  MODULE SUBROUTINE SuperluDGSSVX(obj)
-    TYPE(CSRMatrix_), INTENT(INOUT) :: obj
-  END SUBROUTINE SuperluDGSSVX
-END INTERFACE
-
-!----------------------------------------------------------------------------
-!                                               InitiateSuperluDGSSVXParam
+!                                                       SuperluDGSSVX@Methods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date:  2023-01-27
-! summary: Initiate Superlu DGSSVX variables
-
-INTERFACE
-  MODULE SUBROUTINE InitiateSuperluDGSSVXParam(obj)
-    TYPE(CSRMatrix_), INTENT(INOUT) :: obj
-  END SUBROUTINE InitiateSuperluDGSSVXParam
-END INTERFACE
-
-!----------------------------------------------------------------------------
-!                                                         SuperluPrintStat
-!----------------------------------------------------------------------------
-
-!> author: Vikas Sharma, Ph. D.
-! date:  2023-01-27
-! summary: Print statistics
-
-INTERFACE
-  MODULE SUBROUTINE SuperluDisplayStat(obj)
-    TYPE(CSRMatrix_), INTENT(INOUT) :: obj
-  END SUBROUTINE SuperluDisplayStat
-END INTERFACE
-
-!----------------------------------------------------------------------------
-!                                                         SuperluDeallocate
-!----------------------------------------------------------------------------
-
-!> author: Vikas Sharma, Ph. D.
-! date:  2023-01-27
-! summary: SuperluDeallocate
-
-INTERFACE
-  MODULE SUBROUTINE SuperluDeallocate(obj)
-    TYPE(CSRMatrix_), INTENT(INOUT) :: obj
-  END SUBROUTINE SuperluDeallocate
-END INTERFACE
-
-!----------------------------------------------------------------------------
-!                                                                LinSolve1
-!----------------------------------------------------------------------------
-
-!> author: Vikas Sharma, Ph. D.
-! date:  2023-01-26
-! summary: Linear solver using LUSolve
+! date: 2023-01-26
+! summary: Call dgssvx of SuperLU
 !
-!# Introduction
+! Description:
+!   Solves with the options, the matrix, the right-hand sides and the
+!   work arrays in `obj%slu`. The status is in `obj%slu%info`.
+
+INTERFACE SuperluDGSSVX
+  MODULE SUBROUTINE obj_SuperluDGSSVX(obj)
+    TYPE(CSRMatrix_), INTENT(INOUT) :: obj
+    !! matrix, obj%slu holds the SuperLU data
+  END SUBROUTINE obj_SuperluDGSSVX
+END INTERFACE SuperluDGSSVX
+
+!----------------------------------------------------------------------------
+!                                          InitiateSuperluDGSSVXParam@Methods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2023-01-26
+! summary: Allocate the work arrays of dgssvx
 !
-! This routine solves `A*X=B`
+! Description:
+!   The permutations `perm_c`, `perm_r`, the elimination tree `etree`,
+!   the scalings `R`, `C` and the error bounds `ferr`, `berr`.
+
+INTERFACE InitiateSuperluDGSSVXParam
+  MODULE SUBROUTINE obj_InitiateSuperluDGSSVXParam(obj)
+    TYPE(CSRMatrix_), INTENT(INOUT) :: obj
+    !! matrix, obj%slu holds the SuperLU data
+  END SUBROUTINE obj_InitiateSuperluDGSSVXParam
+END INTERFACE InitiateSuperluDGSSVXParam
+
+!----------------------------------------------------------------------------
+!                                                  SuperluDisplayStat@Methods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2023-01-26
+! summary: Display the statistics of the last solve
+!
+! Description:
+!   Only when `PrintStat = yes_no_t%YES`: pivot growth, condition number,
+!   refinement steps and error bounds, the SuperLU statistics and the
+!   memory used.
+
+INTERFACE SuperluDisplayStat
+  MODULE SUBROUTINE obj_SuperluDisplayStat(obj)
+    TYPE(CSRMatrix_), INTENT(INOUT) :: obj
+    !! matrix, obj%slu holds the SuperLU data
+  END SUBROUTINE obj_SuperluDisplayStat
+END INTERFACE SuperluDisplayStat
+
+!----------------------------------------------------------------------------
+!                                                   SuperluDeallocate@Methods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2023-01-26
+! summary: Free all SuperLU data of a matrix
+!
+! Description:
+!   Frees the arrays, the SuperLU matrices A, B, X, L and U, the work
+!   array and the statistics, and deallocates `obj%slu`. It is called by
+!   the Deallocate of [[CSRMatrix_]].
+
+INTERFACE SuperluDeallocate
+  MODULE SUBROUTINE obj_SuperluDeallocate(obj)
+    TYPE(CSRMatrix_), INTENT(INOUT) :: obj
+    !! matrix, obj%slu holds the SuperLU data
+  END SUBROUTINE obj_SuperluDeallocate
+END INTERFACE SuperluDeallocate
+
+!----------------------------------------------------------------------------
+!                                                            LinSolve@Methods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2023-01-26
+! summary: Solve A X = B with SuperLU, one right-hand side
+!
+! Description:
+!   Solves `A X = B` with SuperLU (`dgssvx`).
+!
+!   - The first call sets up the SuperLU data of `A` and factors `A`.
+!   - A later call with `isFactored = .TRUE.` uses the stored factors
+!     (`Fact = FACTORED`), so only the new right-hand side is solved; new
+!     values of `A` are ignored.
+!   - With `isFactored = .FALSE.` (default) the matrix is factored again
+!     with the same sparsity pattern (`Fact = SamePattern`).
+!   - The factors are kept after the solve. With `isFreeFactors = .TRUE.`
+!     they are freed at the end to save memory; the next call must then use
+!     `isFactored = .FALSE.`, a call with `isFactored = .TRUE.` stops with
+!     an error.
+!
+!   The options (ColPerm to PrintStat) are applied at every call.
+!
+! Changes:
+!   - 2026-11-17: the L and U factors are kept after a solve, so that
+!     `isFactored = .TRUE.` works (it crashed before); new argument
+!     `isFreeFactors`, easifem/base#358
+!
+! Examples
+!
+! Full example: src/modules/CSRMatrix/examples/LinSolve_test_1.F90
 
 INTERFACE LinSolve
-  MODULE SUBROUTINE LinSolve1(X, A, B, isTranspose, isFactored, &
-    & ColPerm, Equil, IterRefine, PivotGrowth, DiagPivotThresh, &
-    & ConditionNumber, SymmetricMode, PrintStat, info)
+  MODULE SUBROUTINE obj_LinSolve1(X, A, B, isTranspose, isFactored, ColPerm, &
+                                  Equil, IterRefine, PivotGrowth, &
+                                  DiagPivotThresh, ConditionNumber, &
+                                  SymmetricMode, PrintStat, info, &
+                                  isFreeFactors)
     REAL(DFP), INTENT(INOUT) :: X(:)
-    !! Solution
+    !! solution
     TYPE(CSRMatrix_), INTENT(INOUT) :: A
-    !! CSRMatrix
+    !! matrix, A%slu holds the SuperLU data
     REAL(DFP), INTENT(IN) :: B(:)
-    !! RHS, it will not be modified, we will make a copy of it
+    !! right-hand side, not changed
     LOGICAL(LGT), OPTIONAL, INTENT(IN) :: isTranspose
-    !! Should we solve `A*X=B` or `transpose(A)*X=B`
+    !! solve transpose(A) X = B instead, default false
     LOGICAL(LGT), OPTIONAL, INTENT(IN) :: isFactored
-    !! is A already factored
+    !! use the stored factors of the last factorization, default false
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: ColPerm
-    !! Colperm_t%NATURAL
-    !! Colperm_t%MMD_ATA
-    !! Colperm_t%MMD_AT_PLUS_A
-    !! Colperm_t%COLAMD
-    !! Colperm_t%MY_PERMC
+    !! column ordering, Colperm_t%NATURAL, MMD_ATA, MMD_AT_PLUS_A, COLAMD or
+    !! MY_PERMC, default COLAMD
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: Equil
-    !! yes_no_t%YES
-    !! yes_no_t%NO
+    !! equilibrate the matrix, yes_no_t%YES or NO, default YES
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: IterRefine
-    !! IterRefine_t%NO
-    !! IterRefine_t%SLU_SINGLE
-    !! IterRefine_t%SLU_DOUBLE
-    !! IterRefine_t%SLU_EXTRA
+    !! iterative refinement, IterRefine_t%NOREFINE, SLU_SINGLE, SLU_DOUBLE or
+    !! SLU_EXTRA, default SLU_DOUBLE
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: PivotGrowth
-    !! yes_no_t%YES
-    !! yes_no_t%NO
+    !! compute the reciprocal pivot growth, yes_no_t%YES or NO, default NO
     REAL(DFP), OPTIONAL, INTENT(IN) :: DiagPivotThresh
-    !! between 0 and 1
+    !! threshold of partial pivoting, between 0 and 1, default 1
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: ConditionNumber
-    !! yes_no_t%YES
-    !! yes_no_t%NO
+    !! estimate the condition number, yes_no_t%YES or NO, default NO
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: SymmetricMode
-    !! yes_no_t%YES
-    !! yes_no_t%NO
+    !! symmetric mode, yes_no_t%YES or NO, default NO
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: PrintStat
-    !! yes_no_t%YES
-    !! yes_no_t%NO
+    !! print the statistics, yes_no_t%YES or NO, default NO
     INTEGER(I4B), OPTIONAL, INTENT(OUT) :: info
-    !! if info equal  to zero then success, else failure
-  END SUBROUTINE LinSolve1
+    !! info of dgssvx, zero on success
+    LOGICAL(LGT), OPTIONAL, INTENT(IN) :: isFreeFactors
+    !! free the L and U factors after the solve, default false
+  END SUBROUTINE obj_LinSolve1
 END INTERFACE LinSolve
 
 !----------------------------------------------------------------------------
-!                                                         LinSolve2
+!                                                            LinSolve@Methods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date:  2023-01-26
-! summary: Linear solver using LUSolve
+! date: 2023-01-26
+! summary: Solve A X = B with SuperLU, several right-hand sides
 !
-!# Introduction
+! Description:
+!   Solves `A X = B` with SuperLU (`dgssvx`).
 !
-! This routine solves `A*X=B`
+!   - The first call sets up the SuperLU data of `A` and factors `A`.
+!   - A later call with `isFactored = .TRUE.` uses the stored factors
+!     (`Fact = FACTORED`), so only the new right-hand side is solved; new
+!     values of `A` are ignored.
+!   - With `isFactored = .FALSE.` (default) the matrix is factored again
+!     with the same sparsity pattern (`Fact = SamePattern`).
+!   - The factors are kept after the solve. With `isFreeFactors = .TRUE.`
+!     they are freed at the end to save memory; the next call must then use
+!     `isFactored = .FALSE.`, a call with `isFactored = .TRUE.` stops with
+!     an error.
+!
+!   The options (ColPerm to PrintStat) are applied at the first call only;
+!   later calls change only Fact and Trans.
+!
+! Changes:
+!   - 2026-11-17: the L and U factors are kept after a solve, so that
+!     `isFactored = .TRUE.` works (it crashed before); new argument
+!     `isFreeFactors`, easifem/base#358
+!
+! Examples
+!
+! Full example: src/modules/CSRMatrix/examples/LinSolve_test_1.F90
 
 INTERFACE LinSolve
-  MODULE SUBROUTINE LinSolve2(X, A, B, isTranspose, isFactored, &
-    & ColPerm, Equil, IterRefine, PivotGrowth, DiagPivotThresh, &
-    & ConditionNumber, SymmetricMode, PrintStat, info)
+  MODULE SUBROUTINE obj_LinSolve2(X, A, B, isTranspose, isFactored, ColPerm, &
+                                  Equil, IterRefine, PivotGrowth, &
+                                  DiagPivotThresh, ConditionNumber, &
+                                  SymmetricMode, PrintStat, info, &
+                                  isFreeFactors)
     REAL(DFP), INTENT(INOUT) :: X(:, :)
-    !! Solution
+    !! solutions, one per column
     TYPE(CSRMatrix_), INTENT(INOUT) :: A
-    !! CSRMatrix
+    !! matrix, A%slu holds the SuperLU data
     REAL(DFP), INTENT(IN) :: B(:, :)
-    !! RHS, it will not be modified, we will make a copy of it
+    !! right-hand sides, one per column, not changed
     LOGICAL(LGT), OPTIONAL, INTENT(IN) :: isTranspose
-    !! Should we solve `A*X=B` or `transpose(A)*X=B`
+    !! solve transpose(A) X = B instead, default false
     LOGICAL(LGT), OPTIONAL, INTENT(IN) :: isFactored
-    !! is A already factored
+    !! use the stored factors of the last factorization, default false
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: ColPerm
-    !! Colperm_t%NATURAL
-    !! Colperm_t%MMD_ATA
-    !! Colperm_t%MMD_AT_PLUS_A
-    !! Colperm_t%COLAMD
-    !! Colperm_t%MY_PERMC
+    !! column ordering, Colperm_t%NATURAL, MMD_ATA, MMD_AT_PLUS_A, COLAMD or
+    !! MY_PERMC, default COLAMD
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: Equil
-    !! yes_no_t%YES
-    !! yes_no_t%NO
+    !! equilibrate the matrix, yes_no_t%YES or NO, default YES
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: IterRefine
-    !! IterRefine_t%NO
-    !! IterRefine_t%SLU_SINGLE
-    !! IterRefine_t%SLU_DOUBLE
-    !! IterRefine_t%SLU_EXTRA
+    !! iterative refinement, IterRefine_t%NOREFINE, SLU_SINGLE, SLU_DOUBLE or
+    !! SLU_EXTRA, default SLU_DOUBLE
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: PivotGrowth
-    !! yes_no_t%YES
-    !! yes_no_t%NO
+    !! compute the reciprocal pivot growth, yes_no_t%YES or NO, default NO
     REAL(DFP), OPTIONAL, INTENT(IN) :: DiagPivotThresh
-    !! between 0 and 1
+    !! threshold of partial pivoting, between 0 and 1, default 1
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: ConditionNumber
-    !! yes_no_t%YES
-    !! yes_no_t%NO
+    !! estimate the condition number, yes_no_t%YES or NO, default NO
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: SymmetricMode
-    !! yes_no_t%YES
-    !! yes_no_t%NO
+    !! symmetric mode, yes_no_t%YES or NO, default NO
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: PrintStat
-    !! yes_no_t%YES
-    !! yes_no_t%NO
+    !! print the statistics, yes_no_t%YES or NO, default NO
     INTEGER(I4B), OPTIONAL, INTENT(OUT) :: info
-    !! if info equal  to zero then success, else failure
-  END SUBROUTINE LinSolve2
+    !! info of dgssvx, zero on success
+    LOGICAL(LGT), OPTIONAL, INTENT(IN) :: isFreeFactors
+    !! free the L and U factors after the solve, default false
+  END SUBROUTINE obj_LinSolve2
 END INTERFACE LinSolve
 
 !----------------------------------------------------------------------------
-!                                                                LinSolve1
+!                                                            LinSolve@Methods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date:  2023-01-26
-! summary: Linear solver using LUSolve
+! date: 2023-01-26
+! summary: Solve A X = B with SuperLU, solution returned in B
 !
-!# Introduction
+! Description:
+!   Solves `A X = B` with SuperLU (`dgssvx`).
 !
-! This routine solves `A*X=B`
-! Solution is returned in B
+!   - The first call sets up the SuperLU data of `A` and factors `A`.
+!   - A later call with `isFactored = .TRUE.` uses the stored factors
+!     (`Fact = FACTORED`), so only the new right-hand side is solved; new
+!     values of `A` are ignored.
+!   - With `isFactored = .FALSE.` (default) the matrix is factored again
+!     with the same sparsity pattern (`Fact = SamePattern`).
+!   - The factors are kept after the solve. With `isFreeFactors = .TRUE.`
+!     they are freed at the end to save memory; the next call must then use
+!     `isFactored = .FALSE.`, a call with `isFactored = .TRUE.` stops with
+!     an error.
+!
+!   The options (ColPerm to PrintStat) are applied at the first call only;
+!   later calls change only Fact and Trans.
+!
+! Changes:
+!   - 2026-11-17: the L and U factors are kept after a solve, so that
+!     `isFactored = .TRUE.` works (it crashed before); new argument
+!     `isFreeFactors`, easifem/base#358
+!
+! Examples
+!
+! Full example: src/modules/CSRMatrix/examples/LinSolve_test_1.F90
 
 INTERFACE LinSolve
-  MODULE SUBROUTINE LinSolve3(A, B, isTranspose, isFactored, &
-    & ColPerm, Equil, IterRefine, PivotGrowth, DiagPivotThresh, &
-    & ConditionNumber, SymmetricMode, PrintStat, info)
+  MODULE SUBROUTINE obj_LinSolve3(A, B, isTranspose, isFactored, ColPerm, &
+                                  Equil, IterRefine, PivotGrowth, &
+                                  DiagPivotThresh, ConditionNumber, &
+                                  SymmetricMode, PrintStat, info, &
+                                  isFreeFactors)
     TYPE(CSRMatrix_), INTENT(INOUT) :: A
-    !! CSRMatrix
+    !! matrix, A%slu holds the SuperLU data
     REAL(DFP), INTENT(INOUT) :: B(:)
-    !! RHS, it will not be modified, we will make a copy of it
+    !! right-hand side on entry, solution on return
     LOGICAL(LGT), OPTIONAL, INTENT(IN) :: isTranspose
-    !! Should we solve `A*X=B` or `transpose(A)*X=B`
+    !! solve transpose(A) X = B instead, default false
     LOGICAL(LGT), OPTIONAL, INTENT(IN) :: isFactored
-    !! is A already factored
+    !! use the stored factors of the last factorization, default false
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: ColPerm
-    !! Colperm_t%NATURAL
-    !! Colperm_t%MMD_ATA
-    !! Colperm_t%MMD_AT_PLUS_A
-    !! Colperm_t%COLAMD
-    !! Colperm_t%MY_PERMC
+    !! column ordering, Colperm_t%NATURAL, MMD_ATA, MMD_AT_PLUS_A, COLAMD or
+    !! MY_PERMC, default COLAMD
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: Equil
-    !! yes_no_t%YES
-    !! yes_no_t%NO
+    !! equilibrate the matrix, yes_no_t%YES or NO, default YES
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: IterRefine
-    !! IterRefine_t%NO
-    !! IterRefine_t%SLU_SINGLE
-    !! IterRefine_t%SLU_DOUBLE
-    !! IterRefine_t%SLU_EXTRA
+    !! iterative refinement, IterRefine_t%NOREFINE, SLU_SINGLE, SLU_DOUBLE or
+    !! SLU_EXTRA, default SLU_DOUBLE
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: PivotGrowth
-    !! yes_no_t%YES
-    !! yes_no_t%NO
+    !! compute the reciprocal pivot growth, yes_no_t%YES or NO, default NO
     REAL(DFP), OPTIONAL, INTENT(IN) :: DiagPivotThresh
-    !! between 0 and 1
+    !! threshold of partial pivoting, between 0 and 1, default 1
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: ConditionNumber
-    !! yes_no_t%YES
-    !! yes_no_t%NO
+    !! estimate the condition number, yes_no_t%YES or NO, default NO
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: SymmetricMode
-    !! yes_no_t%YES
-    !! yes_no_t%NO
+    !! symmetric mode, yes_no_t%YES or NO, default NO
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: PrintStat
-    !! yes_no_t%YES
-    !! yes_no_t%NO
+    !! print the statistics, yes_no_t%YES or NO, default NO
     INTEGER(I4B), OPTIONAL, INTENT(OUT) :: info
-    !! if info equal  to zero then success, else failure
-  END SUBROUTINE LinSolve3
+    !! info of dgssvx, zero on success
+    LOGICAL(LGT), OPTIONAL, INTENT(IN) :: isFreeFactors
+    !! free the L and U factors after the solve, default false
+  END SUBROUTINE obj_LinSolve3
 END INTERFACE LinSolve
 
 !----------------------------------------------------------------------------
-!                                                         LinSolve2
+!                                                            LinSolve@Methods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date:  2023-01-26
-! summary: Linear solver using LUSolve
+! date: 2023-01-26
+! summary: Solve A X = B with SuperLU, solutions returned in B
 !
-!# Introduction
+! Description:
+!   Solves `A X = B` with SuperLU (`dgssvx`).
 !
-! This routine solves `A*X=B`
+!   - The first call sets up the SuperLU data of `A` and factors `A`.
+!   - A later call with `isFactored = .TRUE.` uses the stored factors
+!     (`Fact = FACTORED`), so only the new right-hand side is solved; new
+!     values of `A` are ignored.
+!   - With `isFactored = .FALSE.` (default) the matrix is factored again
+!     with the same sparsity pattern (`Fact = SamePattern`).
+!   - The factors are kept after the solve. With `isFreeFactors = .TRUE.`
+!     they are freed at the end to save memory; the next call must then use
+!     `isFactored = .FALSE.`, a call with `isFactored = .TRUE.` stops with
+!     an error.
+!
+!   The options (ColPerm to PrintStat) are applied at the first call only;
+!   later calls change only Fact and Trans.
+!
+! Changes:
+!   - 2026-11-17: the L and U factors are kept after a solve, so that
+!     `isFactored = .TRUE.` works (it crashed before); new argument
+!     `isFreeFactors`, easifem/base#358
+!
+! Examples
+!
+! Full example: src/modules/CSRMatrix/examples/LinSolve_test_1.F90
 
 INTERFACE LinSolve
-  MODULE SUBROUTINE LinSolve4(A, B, isTranspose, isFactored, &
-    & ColPerm, Equil, IterRefine, PivotGrowth, DiagPivotThresh, &
-    & ConditionNumber, SymmetricMode, PrintStat, info)
+  MODULE SUBROUTINE obj_LinSolve4(A, B, isTranspose, isFactored, ColPerm, &
+                                  Equil, IterRefine, PivotGrowth, &
+                                  DiagPivotThresh, ConditionNumber, &
+                                  SymmetricMode, PrintStat, info, &
+                                  isFreeFactors)
     TYPE(CSRMatrix_), INTENT(INOUT) :: A
-    !! CSRMatrix
+    !! matrix, A%slu holds the SuperLU data
     REAL(DFP), INTENT(INOUT) :: B(:, :)
-    !! RHS, it will be modified on return, solution is in B
+    !! right-hand sides on entry, solutions on return, one per column
     LOGICAL(LGT), OPTIONAL, INTENT(IN) :: isTranspose
-    !! Should we solve `A*X=B` or `transpose(A)*X=B`
+    !! solve transpose(A) X = B instead, default false
     LOGICAL(LGT), OPTIONAL, INTENT(IN) :: isFactored
-    !! is A already factored
+    !! use the stored factors of the last factorization, default false
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: ColPerm
-    !! Colperm_t%NATURAL
-    !! Colperm_t%MMD_ATA
-    !! Colperm_t%MMD_AT_PLUS_A
-    !! Colperm_t%COLAMD
-    !! Colperm_t%MY_PERMC
+    !! column ordering, Colperm_t%NATURAL, MMD_ATA, MMD_AT_PLUS_A, COLAMD or
+    !! MY_PERMC, default COLAMD
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: Equil
-    !! yes_no_t%YES
-    !! yes_no_t%NO
+    !! equilibrate the matrix, yes_no_t%YES or NO, default YES
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: IterRefine
-    !! IterRefine_t%NO
-    !! IterRefine_t%SLU_SINGLE
-    !! IterRefine_t%SLU_DOUBLE
-    !! IterRefine_t%SLU_EXTRA
+    !! iterative refinement, IterRefine_t%NOREFINE, SLU_SINGLE, SLU_DOUBLE or
+    !! SLU_EXTRA, default SLU_DOUBLE
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: PivotGrowth
-    !! yes_no_t%YES
-    !! yes_no_t%NO
+    !! compute the reciprocal pivot growth, yes_no_t%YES or NO, default NO
     REAL(DFP), OPTIONAL, INTENT(IN) :: DiagPivotThresh
-    !! between 0 and 1
+    !! threshold of partial pivoting, between 0 and 1, default 1
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: ConditionNumber
-    !! yes_no_t%YES
-    !! yes_no_t%NO
+    !! estimate the condition number, yes_no_t%YES or NO, default NO
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: SymmetricMode
-    !! yes_no_t%YES
-    !! yes_no_t%NO
+    !! symmetric mode, yes_no_t%YES or NO, default NO
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: PrintStat
-    !! yes_no_t%YES
-    !! yes_no_t%NO
+    !! print the statistics, yes_no_t%YES or NO, default NO
     INTEGER(I4B), OPTIONAL, INTENT(OUT) :: info
-    !! if info equal  to zero then success, else failure
-  END SUBROUTINE LinSolve4
+    !! info of dgssvx, zero on success
+    LOGICAL(LGT), OPTIONAL, INTENT(IN) :: isFreeFactors
+    !! free the L and U factors after the solve, default false
+  END SUBROUTINE obj_LinSolve4
 END INTERFACE LinSolve
 
-!----------------------------------------------------------------------------
-!
-!----------------------------------------------------------------------------
 END MODULE CSRMatrix_Superlu

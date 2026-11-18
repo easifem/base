@@ -9,7 +9,11 @@ PROGRAM main
 USE GlobalData, ONLY: DFP
 USE GlobalData, ONLY: I4B
 USE GlobalData, ONLY: VoigtFormPlaneStrain
+USE GlobalData, ONLY: VoigtFormPlaneStrainFull
 USE GlobalData, ONLY: VoigtFormPlaneStress
+USE GlobalData, ONLY: VoigtFormPlaneStressFull
+USE GlobalData, ONLY: VoigtFormUniaxialStrain
+USE GlobalData, ONLY: VoigtFormUniaxialStrainFull
 USE MaterialJacobian_Method, ONLY: ReduceVoigtTangent
 USE Test_Method, ONLY: OK
 IMPLICIT NONE
@@ -54,6 +58,25 @@ BLOCK
           "plane stress: s33 = s23 = s13 = 0")
   CALL OK(MAXVAL(ABS(s6([1, 2, 4]) - MATMUL(C2, ei))) .LT. tol, &
           "plane stress: condensed tangent")
+END BLOCK
+
+! Test 3: uniaxial strain and the Full forms are sub-matrices; plane
+! stress full has no condensation (sigma_33 = 0 is not imposed)
+BLOCK
+  REAL(DFP), ALLOCATABLE :: C2(:, :)
+
+  C2 = ReduceVoigtTangent(C6, VoigtFormUniaxialStrain)
+  CALL OK(SIZE(C2) .EQ. 1 .AND. ABS(C2(1, 1) - C6(1, 1)) .LT. tol, &
+          "uniaxial strain: C(1, 1)")
+  C2 = ReduceVoigtTangent(C6, VoigtFormPlaneStrainFull)
+  CALL OK(MAXVAL(ABS(C2 - C6([1, 2, 4, 3], [1, 2, 4, 3]))) .LT. tol, &
+          "plane strain full: sub-matrix")
+  C2 = ReduceVoigtTangent(C6, VoigtFormPlaneStressFull)
+  CALL OK(MAXVAL(ABS(C2 - C6([1, 2, 4, 3], [1, 2, 4, 3]))) .LT. tol, &
+          "plane stress full: sub-matrix")
+  C2 = ReduceVoigtTangent(C6, VoigtFormUniaxialStrainFull)
+  CALL OK(MAXVAL(ABS(C2 - C6(1:3, 1:3))) .LT. tol, &
+          "uniaxial strain full: sub-matrix")
 END BLOCK
 
 CONTAINS

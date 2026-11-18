@@ -20,100 +20,62 @@
 !
 ! Ported from the old `Stress/OperatorOverloading/Shape.part` and the
 ! NSD logic of the old `Stress_Class` constructor.
+!
+! Changes:
+!   - 2026-11-17: the index orders come from VoigtUtility (one table for
+!     all forms), added GetVoigtSize, easifem/base#356
 
 SUBMODULE(VoigtRank2Tensor_Method) VoigtFormMethods
-USE GlobalData, ONLY: VoigtFormAxisymmetric
-USE GlobalData, ONLY: VoigtFormPlaneStrain
-USE GlobalData, ONLY: VoigtFormPlaneStress
+USE VoigtUtility, ONLY: Array_GetVoigtVector => GetVoigtVector
+USE VoigtUtility, ONLY: Array_GetVoigtVector_ => GetVoigtVector_
+USE VoigtUtility, ONLY: VoigtFromForm
+USE VoigtUtility, ONLY: VoigtSize
 IMPLICIT NONE
 
 CONTAINS
 
 !----------------------------------------------------------------------------
-!                                                                  VoigtSize
+!                                                               GetVoigtSize
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE VoigtRank2Tensor_VoigtSize
-SELECT CASE (voigtForm)
-CASE (VoigtFormPlaneStrain, VoigtFormPlaneStress)
-  ans = 3
-CASE (VoigtFormAxisymmetric)
-  ans = 4
-CASE DEFAULT
-  ans = 6
-END SELECT
-END PROCEDURE VoigtRank2Tensor_VoigtSize
+MODULE PROCEDURE obj_GetVoigtSize
+ans = VoigtSize(voigtForm)
+END PROCEDURE obj_GetVoigtSize
 
 !----------------------------------------------------------------------------
 !                                                             GetVoigtVector
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE VoigtRank2Tensor_GetVoigtVector
-SELECT CASE (voigtForm)
-CASE (VoigtFormPlaneStrain, VoigtFormPlaneStress)
-  ans = [obj%V(1), obj%V(2), obj%V(4)]
-CASE (VoigtFormAxisymmetric)
-  ans = [obj%V(1), obj%V(2), obj%V(4), obj%V(3)]
-CASE DEFAULT
-  ans = obj%V
-END SELECT
-END PROCEDURE VoigtRank2Tensor_GetVoigtVector
+MODULE PROCEDURE obj_GetVoigtVector
+ans = Array_GetVoigtVector(v=obj%V, voigtForm=voigtForm)
+END PROCEDURE obj_GetVoigtVector
 
 !----------------------------------------------------------------------------
 !                                                            GetVoigtVector_
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE VoigtRank2Tensor_GetVoigtVector_
-SELECT CASE (voigtForm)
-CASE (VoigtFormPlaneStrain, VoigtFormPlaneStress)
-  tsize = 3
-  ans(1) = obj%V(1)
-  ans(2) = obj%V(2)
-  ans(3) = obj%V(4)
-CASE (VoigtFormAxisymmetric)
-  tsize = 4
-  ans(1) = obj%V(1)
-  ans(2) = obj%V(2)
-  ans(3) = obj%V(4)
-  ans(4) = obj%V(3)
-CASE DEFAULT
-  tsize = 6
-  ans(1:6) = obj%V
-END SELECT
-END PROCEDURE VoigtRank2Tensor_GetVoigtVector_
+MODULE PROCEDURE obj_GetVoigtVector_
+CALL Array_GetVoigtVector_(v=obj%V, voigtForm=voigtForm, ans=ans, &
+                           tsize=tsize)
+END PROCEDURE obj_GetVoigtVector_
 
 !----------------------------------------------------------------------------
 !                                                                   Initiate
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE VoigtRank2Tensor_Initiate3
+MODULE PROCEDURE obj_Initiate3
 REAL(DFP) :: v6(6)
 
-v6 = 0.0_DFP
-
-SELECT CASE (voigtForm)
-CASE (VoigtFormPlaneStrain, VoigtFormPlaneStress)
-  v6(1) = vec(1)
-  v6(2) = vec(2)
-  v6(4) = vec(3)
-CASE (VoigtFormAxisymmetric)
-  v6(1) = vec(1)
-  v6(2) = vec(2)
-  v6(4) = vec(3)
-  v6(3) = vec(4)
-CASE DEFAULT
-  v6 = vec(1:6)
-END SELECT
-
+CALL VoigtFromForm(vec=vec, voigtForm=voigtForm, ans=v6)
 CALL Initiate(obj=obj, vec=v6, voigtType=voigtType)
-END PROCEDURE VoigtRank2Tensor_Initiate3
+END PROCEDURE obj_Initiate3
 
 !----------------------------------------------------------------------------
 !                                                           VoigtRank2Tensor
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE VoigtRank2Tensor_Constructor3
+MODULE PROCEDURE obj_VoigtRank2Tensor3
 CALL Initiate(obj=ans, vec=vec, voigtType=voigtType, voigtForm=voigtForm)
-END PROCEDURE VoigtRank2Tensor_Constructor3
+END PROCEDURE obj_VoigtRank2Tensor3
 
 END SUBMODULE VoigtFormMethods

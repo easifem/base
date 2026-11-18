@@ -970,16 +970,25 @@ END INTERFACE GetTangent
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2026-10-21
-! summary: Reduce a 3D Voigt tangent to a 2D Voigt form
+! summary: Reduce a 3D Voigt tangent to a Voigt form
 !
 ! The reduction depends on the Voigt form.
 !
-! - `VoigtFormPlaneStrain`: rows and columns `[1, 2, 4]`
-! - `VoigtFormAxisymmetric`: rows and columns `[1, 2, 4, 3]`
 ! - `VoigtFormPlaneStress`: static condensation with
 !   $\sigma_{33} = \sigma_{23} = \sigma_{13} = 0$, using the in-plane
 !   set $i = [1, 2, 4]$ and out-of-plane set $o = [3, 5, 6]$
+! - every other form: the rows and columns of the form's components
+!   (GetVoigtIndex_ of VoigtUtility), for example `[1, 2, 4]` for
+!   `VoigtFormPlaneStrain`, `[1, 2, 4, 3]` for `VoigtFormAxisymmetric`
+!   and `VoigtFormPlaneStrainFull`, `[1]` for `VoigtFormUniaxialStrain`
+! - `VoigtFormPlaneStressFull` is also a plain sub-matrix; the condition
+!   $\sigma_{33} = 0$ is not imposed. Use `VoigtFormPlaneStress` for the
+!   condensed tangent.
 ! - `VoigtForm3D` or unknown: the 6x6 matrix itself
+!
+! Changes:
+!   - 2026-11-17: the uniaxial strain and Full forms, one index table in
+!     VoigtUtility, easifem/base#356
 !
 ! Returns:
 !   ans : REAL(DFP), ALLOCATABLE, SHAPE(n, n) - n = VoigtSize(voigtForm)
@@ -994,7 +1003,11 @@ END INTERFACE GetTangent
 ! USE GlobalData, ONLY: DFP
 ! USE GlobalData, ONLY: I4B
 ! USE GlobalData, ONLY: VoigtFormPlaneStrain
+! USE GlobalData, ONLY: VoigtFormPlaneStrainFull
 ! USE GlobalData, ONLY: VoigtFormPlaneStress
+! USE GlobalData, ONLY: VoigtFormPlaneStressFull
+! USE GlobalData, ONLY: VoigtFormUniaxialStrain
+! USE GlobalData, ONLY: VoigtFormUniaxialStrainFull
 ! USE MaterialJacobian_Method, ONLY: ReduceVoigtTangent
 ! USE Test_Method, ONLY: OK
 ! IMPLICIT NONE
@@ -1041,6 +1054,25 @@ END INTERFACE GetTangent
 !           "plane stress: condensed tangent")
 ! END BLOCK
 !
+! ! Test 3: uniaxial strain and the Full forms are sub-matrices; plane
+! ! stress full has no condensation (sigma_33 = 0 is not imposed)
+! BLOCK
+!   REAL(DFP), ALLOCATABLE :: C2(:, :)
+!
+!   C2 = ReduceVoigtTangent(C6, VoigtFormUniaxialStrain)
+!   CALL OK(SIZE(C2) .EQ. 1 .AND. ABS(C2(1, 1) - C6(1, 1)) .LT. tol, &
+!           "uniaxial strain: C(1, 1)")
+!   C2 = ReduceVoigtTangent(C6, VoigtFormPlaneStrainFull)
+!   CALL OK(MAXVAL(ABS(C2 - C6([1, 2, 4, 3], [1, 2, 4, 3]))) .LT. tol, &
+!           "plane strain full: sub-matrix")
+!   C2 = ReduceVoigtTangent(C6, VoigtFormPlaneStressFull)
+!   CALL OK(MAXVAL(ABS(C2 - C6([1, 2, 4, 3], [1, 2, 4, 3]))) .LT. tol, &
+!           "plane stress full: sub-matrix")
+!   C2 = ReduceVoigtTangent(C6, VoigtFormUniaxialStrainFull)
+!   CALL OK(MAXVAL(ABS(C2 - C6(1:3, 1:3))) .LT. tol, &
+!           "uniaxial strain full: sub-matrix")
+! END BLOCK
+!
 ! CONTAINS
 !
 ! ! Inverse of a 3x3 matrix by cofactors
@@ -1083,7 +1115,7 @@ END INTERFACE ReduceVoigtTangent
 
 !> author: Shion Shimizu
 ! date: 2026-11-02
-! summary: Reduce a 3D Voigt tangent to a 2D Voigt form (no allocation)
+! summary: Reduce a 3D Voigt tangent to a Voigt form (no allocation)
 !
 ! Same as [[ReduceVoigtTangent]] but the result is written in `ans`,
 ! which is allocated by the caller. Only `ans(1:nrow, 1:ncol)` is
@@ -1101,7 +1133,11 @@ END INTERFACE ReduceVoigtTangent
 ! USE GlobalData, ONLY: VoigtForm3D
 ! USE GlobalData, ONLY: VoigtFormAxisymmetric
 ! USE GlobalData, ONLY: VoigtFormPlaneStrain
+! USE GlobalData, ONLY: VoigtFormPlaneStrainFull
 ! USE GlobalData, ONLY: VoigtFormPlaneStress
+! USE GlobalData, ONLY: VoigtFormPlaneStressFull
+! USE GlobalData, ONLY: VoigtFormUniaxialStrain
+! USE GlobalData, ONLY: VoigtFormUniaxialStrainFull
 ! USE MaterialJacobian_Method, ONLY: IsotropicTangent
 ! USE MaterialJacobian_Method, ONLY: ReduceVoigtTangent
 ! USE MaterialJacobian_Method, ONLY: ReduceVoigtTangent_
@@ -1109,14 +1145,22 @@ END INTERFACE ReduceVoigtTangent
 ! IMPLICIT NONE
 !
 ! REAL(DFP), PARAMETER :: tol = 1.0E-14_DFP
-! INTEGER(I4B), PARAMETER :: forms(4) = [VoigtForm3D, &
+! INTEGER(I4B), PARAMETER :: forms(8) = [VoigtForm3D, &
 !                                        VoigtFormPlaneStrain, &
 !                                        VoigtFormPlaneStress, &
-!                                        VoigtFormAxisymmetric]
-! CHARACTER(*), PARAMETER :: names(4) = ["3D          ", &
-!                                        "plane strain", &
-!                                        "plane stress", &
-!                                        "axisymmetric"]
+!                                        VoigtFormAxisymmetric, &
+!                                        VoigtFormUniaxialStrain, &
+!                                        VoigtFormPlaneStrainFull, &
+!                                        VoigtFormUniaxialStrainFull, &
+!                                        VoigtFormPlaneStressFull]
+! CHARACTER(*), PARAMETER :: names(8) = ["3D                  ", &
+!                                        "plane strain        ", &
+!                                        "plane stress        ", &
+!                                        "axisymmetric        ", &
+!                                        "uniaxial strain     ", &
+!                                        "plane strain full   ", &
+!                                        "uniaxial strain full", &
+!                                        "plane stress full   "]
 ! REAL(DFP) :: C(6, 6)
 !
 ! C = IsotropicTangent(lambda=1.5_DFP, mu=0.5_DFP)
@@ -1129,7 +1173,7 @@ END INTERFACE ReduceVoigtTangent
 !   REAL(DFP), ALLOCATABLE :: Cref(:, :)
 !   INTEGER(I4B) :: ii, nrow, ncol
 !
-!   DO ii = 1, 4
+!   DO ii = 1, SIZE(forms)
 !     Cref = ReduceVoigtTangent(C, forms(ii))
 !     CALL ReduceVoigtTangent_(C, forms(ii), Cr, nrow, ncol)
 !     CALL OK(nrow .EQ. SIZE(Cref, 1) .AND. ncol .EQ. SIZE(Cref, 2), &

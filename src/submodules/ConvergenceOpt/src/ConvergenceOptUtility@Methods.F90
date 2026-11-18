@@ -17,10 +17,10 @@
 !
 
 SUBMODULE(ConvergenceOptUtility) Methods
-USE Display_Method, ONLY: ToString
-USE StringUtility, ONLY: UpperCase
 USE BaseType, ONLY: TypeConvergenceOpt
 USE BaseType, ONLY: math => TypeMathOpt
+USE Display_Method, ONLY: ToString
+USE StringUtility, ONLY: UpperCase
 IMPLICIT NONE
 
 #ifdef DEBUG_VER
@@ -127,9 +127,9 @@ acase = UpperCase(TRIM(name))
 
 SELECT CASE (acase)
 CASE ("RESIDUAL")
-  ans = TypeConvergenceOpt%relative
+  ans = TypeConvergenceOpt%res
 CASE ("SOLUTION")
-  ans = TypeConvergenceOpt%absolute
+  ans = TypeConvergenceOpt%sol
 CASE ("BOTH")
   ans = TypeConvergenceOpt%both
 CASE DEFAULT

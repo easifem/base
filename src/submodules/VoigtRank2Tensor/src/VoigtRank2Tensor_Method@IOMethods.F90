@@ -17,10 +17,14 @@
 !> author: Vikas Sharma, Ph. D.
 ! date: 2021-03-13
 ! summary: Input and output methods of [[VoigtRank2Tensor_]]
+!
+! Changes:
+!   - 2026-11-17: Display rewritten after IntVector_IOMethod, added the
+!     array version
 
 SUBMODULE(VoigtRank2Tensor_Method) IOMethods
-USE Display_Method, ONLY: Util_Display => Display
-USE GlobalData, ONLY: stdout
+USE Display_Method, ONLY: Display0 => Display
+USE Display_Method, ONLY: ToString
 USE GlobalData, ONLY: StrainTypeVoigt
 USE GlobalData, ONLY: StressTypeVoigt
 USE InputUtility, ONLY: Input
@@ -32,23 +36,52 @@ CONTAINS
 !                                                                    Display
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE VoigtRank2Tensor_Display
-INTEGER(I4B) :: unitNo0
+MODULE PROCEDURE obj_Display1
+CALL Display0(msg=msg, unitNo=unitNo)
+CALL Display0(msg="voigtType: "//VoigtTypeName(obj%voigtType), &
+              unitNo=unitNo)
+CALL Display0(val=obj%scale, msg="scale: ", unitNo=unitNo)
+CALL Display0(val=obj%V, msg="V: ", unitNo=unitNo, &
+              orient=Input(option=orient, default="row"))
+END PROCEDURE obj_Display1
 
-unitNo0 = Input(option=unitNo, default=stdout)
+!----------------------------------------------------------------------------
+!                                                                    Display
+!----------------------------------------------------------------------------
 
-WRITE (unitNo0, "(A)") "# "//TRIM(msg)
+MODULE PROCEDURE obj_Display2
+INTEGER(I4B) :: ii
 
-SELECT CASE (obj%voigtType)
-CASE (StressTypeVoigt)
-  WRITE (unitNo0, "(A)") "Stress Like Voigt Type"
-CASE (StrainTypeVoigt)
-  WRITE (unitNo0, "(A)") "Strain Like Voigt Type"
-CASE DEFAULT
-  WRITE (unitNo0, "(A)") "Unknown Voigt Type (treated as stress like)"
-END SELECT
+CALL Display0(msg=msg, unitNo=unitNo)
+CALL Display0(val=SIZE(obj), msg="size: ", unitNo=unitNo)
+DO ii = 1, SIZE(obj)
+  CALL Display(obj(ii), msg="("//ToString(ii)//")", unitNo=unitNo, &
+               orient=orient)
+END DO
+END PROCEDURE obj_Display2
 
-CALL Util_Display(obj%V, msg="", unitNo=unitNo0, orient="row")
-END PROCEDURE VoigtRank2Tensor_Display
+!----------------------------------------------------------------------------
+!                                                              VoigtTypeName
+!----------------------------------------------------------------------------
+
+!> author: Shion Shimizu
+! date: 2026-11-17
+! summary: Name of a Voigt type for Display
+
+PURE FUNCTION VoigtTypeName(voigtType) RESULT(ans)
+  INTEGER(I4B), INTENT(IN) :: voigtType
+  !! StressTypeVoigt, StrainTypeVoigt or other
+  CHARACTER(:), ALLOCATABLE :: ans
+  !! name of the Voigt type
+
+  SELECT CASE (voigtType)
+  CASE (StressTypeVoigt)
+    ans = "stress-like"
+  CASE (StrainTypeVoigt)
+    ans = "strain-like"
+  CASE DEFAULT
+    ans = "unknown (treated as stress-like)"
+  END SELECT
+END FUNCTION VoigtTypeName
 
 END SUBMODULE IOMethods

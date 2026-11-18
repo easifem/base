@@ -10,6 +10,7 @@ USE GlobalData, ONLY: StressTypeVoigt
 USE GlobalData, ONLY: VoigtForm3D
 USE GlobalData, ONLY: VoigtFormAxisymmetric
 USE GlobalData, ONLY: VoigtFormPlaneStrain
+USE GlobalData, ONLY: VoigtFormUniaxialStrainFull
 USE Test_Method, ONLY: OK
 USE VoigtRank2Tensor_Method, ONLY: GetVoigtVector_
 USE VoigtRank2Tensor_Method, ONLY: VoigtRank2Tensor
@@ -54,6 +55,17 @@ BLOCK
   CALL OK(tsize .EQ. 4, "axisymmetric: tsize")
   CALL OK(MAXVAL(ABS(ans - [1.0_DFP, 2.0_DFP, 4.0_DFP, 3.0_DFP])) &
           .LT. tol, "axisymmetric: values")
+END BLOCK
+
+! Test 4: uniaxial strain full writes the normal components [11,22,33]
+BLOCK
+  REAL(DFP) :: ans(3)
+  INTEGER(I4B) :: tsize
+
+  CALL GetVoigtVector_(obj, VoigtFormUniaxialStrainFull, ans, tsize)
+  CALL OK(tsize .EQ. 3, "uniaxial strain full: tsize")
+  CALL OK(MAXVAL(ABS(ans - [1.0_DFP, 2.0_DFP, 3.0_DFP])) .LT. tol, &
+          "uniaxial strain full: values")
 END BLOCK
 
 END PROGRAM main
