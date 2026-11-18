@@ -29,16 +29,18 @@
 !     isFreeFactors (easifem/base#358); reformatted: obj_ names,
 !     trailing continuation lines, SuperluError and SuperluNotLinked
 !     instead of repeated ErrorMsg blocks, USE with ONLY
+!   - 2026-11-18: USE the defining modules instead of BaseMethod; the
+!     matrix size is CSRMatrixSize (Size of CSRMatrix_ConstructorMethods)
 
 SUBMODULE(CSRMatrix_Superlu) Methods
-USE BaseMethod, ONLY: Copy
-USE BaseMethod, ONLY: Display
-USE BaseMethod, ONLY: ErrorMsg
-USE BaseMethod, ONLY: GetNNZ
-USE BaseMethod, ONLY: Input
-USE BaseMethod, ONLY: Reallocate
-USE BaseMethod, ONLY: SIZE
+USE CSRMatrix_ConstructorMethods, ONLY: CSRMatrixSize => Size
+USE CSRMatrix_ConstructorMethods, ONLY: GetNNZ
+USE Display_Method, ONLY: Display
+USE ErrorHandling, ONLY: ErrorMsg
+USE F95_BLAS, ONLY: Copy
 USE GlobalData, ONLY: stderr
+USE InputUtility, ONLY: Input
+USE ReallocateUtility, ONLY: Reallocate
 #ifdef USE_SuperLU
 USE SuperLUInterface, ONLY: colperm_t
 USE SuperLUInterface, ONLY: dCreate_CompCol_Matrix
@@ -174,6 +176,7 @@ SUBROUTINE DestroySuperluLU(obj)
     obj%slu%isUInitiated = .FALSE.
   END IF
 END SUBROUTINE DestroySuperluLU
+#endif
 
 !----------------------------------------------------------------------------
 !                                                       CheckSuperluFactors
@@ -186,6 +189,7 @@ END SUBROUTINE DestroySuperluLU
 ! The factors are missing when a previous call used isFreeFactors =
 ! .TRUE.; reading them would crash in dgssvx (easifem/base#358).
 
+#ifdef USE_SuperLU
 SUBROUTINE CheckSuperluFactors(obj, routine)
   TYPE(CSRMatrix_), INTENT(IN) :: obj
   !! matrix with SuperLU data, obj%slu is associated
@@ -230,8 +234,8 @@ END IF
 obj%slu%isAInitiated = .TRUE.
 
 nnz = SIZE(obj%A)
-m = SIZE(obj, 1)
-n = SIZE(obj, 2)
+m = CSRMatrixSize(obj, 1)
+n = CSRMatrixSize(obj, 2)
 
 CALL Reallocate(obj%slu%nzval, nnz)
 CALL Reallocate(obj%slu%ia, m + 1)
@@ -284,8 +288,8 @@ IF (.NOT. obj%slu%isAInitiated) THEN
 END IF
 
 nnz = SIZE(obj%A)
-m = SIZE(obj, 1)
-n = SIZE(obj, 2)
+m = CSRMatrixSize(obj, 1)
+n = CSRMatrixSize(obj, 2)
 
 IF (SIZE(obj%slu%nzval) .NE. nnz &
     .OR. SIZE(obj%slu%ia) .NE. m + 1 &
@@ -585,64 +589,64 @@ END PROCEDURE obj_InitiateSuperluOptions
 MODULE PROCEDURE obj_SetSuperluOptions
 #ifdef USE_SuperLU
 
-IF (PRESENT(Fact)) THEN
-  obj%slu%options%Fact = Fact
+IF (PRESENT(fact)) THEN
+  obj%slu%options%Fact = fact
 END IF
 
-IF (PRESENT(Equil)) THEN
-  obj%slu%options%Equil = Equil
+IF (PRESENT(equil)) THEN
+  obj%slu%options%Equil = equil
 END IF
 
-IF (PRESENT(ColPerm)) THEN
-  obj%slu%options%ColPerm = ColPerm
+IF (PRESENT(colPerm)) THEN
+  obj%slu%options%ColPerm = colPerm
 END IF
 
-IF (PRESENT(Trans)) THEN
-  obj%slu%options%Trans = Trans
+IF (PRESENT(trans)) THEN
+  obj%slu%options%Trans = trans
 END IF
 
-IF (PRESENT(IterRefine)) THEN
-  obj%slu%options%IterRefine = IterRefine
+IF (PRESENT(iterRefine)) THEN
+  obj%slu%options%IterRefine = iterRefine
 END IF
 
-IF (PRESENT(DiagPivotThresh)) THEN
-  obj%slu%options%DiagPivotThresh = DiagPivotThresh
+IF (PRESENT(diagPivotThresh)) THEN
+  obj%slu%options%DiagPivotThresh = diagPivotThresh
 END IF
 
-IF (PRESENT(SymmetricMode)) THEN
-  obj%slu%options%SymmetricMode = SymmetricMode
+IF (PRESENT(symmetricMode)) THEN
+  obj%slu%options%SymmetricMode = symmetricMode
 END IF
 
-IF (PRESENT(PivotGrowth)) THEN
-  obj%slu%options%PivotGrowth = PivotGrowth
+IF (PRESENT(pivotGrowth)) THEN
+  obj%slu%options%PivotGrowth = pivotGrowth
 END IF
 
-IF (PRESENT(ConditionNumber)) THEN
-  obj%slu%options%ConditionNumber = ConditionNumber
+IF (PRESENT(conditionNumber)) THEN
+  obj%slu%options%ConditionNumber = conditionNumber
 END IF
 
-IF (PRESENT(RowPerm)) THEN
-  obj%slu%options%RowPerm = RowPerm
+IF (PRESENT(rowPerm)) THEN
+  obj%slu%options%RowPerm = rowPerm
 END IF
 
-IF (PRESENT(ILU_DropRule)) THEN
-  obj%slu%options%ILU_DropRule = ILU_DropRule
+IF (PRESENT(iluDropRule)) THEN
+  obj%slu%options%ILU_DropRule = iluDropRule
 END IF
 
-IF (PRESENT(ILU_DropTol)) THEN
-  obj%slu%options%ILU_DropTol = ILU_DropTol
+IF (PRESENT(iluDropTol)) THEN
+  obj%slu%options%ILU_DropTol = iluDropTol
 END IF
 
-IF (PRESENT(ILU_FillFactor)) THEN
-  obj%slu%options%ILU_FillFactor = ILU_FillFactor
+IF (PRESENT(iluFillFactor)) THEN
+  obj%slu%options%ILU_FillFactor = iluFillFactor
 END IF
 
-IF (PRESENT(ILU_MILU)) THEN
-  obj%slu%options%ILU_MILU = ILU_MILU
+IF (PRESENT(iluMilu)) THEN
+  obj%slu%options%ILU_MILU = iluMilu
 END IF
 
-IF (PRESENT(PrintStat)) THEN
-  obj%slu%options%PrintStat = PrintStat
+IF (PRESENT(printStat)) THEN
+  obj%slu%options%PrintStat = printStat
 END IF
 
 #else
@@ -723,8 +727,8 @@ MODULE PROCEDURE obj_InitiateSuperluDGSSVXParam
 #ifdef USE_SuperLU
 INTEGER(I4B) :: m, n, nnz, nrhs
 
-m = SIZE(obj, 1)
-n = SIZE(obj, 2)
+m = CSRMatrixSize(obj, 1)
+n = CSRMatrixSize(obj, 2)
 nnz = GetNNZ(obj)
 nrhs = SIZE(obj%slu%rhs, 2)
 
@@ -860,7 +864,7 @@ INTEGER(I4B) :: Equil0
 INTEGER(I4B) :: SymmetricMode0
 INTEGER(I4B) :: PrintStat0
 
-CALL CheckErrorCSRMatrix(obj=A, lineNo=__LINE__, routine="obj_LinSolve1()")
+CALL CheckErrorCSRMatrix(obj=a, lineNo=__LINE__, routine="obj_LinSolve1()")
 
 isTranspose0 = input(option=isTranspose, default=.FALSE.)
 
@@ -870,72 +874,72 @@ ELSE
   Trans0 = Trans_t%TRANS
 END IF
 
-Equil0 = input(option=Equil, default=yes_no_t%YES)
-ColPerm0 = input(option=ColPerm, default=colperm_t%COLAMD)
-IterRefine0 = input(option=IterRefine, default=IterRefine_t%SLU_DOUBLE)
-DiagPivotThresh0 = input(option=DiagPivotThresh, default=1.0_DFP)
-PivotGrowth0 = input(option=PivotGrowth, default=yes_no_t%NO)
-ConditionNumber0 = input(option=ConditionNumber, default=yes_no_t%NO)
-SymmetricMode0 = input(option=SymmetricMode, default=yes_no_t%NO)
-PrintStat0 = input(option=PrintStat, default=yes_no_t%NO)
+Equil0 = input(option=equil, default=yes_no_t%YES)
+ColPerm0 = input(option=colPerm, default=colperm_t%COLAMD)
+IterRefine0 = input(option=iterRefine, default=IterRefine_t%SLU_DOUBLE)
+DiagPivotThresh0 = input(option=diagPivotThresh, default=1.0_DFP)
+PivotGrowth0 = input(option=pivotGrowth, default=yes_no_t%NO)
+ConditionNumber0 = input(option=conditionNumber, default=yes_no_t%NO)
+SymmetricMode0 = input(option=symmetricMode, default=yes_no_t%NO)
+PrintStat0 = input(option=printStat, default=yes_no_t%NO)
 
 ! first call: set up A, B, X, the options and the work arrays
 
-IF (.NOT. ASSOCIATED(A%slu)) THEN
-  ALLOCATE (A%slu)
+IF (.NOT. ASSOCIATED(a%slu)) THEN
+  ALLOCATE (a%slu)
 END IF
 
-IF (.NOT. A%slu%isAInitiated) THEN
-  CALL InitiateSuperluA(obj=A)
-  CALL InitiateSuperluRHS(obj=A, rhs=B)
-  CALL InitiateSuperluOptions(obj=A)
-  CALL SetSuperluOptions(obj=A, Equil=Equil0, Trans=Trans0, &
-                         ColPerm=ColPerm0, Fact=Fact_t%DOFACT, &
-                         IterRefine=IterRefine0, PivotGrowth=PivotGrowth0, &
-                         DiagPivotThresh=DiagPivotThresh0, &
-                         SymmetricMode=SymmetricMode0, PrintStat=PrintStat0, &
-                         ConditionNumber=ConditionNumber0)
-  CALL InitiateSuperluDGSSVXParam(obj=A)
-  CALL StatInit(A%slu%STAT)
-  A%slu%isStatInitiated = .TRUE.
+IF (.NOT. a%slu%isAInitiated) THEN
+  CALL InitiateSuperluA(obj=a)
+  CALL InitiateSuperluRHS(obj=a, rhs=b)
+  CALL InitiateSuperluOptions(obj=a)
+  CALL SetSuperluOptions(obj=a, equil=Equil0, trans=Trans0, &
+                         colPerm=ColPerm0, fact=Fact_t%DOFACT, &
+                         iterRefine=IterRefine0, pivotGrowth=PivotGrowth0, &
+                         diagPivotThresh=DiagPivotThresh0, &
+                         symmetricMode=SymmetricMode0, printStat=PrintStat0, &
+                         conditionNumber=ConditionNumber0)
+  CALL InitiateSuperluDGSSVXParam(obj=a)
+  CALL StatInit(a%slu%STAT)
+  a%slu%isStatInitiated = .TRUE.
 
 ELSE
   isFactored0 = input(option=isFactored, default=.FALSE.)
   IF (isFactored0) THEN
     ! use the stored factors (Fact = FACTORED)
-    CALL CheckSuperluFactors(obj=A, routine="obj_LinSolve1()")
-    CALL SetSuperluRHS(obj=A, rhs=B)
-    CALL SetSuperluOptions(obj=A, Equil=Equil0, Trans=Trans0, &
-                           ColPerm=ColPerm0, Fact=Fact_t%FACTORED, &
-                           IterRefine=IterRefine0, PivotGrowth=PivotGrowth0, &
-                           DiagPivotThresh=DiagPivotThresh0, &
-                           SymmetricMode=SymmetricMode0, &
-                           PrintStat=PrintStat0, &
-                           ConditionNumber=ConditionNumber0)
+    CALL CheckSuperluFactors(obj=a, routine="obj_LinSolve1()")
+    CALL SetSuperluRHS(obj=a, rhs=b)
+    CALL SetSuperluOptions(obj=a, equil=Equil0, trans=Trans0, &
+                           colPerm=ColPerm0, fact=Fact_t%FACTORED, &
+                           iterRefine=IterRefine0, pivotGrowth=PivotGrowth0, &
+                           diagPivotThresh=DiagPivotThresh0, &
+                           symmetricMode=SymmetricMode0, &
+                           printStat=PrintStat0, &
+                           conditionNumber=ConditionNumber0)
   ELSE
     ! factor again (Fact = SamePattern); the sparsity is the same, so the
     ! work arrays of InitiateSuperluDGSSVXParam are kept
-    CALL DestroySuperluLU(obj=A)
-    CALL SetSuperluA(obj=A)
-    CALL SetSuperluRHS(obj=A, rhs=B)
-    CALL SetSuperluOptions(obj=A, Equil=Equil0, Trans=Trans0, &
-                           ColPerm=ColPerm0, Fact=Fact_t%SamePattern, &
-                           IterRefine=IterRefine0, PivotGrowth=PivotGrowth0, &
-                           DiagPivotThresh=DiagPivotThresh0, &
-                           SymmetricMode=SymmetricMode0, &
-                           PrintStat=PrintStat0, &
-                           ConditionNumber=ConditionNumber0)
+    CALL DestroySuperluLU(obj=a)
+    CALL SetSuperluA(obj=a)
+    CALL SetSuperluRHS(obj=a, rhs=b)
+    CALL SetSuperluOptions(obj=a, equil=Equil0, trans=Trans0, &
+                           colPerm=ColPerm0, fact=Fact_t%SamePattern, &
+                           iterRefine=IterRefine0, pivotGrowth=PivotGrowth0, &
+                           diagPivotThresh=DiagPivotThresh0, &
+                           symmetricMode=SymmetricMode0, &
+                           printStat=PrintStat0, &
+                           conditionNumber=ConditionNumber0)
   END IF
 
 END IF
 
-CALL SuperluDGSSVX(obj=A)
-CALL Copy(x=A%slu%sol(:, 1), y=x)
-IF (PRESENT(info)) info = A%slu%info
-CALL SuperluDisplayStat(obj=A)
+CALL SuperluDGSSVX(obj=a)
+CALL Copy(x=a%slu%sol(:, 1), y=x)
+IF (PRESENT(info)) info = a%slu%info
+CALL SuperluDisplayStat(obj=a)
 
 isFreeFactors0 = input(option=isFreeFactors, default=.FALSE.)
-IF (isFreeFactors0) CALL DestroySuperluLU(obj=A)
+IF (isFreeFactors0) CALL DestroySuperluLU(obj=a)
 
 ! L and U are kept for the next call with isFactored (easifem/base#358)
 
@@ -964,7 +968,7 @@ INTEGER(I4B) :: SymmetricMode0
 INTEGER(I4B) :: PrintStat0
 INTEGER(I4B) :: ii, nrhs
 
-CALL CheckErrorCSRMatrix(obj=A, lineNo=__LINE__, routine="obj_LinSolve2()")
+CALL CheckErrorCSRMatrix(obj=a, lineNo=__LINE__, routine="obj_LinSolve2()")
 
 isTranspose0 = input(option=isTranspose, default=.FALSE.)
 
@@ -974,62 +978,62 @@ ELSE
   Trans0 = Trans_t%TRANS
 END IF
 
-Equil0 = input(option=Equil, default=yes_no_t%YES)
-ColPerm0 = input(option=ColPerm, default=colperm_t%COLAMD)
-IterRefine0 = input(option=IterRefine, default=IterRefine_t%SLU_DOUBLE)
-DiagPivotThresh0 = input(option=DiagPivotThresh, default=1.0_DFP)
-PivotGrowth0 = input(option=PivotGrowth, default=yes_no_t%NO)
-ConditionNumber0 = input(option=ConditionNumber, default=yes_no_t%NO)
-SymmetricMode0 = input(option=SymmetricMode, default=yes_no_t%NO)
-PrintStat0 = input(option=PrintStat, default=yes_no_t%NO)
+Equil0 = input(option=equil, default=yes_no_t%YES)
+ColPerm0 = input(option=colPerm, default=colperm_t%COLAMD)
+IterRefine0 = input(option=iterRefine, default=IterRefine_t%SLU_DOUBLE)
+DiagPivotThresh0 = input(option=diagPivotThresh, default=1.0_DFP)
+PivotGrowth0 = input(option=pivotGrowth, default=yes_no_t%NO)
+ConditionNumber0 = input(option=conditionNumber, default=yes_no_t%NO)
+SymmetricMode0 = input(option=symmetricMode, default=yes_no_t%NO)
+PrintStat0 = input(option=printStat, default=yes_no_t%NO)
 
 ! first call: set up A, B, X, the options and the work arrays
 
-IF (.NOT. ASSOCIATED(A%slu)) THEN
-  ALLOCATE (A%slu)
+IF (.NOT. ASSOCIATED(a%slu)) THEN
+  ALLOCATE (a%slu)
 END IF
 
-IF (.NOT. A%slu%isAInitiated) THEN
-  CALL InitiateSuperluA(obj=A)
-  CALL InitiateSuperluRHS(obj=A, rhs=B)
-  CALL InitiateSuperluOptions(obj=A)
-  CALL SetSuperluOptions(obj=A, Equil=Equil0, Trans=Trans0, &
-                         ColPerm=ColPerm0, Fact=Fact_t%DOFACT, &
-                         IterRefine=IterRefine0, PivotGrowth=PivotGrowth0, &
-                         DiagPivotThresh=DiagPivotThresh0, &
-                         SymmetricMode=SymmetricMode0, PrintStat=PrintStat0, &
-                         ConditionNumber=ConditionNumber0)
-  CALL InitiateSuperluDGSSVXParam(obj=A)
-  CALL StatInit(A%slu%STAT)
-  A%slu%isStatInitiated = .TRUE.
+IF (.NOT. a%slu%isAInitiated) THEN
+  CALL InitiateSuperluA(obj=a)
+  CALL InitiateSuperluRHS(obj=a, rhs=b)
+  CALL InitiateSuperluOptions(obj=a)
+  CALL SetSuperluOptions(obj=a, equil=Equil0, trans=Trans0, &
+                         colPerm=ColPerm0, fact=Fact_t%DOFACT, &
+                         iterRefine=IterRefine0, pivotGrowth=PivotGrowth0, &
+                         diagPivotThresh=DiagPivotThresh0, &
+                         symmetricMode=SymmetricMode0, printStat=PrintStat0, &
+                         conditionNumber=ConditionNumber0)
+  CALL InitiateSuperluDGSSVXParam(obj=a)
+  CALL StatInit(a%slu%STAT)
+  a%slu%isStatInitiated = .TRUE.
 ELSE
   isFactored0 = input(option=isFactored, default=.FALSE.)
   IF (isFactored0) THEN
     ! use the stored factors (Fact = FACTORED)
-    CALL CheckSuperluFactors(obj=A, routine="obj_LinSolve2()")
-    CALL SetSuperluRHS(obj=A, rhs=B)
-    CALL SetSuperluOptions(obj=A, Fact=Fact_t%FACTORED, Trans=Trans0)
+    CALL CheckSuperluFactors(obj=a, routine="obj_LinSolve2()")
+    CALL SetSuperluRHS(obj=a, rhs=b)
+    CALL SetSuperluOptions(obj=a, fact=Fact_t%FACTORED, trans=Trans0)
   ELSE
     ! factor again (Fact = SamePattern); the sparsity is the same, so the
     ! work arrays of InitiateSuperluDGSSVXParam are kept
-    CALL DestroySuperluLU(obj=A)
-    CALL SetSuperluA(obj=A)
-    CALL SetSuperluRHS(obj=A, rhs=B)
-    CALL SetSuperluOptions(obj=A, Fact=Fact_t%SamePattern, Trans=Trans0)
+    CALL DestroySuperluLU(obj=a)
+    CALL SetSuperluA(obj=a)
+    CALL SetSuperluRHS(obj=a, rhs=b)
+    CALL SetSuperluOptions(obj=a, fact=Fact_t%SamePattern, trans=Trans0)
   END IF
 
 END IF
 
-CALL SuperluDGSSVX(obj=A)
+CALL SuperluDGSSVX(obj=a)
 nrhs = SIZE(x, 2)
 DO ii = 1, nrhs
-  CALL Copy(x=A%slu%sol(:, ii), y=x(:, ii))
+  CALL Copy(x=a%slu%sol(:, ii), y=x(:, ii))
 END DO
-IF (PRESENT(info)) info = A%slu%info
-CALL SuperluDisplayStat(obj=A)
+IF (PRESENT(info)) info = a%slu%info
+CALL SuperluDisplayStat(obj=a)
 
 isFreeFactors0 = input(option=isFreeFactors, default=.FALSE.)
-IF (isFreeFactors0) CALL DestroySuperluLU(obj=A)
+IF (isFreeFactors0) CALL DestroySuperluLU(obj=a)
 
 ! L and U are kept for the next call with isFactored (easifem/base#358)
 
@@ -1057,7 +1061,7 @@ INTEGER(I4B) :: Equil0
 INTEGER(I4B) :: SymmetricMode0
 INTEGER(I4B) :: PrintStat0
 
-CALL CheckErrorCSRMatrix(obj=A, lineNo=__LINE__, routine="obj_LinSolve3()")
+CALL CheckErrorCSRMatrix(obj=a, lineNo=__LINE__, routine="obj_LinSolve3()")
 
 isTranspose0 = input(option=isTranspose, default=.FALSE.)
 
@@ -1067,59 +1071,59 @@ ELSE
   Trans0 = Trans_t%TRANS
 END IF
 
-Equil0 = input(option=Equil, default=yes_no_t%YES)
-ColPerm0 = input(option=ColPerm, default=colperm_t%COLAMD)
-IterRefine0 = input(option=IterRefine, default=IterRefine_t%SLU_DOUBLE)
-DiagPivotThresh0 = input(option=DiagPivotThresh, default=1.0_DFP)
-PivotGrowth0 = input(option=PivotGrowth, default=yes_no_t%NO)
-ConditionNumber0 = input(option=ConditionNumber, default=yes_no_t%NO)
-SymmetricMode0 = input(option=SymmetricMode, default=yes_no_t%NO)
-PrintStat0 = input(option=PrintStat, default=yes_no_t%NO)
+Equil0 = input(option=equil, default=yes_no_t%YES)
+ColPerm0 = input(option=colPerm, default=colperm_t%COLAMD)
+IterRefine0 = input(option=iterRefine, default=IterRefine_t%SLU_DOUBLE)
+DiagPivotThresh0 = input(option=diagPivotThresh, default=1.0_DFP)
+PivotGrowth0 = input(option=pivotGrowth, default=yes_no_t%NO)
+ConditionNumber0 = input(option=conditionNumber, default=yes_no_t%NO)
+SymmetricMode0 = input(option=symmetricMode, default=yes_no_t%NO)
+PrintStat0 = input(option=printStat, default=yes_no_t%NO)
 
 ! first call: set up A, B, X, the options and the work arrays
 
-IF (.NOT. ASSOCIATED(A%slu)) THEN
-  ALLOCATE (A%slu)
+IF (.NOT. ASSOCIATED(a%slu)) THEN
+  ALLOCATE (a%slu)
 END IF
 
-IF (.NOT. A%slu%isAInitiated) THEN
-  CALL InitiateSuperluA(obj=A)
-  CALL InitiateSuperluRHS(obj=A, rhs=B)
-  CALL InitiateSuperluOptions(obj=A)
-  CALL SetSuperluOptions(obj=A, Equil=Equil0, Trans=Trans0, &
-                         ColPerm=ColPerm0, Fact=Fact_t%DOFACT, &
-                         IterRefine=IterRefine0, PivotGrowth=PivotGrowth0, &
-                         DiagPivotThresh=DiagPivotThresh0, &
-                         SymmetricMode=SymmetricMode0, PrintStat=PrintStat0, &
-                         ConditionNumber=ConditionNumber0)
-  CALL InitiateSuperluDGSSVXParam(obj=A)
-  CALL StatInit(A%slu%STAT)
-  A%slu%isStatInitiated = .TRUE.
+IF (.NOT. a%slu%isAInitiated) THEN
+  CALL InitiateSuperluA(obj=a)
+  CALL InitiateSuperluRHS(obj=a, rhs=b)
+  CALL InitiateSuperluOptions(obj=a)
+  CALL SetSuperluOptions(obj=a, equil=Equil0, trans=Trans0, &
+                         colPerm=ColPerm0, fact=Fact_t%DOFACT, &
+                         iterRefine=IterRefine0, pivotGrowth=PivotGrowth0, &
+                         diagPivotThresh=DiagPivotThresh0, &
+                         symmetricMode=SymmetricMode0, printStat=PrintStat0, &
+                         conditionNumber=ConditionNumber0)
+  CALL InitiateSuperluDGSSVXParam(obj=a)
+  CALL StatInit(a%slu%STAT)
+  a%slu%isStatInitiated = .TRUE.
 ELSE
   isFactored0 = input(option=isFactored, default=.FALSE.)
   IF (isFactored0) THEN
     ! use the stored factors (Fact = FACTORED)
-    CALL CheckSuperluFactors(obj=A, routine="obj_LinSolve3()")
-    CALL SetSuperluRHS(obj=A, rhs=B)
-    CALL SetSuperluOptions(obj=A, Fact=Fact_t%FACTORED, Trans=Trans0)
+    CALL CheckSuperluFactors(obj=a, routine="obj_LinSolve3()")
+    CALL SetSuperluRHS(obj=a, rhs=b)
+    CALL SetSuperluOptions(obj=a, fact=Fact_t%FACTORED, trans=Trans0)
   ELSE
     ! factor again (Fact = SamePattern); the sparsity is the same, so the
     ! work arrays of InitiateSuperluDGSSVXParam are kept
-    CALL DestroySuperluLU(obj=A)
-    CALL SetSuperluA(obj=A)
-    CALL SetSuperluRHS(obj=A, rhs=B)
-    CALL SetSuperluOptions(obj=A, Fact=Fact_t%SamePattern, Trans=Trans0)
+    CALL DestroySuperluLU(obj=a)
+    CALL SetSuperluA(obj=a)
+    CALL SetSuperluRHS(obj=a, rhs=b)
+    CALL SetSuperluOptions(obj=a, fact=Fact_t%SamePattern, trans=Trans0)
   END IF
 
 END IF
 
-CALL SuperluDGSSVX(obj=A)
-CALL Copy(x=A%slu%sol(:, 1), y=B)
-IF (PRESENT(info)) info = A%slu%info
-CALL SuperluDisplayStat(obj=A)
+CALL SuperluDGSSVX(obj=a)
+CALL Copy(x=a%slu%sol(:, 1), y=b)
+IF (PRESENT(info)) info = a%slu%info
+CALL SuperluDisplayStat(obj=a)
 
 isFreeFactors0 = input(option=isFreeFactors, default=.FALSE.)
-IF (isFreeFactors0) CALL DestroySuperluLU(obj=A)
+IF (isFreeFactors0) CALL DestroySuperluLU(obj=a)
 ! L and U are kept for the next call with isFactored (easifem/base#358)
 #else
 
@@ -1146,7 +1150,7 @@ INTEGER(I4B) :: SymmetricMode0
 INTEGER(I4B) :: PrintStat0
 INTEGER(I4B) :: ii, nrhs
 
-CALL CheckErrorCSRMatrix(obj=A, lineNo=__LINE__, routine="obj_LinSolve4()")
+CALL CheckErrorCSRMatrix(obj=a, lineNo=__LINE__, routine="obj_LinSolve4()")
 
 isTranspose0 = input(option=isTranspose, default=.FALSE.)
 
@@ -1156,63 +1160,63 @@ ELSE
   Trans0 = Trans_t%TRANS
 END IF
 
-Equil0 = input(option=Equil, default=yes_no_t%YES)
-ColPerm0 = input(option=ColPerm, default=colperm_t%COLAMD)
-IterRefine0 = input(option=IterRefine, default=IterRefine_t%SLU_DOUBLE)
-DiagPivotThresh0 = input(option=DiagPivotThresh, default=1.0_DFP)
-PivotGrowth0 = input(option=PivotGrowth, default=yes_no_t%NO)
-ConditionNumber0 = input(option=ConditionNumber, default=yes_no_t%NO)
-SymmetricMode0 = input(option=SymmetricMode, default=yes_no_t%NO)
-PrintStat0 = input(option=PrintStat, default=yes_no_t%NO)
+Equil0 = input(option=equil, default=yes_no_t%YES)
+ColPerm0 = input(option=colPerm, default=colperm_t%COLAMD)
+IterRefine0 = input(option=iterRefine, default=IterRefine_t%SLU_DOUBLE)
+DiagPivotThresh0 = input(option=diagPivotThresh, default=1.0_DFP)
+PivotGrowth0 = input(option=pivotGrowth, default=yes_no_t%NO)
+ConditionNumber0 = input(option=conditionNumber, default=yes_no_t%NO)
+SymmetricMode0 = input(option=symmetricMode, default=yes_no_t%NO)
+PrintStat0 = input(option=printStat, default=yes_no_t%NO)
 
 ! first call: set up A, B, X, the options and the work arrays
 
-IF (.NOT. ASSOCIATED(A%slu)) THEN
-  ALLOCATE (A%slu)
+IF (.NOT. ASSOCIATED(a%slu)) THEN
+  ALLOCATE (a%slu)
 END IF
 
-IF (.NOT. A%slu%isAInitiated) THEN
-  CALL InitiateSuperluA(obj=A)
-  CALL InitiateSuperluRHS(obj=A, rhs=B)
-  CALL InitiateSuperluOptions(obj=A)
-  CALL SetSuperluOptions(obj=A, Equil=Equil0, Trans=Trans0, &
-                         ColPerm=ColPerm0, Fact=Fact_t%DOFACT, &
-                         IterRefine=IterRefine0, PivotGrowth=PivotGrowth0, &
-                         DiagPivotThresh=DiagPivotThresh0, &
-                         SymmetricMode=SymmetricMode0, PrintStat=PrintStat0, &
-                         ConditionNumber=ConditionNumber0)
-  CALL InitiateSuperluDGSSVXParam(obj=A)
-  CALL StatInit(A%slu%STAT)
-  A%slu%isStatInitiated = .TRUE.
+IF (.NOT. a%slu%isAInitiated) THEN
+  CALL InitiateSuperluA(obj=a)
+  CALL InitiateSuperluRHS(obj=a, rhs=b)
+  CALL InitiateSuperluOptions(obj=a)
+  CALL SetSuperluOptions(obj=a, equil=Equil0, trans=Trans0, &
+                         colPerm=ColPerm0, fact=Fact_t%DOFACT, &
+                         iterRefine=IterRefine0, pivotGrowth=PivotGrowth0, &
+                         diagPivotThresh=DiagPivotThresh0, &
+                         symmetricMode=SymmetricMode0, printStat=PrintStat0, &
+                         conditionNumber=ConditionNumber0)
+  CALL InitiateSuperluDGSSVXParam(obj=a)
+  CALL StatInit(a%slu%STAT)
+  a%slu%isStatInitiated = .TRUE.
 
 ELSE
   isFactored0 = input(option=isFactored, default=.FALSE.)
   IF (isFactored0) THEN
     ! use the stored factors (Fact = FACTORED)
-    CALL CheckSuperluFactors(obj=A, routine="obj_LinSolve4()")
-    CALL SetSuperluRHS(obj=A, rhs=B)
-    CALL SetSuperluOptions(obj=A, Fact=Fact_t%FACTORED, Trans=Trans0)
+    CALL CheckSuperluFactors(obj=a, routine="obj_LinSolve4()")
+    CALL SetSuperluRHS(obj=a, rhs=b)
+    CALL SetSuperluOptions(obj=a, fact=Fact_t%FACTORED, trans=Trans0)
   ELSE
     ! factor again (Fact = SamePattern); the sparsity is the same, so the
     ! work arrays of InitiateSuperluDGSSVXParam are kept
-    CALL DestroySuperluLU(obj=A)
-    CALL SetSuperluA(obj=A)
-    CALL SetSuperluRHS(obj=A, rhs=B)
-    CALL SetSuperluOptions(obj=A, Fact=Fact_t%SamePattern, Trans=Trans0)
+    CALL DestroySuperluLU(obj=a)
+    CALL SetSuperluA(obj=a)
+    CALL SetSuperluRHS(obj=a, rhs=b)
+    CALL SetSuperluOptions(obj=a, fact=Fact_t%SamePattern, trans=Trans0)
   END IF
 
 END IF
 
-CALL SuperluDGSSVX(obj=A)
-nrhs = SIZE(B, 2)
+CALL SuperluDGSSVX(obj=a)
+nrhs = SIZE(b, 2)
 DO ii = 1, nrhs
-  CALL Copy(x=A%slu%sol(:, ii), y=B(:, ii))
+  CALL Copy(x=a%slu%sol(:, ii), y=b(:, ii))
 END DO
-IF (PRESENT(info)) info = A%slu%info
-CALL SuperluDisplayStat(obj=A)
+IF (PRESENT(info)) info = a%slu%info
+CALL SuperluDisplayStat(obj=a)
 
 isFreeFactors0 = input(option=isFreeFactors, default=.FALSE.)
-IF (isFreeFactors0) CALL DestroySuperluLU(obj=A)
+IF (isFreeFactors0) CALL DestroySuperluLU(obj=a)
 ! L and U are kept for the next call with isFactored (easifem/base#358)
 #else
 
