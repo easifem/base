@@ -176,6 +176,7 @@ SUBROUTINE DestroySuperluLU(obj)
     obj%slu%isUInitiated = .FALSE.
   END IF
 END SUBROUTINE DestroySuperluLU
+#endif
 
 !----------------------------------------------------------------------------
 !                                                       CheckSuperluFactors
@@ -188,6 +189,7 @@ END SUBROUTINE DestroySuperluLU
 ! The factors are missing when a previous call used isFreeFactors =
 ! .TRUE.; reading them would crash in dgssvx (easifem/base#358).
 
+#ifdef USE_SuperLU
 SUBROUTINE CheckSuperluFactors(obj, routine)
   TYPE(CSRMatrix_), INTENT(IN) :: obj
   !! matrix with SuperLU data, obj%slu is associated
