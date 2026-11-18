@@ -29,16 +29,18 @@
 !     isFreeFactors (easifem/base#358); reformatted: obj_ names,
 !     trailing continuation lines, SuperluError and SuperluNotLinked
 !     instead of repeated ErrorMsg blocks, USE with ONLY
+!   - 2026-11-18: USE the defining modules instead of BaseMethod; the
+!     matrix size is CSRMatrixSize (Size of CSRMatrix_ConstructorMethods)
 
 SUBMODULE(CSRMatrix_Superlu) Methods
-USE BaseMethod, ONLY: Copy
-USE BaseMethod, ONLY: Display
-USE BaseMethod, ONLY: ErrorMsg
-USE BaseMethod, ONLY: GetNNZ
-USE BaseMethod, ONLY: Input
-USE BaseMethod, ONLY: Reallocate
-USE BaseMethod, ONLY: SIZE
+USE CSRMatrix_ConstructorMethods, ONLY: CSRMatrixSize => Size
+USE CSRMatrix_ConstructorMethods, ONLY: GetNNZ
+USE Display_Method, ONLY: Display
+USE ErrorHandling, ONLY: ErrorMsg
+USE F95_BLAS, ONLY: Copy
 USE GlobalData, ONLY: stderr
+USE InputUtility, ONLY: Input
+USE ReallocateUtility, ONLY: Reallocate
 #ifdef USE_SuperLU
 USE SuperLUInterface, ONLY: colperm_t
 USE SuperLUInterface, ONLY: dCreate_CompCol_Matrix
@@ -230,8 +232,8 @@ END IF
 obj%slu%isAInitiated = .TRUE.
 
 nnz = SIZE(obj%A)
-m = SIZE(obj, 1)
-n = SIZE(obj, 2)
+m = CSRMatrixSize(obj, 1)
+n = CSRMatrixSize(obj, 2)
 
 CALL Reallocate(obj%slu%nzval, nnz)
 CALL Reallocate(obj%slu%ia, m + 1)
@@ -284,8 +286,8 @@ IF (.NOT. obj%slu%isAInitiated) THEN
 END IF
 
 nnz = SIZE(obj%A)
-m = SIZE(obj, 1)
-n = SIZE(obj, 2)
+m = CSRMatrixSize(obj, 1)
+n = CSRMatrixSize(obj, 2)
 
 IF (SIZE(obj%slu%nzval) .NE. nnz &
     .OR. SIZE(obj%slu%ia) .NE. m + 1 &
@@ -723,8 +725,8 @@ MODULE PROCEDURE obj_InitiateSuperluDGSSVXParam
 #ifdef USE_SuperLU
 INTEGER(I4B) :: m, n, nnz, nrhs
 
-m = SIZE(obj, 1)
-n = SIZE(obj, 2)
+m = CSRMatrixSize(obj, 1)
+n = CSRMatrixSize(obj, 2)
 nnz = GetNNZ(obj)
 nrhs = SIZE(obj%slu%rhs, 2)
 
