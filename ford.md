@@ -12,6 +12,8 @@ src_dir: src/modules/Utility/src/
          src/modules/Quadrangle/src/
          src/modules/Tetrahedron/src/
          src/modules/IntVector/src/
+         src/modules/FEVariable/src/
+         src/modules/ElemshapeData/src/
 media_dir: docs/media
 page_dir: docs/pages
 output_dir: /tmp/formal/base
