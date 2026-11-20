@@ -15,10 +15,21 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
+!> author: Vikas Sharma, Ph. D.
+! date: 2021-03-04
+! summary: Constructor methods of ElemShapeData_ and STElemShapeData_
+!
+! Allocate, copy and deallocate element shape data, and initiate
+! space-time shape data from the shape data of a time element.
+
 MODULE ElemshapeData_ConstructorMethods
-USE BaseType, ONLY: ElemShapeData_, STElemShapeData_, QuadraturePoint_, &
-                    ReferenceElement_
-USE GlobalData, ONLY: I4B, DFP, LGT
+USE BaseType, ONLY: ElemShapeData_
+USE BaseType, ONLY: QuadraturePoint_
+USE BaseType, ONLY: ReferenceElement_
+USE BaseType, ONLY: STElemShapeData_
+USE GlobalData, ONLY: DFP
+USE GlobalData, ONLY: I4B
+USE GlobalData, ONLY: LGT
 IMPLICIT NONE
 PRIVATE
 
@@ -28,32 +39,50 @@ PUBLIC :: ALLOCATE
 PUBLIC :: ASSIGNMENT(=)
 
 !----------------------------------------------------------------------------
-!                                                  Allocate@Constructor
+!                                                 Allocate@ConstructorMethods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date: 4 March 2021
+! date: 2021-03-04
 ! summary: Allocates the memory for various matrices in elemsd
 !
-!# Introduction
+! Reallocates the arrays of `obj` and sets its sizes.
+! It sets `nsd`, `xidim`, `nns` and `nips`, and allocates:
 !
-!- This subroutine allocates the memory for various matrices in the obj.
-!- This subroutine belongs to the generic interface called `Allocate()`.
+! - `N(nns, nips)` and `NLaplacian(nns, nips)`
+! - `dNdXi(nns, xidim, nips)` and `dNdXt(nns, nsd, nips)`
+! - `jacobian(nsd, xidim, nips)`, `normal(3, nips)`, `coord(nsd, nips)`
+! - `js(nips)`, `ws(nips)` and `thickness(nips)`
+!
+! All values are zero, except `thickness`, which is one.
+!
+! If `obj` is a `STElemShapeData_` and `nnt` is present, it also sets
+! `nnt`. It then allocates `T(nnt)`, `dTdTheta(nnt)`,
+! `dNTdt(nns, nnt, nips)` and `dNTdXt(nns, nnt, nsd, nips)`.
+!
+! You can also call it as `Initiate(obj, nsd, xidim, nns, nips, nnt)`.
+!
+! Examples
+!
+! - [test 1](|base|ElemshapeData/examples/ALLOCATE_test_1.F90)
+! for `ElemShapeData_`, `STElemShapeData_` and `DEALLOCATE`
+!
+! See also: [[obj_Deallocate]]
 
 INTERFACE ALLOCATE
   MODULE PURE SUBROUTINE obj_Allocate(obj, nsd, xidim, nns, nips, nnt)
     CLASS(ElemshapeData_), INTENT(INOUT) :: obj
-    !! object to be returned
+    !! shape data to allocate
     INTEGER(I4B), INTENT(IN) :: nsd
     !! spatial dimension
     INTEGER(I4B), INTENT(IN) :: xidim
-    !! xidimension
+    !! dimension of the reference element
     INTEGER(I4B), INTENT(IN) :: nns
     !! number of nodes in element
     INTEGER(I4B), INTENT(IN) :: nips
     !! number of integration points
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: nnt
-    !! it is used when elemshape data is STElemShapeData
+    !! number of time nodes; used only for `STElemShapeData_`
   END SUBROUTINE obj_Allocate
 END INTERFACE ALLOCATE
 
@@ -62,18 +91,33 @@ INTERFACE Initiate
 END INTERFACE Initiate
 
 !----------------------------------------------------------------------------
-!                                               Initiate@ConstructorMethods
+!                                                 Initiate@ConstructorMethods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date: 23 July 2021
-! summary: This routine Initiate the element shapefunction data
+! date: 2021-07-23
+! summary: Initiate the element shape function data (not implemented)
+!
+! This routine should initiate `obj` from quadrature points and a
+! reference element. The names of the continuity and interpolation
+! types select the basis functions.
+!
+! @warning
+! It is not implemented. It prints `"[WORK IN PROGRESS]"` and stops
+! the program.
+! @endwarning
+!
+! Use [[LagrangeElemShapeData]] instead.
+! You can also use the `Initiate` that takes `TypeH1` and
+! `TypeLagrangeInterpolation` arguments.
+!
+! See also: [[LagrangeElemShapeData]]
 
 INTERFACE Initiate
   MODULE SUBROUTINE obj_Initiate1(obj, quad, refelem, continuityType, &
                                   interpolType)
     CLASS(ElemshapeData_), INTENT(INOUT) :: obj
-    !! ElemshapeData to be formed
+    !! shape data to initiate
     CLASS(QuadraturePoint_), INTENT(IN) :: quad
     !! Quadrature points
     CLASS(ReferenceElement_), INTENT(IN) :: refelem
@@ -86,17 +130,40 @@ INTERFACE Initiate
 END INTERFACE Initiate
 
 !----------------------------------------------------------------------------
-!                                               Initiate@ConstructorMethods
+!                                                 Initiate@ConstructorMethods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date: 20 May 2022
+! date: 2022-05-20
 ! summary: Copy data from an instance of elemshapedata to another instance
+!
+! Copies the shape data of `obj2` into `obj1`.
+!
+! 1. Allocates `obj1` with the sizes of `obj2`, see [[obj_Allocate]].
+! 2. Copies `N`, `dNdXi`, `dNdXt`, `jacobian`, `js`, `ws`, `thickness`,
+!    `coord` and `normal`.
+! 3. If both are `STElemShapeData_`, it also copies `wt`, `jt`, `nnt`,
+!    `T`, `dTdTheta`, `dNTdt` and `dNTdXt`.
+!
+! @note
+! It allocates `NLaplacian` but does not copy it.
+! @endnote
+!
+! You can also write it as `obj1 = obj2`.
+!
+! Examples
+!
+! - [test 1](|base|ElemshapeData/examples/Initiate_test_1.F90) copies with
+! `Initiate` and with `=`
+!
+! See also: [[obj_Allocate]]
 
 INTERFACE Initiate
   MODULE SUBROUTINE obj_Initiate2(obj1, obj2)
     CLASS(ElemshapeData_), INTENT(INOUT) :: obj1
+    !! destination
     CLASS(ElemshapeData_), INTENT(IN) :: obj2
+    !! source
   END SUBROUTINE obj_Initiate2
 END INTERFACE Initiate
 
@@ -105,55 +172,66 @@ INTERFACE ASSIGNMENT(=)
 END INTERFACE
 
 !----------------------------------------------------------------------------
-!                                                Initiate@ConstructorMethods
+!                                                 Initiate@ConstructorMethods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date: 4 March 2021
+! date: 2021-03-04
 ! summary: Initiate time shape function data in [[stelemshapedata_]]
 !
-!# Introduction
+! Sets the time shape data of `obj` from the time element `elemsd`.
+! It reallocates `obj` with one `STElemShapeData_` per time quadrature
+! point.
 !
-! - This subroutine Initiates the shape-function data related to time
-! domain in the instance of [[stelemshapedata_]].
-! - User should provide an instance of [[Elemshapedata_]] elemsd,
-! - The `elemsd`, actually contains the information of
-! the shape-function in the time domain
-! - The shape-function data in the time domain is
-!   - $T$
-!   - $\frac{dT}{d\theta}$
-!   - ...
-!@note
-! This routine uses `elemsd` to  set `obj%T`, `obj%dTdTheta`, `obj%Jt`,
-! `obj%Wt`, `obj%Theta`.
-!@endnote
+! For each time point `ip`, it sets:
 !
+! - `nnt` to `elemsd%nns`
+! - `T` to `elemsd%N(:, ip)`
+! - `dTdTheta` to `elemsd%dNdXi(:, 1, ip)`
+! - `wt` to `elemsd%ws(ip)` and `jt` to `elemsd%js(ip)`
+!
+! @note
+! It does not set the space part of `obj(ip)`.
+! @endnote
+!
+! Examples
+!
+! - [test 1](|base|ElemshapeData/examples/Initiate_test_1.F90) second block,
+! from a `Line2` time element
 
 INTERFACE Initiate
   MODULE PURE SUBROUTINE obj_Initiate3(obj, elemsd)
     TYPE(STElemshapeData_), ALLOCATABLE, INTENT(INOUT) :: obj(:)
+    !! space-time shape data, one per time quadrature point
     TYPE(ElemshapeData_), INTENT(IN) :: elemsd
     !! It has information about location shape function for time element
   END SUBROUTINE obj_Initiate3
 END INTERFACE Initiate
 
 !----------------------------------------------------------------------------
-!                                             Deallocate@ConstructorMethods
+!                                               Deallocate@ConstructorMethods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date: 4 March 2021
+! date: 2021-03-04
 ! summary: Deallocates the data stored inside [[elemshapedata_]]
 !
-!# Introduction
+! Deallocates all arrays of `obj`.
+! It sets `nsd`, `xidim`, `nips` and `nns` to zero.
 !
-! This routine deallocates the data stored inside [[elemshapedata_]]. This
-! routine belongs to `Allocate()`
+! If `obj` is a `STElemShapeData_`, it also deallocates the time arrays.
+! It then sets `nnt`, `wt` and `jt` to zero.
 !
+! Examples
+!
+! - [test 1](|base|ElemshapeData/examples/ALLOCATE_test_1.F90) third block
+!
+! See also: [[obj_Allocate]]
 
 INTERFACE DEALLOCATE
   MODULE PURE SUBROUTINE obj_Deallocate(obj)
     CLASS(ElemshapeData_), INTENT(INOUT) :: obj
+    !! element shape data
   END SUBROUTINE obj_Deallocate
 END INTERFACE DEALLOCATE
 
