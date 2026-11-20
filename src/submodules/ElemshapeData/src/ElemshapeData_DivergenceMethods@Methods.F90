@@ -58,7 +58,7 @@ END PROCEDURE elemsd_GetDivergence_1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE elemsd_GetDivergence_2
-INTEGER(I4B) :: ips, I, ii, a, ips
+INTEGER(I4B) :: ips, I, ii, a
 
 tsize = obj%nips
 
@@ -125,7 +125,7 @@ DO ips = 1, ncol
 
     DO I = 1, obj%nns
       DO ii = 1, obj%nsd
-        ans(jj, ips) = ans(jj, ips) + val(ii, jj, I) * obj%dNdXt(I, ii, ips)
+        ans(jj, ips) = ans(jj, ips) + val(jj, ii, I) * obj%dNdXt(I, ii, ips)
       END DO
     END DO
   END DO
@@ -154,7 +154,7 @@ SELECT TYPE (obj); TYPE IS (STElemShapeData_)
         DO I = 1, obj%nns
           DO ii = 1, obj%nsd
             ans(jj, ips) = ans(jj, ips) + &
-                           val(ii, jj, I, a) * obj%dNTdXt(I, a, ii, ips)
+                           val(jj, ii, I, a) * obj%dNTdXt(I, a, ii, ips)
           END DO
         END DO
       END DO
@@ -228,7 +228,7 @@ END PROCEDURE elemsd_GetDivergence_7
 
 MODULE PROCEDURE elemsd_GetDivergence_8
 REAL(DFP), ALLOCATABLE :: r1(:), r2(:, :), r3(:, :, :)
-INTEGER(I4B) :: ii, nipt, jj, kk, s(2)
+INTEGER(I4B) :: ii, nipt, jj, kk, s(2), maxnips
 
 nipt = SIZE(obj)
 
@@ -241,14 +241,16 @@ CASE (TypeFEVariableOpt%vector)
     IF (obj(jj)%nips .GT. ii) ii = obj(jj)%nips
   END DO
 
+  maxnips = ii
   ALLOCATE (r1(ii), r2(ii, nipt))
+  r2 = 0.0_DFP
 
   DO ii = 1, nipt
     CALL GetDivergence(obj=obj(ii), ans=r1(1:obj(ii)%nips), val=val, tsize=jj)
     r2(1:obj(ii)%nips, ii) = r1(1:obj(ii)%nips)
   END DO
 
-  ans = QuadratureVariable(r2(1:obj(ii)%nips, 1:nipt), typeFEVariableScalar, &
+  ans = QuadratureVariable(r2(1:maxnips, 1:nipt), typeFEVariableScalar, &
                            typeFEVariableSpaceTime)
   DEALLOCATE (r2, r1)
 

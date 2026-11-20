@@ -26,7 +26,7 @@
 ! `dNTdXt`) must be set first, for example by [[Set]].
 
 MODULE ElemshapeData_DivergenceMethods
-USE BaseType, ONLY: ElemShapeData_, STElemshapeData_, FEVariable_
+USE BaseType, ONLY: ElemShapeData_, FEVariable_, STElemshapeData_
 USE GlobalData, ONLY: DFP, I4B, LGT
 
 IMPLICIT NONE
@@ -37,7 +37,8 @@ PUBLIC :: GetDivergence
 PUBLIC :: Divergence
 
 !----------------------------------------------------------------------------
-!                                       GetDivergence@DivergenceMethods
+!                                                      GetDivergence@Methods
+!----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-26
@@ -53,7 +54,8 @@ PUBLIC :: Divergence
 !
 ! Examples
 !
-! - [test 1](|base|ElemshapeData/examples/GetDivergence_test_1.F90) first block
+! - [test 1](|base|ElemshapeData/examples/GetDivergence_test_1.F90)
+! first block
 !
 ! See also: [[elemsd_GetDivergence_3]], [[elemsd_Divergence_1]]
 
@@ -72,6 +74,7 @@ END INTERFACE GetDivergence
 
 !----------------------------------------------------------------------------
 !                                          GetDivergence@DivergenceMethods
+!----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-26
@@ -94,7 +97,8 @@ END INTERFACE GetDivergence
 !
 ! Examples
 !
-! - [test 1](|base|ElemshapeData/examples/GetDivergence_test_1.F90) third block
+! - [test 1](|base|ElemshapeData/examples/GetDivergence_test_1.F90)
+! third block
 !
 ! See also: [[elemsd_GetDivergence_1]]
 
@@ -113,6 +117,7 @@ END INTERFACE GetDivergence
 
 !----------------------------------------------------------------------------
 !                                      GetDivergence@DivergenceMethods
+!----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-26
@@ -133,7 +138,8 @@ END INTERFACE GetDivergence
 !
 ! Examples
 !
-! - [test 1](|base|ElemshapeData/examples/GetDivergence_test_1.F90) second block
+! - [test 1](|base|ElemshapeData/examples/GetDivergence_test_1.F90)
+! second block
 !
 ! See also: [[elemsd_GetDivergence_1]], [[elemsd_GetDivergence_2]]
 
@@ -151,7 +157,8 @@ INTERFACE GetDivergence
 END INTERFACE GetDivergence
 
 !----------------------------------------------------------------------------
-!                                      GetDivergence@DivergenceMethods
+!                                            GetDivergence@DivergenceMethods
+!----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-26
@@ -170,7 +177,8 @@ END INTERFACE GetDivergence
 !
 ! Examples
 !
-! - [test 1](|base|ElemshapeData/examples/GetDivergence_test_1.F90) first block
+! - [test 1](|base|ElemshapeData/examples/GetDivergence_test_1.F90)
+! first block
 !
 ! See also: [[elemsd_GetDivergence_6]]
 
@@ -191,6 +199,7 @@ END INTERFACE GetDivergence
 
 !----------------------------------------------------------------------------
 !                                       GetDivergence@DivergenceMethods
+!----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-26
@@ -214,7 +223,8 @@ END INTERFACE GetDivergence
 !
 ! Examples
 !
-! - [test 1](|base|ElemshapeData/examples/GetDivergence_test_1.F90) third block
+! - [test 1](|base|ElemshapeData/examples/GetDivergence_test_1.F90)
+! third block
 !
 ! See also: [[elemsd_GetDivergence_4]]
 
@@ -234,7 +244,8 @@ INTERFACE GetDivergence
 END INTERFACE GetDivergence
 
 !----------------------------------------------------------------------------
-!                                       GetDivergence@DivergenceMethods
+!                                                      GetDivergence@Methods
+!----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-26
@@ -275,7 +286,8 @@ INTERFACE GetDivergence
 END INTERFACE GetDivergence
 
 !----------------------------------------------------------------------------
-!                                      GetDivergence@DivergenceMethods
+!                                                     GetDivergence@Methods
+!----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-26
@@ -308,7 +320,8 @@ INTERFACE GetDivergence
 END INTERFACE GetDivergence
 
 !----------------------------------------------------------------------------
-!                                      GetDivergence@DivergenceMethods
+!                                                      GetDivergence@Methods
+!----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-26
@@ -327,7 +340,8 @@ END INTERFACE GetDivergence
 !
 ! Examples
 !
-! - [test 1](|base|ElemshapeData/examples/GetDivergence_test_1.F90) third block
+! - [test 1](|base|ElemshapeData/examples/GetDivergence_test_1.F90)
+! third block
 !
 ! See also: [[elemsd_GetDivergence_7]], [[elemsd_Divergence_2]]
 
@@ -343,7 +357,8 @@ INTERFACE GetDivergence
 END INTERFACE GetDivergence
 
 !----------------------------------------------------------------------------
-!
+!                                                          Divergence@Methods
+!----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2021-03-04
@@ -354,7 +369,8 @@ END INTERFACE GetDivergence
 !
 ! Examples
 !
-! - [test 1](|base|ElemshapeData/examples/Divergence_test_1.F90) first block, vector and matrix
+! - [test 1](|base|ElemshapeData/examples/Divergence_test_1.F90)
+! first block, vector and matrix
 !
 ! See also: [[elemsd_GetDivergence_7]]
 
@@ -370,7 +386,8 @@ INTERFACE Divergence
 END INTERFACE Divergence
 
 !----------------------------------------------------------------------------
-!
+!                                                          Divergence@Methods
+!----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2021-03-04
@@ -381,7 +398,8 @@ END INTERFACE Divergence
 !
 ! Examples
 !
-! - [test 1](|base|ElemshapeData/examples/Divergence_test_1.F90) second block, space-time
+! - [test 1](|base|ElemshapeData/examples/Divergence_test_1.F90)
+! second block, space-time
 !
 ! See also: [[elemsd_GetDivergence_8]]
 
