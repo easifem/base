@@ -1,5 +1,6 @@
 ! This program is a part of EASIFEM library
-! Copyright (C) 2020-2021  Vikas Sharma, Ph.D
+! Expandable And Scalable Infrastructure for Finite Element Methods
+! htttps://www.easifem.com
 !
 ! This program is free software: you can redistribute it and/or modify
 ! it under the terms of the GNU General Public License as published by
@@ -13,6 +14,7 @@
 !
 ! You should have received a copy of the GNU General Public License
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
+!
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2021-03-04
@@ -40,6 +42,7 @@ PUBLIC :: GetSpatialGradient_
 
 !----------------------------------------------------------------------------
 !                                                         GetSpatialGradient
+!----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-26
@@ -68,6 +71,7 @@ END INTERFACE GetSpatialGradient
 
 !----------------------------------------------------------------------------
 !                                                        GetSpatialGradient_
+!----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-26
@@ -83,7 +87,8 @@ END INTERFACE GetSpatialGradient
 !
 ! Examples
 !
-! - [test 1](|base|ElemshapeData/examples/GetSpatialGradient__test_1.F90) first block
+! - [test 1](|base|ElemshapeData/examples/GetSpatialGradient__test_1.F90)
+! first block
 !
 ! See also: [[obj_GetSpatialGradient1]]
 
@@ -104,6 +109,7 @@ END INTERFACE GetSpatialGradient_
 
 !----------------------------------------------------------------------------
 !                                                         GetSpatialGradient
+!----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-26
@@ -115,7 +121,8 @@ END INTERFACE GetSpatialGradient_
 !
 ! Examples
 !
-! - [test 1](|base|ElemshapeData/examples/GetSpatialGradient_test_1.F90) first block
+! - [test 1](|base|ElemshapeData/examples/GetSpatialGradient_test_1.F90)
+! first block
 !
 ! See also: [[obj_GetSpatialGradient_2]]
 
@@ -132,6 +139,7 @@ END INTERFACE GetSpatialGradient
 
 !----------------------------------------------------------------------------
 !                                                        GetSpatialGradient_
+!----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-26
@@ -147,7 +155,8 @@ END INTERFACE GetSpatialGradient
 !
 ! Examples
 !
-! - [test 1](|base|ElemshapeData/examples/GetSpatialGradient__test_1.F90) first block
+! - [test 1](|base|ElemshapeData/examples/GetSpatialGradient__test_1.F90)
+! first block
 !
 ! See also: [[obj_GetSpatialGradient2]]
 
@@ -171,6 +180,7 @@ END INTERFACE GetSpatialGradient_
 
 !----------------------------------------------------------------------------
 !                                                          GetSpatialGradient
+!----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-26
@@ -183,7 +193,8 @@ END INTERFACE GetSpatialGradient_
 !
 ! Examples
 !
-! - [test 1](|base|ElemshapeData/examples/GetSpatialGradient_test_1.F90) third block
+! - [test 1](|base|ElemshapeData/examples/GetSpatialGradient_test_1.F90)
+! third block
 !
 ! See also: [[obj_GetSpatialGradient_3]]
 
@@ -200,6 +211,7 @@ END INTERFACE GetSpatialGradient
 
 !----------------------------------------------------------------------------
 !                                                        GetSpatialGradient_
+!----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-26
@@ -215,7 +227,8 @@ END INTERFACE GetSpatialGradient
 !
 ! Examples
 !
-! - [test 2](|base|ElemshapeData/examples/GetSpatialGradient__test_2.F90) second block
+! - [test 2](|base|ElemshapeData/examples/GetSpatialGradient__test_2.F90)
+! second block
 !
 ! See also: [[obj_GetSpatialGradient3]]
 
@@ -237,6 +250,7 @@ END INTERFACE GetSpatialGradient_
 
 !----------------------------------------------------------------------------
 !                                                          GetSpatialGradient
+!----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-26
@@ -249,7 +263,8 @@ END INTERFACE GetSpatialGradient_
 !
 ! Examples
 !
-! - [test 2](|base|ElemshapeData/examples/GetSpatialGradient_test_2.F90) first block
+! - [test 2](|base|ElemshapeData/examples/GetSpatialGradient_test_2.F90)
+! first block
 !
 ! See also: [[obj_GetSpatialGradient_4]]
 
@@ -266,6 +281,7 @@ END INTERFACE GetSpatialGradient
 
 !----------------------------------------------------------------------------
 !                                                        GetSpatialGradient_
+!----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-26
@@ -282,7 +298,8 @@ END INTERFACE GetSpatialGradient
 !
 ! Examples
 !
-! - [test 2](|base|ElemshapeData/examples/GetSpatialGradient__test_2.F90) second block
+! - [test 2](|base|ElemshapeData/examples/GetSpatialGradient__test_2.F90)
+! second block
 !
 ! See also: [[obj_GetSpatialGradient4]]
 
@@ -306,6 +323,7 @@ END INTERFACE GetSpatialGradient_
 
 !----------------------------------------------------------------------------
 !                                                          GetSpatialGradient
+!----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-26
@@ -317,7 +335,8 @@ END INTERFACE GetSpatialGradient_
 !
 ! Examples
 !
-! - [test 1](|base|ElemshapeData/examples/GetSpatialGradient_test_1.F90) second block
+! - [test 1](|base|ElemshapeData/examples/GetSpatialGradient_test_1.F90)
+! second block
 !
 ! See also: [[obj_GetSpatialGradient_5]]
 
@@ -336,6 +355,7 @@ END INTERFACE GetSpatialGradient
 
 !----------------------------------------------------------------------------
 !                                                        GetSpatialGradient_
+!----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-26
@@ -355,7 +375,8 @@ END INTERFACE GetSpatialGradient
 !
 ! Examples
 !
-! - [test 1](|base|ElemshapeData/examples/GetSpatialGradient__test_1.F90) second block
+! - [test 1](|base|ElemshapeData/examples/GetSpatialGradient__test_1.F90)
+! second block
 !
 ! See also: [[obj_GetSpatialGradient5]]
 
@@ -382,6 +403,7 @@ END INTERFACE GetSpatialGradient_
 
 !----------------------------------------------------------------------------
 !                                                         GetSpatialGradient
+!----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-26
@@ -393,7 +415,8 @@ END INTERFACE GetSpatialGradient_
 !
 ! Examples
 !
-! - [test 1](|base|ElemshapeData/examples/GetSpatialGradient_test_1.F90) second block
+! - [test 1](|base|ElemshapeData/examples/GetSpatialGradient_test_1.F90)
+! second block
 !
 ! See also: [[obj_GetSpatialGradient_6]]
 
@@ -412,6 +435,7 @@ END INTERFACE GetSpatialGradient
 
 !----------------------------------------------------------------------------
 !                                                        GetSpatialGradient_
+!----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-26
@@ -431,7 +455,8 @@ END INTERFACE GetSpatialGradient
 !
 ! Examples
 !
-! - [test 1](|base|ElemshapeData/examples/GetSpatialGradient__test_1.F90) second block
+! - [test 1](|base|ElemshapeData/examples/GetSpatialGradient__test_1.F90)
+! second block
 !
 ! See also: [[obj_GetSpatialGradient6]]
 
@@ -459,6 +484,7 @@ END INTERFACE GetSpatialGradient_
 
 !----------------------------------------------------------------------------
 !                                                         GetSpatialGradient
+!----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-26
@@ -470,7 +496,8 @@ END INTERFACE GetSpatialGradient_
 !
 ! Examples
 !
-! - [test 1](|base|ElemshapeData/examples/GetSpatialGradient_test_1.F90) first block
+! - [test 1](|base|ElemshapeData/examples/GetSpatialGradient_test_1.F90)
+! first block
 !
 ! See also: [[obj_GetSpatialGradient_7]]
 
@@ -487,6 +514,7 @@ END INTERFACE GetSpatialGradient
 
 !----------------------------------------------------------------------------
 !                                                         GetSpatialGradient
+!----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-26
@@ -502,7 +530,8 @@ END INTERFACE GetSpatialGradient
 !
 ! Examples
 !
-! - [test 2](|base|ElemshapeData/examples/GetSpatialGradient__test_2.F90) first block
+! - [test 2](|base|ElemshapeData/examples/GetSpatialGradient__test_2.F90)
+! first block
 !
 ! See also: [[obj_GetSpatialGradient7]]
 
@@ -528,6 +557,7 @@ END INTERFACE GetSpatialGradient_
 
 !----------------------------------------------------------------------------
 !                                                         GetSpatialGradient
+!----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-26
@@ -540,7 +570,8 @@ END INTERFACE GetSpatialGradient_
 !
 ! Examples
 !
-! - [test 2](|base|ElemshapeData/examples/GetSpatialGradient_test_2.F90) second block
+! - [test 2](|base|ElemshapeData/examples/GetSpatialGradient_test_2.F90)
+! second block
 !
 ! See also: [[obj_GetSpatialGradient_8]]
 
@@ -557,6 +588,7 @@ END INTERFACE GetSpatialGradient
 
 !----------------------------------------------------------------------------
 !                                                        GetSpatialGradient_
+!----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-26
@@ -573,7 +605,8 @@ END INTERFACE GetSpatialGradient
 !
 ! Examples
 !
-! - [test 2](|base|ElemshapeData/examples/GetSpatialGradient__test_2.F90) second block
+! - [test 2](|base|ElemshapeData/examples/GetSpatialGradient__test_2.F90)
+! second block
 !
 ! See also: [[obj_GetSpatialGradient8]]
 
@@ -599,6 +632,7 @@ END INTERFACE GetSpatialGradient_
 
 !----------------------------------------------------------------------------
 !                                                         GetSpatialGradient
+!----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-26
@@ -620,7 +654,8 @@ END INTERFACE GetSpatialGradient_
 !
 ! Examples
 !
-! - [test 1](|base|ElemshapeData/examples/GetSpatialGradient_test_1.F90) second block
+! - [test 1](|base|ElemshapeData/examples/GetSpatialGradient_test_1.F90)
+! second block
 !
 ! See also: [[obj_GetSpatialGradient_9]]
 
@@ -637,6 +672,7 @@ END INTERFACE GetSpatialGradient
 
 !----------------------------------------------------------------------------
 !                                                        GetSpatialGradient_
+!----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-26
@@ -661,7 +697,8 @@ END INTERFACE GetSpatialGradient
 !
 ! Examples
 !
-! - [test 1](|base|ElemshapeData/examples/GetSpatialGradient__test_1.F90) second block, space and space-time `val`
+! - [test 1](|base|ElemshapeData/examples/GetSpatialGradient__test_1.F90)
+! second block, space and space-time `val`
 !
 ! See also: [[obj_GetSpatialGradient9]]
 
@@ -691,6 +728,7 @@ END INTERFACE GetSpatialGradient_
 
 !----------------------------------------------------------------------------
 !                                                        GetSpatialGradient_
+!----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-26
@@ -703,7 +741,8 @@ END INTERFACE GetSpatialGradient_
 !
 ! Examples
 !
-! - [test 1](|base|ElemshapeData/examples/GetSpatialGradient_test_1.F90) third block
+! - [test 1](|base|ElemshapeData/examples/GetSpatialGradient_test_1.F90)
+! third block
 !
 ! See also: [[obj_GetSpatialGradient_10]]
 
@@ -723,6 +762,7 @@ END INTERFACE GetSpatialGradient
 
 !----------------------------------------------------------------------------
 !                                                        GetSpatialGradient_
+!----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-26
@@ -744,7 +784,8 @@ END INTERFACE GetSpatialGradient
 !
 ! Examples
 !
-! - [test 2](|base|ElemshapeData/examples/GetSpatialGradient__test_2.F90) third block
+! - [test 2](|base|ElemshapeData/examples/GetSpatialGradient__test_2.F90)
+! third block
 !
 ! See also: [[obj_GetSpatialGradient10]]
 
@@ -770,6 +811,7 @@ END INTERFACE GetSpatialGradient_
 
 !----------------------------------------------------------------------------
 !                                                        GetSpatialGradient_
+!----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-26
@@ -782,7 +824,8 @@ END INTERFACE GetSpatialGradient_
 !
 ! Examples
 !
-! - [test 2](|base|ElemshapeData/examples/GetSpatialGradient_test_2.F90) third block
+! - [test 2](|base|ElemshapeData/examples/GetSpatialGradient_test_2.F90)
+! third block
 !
 ! See also: [[obj_GetSpatialGradient_11]]
 
@@ -802,6 +845,7 @@ END INTERFACE GetSpatialGradient
 
 !----------------------------------------------------------------------------
 !                                                        GetSpatialGradient_
+!----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-26
@@ -823,7 +867,8 @@ END INTERFACE GetSpatialGradient
 !
 ! Examples
 !
-! - [test 2](|base|ElemshapeData/examples/GetSpatialGradient__test_2.F90) fourth block
+! - [test 2](|base|ElemshapeData/examples/GetSpatialGradient__test_2.F90)
+! fourth block
 !
 ! See also: [[obj_GetSpatialGradient11]]
 
@@ -851,6 +896,7 @@ END INTERFACE GetSpatialGradient_
 
 !----------------------------------------------------------------------------
 !                                                        GetSpatialGradient_
+!----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-26
@@ -863,7 +909,8 @@ END INTERFACE GetSpatialGradient_
 !
 ! Examples
 !
-! - [test 2](|base|ElemshapeData/examples/GetSpatialGradient_test_2.F90) fourth block
+! - [test 2](|base|ElemshapeData/examples/GetSpatialGradient_test_2.F90)
+! fourth block
 !
 ! See also: [[obj_GetSpatialGradient_12]]
 
@@ -883,6 +930,7 @@ END INTERFACE GetSpatialGradient
 
 !----------------------------------------------------------------------------
 !                                                        GetSpatialGradient_
+!----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-26
@@ -904,7 +952,8 @@ END INTERFACE GetSpatialGradient
 !
 ! Examples
 !
-! - [test 2](|base|ElemshapeData/examples/GetSpatialGradient__test_2.F90) fourth block
+! - [test 2](|base|ElemshapeData/examples/GetSpatialGradient__test_2.F90)
+! fourth block
 !
 ! See also: [[obj_GetSpatialGradient12]]
 
@@ -935,5 +984,9 @@ INTERFACE GetSpatialGradient_
     !! obj%nns, obj%nnt
   END SUBROUTINE obj_GetSpatialGradient_12
 END INTERFACE GetSpatialGradient_
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
 
 END MODULE ElemshapeData_GradientMethods
