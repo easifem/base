@@ -19,14 +19,16 @@
 ! date: 2021-11-11
 ! summary: Get methods for [[IntVector_]]
 !
-! The generic `Get` reads entries from one [[IntVector_]] or from a vector
-! of them, selected as all entries, a list of positions or an index
-! triplet. The `datatype` argument selects the type and kind of the
-! result; its value is not used. `GetIndex` searches for values. All
-! methods use only the active entries `obj%val(1:obj%tsize)`.
+! The generic `Get` reads entries from one [[IntVector_]] or from an
+! array of them. You select all entries, a list of positions or an index
+! triplet. The `datatype` argument sets the type and kind of the result.
+! Its value is not used.
+!
+! `GetIndex` searches for values. All methods use only the active
+! entries `obj%val(1:obj%tsize)`.
 !
 ! Changes:
-!   - 2026-11-03: Renamed intVec_get_* to obj_Get*, removed GetPointer
+!   - 2026-11-03: Renamed `intVec_get_*` to `obj_Get*`, removed GetPointer
 !   - 2026-11-05: Fixed empty triplets, Get11 and scalar GetIndex
 
 MODULE IntVector_GetMethod
@@ -52,11 +54,11 @@ PUBLIC :: GetIndex
 ! date: 2021-11-11
 ! summary: Returns a copy of [[IntVector_]]
 !
-! Returns the active entries `obj%val(1:obj%tsize)` as a new
-! [[IntVector_]]. The type of the result is selected by `datatype`; its
-! value is not used, so pass `TypeIntVector` from `BaseType`. An empty
-! `obj` gives an empty result. For an integer array result see
-! [[obj_Get7a]].
+! Returns the active entries `obj%val(1:tsize)` as a new [[IntVector_]].
+! An empty `obj` gives an empty result.
+!
+! The type of the result is selected by `datatype`. Its value is not
+! used, so pass `TypeIntVector` from `BaseType`.
 !
 ! Changes:
 !   - 2026-11-03: Renamed from intVec_get_1; only the active entries
@@ -67,57 +69,14 @@ PUBLIC :: GetIndex
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE BaseType, ONLY: IntVector_
-! USE BaseType, ONLY: TypeIntVector
-! USE GlobalData, ONLY: I4B
-! USE IntVector_Method, ONLY: ASSIGNMENT(=)
-! USE IntVector_Method, ONLY: Capacity
-! USE IntVector_Method, ONLY: Get
-! USE IntVector_Method, ONLY: Size
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
+! - [test 1](|base|IntVector/examples/Get_test_1.F90)
 !
-! TYPE(IntVector_) :: obj, empty, ans
-! INTEGER(I4B), ALLOCATABLE :: arr(:)
-!
-! obj = [10_I4B, 20_I4B, 30_I4B, 40_I4B]
-!
-! ! Test 1: the result is an IntVector_ copy
-! ans = Get(obj, TypeIntVector)
-! CALL OK(Size(ans) .EQ. 4, "Get: IntVector_ result, Size")
-! CALL OK(ALL(ans%val(1:4) .EQ. [10, 20, 30, 40]), &
-!         "Get: IntVector_ result, values")
-!
-! ! Test 2: the result is an integer array
-! arr = Get(obj, 1_I4B)
-! CALL OK(SIZE(arr) .EQ. 4, "Get: array result, SIZE")
-! CALL OK(ALL(arr .EQ. [10, 20, 30, 40]), "Get: array result, values")
-!
-! ! Test 3: an empty obj gives an empty result
-! ans = Get(empty, TypeIntVector)
-! CALL OK(Size(ans) .EQ. 0, "Get: empty obj, IntVector_ result")
-! arr = Get(empty, 1_I4B)
-! CALL OK(SIZE(arr) .EQ. 0, "Get: empty obj, array result")
-!
-! ! Test 4: entries beyond tsize are not returned
-! obj%tsize = 2
-! ans = Get(obj, TypeIntVector)
-! CALL OK(Size(ans) .EQ. 2, "Get: spare capacity, Size")
-! CALL OK(Capacity(ans) .EQ. 2, "Get: result capacity = tsize")
-! arr = Get(obj, 1_I4B)
-! CALL OK(ALL(arr .EQ. [10, 20]), "Get: spare capacity, array result")
-!
-! END PROGRAM main
-!```
-!
-! See also: [[obj_Get7a]], [[obj_Initiate6]]
+! See also: [[obj_Get_1]], [[obj_Get7a]], [[obj_Initiate6]]
 
 INTERFACE Get
   MODULE PURE FUNCTION obj_Get1(obj, datatype) RESULT(val)
     TYPE(IntVector_), INTENT(IN) :: obj
-    !! integer vector, only obj%val(1:obj%tsize) is read
+    !! integer vector, only `obj%val(1:obj%tsize)` is read
     TYPE(IntVector_), INTENT(IN) :: datatype
     !! selects an IntVector_ result, value is not used
     TYPE(IntVector_) :: val
@@ -133,14 +92,26 @@ END INTERFACE Get
 ! date: 2026-11-05
 ! summary: Like [[obj_Get1]] but without allocation.
 !
-! This method returns the val without allocation. This method
-! is similar to [[obj_Get1]]
+! Copies the active entries `obj%val(1:tsize)` into `ans`.
 !
+! 1. If `ans%val` is not allocated, the routine allocates it.
+! 2. If `capacity` of `ans` is smaller than `tsize` of `obj`, the
+!    routine makes `ans` larger.
+! 3. Otherwise `capacity` of `ans` does not change.
+! 4. The routine sets `tsize` of `ans` to `tsize` of `obj`.
+!
+! Entries of `ans%val` beyond the new `tsize` do not change.
+!
+! Examples
+!
+! - [test 1](|base|IntVector/examples/Get__test_1.F90)
+!
+! See also: [[obj_Get1]]
 
 INTERFACE Get_
   MODULE PURE SUBROUTINE obj_Get_1(obj, ans)
     TYPE(IntVector_), INTENT(IN) :: obj
-    !! integer vector, only obj%val(1:obj%tsize) is read
+    !! integer vector, only `obj%val(1:obj%tsize)` is read
     TYPE(IntVector_), INTENT(INOUT) :: ans
     !! returned entries
   END SUBROUTINE obj_Get_1
@@ -156,9 +127,11 @@ END INTERFACE Get_
 !
 ! Returns the entries of `obj` at the positions `indx`, in the order of
 ! `indx`. A position can be repeated. Every position must satisfy
-! `1 <= indx(i) <= Size(obj)`. If `obj%val` is not allocated, the result
-! has `SIZE(indx)` zeros. For an integer array result see [[obj_Get8a]],
-! and for one position see [[obj_Get13a]].
+! `1 <= indx(i) <= Size(obj)`.
+!
+! If `obj%val` is not allocated, the result has `SIZE(indx)` zeros.
+! The type of the result is selected by `datatype`. Its value is not
+! used, so pass `TypeIntVector` from `BaseType`.
 !
 ! Changes:
 !   - 2026-11-03: Renamed from intVec_get_2; only the active entries
@@ -169,56 +142,14 @@ END INTERFACE Get_
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE BaseType, ONLY: IntVector_
-! USE BaseType, ONLY: TypeIntVector
-! USE GlobalData, ONLY: I4B
-! USE IntVector_Method, ONLY: ASSIGNMENT(=)
-! USE IntVector_Method, ONLY: Get
-! USE IntVector_Method, ONLY: Size
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
+! - [test 2](|base|IntVector/examples/Get_test_2.F90)
 !
-! TYPE(IntVector_) :: obj, ans
-! INTEGER(I4B), ALLOCATABLE :: arr(:)
-!
-! obj = [10_I4B, 20_I4B, 30_I4B, 40_I4B]
-!
-! ! Test 1: vector of positions, IntVector_ result; order is kept
-! ans = Get(obj, [4_I4B, 1_I4B, 4_I4B], TypeIntVector)
-! CALL OK(Size(ans) .EQ. 3, "Get: indx, IntVector_ result, Size")
-! CALL OK(ALL(ans%val(1:3) .EQ. [40, 10, 40]), &
-!         "Get: indx, IntVector_ result, values")
-!
-! ! Test 2: vector of positions, array result
-! arr = Get(obj, [2_I4B, 3_I4B], 1_I4B)
-! CALL OK(ALL(arr .EQ. [20, 30]), "Get: indx, array result")
-!
-! ! Test 3: no positions gives an empty result
-! BLOCK
-!   INTEGER(I4B) :: noindx(0)
-!   ans = Get(obj, noindx, TypeIntVector)
-!   CALL OK(Size(ans) .EQ. 0, "Get: empty indx, IntVector_ result")
-!   arr = Get(obj, noindx, 1_I4B)
-!   CALL OK(SIZE(arr) .EQ. 0, "Get: empty indx, array result")
-! END BLOCK
-!
-! ! Test 4: one position gives a scalar
-! CALL OK(Get(obj, 3_I4B, 1_I4B) .EQ. 30, "Get: scalar indx")
-!
-! ! Test 5: a scalar position beyond tsize gives zero
-! CALL OK(Get(obj, 5_I4B, 1_I4B) .EQ. 0, "Get: scalar indx > tsize")
-!
-! END PROGRAM main
-!```
-!
-! See also: [[obj_Get8a]], [[obj_Get13a]]
+! See also: [[obj_Get_2]], [[obj_Get8a]], [[obj_Get13a]]
 
 INTERFACE Get
   MODULE PURE FUNCTION obj_Get2(obj, indx, datatype) RESULT(val)
     TYPE(IntVector_), INTENT(IN) :: obj
-    !! integer vector, only obj%val(1:obj%tsize) is read
+    !! integer vector, only `obj%val(1:obj%tsize)` is read
     TYPE(IntVector_), INTENT(IN) :: datatype
     !! selects an IntVector_ result, value is not used
     INTEGER(I4B), INTENT(IN) :: indx(:)
@@ -236,13 +167,29 @@ END INTERFACE Get
 ! date: 2026-11-05
 ! summary: Get the values from IntVector in the form of IntVector using indx
 !
-! This method is similar to [[obj_Get2]], but it will reallocates
-! only if it is necessary.
+! Copies the entries of `obj` at the positions `indx` into `ans`, in the
+! order of `indx`. Every position must satisfy
+! `1 <= indx(i) <= Size(obj)`.
 !
+! 1. If `ans%val` is not allocated, the routine allocates it.
+! 2. If `capacity` of `ans` is smaller than `SIZE(indx)`, the routine
+!    makes `ans` larger.
+! 3. Otherwise `capacity` of `ans` does not change.
+! 4. The routine sets `tsize` of `ans` to `SIZE(indx)`.
+!
+! Old values in `ans%val(1:tsize)` are cleared first. If `obj%val` is not
+! allocated, `ans` holds `SIZE(indx)` zeros.
+!
+! Examples
+!
+! - [test 2](|base|IntVector/examples/Get__test_2.F90)
+!
+! See also: [[obj_Get2]]
+
 INTERFACE Get_
   MODULE PURE SUBROUTINE obj_Get_2(obj, indx, ans)
     TYPE(IntVector_), INTENT(IN) :: obj
-    !! integer vector, only obj%val(1:obj%tsize) is read
+    !! integer vector, only `obj%val(1:obj%tsize)` is read
     INTEGER(I4B), INTENT(IN) :: indx(:)
     !! positions to read, 1 <= indx(i) <= Size(obj)
     TYPE(IntVector_), INTENT(INOUT) :: ans
@@ -258,9 +205,11 @@ END INTERFACE Get_
 ! date: 2021-11-11
 ! summary: Returns obj(istart:iend:stride) as an [[IntVector_]]
 !
-! Returns the entries of `obj` selected by an index triplet. `iend` and
-! `stride` are optional, so pass `datatype` by keyword when any of them
-! is left out. The stride can be negative.
+! Returns the entries of `obj` selected by the triplet
+! `istart:iend:stride` as a new [[IntVector_]].
+! `iend` defaults to `Size(obj)` and `stride` defaults to 1.
+! The stride can be negative, but not zero.
+! Pass `datatype` by keyword when `iend` or `stride` is left out.
 !
 ! A triplet that selects no entries, such as 3:2:2, gives an empty result.
 !
@@ -279,62 +228,15 @@ END INTERFACE Get_
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE BaseType, ONLY: IntVector_
-! USE BaseType, ONLY: TypeIntVector
-! USE GlobalData, ONLY: I4B
-! USE IntVector_Method, ONLY: ASSIGNMENT(=)
-! USE IntVector_Method, ONLY: Get
-! USE IntVector_Method, ONLY: Size
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
+! - [test 3](|base|IntVector/examples/Get_test_3.F90)
 !
-! TYPE(IntVector_) :: obj, ans
-! INTEGER(I4B), ALLOCATABLE :: arr(:)
-!
-! obj = [10_I4B, 20_I4B, 30_I4B, 40_I4B, 50_I4B]
-!
-! ! Test 1: full triplet, IntVector_ result
-! ans = Get(obj, 1_I4B, 5_I4B, 2_I4B, TypeIntVector)
-! CALL OK(Size(ans) .EQ. 3, "Get: triplet, IntVector_ result, Size")
-! CALL OK(ALL(ans%val(1:3) .EQ. [10, 30, 50]), &
-!         "Get: triplet, IntVector_ result, values")
-!
-! ! Test 2: iend and stride default to Size(obj) and 1
-! ans = Get(obj, istart=3_I4B, datatype=TypeIntVector)
-! CALL OK(ALL(ans%val(1:Size(ans)) .EQ. [30, 40, 50]), &
-!         "Get: default iend and stride")
-!
-! ! Test 3: stride alone
-! ans = Get(obj, istart=2_I4B, stride=2_I4B, datatype=TypeIntVector)
-! CALL OK(ALL(ans%val(1:Size(ans)) .EQ. [20, 40]), "Get: default iend")
-!
-! ! Test 4: negative stride walks backwards
-! ans = Get(obj, 5_I4B, 1_I4B, -2_I4B, TypeIntVector)
-! CALL OK(ALL(ans%val(1:Size(ans)) .EQ. [50, 30, 10]), &
-!         "Get: negative stride, IntVector_ result")
-!
-! ! Test 5: array result
-! arr = Get(obj, 2_I4B, 4_I4B, 1_I4B, 1_I4B)
-! CALL OK(ALL(arr .EQ. [20, 30, 40]), "Get: triplet, array result")
-! arr = Get(obj, 5_I4B, 1_I4B, -2_I4B, 1_I4B)
-! CALL OK(ALL(arr .EQ. [50, 30, 10]), "Get: negative stride, array result")
-!
-! ! Test 6: a stride larger than the range gives one entry
-! arr = Get(obj, 2_I4B, 3_I4B, 5_I4B, 1_I4B)
-! CALL OK(ALL(arr .EQ. [20]), "Get: stride larger than the range")
-!
-! END PROGRAM main
-!```
-!
-! See also: [[obj_Get9a]]
+! See also: [[obj_Get_3]], [[obj_Get9a]]
 
 INTERFACE Get
   MODULE PURE FUNCTION obj_Get3(obj, istart, iend, stride, datatype) &
     RESULT(val)
     TYPE(IntVector_), INTENT(IN) :: obj
-    !! integer vector, only obj%val(1:obj%tsize) is read
+    !! integer vector, only `obj%val(1:obj%tsize)` is read
     TYPE(IntVector_), INTENT(IN) :: datatype
     !! selects an IntVector_ result, value is not used
     INTEGER(I4B), INTENT(IN) :: istart
@@ -354,13 +256,28 @@ END INTERFACE Get
 ! date: 2026-11-05
 ! summary: Get values from IntVector_ in another IntVector_ using triplets
 !
-! This method works like [[obj_Get3]] but it will reallocates only when
-! necessary.
+! Copies the entries of `obj` selected by an index triplet into `ans`.
+! The triplet works as in [[obj_Get3]].
+!
+! 1. If `ans%val` is not allocated, the routine allocates it.
+! 2. If `capacity` of `ans` is smaller than the number of selected
+!    entries, the routine makes `ans` larger.
+! 3. Otherwise `capacity` of `ans` does not change.
+! 4. The routine sets `tsize` of `ans` to the number of selected entries.
+!
+! Old values in `ans%val(1:tsize)` are cleared first, so a skipped entry is 0.
+! A triplet that selects no entries gives `tsize = 0`.
+!
+! Examples
+!
+! - [test 3](|base|IntVector/examples/Get__test_3.F90)
+!
+! See also: [[obj_Get3]]
 
 INTERFACE Get_
   MODULE PURE SUBROUTINE obj_Get_3(obj, istart, iend, stride, ans)
     TYPE(IntVector_), INTENT(IN) :: obj
-    !! integer vector, only obj%val(1:obj%tsize) is read
+    !! integer vector, only `obj%val(1:obj%tsize)` is read
     INTEGER(I4B), INTENT(IN) :: istart
     !! first index
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: iend, stride
@@ -378,9 +295,11 @@ END INTERFACE Get_
 ! date: 2021-11-11
 ! summary: Joins a vector of [[IntVector_]] into one [[IntVector_]]
 !
-! Returns the active entries of `obj(1)`, `obj(2)`, ... one after the
-! other. Empty items add nothing. For an integer array result see
-! [[obj_Get10a]].
+! Joins the active entries of `obj(1)`, `obj(2)`, ... one after the
+! other into a new [[IntVector_]]. Empty items add nothing.
+!
+! The type of the result is selected by `datatype`. Its value is not
+! used, so pass `TypeIntVector` from `BaseType`.
 !
 ! Changes:
 !   - 2026-11-03: Renamed from intVec_get_4; only the active entries
@@ -394,45 +313,9 @@ END INTERFACE Get_
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE BaseType, ONLY: IntVector_
-! USE BaseType, ONLY: TypeIntVector
-! USE GlobalData, ONLY: I4B
-! USE IntVector_Method, ONLY: ASSIGNMENT(=)
-! USE IntVector_Method, ONLY: Get
-! USE IntVector_Method, ONLY: Size
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
+! - [test 4](|base|IntVector/examples/Get_test_4.F90)
 !
-! TYPE(IntVector_) :: obj(3), ans
-! INTEGER(I4B), ALLOCATABLE :: arr(:)
-!
-! obj(1) = [1_I4B, 2_I4B]
-! obj(3) = [3_I4B, 4_I4B, 5_I4B]
-!
-! ! Test 1: entries are joined in order, an empty item is skipped
-! ans = Get(obj, TypeIntVector)
-! CALL OK(Size(ans) .EQ. 5, "Get: join, IntVector_ result, Size")
-! CALL OK(ALL(ans%val(1:5) .EQ. [1, 2, 3, 4, 5]), &
-!         "Get: join, IntVector_ result, values")
-!
-! ! Test 2: array result
-! arr = Get(obj, 1_I4B)
-! CALL OK(SIZE(arr) .EQ. 5, "Get: join, array result, SIZE")
-! CALL OK(ALL(arr .EQ. [1, 2, 3, 4, 5]), "Get: join, array result, values")
-!
-! ! Test 3: entries beyond tsize are not joined
-! obj(3)%tsize = 1
-! arr = Get(obj, 1_I4B)
-! CALL OK(ALL(arr .EQ. [1, 2, 3]), "Get: join, spare capacity, array")
-! ans = Get(obj, TypeIntVector)
-! CALL OK(Size(ans) .EQ. 3, "Get: join, spare capacity, IntVector_")
-!
-! END PROGRAM main
-!```
-!
-! See also: [[obj_Get10a]]
+! See also: [[obj_Get_4]], [[obj_Get10a]]
 
 INTERFACE Get
   MODULE PURE FUNCTION obj_Get4(obj, datatype) RESULT(val)
@@ -451,11 +334,23 @@ END INTERFACE Get
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2026-11-05
-! summary: Get IntVector from a vector of IntVector.
+! summary: Joins a vector of [[IntVector_]] into an existing [[IntVector_]]
 !
-! This method works same as [[obj_Get4]], but it will reallocate only
-! when it is necessary.
+! Copies the active entries of `obj(1)`, `obj(2)`, ... one after the
+! other into `ans`. Empty items add nothing.
 !
+! 1. If `ans%val` is not allocated, the routine allocates it.
+! 2. If `capacity` of `ans` is smaller than the total number of entries,
+!    the routine makes `ans` larger.
+! 3. Otherwise `capacity` of `ans` does not change.
+! 4. The routine sets `tsize` of `ans` to the total number of entries.
+!
+! Examples
+!
+! - [test 4](|base|IntVector/examples/Get__test_4.F90)
+!
+! See also: [[obj_Get4]]
+
 INTERFACE Get_
   MODULE PURE SUBROUTINE obj_Get_4(obj, ans)
     TYPE(IntVector_), INTENT(IN) :: obj(:)
@@ -491,38 +386,9 @@ END INTERFACE Get_
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE BaseType, ONLY: IntVector_
-! USE BaseType, ONLY: TypeIntVector
-! USE GlobalData, ONLY: I4B
-! USE IntVector_Method, ONLY: ASSIGNMENT(=)
-! USE IntVector_Method, ONLY: Get
-! USE IntVector_Method, ONLY: Size
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
+! - [test 5](|base|IntVector/examples/Get_test_5.F90)
 !
-! TYPE(IntVector_) :: obj(2), ans
-! INTEGER(I4B), ALLOCATABLE :: arr(:)
-!
-! obj(1) = [1_I4B, 2_I4B, 3_I4B]
-! obj(2) = [4_I4B, 5_I4B, 6_I4B]
-!
-! ! Test 1: the same positions are read from each item
-! ans = Get(obj, [3_I4B, 1_I4B], TypeIntVector)
-! CALL OK(Size(ans) .EQ. 4, "Get: vector obj, indx, IntVector_, Size")
-! CALL OK(ALL(ans%val(1:4) .EQ. [3, 1, 6, 4]), &
-!         "Get: vector obj, indx, IntVector_, values")
-!
-! ! Test 2: array result
-! arr = Get(obj, [3_I4B, 1_I4B], 1_I4B)
-! CALL OK(SIZE(arr) .EQ. 4, "Get: vector obj, indx, array, SIZE")
-! CALL OK(ALL(arr .EQ. [3, 1, 6, 4]), "Get: vector obj, indx, array, values")
-!
-! END PROGRAM main
-!```
-!
-! See also: [[obj_Get11a]]
+! See also: [[obj_Get_5]], [[obj_Get11a]]
 
 INTERFACE Get
   MODULE PURE FUNCTION obj_Get5(obj, indx, datatype) RESULT(val)
@@ -543,11 +409,26 @@ END INTERFACE Get
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2026-11-05
-! summary: Get IntVector from vector of IntVector using indx.
+! summary: Reads the same positions from each item into an [[IntVector_]]
 !
-! This method is like [[obj_Get5]] but it will reallocate only if it is
-! necessary.
+! Copies `obj(1)%val(indx)`, `obj(2)%val(indx)`, ... one after the other
+! into `ans`. Every position must satisfy
+! `1 <= indx(j) <= Size(obj(i))` for each item.
 !
+! 1. If `ans%val` is not allocated, the routine allocates it.
+! 2. If `capacity` of `ans` is smaller than `SIZE(obj) * SIZE(indx)`,
+!    the routine makes `ans` larger.
+! 3. Otherwise `capacity` of `ans` does not change.
+! 4. The routine sets `tsize` of `ans` to `SIZE(obj) * SIZE(indx)`.
+!
+! Old values in `ans%val(1:tsize)` are cleared first.
+!
+! Examples
+!
+! - [test 5](|base|IntVector/examples/Get__test_5.F90)
+!
+! See also: [[obj_Get5]]
+
 INTERFACE Get_
   MODULE PURE SUBROUTINE obj_Get_5(obj, indx, ans)
     TYPE(IntVector_), INTENT(IN) :: obj(:)
@@ -587,42 +468,10 @@ END INTERFACE Get_
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE BaseType, ONLY: IntVector_
-! USE BaseType, ONLY: TypeIntVector
-! USE GlobalData, ONLY: I4B
-! USE IntVector_Method, ONLY: ASSIGNMENT(=)
-! USE IntVector_Method, ONLY: Get
-! USE IntVector_Method, ONLY: Size
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
+! - [test 6](|base|IntVector/examples/Get_test_6.F90)
+! - [test 7](|base|IntVector/examples/Get_test_7.F90) with an empty triplet
 !
-! TYPE(IntVector_) :: obj(2), ans
-! INTEGER(I4B), ALLOCATABLE :: arr(:)
-!
-! obj(1) = [1_I4B, 2_I4B, 3_I4B]
-! obj(2) = [4_I4B, 5_I4B, 6_I4B]
-!
-! ! Test 1: the same triplet is applied to each item
-! ans = Get(obj, 1_I4B, 3_I4B, 2_I4B, TypeIntVector)
-! CALL OK(Size(ans) .EQ. 4, "Get: vector obj, triplet, IntVector_, Size")
-! CALL OK(ALL(ans%val(1:4) .EQ. [1, 3, 4, 6]), &
-!         "Get: vector obj, triplet, IntVector_, values")
-!
-! ! Test 2: array result
-! arr = Get(obj, 1_I4B, 3_I4B, 2_I4B, 1_I4B)
-! CALL OK(SIZE(arr) .EQ. 4, "Get: vector obj, triplet, array, SIZE")
-! CALL OK(ALL(arr .EQ. [1, 3, 4, 6]), "Get: vector obj, triplet, array")
-!
-! ! Test 3: negative stride
-! arr = Get(obj, 3_I4B, 2_I4B, -1_I4B, 1_I4B)
-! CALL OK(ALL(arr .EQ. [3, 2, 6, 5]), "Get: vector obj, negative stride")
-!
-! END PROGRAM main
-!```
-!
-! See also: [[obj_Get12a]]
+! See also: [[obj_Get_6]], [[obj_Get12a]]
 
 INTERFACE Get
   MODULE PURE FUNCTION obj_Get6(obj, istart, iend, stride, datatype) &
@@ -644,10 +493,26 @@ END INTERFACE Get
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2026-11-05
-! summary: Get IntVector from a vector of IntVector using triples
+! summary: Applies one index triplet to each item, into an [[IntVector_]]
 !
-! This method is like [[obj_Get6]], but it will reallocate only if it
-! is necessary.
+! Copies `obj(1)%val(istart:iend:stride)`,
+! `obj(2)%val(istart:iend:stride)`, ... one after the other into `ans`.
+! The triplet works as in [[obj_Get6]]. The stride can be negative.
+!
+! 1. If `ans%val` is not allocated, the routine allocates it.
+! 2. If `capacity` of `ans` is smaller than the number of copied entries,
+!    the routine makes `ans` larger.
+! 3. Otherwise `capacity` of `ans` does not change.
+! 4. The routine sets `tsize` of `ans` to the number of copied entries.
+!
+! Old values in `ans%val(1:tsize)` are cleared first. A triplet that
+! selects no entries gives `tsize = 0`.
+!
+! Examples
+!
+! - [test 6](|base|IntVector/examples/Get__test_6.F90)
+!
+! See also: [[obj_Get6]]
 
 INTERFACE Get_
   MODULE PURE SUBROUTINE obj_Get_6(obj, istart, iend, stride, ans)
@@ -672,15 +537,22 @@ END INTERFACE Get_
 ! The value of `datatype` is not used. Values that do not fit in that
 ! kind are not checked. An empty `obj` gives a zero-size array.
 !
+! Each kind has its own specific procedure: `INT8` (`obj_Get7a`),
+! `INT16` (`obj_Get7b`), `INT32` (`obj_Get7c`) and `INT64` (`obj_Get7d`).
+!
 ! Returns:
 !   val : INTEGER, ALLOCATABLE, val(:) - kind of datatype
 !
-! See also: [[obj_Get1]] for the example
+! Examples
+!
+! - [test 1](|base|IntVector/examples/Get_test_1.F90) with an array result
+!
+! See also: [[obj_Get_7a]], [[obj_Get1]]
 
 INTERFACE Get
   MODULE PURE FUNCTION obj_Get7a(obj, datatype) RESULT(val)
     TYPE(IntVector_), INTENT(IN) :: obj
-    !! integer vector, only obj%val(1:obj%tsize) is read
+    !! integer vector, only `obj%val(1:obj%tsize)` is read
     INTEGER(INT8), INTENT(IN) :: datatype
     !! selects the kind of the result, value is not used
     INTEGER(INT8), ALLOCATABLE :: val(:)
@@ -688,7 +560,7 @@ INTERFACE Get
   END FUNCTION obj_Get7a
   MODULE PURE FUNCTION obj_Get7b(obj, datatype) RESULT(val)
     TYPE(IntVector_), INTENT(IN) :: obj
-    !! integer vector, only obj%val(1:obj%tsize) is read
+    !! integer vector, only `obj%val(1:obj%tsize)` is read
     INTEGER(INT16), INTENT(IN) :: datatype
     !! selects the kind of the result, value is not used
     INTEGER(INT16), ALLOCATABLE :: val(:)
@@ -696,7 +568,7 @@ INTERFACE Get
   END FUNCTION obj_Get7b
   MODULE PURE FUNCTION obj_Get7c(obj, datatype) RESULT(val)
     TYPE(IntVector_), INTENT(IN) :: obj
-    !! integer vector, only obj%val(1:obj%tsize) is read
+    !! integer vector, only `obj%val(1:obj%tsize)` is read
     INTEGER(INT32), INTENT(IN) :: datatype
     !! selects the kind of the result, value is not used
     INTEGER(INT32), ALLOCATABLE :: val(:)
@@ -704,7 +576,7 @@ INTERFACE Get
   END FUNCTION obj_Get7c
   MODULE PURE FUNCTION obj_Get7d(obj, datatype) RESULT(val)
     TYPE(IntVector_), INTENT(IN) :: obj
-    !! integer vector, only obj%val(1:obj%tsize) is read
+    !! integer vector, only `obj%val(1:obj%tsize)` is read
     INTEGER(INT64), INTENT(IN) :: datatype
     !! selects the kind of the result, value is not used
     INTEGER(INT64), ALLOCATABLE :: val(:)
@@ -718,18 +590,29 @@ END INTERFACE Get
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2026-11-05
-! summary: Get integer vector from IntVector
+! summary: Writes the active entries into an integer array
 !
-! These methods are similar to [[obj_Get7a]], [[obj_Get7b]], [[obj_Get7c]],
-! [[obj_Get7d]]. But this method will not allocate ans.
+! Writes `obj%val(1:obj%tsize)` into `ans(1:tsize)`, converted to the
+! kind of `ans`. The routine never allocates `ans`.
 !
-! `SIZE(ans)` must be at least `Size(obj)`. Only `ans(1:tsize)` is written.
+! `SIZE(ans)` must be at least `Size(obj)`. Entries of `ans` beyond
+! `tsize` do not change. Values that do not fit in the kind of `ans`
+! are not checked.
 !
+! Each kind has its own specific procedure: `INT8` (`obj_Get_7a`),
+! `INT16` (`obj_Get_7b`), `INT32` (`obj_Get_7c`) and `INT64`
+! (`obj_Get_7d`).
+!
+! Examples
+!
+! - [test 7](|base|IntVector/examples/Get__test_7.F90)
+!
+! See also: [[obj_Get7a]]
 
 INTERFACE Get_
   MODULE PURE SUBROUTINE obj_Get_7a(obj, ans, tsize)
     TYPE(IntVector_), INTENT(IN) :: obj
-    !! integer vector, only obj%val(1:obj%tsize) is read
+    !! integer vector, only `obj%val(1:obj%tsize)` is read
     INTEGER(INT8), INTENT(INOUT) :: ans(:)
     !! returned entries
     INTEGER(I4B), INTENT(OUT) :: tsize
@@ -737,7 +620,7 @@ INTERFACE Get_
   END SUBROUTINE obj_Get_7a
   MODULE PURE SUBROUTINE obj_Get_7b(obj, ans, tsize)
     TYPE(IntVector_), INTENT(IN) :: obj
-    !! integer vector, only obj%val(1:obj%tsize) is read
+    !! integer vector, only `obj%val(1:obj%tsize)` is read
     INTEGER(INT16), INTENT(INOUT) ::  ans(:)
     !! returned entries
     INTEGER(I4B), INTENT(OUT) :: tsize
@@ -745,7 +628,7 @@ INTERFACE Get_
   END SUBROUTINE obj_Get_7b
   MODULE PURE SUBROUTINE obj_Get_7c(obj, ans, tsize)
     TYPE(IntVector_), INTENT(IN) :: obj
-    !! integer vector, only obj%val(1:obj%tsize) is read
+    !! integer vector, only `obj%val(1:obj%tsize)` is read
     INTEGER(INT32), INTENT(INOUT) :: ans(:)
     !! returned entries
     INTEGER(I4B), INTENT(OUT) :: tsize
@@ -753,7 +636,7 @@ INTERFACE Get_
   END SUBROUTINE obj_Get_7c
   MODULE PURE SUBROUTINE obj_Get_7d(obj, ans, tsize)
     TYPE(IntVector_), INTENT(IN) :: obj
-    !! integer vector, only obj%val(1:obj%tsize) is read
+    !! integer vector, only `obj%val(1:obj%tsize)` is read
     INTEGER(INT64), INTENT(INOUT) :: ans(:)
     !! returned entries
     INTEGER(I4B), INTENT(OUT) :: tsize
@@ -773,15 +656,22 @@ END INTERFACE Get_
 ! `indx`, converted to the kind of `datatype`. Every position must
 ! satisfy `1 <= indx(i) <= Size(obj)`.
 !
+! Each kind has its own specific procedure: `INT8` (`obj_Get8a`),
+! `INT16` (`obj_Get8b`), `INT32` (`obj_Get8c`) and `INT64` (`obj_Get8d`).
+!
 ! Returns:
 !   val : INTEGER, ALLOCATABLE, val(:) - kind of datatype
 !
-! See also: [[obj_Get2]] for the example, [[obj_Get13a]]
+! Examples
+!
+! - [test 2](|base|IntVector/examples/Get_test_2.F90) with an array result
+!
+! See also: [[obj_Get_8a]], [[obj_Get2]], [[obj_Get13a]]
 
 INTERFACE Get
   MODULE PURE FUNCTION obj_Get8a(obj, indx, datatype) RESULT(val)
     TYPE(IntVector_), INTENT(IN) :: obj
-    !! integer vector, only obj%val(1:obj%tsize) is read
+    !! integer vector, only `obj%val(1:obj%tsize)` is read
     INTEGER(I4B), INTENT(IN) :: indx(:)
     !! positions to read, 1 <= indx(i) <= Size(obj)
     INTEGER(INT8), INTENT(IN) :: datatype
@@ -791,7 +681,7 @@ INTERFACE Get
   END FUNCTION obj_Get8a
   MODULE PURE FUNCTION obj_Get8b(obj, indx, datatype) RESULT(val)
     TYPE(IntVector_), INTENT(IN) :: obj
-    !! integer vector, only obj%val(1:obj%tsize) is read
+    !! integer vector, only `obj%val(1:obj%tsize)` is read
     INTEGER(I4B), INTENT(IN) :: indx(:)
     !! positions to read, 1 <= indx(i) <= Size(obj)
     INTEGER(INT16), INTENT(IN) :: datatype
@@ -801,7 +691,7 @@ INTERFACE Get
   END FUNCTION obj_Get8b
   MODULE PURE FUNCTION obj_Get8c(obj, indx, datatype) RESULT(val)
     TYPE(IntVector_), INTENT(IN) :: obj
-    !! integer vector, only obj%val(1:obj%tsize) is read
+    !! integer vector, only `obj%val(1:obj%tsize)` is read
     INTEGER(I4B), INTENT(IN) :: indx(:)
     !! positions to read, 1 <= indx(i) <= Size(obj)
     INTEGER(INT32), INTENT(IN) :: datatype
@@ -811,7 +701,7 @@ INTERFACE Get
   END FUNCTION obj_Get8c
   MODULE PURE FUNCTION obj_Get8d(obj, indx, datatype) RESULT(val)
     TYPE(IntVector_), INTENT(IN) :: obj
-    !! integer vector, only obj%val(1:obj%tsize) is read
+    !! integer vector, only `obj%val(1:obj%tsize)` is read
     INTEGER(I4B), INTENT(IN) :: indx(:)
     !! positions to read, 1 <= indx(i) <= Size(obj)
     INTEGER(INT64), INTENT(IN) :: datatype
@@ -827,18 +717,31 @@ END INTERFACE Get
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2026-11-05
-! summary: Get integer vector from IntVector using indx
+! summary: Writes the entries at given positions into an integer array
 !
-! These methods are similar to [[obj_Get8a]], [[obj_Get8b]], [[obj_Get8c]],
-! [[obj_Get8d]]. But this method will not allocate ans.
+! Writes the entries of `obj` at the positions `indx` into `ans(1:tsize)`,
+! in the order of `indx`, converted to the kind of `ans`. Every position
+! must satisfy `1 <= indx(i) <= Size(obj)`. The routine never allocates
+! `ans`.
 !
-! `SIZE(ans)` must be at least `SIZE(indx)`. Only `ans(1:tsize)` is written.
+! `SIZE(ans)` must be at least `SIZE(indx)`. The routine sets `tsize` to
+! `SIZE(indx)`. It clears `ans(1:tsize)` first. Entries of `ans` beyond
+! `tsize` do not change.
 !
+! Each kind has its own specific procedure: `INT8` (`obj_Get_8a`),
+! `INT16` (`obj_Get_8b`), `INT32` (`obj_Get_8c`) and `INT64`
+! (`obj_Get_8d`).
+!
+! Examples
+!
+! - [test 8](|base|IntVector/examples/Get__test_8.F90)
+!
+! See also: [[obj_Get8a]]
 
 INTERFACE Get_
   MODULE PURE SUBROUTINE obj_Get_8a(obj, indx, ans, tsize)
     TYPE(IntVector_), INTENT(IN) :: obj
-    !! integer vector, only obj%val(1:obj%tsize) is read
+    !! integer vector, only `obj%val(1:obj%tsize)` is read
     INTEGER(I4B), INTENT(IN) :: indx(:)
     !! positions to read, 1 <= indx(i) <= Size(obj)
     INTEGER(INT8), INTENT(INOUT) :: ans(:)
@@ -848,7 +751,7 @@ INTERFACE Get_
   END SUBROUTINE obj_Get_8a
   MODULE PURE SUBROUTINE obj_Get_8b(obj, indx, ans, tsize)
     TYPE(IntVector_), INTENT(IN) :: obj
-    !! integer vector, only obj%val(1:obj%tsize) is read
+    !! integer vector, only `obj%val(1:obj%tsize)` is read
     INTEGER(I4B), INTENT(IN) :: indx(:)
     !! positions to read, 1 <= indx(i) <= Size(obj)
     INTEGER(INT16), INTENT(INOUT) :: ans(:)
@@ -858,7 +761,7 @@ INTERFACE Get_
   END SUBROUTINE obj_Get_8b
   MODULE PURE SUBROUTINE obj_Get_8c(obj, indx, ans, tsize)
     TYPE(IntVector_), INTENT(IN) :: obj
-    !! integer vector, only obj%val(1:obj%tsize) is read
+    !! integer vector, only `obj%val(1:obj%tsize)` is read
     INTEGER(I4B), INTENT(IN) :: indx(:)
     !! positions to read, 1 <= indx(i) <= Size(obj)
     INTEGER(INT32), INTENT(INOUT) :: ans(:)
@@ -868,7 +771,7 @@ INTERFACE Get_
   END SUBROUTINE obj_Get_8c
   MODULE PURE SUBROUTINE obj_Get_8d(obj, indx, ans, tsize)
     TYPE(IntVector_), INTENT(IN) :: obj
-    !! integer vector, only obj%val(1:obj%tsize) is read
+    !! integer vector, only `obj%val(1:obj%tsize)` is read
     INTEGER(I4B), INTENT(IN) :: indx(:)
     !! positions to read, 1 <= indx(i) <= Size(obj)
     INTEGER(INT64), INTENT(INOUT) :: ans(:)
@@ -902,13 +805,18 @@ END INTERFACE Get_
 !     \frac{iend - istart + stride}{stride}, 0\right) $$
 !   with integer division.
 !
-! See also: [[obj_Get3]] for the example
+! Examples
+!
+! - [test 3](|base|IntVector/examples/Get_test_3.F90) with an array result
+! - [test 7](|base|IntVector/examples/Get_test_7.F90) with an empty triplet
+!
+! See also: [[obj_Get_9a]], [[obj_Get3]]
 
 INTERFACE Get
   MODULE PURE FUNCTION obj_Get9a(obj, istart, iend, stride, datatype) &
     RESULT(val)
     TYPE(IntVector_), INTENT(IN) :: obj
-    !! integer vector, only obj%val(1:obj%tsize) is read
+    !! integer vector, only `obj%val(1:obj%tsize)` is read
     INTEGER(I4B), INTENT(IN) :: istart, iend, stride
     !! first index, last index, nonzero step
     INTEGER(INT8), INTENT(IN) :: datatype
@@ -919,7 +827,7 @@ INTERFACE Get
   MODULE PURE FUNCTION obj_Get9b(obj, istart, iend, stride, datatype) &
     RESULT(val)
     TYPE(IntVector_), INTENT(IN) :: obj
-    !! integer vector, only obj%val(1:obj%tsize) is read
+    !! integer vector, only `obj%val(1:obj%tsize)` is read
     INTEGER(I4B), INTENT(IN) :: istart, iend, stride
     !! first index, last index, nonzero step
     INTEGER(INT16), INTENT(IN) :: datatype
@@ -930,7 +838,7 @@ INTERFACE Get
   MODULE PURE FUNCTION obj_Get9c(obj, istart, iend, stride, datatype) &
     RESULT(val)
     TYPE(IntVector_), INTENT(IN) :: obj
-    !! integer vector, only obj%val(1:obj%tsize) is read
+    !! integer vector, only `obj%val(1:obj%tsize)` is read
     INTEGER(I4B), INTENT(IN) :: istart, iend, stride
     !! first index, last index, nonzero step
     INTEGER(INT32), INTENT(IN) :: datatype
@@ -941,7 +849,7 @@ INTERFACE Get
   MODULE PURE FUNCTION obj_Get9d(obj, istart, iend, stride, datatype) &
     RESULT(val)
     TYPE(IntVector_), INTENT(IN) :: obj
-    !! integer vector, only obj%val(1:obj%tsize) is read
+    !! integer vector, only `obj%val(1:obj%tsize)` is read
     INTEGER(I4B), INTENT(IN) :: istart, iend, stride
     !! first index, last index, nonzero step
     INTEGER(INT64), INTENT(IN) :: datatype
@@ -957,19 +865,38 @@ END INTERFACE Get
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2026-11-05
-! summary: Get integer vector from IntVector using triplets
+! summary: Writes the entries of an index triplet into an integer array
 !
-! These methods are similar to [[obj_Get9a]], [[obj_Get9b]],
-! [[obj_Get9c]], [[obj_Get9d]]. But this method will not allocate ans.
+! Writes the entries of `obj` selected by `istart:iend:stride` into
+! `ans(1:tsize)`, converted to the kind of `ans`. The stride can be
+! negative. The routine never allocates `ans`.
 !
-! `SIZE(ans)` must be at least the number of entries selected by the
-! triplet. Only `ans(1:tsize)` is written.
+! `SIZE(ans)` must be at least the number of selected entries. The routine
+! sets `tsize` to that number. It clears `ans(1:tsize)` first. Entries of
+! `ans` beyond `tsize` do not change. A triplet that selects no entries,
+! such as 3:2:2, gives `tsize = 0`.
 !
+! Each selected index must satisfy `1 <= index <= Size(obj)`.
+!
+! Each kind has its own specific procedure: `INT8` (`obj_Get_9a`),
+! `INT16` (`obj_Get_9b`), `INT32` (`obj_Get_9c`) and `INT64`
+! (`obj_Get_9d`).
+!
+! Formula:
+!   $$ \text{tsize} = \max\left(
+!     \frac{iend - istart + stride}{stride}, 0\right) $$
+!   with integer division.
+!
+! Examples
+!
+! - [test 9](|base|IntVector/examples/Get__test_9.F90)
+!
+! See also: [[obj_Get9a]]
 
 INTERFACE Get_
   MODULE PURE SUBROUTINE obj_Get_9a(obj, istart, iend, stride, ans, tsize)
     TYPE(IntVector_), INTENT(IN) :: obj
-    !! integer vector, only obj%val(1:obj%tsize) is read
+    !! integer vector, only `obj%val(1:obj%tsize)` is read
     INTEGER(I4B), INTENT(IN) :: istart, iend, stride
     !! first index, last index, nonzero step
     INTEGER(INT8), INTENT(INOUT) :: ans(:)
@@ -979,7 +906,7 @@ INTERFACE Get_
   END SUBROUTINE obj_Get_9a
   MODULE PURE SUBROUTINE obj_Get_9b(obj, istart, iend, stride, ans, tsize)
     TYPE(IntVector_), INTENT(IN) :: obj
-    !! integer vector, only obj%val(1:obj%tsize) is read
+    !! integer vector, only `obj%val(1:obj%tsize)` is read
     INTEGER(I4B), INTENT(IN) :: istart, iend, stride
     !! first index, last index, nonzero step
     INTEGER(INT16), INTENT(INOUT) :: ans(:)
@@ -989,7 +916,7 @@ INTERFACE Get_
   END SUBROUTINE obj_Get_9b
   MODULE PURE SUBROUTINE obj_Get_9c(obj, istart, iend, stride, ans, tsize)
     TYPE(IntVector_), INTENT(IN) :: obj
-    !! integer vector, only obj%val(1:obj%tsize) is read
+    !! integer vector, only `obj%val(1:obj%tsize)` is read
     INTEGER(I4B), INTENT(IN) :: istart, iend, stride
     !! first index, last index, nonzero step
     INTEGER(INT32), INTENT(INOUT) :: ans(:)
@@ -999,7 +926,7 @@ INTERFACE Get_
   END SUBROUTINE obj_Get_9c
   MODULE PURE SUBROUTINE obj_Get_9d(obj, istart, iend, stride, ans, tsize)
     TYPE(IntVector_), INTENT(IN) :: obj
-    !! integer vector, only obj%val(1:obj%tsize) is read
+    !! integer vector, only `obj%val(1:obj%tsize)` is read
     INTEGER(I4B), INTENT(IN) :: istart, iend, stride
     !! first index, last index, nonzero step
     INTEGER(INT64), INTENT(INOUT) :: ans(:)
@@ -1020,10 +947,18 @@ END INTERFACE Get_
 ! Returns the active entries of `obj(1)`, `obj(2)`, ... one after the
 ! other, converted to the kind of `datatype`. Empty items add nothing.
 !
+! Each kind has its own specific procedure: `INT8` (`obj_Get10a`),
+! `INT16` (`obj_Get10b`), `INT32` (`obj_Get10c`) and `INT64`
+! (`obj_Get10d`).
+!
 ! Returns:
 !   val : INTEGER, ALLOCATABLE, val(:) - kind of datatype
 !
-! See also: [[obj_Get4]] for the example
+! Examples
+!
+! - [test 4](|base|IntVector/examples/Get_test_4.F90) with an array result
+!
+! See also: [[obj_Get_10a]], [[obj_Get4]]
 
 INTERFACE Get
   MODULE PURE FUNCTION obj_Get10a(obj, datatype) RESULT(val)
@@ -1066,14 +1001,24 @@ END INTERFACE Get
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2026-11-05
-! summary: Get integer vector from a vector of IntVector
+! summary: Writes a vector of [[IntVector_]] into an integer array
 !
-! These methods are similar to [[obj_Get10a]], [[obj_Get10b]],
-! [[obj_Get10c]], [[obj_Get10d]]. But this method will not allocate ans.
+! Writes the active entries of `obj(1)`, `obj(2)`, ... one after the
+! other into `ans(1:tsize)`, converted to the kind of `ans`. Empty items
+! add nothing. The routine never allocates `ans`.
 !
-! `SIZE(ans)` must be at least the sum of `Size(obj(i))`. Only
-! `ans(1:tsize)` is written.
+! `SIZE(ans)` must be at least the sum of `Size(obj(i))`. The routine sets
+! `tsize` to that sum. Entries of `ans` beyond `tsize` do not change.
 !
+! Each kind has its own specific procedure: `INT8` (`obj_Get_10a`),
+! `INT16` (`obj_Get_10b`), `INT32` (`obj_Get_10c`) and `INT64`
+! (`obj_Get_10d`).
+!
+! Examples
+!
+! - [test 10](|base|IntVector/examples/Get__test_10.F90)
+!
+! See also: [[obj_Get10a]]
 
 INTERFACE Get_
   MODULE PURE SUBROUTINE obj_Get_10a(obj, ans, tsize)
@@ -1125,10 +1070,18 @@ END INTERFACE Get_
 ! Changes:
 !   - 2026-11-05: Fixed the crash from an uninitialised counter
 !
+! Each kind has its own specific procedure: `INT8` (`obj_Get11a`),
+! `INT16` (`obj_Get11b`), `INT32` (`obj_Get11c`) and `INT64`
+! (`obj_Get11d`).
+!
 ! Returns:
 !   val : INTEGER, ALLOCATABLE, val(:) - kind of datatype
 !
-! See also: [[obj_Get5]] for the example
+! Examples
+!
+! - [test 5](|base|IntVector/examples/Get_test_5.F90) with an array result
+!
+! See also: [[obj_Get_11a]], [[obj_Get5]]
 
 INTERFACE Get
   MODULE PURE FUNCTION obj_Get11a(obj, indx, datatype) &
@@ -1183,14 +1136,28 @@ END INTERFACE Get
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2026-11-05
-! summary: Get integer vector from a vector of IntVector using indx
+! summary: Writes the same positions of each item into an integer array
 !
-! These methods are similar to [[obj_Get11a]], [[obj_Get11b]],
-! [[obj_Get11c]], [[obj_Get11d]]. But this method will not allocate ans.
+! Writes `obj(1)%val(indx)`, `obj(2)%val(indx)`, ... one after the other
+! into `ans(1:tsize)`, converted to the kind of `ans`. The routine never
+! allocates `ans`.
 !
-! `SIZE(ans)` must be at least `SIZE(obj) * SIZE(indx)`. Only
-! `ans(1:tsize)` is written.
+! `SIZE(ans)` must be at least `SIZE(obj) * SIZE(indx)`. The routine sets
+! `tsize` to that product. It clears `ans(1:tsize)` first. Entries of
+! `ans` beyond `tsize` do not change.
 !
+! Every position must satisfy `1 <= indx(j) <= Size(obj(i))` for each
+! item.
+!
+! Each kind has its own specific procedure: `INT8` (`obj_Get_11a`),
+! `INT16` (`obj_Get_11b`), `INT32` (`obj_Get_11c`) and `INT64`
+! (`obj_Get_11d`).
+!
+! Examples
+!
+! - [test 11](|base|IntVector/examples/Get__test_11.F90)
+!
+! See also: [[obj_Get11a]]
 
 INTERFACE Get_
   MODULE PURE SUBROUTINE obj_Get_11a(obj, indx, ans, tsize)
@@ -1260,7 +1227,16 @@ END INTERFACE Get_
 !     \frac{iend - istart + stride}{stride}, 0\right) $$
 !   with integer division.
 !
-! See also: [[obj_Get6]] for the example
+! Each kind has its own specific procedure: `INT8` (`obj_Get12a`),
+! `INT16` (`obj_Get12b`), `INT32` (`obj_Get12c`) and `INT64`
+! (`obj_Get12d`).
+!
+! Examples
+!
+! - [test 6](|base|IntVector/examples/Get_test_6.F90) with an array result
+! - [test 7](|base|IntVector/examples/Get_test_7.F90) with an empty triplet
+!
+! See also: [[obj_Get_12a]], [[obj_Get6]]
 
 INTERFACE Get
   MODULE PURE FUNCTION obj_Get12a(obj, iStart, iEnd, &
@@ -1315,14 +1291,35 @@ END INTERFACE Get
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2026-11-05
-! summary: Get integer vector from a vector of IntVector using triplets
+! summary: Writes one index triplet of each item into an integer array
 !
-! These methods are similar to [[obj_Get12a]], [[obj_Get12b]],
-! [[obj_Get12c]], [[obj_Get12d]]. But this method will not allocate ans.
+! Writes `obj(1)%val(istart:iend:stride)`,
+! `obj(2)%val(istart:iend:stride)`, ... one after the other into
+! `ans(1:tsize)`, converted to the kind of `ans`. The stride can be
+! negative. The routine never allocates `ans`.
 !
 ! `SIZE(ans)` must be at least `SIZE(obj)` times the number of entries
-! selected by the triplet. Only `ans(1:tsize)` is written.
+! selected by the triplet. The routine sets `tsize` to that product. It
+! clears `ans(1:tsize)` first. Entries of `ans` beyond `tsize` do not
+! change. A triplet that selects no entries gives `tsize = 0`.
 !
+! Each selected index must satisfy `1 <= index <= Size(obj(i))` for each
+! item.
+!
+! Each kind has its own specific procedure: `INT8` (`obj_Get_12a`),
+! `INT16` (`obj_Get_12b`), `INT32` (`obj_Get_12c`) and `INT64`
+! (`obj_Get_12d`).
+!
+! Formula:
+!   $$ \text{tsize} = \text{SIZE}(obj) \max\left(
+!     \frac{iend - istart + stride}{stride}, 0\right) $$
+!   with integer division.
+!
+! Examples
+!
+! - [test 12](|base|IntVector/examples/Get__test_12.F90)
+!
+! See also: [[obj_Get12a]]
 
 INTERFACE Get_
   MODULE PURE SUBROUTINE obj_Get_12a(obj, istart, iend, stride, ans, tsize)
@@ -1376,17 +1373,26 @@ END INTERFACE Get_
 ! summary: Returns one entry of [[IntVector_]]
 !
 ! Returns `obj%val(indx)` converted to the kind of `datatype`. If
-! `indx > Size(obj)` the result is zero. `indx >= 1` is needed.
+! `indx > Size(obj)`, the result is zero. The routine does not check
+! `indx >= 1`, so the caller must make sure of it.
+!
+! Each kind has its own specific procedure: `INT8` (`obj_Get13a`),
+! `INT16` (`obj_Get13b`), `INT32` (`obj_Get13c`) and `INT64`
+! (`obj_Get13d`).
 !
 ! Returns:
 !   val : INTEGER - kind of datatype
 !
-! See also: [[obj_Get2]] for the example, [[obj_Get8a]]
+! Examples
+!
+! - [test 2](|base|IntVector/examples/Get_test_2.F90) with a scalar `indx`
+!
+! See also: [[obj_Get2]], [[obj_Get8a]]
 
 INTERFACE Get
   MODULE PURE FUNCTION obj_Get13a(obj, indx, datatype) RESULT(val)
     TYPE(IntVector_), INTENT(IN) :: obj
-    !! integer vector, only obj%val(1:obj%tsize) is read
+    !! integer vector, only `obj%val(1:obj%tsize)` is read
     INTEGER(I4B), INTENT(IN) :: indx
     !! position to read, indx >= 1
     INTEGER(INT8), INTENT(IN) :: datatype
@@ -1396,7 +1402,7 @@ INTERFACE Get
   END FUNCTION obj_Get13a
   MODULE PURE FUNCTION obj_Get13b(obj, indx, datatype) RESULT(val)
     TYPE(IntVector_), INTENT(IN) :: obj
-    !! integer vector, only obj%val(1:obj%tsize) is read
+    !! integer vector, only `obj%val(1:obj%tsize)` is read
     INTEGER(I4B), INTENT(IN) :: indx
     !! position to read, indx >= 1
     INTEGER(INT16), INTENT(IN) :: datatype
@@ -1406,7 +1412,7 @@ INTERFACE Get
   END FUNCTION obj_Get13b
   MODULE PURE FUNCTION obj_Get13c(obj, indx, datatype) RESULT(val)
     TYPE(IntVector_), INTENT(IN) :: obj
-    !! integer vector, only obj%val(1:obj%tsize) is read
+    !! integer vector, only `obj%val(1:obj%tsize)` is read
     INTEGER(I4B), INTENT(IN) :: indx
     !! position to read, indx >= 1
     INTEGER(INT32), INTENT(IN) :: datatype
@@ -1416,7 +1422,7 @@ INTERFACE Get
   END FUNCTION obj_Get13c
   MODULE PURE FUNCTION obj_Get13d(obj, indx, datatype) RESULT(val)
     TYPE(IntVector_), INTENT(IN) :: obj
-    !! integer vector, only obj%val(1:obj%tsize) is read
+    !! integer vector, only `obj%val(1:obj%tsize)` is read
     INTEGER(I4B), INTENT(IN) :: indx
     !! position to read, indx >= 1
     INTEGER(INT64), INTENT(IN) :: datatype
@@ -1446,52 +1452,15 @@ END INTERFACE Get
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE BaseType, ONLY: IntVector_
-! USE GlobalData, ONLY: I4B
-! USE IntVector_Method, ONLY: ASSIGNMENT(=)
-! USE IntVector_Method, ONLY: GetIndex
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-!
-! TYPE(IntVector_) :: obj, empty
-!
-! obj = [5_I4B, 7_I4B, 5_I4B, 9_I4B]
-!
-! ! Test 1: scalar value, first position is returned
-! CALL OK(GetIndex(obj, 7_I4B) .EQ. 2, "GetIndex: scalar value")
-! CALL OK(GetIndex(obj, 5_I4B) .EQ. 1, "GetIndex: repeated value")
-!
-! ! Test 2: vector of values, 0 means not found
-! CALL OK(ALL(GetIndex(obj, [9_I4B, 1_I4B, 5_I4B, 5_I4B]) .EQ. &
-!             [4, 0, 1, 1]), "GetIndex: vector of values")
-!
-! ! Test 3: empty vector of values gives an empty result
-! BLOCK
-!   INTEGER(I4B) :: novalue(0)
-!   CALL OK(SIZE(GetIndex(obj, novalue)) .EQ. 0, "GetIndex: empty val")
-! END BLOCK
-!
-! ! Test 4: nothing is found in an empty obj
-! CALL OK(GetIndex(empty, 1_I4B) .EQ. 0, "GetIndex: empty obj, scalar")
-! CALL OK(ALL(GetIndex(empty, [1_I4B, 2_I4B]) .EQ. 0), &
-!         "GetIndex: empty obj, vector")
-!
-! ! Test 5: entries beyond tsize are not searched
-! obj%tsize = 3
-! CALL OK(ALL(GetIndex(obj, [5_I4B, 9_I4B]) .EQ. [1, 0]), &
-!         "GetIndex: vector of values with tsize = 3")
-!
-! END PROGRAM main
-!```
+! - [test 1](|base|IntVector/examples/GetIndex_test_1.F90) with repeated values
+! - [test 2](|base|IntVector/examples/GetIndex_test_2.F90) with absent values
 !
 ! See also: [[obj_GetIndex2]]
 
 INTERFACE GetIndex
   MODULE PURE FUNCTION obj_GetIndex1(obj, val) RESULT(ans)
     TYPE(IntVector_), INTENT(IN) :: obj
-    !! integer vector, only obj%val(1:obj%tsize) is read
+    !! integer vector, only `obj%val(1:obj%tsize)` is read
     INTEGER(I4B), INTENT(IN) :: val
     !! value to search
     INTEGER(I4B) :: ans
@@ -1514,12 +1483,16 @@ END INTERFACE GetIndex
 ! Returns:
 !   ans : INTEGER(I4B), ALLOCATABLE, ans(:) - SIZE(ans) = SIZE(val)
 !
-! See also: [[obj_GetIndex1]] for the example
+! Examples
+!
+! - [test 1](|base|IntVector/examples/GetIndex_test_1.F90)
+!
+! See also: [[obj_GetIndex1]]
 
 INTERFACE GetIndex
   MODULE PURE FUNCTION obj_GetIndex2(obj, val) RESULT(ans)
     TYPE(IntVector_), INTENT(IN) :: obj
-    !! integer vector, only obj%val(1:obj%tsize) is read
+    !! integer vector, only `obj%val(1:obj%tsize)` is read
     INTEGER(I4B), INTENT(IN) :: val(:)
     !! values to search
     INTEGER(I4B), ALLOCATABLE :: ans(:)
