@@ -19,8 +19,8 @@
 ! date: 2021-03-04
 ! summary: Constructor methods of ElemShapeData_ and STElemShapeData_
 !
-! Allocate, copy and deallocate element shape data, and initiate
-! space-time shape data from the shape data of a time element.
+! Allocate, copy and deallocate element shape data.
+! Initiate space-time shape data from the shape data of a time element.
 
 MODULE ElemshapeData_ConstructorMethods
 USE BaseType, ONLY: ElemShapeData_
@@ -119,13 +119,13 @@ INTERFACE Initiate
     CLASS(ElemshapeData_), INTENT(INOUT) :: obj
     !! shape data to initiate
     CLASS(QuadraturePoint_), INTENT(IN) :: quad
-    !! Quadrature points
+    !! quadrature points
     CLASS(ReferenceElement_), INTENT(IN) :: refelem
     !! reference element
     CHARACTER(*), INTENT(IN) :: continuityType
-    !! - continuity/ conformity of shape function (basis functions)
+    !! continuity of the basis functions
     CHARACTER(*), INTENT(IN) :: interpolType
-    !! interpolation/polynomial family for basis functions
+    !! polynomial family of the basis functions
   END SUBROUTINE obj_Initiate1
 END INTERFACE Initiate
 
@@ -155,6 +155,8 @@ END INTERFACE Initiate
 !
 ! - [test 1](|base|ElemshapeData/examples/Initiate_test_1.F90) copies with
 ! `Initiate` and with `=`
+! - [test 2](|base|ElemshapeData/examples/Initiate_test_2.F90) copies a
+! `STElemShapeData_`
 !
 ! See also: [[obj_Allocate]]
 
@@ -204,7 +206,8 @@ INTERFACE Initiate
     TYPE(STElemshapeData_), ALLOCATABLE, INTENT(INOUT) :: obj(:)
     !! space-time shape data, one per time quadrature point
     TYPE(ElemshapeData_), INTENT(IN) :: elemsd
-    !! It has information about location shape function for time element
+    !! shape data of the time element; `nips` gives the number of time
+    !! points and `nns` the number of time nodes
   END SUBROUTINE obj_Initiate3
 END INTERFACE Initiate
 

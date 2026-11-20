@@ -346,6 +346,8 @@ END INTERFACE GetInterpolation_
 ! Examples
 !
 ! - [test 2](|base|ElemshapeData/examples/GetInterpolation_test_2.F90) third block
+! - [test 12](|base|ElemshapeData/examples/GetInterpolation_test_12.F90)
+!   first block, quadrature `val`
 !
 ! See also: [[GetInterpolation_4]]
 
@@ -414,6 +416,8 @@ END INTERFACE GetInterpolation_
 ! Examples
 !
 ! - [test 6](|base|ElemshapeData/examples/GetInterpolation_test_6.F90) third block
+! - [test 12](|base|ElemshapeData/examples/GetInterpolation_test_12.F90)
+!   first and second blocks, quadrature `val`
 !
 ! See also: [[GetInterpolation_4]], [[GetInterpolation_4b]]
 
@@ -455,6 +459,8 @@ END INTERFACE GetInterpolation_
 ! Examples
 !
 ! - [test 2](|base|ElemshapeData/examples/GetInterpolation_test_2.F90) third block, at `spaceIndx = 2`
+! - [test 12](|base|ElemshapeData/examples/GetInterpolation_test_12.F90)
+!   third block, constant and space-time `val`
 !
 ! See also: [[GetInterpolation_4a]]
 
@@ -525,6 +531,8 @@ END INTERFACE GetInterpolation
 ! Examples
 !
 ! - [test 6](|base|ElemshapeData/examples/GetInterpolation_test_6.F90) fourth block
+! - [test 12](|base|ElemshapeData/examples/GetInterpolation_test_12.F90)
+!   second block, quadrature `val`
 !
 ! See also: [[GetInterpolation5]], [[GetInterpolation_5a]]
 

@@ -18,13 +18,18 @@
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2021-03-04
-! summary: Interpolation of a FEVariable_ into a quadrature FEVariable_
+! summary: Interpolation of a `FEVariable_` at quadrature points
 !
-! Interpolate a FEVariable_ `val` of any rank at the quadrature points of
-! the shape data `obj`. The result `ans` is a quadrature FEVariable_ with
-! the rank of `val`. A nodal `val` is interpolated with the shape
-! functions; a quadrature `val` is copied; a constant `val` is repeated.
-! Time variables are not supported.
+! Interpolates a `FEVariable_` `val` of any rank at the quadrature
+! points of the shape data `obj`.
+! The result `ans` is a quadrature `FEVariable_` with the rank of `val`.
+!
+! - For a nodal `val`, it uses the shape functions.
+! - For a quadrature `val`, it copies the values.
+! - For a constant `val`, it repeats the value at each point.
+!
+! It does not support a `val` of variable type time. Then it does not
+! set the values of `ans`.
 
 MODULE ElemshapeData_InterpolMethods
 USE GlobalData, ONLY: DFP, I4B, LGT
@@ -67,6 +72,8 @@ PUBLIC :: Interpolation
 !
 ! - [test 1](|base|ElemshapeData/examples/GetInterpolation_test_1.F90) first block, scalar
 ! - [test 1](|base|ElemshapeData/examples/GetInterpolation_test_1.F90) second block, vector
+! - [test 9](|base|ElemshapeData/examples/GetInterpolation_test_9.F90) constant and quadrature `val`
+! - [test 10](|base|ElemshapeData/examples/GetInterpolation_test_10.F90) second block, space-time `val`
 !
 ! See also: [[GetInterpolation_1]], [[Interpolation1]]
 
@@ -132,6 +139,7 @@ END INTERFACE GetInterpolation_
 ! Examples
 !
 ! - [test 1](|base|ElemshapeData/examples/GetInterpolation_test_1.F90) first block, with `scale = 0.5`
+! - [test 10](|base|ElemshapeData/examples/GetInterpolation_test_10.F90) first block, space-time shape data
 !
 ! See also: [[GetInterpolation_1]]
 
@@ -147,7 +155,8 @@ INTERFACE GetInterpolation_
     REAL(DFP), INTENT(IN) :: scale
     !! scale factor applied to the interpolated value
     LOGICAL, INTENT(IN) :: addContribution
-    !! if true, the interpolated value is added to ans
+    !! if true, adds the scaled interpolated value to `ans`;
+    !! if false, clears `ans` first
   END SUBROUTINE GetInterpolation_1a
 END INTERFACE GetInterpolation_
 
@@ -175,6 +184,7 @@ END INTERFACE GetInterpolation_
 ! Examples
 !
 ! - [test 1](|base|ElemshapeData/examples/GetInterpolation_test_1.F90) third block
+! - [test 9](|base|ElemshapeData/examples/GetInterpolation_test_9.F90) fourth block, space `val`
 !
 ! See also: [[GetInterpolation_2]]
 
@@ -253,7 +263,8 @@ INTERFACE GetInterpolation_
     REAL(DFP), INTENT(IN) :: scale
     !! scale factor applied to the interpolated value
     LOGICAL, INTENT(IN) :: addContribution
-    !! if true, the interpolated value is added to ans
+    !! if true, adds the scaled interpolated value to `ans`;
+    !! if false, clears `ans` at each time point first
   END SUBROUTINE GetInterpolation_2a
 END INTERFACE GetInterpolation_
 
@@ -271,6 +282,7 @@ END INTERFACE GetInterpolation_
 ! Examples
 !
 ! - [test 1](|base|ElemshapeData/examples/GetInterpolation_test_1.F90) first block
+! - [test 9](|base|ElemshapeData/examples/GetInterpolation_test_9.F90) second block, constant vector
 !
 ! See also: [[GetInterpolation1]]
 

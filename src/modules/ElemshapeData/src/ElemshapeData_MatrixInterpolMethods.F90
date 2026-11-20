@@ -15,11 +15,11 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 !
-! This file contains the interpolation methods interfaces\
+! This file contains the interfaces of the matrix interpolation methods
 
 MODULE ElemshapeData_MatrixInterpolMethods
-USE GlobalData, ONLY: DFP, I4B, LGT
 USE BaseType, ONLY: ElemShapeData_, STElemShapeData_, FEVariable_
+USE GlobalData, ONLY: DFP, I4B, LGT
 IMPLICIT NONE
 PRIVATE
 
@@ -43,7 +43,8 @@ PUBLIC :: STInterpolation
 !
 ! Examples
 !
-! - [test 4](|base|ElemshapeData/examples/GetInterpolation_test_4.F90) first block
+! - [test 4](|base|ElemshapeData/examples/GetInterpolation_test_4.F90),
+!   Test 1
 !
 ! See also: [[GetInterpolation_1]], [[Interpolation1]]
 
@@ -71,7 +72,8 @@ END INTERFACE GetInterpolation
 !
 ! Examples
 !
-! - [test 8](|base|ElemshapeData/examples/GetInterpolation_test_8.F90) first block
+! - [test 8](|base|ElemshapeData/examples/GetInterpolation_test_8.F90),
+!   Test 1
 !
 ! See also: [[GetInterpolation1]], [[GetInterpolation_1a]]
 
@@ -108,7 +110,8 @@ END INTERFACE GetInterpolation_
 !
 ! Examples
 !
-! - [test 8](|base|ElemshapeData/examples/GetInterpolation_test_8.F90) first block
+! - [test 8](|base|ElemshapeData/examples/GetInterpolation_test_8.F90),
+!   Test 1
 !
 ! See also: [[GetInterpolation_1]]
 
@@ -131,7 +134,7 @@ INTERFACE GetInterpolation_
     REAL(DFP), INTENT(IN) :: scale
     !! scale factor applied to the interpolated value
     LOGICAL(LGT), INTENT(IN) :: addContribution
-    !! if true, the interpolated value is added to ans
+    !! if true, add the interpolated value to ans
   END SUBROUTINE GetInterpolation_1a
 END INTERFACE GetInterpolation_
 
@@ -152,7 +155,8 @@ END INTERFACE GetInterpolation_
 !
 ! Examples
 !
-! - [test 8](|base|ElemshapeData/examples/GetInterpolation_test_8.F90) second block
+! - [test 8](|base|ElemshapeData/examples/GetInterpolation_test_8.F90),
+!   Test 2
 !
 ! See also: [[GetInterpolation_2]], [[STInterpolation1]]
 
@@ -180,7 +184,8 @@ END INTERFACE GetInterpolation
 !
 ! Examples
 !
-! - [test 8](|base|ElemshapeData/examples/GetInterpolation_test_8.F90) second block
+! - [test 8](|base|ElemshapeData/examples/GetInterpolation_test_8.F90),
+!   Test 2
 !
 ! See also: [[GetInterpolation2]], [[GetInterpolation_2a]]
 
@@ -217,7 +222,8 @@ END INTERFACE GetInterpolation_
 !
 ! Examples
 !
-! - [test 8](|base|ElemshapeData/examples/GetInterpolation_test_8.F90) second block
+! - [test 8](|base|ElemshapeData/examples/GetInterpolation_test_8.F90),
+!   Test 2
 !
 ! See also: [[GetInterpolation_2]]
 
@@ -240,7 +246,7 @@ INTERFACE GetInterpolation_
     REAL(DFP), INTENT(IN) :: scale
     !! scale factor applied to the interpolated value
     LOGICAL(LGT), INTENT(IN) :: addContribution
-    !! if true, the interpolated value is added to ans
+    !! if true, add the interpolated value to ans
   END SUBROUTINE GetInterpolation_2a
 END INTERFACE GetInterpolation_
 
@@ -261,7 +267,8 @@ END INTERFACE GetInterpolation_
 !
 ! Examples
 !
-! - [test 4](|base|ElemshapeData/examples/GetInterpolation_test_4.F90) second block
+! - [test 4](|base|ElemshapeData/examples/GetInterpolation_test_4.F90),
+!   Test 2
 !
 ! See also: [[GetInterpolation_3]]
 
@@ -290,7 +297,8 @@ END INTERFACE GetInterpolation
 !
 ! Examples
 !
-! - [test 8](|base|ElemshapeData/examples/GetInterpolation_test_8.F90) third block
+! - [test 8](|base|ElemshapeData/examples/GetInterpolation_test_8.F90),
+!   Test 3
 !
 ! See also: [[GetInterpolation3]], [[GetInterpolation_3a]]
 
@@ -311,7 +319,6 @@ INTERFACE GetInterpolation_
     !! size of dim3 written in ans
     INTEGER(I4B), INTENT(OUT) :: dim4
     !! size of dim4 written in ans
-    !! size of data written in ans
   END SUBROUTINE GetInterpolation_3
 END INTERFACE GetInterpolation_
 
@@ -329,7 +336,8 @@ END INTERFACE GetInterpolation_
 !
 ! Examples
 !
-! - [test 8](|base|ElemshapeData/examples/GetInterpolation_test_8.F90) third block
+! - [test 8](|base|ElemshapeData/examples/GetInterpolation_test_8.F90),
+!   Test 3
 !
 ! See also: [[GetInterpolation_3]]
 
@@ -351,11 +359,10 @@ INTERFACE GetInterpolation_
     !! size of dim3 written in ans
     INTEGER(I4B), INTENT(OUT) :: dim4
     !! size of dim4 written in ans
-    !! size of data written in ans
     REAL(DFP), INTENT(IN) :: scale
     !! scaling factor
     LOGICAL(LGT), INTENT(IN) :: addContribution
-    !! if true, the interpolated value is added to ans
+    !! if true, add the interpolated value to ans
   END SUBROUTINE GetInterpolation_3a
 END INTERFACE GetInterpolation_
 
@@ -375,7 +382,10 @@ END INTERFACE GetInterpolation_
 !
 ! Examples
 !
-! - [test 4](|base|ElemshapeData/examples/GetInterpolation_test_4.F90) first block
+! - [test 4](|base|ElemshapeData/examples/GetInterpolation_test_4.F90),
+!   Test 1
+! - [test 11](|base|ElemshapeData/examples/GetInterpolation_test_11.F90),
+!   Test 1
 !
 ! See also: [[GetInterpolation_4]]
 
@@ -403,7 +413,10 @@ END INTERFACE GetInterpolation
 !
 ! Examples
 !
-! - [test 8](|base|ElemshapeData/examples/GetInterpolation_test_8.F90) fourth block
+! - [test 8](|base|ElemshapeData/examples/GetInterpolation_test_8.F90),
+!   Test 4
+! - [test 11](|base|ElemshapeData/examples/GetInterpolation_test_11.F90),
+!   Test 2
 !
 ! See also: [[GetInterpolation4]], [[GetInterpolation_4a]]
 
@@ -448,7 +461,10 @@ END INTERFACE GetInterpolation_
 !
 ! Examples
 !
-! - [test 8](|base|ElemshapeData/examples/GetInterpolation_test_8.F90) fourth block
+! - [test 8](|base|ElemshapeData/examples/GetInterpolation_test_8.F90),
+!   Test 4
+! - [test 11](|base|ElemshapeData/examples/GetInterpolation_test_11.F90),
+!   Test 1 and Test 4
 !
 ! See also: [[GetInterpolation_4]], [[GetInterpolation_4b]]
 
@@ -471,7 +487,7 @@ INTERFACE GetInterpolation_
     REAL(DFP), INTENT(IN) :: scale
     !! scale factor applied to the interpolated value
     LOGICAL(LGT), INTENT(IN) :: addContribution
-    !! if true, the interpolated value is added to ans
+    !! if true, add the interpolated value to ans
     INTEGER(I4B), INTENT(IN), OPTIONAL :: timeIndx
     !! time quadrature point index
   END SUBROUTINE GetInterpolation_4a
@@ -494,7 +510,10 @@ END INTERFACE GetInterpolation_
 !
 ! Examples
 !
-! - [test 8](|base|ElemshapeData/examples/GetInterpolation_test_8.F90) fourth block
+! - [test 8](|base|ElemshapeData/examples/GetInterpolation_test_8.F90),
+!   Test 4
+! - [test 11](|base|ElemshapeData/examples/GetInterpolation_test_11.F90),
+!   Test 5
 !
 ! See also: [[GetInterpolation_4a]]
 
@@ -516,7 +535,7 @@ INTERFACE GetInterpolation_
     REAL(DFP), INTENT(IN) :: scale
     !! scale factor applied to the interpolated value
     LOGICAL(LGT), INTENT(IN) :: addContribution
-    !! if true, the interpolated value is added to ans
+    !! if true, add the interpolated value to ans
     INTEGER(I4B), INTENT(IN) :: timeIndx
     !! time quadrature point index
     INTEGER(I4B), INTENT(IN) :: spaceIndx
@@ -540,7 +559,10 @@ END INTERFACE GetInterpolation_
 !
 ! Examples
 !
-! - [test 8](|base|ElemshapeData/examples/GetInterpolation_test_8.F90) fifth block
+! - [test 8](|base|ElemshapeData/examples/GetInterpolation_test_8.F90),
+!   Test 5
+! - [test 11](|base|ElemshapeData/examples/GetInterpolation_test_11.F90),
+!   Test 3
 !
 ! See also: [[GetInterpolation_5]]
 
@@ -569,7 +591,8 @@ END INTERFACE GetInterpolation
 !
 ! Examples
 !
-! - [test 8](|base|ElemshapeData/examples/GetInterpolation_test_8.F90) fifth block
+! - [test 8](|base|ElemshapeData/examples/GetInterpolation_test_8.F90),
+!   Test 5
 !
 ! See also: [[GetInterpolation5]], [[GetInterpolation_5a]]
 
@@ -606,7 +629,8 @@ END INTERFACE GetInterpolation_
 !
 ! Examples
 !
-! - [test 8](|base|ElemshapeData/examples/GetInterpolation_test_8.F90) fifth block
+! - [test 8](|base|ElemshapeData/examples/GetInterpolation_test_8.F90),
+!   Test 5
 !
 ! See also: [[GetInterpolation_5]]
 
@@ -631,7 +655,7 @@ INTERFACE GetInterpolation_
     REAL(DFP), INTENT(IN) :: scale
     !! scale factor applied to the interpolated value
     LOGICAL(LGT), INTENT(IN) :: addContribution
-    !! if true, the interpolated value is added to ans
+    !! if true, add the interpolated value to ans
   END SUBROUTINE GetInterpolation_5a
 END INTERFACE GetInterpolation_
 
@@ -650,7 +674,8 @@ END INTERFACE GetInterpolation_
 !
 ! Examples
 !
-! - [test 4](|base|ElemshapeData/examples/GetInterpolation_test_4.F90) first block
+! - [test 4](|base|ElemshapeData/examples/GetInterpolation_test_4.F90),
+!   Test 1
 !
 ! See also: [[GetInterpolation1]]
 
@@ -687,7 +712,8 @@ END INTERFACE Interpolation
 !
 ! Examples
 !
-! - [test 8](|base|ElemshapeData/examples/GetInterpolation_test_8.F90) second block
+! - [test 8](|base|ElemshapeData/examples/GetInterpolation_test_8.F90),
+!   Test 2
 !
 ! See also: [[GetInterpolation2]]
 
@@ -697,9 +723,9 @@ INTERFACE
     CLASS(STElemshapeData_), INTENT(IN) :: obj
     !! space-time shape data at one time point
     REAL(DFP), INTENT(IN) :: val(:, :, :, :)
-    !! spatial nodal values of matrix
+    !! space-time nodal values, val(nrow, ncol, nns, nnt)
     REAL(DFP), ALLOCATABLE :: ans(:, :, :)
-    !! Interpolation value of matrix
+    !! interpolated value
   END FUNCTION STInterpolation1
 END INTERFACE
 

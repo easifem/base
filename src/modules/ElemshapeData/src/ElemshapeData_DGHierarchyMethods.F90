@@ -27,22 +27,33 @@ public :: Initiate
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date: 23 July 2021
-! summary: This routine initiate the shape data
+! date: 2021-07-23
+! summary: Initiates the shape function data of an element for a
+!   discontinuous Galerkin (DG) hierarchy basis.
 !
-!# Introduction
+! This routine should fill `obj` with the shape function data of
+! the reference element `refElem` at the points of `quad`.
+! The basis is a hierarchy basis for a DG continuity type.
 !
-! This routine initiates the shape function related data inside the element.
-!
+! @warning
+! This method is not implemented. No submodule has a body for it,
+! and the build does not compile this file. Use `DG_Hierarchy1`
+! in `ElemshapeData_DGMethods` instead.
+! @endwarning
 
 INTERFACE
   MODULE PURE SUBROUTINE DG_Hierarchy(obj, quad, refElem, &
     & continuityType, interpolType)
     CLASS(ElemshapeData_), INTENT(INOUT) :: obj
+    !! shape function data to initiate
     CLASS(QuadraturePoint_), INTENT(IN) :: quad
+    !! quadrature points for evaluating the shape functions
     CLASS(ReferenceElement_), INTENT(IN) :: refElem
+    !! reference element
     CLASS(DG_), INTENT(IN) :: continuityType
+    !! continuity type, here the discontinuous Galerkin type
     CLASS(HierarchyInterpolation_), INTENT(IN) :: interpolType
+    !! hierarchy interpolation type
   END SUBROUTINE DG_Hierarchy
 END INTERFACE
 

@@ -46,8 +46,14 @@ PUBLIC :: Divergence
 !
 ! Returns the divergence of a vector at the quadrature points.
 ! `val(nsd, nns)` holds the nodal values of the vector.
-! It sets `tsize = nips` and does not allocate `ans`.
-! `dNdXt` must be set first.
+! The result is a scalar at each quadrature point.
+!
+! The routine does not allocate `ans`.
+! It returns the number of quadrature points in `tsize`.
+!
+! @note
+! Set `obj%dNdXt` before the call.
+! @endnote
 !
 ! Formula:
 !   $$ ans(ips) = \sum_I \sum_i val(i, I) \, dNdXt(I, i, ips) $$
@@ -55,7 +61,6 @@ PUBLIC :: Divergence
 ! Examples
 !
 ! - [test 1](|base|ElemshapeData/examples/GetDivergence_test_1.F90)
-! first block
 !
 ! See also: [[elemsd_GetDivergence_3]], [[elemsd_Divergence_1]]
 
@@ -82,10 +87,14 @@ END INTERFACE GetDivergence
 !
 ! Returns the divergence of a space-time vector at the quadrature points.
 ! `val(nsd, nns, nnt)` holds the nodal values in space and time.
+! The result is for the one time point that `obj` represents.
+!
+! The routine does not allocate `ans`.
+! It returns the number of quadrature points in `tsize`.
 !
 ! @note
-! `obj` must be a `STElemShapeData_`. Otherwise, it does not set
-! `ans`.
+! `obj` must be a `STElemShapeData_` with `dNTdXt` set. Otherwise,
+! the routine leaves `ans` unchanged.
 ! @endnote
 !
 ! Changes:
@@ -98,9 +107,8 @@ END INTERFACE GetDivergence
 ! Examples
 !
 ! - [test 1](|base|ElemshapeData/examples/GetDivergence_test_1.F90)
-! third block
 !
-! See also: [[elemsd_GetDivergence_1]]
+! See also: [[elemsd_GetDivergence_1]], [[elemsd_GetDivergence_3]]
 
 INTERFACE GetDivergence
   MODULE PURE SUBROUTINE elemsd_GetDivergence_2(obj, val, ans, tsize)
@@ -123,14 +131,17 @@ END INTERFACE GetDivergence
 ! date: 2021-11-26
 ! summary: Divergence of a vector FEVariable
 !
-! Returns the divergence of the vector `FEVariable_` `val`.
+! Returns the divergence of the vector `FEVariable_` `val` in `ans`.
+! The routine does not allocate `ans`.
+! It returns the number of quadrature points in `tsize`.
+! The variable type of `val` decides the result.
 !
 ! - A constant `val` gives zero.
 ! - A space `val` works like [[elemsd_GetDivergence_1]].
 ! - A space-time `val` works like [[elemsd_GetDivergence_2]].
 !   Then `obj` must be a `STElemShapeData_`.
 !
-! For other variable types, it does not set `ans`.
+! For other variable types, the routine leaves `ans` unchanged.
 !
 ! @note
 ! `val` must hold nodal values. A quadrature variable is not supported.
@@ -139,7 +150,8 @@ END INTERFACE GetDivergence
 ! Examples
 !
 ! - [test 1](|base|ElemshapeData/examples/GetDivergence_test_1.F90)
-! second block
+! - [test 2](|base|ElemshapeData/examples/GetDivergence_test_2.F90) with a
+!   space-time `val`
 !
 ! See also: [[elemsd_GetDivergence_1]], [[elemsd_GetDivergence_2]]
 
@@ -164,13 +176,20 @@ END INTERFACE GetDivergence
 ! date: 2021-11-26
 ! summary: Row divergence of matrix nodal values
 !
-! Returns the divergence of each row of a matrix.
+! Returns the divergence of each row of a matrix at the quadrature points.
 ! `val(nrow, nsd, nns)` holds the nodal values of the matrix.
-! It sets `nrow = SIZE(val, 1)` and `ncol = nips`.
+! The result is a vector with `nrow` entries at each quadrature point.
+!
+! The routine does not allocate `ans`.
+! It returns `nrow = SIZE(val, 1)` and `ncol = nips`.
+!
+! @note
+! Set `obj%dNdXt` before the call.
+! @endnote
 !
 ! Changes:
-!   - 2026-11-14: row divergence, SUM_j dM_ij/dx_j; before it summed
-!     over the first index
+!   - 2026-11-14: row divergence, `SUM_j dM_ij/dx_j`. Before, it summed
+!     over the first index.
 !
 ! Formula:
 !   $$ ans(i, ips) = \sum_I \sum_j val(i, j, I) \, dNdXt(I, j, ips) $$
@@ -178,9 +197,8 @@ END INTERFACE GetDivergence
 ! Examples
 !
 ! - [test 1](|base|ElemshapeData/examples/GetDivergence_test_1.F90)
-! first block
 !
-! See also: [[elemsd_GetDivergence_6]]
+! See also: [[elemsd_GetDivergence_5]], [[elemsd_GetDivergence_6]]
 
 INTERFACE GetDivergence
   MODULE PURE SUBROUTINE elemsd_GetDivergence_4(obj, val, ans, nrow, ncol)
@@ -207,15 +225,19 @@ END INTERFACE GetDivergence
 !
 ! Returns the divergence of each row of a space-time matrix.
 ! `val(nrow, nsd, nns, nnt)` holds the nodal values in space and time.
+! The result is for the one time point that `obj` represents.
+!
+! The routine does not allocate `ans`.
+! It returns `nrow = SIZE(val, 1)` and `ncol = nips`.
 !
 ! @note
-! `obj` must be a `STElemShapeData_`. Otherwise, it does not set
-! `ans`.
+! `obj` must be a `STElemShapeData_` with `dNTdXt` set. Otherwise,
+! the routine leaves `ans` unchanged.
 ! @endnote
 !
 ! Changes:
-!   - 2026-11-14: row divergence, SUM_j dM_ij/dx_j; before it summed
-!     over the first index
+!   - 2026-11-14: row divergence, `SUM_j dM_ij/dx_j`. Before, it summed
+!     over the first index.
 !
 ! Formula:
 !   $$ ans(i, ips) = \sum_a \sum_I \sum_j val(i, j, I, a) \,
@@ -224,9 +246,8 @@ END INTERFACE GetDivergence
 ! Examples
 !
 ! - [test 1](|base|ElemshapeData/examples/GetDivergence_test_1.F90)
-! third block
 !
-! See also: [[elemsd_GetDivergence_4]]
+! See also: [[elemsd_GetDivergence_4]], [[elemsd_GetDivergence_6]]
 
 INTERFACE GetDivergence
   MODULE PURE SUBROUTINE elemsd_GetDivergence_5(obj, val, ans, nrow, ncol)
@@ -251,14 +272,17 @@ END INTERFACE GetDivergence
 ! date: 2021-11-26
 ! summary: Row divergence of a matrix FEVariable
 !
-! Returns the row divergence of the matrix `FEVariable_` `val`.
+! Returns the row divergence of the matrix `FEVariable_` `val` in `ans`.
+! The routine does not allocate `ans`.
+! It returns the shape of the result in `nrow` and `ncol`.
+! The variable type of `val` decides the result.
 !
 ! - A constant `val` gives zero.
 ! - A space `val` works like [[elemsd_GetDivergence_4]].
 ! - A space-time `val` works like [[elemsd_GetDivergence_5]].
 !   Then `obj` must be a `STElemShapeData_`.
 !
-! For other variable types, it does not set `ans`.
+! For other variable types, the routine leaves `ans` unchanged.
 !
 ! @note
 ! `val` must hold nodal values. A quadrature variable is not supported.
@@ -266,7 +290,9 @@ END INTERFACE GetDivergence
 !
 ! Examples
 !
-! - [test 1](|base|ElemshapeData/examples/GetDivergence_test_1.F90) second block
+! - [test 1](|base|ElemshapeData/examples/GetDivergence_test_1.F90)
+! - [test 2](|base|ElemshapeData/examples/GetDivergence_test_2.F90) with a
+!   constant and a space-time `val`
 !
 ! See also: [[elemsd_GetDivergence_4]], [[elemsd_GetDivergence_5]]
 
@@ -296,6 +322,7 @@ END INTERFACE GetDivergence
 ! Returns the divergence of `val` as a quadrature, space `FEVariable_`.
 ! A vector `val` gives a scalar.
 ! A matrix `val` gives a vector of row divergences.
+! For any other rank of `val`, the routine leaves `ans` unchanged.
 !
 ! @note
 ! `val` must hold nodal values. A quadrature variable is not supported.
@@ -303,7 +330,9 @@ END INTERFACE GetDivergence
 !
 ! Examples
 !
-! - [test 1](|base|ElemshapeData/examples/GetDivergence_test_1.F90) second block
+! - [test 1](|base|ElemshapeData/examples/GetDivergence_test_1.F90)
+! - [test 2](|base|ElemshapeData/examples/GetDivergence_test_2.F90) with a
+!   constant `val`
 !
 ! See also: [[elemsd_GetDivergence_3]], [[elemsd_GetDivergence_6]],
 ! [[elemsd_Divergence_1]]
@@ -330,18 +359,23 @@ END INTERFACE GetDivergence
 ! Returns the divergence of `val` at all time points.
 ! Here `obj(ipt)` is the shape data at time quadrature point `ipt`.
 ! The result is a quadrature, space-time `FEVariable_`.
+! In the shapes below, `nips` is the largest number of quadrature
+! points in `obj`.
 !
 ! - A vector `val` gives a scalar with shape `[nips, nipt]`.
 ! - A matrix `val` gives a vector with shape `[nrow, nips, nipt]`.
 !
+! For any other rank of `val`, the routine leaves `ans` unchanged.
+!
 ! Changes:
-!   - 2026-11-14: the result of a vector val used obj(nipt + 1) after
-!     the loop; it now uses the largest nips
+!   - 2026-11-14: for a vector `val`, the result used `obj(nipt + 1)`
+!     after the loop. It now uses the largest `nips`.
 !
 ! Examples
 !
 ! - [test 1](|base|ElemshapeData/examples/GetDivergence_test_1.F90)
-! third block
+! - [test 2](|base|ElemshapeData/examples/GetDivergence_test_2.F90) with a
+!   matrix `val`
 !
 ! See also: [[elemsd_GetDivergence_7]], [[elemsd_Divergence_2]]
 
@@ -365,12 +399,13 @@ END INTERFACE GetDivergence
 ! summary: Function form of the divergence of a FEVariable
 !
 ! Returns the divergence of `val` as a quadrature `FEVariable_`.
-! It gives the same result as [[elemsd_GetDivergence_7]].
+! A vector `val` gives a scalar.
+! A matrix `val` gives a vector of row divergences.
+! The result is the same as that of [[elemsd_GetDivergence_7]].
 !
 ! Examples
 !
 ! - [test 1](|base|ElemshapeData/examples/Divergence_test_1.F90)
-! first block, vector and matrix
 !
 ! See also: [[elemsd_GetDivergence_7]]
 
@@ -394,12 +429,14 @@ END INTERFACE Divergence
 ! summary: Function form of the divergence at all time points
 !
 ! Returns the divergence of `val` at all time points.
-! It gives the same result as [[elemsd_GetDivergence_8]].
+! `obj(ipt)` is the shape data at time quadrature point `ipt`.
+! The result is the same as that of [[elemsd_GetDivergence_8]].
 !
 ! Examples
 !
 ! - [test 1](|base|ElemshapeData/examples/Divergence_test_1.F90)
-! second block, space-time
+! - [test 2](|base|ElemshapeData/examples/Divergence_test_2.F90) with vector
+!   and matrix `val`
 !
 ! See also: [[elemsd_GetDivergence_8]]
 

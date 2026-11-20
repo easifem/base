@@ -37,16 +37,47 @@ PUBLIC :: Initiate
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2023-08-16
-! summary: This routine initiate the shape data
+! summary: Initiates the hierarchical shape data from element data
+!
+! Fills `obj` with hierarchical basis functions and their gradients at
+! the quadrature points `quad`.
+! The arguments `nsd`, `xidim`, `elemType`, `refelemCoord` and
+! `domainName` describe the element.
+!
+! The routine does the following.
+!
+! 1. It counts the basis functions from `elemType` and the orders.
+! 2. It allocates `obj` for that many functions and points.
+! 3. It stores the quadrature weights in `obj%ws`.
+! 4. It stores the basis values in `obj%N` and the gradients in
+!    `obj%dNdXi`.
+!
+! The orders and orientations are optional, but the element needs some.
+! Pass `cellOrder` and `cellOrient` for every element.
+! Pass `faceOrient` for 2D elements.
+! Pass `faceOrder` for 2D and 3D elements.
+! Pass `edgeOrder` for 3D elements.
+!
+! @note
+! The routine does not use `refelemCoord`.
+! The basis exists only for lines, triangles and quadrangles.
+! For other elements `obj%N` and `obj%dNdXi` are not valid.
+! @endnote
+!
+! Examples
+!
+! - [test 1](|base|ElemshapeData/examples/HierarchicalElemShapeData_test_1.F90)
+!
+! See also: [[HierarchicalElemShapeData2]], [[HierarchicalElemShapeData3]]
 
 INTERFACE HierarchicalElemShapeData
   MODULE SUBROUTINE HierarchicalElemShapeData1( &
     obj, quad, nsd, xidim, elemType, refelemCoord, domainName, cellOrder, &
     faceOrder, edgeOrder, cellOrient, faceOrient, edgeOrient)
     TYPE(ElemshapeData_), INTENT(INOUT) :: obj
-    !! element shape data
+    !! element shape data, the routine allocates and fills it
     TYPE(QuadraturePoint_), INTENT(IN) :: quad
-    !! quadrature point
+    !! quadrature points and weights
     INTEGER(I4B), INTENT(IN) :: nsd
     !! number of spatial dimension
     INTEGER(I4B), INTENT(IN) :: xidim
@@ -78,15 +109,33 @@ END INTERFACE HierarchicalElemShapeData
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2023-08-16
-! summary: This routine initiate the shape data
+! summary: Initiates the hierarchical shape data from a reference element
+!
+! Fills `obj` with hierarchical basis functions and their gradients at
+! the quadrature points `quad`.
+! The routine reads the element data from `refelem`.
+! Then it calls [[HierarchicalElemShapeData1]].
+!
+! Pass `cellOrder` for every element.
+! Pass `faceOrder` for 2D and 3D elements.
+! Pass `edgeOrder` for 3D elements.
+!
+! Examples
+!
+! - [test 1](|base|ElemshapeData/examples/HierarchicalElemShapeData_test_1.F90)
+!
+! See also: [[HierarchicalElemShapeData1]]
 
 INTERFACE HierarchicalElemShapeData
   MODULE SUBROUTINE HierarchicalElemShapeData2( &
     obj, quad, refelem, cellOrder, faceOrder, edgeOrder, cellOrient, &
     faceOrient, edgeOrient)
     TYPE(ElemshapeData_), INTENT(INOUT) :: obj
+    !! element shape data, the routine allocates and fills it
     TYPE(QuadraturePoint_), INTENT(IN) :: quad
+    !! quadrature points and weights
     CLASS(ReferenceElement_), INTENT(IN) :: refelem
+    !! reference element
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: cellOrder(:)
     !! cell order, always needed
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: faceOrder(:, :)
@@ -103,21 +152,49 @@ INTERFACE HierarchicalElemShapeData
 END INTERFACE HierarchicalElemShapeData
 
 !----------------------------------------------------------------------------
-!
+!                                                          Initiate@Methods
 !----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2023-08-16
+! summary: Initiates the hierarchical shape data, with continuity types
+!
+! Fills `obj` with hierarchical basis functions and their gradients at
+! the quadrature points `quad`.
+! This routine is also available under the generic name `Initiate`.
+!
+! It accepts `baseContinuity` and `baseInterpolation` but does not use
+! them.
+! It calls [[HierarchicalElemShapeData2]] with the other arguments.
+!
+! @note
+! The result does not depend on `baseContinuity` or `baseInterpolation`.
+! @endnote
+!
+! Pass `cellOrder` for every element.
+! Pass `faceOrder` for 2D and 3D elements.
+! Pass `edgeOrder` for 3D elements.
+!
+! Examples
+!
+! - [test 1](|base|ElemshapeData/examples/HierarchicalElemShapeData_test_1.F90) test 6, with `Initiate`
+!
+! See also: [[HierarchicalElemShapeData2]]
 
 INTERFACE HierarchicalElemShapeData
   MODULE SUBROUTINE HierarchicalElemShapeData3( &
     obj, quad, refelem, baseContinuity, baseInterpolation, cellOrder, &
     faceOrder, edgeOrder, cellOrient, faceOrient, edgeOrient)
     TYPE(ElemshapeData_), INTENT(INOUT) :: obj
+    !! element shape data, the routine allocates and fills it
     TYPE(QuadraturePoint_), INTENT(IN) :: quad
+    !! quadrature points and weights
     CLASS(ReferenceElement_), INTENT(IN) :: refelem
     !! reference element
     TYPE(H1_), INTENT(IN) :: baseContinuity
-    !! base continuity
+    !! base continuity, not used
     TYPE(HierarchyInterpolation_), INTENT(IN) :: baseInterpolation
-    !! base interpolation
+    !! base interpolation, not used
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: cellOrder(:)
     !! cell order, always needed
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: faceOrder(:, :)
@@ -143,7 +220,22 @@ END INTERFACE Initiate
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2023-08-16
-! summary: This routine initiate the shape data
+! summary: Initiates the hierarchical shape data of an element and a facet
+!
+! Fills `obj` with the shape data of the element, as
+! [[HierarchicalElemShapeData1]] does.
+! Then it fills `facetElemsd` with the shape data of the face
+! `localFaceNumber`, at the facet quadrature points `facetQuad`.
+!
+! The facet data uses `faceOrder(:, localFaceNumber)` as its cell order.
+! It uses no orientations.
+!
+! @warning
+! This routine is under development.
+! In a debug build it stops with an error.
+! @endwarning
+!
+! See also: [[HierarchicalElemShapeData1]]
 
 INTERFACE HierarchicalFacetElemShapeData
   MODULE SUBROUTINE HierarchicalFacetElemShapeData1( &
@@ -151,11 +243,13 @@ INTERFACE HierarchicalFacetElemShapeData
     elemType, refelemCoord, domainName, cellOrder, faceOrder, edgeOrder, &
     cellOrient, faceOrient, edgeOrient)
     TYPE(ElemshapeData_), INTENT(INOUT) :: obj, facetElemsd
-    !! element shape data
+    !! `obj` is the element shape data
+    !! `facetElemsd` is the facet shape data
     TYPE(QuadraturePoint_), INTENT(IN) :: quad, facetQuad
-    !! quadrature point
+    !! `quad` is the quadrature of the element
+    !! `facetQuad` is the quadrature of the facet
     INTEGER(I4B), INTENT(IN) :: localFaceNumber
-    !! local face number
+    !! local face number, used as a column of `faceOrder`
     INTEGER(I4B), INTENT(IN) :: nsd
     !! number of spatial dimension
     INTEGER(I4B), INTENT(IN) :: xidim

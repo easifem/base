@@ -21,10 +21,11 @@
 ! summary: Gradient with respect to the physical coordinates
 !
 ! Compute the spatial gradient of a quantity at the quadrature points
-! from its nodal values and `dNdXt` (or `dNTdXt` for space-time). The
-! gradient of a scalar is a vector of size `nsd`, of a vector a matrix,
-! and of a matrix a rank-3 array. `dNdXt` (and `dNTdXt`) must be set
-! first, for example by [[Set]].
+! from its nodal values and `dNdXt` (or `dNTdXt` for space-time).
+! The gradient of a scalar is a vector of size `nsd`.
+! The gradient of a vector is a matrix.
+! The gradient of a matrix is a rank-3 array.
+! Fill `dNdXt` (and `dNTdXt`) first, for example with [[Set]].
 
 MODULE ElemshapeData_GradientMethods
 USE BaseType, ONLY: ElemShapeData_
@@ -49,12 +50,13 @@ PUBLIC :: GetSpatialGradient_
 ! summary: Spatial gradient of scalar nodal values
 !
 ! Returns the spatial gradient of scalar nodal values `val(nns)`.
-! It reallocates `ans(nsd, nips)`.
-! Then it works like [[obj_GetSpatialGradient_1]].
+! It reallocates `ans(nsd, nips)` and then works like
+! [[obj_GetSpatialGradient_1]].
 !
 ! Examples
 !
-! - [test 1](|base|ElemshapeData/examples/GetSpatialGradient_test_1.F90) first block
+! - [test 1](|base|ElemshapeData/examples/GetSpatialGradient_test_1.F90)
+! - [test 3](|base|ElemshapeData/examples/GetSpatialGradient_test_3.F90) on a facet
 !
 ! See also: [[obj_GetSpatialGradient_1]]
 
@@ -77,10 +79,16 @@ END INTERFACE GetSpatialGradient
 ! date: 2021-11-26
 ! summary: Spatial gradient of scalar nodal values, no allocation
 !
-! Returns the spatial gradient of scalar nodal values `val(nns)`.
-! It writes into the existing `ans` and returns the used size in
-! `nrow` and `ncol`.
-! If `nsd /= xidim`, `obj` is a facet and it sets `ans` to zero.
+! Computes the spatial gradient of scalar nodal values `val(nns)`
+! at the quadrature points.
+! It writes into the existing `ans`.
+! It returns the size used in `ans` in `nrow` and `ncol`.
+!
+! If `nsd /= xidim`, `obj` is a facet and the routine zeroes `ans`.
+!
+! @note
+! Fill `obj%dNdXt` before the call.
+! @endnote
 !
 ! Formula:
 !   $$ ans(:, ips) = \sum_I val(I) \, dNdXt(I, :, ips) $$
@@ -88,7 +96,7 @@ END INTERFACE GetSpatialGradient
 ! Examples
 !
 ! - [test 1](|base|ElemshapeData/examples/GetSpatialGradient__test_1.F90)
-! first block
+! - [test 3](|base|ElemshapeData/examples/GetSpatialGradient__test_3.F90) on a facet
 !
 ! See also: [[obj_GetSpatialGradient1]]
 
@@ -116,13 +124,13 @@ END INTERFACE GetSpatialGradient_
 ! summary: Spatial gradient of vector nodal values
 !
 ! Returns the spatial gradient of vector nodal values `val(ncomp, nns)`.
-! It reallocates `ans(ncomp, nsd, nips)`.
-! Then it works like [[obj_GetSpatialGradient_2]].
+! It reallocates `ans(ncomp, nsd, nips)` and then works like
+! [[obj_GetSpatialGradient_2]].
 !
 ! Examples
 !
 ! - [test 1](|base|ElemshapeData/examples/GetSpatialGradient_test_1.F90)
-! first block
+! - [test 3](|base|ElemshapeData/examples/GetSpatialGradient_test_3.F90) on a facet
 !
 ! See also: [[obj_GetSpatialGradient_2]]
 
@@ -145,10 +153,16 @@ END INTERFACE GetSpatialGradient
 ! date: 2021-11-26
 ! summary: Spatial gradient of vector nodal values, no allocation
 !
-! Returns the spatial gradient of vector nodal values `val(ncomp, nns)`.
-! It writes into the existing `ans` and returns the used size in
-! `dim1`, `dim2` and `dim3`.
-! If `nsd /= xidim`, `obj` is a facet and it sets `ans` to zero.
+! Computes the spatial gradient of vector nodal values `val(ncomp, nns)`
+! at the quadrature points.
+! It writes into the existing `ans`.
+! It returns the size used in `ans` in `dim1`, `dim2` and `dim3`.
+!
+! If `nsd /= xidim`, `obj` is a facet and the routine zeroes `ans`.
+!
+! @note
+! Fill `obj%dNdXt` before the call.
+! @endnote
 !
 ! Formula:
 !   $$ ans(:, :, ips) = \sum_I val(:, I) \, dNdXt(I, :, ips) $$
@@ -156,7 +170,7 @@ END INTERFACE GetSpatialGradient
 ! Examples
 !
 ! - [test 1](|base|ElemshapeData/examples/GetSpatialGradient__test_1.F90)
-! first block
+! - [test 3](|base|ElemshapeData/examples/GetSpatialGradient__test_3.F90) on a facet
 !
 ! See also: [[obj_GetSpatialGradient2]]
 
@@ -188,13 +202,13 @@ END INTERFACE GetSpatialGradient_
 !
 ! Returns the spatial gradient of scalar space-time nodal values
 ! `val(nns, nnt)`.
-! It reallocates `ans(nsd, nips)`.
-! Then it works like [[obj_GetSpatialGradient_3]].
+! `obj` is the shape data at one time point.
+! It reallocates `ans(nsd, nips)` and then works like
+! [[obj_GetSpatialGradient_3]].
 !
 ! Examples
 !
 ! - [test 1](|base|ElemshapeData/examples/GetSpatialGradient_test_1.F90)
-! third block
 !
 ! See also: [[obj_GetSpatialGradient_3]]
 
@@ -217,10 +231,17 @@ END INTERFACE GetSpatialGradient
 ! date: 2021-11-26
 ! summary: Spatial gradient of scalar space-time nodal values, no allocation
 !
-! Returns the spatial gradient of scalar space-time nodal values
-! `val(nns, nnt)`. It writes into the existing `ans` and returns the
-! used size in `nrow` and `ncol`.
-! If `nsd /= xidim`, `obj` is a facet and it sets `ans` to zero.
+! Computes the spatial gradient of scalar space-time nodal values
+! `val(nns, nnt)` at the quadrature points.
+! `obj` is the shape data at one time point.
+! It writes into the existing `ans`.
+! It returns the size used in `ans` in `nrow` and `ncol`.
+!
+! If `nsd /= xidim`, `obj` is a facet and the routine zeroes `ans`.
+!
+! @note
+! Fill `obj%dNTdXt` before the call.
+! @endnote
 !
 ! Formula:
 !   $$ ans(:, ips) = \sum_I \sum_a val(I, a) \, dNTdXt(I, a, :, ips) $$
@@ -228,7 +249,6 @@ END INTERFACE GetSpatialGradient
 ! Examples
 !
 ! - [test 2](|base|ElemshapeData/examples/GetSpatialGradient__test_2.F90)
-! second block
 !
 ! See also: [[obj_GetSpatialGradient3]]
 
@@ -258,13 +278,13 @@ END INTERFACE GetSpatialGradient_
 !
 ! Returns the spatial gradient of vector space-time nodal values
 ! `val(ncomp, nns, nnt)`.
-! It reallocates `ans(ncomp, nsd, nips)`.
-! Then it works like [[obj_GetSpatialGradient_4]].
+! `obj` is the shape data at one time point.
+! It reallocates `ans(ncomp, nsd, nips)` and then works like
+! [[obj_GetSpatialGradient_4]].
 !
 ! Examples
 !
 ! - [test 2](|base|ElemshapeData/examples/GetSpatialGradient_test_2.F90)
-! first block
 !
 ! See also: [[obj_GetSpatialGradient_4]]
 
@@ -287,10 +307,17 @@ END INTERFACE GetSpatialGradient
 ! date: 2021-11-26
 ! summary: Spatial gradient of vector space-time nodal values, no allocation
 !
-! Returns the spatial gradient of vector space-time nodal values
-! `val(ncomp, nns, nnt)`. It writes into the existing `ans` and returns
-! the used size in `dim1`, `dim2` and `dim3`.
-! If `nsd /= xidim`, `obj` is a facet and it sets `ans` to zero.
+! Computes the spatial gradient of vector space-time nodal values
+! `val(ncomp, nns, nnt)` at the quadrature points.
+! `obj` is the shape data at one time point.
+! It writes into the existing `ans`.
+! It returns the size used in `ans` in `dim1`, `dim2` and `dim3`.
+!
+! If `nsd /= xidim`, `obj` is a facet and the routine zeroes `ans`.
+!
+! @note
+! Fill `obj%dNTdXt` before the call.
+! @endnote
 !
 ! Formula:
 !   $$ ans(i, :, ips) = \sum_I \sum_a val(i, I, a) \,
@@ -299,7 +326,6 @@ END INTERFACE GetSpatialGradient
 ! Examples
 !
 ! - [test 2](|base|ElemshapeData/examples/GetSpatialGradient__test_2.F90)
-! second block
 !
 ! See also: [[obj_GetSpatialGradient4]]
 
@@ -336,7 +362,6 @@ END INTERFACE GetSpatialGradient_
 ! Examples
 !
 ! - [test 1](|base|ElemshapeData/examples/GetSpatialGradient_test_1.F90)
-! second block
 !
 ! See also: [[obj_GetSpatialGradient_5]]
 
@@ -376,7 +401,6 @@ END INTERFACE GetSpatialGradient
 ! Examples
 !
 ! - [test 1](|base|ElemshapeData/examples/GetSpatialGradient__test_1.F90)
-! second block
 !
 ! See also: [[obj_GetSpatialGradient5]]
 
@@ -396,8 +420,7 @@ INTERFACE GetSpatialGradient_
     INTEGER(I4B), INTENT(OUT) :: ncol
     !! number of columns written in ans
     REAL(DFP), INTENT(INOUT) :: tempVec(:)
-    !! temporary vector for internal use, its size should be
-    !! atleast obj%nns
+    !! work array, SIZE >= `obj%nns`
   END SUBROUTINE obj_GetSpatialGradient_5
 END INTERFACE GetSpatialGradient_
 
@@ -416,7 +439,7 @@ END INTERFACE GetSpatialGradient_
 ! Examples
 !
 ! - [test 1](|base|ElemshapeData/examples/GetSpatialGradient_test_1.F90)
-! second block
+! - [test 3](|base|ElemshapeData/examples/GetSpatialGradient_test_3.F90) with a constant `val`
 !
 ! See also: [[obj_GetSpatialGradient_6]]
 
@@ -456,7 +479,7 @@ END INTERFACE GetSpatialGradient
 ! Examples
 !
 ! - [test 1](|base|ElemshapeData/examples/GetSpatialGradient__test_1.F90)
-! second block
+! - [test 3](|base|ElemshapeData/examples/GetSpatialGradient__test_3.F90) with a constant `val`
 !
 ! See also: [[obj_GetSpatialGradient6]]
 
@@ -497,7 +520,7 @@ END INTERFACE GetSpatialGradient_
 ! Examples
 !
 ! - [test 1](|base|ElemshapeData/examples/GetSpatialGradient_test_1.F90)
-! first block
+! - [test 3](|base|ElemshapeData/examples/GetSpatialGradient_test_3.F90) on a facet
 !
 ! See also: [[obj_GetSpatialGradient_7]]
 
@@ -523,7 +546,11 @@ END INTERFACE GetSpatialGradient
 ! Returns the spatial gradient of matrix nodal values
 ! `val(nrow, ncol, nns)`. It writes into the existing `ans` and returns
 ! the used size in `dim1` to `dim4`.
-! If `nsd /= xidim`, `obj` is a facet and it sets `ans` to zero.
+! If `nsd /= xidim`, `obj` is a facet and the routine zeroes `ans`.
+!
+! @note
+! Fill `obj%dNdXt` before the call.
+! @endnote
 !
 ! Formula:
 !   $$ ans(:, :, :, ips) = \sum_I val(:, :, I) \, dNdXt(I, :, ips) $$
@@ -531,7 +558,7 @@ END INTERFACE GetSpatialGradient
 ! Examples
 !
 ! - [test 2](|base|ElemshapeData/examples/GetSpatialGradient__test_2.F90)
-! first block
+! - [test 3](|base|ElemshapeData/examples/GetSpatialGradient__test_3.F90) on a facet
 !
 ! See also: [[obj_GetSpatialGradient7]]
 
@@ -571,7 +598,6 @@ END INTERFACE GetSpatialGradient_
 ! Examples
 !
 ! - [test 2](|base|ElemshapeData/examples/GetSpatialGradient_test_2.F90)
-! second block
 !
 ! See also: [[obj_GetSpatialGradient_8]]
 
@@ -597,7 +623,11 @@ END INTERFACE GetSpatialGradient
 ! Returns the spatial gradient of matrix space-time nodal values
 ! `val(nrow, ncol, nns, nnt)`. It writes into the existing `ans` and
 ! returns the used size in `dim1` to `dim4`.
-! If `nsd /= xidim`, `obj` is a facet and it sets `ans` to zero.
+! If `nsd /= xidim`, `obj` is a facet and the routine zeroes `ans`.
+!
+! @note
+! Fill `obj%dNTdXt` before the call.
+! @endnote
 !
 ! Formula:
 !   $$ ans(i, j, :, ips) = \sum_I \sum_a val(i, j, I, a) \,
@@ -606,7 +636,6 @@ END INTERFACE GetSpatialGradient
 ! Examples
 !
 ! - [test 2](|base|ElemshapeData/examples/GetSpatialGradient__test_2.F90)
-! second block
 !
 ! See also: [[obj_GetSpatialGradient8]]
 
@@ -646,7 +675,7 @@ END INTERFACE GetSpatialGradient_
 ! - A space-time `val` works like [[obj_GetSpatialGradient_8]].
 !   Then `obj` must be a `STElemShapeData_`.
 !
-! For other variable types, it does not set `ans`.
+! For other variable types, it leaves `ans` unchanged.
 !
 ! @note
 ! `val` must hold nodal values. A quadrature variable is not supported.
@@ -655,7 +684,7 @@ END INTERFACE GetSpatialGradient_
 ! Examples
 !
 ! - [test 1](|base|ElemshapeData/examples/GetSpatialGradient_test_1.F90)
-! second block
+! - [test 3](|base|ElemshapeData/examples/GetSpatialGradient_test_3.F90) with constant and space-time `val`
 !
 ! See also: [[obj_GetSpatialGradient_9]]
 
@@ -692,13 +721,13 @@ END INTERFACE GetSpatialGradient
 ! @endnote
 !
 ! Changes:
-!   - 2026-11-14: ans is set to zero for variable types other than
-!     space, and only the used part of tempMat3 is passed on
+!   - 2026-11-14: the routine zeroes `ans` for variable types other
+!     than space. It passes on only the used part of `tempMat3`.
 !
 ! Examples
 !
 ! - [test 1](|base|ElemshapeData/examples/GetSpatialGradient__test_1.F90)
-! second block, space and space-time `val`
+! - [test 3](|base|ElemshapeData/examples/GetSpatialGradient__test_3.F90) with a constant `val`
 !
 ! See also: [[obj_GetSpatialGradient9]]
 
@@ -741,8 +770,7 @@ END INTERFACE GetSpatialGradient_
 !
 ! Examples
 !
-! - [test 1](|base|ElemshapeData/examples/GetSpatialGradient_test_1.F90)
-! third block
+! - [test 1](|base|ElemshapeData/examples/GetSpatialGradient_test_1.F90) with space-time nodal values
 !
 ! See also: [[obj_GetSpatialGradient_10]]
 
@@ -784,8 +812,7 @@ END INTERFACE GetSpatialGradient
 !
 ! Examples
 !
-! - [test 2](|base|ElemshapeData/examples/GetSpatialGradient__test_2.F90)
-! third block
+! - [test 2](|base|ElemshapeData/examples/GetSpatialGradient__test_2.F90) with space, space-time and constant `val`
 !
 ! See also: [[obj_GetSpatialGradient10]]
 
@@ -824,8 +851,7 @@ END INTERFACE GetSpatialGradient_
 !
 ! Examples
 !
-! - [test 2](|base|ElemshapeData/examples/GetSpatialGradient_test_2.F90)
-! third block
+! - [test 2](|base|ElemshapeData/examples/GetSpatialGradient_test_2.F90) with space-time `val`
 !
 ! See also: [[obj_GetSpatialGradient_11]]
 
@@ -867,8 +893,8 @@ END INTERFACE GetSpatialGradient
 !
 ! Examples
 !
-! - [test 2](|base|ElemshapeData/examples/GetSpatialGradient__test_2.F90)
-! fourth block
+! - [test 2](|base|ElemshapeData/examples/GetSpatialGradient__test_2.F90) with space-time `val`
+! - [test 3](|base|ElemshapeData/examples/GetSpatialGradient__test_3.F90) with a space `val`
 !
 ! See also: [[obj_GetSpatialGradient11]]
 
@@ -909,8 +935,7 @@ END INTERFACE GetSpatialGradient_
 !
 ! Examples
 !
-! - [test 2](|base|ElemshapeData/examples/GetSpatialGradient_test_2.F90)
-! fourth block
+! - [test 2](|base|ElemshapeData/examples/GetSpatialGradient_test_2.F90) with space-time `val`
 !
 ! See also: [[obj_GetSpatialGradient_12]]
 
@@ -952,8 +977,8 @@ END INTERFACE GetSpatialGradient
 !
 ! Examples
 !
-! - [test 2](|base|ElemshapeData/examples/GetSpatialGradient__test_2.F90)
-! fourth block
+! - [test 2](|base|ElemshapeData/examples/GetSpatialGradient__test_2.F90) with space-time `val`
+! - [test 3](|base|ElemshapeData/examples/GetSpatialGradient__test_3.F90) with a space `val`
 !
 ! See also: [[obj_GetSpatialGradient12]]
 
@@ -977,11 +1002,7 @@ INTERFACE GetSpatialGradient_
     INTEGER(I4B), INTENT(OUT) :: dim4
     !! size of dim4 written in ans
     REAL(DFP), INTENT(INOUT) :: tempMat4(:, :, :, :)
-    !! temporary matrix of rank 4, its size should be enough
-    !! to keep the matrix nodal value from val
-    !! index 1 and index 2 should be atleast shape of matrix.
-    !! index 3 and index 4 of tempMat4 should be atleast
-    !! obj%nns, obj%nnt
+    !! work array, SHAPE >= [nrow, ncol, nns, nnt]
   END SUBROUTINE obj_GetSpatialGradient_12
 END INTERFACE GetSpatialGradient_
 

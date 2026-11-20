@@ -37,7 +37,31 @@ PUBLIC :: Initiate
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2023-08-16
-! summary: This routine initiate orthogonal shape function data
+! summary: Initiates orthogonal shape function data from an element type
+!   and a domain name.
+!
+! This routine fills `obj` with orthogonal shape functions at the
+! quadrature points `quad`.
+!
+! 1. It allocates `obj` for the number of shape functions of `order`.
+! 2. It copies the quadrature weights into `obj%ws`.
+! 3. It evaluates the orthogonal polynomials into `obj%N`.
+! 4. It evaluates their gradients into `obj%dNdXi`.
+!
+! @note
+! The routine sets only `obj%ws`, `obj%N` and `obj%dNdXi`.
+! It does not compute the Jacobian or the physical coordinates.
+! @endnote
+!
+! @note
+! The routine does not read `refelemCoord`.
+! @endnote
+!
+! Examples
+!
+! - [test 1](|base|ElemshapeData/examples/OrthogonalElemShapeData_test_1.F90)
+!
+! See also: [[OrthogonalElemShapeData2]], [[OrthogonalElemShapeData3]]
 
 INTERFACE OrthogonalElemShapeData
   MODULE SUBROUTINE OrthogonalElemShapeData1(obj, quad, nsd, xidim, &
@@ -46,11 +70,11 @@ INTERFACE OrthogonalElemShapeData
     TYPE(ElemshapeData_), INTENT(INOUT) :: obj
     !! element shape data
     TYPE(QuadraturePoint_), INTENT(IN) :: quad
-    !! quadrature point
+    !! quadrature points
     INTEGER(I4B), INTENT(IN) :: nsd
-    !! number of spatial dimension
+    !! number of spatial dimensions
     INTEGER(I4B), INTENT(IN) :: xidim
-    !!  dimension of xi
+    !! dimension of `xi`
     INTEGER(I4B), INTENT(IN) :: elemType
     !! element type
     REAL(DFP), INTENT(IN) :: refelemCoord(:, :)
@@ -62,7 +86,7 @@ INTERFACE OrthogonalElemShapeData
     INTEGER(I4B), INTENT(IN) :: basisType
     !! basis type
     REAL(DFP), OPTIONAL, INTENT(IN) :: alpha, beta, lambda
-    !! parameters for Jacobi and Ultraspherical poly
+    !! parameters for Jacobi and ultraspherical polynomials
   END SUBROUTINE OrthogonalElemShapeData1
 END INTERFACE OrthogonalElemShapeData
 
@@ -72,7 +96,18 @@ END INTERFACE OrthogonalElemShapeData
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2023-08-16
-! summary: This routine initiate the shape data
+! summary: Initiates orthogonal shape function data from a reference
+!   element.
+!
+! This routine reads `nsd`, the dimension of `xi`, the element type,
+! the reference coordinates and the domain name from `refelem`.
+! It then calls [[OrthogonalElemShapeData1]].
+!
+! Examples
+!
+! - [test 1](|base|ElemshapeData/examples/OrthogonalElemShapeData_test_1.F90)
+!
+! See also: [[OrthogonalElemShapeData1]]
 
 INTERFACE OrthogonalElemShapeData
   MODULE SUBROUTINE OrthogonalElemShapeData2(obj, quad, refelem, order, &
@@ -87,33 +122,65 @@ INTERFACE OrthogonalElemShapeData
     !! cell order, always needed
     INTEGER(I4B), INTENT(IN) :: basisType
     !! basis type
-    !! needed for line, quad, and hexa element
     REAL(DFP), OPTIONAL, INTENT(IN) :: alpha, beta, lambda
+    !! parameters for Jacobi and ultraspherical polynomials,
+    !! needed for line, quadrangle and hexahedron elements
   END SUBROUTINE OrthogonalElemShapeData2
 END INTERFACE OrthogonalElemShapeData
 
 !----------------------------------------------------------------------------
-!
+!                                                          Initiate@Methods
 !----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2023-08-16
+! summary: Initiates orthogonal shape function data from a reference
+!   element, a continuity type and an interpolation type.
+!
+! This routine fills `obj` with orthogonal shape functions at the
+! quadrature points `quad`.
+! It gives the same result as [[OrthogonalElemShapeData2]].
+!
+! @note
+! `baseContinuity` and `baseInterpolation` only select this overload.
+! The routine does not read them.
+! @endnote
+!
+! Examples
+!
+! - [test 1](|base|ElemshapeData/examples/OrthogonalElemShapeData_test_1.F90)
+!
+! See also: [[OrthogonalElemShapeData1]], [[OrthogonalElemShapeData2]]
 
 INTERFACE OrthogonalElemShapeData
   MODULE SUBROUTINE OrthogonalElemShapeData3(obj, quad, refelem, &
      baseContinuity, baseInterpolation, order, basisType, alpha, beta, lambda)
     TYPE(ElemshapeData_), INTENT(INOUT) :: obj
+    !! element shape data
     TYPE(QuadraturePoint_), INTENT(IN) :: quad
+    !! quadrature points
     CLASS(ReferenceElement_), INTENT(IN) :: refelem
     !! reference element
     TYPE(H1_), INTENT(IN) :: baseContinuity
-    !! base continuity
+    !! base continuity, only used to select this overload
     TYPE(OrthogonalInterpolation_), INTENT(IN) :: baseInterpolation
-    !! base interpolation
+    !! base interpolation, only used to select this overload
     INTEGER(I4B), INTENT(IN) :: order
     !! cell order, always needed
     INTEGER(I4B), INTENT(IN) :: basisType
     !! basis type
     REAL(DFP), OPTIONAL, INTENT(IN) :: alpha, beta, lambda
+    !! parameters for Jacobi and ultraspherical polynomials
   END SUBROUTINE OrthogonalElemShapeData3
 END INTERFACE OrthogonalElemShapeData
+
+!----------------------------------------------------------------------------
+!                                                          Initiate@Methods
+!----------------------------------------------------------------------------
+
+!> Initiate is a generic name for [[OrthogonalElemShapeData3]].
+!
+! See [[OrthogonalElemShapeData3]] for the arguments.
 
 INTERFACE Initiate
   MODULE PROCEDURE OrthogonalElemShapeData3

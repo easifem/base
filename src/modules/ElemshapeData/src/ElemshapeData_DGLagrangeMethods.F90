@@ -27,22 +27,31 @@ public :: Initiate
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date: 23 July 2021
-! summary: This routine initiate the shape data
+! date: 2021-07-23
+! summary: Initiates the shape data for DG Lagrange interpolation
 !
-!# Introduction
+! This routine should fill `obj` with the shape function data of a
+! discontinuous Galerkin (DG) Lagrange element.
+! It should evaluate the data at the points of `quad` on `refElem`.
 !
-! This routine initiates the shape function related data inside the element.
-!
+! @warning
+! This method has no body. No submodule defines `DG_Lagrange`.
+! The build (`CMakeLists.txt`) does not include this module.
+! @endwarning
 
 INTERFACE
   MODULE PURE SUBROUTINE DG_Lagrange(obj, quad, refElem, &
     & continuityType, interpolType)
     CLASS(ElemshapeData_), INTENT(INOUT) :: obj
+    !! shape data to fill
     CLASS(QuadraturePoint_), INTENT(IN) :: quad
+    !! quadrature points for the shape data
     CLASS(ReferenceElement_), INTENT(IN) :: refElem
+    !! reference element
     CLASS(DG_), INTENT(IN) :: continuityType
+    !! continuity type; `DG_` selects this overload
     CLASS(LagrangeInterpolation_), INTENT(IN) :: interpolType
+    !! Lagrange interpolation type
   END SUBROUTINE DG_Lagrange
 END INTERFACE
 

@@ -27,22 +27,37 @@ public :: Initiate
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date: 23 July 2021
-! summary: This routine initiate the shape data
+! date: 2021-07-23
+! summary: Initiates the shape function data for Hermit interpolation
+!  with discontinuous Galerkin (DG) continuity.
 !
-!# Introduction
+! This routine should initiate the shape function data of `obj`.
+! It uses the quadrature points `quad` and the reference element
+! `refElem`.
+! The arguments `continuityType` and `interpolType` select the DG
+! continuity and the Hermit interpolation.
 !
-! This routine initiates the shape function related data inside the element.
+! @warning
+! This routine has no body. The module is not listed in the CMake file
+! of `ElemshapeData`, so it is not compiled. No submodule implements
+! `DG_Hermit`, so a call to it cannot link.
+! @endwarning
 !
+! See also: [[ElemshapeData_DGMethods]]
 
 INTERFACE
   MODULE PURE SUBROUTINE DG_Hermit(obj, quad, refElem, &
     & continuityType, interpolType)
     CLASS(ElemshapeData_), INTENT(INOUT) :: obj
+    !! shape function data to initiate
     CLASS(QuadraturePoint_), INTENT(IN) :: quad
+    !! quadrature points
     CLASS(ReferenceElement_), INTENT(IN) :: refElem
+    !! reference element
     CLASS(DG_), INTENT(IN) :: continuityType
+    !! DG continuity type
     CLASS(HermitInterpolation_), INTENT(IN) :: interpolType
+    !! Hermit interpolation type
   END SUBROUTINE DG_Hermit
 END INTERFACE
 

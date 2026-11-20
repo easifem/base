@@ -20,9 +20,9 @@
 ! summary: Divergence with respect to the reference coordinates
 !
 ! Compute the divergence of a vector or matrix with respect to the
-! reference coordinates `xi` at the quadrature points, from its nodal
-! values and `dNdXi`. The divergence of a matrix is the vector of row
-! divergences, `SUM_k dM_ik/dxi_k`.
+! reference coordinates `xi`. The result is at the quadrature points.
+! It uses the nodal values and `dNdXi`. The divergence of a matrix is
+! the vector of row divergences, `SUM_k dM_ik/dxi_k`.
 
 module ElemshapeData_LocalDivergenceMethods
 USE BaseType
@@ -80,12 +80,14 @@ END INTERFACE getLocalDivergence
 ! Then it sets `lg(nips)` like [[elemsd_getLocalDivergence_1]].
 !
 ! @note
-! `obj` must be a `STElemShapeData_`. Otherwise, it does nothing.
+! `obj` must be a `STElemShapeData_`. Otherwise, it does nothing
+! and `lg` keeps its value.
 ! @endnote
 !
 ! Examples
 !
 ! - [test 1](|base|ElemshapeData/examples/GetLocalDivergence_test_1.F90) third block
+! - [test 3](|base|ElemshapeData/examples/GetLocalDivergence_test_3.F90) plain `ElemShapeData_`, `lg` unchanged
 !
 ! See also: [[elemsd_getLocalDivergence_1]]
 
@@ -225,8 +227,14 @@ END INTERFACE getLocalDivergence
 ! summary: Local row divergence of a matrix FEVariable
 !
 ! Returns the local row divergence of the matrix `FEVariable_` `val`.
-! It works like [[elemsd_getLocalDivergence_3]] and sets
-! `lg(nrow, nips)`.
+! It reallocates `lg(nrow, nips)`.
+!
+! - A constant `val` gives zero. `nrow` is the first extent of `val`.
+! - A space `val` works like [[elemsd_getLocalDivergence_4]].
+! - A space-time `val` works like [[elemsd_getLocalDivergence_5]].
+!   Then `obj` must be a `STElemShapeData_`.
+!
+! For other variable types, it does not set `lg`.
 !
 ! @note
 ! `val` must hold nodal values. A quadrature variable is not supported.
@@ -235,6 +243,7 @@ END INTERFACE getLocalDivergence
 ! Examples
 !
 ! - [test 2](|base|ElemshapeData/examples/GetLocalDivergence_test_2.F90) space and space-time
+! - [test 3](|base|ElemshapeData/examples/GetLocalDivergence_test_3.F90) constant matrix gives zero
 !
 ! See also: [[elemsd_getLocalDivergence_3]], [[elemsd_getLocalDivergence_4]]
 
@@ -261,16 +270,25 @@ END INTERFACE getLocalDivergence
 ! summary: Local divergence of a FEVariable as a FEVariable
 !
 ! Returns the local divergence of `val` as a quadrature, space
-! `FEVariable_`. A vector `val` gives a scalar.
-! A matrix `val` gives a vector of row divergences.
+! `FEVariable_`.
+!
+! - A vector `val` gives a scalar variable with `nips` values.
+! - A matrix `val` gives a vector variable of row divergences.
+!
+! If `val` is neither a vector nor a matrix, it leaves `lg` unchanged.
 !
 ! @note
 ! `val` must hold nodal values. A quadrature variable is not supported.
 ! @endnote
 !
+! @note
+! If `val` is space-time, `obj` must be a `STElemShapeData_`.
+! @endnote
+!
 ! Examples
 !
 ! - [test 1](|base|ElemshapeData/examples/GetLocalDivergence_test_1.F90) second block
+! - [test 3](|base|ElemshapeData/examples/GetLocalDivergence_test_3.F90) vector `val`, scalar `lg`
 !
 ! See also: [[elemsd_getLocalDivergence_3]], [[elemsd_getLocalDivergence_6]]
 
@@ -303,9 +321,12 @@ END INTERFACE getLocalDivergence
 ! - A vector `val` gives a scalar with shape `[nips, nipt]`.
 ! - A matrix `val` gives a vector with shape `[nrow, nips, nipt]`.
 !
+! If `val` is neither a vector nor a matrix, it leaves `lg` unchanged.
+!
 ! Examples
 !
 ! - [test 1](|base|ElemshapeData/examples/GetLocalDivergence_test_1.F90) third block
+! - [test 3](|base|ElemshapeData/examples/GetLocalDivergence_test_3.F90) matrix `val`, vector `lg`
 !
 ! See also: [[elemsd_getLocalDivergence_7]], [[elemsd_LocalDivergence_2]]
 

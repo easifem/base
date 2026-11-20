@@ -20,9 +20,10 @@
 ! summary: Gradient with respect to the reference coordinates
 !
 ! Compute the gradient of a quantity with respect to the reference
-! coordinates `xi` at the quadrature points, from its nodal values and
-! `dNdXi`. The local gradient of a scalar is a vector of size `xidim`,
-! of a vector a matrix, and of a matrix a rank-3 array.
+! coordinates `xi` at the quadrature points.
+! The methods use the nodal values and `dNdXi`.
+! The local gradient of a scalar is a vector of size `xidim`.
+! For a vector it is a matrix. For a matrix it is a rank-3 array.
 
 module ElemshapeData_LocalGradientMethods
 USE BaseType
@@ -382,7 +383,7 @@ END INTERFACE getLocalGradient
 !
 ! Examples
 !
-! - [test 1](|base|ElemshapeData/examples/GetLocalGradient_test_1.F90) third block
+! - [test 3](|base|ElemshapeData/examples/GetLocalGradient_test_3.F90) first block
 !
 ! See also: [[elemsd_getLocalGradient_5]], [[elemsd_LocalGradient_1]]
 
@@ -416,11 +417,16 @@ END INTERFACE getLocalGradient
 ! - A vector `val` gives a matrix with shape
 !   `[ncomp, xidim, nips, nipt]`.
 !
-! A matrix `val` is not supported.
+! `val` can hold nodal values in space or in space-time.
+!
+! @note
+! A matrix `val` is not supported, and then `lg` does not change.
+! @endnote
 !
 ! Examples
 !
 ! - [test 1](|base|ElemshapeData/examples/GetLocalGradient_test_1.F90) fourth block
+! - [test 3](|base|ElemshapeData/examples/GetLocalGradient_test_3.F90) scalar and vector `FEVariable_`
 !
 ! See also: [[elemsd_getLocalGradient_10]], [[elemsd_LocalGradient_2]]
 
@@ -448,6 +454,9 @@ END INTERFACE getLocalGradient
 !
 ! Returns the local gradient of `val` as a quadrature `FEVariable_`.
 ! It gives the same result as [[elemsd_getLocalGradient_10]].
+!
+! Returns:
+!   ans : `FEVariable_` - local gradient, quadrature space variable
 !
 ! Examples
 !
@@ -479,6 +488,14 @@ END INTERFACE localGradient
 !
 ! Returns the local gradient of `val` at all time points.
 ! It gives the same result as [[elemsd_getLocalGradient_11]].
+! Here `obj(ipt)` is the shape data at time quadrature point `ipt`.
+!
+! Returns:
+!   ans : `FEVariable_` - local gradient, quadrature space-time variable
+!
+! Examples
+!
+! - [test 2](|base|ElemshapeData/examples/LocalGradient_test_2.F90) scalar and vector space-time `FEVariable_`
 !
 ! See also: [[elemsd_getLocalGradient_11]], [[elemsd_LocalGradient_1]]
 

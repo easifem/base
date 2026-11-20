@@ -15,11 +15,11 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 !
-! This file contains the interpolation methods interfaces\
+! This file contains the interfaces of the vector interpolation methods
 
 MODULE ElemshapeData_VectorInterpolMethods
-USE GlobalData, ONLY: DFP, I4B, LGT
 USE BaseType, ONLY: ElemShapeData_, STElemShapeData_, FEVariable_
+USE GlobalData, ONLY: DFP, I4B, LGT
 IMPLICIT NONE
 PRIVATE
 
@@ -106,6 +106,7 @@ END INTERFACE GetInterpolation_
 ! Examples
 !
 ! - [test 7](|base|ElemshapeData/examples/GetInterpolation_test_7.F90) first block
+! - [test 13](|base|ElemshapeData/examples/GetInterpolation_test_13.F90) fifth block
 !
 ! See also: [[GetInterpolation_1]]
 
@@ -125,7 +126,7 @@ INTERFACE GetInterpolation_
     REAL(DFP), INTENT(IN) :: scale
     !! scale factor applied to the interpolated value
     LOGICAL(LGT), INTENT(IN) :: addContribution
-    !! if true, the interpolated value is added to ans
+    !! if true, add the interpolated value to ans
   END SUBROUTINE GetInterpolation_1a
 END INTERFACE GetInterpolation_
 
@@ -154,7 +155,7 @@ INTERFACE GetInterpolation
     CLASS(STElemshapeData_), INTENT(IN) :: obj
     !! space-time shape data at one time point
     REAL(DFP), INTENT(INOUT), ALLOCATABLE :: ans(:, :)
-    !!
+    !! interpolated value, ans(ncomp, nips)
     REAL(DFP), INTENT(IN) :: val(:, :, :)
     !! space-time nodal values of vector in `xiJa` format
   END SUBROUTINE GetInterpolation2
@@ -227,7 +228,7 @@ INTERFACE GetInterpolation_
     REAL(DFP), INTENT(IN) :: scale
     !! scale factor applied to the interpolated value
     LOGICAL(LGT), INTENT(IN) :: addContribution
-    !! if true, the interpolated value is added to ans
+    !! if true, add the interpolated value to ans
   END SUBROUTINE GetInterpolation_2a
 END INTERFACE GetInterpolation_
 
@@ -255,7 +256,7 @@ INTERFACE GetInterpolation
     CLASS(STElemshapeData_), INTENT(IN) :: obj(:)
     !! space-time shape data at each time point
     REAL(DFP), INTENT(INOUT), ALLOCATABLE :: ans(:, :, :)
-    !!
+    !! interpolated value, ans(ncomp, nips, nipt)
     REAL(DFP), INTENT(IN) :: val(:, :, :)
     !! space-time nodal values of vector in `xiJa` format
   END SUBROUTINE GetInterpolation3
@@ -332,7 +333,7 @@ INTERFACE GetInterpolation_
     REAL(DFP), INTENT(IN) :: scale
     !! scale factor applied to the interpolated value
     LOGICAL(LGT), INTENT(IN) :: addContribution
-    !! if true, the interpolated value is added to ans
+    !! if true, add the interpolated value to ans
   END SUBROUTINE GetInterpolation_3a
 END INTERFACE GetInterpolation_
 
@@ -353,6 +354,7 @@ END INTERFACE GetInterpolation_
 ! Examples
 !
 ! - [test 3](|base|ElemshapeData/examples/GetInterpolation_test_3.F90) third block
+! - [test 13](|base|ElemshapeData/examples/GetInterpolation_test_13.F90) first block
 !
 ! See also: [[GetInterpolation_4]]
 
@@ -423,6 +425,7 @@ END INTERFACE GetInterpolation_
 ! Examples
 !
 ! - [test 7](|base|ElemshapeData/examples/GetInterpolation_test_7.F90) fourth block
+! - [test 13](|base|ElemshapeData/examples/GetInterpolation_test_13.F90) second block
 !
 ! See also: [[GetInterpolation_4]], [[GetInterpolation_4b]]
 
@@ -442,7 +445,7 @@ INTERFACE GetInterpolation_
     REAL(DFP), INTENT(IN) :: scale
     !! scale factor applied to the interpolated value
     LOGICAL(LGT), INTENT(IN) :: addContribution
-    !! if true, the interpolated value is added to ans
+    !! if true, add the interpolated value to ans
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: timeIndx
     !! time quadrature point index
   END SUBROUTINE GetInterpolation_4a
@@ -466,6 +469,7 @@ END INTERFACE GetInterpolation_
 ! Examples
 !
 ! - [test 3](|base|ElemshapeData/examples/GetInterpolation_test_3.F90) third block, at `spaceIndx = 1`
+! - [test 13](|base|ElemshapeData/examples/GetInterpolation_test_13.F90) fourth block
 !
 ! See also: [[GetInterpolation_4a]]
 
@@ -484,7 +488,7 @@ INTERFACE GetInterpolation_
     REAL(DFP), INTENT(IN) :: scale
     !! scale factor applied to the interpolated value
     LOGICAL(LGT), INTENT(IN) :: addContribution
-    !! if true, the interpolated value is added to ans
+    !! if true, add the interpolated value to ans
     INTEGER(I4B), INTENT(IN) :: spaceIndx
     !! space quadrature point index
     INTEGER(I4B), INTENT(IN) :: timeIndx
@@ -509,6 +513,7 @@ END INTERFACE GetInterpolation_
 ! Examples
 !
 ! - [test 7](|base|ElemshapeData/examples/GetInterpolation_test_7.F90) fifth block
+! - [test 13](|base|ElemshapeData/examples/GetInterpolation_test_13.F90) third block
 !
 ! See also: [[GetInterpolation_5]]
 
@@ -593,12 +598,12 @@ INTERFACE GetInterpolation_
     REAL(DFP), INTENT(IN) :: scale
     !! scale factor applied to the interpolated value
     LOGICAL(LGT), INTENT(IN) :: addContribution
-    !! if true, the interpolated value is added to ans
+    !! if true, add the interpolated value to ans
   END SUBROUTINE GetInterpolation_5a
 END INTERFACE GetInterpolation_
 
 !----------------------------------------------------------------------------
-!                                              Interpolation@InterpolMethods
+!                                                       Interpolation@Methods
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2021-03-04
@@ -632,7 +637,7 @@ INTERFACE Interpolation
 END INTERFACE Interpolation
 
 !----------------------------------------------------------------------------
-!                                            STInterpolation@InterpolMethods
+!                                                     STInterpolation@Methods
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2021-03-04
@@ -657,9 +662,9 @@ INTERFACE
     CLASS(STElemshapeData_), INTENT(IN) :: obj
     !! space-time shape data at one time point
     REAL(DFP), INTENT(IN) :: val(:, :, :)
-    !! spatial nodal values of vector
+    !! space-time nodal values, val(ncomp, nns, nnt)
     REAL(DFP), ALLOCATABLE :: ans(:, :)
-    !! Interpolation value of vector
+    !! interpolated value, ans(ncomp, nips)
   END FUNCTION STInterpolation1
 END INTERFACE
 

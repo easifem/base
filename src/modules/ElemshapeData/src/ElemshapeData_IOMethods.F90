@@ -43,15 +43,25 @@ PUBLIC :: ElemshapeData_ReactEncode
 ! date: 2021-03-04
 ! summary: Display the content of ElemShapeData_
 !
-! Writes the content of `obj` to `unitNo`.
-! It writes `msg`, the sizes `nsd`, `xidim`, `nns` and `nips`, and
-! every allocated array. The default unit is the standard output.
+! Writes the content of `obj` to the unit `unitNo`.
+! The default unit is the standard output.
 !
-! For a `STElemShapeData_`, it also writes the time data.
+! The output holds these items in order.
+!
+! 1. The message `msg`.
+! 2. The sizes `nsd`, `xidim`, `nns` and `nips`.
+! 3. The arrays `N`, `dNdXi`, `dNdXt`, `jacobian`, `js`, `ws`,
+!    `thickness`, `coord` and `normal`.
+!
+! For an array that is not allocated, it writes `NOT ALLOCATED`.
+! It does not write `NLaplacian`.
+!
+! If `obj` is an `STElemShapeData_`, the output ends with the time
+! data `jt`, `wt`, `T`, `dTdTheta`, `dNTdt` and `dNTdXt`.
 !
 ! Examples
 !
-! - [test 1](|base|ElemshapeData/examples/Display_test_1.F90) writes to a scratch unit
+! - [test 1](|base|ElemshapeData/examples/Display_test_1.F90)
 !
 ! See also: [[elemsd_display_2]]
 
@@ -79,7 +89,9 @@ END INTERFACE Display
 ! - `dNdXi`, `dNdXt` and `jacobian` get one table per quadrature
 !   point.
 !
-! An array that is not allocated appears as "Not ALLOCATED".
+! An array that is not allocated appears as `Not ALLOCATED`.
+!
+! The arrays `ws`, `coord` and `NLaplacian` are not encoded.
 !
 ! Examples
 !
@@ -104,6 +116,10 @@ END INTERFACE MdEncode
 ! @warning
 ! It is not implemented. It returns an empty `String`.
 ! @endwarning
+!
+! Examples
+!
+! - [test 1](|base|ElemshapeData/examples/ReactEncode_test_1.F90)
 
 INTERFACE
   MODULE FUNCTION ElemshapeData_ReactEncode(obj) RESULT(ans)
@@ -121,8 +137,10 @@ END INTERFACE
 ! date: 2021-03-04
 ! summary: Display the content of space-time shape data
 !
-! Displays each `obj(ipt)` like [[elemsd_display_1]].
-! Each block starts with `msg` and the time point number.
+! Displays every element of `obj`, one time point after the other.
+! It writes each element like [[elemsd_display_1]] does, including
+! the time data.
+! The message of element `ii` is `msg` followed by `(ii): `.
 !
 ! Examples
 !

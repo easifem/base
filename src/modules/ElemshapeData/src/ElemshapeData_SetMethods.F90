@@ -18,12 +18,17 @@
 ! date: 2021-03-04
 ! summary: Set the physical part of ElemShapeData_ and STElemShapeData_
 !
-! These routines fill the data that depend on the physical element:
-! the Jacobian, its determinant `js`, the derivatives `dNdXt`, the
-! coordinates of quadrature points, the thickness, the unit normal of a
-! facet, and the space-time derivatives `dNTdXt` and `dNTdt`. The
-! reference data (`N`, `dNdXi`, `ws`) must be set first, for example by
-! [[LagrangeElemShapeData]].
+! These routines fill the data that depend on the physical element.
+! They set the following data.
+!
+! - The Jacobian and its determinant `js`.
+! - The derivatives `dNdXt`, `dNTdXt` and `dNTdt`.
+! - The coordinates of the quadrature points.
+! - The thickness.
+! - The unit normal of a facet.
+!
+! The reference data `N`, `dNdXi` and `ws` must exist first.
+! For example, call [[LagrangeElemShapeData]] to create them.
 
 MODULE ElemshapeData_SetMethods
 USE BaseType, ONLY: ElemshapeData_, STElemshapeData_, ElemshapeDataPointer_
@@ -108,9 +113,9 @@ INTERFACE SetThickness
     REAL(DFP), INTENT(IN) :: val(:)
     !! nodal thickness, val(nns)
     REAL(DFP), INTENT(IN) :: N(:, :)
-    !! Shape function values at quadrature points
-    !! number of rows in n should be same as size of val
-    !! number of columns in N should be equal to nips in obj
+    !! shape functions at quadrature points, N(nns, nips)
+    !! The number of rows equals `SIZE(val)`.
+    !! The number of columns equals `obj%nips`.
   END SUBROUTINE elemsd_SetThickness
 END INTERFACE SetThickness
 
@@ -140,9 +145,9 @@ INTERFACE SetThickness
     REAL(DFP), INTENT(IN) :: val(:, :)
     !! space-time nodal thickness, val(nns, nnt)
     REAL(DFP), INTENT(IN) :: N(:, :)
-    !! Shape function at spatial quadrature
+    !! shape functions at spatial quadrature points, N(nns, nips)
     REAL(DFP), INTENT(IN) :: T(:)
-    !! Shape function at temporal quadrature
+    !! time shape functions at the time point, T(nnt)
   END SUBROUTINE stsd_SetThickness
 END INTERFACE SetThickness
 
@@ -172,9 +177,8 @@ INTERFACE SetBarycentricCoord
     REAL(DFP), INTENT(IN) :: val(:, :)
     !! nodal coordinates, val(nsd, nns)
     REAL(DFP), INTENT(IN) :: N(:, :)
-    !! When element is not an isoparametric we can supply N.
-    !! row size should be nns
-    !! col size should be nips
+    !! shape functions at quadrature points, N(nns, nips)
+    !! Use this to interpolate with a non-isoparametric basis.
   END SUBROUTINE elemsd_SetBarycentricCoord
 END INTERFACE SetBarycentricCoord
 
@@ -318,9 +322,9 @@ INTERFACE SetdNdXt
   MODULE PURE SUBROUTINE elemsd_SetdNdXt2(dNdXt, dNdXi, jacobian, &
                                           xidim, nsd, nips, nns)
     REAL(DFP), INTENT(INOUT) :: dNdXt(:, :, :)
-    !! derivatives of shape functions with respect to x, dNdXt(nns, nsd, nips)
+    !! derivatives with respect to x, `dNdXt(nns, nsd, nips)`
     REAL(DFP), INTENT(IN) :: dNdXi(:, :, :)
-    !! derivatives of shape functions, dNdXi(nns, xidim, nips)
+    !! derivatives with respect to xi, `dNdXi(nns, xidim, nips)`
     REAL(DFP), INTENT(IN) :: jacobian(:, :, :)
     !! Jacobian, jacobian(nsd, xidim, nips)
     INTEGER(I4B), INTENT(IN) :: xidim
@@ -361,9 +365,7 @@ INTERFACE SetJacobian
     REAL(DFP), INTENT(IN) :: val(:, :)
     !! nodal coordinates, val(nsd, nns)
     REAL(DFP), INTENT(IN) :: dNdXi(:, :, :)
-    !! dim1 is equal to nns
-    !! dim2 is equal to xidim
-    !! dim3 is equal to nips
+    !! local derivatives of shape functions, `dNdXi(nns, xidim, nips)`
   END SUBROUTINE elemsd_SetJacobian
 END INTERFACE SetJacobian
 
@@ -391,9 +393,9 @@ INTERFACE SetJacobian
     REAL(DFP), INTENT(IN) :: val(:, :, :)
     !! space-time nodal coordinates, val(nsd, nns, nnt)
     REAL(DFP), INTENT(IN) :: dNdXi(:, :, :)
-    !! Local derivative of shape function for geometry
+    !! local derivatives of space shape functions, `dNdXi(nns, xidim, nips)`
     REAL(DFP), INTENT(IN) :: T(:)
-    !! Shape function for time element
+    !! time shape functions at the time point, `T(nnt)`
   END SUBROUTINE stsd_SetJacobian
 END INTERFACE SetJacobian
 
@@ -495,9 +497,9 @@ INTERFACE Set
     REAL(DFP), INTENT(IN) :: val(:, :)
     !! nodal coordinates, val(nsd, nns)
     REAL(DFP), INTENT(IN) :: N(:, :)
-    !! Shape function for geometry
+    !! shape functions at quadrature points, `N(nns, nips)`
     REAL(DFP), INTENT(IN) :: dNdXi(:, :, :)
-    !! Local derivative of shape functions for geometry
+    !! local derivatives of shape functions, `dNdXi(nns, xidim, nips)`
   END SUBROUTINE elemsd_Set1
 END INTERFACE Set
 
@@ -538,17 +540,17 @@ INTERFACE Set
     CLASS(ElemshapeData_), INTENT(INOUT) :: cellobj
     !! cell element shape data
     REAL(DFP), INTENT(IN) :: cellval(:, :)
-    !! Spatial nodal coordinates of cell
+    !! nodal coordinates of the cell, `cellval(nsd, nns)`
     REAL(DFP), INTENT(IN) :: facetval(:, :)
-    !! Spatial nodal coordinates of facet element
+    !! nodal coordinates of the facet, `facetval(nsd, nns)`
     REAL(DFP), INTENT(IN) :: cellN(:, :)
-    !! shape function for cell
+    !! cell shape functions at the facet quadrature points
     REAL(DFP), INTENT(IN) :: facetN(:, :)
-    !! Shape function for geometry
+    !! facet shape functions at the facet quadrature points
     REAL(DFP), INTENT(IN) :: celldNdXi(:, :, :)
-    !! derivatives of cell shape functions at the facet points
+    !! local derivatives of cell shape functions at the facet points
     REAL(DFP), INTENT(IN) :: facetdNdXi(:, :, :)
-    !! Local derivative of shape functions for geometry
+    !! local derivatives of facet shape functions
   END SUBROUTINE elemsd_Set2
 END INTERFACE Set
 
@@ -576,9 +578,9 @@ INTERFACE Set
     slaveFacetobj, slaveCellobj, slaveCellval, slaveCellN, slaveCelldNdXi, &
     slaveFacetN, slaveFacetdNdXi, slaveFacetVal)
     CLASS(ElemshapeData_), INTENT(INOUT) :: masterFacetobj
-    !! master: nodal coordinates of the facet, facetval(nsd, nns of facet)
+    !! Shape function data for facet element of master cell
     CLASS(ElemshapeData_), INTENT(INOUT) :: masterCellobj
-    !! master: nodal coordinates of the facet, facetval(nsd, nns of facet)
+    !! Shape function data for cell element of master cell
     REAL(DFP), INTENT(IN) :: masterCellval(:, :)
     !! Spatial nodal coordinates of master cell
     REAL(DFP), INTENT(IN) :: masterCellN(:, :)
@@ -651,7 +653,7 @@ INTERFACE Set
     REAL(DFP), INTENT(IN) :: T(:)
     !! time shape functions at the time point, T(nnt)
     REAL(DFP), INTENT(IN) :: dNdXi(:, :, :)
-    !! derivatives of shape functions, dNdXi(nns, xidim, nips)
+    !! local derivatives of shape functions, `dNdXi(nns, xidim, nips)`
   END SUBROUTINE stelemsd_Set1
 END INTERFACE Set
 

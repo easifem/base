@@ -28,22 +28,34 @@ public :: Initiate
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date: 23 July 2021
-! summary: This routine initiate the shape data
+! date: 2021-07-23
+! summary: Initiates the shape function data of an element for the
+!   discontinuous Galerkin (DG) Serendipity basis.
 !
-!# Introduction
+! This routine initiates the shape function data inside `obj`.
+! The data belongs to a reference element `refElem`.
+! The routine evaluates it at the points of `quad`.
 !
-! This routine initiates the shape function related data inside the element.
+! The type of `continuityType` selects the DG continuity.
+! The type of `interpolType` selects the Serendipity interpolation.
 !
+! @warning
+! This routine has no implementation yet. The module is not compiled.
+! @endwarning
 
 INTERFACE
   MODULE PURE SUBROUTINE DG_Serendipity(obj, quad, refElem, &
     & continuityType, interpolType)
     CLASS(ElemshapeData_), INTENT(INOUT) :: obj
+    !! shape function data to initiate
     CLASS(QuadraturePoint_), INTENT(IN) :: quad
+    !! quadrature points where the routine evaluates the data
     CLASS(ReferenceElement_), INTENT(IN) :: refElem
+    !! reference element
     CLASS(DG_), INTENT(IN) :: continuityType
+    !! DG continuity type
     CLASS(SerendipityInterpolation_), INTENT(IN) :: interpolType
+    !! Serendipity interpolation type
   END SUBROUTINE DG_Serendipity
 END INTERFACE
 

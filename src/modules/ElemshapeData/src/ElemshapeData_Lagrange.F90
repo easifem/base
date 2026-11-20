@@ -70,6 +70,7 @@ PUBLIC :: Initiate
 ! Examples
 !
 ! - [test 1](|base|ElemshapeData/examples/LagrangeElemShapeData_test_1.F90) first three blocks: line, quadratic line, quadrangle
+! - [test 2](|base|ElemshapeData/examples/LagrangeElemShapeData_test_2.F90) with `coeff` and `firstCall`
 !
 ! See also: [[LagrangeElemShapeData2]], [[LagrangeFacetElemShapeData]]
 
@@ -90,7 +91,7 @@ INTERFACE LagrangeElemShapeData
     INTEGER(I4B), INTENT(IN) :: elemType
     !! element type
     REAL(DFP), INTENT(IN) :: refelemCoord(:, :)
-    !! coordinate of reference element, refelemCoord(xidim, nodes)
+    !! coordinates of the reference element, shape `(xidim, nodes)`
     CHARACTER(*), INTENT(IN) :: domainName
     !! name of reference element domain, "UNIT" or "BIUNIT"
     INTEGER(I4B), INTENT(IN) :: order
@@ -104,9 +105,9 @@ INTERFACE LagrangeElemShapeData
     REAL(DFP), OPTIONAL, INTENT(INOUT) :: coeff(:, :)
     !! Coefficient of Lagrange polynomials, coeff(nns, nns)
     LOGICAL(LGT), OPTIONAL :: firstCall
-    !! If firstCall is true, then coeff will be made
-    !! If firstCall is false, then coeff will be used
-    !! Default value of firstCall is True
+    !! If `firstCall` is true, the routine computes `coeff`.
+    !! If `firstCall` is false, the routine reuses `coeff`.
+    !! Default is `.TRUE.`.
     REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
     !! Jacobi parameter
     REAL(DFP), OPTIONAL, INTENT(IN) :: beta
@@ -155,9 +156,9 @@ INTERFACE LagrangeElemShapeData
     REAL(DFP), OPTIONAL, INTENT(INOUT) :: coeff(:, :)
     !! Coefficient of Lagrange polynomials, coeff(nns, nns)
     LOGICAL(LGT), OPTIONAL :: firstCall
-    !! If firstCall is true, then coeff will be made
-    !! If firstCall is false, then coeff will be used
-    !! Default value of firstCall is True
+    !! If `firstCall` is true, the routine computes `coeff`.
+    !! If `firstCall` is false, the routine reuses `coeff`.
+    !! Default is `.TRUE.`.
     REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
     !! Jacobi parameter
     REAL(DFP), OPTIONAL, INTENT(IN) :: beta
@@ -210,9 +211,9 @@ INTERFACE LagrangeElemShapeData
     REAL(DFP), OPTIONAL, INTENT(INOUT) :: coeff(:, :)
     !! Coefficient of Lagrange polynomials, coeff(nns, nns)
     LOGICAL(LGT), OPTIONAL :: firstCall
-    !! If firstCall is true, then coeff will be made
-    !! If firstCall is false, then coeff will be used
-    !! Default value of firstCall is True
+    !! If `firstCall` is true, the routine computes `coeff`.
+    !! If `firstCall` is false, the routine reuses `coeff`.
+    !! Default is `.TRUE.`.
     REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
     !! Jacobi parameter
     REAL(DFP), OPTIONAL, INTENT(IN) :: beta
@@ -251,6 +252,7 @@ END INTERFACE Initiate
 ! Examples
 !
 ! - [test 1](|base|ElemshapeData/examples/LagrangeFacetElemShapeData_test_1.F90) quadrangle and its first face
+! - [test 2](|base|ElemshapeData/examples/LagrangeFacetElemShapeData_test_2.F90) hexahedron and one quadrangle face
 !
 ! See also: [[LagrangeElemShapeData1]]
 
@@ -276,7 +278,7 @@ INTERFACE LagrangeFacetElemShapeData
     INTEGER(I4B), INTENT(IN) :: elemType
     !! element type
     REAL(DFP), INTENT(IN) :: refelemCoord(:, :)
-    !! coordinate of reference element, refelemCoord(xidim, nodes)
+    !! coordinates of the reference element, shape `(xidim, nodes)`
     CHARACTER(*), INTENT(IN) :: domainName
     !! name of reference element domain, "UNIT" or "BIUNIT"
     INTEGER(I4B), INTENT(IN) :: order
@@ -290,9 +292,9 @@ INTERFACE LagrangeFacetElemShapeData
     REAL(DFP), OPTIONAL, INTENT(INOUT) :: coeff(:, :)
     !! Coefficient of Lagrange polynomials, coeff(nns, nns)
     LOGICAL(LGT), OPTIONAL :: firstCall
-    !! If firstCall is true, then coeff will be made
-    !! If firstCall is false, then coeff will be used
-    !! Default value of firstCall is True
+    !! If `firstCall` is true, the routine computes `coeff`.
+    !! If `firstCall` is false, the routine reuses `coeff`.
+    !! Default is `.TRUE.`.
     REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
     !! Jacobi parameter
     REAL(DFP), OPTIONAL, INTENT(IN) :: beta

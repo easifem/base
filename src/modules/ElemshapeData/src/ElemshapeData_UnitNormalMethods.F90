@@ -19,8 +19,9 @@
 ! date: 2021-03-04
 ! summary: Unit normal from the gradient of a field
 !
-! Compute a unit vector at the quadrature points from the gradient of a
-! scalar or vector field, for example the normal of a level set.
+! Compute a unit vector at the quadrature points.
+! It comes from the gradient of a scalar or vector field.
+! An example is the normal of a level set.
 
 module ElemshapeData_UnitNormalMethods
 USE BaseType
@@ -46,7 +47,10 @@ PUBLIC :: GetUnitNormal
 !
 ! Examples
 !
-! - [test 1](|base|ElemshapeData/examples/GetUnitNormal_test_1.F90) first block, level set `p = y - 1/2`
+! - [test 1](|base|ElemshapeData/examples/GetUnitNormal_test_1.F90)
+!   first block, level set `p = y - 1/2`
+! - [test 2](|base|ElemshapeData/examples/GetUnitNormal_test_2.F90)
+!   first and second blocks, constant `p` gives `R = 0`
 !
 ! See also: [[GetUnitNormal_2]], [[GetUnitNormal_3]]
 
@@ -55,7 +59,7 @@ INTERFACE
     CLASS(ElemshapeData_), INTENT(IN) :: obj
     !! element shape data
     REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: R(:, :)
-    !! unit vector defined over quadrature points, in xiJ format
+    !! unit vector defined over quadrature points, in `xiJ` format
     REAL(DFP), INTENT(IN) :: val(:)
     !! nodal values of a scalar, val(nns)
   END SUBROUTINE GetUnitNormal_1
@@ -85,7 +89,10 @@ END INTERFACE GetUnitNormal
 !
 ! Examples
 !
-! - [test 1](|base|ElemshapeData/examples/GetUnitNormal_test_1.F90) second block, field `(x, 0)`
+! - [test 1](|base|ElemshapeData/examples/GetUnitNormal_test_1.F90)
+!   second block, field `(x, 0)`
+! - [test 2](|base|ElemshapeData/examples/GetUnitNormal_test_2.F90)
+!   third to fifth blocks, fields `(x, y)`, `(x, y, 0)` and zero
 !
 ! See also: [[GetUnitNormal_1]]
 
@@ -94,7 +101,7 @@ INTERFACE
     CLASS(ElemshapeData_), INTENT(IN) :: obj
     !! element shape data
     REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: R(:, :)
-    !! unit vector defined over quadrature points, in xiJ format
+    !! unit vector defined over quadrature points, in `xiJ` format
     REAL(DFP), INTENT(IN) :: val(:, :)
     !! nodal values of a vector, val(nsd, nns)
   END SUBROUTINE GetUnitNormal_2
@@ -122,7 +129,10 @@ END INTERFACE GetUnitNormal
 !
 ! Examples
 !
-! - [test 1](|base|ElemshapeData/examples/GetUnitNormal_test_1.F90) both blocks, with `NodalVariable`
+! - [test 1](|base|ElemshapeData/examples/GetUnitNormal_test_1.F90)
+!   both blocks, with `NodalVariable`
+! - [test 2](|base|ElemshapeData/examples/GetUnitNormal_test_2.F90)
+!   third block (vector) and sixth block (matrix, `R` does not change)
 !
 ! See also: [[GetUnitNormal_1]], [[GetUnitNormal_2]]
 
@@ -131,7 +141,7 @@ INTERFACE
     CLASS(ElemshapeData_), INTENT(IN) :: obj
     !! element shape data
     REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: R(:, :)
-    !! unit vector defined over quadrature points, in xiJ format
+    !! unit vector defined over quadrature points, in `xiJ` format
     TYPE(FEVariable_), INTENT(IN) :: val
     !! scalar or vector nodal FEVariable
   END SUBROUTINE GetUnitNormal_3

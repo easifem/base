@@ -21,7 +21,7 @@
 !
 ! Compute `c . grad(N_I)` (or `c . grad(N_I T_a)` for space-time) at the
 ! quadrature points, for a vector `c`. This is the convective term of
-! advection operators. `dNdXt` (or `dNTdXt`) must be set first.
+! advection operators. Set `dNdXt` (or `dNTdXt`) first.
 
 MODULE ElemshapeData_ProjectionMethods
 USE BaseType, ONLY: ElemShapeData_
@@ -48,7 +48,7 @@ PUBLIC :: GetProjectionOfdNTdXt_
 ! `c` is a constant vector. It reallocates `ans(nns, nips)`.
 !
 ! For nodal values `u`, `SUM_I u(I) * ans(I, ips)` gives `c . grad(u)`.
-! `dNdXt` must be set first.
+! Set `dNdXt` first.
 !
 ! Formula:
 !   $$ ans(I, ips) = \sum_k dNdXt(I, k, ips) \, c(k) $$
@@ -382,6 +382,7 @@ END INTERFACE GetProjectionOfdNTdXt
 !
 ! Returns `c(ips) . grad(N_I T_a)` like [[GetProjectionOfdNTdXt_2]].
 ! It writes into the existing `ans` and does not allocate it.
+! It returns `dim1 = nns`, `dim2 = nnt` and `dim3 = nips`.
 !
 ! Examples
 !
@@ -451,6 +452,8 @@ END INTERFACE GetProjectionOfdNTdXt
 !
 ! Returns `c . grad(N_I T_a)` like [[GetProjectionOfdNTdXt_3]].
 ! It writes into the existing `ans` and does not allocate it.
+! It returns `dim1 = nns`, `dim2 = nnt`, `dim3 = nips` and
+! `dim4 = nipt`.
 !
 ! Examples
 !
@@ -493,8 +496,8 @@ END INTERFACE GetProjectionOfdNTdXt_
 ! `ncol = nnt`.
 !
 ! Changes:
-!   - 2026-11-14: nns, nnt and nsd are read from obj(ipt); before they were
-!     read from obj(ips)
+!   - 2026-11-14: it reads nns, nnt and nsd from obj(ipt); before, it
+!     read them from obj(ips)
 !
 ! Examples
 !
