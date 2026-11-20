@@ -257,9 +257,9 @@ MODULE PROCEDURE GetProjectionOfdNTdXt4_
 INTEGER(I4B) :: nsd, i1, i2
 REAL(DFP) :: cbar(3)
 
-nrow = obj(ips)%nns
-ncol = obj(ips)%nnt
-nsd = obj(ips)%nsd
+nrow = obj(ipt)%nns
+ncol = obj(ipt)%nnt
+nsd = obj(ipt)%nsd
 
 CALL GetInterpolation_( &
   obj=c, rank=crank, N=obj(ipt)%N, nns=obj(ipt)%nns, &
