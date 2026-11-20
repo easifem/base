@@ -219,9 +219,11 @@ REAL(Float), PARAMETER :: Zero = ZeroReal32
 #endif
 ! Bits/bytes memory requirements
 #ifdef USE_Real128
-INTEGER(INT16), PARAMETER :: BIReal128 = int(STORAGE_SIZE(MaxReal128), kind=int16)
+INTEGER(INT16), PARAMETER :: BIReal128 = INT(STORAGE_SIZE(MaxReal128), &
+                                             kind=INT16)
 #else
-INTEGER(INT16), PARAMETER :: BIReal128 = int(STORAGE_SIZE(MaxReal64), kind=int16)
+INTEGER(INT16), PARAMETER :: BIReal128 = INT(STORAGE_SIZE(MaxReal64), &
+                                             kind=INT16)
 #endif
 INTEGER(INT8), PARAMETER :: BIReal64 = INT(STORAGE_SIZE(MaxReal64), kind=INT8)
 INTEGER(INT8), PARAMETER :: BIReal32 = INT(STORAGE_SIZE(MaxReal32), kind=INT8)
@@ -252,10 +254,14 @@ INTEGER(INT16), PARAMETER :: BIInt16 = INT(BIT_SIZE(MaxInt16), kind=INT16)
 INTEGER(INT8), PARAMETER :: BIInt8 = INT(BIT_SIZE(MaxInt8), kind=INT8)
 INTEGER(DIP), PARAMETER :: BIInt = INT(BIT_SIZE(MaxInt), kind=DIP)
 INTEGER(DIP), PARAMETER :: BII4B = INT(BIT_SIZE(MaxInt), kind=DIP)
-INTEGER(INT64), PARAMETER :: BYInt64 = int(BIT_SIZE(MaxInt64) / 8_INT64, kind=int64) 
-INTEGER(INT32), PARAMETER :: BYInt32 = int(BIT_SIZE(MaxInt32) / 8_INT32, kind=int32)
-INTEGER(INT16), PARAMETER :: BYInt16 = int(BIT_SIZE(MaxInt16) / 8_INT16, kind=int16)
-INTEGER(INT8), PARAMETER :: BYInt8 = int(BIT_SIZE(MaxInt8) / 8_INT8, kind=int8)
+INTEGER(INT64), PARAMETER :: BYInt64 = INT(BIT_SIZE(MaxInt64) / 8_INT64, &
+                                           kind=INT64)
+INTEGER(INT32), PARAMETER :: BYInt32 = INT(BIT_SIZE(MaxInt32) / 8_INT32, &
+                                           kind=INT32)
+INTEGER(INT16), PARAMETER :: BYInt16 = INT(BIT_SIZE(MaxInt16) / 8_INT16, &
+                                           kind=INT16)
+INTEGER(INT8), PARAMETER :: BYInt8 = INT(BIT_SIZE(MaxInt8) / &
+                                         8_INT8, kind=INT8)
 INTEGER(DIP), PARAMETER :: BYInt = INT(BIT_SIZE(MaxInt) / 8_DIP, kind=DIP)
 INTEGER(DIP), PARAMETER :: BYI4B = INT(BIT_SIZE(MaxInt) / 8_DIP, kind=DIP)
 REAL(DFP), PARAMETER :: Pi = 3.14159265359_DFP
