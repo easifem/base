@@ -20,7 +20,7 @@
 !
 ! Element-wise `ABS`, `SQRT` and integer power, the Euclidean norm of a
 ! vector variable, and the comparison operators `==` and `/=`. The `_`
-! versions write into an existing FEVariable_ without allocation.
+! versions write into an existing `FEVariable_` without allocation.
 
 MODULE FEVariable_UnaryMethod
 USE BaseType, ONLY: FEVariable_
@@ -48,55 +48,11 @@ PUBLIC :: OPERATOR(.NE.)
 ! Returns a copy of `obj` with the absolute value of every value.
 !
 ! Changes:
-!   - 2026-11-14: all values are computed; before only the last value was
+!   - 2026-11-14: the routine now computes all values, not only the last
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE BaseType, ONLY: FEVariable_
-! USE BaseType, ONLY: Scalar => TypeFEVariableScalar
-! USE BaseType, ONLY: Space => TypeFEVariableSpace
-! USE BaseType, ONLY: Vector => TypeFEVariableVector
-! USE FEVariable_Method, ONLY: ABS
-! USE FEVariable_Method, ONLY: ABS_
-! USE FEVariable_Method, ONLY: Get
-! USE FEVariable_Method, ONLY: QuadratureVariable
-! USE FEVariable_Method, ONLY: SHAPE
-! USE GlobalData, ONLY: DFP
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-!
-! REAL(DFP) :: a(3), vs(2, 2)
-!
-! a = [-1.0_DFP, 4.0_DFP, -9.0_DFP]
-! vs = RESHAPE([-1.0_DFP, 2.0_DFP, -3.0_DFP, 4.0_DFP], [2, 2])
-!
-! ! Test 1: ABS of every value
-! BLOCK
-!   TYPE(FEVariable_) :: ans
-!
-!   ans = ABS(QuadratureVariable(a, Scalar, Space))
-!   CALL OK(ALL(Get(ans, Scalar, Space) .EQ. [1.0_DFP, 4.0_DFP, 9.0_DFP]), &
-!           "ABS scalar space")
-!
-!   ans = ABS(QuadratureVariable(vs, Vector, Space))
-!   CALL OK(ALL(Get(ans, Vector, Space) .EQ. ABS(vs)), "ABS vector space")
-!   CALL OK(ALL(SHAPE(ans) .EQ. [2, 2]), "ABS keeps the shape")
-! END BLOCK
-!
-! ! Test 2: ABS_ writes into an existing variable
-! BLOCK
-!   TYPE(FEVariable_) :: obj, ans
-!
-!   obj = QuadratureVariable(a, Scalar, Space)
-!   ans = obj
-!   CALL ABS_(obj=obj, ans=ans)
-!   CALL OK(ALL(ans%val(1:3) .EQ. [1.0_DFP, 4.0_DFP, 9.0_DFP]), "ABS_")
-! END BLOCK
-!
-! END PROGRAM main
-!```
+! - [test 1](|base|FEVariable/examples/Abs_test_1.F90) with `ABS` and `ABS_`
 !
 ! See also: [[obj_abs_]]
 
@@ -117,18 +73,23 @@ END INTERFACE ABS
 ! date: 2021-12-12
 ! summary: ans = ABS(obj) without allocation
 !
-! Sets `ans%val(1:len) = ABS(obj%val(1:len))` with `len = obj%len`.
+! Stores the absolute value of every value of `obj` in `ans`.
+! It sets `ans%val(1:len)` to `ABS(obj%val(1:len))`, where `len` is
+! `obj%len`.
 !
-! `ans` must already have the rank, variable type and total shape of
-! `obj` and enough capacity, for example `ans = obj`. Only `len`, `s`
-! and `val` of `ans` are set.
+! `ans` must already have the rank, variable type and shape of `obj`.
+! Its `val` must have room for `len` values. For example, use `ans = obj`
+! first.
+! This routine sets only `len`, `s` and `val` of `ans`.
 !
 ! Changes:
-!   - 2026-11-14: all values are computed; before only the last value was
+!   - 2026-11-14: the routine now computes all values, not only the last
 !
 ! Examples
 !
-! See [[obj_abs]] (Test 2).
+! - [test 1](|base|FEVariable/examples/Abs_test_1.F90)
+!
+! See also: [[obj_abs]]
 
 INTERFACE ABS_
   MODULE PURE SUBROUTINE obj_abs_(obj, ans)
@@ -152,48 +113,7 @@ END INTERFACE ABS_
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE BaseType, ONLY: FEVariable_
-! USE BaseType, ONLY: Scalar => TypeFEVariableScalar
-! USE BaseType, ONLY: Space => TypeFEVariableSpace
-! USE FEVariable_Method, ONLY: Get
-! USE FEVariable_Method, ONLY: OPERATOR(**)
-! USE FEVariable_Method, ONLY: POWER_
-! USE FEVariable_Method, ONLY: QuadratureVariable
-! USE GlobalData, ONLY: DFP
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-!
-! REAL(DFP), PARAMETER :: tol = 1.0E-12_DFP
-! REAL(DFP) :: a(3)
-!
-! a = [-1.0_DFP, 2.0_DFP, 3.0_DFP]
-!
-! ! Test 1: obj ** n for n = 2, 3 and 0
-! BLOCK
-!   TYPE(FEVariable_) :: ans
-!
-!   ans = QuadratureVariable(a, Scalar, Space)**2
-!   CALL OK(ALL(ABS(Get(ans, Scalar, Space) - a**2) .LT. tol), "obj ** 2")
-!   ans = QuadratureVariable(a, Scalar, Space)**3
-!   CALL OK(ALL(ABS(Get(ans, Scalar, Space) - a**3) .LT. tol), "obj ** 3")
-!   ans = QuadratureVariable(a, Scalar, Space)**0
-!   CALL OK(ALL(ABS(Get(ans, Scalar, Space) - 1.0_DFP) .LT. tol), "obj ** 0")
-! END BLOCK
-!
-! ! Test 2: POWER_ writes into an existing variable
-! BLOCK
-!   TYPE(FEVariable_) :: obj, ans
-!
-!   obj = QuadratureVariable(a, Scalar, Space)
-!   ans = obj
-!   CALL POWER_(obj=obj, n=2, ans=ans)
-!   CALL OK(ALL(ABS(ans%val(1:3) - a**2) .LT. tol), "POWER_")
-! END BLOCK
-!
-! END PROGRAM main
-!```
+! - [test 1](|base|FEVariable/examples/Power_test_1.F90) `**` and `POWER_`
 !
 ! See also: [[obj_power_]]
 
@@ -216,15 +136,20 @@ END INTERFACE OPERATOR(**)
 ! date: 2021-12-12
 ! summary: ans = obj ** n without allocation
 !
-! Sets `ans%val(1:len) = obj%val(1:len) ** n` with `len = obj%len`.
+! Raises every value of `obj` to the integer power `n` and stores it in
+! `ans`. It sets `ans%val(1:len)` to `obj%val(1:len) ** n`, where `len`
+! is `obj%len`.
 !
-! `ans` must already have the rank, variable type and total shape of
-! `obj` and enough capacity, for example `ans = obj`. Only `len`, `s`
-! and `val` of `ans` are set.
+! `ans` must already have the rank, variable type and shape of `obj`.
+! Its `val` must have room for `len` values. For example, use `ans = obj`
+! first.
+! This routine sets only `len`, `s` and `val` of `ans`.
 !
 ! Examples
 !
-! See [[obj_power]] (Test 2).
+! - [test 1](|base|FEVariable/examples/Power_test_1.F90)
+!
+! See also: [[obj_power]]
 
 INTERFACE POWER_
   MODULE PURE SUBROUTINE obj_power_(obj, n, ans)
@@ -245,61 +170,18 @@ END INTERFACE POWER_
 ! date: 2021-12-12
 ! summary: ans = SQRT(obj)
 !
-! Returns a copy of `obj` with the square root of every value. Values
-! must not be negative; this is not checked.
+! Returns a copy of `obj` with the square root of every value.
+!
+! @note
+! All values must be non-negative. The routine does not check this.
+! @endnote
 !
 ! Changes:
-!   - 2026-11-14: all values are computed; before only the last value was
+!   - 2026-11-14: the routine now computes all values, not only the last
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE BaseType, ONLY: FEVariable_
-! USE BaseType, ONLY: Matrix => TypeFEVariableMatrix
-! USE BaseType, ONLY: Constant => TypeFEVariableConstant
-! USE BaseType, ONLY: Scalar => TypeFEVariableScalar
-! USE BaseType, ONLY: Space => TypeFEVariableSpace
-! USE FEVariable_Method, ONLY: Get
-! USE FEVariable_Method, ONLY: QuadratureVariable
-! USE FEVariable_Method, ONLY: SQRT
-! USE FEVariable_Method, ONLY: Sqrt_
-! USE GlobalData, ONLY: DFP
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-!
-! REAL(DFP), PARAMETER :: tol = 1.0E-12_DFP
-! REAL(DFP) :: a(3), m(2, 2)
-!
-! a = [1.0_DFP, 4.0_DFP, 9.0_DFP]
-! m = RESHAPE([1.0_DFP, 4.0_DFP, 16.0_DFP, 25.0_DFP], [2, 2])
-!
-! ! Test 1: SQRT of every value
-! BLOCK
-!   TYPE(FEVariable_) :: ans
-!
-!   ans = SQRT(QuadratureVariable(a, Scalar, Space))
-!   CALL OK(ALL(ABS(Get(ans, Scalar, Space) - [1.0_DFP, 2.0_DFP, 3.0_DFP]) &
-!               .LT. tol), "SQRT scalar space")
-!
-!   ans = SQRT(QuadratureVariable(m, Matrix, Constant))
-!   CALL OK(ALL(ABS(Get(ans, Matrix, Constant) - SQRT(m)) .LT. tol), &
-!           "SQRT matrix constant")
-! END BLOCK
-!
-! ! Test 2: Sqrt_ writes into an existing variable
-! BLOCK
-!   TYPE(FEVariable_) :: obj, ans
-!
-!   obj = QuadratureVariable(a, Scalar, Space)
-!   ans = obj
-!   CALL Sqrt_(obj=obj, ans=ans)
-!   CALL OK(ALL(ABS(ans%val(1:3) - [1.0_DFP, 2.0_DFP, 3.0_DFP]) .LT. tol), &
-!           "Sqrt_")
-! END BLOCK
-!
-! END PROGRAM main
-!```
+! - [test 1](|base|FEVariable/examples/Sqrt_test_1.F90) `SQRT` and `Sqrt_`
 !
 ! See also: [[obj_sqrt_]]
 
@@ -320,18 +202,27 @@ END INTERFACE Sqrt
 ! date: 2026-01-01
 ! summary: ans = SQRT(obj) without allocation
 !
-! Sets `ans%val(1:len) = SQRT(obj%val(1:len))` with `len = obj%len`.
+! Stores the square root of every value of `obj` in `ans`.
+! It sets `ans%val(1:len)` to `SQRT(obj%val(1:len))`, where `len` is
+! `obj%len`.
 !
-! `ans` must already have the rank, variable type and total shape of
-! `obj` and enough capacity, for example `ans = obj`. Only `len`, `s`
-! and `val` of `ans` are set.
+! `ans` must already have the rank, variable type and shape of `obj`.
+! Its `val` must have room for `len` values. For example, use `ans = obj`
+! first.
+! This routine sets only `len`, `s` and `val` of `ans`.
+!
+! @note
+! All values must be non-negative. The routine does not check this.
+! @endnote
 !
 ! Changes:
-!   - 2026-11-14: all values are computed; before only the last value was
+!   - 2026-11-14: the routine now computes all values, not only the last
 !
 ! Examples
 !
-! See [[obj_sqrt]] (Test 2).
+! - [test 1](|base|FEVariable/examples/Sqrt_test_1.F90)
+!
+! See also: [[obj_sqrt]]
 
 INTERFACE Sqrt_
   MODULE PURE SUBROUTINE obj_sqrt_(obj, ans)
@@ -350,74 +241,20 @@ END INTERFACE Sqrt_
 ! date: 2021-12-12
 ! summary: ans = NORM2(obj)
 !
-! Returns a scalar FEVariable_ with the Euclidean norm of the vector at
-! each space and time point. The variable type and `defineOn` are those
-! of `obj`; the shape drops the component dimension.
+! Returns the Euclidean norm of a vector variable at each point.
+! The result is a scalar variable.
 !
-! `obj` must be a vector variable. Scalar and matrix variables are not
-! supported; this is not checked.
+! The result has the same `defineOn` and variable type as `obj`.
+! Its shape has no component dimension.
+!
+! @note
+! `obj` must be a vector variable. The routine does not check this.
+! @endnote
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE BaseType, ONLY: FEVariable_
-! USE BaseType, ONLY: fevaropt => TypeFEVariableOpt
-! USE BaseType, ONLY: Constant => TypeFEVariableConstant
-! USE BaseType, ONLY: Scalar => TypeFEVariableScalar
-! USE BaseType, ONLY: Space => TypeFEVariableSpace
-! USE BaseType, ONLY: SpaceTime => TypeFEVariableSpaceTime
-! USE BaseType, ONLY: Time => TypeFEVariableTime
-! USE BaseType, ONLY: Vector => TypeFEVariableVector
-! USE FEVariable_Method, ONLY: Get
-! USE FEVariable_Method, ONLY: NodalVariable
-! USE FEVariable_Method, ONLY: NORM2
-! USE FEVariable_Method, ONLY: Norm2_
-! USE FEVariable_Method, ONLY: QuadratureVariable
-! USE GlobalData, ONLY: DFP
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-!
-! REAL(DFP), PARAMETER :: tol = 1.0E-12_DFP
-! REAL(DFP) :: vs(2, 2), vst(2, 2, 2)
-!
-! vs = RESHAPE([3.0_DFP, 4.0_DFP, 6.0_DFP, 8.0_DFP], [2, 2])
-! vst = RESHAPE([3.0_DFP, 4.0_DFP, 6.0_DFP, 8.0_DFP, 0.0_DFP, 1.0_DFP, &
-!                5.0_DFP, 12.0_DFP], [2, 2, 2])
-!
-! ! Test 1: norm at each point gives a scalar variable
-! BLOCK
-!   TYPE(FEVariable_) :: ans
-!
-!   ans = NORM2(QuadratureVariable([3.0_DFP, 4.0_DFP], Vector, Constant))
-!   CALL OK(ans%rank .EQ. fevaropt%scalar, "constant: scalar")
-!   CALL OK(ABS(Get(ans, Scalar, Constant) - 5.0_DFP) .LT. tol, "constant")
-!
-!   ans = NORM2(QuadratureVariable(vs, Vector, Space))
-!   CALL OK(ALL(ABS(Get(ans, Scalar, Space) - [5.0_DFP, 10.0_DFP]) &
-!               .LT. tol), "space")
-!
-!   ans = NORM2(NodalVariable(vs, Vector, Time))
-!   CALL OK(ans%defineOn .EQ. fevaropt%nodal, "time: nodal")
-!   CALL OK(ALL(ABS(Get(ans, Scalar, Time) - [5.0_DFP, 10.0_DFP]) &
-!               .LT. tol), "time")
-!
-!   ans = NORM2(QuadratureVariable(vst, Vector, SpaceTime))
-!   CALL OK(ALL(ABS(Get(ans, Scalar, SpaceTime) - RESHAPE([5.0_DFP, &
-!               10.0_DFP, 1.0_DFP, 13.0_DFP], [2, 2])) .LT. tol), "spaceTime")
-! END BLOCK
-!
-! ! Test 2: Norm2_ writes into an existing scalar variable
-! BLOCK
-!   TYPE(FEVariable_) :: ans
-!
-!   ans = QuadratureVariable(tsize=2, rank=Scalar, vartype=Space)
-!   CALL Norm2_(obj=QuadratureVariable(vs, Vector, Space), ans=ans)
-!   CALL OK(ALL(ABS(ans%val(1:2) - [5.0_DFP, 10.0_DFP]) .LT. tol), "Norm2_")
-! END BLOCK
-!
-! END PROGRAM main
-!```
+! - [test 1](|base|FEVariable/examples/Norm2_test_1.F90)
+! - [test 2](|base|FEVariable/examples/Norm2_test_2.F90) nodal, space-time
 !
 ! See also: [[obj_norm2_]], [[DOT_PRODUCT]]
 
@@ -438,13 +275,19 @@ END INTERFACE Norm2
 ! date: 2021-12-12
 ! summary: ans = NORM2(obj) without allocation
 !
-! Same as [[obj_norm2]], but writes into `ans`. `ans` must already be a
-! scalar variable with the variable type of `obj` and enough capacity.
-! Only `len`, `s` and `val` of `ans` are set.
+! Stores the Euclidean norm of a vector variable at each point in `ans`.
+! It gives the same values as [[obj_norm2]].
+!
+! `ans` must already be a scalar variable with the variable type of
+! `obj`. Its `val` must have room for the result.
+! This routine sets only `len`, `s` and `val` of `ans`.
 !
 ! Examples
 !
-! See [[obj_norm2]] (Test 2).
+! - [test 1](|base|FEVariable/examples/Norm2_test_1.F90)
+! - [test 2](|base|FEVariable/examples/Norm2_test_2.F90)
+!
+! See also: [[obj_norm2]]
 
 INTERFACE Norm2_
   MODULE PURE SUBROUTINE obj_norm2_(obj, ans)
@@ -463,72 +306,21 @@ END INTERFACE Norm2_
 ! date: 2021-12-12
 ! summary: ans = obj1 .eq. obj2
 !
-! True if `obj1` and `obj2` have the same `len`, `defineOn`, `rank`,
-! `varType`, `tshape` and shape, and `val(1:len)` are approximately equal
-! (see `.APPROXEQ.` in ApproxUtility). Capacity is not compared.
+! Returns `.TRUE.` if `obj1` and `obj2` are equal.
+!
+! Two variables are equal when all of these hold.
+!
+! 1. They have the same `len`, `defineOn`, `rank`, `varType` and `tshape`.
+! 2. They have the same shape `s`.
+! 3. The values `val(1:len)` are approximately equal, see `.APPROXEQ.`
+!    in ApproxUtility.
+!
+! The capacity of `val` is not compared.
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE BaseType, ONLY: FEVariable_
-! USE BaseType, ONLY: Scalar => TypeFEVariableScalar
-! USE BaseType, ONLY: Space => TypeFEVariableSpace
-! USE BaseType, ONLY: Time => TypeFEVariableTime
-! USE FEVariable_Method, ONLY: NodalVariable
-! USE FEVariable_Method, ONLY: OPERATOR(.EQ.)
-! USE FEVariable_Method, ONLY: OPERATOR(.NE.)
-! USE FEVariable_Method, ONLY: QuadratureVariable
-! USE FEVariable_Method, ONLY: SetLen
-! USE GlobalData, ONLY: DFP
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-!
-! REAL(DFP) :: a(3)
-!
-! a = [1.0_DFP, 2.0_DFP, 3.0_DFP]
-!
-! ! Test 1: same data are equal
-! BLOCK
-!   TYPE(FEVariable_) :: obj1, obj2
-!
-!   obj1 = QuadratureVariable(a, Scalar, Space)
-!   obj2 = obj1
-!   CALL OK(obj1 .EQ. obj2, "same: ==")
-!   CALL OK(.NOT. (obj1 .NE. obj2), "same: not /=")
-! END BLOCK
-!
-! ! Test 2: different values, defineOn, varType or len are not equal
-! BLOCK
-!   TYPE(FEVariable_) :: obj1, obj2
-!
-!   obj1 = QuadratureVariable(a, Scalar, Space)
-!   obj2 = QuadratureVariable(a + 1.0_DFP, Scalar, Space)
-!   CALL OK(obj1 .NE. obj2, "values differ: /=")
-!   obj2 = NodalVariable(a, Scalar, Space)
-!   CALL OK(obj1 .NE. obj2, "defineOn differs: /=")
-!   obj2 = QuadratureVariable(a, Scalar, Time)
-!   CALL OK(obj1 .NE. obj2, "varType differs: /=")
-!   obj2 = QuadratureVariable(a(1:2), Scalar, Space)
-!   CALL OK(.NOT. (obj1 .EQ. obj2), "len differs: not ==")
-!   CALL OK(obj1 .NE. obj2, "len differs: /=")
-! END BLOCK
-!
-! ! Test 3: same data with a larger capacity are equal
-! BLOCK
-!   TYPE(FEVariable_) :: obj1, obj2
-!
-!   obj1 = QuadratureVariable(a, Scalar, Space)
-!   obj2 = QuadratureVariable([a, 7.0_DFP], Scalar, Space)
-!   CALL SetLen(obj2, 3)
-!   obj2%s(1) = 3
-!   obj2%val(1:3) = a
-!   CALL OK(obj1 .EQ. obj2, "larger capacity: ==")
-!   CALL OK(.NOT. (obj1 .NE. obj2), "larger capacity: not /=")
-! END BLOCK
-!
-! END PROGRAM main
-!```
+! - [test 1](|base|FEVariable/examples/Equal_test_1.F90)
+! - [test 2](|base|FEVariable/examples/Equal_test_2.F90) rank or shape differ
 !
 ! See also: [[obj_notEqual]]
 
@@ -551,15 +343,19 @@ END INTERFACE OPERATOR(.EQ.)
 ! date: 2021-12-12
 ! summary: ans = obj1 .ne. obj2
 !
-! Returns `.NOT. (obj1 == obj2)`, see [[obj_isEqual]].
+! Returns `.TRUE.` if `obj1` and `obj2` are not equal.
+! It is the negation of `obj1 .EQ. obj2`.
 !
 ! Changes:
-!   - 2026-11-14: defined as the negation of ==; before it compared the
-!     whole allocated val arrays and failed when their sizes differed
+!   - 2026-11-14: now the negation of `==`. Before, it compared the whole
+!     allocated `val` arrays. It failed when their sizes differed.
 !
 ! Examples
 !
-! See [[obj_isEqual]].
+! - [test 1](|base|FEVariable/examples/Equal_test_1.F90)
+! - [test 2](|base|FEVariable/examples/Equal_test_2.F90)
+!
+! See also: [[obj_isEqual]]
 
 INTERFACE OPERATOR(.NE.)
   MODULE PURE FUNCTION obj_notEqual(obj1, obj2) RESULT(ans)

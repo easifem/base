@@ -20,10 +20,13 @@
 ! date: 2026-03-13
 ! summary: Set the values of FEVariable_
 !
-! `Set` copies `scale * val` into an initiated FEVariable_, or adds it to
-! the current values when `addContribution` is true. The rank and the
-! variable type are passed as type arguments and select the specific
-! procedure.
+! `Set` copies `scale * val` into an initiated `FEVariable_`.
+! If `addContribution` is true, it adds `scale * val` to the current
+! values instead.
+!
+! The arguments `rank` and `vartype` select the specific procedure.
+! Pass the type constants of `BaseType`, for example `TypeFEVariableMatrix`
+! and `TypeFEVariableSpaceTime`.
 
 MODULE FEVariable_SetMethod
 USE BaseType, ONLY: FEVariable_
@@ -49,35 +52,29 @@ PUBLIC :: Set
 ! date: 2026-03-13
 ! summary: Set the constant value of scalar variable
 !
-! Sets `obj%val(1)` from the scalar `val`, and sets `obj%s(1) = 1` and
-! `obj%len = 1`.
-! `obj%varType` is set to constant.
+! Stores a scalar that is constant in space and time in `obj`.
 !
-! If `addContribution` is false, `obj%val = scale * val`; otherwise
-! `obj%val = obj%val + scale * val`.
+! The routine sets `obj%val(1)` to `scale * val`.
+! If `addContribution` is true, it adds `scale * val` to `obj%val(1)`
+! instead.
 !
-! `obj%tshape` is set to 1.
+! It also sets `obj%len = 1`, `obj%s(1) = 1` and `obj%tshape = 1`.
+! The variable type of `obj` becomes constant.
 !
-! `obj` must be initiated as a scalar variable with `capacity >= 1`;
-! its variable type may differ and is replaced. `Set` does not change
-! `rank`, `defineOn` or `capacity`, and does not reallocate `obj%val`.
+! @note
+! `obj` must be initiated as a scalar variable with `capacity >= 1`.
+! `Set` does not change `rank`, `defineOn` or `capacity`.
+! It does not reallocate `obj%val`.
+! The old variable type of `obj` may differ, and `Set` replaces it.
+! @endnote
 !
 ! Changes:
 !   - 2026-11-14: `tshape` is set, so the variable type can be changed
 !
 ! Examples
 !
-!```fortran
-! TYPE(FEVariable_) :: obj
-! REAL(DFP) :: val
-! val = 1.0_DFP
-! ! obj initiated by NodalVariable or QuadratureVariable
-! CALL Set(obj=obj, val=val, rank=TypeFEVariableScalar, &
-!          vartype=TypeFEVariableConstant, scale=1.0_DFP, &
-!          addContribution=.FALSE.)
-!```
-!
-! Full example: src/modules/FEVariable/examples/Set_test_1.F90
+! - [test 1](|base|FEVariable/examples/Set_test_1.F90)
+! - [test 2](|base|FEVariable/examples/Set_test_2.F90) with a change of variable type
 
 INTERFACE Set
   MODULE PURE SUBROUTINE obj_Set1( &
@@ -105,35 +102,30 @@ END INTERFACE Set
 ! date: 2026-03-13
 ! summary: Set the space value of scalar variable
 !
-! Sets `obj%val(1:len)` from `val` in column major order, and sets
-! `obj%s(1:1) = SHAPE(val)` and `obj%len = SIZE(val)`.
-! `obj%varType` is set to space.
+! Stores a scalar that varies in space in `obj`.
+! The array `val` holds one value per space node or quadrature point.
 !
-! If `addContribution` is false, `obj%val = scale * val`; otherwise
-! `obj%val = obj%val + scale * val`.
+! The routine copies `scale * val` into `obj%val` in column major order.
+! If `addContribution` is true, it adds `scale * val` instead.
 !
-! `obj%tshape` is set to 1.
+! It also sets `obj%len = SIZE(val)`, `obj%s(1) = SIZE(val)` and
+! `obj%tshape = 1`.
+! The variable type of `obj` becomes space.
 !
-! `obj` must be initiated as a scalar variable with `capacity >= SIZE(val)`;
-! its variable type may differ and is replaced. `Set` does not change
-! `rank`, `defineOn` or `capacity`, and does not reallocate `obj%val`.
+! @note
+! `obj` must be initiated as a scalar variable with
+! `capacity >= SIZE(val)`.
+! `Set` does not change `rank`, `defineOn` or `capacity`.
+! It does not reallocate `obj%val`.
+! The old variable type of `obj` may differ, and `Set` replaces it.
+! @endnote
 !
 ! Changes:
 !   - 2026-11-14: `tshape` is set, so the variable type can be changed
 !
 ! Examples
 !
-!```fortran
-! TYPE(FEVariable_) :: obj
-! REAL(DFP) :: val(3)
-! val = 1.0_DFP
-! ! obj initiated by NodalVariable or QuadratureVariable
-! CALL Set(obj=obj, val=val, rank=TypeFEVariableScalar, &
-!          vartype=TypeFEVariableSpace, scale=1.0_DFP, &
-!          addContribution=.FALSE.)
-!```
-!
-! Full example: src/modules/FEVariable/examples/Set_test_1.F90
+! - [test 1](|base|FEVariable/examples/Set_test_1.F90)
 
 INTERFACE Set
   MODULE PURE SUBROUTINE obj_Set2( &
@@ -161,35 +153,30 @@ END INTERFACE Set
 ! date: 2026-03-13
 ! summary: Set the spaceTime value of scalar variable
 !
-! Sets `obj%val(1:len)` from `val` in column major order, and sets
-! `obj%s(1:2) = SHAPE(val)` and `obj%len = SIZE(val)`.
-! `obj%varType` is set to spaceTime.
+! Stores a scalar that varies in space and time in `obj`.
+! The array `val` has one row per space node and one column per time node.
 !
-! If `addContribution` is false, `obj%val = scale * val`; otherwise
-! `obj%val = obj%val + scale * val`.
+! The routine copies `scale * val` into `obj%val` in column major order.
+! If `addContribution` is true, it adds `scale * val` instead.
 !
-! `obj%tshape` is set to 2.
+! It also sets `obj%s(1:2) = SHAPE(val)`, `obj%len = SIZE(val)` and
+! `obj%tshape = 2`.
+! The variable type of `obj` becomes space-time.
 !
-! `obj` must be initiated as a scalar variable with `capacity >= SIZE(val)`;
-! its variable type may differ and is replaced. `Set` does not change
-! `rank`, `defineOn` or `capacity`, and does not reallocate `obj%val`.
+! @note
+! `obj` must be initiated as a scalar variable with
+! `capacity >= SIZE(val)`.
+! `Set` does not change `rank`, `defineOn` or `capacity`.
+! It does not reallocate `obj%val`.
+! The old variable type of `obj` may differ, and `Set` replaces it.
+! @endnote
 !
 ! Changes:
 !   - 2026-11-14: `tshape` is set, so the variable type can be changed
 !
 ! Examples
 !
-!```fortran
-! TYPE(FEVariable_) :: obj
-! REAL(DFP) :: val(2, 2)
-! val = 1.0_DFP
-! ! obj initiated by NodalVariable or QuadratureVariable
-! CALL Set(obj=obj, val=val, rank=TypeFEVariableScalar, &
-!          vartype=TypeFEVariableSpaceTime, scale=1.0_DFP, &
-!          addContribution=.FALSE.)
-!```
-!
-! Full example: src/modules/FEVariable/examples/Set_test_1.F90
+! - [test 1](|base|FEVariable/examples/Set_test_1.F90)
 
 INTERFACE Set
   MODULE PURE SUBROUTINE obj_Set3( &
@@ -217,35 +204,31 @@ END INTERFACE Set
 ! date: 2026-03-13
 ! summary: Set the time value of scalar variable
 !
-! Sets `obj%val(1:len)` from `val` in column major order, and sets
-! `obj%s(1:1) = SHAPE(val)` and `obj%len = SIZE(val)`.
-! `obj%varType` is set to time.
+! Stores a scalar that varies in time in `obj`.
+! The array `val` holds one value per time node.
 !
-! If `addContribution` is false, `obj%val = scale * val`; otherwise
-! `obj%val = obj%val + scale * val`.
+! The routine copies `scale * val` into `obj%val`.
+! If `addContribution` is true, it adds `scale * val` instead.
 !
-! `obj%tshape` is set to 1.
+! It also sets `obj%len = SIZE(val)`, `obj%s(1) = SIZE(val)` and
+! `obj%tshape = 1`.
+! The variable type of `obj` becomes time.
 !
-! `obj` must be initiated as a scalar variable with `capacity >= SIZE(val)`;
-! its variable type may differ and is replaced. `Set` does not change
-! `rank`, `defineOn` or `capacity`, and does not reallocate `obj%val`.
+! @note
+! `obj` must be initiated as a scalar variable with
+! `capacity >= SIZE(val)`.
+! `Set` does not change `rank`, `defineOn` or `capacity`.
+! It does not reallocate `obj%val`.
+! The old variable type of `obj` may differ, and `Set` replaces it.
+! @endnote
 !
 ! Changes:
 !   - 2026-11-14: `tshape` is set, so the variable type can be changed
 !
 ! Examples
 !
-!```fortran
-! TYPE(FEVariable_) :: obj
-! REAL(DFP) :: val(3)
-! val = 1.0_DFP
-! ! obj initiated by NodalVariable or QuadratureVariable
-! CALL Set(obj=obj, val=val, rank=TypeFEVariableScalar, &
-!          vartype=TypeFEVariableTime, scale=1.0_DFP, &
-!          addContribution=.FALSE.)
-!```
-!
-! Full example: src/modules/FEVariable/examples/Set_test_1.F90
+! - [test 1](|base|FEVariable/examples/Set_test_1.F90)
+! - [test 2](|base|FEVariable/examples/Set_test_2.F90) with zero and negative scale
 
 INTERFACE Set
   MODULE PURE SUBROUTINE obj_Set10( &
@@ -273,35 +256,31 @@ END INTERFACE Set
 ! date: 2026-03-13
 ! summary: Set the constant value of vector variable
 !
-! Sets `obj%val(1:len)` from `val` in column major order, and sets
-! `obj%s(1:1) = SHAPE(val)` and `obj%len = SIZE(val)`.
-! `obj%varType` is set to constant.
+! Stores a vector that is constant in space and time in `obj`.
+! The array `val` holds the components of the vector.
 !
-! If `addContribution` is false, `obj%val = scale * val`; otherwise
-! `obj%val = obj%val + scale * val`.
+! The routine copies `scale * val` into `obj%val`.
+! If `addContribution` is true, it adds `scale * val` instead.
 !
-! `obj%tshape` is set to 1.
+! It also sets `obj%len = SIZE(val)`, `obj%s(1) = SIZE(val)` and
+! `obj%tshape = 1`.
+! The variable type of `obj` becomes constant.
 !
-! `obj` must be initiated as a vector variable with `capacity >= SIZE(val)`;
-! its variable type may differ and is replaced. `Set` does not change
-! `rank`, `defineOn` or `capacity`, and does not reallocate `obj%val`.
+! @note
+! `obj` must be initiated as a vector variable with
+! `capacity >= SIZE(val)`.
+! `Set` does not change `rank`, `defineOn` or `capacity`.
+! It does not reallocate `obj%val`.
+! The old variable type of `obj` may differ, and `Set` replaces it.
+! @endnote
 !
 ! Changes:
 !   - 2026-11-14: `tshape` is set, so the variable type can be changed
 !
 ! Examples
 !
-!```fortran
-! TYPE(FEVariable_) :: obj
-! REAL(DFP) :: val(3)
-! val = 1.0_DFP
-! ! obj initiated by NodalVariable or QuadratureVariable
-! CALL Set(obj=obj, val=val, rank=TypeFEVariableVector, &
-!          vartype=TypeFEVariableConstant, scale=1.0_DFP, &
-!          addContribution=.FALSE.)
-!```
-!
-! Full example: src/modules/FEVariable/examples/Set_test_1.F90
+! - [test 1](|base|FEVariable/examples/Set_test_1.F90)
+! - [test 2](|base|FEVariable/examples/Set_test_2.F90) with a change of variable type
 
 INTERFACE Set
   MODULE PURE SUBROUTINE obj_Set4( &
@@ -329,35 +308,31 @@ END INTERFACE Set
 ! date: 2026-03-13
 ! summary: Set the space value of vector variable
 !
-! Sets `obj%val(1:len)` from `val` in column major order, and sets
-! `obj%s(1:2) = SHAPE(val)` and `obj%len = SIZE(val)`.
-! `obj%varType` is set to space.
+! Stores a vector that varies in space in `obj`.
+! The array `val` has one row per component and one column per space node.
 !
-! If `addContribution` is false, `obj%val = scale * val`; otherwise
-! `obj%val = obj%val + scale * val`.
+! The routine copies `scale * val` into `obj%val` in column major order.
+! If `addContribution` is true, it adds `scale * val` instead.
 !
-! `obj%tshape` is set to 2.
+! It also sets `obj%s(1:2) = SHAPE(val)`, `obj%len = SIZE(val)` and
+! `obj%tshape = 2`.
+! The variable type of `obj` becomes space.
 !
-! `obj` must be initiated as a vector variable with `capacity >= SIZE(val)`;
-! its variable type may differ and is replaced. `Set` does not change
-! `rank`, `defineOn` or `capacity`, and does not reallocate `obj%val`.
+! @note
+! `obj` must be initiated as a vector variable with
+! `capacity >= SIZE(val)`.
+! `Set` does not change `rank`, `defineOn` or `capacity`.
+! It does not reallocate `obj%val`.
+! The old variable type of `obj` may differ, and `Set` replaces it.
+! @endnote
 !
 ! Changes:
 !   - 2026-11-14: `tshape` is set, so the variable type can be changed
 !
 ! Examples
 !
-!```fortran
-! TYPE(FEVariable_) :: obj
-! REAL(DFP) :: val(2, 2)
-! val = 1.0_DFP
-! ! obj initiated by NodalVariable or QuadratureVariable
-! CALL Set(obj=obj, val=val, rank=TypeFEVariableVector, &
-!          vartype=TypeFEVariableSpace, scale=1.0_DFP, &
-!          addContribution=.FALSE.)
-!```
-!
-! Full example: src/modules/FEVariable/examples/Set_test_1.F90
+! - [test 1](|base|FEVariable/examples/Set_test_1.F90)
+! - [test 2](|base|FEVariable/examples/Set_test_2.F90) with a quadrature variable
 
 INTERFACE Set
   MODULE PURE SUBROUTINE obj_Set5( &
@@ -385,35 +360,31 @@ END INTERFACE Set
 ! date: 2026-03-13
 ! summary: Set the spaceTime value of vector variable
 !
-! Sets `obj%val(1:len)` from `val` in column major order, and sets
-! `obj%s(1:3) = SHAPE(val)` and `obj%len = SIZE(val)`.
-! `obj%varType` is set to spaceTime.
+! Stores a vector that varies in space and time in `obj`.
+! The array `val` is indexed by component, space node and time node.
 !
-! If `addContribution` is false, `obj%val = scale * val`; otherwise
-! `obj%val = obj%val + scale * val`.
+! The routine copies `scale * val` into `obj%val` in column major order.
+! If `addContribution` is true, it adds `scale * val` instead.
 !
-! `obj%tshape` is set to 3.
+! It also sets `obj%s(1:3) = SHAPE(val)`, `obj%len = SIZE(val)` and
+! `obj%tshape = 3`.
+! The variable type of `obj` becomes space-time.
 !
-! `obj` must be initiated as a vector variable with `capacity >= SIZE(val)`;
-! its variable type may differ and is replaced. `Set` does not change
-! `rank`, `defineOn` or `capacity`, and does not reallocate `obj%val`.
+! @note
+! `obj` must be initiated as a vector variable with
+! `capacity >= SIZE(val)`.
+! `Set` does not change `rank`, `defineOn` or `capacity`.
+! It does not reallocate `obj%val`.
+! The old variable type of `obj` may differ, and `Set` replaces it.
+! @endnote
 !
 ! Changes:
 !   - 2026-11-14: `tshape` is set, so the variable type can be changed
 !
 ! Examples
 !
-!```fortran
-! TYPE(FEVariable_) :: obj
-! REAL(DFP) :: val(2, 2, 2)
-! val = 1.0_DFP
-! ! obj initiated by NodalVariable or QuadratureVariable
-! CALL Set(obj=obj, val=val, rank=TypeFEVariableVector, &
-!          vartype=TypeFEVariableSpaceTime, scale=1.0_DFP, &
-!          addContribution=.FALSE.)
-!```
-!
-! Full example: src/modules/FEVariable/examples/Set_test_1.F90
+! - [test 1](|base|FEVariable/examples/Set_test_1.F90)
+! - [test 2](|base|FEVariable/examples/Set_test_2.F90) with a quadrature variable
 
 INTERFACE Set
   MODULE PURE SUBROUTINE obj_Set6( &
@@ -441,35 +412,31 @@ END INTERFACE Set
 ! date: 2026-03-13
 ! summary: Set the time value of vector variable
 !
-! Sets `obj%val(1:len)` from `val` in column major order, and sets
-! `obj%s(1:2) = SHAPE(val)` and `obj%len = SIZE(val)`.
-! `obj%varType` is set to time.
+! Stores a vector that varies in time in `obj`.
+! The array `val` has one row per component and one column per time node.
 !
-! If `addContribution` is false, `obj%val = scale * val`; otherwise
-! `obj%val = obj%val + scale * val`.
+! The routine copies `scale * val` into `obj%val` in column major order.
+! If `addContribution` is true, it adds `scale * val` instead.
 !
-! `obj%tshape` is set to 2.
+! It also sets `obj%s(1:2) = SHAPE(val)`, `obj%len = SIZE(val)` and
+! `obj%tshape = 2`.
+! The variable type of `obj` becomes time.
 !
-! `obj` must be initiated as a vector variable with `capacity >= SIZE(val)`;
-! its variable type may differ and is replaced. `Set` does not change
-! `rank`, `defineOn` or `capacity`, and does not reallocate `obj%val`.
+! @note
+! `obj` must be initiated as a vector variable with
+! `capacity >= SIZE(val)`.
+! `Set` does not change `rank`, `defineOn` or `capacity`.
+! It does not reallocate `obj%val`.
+! The old variable type of `obj` may differ, and `Set` replaces it.
+! @endnote
 !
 ! Changes:
 !   - 2026-11-14: `tshape` is set, so the variable type can be changed
 !
 ! Examples
 !
-!```fortran
-! TYPE(FEVariable_) :: obj
-! REAL(DFP) :: val(2, 2)
-! val = 1.0_DFP
-! ! obj initiated by NodalVariable or QuadratureVariable
-! CALL Set(obj=obj, val=val, rank=TypeFEVariableVector, &
-!          vartype=TypeFEVariableTime, scale=1.0_DFP, &
-!          addContribution=.FALSE.)
-!```
-!
-! Full example: src/modules/FEVariable/examples/Set_test_1.F90
+! - [test 1](|base|FEVariable/examples/Set_test_1.F90)
+! - [test 2](|base|FEVariable/examples/Set_test_2.F90) with a quadrature variable
 
 INTERFACE Set
   MODULE PURE SUBROUTINE obj_Set11( &
@@ -497,35 +464,31 @@ END INTERFACE Set
 ! date: 2026-03-13
 ! summary: Set the constant value of matrix variable
 !
-! Sets `obj%val(1:len)` from `val` in column major order, and sets
-! `obj%s(1:2) = SHAPE(val)` and `obj%len = SIZE(val)`.
-! `obj%varType` is set to constant.
+! Stores a matrix that is constant in space and time in `obj`.
+! The array `val` holds the matrix, indexed by row and column.
 !
-! If `addContribution` is false, `obj%val = scale * val`; otherwise
-! `obj%val = obj%val + scale * val`.
+! The routine copies `scale * val` into `obj%val` in column major order.
+! If `addContribution` is true, it adds `scale * val` instead.
 !
-! `obj%tshape` is set to 2.
+! It also sets `obj%s(1:2) = SHAPE(val)`, `obj%len = SIZE(val)` and
+! `obj%tshape = 2`.
+! The variable type of `obj` becomes constant.
 !
-! `obj` must be initiated as a matrix variable with `capacity >= SIZE(val)`;
-! its variable type may differ and is replaced. `Set` does not change
-! `rank`, `defineOn` or `capacity`, and does not reallocate `obj%val`.
+! @note
+! `obj` must be initiated as a matrix variable with
+! `capacity >= SIZE(val)`.
+! `Set` does not change `rank`, `defineOn` or `capacity`.
+! It does not reallocate `obj%val`.
+! The old variable type of `obj` may differ, and `Set` replaces it.
+! @endnote
 !
 ! Changes:
 !   - 2026-11-14: `tshape` is set, so the variable type can be changed
 !
 ! Examples
 !
-!```fortran
-! TYPE(FEVariable_) :: obj
-! REAL(DFP) :: val(2, 2)
-! val = 1.0_DFP
-! ! obj initiated by NodalVariable or QuadratureVariable
-! CALL Set(obj=obj, val=val, rank=TypeFEVariableMatrix, &
-!          vartype=TypeFEVariableConstant, scale=1.0_DFP, &
-!          addContribution=.FALSE.)
-!```
-!
-! Full example: src/modules/FEVariable/examples/Set_test_1.F90
+! - [test 1](|base|FEVariable/examples/Set_test_1.F90)
+! - [test 2](|base|FEVariable/examples/Set_test_2.F90) with a change of variable type
 
 INTERFACE Set
   MODULE PURE SUBROUTINE obj_Set7( &
@@ -553,35 +516,31 @@ END INTERFACE Set
 ! date: 2026-03-13
 ! summary: Set the space value of matrix variable
 !
-! Sets `obj%val(1:len)` from `val` in column major order, and sets
-! `obj%s(1:3) = SHAPE(val)` and `obj%len = SIZE(val)`.
-! `obj%varType` is set to space.
+! Stores a matrix that varies in space in `obj`.
+! The array `val` is indexed by matrix row, matrix column and space node.
 !
-! If `addContribution` is false, `obj%val = scale * val`; otherwise
-! `obj%val = obj%val + scale * val`.
+! The routine copies `scale * val` into `obj%val` in column major order.
+! If `addContribution` is true, it adds `scale * val` instead.
 !
-! `obj%tshape` is set to 3.
+! It also sets `obj%s(1:3) = SHAPE(val)`, `obj%len = SIZE(val)` and
+! `obj%tshape = 3`.
+! The variable type of `obj` becomes space.
 !
-! `obj` must be initiated as a matrix variable with `capacity >= SIZE(val)`;
-! its variable type may differ and is replaced. `Set` does not change
-! `rank`, `defineOn` or `capacity`, and does not reallocate `obj%val`.
+! @note
+! `obj` must be initiated as a matrix variable with
+! `capacity >= SIZE(val)`.
+! `Set` does not change `rank`, `defineOn` or `capacity`.
+! It does not reallocate `obj%val`.
+! The old variable type of `obj` may differ, and `Set` replaces it.
+! @endnote
 !
 ! Changes:
 !   - 2026-11-14: `tshape` is set, so the variable type can be changed
 !
 ! Examples
 !
-!```fortran
-! TYPE(FEVariable_) :: obj
-! REAL(DFP) :: val(2, 2, 2)
-! val = 1.0_DFP
-! ! obj initiated by NodalVariable or QuadratureVariable
-! CALL Set(obj=obj, val=val, rank=TypeFEVariableMatrix, &
-!          vartype=TypeFEVariableSpace, scale=1.0_DFP, &
-!          addContribution=.FALSE.)
-!```
-!
-! Full example: src/modules/FEVariable/examples/Set_test_1.F90
+! - [test 1](|base|FEVariable/examples/Set_test_1.F90)
+! - [test 2](|base|FEVariable/examples/Set_test_2.F90) with a change of variable type
 
 INTERFACE Set
   MODULE PURE SUBROUTINE obj_Set8( &
@@ -607,37 +566,33 @@ END INTERFACE Set
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2026-03-13
-! summary: Set the spaceTime value of matrix variable
+! summary: Set the space-time value of matrix variable
 !
-! Sets `obj%val(1:len)` from `val` in column major order, and sets
-! `obj%s(1:4) = SHAPE(val)` and `obj%len = SIZE(val)`.
-! `obj%varType` is set to spaceTime.
+! Stores a matrix that varies in space and time in `obj`.
+! The array `val` holds one matrix per space node and time node.
 !
-! If `addContribution` is false, `obj%val = scale * val`; otherwise
-! `obj%val = obj%val + scale * val`.
+! The routine copies `scale * val` into `obj%val` in column major order.
+! If `addContribution` is true, it adds `scale * val` instead.
 !
-! `obj%tshape` is set to 4.
+! It also sets `obj%len = SIZE(val)`, `obj%s(1:4) = SHAPE(val)` and
+! `obj%tshape = 4`.
+! The variable type of `obj` becomes space-time.
 !
-! `obj` must be initiated as a matrix variable with `capacity >= SIZE(val)`;
-! its variable type may differ and is replaced. `Set` does not change
-! `rank`, `defineOn` or `capacity`, and does not reallocate `obj%val`.
+! @note
+! `obj` must be initiated as a matrix variable with
+! `capacity >= SIZE(val)`.
+! `Set` does not change `rank`, `defineOn` or `capacity`.
+! It does not reallocate `obj%val`.
+! The old variable type of `obj` may differ, and `Set` replaces it.
+! @endnote
 !
 ! Changes:
 !   - 2026-11-14: `tshape` is set, so the variable type can be changed
 !
 ! Examples
 !
-!```fortran
-! TYPE(FEVariable_) :: obj
-! REAL(DFP) :: val(2, 2, 2, 2)
-! val = 1.0_DFP
-! ! obj initiated by NodalVariable or QuadratureVariable
-! CALL Set(obj=obj, val=val, rank=TypeFEVariableMatrix, &
-!          vartype=TypeFEVariableSpaceTime, scale=1.0_DFP, &
-!          addContribution=.FALSE.)
-!```
-!
-! Full example: src/modules/FEVariable/examples/Set_test_1.F90
+! - [test 1](|base|FEVariable/examples/Set_test_1.F90)
+! - [test 2](|base|FEVariable/examples/Set_test_2.F90) with a change of variable type
 
 INTERFACE Set
   MODULE PURE SUBROUTINE obj_Set9( &
@@ -665,35 +620,31 @@ END INTERFACE Set
 ! date: 2026-03-13
 ! summary: Set the time value of matrix variable
 !
-! Sets `obj%val(1:len)` from `val` in column major order, and sets
-! `obj%s(1:3) = SHAPE(val)` and `obj%len = SIZE(val)`.
-! `obj%varType` is set to time.
+! Stores a matrix that varies in time in `obj`.
+! The array `val` holds one matrix per time node.
 !
-! If `addContribution` is false, `obj%val = scale * val`; otherwise
-! `obj%val = obj%val + scale * val`.
+! The routine copies `scale * val` into `obj%val` in column major order.
+! If `addContribution` is true, it adds `scale * val` instead.
 !
-! `obj%tshape` is set to 3.
+! It also sets `obj%len = SIZE(val)`, `obj%s(1:3) = SHAPE(val)` and
+! `obj%tshape = 3`.
+! The variable type of `obj` becomes time.
 !
-! `obj` must be initiated as a matrix variable with `capacity >= SIZE(val)`;
-! its variable type may differ and is replaced. `Set` does not change
-! `rank`, `defineOn` or `capacity`, and does not reallocate `obj%val`.
+! @note
+! `obj` must be initiated as a matrix variable with
+! `capacity >= SIZE(val)`.
+! `Set` does not change `rank`, `defineOn` or `capacity`.
+! It does not reallocate `obj%val`.
+! The old variable type of `obj` may differ, and `Set` replaces it.
+! @endnote
 !
 ! Changes:
 !   - 2026-11-14: `tshape` is set, so the variable type can be changed
 !
 ! Examples
 !
-!```fortran
-! TYPE(FEVariable_) :: obj
-! REAL(DFP) :: val(2, 2, 2)
-! val = 1.0_DFP
-! ! obj initiated by NodalVariable or QuadratureVariable
-! CALL Set(obj=obj, val=val, rank=TypeFEVariableMatrix, &
-!          vartype=TypeFEVariableTime, scale=1.0_DFP, &
-!          addContribution=.FALSE.)
-!```
-!
-! Full example: src/modules/FEVariable/examples/Set_test_1.F90
+! - [test 1](|base|FEVariable/examples/Set_test_1.F90)
+! - [test 2](|base|FEVariable/examples/Set_test_2.F90) with a change of variable type
 
 INTERFACE Set
   MODULE PURE SUBROUTINE obj_Set12( &

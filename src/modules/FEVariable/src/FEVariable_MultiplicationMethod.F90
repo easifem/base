@@ -18,9 +18,9 @@
 ! date: 2021-12-12
 ! summary: Multiplication of FEVariable_, operator(*) and Multiplication_
 !
-! `obj1 * obj2`, `obj * val` and `val * obj` return a new FEVariable_.
-! `Multiplication_` writes the result into an existing FEVariable_ without
-! extra allocation.
+! `obj1 * obj2`, `obj * val` and `val * obj` return a new `FEVariable_`.
+! `Multiplication_` writes the result into an existing `FEVariable_`.
+! It does not allocate.
 
 #define _OP_ *
 
@@ -43,104 +43,42 @@ PUBLIC :: Multiplication_
 ! date: 2025-12-28
 ! summary: Multiplication of two FEVariables without allocation
 !
-! Computes `ans = obj1 * obj2`. It computes the rank case and variable
-! case and calls [[fevar_Multiplication_3]].
+! Computes `ans = obj1 * obj2` without allocating memory.
 !
-! `ans` must already be initiated with the rank and total shape of the
-! result and with enough capacity, for example by a previous
-! `ans = obj1 * obj2`. Only `s`, `len`, `val` and `varType` of `ans` are
-! set; `rank`, `tshape` and `capacity` are not changed and `ans%val` is not
-! reallocated. User should know what they are doing.
+! The operation is element-wise. A scalar operand acts on every
+! component of a vector or matrix. Two vectors, or two matrices,
+! multiply entry by entry. This is not a vector or matrix product.
 !
-! The rank, variable type and shape of the result follow
-! [[GetRankCase]], [[GetVarCase]], [[GetRank]], [[GetVarType]] and
-! [[GetShape]]. The operation is element-wise: a scalar operand acts on
-! every component of a vector or matrix, and two vectors or two
-! matrices are combined entry by entry (`*` and `/` are not vector or
-! matrix products). A space variable and a time variable give a
-! space-time variable. `defineOn` of the result is that of the first operand.
-! Vector * matrix and matrix * vector are not supported.
+! A space variable times a time variable gives a space-time variable.
+! The rank, variable type and shape of the result follow [[GetRankCase]],
+! [[GetVarCase]], [[GetRank]], [[GetVarType]] and [[GetShape]].
 !
-! When the space (or time) sizes of the two operands differ, only the
-! first `MIN` of the two sizes is used; this is not checked.
+! The routine computes the rank case and the variable case itself.
+! To pass them in, use [[fevar_Multiplication_3]].
+!
+! @note
+! `ans` must already have the rank and total shape of the result. It
+! must also have enough capacity. For example, use the result of a
+! previous `obj1 * obj2`.
+! @endnote
+!
+! The routine sets only `s`, `len`, `val` and `varType` of `ans`. It
+! does not change `rank`, `tshape` or `capacity`. It does not reallocate
+! `ans%val`.
+!
+! @warning
+! If the space (or time) sizes of the operands differ, the routine uses
+! only the smaller size. It does not check this.
+! @endwarning
+!
+! @note
+! A vector times a matrix, or a matrix times a vector, is not
+! supported. In that case `ans` is not changed.
+! @endnote
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE BaseType, ONLY: FEVariable_
-! USE BaseType, ONLY: fevaropt => TypeFEVariableOpt
-! USE BaseType, ONLY: Constant => TypeFEVariableConstant
-! USE BaseType, ONLY: Scalar => TypeFEVariableScalar
-! USE BaseType, ONLY: Space => TypeFEVariableSpace
-! USE BaseType, ONLY: Vector => TypeFEVariableVector
-! USE FEVariable_Method, ONLY: Multiplication_
-! USE FEVariable_Method, ONLY: GetRankCase
-! USE FEVariable_Method, ONLY: GetVarCase
-! USE FEVariable_Method, ONLY: QuadratureVariable
-! USE GlobalData, ONLY: DFP
-! USE GlobalData, ONLY: I4B
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-!
-! REAL(DFP), PARAMETER :: tol = 1.0E-12_DFP
-! REAL(DFP) :: a(3), c(3), vs(2, 3)
-! INTEGER(I4B) :: ii
-! TYPE(FEVariable_) :: obj1, obj2, ans
-!
-! a = [1.0_DFP, 2.0_DFP, 3.0_DFP]
-! c = [100.0_DFP, 200.0_DFP, 300.0_DFP]
-! vs = RESHAPE([(REAL(ii, DFP), ii=1, 6)], [2, 3])
-!
-! ! ans is initiated with the rank and shape of the result
-! ans = QuadratureVariable(nrow=2, ncol=3, rank=Vector, vartype=Space)
-!
-! ! Test 1: Multiplication_(obj1, obj2, ans)
-! BLOCK
-!   obj1 = QuadratureVariable(vs, Vector, Space)
-!   obj2 = QuadratureVariable(vs + 1.0_DFP, Vector, Space)
-!   CALL Multiplication_(obj1=obj1, obj2=obj2, ans=ans)
-!   CALL OK(ans%len .EQ. 6, "obj1 * obj2: len")
-!   CALL OK(ALL(ABS(ans%val(1:6) - RESHAPE(vs * (vs + 1.0_DFP), [6])) &
-!               .LT. tol), "obj1 * obj2: values")
-! END BLOCK
-!
-! ! Test 2: Multiplication_(obj, val, ans)
-! BLOCK
-!   obj1 = QuadratureVariable(vs, Vector, Space)
-!   CALL Multiplication_(obj=obj1, val=0.5_DFP, ans=ans)
-!   CALL OK(ALL(ABS(ans%val(1:6) - (RESHAPE(vs, [6]) * 0.5_DFP)) &
-!               .LT. tol), "obj * val: values")
-! END BLOCK
-!
-! ! Test 3: Multiplication_ with precomputed rankCase and varCase
-! BLOCK
-!   INTEGER(I4B) :: rankCase, varCase
-!
-!   obj1 = QuadratureVariable(a, Scalar, Space)
-!   obj2 = QuadratureVariable(c, Scalar, Space)
-!   rankCase = GetRankCase(obj1%rank, obj2%rank)
-!   varCase = GetVarCase(obj1%varType, obj2%varType)
-!   CALL Multiplication_(obj1=obj1, obj2=obj2, ans=ans, varCase=varCase, &
-!                        rankCase=rankCase)
-!   CALL OK(ans%len .EQ. 3, "with cases: len = 3")
-!   CALL OK(ans%varType .EQ. fevaropt%space, "with cases: space")
-!   CALL OK(ALL(ABS(ans%val(1:3) - (a * c)) .LT. tol), &
-!           "with cases: values")
-! END BLOCK
-!
-! ! Test 4: scalar constant * vector constant into ans
-! BLOCK
-!   obj1 = QuadratureVariable(2.0_DFP, Scalar, Constant)
-!   obj2 = QuadratureVariable(a, Vector, Constant)
-!   CALL Multiplication_(obj1=obj1, obj2=obj2, ans=ans)
-!   CALL OK(ans%len .EQ. 3, "scalar * vector constant: len")
-!   CALL OK(ALL(ABS(ans%val(1:3) - (2.0_DFP * a)) .LT. tol), &
-!           "scalar * vector constant: values")
-! END BLOCK
-!
-! END PROGRAM main
-!```
+! - [test 1](|base|FEVariable/examples/Multiplication__test_1.F90)
 !
 ! See also: [[fevar_Multiplication1]], [[fevar_Multiplication_3]]
 
@@ -163,22 +101,22 @@ END INTERFACE Multiplication_
 ! date: 2025-12-28
 ! summary: Multiplication of a FEVariable and a real without allocation
 !
-! Computes `ans%val(1:len) = obj%val(1:len) * val` with `len = obj%len`,
-! and copies `len` and `s` of `obj` into `ans`.
+! Multiplies every value of `obj` by `val` and stores the result in
+! `ans`, without allocating memory.
 !
+! The routine copies `len` and `s` of `obj` into `ans`. Then it sets
+! `ans%val(1:len) = obj%val(1:len) * val`.
+!
+! @note
 ! `ans` must already have the rank, variable type and total shape of
-! `obj` and enough capacity, for example `ans = obj`. `varType`, `rank`
-! and `tshape` of `ans` are not changed.
+! `obj`. It must also have enough capacity. For example, use `ans = obj`.
+! @endnote
+!
+! The routine does not change `varType`, `rank` or `tshape` of `ans`.
 !
 ! Examples
 !
-!```fortran
-! TYPE(FEVariable_) :: obj1, obj2, ans
-! ! ans initiated with the rank and shape of the result
-! CALL Multiplication_(obj=obj1, val=0.5_DFP, ans=ans)
-!```
-!
-! Full example: src/modules/FEVariable/examples/Multiplication__test_1.F90
+! - [test 1](|base|FEVariable/examples/Multiplication__test_1.F90)
 !
 ! See also: [[fevar_Multiplication2]]
 
@@ -201,26 +139,30 @@ END INTERFACE Multiplication_
 ! date: 2025-12-28
 ! summary: Multiplication of two FEVariables with given rank and variable case
 !
-! Same as [[fevar_Multiplication_1]], but `rankCase` and `varCase` are
-! given by the caller. This bypasses the overhead of computing them inside the
-! method, which helps when the same operation is repeated many times.
+! Computes `ans = obj1 * obj2` without allocating memory. The caller
+! gives `rankCase` and `varCase`.
 !
-! `ans` must already be initiated with the rank and total shape of the
-! result and with enough capacity, for example by a previous
-! `ans = obj1 * obj2`. Only `s`, `len`, `val` and `varType` of `ans` are
-! set; `rank`, `tshape` and `capacity` are not changed and `ans%val` is not
-! reallocated. User should know what they are doing.
+! This does the same as [[fevar_Multiplication_1]]. It saves the cost of
+! computing the two cases, which helps when the same operation repeats
+! many times.
+!
+! @note
+! `ans` must already have the rank and total shape of the result. It
+! must also have enough capacity. For example, use the result of a
+! previous `obj1 * obj2`.
+! @endnote
+!
+! The routine sets only `s`, `len`, `val` and `varType` of `ans`. It
+! does not change `rank`, `tshape` or `capacity`. It does not reallocate
+! `ans%val`.
+!
+! @note
+! If `rankCase` is not a supported combination, `ans` is not changed.
+! @endnote
 !
 ! Examples
 !
-!```fortran
-! TYPE(FEVariable_) :: obj1, obj2, ans
-! ! ans initiated with the rank and shape of the result
-! CALL Multiplication_(obj1=obj1, obj2=obj2, ans=ans, &
-!               varCase=varCase, rankCase=rankCase)
-!```
-!
-! Full example: src/modules/FEVariable/examples/Multiplication__test_1.F90
+! - [test 1](|base|FEVariable/examples/Multiplication__test_1.F90)
 !
 ! See also: [[fevar_Multiplication_1]], [[GetRankCase]], [[GetVarCase]]
 
@@ -234,9 +176,9 @@ INTERFACE Multiplication_
     CLASS(FEVariable_), INTENT(INOUT) :: ans
     !! result, obj1 * obj2
     INTEGER(I4B), INTENT(IN) :: varCase
-    !! varCase can be obtained from GetVarCase function
+    !! variable case, from [[GetVarCase]]
     INTEGER(I4B), INTENT(IN) :: rankCase
-    !! rankCase can be obtained from GetRankCase function
+    !! rank case, from [[GetRankCase]]
   END SUBROUTINE fevar_Multiplication_3
 END INTERFACE Multiplication_
 
@@ -248,29 +190,31 @@ END INTERFACE Multiplication_
 ! date: 2021-12-12
 ! summary: FEVariable = FEVariable * FEVariable
 !
-! Returns a new FEVariable_ initiated with the rank, variable type and
-! shape of the result, then filled by [[fevar_Multiplication_3]].
+! Returns the product `obj1 * obj2` as a new `FEVariable_`.
 !
-! The rank, variable type and shape of the result follow
-! [[GetRankCase]], [[GetVarCase]], [[GetRank]], [[GetVarType]] and
-! [[GetShape]]. The operation is element-wise: a scalar operand acts on
-! every component of a vector or matrix, and two vectors or two
-! matrices are combined entry by entry (`*` and `/` are not vector or
-! matrix products). A space variable and a time variable give a
-! space-time variable. `defineOn` of the result is that of the first operand.
-! Vector * matrix and matrix * vector are not supported.
+! The operation is element-wise. A scalar operand acts on every
+! component of a vector or matrix. Two vectors, or two matrices,
+! multiply entry by entry. This is not a vector or matrix product.
 !
-! When the space (or time) sizes of the two operands differ, only the
-! first `MIN` of the two sizes is used; this is not checked.
+! A space variable times a time variable gives a space-time variable.
+! The rank, variable type and shape of the result follow [[GetRankCase]],
+! [[GetVarCase]], [[GetRank]], [[GetVarType]] and [[GetShape]]. The
+! `defineOn` of the result is that of `obj1`.
+!
+! @warning
+! If the space (or time) sizes of the operands differ, the routine uses
+! only the smaller size. It does not check this.
+! @endwarning
+!
+! @note
+! A vector times a matrix, or a matrix times a vector, is not
+! supported. The values of `ans` are then not set.
+! @endnote
 !
 ! Examples
 !
-!```fortran
-! TYPE(FEVariable_) :: obj1, obj2, ans
-! ans = obj1 * obj2
-!```
-!
-! Full example: src/modules/FEVariable/examples/Multiplication_test_1.F90
+! - [test 1](|base|FEVariable/examples/Multiplication_test_1.F90)
+! - [test 2](|base|FEVariable/examples/Multiplication_test_2.F90)
 !
 ! See also: [[fevar_Multiplication_1]]
 
@@ -293,17 +237,12 @@ END INTERFACE OPERATOR(_OP_)
 ! date: 2021-12-12
 ! summary: FEVariable = FEVariable * Real
 !
-! Returns a copy of `obj` with `val` applied to every value:
-! `ans%val = obj%val * val`.
+! Returns a copy of `obj` with every value multiplied by `val`.
+! The result has the same rank, variable type and shape as `obj`.
 !
 ! Examples
 !
-!```fortran
-! TYPE(FEVariable_) :: obj1, obj2, ans
-! ans = obj1 * 1.0_DFP
-!```
-!
-! Full example: src/modules/FEVariable/examples/Multiplication_test_1.F90
+! - [test 1](|base|FEVariable/examples/Multiplication_test_1.F90)
 !
 ! See also: [[fevar_Multiplication_2]]
 
@@ -326,17 +265,12 @@ END INTERFACE OPERATOR(_OP_)
 ! date: 2021-12-12
 ! summary: FEVariable = Real * FEVariable
 !
-! Returns a copy of `obj` with `val` applied to every value:
-! `ans%val = val * obj%val`.
+! Returns a copy of `obj` with every value multiplied by `val`.
+! The result has the same rank, variable type and shape as `obj`.
 !
 ! Examples
 !
-!```fortran
-! TYPE(FEVariable_) :: obj1, obj2, ans
-! ans = 1.0_DFP * obj1
-!```
-!
-! Full example: src/modules/FEVariable/examples/Multiplication_test_1.F90
+! - [test 1](|base|FEVariable/examples/Multiplication_test_1.F90)
 !
 ! See also: [[fevar_Multiplication2]]
 

@@ -190,6 +190,7 @@ END INTERFACE Addition_
 ! Examples
 !
 ! - [test 1](|base|FEVariable/examples/Addition_test_1.F90)
+! - [test 2](|base|FEVariable/examples/Addition_test_2.F90)
 !
 ! See also: [[fevar_Addition_1]]
 

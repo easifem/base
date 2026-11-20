@@ -18,14 +18,18 @@
 ! date: 2025-08-29
 ! summary: Interpolation of matrix FEVariable_ to quadrature points
 !
-! `GetInterpolation_` evaluates a matrix FEVariable_ at quadrature points
-! without allocation. A nodal variable is interpolated with the space
-! shape functions `N` (and the time shape functions `T` for space-time);
-! a quadrature variable is copied. Three forms exist for each variable
-! type (constant, space, space-time):
+! `GetInterpolation_` evaluates a matrix `FEVariable_` at quadrature
+! points. It does not allocate memory.
+!
+! For a nodal variable, it uses the space shape functions `N`.
+! For a space-time variable, it also uses the time shape functions `T`.
+! For a quadrature variable, it copies the values.
+!
+! Each variable type has three forms. The types are constant, space and
+! space-time.
 !
 ! - `_1`: values at all `nips` points in an array
-! - `_2`: values at all points written in a FEVariable_ at `timeIndx`
+! - `_2`: values at all points in a `FEVariable_`, at `timeIndx`
 ! - `_3`: value at the single point `spaceIndx`
 !
 ! `MatrixGetInterpolation_3` picks the variable type from `obj`.
@@ -55,24 +59,25 @@ PUBLIC :: GetInterpolation_
 ! date: 2025-08-29
 ! summary: Interpolation of matrix, constant, at all quadrature points
 !
-! Writes the interpolated value in `ans(1:dim1, 1:dim2, 1:nips)`.
-! The constant value is used at every quadrature point; `N` is not
-! used.
+! Interpolates a constant matrix at every quadrature point.
+! The result goes to `ans(1:dim1, 1:dim2, 1:nips)`.
+! Each quadrature point gets `scale * obj`.
+! The routine returns `dim1`, `dim2` and `dim3 = nips`.
 !
-! If `addContribution` is false, `ans` is cleared first.
+! If `addContribution` is false, it clears that part of `ans` first.
+! Otherwise it adds to the values already in `ans`.
+!
+! @note
+! `N` and `nns` are not used for a constant variable.
+! @endnote
 !
 ! Examples
 !
-!```fortran
-! CALL GetInterpolation_(obj=obj, rank=TypeFEVariableMatrix, &
-!                        vartype=TypeFEVariableConstant, N=N, nns=nns, &
-!                        nips=nips, scale=1.0_DFP, &
-!                        addContribution=.FALSE., ans=ans, dim1=dim1, &
-!                        dim2=dim2, dim3=dim3)
-!```
+! - [test 3](|base|FEVariable/examples/GetInterpolation__test_3.F90)
+! - [test 7](|base|FEVariable/examples/GetInterpolation__test_7.F90)
 !
-! Full example:
-! src/modules/FEVariable/examples/GetInterpolation__test_3.F90
+! See also: [[MatrixConstantGetInterpolation_2]],
+! [[MatrixConstantGetInterpolation_3]]
 
 INTERFACE GetInterpolation_
   MODULE PURE SUBROUTINE MatrixConstantGetInterpolation_1( &
@@ -93,7 +98,7 @@ INTERFACE GetInterpolation_
     REAL(DFP), INTENT(IN) :: scale
     !! scale factor applied to the interpolated value
     LOGICAL(LGT), INTENT(IN) :: addContribution
-    !! if true, the interpolated value is added to ans
+    !! if true, adds the interpolated value to ans
     REAL(DFP), INTENT(INOUT) :: ans(:, :, :)
     !! interpolated values, SHAPE(ans) >= [nrow, ncol, nips]
     INTEGER(I4B), INTENT(OUT) :: dim1
@@ -113,32 +118,31 @@ END INTERFACE GetInterpolation_
 ! date: 2025-08-29
 ! summary: Interpolation of matrix, constant, into a FEVariable
 !
-! Writes the interpolated value in `ans%val` of the time slice `timeIndx`.
-! The constant value is used at every quadrature point; `N` is not
-! used.
+! Interpolates a constant matrix at every quadrature point.
+! The result goes into the time slice `timeIndx` of `ans%val`.
+! Each quadrature point gets `scale * obj`.
 !
-! `ans` must already be a quadrature FEVariable_ with the shape of the
-! result; the values of time point `timeIndx` start after
-! `(timeIndx - 1)` time slices. `ans%s`, `ans%len` and the other
-! components of `ans` are not changed.
-! If `addContribution` is false, that time slice is cleared first.
+! `ans` must be a quadrature `FEVariable_` that already has its shape.
+! The routine changes only the values of the slice `timeIndx`.
+! It leaves `ans%s`, `ans%len` and the other components as they are.
+!
+! If `addContribution` is false, it clears that slice first.
+! Otherwise it adds to the values already in the slice.
+!
+! @note
+! `N` and `nns` are not used for a constant variable.
+! @endnote
 !
 ! Changes:
-!   - 2026-11-14: the constant value is repeated at every point; before
-!     it read past the values of obj when nips > 1
+!   - 2026-11-14: the routine repeats the constant value at every point.
+!     Before, it read past the values of obj when nips > 1.
 !
 ! Examples
 !
-!```fortran
-! CALL GetInterpolation_(obj=obj, rank=TypeFEVariableMatrix, &
-!                        vartype=TypeFEVariableConstant, N=N, nns=nns, &
-!                        nips=nips, scale=1.0_DFP, &
-!                        addContribution=.FALSE., timeIndx=timeIndx, &
-!                        ans=ans)
-!```
+! - [test 3](|base|FEVariable/examples/GetInterpolation__test_3.F90)
+! - [test 7](|base|FEVariable/examples/GetInterpolation__test_7.F90)
 !
-! Full example:
-! src/modules/FEVariable/examples/GetInterpolation__test_3.F90
+! See also: [[MatrixConstantGetInterpolation_1]]
 
 INTERFACE GetInterpolation_
   MODULE PURE SUBROUTINE MatrixConstantGetInterpolation_2( &
@@ -158,11 +162,11 @@ INTERFACE GetInterpolation_
     REAL(DFP), INTENT(IN) :: scale
     !! scale factor applied to the interpolated value
     LOGICAL(LGT), INTENT(IN) :: addContribution
-    !! if true, the interpolated value is added to ans
+    !! if true, adds the interpolated value to ans
     INTEGER(I4B), INTENT(IN) :: timeIndx
     !! time quadrature point index
     TYPE(FEVariable_), INTENT(INOUT) :: ans
-    !! quadrature variable, values written at timeIndx
+    !! quadrature variable, the routine writes the slice `timeIndx`
   END SUBROUTINE MatrixConstantGetInterpolation_2
 END INTERFACE GetInterpolation_
 
@@ -174,24 +178,24 @@ END INTERFACE GetInterpolation_
 ! date: 2025-08-29
 ! summary: Interpolation of matrix, constant, at one quadrature point
 !
-! Writes the interpolated value in `ans(1:nrow, 1:ncol)`.
-! The constant value is used at every quadrature point; `N` is not
-! used.
+! Interpolates a constant matrix at one quadrature point.
+! The result `scale * obj` goes to `ans(1:nrow, 1:ncol)`.
+! The routine returns `nrow` and `ncol`.
 !
-! If `addContribution` is false, `ans` is cleared first.
+! If `addContribution` is false, it clears that part of `ans` first.
+! Otherwise it adds to the values already in `ans`.
+!
+! @note
+! `N`, `nns`, `spaceIndx` and `timeIndx` are not used for a constant
+! variable.
+! @endnote
 !
 ! Examples
 !
-!```fortran
-! CALL GetInterpolation_(obj=obj, rank=TypeFEVariableMatrix, &
-!                        vartype=TypeFEVariableConstant, N=N, nns=nns, &
-!                        spaceIndx=ips, timeIndx=1, scale=1.0_DFP, &
-!                        addContribution=.FALSE., ans=ans, nrow=nrow, &
-!                        ncol=ncol)
-!```
+! - [test 3](|base|FEVariable/examples/GetInterpolation__test_3.F90)
+! - [test 7](|base|FEVariable/examples/GetInterpolation__test_7.F90)
 !
-! Full example:
-! src/modules/FEVariable/examples/GetInterpolation__test_3.F90
+! See also: [[MatrixConstantGetInterpolation_1]]
 
 INTERFACE GetInterpolation_
   MODULE PURE SUBROUTINE MatrixConstantGetInterpolation_3( &
@@ -214,7 +218,7 @@ INTERFACE GetInterpolation_
     REAL(DFP), INTENT(IN) :: scale
     !! scale factor applied to the interpolated value
     LOGICAL(LGT), INTENT(IN) :: addContribution
-    !! if true, the interpolated value is added to ans
+    !! if true, adds the interpolated value to ans
     REAL(DFP), INTENT(INOUT) :: ans(:, :)
     !! interpolated value, SHAPE(ans) >= [nrow, ncol]
     INTEGER(I4B), INTENT(OUT) :: nrow
@@ -232,27 +236,32 @@ END INTERFACE GetInterpolation_
 ! date: 2025-08-29
 ! summary: Interpolation of matrix, space, at all quadrature points
 !
-! Writes the interpolated value in `ans(1:dim1, 1:dim2, 1:nips)`:
+! Interpolates a matrix that varies in space at every quadrature point.
+! The result goes to `ans(1:dim1, 1:dim2, 1:nips)`.
+! The routine returns `dim1`, `dim2` and `dim3 = nips`.
 !
-! - nodal:
-!   `ans(:, :, ips) = scale * SUM_I N(I, ips) * obj(:, :, I)`
-! - quadrature (`N` is not used):
-!   `ans(:, :, ips) = scale * obj(:, :, ips)`
+! The result depends on whether `obj` holds nodal or quadrature values.
 !
-! If `addContribution` is false, `ans` is cleared first.
+! - If `obj` is nodal, the routine uses the shape functions `N`.
+! - If `obj` holds quadrature values, the routine copies
+!   the values and ignores `N` and `nns`.
+!
+! If `addContribution` is false, it clears that part of `ans` first.
+! Otherwise it adds to the values already in `ans`.
+!
+! Formula:
+!   For a nodal `obj`
+!   $$ ans(:, :, ips) = scale \sum_{I=1}^{nns} N(I, ips)\, obj(:, :, I) $$
+!   For a quadrature `obj`
+!   $$ ans(:, :, ips) = scale\, obj(:, :, ips) $$
 !
 ! Examples
 !
-!```fortran
-! CALL GetInterpolation_(obj=obj, rank=TypeFEVariableMatrix, &
-!                        vartype=TypeFEVariableSpace, N=N, nns=nns, &
-!                        nips=nips, scale=1.0_DFP, &
-!                        addContribution=.FALSE., ans=ans, dim1=dim1, &
-!                        dim2=dim2, dim3=dim3)
-!```
+! - [test 3](|base|FEVariable/examples/GetInterpolation__test_3.F90)
+! - [test 7](|base|FEVariable/examples/GetInterpolation__test_7.F90)
 !
-! Full example:
-! src/modules/FEVariable/examples/GetInterpolation__test_3.F90
+! See also: [[MatrixSpaceGetInterpolation_2]],
+! [[MatrixSpaceGetInterpolation_3]]
 
 INTERFACE GetInterpolation_
   MODULE PURE SUBROUTINE MatrixSpaceGetInterpolation_1( &
@@ -275,7 +284,7 @@ INTERFACE GetInterpolation_
     REAL(DFP), INTENT(IN) :: scale
     !! scale factor applied to the interpolated value
     LOGICAL(LGT), INTENT(IN) :: addContribution
-    !! if true, the interpolated value is added to ans
+    !! if true, adds the interpolated value to ans
     INTEGER(I4B), INTENT(OUT) :: dim1
     !! size of dim1 written in ans
     INTEGER(I4B), INTENT(OUT) :: dim2
@@ -293,31 +302,34 @@ END INTERFACE GetInterpolation_
 ! date: 2025-08-29
 ! summary: Interpolation of matrix, space, into a FEVariable
 !
-! Writes the interpolated value in `ans%val` of the time slice `timeIndx`:
+! Interpolates a matrix that varies in space at every quadrature point.
+! The result goes into the time slice `timeIndx` of `ans%val`.
 !
-! - nodal:
-!   `ans(:, :, ips) = scale * SUM_I N(I, ips) * obj(:, :, I)`
-! - quadrature (`N` is not used):
-!   `ans(:, :, ips) = scale * obj(:, :, ips)`
+! The result depends on whether `obj` holds nodal or quadrature values.
 !
-! `ans` must already be a quadrature FEVariable_ with the shape of the
-! result; the values of time point `timeIndx` start after
-! `(timeIndx - 1)` time slices. `ans%s`, `ans%len` and the other
-! components of `ans` are not changed.
-! If `addContribution` is false, that time slice is cleared first.
+! - If `obj` is nodal, the routine uses the shape functions `N`.
+! - If `obj` holds quadrature values, the routine copies
+!   the values and ignores `N` and `nns`.
+!
+! `ans` must be a quadrature `FEVariable_` that already has its shape.
+! The routine changes only the values of the slice `timeIndx`.
+! It leaves `ans%s`, `ans%len` and the other components as they are.
+!
+! If `addContribution` is false, it clears that slice first.
+! Otherwise it adds to the values already in the slice.
+!
+! Formula:
+!   For a nodal `obj`
+!   $$ ans(:, :, ips) = scale \sum_{I=1}^{nns} N(I, ips)\, obj(:, :, I) $$
+!   For a quadrature `obj`
+!   $$ ans(:, :, ips) = scale\, obj(:, :, ips) $$
 !
 ! Examples
 !
-!```fortran
-! CALL GetInterpolation_(obj=obj, rank=TypeFEVariableMatrix, &
-!                        vartype=TypeFEVariableSpace, N=N, nns=nns, &
-!                        nips=nips, scale=1.0_DFP, &
-!                        addContribution=.FALSE., timeIndx=timeIndx, &
-!                        ans=ans)
-!```
+! - [test 3](|base|FEVariable/examples/GetInterpolation__test_3.F90)
+! - [test 7](|base|FEVariable/examples/GetInterpolation__test_7.F90)
 !
-! Full example:
-! src/modules/FEVariable/examples/GetInterpolation__test_3.F90
+! See also: [[MatrixSpaceGetInterpolation_1]]
 
 INTERFACE GetInterpolation_
   MODULE PURE SUBROUTINE MatrixSpaceGetInterpolation_2( &
@@ -337,11 +349,11 @@ INTERFACE GetInterpolation_
     REAL(DFP), INTENT(IN) :: scale
     !! scale factor applied to the interpolated value
     LOGICAL(LGT), INTENT(IN) :: addContribution
-    !! if true, the interpolated value is added to ans
+    !! if true, adds the interpolated value to ans
     INTEGER(I4B), INTENT(IN) :: timeIndx
     !! time quadrature point index
     TYPE(FEVariable_), INTENT(INOUT) :: ans
-    !! quadrature variable, values written at timeIndx
+    !! quadrature variable, the routine writes the slice `timeIndx`
   END SUBROUTINE MatrixSpaceGetInterpolation_2
 END INTERFACE GetInterpolation_
 
@@ -353,27 +365,36 @@ END INTERFACE GetInterpolation_
 ! date: 2025-08-29
 ! summary: Interpolation of matrix, space, at one quadrature point
 !
-! Writes the interpolated value in `ans(1:nrow, 1:ncol)`:
+! Interpolates a matrix that varies in space at one quadrature point.
+! The point is `spaceIndx`.
+! The result goes to `ans(1:nrow, 1:ncol)`.
+! The routine returns `nrow` and `ncol`.
 !
-! - nodal:
-!   `ans(:, :) = scale * SUM_I N(I, spaceIndx) * obj(:, :, I)`
-! - quadrature (`N` is not used):
-!   `ans(:, :) = scale * obj(:, :, spaceIndx)`
+! The result depends on whether `obj` holds nodal or quadrature values.
 !
-! If `addContribution` is false, `ans` is cleared first.
+! - If `obj` is nodal, the routine uses the shape functions `N`.
+! - If `obj` holds quadrature values, the routine copies
+!   the values and ignores `N` and `nns`.
+!
+! If `addContribution` is false, it clears that part of `ans` first.
+! Otherwise it adds to the values already in `ans`.
+!
+! @note
+! `timeIndx` is not used for a space variable.
+! @endnote
+!
+! Formula:
+!   For a nodal `obj`
+!   $$ ans = scale \sum_{I=1}^{nns} N(I, spaceIndx)\, obj(:, :, I) $$
+!   For a quadrature `obj`
+!   $$ ans = scale\, obj(:, :, spaceIndx) $$
 !
 ! Examples
 !
-!```fortran
-! CALL GetInterpolation_(obj=obj, rank=TypeFEVariableMatrix, &
-!                        vartype=TypeFEVariableSpace, N=N, nns=nns, &
-!                        spaceIndx=ips, timeIndx=1, scale=1.0_DFP, &
-!                        addContribution=.FALSE., ans=ans, nrow=nrow, &
-!                        ncol=ncol)
-!```
+! - [test 3](|base|FEVariable/examples/GetInterpolation__test_3.F90)
+! - [test 7](|base|FEVariable/examples/GetInterpolation__test_7.F90)
 !
-! Full example:
-! src/modules/FEVariable/examples/GetInterpolation__test_3.F90
+! See also: [[MatrixSpaceGetInterpolation_1]]
 
 INTERFACE GetInterpolation_
   MODULE PURE SUBROUTINE MatrixSpaceGetInterpolation_3( &
@@ -398,7 +419,7 @@ INTERFACE GetInterpolation_
     REAL(DFP), INTENT(IN) :: scale
     !! scale factor applied to the interpolated value
     LOGICAL(LGT), INTENT(IN) :: addContribution
-    !! if true, the interpolated value is added to ans
+    !! if true, adds the interpolated value to ans
     INTEGER(I4B), INTENT(OUT) :: nrow
     !! number of rows written in ans
     INTEGER(I4B), INTENT(OUT) :: ncol
@@ -414,27 +435,36 @@ END INTERFACE GetInterpolation_
 ! date: 2025-08-29
 ! summary: Interpolation of matrix, space-time, at all quadrature points
 !
-! Writes the interpolated value in `ans(1:dim1, 1:dim2, 1:nips)`:
+! Interpolates a matrix that varies in space and time at every space
+! quadrature point.
+! The result goes to `ans(1:dim1, 1:dim2, 1:nips)`.
+! The routine returns `dim1`, `dim2` and `dim3 = nips`.
 !
-! - nodal:
-!   `ans(:, :, ips) = scale * SUM_a T(a) SUM_I N(I, ips) * obj(:, :, I, a)`
-! - quadrature (`N` and `T` are not used):
-!   `ans(:, :, ips) = scale * obj(:, :, ips, timeIndx)`
+! The result depends on whether `obj` holds nodal or quadrature values.
 !
-! If `addContribution` is false, `ans` is cleared first.
+! - If `obj` is nodal, the routine uses `N` and the time shape
+!   functions `T`. It ignores `timeIndx`.
+! - If `obj` holds quadrature values, the routine copies the
+!   values of the time point `timeIndx`. It ignores `N`, `nns`, `T`
+!   and `nnt`.
+!
+! If `addContribution` is false, it clears that part of `ans` first.
+! Otherwise it adds to the values already in `ans`.
+!
+! Formula:
+!   For a nodal `obj`
+!   $$ ans(:, :, ips) = scale \sum_{a=1}^{nnt} T(a)
+!      \sum_{I=1}^{nns} N(I, ips)\, obj(:, :, I, a) $$
+!   For a quadrature `obj`
+!   $$ ans(:, :, ips) = scale\, obj(:, :, ips, timeIndx) $$
 !
 ! Examples
 !
-!```fortran
-! CALL GetInterpolation_(obj=obj, rank=TypeFEVariableMatrix, &
-!                        vartype=TypeFEVariableSpaceTime, N=N, nns=nns, &
-!                        nips=nips, T=T, nnt=nnt, scale=1.0_DFP, &
-!                        addContribution=.FALSE., ans=ans, dim1=dim1, &
-!                        dim2=dim2, dim3=dim3, timeIndx=1)
-!```
+! - [test 3](|base|FEVariable/examples/GetInterpolation__test_3.F90)
+! - [test 7](|base|FEVariable/examples/GetInterpolation__test_7.F90)
 !
-! Full example:
-! src/modules/FEVariable/examples/GetInterpolation__test_3.F90
+! See also: [[MatrixSpaceTimeGetInterpolation_2]],
+! [[MatrixSpaceTimeGetInterpolation_3]]
 
 INTERFACE GetInterpolation_
   MODULE PURE SUBROUTINE MatrixSpaceTimeGetInterpolation_1( &
@@ -461,7 +491,7 @@ INTERFACE GetInterpolation_
     REAL(DFP), INTENT(IN) :: scale
     !! scale factor applied to the interpolated value
     LOGICAL(LGT), INTENT(IN) :: addContribution
-    !! if true, the interpolated value is added to ans
+    !! if true, adds the interpolated value to ans
     INTEGER(I4B), INTENT(OUT) :: dim1
     !! size of dim1 written in ans
     INTEGER(I4B), INTENT(OUT) :: dim2
@@ -481,31 +511,38 @@ END INTERFACE GetInterpolation_
 ! date: 2025-08-29
 ! summary: Interpolation of matrix, space-time, into a FEVariable
 !
-! Writes the interpolated value in `ans%val` of the time slice `timeIndx`:
+! Interpolates a matrix that varies in space and time at every space
+! quadrature point.
+! The result goes into the time slice `timeIndx` of `ans%val`.
 !
-! - nodal:
-!   `ans(:, :, ips) = scale * SUM_a T(a) SUM_I N(I, ips) * obj(:, :, I, a)`
-! - quadrature (`N` and `T` are not used):
-!   `ans(:, :, ips) = scale * obj(:, :, ips, timeIndx)`
+! The result depends on whether `obj` holds nodal or quadrature values.
 !
-! `ans` must already be a quadrature FEVariable_ with the shape of the
-! result; the values of time point `timeIndx` start after
-! `(timeIndx - 1)` time slices. `ans%s`, `ans%len` and the other
-! components of `ans` are not changed.
-! If `addContribution` is false, that time slice is cleared first.
+! - If `obj` is nodal, the routine uses `N` and the time shape
+!   functions `T`.
+! - If `obj` holds quadrature values, the routine copies the
+!   values of the time point `timeIndx`. It ignores `N`, `nns`, `T`
+!   and `nnt`.
+!
+! `ans` must be a quadrature `FEVariable_` that already has its shape.
+! The routine changes only the values of the slice `timeIndx`.
+! It leaves `ans%s`, `ans%len` and the other components as they are.
+!
+! If `addContribution` is false, it clears that slice first.
+! Otherwise it adds to the values already in the slice.
+!
+! Formula:
+!   For a nodal `obj`
+!   $$ ans(:, :, ips) = scale \sum_{a=1}^{nnt} T(a)
+!      \sum_{I=1}^{nns} N(I, ips)\, obj(:, :, I, a) $$
+!   For a quadrature `obj`
+!   $$ ans(:, :, ips) = scale\, obj(:, :, ips, timeIndx) $$
 !
 ! Examples
 !
-!```fortran
-! CALL GetInterpolation_(obj=obj, rank=TypeFEVariableMatrix, &
-!                        vartype=TypeFEVariableSpaceTime, N=N, nns=nns, &
-!                        nips=nips, T=T, nnt=nnt, scale=1.0_DFP, &
-!                        addContribution=.FALSE., timeIndx=timeIndx, &
-!                        ans=ans)
-!```
+! - [test 3](|base|FEVariable/examples/GetInterpolation__test_3.F90)
+! - [test 7](|base|FEVariable/examples/GetInterpolation__test_7.F90)
 !
-! Full example:
-! src/modules/FEVariable/examples/GetInterpolation__test_3.F90
+! See also: [[MatrixSpaceTimeGetInterpolation_1]]
 
 INTERFACE GetInterpolation_
   MODULE PURE SUBROUTINE MatrixSpaceTimeGetInterpolation_2( &
@@ -530,11 +567,11 @@ INTERFACE GetInterpolation_
     REAL(DFP), INTENT(IN) :: scale
     !! scale factor applied to the interpolated value
     LOGICAL(LGT), INTENT(IN) :: addContribution
-    !! if true, the interpolated value is added to ans
+    !! if true, adds the interpolated value to ans
     INTEGER(I4B), INTENT(IN) :: timeIndx
     !! time quadrature point index
     TYPE(FEVariable_), INTENT(INOUT) :: ans
-    !! quadrature variable, values written at timeIndx
+    !! quadrature variable, the routine writes the slice `timeIndx`
   END SUBROUTINE MatrixSpaceTimeGetInterpolation_2
 END INTERFACE GetInterpolation_
 
@@ -546,27 +583,36 @@ END INTERFACE GetInterpolation_
 ! date: 2025-08-29
 ! summary: Interpolation of matrix, space-time, at one quadrature point
 !
-! Writes the interpolated value in `ans(1:nrow, 1:ncol)`:
+! Interpolates a matrix that varies in space and time at one space
+! quadrature point.
+! The point is `spaceIndx`.
+! The result goes to `ans(1:nrow, 1:ncol)`.
+! The routine returns `nrow` and `ncol`.
 !
-! - nodal:
-!   `ans(:, :) = scale * SUM_a T(a) SUM_I N(I, spaceIndx) * obj(:, :, I, a)`
-! - quadrature (`N` and `T` are not used):
-!   `ans(:, :) = scale * obj(:, :, spaceIndx, timeIndx)`
+! The result depends on whether `obj` holds nodal or quadrature values.
 !
-! If `addContribution` is false, `ans` is cleared first.
+! - If `obj` is nodal, the routine uses `N` and the time shape
+!   functions `T`. It ignores `timeIndx`.
+! - If `obj` holds quadrature values, the routine copies the
+!   values of the point `spaceIndx` at the time point `timeIndx`.
+!   It ignores `N`, `nns`, `T` and `nnt`.
+!
+! If `addContribution` is false, it clears that part of `ans` first.
+! Otherwise it adds to the values already in `ans`.
+!
+! Formula:
+!   For a nodal `obj`
+!   $$ ans = scale \sum_{a=1}^{nnt} T(a)
+!      \sum_{I=1}^{nns} N(I, spaceIndx)\, obj(:, :, I, a) $$
+!   For a quadrature `obj`
+!   $$ ans = scale\, obj(:, :, spaceIndx, timeIndx) $$
 !
 ! Examples
 !
-!```fortran
-! CALL GetInterpolation_(obj=obj, rank=TypeFEVariableMatrix, &
-!                        vartype=TypeFEVariableSpaceTime, N=N, nns=nns, &
-!                        spaceIndx=ips, timeIndx=1, T=T, nnt=nnt, &
-!                        scale=1.0_DFP, addContribution=.FALSE., ans=ans, &
-!                        nrow=nrow, ncol=ncol)
-!```
+! - [test 3](|base|FEVariable/examples/GetInterpolation__test_3.F90)
+! - [test 7](|base|FEVariable/examples/GetInterpolation__test_7.F90)
 !
-! Full example:
-! src/modules/FEVariable/examples/GetInterpolation__test_3.F90
+! See also: [[MatrixSpaceTimeGetInterpolation_1]]
 
 INTERFACE GetInterpolation_
   MODULE PURE SUBROUTINE MatrixSpaceTimeGetInterpolation_3( &
@@ -595,7 +641,7 @@ INTERFACE GetInterpolation_
     REAL(DFP), INTENT(IN) :: scale
     !! scale factor applied to the interpolated value
     LOGICAL(LGT), INTENT(IN) :: addContribution
-    !! if true, the interpolated value is added to ans
+    !! if true, adds the interpolated value to ans
     INTEGER(I4B), INTENT(OUT) :: nrow
     !! number of rows written in ans
     INTEGER(I4B), INTENT(OUT) :: ncol
@@ -611,22 +657,25 @@ END INTERFACE GetInterpolation_
 ! date: 2025-08-29
 ! summary: Interpolation of matrix at one point, any variable type
 !
-! Calls the `_3` form of the variable type of `obj`: constant, space or
-! space-time. For a time variable nothing is done and `ans` is not
-! changed.
-
+! Interpolates a matrix at one quadrature point, for any variable type.
+! The routine reads the variable type from `obj`.
+! It then does the same as the routine for that type.
+! The result goes to `ans(1:nrow, 1:ncol)`.
+! The routine returns `nrow` and `ncol`.
+!
+! 1. A constant `obj` follows [[MatrixConstantGetInterpolation_3]].
+! 2. A space `obj` follows [[MatrixSpaceGetInterpolation_3]].
+! 3. A space-time `obj` follows [[MatrixSpaceTimeGetInterpolation_3]].
+!
+! @note
+! A time variable does nothing.
+! `ans`, `nrow` and `ncol` stay unchanged.
+! @endnote
 !
 ! Examples
 !
-!```fortran
-! CALL GetInterpolation_(obj=obj, rank=TypeFEVariableMatrix, N=N, nns=nns, &
-!                        spaceIndx=ips, timeIndx=1, T=T, nnt=nnt, &
-!                        scale=1.0_DFP, addContribution=.FALSE., ans=ans, &
-!                        nrow=nrow, ncol=ncol)
-!```
-!
-! Full example:
-! src/modules/FEVariable/examples/GetInterpolation__test_3.F90
+! - [test 3](|base|FEVariable/examples/GetInterpolation__test_3.F90)
+! - [test 7](|base|FEVariable/examples/GetInterpolation__test_7.F90)
 
 INTERFACE GetInterpolation_
   MODULE PURE SUBROUTINE MatrixGetInterpolation_3( &
@@ -653,7 +702,7 @@ INTERFACE GetInterpolation_
     REAL(DFP), INTENT(IN) :: scale
     !! scale factor applied to the interpolated value
     LOGICAL(LGT), INTENT(IN) :: addContribution
-    !! if true, the interpolated value is added to ans
+    !! if true, adds the interpolated value to ans
     INTEGER(I4B), INTENT(OUT) :: nrow
     !! number of rows written in ans
     INTEGER(I4B), INTENT(OUT) :: ncol

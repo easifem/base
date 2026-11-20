@@ -45,19 +45,20 @@ PUBLIC :: MEAN
 ! date: 2022-05-27
 ! summary: FEVariable = Mean( obj )
 !
-! Returns a constant FEVariable_ with the same rank and `defineOn` as
-! `obj`, whose value is the mean of `obj` over all space and time points.
-! See [[fevar_Mean2]], [[fevar_Mean3]] and [[fevar_Mean4]].
+! Returns the mean of `obj` as a constant `FEVariable_`.
+! The mean averages over all space and time points.
+!
+! The result has the same rank and `defineOn` as `obj`.
+! The rank can be scalar, vector or matrix.
 !
 ! Examples
 !
-!```fortran
-! TYPE(FEVariable_) :: obj, ans
-! obj = NodalVariable(val, TypeFEVariableVector, TypeFEVariableSpace)
-! ans = MEAN(obj)
-!```
+! - [test 1](|base|FEVariable/examples/Mean_test_1.F90) with scalar and
+!   vector variables
+! - [test 2](|base|FEVariable/examples/Mean_test_2.F90) with matrix
+!   variables and constant input
 !
-! Full example: src/modules/FEVariable/examples/Mean_test_1.F90
+! See also: [[fevar_Mean2]], [[fevar_Mean3]], [[fevar_Mean4]]
 
 INTERFACE MEAN
   MODULE PURE FUNCTION fevar_Mean1(obj) RESULT(ans)
@@ -76,16 +77,15 @@ END INTERFACE MEAN
 ! date: 2022-05-27
 ! summary: Mean of a scalar FEVariable
 !
-! Returns `SUM(obj%val(1:len)) / len`, the mean over all space and time
-! points of a scalar variable.
+! Returns the mean of a scalar variable as a real number.
+! The mean is `SUM(obj%val(1:obj%len)) / obj%len`.
+! It covers all space and time points.
 !
 ! Examples
 !
-!```fortran
-! ans = MEAN(obj, TypeFEVariableScalar)
-!```
+! - [test 1](|base|FEVariable/examples/Mean_test_1.F90)
 !
-! Full example: src/modules/FEVariable/examples/Mean_test_1.F90
+! See also: [[fevar_Mean1]]
 
 INTERFACE MEAN
   MODULE PURE FUNCTION fevar_Mean2(obj, dataType) RESULT(ans)
@@ -106,17 +106,17 @@ END INTERFACE MEAN
 ! date: 2022-05-27
 ! summary: Mean of a vector FEVariable
 !
-! Returns the mean vector over all space and time points of a vector
-! variable, `SIZE(ans) = obj%s(1)`. For a constant variable the vector
-! itself is returned.
+! Returns the mean vector of a vector variable.
+! The mean averages over all space and time points.
+! The result has size `obj%s(1)`.
+!
+! For a constant variable, it returns the vector itself.
 !
 ! Examples
 !
-!```fortran
-! ans = MEAN(obj, TypeFEVariableVector)
-!```
+! - [test 1](|base|FEVariable/examples/Mean_test_1.F90)
 !
-! Full example: src/modules/FEVariable/examples/Mean_test_1.F90
+! See also: [[fevar_Mean1]]
 
 INTERFACE MEAN
   MODULE PURE FUNCTION fevar_Mean3(obj, dataType) RESULT(ans)
@@ -125,7 +125,7 @@ INTERFACE MEAN
     TYPE(FEVariableVector_), INTENT(IN) :: dataType
     !! TypeFEVariableVector
     REAL(DFP), ALLOCATABLE :: ans(:)
-    !! mean vector, SIZE(ans) = obj%s(1)
+    !! mean vector, `SIZE(ans) = obj%s(1)`
   END FUNCTION fevar_Mean3
 END INTERFACE MEAN
 
@@ -137,21 +137,22 @@ END INTERFACE MEAN
 ! date: 2022-05-27
 ! summary: Mean of a matrix FEVariable
 !
-! Returns the mean matrix over all space and time points of a matrix
-! variable, `SHAPE(ans) = obj%s(1:2)`. For a constant variable the matrix
-! itself is returned.
+! Returns the mean matrix of a matrix variable.
+! The mean averages over all space and time points.
+! The result has shape `obj%s(1:2)`.
+!
+! For a constant variable, it returns the matrix itself.
 !
 ! Changes:
-!   - 2026-11-14: the sum is initialised to zero for space, time and
+!   - 2026-11-14: Starts the sum from zero for space, time and
 !     space-time variables
 !
 ! Examples
 !
-!```fortran
-! ans = MEAN(obj, TypeFEVariableMatrix)
-!```
+! - [test 1](|base|FEVariable/examples/Mean_test_1.F90) with 2x2 matrices
+! - [test 2](|base|FEVariable/examples/Mean_test_2.F90) with 2x3 matrices
 !
-! Full example: src/modules/FEVariable/examples/Mean_test_1.F90
+! See also: [[fevar_Mean1]]
 
 INTERFACE MEAN
   MODULE PURE FUNCTION fevar_Mean4(obj, dataType) RESULT(ans)
@@ -160,7 +161,7 @@ INTERFACE MEAN
     TYPE(FEVariableMatrix_), INTENT(IN) :: dataType
     !! TypeFEVariableMatrix
     REAL(DFP), ALLOCATABLE :: ans(:, :)
-    !! mean matrix, SHAPE(ans) = obj%s(1:2)
+    !! mean matrix, `SHAPE(ans) = obj%s(1:2)`
   END FUNCTION fevar_Mean4
 END INTERFACE MEAN
 

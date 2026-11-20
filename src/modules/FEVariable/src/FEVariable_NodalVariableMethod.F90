@@ -16,15 +16,22 @@
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2021-12-10
-! summary: Constructors of nodal variables (NodalVariable)
+! summary: Constructors of nodal variables (`NodalVariable`)
 !
-! `NodalVariable` returns a FEVariable_ with `defineOn` set to
-! nodal.
-! The rank (TypeFEVariableScalar, TypeFEVariableVector,
-! TypeFEVariableMatrix) and the variable type
-! (TypeFEVariableConstant, TypeFEVariableSpace, TypeFEVariableTime,
-! TypeFEVariableSpaceTime) are passed as type arguments and select
-! the specific procedure. Values are stored column major in `val`.
+! The generic `NodalVariable` returns a `FEVariable_` defined on nodes.
+! A nodal variable holds one value, vector or matrix per node.
+!
+! Two type arguments select the specific procedure.
+! The first is the rank: `TypeFEVariableScalar`, `TypeFEVariableVector`
+! or `TypeFEVariableMatrix`.
+! The second is the variable type: `TypeFEVariableConstant`,
+! `TypeFEVariableSpace`, `TypeFEVariableTime` or
+! `TypeFEVariableSpaceTime`.
+!
+! Each combination has up to three constructors.
+! One takes an array of values. One takes flat values and a shape.
+! One takes only the sizes and sets all values to zero.
+! The variable keeps its values in column major order.
 ! The shape `s` of each combination is:
 !
 ! - scalar, constant: [1]
@@ -40,7 +47,9 @@
 ! - matrix, time: [nrow, ncol, nnt]
 ! - matrix, space-time: [nrow, ncol, nns, nnt]
 !
-! where nns and nnt are the number of nodes in space and time
+! Here `nns` and `nnt` are the number of nodes in space and in time.
+! The vector length is `ncomp`.
+! The matrix has `nrow` rows and `ncol` columns.
 
 MODULE FEVariable_NodalVariableMethod
 USE BaseType, ONLY: FEVariable_, &
@@ -68,20 +77,13 @@ PUBLIC :: NodalVariable
 ! date: 2021-12-10
 ! summary: Create nodal variable, scalar, constant, from values
 !
-! Create a scalar, constant nodal variable with `s = [1]`, `len = 1` and
-! `val(1) = val`.
+! Returns a nodal variable that holds one constant scalar value.
+!
+! The result has shape `s = [1]` and length `1`. Its only entry is `val`.
 !
 ! Examples
 !
-!```fortran
-! TYPE(FEVariable_) :: obj
-! REAL(DFP) :: val
-! val = 1.0_DFP
-! obj = NodalVariable(val, TypeFEVariableScalar, &
-!                     TypeFEVariableConstant)
-!```
-!
-! Full example: src/modules/FEVariable/examples/NodalVariable_test_1.F90
+! - [test 1](|base|FEVariable/examples/NodalVariable_test_1.F90)
 
 INTERFACE NodalVariable
   MODULE PURE FUNCTION Nodal_Scalar_Constant(val, rank, vartype) RESULT(obj)
@@ -90,9 +92,9 @@ INTERFACE NodalVariable
     REAL(DFP), INTENT(IN) :: val
     !! constant value
     CLASS(FEVariableScalar_), INTENT(IN) :: rank
-    !! TypeFEVariableScalar
+    !! use `TypeFEVariableScalar`
     CLASS(FEVariableConstant_), INTENT(IN) :: vartype
-    !! TypeFEVariableConstant
+    !! use `TypeFEVariableConstant`
   END FUNCTION Nodal_Scalar_Constant
 END INTERFACE NodalVariable
 
@@ -104,32 +106,26 @@ END INTERFACE NodalVariable
 ! date: 2021-12-10
 ! summary: Create nodal variable, scalar, space, from values
 !
-! Create a scalar, space nodal variable from `val`. The shape is
-! `s = SHAPE(val) = [nns]`, `len = PRODUCT(s)`, and `val` is stored column
-! major.
+! Returns a scalar nodal variable that varies in space.
+! The array `val` holds one value for each node.
+!
+! The shape is `s = [nns]`, where `nns` is `SIZE(val)`.
+! The length is `nns`.
 !
 ! Examples
 !
-!```fortran
-! TYPE(FEVariable_) :: obj
-! REAL(DFP) :: val(3)
-! val = 1.0_DFP
-! obj = NodalVariable(val, TypeFEVariableScalar, &
-!                     TypeFEVariableSpace)
-!```
-!
-! Full example: src/modules/FEVariable/examples/NodalVariable_test_1.F90
+! - [test 1](|base|FEVariable/examples/NodalVariable_test_1.F90)
 
 INTERFACE NodalVariable
   MODULE PURE FUNCTION Nodal_Scalar_Space(val, rank, vartype) RESULT(obj)
     TYPE(FEVariable_) :: obj
     !! nodal variable
     REAL(DFP), INTENT(IN) :: val(:)
-    !! values, SHAPE(val) = [nns]
+    !! nodal values, `SIZE(val) = nns`
     TYPE(FEVariableScalar_), INTENT(IN) :: rank
-    !! TypeFEVariableScalar
+    !! use `TypeFEVariableScalar`
     TYPE(FEVariableSpace_), INTENT(IN) :: vartype
-    !! TypeFEVariableSpace
+    !! use `TypeFEVariableSpace`
   END FUNCTION Nodal_Scalar_Space
 END INTERFACE NodalVariable
 
@@ -141,19 +137,16 @@ END INTERFACE NodalVariable
 ! date: 2025-11-04
 ! summary: Create nodal variable, scalar, space, with zero values
 !
-! Create a scalar, space nodal variable with shape `s = [nns]` given by the
-! size arguments, `len = PRODUCT(s)` and all values zero.
+! Returns a scalar nodal variable that varies in space.
+! All values are zero.
+!
+! The shape is `s = [tsize]` and the length is `tsize`.
 !
 ! Examples
 !
-!```fortran
-! TYPE(FEVariable_) :: obj
-! obj = NodalVariable(tsize=2, &
-!                     rank=TypeFEVariableScalar, &
-!                     vartype=TypeFEVariableSpace)
-!```
-!
-! Full example: src/modules/FEVariable/examples/NodalVariable_test_1.F90
+! - [test 1](|base|FEVariable/examples/NodalVariable_test_1.F90)
+! - [test 2](|base|FEVariable/examples/NodalVariable_test_2.F90) with
+!   zero nodes and with reassignment
 
 INTERFACE NodalVariable
   MODULE PURE FUNCTION Nodal_Scalar_Space2(tsize, rank, vartype) RESULT(obj)
@@ -162,9 +155,9 @@ INTERFACE NodalVariable
     INTEGER(I4B), INTENT(IN) :: tsize
     !! number of nodes in space
     TYPE(FEVariableScalar_), INTENT(IN) :: rank
-    !! TypeFEVariableScalar
+    !! use `TypeFEVariableScalar`
     TYPE(FEVariableSpace_), INTENT(IN) :: vartype
-    !! TypeFEVariableSpace
+    !! use `TypeFEVariableSpace`
   END FUNCTION Nodal_Scalar_Space2
 END INTERFACE NodalVariable
 
@@ -176,32 +169,26 @@ END INTERFACE NodalVariable
 ! date: 2021-12-10
 ! summary: Create nodal variable, scalar, time, from values
 !
-! Create a scalar, time nodal variable from `val`. The shape is
-! `s = SHAPE(val) = [nnt]`, `len = PRODUCT(s)`, and `val` is stored column
-! major.
+! Returns a scalar nodal variable that varies in time.
+! The array `val` holds one value for each time node.
+!
+! The shape is `s = [nnt]`, where `nnt` is `SIZE(val)`.
+! The length is `nnt`.
 !
 ! Examples
 !
-!```fortran
-! TYPE(FEVariable_) :: obj
-! REAL(DFP) :: val(3)
-! val = 1.0_DFP
-! obj = NodalVariable(val, TypeFEVariableScalar, &
-!                     TypeFEVariableTime)
-!```
-!
-! Full example: src/modules/FEVariable/examples/NodalVariable_test_1.F90
+! - [test 1](|base|FEVariable/examples/NodalVariable_test_1.F90)
 
 INTERFACE NodalVariable
   MODULE PURE FUNCTION Nodal_Scalar_Time(val, rank, vartype) RESULT(obj)
     TYPE(FEVariable_) :: obj
     !! nodal variable
     REAL(DFP), INTENT(IN) :: val(:)
-    !! values, SHAPE(val) = [nnt]
+    !! nodal values, `SIZE(val) = nnt`
     TYPE(FEVariableScalar_), INTENT(IN) :: rank
-    !! TypeFEVariableScalar
+    !! use `TypeFEVariableScalar`
     TYPE(FEVariableTime_), INTENT(IN) :: vartype
-    !! TypeFEVariableTime
+    !! use `TypeFEVariableTime`
   END FUNCTION Nodal_Scalar_Time
 END INTERFACE NodalVariable
 
@@ -213,19 +200,16 @@ END INTERFACE NodalVariable
 ! date: 2021-12-10
 ! summary: Create nodal variable, scalar, time, with zero values
 !
-! Create a scalar, time nodal variable with shape `s = [nnt]` given by the
-! size arguments, `len = PRODUCT(s)` and all values zero.
+! Returns a scalar nodal variable that varies in time.
+! All values are zero.
+!
+! The shape is `s = [tsize]` and the length is `tsize`.
 !
 ! Examples
 !
-!```fortran
-! TYPE(FEVariable_) :: obj
-! obj = NodalVariable(tsize=2, &
-!                     rank=TypeFEVariableScalar, &
-!                     vartype=TypeFEVariableTime)
-!```
-!
-! Full example: src/modules/FEVariable/examples/NodalVariable_test_1.F90
+! - [test 1](|base|FEVariable/examples/NodalVariable_test_1.F90)
+! - [test 2](|base|FEVariable/examples/NodalVariable_test_2.F90) with
+!   reassignment
 
 INTERFACE NodalVariable
   MODULE PURE FUNCTION Nodal_Scalar_Time2(tsize, rank, vartype) RESULT(obj)
@@ -234,9 +218,9 @@ INTERFACE NodalVariable
     INTEGER(I4B), INTENT(IN) :: tsize
     !! number of nodes in time
     TYPE(FEVariableScalar_), INTENT(IN) :: rank
-    !! TypeFEVariableScalar
+    !! use `TypeFEVariableScalar`
     TYPE(FEVariableTime_), INTENT(IN) :: vartype
-    !! TypeFEVariableTime
+    !! use `TypeFEVariableTime`
   END FUNCTION Nodal_Scalar_Time2
 END INTERFACE NodalVariable
 
@@ -248,32 +232,27 @@ END INTERFACE NodalVariable
 ! date: 2021-12-10
 ! summary: Create nodal variable, scalar, space-time, from values
 !
-! Create a scalar, space-time nodal variable from `val`. The shape is
-! `s = SHAPE(val) = [nns, nnt]`, `len = PRODUCT(s)`, and `val` is stored
-! column major.
+! Returns a scalar nodal variable that varies in space and time.
+! The entry `val(i, j)` is the value at space node `i` and time node `j`.
+!
+! The shape is `s = [nns, nnt]`, taken from `SHAPE(val)`.
+! The length is `nns * nnt`.
+! The variable keeps the values column by column.
 !
 ! Examples
 !
-!```fortran
-! TYPE(FEVariable_) :: obj
-! REAL(DFP) :: val(2, 2)
-! val = 1.0_DFP
-! obj = NodalVariable(val, TypeFEVariableScalar, &
-!                     TypeFEVariableSpaceTime)
-!```
-!
-! Full example: src/modules/FEVariable/examples/NodalVariable_test_1.F90
+! - [test 1](|base|FEVariable/examples/NodalVariable_test_1.F90)
 
 INTERFACE NodalVariable
   MODULE PURE FUNCTION Nodal_Scalar_SpaceTime(val, rank, vartype) RESULT(obj)
     TYPE(FEVariable_) :: obj
     !! nodal variable
     REAL(DFP), INTENT(IN) :: val(:, :)
-    !! values, SHAPE(val) = [nns, nnt]
+    !! nodal values, `SHAPE(val) = [nns, nnt]`
     TYPE(FEVariableScalar_), INTENT(IN) :: rank
-    !! TypeFEVariableScalar
+    !! use `TypeFEVariableScalar`
     TYPE(FEVariableSpaceTime_), INTENT(IN) :: vartype
-    !! TypeFEVariableSpaceTime
+    !! use `TypeFEVariableSpaceTime`
   END FUNCTION Nodal_Scalar_SpaceTime
 END INTERFACE NodalVariable
 
@@ -285,20 +264,22 @@ END INTERFACE NodalVariable
 ! date: 2021-12-10
 ! summary: Create nodal variable, scalar, space-time, from flat values
 !
-! Create a scalar, space-time nodal variable with shape `s = [nns, nnt]` and
-! `len = PRODUCT(s)`. The data `val(1:len)` must be in column major order.
+! Returns a scalar nodal variable that varies in space and time.
+! The values come from a flat array and the shape comes from `s`.
+!
+! The length is `s(1) * s(2)`.
+! The code reads the first `s(1) * s(2)` entries of `val` in column major
+! order. The space index runs fastest.
+!
+! @note
+! `SIZE(val)` must be at least `s(1) * s(2)`.
+! @endnote
 !
 ! Examples
 !
-!```fortran
-! TYPE(FEVariable_) :: obj
-! REAL(DFP) :: val(4)
-! val = 1.0_DFP
-! obj = NodalVariable(val, TypeFEVariableScalar, &
-!                     TypeFEVariableSpaceTime, [2, 2])
-!```
-!
-! Full example: src/modules/FEVariable/examples/NodalVariable_test_1.F90
+! - [test 1](|base|FEVariable/examples/NodalVariable_test_1.F90)
+! - [test 2](|base|FEVariable/examples/NodalVariable_test_2.F90) with a
+!   longer `val`
 
 INTERFACE NodalVariable
   MODULE PURE FUNCTION Nodal_Scalar_SpaceTime2( &
@@ -306,13 +287,13 @@ INTERFACE NodalVariable
     TYPE(FEVariable_) :: obj
     !! nodal variable
     REAL(DFP), INTENT(IN) :: val(:)
-    !! values in column major order, SIZE(val) >= PRODUCT(s)
+    !! values in column major order, `SIZE(val) >= PRODUCT(s)`
     TYPE(FEVariableScalar_), INTENT(IN) :: rank
-    !! TypeFEVariableScalar
+    !! use `TypeFEVariableScalar`
     TYPE(FEVariableSpaceTime_), INTENT(IN) :: vartype
-    !! TypeFEVariableSpaceTime
+    !! use `TypeFEVariableSpaceTime`
     INTEGER(I4B), INTENT(IN) :: s(2)
-    !! shape of data, [nns, nnt]
+    !! shape of the data, `[nns, nnt]`
   END FUNCTION Nodal_Scalar_SpaceTime2
 END INTERFACE NodalVariable
 
@@ -324,19 +305,16 @@ END INTERFACE NodalVariable
 ! date: 2021-12-10
 ! summary: Create nodal variable, scalar, space-time, with zero values
 !
-! Create a scalar, space-time nodal variable with shape `s = [nns, nnt]` given
-! by the size arguments, `len = PRODUCT(s)` and all values zero.
+! Returns a scalar nodal variable that varies in space and time.
+! All values are zero.
+!
+! The shape is `s = [nrow, ncol]` and the length is `nrow * ncol`.
 !
 ! Examples
 !
-!```fortran
-! TYPE(FEVariable_) :: obj
-! obj = NodalVariable(nrow=2, ncol=2, &
-!                     rank=TypeFEVariableScalar, &
-!                     vartype=TypeFEVariableSpaceTime)
-!```
-!
-! Full example: src/modules/FEVariable/examples/NodalVariable_test_1.F90
+! - [test 1](|base|FEVariable/examples/NodalVariable_test_1.F90)
+! - [test 2](|base|FEVariable/examples/NodalVariable_test_2.F90) with
+!   check of the zero values
 
 INTERFACE NodalVariable
   MODULE PURE FUNCTION Nodal_Scalar_SpaceTime3( &
@@ -348,9 +326,9 @@ INTERFACE NodalVariable
     INTEGER(I4B), INTENT(IN) :: ncol
     !! number of nodes in time
     TYPE(FEVariableScalar_), INTENT(IN) :: rank
-    !! TypeFEVariableScalar
+    !! use `TypeFEVariableScalar`
     TYPE(FEVariableSpaceTime_), INTENT(IN) :: vartype
-    !! TypeFEVariableSpaceTime
+    !! use `TypeFEVariableSpaceTime`
   END FUNCTION Nodal_Scalar_SpaceTime3
 END INTERFACE NodalVariable
 
@@ -362,32 +340,26 @@ END INTERFACE NodalVariable
 ! date: 2021-12-10
 ! summary: Create nodal variable, vector, constant, from values
 !
-! Create a vector, constant nodal variable from `val`. The shape is
-! `s = SHAPE(val) = [ncomp]`, `len = PRODUCT(s)`, and `val` is stored column
-! major.
+! Returns a constant vector nodal variable.
+! The array `val` holds one value for each component.
+!
+! The shape is `s = [ncomp]`, where `ncomp` is `SIZE(val)`.
+! The length is `ncomp`.
 !
 ! Examples
 !
-!```fortran
-! TYPE(FEVariable_) :: obj
-! REAL(DFP) :: val(3)
-! val = 1.0_DFP
-! obj = NodalVariable(val, TypeFEVariableVector, &
-!                     TypeFEVariableConstant)
-!```
-!
-! Full example: src/modules/FEVariable/examples/NodalVariable_test_1.F90
+! - [test 1](|base|FEVariable/examples/NodalVariable_test_1.F90)
 
 INTERFACE NodalVariable
   MODULE PURE FUNCTION Nodal_Vector_Constant(val, rank, vartype) RESULT(obj)
     TYPE(FEVariable_) :: obj
     !! nodal variable
     REAL(DFP), INTENT(IN) :: val(:)
-    !! values, SHAPE(val) = [ncomp]
+    !! component values, `SIZE(val) = ncomp`
     TYPE(FEVariableVector_), INTENT(IN) :: rank
-    !! TypeFEVariableVector
+    !! use `TypeFEVariableVector`
     TYPE(FEVariableConstant_), INTENT(IN) :: vartype
-    !! TypeFEVariableConstant
+    !! use `TypeFEVariableConstant`
   END FUNCTION Nodal_Vector_Constant
 END INTERFACE NodalVariable
 
@@ -399,19 +371,16 @@ END INTERFACE NodalVariable
 ! date: 2021-12-10
 ! summary: Create nodal variable, vector, constant, with zero values
 !
-! Create a vector, constant nodal variable with shape `s = [ncomp]` given by
-! the size arguments, `len = PRODUCT(s)` and all values zero.
+! Returns a constant vector nodal variable.
+! All values are zero.
+!
+! The shape is `s = [tsize]` and the length is `tsize`.
 !
 ! Examples
 !
-!```fortran
-! TYPE(FEVariable_) :: obj
-! obj = NodalVariable(tsize=2, &
-!                     rank=TypeFEVariableVector, &
-!                     vartype=TypeFEVariableConstant)
-!```
-!
-! Full example: src/modules/FEVariable/examples/NodalVariable_test_1.F90
+! - [test 1](|base|FEVariable/examples/NodalVariable_test_1.F90)
+! - [test 2](|base|FEVariable/examples/NodalVariable_test_2.F90) with
+!   check of the zero values
 
 INTERFACE NodalVariable
   MODULE PURE FUNCTION Nodal_Vector_Constant2( &
@@ -421,9 +390,9 @@ INTERFACE NodalVariable
     INTEGER(I4B), INTENT(IN) :: tsize
     !! number of components
     TYPE(FEVariableVector_), INTENT(IN) :: rank
-    !! TypeFEVariableVector
+    !! use `TypeFEVariableVector`
     TYPE(FEVariableConstant_), INTENT(IN) :: vartype
-    !! TypeFEVariableConstant
+    !! use `TypeFEVariableConstant`
   END FUNCTION Nodal_Vector_Constant2
 END INTERFACE NodalVariable
 
@@ -435,32 +404,29 @@ END INTERFACE NodalVariable
 ! date: 2021-12-10
 ! summary: Create nodal variable, vector, space, from values
 !
-! Create a vector, space nodal variable from `val`. The shape is
-! `s = SHAPE(val) = [ncomp, nns]`, `len = PRODUCT(s)`, and `val` is stored
-! column major.
+! Returns a vector nodal variable that varies in space.
+! The entry `val(i, j)` is component `i` at space node `j`.
+!
+! The shape is `s = [ncomp, nns]`, taken from `SHAPE(val)`.
+! The length is `ncomp * nns`.
+! The variable keeps the values column by column.
 !
 ! Examples
 !
-!```fortran
-! TYPE(FEVariable_) :: obj
-! REAL(DFP) :: val(2, 2)
-! val = 1.0_DFP
-! obj = NodalVariable(val, TypeFEVariableVector, &
-!                     TypeFEVariableSpace)
-!```
-!
-! Full example: src/modules/FEVariable/examples/NodalVariable_test_1.F90
+! - [test 1](|base|FEVariable/examples/NodalVariable_test_1.F90)
+! - [test 2](|base|FEVariable/examples/NodalVariable_test_2.F90) with
+!   check of the value order
 
 INTERFACE NodalVariable
   MODULE PURE FUNCTION Nodal_Vector_Space(val, rank, vartype) RESULT(obj)
     TYPE(FEVariable_) :: obj
     !! nodal variable
     REAL(DFP), INTENT(IN) :: val(:, :)
-    !! values, SHAPE(val) = [ncomp, nns]
+    !! nodal values, `SHAPE(val) = [ncomp, nns]`
     TYPE(FEVariableVector_), INTENT(IN) :: rank
-    !! TypeFEVariableVector
+    !! use `TypeFEVariableVector`
     TYPE(FEVariableSpace_), INTENT(IN) :: vartype
-    !! TypeFEVariableSpace
+    !! use `TypeFEVariableSpace`
   END FUNCTION Nodal_Vector_Space
 END INTERFACE NodalVariable
 
@@ -472,33 +438,35 @@ END INTERFACE NodalVariable
 ! date: 2021-12-10
 ! summary: Create nodal variable, vector, space, from flat values
 !
-! Create a vector, space nodal variable with shape `s = [ncomp, nns]` and
-! `len = PRODUCT(s)`. The data `val(1:len)` must be in column major order.
+! Returns a vector nodal variable that varies in space.
+! The values come from a flat array and the shape comes from `s`.
+!
+! The length is `s(1) * s(2)`.
+! The code reads the first `s(1) * s(2)` entries of `val` in column major
+! order. The component index runs fastest.
+!
+! @note
+! `SIZE(val)` must be at least `s(1) * s(2)`.
+! @endnote
 !
 ! Examples
 !
-!```fortran
-! TYPE(FEVariable_) :: obj
-! REAL(DFP) :: val(4)
-! val = 1.0_DFP
-! obj = NodalVariable(val, TypeFEVariableVector, &
-!                     TypeFEVariableSpace, [2, 2])
-!```
-!
-! Full example: src/modules/FEVariable/examples/NodalVariable_test_1.F90
+! - [test 1](|base|FEVariable/examples/NodalVariable_test_1.F90)
+! - [test 2](|base|FEVariable/examples/NodalVariable_test_2.F90) with
+!   check of the value order
 
 INTERFACE NodalVariable
   MODULE PURE FUNCTION Nodal_Vector_Space2(val, rank, vartype, s) RESULT(obj)
     TYPE(FEVariable_) :: obj
     !! nodal variable
     REAL(DFP), INTENT(IN) :: val(:)
-    !! values in column major order, SIZE(val) >= PRODUCT(s)
+    !! values in column major order, `SIZE(val) >= PRODUCT(s)`
     TYPE(FEVariableVector_), INTENT(IN) :: rank
-    !! TypeFEVariableVector
+    !! use `TypeFEVariableVector`
     TYPE(FEVariableSpace_), INTENT(IN) :: vartype
-    !! TypeFEVariableSpace
+    !! use `TypeFEVariableSpace`
     INTEGER(I4B), INTENT(IN) :: s(2)
-    !! shape of data, [ncomp, nns]
+    !! shape of the data, `[ncomp, nns]`
   END FUNCTION Nodal_Vector_Space2
 END INTERFACE NodalVariable
 
@@ -510,19 +478,16 @@ END INTERFACE NodalVariable
 ! date: 2025-11-05
 ! summary: Create nodal variable, vector, space, with zero values
 !
-! Create a vector, space nodal variable with shape `s = [ncomp, nns]` given by
-! the size arguments, `len = PRODUCT(s)` and all values zero.
+! Returns a vector nodal variable that varies in space.
+! All values are zero.
+!
+! The shape is `s = [nrow, ncol]` and the length is `nrow * ncol`.
 !
 ! Examples
 !
-!```fortran
-! TYPE(FEVariable_) :: obj
-! obj = NodalVariable(nrow=2, ncol=2, &
-!                     rank=TypeFEVariableVector, &
-!                     vartype=TypeFEVariableSpace)
-!```
-!
-! Full example: src/modules/FEVariable/examples/NodalVariable_test_1.F90
+! - [test 1](|base|FEVariable/examples/NodalVariable_test_1.F90)
+! - [test 2](|base|FEVariable/examples/NodalVariable_test_2.F90) with
+!   check of the zero values
 
 INTERFACE NodalVariable
   MODULE PURE FUNCTION Nodal_Vector_Space3( &
@@ -534,9 +499,9 @@ INTERFACE NodalVariable
     INTEGER(I4B), INTENT(IN) :: ncol
     !! number of nodes in space
     TYPE(FEVariableVector_), INTENT(IN) :: rank
-    !! TypeFEVariableVector
+    !! use `TypeFEVariableVector`
     TYPE(FEVariableSpace_), INTENT(IN) :: vartype
-    !! TypeFEVariableSpace
+    !! use `TypeFEVariableSpace`
   END FUNCTION Nodal_Vector_Space3
 END INTERFACE NodalVariable
 
@@ -548,32 +513,27 @@ END INTERFACE NodalVariable
 ! date: 2021-12-10
 ! summary: Create nodal variable, vector, time, from values
 !
-! Create a vector, time nodal variable from `val`. The shape is
-! `s = SHAPE(val) = [ncomp, nnt]`, `len = PRODUCT(s)`, and `val` is stored
-! column major.
+! Returns a vector nodal variable that varies in time.
+! The entry `val(i, j)` is component `i` at time node `j`.
+!
+! The shape is `s = [ncomp, nnt]`, taken from `SHAPE(val)`.
+! The length is `ncomp * nnt`.
+! The variable keeps the values column by column.
 !
 ! Examples
 !
-!```fortran
-! TYPE(FEVariable_) :: obj
-! REAL(DFP) :: val(2, 2)
-! val = 1.0_DFP
-! obj = NodalVariable(val, TypeFEVariableVector, &
-!                     TypeFEVariableTime)
-!```
-!
-! Full example: src/modules/FEVariable/examples/NodalVariable_test_1.F90
+! - [test 1](|base|FEVariable/examples/NodalVariable_test_1.F90)
 
 INTERFACE NodalVariable
   MODULE PURE FUNCTION Nodal_Vector_Time(val, rank, vartype) RESULT(obj)
     TYPE(FEVariable_) :: obj
     !! nodal variable
     REAL(DFP), INTENT(IN) :: val(:, :)
-    !! values, SHAPE(val) = [ncomp, nnt]
+    !! nodal values, `SHAPE(val) = [ncomp, nnt]`
     TYPE(FEVariableVector_), INTENT(IN) :: rank
-    !! TypeFEVariableVector
+    !! use `TypeFEVariableVector`
     TYPE(FEVariableTime_), INTENT(IN) :: vartype
-    !! TypeFEVariableTime
+    !! use `TypeFEVariableTime`
   END FUNCTION Nodal_Vector_Time
 END INTERFACE NodalVariable
 
@@ -585,33 +545,35 @@ END INTERFACE NodalVariable
 ! date: 2021-12-10
 ! summary: Create nodal variable, vector, time, from flat values
 !
-! Create a vector, time nodal variable with shape `s = [ncomp, nnt]` and
-! `len = PRODUCT(s)`. The data `val(1:len)` must be in column major order.
+! Returns a vector nodal variable that varies in time.
+! The values come from a flat array and the shape comes from `s`.
+!
+! The length is `s(1) * s(2)`.
+! The code reads the first `s(1) * s(2)` entries of `val` in column major
+! order. The component index runs fastest.
+!
+! @note
+! `SIZE(val)` must be at least `s(1) * s(2)`.
+! @endnote
 !
 ! Examples
 !
-!```fortran
-! TYPE(FEVariable_) :: obj
-! REAL(DFP) :: val(4)
-! val = 1.0_DFP
-! obj = NodalVariable(val, TypeFEVariableVector, &
-!                     TypeFEVariableTime, [2, 2])
-!```
-!
-! Full example: src/modules/FEVariable/examples/NodalVariable_test_1.F90
+! - [test 1](|base|FEVariable/examples/NodalVariable_test_1.F90)
+! - [test 2](|base|FEVariable/examples/NodalVariable_test_2.F90) with
+!   check of the value order
 
 INTERFACE NodalVariable
   MODULE PURE FUNCTION Nodal_Vector_Time2(val, rank, vartype, s) RESULT(obj)
     TYPE(FEVariable_) :: obj
     !! nodal variable
     REAL(DFP), INTENT(IN) :: val(:)
-    !! values in column major order, SIZE(val) >= PRODUCT(s)
+    !! values in column major order, `SIZE(val) >= PRODUCT(s)`
     TYPE(FEVariableVector_), INTENT(IN) :: rank
-    !! TypeFEVariableVector
+    !! use `TypeFEVariableVector`
     TYPE(FEVariableTime_), INTENT(IN) :: vartype
-    !! TypeFEVariableTime
+    !! use `TypeFEVariableTime`
     INTEGER(I4B), INTENT(IN) :: s(2)
-    !! shape of data, [ncomp, nnt]
+    !! shape of the data, `[ncomp, nnt]`
   END FUNCTION Nodal_Vector_Time2
 END INTERFACE NodalVariable
 
@@ -623,19 +585,16 @@ END INTERFACE NodalVariable
 ! date: 2021-12-10
 ! summary: Create nodal variable, vector, time, with zero values
 !
-! Create a vector, time nodal variable with shape `s = [ncomp, nnt]` given by
-! the size arguments, `len = PRODUCT(s)` and all values zero.
+! Returns a vector nodal variable that varies in time.
+! All values are zero.
+!
+! The shape is `s = [nrow, ncol]` and the length is `nrow * ncol`.
 !
 ! Examples
 !
-!```fortran
-! TYPE(FEVariable_) :: obj
-! obj = NodalVariable(nrow=2, ncol=2, &
-!                     rank=TypeFEVariableVector, &
-!                     vartype=TypeFEVariableTime)
-!```
-!
-! Full example: src/modules/FEVariable/examples/NodalVariable_test_1.F90
+! - [test 1](|base|FEVariable/examples/NodalVariable_test_1.F90)
+! - [test 2](|base|FEVariable/examples/NodalVariable_test_2.F90) with
+!   check of the zero values
 
 INTERFACE NodalVariable
   MODULE PURE FUNCTION Nodal_Vector_Time3( &
@@ -647,9 +606,9 @@ INTERFACE NodalVariable
     INTEGER(I4B), INTENT(IN) :: ncol
     !! number of nodes in time
     TYPE(FEVariableVector_), INTENT(IN) :: rank
-    !! TypeFEVariableVector
+    !! use `TypeFEVariableVector`
     TYPE(FEVariableTime_), INTENT(IN) :: vartype
-    !! TypeFEVariableTime
+    !! use `TypeFEVariableTime`
   END FUNCTION Nodal_Vector_Time3
 END INTERFACE NodalVariable
 
@@ -661,32 +620,28 @@ END INTERFACE NodalVariable
 ! date: 2021-12-10
 ! summary: Create nodal variable, vector, space-time, from values
 !
-! Create a vector, space-time nodal variable from `val`. The shape is
-! `s = SHAPE(val) = [ncomp, nns, nnt]`, `len = PRODUCT(s)`, and `val` is
-! stored column major.
+! Returns a vector nodal variable that varies in space and time.
+! The entry `val(i, j, k)` is component `i` at space node `j` and time
+! node `k`.
+!
+! The shape is `s = [ncomp, nns, nnt]`, taken from `SHAPE(val)`.
+! The length is `ncomp * nns * nnt`.
+! The variable keeps the values in column major order.
 !
 ! Examples
 !
-!```fortran
-! TYPE(FEVariable_) :: obj
-! REAL(DFP) :: val(2, 2, 2)
-! val = 1.0_DFP
-! obj = NodalVariable(val, TypeFEVariableVector, &
-!                     TypeFEVariableSpaceTime)
-!```
-!
-! Full example: src/modules/FEVariable/examples/NodalVariable_test_1.F90
+! - [test 1](|base|FEVariable/examples/NodalVariable_test_1.F90)
 
 INTERFACE NodalVariable
   MODULE PURE FUNCTION Nodal_Vector_SpaceTime(val, rank, vartype) RESULT(obj)
     TYPE(FEVariable_) :: obj
     !! nodal variable
     REAL(DFP), INTENT(IN) :: val(:, :, :)
-    !! values, SHAPE(val) = [ncomp, nns, nnt]
+    !! nodal values, `SHAPE(val) = [ncomp, nns, nnt]`
     TYPE(FEVariableVector_), INTENT(IN) :: rank
-    !! TypeFEVariableVector
+    !! use `TypeFEVariableVector`
     TYPE(FEVariableSpaceTime_), INTENT(IN) :: vartype
-    !! TypeFEVariableSpaceTime
+    !! use `TypeFEVariableSpaceTime`
   END FUNCTION Nodal_Vector_SpaceTime
 END INTERFACE NodalVariable
 
@@ -698,21 +653,22 @@ END INTERFACE NodalVariable
 ! date: 2021-12-10
 ! summary: Create nodal variable, vector, space-time, from flat values
 !
-! Create a vector, space-time nodal variable with shape
-! `s = [ncomp, nns, nnt]` and `len = PRODUCT(s)`. The data `val(1:len)` must
-! be in column major order.
+! Returns a vector nodal variable that varies in space and time.
+! The values come from a flat array and the shape comes from `s`.
+!
+! The length is `s(1) * s(2) * s(3)`.
+! The code reads the first `s(1) * s(2) * s(3)` entries of `val` in column
+! major order. The component index runs fastest.
+!
+! @note
+! `SIZE(val)` must be at least `s(1) * s(2) * s(3)`.
+! @endnote
 !
 ! Examples
 !
-!```fortran
-! TYPE(FEVariable_) :: obj
-! REAL(DFP) :: val(8)
-! val = 1.0_DFP
-! obj = NodalVariable(val, TypeFEVariableVector, &
-!                     TypeFEVariableSpaceTime, [2, 2, 2])
-!```
-!
-! Full example: src/modules/FEVariable/examples/NodalVariable_test_1.F90
+! - [test 1](|base|FEVariable/examples/NodalVariable_test_1.F90)
+! - [test 2](|base|FEVariable/examples/NodalVariable_test_2.F90) with
+!   check of the value order
 
 INTERFACE NodalVariable
   MODULE PURE FUNCTION Nodal_Vector_SpaceTime2( &
@@ -720,13 +676,13 @@ INTERFACE NodalVariable
     TYPE(FEVariable_) :: obj
     !! nodal variable
     REAL(DFP), INTENT(IN) :: val(:)
-    !! values in column major order, SIZE(val) >= PRODUCT(s)
+    !! values in column major order, `SIZE(val) >= PRODUCT(s)`
     TYPE(FEVariableVector_), INTENT(IN) :: rank
-    !! TypeFEVariableVector
+    !! use `TypeFEVariableVector`
     TYPE(FEVariableSpaceTime_), INTENT(IN) :: vartype
-    !! TypeFEVariableSpaceTime
+    !! use `TypeFEVariableSpaceTime`
     INTEGER(I4B), INTENT(IN) :: s(3)
-    !! shape of data, [ncomp, nns, nnt]
+    !! shape of the data, `[ncomp, nns, nnt]`
   END FUNCTION Nodal_Vector_SpaceTime2
 END INTERFACE NodalVariable
 
@@ -738,20 +694,17 @@ END INTERFACE NodalVariable
 ! date: 2021-12-10
 ! summary: Create nodal variable, vector, space-time, with zero values
 !
-! Create a vector, space-time nodal variable with shape
-! `s = [ncomp, nns, nnt]` given by the size arguments, `len = PRODUCT(s)` and
-! all values zero.
+! Returns a vector nodal variable that varies in space and time.
+! All values are zero.
+!
+! The shape is `s = [dim1, dim2, dim3]` and the length is
+! `dim1 * dim2 * dim3`.
 !
 ! Examples
 !
-!```fortran
-! TYPE(FEVariable_) :: obj
-! obj = NodalVariable(dim1=2, dim2=2, dim3=2, &
-!                     rank=TypeFEVariableVector, &
-!                     vartype=TypeFEVariableSpaceTime)
-!```
-!
-! Full example: src/modules/FEVariable/examples/NodalVariable_test_1.F90
+! - [test 1](|base|FEVariable/examples/NodalVariable_test_1.F90)
+! - [test 2](|base|FEVariable/examples/NodalVariable_test_2.F90) with
+!   check of the zero values
 
 INTERFACE NodalVariable
   MODULE PURE FUNCTION Nodal_Vector_SpaceTime3( &
@@ -765,9 +718,9 @@ INTERFACE NodalVariable
     INTEGER(I4B), INTENT(IN) :: dim3
     !! number of nodes in time
     TYPE(FEVariableVector_), INTENT(IN) :: rank
-    !! TypeFEVariableVector
+    !! use `TypeFEVariableVector`
     TYPE(FEVariableSpaceTime_), INTENT(IN) :: vartype
-    !! TypeFEVariableSpaceTime
+    !! use `TypeFEVariableSpaceTime`
   END FUNCTION Nodal_Vector_SpaceTime3
 END INTERFACE NodalVariable
 
@@ -779,32 +732,27 @@ END INTERFACE NodalVariable
 ! date: 2021-12-10
 ! summary: Create nodal variable, matrix, constant, from values
 !
-! Create a matrix, constant nodal variable from `val`. The shape is
-! `s = SHAPE(val) = [nrow, ncol]`, `len = PRODUCT(s)`, and `val` is stored
-! column major.
+! Returns a constant matrix nodal variable.
+! The array `val` holds the matrix.
+!
+! The shape is `s = [nrow, ncol]`, taken from `SHAPE(val)`.
+! The length is `nrow * ncol`.
+! The variable keeps the values column by column.
 !
 ! Examples
 !
-!```fortran
-! TYPE(FEVariable_) :: obj
-! REAL(DFP) :: val(2, 2)
-! val = 1.0_DFP
-! obj = NodalVariable(val, TypeFEVariableMatrix, &
-!                     TypeFEVariableConstant)
-!```
-!
-! Full example: src/modules/FEVariable/examples/NodalVariable_test_1.F90
+! - [test 1](|base|FEVariable/examples/NodalVariable_test_1.F90)
 
 INTERFACE NodalVariable
   MODULE PURE FUNCTION Nodal_Matrix_Constant(val, rank, vartype) RESULT(obj)
     TYPE(FEVariable_) :: obj
     !! nodal variable
     REAL(DFP), INTENT(IN) :: val(:, :)
-    !! values, SHAPE(val) = [nrow, ncol]
+    !! matrix values, `SHAPE(val) = [nrow, ncol]`
     TYPE(FEVariableMatrix_), INTENT(IN) :: rank
-    !! TypeFEVariableMatrix
+    !! use `TypeFEVariableMatrix`
     TYPE(FEVariableConstant_), INTENT(IN) :: vartype
-    !! TypeFEVariableConstant
+    !! use `TypeFEVariableConstant`
   END FUNCTION Nodal_Matrix_Constant
 END INTERFACE NodalVariable
 
@@ -816,20 +764,20 @@ END INTERFACE NodalVariable
 ! date: 2021-12-10
 ! summary: Create nodal variable, matrix, constant, from flat values
 !
-! Create a matrix, constant nodal variable with shape `s = [nrow, ncol]` and
-! `len = PRODUCT(s)`. The data `val(1:len)` must be in column major order.
+! Returns a constant matrix nodal variable.
+! The array `val` holds the matrix values in a flat list.
+!
+! The shape is `s = [nrow, ncol]`.
+! The length is `PRODUCT(s)`.
+! The function reads only the first `PRODUCT(s)` entries of `val`.
+! They must be in column major order.
 !
 ! Examples
 !
-!```fortran
-! TYPE(FEVariable_) :: obj
-! REAL(DFP) :: val(4)
-! val = 1.0_DFP
-! obj = NodalVariable(val, TypeFEVariableMatrix, &
-!                     TypeFEVariableConstant, [2, 2])
-!```
+! - [test 1](|base|FEVariable/examples/NodalVariable_test_1.F90)
+! - [test 2](|base|FEVariable/examples/NodalVariable_test_2.F90)
 !
-! Full example: src/modules/FEVariable/examples/NodalVariable_test_1.F90
+! See also: [[NodalVariable]]
 
 INTERFACE NodalVariable
   MODULE PURE FUNCTION Nodal_Matrix_Constant2( &
@@ -837,13 +785,13 @@ INTERFACE NodalVariable
     TYPE(FEVariable_) :: obj
     !! nodal variable
     REAL(DFP), INTENT(IN) :: val(:)
-    !! values in column major order, SIZE(val) >= PRODUCT(s)
+    !! matrix values in column major order, `SIZE(val) >= PRODUCT(s)`
     TYPE(FEVariableMatrix_), INTENT(IN) :: rank
-    !! TypeFEVariableMatrix
+    !! use `TypeFEVariableMatrix`
     TYPE(FEVariableConstant_), INTENT(IN) :: vartype
-    !! TypeFEVariableConstant
+    !! use `TypeFEVariableConstant`
     INTEGER(I4B), INTENT(IN) :: s(2)
-    !! shape of data, [nrow, ncol]
+    !! shape of the matrix, `[nrow, ncol]`
   END FUNCTION Nodal_Matrix_Constant2
 END INTERFACE NodalVariable
 
@@ -855,19 +803,17 @@ END INTERFACE NodalVariable
 ! date: 2021-12-10
 ! summary: Create nodal variable, matrix, constant, with zero values
 !
-! Create a matrix, constant nodal variable with shape `s = [nrow, ncol]` given
-! by the size arguments, `len = PRODUCT(s)` and all values zero.
+! Returns a constant matrix nodal variable with all values zero.
+!
+! The shape is `s = [nrow, ncol]`.
+! The length is `nrow * ncol`.
 !
 ! Examples
 !
-!```fortran
-! TYPE(FEVariable_) :: obj
-! obj = NodalVariable(nrow=2, ncol=2, &
-!                     rank=TypeFEVariableMatrix, &
-!                     vartype=TypeFEVariableConstant)
-!```
+! - [test 1](|base|FEVariable/examples/NodalVariable_test_1.F90)
+! - [test 2](|base|FEVariable/examples/NodalVariable_test_2.F90)
 !
-! Full example: src/modules/FEVariable/examples/NodalVariable_test_1.F90
+! See also: [[NodalVariable]]
 
 INTERFACE NodalVariable
   MODULE PURE FUNCTION Nodal_Matrix_Constant3( &
@@ -879,9 +825,9 @@ INTERFACE NodalVariable
     INTEGER(I4B), INTENT(IN) :: ncol
     !! number of columns
     TYPE(FEVariableMatrix_), INTENT(IN) :: rank
-    !! TypeFEVariableMatrix
+    !! use `TypeFEVariableMatrix`
     TYPE(FEVariableConstant_), INTENT(IN) :: vartype
-    !! TypeFEVariableConstant
+    !! use `TypeFEVariableConstant`
   END FUNCTION Nodal_Matrix_Constant3
 END INTERFACE NodalVariable
 
@@ -893,32 +839,30 @@ END INTERFACE NodalVariable
 ! date: 2021-12-10
 ! summary: Create nodal variable, matrix, space, from values
 !
-! Create a matrix, space nodal variable from `val`. The shape is
-! `s = SHAPE(val) = [nrow, ncol, nns]`, `len = PRODUCT(s)`, and `val` is
-! stored column major.
+! Returns a matrix nodal variable that varies in space.
+! The array `val` holds one matrix for each space node.
+!
+! The shape is `s = [nrow, ncol, nns]`, taken from `SHAPE(val)`.
+! Here `nns` is the number of nodes in space.
+! The length is `PRODUCT(s)`.
+! The variable keeps the values in column major order.
 !
 ! Examples
 !
-!```fortran
-! TYPE(FEVariable_) :: obj
-! REAL(DFP) :: val(2, 2, 2)
-! val = 1.0_DFP
-! obj = NodalVariable(val, TypeFEVariableMatrix, &
-!                     TypeFEVariableSpace)
-!```
+! - [test 1](|base|FEVariable/examples/NodalVariable_test_1.F90)
 !
-! Full example: src/modules/FEVariable/examples/NodalVariable_test_1.F90
+! See also: [[NodalVariable]]
 
 INTERFACE NodalVariable
   MODULE PURE FUNCTION Nodal_Matrix_Space(val, rank, vartype) RESULT(obj)
     TYPE(FEVariable_) :: obj
     !! nodal variable
     REAL(DFP), INTENT(IN) :: val(:, :, :)
-    !! values, SHAPE(val) = [nrow, ncol, nns]
+    !! matrix values, `SHAPE(val) = [nrow, ncol, nns]`
     TYPE(FEVariableMatrix_), INTENT(IN) :: rank
-    !! TypeFEVariableMatrix
+    !! use `TypeFEVariableMatrix`
     TYPE(FEVariableSpace_), INTENT(IN) :: vartype
-    !! TypeFEVariableSpace
+    !! use `TypeFEVariableSpace`
   END FUNCTION Nodal_Matrix_Space
 END INTERFACE NodalVariable
 
@@ -930,33 +874,34 @@ END INTERFACE NodalVariable
 ! date: 2021-12-10
 ! summary: Create nodal variable, matrix, space, from flat values
 !
-! Create a matrix, space nodal variable with shape `s = [nrow, ncol, nns]` and
-! `len = PRODUCT(s)`. The data `val(1:len)` must be in column major order.
+! Returns a matrix nodal variable that varies in space.
+! The array `val` holds the values in a flat list.
+!
+! The shape is `s = [nrow, ncol, nns]`.
+! Here `nns` is the number of nodes in space.
+! The length is `PRODUCT(s)`.
+! The function reads only the first `PRODUCT(s)` entries of `val`.
+! They must be in column major order.
 !
 ! Examples
 !
-!```fortran
-! TYPE(FEVariable_) :: obj
-! REAL(DFP) :: val(8)
-! val = 1.0_DFP
-! obj = NodalVariable(val, TypeFEVariableMatrix, &
-!                     TypeFEVariableSpace, [2, 2, 2])
-!```
+! - [test 1](|base|FEVariable/examples/NodalVariable_test_1.F90)
+! - [test 2](|base|FEVariable/examples/NodalVariable_test_2.F90)
 !
-! Full example: src/modules/FEVariable/examples/NodalVariable_test_1.F90
+! See also: [[NodalVariable]]
 
 INTERFACE NodalVariable
   MODULE PURE FUNCTION Nodal_Matrix_Space2(val, rank, vartype, s) RESULT(obj)
     TYPE(FEVariable_) :: obj
     !! nodal variable
     REAL(DFP), INTENT(IN) :: val(:)
-    !! values in column major order, SIZE(val) >= PRODUCT(s)
+    !! matrix values in column major order, `SIZE(val) >= PRODUCT(s)`
     TYPE(FEVariableMatrix_), INTENT(IN) :: rank
-    !! TypeFEVariableMatrix
+    !! use `TypeFEVariableMatrix`
     TYPE(FEVariableSpace_), INTENT(IN) :: vartype
-    !! TypeFEVariableSpace
+    !! use `TypeFEVariableSpace`
     INTEGER(I4B), INTENT(IN) :: s(3)
-    !! shape of data, [nrow, ncol, nns]
+    !! shape of the data, `[nrow, ncol, nns]`
   END FUNCTION Nodal_Matrix_Space2
 END INTERFACE NodalVariable
 
@@ -968,19 +913,18 @@ END INTERFACE NodalVariable
 ! date: 2021-12-10
 ! summary: Create nodal variable, matrix, space, with zero values
 !
-! Create a matrix, space nodal variable with shape `s = [nrow, ncol, nns]`
-! given by the size arguments, `len = PRODUCT(s)` and all values zero.
+! Returns a matrix nodal variable that varies in space.
+! All values are zero.
+!
+! The shape is `s = [dim1, dim2, dim3]`.
+! The length is `PRODUCT(s)`.
 !
 ! Examples
 !
-!```fortran
-! TYPE(FEVariable_) :: obj
-! obj = NodalVariable(dim1=2, dim2=2, dim3=2, &
-!                     rank=TypeFEVariableMatrix, &
-!                     vartype=TypeFEVariableSpace)
-!```
+! - [test 1](|base|FEVariable/examples/NodalVariable_test_1.F90)
+! - [test 2](|base|FEVariable/examples/NodalVariable_test_2.F90)
 !
-! Full example: src/modules/FEVariable/examples/NodalVariable_test_1.F90
+! See also: [[NodalVariable]]
 
 INTERFACE NodalVariable
   MODULE PURE FUNCTION Nodal_Matrix_Space3( &
@@ -994,9 +938,9 @@ INTERFACE NodalVariable
     INTEGER(I4B), INTENT(IN) :: dim3
     !! number of nodes in space
     TYPE(FEVariableMatrix_), INTENT(IN) :: rank
-    !! TypeFEVariableMatrix
+    !! use `TypeFEVariableMatrix`
     TYPE(FEVariableSpace_), INTENT(IN) :: vartype
-    !! TypeFEVariableSpace
+    !! use `TypeFEVariableSpace`
   END FUNCTION Nodal_Matrix_Space3
 END INTERFACE NodalVariable
 
@@ -1008,32 +952,30 @@ END INTERFACE NodalVariable
 ! date: 2021-12-10
 ! summary: Create nodal variable, matrix, time, from values
 !
-! Create a matrix, time nodal variable from `val`. The shape is
-! `s = SHAPE(val) = [nrow, ncol, nnt]`, `len = PRODUCT(s)`, and `val` is
-! stored column major.
+! Returns a matrix nodal variable that varies in time.
+! The array `val` holds one matrix for each time node.
+!
+! The shape is `s = [nrow, ncol, nnt]`, taken from `SHAPE(val)`.
+! Here `nnt` is the number of nodes in time.
+! The length is `PRODUCT(s)`.
+! The variable keeps the values in column major order.
 !
 ! Examples
 !
-!```fortran
-! TYPE(FEVariable_) :: obj
-! REAL(DFP) :: val(2, 2, 2)
-! val = 1.0_DFP
-! obj = NodalVariable(val, TypeFEVariableMatrix, &
-!                     TypeFEVariableTime)
-!```
+! - [test 1](|base|FEVariable/examples/NodalVariable_test_1.F90)
 !
-! Full example: src/modules/FEVariable/examples/NodalVariable_test_1.F90
+! See also: [[NodalVariable]]
 
 INTERFACE NodalVariable
   MODULE PURE FUNCTION Nodal_Matrix_Time(val, rank, vartype) RESULT(obj)
     TYPE(FEVariable_) :: obj
     !! nodal variable
     REAL(DFP), INTENT(IN) :: val(:, :, :)
-    !! values, SHAPE(val) = [nrow, ncol, nnt]
+    !! matrix values, `SHAPE(val) = [nrow, ncol, nnt]`
     TYPE(FEVariableMatrix_), INTENT(IN) :: rank
-    !! TypeFEVariableMatrix
+    !! use `TypeFEVariableMatrix`
     TYPE(FEVariableTime_), INTENT(IN) :: vartype
-    !! TypeFEVariableTime
+    !! use `TypeFEVariableTime`
   END FUNCTION Nodal_Matrix_Time
 END INTERFACE NodalVariable
 
@@ -1045,33 +987,34 @@ END INTERFACE NodalVariable
 ! date: 2021-12-10
 ! summary: Create nodal variable, matrix, time, from flat values
 !
-! Create a matrix, time nodal variable with shape `s = [nrow, ncol, nnt]` and
-! `len = PRODUCT(s)`. The data `val(1:len)` must be in column major order.
+! Returns a matrix nodal variable that varies in time.
+! The array `val` holds the values in a flat list.
+!
+! The shape is `s = [nrow, ncol, nnt]`.
+! Here `nnt` is the number of nodes in time.
+! The length is `PRODUCT(s)`.
+! The function reads only the first `PRODUCT(s)` entries of `val`.
+! They must be in column major order.
 !
 ! Examples
 !
-!```fortran
-! TYPE(FEVariable_) :: obj
-! REAL(DFP) :: val(8)
-! val = 1.0_DFP
-! obj = NodalVariable(val, TypeFEVariableMatrix, &
-!                     TypeFEVariableTime, [2, 2, 2])
-!```
+! - [test 1](|base|FEVariable/examples/NodalVariable_test_1.F90)
+! - [test 2](|base|FEVariable/examples/NodalVariable_test_2.F90)
 !
-! Full example: src/modules/FEVariable/examples/NodalVariable_test_1.F90
+! See also: [[NodalVariable]]
 
 INTERFACE NodalVariable
   MODULE PURE FUNCTION Nodal_Matrix_Time2(val, rank, vartype, s) RESULT(obj)
     TYPE(FEVariable_) :: obj
     !! nodal variable
     REAL(DFP), INTENT(IN) :: val(:)
-    !! values in column major order, SIZE(val) >= PRODUCT(s)
+    !! matrix values in column major order, `SIZE(val) >= PRODUCT(s)`
     TYPE(FEVariableMatrix_), INTENT(IN) :: rank
-    !! TypeFEVariableMatrix
+    !! use `TypeFEVariableMatrix`
     TYPE(FEVariableTime_), INTENT(IN) :: vartype
-    !! TypeFEVariableTime
+    !! use `TypeFEVariableTime`
     INTEGER(I4B), INTENT(IN) :: s(3)
-    !! shape of data, [nrow, ncol, nnt]
+    !! shape of the data, `[nrow, ncol, nnt]`
   END FUNCTION Nodal_Matrix_Time2
 END INTERFACE NodalVariable
 
@@ -1083,19 +1026,18 @@ END INTERFACE NodalVariable
 ! date: 2021-12-10
 ! summary: Create nodal variable, matrix, time, with zero values
 !
-! Create a matrix, time nodal variable with shape `s = [nrow, ncol, nnt]`
-! given by the size arguments, `len = PRODUCT(s)` and all values zero.
+! Returns a matrix nodal variable that varies in time.
+! All values are zero.
+!
+! The shape is `s = [dim1, dim2, dim3]`.
+! The length is `PRODUCT(s)`.
 !
 ! Examples
 !
-!```fortran
-! TYPE(FEVariable_) :: obj
-! obj = NodalVariable(dim1=2, dim2=2, dim3=2, &
-!                     rank=TypeFEVariableMatrix, &
-!                     vartype=TypeFEVariableTime)
-!```
+! - [test 1](|base|FEVariable/examples/NodalVariable_test_1.F90)
+! - [test 2](|base|FEVariable/examples/NodalVariable_test_2.F90)
 !
-! Full example: src/modules/FEVariable/examples/NodalVariable_test_1.F90
+! See also: [[NodalVariable]]
 
 INTERFACE NodalVariable
   MODULE PURE FUNCTION Nodal_Matrix_Time3( &
@@ -1109,9 +1051,9 @@ INTERFACE NodalVariable
     INTEGER(I4B), INTENT(IN) :: dim3
     !! number of nodes in time
     TYPE(FEVariableMatrix_), INTENT(IN) :: rank
-    !! TypeFEVariableMatrix
+    !! use `TypeFEVariableMatrix`
     TYPE(FEVariableTime_), INTENT(IN) :: vartype
-    !! TypeFEVariableTime
+    !! use `TypeFEVariableTime`
   END FUNCTION Nodal_Matrix_Time3
 END INTERFACE NodalVariable
 
@@ -1123,32 +1065,31 @@ END INTERFACE NodalVariable
 ! date: 2021-12-10
 ! summary: Create nodal variable, matrix, space-time, from values
 !
-! Create a matrix, space-time nodal variable from `val`. The shape is
-! `s = SHAPE(val) = [nrow, ncol, nns, nnt]`, `len = PRODUCT(s)`, and `val` is
-! stored column major.
+! Returns a matrix nodal variable that varies in space and time.
+! The array `val` holds one matrix for each space and time node.
+!
+! The shape is `s = [nrow, ncol, nns, nnt]`, taken from `SHAPE(val)`.
+! Here `nns` is the number of nodes in space.
+! And `nnt` is the number of nodes in time.
+! The length is `PRODUCT(s)`.
+! The variable keeps the values in column major order.
 !
 ! Examples
 !
-!```fortran
-! TYPE(FEVariable_) :: obj
-! REAL(DFP) :: val(2, 2, 2, 2)
-! val = 1.0_DFP
-! obj = NodalVariable(val, TypeFEVariableMatrix, &
-!                     TypeFEVariableSpaceTime)
-!```
+! - [test 1](|base|FEVariable/examples/NodalVariable_test_1.F90)
 !
-! Full example: src/modules/FEVariable/examples/NodalVariable_test_1.F90
+! See also: [[NodalVariable]]
 
 INTERFACE NodalVariable
   MODULE PURE FUNCTION Nodal_Matrix_SpaceTime(val, rank, vartype) RESULT(obj)
     TYPE(FEVariable_) :: obj
     !! nodal variable
     REAL(DFP), INTENT(IN) :: val(:, :, :, :)
-    !! values, SHAPE(val) = [nrow, ncol, nns, nnt]
+    !! matrix values, `SHAPE(val) = [nrow, ncol, nns, nnt]`
     TYPE(FEVariableMatrix_), INTENT(IN) :: rank
-    !! TypeFEVariableMatrix
+    !! use `TypeFEVariableMatrix`
     TYPE(FEVariableSpaceTime_), INTENT(IN) :: vartype
-    !! TypeFEVariableSpaceTime
+    !! use `TypeFEVariableSpaceTime`
   END FUNCTION Nodal_Matrix_SpaceTime
 END INTERFACE NodalVariable
 
@@ -1160,21 +1101,21 @@ END INTERFACE NodalVariable
 ! date: 2021-12-10
 ! summary: Create nodal variable, matrix, space-time, from flat values
 !
-! Create a matrix, space-time nodal variable with shape
-! `s = [nrow, ncol, nns, nnt]` and `len = PRODUCT(s)`. The data `val(1:len)`
-! must be in column major order.
+! Returns a matrix nodal variable that varies in space and time.
+! The array `val` holds the values in a flat list.
+!
+! The shape is `s = [nrow, ncol, nns, nnt]`.
+! Here `nns` is the number of nodes in space.
+! And `nnt` is the number of nodes in time.
+! The length is `PRODUCT(s)`.
+! The function reads only the first `PRODUCT(s)` entries of `val`.
+! They must be in column major order.
 !
 ! Examples
 !
-!```fortran
-! TYPE(FEVariable_) :: obj
-! REAL(DFP) :: val(16)
-! val = 1.0_DFP
-! obj = NodalVariable(val, TypeFEVariableMatrix, &
-!                     TypeFEVariableSpaceTime, [2, 2, 2, 2])
-!```
+! - [test 1](|base|FEVariable/examples/NodalVariable_test_1.F90)
 !
-! Full example: src/modules/FEVariable/examples/NodalVariable_test_1.F90
+! See also: [[NodalVariable]]
 
 INTERFACE NodalVariable
   MODULE PURE FUNCTION Nodal_Matrix_SpaceTime2( &
@@ -1182,13 +1123,13 @@ INTERFACE NodalVariable
     TYPE(FEVariable_) :: obj
     !! nodal variable
     REAL(DFP), INTENT(IN) :: val(:)
-    !! values in column major order, SIZE(val) >= PRODUCT(s)
+    !! matrix values in column major order, `SIZE(val) >= PRODUCT(s)`
     TYPE(FEVariableMatrix_), INTENT(IN) :: rank
-    !! TypeFEVariableMatrix
+    !! use `TypeFEVariableMatrix`
     TYPE(FEVariableSpaceTime_), INTENT(IN) :: vartype
-    !! TypeFEVariableSpaceTime
+    !! use `TypeFEVariableSpaceTime`
     INTEGER(I4B), INTENT(IN) :: s(4)
-    !! shape of data, [nrow, ncol, nns, nnt]
+    !! shape of the data, `[nrow, ncol, nns, nnt]`
   END FUNCTION Nodal_Matrix_SpaceTime2
 END INTERFACE NodalVariable
 
@@ -1200,20 +1141,20 @@ END INTERFACE NodalVariable
 ! date: 2021-12-10
 ! summary: Create nodal variable, matrix, space-time, with zero values
 !
-! Create a matrix, space-time nodal variable with shape
-! `s = [nrow, ncol, nns, nnt]` given by the size arguments, `len = PRODUCT(s)`
-! and all values zero.
+! Returns a matrix nodal variable that varies in space and time.
+! All values are zero.
+!
+! The shape is `s = [dim1, dim2, dim3, dim4]`.
+! This is `[nrow, ncol, nns, nnt]`.
+! Here `nns` is the number of nodes in space.
+! And `nnt` is the number of nodes in time.
+! The length is `PRODUCT(s)`.
 !
 ! Examples
 !
-!```fortran
-! TYPE(FEVariable_) :: obj
-! obj = NodalVariable(dim1=2, dim2=2, dim3=2, dim4=2, &
-!                     rank=TypeFEVariableMatrix, &
-!                     vartype=TypeFEVariableSpaceTime)
-!```
+! - [test 1](|base|FEVariable/examples/NodalVariable_test_1.F90)
 !
-! Full example: src/modules/FEVariable/examples/NodalVariable_test_1.F90
+! See also: [[NodalVariable]]
 
 INTERFACE NodalVariable
   MODULE PURE FUNCTION Nodal_Matrix_SpaceTime3( &
@@ -1229,9 +1170,9 @@ INTERFACE NodalVariable
     INTEGER(I4B), INTENT(IN) :: dim4
     !! number of nodes in time
     TYPE(FEVariableMatrix_), INTENT(IN) :: rank
-    !! TypeFEVariableMatrix
+    !! use `TypeFEVariableMatrix`
     TYPE(FEVariableSpaceTime_), INTENT(IN) :: vartype
-    !! TypeFEVariableSpaceTime
+    !! use `TypeFEVariableSpaceTime`
   END FUNCTION Nodal_Matrix_SpaceTime3
 END INTERFACE NodalVariable
 

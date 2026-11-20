@@ -18,13 +18,15 @@
 ! date: 2021-12-10
 ! summary: Constructors of quadrature variables (QuadratureVariable)
 !
-! `QuadratureVariable` returns a FEVariable_ with `defineOn` set to
-! quadrature.
-! The rank (TypeFEVariableScalar, TypeFEVariableVector,
-! TypeFEVariableMatrix) and the variable type
-! (TypeFEVariableConstant, TypeFEVariableSpace, TypeFEVariableTime,
-! TypeFEVariableSpaceTime) are passed as type arguments and select
-! the specific procedure. Values are stored column major in `val`.
+! `QuadratureVariable` returns a `FEVariable_` defined on quadrature
+! points.
+! Two type arguments select the specific procedure.
+! The `rank` argument is `TypeFEVariableScalar`, `TypeFEVariableVector`
+! or `TypeFEVariableMatrix`.
+! The `vartype` argument is `TypeFEVariableConstant`,
+! `TypeFEVariableSpace`, `TypeFEVariableTime` or
+! `TypeFEVariableSpaceTime`.
+! The variable keeps its values in `val`, in column-major order.
 ! The shape `s` of each combination is:
 !
 ! - scalar, constant: [1]
@@ -40,8 +42,8 @@
 ! - matrix, time: [nrow, ncol, nipt]
 ! - matrix, space-time: [nrow, ncol, nips, nipt]
 !
-! where nips and nipt are the number of quadrature points in space and
-! time
+! Here `nips` and `nipt` are the numbers of quadrature points in space
+! and in time.
 
 MODULE FEVariable_QuadratureVariableMethod
 USE BaseType, ONLY: FEVariable_
@@ -68,20 +70,14 @@ PUBLIC :: QuadratureVariable
 ! date: 2021-12-10
 ! summary: Create quadrature variable, scalar, constant, from values
 !
-! Create a scalar, constant quadrature variable with `s = [1]`, `len = 1` and
-! `val(1) = val`.
+! Creates a scalar quadrature variable that has one constant value.
+! The same value applies at every quadrature point.
+!
+! The result has `s = [1]` and `len = 1`. Its only value is `val`.
 !
 ! Examples
 !
-!```fortran
-! TYPE(FEVariable_) :: obj
-! REAL(DFP) :: val
-! val = 1.0_DFP
-! obj = QuadratureVariable(val, TypeFEVariableScalar, &
-!                          TypeFEVariableConstant)
-!```
-!
-! Full example: src/modules/FEVariable/examples/QuadratureVariable_test_1.F90
+! - [test 1](|base|FEVariable/examples/QuadratureVariable_test_1.F90)
 
 INTERFACE QuadratureVariable
   MODULE PURE FUNCTION Quadrature_Scalar_Constant( &
@@ -105,21 +101,15 @@ END INTERFACE QuadratureVariable
 ! date: 2021-12-10
 ! summary: Create quadrature variable, scalar, space, from values
 !
-! Create a scalar, space quadrature variable from `val`. The shape is
-! `s = SHAPE(val) = [nips]`, `len = PRODUCT(s)`, and `val` is stored column
-! major.
+! Creates a scalar quadrature variable that varies in space.
+! It holds one value for each space quadrature point.
+!
+! The result has `s = [nips]` with `nips = SIZE(val)`, and `len = nips`.
+! It stores a copy of `val`.
 !
 ! Examples
 !
-!```fortran
-! TYPE(FEVariable_) :: obj
-! REAL(DFP) :: val(3)
-! val = 1.0_DFP
-! obj = QuadratureVariable(val, TypeFEVariableScalar, &
-!                          TypeFEVariableSpace)
-!```
-!
-! Full example: src/modules/FEVariable/examples/QuadratureVariable_test_1.F90
+! - [test 1](|base|FEVariable/examples/QuadratureVariable_test_1.F90)
 
 INTERFACE QuadratureVariable
   MODULE PURE FUNCTION Quadrature_Scalar_Space(val, rank, vartype) RESULT(obj)
@@ -142,19 +132,15 @@ END INTERFACE QuadratureVariable
 ! date: 2025-11-04
 ! summary: Create quadrature variable, scalar, space, with zero values
 !
-! Create a scalar, space quadrature variable with shape `s = [nips]` given by
-! the size arguments, `len = PRODUCT(s)` and all values zero.
+! Creates a scalar quadrature variable that varies in space.
+! All values are zero.
+!
+! The result has `s = [tsize]` and `len = tsize`.
 !
 ! Examples
 !
-!```fortran
-! TYPE(FEVariable_) :: obj
-! obj = QuadratureVariable(tsize=2, &
-!                          rank=TypeFEVariableScalar, &
-!                          vartype=TypeFEVariableSpace)
-!```
-!
-! Full example: src/modules/FEVariable/examples/QuadratureVariable_test_1.F90
+! - [test 1](|base|FEVariable/examples/QuadratureVariable_test_1.F90)
+! - [test 2](|base|FEVariable/examples/QuadratureVariable_test_2.F90)
 
 INTERFACE QuadratureVariable
   MODULE PURE FUNCTION Quadrature_Scalar_Space2( &
@@ -178,21 +164,15 @@ END INTERFACE QuadratureVariable
 ! date: 2021-12-10
 ! summary: Create quadrature variable, scalar, time, from values
 !
-! Create a scalar, time quadrature variable from `val`. The shape is
-! `s = SHAPE(val) = [nipt]`, `len = PRODUCT(s)`, and `val` is stored column
-! major.
+! Creates a scalar quadrature variable that varies in time.
+! It holds one value for each time quadrature point.
+!
+! The result has `s = [nipt]` with `nipt = SIZE(val)`, and `len = nipt`.
+! It stores a copy of `val`.
 !
 ! Examples
 !
-!```fortran
-! TYPE(FEVariable_) :: obj
-! REAL(DFP) :: val(3)
-! val = 1.0_DFP
-! obj = QuadratureVariable(val, TypeFEVariableScalar, &
-!                          TypeFEVariableTime)
-!```
-!
-! Full example: src/modules/FEVariable/examples/QuadratureVariable_test_1.F90
+! - [test 1](|base|FEVariable/examples/QuadratureVariable_test_1.F90)
 
 INTERFACE QuadratureVariable
   MODULE PURE FUNCTION Quadrature_Scalar_Time(val, rank, vartype) RESULT(obj)
@@ -215,19 +195,14 @@ END INTERFACE QuadratureVariable
 ! date: 2021-12-10
 ! summary: Create quadrature variable, scalar, time, with zero values
 !
-! Create a scalar, time quadrature variable with shape `s = [nipt]` given by
-! the size arguments, `len = PRODUCT(s)` and all values zero.
+! Creates a scalar quadrature variable that varies in time.
+! All values are zero.
+!
+! The result has `s = [tsize]` and `len = tsize`.
 !
 ! Examples
 !
-!```fortran
-! TYPE(FEVariable_) :: obj
-! obj = QuadratureVariable(tsize=2, &
-!                          rank=TypeFEVariableScalar, &
-!                          vartype=TypeFEVariableTime)
-!```
-!
-! Full example: src/modules/FEVariable/examples/QuadratureVariable_test_1.F90
+! - [test 1](|base|FEVariable/examples/QuadratureVariable_test_1.F90)
 
 INTERFACE QuadratureVariable
   MODULE PURE FUNCTION Quadrature_Scalar_Time2( &
@@ -251,21 +226,15 @@ END INTERFACE QuadratureVariable
 ! date: 2021-12-10
 ! summary: Create quadrature variable, scalar, space-time, from values
 !
-! Create a scalar, space-time quadrature variable from `val`. The shape is
-! `s = SHAPE(val) = [nips, nipt]`, `len = PRODUCT(s)`, and `val` is stored
-! column major.
+! Creates a scalar quadrature variable that varies in space and time.
+! It holds one value for each pair of space and time quadrature points.
+!
+! The result has `s = [nips, nipt]` equal to `SHAPE(val)`, and
+! `len = nips * nipt`. The result keeps the values of `val` column by column.
 !
 ! Examples
 !
-!```fortran
-! TYPE(FEVariable_) :: obj
-! REAL(DFP) :: val(2, 2)
-! val = 1.0_DFP
-! obj = QuadratureVariable(val, TypeFEVariableScalar, &
-!                          TypeFEVariableSpaceTime)
-!```
-!
-! Full example: src/modules/FEVariable/examples/QuadratureVariable_test_1.F90
+! - [test 1](|base|FEVariable/examples/QuadratureVariable_test_1.F90)
 
 INTERFACE QuadratureVariable
   MODULE PURE FUNCTION Quadrature_Scalar_SpaceTime( &
@@ -289,21 +258,17 @@ END INTERFACE QuadratureVariable
 ! date: 2021-12-10
 ! summary: Create quadrature variable, scalar, space-time, from flat values
 !
-! Create a scalar, space-time quadrature variable with shape
-! `s = [nips, nipt]` and `len = PRODUCT(s)`. The data `val(1:len)` must be in
-! column major order.
+! Creates a scalar quadrature variable that varies in space and time.
+! The values come from a flat array, and `s` gives the shape.
+!
+! The result has `len = s(1) * s(2)`. It uses the first `len` entries of
+! `val`, in column major order. It skips any extra entries.
 !
 ! Examples
 !
-!```fortran
-! TYPE(FEVariable_) :: obj
-! REAL(DFP) :: val(4)
-! val = 1.0_DFP
-! obj = QuadratureVariable(val, TypeFEVariableScalar, &
-!                          TypeFEVariableSpaceTime, [2, 2])
-!```
-!
-! Full example: src/modules/FEVariable/examples/QuadratureVariable_test_1.F90
+! - [test 1](|base|FEVariable/examples/QuadratureVariable_test_1.F90)
+! - [test 2](|base|FEVariable/examples/QuadratureVariable_test_2.F90) with
+!   `val` longer than `PRODUCT(s)`
 
 INTERFACE QuadratureVariable
   MODULE PURE FUNCTION Quadrature_Scalar_SpaceTime2( &
@@ -329,20 +294,15 @@ END INTERFACE QuadratureVariable
 ! date: 2021-12-10
 ! summary: Create quadrature variable, scalar, space-time, with zero values
 !
-! Create a scalar, space-time quadrature variable with shape
-! `s = [nips, nipt]` given by the size arguments, `len = PRODUCT(s)` and all
-! values zero.
+! Creates a scalar quadrature variable that varies in space and time.
+! All values are zero.
+!
+! The result has `s = [nrow, ncol]` and `len = nrow * ncol`.
 !
 ! Examples
 !
-!```fortran
-! TYPE(FEVariable_) :: obj
-! obj = QuadratureVariable(nrow=2, ncol=2, &
-!                          rank=TypeFEVariableScalar, &
-!                          vartype=TypeFEVariableSpaceTime)
-!```
-!
-! Full example: src/modules/FEVariable/examples/QuadratureVariable_test_1.F90
+! - [test 1](|base|FEVariable/examples/QuadratureVariable_test_1.F90)
+! - [test 2](|base|FEVariable/examples/QuadratureVariable_test_2.F90)
 
 INTERFACE QuadratureVariable
   MODULE PURE FUNCTION Quadrature_Scalar_SpaceTime3( &
@@ -368,21 +328,15 @@ END INTERFACE QuadratureVariable
 ! date: 2021-12-10
 ! summary: Create quadrature variable, vector, constant, from values
 !
-! Create a vector, constant quadrature variable from `val`. The shape is
-! `s = SHAPE(val) = [ncomp]`, `len = PRODUCT(s)`, and `val` is stored column
-! major.
+! Creates a vector quadrature variable that is constant in space and time.
+! The same vector applies at every quadrature point.
+!
+! The result has `s = [ncomp]` with `ncomp = SIZE(val)`, and `len = ncomp`.
+! It stores a copy of `val`.
 !
 ! Examples
 !
-!```fortran
-! TYPE(FEVariable_) :: obj
-! REAL(DFP) :: val(3)
-! val = 1.0_DFP
-! obj = QuadratureVariable(val, TypeFEVariableVector, &
-!                          TypeFEVariableConstant)
-!```
-!
-! Full example: src/modules/FEVariable/examples/QuadratureVariable_test_1.F90
+! - [test 1](|base|FEVariable/examples/QuadratureVariable_test_1.F90)
 
 INTERFACE QuadratureVariable
   MODULE PURE FUNCTION Quadrature_Vector_Constant( &
@@ -406,19 +360,15 @@ END INTERFACE QuadratureVariable
 ! date: 2021-12-10
 ! summary: Create quadrature variable, vector, constant, with zero values
 !
-! Create a vector, constant quadrature variable with shape `s = [ncomp]` given
-! by the size arguments, `len = PRODUCT(s)` and all values zero.
+! Creates a vector quadrature variable that is constant in space and time.
+! All components are zero.
+!
+! The result has `s = [tsize]` and `len = tsize`.
 !
 ! Examples
 !
-!```fortran
-! TYPE(FEVariable_) :: obj
-! obj = QuadratureVariable(tsize=2, &
-!                          rank=TypeFEVariableVector, &
-!                          vartype=TypeFEVariableConstant)
-!```
-!
-! Full example: src/modules/FEVariable/examples/QuadratureVariable_test_1.F90
+! - [test 1](|base|FEVariable/examples/QuadratureVariable_test_1.F90)
+! - [test 2](|base|FEVariable/examples/QuadratureVariable_test_2.F90)
 
 INTERFACE QuadratureVariable
   MODULE PURE FUNCTION Quadrature_Vector_Constant2( &
@@ -442,21 +392,19 @@ END INTERFACE QuadratureVariable
 ! date: 2021-12-10
 ! summary: Create quadrature variable, vector, space, from values
 !
-! Create a vector, space quadrature variable from `val`. The shape is
-! `s = SHAPE(val) = [ncomp, nips]`, `len = PRODUCT(s)`, and `val` is stored
-! column major.
+! Creates a vector quadrature variable that varies in space.
+! The values come from the matrix `val`.
+!
+! The shape of the variable is `SHAPE(val) = [ncomp, nips]`.
+! Here `ncomp` is the number of components and `nips` is the number of
+! quadrature points in space. The variable holds `ncomp * nips` values.
+! The routine copies them from `val` in column major order.
 !
 ! Examples
 !
-!```fortran
-! TYPE(FEVariable_) :: obj
-! REAL(DFP) :: val(2, 2)
-! val = 1.0_DFP
-! obj = QuadratureVariable(val, TypeFEVariableVector, &
-!                          TypeFEVariableSpace)
-!```
+! - [test 1](|base|FEVariable/examples/QuadratureVariable_test_1.F90)
 !
-! Full example: src/modules/FEVariable/examples/QuadratureVariable_test_1.F90
+! See also: [[Quadrature_Vector_Space2]], [[Quadrature_Vector_Space3]]
 
 INTERFACE QuadratureVariable
   MODULE PURE FUNCTION Quadrature_Vector_Space(val, rank, vartype) RESULT(obj)
@@ -479,20 +427,20 @@ END INTERFACE QuadratureVariable
 ! date: 2021-12-10
 ! summary: Create quadrature variable, vector, space, from flat values
 !
-! Create a vector, space quadrature variable with shape `s = [ncomp, nips]`
-! and `len = PRODUCT(s)`. The data `val(1:len)` must be in column major order.
+! Creates a vector quadrature variable that varies in space.
+! The values come from the flat array `val`.
+!
+! The shape `s = [ncomp, nips]` gives the number of components and the
+! number of quadrature points in space. The variable copies the first
+! `PRODUCT(s)` entries of `val`, read in column major order. It ignores
+! any further entries.
 !
 ! Examples
 !
-!```fortran
-! TYPE(FEVariable_) :: obj
-! REAL(DFP) :: val(4)
-! val = 1.0_DFP
-! obj = QuadratureVariable(val, TypeFEVariableVector, &
-!                          TypeFEVariableSpace, [2, 2])
-!```
+! - [test 1](|base|FEVariable/examples/QuadratureVariable_test_1.F90)
+! - [test 2](|base|FEVariable/examples/QuadratureVariable_test_2.F90) checks the values
 !
-! Full example: src/modules/FEVariable/examples/QuadratureVariable_test_1.F90
+! See also: [[Quadrature_Vector_Space]]
 
 INTERFACE QuadratureVariable
   MODULE PURE FUNCTION Quadrature_Vector_Space2( &
@@ -518,19 +466,18 @@ END INTERFACE QuadratureVariable
 ! date: 2025-11-05
 ! summary: Create quadrature variable, vector, space, with zero values
 !
-! Create a vector, space quadrature variable with shape `s = [ncomp, nips]`
-! given by the size arguments, `len = PRODUCT(s)` and all values zero.
+! Creates a vector quadrature variable that varies in space.
+! All values are zero.
+!
+! The shape is `[nrow, ncol]`. Here `nrow` is the number of components
+! and `ncol` is the number of quadrature points in space.
 !
 ! Examples
 !
-!```fortran
-! TYPE(FEVariable_) :: obj
-! obj = QuadratureVariable(nrow=2, ncol=2, &
-!                          rank=TypeFEVariableVector, &
-!                          vartype=TypeFEVariableSpace)
-!```
+! - [test 1](|base|FEVariable/examples/QuadratureVariable_test_1.F90)
+! - [test 2](|base|FEVariable/examples/QuadratureVariable_test_2.F90) checks the zero values
 !
-! Full example: src/modules/FEVariable/examples/QuadratureVariable_test_1.F90
+! See also: [[Quadrature_Vector_Space]]
 
 INTERFACE QuadratureVariable
   MODULE PURE FUNCTION Quadrature_Vector_Space3( &
@@ -556,21 +503,19 @@ END INTERFACE QuadratureVariable
 ! date: 2021-12-10
 ! summary: Create quadrature variable, vector, time, from values
 !
-! Create a vector, time quadrature variable from `val`. The shape is
-! `s = SHAPE(val) = [ncomp, nipt]`, `len = PRODUCT(s)`, and `val` is stored
-! column major.
+! Creates a vector quadrature variable that varies in time.
+! The values come from the matrix `val`.
+!
+! The shape of the variable is `SHAPE(val) = [ncomp, nipt]`.
+! Here `ncomp` is the number of components and `nipt` is the number of
+! quadrature points in time. The variable holds `ncomp * nipt` values.
+! The routine copies them from `val` in column major order.
 !
 ! Examples
 !
-!```fortran
-! TYPE(FEVariable_) :: obj
-! REAL(DFP) :: val(2, 2)
-! val = 1.0_DFP
-! obj = QuadratureVariable(val, TypeFEVariableVector, &
-!                          TypeFEVariableTime)
-!```
+! - [test 1](|base|FEVariable/examples/QuadratureVariable_test_1.F90)
 !
-! Full example: src/modules/FEVariable/examples/QuadratureVariable_test_1.F90
+! See also: [[Quadrature_Vector_Time2]], [[Quadrature_Vector_Time3]]
 
 INTERFACE QuadratureVariable
   MODULE PURE FUNCTION Quadrature_Vector_Time(val, rank, vartype) RESULT(obj)
@@ -593,20 +538,20 @@ END INTERFACE QuadratureVariable
 ! date: 2021-12-10
 ! summary: Create quadrature variable, vector, time, from flat values
 !
-! Create a vector, time quadrature variable with shape `s = [ncomp, nipt]` and
-! `len = PRODUCT(s)`. The data `val(1:len)` must be in column major order.
+! Creates a vector quadrature variable that varies in time.
+! The values come from the flat array `val`.
+!
+! The shape `s = [ncomp, nipt]` gives the number of components and the
+! number of quadrature points in time. The variable copies the first
+! `PRODUCT(s)` entries of `val`, read in column major order. It ignores
+! any further entries.
 !
 ! Examples
 !
-!```fortran
-! TYPE(FEVariable_) :: obj
-! REAL(DFP) :: val(4)
-! val = 1.0_DFP
-! obj = QuadratureVariable(val, TypeFEVariableVector, &
-!                          TypeFEVariableTime, [2, 2])
-!```
+! - [test 1](|base|FEVariable/examples/QuadratureVariable_test_1.F90)
+! - [test 2](|base|FEVariable/examples/QuadratureVariable_test_2.F90) checks the values
 !
-! Full example: src/modules/FEVariable/examples/QuadratureVariable_test_1.F90
+! See also: [[Quadrature_Vector_Time]]
 
 INTERFACE QuadratureVariable
   MODULE PURE FUNCTION Quadrature_Vector_Time2( &
@@ -632,19 +577,18 @@ END INTERFACE QuadratureVariable
 ! date: 2026-11-14
 ! summary: Create quadrature variable, vector, time, with zero values
 !
-! Create a vector, time quadrature variable with shape `s = [ncomp, nipt]`
-! given by the size arguments, `len = PRODUCT(s)` and all values zero.
+! Creates a vector quadrature variable that varies in time.
+! All values are zero.
+!
+! The shape is `[nrow, ncol]`. Here `nrow` is the number of components
+! and `ncol` is the number of quadrature points in time.
 !
 ! Examples
 !
-!```fortran
-! TYPE(FEVariable_) :: obj
-! obj = QuadratureVariable(nrow=2, ncol=2, &
-!                          rank=TypeFEVariableVector, &
-!                          vartype=TypeFEVariableTime)
-!```
+! - [test 1](|base|FEVariable/examples/QuadratureVariable_test_1.F90)
+! - [test 2](|base|FEVariable/examples/QuadratureVariable_test_2.F90) checks the zero values
 !
-! Full example: src/modules/FEVariable/examples/QuadratureVariable_test_1.F90
+! See also: [[Quadrature_Vector_Time]]
 
 INTERFACE QuadratureVariable
   MODULE PURE FUNCTION Quadrature_Vector_Time3(nrow, ncol, rank, vartype) &
@@ -670,21 +614,21 @@ END INTERFACE QuadratureVariable
 ! date: 2021-12-10
 ! summary: Create quadrature variable, vector, space-time, from values
 !
-! Create a vector, space-time quadrature variable from `val`. The shape is
-! `s = SHAPE(val) = [ncomp, nips, nipt]`, `len = PRODUCT(s)`, and `val` is
-! stored column major.
+! Creates a vector quadrature variable that varies in space and time.
+! The values come from the rank-3 array `val`.
+!
+! The shape of the variable is `SHAPE(val) = [ncomp, nips, nipt]`.
+! Here `ncomp` is the number of components. The terms `nips` and `nipt`
+! are the numbers of quadrature points in space and in time. The variable
+! holds `ncomp * nips * nipt` values. The routine copies them from `val`
+! in column major order.
 !
 ! Examples
 !
-!```fortran
-! TYPE(FEVariable_) :: obj
-! REAL(DFP) :: val(2, 2, 2)
-! val = 1.0_DFP
-! obj = QuadratureVariable(val, TypeFEVariableVector, &
-!                          TypeFEVariableSpaceTime)
-!```
+! - [test 1](|base|FEVariable/examples/QuadratureVariable_test_1.F90)
 !
-! Full example: src/modules/FEVariable/examples/QuadratureVariable_test_1.F90
+! See also: [[Quadrature_Vector_SpaceTime2]],
+! [[Quadrature_Vector_SpaceTime3]]
 
 INTERFACE QuadratureVariable
   MODULE PURE FUNCTION Quadrature_Vector_SpaceTime( &
@@ -708,21 +652,20 @@ END INTERFACE QuadratureVariable
 ! date: 2021-12-10
 ! summary: Create quadrature variable, vector, space-time, from flat values
 !
-! Create a vector, space-time quadrature variable with shape
-! `s = [ncomp, nips, nipt]` and `len = PRODUCT(s)`. The data `val(1:len)` must
-! be in column major order.
+! Creates a vector quadrature variable that varies in space and time.
+! The values come from the flat array `val`.
+!
+! The shape `s = [ncomp, nips, nipt]` gives the number of components and
+! the numbers of quadrature points in space and in time. The variable
+! copies the first `PRODUCT(s)` entries of `val`, read in column major
+! order. It ignores any further entries.
 !
 ! Examples
 !
-!```fortran
-! TYPE(FEVariable_) :: obj
-! REAL(DFP) :: val(8)
-! val = 1.0_DFP
-! obj = QuadratureVariable(val, TypeFEVariableVector, &
-!                          TypeFEVariableSpaceTime, [2, 2, 2])
-!```
+! - [test 1](|base|FEVariable/examples/QuadratureVariable_test_1.F90)
+! - [test 2](|base|FEVariable/examples/QuadratureVariable_test_2.F90) checks the values
 !
-! Full example: src/modules/FEVariable/examples/QuadratureVariable_test_1.F90
+! See also: [[Quadrature_Vector_SpaceTime]]
 
 INTERFACE QuadratureVariable
   MODULE PURE FUNCTION Quadrature_Vector_SpaceTime2( &
@@ -748,9 +691,12 @@ END INTERFACE QuadratureVariable
 ! date: 2025-12-11
 ! summary: Create quadrature variable, vector, space-time, with zero values
 !
-! Create a vector, space-time quadrature variable with shape
-! `s = [ncomp, nips, nipt]` given by the size arguments, `len = PRODUCT(s)`
-! and all values zero.
+! Creates a vector quadrature variable that varies in space and time.
+! All values are zero.
+!
+! The shape is `[dim1, dim2, dim3]`. Here `dim1` is the number of
+! components. The terms `dim2` and `dim3` are the numbers of quadrature
+! points in space and in time.
 !
 ! Changes:
 !   - 2026-11-14: dim1, dim2, dim3 moved before rank and vartype, as in
@@ -758,14 +704,10 @@ END INTERFACE QuadratureVariable
 !
 ! Examples
 !
-!```fortran
-! TYPE(FEVariable_) :: obj
-! obj = QuadratureVariable(dim1=2, dim2=2, dim3=2, &
-!                          rank=TypeFEVariableVector, &
-!                          vartype=TypeFEVariableSpaceTime)
-!```
+! - [test 1](|base|FEVariable/examples/QuadratureVariable_test_1.F90)
+! - [test 2](|base|FEVariable/examples/QuadratureVariable_test_2.F90) checks the zero values
 !
-! Full example: src/modules/FEVariable/examples/QuadratureVariable_test_1.F90
+! See also: [[Quadrature_Vector_SpaceTime]]
 
 INTERFACE QuadratureVariable
   MODULE PURE FUNCTION Quadrature_Vector_SpaceTime3( &
@@ -793,21 +735,18 @@ END INTERFACE QuadratureVariable
 ! date: 2021-12-10
 ! summary: Create quadrature variable, matrix, constant, from values
 !
-! Create a matrix, constant quadrature variable from `val`. The shape is
-! `s = SHAPE(val) = [nrow, ncol]`, `len = PRODUCT(s)`, and `val` is stored
-! column major.
+! Creates a matrix quadrature variable that is constant in space and time.
+! The values come from the matrix `val`.
+!
+! The shape of the variable is `SHAPE(val) = [nrow, ncol]`. It holds
+! `nrow * ncol` values. The routine copies them from `val` in column
+! major order.
 !
 ! Examples
 !
-!```fortran
-! TYPE(FEVariable_) :: obj
-! REAL(DFP) :: val(2, 2)
-! val = 1.0_DFP
-! obj = QuadratureVariable(val, TypeFEVariableMatrix, &
-!                          TypeFEVariableConstant)
-!```
+! - [test 1](|base|FEVariable/examples/QuadratureVariable_test_1.F90)
 !
-! Full example: src/modules/FEVariable/examples/QuadratureVariable_test_1.F90
+! See also: [[Quadrature_Matrix_Constant2]], [[Quadrature_Matrix_Constant3]]
 
 INTERFACE QuadratureVariable
   MODULE PURE FUNCTION Quadrature_Matrix_Constant( &
@@ -831,20 +770,20 @@ END INTERFACE QuadratureVariable
 ! date: 2021-12-10
 ! summary: Create quadrature variable, matrix, constant, from flat values
 !
-! Create a matrix, constant quadrature variable with shape `s = [nrow, ncol]`
-! and `len = PRODUCT(s)`. The data `val(1:len)` must be in column major order.
+! Creates a matrix quadrature variable that is constant in space and time.
+! The values come from the flat array `val`.
+!
+! The shape `s = [nrow, ncol]` gives the matrix size. The variable holds
+! `PRODUCT(s)` values. The routine copies the first `PRODUCT(s)` entries
+! of `val`, in column major order. It ignores any further entries.
 !
 ! Examples
 !
-!```fortran
-! TYPE(FEVariable_) :: obj
-! REAL(DFP) :: val(4)
-! val = 1.0_DFP
-! obj = QuadratureVariable(val, TypeFEVariableMatrix, &
-!                          TypeFEVariableConstant, [2, 2])
-!```
+! - [test 1](|base|FEVariable/examples/QuadratureVariable_test_1.F90)
+! - [test 2](|base|FEVariable/examples/QuadratureVariable_test_2.F90) checks
+!   the copied values
 !
-! Full example: src/modules/FEVariable/examples/QuadratureVariable_test_1.F90
+! See also: [[Quadrature_Matrix_Constant]]
 
 INTERFACE QuadratureVariable
   MODULE PURE FUNCTION Quadrature_Matrix_Constant2( &
@@ -870,19 +809,19 @@ END INTERFACE QuadratureVariable
 ! date: 2021-12-10
 ! summary: Create quadrature variable, matrix, constant, with zero values
 !
-! Create a matrix, constant quadrature variable with shape `s = [nrow, ncol]`
-! given by the size arguments, `len = PRODUCT(s)` and all values zero.
+! Creates a matrix quadrature variable that is constant in space and time.
+! Every value is zero.
+!
+! The arguments `nrow` and `ncol` give the matrix size. The variable holds
+! `nrow * ncol` values.
 !
 ! Examples
 !
-!```fortran
-! TYPE(FEVariable_) :: obj
-! obj = QuadratureVariable(nrow=2, ncol=2, &
-!                          rank=TypeFEVariableMatrix, &
-!                          vartype=TypeFEVariableConstant)
-!```
+! - [test 1](|base|FEVariable/examples/QuadratureVariable_test_1.F90)
+! - [test 2](|base|FEVariable/examples/QuadratureVariable_test_2.F90) checks
+!   the zero values
 !
-! Full example: src/modules/FEVariable/examples/QuadratureVariable_test_1.F90
+! See also: [[Quadrature_Matrix_Constant]]
 
 INTERFACE QuadratureVariable
   MODULE PURE FUNCTION Quadrature_Matrix_Constant3( &
@@ -908,21 +847,20 @@ END INTERFACE QuadratureVariable
 ! date: 2021-12-10
 ! summary: Create quadrature variable, matrix, space, from values
 !
-! Create a matrix, space quadrature variable from `val`. The shape is
-! `s = SHAPE(val) = [nrow, ncol, nips]`, `len = PRODUCT(s)`, and `val` is
-! stored column major.
+! Creates a matrix quadrature variable that varies in space.
+! It holds one matrix at each space quadrature point.
+!
+! The shape is `SHAPE(val) = [nrow, ncol, nips]`. Here `nips` is the
+! number of quadrature points in space. The variable holds
+! `nrow * ncol * nips` values. The routine copies them from `val` in
+! column major order.
 !
 ! Examples
 !
-!```fortran
-! TYPE(FEVariable_) :: obj
-! REAL(DFP) :: val(2, 2, 2)
-! val = 1.0_DFP
-! obj = QuadratureVariable(val, TypeFEVariableMatrix, &
-!                          TypeFEVariableSpace)
-!```
+! - [test 1](|base|FEVariable/examples/QuadratureVariable_test_1.F90)
+! - [test 2](|base|FEVariable/examples/QuadratureVariable_test_2.F90)
 !
-! Full example: src/modules/FEVariable/examples/QuadratureVariable_test_1.F90
+! See also: [[Quadrature_Matrix_Space2]], [[Quadrature_Matrix_Space3]]
 
 INTERFACE QuadratureVariable
   MODULE PURE FUNCTION Quadrature_Matrix_Space(val, rank, vartype) RESULT(obj)
@@ -945,21 +883,21 @@ END INTERFACE QuadratureVariable
 ! date: 2021-12-10
 ! summary: Create quadrature variable, matrix, space, from flat values
 !
-! Create a matrix, space quadrature variable with shape
-! `s = [nrow, ncol, nips]` and `len = PRODUCT(s)`. The data `val(1:len)` must
-! be in column major order.
+! Creates a matrix quadrature variable that varies in space.
+! The values come from the flat array `val`.
+!
+! The shape `s = [nrow, ncol, nips]` gives the matrix size and the number
+! of space quadrature points. The variable holds `PRODUCT(s)` values. The
+! routine copies the first `PRODUCT(s)` entries of `val`, in column major
+! order. It ignores any further entries.
 !
 ! Examples
 !
-!```fortran
-! TYPE(FEVariable_) :: obj
-! REAL(DFP) :: val(8)
-! val = 1.0_DFP
-! obj = QuadratureVariable(val, TypeFEVariableMatrix, &
-!                          TypeFEVariableSpace, [2, 2, 2])
-!```
+! - [test 1](|base|FEVariable/examples/QuadratureVariable_test_1.F90)
+! - [test 2](|base|FEVariable/examples/QuadratureVariable_test_2.F90) checks
+!   the copied values
 !
-! Full example: src/modules/FEVariable/examples/QuadratureVariable_test_1.F90
+! See also: [[Quadrature_Matrix_Space]]
 
 INTERFACE QuadratureVariable
   MODULE PURE FUNCTION Quadrature_Matrix_Space2( &
@@ -985,20 +923,20 @@ END INTERFACE QuadratureVariable
 ! date: 2021-12-10
 ! summary: Create quadrature variable, matrix, space, with zero values
 !
-! Create a matrix, space quadrature variable with shape
-! `s = [nrow, ncol, nips]` given by the size arguments, `len = PRODUCT(s)` and
-! all values zero.
+! Creates a matrix quadrature variable that varies in space.
+! Every value is zero.
+!
+! The arguments `dim1`, `dim2` and `dim3` give the number of rows, the
+! number of columns and the number of space quadrature points. The variable
+! holds `dim1 * dim2 * dim3` values.
 !
 ! Examples
 !
-!```fortran
-! TYPE(FEVariable_) :: obj
-! obj = QuadratureVariable(dim1=2, dim2=2, dim3=2, &
-!                          rank=TypeFEVariableMatrix, &
-!                          vartype=TypeFEVariableSpace)
-!```
+! - [test 1](|base|FEVariable/examples/QuadratureVariable_test_1.F90)
+! - [test 2](|base|FEVariable/examples/QuadratureVariable_test_2.F90) checks
+!   the zero values
 !
-! Full example: src/modules/FEVariable/examples/QuadratureVariable_test_1.F90
+! See also: [[Quadrature_Matrix_Space]]
 
 INTERFACE QuadratureVariable
   MODULE PURE FUNCTION Quadrature_Matrix_Space3( &
@@ -1026,21 +964,20 @@ END INTERFACE QuadratureVariable
 ! date: 2021-12-10
 ! summary: Create quadrature variable, matrix, time, from values
 !
-! Create a matrix, time quadrature variable from `val`. The shape is
-! `s = SHAPE(val) = [nrow, ncol, nipt]`, `len = PRODUCT(s)`, and `val` is
-! stored column major.
+! Creates a matrix quadrature variable that varies in time.
+! It holds one matrix at each time quadrature point.
+!
+! The shape is `SHAPE(val) = [nrow, ncol, nipt]`. Here `nipt` is the
+! number of quadrature points in time. The variable holds
+! `nrow * ncol * nipt` values. The routine copies them from `val` in
+! column major order.
 !
 ! Examples
 !
-!```fortran
-! TYPE(FEVariable_) :: obj
-! REAL(DFP) :: val(2, 2, 2)
-! val = 1.0_DFP
-! obj = QuadratureVariable(val, TypeFEVariableMatrix, &
-!                          TypeFEVariableTime)
-!```
+! - [test 1](|base|FEVariable/examples/QuadratureVariable_test_1.F90)
+! - [test 2](|base|FEVariable/examples/QuadratureVariable_test_2.F90)
 !
-! Full example: src/modules/FEVariable/examples/QuadratureVariable_test_1.F90
+! See also: [[Quadrature_Matrix_Time2]], [[Quadrature_Matrix_Time3]]
 
 INTERFACE QuadratureVariable
   MODULE PURE FUNCTION Quadrature_Matrix_Time(val, rank, vartype) RESULT(obj)
@@ -1063,21 +1000,21 @@ END INTERFACE QuadratureVariable
 ! date: 2021-12-10
 ! summary: Create quadrature variable, matrix, time, from flat values
 !
-! Create a matrix, time quadrature variable with shape
-! `s = [nrow, ncol, nipt]` and `len = PRODUCT(s)`. The data `val(1:len)` must
-! be in column major order.
+! Creates a matrix quadrature variable that varies in time.
+! The values come from the flat array `val`.
+!
+! The shape `s = [nrow, ncol, nipt]` gives the matrix size and the number
+! of time quadrature points. The variable holds `PRODUCT(s)` values. The
+! routine copies the first `PRODUCT(s)` entries of `val`, in column major
+! order. It ignores any further entries.
 !
 ! Examples
 !
-!```fortran
-! TYPE(FEVariable_) :: obj
-! REAL(DFP) :: val(8)
-! val = 1.0_DFP
-! obj = QuadratureVariable(val, TypeFEVariableMatrix, &
-!                          TypeFEVariableTime, [2, 2, 2])
-!```
+! - [test 1](|base|FEVariable/examples/QuadratureVariable_test_1.F90)
+! - [test 2](|base|FEVariable/examples/QuadratureVariable_test_2.F90) checks
+!   the copied values
 !
-! Full example: src/modules/FEVariable/examples/QuadratureVariable_test_1.F90
+! See also: [[Quadrature_Matrix_Time]]
 
 INTERFACE QuadratureVariable
   MODULE PURE FUNCTION Quadrature_Matrix_Time2( &
@@ -1103,20 +1040,20 @@ END INTERFACE QuadratureVariable
 ! date: 2021-12-10
 ! summary: Create quadrature variable, matrix, time, with zero values
 !
-! Create a matrix, time quadrature variable with shape
-! `s = [nrow, ncol, nipt]` given by the size arguments, `len = PRODUCT(s)` and
-! all values zero.
+! Creates a matrix quadrature variable that varies in time.
+! Every value is zero.
+!
+! The arguments `dim1`, `dim2` and `dim3` give the number of rows, the
+! number of columns and the number of time quadrature points. The variable
+! holds `dim1 * dim2 * dim3` values.
 !
 ! Examples
 !
-!```fortran
-! TYPE(FEVariable_) :: obj
-! obj = QuadratureVariable(dim1=2, dim2=2, dim3=2, &
-!                          rank=TypeFEVariableMatrix, &
-!                          vartype=TypeFEVariableTime)
-!```
+! - [test 1](|base|FEVariable/examples/QuadratureVariable_test_1.F90)
+! - [test 2](|base|FEVariable/examples/QuadratureVariable_test_2.F90) checks
+!   the zero values
 !
-! Full example: src/modules/FEVariable/examples/QuadratureVariable_test_1.F90
+! See also: [[Quadrature_Matrix_Time]]
 
 INTERFACE QuadratureVariable
   MODULE PURE FUNCTION Quadrature_Matrix_Time3( &
@@ -1144,21 +1081,20 @@ END INTERFACE QuadratureVariable
 ! date: 2021-12-10
 ! summary: Create quadrature variable, matrix, space-time, from values
 !
-! Create a matrix, space-time quadrature variable from `val`. The shape is
-! `s = SHAPE(val) = [nrow, ncol, nips, nipt]`, `len = PRODUCT(s)`, and `val`
-! is stored column major.
+! Creates a matrix quadrature variable that varies in space and time.
+! It holds one matrix at each pair of space and time quadrature points.
+!
+! The shape is `SHAPE(val) = [nrow, ncol, nips, nipt]`. Here `nips` and
+! `nipt` are the numbers of quadrature points in space and in time. The
+! variable holds `nrow * ncol * nips * nipt` values. The routine copies
+! them from `val` in column major order.
 !
 ! Examples
 !
-!```fortran
-! TYPE(FEVariable_) :: obj
-! REAL(DFP) :: val(2, 2, 2, 2)
-! val = 1.0_DFP
-! obj = QuadratureVariable(val, TypeFEVariableMatrix, &
-!                          TypeFEVariableSpaceTime)
-!```
+! - [test 1](|base|FEVariable/examples/QuadratureVariable_test_1.F90)
+! - [test 2](|base|FEVariable/examples/QuadratureVariable_test_2.F90)
 !
-! Full example: src/modules/FEVariable/examples/QuadratureVariable_test_1.F90
+! See also: [[Quadrature_Matrix_SpaceTime2]]
 
 INTERFACE QuadratureVariable
   MODULE PURE FUNCTION Quadrature_Matrix_SpaceTime( &
@@ -1182,21 +1118,21 @@ END INTERFACE QuadratureVariable
 ! date: 2021-12-10
 ! summary: Create quadrature variable, matrix, space-time, from flat values
 !
-! Create a matrix, space-time quadrature variable with shape
-! `s = [nrow, ncol, nips, nipt]` and `len = PRODUCT(s)`. The data `val(1:len)`
-! must be in column major order.
+! Creates a matrix quadrature variable that varies in space and time.
+! The values come from the flat array `val`.
+!
+! The shape `s = [nrow, ncol, nips, nipt]` gives the matrix size and the
+! numbers of quadrature points in space and in time. The variable holds
+! `PRODUCT(s)` values. The routine copies the first `PRODUCT(s)` entries
+! of `val`, in column major order. It ignores any further entries.
 !
 ! Examples
 !
-!```fortran
-! TYPE(FEVariable_) :: obj
-! REAL(DFP) :: val(16)
-! val = 1.0_DFP
-! obj = QuadratureVariable(val, TypeFEVariableMatrix, &
-!                          TypeFEVariableSpaceTime, [2, 2, 2, 2])
-!```
+! - [test 1](|base|FEVariable/examples/QuadratureVariable_test_1.F90)
+! - [test 2](|base|FEVariable/examples/QuadratureVariable_test_2.F90) checks
+!   the copied values
 !
-! Full example: src/modules/FEVariable/examples/QuadratureVariable_test_1.F90
+! See also: [[Quadrature_Matrix_SpaceTime]]
 
 INTERFACE QuadratureVariable
   MODULE PURE FUNCTION Quadrature_Matrix_SpaceTime2( &
@@ -1222,20 +1158,18 @@ END INTERFACE QuadratureVariable
 ! date: 2021-12-10
 ! summary: Create quadrature variable, matrix, space-time, with zero values
 !
-! Create a matrix, space-time quadrature variable with shape
-! `s = [nrow, ncol, nips, nipt]` given by the size arguments,
-! `len = PRODUCT(s)` and all values zero.
+! Creates a matrix quadrature variable that varies in space and time.
+! All values start at zero.
+!
+! The shape of the variable is `[dim1, dim2, dim3, dim4]`.
+! These are the rows, the columns, the quadrature points in space and
+! the quadrature points in time.
+! The total length is the product of the four sizes.
 !
 ! Examples
 !
-!```fortran
-! TYPE(FEVariable_) :: obj
-! obj = QuadratureVariable(dim1=2, dim2=2, dim3=2, dim4=2, &
-!                          rank=TypeFEVariableMatrix, &
-!                          vartype=TypeFEVariableSpaceTime)
-!```
-!
-! Full example: src/modules/FEVariable/examples/QuadratureVariable_test_1.F90
+! - [test 1](|base|FEVariable/examples/QuadratureVariable_test_1.F90)
+! - [test 2](|base|FEVariable/examples/QuadratureVariable_test_2.F90)
 
 INTERFACE QuadratureVariable
   MODULE PURE FUNCTION Quadrature_Matrix_SpaceTime3( &

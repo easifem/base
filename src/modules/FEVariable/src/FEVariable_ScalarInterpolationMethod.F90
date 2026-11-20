@@ -16,20 +16,25 @@
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2025-08-29
-! summary: Interpolation of scalar FEVariable_ to quadrature points
+! summary: Interpolation of scalar `FEVariable_` at quadrature points
 !
-! `GetInterpolation_` evaluates a scalar FEVariable_ at quadrature points
-! without allocation. A nodal variable is interpolated with the space
-! shape functions `N` (and the time shape functions `T` for space-time);
-! a quadrature variable is copied. Three forms exist for each variable
-! type (constant, space, space-time):
+! `GetInterpolation_` evaluates a scalar `FEVariable_` at quadrature
+! points. It does not allocate memory.
 !
-! - `_1`: values at all `nips` points in an array
-! - `_2`: values at all points written in a FEVariable_ at `timeIndx`
-! - `_3`: value at the single point `spaceIndx`
+! A variable defined on nodes uses the space shape functions `N`.
+! A space-time variable also uses the time shape functions `T`.
+! A variable defined on quadrature points needs no shape functions.
+! The routine copies its values.
 !
-! `ScalarGetInterpolation_3` picks the variable type from `obj`.
-! Time variables are not supported.
+! Each variable type (constant, space, space-time) has three forms.
+!
+! - `_1` writes the values at all `nips` points into an array.
+! - `_2` writes the values at all points into a `FEVariable_`, at the
+!   time point `timeIndx`.
+! - `_3` returns the value at the single point `spaceIndx`.
+!
+! The `ScalarGetInterpolation_3` form reads the variable type from `obj`.
+! It does not support time variables.
 
 MODULE FEVariable_ScalarInterpolationMethod
 USE BaseType, ONLY: FEVariable_, &
@@ -56,23 +61,18 @@ PUBLIC :: GetInterpolation_
 ! date: 2025-08-29
 ! summary: Interpolation of scalar, constant, at all quadrature points
 !
-! Writes the interpolated value in `ans(1:nips)`.
-! The constant value is used at every quadrature point; `N` is not
-! used.
+! Computes a constant scalar at the first `nips` quadrature points.
+! It stores `scale * obj%val(1)` in each of `ans(1:nips)`.
+! It sets `tsize` to `nips`.
+! The arguments `N` and `nns` are not used, because the value is the
+! same at every point.
 !
-! If `addContribution` is false, `ans` is cleared first.
+! If `addContribution` is true, the routine adds the values to `ans`.
+! Otherwise, the routine sets `ans(1:nips)` to zero first.
 !
 ! Examples
 !
-!```fortran
-! CALL GetInterpolation_(obj=obj, rank=TypeFEVariableScalar, &
-!                        vartype=TypeFEVariableConstant, N=N, nns=nns, &
-!                        nips=nips, scale=1.0_DFP, &
-!                        addContribution=.FALSE., ans=ans, tsize=tsize)
-!```
-!
-! Full example:
-! src/modules/FEVariable/examples/GetInterpolation__test_1.F90
+! - [test 1](|base|FEVariable/examples/GetInterpolation__test_1.F90)
 
 INTERFACE GetInterpolation_
   MODULE PURE SUBROUTINE ScalarConstantGetInterpolation_1( &
@@ -92,7 +92,7 @@ INTERFACE GetInterpolation_
     REAL(DFP), INTENT(IN) :: scale
     !! scale factor applied to the interpolated value
     LOGICAL(LGT), INTENT(IN) :: addContribution
-    !! if true, the interpolated value is added to ans
+    !! if true, add the interpolated value to `ans`
     REAL(DFP), INTENT(INOUT) :: ans(:)
     !! interpolated values, SIZE(ans) >= nips
     INTEGER(I4B), INTENT(OUT) :: tsize
@@ -108,28 +108,24 @@ END INTERFACE GetInterpolation_
 ! date: 2025-08-29
 ! summary: Interpolation of scalar, constant, into a FEVariable
 !
-! Writes the interpolated value in `ans%val` of the time slice `timeIndx`.
-! The constant value is used at every quadrature point; `N` is not
-! used.
+! Computes a constant scalar at all quadrature points of one time point.
+! It stores `scale * obj%val(1)` in the first `nips` values of the time
+! slice `timeIndx` of `ans%val`.
+! The arguments `N` and `nns` are not used.
 !
-! `ans` must already be a quadrature FEVariable_ with the shape of the
-! result; the values of time point `timeIndx` start after
-! `(timeIndx - 1)` time slices. `ans%s`, `ans%len` and the other
-! components of `ans` are not changed.
-! If `addContribution` is false, that time slice is cleared first.
+! If `addContribution` is true, the routine adds the values to `ans`.
+! Otherwise, the routine sets the `nips` values of that slice to zero
+! first.
+!
+! @note
+! `ans` must already be a quadrature variable of the right shape.
+! The routine changes only `ans%val`.
+! Time slice `timeIndx` starts after `(timeIndx - 1) * ans%s(1)` values.
+! @endnote
 !
 ! Examples
 !
-!```fortran
-! CALL GetInterpolation_(obj=obj, rank=TypeFEVariableScalar, &
-!                        vartype=TypeFEVariableConstant, N=N, nns=nns, &
-!                        nips=nips, scale=1.0_DFP, &
-!                        addContribution=.FALSE., timeIndx=timeIndx, &
-!                        ans=ans)
-!```
-!
-! Full example:
-! src/modules/FEVariable/examples/GetInterpolation__test_1.F90
+! - [test 1](|base|FEVariable/examples/GetInterpolation__test_1.F90)
 
 INTERFACE GetInterpolation_
   MODULE PURE SUBROUTINE ScalarConstantGetInterpolation_2( &
@@ -149,11 +145,11 @@ INTERFACE GetInterpolation_
     REAL(DFP), INTENT(IN) :: scale
     !! scale factor applied to the interpolated value
     LOGICAL(LGT), INTENT(IN) :: addContribution
-    !! if true, the interpolated value is added to ans
+    !! if true, add the interpolated value to `ans`
     INTEGER(I4B), INTENT(IN) :: timeIndx
     !! time quadrature point index
     TYPE(FEVariable_), INTENT(INOUT) :: ans
-    !! quadrature variable, values written at timeIndx
+    !! quadrature variable, values written at `timeIndx`
   END SUBROUTINE ScalarConstantGetInterpolation_2
 END INTERFACE GetInterpolation_
 
@@ -165,23 +161,17 @@ END INTERFACE GetInterpolation_
 ! date: 2025-08-29
 ! summary: Interpolation of scalar, constant, at one quadrature point
 !
-! Writes the interpolated value in `ans`.
-! The constant value is used at every quadrature point; `N` is not
-! used.
+! Computes a constant scalar at one quadrature point.
+! It stores the result `scale * obj%val(1)` in `ans`.
+! The arguments `N`, `nns`, `spaceIndx` and `timeIndx` are not used,
+! because the value is the same at every point.
 !
-! If `addContribution` is false, `ans` is cleared first.
+! If `addContribution` is true, the routine adds the result to `ans`.
+! Otherwise, the routine sets `ans` to zero first.
 !
 ! Examples
 !
-!```fortran
-! CALL GetInterpolation_(obj=obj, rank=TypeFEVariableScalar, &
-!                        vartype=TypeFEVariableConstant, N=N, nns=nns, &
-!                        spaceIndx=ips, timeIndx=1, scale=1.0_DFP, &
-!                        addContribution=.FALSE., ans=ans)
-!```
-!
-! Full example:
-! src/modules/FEVariable/examples/GetInterpolation__test_1.F90
+! - [test 1](|base|FEVariable/examples/GetInterpolation__test_1.F90)
 
 INTERFACE GetInterpolation_
   MODULE PURE SUBROUTINE ScalarConstantGetInterpolation_3( &
@@ -204,7 +194,7 @@ INTERFACE GetInterpolation_
     REAL(DFP), INTENT(IN) :: scale
     !! scale factor applied to the interpolated value
     LOGICAL(LGT), INTENT(IN) :: addContribution
-    !! if true, the interpolated value is added to ans
+    !! if true, add the interpolated value to `ans`
     REAL(DFP), INTENT(INOUT) :: ans
     !! interpolated value
   END SUBROUTINE ScalarConstantGetInterpolation_3
@@ -218,26 +208,21 @@ END INTERFACE GetInterpolation_
 ! date: 2025-08-29
 ! summary: Interpolation of scalar, space, at all quadrature points
 !
-! Writes the interpolated value in `ans(1:nips)`:
+! Computes a space-varying scalar at the first `nips` quadrature points.
+! It stores the values in `ans(1:nips)` and sets `tsize` to `nips`.
 !
-! - nodal:
-!   `ans(ips) = scale * SUM_I N(I, ips) * obj(I)`
-! - quadrature (`N` is not used):
-!   `ans(ips) = scale * obj(ips)`
+! The result depends on where `obj` is defined.
 !
-! If `addContribution` is false, `ans` is cleared first.
+! - On nodes, `ans(ips) = scale * SUM_I N(I, ips) * obj(I)`.
+! - On quadrature points, `ans(ips) = scale * obj(ips)`.
+!   Then `N` is not used.
+!
+! If `addContribution` is true, the routine adds the values to `ans`.
+! Otherwise, the routine sets `ans(1:nips)` to zero first.
 !
 ! Examples
 !
-!```fortran
-! CALL GetInterpolation_(obj=obj, rank=TypeFEVariableScalar, &
-!                        vartype=TypeFEVariableSpace, N=N, nns=nns, &
-!                        nips=nips, scale=1.0_DFP, &
-!                        addContribution=.FALSE., ans=ans, tsize=tsize)
-!```
-!
-! Full example:
-! src/modules/FEVariable/examples/GetInterpolation__test_1.F90
+! - [test 1](|base|FEVariable/examples/GetInterpolation__test_1.F90)
 
 INTERFACE GetInterpolation_
   MODULE PURE SUBROUTINE ScalarSpaceGetInterpolation_1( &
@@ -259,7 +244,7 @@ INTERFACE GetInterpolation_
     REAL(DFP), INTENT(IN) :: scale
     !! scale factor applied to the interpolated value
     LOGICAL(LGT), INTENT(IN) :: addContribution
-    !! if true, the interpolated value is added to ans
+    !! if true, add the interpolated value to `ans`
     INTEGER(I4B), INTENT(OUT) :: tsize
     !! number of values written in ans
   END SUBROUTINE ScalarSpaceGetInterpolation_1
@@ -273,34 +258,34 @@ END INTERFACE GetInterpolation_
 ! date: 2025-08-29
 ! summary: Interpolation of scalar, space, into a FEVariable
 !
-! Writes the interpolated value in `ans%val` of the time slice `timeIndx`:
+! Computes a space-varying scalar at the first `nips` quadrature
+! points. It stores the values in one time slice of `ans%val`.
 !
-! - nodal:
-!   `ans(ips) = scale * SUM_I N(I, ips) * obj(I)`
-! - quadrature (`N` is not used):
-!   `ans(ips) = scale * obj(ips)`
+! The result depends on where `obj` is defined.
 !
-! `ans` must already be a quadrature FEVariable_ with the shape of the
-! result; the values of time point `timeIndx` start after
-! `(timeIndx - 1)` time slices. `ans%s`, `ans%len` and the other
-! components of `ans` are not changed.
-! If `addContribution` is false, that time slice is cleared first.
+! - On nodes, `ans(ips) = scale * SUM_I N(I, ips) * obj(I)`.
+! - On quadrature points, `ans(ips) = scale * obj(ips)`.
+!   Then `N` is not used.
+!
+! The routine writes to the slice `timeIndx` of `ans`.
+! This slice starts after `(timeIndx - 1) * ans%s(1)` values.
+!
+! If `addContribution` is true, the routine adds the values to the slice.
+! Otherwise, it sets the slice to zero first.
+!
+! @note
+! `ans` must be a quadrature variable of the right shape.
+! The routine does not change `ans%s`, `ans%len` or other components.
+! @endnote
 !
 ! Changes:
-!   - 2026-11-14: ans%s and ans%len are no longer changed
+!   - 2026-11-14: `ans%s` and `ans%len` are no longer changed
 !
 ! Examples
 !
-!```fortran
-! CALL GetInterpolation_(obj=obj, rank=TypeFEVariableScalar, &
-!                        vartype=TypeFEVariableSpace, N=N, nns=nns, &
-!                        nips=nips, scale=1.0_DFP, &
-!                        addContribution=.FALSE., timeIndx=timeIndx, &
-!                        ans=ans)
-!```
+! - [test 1](|base|FEVariable/examples/GetInterpolation__test_1.F90)
 !
-! Full example:
-! src/modules/FEVariable/examples/GetInterpolation__test_1.F90
+! See also: [[ScalarSpaceGetInterpolation_1]]
 
 INTERFACE GetInterpolation_
   MODULE PURE SUBROUTINE ScalarSpaceGetInterpolation_2( &
@@ -320,11 +305,11 @@ INTERFACE GetInterpolation_
     REAL(DFP), INTENT(IN) :: scale
     !! scale factor applied to the interpolated value
     LOGICAL(LGT), INTENT(IN) :: addContribution
-    !! if true, the interpolated value is added to ans
+    !! if true, adds the interpolated values to `ans`
     INTEGER(I4B), INTENT(IN) :: timeIndx
     !! time quadrature point index
     TYPE(FEVariable_), INTENT(INOUT) :: ans
-    !! quadrature variable, values written at timeIndx
+    !! quadrature variable, the routine writes to the slice `timeIndx`
   END SUBROUTINE ScalarSpaceGetInterpolation_2
 END INTERFACE GetInterpolation_
 
@@ -336,26 +321,26 @@ END INTERFACE GetInterpolation_
 ! date: 2025-08-29
 ! summary: Interpolation of scalar, space, at one quadrature point
 !
-! Writes the interpolated value in `ans`:
+! Computes a space-varying scalar at one space quadrature point.
+! It stores the value in `ans`.
 !
-! - nodal:
-!   `ans = scale * SUM_I N(I, spaceIndx) * obj(I)`
-! - quadrature (`N` is not used):
-!   `ans = scale * obj(spaceIndx)`
+! The result depends on where `obj` is defined.
 !
-! If `addContribution` is false, `ans` is cleared first.
+! - On nodes, `ans = scale * SUM_I N(I, spaceIndx) * obj(I)`.
+! - On quadrature points, `ans = scale * obj(spaceIndx)`.
+!   Then `N` is not used.
+!
+! If `addContribution` is true, the routine adds the value to `ans`.
+! Otherwise, it sets `ans` to zero first.
+!
+! The routine ignores `timeIndx`.
+! It exists so that all variable types share one argument list.
 !
 ! Examples
 !
-!```fortran
-! CALL GetInterpolation_(obj=obj, rank=TypeFEVariableScalar, &
-!                        vartype=TypeFEVariableSpace, N=N, nns=nns, &
-!                        spaceIndx=ips, timeIndx=1, scale=1.0_DFP, &
-!                        addContribution=.FALSE., ans=ans)
-!```
+! - [test 1](|base|FEVariable/examples/GetInterpolation__test_1.F90)
 !
-! Full example:
-! src/modules/FEVariable/examples/GetInterpolation__test_1.F90
+! See also: [[ScalarSpaceGetInterpolation_1]]
 
 INTERFACE GetInterpolation_
   MODULE PURE SUBROUTINE ScalarSpaceGetInterpolation_3( &
@@ -378,7 +363,7 @@ INTERFACE GetInterpolation_
     REAL(DFP), INTENT(IN) :: scale
     !! scale factor applied to the interpolated value
     LOGICAL(LGT), INTENT(IN) :: addContribution
-    !! if true, the interpolated value is added to ans
+    !! if true, adds the interpolated value to `ans`
     REAL(DFP), INTENT(INOUT) :: ans
     !! interpolated value
   END SUBROUTINE ScalarSpaceGetInterpolation_3
@@ -392,27 +377,23 @@ END INTERFACE GetInterpolation_
 ! date: 2025-08-29
 ! summary: Interpolation of scalar, space-time, at all quadrature points
 !
-! Writes the interpolated value in `ans(1:nips)`:
+! Computes a space-time scalar at the first `nips` space quadrature
+! points. It stores the values in `ans(1:nips)` and sets `tsize` to
+! `nips`.
 !
-! - nodal:
-!   `ans(ips) = scale * SUM_a T(a) SUM_I N(I, ips) * obj(I, a)`
-! - quadrature (`N` and `T` are not used):
-!   `ans(ips) = scale * obj(ips, timeIndx)`
+! The result depends on where `obj` is defined.
 !
-! If `addContribution` is false, `ans` is cleared first.
+! - On nodes, `ans(ips) = scale * SUM_a T(a) * SUM_I N(I, ips) * obj(I, a)`.
+!   Here `a` runs over the `nnt` time nodes.
+! - On quadrature points, `ans(ips) = scale * obj(ips, timeIndx)`.
+!   Then `N` and `T` are not used.
+!
+! If `addContribution` is true, the routine adds the values to `ans`.
+! Otherwise, it sets `ans(1:nips)` to zero first.
 !
 ! Examples
 !
-!```fortran
-! CALL GetInterpolation_(obj=obj, rank=TypeFEVariableScalar, &
-!                        vartype=TypeFEVariableSpaceTime, N=N, nns=nns, &
-!                        nips=nips, T=T, nnt=nnt, scale=1.0_DFP, &
-!                        addContribution=.FALSE., ans=ans, tsize=tsize, &
-!                        timeIndx=1)
-!```
-!
-! Full example:
-! src/modules/FEVariable/examples/GetInterpolation__test_1.F90
+! - [test 1](|base|FEVariable/examples/GetInterpolation__test_1.F90)
 
 INTERFACE GetInterpolation_
   MODULE PURE SUBROUTINE ScalarSpaceTimeGetInterpolation_1( &
@@ -439,11 +420,11 @@ INTERFACE GetInterpolation_
     REAL(DFP), INTENT(IN) :: scale
     !! scale factor applied to the interpolated value
     LOGICAL(LGT), INTENT(IN) :: addContribution
-    !! if true, the interpolated value is added to ans
+    !! if true, adds the interpolated values to `ans`
     INTEGER(I4B), INTENT(OUT) :: tsize
-    !! number of values written in ans
+    !! number of values written in `ans`
     INTEGER(I4B), INTENT(IN) :: timeIndx
-    !! time quadrature point index
+    !! time quadrature point index, used only if `obj` is on quadrature points
   END SUBROUTINE ScalarSpaceTimeGetInterpolation_1
 END INTERFACE GetInterpolation_
 
@@ -455,31 +436,35 @@ END INTERFACE GetInterpolation_
 ! date: 2025-08-29
 ! summary: Interpolation of scalar, space-time, into a FEVariable
 !
-! Writes the interpolated value in `ans%val` of the time slice `timeIndx`:
+! Computes a space-time scalar at the first `nips` space quadrature
+! points. It stores the values in one time slice of `ans%val`.
 !
-! - nodal:
-!   `ans(ips) = scale * SUM_a T(a) SUM_I N(I, ips) * obj(I, a)`
-! - quadrature (`N` and `T` are not used):
-!   `ans(ips) = scale * obj(ips, timeIndx)`
+! The result depends on where `obj` is defined.
 !
-! `ans` must already be a quadrature FEVariable_ with the shape of the
-! result; the values of time point `timeIndx` start after
-! `(timeIndx - 1)` time slices. `ans%s`, `ans%len` and the other
-! components of `ans` are not changed.
-! If `addContribution` is false, that time slice is cleared first.
+! - On nodes, `ans(ips) = scale * SUM_a T(a) * SUM_I N(I, ips) * obj(I, a)`.
+!   Here `a` runs over the `nnt` time nodes.
+! - On quadrature points, `ans(ips) = scale * obj(ips, timeIndx)`.
+!   Then `N` and `T` are not used.
+!
+! The routine writes to the slice `timeIndx` of `ans`.
+! This slice starts after `(timeIndx - 1) * ans%s(1)` values.
+!
+! If `addContribution` is true, the routine adds the values to the slice.
+! Otherwise, it sets the slice to zero first.
+!
+! @note
+! `ans` must be a quadrature variable of the right shape.
+! The routine does not change `ans%s`, `ans%len` or other components.
+! @endnote
+!
+! Changes:
+!   - 2026-11-14: `ans%s` and `ans%len` are no longer changed
 !
 ! Examples
 !
-!```fortran
-! CALL GetInterpolation_(obj=obj, rank=TypeFEVariableScalar, &
-!                        vartype=TypeFEVariableSpaceTime, N=N, nns=nns, &
-!                        nips=nips, T=T, nnt=nnt, scale=1.0_DFP, &
-!                        addContribution=.FALSE., timeIndx=timeIndx, &
-!                        ans=ans)
-!```
+! - [test 1](|base|FEVariable/examples/GetInterpolation__test_1.F90)
 !
-! Full example:
-! src/modules/FEVariable/examples/GetInterpolation__test_1.F90
+! See also: [[ScalarSpaceTimeGetInterpolation_1]]
 
 INTERFACE GetInterpolation_
   MODULE PURE SUBROUTINE ScalarSpaceTimeGetInterpolation_2( &
@@ -504,11 +489,11 @@ INTERFACE GetInterpolation_
     REAL(DFP), INTENT(IN) :: scale
     !! scale factor applied to the interpolated value
     LOGICAL(LGT), INTENT(IN) :: addContribution
-    !! if true, the interpolated value is added to ans
+    !! if true, adds the interpolated values to `ans`
     INTEGER(I4B), INTENT(IN) :: timeIndx
     !! time quadrature point index
     TYPE(FEVariable_), INTENT(INOUT) :: ans
-    !! quadrature variable, values written at timeIndx
+    !! quadrature variable, the routine writes to the slice `timeIndx`
   END SUBROUTINE ScalarSpaceTimeGetInterpolation_2
 END INTERFACE GetInterpolation_
 
@@ -520,26 +505,24 @@ END INTERFACE GetInterpolation_
 ! date: 2025-08-29
 ! summary: Interpolation of scalar, space-time, at one quadrature point
 !
-! Writes the interpolated value in `ans`:
+! Computes a space-time scalar at one space quadrature point.
+! It stores the value in `ans`.
 !
-! - nodal:
-!   `ans = scale * SUM_a T(a) SUM_I N(I, spaceIndx) * obj(I, a)`
-! - quadrature (`N` and `T` are not used):
-!   `ans = scale * obj(spaceIndx, timeIndx)`
+! The result depends on where `obj` is defined.
 !
-! If `addContribution` is false, `ans` is cleared first.
+! - On nodes, `ans = scale * SUM_a T(a) * SUM_I N(I, spaceIndx) * obj(I, a)`.
+!   Here `a` runs over the `nnt` time nodes.
+! - On quadrature points, `ans = scale * obj(spaceIndx, timeIndx)`.
+!   Then `N` and `T` are not used.
+!
+! If `addContribution` is true, the routine adds the value to `ans`.
+! Otherwise, it sets `ans` to zero first.
 !
 ! Examples
 !
-!```fortran
-! CALL GetInterpolation_(obj=obj, rank=TypeFEVariableScalar, &
-!                        vartype=TypeFEVariableSpaceTime, N=N, nns=nns, &
-!                        spaceIndx=ips, timeIndx=1, T=T, nnt=nnt, &
-!                        scale=1.0_DFP, addContribution=.FALSE., ans=ans)
-!```
+! - [test 1](|base|FEVariable/examples/GetInterpolation__test_1.F90)
 !
-! Full example:
-! src/modules/FEVariable/examples/GetInterpolation__test_1.F90
+! See also: [[ScalarSpaceTimeGetInterpolation_1]]
 
 INTERFACE GetInterpolation_
   MODULE PURE SUBROUTINE ScalarSpaceTimeGetInterpolation_3( &
@@ -568,7 +551,7 @@ INTERFACE GetInterpolation_
     REAL(DFP), INTENT(IN) :: scale
     !! scale factor applied to the interpolated value
     LOGICAL(LGT), INTENT(IN) :: addContribution
-    !! if true, the interpolated value is added to ans
+    !! if true, adds the interpolated value to `ans`
   END SUBROUTINE ScalarSpaceTimeGetInterpolation_3
 END INTERFACE GetInterpolation_
 
@@ -580,21 +563,25 @@ END INTERFACE GetInterpolation_
 ! date: 2025-08-29
 ! summary: Interpolation of scalar at one point, any variable type
 !
-! Calls the `_3` form of the variable type of `obj`: constant, space or
-! space-time. For a time variable nothing is done and `ans` is not
-! changed.
-
+! Interpolates a scalar variable at one quadrature point.
+! It works for any variable type of `obj`.
+! It reads the type from `obj` and picks the matching routine.
+!
+! 1. A constant variable gives `ans = scale * obj%val(1)`.
+! 2. A space variable uses `spaceIndx` and `N`.
+! 3. A space-time variable uses `spaceIndx`, `timeIndx`, `N` and `T`.
+!
+! A time variable is not supported.
+! For it, the routine does nothing and leaves `ans` unchanged.
+!
+! If `addContribution` is false, the routine sets `ans` to zero first.
 !
 ! Examples
 !
-!```fortran
-! CALL GetInterpolation_(obj=obj, rank=TypeFEVariableScalar, N=N, nns=nns, &
-!                        spaceIndx=ips, timeIndx=1, T=T, nnt=nnt, &
-!                        scale=1.0_DFP, addContribution=.FALSE., ans=ans)
-!```
+! - [test 1](|base|FEVariable/examples/GetInterpolation__test_1.F90)
 !
-! Full example:
-! src/modules/FEVariable/examples/GetInterpolation__test_1.F90
+! See also: [[ScalarSpaceGetInterpolation_3]],
+! [[ScalarSpaceTimeGetInterpolation_3]]
 
 INTERFACE GetInterpolation_
   MODULE PURE SUBROUTINE ScalarGetInterpolation_3( &
@@ -621,7 +608,7 @@ INTERFACE GetInterpolation_
     REAL(DFP), INTENT(IN) :: scale
     !! scale factor applied to the interpolated value
     LOGICAL(LGT), INTENT(IN) :: addContribution
-    !! if true, the interpolated value is added to ans
+    !! if true, adds the interpolated value to `ans`
   END SUBROUTINE ScalarGetInterpolation_3
 END INTERFACE GetInterpolation_
 

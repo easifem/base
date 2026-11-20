@@ -42,76 +42,34 @@ PUBLIC :: GetInterpolation_
 ! date: 2025-08-29
 ! summary: Interpolation of a FEVariable in space only
 !
-! Interpolates `obj` with the space shape functions `N` at `nips`
-! quadrature points and writes the result in `ans` as the `_2` form of
-! its rank with `timeIndx = 1`. A constant `obj` gives the same value at
-! every point. A space-time `obj` is treated as a space variable: only
-! its first time slice is used.
+! Interpolates `obj` at `nips` quadrature points and stores the result
+! in `ans`. The rank and the variable type of `obj` are read from `obj`
+! itself, so the caller does not pass them.
 !
-! `ans` must already be a quadrature FEVariable_ with the rank of `obj`
-! and the shape of the result. If `addContribution` is false, the values
-! of `ans` are cleared first.
+! The result depends on how `obj` is defined.
+!
+! - A nodal `obj` gives `scale * N(I, ips) * obj(I)`, summed over the
+!   first `nns` nodes `I`, at each point `ips`.
+! - A quadrature `obj` is not interpolated. Its values are only
+!   multiplied by `scale`.
+! - A constant `obj` gives `scale` times its value at every point.
+!
+! Time is not used. A space-time `obj` is read at its first time slice
+! only. The result goes to the first time slice of `ans`.
+!
+! `ans` must already exist as a quadrature `FEVariable_` of the same
+! rank as `obj`, with the shape of the result.
+! If `addContribution` is false, the old values of `ans` are replaced.
+! Otherwise the new values are added to them.
+!
+! @note
+! A time variable is not supported. Then `ans` is left unchanged.
+! @endnote
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE BaseType, ONLY: FEVariable_
-! USE BaseType, ONLY: Scalar => TypeFEVariableScalar
-! USE BaseType, ONLY: Space => TypeFEVariableSpace
-! USE BaseType, ONLY: SpaceTime => TypeFEVariableSpaceTime
-! USE BaseType, ONLY: Vector => TypeFEVariableVector
-! USE FEVariable_Method, ONLY: GetInterpolation_
-! USE FEVariable_Method, ONLY: NodalVariable
-! USE FEVariable_Method, ONLY: QuadratureVariable
-! USE GlobalData, ONLY: DFP
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-!
-! REAL(DFP), PARAMETER :: tol = 1.0E-12_DFP
-! REAL(DFP), PARAMETER :: N(2, 3) = RESHAPE([1.0_DFP, 0.0_DFP, 0.5_DFP, &
-!                                            0.5_DFP, 0.0_DFP, 1.0_DFP], &
-!                                           [2, 3])
-! REAL(DFP), PARAMETER :: T(2) = [0.25_DFP, 0.75_DFP]
-!
-! ! Test 1: rank and variable type are taken from obj
-! BLOCK
-!   TYPE(FEVariable_) :: obj, ans
-!
-!   obj = NodalVariable([2.0_DFP, 4.0_DFP], Scalar, Space)
-!   ans = QuadratureVariable(tsize=3, rank=Scalar, vartype=Space)
-!   CALL GetInterpolation_(obj=obj, N=N, nns=2, nips=3, scale=1.0_DFP, &
-!                          addContribution=.FALSE., ans=ans)
-!   CALL OK(ALL(ABS(ans%val(1:3) - [2.0_DFP, 3.0_DFP, 4.0_DFP]) .LT. tol), &
-!           "scalar nodal space")
-!
-!   obj = NodalVariable(RESHAPE([1.0_DFP, 2.0_DFP, 3.0_DFP, 4.0_DFP], &
-!                               [2, 2]), Vector, Space)
-!   ans = QuadratureVariable(nrow=2, ncol=3, rank=Vector, vartype=Space)
-!   CALL GetInterpolation_(obj=obj, N=N, nns=2, nips=3, scale=1.0_DFP, &
-!                          addContribution=.FALSE., ans=ans)
-!   CALL OK(ALL(ABS(ans%val(1:6) - [1.0_DFP, 2.0_DFP, 2.0_DFP, 3.0_DFP, &
-!                                   3.0_DFP, 4.0_DFP]) .LT. tol), &
-!           "vector nodal space")
-! END BLOCK
-!
-! ! Test 2: space-time variable with time shape functions at timeIndx
-! BLOCK
-!   TYPE(FEVariable_) :: obj, ans
-!
-!   obj = NodalVariable(RESHAPE([2.0_DFP, 4.0_DFP, 6.0_DFP, 8.0_DFP], &
-!                               [2, 2]), Scalar, SpaceTime)
-!   ans = QuadratureVariable(nrow=3, ncol=2, rank=Scalar, vartype=SpaceTime)
-!   CALL GetInterpolation_(obj=obj, N=N, nns=2, nips=3, T=T, nnt=2, &
-!                          scale=1.0_DFP, addContribution=.FALSE., &
-!                          timeIndx=2, ans=ans)
-!   CALL OK(ALL(ABS(ans%val(4:6) - [5.0_DFP, 6.0_DFP, 7.0_DFP]) .LT. tol), &
-!           "scalar nodal spaceTime at timeIndx 2")
-!   CALL OK(ans%len .EQ. 6, "len of ans is kept")
-! END BLOCK
-!
-! END PROGRAM main
-!```
+! - [test 4](|base|FEVariable/examples/GetInterpolation__test_4.F90)
+! - [test 5](|base|FEVariable/examples/GetInterpolation__test_5.F90)
 !
 ! See also: [[FEVariableGetInterpolation_2]]
 
@@ -132,8 +90,8 @@ INTERFACE GetInterpolation_
     LOGICAL(LGT), INTENT(IN) :: addContribution
     !! if true, the interpolated value is added to ans
     TYPE(FEVariable_), INTENT(INOUT) :: ans
-    !! Interpolated value in FEVariable_ format
-    !! Scalar, or Vector, or Matrix, Quadrature, Space
+    !! interpolated value, a quadrature `FEVariable_` with the rank of
+    !! `obj`. It must be allocated before the call.
   END SUBROUTINE FEVariableGetInterpolation_1
 END INTERFACE GetInterpolation_
 
@@ -145,13 +103,35 @@ END INTERFACE GetInterpolation_
 ! date: 2025-08-29
 ! summary: Interpolation of a FEVariable in space and time
 !
-! Same as [[FEVariableGetInterpolation_1]], but a space-time `obj` is
-! interpolated with the time shape functions `T` as well, and the result
-! is written in the time slice `timeIndx` of `ans`.
+! Interpolates `obj` at `nips` quadrature points and stores the result
+! in the time slice `timeIndx` of `ans`. The rank and the variable type
+! of `obj` are read from `obj` itself.
+!
+! The result depends on the variable type of `obj`.
+!
+! - A nodal space-time `obj` is interpolated in space with `N` and in
+!   time with `T`. The first `nnt` time nodes are used.
+! - A quadrature space-time `obj` is not interpolated. Its time slice
+!   `timeIndx` is multiplied by `scale`.
+! - A space or constant `obj` has no time. Its result is written to the
+!   time slice `timeIndx` of `ans` as in
+!   [[FEVariableGetInterpolation_1]].
+!
+! `ans` must already exist as a space-time quadrature `FEVariable_` of
+! the same rank as `obj`. Other time slices of `ans` are not changed.
+! If `addContribution` is false, the old values in the time slice
+! `timeIndx` are replaced. Otherwise the new values are added to them.
+!
+! @note
+! A time variable is not supported. Then `ans` is left unchanged.
+! @endnote
 !
 ! Examples
 !
-! See [[FEVariableGetInterpolation_1]] (Test 2).
+! - [test 4](|base|FEVariable/examples/GetInterpolation__test_4.F90)
+! - [test 6](|base|FEVariable/examples/GetInterpolation__test_6.F90)
+!
+! See also: [[FEVariableGetInterpolation_1]]
 
 INTERFACE GetInterpolation_
   MODULE PURE SUBROUTINE FEVariableGetInterpolation_2( &
@@ -166,17 +146,19 @@ INTERFACE GetInterpolation_
     INTEGER(I4B), INTENT(IN) :: nips
     !! number of integration points in N, bound for dim2 in N
     REAL(DFP), INTENT(IN) :: T(:)
-    !! time shape functions at the time quadrature point, T(a)
+    !! time shape functions at the time quadrature point, T(a) with
+    !! a = 1, ..., nnt. Used only for a space-time nodal `obj`.
     INTEGER(I4B), INTENT(IN) :: nnt
-    !! number of time nodes, bound for T
+    !! number of time nodes, bound for `T`
     REAL(DFP), INTENT(IN) :: scale
     !! scale factor to be applied to the interpolated value
     LOGICAL(LGT), INTENT(IN) :: addContribution
     !! if true, the interpolated value is added to ans
     INTEGER(I4B), INTENT(IN) :: timeIndx
-    !! time quadrature point index
+    !! time slice of `ans` that receives the result
     TYPE(FEVariable_), INTENT(INOUT) :: ans
-    !! Interpolated value in FEVariable_ format
+    !! interpolated value, a space-time quadrature `FEVariable_` with
+    !! the rank of `obj`. It must be allocated before the call.
   END SUBROUTINE FEVariableGetInterpolation_2
 END INTERFACE GetInterpolation_
 

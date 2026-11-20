@@ -16,11 +16,12 @@
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2021-12-12
-! summary: Subtraction of FEVariable_, operator(-) and Subtraction_
+! summary: Subtraction of `FEVariable_` objects
 !
-! `obj1 - obj2`, `obj - val` and `val - obj` return a new FEVariable_.
-! `Subtraction_` writes the result into an existing FEVariable_ without
-! extra allocation.
+! This module provides `OPERATOR(-)` and `Subtraction_`.
+! `obj1 - obj2`, `obj - val` and `val - obj` return a new `FEVariable_`.
+! `Subtraction_` writes the result into an existing `FEVariable_`
+! and does not allocate.
 
 #define _OP_ -
 
@@ -41,110 +42,41 @@ PUBLIC :: Subtraction_
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2025-12-28
-! summary: Subtraction of two FEVariables without allocation
+! summary: Subtracts two `FEVariable_` objects without allocation
 !
-! Computes `ans = obj1 - obj2`. It computes the rank case and variable
-! case and calls [[fevar_Subtraction_3]].
+! Computes `ans = obj1 - obj2`.
+! The routine finds the rank case and the variable case of the two
+! operands, then calls [[fevar_Subtraction_3]].
 !
-! `ans` must already be initiated with the rank and total shape of the
-! result and with enough capacity, for example by a previous
-! `ans = obj1 - obj2`. Only `s`, `len`, `val` and `varType` of `ans` are
-! set; `rank`, `tshape` and `capacity` are not changed and `ans%val` is not
-! reallocated. User should know what they are doing.
-!
+! The operation works entry by entry.
+! A scalar operand acts on every component of a vector or matrix.
+! For two vectors, or two matrices, it subtracts entry by entry.
+! A space variable and a time variable give a space-time variable.
 ! The rank, variable type and shape of the result follow
 ! [[GetRankCase]], [[GetVarCase]], [[GetRank]], [[GetVarType]] and
-! [[GetShape]]. The operation is element-wise: a scalar operand acts on
-! every component of a vector or matrix, and two vectors or two
-! matrices are combined entry by entry (`*` and `/` are not vector or
-! matrix products). A space variable and a time variable give a
-! space-time variable. `defineOn` of the result is that of the first operand.
-! Vector - matrix and matrix - vector are not supported.
+! [[GetShape]].
 !
-! When the space (or time) sizes of the two operands differ, only the
-! first `MIN` of the two sizes is used; this is not checked.
+! The routine sets only `s`, `len`, `val` and `varType` of `ans`.
+! It does not change `rank`, `tshape` or `capacity`.
+!
+! @warning
+! `ans` must already have the rank and total shape of the result,
+! and enough capacity. Initiate it first, for example with a previous
+! `ans = obj1 - obj2`. The routine does not reallocate `ans%val`.
+! @endwarning
+!
+! @note
+! Vector - matrix and matrix - vector are not supported.
+! @endnote
+!
+! @note
+! If the space (or time) sizes of the two operands differ, the
+! routine uses only the smaller size. It does not check this.
+! @endnote
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE BaseType, ONLY: FEVariable_
-! USE BaseType, ONLY: fevaropt => TypeFEVariableOpt
-! USE BaseType, ONLY: Constant => TypeFEVariableConstant
-! USE BaseType, ONLY: Scalar => TypeFEVariableScalar
-! USE BaseType, ONLY: Space => TypeFEVariableSpace
-! USE BaseType, ONLY: Vector => TypeFEVariableVector
-! USE FEVariable_Method, ONLY: Subtraction_
-! USE FEVariable_Method, ONLY: GetRankCase
-! USE FEVariable_Method, ONLY: GetVarCase
-! USE FEVariable_Method, ONLY: QuadratureVariable
-! USE GlobalData, ONLY: DFP
-! USE GlobalData, ONLY: I4B
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-!
-! REAL(DFP), PARAMETER :: tol = 1.0E-12_DFP
-! REAL(DFP) :: a(3), c(3), vs(2, 3)
-! INTEGER(I4B) :: ii
-! TYPE(FEVariable_) :: obj1, obj2, ans
-!
-! a = [1.0_DFP, 2.0_DFP, 3.0_DFP]
-! c = [100.0_DFP, 200.0_DFP, 300.0_DFP]
-! vs = RESHAPE([(REAL(ii, DFP), ii=1, 6)], [2, 3])
-!
-! ! ans is initiated with the rank and shape of the result
-! ans = QuadratureVariable(nrow=2, ncol=3, rank=Vector, vartype=Space)
-!
-! ! Test 1: Subtraction_(obj1, obj2, ans)
-! BLOCK
-!   obj1 = QuadratureVariable(vs, Vector, Space)
-!   obj2 = QuadratureVariable(vs + 1.0_DFP, Vector, Space)
-!   CALL Subtraction_(obj1=obj1, obj2=obj2, ans=ans)
-!   CALL OK(ans%len .EQ. 6, "obj1 - obj2: len")
-!   CALL OK(ALL(ABS(ans%val(1:6) - RESHAPE(vs - (vs + 1.0_DFP), [6])) &
-!               .LT. tol), "obj1 - obj2: values")
-! END BLOCK
-!
-! ! Test 2: Subtraction_(obj, val, ans)
-! BLOCK
-!   obj1 = QuadratureVariable(vs, Vector, Space)
-!   CALL Subtraction_(obj=obj1, val=0.5_DFP, ans=ans)
-!   CALL OK(ALL(ABS(ans%val(1:6) - (RESHAPE(vs, [6]) - 0.5_DFP)) &
-!               .LT. tol), "obj - val: values")
-!
-!   CALL Subtraction_(obj=obj1, val=0.5_DFP, ans=ans, objOnRHS=.TRUE.)
-!   CALL OK(ALL(ABS(ans%val(1:6) - (0.5_DFP - RESHAPE(vs, [6]))) &
-!               .LT. tol), "val - obj with objOnRHS: values")
-! END BLOCK
-!
-! ! Test 3: Subtraction_ with precomputed rankCase and varCase
-! BLOCK
-!   INTEGER(I4B) :: rankCase, varCase
-!
-!   obj1 = QuadratureVariable(a, Scalar, Space)
-!   obj2 = QuadratureVariable(c, Scalar, Space)
-!   rankCase = GetRankCase(obj1%rank, obj2%rank)
-!   varCase = GetVarCase(obj1%varType, obj2%varType)
-!   CALL Subtraction_(obj1=obj1, obj2=obj2, ans=ans, varCase=varCase, &
-!                     rankCase=rankCase)
-!   CALL OK(ans%len .EQ. 3, "with cases: len = 3")
-!   CALL OK(ans%varType .EQ. fevaropt%space, "with cases: space")
-!   CALL OK(ALL(ABS(ans%val(1:3) - (a - c)) .LT. tol), &
-!           "with cases: values")
-! END BLOCK
-!
-! ! Test 4: scalar constant - vector constant into ans
-! BLOCK
-!   obj1 = QuadratureVariable(2.0_DFP, Scalar, Constant)
-!   obj2 = QuadratureVariable(a, Vector, Constant)
-!   CALL Subtraction_(obj1=obj1, obj2=obj2, ans=ans)
-!   CALL OK(ans%len .EQ. 3, "scalar - vector constant: len")
-!   CALL OK(ALL(ABS(ans%val(1:3) - (2.0_DFP - a)) .LT. tol), &
-!           "scalar - vector constant: values")
-! END BLOCK
-!
-! END PROGRAM main
-!```
+! - [test 1](|base|FEVariable/examples/Subtraction__test_1.F90)
 !
 ! See also: [[fevar_Subtraction1]], [[fevar_Subtraction_3]]
 
@@ -165,39 +97,37 @@ END INTERFACE Subtraction_
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2025-12-28
-! summary: Subtraction of a FEVariable and a real without allocation
+! summary: Subtracts a real value from a `FEVariable_`, or the reverse
 !
-! Computes `ans%val(1:len) = obj%val(1:len) - val` with `len = obj%len`,
-! and copies `len` and `s` of `obj` into `ans`.
-! If `objOnRHS` is true, computes `val - obj%val(1:len)` instead.
+! Sets `ans%val(1:len) = obj%val(1:len) - val`, with `len = obj%len`.
+! It also copies `len` and `s` of `obj` into `ans`.
 !
+! If `objOnRHS` is true, it sets `ans%val(1:len) = val - obj%val(1:len)`
+! instead.
+!
+! @warning
 ! `ans` must already have the rank, variable type and total shape of
-! `obj` and enough capacity, for example `ans = obj`. `varType`, `rank`
-! and `tshape` of `ans` are not changed.
+! `obj`, and enough capacity. For example, initiate it with `ans = obj`.
+! The routine does not change `varType`, `rank` or `tshape` of `ans`.
+! @endwarning
 !
 ! Examples
 !
-!```fortran
-! TYPE(FEVariable_) :: obj1, obj2, ans
-! ! ans initiated with the rank and shape of the result
-! CALL Subtraction_(obj=obj1, val=0.5_DFP, ans=ans, objOnRHS=.TRUE.)
-!```
+! - [test 1](|base|FEVariable/examples/Subtraction__test_1.F90)
 !
-! Full example: src/modules/FEVariable/examples/Subtraction__test_1.F90
-!
-! See also: [[fevar_Subtraction2]]
+! See also: [[fevar_Subtraction2]], [[fevar_Subtraction3]]
 
 INTERFACE Subtraction_
   MODULE PURE SUBROUTINE fevar_Subtraction_2(obj, val, ans, objOnRHS)
     CLASS(FEVariable_), INTENT(IN) :: obj
     !! finite element variable
     REAL(DFP), INTENT(IN) :: val
-    !! real value, applied to every value of obj
+    !! real value, applied to every value of `obj`
     CLASS(FEVariable_), INTENT(INOUT) :: ans
-    !! result, obj - val (or val - obj, see objOnRHS)
+    !! result, `obj - val`, or `val - obj` if `objOnRHS` is true
     LOGICAL(LGT), OPTIONAL, INTENT(IN) :: objOnRHS
-    !! By default obj is on LHS, i.e., ans = obj - val
-    !! If objOnRHS = .TRUE. , then ans = val - obj
+    !! If `.TRUE.`, then `ans = val - obj`.
+    !! Default is `.FALSE.`, which gives `ans = obj - val`.
   END SUBROUTINE fevar_Subtraction_2
 END INTERFACE Subtraction_
 
@@ -207,28 +137,25 @@ END INTERFACE Subtraction_
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2025-12-28
-! summary: Subtraction of two FEVariables with given rank and variable case
+! summary: Subtracts two `FEVariable_` objects with given cases
 !
-! Same as [[fevar_Subtraction_1]], but `rankCase` and `varCase` are
-! given by the caller. This bypasses the overhead of computing them inside the
-! method, which helps when the same operation is repeated many times.
+! Computes `ans = obj1 - obj2`, as [[fevar_Subtraction_1]] does.
+! The caller gives `rankCase` and `varCase`.
+! This avoids computing them again when the same operation repeats
+! many times.
 !
-! `ans` must already be initiated with the rank and total shape of the
-! result and with enough capacity, for example by a previous
-! `ans = obj1 - obj2`. Only `s`, `len`, `val` and `varType` of `ans` are
-! set; `rank`, `tshape` and `capacity` are not changed and `ans%val` is not
-! reallocated. User should know what they are doing.
+! Get `rankCase` from [[GetRankCase]] and `varCase` from [[GetVarCase]].
+! If `rankCase` is not a supported rank pair, `ans` is not changed.
+!
+! @warning
+! `ans` must already have the rank and total shape of the result,
+! and enough capacity. Initiate it first, for example with a previous
+! `ans = obj1 - obj2`. The routine does not reallocate `ans%val`.
+! @endwarning
 !
 ! Examples
 !
-!```fortran
-! TYPE(FEVariable_) :: obj1, obj2, ans
-! ! ans initiated with the rank and shape of the result
-! CALL Subtraction_(obj1=obj1, obj2=obj2, ans=ans, &
-!               varCase=varCase, rankCase=rankCase)
-!```
-!
-! Full example: src/modules/FEVariable/examples/Subtraction__test_1.F90
+! - [test 1](|base|FEVariable/examples/Subtraction__test_1.F90)
 !
 ! See also: [[fevar_Subtraction_1]], [[GetRankCase]], [[GetVarCase]]
 
@@ -242,9 +169,9 @@ INTERFACE Subtraction_
     CLASS(FEVariable_), INTENT(INOUT) :: ans
     !! result, obj1 - obj2
     INTEGER(I4B), INTENT(IN) :: varCase
-    !! varCase can be obtained from GetVarCase function
+    !! variable case, from `GetVarCase`
     INTEGER(I4B), INTENT(IN) :: rankCase
-    !! rankCase can be obtained from GetRankCase function
+    !! rank case, from `GetRankCase`
   END SUBROUTINE fevar_Subtraction_3
 END INTERFACE Subtraction_
 
@@ -254,31 +181,31 @@ END INTERFACE Subtraction_
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2021-12-12
-! summary: FEVariable = FEVariable - FEVariable
+! summary: Subtracts one `FEVariable_` from another
 !
-! Returns a new FEVariable_ initiated with the rank, variable type and
-! shape of the result, then filled by [[fevar_Subtraction_3]].
-!
+! Returns `obj1 - obj2`, a new `FEVariable_`.
 ! The rank, variable type and shape of the result follow
 ! [[GetRankCase]], [[GetVarCase]], [[GetRank]], [[GetVarType]] and
-! [[GetShape]]. The operation is element-wise: a scalar operand acts on
-! every component of a vector or matrix, and two vectors or two
-! matrices are combined entry by entry (`*` and `/` are not vector or
-! matrix products). A space variable and a time variable give a
-! space-time variable. `defineOn` of the result is that of the first operand.
-! Vector - matrix and matrix - vector are not supported.
+! [[GetShape]].
 !
-! When the space (or time) sizes of the two operands differ, only the
-! first `MIN` of the two sizes is used; this is not checked.
+! The operation works entry by entry.
+! A scalar operand acts on every component of a vector or matrix.
+! For two vectors, or two matrices, it subtracts entry by entry.
+! A space variable and a time variable give a space-time variable.
+! The `defineOn` of the result is that of `obj1`.
+!
+! @note
+! Vector - matrix and matrix - vector are not supported.
+! @endnote
+!
+! @note
+! If the space (or time) sizes of the two operands differ, the
+! operator uses only the smaller size. It does not check this.
+! @endnote
 !
 ! Examples
 !
-!```fortran
-! TYPE(FEVariable_) :: obj1, obj2, ans
-! ans = obj1 - obj2
-!```
-!
-! Full example: src/modules/FEVariable/examples/Subtraction_test_1.F90
+! - [test 1](|base|FEVariable/examples/Subtraction_test_1.F90)
 !
 ! See also: [[fevar_Subtraction_1]]
 
@@ -299,21 +226,17 @@ END INTERFACE OPERATOR(_OP_)
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2021-12-12
-! summary: FEVariable = FEVariable - Real
+! summary: Subtracts a real value from a `FEVariable_`
 !
-! Returns a copy of `obj` with `val` applied to every value:
-! `ans%val = obj%val - val`.
+! Returns `obj - val`, a new `FEVariable_`.
+! The result has the same rank, variable type and shape as `obj`.
+! It subtracts `val` from every value of `obj`.
 !
 ! Examples
 !
-!```fortran
-! TYPE(FEVariable_) :: obj1, obj2, ans
-! ans = obj1 - 1.0_DFP
-!```
+! - [test 1](|base|FEVariable/examples/Subtraction_test_1.F90)
 !
-! Full example: src/modules/FEVariable/examples/Subtraction_test_1.F90
-!
-! See also: [[fevar_Subtraction_2]]
+! See also: [[fevar_Subtraction3]], [[fevar_Subtraction_2]]
 
 INTERFACE OPERATOR(_OP_)
   MODULE PURE FUNCTION fevar_Subtraction2(obj, val) RESULT(ans)
@@ -332,21 +255,17 @@ END INTERFACE OPERATOR(_OP_)
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2021-12-12
-! summary: FEVariable = Real - FEVariable
+! summary: Subtracts a `FEVariable_` from a real value
 !
-! Returns a copy of `obj` with `val` applied to every value:
-! `ans%val = val - obj%val`.
+! Returns `val - obj`, a new `FEVariable_`.
+! The result has the same rank, variable type and shape as `obj`.
+! It subtracts every value of `obj` from `val`.
 !
 ! Examples
 !
-!```fortran
-! TYPE(FEVariable_) :: obj1, obj2, ans
-! ans = 1.0_DFP - obj1
-!```
+! - [test 1](|base|FEVariable/examples/Subtraction_test_1.F90)
 !
-! Full example: src/modules/FEVariable/examples/Subtraction_test_1.F90
-!
-! See also: [[fevar_Subtraction2]]
+! See also: [[fevar_Subtraction2]], [[fevar_Subtraction_2]]
 
 INTERFACE OPERATOR(_OP_)
   MODULE PURE FUNCTION fevar_Subtraction3(val, obj) RESULT(ans)
