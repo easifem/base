@@ -17,53 +17,29 @@
 
 !> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
-! summary: ReferenceTriangle geometry and interpolation utilities.
+! summary: Reference triangle constructors, geometry and topology methods.
 !
-! ReferenceTriangle_ stores two intrinsic coordinate rows and records
-! embedding dimension separately. Constructors default to UNIT. Many geometry
-! wrappers use only planar coordinates. HighorderElement_Triangle currently
-! accesses a fourth face column outside its three column allocation; use
-! interpolation node generation directly until repaired.
+! This module works with the reference element `ReferenceTriangle_`.
+! It covers these groups.
 !
-! Arguments:
-!   None at module scope; see individual public interfaces.
+! 1. Constructors: `Initiate`, `ReferenceTriangle` and
+!    `ReferenceTriangle_Pointer`.
+! 2. Geometry of a triangle given by its vertices: `Area`, `Angles`,
+!    `Centroid`, `CircumCenter`, `Incenter`, `EdgeLength`, `Barycentric`
+!    and similar functions.
+! 3. Point tests and queries: `Contains_Point_Triangle`, `NearestPoint`,
+!    `DistanceFromPoint` and `RandomPoint`.
+! 4. Topology: edge and face connectivity, facet elements, element names,
+!    element types and entity counts.
+! 5. Reference coordinates: `RefTriangleCoord` and `RefCoord_Triangle`.
 !
-! Returns:
-!   Geometry, reference element and interpolation procedures.
+! Some geometry functions use only the planar coordinates of the vertices.
 !
-! Formula:
-! $$N=(p+1)(p+2)/2$$
-!
-! Examples
-!
-!```fortran
-! PROGRAM main
-! USE GlobalData, ONLY: DFP
-! USE GlobalData, ONLY: I4B
-! USE BaseType, ONLY: ReferenceTriangle_
-! USE ReferenceTriangle_Method, ONLY: Initiate
-! USE ReferenceTriangle_Method, ONLY: ReferenceTriangle
-! USE ReferenceTriangle_Method, ONLY: ReferenceTriangle_Pointer
-! USE ReferenceTriangle_Method, ONLY: RefTriangleCoord
-! USE ReferenceTriangle_Method, ONLY: RefCoord_Triangle
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-! TYPE(ReferenceTriangle_) :: a, b
-! CLASS(ReferenceTriangle_), POINTER :: p
-! REAL(DFP) :: x(2, 3)
-!
-! CALL Initiate(obj=a, nsd=2_I4B, domainName="UNIT")
-! b = ReferenceTriangle(nsd=2_I4B, domainName="UNIT")
-! p => ReferenceTriangle_Pointer(nsd=2_I4B, domainName="UNIT")
-! CALL OK(a%order == 1 .AND. b%order == 1, "Linear reference objects")
-! CALL OK(ASSOCIATED(p), "Pointer constructor allocates its result")
-! x = RefTriangleCoord("UNIT")
-! CALL OK(MAXVAL(ABS(x-RefCoord_Triangle("UNIT"))) < 1.0E-12_DFP, &
-!   "Coordinate aliases agree")
-! CALL OK(MAXVAL(ABS(a%xij-x)) < 1.0E-12_DFP, "Stored reference coordinates")
-! DEALLOCATE(p)
-! END PROGRAM main
-!```
+! @warning
+! `HighorderElement_Triangle` reads a fourth column of the face
+! connectivity, which has only three columns.
+! Do not rely on it until someone fixes this.
+! @endwarning
 
 MODULE ReferenceTriangle_Method
 USE GlobalData
@@ -138,55 +114,22 @@ INTEGER(I4B), PARAMETER :: DEFAULT_OPT_TRIANGLE_EDGE_CON = 2_I4B
 
 !> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
-! summary: Query reference element identifiers, orders and topology metadata.
+! summary: Returns the name of a triangle element type.
 !
-! Element name strings are case sensitive. TotalEntities stores node, edge,
-! face and cell counts; the node count includes higher order nodes. MaxOrder
-! is a build time limit, not the extent of every metadata lookup table.
-!
-! Arguments:
-!   elemType : INTEGER(I4B), INTENT(IN). Element identifier from GlobalData or
-! the element type lookup.
+! For example, `Triangle6` gives `"Triangle6"`.
+! If `elemType` is not a triangle type, the result is `"NONE"`.
 !
 ! Returns:
-!   ans : CHARACTER(:), ALLOCATABLE.
+!   ans : CHARACTER(:), ALLOCATABLE - name of the element type
 !
-! Formula:
-! $$N_{\mathrm{line}}=p+1,\quad N_{\mathrm{triangle}}=(p+1)(p+2)/2$$
-!
-! Examples
-!
-!```fortran
-! PROGRAM main
-! USE GlobalData, ONLY: DFP
-! USE GlobalData, ONLY: I4B
-! USE ReferenceTriangle_Method, ONLY: ElementName_Triangle
-! USE ReferenceTriangle_Method, ONLY: ElementType_Triangle
-! USE ReferenceTriangle_Method, ONLY: ElementOrder_Triangle
-! USE ReferenceTriangle_Method, ONLY: TotalNodesInElement_Triangle
-! USE ReferenceTriangle_Method, ONLY: TotalEntities_Triangle
-! USE ReferenceTriangle_Method, ONLY: MaxOrder_Triangle
-! USE ReferenceTriangle_Method, ONLY: DEFAULT_OPT_TRIANGLE_EDGE_CON
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-! INTEGER(I4B) :: kind, entities(4)
-!
-! kind = ElementType_Triangle("Triangle3")
-! CALL OK(ElementName_Triangle(kind) == "Triangle3", "Name round trip")
-! CALL OK(ElementOrder_Triangle(kind) == 1, "Linear element order")
-! CALL OK(TotalNodesInElement_Triangle(kind) == 3, "Vertex count")
-! entities = TotalEntities_Triangle(kind)
-! CALL OK(entities(1) == 3, "Entity counts start with node count")
-! CALL OK(MaxOrder_Triangle >= 1, "Configured maximum order")
-! CALL OK(DEFAULT_OPT_TRIANGLE_EDGE_CON == 1 .OR. &
-!   DEFAULT_OPT_TRIANGLE_EDGE_CON == 2, "Configured connectivity option")
-! END PROGRAM main
-!```
+! See also: [[ElementType_Triangle]]
 
 INTERFACE
   MODULE PURE FUNCTION ElementName_Triangle(elemType) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: elemType
+    !! triangle element type, for example `Triangle6`
     CHARACTER(:), ALLOCATABLE :: ans
+    !! name of the element type
   END FUNCTION ElementName_Triangle
 END INTERFACE
 
@@ -196,70 +139,28 @@ END INTERFACE
 
 !> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
-! summary: Construct facet connectivity and reference topology.
+! summary: Builds the topology of the three edges of a triangle.
 !
-! Use caller allocated output arrays. Line facets are points. Triangle face
-! connectivity always uses [1,2], [2,3], [3,1]; GetFaceConnectivity_Triangle
-! ignores opt and forces option 2. Edge connectivity option 1 uses [1,2],
-! [1,3], [2,3]. The example uses linear elements to avoid higher order
-! indexing assumptions.
+! Sets the topology of each edge of the triangle `elemType`.
+! The edges follow the order given by `DEFAULT_OPT_TRIANGLE_EDGE_CON`.
+! Each edge is a line element with the same order as the triangle.
 !
-! Arguments:
-!   elemType : INTEGER(I4B), INTENT(IN). Element identifier from GlobalData or
-! the element type lookup.
-!   nptrs : INTEGER(I4B), INTENT(IN)(:). Element node identifiers to select
-! into facet topology.
-!   ans : TYPE(ReferenceTopology_), INTENT(INOUT)(:). Result buffer; allocate
-! the full active shape before the call.
+! For edge `ii`, `ans(ii)%nptrs` holds the entries of `nptrs` that
+! belong to the edge. `ans(ii)%name` is the line type and
+! `ans(ii)%xiDimension` is 1.
 !
-! Returns:
-!   Updates ans(:).
+! The caller allocates `ans` with size 3.
 !
-! Formula:
-! $$\partial T=e_{12}\cup e_{23}\cup e_{31}$$
-!
-! Examples
-!
-!```fortran
-! PROGRAM main
-! USE GlobalData, ONLY: DFP
-! USE GlobalData, ONLY: I4B
-! USE GlobalData, ONLY: Triangle3
-! USE BaseType, ONLY: ReferenceTopology_
-! USE BaseType, ONLY: ReferenceElement_
-! USE ReferenceTriangle_Method, ONLY: GetEdgeConnectivity_Triangle
-! USE ReferenceTriangle_Method, ONLY: GetFaceConnectivity_Triangle
-! USE ReferenceTriangle_Method, ONLY: GetFaceElemType_Triangle
-! USE ReferenceTriangle_Method, ONLY: FacetTopology_Triangle
-! USE ReferenceTriangle_Method, ONLY: FacetElements_Triangle
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-! INTEGER(I4B), PARAMETER :: kind = Triangle3
-! INTEGER(I4B) :: edge(2, 3), face(2, 3)
-! INTEGER(I4B) :: faceTypes(3), nodeCounts(3), nr, nc
-! TYPE(ReferenceTopology_) :: topology(3)
-! TYPE(ReferenceElement_) :: facets(3)
-!
-! CALL GetEdgeConnectivity_Triangle(con=edge, order=1_I4B, &
-!   nrow=nr, ncol=nc)
-! CALL OK(nr == 2 .AND. nc == 3, "Connectivity dimensions")
-! CALL GetFaceConnectivity_Triangle(con=face, order=1_I4B)
-! CALL GetFaceElemType_Triangle(elemType=kind, &
-!   faceElemType=faceTypes, tFaceNodes=nodeCounts)
-! CALL OK(ALL(nodeCounts == 2), "Linear facet node count")
-! CALL FacetTopology_Triangle(elemType=kind, &
-!   nptrs=[1_I4B, 2_I4B, 3_I4B], ans=topology)
-! CALL OK(ALL(topology(1)%nptrs == face(:, 1)), "Facet pointers")
-! CALL FacetElements_Triangle(elemType=kind, nsd=2_I4B, ans=facets)
-! CALL OK(ALL(facets%order == 1), "Facet polynomial order")
-! END PROGRAM main
-!```
+! See also: [[FacetElements_Triangle]], [[GetFaceConnectivity_Triangle]]
 
 INTERFACE
   MODULE PURE SUBROUTINE FacetTopology_Triangle(elemType, nptrs, ans)
     INTEGER(I4B), INTENT(IN) :: elemType
+    !! triangle element type, for example `Triangle3`
     INTEGER(I4B), INTENT(IN) :: nptrs(:)
+    !! node numbers of the triangle, one entry per node of `elemType`
     TYPE(ReferenceTopology_), INTENT(INOUT) :: ans(:)
+    !! topology of the edges, size 3
   END SUBROUTINE FacetTopology_Triangle
 END INTERFACE
 
@@ -269,55 +170,28 @@ END INTERFACE
 
 !> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
-! summary: Query reference element identifiers, orders and topology metadata.
+! summary: Returns the number of nodes, edges, faces and cells of a triangle.
 !
-! Element name strings are case sensitive. TotalEntities stores node, edge,
-! face and cell counts; the node count includes higher order nodes. MaxOrder
-! is a build time limit, not the extent of every metadata lookup table.
+! The result has four entries.
 !
-! Arguments:
-!   elemType : INTEGER(I4B), INTENT(IN). Element identifier from GlobalData or
-! the element type lookup.
+! 1. The number of nodes, including high order nodes.
+! 2. The number of edges, always 3.
+! 3. The number of faces, always 1.
+! 4. The number of cells, always 0.
+!
+! If `elemType` is not a triangle type, the node count is 0.
 !
 ! Returns:
-!   ans : INTEGER(I4B)(4).
+!   ans : INTEGER(I4B) - the four counts, size 4
 !
-! Formula:
-! $$N_{\mathrm{line}}=p+1,\quad N_{\mathrm{triangle}}=(p+1)(p+2)/2$$
-!
-! Examples
-!
-!```fortran
-! PROGRAM main
-! USE GlobalData, ONLY: DFP
-! USE GlobalData, ONLY: I4B
-! USE ReferenceTriangle_Method, ONLY: ElementName_Triangle
-! USE ReferenceTriangle_Method, ONLY: ElementType_Triangle
-! USE ReferenceTriangle_Method, ONLY: ElementOrder_Triangle
-! USE ReferenceTriangle_Method, ONLY: TotalNodesInElement_Triangle
-! USE ReferenceTriangle_Method, ONLY: TotalEntities_Triangle
-! USE ReferenceTriangle_Method, ONLY: MaxOrder_Triangle
-! USE ReferenceTriangle_Method, ONLY: DEFAULT_OPT_TRIANGLE_EDGE_CON
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-! INTEGER(I4B) :: kind, entities(4)
-!
-! kind = ElementType_Triangle("Triangle3")
-! CALL OK(ElementName_Triangle(kind) == "Triangle3", "Name round trip")
-! CALL OK(ElementOrder_Triangle(kind) == 1, "Linear element order")
-! CALL OK(TotalNodesInElement_Triangle(kind) == 3, "Vertex count")
-! entities = TotalEntities_Triangle(kind)
-! CALL OK(entities(1) == 3, "Entity counts start with node count")
-! CALL OK(MaxOrder_Triangle >= 1, "Configured maximum order")
-! CALL OK(DEFAULT_OPT_TRIANGLE_EDGE_CON == 1 .OR. &
-!   DEFAULT_OPT_TRIANGLE_EDGE_CON == 2, "Configured connectivity option")
-! END PROGRAM main
-!```
+! See also: [[TotalNodesInElement_Triangle]]
 
 INTERFACE
   MODULE PURE FUNCTION TotalEntities_Triangle(elemType) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: elemType
+    !! triangle element type, for example `Triangle6`
     INTEGER(I4B) :: ans(4)
+    !! counts of nodes, edges, faces and cells
   END FUNCTION TotalEntities_Triangle
 END INTERFACE
 
@@ -327,55 +201,22 @@ END INTERFACE
 
 !> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
-! summary: Query reference element identifiers, orders and topology metadata.
+! summary: Returns the number of nodes of a triangle element type.
 !
-! Element name strings are case sensitive. TotalEntities stores node, edge,
-! face and cell counts; the node count includes higher order nodes. MaxOrder
-! is a build time limit, not the extent of every metadata lookup table.
-!
-! Arguments:
-!   elemType : INTEGER(I4B), INTENT(IN). Element identifier from GlobalData or
-! the element type lookup.
+! For example, `Triangle3` has 3 nodes and `Triangle6` has 6 nodes.
+! If `elemType` is not a triangle type, the result is 0.
 !
 ! Returns:
-!   ans : INTEGER(I4B).
+!   ans : INTEGER(I4B) - number of nodes, or 0 for an unknown type
 !
-! Formula:
-! $$N_{\mathrm{line}}=p+1,\quad N_{\mathrm{triangle}}=(p+1)(p+2)/2$$
-!
-! Examples
-!
-!```fortran
-! PROGRAM main
-! USE GlobalData, ONLY: DFP
-! USE GlobalData, ONLY: I4B
-! USE ReferenceTriangle_Method, ONLY: ElementName_Triangle
-! USE ReferenceTriangle_Method, ONLY: ElementType_Triangle
-! USE ReferenceTriangle_Method, ONLY: ElementOrder_Triangle
-! USE ReferenceTriangle_Method, ONLY: TotalNodesInElement_Triangle
-! USE ReferenceTriangle_Method, ONLY: TotalEntities_Triangle
-! USE ReferenceTriangle_Method, ONLY: MaxOrder_Triangle
-! USE ReferenceTriangle_Method, ONLY: DEFAULT_OPT_TRIANGLE_EDGE_CON
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-! INTEGER(I4B) :: kind, entities(4)
-!
-! kind = ElementType_Triangle("Triangle3")
-! CALL OK(ElementName_Triangle(kind) == "Triangle3", "Name round trip")
-! CALL OK(ElementOrder_Triangle(kind) == 1, "Linear element order")
-! CALL OK(TotalNodesInElement_Triangle(kind) == 3, "Vertex count")
-! entities = TotalEntities_Triangle(kind)
-! CALL OK(entities(1) == 3, "Entity counts start with node count")
-! CALL OK(MaxOrder_Triangle >= 1, "Configured maximum order")
-! CALL OK(DEFAULT_OPT_TRIANGLE_EDGE_CON == 1 .OR. &
-!   DEFAULT_OPT_TRIANGLE_EDGE_CON == 2, "Configured connectivity option")
-! END PROGRAM main
-!```
+! See also: [[TotalEntities_Triangle]], [[ElementOrder_Triangle]]
 
 INTERFACE
   MODULE PURE FUNCTION TotalNodesInElement_Triangle(elemType) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: elemType
+    !! triangle element type, for example `Triangle6`
     INTEGER(I4B) :: ans
+    !! number of nodes
   END FUNCTION TotalNodesInElement_Triangle
 END INTERFACE
 
@@ -385,54 +226,27 @@ END INTERFACE
 
 !> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
-! summary: Query reference element identifiers, orders and topology metadata.
+! summary: Returns the triangle element type for an element name.
 !
-! Element name strings are case sensitive. TotalEntities stores node, edge,
-! face and cell counts; the node count includes higher order nodes. MaxOrder
-! is a build time limit, not the extent of every metadata lookup table.
-!
-! Arguments:
-!   elemName : CHARACTER(*), INTENT(IN). Case sensitive element name string.
+! The name is case sensitive. For example, `"Triangle6"` gives
+! `Triangle6`. The name `"Triangle"` is an alias for `Triangle3`.
+! If the name is not a triangle name, the result is 0.
 !
 ! Returns:
-!   ans : INTEGER(I4B).
-!
-! Formula:
-! $$N_{\mathrm{line}}=p+1,\quad N_{\mathrm{triangle}}=(p+1)(p+2)/2$$
+!   ans : INTEGER(I4B) - element type, or 0 if the name is unknown
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE GlobalData, ONLY: DFP
-! USE GlobalData, ONLY: I4B
-! USE ReferenceTriangle_Method, ONLY: ElementName_Triangle
-! USE ReferenceTriangle_Method, ONLY: ElementType_Triangle
-! USE ReferenceTriangle_Method, ONLY: ElementOrder_Triangle
-! USE ReferenceTriangle_Method, ONLY: TotalNodesInElement_Triangle
-! USE ReferenceTriangle_Method, ONLY: TotalEntities_Triangle
-! USE ReferenceTriangle_Method, ONLY: MaxOrder_Triangle
-! USE ReferenceTriangle_Method, ONLY: DEFAULT_OPT_TRIANGLE_EDGE_CON
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-! INTEGER(I4B) :: kind, entities(4)
+! - [test 1](|base|Triangle/examples/ElementType_Triangle_test_1.F90)
 !
-! kind = ElementType_Triangle("Triangle3")
-! CALL OK(ElementName_Triangle(kind) == "Triangle3", "Name round trip")
-! CALL OK(ElementOrder_Triangle(kind) == 1, "Linear element order")
-! CALL OK(TotalNodesInElement_Triangle(kind) == 3, "Vertex count")
-! entities = TotalEntities_Triangle(kind)
-! CALL OK(entities(1) == 3, "Entity counts start with node count")
-! CALL OK(MaxOrder_Triangle >= 1, "Configured maximum order")
-! CALL OK(DEFAULT_OPT_TRIANGLE_EDGE_CON == 1 .OR. &
-!   DEFAULT_OPT_TRIANGLE_EDGE_CON == 2, "Configured connectivity option")
-! END PROGRAM main
-!```
+! See also: [[ElementName_Triangle]]
 
 INTERFACE
   MODULE PURE FUNCTION ElementType_Triangle(elemName) RESULT(ans)
     CHARACTER(*), INTENT(IN) :: elemName
+    !! element name, for example `"Triangle6"`
     INTEGER(I4B) :: ans
+    !! element type
   END FUNCTION ElementType_Triangle
 END INTERFACE
 
@@ -442,55 +256,26 @@ END INTERFACE
 
 !> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
-! summary: Query reference element identifiers, orders and topology metadata.
+! summary: Returns the polynomial order of a triangle element type.
 !
-! Element name strings are case sensitive. TotalEntities stores node, edge,
-! face and cell counts; the node count includes higher order nodes. MaxOrder
-! is a build time limit, not the extent of every metadata lookup table.
+! For example, `Triangle3` has order 1 and `Triangle6` has order 2.
+! `Triangle15a` has order 4 and `Triangle15b` has order 5.
 !
-! Arguments:
-!   elemType : INTEGER(I4B), INTENT(IN). Element identifier from GlobalData or
-! the element type lookup.
+! @warning
+! The result is not set when `elemType` is not a triangle type.
+! @endwarning
 !
 ! Returns:
-!   ans : INTEGER(I4B).
+!   ans : INTEGER(I4B) - polynomial order
 !
-! Formula:
-! $$N_{\mathrm{line}}=p+1,\quad N_{\mathrm{triangle}}=(p+1)(p+2)/2$$
-!
-! Examples
-!
-!```fortran
-! PROGRAM main
-! USE GlobalData, ONLY: DFP
-! USE GlobalData, ONLY: I4B
-! USE ReferenceTriangle_Method, ONLY: ElementName_Triangle
-! USE ReferenceTriangle_Method, ONLY: ElementType_Triangle
-! USE ReferenceTriangle_Method, ONLY: ElementOrder_Triangle
-! USE ReferenceTriangle_Method, ONLY: TotalNodesInElement_Triangle
-! USE ReferenceTriangle_Method, ONLY: TotalEntities_Triangle
-! USE ReferenceTriangle_Method, ONLY: MaxOrder_Triangle
-! USE ReferenceTriangle_Method, ONLY: DEFAULT_OPT_TRIANGLE_EDGE_CON
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-! INTEGER(I4B) :: kind, entities(4)
-!
-! kind = ElementType_Triangle("Triangle3")
-! CALL OK(ElementName_Triangle(kind) == "Triangle3", "Name round trip")
-! CALL OK(ElementOrder_Triangle(kind) == 1, "Linear element order")
-! CALL OK(TotalNodesInElement_Triangle(kind) == 3, "Vertex count")
-! entities = TotalEntities_Triangle(kind)
-! CALL OK(entities(1) == 3, "Entity counts start with node count")
-! CALL OK(MaxOrder_Triangle >= 1, "Configured maximum order")
-! CALL OK(DEFAULT_OPT_TRIANGLE_EDGE_CON == 1 .OR. &
-!   DEFAULT_OPT_TRIANGLE_EDGE_CON == 2, "Configured connectivity option")
-! END PROGRAM main
-!```
+! See also: [[ElementType_Triangle]], [[TotalNodesInElement_Triangle]]
 
 INTERFACE
   MODULE PURE FUNCTION ElementOrder_Triangle(elemType) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: elemType
+    !! triangle element type, for example `Triangle6`
     INTEGER(I4B) :: ans
+    !! polynomial order
   END FUNCTION ElementOrder_Triangle
 END INTERFACE
 
@@ -500,67 +285,27 @@ END INTERFACE
 
 !> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
-! summary: Construct facet connectivity and reference topology.
+! summary: Builds the three facets of a reference triangle.
 !
-! Use caller allocated output arrays. Line facets are points. Triangle face
-! connectivity always uses [1,2], [2,3], [3,1]; GetFaceConnectivity_Triangle
-! ignores opt and forces option 2. Edge connectivity option 1 uses [1,2],
-! [1,3], [2,3]. The example uses linear elements to avoid higher order
-! indexing assumptions.
+! Each facet is a line element. Its name, order and node numbers come from
+! the edge topology of `refelem`. Its points use the interpolation point
+! type of `refelem`. Each facet keeps the `nsd` of `refelem`.
 !
-! Arguments:
-!   refelem : CLASS(ReferenceElement_), INTENT(IN). Reference element carrying
-! topology and embedding dimension.
-!   ans : TYPE(ReferenceElement_), INTENT(INOUT)(:). Result buffer; allocate
-! the full active shape before the call.
-!
-! Returns:
-!   Updates ans(:).
-!
-! Formula:
-! $$\partial T=e_{12}\cup e_{23}\cup e_{31}$$
+! The caller allocates `ans` with size 3. The topology of each facet lists
+! its nodes as points, then the line itself.
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE GlobalData, ONLY: DFP
-! USE GlobalData, ONLY: I4B
-! USE GlobalData, ONLY: Triangle3
-! USE BaseType, ONLY: ReferenceTopology_
-! USE BaseType, ONLY: ReferenceElement_
-! USE ReferenceTriangle_Method, ONLY: GetEdgeConnectivity_Triangle
-! USE ReferenceTriangle_Method, ONLY: GetFaceConnectivity_Triangle
-! USE ReferenceTriangle_Method, ONLY: GetFaceElemType_Triangle
-! USE ReferenceTriangle_Method, ONLY: FacetTopology_Triangle
-! USE ReferenceTriangle_Method, ONLY: FacetElements_Triangle
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-! INTEGER(I4B), PARAMETER :: kind = Triangle3
-! INTEGER(I4B) :: edge(2, 3), face(2, 3)
-! INTEGER(I4B) :: faceTypes(3), nodeCounts(3), nr, nc
-! TYPE(ReferenceTopology_) :: topology(3)
-! TYPE(ReferenceElement_) :: facets(3)
+! - [test 1](|base|Triangle/examples/FacetElements_Triangle_test_1.F90)
 !
-! CALL GetEdgeConnectivity_Triangle(con=edge, order=1_I4B, &
-!   nrow=nr, ncol=nc)
-! CALL OK(nr == 2 .AND. nc == 3, "Connectivity dimensions")
-! CALL GetFaceConnectivity_Triangle(con=face, order=1_I4B)
-! CALL GetFaceElemType_Triangle(elemType=kind, &
-!   faceElemType=faceTypes, tFaceNodes=nodeCounts)
-! CALL OK(ALL(nodeCounts == 2), "Linear facet node count")
-! CALL FacetTopology_Triangle(elemType=kind, &
-!   nptrs=[1_I4B, 2_I4B, 3_I4B], ans=topology)
-! CALL OK(ALL(topology(1)%nptrs == face(:, 1)), "Facet pointers")
-! CALL FacetElements_Triangle(elemType=kind, nsd=2_I4B, ans=facets)
-! CALL OK(ALL(facets%order == 1), "Facet polynomial order")
-! END PROGRAM main
-!```
+! See also: [[FacetElements_Triangle2]]
 
 INTERFACE FacetElements_Triangle
   MODULE SUBROUTINE FacetElements_Triangle1(refelem, ans)
     CLASS(ReferenceElement_), INTENT(IN) :: refelem
+    !! the reference triangle
     TYPE(ReferenceElement_), INTENT(INOUT) :: ans(:)
+    !! the facets, size 3
   END SUBROUTINE FacetElements_Triangle1
 END INTERFACE FacetElements_Triangle
 
@@ -570,70 +315,26 @@ END INTERFACE FacetElements_Triangle
 
 !> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
-! summary: Construct facet connectivity and reference topology.
+! summary: Builds the three facets of a triangle from its element type.
 !
-! Use caller allocated output arrays. Line facets are points. Triangle face
-! connectivity always uses [1,2], [2,3], [3,1]; GetFaceConnectivity_Triangle
-! ignores opt and forces option 2. Edge connectivity option 1 uses [1,2],
-! [1,3], [2,3]. The example uses linear elements to avoid higher order
-! indexing assumptions.
+! Each facet is a line element with the same order as the triangle.
+! The facets follow the edge order `[1,2]`, `[2,3]`, `[3,1]`.
+! Their points are equidistant.
 !
-! Arguments:
-!   elemType : INTEGER(I4B), INTENT(IN). Element identifier from GlobalData or
-! the element type lookup.
-!   nsd : INTEGER(I4B), INTENT(IN). Physical embedding dimension; does not
-! change intrinsic coordinate row count.
-!   ans : TYPE(ReferenceElement_), INTENT(INOUT)(:). Result buffer; allocate
-! the full active shape before the call.
+! The caller allocates `ans` with size 3. Each facet gets its order,
+! name, points, `nsd` and topology. The topology lists the facet nodes
+! as points, then the line itself.
 !
-! Returns:
-!   Updates ans(:).
-!
-! Formula:
-! $$\partial T=e_{12}\cup e_{23}\cup e_{31}$$
-!
-! Examples
-!
-!```fortran
-! PROGRAM main
-! USE GlobalData, ONLY: DFP
-! USE GlobalData, ONLY: I4B
-! USE GlobalData, ONLY: Triangle3
-! USE BaseType, ONLY: ReferenceTopology_
-! USE BaseType, ONLY: ReferenceElement_
-! USE ReferenceTriangle_Method, ONLY: GetEdgeConnectivity_Triangle
-! USE ReferenceTriangle_Method, ONLY: GetFaceConnectivity_Triangle
-! USE ReferenceTriangle_Method, ONLY: GetFaceElemType_Triangle
-! USE ReferenceTriangle_Method, ONLY: FacetTopology_Triangle
-! USE ReferenceTriangle_Method, ONLY: FacetElements_Triangle
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-! INTEGER(I4B), PARAMETER :: kind = Triangle3
-! INTEGER(I4B) :: edge(2, 3), face(2, 3)
-! INTEGER(I4B) :: faceTypes(3), nodeCounts(3), nr, nc
-! TYPE(ReferenceTopology_) :: topology(3)
-! TYPE(ReferenceElement_) :: facets(3)
-!
-! CALL GetEdgeConnectivity_Triangle(con=edge, order=1_I4B, &
-!   nrow=nr, ncol=nc)
-! CALL OK(nr == 2 .AND. nc == 3, "Connectivity dimensions")
-! CALL GetFaceConnectivity_Triangle(con=face, order=1_I4B)
-! CALL GetFaceElemType_Triangle(elemType=kind, &
-!   faceElemType=faceTypes, tFaceNodes=nodeCounts)
-! CALL OK(ALL(nodeCounts == 2), "Linear facet node count")
-! CALL FacetTopology_Triangle(elemType=kind, &
-!   nptrs=[1_I4B, 2_I4B, 3_I4B], ans=topology)
-! CALL OK(ALL(topology(1)%nptrs == face(:, 1)), "Facet pointers")
-! CALL FacetElements_Triangle(elemType=kind, nsd=2_I4B, ans=facets)
-! CALL OK(ALL(facets%order == 1), "Facet polynomial order")
-! END PROGRAM main
-!```
+! See also: [[FacetElements_Triangle1]]
 
 INTERFACE FacetElements_Triangle
   MODULE SUBROUTINE FacetElements_Triangle2(elemType, nsd, ans)
     INTEGER(I4B), INTENT(IN) :: elemType
+    !! triangle element type, for example `Triangle3`
     INTEGER(I4B), INTENT(IN) :: nsd
+    !! spatial dimension stored in each facet
     TYPE(ReferenceElement_), INTENT(INOUT) :: ans(:)
+    !! the facets, size 3
   END SUBROUTINE FacetElements_Triangle2
 END INTERFACE FacetElements_Triangle
 
@@ -643,68 +344,40 @@ END INTERFACE FacetElements_Triangle
 
 !> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
-! summary: Construct a linear reference element or obtain reference
-! coordinates.
+! summary: Initiates a linear reference triangle.
 !
-! Pass UNIT or BIUNIT explicitly for reproducibility. Constructors retain only
-! intrinsic coordinate rows (one for Line and two for Triangle); nsd records
-! the embedding dimension. The pointer constructor allocates a new target
-! which the caller owns.
+! Fills `obj` as a three node triangle with three edges and one face.
+! It first deallocates the old content of `obj`.
 !
-! Arguments:
-!   obj : CLASS(ReferenceTriangle_), INTENT(INOUT). Reference element result;
-! pointer constructors allocate a new target.
-!   nsd : INTEGER(I4B), INTENT(IN). Physical embedding dimension; does not
-! change intrinsic coordinate row count.
-!   xij : REAL(DFP), INTENT(IN), OPTIONAL(:, :). Point columns; vertices or
-! interpolation nodes according to the interface.
-!   domainName : CHARACTER(*), OPTIONAL, INTENT(IN). Reference domain name;
-! use UNIT or BIUNIT explicitly.
+! If `xij` is present, its first three columns set the vertices.
+! `domainName` is then ignored. The method sets it to `"UNIT"`,
+! `"BIUNIT"` or `"GENERAL"`, by comparing the vertices with the two
+! reference triangles.
 !
-! Returns:
-!   Updates obj.
+! If `xij` is absent, `domainName` selects the vertices. It is not case
+! sensitive. The default is `"UNIT"`. The vertices are only set for
+! `"UNIT"` and `"BIUNIT"`.
 !
-! Formula:
-! $$\widehat K_{\mathrm{line}}=[0,1],\quad\widehat T=\{(x,y):x,y\ge0,\
-! x+y\le1\}$$
+! @note
+! `nsd` only records the spatial dimension. It does not change the number
+! of rows of `obj%xij`, which is 2.
+! @endnote
 !
-! Examples
-!
-!```fortran
-! PROGRAM main
-! USE GlobalData, ONLY: DFP
-! USE GlobalData, ONLY: I4B
-! USE BaseType, ONLY: ReferenceTriangle_
-! USE ReferenceTriangle_Method, ONLY: Initiate
-! USE ReferenceTriangle_Method, ONLY: ReferenceTriangle
-! USE ReferenceTriangle_Method, ONLY: ReferenceTriangle_Pointer
-! USE ReferenceTriangle_Method, ONLY: RefTriangleCoord
-! USE ReferenceTriangle_Method, ONLY: RefCoord_Triangle
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-! TYPE(ReferenceTriangle_) :: a, b
-! CLASS(ReferenceTriangle_), POINTER :: p
-! REAL(DFP) :: x(2, 3)
-!
-! CALL Initiate(obj=a, nsd=2_I4B, domainName="UNIT")
-! b = ReferenceTriangle(nsd=2_I4B, domainName="UNIT")
-! p => ReferenceTriangle_Pointer(nsd=2_I4B, domainName="UNIT")
-! CALL OK(a%order == 1 .AND. b%order == 1, "Linear reference objects")
-! CALL OK(ASSOCIATED(p), "Pointer constructor allocates its result")
-! x = RefTriangleCoord("UNIT")
-! CALL OK(MAXVAL(ABS(x-RefCoord_Triangle("UNIT"))) < 1.0E-12_DFP, &
-!   "Coordinate aliases agree")
-! CALL OK(MAXVAL(ABS(a%xij-x)) < 1.0E-12_DFP, "Stored reference coordinates")
-! DEALLOCATE(p)
-! END PROGRAM main
-!```
+! See also: [[Reference_Triangle]], [[Reference_Triangle_Pointer]]
 
 INTERFACE Initiate
   MODULE PURE SUBROUTINE Initiate_Ref_Triangle(obj, nsd, xij, domainName)
     CLASS(ReferenceTriangle_), INTENT(INOUT) :: obj
+    !! the reference triangle to initiate
     INTEGER(I4B), INTENT(IN) :: nsd
+    !! spatial dimension of the space that holds the triangle
     REAL(DFP), INTENT(IN), OPTIONAL :: xij(:, :)
+    !! vertex coordinates, one vertex per column.
+    !! At least 2 rows and 3 columns. Only the first 2 rows and
+    !! 3 columns count
     CHARACTER(*), OPTIONAL, INTENT(IN) :: domainName
+    !! reference domain, `"UNIT"` or `"BIUNIT"`; default `"UNIT"`.
+    !! Ignored when `xij` is present
   END SUBROUTINE Initiate_Ref_Triangle
 END INTERFACE Initiate
 
@@ -714,66 +387,39 @@ END INTERFACE Initiate
 
 !> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
-! summary: Construct a linear reference element or obtain reference
-! coordinates.
+! summary: Returns a linear reference triangle as a function result.
 !
-! Pass UNIT or BIUNIT explicitly for reproducibility. Constructors retain only
-! intrinsic coordinate rows (one for Line and two for Triangle); nsd records
-! the embedding dimension. The pointer constructor allocates a new target
-! which the caller owns.
+! Builds a `ReferenceTriangle_` with three nodes, three edges and one face.
+! It does the same work as [[Initiate_Ref_Triangle]], but it returns the
+! object instead of filling an argument.
 !
-! Arguments:
-!   nsd : INTEGER(I4B), INTENT(IN). Physical embedding dimension; does not
-! change intrinsic coordinate row count.
-!   xij : REAL(DFP), INTENT(IN), OPTIONAL(:, :). Point columns; vertices or
-! interpolation nodes according to the interface.
-!   domainName : CHARACTER(*), OPTIONAL, INTENT(IN). Reference domain name;
-! use UNIT or BIUNIT explicitly.
+! If `xij` is present, its first three columns set the vertices.
+! `domainName` is then ignored. The method sets it to `"UNIT"`,
+! `"BIUNIT"` or `"GENERAL"`, by comparing the vertices with the two
+! reference triangles.
+!
+! If `xij` is absent, `domainName` selects the vertices. It is not case
+! sensitive. The default is `"UNIT"`. The vertices are only set for
+! `"UNIT"` and `"BIUNIT"`.
 !
 ! Returns:
-!   obj : TYPE(ReferenceTriangle_).
+!   obj : `ReferenceTriangle_` - the reference triangle
 !
-! Formula:
-! $$\widehat K_{\mathrm{line}}=[0,1],\quad\widehat T=\{(x,y):x,y\ge0,\
-! x+y\le1\}$$
-!
-! Examples
-!
-!```fortran
-! PROGRAM main
-! USE GlobalData, ONLY: DFP
-! USE GlobalData, ONLY: I4B
-! USE BaseType, ONLY: ReferenceTriangle_
-! USE ReferenceTriangle_Method, ONLY: Initiate
-! USE ReferenceTriangle_Method, ONLY: ReferenceTriangle
-! USE ReferenceTriangle_Method, ONLY: ReferenceTriangle_Pointer
-! USE ReferenceTriangle_Method, ONLY: RefTriangleCoord
-! USE ReferenceTriangle_Method, ONLY: RefCoord_Triangle
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-! TYPE(ReferenceTriangle_) :: a, b
-! CLASS(ReferenceTriangle_), POINTER :: p
-! REAL(DFP) :: x(2, 3)
-!
-! CALL Initiate(obj=a, nsd=2_I4B, domainName="UNIT")
-! b = ReferenceTriangle(nsd=2_I4B, domainName="UNIT")
-! p => ReferenceTriangle_Pointer(nsd=2_I4B, domainName="UNIT")
-! CALL OK(a%order == 1 .AND. b%order == 1, "Linear reference objects")
-! CALL OK(ASSOCIATED(p), "Pointer constructor allocates its result")
-! x = RefTriangleCoord("UNIT")
-! CALL OK(MAXVAL(ABS(x-RefCoord_Triangle("UNIT"))) < 1.0E-12_DFP, &
-!   "Coordinate aliases agree")
-! CALL OK(MAXVAL(ABS(a%xij-x)) < 1.0E-12_DFP, "Stored reference coordinates")
-! DEALLOCATE(p)
-! END PROGRAM main
-!```
+! See also: [[Initiate_Ref_Triangle]], [[Reference_Triangle_Pointer]]
 
 INTERFACE ReferenceTriangle
   MODULE PURE FUNCTION Reference_Triangle(nsd, xij, domainName) RESULT(obj)
     INTEGER(I4B), INTENT(IN) :: nsd
+    !! spatial dimension of the space that holds the triangle
     REAL(DFP), INTENT(IN), OPTIONAL :: xij(:, :)
+    !! vertex coordinates, one vertex per column.
+    !! At least 2 rows and 3 columns. Only the first 2 rows and
+    !! 3 columns count
     CHARACTER(*), OPTIONAL, INTENT(IN) :: domainName
+    !! reference domain, `"UNIT"` or `"BIUNIT"`; default `"UNIT"`.
+    !! Ignored when `xij` is present
     TYPE(ReferenceTriangle_) :: obj
+    !! the reference triangle
   END FUNCTION Reference_Triangle
 END INTERFACE ReferenceTriangle
 
@@ -783,67 +429,44 @@ END INTERFACE ReferenceTriangle
 
 !> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
-! summary: Construct a linear reference element or obtain reference
-! coordinates.
+! summary: Returns a pointer to a new linear reference triangle.
 !
-! Pass UNIT or BIUNIT explicitly for reproducibility. Constructors retain only
-! intrinsic coordinate rows (one for Line and two for Triangle); nsd records
-! the embedding dimension. The pointer constructor allocates a new target
-! which the caller owns.
+! Allocates a new `ReferenceTriangle_` and returns a pointer to it.
+! The element has three nodes and order 1.
+! The caller owns the pointer and must deallocate it.
 !
-! Arguments:
-!   nsd : INTEGER(I4B), INTENT(IN). Physical embedding dimension; does not
-! change intrinsic coordinate row count.
-!   xij : REAL(DFP), INTENT(IN), OPTIONAL(:, :). Point columns; vertices or
-! interpolation nodes according to the interface.
-!   domainName : CHARACTER(*), OPTIONAL, INTENT(IN). Reference domain name;
-! use UNIT or BIUNIT explicitly.
+! The routine picks the vertex coordinates in this order.
+!
+! 1. If `xij` is present, its first two rows and first three columns
+!    are the coordinates. The domain name becomes `"UNIT"` or `"BIUNIT"`
+!    when they match that triangle, and `"GENERAL"` otherwise.
+! 2. If `domainName` is `"UNIT"` or `"BIUNIT"` in any case, the
+!    coordinates are those of that reference triangle.
+! 3. If `domainName` has another value, the routine stores the name
+!    and leaves the coordinates unset.
+! 4. If neither argument is present, the domain is `"UNIT"`.
+!
+! @note
+! `nsd` only records the dimension of the space around the triangle.
+! The coordinate array always has two rows.
+! @endnote
 !
 ! Returns:
-!   obj : CLASS(ReferenceTriangle_), POINTER.
+!   obj : CLASS(`ReferenceTriangle_`), POINTER - the new reference triangle
 !
-! Formula:
-! $$\widehat K_{\mathrm{line}}=[0,1],\quad\widehat T=\{(x,y):x,y\ge0,\
-! x+y\le1\}$$
-!
-! Examples
-!
-!```fortran
-! PROGRAM main
-! USE GlobalData, ONLY: DFP
-! USE GlobalData, ONLY: I4B
-! USE BaseType, ONLY: ReferenceTriangle_
-! USE ReferenceTriangle_Method, ONLY: Initiate
-! USE ReferenceTriangle_Method, ONLY: ReferenceTriangle
-! USE ReferenceTriangle_Method, ONLY: ReferenceTriangle_Pointer
-! USE ReferenceTriangle_Method, ONLY: RefTriangleCoord
-! USE ReferenceTriangle_Method, ONLY: RefCoord_Triangle
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-! TYPE(ReferenceTriangle_) :: a, b
-! CLASS(ReferenceTriangle_), POINTER :: p
-! REAL(DFP) :: x(2, 3)
-!
-! CALL Initiate(obj=a, nsd=2_I4B, domainName="UNIT")
-! b = ReferenceTriangle(nsd=2_I4B, domainName="UNIT")
-! p => ReferenceTriangle_Pointer(nsd=2_I4B, domainName="UNIT")
-! CALL OK(a%order == 1 .AND. b%order == 1, "Linear reference objects")
-! CALL OK(ASSOCIATED(p), "Pointer constructor allocates its result")
-! x = RefTriangleCoord("UNIT")
-! CALL OK(MAXVAL(ABS(x-RefCoord_Triangle("UNIT"))) < 1.0E-12_DFP, &
-!   "Coordinate aliases agree")
-! CALL OK(MAXVAL(ABS(a%xij-x)) < 1.0E-12_DFP, "Stored reference coordinates")
-! DEALLOCATE(p)
-! END PROGRAM main
-!```
+! See also: [[ReferenceTriangle]]
 
 INTERFACE ReferenceTriangle_Pointer
   MODULE FUNCTION Reference_Triangle_Pointer(nsd, xij, domainName) &
     & RESULT(obj)
     INTEGER(I4B), INTENT(IN) :: nsd
+    !! spatial dimension of the space around the triangle
     REAL(DFP), INTENT(IN), OPTIONAL :: xij(:, :)
+    !! vertex coordinates in columns, at least 2 rows and 3 columns
     CHARACTER(*), OPTIONAL, INTENT(IN) :: domainName
+    !! domain name, `"UNIT"` or `"BIUNIT"`; used when `xij` is absent
     CLASS(ReferenceTriangle_), POINTER :: obj
+    !! pointer to the new reference triangle
   END FUNCTION Reference_Triangle_Pointer
 END INTERFACE ReferenceTriangle_Pointer
 
@@ -853,55 +476,44 @@ END INTERFACE ReferenceTriangle_Pointer
 
 !> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
-! summary: Construct higher order triangle metadata (currently unsafe).
+! summary: Builds a higher order triangle from a linear reference triangle.
 !
-! Do not call the current constructor: facecon is allocated with three columns
-! but the implementation accesses facecon(:,4). The example instead constructs
-! nodes through InterpolationPoint_Triangle; it does not validate the unsafe
-! constructor.
+! Fills `obj` with a Lagrange triangle of the given `order`.
+! The routine does the following.
 !
-! Arguments:
-!   refelem : CLASS(ReferenceElement_), INTENT(IN). Reference element carrying
-! topology and embedding dimension.
-!   order : INTEGER(I4B), INTENT(IN). Polynomial degree, except quadrature
-! where it is requested exactness degree.
-!   obj : CLASS(ReferenceElement_), INTENT(INOUT). Reference element result;
-! pointer constructors allocate a new target.
-!   ipType : INTEGER(I4B), INTENT(IN). Interpolation node family selector.
+! 1. Clears `obj`.
+! 2. Sets the nodes of `obj` to interpolation points of degree `order`
+!    on the three vertices of `refelem`.
+! 3. Copies the domain name, `nsd`, and the dimension of the
+!    parametric space from `refelem`.
+! 4. Sets the element name, the entity counts and the topology of
+!    points, edges and the cell.
 !
-! Returns:
-!   No reliable result from the affected backend; see the workaround example.
+! The number of nodes is `(order + 1) * (order + 2) / 2`.
 !
-! Formula:
-! $$N=(p+1)(p+2)/2$$
+! @warning
+! The code reads a fourth edge column of the connectivity. A triangle
+! has only three edges, so this read is out of bounds. Do not rely on
+! this routine until someone fixes the code.
+! @endwarning
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE GlobalData, ONLY: DFP
-! USE GlobalData, ONLY: I4B
-! USE GlobalData, ONLY: Equidistance
-! USE ReferenceTriangle_Method, ONLY: HighorderElement_Triangle
-! USE TriangleInterpolationUtility, ONLY: InterpolationPoint_Triangle
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-! REAL(DFP), ALLOCATABLE :: nodes(:, :)
+! - [test 1](|base|Triangle/examples/HighorderElement_Triangle_test_1.F90)
+! - [test 2](|base|Triangle/examples/HighorderElement_Triangle_test_2.F90)
 !
-! ! HighorderElement_Triangle indexes a nonexistent fourth face column.
-! ! Construct the interpolation nodes directly until that backend is repaired.
-! nodes = InterpolationPoint_Triangle(order=2_I4B, &
-!   ipType=Equidistance, layout="VEFC")
-! CALL OK(ALL(SHAPE(nodes) == [2, 6]), "Quadratic triangle node workaround")
-! END PROGRAM main
-!```
+! See also: [[InterpolationPoint_Triangle]]
 
 INTERFACE
   MODULE SUBROUTINE HighorderElement_Triangle(refelem, order, obj, ipType)
     CLASS(ReferenceElement_), INTENT(IN) :: refelem
+    !! linear reference triangle
     INTEGER(I4B), INTENT(IN) :: order
+    !! polynomial order of the new element
     CLASS(ReferenceElement_), INTENT(INOUT) :: obj
+    !! the higher order element
     INTEGER(I4B), INTENT(IN) :: ipType
+    !! type of interpolation points, for example `Equidistance`
   END SUBROUTINE HighorderElement_Triangle
 END INTERFACE
 
@@ -911,55 +523,36 @@ END INTERFACE
 
 !> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
-! summary: Evaluate triangle Measure_Simplex_Triangle through a reference
-! element.
+! summary: Returns the area of a triangle.
 !
-! The reference object selects embedding dimension. Coordinates are point
-! columns. Several geometry wrappers project onto the first two coordinate
-! rows; their output z component is zero.
+! Returns the measure of a triangle, which is its area.
+! The vertices are the columns of `xij`.
+! The result is the same as [[Area]].
 !
-! Arguments:
-!   refelem : CLASS(ReferenceElement_), INTENT(IN). Reference element carrying
-! topology and embedding dimension.
-!   xij : REAL(DFP), INTENT(IN)(:, :). Point columns; vertices or
-! interpolation nodes according to the interface.
+! If `refelem%nsd` is 2, the area has a sign. It is positive when the
+! vertices run counterclockwise.
+! If `refelem%nsd` is 3, the area is never negative.
 !
 ! Returns:
-!   ans : REAL(DFP).
+!   ans : REAL(DFP) - area of the triangle
 !
 ! Formula:
-! $$A=\tfrac12\det[v_2-v_1,v_3-v_1]$$
+!   $$ A = \frac{1}{2} \det [v_2 - v_1, v_3 - v_1] $$
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE GlobalData, ONLY: DFP
-! USE GlobalData, ONLY: I4B
-! USE BaseType, ONLY: ReferenceTriangle_
-! USE ReferenceTriangle_Method, ONLY: Measure_Simplex_Triangle
-! USE ReferenceTriangle_Method, ONLY: ReferenceTriangle
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-! REAL(DFP) :: t2(2, 3), t3(3, 3)
-! TYPE(ReferenceTriangle_) :: ref
-! REAL(DFP) :: y
+! - [test 1](|base|Triangle/examples/Measure_Simplex_Triangle_test_1.F90)
 !
-! t2 = RESHAPE([0.0_DFP, 0.0_DFP, 2.0_DFP, &
-!   0.0_DFP, 0.0_DFP, 1.0_DFP], [2, 3])
-! t3 = 0.0_DFP
-! t3(1:2, :) = t2
-! ref = ReferenceTriangle(nsd=2_I4B, domainName="UNIT")
-! y = Measure_Simplex_Triangle(ref, t2)
-! CALL OK(ABS(y-1.0_DFP) < 1.0E-11_DFP, "Simplex area")
-! END PROGRAM main
-!```
+! See also: [[Area]]
 
 INTERFACE
   MODULE PURE FUNCTION Measure_Simplex_Triangle(refelem, xij) RESULT(ans)
     CLASS(ReferenceElement_), INTENT(IN) :: refelem
+    !! reference triangle, `refelem%nsd` must be 2 or 3
     REAL(DFP), INTENT(IN) :: xij(:, :)
+    !! vertex coordinates in columns, `nsd` rows and 3 columns
     REAL(DFP) :: ans
+    !! area of the triangle
   END FUNCTION Measure_Simplex_Triangle
 END INTERFACE
 
@@ -969,54 +562,34 @@ END INTERFACE
 
 !> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
-! summary: Evaluate triangle Angles through a reference element.
+! summary: Returns the three interior angles of a triangle.
 !
-! The reference object selects embedding dimension. Coordinates are point
-! columns. Several geometry wrappers project onto the first two coordinate
-! rows; their output z component is zero.
+! Returns the interior angles in radians.
+! The vertices are the columns of `xij`.
+! The value `ans(i)` is the angle at vertex `i`.
+! The angles add up to pi.
 !
-! Arguments:
-!   refelem : CLASS(ReferenceElement_), INTENT(IN). Reference element carrying
-! topology and embedding dimension.
-!   xij : REAL(DFP), INTENT(IN)(:, :). Point columns; vertices or
-! interpolation nodes according to the interface.
+! The routine uses the first `refelem%nsd` rows of `xij`.
+! It supports `refelem%nsd` equal to 2 or 3.
 !
 ! Returns:
-!   ans : REAL(DFP)(3).
+!   ans : REAL(DFP) - angles at the three vertices, in radians
 !
 ! Formula:
-! $$\sum_i\theta_i=\pi$$
+!   $$ \theta_1 + \theta_2 + \theta_3 = \pi $$
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE GlobalData, ONLY: DFP
-! USE GlobalData, ONLY: I4B
-! USE BaseType, ONLY: ReferenceTriangle_
-! USE ReferenceTriangle_Method, ONLY: Angles
-! USE ReferenceTriangle_Method, ONLY: ReferenceTriangle
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-! REAL(DFP) :: t2(2, 3), t3(3, 3)
-! TYPE(ReferenceTriangle_) :: ref
-! REAL(DFP) :: y(3)
-!
-! t2 = RESHAPE([0.0_DFP, 0.0_DFP, 2.0_DFP, &
-!   0.0_DFP, 0.0_DFP, 1.0_DFP], [2, 3])
-! t3 = 0.0_DFP
-! t3(1:2, :) = t2
-! ref = ReferenceTriangle(nsd=2_I4B, domainName="UNIT")
-! y = Angles(ref, t2)
-! CALL OK(ABS(SUM(y)-ACOS(-1.0_DFP)) < 1.0E-11_DFP, "Angle sum")
-! END PROGRAM main
-!```
+! - [test 1](|base|Triangle/examples/Angles_test_1.F90)
 
 INTERFACE Angles
   MODULE PURE FUNCTION Triangle_angles(refelem, xij) RESULT(ans)
     CLASS(ReferenceElement_), INTENT(IN) :: refelem
+    !! reference triangle, `refelem%nsd` must be 2 or 3
     REAL(DFP), INTENT(IN) :: xij(:, :)
+    !! vertex coordinates in columns, `nsd` rows and 3 columns
     REAL(DFP) :: ans(3)
+    !! angles at the three vertices, in radians
   END FUNCTION Triangle_angles
 END INTERFACE Angles
 
@@ -1026,54 +599,34 @@ END INTERFACE Angles
 
 !> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
-! summary: Evaluate triangle Area through a reference element.
+! summary: Returns the area of a triangle.
 !
-! The reference object selects embedding dimension. Coordinates are point
-! columns. Several geometry wrappers project onto the first two coordinate
-! rows; their output z component is zero.
+! The vertices are the columns of `xij`.
 !
-! Arguments:
-!   refelem : CLASS(ReferenceElement_), INTENT(IN). Reference element carrying
-! topology and embedding dimension.
-!   xij : REAL(DFP), INTENT(IN)(:, :). Point columns; vertices or
-! interpolation nodes according to the interface.
+! If `refelem%nsd` is 2, the area has a sign. It is positive when the
+! vertices run counterclockwise.
+! If `refelem%nsd` is 3, the area is never negative.
 !
 ! Returns:
-!   ans : REAL(DFP).
+!   ans : REAL(DFP) - area of the triangle
 !
 ! Formula:
-! $$A=\tfrac12\det[v_2-v_1,v_3-v_1]$$
+!   $$ A = \frac{1}{2} \det [v_2 - v_1, v_3 - v_1] $$
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE GlobalData, ONLY: DFP
-! USE GlobalData, ONLY: I4B
-! USE BaseType, ONLY: ReferenceTriangle_
-! USE ReferenceTriangle_Method, ONLY: Area
-! USE ReferenceTriangle_Method, ONLY: ReferenceTriangle
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-! REAL(DFP) :: t2(2, 3), t3(3, 3)
-! TYPE(ReferenceTriangle_) :: ref
-! REAL(DFP) :: y
+! - [test 1](|base|Triangle/examples/Area_test_1.F90)
 !
-! t2 = RESHAPE([0.0_DFP, 0.0_DFP, 2.0_DFP, &
-!   0.0_DFP, 0.0_DFP, 1.0_DFP], [2, 3])
-! t3 = 0.0_DFP
-! t3(1:2, :) = t2
-! ref = ReferenceTriangle(nsd=2_I4B, domainName="UNIT")
-! y = Area(ref, t2)
-! CALL OK(ABS(y-1.0_DFP) < 1.0E-11_DFP, "Signed planar area")
-! END PROGRAM main
-!```
+! See also: [[ArealVector]]
 
 INTERFACE Area
   MODULE PURE FUNCTION Triangle_area(refelem, xij) RESULT(ans)
     CLASS(ReferenceElement_), INTENT(IN) :: refelem
+    !! reference triangle, `refelem%nsd` must be 2 or 3
     REAL(DFP), INTENT(IN) :: xij(:, :)
+    !! vertex coordinates in columns, `nsd` rows and 3 columns
     REAL(DFP) :: ans
+    !! area of the triangle
   END FUNCTION Triangle_area
 END INTERFACE Area
 
@@ -1083,56 +636,43 @@ END INTERFACE Area
 
 !> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
-! summary: Evaluate triangle ArealVector through a reference element.
+! summary: Returns the area vector of a triangle.
 !
-! The reference object selects embedding dimension. Coordinates are point
-! columns. Several geometry wrappers project onto the first two coordinate
-! rows; their output z component is zero. Scaling differs between embedding
-! dimensions: the 3D branch returns twice the area vector.
+! The vertices are the columns of `xij`.
+! The result has three components.
 !
-! Arguments:
-!   refelem : CLASS(ReferenceElement_), INTENT(IN). Reference element carrying
-! topology and embedding dimension.
-!   xij : REAL(DFP), INTENT(IN)(:, :). Point columns; vertices or
-! interpolation nodes according to the interface.
+! If `refelem%nsd` is 2, the result is `[0, 0, A]`.
+! Here `A` is the signed area.
+!
+! If `refelem%nsd` is 3, the result is the cross product of the
+! vectors from vertex 1 to vertices 2 and 3.
+!
+! @note
+! The two cases use different scales. In 3D the vector has length
+! `2 * A`, which is twice the area.
+! @endnote
 !
 ! Returns:
-!   ans : REAL(DFP)(3).
+!   ans : REAL(DFP) - area vector of the triangle
 !
 ! Formula:
-! $$a_{\mathrm{2D}}=(0,0,A),\quad a_{\mathrm{3D}}=(v_2-v_1)\times(v_3-v_1)$$
+!   $$ a_{2D} = (0, 0, A), \quad
+!      a_{3D} = (v_2 - v_1) \times (v_3 - v_1) $$
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE GlobalData, ONLY: DFP
-! USE GlobalData, ONLY: I4B
-! USE BaseType, ONLY: ReferenceTriangle_
-! USE ReferenceTriangle_Method, ONLY: ArealVector
-! USE ReferenceTriangle_Method, ONLY: ReferenceTriangle
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-! REAL(DFP) :: t2(2, 3), t3(3, 3)
-! TYPE(ReferenceTriangle_) :: ref
-! REAL(DFP) :: y(3)
+! - [test 1](|base|Triangle/examples/ArealVector_test_1.F90)
 !
-! t2 = RESHAPE([0.0_DFP, 0.0_DFP, 2.0_DFP, &
-!   0.0_DFP, 0.0_DFP, 1.0_DFP], [2, 3])
-! t3 = 0.0_DFP
-! t3(1:2, :) = t2
-! ref = ReferenceTriangle(nsd=2_I4B, domainName="UNIT")
-! y = ArealVector(ref, t2)
-! CALL OK(MAXVAL(ABS(y-[0.0_DFP, 0.0_DFP, 1.0_DFP])) &
-!   < 1.0E-11_DFP, "Planar area vector")
-! END PROGRAM main
-!```
+! See also: [[Area]]
 
 INTERFACE ArealVector
   MODULE PURE FUNCTION Triangle_arealVector(refelem, xij) RESULT(ans)
     CLASS(ReferenceElement_), INTENT(IN) :: refelem
+    !! reference triangle, `refelem%nsd` must be 2 or 3
     REAL(DFP), INTENT(IN) :: xij(:, :)
+    !! vertex coordinates in columns, `nsd` rows and 3 columns
     REAL(DFP) :: ans(3)
+    !! area vector of the triangle
   END FUNCTION Triangle_arealVector
 END INTERFACE ArealVector
 
@@ -1142,58 +682,36 @@ END INTERFACE ArealVector
 
 !> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
-! summary: Evaluate triangle Barycentric through a reference element.
+! summary: Returns the barycentric coordinates of a point in a triangle.
 !
-! The reference object selects embedding dimension. Coordinates are point
-! columns. Several geometry wrappers project onto the first two coordinate
-! rows; their output z component is zero.
+! Returns the three barycentric coordinates of the point `x`.
+! The vertices are the columns of `xij`.
+! The coordinates add up to 1.
+! They are all non-negative when `x` lies inside the triangle.
 !
-! Arguments:
-!   refelem : CLASS(ReferenceElement_), INTENT(IN). Reference element carrying
-! topology and embedding dimension.
-!   xij : REAL(DFP), INTENT(IN)(:, :). Point columns; vertices or
-! interpolation nodes according to the interface.
-!   x : REAL(DFP), INTENT(IN)(:). Evaluation point(s); columns for rank two
-! arrays.
+! The routine works in the plane. It uses only the first two rows
+! of `xij` and the first two entries of `x`. It ignores `refelem%nsd`.
 !
 ! Returns:
-!   ans : REAL(DFP)(3).
+!   ans : REAL(DFP) - barycentric coordinates of `x`
 !
 ! Formula:
-! $$x=\sum_i\lambda_i v_i$$
+!   $$ x = \sum_{i=1}^{3} \lambda_i v_i $$
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE GlobalData, ONLY: DFP
-! USE GlobalData, ONLY: I4B
-! USE BaseType, ONLY: ReferenceTriangle_
-! USE ReferenceTriangle_Method, ONLY: Barycentric
-! USE ReferenceTriangle_Method, ONLY: ReferenceTriangle
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-! REAL(DFP) :: t2(2, 3), t3(3, 3)
-! TYPE(ReferenceTriangle_) :: ref
-! REAL(DFP) :: y(3)
-!
-! t2 = RESHAPE([0.0_DFP, 0.0_DFP, 2.0_DFP, &
-!   0.0_DFP, 0.0_DFP, 1.0_DFP], [2, 3])
-! t3 = 0.0_DFP
-! t3(1:2, :) = t2
-! ref = ReferenceTriangle(nsd=2_I4B, domainName="UNIT")
-! y = Barycentric(ref, t2, [0.5_DFP, 0.25_DFP])
-! CALL OK(MAXVAL(ABS(MATMUL(t2,y)- &
-!   [0.5_DFP, 0.25_DFP])) < 1.0E-11_DFP, "Barycentric reconstruction")
-! END PROGRAM main
-!```
+! - [test 1](|base|Triangle/examples/Barycentric_test_1.F90)
 
 INTERFACE Barycentric
   MODULE PURE FUNCTION Triangle_barycentric(refelem, xij, x) RESULT(ans)
     CLASS(ReferenceElement_), INTENT(IN) :: refelem
+    !! reference triangle
     REAL(DFP), INTENT(IN) :: xij(:, :)
+    !! vertex coordinates in columns, at least 2 rows and 3 columns
     REAL(DFP), INTENT(IN) :: x(:)
+    !! the point, at least 2 entries
     REAL(DFP) :: ans(3)
+    !! barycentric coordinates of `x`
   END FUNCTION Triangle_barycentric
 END INTERFACE Barycentric
 
@@ -1203,55 +721,30 @@ END INTERFACE Barycentric
 
 !> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
-! summary: Evaluate triangle Centroid through a reference element.
+! summary: Returns the centroid of a triangle.
 !
-! The reference object selects embedding dimension. Coordinates are point
-! columns. Several geometry wrappers project onto the first two coordinate
-! rows; their output z component is zero.
-!
-! Arguments:
-!   refelem : CLASS(ReferenceElement_), INTENT(IN). Reference element carrying
-! topology and embedding dimension.
-!   xij : REAL(DFP), INTENT(IN)(:, :). Point columns; vertices or
-! interpolation nodes according to the interface.
+! The vertices are the columns of `xij`.
+! The result has three components.
+! If `refelem%nsd` is 2, the third component is 0.
 !
 ! Returns:
-!   ans : REAL(DFP)(3).
+!   ans : REAL(DFP) - coordinates of the centroid
 !
 ! Formula:
-! $$c=(v_1+v_2+v_3)/3$$
+!   $$ c = \frac{v_1 + v_2 + v_3}{3} $$
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE GlobalData, ONLY: DFP
-! USE GlobalData, ONLY: I4B
-! USE BaseType, ONLY: ReferenceTriangle_
-! USE ReferenceTriangle_Method, ONLY: Centroid
-! USE ReferenceTriangle_Method, ONLY: ReferenceTriangle
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-! REAL(DFP) :: t2(2, 3), t3(3, 3)
-! TYPE(ReferenceTriangle_) :: ref
-! REAL(DFP) :: y(3)
-!
-! t2 = RESHAPE([0.0_DFP, 0.0_DFP, 2.0_DFP, &
-!   0.0_DFP, 0.0_DFP, 1.0_DFP], [2, 3])
-! t3 = 0.0_DFP
-! t3(1:2, :) = t2
-! ref = ReferenceTriangle(nsd=2_I4B, domainName="UNIT")
-! y = Centroid(ref, t2)
-! CALL OK(MAXVAL(ABS(y-SUM(t3,DIM=2)/3.0_DFP)) &
-!   < 1.0E-11_DFP, "Centroid")
-! END PROGRAM main
-!```
+! - [test 1](|base|Triangle/examples/Centroid_test_1.F90)
 
 INTERFACE Centroid
   MODULE PURE FUNCTION Triangle_centroid(refelem, xij) RESULT(ans)
     CLASS(ReferenceElement_), INTENT(IN) :: refelem
+    !! reference triangle, `refelem%nsd` must be 2 or 3
     REAL(DFP), INTENT(IN) :: xij(:, :)
+    !! vertex coordinates in columns, `nsd` rows and 3 columns
     REAL(DFP) :: ans(3)
+    !! coordinates of the centroid
   END FUNCTION Triangle_centroid
 END INTERFACE Centroid
 
@@ -1261,55 +754,33 @@ END INTERFACE Centroid
 
 !> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
-! summary: Evaluate triangle CircumCenter through a reference element.
+! summary: Returns the circumcentre of a triangle.
 !
-! The reference object selects embedding dimension. Coordinates are point
-! columns. Several geometry wrappers project onto the first two coordinate
-! rows; their output z component is zero.
-!
-! Arguments:
-!   refelem : CLASS(ReferenceElement_), INTENT(IN). Reference element carrying
-! topology and embedding dimension.
-!   xij : REAL(DFP), INTENT(IN)(:, :). Point columns; vertices or
-! interpolation nodes according to the interface.
+! The circumcentre is the centre of the circle through the three
+! vertices. The vertices are the columns of `xij`.
+! The result has three components.
+! If `refelem%nsd` is 2, the third component is 0.
 !
 ! Returns:
-!   ans : REAL(DFP)(3).
+!   ans : REAL(DFP) - coordinates of the circumcentre
 !
 ! Formula:
-! $$\|c-v_i\|=R$$
+!   $$ \| c - v_i \| = R, \quad i = 1, 2, 3 $$
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE GlobalData, ONLY: DFP
-! USE GlobalData, ONLY: I4B
-! USE BaseType, ONLY: ReferenceTriangle_
-! USE ReferenceTriangle_Method, ONLY: CircumCenter
-! USE ReferenceTriangle_Method, ONLY: ReferenceTriangle
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-! REAL(DFP) :: t2(2, 3), t3(3, 3)
-! TYPE(ReferenceTriangle_) :: ref
-! REAL(DFP) :: y(3)
+! - [test 1](|base|Triangle/examples/CircumCenter_test_1.F90)
 !
-! t2 = RESHAPE([0.0_DFP, 0.0_DFP, 2.0_DFP, &
-!   0.0_DFP, 0.0_DFP, 1.0_DFP], [2, 3])
-! t3 = 0.0_DFP
-! t3(1:2, :) = t2
-! ref = ReferenceTriangle(nsd=2_I4B, domainName="UNIT")
-! y = CircumCenter(ref,t2)
-! CALL OK(MAXVAL(ABS(y-[1.0_DFP, 0.5_DFP, 0.0_DFP])) &
-!   < 1.0E-11_DFP, "Circumcenter")
-! END PROGRAM main
-!```
+! See also: [[CircumCircle]]
 
 INTERFACE CircumCenter
   MODULE PURE FUNCTION Triangle_circumcentre(refelem, xij) RESULT(ans)
     CLASS(ReferenceElement_), INTENT(IN) :: refelem
+    !! reference triangle, `refelem%nsd` must be 2 or 3
     REAL(DFP), INTENT(IN) :: xij(:, :)
+    !! vertex coordinates in columns, `nsd` rows and 3 columns
     REAL(DFP) :: ans(3)
+    !! coordinates of the circumcentre
   END FUNCTION Triangle_circumcentre
 END INTERFACE CircumCenter
 
@@ -1319,56 +790,38 @@ END INTERFACE CircumCenter
 
 !> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
-! summary: Evaluate triangle CircumCircle through a reference element.
+! summary: Returns the radius and centre of the circle through a triangle.
 !
-! The reference object selects embedding dimension. Coordinates are point
-! columns. Several geometry wrappers project onto the first two coordinate
-! rows; their output z component is zero.
+! The vertices are the columns of `xij`.
+! The routine works in the plane. It uses the first two rows of `xij`
+! and ignores `refelem%nsd`.
 !
-! Arguments:
-!   refelem : CLASS(ReferenceElement_), INTENT(IN). Reference element carrying
-! topology and embedding dimension.
-!   xij : REAL(DFP), INTENT(IN)(:, :). Point columns; vertices or
-! interpolation nodes according to the interface.
+! The result holds the radius first, then the centre.
+! The last entry is always 0.
+!
+! If the three vertices lie on a line, the radius is -1 and the centre
+! is zero.
 !
 ! Returns:
-!   ans : REAL(DFP)(4).
+!   ans : REAL(DFP) - radius `R` and centre `c` of the circle
 !
 ! Formula:
-! $$y=(R,c_x,c_y,0)$$
+!   $$ ans = (R, c_x, c_y, 0) $$
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE GlobalData, ONLY: DFP
-! USE GlobalData, ONLY: I4B
-! USE BaseType, ONLY: ReferenceTriangle_
-! USE ReferenceTriangle_Method, ONLY: CircumCircle
-! USE ReferenceTriangle_Method, ONLY: ReferenceTriangle
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-! REAL(DFP) :: t2(2, 3), t3(3, 3)
-! TYPE(ReferenceTriangle_) :: ref
-! REAL(DFP) :: y(4)
+! - [test 1](|base|Triangle/examples/CircumCircle_test_1.F90)
 !
-! t2 = RESHAPE([0.0_DFP, 0.0_DFP, 2.0_DFP, &
-!   0.0_DFP, 0.0_DFP, 1.0_DFP], [2, 3])
-! t3 = 0.0_DFP
-! t3(1:2, :) = t2
-! ref = ReferenceTriangle(nsd=2_I4B, domainName="UNIT")
-! y = CircumCircle(ref,t2)
-! CALL OK(ABS(y(1)-SQRT(5.0_DFP)/2.0_DFP) < 1.0E-11_DFP, &
-!   "Circle result stores radius before center coordinates")
-! END PROGRAM main
-!```
+! See also: [[CircumCenter]]
 
 INTERFACE CircumCircle
   MODULE PURE FUNCTION Triangle_circumcircle(refelem, xij) RESULT(ans)
     CLASS(ReferenceElement_), INTENT(IN) :: refelem
+    !! reference triangle
     REAL(DFP), INTENT(IN) :: xij(:, :)
+    !! vertex coordinates in columns, at least 2 rows and 3 columns
     REAL(DFP) :: ans(4)
-    !! ans(1) = radius and ans(2:4) center
+    !! `ans(1)` is the radius, `ans(2:3)` is the centre, `ans(4)` is 0
   END FUNCTION Triangle_circumcircle
 END INTERFACE CircumCircle
 
@@ -1378,54 +831,37 @@ END INTERFACE CircumCircle
 
 !> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
-! summary: Evaluate triangle CircumRadius through a reference element.
+! summary: Returns the radius of the circle through the three vertices.
 !
-! The reference object selects embedding dimension. Coordinates are point
-! columns. Several geometry wrappers project onto the first two coordinate
-! rows; their output z component is zero.
+! Returns the circumradius of a triangle.
+! The vertices are the columns of `xij`.
+! The routine uses only the first two rows of `xij`.
+! It treats the triangle as a plane triangle.
 !
-! Arguments:
-!   refelem : CLASS(ReferenceElement_), INTENT(IN). Reference element carrying
-! topology and embedding dimension.
-!   xij : REAL(DFP), INTENT(IN)(:, :). Point columns; vertices or
-! interpolation nodes according to the interface.
+! If the three vertices lie on one line, the result is `-1`.
 !
 ! Returns:
-!   ans : REAL(DFP).
+!   ans : REAL(DFP) - circumradius, or -1 for a degenerate triangle
 !
 ! Formula:
-! $$R=abc/(4A)$$
+!   $$ R = \frac{abc}{4A} $$
+!
+!   Here a, b and c are the edge lengths and A is the area.
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE GlobalData, ONLY: DFP
-! USE GlobalData, ONLY: I4B
-! USE BaseType, ONLY: ReferenceTriangle_
-! USE ReferenceTriangle_Method, ONLY: CircumRadius
-! USE ReferenceTriangle_Method, ONLY: ReferenceTriangle
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-! REAL(DFP) :: t2(2, 3), t3(3, 3)
-! TYPE(ReferenceTriangle_) :: ref
-! REAL(DFP) :: y
+! - [test 1](|base|Triangle/examples/CircumRadius_test_1.F90)
 !
-! t2 = RESHAPE([0.0_DFP, 0.0_DFP, 2.0_DFP, &
-!   0.0_DFP, 0.0_DFP, 1.0_DFP], [2, 3])
-! t3 = 0.0_DFP
-! t3(1:2, :) = t2
-! ref = ReferenceTriangle(nsd=2_I4B, domainName="UNIT")
-! y = CircumRadius(ref,t2)
-! CALL OK(ABS(y-SQRT(5.0_DFP)/2.0_DFP) < 1.0E-11_DFP, "Radius")
-! END PROGRAM main
-!```
+! See also: [[CircumCircle]]
 
 INTERFACE CircumRadius
   MODULE PURE FUNCTION Triangle_circumradius(refelem, xij) RESULT(ans)
     CLASS(ReferenceElement_), INTENT(IN) :: refelem
+    !! reference triangle; the routine does not use it
     REAL(DFP), INTENT(IN) :: xij(:, :)
+    !! vertex coordinates in columns, at least 2 rows and 3 columns
     REAL(DFP) :: ans
+    !! circumradius
   END FUNCTION Triangle_circumradius
 END INTERFACE CircumRadius
 
@@ -1435,70 +871,48 @@ END INTERFACE CircumRadius
 
 !> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
-! summary: Intersect a parametric or explicit spatial line with a triangle.
+! summary: Checks whether a line in 3D meets a triangle.
 !
-! Provide three coordinate rows. With parametricLine=.TRUE., x2 is a
-! direction; otherwise x1 and x2 are two points.
+! Finds where a line crosses the plane of a triangle.
+! It sets `inside` to true when the crossing point lies in the triangle.
+! The routine stores the point in `xint`.
 !
-! Arguments:
-!   refelem : CLASS(ReferenceElement_), INTENT(IN). Reference element carrying
-! topology and embedding dimension.
-!   xij : REAL(DFP), INTENT(IN)(:, :). Point columns; vertices or
-! interpolation nodes according to the interface.
-!   x1 : REAL(DFP), INTENT(IN)(3). Use the declaration and description for
-! this overload.
-!   x2 : REAL(DFP), INTENT(IN)(3). Use the declaration and description for
-! this overload.
-!   parametricLine : LOGICAL(LGT), INTENT(IN). If true x2 is a direction;
-! otherwise x1,x2 are explicit points.
-!   inside : LOGICAL(LGT), INTENT(OUT). Whether the point or line intersection
-! is contained.
-!   xint : REAL(DFP), INTENT(OUT)(3). Use the declaration and description for
-! this overload.
+! The routine describes the line in one of two ways.
 !
-! Returns:
-!   Updates inside, xint(3).
+! 1. If `parametricLine` is true, the line passes through `x1` and has
+!    the direction `x2`.
+! 2. Otherwise, the line passes through the two points `x1` and `x2`.
+!
+! The routine works in 3D, so `xij` needs three rows.
 !
 ! Formula:
-! $$x=x_1+s x_2$$
+!   $$ x = x_1 + s x_2 $$
+!
+!   This is the parametric line. For two points, replace `x2` by
+!   `x2 - x1`.
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE GlobalData, ONLY: DFP
-! USE GlobalData, ONLY: I4B
-! USE GlobalData, ONLY: LGT
-! USE BaseType, ONLY: ReferenceTriangle_
-! USE ReferenceTriangle_Method, ONLY: ContainsLine
-! USE ReferenceTriangle_Method, ONLY: ReferenceTriangle
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-! REAL(DFP) :: t2(2, 3), t3(3, 3)
-! TYPE(ReferenceTriangle_) :: ref
-! LOGICAL(LGT) :: inside
-! REAL(DFP) :: point(3)
+! - [test 1](|base|Triangle/examples/ContainsLine_test_1.F90)
 !
-! t2 = RESHAPE([0.0_DFP, 0.0_DFP, 2.0_DFP, &
-!   0.0_DFP, 0.0_DFP, 1.0_DFP], [2, 3])
-! t3 = 0.0_DFP
-! t3(1:2, :) = t2
-! ref = ReferenceTriangle(nsd=2_I4B, domainName="UNIT")
-! CALL ContainsLine(ref, t3, [0.5_DFP,0.25_DFP,-1.0_DFP], &
-!   [0.0_DFP,0.0_DFP,1.0_DFP], .TRUE., inside, point)
-! CALL OK(inside .AND. ABS(point(3)) < 1.0E-11_DFP, &
-!   "Parametric line crosses triangle")
-! END PROGRAM main
-!```
+! See also: [[Contains_Point_Triangle]]
 
 INTERFACE ContainsLine
   MODULE PURE SUBROUTINE Triangle_contains_line(refelem, xij, x1, x2, &
     & parametricLine, inside, xint)
     CLASS(ReferenceElement_), INTENT(IN) :: refelem
+    !! reference triangle; the routine does not use it
     REAL(DFP), INTENT(IN) :: xij(:, :), x1(3), x2(3)
+    !! `xij`: vertex coordinates in columns, 3 rows and 3 columns.
+    !! `x1`: point on the line.
+    !! `x2`: direction of the line if `parametricLine` is true, else a
+    !! second point on the line.
     LOGICAL(LGT), INTENT(IN) :: parametricLine
+    !! true if `x2` is a direction, false if `x2` is a point
     LOGICAL(LGT), INTENT(OUT) :: inside
+    !! true if the line meets the triangle
     REAL(DFP), INTENT(OUT) :: xint(3)
+    !! point where the line meets the plane of the triangle
   END SUBROUTINE Triangle_contains_line
 END INTERFACE ContainsLine
 
@@ -1508,58 +922,36 @@ END INTERFACE ContainsLine
 
 !> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
-! summary: Evaluate triangle containment or a selected quality measure.
+! summary: Checks whether a point lies in a triangle.
 !
-! Containment uses the 2D barycentric test. Select a supported quality
-! measure from QualityMeasure; measures are not all normalized to [0,1].
-!
-! Arguments:
-!   refelem : CLASS(ReferenceElement_), INTENT(IN). Reference element carrying
-! topology and embedding dimension.
-!   xij : REAL(DFP), INTENT(IN)(:, :). Point columns; vertices or
-! interpolation nodes according to the interface.
-!   x : REAL(DFP), INTENT(IN)(:). Evaluation point(s); columns for rank two
-! arrays.
+! Returns true if the point `x` lies in the triangle.
+! The vertices are the columns of `xij`.
+! The routine uses only the first two rows of `xij` and the first two
+! entries of `x`. It treats the triangle as a plane triangle.
 !
 ! Returns:
-!   ans : LOGICAL(LGT).
+!   ans : LOGICAL(LGT) - true if `x` lies in the triangle
 !
 ! Formula:
-! $$x\in T\iff\lambda_i(x)\ge0$$
+!   $$ x \in T \iff \lambda_i(x) \ge 0, \quad i = 1, 2, 3 $$
+!
+!   Here $\lambda_i$ are the barycentric coordinates of `x`.
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE GlobalData, ONLY: DFP
-! USE GlobalData, ONLY: I4B
-! USE GlobalData, ONLY: LGT
-! USE BaseType, ONLY: ReferenceTriangle_
-! USE ReferenceTriangle_Method, ONLY: Triangle_Contains_Point
-! USE ReferenceTriangle_Method, ONLY: Contains_Point_Triangle
-! USE ReferenceTriangle_Method, ONLY: ReferenceTriangle
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-! REAL(DFP) :: t2(2, 3), t3(3, 3)
-! TYPE(ReferenceTriangle_) :: ref
-! LOGICAL(LGT) :: y
+! - [test 1](|base|Triangle/examples/Contains_Point_Triangle_test_1.F90)
 !
-! t2 = RESHAPE([0.0_DFP, 0.0_DFP, 2.0_DFP, &
-!   0.0_DFP, 0.0_DFP, 1.0_DFP], [2, 3])
-! t3 = 0.0_DFP
-! t3(1:2, :) = t2
-! ref = ReferenceTriangle(nsd=2_I4B, domainName="UNIT")
-! y = Triangle_Contains_Point(ref,t2,[0.5_DFP,0.25_DFP])
-! CALL OK(y .AND. Contains_Point_Triangle(ref,t2,[0.5_DFP,0.25_DFP]), &
-!   "Containment aliases agree")
-! END PROGRAM main
-!```
+! See also: [[Barycentric]]
 
 INTERFACE Contains_Point_Triangle
   MODULE PURE FUNCTION Triangle_Contains_Point(refelem, xij, x) RESULT(ans)
     CLASS(ReferenceElement_), INTENT(IN) :: refelem
+    !! reference triangle; the routine does not use it
     REAL(DFP), INTENT(IN) :: xij(:, :), x(:)
+    !! `xij`: vertex coordinates in columns, at least 2 rows and 3 columns.
+    !! `x`: point to test, at least 2 entries.
     LOGICAL(LGT) :: ans
+    !! true if `x` lies in the triangle
   END FUNCTION Triangle_Contains_Point
 END INTERFACE Contains_Point_Triangle
 
@@ -1569,57 +961,46 @@ END INTERFACE Contains_Point_Triangle
 
 !> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
-! summary: Evaluate triangle Diameter through a reference element.
+! summary: Returns the diameter of the smallest circle around a triangle.
 !
-! The reference object selects embedding dimension. Coordinates are point
-! columns. Several geometry wrappers project onto the first two coordinate
-! rows; their output z component is zero. The backend uses squared coordinate
-! sums rather than squared norms; this example records the existing result 2
-! instead of the geometric sqrt(5).
+! Returns the diameter of the smallest circle that holds the triangle.
+! The vertices are the columns of `xij`.
+! The routine uses only the first two rows of `xij`.
 !
-! Arguments:
-!   refelem : CLASS(ReferenceElement_), INTENT(IN). Reference element carrying
-! topology and embedding dimension.
-!   xij : REAL(DFP), INTENT(IN)(:, :). Point columns; vertices or
-! interpolation nodes according to the interface.
+! 1. For an acute triangle, this is the circumcircle diameter.
+! 2. For an obtuse triangle, this is the longest edge.
+!
+! @warning
+! The backend sums the coordinate differences before it squares them.
+! It does not square each difference first. The edge lengths it uses
+! can be wrong, and the result can be wrong too.
+! For the triangle with vertices (0,0), (2,0) and (0,1), the routine
+! returns 2, not `SQRT(5)`.
+! @endwarning
 !
 ! Returns:
-!   ans : REAL(DFP).
+!   ans : REAL(DFP) - diameter of the smallest circle around the triangle
 !
 ! Formula:
-! $$D_{\mathrm{intended}}=\text{smallest enclosing circle diameter}$$
+!   $$ D = \frac{abc}{2A} $$
+!
+!   This holds for an acute triangle. Here a, b and c are the edge
+!   lengths and A is the area.
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE GlobalData, ONLY: DFP
-! USE GlobalData, ONLY: I4B
-! USE BaseType, ONLY: ReferenceTriangle_
-! USE ReferenceTriangle_Method, ONLY: Diameter
-! USE ReferenceTriangle_Method, ONLY: ReferenceTriangle
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-! REAL(DFP) :: t2(2, 3), t3(3, 3)
-! TYPE(ReferenceTriangle_) :: ref
-! REAL(DFP) :: y
+! - [test 1](|base|Triangle/examples/Diameter_test_1.F90)
 !
-! t2 = RESHAPE([0.0_DFP, 0.0_DFP, 2.0_DFP, &
-!   0.0_DFP, 0.0_DFP, 1.0_DFP], [2, 3])
-! t3 = 0.0_DFP
-! t3(1:2, :) = t2
-! ref = ReferenceTriangle(nsd=2_I4B, domainName="UNIT")
-! y = Diameter(ref,t2)
-! CALL OK(ABS(y-2.0_DFP) < 1.0E-11_DFP, &
-!   "Current backend diameter behavior; see implementation limitation")
-! END PROGRAM main
-!```
+! See also: [[CircumRadius]]
 
 INTERFACE Diameter
   MODULE PURE FUNCTION triangle_diameter(refelem, xij) RESULT(ans)
     CLASS(ReferenceElement_), INTENT(IN) :: refelem
+    !! reference triangle; the routine does not use it
     REAL(DFP), INTENT(IN) :: xij(:, :)
+    !! vertex coordinates in columns, at least 2 rows and 3 columns
     REAL(DFP) :: ans
+    !! diameter
   END FUNCTION triangle_diameter
 END INTERFACE Diameter
 
@@ -1629,55 +1010,31 @@ END INTERFACE Diameter
 
 !> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
-! summary: Evaluate triangle EdgeLength through a reference element.
+! summary: Returns the lengths of the three edges of a triangle.
 !
-! The reference object selects embedding dimension. Coordinates are point
-! columns. Several geometry wrappers project onto the first two coordinate
-! rows; their output z component is zero.
-!
-! Arguments:
-!   refelem : CLASS(ReferenceElement_), INTENT(IN). Reference element carrying
-! topology and embedding dimension.
-!   xij : REAL(DFP), INTENT(IN)(:, :). Point columns; vertices or
-! interpolation nodes according to the interface.
+! The vertices are the columns of `xij`.
+! The value `ans(i)` is the length of the edge from vertex `i` to vertex
+! `i+1`. The last edge runs from vertex 3 to vertex 1.
+! The routine uses only the first two rows of `xij`.
 !
 ! Returns:
-!   ans : REAL(DFP)(3).
+!   ans : REAL(DFP) - the three edge lengths
 !
 ! Formula:
-! $$\ell_i=\|v_{i+1}-v_i\|$$
+!   $$ \ell_i = \| v_{i+1} - v_i \| $$
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE GlobalData, ONLY: DFP
-! USE GlobalData, ONLY: I4B
-! USE BaseType, ONLY: ReferenceTriangle_
-! USE ReferenceTriangle_Method, ONLY: EdgeLength
-! USE ReferenceTriangle_Method, ONLY: ReferenceTriangle
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-! REAL(DFP) :: t2(2, 3), t3(3, 3)
-! TYPE(ReferenceTriangle_) :: ref
-! REAL(DFP) :: y(3)
-!
-! t2 = RESHAPE([0.0_DFP, 0.0_DFP, 2.0_DFP, &
-!   0.0_DFP, 0.0_DFP, 1.0_DFP], [2, 3])
-! t3 = 0.0_DFP
-! t3(1:2, :) = t2
-! ref = ReferenceTriangle(nsd=2_I4B, domainName="UNIT")
-! y = EdgeLength(ref,t2)
-! CALL OK(ABS(SUM(y)-3.0_DFP-SQRT(5.0_DFP)) &
-!   < 1.0E-11_DFP, "Perimeter")
-! END PROGRAM main
-!```
+! - [test 1](|base|Triangle/examples/EdgeLength_test_1.F90)
 
 INTERFACE EdgeLength
   MODULE PURE FUNCTION triangle_edge_length(refelem, xij) RESULT(ans)
     CLASS(ReferenceElement_), INTENT(IN) :: refelem
+    !! reference triangle; the routine does not use it
     REAL(DFP), INTENT(IN) :: xij(:, :)
+    !! vertex coordinates in columns, at least 2 rows and 3 columns
     REAL(DFP) :: ans(3)
+    !! lengths of the three edges
   END FUNCTION triangle_edge_length
 END INTERFACE EdgeLength
 
@@ -1687,55 +1044,40 @@ END INTERFACE EdgeLength
 
 !> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
-! summary: Evaluate triangle Incenter through a reference element.
+! summary: Returns the incenter of a triangle.
 !
-! The reference object selects embedding dimension. Coordinates are point
-! columns. Several geometry wrappers project onto the first two coordinate
-! rows; their output z component is zero.
+! The incenter is the centre of the largest circle inside the triangle.
+! It is where the three angle bisectors meet.
+! The vertices are the columns of `xij`.
+! The routine uses only the first two rows of `xij`.
+! The third entry of the result is always zero.
 !
-! Arguments:
-!   refelem : CLASS(ReferenceElement_), INTENT(IN). Reference element carrying
-! topology and embedding dimension.
-!   xij : REAL(DFP), INTENT(IN)(:, :). Point columns; vertices or
-! interpolation nodes according to the interface.
+! If all three vertices coincide, the result is that vertex.
 !
 ! Returns:
-!   ans : REAL(DFP)(3).
+!   ans : REAL(DFP) - coordinates of the incenter, `ans(3)` is 0
 !
 ! Formula:
-! $$r=2A/(a+b+c)$$
+!   $$ c = \frac{b v_1 + c' v_2 + a v_3}{a + b + c'} $$
+!
+!   Here a is the length of the edge from `v_1` to `v_2`.
+!   The value b is the length of the edge from `v_2` to `v_3`.
+!   The value c' is the length of the edge from `v_3` to `v_1`.
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE GlobalData, ONLY: DFP
-! USE GlobalData, ONLY: I4B
-! USE BaseType, ONLY: ReferenceTriangle_
-! USE ReferenceTriangle_Method, ONLY: Incenter
-! USE ReferenceTriangle_Method, ONLY: ReferenceTriangle
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-! REAL(DFP) :: t2(2, 3), t3(3, 3)
-! TYPE(ReferenceTriangle_) :: ref
-! REAL(DFP) :: y(3)
+! - [test 1](|base|Triangle/examples/Incenter_test_1.F90)
 !
-! t2 = RESHAPE([0.0_DFP, 0.0_DFP, 2.0_DFP, &
-!   0.0_DFP, 0.0_DFP, 1.0_DFP], [2, 3])
-! t3 = 0.0_DFP
-! t3(1:2, :) = t2
-! ref = ReferenceTriangle(nsd=2_I4B, domainName="UNIT")
-! y = Incenter(ref,t2)
-! CALL OK(ABS(y(1)-(3.0_DFP-SQRT(5.0_DFP))/2.0_DFP) &
-!   < 1.0E-11_DFP, "Incenter")
-! END PROGRAM main
-!```
+! See also: [[Incircle]], [[Inradius]]
 
 INTERFACE Incenter
   MODULE PURE FUNCTION triangle_incenter(refelem, xij) RESULT(ans)
     CLASS(ReferenceElement_), INTENT(IN) :: refelem
+    !! reference triangle; the routine does not use it
     REAL(DFP), INTENT(IN) :: xij(:, :)
+    !! vertex coordinates in columns, at least 2 rows and 3 columns
     REAL(DFP) :: ans(3)
+    !! incenter, `ans(3)` is 0
   END FUNCTION triangle_incenter
 END INTERFACE Incenter
 
@@ -1745,55 +1087,38 @@ END INTERFACE Incenter
 
 !> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
-! summary: Evaluate triangle Incircle through a reference element.
+! summary: Returns the radius and centre of the circle inside a triangle.
 !
-! The reference object selects embedding dimension. Coordinates are point
-! columns. Several geometry wrappers project onto the first two coordinate
-! rows; their output z component is zero.
+! The incircle is the largest circle inside the triangle.
+! The vertices are the columns of `xij`.
+! The routine uses only the first two rows of `xij`.
 !
-! Arguments:
-!   refelem : CLASS(ReferenceElement_), INTENT(IN). Reference element carrying
-! topology and embedding dimension.
-!   xij : REAL(DFP), INTENT(IN)(:, :). Point columns; vertices or
-! interpolation nodes according to the interface.
+! The result holds the radius first, then the centre.
+! The last entry is always zero.
+!
+! If all three vertices coincide, the radius is zero and the centre is
+! that vertex.
 !
 ! Returns:
-!   ans : REAL(DFP)(4).
+!   ans : REAL(DFP) - radius in `ans(1)`, centre in `ans(2:3)`
 !
 ! Formula:
-! $$y=(r,c_x,c_y,0)$$
+!   $$ ans = (r, c_x, c_y, 0) $$
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE GlobalData, ONLY: DFP
-! USE GlobalData, ONLY: I4B
-! USE BaseType, ONLY: ReferenceTriangle_
-! USE ReferenceTriangle_Method, ONLY: Incircle
-! USE ReferenceTriangle_Method, ONLY: ReferenceTriangle
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-! REAL(DFP) :: t2(2, 3), t3(3, 3)
-! TYPE(ReferenceTriangle_) :: ref
-! REAL(DFP) :: y(4)
+! - [test 1](|base|Triangle/examples/Incircle_test_1.F90)
 !
-! t2 = RESHAPE([0.0_DFP, 0.0_DFP, 2.0_DFP, &
-!   0.0_DFP, 0.0_DFP, 1.0_DFP], [2, 3])
-! t3 = 0.0_DFP
-! t3(1:2, :) = t2
-! ref = ReferenceTriangle(nsd=2_I4B, domainName="UNIT")
-! y = Incircle(ref,t2)
-! CALL OK(ABS(y(1)-(3.0_DFP-SQRT(5.0_DFP))/2.0_DFP) &
-!   < 1.0E-11_DFP, "Incircle radius is the first entry")
-! END PROGRAM main
-!```
+! See also: [[Incenter]], [[Inradius]]
 
 INTERFACE Incircle
   MODULE PURE FUNCTION triangle_incircle(refelem, xij) RESULT(ans)
     CLASS(ReferenceElement_), INTENT(IN) :: refelem
+    !! reference triangle; the routine does not use it
     REAL(DFP), INTENT(IN) :: xij(:, :)
+    !! vertex coordinates in columns, at least 2 rows and 3 columns
     REAL(DFP) :: ans(4)
+    !! radius, x and y of the centre, and 0
   END FUNCTION triangle_incircle
 END INTERFACE Incircle
 
@@ -1803,55 +1128,35 @@ END INTERFACE Incircle
 
 !> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
-! summary: Evaluate triangle Inradius through a reference element.
+! summary: Returns the radius of the circle inside a triangle.
 !
-! The reference object selects embedding dimension. Coordinates are point
-! columns. Several geometry wrappers project onto the first two coordinate
-! rows; their output z component is zero.
-!
-! Arguments:
-!   refelem : CLASS(ReferenceElement_), INTENT(IN). Reference element carrying
-! topology and embedding dimension.
-!   xij : REAL(DFP), INTENT(IN)(:, :). Point columns; vertices or
-! interpolation nodes according to the interface.
+! The inradius is the radius of the largest circle inside the triangle.
+! The vertices are the columns of `xij`.
+! The routine uses only the first two rows of `xij`.
+! If all three vertices coincide, the result is zero.
 !
 ! Returns:
-!   ans : REAL(DFP).
+!   ans : REAL(DFP) - inradius
 !
 ! Formula:
-! $$r=2A/(a+b+c)$$
+!   $$ r = \frac{2A}{a + b + c} $$
+!
+!   Here a, b and c are the edge lengths and A is the area.
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE GlobalData, ONLY: DFP
-! USE GlobalData, ONLY: I4B
-! USE BaseType, ONLY: ReferenceTriangle_
-! USE ReferenceTriangle_Method, ONLY: Inradius
-! USE ReferenceTriangle_Method, ONLY: ReferenceTriangle
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-! REAL(DFP) :: t2(2, 3), t3(3, 3)
-! TYPE(ReferenceTriangle_) :: ref
-! REAL(DFP) :: y
+! - [test 1](|base|Triangle/examples/Inradius_test_1.F90)
 !
-! t2 = RESHAPE([0.0_DFP, 0.0_DFP, 2.0_DFP, &
-!   0.0_DFP, 0.0_DFP, 1.0_DFP], [2, 3])
-! t3 = 0.0_DFP
-! t3(1:2, :) = t2
-! ref = ReferenceTriangle(nsd=2_I4B, domainName="UNIT")
-! y = Inradius(ref,t2)
-! CALL OK(ABS(y-(3.0_DFP-SQRT(5.0_DFP))/2.0_DFP) &
-!   < 1.0E-11_DFP, "Inradius")
-! END PROGRAM main
-!```
+! See also: [[Incircle]], [[Incenter]]
 
 INTERFACE Inradius
   MODULE PURE FUNCTION triangle_inradius(refelem, xij) RESULT(ans)
     CLASS(ReferenceElement_), INTENT(IN) :: refelem
+    !! reference triangle; the routine does not use it
     REAL(DFP), INTENT(IN) :: xij(:, :)
+    !! vertex coordinates in columns, at least 2 rows and 3 columns
     REAL(DFP) :: ans
+    !! inradius
   END FUNCTION triangle_inradius
 END INTERFACE Inradius
 
@@ -1861,54 +1166,38 @@ END INTERFACE Inradius
 
 !> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
-! summary: Evaluate triangle Orthocenter through a reference element.
+! summary: Returns the orthocenter of a triangle.
 !
-! The reference object selects embedding dimension. Coordinates are point
-! columns. Several geometry wrappers project onto the first two coordinate
-! rows; their output z component is zero.
+! The orthocenter is the point where the three altitudes meet.
+! The vertices are the columns of `xij`.
+! The routine uses only the first two rows of `xij`.
+! The third entry of the result is always zero.
 !
-! Arguments:
-!   refelem : CLASS(ReferenceElement_), INTENT(IN). Reference element carrying
-! topology and embedding dimension.
-!   xij : REAL(DFP), INTENT(IN)(:, :). Point columns; vertices or
-! interpolation nodes according to the interface.
+! For a right triangle, the orthocenter is the vertex at the right angle.
+!
+! If the routine cannot find the point, it sets the first two entries to
+! `HUGE(1.0_DFP)`. This happens for a degenerate triangle.
 !
 ! Returns:
-!   ans : REAL(DFP)(3).
+!   ans : REAL(DFP) - coordinates of the orthocenter, `ans(3)` is 0
 !
 ! Formula:
-! $$h=3c_{\mathrm{centroid}}-2c_{\mathrm{circumcenter}}$$
+!   $$ h = 3 c_{centroid} - 2 c_{circumcenter} $$
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE GlobalData, ONLY: DFP
-! USE GlobalData, ONLY: I4B
-! USE BaseType, ONLY: ReferenceTriangle_
-! USE ReferenceTriangle_Method, ONLY: Orthocenter
-! USE ReferenceTriangle_Method, ONLY: ReferenceTriangle
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-! REAL(DFP) :: t2(2, 3), t3(3, 3)
-! TYPE(ReferenceTriangle_) :: ref
-! REAL(DFP) :: y(3)
+! - [test 1](|base|Triangle/examples/Orthocenter_test_1.F90)
 !
-! t2 = RESHAPE([0.0_DFP, 0.0_DFP, 2.0_DFP, &
-!   0.0_DFP, 0.0_DFP, 1.0_DFP], [2, 3])
-! t3 = 0.0_DFP
-! t3(1:2, :) = t2
-! ref = ReferenceTriangle(nsd=2_I4B, domainName="UNIT")
-! y = Orthocenter(ref,t2)
-! CALL OK(MAXVAL(ABS(y)) < 1.0E-11_DFP, "Right angle vertex")
-! END PROGRAM main
-!```
+! See also: [[Centroid]], [[CircumCenter]]
 
 INTERFACE Orthocenter
   MODULE PURE FUNCTION triangle_orthocenter(refelem, xij) RESULT(ans)
     CLASS(ReferenceElement_), INTENT(IN) :: refelem
+    !! reference triangle; the routine does not use it
     REAL(DFP), INTENT(IN) :: xij(:, :)
+    !! vertex coordinates in columns, at least 2 rows and 3 columns
     REAL(DFP) :: ans(3)
+    !! orthocenter, `ans(3)` is 0
   END FUNCTION triangle_orthocenter
 END INTERFACE Orthocenter
 
@@ -1918,57 +1207,42 @@ END INTERFACE Orthocenter
 
 !> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
-! summary: Evaluate triangle DistanceFromPoint through a reference element.
+! summary: Returns the distance from a point to the edges of a triangle.
 !
-! The reference object selects embedding dimension. Coordinates are point
-! columns. Several geometry wrappers project onto the first two coordinate
-! rows; their output z component is zero.
+! Returns the shortest distance from the point `x` to the boundary of the
+! triangle. The vertices are the columns of `xij`.
 !
-! Arguments:
-!   refelem : CLASS(ReferenceElement_), INTENT(IN). Reference element carrying
-! topology and embedding dimension.
-!   xij : REAL(DFP), INTENT(IN)(:, :). Point columns; vertices or
-! interpolation nodes according to the interface.
-!   x : REAL(DFP), INTENT(IN)(:). Evaluation point(s); columns for rank two
-! arrays.
+! The routine reads `refelem%nsd`.
+!
+! 1. If `refelem%nsd` is 2, it uses the first two rows of `xij` and the
+!    first two entries of `x`.
+! 2. If `refelem%nsd` is 3, it uses the first three rows of `xij` and
+!    the first three entries of `x`.
+!
+! A point inside the triangle has a positive distance to the edges.
+!
+! @note
+! For any other value of `refelem%nsd`, the result is not set.
+! @endnote
 !
 ! Returns:
-!   ans : REAL(DFP).
+!   ans : REAL(DFP) - distance from `x` to the nearest edge
 !
 ! Formula:
-! $$d=\min_{q\in\partial T}\|x-q\|$$
+!   $$ d = \min_{q \in \partial T} \| x - q \| $$
 !
-! Examples
-!
-!```fortran
-! PROGRAM main
-! USE GlobalData, ONLY: DFP
-! USE GlobalData, ONLY: I4B
-! USE BaseType, ONLY: ReferenceTriangle_
-! USE ReferenceTriangle_Method, ONLY: DistanceFromPoint
-! USE ReferenceTriangle_Method, ONLY: ReferenceTriangle
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-! REAL(DFP) :: t2(2, 3), t3(3, 3)
-! TYPE(ReferenceTriangle_) :: ref
-! REAL(DFP) :: y
-!
-! t2 = RESHAPE([0.0_DFP, 0.0_DFP, 2.0_DFP, &
-!   0.0_DFP, 0.0_DFP, 1.0_DFP], [2, 3])
-! t3 = 0.0_DFP
-! t3(1:2, :) = t2
-! ref = ReferenceTriangle(nsd=2_I4B, domainName="UNIT")
-! y = DistanceFromPoint(ref,t2,[-1.0_DFP,0.0_DFP])
-! CALL OK(ABS(y-1.0_DFP) < 1.0E-11_DFP, "Boundary distance")
-! END PROGRAM main
-!```
+! See also: [[NearestPoint]]
 
 INTERFACE DistanceFromPoint
   MODULE PURE FUNCTION triangle_point_dist(refelem, xij, x) &
     & RESULT(ans)
     CLASS(ReferenceElement_), INTENT(IN) :: refelem
+    !! reference triangle, `refelem%nsd` must be 2 or 3
     REAL(DFP), INTENT(IN) :: xij(:, :), x(:)
+    !! `xij`: vertex coordinates in columns, `nsd` rows and 3 columns.
+    !! `x`: point, at least `nsd` entries.
     REAL(DFP) :: ans
+    !! distance from `x` to the edges
   END FUNCTION triangle_point_dist
 END INTERFACE DistanceFromPoint
 
@@ -1978,62 +1252,37 @@ END INTERFACE DistanceFromPoint
 
 !> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
-! summary: Evaluate triangle NearestPoint through a reference element.
+! summary: Finds the point of a triangle nearest to a given point.
 !
-! The reference object selects embedding dimension. Coordinates are point
-! columns. Several geometry wrappers project onto the first two coordinate
-! rows; their output z component is zero.
+! Finds the point `xn` on the boundary of a triangle that is closest to
+! the point `x`. It also returns the distance `dist` between `x` and `xn`.
 !
-! Arguments:
-!   refelem : CLASS(ReferenceElement_), INTENT(IN). Reference element carrying
-! topology and embedding dimension.
-!   xij : REAL(DFP), INTENT(IN)(:, :). Point columns; vertices or
-! interpolation nodes according to the interface.
-!   x : REAL(DFP), INTENT(IN)(:). Evaluation point(s); columns for rank two
-! arrays.
-!   xn : REAL(DFP), INTENT(INOUT)(:). Use the declaration and description for
-! this overload.
-!   dist : REAL(DFP), INTENT(OUT). Distance from the query point to the
-! segment or triangle boundary.
+! The routine works in 2D. It reads the first two rows of `xij` and the
+! first two entries of `x`. It sets only `xn(1:2)`.
 !
-! Returns:
-!   Updates xn(:), dist.
+! @note
+! The routine does not use `refelem`.
+! @endnote
 !
 ! Formula:
-! $$q=\mathop{\mathrm{argmin}}_{q\in\partial T}\|x-q\|$$
+!   $$ q = \mathop{\mathrm{argmin}}_{q \in \partial T} \|x - q\| $$
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE GlobalData, ONLY: DFP
-! USE GlobalData, ONLY: I4B
-! USE BaseType, ONLY: ReferenceTriangle_
-! USE ReferenceTriangle_Method, ONLY: NearestPoint
-! USE ReferenceTriangle_Method, ONLY: ReferenceTriangle
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-! REAL(DFP) :: t2(2, 3), t3(3, 3)
-! TYPE(ReferenceTriangle_) :: ref
-! REAL(DFP) :: y, nearest(2)
-!
-! t2 = RESHAPE([0.0_DFP, 0.0_DFP, 2.0_DFP, &
-!   0.0_DFP, 0.0_DFP, 1.0_DFP], [2, 3])
-! t3 = 0.0_DFP
-! t3(1:2, :) = t2
-! ref = ReferenceTriangle(nsd=2_I4B, domainName="UNIT")
-! CALL NearestPoint(ref,t2,[-1.0_DFP,0.0_DFP],nearest,y)
-! CALL OK(MAXVAL(ABS(nearest)) < 1.0E-11_DFP, "Nearest boundary vertex")
-! END PROGRAM main
-!```
+! - [test 1](|base|Triangle/examples/NearestPoint_test_1.F90)
 
 INTERFACE NearestPoint
   MODULE PURE SUBROUTINE triangle_get_nearest_point(refelem, xij, x, xn,  &
     & dist)
     CLASS(ReferenceElement_), INTENT(IN) :: refelem
+    !! Reference triangle. The routine does not use it.
     REAL(DFP), INTENT(IN) :: xij(:, :), x(:)
+    !! `xij(1:2, 1:3)` holds the vertex coordinates, one vertex per column.
+    !! `x(1:2)` is the query point.
     REAL(DFP), INTENT(INOUT) :: xn(:)
+    !! Nearest boundary point. The routine sets `xn(1:2)`.
     REAL(DFP), INTENT(OUT) :: dist
+    !! Distance between `x` and `xn`.
   END SUBROUTINE triangle_get_nearest_point
 END INTERFACE NearestPoint
 
@@ -2043,62 +1292,46 @@ END INTERFACE NearestPoint
 
 !> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
-! summary: Evaluate triangle RandomPoint through a reference element.
+! summary: Returns random points inside a triangle.
 !
-! The reference object selects embedding dimension. Coordinates are point
-! columns. Several geometry wrappers project onto the first two coordinate
-! rows; their output z component is zero.
+! Returns `n` random points inside a triangle.
+! The routine works in 2D. It reads `xij(1:2, 1:3)`.
+! Each column of the result is one point. The third row is zero.
 !
-! Arguments:
-!   refelem : CLASS(ReferenceElement_), INTENT(IN). Reference element carrying
-! topology and embedding dimension.
-!   xij : REAL(DFP), INTENT(IN)(:, :). Point columns; vertices or
-! interpolation nodes according to the interface.
-!   n : INTEGER(I4B), INTENT(IN). Number of samples, coordinate dimension or
-! grid count as specified by the routine.
-!   seed : INTEGER(I4B), OPTIONAL, INTENT(IN). Random generator seed; this
-! interface does not return an advanced seed.
+! @warning
+! Always pass `seed`. The sampler needs it, and the routine gives no
+! default.
+! @endwarning
+!
+! @note
+! The routine does not use `refelem`.
+! @endnote
 !
 ! Returns:
-!   ans : REAL(DFP)(3, n).
+!   ans : REAL(DFP)(3, n) - the points, one per column
 !
 ! Formula:
-! $$x=\sum_i\lambda_i v_i,\quad\lambda_i\ge0,\quad\sum_i\lambda_i=1$$
+!   $$ x = \sum_i \lambda_i v_i, \quad \lambda_i \ge 0, \quad
+!   \sum_i \lambda_i = 1 $$
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE GlobalData, ONLY: DFP
-! USE GlobalData, ONLY: I4B
-! USE BaseType, ONLY: ReferenceTriangle_
-! USE ReferenceTriangle_Method, ONLY: RandomPoint
-! USE ReferenceTriangle_Method, ONLY: ReferenceTriangle
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-! REAL(DFP) :: t2(2, 3), t3(3, 3)
-! TYPE(ReferenceTriangle_) :: ref
-! REAL(DFP) :: y(3,4)
-!
-! t2 = RESHAPE([0.0_DFP, 0.0_DFP, 2.0_DFP, &
-!   0.0_DFP, 0.0_DFP, 1.0_DFP], [2, 3])
-! t3 = 0.0_DFP
-! t3(1:2, :) = t2
-! ref = ReferenceTriangle(nsd=2_I4B, domainName="UNIT")
-! y = RandomPoint(ref,t2,n=4_I4B,seed=12345_I4B)
-! CALL OK(MINVAL(y(1:2,:)) >= 0.0_DFP, "Nonnegative coordinates")
-! CALL OK(MAXVAL(y(1,:)/2.0_DFP+y(2,:)) <= 1.0_DFP, "Interior samples")
-! END PROGRAM main
-!```
+! - [test 1](|base|Triangle/examples/RandomPoint_test_1.F90)
 
 INTERFACE RandomPoint
   MODULE PURE FUNCTION triangle_random_point(refelem, xij, n, seed) &
     & RESULT(ans)
     CLASS(ReferenceElement_), INTENT(IN) :: refelem
+    !! Reference triangle. The routine does not use it.
     REAL(DFP), INTENT(IN) :: xij(:, :)
+    !! Vertex coordinates, one vertex per column.
+    !! The routine reads only `xij(1:2, 1:3)`.
     INTEGER(I4B), INTENT(IN) :: n
+    !! Number of points.
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: seed
+    !! Seed of the random generator. Always pass it.
     REAL(DFP) :: ans(3, n)
+    !! Points in columns. The third row is zero.
   END FUNCTION triangle_random_point
 END INTERFACE RandomPoint
 
@@ -2108,60 +1341,47 @@ END INTERFACE RandomPoint
 
 !> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
-! summary: Evaluate triangle containment or a selected quality measure.
+! summary: Returns a quality measure of a triangle.
 !
-! Containment uses the 2D barycentric test. Select a supported quality
-! measure from QualityMeasure; measures are not all normalized to [0,1].
+! Returns the quality measure of a triangle that `measure` selects.
+! Use a member of `QualityMeasure` for `measure`.
+! The supported measures are:
 !
-! Arguments:
-!   refelem : CLASS(ReferenceElement_), INTENT(IN). Reference element carrying
-! topology and embedding dimension.
-!   xij : REAL(DFP), INTENT(IN)(:, :). Point columns; vertices or
-! interpolation nodes according to the interface.
-!   measure : INTEGER(I4B), INTENT(IN). Quality measure selector; Line quality
-! currently returns a placeholder zero.
+! 1. `QualityMeasure%area`: the area.
+! 2. `QualityMeasure%maxangle`: the largest angle.
+! 3. `QualityMeasure%minangle`: the smallest angle.
+! 4. `QualityMeasure%angleratio`: three times the smallest angle,
+!    divided by pi.
+! 5. `QualityMeasure%radiusRatio`: twice the inradius, divided by the
+!    circumradius.
+! 6. `QualityMeasure%edgeRatio`: the shortest edge, divided by the
+!    longest edge.
+! 7. `QualityMeasure%aspectRatio`: the longest edge times the perimeter,
+!    divided by four times the square root of 3 times the area.
+!
+! Angles are in radians. The measures are not all scaled to [0, 1].
+!
+! @warning
+! For any other value of `measure`, the routine does not set `ans`.
+! @endwarning
 !
 ! Returns:
-!   ans : REAL(DFP).
-!
-! Formula:
-! $$Q_{\mathrm{area}}=A$$
+!   ans : REAL(DFP) - the selected quality measure
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE GlobalData, ONLY: DFP
-! USE GlobalData, ONLY: I4B
-! USE BaseType, ONLY: ReferenceTriangle_
-! USE BaseType, ONLY: QualityMeasure
-! USE ReferenceTriangle_Method, ONLY: Triangle_Quality
-! USE ReferenceTriangle_Method, ONLY: Quality_Triangle
-! USE ReferenceTriangle_Method, ONLY: ReferenceTriangle
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-! REAL(DFP) :: t2(2, 3), t3(3, 3)
-! TYPE(ReferenceTriangle_) :: ref
-! REAL(DFP) :: y
-!
-! t2 = RESHAPE([0.0_DFP, 0.0_DFP, 2.0_DFP, &
-!   0.0_DFP, 0.0_DFP, 1.0_DFP], [2, 3])
-! t3 = 0.0_DFP
-! t3(1:2, :) = t2
-! ref = ReferenceTriangle(nsd=2_I4B, domainName="UNIT")
-! y = Triangle_Quality(ref,t2,QualityMeasure%area)
-! CALL OK(ABS(y-1.0_DFP) < 1.0E-11_DFP .AND. &
-!   ABS(Quality_Triangle(ref,t2,QualityMeasure%area)-y) < 1.0E-11_DFP, &
-!   "Area quality aliases agree")
-! END PROGRAM main
-!```
+! - [test 1](|base|Triangle/examples/Quality_Triangle_test_1.F90)
 
 INTERFACE Quality_Triangle
   MODULE PURE FUNCTION Triangle_Quality(refelem, xij, measure) RESULT(ans)
     CLASS(ReferenceElement_), INTENT(IN) :: refelem
+    !! Reference triangle.
     REAL(DFP), INTENT(IN) :: xij(:, :)
+    !! Vertex coordinates, one vertex per column.
     INTEGER(I4B), INTENT(IN) :: measure
+    !! Quality measure, a member of `QualityMeasure`.
     REAL(DFP) :: ans
+    !! Value of the selected quality measure.
   END FUNCTION Triangle_Quality
 END INTERFACE Quality_Triangle
 
@@ -2171,97 +1391,58 @@ END INTERFACE Quality_Triangle
 
 !> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
-! summary: Compute triangle area from vertex columns.
+! summary: Returns the area of a triangle in 3D.
 !
-! The 2D routine returns signed area; the 3D routine returns nonnegative area.
-!
-! Arguments:
-!   t : REAL(DFP), INTENT(IN)(3, 3). Triangle vertex coordinates, one vertex
-! per column.
-!   ans : REAL(DFP), INTENT(OUT). Result buffer; allocate the full active
-! shape before the call.
-!
-! Returns:
-!   Updates ans.
+! Computes the area of a triangle with vertices in 3D.
+! The area is never negative.
+! It is half the length of the cross product of two edges.
 !
 ! Formula:
-! $$A=\tfrac12\|(v_2-v_1)\times(v_3-v_1)\|$$
+!   $$ A = \tfrac12 \|(v_2 - v_1) \times (v_3 - v_1)\| $$
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE GlobalData, ONLY: DFP
-! USE GlobalData, ONLY: I4B
-! USE ReferenceTriangle_Method, ONLY: TriangleArea3D
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-! REAL(DFP) :: t2(2, 3), t3(3, 3)
-! REAL(DFP) :: y
+! - [test 1](|base|Triangle/examples/TriangleArea3D_test_1.F90)
 !
-! t2 = RESHAPE([0.0_DFP, 0.0_DFP, 2.0_DFP, &
-!   0.0_DFP, 0.0_DFP, 1.0_DFP], [2, 3])
-! t3 = 0.0_DFP
-! t3(1:2, :) = t2
-! CALL TriangleArea3D(t3,y)
-! CALL OK(ABS(y-1.0_DFP) < 1.0E-11_DFP, "Triangle area")
-! END PROGRAM main
-!```
+! See also: [[TriangleArea2D]]
 
 INTERFACE
   MODULE PURE SUBROUTINE TriangleArea3D(t, ans)
     REAL(DFP), INTENT(IN) :: t(3, 3)
+    !! Vertex coordinates, one vertex per column.
     REAL(DFP), INTENT(OUT) :: ans
+    !! Area of the triangle.
   END SUBROUTINE TriangleArea3D
 END INTERFACE
 
 !----------------------------------------------------------------------------
-!
+!                                                              TriangleArea2D
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
-! summary: Compute triangle area from vertex columns.
+! summary: Returns the signed area of a triangle in 2D.
 !
-! The 2D routine returns signed area; the 3D routine returns nonnegative area.
-!
-! Arguments:
-!   t : REAL(DFP), INTENT(IN)(2, 3). Triangle vertex coordinates, one vertex
-! per column.
-!   ans : REAL(DFP), INTENT(OUT). Result buffer; allocate the full active
-! shape before the call.
-!
-! Returns:
-!   Updates ans.
+! Computes the signed area of a triangle with vertices in 2D.
+! The area is positive when the vertices run counterclockwise.
+! It is negative when they run clockwise.
 !
 ! Formula:
-! $$A=\tfrac12\|(v_2-v_1)\times(v_3-v_1)\|$$
+!   $$ A = \tfrac12 \left[ x_1 (y_2 - y_3) + x_2 (y_3 - y_1)
+!   + x_3 (y_1 - y_2) \right] $$
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE GlobalData, ONLY: DFP
-! USE GlobalData, ONLY: I4B
-! USE ReferenceTriangle_Method, ONLY: TriangleArea2D
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-! REAL(DFP) :: t2(2, 3), t3(3, 3)
-! REAL(DFP) :: y
+! - [test 1](|base|Triangle/examples/TriangleArea2D_test_1.F90)
 !
-! t2 = RESHAPE([0.0_DFP, 0.0_DFP, 2.0_DFP, &
-!   0.0_DFP, 0.0_DFP, 1.0_DFP], [2, 3])
-! t3 = 0.0_DFP
-! t3(1:2, :) = t2
-! CALL TriangleArea2D(t2,y)
-! CALL OK(ABS(y-1.0_DFP) < 1.0E-11_DFP, "Triangle area")
-! END PROGRAM main
-!```
+! See also: [[TriangleArea3D]]
 
 INTERFACE
   MODULE PURE SUBROUTINE TriangleArea2D(t, ans)
     REAL(DFP), INTENT(IN) :: t(2, 3)
+    !! Vertex coordinates, one vertex per column.
     REAL(DFP), INTENT(OUT) :: ans
+    !! Signed area of the triangle.
   END SUBROUTINE TriangleArea2D
 END INTERFACE
 
@@ -2271,177 +1452,89 @@ END INTERFACE
 
 !> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
-! summary: Construct facet connectivity and reference topology.
+! summary: Returns the local node numbers of the edges of a triangle.
 !
-! Use caller allocated output arrays. Line facets are points. Triangle face
-! connectivity always uses [1,2], [2,3], [3,1]; GetFaceConnectivity_Triangle
-! ignores opt and forces option 2. Edge connectivity option 1 uses [1,2],
-! [1,3], [2,3]. The example uses linear elements to avoid higher order
-! indexing assumptions.
+! Fills `con` with the local node numbers of the three edges.
+! Column `j` of `con` holds edge `j`.
+! The first two rows hold the end vertices of the edge.
+! The next rows hold the nodes inside the edge, if the order is above 1.
 !
-! Arguments:
-!   con : INTEGER(I4B), INTENT(INOUT)(:, :). Caller supplied connectivity
-! storage, with entities in columns.
-!   opt : INTEGER(I4B), OPTIONAL, INTENT(IN). Connectivity or entity selector;
-! see the routine description.
-!   order : INTEGER(I4B), OPTIONAL, INTENT(IN). Polynomial degree, except
-! quadrature where it is requested exactness degree.
-!   nrow : INTEGER(I4B), OPTIONAL, INTENT(OUT). Number of active output rows.
-!   ncol : INTEGER(I4B), OPTIONAL, INTENT(OUT). Number of active output
+! The option `opt` selects the numbering.
+!
+! 1. If `opt` is 1, the edges are [1,2], [1,3] and [2,3].
+!    This is the hierarchical numbering and the default.
+! 2. If `opt` is 2, the edges are [1,2], [2,3] and [3,1].
+!    This is the Lagrange numbering.
+!
+! The routine sets `nrow` to `order + 1` and `ncol` to 3.
+!
+! @note
+! The caller allocates `con` with at least `order + 1` rows and 3
 ! columns.
-!
-! Returns:
-!   Updates con(:, :), nrow, ncol.
-!
-! Formula:
-! $$\partial T=e_{12}\cup e_{23}\cup e_{31}$$
+! @endnote
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE GlobalData, ONLY: DFP
-! USE GlobalData, ONLY: I4B
-! USE GlobalData, ONLY: Triangle3
-! USE BaseType, ONLY: ReferenceTopology_
-! USE BaseType, ONLY: ReferenceElement_
-! USE ReferenceTriangle_Method, ONLY: GetEdgeConnectivity_Triangle
-! USE ReferenceTriangle_Method, ONLY: GetFaceConnectivity_Triangle
-! USE ReferenceTriangle_Method, ONLY: GetFaceElemType_Triangle
-! USE ReferenceTriangle_Method, ONLY: FacetTopology_Triangle
-! USE ReferenceTriangle_Method, ONLY: FacetElements_Triangle
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-! INTEGER(I4B), PARAMETER :: kind = Triangle3
-! INTEGER(I4B) :: edge(2, 3), face(2, 3)
-! INTEGER(I4B) :: faceTypes(3), nodeCounts(3), nr, nc
-! TYPE(ReferenceTopology_) :: topology(3)
-! TYPE(ReferenceElement_) :: facets(3)
+! - [test 1](|base|Triangle/examples/GetEdgeConnectivity_Triangle_test_1.F90)
 !
-! CALL GetEdgeConnectivity_Triangle(con=edge, order=1_I4B, &
-!   nrow=nr, ncol=nc)
-! CALL OK(nr == 2 .AND. nc == 3, "Connectivity dimensions")
-! CALL GetFaceConnectivity_Triangle(con=face, order=1_I4B)
-! CALL GetFaceElemType_Triangle(elemType=kind, &
-!   faceElemType=faceTypes, tFaceNodes=nodeCounts)
-! CALL OK(ALL(nodeCounts == 2), "Linear facet node count")
-! CALL FacetTopology_Triangle(elemType=kind, &
-!   nptrs=[1_I4B, 2_I4B, 3_I4B], ans=topology)
-! CALL OK(ALL(topology(1)%nptrs == face(:, 1)), "Facet pointers")
-! CALL FacetElements_Triangle(elemType=kind, nsd=2_I4B, ans=facets)
-! CALL OK(ALL(facets%order == 1), "Facet polynomial order")
-! END PROGRAM main
-!```
+! See also: [[GetFaceConnectivity_Triangle]]
 
 INTERFACE
   MODULE PURE SUBROUTINE GetEdgeConnectivity_Triangle(con, opt, order, &
                                                       nrow, ncol)
     INTEGER(I4B), INTENT(INOUT) :: con(:, :)
-    !! Connectivity
-    !! The columns represents the edge number
-    !! The row represents a edge
-    !! con should be allocated by the user
+    !! Edge connectivity.
+    !! Column `j` holds the local node numbers of edge `j`.
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: opt
-    !! If opt = 1, then edge connectivity for hierarchial approximation
-    !! [1,2], [1,3], [2,3]. This is DEFAULT
-    !! If opt =2, then edge connectivity for Lagrangian approximation
-    !! [1,2], [2,3], [3,1]
+    !! Numbering option, 1 or 2. Default 1.
+    !! 1 gives [1,2], [1,3], [2,3] for the hierarchical basis.
+    !! 2 gives [1,2], [2,3], [3,1] for the Lagrange basis.
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: order
-    !! order of element
-    !! Currently order is used only when opt=2
-    !! Currently any order is valid
+    !! Polynomial order of the element. Default 1.
     INTEGER(I4B), OPTIONAL, INTENT(OUT) :: nrow
-    !! Number of rows written in con
+    !! Number of rows written in `con`, equal to `order + 1`.
     INTEGER(I4B), OPTIONAL, INTENT(OUT) :: ncol
-    !! Numbers of cols written in con
+    !! Number of columns written in `con`, equal to 3.
   END SUBROUTINE GetEdgeConnectivity_Triangle
 END INTERFACE
 
 !----------------------------------------------------------------------------
-!                                                        GetEdgeConnectivity
+!                                                 GetFaceConnectivity_Triangle
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
-! summary: Construct facet connectivity and reference topology.
+! summary: Returns the local node numbers of the faces of a triangle.
 !
-! Use caller allocated output arrays. Line facets are points. Triangle face
-! connectivity always uses [1,2], [2,3], [3,1]; GetFaceConnectivity_Triangle
-! ignores opt and forces option 2. Edge connectivity option 1 uses [1,2],
-! [1,3], [2,3]. The example uses linear elements to avoid higher order
-! indexing assumptions.
+! Fills `con` with the local node numbers of the three faces.
+! The faces of a triangle are its edges.
+! Column `j` of `con` holds face `j`.
+! The faces are always [1,2], [2,3] and [3,1].
 !
-! Arguments:
-!   con : INTEGER(I4B), INTENT(INOUT)(:, :). Caller supplied connectivity
-! storage, with entities in columns.
-!   opt : INTEGER(I4B), OPTIONAL, INTENT(IN). Connectivity or entity selector;
-! see the routine description.
-!   order : INTEGER(I4B), OPTIONAL, INTENT(IN). Polynomial degree, except
-! quadrature where it is requested exactness degree.
-!   nrow : INTEGER(I4B), OPTIONAL, INTENT(OUT). Number of active output rows.
-!   ncol : INTEGER(I4B), OPTIONAL, INTENT(OUT). Number of active output
+! The routine sets `nrow` to `order + 1` and `ncol` to 3.
+!
+! @note
+! The routine ignores `opt`. It always uses the Lagrange numbering.
+! The caller allocates `con` with at least `order + 1` rows and 3
 ! columns.
+! @endnote
 !
-! Returns:
-!   Updates con(:, :), nrow, ncol.
-!
-! Formula:
-! $$\partial T=e_{12}\cup e_{23}\cup e_{31}$$
-!
-! Examples
-!
-!```fortran
-! PROGRAM main
-! USE GlobalData, ONLY: DFP
-! USE GlobalData, ONLY: I4B
-! USE GlobalData, ONLY: Triangle3
-! USE BaseType, ONLY: ReferenceTopology_
-! USE BaseType, ONLY: ReferenceElement_
-! USE ReferenceTriangle_Method, ONLY: GetEdgeConnectivity_Triangle
-! USE ReferenceTriangle_Method, ONLY: GetFaceConnectivity_Triangle
-! USE ReferenceTriangle_Method, ONLY: GetFaceElemType_Triangle
-! USE ReferenceTriangle_Method, ONLY: FacetTopology_Triangle
-! USE ReferenceTriangle_Method, ONLY: FacetElements_Triangle
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-! INTEGER(I4B), PARAMETER :: kind = Triangle3
-! INTEGER(I4B) :: edge(2, 3), face(2, 3)
-! INTEGER(I4B) :: faceTypes(3), nodeCounts(3), nr, nc
-! TYPE(ReferenceTopology_) :: topology(3)
-! TYPE(ReferenceElement_) :: facets(3)
-!
-! CALL GetEdgeConnectivity_Triangle(con=edge, order=1_I4B, &
-!   nrow=nr, ncol=nc)
-! CALL OK(nr == 2 .AND. nc == 3, "Connectivity dimensions")
-! CALL GetFaceConnectivity_Triangle(con=face, order=1_I4B)
-! CALL GetFaceElemType_Triangle(elemType=kind, &
-!   faceElemType=faceTypes, tFaceNodes=nodeCounts)
-! CALL OK(ALL(nodeCounts == 2), "Linear facet node count")
-! CALL FacetTopology_Triangle(elemType=kind, &
-!   nptrs=[1_I4B, 2_I4B, 3_I4B], ans=topology)
-! CALL OK(ALL(topology(1)%nptrs == face(:, 1)), "Facet pointers")
-! CALL FacetElements_Triangle(elemType=kind, nsd=2_I4B, ans=facets)
-! CALL OK(ALL(facets%order == 1), "Facet polynomial order")
-! END PROGRAM main
-!```
+! See also: [[GetEdgeConnectivity_Triangle]]
 
 INTERFACE
   MODULE PURE SUBROUTINE GetFaceConnectivity_Triangle(con, opt, order, &
                                                       nrow, ncol)
     INTEGER(I4B), INTENT(INOUT) :: con(:, :)
-    !! Connectivity
-    !! The columns represents the Face number
-    !! The row represents a Face
-    !! con should be allocated by the user
+    !! Face connectivity.
+    !! Column `j` holds the local node numbers of face `j`.
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: opt
-    !! This option is ignored now
+    !! Not used.
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: order
-    !! order of element
-    !! Currently any order is valid
+    !! Polynomial order of the element. Default 1.
     INTEGER(I4B), OPTIONAL, INTENT(OUT) :: nrow
-    !! Number of rows written in con
+    !! Number of rows written in `con`, equal to `order + 1`.
     INTEGER(I4B), OPTIONAL, INTENT(OUT) :: ncol
-    !! Numbers of cols written in con
+    !! Number of columns written in `con`, equal to 3.
   END SUBROUTINE GetFaceConnectivity_Triangle
 END INTERFACE
 
@@ -2451,60 +1544,28 @@ END INTERFACE
 
 !> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
-! summary: Construct a linear reference element or obtain reference
-! coordinates.
+! summary: Returns the vertex coordinates of a reference triangle.
 !
-! Pass UNIT or BIUNIT explicitly for reproducibility. Constructors retain only
-! intrinsic coordinate rows (one for Line and two for Triangle); nsd records
-! the embedding dimension. The pointer constructor allocates a new target
-! which the caller owns.
+! Returns the coordinates of the three vertices of a reference triangle.
+! Column `j` of the result holds vertex `j`.
+! Only the first letter of `refTriangle` matters, in upper or lower case.
 !
-! Arguments:
-!   refTriangle : CHARACTER(*), INTENT(IN). Reference triangle name, UNIT or
-! BIUNIT.
+! 1. `"UNIT"` gives the vertices (0,0), (1,0) and (0,1).
+! 2. `"BIUNIT"` gives the vertices (-1,-1), (1,-1) and (-1,1).
+!
+! @warning
+! For any other first letter, the routine does not set `ans`.
+! @endwarning
 !
 ! Returns:
-!   ans : REAL(DFP)(2, 3).
-!
-! Formula:
-! $$\widehat K_{\mathrm{line}}=[0,1],\quad\widehat T=\{(x,y):x,y\ge0,\
-! x+y\le1\}$$
-!
-! Examples
-!
-!```fortran
-! PROGRAM main
-! USE GlobalData, ONLY: DFP
-! USE GlobalData, ONLY: I4B
-! USE BaseType, ONLY: ReferenceTriangle_
-! USE ReferenceTriangle_Method, ONLY: Initiate
-! USE ReferenceTriangle_Method, ONLY: ReferenceTriangle
-! USE ReferenceTriangle_Method, ONLY: ReferenceTriangle_Pointer
-! USE ReferenceTriangle_Method, ONLY: RefTriangleCoord
-! USE ReferenceTriangle_Method, ONLY: RefCoord_Triangle
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-! TYPE(ReferenceTriangle_) :: a, b
-! CLASS(ReferenceTriangle_), POINTER :: p
-! REAL(DFP) :: x(2, 3)
-!
-! CALL Initiate(obj=a, nsd=2_I4B, domainName="UNIT")
-! b = ReferenceTriangle(nsd=2_I4B, domainName="UNIT")
-! p => ReferenceTriangle_Pointer(nsd=2_I4B, domainName="UNIT")
-! CALL OK(a%order == 1 .AND. b%order == 1, "Linear reference objects")
-! CALL OK(ASSOCIATED(p), "Pointer constructor allocates its result")
-! x = RefTriangleCoord("UNIT")
-! CALL OK(MAXVAL(ABS(x-RefCoord_Triangle("UNIT"))) < 1.0E-12_DFP, &
-!   "Coordinate aliases agree")
-! CALL OK(MAXVAL(ABS(a%xij-x)) < 1.0E-12_DFP, "Stored reference coordinates")
-! DEALLOCATE(p)
-! END PROGRAM main
-!```
+!   ans : REAL(DFP)(2, 3) - vertex coordinates, one vertex per column
 
 INTERFACE RefCoord_Triangle
   MODULE PURE FUNCTION RefTriangleCoord(refTriangle) RESULT(ans)
     CHARACTER(*), INTENT(IN) :: refTriangle
+    !! Name of the reference triangle, `"UNIT"` or `"BIUNIT"`.
     REAL(DFP) :: ans(2, 3)
+    !! Vertex coordinates, one vertex per column.
   END FUNCTION RefTriangleCoord
 END INTERFACE RefCoord_Triangle
 
@@ -2514,53 +1575,39 @@ END INTERFACE RefCoord_Triangle
 
 !> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
-! summary: Canonicalize triangular face vertices and return orientation
-! metadata.
+! summary: Puts a triangular face in canonical order and finds its
+! orientation.
 !
-! faceOrient contains a zero based rotation followed by a sign. localFaces
-! receives the cyclic vertex values, not a permutation of local indices.
+! Takes the three vertex numbers of a triangular face in `face`.
+! The routine does the following.
 !
-! Arguments:
-!   face : INTEGER(I4B), INTENT(INOUT)(:). Triangular face vertex identifiers.
-!   sorted_face : INTEGER(I4B), INTENT(INOUT)(:). Canonical sorted face
-! identifiers.
-!   faceOrient : INTEGER(I4B), OPTIONAL, INTENT(INOUT)(:). Two entry zero
-! based rotation and sign orientation code.
-!   localFaces : INTEGER(I4B), OPTIONAL, INTENT(INOUT)(:). Cyclic vertex
-! identifiers used for orientation.
+! 1. It rotates the vertices so that the smallest number comes first.
+!    It stores the result in `localFaces`, if present.
+! 2. It sorts the other two numbers in ascending order.
+!    It stores the result in `sorted_face`.
+! 3. It stores the orientation in `faceOrient`, if present.
 !
-! Returns:
-!   Updates face(:), sorted_face(:), faceOrient(:), localFaces(:).
+! The orientation has two entries.
+! The first is the number of places the routine rotates the face: 0, 1
+! or 2.
+! The second is 1 if the other two numbers were already ascending.
+! Otherwise, it is -1.
 !
-! Formula:
-! $$o=(r,s),\quad r\in\{0,1,2\},\quad s\in\{-1,1\}$$
-!
-! Examples
-!
-!```fortran
-! PROGRAM main
-! USE GlobalData, ONLY: DFP
-! USE GlobalData, ONLY: I4B
-! USE ReferenceTriangle_Method, ONLY: FaceShapeMetaData_Triangle
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-! INTEGER(I4B) :: face(3), sorted(3), orientation(2), local(3)
-!
-! face = [3_I4B, 1_I4B, 2_I4B]
-! CALL FaceShapeMetaData_Triangle(face, sorted, orientation, local)
-! CALL OK(ALL(sorted == [1_I4B, 2_I4B, 3_I4B]), "Canonical vertex order")
-! CALL OK(ALL(orientation == [1_I4B, 1_I4B]), &
-!   "Rotation and orientation code")
-! END PROGRAM main
-!```
+! @note
+! The routine does not change `face`.
+! @endnote
 
 INTERFACE
   MODULE SUBROUTINE FaceShapeMetaData_Triangle(face, sorted_face, &
                                                faceOrient, localFaces)
     INTEGER(I4B), INTENT(INOUT) :: face(:)
+    !! Vertex numbers of the face, `face(1:3)`. It is not changed.
     INTEGER(I4B), INTENT(INOUT) :: sorted_face(:)
+    !! Canonical face `sorted_face(1:3)`, smallest number first.
     INTEGER(I4B), OPTIONAL, INTENT(INOUT) :: faceOrient(:)
+    !! Orientation `faceOrient(1:2)`: the rotation and the sign.
     INTEGER(I4B), OPTIONAL, INTENT(INOUT) :: localFaces(:)
+    !! Rotated vertex numbers `localFaces(1:3)`, smallest first.
   END SUBROUTINE FaceShapeMetaData_Triangle
 END INTERFACE
 
@@ -2570,81 +1617,40 @@ END INTERFACE
 
 !> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
-! summary: Construct facet connectivity and reference topology.
+! summary: Returns the element type of the faces of a triangle element.
 !
-! Use caller allocated output arrays. Line facets are points. Triangle face
-! connectivity always uses [1,2], [2,3], [3,1]; GetFaceConnectivity_Triangle
-! ignores opt and forces option 2. Edge connectivity option 1 uses [1,2],
-! [1,3], [2,3]. The example uses linear elements to avoid higher order
-! indexing assumptions.
+! Returns the element type and the node count of the three faces of a
+! triangle element. The faces are line elements.
+! The routine sets the first three entries of `faceElemType` and
+! `tFaceNodes`, whichever are present.
 !
-! Arguments:
-!   elemType : INTEGER(I4B), OPTIONAL, INTENT(IN). Element identifier from
-! GlobalData or the element type lookup.
-!   faceElemType : INTEGER(I4B), OPTIONAL, INTENT(INOUT)(:). Output facet
-! element identifier(s).
-!   tFaceNodes : INTEGER(I4B), OPTIONAL, INTENT(INOUT)(:). Output facet node
-! count(s).
-!   opt : INTEGER(I4B), OPTIONAL, INTENT(IN). Connectivity or entity selector;
-! see the routine description.
+! The faces depend on `elemType`.
 !
-! Returns:
-!   Updates faceElemType(:), tFaceNodes(:).
+! 1. `Triangle3` has `Line2` faces with 2 nodes.
+! 2. `Triangle6` has `Line3` faces with 3 nodes.
+! 3. `Triangle9` and `Triangle10` have `Line4` faces with 4 nodes.
+! 4. `Triangle15` has `Line5` faces with 5 nodes.
+! 5. `Triangle21a` and `Triangle21b` have `Line6` faces with 6 nodes.
+! 6. `Triangle18` has `Line7` faces with 7 nodes.
 !
-! Formula:
-! $$\partial T=e_{12}\cup e_{23}\cup e_{31}$$
+! For any other `elemType`, the routine changes nothing.
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE GlobalData, ONLY: DFP
-! USE GlobalData, ONLY: I4B
-! USE GlobalData, ONLY: Triangle3
-! USE BaseType, ONLY: ReferenceTopology_
-! USE BaseType, ONLY: ReferenceElement_
-! USE ReferenceTriangle_Method, ONLY: GetEdgeConnectivity_Triangle
-! USE ReferenceTriangle_Method, ONLY: GetFaceConnectivity_Triangle
-! USE ReferenceTriangle_Method, ONLY: GetFaceElemType_Triangle
-! USE ReferenceTriangle_Method, ONLY: FacetTopology_Triangle
-! USE ReferenceTriangle_Method, ONLY: FacetElements_Triangle
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-! INTEGER(I4B), PARAMETER :: kind = Triangle3
-! INTEGER(I4B) :: edge(2, 3), face(2, 3)
-! INTEGER(I4B) :: faceTypes(3), nodeCounts(3), nr, nc
-! TYPE(ReferenceTopology_) :: topology(3)
-! TYPE(ReferenceElement_) :: facets(3)
-!
-! CALL GetEdgeConnectivity_Triangle(con=edge, order=1_I4B, &
-!   nrow=nr, ncol=nc)
-! CALL OK(nr == 2 .AND. nc == 3, "Connectivity dimensions")
-! CALL GetFaceConnectivity_Triangle(con=face, order=1_I4B)
-! CALL GetFaceElemType_Triangle(elemType=kind, &
-!   faceElemType=faceTypes, tFaceNodes=nodeCounts)
-! CALL OK(ALL(nodeCounts == 2), "Linear facet node count")
-! CALL FacetTopology_Triangle(elemType=kind, &
-!   nptrs=[1_I4B, 2_I4B, 3_I4B], ans=topology)
-! CALL OK(ALL(topology(1)%nptrs == face(:, 1)), "Facet pointers")
-! CALL FacetElements_Triangle(elemType=kind, nsd=2_I4B, ans=facets)
-! CALL OK(ALL(facets%order == 1), "Facet polynomial order")
-! END PROGRAM main
-!```
+! - [test 1](|base|Triangle/examples/GetFaceElemType_Triangle_test_1.F90)
 
 INTERFACE GetFaceElemType_Triangle
 MODULE PURE SUBROUTINE GetFaceElemType_Triangle1(elemType, faceElemType, &
     opt, &
                                                    tFaceNodes)
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: elemType
-    !! name of element
+    !! Element type of the triangle. Default `Triangle`.
     INTEGER(I4B), OPTIONAL, INTENT(INOUT) :: faceElemType(:)
-    !! Element names of faces
+    !! Element types of the faces. It needs at least 3 entries.
     INTEGER(I4B), OPTIONAL, INTENT(INOUT) :: tFaceNodes(:)
-    !! Total number of nodes in each face
+    !! Number of nodes of each face. It needs at least 3 entries.
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: opt
-    !! If opt = 1, then edge connectivity for hierarchial approximation
-    !! If opt = 2, then edge connectivity for Lagrangian approximation
-    !! opt = 1 is default
+    !! Not used.
   END SUBROUTINE GetFaceElemType_Triangle1
 END INTERFACE GetFaceElemType_Triangle
 
@@ -2654,82 +1660,47 @@ END INTERFACE GetFaceElemType_Triangle
 
 !> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
-! summary: Construct facet connectivity and reference topology.
+! summary: Returns the element type of one face of a triangle element.
 !
-! Use caller allocated output arrays. Line facets are points. Triangle face
-! connectivity always uses [1,2], [2,3], [3,1]; GetFaceConnectivity_Triangle
-! ignores opt and forces option 2. Edge connectivity option 1 uses [1,2],
-! [1,3], [2,3]. The example uses linear elements to avoid higher order
-! indexing assumptions.
+! Returns the element type and the node count of the face
+! `localFaceNumber`. The faces are line elements.
+! All three faces of a triangle have the same type.
 !
-! Arguments:
-!   elemType : INTEGER(I4B), OPTIONAL, INTENT(IN). Element identifier from
-! GlobalData or the element type lookup.
-!   localFaceNumber : INTEGER(I4B), INTENT(IN). One based local facet index.
-!   faceElemType : INTEGER(I4B), INTENT(OUT). Output facet element
-! identifier(s).
-!   tFaceNodes : INTEGER(I4B), INTENT(OUT). Output facet node count(s).
-!   opt : INTEGER(I4B), OPTIONAL, INTENT(IN). Connectivity or entity selector;
-! see the routine description.
+! The face depends on `elemType`.
 !
-! Returns:
-!   Updates faceElemType, tFaceNodes.
+! 1. `Triangle3` has a `Line2` face with 2 nodes.
+! 2. `Triangle6` has a `Line3` face with 3 nodes.
+! 3. `Triangle9` and `Triangle10` have a `Line4` face with 4 nodes.
+! 4. `Triangle15` has a `Line5` face with 5 nodes.
+! 5. `Triangle21a` and `Triangle21b` have a `Line6` face with 6 nodes.
+! 6. `Triangle18` has a `Line7` face with 7 nodes.
 !
-! Formula:
-! $$\partial T=e_{12}\cup e_{23}\cup e_{31}$$
+! For any other `elemType`, the routine leaves `faceElemType` and
+! `tFaceNodes` unchanged. Their values are then undefined.
+!
+! @note
+! The routine does not use `localFaceNumber` and `opt`.
+! @endnote
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE GlobalData, ONLY: DFP
-! USE GlobalData, ONLY: I4B
-! USE GlobalData, ONLY: Triangle3
-! USE BaseType, ONLY: ReferenceTopology_
-! USE BaseType, ONLY: ReferenceElement_
-! USE ReferenceTriangle_Method, ONLY: GetEdgeConnectivity_Triangle
-! USE ReferenceTriangle_Method, ONLY: GetFaceConnectivity_Triangle
-! USE ReferenceTriangle_Method, ONLY: GetFaceElemType_Triangle
-! USE ReferenceTriangle_Method, ONLY: FacetTopology_Triangle
-! USE ReferenceTriangle_Method, ONLY: FacetElements_Triangle
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-! INTEGER(I4B), PARAMETER :: kind = Triangle3
-! INTEGER(I4B) :: edge(2, 3), face(2, 3)
-! INTEGER(I4B) :: faceTypes(3), nodeCounts(3), nr, nc
-! TYPE(ReferenceTopology_) :: topology(3)
-! TYPE(ReferenceElement_) :: facets(3)
+! - [test 1](|base|Triangle/examples/GetFaceElemType_Triangle_test_1.F90)
 !
-! CALL GetEdgeConnectivity_Triangle(con=edge, order=1_I4B, &
-!   nrow=nr, ncol=nc)
-! CALL OK(nr == 2 .AND. nc == 3, "Connectivity dimensions")
-! CALL GetFaceConnectivity_Triangle(con=face, order=1_I4B)
-! CALL GetFaceElemType_Triangle(elemType=kind, &
-!   faceElemType=faceTypes, tFaceNodes=nodeCounts)
-! CALL OK(ALL(nodeCounts == 2), "Linear facet node count")
-! CALL FacetTopology_Triangle(elemType=kind, &
-!   nptrs=[1_I4B, 2_I4B, 3_I4B], ans=topology)
-! CALL OK(ALL(topology(1)%nptrs == face(:, 1)), "Facet pointers")
-! CALL FacetElements_Triangle(elemType=kind, nsd=2_I4B, ans=facets)
-! CALL OK(ALL(facets%order == 1), "Facet polynomial order")
-! END PROGRAM main
-!```
+! See also: [[GetFaceElemType_Triangle1]]
 
 INTERFACE GetFaceElemType_Triangle
  MODULE PURE SUBROUTINE GetFaceElemType_Triangle2(elemType, localFaceNumber, &
                                                 faceElemType, opt, tFaceNodes)
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: elemType
-    !! name of element
+    !! Element type of the triangle. Always pass it.
     INTEGER(I4B), INTENT(IN) :: localFaceNumber
-    !! local face number
+    !! Local face number. Not used.
     INTEGER(I4B), INTENT(OUT) :: faceElemType
-    !! Element names of faces
+    !! Element type of the face.
     INTEGER(I4B), INTENT(OUT) :: tFaceNodes
-    !! Total number of nodes in each face
+    !! Number of nodes of the face.
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: opt
-    !! If opt = 1, then edge connectivity for hierarchial approximation
-    !! If opt = 2, then edge connectivity for Lagrangian approximation
-    !! opt = 1 is default
+    !! Not used.
   END SUBROUTINE GetFaceElemType_Triangle2
 END INTERFACE GetFaceElemType_Triangle
 
