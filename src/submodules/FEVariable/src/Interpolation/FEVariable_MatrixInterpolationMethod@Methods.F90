@@ -20,7 +20,6 @@ USE BaseType, ONLY: TypeFEVariableConstant
 USE BaseType, ONLY: TypeFEVariableSpace
 USE BaseType, ONLY: TypeFEVariableTime
 USE BaseType, ONLY: TypeFEVariableSpaceTime
-
 IMPLICIT NONE
 CONTAINS
 
@@ -52,17 +51,22 @@ END PROCEDURE MatrixConstantGetInterpolation_1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE MatrixConstantGetInterpolation_2
-INTEGER(I4B) :: tsize, ansStart, valStart, ii
+INTEGER(I4B) :: tsize, ansStart, ii, ips, msize
 
+msize = obj%s(1) * obj%s(2)
 tsize = ans%s(1) * ans%s(2) * nips
 ansStart = (timeIndx - 1) * tsize
+
 IF (.NOT. addContribution) ans%val(ansStart + 1:ansStart + tsize) = 0.0_DFP
 
-valStart = 0
-DO ii = 1, tsize
-  ans%val(ansStart + ii) = ans%val(ansStart + ii) &
-                           + scale * obj%val(valStart + ii)
+! the constant matrix is the same at every quadrature point
+DO ips = 1, nips
+  DO ii = 1, msize
+    ans%val(ansStart + ii) = ans%val(ansStart + ii) + scale * obj%val(ii)
+  END DO
+  ansStart = ansStart + msize
 END DO
+
 END PROCEDURE MatrixConstantGetInterpolation_2
 
 !----------------------------------------------------------------------------
@@ -547,13 +551,13 @@ vartype = obj%varType
 SELECT CASE (vartype)
 CASE (TypeFEVariableOpt%constant)
   CALL GetInterpolation_( &
-    obj=obj, rank=rank, vartype=TypeFEVariableConstant, N=N, nns=nns, &
+    obj=obj, RANK=RANK, vartype=TypeFEVariableConstant, N=N, nns=nns, &
     spaceIndx=spaceIndx, timeIndx=timeIndx, scale=scale, &
     addContribution=addContribution, ans=ans, nrow=nrow, ncol=ncol)
 
 CASE (TypeFEVariableOpt%space)
   CALL GetInterpolation_( &
-    obj=obj, rank=rank, vartype=TypeFEVariableSpace, N=N, nns=nns, &
+    obj=obj, RANK=RANK, vartype=TypeFEVariableSpace, N=N, nns=nns, &
     spaceIndx=spaceIndx, timeIndx=timeIndx, scale=scale, &
     addContribution=addContribution, ans=ans, nrow=nrow, ncol=ncol)
 
@@ -561,7 +565,7 @@ CASE (TypeFEVariableOpt%time)
 
 CASE (TypeFEVariableOpt%spacetime)
   CALL GetInterpolation_( &
-    obj=obj, rank=rank, vartype=TypeFEVariableSpaceTime, N=N, nns=nns, &
+    obj=obj, RANK=RANK, vartype=TypeFEVariableSpaceTime, N=N, nns=nns, &
     spaceIndx=spaceIndx, timeIndx=timeIndx, T=T, nnt=nnt, scale=scale, &
     addContribution=addContribution, ans=ans, nrow=nrow, ncol=ncol)
 END SELECT
