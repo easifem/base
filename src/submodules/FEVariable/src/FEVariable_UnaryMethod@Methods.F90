@@ -53,7 +53,7 @@ END PROCEDURE obj_Abs
 MODULE PROCEDURE obj_Abs_
 ans%len = obj%len
 ans%s = obj%s
-ans%val(ans%len) = ABS(obj%val(ans%len))
+ans%val(1:ans%len) = ABS(obj%val(1:ans%len))
 END PROCEDURE obj_Abs_
 
 !----------------------------------------------------------------------------
@@ -94,7 +94,7 @@ END PROCEDURE obj_Sqrt
 MODULE PROCEDURE obj_Sqrt_
 ans%len = obj%len
 ans%s = obj%s
-ans%val(ans%len) = SQRT(obj%val(ans%len))
+ans%val(1:ans%len) = SQRT(obj%val(1:ans%len))
 END PROCEDURE obj_Sqrt_
 
 !----------------------------------------------------------------------------
@@ -248,39 +248,7 @@ END PROCEDURE obj_IsEqual
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE obj_NotEqual
-LOGICAL(LGT) :: isok
-
-ans = .FALSE.
-
-isok = .NOT. ALL(obj1%val.APPROXEQ.obj2%val)
-IF (isok) THEN
-  ans = .TRUE.
-  RETURN
-END IF
-
-isok = obj1%defineon .NE. obj2%defineon
-IF (isok) THEN
-  ans = .TRUE.
-  RETURN
-END IF
-
-isok = obj1%rank .NE. obj2%rank
-IF (isok) THEN
-  ans = .TRUE.
-  RETURN
-END IF
-
-isok = obj1%varType .NE. obj2%varType
-IF (isok) THEN
-  ans = .TRUE.
-  RETURN
-END IF
-
-isok = ANY(obj1%s .NE. obj2%s)
-IF (isok) THEN
-  ans = .TRUE.
-  RETURN
-END IF
+ans = .NOT. obj_IsEqual(obj1=obj1, obj2=obj2)
 END PROCEDURE obj_NotEqual
 
 !----------------------------------------------------------------------------
