@@ -139,71 +139,32 @@ PUBLIC :: OrthogonalBasisLaplacian_Line_
 
 !> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
-! summary: Query interpolation dimensions, exponent tables and reference
-! domains.
+! summary: Returns the name of the reference domain of a line element.
 !
-! Degree tables have monomial rows and coordinate columns. Use positive
-! interpolation orders. Current total-count implementations do not branch on
-! the supplied continuity or interpolation strings; they return the scalar
-! polynomial counts. Triangle H1 Lagrange uses UNIT, while H1 hierarchical and
-! orthogonal families use BIUNIT.
+! The reference line is the interval from -1 to 1. Its name is
+! `"BIUNIT"`. The result is the same for every basis family.
 !
-! Arguments:
-!   baseContinuity : CHARACTER(*), INTENT(IN). Use the declaration and
-! description for this overload.
-!   baseInterpol : CHARACTER(*), INTENT(IN). Use the declaration and
-! description for this overload.
+! @note
+! `baseContinuity` and `baseInterpol` are not used.
+! @endnote
 !
 ! Returns:
-!   ans : TYPE(String).
-!
-! Formula:
-! $$N_{\mathrm{line}}=p+1,\quad N_{\mathrm{triangle}}=(p+1)(p+2)/2$$
+!   ans : TYPE(String) - always `"BIUNIT"`
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE GlobalData, ONLY: DFP
-! USE GlobalData, ONLY: I4B
-! USE LineInterpolationUtility, ONLY: LagrangeDOF_Line
-! USE LineInterpolationUtility, ONLY: LagrangeInDOF_Line
-! USE LineInterpolationUtility, ONLY: GetTotalDOF_Line
-! USE LineInterpolationUtility, ONLY: GetTotalInDOF_Line
-! USE LineInterpolationUtility, ONLY: LagrangeDegree_Line
-! USE LineInterpolationUtility, ONLY: RefElemDomain_Line
-! USE LineInterpolationUtility, ONLY: LagrangeDOF_Point
-! USE String_Class, ONLY: String
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-! INTEGER(I4B), ALLOCATABLE :: degree(:, :)
-! TYPE(String) :: domain
-!
-! CALL OK(LagrangeDOF_Line(3_I4B) == 4, "Cubic total DOFs")
-! CALL OK(LagrangeInDOF_Line(3_I4B) == 2, "Cubic interior DOFs")
-! CALL OK(GetTotalDOF_Line(3_I4B,"H1","Lagrange") == &
-!   LagrangeDOF_Line(3_I4B), "Total DOF APIs agree")
-! CALL OK(GetTotalInDOF_Line(3_I4B,"H1","Lagrange") == &
-!   LagrangeInDOF_Line(3_I4B), "Interior DOF APIs agree")
-! degree = LagrangeDegree_Line(3_I4B)
-! CALL OK(SIZE(degree,1) == 4 .AND. &
-!   SIZE(degree,2) == 1, "Monomial rows and coordinate columns")
-! domain = RefElemDomain_Line("H1","Lagrange")
-! CALL OK(domain%chars() == "BIUNIT", "Reference domain")
-! CALL OK(LagrangeDOF_Point(3_I4B) == 1, "Point has one DOF")
-! END PROGRAM main
-!```
+! - [test 1](|base|Line/examples/RefElemDomain_Line_test_1.F90)
 
 INTERFACE
   MODULE FUNCTION RefElemDomain_Line(baseContinuity, baseInterpol) &
     & RESULT(ans)
     CHARACTER(*), INTENT(IN) :: baseContinuity
-    !! Cointinuity (conformity) of basis functions
-    !! "H1", "HDiv", "HCurl", "DG"
+    !! continuity of the basis, such as `"H1"`, `"HDiv"`, `"HCurl"`
+    !! or `"DG"`; not used
     CHARACTER(*), INTENT(IN) :: baseInterpol
-    !! Basis function family for Interpolation
-    !! Lagrange, Hierarchy, Serendipity, Hermit, Orthogonal
+    !! basis family, such as `"Lagrange"` or `"Hierarchy"`; not used
     TYPE(String) :: ans
+    !! name of the reference domain
   END FUNCTION RefElemDomain_Line
 END INTERFACE
 
@@ -213,61 +174,39 @@ END INTERFACE
 
 !> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
-! summary: Select a rule and construct quadrature coordinates and weights.
+! summary: Returns the number of quadrature points needed on a line.
 !
-! order requests polynomial integration degree; nips requests an explicit
-! supported point count. Output columns are points, coordinate rows come
-! first, and the final row contains weights. The default Line domain is
-! BIUNIT; Triangle requires refTriangle. Supply vertex xij to map coordinates
-! and scale weights by the geometric Jacobian. Triangle economical rules are
-! selected from Solin tables; the count selector currently ignores quadType.
+! The result is the smallest point count that integrates a polynomial of
+! degree `order` exactly. The count depends on `quadType`.
 !
-! Arguments:
-!   order : INTEGER(I4B), INTENT(IN). Polynomial degree, except quadrature
-! where it is requested exactness degree.
-!   quadType : INTEGER(I4B), INTENT(IN). Quadrature family selector from
-! GlobalData or TypeQuadratureOpt.
+! 1. For the Gauss rules (Legendre, Chebyshev, Jacobi and
+!    Ultraspherical), the result is `1 + order / 2`.
+! 2. For the Gauss-Radau rules, left or right, the result is
+!    `2 + (order - 1) / 2`.
+! 3. For any other `quadType`, such as a Lobatto rule, the result is
+!    `2 + order / 2`.
 !
-! Returns:
-!   ans : INTEGER(I4B).
+! The divisions are integer divisions.
 !
 ! Formula:
-! $$\int_K f(x)\,dx\simeq\sum_i w_i f(x_i)$$
+!   $$ n = 1 + \lfloor p/2 \rfloor $$
+!
+! for the first case, where `p` is `order`.
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE GlobalData, ONLY: DFP
-! USE GlobalData, ONLY: I4B
-! USE GlobalData, ONLY: GaussLegendreQP
-! USE LineInterpolationUtility, ONLY: QuadratureNumber_Line
-! USE LineInterpolationUtility, ONLY: QuadraturePoint_Line
-! USE LineInterpolationUtility, ONLY: QuadraturePoint_Line_
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-! REAL(DFP), ALLOCATABLE :: q(:,:), buffer(:,:)
-! INTEGER(I4B) :: n,nr,nc
+! - [test 1](|base|Line/examples/QuadratureNumber_Line_test_1.F90)
 !
-! n = QuadratureNumber_Line(2_I4B,GaussLegendreQP)
-! q = QuadraturePoint_Line(order=2_I4B, quadType=GaussLegendreQP, &
-!   layout="INCREASING")
-! CALL OK(ABS(SUM(q(2,:))-2.0_DFP) < 1.0E-10_DFP, &
-!   "Weights integrate reference measure")
-! ALLOCATE(buffer(2,n))
-! CALL QuadraturePoint_Line_(nips=[n], quadType=GaussLegendreQP, &
-!   layout="INCREASING", ans=buffer, nrow=nr, ncol=nc)
-! CALL OK(nr == 2 .AND. nc == n, "Active quadrature dimensions")
-! CALL OK(MAXVAL(ABS(q-buffer)) < 1.0E-10_DFP, &
-!   "Function and subroutine quadrature agree")
-! END PROGRAM main
-!```
+! See also: [[LineInterpolationUtility:QuadraturePoint_Line]]
 
 INTERFACE
   MODULE PURE FUNCTION QuadratureNumber_Line(order, quadType) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
+    !! highest polynomial degree to integrate exactly
     INTEGER(I4B), INTENT(IN) :: quadType
+    !! quadrature type, a value of `TypeQuadratureOpt`
     INTEGER(I4B) :: ans
+    !! number of quadrature points
   END FUNCTION QuadratureNumber_Line
 END INTERFACE
 
@@ -277,40 +216,27 @@ END INTERFACE
 
 !> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
-! summary: Reorder an increasing line point list into endpoint first layout.
+! summary: Reorders line points so the end points come first.
 !
+! The input holds points in increasing order along the line.
+! This routine moves the last point to the second place.
+! The interior points shift by one place. The first point stays.
+! The result lists the two end points, then the interior points.
+! This is the vertex, edge, face, cell (VEFC) order.
 !
-! Arguments:
-!   pt : REAL(DFP), INTENT(INOUT)(:). Use the declaration and description for
-! this overload.
-!
-! Returns:
-!   Updates pt(:).
+! If `pt` has two points or fewer, it does not change.
 !
 ! Formula:
-! $$[x_1,x_2,\ldots,x_N]\mapsto[x_1,x_N,x_2,\ldots,x_{N-1}]$$
+!   $$ [x_1, x_2, \ldots, x_N] \mapsto [x_1, x_N, x_2, \ldots, x_{N-1}] $$
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE GlobalData, ONLY: DFP
-! USE GlobalData, ONLY: I4B
-! USE LineInterpolationUtility, ONLY: ToVEFC_Line
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-! REAL(DFP) :: p(3)
-!
-! p = [-1.0_DFP,0.0_DFP,1.0_DFP]
-! CALL ToVEFC_Line(p)
-! CALL OK(MAXVAL(ABS(p-[-1.0_DFP,1.0_DFP,0.0_DFP])) &
-!   < 1.0E-12_DFP, "Endpoints precede interior points")
-! END PROGRAM main
-!```
+! - [test 1](|base|Line/examples/ToVEFC_Line_test_1.F90)
 
 INTERFACE
   MODULE PURE SUBROUTINE ToVEFC_Line(pt)
     REAL(DFP), INTENT(INOUT) :: pt(:)
+    !! points in increasing order on input, in VEFC order on output
   END SUBROUTINE ToVEFC_Line
 END INTERFACE
 
@@ -320,63 +246,27 @@ END INTERFACE
 
 !> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
-! summary: Query interpolation dimensions, exponent tables and reference
-! domains.
+! summary: Returns the monomial exponents of a Lagrange line basis.
 !
-! Degree tables have monomial rows and coordinate columns. Use positive
-! interpolation orders. Current total-count implementations do not branch on
-! the supplied continuity or interpolation strings; they return the scalar
-! polynomial counts. Triangle H1 Lagrange uses UNIT, while H1 hierarchical and
-! orthogonal families use BIUNIT.
-!
-! Arguments:
-!   order : INTEGER(I4B), INTENT(IN). Polynomial degree, except quadrature
-! where it is requested exactness degree.
-!
-! Returns:
-!   ans : INTEGER(I4B), ALLOCATABLE(:, :).
+! The monomial basis on a line is `1, x, x^2, ..., x^p`, where `p` is
+! `order`. Row `i` of the result holds the exponent of the `i`-th
+! monomial. The result has `order + 1` rows and one column.
 !
 ! Formula:
-! $$N_{\mathrm{line}}=p+1,\quad N_{\mathrm{triangle}}=(p+1)(p+2)/2$$
+!   $$ ans(i, 1) = i - 1, \quad i = 1, \ldots, p + 1 $$
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE GlobalData, ONLY: DFP
-! USE GlobalData, ONLY: I4B
-! USE LineInterpolationUtility, ONLY: LagrangeDOF_Line
-! USE LineInterpolationUtility, ONLY: LagrangeInDOF_Line
-! USE LineInterpolationUtility, ONLY: GetTotalDOF_Line
-! USE LineInterpolationUtility, ONLY: GetTotalInDOF_Line
-! USE LineInterpolationUtility, ONLY: LagrangeDegree_Line
-! USE LineInterpolationUtility, ONLY: RefElemDomain_Line
-! USE LineInterpolationUtility, ONLY: LagrangeDOF_Point
-! USE String_Class, ONLY: String
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-! INTEGER(I4B), ALLOCATABLE :: degree(:, :)
-! TYPE(String) :: domain
+! - [test 1](|base|Line/examples/LagrangeDegree_Line_test_1.F90)
 !
-! CALL OK(LagrangeDOF_Line(3_I4B) == 4, "Cubic total DOFs")
-! CALL OK(LagrangeInDOF_Line(3_I4B) == 2, "Cubic interior DOFs")
-! CALL OK(GetTotalDOF_Line(3_I4B,"H1","Lagrange") == &
-!   LagrangeDOF_Line(3_I4B), "Total DOF APIs agree")
-! CALL OK(GetTotalInDOF_Line(3_I4B,"H1","Lagrange") == &
-!   LagrangeInDOF_Line(3_I4B), "Interior DOF APIs agree")
-! degree = LagrangeDegree_Line(3_I4B)
-! CALL OK(SIZE(degree,1) == 4 .AND. &
-!   SIZE(degree,2) == 1, "Monomial rows and coordinate columns")
-! domain = RefElemDomain_Line("H1","Lagrange")
-! CALL OK(domain%chars() == "BIUNIT", "Reference domain")
-! CALL OK(LagrangeDOF_Point(3_I4B) == 1, "Point has one DOF")
-! END PROGRAM main
-!```
+! See also: [[LineInterpolationUtility:LagrangeDOF_Line]]
 
 INTERFACE
   MODULE PURE FUNCTION LagrangeDegree_Line(order) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
+    !! polynomial order of the basis
     INTEGER(I4B), ALLOCATABLE :: ans(:, :)
+    !! exponents, size is `(order + 1, 1)`
   END FUNCTION LagrangeDegree_Line
 END INTERFACE
 
@@ -386,129 +276,57 @@ END INTERFACE
 
 !> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
-! summary: Query interpolation dimensions, exponent tables and reference
-! domains.
+! summary: Returns the number of Lagrange DOFs of a point.
 !
-! Degree tables have monomial rows and coordinate columns. Use positive
-! interpolation orders. Current total-count implementations do not branch on
-! the supplied continuity or interpolation strings; they return the scalar
-! polynomial counts. Triangle H1 Lagrange uses UNIT, while H1 hierarchical and
-! orthogonal families use BIUNIT.
-!
-! Arguments:
-!   order : INTEGER(I4B), INTENT(IN). Polynomial degree, except quadrature
-! where it is requested exactness degree.
+! A point always has one DOF. The result is 1 for every `order`.
 !
 ! Returns:
-!   ans : INTEGER(I4B).
-!
-! Formula:
-! $$N_{\mathrm{line}}=p+1,\quad N_{\mathrm{triangle}}=(p+1)(p+2)/2$$
+!   ans : INTEGER(I4B) - always 1
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE GlobalData, ONLY: DFP
-! USE GlobalData, ONLY: I4B
-! USE LineInterpolationUtility, ONLY: LagrangeDOF_Line
-! USE LineInterpolationUtility, ONLY: LagrangeInDOF_Line
-! USE LineInterpolationUtility, ONLY: GetTotalDOF_Line
-! USE LineInterpolationUtility, ONLY: GetTotalInDOF_Line
-! USE LineInterpolationUtility, ONLY: LagrangeDegree_Line
-! USE LineInterpolationUtility, ONLY: RefElemDomain_Line
-! USE LineInterpolationUtility, ONLY: LagrangeDOF_Point
-! USE String_Class, ONLY: String
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-! INTEGER(I4B), ALLOCATABLE :: degree(:, :)
-! TYPE(String) :: domain
+! - [test 1](|base|Line/examples/LagrangeDOF_Point_test_1.F90)
 !
-! CALL OK(LagrangeDOF_Line(3_I4B) == 4, "Cubic total DOFs")
-! CALL OK(LagrangeInDOF_Line(3_I4B) == 2, "Cubic interior DOFs")
-! CALL OK(GetTotalDOF_Line(3_I4B,"H1","Lagrange") == &
-!   LagrangeDOF_Line(3_I4B), "Total DOF APIs agree")
-! CALL OK(GetTotalInDOF_Line(3_I4B,"H1","Lagrange") == &
-!   LagrangeInDOF_Line(3_I4B), "Interior DOF APIs agree")
-! degree = LagrangeDegree_Line(3_I4B)
-! CALL OK(SIZE(degree,1) == 4 .AND. &
-!   SIZE(degree,2) == 1, "Monomial rows and coordinate columns")
-! domain = RefElemDomain_Line("H1","Lagrange")
-! CALL OK(domain%chars() == "BIUNIT", "Reference domain")
-! CALL OK(LagrangeDOF_Point(3_I4B) == 1, "Point has one DOF")
-! END PROGRAM main
-!```
+! See also: [[LineInterpolationUtility:LagrangeDOF_Line]]
 
 INTERFACE
   MODULE PURE FUNCTION LagrangeDOF_Point(order) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
+    !! polynomial order of the basis, not used
     INTEGER(I4B) :: ans
+    !! number of DOFs, always 1
   END FUNCTION LagrangeDOF_Point
 END INTERFACE
 
 !----------------------------------------------------------------------------
-!                                                              GetDOF_Line
+!                                                            LagrangeDOF_Line
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
-! summary: Query interpolation dimensions, exponent tables and reference
-! domains.
+! summary: Returns the total number of Lagrange DOFs of a line element.
 !
-! Degree tables have monomial rows and coordinate columns. Use positive
-! interpolation orders. Current total-count implementations do not branch on
-! the supplied continuity or interpolation strings; they return the scalar
-! polynomial counts. Triangle H1 Lagrange uses UNIT, while H1 hierarchical and
-! orthogonal families use BIUNIT.
-!
-! Arguments:
-!   order : INTEGER(I4B), INTENT(IN). Polynomial degree, except quadrature
-! where it is requested exactness degree.
+! The total counts the DOFs at the two end points and in the interior.
+! The result is `order + 1`.
 !
 ! Returns:
-!   ans : INTEGER(I4B).
+!   ans : INTEGER(I4B) - total number of DOFs
 !
 ! Formula:
-! $$N_{\mathrm{line}}=p+1,\quad N_{\mathrm{triangle}}=(p+1)(p+2)/2$$
+!   $$ N = p + 1 $$
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE GlobalData, ONLY: DFP
-! USE GlobalData, ONLY: I4B
-! USE LineInterpolationUtility, ONLY: LagrangeDOF_Line
-! USE LineInterpolationUtility, ONLY: LagrangeInDOF_Line
-! USE LineInterpolationUtility, ONLY: GetTotalDOF_Line
-! USE LineInterpolationUtility, ONLY: GetTotalInDOF_Line
-! USE LineInterpolationUtility, ONLY: LagrangeDegree_Line
-! USE LineInterpolationUtility, ONLY: RefElemDomain_Line
-! USE LineInterpolationUtility, ONLY: LagrangeDOF_Point
-! USE String_Class, ONLY: String
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-! INTEGER(I4B), ALLOCATABLE :: degree(:, :)
-! TYPE(String) :: domain
+! - [test 1](|base|Line/examples/LagrangeDOF_Line_test_1.F90)
 !
-! CALL OK(LagrangeDOF_Line(3_I4B) == 4, "Cubic total DOFs")
-! CALL OK(LagrangeInDOF_Line(3_I4B) == 2, "Cubic interior DOFs")
-! CALL OK(GetTotalDOF_Line(3_I4B,"H1","Lagrange") == &
-!   LagrangeDOF_Line(3_I4B), "Total DOF APIs agree")
-! CALL OK(GetTotalInDOF_Line(3_I4B,"H1","Lagrange") == &
-!   LagrangeInDOF_Line(3_I4B), "Interior DOF APIs agree")
-! degree = LagrangeDegree_Line(3_I4B)
-! CALL OK(SIZE(degree,1) == 4 .AND. &
-!   SIZE(degree,2) == 1, "Monomial rows and coordinate columns")
-! domain = RefElemDomain_Line("H1","Lagrange")
-! CALL OK(domain%chars() == "BIUNIT", "Reference domain")
-! CALL OK(LagrangeDOF_Point(3_I4B) == 1, "Point has one DOF")
-! END PROGRAM main
-!```
+! See also: [[LineInterpolationUtility:LagrangeInDOF_Line]]
 
 INTERFACE
   MODULE PURE FUNCTION LagrangeDOF_Line(order) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
+    !! polynomial order of the basis
     INTEGER(I4B) :: ans
+    !! total number of DOFs, equal to `order + 1`
   END FUNCTION LagrangeDOF_Line
 END INTERFACE
 
@@ -518,63 +336,35 @@ END INTERFACE
 
 !> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
-! summary: Query interpolation dimensions, exponent tables and reference
-! domains.
+! summary: Returns the number of interior Lagrange DOFs of a line element.
 !
-! Degree tables have monomial rows and coordinate columns. Use positive
-! interpolation orders. Current total-count implementations do not branch on
-! the supplied continuity or interpolation strings; they return the scalar
-! polynomial counts. Triangle H1 Lagrange uses UNIT, while H1 hierarchical and
-! orthogonal families use BIUNIT.
+! The interior DOFs of a line are those not attached to its two end
+! points. The result is `order - 1`.
 !
-! Arguments:
-!   order : INTEGER(I4B), INTENT(IN). Polynomial degree, except quadrature
-! where it is requested exactness degree.
+! @warning
+! For `order` below 1 the result is zero or negative. It is not clipped.
+! Use [[LineInterpolationUtility:GetTotalInDOF_Line]] for a result that
+! is never negative.
+! @endwarning
 !
 ! Returns:
-!   ans : INTEGER(I4B).
+!   ans : INTEGER(I4B) - number of interior DOFs
 !
 ! Formula:
-! $$N_{\mathrm{line}}=p+1,\quad N_{\mathrm{triangle}}=(p+1)(p+2)/2$$
+!   $$ N_{in} = p - 1 $$
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE GlobalData, ONLY: DFP
-! USE GlobalData, ONLY: I4B
-! USE LineInterpolationUtility, ONLY: LagrangeDOF_Line
-! USE LineInterpolationUtility, ONLY: LagrangeInDOF_Line
-! USE LineInterpolationUtility, ONLY: GetTotalDOF_Line
-! USE LineInterpolationUtility, ONLY: GetTotalInDOF_Line
-! USE LineInterpolationUtility, ONLY: LagrangeDegree_Line
-! USE LineInterpolationUtility, ONLY: RefElemDomain_Line
-! USE LineInterpolationUtility, ONLY: LagrangeDOF_Point
-! USE String_Class, ONLY: String
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-! INTEGER(I4B), ALLOCATABLE :: degree(:, :)
-! TYPE(String) :: domain
+! - [test 1](|base|Line/examples/LagrangeInDOF_Line_test_1.F90)
 !
-! CALL OK(LagrangeDOF_Line(3_I4B) == 4, "Cubic total DOFs")
-! CALL OK(LagrangeInDOF_Line(3_I4B) == 2, "Cubic interior DOFs")
-! CALL OK(GetTotalDOF_Line(3_I4B,"H1","Lagrange") == &
-!   LagrangeDOF_Line(3_I4B), "Total DOF APIs agree")
-! CALL OK(GetTotalInDOF_Line(3_I4B,"H1","Lagrange") == &
-!   LagrangeInDOF_Line(3_I4B), "Interior DOF APIs agree")
-! degree = LagrangeDegree_Line(3_I4B)
-! CALL OK(SIZE(degree,1) == 4 .AND. &
-!   SIZE(degree,2) == 1, "Monomial rows and coordinate columns")
-! domain = RefElemDomain_Line("H1","Lagrange")
-! CALL OK(domain%chars() == "BIUNIT", "Reference domain")
-! CALL OK(LagrangeDOF_Point(3_I4B) == 1, "Point has one DOF")
-! END PROGRAM main
-!```
+! See also: [[LineInterpolationUtility:LagrangeDOF_Line]]
 
 INTERFACE
   MODULE PURE FUNCTION LagrangeInDOF_Line(order) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
+    !! polynomial order of the basis
     INTEGER(I4B) :: ans
+    !! number of interior DOFs, equal to `order - 1`
   END FUNCTION LagrangeInDOF_Line
 END INTERFACE
 
@@ -584,145 +374,84 @@ END INTERFACE
 
 !> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
-! summary: Query interpolation dimensions, exponent tables and reference
-! domains.
+! summary: Returns the total number of DOFs of a line element.
 !
-! Degree tables have monomial rows and coordinate columns. Use positive
-! interpolation orders. Current total-count implementations do not branch on
-! the supplied continuity or interpolation strings; they return the scalar
-! polynomial counts. Triangle H1 Lagrange uses UNIT, while H1 hierarchical and
-! orthogonal families use BIUNIT.
+! The total counts the DOFs at the two end points and in the interior.
+! The result is `order + 1`.
 !
-! Arguments:
-!   order : INTEGER(I4B), INTENT(IN). Polynomial degree, except quadrature
-! where it is requested exactness degree.
-!   baseContinuity : CHARACTER(*), INTENT(IN). Use the declaration and
-! description for this overload.
-!   baseInterpolation : CHARACTER(*), INTENT(IN). Use the declaration and
-! description for this overload.
+! @note
+! `baseContinuity` and `baseInterpolation` are not used. Every basis
+! family gets the same count.
+! @endnote
 !
 ! Returns:
-!   ans : INTEGER(I4B).
+!   ans : INTEGER(I4B) - total number of DOFs
 !
 ! Formula:
-! $$N_{\mathrm{line}}=p+1,\quad N_{\mathrm{triangle}}=(p+1)(p+2)/2$$
+!   $$ N = p + 1 $$
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE GlobalData, ONLY: DFP
-! USE GlobalData, ONLY: I4B
-! USE LineInterpolationUtility, ONLY: LagrangeDOF_Line
-! USE LineInterpolationUtility, ONLY: LagrangeInDOF_Line
-! USE LineInterpolationUtility, ONLY: GetTotalDOF_Line
-! USE LineInterpolationUtility, ONLY: GetTotalInDOF_Line
-! USE LineInterpolationUtility, ONLY: LagrangeDegree_Line
-! USE LineInterpolationUtility, ONLY: RefElemDomain_Line
-! USE LineInterpolationUtility, ONLY: LagrangeDOF_Point
-! USE String_Class, ONLY: String
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-! INTEGER(I4B), ALLOCATABLE :: degree(:, :)
-! TYPE(String) :: domain
+! - [test 1](|base|Line/examples/GetTotalDOF_Line_test_1.F90)
 !
-! CALL OK(LagrangeDOF_Line(3_I4B) == 4, "Cubic total DOFs")
-! CALL OK(LagrangeInDOF_Line(3_I4B) == 2, "Cubic interior DOFs")
-! CALL OK(GetTotalDOF_Line(3_I4B,"H1","Lagrange") == &
-!   LagrangeDOF_Line(3_I4B), "Total DOF APIs agree")
-! CALL OK(GetTotalInDOF_Line(3_I4B,"H1","Lagrange") == &
-!   LagrangeInDOF_Line(3_I4B), "Interior DOF APIs agree")
-! degree = LagrangeDegree_Line(3_I4B)
-! CALL OK(SIZE(degree,1) == 4 .AND. &
-!   SIZE(degree,2) == 1, "Monomial rows and coordinate columns")
-! domain = RefElemDomain_Line("H1","Lagrange")
-! CALL OK(domain%chars() == "BIUNIT", "Reference domain")
-! CALL OK(LagrangeDOF_Point(3_I4B) == 1, "Point has one DOF")
-! END PROGRAM main
-!```
+! See also: [[LineInterpolationUtility:LagrangeDOF_Line]],
+! [[LineInterpolationUtility:GetTotalInDOF_Line]]
 
 INTERFACE
   MODULE PURE FUNCTION GetTotalDOF_Line(order, baseContinuity, &
                                         baseInterpolation) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
+    !! polynomial order of the basis
     CHARACTER(*), INTENT(IN) :: baseContinuity
-    !! not used
+    !! continuity of the basis, not used
     CHARACTER(*), INTENT(IN) :: baseInterpolation
-    !! not used
+    !! basis family, not used
     INTEGER(I4B) :: ans
+    !! total number of DOFs
   END FUNCTION GetTotalDOF_Line
 END INTERFACE
 
 !----------------------------------------------------------------------------
-!                                                        LagrangeInDOF_Line
+!                                                        GetTotalInDOF_Line
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
-! summary: Query interpolation dimensions, exponent tables and reference
-! domains.
+! summary: Returns the number of interior DOFs of a line element.
 !
-! Degree tables have monomial rows and coordinate columns. Use positive
-! interpolation orders. Current total-count implementations do not branch on
-! the supplied continuity or interpolation strings; they return the scalar
-! polynomial counts. Triangle H1 Lagrange uses UNIT, while H1 hierarchical and
-! orthogonal families use BIUNIT.
+! The interior DOFs of a line are those not attached to its two end
+! points. The result is `order - 1`, and it is never negative.
+! If `order` is 1 or less, the result is 0.
 !
-! Arguments:
-!   order : INTEGER(I4B), INTENT(IN). Polynomial degree, except quadrature
-! where it is requested exactness degree.
-!   baseContinuity : CHARACTER(*), INTENT(IN). Use the declaration and
-! description for this overload.
-!   baseInterpolation : CHARACTER(*), INTENT(IN). Use the declaration and
-! description for this overload.
+! @note
+! `baseContinuity` and `baseInterpolation` are not used. Every basis
+! family gets the same count.
+! @endnote
 !
 ! Returns:
-!   ans : INTEGER(I4B).
+!   ans : INTEGER(I4B) - number of interior DOFs
 !
 ! Formula:
-! $$N_{\mathrm{line}}=p+1,\quad N_{\mathrm{triangle}}=(p+1)(p+2)/2$$
+!   $$ N_{in} = \max(p - 1, 0) $$
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE GlobalData, ONLY: DFP
-! USE GlobalData, ONLY: I4B
-! USE LineInterpolationUtility, ONLY: LagrangeDOF_Line
-! USE LineInterpolationUtility, ONLY: LagrangeInDOF_Line
-! USE LineInterpolationUtility, ONLY: GetTotalDOF_Line
-! USE LineInterpolationUtility, ONLY: GetTotalInDOF_Line
-! USE LineInterpolationUtility, ONLY: LagrangeDegree_Line
-! USE LineInterpolationUtility, ONLY: RefElemDomain_Line
-! USE LineInterpolationUtility, ONLY: LagrangeDOF_Point
-! USE String_Class, ONLY: String
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-! INTEGER(I4B), ALLOCATABLE :: degree(:, :)
-! TYPE(String) :: domain
+! - [test 1](|base|Line/examples/GetTotalInDOF_Line_test_1.F90)
 !
-! CALL OK(LagrangeDOF_Line(3_I4B) == 4, "Cubic total DOFs")
-! CALL OK(LagrangeInDOF_Line(3_I4B) == 2, "Cubic interior DOFs")
-! CALL OK(GetTotalDOF_Line(3_I4B,"H1","Lagrange") == &
-!   LagrangeDOF_Line(3_I4B), "Total DOF APIs agree")
-! CALL OK(GetTotalInDOF_Line(3_I4B,"H1","Lagrange") == &
-!   LagrangeInDOF_Line(3_I4B), "Interior DOF APIs agree")
-! degree = LagrangeDegree_Line(3_I4B)
-! CALL OK(SIZE(degree,1) == 4 .AND. &
-!   SIZE(degree,2) == 1, "Monomial rows and coordinate columns")
-! domain = RefElemDomain_Line("H1","Lagrange")
-! CALL OK(domain%chars() == "BIUNIT", "Reference domain")
-! CALL OK(LagrangeDOF_Point(3_I4B) == 1, "Point has one DOF")
-! END PROGRAM main
-!```
+! See also: [[LineInterpolationUtility:LagrangeInDOF_Line]],
+! [[LineInterpolationUtility:GetTotalDOF_Line]]
 
 INTERFACE
   MODULE PURE FUNCTION GetTotalInDOF_Line(order, baseContinuity, &
                                           baseInterpolation) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
+    !! polynomial order of the basis
     CHARACTER(*), INTENT(IN) :: baseContinuity
+    !! continuity of the basis, not used
     CHARACTER(*), INTENT(IN) :: baseInterpolation
+    !! basis family, not used
     INTEGER(I4B) :: ans
+    !! number of interior DOFs
   END FUNCTION GetTotalInDOF_Line
 END INTERFACE
 
@@ -732,108 +461,80 @@ END INTERFACE
 
 !> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
-! summary: Generate interior line interpolation coordinates.
+! summary: Returns equally spaced interior points of a line.
 !
-! Default Line endpoints are -1 and +1; default Triangle vertices are (0,0),
-! (1,0), (0,1). Points are columns and vertices precede edge and interior
-! points. InterpolationPoint requires a layout; VEFC requests entity ordering.
-! Supply vertex coordinates xij to map to a different element.
+! This function returns the interior points of a line segment, in
+! increasing distance from the first end point.
+! The end points are not included.
+! The points divide the segment into `order` equal parts.
 !
-! Arguments:
-!   order : INTEGER(I4B), INTENT(IN). Polynomial degree, except quadrature
-! where it is requested exactness degree.
-!   xij : REAL(DFP), INTENT(IN)(2). Point columns; vertices or interpolation
-! nodes according to the interface.
-!
-! Returns:
-!   ans : REAL(DFP), ALLOCATABLE(:).
+! If `order` is 1 or less, the result is an empty array.
+! Otherwise it has `order - 1` entries.
 !
 ! Formula:
-! $$x_j=a+j(b-a)/p$$
+!   $$ x_j = x_1 + j\,\frac{x_2 - x_1}{p}, \quad j = 1, \ldots, p-1 $$
+!
+! where `p` is `order`, `x_1` is `xij(1)` and `x_2` is `xij(2)`.
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE GlobalData, ONLY: DFP
-! USE GlobalData, ONLY: I4B
-! USE LineInterpolationUtility, ONLY: EquidistanceInPoint_Line
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-! REAL(DFP), ALLOCATABLE :: y(:, :)
+! - [test 2](|base|Line/examples/EquidistanceInPoint_Line_test_2.F90)
 !
-! y = EquidistanceInPoint_Line(order=2_I4B)
-! CALL OK(ALL(SHAPE(y) == [1, 1]), "Coordinate dimensions")
-! CALL OK(MAXVAL(ABS(y-(0.0_DFP))) < 1.0E-11_DFP, &
-!   "Single interior point is the centroid")
-! END PROGRAM main
-!```
+! See also: [[LineInterpolationUtility:EquidistanceInPoint_Line1_]]
 
 INTERFACE EquidistanceInPoint_Line
   MODULE PURE FUNCTION EquidistanceInPoint_Line1(order, xij) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
-    !! order
+    !! interpolation order, the number of segments between the end points
     REAL(DFP), INTENT(IN) :: xij(2)
-    !! coordinates of point 1 and point 2
+    !! coordinates of the first and the second end point
     REAL(DFP), ALLOCATABLE :: ans(:)
+    !! interior points, size is `MAX(order - 1, 0)`
   END FUNCTION EquidistanceInPoint_Line1
 END INTERFACE EquidistanceInPoint_Line
 
 !----------------------------------------------------------------------------
-!
+!                                                  EquidistanceInPoint_Line_
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
-! summary: Generate interior line interpolation coordinates.
+! summary: Computes equally spaced interior points of a line into a buffer.
 !
-! Default Line endpoints are -1 and +1; default Triangle vertices are (0,0),
-! (1,0), (0,1). Points are columns and vertices precede edge and interior
-! points. InterpolationPoint requires a layout; VEFC requests entity ordering.
-! Supply vertex coordinates xij to map to a different element.
+! This subroutine writes the interior points of a line segment into `ans`.
+! The points run from the first end point towards the second.
+! The end points are not included.
+! The points divide the segment into `order` equal parts.
 !
-! Arguments:
-!   order : INTEGER(I4B), INTENT(IN). Polynomial degree, except quadrature
-! where it is requested exactness degree.
-!   xij : REAL(DFP), INTENT(IN)(2). Point columns; vertices or interpolation
-! nodes according to the interface.
-!   ans : REAL(DFP), INTENT(INOUT)(:). Result buffer; allocate the full active
-! shape before the call.
-!   tsize : INTEGER(I4B), INTENT(OUT). Number of active output entries.
+! If `order` is 1 or less, it writes nothing and sets `tsize` to 0.
+! Otherwise it writes `order - 1` entries and sets `tsize` to `order - 1`.
 !
-! Returns:
-!   Updates ans(:), tsize.
+! @note
+! `ans` must hold at least `order - 1` entries.
+! The routine does not allocate it.
+! @endnote
 !
 ! Formula:
-! $$x_j=a+j(b-a)/p$$
+!   $$ x_j = x_1 + j\,\frac{x_2 - x_1}{p}, \quad j = 1, \ldots, p-1 $$
+!
+! where `p` is `order`, `x_1` is `xij(1)` and `x_2` is `xij(2)`.
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE GlobalData, ONLY: DFP
-! USE GlobalData, ONLY: I4B
-! USE LineInterpolationUtility, ONLY: EquidistanceInPoint_Line_
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-! REAL(DFP) :: y(1, 1)
-! INTEGER(I4B) :: nr, nc
+! - [test 2](|base|Line/examples/EquidistanceInPoint_Line_test_2.F90)
 !
-! CALL EquidistanceInPoint_Line_(order=2_I4B, ans=y, nrow=nr, ncol=nc)
-! CALL OK(nr == 1 .AND. nc == 1, "Active coordinate dimensions")
-! CALL OK(MAXVAL(ABS(y-(0.0_DFP))) < 1.0E-11_DFP, &
-!   "Single interior point is the centroid")
-! END PROGRAM main
-!```
+! See also: [[LineInterpolationUtility:EquidistanceInPoint_Line1]]
 
 INTERFACE EquidistanceInPoint_Line_
   MODULE PURE SUBROUTINE EquidistanceInPoint_Line1_(order, xij, ans, tsize)
     INTEGER(I4B), INTENT(IN) :: order
-    !! order
+    !! interpolation order, the number of segments between the end points
     REAL(DFP), INTENT(IN) :: xij(2)
-    !! coordinates of point 1 and point 2
+    !! coordinates of the first and the second end point
     REAL(DFP), INTENT(INOUT) :: ans(:)
+    !! interior points, the routine writes the first `tsize` entries
     INTEGER(I4B), INTENT(OUT) :: tsize
+    !! number of interior points written to `ans`, `MAX(order - 1, 0)`
   END SUBROUTINE EquidistanceInPoint_Line1_
 END INTERFACE EquidistanceInPoint_Line_
 
@@ -843,120 +544,110 @@ END INTERFACE EquidistanceInPoint_Line_
 
 !> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
-! summary: Generate interior line interpolation coordinates.
+! summary: Returns equally spaced interior points of a line in `xij` format.
 !
-! Default Line endpoints are -1 and +1; default Triangle vertices are (0,0),
-! (1,0), (0,1). Points are columns and vertices precede edge and interior
-! points. InterpolationPoint requires a layout; VEFC requests entity ordering.
-! Supply vertex coordinates xij to map to a different element.
+! This function returns the interior points of a line segment.
+! Each column of `ans` is one point.
+! The points run from the first end point towards the second.
+! The end points are not included.
+! The points divide the segment into `order` equal parts.
 !
-! Arguments:
-!   order : INTEGER(I4B), INTENT(IN). Polynomial degree, except quadrature
-! where it is requested exactness degree.
-!   xij : REAL(DFP), OPTIONAL, INTENT(IN)(:, :). Point columns; vertices or
-! interpolation nodes according to the interface.
+! If `xij` is absent, the segment runs from -1 to 1 and `ans` has one row.
+! Otherwise `ans` has as many rows as `xij`.
 !
-! Returns:
-!   ans : REAL(DFP), ALLOCATABLE(:, :).
+! If `order` is 1 or less, `ans` has no rows and no columns.
+! Otherwise `ans` has `order - 1` columns.
+!
+! @note
+! `xij` can have at most 3 rows.
+! @endnote
 !
 ! Formula:
-! $$x_j=a+j(b-a)/p$$
+!   $$ x_j = x_1 + j\,\frac{x_2 - x_1}{p}, \quad j = 1, \ldots, p-1 $$
+!
+! where `p` is `order`, and `x_1` and `x_2` are the two columns of `xij`.
+! The formula applies to each row.
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE GlobalData, ONLY: DFP
-! USE GlobalData, ONLY: I4B
-! USE LineInterpolationUtility, ONLY: EquidistanceInPoint_Line
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-! REAL(DFP), ALLOCATABLE :: y(:, :)
+! - [test 1](|base|Line/examples/EquidistanceInPoint_Line_test_1.F90)
 !
-! y = EquidistanceInPoint_Line(order=2_I4B)
-! CALL OK(ALL(SHAPE(y) == [1, 1]), "Coordinate dimensions")
-! CALL OK(MAXVAL(ABS(y-(0.0_DFP))) < 1.0E-11_DFP, &
-!   "Single interior point is the centroid")
-! END PROGRAM main
-!```
+! See also: [[LineInterpolationUtility:EquidistanceInPoint_Line2_]]
 
 INTERFACE EquidistanceInPoint_Line
   MODULE PURE FUNCTION EquidistanceInPoint_Line2(order, xij) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
-    !! order
+    !! interpolation order, the number of segments between the end points
     REAL(DFP), OPTIONAL, INTENT(IN) :: xij(:, :)
-    !! coordinates of point 1 and point 2 in $x_{iJ}$ format
-    !! number of rows = nsd
-    !! number of cols = 2
+    !! coordinates of the two end points, one point per column.
+    !! The number of rows is the number of space dimensions.
+    !! The number of columns is 2.
+    !! The default is a single row with the values -1 and 1.
     REAL(DFP), ALLOCATABLE :: ans(:, :)
-    !! Equidistnace points in $x_{iJ}$ format
-    !! The number of rows is equal to the number of rows in xij
-    !! (if xij present), otherwise, it is 1.
+    !! interior points, one point per column.
+    !! The number of rows is the number of rows of `xij`.
+    !! It is 1 if `xij` is absent.
+    !! The number of columns is `MAX(order - 1, 0)`.
   END FUNCTION EquidistanceInPoint_Line2
 END INTERFACE EquidistanceInPoint_Line
 
 !----------------------------------------------------------------------------
-!
+!                                                  EquidistanceInPoint_Line_
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
-! summary: Generate interior line interpolation coordinates.
+! summary: Computes equally spaced interior points of a line into a matrix.
 !
-! Default Line endpoints are -1 and +1; default Triangle vertices are (0,0),
-! (1,0), (0,1). Points are columns and vertices precede edge and interior
-! points. InterpolationPoint requires a layout; VEFC requests entity ordering.
-! Supply vertex coordinates xij to map to a different element.
+! This subroutine writes the interior points of a line segment into `ans`.
+! Each column of `ans` is one point.
+! The points run from the first end point towards the second.
+! The end points are not included.
+! The points divide the segment into `order` equal parts.
 !
-! Arguments:
-!   order : INTEGER(I4B), INTENT(IN). Polynomial degree, except quadrature
-! where it is requested exactness degree.
-!   xij : REAL(DFP), OPTIONAL, INTENT(IN)(:, :). Point columns; vertices or
-! interpolation nodes according to the interface.
-!   ans : REAL(DFP), INTENT(INOUT)(:, :). Result buffer; allocate the full
-! active shape before the call.
-!   nrow : INTEGER(I4B), INTENT(OUT). Number of active output rows.
-!   ncol : INTEGER(I4B), INTENT(OUT). Number of active output columns.
+! If `xij` is absent, the segment runs from -1 to 1 and `nrow` is 1.
+! Otherwise `nrow` is the number of rows of `xij`.
 !
-! Returns:
-!   Updates ans(:, :), nrow, ncol.
+! If `order` is 1 or less, it writes nothing and sets `nrow` and `ncol`
+! to 0. Otherwise it sets `ncol` to `order - 1`.
+!
+! @note
+! `ans` must have at least `nrow` rows and `order - 1` columns.
+! The routine does not allocate it.
+! @endnote
+!
+! @note
+! `xij` can have at most 3 rows.
+! @endnote
 !
 ! Formula:
-! $$x_j=a+j(b-a)/p$$
+!   $$ x_j = x_1 + j\,\frac{x_2 - x_1}{p}, \quad j = 1, \ldots, p-1 $$
+!
+! where `p` is `order`, and `x_1` and `x_2` are the two columns of `xij`.
+! The formula applies to each row.
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE GlobalData, ONLY: DFP
-! USE GlobalData, ONLY: I4B
-! USE LineInterpolationUtility, ONLY: EquidistanceInPoint_Line_
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-! REAL(DFP) :: y(1, 1)
-! INTEGER(I4B) :: nr, nc
+! - [test 1](|base|Line/examples/EquidistanceInPoint_Line__test_1.F90)
 !
-! CALL EquidistanceInPoint_Line_(order=2_I4B, ans=y, nrow=nr, ncol=nc)
-! CALL OK(nr == 1 .AND. nc == 1, "Active coordinate dimensions")
-! CALL OK(MAXVAL(ABS(y-(0.0_DFP))) < 1.0E-11_DFP, &
-!   "Single interior point is the centroid")
-! END PROGRAM main
-!```
+! See also: [[LineInterpolationUtility:EquidistanceInPoint_Line2]]
 
 INTERFACE EquidistanceInPoint_Line_
   MODULE PURE SUBROUTINE EquidistanceInPoint_Line2_(order, xij, ans, &
                                                     nrow, ncol)
     INTEGER(I4B), INTENT(IN) :: order
-    !! order
+    !! interpolation order, the number of segments between the end points
     REAL(DFP), OPTIONAL, INTENT(IN) :: xij(:, :)
-    !! coordinates of point 1 and point 2 in $x_{iJ}$ format
-    !! number of rows = nsd
-    !! number of cols = 2
+    !! coordinates of the two end points, one point per column.
+    !! The number of rows is the number of space dimensions.
+    !! The number of columns is 2.
+    !! The default is a single row with the values -1 and 1.
     REAL(DFP), INTENT(INOUT) :: ans(:, :)
-    !! Equidistnace points in $x_{iJ}$ format
-    !! The number of rows is equal to the number of rows in xij
-    !! (if xij present), otherwise, it is 1.
+    !! interior points, one point per column
+    !! the routine writes the first `nrow` rows and `ncol` columns
     INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+    !! number of rows and columns written to `ans`
+    !! `ncol` is `MAX(order - 1, 0)`
   END SUBROUTINE EquidistanceInPoint_Line2_
 END INTERFACE EquidistanceInPoint_Line_
 
@@ -966,51 +657,33 @@ END INTERFACE EquidistanceInPoint_Line_
 
 !> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
-! summary: Generate line interpolation coordinates.
+! summary: Returns equally spaced points on a line, including the end points.
 !
-! Default Line endpoints are -1 and +1; default Triangle vertices are (0,0),
-! (1,0), (0,1). Points are columns and vertices precede edge and interior
-! points. InterpolationPoint requires a layout; VEFC requests entity ordering.
-! Supply vertex coordinates xij to map to a different element.
+! This function returns `order + 1` equally spaced points on a line
+! segment. The end points come first, then the interior points.
 !
-! Arguments:
-!   order : INTEGER(I4B), INTENT(IN). Polynomial degree, except quadrature
-! where it is requested exactness degree.
-!   xij : REAL(DFP), INTENT(IN)(2). Point columns; vertices or interpolation
-! nodes according to the interface.
+! 1. `ans(1)` is `xij(1)`.
+! 2. `ans(2)` is `xij(2)`.
+! 3. The remaining entries are the interior points. They run from the
+!    first end point towards the second.
 !
-! Returns:
-!   ans : REAL(DFP), ALLOCATABLE(:).
-!
-! Formula:
-! $$x_j=a+j(b-a)/p$$
+! If `order` is 0, `ans` has one entry. It is the midpoint of the segment.
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE GlobalData, ONLY: DFP
-! USE GlobalData, ONLY: I4B
-! USE LineInterpolationUtility, ONLY: EquidistancePoint_Line
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-! REAL(DFP), ALLOCATABLE :: y(:, :)
+! - [test 2](|base|Line/examples/EquidistancePoint_Line_test_2.F90)
 !
-! y = EquidistancePoint_Line(order=2_I4B)
-! CALL OK(ALL(SHAPE(y) == [1, 3]), "Coordinate dimensions")
-! CALL OK(MAXVAL(ABS(y)) <= 1.0_DFP, "Nodes lie in reference domain")
-! END PROGRAM main
-!```
+! See also: [[LineInterpolationUtility:EquidistanceInPoint_Line1_]]
 
 INTERFACE EquidistancePoint_Line
   MODULE PURE FUNCTION EquidistancePoint_Line1(order, xij) &
     & RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
-    !! order
+    !! interpolation order, the number of segments between the end points
     REAL(DFP), INTENT(IN) :: xij(2)
-    !! coorindates of point 1 and point 2
+    !! coordinates of the first and the second end point
     REAL(DFP), ALLOCATABLE :: ans(:)
-    !! equidistance points
+    !! the points, size is `order + 1`
   END FUNCTION EquidistancePoint_Line1
 END INTERFACE EquidistancePoint_Line
 
@@ -1020,55 +693,39 @@ END INTERFACE EquidistancePoint_Line
 
 !> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
-! summary: Generate line interpolation coordinates.
+! summary: Computes equally spaced points of a line into a buffer.
 !
-! Default Line endpoints are -1 and +1; default Triangle vertices are (0,0),
-! (1,0), (0,1). Points are columns and vertices precede edge and interior
-! points. InterpolationPoint requires a layout; VEFC requests entity ordering.
-! Supply vertex coordinates xij to map to a different element.
+! This subroutine writes `order + 1` equally spaced points of a line
+! segment into `ans`. The end points come first, then the interior points.
 !
-! Arguments:
-!   order : INTEGER(I4B), INTENT(IN). Polynomial degree, except quadrature
-! where it is requested exactness degree.
-!   xij : REAL(DFP), INTENT(IN)(2). Point columns; vertices or interpolation
-! nodes according to the interface.
-!   ans : REAL(DFP), INTENT(INOUT)(:). Result buffer; allocate the full active
-! shape before the call.
-!   tsize : INTEGER(I4B), INTENT(OUT). Number of active output entries.
+! 1. `ans(1)` is `xij(1)`.
+! 2. `ans(2)` is `xij(2)`.
+! 3. The remaining entries are the interior points. They run from the
+!    first end point towards the second.
 !
-! Returns:
-!   Updates ans(:), tsize.
+! If `order` is 0, it writes one entry. It is the midpoint of the segment.
 !
-! Formula:
-! $$x_j=a+j(b-a)/p$$
+! @note
+! `ans` must hold at least `order + 1` entries.
+! The routine does not allocate it.
+! @endnote
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE GlobalData, ONLY: DFP
-! USE GlobalData, ONLY: I4B
-! USE LineInterpolationUtility, ONLY: EquidistancePoint_Line_
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-! REAL(DFP) :: y(1, 3)
-! INTEGER(I4B) :: nr, nc
+! - [test 2](|base|Line/examples/EquidistancePoint_Line_test_2.F90)
 !
-! CALL EquidistancePoint_Line_(order=2_I4B, ans=y, nrow=nr, ncol=nc)
-! CALL OK(nr == 1 .AND. nc == 3, "Active coordinate dimensions")
-! CALL OK(MAXVAL(ABS(y)) <= 1.0_DFP, "Nodes lie in reference domain")
-! END PROGRAM main
-!```
+! See also: [[LineInterpolationUtility:EquidistancePoint_Line1]]
 
 INTERFACE EquidistancePoint_Line_
   MODULE PURE SUBROUTINE EquidistancePoint_Line1_(order, xij, ans, tsize)
     INTEGER(I4B), INTENT(IN) :: order
-    !! order
+    !! interpolation order, the number of segments between the end points
     REAL(DFP), INTENT(IN) :: xij(2)
-    !! coorindates of point 1 and point 2
+    !! coordinates of the first and the second end point
     REAL(DFP), INTENT(INOUT) :: ans(:)
-    !! equidistance points
+    !! the points, the routine writes the first `tsize` entries
     INTEGER(I4B), INTENT(OUT) :: tsize
+    !! number of points written to `ans`, equal to `order + 1`
   END SUBROUTINE EquidistancePoint_Line1_
 END INTERFACE EquidistancePoint_Line_
 
@@ -1078,56 +735,48 @@ END INTERFACE EquidistancePoint_Line_
 
 !> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
-! summary: Generate line interpolation coordinates.
+! summary: Returns equally spaced points of a line in `xij` format.
 !
-! Default Line endpoints are -1 and +1; default Triangle vertices are (0,0),
-! (1,0), (0,1). Points are columns and vertices precede edge and interior
-! points. InterpolationPoint requires a layout; VEFC requests entity ordering.
-! Supply vertex coordinates xij to map to a different element.
+! This function returns `order + 1` equally spaced points on a line
+! segment. Each column of `ans` is one point.
+! The end points come first, then the interior points.
 !
-! Arguments:
-!   order : INTEGER(I4B), INTENT(IN). Polynomial degree, except quadrature
-! where it is requested exactness degree.
-!   xij : REAL(DFP), OPTIONAL, INTENT(IN)(:, :). Point columns; vertices or
-! interpolation nodes according to the interface.
+! 1. The first column is the first end point.
+! 2. The second column is the second end point.
+! 3. The remaining columns are the interior points. They run from the
+!    first end point towards the second.
 !
-! Returns:
-!   ans : REAL(DFP), ALLOCATABLE(:, :).
+! If `xij` is absent, the segment runs from -1 to 1 and `ans` has one row.
+! Otherwise `ans` has as many rows as `xij`.
 !
-! Formula:
-! $$x_j=a+j(b-a)/p$$
+! If `order` is 0, `ans` has one column. It is the midpoint of the segment.
+! The midpoint is 0 if `xij` is absent.
+!
+! @note
+! `xij` can have at most 3 rows.
+! @endnote
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE GlobalData, ONLY: DFP
-! USE GlobalData, ONLY: I4B
-! USE LineInterpolationUtility, ONLY: EquidistancePoint_Line
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-! REAL(DFP), ALLOCATABLE :: y(:, :)
+! - [test 1](|base|Line/examples/EquidistancePoint_Line_test_1.F90)
 !
-! y = EquidistancePoint_Line(order=2_I4B)
-! CALL OK(ALL(SHAPE(y) == [1, 3]), "Coordinate dimensions")
-! CALL OK(MAXVAL(ABS(y)) <= 1.0_DFP, "Nodes lie in reference domain")
-! END PROGRAM main
-!```
+! See also: [[LineInterpolationUtility:EquidistancePoint_Line2_]]
 
 INTERFACE EquidistancePoint_Line
   MODULE PURE FUNCTION EquidistancePoint_Line2(order, xij) &
     & RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
-    !! order
+    !! interpolation order, the number of segments between the end points
     REAL(DFP), OPTIONAL, INTENT(IN) :: xij(:, :)
-    !! coordinates of point 1 and point 2 in $x_{iJ}$ format
-    !! number of rows = nsd
-    !! number of cols = 2
+    !! coordinates of the two end points, one point per column.
+    !! The number of rows is the number of space dimensions.
+    !! The number of columns is 2.
+    !! The default is a single row with the values -1 and 1.
     REAL(DFP), ALLOCATABLE :: ans(:, :)
-    !! equidistance points in $x_{iJ}$ format
-    !! If xij is not present, then number of rows in ans
-    !! is 1. If `xij` is present then the number of rows in
-    !! ans is  same as xij.
+    !! the points, one point per column.
+    !! The number of rows is the number of rows of `xij`.
+    !! It is 1 if `xij` is absent.
+    !! The number of columns is `order + 1`.
   END FUNCTION EquidistancePoint_Line2
 END INTERFACE EquidistancePoint_Line
 
@@ -1137,61 +786,53 @@ END INTERFACE EquidistancePoint_Line
 
 !> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
-! summary: Generate line interpolation coordinates.
+! summary: Computes equally spaced points of a line into a matrix.
 !
-! Default Line endpoints are -1 and +1; default Triangle vertices are (0,0),
-! (1,0), (0,1). Points are columns and vertices precede edge and interior
-! points. InterpolationPoint requires a layout; VEFC requests entity ordering.
-! Supply vertex coordinates xij to map to a different element.
+! This subroutine writes `order + 1` equally spaced points of a line
+! segment into `ans`. Each column of `ans` is one point.
+! The end points come first, then the interior points.
 !
-! Arguments:
-!   order : INTEGER(I4B), INTENT(IN). Polynomial degree, except quadrature
-! where it is requested exactness degree.
-!   xij : REAL(DFP), OPTIONAL, INTENT(IN)(:, :). Point columns; vertices or
-! interpolation nodes according to the interface.
-!   ans : REAL(DFP), INTENT(INOUT)(:, :). Result buffer; allocate the full
-! active shape before the call.
-!   nrow : INTEGER(I4B), INTENT(OUT). Number of active output rows.
-!   ncol : INTEGER(I4B), INTENT(OUT). Number of active output columns.
+! 1. The first column is the first end point.
+! 2. The second column is the second end point.
+! 3. The remaining columns are the interior points. They run from the
+!    first end point towards the second.
 !
-! Returns:
-!   Updates ans(:, :), nrow, ncol.
+! If `xij` is absent, the segment runs from -1 to 1 and `nrow` is 1.
+! Otherwise `nrow` is the number of rows of `xij`.
 !
-! Formula:
-! $$x_j=a+j(b-a)/p$$
+! If `order` is 0, it writes one column. It is the midpoint of the segment.
+! The midpoint is 0 if `xij` is absent.
+!
+! @note
+! `ans` must have at least `nrow` rows and `order + 1` columns.
+! The routine does not allocate it.
+! @endnote
+!
+! @note
+! `xij` can have at most 3 rows.
+! @endnote
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE GlobalData, ONLY: DFP
-! USE GlobalData, ONLY: I4B
-! USE LineInterpolationUtility, ONLY: EquidistancePoint_Line_
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-! REAL(DFP) :: y(1, 3)
-! INTEGER(I4B) :: nr, nc
+! - [test 1](|base|Line/examples/EquidistancePoint_Line__test_1.F90)
 !
-! CALL EquidistancePoint_Line_(order=2_I4B, ans=y, nrow=nr, ncol=nc)
-! CALL OK(nr == 1 .AND. nc == 3, "Active coordinate dimensions")
-! CALL OK(MAXVAL(ABS(y)) <= 1.0_DFP, "Nodes lie in reference domain")
-! END PROGRAM main
-!```
+! See also: [[LineInterpolationUtility:EquidistancePoint_Line2]]
 
 INTERFACE EquidistancePoint_Line_
   MODULE PURE SUBROUTINE EquidistancePoint_Line2_(order, xij, ans, nrow, ncol)
     INTEGER(I4B), INTENT(IN) :: order
-    !! order
+    !! interpolation order, the number of segments between the end points
     REAL(DFP), OPTIONAL, INTENT(IN) :: xij(:, :)
-    !! coordinates of point 1 and point 2 in $x_{iJ}$ format
-    !! number of rows = nsd
-    !! number of cols = 2
+    !! coordinates of the two end points, one point per column.
+    !! The number of rows is the number of space dimensions.
+    !! The number of columns is 2.
+    !! The default is a single row with the values -1 and 1.
     REAL(DFP), INTENT(INOUT) :: ans(:, :)
-    !! equidistance points in $x_{iJ}$ format
-    !! If xij is not present, then number of rows in ans
-    !! is 1. If `xij` is present then the number of rows in
-    !! ans is  same as xij.
+    !! the points, one point per column
+    !! the routine writes the first `nrow` rows and `ncol` columns
     INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+    !! number of rows and columns written to `ans`
+    !! `ncol` is `order + 1`
   END SUBROUTINE EquidistancePoint_Line2_
 END INTERFACE EquidistancePoint_Line_
 
@@ -1201,73 +842,80 @@ END INTERFACE EquidistancePoint_Line_
 
 !> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
-! summary: Generate line interpolation coordinates.
+! summary: Returns interpolation points of a line in `xij` format.
 !
-! Default Line endpoints are -1 and +1; default Triangle vertices are (0,0),
-! (1,0), (0,1). Points are columns and vertices precede edge and interior
-! points. InterpolationPoint requires a layout; VEFC requests entity ordering.
-! Supply vertex coordinates xij to map to a different element.
+! This function returns `order + 1` interpolation points on a line segment.
+! Each column of `ans` is one point.
+! The argument `ipType` selects the family of points.
+! The argument `layout` selects the order of the points.
 !
-! Arguments:
-!   order : INTEGER(I4B), INTENT(IN). Polynomial degree, except quadrature
-! where it is requested exactness degree.
-!   ipType : INTEGER(I4B), INTENT(IN). Interpolation node family selector.
-!   layout : CHARACTER(*), INTENT(IN). Point ordering; VEFC puts vertices
-! before edge/interior points.
-!   xij : REAL(DFP), OPTIONAL, INTENT(IN)(:, :). Point columns; vertices or
-! interpolation nodes according to the interface.
-!   alpha : REAL(DFP), OPTIONAL, INTENT(IN). Jacobi weight parameter alpha.
-!   beta : REAL(DFP), OPTIONAL, INTENT(IN). Jacobi weight parameter beta.
-!   lambda : REAL(DFP), OPTIONAL, INTENT(IN). Ultraspherical family parameter.
+! The families are `Equidistance`, `GaussLegendre`, `GaussChebyshev`,
+! `GaussJacobi`, `GaussUltraspherical` and the Lobatto form of the last
+! four, such as `GaussLegendreLobatto`.
+! The Lobatto families include the end points. The Gauss families do not.
 !
-! Returns:
-!   ans : REAL(DFP), ALLOCATABLE(:, :).
+! The layout is `"VEFC"` or `"INCREASING"`.
+! The routine reads only the first letter.
 !
-! Formula:
-! $$x_j=a+j(b-a)/p$$
+! - `"VEFC"` puts the two end points first, then the interior points in
+!   increasing order. It applies to `Equidistance` and the Lobatto families.
+! - `"INCREASING"` sorts the points in increasing order.
+!   It applies to `Equidistance` and the Lobatto families.
+!
+! The Gauss families ignore `layout`.
+!
+! If `xij` is absent, the segment runs from -1 to 1 and `ans` has one row.
+! Otherwise `ans` has as many rows as `xij`.
+! If `order` is 0, `ans` is the midpoint of the segment.
+! In that case `ipType` and `layout` have no effect.
+!
+! @note
+! `GaussJacobi` and `GaussJacobiLobatto` need `alpha` and `beta`.
+! The ultraspherical families need `lambda`.
+! Debug builds check this. Release builds do not.
+! @endnote
+!
+! @warning
+! The Gauss and Lobatto families support at most 64 points.
+! @endwarning
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE GlobalData, ONLY: DFP
-! USE GlobalData, ONLY: I4B
-! USE GlobalData, ONLY: Equidistance
-! USE LineInterpolationUtility, ONLY: InterpolationPoint_Line
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-! REAL(DFP), ALLOCATABLE :: y(:, :)
+! - [test 1](|base|Line/examples/InterpolationPoint_Line_test_1.F90)
+! - [test 2](|base|Line/examples/InterpolationPoint_Line_test_2.F90) with
+!   a two-row `xij`
 !
-! y = InterpolationPoint_Line(order=2_I4B, ipType=Equidistance, layout="VEFC")
-! CALL OK(ALL(SHAPE(y) == [1, 3]), "Coordinate dimensions")
-! CALL OK(MAXVAL(ABS(y)) <= 1.0_DFP, "Nodes lie in reference domain")
-! END PROGRAM main
-!```
+! See also: [[LineInterpolationUtility:InterpolationPoint_Line1_]]
 
 INTERFACE InterpolationPoint_Line
   MODULE FUNCTION InterpolationPoint_Line1( &
     order, ipType, layout, xij, alpha, beta, lambda) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
-    !! Order of interpolation
+    !! order of interpolation, the number of points is `order + 1`
     INTEGER(I4B), INTENT(IN) :: ipType
-    !! Interpolation point type
-    !! Equidistance, GaussLegendre, GaussLegendreLobatto, GaussChebyshev,
-    !! GaussChebyshevLobatto, GaussJacobi, GaussJacobiLobatto
+    !! type of interpolation points
+    !! `Equidistance`, `GaussLegendre`, `GaussLegendreLobatto`,
+    !! `GaussChebyshev`, `GaussChebyshevLobatto`, `GaussJacobi`,
+    !! `GaussJacobiLobatto`, `GaussUltraspherical`,
+    !! `GaussUltrasphericalLobatto`
     CHARACTER(*), INTENT(IN) :: layout
-    !! "VEFC"
-    !! "INCREASING"
+    !! order of the points, `"VEFC"` or `"INCREASING"`
     REAL(DFP), OPTIONAL, INTENT(IN) :: xij(:, :)
-    !! domain of interpolation
+    !! coordinates of the two end points of the segment, one per column.
+    !! The number of rows is the number of space dimensions.
+    !! The number of columns is 2.
+    !! The default is a single row with the values -1 and 1.
     REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
-    !! Jacobi parameter
+    !! Jacobi parameter, needed by `GaussJacobi` and `GaussJacobiLobatto`
     REAL(DFP), OPTIONAL, INTENT(IN) :: beta
-    !! Jacobi parameter
+    !! Jacobi parameter, needed by `GaussJacobi` and `GaussJacobiLobatto`
     REAL(DFP), OPTIONAL, INTENT(IN) :: lambda
-    !! Ultraspherical parameter
+    !! ultraspherical parameter, needed by the ultraspherical families
     REAL(DFP), ALLOCATABLE :: ans(:, :)
-    !! interpolation points in xij format
-    !! size(ans,1) = 1
-    !! size(ans,2) = order+1
+    !! interpolation points, one point per column.
+    !! The number of rows is the number of rows of `xij`.
+    !! It is 1 if `xij` is absent.
+    !! The number of columns is `order + 1`.
   END FUNCTION InterpolationPoint_Line1
 END INTERFACE InterpolationPoint_Line
 
@@ -1277,77 +925,84 @@ END INTERFACE InterpolationPoint_Line
 
 !> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
-! summary: Generate line interpolation coordinates.
+! summary: Computes interpolation points of a line into a matrix.
 !
-! Default Line endpoints are -1 and +1; default Triangle vertices are (0,0),
-! (1,0), (0,1). Points are columns and vertices precede edge and interior
-! points. InterpolationPoint requires a layout; VEFC requests entity ordering.
-! Supply vertex coordinates xij to map to a different element.
+! This subroutine writes `order + 1` interpolation points of a line segment
+! into `ans`. Each column of `ans` is one point.
+! The argument `ipType` selects the family of points.
+! The argument `layout` selects the order of the points.
 !
-! Arguments:
-!   order : INTEGER(I4B), INTENT(IN). Polynomial degree, except quadrature
-! where it is requested exactness degree.
-!   ipType : INTEGER(I4B), INTENT(IN). Interpolation node family selector.
-!   ans : REAL(DFP), INTENT(INOUT)(:, :). Result buffer; allocate the full
-! active shape before the call.
-!   nrow : INTEGER(I4B), INTENT(OUT). Number of active output rows.
-!   ncol : INTEGER(I4B), INTENT(OUT). Number of active output columns.
-!   layout : CHARACTER(*), INTENT(IN). Point ordering; VEFC puts vertices
-! before edge/interior points.
-!   xij : REAL(DFP), OPTIONAL, INTENT(IN)(:, :). Point columns; vertices or
-! interpolation nodes according to the interface.
-!   alpha : REAL(DFP), OPTIONAL, INTENT(IN). Jacobi weight parameter alpha.
-!   beta : REAL(DFP), OPTIONAL, INTENT(IN). Jacobi weight parameter beta.
-!   lambda : REAL(DFP), OPTIONAL, INTENT(IN). Ultraspherical family parameter.
+! The families are `Equidistance`, `GaussLegendre`, `GaussChebyshev`,
+! `GaussJacobi`, `GaussUltraspherical` and the Lobatto form of the last
+! four, such as `GaussLegendreLobatto`.
+! The Lobatto families include the end points. The Gauss families do not.
 !
-! Returns:
-!   Updates ans(:, :), nrow, ncol.
+! The layout is `"VEFC"` or `"INCREASING"`.
+! The routine reads only the first letter.
 !
-! Formula:
-! $$x_j=a+j(b-a)/p$$
+! - `"VEFC"` puts the two end points first, then the interior points in
+!   increasing order. It applies to `Equidistance` and the Lobatto families.
+! - `"INCREASING"` sorts the points in increasing order.
+!   It applies to `Equidistance` and the Lobatto families.
+!
+! The Gauss families ignore `layout`.
+!
+! If `xij` is absent, the segment runs from -1 to 1 and `nrow` is 1.
+! Otherwise `nrow` is the number of rows of `xij`.
+! If `order` is 0, it writes the midpoint of the segment.
+! In that case `ipType` and `layout` have no effect.
+!
+! @note
+! `ans` must have at least `nrow` rows and `order + 1` columns.
+! The routine does not allocate it.
+! @endnote
+!
+! @note
+! `GaussJacobi` and `GaussJacobiLobatto` need `alpha` and `beta`.
+! The ultraspherical families need `lambda`.
+! Debug builds check this. Release builds do not.
+! @endnote
+!
+! @warning
+! The Gauss and Lobatto families support at most 64 points.
+! @endwarning
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE GlobalData, ONLY: DFP
-! USE GlobalData, ONLY: I4B
-! USE GlobalData, ONLY: Equidistance
-! USE LineInterpolationUtility, ONLY: InterpolationPoint_Line_
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-! REAL(DFP) :: y(1, 3)
-! INTEGER(I4B) :: nr, nc
+! - [test 1](|base|Line/examples/InterpolationPoint_Line__test_1.F90)
 !
-! CALL InterpolationPoint_Line_(order=2_I4B, ipType=Equidistance, &
-!   layout="VEFC", ans=y, nrow=nr, ncol=nc)
-! CALL OK(nr == 1 .AND. nc == 3, "Active coordinate dimensions")
-! CALL OK(MAXVAL(ABS(y)) <= 1.0_DFP, "Nodes lie in reference domain")
-! END PROGRAM main
-!```
+! See also: [[LineInterpolationUtility:InterpolationPoint_Line1]]
 
 INTERFACE InterpolationPoint_Line_
   MODULE SUBROUTINE InterpolationPoint_Line1_( &
     order, ipType, ans, nrow, ncol, layout, xij, alpha, beta, lambda)
     INTEGER(I4B), INTENT(IN) :: order
-    !! Order of interpolation
+    !! order of interpolation, the number of points is `order + 1`
     INTEGER(I4B), INTENT(IN) :: ipType
-    !! Interpolation point type
+    !! type of interpolation points
+    !! `Equidistance`, `GaussLegendre`, `GaussLegendreLobatto`,
+    !! `GaussChebyshev`, `GaussChebyshevLobatto`, `GaussJacobi`,
+    !! `GaussJacobiLobatto`, `GaussUltraspherical`,
+    !! `GaussUltrasphericalLobatto`
     REAL(DFP), INTENT(INOUT) :: ans(:, :)
-    !! interpolation points in xij format
-    !! size(ans,1) = 1, size(ans,2) = order+1
+    !! interpolation points, one point per column
+    !! the routine writes the first `nrow` rows and `ncol` columns
     INTEGER(I4B), INTENT(OUT) :: nrow, ncol
-    !! number of rows and columns written to ans
+    !! number of rows and columns written to `ans`
+    !! `ncol` is `order + 1`
     CHARACTER(*), INTENT(IN) :: layout
-    !! "VEFC" or "INCREASING"
+    !! order of the points, `"VEFC"` or `"INCREASING"`
     REAL(DFP), OPTIONAL, INTENT(IN) :: xij(:, :)
-    !! domain of interpolation
+    !! coordinates of the two end points of the segment, one per column.
+    !! The number of rows is the number of space dimensions.
+    !! The number of columns is 2.
+    !! The default is a single row with the values -1 and 1.
     REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
-    !! Jacobi parameter
+    !! Jacobi parameter, needed by `GaussJacobi` and `GaussJacobiLobatto`
     REAL(DFP), OPTIONAL, INTENT(IN) :: beta
-    !! Jacobi parameter
+    !! Jacobi parameter, needed by `GaussJacobi` and `GaussJacobiLobatto`
     REAL(DFP), OPTIONAL, INTENT(IN) :: lambda
-    !! Ultraspherical parameter
+    !! ultraspherical parameter, needed by the ultraspherical families
   END SUBROUTINE InterpolationPoint_Line1_
 END INTERFACE InterpolationPoint_Line_
 
@@ -1357,68 +1012,69 @@ END INTERFACE InterpolationPoint_Line_
 
 !> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
-! summary: Generate line interpolation coordinates.
+! summary: Returns interpolation points of a line as a vector.
 !
-! Default Line endpoints are -1 and +1; default Triangle vertices are (0,0),
-! (1,0), (0,1). Points are columns and vertices precede edge and interior
-! points. InterpolationPoint requires a layout; VEFC requests entity ordering.
-! Supply vertex coordinates xij to map to a different element.
+! This function returns `order + 1` interpolation points on a line segment
+! from `xij(1)` to `xij(2)`.
+! The argument `ipType` selects the family of points.
+! The argument `layout` selects the order of the points.
 !
-! Arguments:
-!   order : INTEGER(I4B), INTENT(IN). Polynomial degree, except quadrature
-! where it is requested exactness degree.
-!   ipType : INTEGER(I4B), INTENT(IN). Interpolation node family selector.
-!   xij : REAL(DFP), INTENT(IN)(2). Point columns; vertices or interpolation
-! nodes according to the interface.
-!   layout : CHARACTER(*), INTENT(IN). Point ordering; VEFC puts vertices
-! before edge/interior points.
-!   alpha : REAL(DFP), OPTIONAL, INTENT(IN). Jacobi weight parameter alpha.
-!   beta : REAL(DFP), OPTIONAL, INTENT(IN). Jacobi weight parameter beta.
-!   lambda : REAL(DFP), OPTIONAL, INTENT(IN). Ultraspherical family parameter.
+! The families are `Equidistance`, `GaussLegendre`, `GaussChebyshev`,
+! `GaussJacobi`, `GaussUltraspherical` and the Lobatto form of the last
+! four, such as `GaussLegendreLobatto`.
+! The Lobatto families include the end points. The Gauss families do not.
 !
-! Returns:
-!   ans : REAL(DFP), ALLOCATABLE(:).
+! The layout is `"VEFC"` or `"INCREASING"`.
+! The routine reads only the first two letters.
 !
-! Formula:
-! $$x_j=a+j(b-a)/p$$
+! - `"VEFC"` puts the two end points first, then the interior points in
+!   increasing order. It applies to `Equidistance` and the Lobatto families.
+! - `"INCREASING"` sorts the points in increasing order.
+!   It applies to `Equidistance` and the Lobatto families.
+!
+! The Gauss families ignore `layout`.
+! If `order` is 0, `ans` is the midpoint of the segment.
+! In that case `ipType` and `layout` have no effect.
+!
+! @note
+! `layout` must have at least two characters.
+! @endnote
+!
+! @note
+! `GaussJacobi` and `GaussJacobiLobatto` need `alpha` and `beta`.
+! The ultraspherical families need `lambda`.
+! Debug builds check this. Release builds do not.
+! @endnote
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE GlobalData, ONLY: DFP
-! USE GlobalData, ONLY: I4B
-! USE GlobalData, ONLY: Equidistance
-! USE LineInterpolationUtility, ONLY: InterpolationPoint_Line
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-! REAL(DFP), ALLOCATABLE :: y(:, :)
+! - [test 2](|base|Line/examples/InterpolationPoint_Line_test_2.F90)
 !
-! y = InterpolationPoint_Line(order=2_I4B, ipType=Equidistance, layout="VEFC")
-! CALL OK(ALL(SHAPE(y) == [1, 3]), "Coordinate dimensions")
-! CALL OK(MAXVAL(ABS(y)) <= 1.0_DFP, "Nodes lie in reference domain")
-! END PROGRAM main
-!```
+! See also: [[LineInterpolationUtility:InterpolationPoint_Line2_]]
 
 INTERFACE InterpolationPoint_Line
   MODULE FUNCTION InterpolationPoint_Line2( &
     order, ipType, xij, layout, alpha, beta, lambda) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
-    !! order of interpolation
+    !! order of interpolation, the number of points is `order + 1`
     INTEGER(I4B), INTENT(IN) :: ipType
-    !! Interpolation point type
+    !! type of interpolation points
+    !! `Equidistance`, `GaussLegendre`, `GaussLegendreLobatto`,
+    !! `GaussChebyshev`, `GaussChebyshevLobatto`, `GaussJacobi`,
+    !! `GaussJacobiLobatto`, `GaussUltraspherical`,
+    !! `GaussUltrasphericalLobatto`
     REAL(DFP), INTENT(IN) :: xij(2)
-    !! end points
+    !! coordinates of the first and the second end point
     CHARACTER(*), INTENT(IN) :: layout
-    !! "VEFC", "INCREASING", "DECREASING"
+    !! order of the points, `"VEFC"` or `"INCREASING"`
     REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
-    !! Jacobi parameter
+    !! Jacobi parameter, needed by `GaussJacobi` and `GaussJacobiLobatto`
     REAL(DFP), OPTIONAL, INTENT(IN) :: beta
-    !! Jacobi parameter
+    !! Jacobi parameter, needed by `GaussJacobi` and `GaussJacobiLobatto`
     REAL(DFP), OPTIONAL, INTENT(IN) :: lambda
-    !! Ultraspherical parameter
+    !! ultraspherical parameter, needed by the ultraspherical families
     REAL(DFP), ALLOCATABLE :: ans(:)
-    !! one dimensional interpolation point
+    !! interpolation points, size is `order + 1`
   END FUNCTION InterpolationPoint_Line2
 END INTERFACE InterpolationPoint_Line
 
@@ -1428,75 +1084,62 @@ END INTERFACE InterpolationPoint_Line
 
 !> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
-! summary: Generate line interpolation coordinates.
+! summary: Computes one dimensional interpolation points of a line.
 !
-! Default Line endpoints are -1 and +1; default Triangle vertices are (0,0),
-! (1,0), (0,1). Points are columns and vertices precede edge and interior
-! points. InterpolationPoint requires a layout; VEFC requests entity ordering.
-! Supply vertex coordinates xij to map to a different element.
+! Writes `order + 1` interpolation points into the vector `ans`.
+! The points lie on the segment between the two end points in `xij`.
 !
-! Arguments:
-!   order : INTEGER(I4B), INTENT(IN). Polynomial degree, except quadrature
-! where it is requested exactness degree.
-!   ipType : INTEGER(I4B), INTENT(IN). Interpolation node family selector.
-!   ans : REAL(DFP), INTENT(INOUT)(:). Result buffer; allocate the full active
-! shape before the call.
-!   tsize : INTEGER(I4B), INTENT(OUT). Number of active output entries.
-!   xij : REAL(DFP), INTENT(IN)(2). Point columns; vertices or interpolation
-! nodes according to the interface.
-!   layout : CHARACTER(*), INTENT(IN). Point ordering; VEFC puts vertices
-! before edge/interior points.
-!   alpha : REAL(DFP), OPTIONAL, INTENT(IN). Jacobi weight parameter alpha.
-!   beta : REAL(DFP), OPTIONAL, INTENT(IN). Jacobi weight parameter beta.
-!   lambda : REAL(DFP), OPTIONAL, INTENT(IN). Ultraspherical family parameter.
+! 1. If `order` is 0, it writes the midpoint of the segment.
+! 2. Otherwise it picks the points of the family given by `ipType`.
+! 3. It maps the points to the segment.
 !
-! Returns:
-!   Updates ans(:), tsize.
+! `layout` sets the order of the points.
+! The routine reads only its first two letters.
 !
-! Formula:
-! $$x_j=a+j(b-a)/p$$
+! - With `Equidistance`, `"INCREASING"` sorts the points in ascending
+!   order. Any other layout puts the two end points first.
+! - With a Lobatto family, `"VEFC"` puts the two end points first.
+!   Any other layout puts the end points first and last.
+! - With the other Gauss families, `layout` has no effect.
+!
+! @note
+! `ans` must hold at least `order + 1` entries.
+! The routine does not allocate it.
+! @endnote
+!
+! @warning
+! The Jacobi families require `alpha` and `beta`.
+! The ultraspherical families require `lambda`.
+! Only a debug build checks that they are present.
+! @endwarning
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE GlobalData, ONLY: DFP
-! USE GlobalData, ONLY: I4B
-! USE GlobalData, ONLY: Equidistance
-! USE LineInterpolationUtility, ONLY: InterpolationPoint_Line_
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-! REAL(DFP) :: y(1, 3)
-! INTEGER(I4B) :: nr, nc
+! - [test 2](|base|Line/examples/InterpolationPoint_Line_test_2.F90)
 !
-! CALL InterpolationPoint_Line_(order=2_I4B, ipType=Equidistance, &
-!   layout="VEFC", ans=y, nrow=nr, ncol=nc)
-! CALL OK(nr == 1 .AND. nc == 3, "Active coordinate dimensions")
-! CALL OK(MAXVAL(ABS(y)) <= 1.0_DFP, "Nodes lie in reference domain")
-! END PROGRAM main
-!```
+! See also: [[InterpolationPoint_Line2]]
 
 INTERFACE InterpolationPoint_Line_
   MODULE SUBROUTINE InterpolationPoint_Line2_( &
     order, ipType, ans, tsize, xij, layout, alpha, beta, lambda)
     INTEGER(I4B), INTENT(IN) :: order
-    !! order of interpolation
+    !! order of interpolation, the number of points is `order + 1`
     INTEGER(I4B), INTENT(IN) :: ipType
-    !! Interpolation point type, see TypeInterpolationOpt
+    !! interpolation point type, see `TypeInterpolationOpt`
     REAL(DFP), INTENT(INOUT) :: ans(:)
-    !! one dimensional interpolation point
+    !! points, the routine writes the first `tsize` entries
     INTEGER(I4B), INTENT(OUT) :: tsize
-    !! total size of ans
+    !! number of points written to `ans`, equal to `order + 1`
     REAL(DFP), INTENT(IN) :: xij(2)
-    !! end points
+    !! coordinates of the first and the second end point
     CHARACTER(*), INTENT(IN) :: layout
-    !! "VEFC", "INCREASING", "DECREASING"
+    !! point order: `"VEFC"`, `"INCREASING"` or `"DECREASING"`
     REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
-    !! Jacobi parameter
+    !! Jacobi parameter, needed for the Jacobi families
     REAL(DFP), OPTIONAL, INTENT(IN) :: beta
-    !! Jacobi parameter
+    !! Jacobi parameter, needed for the Jacobi families
     REAL(DFP), OPTIONAL, INTENT(IN) :: lambda
-    !! Ultraspherical parameter
+    !! ultraspherical parameter, needed for the ultraspherical families
   END SUBROUTINE InterpolationPoint_Line2_
 END INTERFACE InterpolationPoint_Line_
 
@@ -1506,65 +1149,37 @@ END INTERFACE InterpolationPoint_Line_
 
 !> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
-! summary: Construct coefficients of the nodal interpolation basis.
+! summary: Returns the coefficients of one Lagrange polynomial of a line.
 !
-! The i overload returns one coefficient column. The v/isVandermonde overload
-! takes a Vandermonde matrix; the v/ipiv overload takes its LU factors and
-! pivots. Columns are basis functions. The example uses a monomial basis and
-! verifies its interpolation identity.
+! Returns the coefficients of one Lagrange polynomial of a line.
+! The polynomial uses the monomial basis `1, x, x**2, ...`.
+! It is 1 at the `i`th point of `xij` and 0 at the other points.
 !
-! Arguments:
-!   order : INTEGER(I4B), INTENT(IN). Polynomial degree, except quadrature
-! where it is requested exactness degree.
-!   i : INTEGER(I4B), INTENT(IN). One based cardinal basis function index.
-!   xij : REAL(DFP), INTENT(IN)(:, :). Point columns; vertices or
-! interpolation nodes according to the interface.
+! @note
+! `order` must equal `SIZE(xij, 2) - 1`.
+! @endnote
 !
 ! Returns:
-!   ans : REAL(DFP)(order + 1).
+!   ans : REAL(DFP) - coefficients, size `order + 1`
 !
 ! Formula:
-! $$V C=I,\quad\ell_j(x)=\sum_k C_{kj}m_k(x)$$
+!   $$ V_{ik} = x_i^{k-1}, \quad V c = e_i $$
+!   $$ \ell_i(x) = \sum_k c_k x^{k-1} $$
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE GlobalData, ONLY: DFP
-! USE GlobalData, ONLY: I4B
-! USE GlobalData, ONLY: poly
-! USE LineInterpolationUtility, ONLY: LagrangeCoeff_Line
-! USE LineInterpolationUtility, ONLY: LagrangeDegree_Line
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-! REAL(DFP) :: nodes(1,2), c(2,2), v(2,2)
-! INTEGER(I4B), ALLOCATABLE :: degree(:,:)
-! INTEGER(I4B) :: i, j, nr, nc
+! - [test 2](|base|Line/examples/LagrangeCoeff_Line_test_2.F90)
 !
-! nodes(1,:) = [-1.0_DFP,1.0_DFP]
-! c = LagrangeCoeff_Line(order=1_I4B, xij=nodes, basisType=poly%Monomial)
-! degree = LagrangeDegree_Line(1_I4B)
-! DO j = 1, 2
-!   DO i = 1, 2
-!     v(i,j) = PRODUCT(nodes(:,i)**degree(j,:))
-!   END DO
-! END DO
-! v = MATMUL(v,c)
-! DO j = 1, 2
-!   v(j,j) = v(j,j)-1.0_DFP
-! END DO
-! CALL OK(MAXVAL(ABS(v)) < 1.0E-11_DFP, "Vandermonde times C is identity")
-! END PROGRAM main
-!```
+! See also: [[LagrangeCoeff_Line1_]]
 
 INTERFACE LagrangeCoeff_Line
   MODULE FUNCTION LagrangeCoeff_Line1(order, i, xij) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
-    !! order of polynomial, it should be SIZE(xij,2)-1
+    !! order of polynomial, it should be `SIZE(xij, 2) - 1`
     INTEGER(I4B), INTENT(IN) :: i
-    !! ith coefficients for lagrange polynomial
+    !! index of the Lagrange polynomial, from 1 to `order + 1`
     REAL(DFP), INTENT(IN) :: xij(:, :)
-    !! points in xij format, size(xij,2) = order+1
+    !! points in xij format, `SIZE(xij, 2) = order + 1`
     REAL(DFP) :: ans(order + 1)
     !! coefficients
   END FUNCTION LagrangeCoeff_Line1
@@ -1576,73 +1191,41 @@ END INTERFACE LagrangeCoeff_Line
 
 !> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
-! summary: Construct coefficients of the nodal interpolation basis.
+! summary: Computes the coefficients of one Lagrange polynomial of a line.
 !
-! The i overload returns one coefficient column. The v/isVandermonde overload
-! takes a Vandermonde matrix; the v/ipiv overload takes its LU factors and
-! pivots. Columns are basis functions. The example uses a monomial basis and
-! verifies its interpolation identity.
+! Computes the coefficients of one Lagrange polynomial of a line.
+! It writes them into the vector `ans`.
+! The polynomial uses the monomial basis `1, x, x**2, ...`.
+! It is 1 at the `i`th point of `xij` and 0 at the other points.
 !
-! Arguments:
-!   order : INTEGER(I4B), INTENT(IN). Polynomial degree, except quadrature
-! where it is requested exactness degree.
-!   i : INTEGER(I4B), INTENT(IN). One based cardinal basis function index.
-!   xij : REAL(DFP), INTENT(IN)(:, :). Point columns; vertices or
-! interpolation nodes according to the interface.
-!   ans : REAL(DFP), INTENT(INOUT)(:). Result buffer; allocate the full active
-! shape before the call.
-!   tsize : INTEGER(I4B), INTENT(OUT). Number of active output entries.
-!
-! Returns:
-!   Updates ans(:), tsize.
+! @note
+! `ans` must hold at least `order + 1` entries.
+! The routine does not allocate it.
+! `order` must equal `SIZE(xij, 2) - 1`.
+! @endnote
 !
 ! Formula:
-! $$V C=I,\quad\ell_j(x)=\sum_k C_{kj}m_k(x)$$
+!   $$ V_{ik} = x_i^{k-1}, \quad V c = e_i $$
+!   $$ \ell_i(x) = \sum_k c_k x^{k-1} $$
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE GlobalData, ONLY: DFP
-! USE GlobalData, ONLY: I4B
-! USE GlobalData, ONLY: poly
-! USE LineInterpolationUtility, ONLY: LagrangeCoeff_Line_
-! USE LineInterpolationUtility, ONLY: LagrangeDegree_Line
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-! REAL(DFP) :: nodes(1,2), c(2,2), v(2,2)
-! INTEGER(I4B), ALLOCATABLE :: degree(:,:)
-! INTEGER(I4B) :: i, j, nr, nc
+! - [test 2](|base|Line/examples/LagrangeCoeff_Line_test_2.F90)
 !
-! nodes(1,:) = [-1.0_DFP,1.0_DFP]
-! CALL LagrangeCoeff_Line_(order=1_I4B, xij=nodes, &
-!   basisType=poly%Monomial, ans=c, nrow=nr, ncol=nc)
-! degree = LagrangeDegree_Line(1_I4B)
-! DO j = 1, 2
-!   DO i = 1, 2
-!     v(i,j) = PRODUCT(nodes(:,i)**degree(j,:))
-!   END DO
-! END DO
-! v = MATMUL(v,c)
-! DO j = 1, 2
-!   v(j,j) = v(j,j)-1.0_DFP
-! END DO
-! CALL OK(MAXVAL(ABS(v)) < 1.0E-11_DFP, "Vandermonde times C is identity")
-! END PROGRAM main
-!```
+! See also: [[LagrangeCoeff_Line1]]
 
 INTERFACE LagrangeCoeff_Line_
   MODULE SUBROUTINE LagrangeCoeff_Line1_(order, i, xij, ans, tsize)
     INTEGER(I4B), INTENT(IN) :: order
-    !! order of polynomial, it should be SIZE(xij,2)-1
+    !! order of polynomial, it should be `SIZE(xij, 2) - 1`
     INTEGER(I4B), INTENT(IN) :: i
-    !! ith coefficients for lagrange polynomial
+    !! index of the Lagrange polynomial, from 1 to `order + 1`
     REAL(DFP), INTENT(IN) :: xij(:, :)
-    !! points in xij format, size(xij,2) = order+1
+    !! points in xij format, `SIZE(xij, 2) = order + 1`
     REAL(DFP), INTENT(INOUT) :: ans(:)
-    !! ans(order + 1)
-    !! coefficients
+    !! coefficients, the routine writes the first `tsize` entries
     INTEGER(I4B), INTENT(OUT) :: tsize
+    !! number of entries written to `ans`, equal to `order + 1`
   END SUBROUTINE LagrangeCoeff_Line1_
 END INTERFACE LagrangeCoeff_Line_
 
@@ -1652,68 +1235,44 @@ END INTERFACE LagrangeCoeff_Line_
 
 !> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
-! summary: Construct coefficients of the nodal interpolation basis.
+! summary: Returns one Lagrange polynomial of a line, from a Vandermonde
+!   matrix.
 !
-! The i overload returns one coefficient column. The v/isVandermonde overload
-! takes a Vandermonde matrix; the v/ipiv overload takes its LU factors and
-! pivots. Columns are basis functions. The example uses a monomial basis and
-! verifies its interpolation identity.
+! Returns the coefficients of one Lagrange polynomial of a line.
+! The polynomial uses the monomial basis `1, x, x**2, ...`.
+! It is 1 at the `i`th point and 0 at the other points.
 !
-! Arguments:
-!   order : INTEGER(I4B), INTENT(IN). Polynomial degree, except quadrature
-! where it is requested exactness degree.
-!   i : INTEGER(I4B), INTENT(IN). One based cardinal basis function index.
-!   v : REAL(DFP), INTENT(IN)(:, :). Vandermonde matrix or LU factorization,
-! according to overload.
-!   isVandermonde : LOGICAL(LGT), INTENT(IN). Marks v as a Vandermonde matrix.
+! The caller gives the Vandermonde matrix `v` of the points.
+! The routine does not change `v`.
+!
+! @note
+! The routine never reads `isVandermonde`.
+! The argument only tells this overload from the others.
+! @endnote
 !
 ! Returns:
-!   ans : REAL(DFP)(order + 1).
+!   ans : REAL(DFP) - coefficients, size `order + 1`
 !
 ! Formula:
-! $$V C=I,\quad\ell_j(x)=\sum_k C_{kj}m_k(x)$$
+!   $$ V_{ik} = x_i^{k-1}, \quad V c = e_i $$
+!   $$ \ell_i(x) = \sum_k c_k x^{k-1} $$
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE GlobalData, ONLY: DFP
-! USE GlobalData, ONLY: I4B
-! USE GlobalData, ONLY: poly
-! USE LineInterpolationUtility, ONLY: LagrangeCoeff_Line
-! USE LineInterpolationUtility, ONLY: LagrangeDegree_Line
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-! REAL(DFP) :: nodes(1,2), c(2,2), v(2,2)
-! INTEGER(I4B), ALLOCATABLE :: degree(:,:)
-! INTEGER(I4B) :: i, j, nr, nc
+! - [test 2](|base|Line/examples/LagrangeCoeff_Line_test_2.F90)
 !
-! nodes(1,:) = [-1.0_DFP,1.0_DFP]
-! c = LagrangeCoeff_Line(order=1_I4B, xij=nodes, basisType=poly%Monomial)
-! degree = LagrangeDegree_Line(1_I4B)
-! DO j = 1, 2
-!   DO i = 1, 2
-!     v(i,j) = PRODUCT(nodes(:,i)**degree(j,:))
-!   END DO
-! END DO
-! v = MATMUL(v,c)
-! DO j = 1, 2
-!   v(j,j) = v(j,j)-1.0_DFP
-! END DO
-! CALL OK(MAXVAL(ABS(v)) < 1.0E-11_DFP, "Vandermonde times C is identity")
-! END PROGRAM main
-!```
+! See also: [[LagrangeCoeff_Line2_]]
 
 INTERFACE LagrangeCoeff_Line
   MODULE FUNCTION LagrangeCoeff_Line2(order, i, v, isVandermonde) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
-    !! order of polynomial, it should be SIZE(v,2)-1
+    !! order of polynomial, it should be `SIZE(v, 2) - 1`
     INTEGER(I4B), INTENT(IN) :: i
-    !! coefficient for ith lagrange polynomial
+    !! index of the Lagrange polynomial, from 1 to `order + 1`
     REAL(DFP), INTENT(IN) :: v(:, :)
-    !! vandermonde matrix size should be (order+1,order+1)
+    !! Vandermonde matrix, size `(order + 1, order + 1)`
     LOGICAL(LGT), INTENT(IN) :: isVandermonde
-    !! This is just to resolve interface issue
+    !! not used, it only resolves the generic interface
     REAL(DFP) :: ans(order + 1)
     !! coefficients
   END FUNCTION LagrangeCoeff_Line2
@@ -1725,77 +1284,52 @@ END INTERFACE LagrangeCoeff_Line
 
 !> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
-! summary: Construct coefficients of the nodal interpolation basis.
+! summary: Computes one Lagrange polynomial of a line, from a Vandermonde
+!   matrix.
 !
-! The i overload returns one coefficient column. The v/isVandermonde overload
-! takes a Vandermonde matrix; the v/ipiv overload takes its LU factors and
-! pivots. Columns are basis functions. The example uses a monomial basis and
-! verifies its interpolation identity.
+! Computes the coefficients of one Lagrange polynomial of a line.
+! It writes them into the vector `ans`.
+! The polynomial uses the monomial basis `1, x, x**2, ...`.
+! It is 1 at the `i`th point and 0 at the other points.
 !
-! Arguments:
-!   order : INTEGER(I4B), INTENT(IN). Polynomial degree, except quadrature
-! where it is requested exactness degree.
-!   i : INTEGER(I4B), INTENT(IN). One based cardinal basis function index.
-!   v : REAL(DFP), INTENT(IN)(:, :). Vandermonde matrix or LU factorization,
-! according to overload.
-!   isVandermonde : LOGICAL(LGT), INTENT(IN). Marks v as a Vandermonde matrix.
-!   ans : REAL(DFP), INTENT(INOUT)(:). Result buffer; allocate the full active
-! shape before the call.
-!   tsize : INTEGER(I4B), INTENT(OUT). Number of active output entries.
+! The caller gives the Vandermonde matrix `v` of the points.
+! The routine does not change `v`.
 !
-! Returns:
-!   Updates ans(:), tsize.
+! @note
+! `ans` must hold at least `order + 1` entries.
+! The routine does not allocate it.
+! @endnote
+!
+! @note
+! The routine never reads `isVandermonde`.
+! The argument only tells this overload from the others.
+! @endnote
 !
 ! Formula:
-! $$V C=I,\quad\ell_j(x)=\sum_k C_{kj}m_k(x)$$
+!   $$ V_{ik} = x_i^{k-1}, \quad V c = e_i $$
+!   $$ \ell_i(x) = \sum_k c_k x^{k-1} $$
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE GlobalData, ONLY: DFP
-! USE GlobalData, ONLY: I4B
-! USE GlobalData, ONLY: poly
-! USE LineInterpolationUtility, ONLY: LagrangeCoeff_Line_
-! USE LineInterpolationUtility, ONLY: LagrangeDegree_Line
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-! REAL(DFP) :: nodes(1,2), c(2,2), v(2,2)
-! INTEGER(I4B), ALLOCATABLE :: degree(:,:)
-! INTEGER(I4B) :: i, j, nr, nc
+! - [test 2](|base|Line/examples/LagrangeCoeff_Line_test_2.F90)
 !
-! nodes(1,:) = [-1.0_DFP,1.0_DFP]
-! CALL LagrangeCoeff_Line_(order=1_I4B, xij=nodes, &
-!   basisType=poly%Monomial, ans=c, nrow=nr, ncol=nc)
-! degree = LagrangeDegree_Line(1_I4B)
-! DO j = 1, 2
-!   DO i = 1, 2
-!     v(i,j) = PRODUCT(nodes(:,i)**degree(j,:))
-!   END DO
-! END DO
-! v = MATMUL(v,c)
-! DO j = 1, 2
-!   v(j,j) = v(j,j)-1.0_DFP
-! END DO
-! CALL OK(MAXVAL(ABS(v)) < 1.0E-11_DFP, "Vandermonde times C is identity")
-! END PROGRAM main
-!```
+! See also: [[LagrangeCoeff_Line2]]
 
 INTERFACE LagrangeCoeff_Line_
   MODULE SUBROUTINE LagrangeCoeff_Line2_(order, i, v, isVandermonde, ans, &
                                          tsize)
     INTEGER(I4B), INTENT(IN) :: order
-    !! order of polynomial, it should be SIZE(v,2)-1
+    !! order of polynomial, it should be `SIZE(v, 2) - 1`
     INTEGER(I4B), INTENT(IN) :: i
-    !! coefficient for ith lagrange polynomial
+    !! index of the Lagrange polynomial, from 1 to `order + 1`
     REAL(DFP), INTENT(IN) :: v(:, :)
-    !! vandermonde matrix size should be (order+1,order+1)
+    !! Vandermonde matrix, size `(order + 1, order + 1)`
     LOGICAL(LGT), INTENT(IN) :: isVandermonde
-    !! This is just to resolve interface issue
+    !! not used, it only resolves the generic interface
     REAL(DFP), INTENT(INOUT) :: ans(:)
-    !! ans(order + 1)
-    !! coefficients
+    !! coefficients, the routine writes the first `tsize` entries
     INTEGER(I4B), INTENT(OUT) :: tsize
+    !! number of entries written to `ans`, equal to `order + 1`
   END SUBROUTINE LagrangeCoeff_Line2_
 END INTERFACE LagrangeCoeff_Line_
 
@@ -1805,69 +1339,39 @@ END INTERFACE LagrangeCoeff_Line_
 
 !> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
-! summary: Construct coefficients of the nodal interpolation basis.
+! summary: Returns one Lagrange polynomial of a line from LU factors.
 !
-! The i overload returns one coefficient column. The v/isVandermonde overload
-! takes a Vandermonde matrix; the v/ipiv overload takes its LU factors and
-! pivots. Columns are basis functions. The example uses a monomial basis and
-! verifies its interpolation identity.
+! Returns the coefficients of one Lagrange polynomial of a line.
+! The polynomial uses the monomial basis `1, x, x**2, ...`.
+! It is 1 at the `i`th point and 0 at the other points.
 !
-! Arguments:
-!   order : INTEGER(I4B), INTENT(IN). Polynomial degree, except quadrature
-! where it is requested exactness degree.
-!   i : INTEGER(I4B), INTENT(IN). One based cardinal basis function index.
-!   v : REAL(DFP), INTENT(INOUT)(:, :). Vandermonde matrix or LU
-! factorization, according to overload.
-!   ipiv : INTEGER(I4B), INTENT(IN)(:). Pivot indices for the supplied LU
-! factorization.
+! The caller gives the LU factors of the Vandermonde matrix, with the
+! pivots, as returned by `GetLU`.
+! This saves the factorization when you need many polynomials.
 !
 ! Returns:
-!   ans : REAL(DFP)(order + 1).
+!   ans : REAL(DFP) - coefficients, size `order + 1`
 !
 ! Formula:
-! $$V C=I,\quad\ell_j(x)=\sum_k C_{kj}m_k(x)$$
+!   $$ V_{ik} = x_i^{k-1}, \quad V c = e_i $$
+!   $$ \ell_i(x) = \sum_k c_k x^{k-1} $$
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE GlobalData, ONLY: DFP
-! USE GlobalData, ONLY: I4B
-! USE GlobalData, ONLY: poly
-! USE LineInterpolationUtility, ONLY: LagrangeCoeff_Line
-! USE LineInterpolationUtility, ONLY: LagrangeDegree_Line
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-! REAL(DFP) :: nodes(1,2), c(2,2), v(2,2)
-! INTEGER(I4B), ALLOCATABLE :: degree(:,:)
-! INTEGER(I4B) :: i, j, nr, nc
+! - [test 2](|base|Line/examples/LagrangeCoeff_Line_test_2.F90)
 !
-! nodes(1,:) = [-1.0_DFP,1.0_DFP]
-! c = LagrangeCoeff_Line(order=1_I4B, xij=nodes, basisType=poly%Monomial)
-! degree = LagrangeDegree_Line(1_I4B)
-! DO j = 1, 2
-!   DO i = 1, 2
-!     v(i,j) = PRODUCT(nodes(:,i)**degree(j,:))
-!   END DO
-! END DO
-! v = MATMUL(v,c)
-! DO j = 1, 2
-!   v(j,j) = v(j,j)-1.0_DFP
-! END DO
-! CALL OK(MAXVAL(ABS(v)) < 1.0E-11_DFP, "Vandermonde times C is identity")
-! END PROGRAM main
-!```
+! See also: [[LagrangeCoeff_Line3_]]
 
 INTERFACE LagrangeCoeff_Line
   MODULE FUNCTION LagrangeCoeff_Line3(order, i, v, ipiv) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
-    !! order of polynomial, it should be SIZE(x,2)-1
+    !! order of polynomial, it should be `SIZE(v, 2) - 1`
     INTEGER(I4B), INTENT(IN) :: i
-    !! ith coefficients for lagrange polynomial
+    !! index of the Lagrange polynomial, from 1 to `order + 1`
     REAL(DFP), INTENT(INOUT) :: v(:, :)
-    !! LU decomposition of vandermonde matrix
+    !! LU factors of the Vandermonde matrix, size `(order + 1, order + 1)`
     INTEGER(I4B), INTENT(IN) :: ipiv(:)
-    !! inverse pivoting mapping, compes from LU decomposition
+    !! pivot indices of the factorization, as returned by `GetLU`
     REAL(DFP) :: ans(order + 1)
     !! coefficients
   END FUNCTION LagrangeCoeff_Line3
@@ -1879,77 +1383,46 @@ END INTERFACE LagrangeCoeff_Line
 
 !> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
-! summary: Construct coefficients of the nodal interpolation basis.
+! summary: Computes one Lagrange polynomial of a line from LU factors.
 !
-! The i overload returns one coefficient column. The v/isVandermonde overload
-! takes a Vandermonde matrix; the v/ipiv overload takes its LU factors and
-! pivots. Columns are basis functions. The example uses a monomial basis and
-! verifies its interpolation identity.
+! Computes the coefficients of one Lagrange polynomial of a line.
+! It writes them into the vector `ans`.
+! The polynomial uses the monomial basis `1, x, x**2, ...`.
+! It is 1 at the `i`th point and 0 at the other points.
 !
-! Arguments:
-!   order : INTEGER(I4B), INTENT(IN). Polynomial degree, except quadrature
-! where it is requested exactness degree.
-!   i : INTEGER(I4B), INTENT(IN). One based cardinal basis function index.
-!   v : REAL(DFP), INTENT(INOUT)(:, :). Vandermonde matrix or LU
-! factorization, according to overload.
-!   ipiv : INTEGER(I4B), INTENT(IN)(:). Pivot indices for the supplied LU
-! factorization.
-!   ans : REAL(DFP), INTENT(INOUT)(:). Result buffer; allocate the full active
-! shape before the call.
-!   tsize : INTEGER(I4B), INTENT(OUT). Number of active output entries.
+! The caller gives the LU factors of the Vandermonde matrix, with the
+! pivots, as returned by `GetLU`.
+! This saves the factorization when you need many polynomials.
 !
-! Returns:
-!   Updates v(:, :), ans(:), tsize.
+! @note
+! `ans` must hold at least `order + 1` entries.
+! The routine does not allocate it.
+! @endnote
 !
 ! Formula:
-! $$V C=I,\quad\ell_j(x)=\sum_k C_{kj}m_k(x)$$
+!   $$ V_{ik} = x_i^{k-1}, \quad V c = e_i $$
+!   $$ \ell_i(x) = \sum_k c_k x^{k-1} $$
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE GlobalData, ONLY: DFP
-! USE GlobalData, ONLY: I4B
-! USE GlobalData, ONLY: poly
-! USE LineInterpolationUtility, ONLY: LagrangeCoeff_Line_
-! USE LineInterpolationUtility, ONLY: LagrangeDegree_Line
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-! REAL(DFP) :: nodes(1,2), c(2,2), v(2,2)
-! INTEGER(I4B), ALLOCATABLE :: degree(:,:)
-! INTEGER(I4B) :: i, j, nr, nc
+! - [test 2](|base|Line/examples/LagrangeCoeff_Line_test_2.F90)
 !
-! nodes(1,:) = [-1.0_DFP,1.0_DFP]
-! CALL LagrangeCoeff_Line_(order=1_I4B, xij=nodes, &
-!   basisType=poly%Monomial, ans=c, nrow=nr, ncol=nc)
-! degree = LagrangeDegree_Line(1_I4B)
-! DO j = 1, 2
-!   DO i = 1, 2
-!     v(i,j) = PRODUCT(nodes(:,i)**degree(j,:))
-!   END DO
-! END DO
-! v = MATMUL(v,c)
-! DO j = 1, 2
-!   v(j,j) = v(j,j)-1.0_DFP
-! END DO
-! CALL OK(MAXVAL(ABS(v)) < 1.0E-11_DFP, "Vandermonde times C is identity")
-! END PROGRAM main
-!```
+! See also: [[LagrangeCoeff_Line3]]
 
 INTERFACE LagrangeCoeff_Line_
   MODULE SUBROUTINE LagrangeCoeff_Line3_(order, i, v, ipiv, ans, tsize)
     INTEGER(I4B), INTENT(IN) :: order
-    !! order of polynomial, it should be SIZE(x,2)-1
+    !! order of polynomial, it should be `SIZE(v, 2) - 1`
     INTEGER(I4B), INTENT(IN) :: i
-    !! ith coefficients for lagrange polynomial
+    !! index of the Lagrange polynomial, from 1 to `order + 1`
     REAL(DFP), INTENT(INOUT) :: v(:, :)
-    !! LU decomposition of vandermonde matrix
+    !! LU factors of the Vandermonde matrix, size `(order + 1, order + 1)`
     INTEGER(I4B), INTENT(IN) :: ipiv(:)
-    !! inverse pivoting mapping, compes from LU decomposition
+    !! pivot indices of the factorization, as returned by `GetLU`
     REAL(DFP), INTENT(INOUT) :: ans(:)
-    !! ans(order + 1)
-    !! coefficients
+    !! coefficients, the routine writes the first `tsize` entries
     INTEGER(I4B), INTENT(OUT) :: tsize
+    !! number of entries written to `ans`, equal to `order + 1`
   END SUBROUTINE LagrangeCoeff_Line3_
 END INTERFACE LagrangeCoeff_Line_
 
@@ -1959,66 +1432,41 @@ END INTERFACE LagrangeCoeff_Line_
 
 !> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
-! summary: Construct coefficients of the nodal interpolation basis.
+! summary: Returns the coefficients of all Lagrange polynomials of a line.
 !
-! The i overload returns one coefficient column. The v/isVandermonde overload
-! takes a Vandermonde matrix; the v/ipiv overload takes its LU factors and
-! pivots. Columns are basis functions. The example uses a monomial basis and
-! verifies its interpolation identity.
+! Returns the coefficients of all Lagrange polynomials of a line.
+! The polynomials use the monomial basis `1, x, x**2, ...`.
+! Column `j` of `ans` holds the coefficients of the `j`th polynomial.
+! This polynomial is 1 at the `j`th point of `xij` and 0 at the others.
 !
-! Arguments:
-!   order : INTEGER(I4B), INTENT(IN). Polynomial degree, except quadrature
-! where it is requested exactness degree.
-!   xij : REAL(DFP), INTENT(IN)(:, :). Point columns; vertices or
-! interpolation nodes according to the interface.
+! The result is the inverse of the Vandermonde matrix of the points.
+!
+! @note
+! `order` must equal `SIZE(xij, 2) - 1`.
+! @endnote
 !
 ! Returns:
-!   ans : REAL(DFP)(order + 1, order + 1).
+!   ans : REAL(DFP) - square matrix of size `order + 1`
 !
 ! Formula:
-! $$V C=I,\quad\ell_j(x)=\sum_k C_{kj}m_k(x)$$
+!   $$ V_{ik} = x_i^{k-1}, \quad V C = I $$
+!   $$ \ell_j(x) = \sum_k C_{kj} x^{k-1} $$
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE GlobalData, ONLY: DFP
-! USE GlobalData, ONLY: I4B
-! USE GlobalData, ONLY: poly
-! USE LineInterpolationUtility, ONLY: LagrangeCoeff_Line
-! USE LineInterpolationUtility, ONLY: LagrangeDegree_Line
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-! REAL(DFP) :: nodes(1,2), c(2,2), v(2,2)
-! INTEGER(I4B), ALLOCATABLE :: degree(:,:)
-! INTEGER(I4B) :: i, j, nr, nc
+! - [test 2](|base|Line/examples/LagrangeCoeff_Line_test_2.F90)
 !
-! nodes(1,:) = [-1.0_DFP,1.0_DFP]
-! c = LagrangeCoeff_Line(order=1_I4B, xij=nodes, basisType=poly%Monomial)
-! degree = LagrangeDegree_Line(1_I4B)
-! DO j = 1, 2
-!   DO i = 1, 2
-!     v(i,j) = PRODUCT(nodes(:,i)**degree(j,:))
-!   END DO
-! END DO
-! v = MATMUL(v,c)
-! DO j = 1, 2
-!   v(j,j) = v(j,j)-1.0_DFP
-! END DO
-! CALL OK(MAXVAL(ABS(v)) < 1.0E-11_DFP, "Vandermonde times C is identity")
-! END PROGRAM main
-!```
+! See also: [[LagrangeCoeff_Line4_]], [[LagrangeCoeff_Line5]]
 
 INTERFACE LagrangeCoeff_Line
   MODULE FUNCTION LagrangeCoeff_Line4(order, xij) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
-    !! order of polynomial, it should be SIZE(xij,2)-1
+    !! order of polynomial, it should be `SIZE(xij, 2) - 1`
     REAL(DFP), INTENT(IN) :: xij(:, :)
-    !! points in xij format, size(xij,2) = order+1
+    !! points in xij format, `SIZE(xij, 2) = order + 1`
     REAL(DFP) :: ans(order + 1, order + 1)
-    !! coefficients
-    !! jth column of ans corresponds to the coeff of lagrange polynomial
-    !! at the jth point
+    !! coefficients, column `j` belongs to the Lagrange polynomial
+    !! of the `j`th point
   END FUNCTION LagrangeCoeff_Line4
 END INTERFACE LagrangeCoeff_Line
 
@@ -2028,73 +1476,43 @@ END INTERFACE LagrangeCoeff_Line
 
 !> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
-! summary: Construct coefficients of the nodal interpolation basis.
+! summary: Computes the coefficients of all Lagrange polynomials of a line.
 !
-! The i overload returns one coefficient column. The v/isVandermonde overload
-! takes a Vandermonde matrix; the v/ipiv overload takes its LU factors and
-! pivots. Columns are basis functions. The example uses a monomial basis and
-! verifies its interpolation identity.
+! Computes the coefficients of all Lagrange polynomials of a line.
+! It writes them into the matrix `ans`.
+! The polynomials use the monomial basis `1, x, x**2, ...`.
+! Column `j` of `ans` holds the coefficients of the `j`th polynomial.
+! This polynomial is 1 at the `j`th point of `xij` and 0 at the others.
 !
-! Arguments:
-!   order : INTEGER(I4B), INTENT(IN). Polynomial degree, except quadrature
-! where it is requested exactness degree.
-!   xij : REAL(DFP), INTENT(IN)(:, :). Point columns; vertices or
-! interpolation nodes according to the interface.
-!   ans : REAL(DFP), INTENT(INOUT)(:, :). Result buffer; allocate the full
-! active shape before the call.
-!   nrow : INTEGER(I4B), INTENT(OUT). Number of active output rows.
-!   ncol : INTEGER(I4B), INTENT(OUT). Number of active output columns.
+! The result is the inverse of the Vandermonde matrix of the points.
 !
-! Returns:
-!   Updates ans(:, :), nrow, ncol.
+! @note
+! `ans` must hold at least `order + 1` rows and `order + 1` columns.
+! The routine does not allocate it.
+! `order` must equal `SIZE(xij, 2) - 1`.
+! @endnote
 !
 ! Formula:
-! $$V C=I,\quad\ell_j(x)=\sum_k C_{kj}m_k(x)$$
+!   $$ V_{ik} = x_i^{k-1}, \quad V C = I $$
+!   $$ \ell_j(x) = \sum_k C_{kj} x^{k-1} $$
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE GlobalData, ONLY: DFP
-! USE GlobalData, ONLY: I4B
-! USE GlobalData, ONLY: poly
-! USE LineInterpolationUtility, ONLY: LagrangeCoeff_Line_
-! USE LineInterpolationUtility, ONLY: LagrangeDegree_Line
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-! REAL(DFP) :: nodes(1,2), c(2,2), v(2,2)
-! INTEGER(I4B), ALLOCATABLE :: degree(:,:)
-! INTEGER(I4B) :: i, j, nr, nc
+! - [test 2](|base|Line/examples/LagrangeCoeff_Line_test_2.F90)
 !
-! nodes(1,:) = [-1.0_DFP,1.0_DFP]
-! CALL LagrangeCoeff_Line_(order=1_I4B, xij=nodes, &
-!   basisType=poly%Monomial, ans=c, nrow=nr, ncol=nc)
-! degree = LagrangeDegree_Line(1_I4B)
-! DO j = 1, 2
-!   DO i = 1, 2
-!     v(i,j) = PRODUCT(nodes(:,i)**degree(j,:))
-!   END DO
-! END DO
-! v = MATMUL(v,c)
-! DO j = 1, 2
-!   v(j,j) = v(j,j)-1.0_DFP
-! END DO
-! CALL OK(MAXVAL(ABS(v)) < 1.0E-11_DFP, "Vandermonde times C is identity")
-! END PROGRAM main
-!```
+! See also: [[LagrangeCoeff_Line4]]
 
 INTERFACE LagrangeCoeff_Line_
   MODULE SUBROUTINE LagrangeCoeff_Line4_(order, xij, ans, nrow, ncol)
     INTEGER(I4B), INTENT(IN) :: order
-    !! order of polynomial, it should be SIZE(xij,2)-1
+    !! order of polynomial, it should be `SIZE(xij, 2) - 1`
     REAL(DFP), INTENT(IN) :: xij(:, :)
-    !! points in xij format, size(xij,2) = order+1
+    !! points in xij format, `SIZE(xij, 2) = order + 1`
     REAL(DFP), INTENT(INOUT) :: ans(:, :)
-    !! ans(order + 1, order + 1)
-    !! coefficients
-    !! jth column of ans corresponds to the coeff of lagrange polynomial
-    !! at the jth point
+    !! coefficients, the routine writes `ans(1:nrow, 1:ncol)`
+    !! column `j` belongs to the Lagrange polynomial of the `j`th point
     INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+    !! number of rows and columns written to `ans`, both `order + 1`
   END SUBROUTINE LagrangeCoeff_Line4_
 END INTERFACE LagrangeCoeff_Line_
 
@@ -2104,80 +1522,57 @@ END INTERFACE LagrangeCoeff_Line_
 
 !> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
-! summary: Construct coefficients of the nodal interpolation basis.
+! summary: Returns the Lagrange coefficients of a line in a chosen basis.
 !
-! The i overload returns one coefficient column. The v/isVandermonde overload
-! takes a Vandermonde matrix; the v/ipiv overload takes its LU factors and
-! pivots. Columns are basis functions. The example uses a monomial basis and
-! verifies its interpolation identity.
+! Returns the coefficients of all Lagrange polynomials of a line.
+! The polynomials use the basis chosen by `basisType`.
+! Column `j` of `ans` holds the coefficients of the `j`th polynomial.
+! This polynomial is 1 at the `j`th point of `xij` and 0 at the others.
 !
-! Arguments:
-!   order : INTEGER(I4B), INTENT(IN). Polynomial degree, except quadrature
-! where it is requested exactness degree.
-!   xij : REAL(DFP), INTENT(IN)(:, :). Point columns; vertices or
-! interpolation nodes according to the interface.
-!   basisType : INTEGER(I4B), INTENT(IN). Polynomial family selector, for
-! example poly%Monomial.
-!   alpha : REAL(DFP), OPTIONAL, INTENT(IN). Jacobi weight parameter alpha.
-!   beta : REAL(DFP), OPTIONAL, INTENT(IN). Jacobi weight parameter beta.
-!   lambda : REAL(DFP), OPTIONAL, INTENT(IN). Ultraspherical family parameter.
+! If `basisType` is `poly%Monomial`, the basis is `1, x, x**2, ...`.
+! Then the result equals that of [[LagrangeCoeff_Line4]].
+!
+! Any other `basisType` selects an orthogonal polynomial family.
+! The result is the inverse of the matrix of basis values at the points.
+! `alpha` and `beta` are the Jacobi parameters.
+! `lambda` is the ultraspherical parameter.
+!
+! @note
+! `order` must equal `SIZE(xij, 2) - 1`.
+! The orthogonal families use only the first row of `xij`.
+! @endnote
 !
 ! Returns:
-!   ans : REAL(DFP)(SIZE(xij, 2), SIZE(xij, 2)).
+!   ans : REAL(DFP) - square matrix of size `SIZE(xij, 2)`
 !
 ! Formula:
-! $$V C=I,\quad\ell_j(x)=\sum_k C_{kj}m_k(x)$$
+!   $$ V_{ik} = \phi_k(x_i), \quad V C = I $$
+!   $$ \ell_j(x) = \sum_k C_{kj} \phi_k(x) $$
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE GlobalData, ONLY: DFP
-! USE GlobalData, ONLY: I4B
-! USE GlobalData, ONLY: poly
-! USE LineInterpolationUtility, ONLY: LagrangeCoeff_Line
-! USE LineInterpolationUtility, ONLY: LagrangeDegree_Line
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-! REAL(DFP) :: nodes(1,2), c(2,2), v(2,2)
-! INTEGER(I4B), ALLOCATABLE :: degree(:,:)
-! INTEGER(I4B) :: i, j, nr, nc
+! - [test 1](|base|Line/examples/LagrangeCoeff_Line_test_1.F90)
 !
-! nodes(1,:) = [-1.0_DFP,1.0_DFP]
-! c = LagrangeCoeff_Line(order=1_I4B, xij=nodes, basisType=poly%Monomial)
-! degree = LagrangeDegree_Line(1_I4B)
-! DO j = 1, 2
-!   DO i = 1, 2
-!     v(i,j) = PRODUCT(nodes(:,i)**degree(j,:))
-!   END DO
-! END DO
-! v = MATMUL(v,c)
-! DO j = 1, 2
-!   v(j,j) = v(j,j)-1.0_DFP
-! END DO
-! CALL OK(MAXVAL(ABS(v)) < 1.0E-11_DFP, "Vandermonde times C is identity")
-! END PROGRAM main
-!```
+! See also: [[LagrangeCoeff_Line4]], [[LagrangeCoeff_Line5_]]
 
 INTERFACE LagrangeCoeff_Line
   MODULE FUNCTION LagrangeCoeff_Line5(order, xij, basisType, alpha, &
                                       beta, lambda) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
-    !! order of polynomial, it should be SIZE(xij,2)-1
+    !! order of polynomial, it should be `SIZE(xij, 2) - 1`
     REAL(DFP), INTENT(IN) :: xij(:, :)
-    !! points in xij format, size(xij,2) = order+1
+    !! points in xij format, `SIZE(xij, 2) = order + 1`
     INTEGER(I4B), INTENT(IN) :: basisType
-    !! Monomial, Jacobi, Legendre, Chebyshev, Lobatto, UnscaledLobatto
+    !! polynomial family, for example `poly%Monomial`, `poly%Legendre`
     REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
-    !! Jacobi polynomial parameter
+    !! Jacobi parameter, needed for the Jacobi family
     REAL(DFP), OPTIONAL, INTENT(IN) :: beta
-    !! Jacobi polynomial parameter
+    !! Jacobi parameter, needed for the Jacobi family
     REAL(DFP), OPTIONAL, INTENT(IN) :: lambda
-    !! Ultraspherical parameter
+    !! ultraspherical parameter, needed for the ultraspherical family
     REAL(DFP) :: ans(SIZE(xij, 2), SIZE(xij, 2))
-    !! coefficients
-    !! jth column of ans corresponds to the coeff of lagrange polynomial
-    !! at the jth point
+    !! coefficients, column `j` belongs to the Lagrange polynomial
+    !! of the `j`th point
   END FUNCTION LagrangeCoeff_Line5
 END INTERFACE LagrangeCoeff_Line
 
@@ -2187,87 +1582,59 @@ END INTERFACE LagrangeCoeff_Line
 
 !> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
-! summary: Construct coefficients of the nodal interpolation basis.
+! summary: Computes the Lagrange coefficients of a line in a chosen basis.
 !
-! The i overload returns one coefficient column. The v/isVandermonde overload
-! takes a Vandermonde matrix; the v/ipiv overload takes its LU factors and
-! pivots. Columns are basis functions. The example uses a monomial basis and
-! verifies its interpolation identity.
+! Computes the coefficients of all Lagrange polynomials of a line.
+! It writes them into the matrix `ans`.
+! The polynomials use the basis chosen by `basisType`.
+! Column `j` of `ans` holds the coefficients of the `j`th polynomial.
+! This polynomial is 1 at the `j`th point of `xij` and 0 at the others.
 !
-! Arguments:
-!   order : INTEGER(I4B), INTENT(IN). Polynomial degree, except quadrature
-! where it is requested exactness degree.
-!   xij : REAL(DFP), INTENT(IN)(:, :). Point columns; vertices or
-! interpolation nodes according to the interface.
-!   basisType : INTEGER(I4B), INTENT(IN). Polynomial family selector, for
-! example poly%Monomial.
-!   alpha : REAL(DFP), OPTIONAL, INTENT(IN). Jacobi weight parameter alpha.
-!   beta : REAL(DFP), OPTIONAL, INTENT(IN). Jacobi weight parameter beta.
-!   lambda : REAL(DFP), OPTIONAL, INTENT(IN). Ultraspherical family parameter.
-!   ans : REAL(DFP), INTENT(INOUT)(:, :). Result buffer; allocate the full
-! active shape before the call.
-!   nrow : INTEGER(I4B), INTENT(OUT). Number of active output rows.
-!   ncol : INTEGER(I4B), INTENT(OUT). Number of active output columns.
+! If `basisType` is `poly%Monomial`, the basis is `1, x, x**2, ...`.
+! Then the result equals that of [[LagrangeCoeff_Line4_]].
 !
-! Returns:
-!   Updates ans(:, :), nrow, ncol.
+! Any other `basisType` selects an orthogonal polynomial family.
+! The result is the inverse of the matrix of basis values at the points.
+! `alpha` and `beta` are the Jacobi parameters.
+! `lambda` is the ultraspherical parameter.
+!
+! @note
+! `ans` must hold at least `order + 1` rows and `order + 1` columns.
+! The routine does not allocate it.
+! `order` must equal `SIZE(xij, 2) - 1`.
+! The orthogonal families use only the first row of `xij`.
+! @endnote
 !
 ! Formula:
-! $$V C=I,\quad\ell_j(x)=\sum_k C_{kj}m_k(x)$$
+!   $$ V_{ik} = \phi_k(x_i), \quad V C = I $$
+!   $$ \ell_j(x) = \sum_k C_{kj} \phi_k(x) $$
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE GlobalData, ONLY: DFP
-! USE GlobalData, ONLY: I4B
-! USE GlobalData, ONLY: poly
-! USE LineInterpolationUtility, ONLY: LagrangeCoeff_Line_
-! USE LineInterpolationUtility, ONLY: LagrangeDegree_Line
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-! REAL(DFP) :: nodes(1,2), c(2,2), v(2,2)
-! INTEGER(I4B), ALLOCATABLE :: degree(:,:)
-! INTEGER(I4B) :: i, j, nr, nc
+! - [test 1](|base|Line/examples/LagrangeCoeff_Line__test_1.F90)
 !
-! nodes(1,:) = [-1.0_DFP,1.0_DFP]
-! CALL LagrangeCoeff_Line_(order=1_I4B, xij=nodes, &
-!   basisType=poly%Monomial, ans=c, nrow=nr, ncol=nc)
-! degree = LagrangeDegree_Line(1_I4B)
-! DO j = 1, 2
-!   DO i = 1, 2
-!     v(i,j) = PRODUCT(nodes(:,i)**degree(j,:))
-!   END DO
-! END DO
-! v = MATMUL(v,c)
-! DO j = 1, 2
-!   v(j,j) = v(j,j)-1.0_DFP
-! END DO
-! CALL OK(MAXVAL(ABS(v)) < 1.0E-11_DFP, "Vandermonde times C is identity")
-! END PROGRAM main
-!```
+! See also: [[LagrangeCoeff_Line5]]
 
 INTERFACE LagrangeCoeff_Line_
   MODULE SUBROUTINE LagrangeCoeff_Line5_(order, xij, basisType, alpha, &
                                          beta, lambda, ans, nrow, ncol)
     INTEGER(I4B), INTENT(IN) :: order
-    !! order of polynomial, it should be SIZE(xij,2)-1
+    !! order of polynomial, it should be `SIZE(xij, 2) - 1`
     REAL(DFP), INTENT(IN) :: xij(:, :)
-    !! points in xij format, size(xij,2) = order+1
+    !! points in xij format, `SIZE(xij, 2) = order + 1`
     INTEGER(I4B), INTENT(IN) :: basisType
-    !! Monomial, Jacobi, Legendre, Chebyshev, Lobatto, UnscaledLobatto
+    !! polynomial family, for example `poly%Monomial`, `poly%Legendre`
     REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
-    !! Jacobi polynomial parameter
+    !! Jacobi parameter, needed for the Jacobi family
     REAL(DFP), OPTIONAL, INTENT(IN) :: beta
-    !! Jacobi polynomial parameter
+    !! Jacobi parameter, needed for the Jacobi family
     REAL(DFP), OPTIONAL, INTENT(IN) :: lambda
-    !! Ultraspherical parameter
+    !! ultraspherical parameter, needed for the ultraspherical family
     REAL(DFP), INTENT(INOUT) :: ans(:, :)
-    !! ans(SIZE(xij, 2), SIZE(xij, 2))
-    !! coefficients
-    !! jth column of ans corresponds to the coeff of lagrange polynomial
-    !! at the jth point
+    !! coefficients, the routine writes `ans(1:nrow, 1:ncol)`
+    !! column `j` belongs to the Lagrange polynomial of the `j`th point
     INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+    !! number of rows and columns written to `ans`, both `order + 1`
   END SUBROUTINE LagrangeCoeff_Line5_
 END INTERFACE LagrangeCoeff_Line_
 
@@ -2277,86 +1644,71 @@ END INTERFACE LagrangeCoeff_Line_
 
 !> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
-! summary: Evaluate the nodal line basis.
+! summary: Returns all Lagrange polynomials of a line at one point.
 !
-! Keep evaluation points separate from the INOUT node array xij. coeff can
-! cache basis coefficients: pass firstCall=.TRUE. on the first call and
-! .FALSE. on later calls with the same nodes and basis. Line firstCall is an
-! input flag, so set it explicitly rather than assuming it is changed
-! internally.
+! Returns the values of all Lagrange polynomials of a line at the point
+! `x`.
+! Polynomial `j` is 1 at the `j`th point of `xij` and 0 at the others.
 !
-! Arguments:
-!   order : INTEGER(I4B), INTENT(IN). Polynomial degree, except quadrature
-! where it is requested exactness degree.
-!   x : REAL(DFP), INTENT(IN). Evaluation point(s); columns for rank two
-! arrays.
-!   xij : REAL(DFP), INTENT(INOUT)(:, :). Point columns; vertices or
-! interpolation nodes according to the interface.
-!   coeff : REAL(DFP), OPTIONAL, INTENT(INOUT)(SIZE(xij, 2), SIZE(xij, 2)).
-! Optional coefficient cache; must match the same nodes, order and basis.
-!   firstCall : LOGICAL(LGT), OPTIONAL, INTENT(IN). Use .TRUE. to construct
-! the coefficient cache, then explicitly pass .FALSE. to reuse it.
-!   basisType : INTEGER(I4B), OPTIONAL, INTENT(IN). Polynomial family
-! selector, for example poly%Monomial.
-!   alpha : REAL(DFP), OPTIONAL, INTENT(IN). Jacobi weight parameter alpha.
-!   beta : REAL(DFP), OPTIONAL, INTENT(IN). Jacobi weight parameter beta.
-!   lambda : REAL(DFP), OPTIONAL, INTENT(IN). Ultraspherical family parameter.
+! `basisType` selects the polynomial family used to build them.
+! The default is `poly%Monomial`.
+! The Jacobi families require `alpha` and `beta`.
+! The ultraspherical families require `lambda`.
+!
+! `coeff` can store the polynomial coefficients for later calls.
+! 1. In the first call, set `firstCall` to `.TRUE.`.
+!    The routine computes the coefficients and writes them to `coeff`.
+! 2. In later calls with the same `xij` and `basisType`, set `firstCall`
+!    to `.FALSE.`.
+!    The routine reads the coefficients from `coeff`.
+!
+! If `coeff` is absent, the routine computes the coefficients on every
+! call.
+!
+! @note
+! `order` must equal `SIZE(xij, 2) - 1`.
+! `xij` is not changed.
+! @endnote
 !
 ! Returns:
-!   ans : REAL(DFP)(SIZE(xij, 2)).
+!   ans : REAL(DFP) - values of the polynomials, size `SIZE(xij, 2)`
 !
 ! Formula:
-! $$\ell_j(x_i)=\delta_{ij},\quad\sum_j\ell_j=1$$
+!   $$ \ell_j(x_i) = \delta_{ij}, \quad \sum_j \ell_j(x) = 1 $$
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE GlobalData, ONLY: DFP
-! USE GlobalData, ONLY: I4B
-! USE GlobalData, ONLY: poly
-! USE LineInterpolationUtility, ONLY: LagrangeEvalAll_Line
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-! REAL(DFP) :: nodes(1,2), points(1,2)
-! REAL(DFP) :: y(2,2)
+! - [test 2](|base|Line/examples/LagrangeEvalAll_Line_test_2.F90)
 !
-! nodes(1,:) = [-1.0_DFP,1.0_DFP]
-! points = nodes
-! y = LagrangeEvalAll_Line(order=1_I4B, x=points, xij=nodes, &
-!   basisType=poly%Monomial)
-! CALL OK(MAXVAL(ABS(SUM(y,DIM=2)-1.0_DFP)) < 1.0E-10_DFP, &
-!   "Partition of unity")
-! CALL OK(ABS(y(1,1)-1.0_DFP) < 1.0E-11_DFP .AND. &
-!   ABS(y(1,2)) < 1.0E-11_DFP, "Nodal delta property")
-! END PROGRAM main
-!```
+! See also: [[LagrangeEvalAll_Line1_]], [[LagrangeEvalAll_Line2]]
 
 INTERFACE LagrangeEvalAll_Line
   MODULE FUNCTION LagrangeEvalAll_Line1(order, x, xij, coeff, firstCall, &
                                    basisType, alpha, beta, lambda) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
-    !! order of Lagrange polynomials
+    !! order of Lagrange polynomials, it should be `SIZE(xij, 2) - 1`
     REAL(DFP), INTENT(IN) :: x
     !! point of evaluation
     REAL(DFP), INTENT(INOUT) :: xij(:, :)
-    !! interpolation points
+    !! interpolation points in xij format, `SIZE(xij, 2) = order + 1`
+    !! the routine does not change it
     REAL(DFP), OPTIONAL, INTENT(INOUT) :: coeff(SIZE(xij, 2), SIZE(xij, 2))
-    !! coefficient of Lagrange polynomials
+    !! coefficients of the Lagrange polynomials
+    !! the routine writes it when `firstCall` is true
+    !! the routine reads it when `firstCall` is false
     LOGICAL(LGT), OPTIONAL, INTENT(IN) :: firstCall
-    !! If firstCall is true, then coeff will be made
-    !! If firstCall is False, then coeff will be used
-    !! Default value of firstCall is True
+    !! if true, compute `coeff`, if false, use `coeff`, default `.TRUE.`
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: basisType
-    !! Monomial  Jacobi  Legendre  Chebyshev  Lobatto  UnscaledLobatto
+    !! polynomial family, for example `poly%Monomial`, `poly%Legendre`
+    !! default `poly%Monomial`
     REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
-    !! Jacobi polynomial parameter
+    !! Jacobi parameter, needed for the Jacobi family
     REAL(DFP), OPTIONAL, INTENT(IN) :: beta
-    !! Jacobi polynomial parameter
+    !! Jacobi parameter, needed for the Jacobi family
     REAL(DFP), OPTIONAL, INTENT(IN) :: lambda
-    !! Ultraspherical parameter
+    !! ultraspherical parameter, needed for the ultraspherical family
     REAL(DFP) :: ans(SIZE(xij, 2))
-    !! Value of n+1 Lagrange polynomials at point x
+    !! values of the `order + 1` Lagrange polynomials at `x`
   END FUNCTION LagrangeEvalAll_Line1
 END INTERFACE LagrangeEvalAll_Line
 
@@ -2366,94 +1718,76 @@ END INTERFACE LagrangeEvalAll_Line
 
 !> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
-! summary: Evaluate the nodal line basis.
+! summary: Computes all Lagrange polynomials of a line at one point.
 !
-! Keep evaluation points separate from the INOUT node array xij. coeff can
-! cache basis coefficients: pass firstCall=.TRUE. on the first call and
-! .FALSE. on later calls with the same nodes and basis. Line firstCall is an
-! input flag, so set it explicitly rather than assuming it is changed
-! internally.
+! Computes the values of all Lagrange polynomials of a line at the point
+! `x`.
+! It writes them into the vector `ans`.
+! Polynomial `j` is 1 at the `j`th point of `xij` and 0 at the others.
 !
-! Arguments:
-!   order : INTEGER(I4B), INTENT(IN). Polynomial degree, except quadrature
-! where it is requested exactness degree.
-!   x : REAL(DFP), INTENT(IN). Evaluation point(s); columns for rank two
-! arrays.
-!   xij : REAL(DFP), INTENT(INOUT)(:, :). Point columns; vertices or
-! interpolation nodes according to the interface.
-!   coeff : REAL(DFP), OPTIONAL, INTENT(INOUT)(:, :). Optional coefficient
-! cache; must match the same nodes, order and basis.
-!   firstCall : LOGICAL(LGT), OPTIONAL, INTENT(IN). Use .TRUE. to construct
-! the coefficient cache, then explicitly pass .FALSE. to reuse it.
-!   basisType : INTEGER(I4B), OPTIONAL, INTENT(IN). Polynomial family
-! selector, for example poly%Monomial.
-!   alpha : REAL(DFP), OPTIONAL, INTENT(IN). Jacobi weight parameter alpha.
-!   beta : REAL(DFP), OPTIONAL, INTENT(IN). Jacobi weight parameter beta.
-!   lambda : REAL(DFP), OPTIONAL, INTENT(IN). Ultraspherical family parameter.
-!   ans : REAL(DFP), INTENT(INOUT)(:). Result buffer; allocate the full active
-! shape before the call.
-!   tsize : INTEGER(I4B), INTENT(OUT). Number of active output entries.
+! `basisType` selects the polynomial family used to build them.
+! The default is `poly%Monomial`.
+! The Jacobi families require `alpha` and `beta`.
+! The ultraspherical families require `lambda`.
 !
-! Returns:
-!   Updates xij(:, :), coeff(:, :), ans(:), tsize.
+! `coeff` can store the polynomial coefficients for later calls.
+! 1. In the first call, set `firstCall` to `.TRUE.`.
+!    The routine computes the coefficients and writes them to `coeff`.
+! 2. In later calls with the same `xij` and `basisType`, set `firstCall`
+!    to `.FALSE.`.
+!    The routine reads the coefficients from `coeff`.
+!
+! If `coeff` is absent, the routine computes the coefficients on every
+! call.
+!
+! @note
+! `ans` must hold at least `SIZE(xij, 2)` entries.
+! The routine does not allocate it.
+! `order` must equal `SIZE(xij, 2) - 1`.
+! `xij` is not changed.
+! @endnote
 !
 ! Formula:
-! $$\ell_j(x_i)=\delta_{ij},\quad\sum_j\ell_j=1$$
+!   $$ \ell_j(x_i) = \delta_{ij}, \quad \sum_j \ell_j(x) = 1 $$
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE GlobalData, ONLY: DFP
-! USE GlobalData, ONLY: I4B
-! USE GlobalData, ONLY: poly
-! USE LineInterpolationUtility, ONLY: LagrangeEvalAll_Line_
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-! REAL(DFP) :: nodes(1,2), points(1,2)
-! REAL(DFP) :: y(2,2)
-! INTEGER(I4B) :: nr,nc
+! - [test 2](|base|Line/examples/LagrangeEvalAll_Line_test_2.F90)
 !
-! nodes(1,:) = [-1.0_DFP,1.0_DFP]
-! points = nodes
-! CALL LagrangeEvalAll_Line_(order=1_I4B, x=points, xij=nodes, &
-!   basisType=poly%Monomial, ans=y, nrow=nr, ncol=nc)
-! CALL OK(MAXVAL(ABS(SUM(y,DIM=2)-1.0_DFP)) < 1.0E-10_DFP, &
-!   "Partition of unity")
-! CALL OK(ABS(y(1,1)-1.0_DFP) < 1.0E-11_DFP .AND. &
-!   ABS(y(1,2)) < 1.0E-11_DFP, "Nodal delta property")
-! END PROGRAM main
-!```
+! See also: [[LagrangeEvalAll_Line1]], [[LagrangeEvalAll_Line2_]]
 
 INTERFACE LagrangeEvalAll_Line_
   MODULE SUBROUTINE LagrangeEvalAll_Line1_( &
     order, x, xij, coeff, firstCall, basisType, alpha, beta, lambda, ans, &
     tsize)
     INTEGER(I4B), INTENT(IN) :: order
-    !! order of Lagrange polynomials
+    !! order of Lagrange polynomials, it should be `SIZE(xij, 2) - 1`
     REAL(DFP), INTENT(IN) :: x
     !! point of evaluation
     REAL(DFP), INTENT(INOUT) :: xij(:, :)
-    !! interpolation points
+    !! interpolation points in xij format, `SIZE(xij, 2) = order + 1`
+    !! the routine does not change it
     REAL(DFP), OPTIONAL, INTENT(INOUT) :: coeff(:, :)
-    !! coeff(SIZE(xij, 2), SIZE(xij, 2))
-    !! coefficient of Lagrange polynomials
+    !! coefficients of the Lagrange polynomials.
+    !! Its size is at least `(SIZE(xij, 2), SIZE(xij, 2))`.
+    !! The routine writes it when `firstCall` is true.
+    !! The routine reads it when `firstCall` is false.
     LOGICAL(LGT), OPTIONAL, INTENT(IN) :: firstCall
-    !! If firstCall is true, then coeff will be made
-    !! If firstCall is False, then coeff will be used
-    !! Default value of firstCall is True
+    !! if true, compute `coeff`, if false, use `coeff`, default `.TRUE.`
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: basisType
-    !! Monomial  Jacobi  Legendre  Chebyshev  Lobatto  UnscaledLobatto
+    !! polynomial family, for example `poly%Monomial`, `poly%Legendre`
+    !! default `poly%Monomial`
     REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
-    !! Jacobi polynomial parameter
+    !! Jacobi parameter, needed for the Jacobi family
     REAL(DFP), OPTIONAL, INTENT(IN) :: beta
-    !! Jacobi polynomial parameter
+    !! Jacobi parameter, needed for the Jacobi family
     REAL(DFP), OPTIONAL, INTENT(IN) :: lambda
-    !! Ultraspherical parameter
+    !! ultraspherical parameter, needed for the ultraspherical family
     REAL(DFP), INTENT(INOUT) :: ans(:)
-    !! ans(SIZE(xij, 2))
-    !! Value of n+1 Lagrange polynomials at point x
+    !! values of the Lagrange polynomials at `x`
+    !! the routine writes the first `tsize` entries
     INTEGER(I4B), INTENT(OUT) :: tsize
+    !! number of entries written to `ans`, equal to `SIZE(xij, 2)`
   END SUBROUTINE LagrangeEvalAll_Line1_
 END INTERFACE LagrangeEvalAll_Line_
 
@@ -2463,99 +1797,78 @@ END INTERFACE LagrangeEvalAll_Line_
 
 !> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
-! summary: Evaluate the nodal line basis.
+! summary: Returns all Lagrange polynomials of a line at many points.
 !
-! Keep evaluation points separate from the INOUT node array xij. coeff can
-! cache basis coefficients: pass firstCall=.TRUE. on the first call and
-! .FALSE. on later calls with the same nodes and basis. Line firstCall is an
-! input flag, so set it explicitly rather than assuming it is changed
-! internally.
+! Returns the values of all Lagrange polynomials of a line at the
+! points `x`.
+! Polynomial `j` is 1 at the `j`th point of `xij` and 0 at the others.
 !
-! Arguments:
-!   order : INTEGER(I4B), INTENT(IN). Polynomial degree, except quadrature
-! where it is requested exactness degree.
-!   x : REAL(DFP), INTENT(IN)(:, :). Evaluation point(s); columns for rank two
-! arrays.
-!   xij : REAL(DFP), INTENT(INOUT)(:, :). Point columns; vertices or
-! interpolation nodes according to the interface.
-!   coeff : REAL(DFP), OPTIONAL, INTENT(INOUT)(SIZE(xij, 2), SIZE(xij, 2)).
-! Optional coefficient cache; must match the same nodes, order and basis.
-!   firstCall : LOGICAL(LGT), OPTIONAL, INTENT(IN). Use .TRUE. to construct
-! the coefficient cache, then explicitly pass .FALSE. to reuse it.
-!   basisType : INTEGER(I4B), OPTIONAL, INTENT(IN). Polynomial family
-! selector, for example poly%Monomial.
-!   alpha : REAL(DFP), OPTIONAL, INTENT(IN). Jacobi weight parameter alpha.
-!   beta : REAL(DFP), OPTIONAL, INTENT(IN). Jacobi weight parameter beta.
-!   lambda : REAL(DFP), OPTIONAL, INTENT(IN). Ultraspherical family parameter.
+! `basisType` selects the polynomial family used to build them.
+! The default is `poly%Monomial`.
+! The Jacobi families require `alpha` and `beta`.
+! The ultraspherical families require `lambda`.
+!
+! `coeff` can store the polynomial coefficients for later calls.
+! 1. In the first call, set `firstCall` to `.TRUE.`.
+!    The routine computes the coefficients and writes them to `coeff`.
+! 2. In later calls with the same `xij` and `basisType`, set `firstCall`
+!    to `.FALSE.`.
+!    The routine reads the coefficients from `coeff`.
+!
+! @note
+! `order` must equal `SIZE(xij, 2) - 1`.
+! The routine reads only the first row of `x`.
+! @endnote
+!
+! @warning
+! If `coeff` is absent, do not set `firstCall` to `.FALSE.`.
+! The routine then has no coefficients to read.
+! @endwarning
 !
 ! Returns:
-!   ans : REAL(DFP)(SIZE(x, 2), SIZE(xij, 2)).
+!   ans : REAL(DFP) - values of the polynomials, size
+!     `(SIZE(x, 2), SIZE(xij, 2))`
 !
 ! Formula:
-! $$\ell_j(x_i)=\delta_{ij},\quad\sum_j\ell_j=1$$
+!   $$ \ell_j(x_i) = \delta_{ij}, \quad \sum_j \ell_j(x) = 1 $$
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE GlobalData, ONLY: DFP
-! USE GlobalData, ONLY: I4B
-! USE GlobalData, ONLY: poly
-! USE LineInterpolationUtility, ONLY: LagrangeEvalAll_Line
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-! REAL(DFP) :: nodes(1,2), points(1,2)
-! REAL(DFP) :: y(2,2)
+! - [test 1](|base|Line/examples/LagrangeEvalAll_Line_test_1.F90)
 !
-! nodes(1,:) = [-1.0_DFP,1.0_DFP]
-! points = nodes
-! y = LagrangeEvalAll_Line(order=1_I4B, x=points, xij=nodes, &
-!   basisType=poly%Monomial)
-! CALL OK(MAXVAL(ABS(SUM(y,DIM=2)-1.0_DFP)) < 1.0E-10_DFP, &
-!   "Partition of unity")
-! CALL OK(ABS(y(1,1)-1.0_DFP) < 1.0E-11_DFP .AND. &
-!   ABS(y(1,2)) < 1.0E-11_DFP, "Nodal delta property")
-! END PROGRAM main
-!```
+! See also: [[LagrangeEvalAll_Line1]], [[LagrangeEvalAll_Line2_]]
 
 INTERFACE LagrangeEvalAll_Line
   MODULE FUNCTION LagrangeEvalAll_Line2( &
     order, x, xij, coeff, firstCall, basisType, alpha, beta, lambda) &
     RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
-    !! order of Lagrange polynomials
+    !! order of Lagrange polynomials, it should be `SIZE(xij, 2) - 1`
     REAL(DFP), INTENT(IN) :: x(:, :)
-    !! point of evaluation in xij format
-    !! size(xij, 1) = nsd
-    !! size(xij, 2) = number of points
+    !! points of evaluation in xij format
+    !! `SIZE(x, 2)` is the number of points
+    !! the routine reads only `x(1, :)`
     REAL(DFP), INTENT(INOUT) :: xij(:, :)
-    !! interpolation points
-    !! xij should be present when firstCall is true.
-    !! It is used for computing the coeff
-    !! If coeff is absent then xij should be present
+    !! interpolation points in xij format, `SIZE(xij, 2) = order + 1`
+    !! the routine does not change it
     REAL(DFP), OPTIONAL, INTENT(INOUT) :: coeff(SIZE(xij, 2), SIZE(xij, 2))
-    !! coefficient of Lagrange polynomials
+    !! coefficients of the Lagrange polynomials
+    !! the routine writes it when `firstCall` is true
+    !! the routine reads it when `firstCall` is false
     LOGICAL(LGT), OPTIONAL, INTENT(IN) :: firstCall
-    !! If firstCall is true, then coeff will be made
-    !! If firstCall is False, then coeff will be used
-    !! Default value of firstCall is True
+    !! if true, compute `coeff`, if false, use `coeff`, default `.TRUE.`
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: basisType
-    !! Monomial
-    !! Jacobi
-    !! Legendre
-    !! Chebyshev
-    !! Lobatto
-    !! UnscaledLobatto
+    !! polynomial family, for example `poly%Monomial`, `poly%Legendre`
+    !! default `poly%Monomial`
     REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
-    !! Jacobi polynomial parameter
+    !! Jacobi parameter, needed for the Jacobi family
     REAL(DFP), OPTIONAL, INTENT(IN) :: beta
-    !! Jacobi polynomial parameter
+    !! Jacobi parameter, needed for the Jacobi family
     REAL(DFP), OPTIONAL, INTENT(IN) :: lambda
-    !! Ultraspherical parameter
+    !! ultraspherical parameter, needed for the ultraspherical family
     REAL(DFP) :: ans(SIZE(x, 2), SIZE(xij, 2))
-    !! Value of n+1 Lagrange polynomials at point x
-    !! ans(:, j) is the value of jth polynomial at x points
-    !! ans(i, :) is the value of all polynomials at x(i) point
+    !! values of the Lagrange polynomials
+    !! `ans(i, j)` is the value of the `j`th polynomial at the `i`th point
   END FUNCTION LagrangeEvalAll_Line2
 END INTERFACE LagrangeEvalAll_Line
 
@@ -2565,103 +1878,83 @@ END INTERFACE LagrangeEvalAll_Line
 
 !> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
-! summary: Evaluate the nodal line basis.
+! summary: Computes all Lagrange polynomials of a line at many points.
 !
-! Keep evaluation points separate from the INOUT node array xij. coeff can
-! cache basis coefficients: pass firstCall=.TRUE. on the first call and
-! .FALSE. on later calls with the same nodes and basis. Line firstCall is an
-! input flag, so set it explicitly rather than assuming it is changed
-! internally.
+! Computes the values of all Lagrange polynomials of a line at the
+! points `x`.
+! It writes them into the matrix `ans`.
+! Polynomial `j` is 1 at the `j`th point of `xij` and 0 at the others.
 !
-! Arguments:
-!   order : INTEGER(I4B), INTENT(IN). Polynomial degree, except quadrature
-! where it is requested exactness degree.
-!   x : REAL(DFP), INTENT(IN)(:, :). Evaluation point(s); columns for rank two
-! arrays.
-!   xij : REAL(DFP), INTENT(INOUT)(:, :). Point columns; vertices or
-! interpolation nodes according to the interface.
-!   ans : REAL(DFP), INTENT(INOUT)(:, :). Result buffer; allocate the full
-! active shape before the call.
-!   nrow : INTEGER(I4B), INTENT(OUT). Number of active output rows.
-!   ncol : INTEGER(I4B), INTENT(OUT). Number of active output columns.
-!   coeff : REAL(DFP), OPTIONAL, INTENT(INOUT)(:, :). Optional coefficient
-! cache; must match the same nodes, order and basis.
-!   firstCall : LOGICAL(LGT), OPTIONAL, INTENT(IN). Use .TRUE. to construct
-! the coefficient cache, then explicitly pass .FALSE. to reuse it.
-!   basisType : INTEGER(I4B), OPTIONAL, INTENT(IN). Polynomial family
-! selector, for example poly%Monomial.
-!   alpha : REAL(DFP), OPTIONAL, INTENT(IN). Jacobi weight parameter alpha.
-!   beta : REAL(DFP), OPTIONAL, INTENT(IN). Jacobi weight parameter beta.
-!   lambda : REAL(DFP), OPTIONAL, INTENT(IN). Ultraspherical family parameter.
+! `basisType` selects the polynomial family used to build them.
+! The default is `poly%Monomial`.
+! The Jacobi families require `alpha` and `beta`.
+! The ultraspherical families require `lambda`.
 !
-! Returns:
-!   Updates xij(:, :), ans(:, :), nrow, ncol, coeff(:, :).
+! `coeff` can store the polynomial coefficients for later calls.
+! 1. In the first call, set `firstCall` to `.TRUE.`.
+!    The routine computes the coefficients and writes them to `coeff`.
+! 2. In later calls with the same `xij` and `basisType`, set `firstCall`
+!    to `.FALSE.`.
+!    The routine reads the coefficients from `coeff`.
+!
+! @note
+! `ans` must hold at least `SIZE(x, 2)` rows and `SIZE(xij, 2)` columns.
+! The routine does not allocate it.
+! `order` must equal `SIZE(xij, 2) - 1`.
+! The routine reads only the first row of `x`.
+! @endnote
+!
+! @warning
+! If `coeff` is absent, do not set `firstCall` to `.FALSE.`.
+! The routine then has no coefficients to read.
+! @endwarning
 !
 ! Formula:
-! $$\ell_j(x_i)=\delta_{ij},\quad\sum_j\ell_j=1$$
+!   $$ \ell_j(x_i) = \delta_{ij}, \quad \sum_j \ell_j(x) = 1 $$
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE GlobalData, ONLY: DFP
-! USE GlobalData, ONLY: I4B
-! USE GlobalData, ONLY: poly
-! USE LineInterpolationUtility, ONLY: LagrangeEvalAll_Line_
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-! REAL(DFP) :: nodes(1,2), points(1,2)
-! REAL(DFP) :: y(2,2)
-! INTEGER(I4B) :: nr,nc
+! - [test 1](|base|Line/examples/LagrangeEvalAll_Line__test_1.F90)
+! - [test 2](|base|Line/examples/LagrangeEvalAll_Line_test_2.F90)
 !
-! nodes(1,:) = [-1.0_DFP,1.0_DFP]
-! points = nodes
-! CALL LagrangeEvalAll_Line_(order=1_I4B, x=points, xij=nodes, &
-!   basisType=poly%Monomial, ans=y, nrow=nr, ncol=nc)
-! CALL OK(MAXVAL(ABS(SUM(y,DIM=2)-1.0_DFP)) < 1.0E-10_DFP, &
-!   "Partition of unity")
-! CALL OK(ABS(y(1,1)-1.0_DFP) < 1.0E-11_DFP .AND. &
-!   ABS(y(1,2)) < 1.0E-11_DFP, "Nodal delta property")
-! END PROGRAM main
-!```
+! See also: [[LagrangeEvalAll_Line2]], [[LagrangeEvalAll_Line3_]]
 
 INTERFACE LagrangeEvalAll_Line_
   MODULE SUBROUTINE LagrangeEvalAll_Line2_( &
     order, x, xij, ans, nrow, ncol, coeff, firstCall, basisType, alpha, &
     beta, lambda)
     INTEGER(I4B), INTENT(IN) :: order
-    !! order of Lagrange polynomials
+    !! order of Lagrange polynomials, it should be `SIZE(xij, 2) - 1`
     REAL(DFP), INTENT(IN) :: x(:, :)
-    !! point of evaluation in xij format
-    !! size(xij, 1) = nsd
-    !! size(xij, 2) = number of points
+    !! points of evaluation in xij format
+    !! `SIZE(x, 2)` is the number of points
+    !! the routine reads only `x(1, :)`
     REAL(DFP), INTENT(INOUT) :: xij(:, :)
-    !! interpolation points
-    !! xij should be present when firstCall is true.
-    !! It is used for computing the coeff
-    !! If coeff is absent then xij should be present
+    !! interpolation points in xij format, `SIZE(xij, 2) = order + 1`
+    !! the routine does not change it
     REAL(DFP), INTENT(INOUT) :: ans(:, :)
-    !! ans(SIZE(x, 2), SIZE(xij, 2))
-    !! Value of n+1 Lagrange polynomials at point x
-    !! ans(:, j) is the value of jth polynomial at x points
-    !! ans(i, :) is the value of all polynomials at x(i) point
+    !! values of the Lagrange polynomials
+    !! the routine writes `ans(1:nrow, 1:ncol)`
+    !! `ans(i, j)` is the value of the `j`th polynomial at the `i`th point
     INTEGER(I4B), INTENT(OUT) :: nrow, ncol
-    !! nubmer of rows and cols writte in ans
+    !! number of rows and columns written to `ans`
+    !! `nrow = SIZE(x, 2)` and `ncol = SIZE(xij, 2)`
     REAL(DFP), OPTIONAL, INTENT(INOUT) :: coeff(:, :)
-    !! coeff(SIZE(xij, 2), SIZE(xij, 2))
-    !! coefficient of Lagrange polynomials
+    !! coefficients of the Lagrange polynomials.
+    !! Its size is at least `(SIZE(xij, 2), SIZE(xij, 2))`.
+    !! The routine writes it when `firstCall` is true.
+    !! The routine reads it when `firstCall` is false.
     LOGICAL(LGT), OPTIONAL, INTENT(IN) :: firstCall
-    !! If firstCall is true, then coeff will be made
-    !! If firstCall is False, then coeff will be used
-    !! Default value of firstCall is True
+    !! if true, compute `coeff`, if false, use `coeff`, default `.TRUE.`
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: basisType
-    !! Monomial, Jacobi, Legendre, Chebyshev, Lobatto, UnscaledLobatto
+    !! polynomial family, for example `poly%Monomial`, `poly%Legendre`
+    !! default `poly%Monomial`
     REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
-    !! Jacobi polynomial parameter
+    !! Jacobi parameter, needed for the Jacobi family
     REAL(DFP), OPTIONAL, INTENT(IN) :: beta
-    !! Jacobi polynomial parameter
+    !! Jacobi parameter, needed for the Jacobi family
     REAL(DFP), OPTIONAL, INTENT(IN) :: lambda
-    !! Ultraspherical parameter
+    !! ultraspherical parameter, needed for the ultraspherical family
   END SUBROUTINE LagrangeEvalAll_Line2_
 END INTERFACE LagrangeEvalAll_Line_
 
@@ -2671,112 +1964,81 @@ END INTERFACE LagrangeEvalAll_Line_
 
 !> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
-! summary: Evaluate the nodal line basis.
+! summary: Computes all Lagrange polynomials of a line, with work arrays.
 !
-! Keep evaluation points separate from the INOUT node array xij. coeff can
-! cache basis coefficients: pass firstCall=.TRUE. on the first call and
-! .FALSE. on later calls with the same nodes and basis. Line firstCall is an
-! input flag, so set it explicitly rather than assuming it is changed
-! internally.
+! Computes the values of all Lagrange polynomials of a line at the
+! points `x`.
+! It writes them into the matrix `ans`.
+! Polynomial `j` is 1 at the `j`th point of `xij` and 0 at the others.
 !
-! Arguments:
-!   order : INTEGER(I4B), INTENT(IN). Polynomial degree, except quadrature
-! where it is requested exactness degree.
-!   x : REAL(DFP), INTENT(IN)(:, :). Evaluation point(s); columns for rank two
-! arrays.
-!   xij : REAL(DFP), INTENT(INOUT)(:, :). Point columns; vertices or
-! interpolation nodes according to the interface.
-!   ans : REAL(DFP), INTENT(INOUT)(:, :). Result buffer; allocate the full
-! active shape before the call.
-!   nrow : INTEGER(I4B), INTENT(OUT). Number of active output rows.
-!   ncol : INTEGER(I4B), INTENT(OUT). Number of active output columns.
-!   coeff : REAL(DFP), INTENT(INOUT)(:, :). Optional coefficient cache; must
-! match the same nodes, order and basis.
-!   xx : REAL(DFP), INTENT(INOUT)(:, :). Reusable point by basis workspace;
-! shape must match the selected overload.
-!   firstCall : LOGICAL(LGT), INTENT(IN). Use .TRUE. to construct the
-! coefficient cache, then explicitly pass .FALSE. to reuse it.
-!   basisType : INTEGER(I4B), OPTIONAL, INTENT(IN). Polynomial family
-! selector, for example poly%Monomial.
-!   alpha : REAL(DFP), OPTIONAL, INTENT(IN). Jacobi weight parameter alpha.
-!   beta : REAL(DFP), OPTIONAL, INTENT(IN). Jacobi weight parameter beta.
-!   lambda : REAL(DFP), OPTIONAL, INTENT(IN). Ultraspherical family parameter.
+! The caller gives the work arrays `coeff` and `xx`.
+! The routine does not allocate memory.
 !
-! Returns:
-!   Updates xij(:, :), ans(:, :), nrow, ncol, coeff(:, :), xx(:, :).
+! `basisType` selects the polynomial family used to build them.
+! The default is `poly%Monomial`.
+! The Jacobi families require `alpha` and `beta`.
+! The ultraspherical families require `lambda`.
+!
+! `coeff` stores the polynomial coefficients.
+! 1. In the first call, set `firstCall` to `.TRUE.`.
+!    The routine computes the coefficients and writes them to `coeff`.
+! 2. In later calls with the same `xij` and `basisType`, set `firstCall`
+!    to `.FALSE.`.
+!    The routine reads the coefficients from `coeff`.
+!
+! @note
+! `ans` must hold at least `SIZE(x, 2)` rows and `SIZE(xij, 2)` columns.
+! `order` must equal `SIZE(xij, 2) - 1`.
+! The routine reads only the first row of `x`.
+! @endnote
 !
 ! Formula:
-! $$\ell_j(x_i)=\delta_{ij},\quad\sum_j\ell_j=1$$
+!   $$ \ell_j(x_i) = \delta_{ij}, \quad \sum_j \ell_j(x) = 1 $$
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE GlobalData, ONLY: DFP
-! USE GlobalData, ONLY: I4B
-! USE GlobalData, ONLY: poly
-! USE LineInterpolationUtility, ONLY: LagrangeEvalAll_Line_
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-! REAL(DFP) :: nodes(1,2), points(1,2)
-! REAL(DFP) :: y(2,2)
-! INTEGER(I4B) :: nr,nc
+! - [test 2](|base|Line/examples/LagrangeEvalAll_Line_test_2.F90)
 !
-! nodes(1,:) = [-1.0_DFP,1.0_DFP]
-! points = nodes
-! CALL LagrangeEvalAll_Line_(order=1_I4B, x=points, xij=nodes, &
-!   basisType=poly%Monomial, ans=y, nrow=nr, ncol=nc)
-! CALL OK(MAXVAL(ABS(SUM(y,DIM=2)-1.0_DFP)) < 1.0E-10_DFP, &
-!   "Partition of unity")
-! CALL OK(ABS(y(1,1)-1.0_DFP) < 1.0E-11_DFP .AND. &
-!   ABS(y(1,2)) < 1.0E-11_DFP, "Nodal delta property")
-! END PROGRAM main
-!```
+! See also: [[LagrangeEvalAll_Line2_]]
 
 INTERFACE LagrangeEvalAll_Line_
   MODULE SUBROUTINE LagrangeEvalAll_Line3_( &
     order, x, xij, ans, nrow, ncol, coeff, xx, firstCall, basisType, alpha, &
     beta, lambda)
     INTEGER(I4B), INTENT(IN) :: order
-    !! order of Lagrange polynomials
+    !! order of Lagrange polynomials, it should be `SIZE(xij, 2) - 1`
     REAL(DFP), INTENT(IN) :: x(:, :)
-    !! point of evaluation in xij format
-    !! size(xij, 1) = nsd
-    !! size(xij, 2) = number of points, ncol
+    !! points of evaluation in xij format
+    !! `SIZE(x, 2)` is the number of points
+    !! the routine reads only `x(1, :)`
     REAL(DFP), INTENT(INOUT) :: xij(:, :)
-    !! interpolation points
-    !! xij should be present when firstCall is true.
-    !! It is used for computing the coeff
-    !! If coeff is absent then xij should be present
-    !! rows of xij = nsd
-    !! cols of xij = ncol
+    !! interpolation points in xij format, `SIZE(xij, 2) = order + 1`
+    !! the routine reads it only when `firstCall` is true
     REAL(DFP), INTENT(INOUT) :: ans(:, :)
-    !! ans(SIZE(x, 2), SIZE(xij, 2))
-    !! Value of n+1 Lagrange polynomials at point x
-    !! ans(:, j) is the value of jth polynomial at x points
-    !! ans(i, :) is the value of all polynomials at x(i) point
+    !! values of the Lagrange polynomials
+    !! the routine writes `ans(1:nrow, 1:ncol)`
+    !! `ans(i, j)` is the value of the `j`th polynomial at the `i`th point
     INTEGER(I4B), INTENT(OUT) :: nrow, ncol
-    !! nubmer of rows and cols writte in ans
-    !! nrow = size(x, 2), number of points of evaluation
-    !! ncol = size(xij, 2), number of interpolation points
+    !! number of rows and columns written to `ans`
+    !! `nrow = SIZE(x, 2)` and `ncol = SIZE(xij, 2)`
     REAL(DFP), INTENT(INOUT) :: coeff(:, :), xx(:, :)
-    !! coefficient of Lagrange polynomials
-    !! The size should be at least ncol by ncol
-    !! The size of xx should be at least nrow by ncol
-    !! It contains the evaluation of basis functions on x
-    !! Size of xx is nrow by ncol
+    !! `coeff` holds the coefficients of the Lagrange polynomials.
+    !! Its size is at least `ncol` by `ncol`.
+    !! The routine writes it when `firstCall` is true.
+    !! The routine reads it when `firstCall` is false.
+    !! `xx` holds the basis functions at the points `x`.
+    !! Its size is at least `nrow` by `ncol`.
     LOGICAL(LGT), INTENT(IN) :: firstCall
-    !! If firstCall is true, then coeff will be made
-    !! If firstCall is False, then coeff will be used
-    !! Default value of firstCall is True
+    !! if true, compute `coeff`, if false, use `coeff`
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: basisType
-    !! Monomial, Jacobi, Legendre, Chebyshev, Lobatto, UnscaledLobatto
+    !! polynomial family, for example `poly%Monomial`, `poly%Legendre`
+    !! default `poly%Monomial`
     REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
-    !! Jacobi polynomial parameter
+    !! Jacobi parameter, needed for the Jacobi family
     REAL(DFP), OPTIONAL, INTENT(IN) :: beta
-    !! Jacobi polynomial parameter
+    !! Jacobi parameter, needed for the Jacobi family
     REAL(DFP), OPTIONAL, INTENT(IN) :: lambda
-    !! Ultraspherical parameter
+    !! ultraspherical parameter, needed for the ultraspherical family
   END SUBROUTINE LagrangeEvalAll_Line3_
 END INTERFACE LagrangeEvalAll_Line_
 
@@ -2786,92 +2048,80 @@ END INTERFACE LagrangeEvalAll_Line_
 
 !> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
-! summary: Evaluate gradients of the nodal line basis.
+! summary: Returns the gradients of all Lagrange polynomials of a line.
 !
-! Keep evaluation points separate from the INOUT node array xij. coeff can
-! cache basis coefficients: pass firstCall=.TRUE. on the first call and
-! .FALSE. on later calls with the same nodes and basis. Line firstCall is an
-! input flag, so set it explicitly rather than assuming it is changed
-! internally.
+! Returns the gradients of all Lagrange polynomials of a line at the
+! points `x`.
+! Polynomial `j` is 1 at the `j`th point of `xij` and 0 at the others.
+! A line has one space dimension, so the third index of `ans` has size 1.
 !
-! Arguments:
-!   order : INTEGER(I4B), INTENT(IN). Polynomial degree, except quadrature
-! where it is requested exactness degree.
-!   x : REAL(DFP), INTENT(IN)(:, :). Evaluation point(s); columns for rank two
-! arrays.
-!   xij : REAL(DFP), INTENT(INOUT)(:, :). Point columns; vertices or
-! interpolation nodes according to the interface.
-!   coeff : REAL(DFP), OPTIONAL, INTENT(INOUT)(SIZE(xij, 2), SIZE(xij, 2)).
-! Optional coefficient cache; must match the same nodes, order and basis.
-!   firstCall : LOGICAL(LGT), OPTIONAL, INTENT(IN). Use .TRUE. to construct
-! the coefficient cache, then explicitly pass .FALSE. to reuse it.
-!   basisType : INTEGER(I4B), OPTIONAL, INTENT(IN). Polynomial family
-! selector, for example poly%Monomial.
-!   alpha : REAL(DFP), OPTIONAL, INTENT(IN). Jacobi weight parameter alpha.
-!   beta : REAL(DFP), OPTIONAL, INTENT(IN). Jacobi weight parameter beta.
-!   lambda : REAL(DFP), OPTIONAL, INTENT(IN). Ultraspherical family parameter.
+! `basisType` selects the polynomial family used to build them.
+! The default is `poly%Monomial`.
+! The Jacobi families require `alpha` and `beta`.
+! The ultraspherical families require `lambda`.
+!
+! `coeff` can store the polynomial coefficients for later calls.
+! 1. In the first call, set `firstCall` to `.TRUE.`.
+!    The routine computes the coefficients and writes them to `coeff`.
+! 2. In later calls with the same `xij` and `basisType`, set `firstCall`
+!    to `.FALSE.`.
+!    The routine reads the coefficients from `coeff`.
+!
+! @note
+! `order` must equal `SIZE(xij, 2) - 1`.
+! The routine reads only the first row of `x`.
+! @endnote
+!
+! @warning
+! If `coeff` is absent, do not set `firstCall` to `.FALSE.`.
+! The routine then has no coefficients to read.
+! @endwarning
 !
 ! Returns:
-!   ans : REAL(DFP)(SIZE(x, 2), SIZE(xij, 2), 1).
+!   ans : REAL(DFP) - gradients, size `(SIZE(x, 2), SIZE(xij, 2), 1)`
 !
 ! Formula:
-! $$\sum_j\nabla\ell_j=0$$
+!   $$ \sum_j \nabla \ell_j(x) = 0 $$
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE GlobalData, ONLY: DFP
-! USE GlobalData, ONLY: I4B
-! USE GlobalData, ONLY: poly
-! USE LineInterpolationUtility, ONLY: LagrangeGradientEvalAll_Line
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-! REAL(DFP) :: nodes(1,2), points(1,2)
-! REAL(DFP) :: y(2,2,1)
+! - [test 1](|base|Line/examples/LagrangeGradientEvalAll_Line_test_1.F90)
+! - [test 2](|base|Line/examples/LagrangeGradientEvalAll_Line_test_2.F90)
 !
-! nodes(1,:) = [-1.0_DFP,1.0_DFP]
-! points = nodes
-! y = LagrangeGradientEvalAll_Line(order=1_I4B, x=points, xij=nodes, &
-!   basisType=poly%Monomial)
-! CALL OK(MAXVAL(ABS(SUM(y,DIM=2))) < 1.0E-10_DFP, &
-!   "Gradient of partition of unity")
-! END PROGRAM main
-!```
+! See also: [[LagrangeGradientEvalAll_Line1_]]
 
 INTERFACE LagrangeGradientEvalAll_Line
   MODULE FUNCTION LagrangeGradientEvalAll_Line1( &
     order, x, xij, coeff, firstCall, basisType, alpha, beta, lambda) &
     RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
-    !! order of Lagrange polynomials
+    !! order of Lagrange polynomials, it should be `SIZE(xij, 2) - 1`
     REAL(DFP), INTENT(IN) :: x(:, :)
-    !! point of evaluation in xij format
+    !! points of evaluation in xij format
+    !! `SIZE(x, 2)` is the number of points
+    !! the routine reads only `x(1, :)`
     REAL(DFP), INTENT(INOUT) :: xij(:, :)
-    !! interpolation points
-    !! xij should be present when firstCall is true.
-    !! It is used for computing the coeff
-    !! If coeff is absent then xij should be present
+    !! interpolation points in xij format, `SIZE(xij, 2) = order + 1`
+    !! the routine does not change it
     REAL(DFP), OPTIONAL, INTENT(INOUT) :: coeff(SIZE(xij, 2), SIZE(xij, 2))
-    !! coefficient of Lagrange polynomials
+    !! coefficients of the Lagrange polynomials
+    !! the routine writes it when `firstCall` is true
+    !! the routine reads it when `firstCall` is false
     LOGICAL(LGT), OPTIONAL, INTENT(IN) :: firstCall
-    !! If firstCall is true, then coeff will be made
-    !! If firstCall is False, then coeff will be used
-    !! Default value of firstCall is True
+    !! if true, compute `coeff`, if false, use `coeff`, default `.TRUE.`
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: basisType
-    !! Monomial ! Jacobi ! Legendre ! Chebyshev ! Lobatto ! UnscaledLobatto
+    !! polynomial family, for example `poly%Monomial`, `poly%Legendre`
+    !! default `poly%Monomial`
     REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
-    !! Jacobi polynomial parameter
+    !! Jacobi parameter, needed for the Jacobi family
     REAL(DFP), OPTIONAL, INTENT(IN) :: beta
-    !! Jacobi polynomial parameter
+    !! Jacobi parameter, needed for the Jacobi family
     REAL(DFP), OPTIONAL, INTENT(IN) :: lambda
-    !! Ultraspherical parameter
+    !! ultraspherical parameter, needed for the ultraspherical family
     REAL(DFP) :: ans(SIZE(x, 2), SIZE(xij, 2), 1)
-    !! Value of gradient of nth order Lagrange polynomials at point x
-    !! The first index denotes point of evaluation
-    !! the second index denotes Lagrange polynomial number
-    !! The third index denotes the spatial dimension in which gradient is
-    !! computed
+    !! gradients of the Lagrange polynomials
+    !! `ans(i, j, 1)` is the derivative of the `j`th polynomial at the
+    !! `i`th point
   END FUNCTION LagrangeGradientEvalAll_Line1
 END INTERFACE LagrangeGradientEvalAll_Line
 
@@ -2881,101 +2131,84 @@ END INTERFACE LagrangeGradientEvalAll_Line
 
 !> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
-! summary: Evaluate gradients of the nodal line basis.
+! summary: Computes the gradients of all Lagrange polynomials of a line.
 !
-! Keep evaluation points separate from the INOUT node array xij. coeff can
-! cache basis coefficients: pass firstCall=.TRUE. on the first call and
-! .FALSE. on later calls with the same nodes and basis. Line firstCall is an
-! input flag, so set it explicitly rather than assuming it is changed
-! internally.
+! Computes the gradients of all Lagrange polynomials of a line at the
+! points `x`.
+! It writes them into the array `ans`.
+! Polynomial `j` is 1 at the `j`th point of `xij` and 0 at the others.
+! A line has one space dimension, so `dim3` is 1.
 !
-! Arguments:
-!   order : INTEGER(I4B), INTENT(IN). Polynomial degree, except quadrature
-! where it is requested exactness degree.
-!   x : REAL(DFP), INTENT(IN)(:, :). Evaluation point(s); columns for rank two
-! arrays.
-!   xij : REAL(DFP), INTENT(INOUT)(:, :). Point columns; vertices or
-! interpolation nodes according to the interface.
-!   ans : REAL(DFP), INTENT(INOUT)(:, :, :). Result buffer; allocate the full
-! active shape before the call.
-!   dim1 : INTEGER(I4B), INTENT(OUT). Active point dimension.
-!   dim2 : INTEGER(I4B), INTENT(OUT). Active basis dimension.
-!   dim3 : INTEGER(I4B), INTENT(OUT). Active coordinate dimension.
-!   coeff : REAL(DFP), OPTIONAL, INTENT(INOUT)(SIZE(xij, 2), SIZE(xij, 2)).
-! Optional coefficient cache; must match the same nodes, order and basis.
-!   firstCall : LOGICAL(LGT), OPTIONAL, INTENT(IN). Use .TRUE. to construct
-! the coefficient cache, then explicitly pass .FALSE. to reuse it.
-!   basisType : INTEGER(I4B), OPTIONAL, INTENT(IN). Polynomial family
-! selector, for example poly%Monomial.
-!   alpha : REAL(DFP), OPTIONAL, INTENT(IN). Jacobi weight parameter alpha.
-!   beta : REAL(DFP), OPTIONAL, INTENT(IN). Jacobi weight parameter beta.
-!   lambda : REAL(DFP), OPTIONAL, INTENT(IN). Ultraspherical family parameter.
+! `basisType` selects the polynomial family used to build them.
+! The default is `poly%Monomial`.
+! The Jacobi families require `alpha` and `beta`.
+! The ultraspherical families require `lambda`.
 !
-! Returns:
-!   Updates xij(:, :), ans(:, :, :), dim1, dim2, dim3, coeff(SIZE(xij, 2),
-! SIZE(xij, 2)).
+! `coeff` can store the polynomial coefficients for later calls.
+! 1. In the first call, set `firstCall` to `.TRUE.`.
+!    The routine computes the coefficients and writes them to `coeff`.
+! 2. In later calls with the same `xij` and `basisType`, set `firstCall`
+!    to `.FALSE.`.
+!    The routine reads the coefficients from `coeff`.
+!
+! @note
+! `ans` must hold at least `SIZE(x, 2)` by `SIZE(xij, 2)` by 1 entries.
+! The routine does not allocate it.
+! `order` must equal `SIZE(xij, 2) - 1`.
+! The routine reads only the first row of `x`.
+! @endnote
+!
+! @warning
+! If `coeff` is absent, do not set `firstCall` to `.FALSE.`.
+! The routine then has no coefficients to read.
+! @endwarning
 !
 ! Formula:
-! $$\sum_j\nabla\ell_j=0$$
+!   $$ \sum_j \nabla \ell_j(x) = 0 $$
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE GlobalData, ONLY: DFP
-! USE GlobalData, ONLY: I4B
-! USE GlobalData, ONLY: poly
-! USE LineInterpolationUtility, ONLY: LagrangeGradientEvalAll_Line_
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-! REAL(DFP) :: nodes(1,2), points(1,2)
-! REAL(DFP) :: y(2,2,1)
-! INTEGER(I4B) :: nr,nc,nd
+! - [test 1](|base|Line/examples/LagrangeGradientEvalAll_Line__test_1.F90)
 !
-! nodes(1,:) = [-1.0_DFP,1.0_DFP]
-! points = nodes
-! CALL LagrangeGradientEvalAll_Line_(order=1_I4B, x=points, xij=nodes, &
-!   basisType=poly%Monomial, ans=y, dim1=nr, dim2=nc, dim3=nd)
-! CALL OK(MAXVAL(ABS(SUM(y,DIM=2))) < 1.0E-10_DFP, &
-!   "Gradient of partition of unity")
-! END PROGRAM main
-!```
+! See also: [[LagrangeGradientEvalAll_Line1]],
+! [[LagrangeGradientEvalAll_Line2_]]
 
 INTERFACE LagrangeGradientEvalAll_Line_
   MODULE SUBROUTINE LagrangeGradientEvalAll_Line1_( &
     order, x, xij, ans, dim1, dim2, dim3, coeff, firstCall, basisType, &
     alpha, beta, lambda)
     INTEGER(I4B), INTENT(IN) :: order
-    !! order of Lagrange polynomials
+    !! order of Lagrange polynomials, it should be `SIZE(xij, 2) - 1`
     REAL(DFP), INTENT(IN) :: x(:, :)
-    !! point of evaluation in xij format
+    !! points of evaluation in xij format
+    !! `SIZE(x, 2)` is the number of points
+    !! the routine reads only `x(1, :)`
     REAL(DFP), INTENT(INOUT) :: xij(:, :)
-    !! interpolation points
-    !! xij should be present when firstCall is true.
-    !! It is used for computing the coeff
-    !! If coeff is absent then xij should be present
+    !! interpolation points in xij format, `SIZE(xij, 2) = order + 1`
+    !! the routine does not change it
     REAL(DFP), INTENT(INOUT) :: ans(:, :, :)
-    !! Value of gradient of nth order Lagrange polynomials at point x
-    !! The first index denotes point of evaluation
-    !! the second index denotes Lagrange polynomial number
-    !! The third index denotes the spatial dimension in which gradient is
-    !! computed
+    !! gradients of the Lagrange polynomials
+    !! the routine writes `ans(1:dim1, 1:dim2, 1:dim3)`
+    !! `ans(i, j, 1)` is the derivative of the `j`th polynomial at the
+    !! `i`th point
     INTEGER(I4B), INTENT(OUT) :: dim1, dim2, dim3
-    !! ans(SIZE(x, 2), SIZE(xij, 2), 1)
+    !! number of entries written to `ans` in each index
+    !! `dim1 = SIZE(x, 2)`, `dim2 = SIZE(xij, 2)` and `dim3 = 1`
     REAL(DFP), OPTIONAL, INTENT(INOUT) :: coeff(SIZE(xij, 2), SIZE(xij, 2))
-    !! coefficient of Lagrange polynomials
+    !! coefficients of the Lagrange polynomials
+    !! the routine writes it when `firstCall` is true
+    !! the routine reads it when `firstCall` is false
     LOGICAL(LGT), OPTIONAL, INTENT(IN) :: firstCall
-    !! If firstCall is true, then coeff will be made
-    !! If firstCall is False, then coeff will be used
-    !! Default value of firstCall is True
+    !! if true, compute `coeff`, if false, use `coeff`, default `.TRUE.`
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: basisType
-    !! Monomial
+    !! polynomial family, for example `poly%Monomial`, `poly%Legendre`
+    !! default `poly%Monomial`
     REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
-    !! Jacobi polynomial parameter
+    !! Jacobi parameter, needed for the Jacobi family
     REAL(DFP), OPTIONAL, INTENT(IN) :: beta
-    !! Jacobi polynomial parameter
+    !! Jacobi parameter, needed for the Jacobi family
     REAL(DFP), OPTIONAL, INTENT(IN) :: lambda
-    !! Ultraspherical parameter
+    !! ultraspherical parameter, needed for the ultraspherical family
   END SUBROUTINE LagrangeGradientEvalAll_Line1_
 END INTERFACE LagrangeGradientEvalAll_Line_
 
@@ -2985,107 +2218,83 @@ END INTERFACE LagrangeGradientEvalAll_Line_
 
 !> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
-! summary: Evaluate gradients of the nodal line basis.
+! summary: Computes the gradients of all Lagrange polynomials, with work
+!   arrays.
 !
-! Keep evaluation points separate from the INOUT node array xij. coeff can
-! cache basis coefficients: pass firstCall=.TRUE. on the first call and
-! .FALSE. on later calls with the same nodes and basis. Line firstCall is an
-! input flag, so set it explicitly rather than assuming it is changed
-! internally.
+! Computes the gradients of all Lagrange polynomials of a line at the
+! points `x`.
+! It writes them into the array `ans`.
+! Polynomial `j` is 1 at the `j`th point of `xij` and 0 at the others.
+! A line has one space dimension, so `dim3` is 1.
 !
-! Arguments:
-!   order : INTEGER(I4B), INTENT(IN). Polynomial degree, except quadrature
-! where it is requested exactness degree.
-!   x : REAL(DFP), INTENT(IN)(:, :). Evaluation point(s); columns for rank two
-! arrays.
-!   xij : REAL(DFP), INTENT(INOUT)(:, :). Point columns; vertices or
-! interpolation nodes according to the interface.
-!   ans : REAL(DFP), INTENT(INOUT)(:, :, :). Result buffer; allocate the full
-! active shape before the call.
-!   dim1 : INTEGER(I4B), INTENT(OUT). Active point dimension.
-!   dim2 : INTEGER(I4B), INTENT(OUT). Active basis dimension.
-!   dim3 : INTEGER(I4B), INTENT(OUT). Active coordinate dimension.
-!   coeff : REAL(DFP), INTENT(INOUT)(:, :). Optional coefficient cache; must
-! match the same nodes, order and basis.
-!   xx : REAL(DFP), INTENT(INOUT)(:, :). Reusable point by basis workspace;
-! shape must match the selected overload.
-!   firstCall : LOGICAL(LGT), INTENT(IN). Use .TRUE. to construct the
-! coefficient cache, then explicitly pass .FALSE. to reuse it.
-!   basisType : INTEGER(I4B), INTENT(IN). Polynomial family selector, for
-! example poly%Monomial.
-!   alpha : REAL(DFP), OPTIONAL, INTENT(IN). Jacobi weight parameter alpha.
-!   beta : REAL(DFP), OPTIONAL, INTENT(IN). Jacobi weight parameter beta.
-!   lambda : REAL(DFP), OPTIONAL, INTENT(IN). Ultraspherical family parameter.
+! The caller gives the work arrays `coeff` and `xx`.
+! The routine does not allocate memory.
 !
-! Returns:
-!   Updates xij(:, :), ans(:, :, :), dim1, dim2, dim3, coeff(:, :), xx(:, :).
+! `basisType` selects the polynomial family used to build them.
+! The Jacobi families require `alpha` and `beta`.
+! The ultraspherical families require `lambda`.
+!
+! `coeff` stores the polynomial coefficients.
+! 1. In the first call, set `firstCall` to `.TRUE.`.
+!    The routine computes the coefficients and writes them to `coeff`.
+! 2. In later calls with the same `xij` and `basisType`, set `firstCall`
+!    to `.FALSE.`.
+!    The routine reads the coefficients from `coeff`.
+!
+! @note
+! `ans` must hold at least `SIZE(x, 2)` by `SIZE(xij, 2)` by 1 entries.
+! `order` must equal `SIZE(xij, 2) - 1`.
+! The routine reads only the first row of `x`.
+! @endnote
 !
 ! Formula:
-! $$\sum_j\nabla\ell_j=0$$
+!   $$ \sum_j \nabla \ell_j(x) = 0 $$
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE GlobalData, ONLY: DFP
-! USE GlobalData, ONLY: I4B
-! USE GlobalData, ONLY: poly
-! USE LineInterpolationUtility, ONLY: LagrangeGradientEvalAll_Line_
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-! REAL(DFP) :: nodes(1,2), points(1,2)
-! REAL(DFP) :: y(2,2,1)
-! INTEGER(I4B) :: nr,nc,nd
+! - [test 2](|base|Line/examples/LagrangeGradientEvalAll_Line_test_2.F90)
 !
-! nodes(1,:) = [-1.0_DFP,1.0_DFP]
-! points = nodes
-! CALL LagrangeGradientEvalAll_Line_(order=1_I4B, x=points, xij=nodes, &
-!   basisType=poly%Monomial, ans=y, dim1=nr, dim2=nc, dim3=nd)
-! CALL OK(MAXVAL(ABS(SUM(y,DIM=2))) < 1.0E-10_DFP, &
-!   "Gradient of partition of unity")
-! END PROGRAM main
-!```
+! See also: [[LagrangeGradientEvalAll_Line1_]]
 
 INTERFACE LagrangeGradientEvalAll_Line_
   MODULE SUBROUTINE LagrangeGradientEvalAll_Line2_( &
     order, x, xij, ans, dim1, dim2, dim3, coeff, xx, firstCall, basisType, &
     alpha, beta, lambda)
     INTEGER(I4B), INTENT(IN) :: order
-    !! order of Lagrange polynomials
+    !! order of Lagrange polynomials, it should be `SIZE(xij, 2) - 1`
     REAL(DFP), INTENT(IN) :: x(:, :)
-    !! point of evaluation in xij format
+    !! points of evaluation in xij format
+    !! `SIZE(x, 2)` is the number of points
+    !! the routine reads only `x(1, :)`
     REAL(DFP), INTENT(INOUT) :: xij(:, :)
-    !! interpolation points
-    !! xij should be present when firstCall is true.
-    !! It is used for computing the coeff
-    !! If coeff is absent then xij should be present
+    !! interpolation points in xij format, `SIZE(xij, 2) = order + 1`
+    !! the routine reads it only when `firstCall` is true
     REAL(DFP), INTENT(INOUT) :: ans(:, :, :)
-    !! Value of gradient of nth order Lagrange polynomials at point x
-    !! The first index denotes point of evaluation
-    !! the second index denotes Lagrange polynomial number
-    !! The third index denotes the spatial dimension in which gradient is
-    !! computed
+    !! gradients of the Lagrange polynomials
+    !! the routine writes `ans(1:dim1, 1:dim2, 1)`
+    !! `ans(i, j, 1)` is the derivative of the `j`th polynomial at the
+    !! `i`th point
     INTEGER(I4B), INTENT(OUT) :: dim1, dim2, dim3
-    !! ans(SIZE(x, 2), SIZE(xij, 2), 1)
+    !! number of entries written to `ans` in each index
+    !! `dim1 = SIZE(x, 2)`, `dim2 = SIZE(xij, 2)` and `dim3 = 1`
     REAL(DFP), INTENT(INOUT) :: coeff(:, :)
-    !! coefficient of Lagrange polynomials
-    !! shape nrow = size(xij, 2), ncol = size(xij, 2)
+    !! coefficients of the Lagrange polynomials.
+    !! Its size is at least `(SIZE(xij, 2), SIZE(xij, 2))`.
+    !! The routine writes it when `firstCall` is true.
+    !! The routine reads it when `firstCall` is false.
     REAL(DFP), INTENT(INOUT) :: xx(:, :)
-    !! working array needed for internal used
-    !! number of rows in xx should be : size(x, 2)
-    !! number of cols in xx should be : order + 1
+    !! work array for the basis derivatives at the points `x`.
+    !! Its size is at least `(SIZE(x, 2), order + 1)`.
     LOGICAL(LGT), INTENT(IN) :: firstCall
-    !! If firstCall is true, then coeff will be made
-    !! If firstCall is False, then coeff will be used
-    !! Default value of firstCall is True
+    !! if true, compute `coeff`, if false, use `coeff`
     INTEGER(I4B), INTENT(IN) :: basisType
-    !! Monomial
+    !! polynomial family, for example `poly%Monomial`, `poly%Legendre`
     REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
-    !! Jacobi polynomial parameter
+    !! Jacobi parameter, needed for the Jacobi family
     REAL(DFP), OPTIONAL, INTENT(IN) :: beta
-    !! Jacobi polynomial parameter
+    !! Jacobi parameter, needed for the Jacobi family
     REAL(DFP), OPTIONAL, INTENT(IN) :: lambda
-    !! Ultraspherical parameter
+    !! ultraspherical parameter, needed for the ultraspherical family
   END SUBROUTINE LagrangeGradientEvalAll_Line2_
 END INTERFACE LagrangeGradientEvalAll_Line_
 
@@ -3095,87 +2304,79 @@ END INTERFACE LagrangeGradientEvalAll_Line_
 
 !> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
-! summary: Evaluate second derivatives of nodal line basis functions.
+! summary: Returns the second derivatives of all Lagrange polynomials.
 !
-! Uses the implemented monomial second derivative backend. Other selected
-! polynomial families can reach empty Laplacian implementations. Cache and
-! point layout conventions match LagrangeEvalAll_Line.
+! Returns the second derivatives of all Lagrange polynomials of a line at
+! the points `x`.
+! Polynomial `j` is 1 at the `j`th point of `xij` and 0 at the others.
 !
-! Arguments:
-!   order : INTEGER(I4B), INTENT(IN). Polynomial degree, except quadrature
-! where it is requested exactness degree.
-!   x : REAL(DFP), INTENT(IN)(:, :). Evaluation point(s); columns for rank two
-! arrays.
-!   xij : REAL(DFP), INTENT(INOUT)(:, :). Point columns; vertices or
-! interpolation nodes according to the interface.
-!   coeff : REAL(DFP), OPTIONAL, INTENT(INOUT)(SIZE(xij, 2), SIZE(xij, 2)).
-! Optional coefficient cache; must match the same nodes, order and basis.
-!   firstCall : LOGICAL(LGT), OPTIONAL, INTENT(IN). Use .TRUE. to construct
-! the coefficient cache, then explicitly pass .FALSE. to reuse it.
-!   basisType : INTEGER(I4B), OPTIONAL, INTENT(IN). Polynomial family
-! selector, for example poly%Monomial.
-!   alpha : REAL(DFP), OPTIONAL, INTENT(IN). Jacobi weight parameter alpha.
-!   beta : REAL(DFP), OPTIONAL, INTENT(IN). Jacobi weight parameter beta.
-!   lambda : REAL(DFP), OPTIONAL, INTENT(IN). Ultraspherical family parameter.
+! `basisType` selects the polynomial family used to build them.
+! The default is `poly%Monomial`.
+! The Jacobi families require `alpha` and `beta`.
+! The ultraspherical families require `lambda`.
+!
+! `coeff` can store the polynomial coefficients for later calls.
+! 1. In the first call, set `firstCall` to `.TRUE.`.
+!    The routine computes the coefficients and writes them to `coeff`.
+! 2. In later calls with the same `xij` and `basisType`, set `firstCall`
+!    to `.FALSE.`.
+!    The routine reads the coefficients from `coeff`.
+!
+! @note
+! `order` must equal `SIZE(xij, 2) - 1`.
+! The routine reads only the first row of `x`.
+! The tests cover only `poly%Monomial`.
+! @endnote
+!
+! @warning
+! If `coeff` is absent, do not set `firstCall` to `.FALSE.`.
+! The routine then has no coefficients to read.
+! @endwarning
 !
 ! Returns:
-!   ans : REAL(DFP)(SIZE(x, 2), SIZE(xij, 2)).
+!   ans : REAL(DFP) - second derivatives, size
+!     `(SIZE(x, 2), SIZE(xij, 2))`
 !
 ! Formula:
-! $$\ell_j''(x)=\sum_k C_{kj}m_k''(x)$$
+!   $$ \ell_j''(x) = \sum_k C_{kj} \phi_k''(x) $$
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE GlobalData, ONLY: DFP
-! USE GlobalData, ONLY: I4B
-! USE GlobalData, ONLY: poly
-! USE LineInterpolationUtility, ONLY: LagrangeLaplacianEvalAll_Line
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-! REAL(DFP) :: nodes(1,3), points(1,3), y(3,3)
+! - [test 1](|base|Line/examples/LagrangeLaplacianEvalAll_Line_test_1.F90)
 !
-! nodes(1,:) = [-1.0_DFP,0.0_DFP,1.0_DFP]
-! points = nodes
-! y = LagrangeLaplacianEvalAll_Line(order=2_I4B,x=points,xij=nodes, &
-!   basisType=poly%Monomial)
-! CALL OK(MAXVAL(ABS(y(:,2)+2.0_DFP)) < 1.0E-10_DFP, &
-!   "Central cardinal quadratic has second derivative -2")
-! END PROGRAM main
-!```
+! See also: [[LagrangeLaplacianEvalAll_Line1_]]
 
 INTERFACE LagrangeLaplacianEvalAll_Line
   MODULE FUNCTION LagrangeLaplacianEvalAll_Line1( &
     order, x, xij, coeff, firstCall, basisType, alpha, beta, lambda) &
     RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
-    !! order of Lagrange polynomials
+    !! order of Lagrange polynomials, it should be `SIZE(xij, 2) - 1`
     REAL(DFP), INTENT(IN) :: x(:, :)
-    !! point of evaluation in xij format
+    !! points of evaluation in xij format
+    !! `SIZE(x, 2)` is the number of points
+    !! the routine reads only `x(1, :)`
     REAL(DFP), INTENT(INOUT) :: xij(:, :)
-    !! interpolation points
-    !! xij should be present when firstCall is true.
-    !! It is used for computing the coeff
-    !! If coeff is absent then xij should be present
+    !! interpolation points in xij format, `SIZE(xij, 2) = order + 1`
+    !! the routine does not change it
     REAL(DFP), OPTIONAL, INTENT(INOUT) :: coeff(SIZE(xij, 2), SIZE(xij, 2))
-    !! coefficient of Lagrange polynomials
+    !! coefficients of the Lagrange polynomials
+    !! the routine writes it when `firstCall` is true
+    !! the routine reads it when `firstCall` is false
     LOGICAL(LGT), OPTIONAL, INTENT(IN) :: firstCall
-    !! If firstCall is true, then coeff will be made
-    !! If firstCall is False, then coeff will be used
-    !! Default value of firstCall is True
+    !! if true, compute `coeff`, if false, use `coeff`, default `.TRUE.`
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: basisType
-    !! Monomial ! Jacobi ! Legendre ! Chebyshev ! Lobatto ! UnscaledLobatto
+    !! polynomial family, for example `poly%Monomial`, `poly%Legendre`
+    !! default `poly%Monomial`
     REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
-    !! Jacobi polynomial parameter
+    !! Jacobi parameter, needed for the Jacobi family
     REAL(DFP), OPTIONAL, INTENT(IN) :: beta
-    !! Jacobi polynomial parameter
+    !! Jacobi parameter, needed for the Jacobi family
     REAL(DFP), OPTIONAL, INTENT(IN) :: lambda
-    !! Ultraspherical parameter
+    !! ultraspherical parameter, needed for the ultraspherical family
     REAL(DFP) :: ans(SIZE(x, 2), SIZE(xij, 2))
-    !! Value of Laplacian of nth order Lagrange polynomials at point x
-    !! The first index denotes point of evaluation (ips)
-    !! the second index denotes Lagrange polynomial number (I)
+    !! second derivatives of the Lagrange polynomials
+    !! `ans(i, j)` is the value for the `j`th polynomial at the `i`th point
   END FUNCTION LagrangeLaplacianEvalAll_Line1
 END INTERFACE LagrangeLaplacianEvalAll_Line
 
@@ -3185,97 +2386,88 @@ END INTERFACE LagrangeLaplacianEvalAll_Line
 
 !> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
-! summary: Evaluate second derivatives of nodal line basis functions.
+! summary: Computes the second derivatives of all Lagrange polynomials.
 !
-! Uses the implemented monomial second derivative backend. Other selected
-! polynomial families can reach empty Laplacian implementations. Cache and
-! point layout conventions match LagrangeEvalAll_Line.
+! Computes the second derivatives of all Lagrange polynomials of a line at
+! the points `x`.
+! It writes them into the matrix `ans`.
+! Polynomial `j` is 1 at the `j`th point of `xij` and 0 at the others.
 !
-! Arguments:
-!   order : INTEGER(I4B), INTENT(IN). Polynomial degree, except quadrature
-! where it is requested exactness degree.
-!   x : REAL(DFP), INTENT(IN)(:, :). Evaluation point(s); columns for rank two
-! arrays.
-!   xij : REAL(DFP), INTENT(INOUT)(:, :). Point columns; vertices or
-! interpolation nodes according to the interface.
-!   ans : REAL(DFP), INTENT(INOUT)(:, :). Result buffer; allocate the full
-! active shape before the call.
-!   nrow : INTEGER(I4B), INTENT(OUT). Number of active output rows.
-!   ncol : INTEGER(I4B), INTENT(OUT). Number of active output columns.
-!   coeff : REAL(DFP), OPTIONAL, INTENT(INOUT)(SIZE(xij, 2), SIZE(xij, 2)).
-! Optional coefficient cache; must match the same nodes, order and basis.
-!   firstCall : LOGICAL(LGT), OPTIONAL, INTENT(IN). Use .TRUE. to construct
-! the coefficient cache, then explicitly pass .FALSE. to reuse it.
-!   basisType : INTEGER(I4B), OPTIONAL, INTENT(IN). Polynomial family
-! selector, for example poly%Monomial.
-!   alpha : REAL(DFP), OPTIONAL, INTENT(IN). Jacobi weight parameter alpha.
-!   beta : REAL(DFP), OPTIONAL, INTENT(IN). Jacobi weight parameter beta.
-!   lambda : REAL(DFP), OPTIONAL, INTENT(IN). Ultraspherical family parameter.
+! `basisType` selects the polynomial family used to build them.
+! The default is `poly%Monomial`.
+! The Jacobi families require `alpha` and `beta`.
+! The ultraspherical families require `lambda`.
 !
-! Returns:
-!   Updates xij(:, :), ans(:, :), nrow, ncol, coeff(SIZE(xij, 2), SIZE(xij,
-! 2)).
+! `coeff` can store the polynomial coefficients for later calls.
+! 1. In the first call, set `firstCall` to `.TRUE.`.
+!    The routine computes the coefficients and writes them to `coeff`.
+! 2. In later calls with the same `xij` and `basisType`, set `firstCall`
+!    to `.FALSE.`.
+!    The routine reads the coefficients from `coeff`.
+!
+! @note
+! `ans` must hold at least `SIZE(x, 2)` rows and `SIZE(xij, 2)` columns.
+! The routine does not allocate it.
+! `order` must equal `SIZE(xij, 2) - 1`.
+! The routine reads only the first row of `x`.
+! @endnote
+!
+! @warning
+! Only `poly%Monomial` works.
+! The other families call empty routines and leave `ans` undefined.
+! @endwarning
+!
+! @warning
+! If `coeff` is absent, do not set `firstCall` to `.FALSE.`.
+! The routine then has no coefficients to read.
+! @endwarning
 !
 ! Formula:
-! $$\ell_j''(x)=\sum_k C_{kj}m_k''(x)$$
+!   $$ \ell_j''(x) = \sum_k C_{kj} \phi_k''(x) $$
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE GlobalData, ONLY: DFP
-! USE GlobalData, ONLY: I4B
-! USE GlobalData, ONLY: poly
-! USE LineInterpolationUtility, ONLY: LagrangeLaplacianEvalAll_Line_
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-! REAL(DFP) :: nodes(1,3), points(1,3), y(3,3)
-! INTEGER(I4B) :: nr,nc
+! - [test 1](|base|Line/examples/LagrangeLaplacianEvalAll_Line__test_1.F90)
 !
-! nodes(1,:) = [-1.0_DFP,0.0_DFP,1.0_DFP]
-! points = nodes
-! CALL LagrangeLaplacianEvalAll_Line_(order=2_I4B,x=points,xij=nodes, &
-!   basisType=poly%Monomial,ans=y,nrow=nr,ncol=nc)
-! CALL OK(MAXVAL(ABS(y(:,2)+2.0_DFP)) < 1.0E-10_DFP, &
-!   "Central cardinal quadratic has second derivative -2")
-! END PROGRAM main
-!```
+! See also: [[LagrangeLaplacianEvalAll_Line1]],
+! [[LagrangeLaplacianEvalAll_Line2_]]
 
 INTERFACE LagrangeLaplacianEvalAll_Line_
   MODULE SUBROUTINE LagrangeLaplacianEvalAll_Line1_( &
     order, x, xij, ans, nrow, ncol, coeff, firstCall, basisType, &
     alpha, beta, lambda)
     INTEGER(I4B), INTENT(IN) :: order
-    !! order of Lagrange polynomials
+    !! order of Lagrange polynomials, it should be `SIZE(xij, 2) - 1`
     REAL(DFP), INTENT(IN) :: x(:, :)
-    !! point of evaluation in xij format
+    !! points of evaluation in xij format
+    !! `SIZE(x, 2)` is the number of points
+    !! the routine reads only `x(1, :)`
     REAL(DFP), INTENT(INOUT) :: xij(:, :)
-    !! interpolation points
-    !! xij should be present when firstCall is true.
-    !! It is used for computing the coeff
-    !! If coeff is absent then xij should be present
+    !! interpolation points in xij format, `SIZE(xij, 2) = order + 1`
+    !! the routine does not change it
     REAL(DFP), INTENT(INOUT) :: ans(:, :)
-    !! Value of Laplacian of nth order Lagrange polynomials at point x
-    !! The first index denotes point of evaluation
-    !! the second index denotes Lagrange polynomial number
-    !! The third index denotes the spatial dimension in which Laplacian is
-    !! computed
+    !! second derivatives of the Lagrange polynomials
+    !! the routine writes `ans(1:nrow, 1:ncol)`
+    !! `ans(i, j)` is the value for the `j`th polynomial at the `i`th point
     INTEGER(I4B), INTENT(OUT) :: nrow, ncol
-    !! ans(SIZE(x, 2), SIZE(xij, 2), 1)
+    !! number of rows and columns written to `ans`
+    !! `nrow = SIZE(x, 2)` and `ncol = SIZE(xij, 2)`
     REAL(DFP), OPTIONAL, INTENT(INOUT) :: coeff(SIZE(xij, 2), SIZE(xij, 2))
-    !! coefficient of Lagrange polynomials
+    !! coefficients of the Lagrange polynomials.
+    !! The routine writes it when `firstCall` is true.
+    !! The routine reads it when `firstCall` is false.
+    !! If absent, the routine uses a local array.
     LOGICAL(LGT), OPTIONAL, INTENT(IN) :: firstCall
-    !! If firstCall is true, then coeff will be made
-    !! If firstCall is False, then coeff will be used
-    !! Default value of firstCall is True
+    !! if true, compute `coeff`, if false, use `coeff`, default `.TRUE.`
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: basisType
-    !! Monomial
+    !! polynomial family, for example `poly%Monomial`, `poly%Legendre`
+    !! default `poly%Monomial`
     REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
-    !! Jacobi polynomial parameter
+    !! Jacobi parameter, needed for the Jacobi family
     REAL(DFP), OPTIONAL, INTENT(IN) :: beta
-    !! Jacobi polynomial parameter
+    !! Jacobi parameter, needed for the Jacobi family
     REAL(DFP), OPTIONAL, INTENT(IN) :: lambda
-    !! Ultraspherical parameter
+    !! ultraspherical parameter, needed for the ultraspherical family
   END SUBROUTINE LagrangeLaplacianEvalAll_Line1_
 END INTERFACE LagrangeLaplacianEvalAll_Line_
 
@@ -3285,103 +2477,89 @@ END INTERFACE LagrangeLaplacianEvalAll_Line_
 
 !> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
-! summary: Evaluate second derivatives of nodal line basis functions.
+! summary: Computes the second derivatives of all Lagrange polynomials,
+! with work arrays.
 !
-! Uses the implemented monomial second derivative backend. Other selected
-! polynomial families can reach empty Laplacian implementations. Cache and
-! point layout conventions match LagrangeEvalAll_Line.
+! Computes the second derivatives of all Lagrange polynomials of a line at
+! the points `x`.
+! It writes them into the matrix `ans`.
+! Polynomial `j` is 1 at the `j`th point of `xij` and 0 at the others.
 !
-! Arguments:
-!   order : INTEGER(I4B), INTENT(IN). Polynomial degree, except quadrature
-! where it is requested exactness degree.
-!   x : REAL(DFP), INTENT(IN)(:, :). Evaluation point(s); columns for rank two
-! arrays.
-!   xij : REAL(DFP), INTENT(INOUT)(:, :). Point columns; vertices or
-! interpolation nodes according to the interface.
-!   ans : REAL(DFP), INTENT(INOUT)(:, :). Result buffer; allocate the full
-! active shape before the call.
-!   nrow : INTEGER(I4B), INTENT(OUT). Number of active output rows.
-!   ncol : INTEGER(I4B), INTENT(OUT). Number of active output columns.
-!   coeff : REAL(DFP), INTENT(INOUT)(:, :). Optional coefficient cache; must
-! match the same nodes, order and basis.
-!   xx : REAL(DFP), INTENT(INOUT)(:, :). Reusable point by basis workspace;
-! shape must match the selected overload.
-!   firstCall : LOGICAL(LGT), INTENT(IN). Use .TRUE. to construct the
-! coefficient cache, then explicitly pass .FALSE. to reuse it.
-!   basisType : INTEGER(I4B), INTENT(IN). Polynomial family selector, for
-! example poly%Monomial.
-!   alpha : REAL(DFP), OPTIONAL, INTENT(IN). Jacobi weight parameter alpha.
-!   beta : REAL(DFP), OPTIONAL, INTENT(IN). Jacobi weight parameter beta.
-!   lambda : REAL(DFP), OPTIONAL, INTENT(IN). Ultraspherical family parameter.
+! The caller gives the work arrays `coeff` and `xx`.
+! The routine does not allocate memory.
 !
-! Returns:
-!   Updates xij(:, :), ans(:, :), nrow, ncol, coeff(:, :), xx(:, :).
+! `basisType` selects the polynomial family used to build them.
+! The Jacobi families require `alpha` and `beta`.
+! The ultraspherical families require `lambda`.
+!
+! `coeff` stores the polynomial coefficients.
+! 1. In the first call, set `firstCall` to `.TRUE.`.
+!    The routine computes the coefficients and writes them to `coeff`.
+! 2. In later calls with the same `xij` and `basisType`, set `firstCall`
+!    to `.FALSE.`.
+!    The routine reads the coefficients from `coeff`.
+!
+! @note
+! `ans` must hold at least `SIZE(x, 2)` rows and `SIZE(xij, 2)` columns.
+! `order` must equal `SIZE(xij, 2) - 1`.
+! The routine reads only the first row of `x`.
+! @endnote
+!
+! @warning
+! Only `poly%Monomial` works.
+! The other families call empty routines and leave `xx`, and so `ans`,
+! undefined.
+! @endwarning
 !
 ! Formula:
-! $$\ell_j''(x)=\sum_k C_{kj}m_k''(x)$$
+!   $$ \ell_j''(x) = \sum_k C_{kj} \phi_k''(x) $$
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE GlobalData, ONLY: DFP
-! USE GlobalData, ONLY: I4B
-! USE GlobalData, ONLY: poly
-! USE LineInterpolationUtility, ONLY: LagrangeLaplacianEvalAll_Line_
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-! REAL(DFP) :: nodes(1,3), points(1,3), y(3,3)
-! INTEGER(I4B) :: nr,nc
+! - [test 2](|base|Line/examples/LagrangeLaplacianEvalAll_Line_test_2.F90)
 !
-! nodes(1,:) = [-1.0_DFP,0.0_DFP,1.0_DFP]
-! points = nodes
-! CALL LagrangeLaplacianEvalAll_Line_(order=2_I4B,x=points,xij=nodes, &
-!   basisType=poly%Monomial,ans=y,nrow=nr,ncol=nc)
-! CALL OK(MAXVAL(ABS(y(:,2)+2.0_DFP)) < 1.0E-10_DFP, &
-!   "Central cardinal quadratic has second derivative -2")
-! END PROGRAM main
-!```
+! See also: [[LagrangeLaplacianEvalAll_Line1_]]
 
 INTERFACE LagrangeLaplacianEvalAll_Line_
   MODULE SUBROUTINE LagrangeLaplacianEvalAll_Line2_( &
     order, x, xij, ans, nrow, ncol, coeff, xx, firstCall, basisType, &
     alpha, beta, lambda)
     INTEGER(I4B), INTENT(IN) :: order
-    !! order of Lagrange polynomials
+    !! order of Lagrange polynomials, it should be `SIZE(xij, 2) - 1`
     REAL(DFP), INTENT(IN) :: x(:, :)
-    !! point of evaluation in xij format
+    !! points of evaluation in xij format
+    !! `SIZE(x, 2)` is the number of points
+    !! the routine reads only `x(1, :)`
     REAL(DFP), INTENT(INOUT) :: xij(:, :)
-    !! interpolation points
-    !! xij should be present when firstCall is true.
-    !! It is used for computing the coeff
-    !! If coeff is absent then xij should be present
+    !! interpolation points in xij format, `SIZE(xij, 2) = order + 1`
+    !! its size sets `ncol`
+    !! the routine reads its values only when `firstCall` is true
     REAL(DFP), INTENT(INOUT) :: ans(:, :)
-    !! Value of Laplacian of nth order Lagrange polynomials at point x
-    !! The first index denotes point of evaluation
-    !! the second index denotes Lagrange polynomial number
-    !! The third index denotes the spatial dimension in which Laplacian is
-    !! computed
+    !! second derivatives of the Lagrange polynomials
+    !! the routine writes `ans(1:nrow, 1:ncol)`
+    !! `ans(i, j)` is the value for the `j`th polynomial at the `i`th point
     INTEGER(I4B), INTENT(OUT) :: nrow, ncol
-    !! ans(SIZE(x, 2), SIZE(xij, 2), 1)
+    !! number of rows and columns written to `ans`
+    !! `nrow = SIZE(x, 2)` and `ncol = SIZE(xij, 2)`
     REAL(DFP), INTENT(INOUT) :: coeff(:, :)
-    !! coefficient of Lagrange polynomials
-    !! shape nrow = size(xij, 2), ncol = size(xij, 2)
+    !! coefficients of the Lagrange polynomials.
+    !! Its size is at least `ncol` by `ncol`.
+    !! The routine writes it when `firstCall` is true.
+    !! The routine reads it when `firstCall` is false.
     REAL(DFP), INTENT(INOUT) :: xx(:, :)
-    !! working array needed for internal used
-    !! number of rows in xx should be : size(x, 2)
-    !! number of cols in xx should be : order + 1
+    !! second derivatives of the basis functions at the points `x`
+    !! its size is at least `nrow` by `ncol`
     LOGICAL(LGT), INTENT(IN) :: firstCall
-    !! If firstCall is true, then coeff will be made
-    !! If firstCall is False, then coeff will be used
-    !! Default value of firstCall is True
+    !! if true, compute `coeff`, if false, use `coeff`
     INTEGER(I4B), INTENT(IN) :: basisType
-    !! Monomial
+    !! polynomial family, for example `poly%Monomial`
+    !! there is no default
     REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
-    !! Jacobi polynomial parameter
+    !! Jacobi parameter, needed for the Jacobi family
     REAL(DFP), OPTIONAL, INTENT(IN) :: beta
-    !! Jacobi polynomial parameter
+    !! Jacobi parameter, needed for the Jacobi family
     REAL(DFP), OPTIONAL, INTENT(IN) :: lambda
-    !! Ultraspherical parameter
+    !! ultraspherical parameter, needed for the ultraspherical family
   END SUBROUTINE LagrangeLaplacianEvalAll_Line2_
 END INTERFACE LagrangeLaplacianEvalAll_Line_
 
@@ -3391,74 +2569,72 @@ END INTERFACE LagrangeLaplacianEvalAll_Line_
 
 !> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
-! summary: Evaluate line OrthogonalBasis laplacian.
+! summary: Returns the second derivatives of the orthogonal basis of a line.
 !
-! Results use point rows and degree columns. Gradient element wrappers add a
-! coordinate axis. BIUNIT is used explicitly. Only Monomial has a working
-! Laplacian here; named polynomial family branches can reach unimplemented
-! routines. UNIT second derivative scaling requires review.
+! Returns the second derivatives of the first `order + 1` basis
+! polynomials of a line at the points `xij`.
+! Column `j` holds the polynomial of degree `j - 1`.
+! `basisType` selects the polynomial family.
 !
-! Arguments:
-!   order : INTEGER(I4B), INTENT(IN). Polynomial degree, except quadrature
-! where it is requested exactness degree.
-!   xij : REAL(DFP), INTENT(IN)(:, :). Point columns; vertices or
-! interpolation nodes according to the interface.
-!   refLine : CHARACTER(*), INTENT(IN). Reference interval name, UNIT or
-! BIUNIT.
-!   basisType : INTEGER(I4B), INTENT(IN). Polynomial family selector, for
-! example poly%Monomial.
-!   alpha : REAL(DFP), OPTIONAL, INTENT(IN). Jacobi weight parameter alpha.
-!   beta : REAL(DFP), OPTIONAL, INTENT(IN). Jacobi weight parameter beta.
-!   lambda : REAL(DFP), OPTIONAL, INTENT(IN). Ultraspherical family parameter.
+! `refLine` names the interval of the points.
+! The routine checks only its first letter, in any case.
+! 1. `"BIUNIT"` means the interval [-1, 1].
+!    The routine returns the plain second derivatives.
+! 2. `"UNIT"` means the interval [0, 1].
+!    The routine returns the second derivatives scaled by 2.
+!
+! @note
+! `xij` has one row, and the routine reads only that row.
+! The routine accepts `alpha`, `beta` and `lambda` but does not use them.
+! @endnote
+!
+! @warning
+! Only `poly%Monomial` works.
+! The other families call empty routines and leave `ans` undefined.
+! @endwarning
+!
+! @warning
+! The chain rule for `"UNIT"` needs a factor 4, not 2.
+! The result for `"UNIT"` is wrong by a factor 2.
+! @endwarning
 !
 ! Returns:
-!   ans : REAL(DFP)(SIZE(xij, 2), order + 1).
+!   ans : REAL(DFP) - second derivatives, size `(SIZE(xij, 2), order + 1)`
 !
 ! Formula:
-! $$L_{ij}=\phi_j''(x_i)$$
+!   $$ L_{ij} = \phi_{j-1}''(x_i) $$
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE GlobalData, ONLY: DFP
-! USE GlobalData, ONLY: I4B
-! USE GlobalData, ONLY: poly
-! USE LineInterpolationUtility, ONLY: OrthogonalBasisLaplacian_Line
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-! REAL(DFP) :: x(1,3), y(3,3)
+! - [test 1](|base|Line/examples/OrthogonalBasisLaplacian_Line_test_1.F90)
+! - [test 2](|base|Line/examples/OrthogonalBasisLaplacian_Line_test_2.F90)
+!   with `"BIUNIT"` and `"UNIT"`
 !
-! x(1,:) = [-0.5_DFP,0.0_DFP,0.5_DFP]
-! y = OrthogonalBasisLaplacian_Line(order=2_I4B, xij=x, &
-!   refLine="BIUNIT", basisType=poly%Monomial)
-! CALL OK(MAXVAL(ABS(y(:,3)- &
-!   (2.0_DFP))) < 1.0E-10_DFP, "Analytic quadratic mode")
-! END PROGRAM main
-!```
+! See also: [[OrthogonalBasisLaplacian_Line1_]]
 
 INTERFACE OrthogonalBasisLaplacian_Line
   MODULE FUNCTION OrthogonalBasisLaplacian_Line1( &
     order, xij, refLine, basisType, alpha, beta, lambda) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
-    !! order of  polynomials
+    !! order of the polynomials, the highest degree
     REAL(DFP), INTENT(IN) :: xij(:, :)
-    !! point of evaluation
-    !! Number of rows in xij is 1
+    !! points of evaluation, `SIZE(xij, 1)` is 1
+    !! `SIZE(xij, 2)` is the number of points
     CHARACTER(*), INTENT(IN) :: refLine
-    !! UNIT ! BIUNIT
+    !! interval of the points, `"BIUNIT"` or `"UNIT"`
     INTEGER(I4B), INTENT(IN) :: basisType
-    ! basisType
+    !! polynomial family, for example `poly%Monomial`
+    !! there is no default
     REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
-    !! Jacobi polynomial parameter
+    !! Jacobi parameter, not used
     REAL(DFP), OPTIONAL, INTENT(IN) :: beta
-    !! Jacobi polynomial parameter
+    !! Jacobi parameter, not used
     REAL(DFP), OPTIONAL, INTENT(IN) :: lambda
-    !! Ultraspherical parameter
+    !! ultraspherical parameter, not used
     REAL(DFP) :: ans(SIZE(xij, 2), order + 1)
-    !! Value of n+1  polynomials at point x
-    !! ans(:, j) is the value of jth polynomial at x points
-    !! ans(i, :) is the value of all polynomials at x(i) point
+    !! second derivatives of the `order + 1` polynomials
+    !! `ans(:, j)` is the `j`th polynomial at all points
+    !! `ans(i, :)` is all polynomials at the `i`th point
   END FUNCTION OrthogonalBasisLaplacian_Line1
 END INTERFACE OrthogonalBasisLaplacian_Line
 
@@ -3468,83 +2644,74 @@ END INTERFACE OrthogonalBasisLaplacian_Line
 
 !> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
-! summary: Evaluate line OrthogonalBasis laplacian.
+! summary: Computes the second derivatives of the orthogonal basis of a line.
 !
-! Results use point rows and degree columns. Gradient element wrappers add a
-! coordinate axis. BIUNIT is used explicitly. Only Monomial has a working
-! Laplacian here; named polynomial family branches can reach unimplemented
-! routines. UNIT second derivative scaling requires review.
+! Computes the second derivatives of the first `order + 1` basis
+! polynomials of a line at the points `xij`.
+! It writes them into the matrix `ans`.
+! Column `j` holds the polynomial of degree `j - 1`.
+! `basisType` selects the polynomial family.
 !
-! Arguments:
-!   order : INTEGER(I4B), INTENT(IN). Polynomial degree, except quadrature
-! where it is requested exactness degree.
-!   xij : REAL(DFP), INTENT(IN)(:, :). Point columns; vertices or
-! interpolation nodes according to the interface.
-!   refLine : CHARACTER(*), INTENT(IN). Reference interval name, UNIT or
-! BIUNIT.
-!   basisType : INTEGER(I4B), INTENT(IN). Polynomial family selector, for
-! example poly%Monomial.
-!   alpha : REAL(DFP), OPTIONAL, INTENT(IN). Jacobi weight parameter alpha.
-!   beta : REAL(DFP), OPTIONAL, INTENT(IN). Jacobi weight parameter beta.
-!   lambda : REAL(DFP), OPTIONAL, INTENT(IN). Ultraspherical family parameter.
-!   ans : REAL(DFP), INTENT(INOUT)(:, :). Result buffer; allocate the full
-! active shape before the call.
-!   nrow : INTEGER(I4B), INTENT(OUT). Number of active output rows.
-!   ncol : INTEGER(I4B), INTENT(OUT). Number of active output columns.
+! `refLine` names the interval of the points.
+! The routine checks only its first letter, in any case.
+! 1. `"BIUNIT"` means the interval [-1, 1].
+!    The routine writes the plain second derivatives.
+! 2. `"UNIT"` means the interval [0, 1].
+!    The routine writes the second derivatives scaled by 2.
 !
-! Returns:
-!   Updates ans(:, :), nrow, ncol.
+! @note
+! `ans` must hold at least `SIZE(xij, 2)` rows and `order + 1` columns.
+! `xij` has one row, and the routine reads only that row.
+! The routine accepts `alpha`, `beta` and `lambda` but does not use them.
+! @endnote
+!
+! @warning
+! Only `poly%Monomial` works.
+! The other families call empty routines and leave `ans` undefined.
+! @endwarning
+!
+! @warning
+! The chain rule for `"UNIT"` needs a factor 4, not 2.
+! The result for `"UNIT"` is wrong by a factor 2.
+! @endwarning
 !
 ! Formula:
-! $$L_{ij}=\phi_j''(x_i)$$
+!   $$ L_{ij} = \phi_{j-1}''(x_i) $$
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE GlobalData, ONLY: DFP
-! USE GlobalData, ONLY: I4B
-! USE GlobalData, ONLY: poly
-! USE LineInterpolationUtility, ONLY: OrthogonalBasisLaplacian_Line_
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-! REAL(DFP) :: x(1,3), y(3,3)
-! INTEGER(I4B) :: nr,nc
+! - [test 1](|base|Line/examples/OrthogonalBasisLaplacian_Line__test_1.F90)
 !
-! x(1,:) = [-0.5_DFP,0.0_DFP,0.5_DFP]
-! CALL OrthogonalBasisLaplacian_Line_(order=2_I4B, xij=x, &
-!   refLine="BIUNIT", basisType=poly%Monomial, ans=y, nrow=nr,ncol=nc)
-! CALL OK(MAXVAL(ABS(y(:,3)- &
-!   (2.0_DFP))) < 1.0E-10_DFP, "Analytic quadratic mode")
-! END PROGRAM main
-!```
+! See also: [[OrthogonalBasisLaplacian_Line1]]
 
 INTERFACE OrthogonalBasisLaplacian_Line_
   MODULE SUBROUTINE OrthogonalBasisLaplacian_Line1_( &
     order, xij, refLine, basisType, ans, nrow, ncol, alpha, beta, &
     lambda)
     INTEGER(I4B), INTENT(IN) :: order
-    !! order of  polynomials
+    !! order of the polynomials, the highest degree
     REAL(DFP), INTENT(IN) :: xij(:, :)
-    !! point of evaluation
-    !! Number of rows in xij is 1
+    !! points of evaluation, `SIZE(xij, 1)` is 1
+    !! `SIZE(xij, 2)` is the number of points
     CHARACTER(*), INTENT(IN) :: refLine
-    !! reference line element: UNIT, BIUNIT
+    !! interval of the points, `"BIUNIT"` or `"UNIT"`
     INTEGER(I4B), INTENT(IN) :: basisType
-    !! basisType
+    !! polynomial family, for example `poly%Monomial`
+    !! there is no default
     REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
-    !! Jacobi polynomial parameter
+    !! Jacobi parameter, not used
     REAL(DFP), OPTIONAL, INTENT(IN) :: beta
-    !! Jacobi polynomial parameter
+    !! Jacobi parameter, not used
     REAL(DFP), OPTIONAL, INTENT(IN) :: lambda
-    !! Ultraspherical parameter
+    !! ultraspherical parameter, not used
     REAL(DFP), INTENT(INOUT) :: ans(:, :)
-    !! ans(SIZE(xij, 2), order + 1, 1)
-    !! Value of n+1  polynomials at point x
-    !! ans(:, j) is the value of jth polynomial at x points
-    !! ans(i, :) is the value of all polynomials at x(i) point
+    !! second derivatives of the `order + 1` polynomials.
+    !! The routine writes `ans(1:nrow, 1:ncol)`.
+    !! `ans(:, j)` is the `j`th polynomial at all points
+    !! `ans(i, :)` is all polynomials at the `i`th point
     INTEGER(I4B), INTENT(OUT) :: nrow, ncol
-    !! nrow = size(xij,2) ! ncol = order+1
+    !! number of rows and columns written to `ans`
+    !! `nrow = SIZE(xij, 2)` and `ncol = order + 1`
   END SUBROUTINE OrthogonalBasisLaplacian_Line1_
 END INTERFACE OrthogonalBasisLaplacian_Line_
 
@@ -3554,69 +2721,59 @@ END INTERFACE OrthogonalBasisLaplacian_Line_
 
 !> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
-! summary: Evaluate line Basis values.
+! summary: Returns the basis polynomials of a line at one point.
 !
-! Results use point rows and degree columns. Gradient element wrappers add a
-! coordinate axis. BIUNIT is used explicitly.
+! Returns the values of the first `order + 1` basis polynomials at the
+! point `x`.
+! `ans(j)` is the value of the polynomial of degree `j - 1`.
 !
-! Arguments:
-!   order : INTEGER(I4B), INTENT(IN). Polynomial degree, except quadrature
-! where it is requested exactness degree.
-!   x : REAL(DFP), INTENT(IN). Evaluation point(s); columns for rank two
-! arrays.
-!   refLine : CHARACTER(*), INTENT(IN). Reference interval name, UNIT or
-! BIUNIT.
-!   basisType : INTEGER(I4B), OPTIONAL, INTENT(IN). Polynomial family
-! selector, for example poly%Monomial.
-!   alpha : REAL(DFP), OPTIONAL, INTENT(IN). Jacobi weight parameter alpha.
-!   beta : REAL(DFP), OPTIONAL, INTENT(IN). Jacobi weight parameter beta.
-!   lambda : REAL(DFP), OPTIONAL, INTENT(IN). Ultraspherical family parameter.
+! `basisType` selects the polynomial family.
+! The default is `poly%Monomial`, which gives `ans(j) = x**(j - 1)`.
+! The Jacobi family requires `alpha` and `beta`.
+! The ultraspherical family requires `lambda`.
+!
+! @note
+! `x` must lie in the interval [-1, 1], so `refLine` must be `"BIUNIT"`.
+! A release build does not check `refLine` and ignores it.
+! @endnote
+!
+! @warning
+! For a family other than `poly%Monomial`, `order` must be at most 99.
+! The routine keeps the values in a work array of 100 entries.
+! @endwarning
 !
 ! Returns:
-!   ans : REAL(DFP)(order + 1).
+!   ans : REAL(DFP) - basis values, size `order + 1`
 !
 ! Formula:
-! $$Y_{ij}=\phi_j(x_i)$$
+!   $$ ans_j = \phi_{j-1}(x) $$
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE GlobalData, ONLY: DFP
-! USE GlobalData, ONLY: I4B
-! USE GlobalData, ONLY: poly
-! USE LineInterpolationUtility, ONLY: BasisEvalAll_Line
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-! REAL(DFP) :: x(1,3), y(3,3)
+! - [test 2](|base|Line/examples/BasisEvalAll_Line_test_2.F90)
 !
-! x(1,:) = [-0.5_DFP,0.0_DFP,0.5_DFP]
-! y = BasisEvalAll_Line(order=2_I4B, x=x(1,:), refLine="BIUNIT", &
-!   basisType=poly%Monomial)
-! CALL OK(MAXVAL(ABS(y(:,3)- &
-!   (x(1,:)**2))) < 1.0E-10_DFP, "Analytic quadratic mode")
-! END PROGRAM main
-!```
+! See also: [[BasisEvalAll_Line1_]], [[BasisEvalAll_Line2]]
 
 INTERFACE BasisEvalAll_Line
   MODULE FUNCTION BasisEvalAll_Line1(order, x, refLine, basisType, alpha, &
                                      beta, lambda) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
-    !! order of  polynomials
+    !! order of the polynomials, the highest degree
     REAL(DFP), INTENT(IN) :: x
     !! point of evaluation
     CHARACTER(*), INTENT(IN) :: refLine
-    !! Refline should be  BIUNIT
+    !! interval of the point, it should be `"BIUNIT"`
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: basisType
-    !! BasisType
+    !! polynomial family, for example `poly%Monomial`, `poly%Legendre`
+    !! default `poly%Monomial`
     REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
-    !! Jacobi polynomial parameter
+    !! Jacobi parameter, needed for the Jacobi family
     REAL(DFP), OPTIONAL, INTENT(IN) :: beta
-    !! Jacobi polynomial parameter
+    !! Jacobi parameter, needed for the Jacobi family
     REAL(DFP), OPTIONAL, INTENT(IN) :: lambda
-    !! Ultraspherical parameter
+    !! ultraspherical parameter, needed for the ultraspherical family
     REAL(DFP) :: ans(order + 1)
-    !! Value of n+1  polynomials at point x
+    !! values of the `order + 1` polynomials at the point `x`
   END FUNCTION BasisEvalAll_Line1
 END INTERFACE BasisEvalAll_Line
 
@@ -3626,75 +2783,62 @@ END INTERFACE BasisEvalAll_Line
 
 !> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
-! summary: Evaluate line Basis values.
+! summary: Computes the basis polynomials of a line at one point.
 !
-! Results use point rows and degree columns. Gradient element wrappers add a
-! coordinate axis. BIUNIT is used explicitly.
+! Computes the values of the first `order + 1` basis polynomials at the
+! point `x`.
+! It writes them into the vector `ans`.
+! `ans(j)` is the value of the polynomial of degree `j - 1`.
 !
-! Arguments:
-!   order : INTEGER(I4B), INTENT(IN). Polynomial degree, except quadrature
-! where it is requested exactness degree.
-!   x : REAL(DFP), INTENT(IN). Evaluation point(s); columns for rank two
-! arrays.
-!   ans : REAL(DFP), INTENT(INOUT)(:). Result buffer; allocate the full active
-! shape before the call.
-!   tsize : INTEGER(I4B), INTENT(OUT). Number of active output entries.
-!   refLine : CHARACTER(*), INTENT(IN). Reference interval name, UNIT or
-! BIUNIT.
-!   basisType : INTEGER(I4B), OPTIONAL, INTENT(IN). Polynomial family
-! selector, for example poly%Monomial.
-!   alpha : REAL(DFP), OPTIONAL, INTENT(IN). Jacobi weight parameter alpha.
-!   beta : REAL(DFP), OPTIONAL, INTENT(IN). Jacobi weight parameter beta.
-!   lambda : REAL(DFP), OPTIONAL, INTENT(IN). Ultraspherical family parameter.
+! `basisType` selects the polynomial family.
+! The default is `poly%Monomial`, which gives `ans(j) = x**(j - 1)`.
+! The Jacobi family requires `alpha` and `beta`.
+! The ultraspherical family requires `lambda`.
 !
-! Returns:
-!   Updates ans(:), tsize.
+! @note
+! `ans` must hold at least `order + 1` entries.
+! The routine does not allocate it.
+! `x` must lie in the interval [-1, 1], so `refLine` must be `"BIUNIT"`.
+! A release build does not check `refLine` and ignores it.
+! @endnote
+!
+! @warning
+! For a family other than `poly%Monomial`, `order` must be at most 99.
+! The routine keeps the values in a work array of 100 entries.
+! @endwarning
 !
 ! Formula:
-! $$Y_{ij}=\phi_j(x_i)$$
+!   $$ ans_j = \phi_{j-1}(x) $$
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE GlobalData, ONLY: DFP
-! USE GlobalData, ONLY: I4B
-! USE GlobalData, ONLY: poly
-! USE LineInterpolationUtility, ONLY: BasisEvalAll_Line_
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-! REAL(DFP) :: x(1,3), y(3,3)
-! INTEGER(I4B) :: nr,nc
+! - [test 2](|base|Line/examples/BasisEvalAll_Line_test_2.F90)
 !
-! x(1,:) = [-0.5_DFP,0.0_DFP,0.5_DFP]
-! CALL BasisEvalAll_Line_(order=2_I4B, x=x(1,:), refLine="BIUNIT", &
-!   basisType=poly%Monomial, ans=y, nrow=nr,ncol=nc)
-! CALL OK(MAXVAL(ABS(y(:,3)- &
-!   (x(1,:)**2))) < 1.0E-10_DFP, "Analytic quadratic mode")
-! END PROGRAM main
-!```
+! See also: [[BasisEvalAll_Line1]], [[BasisEvalAll_Line2_]]
 
 INTERFACE BasisEvalAll_Line_
   MODULE SUBROUTINE BasisEvalAll_Line1_(order, x, ans, tsize, refLine, &
                                         basisType, alpha, beta, lambda)
     INTEGER(I4B), INTENT(IN) :: order
-    !! order of  polynomials
+    !! order of the polynomials, the highest degree
     REAL(DFP), INTENT(IN) :: x
     !! point of evaluation
     REAL(DFP), INTENT(INOUT) :: ans(:)
-    !! ans(order + 1)
-    !! Value of n+1  polynomials at point x
+    !! values of the `order + 1` polynomials at the point `x`
+    !! the routine writes `ans(1:tsize)`
     INTEGER(I4B), INTENT(OUT) :: tsize
+    !! number of values written to `ans`, it is `order + 1`
     CHARACTER(*), INTENT(IN) :: refLine
-    !! Refline should be  BIUNIT
+    !! interval of the point, it should be `"BIUNIT"`
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: basisType
-    !! BasisType
+    !! polynomial family, for example `poly%Monomial`, `poly%Legendre`
+    !! default `poly%Monomial`
     REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
-    !! Jacobi polynomial parameter
+    !! Jacobi parameter, needed for the Jacobi family
     REAL(DFP), OPTIONAL, INTENT(IN) :: beta
-    !! Jacobi polynomial parameter
+    !! Jacobi parameter, needed for the Jacobi family
     REAL(DFP), OPTIONAL, INTENT(IN) :: lambda
-    !! Ultraspherical parameter
+    !! ultraspherical parameter, needed for the ultraspherical family
   END SUBROUTINE BasisEvalAll_Line1_
 END INTERFACE BasisEvalAll_Line_
 
@@ -3704,71 +2848,58 @@ END INTERFACE BasisEvalAll_Line_
 
 !> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
-! summary: Evaluate line Basis values.
+! summary: Returns the basis polynomials of a line at many points.
 !
-! Results use point rows and degree columns. Gradient element wrappers add a
-! coordinate axis. BIUNIT is used explicitly.
+! Returns the values of the first `order + 1` basis polynomials at the
+! points `x`.
+! `ans(i, j)` is the polynomial of degree `j - 1` at the point `x(i)`.
 !
-! Arguments:
-!   order : INTEGER(I4B), INTENT(IN). Polynomial degree, except quadrature
-! where it is requested exactness degree.
-!   x : REAL(DFP), INTENT(IN)(:). Evaluation point(s); columns for rank two
-! arrays.
-!   refLine : CHARACTER(*), INTENT(IN). Reference interval name, UNIT or
-! BIUNIT.
-!   basisType : INTEGER(I4B), OPTIONAL, INTENT(IN). Polynomial family
-! selector, for example poly%Monomial.
-!   alpha : REAL(DFP), OPTIONAL, INTENT(IN). Jacobi weight parameter alpha.
-!   beta : REAL(DFP), OPTIONAL, INTENT(IN). Jacobi weight parameter beta.
-!   lambda : REAL(DFP), OPTIONAL, INTENT(IN). Ultraspherical family parameter.
+! `basisType` selects the polynomial family.
+! The default is `poly%Monomial`, which gives `ans(i, j) = x(i)**(j - 1)`.
+! The Jacobi family requires `alpha` and `beta`.
+! The ultraspherical family requires `lambda`.
+!
+! @note
+! The routine evaluates at `x` as given.
+! It does not map points from the `"UNIT"` interval to [-1, 1].
+! Pass points of the interval [-1, 1] and `refLine` equal to `"BIUNIT"`.
+! A release build does not check `refLine` and ignores it.
+! @endnote
 !
 ! Returns:
-!   ans : REAL(DFP)(SIZE(x), order + 1).
+!   ans : REAL(DFP) - basis values, size `(SIZE(x), order + 1)`
 !
 ! Formula:
-! $$Y_{ij}=\phi_j(x_i)$$
+!   $$ ans_{ij} = \phi_{j-1}(x_i) $$
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE GlobalData, ONLY: DFP
-! USE GlobalData, ONLY: I4B
-! USE GlobalData, ONLY: poly
-! USE LineInterpolationUtility, ONLY: BasisEvalAll_Line
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-! REAL(DFP) :: x(1,3), y(3,3)
+! - [test 1](|base|Line/examples/BasisEvalAll_Line_test_1.F90)
 !
-! x(1,:) = [-0.5_DFP,0.0_DFP,0.5_DFP]
-! y = BasisEvalAll_Line(order=2_I4B, x=x(1,:), refLine="BIUNIT", &
-!   basisType=poly%Monomial)
-! CALL OK(MAXVAL(ABS(y(:,3)- &
-!   (x(1,:)**2))) < 1.0E-10_DFP, "Analytic quadratic mode")
-! END PROGRAM main
-!```
+! See also: [[BasisEvalAll_Line2_]], [[BasisEvalAll_Line1]]
 
 INTERFACE BasisEvalAll_Line
   MODULE FUNCTION BasisEvalAll_Line2(order, x, refLine, basisType, &
                                      alpha, beta, lambda) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
-    !! order of  polynomials
+    !! order of the polynomials, the highest degree
     REAL(DFP), INTENT(IN) :: x(:)
-    !! point of evaluation
+    !! points of evaluation
     CHARACTER(*), INTENT(IN) :: refLine
-    !! UNIT, BIUNIT
+    !! interval of the points, it should be `"BIUNIT"`
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: basisType
-    !! BasisType
+    !! polynomial family, for example `poly%Monomial`, `poly%Legendre`
+    !! default `poly%Monomial`
     REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
-    !! Jacobi polynomial parameter
+    !! Jacobi parameter, needed for the Jacobi family
     REAL(DFP), OPTIONAL, INTENT(IN) :: beta
-    !! Jacobi polynomial parameter
+    !! Jacobi parameter, needed for the Jacobi family
     REAL(DFP), OPTIONAL, INTENT(IN) :: lambda
-    !! Ultraspherical parameter
+    !! ultraspherical parameter, needed for the ultraspherical family
     REAL(DFP) :: ans(SIZE(x), order + 1)
-    !! Value of n+1  polynomials at point x
-    !! ans(:, j) is the value of jth polynomial at x points
-    !! ans(i, :) is the value of all polynomials at x(i) point
+    !! values of the `order + 1` polynomials at the points `x`
+    !! `ans(:, j)` is the `j`th polynomial at all points
+    !! `ans(i, :)` is all polynomials at the point `x(i)`
   END FUNCTION BasisEvalAll_Line2
 END INTERFACE BasisEvalAll_Line
 
@@ -3778,155 +2909,131 @@ END INTERFACE BasisEvalAll_Line
 
 !> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
-! summary: Evaluate line Basis values.
+! summary: Computes the basis polynomials of a line at many points.
 !
-! Results use point rows and degree columns. Gradient element wrappers add a
-! coordinate axis. BIUNIT is used explicitly.
+! Computes the values of the first `order + 1` basis polynomials at the
+! points `x`.
+! It writes them into the matrix `ans`.
+! `ans(i, j)` is the polynomial of degree `j - 1` at the point `x(i)`.
 !
-! Arguments:
-!   order : INTEGER(I4B), INTENT(IN). Polynomial degree, except quadrature
-! where it is requested exactness degree.
-!   x : REAL(DFP), INTENT(IN)(:). Evaluation point(s); columns for rank two
-! arrays.
-!   ans : REAL(DFP), INTENT(INOUT)(:, :). Result buffer; allocate the full
-! active shape before the call.
-!   nrow : INTEGER(I4B), INTENT(OUT). Number of active output rows.
-!   ncol : INTEGER(I4B), INTENT(OUT). Number of active output columns.
-!   refLine : CHARACTER(*), INTENT(IN). Reference interval name, UNIT or
-! BIUNIT.
-!   basisType : INTEGER(I4B), OPTIONAL, INTENT(IN). Polynomial family
-! selector, for example poly%Monomial.
-!   alpha : REAL(DFP), OPTIONAL, INTENT(IN). Jacobi weight parameter alpha.
-!   beta : REAL(DFP), OPTIONAL, INTENT(IN). Jacobi weight parameter beta.
-!   lambda : REAL(DFP), OPTIONAL, INTENT(IN). Ultraspherical family parameter.
+! `basisType` selects the polynomial family.
+! The default is `poly%Monomial`, which gives `ans(i, j) = x(i)**(j - 1)`.
+! The Jacobi family requires `alpha` and `beta`.
+! The ultraspherical family requires `lambda`.
 !
-! Returns:
-!   Updates ans(:, :), nrow, ncol.
+! @note
+! `ans` must hold at least `SIZE(x)` rows and `order + 1` columns.
+! The routine does not allocate it.
+! @endnote
+!
+! @note
+! The routine evaluates at `x` as given.
+! It does not map points from the `"UNIT"` interval to [-1, 1].
+! Pass points of the interval [-1, 1] and `refLine` equal to `"BIUNIT"`.
+! A release build does not check `refLine` and ignores it.
+! @endnote
 !
 ! Formula:
-! $$Y_{ij}=\phi_j(x_i)$$
+!   $$ ans_{ij} = \phi_{j-1}(x_i) $$
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE GlobalData, ONLY: DFP
-! USE GlobalData, ONLY: I4B
-! USE GlobalData, ONLY: poly
-! USE LineInterpolationUtility, ONLY: BasisEvalAll_Line_
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-! REAL(DFP) :: x(1,3), y(3,3)
-! INTEGER(I4B) :: nr,nc
+! - [test 1](|base|Line/examples/BasisEvalAll_Line__test_1.F90)
 !
-! x(1,:) = [-0.5_DFP,0.0_DFP,0.5_DFP]
-! CALL BasisEvalAll_Line_(order=2_I4B, x=x(1,:), refLine="BIUNIT", &
-!   basisType=poly%Monomial, ans=y, nrow=nr,ncol=nc)
-! CALL OK(MAXVAL(ABS(y(:,3)- &
-!   (x(1,:)**2))) < 1.0E-10_DFP, "Analytic quadratic mode")
-! END PROGRAM main
-!```
+! See also: [[BasisEvalAll_Line2]], [[BasisEvalAll_Line1_]]
 
 INTERFACE BasisEvalAll_Line_
   MODULE SUBROUTINE BasisEvalAll_Line2_(order, x, ans, nrow, ncol, &
                                       refLine, basisType, alpha, beta, lambda)
     INTEGER(I4B), INTENT(IN) :: order
-    !! order of  polynomials
+    !! order of the polynomials, the highest degree
     REAL(DFP), INTENT(IN) :: x(:)
-    !! point of evaluation
+    !! points of evaluation
     REAL(DFP), INTENT(INOUT) :: ans(:, :)
-    !! ans(SIZE(x), order + 1)
-    !! Value of n+1  polynomials at point x
-    !! ans(:, j) is the value of jth polynomial at x points
-    !! ans(i, :) is the value of all polynomials at x(i) point
+    !! values of the `order + 1` polynomials at the points `x`.
+    !! The routine writes `ans(1:nrow, 1:ncol)`.
+    !! `ans(:, j)` is the `j`th polynomial at all points
+    !! `ans(i, :)` is all polynomials at the point `x(i)`
     INTEGER(I4B), INTENT(OUT) :: nrow, ncol
-    !! number of rows and columns written to ans
+    !! number of rows and columns written to `ans`
+    !! `nrow = SIZE(x)` and `ncol = order + 1`
     CHARACTER(*), INTENT(IN) :: refLine
-    !! UNIT, BIUNIT
+    !! interval of the points, it should be `"BIUNIT"`
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: basisType
-    !! basis type
+    !! polynomial family, for example `poly%Monomial`, `poly%Legendre`
+    !! default `poly%Monomial`
     REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
-    !! Jacobi polynomial parameter
+    !! Jacobi parameter, needed for the Jacobi family
     REAL(DFP), OPTIONAL, INTENT(IN) :: beta
-    !! Jacobi polynomial parameter
+    !! Jacobi parameter, needed for the Jacobi family
     REAL(DFP), OPTIONAL, INTENT(IN) :: lambda
-    !! Ultraspherical parameter
+    !! ultraspherical parameter, needed for the ultraspherical family
   END SUBROUTINE BasisEvalAll_Line2_
 END INTERFACE BasisEvalAll_Line_
 
 !----------------------------------------------------------------------------
-!                                                         BasisEvalAll_Line
+!                                                        OrthogonalBasis_Line
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
-! summary: Evaluate line OrthogonalBasis values.
+! summary: Returns the orthogonal basis polynomials of a line.
 !
-! Results use point rows and degree columns. Gradient element wrappers add a
-! coordinate axis. BIUNIT is used explicitly.
+! Returns the values of the first `order + 1` basis polynomials of a line
+! at the points `xij`.
+! `ans(i, j)` is the polynomial of degree `j - 1` at the `i`th point.
+! `basisType` selects the polynomial family.
 !
-! Arguments:
-!   order : INTEGER(I4B), INTENT(IN). Polynomial degree, except quadrature
-! where it is requested exactness degree.
-!   xij : REAL(DFP), INTENT(IN)(:, :). Point columns; vertices or
-! interpolation nodes according to the interface.
-!   refLine : CHARACTER(*), INTENT(IN). Reference interval name, UNIT or
-! BIUNIT.
-!   basisType : INTEGER(I4B), INTENT(IN). Polynomial family selector, for
-! example poly%Monomial.
-!   alpha : REAL(DFP), OPTIONAL, INTENT(IN). Jacobi weight parameter alpha.
-!   beta : REAL(DFP), OPTIONAL, INTENT(IN). Jacobi weight parameter beta.
-!   lambda : REAL(DFP), OPTIONAL, INTENT(IN). Ultraspherical family parameter.
+! `refLine` names the interval of the points.
+! The routine checks only its first letter, in any case.
+! 1. `"BIUNIT"` means the interval [-1, 1].
+!    The routine evaluates the polynomials at the points as given.
+! 2. `"UNIT"` means the interval [0, 1].
+!    The routine first maps the points to [-1, 1].
+!
+! @note
+! `xij` has one row, and the routine reads only that row.
+! The Jacobi family requires `alpha` and `beta`.
+! The ultraspherical family requires `lambda`.
+! @endnote
 !
 ! Returns:
-!   ans : REAL(DFP)(SIZE(xij, 2), order + 1).
+!   ans : REAL(DFP) - basis values, size `(SIZE(xij, 2), order + 1)`
 !
 ! Formula:
-! $$Y_{ij}=\phi_j(x_i)$$
+!   $$ ans_{ij} = \phi_{j-1}(x_i) $$
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE GlobalData, ONLY: DFP
-! USE GlobalData, ONLY: I4B
-! USE GlobalData, ONLY: poly
-! USE LineInterpolationUtility, ONLY: OrthogonalBasis_Line
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-! REAL(DFP) :: x(1,3), y(3,3)
+! - [test 1](|base|Line/examples/OrthogonalBasis_Line_test_1.F90)
+! - [test 2](|base|Line/examples/OrthogonalBasis_Line_test_2.F90)
+!   with `"BIUNIT"` and `"UNIT"`
 !
-! x(1,:) = [-0.5_DFP,0.0_DFP,0.5_DFP]
-! y = OrthogonalBasis_Line(order=2_I4B, xij=x, refLine="BIUNIT", &
-!   basisType=poly%Monomial)
-! CALL OK(MAXVAL(ABS(y(:,3)- &
-!   (x(1,:)**2))) < 1.0E-10_DFP, "Analytic quadratic mode")
-! END PROGRAM main
-!```
+! See also: [[OrthogonalBasis_Line1_]]
 
 INTERFACE OrthogonalBasis_Line
   MODULE FUNCTION OrthogonalBasis_Line1(order, xij, refLine, basisType, &
                                         alpha, beta, lambda) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
-    !! order of  polynomials
+    !! order of the polynomials, the highest degree
     REAL(DFP), INTENT(IN) :: xij(:, :)
-    !! point of evaluation
-    !! Number of rows in xij is 1
+    !! points of evaluation, `SIZE(xij, 1)` is 1
+    !! `SIZE(xij, 2)` is the number of points
     CHARACTER(*), INTENT(IN) :: refLine
-    !! UNIT ! BIUNIT
+    !! interval of the points, `"BIUNIT"` or `"UNIT"`
     INTEGER(I4B), INTENT(IN) :: basisType
-    !! Jacobi ! Ultraspherical ! Legendre ! Chebyshev ! Lobatto
-    !! UnscaledLobatto
+    !! polynomial family, for example `poly%Legendre`, `poly%Jacobi`
+    !! there is no default
     REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
-    !! Jacobi polynomial parameter
+    !! Jacobi parameter, needed for the Jacobi family
     REAL(DFP), OPTIONAL, INTENT(IN) :: beta
-    !! Jacobi polynomial parameter
+    !! Jacobi parameter, needed for the Jacobi family
     REAL(DFP), OPTIONAL, INTENT(IN) :: lambda
-    !! Ultraspherical parameter
+    !! ultraspherical parameter, needed for the ultraspherical family
     REAL(DFP) :: ans(SIZE(xij, 2), order + 1)
-    !! Value of n+1  polynomials at point x
-    !! ans(:, j) is the value of jth polynomial at x points
-    !! ans(i, :) is the value of all polynomials at x(i) point
+    !! values of the `order + 1` polynomials at the points `xij`.
+    !! `ans(:, j)` is the `j`th polynomial at all points.
+    !! `ans(i, :)` is all polynomials at the `i`th point.
   END FUNCTION OrthogonalBasis_Line1
 END INTERFACE OrthogonalBasis_Line
 
@@ -3936,82 +3043,69 @@ END INTERFACE OrthogonalBasis_Line
 
 !> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
-! summary: Evaluate line OrthogonalBasis values.
+! summary: Computes the orthogonal basis polynomials of a line.
 !
-! Results use point rows and degree columns. Gradient element wrappers add a
-! coordinate axis. BIUNIT is used explicitly.
+! Computes the values of the first `order + 1` basis polynomials of a line
+! at the points `xij`.
+! It writes them into the matrix `ans`.
+! `ans(i, j)` is the polynomial of degree `j - 1` at the `i`th point.
+! `basisType` selects the polynomial family.
 !
-! Arguments:
-!   order : INTEGER(I4B), INTENT(IN). Polynomial degree, except quadrature
-! where it is requested exactness degree.
-!   xij : REAL(DFP), INTENT(IN)(:, :). Point columns; vertices or
-! interpolation nodes according to the interface.
-!   refLine : CHARACTER(*), INTENT(IN). Reference interval name, UNIT or
-! BIUNIT.
-!   basisType : INTEGER(I4B), INTENT(IN). Polynomial family selector, for
-! example poly%Monomial.
-!   alpha : REAL(DFP), OPTIONAL, INTENT(IN). Jacobi weight parameter alpha.
-!   beta : REAL(DFP), OPTIONAL, INTENT(IN). Jacobi weight parameter beta.
-!   lambda : REAL(DFP), OPTIONAL, INTENT(IN). Ultraspherical family parameter.
-!   ans : REAL(DFP), INTENT(INOUT)(:, :). Result buffer; allocate the full
-! active shape before the call.
-!   nrow : INTEGER(I4B), INTENT(OUT). Number of active output rows.
-!   ncol : INTEGER(I4B), INTENT(OUT). Number of active output columns.
+! `refLine` names the interval of the points.
+! The routine checks only its first letter, in any case.
+! 1. `"BIUNIT"` means the interval [-1, 1].
+!    The routine evaluates the polynomials at the points as given.
+! 2. `"UNIT"` means the interval [0, 1].
+!    The routine first maps the points to [-1, 1].
 !
-! Returns:
-!   Updates ans(:, :), nrow, ncol.
+! @note
+! `ans` must hold at least `SIZE(xij, 2)` rows and `order + 1` columns.
+! `xij` has one row, and the routine reads only that row.
+! The Jacobi family requires `alpha` and `beta`.
+! The ultraspherical family requires `lambda`.
+! @endnote
+!
+! @warning
+! For any other `refLine`, the routine only fills `ans` with zeros.
+! A debug build also reports an error.
+! @endwarning
 !
 ! Formula:
-! $$Y_{ij}=\phi_j(x_i)$$
+!   $$ ans_{ij} = \phi_{j-1}(x_i) $$
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE GlobalData, ONLY: DFP
-! USE GlobalData, ONLY: I4B
-! USE GlobalData, ONLY: poly
-! USE LineInterpolationUtility, ONLY: OrthogonalBasis_Line_
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-! REAL(DFP) :: x(1,3), y(3,3)
-! INTEGER(I4B) :: nr,nc
+! - [test 1](|base|Line/examples/OrthogonalBasis_Line__test_1.F90)
 !
-! x(1,:) = [-0.5_DFP,0.0_DFP,0.5_DFP]
-! CALL OrthogonalBasis_Line_(order=2_I4B, xij=x, refLine="BIUNIT", &
-!   basisType=poly%Monomial, ans=y, nrow=nr,ncol=nc)
-! CALL OK(MAXVAL(ABS(y(:,3)- &
-!   (x(1,:)**2))) < 1.0E-10_DFP, "Analytic quadratic mode")
-! END PROGRAM main
-!```
+! See also: [[OrthogonalBasis_Line1]]
 
 INTERFACE OrthogonalBasis_Line_
   MODULE SUBROUTINE OrthogonalBasis_Line1_( &
     order, xij, refLine, basisType, ans, nrow, ncol, alpha, beta, lambda)
     INTEGER(I4B), INTENT(IN) :: order
-    !! order of  polynomials
+    !! order of the polynomials, the highest degree
     REAL(DFP), INTENT(IN) :: xij(:, :)
-    !! point of evaluation
-    !! Number of rows in xij is 1
+    !! points of evaluation, `SIZE(xij, 1)` is 1
+    !! `SIZE(xij, 2)` is the number of points
     CHARACTER(*), INTENT(IN) :: refLine
-    !! UNIT ! BIUNIT
+    !! interval of the points, `"BIUNIT"` or `"UNIT"`
     INTEGER(I4B), INTENT(IN) :: basisType
-    !! Jacobi ! Ultraspherical ! Legendre ! Chebyshev ! Lobatto
-    !! UnscaledLobatto
+    !! polynomial family, for example `poly%Legendre`, `poly%Jacobi`
+    !! there is no default
     REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
-    !! Jacobi polynomial parameter
+    !! Jacobi parameter, needed for the Jacobi family
     REAL(DFP), OPTIONAL, INTENT(IN) :: beta
-    !! Jacobi polynomial parameter
+    !! Jacobi parameter, needed for the Jacobi family
     REAL(DFP), OPTIONAL, INTENT(IN) :: lambda
-    !! Ultraspherical parameter
+    !! ultraspherical parameter, needed for the ultraspherical family
     REAL(DFP), INTENT(INOUT) :: ans(:, :)
-    !! Value of n+1  polynomials at point x
-    !  ans(SIZE(xij, 2), order + 1)
-    !! ans(:, j) is the value of jth polynomial at x points
-    !! ans(i, :) is the value of all polynomials at x(i) point
+    !! values of the `order + 1` polynomials at the points `xij`.
+    !! The routine writes `ans(1:nrow, 1:ncol)`.
+    !! `ans(:, j)` is the `j`th polynomial at all points.
+    !! `ans(i, :)` is all polynomials at the `i`th point.
     INTEGER(I4B), INTENT(OUT) :: nrow, ncol
-    !! nrow = size(xij, 2)
-    !! ncol = order+1
+    !! number of rows and columns written to `ans`.
+    !! `nrow = SIZE(xij, 2)` and `ncol = order + 1`.
   END SUBROUTINE OrthogonalBasis_Line1_
 END INTERFACE OrthogonalBasis_Line_
 
@@ -4021,72 +3115,66 @@ END INTERFACE OrthogonalBasis_Line_
 
 !> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
-! summary: Evaluate line OrthogonalBasis gradient.
+! summary: Returns the gradient of the orthogonal basis of a line.
 !
-! Results use point rows and degree columns. Gradient element wrappers add a
-! coordinate axis. BIUNIT is used explicitly.
+! Returns the first derivatives of the first `order + 1` basis
+! polynomials of a line at the points `xij`.
+! The result is a rank-3 array with shape `SIZE(xij, 2)` by `order + 1`
+! by 1.
+! Entry `ans(i, j, 1)` is the derivative of the polynomial of degree
+! `j - 1` at the `i`th point.
+! `basisType` selects the polynomial family.
 !
-! Arguments:
-!   order : INTEGER(I4B), INTENT(IN). Polynomial degree, except quadrature
-! where it is requested exactness degree.
-!   xij : REAL(DFP), INTENT(IN)(:, :). Point columns; vertices or
-! interpolation nodes according to the interface.
-!   refLine : CHARACTER(*), INTENT(IN). Reference interval name, UNIT or
-! BIUNIT.
-!   basisType : INTEGER(I4B), INTENT(IN). Polynomial family selector, for
-! example poly%Monomial.
-!   alpha : REAL(DFP), OPTIONAL, INTENT(IN). Jacobi weight parameter alpha.
-!   beta : REAL(DFP), OPTIONAL, INTENT(IN). Jacobi weight parameter beta.
-!   lambda : REAL(DFP), OPTIONAL, INTENT(IN). Ultraspherical family parameter.
+! `refLine` names the interval of the points.
+! The routine checks only its first letter, in any case.
+! 1. `"BIUNIT"` means the interval [-1, 1].
+!    The routine returns the plain derivatives.
+! 2. `"UNIT"` means the interval [0, 1].
+!    The routine first maps the points to [-1, 1].
+!    It then multiplies the derivatives by 2.
 !
-! Returns:
-!   ans : REAL(DFP)(SIZE(xij, 2), order + 1, 1).
+! If `refLine` is not recognised, `ans` is not set.
+! A debug build stops with an error in this case.
+!
+! @note
+! The routine does not pass `alpha`, `beta` and `lambda` on, so they have
+! no effect.
+! @endnote
 !
 ! Formula:
-! $$G_{ij}=\phi_j'(x_i)$$
+!   $$ ans_{i,j,1} = \phi_j'(x_i) $$
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE GlobalData, ONLY: DFP
-! USE GlobalData, ONLY: I4B
-! USE GlobalData, ONLY: poly
-! USE LineInterpolationUtility, ONLY: OrthogonalBasisGradient_Line
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-! REAL(DFP) :: x(1,3), y(3,3,1)
+! - [test 1](|base|Line/examples/OrthogonalBasisGradient_Line_test_1.F90)
+! - [test 2](|base|Line/examples/OrthogonalBasisGradient_Line_test_2.F90)
+! - [test 3](|base|Line/examples/OrthogonalBasisGradient_Line_test_3.F90)
 !
-! x(1,:) = [-0.5_DFP,0.0_DFP,0.5_DFP]
-! y = OrthogonalBasisGradient_Line(order=2_I4B, xij=x, refLine="BIUNIT", &
-!   basisType=poly%Monomial)
-! CALL OK(MAXVAL(ABS(y(:,3,1)- &
-!   (2.0_DFP*x(1,:)))) < 1.0E-10_DFP, "Analytic quadratic mode")
-! END PROGRAM main
-!```
+! See also: [[OrthogonalBasisGradient_Line1_]]
 
 INTERFACE OrthogonalBasisGradient_Line
   MODULE FUNCTION OrthogonalBasisGradient_Line1( &
     order, xij, refLine, basisType, alpha, beta, lambda) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
-    !! order of  polynomials
+    !! highest polynomial degree
     REAL(DFP), INTENT(IN) :: xij(:, :)
-    !! point of evaluation
-    !! Number of rows in xij is 1
+    !! points of evaluation in `xij` format.
+    !! The routine reads only the first row, so `SIZE(xij, 1)` should be 1.
     CHARACTER(*), INTENT(IN) :: refLine
-    !! UNIT ! BIUNIT
+    !! reference interval, `"UNIT"` or `"BIUNIT"`
     INTEGER(I4B), INTENT(IN) :: basisType
-    ! basisType
+    !! polynomial family, for example `poly%Monomial` or `poly%Legendre`.
+    !! It has no default.
     REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
-    !! Jacobi polynomial parameter
+    !! Jacobi parameter, not used
     REAL(DFP), OPTIONAL, INTENT(IN) :: beta
-    !! Jacobi polynomial parameter
+    !! Jacobi parameter, not used
     REAL(DFP), OPTIONAL, INTENT(IN) :: lambda
-    !! Ultraspherical parameter
+    !! ultraspherical parameter, not used
     REAL(DFP) :: ans(SIZE(xij, 2), order + 1, 1)
-    !! Value of n+1  polynomials at point x
-    !! ans(:, j) is the value of jth polynomial at x points
-    !! ans(i, :) is the value of all polynomials at x(i) point
+    !! derivatives of the `order + 1` polynomials.
+    !! `ans(:, j, 1)` is the `j`th polynomial at all points.
+    !! `ans(i, :, 1)` is all polynomials at the `i`th point.
   END FUNCTION OrthogonalBasisGradient_Line1
 END INTERFACE OrthogonalBasisGradient_Line
 
@@ -4096,82 +3184,69 @@ END INTERFACE OrthogonalBasisGradient_Line
 
 !> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
-! summary: Evaluate line OrthogonalBasis gradient.
+! summary: Computes the gradient of the orthogonal basis of a line, into
+!   a buffer.
 !
-! Results use point rows and degree columns. Gradient element wrappers add a
-! coordinate axis. BIUNIT is used explicitly.
+! Computes the first derivatives of the first `order + 1` basis
+! polynomials of a line at the points `xij`.
+! It writes them into the rank-3 array `ans`.
+! Entry `ans(i, j, 1)` is the derivative of the polynomial of degree
+! `j - 1` at the `i`th point.
+! `basisType` selects the polynomial family.
 !
-! Arguments:
-!   order : INTEGER(I4B), INTENT(IN). Polynomial degree, except quadrature
-! where it is requested exactness degree.
-!   xij : REAL(DFP), INTENT(IN)(:, :). Point columns; vertices or
-! interpolation nodes according to the interface.
-!   refLine : CHARACTER(*), INTENT(IN). Reference interval name, UNIT or
-! BIUNIT.
-!   basisType : INTEGER(I4B), INTENT(IN). Polynomial family selector, for
-! example poly%Monomial.
-!   alpha : REAL(DFP), OPTIONAL, INTENT(IN). Jacobi weight parameter alpha.
-!   beta : REAL(DFP), OPTIONAL, INTENT(IN). Jacobi weight parameter beta.
-!   lambda : REAL(DFP), OPTIONAL, INTENT(IN). Ultraspherical family parameter.
-!   ans : REAL(DFP), INTENT(INOUT)(:, :, :). Result buffer; allocate the full
-! active shape before the call.
-!   dim1 : INTEGER(I4B), INTENT(OUT). Active point dimension.
-!   dim2 : INTEGER(I4B), INTENT(OUT). Active basis dimension.
-!   dim3 : INTEGER(I4B), INTENT(OUT). Active coordinate dimension.
+! `refLine` names the interval of the points.
+! The routine checks only its first letter, in any case.
+! 1. `"BIUNIT"` means the interval [-1, 1].
+!    The routine returns the plain derivatives.
+! 2. `"UNIT"` means the interval [0, 1].
+!    The routine first maps the points to [-1, 1].
+!    It then multiplies the derivatives by 2.
 !
-! Returns:
-!   Updates ans(:, :, :), dim1, dim2, dim3.
+! If `refLine` is not recognised, `ans` stays untouched.
+! A debug build stops with an error in this case.
+!
+! @note
+! The routine does not pass `alpha`, `beta` and `lambda` on, so they have
+! no effect.
+! @endnote
 !
 ! Formula:
-! $$G_{ij}=\phi_j'(x_i)$$
+!   $$ ans_{i,j,1} = \phi_j'(x_i) $$
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE GlobalData, ONLY: DFP
-! USE GlobalData, ONLY: I4B
-! USE GlobalData, ONLY: poly
-! USE LineInterpolationUtility, ONLY: OrthogonalBasisGradient_Line_
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-! REAL(DFP) :: x(1,3), y(3,3,1)
-! INTEGER(I4B) :: nr,nc,nd
+! - [test 1](|base|Line/examples/OrthogonalBasisGradient_Line__test_1.F90)
 !
-! x(1,:) = [-0.5_DFP,0.0_DFP,0.5_DFP]
-! CALL OrthogonalBasisGradient_Line_(order=2_I4B, xij=x, &
-!   refLine="BIUNIT", basisType=poly%Monomial, ans=y, dim1=nr,dim2=nc,dim3=nd)
-! CALL OK(MAXVAL(ABS(y(:,3,1)- &
-!   (2.0_DFP*x(1,:)))) < 1.0E-10_DFP, "Analytic quadratic mode")
-! END PROGRAM main
-!```
+! See also: [[OrthogonalBasisGradient_Line1]]
 
 INTERFACE OrthogonalBasisGradient_Line_
   MODULE SUBROUTINE OrthogonalBasisGradient_Line1_( &
     order, xij, refLine, basisType, ans, dim1, dim2, dim3, alpha, beta, &
     lambda)
     INTEGER(I4B), INTENT(IN) :: order
-    !! order of  polynomials
+    !! highest polynomial degree
     REAL(DFP), INTENT(IN) :: xij(:, :)
-    !! point of evaluation
-    !! Number of rows in xij is 1
+    !! points of evaluation in `xij` format.
+    !! The routine reads only the first row, so `SIZE(xij, 1)` should be 1.
     CHARACTER(*), INTENT(IN) :: refLine
-    !! reference line element: UNIT, BIUNIT
+    !! reference interval, `"UNIT"` or `"BIUNIT"`
     INTEGER(I4B), INTENT(IN) :: basisType
-    !! basisType
+    !! polynomial family, for example `poly%Monomial` or `poly%Legendre`.
+    !! It has no default.
     REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
-    !! Jacobi polynomial parameter
+    !! Jacobi parameter, not used
     REAL(DFP), OPTIONAL, INTENT(IN) :: beta
-    !! Jacobi polynomial parameter
+    !! Jacobi parameter, not used
     REAL(DFP), OPTIONAL, INTENT(IN) :: lambda
-    !! Ultraspherical parameter
+    !! ultraspherical parameter, not used
     REAL(DFP), INTENT(INOUT) :: ans(:, :, :)
-    !! ans(SIZE(xij, 2), order + 1, 1)
-    !! Value of n+1  polynomials at point x
-    !! ans(:, j) is the value of jth polynomial at x points
-    !! ans(i, :) is the value of all polynomials at x(i) point
+    !! derivatives of the `order + 1` polynomials.
+    !! The routine writes `ans(1:dim1, 1:dim2, 1)`.
+    !! The shape of `ans` must be at least `SIZE(xij, 2)` by `order + 1`
+    !! by 1.
     INTEGER(I4B), INTENT(OUT) :: dim1, dim2, dim3
-    !! dim1 = size(xij,2) ! dim2 = order+1 ! dim3 = 1
+    !! number of entries written to `ans` along each dimension.
+    !! `dim1 = SIZE(xij, 2)`, `dim2 = order + 1` and `dim3 = 1`.
   END SUBROUTINE OrthogonalBasisGradient_Line1_
 END INTERFACE OrthogonalBasisGradient_Line_
 
@@ -4181,59 +3256,46 @@ END INTERFACE OrthogonalBasisGradient_Line_
 
 !> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
-! summary: Evaluate line HeirarchicalBasis values.
+! summary: Returns the hierarchical basis of a line.
 !
-! Results use point rows and degree columns. Gradient element wrappers add a
-! coordinate axis. BIUNIT is used explicitly. The API spelling Heirarchical is
-! intentional. Endpoint modes come first, then scaled Lobatto interior modes.
-! Explicit orient overloads change interior mode signs.
+! Returns the values of the first `order + 1` hierarchical basis
+! functions of a line at the points `xij`.
+! The result is a matrix with shape `SIZE(xij, 2)` by `order + 1`.
+! The first two functions belong to the end points.
+! The others use scaled Lobatto polynomials of degree 2 and higher.
+! The spelling `Heirarchical` is part of the API.
 !
-! Arguments:
-!   order : INTEGER(I4B), INTENT(IN). Polynomial degree, except quadrature
-! where it is requested exactness degree.
-!   xij : REAL(DFP), INTENT(IN)(:, :). Point columns; vertices or
-! interpolation nodes according to the interface.
-!   refLine : CHARACTER(*), INTENT(IN). Reference interval name, UNIT or
-! BIUNIT.
+! `refLine` names the interval of the points.
+! The routine checks only its first letter, in any case.
+! 1. `"BIUNIT"` means the interval [-1, 1].
+!    The routine evaluates the functions at the points as given.
+! 2. `"UNIT"` means the interval [0, 1].
+!    The routine first maps the points to [-1, 1].
 !
-! Returns:
-!   ans : REAL(DFP)(SIZE(xij, 2), order + 1).
+! This routine uses the orientation 1.
+! Use [[HeirarchicalBasis_Line2_]] to choose the orientation.
 !
 ! Formula:
-! $$Y_{ij}=\phi_j(x_i)$$
+!   $$ ans_{i,j} = \phi_j(x_i) $$
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE GlobalData, ONLY: DFP
-! USE GlobalData, ONLY: I4B
-! USE LineInterpolationUtility, ONLY: HeirarchicalBasis_Line
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-! REAL(DFP) :: x(1,3), y(3,3)
+! - [test 1](|base|Line/examples/HeirarchicalBasis_Line_test_1.F90)
+! - [test 2](|base|Line/examples/HeirarchicalBasis_Line_test_2.F90)
 !
-! x(1,:) = [-0.5_DFP,0.0_DFP,0.5_DFP]
-! y = HeirarchicalBasis_Line(order=2_I4B, xij=x, refLine="BIUNIT")
-! CALL OK(MAXVAL(ABS(y(:,3)- &
-!   (1.5_DFP*(x(1,:)**2-1.0_DFP)/SQRT(6.0_DFP)))) < 1.0E-10_DFP, &
-!   "Analytic quadratic mode")
-! END PROGRAM main
-!```
+! See also: [[HeirarchicalBasis_Line1_]]
 
 INTERFACE HeirarchicalBasis_Line
   MODULE FUNCTION HeirarchicalBasis_Line1(order, xij, refLine) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
-    !! Polynomial order of interpolation
+    !! highest polynomial degree
     REAL(DFP), INTENT(IN) :: xij(:, :)
-    !! Points of evaluation in xij format
+    !! points of evaluation in `xij` format.
+    !! The routine reads only the first row, so `SIZE(xij, 1)` should be 1.
     CHARACTER(*), INTENT(IN) :: refLine
-    !! This parameter denotes the type of reference line.
-    !! It can take following values:
-    !! UNIT: in this case xij is in unit Line.
-    !! BIUNIT: in this case xij is in biunit Line.
+    !! reference interval, `"UNIT"` or `"BIUNIT"`
     REAL(DFP) :: ans(SIZE(xij, 2), order + 1)
-    !! Hierarchical basis
+    !! hierarchical basis
   END FUNCTION HeirarchicalBasis_Line1
 END INTERFACE HeirarchicalBasis_Line
 
@@ -4243,68 +3305,55 @@ END INTERFACE HeirarchicalBasis_Line
 
 !> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
-! summary: Evaluate line HeirarchicalBasis values.
+! summary: Computes the hierarchical basis of a line, into a buffer.
 !
-! Results use point rows and degree columns. Gradient element wrappers add a
-! coordinate axis. BIUNIT is used explicitly. The API spelling Heirarchical is
-! intentional. Endpoint modes come first, then scaled Lobatto interior modes.
-! Explicit orient overloads change interior mode signs.
+! Computes the values of the first `order + 1` hierarchical basis
+! functions of a line at the points `xij`.
+! It writes them into the matrix `ans`.
+! The first two functions belong to the end points.
+! The others use scaled Lobatto polynomials of degree 2 and higher.
+! The spelling `Heirarchical` is part of the API.
 !
-! Arguments:
-!   order : INTEGER(I4B), INTENT(IN). Polynomial degree, except quadrature
-! where it is requested exactness degree.
-!   xij : REAL(DFP), INTENT(IN)(:, :). Point columns; vertices or
-! interpolation nodes according to the interface.
-!   refLine : CHARACTER(*), INTENT(IN). Reference interval name, UNIT or
-! BIUNIT.
-!   ans : REAL(DFP), INTENT(INOUT)(:, :). Result buffer; allocate the full
-! active shape before the call.
-!   nrow : INTEGER(I4B), INTENT(OUT). Number of active output rows.
-!   ncol : INTEGER(I4B), INTENT(OUT). Number of active output columns.
+! `refLine` names the interval of the points.
+! The routine checks only its first letter, in any case.
+! 1. `"BIUNIT"` means the interval [-1, 1].
+!    The routine evaluates the functions at the points as given.
+! 2. `"UNIT"` means the interval [0, 1].
+!    The routine first maps the points to [-1, 1].
 !
-! Returns:
-!   Updates ans(:, :), nrow, ncol.
+! If `refLine` is not recognised, the routine sets `nrow` and `ncol`
+! to 0 and leaves `ans` untouched.
+!
+! This routine uses the orientation 1.
+! Use [[HeirarchicalBasis_Line2_]] to choose the orientation.
 !
 ! Formula:
-! $$Y_{ij}=\phi_j(x_i)$$
+!   $$ ans_{i,j} = \phi_j(x_i) $$
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE GlobalData, ONLY: DFP
-! USE GlobalData, ONLY: I4B
-! USE LineInterpolationUtility, ONLY: HeirarchicalBasis_Line_
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-! REAL(DFP) :: x(1,3), y(3,3)
-! INTEGER(I4B) :: nr,nc
+! - [test 1](|base|Line/examples/HeirarchicalBasis_Line__test_1.F90)
+! - [test 2](|base|Line/examples/HeirarchicalBasis_Line_test_2.F90)
 !
-! x(1,:) = [-0.5_DFP,0.0_DFP,0.5_DFP]
-! CALL HeirarchicalBasis_Line_(order=2_I4B, xij=x, refLine="BIUNIT", &
-!   ans=y, nrow=nr,ncol=nc)
-! CALL OK(MAXVAL(ABS(y(:,3)- &
-!   (1.5_DFP*(x(1,:)**2-1.0_DFP)/SQRT(6.0_DFP)))) < 1.0E-10_DFP, &
-!   "Analytic quadratic mode")
-! END PROGRAM main
-!```
+! See also: [[HeirarchicalBasis_Line1]]
 
 INTERFACE HeirarchicalBasis_Line_
   MODULE SUBROUTINE HeirarchicalBasis_Line1_( &
     order, xij, refLine, ans, nrow, ncol)
     INTEGER(I4B), INTENT(IN) :: order
-    !! Polynomial order of interpolation
+    !! highest polynomial degree
     REAL(DFP), INTENT(IN) :: xij(:, :)
-    !! Points of evaluation in xij format
+    !! points of evaluation in `xij` format.
+    !! The routine reads only the first row, so `SIZE(xij, 1)` should be 1.
     CHARACTER(*), INTENT(IN) :: refLine
-    !! This parameter denotes the type of reference line.
-    !! It can take following values:
-    !! UNIT: in this case xij is in unit Line.
-    !! BIUNIT: in this case xij is in biunit Line.
+    !! reference interval, `"UNIT"` or `"BIUNIT"`
     REAL(DFP), INTENT(INOUT) :: ans(:, :)
-    !! Hierarchical basis
+    !! hierarchical basis.
+    !! The routine writes `ans(1:nrow, 1:ncol)`.
+    !! The shape of `ans` must be at least `SIZE(xij, 2)` by `order + 1`.
     INTEGER(I4B), INTENT(OUT) :: nrow, ncol
-    !! SIZE(xij, 2), order + 1
+    !! number of rows and columns written to `ans`.
+    !! `nrow = SIZE(xij, 2)` and `ncol = order + 1`.
   END SUBROUTINE HeirarchicalBasis_Line1_
 END INTERFACE HeirarchicalBasis_Line_
 
@@ -4314,72 +3363,63 @@ END INTERFACE HeirarchicalBasis_Line_
 
 !> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
-! summary: Evaluate line HeirarchicalBasis values.
+! summary: Computes the hierarchical basis of a line with a given
+!   orientation, into a buffer.
 !
-! Results use point rows and degree columns. Gradient element wrappers add a
-! coordinate axis. BIUNIT is used explicitly. The API spelling Heirarchical is
-! intentional. Endpoint modes come first, then scaled Lobatto interior modes.
-! Explicit orient overloads change interior mode signs.
+! Computes the values of the first `order + 1` hierarchical basis
+! functions of a line at the points `xij`.
+! It writes them into the matrix `ans`.
+! The first two functions belong to the end points.
+! The others use scaled Lobatto polynomials of degree 2 and higher.
+! The spelling `Heirarchical` is part of the API.
 !
-! Arguments:
-!   order : INTEGER(I4B), INTENT(IN). Polynomial degree, except quadrature
-! where it is requested exactness degree.
-!   xij : REAL(DFP), INTENT(IN)(:, :). Point columns; vertices or
-! interpolation nodes according to the interface.
-!   refLine : CHARACTER(*), INTENT(IN). Reference interval name, UNIT or
-! BIUNIT.
-!   orient : INTEGER(I4B), INTENT(IN). Interior mode orientation sign, +1 or
-! -1.
-!   ans : REAL(DFP), INTENT(INOUT)(:, :). Result buffer; allocate the full
-! active shape before the call.
-!   nrow : INTEGER(I4B), INTENT(OUT). Number of active output rows.
-!   ncol : INTEGER(I4B), INTENT(OUT). Number of active output columns.
+! `refLine` names the interval of the points.
+! The routine checks only its first letter, in any case.
+! 1. `"BIUNIT"` means the interval [-1, 1].
+!    The routine evaluates the functions at the points as given.
+! 2. `"UNIT"` means the interval [0, 1].
+!    The routine first maps the points to [-1, 1].
 !
-! Returns:
-!   Updates ans(:, :), nrow, ncol.
+! `orient` sets the orientation of the line.
+! The routine multiplies the function of degree `k`, with `k >= 2`, by
+! `orient**k`.
+! The end-point functions do not change.
+!
+! If `refLine` is not recognised, the routine sets `nrow` and `ncol`
+! to 0 and leaves `ans` untouched.
+!
+! @note
+! The routine does not check `orient`. Use 1 or -1.
+! @endnote
 !
 ! Formula:
-! $$Y_{ij}=\phi_j(x_i)$$
+!   $$ ans_{i,j} = \phi_j(x_i) $$
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE GlobalData, ONLY: DFP
-! USE GlobalData, ONLY: I4B
-! USE LineInterpolationUtility, ONLY: HeirarchicalBasis_Line_
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-! REAL(DFP) :: x(1,3), y(3,3)
-! INTEGER(I4B) :: nr,nc
+! - [test 2](|base|Line/examples/HeirarchicalBasis_Line_test_2.F90)
 !
-! x(1,:) = [-0.5_DFP,0.0_DFP,0.5_DFP]
-! CALL HeirarchicalBasis_Line_(order=2_I4B, xij=x, refLine="BIUNIT", &
-!   ans=y, nrow=nr,ncol=nc)
-! CALL OK(MAXVAL(ABS(y(:,3)- &
-!   (1.5_DFP*(x(1,:)**2-1.0_DFP)/SQRT(6.0_DFP)))) < 1.0E-10_DFP, &
-!   "Analytic quadratic mode")
-! END PROGRAM main
-!```
+! See also: [[HeirarchicalBasis_Line_]]
 
 INTERFACE HeirarchicalBasis_Line_
   MODULE SUBROUTINE HeirarchicalBasis_Line2_( &
     order, xij, refLine, orient, ans, nrow, ncol)
     INTEGER(I4B), INTENT(IN) :: order
-    !! Polynomial order of interpolation
+    !! highest polynomial degree
     REAL(DFP), INTENT(IN) :: xij(:, :)
-    !! Points of evaluation in xij format
+    !! points of evaluation in `xij` format.
+    !! The routine reads only the first row, so `SIZE(xij, 1)` should be 1.
     CHARACTER(*), INTENT(IN) :: refLine
-    !! This parameter denotes the type of reference line.
-    !! It can take following values:
-    !! UNIT: in this case xij is in unit Line.
-    !! BIUNIT: in this case xij is in biunit Line.
+    !! reference interval, `"UNIT"` or `"BIUNIT"`
     INTEGER(I4B), INTENT(IN) :: orient
-    !! orientation of line: 1 or -1
+    !! orientation of the line, 1 or -1
     REAL(DFP), INTENT(INOUT) :: ans(:, :)
-    !! Hierarchical basis
+    !! hierarchical basis.
+    !! The routine writes `ans(1:nrow, 1:ncol)`.
+    !! The shape of `ans` must be at least `SIZE(xij, 2)` by `order + 1`.
     INTEGER(I4B), INTENT(OUT) :: nrow, ncol
-    !! SIZE(xij, 2), order + 1
+    !! number of rows and columns written to `ans`.
+    !! `nrow = SIZE(xij, 2)` and `ncol = order + 1`.
   END SUBROUTINE HeirarchicalBasis_Line2_
 END INTERFACE HeirarchicalBasis_Line_
 
@@ -4389,60 +3429,49 @@ END INTERFACE HeirarchicalBasis_Line_
 
 !> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
-! summary: Evaluate line HeirarchicalBasis gradient.
+! summary: Returns the gradient of the hierarchical basis of a line.
 !
-! Results use point rows and degree columns. Gradient element wrappers add a
-! coordinate axis. BIUNIT is used explicitly. The API spelling Heirarchical is
-! intentional. Endpoint modes come first, then scaled Lobatto interior modes.
-! Explicit orient overloads change interior mode signs.
+! Returns the first derivatives of the first `order + 1` hierarchical
+! basis functions of a line at the points `xij`.
+! The result is a rank-3 array with shape `SIZE(xij, 2)` by `order + 1`
+! by 1.
+! The first two functions belong to the end points.
+! The others use scaled Lobatto polynomials of degree 2 and higher.
+! The spelling `Heirarchical` is part of the API.
 !
-! Arguments:
-!   order : INTEGER(I4B), INTENT(IN). Polynomial degree, except quadrature
-! where it is requested exactness degree.
-!   xij : REAL(DFP), INTENT(IN)(:, :). Point columns; vertices or
-! interpolation nodes according to the interface.
-!   refLine : CHARACTER(*), INTENT(IN). Reference interval name, UNIT or
-! BIUNIT.
+! `refLine` names the interval of the points.
+! The routine checks only its first letter, in any case.
+! 1. `"BIUNIT"` means the interval [-1, 1].
+!    The routine returns the plain derivatives.
+! 2. `"UNIT"` means the interval [0, 1].
+!    The routine first maps the points to [-1, 1].
+!    It then multiplies the derivatives by 2.
 !
-! Returns:
-!   ans : REAL(DFP)(SIZE(xij, 2), order + 1, 1).
+! This routine uses the orientation 1.
+! Use [[HeirarchicalGradientBasis_Line2]] to choose the orientation.
 !
 ! Formula:
-! $$G_{ij}=\phi_j'(x_i)$$
+!   $$ ans_{i,j,1} = \phi_j'(x_i) $$
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE GlobalData, ONLY: DFP
-! USE GlobalData, ONLY: I4B
-! USE LineInterpolationUtility, ONLY: HeirarchicalBasisGradient_Line
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-! REAL(DFP) :: x(1,3), y(3,3,1)
+! - [test 1](|base|Line/examples/HeirarchicalBasisGradient_Line_test_1.F90)
+! - [test 2](|base|Line/examples/HeirarchicalBasisGradient_Line_test_2.F90)
 !
-! x(1,:) = [-0.5_DFP,0.0_DFP,0.5_DFP]
-! y = HeirarchicalBasisGradient_Line(order=2_I4B, xij=x, refLine="BIUNIT")
-! CALL OK(MAXVAL(ABS(y(:,3,1)- &
-!   (3.0_DFP*x(1,:)/SQRT(6.0_DFP)))) < 1.0E-10_DFP, "Analytic quadratic mode")
-! END PROGRAM main
-!```
+! See also: [[HeirarchicalGradientBasis_Line1_]]
 
 INTERFACE HeirarchicalBasisGradient_Line
   MODULE FUNCTION HeirarchicalGradientBasis_Line1(order, xij, refLine) &
     RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
-    !! Polynomial order of interpolation
+    !! highest polynomial degree
     REAL(DFP), INTENT(IN) :: xij(:, :)
-    !! Points of evaluation in xij format
-    !! size(xij, 1) should be 1
+    !! points of evaluation in `xij` format.
+    !! The routine reads only the first row, so `SIZE(xij, 1)` should be 1.
     CHARACTER(*), INTENT(IN) :: refLine
-    !! This parameter denotes the type of reference line.
-    !! It can take following values:
-    !! UNIT: in this case xij is in unit Line.
-    !! BIUNIT: in this case xij is in biunit Line.
+    !! reference interval, `"UNIT"` or `"BIUNIT"`
     REAL(DFP) :: ans(SIZE(xij, 2), order + 1, 1)
-    !! Gradient of Hierarchical basis
+    !! gradient of the hierarchical basis
   END FUNCTION HeirarchicalGradientBasis_Line1
 END INTERFACE HeirarchicalBasisGradient_Line
 
@@ -4452,69 +3481,58 @@ END INTERFACE HeirarchicalBasisGradient_Line
 
 !> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
-! summary: Evaluate line HeirarchicalBasis gradient.
+! summary: Computes the gradient of the hierarchical basis of a line, into
+!   a buffer.
 !
-! Results use point rows and degree columns. Gradient element wrappers add a
-! coordinate axis. BIUNIT is used explicitly. The API spelling Heirarchical is
-! intentional. Endpoint modes come first, then scaled Lobatto interior modes.
-! Explicit orient overloads change interior mode signs.
+! Computes the first derivatives of the first `order + 1` hierarchical
+! basis functions of a line at the points `xij`.
+! It writes them into the rank-3 array `ans`.
+! The first two functions belong to the end points.
+! The others use scaled Lobatto polynomials of degree 2 and higher.
+! The spelling `Heirarchical` is part of the API.
 !
-! Arguments:
-!   order : INTEGER(I4B), INTENT(IN). Polynomial degree, except quadrature
-! where it is requested exactness degree.
-!   xij : REAL(DFP), INTENT(IN)(:, :). Point columns; vertices or
-! interpolation nodes according to the interface.
-!   refLine : CHARACTER(*), INTENT(IN). Reference interval name, UNIT or
-! BIUNIT.
-!   ans : REAL(DFP), INTENT(INOUT)(:, :, :). Result buffer; allocate the full
-! active shape before the call.
-!   dim1 : INTEGER(I4B), INTENT(OUT). Active point dimension.
-!   dim2 : INTEGER(I4B), INTENT(OUT). Active basis dimension.
-!   dim3 : INTEGER(I4B), INTENT(OUT). Active coordinate dimension.
+! `refLine` names the interval of the points.
+! The routine checks only its first letter, in any case.
+! 1. `"BIUNIT"` means the interval [-1, 1].
+!    The routine returns the plain derivatives.
+! 2. `"UNIT"` means the interval [0, 1].
+!    The routine first maps the points to [-1, 1].
+!    It then multiplies the derivatives by 2.
 !
-! Returns:
-!   Updates ans(:, :, :), dim1, dim2, dim3.
+! If `refLine` is not recognised, the routine sets `dim1`, `dim2` and
+! `dim3` to 0 and leaves `ans` untouched.
+!
+! This routine uses the orientation 1.
+! Use [[HeirarchicalGradientBasis_Line2_]] to choose the orientation.
 !
 ! Formula:
-! $$G_{ij}=\phi_j'(x_i)$$
+!   $$ ans_{i,j,1} = \phi_j'(x_i) $$
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE GlobalData, ONLY: DFP
-! USE GlobalData, ONLY: I4B
-! USE LineInterpolationUtility, ONLY: HeirarchicalBasisGradient_Line_
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-! REAL(DFP) :: x(1,3), y(3,3,1)
-! INTEGER(I4B) :: nr,nc,nd
+! - [test 1](|base|Line/examples/HeirarchicalBasisGradient_Line__test_1.F90)
+! - [test 2](|base|Line/examples/HeirarchicalBasisGradient_Line_test_2.F90)
 !
-! x(1,:) = [-0.5_DFP,0.0_DFP,0.5_DFP]
-! CALL HeirarchicalBasisGradient_Line_(order=2_I4B, xij=x, &
-!   refLine="BIUNIT", ans=y, dim1=nr,dim2=nc,dim3=nd)
-! CALL OK(MAXVAL(ABS(y(:,3,1)- &
-!   (3.0_DFP*x(1,:)/SQRT(6.0_DFP)))) < 1.0E-10_DFP, "Analytic quadratic mode")
-! END PROGRAM main
-!```
+! See also: [[HeirarchicalGradientBasis_Line1]]
 
 INTERFACE HeirarchicalBasisGradient_Line_
   MODULE SUBROUTINE HeirarchicalGradientBasis_Line1_( &
     order, xij, refLine, ans, dim1, dim2, dim3)
     INTEGER(I4B), INTENT(IN) :: order
-    !! Polynomial order of interpolation
+    !! highest polynomial degree
     REAL(DFP), INTENT(IN) :: xij(:, :)
-    !! Points of evaluation in xij format
-    !! size(xij, 1) should be 1
+    !! points of evaluation in `xij` format.
+    !! The routine reads only the first row, so `SIZE(xij, 1)` should be 1.
     CHARACTER(*), INTENT(IN) :: refLine
-    !! This parameter denotes the type of reference line.
-    !! It can take following values:
-    !! UNIT: in this case xij is in unit Line.
-    !! BIUNIT: in this case xij is in biunit Line.
+    !! reference interval, `"UNIT"` or `"BIUNIT"`
     REAL(DFP), INTENT(INOUT) :: ans(:, :, :)
-    !! Gradient of Hierarchical basis
+    !! gradient of the hierarchical basis.
+    !! The routine writes `ans(1:dim1, 1:dim2, 1)`.
+    !! The shape of `ans` must be at least `SIZE(xij, 2)` by `order + 1`
+    !! by 1.
     INTEGER(I4B), INTENT(OUT) :: dim1, dim2, dim3
-    !! SIZE(xij, 2), order + 1, 1
+    !! number of entries written to `ans` along each dimension.
+    !! `dim1 = SIZE(xij, 2)`, `dim2 = order + 1` and `dim3 = 1`.
   END SUBROUTINE HeirarchicalGradientBasis_Line1_
 END INTERFACE HeirarchicalBasisGradient_Line_
 
@@ -4524,65 +3542,58 @@ END INTERFACE HeirarchicalBasisGradient_Line_
 
 !> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
-! summary: Evaluate line HeirarchicalBasis gradient.
+! summary: Returns the gradient of the hierarchical basis of a line with
+!   a given orientation.
 !
-! Results use point rows and degree columns. Gradient element wrappers add a
-! coordinate axis. BIUNIT is used explicitly. The API spelling Heirarchical is
-! intentional. Endpoint modes come first, then scaled Lobatto interior modes.
-! Explicit orient overloads change interior mode signs.
+! Returns the first derivatives of the first `order + 1` hierarchical
+! basis functions of a line at the points `xij`.
+! The result is a rank-3 array with shape `SIZE(xij, 2)` by `order + 1`
+! by 1.
+! The first two functions belong to the end points.
+! The others use scaled Lobatto polynomials of degree 2 and higher.
+! The spelling `Heirarchical` is part of the API.
 !
-! Arguments:
-!   order : INTEGER(I4B), INTENT(IN). Polynomial degree, except quadrature
-! where it is requested exactness degree.
-!   xij : REAL(DFP), INTENT(IN)(:, :). Point columns; vertices or
-! interpolation nodes according to the interface.
-!   refLine : CHARACTER(*), INTENT(IN). Reference interval name, UNIT or
-! BIUNIT.
-!   orient : INTEGER(I4B), INTENT(IN). Interior mode orientation sign, +1 or
-! -1.
+! `refLine` names the interval of the points.
+! The routine checks only its first letter, in any case.
+! 1. `"BIUNIT"` means the interval [-1, 1].
+!    The routine returns the plain derivatives.
+! 2. `"UNIT"` means the interval [0, 1].
+!    The routine first maps the points to [-1, 1].
+!    It then multiplies the derivatives by 2.
 !
-! Returns:
-!   ans : REAL(DFP), ALLOCATABLE(:, :, :).
+! `orient` sets the orientation of the line.
+! The routine multiplies the derivative of the function of degree `k`,
+! with `k >= 2`, by `orient**(k - 1)`.
+! The end-point functions do not change.
+!
+! @note
+! The routine does not check `orient`. Use 1 or -1.
+! @endnote
 !
 ! Formula:
-! $$G_{ij}=\phi_j'(x_i)$$
+!   $$ ans_{i,j,1} = \phi_j'(x_i) $$
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE GlobalData, ONLY: DFP
-! USE GlobalData, ONLY: I4B
-! USE LineInterpolationUtility, ONLY: HeirarchicalBasisGradient_Line
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-! REAL(DFP) :: x(1,3), y(3,3,1)
+! - [test 2](|base|Line/examples/HeirarchicalBasisGradient_Line_test_2.F90)
 !
-! x(1,:) = [-0.5_DFP,0.0_DFP,0.5_DFP]
-! y = HeirarchicalBasisGradient_Line(order=2_I4B, xij=x, refLine="BIUNIT")
-! CALL OK(MAXVAL(ABS(y(:,3,1)- &
-!   (3.0_DFP*x(1,:)/SQRT(6.0_DFP)))) < 1.0E-10_DFP, "Analytic quadratic mode")
-! END PROGRAM main
-!```
+! See also: [[HeirarchicalGradientBasis_Line2_]]
 
 INTERFACE HeirarchicalBasisGradient_Line
   MODULE FUNCTION HeirarchicalGradientBasis_Line2( &
     order, xij, refLine, orient) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
-    !! Polynomial order of interpolation
+    !! highest polynomial degree
     REAL(DFP), INTENT(IN) :: xij(:, :)
-    !! Points of evaluation in xij format
-    !! size(xij, 1) should be 1
+    !! points of evaluation in `xij` format.
+    !! The routine reads only the first row, so `SIZE(xij, 1)` should be 1.
     CHARACTER(*), INTENT(IN) :: refLine
-    !! This parameter denotes the type of reference line.
-    !! It can take following values:
-    !! UNIT: in this case xij is in unit Line.
-    !! BIUNIT: in this case xij is in biunit Line.
+    !! reference interval, `"UNIT"` or `"BIUNIT"`
     INTEGER(I4B), INTENT(IN) :: orient
-    !! orientation of line: 1 or -1
+    !! orientation of the line, 1 or -1
     REAL(DFP), ALLOCATABLE :: ans(:, :, :)
-    !! Gradient of Hierarchical basis
-    !! SIZE(xij, 2), order + 1, 1
+    !! gradient of the hierarchical basis.
+    !! Its shape is `SIZE(xij, 2)` by `order + 1` by 1.
   END FUNCTION HeirarchicalGradientBasis_Line2
 END INTERFACE HeirarchicalBasisGradient_Line
 
@@ -4592,73 +3603,65 @@ END INTERFACE HeirarchicalBasisGradient_Line
 
 !> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
-! summary: Evaluate line HeirarchicalBasis gradient.
+! summary: Computes the gradient of the hierarchical basis of a line with
+!   a given orientation, into a buffer.
 !
-! Results use point rows and degree columns. Gradient element wrappers add a
-! coordinate axis. BIUNIT is used explicitly. The API spelling Heirarchical is
-! intentional. Endpoint modes come first, then scaled Lobatto interior modes.
-! Explicit orient overloads change interior mode signs.
+! Computes the first derivatives of the first `order + 1` hierarchical
+! basis functions of a line at the points `xij`.
+! It writes them into the rank-3 array `ans`.
+! The first two functions belong to the end points.
+! The others use scaled Lobatto polynomials of degree 2 and higher.
+! The spelling `Heirarchical` is part of the API.
 !
-! Arguments:
-!   order : INTEGER(I4B), INTENT(IN). Polynomial degree, except quadrature
-! where it is requested exactness degree.
-!   xij : REAL(DFP), INTENT(IN)(:, :). Point columns; vertices or
-! interpolation nodes according to the interface.
-!   refLine : CHARACTER(*), INTENT(IN). Reference interval name, UNIT or
-! BIUNIT.
-!   orient : INTEGER(I4B), INTENT(IN). Interior mode orientation sign, +1 or
-! -1.
-!   ans : REAL(DFP), INTENT(INOUT)(:, :, :). Result buffer; allocate the full
-! active shape before the call.
-!   dim1 : INTEGER(I4B), INTENT(OUT). Active point dimension.
-!   dim2 : INTEGER(I4B), INTENT(OUT). Active basis dimension.
-!   dim3 : INTEGER(I4B), INTENT(OUT). Active coordinate dimension.
+! `refLine` names the interval of the points.
+! The routine checks only its first letter, in any case.
+! 1. `"BIUNIT"` means the interval [-1, 1].
+!    The routine returns the plain derivatives.
+! 2. `"UNIT"` means the interval [0, 1].
+!    The routine first maps the points to [-1, 1].
+!    It then multiplies the derivatives by 2.
 !
-! Returns:
-!   Updates ans(:, :, :), dim1, dim2, dim3.
+! `orient` sets the orientation of the line.
+! The routine multiplies the derivative of the function of degree `k`,
+! with `k >= 2`, by `orient**(k - 1)`.
+! The end-point functions do not change.
+!
+! If `refLine` is not recognised, the routine sets `dim1`, `dim2` and
+! `dim3` to 0 and leaves `ans` untouched.
+!
+! @note
+! The routine does not check `orient`. Use 1 or -1.
+! @endnote
 !
 ! Formula:
-! $$G_{ij}=\phi_j'(x_i)$$
+!   $$ ans_{i,j,1} = \phi_j'(x_i) $$
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE GlobalData, ONLY: DFP
-! USE GlobalData, ONLY: I4B
-! USE LineInterpolationUtility, ONLY: HeirarchicalBasisGradient_Line_
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-! REAL(DFP) :: x(1,3), y(3,3,1)
-! INTEGER(I4B) :: nr,nc,nd
+! - [test 2](|base|Line/examples/HeirarchicalBasisGradient_Line_test_2.F90)
 !
-! x(1,:) = [-0.5_DFP,0.0_DFP,0.5_DFP]
-! CALL HeirarchicalBasisGradient_Line_(order=2_I4B, xij=x, &
-!   refLine="BIUNIT", ans=y, dim1=nr,dim2=nc,dim3=nd)
-! CALL OK(MAXVAL(ABS(y(:,3,1)- &
-!   (3.0_DFP*x(1,:)/SQRT(6.0_DFP)))) < 1.0E-10_DFP, "Analytic quadratic mode")
-! END PROGRAM main
-!```
+! See also: [[HeirarchicalBasisGradient_Line_]]
 
 INTERFACE HeirarchicalBasisGradient_Line_
   MODULE SUBROUTINE HeirarchicalGradientBasis_Line2_( &
     order, xij, refLine, orient, ans, dim1, dim2, dim3)
     INTEGER(I4B), INTENT(IN) :: order
-    !! Polynomial order of interpolation
+    !! highest polynomial degree
     REAL(DFP), INTENT(IN) :: xij(:, :)
-    !! Points of evaluation in xij format
-    !! size(xij, 1) should be 1
+    !! points of evaluation in `xij` format.
+    !! The routine reads only the first row, so `SIZE(xij, 1)` should be 1.
     CHARACTER(*), INTENT(IN) :: refLine
-    !! This parameter denotes the type of reference line.
-    !! It can take following values:
-    !! UNIT: in this case xij is in unit Line.
-    !! BIUNIT: in this case xij is in biunit Line.
+    !! reference interval, `"UNIT"` or `"BIUNIT"`
     INTEGER(I4B), INTENT(IN) :: orient
-    !! orientation of line: 1 or -1
+    !! orientation of the line, 1 or -1
     REAL(DFP), INTENT(INOUT) :: ans(:, :, :)
-    !! Gradient of Hierarchical basis
+    !! gradient of the hierarchical basis.
+    !! The routine writes `ans(1:dim1, 1:dim2, 1)`.
+    !! The shape of `ans` must be at least `SIZE(xij, 2)` by `order + 1`
+    !! by 1.
     INTEGER(I4B), INTENT(OUT) :: dim1, dim2, dim3
-    !! SIZE(xij, 2), order + 1, 1
+    !! number of entries written to `ans` along each dimension.
+    !! `dim1 = SIZE(xij, 2)`, `dim2 = order + 1` and `dim3 = 1`.
   END SUBROUTINE HeirarchicalGradientBasis_Line2_
 END INTERFACE HeirarchicalBasisGradient_Line_
 
@@ -4668,70 +3671,60 @@ END INTERFACE HeirarchicalBasisGradient_Line_
 
 !> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
-! summary: Evaluate line Basis gradient.
+! summary: Returns the first derivatives of all basis polynomials of a line
+!   at one point.
 !
-! Results use point rows and degree columns. Gradient element wrappers add a
-! coordinate axis. BIUNIT is used explicitly.
+! Returns the first derivatives of the first `order + 1` basis polynomials
+! of a line at the point `x`.
+! Entry `j` of the result holds the derivative of the polynomial of degree
+! `j - 1`.
+! `basisType` selects the polynomial family.
+! The default is the monomial family.
 !
-! Arguments:
-!   order : INTEGER(I4B), INTENT(IN). Polynomial degree, except quadrature
-! where it is requested exactness degree.
-!   x : REAL(DFP), INTENT(IN). Evaluation point(s); columns for rank two
-! arrays.
-!   refLine : CHARACTER(*), INTENT(IN). Reference interval name, UNIT or
-! BIUNIT.
-!   basisType : INTEGER(I4B), OPTIONAL, INTENT(IN). Polynomial family
-! selector, for example poly%Monomial.
-!   alpha : REAL(DFP), OPTIONAL, INTENT(IN). Jacobi weight parameter alpha.
-!   beta : REAL(DFP), OPTIONAL, INTENT(IN). Jacobi weight parameter beta.
-!   lambda : REAL(DFP), OPTIONAL, INTENT(IN). Ultraspherical family parameter.
+! The point `x` must lie on the biunit interval [-1, 1].
+! The routine does not map points from the unit interval.
+! It checks `refLine` only in a debug build, where `refLine` must start
+! with `"B"`.
 !
-! Returns:
-!   ans : REAL(DFP)(order + 1).
+! The Jacobi family needs `alpha` and `beta`.
+! The ultraspherical family needs `lambda`.
+! A debug build checks this.
+!
+! @note
+! For the monomial family, the derivative of the polynomial of degree 0
+! is 0.
+! @endnote
 !
 ! Formula:
-! $$G_{ij}=\phi_j'(x_i)$$
+!   $$ ans_j = \phi_{j-1}'(x), \quad j = 1, \ldots, order + 1 $$
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE GlobalData, ONLY: DFP
-! USE GlobalData, ONLY: I4B
-! USE GlobalData, ONLY: poly
-! USE LineInterpolationUtility, ONLY: BasisGradientEvalAll_Line
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-! REAL(DFP) :: x(1,3), y(3,3)
+! - [test 1](|base|Line/examples/BasisGradientEvalAll_Line_test_1.F90)
+! - [test 2](|base|Line/examples/BasisGradientEvalAll_Line_test_2.F90)
 !
-! x(1,:) = [-0.5_DFP,0.0_DFP,0.5_DFP]
-! y = BasisGradientEvalAll_Line(order=2_I4B, x=x(1,:), refLine="BIUNIT", &
-!   basisType=poly%Monomial)
-! CALL OK(MAXVAL(ABS(y(:,3)- &
-!   (2.0_DFP*x(1,:)))) < 1.0E-10_DFP, "Analytic quadratic mode")
-! END PROGRAM main
-!```
+! See also: [[BasisGradientEvalAll_Line_]]
 
 INTERFACE BasisGradientEvalAll_Line
   MODULE FUNCTION BasisGradientEvalAll_Line1( &
     order, x, refLine, basisType, alpha, beta, lambda) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
-    !! order of  polynomials
+    !! highest polynomial degree
     REAL(DFP), INTENT(IN) :: x
-    !! point of evaluation
+    !! point of evaluation, in [-1, 1]
     CHARACTER(*), INTENT(IN) :: refLine
-    !! Refline should be  BIUNIT
+    !! reference interval, it should be `"BIUNIT"`
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: basisType
-    !! Monomial ! Jacobi ! Ultraspherical ! Legendre ! Chebyshev ! Lobatto
-    !! UnscaledLobatto
+    !! polynomial family, for example `poly%Monomial` or `poly%Legendre`.
+    !! The default is `poly%Monomial`.
     REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
-    !! Jacobi polynomial parameter
+    !! Jacobi parameter, needed for the Jacobi family
     REAL(DFP), OPTIONAL, INTENT(IN) :: beta
-    !! Jacobi polynomial parameter
+    !! Jacobi parameter, needed for the Jacobi family
     REAL(DFP), OPTIONAL, INTENT(IN) :: lambda
-    !! Ultraspherical parameter
+    !! ultraspherical parameter, needed for the ultraspherical family
     REAL(DFP) :: ans(order + 1)
-    !! Value of n+1  polynomials at point x
+    !! first derivatives of the `order + 1` polynomials at `x`
   END FUNCTION BasisGradientEvalAll_Line1
 END INTERFACE BasisGradientEvalAll_Line
 
@@ -4741,77 +3734,62 @@ END INTERFACE BasisGradientEvalAll_Line
 
 !> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
-! summary: Evaluate line Basis gradient.
+! summary: Computes the first derivatives of all basis polynomials of a
+!   line at one point, into a buffer.
 !
-! Results use point rows and degree columns. Gradient element wrappers add a
-! coordinate axis. BIUNIT is used explicitly.
+! Writes the first derivatives of the first `order + 1` basis polynomials
+! at the point `x` into `ans`.
+! Entry `j` holds the derivative of the polynomial of degree `j - 1`.
+! `basisType` selects the polynomial family.
+! The default is the monomial family.
+! The routine sets `tsize` to the number of entries it wrote.
 !
-! Arguments:
-!   order : INTEGER(I4B), INTENT(IN). Polynomial degree, except quadrature
-! where it is requested exactness degree.
-!   x : REAL(DFP), INTENT(IN). Evaluation point(s); columns for rank two
-! arrays.
-!   ans : REAL(DFP), INTENT(INOUT)(:). Result buffer; allocate the full active
-! shape before the call.
-!   tsize : INTEGER(I4B), INTENT(OUT). Number of active output entries.
-!   refLine : CHARACTER(*), INTENT(IN). Reference interval name, UNIT or
-! BIUNIT.
-!   basisType : INTEGER(I4B), OPTIONAL, INTENT(IN). Polynomial family
-! selector, for example poly%Monomial.
-!   alpha : REAL(DFP), OPTIONAL, INTENT(IN). Jacobi weight parameter alpha.
-!   beta : REAL(DFP), OPTIONAL, INTENT(IN). Jacobi weight parameter beta.
-!   lambda : REAL(DFP), OPTIONAL, INTENT(IN). Ultraspherical family parameter.
+! The point `x` must lie on the biunit interval [-1, 1].
+! The routine does not map points from the unit interval.
+! It checks `refLine` only in a debug build, where `refLine` must start
+! with `"B"`.
 !
-! Returns:
-!   Updates ans(:), tsize.
+! The Jacobi family needs `alpha` and `beta`.
+! The ultraspherical family needs `lambda`.
+! A debug build checks this.
+!
+! @note
+! For the monomial family, the derivative of the polynomial of degree 0
+! is 0.
+! @endnote
 !
 ! Formula:
-! $$G_{ij}=\phi_j'(x_i)$$
+!   $$ ans_j = \phi_{j-1}'(x), \quad j = 1, \ldots, order + 1 $$
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE GlobalData, ONLY: DFP
-! USE GlobalData, ONLY: I4B
-! USE GlobalData, ONLY: poly
-! USE LineInterpolationUtility, ONLY: BasisGradientEvalAll_Line_
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-! REAL(DFP) :: x(1,3), y(3,3)
-! INTEGER(I4B) :: nr,nc
+! - [test 2](|base|Line/examples/BasisGradientEvalAll_Line_test_2.F90)
 !
-! x(1,:) = [-0.5_DFP,0.0_DFP,0.5_DFP]
-! CALL BasisGradientEvalAll_Line_(order=2_I4B, x=x(1,:), &
-!   refLine="BIUNIT", basisType=poly%Monomial, ans=y, nrow=nr,ncol=nc)
-! CALL OK(MAXVAL(ABS(y(:,3)- &
-!   (2.0_DFP*x(1,:)))) < 1.0E-10_DFP, "Analytic quadratic mode")
-! END PROGRAM main
-!```
+! See also: [[BasisGradientEvalAll_Line1]]
 
 INTERFACE BasisGradientEvalAll_Line_
   MODULE SUBROUTINE BasisGradientEvalAll_Line1_( &
     order, x, refLine, basisType, alpha, beta, lambda, ans, tsize)
     INTEGER(I4B), INTENT(IN) :: order
-    !! order of  polynomials
+    !! highest polynomial degree
     REAL(DFP), INTENT(IN) :: x
-    !! point of evaluation
+    !! point of evaluation, in [-1, 1]
     REAL(DFP), INTENT(INOUT) :: ans(:)
-    !! ans(order + 1)
-    !! Value of n+1  polynomials at point x
+    !! first derivatives, at least `order + 1` entries.
+    !! `ans(j)` is the derivative of the polynomial of degree `j - 1`.
     INTEGER(I4B), INTENT(OUT) :: tsize
-    !! order + 1
+    !! number of entries written to `ans`, `order + 1`
     CHARACTER(*), INTENT(IN) :: refLine
-    !! Refline should be  BIUNIT
+    !! reference interval, it should be `"BIUNIT"`
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: basisType
-    !! Monomial ! Jacobi ! Ultraspherical ! Legendre ! Chebyshev
-    !! Lobatto ! UnscaledLobatto
+    !! polynomial family, for example `poly%Monomial` or `poly%Legendre`.
+    !! The default is `poly%Monomial`.
     REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
-    !! Jacobi polynomial parameter
+    !! Jacobi parameter, needed for the Jacobi family
     REAL(DFP), OPTIONAL, INTENT(IN) :: beta
-    !! Jacobi polynomial parameter
+    !! Jacobi parameter, needed for the Jacobi family
     REAL(DFP), OPTIONAL, INTENT(IN) :: lambda
-    !! Ultraspherical parameter
+    !! ultraspherical parameter, needed for the ultraspherical family
   END SUBROUTINE BasisGradientEvalAll_Line1_
 END INTERFACE BasisGradientEvalAll_Line_
 
@@ -4821,72 +3799,60 @@ END INTERFACE BasisGradientEvalAll_Line_
 
 !> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
-! summary: Evaluate line Basis gradient.
+! summary: Returns the first derivatives of all basis polynomials of a line
+!   at many points.
 !
-! Results use point rows and degree columns. Gradient element wrappers add a
-! coordinate axis. BIUNIT is used explicitly.
+! Returns the first derivatives of the first `order + 1` basis polynomials
+! at the points `x`.
+! Row `i` belongs to the point `x(i)`.
+! Column `j` belongs to the polynomial of degree `j - 1`.
+! `basisType` selects the polynomial family.
+! The default is the monomial family.
 !
-! Arguments:
-!   order : INTEGER(I4B), INTENT(IN). Polynomial degree, except quadrature
-! where it is requested exactness degree.
-!   x : REAL(DFP), INTENT(IN)(:). Evaluation point(s); columns for rank two
-! arrays.
-!   refLine : CHARACTER(*), INTENT(IN). Reference interval name, UNIT or
-! BIUNIT.
-!   basisType : INTEGER(I4B), OPTIONAL, INTENT(IN). Polynomial family
-! selector, for example poly%Monomial.
-!   alpha : REAL(DFP), OPTIONAL, INTENT(IN). Jacobi weight parameter alpha.
-!   beta : REAL(DFP), OPTIONAL, INTENT(IN). Jacobi weight parameter beta.
-!   lambda : REAL(DFP), OPTIONAL, INTENT(IN). Ultraspherical family parameter.
+! The points must lie on the biunit interval [-1, 1].
+! The routine does not map points from the unit interval.
+! It checks `refLine` only in a debug build, where `refLine` must start
+! with `"B"`.
 !
-! Returns:
-!   ans : REAL(DFP)(SIZE(x), order + 1).
+! The Jacobi family needs `alpha` and `beta`.
+! The ultraspherical family needs `lambda`.
+! A debug build checks this.
+!
+! @note
+! For the monomial family, the derivative of the polynomial of degree 0
+! is 0.
+! @endnote
 !
 ! Formula:
-! $$G_{ij}=\phi_j'(x_i)$$
+!   $$ ans_{ij} = \phi_{j-1}'(x_i), \quad j = 1, \ldots, order + 1 $$
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE GlobalData, ONLY: DFP
-! USE GlobalData, ONLY: I4B
-! USE GlobalData, ONLY: poly
-! USE LineInterpolationUtility, ONLY: BasisGradientEvalAll_Line
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-! REAL(DFP) :: x(1,3), y(3,3)
+! - [test 1](|base|Line/examples/BasisGradientEvalAll_Line_test_1.F90)
 !
-! x(1,:) = [-0.5_DFP,0.0_DFP,0.5_DFP]
-! y = BasisGradientEvalAll_Line(order=2_I4B, x=x(1,:), refLine="BIUNIT", &
-!   basisType=poly%Monomial)
-! CALL OK(MAXVAL(ABS(y(:,3)- &
-!   (2.0_DFP*x(1,:)))) < 1.0E-10_DFP, "Analytic quadratic mode")
-! END PROGRAM main
-!```
+! See also: [[BasisGradientEvalAll_Line2_]]
 
 INTERFACE BasisGradientEvalAll_Line
   MODULE FUNCTION BasisGradientEvalAll_Line2( &
     order, x, refLine, basisType, alpha, beta, lambda) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
-    !! order of  polynomials
+    !! highest polynomial degree
     REAL(DFP), INTENT(IN) :: x(:)
-    !! point of evaluation
+    !! points of evaluation, in [-1, 1]
     CHARACTER(*), INTENT(IN) :: refLine
-    !! UNIT ! BIUNIT
+    !! reference interval, it should be `"BIUNIT"`
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: basisType
-    !! Monomial ! Jacobi ! Ultraspherical ! Legendre ! Chebyshev
-    !! Lobatto ! UnscaledLobatto
+    !! polynomial family, for example `poly%Monomial` or `poly%Legendre`.
+    !! The default is `poly%Monomial`.
     REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
-    !! Jacobi polynomial parameter
+    !! Jacobi parameter, needed for the Jacobi family
     REAL(DFP), OPTIONAL, INTENT(IN) :: beta
-    !! Jacobi polynomial parameter
+    !! Jacobi parameter, needed for the Jacobi family
     REAL(DFP), OPTIONAL, INTENT(IN) :: lambda
-    !! Ultraspherical parameter
+    !! ultraspherical parameter, needed for the ultraspherical family
     REAL(DFP) :: ans(SIZE(x), order + 1)
-    !! Value of n+1  polynomials at point x
-    !! ans(:, j) is the value of jth polynomial at x points
-    !! ans(i, :) is the value of all polynomials at x(i) point
+    !! first derivatives, `ans(i, j)` is the derivative of the polynomial
+    !! of degree `j - 1` at `x(i)`
   END FUNCTION BasisGradientEvalAll_Line2
 END INTERFACE BasisGradientEvalAll_Line
 
@@ -4896,80 +3862,65 @@ END INTERFACE BasisGradientEvalAll_Line
 
 !> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
-! summary: Evaluate line Basis gradient.
+! summary: Computes the first derivatives of all basis polynomials of a
+!   line at many points, into a matrix.
 !
-! Results use point rows and degree columns. Gradient element wrappers add a
-! coordinate axis. BIUNIT is used explicitly.
+! Writes the first derivatives of the first `order + 1` basis polynomials
+! at the points `x` into `ans`.
+! Row `i` belongs to the point `x(i)`.
+! Column `j` belongs to the polynomial of degree `j - 1`.
+! `basisType` selects the polynomial family.
+! The default is the monomial family.
+! The routine sets `nrow` and `ncol` to the size it wrote.
 !
-! Arguments:
-!   order : INTEGER(I4B), INTENT(IN). Polynomial degree, except quadrature
-! where it is requested exactness degree.
-!   x : REAL(DFP), INTENT(IN)(:). Evaluation point(s); columns for rank two
-! arrays.
-!   ans : REAL(DFP), INTENT(INOUT)(:, :). Result buffer; allocate the full
-! active shape before the call.
-!   nrow : INTEGER(I4B), INTENT(OUT). Number of active output rows.
-!   ncol : INTEGER(I4B), INTENT(OUT). Number of active output columns.
-!   refLine : CHARACTER(*), INTENT(IN). Reference interval name, UNIT or
-! BIUNIT.
-!   basisType : INTEGER(I4B), OPTIONAL, INTENT(IN). Polynomial family
-! selector, for example poly%Monomial.
-!   alpha : REAL(DFP), OPTIONAL, INTENT(IN). Jacobi weight parameter alpha.
-!   beta : REAL(DFP), OPTIONAL, INTENT(IN). Jacobi weight parameter beta.
-!   lambda : REAL(DFP), OPTIONAL, INTENT(IN). Ultraspherical family parameter.
+! The points must lie on the biunit interval [-1, 1].
+! The routine does not map points from the unit interval.
+! It checks `refLine` only in a debug build, where `refLine` must start
+! with `"B"`.
 !
-! Returns:
-!   Updates ans(:, :), nrow, ncol.
+! The Jacobi family needs `alpha` and `beta`.
+! The ultraspherical family needs `lambda`.
+! A debug build checks this.
+!
+! @note
+! For the monomial family, the derivative of the polynomial of degree 0
+! is 0.
+! @endnote
 !
 ! Formula:
-! $$G_{ij}=\phi_j'(x_i)$$
+!   $$ ans_{ij} = \phi_{j-1}'(x_i), \quad j = 1, \ldots, order + 1 $$
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE GlobalData, ONLY: DFP
-! USE GlobalData, ONLY: I4B
-! USE GlobalData, ONLY: poly
-! USE LineInterpolationUtility, ONLY: BasisGradientEvalAll_Line_
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-! REAL(DFP) :: x(1,3), y(3,3)
-! INTEGER(I4B) :: nr,nc
+! - [test 1](|base|Line/examples/BasisGradientEvalAll_Line__test_1.F90)
 !
-! x(1,:) = [-0.5_DFP,0.0_DFP,0.5_DFP]
-! CALL BasisGradientEvalAll_Line_(order=2_I4B, x=x(1,:), &
-!   refLine="BIUNIT", basisType=poly%Monomial, ans=y, nrow=nr,ncol=nc)
-! CALL OK(MAXVAL(ABS(y(:,3)- &
-!   (2.0_DFP*x(1,:)))) < 1.0E-10_DFP, "Analytic quadratic mode")
-! END PROGRAM main
-!```
+! See also: [[BasisGradientEvalAll_Line2]]
 
 INTERFACE BasisGradientEvalAll_Line_
   MODULE SUBROUTINE BasisGradientEvalAll_Line2_( &
     order, x, ans, nrow, ncol, refLine, basisType, alpha, beta, lambda)
     INTEGER(I4B), INTENT(IN) :: order
-    !! order of  polynomials
+    !! highest polynomial degree
     REAL(DFP), INTENT(IN) :: x(:)
-    !! point of evaluation
+    !! points of evaluation, in [-1, 1]
     REAL(DFP), INTENT(INOUT) :: ans(:, :)
-    !! ans(SIZE(x), order + 1)
-    !! Value of n+1  polynomials at point x
-    !! ans(:, j) is the value of jth polynomial at x points
-    !! ans(i, :) is the value of all polynomials at x(i) point
+    !! first derivatives, at least `SIZE(x)` rows and `order + 1` columns.
+    !! `ans(i, j)` is the derivative of the polynomial of degree `j - 1`
+    !! at `x(i)`.
     INTEGER(I4B), INTENT(OUT) :: nrow, ncol
-    !! number of rows and columns written to ans
+    !! number of rows and columns written to `ans`.
+    !! They are `SIZE(x)` and `order + 1`.
     CHARACTER(*), INTENT(IN) :: refLine
-    !! UNIT ! BIUNIT
+    !! reference interval, it should be `"BIUNIT"`
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: basisType
-    !! Monomial ! Jacobi ! Ultraspherical ! Legendre ! Chebyshev
-    !! Lobatto ! UnscaledLobatto
+    !! polynomial family, for example `poly%Monomial` or `poly%Legendre`.
+    !! The default is `poly%Monomial`.
     REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
-    !! Jacobi polynomial parameter
+    !! Jacobi parameter, needed for the Jacobi family
     REAL(DFP), OPTIONAL, INTENT(IN) :: beta
-    !! Jacobi polynomial parameter
+    !! Jacobi parameter, needed for the Jacobi family
     REAL(DFP), OPTIONAL, INTENT(IN) :: lambda
-    !! Ultraspherical parameter
+    !! ultraspherical parameter, needed for the ultraspherical family
   END SUBROUTINE BasisGradientEvalAll_Line2_
 END INTERFACE BasisGradientEvalAll_Line_
 
@@ -4981,89 +3932,60 @@ END INTERFACE BasisGradientEvalAll_Line_
 ! date: 2026-10-30
 ! summary: Select a rule and construct quadrature coordinates and weights.
 !
-! order requests polynomial integration degree; nips requests an explicit
-! supported point count. Output columns are points, coordinate rows come
-! first, and the final row contains weights. The default Line domain is
-! BIUNIT; Triangle requires refTriangle. Supply vertex xij to map coordinates
-! and scale weights by the geometric Jacobian. Triangle economical rules are
-! selected from Solin tables; the count selector currently ignores quadType.
+! Returns the points and weights of a quadrature rule on a line.
+! `order` is the polynomial degree the rule should integrate.
+! The routine picks the number of points from `order` and `quadType`.
 !
-! Arguments:
-!   order : INTEGER(I4B), INTENT(IN). Polynomial degree, except quadrature
-! where it is requested exactness degree.
-!   quadType : INTEGER(I4B), INTENT(IN). Quadrature family selector from
-! GlobalData or TypeQuadratureOpt.
-!   layout : CHARACTER(*), INTENT(IN). Point ordering; VEFC puts vertices
-! before edge/interior points.
-!   xij : REAL(DFP), OPTIONAL, INTENT(IN)(:, :). Point columns; vertices or
-! interpolation nodes according to the interface.
-!   alpha : REAL(DFP), OPTIONAL, INTENT(IN). Jacobi weight parameter alpha.
-!   beta : REAL(DFP), OPTIONAL, INTENT(IN). Jacobi weight parameter beta.
-!   lambda : REAL(DFP), OPTIONAL, INTENT(IN). Ultraspherical family parameter.
+! Each column of the result is one quadrature point.
+! The last row holds the weights.
+! The rows before it hold the coordinates of the point.
 !
-! Returns:
-!   ans : REAL(DFP), ALLOCATABLE(:, :).
+! Without `xij`, the points lie on the biunit interval [-1, 1].
+! The result then has two rows.
+! With `xij`, the routine maps the points to a segment.
+! Column 1 of `xij` is the first end point and column 2 is the second.
+! The result then has `SIZE(xij, 1) + 1` rows.
+! The routine multiplies the weights by half the segment length.
+!
+! The rules, the `layout` values and the checks of `alpha`, `beta` and
+! `lambda` are the same as in [[QuadraturePoint_Line1_]].
 !
 ! Formula:
-! $$\int_K f(x)\,dx\simeq\sum_i w_i f(x_i)$$
+!   $$ \int_{-1}^{1} f(x)\,dx \approx \sum_{i=1}^{n} w_i f(x_i) $$
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE GlobalData, ONLY: DFP
-! USE GlobalData, ONLY: I4B
-! USE GlobalData, ONLY: GaussLegendreQP
-! USE LineInterpolationUtility, ONLY: QuadratureNumber_Line
-! USE LineInterpolationUtility, ONLY: QuadraturePoint_Line
-! USE LineInterpolationUtility, ONLY: QuadraturePoint_Line_
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-! REAL(DFP), ALLOCATABLE :: q(:,:), buffer(:,:)
-! INTEGER(I4B) :: n,nr,nc
+! - [test 1](|base|Line/examples/QuadraturePoint_Line_test_1.F90) with
+!   a Lobatto rule on the biunit interval
 !
-! n = QuadratureNumber_Line(2_I4B,GaussLegendreQP)
-! q = QuadraturePoint_Line(order=2_I4B, quadType=GaussLegendreQP, &
-!   layout="INCREASING")
-! CALL OK(ABS(SUM(q(2,:))-2.0_DFP) < 1.0E-10_DFP, &
-!   "Weights integrate reference measure")
-! ALLOCATE(buffer(2,n))
-! CALL QuadraturePoint_Line_(nips=[n], quadType=GaussLegendreQP, &
-!   layout="INCREASING", ans=buffer, nrow=nr, ncol=nc)
-! CALL OK(nr == 2 .AND. nc == n, "Active quadrature dimensions")
-! CALL OK(MAXVAL(ABS(q-buffer)) < 1.0E-10_DFP, &
-!   "Function and subroutine quadrature agree")
-! END PROGRAM main
-!```
+! See also: [[QuadraturePoint_Line2]], [[QuadratureNumber_Line]]
 
 INTERFACE QuadraturePoint_Line
   MODULE FUNCTION QuadraturePoint_Line1(order, quadType, layout, xij, &
                                         alpha, beta, lambda) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
-    !! Order of interpolation
+    !! polynomial degree the rule should integrate
     INTEGER(I4B), INTENT(IN) :: quadType
-    !! Quadrature point type
-    !! Equidistance, ! GaussLegendre, ! GaussLegendreLobatto,
-    !! GaussChebyshev, ! GaussChebyshevLobatto, ! GaussJacobi,
-    !! GaussJacobiLobatto
+    !! quadrature rule, a constant of `TypeQuadratureOpt`,
+    !! for example `ipopt%GaussLegendre`
     CHARACTER(*), INTENT(IN) :: layout
-    !! "VEFC" ! "INCREASING"
+    !! `"VEFC"` puts the end points first.
+    !! `"INCREASING"` gives increasing order.
+    !! Only the first letter matters.
     REAL(DFP), OPTIONAL, INTENT(IN) :: xij(:, :)
-    !! domain of interpolation
+    !! end points of the segment, `xij(:, 1)` and `xij(:, 2)`.
+    !! The default is the biunit interval [-1, 1].
     REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
-    !! Jacobi parameter
+    !! Jacobi parameter, needed for the Jacobi rules
     REAL(DFP), OPTIONAL, INTENT(IN) :: beta
-    !! Jacobi parameter
+    !! Jacobi parameter, needed for the Jacobi rules
     REAL(DFP), OPTIONAL, INTENT(IN) :: lambda
-    !! Ultraspherical parameter
+    !! ultraspherical parameter, needed for the ultraspherical rules
     REAL(DFP), ALLOCATABLE :: ans(:, :)
-    !! quadrature points
-    !! If xij is present then the number of rows in ans
-    !! is same as size(xij,1) + 1.
-    !! If xij is not present then the number of rows in
-    !! ans is 2
-    !! The last row of ans contains the weights
-    !! The first few rows contains the quadrature points
+    !! points and weights, shape `(nsd + 1, n)`.
+    !! `nsd` is `SIZE(xij, 1)`, or 1 when `xij` is absent.
+    !! `n` is [[QuadratureNumber_Line]] for `order` and `quadType`.
+    !! The last row holds the weights.
   END FUNCTION QuadraturePoint_Line1
 END INTERFACE QuadraturePoint_Line
 
@@ -5075,83 +3997,54 @@ END INTERFACE QuadraturePoint_Line
 ! date: 2026-10-30
 ! summary: Select a rule and construct quadrature coordinates and weights.
 !
-! order requests polynomial integration degree; nips requests an explicit
-! supported point count. Output columns are points, coordinate rows come
-! first, and the final row contains weights. The default Line domain is
-! BIUNIT; Triangle requires refTriangle. Supply vertex xij to map coordinates
-! and scale weights by the geometric Jacobian. Triangle economical rules are
-! selected from Solin tables; the count selector currently ignores quadType.
+! Returns the points and weights of a quadrature rule on a segment of a
+! one dimensional line.
+! `order` is the polynomial degree the rule should integrate.
+! The routine picks the number of points from `order` and `quadType`.
 !
-! Arguments:
-!   order : INTEGER(I4B), INTENT(IN). Polynomial degree, except quadrature
-! where it is requested exactness degree.
-!   quadType : INTEGER(I4B), INTENT(IN). Quadrature family selector from
-! GlobalData or TypeQuadratureOpt.
-!   xij : REAL(DFP), INTENT(IN)(2). Point columns; vertices or interpolation
-! nodes according to the interface.
-!   layout : CHARACTER(*), INTENT(IN). Point ordering; VEFC puts vertices
-! before edge/interior points.
-!   alpha : REAL(DFP), OPTIONAL, INTENT(IN). Jacobi weight parameter alpha.
-!   beta : REAL(DFP), OPTIONAL, INTENT(IN). Jacobi weight parameter beta.
-!   lambda : REAL(DFP), OPTIONAL, INTENT(IN). Ultraspherical family parameter.
+! The segment runs from `xij(1)` to `xij(2)`.
+! The result has two rows.
+! Row 1 holds the points.
+! Row 2 holds the weights, scaled by half the length of the segment.
 !
-! Returns:
-!   ans : REAL(DFP), ALLOCATABLE(:, :).
+! The rules, the `layout` values and the checks of `alpha`, `beta` and
+! `lambda` are the same as in [[QuadraturePoint_Line1_]].
 !
 ! Formula:
-! $$\int_K f(x)\,dx\simeq\sum_i w_i f(x_i)$$
+!   $$ \int_{x_1}^{x_2} f(x)\,dx \approx \sum_{i=1}^{n} w_i f(x_i) $$
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE GlobalData, ONLY: DFP
-! USE GlobalData, ONLY: I4B
-! USE GlobalData, ONLY: GaussLegendreQP
-! USE LineInterpolationUtility, ONLY: QuadratureNumber_Line
-! USE LineInterpolationUtility, ONLY: QuadraturePoint_Line
-! USE LineInterpolationUtility, ONLY: QuadraturePoint_Line_
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-! REAL(DFP), ALLOCATABLE :: q(:,:), buffer(:,:)
-! INTEGER(I4B) :: n,nr,nc
+! - [test 1](|base|Line/examples/QuadraturePoint_Line_test_1.F90) with
+!   order 3 on the segment [0, 2]
 !
-! n = QuadratureNumber_Line(2_I4B,GaussLegendreQP)
-! q = QuadraturePoint_Line(order=2_I4B, quadType=GaussLegendreQP, &
-!   layout="INCREASING")
-! CALL OK(ABS(SUM(q(2,:))-2.0_DFP) < 1.0E-10_DFP, &
-!   "Weights integrate reference measure")
-! ALLOCATE(buffer(2,n))
-! CALL QuadraturePoint_Line_(nips=[n], quadType=GaussLegendreQP, &
-!   layout="INCREASING", ans=buffer, nrow=nr, ncol=nc)
-! CALL OK(nr == 2 .AND. nc == n, "Active quadrature dimensions")
-! CALL OK(MAXVAL(ABS(q-buffer)) < 1.0E-10_DFP, &
-!   "Function and subroutine quadrature agree")
-! END PROGRAM main
-!```
+! See also: [[QuadraturePoint_Line1]], [[QuadraturePoint_Line4]],
+!   [[QuadratureNumber_Line]]
 
 INTERFACE QuadraturePoint_Line
   MODULE FUNCTION QuadraturePoint_Line2(order, quadType, xij, layout, &
                                         alpha, beta, lambda) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
-    !! order of interpolation
+    !! polynomial degree the rule should integrate
     INTEGER(I4B), INTENT(IN) :: quadType
-    !! Quadrature point type
-    !! Equidistance ! GaussLegendre ! GaussLegendreLobatto ! GaussChebyshev,
-    !! GaussChebyshevLobatto ! GaussJacobi ! GaussJacobiLobatto
+    !! quadrature rule, a constant of `TypeQuadratureOpt`,
+    !! for example `ipopt%GaussLegendre`
     REAL(DFP), INTENT(IN) :: xij(2)
-    !! end points
+    !! end points of the segment
     CHARACTER(*), INTENT(IN) :: layout
-    !! "VEFC"
-    !! "INCREASING"
+    !! `"VEFC"` puts the end points first.
+    !! `"INCREASING"` gives increasing order.
+    !! Only the first letter matters.
     REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
-    !! Jacobi parameter
+    !! Jacobi parameter, needed for the Jacobi rules
     REAL(DFP), OPTIONAL, INTENT(IN) :: beta
-    !! Jacobi parameter
+    !! Jacobi parameter, needed for the Jacobi rules
     REAL(DFP), OPTIONAL, INTENT(IN) :: lambda
-    !! Ultraspherical parameter
+    !! ultraspherical parameter, needed for the ultraspherical rules
     REAL(DFP), ALLOCATABLE :: ans(:, :)
-    !! one dimensional interpolation point
+    !! points and weights, shape `(2, n)`.
+    !! `n` is [[QuadratureNumber_Line]] for `order` and `quadType`.
+    !! Row 1 holds the points and row 2 holds the weights.
   END FUNCTION QuadraturePoint_Line2
 END INTERFACE QuadraturePoint_Line
 
@@ -5163,83 +4056,52 @@ END INTERFACE QuadraturePoint_Line
 ! date: 2026-10-30
 ! summary: Select a rule and construct quadrature coordinates and weights.
 !
-! order requests polynomial integration degree; nips requests an explicit
-! supported point count. Output columns are points, coordinate rows come
-! first, and the final row contains weights. The default Line domain is
-! BIUNIT; Triangle requires refTriangle. Supply vertex xij to map coordinates
-! and scale weights by the geometric Jacobian. Triangle economical rules are
-! selected from Solin tables; the count selector currently ignores quadType.
+! Returns the points and weights of a quadrature rule on a segment of a
+! one dimensional line.
+! The caller gives the number of points `nips(1)`.
+! The rule must support that number of points.
 !
-! Arguments:
-!   nips : INTEGER(I4B), INTENT(IN)(1). Explicit quadrature point count; must
-! be supported by the selected rule.
-!   quadType : INTEGER(I4B), INTENT(IN). Quadrature family selector from
-! GlobalData or TypeQuadratureOpt.
-!   xij : REAL(DFP), INTENT(IN)(2). Point columns; vertices or interpolation
-! nodes according to the interface.
-!   layout : CHARACTER(*), INTENT(IN). Point ordering; VEFC puts vertices
-! before edge/interior points.
-!   alpha : REAL(DFP), OPTIONAL, INTENT(IN). Jacobi weight parameter alpha.
-!   beta : REAL(DFP), OPTIONAL, INTENT(IN). Jacobi weight parameter beta.
-!   lambda : REAL(DFP), OPTIONAL, INTENT(IN). Ultraspherical family parameter.
+! The segment runs from `xij(1)` to `xij(2)`.
+! The result has two rows and `nips(1)` columns.
+! Row 1 holds the points.
+! Row 2 holds the weights, scaled by half the length of the segment.
 !
-! Returns:
-!   ans : REAL(DFP), ALLOCATABLE(:, :).
+! The rules, the `layout` values and the checks of `alpha`, `beta` and
+! `lambda` are the same as in [[QuadraturePoint_Line1_]].
 !
 ! Formula:
-! $$\int_K f(x)\,dx\simeq\sum_i w_i f(x_i)$$
+!   $$ \int_{x_1}^{x_2} f(x)\,dx \approx \sum_{i=1}^{n} w_i f(x_i) $$
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE GlobalData, ONLY: DFP
-! USE GlobalData, ONLY: I4B
-! USE GlobalData, ONLY: GaussLegendreQP
-! USE LineInterpolationUtility, ONLY: QuadratureNumber_Line
-! USE LineInterpolationUtility, ONLY: QuadraturePoint_Line
-! USE LineInterpolationUtility, ONLY: QuadraturePoint_Line_
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-! REAL(DFP), ALLOCATABLE :: q(:,:), buffer(:,:)
-! INTEGER(I4B) :: n,nr,nc
+! - [test 1](|base|Line/examples/QuadraturePoint_Line_test_1.F90) with
+!   three points on the segment [0, 2]
 !
-! n = QuadratureNumber_Line(2_I4B,GaussLegendreQP)
-! q = QuadraturePoint_Line(order=2_I4B, quadType=GaussLegendreQP, &
-!   layout="INCREASING")
-! CALL OK(ABS(SUM(q(2,:))-2.0_DFP) < 1.0E-10_DFP, &
-!   "Weights integrate reference measure")
-! ALLOCATE(buffer(2,n))
-! CALL QuadraturePoint_Line_(nips=[n], quadType=GaussLegendreQP, &
-!   layout="INCREASING", ans=buffer, nrow=nr, ncol=nc)
-! CALL OK(nr == 2 .AND. nc == n, "Active quadrature dimensions")
-! CALL OK(MAXVAL(ABS(q-buffer)) < 1.0E-10_DFP, &
-!   "Function and subroutine quadrature agree")
-! END PROGRAM main
-!```
+! See also: [[QuadraturePoint_Line2]], [[QuadraturePoint_Line3]]
 
 INTERFACE QuadraturePoint_Line
   MODULE FUNCTION QuadraturePoint_Line4(nips, quadType, xij, layout, &
                                         alpha, beta, lambda) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: nips(1)
-    !! order of interpolation
+    !! number of quadrature points, `nips(1)`
     INTEGER(I4B), INTENT(IN) :: quadType
-    !! Quadrature point type
-    !! Equidistance ! GaussLegendre ! GaussLegendreLobatto ! GaussChebyshev,
-    !! GaussChebyshevLobatto ! GaussJacobi ! GaussJacobiLobatto
+    !! quadrature rule, a constant of `TypeQuadratureOpt`,
+    !! for example `ipopt%GaussLegendre`
     REAL(DFP), INTENT(IN) :: xij(2)
-    !! end points
+    !! end points of the segment
     CHARACTER(*), INTENT(IN) :: layout
-    !! "VEFC"
-    !! "INCREASING"
+    !! `"VEFC"` puts the end points first.
+    !! `"INCREASING"` gives increasing order.
+    !! Only the first letter matters.
     REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
-    !! Jacobi parameter
+    !! Jacobi parameter, needed for the Jacobi rules
     REAL(DFP), OPTIONAL, INTENT(IN) :: beta
-    !! Jacobi parameter
+    !! Jacobi parameter, needed for the Jacobi rules
     REAL(DFP), OPTIONAL, INTENT(IN) :: lambda
-    !! Ultraspherical parameter
+    !! ultraspherical parameter, needed for the ultraspherical rules
     REAL(DFP), ALLOCATABLE :: ans(:, :)
-    !! one dimensional interpolation point
+    !! points and weights, shape `(2, nips(1))`.
+    !! Row 1 holds the points and row 2 holds the weights.
   END FUNCTION QuadraturePoint_Line4
 END INTERFACE QuadraturePoint_Line
 
@@ -5251,94 +4113,59 @@ END INTERFACE QuadraturePoint_Line
 ! date: 2026-10-30
 ! summary: Select a rule and construct quadrature coordinates and weights.
 !
-! order requests polynomial integration degree; nips requests an explicit
-! supported point count. Output columns are points, coordinate rows come
-! first, and the final row contains weights. The default Line domain is
-! BIUNIT; Triangle requires refTriangle. Supply vertex xij to map coordinates
-! and scale weights by the geometric Jacobian. Triangle economical rules are
-! selected from Solin tables; the count selector currently ignores quadType.
+! Returns the points and weights of a quadrature rule on a line.
+! The caller gives the number of points `nips(1)`.
+! The rule must support that number of points.
 !
-! Arguments:
-!   nips : INTEGER(I4B), INTENT(IN)(1). Explicit quadrature point count; must
-! be supported by the selected rule.
-!   quadType : INTEGER(I4B), INTENT(IN). Quadrature family selector from
-! GlobalData or TypeQuadratureOpt.
-!   layout : CHARACTER(*), INTENT(IN). Point ordering; VEFC puts vertices
-! before edge/interior points.
-!   xij : REAL(DFP), OPTIONAL, INTENT(IN)(:, :). Point columns; vertices or
-! interpolation nodes according to the interface.
-!   alpha : REAL(DFP), OPTIONAL, INTENT(IN). Jacobi weight parameter alpha.
-!   beta : REAL(DFP), OPTIONAL, INTENT(IN). Jacobi weight parameter beta.
-!   lambda : REAL(DFP), OPTIONAL, INTENT(IN). Ultraspherical family parameter.
+! Each column of the result is one quadrature point.
+! The last row holds the weights.
+! The rows before it hold the coordinates of the point.
 !
-! Returns:
-!   ans : REAL(DFP), ALLOCATABLE(:, :).
+! Without `xij`, the points lie on the biunit interval [-1, 1].
+! The result then has two rows.
+! With `xij`, the routine maps the points to a segment.
+! Column 1 of `xij` is the first end point and column 2 is the second.
+! The result then has `SIZE(xij, 1) + 1` rows.
+! The routine multiplies the weights by half the segment length.
+!
+! The rules, the `layout` values and the checks of `alpha`, `beta` and
+! `lambda` are the same as in [[QuadraturePoint_Line1_]].
 !
 ! Formula:
-! $$\int_K f(x)\,dx\simeq\sum_i w_i f(x_i)$$
+!   $$ \int_{-1}^{1} f(x)\,dx \approx \sum_{i=1}^{n} w_i f(x_i) $$
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE GlobalData, ONLY: DFP
-! USE GlobalData, ONLY: I4B
-! USE GlobalData, ONLY: GaussLegendreQP
-! USE LineInterpolationUtility, ONLY: QuadratureNumber_Line
-! USE LineInterpolationUtility, ONLY: QuadraturePoint_Line
-! USE LineInterpolationUtility, ONLY: QuadraturePoint_Line_
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-! REAL(DFP), ALLOCATABLE :: q(:,:), buffer(:,:)
-! INTEGER(I4B) :: n,nr,nc
+! - [test 1](|base|Line/examples/QuadraturePoint_Line_test_1.F90) with a
+!   segment in two dimensions
 !
-! n = QuadratureNumber_Line(2_I4B,GaussLegendreQP)
-! q = QuadraturePoint_Line(order=2_I4B, quadType=GaussLegendreQP, &
-!   layout="INCREASING")
-! CALL OK(ABS(SUM(q(2,:))-2.0_DFP) < 1.0E-10_DFP, &
-!   "Weights integrate reference measure")
-! ALLOCATE(buffer(2,n))
-! CALL QuadraturePoint_Line_(nips=[n], quadType=GaussLegendreQP, &
-!   layout="INCREASING", ans=buffer, nrow=nr, ncol=nc)
-! CALL OK(nr == 2 .AND. nc == n, "Active quadrature dimensions")
-! CALL OK(MAXVAL(ABS(q-buffer)) < 1.0E-10_DFP, &
-!   "Function and subroutine quadrature agree")
-! END PROGRAM main
-!```
+! See also: [[QuadraturePoint_Line1]], [[QuadraturePoint_Line4]]
 
 INTERFACE QuadraturePoint_Line
   MODULE FUNCTION QuadraturePoint_Line3(nips, quadType, layout, xij, &
                                         alpha, beta, lambda) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: nips(1)
-    !! Order of interpolation
+    !! number of quadrature points, `nips(1)`
     INTEGER(I4B), INTENT(IN) :: quadType
-    !! Quadrature point type
-    !! Equidistance,
-    !! GaussLegendre,
-    !! GaussLegendreLobatto,
-    !! GaussChebyshev,
-    !! GaussChebyshevLobatto,
-    !! GaussJacobi,
-    !! GaussJacobiLobatto
+    !! quadrature rule, a constant of `TypeQuadratureOpt`,
+    !! for example `ipopt%GaussLegendre`
     CHARACTER(*), INTENT(IN) :: layout
-    !! "VEFC"
-    !! "INCREASING"
+    !! `"VEFC"` puts the end points first.
+    !! `"INCREASING"` gives increasing order.
+    !! Only the first letter matters.
     REAL(DFP), OPTIONAL, INTENT(IN) :: xij(:, :)
-    !! domain of interpolation
+    !! end points of the segment, `xij(:, 1)` and `xij(:, 2)`.
+    !! The default is the biunit interval [-1, 1].
     REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
-    !! Jacobi parameter
+    !! Jacobi parameter, needed for the Jacobi rules
     REAL(DFP), OPTIONAL, INTENT(IN) :: beta
-    !! Jacobi parameter
+    !! Jacobi parameter, needed for the Jacobi rules
     REAL(DFP), OPTIONAL, INTENT(IN) :: lambda
-    !! Ultraspherical parameter
+    !! ultraspherical parameter, needed for the ultraspherical rules
     REAL(DFP), ALLOCATABLE :: ans(:, :)
-    !! quadrature points
-    !! If xij is present then the number of rows in ans
-    !! is same as size(xij,1) + 1.
-    !! If xij is not present then the number of rows in
-    !! ans is 2
-    !! The last row of ans contains the weights
-    !! The first few rows contains the quadrature points
+    !! points and weights, shape `(nsd + 1, nips(1))`.
+    !! `nsd` is `SIZE(xij, 1)`, or 1 when `xij` is absent.
+    !! The last row holds the weights.
   END FUNCTION QuadraturePoint_Line3
 END INTERFACE QuadraturePoint_Line
 
@@ -5350,95 +4177,84 @@ END INTERFACE QuadraturePoint_Line
 ! date: 2026-10-30
 ! summary: Select a rule and construct quadrature coordinates and weights.
 !
-! order requests polynomial integration degree; nips requests an explicit
-! supported point count. Output columns are points, coordinate rows come
-! first, and the final row contains weights. The default Line domain is
-! BIUNIT; Triangle requires refTriangle. Supply vertex xij to map coordinates
-! and scale weights by the geometric Jacobian. Triangle economical rules are
-! selected from Solin tables; the count selector currently ignores quadType.
+! Computes the points and weights of a quadrature rule on a line.
+! The routine writes them into `ans`, which the caller allocates.
+! It never allocates `ans`.
 !
-! Arguments:
-!   nips : INTEGER(I4B), INTENT(IN)(1). Explicit quadrature point count; must
-! be supported by the selected rule.
-!   quadType : INTEGER(I4B), INTENT(IN). Quadrature family selector from
-! GlobalData or TypeQuadratureOpt.
-!   layout : CHARACTER(*), INTENT(IN). Point ordering; VEFC puts vertices
-! before edge/interior points.
-!   xij : REAL(DFP), OPTIONAL, INTENT(IN)(:, :). Point columns; vertices or
-! interpolation nodes according to the interface.
-!   alpha : REAL(DFP), OPTIONAL, INTENT(IN). Jacobi weight parameter alpha.
-!   beta : REAL(DFP), OPTIONAL, INTENT(IN). Jacobi weight parameter beta.
-!   lambda : REAL(DFP), OPTIONAL, INTENT(IN). Ultraspherical family parameter.
-!   ans : REAL(DFP), INTENT(INOUT)(:, :). Result buffer; allocate the full
-! active shape before the call.
-!   nrow : INTEGER(I4B), INTENT(OUT). Number of active output rows.
-!   ncol : INTEGER(I4B), INTENT(OUT). Number of active output columns.
+! Each column of `ans` is one quadrature point.
+! The last row holds the weights.
+! The rows before it hold the coordinates of the point.
 !
-! Returns:
-!   Updates ans(:, :), nrow, ncol.
+! Without `xij`, the points lie on the biunit interval [-1, 1].
+! `ans` then has two rows, and the weights sum to 2.
+!
+! With `xij`, the routine maps the points to a segment.
+! Column 1 of `xij` is the first end point of the segment.
+! Column 2 is the second end point.
+! `SIZE(xij, 1)` is the number of space dimensions `nsd`.
+! `ans` then has `nsd + 1` rows.
+! The routine multiplies the weights by half the segment length.
+!
+! `layout` sets the order of the points.
+! If its first letter is `"V"`, the two end points come first.
+! The interior points follow.
+! Any other value gives increasing order.
+!
+! `quadType` selects the rule.
+! Use a constant of `TypeQuadratureOpt`, for example `ipopt%GaussLegendre`.
+! The Legendre, Chebyshev, Jacobi and ultraspherical families are
+! available.
+! Each family has a Gauss, a left Radau, a right Radau and a Lobatto rule.
+!
+! The Jacobi rules need `alpha` and `beta`.
+! The ultraspherical rules need `lambda`.
+! A debug build checks this.
+!
+! @note
+! The routine does not check `quadType` in a release build.
+! For an unknown type, the routine does not fill `ans`.
+! A debug build stops with an error.
+! @endnote
 !
 ! Formula:
-! $$\int_K f(x)\,dx\simeq\sum_i w_i f(x_i)$$
+!   $$ \int_{-1}^{1} f(x)\,dx \approx \sum_{i=1}^{n} w_i f(x_i) $$
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE GlobalData, ONLY: DFP
-! USE GlobalData, ONLY: I4B
-! USE GlobalData, ONLY: GaussLegendreQP
-! USE LineInterpolationUtility, ONLY: QuadratureNumber_Line
-! USE LineInterpolationUtility, ONLY: QuadraturePoint_Line
-! USE LineInterpolationUtility, ONLY: QuadraturePoint_Line_
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-! REAL(DFP), ALLOCATABLE :: q(:,:), buffer(:,:)
-! INTEGER(I4B) :: n,nr,nc
+! - [test 1](|base|Line/examples/QuadraturePoint_Line__test_1.F90)
 !
-! n = QuadratureNumber_Line(2_I4B,GaussLegendreQP)
-! q = QuadraturePoint_Line(order=2_I4B, quadType=GaussLegendreQP, &
-!   layout="INCREASING")
-! CALL OK(ABS(SUM(q(2,:))-2.0_DFP) < 1.0E-10_DFP, &
-!   "Weights integrate reference measure")
-! ALLOCATE(buffer(2,n))
-! CALL QuadraturePoint_Line_(nips=[n], quadType=GaussLegendreQP, &
-!   layout="INCREASING", ans=buffer, nrow=nr, ncol=nc)
-! CALL OK(nr == 2 .AND. nc == n, "Active quadrature dimensions")
-! CALL OK(MAXVAL(ABS(q-buffer)) < 1.0E-10_DFP, &
-!   "Function and subroutine quadrature agree")
-! END PROGRAM main
-!```
+! See also: [[QuadraturePoint_Line3]], [[QuadratureNumber_Line]]
 
 INTERFACE QuadraturePoint_Line_
   MODULE SUBROUTINE QuadraturePoint_Line1_(nips, quadType, layout, xij, &
                                            alpha, beta, lambda, ans, nrow, &
                                            ncol)
     INTEGER(I4B), INTENT(IN) :: nips(1)
-    !! Order of interpolation
+    !! number of quadrature points, `nips(1)`
     INTEGER(I4B), INTENT(IN) :: quadType
-    !! Quadrature point type
-    !! Equidistance, ! GaussLegendre, ! GaussLegendreLobatto,
-    !! GaussChebyshev, GaussChebyshevLobatto, GaussJacobi,
-    !! GaussJacobiLobatto
+    !! quadrature rule, a constant of `TypeQuadratureOpt`,
+    !! for example `ipopt%GaussLegendre`
     CHARACTER(*), INTENT(IN) :: layout
-    !! "VEFC" ! "INCREASING"
+    !! `"VEFC"` puts the end points first.
+    !! `"INCREASING"` gives increasing order.
+    !! Only the first letter matters.
     REAL(DFP), OPTIONAL, INTENT(IN) :: xij(:, :)
-    !! domain of interpolation
+    !! end points of the segment, `xij(:, 1)` and `xij(:, 2)`.
+    !! The default is the biunit interval [-1, 1].
     REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
-    !! Jacobi parameter
+    !! Jacobi parameter, needed for the Jacobi rules
     REAL(DFP), OPTIONAL, INTENT(IN) :: beta
-    !! Jacobi parameter
+    !! Jacobi parameter, needed for the Jacobi rules
     REAL(DFP), OPTIONAL, INTENT(IN) :: lambda
-    !! Ultraspherical parameter
+    !! ultraspherical parameter, needed for the ultraspherical rules
     REAL(DFP), INTENT(INOUT) :: ans(:, :)
-    !! quadrature points
-    !! If xij is present then the number of rows in ans
-    !! is same as size(xij,1) + 1.
-    !! If xij is not present then the number of rows in
-    !! ans is 2
-    !! The last row of ans contains the weights
-    !! The first few rows contains the quadrature points
+    !! points and weights.
+    !! It needs at least `nsd + 1` rows and `nips(1)` columns.
+    !! The last active row holds the weights.
+    !! `nsd` is `SIZE(xij, 1)`, or 1 when `xij` is absent.
     INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+    !! number of rows and columns written to `ans`.
+    !! They are `nsd + 1` and `nips(1)`.
   END SUBROUTINE QuadraturePoint_Line1_
 END INTERFACE QuadraturePoint_Line_
 
@@ -5448,68 +4264,39 @@ END INTERFACE QuadraturePoint_Line_
 
 !> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
-! summary: Declared hierarchical Laplacian interface (unimplemented backend).
+! summary: Returns the second derivatives of the hierarchical basis of a
+!   line.
 !
-! Do not call this API currently: it delegates to empty Lobatto Laplacian
-! bodies and can leave values and active dimensions undefined. The example
-! deliberately uses a gradient based workaround. It is not validation of this
-! Laplacian interface.
+! Intended to return the second derivatives of the first `order + 1`
+! hierarchical basis polynomials at the points `xij`.
+! Row `i` of the result belongs to point `xij(1, i)`.
+! Column `j` belongs to the polynomial of degree `j - 1`.
+! The routine uses the orientation `+1`.
 !
-! Arguments:
-!   order : INTEGER(I4B), INTENT(IN). Polynomial degree, except quadrature
-! where it is requested exactness degree.
-!   xij : REAL(DFP), INTENT(IN)(:, :). Point columns; vertices or
-! interpolation nodes according to the interface.
-!   refLine : CHARACTER(*), INTENT(IN). Reference interval name, UNIT or
-! BIUNIT.
-!
-! Returns:
-!   No reliable result from the affected backend; see the workaround example.
+! @warning
+! Do not call this function yet.
+! The Lobatto Laplacian routine behind it has an empty body.
+! It leaves the result unset.
+! @endwarning
 !
 ! Formula:
-! $$\phi''(x)\simeq[\phi'(x+h)-\phi'(x-h)]/(2h)$$
+!   $$ ans_{ij} = \phi_{j-1}''(x_i), \quad j = 1, \ldots, order + 1 $$
 !
-! Examples
-!
-!```fortran
-! PROGRAM main
-! USE GlobalData, ONLY: DFP
-! USE GlobalData, ONLY: I4B
-! USE LineInterpolationUtility, ONLY: HeirarchicalBasisLaplacian_Line
-! USE LineInterpolationUtility, ONLY: HeirarchicalBasisGradient_Line
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-! REAL(DFP) :: x(1,3), xp(1,3), xm(1,3)
-! REAL(DFP) :: gp(3,3,1), gm(3,3,1), second(3,3)
-! REAL(DFP), PARAMETER :: h = 1.0E-5_DFP
-!
-! ! The hierarchical Laplacian forwards to empty Lobatto implementations.
-! x(1,:) = [-0.5_DFP,0.0_DFP,0.5_DFP]
-! xp = x+h
-! xm = x-h
-! gp = HeirarchicalBasisGradient_Line(2_I4B,xp,"BIUNIT")
-! gm = HeirarchicalBasisGradient_Line(2_I4B,xm,"BIUNIT")
-! second = (gp(:,:,1)-gm(:,:,1))/(2.0_DFP*h)
-! CALL OK(MAXVAL(ABS(second(:,3)-3.0_DFP/SQRT(6.0_DFP))) &
-!   < 1.0E-8_DFP, "Gradient based second derivative workaround")
-! END PROGRAM main
-!```
+! See also: [[HeirarchicalLaplacianBasis_Line1_]]
 
 INTERFACE HeirarchicalBasisLaplacian_Line
   MODULE FUNCTION HeirarchicalLaplacianBasis_Line1(order, xij, refLine) &
     RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
-    !! Polynomial order of interpolation
+    !! highest polynomial degree
     REAL(DFP), INTENT(IN) :: xij(:, :)
-    !! Points of evaluation in xij format
-    !! size(xij, 1) should be 1
+    !! points of evaluation, one point per column.
+    !! `SIZE(xij, 1)` must be 1.
     CHARACTER(*), INTENT(IN) :: refLine
-    !! This parameter denotes the type of reference line.
-    !! It can take following values:
-    !! UNIT: in this case xij is in unit Line.
-    !! BIUNIT: in this case xij is in biunit Line.
+    !! reference interval, `"UNIT"` or `"BIUNIT"`.
+    !! Only the first letter matters.
     REAL(DFP) :: ans(SIZE(xij, 2), order + 1)
-    !! Laplacian of Hierarchical basis
+    !! second derivatives at the points `xij`
   END FUNCTION HeirarchicalLaplacianBasis_Line1
 END INTERFACE HeirarchicalBasisLaplacian_Line
 
@@ -5519,74 +4306,44 @@ END INTERFACE HeirarchicalBasisLaplacian_Line
 
 !> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
-! summary: Declared hierarchical Laplacian interface (unimplemented backend).
+! summary: Computes the second derivatives of the hierarchical basis of a
+!   line, into a buffer.
 !
-! Do not call this API currently: it delegates to empty Lobatto Laplacian
-! bodies and can leave values and active dimensions undefined. The example
-! deliberately uses a gradient based workaround. It is not validation of this
-! Laplacian interface.
+! Intended to write the second derivatives of the first `order + 1`
+! hierarchical basis polynomials at the points `xij` into `ans`.
+! Row `i` of `ans` belongs to point `xij(1, i)`.
+! Column `j` belongs to the polynomial of degree `j - 1`.
+! The routine uses the orientation `+1`.
+! It sets `nrow` and `ncol` to the active size of `ans`.
 !
-! Arguments:
-!   order : INTEGER(I4B), INTENT(IN). Polynomial degree, except quadrature
-! where it is requested exactness degree.
-!   xij : REAL(DFP), INTENT(IN)(:, :). Point columns; vertices or
-! interpolation nodes according to the interface.
-!   refLine : CHARACTER(*), INTENT(IN). Reference interval name, UNIT or
-! BIUNIT.
-!   ans : REAL(DFP), INTENT(INOUT)(:, :). Result buffer; allocate the full
-! active shape before the call.
-!   nrow : INTEGER(I4B), INTENT(OUT). Number of active output rows.
-!   ncol : INTEGER(I4B), INTENT(OUT). Number of active output columns.
-!
-! Returns:
-!   No reliable result from the affected backend; see the workaround example.
+! @warning
+! Do not call this routine yet.
+! The Lobatto Laplacian routine behind it has an empty body.
+! It leaves `ans`, `nrow` and `ncol` unset.
+! @endwarning
 !
 ! Formula:
-! $$\phi''(x)\simeq[\phi'(x+h)-\phi'(x-h)]/(2h)$$
+!   $$ ans_{ij} = \phi_{j-1}''(x_i), \quad j = 1, \ldots, order + 1 $$
 !
-! Examples
-!
-!```fortran
-! PROGRAM main
-! USE GlobalData, ONLY: DFP
-! USE GlobalData, ONLY: I4B
-! USE LineInterpolationUtility, ONLY: HeirarchicalBasisLaplacian_Line_
-! USE LineInterpolationUtility, ONLY: HeirarchicalBasisGradient_Line
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-! REAL(DFP) :: x(1,3), xp(1,3), xm(1,3)
-! REAL(DFP) :: gp(3,3,1), gm(3,3,1), second(3,3)
-! REAL(DFP), PARAMETER :: h = 1.0E-5_DFP
-!
-! ! The hierarchical Laplacian forwards to empty Lobatto implementations.
-! x(1,:) = [-0.5_DFP,0.0_DFP,0.5_DFP]
-! xp = x+h
-! xm = x-h
-! gp = HeirarchicalBasisGradient_Line(2_I4B,xp,"BIUNIT")
-! gm = HeirarchicalBasisGradient_Line(2_I4B,xm,"BIUNIT")
-! second = (gp(:,:,1)-gm(:,:,1))/(2.0_DFP*h)
-! CALL OK(MAXVAL(ABS(second(:,3)-3.0_DFP/SQRT(6.0_DFP))) &
-!   < 1.0E-8_DFP, "Gradient based second derivative workaround")
-! END PROGRAM main
-!```
+! See also: [[HeirarchicalLaplacianBasis_Line1]]
 
 INTERFACE HeirarchicalBasisLaplacian_Line_
   MODULE SUBROUTINE HeirarchicalLaplacianBasis_Line1_( &
     order, xij, refLine, ans, nrow, ncol)
     INTEGER(I4B), INTENT(IN) :: order
-    !! Polynomial order of interpolation
+    !! highest polynomial degree
     REAL(DFP), INTENT(IN) :: xij(:, :)
-    !! Points of evaluation in xij format
-    !! size(xij, 1) should be 1
+    !! points of evaluation, one point per column.
+    !! `SIZE(xij, 1)` must be 1.
     CHARACTER(*), INTENT(IN) :: refLine
-    !! This parameter denotes the type of reference line.
-    !! It can take following values:
-    !! UNIT: in this case xij is in unit Line.
-    !! BIUNIT: in this case xij is in biunit Line.
+    !! reference interval, `"UNIT"` or `"BIUNIT"`.
+    !! Only the first letter matters.
     REAL(DFP), INTENT(INOUT) :: ans(:, :)
-    !! Laplacian of Hierarchical basis
+    !! second derivatives, at least `SIZE(xij, 2)` rows and
+    !! `order + 1` columns
     INTEGER(I4B), INTENT(OUT) :: nrow, ncol
-    !! SIZE(xij, 2), order + 1, 1
+    !! number of rows and columns written to `ans`.
+    !! They should be `SIZE(xij, 2)` and `order + 1`.
   END SUBROUTINE HeirarchicalLaplacianBasis_Line1_
 END INTERFACE HeirarchicalBasisLaplacian_Line_
 
@@ -5596,73 +4353,55 @@ END INTERFACE HeirarchicalBasisLaplacian_Line_
 
 !> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
-! summary: Declared hierarchical Laplacian interface (unimplemented backend).
+! summary: Returns the second derivatives of the hierarchical basis of a
+!   line with an orientation.
 !
-! Do not call this API currently: it delegates to empty Lobatto Laplacian
-! bodies and can leave values and active dimensions undefined. The example
-! deliberately uses a gradient based workaround. It is not validation of this
-! Laplacian interface.
+! Intended to return the second derivatives of the first `order + 1`
+! hierarchical basis polynomials at the points `xij`.
+! Row `i` of the result belongs to the point `xij(1, i)`.
+! Column `j` belongs to the polynomial of degree `j - 1`.
+! The routine allocates the result with `SIZE(xij, 2)` rows and
+! `order + 1` columns.
 !
-! Arguments:
-!   order : INTEGER(I4B), INTENT(IN). Polynomial degree, except quadrature
-! where it is requested exactness degree.
-!   xij : REAL(DFP), INTENT(IN)(:, :). Point columns; vertices or
-! interpolation nodes according to the interface.
-!   refLine : CHARACTER(*), INTENT(IN). Reference interval name, UNIT or
-! BIUNIT.
-!   orient : INTEGER(I4B), INTENT(IN). Interior mode orientation sign, +1 or
-! -1.
+! The routine reads the first letter of `refLine`.
 !
-! Returns:
-!   No reliable result from the affected backend; see the workaround example.
+! 1. For `"B"`, `xij` lies on the biunit interval `[-1, 1]`.
+! 2. For `"U"`, `xij` lies on the unit interval `[0, 1]`.
+!    The routine maps the points to the biunit interval and multiplies
+!    the result by 2.
+! 3. For any other letter, the result is not filled.
+!
+! Then it multiplies column `k + 1` by `orient**(k - 1)` for each degree
+! `k >= 2`. The two vertex columns stay unchanged.
+!
+! @warning
+! Do not call this function yet.
+! The Lobatto Laplacian routine behind it has an empty body.
+! It leaves the result unset.
+! @endwarning
 !
 ! Formula:
-! $$\phi''(x)\simeq[\phi'(x+h)-\phi'(x-h)]/(2h)$$
+!   $$ ans_{ij} = \phi_{j-1}''(x_i), \quad j = 1, \ldots, order + 1 $$
 !
-! Examples
-!
-!```fortran
-! PROGRAM main
-! USE GlobalData, ONLY: DFP
-! USE GlobalData, ONLY: I4B
-! USE LineInterpolationUtility, ONLY: HeirarchicalBasisLaplacian_Line
-! USE LineInterpolationUtility, ONLY: HeirarchicalBasisGradient_Line
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-! REAL(DFP) :: x(1,3), xp(1,3), xm(1,3)
-! REAL(DFP) :: gp(3,3,1), gm(3,3,1), second(3,3)
-! REAL(DFP), PARAMETER :: h = 1.0E-5_DFP
-!
-! ! The hierarchical Laplacian forwards to empty Lobatto implementations.
-! x(1,:) = [-0.5_DFP,0.0_DFP,0.5_DFP]
-! xp = x+h
-! xm = x-h
-! gp = HeirarchicalBasisGradient_Line(2_I4B,xp,"BIUNIT")
-! gm = HeirarchicalBasisGradient_Line(2_I4B,xm,"BIUNIT")
-! second = (gp(:,:,1)-gm(:,:,1))/(2.0_DFP*h)
-! CALL OK(MAXVAL(ABS(second(:,3)-3.0_DFP/SQRT(6.0_DFP))) &
-!   < 1.0E-8_DFP, "Gradient based second derivative workaround")
-! END PROGRAM main
-!```
+! See also: [[HeirarchicalLaplacianBasis_Line1]],
+!   [[HeirarchicalLaplacianBasis_Line2_]]
 
 INTERFACE HeirarchicalBasisLaplacian_Line
   MODULE FUNCTION HeirarchicalLaplacianBasis_Line2( &
     order, xij, refLine, orient) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
-    !! Polynomial order of interpolation
+    !! highest polynomial degree
     REAL(DFP), INTENT(IN) :: xij(:, :)
-    !! Points of evaluation in xij format
-    !! size(xij, 1) should be 1
+    !! points of evaluation, one point per column.
+    !! `SIZE(xij, 1)` must be 1.
     CHARACTER(*), INTENT(IN) :: refLine
-    !! This parameter denotes the type of reference line.
-    !! It can take following values:
-    !! UNIT: in this case xij is in unit Line.
-    !! BIUNIT: in this case xij is in biunit Line.
+    !! reference interval, `"UNIT"` or `"BIUNIT"`.
+    !! Only the first letter matters.
     INTEGER(I4B), INTENT(IN) :: orient
-    !! orientation of line: 1 or -1
+    !! orientation of the line, 1 or -1
     REAL(DFP), ALLOCATABLE :: ans(:, :)
-    !! Laplacian of Hierarchical basis
-    !! SIZE(xij, 2), order + 1, 1
+    !! second derivatives at the points `xij`, shape
+    !! `(SIZE(xij, 2), order + 1)`
   END FUNCTION HeirarchicalLaplacianBasis_Line2
 END INTERFACE HeirarchicalBasisLaplacian_Line
 
@@ -5672,78 +4411,58 @@ END INTERFACE HeirarchicalBasisLaplacian_Line
 
 !> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
-! summary: Declared hierarchical Laplacian interface (unimplemented backend).
+! summary: Computes the second derivatives of the hierarchical basis of a
+!   line with an orientation, into a buffer.
 !
-! Do not call this API currently: it delegates to empty Lobatto Laplacian
-! bodies and can leave values and active dimensions undefined. The example
-! deliberately uses a gradient based workaround. It is not validation of this
-! Laplacian interface.
+! Intended to write the second derivatives of the first `order + 1`
+! hierarchical basis polynomials at the points `xij` into `ans`.
+! Row `i` of `ans` belongs to the point `xij(1, i)`.
+! Column `j` belongs to the polynomial of degree `j - 1`.
+! The routine sets `nrow` and `ncol` to the active size of `ans`.
+! It never allocates `ans`.
 !
-! Arguments:
-!   order : INTEGER(I4B), INTENT(IN). Polynomial degree, except quadrature
-! where it is requested exactness degree.
-!   xij : REAL(DFP), INTENT(IN)(:, :). Point columns; vertices or
-! interpolation nodes according to the interface.
-!   refLine : CHARACTER(*), INTENT(IN). Reference interval name, UNIT or
-! BIUNIT.
-!   orient : INTEGER(I4B), INTENT(IN). Interior mode orientation sign, +1 or
-! -1.
-!   ans : REAL(DFP), INTENT(INOUT)(:, :). Result buffer; allocate the full
-! active shape before the call.
-!   nrow : INTEGER(I4B), INTENT(OUT). Number of active output rows.
-!   ncol : INTEGER(I4B), INTENT(OUT). Number of active output columns.
+! The routine reads the first letter of `refLine`.
 !
-! Returns:
-!   No reliable result from the affected backend; see the workaround example.
+! 1. For `"B"`, `xij` lies on the biunit interval `[-1, 1]`.
+! 2. For `"U"`, `xij` lies on the unit interval `[0, 1]`.
+!    The routine maps the points to the biunit interval and multiplies
+!    the result by 2.
+! 3. For any other letter, it sets `nrow` and `ncol` to 0.
+!
+! Then it multiplies column `k + 1` by `orient**(k - 1)` for each degree
+! `k >= 2`. The two vertex columns stay unchanged.
+!
+! @warning
+! Do not call this routine yet.
+! The Lobatto Laplacian routine behind it has an empty body.
+! It leaves `ans`, `nrow` and `ncol` unset.
+! @endwarning
 !
 ! Formula:
-! $$\phi''(x)\simeq[\phi'(x+h)-\phi'(x-h)]/(2h)$$
+!   $$ ans_{ij} = \phi_{j-1}''(x_i), \quad j = 1, \ldots, order + 1 $$
 !
-! Examples
-!
-!```fortran
-! PROGRAM main
-! USE GlobalData, ONLY: DFP
-! USE GlobalData, ONLY: I4B
-! USE LineInterpolationUtility, ONLY: HeirarchicalBasisLaplacian_Line_
-! USE LineInterpolationUtility, ONLY: HeirarchicalBasisGradient_Line
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-! REAL(DFP) :: x(1,3), xp(1,3), xm(1,3)
-! REAL(DFP) :: gp(3,3,1), gm(3,3,1), second(3,3)
-! REAL(DFP), PARAMETER :: h = 1.0E-5_DFP
-!
-! ! The hierarchical Laplacian forwards to empty Lobatto implementations.
-! x(1,:) = [-0.5_DFP,0.0_DFP,0.5_DFP]
-! xp = x+h
-! xm = x-h
-! gp = HeirarchicalBasisGradient_Line(2_I4B,xp,"BIUNIT")
-! gm = HeirarchicalBasisGradient_Line(2_I4B,xm,"BIUNIT")
-! second = (gp(:,:,1)-gm(:,:,1))/(2.0_DFP*h)
-! CALL OK(MAXVAL(ABS(second(:,3)-3.0_DFP/SQRT(6.0_DFP))) &
-!   < 1.0E-8_DFP, "Gradient based second derivative workaround")
-! END PROGRAM main
-!```
+! See also: [[HeirarchicalLaplacianBasis_Line1_]],
+!   [[HeirarchicalLaplacianBasis_Line2]]
 
 INTERFACE HeirarchicalBasisLaplacian_Line_
   MODULE SUBROUTINE HeirarchicalLaplacianBasis_Line2_( &
     order, xij, refLine, orient, ans, nrow, ncol)
     INTEGER(I4B), INTENT(IN) :: order
-    !! Polynomial order of interpolation
+    !! highest polynomial degree
     REAL(DFP), INTENT(IN) :: xij(:, :)
-    !! Points of evaluation in xij format
-    !! size(xij, 1) should be 1
+    !! points of evaluation, one point per column.
+    !! `SIZE(xij, 1)` must be 1.
     CHARACTER(*), INTENT(IN) :: refLine
-    !! This parameter denotes the type of reference line.
-    !! It can take following values:
-    !! UNIT: in this case xij is in unit Line.
-    !! BIUNIT: in this case xij is in biunit Line.
+    !! reference interval, `"UNIT"` or `"BIUNIT"`.
+    !! Only the first letter matters.
     INTEGER(I4B), INTENT(IN) :: orient
-    !! orientation of line: 1 or -1
+    !! orientation of the line, 1 or -1
     REAL(DFP), INTENT(INOUT) :: ans(:, :)
-    !! Laplacian of Hierarchical basis
+    !! second derivatives, at least `SIZE(xij, 2)` rows and
+    !! `order + 1` columns
     INTEGER(I4B), INTENT(OUT) :: nrow, ncol
-    !! SIZE(xij, 2), order + 1, 1
+    !! number of rows and columns written to `ans`.
+    !! They should be `SIZE(xij, 2)` and `order + 1`.
   END SUBROUTINE HeirarchicalLaplacianBasis_Line2_
 END INTERFACE HeirarchicalBasisLaplacian_Line_
 
@@ -5753,72 +4472,64 @@ END INTERFACE HeirarchicalBasisLaplacian_Line_
 
 !> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
-! summary: Evaluate line Basis laplacian.
+! summary: Returns the second derivatives of the basis of a line at one
+!   point.
 !
-! Results use point rows and degree columns. Gradient element wrappers add a
-! coordinate axis. BIUNIT is used explicitly. Only Monomial has a working
-! Laplacian here; named polynomial family branches can reach unimplemented
-! routines. UNIT second derivative scaling requires review.
+! Returns the second derivatives of the first `order + 1` basis
+! polynomials at the point `x`.
+! Entry `j` belongs to the polynomial of degree `j - 1`.
 !
-! Arguments:
-!   order : INTEGER(I4B), INTENT(IN). Polynomial degree, except quadrature
-! where it is requested exactness degree.
-!   x : REAL(DFP), INTENT(IN). Evaluation point(s); columns for rank two
-! arrays.
-!   refLine : CHARACTER(*), INTENT(IN). Reference interval name, UNIT or
-! BIUNIT.
-!   basisType : INTEGER(I4B), OPTIONAL, INTENT(IN). Polynomial family
-! selector, for example poly%Monomial.
-!   alpha : REAL(DFP), OPTIONAL, INTENT(IN). Jacobi weight parameter alpha.
-!   beta : REAL(DFP), OPTIONAL, INTENT(IN). Jacobi weight parameter beta.
-!   lambda : REAL(DFP), OPTIONAL, INTENT(IN). Ultraspherical family parameter.
+! The default basis is the monomial basis `1, x, x**2, ...`.
+! Entries 1 and 2 are zero.
+! For `j >= 3`, entry `j` is `(j - 1) * (j - 2) * x**(j - 3)`.
 !
-! Returns:
-!   ans : REAL(DFP)(order + 1).
+! The routine works on the biunit interval `[-1, 1]` only.
+!
+! @note
+! A debug build stops with an error if `refLine` does not start with `B`.
+! A release build does not check `refLine`.
+! It never rescales the result for `"UNIT"`.
+! @endnote
+!
+! @warning
+! Only the monomial basis works.
+! For any other `basisType`, the polynomial backend is an empty stub.
+! It leaves the result unset.
+! @endwarning
 !
 ! Formula:
-! $$L_{ij}=\phi_j''(x_i)$$
+!   $$ ans_j = \phi_{j-1}''(x) $$
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE GlobalData, ONLY: DFP
-! USE GlobalData, ONLY: I4B
-! USE GlobalData, ONLY: poly
-! USE LineInterpolationUtility, ONLY: BasisLaplacianEvalAll_Line
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-! REAL(DFP) :: x(1,3), y(3,3)
+! - [test 2](|base|Line/examples/BasisLaplacianEvalAll_Line_test_2.F90)
 !
-! x(1,:) = [-0.5_DFP,0.0_DFP,0.5_DFP]
-! y = BasisLaplacianEvalAll_Line(order=2_I4B, x=x(1,:), &
-!   refLine="BIUNIT", basisType=poly%Monomial)
-! CALL OK(MAXVAL(ABS(y(:,3)- &
-!   (2.0_DFP))) < 1.0E-10_DFP, "Analytic quadratic mode")
-! END PROGRAM main
-!```
+! See also: [[BasisLaplacianEvalAll_Line1_]], [[BasisLaplacianEvalAll_Line2]]
 
 INTERFACE BasisLaplacianEvalAll_Line
   MODULE FUNCTION BasisLaplacianEvalAll_Line1( &
     order, x, refLine, basisType, alpha, beta, lambda) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
-    !! order of  polynomials
+    !! highest polynomial degree
     REAL(DFP), INTENT(IN) :: x
     !! point of evaluation
     CHARACTER(*), INTENT(IN) :: refLine
-    !! Refline should be  BIUNIT
+    !! reference interval, must be `"BIUNIT"`.
+    !! Only a debug build checks the first letter.
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: basisType
-    !! Monomial ! Jacobi ! Ultraspherical ! Legendre ! Chebyshev ! Lobatto
-    !! UnscaledLobatto
+    !! polynomial family, a constant of `TypePolynomialOpt`.
+    !! The default is `poly%Monomial`.
+    !! Only the monomial basis works.
     REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
-    !! Jacobi polynomial parameter
+    !! Jacobi parameter, needed for the Jacobi basis
     REAL(DFP), OPTIONAL, INTENT(IN) :: beta
-    !! Jacobi polynomial parameter
+    !! Jacobi parameter, needed for the Jacobi basis
     REAL(DFP), OPTIONAL, INTENT(IN) :: lambda
-    !! Ultraspherical parameter
+    !! ultraspherical parameter, needed for the ultraspherical basis
     REAL(DFP) :: ans(order + 1)
-    !! Value of n+1  polynomials at point x
+    !! second derivatives at the point `x`.
+    !! `ans(j)` is the second derivative of the polynomial of degree
+    !! `j - 1` at `x`.
   END FUNCTION BasisLaplacianEvalAll_Line1
 END INTERFACE BasisLaplacianEvalAll_Line
 
@@ -5828,79 +4539,69 @@ END INTERFACE BasisLaplacianEvalAll_Line
 
 !> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
-! summary: Evaluate line Basis laplacian.
+! summary: Computes the second derivatives of the basis of a line at one
+!   point, into a buffer.
 !
-! Results use point rows and degree columns. Gradient element wrappers add a
-! coordinate axis. BIUNIT is used explicitly. Only Monomial has a working
-! Laplacian here; named polynomial family branches can reach unimplemented
-! routines. UNIT second derivative scaling requires review.
+! Writes the second derivatives of the first `order + 1` basis
+! polynomials at the point `x` into `ans`.
+! Entry `j` belongs to the polynomial of degree `j - 1`.
+! The routine sets `tsize` to `order + 1`.
+! It never allocates `ans`.
 !
-! Arguments:
-!   order : INTEGER(I4B), INTENT(IN). Polynomial degree, except quadrature
-! where it is requested exactness degree.
-!   x : REAL(DFP), INTENT(IN). Evaluation point(s); columns for rank two
-! arrays.
-!   ans : REAL(DFP), INTENT(INOUT)(:). Result buffer; allocate the full active
-! shape before the call.
-!   tsize : INTEGER(I4B), INTENT(OUT). Number of active output entries.
-!   refLine : CHARACTER(*), INTENT(IN). Reference interval name, UNIT or
-! BIUNIT.
-!   basisType : INTEGER(I4B), OPTIONAL, INTENT(IN). Polynomial family
-! selector, for example poly%Monomial.
-!   alpha : REAL(DFP), OPTIONAL, INTENT(IN). Jacobi weight parameter alpha.
-!   beta : REAL(DFP), OPTIONAL, INTENT(IN). Jacobi weight parameter beta.
-!   lambda : REAL(DFP), OPTIONAL, INTENT(IN). Ultraspherical family parameter.
+! The default basis is the monomial basis `1, x, x**2, ...`.
+! Entries 1 and 2 are zero.
+! For `j >= 3`, entry `j` is `(j - 1) * (j - 2) * x**(j - 3)`.
 !
-! Returns:
-!   Updates ans(:), tsize.
+! The routine works on the biunit interval `[-1, 1]` only.
+!
+! @note
+! A debug build stops with an error if `refLine` does not start with `B`.
+! A release build does not check `refLine`.
+! It never rescales the result for `"UNIT"`.
+! @endnote
+!
+! @warning
+! Only the monomial basis works.
+! For any other `basisType`, the polynomial backend is an empty stub.
+! It leaves `ans` unset.
+! @endwarning
 !
 ! Formula:
-! $$L_{ij}=\phi_j''(x_i)$$
+!   $$ ans_j = \phi_{j-1}''(x) $$
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE GlobalData, ONLY: DFP
-! USE GlobalData, ONLY: I4B
-! USE GlobalData, ONLY: poly
-! USE LineInterpolationUtility, ONLY: BasisLaplacianEvalAll_Line_
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-! REAL(DFP) :: x(1,3), y(3,3)
-! INTEGER(I4B) :: nr,nc
+! - [test 2](|base|Line/examples/BasisLaplacianEvalAll_Line_test_2.F90)
+!   calls this routine in its second block
 !
-! x(1,:) = [-0.5_DFP,0.0_DFP,0.5_DFP]
-! CALL BasisLaplacianEvalAll_Line_(order=2_I4B, x=x(1,:), &
-!   refLine="BIUNIT", basisType=poly%Monomial, ans=y, nrow=nr,ncol=nc)
-! CALL OK(MAXVAL(ABS(y(:,3)- &
-!   (2.0_DFP))) < 1.0E-10_DFP, "Analytic quadratic mode")
-! END PROGRAM main
-!```
+! See also: [[BasisLaplacianEvalAll_Line1]], [[BasisLaplacianEvalAll_Line2_]]
 
 INTERFACE BasisLaplacianEvalAll_Line_
   MODULE SUBROUTINE BasisLaplacianEvalAll_Line1_( &
     order, x, refLine, basisType, alpha, beta, lambda, ans, tsize)
     INTEGER(I4B), INTENT(IN) :: order
-    !! order of  polynomials
+    !! highest polynomial degree
     REAL(DFP), INTENT(IN) :: x
     !! point of evaluation
     REAL(DFP), INTENT(INOUT) :: ans(:)
-    !! ans(order + 1)
-    !! Value of n+1  polynomials at point x
+    !! second derivatives, at least `order + 1` entries.
+    !! `ans(j)` is the second derivative of the polynomial of degree
+    !! `j - 1` at `x`.
     INTEGER(I4B), INTENT(OUT) :: tsize
-    !! order + 1
+    !! number of entries written to `ans`, which is `order + 1`
     CHARACTER(*), INTENT(IN) :: refLine
-    !! Refline should be  BIUNIT
+    !! reference interval, must be `"BIUNIT"`.
+    !! Only a debug build checks the first letter.
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: basisType
-    !! Monomial ! Jacobi ! Ultraspherical ! Legendre ! Chebyshev
-    !! Lobatto ! UnscaledLobatto
+    !! polynomial family, a constant of `TypePolynomialOpt`.
+    !! The default is `poly%Monomial`.
+    !! Only the monomial basis works.
     REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
-    !! Jacobi polynomial parameter
+    !! Jacobi parameter, needed for the Jacobi basis
     REAL(DFP), OPTIONAL, INTENT(IN) :: beta
-    !! Jacobi polynomial parameter
+    !! Jacobi parameter, needed for the Jacobi basis
     REAL(DFP), OPTIONAL, INTENT(IN) :: lambda
-    !! Ultraspherical parameter
+    !! ultraspherical parameter, needed for the ultraspherical basis
   END SUBROUTINE BasisLaplacianEvalAll_Line1_
 END INTERFACE BasisLaplacianEvalAll_Line_
 
@@ -5910,74 +4611,65 @@ END INTERFACE BasisLaplacianEvalAll_Line_
 
 !> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
-! summary: Evaluate line Basis laplacian.
+! summary: Returns the second derivatives of the basis of a line at many
+!   points.
 !
-! Results use point rows and degree columns. Gradient element wrappers add a
-! coordinate axis. BIUNIT is used explicitly. Only Monomial has a working
-! Laplacian here; named polynomial family branches can reach unimplemented
-! routines. UNIT second derivative scaling requires review.
+! Returns the second derivatives of the first `order + 1` basis
+! polynomials at the points `x`.
+! Row `i` of the result belongs to the point `x(i)`.
+! Column `j` belongs to the polynomial of degree `j - 1`.
 !
-! Arguments:
-!   order : INTEGER(I4B), INTENT(IN). Polynomial degree, except quadrature
-! where it is requested exactness degree.
-!   x : REAL(DFP), INTENT(IN)(:). Evaluation point(s); columns for rank two
-! arrays.
-!   refLine : CHARACTER(*), INTENT(IN). Reference interval name, UNIT or
-! BIUNIT.
-!   basisType : INTEGER(I4B), OPTIONAL, INTENT(IN). Polynomial family
-! selector, for example poly%Monomial.
-!   alpha : REAL(DFP), OPTIONAL, INTENT(IN). Jacobi weight parameter alpha.
-!   beta : REAL(DFP), OPTIONAL, INTENT(IN). Jacobi weight parameter beta.
-!   lambda : REAL(DFP), OPTIONAL, INTENT(IN). Ultraspherical family parameter.
+! The default basis is the monomial basis `1, x, x**2, ...`.
+! Columns 1 and 2 are zero.
+! For `j >= 3`, column `j` is `(j - 1) * (j - 2) * x**(j - 3)`.
 !
-! Returns:
-!   ans : REAL(DFP)(SIZE(x), order + 1).
+! The routine works on the biunit interval `[-1, 1]` only.
+!
+! @note
+! A debug build stops with an error if `refLine` does not start with `B`.
+! A release build does not check `refLine`.
+! It never rescales the result for `"UNIT"`.
+! @endnote
+!
+! @warning
+! Only the monomial basis works.
+! For any other `basisType`, the polynomial backend is an empty stub.
+! It leaves the result unset.
+! @endwarning
 !
 ! Formula:
-! $$L_{ij}=\phi_j''(x_i)$$
+!   $$ ans_{ij} = \phi_{j-1}''(x_i) $$
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE GlobalData, ONLY: DFP
-! USE GlobalData, ONLY: I4B
-! USE GlobalData, ONLY: poly
-! USE LineInterpolationUtility, ONLY: BasisLaplacianEvalAll_Line
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-! REAL(DFP) :: x(1,3), y(3,3)
+! - [test 1](|base|Line/examples/BasisLaplacianEvalAll_Line_test_1.F90)
 !
-! x(1,:) = [-0.5_DFP,0.0_DFP,0.5_DFP]
-! y = BasisLaplacianEvalAll_Line(order=2_I4B, x=x(1,:), &
-!   refLine="BIUNIT", basisType=poly%Monomial)
-! CALL OK(MAXVAL(ABS(y(:,3)- &
-!   (2.0_DFP))) < 1.0E-10_DFP, "Analytic quadratic mode")
-! END PROGRAM main
-!```
+! See also: [[BasisLaplacianEvalAll_Line2_]], [[BasisLaplacianEvalAll_Line1]]
 
 INTERFACE BasisLaplacianEvalAll_Line
   MODULE FUNCTION BasisLaplacianEvalAll_Line2( &
     order, x, refLine, basisType, alpha, beta, lambda) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
-    !! order of  polynomials
+    !! highest polynomial degree
     REAL(DFP), INTENT(IN) :: x(:)
-    !! point of evaluation
+    !! points of evaluation
     CHARACTER(*), INTENT(IN) :: refLine
-    !! UNIT ! BIUNIT
+    !! reference interval, must be `"BIUNIT"`.
+    !! Only a debug build checks the first letter.
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: basisType
-    !! Monomial ! Jacobi ! Ultraspherical ! Legendre ! Chebyshev
-    !! Lobatto ! UnscaledLobatto
+    !! polynomial family, a constant of `TypePolynomialOpt`.
+    !! The default is `poly%Monomial`.
+    !! Only the monomial basis works.
     REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
-    !! Jacobi polynomial parameter
+    !! Jacobi parameter, needed for the Jacobi basis
     REAL(DFP), OPTIONAL, INTENT(IN) :: beta
-    !! Jacobi polynomial parameter
+    !! Jacobi parameter, needed for the Jacobi basis
     REAL(DFP), OPTIONAL, INTENT(IN) :: lambda
-    !! Ultraspherical parameter
+    !! ultraspherical parameter, needed for the ultraspherical basis
     REAL(DFP) :: ans(SIZE(x), order + 1)
-    !! Value of n+1  polynomials at point x
-    !! ans(:, j) is the value of jth polynomial at x points
-    !! ans(i, :) is the value of all polynomials at x(i) point
+    !! second derivatives at the points `x`.
+    !! `ans(i, j)` is the second derivative of the polynomial of
+    !! degree `j - 1` at `x(i)`.
   END FUNCTION BasisLaplacianEvalAll_Line2
 END INTERFACE BasisLaplacianEvalAll_Line
 
@@ -5987,82 +4679,71 @@ END INTERFACE BasisLaplacianEvalAll_Line
 
 !> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
-! summary: Evaluate line Basis laplacian.
+! summary: Computes the second derivatives of the basis of a line at many
+!   points, into a buffer.
 !
-! Results use point rows and degree columns. Gradient element wrappers add a
-! coordinate axis. BIUNIT is used explicitly. Only Monomial has a working
-! Laplacian here; named polynomial family branches can reach unimplemented
-! routines. UNIT second derivative scaling requires review.
+! Writes the second derivatives of the first `order + 1` basis
+! polynomials at the points `x` into `ans`.
+! Row `i` of `ans` belongs to the point `x(i)`.
+! Column `j` belongs to the polynomial of degree `j - 1`.
+! The routine sets `nrow` and `ncol` to the active size of `ans`.
+! It never allocates `ans`.
 !
-! Arguments:
-!   order : INTEGER(I4B), INTENT(IN). Polynomial degree, except quadrature
-! where it is requested exactness degree.
-!   x : REAL(DFP), INTENT(IN)(:). Evaluation point(s); columns for rank two
-! arrays.
-!   ans : REAL(DFP), INTENT(INOUT)(:, :). Result buffer; allocate the full
-! active shape before the call.
-!   nrow : INTEGER(I4B), INTENT(OUT). Number of active output rows.
-!   ncol : INTEGER(I4B), INTENT(OUT). Number of active output columns.
-!   refLine : CHARACTER(*), INTENT(IN). Reference interval name, UNIT or
-! BIUNIT.
-!   basisType : INTEGER(I4B), OPTIONAL, INTENT(IN). Polynomial family
-! selector, for example poly%Monomial.
-!   alpha : REAL(DFP), OPTIONAL, INTENT(IN). Jacobi weight parameter alpha.
-!   beta : REAL(DFP), OPTIONAL, INTENT(IN). Jacobi weight parameter beta.
-!   lambda : REAL(DFP), OPTIONAL, INTENT(IN). Ultraspherical family parameter.
+! The default basis is the monomial basis `1, x, x**2, ...`.
+! Columns 1 and 2 are zero.
+! For `j >= 3`, column `j` is `(j - 1) * (j - 2) * x**(j - 3)`.
 !
-! Returns:
-!   Updates ans(:, :), nrow, ncol.
+! The routine works on the biunit interval `[-1, 1]` only.
+!
+! @note
+! A debug build stops with an error if `refLine` does not start with `B`.
+! A release build does not check `refLine`.
+! It never rescales the result for `"UNIT"`.
+! @endnote
+!
+! @warning
+! Only the monomial basis works.
+! For any other `basisType`, the polynomial backend is an empty stub.
+! It leaves `ans`, `nrow` and `ncol` unset.
+! @endwarning
 !
 ! Formula:
-! $$L_{ij}=\phi_j''(x_i)$$
+!   $$ ans_{ij} = \phi_{j-1}''(x_i) $$
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE GlobalData, ONLY: DFP
-! USE GlobalData, ONLY: I4B
-! USE GlobalData, ONLY: poly
-! USE LineInterpolationUtility, ONLY: BasisLaplacianEvalAll_Line_
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-! REAL(DFP) :: x(1,3), y(3,3)
-! INTEGER(I4B) :: nr,nc
+! - [test 1](|base|Line/examples/BasisLaplacianEvalAll_Line__test_1.F90)
 !
-! x(1,:) = [-0.5_DFP,0.0_DFP,0.5_DFP]
-! CALL BasisLaplacianEvalAll_Line_(order=2_I4B, x=x(1,:), &
-!   refLine="BIUNIT", basisType=poly%Monomial, ans=y, nrow=nr,ncol=nc)
-! CALL OK(MAXVAL(ABS(y(:,3)- &
-!   (2.0_DFP))) < 1.0E-10_DFP, "Analytic quadratic mode")
-! END PROGRAM main
-!```
+! See also: [[BasisLaplacianEvalAll_Line2]]
 
 INTERFACE BasisLaplacianEvalAll_Line_
   MODULE SUBROUTINE BasisLaplacianEvalAll_Line2_( &
     order, x, ans, nrow, ncol, refLine, basisType, alpha, beta, lambda)
     INTEGER(I4B), INTENT(IN) :: order
-    !! order of  polynomials
+    !! highest polynomial degree
     REAL(DFP), INTENT(IN) :: x(:)
-    !! point of evaluation
+    !! points of evaluation
     REAL(DFP), INTENT(INOUT) :: ans(:, :)
-    !! ans(SIZE(x), order + 1)
-    !! Value of n+1  polynomials at point x
-    !! ans(:, j) is the value of jth polynomial at x points
-    !! ans(i, :) is the value of all polynomials at x(i) point
+    !! second derivatives, at least `SIZE(x)` rows and `order + 1`
+    !! columns.
+    !! `ans(i, j)` is the second derivative of the polynomial of
+    !! degree `j - 1` at `x(i)`.
     INTEGER(I4B), INTENT(OUT) :: nrow, ncol
-    !! number of rows and columns written to ans
+    !! number of rows and columns written to `ans`.
+    !! They are `SIZE(x)` and `order + 1`.
     CHARACTER(*), INTENT(IN) :: refLine
-    !! UNIT ! BIUNIT
+    !! reference interval, must be `"BIUNIT"`.
+    !! Only a debug build checks the first letter.
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: basisType
-    !! Monomial ! Jacobi ! Ultraspherical ! Legendre ! Chebyshev
-    !! Lobatto ! UnscaledLobatto
+    !! polynomial family, a constant of `TypePolynomialOpt`.
+    !! The default is `poly%Monomial`.
+    !! Only the monomial basis works.
     REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
-    !! Jacobi polynomial parameter
+    !! Jacobi parameter, needed for the Jacobi basis
     REAL(DFP), OPTIONAL, INTENT(IN) :: beta
-    !! Jacobi polynomial parameter
+    !! Jacobi parameter, needed for the Jacobi basis
     REAL(DFP), OPTIONAL, INTENT(IN) :: lambda
-    !! Ultraspherical parameter
+    !! ultraspherical parameter, needed for the ultraspherical basis
   END SUBROUTINE BasisLaplacianEvalAll_Line2_
 END INTERFACE BasisLaplacianEvalAll_Line_
 
