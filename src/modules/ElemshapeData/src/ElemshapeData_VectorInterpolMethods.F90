@@ -260,8 +260,14 @@ END INTERFACE GetInterpolation_
 ! point `ipt`. It reallocates `ans(ncomp, nips, nipt)`.
 !
 ! It fills `ans(:, :, ipt)` like [[GetInterpolation2]] with `obj(ipt)`.
+! If `obj` is empty, it reallocates `ans` to `(ncomp, 0, 0)`.
+!
+! Changes:
+!   - 2026-11-21: Handle empty time-point arrays.
 !
 ! Examples
+!
+! - [test 14](|base|ElemshapeData/examples/GetInterpolation_test_14.F90)
 !
 ! - [test 3](|base|ElemshapeData/examples/GetInterpolation_test_3.F90)
 ! second block
@@ -292,10 +298,16 @@ END INTERFACE GetInterpolation
 ! It writes into the existing `ans` and returns the used size in
 ! `dim1`, `dim2` and `dim3`.
 !
+! If `obj` is empty, all three sizes are zero. `ans` is unchanged.
+!
+! Changes:
+!   - 2026-11-21: Define sizes for empty time-point arrays.
+!
 ! Examples
 !
 ! - [test 7](|base|ElemshapeData/examples/GetInterpolation_test_7.F90)
 ! third block
+! - [test 14](|base|ElemshapeData/examples/GetInterpolation_test_14.F90)
 !
 ! See also: [[GetInterpolation3]], [[GetInterpolation_3a]]
 
@@ -329,8 +341,14 @@ END INTERFACE GetInterpolation_
 ! Interpolates `val` like [[GetInterpolation_3]].
 ! It adds `scale` times the interpolated value to `ans`.
 ! If `addContribution` is false, it clears `ans` first.
+! If `obj` is empty, all three sizes are zero. `ans` is unchanged.
+!
+! Changes:
+!   - 2026-11-21: Define sizes for empty time-point arrays.
 !
 ! Examples
+!
+! - [test 14](|base|ElemshapeData/examples/GetInterpolation_test_14.F90)
 !
 ! - [test 7](|base|ElemshapeData/examples/GetInterpolation_test_7.F90)
 ! third block
@@ -543,8 +561,11 @@ END INTERFACE GetInterpolation_
 ! It reallocates `ans(ncomp, nips, nipt)`.
 !
 ! It fills `ans(:, :, ipt)` like [[GetInterpolation_4a]] with
-! `timeIndx = ipt
-! `.
+! `timeIndx = ipt`.
+! If `obj` is empty, it reallocates `ans` to `(ncomp, 0, 0)`.
+!
+! Changes:
+!   - 2026-11-21: Handle empty time-point arrays.
 !
 ! Examples
 !
@@ -552,6 +573,8 @@ END INTERFACE GetInterpolation_
 ! fifth block
 ! - [test 13](|base|ElemshapeData/examples/GetInterpolation_test_13.F90)
 ! third block
+!
+! - [test 14](|base|ElemshapeData/examples/GetInterpolation_test_14.F90)
 !
 ! See also: [[GetInterpolation_5]]
 
@@ -578,8 +601,14 @@ END INTERFACE GetInterpolation
 ! Interpolates `val` like [[GetInterpolation5]].
 ! It writes into the existing `ans` and returns the used size in
 ! `dim1`, `dim2` and `dim3`.
+! If `obj` is empty, all three sizes are zero. `ans` is unchanged.
+!
+! Changes:
+!   - 2026-11-21: Handle empty time-point arrays.
 !
 ! Examples
+!
+! - [test 14](|base|ElemshapeData/examples/GetInterpolation_test_14.F90)
 !
 ! - [test 7](|base|ElemshapeData/examples/GetInterpolation_test_7.F90)
 ! fifth block
@@ -614,8 +643,11 @@ END INTERFACE GetInterpolation_
 ! Interpolates `val` like [[GetInterpolation_5]].
 ! It adds `scale` times the interpolated value to `ans`.
 ! If `addContribution` is false, it clears `ans` first.
+! If `obj` is empty, all three sizes are zero. `ans` is unchanged.
 !
 ! Examples
+!
+! - [test 14](|base|ElemshapeData/examples/GetInterpolation_test_14.F90)
 !
 ! - [test 7](|base|ElemshapeData/examples/GetInterpolation_test_7.F90)
 ! fifth block
