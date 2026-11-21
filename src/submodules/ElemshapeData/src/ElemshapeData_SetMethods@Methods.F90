@@ -48,7 +48,7 @@ END PROCEDURE stsd_SetThickness
 MODULE PROCEDURE elemsd_SetBarycentricCoord
 INTEGER(I4B) :: valNNS
 
-valNNS = SIZE(val, 2)
+valNNS = MIN(SIZE(val, 2), SIZE(N, 1))
 obj%coord(1:obj%nsd, 1:obj%nips) = MATMUL(val(1:obj%nsd, 1:valNNS), &
                                           N(1:valNNS, 1:obj%nips))
 END PROCEDURE elemsd_SetBarycentricCoord

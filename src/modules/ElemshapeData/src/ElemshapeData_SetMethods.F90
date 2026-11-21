@@ -170,14 +170,23 @@ END INTERFACE SetThickness
 !
 ! Sets the coordinates `obj%coord(1:nsd, 1:nips)` of the quadrature
 ! points. It interpolates the nodal coordinates `val` with `N`.
+! It uses the first `MIN(SIZE(val, 2), SIZE(N, 1))` nodes.
+! Extra coordinate columns or shape-function rows do not contribute.
+! With no shared nodes, it sets the coordinates to zero.
+!
+! Changes:
+!   - 2026-11-21: Clip interpolation to the shared node count.
 !
 ! Formula:
-!   $$ coord = val \cdot N $$
+! For `m = MIN(SIZE(val, 2), SIZE(N, 1))`,
+!   $$ coord = val(:, 1:m) \cdot N(1:m, :) $$
 !
 ! Examples
 !
 ! - [test 1](|base|ElemshapeData/examples/SetBarycentricCoord_test_1.F90)
 ! first block
+!
+! - [test 2](|base|ElemshapeData/examples/SetBarycentricCoord_test_2.F90)
 !
 ! See also: [[stsd_SetBarycentricCoord]]
 
@@ -186,9 +195,9 @@ INTERFACE SetBarycentricCoord
     CLASS(ElemshapeData_), INTENT(INOUT) :: obj
     !! element shape data
     REAL(DFP), INTENT(IN) :: val(:, :)
-    !! nodal coordinates, val(nsd, nns)
+    !! nodal coordinates; only nodes shared with `N` contribute
     REAL(DFP), INTENT(IN) :: N(:, :)
-    !! shape functions at quadrature points, N(nns, nips)
+    !! shape functions; at least `obj%nips` columns are required
     !! Use this to interpolate with a non-isoparametric basis.
   END SUBROUTINE elemsd_SetBarycentricCoord
 END INTERFACE SetBarycentricCoord
@@ -203,6 +212,11 @@ END INTERFACE SetBarycentricCoord
 !
 ! Sets the coordinates `obj%coord` from space-time nodal coordinates
 ! `val`. It interpolates `val` in time with `T`, then in space with `N`.
+! The spatial interpolation uses only nodes shared by `val` and `N`.
+! It follows [[elemsd_SetBarycentricCoord]] for the spatial node count.
+!
+! Changes:
+!   - 2026-11-21: Clip spatial interpolation to the shared node count.
 !
 ! Formula:
 !   $$ coord = (val \cdot T) \cdot N $$
@@ -211,6 +225,8 @@ END INTERFACE SetBarycentricCoord
 !
 ! - [test 1](|base|ElemshapeData/examples/SetBarycentricCoord_test_1.F90)
 ! second block
+!
+! - [test 2](|base|ElemshapeData/examples/SetBarycentricCoord_test_2.F90)
 !
 ! See also: [[elemsd_SetBarycentricCoord]]
 
@@ -515,6 +531,7 @@ END INTERFACE SetdNTdXt
 ! Examples
 !
 ! - [test 1](|base|ElemshapeData/examples/Set_test_1.F90) first block
+! - [test 2](|base|ElemshapeData/examples/SetBarycentricCoord_test_2.F90)
 !
 ! See also: [[elemsd_Set2]], [[stelemsd_Set1]]
 
