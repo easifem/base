@@ -72,9 +72,20 @@ PUBLIC :: SetdNdXt
 ! @endnote
 !
 ! @warning
-! Use it only for facets, where `xidim < nsd`. For cells, the result has
-! no meaning.
+! Use this routine only for lines in 2D or surfaces in 3D.
+! These cases have `(nsd, xidim)` equal to `(2, 1)` or `(3, 2)`.
+! Use nondegenerate facets with nonzero `js`.
+!
+! Point facets and lines in 3D are unsupported.
+! They can produce zero, non-unit, or undefined normals without a diagnostic.
+! A point facet of a 1D cell needs a sign from the cell side.
+! Set its outward normal to -1 or +1 outside this routine.
+! For supported facets, the caller must ensure outward node ordering.
+! Do not use this routine for cells. See easifem/base#534.
 ! @endwarning
+!
+! Changes:
+!   - 2026-11-21: Document normal dimensions and orientation constraints.
 !
 ! Formula:
 !   $$ normal = \frac{J(:, 1) \times J(:, 2)}{js} $$
@@ -283,7 +294,16 @@ END INTERFACE SetJs
 ! - For a curve, `xidim = 1` and `js = |J(:, 1)|`.
 ! - For a surface in 3D, `xidim = 2` and `js = |J(:, 1) x J(:, 2)|`.
 !
-! For a point, `xidim = 0` and it does not set `js`.
+! @warning
+! For a point in physical space, `xidim = 0`, this routine leaves `js`
+! untouched. Set the point measure explicitly before using it.
+! Do not interpret old or uninitialized values as a computed measure.
+! This does not supply the point facet's outward normal.
+! See easifem/base#534.
+! @endwarning
+!
+! Changes:
+!   - 2026-11-21: Document the unset point measure.
 !
 ! Examples
 !
@@ -297,7 +317,7 @@ INTERFACE SetJs
     REAL(DFP), INTENT(IN) :: jacobian(:, :, :)
     !! Jacobian, jacobian(nsd, xidim, nips)
     REAL(DFP), INTENT(INOUT) :: js(:)
-    !! Jacobian determinant, js(nips)
+    !! Jacobian measure, `js(nips)`; untouched for points in physical space
     INTEGER(I4B), INTENT(IN) :: nsd
     !! spatial dimension
     INTEGER(I4B), INTENT(IN) :: xidim
