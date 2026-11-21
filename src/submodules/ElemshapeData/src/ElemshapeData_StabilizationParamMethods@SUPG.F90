@@ -15,6 +15,7 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 SUBMODULE(ElemshapeData_StabilizationParamMethods) SUPG
+USE BaseType, ONLY: TypeFEVariableOpt
 USE BaseType, ONLY: TypeFEVariableScalar
 USE BaseType, ONLY: TypeFEVariableSpace
 USE BaseType, ONLY: TypeFEVariableSpaceTime
@@ -142,7 +143,9 @@ END SUBROUTINE elemsd_getSUPGParam_a
 !----------------------------------------------------------------------------
 
 PURE SUBROUTINE elemsd_getSUPGParam_b(obj, tau, c, val, nu, k, &
-                                      phi, dt, opt)
+                                      phi, dt, opt, timeIndx)
+  INTEGER(I4B), OPTIONAL, INTENT(IN) :: timeIndx
+  !! time quadrature index; absent selects the first column
   CLASS(STElemshapeData_), INTENT(IN) :: obj
   !! space-time element shape data
   TYPE(FEVariable_), INTENT(INOUT) :: tau
@@ -185,7 +188,8 @@ PURE SUBROUTINE elemsd_getSUPGParam_b(obj, tau, c, val, nu, k, &
   !! MAIN
   opt0 = INPUT(option=opt, default=1_I4B)
 
-  CALL GetProjectionOfdNTdXt(obj=obj, ans=p, c=c, &
+  CALL GetProjectionOfdNTdXt(obj=obj, ans=p, &
+                             c=obj_SUPGVectorAtTime(c, timeIndx), &
                              crank=TypeFEVariableVector)
 
   !! make cdNTdxt + dNTdt
@@ -195,11 +199,15 @@ PURE SUBROUTINE elemsd_getSUPGParam_b(obj, tau, c, val, nu, k, &
   rvar = QuadratureVariable(r, TypeFEVariableVector, TypeFEVariableSpace)
   CALL GetProjectionOfdNTdXt(obj=obj, ans=q, c=rvar, &
                              crank=TypeFEVariableVector)
-  CALL GetInterpolation(obj=obj, val=nu, ans=nubar)
+  CALL GetInterpolation(obj=obj, &
+                        val=obj_SUPGScalarAtTime(nu, timeIndx), ans=nubar)
 
   IF (PRESENT(k)) THEN
-    CALL GetInterpolation(obj=obj, val=k, ans=kbar)
-    CALL GetInterpolation(obj=obj, val=phi, ans=phibar)
+    CALL GetInterpolation(obj=obj, &
+                          val=obj_SUPGScalarAtTime(k, timeIndx), ans=kbar)
+    CALL GetInterpolation(obj=obj, &
+                          val=obj_SUPGScalarAtTime(phi, timeIndx), &
+                          ans=phibar)
   ELSE
     ALLOCATE (kbar(SIZE(nubar)))
     ALLOCATE (phibar(SIZE(nubar)))
@@ -269,7 +277,7 @@ CALL Reallocate(ans, SIZE(obj(1)%N, 2), SIZE(obj))
 
 DO ii = 1, SIZE(obj)
   CALL elemsd_getSUPGParam_b(obj=obj(ii), tau=a, c=c, val=val, nu=nu, k=k, &
-                             phi=phi, dt=dt, opt=opt)
+                             phi=phi, dt=dt, opt=opt, timeIndx=ii)
 
   ans(:, ii) = Get(a, TypeFEVariableScalar, TypeFEVariableSpace)
 END DO
@@ -377,7 +385,9 @@ END SUBROUTINE elemsd_getSUPGParam_c
 !----------------------------------------------------------------------------
 
 PURE SUBROUTINE elemsd_getSUPGParam_d(obj, tau, c, val, nu, k, &
-                                      phi, dt, opt)
+                                      phi, dt, opt, timeIndx)
+  INTEGER(I4B), OPTIONAL, INTENT(IN) :: timeIndx
+  !! time quadrature index; absent selects the first column
   CLASS(STElemshapeData_), INTENT(IN) :: obj
   !! space-time element shape data
   TYPE(FEVariable_), INTENT(INOUT) :: tau
@@ -415,7 +425,9 @@ PURE SUBROUTINE elemsd_getSUPGParam_d(obj, tau, c, val, nu, k, &
   !! MAIN
   opt0 = INPUT(default=1_I4B, option=opt)
 
-  CALL GetProjectionOfdNTdXt(obj=obj, ans=p, c=c, crank=TypeFEVariableVector)
+  CALL GetProjectionOfdNTdXt(obj=obj, ans=p, &
+                             c=obj_SUPGVectorAtTime(c, timeIndx), &
+                             crank=TypeFEVariableVector)
 
   !! make cdNTdxt + dNTdt
   p = p + obj%dNTdt
@@ -488,7 +500,7 @@ CALL Reallocate(ans, SIZE(obj(1)%N, 2), SIZE(obj))
 
 DO ii = 1, SIZE(obj)
   CALL elemsd_getSUPGParam_d(obj=obj(ii), tau=a, c=c, val=val, nu=nu, k=k, &
-                             phi=phi, dt=dt, opt=opt)
+                             phi=phi, dt=dt, opt=opt, timeIndx=ii)
   ans(:, ii) = Get(a, TypeFEVariableScalar, TypeFEVariableSpace)
 END DO
 
@@ -502,5 +514,53 @@ END PROCEDURE elemsd_GetSUPGParam4
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
+
+!----------------------------------------------------------------------------
+!                                                       obj_SUPGScalarAtTime
+!----------------------------------------------------------------------------
+
+PURE FUNCTION obj_SUPGScalarAtTime(val, timeIndx) RESULT(ans)
+  TYPE(FEVariable_), INTENT(IN) :: val
+  !! scalar coefficient
+  INTEGER(I4B), OPTIONAL, INTENT(IN) :: timeIndx
+  !! time quadrature index; absent preserves the input
+  TYPE(FEVariable_) :: ans
+  REAL(DFP), ALLOCATABLE :: values(:, :)
+
+  IF (PRESENT(timeIndx)) THEN
+    IF (val%defineOn .EQ. TypeFEVariableOpt%quadrature .AND. &
+        val%varType .EQ. TypeFEVariableOpt%spaceTime) THEN
+      values = Get(val, TypeFEVariableScalar, TypeFEVariableSpaceTime)
+      ans = QuadratureVariable(values(:, timeIndx), &
+                               TypeFEVariableScalar, TypeFEVariableSpace)
+      RETURN
+    END IF
+  END IF
+  ans = val
+END FUNCTION obj_SUPGScalarAtTime
+
+!----------------------------------------------------------------------------
+!                                                       obj_SUPGVectorAtTime
+!----------------------------------------------------------------------------
+
+PURE FUNCTION obj_SUPGVectorAtTime(val, timeIndx) RESULT(ans)
+  TYPE(FEVariable_), INTENT(IN) :: val
+  !! vector coefficient
+  INTEGER(I4B), OPTIONAL, INTENT(IN) :: timeIndx
+  !! time quadrature index; absent preserves the input
+  TYPE(FEVariable_) :: ans
+  REAL(DFP), ALLOCATABLE :: values(:, :, :)
+
+  IF (PRESENT(timeIndx)) THEN
+    IF (val%defineOn .EQ. TypeFEVariableOpt%quadrature .AND. &
+        val%varType .EQ. TypeFEVariableOpt%spaceTime) THEN
+      values = Get(val, TypeFEVariableVector, TypeFEVariableSpaceTime)
+      ans = QuadratureVariable(values(:, :, timeIndx), &
+                               TypeFEVariableVector, TypeFEVariableSpace)
+      RETURN
+    END IF
+  END IF
+  ans = val
+END FUNCTION obj_SUPGVectorAtTime
 
 END SUBMODULE SUPG

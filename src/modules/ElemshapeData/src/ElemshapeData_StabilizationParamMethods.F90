@@ -460,6 +460,7 @@ END INTERFACE GetSUGN3Param_Takizawa2018
 ! @note
 ! If `obj` is an [[STElemshapeData_]], the call uses the space-time
 ! form of the terms. In that case, the routine ignores `dt`.
+! A single object uses time index 1 for quadrature coefficients.
 ! @endnote
 !
 ! Examples
@@ -512,6 +513,8 @@ END INTERFACE GetSUPGParam
 ! Computes the SUPG stabilization parameter `tau` at the space-time
 ! quadrature points of one space-time element.
 ! It evaluates the parameter at each time quadrature point in turn.
+! It selects the matching time column of quadrature `c`, `nu`, `k`,
+! and `phi`. The solution `val` must hold nodal values.
 !
 ! At each quadrature point, the routine forms three terms:
 !
@@ -537,9 +540,13 @@ END INTERFACE GetSUPGParam
 ! already carries the time scale.
 ! @endnote
 !
+! Changes:
+!   - 2026-11-21: Select quadrature coefficients at each time point.
+!
 ! Examples
 !
 ! - [test 2](|base|ElemshapeData/examples/GetSUPGParam_test_2.F90)
+! - [test 3](|base|ElemshapeData/examples/GetSUPGParam_test_3.F90)
 !
 ! See also: [[elemsd_GetSUPGParam1]]
 
@@ -610,6 +617,7 @@ END INTERFACE GetSUPGParam
 ! @note
 ! If `obj` is an [[STElemshapeData_]], the routine uses the space-time
 ! form of the terms and ignores `dt`.
+! A single object uses time index 1 for quadrature velocity.
 ! @endnote
 !
 ! Examples
@@ -667,6 +675,8 @@ END INTERFACE GetSUPGParam
 ! It evaluates the parameter at each time quadrature point in turn.
 ! The diffusivity `nu`, the permeability `k` and the porosity `phi` are
 ! constant real numbers.
+! It selects the matching time column of quadrature velocity `c`.
+! The solution `val` must hold nodal values.
 !
 ! At each quadrature point, the routine forms three terms:
 !
@@ -692,9 +702,13 @@ END INTERFACE GetSUPGParam
 ! already carries the time scale.
 ! @endnote
 !
+! Changes:
+!   - 2026-11-21: Select quadrature velocity at each time point.
+!
 ! Examples
 !
 ! - [test 2](|base|ElemshapeData/examples/GetSUPGParam_test_2.F90)
+! - [test 3](|base|ElemshapeData/examples/GetSUPGParam_test_3.F90)
 !
 ! See also: [[elemsd_GetSUPGParam2]], [[elemsd_GetSUPGParam3]]
 
