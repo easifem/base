@@ -352,7 +352,7 @@ PURE SUBROUTINE elemsd_getSUPGParam_c(obj, tau, c, val, nu, k, &
 
   t2 = 0.0_DFP
   IF (PRESENT(dt)) THEN
-    t2 = 2.0_DFP / dt
+    IF (dt .GT. math%zero) t2 = 2.0_DFP / dt
   END IF
 
   CALL Reallocate(ans, SIZE(obj%N, 2))

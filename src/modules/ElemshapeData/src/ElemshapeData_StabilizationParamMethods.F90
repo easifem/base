@@ -598,7 +598,8 @@ END INTERFACE GetSUPGParam
 !
 ! 1. `t1` is the convection term, built from `c` and the shape
 !    function gradients.
-! 2. `t2` is the time term, `2 / dt`. It is zero if `dt` is absent.
+! 2. `t2` is the time term, `2 / dt`. It is zero if `dt` is absent or
+!    not positive.
 ! 3. `t3` is the diffusion term, built from `nu` and the shape function
 !    gradients along the gradient of `val`.
 ! 4. `t4` is the Darcy term, `2 * phi * nu / k`.
@@ -620,11 +621,16 @@ END INTERFACE GetSUPGParam
 ! A single object uses time index 1 for quadrature velocity.
 ! @endnote
 !
+! Changes:
+!   - 2026-11-21: Omit the time term for nonpositive time steps.
+!
 ! Examples
 !
 ! - [test 1](|base|ElemshapeData/examples/GetSUPGParam_test_1.F90)
 ! - [test 2](|base|ElemshapeData/examples/GetSUPGParam_test_2.F90) with
 !   one space-time shape data
+!
+! - [test 4](|base|ElemshapeData/examples/GetSUPGParam_test_4.F90)
 !
 ! See also: [[elemsd_GetSUPGParam1]], [[elemsd_GetSUPGParam4]]
 
@@ -650,7 +656,7 @@ INTERFACE
     !! Required when `k` is present.
     REAL(DFP), OPTIONAL, INTENT(IN) :: dt
     !! time step size
-    !! If absent, the time term is zero.
+    !! If absent or not positive, the time term is zero.
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: opt
     !! how to combine the terms, 1 or 2
     !! default = 1
