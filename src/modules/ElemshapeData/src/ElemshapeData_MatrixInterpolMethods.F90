@@ -271,8 +271,15 @@ END INTERFACE GetInterpolation_
 !
 ! It fills `ans(:, :, :, ipt)` like [[GetInterpolation2]] with
 ! `obj(ipt)`.
+! With empty `obj`, it allocates shape `(nrow, ncol, 0, 0)`.
+! The first two extents come from `val`.
+!
+! Changes:
+!   - 2026-11-21: Handle empty time-point arrays.
 !
 ! Examples
+!
+! - [test 18](|base|ElemshapeData/examples/GetInterpolation_test_18.F90)
 !
 ! - [test 4](|base|ElemshapeData/examples/GetInterpolation_test_4.F90),
 !   Test 2
@@ -302,8 +309,14 @@ END INTERFACE GetInterpolation
 ! Interpolates `val` like [[GetInterpolation3]].
 ! It writes into the existing `ans` and returns the used size in
 ! `dim1` to `dim4`.
+! With empty `obj`, all four sizes are zero. It leaves `ans` untouched.
+!
+! Changes:
+!   - 2026-11-21: Handle empty time-point arrays.
 !
 ! Examples
+!
+! - [test 18](|base|ElemshapeData/examples/GetInterpolation_test_18.F90)
 !
 ! - [test 8](|base|ElemshapeData/examples/GetInterpolation_test_8.F90),
 !   Test 3
@@ -342,6 +355,7 @@ END INTERFACE GetInterpolation_
 ! Interpolates `val` like [[GetInterpolation_3]].
 ! It adds `scale` times the interpolated value to `ans`.
 ! If `addContribution` is false, it clears `ans` first.
+! With empty `obj`, all four sizes are zero. It leaves `ans` untouched.
 !
 ! Examples
 !
@@ -568,8 +582,15 @@ END INTERFACE GetInterpolation_
 !
 ! It fills `ans(:, :, :, ipt)` like [[GetInterpolation_4a]] with
 ! `timeIndx = ipt`.
+! With empty `obj`, it allocates shape `(nrow, ncol, 0, 0)`.
+! The first two extents come from the matrix dimensions of `val`.
+!
+! Changes:
+!   - 2026-11-21: Handle empty time-point arrays.
 !
 ! Examples
+!
+! - [test 18](|base|ElemshapeData/examples/GetInterpolation_test_18.F90)
 !
 ! - [test 8](|base|ElemshapeData/examples/GetInterpolation_test_8.F90),
 !   Test 5
@@ -601,6 +622,7 @@ END INTERFACE GetInterpolation
 ! Interpolates `val` like [[GetInterpolation5]].
 ! It writes into the existing `ans` and returns the used size in
 ! `dim1` to `dim4`.
+! With empty `obj`, all four sizes are zero. It leaves `ans` untouched.
 !
 ! Examples
 !
@@ -640,6 +662,7 @@ END INTERFACE GetInterpolation_
 ! Interpolates `val` like [[GetInterpolation_5]].
 ! It adds `scale` times the interpolated value to `ans`.
 ! If `addContribution` is false, it clears `ans` first.
+! With empty `obj`, all four sizes are zero. It leaves `ans` untouched.
 !
 ! Examples
 !

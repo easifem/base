@@ -16,12 +16,12 @@
 !
 
 SUBMODULE(ElemshapeData_MatrixInterpolMethods) Methods
+USE BaseType, ONLY: TypeFEVariableConstant, TypeFEVariableMatrix, &
+                    TypeFEVariableOpt, TypeFEVariableSpace, &
+                    TypeFEVariableSpaceTime
+USE FEVariable_Method, ONLY: FEVariableGetInterpolation_ => &
+                             GetInterpolation_, FEVariableSize => Size
 USE ReallocateUtility, ONLY: Reallocate
-USE FEVariable_Method, ONLY: FEVariableSize => Size, &
-                             FEVariableGetInterpolation_ => GetInterpolation_
-USE BaseType, ONLY: TypeFEVariableMatrix, TypeFEVariableConstant, &
-                    TypeFEVariableSpace, TypeFEVariableSpaceTime, &
-                    TypeFEVariableOpt
 
 IMPLICIT NONE
 CONTAINS
@@ -77,7 +77,8 @@ minNNS = MIN(valNNS, obj%nns)
 DO ips = 1, dim3
   DO ii = 1, minNNS
     ans(1:dim1, 1:dim2, ips) = ans(1:dim1, 1:dim2, ips) + &
-                              scale * val(1:dim1, 1:dim2, ii) * obj%N(ii, ips)
+                               scale * val(1:dim1, 1:dim2, ii) * &
+                               obj%N(ii, ips)
   END DO
 END DO
 END PROCEDURE GetInterpolation_1a
@@ -152,8 +153,9 @@ INTEGER(I4B) :: dim1, dim2, dim3, dim4
 
 dim1 = SIZE(val, 1)
 dim2 = SIZE(val, 2)
-dim3 = obj(1)%nips
+dim3 = 0
 dim4 = SIZE(obj)
+IF (dim4 .GT. 0) dim3 = obj(1)%nips
 
 CALL Reallocate(ans, dim1, dim2, dim3, dim4)
 CALL GetInterpolation_(obj=obj, ans=ans, val=val, dim1=dim1, dim2=dim2, &
@@ -170,8 +172,9 @@ LOGICAL(LGT), PARAMETER :: no = .FALSE.
 
 dim1 = SIZE(val, 1)
 dim2 = SIZE(val, 2)
-dim3 = obj(1)%nips
+dim3 = 0
 dim4 = SIZE(obj)
+IF (dim4 .GT. 0) dim3 = obj(1)%nips
 
 CALL GetInterpolation_(obj=obj, ans=ans, val=val, dim1=dim1, dim2=dim2, &
                        dim3=dim3, dim4=dim4, scale=one, addContribution=no)
@@ -237,7 +240,7 @@ IF (PRESENT(timeIndx)) timeIndx0 = timeIndx
 
 SELECT CASE (val%vartype)
 CASE (TypeFEVariableOpt%constant)
-  CALL FEVariableGetInterpolation_(obj=val, rank=TypeFEVariableMatrix, &
+  CALL FEVariableGetInterpolation_(obj=val, RANK=TypeFEVariableMatrix, &
                                    vartype=TypeFEVariableConstant, &
                                    N=obj%N, nns=obj%nns, nips=obj%nips, &
                                    scale=scale, &
@@ -245,7 +248,7 @@ CASE (TypeFEVariableOpt%constant)
                                    ans=ans, dim1=dim1, dim2=dim2, dim3=dim3)
 
 CASE (TypeFEVariableOpt%space)
-  CALL FEVariableGetInterpolation_(obj=val, rank=TypeFEVariableMatrix, &
+  CALL FEVariableGetInterpolation_(obj=val, RANK=TypeFEVariableMatrix, &
                                    vartype=TypeFEVariableSpace, &
                                    N=obj%N, nns=obj%nns, nips=obj%nips, &
                                    scale=scale, &
@@ -254,127 +257,135 @@ CASE (TypeFEVariableOpt%space)
 
 CASE (TypeFEVariableOpt%spacetime)
   SELECT TYPE (obj); TYPE IS (STElemShapeData_)
-    CALL FEVariableGetInterpolation_(obj=val, rank=TypeFEVariableMatrix, &
-                                     vartype=TypeFEVariableSpaceTime, &
-                                     N=obj%N, nns=obj%nns, nips=obj%nips, &
-                                     T=obj%T, nnt=obj%nnt, &
-                                     scale=scale, &
-                                     addContribution=addContribution, &
-                                     ans=ans, dim1=dim1, dim2=dim2, &
-                                     dim3=dim3, timeIndx=timeIndx0)
+      CALL FEVariableGetInterpolation_(obj=val, RANK=TypeFEVariableMatrix, &
+                                       vartype=TypeFEVariableSpaceTime, &
+                                       N=obj%N, nns=obj%nns, nips=obj%nips, &
+                                       T=obj%T, nnt=obj%nnt, &
+                                       scale=scale, &
+                                       addContribution=addContribution, &
+                                       ans=ans, dim1=dim1, dim2=dim2, &
+                                       dim3=dim3, timeIndx=timeIndx0)
 
-  END SELECT
+      END SELECT
 
-END SELECT
-END PROCEDURE GetInterpolation_4a
+      END SELECT
+      END PROCEDURE GetInterpolation_4a
 
 !----------------------------------------------------------------------------
 !                                                           GetInterpolation_
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE GetInterpolation_4b
-SELECT CASE (val%vartype)
-CASE (TypeFEVariableOpt%constant)
-  CALL FEVariableGetInterpolation_(obj=val, rank=TypeFEVariableMatrix, &
-                                   vartype=TypeFEVariableConstant, &
-                                   N=obj%N, nns=obj%nns, &
-                                   spaceIndx=spaceIndx, &
-                                   timeIndx=timeIndx, &
-                                   scale=scale, &
-                                   addContribution=addContribution, &
-                                   ans=ans, nrow=nrow, ncol=ncol)
+      MODULE PROCEDURE GetInterpolation_4b
+      SELECT CASE (val%vartype)
+      CASE (TypeFEVariableOpt%constant)
+        CALL FEVariableGetInterpolation_(obj=val, RANK=TypeFEVariableMatrix, &
+                                         vartype=TypeFEVariableConstant, &
+                                         N=obj%N, nns=obj%nns, &
+                                         spaceIndx=spaceIndx, &
+                                         timeIndx=timeIndx, &
+                                         scale=scale, &
+                                         addContribution=addContribution, &
+                                         ans=ans, nrow=nrow, ncol=ncol)
 
-CASE (TypeFEVariableOpt%space)
-  CALL FEVariableGetInterpolation_(obj=val, rank=TypeFEVariableMatrix, &
-                                   vartype=TypeFEVariableSpace, &
-                                   N=obj%N, nns=obj%nns, &
-                                   spaceIndx=spaceIndx, &
-                                   timeIndx=timeIndx, &
-                                   scale=scale, &
-                                   addContribution=addContribution, &
-                                   ans=ans, nrow=nrow, ncol=ncol)
+      CASE (TypeFEVariableOpt%space)
+        CALL FEVariableGetInterpolation_(obj=val, RANK=TypeFEVariableMatrix, &
+                                         vartype=TypeFEVariableSpace, &
+                                         N=obj%N, nns=obj%nns, &
+                                         spaceIndx=spaceIndx, &
+                                         timeIndx=timeIndx, &
+                                         scale=scale, &
+                                         addContribution=addContribution, &
+                                         ans=ans, nrow=nrow, ncol=ncol)
 
-CASE (TypeFEVariableOpt%spacetime)
-  SELECT TYPE (obj); TYPE IS (STElemShapeData_)
-    CALL FEVariableGetInterpolation_(obj=val, rank=TypeFEVariableMatrix, &
-                                     vartype=TypeFEVariableSpaceTime, &
-                                     N=obj%N, nns=obj%nns, &
-                                     spaceIndx=spaceIndx, &
-                                     timeIndx=timeIndx, &
-                                     T=obj%T, nnt=obj%nnt, &
-                                     scale=scale, &
-                                     addContribution=addContribution, &
-                                     ans=ans, nrow=nrow, ncol=ncol)
+      CASE (TypeFEVariableOpt%spacetime)
+        SELECT TYPE (obj); TYPE IS (STElemShapeData_)
+            CALL FEVariableGetInterpolation_(obj=val, &
+                                             RANK=TypeFEVariableMatrix, &
+                                             vartype=TypeFEVariableSpaceTime, &
+                                             N=obj%N, nns=obj%nns, &
+                                             spaceIndx=spaceIndx, &
+                                             timeIndx=timeIndx, &
+                                             T=obj%T, nnt=obj%nnt, &
+                                             scale=scale, &
+                                             addContribution=addContribution, &
+                                             ans=ans, nrow=nrow, ncol=ncol)
 
-  END SELECT
+            END SELECT
 
-END SELECT
-END PROCEDURE GetInterpolation_4b
+            END SELECT
+            END PROCEDURE GetInterpolation_4b
 
 !----------------------------------------------------------------------------
 !                                                           getinterpolation
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE GetInterpolation5
-INTEGER(I4B) :: dim1, dim2, dim3, dim4
-REAL(DFP), PARAMETER :: one = 1.0_DFP
-LOGICAL(LGT), PARAMETER :: no = .FALSE.
+            MODULE PROCEDURE GetInterpolation5
+            INTEGER(I4B) :: dim1, dim2, dim3, dim4
+            REAL(DFP), PARAMETER :: one = 1.0_DFP
+            LOGICAL(LGT), PARAMETER :: no = .FALSE.
 
-dim1 = FEVariableSIZE(val, 1)
-dim2 = FEVariableSIZE(val, 2)
-dim3 = obj(1)%nips
-dim4 = SIZE(obj)
+            dim1 = FEVariableSIZE(val, 1)
+            dim2 = FEVariableSIZE(val, 2)
+            dim3 = 0
+            dim4 = SIZE(obj)
+            IF (dim4 .GT. 0) dim3 = obj(1)%nips
 
-CALL Reallocate(ans, dim1, dim2, dim3, dim4)
-CALL GetInterpolation_(obj=obj, ans=ans, val=val, dim1=dim1, dim2=dim2, &
-                       dim3=dim3, dim4=dim4, scale=one, addContribution=no)
-END PROCEDURE GetInterpolation5
+            CALL Reallocate(ans, dim1, dim2, dim3, dim4)
+            CALL GetInterpolation_(obj=obj, ans=ans, val=val, dim1=dim1, &
+                                   dim2=dim2, &
+                                   dim3=dim3, dim4=dim4, scale=one, &
+                                   addContribution=no)
+            END PROCEDURE GetInterpolation5
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE GetInterpolation_5
-REAL(DFP), PARAMETER :: one = 1.0_DFP
-LOGICAL(LGT), PARAMETER :: no = .FALSE.
+            MODULE PROCEDURE GetInterpolation_5
+            REAL(DFP), PARAMETER :: one = 1.0_DFP
+            LOGICAL(LGT), PARAMETER :: no = .FALSE.
 
-CALL GetInterpolation_(obj=obj, ans=ans, val=val, dim1=dim1, dim2=dim2, &
-                       dim3=dim3, dim4=dim4, scale=one, addContribution=no)
-END PROCEDURE GetInterpolation_5
+            CALL GetInterpolation_(obj=obj, ans=ans, val=val, dim1=dim1, &
+                                   dim2=dim2, &
+                                   dim3=dim3, dim4=dim4, scale=one, &
+                                   addContribution=no)
+            END PROCEDURE GetInterpolation_5
 
 !----------------------------------------------------------------------------
 !                                                         GetInterpolation_5a
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE GetInterpolation_5a
-INTEGER(I4B) :: ipt
+            MODULE PROCEDURE GetInterpolation_5a
+            INTEGER(I4B) :: ipt
 
-dim1 = 0
-dim2 = 0
-dim3 = 0
-dim4 = SIZE(obj)
-DO ipt = 1, dim4
-  CALL GetInterpolation_(obj=obj(ipt), ans=ans(:, :, :, ipt), &
-                         val=val, dim1=dim1, dim2=dim2, dim3=dim3, &
-                         scale=scale, addContribution=addContribution, &
-                         timeIndx=ipt)
-END DO
-END PROCEDURE GetInterpolation_5a
+            dim1 = 0
+            dim2 = 0
+            dim3 = 0
+            dim4 = SIZE(obj)
+            DO ipt = 1, dim4
+              CALL GetInterpolation_(obj=obj(ipt), ans=ans(:, :, :, ipt), &
+                                     val=val, dim1=dim1, dim2=dim2, &
+                                     dim3=dim3, &
+                                     scale=scale, &
+                                     addContribution=addContribution, &
+                                     timeIndx=ipt)
+            END DO
+            END PROCEDURE GetInterpolation_5a
 
 !----------------------------------------------------------------------------
 !                                                      interpolationOfVector
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE Interpolation1
-CALL GetInterpolation(obj=obj, val=val, ans=ans)
-END PROCEDURE Interpolation1
+            MODULE PROCEDURE Interpolation1
+            CALL GetInterpolation(obj=obj, val=val, ans=ans)
+            END PROCEDURE Interpolation1
 
 !----------------------------------------------------------------------------
 !                                                            STinterpolation
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE STInterpolation1
-CALL GetInterpolation(obj=obj, val=val, ans=ans)
-END PROCEDURE STInterpolation1
+            MODULE PROCEDURE STInterpolation1
+            CALL GetInterpolation(obj=obj, val=val, ans=ans)
+            END PROCEDURE STInterpolation1
 
-END SUBMODULE Methods
+            END SUBMODULE Methods
